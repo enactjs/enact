@@ -1,0 +1,39 @@
+{
+  "name": "enyo-ui-moonstone",
+  "version": "0.1.0",
+  "description": "Large-screen/TV support library for Enyo, containing a variety of UI components.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "transpile": "ncp . build --filter='^(?!.*(node_modules|build|dist|\\.git)).*$' && babel --presets=es2015,stage-0,react build -d build",
+    "pack": "webpack",
+    "clean": "rimraf ./build ./dist"
+  },
+  "homepage": "http://enyojs.com/",
+  "bugs": "http://jira.enyojs.com/",
+  "maintainers": [
+    {
+      "name": "Enyo JS Framework Team",
+      "web": "http://enyojs.com/"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/enyojs/enyo-core.git"
+  },
+  "license": "Apache-2.0",
+  "keywords": [
+    "framework",
+    "toolkit",
+    "components",
+    "mobile",
+    "webOS"
+  ],
+  "devDependencies": {
+    "babel-cli": "^6.10.1",
+    "enyo-config": "enyojs/enyo-next-config"
+  },
+  "dependencies": {
+    "enyo-ui":"enyojs/enyo-ui"
+  }
+}
