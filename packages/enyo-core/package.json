@@ -5,8 +5,10 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "transpile": "ncp . build --filter='^(?!.*(node_modules|build|dist|\\.git)).*$' && babel --presets=es2015,stage-0,react build -d build",
+    "transpile": "enyo-transpile",
     "pack": "webpack",
+    "pack-p": "webpack -p",
+    "watch": "webpack --watch",
     "clean": "rimraf ./build ./dist"
   },
   "homepage": "http://enyojs.com/",
@@ -30,7 +32,6 @@
     "webOS"
   ],
   "devDependencies": {
-    "babel-cli": "^6.10.1",
     "enyo-config": "enyojs/enyo-next-config"
   },
   "dependencies": {
