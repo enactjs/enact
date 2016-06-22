@@ -1,0 +1,66 @@
+{
+  "name": "enyo-i18n",
+  "main": "./index.js",
+  "version": "0.1.0",
+  "description": "Internationalization support for Enyo using iLib",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "transpile": "enyo-transpile",
+    "pack": "webpack",
+    "pack-p": "webpack -p",
+    "watch": "webpack --watch",
+    "clean": "rimraf ./build ./dist"
+  },
+  "homepage": "http://enyojs.com/",
+  "bugs": "http://jira.enyojs.com/",
+  "maintainers": [
+    {
+      "name": "Enyo JS Framework Team",
+      "web": "http://enyojs.com/"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/enyojs/enyo-i18n.git"
+  },
+  "license": "Apache-2.0",
+  "keywords": [
+    "internationalization",
+    "i18n",
+    "localization",
+    "l10n",
+    "globalization",
+    "g11n",
+    "date",
+    "time",
+    "format",
+    "locale",
+    "translation"
+  ],
+  "devDependencies": {
+    "chai": "<3.0.0",
+    "dirty-chai": "^1.2.2",
+    "enyo-config": "enyojs/enyo-next-config",
+    "enzyme": "^2.2.0",
+    "karma": "^0.13.22",
+    "karma-babel-preprocessor": "^6.0.1",
+    "karma-chai": "^0.1.0",
+    "karma-chrome-launcher": "^0.2.3",
+    "karma-dirty-chai": "^1.0.1",
+    "karma-json-reporter": "^1.2.0",
+    "karma-mocha": "^1.0.1",
+    "karma-phantomjs-launcher": "^1.0.0",
+    "karma-sourcemap-loader": "^0.3.7",
+    "karma-webpack": "^1.7.0",
+    "mocha": "^2.4.5",
+    "phantomjs-prebuilt": "^2.1.7",
+    "react-addons-test-utils": "^15.0.1",
+    "react": "^15.1.0",
+    "react-dom": "^15.1.0",
+    "sinon": "git+https://github.com/sinonjs/sinon.git"
+  },
+  "dependencies": {
+    "ramda": "^0.21.0",
+    "xhr": "^2.2.0"
+  }
+}
