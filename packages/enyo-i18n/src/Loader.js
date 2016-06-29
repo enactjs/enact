@@ -2,6 +2,7 @@ import xhr from 'xhr';
 
 import Loader from '../ilib/lib/Loader';
 import ZoneInfoFile from './zoneinfo';
+import ilibLocale from 'ilib!../ilib/locale/ilibmanifest.json';
 
 const get = (url, callback) => {
 	xhr({url, sync: true}, (err, resp, body) => {
@@ -12,7 +13,7 @@ const get = (url, callback) => {
 };
 
 function EnyoLoader () {
-	this.base = 'ilib/';
+	this.base = ilibLocale;
 	// TODO: enyo.platform
 	// if (platform.platformName === 'webos') {
 	// 	this.webos = true;
