@@ -1,1 +1,1 @@
-# enyo-next-spotlight
+# enyo-spotlight

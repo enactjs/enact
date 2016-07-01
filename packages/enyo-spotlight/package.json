@@ -1,9 +1,9 @@
 {
-  "name": "spotlight",
+  "name": "enyo-spotlight",
   "main": "index.js",
   "version": "0.1.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/enyojs/enyo-next-spotlight.git"
+    "url": "git+https://github.com/enyojs/enyo-spotlight.git"
   }
 }
