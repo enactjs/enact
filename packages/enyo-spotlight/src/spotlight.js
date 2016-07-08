@@ -6,7 +6,9 @@
  *
  * Licensed under the MPL license.
  */
-module.exports = (function() {
+
+const spotlightRootContainerName = 'spotlightRootDecorator';
+const Spotlight = (function() {
 	'use strict';
 
 	/**
@@ -520,11 +522,16 @@ module.exports = (function() {
 	}
 
 	function getContainerId(elem) {
+		var containerId;
 		for (var id in _containers) {
 			if (!_containers[id].selectorDisabled && matchSelector(elem, _containers[id].selector)) {
-				return id;
+				containerId = id;
+				if (id != spotlightRootContainerName) {
+					break;
+				}
 			}
 		}
+		return containerId;
 	}
 
 	function getContainerNavigableElements(containerId) {
@@ -1077,3 +1084,6 @@ module.exports = (function() {
 	return Spotlight;
 
 })();
+
+export default Spotlight;
+export {Spotlight, spotlightRootContainerName};

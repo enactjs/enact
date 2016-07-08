@@ -1,7 +1,6 @@
 import React from 'react';
 import hoc from './hoc';
-
-import Spotlight from './spotlight';
+import {Spotlight, spotlightRootContainerName} from './spotlight';
 import {spottableClass} from './spottable';
 
 const defaultConfig = {};
@@ -10,7 +9,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		componentDidMount () {
 			Spotlight.initialize();
-			Spotlight.add({
+			Spotlight.add(spotlightRootContainerName, {
 				selector: '.' + spottableClass
 			});
 			Spotlight.focus();

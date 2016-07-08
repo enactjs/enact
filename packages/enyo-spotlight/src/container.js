@@ -27,6 +27,10 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.setState({containerId: containerId});
 		}
 
+		componentWillUnmount () {
+			Spotlight.remove(this.state.containerId);
+		}
+
 		render () {
 			const props = Object.assign({}, this.props),
 				containerId = this.state.containerId;
