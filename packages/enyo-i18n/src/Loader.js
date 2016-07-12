@@ -13,7 +13,7 @@ const get = (url, callback) => {
 };
 
 function EnyoLoader () {
-	this.base = ilibLocale;
+	this.base = ilibLocale.substring(0, ilibLocale.lastIndexOf('/locale'));
 	// TODO: enyo.platform
 	// if (platform.platformName === 'webos') {
 	// 	this.webos = true;
