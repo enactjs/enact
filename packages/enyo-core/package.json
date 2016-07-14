@@ -6,10 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "transpile": "enyo-transpile",
-    "pack": "webpack",
-    "pack-p": "webpack -p",
-    "watch": "webpack --watch",
-    "clean": "rimraf ./build ./dist"
+    "pack": "enyo-webpack",
+    "pack-p": "enyo-webpack -p",
+    "watch": "enyo-webpack --watch",
+    "clean": "enyo-clean"
   },
   "homepage": "http://enyojs.com/",
   "bugs": "http://jira.enyojs.com/",
@@ -32,7 +32,7 @@
     "webOS"
   ],
   "devDependencies": {
-    "enyo-config": "enyojs/enyo-next-config"
+    "enyo-config": "enyojs/enyo-config"
   },
   "dependencies": {
     "react": "^15.1.0",
