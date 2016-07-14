@@ -33,7 +33,7 @@
     "webOS"
   ],
   "devDependencies": {
-    "enyo-config": "enyojs/enyo-next-config"
+    "enyo-config": "enyojs/enyo-config"
   },
   "dependencies": {
   	"enyo-ui":"enyojs/enyo-ui"
