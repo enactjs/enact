@@ -38,24 +38,7 @@
     "translation"
   ],
   "devDependencies": {
-    "chai": "<3.0.0",
-    "dirty-chai": "^1.2.2",
-    "enyo-config": "enyojs/enyo-next-config",
-    "enzyme": "^2.2.0",
-    "karma": "^0.13.22",
-    "karma-babel-preprocessor": "^6.0.1",
-    "karma-chai": "^0.1.0",
-    "karma-chrome-launcher": "^0.2.3",
-    "karma-dirty-chai": "^1.0.1",
-    "karma-json-reporter": "^1.2.0",
-    "karma-mocha": "^1.0.1",
-    "karma-phantomjs-launcher": "^1.0.0",
-    "karma-sourcemap-loader": "^0.3.7",
-    "karma-webpack": "^1.7.0",
-    "mocha": "^2.4.5",
-    "phantomjs-prebuilt": "^2.1.7",
-    "react-addons-test-utils": "^15.0.1",
-    "sinon": "git+https://github.com/sinonjs/sinon.git"
+    "enyo-config": "enyojs/enyo-config"
   },
   "dependencies": {
     "react": "^15.1.0",
