@@ -829,6 +829,10 @@ const Spotlight = (function() {
 	}
 
 	function onMouseOver(evt) {
+		if (!_containerCount || _pause) {
+			return;
+		}
+
 		var target = getNavigableTarget(evt.target), // account for child controls
 			current = getCurrent(),
 			preventDefault = function() {

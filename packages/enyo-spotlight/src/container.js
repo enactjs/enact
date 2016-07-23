@@ -32,8 +32,8 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const props = Object.assign({}, this.props),
-				containerId = this.state.containerId;
+			const containerId = this.state.containerId,
+				props = Object.assign({}, this.props, {containerId});
 
 			if (props.className) {
 				props.className += ' ' + containerId;
