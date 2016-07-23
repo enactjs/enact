@@ -823,7 +823,9 @@ const Spotlight = (function() {
 			return;
 		}
 
-		spotNext(direction, currentFocusedElement, currentContainerId);
+		if (!spotNext(direction, currentFocusedElement, currentContainerId)) {
+			focusElement(currentFocusedElement, currentContainerId);
+		}
 
 		return preventDefault();
 	}
