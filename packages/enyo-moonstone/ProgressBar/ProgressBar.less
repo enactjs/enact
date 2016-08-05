@@ -1,0 +1,33 @@
+@import '../styles/colors.less';
+@import '../styles/variables.less';
+
+.progressBar {
+	position: relative;
+	height: @moon-progress-bar-height;
+	background-color: @moon-progress-bar-background;
+
+	&.vertical {
+		min-height: 120px;
+		width: @moon-progress-bar-height;
+
+		.fill {
+			width: 100%;
+			bottom: 0%;
+		}
+		.load {
+			width: 100%;
+			bottom: 0%;
+		}
+	}
+
+	.fill {
+		height: 100%;
+		position: absolute;
+		background-color: @moon-progress-bar-background-fill;
+	}
+	.load {
+		height: 100%;
+		position: absolute;
+		background-color: @moon-progress-bar-background-loaded;
+	}
+}

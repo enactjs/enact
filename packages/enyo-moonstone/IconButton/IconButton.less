@@ -1,0 +1,29 @@
+// IconButton.less
+//
+@import '../styles/mixins.less';
+@import '../styles/variables.less';
+
+.iconButton {
+	.border-box();
+	.moon-taparea(@moon-icon-button-size);
+
+	padding: 0;
+	width: @moon-icon-button-size;
+	height: @moon-icon-button-size;
+	background-size: @moon-icon-sprite-size @moon-icon-sprite-size * 2;
+	background-position: center 0;
+
+	&.small {
+		width: @moon-icon-button-small-size;
+		height: @moon-icon-button-small-size;
+		background-size: @moon-icon-sprite-small-size @moon-icon-sprite-small-size * 2;
+		background-position: center 0;
+
+		.moon-taparea(@moon-icon-button-small-size);
+	}
+
+	.icon {
+		margin: -@moon-button-border-width 0 0 0;
+		color: inherit;
+	}
+}

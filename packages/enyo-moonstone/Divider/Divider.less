@@ -1,0 +1,15 @@
+// Divider
+//
+@import '../styles/rules.less';
+@import '../styles/variables.less';
+
+.divider {
+	.moon-divider-border();
+
+	margin: 0 @moon-spotlight-outset (1.5 * @moon-spotlight-outset) @moon-spotlight-outset;
+	line-height: 1.6em;
+
+	.moon-neutral & {
+		.moon-neutral-divider-border();
+	}
+}

@@ -1,10 +1,12 @@
 {
-  "name": "enyo-ui-moonstone",
+  "name": "enyo-moonstone",
   "version": "0.1.0",
   "description": "Large-screen/TV support library for Enyo, containing a variety of UI components.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "enyo-karma start --single-run --browsers PhantomJS",
+    "test-json": "enyo-karma start --single-run --browsers PhantomJS --reporters json",
+    "test-watch": "enyo-karma start --browsers PhantomJS",
     "transpile": "enyo-transpile",
     "pack": "enyo-webpack",
     "pack-p": "enyo-webpack -p",
@@ -33,9 +35,13 @@
     "webOS"
   ],
   "devDependencies": {
-    "enyo-config": "enyojs/enyo-config"
+    "enyo-config": "enyojs/enyo-config#test-suite"
   },
   "dependencies": {
-  	"enyo-ui":"enyojs/enyo-ui"
+    "eases": "^1.0.8",
+    "enyo-core": "enyojs/enyo-core",
+    "enyo-i18n": "github:enyojs/enyo-i18n",
+    "enyo-spotlight": "enyojs/enyo-spotlight",
+    "enyo-ui": "enyojs/enyo-ui"
   }
 }

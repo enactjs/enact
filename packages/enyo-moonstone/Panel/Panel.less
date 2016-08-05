@@ -1,0 +1,21 @@
+@import '../styles/variables.less';
+
+.panel {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+	padding: @moon-app-keepout @moon-spotlight-outset;
+	box-sizing: border-box;
+
+	&:global(.enyo-fit) {
+		height: auto;
+	}
+}
+
+.body {
+	overflow: hidden;
+	position: relative;
+	padding-top: 12px;
+	z-index: 1;
+}
