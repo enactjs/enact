@@ -2,14 +2,18 @@ import xhr from 'xhr';
 
 import Loader from '../ilib/lib/Loader';
 import ZoneInfoFile from './zoneinfo';
-import ilibLocale from 'ilib!../ilib/locale/ilibmanifest.json';
+import ilibLocale from '../ilib/locale/ilibmanifest.json';
 
 const get = (url, callback) => {
-	xhr({url, sync: true}, (err, resp, body) => {
-		const error = err || resp.statusCode !== 200 && resp.statusCode;
-		const json = error ? null : JSON.parse(body);
-		callback(json, error);
-	});
+	if(typeof window === 'object') {
+		xhr({url, sync: true}, (err, resp, body) => {
+			const error = err || resp.statusCode !== 200 && resp.statusCode;
+			const json = error ? null : JSON.parse(body);
+			callback(json, error);
+		});
+	} else {
+		callback(null, new Error('Not a web browser environment'));
+	}
 };
 
 function EnyoLoader () {
