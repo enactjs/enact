@@ -69,17 +69,19 @@ const Spotlight = (function() {
 	/**
 	/* polyfills
 	*/
-	var elementMatchesSelector =
-		Element.prototype.matches ||
-		Element.prototype.matchesSelector ||
-		Element.prototype.mozMatchesSelector ||
-		Element.prototype.webkitMatchesSelector ||
-		Element.prototype.msMatchesSelector ||
-		Element.prototype.oMatchesSelector ||
-		function (selector) {
-			var matchedNodes = (this.parentNode || this.document).querySelectorAll(selector);
-			return [].slice.call(matchedNodes).indexOf(this) >= 0;
-		};
+	var elementMatchesSelector = function (selector) {
+		var matchedNodes = (this.parentNode || this.document).querySelectorAll(selector);
+		return [].slice.call(matchedNodes).indexOf(this) >= 0;
+	};
+	if(typeof window === 'object') {
+		elementMatchesSelector = window.Element.prototype.matches ||
+				window.Element.prototype.matchesSelector ||
+				window.Element.prototype.mozMatchesSelector ||
+				window.Element.prototype.webkitMatchesSelector ||
+				window.Element.prototype.msMatchesSelector ||
+				window.Element.prototype.oMatchesSelector ||
+				elementMatchesSelector;
+	}
 
 	/**
 	/* protected methods
