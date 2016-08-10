@@ -39,9 +39,9 @@
   },
   "dependencies": {
     "eases": "^1.0.8",
-    "enyo-core": "enyojs/enyo-core",
-    "enyo-i18n": "github:enyojs/enyo-i18n",
-    "enyo-spotlight": "enyojs/enyo-spotlight",
-    "enyo-ui": "enyojs/enyo-ui"
+    "enyo-core": "enyojs/enyo-core#develop",
+    "enyo-i18n": "github:enyojs/enyo-i18n#develop",
+    "enyo-spotlight": "enyojs/enyo-spotlight#develop",
+    "enyo-ui": "enyojs/enyo-ui#develop"
   }
 }
