@@ -1,0 +1,51 @@
+// Enyo base styles
+// These are generic, universal styles, independent of a visual library.
+//
+
+:global {
+	.enyo-body-fit {
+		margin: 0;
+		height: 100%;
+		// helps prevent ios page scroll
+		overflow: auto;
+		position: relative;
+	}
+
+	.enyo-fit {
+		position: absolute;
+		left: 0;
+		top: 0;
+		right: 0;
+		bottom: 0;
+	}
+
+	// Touch interaction
+	.enyo-no-touch-action {
+		-ms-touch-action: none;
+	}
+
+	.enyo-untouchable {
+		pointer-events: none;
+
+		> * {
+			pointer-events: auto;
+		}
+	}
+
+	// Selection
+	.enyo-unselectable {
+		cursor: default;
+		-ms-user-select: none;
+		-webkit-user-select: none;
+		-moz-user-select: -moz-none;
+		user-select: none;
+	}
+
+	.enyo-selectable {
+		cursor: auto;
+		-ms-user-select: element;
+		-webkit-user-select: text;
+		-moz-user-select: text;
+		user-select: text;
+	}
+}
