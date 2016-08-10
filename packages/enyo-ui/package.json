@@ -38,7 +38,7 @@
     "enyo-config": "enyojs/enyo-config#test-suite"
   },
   "dependencies": {
-    "enyo-core": "enyojs/enyo-core",
+    "enyo-core": "enyojs/enyo-core#develop",
     "recompose": "^0.20.2"
   }
 }
