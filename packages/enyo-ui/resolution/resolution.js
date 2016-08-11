@@ -159,7 +159,7 @@ function calculateFontSize (type) {
  * @returns {null} n/a
  */
 function updateBaseFontSize (size) {
-	if(typeof window === 'object') {
+	if (typeof window === 'object') {
 		document.documentElement.style.fontSize = size;
 	}
 }

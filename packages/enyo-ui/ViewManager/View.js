@@ -131,6 +131,7 @@ class View extends React.Component {
 	prepareTransition = (arranger, callback) => {
 		const {animate, duration, index, previousIndex, reverse} = this.props;
 		const steps = Math.ceil(duration / TICK);
+		/* eslint react/no-find-dom-node: "off" */
 		const node = ReactDOM.findDOMNode(this);
 
 		// Arranges the control each tick and calls the provided callback on complete
