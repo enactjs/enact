@@ -1,9 +1,13 @@
-sudo: false
 language: node_js
-node_js:
-  - "6"
-before_script:
-  - npm install -g eslint eslint-plugin-react eslint-plugin-babel babel-eslint
-  - npm install enyojs/eslint-config-enyo
+node_js: 
+    - "node"
+sudo: false
+install:
+    - npm install -g eslint eslint-plugin-react eslint-plugin-babel babel-eslint
+    - npm install
 script:
-  - eslint --no-eslintrc -c node_modules/eslint-config-enyo/index.js .
+    - echo -e "\x1b\x5b35;1m*** Starting tests...\x1b\x5b0m"
+    - npm test
+    - echo -e "\x1b\x5b35;1m*** Tests complete\x1b\x5b0m"
+    - echo -e "\x1b\x5b35;1m*** Starting eslint...\x1b\x5b0m"
+    - eslint --no-eslintrc -c node_modules/eslint-config-enyo/index.js .

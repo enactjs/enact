@@ -1,7 +1,6 @@
 /* globals describe, it, expect */
 
 import React from 'react';
-import sinon from 'sinon';
 import {mount} from 'enzyme';
 import kind from '../kind';
 
@@ -22,7 +21,7 @@ describe('kind', () => {
 		computed: {
 			value: ({prop}) => prop + 1
 		},
-		render: ({ref, label, value, classes, ...rest}) => {
+		render: ({label, value, classes, ...rest}) => {
 			delete rest.prop;
 			return (
 				<div {...rest} className={classes} title={label}>
