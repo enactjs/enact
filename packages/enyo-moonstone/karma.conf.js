@@ -1,4 +1,8 @@
- /* eslint no-var: "off" */
+/* eslint no-var: "off" */
 var config = require('enyo-config');
 
-module.exports = config.karma({});
+module.exports = config.karma({
+	ri: {
+		baseSize: 24
+	}
+});
