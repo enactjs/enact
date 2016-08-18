@@ -122,11 +122,20 @@ const ButtonBase = kind({
 		content: ({children, uppercase}) => ((uppercase && typeof children == 'string') ? children.toUpperCase() : children)
 	},
 
-	render: ({content, backgroundOpacity, minWidth, pressed, selected, small, uppercase, ...rest}) => (
-		<button {...rest}>
-			<span className={css.client}>{content}</span>
-		</button>
-	)
+	render: ({content, ...rest}) => {
+		delete rest.backgroundOpacity;
+		delete rest.minWidth;
+		delete rest.pressed;
+		delete rest.selected;
+		delete rest.small;
+		delete rest.uppercase;
+
+		return (
+			<button {...rest}>
+				<span className={css.client}>{content}</span>
+			</button>
+		);
+	}
 });
 
 const Button = Spottable(Pressable(ButtonBase));
