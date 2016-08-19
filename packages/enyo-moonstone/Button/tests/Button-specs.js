@@ -41,4 +41,15 @@ describe('Button Specs', () => {
 
 		expect(actual).to.equal(expected);
 	});
+
+	it('should have \'disabled\' HTML attribute when \'disabled\' prop is provided', function () {
+		const button = mount(
+			<Button disabled>I am a disabled Button</Button>
+		);
+
+		const expected = 1;
+		const actual = button.find({disabled: true}).length;
+
+		expect(actual).to.equal(expected);
+	});
 });
