@@ -87,7 +87,9 @@ describe('BreadcrumbDecorator', () => {
 		}, Panels);
 
 		const subject = mount(
-			<StyledBreadcrumbPanels />
+			<StyledBreadcrumbPanels>
+				<div>Panel</div>
+			</StyledBreadcrumbPanels>
 		);
 
 		const expected = true;
@@ -97,7 +99,7 @@ describe('BreadcrumbDecorator', () => {
 	});
 
 	it('should override runtime props with {config.props}', function () {
-		// Noting that this is an intended use case of this config option but it does test the
+		// Noting that this is not an intended use case of this config option but it does test the
 		// expected behavior.
 		const props = {
 			index: 2
@@ -107,7 +109,11 @@ describe('BreadcrumbDecorator', () => {
 		}, Panels);
 
 		const subject = mount(
-			<FixedIndexPanels index={1} />
+			<FixedIndexPanels index={1}>
+				<div>Panel</div>
+				<div>Panel</div>
+				<div>Panel</div>
+			</FixedIndexPanels>
 		);
 
 		const expected = 2;

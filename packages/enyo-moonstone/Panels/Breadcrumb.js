@@ -2,7 +2,7 @@ import kind from 'enyo-core/kind';
 import {Spottable} from 'enyo-spotlight';
 import React from 'react';
 
-import css from './Breadcrumb.less';
+import css from './Panels.less';
 
 /**
  * The width of a breadcrumb which may be used to allocate space for it in a panels layout.
@@ -34,7 +34,7 @@ const BreadcrumbBase = kind({
 		 *
 		 * @type {Function}
 		 */
-		onSelect: React.PropTypes.func.isRequired
+		onSelect: React.PropTypes.func
 	},
 
 	styles: {
@@ -43,9 +43,9 @@ const BreadcrumbBase = kind({
 	},
 
 	computed: {
-		onSelect: ({index, onSelect, onClick}) => (ev) => {
+		onSelect: ({index, onSelect: handler, onClick}) => (ev) => {
 			if (onClick) onClick(ev);
-			onSelect({index});
+			if (handler) handler({index});
 		}
 	},
 

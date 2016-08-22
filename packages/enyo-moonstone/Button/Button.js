@@ -1,4 +1,5 @@
 import kind from 'enyo-core/kind';
+import Uppercase from 'enyo-i18n/Uppercase';
 import {Spottable} from 'enyo-spotlight';
 import Pressable from 'enyo-ui/Pressable';
 import React, {PropTypes} from 'react';
@@ -14,6 +15,7 @@ import css from './Button.less';
 * Enyo Developer Guide.
 *
 * @class Button
+* @see module:enyo-i18n/Uppercase~Uppercase
 * @extends module:enyo/Button~Button
 * @mixes module:moonstone/MarqueeSupport~MarqueeSupport
 * @ui
@@ -43,8 +45,8 @@ const ButtonBase = kind({
 		 * @default false
 		 * @public
 		 */
-
 		disabled: PropTypes.bool,
+
 		/**
 		* A boolean parameter affecting the minimum width of the button. When `true`,
 		* the minimum width will be set to 180px (or 130px if [small]{@link module:moonstone/Button~Button#small}
@@ -86,16 +88,7 @@ const ButtonBase = kind({
 		* @default false
 		* @public
 		*/
-		small: PropTypes.bool,
-
-		/**
-		* When `true`, the content will have locale-safe uppercasing applied.
-		*
-		* @type {Boolean}
-		* @default true
-		* @public
-		*/
-		uppercase: PropTypes.bool
+		small: PropTypes.bool
 	},
 
 	defaultProps: {
@@ -104,8 +97,7 @@ const ButtonBase = kind({
 		minWidth: true,
 		pressed: false,
 		selected: false,
-		small: false,
-		uppercase: true
+		small: false
 	},
 
 	styles: {
@@ -117,28 +109,27 @@ const ButtonBase = kind({
 		className: ({backgroundOpacity, minWidth, pressed, selected, small, styler}) => styler.append(
 			{pressed, small, minWidth, selected},
 			backgroundOpacity
-		),
-		// convert the content to uppercase. Later this will use the iLib uppercase.
-		content: ({children, uppercase}) => ((uppercase && typeof children == 'string') ? children.toUpperCase() : children)
+		)
 	},
 
-	render: ({content, ...rest}) => {
+	render: ({children, ...rest}) => {
 		delete rest.backgroundOpacity;
 		delete rest.minWidth;
 		delete rest.pressed;
 		delete rest.selected;
 		delete rest.small;
-		delete rest.uppercase;
 
 		return (
 			<button {...rest}>
-				<span className={css.client}>{content}</span>
+				<span className={css.client}>{children}</span>
 			</button>
 		);
 	}
 });
 
-const Button = Spottable(Pressable(ButtonBase));
+const UcButtonBase = Uppercase(ButtonBase);
+
+const Button = Spottable(Pressable(UcButtonBase));
 
 export default Button;
-export {Button, ButtonBase};
+export {Button, UcButtonBase as ButtonBase};

@@ -30,10 +30,10 @@ describe('Button Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should not convert text content when uppercase=false', function () {
+	it('should not convert text content when preserveCase=true', function () {
 		let msg = 'Hello Button!';
 		const button = mount(
-			<Button uppercase={false}>{msg}</Button>
+			<Button preserveCase={false}>{msg}</Button>
 		);
 
 		const expected = msg;

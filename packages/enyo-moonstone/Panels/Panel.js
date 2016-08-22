@@ -1,5 +1,5 @@
 import kind from 'enyo-core/kind';
-import {Slot, Slottable} from 'enyo-ui/Slot';
+import Slottable from 'enyo-ui/Slottable';
 import React from 'react';
 
 import css from './Panel.less';
@@ -10,10 +10,8 @@ import css from './Panel.less';
 * will typically contain several instances of `moonstone/Panel`.
 *
 * @class Panel
-* @ui
 * @public
 */
-
 const PanelBase = kind({
 
 	name: 'Panel',
@@ -23,19 +21,15 @@ const PanelBase = kind({
 		classes: 'panel'
 	},
 
-	render: ({slottable, classes, ...rest}) => {
-		return (
-			<section {...rest} className={classes}>
-				<Slot name="header">{slottable}</Slot>
-				<div className={css.body}>
-					<Slot>{slottable}</Slot>
-				</div>
-			</section>
-		);
-	}
+	render: ({children, classes, header, ...rest}) => (
+		<article {...rest} className={classes}>
+			<div name="header" className={css.header}>{header}</div>
+			<section className={css.body}>{children}</section>
+		</article>
+	)
 });
 
-const Panel = Slottable(PanelBase);
+const Panel = Slottable({slots: ['header']}, PanelBase);
 
 export default Panel;
-export {Panel, PanelBase};
+export {Panel, Panel as PanelBase};

@@ -1,0 +1,29 @@
+@import '../styles/variables.less';
+@import '../styles/text.less';
+
+.header {
+	.moon-header-font();
+	margin: 0 12px;
+
+	.super {
+		.moon-super-header-text();
+	}
+	h1 {
+		.moon-header-text();
+		margin: 0;
+	}
+	h2 {
+		.moon-sub-header-text();
+		margin: 0;
+		.margin-start-end(0, @moon-spotlight-outset);
+		line-height: 45px;
+		float: left;
+		clear: left;
+	}
+	h2+h2 {
+		.moon-header-sub-title-below();
+	}
+
+	.headerComponents {
+	}
+}

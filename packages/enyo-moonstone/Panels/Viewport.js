@@ -1,5 +1,6 @@
 import kind from 'enyo-core/kind';
 import ViewManager, {shape} from 'enyo-ui/ViewManager';
+import invariant from 'invariant';
 import React from 'react';
 
 import css from './Panels.less';
@@ -54,19 +55,27 @@ const Viewport = kind({
 		classes: 'viewport'
 	},
 
-	render: ({noAnimation, arranger, children, classes, index, ...rest}) => (
-		<ViewManager
-			{...rest}
-			noAnimation={noAnimation}
-			arranger={arranger}
-			className={classes}
-			duration={300}
-			index={index}
-			component="main"
-		>
-			{children}
-		</ViewManager>
-	)
+	render: ({noAnimation, arranger, children, classes, index, ...rest}) => {
+		const count = React.Children.count(children);
+		invariant(
+			index === 0 && count === 0 || index < count,
+			`Panels index, ${index}, is invalid for number of children, ${count}`
+		);
+
+		return (
+			<ViewManager
+				{...rest}
+				noAnimation={noAnimation}
+				arranger={arranger}
+				className={classes}
+				duration={300}
+				index={index}
+				component="main"
+			>
+				{children}
+			</ViewManager>
+		);
+	}
 });
 
 export default Viewport;

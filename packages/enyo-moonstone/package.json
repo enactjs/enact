@@ -42,6 +42,8 @@
     "enyo-core": "enyojs/enyo-core#develop",
     "enyo-i18n": "github:enyojs/enyo-i18n#develop",
     "enyo-spotlight": "enyojs/enyo-spotlight#develop",
-    "enyo-ui": "enyojs/enyo-ui#develop"
+    "enyo-ui": "enyojs/enyo-ui#develop",
+    "invariant": "^2.2.1",
+    "warning": "^3.0.0"
   }
 }

@@ -1,6 +1,7 @@
 import {kind, hoc} from 'enyo-core';
 import {coerceFunction} from 'enyo-core/util';
 import ViewManager from 'enyo-ui/ViewManager';
+import invariant from 'invariant';
 import React from 'react';
 
 import Breadcrumb from './Breadcrumb';
@@ -59,6 +60,13 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				React.PropTypes.func,							// generator
 				React.PropTypes.arrayOf(React.PropTypes.node)	// static array of breadcrumbs
 			]),
+
+			/**
+			 * Panels to be rendered
+			 *
+			 * @type {React.node}
+			 */
+			children: React.PropTypes.node,
 
 			/**
 			 * Index of the active panel
@@ -124,8 +132,15 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		},
 
-		render: ({noAnimation, breadcrumbs, classes, index, ...rest}) => {
+		render: ({noAnimation, breadcrumbs, children, classes, index, ...rest}) => {
 			delete rest.onSelectBreadcrumb;
+			delete rest.className;
+
+			const count = React.Children.count(children);
+			invariant(
+				index === 0 && count === 0 || index < count,
+				`Panels index, ${index}, is invalid for number of children, ${count}`
+			);
 
 			return (
 				<div className={classes}>
@@ -140,7 +155,9 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					>
 						{breadcrumbs}
 					</ViewManager>
-					<Wrapped {...rest} noAnimation={noAnimation} index={index} {...config.props} />
+					<Wrapped {...rest} noAnimation={noAnimation} index={index} {...config.props}>
+						{children}
+					</Wrapped>
 				</div>
 			);
 		}
