@@ -86,7 +86,8 @@ const TransitionBase = kind({
 
 	styles: {
 		css,
-		classes: 'transitionFrame'
+		className: 'transitionFrame',
+		prop: 'classes'
 	},
 
 	computed: {
