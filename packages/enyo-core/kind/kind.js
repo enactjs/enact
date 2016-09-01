@@ -4,6 +4,9 @@ import name from './name';
 import propTypes from './propTypes';
 import styles from './styles';
 
+// eslint-disable-next-line no-undef
+const __DEV__ = process.env.NODE_ENV === 'development';
+
 /**
  * Creates a stateless functional component with some helpful declarative sugar.
  *
@@ -57,6 +60,9 @@ const kind = (config) => {
 	if (config.name) name(config.name, render);
 	if (config.propTypes) propTypes(config.propTypes, render);
 	if (config.defaultProps) defaultProps(config.defaultProps, render);
+
+	// Decorate the SFC with the computed property object in DEV for easier testability
+	if (__DEV__ && config.computed) render.computed = config.computed;
 
 	return render;
 };
