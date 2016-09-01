@@ -18,11 +18,11 @@ import styles from './styles';
  *		defaultProps: {
  *			color: 'green'
  *		},
- *		// configure styles with the static classes to merge with user className
+ *		// configure styles with the static className to merge with user className
  *		styles: {
  *			// include the CSS modules map so 'button' can be resolved to the local name
  *			css,
- *			classes: 'button'
+ *			className: 'button'
  *		},
  *		// add some computed properties
  *		computed: {

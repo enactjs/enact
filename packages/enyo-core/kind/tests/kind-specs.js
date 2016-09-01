@@ -16,15 +16,15 @@ describe('kind', () => {
 			label: 'Label'
 		},
 		styles: {
-			classes: 'kind'
+			className: 'kind'
 		},
 		computed: {
 			value: ({prop}) => prop + 1
 		},
-		render: ({label, value, classes, ...rest}) => {
+		render: ({label, value, ...rest}) => {
 			delete rest.prop;
 			return (
-				<div {...rest} className={classes} title={label}>
+				<div {...rest} title={label}>
 					{value}
 				</div>
 			);
@@ -65,7 +65,7 @@ describe('kind', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should add classes defined in styles', function () {
+	it('Should add className defined in styles', function () {
 		const subject = mount(
 			<Kind prop={1} />
 		);

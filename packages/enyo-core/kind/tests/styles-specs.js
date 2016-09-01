@@ -9,76 +9,76 @@ describe('styles', () => {
 		client: 'unambiguous-button-class-name-client'
 	};
 
-	// classes tests
+	// className tests
 
-	it('Should add cfg.classes to props', function () {
+	it('Should add cfg.className to props', function () {
 		const cfg = {
-			classes: 'button'
+			className: 'button'
 		};
 
 		const updated = styles(cfg, {});
 
-		const expected = cfg.classes;
-		const actual = updated.classes;
+		const expected = cfg.className;
+		const actual = updated.className;
 
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should resolve cfg.classes to the cfg.css map', function () {
+	it('Should resolve cfg.className to the cfg.css map', function () {
 		const cfg = {
 			css,
-			classes: 'button'
+			className: 'button'
 		};
 
 		const updated = styles(cfg, {});
 
 		const expected = css.button;
-		const actual = updated.classes;
+		const actual = updated.className;
 
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should pass through props.className when cfg.classes absent', function () {
+	it('Should pass through props.className when cfg.className absent', function () {
 		const props = {
 			className: 'button'
 		};
 		const updated = styles({}, props);
 
 		const expected = props.className;
-		const actual = updated.classes;
+		const actual = updated.className;
 
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should append cfg.classes with props.className', function () {
+	it('Should append cfg.className with props.className', function () {
 		const props = {
 			className: 'custom-button'
 		};
 		const cfg = {
-			classes: 'button'
+			className: 'button'
 		};
 
 		const updated = styles(cfg, props);
 
-		const expected = cfg.classes + ' ' + props.className;
-		const actual = updated.classes;
+		const expected = props.className;
+		const actual = updated.className;
 
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should resolve cfg.classes and append with props.className', function () {
+	it('Should resolve cfg.className and append with props.className', function () {
 		const props = {
 			className: 'custom-button'
 		};
 		const cfg = {
 			css,
-			classes: 'button'
+			className: 'button'
 		};
 
 		const updated = styles(cfg, props);
 
-		const expected = css.button + ' ' + props.className;
-		const actual = updated.classes;
+		const expected = props.className;
+		const actual = updated.className;
 
 		expect(actual).to.equal(expected);
 	});
@@ -188,7 +188,7 @@ describe('styles', () => {
 	it('Should not resolve author classes to css map', function () {
 		const cfg = {
 			css,
-			classes: 'button'
+			className: 'button'
 		};
 		const props = {
 			className: 'button'
@@ -196,15 +196,15 @@ describe('styles', () => {
 		const updated = styles(cfg, props);
 
 		const expected = css.button + ' button';
-		const actual = updated.classes;
+		const actual = updated.className;
 
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should append resolved class names to props.classes', function () {
+	it('Should append resolved class names to props.className', function () {
 		const cfg = {
 			css,
-			classes: 'button'
+			className: 'button'
 		};
 		const props = {
 			className: 'button'

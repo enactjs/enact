@@ -17,13 +17,13 @@ const propOrSelf = R.curryN(2, (b, a) => R.propOr(a, a, b));
 // the class names to their css-modules name
 const resolveClassNames = R.useWith(R.compose(R.join(' '), R.map), [propOrSelf, R.split(' ')]);
 
-// If css and classes are truthy, resolve the classes. Otherwise, return classes defaulted to ''
+// If css and className are truthy, resolve the className. Otherwise, return className defaulted to ''
 const resolveOrSelf = R.ifElse(R.and, resolveClassNames, R.flip(R.defaultTo('')));
 
-// Takes a styles config object and either resolves `classes` with `css` or `classes` iself
-const localClassName = R.compose(R.apply(resolveOrSelf), R.props(['css', 'classes']));
+// Takes a styles config object and either resolves `className` with `css` or `className` iself
+const localClassName = R.compose(R.apply(resolveOrSelf), R.props(['css', 'className']));
 
-// Merges the locally-resolved classes and the className from the props
+// Merges the locally-resolved className and the className from the props
 const mergeClassName = R.useWith(bothOrEither(joinClasses), [localClassName, R.prop('className')]);
 
 // Merges the local style object and the style object from the props
@@ -48,13 +48,13 @@ const join = (cfg) => {
 /**
  * Creates the `append()` method of the styler
  *
- * @param {Object} props Render props updated by styles with `classes` and `styler.join`
+ * @param {Object} props Render props updated by styles with `className` and `styler.join`
  * @returns {Function} `append()`
  * @method append
  */
 const append = (props) => {
 	const j = props.styler.join;
-	return props.classes ? R.compose(joinClasses(props.classes), j) : j;
+	return props.className ? R.compose(joinClasses(props.className), j) : j;
 };
 
 /**
@@ -68,7 +68,7 @@ const append = (props) => {
  *			button: 'unambiguous-button-class-name',
  *			client: 'unambiguous-button-class-name-client'
  *		},
- *		classes: 'button global-class',
+ *		className: 'button global-class',
  *		style: {
  *			color: 'red'
  *		}
@@ -84,21 +84,23 @@ const append = (props) => {
  *	styles(stylesConfig, props); // {className: 'unambiguous-button-class-name global-class', styles: {color: 'red', display: 'none'}}
  *
  * @method styles
- * @param {Object} cfg Configuration object containing one of `css`, `classes`, and/or `style`
+ * @param {Object} cfg Configuration object containing one of `css`, `className`, and/or `style`
  * @param {Object} props Render props
  * @returns {Function} Function accepting props and returning update props with computed properties
  * @public
  */
 const styles = (cfg, props) => {
-	props.style = mergeStyle(cfg, props);
+	const prop = cfg.prop || 'className';
 
-	// classes and styler should not be automatically spread onto children
-	addInternalProp(props, 'classes', mergeClassName(cfg, props));
+	props.style = mergeStyle(cfg, props);
+	props[prop] = mergeClassName(cfg, props);
+
+	// styler should not be automatically spread onto children
 	addInternalProp(props, 'styler', {
 		join: join(cfg)
 	});
 
-	// append requires the computed classes property so it is built off the updated props rather
+	// append requires the computed className property so it is built off the updated props rather
 	// than the provided props
 	props.styler.append = append(props);
 	return props;
