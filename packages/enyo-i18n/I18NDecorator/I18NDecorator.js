@@ -1,3 +1,4 @@
+import hoc from 'enyo-core/hoc';
 import React from 'react';
 
 import '../src/glue';
@@ -8,21 +9,7 @@ const contextTypes = {
 	updateLocale: React.PropTypes.func
 };
 
-// Should be in enyo-core
-const hoc = (defaultConfig, hawk) => (config, maybeWrapped) => {
-	if (typeof config === 'function') {
-		return hawk(defaultConfig, config);
-	} else {
-		const cfg = Object.assign({}, defaultConfig, config);
-		if (typeof maybeWrapped === 'function') {
-			return hawk(cfg, maybeWrapped);
-		} else {
-			return (Wrapped) => hawk(cfg, Wrapped);
-		}
-	}
-};
-
-const IntlHoc = hoc(null, (config, Wrapped) => {
+const IntlHoc = hoc((config, Wrapped) => {
 	return class I18NDecorator extends React.Component {
 		static childContextTypes = contextTypes
 		static propTypes = {

@@ -41,6 +41,7 @@
     "enyo-config": "enyojs/enyo-config"
   },
   "dependencies": {
+    "enyo-core": "enyojs/enyo-core#develop",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
     "ramda": "^0.21.0",
