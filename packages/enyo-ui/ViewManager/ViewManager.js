@@ -22,14 +22,6 @@ class ViewManager extends React.Component {
 
 	static propTypes = {
 		/**
-		 * Indicates if the transition should be animated
-		 *
-		 * @type {Boolean}
-		 * @default true
-		 */
-		animate: React.PropTypes.bool,
-
-		/**
 		 * Arranger to control the animation
 		 *
 		 * @type {Arranger}
@@ -80,6 +72,23 @@ class ViewManager extends React.Component {
 		index: React.PropTypes.number,
 
 		/**
+		 * Indicates if the transition should be animated
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 */
+		noAnimation: React.PropTypes.bool,
+
+		/**
+		 * Explicitly sets the transition direction. If omitted, the direction is determined
+		 * automaticallly based on the change of index or a string comparison of the first child's
+		 * key
+		 *
+		 * @type {Boolean}
+		 */
+		reverseTransition: React.PropTypes.bool,
+
+		/**
 		 * Index of first visible view. Defaults to the current value of `index`.
 		 *
 		 * @type {Number}
@@ -116,24 +125,19 @@ class ViewManager extends React.Component {
 	 * @returns {undefined}
 	 */
 	checkReverse (nextProps) {
-		if (this.props.index !== nextProps.index) {
-			this.reverse = this.props.index > nextProps.index;
+		// null or undefined => determine automatically
+		if (nextProps.reverseTransition != null) {
+			this.reverseTransition = !!nextProps.reverseTransition;
+		} else if (this.props.index !== nextProps.index) {
+			this.reverseTransition = this.props.index > nextProps.index;
 		} else {
-			const prevChildren = React.Children.toArray(this.props.children);
-			const nextChildren = React.Children.toArray(nextProps.children);
-
-			// short-circuit for the common case of swapping out 1 child
-			if (prevChildren.length === 1 && nextChildren.length === 1) {
-				this.reverse = prevChildren[0].key > nextChildren[0].key;
-			} else {
-				// not yet implemented
-			}
+			this.reverseTransition = false;
 		}
 	}
 
 	render () {
-		const {children, arranger, animate, duration, index, start, end, ...rest} = this.props;
-		const {previousIndex, reverse} = this;
+		const {children, arranger, noAnimation, duration, index, start, end, ...rest} = this.props;
+		const {previousIndex, reverseTransition} = this;
 		const childrenList = React.Children.toArray(children);
 
 		const from = (start || start === 0) ? start : index;
@@ -141,7 +145,9 @@ class ViewManager extends React.Component {
 		const size = to - from + 1;
 
 		const views = childrenList.slice(from, to + 1);
-		const childFactory = wrapWithView({duration, arranger, animate, index, previousIndex, reverse});
+		const childFactory = wrapWithView({duration, arranger, noAnimation, index, previousIndex, reverseTransition});
+
+		delete rest.reverseTransition;
 
 		return (
 			<TransitionGroup {...rest} childFactory={childFactory} size={size + 1}>

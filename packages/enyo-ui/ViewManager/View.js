@@ -19,14 +19,6 @@ class View extends React.Component {
 		duration: React.PropTypes.number.isRequired,
 
 		/**
-		 * Indicates if the transition should be animated
-		 *
-		 * @type {Boolean}
-		 * @default true
-		 */
-		animate: React.PropTypes.bool,
-
-		/**
 		 * Arranger to control the animation
 		 *
 		 * @type {Arranger}
@@ -39,6 +31,14 @@ class View extends React.Component {
 		 * @type {Number}
 		 */
 		index: React.PropTypes.number,
+
+		/**
+		 * Indicates if the transition should be animated
+		 *
+		 * @type {Boolean}
+		 * @default true
+		 */
+		noAnimation: React.PropTypes.bool,
 
 		/**
 		 * Index of the previously 'active' view.
@@ -54,11 +54,7 @@ class View extends React.Component {
 		 * @type {Boolean}
 		 * @default false
 		 */
-		reverse: React.PropTypes.bool
-	}
-
-	static defaultProps = {
-		animate: true
+		reverseTransition: React.PropTypes.bool
 	}
 
 	constructor (props) {
@@ -81,7 +77,7 @@ class View extends React.Component {
 
 	componentWillReceiveProps (nextProps) {
 		// changeDirection let's us know we need to switch mid-transition
-		this.changeDirection = this.state.step ? this.props.reverse !== nextProps.reverse : false;
+		this.changeDirection = this.state.step ? this.props.reverseTransition !== nextProps.reverseTransition : false;
 	}
 
 	componentWillUnmount () {
@@ -92,9 +88,9 @@ class View extends React.Component {
 	// TransitionGroup. It will block other animations from occurring until callback is called. It
 	// will not be called on the initial render of a TransitionGroup.
 	componentWillEnter (callback) {
-		const {arranger, reverse} = this.props;
+		const {arranger, reverseTransition} = this.props;
 		if (arranger) {
-			this.prepareTransition(reverse ? arranger.leave : arranger.enter, callback);
+			this.prepareTransition(reverseTransition ? arranger.leave : arranger.enter, callback);
 		} else {
 			callback();
 		}
@@ -113,9 +109,9 @@ class View extends React.Component {
 	// child has been removed, ReactTransitionGroup will keep it in the DOM until callback is
 	// called.
 	componentWillLeave (callback) {
-		const {arranger, reverse} = this.props;
+		const {arranger, reverseTransition} = this.props;
 		if (arranger) {
-			this.prepareTransition(reverse ? arranger.enter : arranger.leave, callback);
+			this.prepareTransition(reverseTransition ? arranger.enter : arranger.leave, callback);
 		} else {
 			callback();
 		}
@@ -129,7 +125,7 @@ class View extends React.Component {
 	 * @returns {undefined}
 	 */
 	prepareTransition = (arranger, callback) => {
-		const {animate, duration, index, previousIndex, reverse} = this.props;
+		const {noAnimation, duration, index, previousIndex, reverseTransition} = this.props;
 		const steps = Math.ceil(duration / TICK);
 		/* eslint react/no-find-dom-node: "off" */
 		const node = ReactDOM.findDOMNode(this);
@@ -140,12 +136,12 @@ class View extends React.Component {
 
 			// percent is the ratio (between 0 and 1) of the current step to the total steps
 			const percent = step / steps;
-			if (animate && percent < 1) {
+			if (!noAnimation && percent < 1) {
 				// the transition is still in progress so call the arranger
 				arranger({
 					node,
 					percent,
-					reverse,
+					reverseTransition,
 					from: previousIndex,
 					to: index
 				});
@@ -158,7 +154,7 @@ class View extends React.Component {
 				arranger({
 					node,
 					percent: 1,
-					reverse,
+					reverseTransition,
 					from: previousIndex,
 					to: index
 				});

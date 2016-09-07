@@ -47,11 +47,11 @@ export const slideOutPartial = slideInOut('out');
 export const slideIn = slideInPartial(100);
 export const slideOut = slideOutPartial(100);
 
-export const reverse = R.curry((fn, {reverse: rev, percent, ...rest}) => {
+export const reverse = R.curry((fn, {reverseTransition, percent, ...rest}) => {
 	fn({
 		...rest,
-		percent: rev ? 1 - percent : percent,
-		reverse: rev
+		percent: reverseTransition ? 1 - percent : percent,
+		reverseTransition
 	});
 });
 

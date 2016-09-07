@@ -85,9 +85,9 @@ describe('ViewManager', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should have 1 child immediately after setting new {index} with an {arranger} and {animate} is false', function () {
+	it('should have 1 child immediately after setting new {index} with an {arranger} and {noAnimation} is false', function () {
 		const subject = mount(
-			<ViewManager index={3} arranger={SlideLeftArranger} animate={false}>
+			<ViewManager index={3} arranger={SlideLeftArranger} noAnimation>
 				<div className="view">View 1</div>
 				<div className="view">View 2</div>
 				<div className="view">View 3</div>
