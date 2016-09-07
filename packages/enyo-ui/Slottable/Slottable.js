@@ -1,6 +1,7 @@
+import {kind, hoc} from 'enyo-core';
 import R from 'ramda';
 import React from 'react';
-import {kind, hoc} from 'enyo-core';
+import warning from 'warning';
 
 // ** WARNING ** This is an intentional but likely dangerous hack necessary to clone a child while
 // omitting the `slot` property. It relies on the black box structure of a React element which could
@@ -20,8 +21,12 @@ const distributeChild = (child, index, slots, props) => {
 
 	if (!React.isValidElement(child)) {
 		return false;
-	} else if (hasSlot(slot = child.props.slot)) {
-		c = cloneElement(child, null, {key: index}, 'slot');
+	} else if (child.props.slot) {
+		const hasUserSlot = hasSlot(slot = child.props.slot);
+		warning(hasUserSlot, 'The slot "%s" specified on %s does not exist', child.props.slot,
+			typeof child.type === 'string' ? child.type : (child.type.name || child.type.displayName || 'component')
+		);
+		c = hasUserSlot && cloneElement(child, null, {key: index}, 'slot');
 	} else if (hasSlot(slot = child.type.defaultSlot)) {
 		c = child;
 	} else if (hasSlot(slot = child.type)) {

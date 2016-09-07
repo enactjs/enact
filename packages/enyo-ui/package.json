@@ -39,6 +39,7 @@
   },
   "dependencies": {
     "enyo-core": "enyojs/enyo-core#develop",
-    "recompose": "^0.20.2"
+    "recompose": "^0.20.2",
+    "warning": "^3.0.0"
   }
 }
