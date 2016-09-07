@@ -26,8 +26,6 @@
 	}
 
 	.valueWrapper {
-		.moon-large-button-text();
-
 		overflow: hidden;
 		vertical-align: bottom;
 		color: inherit;
@@ -67,15 +65,19 @@
 			transform: scale(0.8);
 		}
 
+		.valueWrapper {
+			.moon-large-button-text();
+
+			height: @moon-button-height;
+			line-height: @moon-button-height;
+		}
+
 		&.horizontal {
 			&.incrementing:before {
 				border-right-width: @moon-integer-picker-shadow-width;
 			}
 			&.decrementing:before {
 				border-left-width: @moon-integer-picker-shadow-width;
-			}
-			.valueWrapper {
-				line-height: @moon-button-height;
 			}
 			.incrementer,
 			.decrementer {
@@ -95,11 +97,8 @@
 			.valueWrapper {
 				padding: 0 1ex;
 			}
-
 			.incrementer,
 			.decrementer {
-				height: @button-width;
-				line-height: @button-width;
 				display: block;
 			}
 		}
@@ -128,6 +127,19 @@
 	}
 	&.large .valueWrapper {
 		width: 300px;
+	}
+
+	&.small,
+	&.medium,
+	&.large {
+		.valueWrapper {
+			position: relative;
+
+			.item {
+				position: absolute;
+				.position(0);
+			}
+		}
 	}
 
 	&.vertical .valueWrapper {

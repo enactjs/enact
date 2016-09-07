@@ -4,7 +4,7 @@ import {ease, replaceTransform, startAfter} from 'enyo-ui/ViewManager/arrange';
 /**
  * Panel arrangers have a unique design requirement that varies their transition depending on the
  * direction (reverse) of the transition. This takes the two arrangement functions and returns
- * another function that picks which to call based on the value of `reverse`.
+ * another function that picks which to call based on the value of `reverseTransition`.
  *
  * @param {Function} f forward function
  * @param {Function} b backward function
@@ -12,7 +12,7 @@ import {ease, replaceTransform, startAfter} from 'enyo-ui/ViewManager/arrange';
  * @method
  */
 const forwardBackward = (f, b) => (config) => {
-	const f2 = config.reverse ? b : f;
+	const f2 = config.reverseTransition ? b : f;
 	f2(config);
 };
 

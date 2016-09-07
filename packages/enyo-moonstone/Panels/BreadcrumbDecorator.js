@@ -50,14 +50,6 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		propTypes: {
 			/**
-			 * Breadcrumb transitions will be animated when `true`
-			 *
-			 * @type {Boolean}
-			 * @default true
-			 */
-			animate: React.PropTypes.bool,
-
-			/**
 			 * Array of breadcrumbs or a function that generates an array of breadcrumbs
 			 *
 			 * @type {Function|node[]}
@@ -77,6 +69,14 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			index: React.PropTypes.number,
 
 			/**
+			 * Disable breadcrumb transitions
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 */
+			noAnimation: React.PropTypes.bool,
+
+			/**
 			 * Handler called when a breadcrumb is clicked. The payload includes the `index` of the
 			 * selected breadcrumb
 			 *
@@ -86,7 +86,6 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		},
 
 		defaultProps: {
-			animate: true,
 			breadcrumbs: IndexedBreadcrumbs,
 			index: 0
 		},
@@ -125,13 +124,13 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		},
 
-		render: ({animate, breadcrumbs, classes, index, ...rest}) => {
+		render: ({noAnimation, breadcrumbs, classes, index, ...rest}) => {
 			delete rest.onSelectBreadcrumb;
 
 			return (
 				<div className={classes}>
 					<ViewManager
-						animate={animate}
+						noAnimation={noAnimation}
 						arranger={BreadcrumbArranger}
 						className={css.breadcrumbs}
 						index={index - 1}
@@ -141,7 +140,7 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					>
 						{breadcrumbs}
 					</ViewManager>
-					<Wrapped {...rest} animate={animate} index={index} {...config.props} />
+					<Wrapped {...rest} noAnimation={noAnimation} index={index} {...config.props} />
 				</div>
 			);
 		}

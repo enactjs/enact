@@ -14,14 +14,6 @@ const Viewport = kind({
 
 	propTypes: {
 		/**
-		 * Panel transitions will be animated when `true`
-		 *
-		 * @type {Boolean}
-		 * @default true
-		 */
-		animate: React.PropTypes.bool,
-
-		/**
 		 * Set of functions that control how the panels are transitioned into and out of the
 		 * viewport
 		 *
@@ -42,11 +34,18 @@ const Viewport = kind({
 		 * @type {Number}
 		 * @default 0
 		 */
-		index: React.PropTypes.number
+		index: React.PropTypes.number,
+
+		/**
+		 * Disable panel transitions
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 */
+		noAnimation: React.PropTypes.bool
 	},
 
 	defaultProps: {
-		animate: true,
 		index: 0
 	},
 
@@ -55,10 +54,10 @@ const Viewport = kind({
 		classes: 'viewport'
 	},
 
-	render: ({animate, arranger, children, classes, index, ...rest}) => (
+	render: ({noAnimation, arranger, children, classes, index, ...rest}) => (
 		<ViewManager
 			{...rest}
-			animate={animate}
+			noAnimation={noAnimation}
 			arranger={arranger}
 			className={classes}
 			duration={300}

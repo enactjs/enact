@@ -7,14 +7,14 @@ import {breadcrumbWidth} from './Breadcrumb';
 /**
  * Panel arrangers have a unique design requirement that varies their transition depending on the
  * direction (reverse) of the transition. This takes the two arrangement functions and returns
- * another function that picks which to call based on the value of `reverse`.
+ * another function that picks which to call based on the value of `reverseTransition`.
  *
  * @param {Function} f forward function
  * @param {Function} b backward function
  * @returns {Function} Arrangement function
  */
 const forwardBackward = (f, b) => (config) => {
-	const f2 = config.reverse ? b : f;
+	const f2 = config.reverseTransition ? b : f;
 	f2(config);
 };
 
@@ -69,7 +69,7 @@ const offsetForBreadcrumbs = ({node, percent}) => {
 // transitioning to any panel other than the first and also for the leave transition when moving to
 // the first panel because the active panel should start at the offset before moving right offscreen
 const toFirst = R.compose(R.equals(0), R.prop('to'));
-const toFirstReverse = R.both(toFirst, R.prop('reverse'));
+const toFirstReverse = R.both(toFirst, R.prop('reverseTransition'));
 const notToFirst = R.complement(toFirst);
 
 /**
