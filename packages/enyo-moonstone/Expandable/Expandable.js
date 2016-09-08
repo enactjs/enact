@@ -61,7 +61,7 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => kind({
 		noneText: PropTypes.string,
 
 		/**
-		 * Called to request to expandable be closed
+		 * Method to be called when a condition occurs which should cause the expandable to close
 		 *
 		 * @type {Function}
 		 * @default null
@@ -70,7 +70,7 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => kind({
 		onClose: PropTypes.func,
 
 		/**
-		 * Called to request the expandable be opened
+		 * Method to be called when a condition occurs which should cause the expandable to open
 		 *
 		 * @type {Function}
 		 * @default null
@@ -79,7 +79,7 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => kind({
 		onOpen: PropTypes.func,
 
 		// NOTE: considering removing onToggle as I can't see a good use for it once the History API
-		// is in place managing the state of `open`. It's adding complexity without a signficant
+		// is in place managing the state of `open`. It's adding complexity without a significant
 		// value, imo.
 
 		/**

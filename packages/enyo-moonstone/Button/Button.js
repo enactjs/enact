@@ -1,3 +1,10 @@
+/**
+ * Exports the {@link module:enyo-moonstone/Button~Button} and {@link module:enyo-moonstone/Button~ButtonBase}
+ * components.  The default export is {@link module:enyo-moonstone/Button~Button}.
+ *
+ * @module enyo-moonstone/Button
+ */
+
 import kind from 'enyo-core/kind';
 import Uppercase from 'enyo-i18n/Uppercase';
 import {Spottable} from 'enyo-spotlight';
@@ -7,20 +14,16 @@ import React, {PropTypes} from 'react';
 import css from './Button.less';
 
 /**
-* {@link module:moonstone/Button~Button} is an {@link module:enyo/Button~Button} with Moonstone styling applied.
-* The color of the button may be customized by specifying a background color.
-*
-* For more information, see the documentation on
-* [Buttons]{@linkplain $dev-guide/building-apps/controls/buttons.html} in the
-* Enyo Developer Guide.
-*
-* @class Button
-* @see module:enyo-i18n/Uppercase~Uppercase
-* @extends module:enyo/Button~Button
-* @mixes module:moonstone/MarqueeSupport~MarqueeSupport
-* @ui
-* @public
-*/
+ * {@link module:enyo-moonstone/Button~ButtonBase} is a stateless Button with Moonstone styling
+ * applied.  If the Button's child component is text, it will be uppercased unless `preserveCase` is
+ * set.  In most circumstances, you will want to use the Pressable and Spottable version:
+ * {@link module:enyo-moonstone/Button~Button}
+ *
+ * @class ButtonBase
+ * @mixes module:enyo-i18n/Uppercase
+ * @ui
+ * @public
+ */
 const ButtonBase = kind({
 	name: 'Button',
 
@@ -129,6 +132,23 @@ const ButtonBase = kind({
 
 const UcButtonBase = Uppercase(ButtonBase);
 
+/**
+ * {@link module:enyo-moonstone/Button~Button} is a Button with Moonstone styling, Spottable and
+ * Pressable applied.  If the Button's child component is text, it will be uppercased unless
+ * `preserveCase` is set.
+ *
+ * Usage:
+ * ```
+ * <Button>Press me!</Button>
+ * ```
+ *
+ * @class Button
+ * @see module:enyo-i18n/Uppercase
+ * @mixes module:enyo-spotlight/Spottable
+ * @mixes module:enyo-ui/Pressable
+ * @ui
+ * @public
+ */
 const Button = Spottable(Pressable(UcButtonBase));
 
 export default Button;

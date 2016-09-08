@@ -14,6 +14,15 @@ const Routable = hoc((config, Wrapped) => kind({
 	name: 'Routable',
 
 	propTypes: {
+		/**
+		 * Path of this element.
+		 *
+		 * May either be a URI-style path (`'/app/home/settings'`) or an array
+		 * of strings (`['app', 'home', 'settings']`)
+		 *
+		 * @type {String|String[]}
+		 * @public
+		 */
 		path: propTypes.path.isRequired,
 
 		/**
