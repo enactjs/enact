@@ -1,0 +1,21 @@
+{
+  "name": "enyo-lerna",
+  "version": "0.1.0",
+  "description": "Monorepo for all next-gen Enyo frontend libraries.",
+  "homepage": "http://enyojs.com/",
+  "bugs": "http://jira.enyojs.com/",
+  "maintainers": [
+    {
+      "name": "Enyo JS Framework Team",
+      "web": "http://enyojs.com/"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/enyojs/enyo-core.git"
+  },
+  "private": true,
+  "devDependencies": {
+    "lerna": "2.0.0-beta.27"
+  }
+}
