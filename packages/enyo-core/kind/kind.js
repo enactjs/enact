@@ -4,9 +4,6 @@ import name from './name';
 import propTypes from './propTypes';
 import styles from './styles';
 
-// eslint-disable-next-line no-undef
-const __DEV__ = process.env.NODE_ENV === 'development';
-
 /**
  * Creates a stateless functional component with some helpful declarative sugar.
  *
