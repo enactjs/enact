@@ -17,11 +17,11 @@ const Panels = kind({
 
 	styles: {
 		css,
-		classes: 'panels enyo-fit'
+		className: 'panels enyo-fit'
 	},
 
-	render: ({noAnimation, arranger, children, classes, index, ...rest}) => (
-		<div {...rest} className={classes}>
+	render: ({noAnimation, arranger, children, index, ...rest}) => (
+		<div {...rest}>
 			<Viewport noAnimation={noAnimation} arranger={arranger} index={index}>
 				{children}
 			</Viewport>

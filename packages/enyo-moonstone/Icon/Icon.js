@@ -19,7 +19,7 @@ const Icon = kind({
 
 	styles: {
 		css,
-		classes: 'icon'
+		className: 'icon'
 	},
 
 	computed: {

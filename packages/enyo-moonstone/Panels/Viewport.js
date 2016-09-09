@@ -47,15 +47,16 @@ const Viewport = kind({
 	},
 
 	defaultProps: {
-		index: 0
+		index: 0,
+		noAnimation: false
 	},
 
 	styles: {
 		css,
-		classes: 'viewport'
+		className: 'viewport'
 	},
 
-	render: ({noAnimation, arranger, children, classes, index, ...rest}) => {
+	render: ({arranger, children, index, noAnimation, ...rest}) => {
 		const count = React.Children.count(children);
 		invariant(
 			index === 0 && count === 0 || index < count,
@@ -67,7 +68,6 @@ const Viewport = kind({
 				{...rest}
 				noAnimation={noAnimation}
 				arranger={arranger}
-				className={classes}
 				duration={300}
 				index={index}
 				component="main"

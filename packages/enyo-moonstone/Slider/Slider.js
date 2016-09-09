@@ -45,7 +45,7 @@ const SliderBase = kind({
 
 	styles: {
 		css: css,
-		classes: 'slider'
+		className: 'slider'
 	},
 
 	computed: {

@@ -69,7 +69,7 @@ const ProgressBar = kind({
 
 	styles: {
 		css,
-		classes: 'progressBar'
+		className: 'progressBar'
 	},
 
 	computed: {

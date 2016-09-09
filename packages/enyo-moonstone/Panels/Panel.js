@@ -18,11 +18,11 @@ const PanelBase = kind({
 
 	styles: {
 		css,
-		classes: 'panel'
+		className: 'panel'
 	},
 
-	render: ({children, classes, header, ...rest}) => (
-		<article {...rest} className={classes}>
+	render: ({children, header, ...rest}) => (
+		<article {...rest}>
 			<div name="header" className={css.header}>{header}</div>
 			<section className={css.body}>{children}</section>
 		</article>

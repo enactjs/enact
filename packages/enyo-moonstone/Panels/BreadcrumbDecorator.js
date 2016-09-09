@@ -17,7 +17,7 @@ const defaultConfig = {
 	 * @type {string}
 	 * @default null
 	 */
-	classes: null,
+	className: null,
 
 	/**
 	 * Maximum number of breadcrumbs to display. If a function, it will be called on render to
@@ -95,12 +95,13 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		defaultProps: {
 			breadcrumbs: IndexedBreadcrumbs,
-			index: 0
+			index: 0,
+			noAnimation: false
 		},
 
 		styles: {
 			css,
-			classes: config.classes
+			className: config.className
 		},
 
 		computed: {
@@ -132,9 +133,8 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		},
 
-		render: ({noAnimation, breadcrumbs, children, classes, index, ...rest}) => {
+		render: ({noAnimation, breadcrumbs, children, className, index, ...rest}) => {
 			delete rest.onSelectBreadcrumb;
-			delete rest.className;
 
 			const count = React.Children.count(children);
 			invariant(
@@ -143,7 +143,7 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			);
 
 			return (
-				<div className={classes}>
+				<div className={className}>
 					<ViewManager
 						noAnimation={noAnimation}
 						arranger={BreadcrumbArranger}

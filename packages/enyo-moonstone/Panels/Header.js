@@ -34,7 +34,6 @@ const HeaderBase = kind({
 		 * remain unchanged.
 		 * Uses [Uppercase HOC]{@link module:enyo-i18n/Uppercase~Uppercase} and mirrors the
 		 * [preserveCase prop]{@link module:enyo-i18n/Uppercase~Uppercase#preserveCase}
-		 * Sub-title displayed at the bottom of the panel
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -77,11 +76,11 @@ const HeaderBase = kind({
 
 	styles: {
 		css,
-		classes: 'header'
+		className: 'header'
 	},
 
-	render: ({children, classes, preserveCase, subTitleBelow, title, titleAbove, titleBelow, ...rest}) => (
-		<header {...rest} className={classes}>
+	render: ({children, preserveCase, subTitleBelow, title, titleAbove, titleBelow, ...rest}) => (
+		<header {...rest}>
 			<div name="titleAbove" className={css.titleAbove}>{titleAbove}</div>
 			<UppercaseH1 name="title" className={css.title} preserveCase={preserveCase}>{title}</UppercaseH1>
 			<h2 name="titleBelow" className={css.titleBelow}>{titleBelow}</h2>

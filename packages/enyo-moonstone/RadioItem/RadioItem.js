@@ -15,7 +15,7 @@ const RadioItemBase = kind({
 
 	styles: {
 		css,
-		classes: 'radioItem'
+		className: 'radioItem'
 	},
 
 	computed: {
@@ -25,8 +25,8 @@ const RadioItemBase = kind({
 		)
 	},
 
-	render: ({classes, ...rest}) => (
-		<ToggleItemBase {...rest} className={classes} icon=" " multi={false} />
+	render: (props) => (
+		<ToggleItemBase {...props} icon=" " multi={false} />
 	)
 });
 

@@ -27,11 +27,11 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		styles: {
 			css,
-			classes: 'moon enyo-fit enyo-unselectable'
+			className: 'moon enyo-fit enyo-unselectable'
 		},
 
-		render: ({classes, ...rest}) => (
-			<App {...rest} className={classes} />
+		render: (props) => (
+			<App {...props} />
 		)
 	});
 });

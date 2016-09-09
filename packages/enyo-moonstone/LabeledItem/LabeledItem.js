@@ -15,11 +15,11 @@ export default kind({
 
 	styles: {
 		css,
-		classes: 'labeleditem'
+		className: 'labeleditem'
 	},
 
-	render: ({classes, children, label, ...rest}) => (
-		<Item {...rest} className={classes}>
+	render: ({children, label, ...rest}) => (
+		<Item {...rest}>
 			<div className={css.text}>{children}</div>
 			{(label != null) ? (<div className={css.label}>{label}</div>) : null}
 		</Item>

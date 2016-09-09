@@ -15,7 +15,7 @@ const CheckboxItemBase = kind({
 
 	styles: {
 		css,
-		classes: 'checkboxItem'
+		className: 'checkboxItem'
 	},
 
 	computed: {
@@ -25,8 +25,8 @@ const CheckboxItemBase = kind({
 		)
 	},
 
-	render: ({classes, ...rest}) => (
-		<ToggleItemBase {...rest} className={classes} icon="check" />
+	render: (props) => (
+		<ToggleItemBase {...props} icon="check" />
 	)
 });
 

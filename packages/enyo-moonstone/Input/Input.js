@@ -28,7 +28,7 @@ const PlainInput = kind({
 
 	styles: {
 		css,
-		classes: 'input'
+		className: 'input'
 	},
 
 	computed: {
@@ -56,8 +56,8 @@ const SpottablePlainInput = Spottable(kind({
 	}
 }));
 
-const icon = (which, props, classes) => {
-	return props[which] ? <Icon className={classes}>{props[which]}</Icon> : null;
+const icon = (which, props, className) => {
+	return props[which] ? <Icon className={className}>{props[which]}</Icon> : null;
 };
 
 class InputDecorator extends React.Component {

@@ -66,7 +66,7 @@ const ToggleButtonBase = kind({
 
 	styles: {
 		css,
-		classes: 'toggleButton'
+		className: 'toggleButton'
 	},
 
 	computed: {

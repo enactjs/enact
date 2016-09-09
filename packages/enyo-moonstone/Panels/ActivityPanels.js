@@ -11,7 +11,7 @@ import Viewport from './Viewport';
 * @public
 */
 const ActivityPanels = BreadcrumbDecorator({
-	classes: 'panels activity enyo-fit',
+	className: 'panels activity enyo-fit',
 	max: 1,
 	props: {
 		arranger: ActivityArranger

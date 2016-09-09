@@ -80,10 +80,10 @@ describe('BreadcrumbDecorator', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should add {config.classes} to the root node', function () {
-		const classes = 'root-node';
+	it('should add {config.className} to the root node', function () {
+		const className = 'root-node';
 		const StyledBreadcrumbPanels = BreadcrumbDecorator({
-			classes
+			className
 		}, Panels);
 
 		const subject = mount(
@@ -93,7 +93,7 @@ describe('BreadcrumbDecorator', () => {
 		);
 
 		const expected = true;
-		const actual = subject.find('div').first().hasClass(classes);
+		const actual = subject.find('div').first().hasClass(className);
 
 		expect(actual).to.equal(expected);
 	});

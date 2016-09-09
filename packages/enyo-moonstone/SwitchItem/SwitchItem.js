@@ -16,7 +16,7 @@ const SwitchItemBase = kind({
 
 	styles: {
 		css,
-		classes: 'switchItem'
+		className: 'switchItem'
 	},
 
 	computed: {
@@ -25,8 +25,8 @@ const SwitchItemBase = kind({
 		)
 	},
 
-	render: ({classes, iconElem, ...rest}) => (
-		<ToggleItemBase {...rest} className={classes} icon={iconElem} />
+	render: ({iconElem, ...rest}) => (
+		<ToggleItemBase {...rest} icon={iconElem} />
 	)
 });
 

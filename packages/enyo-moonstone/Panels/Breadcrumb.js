@@ -39,7 +39,7 @@ const BreadcrumbBase = kind({
 
 	styles: {
 		css,
-		classes: 'breadcrumb'
+		className: 'breadcrumb'
 	},
 
 	computed: {
@@ -49,8 +49,8 @@ const BreadcrumbBase = kind({
 		}
 	},
 
-	render: ({classes, children, index, onSelect, ...rest}) => (
-		<div {...rest} className={classes} data-index={index} onClick={onSelect}>
+	render: ({children, index, onSelect, ...rest}) => (
+		<div {...rest} data-index={index} onClick={onSelect}>
 			<div className={css.breadcrumbHeader}>
 				{children}
 			</div>

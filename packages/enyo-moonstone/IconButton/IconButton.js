@@ -16,12 +16,12 @@ const IconButton = kind({
 
 	styles: {
 		css,
-		classes: 'iconButton'
+		className: 'iconButton'
 	},
 
-	render: ({children, classes, small, ...rest}) => {
+	render: ({children, small, ...rest}) => {
 		return (
-			<Button {...rest} className={classes} small={small} minWidth={false}>
+			<Button {...rest} small={small} minWidth={false}>
 				<Icon small={small} className={css.icon}>{children}</Icon>
 			</Button>
 		);

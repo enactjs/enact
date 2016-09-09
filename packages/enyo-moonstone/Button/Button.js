@@ -105,7 +105,7 @@ const ButtonBase = kind({
 
 	styles: {
 		css,
-		classes: 'button'
+		className: 'button'
 	},
 
 	computed: {

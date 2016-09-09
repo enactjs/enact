@@ -24,7 +24,7 @@ const IncrementSliderBase = kind({
 
 	styles: {
 		css: css,
-		classes: 'incrementSlider'
+		className: 'incrementSlider'
 	},
 
 	computed: {

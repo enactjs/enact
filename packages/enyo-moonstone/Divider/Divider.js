@@ -31,15 +31,15 @@ const Divider = kind({
 
 	styles: {
 		css,
-		classes: 'divider'
+		className: 'divider'
 	},
 
 	computed: {
 		content: ({children}) => children.split(' ').map(cap).join(' ')
 	},
 
-	render: ({content, classes, ...rest}) => (
-		<h3 {...rest} className={classes}>{content}</h3>
+	render: ({content, ...rest}) => (
+		<h3 {...rest}>{content}</h3>
 	)
 });
 

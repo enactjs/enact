@@ -33,13 +33,13 @@ const ToggleItemBase = kind({
 
 	styles: {
 		css,
-		classes: 'toggleItem'
+		className: 'toggleItem'
 	},
 
 	computed: {
-		labelClasses: ({classes, inline, styler}) => styler.append(
+		className: ({className, inline, styler}) => styler.append(
 			itemCss.item,
-			classes,
+			className,
 			{inline}
 		),
 		iconElem: ({checked, icon, iconClasses, styler}) => (
@@ -48,14 +48,14 @@ const ToggleItemBase = kind({
 		type: ({multi}) => (multi ? 'checkbox' : 'radio')
 	},
 
-	render: ({labelClasses, iconElem, children, ...rest}) => {
+	render: ({className, iconElem, children, ...rest}) => {
 		delete rest.icon;
 		delete rest.iconClasses;
 		delete rest.inline;
 		delete rest.multi;
 
 		return (
-			<Item tag="label" className={labelClasses} disabled={rest.disabled}>
+			<Item tag="label" className={className} disabled={rest.disabled}>
 				<input {...rest} />
 				{iconElem}
 				{children}

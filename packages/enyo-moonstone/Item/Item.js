@@ -21,15 +21,15 @@ const ItemBase = kind({
 
 	styles: {
 		css,
-		classes: 'item'
+		className: 'item'
 	},
 
-	render: ({classes, tag: Tag, ...rest}) => {
+	render: ({tag: Tag, ...rest}) => {
 		delete rest.index;
 		delete rest.pressed;
 
 		return (
-			<Tag {...rest} className={classes} />
+			<Tag {...rest} />
 		);
 	}
 });
