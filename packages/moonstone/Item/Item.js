@@ -1,7 +1,6 @@
 import React, {PropTypes} from 'react';
 import kind from 'enact-core/kind';
 import {Spottable} from 'enact-spotlight';
-import Pressable from 'enact-ui/Pressable';
 
 import css from './Item.less';
 
@@ -34,7 +33,7 @@ const ItemBase = kind({
 	}
 });
 
-const Item = Spottable(Pressable(ItemBase));
+const Item = Spottable(ItemBase);
 
 export default Item;
 export {Item, ItemBase};

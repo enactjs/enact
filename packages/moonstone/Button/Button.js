@@ -149,7 +149,7 @@ const UcButtonBase = Uppercase(ButtonBase);
  * @ui
  * @public
  */
-const Button = Spottable(Pressable(UcButtonBase));
+const Button = Pressable(Spottable(UcButtonBase));
 
 export default Button;
 export {Button, UcButtonBase as ButtonBase};

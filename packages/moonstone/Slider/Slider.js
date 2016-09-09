@@ -118,7 +118,7 @@ class Slider extends React.Component {
 	}
 }
 
-const SpottableSlider = Spottable(Pressable(Slider));
+const SpottableSlider = Pressable(Spottable(Slider));
 
 export default SpottableSlider;
 export {SpottableSlider as Slider, SliderBase};

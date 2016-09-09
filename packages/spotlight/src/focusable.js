@@ -1,8 +1,8 @@
-import React, {PropTypes} from 'react';
+import hoc from 'enact-core/hoc';
 import R from 'ramda';
+import React, {PropTypes} from 'react';
 
 import Spotlight from './spotlight';
-import hoc from './hoc';
 import {decoratedProp} from './spottable';
 
 const defaultConfig = {
@@ -35,6 +35,7 @@ const SpotlightFocusableDecoratorHoC = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentDidUpdate (prevProps, prevState) {
 			if (this.state.forceFocusChange) {
+				// eslint-disable-next-line no-undefined
 				Spotlight.focus(this.state.innerElementFocused ? this.props.containerId : undefined);
 				this.setState({forceFocusChange: false});
 			}
