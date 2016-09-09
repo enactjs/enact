@@ -1,0 +1,137 @@
+//
+// Handy Information
+// http://lesscss.org/features/#mixins-feature-not-outputting-the-mixin
+//
+
+.moon-taparea(@element-size) when (@moon-button-small-tap-area-height > @element-size) {
+	// Take the size of the minimum tappable area, and subtract the element's current size.
+	@_tap-offset: -(@moon-button-border-width + (@moon-button-small-tap-area-height - @element-size) / 2);
+
+	&:before {
+		content: '';
+		position: absolute;
+		top: @_tap-offset;
+		right: @_tap-offset;
+		bottom: @_tap-offset;
+		left: @_tap-offset;
+	}
+}
+
+.moon-taparea(@element-size) when (@moon-button-small-tap-area-height <= @element-size) {
+	// Remove the tappable area if the tap area is smaller than the element's current size.
+	&:before {
+		content: none;
+	}
+}
+
+.moon-item-icon-tap-area-adjust() {
+	&.small > .small-icon-tap-area {
+		left: -@moon-spotlight-outset;
+		right: -@moon-spotlight-outset;
+	}
+}
+
+.full-screen-video-player() {
+	position: static !important;
+	display: block !important;
+	margin: 0;
+
+	.moon-video-player-video {
+		position: static;
+	}
+}
+
+.hide-full-screen-ancestor() {
+	position: absolute !important;
+	overflow: visible !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	width: 100% !important;
+	height: 100% !important;
+}
+
+.input-placeholder(@rule) {
+	&::-webkit-input-placeholder {
+		@rule();
+	}
+	&::-moz-placeholder {
+		@rule();
+	}
+}
+
+// Asign font-kerning rules in a non-proprietary way. Default value being "normal", to enable kerning.
+.font-kerning(@val: normal) {
+	-webkit-font-kerning: @val;
+	font-kerning: @val;
+}
+
+// THIS IS AN EXACT COPY OF THE MIXINS IN ENYO - THIS IS TEMPORARY SINCE LIBRARIES CURRENTLY
+// DO NOT SUPPORT DEPENDENCIES WHEN BUILDING STANDALONE AT THE MOMENT
+
+// Applies RTL-compatible start and end margins to a selector
+.margin-start-end (@start, @end) {
+	margin-left: @start;
+	margin-right: @end;
+
+	.enact-locale-right-to-left & {
+		margin-left: @end;
+		margin-right: @start;
+	}
+}
+
+// Applies RTL-compatible start and end padding to a selector
+.padding-start-end (@start, @end) {
+	padding-left: @start;
+	padding-right: @end;
+
+	.enact-locale-right-to-left & {
+		padding-left: @end;
+		padding-right: @start;
+	}
+}
+
+// Provide a set of rules to assign to each vendor-prefixed pseudo selector
+.vendor-fullscreen(@rule) {
+	&:-webkit-full-screen { @rule(); }
+	&:-moz-full-screen { @rule(); }
+	&:-ms-fullscreen { @rule(); }
+	&:-o-full-screen { @rule(); }
+	&:fullscreen { @rule(); }
+}
+
+.vendor-opacity(@opacity) {
+	@opacity-ie: (@opacity * 100);	// Less doesn't like math inside `alpha`
+	opacity: @opacity;
+	filter: alpha(opacity=@opacity-ie);
+}
+
+// Shorthand for positioning code
+.position (@t, @r, @b, @l) {
+	top: @t;
+	right: @r;
+	bottom: @b;
+	left: @l;
+}
+.position (@t, @rl, @b) {
+	top: @t;
+	right: @rl;
+	bottom: @b;
+	left: @rl;
+}
+.position (@tb, @rl) {
+	top: @tb;
+	right: @rl;
+	bottom: @tb;
+	left: @rl;
+}
+.position (@trbl) {
+	top: @trbl;
+	right: @trbl;
+	bottom: @trbl;
+	left: @trbl;
+}
+
+.border-box() {
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+}

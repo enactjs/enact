@@ -1,0 +1,49 @@
+{
+  "name": "enact-moonstone",
+  "version": "1.0.0-alpha.1",
+  "description": "Large-screen/TV support library for Enact, containing a variety of UI components.",
+  "main": "index.js",
+  "scripts": {
+    "test": "enyo-karma start --single-run --browsers PhantomJS",
+    "test-json": "enyo-karma start --single-run --browsers PhantomJS --reporters json",
+    "test-watch": "enyo-karma start --browsers PhantomJS",
+    "transpile": "enyo-transpile",
+    "pack": "enyo-webpack",
+    "pack-p": "enyo-webpack -p",
+    "watch": "enyo-webpack --watch",
+    "clean": "enyo-clean"
+  },
+  "homepage": "http://enyojs.com/",
+  "bugs": "http://jira.enyojs.com/",
+  "maintainers": [
+    {
+      "name": "Enyo JS Framework Team",
+      "web": "http://enyojs.com/"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/enyojs/enyo-core.git"
+  },
+  "license": "Apache-2.0",
+  "keywords": [
+    "framework",
+    "toolkit",
+    "components",
+    "mobile",
+    "webOS"
+  ],
+  "devDependencies": {
+    "enyo-config": "enyojs/enyo-config"
+  },
+  "dependencies": {
+    "eases": "^1.0.8",
+    "enact-core": "^1.0.0-alpha.1",
+    "enact-i18n": "^1.0.0-alpha.1",
+    "enact-spotlight": "^1.0.0-alpha.1",
+    "enact-ui": "^1.0.0-alpha.1",
+    "invariant": "^2.2.1",
+    "react": "^15.3.1",
+    "warning": "^3.0.0"
+  }
+}

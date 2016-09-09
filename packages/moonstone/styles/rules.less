@@ -1,0 +1,53 @@
+@import './mixins.less';
+@import './colors.less';
+@import './variables.less';
+
+/* Prevent browser's default focus treatment (at least in Chrome) */
+:focus {
+	outline: none;
+}
+
+/* Common classes applicable to multiple controls */
+.moon {
+	font-family: @moon-font-family;
+	font-size: @moon-sub-header-font-size;
+	font-weight: normal;
+	font-style: normal;
+	letter-spacing: normal;
+	padding: @moon-app-keepout;
+	color: @moon-text-color;
+	background-color: @moon-background-color;
+
+	::selection {
+		color: @moon-spotlight-text-color;
+		background-color: lighten(@moon-spotlight-bg-color, 18%);
+	}
+
+	&:global(.enact-locale-right-to-left) {
+		direction: rtl;
+	}
+}
+
+.moon-divider-border() {
+	border-bottom: @moon-divider-border-width solid @moon-divider-border-color;
+}
+.moon-neutral-divider-border() {
+	border-bottom: @moon-divider-border-width solid @moon-neutral-border-color;
+}
+
+:global(.spottable):focus {
+	background-color: @moon-spotlight-bg-color;
+	color: @moon-spotlight-text-color;
+}
+
+// Disabled components
+[disabled] {
+	.vendor-opacity(@moon-disabled-translucent-opacity);
+
+	cursor: default;
+
+	// Disabled children of disabled components
+	[disabled] {
+		.vendor-opacity(1);
+	}
+}

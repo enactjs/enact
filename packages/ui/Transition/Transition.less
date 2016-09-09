@@ -1,0 +1,89 @@
+// Transition.less
+//
+@import '../styles/mixins.less';
+
+.transitionFrame {
+	overflow: hidden;
+}
+.transition {
+	&.slide {
+		.enact-composite();
+	}
+
+	&.shown {
+		&.slide {
+			transform: translate(0,0,0);
+		}
+		&.clip {
+			&.right,
+			&.left {
+				max-width: 100%;
+			}
+		}
+		&.fade {
+			opacity: 1;
+		}
+	}
+
+	&.hidden {
+		&.slide {
+			&.up {
+				transform: translateY(-100%);
+				max-height: 0;
+			}
+			&.right {
+				transform: translateX(100%);
+			}
+			&.down {
+				transform: translateY(100%);
+			}
+			&.left {
+				transform: translateX(-100%);
+			}
+		}
+		&.clip {
+			&.up,
+			&.down {
+				height: 0;
+			}
+			&.right,
+			&.left {
+				max-width: 0;
+			}
+		}
+		&.fade {
+			opacity: 0;
+		}
+	}
+
+	&.clip {
+		&.down {
+			position: absolute;
+			bottom: 0;
+		}
+		&.right {
+			position: absolute;
+			right: 0;
+		}
+	}
+
+	&.short {
+		transition-duration: 250ms;
+	}
+	&.medium {
+		transition-duration: 500ms;
+	}
+	&.long {
+		transition-duration: 1s;
+	}
+
+	&.ease-in-out {
+		transition-timing-function: ease-in-out;
+	}
+	&.ease {
+		transition-timing-function: ease;
+	}
+	&.linear {
+		transition-timing-function: linear;
+	}
+}
