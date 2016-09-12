@@ -8,20 +8,22 @@ const defaultConfig = {
 };
 
 const PickableHoC = hoc(defaultConfig, (config, Wrapped) => {
+	const defaultPropKey = 'default' + cap(config.prop);
+
 	return class Pickable extends React.Component {
 		static propTypes = {
-			disabled: React.PropTypes.bool,
-			value: React.PropTypes.number
+			[defaultPropKey]: React.PropTypes.number,
+			disabled: React.PropTypes.bool
 		}
 
 		static defaultProps = {
-			value: 0
+			[defaultPropKey]: 0
 		}
 
 		constructor (props) {
 			super(props);
 			this.state = {
-				value: props['default' + cap(config.prop)]
+				value: props[defaultPropKey]
 			};
 		}
 
@@ -35,6 +37,7 @@ const PickableHoC = hoc(defaultConfig, (config, Wrapped) => {
 			const props = Object.assign({}, this.props);
 			props[config.pick] = this.pick;
 			props[config.prop] = this.state.value;
+			delete props[defaultPropKey];
 
 			return <Wrapped {...props} />;
 		}

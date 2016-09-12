@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import hoc from 'enact-core/hoc';
 import R from 'ramda';
+import {cap} from 'enact-core/util';
 
 const defaultConfig = {
 	depress: 'onMouseDown',
@@ -11,8 +12,19 @@ const defaultConfig = {
 };
 
 const PressableHoC = hoc(defaultConfig, (config, Wrapped) => {
+	const defaultPropKey = 'default' + cap(config.prop);
+
 	return class Pressable extends React.Component {
 		static propTypes = {
+
+			/**
+			* Whether or not the component is in a "pressed" state.
+			*
+			* @type {Boolean}
+			* @default false
+			* @public
+			*/
+			[defaultPropKey]: React.PropTypes.bool,
 
 			/**
 			* Whether or not the component is in a disabled state.
@@ -45,6 +57,7 @@ const PressableHoC = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		static defaultProps = {
+			[defaultPropKey]: false,
 			disabled: false,
 			keyCodes: [13, 16777221],
 			useEnterKey: false
@@ -53,7 +66,7 @@ const PressableHoC = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 			this.state = {
-				pressed: false
+				pressed: props[defaultPropKey]
 			};
 		}
 
@@ -92,6 +105,7 @@ const PressableHoC = hoc(defaultConfig, (config, Wrapped) => {
 			}
 			delete props.useEnterKey;
 			delete props.keyCodes;
+			delete props[defaultPropKey];
 
 			return <Wrapped {...props} />;
 		}
