@@ -1,15 +1,30 @@
 import R from 'ramda';
 
-// general utils
-export const self = function () {
-	return this;
-};
+/**
+ * If `arg` is a function, return it. Otherwise returns a function that returns `arg`
+ *
+ * @example
+ *	const returnsZero = coerceFunction(0);
+ *	const returnsArg = coerceFunction(() => 0);
+ *
+ * @param {*} arg Function or value
+ * @method
+ */
 export const coerceFunction = R.unless(R.is(Function), R.always);
+
+/**
+ * If `arg` is array-like, return it. Otherwise returns a single element array containing `arg`
+ *
+ * @example
+ *	const returnsArray = coerceArray(0); // [0]
+ *	const returnsArg = coerceArray([0]); // [0]
+ *	const returnsObjArg = coerceArray({0: 'zeroth', length: 1});
+ *
+ * @see http://ramdajs.com/docs/#isArrayLike
+ * @param {*} arg Array or value
+ * @method
+ */
 export const coerceArray = R.unless(R.isArrayLike, R.of);
-export const prepareApply = R.compose(R.flip(R.apply), coerceArray);
-export const list = R.unapply(R.identity);
-export const sliceArgs = (a, b) => R.compose(R.slice(a, b), list);
-export const isUndefined = R.equals(void 0);
 
 /**
  * Loosely determines if `tag` is a renderable component (either a string or a function)
