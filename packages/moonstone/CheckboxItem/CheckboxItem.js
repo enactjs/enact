@@ -1,12 +1,11 @@
 import React from 'react';
 import kind from 'enact-core/kind';
-import Toggleable from 'enact-ui/Toggleable';
 
 import {ToggleItemBase} from '../ToggleItem';
 
 import css from './CheckboxItem.less';
 
-const CheckboxItemBase = kind({
+const CheckboxItem = kind({
 	name: 'CheckboxItem',
 
 	propTypes: ToggleItemBase.propTypes,
@@ -30,7 +29,5 @@ const CheckboxItemBase = kind({
 	)
 });
 
-const CheckboxItem = Toggleable({prop: 'checked'}, CheckboxItemBase);
-
 export default CheckboxItem;
-export {CheckboxItem, CheckboxItemBase};
+export {CheckboxItem, CheckboxItem as CheckboxItemBase};

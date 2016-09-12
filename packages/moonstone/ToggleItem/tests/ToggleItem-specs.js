@@ -1,7 +1,7 @@
 
 import React from 'react';
-import {mount, shallow} from 'enzyme';
-import {ToggleItem, ToggleItemBase} from '../ToggleItem';
+import {mount} from 'enzyme';
+import {ToggleItemBase} from '../ToggleItem';
 
 describe('ToggleItem Specs', () => {
 
@@ -67,17 +67,4 @@ describe('ToggleItem Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should toggle the \'checked\' prop when clicking the item', function () {
-		const toggleItem = shallow(
-			<ToggleItem>
-				Toggle Item
-			</ToggleItem>
-		);
-		toggleItem.simulate('click');
-
-		const expected = true;
-		const actual = toggleItem.prop('checked');
-
-		expect(actual).to.equal(expected);
-	});
 });

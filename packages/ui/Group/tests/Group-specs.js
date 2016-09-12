@@ -3,9 +3,9 @@
 import React from 'react';
 import sinon from 'sinon';
 import {mount} from 'enzyme';
-import {Group, GroupBase} from '../Group';
+import {GroupBase} from '../Group';
 
-describe('Stateless Group Specs', () => {
+describe('Group', () => {
 	const stringItems = ['One', 'Two', 'Three'];
 
 	it('Should call handler with index on activate', function () {
@@ -130,89 +130,6 @@ describe('Stateless Group Specs', () => {
 
 		const expected = stringItems[index];
 		const actual = subject.find('div').at(index).prop('data-child');
-
-		expect(actual).to.equal(expected);
-	});
-
-});
-
-describe('Stateful Group Specs', () => {
-	const stringItems = ['One', 'Two', 'Three'];
-
-	it('Should select the first item by default', function () {
-		const subject = mount(
-			<Group type="div">
-				{stringItems}
-			</Group>
-		);
-
-		const expected = true;
-		const actual = subject.find('div').first().prop('data-selected');
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('Should select the third item with defaultIndex=2', function () {
-		const index = 2;
-		const subject = mount(
-			<Group type="div" defaultIndex={index}>
-				{stringItems}
-			</Group>
-		);
-
-		const expected = true;
-		const actual = subject.find('div').at(index).prop('data-selected');
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('Should call {onSelectedChange} once', function () {
-		const index = 1;
-		const handleClick = sinon.spy();
-		const subject = mount(
-			<Group type="div" onSelectedChange={handleClick}>
-				{stringItems}
-			</Group>
-		);
-
-		subject.find('div').at(index).simulate('click');
-
-		const expected = true;
-		const actual = handleClick.calledOnce;
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('Should call {onSelectedChange} with index', function () {
-		const index = 1;
-		const handleClick = sinon.spy();
-		const subject = mount(
-			<Group type="div" onSelectedChange={handleClick}>
-				{stringItems}
-			</Group>
-		);
-
-		subject.find('div').at(index).simulate('click');
-
-		const expected = index;
-		const actual = handleClick.firstCall.args[0].index;
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('Should call {onSelectedChange} with data', function () {
-		const index = 1;
-		const handleClick = sinon.spy();
-		const subject = mount(
-			<Group type="div" onSelectedChange={handleClick}>
-				{stringItems}
-			</Group>
-		);
-
-		subject.find('div').at(index).simulate('click');
-
-		const expected = stringItems[index];
-		const actual = handleClick.firstCall.args[0].data;
 
 		expect(actual).to.equal(expected);
 	});
