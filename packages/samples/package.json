@@ -1,0 +1,27 @@
+{
+  "name": "enact-samples",
+  "version": "1.0.0-alpha.1",
+  "description": "Component and QA samples for Enact",
+  "private": true,
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/enyojs/enact.git"
+  },
+  "keywords": [
+    "enact"
+  ],
+  "author": "EnyoJS",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/enyojs/enact/issues"
+  },
+  "homepage": "https://github.com/enyojs/enact#readme",
+  "dependencies": {
+    "enact-core": "^1.0.0-alpha.1",
+    "enact-i18n": "^1.0.0-alpha.1",
+    "enact-moonstone": "^1.0.0-alpha.1",
+    "enact-spotlight": "^1.0.0-alpha.1",
+    "enact-ui": "^1.0.0-alpha.1",
+  }
+}
