@@ -18,6 +18,15 @@ const PressableHoC = hoc(defaultConfig, (config, Wrapped) => {
 		static propTypes = {
 
 			/**
+			* Whether or not the component is in a "pressed" state.
+			*
+			* @type {Boolean}
+			* @default false
+			* @public
+			*/
+			[defaultPropKey]: React.PropTypes.bool,
+
+			/**
 			* Whether or not the component is in a disabled state.
 			*
 			* @type {Boolean}
@@ -48,6 +57,7 @@ const PressableHoC = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		static defaultProps = {
+			[defaultPropKey]: false,
 			disabled: false,
 			keyCodes: [13, 16777221],
 			useEnterKey: false

@@ -13,12 +13,12 @@ const PickableHoC = hoc(defaultConfig, (config, Wrapped) => {
 
 	return class Pickable extends React.Component {
 		static propTypes = {
-			disabled: React.PropTypes.bool,
-			value: React.PropTypes.number
+			[defaultPropKey]: React.PropTypes.number,
+			disabled: React.PropTypes.bool
 		}
 
 		static defaultProps = {
-			value: 0
+			[defaultPropKey]: 0
 		}
 
 		constructor (props) {

@@ -13,7 +13,12 @@ const ToggleableHoC = hoc(defaultConfig, (config, Wrapped) => {
 
 	return class Toggleable extends React.Component {
 		static propTypes = {
+			[defaultPropKey]: React.PropTypes.bool,
 			disabled: React.PropTypes.bool
+		}
+
+		static defaultProps = {
+			[defaultPropKey]: false
 		}
 
 		constructor (props) {
