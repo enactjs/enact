@@ -64,4 +64,4 @@ const Icon = kind({
 });
 
 export default Icon;
-export {Icon, Icon as IconBase, iconList};
+export {Icon, Icon as IconBase, iconList as icons};
