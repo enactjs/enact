@@ -1,5 +1,5 @@
 import {kind, hoc} from 'enact-core';
-import I18NDecorator from 'enact-i18n/I18NDecorator';
+import I18nDecorator from 'enact-i18n/I18nDecorator';
 import {SpotlightRootDecorator} from 'enact-spotlight';
 import {ResolutionDecorator} from 'enact-ui/resolution';
 import React from 'react';
@@ -19,7 +19,7 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	let App = Wrapped;
 
 	if (config.ri) App = ResolutionDecorator(config.ri, App);
-	if (config.i18n) App = I18NDecorator(App);
+	if (config.i18n) App = I18nDecorator(App);
 	if (config.spotlight) App = SpotlightRootDecorator(App);
 
 	return kind({
