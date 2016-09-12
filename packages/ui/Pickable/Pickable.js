@@ -1,4 +1,3 @@
-import R from 'ramda';
 import React from 'react';
 import hoc from 'enact-core/hoc';
 import {cap} from 'enact-core/util';
@@ -35,9 +34,10 @@ const PickableHoC = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const props = R.dissoc(defaultPropKey, this.props);
+			const props = Object.assign({}, this.props);
 			props[config.pick] = this.pick;
 			props[config.prop] = this.state.value;
+			delete props[defaultPropKey];
 
 			return <Wrapped {...props} />;
 		}

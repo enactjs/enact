@@ -1,6 +1,6 @@
-import R from 'ramda';
 import React, {PropTypes} from 'react';
 import hoc from 'enact-core/hoc';
+import R from 'ramda';
 import {cap} from 'enact-core/util';
 
 const defaultConfig = {
@@ -95,7 +95,7 @@ const PressableHoC = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const props = R.dissoc(defaultPropKey, this.props);
+			const props = Object.assign({}, this.props);
 			props[config.depress] = this.onMouseDown;
 			props[config.release] = this.onMouseUp;
 			props[config.prop] = this.state.pressed;
@@ -105,6 +105,7 @@ const PressableHoC = hoc(defaultConfig, (config, Wrapped) => {
 			}
 			delete props.useEnterKey;
 			delete props.keyCodes;
+			delete props[defaultPropKey];
 
 			return <Wrapped {...props} />;
 		}
