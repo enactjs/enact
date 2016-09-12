@@ -1,6 +1,17 @@
 import R from 'ramda';
 
 /**
+* Capitalizes a given string.
+*
+* @param {String} str - The string to capitalize.
+* @returns {String} The capitalized string.
+* @public
+*/
+const cap = function (str) {
+	return str.slice(0, 1).toUpperCase() + str.slice(1);
+};
+
+/**
  * If `arg` is a function, return it. Otherwise returns a function that returns `arg`
  *
  * @example
@@ -10,7 +21,7 @@ import R from 'ramda';
  * @param {*} arg Function or value
  * @method
  */
-export const coerceFunction = R.unless(R.is(Function), R.always);
+const coerceFunction = R.unless(R.is(Function), R.always);
 
 /**
  * If `arg` is array-like, return it. Otherwise returns a single element array containing `arg`
@@ -24,7 +35,7 @@ export const coerceFunction = R.unless(R.is(Function), R.always);
  * @param {*} arg Array or value
  * @method
  */
-export const coerceArray = R.unless(R.isArrayLike, R.of);
+const coerceArray = R.unless(R.isArrayLike, R.of);
 
 /**
  * Loosely determines if `tag` is a renderable component (either a string or a function)
@@ -33,7 +44,14 @@ export const coerceArray = R.unless(R.isArrayLike, R.of);
  *
  * @returns {Boolean} `true` if `tag` is renderable
  */
-export const isRenderable = function (tag) {
+const isRenderable = function (tag) {
 	const type = typeof tag;
 	return type === 'function' || type === 'string';
+};
+
+export {
+	cap,
+	coerceFunction,
+	coerceArray,
+	isRenderable
 };
