@@ -1,3 +1,4 @@
+import R from 'ramda';
 import React from 'react';
 import hoc from 'enact-core/hoc';
 import {cap} from 'enact-core/util';
@@ -8,6 +9,8 @@ const defaultConfig = {
 };
 
 const PickableHoC = hoc(defaultConfig, (config, Wrapped) => {
+	const defaultPropKey = 'default' + cap(config.prop);
+
 	return class Pickable extends React.Component {
 		static propTypes = {
 			disabled: React.PropTypes.bool,
@@ -21,7 +24,7 @@ const PickableHoC = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 			this.state = {
-				value: props['default' + cap(config.prop)]
+				value: props[defaultPropKey]
 			};
 		}
 
@@ -32,7 +35,7 @@ const PickableHoC = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const props = Object.assign({}, this.props);
+			const props = R.dissoc(defaultPropKey, this.props);
 			props[config.pick] = this.pick;
 			props[config.prop] = this.state.value;
 

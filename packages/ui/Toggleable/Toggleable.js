@@ -9,20 +9,17 @@ const defaultConfig = {
 };
 
 const ToggleableHoC = hoc(defaultConfig, (config, Wrapped) => {
+	const defaultPropKey = 'default' + cap(config.prop);
+
 	return class Toggleable extends React.Component {
 		static propTypes = {
-			defaultSelected: React.PropTypes.bool,
 			disabled: React.PropTypes.bool
-		}
-
-		static defaultProps = {
-			defaultSelected: false
 		}
 
 		constructor (props) {
 			super(props);
 			this.state = {
-				selected: props['default' + cap(config.prop)]
+				selected: props[defaultPropKey]
 			};
 		}
 
@@ -33,7 +30,7 @@ const ToggleableHoC = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const props = R.dissoc('defaultSelected', this.props);
+			const props = R.dissoc(defaultPropKey, this.props);
 			props[config.toggle] = this.onToggle;
 			props[config.prop] = this.state.selected;
 

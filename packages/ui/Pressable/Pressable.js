@@ -1,6 +1,7 @@
+import R from 'ramda';
 import React, {PropTypes} from 'react';
 import hoc from 'enact-core/hoc';
-import R from 'ramda';
+import {cap} from 'enact-core/util';
 
 const defaultConfig = {
 	depress: 'onMouseDown',
@@ -11,6 +12,8 @@ const defaultConfig = {
 };
 
 const PressableHoC = hoc(defaultConfig, (config, Wrapped) => {
+	const defaultPropKey = 'default' + cap(config.prop);
+
 	return class Pressable extends React.Component {
 		static propTypes = {
 
@@ -53,7 +56,7 @@ const PressableHoC = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 			this.state = {
-				pressed: false
+				pressed: props[defaultPropKey]
 			};
 		}
 
@@ -82,7 +85,7 @@ const PressableHoC = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const props = Object.assign({}, this.props);
+			const props = R.dissoc(defaultPropKey, this.props);
 			props[config.depress] = this.onMouseDown;
 			props[config.release] = this.onMouseUp;
 			props[config.prop] = this.state.pressed;
