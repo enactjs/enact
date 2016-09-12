@@ -2,11 +2,12 @@ import kind from 'enact-core/kind';
 import React from 'react';
 import Uppercase from 'enact-i18n/Uppercase';
 import Slottable from 'enact-ui/Slottable';
+import Marquee from 'enact-moonstone/Marquee';
 
 import css from './Header.less';
 
-// Create a h1 component that supports the uppercase attribute
-const UppercaseH1 = Uppercase('h1');
+// Create a Marquee component that supports the uppercase attribute
+const UppercaseMarquee = Uppercase(Marquee);
 
 /**
  * A visual header component for a Panel with a title, titleAbove, titleBelow, and subTitleBelow
@@ -70,16 +71,16 @@ const HeaderBase = kind({
 		titleBelow: React.PropTypes.string,
 
 		/**
-		 * Set the type of header to be used. `standard`, `compact`, and `bloated` are all valid
-		 * options. But don't use bloated because it's lame and nobody likes it.
+		 * Set the type of header to be used. `standard` or `compact`.
 		 *
 		 * @type {String}
 		 * @default 'standard'
 		 */
-		type: React.PropTypes.oneOf([null, 'compact', 'standard', 'bloated'])
+		type: React.PropTypes.oneOf(['compact', 'standard'])
 	},
 
 	defaultProps: {
+		preserveCase: false,
 		titleAbove: '00',
 		type: 'standard'
 	},
@@ -93,31 +94,31 @@ const HeaderBase = kind({
 		className: ({type, styler}) => styler.append(type)
 	},
 
-	render: ({children, preserveCase, subTitleBelow, title, titleAbove, titleBelow, type, ...rest}) => {
+	render: ({children, preserveCase, styler, subTitleBelow, title, titleAbove, titleBelow, type, ...rest}) => {
 		switch (type) {
 			case 'compact': return (
 				<header {...rest}>
-					<UppercaseH1 name="title" className={css.title} preserveCase={preserveCase}>{title}</UppercaseH1>
+					<h1 className={css.title}><UppercaseMarquee preserveCase={preserveCase}>{title}</UppercaseMarquee></h1>
 					<nav className={css.headerComponents}>{children}</nav>
 				</header>
 			);
-			case 'bloated': return (
+			// Keeping this block in case we need to add it back after discussing with UX and GUI about future plans.
+			// case 'large': return (
+			// 	<header {...rest}>
+			// 		<div className={css.titleAbove}>{titleAbove}</div>
+			// 		<h1 className={css.title}><UppercaseMarquee preserveCase={preserveCase}>{title}</UppercaseMarquee></h1>
+			// 		<h2 className={css.titleBelow}><Marquee>{titleBelow}</Marquee></h2>
+			// 		<h2 className={css.subTitleBelow}><Marquee>{subTitleBelow}</Marquee></h2>
+			// 		<nav className={css.headerComponents}>{children}</nav>
+			// 	</header>
+			// );
+			case 'standard': return (
 				<header {...rest}>
-					<div name="titleAbove" className={css.titleAbove}>{titleAbove}</div>
-					<UppercaseH1 name="title" className={css.title} preserveCase={preserveCase}>{title}</UppercaseH1>
-					<h2 name="titleBelow" className={css.titleBelow}>{titleBelow}</h2>
-					<h2 name="subTitleBelow" className={css.subTitleBelow}>{subTitleBelow}</h2>
-					<nav className={css.headerComponents}>{children}</nav>
-				</header>
-			);
-			case 'standard':
-			default: return (
-				<header {...rest}>
-					<UppercaseH1 name="title" className={css.title} preserveCase={preserveCase}>{title}</UppercaseH1>
+					<h1 className={css.title}><UppercaseMarquee preserveCase={preserveCase}>{title}</UppercaseMarquee></h1>
 					<div className={css.headerRow}>
 						<div className={css.headerCell}>
-							<h2 name="titleBelow" className={css.titleBelow}>{titleBelow}</h2>
-							<h2 name="subTitleBelow" className={css.subTitleBelow}>{subTitleBelow}</h2>
+							<h2 className={css.titleBelow}><Marquee>{titleBelow}</Marquee></h2>
+							<h2 className={css.subTitleBelow}><Marquee>{subTitleBelow}</Marquee></h2>
 						</div>
 						<nav className={css.headerComponents}>{children}</nav>
 					</div>

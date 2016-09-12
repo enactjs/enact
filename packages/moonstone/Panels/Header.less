@@ -20,11 +20,6 @@
 		margin: 0;
 		.margin-start-end(0, @moon-spotlight-outset);
 		line-height: 45px;
-
-		// Temporary, until we have a real marquee.
-		text-overflow: ellipsis;
-		white-space: nowrap;
-		overflow: hidden;
 	}
 
 	.subTitleBelow {
@@ -84,23 +79,31 @@
 		}
 	}
 
-	&.debug {
+	&:global(.debug) {
+		@alpha: 10%;
+
 		border: cornflowerblue dashed 1px;
+		background-color: fade(cornflowerblue, @alpha);
 
 		.title {
-			border: cornflowerblue dashed 1px;
+			border: lime dashed 1px;
+			background-color: fade(lime, @alpha);
 		}
 		.headerCell {
 			border: orange dashed 1px;
+			background-color: fade(orange, @alpha);
 		}
 		.titleBelow {
 			border: green dashed 1px;
+			background-color: fade(green, @alpha);
 		}
 		.subTitleBelow {
 			border: teal dashed 1px;
+			background-color: fade(teal, @alpha);
 		}
 		.headerComponents {
 			border: cyan dashed 1px;
+			background-color: fade(cyan, @alpha);
 		}
 	}
 }
