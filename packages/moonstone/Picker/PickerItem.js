@@ -8,11 +8,11 @@ const PickerItem = kind({
 
 	styles: {
 		css,
-		classes: 'item'
+		className: 'item'
 	},
 
-	render: ({children, classes, ...rest}) => (
-		<div {...rest} className={classes}>
+	render: ({children, ...rest}) => (
+		<div {...rest}>
 			{children}
 		</div>
 	)
