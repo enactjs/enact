@@ -1,6 +1,7 @@
 import R from 'ramda';
 import React from 'react';
 import hoc from 'enact-core/hoc';
+import {cap} from 'enact-core/util';
 
 const defaultConfig = {
 	toggle: 'onClick',
@@ -21,7 +22,7 @@ const ToggleableHoC = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 			this.state = {
-				selected: props.defaultSelected
+				selected: props['default' + cap(config.prop)]
 			};
 		}
 

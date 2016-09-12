@@ -1,5 +1,6 @@
 import React from 'react';
 import hoc from 'enact-core/hoc';
+import {cap} from 'enact-core/util';
 
 const defaultConfig = {
 	pick: 'onChange',
@@ -20,12 +21,12 @@ const PickableHoC = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 			this.state = {
-				value: props[config.prop]
+				value: props['default' + cap(config.prop)]
 			};
 		}
 
 		pick = (ev) => {
-			this.setState({value: ev.value});
+			this.setState({value: ev[config.prop]});
 			const onPick = this.props[config.pick];
 			if (onPick) onPick(ev);
 		}
