@@ -7,7 +7,7 @@ import Icon from '../Icon';
 import itemCss from '../Item/Item.less'; // TODO: incorrect styling?
 import css from './ToggleItem.less';
 
-const ToggleItem = kind({
+const ToggleItemBase = kind({
 	name: 'ToggleItem',
 
 	propTypes: {
@@ -63,5 +63,5 @@ const ToggleItem = kind({
 	}
 });
 
-export default ToggleItem;
-export {ToggleItem, ToggleItem as ToggleItemBase};
+export default ToggleItemBase;
+export {ToggleItemBase as ToggleItem, ToggleItemBase};

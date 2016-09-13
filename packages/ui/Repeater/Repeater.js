@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import kind from 'enact-core/kind';
 
-const Repeater = kind({
+const RepeaterBase = kind({
 	name: 'Repeater',
 
 	propTypes: {
@@ -40,5 +40,5 @@ const Repeater = kind({
 	}
 });
 
-export default Repeater;
-export {Repeater, Repeater as RepeaterBase};
+export default RepeaterBase;
+export {RepeaterBase as Repeater, RepeaterBase};

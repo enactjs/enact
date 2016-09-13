@@ -9,7 +9,7 @@ const pickGroupItemProps = R.compose(
 	R.pick(['activate', 'childProp', 'index', 'indexProp', 'onActivate', 'selectedProp', 'childComponent'])
 );
 
-const GroupItem = kind({
+const GroupItemBase = kind({
 	displayName: 'GroupItem',
 
 	render: (props) => {
@@ -36,5 +36,5 @@ const GroupItem = kind({
 	}
 });
 
-export default GroupItem;
-export {GroupItem, pickGroupItemProps};
+export default GroupItemBase;
+export {GroupItemBase as GroupItem, GroupItemBase, pickGroupItemProps};
