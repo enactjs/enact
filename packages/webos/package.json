@@ -1,0 +1,37 @@
+{
+  "name": "enact-webos",
+  "version": "1.0.0-alpha.1",
+  "description": "webOS support library",
+  "main": "index.js",
+  "scripts": {
+    "test": "enyo-karma start --single-run --browsers PhantomJS",
+    "test-json": "enyo-karma start --single-run --browsers PhantomJS --reporters json",
+    "test-watch": "enyo-karma start --browsers PhantomJS",
+    "transpile": "enyo-transpile",
+    "pack": "enyo-webpack",
+    "pack-p": "enyo-webpack -p",
+    "watch": "enyo-webpack --watch",
+    "clean": "enyo-clean"
+  },
+  "homepage": "http://enyojs.com/",
+  "bugs": "http://jira.enyojs.com/",
+  "maintainers": [{
+    "name": "Enyo JS Framework Team",
+    "web": "http://enyojs.com/"
+  }],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/enyojs/enact.git"
+  },
+  "license": "Apache-2.0",
+  "keywords": [
+    "framework",
+    "toolkit",
+    "components",
+    "mobile",
+    "webOS"
+  ],
+  "devDependencies": {
+    "enyo-config": "enyojs/enyo-config#test-suite"
+  }
+}
