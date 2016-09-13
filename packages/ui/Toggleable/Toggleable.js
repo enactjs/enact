@@ -1,6 +1,6 @@
-import R from 'ramda';
 import React from 'react';
 import hoc from 'enact-core/hoc';
+import {cap} from 'enact-core/util';
 
 const defaultConfig = {
 	toggle: 'onClick',
@@ -8,20 +8,22 @@ const defaultConfig = {
 };
 
 const ToggleableHoC = hoc(defaultConfig, (config, Wrapped) => {
+	const defaultPropKey = 'default' + cap(config.prop);
+
 	return class Toggleable extends React.Component {
 		static propTypes = {
-			defaultSelected: React.PropTypes.bool,
+			[defaultPropKey]: React.PropTypes.bool,
 			disabled: React.PropTypes.bool
 		}
 
 		static defaultProps = {
-			defaultSelected: false
+			[defaultPropKey]: false
 		}
 
 		constructor (props) {
 			super(props);
 			this.state = {
-				selected: props.defaultSelected
+				selected: props[defaultPropKey]
 			};
 		}
 
@@ -32,9 +34,10 @@ const ToggleableHoC = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const props = R.dissoc('defaultSelected', this.props);
+			const props = Object.assign({}, this.props);
 			props[config.toggle] = this.onToggle;
 			props[config.prop] = this.state.selected;
+			delete props[defaultPropKey];
 
 			return <Wrapped {...props} />;
 		}

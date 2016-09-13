@@ -1,5 +1,4 @@
 import kind from 'enact-core/kind';
-import Toggleable from 'enact-ui/Toggleable';
 import React from 'react';
 
 import {ToggleItemBase} from '../ToggleItem';
@@ -7,7 +6,7 @@ import Switch from '../Switch';
 
 import css from './SwitchItem.less';
 
-const SwitchItemBase = kind({
+const SwitchItem = kind({
 	name: 'SwitchItem',
 
 	propTypes: ToggleItemBase.propTypes,
@@ -30,7 +29,5 @@ const SwitchItemBase = kind({
 	)
 });
 
-const SwitchItem = Toggleable({prop: 'checked'}, SwitchItemBase);
-
 export default SwitchItem;
-export {SwitchItem, SwitchItemBase};
+export {SwitchItem, SwitchItem as SwitchItemBase};

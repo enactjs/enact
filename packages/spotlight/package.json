@@ -28,6 +28,7 @@
     "enyo-config": "enyojs/enyo-config"
   },
   "dependencies": {
+    "ramda": "^0.22.1",
     "react": "^15.3.1"
   }
 }
