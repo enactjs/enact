@@ -2,19 +2,19 @@ import R from 'ramda';
 import React from 'react';
 import kind from 'enact-core/kind';
 
-// Pick the Groupable-specific props into a 'private' itemProps key to be extracted by Groupable
+// Pick the GroupItem-specific props into a 'private' itemProps key to be extracted by GroupItem
 // before passing the remaining on to the repeated `type`
-const pickGroupableProps = R.compose(
-	R.objOf('$$Groupable'),
+const pickGroupItemProps = R.compose(
+	R.objOf('$$GroupItem'),
 	R.pick(['activate', 'childProp', 'index', 'indexProp', 'onActivate', 'selectedProp', 'type'])
 );
 
-const Groupable = kind({
-	displayName: 'Groupable',
+const GroupItem = kind({
+	displayName: 'GroupItem',
 
 	render: (props) => {
 		const {
-			$$Groupable: {
+			$$GroupItem: {
 				activate,
 				childProp,
 				index: selectedIndex,
@@ -36,5 +36,5 @@ const Groupable = kind({
 	}
 });
 
-export default Groupable;
-export {Groupable, pickGroupableProps};
+export default GroupItem;
+export {GroupItem, pickGroupItemProps};
