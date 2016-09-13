@@ -2,7 +2,7 @@
  * Exports the {@link module:enact-moonstone/Marquee~Marquee} and {@link module:enact-moonstone/Marquee~MarqueeBase}
  * components. The default export is {@link module:enact-moonstone/Marquee~Marquee}.
  *
- * @module enact-moonstone/Button
+ * @module enact-moonstone/Marquee
  */
 
 import kind from 'enact-core/kind';
@@ -12,7 +12,7 @@ import css from './Marquee.less';
 
 /**
  * {@link module:enact-moonstone/Marquee~MarqueeBase} is a stateless text container element which
- * implements a text cutt-off followed by an ellipsis character.
+ * implements a text cut-off followed by an ellipsis character.
  *
  * @class MarqueeBase
  * @ui

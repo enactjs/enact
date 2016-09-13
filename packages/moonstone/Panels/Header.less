@@ -3,11 +3,21 @@
 
 .header {
 	.moon-header-font();
-	margin: 0 12px;
+	.border-box;
+	color: @moon-header-text-color;
+	border-top: @moon-header-border-top-width solid @moon-header-border-color;
+	border-bottom: @moon-header-border-bottom-width solid @moon-header-bottom-border-color;
+	position: relative;
+	max-width: 100%;
+	padding: 0;
+	background-color: transparent;
+	background-repeat: no-repeat;
+	background-position: top left;
+	margin: 0 @moon-spotlight-outset;
 
-	.titleAbove {
-		.moon-super-header-text();
-	}
+	// .titleAbove {
+	// 	.moon-super-header-text();
+	// }
 
 	.title {
 		.moon-header-text();
@@ -26,6 +36,12 @@
 		.moon-header-sub-title-below();
 	}
 
+	.headerComponents {
+		flex-wrap: nowrap;
+		display: flex;
+		align-items: flex-end;
+	}
+
 	&.compact,
 	.headerRow {
 		display: flex;
@@ -35,13 +51,6 @@
 		.headerCell {
 			flex-grow: 1;
 		}
-
-		.headerComponents {
-		}
-	}
-
-	.headerComponents {
-		white-space: nowrap;
 	}
 
 	// Standard Header
@@ -56,6 +65,11 @@
 			}
 		}
 
+		.headerRow {
+			position: absolute;
+			bottom: 12px;
+		}
+
 		.titleBelow,
 		.subTitleBelow {
 			line-height: 39px;
@@ -65,17 +79,23 @@
 	// Compact Header
 	&.compact {
 		height: @moon-header-height-small;
-		align-items: flex-end;
+		align-items: stretch;
 
 		.title {
-			padding: 30px 0 0 0;
 			line-height: @moon-small-header-line-height;
 			font-size: @moon-small-header-font-size;
-			height: 84px;
+			margin-bottom: 3px;		// Brings title into alignment with small buttons in headerComponents
+			flex-wrap: nowrap;
+			display: flex;
+			align-items: flex-end;
 
 			.enyo-locale-non-latin & {
 				line-height: @moon-non-latin-small-header-line-height;
 			}
+		}
+
+		.headerComponents {
+			margin: @moon-spotlight-outset 0;
 		}
 	}
 

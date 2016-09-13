@@ -56,12 +56,12 @@ const HeaderBase = kind({
 		 */
 		title: React.PropTypes.string,
 
-		/**
-		 * Text displayed above the title
-		 *
-		 * @type {String}
-		 */
-		titleAbove: React.PropTypes.string,
+		// /**
+		//  * Text displayed above the title
+		//  *
+		//  * @type {String}
+		//  */
+		// titleAbove: React.PropTypes.string,
 
 		/**
 		 * Text displayed below the title

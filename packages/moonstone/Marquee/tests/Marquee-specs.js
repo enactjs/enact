@@ -7,13 +7,13 @@ describe('Marquee Specs', () => {
 	// Update this later to probably require 2 div tags.
 	it('should render a single \<div\> tag', function () {
 		const msg = 'Marquee Text';
-		const button = mount(
+		const marquee = mount(
 			<Marquee>{msg}</Marquee>
 		);
 
-		const buttonTag = button.find('div');
+		const divTags = marquee.find('div');
 		const expected = 1;
-		const actual = buttonTag.length;
+		const actual = divTags.length;
 
 		expect(actual).to.equal(expected);
 	});
