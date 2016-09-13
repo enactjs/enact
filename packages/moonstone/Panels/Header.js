@@ -81,7 +81,7 @@ const HeaderBase = kind({
 
 	defaultProps: {
 		preserveCase: false,
-		titleAbove: '00',
+		// titleAbove: '00',
 		type: 'standard'
 	},
 
@@ -128,7 +128,7 @@ const HeaderBase = kind({
 	}
 });
 
-const Header = Slottable({slots: ['subTitleBelow', 'titleAbove', 'title', 'titleBelow']}, HeaderBase);
+const Header = Slottable({slots: ['subTitleBelow', /*'titleAbove', */'title', 'titleBelow']}, HeaderBase);
 
 // Set up Header so when it's used in a slottable layout (like Panel), it is automatically
 // recognized as this specific slot.
