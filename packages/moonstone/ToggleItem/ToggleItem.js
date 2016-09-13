@@ -15,7 +15,9 @@ const ToggleItemBase = kind({
 		disabled: PropTypes.bool,
 		icon: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
 		iconClasses: PropTypes.string,
-		inline: PropTypes.bool
+		inline: PropTypes.bool,
+		onToggle: PropTypes.func,
+		value: PropTypes.any
 	},
 
 	styles: {
@@ -31,15 +33,24 @@ const ToggleItemBase = kind({
 			}
 
 			return <Icon className={styler.join(css.icon, iconClasses, {checked})}>{icon}</Icon>;
+		},
+		onToggle: (props) => {
+			const {onToggle, onClick, checked, value} = props;
+			if (onToggle || onClick) {
+				return (ev) => {
+					if (onToggle) onToggle({checked: !checked, value});
+					if (onClick) onClick(ev);
+				};
+			}
 		}
 	},
 
-	render: ({icon, children, ...rest}) => {
+	render: ({children, icon, onToggle, ...rest}) => {
 		delete rest.iconClasses;
 		delete rest.inline;
 
 		return (
-			<Item {...rest}>
+			<Item {...rest} onClick={onToggle}>
 				{icon}
 				{children}
 			</Item>
