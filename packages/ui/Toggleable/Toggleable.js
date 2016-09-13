@@ -27,9 +27,11 @@ const ToggleableHoC = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 
-		onToggle = () => {
+		onToggle = (ev) => {
+			const handler = this.props[config.toggle];
 			if (!this.props.disabled) {
 				this.setState({selected: !this.state.selected});
+				if (handler) handler(ev);
 			}
 		}
 
