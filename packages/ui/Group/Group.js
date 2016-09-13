@@ -37,7 +37,7 @@ const Group = kind({
 		delete props.index;
 		delete props.selectedProp;
 
-		return <Repeater {...props} type={GroupItem} />;
+		return <Repeater {...props} childComponent={GroupItem} />;
 	}
 });
 

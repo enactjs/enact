@@ -54,7 +54,7 @@ const ToggleItem = kind({
 		delete rest.multi;
 
 		return (
-			<Item tag="label" className={className} disabled={rest.disabled}>
+			<Item component="label" className={className} disabled={rest.disabled}>
 				<input {...rest} />
 				{iconElem}
 				{children}
