@@ -42,6 +42,13 @@
 		align-items: flex-end;
 	}
 
+	&.compact,
+	.headerRow {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+	}
+
 	// Standard Header
 	&.standard {
 		height: @moon-header-height-medium;
@@ -59,9 +66,6 @@
 			width: 100%;
 			height: 75px;
 			bottom: 12px;
-			display: flex;
-			flex-direction: row;
-			justify-content: space-between;
 
 			.headerCell {
 				flex-grow: 1;
