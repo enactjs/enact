@@ -5,9 +5,12 @@ sudo: false
 install:
     - npm install -g eslint eslint-plugin-react eslint-plugin-babel babel-eslint
     - npm install
+    - npm run bootstrap
 script:
     - echo -e "\x1b\x5b35;1m*** Starting tests...\x1b\x5b0m"
-    - npm test
+    - npm run lerna -- run test
     - echo -e "\x1b\x5b35;1m*** Tests complete\x1b\x5b0m"
     - echo -e "\x1b\x5b35;1m*** Starting eslint...\x1b\x5b0m"
-    - eslint --no-eslintrc -c node_modules/eslint-config-enyo/index.js .
+    - npm run lerna -- exec -- eslint .
+    - echo -e "\x1b\x5b35;1m*** eslint complete\x1b\x5b0m"
+

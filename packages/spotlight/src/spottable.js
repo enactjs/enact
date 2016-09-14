@@ -9,9 +9,9 @@ const defaultConfig = {};
 const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static propTypes = {
+			decorated: React.PropTypes.bool,
 			disabled: React.PropTypes.bool,
-			spotlightDisabled: React.PropTypes.bool,
-			decorated: React.PropTypes.bool
+			spotlightDisabled: React.PropTypes.bool
 		}
 
 		render () {

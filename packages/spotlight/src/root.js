@@ -7,6 +7,8 @@ const defaultConfig = {};
 
 const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
+		displayName = Wrapped.displayName ? 'SpotlightRootDecorator-' + Wrapped.displayName : 'SpotlightRootDecorator';
+
 		componentDidMount () {
 			Spotlight.initialize();
 			Spotlight.add(spotlightRootContainerName, {
