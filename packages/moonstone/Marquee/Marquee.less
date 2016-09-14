@@ -1,0 +1,11 @@
+// Marquee.less
+//
+
+.marquee {
+	// This obscure set of code implements single-line ellipsis-clipped text that doesn't interfere with layout.
+	// white-space: nowrap; interferes with may pure-css layouts.
+	overflow: hidden;
+	display: -webkit-box;
+	-webkit-box-orient: block-axis;
+	-webkit-line-clamp: 1;
+}

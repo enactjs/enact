@@ -1,5 +1,4 @@
 import kind from 'enact-core/kind';
-import Toggleable from 'enact-ui/Toggleable';
 import React, {PropTypes} from 'react';
 
 import Item from '../Item';
@@ -8,7 +7,7 @@ import Icon from '../Icon';
 import itemCss from '../Item/Item.less'; // TODO: incorrect styling?
 import css from './ToggleItem.less';
 
-const ToggleItemBase = kind({
+const ToggleItem = kind({
 	name: 'ToggleItem',
 
 	propTypes: {
@@ -64,7 +63,5 @@ const ToggleItemBase = kind({
 	}
 });
 
-const ToggleItem = Toggleable({prop: 'checked'}, ToggleItemBase);
-
 export default ToggleItem;
-export {ToggleItem, ToggleItemBase};
+export {ToggleItem, ToggleItem as ToggleItemBase};

@@ -1,12 +1,11 @@
 import kind from 'enact-core/kind';
-import Toggleable from 'enact-ui/Toggleable';
 import React from 'react';
 
 import {ToggleItemBase} from '../ToggleItem';
 
 import css from './RadioItem.less';
 
-const RadioItemBase = kind({
+const RadioItem = kind({
 	name: 'RadioItem',
 
 	propTypes: ToggleItemBase.propTypes,
@@ -30,7 +29,5 @@ const RadioItemBase = kind({
 	)
 });
 
-const RadioItem = Toggleable({prop: 'checked'}, RadioItemBase);
-
 export default RadioItem;
-export {RadioItem, RadioItemBase};
+export {RadioItem, RadioItem as RadioItemBase};
