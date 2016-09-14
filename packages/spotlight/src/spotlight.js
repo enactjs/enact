@@ -7,7 +7,11 @@
  * Licensed under the MPL license.
  */
 
+import Accelerator from 'enact-ui/Accelerator';
+
 const spotlightRootContainerName = 'spotlightRootDecorator';
+const SpotlightAccelerator = new Accelerator();
+
 const Spotlight = (function() {
 	'use strict';
 
@@ -791,24 +795,13 @@ const Spotlight = (function() {
 		return false;
 	}
 
-	function onKeyDown(evt) {
-		if (!_containerCount || _pause) {
-			return;
-		}
-
-		var currentFocusedElement;
+	function onAcceleratedKeyDown(evt) {
 		var preventDefault = function() {
 			evt.preventDefault();
 			evt.stopPropagation();
 			return false;
 		};
-
-		var direction = _directions[evt.keyCode];
-		if (!direction) {
-			return;
-		}
-
-		currentFocusedElement = getCurrent();
+		var currentFocusedElement = getCurrent();
 
 		if (!currentFocusedElement) {
 			if (_lastContainerId) {
@@ -825,11 +818,29 @@ const Spotlight = (function() {
 			return;
 		}
 
-		if (!spotNext(direction, currentFocusedElement, currentContainerId)) {
-			focusElement(currentFocusedElement, currentContainerId);
+		return spotNext(_directions[evt.keyCode], currentFocusedElement, currentContainerId) || focusElement(currentFocusedElement, currentContainerId);
+	}
+
+	function onKeyUp(evt) {
+		if (!_containerCount || _pause) {
+			return;
 		}
 
-		return preventDefault();
+		SpotlightAccelerator.processKey(evt, function(){ return; });
+		return false;
+	}
+
+	function onKeyDown(evt) {
+		if (!_containerCount || _pause) {
+			return;
+		}
+
+		if (!_directions[evt.keyCode]) {
+			return;
+		}
+
+		SpotlightAccelerator.processKey(evt, onAcceleratedKeyDown);
+		return false;
 	}
 
 	function onMouseOver(evt) {
@@ -878,6 +889,7 @@ const Spotlight = (function() {
 		initialize: function() {
 			if (!_initialized) {
 				window.addEventListener('keydown', onKeyDown);
+				window.addEventListener('keyup', onKeyUp);
 				window.addEventListener('mouseover', onMouseOver);
 				_initialized = true;
 			}
@@ -885,6 +897,7 @@ const Spotlight = (function() {
 
 		terminate: function() {
 			window.removeEventListener('keydown', onKeyDown);
+			window.removeEventListener('keyup', onKeyUp);
 			window.removeEventListener('mouseover', onMouseOver);
 			Spotlight.clear();
 			_ids = 0;
