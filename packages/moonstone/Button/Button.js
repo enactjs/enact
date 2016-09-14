@@ -124,6 +124,7 @@ const ButtonBase = kind({
 
 		return (
 			<button {...rest}>
+				<div className={css.bg} />
 				<span className={css.client}>{children}</span>
 			</button>
 		);

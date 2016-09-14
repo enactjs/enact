@@ -13,13 +13,14 @@
 	&:after {
 		position: absolute;
 		content: '';
-		top: ((@moon-button-height) - @moon-toggle-button-switch-width)/2 - (@moon-button-border-width + @moon-toggle-button-switch-border-width);
+		top: 50%;
 		right: @moon-button-h-padding;
 		width: @moon-toggle-button-switch-width;
 		height: @moon-toggle-button-switch-width;
 		border-radius: @moon-button-border-radius;
 		background-color: @moon-toggle-button-switch-off-bg-color;
 		border: solid @moon-toggle-button-switch-border-width @moon-toggle-button-switch-off-border-color;
+		transform: translateY(-50%);
 	}
 
 	&[disabled] {
