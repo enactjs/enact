@@ -7,6 +7,7 @@ import Marquee from 'enact-moonstone/Marquee';
 import css from './Header.less';
 
 // Create a Marquee component that supports the uppercase attribute
+const UppercaseH1 = Uppercase('h1');		// Used by compact header, which provides its own inline strings and tags for marqueeing
 const UppercaseMarquee = Uppercase(Marquee);
 
 /**
@@ -98,7 +99,10 @@ const HeaderBase = kind({
 		switch (type) {
 			case 'compact': return (
 				<header {...rest}>
-					<h1 className={css.title}><UppercaseMarquee preserveCase={preserveCase}>{title}</UppercaseMarquee></h1>
+					<Marquee className={css.headerCell}>
+						<UppercaseH1 className={css.title} preserveCase={preserveCase}>{title}</UppercaseH1>
+						<h2 className={css.titleBelow}>{titleBelow}</h2>
+					</Marquee>
 					<nav className={css.headerComponents}>{children}</nav>
 				</header>
 			);

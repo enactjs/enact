@@ -42,17 +42,6 @@
 		align-items: flex-end;
 	}
 
-	&.compact,
-	.headerRow {
-		display: flex;
-		flex-direction: row;
-		justify-content: space-between;
-
-		.headerCell {
-			flex-grow: 1;
-		}
-	}
-
 	// Standard Header
 	&.standard {
 		height: @moon-header-height-medium;
@@ -67,7 +56,16 @@
 
 		.headerRow {
 			position: absolute;
+			width: 100%;
+			height: 75px;
 			bottom: 12px;
+			display: flex;
+			flex-direction: row;
+			justify-content: space-between;
+
+			.headerCell {
+				flex-grow: 1;
+			}
 		}
 
 		.titleBelow,
@@ -84,14 +82,17 @@
 		.title {
 			line-height: @moon-small-header-line-height;
 			font-size: @moon-small-header-font-size;
-			margin-bottom: 3px;		// Brings title into alignment with small buttons in headerComponents
-			flex-wrap: nowrap;
-			display: flex;
-			align-items: flex-end;
+			margin-top: 30px;
+			display: inline-block;
 
 			.enyo-locale-non-latin & {
 				line-height: @moon-non-latin-small-header-line-height;
 			}
+		}
+
+		.titleBelow {
+			display: inline;
+			margin-left: (2 * @moon-spotlight-outset);
 		}
 
 		.headerComponents {
