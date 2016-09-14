@@ -6,7 +6,7 @@ import Marquee from 'enact-moonstone/Marquee';
 
 import css from './Header.less';
 
-// Create a Marquee component that supports the uppercase attribute
+// Create a <h1> and Marquee component that support the uppercase attribute
 const UppercaseH1 = Uppercase('h1');		// Used by compact header, which provides its own inline strings and tags for marqueeing
 const UppercaseMarquee = Uppercase(Marquee);
 
@@ -132,7 +132,7 @@ const HeaderBase = kind({
 	}
 });
 
-const Header = Slottable({slots: ['subTitleBelow', /*'titleAbove', */'title', 'titleBelow']}, HeaderBase);
+const Header = Slottable({slots: ['subTitleBelow', /* 'titleAbove', */'title', 'titleBelow']}, HeaderBase);
 
 // Set up Header so when it's used in a slottable layout (like Panel), it is automatically
 // recognized as this specific slot.
