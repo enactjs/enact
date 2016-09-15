@@ -5,10 +5,11 @@ import Picker, {PickerBase} from 'enact-moonstone/Picker';
 import RangePicker from 'enact-moonstone/RangePicker';
 import backgrounds from 'react-storybook-addon-backgrounds';
 import {withKnobs, text, boolean, number} from '@kadira/storybook-addon-knobs';
+import Moonstone from '../../src/MoonstoneEnvironment';
 
 const StatefulRangePicker = Pickable(RangePicker);
 
-const stories = storiesOf('Pickers', module);
+const stories = storiesOf('Pickers');
 
 stories.addDecorator(withKnobs);
 stories.addDecorator(backgrounds([
@@ -24,26 +25,30 @@ stories
 		'StatefulRangePicker without wrap',
 		'This is an example of using StatefulRangePicker without wrapping;',
 		() => (
-			<StatefulRangePicker
-				onChange={action('changed')}
-				min={number('min', 0)}
-				max={number('max', 10)}
-				value={number('value', 10)}
-				width={text('width', 'small')}
-			/>
+			<Moonstone title="StatefulRangePicker" description="This is an example of using StatefulRangePicker without wrapping.">
+				<StatefulRangePicker
+					onChange={action('changed')}
+					min={number('min', 0)}
+					max={number('max', 10)}
+					value={number('value', 10)}
+					width={text('width', 'small')}
+				/>
+			</Moonstone>
 		)
 	)
 	.addWithInfo(
 		'StatefulRangePicker with wrap',
 		'This is an example of using StatefulRangePicker with wrapping;',
 		() => (
-			<StatefulRangePicker
-				onChange={action('changed')}
-				min={number('min', 0)}
-				max={number('max', 10)}
-				value={number('value', 10)}
-				wrap={boolean('wrap', true)}
-				width={text('width', 'small')}
-			/>
+			<Moonstone title="StatefulRangePicker with wrap" description="This is an example of using StatefulRangePicker with wrapping.">
+				<StatefulRangePicker
+					onChange={action('changed')}
+					min={number('min', 0)}
+					max={number('max', 10)}
+					value={number('value', 10)}
+					wrap={boolean('wrap', true)}
+					width={text('width', 'small')}
+				/>
+			</Moonstone>
 		)
 	);
