@@ -32,4 +32,13 @@ const PanelsBase = kind({
 
 const Moonstone = MoonstoneDecorator(PanelsBase);
 
-export default Moonstone;
+const StorybookDecorator = (story, config) => {
+	return (
+		<Moonstone title={config.story}>
+			{story()}
+		</Moonstone>
+	);
+};
+
+export default StorybookDecorator;
+export {StorybookDecorator, Moonstone};
