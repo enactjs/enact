@@ -34,8 +34,7 @@ const ToggleItemBase = kind({
 
 			return <Icon className={styler.join(css.icon, iconClasses, {checked})}>{icon}</Icon>;
 		},
-		onToggle: (props) => {
-			const {onToggle, onClick, checked, value} = props;
+		onToggle: ({onToggle, onClick, checked, value}) => {
 			if (onToggle || onClick) {
 				return (ev) => {
 					if (onToggle) onToggle({checked: !checked, value});
