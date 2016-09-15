@@ -2,7 +2,8 @@
 
 import React from 'react';
 import sinon from 'sinon';
-import {mount} from 'enzyme';
+import {mount, shallow} from 'enzyme';
+import kind from 'enact-core/kind';
 import Slottable from '../Slottable';
 
 describe('Slottable Specs', () => {
@@ -28,6 +29,106 @@ describe('Slottable Specs', () => {
 
 		expect(actual).to.equal(expected);
 	});
+
+	it('should distribute children with a \'type\' that matches a slot', function () {
+		const Component = Slottable({slots: ['a', 'b', 'c', 'custom']}, ({a, b, c, custom}) => (
+			<div>
+				{c}
+				{b}
+				{a}
+				{custom}
+			</div>
+		));
+		const subject = mount(
+			<Component>
+				<div slot='a'>A</div>
+				<div slot='b'>B</div>
+				<custom>D</custom>
+				<div slot='c'>C</div>
+			</Component>
+		);
+
+		const expected = 'CBAD';
+		const actual = subject.text();
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should distribute children whose \'type\' has a \'defaultSlot\' property that matches a slot', function () {
+		const Custom = kind({
+			name: 'Custom',
+			render: (props) => {
+				return <div>{props.children}</div>;
+			}
+		});
+		Custom.defaultSlot = 'a';
+
+		const Component = Slottable({slots: ['a', 'b', 'c']}, ({a, b, c}) => (
+			<div>
+				{c}
+				{b}
+				{a}
+			</div>
+		));
+		const subject = mount(
+			<Component>
+				<div slot='a'>A</div>
+				<div slot='b'>B</div>
+				<Custom>D</Custom>
+				<div slot='c'>C</div>
+			</Component>
+		);
+
+		const expected = 'CBAD';
+		const actual = subject.text();
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should distribute children with no \'slot\' property to Slottable\'s \'children\'', function () {
+		const Component = Slottable({slots: ['a', 'b']}, ({a, b, c}) => (
+			<div>
+				{c}
+				{b}
+				{a}
+			</div>
+		));
+		const subject = mount(
+			<Component>
+				<div slot='a'>A</div>
+				<div slot='b'>B</div>
+				<div>C</div>
+			</Component>
+		);
+
+		const expected = 3;
+		const actual = subject.prop('children').length;
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should distribute children with no matching \'slot\' property to Slottable\'s \'children\'', function () {
+		const Component = Slottable({slots: ['a', 'b']}, ({a, b, c}) => (
+			<div>
+				{c}
+				{b}
+				{a}
+			</div>
+		));
+		const subject = mount(
+			<Component>
+				<div slot='a'>A</div>
+				<div slot='b'>B</div>
+				<div slot='c'>C</div>
+			</Component>
+		);
+
+		const expected = 3;
+		const actual = subject.prop('children').length;
+
+		expect(actual).to.equal(expected);
+	});
+
 
 });
 
