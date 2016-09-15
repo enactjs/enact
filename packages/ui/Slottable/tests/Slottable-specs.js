@@ -22,8 +22,6 @@ describe('Slottable Specs', () => {
 				<div slot='c'>C</div>
 			</Component>
 		);
-		console.log("SLOTTABLE", subject.debug());
-		console.log("CHILDREN:", subject.prop('children').length);
 
 		const expected = 'CBA';
 		const actual = subject.text();
