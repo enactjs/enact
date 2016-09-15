@@ -5,7 +5,7 @@ import sinon from 'sinon';
 
 import {ToggleItemBase} from '../ToggleItem';
 
-describe.only('ToggleItem Specs', () => {
+describe('ToggleItem Specs', () => {
 
 	it('should call onToggle, onClick, or both when clicked', function () {
 		const handleToggle = sinon.spy();
