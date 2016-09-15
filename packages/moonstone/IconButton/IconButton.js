@@ -6,7 +6,7 @@ import Icon from '../Icon';
 
 import css from './IconButton.less';
 
-const IconButton = kind({
+const IconButtonBase = kind({
 	name: 'IconButton',
 
 	propTypes: {
@@ -28,5 +28,5 @@ const IconButton = kind({
 	}
 });
 
-export default IconButton;
-export {IconButton, IconButton as IconButtonBase};
+export default IconButtonBase;
+export {IconButtonBase as IconButton, IconButtonBase};

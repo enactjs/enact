@@ -16,7 +16,7 @@ const ExpandableListBase = kind({
 		 * @default [moonstone/Item]
 		 * @public
 		 */
-		childTag: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
+		childComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
 
 		/**
 		 * Called when an item is selected
@@ -28,18 +28,18 @@ const ExpandableListBase = kind({
 	},
 
 	defaultProps: {
-		childTag: Item
+		childComponent: Item
 	},
 
 	computed: {
-		// Wrap established elements in only a div (for event and key wiring) instead of using the childTag.
+		// Wrap established elements in only a div (for event and key wiring) instead of using the childComponent.
 		// This only affects children that are qualified elements, not arrays of strings.
-		// Arrays of strings still use the provided childTag
-		ItemType: ({children, childTag}) => ((children && children[0] && typeof children[0] === 'string') ? childTag : 'div')
+		// Arrays of strings still use the provided childComponent
+		ItemType: ({children, childComponent}) => ((children && children[0] && typeof children[0] === 'string') ? childComponent : 'div')
 	},
 
 	render: ({children, onChange, ItemType, ...rest}) => {
-		delete rest.childTag;
+		delete rest.childComponent;
 
 		return (
 			<div {...rest}>
