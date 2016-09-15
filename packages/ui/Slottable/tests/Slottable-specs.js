@@ -1,8 +1,7 @@
 /* globals describe, it, expect */
 
 import React from 'react';
-import sinon from 'sinon';
-import {mount, shallow} from 'enzyme';
+import {mount} from 'enzyme';
 import kind from 'enact-core/kind';
 import Slottable from '../Slottable';
 
