@@ -25,7 +25,7 @@ const RadioItemBase = kind({
 	},
 
 	render: (props) => (
-		<ToggleItemBase {...props} icon=" " multi={false} />
+		<ToggleItemBase {...props} icon=" " />
 	)
 });
 

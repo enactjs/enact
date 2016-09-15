@@ -30,7 +30,7 @@ const GroupItemBase = kind({
 		const data = rest[childProp];
 		const selected = index === selectedIndex;
 		if (selectedProp) rest[selectedProp] = selected;
-		if (activate) rest[activate] = () => onActivate({index, data});
+		if (activate) rest[activate] = (ev) => onActivate({...ev, index, data});
 
 		return <Component {...rest} />;
 	}
