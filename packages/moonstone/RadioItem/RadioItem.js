@@ -5,7 +5,7 @@ import {ToggleItemBase} from '../ToggleItem';
 
 import css from './RadioItem.less';
 
-const RadioItem = kind({
+const RadioItemBase = kind({
 	name: 'RadioItem',
 
 	propTypes: ToggleItemBase.propTypes,
@@ -29,5 +29,5 @@ const RadioItem = kind({
 	)
 });
 
-export default RadioItem;
-export {RadioItem, RadioItem as RadioItemBase};
+export default RadioItemBase;
+export {RadioItemBase as RadioItem, RadioItemBase};
