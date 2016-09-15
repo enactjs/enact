@@ -4,7 +4,7 @@ import {cap} from 'enact-core/util';
 
 const defaultConfig = {
 	/**
-	 * If a Pickable component is used to maintain uncommited state within another component,
+	 * If a Pickable component is used to maintain uncommitted state within another component,
 	 * `mutable` allows `prop` to be updated via incoming props in addition to the `pick` callback.
 	 * When `true` and `prop` is specified, it will take precendence over the default value.
 	 *
