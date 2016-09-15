@@ -42,9 +42,9 @@
   },
   "dependencies": {
     "enact-core": "^1.0.0-alpha.1",
-    "react": "^15.1.0",
-    "react-dom": "^15.1.0",
-    "ramda": "^0.21.0",
+    "react": "^15.3.1",
+    "react-dom": "^15.3.1",
+    "ramda": "^0.22.1",
     "xhr": "^2.2.0"
   }
 }
