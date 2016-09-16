@@ -94,16 +94,13 @@ describe('Toggleable Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	// NOTE: Currently failing
 	it('should invoke onMouseDown', function () {
-		const mouseSpy = sinon.spy();
-
 		const DivComponent = ({onMouseDown}) =>
 			<div onMouseDown={onMouseDown}>Toggle</div>;
 
-		const ToggleableDiv = Toggleable(DivComponent);
+		const ToggleableDiv = Toggleable({toggle: 'onMouseDown'}, DivComponent);
 		const wrapped = shallow(
-			<ToggleableDiv onClick={mouseSpy} />
+			<ToggleableDiv />
 		);
 
 		wrapped.find('DivComponent').simulate('mousedown');
