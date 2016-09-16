@@ -2,6 +2,15 @@
 //
 @import '~enact-moonstone/styles/variables.less';
 
+// from ~enact-ui/styles/core.less. Can't import global mixins.
+.enact-selectable() {
+	cursor: auto;
+	-ms-user-select: element;
+	-webkit-user-select: text;
+	-moz-user-select: text;
+	user-select: text;
+}
+
 .moonstone {
 	// Restore the line below when backgrounds addon accepts images and allows a user-specified default background.
 	// It sets moonstone's root background color to transparent so the background-addon bg can shine through.
@@ -17,6 +26,8 @@
 
 	// Hack into the Info - Don't try this at home, kids
 	main > article > section > :nth-child(2) > :nth-child(1) > :nth-child(3) {
+		.enact-selectable();
+
 		background-color: black !important;
 
 		h1, h2, h3, p, div {
