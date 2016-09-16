@@ -1,7 +1,6 @@
 import React from 'react';
 import {shallow, mount} from 'enzyme';
 import Pressable from '../Pressable';
-import sinon from 'sinon';
 
 describe('Pressable Specs', () => {
 
@@ -32,7 +31,7 @@ describe('Pressable Specs', () => {
 		expect(actual).to.have.property(expectedMouseUp).to.be.a(expectedType);
 	});
 
-	it('Should pass key and mouse event handlers to Wrapped', function () {
+	it('Should pass mouse event handlers to Wrapped with prop useEnterKey', function () {
 		const DivComponent = () => <div>press</div>;
 
 		const PressableDiv = Pressable(DivComponent);
@@ -40,15 +39,11 @@ describe('Pressable Specs', () => {
 
 		const expectedMouseDown = 'onMouseDown';
 		const expectedMouseUp = 'onMouseUp';
-		const expectedKeyDown = 'onKeyDown';
-		const expectedKeyUp = 'onKeyUp';
 		const actual = wrapped.find('DivComponent').props();
 		const expectedType = 'function';
 
 		expect(actual).to.have.property(expectedMouseDown).to.be.a(expectedType);
 		expect(actual).to.have.property(expectedMouseUp).to.be.a(expectedType);
-		expect(actual).to.have.property(expectedKeyDown).to.be.a(expectedType);
-		expect(actual).to.have.property(expectedKeyUp).to.be.a(expectedType);
 	});
 
 	it('should pass pressed to Wrapped in configured prop', function () {
@@ -65,7 +60,6 @@ describe('Pressable Specs', () => {
 
 		expect(actual).to.have.property(expected);
 	});
-
 
 	it('should pass depress handlers to Wrapped in configured props', function () {
 		const DivComponent = () => <div>press</div>;
@@ -93,32 +87,6 @@ describe('Pressable Specs', () => {
 		expect(actual).to.have.property(expected).to.be.a('function');
 	});
 
-	it('should pass keyUp handlers to Wrapped in configured props', function () {
-		const DivComponent = () => <div>press</div>;
-		const keyHandle = 'onUp';
-
-		const PressableDiv = Pressable({keyUp: keyHandle}, DivComponent);
-		const wrapped = shallow(<PressableDiv useEnterKey />);
-
-		const expected = keyHandle;
-		const actual = wrapped.find('DivComponent').props();
-
-		expect(actual).to.have.property(expected).to.be.a('function');
-	});
-
-	it('should pass keyDown handlers to Wrapped in configured props', function () {
-		const DivComponent = () => <div>press</div>;
-		const keyHandle = 'onDown';
-
-		const PressableDiv = Pressable({keyUp: keyHandle}, DivComponent);
-		const wrapped = shallow(<PressableDiv useEnterKey />);
-
-		const expected = keyHandle;
-		const actual = wrapped.find('DivComponent').props();
-
-		expect(actual).to.have.property(expected).to.be.a('function');
-	});
-
 	it('should cause pressed to be true on event', function () {
 		const DivComponent = ({onMouseDown}) =>
 			<div onMouseDown={onMouseDown}>press</div>;
@@ -129,22 +97,6 @@ describe('Pressable Specs', () => {
 
 		const expected = true;
 		const actual = wrapped.find('DivComponent').prop('pressed');
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('should invoke depress handler', function () {
-		const mouseDownCB = sinon.spy();
-
-		const DivComponent = () =>
-			<div onMouseDown={mouseDownCB}>press</div>;
-
-		const PressableDiv = Pressable(DivComponent);
-		const wrapped = mount(<PressableDiv onMouseDown={mouseDownCB} />);
-		wrapped.find('DivComponent').simulate('mousedown');
-
-		const expected = true;
-		const actual = mouseDownCB.called;
 
 		expect(actual).to.equal(expected);
 	});
@@ -174,22 +126,6 @@ describe('Pressable Specs', () => {
 		const expectedUp = false;
 		const actualUp = wrapped.find('DivComponent').prop('pressed');
 		expect(actualUp).to.equal(expectedUp);
-	});
-
-	it('should invoke release handler', function () {
-		const mouseSpy = sinon.spy();
-
-		const DivComponent = () =>
-			<div onMouseUp={mouseSpy}>press</div>;
-
-		const PressableDiv = Pressable(DivComponent);
-		const wrapped = mount(<PressableDiv onMouseUp={mouseSpy} />);
-		wrapped.find('DivComponent').simulate('mouseup');
-
-		const expected = true;
-		const actual = mouseSpy.called;
-
-		expect(actual).to.equal(expected);
 	});
 
 	it('should invoke custom depress handler', function () {
