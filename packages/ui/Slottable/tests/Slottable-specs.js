@@ -122,8 +122,8 @@ describe('Slottable Specs', () => {
 			</Component>
 		);
 
-		const expected = 3;
-		const actual = subject.prop('children').length;
+		const expected = 'BA';
+		const actual = subject.text();
 
 		expect(actual).to.equal(expected);
 	});
