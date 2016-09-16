@@ -5,8 +5,10 @@ import Moonstone from '../src/MoonstoneEnvironment';
 
 addDecorator(Moonstone);
 addDecorator(backgrounds([
-	{name: 'default', value: '#000000'},
-	{name: 'image', value: 'gray url("http://lorempixel.com/720/480/") no-repeat center/cover'}
+	{name: 'black', value: '#000000'},
+	{name: 'dark image', value: 'darkgray url("http://lorempixel.com/720/480/abstract/2/") no-repeat center/cover'},
+	{name: 'light image', value: 'lightgray url("http://lorempixel.com/720/480/cats/9/") no-repeat center/cover'},
+	{name: 'random image', value: 'gray url("http://lorempixel.com/720/480/") no-repeat center/cover'}
 ]));
 
 setAddon(infoAddon);
