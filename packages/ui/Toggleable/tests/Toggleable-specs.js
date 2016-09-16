@@ -1,7 +1,6 @@
 import React from 'react';
 import {shallow} from 'enzyme';
 import Toggleable from '../Toggleable';
-import sinon from 'sinon';
 
 describe('Toggleable Specs', () => {
 	it('should accept a default selected prop', function () {
@@ -48,7 +47,7 @@ describe('Toggleable Specs', () => {
 		expect(actual).to.have.property(expected);
 	});
 
-	it('should pass selected to Wrapped in configured prop', function () {
+	it('should pass custom toggle prop to Wrapped Component in configured prop', function () {
 		const DivComponent = () => <div>Toggle</div>;
 
 		const defaultSelected = 'toggleMe';
@@ -63,10 +62,10 @@ describe('Toggleable Specs', () => {
 		expect(actual).to.have.property(expected);
 	});
 
-	it('should pass handler to Wrapped in configured prop', function () {
+	it('should pass custom selected prop to Wrapped Component in configured prop', function () {
 		const DivComponent = () => <div>Toggle</div>;
 
-		const defaultSelected = 'selectMe';
+		const defaultSelected = 'isSelected';
 		const ToggleableDiv = Toggleable({prop: defaultSelected}, DivComponent);
 		const wrapped = shallow(
 			<ToggleableDiv />
@@ -78,7 +77,7 @@ describe('Toggleable Specs', () => {
 		expect(actual).to.have.property(expected);
 	});
 
-	it('should invoke onClick', function () {
+	it('should change selected to true on click event', function () {
 		const DivComponent = ({onClick}) => <div onClick={onClick}>Toggle</div>;
 
 		const ToggleableDiv = Toggleable(DivComponent);
@@ -94,7 +93,7 @@ describe('Toggleable Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should invoke onMouseDown', function () {
+	it('should change selected to true on mousedown event', function () {
 		const DivComponent = ({onMouseDown}) =>
 			<div onMouseDown={onMouseDown}>Toggle</div>;
 
