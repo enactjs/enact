@@ -19,7 +19,7 @@ const PanelsBase = kind({
 		<div {...rest}>
 			<Panels>
 				<Panel>
-					<Header type="compact" title={title} />
+					<Header type="compact" title={title} preserveCase />
 					<div className={css.description}>
 						<p>{description}</p>
 					</div>
@@ -30,15 +30,37 @@ const PanelsBase = kind({
 	)
 });
 
+const FullscreenBase = kind({
+	name: 'MoonstoneEnvironment',
+
+	styles: {
+		css,
+		className: 'moonstone'
+	},
+
+	render: (props) => (
+		<div {...props} />
+	)
+});
+
 const Moonstone = MoonstoneDecorator(PanelsBase);
+const MoonstoneFullscreen = MoonstoneDecorator(FullscreenBase);
 
 const StorybookDecorator = (story, config) => {
 	return (
-		<Moonstone title={config.story}>
+		<Moonstone title={config.kind + ' ' + config.story} description={config.description}>
 			{story()}
 		</Moonstone>
 	);
 };
 
+const FullscreenStorybookDecorator = (story, config) => {
+	return (
+		<MoonstoneFullscreen title={config.kind + ' ' + config.story} description={config.description}>
+			{story()}
+		</MoonstoneFullscreen>
+	);
+};
+
 export default StorybookDecorator;
-export {StorybookDecorator, Moonstone};
+export {StorybookDecorator as Moonstone, FullscreenStorybookDecorator as MoonstoneFullscreen};

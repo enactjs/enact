@@ -1,51 +1,126 @@
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
+import {withKnobs, text, boolean, number, select} from '@kadira/storybook-addon-knobs';
+
 import Pickable from 'enact-ui/Pickable';
 import Picker, {PickerBase} from 'enact-moonstone/Picker';
-import RangePicker from 'enact-moonstone/RangePicker';
-import backgrounds from 'react-storybook-addon-backgrounds';
-import {withKnobs, text, boolean, number} from '@kadira/storybook-addon-knobs';
-import Moonstone from '../../src/MoonstoneEnvironment';
+import Icon from 'enact-moonstone/Icon';
 
-const StatefulRangePicker = Pickable(RangePicker);
+const pickerStories = storiesOf('Picker').addDecorator(withKnobs);
 
-const stories = storiesOf('Pickers');
+const StatefulPicker = Pickable(Picker);
+StatefulPicker.displayName = 'Picker';
+StatefulPicker.propTypes = Object.assign({}, PickerBase.propTypes, Picker.propTypes);
+StatefulPicker.defaultProps = Object.assign({}, PickerBase.defaultProps, Picker.defaultProps);
 
-stories.addDecorator(Moonstone);
-stories.addDecorator(withKnobs);
-stories.addDecorator(backgrounds([
-	{name: 'dark', value: '#000000'}
-]));
+// Set up some defaults for info and knobs
+const prop = {
+	orientation: {'horizontal': 'horizontal', 'vertical': 'vertical'},
+	width: {'null': null, 'small': 'small', 'medium': 'medium', 'large': 'large'}
+};
 
-StatefulRangePicker.displayName = 'StatefulRangePicker';
-StatefulRangePicker.propTypes = Object.assign({}, PickerBase.propTypes, Picker.propTypes );
-StatefulRangePicker.defaultProps = Object.assign({}, PickerBase.defaultProps, Picker.defaultProps);
+const airports = [
+	'San Francisco Airport Terminal Gate 1',
+	'Boston Airport Terminal Gate 2',
+	'Tokyo Airport Terminal Gate 3',
+	'נמל התעופה בן גוריון טרמינל הבינלאומי'
+];
+const foods = ['Potato', 'Carrot', 'Tomato', 'Celery', 'Peanut'];
 
-stories
+pickerStories
 	.addWithInfo(
-		'StatefulRangePicker without wrap',
-		'This is an example of using StatefulRangePicker without wrapping;',
+		'basic',
+		'In its initial form, using an array of data, with only defaultValue and width specified.',
 		() => (
-			<StatefulRangePicker
-				onChange={action('changed')}
-				min={number('min', 0)}
-				max={number('max', 10)}
-				value={number('value', 10)}
-				width={text('width', 'small')}
-			/>
-		)
+			<StatefulPicker
+				onChange={action('onChange')}
+				defaultValue={number('defaultValue', 2)}
+				width={select('width', prop.width, 'large')}
+			>
+				{airports}
+			</StatefulPicker>
+		),
 	)
 	.addWithInfo(
-		'StatefulRangePicker with wrap',
-		'This is an example of using StatefulRangePicker with wrapping;',
+		'with Array and full options',
+		'Customizable Picker with most options adjustable.',
 		() => (
-			<StatefulRangePicker
-				onChange={action('changed')}
-				min={number('min', 0)}
-				max={number('max', 10)}
-				value={number('value', 10)}
+			<StatefulPicker
+				onChange={action('onChange')}
+				defaultValue={number('defaultValue', 2)}
+				width={select('width', prop.width, 'large')}
+				orientation={select('orientation', prop.orientation, 'horizontal')}
+				wrap={boolean('wrap')}
+				joined={boolean('joined')}
+				noAnimation={boolean('noAnimation')}
+				disabled={boolean('disabled')}
+				incrementIcon={text('incrementIcon')}
+				decrementIcon={text('decrementIcon')}
+			>
+				{airports}
+			</StatefulPicker>
+		),
+	)
+	.addWithInfo(
+		'with Component children',
+		'We see Picker supports arbitrary components as children to pick from.',
+		() => (
+			<StatefulPicker
+				onChange={action('onChange')}
+				defaultValue={number('defaultValue', 2)}
+				width={select('width', prop.width, 'medium')}
+				orientation={select('orientation', prop.orientation, 'horizontal')}
+				wrap={boolean('wrap')}
+				joined={boolean('joined')}
+				noAnimation={boolean('noAnimation')}
+				disabled={boolean('disabled')}
+				incrementIcon={text('incrementIcon')}
+				decrementIcon={text('decrementIcon')}
+			>
+				<Icon>search</Icon>
+				<Icon>gear</Icon>
+				<Icon>trash</Icon>
+			</StatefulPicker>
+		),
+	)
+	.addWithInfo(
+		'with custom icons',
+		'Picker supports customized icons for the increment and decrement buttons in any orientation. Any valid Icon name or format is supported.',
+		() => (
+			<StatefulPicker
+				onChange={action('onChange')}
+				defaultValue={number('defaultValue', 2)}
+				width={select('width', prop.width, 'medium')}
+				orientation={select('orientation', prop.orientation, 'vertical')}
+				wrap={boolean('wrap')}
+				joined={boolean('joined')}
+				noAnimation={boolean('noAnimation')}
+				disabled={boolean('disabled')}
+				incrementIcon={text('incrementIcon', 'plus')}
+				decrementIcon={text('decrementIcon', 'minus')}
+			>
+				{foods}
+			</StatefulPicker>
+		),
+	)
+	.addWithInfo(
+		'joined',
+		'Picker may have both buttons joined together into a single shape, if that is more appropriate for your usage.',
+		() => (
+			<StatefulPicker
+				onChange={action('onChange')}
+				defaultValue={number('defaultValue', 2)}
+				width={select('width', prop.width, 'medium')}
+				orientation={select('orientation', prop.orientation, 'horizontal')}
 				wrap={boolean('wrap', true)}
-				width={text('width', 'small')}
-			/>
-		)
-	);
+				joined={boolean('joined', true)}
+				noAnimation={boolean('noAnimation')}
+				disabled={boolean('disabled')}
+				incrementIcon={text('incrementIcon')}
+				decrementIcon={text('decrementIcon')}
+			>
+				{foods}
+			</StatefulPicker>
+		),
+	)
+;
