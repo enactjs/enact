@@ -31,11 +31,11 @@ describe('Pressable Specs', () => {
 		expect(actual).to.have.property(expectedMouseUp).to.be.a(expectedType);
 	});
 
-	it('Should pass mouse event handlers to Wrapped with prop useEnterKey', function () {
+	it('Should pass mouse event handlers to Wrapped', function () {
 		const DivComponent = () => <div>press</div>;
 
 		const PressableDiv = Pressable(DivComponent);
-		const wrapped = shallow(<PressableDiv useEnterKey />);
+		const wrapped = shallow(<PressableDiv />);
 
 		const expectedMouseDown = 'onMouseDown';
 		const expectedMouseUp = 'onMouseUp';
