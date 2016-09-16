@@ -9,13 +9,13 @@ const ItemBase = kind({
 
 	propTypes : {
 		children: PropTypes.node.isRequired,
-		disabled: PropTypes.bool,
-		tag: PropTypes.string
+		component: PropTypes.string,
+		disabled: PropTypes.bool
 	},
 
 	defaultProps: {
-		disabled: false,
-		tag: 'div'
+		component: 'div',
+		disabled: false
 	},
 
 	styles: {
@@ -23,12 +23,12 @@ const ItemBase = kind({
 		className: 'item'
 	},
 
-	render: ({tag: Tag, ...rest}) => {
+	render: ({component: Component, ...rest}) => {
 		delete rest.index;
 		delete rest.pressed;
 
 		return (
-			<Tag {...rest} />
+			<Component {...rest} />
 		);
 	}
 });

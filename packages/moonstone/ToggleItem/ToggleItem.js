@@ -1,11 +1,9 @@
 import kind from 'enact-core/kind';
-import Toggleable from 'enact-ui/Toggleable';
 import React, {PropTypes} from 'react';
 
 import Item from '../Item';
 import Icon from '../Icon';
 
-import itemCss from '../Item/Item.less'; // TODO: incorrect styling?
 import css from './ToggleItem.less';
 
 const ToggleItemBase = kind({
@@ -18,17 +16,8 @@ const ToggleItemBase = kind({
 		icon: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
 		iconClasses: PropTypes.string,
 		inline: PropTypes.bool,
-		multi: PropTypes.bool,
-		name: PropTypes.string,
-		onChange: PropTypes.func,
-		value: PropTypes.string
-	},
-
-	defaultProps: {
-		checked: false,
-		disabled: false,
-		inline: false,
-		multi: true
+		onToggle: PropTypes.func,
+		value: PropTypes.any
 	},
 
 	styles: {
@@ -37,34 +26,36 @@ const ToggleItemBase = kind({
 	},
 
 	computed: {
-		className: ({className, inline, styler}) => styler.append(
-			itemCss.item,
-			className,
-			{inline}
-		),
-		iconElem: ({checked, icon, iconClasses, styler}) => (
-			React.isValidElement(icon) ? icon : <Icon className={styler.join(css.icon, iconClasses, {checked})}>{icon}</Icon>
-		),
-		type: ({multi}) => (multi ? 'checkbox' : 'radio')
+		className: ({inline, styler}) => styler.append({inline}),
+		icon: ({checked, icon, iconClasses, styler}) => {
+			if (React.isValidElement(icon)) {
+				return icon;
+			}
+
+			return <Icon className={styler.join(css.icon, iconClasses, {checked})}>{icon}</Icon>;
+		},
+		onToggle: ({onToggle, onClick, checked, value}) => {
+			if (onToggle || onClick) {
+				return (ev) => {
+					if (onToggle) onToggle({checked: !checked, value});
+					if (onClick) onClick(ev);
+				};
+			}
+		}
 	},
 
-	render: ({className, iconElem, children, ...rest}) => {
-		delete rest.icon;
+	render: ({children, icon, onToggle, ...rest}) => {
 		delete rest.iconClasses;
 		delete rest.inline;
-		delete rest.multi;
 
 		return (
-			<Item tag="label" className={className} disabled={rest.disabled}>
-				<input {...rest} />
-				{iconElem}
+			<Item {...rest} onClick={onToggle}>
+				{icon}
 				{children}
 			</Item>
 		);
 	}
 });
 
-const ToggleItem = Toggleable({prop: 'checked'}, ToggleItemBase);
-
-export default ToggleItem;
-export {ToggleItem, ToggleItemBase};
+export default ToggleItemBase;
+export {ToggleItemBase as ToggleItem, ToggleItemBase};

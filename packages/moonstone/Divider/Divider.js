@@ -1,21 +1,10 @@
 import kind from 'enact-core/kind';
+import {cap} from 'enact-core/util';
 import React, {PropTypes} from 'react';
 
 import css from './Divider.less';
 
-// From enyo/utils
-/**
-* Capitalizes a given string.
-*
-* @param {String} str - The string to capitalize.
-* @returns {String} The capitalized string.
-* @public
-*/
-const cap = function (str) {
-	return str.slice(0, 1).toUpperCase() + str.slice(1);
-};
-
-const Divider = kind({
+const DividerBase = kind({
 	name: 'Divider',
 
 	propTypes: {
@@ -43,5 +32,5 @@ const Divider = kind({
 	)
 });
 
-export default Divider;
-export {Divider, Divider as DividerBase};
+export default DividerBase;
+export {DividerBase as Divider, DividerBase};

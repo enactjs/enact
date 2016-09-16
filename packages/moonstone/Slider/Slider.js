@@ -1,6 +1,6 @@
 import kind from 'enact-core/kind';
 import {throttleJob} from 'enact-core/jobs';
-import {Spottable} from 'enact-spotlight';
+import {Spotlight, Spottable} from 'enact-spotlight';
 import Pressable from 'enact-ui/Pressable';
 import {checkDefaultBounds} from 'enact-ui/validators/PropTypeValidators';
 import React, {PropTypes} from 'react';
@@ -59,12 +59,12 @@ const SliderBase = kind({
 		loadedValue: ({backgroundPercent}) => (backgroundPercent + '%')
 	},
 
-	render: ({percentProgress, loadedValue, max, min, onChange, value, step, vertical, verticalHeight, verticalWidth, ...rest}) => {
+	render: ({percentProgress, loadedValue, max, min, onChange, value, step, vertical, verticalHeight, verticalWidth, sliderRef, ...rest}) => {
 		delete rest.backgroundPercent;
 		delete rest.pressed;
 
 		return (
-			<div {...rest}>
+			<div {...rest} ref={sliderRef}>
 				<div className={css.visibleBar} style={verticalHeight}>
 					<div className={css.load} style={{[vertical ? 'height' : 'width']: loadedValue}} />
 					<div className={css.fill} style={{[vertical ? 'height' : 'width']: percentProgress}} />
@@ -107,12 +107,20 @@ class Slider extends React.Component {
 		}, this.changeDelayMS);
 	}
 
+	getSliderNode = (node) => {
+		this.sliderNode = node;
+	}
+
+	handleClick = () => Spotlight.focus(this.sliderNode);
+
 	render () {
 		return (
 			<SliderBase
 				{...this.props}
 				value={this.state.value}
 				onChange={this.updateValue}
+				sliderRef={this.getSliderNode}
+				onClick={this.handleClick}
 			/>
 		);
 	}

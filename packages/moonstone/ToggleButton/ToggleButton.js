@@ -1,5 +1,4 @@
 import kind from 'enact-core/kind';
-import Toggleable from 'enact-ui/Toggleable';
 import React, {PropTypes} from 'react';
 
 import Button from '../Button';
@@ -94,7 +93,5 @@ const ToggleButtonBase = kind({
 	}
 });
 
-const ToggleButton = Toggleable(ToggleButtonBase);
-
-export default ToggleButton;
-export {ToggleButton, ToggleButtonBase};
+export default ToggleButtonBase;
+export {ToggleButtonBase as ToggleButton, ToggleButtonBase};

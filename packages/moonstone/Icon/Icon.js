@@ -5,7 +5,7 @@ import iconList from './IconList.js';
 
 import css from './Icon.less';
 
-const Icon = kind({
+const IconBase = kind({
 	name: 'Icon',
 
 	propTypes: {
@@ -63,5 +63,5 @@ const Icon = kind({
 	}
 });
 
-export default Icon;
-export {Icon, Icon as IconBase, iconList};
+export default IconBase;
+export {IconBase as Icon, IconBase, iconList as icons};

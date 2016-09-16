@@ -1,7 +1,7 @@
 import React from 'react';
 import {shallow} from 'enzyme';
 import sinon from 'sinon';
-import {PlainInput as Input} from '../Input';
+import {PlainInputBase as Input} from '../PlainInput';
 
 describe('Input Specs', () => {
 	it('Should have an input element', function () {

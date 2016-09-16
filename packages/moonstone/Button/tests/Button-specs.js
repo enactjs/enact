@@ -33,7 +33,7 @@ describe('Button Specs', () => {
 	it('should not convert text content when preserveCase=true', function () {
 		let msg = 'Hello Button!';
 		const button = mount(
-			<Button preserveCase={false}>{msg}</Button>
+			<Button preserveCase>{msg}</Button>
 		);
 
 		const expected = msg;

@@ -1,5 +1,4 @@
 import kind from 'enact-core/kind';
-import Toggleable from 'enact-ui/Toggleable';
 import React from 'react';
 
 import {ToggleItemBase} from '../ToggleItem';
@@ -27,7 +26,5 @@ const SelectableItemBase = kind({
 	)
 });
 
-const SelectableItem = Toggleable({prop: 'checked'}, SelectableItemBase);
-
-export default SelectableItem;
-export {SelectableItem, SelectableItemBase};
+export default SelectableItemBase;
+export {SelectableItemBase as SelectableItem, SelectableItemBase};

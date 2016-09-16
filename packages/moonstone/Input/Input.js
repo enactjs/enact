@@ -1,64 +1,19 @@
 import classNames from 'classnames';
-import kind from 'enact-core/kind';
 import {Spotlight, Spottable, SpotlightContainerDecorator, SpotlightFocusableDecorator} from 'enact-spotlight';
 import React, {PropTypes} from 'react';
 
 import Icon from '../Icon';
 
+import {PlainInput, PlainInputBase} from './PlainInput';
 import css from './Input.less';
-
-const PlainInput = kind({
-	name: 'PlainInput',
-
-	propTypes: {
-		className: PropTypes.string,
-		disabled: PropTypes.bool,
-		onChange: PropTypes.func,
-		placeholder: PropTypes.string,
-		type: PropTypes.string,
-		value: PropTypes.string
-	},
-
-	defaultProps: {
-		disabled: false,
-		placeholder: '',
-		type: 'text',
-		value: ''
-	},
-
-	styles: {
-		css,
-		className: 'input'
-	},
-
-	computed: {
-		className: ({disabled, styler}) => styler.append({disabled})
-	},
-
-	render: ({inputRef, ...rest}) => (
-		<input {...rest} ref={inputRef} />
-	)
-});
-
-const SpottablePlainInput = Spottable(kind({
-	name: 'SpottablePlainInput',
-
-	render: (props) => {
-		delete props.spotlightDisabled;
-
-		return (
-			<PlainInput {...props} />
-		);
-	}
-}));
 
 const icon = (which, props, className) => {
 	return props[which] ? <Icon className={className}>{props[which]}</Icon> : null;
 };
 
-class InputDecorator extends React.Component {
+class InputBase extends React.Component {
 	static propTypes = {
-		...PlainInput.propTypes,
+		...PlainInputBase.propTypes,
 		disabled: PropTypes.bool,
 		iconEnd: PropTypes.string,
 		iconStart: PropTypes.string
@@ -119,16 +74,19 @@ class InputDecorator extends React.Component {
 		return (
 			<label disabled={disabled} className={decoratorClasses} tabIndex={tabIndex} onKeyDown={onKeyDown} onFocus={onFocus} >
 				{firstIcon}
-				<SpottablePlainInput {...rest} decorated disabled={disabled} spotlightDisabled={!spotlightDisabled} onKeyDown={this.inputKeyDown} inputRef={this.getInputNode} />
+				<PlainInput {...rest} decorated disabled={disabled} spotlightDisabled={!spotlightDisabled} onKeyDown={this.inputKeyDown} inputRef={this.getInputNode} />
 				{lastIcon}
 			</label>
 		);
 	}
 }
 
-const Input = SpotlightContainerDecorator(SpotlightFocusableDecorator({useEnterKey: true, pauseSpotlightOnFocus: true}, Spottable(InputDecorator)));
+const Input = SpotlightContainerDecorator(
+	SpotlightFocusableDecorator(
+		{useEnterKey: true, pauseSpotlightOnFocus: true},
+		Spottable(InputBase)
+	)
+);
 
-// Input, being the fully decorated control, is the default.
 export default Input;
-// Named default, Stateless decorated Input (base), Stateless undecorated Input.
-export {Input, InputDecorator as InputBase, PlainInput, SpottablePlainInput};
+export {Input, InputBase};
