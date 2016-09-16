@@ -3,7 +3,7 @@ import React from 'react';
 
 import css from './Picker.less';
 
-const PickerItem = kind({
+const PickerItemBase = kind({
 	name: 'PickerItem',
 
 	styles: {
@@ -18,5 +18,5 @@ const PickerItem = kind({
 	)
 });
 
-export default PickerItem;
-export {PickerItem};
+export default PickerItemBase;
+export {PickerItemBase as PickerItem, PickerItemBase};

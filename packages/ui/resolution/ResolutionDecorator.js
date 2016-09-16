@@ -58,7 +58,7 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.state && !this.state.screenType) init();
 
 			let classes = getResolutionClasses();
-			if (this.props.className) classes += ' ' + this.props.className;
+			if (this.props.className) classes += (classes ? ' ' : '') + this.props.className;
 			return <Wrapped {...this.props} className={classes} />;
 		}
 	};

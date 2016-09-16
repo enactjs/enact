@@ -5,7 +5,7 @@ import {ToggleItemBase} from '../ToggleItem';
 
 import css from './CheckboxItem.less';
 
-const CheckboxItem = kind({
+const CheckboxItemBase = kind({
 	name: 'CheckboxItem',
 
 	propTypes: ToggleItemBase.propTypes,
@@ -29,5 +29,5 @@ const CheckboxItem = kind({
 	)
 });
 
-export default CheckboxItem;
-export {CheckboxItem, CheckboxItem as CheckboxItemBase};
+export default CheckboxItemBase;
+export {CheckboxItemBase as CheckboxItem, CheckboxItemBase};

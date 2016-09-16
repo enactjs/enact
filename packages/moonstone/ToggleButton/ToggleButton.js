@@ -19,7 +19,7 @@ import css from './ToggleButton.less';
 * @ui
 * @public
 */
-const ToggleButton = kind({
+const ToggleButtonBase = kind({
 
 	propTypes: {
 		...Button.propTypes,
@@ -93,5 +93,5 @@ const ToggleButton = kind({
 	}
 });
 
-export default ToggleButton;
-export {ToggleButton, ToggleButton as ToggleButtonBase};
+export default ToggleButtonBase;
+export {ToggleButtonBase as ToggleButton, ToggleButtonBase};
