@@ -368,12 +368,14 @@ function init () {
 config = Object.assign({}, configDefaults);
 
 export {
+	calculateFontSize,
 	config,
 	defineScreenTypes,
 	getAspectRatio,
 	getAspectRatioName,
 	getResolutionClasses,
 	getScreenTypeObject,
+	getScreenType,
 	init,
 	scale,
 	selectSrc,
