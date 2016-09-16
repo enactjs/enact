@@ -4,6 +4,10 @@ import React, {PropTypes} from 'react';
 import Expandable from '../Expandable';
 import Item from '../Item';
 
+import {Spottable} from 'enact-spotlight';
+
+const SpottableDiv = Spottable('div');
+
 const ExpandableListBase = kind({
 	name: 'ExpandableList',
 
