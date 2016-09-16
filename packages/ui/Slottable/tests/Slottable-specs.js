@@ -85,9 +85,9 @@ describe('Slottable Specs', () => {
 	});
 
 	it('should distribute children with no \'slot\' property to Slottable\'s \'children\'', function () {
-		const Component = Slottable({slots: ['a', 'b']}, ({a, b, c}) => (
+		const Component = Slottable({slots: ['a', 'b']}, ({a, b, children}) => (
 			<div>
-				{c}
+				{children}
 				{b}
 				{a}
 			</div>
@@ -100,13 +100,13 @@ describe('Slottable Specs', () => {
 			</Component>
 		);
 
-		const expected = 3;
-		const actual = subject.prop('children').length;
+		const expected = 'CBA';
+		const actual = subject.text();
 
 		expect(actual).to.equal(expected);
 	});
 
-	it('should distribute children with no matching \'slot\' property to Slottable\'s \'children\'', function () {
+	it('should not distribute children with an invalid \'slot\' property', function () {
 		const Component = Slottable({slots: ['a', 'b']}, ({a, b, c}) => (
 			<div>
 				{c}
