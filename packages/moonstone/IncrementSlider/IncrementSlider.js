@@ -100,7 +100,7 @@ class IncrementSlider extends React.Component {
 	}
 }
 
-const SpottableSlider = Spottable(Pressable(IncrementSlider));
+const SpottableSlider = Pressable(Spottable(IncrementSlider));
 
 export default SpottableSlider;
 export {SpottableSlider as IncrementSlider, IncrementSliderBase};
