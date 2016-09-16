@@ -1,36 +1,45 @@
 /* globals Map */
-
 import React from 'react';
-import {shallow, mount} from 'enzyme';
+import {mount} from 'enzyme';
 import Transition from '../Transition';
 import css from '../Transition.less';
 
 describe('Transition Specs', () => {
-	it('should apply author classes to root node', function () {
+	// NOTE: Feature not yet implemented
+	it.skip('should apply author classes', function () {
 		const className = 'classA classB';
 
-		const wrapped = shallow(
-			<Transition className={className}>Body</Transition>
+		const ChildNode = (props) => <div {...props}>Body</div>;
+
+		const wrapped = mount(
+			<Transition className={className}>
+				<ChildNode />
+			</Transition>
 		);
 
 		const expected = className;
-		const actual = wrapped.prop('className');
+		const actual = wrapped.find('ChildNode').prop('className');
 
-		expect(actual).to.equal(expected);
+		expect(actual).to.contain(expected);
 	});
 
-	it('should apply author styles to root node', function () {
+	// NOTE: Feature not yet implemented
+	it.skip('should apply author styles', function () {
 		const styles = {
 			color: '#000000',
 			backgroundColor: '#FFFFFF'
 		};
 
-		const wrapped = shallow(
-			<Transition style={styles}>Body</Transition>
+		const ChildNode = (props) => <div {...props}>Body</div>;
+
+		const wrapped = mount(
+			<Transition style={styles}>
+				<ChildNode />
+			</Transition>
 		);
 
 		const expected = styles;
-		const actual = wrapped.prop('style');
+		const actual = wrapped.find('ChildNode').prop('style');
 
 		expect(actual).to.equal(expected);
 	});
