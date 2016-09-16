@@ -5,6 +5,9 @@ import {withKnobs, text, boolean, number, select} from '@kadira/storybook-addon-
 import Pickable from 'enact-ui/Pickable';
 import Picker, {PickerBase} from 'enact-moonstone/Picker';
 import Icon from 'enact-moonstone/Icon';
+import Divider from 'enact-moonstone/Divider';
+
+import css from '../common.less';
 
 const pickerStories = storiesOf('Picker').addDecorator(withKnobs);
 
@@ -122,5 +125,46 @@ pickerStories
 				{foods}
 			</StatefulPicker>
 		),
+	)
+	.addWithInfo(
+		'at a glance',
+		'Many variations of Picker all displaying together.',
+		() => (
+			<div>
+				<section>
+					<Divider>Horizontal</Divider>
+					<div className={css.row}>
+						<StatefulPicker defaultValue={2} width="large" wrap onChange={action('onChange')}>
+							{airports}
+						</StatefulPicker>
+						<StatefulPicker defaultValue={1} joined width="small" onChange={action('onChange')}>
+							<Icon className={css.pickerIcon}>search</Icon>
+							<Icon className={css.pickerIcon}>gear</Icon>
+							<Icon className={css.pickerIcon}>trash</Icon>
+						</StatefulPicker>
+					</div>
+				</section>
+				<section>
+					<Divider>Vertical</Divider>
+					<div className={css.row}>
+						<StatefulPicker orientation="vertical" width="large" onChange={action('onChange')}>
+							{airports}
+						</StatefulPicker>
+						<StatefulPicker orientation="vertical" incrementIcon="plus" decrementIcon="minus" width="large" onChange={action('onChange')}>
+							{airports}
+						</StatefulPicker>
+						<StatefulPicker orientation="vertical" joined onChange={action('onChange')}>
+							{foods}
+						</StatefulPicker>
+						<StatefulPicker orientation="vertical" joined width="small" onChange={action('onChange')}>
+							<Icon className={css.pickerIcon}>search</Icon>
+							<Icon className={css.pickerIcon}>gear</Icon>
+							<Icon className={css.pickerIcon}>trash</Icon>
+						</StatefulPicker>
+					</div>
+				</section>
+			</div>
+		),
+		{propTables: [StatefulPicker]}
 	)
 ;
