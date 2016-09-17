@@ -59,14 +59,14 @@ describe('Pressable Specs', () => {
 		expect(actual).to.have.property(expected).to.be.a('function');
 	});
 
-	it('should pass release handler to Wrapped in configured props', function () {
+	it('should pass custom release prop to Wrapped in configured props', function () {
 		const DivComponent = () => <div>press</div>;
-		const mouseDownHandle = 'onUp';
+		const mouseUpHandle = 'onUp';
 
-		const PressableDiv = Pressable({release: mouseDownHandle}, DivComponent);
+		const PressableDiv = Pressable({release: mouseUpHandle}, DivComponent);
 		const wrapped = shallow(<PressableDiv />);
 
-		const expected = mouseDownHandle;
+		const expected = mouseUpHandle;
 		const actual = wrapped.find('DivComponent').props();
 
 		expect(actual).to.have.property(expected).to.be.a('function');
