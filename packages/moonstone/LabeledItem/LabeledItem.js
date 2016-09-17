@@ -5,7 +5,7 @@ import Item from '../Item';
 
 import css from './LabeledItem.less';
 
-export default kind({
+const LabeledItemBase = kind({
 	name: 'LabeledItem',
 
 	propTypes : {
@@ -25,3 +25,6 @@ export default kind({
 		</Item>
 	)
 });
+
+export default LabeledItemBase;
+export {LabeledItemBase as LabeledItem, LabeledItemBase};

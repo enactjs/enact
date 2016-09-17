@@ -11,7 +11,7 @@ describe('Group', () => {
 	it('Should call handler with index on activate', function () {
 		const handleClick = sinon.spy();
 		const subject = mount(
-			<GroupBase type="div" onActivate={handleClick}>
+			<GroupBase childComponent="div" onActivate={handleClick}>
 				{stringItems}
 			</GroupBase>
 		);
@@ -28,7 +28,7 @@ describe('Group', () => {
 	it('Should call handler with data on activate', function () {
 		const handleClick = sinon.spy();
 		const subject = mount(
-			<GroupBase type="div" onActivate={handleClick}>
+			<GroupBase childComponent="div" onActivate={handleClick}>
 				{stringItems}
 			</GroupBase>
 		);
@@ -45,7 +45,7 @@ describe('Group', () => {
 	it('Should call handler on move when activate="onMouseMove"', function () {
 		const handleClick = sinon.spy();
 		const subject = mount(
-			<GroupBase type="div" activate='onMouseMove' onActivate={handleClick}>
+			<GroupBase childComponent="div" activate='onMouseMove' onActivate={handleClick}>
 				{stringItems}
 			</GroupBase>
 		);
@@ -63,7 +63,7 @@ describe('Group', () => {
 	it('Should select the first item by default', function () {
 		const handleClick = sinon.spy();
 		const subject = mount(
-			<GroupBase type="div" onActivate={handleClick}>
+			<GroupBase childComponent="div" onActivate={handleClick}>
 				{stringItems}
 			</GroupBase>
 		);
@@ -78,7 +78,7 @@ describe('Group', () => {
 		const index = 2;
 		const handleClick = sinon.spy();
 		const subject = mount(
-			<GroupBase type="div" index={index} onActivate={handleClick}>
+			<GroupBase childComponent="div" index={index} onActivate={handleClick}>
 				{stringItems}
 			</GroupBase>
 		);
@@ -93,7 +93,7 @@ describe('Group', () => {
 		const index = 0;
 		const handleClick = sinon.spy();
 		const subject = mount(
-			<GroupBase type="div" index={index} selectedProp="data-active" onActivate={handleClick}>
+			<GroupBase childComponent="div" index={index} selectedProp="data-active" onActivate={handleClick}>
 				{stringItems}
 			</GroupBase>
 		);
@@ -108,7 +108,7 @@ describe('Group', () => {
 		const index = 0;
 		const handleClick = sinon.spy();
 		const subject = mount(
-			<GroupBase type="div" onActivate={handleClick}>
+			<GroupBase childComponent="div" onActivate={handleClick}>
 				{stringItems}
 			</GroupBase>
 		);
@@ -123,7 +123,7 @@ describe('Group', () => {
 		const index = 0;
 		const handleClick = sinon.spy();
 		const subject = mount(
-			<GroupBase type="div" childProp="data-child" onActivate={handleClick}>
+			<GroupBase childComponent="div" childProp="data-child" onActivate={handleClick}>
 				{stringItems}
 			</GroupBase>
 		);

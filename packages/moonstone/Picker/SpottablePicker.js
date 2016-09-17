@@ -4,7 +4,7 @@ import Pressable from 'enact-ui/Pressable';
 import React from 'react';
 
 const SpottablePicker = hoc(null, (config, Wrapped) => {
-	const Joined = Spottable(Pressable(Wrapped));
+	const Joined = Pressable(Spottable(Wrapped));
 	return class extends React.Component {
 		static displayName = 'SpottablePicker'
 

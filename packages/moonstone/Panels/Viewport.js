@@ -10,7 +10,7 @@ import css from './Panels.less';
  *
  * @class Viewport
  */
-const Viewport = kind({
+const ViewportBase = kind({
 	name: 'Viewport',
 
 	propTypes: {
@@ -78,5 +78,5 @@ const Viewport = kind({
 	}
 });
 
-export default Viewport;
-export {Viewport};
+export default ViewportBase;
+export {ViewportBase as Viewport, ViewportBase};

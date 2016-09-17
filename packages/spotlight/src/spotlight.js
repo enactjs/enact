@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 /*
  * A javascript-based implementation of Spatial Navigation.
  *

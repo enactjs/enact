@@ -3,27 +3,132 @@
 
 .header {
 	.moon-header-font();
-	margin: 0 12px;
+	.border-box;
+	color: @moon-header-text-color;
+	border-top: @moon-header-border-top-width solid @moon-header-border-color;
+	border-bottom: @moon-header-border-bottom-width solid @moon-header-bottom-border-color;
+	position: relative;
+	max-width: 100%;
+	padding: 0;
+	background-color: transparent;
+	background-repeat: no-repeat;
+	background-position: top left;
+	margin: 0 @moon-spotlight-outset;
 
-	.super {
-		.moon-super-header-text();
-	}
-	h1 {
+	// .titleAbove {
+	// 	.moon-super-header-text();
+	// }
+
+	.title {
 		.moon-header-text();
 		margin: 0;
 	}
-	h2 {
+
+	.titleBelow,
+	.subTitleBelow {
 		.moon-sub-header-text();
 		margin: 0;
 		.margin-start-end(0, @moon-spotlight-outset);
 		line-height: 45px;
-		float: left;
-		clear: left;
 	}
-	h2+h2 {
+
+	.subTitleBelow {
 		.moon-header-sub-title-below();
 	}
 
 	.headerComponents {
+		flex-wrap: nowrap;
+		display: flex;
+		align-items: flex-end;
+	}
+
+	&.compact,
+	.headerRow {
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+	}
+
+	// Standard Header
+	&.standard {
+		height: @moon-header-height-medium;
+
+		.title {
+			line-height: @moon-medium-header-line-height;
+
+			.enyo-locale-non-latin & {
+				line-height: @moon-non-latin-medium-header-line-height;
+			}
+		}
+
+		.headerRow {
+			position: absolute;
+			width: 100%;
+			height: 75px;
+			bottom: 12px;
+
+			.headerCell {
+				flex-grow: 1;
+			}
+		}
+
+		.titleBelow,
+		.subTitleBelow {
+			line-height: 39px;
+		}
+	}
+
+	// Compact Header
+	&.compact {
+		height: @moon-header-height-small;
+		align-items: stretch;
+
+		.title {
+			line-height: @moon-small-header-line-height;
+			font-size: @moon-small-header-font-size;
+			margin-top: 30px;
+			display: inline-block;
+
+			.enyo-locale-non-latin & {
+				line-height: @moon-non-latin-small-header-line-height;
+			}
+		}
+
+		.titleBelow {
+			display: inline;
+			margin-left: (2 * @moon-spotlight-outset);
+		}
+
+		.headerComponents {
+			margin: @moon-spotlight-outset 0;
+		}
+	}
+
+	&:global(.debug) {
+		@alpha: 10%;
+
+		border: cornflowerblue dashed 1px;
+		background-color: fade(cornflowerblue, @alpha);
+
+		.title {
+			border: lime dashed 1px;
+			background-color: fade(lime, @alpha);
+		}
+		.headerCell {
+			border: orange dashed 1px;
+			background-color: fade(orange, @alpha);
+		}
+		.titleBelow {
+			border: green dashed 1px;
+			background-color: fade(green, @alpha);
+		}
+		.subTitleBelow {
+			border: teal dashed 1px;
+			background-color: fade(teal, @alpha);
+		}
+		.headerComponents {
+			border: cyan dashed 1px;
+			background-color: fade(cyan, @alpha);
+		}
 	}
 }
