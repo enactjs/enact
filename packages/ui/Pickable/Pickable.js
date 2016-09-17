@@ -1,3 +1,9 @@
+/**
+ * Exports the {@link module:enact-ui/Pickable~Pickable} Higher-order Component (Hoc).
+ *
+ * @module enact-ui/Pickable
+ */
+
 import React from 'react';
 import hoc from 'enact-core/hoc';
 import {cap} from 'enact-core/util';
@@ -33,13 +39,41 @@ const defaultConfig = {
 	prop: 'value'
 };
 
+/**
+ * {@link module:enact-ui/Pickable~Pickable} is a Higher-order Component that applies a 'Pickable' behavior
+ * to its wrapped component.  Its default event and value properties can be configured when applied to a component.
+ * In addition, it supports `mutable` config setting that allows the HoC to accept incoming settings for the `prop`.
+ *
+ * By default, you can set the initial state of the pickable item by passing `defaultValue`.  Once rendered, the
+ * HoC manages the state of `value`.  If the `prop` is overridden, the names change correspondingly.
+ *
+ * @class Pickable
+ * @ui
+ * @public
+ */
 const PickableHoC = hoc(defaultConfig, (config, Wrapped) => {
 	const {mutable, prop} = config;
 	const defaultPropKey = 'default' + cap(prop);
 
 	return class Pickable extends React.Component {
 		static propTypes = {
+
+			/**
+			 * The default value of the component. *Note that this property name changes based on the config.*
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
 			[defaultPropKey]: React.PropTypes.number,
+
+			/**
+			 * Controls whether the component is disabled.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
 			disabled: React.PropTypes.bool
 		}
 

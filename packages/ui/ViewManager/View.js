@@ -1,3 +1,9 @@
+/**
+ * Exports the {@link module:enact-ui/ViewManager~View} component.
+ *
+ * @module enact-ui/View
+ */
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 
@@ -6,6 +12,13 @@ import shallowEqual from 'recompose/shallowEqual';
 
 const TICK = 17;
 
+/**
+ * A `View` wraps a set of children for {@link module:enact-ui/ViewManager~ViewManager}.
+ * It is not intended to be used directly
+ *
+ * @class View
+ * @private
+ */
 class View extends React.Component {
 
 	static propTypes = {
