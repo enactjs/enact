@@ -1,4 +1,3 @@
-/* globals Map */
 import React from 'react';
 import {mount} from 'enzyme';
 import Transition from '../Transition';
@@ -42,18 +41,6 @@ describe('Transition Specs', () => {
 		const actual = wrapped.find('ChildNode').prop('style');
 
 		expect(actual).to.equal(expected);
-	});
-
-	it('should apply styles to inner wrapper when type == "clip"', function () {
-		const clipStyles = {height: 0, overflow: 'hidden'};
-		const wrapped = mount(
-			<Transition type='clip'>Body</Transition>
-		);
-
-		const expected = clipStyles;
-		const actual = wrapped.childAt(0).prop('style');
-
-		expect(actual).to.deep.equal(expected);
 	});
 
 	// Tests for prop and className combinations
