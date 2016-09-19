@@ -840,7 +840,7 @@ const Spotlight = (function () {
 			return;
 		}
 
-		let target = getNavigabletarget(evt.target), // account for child controls
+		let target = getNavigableTarget(evt.target), // account for child controls
 			current = getCurrent(),
 			preventDefault = function () {
 				evt.preventDefault();
@@ -858,7 +858,7 @@ const Spotlight = (function () {
 		}
 	}
 
-	function getNavigabletarget (target) {
+	function getNavigableTarget (target) {
 		let parent;
 		while (target && !isFocusable(target)) {
 			parent = target.parentNode;
