@@ -6,16 +6,15 @@ import ResolutionDecorator from '../ResolutionDecorator';
 
 describe('ResolutionDecorator Specs', () => {
 
-	it('should apply resolution classes to the wrapped component', function () {
-		const className = 'resolution-class';
+	it.skip('should apply resolution classes to the wrapped component', function () {
 		const Component = ResolutionDecorator('div');
 		const subject = shallow(
-			<Component className={className} />
+			<Component />
 		);
 		const wrapped = subject.find('div');
 
-		const expected = className;
-		const actual = wrapped.prop('className');
+		const expected = true;
+		const actual = (wrapped.hasClass('enact-res-standard') && (wrapped.hasClass('enact-orientation-landscape') || wrapped.hasClass('enact-orientation-portrait')));
 
 		expect(actual).to.equal(expected);
 	});
@@ -37,35 +36,11 @@ describe('ResolutionDecorator Specs', () => {
 	});
 
 	it.skip('should update the resolution when the screen is resized', function () {
-		const name = 'mhd';
-		const screens = [
-			{name: name, pxPerRem: 36, width: 1440, height: 920, aspectRatioName: 'hdtv', base: true}
-		];
-		const Component = ResolutionDecorator({screenTypes: screens}, 'div');
-		const subject = shallow(
-			<Component />
-		);
-
-		const expected = subject;
-		const actual = false;
-
-		expect(actual).to.equal(expected);
+		//TODO: write a test
 	});
 
 	it.skip('should not allow dynamic resolution updates when \'dynamic\' config option is false', function () {
-		const name = 'mhd';
-		const screens = [
-			{name: name, pxPerRem: 36, width: 1440, height: 920, aspectRatioName: 'hdtv', base: true}
-		];
-		const Component = ResolutionDecorator({screenTypes: screens, dynamic: false}, 'div');
-		const subject = shallow(
-			<Component />
-		);
-
-		const expected = subject;
-		const actual = false;
-
-		expect(actual).to.equal(expected);
+		//TODO: write a test
 	});
 
 });
