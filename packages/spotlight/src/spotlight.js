@@ -72,7 +72,7 @@ const Spotlight = (function () {
 	* polyfills
 	*/
 	let elementMatchesSelector = function (selector) {
-		let matchedNodes = (this.parentNode || this.document).querySelectorAll(selector);
+		const matchedNodes = (this.parentNode || this.document).querySelectorAll(selector);
 		return [].slice.call(matchedNodes).indexOf(this) >= 0;
 	};
 	if (typeof window === 'object') {
@@ -89,8 +89,8 @@ const Spotlight = (function () {
 	* protected methods
 	*/
 	function getRect (elem) {
-		let cr = elem.getBoundingClientRect();
-		let rect = {
+		const cr = elem.getBoundingClientRect();
+		const rect = {
 			left: cr.left,
 			top: cr.top,
 			width: cr.width,
@@ -241,12 +241,12 @@ const Spotlight = (function () {
 			return null;
 		}
 
-		let destDistance = destPriority.distance;
+		const destDistance = destPriority.distance;
 
 		destPriority.group.sort(function (a, b) {
 			for (let i = 0; i < destDistance.length; i++) {
-				let distance = destDistance[i];
-				let delta = distance(a) - distance(b);
+				const distance = destDistance[i];
+				const delta = distance(a) - distance(b);
 				if (delta) {
 					return delta;
 				}
@@ -840,7 +840,7 @@ const Spotlight = (function () {
 			return;
 		}
 
-		let target = getNavigableTarget(evt.target), // account for child controls
+		let target = getNavigabletarget(evt.target), // account for child controls
 			current = getCurrent(),
 			preventDefault = function () {
 				evt.preventDefault();
@@ -858,7 +858,7 @@ const Spotlight = (function () {
 		}
 	}
 
-	function getNavigableTarget (target) {
+	function getNavigabletarget (target) {
 		let parent;
 		while (target && !isFocusable(target)) {
 			parent = target.parentNode;

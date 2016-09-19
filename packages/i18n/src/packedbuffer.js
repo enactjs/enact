@@ -25,7 +25,7 @@
  * @constructor
  * @param {string} buffer the binary buffer represented as a string
  */
-let PackedBuffer = function (buffer) {
+const PackedBuffer = function (buffer) {
 	this.buffer = buffer;
 	this.index = 0;
 };
@@ -65,11 +65,10 @@ PackedBuffer.prototype.getLongs = function (num) {
  * there is not enough bytes left in the buffer to form a long
  */
 PackedBuffer.prototype.getLong = function () {
-	let longs = this.getLongs(1);
+	const longs = this.getLongs(1);
 	if (longs && longs.length > 0) {
 		return longs[0];
 	}
-	return;
 };
 
 /**
@@ -106,11 +105,10 @@ PackedBuffer.prototype.getBytes = function (num) {
  * there is not enough bytes left in the buffer to form a byte
  */
 PackedBuffer.prototype.getByte = function () {
-	let bytes = this.getBytes(1);
+	const bytes = this.getBytes(1);
 	if (bytes && bytes.length > 0) {
 		return bytes[0];
 	}
-	return;
 };
 
 /**
@@ -141,7 +139,7 @@ PackedBuffer.prototype.getUnsignedBytes = function (num) {
  * @returns {string} a string made out of the given bytes
  */
 PackedBuffer.prototype.getString = function (num) {
-	let arr = this.getUnsignedBytes(num);
+	const arr = this.getUnsignedBytes(num);
 	let str = '';
 	for (let i = 0; i < arr.length; i++) {
 		str += String.fromCharCode(arr[i]);
