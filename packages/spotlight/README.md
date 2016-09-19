@@ -10,7 +10,7 @@
 8. [Focusable](#8)
 9. [Events](#9)
 10. [Spotlight API](#10)
-11. [HOC Parameters](#11)
+11. [HoC Parameters](#11)
 12. [Examples](#12)
 
 <a name="1"></a>
@@ -67,12 +67,12 @@ following types:
 
 <a name="5"></a>
 ## 5. SpotlightRootDecorator
-The `SpotlightRootDecorator` is a top-level HOC (Higher Order Component) that is 
+The `SpotlightRootDecorator` is a top-level HoC (Higher-order Component) that is 
 required to use Spotlight. It is responsible for initializing the Spotlight instance
 and managing navigation event listeners.
 
 To use Spotlight in an application, simply import and wrap the `SpotlightRootDecorator` 
-HOC around your application view:
+HoC around your application view:
 
 ```javascript
 import ApplicationView from './ApplicationView';
@@ -81,13 +81,13 @@ const App = SpotlightRootDecorator(ApplicationView);
 ```
 
 It's worth noting that `enact-moonstone` applications include `SpotlightRootDecorator`
-by default in its `MoonstoneDecorator` HOC.
+by default in its `MoonstoneDecorator` HoC.
 
 <a name="6"></a>
 ## 6. Spottable
 
 In order to make a control focus-enabled (or "spottable") with Spotlight, simply
-wrap your base control with the `Spottable` HOC, like so:
+wrap your base control with the `Spottable` HoC, like so:
 
 ```javascript
     import {Spottable} from 'enact-spotlight';
@@ -110,7 +110,7 @@ hold focus before the focus moved outside of the container.  If the container in
 question has never been focused, it passes focus to its first spottable child.
 
 To define a container, wrap your base control with the `SpotlightContainerDecorator` 
-HOC:
+HoC:
 
 ```javascript
 import kind from 'enact-core/kind';
@@ -135,18 +135,18 @@ as the leaves--of the Spotlight navigation tree.
 
 Sometimes it's necessary to change the style of an outer-control based on the
 focus state of an inner-control--i.e.: in the case of a decorated spottable control.
-The `SpotlightFocusableDecorator` HOC -- when used with the `SpotlightContainerDecorator`
-HOC -- adds focus and state management in these scenarios by adding the CSS 
+The `SpotlightFocusableDecorator` HoC -- when used with the `SpotlightContainerDecorator`
+HoC -- adds focus and state management in these scenarios by adding the CSS 
 class `.focused` to your spottable outer-control when the spottable inner-control 
 is focused. This allows decorated controls to be styled on a  per-kind basis 
 using `.<kindClass>.focused` selectors.
 
-The `SpotlightFocusableDecorator` HOC provides certain properties that can be used
+The `SpotlightFocusableDecorator` HoC provides certain properties that can be used
 to determine which element in your control should be designated as the inner or 
 outer elements, allowing for complex and configurable controls.
 
 To define a focusable control, wrap your base control with the `SpotlightFocusableDecorator`
-& `SpotlightContainerDecorator` HOCs, and designate which controls should receive the
+& `SpotlightContainerDecorator` HoCs, and designate which controls should receive the
 `onFocus`, `onKeyDown`, `spotlightDisabled`, and `decorated` properties:
 
 ```javascript
@@ -224,7 +224,7 @@ Moves focus in the specified direction of `selector`. If `selector` is not speci
 Spotlight will move in the given direction of the currently spotted control.
 
 <a name="11"></a>
-## 11. HOC PARAMETERS ##
+## 11. HoC PARAMETERS ##
 
 ### Spottable ###
 `spotlightDisabled`
