@@ -1,5 +1,3 @@
-/* globals describe, it, expect */
-
 import React from 'react';
 import {mount} from 'enzyme';
 import kind from 'enact-core/kind';
@@ -127,7 +125,6 @@ describe('Slottable Specs', () => {
 
 		expect(actual).to.equal(expected);
 	});
-
 
 });
 
