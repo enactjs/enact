@@ -10,7 +10,7 @@ const pickGroupItemProps = R.compose(
 );
 
 const GroupItemBase = kind({
-	displayName: 'GroupItem',
+	name: 'GroupItem',
 
 	render: (props) => {
 		const {
