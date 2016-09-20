@@ -19,6 +19,7 @@
   "homepage": "https://github.com/enyojs/enact#readme",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "pack": "build-storybook -c .storybook -o dist",
     "storybook": "start-storybook -p 9001 -c .storybook"
   },
   "devDependencies": {
