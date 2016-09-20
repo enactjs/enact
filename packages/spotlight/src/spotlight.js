@@ -826,7 +826,11 @@ const Spotlight = (function() {
 			return;
 		}
 
-		SpotlightAccelerator.processKey(evt, function(){ return; });
+		if (!_directions[evt.keyCode]) {
+			return;
+		}
+
+		SpotlightAccelerator.processKey(evt, function(){});
 		return false;
 	}
 

@@ -1,11 +1,11 @@
 //* @protected
 /*************************************************************/
-let _isAccelerating = false,
-	_nSkipped = 0,
-	_nTime = 0,
-	_nKey = 0,
-	_bCanceled = false,
-	_frequency = [3, 3, 3, 2, 2, 2, 1];
+let accelerating = false,
+	skipped = 0,
+	time = 0,
+	keyCode = 0,
+	canceled = false,
+	frequency = [3, 3, 3, 2, 2, 2, 1];
 
 /**
 * Accelerator provides logic for accelerating and throttling.
@@ -16,7 +16,7 @@ let _isAccelerating = false,
 * @public
 */
 class Accelerator {
-	constructor (frequency) {
+	constructor (inFrequency) {
 		/**
 		* Controls the frequency with which the acceleration will "freeze". While frozen,
 		* the current target item cannot change, and all events are directed to it.
@@ -25,7 +25,7 @@ class Accelerator {
 		* @default [3, 3, 3, 2, 2, 2, 1]
 		* @public
 		*/
-		this.frequency = frequency || _frequency;
+		this.frequency = inFrequency || frequency;
 	}
 
 	/**
@@ -41,35 +41,35 @@ class Accelerator {
 	processKey = (event, callback, context) => {
 		switch (event.type) {
 			case 'keydown':
-				if (event.keyCode != _nKey) {
+				if (event.keyCode != keyCode) {
 					this.reset();
-					_nTime = (new Date()).getTime();
-					_nKey = event.keyCode;
+					time = (new Date()).getTime();
+					keyCode = event.keyCode;
 					return callback.apply(context, [event]);
-				} else if (_bCanceled) {
+				} else if (canceled) {
 
 					// Prevent skipped keydown events from bubbling
 					event.preventDefault();
 					return true;
 				} else {
-					let nElapsedTime = (new Date()).getTime() - _nTime,
-						nSeconds = Math.floor(nElapsedTime / 1000),
-						nToSkip = 0;
+					let elapsedTime = (new Date()).getTime() - time,
+						seconds = Math.floor(elapsedTime / 1000),
+						toSkip = 0;
 
-					nSeconds = nSeconds > this.frequency.length - 1 ? this.frequency.length - 1 : nSeconds;
+					seconds = seconds > this.frequency.length - 1 ? this.frequency.length - 1 : seconds;
 
-					nToSkip = this.frequency[nSeconds] - 1;
-					if (nToSkip < 0) {
-						nToSkip = 0;
+					toSkip = this.frequency[seconds] - 1;
+					if (toSkip < 0) {
+						toSkip = 0;
 					}
 
-					_isAccelerating = !(nSeconds === 0 && _nSkipped === 0);
+					accelerating = !(seconds === 0 && skipped === 0);
 
-					if (_nSkipped >= nToSkip) {
-						_nSkipped = 0;
+					if (skipped >= toSkip) {
+						skipped = 0;
 						return callback.apply(context, [event]);
 					} else {
-						_nSkipped++;
+						skipped++;
 						// Prevent skipped keydown events from bubbling
 						event.preventDefault();
 						return true;
@@ -88,11 +88,11 @@ class Accelerator {
 	* @public
 	*/
 	reset = () => {
-		_nSkipped = 0;
-		_nTime = 0;
-		_nKey = 0;
-		_bCanceled = false;
-		_isAccelerating = false;
+		skipped = 0;
+		time = 0;
+		keyCode = 0;
+		canceled = false;
+		accelerating = false;
 	}
 
 	/**
@@ -101,7 +101,7 @@ class Accelerator {
 	* @public
 	*/
 	cancel = () => {
-		_bCanceled = true;
+		canceled = true;
 	}
 
 	/**
@@ -111,7 +111,7 @@ class Accelerator {
 	* @public
 	*/
 	isAccelerating = () => {
-		return _isAccelerating;
+		return accelerating;
 	}
 }
 
