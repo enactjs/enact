@@ -15,6 +15,9 @@ StatefulRangePicker.displayName = 'RangePicker';
 StatefulRangePicker.propTypes = Object.assign({}, RangePickerBase.propTypes, RangePicker.propTypes);
 StatefulRangePicker.defaultProps = Object.assign({}, RangePickerBase.defaultProps, RangePicker.defaultProps);
 
+// Don't want to show `value` and it throws a warning, too!
+delete StatefulRangePicker.propTypes.value;
+
 // Set up some defaults for info and knobs
 const prop = {
 	orientation: {'horizontal': 'horizontal', 'vertical': 'vertical'},
@@ -94,6 +97,8 @@ rangePickerStories
 			<StatefulRangePicker
 				onChange={action('onChange')}
 				defaultValue={number('defaultValue', 2)}
+				min={number('min', 0)}
+				max={number('max', 10)}
 				width={select('width', prop.width, 'medium')}
 				orientation={select('orientation', prop.orientation, 'vertical')}
 				wrap={boolean('wrap')}
