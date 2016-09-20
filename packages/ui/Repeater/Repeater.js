@@ -32,7 +32,7 @@ const RepeaterBase = kind({
 		/**
 		 * An array of data to be mapped onto the `childComponent`.  For example, an array of strings.
 		 *
-		 * @type {Element}
+		 * @type {Array}
 		 * @public
 		 */
 		children: PropTypes.array.isRequired,

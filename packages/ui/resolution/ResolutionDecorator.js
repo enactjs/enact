@@ -23,8 +23,8 @@ const defaultConfig = {
 	 * An array of objects containing declarations for screen types to add to the list of known
 	 * screen types.
 	 *
-	 * @type {Boolean}
-	 * @default 'true'
+	 * @type {Object[]}
+	 * @default null
 	 * @public
 	 */
 	screenTypes: null

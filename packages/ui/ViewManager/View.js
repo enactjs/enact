@@ -1,7 +1,7 @@
 /**
  * Exports the {@link module:enact-ui/ViewManager~View} component.
  *
- * @module enact-ui/View
+ * @module enact-ui/ViewManager/View
  */
 
 import React from 'react';

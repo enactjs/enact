@@ -2,14 +2,16 @@
  * Exports a number of pre-defined arrangers for use with {@link module:enact-ui/ViewManager}.
  *
  * @public
- * @module enact-ui/Transition
+ * @module enact-ui/ViewManager/Arranger
  */
 
 import React from 'react';
 import {accelerate, clearTransform, compose, fadeIn, fadeOut, reverse, slideInPartial, slideOutPartial} from './arrange';
 
 /**
- * An basic arranger that must be configured with `enter` and `leave` direction
+ * A basic arranger that must be configured with `enter` and `leave` direction
+ * @param {Object} config Configuration object including `amount`, `enter` and `leave` properties
+ * @returns {Object} An arranger
  * @public
  */
 export const SlideArranger = ({amount = 100, enter, leave}) => ({
