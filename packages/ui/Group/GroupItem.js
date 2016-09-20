@@ -33,7 +33,7 @@ const pickGroupItemProps = R.compose(
  * @private
  */
 const GroupItemBase = kind({
-	displayName: 'GroupItem',
+	name: 'GroupItem',
 	// TODO: Add propTypes
 
 	render: (props) => {

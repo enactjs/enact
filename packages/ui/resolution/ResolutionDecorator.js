@@ -54,7 +54,7 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	}
 
 	return class extends React.Component {
-		displayName = 'ResolutionDecorator'
+		static displayName = 'ResolutionDecorator'
 
 		static propTypes = {
 			className: React.PropTypes.string

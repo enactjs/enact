@@ -2,7 +2,7 @@ import kind from 'enact-core/kind';
 import React from 'react';
 import Uppercase from 'enact-i18n/Uppercase';
 import Slottable from 'enact-ui/Slottable';
-import Marquee from 'enact-moonstone/Marquee';
+import Marquee from '../Marquee';
 
 import css from './Header.less';
 
