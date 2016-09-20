@@ -832,8 +832,12 @@ const Spotlight = (function() {
 			return;
 		}
 
-		SpotlightAccelerator.processKey(evt, function(){});
-		return false;
+		SpotlightAccelerator.reset();
+		return () => {
+			evt.preventDefault();
+			evt.stopPropagation();
+			return false;
+		};
 	}
 
 	function onKeyDown(evt) {
@@ -846,7 +850,11 @@ const Spotlight = (function() {
 		}
 
 		SpotlightAccelerator.processKey(evt, onAcceleratedKeyDown);
-		return false;
+		return () => {
+			evt.preventDefault();
+			evt.stopPropagation();
+			return false;
+		};
 	}
 
 	function onMouseOver (evt) {
