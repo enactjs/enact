@@ -4,9 +4,7 @@
   "description": "webOS support library",
   "main": "index.js",
   "scripts": {
-    "test": "enyo-karma start --single-run --browsers PhantomJS",
-    "test-json": "enyo-karma start --single-run --browsers PhantomJS --reporters json",
-    "test-watch": "enyo-karma start --browsers PhantomJS",
+    "test": "echo \"No test suite\" && exit 0",
     "transpile": "enyo-transpile",
     "pack": "enyo-webpack",
     "pack-p": "enyo-webpack -p",
@@ -32,6 +30,6 @@
     "webOS"
   ],
   "devDependencies": {
-    "enyo-config": "enyojs/enyo-config#test-suite"
+    "enyo-config": "enyojs/enyo-config"
   }
 }
