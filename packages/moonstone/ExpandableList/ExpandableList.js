@@ -4,6 +4,10 @@ import React, {PropTypes} from 'react';
 import Expandable from '../Expandable';
 import Item from '../Item';
 
+import {Spottable} from 'enact-spotlight';
+
+const SpottableDiv = Spottable('div');
+
 const ExpandableListBase = kind({
 	name: 'ExpandableList',
 
@@ -35,7 +39,7 @@ const ExpandableListBase = kind({
 		// Wrap established elements in only a div (for event and key wiring) instead of using the childComponent.
 		// This only affects children that are qualified elements, not arrays of strings.
 		// Arrays of strings still use the provided childComponent
-		ItemType: ({children, childComponent}) => ((children && children[0] && typeof children[0] === 'string') ? childComponent : 'div')
+		ItemType: ({children, childComponent}) => ((children && children[0] && typeof children[0] === 'string') ? childComponent : SpottableDiv)
 	},
 
 	render: ({children, onChange, ItemType, ...rest}) => {
