@@ -1,5 +1,6 @@
+import hoc from 'enact-core/hoc';
 import React from 'react';
-import hoc from './hoc';
+
 import {Spotlight, spotlightRootContainerName} from './spotlight';
 import {spottableClass} from './spottable';
 
@@ -7,6 +8,8 @@ const defaultConfig = {};
 
 const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
+		static displayName = 'SpotlightRootDecorator';
+
 		componentDidMount () {
 			Spotlight.initialize();
 			Spotlight.add(spotlightRootContainerName, {

@@ -13,7 +13,7 @@ describe('Repeater Specs', () => {
 
 	it('Should have a root span element', function () {
 		const subject = shallow(
-			<Repeater type="div">{stringItems}</Repeater>
+			<Repeater childComponent="div">{stringItems}</Repeater>
 		);
 
 		const expected = 'span';
@@ -22,9 +22,9 @@ describe('Repeater Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should accept a nodeName as type', function () {
+	it('Should accept a nodeName as childComponent', function () {
 		const subject = shallow(
-			<Repeater type="div">{stringItems}</Repeater>
+			<Repeater childComponent="div">{stringItems}</Repeater>
 		);
 
 		const expected = 3;
@@ -33,9 +33,9 @@ describe('Repeater Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should accept a function as type', function () {
+	it('Should accept a function as childComponent', function () {
 		const subject = shallow(
-			<Repeater type={CustomType}>{stringItems}</Repeater>
+			<Repeater childComponent={CustomType}>{stringItems}</Repeater>
 		);
 
 		const expected = 3;
@@ -46,7 +46,7 @@ describe('Repeater Specs', () => {
 
 	it('Should create a number of children matching the length of items', function () {
 		const subject = shallow(
-			<Repeater type="div">{stringItems}</Repeater>
+			<Repeater childComponent="div">{stringItems}</Repeater>
 		);
 
 		const expected = stringItems.length;
@@ -57,7 +57,7 @@ describe('Repeater Specs', () => {
 
 	it('Should support an array of objects as items', function () {
 		const subject = shallow(
-			<Repeater type={CustomType}>{objItems}</Repeater>
+			<Repeater childComponent={CustomType}>{objItems}</Repeater>
 		);
 
 		const expected = objItems.length;
@@ -68,7 +68,7 @@ describe('Repeater Specs', () => {
 
 	it('Should support passing itemProps to children', function () {
 		const subject = shallow(
-			<Repeater type="div" itemProps={{title: 'test'}}>{stringItems}</Repeater>
+			<Repeater childComponent="div" itemProps={{title: 'test'}}>{stringItems}</Repeater>
 		);
 
 		const expected = 'test';
@@ -79,7 +79,7 @@ describe('Repeater Specs', () => {
 
 	it('Should pass index to each child', function () {
 		const subject = shallow(
-			<Repeater type="div">{stringItems}</Repeater>
+			<Repeater childComponent="div">{stringItems}</Repeater>
 		);
 
 		const expected = 0;
@@ -90,7 +90,7 @@ describe('Repeater Specs', () => {
 
 	it('Should pass data to each child', function () {
 		const subject = shallow(
-			<Repeater type="div" childProp="data-str">{stringItems}</Repeater>
+			<Repeater childComponent="div" childProp="data-str">{stringItems}</Repeater>
 		);
 
 		const expected = stringItems[0];
@@ -101,7 +101,7 @@ describe('Repeater Specs', () => {
 
 	it('Should pass item as children to each child', function () {
 		const subject = shallow(
-			<Repeater type="div">{stringItems}</Repeater>
+			<Repeater childComponent="div">{stringItems}</Repeater>
 		);
 
 		const expected = stringItems[0];

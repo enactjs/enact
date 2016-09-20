@@ -23,7 +23,7 @@ const PanelBase = kind({
 
 	render: ({children, header, ...rest}) => (
 		<article {...rest}>
-			<div name="header" className={css.header}>{header}</div>
+			<div className={css.header}>{header}</div>
 			<section className={css.body}>{children}</section>
 		</article>
 	)

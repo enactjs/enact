@@ -6,7 +6,7 @@ import Repeater from '../Repeater';
 
 import {GroupItem, pickGroupItemProps} from './GroupItem';
 
-const Group = kind({
+const GroupBase = kind({
 	name: 'Group',
 
 	propTypes: {
@@ -37,9 +37,9 @@ const Group = kind({
 		delete props.index;
 		delete props.selectedProp;
 
-		return <Repeater {...props} type={GroupItem} />;
+		return <Repeater {...props} childComponent={GroupItem} />;
 	}
 });
 
-export default Group;
-export {Group, Group as GroupBase, GroupItem};
+export default GroupBase;
+export {GroupBase as Group, GroupBase, GroupItem};
