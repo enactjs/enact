@@ -1,4 +1,4 @@
-let refs = {};
+const refs = {};
 
 const adjustPath = (path) => {
 	if (path.slice(-1) !== '/') {
