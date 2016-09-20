@@ -19,7 +19,8 @@
   "homepage": "https://github.com/enyojs/enact#readme",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "storybook": "start-storybook -p 9001 -c .storybook"
+    "pack": "build-storybook -c .storybook -o dist",
+    "storybook": "start-storybook -p 9001 -c .storybool"
   },
   "devDependencies": {
     "enyo-config": "enyojs/enyo-config"
@@ -28,11 +29,11 @@
     "@kadira/react-storybook-addon-info": "^3.2.1",
     "@kadira/storybook": "^2.11.0",
     "@kadira/storybook-addon-knobs": "^1.1.0",
-    "enact-core": "^1.0.0-alpha.1",
-    "enact-i18n": "^1.0.0-alpha.1",
-    "enact-moonstone": "^1.0.0-alpha.1",
-    "enact-spotlight": "^1.0.0-alpha.1",
-    "enact-ui": "^1.0.0-alpha.1",
+    "enact-core": "file:../core",
+    "enact-i18n": "file:../i18n",
+    "enact-moonstone": "file:../moonstone",
+    "enact-spotlight": "file:../spotlight",
+    "enact-ui": "file:../ui",
     "enyo-moonstone": "enyojs/enyo-moonstone#develop",
     "enyo-ui": "enyojs/enyo-ui#develop",
     "react": "^15.3.1",
