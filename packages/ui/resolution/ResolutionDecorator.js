@@ -32,7 +32,7 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	}
 
 	return class extends React.Component {
-		displayName = 'ResolutionDecorator'
+		static displayName = 'ResolutionDecorator'
 
 		static propTypes = {
 			className: React.PropTypes.string
@@ -58,7 +58,7 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.state && !this.state.screenType) init();
 
 			let classes = getResolutionClasses();
-			if (this.props.className) classes += ' ' + this.props.className;
+			if (this.props.className) classes += (classes ? ' ' : '') + this.props.className;
 			return <Wrapped {...this.props} className={classes} />;
 		}
 	};

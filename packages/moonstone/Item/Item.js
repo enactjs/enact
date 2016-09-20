@@ -1,7 +1,6 @@
 import React, {PropTypes} from 'react';
 import kind from 'enact-core/kind';
 import {Spottable} from 'enact-spotlight';
-import Pressable from 'enact-ui/Pressable';
 
 import css from './Item.less';
 
@@ -10,13 +9,13 @@ const ItemBase = kind({
 
 	propTypes : {
 		children: PropTypes.node.isRequired,
-		disabled: PropTypes.bool,
-		tag: PropTypes.string
+		component: PropTypes.string,
+		disabled: PropTypes.bool
 	},
 
 	defaultProps: {
-		disabled: false,
-		tag: 'div'
+		component: 'div',
+		disabled: false
 	},
 
 	styles: {
@@ -24,17 +23,17 @@ const ItemBase = kind({
 		className: 'item'
 	},
 
-	render: ({tag: Tag, ...rest}) => {
+	render: ({component: Component, ...rest}) => {
 		delete rest.index;
 		delete rest.pressed;
 
 		return (
-			<Tag {...rest} />
+			<Component {...rest} />
 		);
 	}
 });
 
-const Item = Spottable(Pressable(ItemBase));
+const Item = Spottable(ItemBase);
 
 export default Item;
 export {Item, ItemBase};

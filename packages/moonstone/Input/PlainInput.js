@@ -32,13 +32,9 @@ const PlainInputBase = kind({
 		className: ({disabled, styler}) => styler.append({disabled})
 	},
 
-	render: ({inputRef, ...rest}) => {
-		delete rest.useEnterKey;
-
-		return (
-			<input {...rest} ref={inputRef} />
-		);
-	}
+	render: ({inputRef, ...rest}) => (
+		<input {...rest} ref={inputRef} />
+	)
 });
 
 const PlainInput = Spottable(kind({

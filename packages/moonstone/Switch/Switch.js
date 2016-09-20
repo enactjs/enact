@@ -18,7 +18,7 @@ import css from './Switch.less';
 * @ui
 * @public
 */
-const Switch = kind({
+const SwitchBase = kind({
 	/** @lends module:moonstone/Switch~Switch.prototype */
 	name: 'Switch',
 
@@ -80,5 +80,5 @@ const Switch = kind({
 	}
 });
 
-export default Switch;
-export {Switch, Switch as SwitchBase};
+export default SwitchBase;
+export {SwitchBase as Switch, SwitchBase};

@@ -4,7 +4,7 @@ import React, {PropTypes} from 'react';
 
 import css from './Divider.less';
 
-const Divider = kind({
+const DividerBase = kind({
 	name: 'Divider',
 
 	propTypes: {
@@ -32,5 +32,5 @@ const Divider = kind({
 	)
 });
 
-export default Divider;
-export {Divider, Divider as DividerBase};
+export default DividerBase;
+export {DividerBase as Divider, DividerBase};
