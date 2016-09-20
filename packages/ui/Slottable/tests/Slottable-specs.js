@@ -1,7 +1,11 @@
+/* globals console */
+/* eslint no-console: ["error", { allow: ["warn", "error"] }] */
+
 import React from 'react';
 import {mount} from 'enzyme';
 import kind from 'enact-core/kind';
 import Slottable from '../Slottable';
+import sinon from 'sinon';
 
 describe('Slottable Specs', () => {
 
@@ -105,6 +109,10 @@ describe('Slottable Specs', () => {
 	});
 
 	it('should not distribute children with an invalid \'slot\' property', function () {
+		// Remove Global Spy and replace with a stub instead
+		console.error.restore();
+		sinon.stub(console, 'error');
+
 		const Component = Slottable({slots: ['a', 'b']}, ({a, b, c}) => (
 			<div>
 				{c}
@@ -112,6 +120,7 @@ describe('Slottable Specs', () => {
 				{a}
 			</div>
 		));
+
 		const subject = mount(
 			<Component>
 				<div slot='a'>A</div>
@@ -124,7 +133,16 @@ describe('Slottable Specs', () => {
 		const actual = subject.text();
 
 		expect(actual).to.equal(expected);
+
+		// Check to make sure that we only get the one expected error
+		const actualErrorsLength = console.error.args.length;
+		const expectedErrorLength = 1;
+
+		expect(actualErrorsLength).to.equal(expectedErrorLength);
+
+		const actualError = console.error.args[0][0];
+		const expectedError = 'Warning: The slot "c" specified on div does not exist';
+
+		expect(actualError).to.equal(expectedError);
 	});
-
 });
-
