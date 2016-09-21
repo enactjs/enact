@@ -14,8 +14,12 @@ addDecorator(backgrounds([
 setAddon(infoAddon);
 
 function loadStories () {
+	require('../stories/moonstone-stories/Divider.js');
+	require('../stories/moonstone-stories/Icon.js');
 	require('../stories/moonstone-stories/Picker.js');
 	require('../stories/moonstone-stories/RangePicker.js');
+	require('../stories/moonstone-stories/Item.js');
+	require('../stories/moonstone-stories/LabeledItem.js');
 	require('../stories/moonstone-stories/CheckboxItem.js');
 	require('../stories/moonstone-stories/RadioItem.js');
 	require('../stories/moonstone-stories/SwitchItem.js');
