@@ -1,3 +1,5 @@
+/* eslint no-shadow: ["error", { "allow": ["context"] }] */
+
 import xhr from 'xhr';
 
 import Loader from '../ilib/lib/Loader';
@@ -217,4 +219,3 @@ EnyoLoader.prototype.isAvailable = function (_root, path) {
 
 export default EnyoLoader;
 export {EnyoLoader as Loader};
-

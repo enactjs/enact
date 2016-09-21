@@ -1,3 +1,5 @@
+/* eslint no-shadow: ["error", { "allow": ["context"] }]*/
+
 import computed from './computed';
 import defaultProps from './defaultProps';
 import name from './name';
