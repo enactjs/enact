@@ -56,7 +56,6 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			 * Whether or not the component is in a disabled state.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			disabled: React.PropTypes.bool
