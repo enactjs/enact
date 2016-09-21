@@ -1,6 +1,6 @@
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
-import {withKnobs, boolean} from '@kadira/storybook-addon-knobs';
+import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
 
 import Icon from 'enact-moonstone/Icon';
 
@@ -11,6 +11,6 @@ storiesOf('Icon')
 		'Basic usage of Icon',
 		() => (
 			<div>
-				<Icon small={boolean('small')}>plus</Icon>
+				<Icon small={boolean('small')}>{text('icon', 'plus')}</Icon>
 			</div>
 		));
