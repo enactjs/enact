@@ -1,5 +1,5 @@
 {
-  "name": "enact-samples",
+  "name": "sampler",
   "version": "1.0.0-alpha.1",
   "description": "Component and QA samples for Enact",
   "private": true,
@@ -18,9 +18,9 @@
   },
   "homepage": "https://github.com/enyojs/enact#readme",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "echo \"Error: no test suite\" && exit 0",
     "pack": "build-storybook -c .storybook -o dist",
-    "storybook": "start-storybook -p 9001 -c .storybook"
+    "serve": "start-storybook -p 9001 -c .storybook"
   },
   "devDependencies": {
     "enyo-config": "enyojs/enyo-config"
