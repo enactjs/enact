@@ -18,6 +18,7 @@ function loadStories () {
 	require('../stories/moonstone-stories/IconButton.js');
 	require('../stories/moonstone-stories/Picker.js');
 	require('../stories/moonstone-stories/RangePicker.js');
+	require('../stories/moonstone-stories/ToggleButton.js');
 }
 
 configure(loadStories, module);
