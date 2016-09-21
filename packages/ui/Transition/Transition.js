@@ -1,8 +1,24 @@
+/**
+ * Exports the {@link module:enact-ui/Transition~Transition} and {@link module:enact-ui/Transition~TransitionBase}
+ * components.  The default export is {@link module:enact-ui/Transition~Transition}.
+ *
+ * @module enact-ui/Transition
+ */
+
 import React, {PropTypes} from 'react';
 import kind from 'enact-core/kind';
 
 import css from './Transition.less';
 
+/**
+ * {@link module:enact-ui/Transition~TransitionBase} is a stateless component that allows for applying transitions
+ * to its child items via configurable properties and events. In general, you want to use the stateful version,
+ * {@link module:enact-ui/Transition~Transition}.
+ *
+ * @class TransitionBase
+ * @ui
+ * @public
+ */
 const TransitionBase = kind({
 
 	propTypes: {
@@ -42,7 +58,7 @@ const TransitionBase = kind({
 		 * Supported durations are: short (250ms), long (1s). medium (500ms) is default when no others are specified.
 		 *
 		 * @type {String}
-		 * @default ''
+		 * @default 'medium'
 		 * @public
 		 */
 		duration: PropTypes.oneOf(['short', 'medium', 'long']),
@@ -52,7 +68,7 @@ const TransitionBase = kind({
 		 * Supported functions are: linear, ease. ease-in-out is the default when none others are specified.
 		 *
 		 * @type {String}
-		 * @default ''
+		 * @default 'ease-in-out'
 		 * @public
 		 */
 		timingFunction: PropTypes.oneOf(['ease-in-out', 'ease', 'linear']),
@@ -71,6 +87,7 @@ const TransitionBase = kind({
 		 * Set the visibility of the component, which determines whether it's on screen or off.
 		 *
 		 * @type {Boolean}
+		 * @default true
 		 * @public
 		 */
 		visible: PropTypes.bool
@@ -123,6 +140,14 @@ const TransitionBase = kind({
 	}
 });
 
+/**
+ * {@link module:enact-ui/Transition~Transition} is a stateful component that allows for applying transitions
+ * to its child items via configurable properties and events.
+ *
+ * @class Transition
+ * @ui
+ * @public
+ */
 class Transition extends React.Component {
 	static propTypes = TransitionBase.propTypes
 	static defaultProps = TransitionBase.defaultProps

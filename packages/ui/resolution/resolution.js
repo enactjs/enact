@@ -120,27 +120,27 @@ function getScreenType (rez) {
 }
 
 /**
-* Calculate the base rem font size. This is how the magic happens. This accepts an
-* optional screenType name. If one isn't provided, the currently detected screen type is used.
-* This uses the config option "orientationHandling", which when set to "scale" and the screen is
-* in portrait orientation, will dynamically calculate what the base font size should be, if the
-* width were proportionally scaled down to fit in the portrait space.
-*
-* To use, put the following in your application code:
-* ```
-* 	var RI = require('moonstone/resolution');
-*
-* 	RI.config.orientationHandling = 'scale';
-* 	RI.init();
-* ```
-*
-* This has no effect if the screen is in landscape, or if orientationHandling is unset.
-*
-* @param {String} type - Screen type to base size the calculation on. If no
-*     screen type is provided, the current screen type will be used.
-* @returns {String} The calculated pixel size (with unit suffix. Ex: "24px").
-* @public
-*/
+ * Calculate the base rem font size. This is how the magic happens. This accepts an
+ * optional screenType name. If one isn't provided, the currently detected screen type is used.
+ * This uses the config option "orientationHandling", which when set to "scale" and the screen is
+ * in portrait orientation, will dynamically calculate what the base font size should be, if the
+ * width were proportionally scaled down to fit in the portrait space.
+ *
+ * To use, put the following in your application code:
+ * ```
+ * 	var RI = require('moonstone/resolution');
+ *
+ * 	RI.config.orientationHandling = 'scale';
+ * 	RI.init();
+ * ```
+ *
+ * This has no effect if the screen is in landscape, or if orientationHandling is unset.
+ *
+ * @param {String} type - Screen type to base size the calculation on. If no
+ *     screen type is provided, the current screen type will be used.
+ * @returns {String} The calculated pixel size (with unit suffix. Ex: "24px").
+ * @public
+ */
 function calculateFontSize (type) {
 	const scrObj = getScreenTypeObject(type);
 	let size;
