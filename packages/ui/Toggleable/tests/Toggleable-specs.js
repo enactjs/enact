@@ -1,5 +1,6 @@
 import React from 'react';
 import {shallow} from 'enzyme';
+import sinon from 'sinon';
 import Toggleable from '../Toggleable';
 
 describe('Toggleable Specs', () => {
@@ -108,6 +109,17 @@ describe('Toggleable Specs', () => {
 		const actual = wrapped.find('DivComponent').prop('selected');
 
 		expect(actual).to.equal(expected);
+	});
+
+	it('should call event handlers from props', function () {
+		const handleClick = sinon.spy();
+
+		const Component = Toggleable({prop: 'data-selected'}, 'div');
+		const wrapped = shallow(<Component onClick={handleClick} />);
+
+		wrapped.find('div').simulate('click', {});
+
+		expect(handleClick.calledOnce).to.equal(true);
 	});
 
 });

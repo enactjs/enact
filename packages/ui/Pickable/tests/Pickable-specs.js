@@ -48,9 +48,9 @@ describe('Pickable Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should invoke \'onChange\' handler', function() {
+	it('should invoke \'onChange\' handler', function () {
 		const handleChange = sinon.spy();
-		const Component = Pickable('div');
+		const Component = Pickable({prop: 'data-value'}, 'div');
 		const subject = shallow(
 			<Component onChange={handleChange} />
 		);
@@ -75,5 +75,4 @@ describe('Pickable Specs', () => {
 
 		expect(actual).to.equal(expected);
 	});
-
 });

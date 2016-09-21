@@ -4,9 +4,10 @@
  * @module enact-ui/Pickable
  */
 
-import React from 'react';
+import handle from 'enact-core/handle';
 import hoc from 'enact-core/hoc';
 import {cap} from 'enact-core/util';
+import React from 'react';
 
 const defaultConfig = {
 	/**
@@ -52,7 +53,7 @@ const defaultConfig = {
  * @public
  */
 const PickableHOC = hoc(defaultConfig, (config, Wrapped) => {
-	const {mutable, prop} = config;
+	const {mutable, prop, pick} = config;
 	const defaultPropKey = 'default' + cap(prop);
 
 	return class Pickable extends React.Component {
@@ -97,17 +98,14 @@ const PickableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		pick = (ev) => {
-			const value = this.value = ev[config.prop];
-			const onPick = this.props[config.pick];
-
+			const value = this.value = ev[prop];
 			this.setState({value});
-			if (onPick) onPick(ev);
 		}
 
 		render () {
 			const props = Object.assign({}, this.props);
-			props[config.pick] = this.pick;
-			props[config.prop] = this.state.value;
+			props[pick] = handle(this.pick, props[pick]);
+			props[prop] = this.state.value;
 			delete props[defaultPropKey];
 
 			return <Wrapped {...props} value={this.value} />;

@@ -4,6 +4,7 @@
  * @module enact-ui/Pressable
  */
 
+import handle from 'enact-core/handle';
 import hoc from 'enact-core/hoc';
 import {cap} from 'enact-core/util';
 import React, {PropTypes} from 'react';
@@ -45,7 +46,8 @@ const defaultConfig = {
  * @public
  */
 const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
-	const defaultPropKey = 'default' + cap(config.prop);
+	const {depress, release, prop} = config;
+	const defaultPropKey = 'default' + cap(prop);
 
 	return class Pressable extends React.Component {
 		static propTypes = {
@@ -93,9 +95,9 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 		render () {
 			const props = Object.assign({}, this.props);
-			if (config.depress) props[config.depress] = this.onMouseDown;
-			if (config.release) props[config.release] = this.onMouseUp;
-			if (config.prop) props[config.prop] = this.state.pressed;
+			if (depress) props[depress] = handle(this.onMouseDown, props[depress]);
+			if (release) props[release] = handle(this.onMouseUp, props[release]);
+			if (prop) props[prop] = this.state.pressed;
 			delete props[defaultPropKey];
 
 			return <Wrapped {...props} />;
