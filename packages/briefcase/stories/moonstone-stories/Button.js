@@ -1,13 +1,14 @@
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, text, boolean, number, select} from '@kadira/storybook-addon-knobs';
+import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
 
-import Button from 'enact-moonstone/Button';
-
+import Button, {ButtonBase} from 'enact-moonstone/Button';
 
 const buttonStories = storiesOf('Button').addDecorator(withKnobs);
 
-
+Button.propTypes = Object.assign({}, ButtonBase.propTypes, Button.propTypes);
+Button.defaultProps = Object.assign({}, ButtonBase.defaultProps, Button.defaultProps);
+Button.displayName = 'Button';
 
 // Set up some defaults for info and knobs
 const prop = {
@@ -16,19 +17,18 @@ const prop = {
 
 buttonStories
 	.addWithInfo(
-		'basic',
+		'',
 		'The basic Button.',
 		() => (
 			<Button
 				onClick={action('onClick')}
-				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity, 'opaque')}
+				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
 				disabled={boolean('disabled')}
 				minWidth={boolean('minWidth')}
-				pressed={boolean('pressed')}
+				preserveCase={boolean('preserveCase')}
 				selected={boolean('selected')}
 				small={boolean('small')}
-				preserveCase={boolean('preserveCase')}
-			>Button</Button>
+			>Click Me</Button>
 		)
 	)
 ;
