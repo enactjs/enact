@@ -10,11 +10,14 @@ Item.defaultProps = Object.assign({}, ItemBase.defaultProps, Item.defaultProps);
 
 storiesOf('Item')
 	.addDecorator(withKnobs)
-	.addWithInfo('with text', 'basic usage of Item', () => (
-		<Item
-			disabled={boolean('disabled')}
-			spotlightDisabled={boolean('spotlightDisabled')}
-		>
-			Hello Item
-		</Item>
-	));
+	.addWithInfo(
+		'',
+		'Basic usage of Item',
+		() => (
+			<Item
+				disabled={boolean('disabled')}
+				spotlightDisabled={boolean('spotlightDisabled')}
+			>
+				Hello Item
+			</Item>
+		));

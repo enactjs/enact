@@ -5,8 +5,8 @@ import Divider from 'enact-moonstone/Divider';
 
 storiesOf('Divider')
 	.addWithInfo(
-		'with text',
-		'Basic divider',
+		'',
+		'Basic usage of divider',
 		() => (
 			<Divider>divider text</Divider>
 		));

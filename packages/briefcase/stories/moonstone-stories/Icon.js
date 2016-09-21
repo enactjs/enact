@@ -7,17 +7,11 @@ import Icon from 'enact-moonstone/Icon';
 storiesOf('Icon')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'default',
-		'Basic usage',
-		() => (
-			<Icon small={boolean('small')}>plus</Icon>
-		))
-	.addWithInfo(
-		'all',
+		'',
 		'List of available icons',
 		() => (
 			<div>
-				<Icon>plus</Icon>
+				<Icon small={boolean('small')}>plus</Icon>
 				<Icon>minus</Icon>
 				<Icon>arrowhookleft</Icon>
 				<Icon>arrowhookright</Icon>

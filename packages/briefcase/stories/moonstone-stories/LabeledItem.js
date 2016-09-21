@@ -11,8 +11,8 @@ LabeledItem.defaultProps = Object.assign({}, ItemBase.defaultProps, Item.default
 storiesOf('LabeledItem')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'with label and text',
-		'basic usage of LabeledItem',
+		'',
+		'Basic usage of LabeledItem',
 		() => (
 			<LabeledItem
 				label={'Label'}
