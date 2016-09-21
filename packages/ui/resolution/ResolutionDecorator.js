@@ -1,5 +1,5 @@
 /**
- * Exports the {@link module:enact-ui/resolution~ResolutionDecorator} Higher-order Component (Hoc).
+ * Exports the {@link module:enact-ui/resolution~ResolutionDecorator} Higher-order Component (HOC).
  *
  * @module enact-ui/resolution/ResolutionDecorator
  */
@@ -14,7 +14,7 @@ const defaultConfig = {
 	 * When `true`, an event listener will be attached to the window to listen for resize events.
 	 *
 	 * @type {Boolean}
-	 * @default 'true'
+	 * @default true
 	 * @public
 	 */
 	dynamic: true,

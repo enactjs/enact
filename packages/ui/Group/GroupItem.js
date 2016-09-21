@@ -1,7 +1,7 @@
 /**
- * Exports the {@link module:enact-ui/Group~GroupItem} and {@link module:enact-ui/Group~GroupItemBaseBase}
+ * Exports the {@link module:enact-ui/Group~GroupItem} and {@link module:enact-ui/Group~GroupItemBase}
  * components as well as the `pickGroupItemProps` method.  The default export is {@link module:enact-ui/Group~GroupItem}.
- * `GroupItem` is stateless and is the same as `GroupItemBaseBase`.
+ * `GroupItem` is stateless and is the same as `GroupItemBase`.
  *
  * @module enact-ui/Group/GroupItem
  */

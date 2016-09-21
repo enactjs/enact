@@ -1,5 +1,5 @@
 /**
- * Exports the {@link module:enact-ui/Toggleable~Toggleable} Higher-order Component (Hoc).
+ * Exports the {@link module:enact-ui/Toggleable~Toggleable} Higher-order Component (HOC).
  *
  * @module enact-ui/Toggleable
  */
@@ -14,7 +14,7 @@ const defaultConfig = {
 	 * Configures the event name that toggles the component
 	 *
 	 * @type {String}
-	 * @default 'onMouseUp'
+	 * @default 'onClick'
 	 */
 	toggle: 'onClick',
 
@@ -22,7 +22,7 @@ const defaultConfig = {
 	 * Configures the property that is passed to the wrapped component when toggled
 	 *
 	 * @type {String}
-	 * @default 'pressed'
+	 * @default 'selected'
 	 */
 	prop: 'selected'
 };
@@ -37,7 +37,7 @@ const defaultConfig = {
  * @ui
  * @public
  */
-const ToggleableHoC = hoc(defaultConfig, (config, Wrapped) => {
+const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 	const defaultPropKey = 'default' + cap(config.prop);
 
 	return class Toggleable extends React.Component {
@@ -92,5 +92,5 @@ const ToggleableHoC = hoc(defaultConfig, (config, Wrapped) => {
 	};
 });
 
-export default ToggleableHoC;
-export {ToggleableHoC as Toggleable};
+export default ToggleableHOC;
+export {ToggleableHOC as Toggleable};

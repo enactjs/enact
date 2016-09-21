@@ -1,5 +1,5 @@
 /**
- * Exports the {@link module:enact-ui/Pressable~Pressable} Higher-order Component (Hoc).
+ * Exports the {@link module:enact-ui/Pressable~Pressable} Higher-order Component (HOC).
  *
  * @module enact-ui/Pressable
  */
@@ -44,7 +44,7 @@ const defaultConfig = {
  * @ui
  * @public
  */
-const PressableHoC = hoc(defaultConfig, (config, Wrapped) => {
+const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 	const defaultPropKey = 'default' + cap(config.prop);
 
 	return class Pressable extends React.Component {
@@ -103,5 +103,5 @@ const PressableHoC = hoc(defaultConfig, (config, Wrapped) => {
 	};
 });
 
-export default PressableHoC;
-export {PressableHoC as Pressable};
+export default PressableHOC;
+export {PressableHOC as Pressable};

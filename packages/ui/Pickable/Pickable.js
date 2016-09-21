@@ -1,5 +1,5 @@
 /**
- * Exports the {@link module:enact-ui/Pickable~Pickable} Higher-order Component (Hoc).
+ * Exports the {@link module:enact-ui/Pickable~Pickable} Higher-order Component (HOC).
  *
  * @module enact-ui/Pickable
  */
@@ -42,16 +42,16 @@ const defaultConfig = {
 /**
  * {@link module:enact-ui/Pickable~Pickable} is a Higher-order Component that applies a 'Pickable' behavior
  * to its wrapped component.  Its default event and value properties can be configured when applied to a component.
- * In addition, it supports `mutable` config setting that allows the HoC to accept incoming settings for the `prop`.
+ * In addition, it supports `mutable` config setting that allows the HOC to accept incoming settings for the `prop`.
  *
  * By default, you can set the initial state of the pickable item by passing `defaultValue`.  Once rendered, the
- * HoC manages the state of `value`.  If the `prop` is overridden, the names change correspondingly.
+ * HOC manages the state of `value`.  If the `prop` is overridden, the names change correspondingly.
  *
  * @class Pickable
  * @ui
  * @public
  */
-const PickableHoC = hoc(defaultConfig, (config, Wrapped) => {
+const PickableHOC = hoc(defaultConfig, (config, Wrapped) => {
 	const {mutable, prop} = config;
 	const defaultPropKey = 'default' + cap(prop);
 
@@ -115,5 +115,5 @@ const PickableHoC = hoc(defaultConfig, (config, Wrapped) => {
 	};
 });
 
-export default PickableHoC;
-export {PickableHoC as Pickable};
+export default PickableHOC;
+export {PickableHOC as Pickable};

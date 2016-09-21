@@ -1,5 +1,5 @@
 /**
- * Exports the {@link module:enact-ui/Slottable~Slottable} Higher-order Component (Hoc).
+ * Exports the {@link module:enact-ui/Slottable~Slottable} Higher-order Component (HOC).
  *
  * @module enact-ui/Slottable
  */
