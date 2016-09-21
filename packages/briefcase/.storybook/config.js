@@ -16,6 +16,10 @@ setAddon(infoAddon);
 function loadStories () {
 	require('../stories/moonstone-stories/Picker.js');
 	require('../stories/moonstone-stories/RangePicker.js');
+	require('../stories/moonstone-stories/CheckboxItem.js');
+	require('../stories/moonstone-stories/RadioItem.js');
+	require('../stories/moonstone-stories/SwitchItem.js');
+	require('../stories/moonstone-stories/SelectableItem.js');
 }
 
 configure(loadStories, module);
