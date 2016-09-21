@@ -56,7 +56,7 @@ const PickableHoC = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentWillReceiveProps (nextProps) {
 			if (mutable) {
-				let value = nextProps[prop];
+				const value = nextProps[prop];
 				this.setState({value});
 			}
 		}
