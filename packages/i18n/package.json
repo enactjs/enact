@@ -37,6 +37,9 @@
     "locale",
     "translation"
   ],
+  "eslintConfig": {
+    "extends": "./node_modules/eslint-config-enact/index.js"
+  },
   "devDependencies": {
     "eslint-config-enact": "enyojs/eslint-config-enact"
   },

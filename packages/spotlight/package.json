@@ -24,6 +24,9 @@
     "url": "git+https://github.com/enyojs/enact.git"
   },
   "license": "Apache-2.0",
+  "eslintConfig": {
+    "extends": "./node_modules/eslint-config-enact/index.js"
+  },
   "devDependencies": {
     "eslint-config-enact": "enyojs/eslint-config-enact"
   },
