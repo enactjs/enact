@@ -37,7 +37,9 @@
     "extends": "./node_modules/eslint-config-enact/index.js"
   },
   "devDependencies": {
-    "eslint-config-enact": "enyojs/eslint-config-enact"
+    "enzyme": "^2.4.1",
+    "eslint-config-enact": "enyojs/eslint-config-enact",
+    "sinon": "git+https://github.com/sinonjs/sinon.git"
   },
   "dependencies": {
     "enact-core": "1.0.0-alpha.1",
