@@ -38,7 +38,7 @@
     "translation"
   ],
   "devDependencies": {
-    "enyo-config": "enyojs/enyo-config"
+    "eslint-config-enact": "enyojs/eslint-config-enact"
   },
   "dependencies": {
     "enact-core": "^1.0.0-alpha.1",
@@ -46,5 +46,8 @@
     "react-dom": "^15.1.0",
     "ramda": "^0.21.0",
     "xhr": "^2.2.0"
+  },
+  "peerDependencies": {
+    "enact-dev":"enyojs/enact-dev#release/0.1.0"
   }
 }

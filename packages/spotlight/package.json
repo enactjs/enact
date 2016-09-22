@@ -25,11 +25,14 @@
   },
   "license": "Apache-2.0",
   "devDependencies": {
-    "enyo-config": "enyojs/enyo-config"
+    "eslint-config-enact": "enyojs/eslint-config-enact"
   },
   "dependencies": {
     "enact-core": "^1.0.0-alpha.1",
     "ramda": "^0.22.1",
     "react": "^15.3.1"
+  },
+  "peerDependencies": {
+    "enact-dev":"enyojs/enact-dev#release/0.1.0"
   }
 }

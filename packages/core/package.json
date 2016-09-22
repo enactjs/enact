@@ -34,7 +34,7 @@
     "webOS"
   ],
   "devDependencies": {
-    "enyo-config": "enyojs/enyo-config#test-suite"
+    "eslint-config-enact": "enyojs/eslint-config-enact"
   },
   "dependencies": {
     "react": "^15.1.0",
@@ -42,5 +42,8 @@
     "react-dom": "^15.1.0",
     "ramda": "^0.21.0",
     "classnames": "^2.2.5"
+  },
+  "peerDependencies": {
+    "enact-dev":"enyojs/enact-dev#release/0.1.0"
   }
 }

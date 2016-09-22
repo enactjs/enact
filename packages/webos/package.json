@@ -30,6 +30,9 @@
     "webOS"
   ],
   "devDependencies": {
-    "enyo-config": "enyojs/enyo-config"
+    "eslint-config-enact": "enyojs/eslint-config-enact"
+  },
+  "peerDependencies": {
+    "enact-dev":"enyojs/enact-dev#release/0.1.0"
   }
 }
