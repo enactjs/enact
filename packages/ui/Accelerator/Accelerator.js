@@ -1,12 +1,3 @@
-//* @protected
-/*************************************************************/
-let accelerating = false,
-	skipped = 0,
-	time = 0,
-	keyCode = 0,
-	canceled = false,
-	frequency = [3, 3, 3, 2, 2, 2, 1];
-
 /**
 * Accelerator provides logic for accelerating and throttling.
 *
@@ -17,6 +8,47 @@ let accelerating = false,
 */
 class Accelerator {
 	constructor (inFrequency) {
+
+		/**
+		* Whether the instance is currently in an accelerating state.
+		*
+		* @type {Boolean}
+		* @default false
+		*/
+		this.accelerating = false;
+
+		/**
+		* The current count of skipped events.
+		*
+		* @type {Integer}
+		* @default 0
+		*/
+		this.skipped = 0;
+
+		/**
+		* The timestamp of the last evaluated event.
+		*
+		* @type {Integer}
+		* @default 0
+		*/
+		this.time = 0;
+
+		/**
+		* The keyCode of the last evaluated event. 
+		*
+		* @type {Integer}
+		* @default 0
+		*/
+		this.keyCode = 0;
+
+		/**
+		* Whether the instance is in a state of being canceled.
+		*
+		* @type {Boolean}
+		* @default false
+		*/
+		this.canceled = false;
+
 		/**
 		* Controls the frequency with which the acceleration will "freeze". While frozen,
 		* the current target item cannot change, and all events are directed to it.
@@ -25,7 +57,7 @@ class Accelerator {
 		* @default [3, 3, 3, 2, 2, 2, 1]
 		* @public
 		*/
-		this.frequency = inFrequency || frequency;
+		this.frequency = inFrequency || [3, 3, 3, 2, 2, 2, 1];
 	}
 
 	/**
@@ -34,25 +66,24 @@ class Accelerator {
 	*
 	* @param  {Object} event - The current event to validate.
 	* @param  {Function} callback - The callback to execute.
-	* @param  {Object} context - The callback's execution context.
 	* @returns {Boolean}
 	* @public
 	*/
-	processKey = (event, callback, context) => {
+	processKey = (event, callback) => {
 		switch (event.type) {
 			case 'keydown':
-				if (event.keyCode != keyCode) {
+				if (event.keyCode != this.keyCode) {
 					this.reset();
-					time = (new Date()).getTime();
-					keyCode = event.keyCode;
-					return callback.apply(context, [event]);
-				} else if (canceled) {
+					this.time = Date.now();
+					this.keyCode = event.keyCode;
+					return callback.apply(null, [event]);
+				} else if (this.canceled) {
 
 					// Prevent skipped keydown events from bubbling
 					event.preventDefault();
 					return true;
 				} else {
-					let elapsedTime = (new Date()).getTime() - time,
+					let elapsedTime = Date.now() - this.time,
 						seconds = Math.floor(elapsedTime / 1000),
 						toSkip = 0;
 
@@ -63,13 +94,13 @@ class Accelerator {
 						toSkip = 0;
 					}
 
-					accelerating = !(seconds === 0 && skipped === 0);
+					this.accelerating = !(seconds === 0 && this.skipped === 0);
 
-					if (skipped >= toSkip) {
-						skipped = 0;
-						return callback.apply(context, [event]);
+					if (this.skipped >= toSkip) {
+						this.skipped = 0;
+						return callback.apply(null, [event]);
 					} else {
-						skipped++;
+						this.skipped++;
 						// Prevent skipped keydown events from bubbling
 						event.preventDefault();
 						return true;
@@ -78,7 +109,7 @@ class Accelerator {
 				break;
 			case 'keyup':
 				this.reset();
-				return callback.apply(context, [event]);
+				return callback.apply(null, [event]);
 		}
 	}
 
@@ -88,11 +119,11 @@ class Accelerator {
 	* @public
 	*/
 	reset = () => {
-		skipped = 0;
-		time = 0;
-		keyCode = 0;
-		canceled = false;
-		accelerating = false;
+		this.skipped = 0;
+		this.time = 0;
+		this.keyCode = 0;
+		this.canceled = false;
+		this.accelerating = false;
 	}
 
 	/**
@@ -101,7 +132,7 @@ class Accelerator {
 	* @public
 	*/
 	cancel = () => {
-		canceled = true;
+		this.canceled = true;
 	}
 
 	/**
@@ -111,7 +142,7 @@ class Accelerator {
 	* @public
 	*/
 	isAccelerating = () => {
-		return accelerating;
+		return this.accelerating;
 	}
 }
 

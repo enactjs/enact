@@ -9,6 +9,7 @@
  * Licensed under the MPL license.
  */
 
+import R from 'ramda';
 import Accelerator from 'enact-ui/Accelerator';
 
 const spotlightRootContainerName = 'spotlightRootDecorator';
@@ -56,6 +57,8 @@ const Spotlight = (function() {
 		'right': 'left',
 		'down': 'up'
 	};
+
+	const _enterKeyCodes = [13, 16777221];
 
 	const _containerPrefix = 'container-';
 
@@ -797,12 +800,13 @@ const Spotlight = (function() {
 		return false;
 	}
 
+	function preventDefault(evt) {
+		evt.preventDefault();
+		evt.stopPropagation();
+		return false;
+	}
+
 	function onAcceleratedKeyDown(evt) {
-		const preventDefault = function() {
-			evt.preventDefault();
-			evt.stopPropagation();
-			return false;
-		};
 		let currentFocusedElement = getCurrent();
 
 		if (!currentFocusedElement) {
@@ -811,7 +815,7 @@ const Spotlight = (function() {
 			}
 			if (!currentFocusedElement) {
 				focusContainer();
-				return preventDefault();
+				return preventDefault(evt);
 			}
 		}
 
@@ -820,7 +824,9 @@ const Spotlight = (function() {
 			return;
 		}
 
-		return spotNext(_directions[evt.keyCode], currentFocusedElement, currentContainerId) || focusElement(currentFocusedElement, currentContainerId);
+		if (!spotNext(_directions[evt.keyCode], currentFocusedElement, currentContainerId)) {
+			focusElement(currentFocusedElement, currentContainerId)
+		}
 	}
 
 	function onKeyUp(evt) {
@@ -828,16 +834,12 @@ const Spotlight = (function() {
 			return;
 		}
 
-		if (!_directions[evt.keyCode]) {
+		const keyCode = evt.keyCode;
+		if (!_directions[keyCode] && !R.contains(keyCode, _enterKeyCodes)) {
 			return;
 		}
 
 		SpotlightAccelerator.reset();
-		return () => {
-			evt.preventDefault();
-			evt.stopPropagation();
-			return false;
-		};
 	}
 
 	function onKeyDown(evt) {
@@ -845,16 +847,14 @@ const Spotlight = (function() {
 			return;
 		}
 
-		if (!_directions[evt.keyCode]) {
+		const keyCode = evt.keyCode;
+		if (!_directions[keyCode] && !R.contains(keyCode, _enterKeyCodes)) {
 			return;
 		}
 
 		SpotlightAccelerator.processKey(evt, onAcceleratedKeyDown);
-		return () => {
-			evt.preventDefault();
-			evt.stopPropagation();
-			return false;
-		};
+
+		preventDefault(evt);
 	}
 
 	function onMouseOver (evt) {
@@ -863,12 +863,7 @@ const Spotlight = (function() {
 		}
 
 		let target = getNavigableTarget(evt.target), // account for child controls
-			current = getCurrent(),
-			preventDefault = function () {
-				evt.preventDefault();
-				evt.stopPropagation();
-				return false;
-			};
+			current = getCurrent();
 
 		if (!target) { // we are moving over a non-focusable element, so we force a blur to occur
 			if (current) {
@@ -876,7 +871,7 @@ const Spotlight = (function() {
 			}
 		} else if (target !== getCurrent()) { // moving over a focusable element
 			focusElement(target, getContainerId(target));
-			preventDefault();
+			preventDefault(evt);
 		}
 	}
 
