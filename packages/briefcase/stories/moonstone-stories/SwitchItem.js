@@ -7,8 +7,13 @@ import {SwitchItemBase} from 'enact-moonstone/SwitchItem';
 
 const SwitchItem = Toggleable({prop: 'checked'}, SwitchItemBase);
 SwitchItem.displayName = 'SwitchItem';
-SwitchItem.propTypes = SwitchItemBase.propTypes;
-SwitchItem.defaultProps = SwitchItemBase.defaultProps;
+SwitchItem.propTypes = Object.assign({}, SwitchItem.propTypes, SwitchItemBase.propTypes);
+SwitchItem.defaultProps = Object.assign({}, SwitchItem.defaultProps, SwitchItemBase.defaultProps);
+
+delete SwitchItem.propTypes.checked;
+delete SwitchItem.propTypes.defaultChecked;
+delete SwitchItem.propTypes.icon;
+delete SwitchItem.propTypes.iconClasses;
 
 storiesOf('SwitchItem')
 	.addDecorator(withKnobs)
@@ -17,7 +22,6 @@ storiesOf('SwitchItem')
 		'Basic usage of SwitchItem',
 		() => (
 			<SwitchItem
-				checked={boolean('checked', false)}
 				disabled={boolean('disabled', false)}
 				inline={boolean('inline', false)}
 				onToggle={action('onToggle')}

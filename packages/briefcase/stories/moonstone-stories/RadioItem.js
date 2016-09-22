@@ -7,8 +7,13 @@ import {RadioItemBase} from 'enact-moonstone/RadioItem';
 
 const RadioItem = Toggleable({prop: 'checked'}, RadioItemBase);
 RadioItem.displayName = 'RadioItem';
-RadioItem.propTypes = RadioItemBase.propTypes;
-RadioItem.defaultProps = RadioItemBase.defaultProps;
+RadioItem.propTypes = Object.assign({}, RadioItem.propTypes, RadioItemBase.propTypes);
+RadioItem.defaultProps = Object.assign({}, RadioItem.defaultProps, RadioItemBase.defaultProps);
+
+delete RadioItem.propTypes.checked;
+delete RadioItem.propTypes.defaultChecked;
+delete RadioItem.propTypes.icon;
+delete RadioItem.propTypes.iconClasses;
 
 storiesOf('RadioItem')
 	.addDecorator(withKnobs)
@@ -17,7 +22,6 @@ storiesOf('RadioItem')
 		'Basic usage of RadioItem',
 		() => (
 			<RadioItem
-				checked={boolean('checked', false)}
 				disabled={boolean('disabled', false)}
 				inline={boolean('inline', false)}
 				onToggle={action('onToggle')}

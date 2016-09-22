@@ -7,8 +7,13 @@ import {CheckboxItemBase} from 'enact-moonstone/CheckboxItem';
 
 const CheckboxItem = Toggleable({prop: 'checked'}, CheckboxItemBase);
 CheckboxItem.displayName = 'CheckboxItem';
-CheckboxItem.propTypes = CheckboxItemBase.propTypes;
-CheckboxItem.defaultProps = CheckboxItemBase.defaultProps;
+CheckboxItem.propTypes = Object.assign({}, CheckboxItem.propTypes, CheckboxItemBase.propTypes);
+CheckboxItem.defaultProps = Object.assign({}, CheckboxItem.defaultProps, CheckboxItemBase.defaultProps);
+
+delete CheckboxItem.propTypes.checked;
+delete CheckboxItem.propTypes.defaultChecked;
+delete CheckboxItem.propTypes.icon;
+delete CheckboxItem.propTypes.iconClasses;
 
 storiesOf('CheckboxItem')
 	.addDecorator(withKnobs)
@@ -17,7 +22,6 @@ storiesOf('CheckboxItem')
 		'Basic usage of CheckboxItem',
 		() => (
 			<CheckboxItem
-				checked={boolean('checked', false)}
 				disabled={boolean('disabled', false)}
 				inline={boolean('inline', false)}
 				onToggle={action('onToggle')}
