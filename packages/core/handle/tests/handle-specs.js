@@ -11,7 +11,7 @@ import {
 	withArgs
 } from '../handle';
 
-describe.only('handle', () => {
+describe('handle', () => {
 
 	const makeEvent = (payload) => ({
 		preventDefault: sinon.spy(),

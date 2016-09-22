@@ -8,11 +8,13 @@ import R from 'ramda';
  *  const submit = (e) => {
  *		console.log('Submitting the data!');
  *  };
- *	const submitOnEnter = handle(handle.forKeyCode(13), handle.stop, submit)(props);
+ *	const submitOnEnter = handle(handle.forKeyCode(13), handle.stop, submit);
  *	return (<input onKeyPress={submitOnEnter}>);
  *
- * @return {Function} - A function that accepts an event which is dispatched to each of the provided
- *                      handlers.
+ * @method	handle
+ * @param	{...Function}	handlers List of handlers to process the event
+ * @returns	{Function}		A function that accepts an event which is dispatched to each of the
+ * 							provided handlers.
  */
 const handle = R.unapply(handlers => (...args) => R.reduce((acc, handler) => {
 	if (acc) {
@@ -28,10 +30,26 @@ const handle = R.unapply(handlers => (...args) => R.reduce((acc, handler) => {
 	return false;
 }, false, handlers));
 
-// like handle(), accepts a list of handlers to process the event.
-// returns a function that accepts a list of args that will be included as additional arguments to
-// the handlers. that function returns another function which is the event handler that accepts the
-// event and passes it, along with the extra args, to the handlers.
+/**
+ * Like `handle()`, accepts a list of handlers to process the event but returns a function that
+ * accepts an additional list of args that will be included as additional arguments to the handlers.
+ * That function returns the event handler that accepts the event and passes it, along with the
+ * extra args, to the handlers.
+ *
+ * @example
+ *  const submit = (e, props) => {
+ *  	// block submission for blank data unless the prop allows it
+ *  	if (e.target.value === '' && !props.allowBlank) return true;
+ *		console.log('Submitting the data!');
+ *  };
+ *	const submitOnEnter = withArgs(handle.forKeyCode(13), handle.stop, submit);
+ *	return (<input onKeyPress={submitOnEnter}>);
+ *
+ * @method	withArgs
+ * @param	{...Function}	handlers List of handlers to process the event
+ * @returns	{Function}		A function that accepts a list of args which returns a function that
+ * 							accepts an event which is dispatched to each of the provided handlers.
+ */
 const withArgs = handle.withArgs = (...handlers) => {
 	const handler = handle(...handlers);
 	return (...args) => (e) => handler(e, ...args);
@@ -43,52 +61,88 @@ const withArgs = handle.withArgs = (...handlers) => {
  * @example
  *	// calls event.stop() before calling submit()
  *	handle(handle.callOnEvent('stop'), submit)
+ *
+ * @method	callOnEvent
+ * @param	{String}	methodName	Name of the method to call on the event.
+ * @returns {Function}				Event handler
  */
-const callOnEvent = handle.callOnEvent = R.curry((fn, e) => {
-	e[fn]();
+const callOnEvent = handle.callOnEvent = (methodName) => (e) => {
+	e[methodName]();
 	return false;
-});
+};
 
 /**
- * Stops handling if the value of `prop` on the event equals `value`
+ * Stops handling if the value of `prop` on the event does not equal `value`
  *
  * @example
  *  // submit() called only if event[x] is non-zero
  *	handle(handle.forProp('x', 0), submit)
+ *
+ * @method	forProp
+ * @param	{String}	prop	Name of property on event
+ * @param	{*}			value	Value of property
+ * @returns {Function}			Event handler
  */
-const forProp = handle.forProp = R.curry((prop, value) => (e) => e[prop] !== value);
+const forProp = handle.forProp = R.curry((prop, value) => {
+	return (e) => e[prop] !== value;
+});
 
 /**
- * Forwards the event to a function at `name` on `props`
+ * Forwards the event to a function at `name` on `props`. The return value of the forwarded function
+ * is ignored.
+ *
+ * **Note:** Can only be used with `withArgs` which allows extra args to be passed to the handlers.
+ * If you have a reference to the function instead of the name, it can be passed directly to
+ * `handle()` as a handler.
  *
  * @example
  *  const props = {onSubmit: (e) => doSomething()};
  *	const handleClick = handle(handle.forward('onSubmit'))(props);
+ *
+ * @method	forward
+ * @param	{String}	name	Name of method on the `props`
+ * @returns	{Function}			Event handler
  */
 const forward = handle.foward = name => (e, props) => {
-	const fn = props[name];
+	const fn = props && props[name];
 	if (typeof fn == 'function') {
 		fn(e);
 	}
+
+	return false;
 };
 
 /**
- * Calls event.preventDefault() and returns false
+ * Calls event.preventDefault() and returns false.
+ *
+ * @method	preventDefault
+ * @returns {Function}	Event handler
  */
 const preventDefault = handle.preventDefault = callOnEvent('preventDefault');
 
 /**
  * Calls event.stopPropagation() and returns false
+ *
+ * @method	stop
+ * @returns {Function}	Event handler
  */
 const stop = handle.stop = callOnEvent('stopPropagation');
 
 /**
- * Returns false if event.keyCode == value
+ * Only allows event handling to continue if `event.keyCode === value`.
+ *
+ * @method	forKeyCode
+ * @param	{Number}	value	`keyCode` to test
+ * @returns	{Function}			Event handler
  */
 const forKeyCode = handle.forKeyCode = forProp('keyCode');
 
 /**
- * Returns false if event.which == value
+ * Only allows event handling to continue if `event.which === value`.
+ *
+ * @method	forWhich
+ * @param	{Number}	value	`which` to test
+ * @returns	{Function}			Event handler
  */
 const forWhich = handle.forWhich = forProp('which');
 
