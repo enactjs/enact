@@ -11,7 +11,6 @@ SwitchItem.propTypes = Object.assign({}, SwitchItem.propTypes, SwitchItemBase.pr
 SwitchItem.defaultProps = Object.assign({}, SwitchItem.defaultProps, SwitchItemBase.defaultProps);
 
 delete SwitchItem.propTypes.checked;
-delete SwitchItem.propTypes.defaultChecked;
 delete SwitchItem.propTypes.icon;
 delete SwitchItem.propTypes.iconClasses;
 

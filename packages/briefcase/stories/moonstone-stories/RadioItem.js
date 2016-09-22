@@ -11,7 +11,6 @@ RadioItem.propTypes = Object.assign({}, RadioItem.propTypes, RadioItemBase.propT
 RadioItem.defaultProps = Object.assign({}, RadioItem.defaultProps, RadioItemBase.defaultProps);
 
 delete RadioItem.propTypes.checked;
-delete RadioItem.propTypes.defaultChecked;
 delete RadioItem.propTypes.icon;
 delete RadioItem.propTypes.iconClasses;
 

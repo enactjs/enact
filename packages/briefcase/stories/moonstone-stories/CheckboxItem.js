@@ -11,7 +11,6 @@ CheckboxItem.propTypes = Object.assign({}, CheckboxItem.propTypes, CheckboxItemB
 CheckboxItem.defaultProps = Object.assign({}, CheckboxItem.defaultProps, CheckboxItemBase.defaultProps);
 
 delete CheckboxItem.propTypes.checked;
-delete CheckboxItem.propTypes.defaultChecked;
 delete CheckboxItem.propTypes.icon;
 delete CheckboxItem.propTypes.iconClasses;
 
