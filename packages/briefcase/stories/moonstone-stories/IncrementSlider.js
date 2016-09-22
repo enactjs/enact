@@ -10,11 +10,6 @@ IncrementSlider.propTypes = Object.assign({}, IncrementSliderBase.propTypes, Inc
 IncrementSlider.defaultProps = Object.assign({}, IncrementSliderBase.defaultProps, IncrementSlider.defaultProps);
 IncrementSlider.displayName = 'IncrementSlider';
 
-// Set up some defaults for info and knobs
-const prop = {
-	backgroundOpacity: {'opaque': 'opaque', 'translucent': 'translucent', 'transparent': 'transparent'}
-};
-
 IncrementSliderStories
 	.addWithInfo(
 		'',
@@ -23,11 +18,11 @@ IncrementSliderStories
 			<IncrementSlider
 				height={text('height (vertical only)')}
 				onChange={action('onChange')}
-			    max={number('max')}
-			    min={number('min')}
-			    step={number('step')}
-			    value={number('value')}
-			    vertical={boolean('vertical')}
+				max={number('max')}
+				min={number('min')}
+				step={number('step')}
+				value={number('value')}
+				vertical={boolean('vertical')}
 			/>
 		)
 	)
