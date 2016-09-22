@@ -21,12 +21,12 @@ IncrementSliderStories
 		'The basic IncrementSlider.',
 		() => (
 			<IncrementSlider
-				height={text('height (vertical only)', '300px')}
+				height={text('height (vertical only)')}
 				onChange={action('onChange')}
-			    max={number('max', 100)}
-			    min={number('min', 0)}
-			    step={number('step', 1)}
-			    value={number('value', 0)}
+			    max={number('max')}
+			    min={number('min')}
+			    step={number('step')}
+			    value={number('value')}
 			    vertical={boolean('vertical')}
 			/>
 		)
