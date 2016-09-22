@@ -2,9 +2,9 @@ import React from 'react';
 import {storiesOf} from '@kadira/storybook';
 import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
 
-import ExpandableList from 'enact-moonstone/ExpandableList';
+import {ExpandableList as ExpList, ExpandableListBase} from 'enact-moonstone/ExpandableList';
 
-class StatefulExpandableList extends React.Component {
+class ExpandableList extends React.Component {
 	constructor (props) {
 		super(props);
 		this.state = {
@@ -32,22 +32,21 @@ class StatefulExpandableList extends React.Component {
 
 	render () {
 		return (
-			<ExpandableList
-				title={text('title', 'title')}
+			<ExpList
+				{...this.props}
 				label={this.state.label}
-				noneText={text('noneText', 'none text')}
 				value={this.state.value}
-				disabled={boolean('disabled')}
 				open={this.state.open}
 				onOpen={this.handleOpen}
 				onClose={this.handleClose}
 				onChange={this.handleChange}
-			>
-				{['option1', 'option2']}
-			</ExpandableList>
+			/>
 		);
 	}
 }
+
+ExpandableList.propTypes = Object.assign({}, ExpList.propTypes, ExpandableListBase.propTypes);
+ExpandableList.defaultProps = Object.assign({}, ExpList.defaultProps, ExpandableListBase.defaultProps);
 
 storiesOf('ExpandableList')
 	.addDecorator(withKnobs)
@@ -55,7 +54,12 @@ storiesOf('ExpandableList')
 		'',
 		'Basic usage of ExpandableList',
 		() => (
-			<StatefulExpandableList />
-		),
-		{propTables: [ExpandableList]}
+			<ExpandableList
+				title={text('title', 'title')}
+				noneText={text('noneText', 'none text')}
+				disabled={boolean('disabled', false)}
+			>
+				{['option1', 'option2', 'option3']}
+			</ExpandableList>
+		)
 	);
