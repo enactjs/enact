@@ -23,6 +23,7 @@ function loadStories () {
 	require('../stories/moonstone-stories/Picker.js');
 	require('../stories/moonstone-stories/RangePicker.js');
 	require('../stories/moonstone-stories/ToggleButton.js');
+	require('../stories/moonstone-stories/ExpandableList.js');
 }
 
 configure(loadStories, module);
