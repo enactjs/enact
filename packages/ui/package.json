@@ -7,9 +7,9 @@
     "clean": "enact clean",
     "pack": "enact pack",
     "pack-p": "enact pack -p",
-    "test": "enact start --single-run --browsers PhantomJS",
-    "test-json": "enact start --single-run --browsers PhantomJS --reporters json",
-    "test-watch": "enact start --browsers PhantomJS",
+    "test": "enact test start --single-run --browsers PhantomJS",
+    "test-json": "enact test start --single-run --browsers PhantomJS --reporters json",
+    "test-watch": "enact test start --browsers PhantomJS",
     "transpile": "enact transpile",
     "watch": "enact pack --watch"
   },
@@ -33,6 +33,11 @@
     "mobile",
     "webOS"
   ],
+  "enact": {
+    "ri": {
+      "baseSize": 24
+    }
+  },
   "eslintConfig": {
     "extends": "enact"
   },

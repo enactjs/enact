@@ -37,6 +37,11 @@
     "locale",
     "translation"
   ],
+  "enact": {
+    "ri": {
+      "baseSize": 24
+    }
+  },
   "eslintConfig": {
     "extends": "enact"
   },

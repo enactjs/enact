@@ -25,6 +25,11 @@
     "url": "git+https://github.com/enyojs/enact.git"
   },
   "license": "Apache-2.0",
+  "enact": {
+    "ri": {
+      "baseSize": 24
+    }
+  },
   "eslintConfig": {
     "extends": "enact"
   },
