@@ -34,7 +34,7 @@ class Accelerator {
 		this.time = 0;
 
 		/**
-		* The keyCode of the last evaluated event. 
+		* The keyCode of the last evaluated event.
 		*
 		* @type {Integer}
 		* @default 0
@@ -61,22 +61,22 @@ class Accelerator {
 	}
 
 	/**
-	* Called with the current keydown event and callback, which
-	* will be called when the event is allowed through.
+	* Called with the current keydown event and callback, which will be called when the event is
+	* allowed through.
 	*
 	* @param  {Object} event - The current event to validate.
 	* @param  {Function} callback - The callback to execute.
-	* @returns {Boolean}
+	* @returns {Boolean} `true` if the event was consumed by processKey and callback was not called
 	* @public
 	*/
 	processKey = (event, callback) => {
 		switch (event.type) {
 			case 'keydown':
-				if (event.keyCode != this.keyCode) {
+				if (event.keyCode !== this.keyCode) {
 					this.reset();
 					this.time = Date.now();
 					this.keyCode = event.keyCode;
-					return callback.apply(null, [event]);
+					return callback(event);
 				} else if (this.canceled) {
 
 					// Prevent skipped keydown events from bubbling
@@ -98,7 +98,7 @@ class Accelerator {
 
 					if (this.skipped >= toSkip) {
 						this.skipped = 0;
-						return callback.apply(null, [event]);
+						return callback(event);
 					} else {
 						this.skipped++;
 						// Prevent skipped keydown events from bubbling
@@ -106,16 +106,16 @@ class Accelerator {
 						return true;
 					}
 				}
-				break;
 			case 'keyup':
 				this.reset();
-				return callback.apply(null, [event]);
+				return callback(event);
 		}
 	}
 
 	/**
 	* Resets the Accelerator instance to the default values.
 	*
+	* @returns {undefined}
 	* @public
 	*/
 	reset = () => {
@@ -129,6 +129,7 @@ class Accelerator {
 	/**
 	* Cancels the Accelerator.
 	*
+	* @returns {undefined}
 	* @public
 	*/
 	cancel = () => {
