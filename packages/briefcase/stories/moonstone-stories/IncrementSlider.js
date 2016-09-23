@@ -16,6 +16,8 @@ IncrementSliderStories
 		'The basic IncrementSlider.',
 		() => (
 			<IncrementSlider
+				backgroundPercent={number('backgroundPercent')}
+				disabled={boolean('disabled')}
 				height={text('height (vertical only)')}
 				onChange={action('onChange')}
 				max={number('max')}
