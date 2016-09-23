@@ -47,56 +47,56 @@ const forwardEnter = (keyEvent, mouseEvent) => (props) => {
 
 const defaultConfig = {
 	/**
-	* Whether or not the component should emulate mouse events as a response
-	* to Spotlight 5-way events.
-	*
-	* @type {Boolean}
-	* @default false
-	* @public
-	*/
+	 * Whether or not the component should emulate mouse events as a response
+	 * to Spotlight 5-way events.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @public
+	 */
 	emulateMouse: true
 };
 
 /**
-* Constructs a Spotlight 5-way navigation-enabled Higher-order Component.
-*
-* @example
-*	const SpottableComponent = Spottable(Component);
-*
-* @param  {Object}		defaultConfig Set of default configuration parameters
-* @param  {Function}	Higher-order component
-*
-* @returns {Function}	Spottable
-*/
+ * Constructs a Spotlight 5-way navigation-enabled Higher-order Component.
+ *
+ * @example
+ *	const SpottableComponent = Spottable(Component);
+ *
+ * @param  {Object}		defaultConfig Set of default configuration parameters
+ * @param  {Function}	Higher-order component
+ *
+ * @returns {Function}	Spottable
+ */
 const Spottable = hoc(defaultConfig, (config, Wrapped) => kind({
 	name: 'Spottable',
 
 	propTypes: {
 		/**
-		* Whether or not the component is decorated by another spottable component.
-		*
-		* @type {Boolean}
-		* @default false
-		* @public
-		*/
+		 * Whether or not the component is decorated by another spottable component.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
 		decorated: React.PropTypes.bool,
 
 		/**
-		* Whether or not the component is in a disabled state.
-		*
-		* @type {Boolean}
-		* @default false
-		* @public
-		*/
+		 * Whether or not the component is in a disabled state.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
 		disabled: React.PropTypes.bool,
 
 		/**
-		* Whether or not the component can be navigated using spotlight.
-		*
-		* @type {Boolean}
-		* @default false
-		* @public
-		*/
+		 * Whether or not the component can be navigated using spotlight.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
 		spotlightDisabled: React.PropTypes.bool
 	},
 

@@ -6,37 +6,37 @@ import {spottableClass} from './spottable';
 
 const defaultConfig = {
 	/**
-	* Directs which component receives focus when gaining focus from another container.
-	*
-	* @type {String}
-	* @default ''
-	* @public
-	*/
+	 * Directs which component receives focus when gaining focus from another container.
+	 *
+	 * @type {String}
+	 * @default ''
+	 * @public
+	 */
 	enterTo: '',
 
 	/**
-	* Restricts or prioritizes navigation when focus attempts to leave the container.
-	*
-	* @type {String}
-	* @default 'none'
-	* @public
-	*/
+	 * Restricts or prioritizes navigation when focus attempts to leave the container.
+	 *
+	 * @type {String}
+	 * @default 'none'
+	 * @public
+	 */
 	restrict: 'none'
 };
 
 /**
-* Constructs a Higher-order Component that allows Spotlight focus to be passed to 
-* its own configurable hierarchy of spottable child controls.
-*
-* @example
-*	const DefaultContainer = SpotlightContainerDecorator(Component);
-*	const SelfRestrictedContainer = SpotlightContainerDecorator({restrict: 'self-only'}, Component);
-*
-* @param  {Object}		defaultConfig Set of default configuration parameters
-* @param  {Function}	Higher-order component
-*
-* @returns {Function}	SpotlightContainerDecorator
-*/
+ * Constructs a Higher-order Component that allows Spotlight focus to be passed to 
+ * its own configurable hierarchy of spottable child controls.
+ *
+ * @example
+ *	const DefaultContainer = SpotlightContainerDecorator(Component);
+ *	const SelfRestrictedContainer = SpotlightContainerDecorator({restrict: 'self-only'}, Component);
+ *
+ * @param  {Object}		defaultConfig Set of default configuration parameters
+ * @param  {Function}	Higher-order component
+ *
+ * @returns {Function}	SpotlightContainerDecorator
+ */
 const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		constructor (props) {
