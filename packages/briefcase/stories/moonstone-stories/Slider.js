@@ -22,7 +22,6 @@ storiesOf('Slider')
 			<Slider
 				min={number('min')}
 				max={number('max')}
-				value={number('value')}
 				step={number('step')}
 				backgroundPercent={number('backgroundPercent')}
 				vertical={boolean('vertical')}
