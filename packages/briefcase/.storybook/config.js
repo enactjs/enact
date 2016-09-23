@@ -27,6 +27,7 @@ function loadStories () {
 	require('../stories/moonstone-stories/RadioItem.js');
 	require('../stories/moonstone-stories/RangePicker.js');
 	require('../stories/moonstone-stories/SelectableItem.js');
+	require('../stories/moonstone-stories/Slider.js');
 	require('../stories/moonstone-stories/SwitchItem.js');
 	require('../stories/moonstone-stories/ToggleButton.js');
 }
