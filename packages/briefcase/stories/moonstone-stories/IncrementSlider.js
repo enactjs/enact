@@ -12,7 +12,6 @@ delete IncrementSlider.propTypes.onIncrement;
 IncrementSlider.defaultProps = Object.assign({}, IncrementSliderBase.defaultProps, IncrementSlider.defaultProps);
 IncrementSlider.displayName = 'IncrementSlider';
 
-
 IncrementSliderStories
 	.addWithInfo(
 		'',
