@@ -7,8 +7,11 @@ import IncrementSlider, {IncrementSliderBase} from 'enact-moonstone/IncrementSli
 const IncrementSliderStories = storiesOf('IncrementSlider').addDecorator(withKnobs);
 
 IncrementSlider.propTypes = Object.assign({}, IncrementSliderBase.propTypes, IncrementSlider.propTypes);
+delete IncrementSlider.propTypes.onDecrement;
+delete IncrementSlider.propTypes.onIncrement;
 IncrementSlider.defaultProps = Object.assign({}, IncrementSliderBase.defaultProps, IncrementSlider.defaultProps);
 IncrementSlider.displayName = 'IncrementSlider';
+
 
 IncrementSliderStories
 	.addWithInfo(
