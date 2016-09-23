@@ -15,13 +15,20 @@ setAddon(infoAddon);
 
 function loadStories () {
 	require('../stories/moonstone-stories/Button.js');
+	require('../stories/moonstone-stories/CheckboxItem.js');
 	require('../stories/moonstone-stories/Divider.js');
 	require('../stories/moonstone-stories/Icon.js');
 	require('../stories/moonstone-stories/IconButton.js');
+	require('../stories/moonstone-stories/IncrementSlider.js');
 	require('../stories/moonstone-stories/Item.js');
 	require('../stories/moonstone-stories/LabeledItem.js');
 	require('../stories/moonstone-stories/Picker.js');
+	require('../stories/moonstone-stories/ProgressBar.js');
+	require('../stories/moonstone-stories/RadioItem.js');
 	require('../stories/moonstone-stories/RangePicker.js');
+	require('../stories/moonstone-stories/SelectableItem.js');
+	require('../stories/moonstone-stories/Slider.js');
+	require('../stories/moonstone-stories/SwitchItem.js');
 	require('../stories/moonstone-stories/ToggleButton.js');
 	require('../stories/moonstone-stories/ExpandableList.js');
 }
