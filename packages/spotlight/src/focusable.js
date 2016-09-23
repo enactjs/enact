@@ -71,6 +71,8 @@ const focusableClass = 'focused';
 const SpotlightFocusableDecoratorHoC = hoc(defaultConfig, (config, Wrapped) => {
 	return class SpotlightFocusableDecorator extends React.Component {
 		static propTypes = {
+			containerId: PropTypes.string,
+			disabled: PropTypes.bool,
 			keyCodes: PropTypes.array
 		}
 
@@ -86,11 +88,10 @@ const SpotlightFocusableDecoratorHoC = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 
-		componentDidUpdate (prevProps, prevState) {
+		componentDidUpdate () {
 			if (this.state.forceFocusChange) {
-				// eslint-disable-next-line no-undefined
-				Spotlight.focus(this.state.innerElementFocused ? this.props.containerId : undefined);
-				this.setState({forceFocusChange: false});
+				Spotlight.focus(this.state.innerElementFocused ? this.props.containerId : void 0);
+				this.setState({forceFocusChange: false}); // eslint-disable-line react/no-did-update-set-state
 			}
 		}
 
@@ -130,7 +131,7 @@ const SpotlightFocusableDecoratorHoC = hoc(defaultConfig, (config, Wrapped) => {
 				}
 			}
 		}
-		
+
 		render () {
 			const props = Object.assign({}, this.props, {
 				spotlightDisabled: this.state.innerElementFocused

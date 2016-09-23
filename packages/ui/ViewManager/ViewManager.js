@@ -1,3 +1,10 @@
+/**
+ * Exports the {@link module:enact-ui/ViewManager~ViewManager} component and the
+ * [arrangers]{@link module:enact-ui/ViewManager~Arranger} for use with it.
+ *
+ * @module enact-ui/ViewManager
+ */
+
 import R from 'ramda';
 import React from 'react';
 import TransitionGroup from './TransitionGroup';
@@ -18,6 +25,13 @@ const childrenEquals = (prev, next) => {
 	}
 };
 
+/**
+ * A `ViewManager` controls the visibility of a configurable number of views, allowing for them to be
+ * transitioned on and off the viewport.
+ *
+ * @class ViewManager
+ * @public
+ */
 class ViewManager extends React.Component {
 
 	static propTypes = {

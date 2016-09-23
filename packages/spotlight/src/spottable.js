@@ -12,15 +12,15 @@ const isKeyboardAccessible = (node) => {
 	const name = node.nodeName.toUpperCase();
 	const type = node.type ? node.type.toUpperCase() : null;
 	return (
-		name === 'BUTTON' ||
-		name === 'A' ||
-		name === 'INPUT' && (
-			type === 'BUTTON' ||
-			type === 'CHECKBOX' ||
-			type === 'IMAGE' ||
-			type === 'RADIO' ||
-			type === 'RESET' ||
-			type === 'SUBMIT'
+		name === 'BUTTON'
+		|| name === 'A'
+		|| name === 'INPUT'
+		&&    (type === 'BUTTON'
+			|| type === 'CHECKBOX'
+			|| type === 'IMAGE'
+			|| type === 'RADIO'
+			|| type === 'RESET'
+			|| type === 'SUBMIT'
 		)
 	);
 };
@@ -29,10 +29,9 @@ const shouldEmulateMouse = (ev) => {
 	const {which, type, currentTarget} = ev;
 	return (
 		// emulate mouse events for any remote okay button event
-		which === REMOTE_OK_KEY ||
-
+		which === REMOTE_OK_KEY
 		// or a non-keypress enter event or any enter event on a non-keyboard accessible control
-		(which === ENTER_KEY && (type !== 'keypress' || !isKeyboardAccessible(currentTarget)))
+		|| (which === ENTER_KEY && (type !== 'keypress' || !isKeyboardAccessible(currentTarget)))
 	);
 };
 

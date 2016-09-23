@@ -1,10 +1,32 @@
+/**
+ * Exports the {@link module:enact-ui/resolution~ResolutionDecorator} Higher-order Component (HOC).
+ *
+ * @module enact-ui/resolution/ResolutionDecorator
+ */
+
 import React from 'react';
 import hoc from 'enact-core/hoc';
 
 import {init, defineScreenTypes, getScreenTypeObject, getResolutionClasses} from './resolution';
 
 const defaultConfig = {
+	/**
+	 * When `true`, an event listener will be attached to the window to listen for resize events.
+	 *
+	 * @type {Boolean}
+	 * @default true
+	 * @public
+	 */
 	dynamic: true,
+
+	/**
+	 * An array of objects containing declarations for screen types to add to the list of known
+	 * screen types.
+	 *
+	 * @type {Object[]}
+	 * @default null
+	 * @public
+	 */
 	screenTypes: null
 };
 
@@ -32,7 +54,7 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	}
 
 	return class extends React.Component {
-		displayName = 'ResolutionDecorator'
+		static displayName = 'ResolutionDecorator'
 
 		static propTypes = {
 			className: React.PropTypes.string
