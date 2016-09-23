@@ -56,7 +56,7 @@ storiesOf('ExpandableList')
 		() => (
 			<ExpandableList
 				title={text('title', 'title')}
-				noneText={text('noneText', 'none text')}
+				noneText={text('noneText', 'nothing selected')}
 				disabled={boolean('disabled', false)}
 			>
 				{['option1', 'option2', 'option3']}
