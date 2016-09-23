@@ -1,6 +1,6 @@
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
+import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
 
 import IconList from 'enact-moonstone/Icon/IconList';
 import Input, {InputBase} from 'enact-moonstone/Input/Input';
@@ -23,6 +23,9 @@ InputStories
 				disabled={boolean('disabled')}
 				iconEnd={select('iconEnd', icons)}
 				iconStart={select('iconStart', icons)}
+			    placeholder={text('placeholder')}
+			    type={text('type')}
+			    value={text('value')}
 			/>
 		)
 	)
