@@ -4,14 +4,14 @@
   "description": "A collection of simplified unstyled cross-platform UI components for Enact",
   "main": "index.js",
   "scripts": {
-    "test": "enyo-karma start --single-run --browsers PhantomJS",
-    "test-json": "enyo-karma start --single-run --browsers PhantomJS --reporters json",
-    "test-watch": "enyo-karma start --browsers PhantomJS",
-    "transpile": "enyo-transpile",
-    "pack": "enyo-webpack",
-    "pack-p": "enyo-webpack -p",
-    "watch": "enyo-webpack --watch",
-    "clean": "enyo-clean"
+    "clean": "enact clean",
+    "pack": "enact pack",
+    "pack-p": "enact pack -p",
+    "test": "enact start --single-run --browsers PhantomJS",
+    "test-json": "enact start --single-run --browsers PhantomJS --reporters json",
+    "test-watch": "enact start --browsers PhantomJS",
+    "transpile": "enact transpile",
+    "watch": "enact pack --watch"
   },
   "homepage": "http://enyojs.com/",
   "bugs": "http://jira.enyojs.com/",
@@ -34,7 +34,7 @@
     "webOS"
   ],
   "eslintConfig": {
-    "extends": "./node_modules/eslint-config-enact/index.js"
+    "extends": "enact"
   },
   "devDependencies": {
     "enzyme": "^2.4.1",

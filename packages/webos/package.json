@@ -4,12 +4,12 @@
   "description": "webOS support library",
   "main": "index.js",
   "scripts": {
+    "clean": "enact clean",
+    "pack": "enact pack",
+    "pack-p": "enact pack -p",
     "test": "echo \"No test suite\" && exit 0",
-    "transpile": "enyo-transpile",
-    "pack": "enyo-webpack",
-    "pack-p": "enyo-webpack -p",
-    "watch": "enyo-webpack --watch",
-    "clean": "enyo-clean"
+    "transpile": "enact transpile",
+    "watch": "enact pack --watch"
   },
   "homepage": "http://enyojs.com/",
   "bugs": "http://jira.enyojs.com/",
@@ -30,7 +30,7 @@
     "webOS"
   ],
   "eslintConfig": {
-    "extends": "./node_modules/eslint-config-enact/index.js"
+    "extends": "enact"
   },
   "devDependencies": {
     "enzyme": "^2.4.1",
