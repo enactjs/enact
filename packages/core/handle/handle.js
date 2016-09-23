@@ -14,7 +14,7 @@ import R from 'ramda';
  * @method	handle
  * @param	{...Function}	handlers List of handlers to process the event
  * @returns	{Function}		A function that accepts an event which is dispatched to each of the
- * 							provided handlers.
+ *							provided handlers.
  */
 const handle = R.unapply(handlers => (...args) => R.reduce((acc, handler) => {
 	if (acc) {
@@ -37,18 +37,24 @@ const handle = R.unapply(handlers => (...args) => R.reduce((acc, handler) => {
  * extra args, to the handlers.
  *
  * @example
- *  const submit = (e, props) => {
- *  	// block submission for blank data unless the prop allows it
- *  	if (e.target.value === '' && !props.allowBlank) return true;
- *		console.log('Submitting the data!');
- *  };
- *	const submitOnEnter = withArgs(handle.forKeyCode(13), handle.stop, submit);
- *	return (<input onKeyPress={submitOnEnter}>);
+ *	import {withArgs, forKeyCode, stop} from 'enact-core/handle';
+ *	kind({
+ *		computed: {
+ *			onSubmit: withArgs(forKeyCode(13), stop, (e, props) => {
+ *				// block submission for blank data unless the prop allows it
+ *				if (e.target.value === '' && !props.allowBlank) return true;
+ *				console.log('Submitting the data!');
+ *			})
+ *		},
+ *		render: ({onSubmit}) => (
+ *			<input onKeyPress={submitOnEnter} />
+ *		)
+ *	});
  *
  * @method	withArgs
  * @param	{...Function}	handlers List of handlers to process the event
  * @returns	{Function}		A function that accepts a list of args which returns a function that
- * 							accepts an event which is dispatched to each of the provided handlers.
+ *							accepts an event which is dispatched to each of the provided handlers.
  */
 const withArgs = handle.withArgs = (...handlers) => {
 	const handler = handle(...handlers);
@@ -59,8 +65,8 @@ const withArgs = handle.withArgs = (...handlers) => {
  * Calls a named function on the event and returns false
  *
  * @example
- *	// calls event.stop() before calling submit()
- *	handle(handle.callOnEvent('stop'), submit)
+ *	// calls event.customMethod() before calling submit()
+ *	handle(handle.callOnEvent('customMethod'), submit)
  *
  * @method	callOnEvent
  * @param	{String}	methodName	Name of the method to call on the event.
@@ -75,7 +81,7 @@ const callOnEvent = handle.callOnEvent = (methodName) => (e) => {
  * Stops handling if the value of `prop` on the event does not equal `value`
  *
  * @example
- *  // submit() called only if event[x] is non-zero
+ *  // submit() called only if event.x === 0
  *	handle(handle.forProp('x', 0), submit)
  *
  * @method	forProp
@@ -137,22 +143,12 @@ const stop = handle.stop = callOnEvent('stopPropagation');
  */
 const forKeyCode = handle.forKeyCode = forProp('keyCode');
 
-/**
- * Only allows event handling to continue if `event.which === value`.
- *
- * @method	forWhich
- * @param	{Number}	value	`which` to test
- * @returns	{Function}			Event handler
- */
-const forWhich = handle.forWhich = forProp('which');
-
 export default handle;
 export {
 	callOnEvent,
 	forward,
 	forProp,
 	forKeyCode,
-	forWhich,
 	handle,
 	preventDefault,
 	stop,
