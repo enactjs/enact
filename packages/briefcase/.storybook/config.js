@@ -17,6 +17,7 @@ function loadStories () {
 	require('../stories/moonstone-stories/Button.js');
 	require('../stories/moonstone-stories/CheckboxItem.js');
 	require('../stories/moonstone-stories/Divider.js');
+	require('../stories/moonstone-stories/ExpandableList.js');
 	require('../stories/moonstone-stories/Icon.js');
 	require('../stories/moonstone-stories/IconButton.js');
 	require('../stories/moonstone-stories/IncrementSlider.js');
