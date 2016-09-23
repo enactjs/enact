@@ -63,10 +63,10 @@ const focusableClass = 'focused';
  *		Component
  *	);
  *
- * @param  {Object}		defaultConfig Set of default configuration parameters
- * @param  {Function}	Higher-order component
+ * @param  {Object} defaultConfig Set of default configuration parameters
+ * @param  {Function} Higher-order component
  *
- * @returns {Function}	SpotlightFocusableDecoratorHoC
+ * @returns {Function} SpotlightFocusableDecoratorHoC
  */
 const SpotlightFocusableDecoratorHoC = hoc(defaultConfig, (config, Wrapped) => {
 	return class SpotlightFocusableDecorator extends React.Component {

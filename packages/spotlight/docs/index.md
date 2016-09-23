@@ -25,7 +25,7 @@ computer-with-mouse.
 It was developed for use with the [Enact JavaScript framework](http://enactjs.com), but is useful as a standalone
 library.
 
-Spotlight is based on a fork of [JavaScript SpacialNavigation](https://github.com/luke-chang/js-spatial-navigation)
+Spotlight is based on a fork of [JavaScript SpatialNavigation](https://github.com/luke-chang/js-spatial-navigation)
 (c) 2016 Luke Chang, under the terms of the [Mozilla Public License](https://www.mozilla.org/en-US/MPL/2.0/).
 
 <a name="2"></a>
@@ -126,7 +126,7 @@ const Container = SpotlightContainerDecorator(kind({
 	render: ({className, ...rest}) => {
 		return (
 			<div className={className}>
-				[<A list of spottable controls>]
+				{/* A list of spottable controls */}
 			</div>
 		);
 	}
@@ -247,14 +247,16 @@ Designates whether a control is being decorated by another spottable control.
 
 ### Container ###
 `enterTo`
-+ Type: [`''`, `'last-focused'`, or `'default-element'`]
++ Type: [string]
++ Values: [`''`, `'last-focused'`, or `'default-element'`]
 + Default: `''`
 
 If the focus originates from another container, you can define which element in
 this container receives focus first.
 
 `restrict`
-+ Type: [`'none'`, `'self-first'`, or `'self-only'`]
++ Type: [string]
++ Values: [`'none'`, `'self-first'`, or `'self-only'`]
 + Default: `'none'`
 
 Restricts or prioritizes focus to the controls in the current container.

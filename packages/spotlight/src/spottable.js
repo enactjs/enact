@@ -62,10 +62,10 @@ const defaultConfig = {
  * @example
  *	const SpottableComponent = Spottable(Component);
  *
- * @param  {Object}		defaultConfig Set of default configuration parameters
- * @param  {Function}	Higher-order component
+ * @param  {Object} defaultConfig Set of default configuration parameters
+ * @param  {Function} Higher-order component
  *
- * @returns {Function}	Spottable
+ * @returns {Function} Spottable
  */
 const Spottable = hoc(defaultConfig, (config, Wrapped) => kind({
 	name: 'Spottable',

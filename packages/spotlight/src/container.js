@@ -32,10 +32,10 @@ const defaultConfig = {
  *	const DefaultContainer = SpotlightContainerDecorator(Component);
  *	const SelfRestrictedContainer = SpotlightContainerDecorator({restrict: 'self-only'}, Component);
  *
- * @param  {Object}		defaultConfig Set of default configuration parameters
- * @param  {Function}	Higher-order component
+ * @param  {Object} defaultConfig Set of default configuration parameters
+ * @param  {Function} Higher-order component
  *
- * @returns {Function}	SpotlightContainerDecorator
+ * @returns {Function} SpotlightContainerDecorator
  */
 const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {

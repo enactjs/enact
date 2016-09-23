@@ -13,10 +13,10 @@ const defaultConfig = {};
  * @example
  *	const App = SpotlightRootDecorator(ApplicationView);
  *
- * @param  {Object}		defaultConfig Set of default configuration parameters
- * @param  {Function}	Higher-order component
+ * @param  {Object} defaultConfig Set of default configuration parameters
+ * @param  {Function} Higher-order component
  *
- * @returns {Function}	SpotlightRootDecorator
+ * @returns {Function} SpotlightRootDecorator
  */
 const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
