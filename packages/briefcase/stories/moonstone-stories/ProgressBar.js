@@ -16,7 +16,6 @@ ProgressBarStories
 		'The basic ProgressBar.',
 		() => (
 			<ProgressBar
-				onClick={action('onClick')}
 				backgroundProgress={number('backgroundProgress')}
 				max={number('max')}
 				min={number('min')}
