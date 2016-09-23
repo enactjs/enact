@@ -23,6 +23,7 @@ function loadStories () {
 	require('../stories/moonstone-stories/Item.js');
 	require('../stories/moonstone-stories/LabeledItem.js');
 	require('../stories/moonstone-stories/Picker.js');
+	require('../stories/moonstone-stories/ProgressBar.js');
 	require('../stories/moonstone-stories/RadioItem.js');
 	require('../stories/moonstone-stories/RangePicker.js');
 	require('../stories/moonstone-stories/SelectableItem.js');
