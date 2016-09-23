@@ -25,7 +25,7 @@ const defaultConfig = {
 };
 
 /**
- * Constructs a Higher-order Component that allows Spotlight focus to be passed to 
+ * Constructs a Higher-order Component that allows Spotlight focus to be passed to
  * its own configurable hierarchy of spottable child controls.
  *
  * @example

@@ -53,7 +53,7 @@ const defaultConfig = {
 const focusableClass = 'focused';
 
 /**
- * Constructs a Higher-order Component that allows Spotlight to to change the style 
+ * Constructs a Higher-order Component that allows Spotlight to to change the style
  * of an outer-control based on the focus state of a spottable inner-control.
  *
  * @example
