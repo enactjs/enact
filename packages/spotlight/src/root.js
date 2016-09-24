@@ -6,6 +6,18 @@ import {spottableClass} from './spottable';
 
 const defaultConfig = {};
 
+/**
+ * Constructs a Higher-order Component that initializes and enables Spotlight
+ * 5-way navigation within an application.
+ *
+ * @example
+ *	const App = SpotlightRootDecorator(ApplicationView);
+ *
+ * @param  {Object} defaultConfig Set of default configuration parameters
+ * @param  {Function} Higher-order component
+ *
+ * @returns {Function} SpotlightRootDecorator
+ */
 const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'SpotlightRootDecorator';
