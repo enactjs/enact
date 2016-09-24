@@ -84,20 +84,19 @@ const PickableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 			const key = (mutable && prop in props) ? prop : defaultPropKey;
-			const value = this.value = props[key];
+			const value = props[key];
 			this.state = {value};
 		}
 
 		componentWillReceiveProps (nextProps) {
 			if (mutable) {
-				this.value = nextProps[prop];
-			} else {
-				this.value = this.state.value;
+				const value = nextProps[prop];
+				this.setState({value});
 			}
 		}
 
 		pick = (ev) => {
-			const value = this.value = ev[config.prop];
+			const value = ev[config.prop];
 			const onPick = this.props[config.pick];
 
 			this.setState({value});
@@ -110,7 +109,7 @@ const PickableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			props[config.prop] = this.state.value;
 			delete props[defaultPropKey];
 
-			return <Wrapped {...props} value={this.value} />;
+			return <Wrapped {...props} />;
 		}
 	};
 });
