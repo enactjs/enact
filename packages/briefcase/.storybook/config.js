@@ -21,6 +21,7 @@ function loadStories () {
 	require('../stories/moonstone-stories/Icon.js');
 	require('../stories/moonstone-stories/IconButton.js');
 	require('../stories/moonstone-stories/IncrementSlider.js');
+	require('../stories/moonstone-stories/Input.js');
 	require('../stories/moonstone-stories/Item.js');
 	require('../stories/moonstone-stories/LabeledItem.js');
 	require('../stories/moonstone-stories/Picker.js');
