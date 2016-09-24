@@ -7,7 +7,7 @@
 * @public
 */
 class Accelerator {
-	constructor (inFrequency) {
+	constructor (frequency) {
 
 		/**
 		* Whether the instance is currently in an accelerating state.
@@ -57,7 +57,7 @@ class Accelerator {
 		* @default [3, 3, 3, 2, 2, 2, 1]
 		* @public
 		*/
-		this.frequency = inFrequency || [3, 3, 3, 2, 2, 2, 1];
+		this.frequency = frequency || [3, 3, 3, 2, 2, 2, 1];
 	}
 
 	/**
