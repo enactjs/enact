@@ -1,1 +1,1 @@
-module.exports = require('eslint-config-enyo');
+module.exports = require('eslint-config-enact');
