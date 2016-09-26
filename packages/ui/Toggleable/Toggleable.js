@@ -4,9 +4,10 @@
  * @module enact-ui/Toggleable
  */
 
-import React from 'react';
+import {forward} from 'enact-core/handle';
 import hoc from 'enact-core/hoc';
 import {cap} from 'enact-core/util';
+import React from 'react';
 
 const defaultConfig = {
 
@@ -38,7 +39,9 @@ const defaultConfig = {
  * @public
  */
 const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
-	const defaultPropKey = 'default' + cap(config.prop);
+	const {toggle, prop} = config;
+	const defaultPropKey = 'default' + cap(prop);
+	const forwardToggle = forward(toggle);
 
 	return class Toggleable extends React.Component {
 		static propTypes = {
@@ -73,17 +76,16 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		onToggle = (ev) => {
-			const handler = this.props[config.toggle];
 			if (!this.props.disabled) {
 				this.setState({selected: !this.state.selected});
-				if (handler) handler(ev);
 			}
+			forwardToggle(ev, this.props);
 		}
 
 		render () {
 			const props = Object.assign({}, this.props);
-			props[config.toggle] = this.onToggle;
-			props[config.prop] = this.state.selected;
+			if (toggle) props[toggle] = this.onToggle;
+			if (prop) props[prop] = this.state.selected;
 			delete props[defaultPropKey];
 
 			return <Wrapped {...props} />;
