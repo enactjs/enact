@@ -18,7 +18,7 @@
   "scripts": {
     "lerna": "lerna",
     "bootstrap": "lerna bootstrap --concurrency 1",
-    "postinstall": "npm run bootstrap"
+    "postinstall": "node ./scripts/npm-bootstrap.js"
   },
   "devDependencies": {
     "lerna": "2.0.0-beta.29"
