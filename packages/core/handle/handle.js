@@ -102,8 +102,8 @@ const forProp = handle.forProp = R.curry((prop, value) => {
  * `handle()` as a handler.
  *
  * @example
- *  const props = {onSubmit: (e) => doSomething()};
- *	const handleClick = handle(handle.forward('onSubmit'))(props);
+ *	const props = {onSubmit: (e) => doSomething()};
+ *	const handleClick = withArgs(forward('onSubmit'))(props);
  *
  * @method	forward
  * @param	{String}	name	Name of method on the `props`
