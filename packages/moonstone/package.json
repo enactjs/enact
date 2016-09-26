@@ -53,8 +53,5 @@
     "react": "^15.3.1",
     "recompose": "^0.20.2",
     "warning": "^3.0.0"
-  },
-  "peerDependencies": {
-    "enact-dev":"enyojs/enact-dev#release/0.1.0"
   }
 }

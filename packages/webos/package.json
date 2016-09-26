@@ -36,8 +36,5 @@
   },
   "eslintConfig": {
     "extends": "enact"
-  },
-  "peerDependencies": {
-    "enact-dev":"enyojs/enact-dev#release/0.1.0"
   }
 }
