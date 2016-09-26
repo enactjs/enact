@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "clean": "enact clean",
+    "lint": "enact lint .",
     "pack": "enact pack",
     "pack-p": "enact pack -p",
     "test": "enact test start --single-run --browsers PhantomJS",

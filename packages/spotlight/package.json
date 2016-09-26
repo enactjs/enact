@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "clean": "enyo-clean",
     "clean": "enact clean",
+    "lint": "enact lint .",
     "pack": "enact pack",
     "pack-p": "enact pack -p",
     "test": "echo \"No test suite\" && exit 0",

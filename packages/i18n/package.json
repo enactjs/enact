@@ -5,6 +5,7 @@
   "description": "Internationalization support for Enact using iLib",
   "scripts": {
     "clean": "enact clean",
+    "lint": "enact lint .",
     "pack": "enact pack",
     "pack-p": "enact pack -p",
     "test": "echo \"No test suite\" && exit 0",
