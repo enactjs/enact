@@ -8,7 +8,7 @@ const iconNames = Object.keys(icons);
 storiesOf('Icon')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'',
+		' ',
 		'Basic usage of Icon',
 		() => (
 			<Icon

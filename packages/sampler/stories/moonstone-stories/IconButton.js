@@ -18,8 +18,8 @@ const iconNames = Object.keys(icons);
 storiesOf('IconButton')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'',
-		'The basic IconButton.',
+		' ',
+		'The basic IconButton',
 		() => (
 			<IconButton
 				onClick={action('onClick')}

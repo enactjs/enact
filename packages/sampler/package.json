@@ -18,10 +18,9 @@
   },
   "homepage": "https://github.com/enyojs/enact#readme",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "echo \"No test suite\" && exit 0",
     "pack": "build-storybook -c .storybook -o dist",
-    "serve": "start-storybook -p 9001 -c .storybook",
-    "storybook": "start-storybook -p 9001 -c .storybook"
+    "serve": "start-storybook -p 9001 -c .storybook"
   },
   "devDependencies": {
     "babel-core": "^6.14.0",

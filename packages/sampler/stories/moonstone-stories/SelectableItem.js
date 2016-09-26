@@ -16,7 +16,7 @@ delete SelectableItem.propTypes.iconClasses;
 storiesOf('SelectableItem')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'',
+		' ',
 		'Basic usage of SelectableItem',
 		() => (
 			<SelectableItem

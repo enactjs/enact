@@ -25,7 +25,7 @@ const airports = [
 storiesOf('Picker')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'',
+		' ',
 		'Basic usage of Picker',
 		() => (
 			<StatefulPicker

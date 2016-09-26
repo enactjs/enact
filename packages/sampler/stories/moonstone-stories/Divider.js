@@ -6,7 +6,7 @@ import {withKnobs} from '@kadira/storybook-addon-knobs';
 storiesOf('Divider')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'',
+		' ',
 		'Basic usage of divider',
 		() => (
 			<Divider>divider text</Divider>

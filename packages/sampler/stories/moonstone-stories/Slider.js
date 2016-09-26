@@ -15,8 +15,8 @@ delete Slider.defaultProps.defaultPressed;
 storiesOf('Slider')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'',
-		'Basic usage of Slider.',
+		' ',
+		'Basic usage of Slider',
 		() => (
 			<Slider
 				min={number('min')}

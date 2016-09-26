@@ -50,7 +50,7 @@ ExpandableList.defaultProps = Object.assign({}, ExpList.defaultProps, Expandable
 storiesOf('ExpandableList')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'',
+		' ',
 		'Basic usage of ExpandableList',
 		() => (
 			<ExpandableList

@@ -16,7 +16,7 @@ delete SwitchItem.propTypes.iconClasses;
 storiesOf('SwitchItem')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'',
+		' ',
 		'Basic usage of SwitchItem',
 		() => (
 			<SwitchItem

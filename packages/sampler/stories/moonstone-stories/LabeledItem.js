@@ -10,7 +10,7 @@ LabeledItem.defaultProps = Object.assign({}, ItemBase.defaultProps, Item.default
 storiesOf('LabeledItem')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'',
+		' ',
 		'Basic usage of LabeledItem',
 		() => (
 			<LabeledItem

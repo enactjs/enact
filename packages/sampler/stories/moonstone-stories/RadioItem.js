@@ -16,7 +16,7 @@ delete RadioItem.propTypes.iconClasses;
 storiesOf('RadioItem')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'',
+		' ',
 		'Basic usage of RadioItem',
 		() => (
 			<RadioItem

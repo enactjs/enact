@@ -17,7 +17,7 @@ delete CheckboxItem.propTypes.iconClasses;
 storiesOf('CheckboxItem')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'',
+		' ',
 		'Basic usage of CheckboxItem',
 		() => (
 			<CheckboxItem

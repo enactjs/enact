@@ -10,8 +10,8 @@ ProgressBar.displayName = 'ProgressBar';
 storiesOf('ProgressBar')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'',
-		'The basic ProgressBar.',
+		' ',
+		'The basic ProgressBar',
 		() => (
 			<ProgressBar
 				backgroundProgress={number('backgroundProgress')}

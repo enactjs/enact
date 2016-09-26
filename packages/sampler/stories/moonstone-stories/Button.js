@@ -15,8 +15,8 @@ const prop = {
 storiesOf('Button')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'',
-		'The basic Button.',
+		' ',
+		'The basic Button',
 		() => (
 			<Button
 				onClick={action('onClick')}

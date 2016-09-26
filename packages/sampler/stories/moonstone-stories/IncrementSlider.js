@@ -13,8 +13,8 @@ delete IncrementSlider.propTypes.onIncrement;
 storiesOf('IncrementSlider')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'',
-		'The basic IncrementSlider.',
+		' ',
+		'The basic IncrementSlider',
 		() => (
 			<IncrementSlider
 				backgroundPercent={number('backgroundPercent')}

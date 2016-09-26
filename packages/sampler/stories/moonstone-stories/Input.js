@@ -31,19 +31,19 @@ StatefulInput.propTypes = Object.assign({}, InputBase.propTypes, Input.propTypes
 StatefulInput.defaultProps = Object.assign({}, InputBase.defaultProps, Input.defaultProps);
 StatefulInput.displayName = 'Input';
 
-const iconNames = Object.keys(icons);
+const iconNames = ['', ...Object.keys(icons)];
 
 storiesOf('Input')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'',
-		'The basic Input.',
+		' ',
+		'The basic Input',
 		() => (
 			<StatefulInput
 				onChange={action('onChange')}
 				disabled={boolean('disabled')}
-				iconEnd={select('iconEnd', ['', ...iconNames])}
-				iconStart={select('iconStart', ['', ...iconNames])}
+				iconEnd={select('iconEnd', iconNames)}
+				iconStart={select('iconStart', iconNames)}
 				placeholder={text('placeholder')}
 				type={text('type')}
 				value={text('value', '')}

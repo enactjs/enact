@@ -17,8 +17,8 @@ const prop = {
 storiesOf('ToggleButton')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'',
-		'The basic ToggleButton.',
+		' ',
+		'The basic ToggleButton',
 		() => (
 			<StatefulToggleButton
 				onClick={action('onClick')}

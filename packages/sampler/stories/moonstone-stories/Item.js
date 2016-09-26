@@ -10,7 +10,7 @@ Item.displayName = 'Item';
 storiesOf('Item')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'',
+		' ',
 		'Basic usage of Item',
 		() => (
 			<Item
