@@ -1,0 +1,60 @@
+{
+  "name": "enact-sampler",
+  "version": "1.0.0-alpha.1",
+  "description": "Component and QA samples for Enact",
+  "private": true,
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/enyojs/enact.git"
+  },
+  "keywords": [
+    "enact"
+  ],
+  "author": "EnyoJS",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/enyojs/enact/issues"
+  },
+  "homepage": "https://github.com/enyojs/enact#readme",
+  "scripts": {
+    "test": "echo \"No test suite\" && exit 0",
+    "pack": "build-storybook -c .storybook -o dist",
+    "serve": "start-storybook -p 9001 -c .storybook"
+  },
+  "devDependencies": {
+    "babel-core": "^6.14.0",
+    "babel-loader": "^6.2.5",
+    "babel-plugin-dev-expression": "^0.2.1",
+    "babel-plugin-transform-react-constant-elements": "^6.9.1",
+    "babel-plugin-transform-react-inline-elements": "^6.8.0",
+    "babel-preset-es2015": "^6.14.0",
+    "babel-preset-react": "^6.11.1",
+    "babel-preset-stage-0": "^6.5.0",
+    "css-loader": "^0.25.0",
+    "file-loader": "^0.9.0",
+    "graceful-fs": "^4.1.6",
+    "ilib-loader": "enyojs/ilib-loader",
+    "json-loader": "^0.5.4",
+    "less": "^2.7.1",
+    "less-loader": "^2.2.3",
+    "resolution-independence": "0.0.3",
+    "style-loader": "^0.13.1",
+    "webos-meta-loader": "enyojs/webos-meta-loader",
+    "webpack": "^1.13.2"
+
+  },
+  "dependencies": {
+    "@kadira/react-storybook-addon-info": "^3.2.1",
+    "@kadira/storybook": "^2.11.0",
+    "@kadira/storybook-addon-knobs": "^1.1.0",
+    "enact-core": "^1.0.0-alpha.1",
+    "enact-i18n": "^1.0.0-alpha.1",
+    "enact-moonstone": "^1.0.0-alpha.1",
+    "enact-spotlight": "^1.0.0-alpha.1",
+    "enact-ui": "^1.0.0-alpha.1",
+    "react": "^15.3.1",
+    "react-dom": "^15.3.1",
+    "react-storybook-addon-backgrounds": "0.0.4"
+  }
+}
