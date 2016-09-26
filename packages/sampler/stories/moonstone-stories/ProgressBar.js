@@ -1,5 +1,5 @@
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
+import {storiesOf} from '@kadira/storybook';
 import {withKnobs, boolean, number} from '@kadira/storybook-addon-knobs';
 
 import ProgressBar, {ProgressBarBase} from 'enact-moonstone/ProgressBar';
@@ -24,5 +24,4 @@ ProgressBarStories
 				disabled={boolean('disabled')}
 			/>
 		)
-	)
-;
+	);

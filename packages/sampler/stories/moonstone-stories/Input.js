@@ -9,9 +9,11 @@ import Pickable from 'enact-ui/Pickable';
 
 const InputStories = storiesOf('Input').addDecorator(withKnobs);
 
-// Potentially reusable HOC to adapt a native onChange event to a pickable event
+// Adapter to use Pickable until a suitable state HOC is added to enact-ui
 const MakePickable = hoc((config, Wrapped) => {
 	return kind({
+		name: 'MakePickable',
+
 		computed: {
 			onChange: ({onChange}) => (ev) => {
 				onChange({
@@ -49,5 +51,4 @@ InputStories
 				value={text('value', '')}
 			/>
 		)
-	)
-;
+	);

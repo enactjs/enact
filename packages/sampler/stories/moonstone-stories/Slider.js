@@ -1,5 +1,5 @@
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
+import {storiesOf} from '@kadira/storybook';
 import {withKnobs, boolean, number, text} from '@kadira/storybook-addon-knobs';
 
 import Slider, {SliderBase} from 'enact-moonstone/Slider';
@@ -27,7 +27,6 @@ storiesOf('Slider')
 				vertical={boolean('vertical')}
 				height={text('height')}
 				disabled={boolean('disabled')}
-				onChange={action('onChange')}
 			/>
 		)
 	);

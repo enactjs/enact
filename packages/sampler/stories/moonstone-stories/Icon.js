@@ -13,7 +13,8 @@ storiesOf('Icon')
 		'',
 		'Basic usage of Icon',
 		() => (
-			<div>
-				<Icon small={boolean('small')}>{select('icon', icons, 'plus')}</Icon>
-			</div>
-		));
+			<Icon small={boolean('small')}>
+				{select('icon', icons, 'plus')}
+			</Icon>
+		)
+	);

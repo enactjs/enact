@@ -33,5 +33,4 @@ buttonStories
 				toggleOffLabel={text('toggleOffLabel', 'Off')}
 			/>
 		)
-	)
-;
+	);

@@ -16,7 +16,6 @@ storiesOf('Item')
 		() => (
 			<Item
 				disabled={boolean('disabled')}
-				spotlightDisabled={boolean('spotlightDisabled')}
 			>
 				Hello Item
 			</Item>

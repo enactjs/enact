@@ -32,7 +32,7 @@ storiesOf('RangePicker')
 				max={number('max', 100)}
 				step={number('step', 5)}
 				defaultValue={0}
-				width={select('width', prop.width)}
+				width={select('width', prop.width, 'small')}
 				orientation={select('orientation', prop.orientation)}
 				wrap={boolean('wrap')}
 				joined={boolean('joined')}
@@ -41,5 +41,5 @@ storiesOf('RangePicker')
 				incrementIcon={text('incrementIcon')}
 				decrementIcon={text('decrementIcon')}
 			/>
-		),
+		)
 	);

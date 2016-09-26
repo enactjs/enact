@@ -1,5 +1,5 @@
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
+import {storiesOf} from '@kadira/storybook';
 import {withKnobs, boolean, number, text} from '@kadira/storybook-addon-knobs';
 
 import IncrementSlider, {IncrementSliderBase} from 'enact-moonstone/IncrementSlider';
@@ -22,7 +22,6 @@ IncrementSliderStories
 				backgroundPercent={number('backgroundPercent')}
 				disabled={boolean('disabled')}
 				height={text('height (vertical only)')}
-				onChange={action('onChange')}
 				max={number('max')}
 				min={number('min')}
 				step={number('step')}
@@ -30,6 +29,4 @@ IncrementSliderStories
 				vertical={boolean('vertical')}
 			/>
 		)
-	)
-;
-
+	);

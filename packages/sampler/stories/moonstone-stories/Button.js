@@ -28,7 +28,8 @@ buttonStories
 				preserveCase={boolean('preserveCase')}
 				selected={boolean('selected')}
 				small={boolean('small')}
-			>Click Me</Button>
+			>
+				Click Me
+			</Button>
 		)
-	)
-;
+	);

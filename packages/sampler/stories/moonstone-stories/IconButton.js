@@ -28,7 +28,8 @@ buttonStories
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
 				disabled={boolean('disabled')}
 				small={boolean('small')}
-			>{select('icon', icons, 'play')}</IconButton>
+			>
+				{select('icon', icons, 'play')}
+			</IconButton>
 		)
-	)
-;
+	);

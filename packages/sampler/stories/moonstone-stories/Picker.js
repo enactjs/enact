@@ -32,7 +32,7 @@ storiesOf('Picker')
 		() => (
 			<StatefulPicker
 				onChange={action('onChange')}
-				width={select('width', prop.width)}
+				width={select('width', prop.width, 'large')}
 				orientation={select('orientation', prop.orientation)}
 				wrap={boolean('wrap')}
 				joined={boolean('joined')}
@@ -43,5 +43,5 @@ storiesOf('Picker')
 			>
 				{airports}
 			</StatefulPicker>
-		),
+		)
 	);

@@ -17,7 +17,6 @@ storiesOf('LabeledItem')
 			<LabeledItem
 				label={'Label'}
 				disabled={boolean('disabled')}
-				spotlightDisabled={boolean('spotlightDisabled')}
 			>
 				Hello LabeledItem
 			</LabeledItem>
