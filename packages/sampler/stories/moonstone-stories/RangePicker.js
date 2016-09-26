@@ -1,15 +1,13 @@
+import RangePicker, {RangePickerBase} from 'enact-moonstone/RangePicker';
+import Pickable from 'enact-ui/Pickable';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, text, boolean, number, select} from '@kadira/storybook-addon-knobs';
 
-import Pickable from 'enact-ui/Pickable';
-import RangePicker, {RangePickerBase} from 'enact-moonstone/RangePicker';
-
 const StatefulRangePicker = Pickable(RangePicker);
-
-StatefulRangePicker.displayName = 'RangePicker';
 StatefulRangePicker.propTypes = Object.assign({}, RangePickerBase.propTypes, RangePicker.propTypes);
 StatefulRangePicker.defaultProps = Object.assign({}, RangePickerBase.defaultProps, RangePicker.defaultProps);
+StatefulRangePicker.displayName = 'RangePicker';
 
 // Don't want to show `value` and it throws a warning, too!
 delete StatefulRangePicker.propTypes.value;

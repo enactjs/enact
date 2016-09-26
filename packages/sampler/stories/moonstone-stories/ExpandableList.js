@@ -1,8 +1,7 @@
+import {ExpandableList as ExpList, ExpandableListBase} from 'enact-moonstone/ExpandableList';
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
 import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
-
-import {ExpandableList as ExpList, ExpandableListBase} from 'enact-moonstone/ExpandableList';
 
 class ExpandableList extends React.Component {
 	constructor (props) {

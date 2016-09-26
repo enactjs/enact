@@ -1,13 +1,10 @@
+import {kind, hoc} from 'enact-core';
+import {icons} from 'enact-moonstone/Icon';
+import Input, {InputBase} from 'enact-moonstone/Input';
+import Pickable from 'enact-ui/Pickable';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
-
-import {kind, hoc} from 'enact-core';
-import IconList from 'enact-moonstone/Icon/IconList';
-import Input$, {InputBase} from 'enact-moonstone/Input/Input';
-import Pickable from 'enact-ui/Pickable';
-
-const InputStories = storiesOf('Input').addDecorator(withKnobs);
 
 // Adapter to use Pickable until a suitable state HOC is added to enact-ui
 const MakePickable = hoc((config, Wrapped) => {
@@ -28,24 +25,25 @@ const MakePickable = hoc((config, Wrapped) => {
 	});
 });
 
-const Input = Pickable({mutable: true}, MakePickable(Input$));
+const StatefulInput = Pickable({mutable: true}, MakePickable(Input));
 
-Input.propTypes = Object.assign({}, InputBase.propTypes, Input$.propTypes);
-Input.defaultProps = Object.assign({}, InputBase.defaultProps, Input$.defaultProps);
-Input.displayName = 'Input';
+StatefulInput.propTypes = Object.assign({}, InputBase.propTypes, Input.propTypes);
+StatefulInput.defaultProps = Object.assign({}, InputBase.defaultProps, Input.defaultProps);
+StatefulInput.displayName = 'Input';
 
-const icons = Object.keys(IconList);
+const iconNames = Object.keys(icons);
 
-InputStories
+storiesOf('Input')
+	.addDecorator(withKnobs)
 	.addWithInfo(
 		'',
 		'The basic Input.',
 		() => (
-			<Input
+			<StatefulInput
 				onChange={action('onChange')}
 				disabled={boolean('disabled')}
-				iconEnd={select('iconEnd', ['', ...icons])}
-				iconStart={select('iconStart', ['', ...icons])}
+				iconEnd={select('iconEnd', ['', ...iconNames])}
+				iconStart={select('iconStart', ['', ...iconNames])}
 				placeholder={text('placeholder')}
 				type={text('type')}
 				value={text('value', '')}

@@ -1,14 +1,13 @@
+import {SwitchItemBase} from 'enact-moonstone/SwitchItem';
+import {Toggleable} from 'enact-ui/Toggleable';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean} from '@kadira/storybook-addon-knobs';
 
-import {Toggleable} from 'enact-ui/Toggleable';
-import {SwitchItemBase} from 'enact-moonstone/SwitchItem';
-
 const SwitchItem = Toggleable({prop: 'checked'}, SwitchItemBase);
-SwitchItem.displayName = 'SwitchItem';
 SwitchItem.propTypes = Object.assign({}, SwitchItem.propTypes, SwitchItemBase.propTypes);
 SwitchItem.defaultProps = Object.assign({}, SwitchItem.defaultProps, SwitchItemBase.defaultProps);
+SwitchItem.displayName = 'SwitchItem';
 
 delete SwitchItem.propTypes.checked;
 delete SwitchItem.propTypes.icon;

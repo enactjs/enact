@@ -1,9 +1,9 @@
+import {CheckboxItemBase} from 'enact-moonstone/CheckboxItem';
+import {Toggleable} from 'enact-ui/Toggleable';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean} from '@kadira/storybook-addon-knobs';
 
-import {Toggleable} from 'enact-ui/Toggleable';
-import {CheckboxItemBase} from 'enact-moonstone/CheckboxItem';
 
 const CheckboxItem = Toggleable({prop: 'checked'}, CheckboxItemBase);
 CheckboxItem.displayName = 'CheckboxItem';

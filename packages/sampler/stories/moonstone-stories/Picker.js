@@ -1,15 +1,13 @@
+import Picker, {PickerBase} from 'enact-moonstone/Picker';
+import Pickable from 'enact-ui/Pickable';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, text, boolean, select} from '@kadira/storybook-addon-knobs';
 
-import Pickable from 'enact-ui/Pickable';
-import Picker, {PickerBase} from 'enact-moonstone/Picker';
-
 const StatefulPicker = Pickable(Picker);
-
-StatefulPicker.displayName = 'Picker';
 StatefulPicker.propTypes = Object.assign({}, PickerBase.propTypes, StatefulPicker.propTypes);
 StatefulPicker.defaultProps = Object.assign({}, PickerBase.defaultProps, StatefulPicker.defaultProps);
+StatefulPicker.displayName = 'Picker';
 
 // Set up some defaults for info and knobs
 const prop = {
