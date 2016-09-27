@@ -1,5 +1,5 @@
-import Picker, {PickerBase} from 'enact-moonstone/Picker';
-import Pickable from 'enact-ui/Pickable';
+import Picker, {PickerBase} from '@enact/moonstone/Picker';
+import Pickable from '@enact/ui/Pickable';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, text, boolean, select} from '@kadira/storybook-addon-knobs';

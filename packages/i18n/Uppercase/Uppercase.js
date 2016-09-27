@@ -1,4 +1,4 @@
-import {kind, hoc} from 'enact-core';
+import {kind, hoc} from '@enact/core';
 import React from 'react';
 
 const Uppercase = hoc((config, Wrapped) => kind({

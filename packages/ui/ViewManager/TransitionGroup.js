@@ -1,7 +1,7 @@
 /**
- * Exports the {@link module:enact-ui/ViewManager~TransitionGroup} component.
+ * Exports the {@link module:@enact/ui/ViewManager~TransitionGroup} component.
  *
- * @module enact-ui/ViewManager/TransitionGroup
+ * @module @enact/ui/ViewManager/TransitionGroup
  */
 
 // Using string refs from the source code of ReactTransitionGroup

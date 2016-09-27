@@ -1,4 +1,4 @@
-import hoc from 'enact-core/hoc';
+import hoc from '@enact/core/hoc';
 import React from 'react';
 
 import '../src/glue';

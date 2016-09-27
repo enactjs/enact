@@ -3,7 +3,7 @@
 
 import React from 'react';
 import {mount} from 'enzyme';
-import kind from 'enact-core/kind';
+import kind from '@enact/core/kind';
 import Slottable from '../Slottable';
 import sinon from 'sinon';
 

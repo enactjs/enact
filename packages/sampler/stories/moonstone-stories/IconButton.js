@@ -1,5 +1,5 @@
-import IconButton, {IconButtonBase} from 'enact-moonstone/IconButton';
-import {icons} from 'enact-moonstone/Icon';
+import IconButton, {IconButtonBase} from '@enact/moonstone/IconButton';
+import {icons} from '@enact/moonstone/Icon';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';

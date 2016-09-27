@@ -1,5 +1,5 @@
 import React from 'react';
-import kind from 'enact-core/kind';
+import kind from '@enact/core/kind';
 import {mount} from 'enzyme';
 import BreadcrumbDecorator from '../BreadcrumbDecorator';
 import Panels from '../Panels';

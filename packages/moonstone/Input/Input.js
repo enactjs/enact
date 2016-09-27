@@ -1,5 +1,5 @@
 import classNames from 'classnames';
-import {Spotlight, Spottable, SpotlightContainerDecorator, SpotlightFocusableDecorator} from 'enact-spotlight';
+import {Spotlight, Spottable, SpotlightContainerDecorator, SpotlightFocusableDecorator} from '@enact/spotlight';
 import React, {PropTypes} from 'react';
 
 import Icon from '../Icon';

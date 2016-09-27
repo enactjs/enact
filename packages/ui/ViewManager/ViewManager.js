@@ -1,8 +1,8 @@
 /**
- * Exports the {@link module:enact-ui/ViewManager~ViewManager} component and the
- * [arrangers]{@link module:enact-ui/ViewManager~Arranger} for use with it.
+ * Exports the {@link module:@enact/ui/ViewManager~ViewManager} component and the
+ * [arrangers]{@link module:@enact/ui/ViewManager~Arranger} for use with it.
  *
- * @module enact-ui/ViewManager
+ * @module @enact/ui/ViewManager
  */
 
 import R from 'ramda';

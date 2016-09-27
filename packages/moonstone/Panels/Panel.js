@@ -1,5 +1,5 @@
-import kind from 'enact-core/kind';
-import Slottable from 'enact-ui/Slottable';
+import kind from '@enact/core/kind';
+import Slottable from '@enact/ui/Slottable';
 import React from 'react';
 
 import css from './Panel.less';

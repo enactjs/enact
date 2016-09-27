@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
-import kind from 'enact-core/kind';
-import {Spottable} from 'enact-spotlight';
+import kind from '@enact/core/kind';
+import {Spottable} from '@enact/spotlight';
 
 import css from './Item.less';
 

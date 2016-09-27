@@ -1,4 +1,4 @@
-import {scale} from 'enact-ui/resolution';
+import {scale} from '@enact/ui/resolution';
 import R from 'ramda';
 
 import {AlwaysViewingArranger} from './Arrangers';

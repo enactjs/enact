@@ -8,7 +8,7 @@ module.exports = {
 	devtool: 'sourcemap',
 	resolve: {
 		alias: {
-			'ilib':'enact-i18n/ilib/lib',
+			'ilib':'@enact/i18n/ilib/lib',
 			'webpack/hot/dev-server': require.resolve('webpack/hot/dev-server')
 		},
 		root: [path.resolve('./node_modules')],

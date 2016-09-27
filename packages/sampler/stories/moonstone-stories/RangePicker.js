@@ -1,6 +1,6 @@
-import RangePicker, {RangePickerBase} from 'enact-moonstone/RangePicker';
-import Pickable from 'enact-ui/Pickable';
-import {icons} from 'enact-moonstone/Icon';
+import RangePicker, {RangePickerBase} from '@enact/moonstone/RangePicker';
+import Pickable from '@enact/ui/Pickable';
+import {icons} from '@enact/moonstone/Icon';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, text, boolean, number, select} from '@kadira/storybook-addon-knobs';

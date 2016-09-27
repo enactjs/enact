@@ -1,12 +1,12 @@
 /**
- * Exports the {@link module:enact-ui/Pickable~Pickable} Higher-order Component (HOC).
+ * Exports the {@link module:@enact/ui/Pickable~Pickable} Higher-order Component (HOC).
  *
- * @module enact-ui/Pickable
+ * @module @enact/ui/Pickable
  */
 
-import {forward} from 'enact-core/handle';
-import hoc from 'enact-core/hoc';
-import {cap} from 'enact-core/util';
+import {forward} from '@enact/core/handle';
+import hoc from '@enact/core/hoc';
+import {cap} from '@enact/core/util';
 import React from 'react';
 
 const defaultConfig = {
@@ -41,7 +41,7 @@ const defaultConfig = {
 };
 
 /**
- * {@link module:enact-ui/Pickable~Pickable} is a Higher-order Component that applies a 'Pickable' behavior
+ * {@link module:@enact/ui/Pickable~Pickable} is a Higher-order Component that applies a 'Pickable' behavior
  * to its wrapped component.  Its default event and value properties can be configured when applied to a component.
  * In addition, it supports `mutable` config setting that allows the HOC to accept incoming settings for the `prop`.
  *

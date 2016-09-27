@@ -1,8 +1,8 @@
 /**
- * Exports a number of methods for use with {@link module:enact-ui/ViewManager}.
+ * Exports a number of methods for use with {@link module:@enact/ui/ViewManager}.
  *
  * @private
- * @module enact-ui/ViewManager/arrange
+ * @module @enact/ui/ViewManager/arrange
  */
 
 import R from 'ramda';

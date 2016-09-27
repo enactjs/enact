@@ -1,5 +1,5 @@
-import {SwitchItemBase} from 'enact-moonstone/SwitchItem';
-import {Toggleable} from 'enact-ui/Toggleable';
+import {SwitchItemBase} from '@enact/moonstone/SwitchItem';
+import {Toggleable} from '@enact/ui/Toggleable';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean} from '@kadira/storybook-addon-knobs';
