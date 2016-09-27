@@ -1,8 +1,8 @@
 /**
- * Exports the {@link module:enact-i18n/I18nDecorator~I18nDecorator} component and
- * {@link module:enact-i18n/I18nDecorator~contextTypes} validation rules.
+ * Exports the {@link module:@enact/i18n/I18nDecorator~I18nDecorator} component and
+ * {@link module:@enact/i18n/I18nDecorator~contextTypes} validation rules.
  *
- * @module enact-i18n/I18nDecorator
+ * @module @enact/i18n/I18nDecorator
  */
 
 import hoc from 'enact-core/hoc';
@@ -12,11 +12,11 @@ import '../src/glue';
 import {isRtl, getI18nClasses, updateLocale} from '../src/locale';
 
 /**
- * `contextTypes is an object that exports the default context validation rules. These must be applied
+ * `contextTypes` is an object that exports the default context validation rules. These must be applied
  * to any child components that wish to receive the i18n context.
  *
  * ```
- * import {contextTypes} from 'enact-i18n/I18nDecorator';
+ * import {contextTypes} from '@enact/i18n/I18nDecorator';
  * ...
  * myComponent.contextTypes = contextTypes;
  * ```
@@ -29,7 +29,7 @@ const contextTypes = {
 };
 
 /**
- * {@link module:enact-i18n/I18nDecorator~I18nDecorator} is a Higher Order Component that is used to wrap
+ * {@link module:@enact/i18n/I18nDecorator~I18nDecorator} is a Higher Order Component that is used to wrap
  * the root element in an app. It provides an `rtl` member on the context of the wrapped component, allowing
  * the children to check the current text directionality as well as an `updateLocale` method that can be
  * used to update the current locale.
