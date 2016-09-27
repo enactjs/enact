@@ -42,7 +42,7 @@ module.exports = {
 				loader: 'style!css?modules&importLoaders=1!less'
 			},
 			{
-				test: /\.js$|\.es6$|\.jsx$/, loader: 'babel', exclude: /node_modules.(?!enact)/, query: {
+				test: /\.js$|\.es6$|\.jsx$/, loader: 'babel', exclude: /node_modules.(?!@*enact)/, query: {
 					extends: path.join(__dirname, '.babelrc')
 				}
 			}
