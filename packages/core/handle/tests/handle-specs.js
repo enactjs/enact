@@ -118,18 +118,6 @@ describe('handle', () => {
 		expect(handler.calledOnce).to.equal(true);
 	});
 
-	it('should only call handler for specified which', function () {
-		const which = 1;
-		const handler = sinon.spy();
-		const callback = handle(forWhich(which), handler);
-
-		callback(makeEvent());
-		expect(handler.calledOnce).to.equal(false);
-
-		callback(makeEvent({which}));
-		expect(handler.calledOnce).to.equal(true);
-	});
-
 	it('should only call handler for specified prop', function () {
 		const prop = 'index';
 		const value = 0;
