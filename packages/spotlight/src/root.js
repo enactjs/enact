@@ -22,11 +22,14 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'SpotlightRootDecorator';
 
-		componentDidMount () {
+		componentWillMount () {
 			Spotlight.initialize();
 			Spotlight.add(spotlightRootContainerName, {
 				selector: '.' + spottableClass
 			});
+		}
+
+		componentDidMount () {
 			Spotlight.focus();
 		}
 
