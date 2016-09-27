@@ -1,13 +1,13 @@
 import React from 'react';
-import {shallow, mount} from 'enzyme';
-import {Spottable} from '../spottable';
+import {shallow} from 'enzyme';
+import Spottable from '../spottable';
 
 describe('Spottable Specs', () => {
 
 	it('should render a single spottable \<div\> tag', function () {
 		const msg = 'Spottable Div';
 		const SpottableDiv = Spottable('div');
-		const div = mount(
+		const div = shallow(
 			<SpottableDiv>{msg}</SpottableDiv>
 		);
 

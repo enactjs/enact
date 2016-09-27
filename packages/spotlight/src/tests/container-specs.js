@@ -1,7 +1,7 @@
 import React from 'react';
-import {shallow, mount} from 'enzyme';
+import {shallow} from 'enzyme';
 import Spotlight from '../spotlight';
-import {SpotlightContainerDecorator} from '../container';
+import SpotlightContainerDecorator from '../container';
 
 describe('Container Specs', () => {
 
