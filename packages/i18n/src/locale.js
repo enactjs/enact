@@ -48,7 +48,7 @@ function isRtl () {
 	return script.getScriptDirection() === 'rtl';
 }
 
-function getI18NClasses () {
+function getI18nClasses () {
 	const li = new LocaleInfo(); // for the current locale
 	const locale = li.getLocale();
 	const base = 'enact-locale-';
@@ -124,4 +124,4 @@ const updateLocale = function (locale) {
 	return newLocale;
 };
 
-export {updateLocale, isRtl, getI18NClasses};
+export {updateLocale, isRtl, getI18nClasses};

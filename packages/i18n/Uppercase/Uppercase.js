@@ -1,6 +1,24 @@
+/**
+ * Exports the {@link module:enact-i18n/Uppercase~Uppercase} component and
+ * {@link module:enact-i18n/Uppercase~contextTypes} validation rules.
+ *
+ * @module enact-i18n/Uppercase
+ */
+
 import {kind, hoc} from 'enact-core';
 import React from 'react';
 
+/**
+ * {@link module:enact-i18n/Uppercase~Uppercase} is a Higher Order Component that is used to wrap
+ * an element to provide locale-aware uppercasing of `children`, provided that `children` is a single
+ * string. Other values for `children` are unchanged. It supports a `preserveCase` property which can be
+ * used to override the uppercase as-needed.
+ *
+ * There are no configurable options on this HOC.
+ *
+ * @class Uppercase
+ * @public
+ */
 const Uppercase = hoc((config, Wrapped) => kind({
 	propTypes: {
 		/**
