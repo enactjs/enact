@@ -37,10 +37,10 @@
     "enyo-config": "enyojs/enyo-config#test-suite"
   },
   "dependencies": {
-    "react": "^15.1.0",
-    "react-addons-update": "^15.1.0",
-    "react-dom": "^15.1.0",
-    "ramda": "^0.21.0",
+    "react": "^15.3.1",
+    "react-addons-update": "^15.3.1",
+    "react-dom": "^15.3.1",
+    "ramda": "^0.22.1",
     "classnames": "^2.2.5"
   }
 }
