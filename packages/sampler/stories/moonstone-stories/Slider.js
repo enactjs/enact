@@ -1,4 +1,4 @@
-import Slider, {SliderBase} from 'enact-moonstone/Slider';
+import Slider, {SliderBase} from '@enact/moonstone/Slider';
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
 import {withKnobs, boolean, number, text} from '@kadira/storybook-addon-knobs';

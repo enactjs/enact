@@ -1,4 +1,4 @@
-import kind from 'enact-core/kind';
+import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 
 import Button from '../Button';

@@ -5,7 +5,7 @@
  * @module @enact/i18n/I18nDecorator
  */
 
-import hoc from 'enact-core/hoc';
+import hoc from '@enact/core/hoc';
 import React from 'react';
 
 import '../src/glue';

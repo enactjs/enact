@@ -1,16 +1,16 @@
 /**
- * Exports the {@link module:enact-ui/Repeater~Repeater} and {@link module:enact-ui/Repeater~RepeaterBase}
- * components.  The default export is {@link module:enact-ui/Repeater~Repeater}. `Repeater` is stateless
+ * Exports the {@link module:@enact/ui/Repeater~Repeater} and {@link module:@enact/ui/Repeater~RepeaterBase}
+ * components.  The default export is {@link module:@enact/ui/Repeater~Repeater}. `Repeater` is stateless
  * and is the same as `RepeaterBase`.
  *
- * @module enact-ui/Repeater
+ * @module @enact/ui/Repeater
  */
 
 import React, {PropTypes} from 'react';
-import kind from 'enact-core/kind';
+import kind from '@enact/core/kind';
 
 /**
- * {@link module:enact-ui/Repeater~RepeaterBase} is a stateless component that supports single-select of
+ * {@link module:@enact/ui/Repeater~RepeaterBase} is a stateless component that supports single-select of
  * its child items via configurable properties and events.
  *
  * @class RepeaterBase

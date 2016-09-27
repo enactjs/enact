@@ -5,7 +5,7 @@
  * @module @enact/i18n/Uppercase
  */
 
-import {kind, hoc} from 'enact-core';
+import {kind, hoc} from '@enact/core';
 import React from 'react';
 
 /**

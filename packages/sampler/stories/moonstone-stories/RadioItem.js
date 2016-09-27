@@ -1,5 +1,5 @@
-import {RadioItemBase} from 'enact-moonstone/RadioItem';
-import {Toggleable} from 'enact-ui/Toggleable';
+import {RadioItemBase} from '@enact/moonstone/RadioItem';
+import {Toggleable} from '@enact/ui/Toggleable';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean} from '@kadira/storybook-addon-knobs';

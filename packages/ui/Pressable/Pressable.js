@@ -1,12 +1,12 @@
 /**
- * Exports the {@link module:enact-ui/Pressable~Pressable} Higher-order Component (HOC).
+ * Exports the {@link module:@enact/ui/Pressable~Pressable} Higher-order Component (HOC).
  *
- * @module enact-ui/Pressable
+ * @module @enact/ui/Pressable
  */
 
-import {forward} from 'enact-core/handle';
-import hoc from 'enact-core/hoc';
-import {cap} from 'enact-core/util';
+import {forward} from '@enact/core/handle';
+import hoc from '@enact/core/hoc';
+import {cap} from '@enact/core/util';
 import React, {PropTypes} from 'react';
 
 const defaultConfig = {
@@ -36,7 +36,7 @@ const defaultConfig = {
 };
 
 /**
- * {@link module:enact-ui/Pressable~Pressable} is a Higher-order Component that applies a 'Pressable' behavior
+ * {@link module:@enact/ui/Pressable~Pressable} is a Higher-order Component that applies a 'Pressable' behavior
  * to its wrapped component.  Its default event and property can be configured when applied to a component.
  *
  * By default, Pressable applies the `pressed` property on mouseDown and removes it on mouseUp.

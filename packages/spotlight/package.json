@@ -1,5 +1,5 @@
 {
-  "name": "enact-spotlight",
+  "name": "@enact/spotlight",
   "version": "1.0.0-alpha.1",
   "description": "",
   "main": "index.js",
@@ -28,7 +28,7 @@
     "enyo-config": "enyojs/enyo-config"
   },
   "dependencies": {
-    "enact-core": "^1.0.0-alpha.1",
+    "@enact/core": "^1.0.0-alpha.1",
     "ramda": "^0.22.1",
     "react": "^15.3.1"
   }

@@ -1,11 +1,11 @@
 /**
- * Exports the {@link module:enact-ui/resolution~ResolutionDecorator} Higher-order Component (HOC).
+ * Exports the {@link module:@enact/ui/resolution~ResolutionDecorator} Higher-order Component (HOC).
  *
- * @module enact-ui/resolution/ResolutionDecorator
+ * @module @enact/ui/resolution/ResolutionDecorator
  */
 
 import React from 'react';
-import hoc from 'enact-core/hoc';
+import hoc from '@enact/core/hoc';
 
 import {init, defineScreenTypes, getScreenTypeObject, getResolutionClasses} from './resolution';
 

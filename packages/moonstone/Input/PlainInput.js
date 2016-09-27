@@ -1,5 +1,5 @@
-import kind from 'enact-core/kind';
-import {Spottable} from 'enact-spotlight';
+import kind from '@enact/core/kind';
+import {Spottable} from '@enact/spotlight';
 import React, {PropTypes} from 'react';
 
 import css from './Input.less';

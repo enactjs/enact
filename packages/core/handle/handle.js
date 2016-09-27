@@ -37,7 +37,7 @@ const handle = R.unapply(handlers => (...args) => R.reduce((acc, handler) => {
  * extra args, to the handlers.
  *
  * @example
- *	import {withArgs, forKeyCode, stop} from 'enact-core/handle';
+ *	import {withArgs, forKeyCode, stop} from '@enact/core/handle';
  *	kind({
  *		computed: {
  *			onSubmit: withArgs(forKeyCode(13), stop, (e, props) => {
