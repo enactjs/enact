@@ -1,5 +1,5 @@
 {
-  "name": "enact-webos",
+  "name": "@enact/webos",
   "version": "1.0.0-alpha.1",
   "description": "webOS support library",
   "main": "index.js",
