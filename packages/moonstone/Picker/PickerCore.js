@@ -256,6 +256,15 @@ const PickerCore = class extends React.Component {
 
 	handleIncDown = (ev) => this.handleDown('increment', ev)
 
+	handleWheel = (ev) => {
+		if (ev.nativeEvent.deltaY > 0) {
+			this.handleIncClick();
+		} else {
+			this.handleDecClick();
+		}
+		ev.stopPropagation();
+	}
+
 	determineClasses () {
 		const {joined, orientation, pressed, step, width} = this.props;
 		return [
@@ -308,7 +317,7 @@ const PickerCore = class extends React.Component {
 		}
 
 		return (
-			<div {...rest} className={classes} disabled={disabled}>
+			<div {...rest} className={classes} disabled={disabled} onWheel={this.handleWheel}>
 				<span className={css.incrementer} disabled={incrementerDisabled} onClick={this.handleIncClick} onMouseDown={this.handleIncDown} onMouseUp={onMouseUp}>
 					<ButtonType disabled={incrementerDisabled}>{incrementIcon}</ButtonType>
 				</span>
