@@ -20,7 +20,9 @@
   "scripts": {
     "test": "echo \"No test suite\" && exit 0",
     "pack": "build-storybook -c .storybook -o dist",
-    "serve": "start-storybook -p 9001 -c .storybook"
+    "pack-qa": "build-storybook -c .qa-storybook -o dist",
+    "serve": "start-storybook -p 8080 -c .storybook",
+    "serve-qa": "start-storybook -p 8080 -c .qa-storybook"
   },
   "devDependencies": {
     "babel-core": "^6.14.0",
