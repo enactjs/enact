@@ -30,7 +30,7 @@ To describe state mutations you have to write a function that takes the previous
 
 An action is just a POJO (unless you use middleware as described) that contains data you want to send from your application to the store. They are the sole sources of information for the store (i.e., the only way you can change app state). An action only describes that something happened. We follow the Flux Standard Action (FSA, [https://github.com/acdlite/flux-standard-action](https://github.com/acdlite/flux-standard-action)) model for constructing actions. An action creator is a function that creates an action.
 
-```
+```javascript
 // A simple action
 {
 	type: 'INCREMENT',
@@ -56,7 +56,7 @@ An action is just a POJO (unless you use middleware as described) that contains 
 
 A reducing function (reducer) returns the next state tree, given the current state tree and an action to handle. Reducers are run in response to actions that are made against the store. Reducing functions should be pure (given the same arguments, they should always return the same value) and perform no side effects (API calls, routing transitions, etc.) or call other non-pure functions (i.e. `Date.now()` or `Math.random()`).
 
-```
+```javascript
 // counter reducer
 function counter(state = 0, action) {
   switch (action.type) {
@@ -111,7 +111,7 @@ The Redux architecture revolves around a strict _**unidirectional data flow**_.
 
 ## Vanilla
 
-```
+```javascript
 import {createStore} from 'redux';
 
 // reducer
@@ -142,7 +142,7 @@ Live demo: [http://jsbin.com/keyahus/edit?html,js,output](http://jsbin.com/keyah
 
 ## React
 
-```
+```javascript
 import React, {PropTypes, Component} from 'react';
 import ReactDOM from 'react-dom';
 import {createStore} from 'redux';
@@ -209,7 +209,7 @@ Container components need access to the Redux store so they can subscribe to it.
 
 ## Example
 
-```
+```javascript
 import React, {PropTypes, Component} from 'react';
 import {render} from 'react-dom';
 import {createStore} from 'redux';
