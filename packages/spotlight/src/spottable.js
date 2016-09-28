@@ -1,4 +1,4 @@
-import {kind, hoc} from 'enact-core';
+import {kind, hoc} from '@enact/core';
 import React from 'react';
 
 const spottableClass = 'spottable';

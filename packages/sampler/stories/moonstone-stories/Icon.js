@@ -1,4 +1,4 @@
-import {Icon, icons} from 'enact-moonstone/Icon';
+import {Icon, icons} from '@enact/moonstone/Icon';
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
 import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';

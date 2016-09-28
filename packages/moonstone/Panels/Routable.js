@@ -1,4 +1,4 @@
-import {hoc, kind} from 'enact-core';
+import {hoc, kind} from '@enact/core';
 import React from 'react';
 
 import {Router, propTypes, toSegments} from './Router';

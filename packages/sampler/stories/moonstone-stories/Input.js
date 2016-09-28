@@ -1,12 +1,12 @@
-import {kind, hoc} from 'enact-core';
-import {icons} from 'enact-moonstone/Icon';
-import Input, {InputBase} from 'enact-moonstone/Input';
-import Pickable from 'enact-ui/Pickable';
+import {kind, hoc} from '@enact/core';
+import {icons} from '@enact/moonstone/Icon';
+import Input, {InputBase} from '@enact/moonstone/Input';
+import Pickable from '@enact/ui/Pickable';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
 
-// Adapter to use Pickable until a suitable state HOC is added to enact-ui
+// Adapter to use Pickable until a suitable state HOC is added to @enact/ui
 const MakePickable = hoc((config, Wrapped) => {
 	return kind({
 		name: 'MakePickable',

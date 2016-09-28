@@ -1,5 +1,5 @@
-import kind from 'enact-core/kind';
-import Pickable from 'enact-ui/Pickable';
+import kind from '@enact/core/kind';
+import Pickable from '@enact/ui/Pickable';
 import React from 'react';
 import pure from 'recompose/pure';
 

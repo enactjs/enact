@@ -1,4 +1,4 @@
-import {SlideLeftArranger, SlideBottomArranger, ViewManager} from 'enact-ui/ViewManager';
+import {SlideLeftArranger, SlideBottomArranger, ViewManager} from '@enact/ui/ViewManager';
 import R from 'ramda';
 import React from 'react';
 

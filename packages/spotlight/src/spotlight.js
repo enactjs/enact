@@ -10,7 +10,7 @@
  */
 
 import R from 'ramda';
-import Accelerator from 'enact-core/Accelerator';
+import Accelerator from '@enact/core/Accelerator';
 
 const spotlightRootContainerName = 'spotlightRootDecorator';
 const SpotlightAccelerator = new Accelerator();

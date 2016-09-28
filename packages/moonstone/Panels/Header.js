@@ -1,7 +1,7 @@
-import kind from 'enact-core/kind';
+import kind from '@enact/core/kind';
 import React from 'react';
-import Uppercase from 'enact-i18n/Uppercase';
-import Slottable from 'enact-ui/Slottable';
+import Uppercase from '@enact/i18n/Uppercase';
+import Slottable from '@enact/ui/Slottable';
 import Marquee from '../Marquee';
 
 import css from './Header.less';
@@ -14,7 +14,7 @@ const UppercaseMarquee = Uppercase(Marquee);
  * A visual header component for a Panel with a title, titleAbove, titleBelow, and subTitleBelow
  *
  * @class Header
- * @see module:enact-i18n/Uppercase~Uppercase
+ * @see module:@enact/i18n/Uppercase~Uppercase
  */
 const HeaderBase = kind({
 	name: 'Header',
@@ -34,8 +34,8 @@ const HeaderBase = kind({
 		/**
 		 * When true, the case of the [`title`]{@link module:moonstone/Header~Header#title} will
 		 * remain unchanged.
-		 * Uses [Uppercase HOC]{@link module:enact-i18n/Uppercase~Uppercase} and mirrors the
-		 * [preserveCase prop]{@link module:enact-i18n/Uppercase~Uppercase#preserveCase}
+		 * Uses [Uppercase HOC]{@link module:@enact/i18n/Uppercase~Uppercase} and mirrors the
+		 * [preserveCase prop]{@link module:@enact/i18n/Uppercase~Uppercase#preserveCase}
 		 *
 		 * @type {Boolean}
 		 * @default false

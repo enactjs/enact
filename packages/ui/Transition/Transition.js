@@ -1,19 +1,19 @@
 /**
- * Exports the {@link module:enact-ui/Transition~Transition} and {@link module:enact-ui/Transition~TransitionBase}
- * components.  The default export is {@link module:enact-ui/Transition~Transition}.
+ * Exports the {@link module:@enact/ui/Transition~Transition} and {@link module:@enact/ui/Transition~TransitionBase}
+ * components.  The default export is {@link module:@enact/ui/Transition~Transition}.
  *
- * @module enact-ui/Transition
+ * @module @enact/ui/Transition
  */
 
 import React, {PropTypes} from 'react';
-import kind from 'enact-core/kind';
+import kind from '@enact/core/kind';
 
 import css from './Transition.less';
 
 /**
- * {@link module:enact-ui/Transition~TransitionBase} is a stateless component that allows for applying transitions
+ * {@link module:@enact/ui/Transition~TransitionBase} is a stateless component that allows for applying transitions
  * to its child items via configurable properties and events. In general, you want to use the stateful version,
- * {@link module:enact-ui/Transition~Transition}.
+ * {@link module:@enact/ui/Transition~Transition}.
  *
  * @class TransitionBase
  * @ui
@@ -141,7 +141,7 @@ const TransitionBase = kind({
 });
 
 /**
- * {@link module:enact-ui/Transition~Transition} is a stateful component that allows for applying transitions
+ * {@link module:@enact/ui/Transition~Transition} is a stateful component that allows for applying transitions
  * to its child items via configurable properties and events.
  *
  * @class Transition

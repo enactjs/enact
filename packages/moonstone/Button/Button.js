@@ -1,26 +1,26 @@
 /**
- * Exports the {@link module:enact-moonstone/Button~Button} and {@link module:enact-moonstone/Button~ButtonBase}
- * components.  The default export is {@link module:enact-moonstone/Button~Button}.
+ * Exports the {@link module:@enact/moonstone/Button~Button} and {@link module:@enact/moonstone/Button~ButtonBase}
+ * components.  The default export is {@link module:@enact/moonstone/Button~Button}.
  *
- * @module enact-moonstone/Button
+ * @module @enact/moonstone/Button
  */
 
-import kind from 'enact-core/kind';
-import Uppercase from 'enact-i18n/Uppercase';
-import {Spottable} from 'enact-spotlight';
-import Pressable from 'enact-ui/Pressable';
+import kind from '@enact/core/kind';
+import Uppercase from '@enact/i18n/Uppercase';
+import {Spottable} from '@enact/spotlight';
+import Pressable from '@enact/ui/Pressable';
 import React, {PropTypes} from 'react';
 
 import css from './Button.less';
 
 /**
- * {@link module:enact-moonstone/Button~ButtonBase} is a stateless Button with Moonstone styling
+ * {@link module:@enact/moonstone/Button~ButtonBase} is a stateless Button with Moonstone styling
  * applied.  If the Button's child component is text, it will be uppercased unless `preserveCase` is
  * set.  In most circumstances, you will want to use the Pressable and Spottable version:
- * {@link module:enact-moonstone/Button~Button}
+ * {@link module:@enact/moonstone/Button~Button}
  *
  * @class ButtonBase
- * @mixes module:enact-i18n/Uppercase
+ * @mixes module:@enact/i18n/Uppercase
  * @ui
  * @public
  */
@@ -133,7 +133,7 @@ const ButtonBase = kind({
 const UcButtonBase = Uppercase(ButtonBase);
 
 /**
- * {@link module:enact-moonstone/Button~Button} is a Button with Moonstone styling, Spottable and
+ * {@link module:@enact/moonstone/Button~Button} is a Button with Moonstone styling, Spottable and
  * Pressable applied.  If the Button's child component is text, it will be uppercased unless
  * `preserveCase` is set.
  *
@@ -143,9 +143,9 @@ const UcButtonBase = Uppercase(ButtonBase);
  * ```
  *
  * @class Button
- * @see module:enact-i18n/Uppercase
- * @mixes module:enact-spotlight/Spottable
- * @mixes module:enact-ui/Pressable
+ * @see module:@enact/i18n/Uppercase
+ * @mixes module:@enact/spotlight/Spottable
+ * @mixes module:@enact/ui/Pressable
  * @ui
  * @public
  */

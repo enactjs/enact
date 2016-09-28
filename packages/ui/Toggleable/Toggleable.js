@@ -1,12 +1,12 @@
 /**
- * Exports the {@link module:enact-ui/Toggleable~Toggleable} Higher-order Component (HOC).
+ * Exports the {@link module:@enact/ui/Toggleable~Toggleable} Higher-order Component (HOC).
  *
- * @module enact-ui/Toggleable
+ * @module @enact/ui/Toggleable
  */
 
-import {forward} from 'enact-core/handle';
-import hoc from 'enact-core/hoc';
-import {cap} from 'enact-core/util';
+import {forward} from '@enact/core/handle';
+import hoc from '@enact/core/hoc';
+import {cap} from '@enact/core/util';
 import React from 'react';
 
 const defaultConfig = {
@@ -29,7 +29,7 @@ const defaultConfig = {
 };
 
 /**
- * {@link module:enact-ui/Toggleable~Toggleable} is a Higher-order Component that applies a 'Toggleable' behavior
+ * {@link module:@enact/ui/Toggleable~Toggleable} is a Higher-order Component that applies a 'Toggleable' behavior
  * to its wrapped component.  Its default event and property can be configured when applied to a component.
  *
  * By default, Toggleable applies the `selected` property on click events.

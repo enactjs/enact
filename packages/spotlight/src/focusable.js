@@ -1,4 +1,4 @@
-import hoc from 'enact-core/hoc';
+import hoc from '@enact/core/hoc';
 import R from 'ramda';
 import React, {PropTypes} from 'react';
 

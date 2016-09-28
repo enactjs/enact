@@ -1,5 +1,5 @@
 import React from 'react';
-import kind from 'enact-core/kind';
+import kind from '@enact/core/kind';
 
 import {ToggleItemBase} from '../ToggleItem';
 

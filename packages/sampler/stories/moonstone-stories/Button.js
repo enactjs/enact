@@ -1,4 +1,4 @@
-import Button, {ButtonBase} from 'enact-moonstone/Button';
+import Button, {ButtonBase} from '@enact/moonstone/Button';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';

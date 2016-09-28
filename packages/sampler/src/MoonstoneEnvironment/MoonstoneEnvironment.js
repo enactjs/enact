@@ -1,9 +1,9 @@
 // Moonstone Environment
 
-import kind from 'enact-core/kind';
+import kind from '@enact/core/kind';
 import React from 'react';
-import MoonstoneDecorator from 'enact-moonstone/MoonstoneDecorator';
-import {ActivityPanels as Panels, Panel, Header} from 'enact-moonstone/Panels';
+import MoonstoneDecorator from '@enact/moonstone/MoonstoneDecorator';
+import {ActivityPanels as Panels, Panel, Header} from '@enact/moonstone/Panels';
 
 import css from './MoonstoneEnvironment.less';
 
