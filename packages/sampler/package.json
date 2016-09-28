@@ -53,8 +53,8 @@
     "@enact/moonstone": "1.0.0-alpha.1",
     "@enact/spotlight": "1.0.0-alpha.1",
     "@enact/ui": "1.0.0-alpha.1",
-    "react": "15.3.2",
-    "react-dom": "15.3.2",
-    "react-storybook-addon-backgrounds": "0.0.4"
+    "react": "~15.3.2",
+    "react-dom": "~15.3.2",
+    "react-storybook-addon-backgrounds": "~0.0.4"
   }
 }
