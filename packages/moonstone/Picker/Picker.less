@@ -145,4 +145,17 @@
 	&.vertical .valueWrapper {
 		display: block;
 	}
+
+	&.vertical.medium .valueWrapper, &.vertical.small .valueWrapper {
+
+		:first-child {
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+	}
+
+	&.vertical.small .valueWrapper {
+		width: 100%;
+	}
 }
