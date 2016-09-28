@@ -7,6 +7,7 @@
 
 import React, {PropTypes} from 'react';
 import kind from '@enact/core/kind';
+import {SpotlightContainerDecorator} from 'enact-spotlight';
 
 import css from './Transition.less';
 
@@ -148,7 +149,7 @@ const TransitionBase = kind({
  * @ui
  * @public
  */
-class Transition extends React.Component {
+class TransitionComponent extends React.Component {
 	static propTypes = TransitionBase.propTypes
 	static defaultProps = TransitionBase.defaultProps
 
@@ -170,12 +171,16 @@ class Transition extends React.Component {
 	}
 
 	render () {
-		const height = this.props.visible ? this.state.initialHeight : 0;
+		const props = Object.assign({}, this.props);
+		const height = props.visible ? this.state.initialHeight : 0;
+		props['data-container-disabled'] = !props.visible;
 		return (
-			<TransitionBase {...this.props} childRef={this.measureInner} clipHeight={height} />
+			<TransitionBase {...props} childRef={this.measureInner} clipHeight={height} />
 		);
 	}
 }
+
+const Transition = SpotlightContainerDecorator(TransitionComponent);
 
 export default Transition;
 export {Transition, TransitionBase};

@@ -48,7 +48,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentWillMount () {
 			const containerId = Spotlight.add(),
-				selector = '.' + containerId + ' .' + spottableClass,
+				selector = '[data-container-id="' + containerId + '"]:not([data-container-disabled="true"]) .' + spottableClass,
 				cfg = Object.assign({}, config, {selector: selector});
 
 			Spotlight.set(containerId, cfg);
@@ -61,13 +61,9 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		render () {
 			const containerId = this.state.containerId,
-				props = Object.assign({}, this.props, {containerId});
+				props = Object.assign({}, this.props);
 
-			if (props.className) {
-				props.className += ' ' + containerId;
-			} else {
-				props.className = containerId;
-			}
+			props['data-container-id'] = containerId;
 
 			return <Wrapped {...props} />;
 		}
