@@ -140,29 +140,24 @@
 				.position(0);
 			}
 		}
+
+		&:not(.large) {
+			.item {
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+			}
+		}
 	}
 
 	&.vertical {
-
 		.valueWrapper {
 			display: block;
 		}
 
-		&.medium, &.small {
-
+		&.small {
 			.valueWrapper {
-
-				:first-child {
-					overflow: hidden;
-					text-overflow: ellipsis;
-					white-space: nowrap;
-				}
-			}
-
-			&:not(.medium) {
-				.valueWrapper {
-					width: 100%;
-				}
+				width: inherit;
 			}
 		}
 	}
