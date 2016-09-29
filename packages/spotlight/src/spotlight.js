@@ -32,7 +32,6 @@ const Spotlight = (function() {
 		straightOverlapThreshold: 0.5,
 		rememberSource: false,
 		selectorDisabled: false,
-		disabled: false,
 		defaultElement: '',     // <extSelector> except "@" syntax.
 		enterTo: '',            // '', 'last-focused', 'default-element'
 		leaveFor: null,         // {left: <extSelector>, right: <extSelector>, up: <extSelector>, down: <extSelector>}
@@ -988,22 +987,6 @@ const Spotlight = (function() {
 		enableSelector: function (containerId) {
 			if (_containers[containerId]) {
 				_containers[containerId].selectorDisabled = false;
-				return true;
-			}
-			return false;
-		},
-
-		disable: function (containerId) {
-			if (_containers[containerId]) {
-				_containers[containerId].disabled = true;
-				return true;
-			}
-			return false;
-		},
-
-		enable: function (containerId) {
-			if (_containers[containerId]) {
-				_containers[containerId].disabled = false;
 				return true;
 			}
 			return false;
