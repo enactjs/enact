@@ -1,4 +1,4 @@
-import kind from 'enact-core/kind';
+import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 
 import Button from '../Button';
@@ -19,7 +19,7 @@ import css from './ToggleButton.less';
 * @ui
 * @public
 */
-const ToggleButton = kind({
+const ToggleButtonBase = kind({
 
 	propTypes: {
 		...Button.propTypes,
@@ -69,9 +69,7 @@ const ToggleButton = kind({
 	},
 
 	computed: {
-		className: ({selected, styler}) => styler.append(
-			{selected}
-		),
+		className: ({selected, small, styler}) => styler.append({selected, small}),
 		children: ({children, selected, toggleOnLabel, toggleOffLabel}) => {
 			let c;
 			if (!toggleOnLabel || !toggleOffLabel) {
@@ -93,5 +91,5 @@ const ToggleButton = kind({
 	}
 });
 
-export default ToggleButton;
-export {ToggleButton, ToggleButton as ToggleButtonBase};
+export default ToggleButtonBase;
+export {ToggleButtonBase as ToggleButton, ToggleButtonBase};
