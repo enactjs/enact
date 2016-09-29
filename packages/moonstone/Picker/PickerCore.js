@@ -1,3 +1,4 @@
+import * as jobs from '@enact/core/jobs';
 import {SlideLeftArranger, SlideBottomArranger, ViewManager} from '@enact/ui/ViewManager';
 import R from 'ramda';
 import React from 'react';
@@ -23,6 +24,10 @@ const selectIcon = (icon, v, h) => (props) => (props[icon] || (props.orientation
 const selectIncIcon = selectIcon('incrementIcon', 'arrowlargeup', 'arrowlargeright');
 
 const selectDecIcon = selectIcon('decrementIcon', 'arrowlargedown', 'arrowlargeleft');
+
+const jobNames = {
+	emulateMouseUp: 'PickerCore.emulateMouseUp'
+};
 
 // Components
 const PickerCore = class extends React.Component {
@@ -225,24 +230,30 @@ const PickerCore = class extends React.Component {
 		}
 	}
 
+	componentWillUnmount () {
+		for (const job of Object.keys(jobNames)) {
+			jobs.stopJob(jobNames[job]);
+		}
+	}
+
 	isButtonDisabled = (delta) => {
 		const {disabled, min, max, value, wrap} = this.props;
 		return disabled || (!wrap && R.clamp(min, max, value + delta) === value);
 	}
 
 	handleChange = (n) => {
-		const {min, max, disabled, value, wrap, onChange} = this.props;
+		const {disabled, max, min, onChange, step, value, wrap} = this.props;
 		if (!disabled && onChange) {
-			const next = wrap ? wrapRange(min, max, value + n) : R.clamp(min, max, value + n);
+			const next = wrap ? wrapRange(min, max, value + (n * step)) : R.clamp(min, max, value + (n * step));
 			onChange({
 				value: next
 			});
 		}
 	}
 
-	handleDecClick = () => this.handleChange(-this.props.step)
+	handleDecClick = () => this.handleChange(-1)
 
-	handleIncClick = () => this.handleChange(this.props.step)
+	handleIncClick = () => this.handleChange(1)
 
 	handleDown = (which, ev) => {
 		const {joined, onMouseDown} = this.props;
@@ -257,12 +268,17 @@ const PickerCore = class extends React.Component {
 	handleIncDown = (ev) => this.handleDown('increment', ev)
 
 	handleWheel = (ev) => {
-		if (ev.nativeEvent.deltaY > 0) {
-			this.handleIncClick();
-		} else {
-			this.handleDecClick();
+		const {joined, onMouseUp} = this.props;
+		if (joined) {
+			if (ev.deltaY < 0) {
+				this.handleChange(1);
+				this.handleIncDown(ev);
+			} else {
+				this.handleChange(-1);
+				this.handleDecDown(ev);
+			}
+			jobs.startJob(jobNames.emulateMouseUp, onMouseUp, 350);
 		}
-		ev.stopPropagation();
 	}
 
 	determineClasses () {
