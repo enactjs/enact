@@ -271,6 +271,7 @@ const PickerCore = class extends React.Component {
 
 	handleWheel = (ev) => {
 		const {onMouseUp} = this.props;
+		jobs.stopJob(jobNames.emulateMouseUp);
 		if (ev.deltaY < 0) {
 			this.handleChange(1);
 			this.handleIncDown(ev);
