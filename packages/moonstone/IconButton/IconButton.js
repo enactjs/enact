@@ -19,6 +19,10 @@ const IconButtonBase = kind({
 		className: 'iconButton'
 	},
 
+	computed: {
+		className: ({small, styler}) => styler.append({small})
+	},
+
 	render: ({children, small, ...rest}) => {
 		return (
 			<Button {...rest} small={small} minWidth={false}>
