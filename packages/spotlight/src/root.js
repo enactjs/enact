@@ -23,9 +23,10 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		static displayName = 'SpotlightRootDecorator';
 
 		navigableFilter = (elem) => {
-	 		for (; elem && elem !== document && elem.nodeType === 1; elem = elem.parentNode) {
-	 			if (elem.getAttribute('data-container-id')) return false;
-	  		}
+			while (elem && elem !== document && elem.nodeType === 1) {
+				if (elem.getAttribute('data-container-id')) return false;
+				elem = elem.parentNode;
+			}
 		}
 
 		componentWillMount () {
