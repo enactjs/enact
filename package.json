@@ -17,7 +17,7 @@
   "private": true,
   "scripts": {
     "lerna": "lerna",
-    "bootstrap": "lerna bootstrap"
+    "bootstrap": "lerna bootstrap --concurrency 1"
   },
   "devDependencies": {
     "lerna": "2.0.0-beta.28"

@@ -1,3 +1,10 @@
+/**
+ * Exports a number of methods for use with {@link module:@enact/ui/ViewManager}.
+ *
+ * @private
+ * @module @enact/ui/ViewManager/arrange
+ */
+
 import R from 'ramda';
 
 export const transform = R.curry((action, spec, {node}) => {

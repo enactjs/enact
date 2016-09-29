@@ -1,4 +1,4 @@
-import kind from 'enact-core/kind';
+import kind from '@enact/core/kind';
 import React from 'react';
 
 import Viewport from './Viewport';
@@ -10,7 +10,7 @@ import css from './Panels.less';
  *
  * @class Panels
  */
-const Panels = kind({
+const PanelsBase = kind({
 	name: 'Panels',
 
 	propTypes: Viewport.propTypes,
@@ -29,5 +29,5 @@ const Panels = kind({
 	)
 });
 
-export default Panels;
-export {Panels};
+export default PanelsBase;
+export {PanelsBase as Panels, PanelsBase};

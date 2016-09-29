@@ -5,7 +5,7 @@ import ZoneInfoFile from './zoneinfo';
 import ilibLocale from '../ilib/locale/ilibmanifest.json';
 
 const get = (url, callback) => {
-	if(typeof window === 'object') {
+	if (typeof window === 'object') {
 		xhr({url, sync: true}, (err, resp, body) => {
 			const error = err || resp.statusCode !== 200 && resp.statusCode;
 			const json = error ? null : JSON.parse(body);

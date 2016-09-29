@@ -1,11 +1,11 @@
-import kind from 'enact-core/kind';
+import kind from '@enact/core/kind';
 import React from 'react';
 
 import {ToggleItemBase} from '../ToggleItem';
 
 import css from './RadioItem.less';
 
-const RadioItem = kind({
+const RadioItemBase = kind({
 	name: 'RadioItem',
 
 	propTypes: ToggleItemBase.propTypes,
@@ -25,9 +25,9 @@ const RadioItem = kind({
 	},
 
 	render: (props) => (
-		<ToggleItemBase {...props} icon=" " multi={false} />
+		<ToggleItemBase {...props} icon=" " />
 	)
 });
 
-export default RadioItem;
-export {RadioItem, RadioItem as RadioItemBase};
+export default RadioItemBase;
+export {RadioItemBase as RadioItem, RadioItemBase};

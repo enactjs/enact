@@ -1,10 +1,10 @@
 {
-  "name": "enact-i18n",
+  "name": "@enact/i18n",
   "main": "./src/index.js",
   "version": "1.0.0-alpha.1",
   "description": "Internationalization support for Enact using iLib",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "echo \"No test suite\" && exit 0",
     "transpile": "enyo-transpile",
     "pack": "enyo-webpack",
     "pack-p": "enyo-webpack -p",
@@ -41,7 +41,7 @@
     "enyo-config": "enyojs/enyo-config"
   },
   "dependencies": {
-    "enact-core": "^1.0.0-alpha.1",
+    "@enact/core": "^1.0.0-alpha.1",
     "react": "^15.1.0",
     "react-dom": "^15.1.0",
     "ramda": "^0.21.0",

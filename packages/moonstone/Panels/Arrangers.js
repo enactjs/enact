@@ -1,5 +1,5 @@
 import quadInOut from 'eases/quad-in-out';
-import {appendTransform, clearTransform, compose, ease, endBy, reverse, slideIn, slideOut} from 'enact-ui/ViewManager/arrange';
+import {appendTransform, clearTransform, compose, ease, endBy, reverse, slideIn, slideOut} from '@enact/ui/ViewManager/arrange';
 import R from 'ramda';
 
 import {breadcrumbWidth} from './Breadcrumb';

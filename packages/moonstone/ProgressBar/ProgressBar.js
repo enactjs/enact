@@ -1,5 +1,5 @@
-import kind from 'enact-core/kind';
-import {checkDefaultBounds} from 'enact-ui/validators/PropTypeValidators';
+import kind from '@enact/core/kind';
+import {checkDefaultBounds} from '@enact/ui/validators/PropTypeValidators';
 import R from 'ramda';
 import React, {PropTypes} from 'react';
 
@@ -7,7 +7,7 @@ import css from './ProgressBar.less';
 
 const progressToPercent = (value, max, min) => R.clamp(min, max, (value / max) * 100) + '%';
 
-const ProgressBar = kind({
+const ProgressBarBase = kind({
 	name: 'ProgressBar',
 
 	propTypes: {
@@ -93,5 +93,5 @@ const ProgressBar = kind({
 	}
 });
 
-export default ProgressBar;
-export {ProgressBar, ProgressBar as ProgressBarBase};
+export default ProgressBarBase;
+export {ProgressBarBase as ProgressBar, ProgressBarBase};

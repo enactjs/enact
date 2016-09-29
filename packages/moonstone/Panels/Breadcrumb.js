@@ -1,8 +1,13 @@
-import kind from 'enact-core/kind';
-import {Spottable} from 'enact-spotlight';
+import kind from '@enact/core/kind';
+import {Spottable} from '@enact/spotlight';
 import React from 'react';
 
 import css from './Panels.less';
+
+// Since we expose `onSelect` to handle breadcrumb selection, we need that handler to be set on a
+// component that proxies mouse events for key events so we create a spottable div that will
+// get the right classes as well as handle events correctly.
+const SpottableDiv = Spottable('div');
 
 /**
  * The width of a breadcrumb which may be used to allocate space for it in a panels layout.
@@ -14,9 +19,9 @@ import css from './Panels.less';
 export const breadcrumbWidth = 96;
 
 /**
- * Stateless, functional base component for Breadcrumb
+ * Vertical, transparent bar generally laid out horizontally used to navigate to a prior Panel.
  *
- * @class BreadcrumbBase
+ * @class Breadcrumb
  */
 const BreadcrumbBase = kind({
 	name: 'Breadcrumb',
@@ -50,20 +55,13 @@ const BreadcrumbBase = kind({
 	},
 
 	render: ({children, index, onSelect, ...rest}) => (
-		<div {...rest} data-index={index} onClick={onSelect}>
+		<SpottableDiv {...rest} data-index={index} onClick={onSelect}>
 			<div className={css.breadcrumbHeader}>
 				{children}
 			</div>
-		</div>
+		</SpottableDiv>
 	)
 });
 
-/**
- * Vertical, transparent bar generally laid out horizontally used to navigate to a prior Panel.
- *
- * @class Breadcrumb
- */
-const Breadcrumb = Spottable(BreadcrumbBase);
-
-export default Breadcrumb;
-export {Breadcrumb, BreadcrumbBase};
+export default BreadcrumbBase;
+export {BreadcrumbBase as Breadcrumb, BreadcrumbBase};

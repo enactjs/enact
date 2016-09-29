@@ -1,11 +1,11 @@
-import kind from 'enact-core/kind';
+import kind from '@enact/core/kind';
 import React from 'react';
 
 import {ToggleItemBase} from '../ToggleItem';
 
 import css from './SelectableItem.less';
 
-const SelectableItem = kind({
+const SelectableItemBase = kind({
 	name: 'SelectableItem',
 
 	propTypes: ToggleItemBase.propTypes,
@@ -26,5 +26,5 @@ const SelectableItem = kind({
 	)
 });
 
-export default SelectableItem;
-export {SelectableItem, SelectableItem as SelectableItemBase};
+export default SelectableItemBase;
+export {SelectableItemBase as SelectableItem, SelectableItemBase};

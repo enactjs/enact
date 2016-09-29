@@ -1,66 +1,81 @@
+/**
+ * Exports the {@link module:@enact/ui/Pressable~Pressable} Higher-order Component (HOC).
+ *
+ * @module @enact/ui/Pressable
+ */
+
+import {forward} from '@enact/core/handle';
+import hoc from '@enact/core/hoc';
+import {cap} from '@enact/core/util';
 import React, {PropTypes} from 'react';
-import hoc from 'enact-core/hoc';
-import R from 'ramda';
-import {cap} from 'enact-core/util';
 
 const defaultConfig = {
+	/**
+	 * Configures the event name that activates the Pressable
+	 *
+	 * @type {String}
+	 * @default 'onMouseDown'
+	 */
 	depress: 'onMouseDown',
+
+	/**
+	 * Configures the event name that deactivates the Pressable
+	 *
+	 * @type {String}
+	 * @default 'onMouseUp'
+	 */
 	release: 'onMouseUp',
-	keyDown: 'onKeyDown',
-	keyUp: 'onKeyUp',
+
+	/**
+	 * Configures the property that is passed to the wrapped component when pressed
+	 *
+	 * @type {String}
+	 * @default 'pressed'
+	 */
 	prop: 'pressed'
 };
 
-const PressableHoC = hoc(defaultConfig, (config, Wrapped) => {
-	const defaultPropKey = 'default' + cap(config.prop);
+/**
+ * {@link module:@enact/ui/Pressable~Pressable} is a Higher-order Component that applies a 'Pressable' behavior
+ * to its wrapped component.  Its default event and property can be configured when applied to a component.
+ *
+ * By default, Pressable applies the `pressed` property on mouseDown and removes it on mouseUp.
+ *
+ * @class Pressable
+ * @ui
+ * @public
+ */
+const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
+	const {depress, release, prop} = config;
+	const defaultPropKey = 'default' + cap(prop);
+	const forwardDepress = forward(depress);
+	const forwardRelease = forward(release);
 
 	return class Pressable extends React.Component {
 		static propTypes = {
-
 			/**
-			* Whether or not the component is in a "pressed" state.
-			*
-			* @type {Boolean}
-			* @default false
-			* @public
-			*/
+			 * Whether or not the component is in a "pressed" state when first rendered.
+			 * *Note that this property name can be changed by the config. By default it is `defaultPressed`.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
 			[defaultPropKey]: React.PropTypes.bool,
 
 			/**
-			* Whether or not the component is in a disabled state.
-			*
-			* @type {Boolean}
-			* @default false
-			* @public
-			*/
-			disabled: PropTypes.bool,
-
-			/**
-			* The array of keycodes that the component should respond to, corresponding to when
-			* `useEnterKey` is set to `true`.
-			*
-			* @type {Number[]}
-			* @default [13, 16777221]
-			* @public
-			*/
-			keyCodes: PropTypes.array,
-
-			/**
-			* Whether or not the component should respond to "enter" keypresses and update the
-			* pressed state accordingly.
-			*
-			* @type {Boolean}
-			* @default false
-			* @public
-			*/
-			useEnterKey: PropTypes.bool
+			 * Whether or not the component is in a disabled state.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			disabled: PropTypes.bool
 		}
 
 		static defaultProps = {
 			[defaultPropKey]: false,
-			disabled: false,
-			keyCodes: [13, 16777221],
-			useEnterKey: false
+			disabled: false
 		}
 
 		constructor (props) {
@@ -70,41 +85,23 @@ const PressableHoC = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 
-		onMouseDown = (e) => {
+		onMouseDown = (ev) => {
 			if (!this.props.disabled) {
-				this.setState({pressed: e.pressed || true, keyCode: null});
+				this.setState({pressed: ev.pressed || true});
 			}
+			forwardDepress(ev, this.props);
 		}
 
-		onMouseUp = () => {
-			this.setState({pressed: false, keyCode: null});
-		}
-
-		onKeyDown = (e) => {
-			const keyCode = e.nativeEvent.keyCode;
-			if (!this.props.disabled && !this.state.keyCode && R.contains(keyCode, this.props.keyCodes)) {
-				this.setState({pressed: true, keyCode});
-			}
-		}
-
-		onKeyUp = (e) => {
-			const keyCode = e.nativeEvent.keyCode;
-			if (keyCode === this.state.keyCode) {
-				this.setState({pressed: false, keyCode: null});
-			}
+		onMouseUp = (ev) => {
+			this.setState({pressed: false});
+			forwardRelease(ev, this.props);
 		}
 
 		render () {
 			const props = Object.assign({}, this.props);
-			props[config.depress] = this.onMouseDown;
-			props[config.release] = this.onMouseUp;
-			props[config.prop] = this.state.pressed;
-			if (props.useEnterKey) {
-				props[config.keyDown] = this.onKeyDown;
-				props[config.keyUp] = this.onKeyUp;
-			}
-			delete props.useEnterKey;
-			delete props.keyCodes;
+			if (depress) props[depress] = this.onMouseDown;
+			if (release) props[release] = this.onMouseUp;
+			if (prop) props[prop] = this.state.pressed;
 			delete props[defaultPropKey];
 
 			return <Wrapped {...props} />;
@@ -112,5 +109,5 @@ const PressableHoC = hoc(defaultConfig, (config, Wrapped) => {
 	};
 });
 
-export default PressableHoC;
-export {PressableHoC as Pressable};
+export default PressableHOC;
+export {PressableHOC as Pressable};

@@ -1,6 +1,7 @@
-import kind from 'enact-core/kind';
-import Pickable from 'enact-ui/Pickable';
+import kind from '@enact/core/kind';
+import Pickable from '@enact/ui/Pickable';
 import React from 'react';
+import pure from 'recompose/pure';
 
 import Expandable from '../Expandable';
 import IconButton from '../IconButton';
@@ -26,9 +27,9 @@ const ExpandablePickerBase = kind({
 		}
 	},
 
-	render: ({children, onChange, onPick, style, ...rest}) => (
+	render: ({children, onChange, onPick, style, value, ...rest}) => (
 		<div style={style} disabled={rest.disabled}>
-			<Picker {...rest} onChange={onPick}>
+			<Picker {...rest} onChange={onPick} value={value}>
 				{children}
 			</Picker>
 			<IconButton onClick={onChange}>check</IconButton>
@@ -36,13 +37,15 @@ const ExpandablePickerBase = kind({
 	)
 });
 
-const ExpandablePicker = Expandable(
-	{close: 'onChange'},
-	Pickable(
-		// override `pick` so we can separate handling onChange for the Picker and onChange for the
-		// ExpandablePicker
-		{pick: 'onPick'},
-		ExpandablePickerBase
+const ExpandablePicker = pure(
+	Expandable(
+		{close: 'onChange'},
+		Pickable(
+			// override `pick` so we can separate handling onChange for the Picker and onChange for the
+			// ExpandablePicker
+			{mutable: true, pick: 'onPick'},
+			ExpandablePickerBase
+		)
 	)
 );
 

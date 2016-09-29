@@ -1,5 +1,5 @@
-import kind from 'enact-core/kind';
-import Slottable from 'enact-ui/Slottable';
+import kind from '@enact/core/kind';
+import Slottable from '@enact/ui/Slottable';
 import React from 'react';
 
 import css from './Panel.less';
@@ -23,7 +23,7 @@ const PanelBase = kind({
 
 	render: ({children, header, ...rest}) => (
 		<article {...rest}>
-			<div name="header" className={css.header}>{header}</div>
+			<div className={css.header}>{header}</div>
 			<section className={css.body}>{children}</section>
 		</article>
 	)

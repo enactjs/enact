@@ -1,5 +1,5 @@
-import kind from 'enact-core/kind';
-import {Spottable} from 'enact-spotlight';
+import kind from '@enact/core/kind';
+import {Spottable} from '@enact/spotlight';
 import React, {PropTypes} from 'react';
 
 import css from './Input.less';
@@ -32,13 +32,9 @@ const PlainInputBase = kind({
 		className: ({disabled, styler}) => styler.append({disabled})
 	},
 
-	render: ({inputRef, ...rest}) => {
-		delete rest.useEnterKey;
-
-		return (
-			<input {...rest} ref={inputRef} />
-		);
-	}
+	render: ({inputRef, ...rest}) => (
+		<input {...rest} ref={inputRef} />
+	)
 });
 
 const PlainInput = Spottable(kind({

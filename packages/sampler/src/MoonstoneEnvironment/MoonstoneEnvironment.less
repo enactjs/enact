@@ -1,0 +1,45 @@
+// MoonstoneEnvironment.less
+//
+@import '~@enact/moonstone/styles/variables.less';
+
+// from ~@enact/ui/styles/core.less. Can't import global mixins.
+.enact-selectable() {
+	cursor: auto;
+	-ms-user-select: element;
+	-webkit-user-select: text;
+	-moz-user-select: text;
+	user-select: text;
+}
+
+.moonstone {
+	// Restore the line below when backgrounds addon accepts images and allows a user-specified default background.
+	// It sets moonstone's root background color to transparent so the background-addon bg can shine through.
+	// background-color: transparent;
+
+	.description {
+		margin: 0 @moon-spotlight-outset 1em;
+
+		p:first-child {
+			margin-top: 0;
+		}
+	}
+
+	// Hack into the Info - Don't try this at home, kids
+	main > article > section > :nth-child(2) > :nth-child(1) > :nth-child(3) {
+		.enact-selectable();
+
+		background-color: black !important;
+
+		h1, h2, h3, p, div {
+			color: inherit !important;
+			font-family: @moon-font-family !important;
+		}
+		pre {
+			background-color: #222 !important;
+			font-weight: bold;
+			border-radius: 1em;
+			border: 3px solid #444;
+			overflow-x: auto !important;
+		}
+	}
+}

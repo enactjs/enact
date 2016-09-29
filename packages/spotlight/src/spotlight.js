@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 /*
  * A javascript-based implementation of Spatial Navigation.
  *
@@ -7,7 +9,11 @@
  * Licensed under the MPL license.
  */
 
+import R from 'ramda';
+import Accelerator from '@enact/core/Accelerator';
+
 const spotlightRootContainerName = 'spotlightRootDecorator';
+const SpotlightAccelerator = new Accelerator();
 const Spotlight = (function() {
 	'use strict';
 
@@ -20,7 +26,7 @@ const Spotlight = (function() {
 	// - a single DOM element
 	// - a string "@<containerId>" to indicate the specified container
 	// - a string "@" to indicate the default container
-	var GlobalConfig = {
+	const GlobalConfig = {
 		selector: '',           // can be a valid <extSelector> except "@" syntax.
 		straightOnly: false,
 		straightOverlapThreshold: 0.5,
@@ -38,61 +44,63 @@ const Spotlight = (function() {
 	/**
 	* constants
 	*/
-	var _directions = {
+	const _directions = {
 		'37': 'left',
 		'38': 'up',
 		'39': 'right',
 		'40': 'down'
 	};
 
-	var _reverseDirections = {
+	const _reverseDirections = {
 		'left': 'right',
 		'up': 'down',
 		'right': 'left',
 		'down': 'up'
 	};
 
-	var _containerPrefix = 'container-';
+	const _enterKeyCodes = [13, 16777221];
+
+	const _containerPrefix = 'container-';
 
 	/**
 	/* private vars
 	*/
-	var _ids = 0;
-	var _initialized = false;
-	var _pause = false;
-	var _containers = {};
-	var _containerCount = 0;
-	var _defaultContainerId = '';
-	var _lastContainerId = '';
-	var _duringFocusChange = false;
+	let _ids = 0;
+	let _initialized = false;
+	let _pause = false;
+	let _containers = {};
+	let _containerCount = 0;
+	let _defaultContainerId = '';
+	let _lastContainerId = '';
+	let _duringFocusChange = false;
 
-	/**
-	/* polyfills
+	/*
+	* polyfills
 	*/
-	var elementMatchesSelector = function (selector) {
-		var matchedNodes = (this.parentNode || this.document).querySelectorAll(selector);
+	let elementMatchesSelector = function (selector) {
+		const matchedNodes = (this.parentNode || this.document).querySelectorAll(selector);
 		return [].slice.call(matchedNodes).indexOf(this) >= 0;
 	};
-	if(typeof window === 'object') {
-		elementMatchesSelector = window.Element.prototype.matches ||
-				window.Element.prototype.matchesSelector ||
-				window.Element.prototype.mozMatchesSelector ||
-				window.Element.prototype.webkitMatchesSelector ||
-				window.Element.prototype.msMatchesSelector ||
-				window.Element.prototype.oMatchesSelector ||
-				elementMatchesSelector;
+	if (typeof window === 'object') {
+		elementMatchesSelector = window.Element.prototype.matches
+			|| window.Element.prototype.matchesSelector
+			|| window.Element.prototype.mozMatchesSelector
+			|| window.Element.prototype.webkitMatchesSelector
+			|| window.Element.prototype.msMatchesSelector
+			|| window.Element.prototype.oMatchesSelector
+			|| elementMatchesSelector;
 	}
 
-	/**
-	/* protected methods
+	/*
+	* protected methods
 	*/
-	function getRect(elem) {
-		var cr = elem.getBoundingClientRect();
-		var rect = {
-				left: cr.left,
-				top: cr.top,
-				width: cr.width,
-				height: cr.height
+	function getRect (elem) {
+		const cr = elem.getBoundingClientRect();
+		const rect = {
+			left: cr.left,
+			top: cr.top,
+			width: cr.width,
+			height: cr.height
 		};
 		rect.element = elem;
 		rect.right = rect.left + rect.width;
@@ -106,13 +114,13 @@ const Spotlight = (function() {
 		return rect;
 	}
 
-	function partition(rects, targetRect, straightOverlapThreshold) {
-		var groups = [[], [], [], [], [], [], [], [], []];
+	function partition (rects, targetRect, straightOverlapThreshold) {
+		let groups = [[], [], [], [], [], [], [], [], []];
 
-		for (var i = 0; i < rects.length; i++) {
-			var rect = rects[i];
-			var center = rect.center;
-			var x, y, groupId;
+		for (let i = 0; i < rects.length; i++) {
+			let rect = rects[i];
+			let center = rect.center;
+			let x, y, groupId;
 
 			if (center.x < targetRect.left) {
 				x = 0;
@@ -134,7 +142,7 @@ const Spotlight = (function() {
 			groups[groupId].push(rect);
 
 			if ([0, 2, 6, 8].indexOf(groupId) !== -1) {
-				var threshold = straightOverlapThreshold;
+				let threshold = straightOverlapThreshold;
 
 				if (rect.left <= targetRect.right - targetRect.width * threshold) {
 					if (groupId === 2) {
@@ -173,10 +181,10 @@ const Spotlight = (function() {
 		return groups;
 	}
 
-	function generateDistanceFunction(targetRect) {
+	function generateDistancefunction (targetRect) {
 		return {
-			nearPlumbLineIsBetter: function(rect) {
-				var d;
+			nearPlumbLineIsBetter: function (rect) {
+				let d;
 				if (rect.center.x < targetRect.center.x) {
 					d = targetRect.center.x - rect.right;
 				} else {
@@ -184,8 +192,8 @@ const Spotlight = (function() {
 				}
 				return d < 0 ? 0 : d;
 			},
-			nearHorizonIsBetter: function(rect) {
-				var d;
+			nearHorizonIsBetter: function (rect) {
+				let d;
 				if (rect.center.y < targetRect.center.y) {
 					d = targetRect.center.y - rect.bottom;
 				} else {
@@ -193,8 +201,8 @@ const Spotlight = (function() {
 				}
 				return d < 0 ? 0 : d;
 			},
-			nearTargetLeftIsBetter: function(rect) {
-				var d;
+			nearTargetLeftIsBetter: function (rect) {
+				let d;
 				if (rect.center.x < targetRect.center.x) {
 					d = targetRect.left - rect.right;
 				} else {
@@ -202,8 +210,8 @@ const Spotlight = (function() {
 				}
 				return d < 0 ? 0 : d;
 			},
-			nearTargetTopIsBetter: function(rect) {
-				var d;
+			nearTargetTopIsBetter: function (rect) {
+				let d;
 				if (rect.center.y < targetRect.center.y) {
 					d = targetRect.top - rect.bottom;
 				} else {
@@ -211,24 +219,24 @@ const Spotlight = (function() {
 				}
 				return d < 0 ? 0 : d;
 			},
-			topIsBetter: function(rect) {
+			topIsBetter: function (rect) {
 				return rect.top;
 			},
-			bottomIsBetter: function(rect) {
+			bottomIsBetter: function (rect) {
 				return -1 * rect.bottom;
 			},
-			leftIsBetter: function(rect) {
+			leftIsBetter: function (rect) {
 				return rect.left;
 			},
-			rightIsBetter: function(rect) {
+			rightIsBetter: function (rect) {
 				return -1 * rect.right;
 			}
 		};
 	}
 
-	function prioritize(priorities) {
-		var destPriority = null;
-		for (var i = 0; i < priorities.length; i++) {
+	function prioritize (priorities) {
+		let destPriority = null;
+		for (let i = 0; i < priorities.length; i++) {
 			if (priorities[i].group.length) {
 				destPriority = priorities[i];
 				break;
@@ -239,12 +247,12 @@ const Spotlight = (function() {
 			return null;
 		}
 
-		var destDistance = destPriority.distance;
+		const destDistance = destPriority.distance;
 
-		destPriority.group.sort(function(a, b) {
-			for (var i = 0; i < destDistance.length; i++) {
-				var distance = destDistance[i];
-				var delta = distance(a) - distance(b);
+		destPriority.group.sort(function (a, b) {
+			for (let i = 0; i < destDistance.length; i++) {
+				const distance = destDistance[i];
+				const delta = distance(a) - distance(b);
 				if (delta) {
 					return delta;
 				}
@@ -255,14 +263,14 @@ const Spotlight = (function() {
 		return destPriority.group;
 	}
 
-	function navigate(target, direction, candidates, config) {
+	function navigate (target, direction, candidates, config) {
 		if (!target || !direction || !candidates || !candidates.length) {
 			return null;
 		}
 
-		var rects = [];
-		for (var i = 0; i < candidates.length; i++) {
-			var rect = getRect(candidates[i]);
+		let rects = [];
+		for (let i = 0; i < candidates.length; i++) {
+			let rect = getRect(candidates[i]);
 			if (rect) {
 				rects.push(rect);
 			}
@@ -271,26 +279,26 @@ const Spotlight = (function() {
 			return null;
 		}
 
-		var targetRect = getRect(target);
+		let targetRect = getRect(target);
 		if (!targetRect) {
 			return null;
 		}
 
-		var distanceFunction = generateDistanceFunction(targetRect);
+		let distanceFunction = generateDistancefunction(targetRect);
 
-		var groups = partition(
+		let groups = partition(
 			rects,
 			targetRect,
 			config.straightOverlapThreshold
 		);
 
-		var internalGroups = partition(
+		let internalGroups = partition(
 			groups[4],
 			targetRect.center,
 			config.straightOverlapThreshold
 		);
 
-		var priorities;
+		let priorities;
 
 		switch (direction) {
 			case 'left':
@@ -405,17 +413,17 @@ const Spotlight = (function() {
 			priorities.pop();
 		}
 
-		var destGroup = prioritize(priorities);
+		let destGroup = prioritize(priorities);
 		if (!destGroup) {
 			return null;
 		}
 
-		var dest = null;
-		if (config.rememberSource &&
-				config.previous &&
-				config.previous.destination === target &&
-				config.previous.reverse === direction) {
-			for (var j = 0; j < destGroup.length; j++) {
+		let dest = null;
+		if (config.rememberSource
+				&& config.previous
+				&& config.previous.destination === target
+				&& config.previous.reverse === direction) {
+			for (let j = 0; j < destGroup.length; j++) {
 				if (destGroup[j].element === config.previous.target) {
 					dest = destGroup[j].element;
 					break;
@@ -430,9 +438,10 @@ const Spotlight = (function() {
 		return dest;
 	}
 
-	function generateId() {
-		var id;
-		while(true) {
+	function generateId () {
+		let id;
+		/* eslint no-constant-condition: ["error", { "checkLoops": false }]*/
+		while (true) {
 			id = _containerPrefix + String(++_ids);
 			if (!_containers[id]) {
 				break;
@@ -441,8 +450,8 @@ const Spotlight = (function() {
 		return id;
 	}
 
-	function parseSelector(selector) {
-		var result;
+	function parseSelector (selector) {
+		let result;
 		if (typeof selector === 'string') {
 			result = [].slice.call(document.querySelectorAll(selector));
 		} else if (typeof selector === 'object' && selector.length) {
@@ -455,7 +464,7 @@ const Spotlight = (function() {
 		return result;
 	}
 
-	function matchSelector(elem, selector) {
+	function matchSelector (elem, selector) {
 		if (typeof selector === 'string') {
 			return elementMatchesSelector.call(elem, selector);
 		} else if (typeof selector === 'object' && selector.length) {
@@ -466,21 +475,21 @@ const Spotlight = (function() {
 		return false;
 	}
 
-	function getCurrent() {
-		var activeElement = document.activeElement;
+	function getCurrent () {
+		let activeElement = document.activeElement;
 		if (activeElement && activeElement !== document.body) {
 			return activeElement;
 		}
 	}
 
-	function extend(out) {
+	function extend (out) {
 		out = out || {};
-		for (var i = 1; i < arguments.length; i++) {
+		for (let i = 1; i < arguments.length; i++) {
 			if (!arguments[i]) {
 				continue;
 			}
-			for (var key in arguments[i]) {
-				if (arguments[i].hasOwnProperty(key) && arguments[i][key] !== undefined) {
+			for (let key in arguments[i]) {
+				if (arguments[i].hasOwnProperty(key) && typeof arguments[i][key] !== 'undefined') {
 					out[key] = arguments[i][key];
 				}
 			}
@@ -488,11 +497,11 @@ const Spotlight = (function() {
 		return out;
 	}
 
-	function exclude(elemList, excludedElem) {
+	function exclude (elemList, excludedElem) {
 		if (!Array.isArray(excludedElem)) {
 			excludedElem = [excludedElem];
 		}
-		for (var i = 0, index; i < excludedElem.length; i++) {
+		for (let i = 0, index; i < excludedElem.length; i++) {
 			index = elemList.indexOf(excludedElem[i]);
 			if (index >= 0) {
 				elemList.splice(index, 1);
@@ -501,8 +510,8 @@ const Spotlight = (function() {
 		return elemList;
 	}
 
-	function isNavigable(elem, containerId, verifyContainerSelector) {
-		if (! elem || !containerId || !_containers[containerId] || _containers[containerId].selectorDisabled) {
+	function isNavigable (elem, containerId, verifyContainerSelector) {
+		if (!elem || !containerId || !_containers[containerId] || _containers[containerId].selectorDisabled) {
 			return false;
 		}
 		if ((elem.offsetWidth <= 0 && elem.offsetHeight <= 0)) {
@@ -523,12 +532,12 @@ const Spotlight = (function() {
 		return true;
 	}
 
-	function getContainerId(elem) {
-		var containerId;
-		for (var id in _containers) {
+	function getContainerId (elem) {
+		let containerId;
+		for (let id in _containers) {
 			if (!_containers[id].selectorDisabled && matchSelector(elem, _containers[id].selector)) {
 				containerId = id;
-				if (id != spotlightRootContainerName) {
+				if (id !== spotlightRootContainerName) {
 					break;
 				}
 			}
@@ -536,14 +545,14 @@ const Spotlight = (function() {
 		return containerId;
 	}
 
-	function getContainerNavigableElements(containerId) {
-		return parseSelector(_containers[containerId].selector).filter(function(elem) {
+	function getContainerNavigableElements (containerId) {
+		return parseSelector(_containers[containerId].selector).filter(function (elem) {
 			return isNavigable(elem, containerId);
 		});
 	}
 
-	function getContainerDefaultElement(containerId) {
-		var defaultElement = _containers[containerId].defaultElement;
+	function getContainerDefaultElement (containerId) {
+		let defaultElement = _containers[containerId].defaultElement;
 		if (!defaultElement) {
 			return null;
 		}
@@ -556,22 +565,22 @@ const Spotlight = (function() {
 		return null;
 	}
 
-	function getContainerLastFocusedElement(containerId) {
-		var lastFocusedElement = _containers[containerId].lastFocusedElement;
+	function getContainerLastFocusedElement (containerId) {
+		let lastFocusedElement = _containers[containerId].lastFocusedElement;
 		if (!isNavigable(lastFocusedElement, containerId, true)) {
 			return null;
 		}
 		return lastFocusedElement;
 	}
 
-	function focusElement(elem, containerId, direction) {
+	function focusElement (elem, containerId) {
 		if (!elem) {
 			return false;
 		}
 
-		var currentFocusedElement = getCurrent();
+		let currentFocusedElement = getCurrent();
 
-		var silentFocus = function() {
+		let silentFocus = function () {
 			if (currentFocusedElement) {
 				currentFocusedElement.blur();
 			}
@@ -604,7 +613,7 @@ const Spotlight = (function() {
 		return true;
 	}
 
-	function focusChanged(elem, containerId) {
+	function focusChanged (elem, containerId) {
 		if (!containerId) {
 			containerId = getContainerId(elem);
 		}
@@ -614,18 +623,18 @@ const Spotlight = (function() {
 		}
 	}
 
-	function focusExtendedSelector(selector, direction) {
-		if (selector.charAt(0) == '@') {
-			if (selector.length == 1) {
+	function focusExtendedSelector (selector, direction) {
+		if (selector.charAt(0) === '@') {
+			if (selector.length === 1) {
 				return focusContainer();
 			} else {
-				var containerId = selector.substr(1);
+				let containerId = selector.substr(1);
 				return focusContainer(containerId);
 			}
 		} else {
-			var next = parseSelector(selector)[0];
+			let next = parseSelector(selector)[0];
 			if (next) {
-				var nextContainerId = getContainerId(next);
+				let nextContainerId = getContainerId(next);
 				if (isNavigable(next, nextContainerId)) {
 					return focusElement(next, nextContainerId, direction);
 				}
@@ -634,11 +643,11 @@ const Spotlight = (function() {
 		return false;
 	}
 
-	function focusContainer(containerId) {
-		var range = [];
-		var addRange = function(id) {
-			if (id && range.indexOf(id) < 0 &&
-					_containers[id] && !_containers[id].selectorDisabled) {
+	function focusContainer (containerId) {
+		let range = [];
+		let addRange = function (id) {
+			if (id && range.indexOf(id) < 0
+					&& _containers[id] && !_containers[id].selectorDisabled) {
 				range.push(id);
 			}
 		};
@@ -651,18 +660,18 @@ const Spotlight = (function() {
 			Object.keys(_containers).map(addRange);
 		}
 
-		for (var i = 0; i < range.length; i++) {
-			var id = range[i];
-			var next;
+		for (let i = 0; i < range.length; i++) {
+			let id = range[i];
+			let next;
 
-			if (_containers[id].enterTo == 'last-focused') {
-				next = getContainerLastFocusedElement(id) ||
-							 getContainerDefaultElement(id) ||
-							 getContainerNavigableElements(id)[0];
+			if (_containers[id].enterTo === 'last-focused') {
+				next = getContainerLastFocusedElement(id)
+					|| getContainerDefaultElement(id)
+					|| getContainerNavigableElements(id)[0];
 			} else {
-				next = getContainerDefaultElement(id) ||
-							 getContainerLastFocusedElement(id) ||
-							 getContainerNavigableElements(id)[0];
+				next = getContainerDefaultElement(id)
+					|| getContainerLastFocusedElement(id)
+					|| getContainerNavigableElements(id)[0];
 			}
 
 			if (next) {
@@ -673,9 +682,9 @@ const Spotlight = (function() {
 		return false;
 	}
 
-	function gotoLeaveFor(containerId, direction) {
-		if (_containers[containerId].leaveFor && _containers[containerId].leaveFor[direction] !== undefined) {
-			var next = _containers[containerId].leaveFor[direction];
+	function gotoLeaveFor (containerId, direction) {
+		if (_containers[containerId].leaveFor && typeof _containers[containerId].leaveFor[direction] !== 'undefined') {
+			let next = _containers[containerId].leaveFor[direction];
 
 			if (typeof next === 'string') {
 				if (next === '') {
@@ -684,7 +693,7 @@ const Spotlight = (function() {
 				return focusExtendedSelector(next, direction);
 			}
 
-			var nextContainerId = getContainerId(next);
+			let nextContainerId = getContainerId(next);
 			if (isNavigable(next, nextContainerId)) {
 				return focusElement(next, nextContainerId, direction);
 			}
@@ -692,8 +701,8 @@ const Spotlight = (function() {
 		return false;
 	}
 
-	function spotNext(direction, currentFocusedElement, currentContainerId) {
-		var extSelector = currentFocusedElement.getAttribute('data-spot-' + direction);
+	function spotNext (direction, currentFocusedElement, currentContainerId) {
+		let extSelector = currentFocusedElement.getAttribute('data-spot-' + direction);
 		if (typeof extSelector === 'string') {
 			if (extSelector === '' || !focusExtendedSelector(extSelector, direction)) {
 				return false;
@@ -701,18 +710,18 @@ const Spotlight = (function() {
 			return true;
 		}
 
-		var containerNavigableElements = {};
-		var allNavigableElements = [];
-		for (var id in _containers) {
+		let containerNavigableElements = {};
+		let allNavigableElements = [];
+		for (let id in _containers) {
 			containerNavigableElements[id] = getContainerNavigableElements(id);
 			allNavigableElements = allNavigableElements.concat(containerNavigableElements[id]);
 		}
 
-		var config = extend({}, GlobalConfig, _containers[currentContainerId]);
-		var next;
+		let config = extend({}, GlobalConfig, _containers[currentContainerId]);
+		let next;
 
-		if (config.restrict == 'self-only' || config.restrict == 'self-first') {
-			var currentContainerNavigableElements = containerNavigableElements[currentContainerId];
+		if (config.restrict === 'self-only' || config.restrict === 'self-first') {
+			let currentContainerNavigableElements = containerNavigableElements[currentContainerId];
 
 			next = navigate(
 				currentFocusedElement,
@@ -721,7 +730,7 @@ const Spotlight = (function() {
 				config
 			);
 
-			if (!next && config.restrict == 'self-first') {
+			if (!next && config.restrict === 'self-first') {
 				next = navigate(
 					currentFocusedElement,
 					direction,
@@ -745,11 +754,11 @@ const Spotlight = (function() {
 				reverse: _reverseDirections[direction]
 			};
 
-			var nextContainerId = getContainerId(next);
+			let nextContainerId = getContainerId(next);
 
 			if (_containers[nextContainerId].disabled) {
-				var nextContainerElements = containerNavigableElements[nextContainerId];
-				for (var i=0, len=nextContainerElements.length; i<len; ++i) {
+				let nextContainerElements = containerNavigableElements[nextContainerId];
+				for (let i = 0, len = nextContainerElements.length; i < len; ++i) {
 					allNavigableElements.splice(allNavigableElements.indexOf(nextContainerElements[i]), 1);
 				}
 				next = navigate(
@@ -761,15 +770,15 @@ const Spotlight = (function() {
 				nextContainerId = next ? getContainerId(next) : currentContainerId;
 			}
 
-			if (currentContainerId != nextContainerId) {
-				var result = gotoLeaveFor(currentContainerId, direction);
+			if (currentContainerId !== nextContainerId) {
+				let result = gotoLeaveFor(currentContainerId, direction);
 				if (result) {
 					return true;
 				} else if (result === null) {
 					return false;
 				}
 
-				var enterToElement;
+				let enterToElement;
 				switch (_containers[nextContainerId].enterTo) {
 					case 'last-focused':
 						enterToElement = getContainerLastFocusedElement(nextContainerId) || getContainerDefaultElement(nextContainerId);
@@ -791,24 +800,14 @@ const Spotlight = (function() {
 		return false;
 	}
 
-	function onKeyDown(evt) {
-		if (!_containerCount || _pause) {
-			return;
-		}
+	function preventDefault(evt) {
+		evt.preventDefault();
+		evt.stopPropagation();
+		return false;
+	}
 
-		var currentFocusedElement;
-		var preventDefault = function() {
-			evt.preventDefault();
-			evt.stopPropagation();
-			return false;
-		};
-
-		var direction = _directions[evt.keyCode];
-		if (!direction) {
-			return;
-		}
-
-		currentFocusedElement = getCurrent();
+	function onAcceleratedKeyDown(evt) {
+		let currentFocusedElement = getCurrent();
 
 		if (!currentFocusedElement) {
 			if (_lastContainerId) {
@@ -816,34 +815,55 @@ const Spotlight = (function() {
 			}
 			if (!currentFocusedElement) {
 				focusContainer();
-				return preventDefault();
+				return preventDefault(evt);
 			}
 		}
 
-		var currentContainerId = getContainerId(currentFocusedElement);
+		const currentContainerId = getContainerId(currentFocusedElement);
 		if (!currentContainerId) {
 			return;
 		}
 
-		if (!spotNext(direction, currentFocusedElement, currentContainerId)) {
-			focusElement(currentFocusedElement, currentContainerId);
+		if (!spotNext(_directions[evt.keyCode], currentFocusedElement, currentContainerId)) {
+			focusElement(currentFocusedElement, currentContainerId)
 		}
-
-		return preventDefault();
 	}
 
-	function onMouseOver(evt) {
+	function onKeyUp(evt) {
 		if (!_containerCount || _pause) {
 			return;
 		}
 
-		var target = getNavigableTarget(evt.target), // account for child controls
-			current = getCurrent(),
-			preventDefault = function() {
-				evt.preventDefault();
-				evt.stopPropagation();
-				return false;
-			};
+		const keyCode = evt.keyCode;
+		if (!_directions[keyCode] && !R.contains(keyCode, _enterKeyCodes)) {
+			return;
+		}
+
+		SpotlightAccelerator.reset();
+	}
+
+	function onKeyDown(evt) {
+		if (!_containerCount || _pause) {
+			return;
+		}
+
+		const keyCode = evt.keyCode;
+		if (!_directions[keyCode] && !R.contains(keyCode, _enterKeyCodes)) {
+			return;
+		}
+
+		SpotlightAccelerator.processKey(evt, onAcceleratedKeyDown);
+
+		preventDefault(evt);
+	}
+
+	function onMouseOver (evt) {
+		if (!_containerCount || _pause) {
+			return;
+		}
+
+		let target = getNavigableTarget(evt.target), // account for child controls
+			current = getCurrent();
 
 		if (!target) { // we are moving over a non-focusable element, so we force a blur to occur
 			if (current) {
@@ -851,12 +871,12 @@ const Spotlight = (function() {
 			}
 		} else if (target !== getCurrent()) { // moving over a focusable element
 			focusElement(target, getContainerId(target));
-			preventDefault();
+			preventDefault(evt);
 		}
 	}
 
-	function getNavigableTarget(target) {
-		var parent;
+	function getNavigableTarget (target) {
+		let parent;
 		while (target && !isFocusable(target)) {
 			parent = target.parentNode;
 			target = parent === document ? null : parent; // calling isNavigable on document is problematic
@@ -864,8 +884,8 @@ const Spotlight = (function() {
 		return target;
 	}
 
-	function isFocusable(elem) {
-		for (var id in _containers) { // check *all* the containers to see if the specified element is a focusable element
+	function isFocusable (elem) {
+		for (let id in _containers) { // check *all* the containers to see if the specified element is a focusable element
 			if (isNavigable(elem, id, true)) return true;
 		}
 		return false;
@@ -874,24 +894,26 @@ const Spotlight = (function() {
 	/**
 	/* public methods
 	*/
-	var Spotlight = {
-		initialize: function() {
+	const Spotlight = { // eslint-disable-line no-shadow
+		initialize: function () {
 			if (!_initialized) {
 				window.addEventListener('keydown', onKeyDown);
+				window.addEventListener('keyup', onKeyUp);
 				window.addEventListener('mouseover', onMouseOver);
 				_initialized = true;
 			}
 		},
 
-		terminate: function() {
+		terminate: function () {
 			window.removeEventListener('keydown', onKeyDown);
+			window.removeEventListener('keyup', onKeyUp);
 			window.removeEventListener('mouseover', onMouseOver);
 			Spotlight.clear();
 			_ids = 0;
 			_initialized = false;
 		},
 
-		clear: function() {
+		clear: function () {
 			_containers = {};
 			_containerCount = 0;
 			_defaultContainerId = '';
@@ -901,8 +923,8 @@ const Spotlight = (function() {
 
 		// set(<config>);
 		// set(<containerId>, <config>);
-		set: function() {
-			var containerId, config;
+		set: function () {
+			let containerId, config;
 
 			if (typeof arguments[0] === 'object') {
 				config = arguments[0];
@@ -916,11 +938,11 @@ const Spotlight = (function() {
 				return;
 			}
 
-			for (var key in config) {
-				if (GlobalConfig[key] !== undefined) {
+			for (let key in config) {
+				if (typeof GlobalConfig[key] !== 'undefined') {
 					if (containerId) {
 						_containers[containerId][key] = config[key];
-					} else if (config[key] !== undefined) {
+					} else if (typeof config[key] !== 'undefined') {
 						GlobalConfig[key] = config[key];
 					}
 				}
@@ -934,9 +956,9 @@ const Spotlight = (function() {
 
 		// add(<config>);
 		// add(<containerId>, <config>);
-		add: function() {
-			var containerId;
-			var config = {};
+		add: function () {
+			let containerId;
+			let config = {};
 
 			if (typeof arguments[0] === 'object') {
 				config = arguments[0];
@@ -961,12 +983,12 @@ const Spotlight = (function() {
 			return containerId;
 		},
 
-		remove: function(containerId) {
+		remove: function (containerId) {
 			if (!containerId || typeof containerId !== 'string') {
 				throw new Error('Please assign the "containerId"!');
 			}
 			if (_containers[containerId]) {
-				_containers[containerId] = undefined;
+				_containers[containerId] = void 0;
 				_containers = extend({}, _containers);
 				_containerCount--;
 				return true;
@@ -974,7 +996,7 @@ const Spotlight = (function() {
 			return false;
 		},
 
-		disableSelector: function(containerId) {
+		disableSelector: function (containerId) {
 			if (_containers[containerId]) {
 				_containers[containerId].selectorDisabled = true;
 				return true;
@@ -982,7 +1004,7 @@ const Spotlight = (function() {
 			return false;
 		},
 
-		enableSelector: function(containerId) {
+		enableSelector: function (containerId) {
 			if (_containers[containerId]) {
 				_containers[containerId].selectorDisabled = false;
 				return true;
@@ -990,7 +1012,7 @@ const Spotlight = (function() {
 			return false;
 		},
 
-		disable: function(containerId) {
+		disable: function (containerId) {
 			if (_containers[containerId]) {
 				_containers[containerId].disabled = true;
 				return true;
@@ -998,7 +1020,7 @@ const Spotlight = (function() {
 			return false;
 		},
 
-		enable: function(containerId) {
+		enable: function (containerId) {
 			if (_containers[containerId]) {
 				_containers[containerId].disabled = false;
 				return true;
@@ -1006,11 +1028,11 @@ const Spotlight = (function() {
 			return false;
 		},
 
-		pause: function() {
+		pause: function () {
 			_pause = true;
 		},
 
-		resume: function() {
+		resume: function () {
 			_pause = false;
 		},
 
@@ -1018,15 +1040,15 @@ const Spotlight = (function() {
 		// focus(<containerId>, [silent])
 		// focus(<extSelector>, [silent])
 		// Note: "silent" is optional and default to false
-		focus: function(elem, silent) {
-			var result = false;
+		focus: function (elem, silent) {
+			let result = false;
 
-			if (silent === undefined && typeof elem === 'boolean') {
+			if (typeof silent === 'undefined' && typeof elem === 'boolean') {
 				silent = elem;
-				elem = undefined;
+				elem = void 0;
 			}
 
-			var autoPause = !_pause && silent;
+			let autoPause = !_pause && silent;
 
 			if (autoPause) {
 				Spotlight.pause();
@@ -1034,18 +1056,16 @@ const Spotlight = (function() {
 
 			if (!elem) {
 				result  = focusContainer();
-			} else {
-				if (typeof elem === 'string') {
-					if (_containers[elem]) {
-						result = focusContainer(elem);
-					} else {
-						result = focusExtendedSelector(elem);
-					}
+			} else if (typeof elem === 'string') {
+				if (_containers[elem]) {
+					result = focusContainer(elem);
 				} else {
-					var nextContainerId = getContainerId(elem);
-					if (isNavigable(elem, nextContainerId)) {
-						result = focusElement(elem, nextContainerId);
-					}
+					result = focusExtendedSelector(elem);
+				}
+			} else {
+				let nextContainerId = getContainerId(elem);
+				if (isNavigable(elem, nextContainerId)) {
+					result = focusElement(elem, nextContainerId);
 				}
 			}
 
@@ -1058,19 +1078,20 @@ const Spotlight = (function() {
 
 		// move(<direction>)
 		// move(<direction>, <selector>)
-		move: function(direction, selector) {
+		move: function (direction, selector) {
+			let elem, containerId;
+
 			direction = direction.toLowerCase();
 			if (!_reverseDirections[direction]) {
 				return false;
 			}
 
-			var elem = selector ?
-				parseSelector(selector)[0] : getCurrent();
+			elem = selector ? parseSelector(selector)[0] : getCurrent();
 			if (!elem) {
 				return false;
 			}
 
-			var containerId = getContainerId(elem);
+			containerId = getContainerId(elem);
 			if (!containerId) {
 				return false;
 			}
@@ -1078,7 +1099,7 @@ const Spotlight = (function() {
 			return spotNext(direction, elem, containerId);
 		},
 
-		setDefaultContainer: function(containerId) {
+		setDefaultContainer: function (containerId) {
 			if (!containerId) {
 				_defaultContainerId = '';
 			} else if (!_containers[containerId]) {

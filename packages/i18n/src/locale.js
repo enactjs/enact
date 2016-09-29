@@ -48,7 +48,7 @@ function isRtl () {
 	return script.getScriptDirection() === 'rtl';
 }
 
-function getI18NClasses () {
+function getI18nClasses () {
 	const li = new LocaleInfo(); // for the current locale
 	const locale = li.getLocale();
 	const base = 'enact-locale-';
@@ -98,8 +98,8 @@ function getI18NClasses () {
 }
 
 /**
- * This Enyo hook lets us know that the system locale has changed and gives
- * us a chance to update the iLib locale before Enyo broadcasts its
+ * This Enact hook lets us know that the system locale has changed and gives
+ * us a chance to update the iLib locale before Enact broadcasts its
  * `onlocalechange` signal.
  * Provide an locale string, like 'en-US' or 'ja-JP', to conveniently set
  * that locale immediately. Provide nothing, and reset the locale back to the
@@ -124,4 +124,4 @@ const updateLocale = function (locale) {
 	return newLocale;
 };
 
-export {updateLocale, isRtl, getI18NClasses};
+export {updateLocale, isRtl, getI18nClasses};

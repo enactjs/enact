@@ -1,11 +1,11 @@
 import React from 'react';
-import kind from 'enact-core/kind';
+import kind from '@enact/core/kind';
 
 import {ToggleItemBase} from '../ToggleItem';
 
 import css from './CheckboxItem.less';
 
-const CheckboxItem = kind({
+const CheckboxItemBase = kind({
 	name: 'CheckboxItem',
 
 	propTypes: ToggleItemBase.propTypes,
@@ -29,5 +29,5 @@ const CheckboxItem = kind({
 	)
 });
 
-export default CheckboxItem;
-export {CheckboxItem, CheckboxItem as CheckboxItemBase};
+export default CheckboxItemBase;
+export {CheckboxItemBase as CheckboxItem, CheckboxItemBase};

@@ -1,10 +1,10 @@
 {
-  "name": "enact-spotlight",
+  "name": "@enact/spotlight",
   "version": "1.0.0-alpha.1",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "echo \"No test suite\" && exit 0",
     "transpile": "enyo-transpile",
     "pack": "enyo-webpack",
     "pack-p": "enyo-webpack -p",
@@ -28,6 +28,7 @@
     "enyo-config": "enyojs/enyo-config"
   },
   "dependencies": {
+    "@enact/core": "^1.0.0-alpha.1",
     "ramda": "^0.22.1",
     "react": "^15.3.1"
   }

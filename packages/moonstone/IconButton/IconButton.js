@@ -1,4 +1,4 @@
-import kind from 'enact-core/kind';
+import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 
 import Button from '../Button';
@@ -6,7 +6,7 @@ import Icon from '../Icon';
 
 import css from './IconButton.less';
 
-const IconButton = kind({
+const IconButtonBase = kind({
 	name: 'IconButton',
 
 	propTypes: {
@@ -32,5 +32,5 @@ const IconButton = kind({
 	}
 });
 
-export default IconButton;
-export {IconButton, IconButton as IconButtonBase};
+export default IconButtonBase;
+export {IconButtonBase as IconButton, IconButtonBase};

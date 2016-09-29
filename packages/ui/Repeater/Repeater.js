@@ -1,15 +1,66 @@
-import R from 'ramda';
-import React, {PropTypes} from 'react';
-import kind from 'enact-core/kind';
+/**
+ * Exports the {@link module:@enact/ui/Repeater~Repeater} and {@link module:@enact/ui/Repeater~RepeaterBase}
+ * components.  The default export is {@link module:@enact/ui/Repeater~Repeater}. `Repeater` is stateless
+ * and is the same as `RepeaterBase`.
+ *
+ * @module @enact/ui/Repeater
+ */
 
-const Repeater = kind({
+import React, {PropTypes} from 'react';
+import kind from '@enact/core/kind';
+
+/**
+ * {@link module:@enact/ui/Repeater~RepeaterBase} is a stateless component that supports single-select of
+ * its child items via configurable properties and events.
+ *
+ * @class RepeaterBase
+ * @ui
+ * @public
+ */
+const RepeaterBase = kind({
 	name: 'Repeater',
 
 	propTypes: {
+		/**
+		 * Component type to repeat. This can be a React component or a string describing a DOM node (e.g. `'div'`)
+		 *
+		 * @type {Element}
+		 * @public
+		 */
+		childComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
+
+		/**
+		 * An array of data to be mapped onto the `childComponent`.  For example, an array of strings.
+		 *
+		 * @type {Array}
+		 * @public
+		 */
 		children: PropTypes.array.isRequired,
-		type: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
+
+		/**
+		 * The property on each `childComponent` that receives the data in `children`
+		 *
+		 * @type {String}
+		 * @default 'children'
+		 * @public
+		 */
 		childProp: PropTypes.string,
+
+		/**
+		 * The property on each `childComponent` that receives the index of the item in the Repeater
+		 *
+		 * @type {String}
+		 * @default 'data-index'
+		 * @public
+		 */
 		indexProp: PropTypes.string,
+
+		/**
+		 * An object containing properties to be passed to each child.
+		 *
+		 * @type {Object}
+		 * @public
+		 */
 		itemProps: PropTypes.object
 	},
 
@@ -20,22 +71,26 @@ const Repeater = kind({
 
 	computed: {
 		// eslint-disable-next-line react/display-name, react/prop-types
-		children: ({type: Type, children, childProp, indexProp, itemProps}) => {
+		children: ({childComponent: Component, children, childProp, indexProp, itemProps}) => {
 			return children.map((data, index) => {
 				const props = {...itemProps};
 				if (indexProp) props[indexProp] = index;
 				if (childProp) props[childProp] = data;
 
-				return <Type {...props} />;
+				return <Component {...props} />;
 			});
 		}
 	},
 
 	render: (props) => {
-		const rest = R.omit(['indexProp', 'childProp', 'itemProps', 'type'], props);
-		return <span {...rest} />;
+		delete props.childComponent;
+		delete props.childProp;
+		delete props.indexProp;
+		delete props.itemProps;
+
+		return <span {...props} />;
 	}
 });
 
-export default Repeater;
-export {Repeater, Repeater as RepeaterBase};
+export default RepeaterBase;
+export {RepeaterBase as Repeater, RepeaterBase};

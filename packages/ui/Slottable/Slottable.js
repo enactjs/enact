@@ -1,4 +1,10 @@
-import {kind, hoc} from 'enact-core';
+/**
+ * Exports the {@link module:@enact/ui/Slottable~Slottable} Higher-order Component (HOC).
+ *
+ * @module @enact/ui/Slottable
+ */
+
+import {kind, hoc} from '@enact/core';
 import R from 'ramda';
 import React from 'react';
 import warning from 'warning';
@@ -9,7 +15,7 @@ import warning from 'warning';
 // React warning.
 const cloneElement = (child, props, omit) => {
 	if (omit && R.has(omit, child.props)) {
-		return React.createElement(child.type, R.dissoc(omit, child.props), props);
+		return React.createElement(child.type, R.merge(R.dissoc(omit, child.props), props));
 	}
 
 	return child;
@@ -26,7 +32,7 @@ const distributeChild = (child, index, slots, props) => {
 		warning(hasUserSlot, 'The slot "%s" specified on %s does not exist', child.props.slot,
 			typeof child.type === 'string' ? child.type : (child.type.name || child.type.displayName || 'component')
 		);
-		c = hasUserSlot && cloneElement(child, null, {key: index}, 'slot');
+		c = hasUserSlot && cloneElement(child, {key: index}, 'slot');
 	} else if (hasSlot(slot = child.type.defaultSlot)) {
 		c = child;
 	} else if (hasSlot(slot = child.type)) {
@@ -73,6 +79,17 @@ const defaultConfig = {
 	slots: null
 };
 
+/**
+ * {@link module:@enact/ui/Slottable~Slottable} is a Higher-order Component that allows wrapped components to
+ * separate children into pre-designated 'slots'.  To use Slottable, you must configure it by passing in
+ * a config object with the `slots` member set to an array of slot names.  Any children whose
+ * `slot` or `defaultSlot` property matches a named slot or whose type matches a named slot will be placed
+ * into a property of the same name on the wrapped component.
+ *
+ * @class Slottable
+ * @ui
+ * @public
+ */
 const Slottable = hoc(defaultConfig, (config, Wrapped) => {
 	const slots = config.slots;
 	return kind({
