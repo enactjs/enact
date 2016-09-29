@@ -1,0 +1,20 @@
+@import '../styles/variables.less';
+@import '../styles/colors.less';
+
+.radioItem {
+	.dot {
+		width: (@moon-radio-item-indicator-size - 2 * @moon-radio-item-indicator-border);
+		height: (@moon-radio-item-indicator-size - 2 * @moon-radio-item-indicator-border);
+		border: solid @moon-radio-item-indicator-border @moon-spotlight-text-color;
+		border-radius: (@moon-radio-item-indicator-size / 2);
+		background-color: @moon-button-disabled-text-color;
+
+		&:not(.checked) {
+			visibility: visible;
+		}
+
+		&.checked {
+			background-color: @moon-accent;
+		}
+	}
+}

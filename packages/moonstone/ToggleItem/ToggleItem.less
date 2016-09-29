@@ -1,0 +1,25 @@
+// ToggleItem
+//
+
+.toggleItem {
+    display: block;
+
+    &.inline {
+        display: inline-block;
+    }
+
+
+    .icon {
+        margin-top: 0;
+        margin-bottom: 0;
+        margin-left: 0;
+
+        &:not(.checked) {
+            visibility: hidden;
+        }
+    }
+
+    input {
+        display: none;
+    }
+}

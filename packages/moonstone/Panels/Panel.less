@@ -1,0 +1,24 @@
+@import '../styles/variables.less';
+
+.panel {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	overflow: hidden;
+	padding: @moon-app-keepout @moon-spotlight-outset;
+	box-sizing: border-box;
+	display: flex;
+	flex-direction: column;
+
+	&:global(.enact-fit) {
+		height: auto;
+	}
+}
+
+.body {
+	position: relative;
+	padding-top: 12px;
+	z-index: 1;
+	flex: 1
+}
+

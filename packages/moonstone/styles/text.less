@@ -1,0 +1,223 @@
+@import './variables.less';
+@import './mixins.less';
+
+// mixin classes for create the moontone text classes
+.moon-text-base (@font-size) {
+	font-family: @moon-font-family;
+	font-weight: bold;
+	font-size: @font-size;
+}
+
+.moon-text-base (@font-size, @font-color) {
+	font-family: @moon-font-family;
+	font-weight: bold;
+	font-size: @font-size;
+	color: @font-color;
+}
+
+/* Text definitions */
+
+.moon-header-font() {
+	font-family: @moon-alt-font-family;
+}
+.moon-superscript() {
+	font-size: @moon-superscript-text-size;
+	vertical-align: top;
+	margin: 0 0 0 3px;
+	padding: 0;
+}
+.moon-pre-text() {
+	font-size: @moon-pre-text-size;
+	vertical-align: top;
+	height:  @moon-large-text-size;
+	line-height: @moon-pre-text-size;
+	margin: 12px 3px 9px 0;
+	padding: 0px;
+}
+.moon-large-text() {
+	font-size: @moon-large-text-size;
+	vertical-align: top;
+	height: @moon-large-text-size;
+	margin: 0;
+	padding: 0;
+}
+.moon-header-text() {
+	font-family: @moon-header-font-family;
+	font-weight: @moon-header-font-weight;
+	font-size: @moon-header-font-size;
+	font-style: @moon-header-font-style;
+	.font-kerning;
+}
+.moon-super-header-text() {
+	font-family: @moon-super-header-font-family;
+	font-size: @moon-super-header-font-size;
+	.font-kerning;
+}
+.moon-sub-header-text() {
+	.moon-text-base (@moon-sub-header-font-size);
+
+	.moon-small-header & {
+		font-size: @moon-small-header-sub-header-font-size;
+	}
+}
+.moon-header-sub-title-below() {
+	font-family: @moon-sub-header-below-font-family;
+	font-size: @moon-sub-header-below-font-size;
+}
+.moon-body-text() {
+	font-family: @moon-body-font-family;
+	font-weight: normal;
+	font-size: @moon-body-font-size;
+	color: @moon-body-text-color;
+	line-height: @moon-body-line-height;
+	a:link {color: @moon-spotlight-color; text-decoration:none;}
+	a:visited {color: @moon-spotlight-color; text-decoration:none;}
+	a:hover {color: @moon-spotlight-color; text-decoration:none;}
+	a:active {color: @moon-spotlight-color; text-decoration:none;}
+}
+.moon-body-large-text() {
+	font-size: @moon-body-font-size + 3;
+	line-height: @moon-body-line-height + 9;
+}
+.moon-bold-text() {
+	font-family: @moon-font-family-bold;
+	font-weight: bold;
+	font-size: @moon-body-font-size;
+	color: @moon-body-text-color;
+	line-height: @moon-body-line-height;
+	a:link {color: @moon-spotlight-color; text-decoration:none;}
+	a:visited {color: @moon-spotlight-color; text-decoration:none;}
+	a:hover {color: @moon-spotlight-color; text-decoration:none;}
+	a:active {color: @moon-spotlight-color; text-decoration:none;}
+}
+.moon-body-text-spacing() {
+	margin: 0 @moon-spotlight-outset @moon-grid-row-height @moon-spotlight-outset;
+}
+.moon-large-button-text() {
+	font-family: @moon-button-font-family;
+	font-weight: @moon-button-font-weight;
+	font-size: @moon-button-large-font-size;
+	.font-kerning;
+}
+.moon-small-button-text() {
+	font-family: @moon-button-font-family;
+	font-weight: @moon-button-font-weight;
+	font-size: @moon-button-small-font-size;
+	.font-kerning;
+}
+.moon-icon-text() {
+	font-family: @moon-icon-font-family;
+	font-weight: normal;
+	font-size: @moon-icon-font-size;
+	color: @moon-icon-color;
+}
+.moon-popup-header-text() {
+	font-family: @moon-popup-header-font-family;
+	font-size: @moon-popup-header-font-size;
+	.font-kerning;
+}
+.moon-dialog-title() {
+	.moon-popup-header-text();
+}
+.moon-dialog-sub-title() {
+	font-size: @moon-popup-sub-header-font-size;
+}
+.moon-dialog-content() {
+	font-size: @moon-popup-content-font-size;
+}
+.moon-divider-text() {
+	font-family: @moon-divider-font-family;
+	font-size: @moon-divider-font-size;
+	color: @moon-divider-text-color;
+}
+
+
+//
+// RIGBY NOTES:
+// This section presents a problem. It relies on selector override, since this section is, by nature,
+// an override of the previous rules.
+//
+// If the above rules are mixins, we need to make sure they can be correctly overridden using LESS.
+// LESS doesn't export mixins as real classnames, so overriding may not work the same. We'll need to
+// test this thuroughly to verify it's working correctly...
+//
+.enact-locale-non-latin {
+	// Medium weighted classes
+	.moon,
+	.moon input,
+	.moon textarea,
+	.moon .moon-button,
+	.moon-large-text,
+	.moon-header-text,
+	.moon-header-font,
+	.moon-popup-header-text,
+	.moon-super-header-text {
+		font-family: @moon-non-latin-font-family;
+	}
+
+	// Light weighted classes
+	.moon-body-text,
+	.moon-superscript,
+	.moon-pre-text {
+		font-family: @moon-non-latin-font-family-light;
+	}
+	// Bold weighted classes
+	.moon-sub-header-text,
+	.moon-divider-text,
+	.moon-bold-text,
+	.moon-large-button-text,
+	.moon-small-button-text {
+		font-family: @moon-non-latin-font-family-bold;
+	}
+
+	.moon {
+		font-size: @moon-non-latin-sub-header-font-size;
+	}
+	.moon-superscript {
+		font-size: @moon-non-latin-superscript-text-size;
+	}
+	.moon-pre-text {
+		font-size: @moon-non-latin-pre-text-size;
+	}
+	.moon-large-text {
+		font-size: @moon-non-latin-large-text-size;
+	}
+	.moon-header-text {
+		font-size: @moon-non-latin-header-font-size;
+		line-height: @moon-non-latin-header-text-line-height;
+	}
+	.moon-popup-header-text {
+		font-size: @moon-non-latin-popup-header-font-size;
+	}
+	.moon-sub-header-text,
+	.moon-small-header .moon-sub-header-text {
+		font-size: @moon-non-latin-sub-header-font-size;
+	}
+	.moon-super-header-text {
+		font-size: @moon-non-latin-super-header-font-size;
+	}
+	.moon-divider-text {
+		font-size: @moon-non-latin-divider-font-size;
+		font-style: normal;
+	}
+	.moon-body-text {
+		font-size: @moon-non-latin-body-font-size;
+		line-height: @moon-non-latin-body-line-height;
+	}
+	.moon-body-large-text {
+		font-size: @moon-non-latin-body-font-size + 3;
+		line-height: @moon-non-latin-body-line-height + 9;
+	}
+	.moon-bold-text {
+		font-size: @moon-non-latin-body-font-size;
+		line-height: @moon-non-latin-body-line-height;
+	}
+	.moon-large-button-text {
+		font-size: @moon-non-latin-button-large-font-size;
+		font-weight: normal;
+	}
+	.moon-small-button-text {
+		font-size: @moon-non-latin-button-small-font-size;
+		font-weight: normal;
+	}
+}

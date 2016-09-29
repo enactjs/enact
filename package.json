@@ -1,6 +1,6 @@
 {
-  "name": "enyo-lerna",
-  "version": "0.1.0",
+  "name": "enact",
+  "version": "1.0.0-alpha.1",
   "description": "Monorepo for all next-gen Enyo frontend libraries.",
   "homepage": "http://enyojs.com/",
   "bugs": "http://jira.enyojs.com/",
@@ -12,10 +12,14 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/enyojs/enyo-core.git"
+    "url": "git+https://github.com/enyojs/enact.git"
   },
   "private": true,
+  "scripts": {
+    "lerna": "lerna",
+    "bootstrap": "lerna bootstrap --concurrency 1"
+  },
   "devDependencies": {
-    "lerna": "2.0.0-beta.27"
+    "lerna": "2.0.0-beta.29"
   }
 }

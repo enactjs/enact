@@ -1,0 +1,148 @@
+// Picker
+//
+@import '../styles/colors.less';
+@import '../styles/variables.less';
+@import '../styles/text.less';
+@import '../styles/mixins.less';
+
+.picker {
+	@button-width: (@moon-button-height - 12);
+
+	display: inline-block;
+	border-radius: @button-width;
+	vertical-align: bottom;
+	position: relative;
+	direction: ltr;
+	text-align: center;
+
+	&:before {
+		.position(0);
+
+		content: '';
+		display: block;
+		position: absolute;
+		border: 0 solid rgba(0,0,0,0.2);
+		border-radius: inherit;
+	}
+
+	.valueWrapper {
+		overflow: hidden;
+		vertical-align: bottom;
+		color: inherit;
+	}
+
+	.incrementer,
+	.decrementer {
+		cursor: pointer;
+		margin: 0;
+		position: relative;
+		transition: transform 250ms;
+
+		&[disabled] {
+			cursor: default;
+		}
+	}
+
+	&.horizontal {
+		.incrementer {
+			float: right;
+		}
+		.decrementer {
+			float: left;
+		}
+		.valueWrapper {
+			display: inline-block;
+		}
+	}
+
+	&.joined {
+		background-color: @moon-button-background-color;
+		color: @moon-button-text-color;
+		margin: 0 @moon-spotlight-outset;
+
+		&.incrementing .incrementer,
+		&.decrementing .decrementer {
+			transform: scale(0.8);
+		}
+
+		.valueWrapper {
+			.moon-large-button-text();
+
+			height: @moon-button-height;
+			line-height: @moon-button-height;
+		}
+
+		&.horizontal {
+			&.incrementing:before {
+				border-right-width: @moon-integer-picker-shadow-width;
+			}
+			&.decrementing:before {
+				border-left-width: @moon-integer-picker-shadow-width;
+			}
+			.incrementer,
+			.decrementer {
+				width: @button-width;
+				height: @moon-button-height;
+				line-height: @moon-button-height;
+			}
+		}
+
+		&.vertical {
+			&.incrementing:before {
+				border-top-width: @moon-integer-picker-shadow-width;
+			}
+			&.decrementing:before {
+				border-bottom-width: @moon-integer-picker-shadow-width;
+			}
+			.valueWrapper {
+				padding: 0 1ex;
+			}
+			.incrementer,
+			.decrementer {
+				display: block;
+			}
+		}
+
+		&:global(.spottable):focus {
+			background-color: @moon-spotlight-border-color;
+			color: @moon-spotlight-text-color;
+		}
+	}
+
+	&:not(.joined) {
+		.valueWrapper {
+			.moon-body-text();
+
+			height: @moon-button-height;
+			line-height: @moon-button-height;
+			max-width: 300px;
+		}
+	}
+
+	&.small .valueWrapper {
+		width: 60px;
+	}
+	&.medium .valueWrapper {
+		width: 180px;
+	}
+	&.large .valueWrapper {
+		width: 300px;
+	}
+
+	&.small,
+	&.medium,
+	&.large {
+		.valueWrapper {
+			position: relative;
+
+			.item {
+				position: absolute;
+				.position(0);
+			}
+		}
+	}
+
+	&.vertical .valueWrapper {
+		display: block;
+	}
+}

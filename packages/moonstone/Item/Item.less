@@ -1,0 +1,18 @@
+// Item.less
+//
+@import '../styles/mixins.less';
+@import '../styles/colors.less';
+@import '../styles/variables.less';
+@import '../styles/text.less';
+
+.item {
+	.moon-text-base (@moon-item-font-size);
+
+	line-height: @moon-item-line-height;
+	padding: @moon-item-vertical-padding @moon-spotlight-outset;
+	position: relative;
+
+	:global(.enact-locale-non-latin) & {
+		.enact-locale-non-latin .moon-sub-header-text;
+	}
+}

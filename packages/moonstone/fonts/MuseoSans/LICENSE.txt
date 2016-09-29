@@ -1,0 +1,75 @@
+Museo Sans Font License
+
+Terms and Conditions for Use, Reproduction and Distribution
+
+1.  Definitions.
+
+“License” shall mean the terms and conditions for use, reproduction, and
+distribution of the Font Software as defined herein. "You" (or "Your") shall
+mean an individual or Legal Entity exercising rights and assuming obligations
+granted by this License.
+
+“LGSVL” shall mean LG Silicon Valley Lab, Division of Zenith Electronics, LLC.
+
+“Font Software” shall mean certain Font Software designs created by exljibris
+“Font Foundry (ELJ” or Licensor”) and licensed to LGSVL (with sublicense rights)
+“for implementation into consumer electronics products, applications, devices,
+“and other LG interactive products.
+
+“Enyo Applications” shall mean applications developed using the Enyo JavaScript
+“application framework
+
+2.  Grant of License.  LGSVL grants you a non-exclusive, perpetual, irrevocable,
+non- sublicensable, worldwide, fully paid-up license to use, reproduce, use,
+make use, display and distribute an unlimited number of units of the Font
+Software for the sole purpose of implementation into an unlimited number of
+units of Enyo Applications pursuant to the terms of this Agreement.
+
+3.  Embedding.  You may embed the Font Software in Enyo Applications either as a
+rasterized representation of the Font Software or as a subset of the Font
+Software so long as the Font Software as embedded in applications, products or
+devices is distributed in a secure format that permits only the viewing, but not
+the editing of the Fonts.
+
+4.  Back-up.  You may make back-up copies of the Font Software solely for
+archival purposes, provided that exclusive custody and control is retained over
+such copies.
+
+5.  Modifications.  Except as granted herein, you may not modify, reverse
+engineer, decompile, disassemble, alter, or attempt to discover the source code
+of the Font Software.
+
+6.  Restrictions.  This license is restricted for use with Enyo Applications
+
+7.  Ownership.  All copyrights, trademarks and other intellectual property
+rights in the Font Software belong exclusively to ELJ and are protected by U.S.
+copyright laws, the copyright and design laws of other nations, and by
+international treaties.   You shall obtain no ownership rights in the Font
+Software pursuant to this Agreement or otherwise.
+
+8.  Governing Law.  This Agreement shall be governed by the laws of the State of
+California, without regard to its conflict of laws provisions.  Each party
+agrees that any action or proceeding initiated by either party in connection
+with this Agreement shall be heard exclusively in state or federal courts
+located in Santa Clara County, California.
+
+9.  Disclaimer of Warranty.  Unless required by applicable law or agreed to in
+writing, Licensor provides the Font Software on an "AS IS" BASIS, WITHOUT
+WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied, including,
+without limitation, any warranties or conditions of TITLE, NON-INFRINGEMENT,
+MERCHANTABILITY, or FITNESS FOR A PARTICULAR PURPOSE. You are solely responsible
+for determining the appropriateness of using or redistributing the Font Software
+and assume any risks associated with Your exercise of permissions under this
+License.
+
+10. Limitation of Liability. In no event and under no legal theory, whether in
+tort (including negligence), contract, or otherwise, unless required by
+applicable law (such as deliberate and grossly negligent acts) or agreed to in
+writing, shall LGSVL or Licensor be liable to You for damages, including any
+direct, indirect, special, incidental, or consequential damages of any character
+arising as a result of this License or out of the use or inability to use the
+Font Software (including but not limited to damages for loss of goodwill, work
+stoppage, computer failure or malfunction, or any and all   other commercial
+damages or losses), even if LGSVL or Licensor has been advised of the
+possibility of such damages.
+

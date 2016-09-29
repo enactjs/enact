@@ -1,0 +1,25 @@
+// IncrementSlider
+//
+@import '../styles/variables.less';
+
+.incrementSlider {
+	position: relative;
+	margin: @moon-spotlight-outset;
+
+	.decrementButton,
+	.incrementButton {
+		position: absolute;
+		top: 0;
+	}
+	.decrementButton {
+		left: 0;
+	}
+	.incrementButton {
+		right: 0;
+	}
+
+	.slider {
+		margin-left: @moon-icon-button-small-size + @moon-spotlight-outset + 45px;
+		margin-right: @moon-icon-button-small-size + @moon-spotlight-outset + 45px;
+	}
+}
