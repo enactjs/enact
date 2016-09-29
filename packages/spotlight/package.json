@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"No test suite\" && exit 0",
+    "test": "enyo-karma start --single-run --browsers PhantomJS",
+    "test-json": "enyo-karma start --single-run --browsers PhantomJS --reporters json",
+    "test-watch": "enyo-karma start --browsers PhantomJS",
     "transpile": "enyo-transpile",
     "pack": "enyo-webpack",
     "pack-p": "enyo-webpack -p",
@@ -25,7 +27,7 @@
   },
   "license": "Apache-2.0",
   "devDependencies": {
-    "enyo-config": "enyojs/enyo-config"
+    "enyo-config": "enyojs/enyo-config#test-suite"
   },
   "dependencies": {
     "@enact/core": "1.0.0-alpha.1",

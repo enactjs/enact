@@ -158,4 +158,4 @@ const SpotlightFocusableDecoratorHoC = hoc(defaultConfig, (config, Wrapped) => {
 });
 
 export default SpotlightFocusableDecoratorHoC;
-export {SpotlightFocusableDecoratorHoC as SpotlightFocusableDecorator};
+export {SpotlightFocusableDecoratorHoC as SpotlightFocusableDecorator, focusableClass};
