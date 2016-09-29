@@ -29,6 +29,8 @@ const jobNames = {
 	emulateMouseUp: 'PickerCore.emulateMouseUp'
 };
 
+const emulateMouseEventsTimeout = 175;
+
 // Components
 const PickerCore = class extends React.Component {
 	static displayName = 'PickerCore'
@@ -268,17 +270,15 @@ const PickerCore = class extends React.Component {
 	handleIncDown = (ev) => this.handleDown('increment', ev)
 
 	handleWheel = (ev) => {
-		const {joined, onMouseUp} = this.props;
-		if (joined) {
-			if (ev.deltaY < 0) {
-				this.handleChange(1);
-				this.handleIncDown(ev);
-			} else {
-				this.handleChange(-1);
-				this.handleDecDown(ev);
-			}
-			jobs.startJob(jobNames.emulateMouseUp, onMouseUp, 350);
+		const {onMouseUp} = this.props;
+		if (ev.deltaY < 0) {
+			this.handleChange(1);
+			this.handleIncDown(ev);
+		} else {
+			this.handleChange(-1);
+			this.handleDecDown(ev);
 		}
+		jobs.startJob(jobNames.emulateMouseUp, onMouseUp, emulateMouseEventsTimeout);
 	}
 
 	determineClasses () {
@@ -333,7 +333,7 @@ const PickerCore = class extends React.Component {
 		}
 
 		return (
-			<div {...rest} className={classes} disabled={disabled} onWheel={this.handleWheel}>
+			<div {...rest} className={classes} disabled={disabled} onWheel={joined ? this.handleWheel : null}>
 				<span className={css.incrementer} disabled={incrementerDisabled} onClick={this.handleIncClick} onMouseDown={this.handleIncDown} onMouseUp={onMouseUp}>
 					<ButtonType disabled={incrementerDisabled}>{incrementIcon}</ButtonType>
 				</span>
