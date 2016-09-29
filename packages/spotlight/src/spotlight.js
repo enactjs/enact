@@ -533,16 +533,11 @@ const Spotlight = (function() {
 	}
 
 	function getContainerId (elem) {
-		let containerId;
 		for (let id in _containers) {
 			if (!_containers[id].selectorDisabled && matchSelector(elem, _containers[id].selector)) {
-				containerId = id;
-				if (id !== spotlightRootContainerName) {
-					break;
-				}
+				return id;
 			}
 		}
-		return containerId;
 	}
 
 	function getContainerNavigableElements (containerId) {
@@ -755,20 +750,6 @@ const Spotlight = (function() {
 			};
 
 			let nextContainerId = getContainerId(next);
-
-			if (_containers[nextContainerId].disabled) {
-				let nextContainerElements = containerNavigableElements[nextContainerId];
-				for (let i = 0, len = nextContainerElements.length; i < len; ++i) {
-					allNavigableElements.splice(allNavigableElements.indexOf(nextContainerElements[i]), 1);
-				}
-				next = navigate(
-					currentFocusedElement,
-					direction,
-					exclude(allNavigableElements, nextContainerElements),
-					config
-				);
-				nextContainerId = next ? getContainerId(next) : currentContainerId;
-			}
 
 			if (currentContainerId !== nextContainerId) {
 				let result = gotoLeaveFor(currentContainerId, direction);

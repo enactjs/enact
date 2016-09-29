@@ -28,12 +28,16 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	  		}
 		}
 
-		componentDidMount () {
+		componentWillMount () {
 			Spotlight.initialize();
 			Spotlight.add(spotlightRootContainerName, {
 				selector: '.' + spottableClass,
-				navigableFilter: this.navigableFilter
+				navigableFilter: this.navigableFilter,
+				restrict: 'none'
 			});
+		}
+
+		componentDidMount () {
 			Spotlight.focus();
 		}
 
