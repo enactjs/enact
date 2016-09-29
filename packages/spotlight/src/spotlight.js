@@ -854,7 +854,9 @@ const Spotlight = (function() {
 
 		SpotlightAccelerator.processKey(evt, onAcceleratedKeyDown);
 
-		preventDefault(evt);
+		if (_directions[keyCode]) {
+			preventDefault(evt);
+		}
 	}
 
 	function onMouseOver (evt) {
