@@ -2,7 +2,7 @@ import {configure, setAddon, addDecorator} from '@kadira/storybook';
 import infoAddon from '@kadira/react-storybook-addon-info';
 //import backgrounds from 'react-storybook-addon-backgrounds';
 import Moonstone from '../src/MoonstoneEnvironment';
-const req = require.context('../stories/moonstone-stories', true, /.js$/)
+const req = require.context('../stories/qa-stories', true, /.js$/)
 
 addDecorator(Moonstone);
 /* Disabling until background works.  TODO: Re-enable import here and in addons.js.

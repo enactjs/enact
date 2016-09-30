@@ -14,7 +14,7 @@
 
 
 ### Links
-[//]: # (Related isuses, refrences)
+[//]: # (Related issues, references)
 
 
 ### Comments
