@@ -3,7 +3,7 @@ node_js:
     - "node"
 sudo: false
 install:
-    - npm install -g enyojs/enact-dev#release/0.1.0
+    - npm install -g enyojs/enact-dev
     - npm install
     - npm run bootstrap
 script:
