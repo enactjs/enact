@@ -247,9 +247,11 @@ const PickerCore = class extends React.Component {
 		const {disabled, max, min, onChange, step, value, wrap} = this.props;
 		if (!disabled && onChange) {
 			const next = wrap ? wrapRange(min, max, value + (n * step)) : R.clamp(min, max, value + (n * step));
-			onChange({
-				value: next
-			});
+			if (next !== value) {
+				onChange({
+					value: next
+				});
+			}
 		}
 	}
 
