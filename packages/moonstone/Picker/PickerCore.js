@@ -164,11 +164,11 @@ const PickerCore = class extends React.Component {
 		/**
 		 * Which button (increment, decrement, or neither) is pressed
 		 *
-		 * @type {String|null}
+		 * @type {Number|null}
 		 * @public
 		 */
 		pressed: React.PropTypes.oneOfType([
-			React.PropTypes.string,
+			React.PropTypes.number,
 			React.PropTypes.bool
 		]),
 
@@ -243,10 +243,10 @@ const PickerCore = class extends React.Component {
 		return disabled || (!wrap && R.clamp(min, max, value + delta) === value);
 	}
 
-	handleChange = (n) => {
+	handleChange = (dir) => {
 		const {disabled, max, min, onChange, step, value, wrap} = this.props;
 		if (!disabled && onChange) {
-			const next = wrap ? wrapRange(min, max, value + (n * step)) : R.clamp(min, max, value + (n * step));
+			const next = wrap ? wrapRange(min, max, value + (dir * step)) : R.clamp(min, max, value + (dir * step));
 			if (next !== value) {
 				onChange({
 					value: next
@@ -259,29 +259,32 @@ const PickerCore = class extends React.Component {
 
 	handleIncClick = () => this.handleChange(1)
 
-	handleDown = (which, ev) => {
+	handleDown = (dir) => {
 		const {joined, onMouseDown} = this.props;
 		if (joined && onMouseDown) {
-			onMouseDown({pressed: which});
-			ev.stopPropagation();
+			onMouseDown({pressed: dir});
 		}
 	}
 
-	handleDecDown = (ev) => this.handleDown('decrement', ev)
+	handleDecDown = () => this.handleDown(-1)
 
-	handleIncDown = (ev) => this.handleDown('increment', ev)
+	handleIncDown = () => this.handleDown(1)
 
 	handleWheel = (ev) => {
 		const {onMouseUp} = this.props;
-		jobs.stopJob(jobNames.emulateMouseUp);
-		if (ev.deltaY < 0) {
-			this.handleChange(1);
-			this.handleIncDown(ev);
-		} else {
-			this.handleChange(-1);
-			this.handleDecDown(ev);
+		const dir = Math.sign(ev.deltaY);
+
+		// We'll sometimes get a 0/-0 wheel event we need to ignore
+		if (dir) {
+			// fire the onChange event
+			this.handleChange(dir);
+			// simulate mouse down
+			this.handleDown(dir);
+			// set a timer to simulate the mouse up
+			jobs.startJob(jobNames.emulateMouseUp, onMouseUp, emulateMouseEventsTimeout);
+			// prevent the default scroll behavior to avoid bounce back
+			ev.preventDefault();
 		}
-		jobs.startJob(jobNames.emulateMouseUp, onMouseUp, emulateMouseEventsTimeout);
 	}
 
 	determineClasses () {
@@ -291,8 +294,8 @@ const PickerCore = class extends React.Component {
 			css[orientation],
 			css[width],
 			joined ? css.joined : null,
-			!this.isButtonDisabled(step * -1) && pressed === 'decrement' ? css.decrementing : null,
-			!this.isButtonDisabled(step) && pressed === 'increment' ? css.incrementing : null,
+			!this.isButtonDisabled(step * -1) && pressed === -1 ? css.decrementing : null,
+			!this.isButtonDisabled(step) && pressed === 1 ? css.incrementing : null,
 			this.props.className
 		].join(' ');
 	}
@@ -317,6 +320,7 @@ const PickerCore = class extends React.Component {
 		delete rest.max;
 		delete rest.min;
 		delete rest.onChange;
+		delete rest.onMouseDown;
 		delete rest.pressed;
 		delete rest.reverseTransition;
 		delete rest.value;
