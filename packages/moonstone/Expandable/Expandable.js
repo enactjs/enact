@@ -1,5 +1,5 @@
-import {kind, hoc} from 'enact-core';
-import Transition from 'enact-ui/Transition';
+import {kind, hoc} from '@enact/core';
+import Transition from '@enact/ui/Transition';
 import React, {PropTypes} from 'react';
 
 import LabeledItem from '../LabeledItem';

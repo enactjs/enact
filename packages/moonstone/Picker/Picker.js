@@ -1,4 +1,4 @@
-import kind from 'enact-core/kind';
+import kind from '@enact/core/kind';
 import React from 'react';
 
 import PickerCore from './PickerCore';

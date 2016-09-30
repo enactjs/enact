@@ -1,5 +1,7 @@
 import React from 'react';
 import {shallow, mount} from 'enzyme';
+import sinon from 'sinon';
+
 import Pressable from '../Pressable';
 
 describe('Pressable Specs', () => {
@@ -140,4 +142,19 @@ describe('Pressable Specs', () => {
 
 		expect(actual).to.equal(expected);
 	});
+
+	it('should call event handlers from props', function () {
+		const handleRelease = sinon.spy();
+		const handleDepress = sinon.spy();
+
+		const Component = Pressable({prop: 'data-pressed'}, 'div');
+		const wrapped = shallow(<Component onMouseUp={handleRelease} onMouseDown={handleDepress} />);
+
+		wrapped.find('div').simulate('mousedown', {});
+		wrapped.find('div').simulate('mouseup', {});
+
+		expect(handleRelease.calledOnce).to.equal(true);
+		expect(handleDepress.calledOnce).to.equal(true);
+	});
+
 });

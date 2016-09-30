@@ -1,4 +1,4 @@
-import hoc from 'enact-core/hoc';
+import hoc from '@enact/core/hoc';
 import R from 'ramda';
 import React, {PropTypes} from 'react';
 
@@ -6,15 +6,68 @@ import Spotlight from './spotlight';
 import {decoratedProp} from './spottable';
 
 const defaultConfig = {
+	/**
+	 * Configures the prop name to pass the callback to request a focus change
+	 *
+	 * @type {String}
+	 * @default 'onKeyDown'
+	 */
 	keyDown: 'onKeyDown',
+
+	/**
+	 * Configures the prop name to pass the callback due to gaining focus
+	 *
+	 * @type {String}
+	 * @default 'onFocus'
+	 */
 	focus: 'onFocus',
+
+	/**
+	 * Configures the prop name to pass the callback due to losing focus
+	 *
+	 * @type {String}
+	 * @default 'onBlur'
+	 */
 	blur: 'onBlur',
+
+	/**
+	 * Whether or not the component should respond to "enter" keypresses and update the
+	 * focus state accordingly.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @public
+	 */
 	useEnterKey: false,
+
+	/**
+	 * Whether or not the component should pause Spotlight due to a focus change
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @public
+	 */
 	pauseSpotlightOnFocus: false
 };
 
 const focusableClass = 'focused';
 
+/**
+ * Constructs a Higher-order Component that allows Spotlight to to change the style
+ * of an outer-control based on the focus state of a spottable inner-control.
+ *
+ * @example
+ *	const DefaultFocusComponent = SpotlightFocusableDecorator(Component);
+ *	const PausableFocusComponent = SpotlightFocusableDecorator(
+ *		{pauseSpotlightOnFocus: true},
+ *		Component
+ *	);
+ *
+ * @param  {Object} defaultConfig Set of default configuration parameters
+ * @param  {Function} Higher-order component
+ *
+ * @returns {Function} SpotlightFocusableDecoratorHoC
+ */
 const SpotlightFocusableDecoratorHoC = hoc(defaultConfig, (config, Wrapped) => {
 	return class SpotlightFocusableDecorator extends React.Component {
 		static propTypes = {

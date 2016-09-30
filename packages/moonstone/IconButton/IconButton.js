@@ -1,4 +1,4 @@
-import kind from 'enact-core/kind';
+import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 
 import Button from '../Button';
@@ -17,6 +17,10 @@ const IconButtonBase = kind({
 	styles: {
 		css,
 		className: 'iconButton'
+	},
+
+	computed: {
+		className: ({small, styler}) => styler.append({small})
 	},
 
 	render: ({children, small, ...rest}) => {

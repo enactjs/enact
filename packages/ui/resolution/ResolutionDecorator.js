@@ -1,11 +1,11 @@
 /**
- * Exports the {@link module:enact-ui/resolution~ResolutionDecorator} Higher-order Component (HOC).
+ * Exports the {@link module:@enact/ui/resolution~ResolutionDecorator} Higher-order Component (HOC).
  *
- * @module enact-ui/resolution/ResolutionDecorator
+ * @module @enact/ui/resolution/ResolutionDecorator
  */
 
 import React from 'react';
-import hoc from 'enact-core/hoc';
+import hoc from '@enact/core/hoc';
 
 import {init, defineScreenTypes, getScreenTypeObject, getResolutionClasses} from './resolution';
 
@@ -77,7 +77,7 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		render () {
 			// ensure we've initialized the RI members
-			if (this.state && !this.state.screenType) init();
+			if (!this.state || !this.state.screenType) init();
 
 			let classes = getResolutionClasses();
 			if (this.props.className) classes += (classes ? ' ' : '') + this.props.className;

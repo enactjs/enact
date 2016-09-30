@@ -1,8 +1,8 @@
 /**
- * Exports a number of pre-defined arrangers for use with {@link module:enact-ui/ViewManager}.
+ * Exports a number of pre-defined arrangers for use with {@link module:@enact/ui/ViewManager}.
  *
  * @public
- * @module enact-ui/ViewManager/Arranger
+ * @module @enact/ui/ViewManager/Arranger
  */
 
 import React from 'react';

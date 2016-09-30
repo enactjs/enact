@@ -1,5 +1,3 @@
-/* globals describe, it, expect */
-
 import React from 'react';
 import sinon from 'sinon';
 import {shallow} from 'enzyme';
@@ -35,6 +33,20 @@ describe('Pickable Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
+	it('should not pass \'value\' with configured \'prop\'', function () {
+		const prop = 'id';
+		const Component = Pickable({prop: prop}, 'div');
+		const subject = shallow(
+			<Component defaultId={testValue} />
+		);
+		const wrapped = subject.find('div');
+
+		const expected = void 0;
+		const actual = wrapped.prop('value');
+
+		expect(actual).to.equal(expected);
+	});
+
 	it('should pass \'onChange\' handler to the wrapped component', function () {
 		const Component = Pickable('div');
 		const subject = shallow(
@@ -48,9 +60,9 @@ describe('Pickable Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should invoke \'onChange\' handler', function() {
+	it('should invoke \'onChange\' handler', function () {
 		const handleChange = sinon.spy();
-		const Component = Pickable('div');
+		const Component = Pickable({prop: 'data-value'}, 'div');
 		const subject = shallow(
 			<Component onChange={handleChange} />
 		);
@@ -72,6 +84,38 @@ describe('Pickable Specs', () => {
 
 		const expected = true;
 		const actual = (typeof wrapped.prop(handle) === 'function');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should not allow new props to change value when not mutable', function () {
+		const Component = Pickable('div');
+		const subject = shallow(
+			<Component defaultValue={testValue} />
+		);
+
+		subject.setProps({value: testValue + 1});
+
+		const wrapped = subject.find('div');
+
+		const expected = testValue;
+		const actual = wrapped.prop('value');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should allow new props to change value when mutable', function () {
+		const Component = Pickable({mutable: true}, 'div');
+		const subject = shallow(
+			<Component defaultValue={testValue} />
+		);
+
+		subject.setProps({value: testValue + 1});
+
+		const wrapped = subject.find('div');
+
+		const expected = testValue + 1;
+		const actual = wrapped.prop('value');
 
 		expect(actual).to.equal(expected);
 	});

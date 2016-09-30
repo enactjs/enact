@@ -9,8 +9,12 @@
  * Licensed under the MPL license.
  */
 
+import R from 'ramda';
+import Accelerator from '@enact/core/Accelerator';
+
 const spotlightRootContainerName = 'spotlightRootDecorator';
-const Spotlight = (function () {
+const SpotlightAccelerator = new Accelerator();
+const Spotlight = (function() {
 	'use strict';
 
 	/**
@@ -53,6 +57,8 @@ const Spotlight = (function () {
 		'right': 'left',
 		'down': 'up'
 	};
+
+	const _enterKeyCodes = [13, 16777221];
 
 	const _containerPrefix = 'container-';
 
@@ -794,24 +800,14 @@ const Spotlight = (function () {
 		return false;
 	}
 
-	function onKeyDown (evt) {
-		if (!_containerCount || _pause) {
-			return;
-		}
+	function preventDefault(evt) {
+		evt.preventDefault();
+		evt.stopPropagation();
+		return false;
+	}
 
-		let currentFocusedElement;
-		let preventDefault = function () {
-			evt.preventDefault();
-			evt.stopPropagation();
-			return false;
-		};
-
-		let direction = _directions[evt.keyCode];
-		if (!direction) {
-			return;
-		}
-
-		currentFocusedElement = getCurrent();
+	function onAcceleratedKeyDown(evt) {
+		let currentFocusedElement = getCurrent();
 
 		if (!currentFocusedElement) {
 			if (_lastContainerId) {
@@ -819,20 +815,48 @@ const Spotlight = (function () {
 			}
 			if (!currentFocusedElement) {
 				focusContainer();
-				return preventDefault();
+				return preventDefault(evt);
 			}
 		}
 
-		let currentContainerId = getContainerId(currentFocusedElement);
+		const currentContainerId = getContainerId(currentFocusedElement);
 		if (!currentContainerId) {
 			return;
 		}
 
-		if (!spotNext(direction, currentFocusedElement, currentContainerId)) {
-			focusElement(currentFocusedElement, currentContainerId);
+		if (!spotNext(_directions[evt.keyCode], currentFocusedElement, currentContainerId)) {
+			focusElement(currentFocusedElement, currentContainerId)
+		}
+	}
+
+	function onKeyUp(evt) {
+		if (!_containerCount || _pause) {
+			return;
 		}
 
-		return preventDefault();
+		const keyCode = evt.keyCode;
+		if (!_directions[keyCode] && !R.contains(keyCode, _enterKeyCodes)) {
+			return;
+		}
+
+		SpotlightAccelerator.reset();
+	}
+
+	function onKeyDown(evt) {
+		if (!_containerCount || _pause) {
+			return;
+		}
+
+		const keyCode = evt.keyCode;
+		if (!_directions[keyCode] && !R.contains(keyCode, _enterKeyCodes)) {
+			return;
+		}
+
+		SpotlightAccelerator.processKey(evt, onAcceleratedKeyDown);
+
+		if (_directions[keyCode]) {
+			preventDefault(evt);
+		}
 	}
 
 	function onMouseOver (evt) {
@@ -841,12 +865,7 @@ const Spotlight = (function () {
 		}
 
 		let target = getNavigableTarget(evt.target), // account for child controls
-			current = getCurrent(),
-			preventDefault = function () {
-				evt.preventDefault();
-				evt.stopPropagation();
-				return false;
-			};
+			current = getCurrent();
 
 		if (!target) { // we are moving over a non-focusable element, so we force a blur to occur
 			if (current) {
@@ -854,7 +873,7 @@ const Spotlight = (function () {
 			}
 		} else if (target !== getCurrent()) { // moving over a focusable element
 			focusElement(target, getContainerId(target));
-			preventDefault();
+			preventDefault(evt);
 		}
 	}
 
@@ -881,6 +900,7 @@ const Spotlight = (function () {
 		initialize: function () {
 			if (!_initialized) {
 				window.addEventListener('keydown', onKeyDown);
+				window.addEventListener('keyup', onKeyUp);
 				window.addEventListener('mouseover', onMouseOver);
 				_initialized = true;
 			}
@@ -888,6 +908,7 @@ const Spotlight = (function () {
 
 		terminate: function () {
 			window.removeEventListener('keydown', onKeyDown);
+			window.removeEventListener('keyup', onKeyUp);
 			window.removeEventListener('mouseover', onMouseOver);
 			Spotlight.clear();
 			_ids = 0;

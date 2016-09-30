@@ -1,5 +1,5 @@
 import easing from 'eases/cubic-out';
-import {ease, replaceTransform, startAfter} from 'enact-ui/ViewManager/arrange';
+import {ease, replaceTransform, startAfter} from '@enact/ui/ViewManager/arrange';
 
 /**
  * Panel arrangers have a unique design requirement that varies their transition depending on the

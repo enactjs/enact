@@ -1,10 +1,10 @@
-import kind from 'enact-core/kind';
+import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 
 import Expandable from '../Expandable';
 import Item from '../Item';
 
-import {Spottable} from 'enact-spotlight';
+import {Spottable} from '@enact/spotlight';
 
 const SpottableDiv = Spottable('div');
 

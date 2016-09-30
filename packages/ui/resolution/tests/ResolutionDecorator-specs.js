@@ -4,15 +4,14 @@ import ResolutionDecorator from '../ResolutionDecorator';
 
 describe('ResolutionDecorator Specs', () => {
 
-	it.skip('should apply resolution classes to the wrapped component', function () {
+	it('should apply resolution classes to the wrapped component', function () {
 		const Component = ResolutionDecorator('div');
 		const subject = shallow(
 			<Component />
 		);
-		const wrapped = subject.find('div');
 
 		const expected = true;
-		const actual = (wrapped.hasClass('enact-res-standard') && (wrapped.hasClass('enact-orientation-landscape') || wrapped.hasClass('enact-orientation-portrait')));
+		const actual = (subject.hasClass('enact-res-standard') && (subject.hasClass('enact-orientation-landscape') || subject.hasClass('enact-orientation-portrait')));
 
 		expect(actual).to.equal(expected);
 	});

@@ -1,12 +1,13 @@
 /**
- * Exports the {@link module:enact-ui/Pickable~Pickable} Higher-order Component (HOC).
+ * Exports the {@link module:@enact/ui/Pickable~Pickable} Higher-order Component (HOC).
  *
- * @module enact-ui/Pickable
+ * @module @enact/ui/Pickable
  */
 
+import {forward} from '@enact/core/handle';
+import hoc from '@enact/core/hoc';
+import {cap} from '@enact/core/util';
 import React from 'react';
-import hoc from 'enact-core/hoc';
-import {cap} from 'enact-core/util';
 
 const defaultConfig = {
 	/**
@@ -40,7 +41,7 @@ const defaultConfig = {
 };
 
 /**
- * {@link module:enact-ui/Pickable~Pickable} is a Higher-order Component that applies a 'Pickable' behavior
+ * {@link module:@enact/ui/Pickable~Pickable} is a Higher-order Component that applies a 'Pickable' behavior
  * to its wrapped component.  Its default event and value properties can be configured when applied to a component.
  * In addition, it supports `mutable` config setting that allows the HOC to accept incoming settings for the `prop`.
  *
@@ -52,8 +53,9 @@ const defaultConfig = {
  * @public
  */
 const PickableHOC = hoc(defaultConfig, (config, Wrapped) => {
-	const {mutable, prop} = config;
+	const {mutable, prop, pick} = config;
 	const defaultPropKey = 'default' + cap(prop);
+	const forwardPick = forward(pick);
 
 	return class Pickable extends React.Component {
 		static propTypes = {
@@ -84,33 +86,30 @@ const PickableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 			const key = (mutable && prop in props) ? prop : defaultPropKey;
-			const value = this.value = props[key];
+			const value = props[key];
 			this.state = {value};
 		}
 
 		componentWillReceiveProps (nextProps) {
 			if (mutable) {
-				this.value = nextProps[prop];
-			} else {
-				this.value = this.state.value;
+				const value = nextProps[prop];
+				this.setState({value});
 			}
 		}
 
 		pick = (ev) => {
-			const value = this.value = ev[config.prop];
-			const onPick = this.props[config.pick];
-
+			const value = ev[prop];
 			this.setState({value});
-			if (onPick) onPick(ev);
+			forwardPick(ev, this.props);
 		}
 
 		render () {
 			const props = Object.assign({}, this.props);
-			props[config.pick] = this.pick;
-			props[config.prop] = this.state.value;
+			if (pick) props[pick] = this.pick;
+			if (prop) props[prop] = this.state.value;
 			delete props[defaultPropKey];
 
-			return <Wrapped {...props} value={this.value} />;
+			return <Wrapped {...props} />;
 		}
 	};
 });

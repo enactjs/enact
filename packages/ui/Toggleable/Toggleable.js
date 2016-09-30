@@ -1,12 +1,13 @@
 /**
- * Exports the {@link module:enact-ui/Toggleable~Toggleable} Higher-order Component (HOC).
+ * Exports the {@link module:@enact/ui/Toggleable~Toggleable} Higher-order Component (HOC).
  *
- * @module enact-ui/Toggleable
+ * @module @enact/ui/Toggleable
  */
 
+import {forward} from '@enact/core/handle';
+import hoc from '@enact/core/hoc';
+import {cap} from '@enact/core/util';
 import React from 'react';
-import hoc from 'enact-core/hoc';
-import {cap} from 'enact-core/util';
 
 const defaultConfig = {
 
@@ -28,7 +29,7 @@ const defaultConfig = {
 };
 
 /**
- * {@link module:enact-ui/Toggleable~Toggleable} is a Higher-order Component that applies a 'Toggleable' behavior
+ * {@link module:@enact/ui/Toggleable~Toggleable} is a Higher-order Component that applies a 'Toggleable' behavior
  * to its wrapped component.  Its default event and property can be configured when applied to a component.
  *
  * By default, Toggleable applies the `selected` property on click events.
@@ -38,7 +39,9 @@ const defaultConfig = {
  * @public
  */
 const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
-	const defaultPropKey = 'default' + cap(config.prop);
+	const {toggle, prop} = config;
+	const defaultPropKey = 'default' + cap(prop);
+	const forwardToggle = forward(toggle);
 
 	return class Toggleable extends React.Component {
 		static propTypes = {
@@ -73,17 +76,16 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		onToggle = (ev) => {
-			const handler = this.props[config.toggle];
 			if (!this.props.disabled) {
 				this.setState({selected: !this.state.selected});
-				if (handler) handler(ev);
 			}
+			forwardToggle(ev, this.props);
 		}
 
 		render () {
 			const props = Object.assign({}, this.props);
-			props[config.toggle] = this.onToggle;
-			props[config.prop] = this.state.selected;
+			if (toggle) props[toggle] = this.onToggle;
+			if (prop) props[prop] = this.state.selected;
 			delete props[defaultPropKey];
 
 			return <Wrapped {...props} />;
