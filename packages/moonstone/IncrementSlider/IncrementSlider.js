@@ -2,6 +2,7 @@ import kind from '@enact/core/kind';
 import {throttleJob} from '@enact/core/jobs';
 import {Spottable} from '@enact/spotlight';
 import Pressable from '@enact/ui/Pressable';
+import {checkDefaultBounds} from '@enact/ui/validators/PropTypeValidators';
 import R from 'ramda';
 import React, {PropTypes} from 'react';
 
@@ -15,12 +16,91 @@ const IncrementSliderBase = kind({
 	name: 'IncrementSlider',
 
 	propTypes : {
-		...SliderBase.propTypes,
-		onDecrement: PropTypes.func,
-		onIncrement: PropTypes.func
+		/**
+		* Sets the background progress as a percentage.
+		*
+		* @type {Number}
+		* @default 0
+		* @public
+		*/
+		backgroundPercent: PropTypes.number,
+
+		/**
+		 * Sets the height, in standard CSS units, of the vertical increment slider. Only takes
+		 * effect on a vertical oriented slider.
+		 *
+		 * @type {String}
+		 * @default '300px'
+		 * @public
+		 */
+		height: PropTypes.string,
+
+		/**
+		* The maximum value of the increment slider.
+		*
+		* @type {Number}
+		* @default 100
+		* @public
+		*/
+		max: PropTypes.number,
+
+		/**
+		* The minimum value of the increment slider.
+		*
+		* @type {Number}
+		* @default 0
+		* @public
+		*/
+		min: PropTypes.number,
+
+		/**
+		 * The handler to run when the value is changed.
+		 *
+		 * @type {Function}
+		 * @default () => {}
+		 * @public
+		 */
+		onChange: PropTypes.func,
+
+		/**
+		* The amount to increment or decrement the value.
+		*
+		* @type {Number}
+		* @default 1
+		* @public
+		*/
+		step: PropTypes.number,
+
+		/**
+		* Sets the value of the increment slider.
+		*
+		* @type {Number}
+		* @default 0
+		* @public
+		*/
+		value: checkDefaultBounds,
+
+		/**
+		* If `true` the increment slider will be oriented vertically.
+		*
+		* @type {Boolean}
+		* @default false
+		* @public
+		*/
+		vertical: PropTypes.bool
 	},
 
-	defaultProps: SliderBase.defaultProps,
+	defaultProps: {
+		backgroundPercent: 0,
+		height: '300px',
+		max: 100,
+		min: 0,
+		onChange: () => {},
+		pressed: false,
+		step: 1,
+		value: 0,
+		vertical: false
+	},
 
 	styles: {
 		css: css,

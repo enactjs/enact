@@ -10,14 +10,66 @@ const ToggleItemBase = kind({
 	name: 'ToggleItem',
 
 	propTypes: {
+		/**
+		 * The string value to be displayed as the main content of the toggle item.
+		 *
+		 * @type {String}
+		 * @public
+		 */
 		children: PropTypes.string.isRequired,
+
+		/**
+		 * Applies a "checked" visual state to the radio item.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
 		checked: PropTypes.bool,
+
+		/**
+		 * Applies a disabled visual state to the radio item.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
 		disabled: PropTypes.bool,
-		icon: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-		iconClasses: PropTypes.string,
+
+		/**
+		 * Applies inline styling to the radio item.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
 		inline: PropTypes.bool,
+
+		/**
+		 * The handler to run when the radio item is toggled.
+		 *
+		 * @type {Function}
+		 * @default () => {}
+		 * @public
+		 */
 		onToggle: PropTypes.func,
+
+		/**
+		 * The value that will be sent to the `onToggle` handler.
+		 *
+		 * @type {String|Number}
+		 * @default ''
+		 * @public
+		 */
 		value: PropTypes.any
+	},
+
+	defaultProps: {
+		checked: false,
+		disabled: false,
+		inline: false,
+		onToggle: () => {},
+		value: ''
 	},
 
 	styles: {
