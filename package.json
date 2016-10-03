@@ -21,6 +21,6 @@
     "postinstall": "node ./scripts/npm-bootstrap.js"
   },
   "devDependencies": {
-    "lerna": "2.0.0-beta.29"
+    "lerna": "2.0.0-beta.30"
   }
 }
