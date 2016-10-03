@@ -123,9 +123,9 @@ import kind from 'enact-core/kind';
 import {SpotlightContainerDecorator} from 'enact-spotlight';
 const Container = SpotlightContainerDecorator(kind({
 	name: 'Container',
-	render: ({className, ...rest}) => {
+	render: (props) => {
 		return (
-			<div className={className}>
+			<div {...props}>
 				{/* A list of spottable controls */}
 			</div>
 		);
@@ -135,6 +135,25 @@ const Container = SpotlightContainerDecorator(kind({
 
 In a way, containers may be thought of as the branches--and spottable controls
 as the leaves--of the Spotlight navigation tree.
+
+A special `data-container-disabled` attribute may be applied to the container's
+node to temporarily disable the specified container's spottable controls:
+
+```javascript
+import kind from 'enact-core/kind';
+import {SpotlightContainerDecorator} from 'enact-spotlight';
+const Container = SpotlightContainerDecorator(kind({
+	name: 'Container',
+	render: (props) => {
+		return (
+			<div {...props} data-container-disabled>
+				{/* A list of spottable controls */}
+			</div>
+		);
+	}
+}));
+```
+
 
 <a name="8"></a>
 ## 8. Focusable
@@ -199,16 +218,6 @@ events.
 ```javascript
 import Spotlight from 'enact-spotlight';
 ```
-
-#### `Spotlight.disable(containerId)` ####
-+ `containerId`: (optional) String
-
-May be used to temporarily disable the specified container's spottable controls.
-
-#### `Spotlight.enable(containerId)` ####
-+ `containerId`: (optional) String
-
-Enables the specified container's spottable controls.
 
 #### `Spotlight.pause()` ####
 Temporarily pauses Spotlight until `resume()` is called.

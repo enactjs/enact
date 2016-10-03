@@ -46,10 +46,24 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 
+		navigableFilter = (elem) => {
+			let containerId;
+			while (elem && elem !== document && elem.nodeType === 1) {
+				containerId = elem.getAttribute('data-container-id');
+				if (containerId
+						&& containerId != this.state.containerId
+						&& elem.getAttribute('data-container-disabled') == 'true') {
+
+					return false;
+				}
+				elem = elem.parentNode;
+			}
+		}
+
 		componentWillMount () {
 			const containerId = Spotlight.add(),
-				selector = '.' + containerId + ' .' + spottableClass,
-				cfg = Object.assign({}, config, {selector: selector});
+				selector = '[data-container-id="' + containerId + '"]:not([data-container-disabled="true"]) .' + spottableClass,
+				cfg = Object.assign({}, config, {selector, navigableFilter: this.navigableFilter});
 
 			Spotlight.set(containerId, cfg);
 			this.setState({containerId: containerId});
@@ -61,13 +75,9 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		render () {
 			const containerId = this.state.containerId,
-				props = Object.assign({}, this.props, {containerId});
+				props = Object.assign({}, this.props);
 
-			if (props.className) {
-				props.className += ' ' + containerId;
-			} else {
-				props.className = containerId;
-			}
+			props['data-container-id'] = containerId;
 
 			return <Wrapped {...props} />;
 		}

@@ -1,8 +1,10 @@
 import {kind, hoc} from '@enact/core';
 import Transition from '@enact/ui/Transition';
+import {SpotlightContainerDecorator} from '@enact/spotlight';
 import React, {PropTypes} from 'react';
 
 import LabeledItem from '../LabeledItem';
+import ExpandableContainer from './ExpandableContainer';
 
 const defaultConfig = {
 	open: null,
@@ -20,6 +22,8 @@ const wrapMethod = (method, handler, props) => {
 		};
 	}
 };
+
+const TransitionContainer = SpotlightContainerDecorator(Transition);
 
 const Expandable = hoc(defaultConfig, (config, Wrapped) => kind({
 	name: 'Expandable',
@@ -152,16 +156,16 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => kind({
 		wrapMethod(config.toggle, onToggle, rest);
 
 		return (
-			<div style={style} disabled={disabled}>
+			<ExpandableContainer style={style} disabled={disabled} open={open}>
 				<LabeledItem
 					disabled={disabled}
 					label={determinedLabel}
 					onClick={handleOpen}
 				>{title}</LabeledItem>
-				<Transition visible={open} duration="short" type="clip">
+				<TransitionContainer data-container-disabled={!open} visible={open} duration="short" type="clip">
 					<Wrapped {...rest} disabled={disabled} />
-				</Transition>
-			</div>
+				</TransitionContainer>
+			</ExpandableContainer>
 		);
 	}
 }));
