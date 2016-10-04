@@ -18,6 +18,7 @@ const ToggleItemBase = kind({
 		 * @public
 		 */
 		children: PropTypes.string.isRequired,
+
 		/**
 		 * Value of checked property. True will show checked icon, false will not
 		 *
@@ -25,6 +26,7 @@ const ToggleItemBase = kind({
 		 * @public
 		 */
 		checked: PropTypes.bool,
+
 		/**
 		 * When `true`, the ToggleItem is shown as disabled and does not
 		 * generate tap events.
@@ -33,6 +35,7 @@ const ToggleItemBase = kind({
 		 * @public
 		 */
 		disabled: PropTypes.bool,
+
 		/**
 		 * Icon property accepts a string or an Icon Element. This is the icon that
 		 * will display when checked.
@@ -41,6 +44,7 @@ const ToggleItemBase = kind({
 		 * @public
 		 */
 		icon: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+
 		/**
 		 * CSS classes for Icon
 		 *
@@ -48,6 +52,7 @@ const ToggleItemBase = kind({
 		 * @public
 		 */
 		iconClasses: PropTypes.string,
+
 		/**
 		 * Display component inline
 		 *
@@ -55,6 +60,7 @@ const ToggleItemBase = kind({
 		 * @public
 		 */
 		inline: PropTypes.bool,
+
 		/**
 		 * Function that fires onToggle event/callback.
 		 *
@@ -62,6 +68,7 @@ const ToggleItemBase = kind({
 		 * @public
 		 */
 		onToggle: PropTypes.func,
+
 		/**
 		 * Value is a property that gets sent on an onToggle event.
 		 *
@@ -95,12 +102,12 @@ const ToggleItemBase = kind({
 		}
 	},
 
-	render: ({children, icon, onToggle, ...rest}, context) => {
+	render: ({children, icon, onToggle, ...rest}, {rtl}) => {
 		delete rest.iconClasses;
 		delete rest.inline;
 
 		return (
-			<Item {...rest} onClick={onToggle} style={{direction: context.rtl ? 'rtl' : 'ltr'}}>
+			<Item {...rest} onClick={onToggle} style={{direction: rtl ? 'rtl' : 'ltr'}}>
 				{icon}
 				{children}
 			</Item>

@@ -74,7 +74,7 @@ const locales = [
  * @private
  */
 
-const MockI18NAddon = (defaultLocale) => (story) => {
+const MockI18NAddon = (defaultLocale = 'en-US') => (story) => {
 	return <WrappedMockI18N
 		locale={select('locale', locales, defaultLocale)}
 	>
