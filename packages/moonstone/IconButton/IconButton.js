@@ -11,7 +11,8 @@ const IconButtonBase = kind({
 
 	propTypes: {
 		...Button.propTypes,
-		children: PropTypes.string.isRequired
+		children: PropTypes.string.isRequired,
+		src: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
 	},
 
 	styles: {
@@ -23,10 +24,10 @@ const IconButtonBase = kind({
 		className: ({small, styler}) => styler.append({small})
 	},
 
-	render: ({children, small, ...rest}) => {
+	render: ({children, small, src, ...rest}) => {
 		return (
 			<Button {...rest} small={small} minWidth={false}>
-				<Icon small={small} className={css.icon}>{children}</Icon>
+				<Icon small={small} className={css.icon} src={src}>{children}</Icon>
 			</Button>
 		);
 	}

@@ -1,4 +1,5 @@
 import kind from '@enact/core/kind';
+import ri from '@enact/ui/resolution';
 import React, {PropTypes} from 'react';
 
 import iconList from './IconList.js';
@@ -9,8 +10,9 @@ const IconBase = kind({
 	name: 'Icon',
 
 	propTypes: {
-		children: PropTypes.string.isRequired,
-		small: PropTypes.bool
+		children: PropTypes.string,
+		small: PropTypes.bool,
+		src: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
 	},
 
 	defaultProps: {
@@ -27,7 +29,18 @@ const IconBase = kind({
 			!iconList[icon] && css.dingbat,	// If the icon isn't in our known set, apply our custom font class
 			{pressed, small}
 		),
-		content: ({children: icon}) => {
+		style: ({src, style}) => {
+			let updated = Object.assign({}, style);
+
+			let source = ri.selectSrc(src);
+			if (src && src !== 'none' && src !== 'inherit' && src !== 'initial') {
+				source = `url(${source})`;
+			}
+
+			updated.backgroundImage = source;
+			return updated;
+		},
+		children: ({children: icon}) => {
 			let iconEntity = iconList[icon] || icon;
 
 			if (!iconList[icon]) {
@@ -52,14 +65,11 @@ const IconBase = kind({
 		}
 	},
 
-	render: ({content, ...rest}) => {
-		delete rest.small;
+	render: (props) => {
+		delete props.small;
+		delete props.src;
 
-		return (
-			<div {...rest}>
-				{content}
-			</div>
-		);
+		return <div {...props} />;
 	}
 });
 
