@@ -50,6 +50,7 @@
 	margin: 0 @moon-spotlight-outset;
 	color: @moon-button-text-color;
 	box-sizing: border-box;
+	z-index: 0;
 
 	> * {
 		text-align: center;
@@ -60,6 +61,7 @@
 		position: absolute;
 		content: '';
 		background-color: inherit;
+		z-index: -1;
 		background-color: @moon-button-background-color;
 		border: @moon-button-border-width solid transparent;
 		border-radius: @moon-button-border-radius;
@@ -72,11 +74,6 @@
 		animation-duration: 0.2s;
 		animation-iteration-count: 1;
 		animation-timing-function: ease-out;
-	}
-
-	// force correct stacking with new context (ENYO-3534)
-	.client {
-		filter: blur(0px);
 	}
 
 	// Need 100% width for marquee in button
