@@ -27,7 +27,6 @@ storiesOf('Button')
 				preserveCase={boolean('preserveCase')}
 				selected={boolean('selected')}
 				small={boolean('small')}
-
 			>
 				{select('value', prop.longText,'Loooooooooooooooooog Button')}
 			</Button>
@@ -44,7 +43,6 @@ storiesOf('Button')
 				preserveCase={boolean('preserveCase')}
 				selected={boolean('selected')}
 				small={boolean('small')}
-
 			>
 				{select('value', prop.tallText,'ิ้  ไั  ஒ  து')}
 			</Button>
