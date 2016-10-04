@@ -1,4 +1,5 @@
 import kind from '@enact/core/kind';
+import {withArgs as handle, forward} from '@enact/core/handle';
 import React, {PropTypes} from 'react';
 
 import Icon from '../Icon';
@@ -48,7 +49,9 @@ const SwitchBase = kind({
 		 * @default false
 		 * @public
 		 */
-		disabled: PropTypes.bool
+		disabled: PropTypes.bool,
+
+		onToggle: PropTypes.bool
 	},
 
 	defaultProps: {
@@ -65,7 +68,12 @@ const SwitchBase = kind({
 	computed: {
 		className: ({animated, checked, styler}) => styler.append(
 			{animated, checked}
-		)
+		),
+		onToggle: handle(forward('onClick'), ({checked, onToggle}) => () => {
+			if (onToggle) {
+				onToggle({checked: !checked});
+			}
+		})
 	},
 
 	render: (props) => {

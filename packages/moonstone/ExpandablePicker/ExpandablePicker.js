@@ -1,5 +1,5 @@
 import kind from '@enact/core/kind';
-import Pickable from '@enact/ui/Pickable';
+import Changeable from '@enact/ui/Changeable';
 import React from 'react';
 import pure from 'recompose/pure';
 
@@ -40,10 +40,10 @@ const ExpandablePickerBase = kind({
 const ExpandablePicker = pure(
 	Expandable(
 		{close: 'onChange'},
-		Pickable(
+		Changeable(
 			// override `pick` so we can separate handling onChange for the Picker and onChange for the
 			// ExpandablePicker
-			{mutable: true, pick: 'onPick'},
+			{mutable: true, change: 'onPick'},
 			ExpandablePickerBase
 		)
 	)
