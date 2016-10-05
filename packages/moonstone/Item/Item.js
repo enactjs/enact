@@ -8,8 +8,32 @@ const ItemBase = kind({
 	name: 'Item',
 
 	propTypes : {
+		/**
+		 * Children of Item. Will be rendered inside component.
+		 *
+		 * @type {React.node}
+		 * @public
+		 */
 		children: PropTypes.node.isRequired,
+
+		/**
+		 * Component to render the item as. (e.g 'div', 'span', etc.)
+		 *
+		 * @type {String}
+		 * @default 'div'
+		 * @public
+		 */
 		component: PropTypes.string,
+
+		/**
+		 * Disabled - When set to true this will disable the component from
+		 * accepting events like spotlight and click events. It will also gray out
+		 * the component.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
 		disabled: PropTypes.bool
 	},
 
