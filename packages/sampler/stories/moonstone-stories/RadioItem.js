@@ -2,7 +2,7 @@ import {RadioItemBase} from '@enact/moonstone/RadioItem';
 import {Toggleable} from '@enact/ui/Toggleable';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean} from '@kadira/storybook-addon-knobs';
+import {boolean} from '@kadira/storybook-addon-knobs';
 
 const RadioItem = Toggleable({prop: 'checked'}, RadioItemBase);
 RadioItem.displayName = 'RadioItem';
@@ -14,7 +14,6 @@ delete RadioItem.propTypes.icon;
 delete RadioItem.propTypes.iconClasses;
 
 storiesOf('RadioItem')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'Basic usage of RadioItem',

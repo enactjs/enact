@@ -2,7 +2,7 @@ import Picker, {PickerBase} from '@enact/moonstone/Picker';
 import Pickable from '@enact/ui/Pickable';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, text, boolean, select} from '@kadira/storybook-addon-knobs';
+import {text, boolean, select} from '@kadira/storybook-addon-knobs';
 
 const StatefulPicker = Pickable(Picker);
 StatefulPicker.propTypes = Object.assign({}, PickerBase.propTypes, StatefulPicker.propTypes);
@@ -23,7 +23,6 @@ const airports = [
 ];
 
 storiesOf('Picker')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'Basic usage of Picker',

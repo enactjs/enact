@@ -2,7 +2,7 @@ import {SelectableItemBase} from '@enact/moonstone/SelectableItem';
 import {Toggleable} from '@enact/ui/Toggleable';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean} from '@kadira/storybook-addon-knobs';
+import {boolean} from '@kadira/storybook-addon-knobs';
 
 const SelectableItem = Toggleable({prop: 'checked'}, SelectableItemBase);
 SelectableItem.displayName = 'SelectableItem';
@@ -14,7 +14,6 @@ delete SelectableItem.propTypes.icon;
 delete SelectableItem.propTypes.iconClasses;
 
 storiesOf('SelectableItem')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'Basic usage of SelectableItem',
