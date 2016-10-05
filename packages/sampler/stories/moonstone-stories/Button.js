@@ -1,7 +1,7 @@
 import Button, {ButtonBase} from '@enact/moonstone/Button';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
+import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
 
 Button.propTypes = Object.assign({}, ButtonBase.propTypes, Button.propTypes);
 Button.defaultProps = Object.assign({}, ButtonBase.defaultProps, Button.defaultProps);
@@ -26,8 +26,7 @@ storiesOf('Button')
 				preserveCase={boolean('preserveCase')}
 				selected={boolean('selected')}
 				small={boolean('small')}
-			>
-				Click Me
-			</Button>
+				children={text('children', 'Click Me')}
+			/>
 		)
 	);
