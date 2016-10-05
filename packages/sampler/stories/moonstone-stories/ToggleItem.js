@@ -3,7 +3,6 @@ import Toggleable from '@enact/ui/Toggleable';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
-import MockI18NAddon from '../../src/MockI18NAddon';
 
 import {icons} from '@enact/moonstone/Icon';
 const iconNames = Object.keys(icons);
@@ -14,7 +13,6 @@ StatefulToggleItem.defaultProps = Object.assign({}, ToggleItemBase.defaultProps,
 StatefulToggleItem.displayName = 'StatefulToggleItem';
 
 storiesOf('ToggleItem')
-	.addDecorator(MockI18NAddon())
 	.addDecorator(withKnobs)
 	.addWithInfo(
 		'',
