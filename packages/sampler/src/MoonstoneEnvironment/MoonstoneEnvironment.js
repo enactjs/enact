@@ -58,6 +58,9 @@ const locales = [
 	'ja-JP',
 	'en-JP'
 ];
+
+// NOTE: Knobs cannot set locale in fullscreen mode. This allows the locale to
+// be take from the URL.
 const getURLParameter = (param) => {
 	const locationParams = window.parent.location.search;
 
@@ -88,7 +91,7 @@ const FullscreenStorybookDecorator = (story, config) => {
 		<MoonstoneFullscreen
 			title={config.kind + ' ' + config.story}
 			description={config.description}
-			locale={select('locale', locales, 'en-US')}
+			locale={select('locale', locales, getURLParameter('knob-locale'))}
 		>
 			{sample}
 		</MoonstoneFullscreen>
