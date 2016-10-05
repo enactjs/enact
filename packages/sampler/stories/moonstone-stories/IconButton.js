@@ -2,7 +2,7 @@ import IconButton, {IconButtonBase} from '@enact/moonstone/IconButton';
 import {icons} from '@enact/moonstone/Icon';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
+import {boolean, select} from '@kadira/storybook-addon-knobs';
 
 IconButton.propTypes = Object.assign({}, IconButtonBase.propTypes, IconButton.propTypes);
 IconButton.defaultProps = Object.assign({}, IconButtonBase.defaultProps, IconButton.defaultProps);
@@ -16,7 +16,6 @@ const prop = {
 const iconNames = Object.keys(icons);
 
 storiesOf('IconButton')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'The basic IconButton',

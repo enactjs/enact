@@ -1,6 +1,5 @@
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
-import {contextTypes} from '@enact/i18n/I18nDecorator';
 
 import Item from '../Item';
 import Icon from '../Icon';
@@ -102,20 +101,18 @@ const ToggleItemBase = kind({
 		}
 	},
 
-	render: ({children, icon, onToggle, ...rest}, {rtl}) => {
+	render: ({children, icon, onToggle, ...rest}) => {
 		delete rest.iconClasses;
 		delete rest.inline;
 
 		return (
-			<Item {...rest} onClick={onToggle} style={{direction: rtl ? 'rtl' : 'ltr'}}>
+			<Item {...rest} onClick={onToggle}>
 				{icon}
 				{children}
 			</Item>
 		);
 	}
 });
-
-ToggleItemBase.contextTypes = contextTypes;
 
 export default ToggleItemBase;
 export {ToggleItemBase as ToggleItem, ToggleItemBase};

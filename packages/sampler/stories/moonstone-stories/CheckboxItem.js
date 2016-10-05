@@ -2,7 +2,7 @@ import {CheckboxItemBase} from '@enact/moonstone/CheckboxItem';
 import {Toggleable} from '@enact/ui/Toggleable';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean} from '@kadira/storybook-addon-knobs';
+import {boolean} from '@kadira/storybook-addon-knobs';
 
 
 const CheckboxItem = Toggleable({prop: 'checked'}, CheckboxItemBase);
@@ -15,7 +15,6 @@ delete CheckboxItem.propTypes.icon;
 delete CheckboxItem.propTypes.iconClasses;
 
 storiesOf('CheckboxItem')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'Basic usage of CheckboxItem',

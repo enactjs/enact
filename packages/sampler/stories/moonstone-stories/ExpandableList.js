@@ -1,7 +1,7 @@
 import {ExpandableList as ExpList, ExpandableListBase} from '@enact/moonstone/ExpandableList';
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
-import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
+import {boolean, text} from '@kadira/storybook-addon-knobs';
 
 class ExpandableList extends React.Component {
 	constructor (props) {
@@ -48,7 +48,6 @@ ExpandableList.propTypes = Object.assign({}, ExpList.propTypes, ExpandableListBa
 ExpandableList.defaultProps = Object.assign({}, ExpList.defaultProps, ExpandableListBase.defaultProps);
 
 storiesOf('ExpandableList')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'Basic usage of ExpandableList',
