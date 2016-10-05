@@ -5,13 +5,12 @@ import Divider from '../Divider';
 describe('Divider Specs', () => {
 
 	it('should render a Divider with content', function () {
-		let msg = 'Hello Divider!';
+		const expected = 'Hello Divider!';
 
 		const divider = mount(
-			<Divider>{msg}</Divider>
+			<Divider>{expected}</Divider>
 		);
 
-		const expected = msg;
 		const actual = divider.text();
 
 		expect(actual).to.equal(expected);
