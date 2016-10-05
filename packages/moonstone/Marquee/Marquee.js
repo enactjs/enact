@@ -6,8 +6,9 @@
  */
 
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
+import React from 'react';
 
+import MarqueeDecorator from './MarqueeDecorator';
 import css from './Marquee.less';
 
 /**
@@ -29,7 +30,7 @@ const MarqueeBase = kind({
 		 *
 		 * @type {Node|Node[]}
 		 */
-		children: PropTypes.node
+		children: React.PropTypes.node
 	},
 
 	styles: {
@@ -37,10 +38,19 @@ const MarqueeBase = kind({
 		className: 'marquee'
 	},
 
-	render: (props) => (
-		<div {...props} />
+	render: ({children, marqueeRef, ...rest}) => (
+		<div {...rest}>
+			<div className={css.text} ref={marqueeRef}>
+				{children}
+			</div>
+		</div>
 	)
 });
 
-export default MarqueeBase;
-export {MarqueeBase as Marquee, MarqueeBase};
+const Marquee = MarqueeDecorator('div');
+
+export default Marquee;
+export {
+	Marquee,
+	MarqueeDecorator
+};
