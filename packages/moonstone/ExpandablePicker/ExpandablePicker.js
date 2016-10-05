@@ -41,7 +41,7 @@ const ExpandablePicker = pure(
 	Expandable(
 		{close: 'onChange'},
 		Changeable(
-			// override `pick` so we can separate handling onChange for the Picker and onChange for the
+			// override `change` so we can separate handling onChange for the Picker and onChange for the
 			// ExpandablePicker
 			{mutable: true, change: 'onPick'},
 			ExpandablePickerBase

@@ -118,7 +118,10 @@ describe('Toggleable', () => {
 
 		wrapped.find(DivComponent).simulate('click', {});
 
-		expect(handleClick.calledOnce).to.equal(true);
+		const expected = true;
+		const actual = handleClick.calledOnce;
+
+		expect(actual).to.equal(expected);
 	});
 
 });

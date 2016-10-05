@@ -39,12 +39,12 @@ const GroupItemBase = kind({
 	render: (props) => {
 		const {
 			$$GroupItem: {
-				select,
 				childComponent: Component,
 				childProp,
-				selected: selectedIndex,
 				indexProp,
 				onSelect,
+				select,
+				selected: selectedIndex,
 				selectedProp
 			},
 			...rest
