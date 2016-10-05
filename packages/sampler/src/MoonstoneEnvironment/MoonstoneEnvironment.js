@@ -58,14 +58,24 @@ const locales = [
 	'ja-JP',
 	'en-JP'
 ];
+const getURLParameter = (param) => {
+	const locationParams = window.parent.location.search;
+
+	const startIndex = locationParams.indexOf(param);
+	const keyIndex = locationParams.indexOf('=', startIndex);
+	const valueIndex = locationParams.indexOf('&', keyIndex);
+
+	return locationParams.substring(keyIndex + 1, valueIndex);
+};
 
 const StorybookDecorator = (story, config) => {
+
 	const sample = story();
 	return (
 		<Moonstone
 			title={config.kind + ' ' + config.story}
 			description={config.description}
-			locale={select('locale', locales, 'en-US')}
+			locale={select('locale', locales, getURLParameter('knob-locale'))}
 		>
 			{sample}
 		</Moonstone>
