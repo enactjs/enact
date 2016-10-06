@@ -11,7 +11,7 @@ const SwitchItemBase = kind({
 
 	propTypes: {
 		/**
-		 * The string value to be displayed as the main content of the switch item.
+		 * The string to be displayed as the main content of the switch item.
 		 *
 		 * @type {String}
 		 * @public

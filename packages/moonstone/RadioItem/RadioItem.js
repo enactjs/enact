@@ -10,7 +10,7 @@ const RadioItemBase = kind({
 
 	propTypes: {
 		/**
-		 * The string value to be displayed as the main content of the radio item.
+		 * The string to be displayed as the main content of the radio item.
 		 *
 		 * @type {String}
 		 * @public

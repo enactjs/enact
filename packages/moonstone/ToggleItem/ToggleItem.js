@@ -11,7 +11,7 @@ const ToggleItemBase = kind({
 
 	propTypes: {
 		/**
-		 * The string value to be displayed as the main content of the toggle item.
+		 * The string to be displayed as the main content of the toggle item.
 		 *
 		 * @type {String}
 		 * @public

@@ -11,7 +11,7 @@ const IconButtonBase = kind({
 
 	propTypes: {
 		/**
-		 * The string value corresponding to an icon button.
+		 * The string corresponding to an icon button.
 		 *
 		 * @type {String}
 		 * @public

@@ -10,7 +10,7 @@ const SelectableItemBase = kind({
 
 	propTypes: {
 		/**
-		 * The string value to be displayed as the main content of the selectable item.
+		 * The string to be displayed as the main content of the selectable item.
 		 *
 		 * @type {String}
 		 * @public

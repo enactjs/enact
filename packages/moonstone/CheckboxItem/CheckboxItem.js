@@ -10,7 +10,7 @@ const CheckboxItemBase = kind({
 
 	propTypes: {
 		/**
-		 * The string value to be displayed as the main content of the checkbox item.
+		 * The string to be displayed as the main content of the checkbox item.
 		 *
 		 * @type {String}
 		 * @public

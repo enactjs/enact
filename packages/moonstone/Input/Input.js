@@ -23,7 +23,7 @@ class InputBase extends React.Component {
 		disabled: PropTypes.bool,
 
 		/**
-		 * The string value of the icon to be placed at the end of the input.
+		 * The icon to be placed at the end of the input.
 		 *
 		 * @type {String}
 		 * @public
@@ -31,7 +31,7 @@ class InputBase extends React.Component {
 		iconEnd: PropTypes.string,
 
 		/**
-		 * The string value of the icon to be placed at the beginning of the input.
+		 * The icon to be placed at the beginning of the input.
 		 *
 		 * @type {String}
 		 * @public
@@ -129,7 +129,7 @@ class InputBase extends React.Component {
 		const firstIcon = icon('iconStart', this.props, iconClasses),
 			lastIcon = icon('iconEnd', this.props, iconClasses);
 		const containerProps = {};
-		
+
 		if (spotlightDisabled) {
 			containerProps['data-container-id'] = rest['data-container-id'];
 		}
