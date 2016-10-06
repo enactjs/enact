@@ -2,7 +2,7 @@
  * Exports the {@link module:@enact/moonstone/ToggleItem~ToggleItem} and {@link module:@enact/moonstone/ToggleItem~ToggleItemBase}
  * components.  The default export is {@link module:@enact/moonstone/ToggleItem~ToggleItem}.
  *
- * @module @enact/moonstone/Button
+ * @module @enact/moonstone/ToggleItem
  */
 
 import kind from '@enact/core/kind';
