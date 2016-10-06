@@ -11,7 +11,7 @@ const ToggleItemBase = kind({
 
 	propTypes: {
 		/**
-		 * The string value to be displayed as the main content of the toggle item.
+		 * The string to be displayed as the main content of the toggle item.
 		 *
 		 * @type {String}
 		 * @public
@@ -71,14 +71,14 @@ const ToggleItemBase = kind({
 		 * @default () => {}
 		 * @param {Object} event
 		 * @param {String} event.checked - Checked value of item.
-		 * @param {String|Number} event.value - Value passed from `value` prop.
+		 * @param {*} event.value - Value passed from `value` prop.
 		 * @public
 		 */
 		onToggle: PropTypes.func,
 
 		/**
 		 * The value that will be sent to the `onToggle` handler.
-		 * @type {String|Number}
+		 * @type {*}
 		 * @default ''
 		 * @public
 		 */
