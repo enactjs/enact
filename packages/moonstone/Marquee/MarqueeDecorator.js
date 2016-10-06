@@ -7,13 +7,15 @@ import css from './Marquee.less';
 const animated = css.text + ' ' + css.animate;
 
 const defaultConfig = {
-	focus: 'onFocus',
 	blur: 'onBlur',
-	className: null
+	className: null,
+	enter: 'onMouseEnter',
+	focus: 'onFocus',
+	leave: 'onMouseLeave'
 };
 
 const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {focus, blur, className: marqueeClassName} = config;
+	const {blur, className: marqueeClassName, enter, focus, leave} = config;
 
 	const nonanimated = css.text + ' ' + marqueeClassName;
 
@@ -26,9 +28,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		static propTypes = {
 			children: React.PropTypes.node,
 			className: React.PropTypes.string,
+			disabled: React.PropTypes.bool,
 			marqueeDelay: React.PropTypes.number,
 			marqueeDisabled: React.PropTypes.bool,
 			marqueeOnFocus: React.PropTypes.bool,
+			marqueeOnHover: React.PropTypes.bool,
 			marqueeOnRender: React.PropTypes.bool,
 			marqueePause: React.PropTypes.number,
 			marqueeSpeed: React.PropTypes.number
@@ -37,7 +41,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		static defaultProps = {
 			marqueeDelay: 1000,
 			marqueeOnFocus: true,
-			marqueeOnRender: false,
 			marqueePause: 1000,
 			marqueeSpeed: 60
 		}
@@ -177,12 +180,18 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		renderMarquee () {
-			const {children, marqueeOnFocus, ...rest} = this.props;
+			const {children, disabled, marqueeOnFocus, marqueeOnHover, ...rest} = this.props;
 			const style = this.calcStyle();
 
 			if (marqueeOnFocus) {
 				rest[focus] = this.startAnimation;
 				rest[blur] = this.cancelAnimation;
+			}
+
+			// TODO: cancel others on hover
+			if ((marqueeOnHover && !this.marqueeOnFocus) || (disabled && this.marqueeOnFocus)) {
+				rest[enter] = this.startAnimation;
+				rest[leave] = this.cancelAnimation;
 			}
 
 			delete rest.marqueeDelay;
@@ -191,7 +200,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete rest.marqueeSpeed;
 
 			return (
-				<Wrapped {...rest}>
+				<Wrapped {...rest} disabled={disabled}>
 					<div className={css.marquee}>
 						<div
 							className={this.state.animating ? animated : nonanimated}
@@ -212,6 +221,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete props.marqueeDelay;
 			delete props.marqueeDisabled;
 			delete props.marqueeOnFocus;
+			delete props.marqueeOnHover;
 			delete props.marqueeOnRender;
 			delete props.marqueePause;
 			delete props.marqueeSpeed;
