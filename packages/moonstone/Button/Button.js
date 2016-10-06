@@ -11,6 +11,8 @@ import {Spottable} from '@enact/spotlight';
 import Pressable from '@enact/ui/Pressable';
 import React, {PropTypes} from 'react';
 
+import Marquee from '../Marquee';
+
 import css from './Button.less';
 
 /**
@@ -125,7 +127,7 @@ const ButtonBase = kind({
 		return (
 			<button {...rest}>
 				<div className={css.bg} />
-				<span className={css.client}>{children}</span>
+				<Marquee className={css.client}>{children}</Marquee>
 			</button>
 		);
 	}
