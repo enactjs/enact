@@ -2,12 +2,9 @@
 
 import hoc from '@enact/core/hoc';
 import {forward} from '@enact/core/handle';
-import {contextTypes} from '@enact/i18n/I18nDecorator';
 import React from 'react';
 
-import css from './Marquee.less';
-
-const animated = css.text + ' ' + css.animate;
+import Marquee from './Marquee';
 
 /**
  * Default configuration parameters for {@link module:@enact/moonstone/Marquee~MarqueeDecorator}
@@ -73,14 +70,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const forwardEnter = forward(enter);
 	const forwardLeave = forward(leave);
 
-	// pre-calc the configurable className string
-	const rootClassName = css.marquee + ' ' + marqueeClassName;
-
 	return class extends React.Component {
 		static displayName = 'MarqueeDecorator'
-
-		// Include the i18n contextTypes to make measurement decisions for RTL
-		static contextTypes = contextTypes
 
 		static propTypes = {
 			/**
@@ -317,41 +308,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		/**
-		 * Alternates the direction of the transition distance for RTL
-		 *
-		 * @param  {Number} distance Distance in pixels
-		 *
-		 * @return {Number}          Distance adjusted for RTL
-		 */
-		adjustDistanceForRTL (distance) {
-			return this.context.rtl ? distance : distance * -1;
-		}
-
-		/**
-		 * Determines the inline styles for the marquee element
-		 *
-		 * @return {Object} Inline style object
-		 */
-		calcStyle () {
-			const distance = this.calcDistance();
-			const duration = distance / this.props.marqueeSpeed;
-
-			const style = {
-				textOverflow: this.state.overflow,
-				transform: 'translateZ(0)'
-			};
-
-			if (this.state.animating) {
-				style.transform = `translate3d(${this.adjustDistanceForRTL(distance)}px, 0, 0)`;
-				style.transition = `transform ${duration}s linear`;
-				style.WebkitTransition = `transform ${duration}s linear`;
-			}
-
-			return style;
-		}
-
-		handleTransitionEnd = (ev) => {
+		handleMarqueeComplete = (ev) => {
 			this.resetAnimation();
 			ev.stopPropagation();
 		}
@@ -381,8 +338,15 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		renderMarquee () {
-			const {children, disabled, marqueeOnFocus, marqueeOnHover, ...rest} = this.props;
-			const style = this.calcStyle();
+			const {
+				children,
+				disabled,
+				marqueeOnFocus,
+				marqueeOnHover,
+				marqueeSpeed,
+				...rest
+			} = this.props;
+			const distance = this.calcDistance();
 
 			if (marqueeOnFocus && !disabled) {
 				rest[focus] = this.handleFocus;
@@ -403,16 +367,17 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			return (
 				<Wrapped {...rest} disabled={disabled}>
-					<div className={rootClassName}>
-						<div
-							className={this.state.animating ? animated : css.text}
-							style={style}
-							ref={this.cacheNode}
-							onTransitionEnd={this.handleTransitionEnd}
-						>
-							{children}
-						</div>
-					</div>
+					<Marquee
+						animating={this.state.animating}
+						className={marqueeClassName}
+						clientRef={this.cacheNode}
+						distance={distance}
+						onMarqueeComplete={this.handleMarqueeComplete}
+						overflow={this.state.overflow}
+						speed={marqueeSpeed}
+					>
+						{children}
+					</Marquee>
 				</Wrapped>
 			);
 		}

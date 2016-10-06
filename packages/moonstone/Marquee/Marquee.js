@@ -6,10 +6,12 @@
  */
 
 import kind from '@enact/core/kind';
+import {contextTypes} from '@enact/i18n/I18nDecorator';
 import React from 'react';
 
-import MarqueeDecorator from './MarqueeDecorator';
 import css from './Marquee.less';
+
+const animated = css.text + ' ' + css.animate;
 
 /**
  * {@link module:@enact/moonstone/Marquee~MarqueeBase} is a stateless text container element which
@@ -23,6 +25,11 @@ const MarqueeBase = kind({
 	name: 'Marquee',
 
 	propTypes: {
+		className: React.PropTypes.string,
+		clientRef: React.PropTypes.func,
+
+		onMarqueeComplete: React.PropTypes.func,
+
 		/**
 		 * `children` is the text or components that should be scrolled by the
 		 * {@link module:@enact/moonstone/Marquee~Marquee} component.
@@ -30,7 +37,12 @@ const MarqueeBase = kind({
 		 *
 		 * @type {Node|Node[]}
 		 */
-		children: React.PropTypes.node
+		children: React.PropTypes.node,
+
+		animating: React.PropTypes.bool,
+		distance: React.PropTypes.number,
+		overflow: React.PropTypes.string,
+		speed: React.PropTypes.number
 	},
 
 	styles: {
@@ -38,19 +50,44 @@ const MarqueeBase = kind({
 		className: 'marquee'
 	},
 
-	render: ({children, marqueeRef, ...rest}) => (
-		<div {...rest}>
-			<div className={css.text} ref={marqueeRef}>
-				{children}
+	computed: {
+		clientClassName: ({animating}) => animating ? animated : css.text,
+		clientStyle: ({animating, distance, overflow, speed}, {rtl}) => {
+			const duration = distance / speed;
+			const adjustedDistance = rtl ? distance : distance * -1;
+
+			const style = {
+				textOverflow: overflow,
+				transform: 'translateZ(0)'
+			};
+
+			if (animating) {
+				style.transform = `translate3d(${adjustedDistance}px, 0, 0)`;
+				style.transition = `transform ${duration}s linear`;
+				style.WebkitTransition = `transform ${duration}s linear`;
+			}
+
+			return style;
+		}
+	},
+
+	render: ({children, className, clientClassName, clientRef, clientStyle, onMarqueeComplete}) => {
+		return (
+			<div className={className}>
+				<div
+					className={clientClassName}
+					ref={clientRef}
+					style={clientStyle}
+					onTransitionEnd={onMarqueeComplete}
+				>
+					{children}
+				</div>
 			</div>
-		</div>
-	)
+		);
+	}
 });
 
-const Marquee = MarqueeDecorator('div');
+MarqueeBase.contextTypes = contextTypes;
 
-export default Marquee;
-export {
-	Marquee,
-	MarqueeDecorator
-};
+export default MarqueeBase;
+export {MarqueeBase as Marquee, MarqueeBase};
