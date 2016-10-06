@@ -25,10 +25,13 @@ const MarqueeBase = kind({
 	name: 'Marquee',
 
 	propTypes: {
-		className: React.PropTypes.string,
-		clientRef: React.PropTypes.func,
-
-		onMarqueeComplete: React.PropTypes.func,
+		/**
+		 * `true` when the component should be animating
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		animating: React.PropTypes.bool,
 
 		/**
 		 * `children` is the text or components that should be scrolled by the
@@ -36,12 +39,57 @@ const MarqueeBase = kind({
 		 * This prop may be empty in some cases, which is OK.
 		 *
 		 * @type {Node|Node[]}
+		 * @public
 		 */
 		children: React.PropTypes.node,
 
-		animating: React.PropTypes.bool,
+		/**
+		 * CSS class name for the root node
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		className: React.PropTypes.string,
+
+		/**
+		 * Function to capture a reference to the client node
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		clientRef: React.PropTypes.func,
+
+		/**
+		 * Distance to animate the marquee which is generally the width of the text minus the
+		 * width of the container.
+		 *
+		 * @type {Number}
+		 * @public
+		 */
 		distance: React.PropTypes.number,
-		overflow: React.PropTypes.string,
+
+		/**
+		 * Callback function for when the marquee completes its animation
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onMarqueeComplete: React.PropTypes.func,
+
+		/**
+		 * Text overflow setting. Either `clip` or `ellipsis`
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		overflow: React.PropTypes.oneOf(['clip', 'ellipsis']),
+
+		/**
+		 * Speed of marquee animation in pixels/second.
+		 *
+		 * @type {Number}
+		 * @public
+		 */
 		speed: React.PropTypes.number
 	},
 
