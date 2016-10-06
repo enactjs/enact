@@ -240,9 +240,19 @@ const PickerCore = class extends React.Component {
 		}
 	}
 
-	handleDecClick = () => this.handleChange(-this.props.step)
+	handleDecClick = () => {
+		const disabled = this.isButtonDisabled(this.props.step * -1);
+		if (!disabled) {
+			this.handleChange(-this.props.step);
+		}
+	}
 
-	handleIncClick = () => this.handleChange(this.props.step)
+	handleIncClick = () => {
+		const disabled = this.isButtonDisabled(this.props.step);
+		if (!disabled) {
+			this.handleChange(this.props.step);
+		}
+	}
 
 	handleDown = (which, ev) => {
 		const {joined, onMouseDown} = this.props;
