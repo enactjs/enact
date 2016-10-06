@@ -68,11 +68,16 @@ class InputBase extends React.Component {
 		);
 		const firstIcon = icon('iconStart', this.props, iconClasses),
 			lastIcon = icon('iconEnd', this.props, iconClasses);
+		const containerProps = {};
+		
+		if (spotlightDisabled) {
+			containerProps['data-container-id'] = rest['data-container-id'];
+		}
 
-		delete rest.containerId;
+		delete rest['data-container-id'];
 
 		return (
-			<label disabled={disabled} className={decoratorClasses} tabIndex={tabIndex} onKeyDown={onKeyDown} onFocus={onFocus} >
+			<label {...containerProps} disabled={disabled} className={decoratorClasses} tabIndex={tabIndex} onKeyDown={onKeyDown} onFocus={onFocus} >
 				{firstIcon}
 				<PlainInput {...rest} decorated disabled={disabled} spotlightDisabled={!spotlightDisabled} onKeyDown={this.inputKeyDown} inputRef={this.getInputNode} />
 				{lastIcon}
