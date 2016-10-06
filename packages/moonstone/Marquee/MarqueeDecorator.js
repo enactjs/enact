@@ -1,3 +1,5 @@
+/* global clearTimeout, setTimeout */
+
 import hoc from '@enact/core/hoc';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import React from 'react';
@@ -23,8 +25,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		static displayName = 'MarqueeDecorator'
 		static contextTypes = contextTypes
 
-		distance = null
-
 		static propTypes = {
 			children: React.PropTypes.node,
 			className: React.PropTypes.string,
@@ -49,19 +49,30 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
+			this.distance = null;
 			this.state = {
 				overflow: 'ellipsis'
 			};
 		}
 
 		componentDidMount () {
-			if (this.props.marqueeOnRender) {
+			if (this.props.marqueeOnRender && !this.props.disabled) {
 				this.startAnimation(this.props.marqueeOnRenderDelay);
 			}
 		}
 
 		componentWillUnmount () {
+			this.clearTimeout();
+		}
+
+		clearTimeout () {
 			clearTimeout(this.timer);
+			this.timer = null;
+		}
+
+		setTimeout (fn, time) {
+			this.clearTimeout();
+			this.timer = setTimeout(fn, time);
 		}
 
 		/**
@@ -107,7 +118,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		/**
 		* Starts marquee animation.
 		*
-		* @private
+		* @param {Number} [delay] Milleseconds to wait before animating
+		* @returns {undefined}
 		*/
 		startAnimation = (delay = this.props.marqueeDelay) => {
 			if (this.state.animating || this.contentFits) return;
@@ -120,8 +132,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				return;
 			}
 
-			clearTimeout(this.timer);
-			this.timer = setTimeout(() => {
+			this.setTimeout(() => {
 				this.setState({
 					animating: true
 				});
@@ -136,15 +147,16 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		stopAnimation = () => {
-			clearTimeout(this.timer);
-			this.timer = setTimeout(this.restartAnimation, this.props.marqueePause);
+			this.setTimeout(this.restartAnimation, this.props.marqueePause);
 		}
 
 		cancelAnimation = () => {
-			clearTimeout(this.timer);
-			this.setState({
-				animating: false
-			});
+			if (!this.props.marqueeOnRender) {
+				this.clearTimeout();
+				this.setState({
+					animating: false
+				});
+			}
 		}
 
 		adjustDistanceForRTL (distance) {
@@ -185,7 +197,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const {children, disabled, marqueeOnFocus, marqueeOnHover, ...rest} = this.props;
 			const style = this.calcStyle();
 
-			if (marqueeOnFocus) {
+			if (marqueeOnFocus && !disabled) {
 				rest[focus] = this.handleStartAnimation;
 				rest[blur] = this.cancelAnimation;
 			}
