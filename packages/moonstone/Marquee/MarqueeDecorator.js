@@ -1,6 +1,7 @@
 /* global clearTimeout, setTimeout */
 
 import hoc from '@enact/core/hoc';
+import {forward} from '@enact/core/handle';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import React from 'react';
 
@@ -18,6 +19,10 @@ const defaultConfig = {
 
 const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {blur, className: marqueeClassName, enter, focus, leave} = config;
+	const forwardBlur = forward(blur);
+	const forwardFocus = forward(focus);
+	const forwardEnter = forward(enter);
+	const forwardLeave = forward(leave);
 
 	const nonanimated = css.text + ' ' + marqueeClassName;
 
@@ -181,12 +186,29 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			return style;
 		}
 
-		handleStartAnimation = () => {
-			this.startAnimation();
+		handleTransitionEnd = (ev) => {
+			this.stopAnimation();
+			ev.stopPropagation();
 		}
 
-		handleTransitionEnd = () => {
-			this.stopAnimation();
+		handleFocus = (ev) => {
+			this.startAnimation();
+			forwardFocus(ev, this.props);
+		}
+
+		handleBlur = (ev) => {
+			this.cancelAnimation();
+			forwardBlur(ev, this.props);
+		}
+
+		handleEnter = (ev) => {
+			this.startAnimation();
+			forwardEnter(ev, this.props);
+		}
+
+		handleLeave = (ev) => {
+			this.cancelAnimation();
+			forwardLeave(ev, this.props);
 		}
 
 		cacheNode = (node) => {
@@ -198,14 +220,14 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const style = this.calcStyle();
 
 			if (marqueeOnFocus && !disabled) {
-				rest[focus] = this.handleStartAnimation;
-				rest[blur] = this.cancelAnimation;
+				rest[focus] = this.handleFocus;
+				rest[blur] = this.handleBlur;
 			}
 
 			// TODO: cancel others on hover
 			if ((marqueeOnHover && !this.marqueeOnFocus) || (disabled && this.marqueeOnFocus)) {
-				rest[enter] = this.handleStartAnimation;
-				rest[leave] = this.cancelAnimation;
+				rest[enter] = this.handleEnter;
+				rest[leave] = this.handleLeave;
 			}
 
 			delete rest.marqueeDelay;
