@@ -34,6 +34,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			marqueeOnFocus: React.PropTypes.bool,
 			marqueeOnHover: React.PropTypes.bool,
 			marqueeOnRender: React.PropTypes.bool,
+			marqueeOnRenderDelay: React.PropTypes.number,
 			marqueePause: React.PropTypes.number,
 			marqueeSpeed: React.PropTypes.number
 		}
@@ -41,6 +42,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		static defaultProps = {
 			marqueeDelay: 1000,
 			marqueeOnFocus: true,
+			marqueeOnRenderDelay: 1000,
 			marqueePause: 1000,
 			marqueeSpeed: 60
 		}
@@ -54,12 +56,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentDidMount () {
 			if (this.props.marqueeOnRender) {
-				this.startAnimation();
+				this.startAnimation(this.props.marqueeOnRenderDelay);
 			}
-		}
-
-		componentDidUpdate () {
-			// this.startAnimation();
 		}
 
 		componentWillUnmount () {
@@ -111,7 +109,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		*
 		* @private
 		*/
-		startAnimation = () => {
+		startAnimation = (delay = this.props.marqueeDelay) => {
 			if (this.state.animating || this.contentFits) return;
 
 			const distance = this.calcDistance();
@@ -127,7 +125,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.setState({
 					animating: true
 				});
-			}, this.props.marqueeDelay);
+			}, delay);
 		}
 
 		restartAnimation = () => {
@@ -171,6 +169,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			return style;
 		}
 
+		handleStartAnimation = () => {
+			this.startAnimation();
+		}
+
 		handleTransitionEnd = () => {
 			this.stopAnimation();
 		}
@@ -184,18 +186,19 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const style = this.calcStyle();
 
 			if (marqueeOnFocus) {
-				rest[focus] = this.startAnimation;
+				rest[focus] = this.handleStartAnimation;
 				rest[blur] = this.cancelAnimation;
 			}
 
 			// TODO: cancel others on hover
 			if ((marqueeOnHover && !this.marqueeOnFocus) || (disabled && this.marqueeOnFocus)) {
-				rest[enter] = this.startAnimation;
+				rest[enter] = this.handleStartAnimation;
 				rest[leave] = this.cancelAnimation;
 			}
 
 			delete rest.marqueeDelay;
 			delete rest.marqueeOnFocus;
+			delete rest.marqueeOnRenderDelay;
 			delete rest.marqueePause;
 			delete rest.marqueeSpeed;
 
@@ -223,6 +226,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			delete props.marqueeOnFocus;
 			delete props.marqueeOnHover;
 			delete props.marqueeOnRender;
+			delete props.marqueeOnRenderDelay;
 			delete props.marqueePause;
 			delete props.marqueeSpeed;
 
