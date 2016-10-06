@@ -11,26 +11,27 @@ const ToggleItemBase = kind({
 
 	propTypes: {
 		/**
-		 * Children is a string to display.
+		 * The string value to be displayed as the main content of the toggle item.
 		 *
-		 * @type {string}
+		 * @type {String}
 		 * @public
 		 */
 		children: PropTypes.string.isRequired,
 
 		/**
-		 * Value of checked property. True will show checked icon, false will not
+		 * Applies a "checked" visual state to the toggle item.
 		 *
-		 * @type {boolean}
+		 * @type {Boolean}
+		 * @default false
 		 * @public
 		 */
 		checked: PropTypes.bool,
 
 		/**
-		 * When `true`, the ToggleItem is shown as disabled and does not
-		 * generate tap events.
+		 * Applies a disabled visual state to the toggle item.
 		 *
 		 * @type {Boolean}
+		 * @default false
 		 * @public
 		 */
 		disabled: PropTypes.bool,
@@ -40,6 +41,7 @@ const ToggleItemBase = kind({
 		 * will display when checked.
 		 *
 		 * @type {String}
+		 * @default ''
 		 * @public
 		 */
 		icon: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
@@ -48,33 +50,49 @@ const ToggleItemBase = kind({
 		 * CSS classes for Icon
 		 *
 		 * @type {String}
+		 * @default ''
 		 * @public
 		 */
 		iconClasses: PropTypes.string,
 
 		/**
-		 * Display component inline
+		 * Applies inline styling to the toggle item.
 		 *
 		 * @type {Boolean}
+		 * @default false
 		 * @public
 		 */
 		inline: PropTypes.bool,
 
 		/**
-		 * Function that fires onToggle event/callback.
+		 * The handler to run when the toggle item is toggled.
 		 *
 		 * @type {Function}
+		 * @default () => {}
+		 * @param {Object} event
+		 * @param {String} event.checked - Checked value of item.
+		 * @param {String|Number} event.value - Value passed from `value` prop.
 		 * @public
 		 */
 		onToggle: PropTypes.func,
 
 		/**
-		 * Value is a property that gets sent on an onToggle event.
-		 *
-		 * @type {Any}
+		 * The value that will be sent to the `onToggle` handler.
+		 * @type {String|Number}
+		 * @default ''
 		 * @public
 		 */
 		value: PropTypes.any
+	},
+
+	defaultProps: {
+		checked: false,
+		disabled: false,
+		icon: '',
+		iconClasses: '',
+		inline: false,
+		onToggle: () => {},
+		value: ''
 	},
 
 	styles: {

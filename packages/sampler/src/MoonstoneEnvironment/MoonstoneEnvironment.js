@@ -60,15 +60,19 @@ const locales = [
 ];
 
 // NOTE: Knobs cannot set locale in fullscreen mode. This allows the locale to
-// be take from the URL.
-const getURLParameter = (param) => {
+// be taken from the URL.
+const getLocaleFromURL = () => {
 	const locationParams = window.parent.location.search;
 
-	const startIndex = locationParams.indexOf(param);
-	const keyIndex = locationParams.indexOf('=', startIndex);
-	const valueIndex = locationParams.indexOf('&', keyIndex);
+	const startIndex = locationParams.indexOf('knob-locale');
+	if (startIndex > -1) {
+		const keyIndex = locationParams.indexOf('=', startIndex);
+		const valueIndex = locationParams.indexOf('&', keyIndex);
 
-	return locationParams.substring(keyIndex + 1, valueIndex);
+		return locationParams.substring(keyIndex + 1, valueIndex);
+	}
+
+	return 'en-US';
 };
 
 const StorybookDecorator = (story, config) => {
@@ -78,7 +82,7 @@ const StorybookDecorator = (story, config) => {
 		<Moonstone
 			title={config.kind + ' ' + config.story}
 			description={config.description}
-			locale={select('locale', locales, getURLParameter('knob-locale'))}
+			locale={select('locale', locales, getLocaleFromURL())}
 		>
 			{sample}
 		</Moonstone>
@@ -91,7 +95,7 @@ const FullscreenStorybookDecorator = (story, config) => {
 		<MoonstoneFullscreen
 			title={config.kind + ' ' + config.story}
 			description={config.description}
-			locale={select('locale', locales, getURLParameter('knob-locale'))}
+			locale={select('locale', locales, getLocaleFromURL())}
 		>
 			{sample}
 		</MoonstoneFullscreen>
