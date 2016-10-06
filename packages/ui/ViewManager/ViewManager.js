@@ -117,15 +117,6 @@ class ViewManager extends React.Component {
 		index: 0
 	}
 
-	shouldComponentUpdate (nextProps) {
-		// update when the index changes or the children change
-		if (this.props.index !== nextProps.index) {
-			return true;
-		} else {
-			return !childrenEquals(this.props.children, nextProps.children);
-		}
-	}
-
 	componentWillReceiveProps (nextProps) {
 		this.previousIndex = this.props.index;
 		this.checkReverse(nextProps);

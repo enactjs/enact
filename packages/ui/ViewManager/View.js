@@ -84,8 +84,7 @@ class View extends React.Component {
 			return false;
 		}
 
-		// since state is checked above, we can just check props for equality
-		return !shallowEqual(this.props, nextProps);
+		return true;
 	}
 
 	componentWillReceiveProps (nextProps) {
