@@ -1,3 +1,10 @@
+/**
+ * Exports the {@link module:@enact/moonstone/ToggleItem~ToggleItem} and {@link module:@enact/moonstone/ToggleItem~ToggleItemBase}
+ * components.  The default export is {@link module:@enact/moonstone/ToggleItem~ToggleItem}.
+ *
+ * @module @enact/moonstone/Button
+ */
+
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 
@@ -6,12 +13,24 @@ import Icon from '../Icon';
 
 import css from './ToggleItem.less';
 
+/**
+ * {@link module:@enact/moonstone/ToggleItem~ToggleItemBase} is a base component
+ * to make an Toggleable Item(e.g Checkbox, RadioItem). It has a customizable
+ * prop for icon, so any Moonstone Icon can be used to represent the checked
+ * state.
+ *
+ * {@link module:@enact/moonstone/ToggleItem~ToggleItem}
+ *
+ * @class ToggleItemBase
+ * @ui
+ * @public
+ */
 const ToggleItemBase = kind({
 	name: 'ToggleItem',
 
 	propTypes: {
 		/**
-		 * The string value to be displayed as the main content of the toggle item.
+		 * The string to be displayed as the main content of the toggle item.
 		 *
 		 * @type {String}
 		 * @public
@@ -71,14 +90,14 @@ const ToggleItemBase = kind({
 		 * @default () => {}
 		 * @param {Object} event
 		 * @param {String} event.checked - Checked value of item.
-		 * @param {String|Number} event.value - Value passed from `value` prop.
+		 * @param {*} event.value - Value passed from `value` prop.
 		 * @public
 		 */
 		onToggle: PropTypes.func,
 
 		/**
 		 * The value that will be sent to the `onToggle` handler.
-		 * @type {String|Number}
+		 * @type {*}
 		 * @default ''
 		 * @public
 		 */

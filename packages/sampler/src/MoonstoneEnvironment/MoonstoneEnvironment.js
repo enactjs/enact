@@ -67,9 +67,13 @@ const getLocaleFromURL = () => {
 	const startIndex = locationParams.indexOf('knob-locale');
 	if (startIndex > -1) {
 		const keyIndex = locationParams.indexOf('=', startIndex);
-		const valueIndex = locationParams.indexOf('&', keyIndex);
 
-		return locationParams.substring(keyIndex + 1, valueIndex);
+		if (locationParams.indexOf('&', keyIndex) > -1 ) {
+			const valueIndex = locationParams.indexOf('&', keyIndex);
+			return locationParams.substring(keyIndex + 1, valueIndex);
+		} else {
+			return locationParams.substring(keyIndex + 1, locationParams.length);
+		}
 	}
 
 	return 'en-US';
