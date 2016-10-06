@@ -1,6 +1,5 @@
 /**
- * Exports the {@link module:@enact/moonstone/ToggleItem~ToggleItem} and {@link module:@enact/moonstone/ToggleItem~ToggleItemBase}
- * components.  The default export is {@link module:@enact/moonstone/ToggleItem~ToggleItem}.
+ * Exports the {@link module:@enact/moonstone/ToggleItem~ToggleItem} component.
  *
  * @module @enact/moonstone/ToggleItem
  */
@@ -14,14 +13,11 @@ import Icon from '../Icon';
 import css from './ToggleItem.less';
 
 /**
- * {@link module:@enact/moonstone/ToggleItem~ToggleItemBase} is a base component
- * to make an Toggleable Item(e.g Checkbox, RadioItem). It has a customizable
- * prop for icon, so any Moonstone Icon can be used to represent the checked
- * state.
+ * {@link module:@enact/moonstone/ToggleItem~ToggleItem} is a component to make a Toggleable Item
+ * (e.g Checkbox, RadioItem). It has a customizable prop for icon, so any Moonstone Icon can be used
+ * to represent the checked state.
  *
- * {@link module:@enact/moonstone/ToggleItem~ToggleItem}
- *
- * @class ToggleItemBase
+ * @class ToggleItem
  * @ui
  * @public
  */
