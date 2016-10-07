@@ -42,7 +42,6 @@ const ItemBase = kind({
 
 		/**
 		 * Applies a disabled visual state to the item.
-		 * tap events.
 		 *
 		 * @type {Boolean}
 		 * @default false
