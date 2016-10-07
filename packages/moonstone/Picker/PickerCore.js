@@ -302,6 +302,9 @@ const PickerCore = class extends React.Component {
 		const incrementerDisabled = this.isButtonDisabled(step);
 		const classes = this.determineClasses();
 
+		const handleIncClick = incrementerDisabled ? null : this.handleIncClick;
+		const handleDecClick = decrementerDisabled ? null : this.handleDecClick;
+
 		let arranger;
 		if (width && !disabled) {
 			arranger = orientation === 'vertical' ? SlideBottomArranger : SlideLeftArranger;
@@ -309,13 +312,13 @@ const PickerCore = class extends React.Component {
 
 		return (
 			<div {...rest} className={classes} disabled={disabled}>
-				<span className={css.incrementer} disabled={incrementerDisabled} onClick={incrementerDisabled ? null : this.handleIncClick} onMouseDown={this.handleIncDown} onMouseUp={onMouseUp}>
+				<span className={css.incrementer} disabled={incrementerDisabled} onClick={handleIncClick} onMouseDown={this.handleIncDown} onMouseUp={onMouseUp}>
 					<ButtonType disabled={incrementerDisabled}>{incrementIcon}</ButtonType>
 				</span>
 				<ViewManager arranger={arranger} duration={200} index={index} noAnimation={noAnimation} reverseTransition={this.reverseTransition} className={css.valueWrapper}>
 					{children}
 				</ViewManager>
-				<span className={css.decrementer} disabled={decrementerDisabled} onClick={decrementerDisabled ? null : this.handleDecClick} onMouseDown={this.handleDecDown} onMouseUp={onMouseUp}>
+				<span className={css.decrementer} disabled={decrementerDisabled} onClick={handleDecClick} onMouseDown={this.handleDecDown} onMouseUp={onMouseUp}>
 					<ButtonType disabled={decrementerDisabled}>{decrementIcon}</ButtonType>
 				</span>
 			</div>
