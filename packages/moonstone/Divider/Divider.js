@@ -1,6 +1,5 @@
 /**
- * Exports the {@link module:@enact/moonstone/Divider~Divider} and {@link module:@enact/moonstone/Divider~DividerBase}
- * components.  The default export is {@link module:@enact/moonstone/Divider~DividerBase}.
+ * Exports the {@link module:@enact/moonstone/Divider~Divider} component.
  *
  * @module @enact/moonstone/Divider
  */
@@ -13,10 +12,10 @@ import css from './Divider.less';
 import Marquee from '../Marquee';
 
 /**
- * {@link module:@enact/moonstone/Divider~DividerBase} is a simply styled component that may be used as a separator
+ * {@link module:@enact/moonstone/Divider~Divider} is a simply styled component that may be used as a separator
  * between groups of components.
  *
- * @class DividerBase
+ * @class Divider
  * @ui
  * @public
  */
@@ -25,7 +24,7 @@ const DividerBase = kind({
 
 	propTypes: {
 		/**
-		 * Set the content of the divider.
+		 * The content of the divider.
 		 *
 		 * @type {String}
 		 * @required
