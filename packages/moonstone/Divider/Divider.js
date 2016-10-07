@@ -35,7 +35,7 @@ const DividerBase = kind({
 
 	styles: {
 		css,
-		className: 'divider divider-text'
+		className: 'divider'
 	},
 
 	computed: {
