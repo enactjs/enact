@@ -31,19 +31,19 @@ class InputBase extends React.Component {
 		switch (keyCode) {
 			case 37:
 				if (this.inputNode.selectionStart === 0) {
-					Spotlight.move('left');
+					this.spotlightMove('left');
 				}
 				break;
 			case 39:
 				if (this.inputNode.selectionStart === this.inputNode.value.length) {
-					Spotlight.move('right');
+					this.spotlightMove('right');
 				}
 				break;
 			case 38:
-				Spotlight.move('up');
+				this.spotlightMove('up');
 				break;
 			case 40:
-				Spotlight.move('down');
+				this.spotlightMove('down');
 				break;
 			default:
 				break;
@@ -52,6 +52,12 @@ class InputBase extends React.Component {
 
 	getInputNode = (node) => {
 		this.inputNode = node;
+	}
+
+	spotlightMove = (direction) => {
+		if(!Spotlight.move(direction)) {
+			this.inputNode.blur();
+		}
 	}
 
 	render () {
