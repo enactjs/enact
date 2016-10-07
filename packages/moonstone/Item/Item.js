@@ -1,15 +1,30 @@
+/**
+ * Exports the {@link module:@enact/moonstone/Item~Item} component.
+ *
+ * @module @enact/moonstone/Item
+ */
+
 import React, {PropTypes} from 'react';
 import kind from '@enact/core/kind';
 import {Spottable} from '@enact/spotlight';
 
 import css from './Item.less';
 
+/**
+ * {@link module:@enact/moonstone/Item~Item} is a focusable Moonstone-styled control that can display
+ * simple text or a set of controls.
+ *
+ * @class Item
+ * @ui
+ * @public
+ */
+
 const ItemBase = kind({
 	name: 'Item',
 
 	propTypes : {
 		/**
-		 * Children of Item. Will be rendered inside component.
+		 * The node to be displayed as the main content of the item.
 		 *
 		 * @type {React.node}
 		 * @public
@@ -17,7 +32,7 @@ const ItemBase = kind({
 		children: PropTypes.node.isRequired,
 
 		/**
-		 * Component to render the item as. (e.g 'div', 'span', etc.)
+		 * The type of DOM node to use to render the item. (e.g 'div', 'span', etc.)
 		 *
 		 * @type {String}
 		 * @default 'div'
@@ -26,9 +41,8 @@ const ItemBase = kind({
 		component: PropTypes.string,
 
 		/**
-		 * Disabled - When set to true this will disable the component from
-		 * accepting events like spotlight and click events. It will also gray out
-		 * the component.
+		 * Applies a disabled visual state to the item.
+		 * tap events.
 		 *
 		 * @type {Boolean}
 		 * @default false
