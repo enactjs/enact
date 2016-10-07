@@ -9,6 +9,9 @@ SelectableItem.displayName = 'SelectableItem';
 SelectableItem.propTypes = Object.assign({}, SelectableItem.propTypes, SelectableItemBase.propTypes);
 SelectableItem.defaultProps = Object.assign({}, SelectableItem.defaultProps, SelectableItemBase.defaultProps);
 
+delete SelectableItem.propTypes.checked;
+delete SelectableItem.defaultProps.checked;
+
 storiesOf('SelectableItem')
 	.addDecorator(withKnobs)
 	.addWithInfo(

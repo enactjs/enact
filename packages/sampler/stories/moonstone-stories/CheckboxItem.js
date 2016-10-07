@@ -9,6 +9,9 @@ CheckboxItem.displayName = 'CheckboxItem';
 CheckboxItem.propTypes = Object.assign({}, CheckboxItem.propTypes, CheckboxItemBase.propTypes);
 CheckboxItem.defaultProps = Object.assign({}, CheckboxItem.defaultProps, CheckboxItemBase.defaultProps);
 
+delete CheckboxItem.propTypes.checked;
+delete CheckboxItem.defaultProps.checked;
+
 storiesOf('CheckboxItem')
 	.addDecorator(withKnobs)
 	.addWithInfo(

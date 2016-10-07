@@ -19,6 +19,15 @@ const SwitchItemBase = kind({
 		children: PropTypes.string.isRequired,
 
 		/**
+		 * Applies a "checked" visual state to the switch item.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		checked: PropTypes.bool,
+
+		/**
 		 * Applies a disabled visual state to the switch item.
 		 *
 		 * @type {Boolean}
@@ -56,6 +65,7 @@ const SwitchItemBase = kind({
 	},
 
 	defaultProps: {
+		checked: false,
 		disabled: false,
 		inline: false,
 		onToggle: () => {},

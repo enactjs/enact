@@ -9,6 +9,9 @@ RadioItem.displayName = 'RadioItem';
 RadioItem.propTypes = Object.assign({}, RadioItem.propTypes, RadioItemBase.propTypes);
 RadioItem.defaultProps = Object.assign({}, RadioItem.defaultProps, RadioItemBase.defaultProps);
 
+delete RadioItem.propTypes.checked;
+delete RadioItem.defaultProps.checked;
+
 storiesOf('RadioItem')
 	.addDecorator(withKnobs)
 	.addWithInfo(

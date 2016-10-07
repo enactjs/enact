@@ -18,6 +18,15 @@ const SelectableItemBase = kind({
 		children: PropTypes.string.isRequired,
 
 		/**
+		 * Applies a "checked" visual state to the selectable item.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		checked: PropTypes.bool,
+
+		/**
 		 * Applies a disabled visual state to the selectable item.
 		 *
 		 * @type {Boolean}
@@ -55,6 +64,7 @@ const SelectableItemBase = kind({
 	},
 
 	defaultProps: {
+		checked: false,
 		disabled: false,
 		inline: false,
 		onToggle: () => {},
