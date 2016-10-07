@@ -34,11 +34,11 @@ const ItemBase = kind({
 		/**
 		 * The type of DOM node to use to render the item. (e.g 'div', 'span', etc.)
 		 *
-		 * @type {String}
+		 * @type {String|Function}
 		 * @default 'div'
 		 * @public
 		 */
-		component: PropTypes.string,
+		component: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 
 		/**
 		 * Applies a disabled visual state to the item.
