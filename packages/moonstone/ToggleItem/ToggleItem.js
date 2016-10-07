@@ -138,8 +138,10 @@ const ToggleItemBase = kind({
 		delete rest.iconClasses;
 		delete rest.inline;
 
+		const handleToggle = rest.disabled ? null : onToggle;
+
 		return (
-			<Item {...rest} onClick={onToggle}>
+			<Item {...rest} onClick={handleToggle}>
 				{icon}
 				{children}
 			</Item>
