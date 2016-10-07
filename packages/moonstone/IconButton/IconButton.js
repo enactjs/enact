@@ -39,19 +39,6 @@ const IconButtonBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * A boolean parameter affecting the minimum width of the button. When `true`,
-		 * the minimum width will be set to 180px (or 130px if [small]{@link module:moonstone/Button~Button#small}
-		 * is `true`). If `false`, the minimum width will be set to the current value of
-		 * `@moon-button-height` (thus forcing the button to be no smaller than a circle with
-		 * diameter `@moon-button-height`).
-		 *
-		 * @type {Boolean}
-		 * @default true
-		 * @public
-		 */
-		minWidth: PropTypes.bool,
-
-		/**
 		 * Applies a pressed visual effect to the icon button
 		 *
 		 * @type {Boolean}
@@ -85,7 +72,6 @@ const IconButtonBase = kind({
 	defaultProps: {
 		backgroundOpacity: 'opaque',
 		disabled: false,
-		minWidth: true,
 		pressed: false,
 		selected: false,
 		small: false
