@@ -1,7 +1,7 @@
+import React, {PropTypes} from 'react';
 import kind from '@enact/core/kind';
 import {checkDefaultBounds} from '@enact/ui/validators/PropTypeValidators';
 import R from 'ramda';
-import React, {PropTypes} from 'react';
 
 import css from './ProgressBar.less';
 

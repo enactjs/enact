@@ -1,5 +1,5 @@
-import {Spotlight, SpotlightContainerDecorator} from '@enact/spotlight';
 import React from 'react';
+import {Spotlight, SpotlightContainerDecorator} from '@enact/spotlight';
 
 /**
  * Restores spotlight focus to root container when closing the container if the previously focused

@@ -5,8 +5,8 @@
  * @module @enact/i18n/Uppercase
  */
 
-import {kind, hoc} from '@enact/core';
 import React from 'react';
+import {kind, hoc} from '@enact/core';
 
 /**
  * {@link module:@enact/i18n/Uppercase~Uppercase} is a Higher Order Component that is used to wrap

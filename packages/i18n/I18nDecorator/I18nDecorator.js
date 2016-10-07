@@ -5,8 +5,8 @@
  * @module @enact/i18n/I18nDecorator
  */
 
-import hoc from '@enact/core/hoc';
 import React from 'react';
+import hoc from '@enact/core/hoc';
 
 import '../src/glue';
 import {isRtl, getI18nClasses, updateLocale} from '../src/locale';

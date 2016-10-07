@@ -1,6 +1,6 @@
+import React from 'react';
 import {SlideLeftArranger, SlideBottomArranger, ViewManager} from '@enact/ui/ViewManager';
 import R from 'ramda';
-import React from 'react';
 
 import Icon from '../Icon';
 import IconButton from '../IconButton';

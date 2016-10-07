@@ -1,5 +1,5 @@
-import kind from '@enact/core/kind';
 import React from 'react';
+import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
 import Slottable from '@enact/ui/Slottable';
 import Marquee from '../Marquee';

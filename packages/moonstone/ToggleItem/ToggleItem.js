@@ -4,8 +4,8 @@
  * @module @enact/moonstone/ToggleItem
  */
 
-import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
+import kind from '@enact/core/kind';
 
 import Item from '../Item';
 import Icon from '../Icon';

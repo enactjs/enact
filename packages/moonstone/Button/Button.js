@@ -5,11 +5,11 @@
  * @module @enact/moonstone/Button
  */
 
+import React, {PropTypes} from 'react';
 import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
 import {Spottable} from '@enact/spotlight';
 import Pressable from '@enact/ui/Pressable';
-import React, {PropTypes} from 'react';
 
 import css from './Button.less';
 

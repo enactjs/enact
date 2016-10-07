@@ -1,5 +1,5 @@
-import kind from '@enact/core/kind';
 import React from 'react';
+import kind from '@enact/core/kind';
 
 import css from './Picker.less';
 

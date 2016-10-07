@@ -1,8 +1,8 @@
+import React from 'react';
 import {kind, hoc} from '@enact/core';
 import {coerceFunction} from '@enact/core/util';
 import ViewManager from '@enact/ui/ViewManager';
 import invariant from 'invariant';
-import React from 'react';
 
 import Breadcrumb from './Breadcrumb';
 import BreadcrumbArranger from './BreadcrumbArranger';
