@@ -61,9 +61,6 @@ const ItemBase = kind({
 	},
 
 	render: ({component: Component, ...rest}) => {
-		delete rest.index;
-		delete rest.pressed;
-
 		return (
 			<Component {...rest} />
 		);
