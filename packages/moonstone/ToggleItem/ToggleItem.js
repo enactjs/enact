@@ -1,3 +1,9 @@
+/**
+ * Exports the {@link module:@enact/moonstone/ToggleItem~ToggleItem} component.
+ *
+ * @module @enact/moonstone/ToggleItem
+ */
+
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 
@@ -6,6 +12,15 @@ import Icon from '../Icon';
 
 import css from './ToggleItem.less';
 
+/**
+ * {@link module:@enact/moonstone/ToggleItem~ToggleItem} is a component to make a Toggleable Item
+ * (e.g Checkbox, RadioItem). It has a customizable prop for icon, so any Moonstone Icon can be used
+ * to represent the checked state.
+ *
+ * @class ToggleItem
+ * @ui
+ * @public
+ */
 const ToggleItemBase = kind({
 	name: 'ToggleItem',
 
@@ -19,7 +34,7 @@ const ToggleItemBase = kind({
 		children: PropTypes.string.isRequired,
 
 		/**
-		 * Applies a "checked" visual state to the radio item.
+		 * Applies a "checked" visual state to the toggle item.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -28,7 +43,7 @@ const ToggleItemBase = kind({
 		checked: PropTypes.bool,
 
 		/**
-		 * Applies a disabled visual state to the radio item.
+		 * Applies a disabled visual state to the toggle item.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -37,7 +52,26 @@ const ToggleItemBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * Applies inline styling to the radio item.
+		 * Icon property accepts a string or an Icon Element. This is the icon that
+		 * will display when checked.
+		 *
+		 * @type {String}
+		 * @default ''
+		 * @public
+		 */
+		icon: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+
+		/**
+		 * CSS classes for Icon
+		 *
+		 * @type {String}
+		 * @default ''
+		 * @public
+		 */
+		iconClasses: PropTypes.string,
+
+		/**
+		 * Applies inline styling to the toggle item.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -46,18 +80,20 @@ const ToggleItemBase = kind({
 		inline: PropTypes.bool,
 
 		/**
-		 * The handler to run when the radio item is toggled.
+		 * The handler to run when the toggle item is toggled.
 		 *
 		 * @type {Function}
 		 * @default () => {}
+		 * @param {Object} event
+		 * @param {String} event.checked - Checked value of item.
+		 * @param {*} event.value - Value passed from `value` prop.
 		 * @public
 		 */
 		onToggle: PropTypes.func,
 
 		/**
 		 * The value that will be sent to the `onToggle` handler.
-		 *
-		 * @type {String|Number}
+		 * @type {*}
 		 * @default ''
 		 * @public
 		 */
@@ -67,6 +103,8 @@ const ToggleItemBase = kind({
 	defaultProps: {
 		checked: false,
 		disabled: false,
+		icon: '',
+		iconClasses: '',
 		inline: false,
 		onToggle: () => {},
 		value: ''
