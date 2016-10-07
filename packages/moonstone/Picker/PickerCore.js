@@ -240,19 +240,9 @@ const PickerCore = class extends React.Component {
 		}
 	}
 
-	handleDecClick = () => {
-		const disabled = this.isButtonDisabled(this.props.step * -1);
-		if (!disabled) {
-			this.handleChange(-this.props.step);
-		}
-	}
+	handleDecClick = () => this.handleChange(-this.props.step)
 
-	handleIncClick = () => {
-		const disabled = this.isButtonDisabled(this.props.step);
-		if (!disabled) {
-			this.handleChange(this.props.step);
-		}
-	}
+	handleIncClick = () => this.handleChange(this.props.step)
 
 	handleDown = (which, ev) => {
 		const {joined, onMouseDown} = this.props;
@@ -319,13 +309,13 @@ const PickerCore = class extends React.Component {
 
 		return (
 			<div {...rest} className={classes} disabled={disabled}>
-				<span className={css.incrementer} disabled={incrementerDisabled} onClick={this.handleIncClick} onMouseDown={this.handleIncDown} onMouseUp={onMouseUp}>
+				<span className={css.incrementer} disabled={incrementerDisabled} onClick={incrementerDisabled ? null : this.handleIncClick} onMouseDown={this.handleIncDown} onMouseUp={onMouseUp}>
 					<ButtonType disabled={incrementerDisabled}>{incrementIcon}</ButtonType>
 				</span>
 				<ViewManager arranger={arranger} duration={200} index={index} noAnimation={noAnimation} reverseTransition={this.reverseTransition} className={css.valueWrapper}>
 					{children}
 				</ViewManager>
-				<span className={css.decrementer} disabled={decrementerDisabled} onClick={this.handleDecClick} onMouseDown={this.handleDecDown} onMouseUp={onMouseUp}>
+				<span className={css.decrementer} disabled={decrementerDisabled} onClick={decrementerDisabled ? null : this.handleDecClick} onMouseDown={this.handleDecDown} onMouseUp={onMouseUp}>
 					<ButtonType disabled={decrementerDisabled}>{decrementIcon}</ButtonType>
 				</span>
 			</div>
