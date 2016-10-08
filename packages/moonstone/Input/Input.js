@@ -55,7 +55,7 @@ class InputBase extends React.Component {
 	}
 
 	spotlightMove = (direction) => {
-		if(!Spotlight.move(direction)) {
+		if (!Spotlight.move(direction)) {
 			this.inputNode.blur();
 		}
 	}
@@ -75,7 +75,7 @@ class InputBase extends React.Component {
 		const firstIcon = icon('iconStart', this.props, iconClasses),
 			lastIcon = icon('iconEnd', this.props, iconClasses);
 		const containerProps = {};
-		
+
 		if (spotlightDisabled) {
 			containerProps['data-container-id'] = rest['data-container-id'];
 		}
