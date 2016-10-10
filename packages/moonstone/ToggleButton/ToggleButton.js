@@ -45,8 +45,7 @@ const ToggleButtonBase = kind({
 		selected: PropTypes.bool, // This is overlap from button
 
 		/**
-		* Button text displayed in the 'off' state. If not specified, the children
-	    * will be used for button text.
+		* Button text displayed in the 'off' state. If not specified, the children will be used for button text.
 		*
 		* @type {String}
 		* @default ''
@@ -55,8 +54,7 @@ const ToggleButtonBase = kind({
 		toggleOffLabel: PropTypes.string,
 
 		/**
-		* Button text displayed in the 'on' state. If not specified, the children
-	    * will be used for button text.
+		* Button text displayed in the 'on' state. If not specified, the children will be used for button text.
 		*
 		* @type {String}
 		* @default ''
