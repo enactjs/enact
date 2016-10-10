@@ -13,7 +13,7 @@ import Marquee from './Marquee';
  */
 const defaultConfig = {
 	/**
-	 * Property containing the callback to stop the animation when `marqueeOnFocus` is enabled
+	 * Property containing the callback to stop the animation when `marqueeOn` is 'focus'
 	 *
 	 * @type {String}
 	 * @default 'onBlur'
@@ -29,7 +29,7 @@ const defaultConfig = {
 	className: null,
 
 	/**
-	 * Property containing the callback to start the animation when `marqueeOnHover` is enabled
+	 * Property containing the callback to start the animation when `marqueeOn` is 'hover'
 	 *
 	 * @type {String}
 	 * @default 'onMouseEnter'
@@ -37,7 +37,7 @@ const defaultConfig = {
 	enter: 'onMouseEnter',
 
 	/**
-	 * Property containing the callback to start the animation when `marqueeOnFocus` is enabled
+	 * Property containing the callback to start the animation when `marqueeOn` is 'focus'
 	 *
 	 * @type {String}
 	 * @default 'onFocus'
@@ -45,7 +45,7 @@ const defaultConfig = {
 	focus: 'onFocus',
 
 	/**
-	 * Property containing the callback to stop the animation when `marqueeOnHover` is enabled
+	 * Property containing the callback to stop the animation when `marqueeOn` is 'hover'
 	 *
 	 * @type {String}
 	 * @default 'onMouseLeave'
@@ -83,7 +83,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			children: React.PropTypes.node,
 
 			/**
-			 * Disables all marquee behavior except when `marqueeOnHover` is enabled
+			 * Disables all marquee behavior except when `marqueeOn` is 'hover'
 			 *
 			 * @type {Boolean}
 			 * @public
@@ -91,8 +91,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			disabled: React.PropTypes.bool,
 
 			/**
-			 * Number of milliseconds to wait before starting marquee when `marqueeOnHover` or
-			 * `marqueeOnFocus` are enabled or before restarting any marquee.
+			 * Number of milliseconds to wait before starting marquee when `marqueeOn` is 'hover' or
+			 * 'focus' or before restarting any marquee.
 			 *
 			 * @type {Number}
 			 * @default 1000
@@ -108,33 +108,17 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			marqueeDisabled: React.PropTypes.bool,
 
 			/**
-			 * Starts the marquee when the wrapped component is focused.
+			 * Determines what trigger the marquee to start its animation
 			 *
-			 * @type {Boolean}
-			 * @default true
+			 * @type {String}
+			 * @default 'focus'
 			 * @public
 			 */
-			marqueeOnFocus: React.PropTypes.bool,
-
-			/**
-			 * Starts the marquee when the wrapped component is hovered by the pointer.
-			 *
-			 * @type {Boolean}
-			 * @public
-			 */
-			marqueeOnHover: React.PropTypes.bool,
-
-			/**
-			 * Starts the marquee when the wrapped component is rendered
-			 *
-			 * @type {Boolean}
-			 * @public
-			 */
-			marqueeOnRender: React.PropTypes.bool,
+			marqueeOn: React.PropTypes.oneOf(['focus', 'hover', 'render']),
 
 			/**
 			 * Number of milliseconds to wait before starting marquee the first time. Has no effect
-			 * if `marqueeOnRender` is not enabled
+			 * if `marqueeOn` is not 'render'
 			 *
 			 * @type {Number}
 			 * @default 1000
@@ -163,7 +147,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static defaultProps = {
 			marqueeDelay: 1000,
-			marqueeOnFocus: true,
+			marqueeOn: 'focus',
 			marqueeOnRenderDelay: 1000,
 			marqueeResetDelay: 1000,
 			marqueeSpeed: 60
@@ -178,7 +162,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidMount () {
-			if (this.props.marqueeOnRender && !this.props.disabled && !this.props.marqueeDisabled) {
+			if (this.props.marqueeOn === 'render' && !this.props.disabled && !this.props.marqueeDisabled) {
 				this.startAnimation(this.props.marqueeOnRenderDelay);
 			}
 		}
@@ -295,12 +279,12 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		/**
-		 * Cancels the marquee unless `marqueeOnRender` is enabled
+		 * Cancels the marquee unless `marqueeOn` is 'render'
 		 *
 		 * @returns {undefined}
 		 */
 		cancelAnimation = () => {
-			if (!this.props.marqueeOnRender) {
+			if (!this.props.marqueeOn === 'render') {
 				this.clearTimeout();
 				this.setState({
 					animating: false
@@ -341,12 +325,13 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const {
 				children,
 				disabled,
-				marqueeOnFocus,
-				marqueeOnHover,
+				marqueeOn,
 				marqueeSpeed,
 				...rest
 			} = this.props;
 			const distance = this.calcDistance();
+			const marqueeOnFocus = marqueeOn === 'focus';
+			const marqueeOnHover = marqueeOn === 'hover';
 
 			if (marqueeOnFocus && !disabled) {
 				rest[focus] = this.handleFocus;
@@ -354,13 +339,12 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			// TODO: cancel others on hover
-			if ((marqueeOnHover && !this.marqueeOnFocus) || (disabled && this.marqueeOnFocus)) {
+			if ((marqueeOnHover && !marqueeOnFocus) || (disabled && marqueeOnFocus)) {
 				rest[enter] = this.handleEnter;
 				rest[leave] = this.handleLeave;
 			}
 
 			delete rest.marqueeDelay;
-			delete rest.marqueeOnFocus;
 			delete rest.marqueeOnRenderDelay;
 			delete rest.marqueeResetDelay;
 			delete rest.marqueeSpeed;
@@ -387,9 +371,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			delete props.marqueeDelay;
 			delete props.marqueeDisabled;
-			delete props.marqueeOnFocus;
-			delete props.marqueeOnHover;
-			delete props.marqueeOnRender;
+			delete props.marqueeOn;
 			delete props.marqueeOnRenderDelay;
 			delete props.marqueeResetDelay;
 			delete props.marqueeSpeed;

@@ -100,7 +100,7 @@ const HeaderBase = kind({
 		switch (type) {
 			case 'compact': return (
 				<header {...rest}>
-					<MarqueeText className={css.headerCell} marqueeOnHover marqueeOnFocus={false}>
+					<MarqueeText className={css.headerCell} marqueeOn="hover">
 						<UppercaseH1 className={css.title} preserveCase={preserveCase}>{title}</UppercaseH1>
 						<h2 className={css.titleBelow}>{titleBelow}</h2>
 					</MarqueeText>
@@ -119,15 +119,15 @@ const HeaderBase = kind({
 			// );
 			case 'standard': return (
 				<header {...rest}>
-					<HeaderH1 className={css.title} preserveCase={preserveCase} marqueeOnHover marqueeOnFocus={false}>
+					<HeaderH1 className={css.title} preserveCase={preserveCase} marqueeOn="hover">
 						{title}
 					</HeaderH1>
 					<div className={css.headerRow}>
 						<div className={css.headerCell}>
-							<MarqueeH2 className={css.titleBelow} marqueeOnHover marqueeOnFocus={false}>
+							<MarqueeH2 className={css.titleBelow} marqueeOn="hover">
 								{titleBelow}
 							</MarqueeH2>
-							<MarqueeH2 className={css.subTitleBelow} marqueeOnHover marqueeOnFocus={false}>
+							<MarqueeH2 className={css.subTitleBelow} marqueeOn="hover">
 								{subTitleBelow}
 							</MarqueeH2>
 						</div>
