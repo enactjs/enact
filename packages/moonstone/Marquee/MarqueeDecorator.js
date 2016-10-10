@@ -1,5 +1,3 @@
-/* global clearTimeout, setTimeout */
-
 import hoc from '@enact/core/hoc';
 import {forward} from '@enact/core/handle';
 import {childrenEquals} from '@enact/core/util';
@@ -84,7 +82,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			children: React.PropTypes.node,
 
 			/**
-			 * Disables all marquee behavior except when `marqueeOn` is 'hover'
+			 * Disables all marquee behavior except when `marqueeOn` is 'hover'. Will be forwarded
+			 * onto the wrapped component as well.
 			 *
 			 * @type {Boolean}
 			 * @public
@@ -205,7 +204,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {undefined}
 		 */
 		clearTimeout () {
-			clearTimeout(this.timer);
+			if (window) {
+				window.clearTimeout(this.timer);
+			}
 			this.timer = null;
 		}
 
@@ -218,7 +219,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		setTimeout (fn, time) {
 			this.clearTimeout();
-			this.timer = setTimeout(fn, time);
+			if (window) {
+				this.timer = window.setTimeout(fn, time);
+			}
 		}
 
 		/**
@@ -229,8 +232,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		* @private
 		*/
 		shouldAnimate (distance) {
-			distance = (distance && distance >= 0) ? distance : this.calcDistance();
-			return (distance > 0);
+			const d = distance === null ? this.calcDistance() : distance;
+			return d > 0;
 		}
 
 		/**
