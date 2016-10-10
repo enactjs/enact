@@ -1,3 +1,9 @@
+/**
+ * Exports the {@link module:@enact/moonstone/RadioItem~RadioItem}
+ *
+ * @module @enact/moonstone/RadioItem
+ */
+
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 
@@ -5,6 +11,15 @@ import {ToggleItemBase} from '../ToggleItem';
 
 import css from './RadioItem.less';
 
+/**
+ * {@link module:@enact/moonstone/RadioItem~RadioItem} is a component that
+ * combines a Toggleable radio selector and an Item. It has two checked states
+ * `true` & `false`.
+ *
+ * @class RadioItem
+ * @ui
+ * @public
+ */
 const RadioItemBase = kind({
 	name: 'RadioItem',
 
@@ -58,7 +73,7 @@ const RadioItemBase = kind({
 		/**
 		 * The value that will be sent to the `onToggle` handler.
 		 *
-		 * @type {String|Number}
+		 * @type {*}
 		 * @default ''
 		 * @public
 		 */
