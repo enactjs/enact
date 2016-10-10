@@ -13,7 +13,6 @@ import css from './ToggleButton.less';
 
 /**
 * {@link module:@enact/moonstone/ToggleButton~ToggleButton} is an {@link module:enact/moonstone/Button~Button} that is {@link module:enact/ui/Toggleable~Togleable}.
-
 *
 * @class ToggleButton
 * @extends module:enact/moonstone/Button~Button
