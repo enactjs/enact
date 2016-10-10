@@ -164,9 +164,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidMount () {
-			if (this.marqueeOnRender) {
-				this.startAnimation(this.props.marqueeOnRenderDelay);
-			}
+			this.initMarquee();
 		}
 
 		componentWillReceiveProps (next) {
@@ -181,10 +179,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidUpdate () {
-			this.calcDistance();
-			if (this.marqueeOnRender) {
-				this.startAnimation(this.props.marqueeOnRenderDelay);
-			}
+			this.initMarquee();
 		}
 
 		componentWillUnmount () {
@@ -222,6 +217,19 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.clearTimeout();
 			if (window) {
 				this.timer = window.setTimeout(fn, time);
+			}
+		}
+
+		/**
+		 * Initializes the marquee by calculating the distance and conditionally starting the
+		 * animation
+		 *
+		 * @returns {undefined}
+		 */
+		initMarquee () {
+			this.calcDistance();
+			if (this.marqueeOnRender) {
+				this.startAnimation(this.props.marqueeOnRenderDelay);
 			}
 		}
 
