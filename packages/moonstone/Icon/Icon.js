@@ -1,3 +1,9 @@
+/**
+ * Exports the {@link module:@enact/moonstone/Icon~Icon} component.
+ *
+ * @module @enact/moonstone/Icon
+ */
+
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 
@@ -5,11 +11,33 @@ import iconList from './IconList.js';
 
 import css from './Icon.less';
 
+/**
+ * {@link module:@enact/moonstone/ToggleItem~ToggleItem} is a component to make a Toggleable Item
+ * (e.g Checkbox, RadioItem). It has a customizable prop for icon, so any Moonstone Icon can be used
+ * to represent the checked state.
+ *
+ * @class ToggleItem
+ * @ui
+ * @public
+ */
 const IconBase = kind({
 	name: 'Icon',
 
 	propTypes: {
+		/**
+		 * The string to be displayed as the main content of the toggle item.
+		 *
+		 * @type {String}
+		 * @public
+		 */
 		children: PropTypes.string.isRequired,
+		/**
+		 * If `true`, apply the 'small' class.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
 		small: PropTypes.bool
 	},
 
