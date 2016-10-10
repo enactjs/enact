@@ -4,7 +4,7 @@ import React, {PropTypes} from 'react';
 
 import Icon from '../Icon';
 
-import {PlainInput, PlainInputBase} from './PlainInput';
+import {PlainInput} from './PlainInput';
 import css from './Input.less';
 
 const icon = (which, props, className) => {
@@ -13,7 +13,13 @@ const icon = (which, props, className) => {
 
 class InputBase extends React.Component {
 	static propTypes = {
-		...PlainInputBase.propTypes,
+		/**
+		 * Applies a disabled visual state to the checkbox item.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
 		disabled: PropTypes.bool,
 
 		/**
@@ -24,12 +30,66 @@ class InputBase extends React.Component {
 		 * @public
 		 */
 		dismissOnEnter: PropTypes.bool,
+
+		/**
+		 * The icon to be placed at the end of the input.
+		 *
+		 * @type {String}
+		 * @public
+		 */
 		iconEnd: PropTypes.string,
-		iconStart: PropTypes.string
+
+		/**
+		 * The icon to be placed at the beginning of the input.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		iconStart: PropTypes.string,
+
+		/**
+		 * The handler to run when the input value is changed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onChange: PropTypes.func,
+
+		/**
+		 * The placeholder text to display.
+		 *
+		 * @type {String}
+		 * @default ''
+		 * @public
+		 */
+		placeholder: PropTypes.string,
+
+		/**
+		 * The type of input. Accepted values correspond to the standard HTML5 input types.
+		 *
+		 * @type {String}
+		 * @default 'text'
+		 * @public
+		 */
+		type: PropTypes.string,
+
+		/**
+		 * The value of the input.
+		 *
+		 * @type {String}
+		 * @default ''
+		 * @public
+		 */
+		value: PropTypes.string
 	}
 
 	static defaultProps = {
-		dismissOnEnter: false
+		disabled: false,
+		dismissOnEnter: false,
+		placeholder: '',
+		type: 'text',
+		value: ''
 	}
 
 	inputKeyDown = (e) => {
