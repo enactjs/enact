@@ -1,3 +1,9 @@
+/**
+ * Exports the {@link module:@enact/moonstone/Input~Input} component.
+ *
+ * @module @enact/moonstone/Input
+ */
+
 import classNames from 'classnames';
 import {Spotlight, Spottable, SpotlightContainerDecorator, SpotlightFocusableDecorator} from '@enact/spotlight';
 import React, {PropTypes} from 'react';
@@ -11,11 +17,40 @@ const icon = (which, props, className) => {
 	return props[which] ? <Icon className={className}>{props[which]}</Icon> : null;
 };
 
+/**
+ * {@link module:@enact/moonstone/Input~Input} is a {@link module:@enact/ui/Spottable~Spottable} <input>.
+ *
+ * @class Input
+ * @ui
+ * @public
+ */
 class InputBase extends React.Component {
 	static propTypes = {
+		/**
+		 * See {@link module:@enact/moonstone/PlainInput~PlainInputBase}
+		 */
 		...PlainInputBase.propTypes,
+		/**
+		 * Applies a disabled visual state to the input.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
 		disabled: PropTypes.bool,
+		/**
+		 * A string for an {@link module:@enact/moonstone/Icon~Icon} to use at the
+		 * end of the input.
+		 *
+		 * @module @enact/moonstone/Input
+		 */
 		iconEnd: PropTypes.string,
+		/**
+		 * A string for an {@link module:@enact/moonstone/Icon~Icon} to use at the
+		 * beginning of the input.
+		 *
+		 * @module @enact/moonstone/Input
+		 */
 		iconStart: PropTypes.string
 	}
 
