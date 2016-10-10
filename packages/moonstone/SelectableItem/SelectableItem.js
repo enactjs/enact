@@ -12,9 +12,9 @@ import {ToggleItemBase} from '../ToggleItem';
 import css from './SelectableItem.less';
 
 /**
- * {@link module:@enact/moonstone/SelectableItem~SelectableItem} is moonstone component of
- * a Toggleable SelectableItem. It has two checked states `true` & `false`. It
- * uses a dot to represent its checked state.
+ * {@link module:@enact/moonstone/SelectableItem~SelectableItem} is component
+ * that is an Item that is Toggleable. It has two checked states `true` &
+ * `false`. It uses a dot to represent its checked state.
  *
  * @class SelectableItem
  * @ui

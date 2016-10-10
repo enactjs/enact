@@ -4,36 +4,32 @@ import SelectableItem from '../SelectableItem';
 import css from '../SelectableItem.less';
 
 describe('SelectableItem Specs', () => {
-	it('should render ToggleItem', function () {
+	it('should render SelectableItem', function () {
 		const selectableItem = shallow(
 			<SelectableItem>
 				Hello SelectableItem
 			</SelectableItem>
 		);
 
-		const expected = false;
-		const actual = selectableItem.find('ToggleItem').isEmpty();
+		const actual = selectableItem;
 
-		expect(actual).to.equal(expected);
+		expect(actual).to.be.ok();
 	});
 
-	it('should render no icon when not toggled', function () {
+	it('should render no icon when not checked', function () {
 		const selectableItem = mount(
 			<SelectableItem>
 				Hello SelectableItem
 			</SelectableItem>
 		);
 
-		const expected = css.dot;
+		const expected = css.checked;
 		const actual = selectableItem.find('Icon').prop('className');
-		const checked = css.checked;
 
-		expect(actual).to.contain(expected);
-
-		expect(actual).to.not.contain(checked);
+		expect(actual).to.not.contain(expected);
 	});
 
-	it('should render correct icon when toggled', function () {
+	it('should render correct icon when checked', function () {
 		const selectableItem = mount(
 			<SelectableItem checked>
 				Hello SelectableItem
