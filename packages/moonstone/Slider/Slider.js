@@ -7,27 +7,92 @@ import React, {PropTypes} from 'react';
 
 import css from './Slider.less';
 
+const changeDelayMS = 20;
+
 const SliderBase = kind({
 	name: 'Slider',
 
 	propTypes : {
+		/**
+		 * Background progress, as a percentage.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
 		backgroundPercent: PropTypes.number,
 
 		/**
-		 * Set the height, in standard CSS units, of the vertical slider. Only takes effect on
-		 * vertical oriented slider.
+		 * Height, in standard CSS units, of the vertical slider. Only takes
+		 * effect on a vertical oriented slider.
 		 *
 		 * @type {String}
 		 * @default '300px'
 		 * @public
 		 */
 		height: PropTypes.string,
+
+		/**
+		 * The maximum value of the slider.
+		 *
+		 * @type {Number}
+		 * @default 100
+		 * @public
+		 */
 		max: PropTypes.number,
+
+		/**
+		 * The minimum value of the slider.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
 		min: PropTypes.number,
+
+		/**
+		 * The handler to run when the value is changed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
 		onChange: PropTypes.func,
+
+		/**
+		 * When `true`, a pressed visual effect is applied
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
 		pressed: PropTypes.bool,
+
+		/**
+		* The amount to increment or decrement the value.
+		*
+		* @type {Number}
+		* @default 1
+		* @public
+		*/
 		step: PropTypes.number,
+
+		/**
+		* The value of the slider.
+		*
+		* @type {Number}
+		* @default 0
+		* @public
+		*/
 		value: checkDefaultBounds,
+
+		/**
+		* If `true` the slider will be oriented vertically.
+		*
+		* @type {Boolean}
+		* @default false
+		* @public
+		*/
 		vertical: PropTypes.bool
 	},
 
@@ -36,7 +101,6 @@ const SliderBase = kind({
 		height: '300px',
 		max: 100,
 		min: 0,
-		onChange: () => {},
 		pressed: false,
 		step: 1,
 		value: 0,
@@ -86,8 +150,93 @@ const SliderBase = kind({
 });
 
 class Slider extends React.Component {
-	static propTypes = SliderBase.propTypes;
-	static defaultProps = SliderBase.defaultProps;
+	static propTypes = {
+		/**
+		 * Background progress, as a percentage.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
+		backgroundPercent: PropTypes.number,
+
+		/**
+		 * Height, in standard CSS units, of the vertical slider. Only takes
+		 * effect on a vertical oriented slider.
+		 *
+		 * @type {String}
+		 * @default '300px'
+		 * @public
+		 */
+		height: PropTypes.string,
+
+		/**
+		 * The maximum value of the slider.
+		 *
+		 * @type {Number}
+		 * @default 100
+		 * @public
+		 */
+		max: PropTypes.number,
+
+		/**
+		 * The minimum value of the slider.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
+		min: PropTypes.number,
+
+		/**
+		 * The handler to run when the value is changed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onChange: PropTypes.func,
+
+		/**
+		 * When `true`, a pressed visual effect is applied
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		pressed: PropTypes.bool,
+
+		/**
+		* The amount to increment or decrement the value.
+		*
+		* @type {Number}
+		* @default 1
+		* @public
+		*/
+		step: PropTypes.number,
+
+		/**
+		* The value of the slider.
+		*
+		* @type {Number}
+		* @default 0
+		* @public
+		*/
+		value: checkDefaultBounds,
+
+		/**
+		* If `true` the slider will be oriented vertically.
+		*
+		* @type {Boolean}
+		* @default false
+		* @public
+		*/
+		vertical: PropTypes.bool
+	};
+
+	static defaultProps = {
+		value: 0
+	};
 
 	constructor (props) {
 		super(props);
@@ -98,13 +247,11 @@ class Slider extends React.Component {
 
 	onChange = () => this.props.onChange(this.state.value)
 
-	changeDelayMS = 20
-
 	updateValue = (event) => {
 		event.preventDefault();
 		throttleJob('sliderChange', () => {
 			this.setState({value: Number.parseInt(event.target.value, 10)}, this.onChange);
-		}, this.changeDelayMS);
+		}, changeDelayMS);
 	}
 
 	getSliderNode = (node) => {

@@ -19,7 +19,7 @@ const SwitchItemBase = kind({
 		children: PropTypes.string.isRequired,
 
 		/**
-		 * Applies a "checked" visual state to the switch item.
+		 * When `true`, a "checked" visual state is applied to the switch item.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -28,7 +28,7 @@ const SwitchItemBase = kind({
 		checked: PropTypes.bool,
 
 		/**
-		 * Applies a disabled visual state to the switch item.
+		 * When `true`, a disabled visual state is applied to the switch item.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -37,7 +37,7 @@ const SwitchItemBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * Applies inline styling to the switch item.
+		 * When true, inline styling is applied to the switch item.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -68,9 +68,7 @@ const SwitchItemBase = kind({
 
 	defaultProps: {
 		checked: false,
-		disabled: false,
-		inline: false,
-		value: ''
+		disabled: false
 	},
 
 	styles: {

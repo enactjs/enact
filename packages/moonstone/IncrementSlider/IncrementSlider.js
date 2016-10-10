@@ -17,16 +17,16 @@ const IncrementSliderBase = kind({
 
 	propTypes : {
 		/**
-		* Sets the background progress as a percentage.
-		*
-		* @type {Number}
-		* @default 0
-		* @public
-		*/
+		 * Background progress, as a percentage.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
 		backgroundPercent: PropTypes.number,
 
 		/**
-		 * Sets the height, in standard CSS units, of the vertical increment slider. Only takes
+		 * Height, in standard CSS units, of the vertical increment slider. Only takes
 		 * effect on a vertical oriented slider.
 		 *
 		 * @type {String}
@@ -36,29 +36,28 @@ const IncrementSliderBase = kind({
 		height: PropTypes.string,
 
 		/**
-		* The maximum value of the increment slider.
-		*
-		* @type {Number}
-		* @default 100
-		* @public
-		*/
+		 * The maximum value of the increment slider.
+		 *
+		 * @type {Number}
+		 * @default 100
+		 * @public
+		 */
 		max: PropTypes.number,
 
 		/**
-		* The minimum value of the increment slider.
-		*
-		* @type {Number}
-		* @default 0
-		* @public
-		*/
+		 * The minimum value of the increment slider.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
 		min: PropTypes.number,
 
 		/**
 		 * The handler to run when the value is changed.
 		 *
 		 * @type {Function}
-		 * @default () => {}
-		 * @param {Object} event
+		 * @param {Number} value - The current value
 		 * @public
 		 */
 		onChange: PropTypes.func,
@@ -91,7 +90,7 @@ const IncrementSliderBase = kind({
 		step: PropTypes.number,
 
 		/**
-		* Sets the value of the increment slider.
+		* The value of the increment slider.
 		*
 		* @type {Number}
 		* @default 0
@@ -110,14 +109,6 @@ const IncrementSliderBase = kind({
 	},
 
 	defaultProps: {
-		backgroundPercent: 0,
-		height: '300px',
-		max: 100,
-		min: 0,
-		onChange: () => {},
-		pressed: false,
-		step: 1,
-		value: 0,
 		vertical: false
 	},
 
@@ -130,10 +121,10 @@ const IncrementSliderBase = kind({
 		incrementSliderClasses: ({vertical, styler}) => styler.append({vertical})
 	},
 
-	render: ({value, onIncrement, onDecrement, incrementSliderClasses, ...rest}) => (
+	render: ({onIncrement, onDecrement, incrementSliderClasses, ...rest}) => (
 		<div className={incrementSliderClasses}>
 			<IconButton className={css.decrementButton} small onClick={onDecrement}>arrowlargeleft</IconButton>
-			<SliderBase {...rest} className={css.slider} value={value} />
+			<SliderBase {...rest} className={css.slider} />
 			<IconButton className={css.incrementButton} small onClick={onIncrement}>arrowlargeright</IconButton>
 		</div>
 	)
@@ -141,9 +132,105 @@ const IncrementSliderBase = kind({
 
 class IncrementSlider extends React.Component {
 
-	static propTypes = SliderBase.propTypes;
+	static propTypes = {
+		/**
+		 * Background progress, as a percentage.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
+		backgroundPercent: PropTypes.number,
 
-	static defaultProps = IncrementSliderBase.defaultProps;
+		/**
+		 * Height, in standard CSS units, of the vertical increment slider. Only takes
+		 * effect on a vertical oriented slider.
+		 *
+		 * @type {String}
+		 * @default '300px'
+		 * @public
+		 */
+		height: PropTypes.string,
+
+		/**
+		 * The maximum value of the increment slider.
+		 *
+		 * @type {Number}
+		 * @default 100
+		 * @public
+		 */
+		max: PropTypes.number,
+
+		/**
+		 * The minimum value of the increment slider.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
+		min: PropTypes.number,
+
+		/**
+		 * The handler to run when the value is changed.
+		 *
+		 * @type {Function}
+		 * @param {Number} value - The current value
+		 * @public
+		 */
+		onChange: PropTypes.func,
+
+		/**
+		 * The handler to run when the value is incremented.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onDecrement: PropTypes.func,
+
+		/**
+		 * The handler to run when the value is decremented.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onIncrement: PropTypes.func,
+
+		/**
+		* The amount to increment or decrement the value.
+		*
+		* @type {Number}
+		* @default 1
+		* @public
+		*/
+		step: PropTypes.number,
+
+		/**
+		* The value of the increment slider.
+		*
+		* @type {Number}
+		* @default 0
+		* @public
+		*/
+		value: checkDefaultBounds,
+
+		/**
+		* If `true` the increment slider will be oriented vertically.
+		*
+		* @type {Boolean}
+		* @default false
+		* @public
+		*/
+		vertical: PropTypes.bool
+	};
+
+	static defaultProps = {
+		max: 100,
+		min: 0,
+		step: 1,
+		value: 0
+	};
 
 	constructor (props) {
 		super(props);
@@ -160,7 +247,11 @@ class IncrementSlider extends React.Component {
 		}
 	}
 
-	onChange = () => this.props.onChange(this.state.value)
+	onChange = () => {
+		if (this.props.onChange) {
+			this.props.onChange(this.state.value);
+		}
+	}
 
 	changeDelayMS = 20
 

@@ -11,8 +11,8 @@ const IconButtonBase = kind({
 
 	propTypes: {
 		/**
-		 * The string corresponding to an icon button.
-		 *
+		 * String description of the icon to be used. All strings supported by
+		 * [Icon]{module:@enact/moonstone/Icon~Icon} are supported.
 		 * @type {String}
 		 * @public
 		 */
@@ -39,7 +39,7 @@ const IconButtonBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * Applies a pressed visual effect to the icon button
+		 * When `true`, a pressed visual effect is applied to the icon button
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -48,7 +48,7 @@ const IconButtonBase = kind({
 		pressed: PropTypes.bool,
 
 		/**
-		 * Applies a selected visual effect to the icon button
+		 * When `true`, a selected visual effect is applied to the icon button
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -70,10 +70,6 @@ const IconButtonBase = kind({
 	},
 
 	defaultProps: {
-		backgroundOpacity: 'opaque',
-		disabled: false,
-		pressed: false,
-		selected: false,
 		small: false
 	},
 
