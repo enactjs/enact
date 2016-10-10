@@ -55,6 +55,7 @@ const SliderBase = kind({
 		 *
 		 * @type {Function}
 		 * @param {Object} event
+		 * @param {Number} event.value Value of the slider
 		 * @public
 		 */
 		onChange: PropTypes.func,
@@ -245,7 +246,11 @@ class Slider extends React.Component {
 		};
 	}
 
-	onChange = () => this.props.onChange(this.state.value)
+	onChange = () => {
+		if (this.props.onChange) {
+			this.props.onChange({value: this.state.value});
+		}
+	}
 
 	updateValue = (event) => {
 		event.preventDefault();

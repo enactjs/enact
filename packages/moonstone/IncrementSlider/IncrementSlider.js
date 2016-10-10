@@ -57,7 +57,8 @@ const IncrementSliderBase = kind({
 		 * The handler to run when the value is changed.
 		 *
 		 * @type {Function}
-		 * @param {Number} value - The current value
+		 * @param {Object} event
+		 * @param {Number} event.value The current value
 		 * @public
 		 */
 		onChange: PropTypes.func,
@@ -249,7 +250,7 @@ class IncrementSlider extends React.Component {
 
 	onChange = () => {
 		if (this.props.onChange) {
-			this.props.onChange(this.state.value);
+			this.props.onChange({value: this.state.value});
 		}
 	}
 
