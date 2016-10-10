@@ -48,7 +48,9 @@ const CheckboxItemBase = kind({
 		 * The handler to run when the checkbox item is toggled.
 		 *
 		 * @type {Function}
-		 * @default () => {}
+		 * @param {Object} event
+		 * @param {String} event.checked - Checked value of item.
+		 * @param {*} event.value - Value passed from `value` prop.
 		 * @public
 		 */
 		onToggle: PropTypes.func,
@@ -67,7 +69,6 @@ const CheckboxItemBase = kind({
 		checked: false,
 		disabled: false,
 		inline: false,
-		onToggle: () => {},
 		value: ''
 	},
 

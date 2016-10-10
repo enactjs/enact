@@ -58,9 +58,28 @@ const IncrementSliderBase = kind({
 		 *
 		 * @type {Function}
 		 * @default () => {}
+		 * @param {Object} event
 		 * @public
 		 */
 		onChange: PropTypes.func,
+
+		/**
+		 * The handler to run when the value is incremented.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onDecrement: PropTypes.func,
+
+		/**
+		 * The handler to run when the value is decremented.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onIncrement: PropTypes.func,
 
 		/**
 		* The amount to increment or decrement the value.

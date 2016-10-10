@@ -42,7 +42,7 @@ class InputBase extends React.Component {
 		 * The handler to run when the input value is changed.
 		 *
 		 * @type {Function}
-		 * @default () => {}
+		 * @param {Object} event
 		 * @public
 		 */
 		onChange: PropTypes.func,
@@ -77,7 +77,6 @@ class InputBase extends React.Component {
 
 	defaultProps: {
 		disabled: false,
-		onChange: () => {},
 		placeholder: '',
 		type: 'text',
 		value: ''
