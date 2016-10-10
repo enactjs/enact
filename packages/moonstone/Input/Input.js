@@ -15,20 +15,35 @@ class InputBase extends React.Component {
 	static propTypes = {
 		...PlainInputBase.propTypes,
 		disabled: PropTypes.bool,
+
+		/**
+		 * When `true`, blurs the input when the "enter" key is pressed.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		dismissOnEnter: PropTypes.bool,
 		iconEnd: PropTypes.string,
 		iconStart: PropTypes.string
 	}
 
-	constructor (props) {
-		super(props);
+	static defaultProps = {
+		dismissOnEnter: false
 	}
 
 	inputKeyDown = (e) => {
 		const keyCode = e.nativeEvent.keyCode;
+		const {dismissOnEnter} = this.props;
 
 		e.stopPropagation();
 
 		switch (keyCode) {
+			case 13:
+				if (dismissOnEnter) {
+					this.inputNode.blur();
+				}
+				break;
 			case 37:
 				if (this.inputNode.selectionStart === 0) {
 					Spotlight.move('left');
@@ -69,12 +84,13 @@ class InputBase extends React.Component {
 		const firstIcon = icon('iconStart', this.props, iconClasses),
 			lastIcon = icon('iconEnd', this.props, iconClasses);
 		const containerProps = {};
-		
+
 		if (spotlightDisabled) {
 			containerProps['data-container-id'] = rest['data-container-id'];
 		}
 
 		delete rest['data-container-id'];
+		delete rest.dismissOnEnter;
 
 		return (
 			<label {...containerProps} disabled={disabled} className={decoratorClasses} tabIndex={tabIndex} onKeyDown={onKeyDown} onFocus={onFocus} >
