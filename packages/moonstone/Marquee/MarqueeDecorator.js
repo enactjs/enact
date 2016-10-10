@@ -2,6 +2,7 @@
 
 import hoc from '@enact/core/hoc';
 import {forward} from '@enact/core/handle';
+import {childrenEquals} from '@enact/core/util';
 import React from 'react';
 
 import Marquee from './Marquee';
@@ -159,16 +160,43 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.state = {
 				overflow: 'ellipsis'
 			};
+
+			this.checkMarqueeOnRender(props);
 		}
 
 		componentDidMount () {
-			if (this.props.marqueeOn === 'render' && !this.props.disabled && !this.props.marqueeDisabled) {
+			if (this.marqueeOnRender) {
+				this.startAnimation(this.props.marqueeOnRenderDelay);
+			}
+		}
+
+		componentWillReceiveProps (next) {
+			const {marqueeOn, marqueeDisabled} = this.props;
+			this.checkMarqueeOnRender(next);
+			if (next.marqueeOn !== marqueeOn || next.marqueeDisabled !== marqueeDisabled) {
+				this.cancelAnimation();
+			} else if (!childrenEquals(this.props.children, next.children)) {
+				this.distance = null;
+				this.cancelAnimation();
+			}
+		}
+
+		componentDidUpdate () {
+			if (this.marqueeOnRender) {
 				this.startAnimation(this.props.marqueeOnRenderDelay);
 			}
 		}
 
 		componentWillUnmount () {
 			this.clearTimeout();
+		}
+
+		checkMarqueeOnRender (props) {
+			this.marqueeOnRender =	props.marqueeOn === 'render' &&
+									!props.disabled &&
+									!props.marqueeDisabled;
+
+			return this.marqueeOnRender;
 		}
 
 		/**
@@ -279,17 +307,15 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		/**
-		 * Cancels the marquee unless `marqueeOn` is 'render'
+		 * Cancels the marquee
 		 *
 		 * @returns {undefined}
 		 */
 		cancelAnimation = () => {
-			if (!this.props.marqueeOn === 'render') {
-				this.clearTimeout();
-				this.setState({
-					animating: false
-				});
-			}
+			this.clearTimeout();
+			this.setState({
+				animating: false
+			});
 		}
 
 		handleMarqueeComplete = (ev) => {
