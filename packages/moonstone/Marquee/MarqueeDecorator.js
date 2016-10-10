@@ -181,6 +181,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidUpdate () {
+			this.calcDistance();
 			if (this.marqueeOnRender) {
 				this.startAnimation(this.props.marqueeOnRenderDelay);
 			}
@@ -358,7 +359,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				marqueeSpeed,
 				...rest
 			} = this.props;
-			const distance = this.calcDistance();
+
 			const marqueeOnFocus = marqueeOn === 'focus';
 			const marqueeOnHover = marqueeOn === 'hover';
 
@@ -384,7 +385,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						animating={this.state.animating}
 						className={marqueeClassName}
 						clientRef={this.cacheNode}
-						distance={distance}
+						distance={this.distance}
 						onMarqueeComplete={this.handleMarqueeComplete}
 						overflow={this.state.overflow}
 						speed={marqueeSpeed}
