@@ -276,17 +276,14 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			const distance = this.calcDistance();
 
-			// If there is no need to animate, return early
-			if (!this.shouldAnimate(distance)) {
-				this.contentFits = true;
-				return;
+			this.contentFits = this.shouldAnimate(distance);
+			if (!this.contentFits) {
+				this.setTimeout(() => {
+					this.setState({
+						animating: true
+					});
+				}, delay);
 			}
-
-			this.setTimeout(() => {
-				this.setState({
-					animating: true
-				});
-			}, delay);
 		}
 
 		/**
