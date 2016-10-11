@@ -162,6 +162,15 @@ class Slider extends React.Component {
 		backgroundPercent: PropTypes.number,
 
 		/**
+		* The initial value of the slider.
+		*
+		* @type {Number}
+		* @default 0
+		* @public
+		*/
+		defaultValue: checkDefaultBounds,
+
+		/**
 		 * Height, in standard CSS units, of the vertical slider. Only takes
 		 * effect on a vertical oriented slider.
 		 *
@@ -217,15 +226,6 @@ class Slider extends React.Component {
 		step: PropTypes.number,
 
 		/**
-		* The value of the slider.
-		*
-		* @type {Number}
-		* @default 0
-		* @public
-		*/
-		value: checkDefaultBounds,
-
-		/**
 		* If `true` the slider will be oriented vertically.
 		*
 		* @type {Boolean}
@@ -236,13 +236,13 @@ class Slider extends React.Component {
 	};
 
 	static defaultProps = {
-		value: 0
+		defaultValue: 0
 	};
 
 	constructor (props) {
 		super(props);
 		this.state = {
-			value: this.props.value
+			value: this.props.defaultValue
 		};
 	}
 
