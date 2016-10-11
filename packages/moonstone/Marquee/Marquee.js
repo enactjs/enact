@@ -36,7 +36,7 @@ const MarqueeBase = kind({
 		animating: React.PropTypes.bool,
 
 		/**
-		 * `children` is the text or components that should be scrolled by the
+		 * `children` is the text or a set of components that should be scrolled by the
 		 * {@link module:@enact/moonstone/Marquee~Marquee} component.
 		 * This prop may be empty in some cases, which is OK.
 		 *
@@ -79,7 +79,7 @@ const MarqueeBase = kind({
 		onMarqueeComplete: React.PropTypes.func,
 
 		/**
-		 * Text overflow setting. Either `clip` or `ellipsis`
+		 * Text overflow setting. Either `'clip'` or `'ellipsis'`
 		 *
 		 * @type {String}
 		 * @public

@@ -11,37 +11,45 @@ describe('Marquee', () => {
 
 	// Computed Property Tests
 
-	it('should include the animate class only when animating is true', function () {
+	it('should not include the animate class when animating is false', function () {
 		const subject = shallow(
 			<Marquee />
 		);
 
-		let expected = false;
-		let actual = subject.childAt(0).hasClass(css.animate);
-		expect(actual).to.equal(expected);
-
-		subject.setProps({animating: true});
-
-		expected = true;
-		actual = subject.childAt(0).hasClass(css.animate);
+		const expected = false;
+		const actual = subject.childAt(0).hasClass(css.animate);
 		expect(actual).to.equal(expected);
 	});
 
-	it('should transition only when animating is true', function () {
+	it('should include the animate class when animating is true', function () {
+		const subject = shallow(
+			<Marquee animating />
+		);
+
+		const expected = true;
+		const actual = subject.childAt(0).hasClass(css.animate);
+		expect(actual).to.equal(expected);
+	});
+
+	it('should not transition when animating is false', function () {
 		const subject = shallow(
 			<Marquee />
 		);
 
-		let actual = subject.childAt(0).prop('style');
+		const actual = subject.childAt(0).prop('style');
 		expect(actual).to.not.have.property('transition');
+	});
 
-		subject.setProps({animating: true});
+	it('should transition when animating is true', function () {
+		const subject = shallow(
+			<Marquee animating />
+		);
 
-		actual = subject.childAt(0).prop('style');
+		const actual = subject.childAt(0).prop('style');
 		expect(actual).to.have.property('transition');
 	});
 
-	it('should set the direction when the text directionality differs from context RTL', function () {
+	it('should set RTL direction in LTR context when the text directionality is RTL', function () {
 		const subject = shallow(
 			<Marquee>
 				{rtlContent}
@@ -49,20 +57,25 @@ describe('Marquee', () => {
 			{context: {rtl: false}}
 		);
 
-		let expected = 'rtl';
-		let actual = subject.childAt(0).prop('style').direction;
-		expect(actual).to.equal(expected);
-
-		// Test LTR content and RTL context
-		subject.setContext({rtl: true});
-		subject.setProps({children: content});
-
-		expected = 'ltr';
-		actual = subject.childAt(0).prop('style').direction;
+		const expected = 'rtl';
+		const actual = subject.childAt(0).prop('style').direction;
 		expect(actual).to.equal(expected);
 	});
 
-	it('should adjust the transition direction for RTL', function () {
+	it('should set LTR direction in RTL when the text directionality is LTR', function () {
+		const subject = shallow(
+			<Marquee>
+				{content}
+			</Marquee>,
+			{context: {rtl: true}}
+		);
+
+		const expected = 'ltr';
+		const actual = subject.childAt(0).prop('style').direction;
+		expect(actual).to.equal(expected);
+	});
+
+	it('should have negative translate for LTR text', function () {
 		const subject = shallow(
 			<Marquee animating distance={100}>
 				{content}
@@ -70,15 +83,21 @@ describe('Marquee', () => {
 		);
 
 		// Testing for a negative number after transform3d(
-		let expected = '-';
-		let actual = subject.childAt(0).prop('style').transform.charAt(12);
+		const expected = true;
+		const actual = subject.childAt(0).prop('style').transform.indexOf('-') >= 0;
 		expect(actual).to.equal(expected);
+	});
 
-		// Test RTL content
-		subject.setProps({children: rtlContent});
+	it('should have positive translate for RTL text', function () {
+		const subject = shallow(
+			<Marquee animating distance={100}>
+				{rtlContent}
+			</Marquee>
+		);
 
-		expected = '1';
-		actual = subject.childAt(0).prop('style').transform.charAt(12);
+		// Testing for a positive number after transform3d(
+		const expected = true;
+		const actual = subject.childAt(0).prop('style').transform.indexOf('-') === -1;
 		expect(actual).to.equal(expected);
 	});
 });
