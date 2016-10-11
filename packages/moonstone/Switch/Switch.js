@@ -51,6 +51,15 @@ const SwitchBase = kind({
 		 */
 		disabled: PropTypes.bool,
 
+		/**
+		 * The handler to run when the component is toggled.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @param {String} event.checked - Checked value of item.
+		 * @param {*} event.value - Value passed from `value` prop.
+		 * @public
+		 */
 		onToggle: PropTypes.bool
 	},
 
@@ -76,12 +85,12 @@ const SwitchBase = kind({
 		})
 	},
 
-	render: (props) => {
-		delete props.animated;
-		delete props.checked;
+	render: ({onToggle, ...rest}) => {
+		delete rest.animated;
+		delete rest.checked;
 
 		return (
-			<span {...props}>
+			<span {...rest} onClick={onToggle}>
 				<Icon className={css.icon}>circle</Icon>
 			</span>
 		);
