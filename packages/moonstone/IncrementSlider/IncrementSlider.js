@@ -1,11 +1,10 @@
+import React, {PropTypes} from 'react';
 import kind from '@enact/core/kind';
 import {throttleJob} from '@enact/core/jobs';
 import {Spottable} from '@enact/spotlight';
 import Pressable from '@enact/ui/Pressable';
 import {checkDefaultBounds} from '@enact/ui/validators/PropTypeValidators';
 import R from 'ramda';
-import React, {PropTypes} from 'react';
-
 
 import IconButton from '../IconButton';
 import {SliderBase} from '../Slider';

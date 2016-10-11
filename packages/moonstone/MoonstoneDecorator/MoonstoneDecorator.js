@@ -1,8 +1,8 @@
+import React from 'react';
 import {kind, hoc} from '@enact/core';
 import I18nDecorator from '@enact/i18n/I18nDecorator';
 import {SpotlightRootDecorator} from '@enact/spotlight';
 import {ResolutionDecorator} from '@enact/ui/resolution';
-import React from 'react';
 
 import screenTypes from './screenTypes.json';
 import css from './MoonstoneDecorator.less';

@@ -1,7 +1,7 @@
+import React from 'react';
 import kind from '@enact/core/kind';
 import ViewManager, {shape} from '@enact/ui/ViewManager';
 import invariant from 'invariant';
-import React from 'react';
 
 import css from './Panels.less';
 

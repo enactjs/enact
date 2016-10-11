@@ -1,7 +1,7 @@
+import React from 'react';
 import * as jobs from '@enact/core/jobs';
 import {SlideLeftArranger, SlideBottomArranger, ViewManager} from '@enact/ui/ViewManager';
 import R from 'ramda';
-import React from 'react';
 
 import Icon from '../Icon';
 import IconButton from '../IconButton';

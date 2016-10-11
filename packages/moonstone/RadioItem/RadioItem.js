@@ -4,8 +4,8 @@
  * @module @enact/moonstone/RadioItem
  */
 
-import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
+import kind from '@enact/core/kind';
 
 import {ToggleItemBase} from '../ToggleItem';
 

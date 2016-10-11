@@ -1,5 +1,5 @@
-import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
+import kind from '@enact/core/kind';
 
 import Icon from '../Icon';
 

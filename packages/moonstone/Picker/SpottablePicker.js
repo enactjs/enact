@@ -1,7 +1,7 @@
+import React from 'react';
 import hoc from '@enact/core/hoc';
 import {Spottable} from '@enact/spotlight';
 import Pressable from '@enact/ui/Pressable';
-import React from 'react';
 
 const SpottablePicker = hoc(null, (config, Wrapped) => {
 	const Joined = Pressable(Spottable(Wrapped));

@@ -4,9 +4,9 @@
  * @module @enact/moonstone/Divider
  */
 
+import React, {PropTypes} from 'react';
 import kind from '@enact/core/kind';
 import {cap} from '@enact/core/util';
-import React, {PropTypes} from 'react';
 
 import css from './Divider.less';
 import Marquee from '../Marquee';

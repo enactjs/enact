@@ -1,5 +1,5 @@
-import {withRequired, extendPropType} from '@enact/ui/validators';
 import React from 'react';
+import {withRequired, extendPropType} from '@enact/ui/validators';
 
 const stepped = withRequired(function (props, propName, component) {
 	const value = props[propName];

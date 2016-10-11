@@ -1,7 +1,7 @@
+import React, {PropTypes} from 'react';
 import {kind, hoc} from '@enact/core';
 import Transition from '@enact/ui/Transition';
 import {SpotlightContainerDecorator} from '@enact/spotlight';
-import React, {PropTypes} from 'react';
 
 import LabeledItem from '../LabeledItem';
 import ExpandableContainer from './ExpandableContainer';

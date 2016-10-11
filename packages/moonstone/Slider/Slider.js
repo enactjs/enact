@@ -1,9 +1,9 @@
+import React, {PropTypes} from 'react';
 import kind from '@enact/core/kind';
 import {throttleJob} from '@enact/core/jobs';
 import {Spotlight, Spottable} from '@enact/spotlight';
 import Pressable from '@enact/ui/Pressable';
 import {checkDefaultBounds} from '@enact/ui/validators/PropTypeValidators';
-import React, {PropTypes} from 'react';
 
 import css from './Slider.less';
 
