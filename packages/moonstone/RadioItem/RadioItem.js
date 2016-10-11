@@ -7,7 +7,7 @@
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 
-import {ToggleItemBase} from '../ToggleItem';
+import ToggleItem from '../ToggleItem';
 
 import css from './RadioItem.less';
 
@@ -100,7 +100,7 @@ const RadioItemBase = kind({
 	},
 
 	render: (props) => (
-		<ToggleItemBase {...props} icon=" " />
+		<ToggleItem {...props} icon=" " />
 	)
 });
 

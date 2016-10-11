@@ -1,3 +1,5 @@
+@import '~@enact/ui/styles/mixins.less';
+
 @import '../styles/variables.less';
 @import '../styles/colors.less';
 
@@ -6,9 +8,11 @@
 
 	font-size: @dot-size;
 	line-height: @dot-size;
-	vertical-align: top;
-	margin-right: 6px;
 	color: @moon-accent;
+
+    margin-top: 0;
+    margin-bottom: 0;
+    .margin-start-end(@moon-toggle-item-icon-margin, 0);
 
 	&:not(.checked) {
 		display: none;
