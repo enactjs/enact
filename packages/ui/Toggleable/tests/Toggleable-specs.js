@@ -3,24 +3,22 @@ import {shallow} from 'enzyme';
 import sinon from 'sinon';
 import Toggleable from '../Toggleable';
 
-describe('Toggleable Specs', () => {
-	it('should accept a default selected prop', function () {
+describe('Toggleable', () => {
+	it('should accept a default active prop', function () {
 		const DivComponent = () => <div>Toggle</div>;
 
-		const defaultSelected = 'selectMe';
-		const ToggleableDiv = Toggleable({prop: defaultSelected}, DivComponent);
+		const ToggleableDiv = Toggleable(DivComponent);
 		const wrapped = shallow(
-			<ToggleableDiv />
+			<ToggleableDiv defaultActive />
 		);
 
-		const expected = wrapped.state('selected');
-
-		const actual = wrapped.find('DivComponent').prop(defaultSelected);
+		const expected = true;
+		const actual = wrapped.find(DivComponent).prop('active');
 
 		expect(actual).to.equal(expected);
 	});
 
-	it('should pass selected to Wrapped', function () {
+	it('should pass active to Wrapped', function () {
 		const DivComponent = () => <div>Toggle</div>;
 
 		const ToggleableDiv = Toggleable(DivComponent);
@@ -28,8 +26,8 @@ describe('Toggleable Specs', () => {
 			<ToggleableDiv />
 		);
 
-		const expected = 'selected';
-		const actual = wrapped.find('DivComponent').props();
+		const expected = 'active';
+		const actual = wrapped.find(DivComponent).props();
 
 		expect(actual).to.have.property(expected);
 	});
@@ -42,8 +40,8 @@ describe('Toggleable Specs', () => {
 			<ToggleableDiv />
 		);
 
-		const expected = 'onClick';
-		const actual = wrapped.find('DivComponent').props();
+		const expected = 'onToggle';
+		const actual = wrapped.find(DivComponent).props();
 
 		expect(actual).to.have.property(expected);
 	});
@@ -58,12 +56,12 @@ describe('Toggleable Specs', () => {
 		);
 
 		const expected = defaultSelected;
-		const actual = wrapped.find('DivComponent').props();
+		const actual = wrapped.find(DivComponent).props();
 
 		expect(actual).to.have.property(expected);
 	});
 
-	it('should pass custom selected prop to Wrapped Component in configured prop', function () {
+	it('should pass custom active prop to Wrapped Component in configured prop', function () {
 		const DivComponent = () => <div>Toggle</div>;
 
 		const defaultSelected = 'isSelected';
@@ -73,28 +71,28 @@ describe('Toggleable Specs', () => {
 		);
 
 		const expected = defaultSelected;
-		const actual = wrapped.find('DivComponent').props();
+		const actual = wrapped.find(DivComponent).props();
 
 		expect(actual).to.have.property(expected);
 	});
 
-	it('should change selected to true on click event', function () {
-		const DivComponent = ({onClick}) => <div onClick={onClick}>Toggle</div>;
+	it('should change active to true on click event', function () {
+		const DivComponent = ({onToggle}) => <div onClick={onToggle}>Toggle</div>;
 
 		const ToggleableDiv = Toggleable(DivComponent);
 		const wrapped = shallow(
 			<ToggleableDiv />
 		);
 
-		wrapped.find('DivComponent').simulate('click');
+		wrapped.find(DivComponent).simulate('toggle');
 
 		const expected = true;
-		const actual = wrapped.find('DivComponent').prop('selected');
+		const actual = wrapped.find(DivComponent).prop('active');
 
 		expect(actual).to.equal(expected);
 	});
 
-	it('should change selected to true on mousedown event', function () {
+	it('should change active to true on mousedown event', function () {
 		const DivComponent = ({onMouseDown}) =>
 			<div onMouseDown={onMouseDown}>Toggle</div>;
 
@@ -103,23 +101,27 @@ describe('Toggleable Specs', () => {
 			<ToggleableDiv />
 		);
 
-		wrapped.find('DivComponent').simulate('mousedown');
+		wrapped.find(DivComponent).simulate('mousedown');
 
 		const expected = true;
-		const actual = wrapped.find('DivComponent').prop('selected');
+		const actual = wrapped.find(DivComponent).prop('active');
 
 		expect(actual).to.equal(expected);
 	});
 
 	it('should call event handlers from props', function () {
+		const DivComponent = ({onToggle}) => <div onClick={onToggle}>Toggle</div>;
 		const handleClick = sinon.spy();
 
-		const Component = Toggleable({prop: 'data-selected'}, 'div');
+		const Component = Toggleable({prop: 'data-selected'}, DivComponent);
 		const wrapped = shallow(<Component onClick={handleClick} />);
 
-		wrapped.find('div').simulate('click', {});
+		wrapped.find(DivComponent).simulate('click', {});
 
-		expect(handleClick.calledOnce).to.equal(true);
+		const expected = true;
+		const actual = handleClick.calledOnce;
+
+		expect(actual).to.equal(expected);
 	});
 
 });

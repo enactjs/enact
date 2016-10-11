@@ -1,5 +1,6 @@
 import kind from '@enact/core/kind';
 import {Spottable} from '@enact/spotlight';
+import {anyPrimitive} from '@enact/ui/validators/PropTypeValidators';
 import React, {PropTypes} from 'react';
 
 import css from './Input.less';
@@ -13,7 +14,7 @@ const PlainInputBase = kind({
 		onChange: PropTypes.func,
 		placeholder: PropTypes.string,
 		type: PropTypes.string,
-		value: PropTypes.string
+		value: anyPrimitive
 	},
 
 	defaultProps: {
@@ -29,7 +30,16 @@ const PlainInputBase = kind({
 	},
 
 	computed: {
-		className: ({disabled, styler}) => styler.append({disabled})
+		className: ({disabled, styler}) => styler.append({disabled}),
+
+		// standardize the synthetic React onChange event with our onChange event
+		onChange: ({onChange}) => {
+			if (onChange) {
+				return (ev) => {
+					onChange({value: ev.target.value});
+				};
+			}
+		}
 	},
 
 	render: ({inputRef, ...rest}) => (
