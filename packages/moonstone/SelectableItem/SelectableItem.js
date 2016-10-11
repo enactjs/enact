@@ -84,7 +84,10 @@ const SelectableItemBase = kind({
 		checked: false
 	},
 
-	styles: {css},
+	styles: {
+		css,
+		className: 'selectableItem'
+	},
 
 	computed: {
 		iconClasses: ({checked, styler}) => styler.join(
