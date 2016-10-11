@@ -54,9 +54,12 @@ describe('Icon Specs', () => {
 			<Icon src={src} style={{color: 'green'}} />
 		);
 
-		const style = icon.prop('style');
-		expect(style.backgroundImage).to.equal(`url(${src})`);
-		expect(style.color).to.equal('green');
+		const expected = {
+			color: 'green',
+			backgroundImage: `url(${src})`
+		};
+		const actual = icon.prop('style');
+		expect(actual).to.deep.equal(expected);
 	});
 });
 
