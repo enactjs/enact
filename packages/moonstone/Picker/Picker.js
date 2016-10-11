@@ -59,7 +59,7 @@ const PickerBase = kind({
 		joined: React.PropTypes.bool,
 
 		/**
-		 * By default, the picker will animation transitions between items if it has a defined
+		 * By default, the picker will animate transitions between items if it has a defined
 		 * `width`. Specifying `noAnimation` will prevent any transition animation for the
 		 * component.
 		 *
@@ -107,17 +107,12 @@ const PickerBase = kind({
 
 		/*
 		 * Should the picker stop incrementing when the picker reaches the last element? Set `wrap`
-		 * to true to allow the picker to continue from the opposite end of the list of options.
+		 * to `true` to allow the picker to continue from the opposite end of the list of options.
 		 *
 		 * @type {Boolean}
 		 * @public
 		 */
 		wrap: React.PropTypes.bool
-	},
-
-	defaultProps: {
-		value: 0,
-		orientation: 'horizontal'
 	},
 
 	computed: {

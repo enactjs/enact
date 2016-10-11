@@ -64,7 +64,7 @@ const ButtonBase = kind({
 		minWidth: PropTypes.bool,
 
 		/**
-		 * Applies a pressed visual effect to the button
+		 * When `true`, a pressed visual effect is applied to the button
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -73,7 +73,7 @@ const ButtonBase = kind({
 		pressed: PropTypes.bool,
 
 		/**
-		 * Applies a selected visual effect to the button
+		 * When `true`, a selected visual effect is applied to the button
 		 *
 		 * @type {Boolean}
 		 * @default false

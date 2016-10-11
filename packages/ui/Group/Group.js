@@ -26,8 +26,23 @@ const GroupBase = kind({
 	name: 'Group',
 
 	propTypes: {
-		// Somehow, incorporate propTypes from Repeater...
-		...Repeater.propTypes,
+		/**
+		 * Component type to repeat. This can be a React component or a string describing a DOM
+		 * node (e.g. `'div'`)
+		 *
+		 * @type {Element}
+		 * @public
+		 */
+		childComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
+
+		/**
+		 * An array of data to be mapped onto the `childComponent`.  For example, an array of
+		 * strings.
+		 *
+		 * @type {Array}
+		 * @public
+		 */
+		children: PropTypes.array.isRequired,
 
 		/**
 		 * Callback method to be invoked when an item is activated.
@@ -36,6 +51,32 @@ const GroupBase = kind({
 		 * @public
 		 */
 		onSelect: PropTypes.func.isRequired,
+
+		/**
+		 * The property on each `childComponent` that receives the data in `children`
+		 *
+		 * @type {String}
+		 * @default 'children'
+		 * @public
+		 */
+		childProp: PropTypes.string,
+
+		/**
+		 * The property on each `childComponent` that receives the index of the item
+		 *
+		 * @type {String}
+		 * @default 'data-index'
+		 * @public
+		 */
+		indexProp: PropTypes.string,
+
+		/**
+		 * An object containing properties to be passed to each child.
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		itemProps: PropTypes.object,
 
 		/**
 		 * The name of the event that triggers activation.
@@ -66,8 +107,10 @@ const GroupBase = kind({
 	},
 
 	defaultProps: {
-		...Repeater.defaultProps,
 		select: 'onClick',
+		index: 0,
+		indexProp: 'data-index',
+		childProp: 'children',
 		selectedProp: 'data-selected'
 	},
 
