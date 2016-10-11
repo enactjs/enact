@@ -33,7 +33,7 @@ const SelectableItemBase = kind({
 		children: PropTypes.string.isRequired,
 
 		/**
-		 * Applies a "checked" visual state to the selectable item.
+		 * When `true`, a "checked" visual state is applied to the selectable item.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -42,7 +42,7 @@ const SelectableItemBase = kind({
 		checked: PropTypes.bool,
 
 		/**
-		 * Applies a disabled visual state to the selectable item.
+		 * When true, a disabled visual state is applied to the selectable item.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -51,7 +51,7 @@ const SelectableItemBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * Applies inline styling to the selectable item.
+		 * When `true`, inline styling is applied to the selectable item.
 		 *
 		 * @type {Boolean}
 		 * @default false
