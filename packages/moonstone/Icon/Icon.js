@@ -12,6 +12,13 @@ const IconBase = kind({
 	propTypes: {
 		children: PropTypes.string,
 		small: PropTypes.bool,
+
+		/**
+		* URL specifying path to icon image.
+		*
+		* @type {String|Object}
+		* @public
+		*/
 		src: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
 	},
 
