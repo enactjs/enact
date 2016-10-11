@@ -1,15 +1,30 @@
+/**
+ * Exports the {@link module:@enact/moonstone/Divider~Divider} component.
+ *
+ * @module @enact/moonstone/Divider
+ */
+
 import React, {PropTypes} from 'react';
 import kind from '@enact/core/kind';
 import {cap} from '@enact/core/util';
 
 import css from './Divider.less';
+import Marquee from '../Marquee';
 
+/**
+ * {@link module:@enact/moonstone/Divider~Divider} is a simply styled component that may be used as a separator
+ * between groups of components.
+ *
+ * @class Divider
+ * @ui
+ * @public
+ */
 const DividerBase = kind({
 	name: 'Divider',
 
 	propTypes: {
 		/**
-		 * Set the content of the divider.
+		 * The content of the divider.
 		 *
 		 * @type {String}
 		 * @required
@@ -28,7 +43,7 @@ const DividerBase = kind({
 	},
 
 	render: ({content, ...rest}) => (
-		<h3 {...rest}>{content}</h3>
+		<Marquee {...rest}>{content}</Marquee>
 	)
 });
 

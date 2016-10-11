@@ -83,7 +83,6 @@ const ToggleItemBase = kind({
 		 * The handler to run when the toggle item is toggled.
 		 *
 		 * @type {Function}
-		 * @default () => {}
 		 * @param {Object} event
 		 * @param {String} event.checked - Checked value of item.
 		 * @param {*} event.value - Value passed from `value` prop.
@@ -106,7 +105,6 @@ const ToggleItemBase = kind({
 		icon: '',
 		iconClasses: '',
 		inline: false,
-		onToggle: () => {},
 		value: ''
 	},
 
@@ -124,8 +122,8 @@ const ToggleItemBase = kind({
 
 			return <Icon className={styler.join(css.icon, iconClasses, {checked})}>{icon}</Icon>;
 		},
-		onToggle: ({onToggle, onClick, checked, value}) => {
-			if (onToggle || onClick) {
+		onToggle: ({onToggle, onClick, checked, disabled, value}) => {
+			if (!disabled && (onToggle || onClick)) {
 				return (ev) => {
 					if (onToggle) onToggle({checked: !checked, value});
 					if (onClick) onClick(ev);

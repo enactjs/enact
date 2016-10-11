@@ -91,7 +91,9 @@ const RangePickerBase = kind({
 		joined: React.PropTypes.bool,
 
 		/**
-		 * Disables transition animation
+		 * By default, the picker will animate transitions between items if it has a defined
+		 * `width`. Specifying `noAnimation` will prevent any transition animation for the
+		 * component.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -144,11 +146,6 @@ const RangePickerBase = kind({
 		 * @public
 		 */
 		wrap: React.PropTypes.bool
-	},
-
-	defaultProps: {
-		orientation: 'horizontal',
-		step: 1
 	},
 
 	render: (props) => (

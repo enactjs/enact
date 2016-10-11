@@ -4,8 +4,6 @@ import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
 
-IconButton.propTypes = Object.assign({}, IconButtonBase.propTypes, IconButton.propTypes);
-IconButton.defaultProps = Object.assign({}, IconButtonBase.defaultProps, IconButton.defaultProps);
 IconButton.displayName = 'IconButton';
 
 // Set up some defaults for info and knobs
