@@ -10,8 +10,7 @@ SelectableItem.propTypes = Object.assign({}, SelectableItem.propTypes, Selectabl
 SelectableItem.defaultProps = Object.assign({}, SelectableItem.defaultProps, SelectableItemBase.defaultProps);
 
 delete SelectableItem.propTypes.checked;
-delete SelectableItem.propTypes.icon;
-delete SelectableItem.propTypes.iconClasses;
+delete SelectableItem.defaultProps.checked;
 
 storiesOf('SelectableItem')
 	.addDecorator(withKnobs)

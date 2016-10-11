@@ -8,9 +8,12 @@ import {icons} from '@enact/moonstone/Icon';
 const iconNames = Object.keys(icons);
 
 const ToggleItem = Toggleable({prop: 'checked'}, ToggleItemBase);
-ToggleItem.propTypes = Object.assign({}, ToggleItemBase.propTypes, Toggleable.propTypes);
-ToggleItem.defaultProps = Object.assign({}, ToggleItemBase.defaultProps, Toggleable.defaultProps);
+ToggleItem.propTypes = Object.assign({}, ToggleItem.propTypes, ToggleItemBase.propTypes);
+ToggleItem.defaultProps = Object.assign({}, ToggleItem.defaultProps, ToggleItemBase.defaultProps);
 ToggleItem.displayName = 'ToggleItem';
+
+delete ToggleItem.propTypes.checked;
+delete ToggleItem.defaultProps.checked;
 
 storiesOf('ToggleItem')
 	.addDecorator(withKnobs)

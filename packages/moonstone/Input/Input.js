@@ -4,7 +4,7 @@ import React, {PropTypes} from 'react';
 
 import Icon from '../Icon';
 
-import {PlainInput, PlainInputBase} from './PlainInput';
+import {PlainInput} from './PlainInput';
 import css from './Input.less';
 
 const icon = (which, props, className) => {
@@ -13,14 +13,73 @@ const icon = (which, props, className) => {
 
 class InputBase extends React.Component {
 	static propTypes = {
-		...PlainInputBase.propTypes,
+		/**
+		 * Applies a disabled visual state to the checkbox item.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
 		disabled: PropTypes.bool,
+
+		/**
+		 * The icon to be placed at the end of the input.
+		 *
+		 * @type {String}
+		 * @public
+		 */
 		iconEnd: PropTypes.string,
-		iconStart: PropTypes.string
+
+		/**
+		 * The icon to be placed at the beginning of the input.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		iconStart: PropTypes.string,
+
+		/**
+		 * The handler to run when the input value is changed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onChange: PropTypes.func,
+
+		/**
+		 * The placeholder text to display.
+		 *
+		 * @type {String}
+		 * @default ''
+		 * @public
+		 */
+		placeholder: PropTypes.string,
+
+		/**
+		 * The type of input. Accepted values correspond to the standard HTML5 input types.
+		 *
+		 * @type {String}
+		 * @default 'text'
+		 * @public
+		 */
+		type: PropTypes.string,
+
+		/**
+		 * The value of the input.
+		 *
+		 * @type {String}
+		 * @default ''
+		 * @public
+		 */
+		value: PropTypes.string
 	}
 
-	constructor (props) {
-		super(props);
+	defaultProps: {
+		disabled: false,
+		placeholder: '',
+		type: 'text',
+		value: ''
 	}
 
 	inputKeyDown = (e) => {
@@ -31,19 +90,19 @@ class InputBase extends React.Component {
 		switch (keyCode) {
 			case 37:
 				if (this.inputNode.selectionStart === 0) {
-					Spotlight.move('left');
+					this.spotlightMove('left');
 				}
 				break;
 			case 39:
 				if (this.inputNode.selectionStart === this.inputNode.value.length) {
-					Spotlight.move('right');
+					this.spotlightMove('right');
 				}
 				break;
 			case 38:
-				Spotlight.move('up');
+				this.spotlightMove('up');
 				break;
 			case 40:
-				Spotlight.move('down');
+				this.spotlightMove('down');
 				break;
 			default:
 				break;
@@ -52,6 +111,12 @@ class InputBase extends React.Component {
 
 	getInputNode = (node) => {
 		this.inputNode = node;
+	}
+
+	spotlightMove = (direction) => {
+		if (!Spotlight.move(direction)) {
+			this.inputNode.blur();
+		}
 	}
 
 	render () {
@@ -69,7 +134,7 @@ class InputBase extends React.Component {
 		const firstIcon = icon('iconStart', this.props, iconClasses),
 			lastIcon = icon('iconEnd', this.props, iconClasses);
 		const containerProps = {};
-		
+
 		if (spotlightDisabled) {
 			containerProps['data-container-id'] = rest['data-container-id'];
 		}
