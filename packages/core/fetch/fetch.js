@@ -1,3 +1,4 @@
+/* globals global */
 
 /**
  * Returns the fetch API function, regardless of browser of Node environment.
