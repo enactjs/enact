@@ -1,3 +1,9 @@
+/**
+ * Exports the {@link module:@enact/moonstone/RangePicker~RangePicker}
+ *
+ * @module @enact/moonstone/RangePicker
+ */
+
 import kind from '@enact/core/kind';
 import React from 'react';
 
@@ -5,6 +11,14 @@ import PickerCore from '../Picker/PickerCore';
 import PickerItem from '../Picker/PickerItem';
 import SpottablePicker from '../Picker/SpottablePicker';
 
+/**
+ * {@link module:@enact/moonstone/RangePicker~RangePicker} is a component lets
+ * the user select a number from a range of numbers.
+ *
+ * @class RangePicker
+ * @ui
+ * @public
+ */
 const RangePickerBase = kind({
 	name: 'RangePicker',
 
