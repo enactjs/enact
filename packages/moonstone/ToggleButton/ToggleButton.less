@@ -48,4 +48,24 @@
 			right: @moon-button-small-h-padding;
 		}
 	}
+
+	:global(.enact-locale-right-to-left) & {
+		padding-right: @moon-button-h-padding;
+		padding-left: @moon-toggle-button-text-switch-gutter + @moon-button-h-padding + @moon-toggle-button-switch-width + 2*@moon-toggle-button-switch-border-width;
+
+		&:after {
+			left: @moon-button-h-padding;
+			right: auto;
+		}
+
+		&.small {
+			padding-right: @moon-button-small-h-padding;
+			padding-left: @moon-toggle-button-text-switch-gutter + @moon-button-small-h-padding + @moon-toggle-button-switch-width + 2*@moon-toggle-button-switch-border-width;
+
+			&:after {
+				left: @moon-button-small-h-padding;
+				right: auto;
+			}
+		}
+	}
 }
