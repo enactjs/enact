@@ -36,7 +36,7 @@ const iconNames = ['', ...Object.keys(icons)];
 const inputData = {
 	longText : 'Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text',
 	tallText : ['नरेंद्र मोदी', ' ฟิ้  ไั  ஒ  து', 'ÃÑÕÂÊÎÔÛÄËÏÖÜŸ'],
-	extraSpaceText : 'This		Text 		has			extra 		space',
+	extraSpaceText : 'This                                    Text                                     has                          extra                        space',
 	defaultNumber : 10,
 	type: ['text', 'number', 'password'],
 	minValue: 0,
