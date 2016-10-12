@@ -1,11 +1,11 @@
 import RangePicker, {RangePickerBase} from '@enact/moonstone/RangePicker';
-import Pickable from '@enact/ui/Pickable';
+import Changeable from '@enact/ui/Changeable';
 import {icons} from '@enact/moonstone/Icon';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, text, boolean, number, select} from '@kadira/storybook-addon-knobs';
+import {withKnobs, boolean, number, select} from '@kadira/storybook-addon-knobs';
 
-const StatefulRangePicker = Pickable(RangePicker);
+const StatefulRangePicker = Changeable(RangePicker);
 StatefulRangePicker.propTypes = Object.assign({}, RangePickerBase.propTypes, RangePicker.propTypes);
 StatefulRangePicker.defaultProps = Object.assign({}, RangePickerBase.defaultProps, RangePicker.defaultProps);
 StatefulRangePicker.displayName = 'RangePicker';
