@@ -1,6 +1,6 @@
 import Slider, {SliderBase} from '@enact/moonstone/Slider';
 import React from 'react';
-import {storiesOf} from '@kadira/storybook';
+import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, number, text} from '@kadira/storybook-addon-knobs';
 
 Slider.propTypes = Object.assign({}, SliderBase.propTypes, Slider.propTypes);
@@ -19,13 +19,14 @@ storiesOf('Slider')
 		'Basic usage of Slider',
 		() => (
 			<Slider
+				backgroundPercent={number('backgroundPercent')}
+				disabled={boolean('disabled')}
+				height={text('height')}
 				min={number('min')}
 				max={number('max')}
+				onChange={action('onChange')}
 				step={number('step')}
-				backgroundPercent={number('backgroundPercent')}
 				vertical={boolean('vertical')}
-				height={text('height')}
-				disabled={boolean('disabled')}
 			/>
 		)
 	);
