@@ -15,48 +15,26 @@ const prop = {
 	width: {'null': null, 'small': 'small', 'medium': 'medium', 'large': 'large'}
 };
 
-const airports = [
-	'San Francisco Airport Terminal Gate 1',
-	'Boston Airport Terminal Gate 2',
-	'Tokyo Airport Terminal Gate 3',
-	'נמל התעופה בן גוריון טרמינל הבינלאומי'
-];
-
 const oneAirport = ['San Francisco Airport Terminal Gate 1'];
 
-storiesOf('Picker')
+storiesOf('Picker with One item')
 	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'Basic usage of Picker',
 		() => (
-			<div>
-				<StatefulPicker
-					onChange={action('onChange')}
-					width={select('width', prop.width, 'large')}
-					orientation={select('orientation', prop.orientation)}
-					wrap={oneAirport.length > 1}
-					joined={boolean('joined')}
-					noAnimation={boolean('noAnimation')}
-					disabled={boolean('disabled')}
-					incrementIcon={text('incrementIcon')}
-					decrementIcon={text('decrementIcon')}
-				>
-					{oneAirport}
-				</StatefulPicker>
-				<StatefulPicker
-					onChange={action('onChange')}
-					width={select('width', prop.width, 'large')}
-					orientation={select('orientation', prop.orientation)}
-					wrap={airports.length > 1}
-					joined={boolean('joined')}
-					noAnimation={boolean('noAnimation')}
-					disabled={boolean('disabled')}
-					incrementIcon={text('incrementIcon')}
-					decrementIcon={text('decrementIcon')}
-				>
-					{airports}
-				</StatefulPicker>
-			</div>
+			<StatefulPicker
+				onChange={action('onChange')}
+				width={select('width', prop.width, 'large')}
+				orientation={select('orientation', prop.orientation)}
+				wrap={boolean('wrap',true)}
+				joined={boolean('joined')}
+				noAnimation={boolean('noAnimation')}
+				disabled={boolean('disabled')}
+				incrementIcon={text('incrementIcon')}
+				decrementIcon={text('decrementIcon')}
+			>
+				{oneAirport}
+			</StatefulPicker>
 		)
 	);
