@@ -27,7 +27,7 @@ storiesOf('Picker with One item')
 				onChange={action('onChange')}
 				width={select('width', prop.width, 'large')}
 				orientation={select('orientation', prop.orientation)}
-				wrap={boolean('wrap',true)}
+				wrap={boolean('wrap', true)}
 				joined={boolean('joined')}
 				noAnimation={boolean('noAnimation')}
 				disabled={boolean('disabled')}
