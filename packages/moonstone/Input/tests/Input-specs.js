@@ -24,7 +24,7 @@ describe('Input Specs', () => {
 	it('Should callback onChange when the text changes', function () {
 		const handleChange = sinon.spy();
 		const evt = {target: {value: 'blah'}};
-		const subject = mount(
+		const subject = shallow(
 			<Input onChange={handleChange} />
 		);
 

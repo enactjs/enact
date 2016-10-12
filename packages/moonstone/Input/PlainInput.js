@@ -8,17 +8,14 @@ const PlainInputBase = kind({
 	name: 'PlainInputBase',
 
 	propTypes: {
-		className: PropTypes.string,
 		disabled: PropTypes.bool,
-		onChange: PropTypes.func,
-		placeholder: PropTypes.string,
+		inputRef: PropTypes.func,
 		type: PropTypes.string,
-		value: PropTypes.string
+		value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 	},
 
 	defaultProps: {
 		disabled: false,
-		placeholder: '',
 		type: 'text',
 		value: ''
 	},

@@ -77,11 +77,11 @@ class InputBase extends React.Component {
 		/**
 		 * The value of the input.
 		 *
-		 * @type {String}
+		 * @type {String|Number}
 		 * @default ''
 		 * @public
 		 */
-		value: PropTypes.string
+		value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 	}
 
 	static defaultProps = {
