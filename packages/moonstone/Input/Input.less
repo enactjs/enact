@@ -4,6 +4,26 @@
 @import '../styles/variables.less';
 @import '../styles/text.less';
 
+.iconEnd, .iconStart {
+	width: auto !important;
+}
+
+.iconStart {
+	padding: 0 .7rem 0 0;
+	margin: 0 0 0 -.7rem !important;
+}
+
+:global(.enact-locale-right-to-left) {
+	.iconEnd {
+		padding: 0 .5rem 0 0;
+		margin: 0 0 0 -.7rem !important;
+	}
+
+	.iconStart {
+		padding: 0 0 0 .8rem;
+	}
+}
+
 .input {
 	.moon-body-text();
 

@@ -131,8 +131,8 @@ class InputBase extends React.Component {
 			iconStart ? css[iconStart] : null,
 			iconEnd ? css[iconEnd] : null
 		);
-		const firstIcon = icon('iconStart', this.props, iconClasses),
-			lastIcon = icon('iconEnd', this.props, iconClasses);
+		const firstIcon = icon('iconStart', this.props, iconClasses + ' ' + classNames(css.iconStart)),
+			lastIcon = icon('iconEnd', this.props, iconClasses + ' ' + classNames(css.iconEnd));
 		const containerProps = {};
 
 		if (spotlightDisabled) {
