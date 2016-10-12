@@ -182,7 +182,7 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => {
 	};
 
 	return Toggleable(
-		{activate: 'onOpen', deactivate: 'onClose', prop: 'open'},
+		{activate: 'onOpen', deactivate: 'onClose', mutable: true, prop: 'open'},
 		Cancelable(
 			{component: 'span', onCancel: handleCancel},
 			ExpandableBase
