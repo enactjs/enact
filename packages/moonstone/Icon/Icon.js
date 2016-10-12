@@ -26,7 +26,8 @@ const IconBase = kind({
 
 	propTypes: {
 		/**
-		 * The string that represents the icon from the [IconList]{@link module:@enact/moonstone/Icon~IconList}.
+		 * A string that represents an icon from the [IconList]{@link module:@enact/moonstone/Icon~IconList}.
+		 * Can also be an HTML entity string, unicode reference or hex value (in the form '0x...').
 		 *
 		 * @type {String}
 		 * @public
@@ -43,11 +44,13 @@ const IconBase = kind({
 		small: PropTypes.bool,
 
 		/**
-		* URL specifying path to icon image.
-		*
-		* @type {String|Object}
-		* @public
-		*/
+		 * URL specifying path to an icon image or an object representing a resolution independent resource (See
+		 * {@link module:@enact/ui/resolution}).
+		 * If both `src` and `children` are specified, they will both be rendered.
+		 *
+		 * @type {String|Object}
+		 * @public
+		 */
 		src: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
 	},
 
