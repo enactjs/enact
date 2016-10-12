@@ -10,8 +10,7 @@ SwitchItem.defaultProps = Object.assign({}, SwitchItem.defaultProps, SwitchItemB
 SwitchItem.displayName = 'SwitchItem';
 
 delete SwitchItem.propTypes.checked;
-delete SwitchItem.propTypes.icon;
-delete SwitchItem.propTypes.iconClasses;
+delete SwitchItem.defaultProps.checked;
 
 storiesOf('SwitchItem')
 	.addDecorator(withKnobs)

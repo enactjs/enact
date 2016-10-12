@@ -30,8 +30,8 @@ const IconButtonBase = kind({
 
 	propTypes: {
 		/**
-		 * The string corresponding to an icon button.
-		 *
+		 * String description of the icon to be used. All strings supported by
+		 * [Icon]{module:@enact/moonstone/Icon~Icon} are supported.
 		 * @type {String}
 		 * @public
 		 */
@@ -58,20 +58,7 @@ const IconButtonBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * A boolean parameter affecting the minimum width of the button. When `true`,
-		 * the minimum width will be set to 180px (or 130px if [small]{@link module:moonstone/Button~Button#small}
-		 * is `true`). If `false`, the minimum width will be set to the current value of
-		 * `@moon-button-height` (thus forcing the button to be no smaller than a circle with
-		 * diameter `@moon-button-height`).
-		 *
-		 * @type {Boolean}
-		 * @default true
-		 * @public
-		 */
-		minWidth: PropTypes.bool,
-
-		/**
-		 * Applies a pressed visual effect to the icon button
+		 * When `true`, a pressed visual effect is applied to the icon button
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -80,7 +67,7 @@ const IconButtonBase = kind({
 		pressed: PropTypes.bool,
 
 		/**
-		 * Applies a selected visual effect to the icon button
+		 * When `true`, a selected visual effect is applied to the icon button
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -98,15 +85,18 @@ const IconButtonBase = kind({
 		 * @default false
 		 * @public
 		 */
-		small: PropTypes.bool
+		small: PropTypes.bool,
+
+		/**
+		* URL specifying path to icon image.
+		*
+		* @type {String|Object}
+		* @public
+		*/
+		src: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
 	},
 
 	defaultProps: {
-		backgroundOpacity: 'opaque',
-		disabled: false,
-		minWidth: true,
-		pressed: false,
-		selected: false,
 		small: false
 	},
 
@@ -119,10 +109,10 @@ const IconButtonBase = kind({
 		className: ({small, styler}) => styler.append({small})
 	},
 
-	render: ({children, small, ...rest}) => {
+	render: ({children, small, src, ...rest}) => {
 		return (
-			<Button {...rest} small={small} minWidth={false}>
-				<Icon small={small} className={css.icon}>{children}</Icon>
+			<Button {...rest} small={small} minWidth={false} marqueeDisabled>
+				<Icon small={small} className={css.icon} src={src}>{children}</Icon>
 			</Button>
 		);
 	}
