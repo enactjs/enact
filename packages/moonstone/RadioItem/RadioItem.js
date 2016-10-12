@@ -33,7 +33,7 @@ const RadioItemBase = kind({
 		children: PropTypes.string.isRequired,
 
 		/**
-		 * Applies a "checked" visual state to the toggle item.
+		 * Applies a "checked" visual state to the radio item.
 		 *
 		 * @type {Boolean}
 		 * @default false

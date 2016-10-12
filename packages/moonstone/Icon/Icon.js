@@ -5,6 +5,7 @@
  */
 
 import kind from '@enact/core/kind';
+import ri from '@enact/ui/resolution';
 import React, {PropTypes} from 'react';
 
 import iconList from './IconList.js';
@@ -12,11 +13,11 @@ import iconList from './IconList.js';
 import css from './Icon.less';
 
 /**
- * {@link module:@enact/moonstone/ToggleItem~ToggleItem} is a component to make a Toggleable Item
- * (e.g Checkbox, RadioItem). It has a customizable prop for icon, so any Moonstone Icon can be used
- * to represent the checked state.
+ * {@link module:@enact/moonstone/Icon~Icon} is a component that displays an icon image.  You may specify an
+ * image by setting the `src` property to a URL indicating the image file's location or a child string from
+ * the [IconList]{@link module:@enact/moonstone/Icon~IconList} (e.g. 'plus').
  *
- * @class ToggleItem
+ * @class Icon
  * @ui
  * @public
  */
@@ -25,12 +26,13 @@ const IconBase = kind({
 
 	propTypes: {
 		/**
-		 * The string to be displayed as the main content of the toggle item.
+		 * The string that represents the icon from the [IconList]{@link module:@enact/moonstone/Icon~IconList}.
 		 *
 		 * @type {String}
 		 * @public
 		 */
-		children: PropTypes.string.isRequired,
+		children: PropTypes.string,
+
 		/**
 		 * If `true`, apply the 'small' class.
 		 *
@@ -38,7 +40,15 @@ const IconBase = kind({
 		 * @default false
 		 * @public
 		 */
-		small: PropTypes.bool
+		small: PropTypes.bool,
+
+		/**
+		* URL specifying path to icon image.
+		*
+		* @type {String|Object}
+		* @public
+		*/
+		src: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
 	},
 
 	defaultProps: {
@@ -55,7 +65,18 @@ const IconBase = kind({
 			!iconList[icon] && css.dingbat,	// If the icon isn't in our known set, apply our custom font class
 			{pressed, small}
 		),
-		content: ({children: icon}) => {
+		style: ({src, style}) => {
+			let updated = Object.assign({}, style);
+
+			let source = ri.selectSrc(src);
+			if (src && src !== 'none' && src !== 'inherit' && src !== 'initial') {
+				source = `url(${source})`;
+			}
+
+			updated.backgroundImage = source;
+			return updated;
+		},
+		children: ({children: icon}) => {
 			let iconEntity = iconList[icon] || icon;
 
 			if (!iconList[icon]) {
@@ -80,14 +101,11 @@ const IconBase = kind({
 		}
 	},
 
-	render: ({content, ...rest}) => {
-		delete rest.small;
+	render: (props) => {
+		delete props.small;
+		delete props.src;
 
-		return (
-			<div {...rest}>
-				{content}
-			</div>
-		);
+		return <div {...props} />;
 	}
 });
 

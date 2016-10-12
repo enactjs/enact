@@ -4,15 +4,13 @@ import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean} from '@kadira/storybook-addon-knobs';
 
-
 const CheckboxItem = Toggleable({prop: 'checked'}, CheckboxItemBase);
 CheckboxItem.displayName = 'CheckboxItem';
 CheckboxItem.propTypes = Object.assign({}, CheckboxItem.propTypes, CheckboxItemBase.propTypes);
 CheckboxItem.defaultProps = Object.assign({}, CheckboxItem.defaultProps, CheckboxItemBase.defaultProps);
 
 delete CheckboxItem.propTypes.checked;
-delete CheckboxItem.propTypes.icon;
-delete CheckboxItem.propTypes.iconClasses;
+delete CheckboxItem.defaultProps.checked;
 
 storiesOf('CheckboxItem')
 	.addDecorator(withKnobs)

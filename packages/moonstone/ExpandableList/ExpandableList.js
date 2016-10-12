@@ -6,6 +6,10 @@ import Item from '../Item';
 
 import {Spottable} from '@enact/spotlight';
 
+const isSelected = function (selected, index) {
+	return index === selected || Array.isArray(selected) && selected.includes(index);
+};
+
 const SpottableDiv = Spottable('div');
 
 const ExpandableListBase = kind({
@@ -28,7 +32,23 @@ const ExpandableListBase = kind({
 		 * @type {Function}
 		 * @public
 		 */
-		onChange: PropTypes.func
+		onSelect: PropTypes.func,
+
+		/**
+		 * Index or array of indices of the selected item(s)
+		 *
+		 * @type {Number}
+		 * @public
+		 */
+		selected: PropTypes.oneOfType([PropTypes.number, PropTypes.arrayOf(PropTypes.number)]),
+
+		/**
+		 * Name of `boolean` property to set on `childComponent` when an item is selected
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		selectedProp: PropTypes.string
 	},
 
 	defaultProps: {
@@ -36,36 +56,46 @@ const ExpandableListBase = kind({
 	},
 
 	computed: {
-		// Wrap established elements in only a div (for event and key wiring) instead of using the childComponent.
-		// This only affects children that are qualified elements, not arrays of strings.
-		// Arrays of strings still use the provided childComponent
-		ItemType: ({children, childComponent}) => ((children && children[0] && typeof children[0] === 'string') ? childComponent : SpottableDiv)
+		children: ({children, childComponent, onSelect, selected, selectedProp}) => {
+			// Wrap established elements in only a div (for event and key wiring) instead of using
+			// the childComponent. This only affects children that are qualified elements, not
+			// arrays of strings. Arrays of strings still use the provided childComponent.
+			const onlyStringChild = typeof React.Children.toArray(children)[0] === 'string';
+			const Component = onlyStringChild ? childComponent : SpottableDiv;
+
+			return React.Children.map(children, (item, index) => {
+				const value = (typeof item === 'string') ? item : item.props.value;
+				const itemProps = {
+					children: item,
+					key: index,
+					onClick: null
+				};
+
+				if (onSelect) {
+					itemProps.onClick = () => onSelect({value, selected: index});
+				}
+
+				if (selectedProp) {
+					itemProps[selectedProp] = isSelected(selected, index);
+				}
+
+				return <Component {...itemProps} />;
+			});
+		}
 	},
 
-	render: ({children, onChange, ItemType, ...rest}) => {
-		delete rest.childComponent;
+	render: (props) => {
+		delete props.childComponent;
+		delete props.onSelect;
+		delete props.selected;
+		delete props.selectedProp;
 
-		return (
-			<div {...rest}>
-				{React.Children.map(children, (item, index) => {
-					const value = (typeof item === 'string') ? item : item.props.value;
-					let handler = null;
-
-					if (onChange) handler = () => onChange({value, index});
-
-					return (
-						<ItemType onClick={handler} key={index}>
-							{item}
-						</ItemType>
-					);
-				})}
-			</div>
-		);
+		return <div {...props} />;
 	}
 });
 
 const ExpandableList = Expandable({
-	close: 'onChange'
+	close: 'onSelect'
 }, ExpandableListBase);
 
 export default ExpandableList;

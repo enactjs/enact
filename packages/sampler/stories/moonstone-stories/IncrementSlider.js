@@ -7,9 +7,6 @@ IncrementSlider.propTypes = Object.assign({}, IncrementSliderBase.propTypes, Inc
 IncrementSlider.defaultProps = Object.assign({}, IncrementSliderBase.defaultProps, IncrementSlider.defaultProps);
 IncrementSlider.displayName = 'IncrementSlider';
 
-delete IncrementSlider.propTypes.onDecrement;
-delete IncrementSlider.propTypes.onIncrement;
-
 storiesOf('IncrementSlider')
 	.addDecorator(withKnobs)
 	.addWithInfo(
