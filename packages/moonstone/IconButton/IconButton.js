@@ -35,7 +35,7 @@ const IconButtonBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		children: PropTypes.string.isRequired,
+		children: PropTypes.string,
 
 		/**
 		 * The background-color opacity of this icon button; valid values are `'opaque'`,
