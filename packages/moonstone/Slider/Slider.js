@@ -70,30 +70,30 @@ const SliderBase = kind({
 		pressed: PropTypes.bool,
 
 		/**
-		* The amount to increment or decrement the value.
-		*
-		* @type {Number}
-		* @default 1
-		* @public
-		*/
+		 * The amount to increment or decrement the value.
+		 *
+		 * @type {Number}
+		 * @default 1
+		 * @public
+		 */
 		step: PropTypes.number,
 
 		/**
-		* The value of the slider.
-		*
-		* @type {Number}
-		* @default 0
-		* @public
-		*/
+		 * The value of the slider.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
 		value: checkDefaultBounds,
 
 		/**
-		* If `true` the slider will be oriented vertically.
-		*
-		* @type {Boolean}
-		* @default false
-		* @public
-		*/
+		 * If `true` the slider will be oriented vertically.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
 		vertical: PropTypes.bool
 	},
 
@@ -162,12 +162,12 @@ class Slider extends React.Component {
 		backgroundPercent: PropTypes.number,
 
 		/**
-		* The initial value of the slider.
-		*
-		* @type {Number}
-		* @default 0
-		* @public
-		*/
+		 * The initial value of the slider.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
 		defaultValue: checkDefaultBounds,
 
 		/**
@@ -217,21 +217,21 @@ class Slider extends React.Component {
 		pressed: PropTypes.bool,
 
 		/**
-		* The amount to increment or decrement the value.
-		*
-		* @type {Number}
-		* @default 1
-		* @public
-		*/
+		 * The amount to increment or decrement the value.
+		 *
+		 * @type {Number}
+		 * @default 1
+		 * @public
+		 */
 		step: PropTypes.number,
 
 		/**
-		* If `true` the slider will be oriented vertically.
-		*
-		* @type {Boolean}
-		* @default false
-		* @public
-		*/
+		 * If `true` the slider will be oriented vertically.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
 		vertical: PropTypes.bool
 	};
 
