@@ -34,7 +34,7 @@ storiesOf('IconButton')
 				small={boolean('small')}
 				src={select('src', ['', fwd, play, rew], '')}
 			>
-				{select('icon', ['', ...iconNames], 'plus')}
+				{select('icon', ['', ...iconNames], 'play')}
 			</IconButton>
 		)
 	);
