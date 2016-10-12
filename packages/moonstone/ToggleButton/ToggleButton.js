@@ -34,8 +34,8 @@ const ToggleButtonBase = kind({
 
 		/**
 		 * The string to be displayed as the main content of the toggle button.
-		 * If both `toggleOffLabel` and `toggleOnLabel` are provided, they will
-		 * be used instead.
+		 * If `toggleOffLabel` and/or `toggleOnLabel` are provided, they will
+		 * be used for the respective states.
 		 *
 		 * @type {node}
 		 * @public
@@ -54,7 +54,7 @@ const ToggleButtonBase = kind({
 
 		/**
 		 * A boolean parameter affecting the minimum width of the button. When `true`,
-		 * the minimum width will be set to 180px (or 130px if [small]{@link module:moonstone/Button~Button#small}
+		 * the minimum width will be set to 180px (or 130px if `small`
 		 * is `true`). If `false`, the minimum width will be set to the current value of
 		 * `@moon-button-height` (thus forcing the button to be no smaller than a circle with
 		 * diameter `@moon-button-height`).
@@ -66,7 +66,7 @@ const ToggleButtonBase = kind({
 		minWidth: PropTypes.bool,
 
 		/**
-		 * Applies a pressed visual effect to the button
+		 * When `true` a pressed visual effect is applied to the button
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -96,7 +96,7 @@ const ToggleButtonBase = kind({
 		small: PropTypes.bool,
 
 		/**
-		 * Button text displayed in the 'off' state. If not specified, `children` will be used for button text.
+		 * Button text displayed in the 'off' state. If not specified, `children` will be used for 'off' button text.
 		 *
 		 * @type {String}
 		 * @default ''
@@ -105,7 +105,7 @@ const ToggleButtonBase = kind({
 		toggleOffLabel: PropTypes.string,
 
 		/**
-		 * Button text displayed in the 'on' state. If not specified, `children` will be used for button text.
+		 * Button text displayed in the 'on' state. If not specified, `children` will be used for 'on' button text.
 		 *
 		 * @type {String}
 		 * @default ''
@@ -133,11 +133,11 @@ const ToggleButtonBase = kind({
 	computed: {
 		className: ({selected, small, styler}) => styler.append({selected, small}),
 		children: ({children, selected, toggleOnLabel, toggleOffLabel}) => {
-			let c;
-			if (!toggleOnLabel || !toggleOffLabel) {
-				c = children;
-			} else {
-				c = selected ? toggleOnLabel : toggleOffLabel;
+			let c = children;
+			if (selected && toggleOnLabel) {
+				c = toggleOnLabel;
+			} else if (!selected && toggleOffLabel) {
+				c = toggleOffLabel;
 			}
 			return c;
 		}
