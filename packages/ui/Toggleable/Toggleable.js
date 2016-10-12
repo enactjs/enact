@@ -11,43 +11,49 @@ import React from 'react';
 
 const defaultConfig = {
 
+	activate: null,
+
+	deactivate: null,
+
 	/**
 	 * Configures the event name that toggles the component
 	 *
 	 * @type {String}
-	 * @default 'onClick'
+	 * @default 'onToggle'
 	 */
-	toggle: 'onClick',
+	toggle: 'onToggle',
 
 	/**
 	 * Configures the property that is passed to the wrapped component when toggled
 	 *
 	 * @type {String}
-	 * @default 'selected'
+	 * @default 'active'
 	 */
-	prop: 'selected'
+	prop: 'active'
 };
 
 /**
  * {@link module:@enact/ui/Toggleable~Toggleable} is a Higher-order Component that applies a 'Toggleable' behavior
  * to its wrapped component.  Its default event and property can be configured when applied to a component.
  *
- * By default, Toggleable applies the `selected` property on click events.
+ * By default, Toggleable applies the `active` property on click events.
  *
  * @class Toggleable
  * @ui
  * @public
  */
 const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
-	const {toggle, prop} = config;
+	const {activate, deactivate, toggle, prop} = config;
 	const defaultPropKey = 'default' + cap(prop);
 	const forwardToggle = forward(toggle);
+	const forwardActivate = forward(activate);
+	const forwardDeactivate = forward(deactivate);
 
 	return class Toggleable extends React.Component {
 		static propTypes = {
 			/**
 			 * Whether or not the component is in a "toggled" state when first rendered.
-			 * *Note that this property name can be changed by the config. By default it is `defaultSelected`.
+			 * *Note that this property name can be changed by the config. By default it is `defaultActive`.
 			 *
 			 * @type {Boolean}
 			 * @default false
@@ -71,21 +77,39 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 			this.state = {
-				selected: props[defaultPropKey]
+				active: props[defaultPropKey]
 			};
 		}
 
-		onToggle = (ev) => {
+		handleActivate = (ev) => {
 			if (!this.props.disabled) {
-				this.setState({selected: !this.state.selected});
+				this.setState({active: true});
+				forwardActivate(ev, this.props);
 			}
-			forwardToggle(ev, this.props);
+		}
+
+		handleDeactivate = (ev) => {
+			if (!this.props.disabled) {
+				this.setState({active: false});
+				forwardDeactivate(ev, this.props);
+			}
+		}
+
+		handleToggle = (ev) => {
+			if (!this.props.disabled) {
+				this.setState({active: !this.state.active});
+				forwardToggle(ev, this.props);
+			}
 		}
 
 		render () {
 			const props = Object.assign({}, this.props);
-			if (toggle) props[toggle] = this.onToggle;
-			if (prop) props[prop] = this.state.selected;
+
+			if (toggle) props[toggle] = this.handleToggle;
+			if (activate) props[activate] = this.handleActivate;
+			if (deactivate) props[deactivate] = this.handleDeactivate;
+			if (prop) props[prop] = this.state.active;
+
 			delete props[defaultPropKey];
 
 			return <Wrapped {...props} />;

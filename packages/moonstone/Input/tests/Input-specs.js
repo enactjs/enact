@@ -23,14 +23,18 @@ describe('Input Specs', () => {
 
 	it('Should callback onChange when the text changes', function () {
 		const handleChange = sinon.spy();
-		const evt = {target: {value: 'blah'}};
+		const value = 'blah';
+		const evt = {target: {value: value}};
 		const subject = shallow(
 			<Input onChange={handleChange} />
 		);
 
 		subject.find('input').simulate('change', evt);
 
-		expect(handleChange.calledWith(evt)).to.be.true();
+		const expected = value;
+		const actual = handleChange.firstCall.args[0].value;
+
+		expect(actual).to.equal(expected);
 	});
 
 	it('Should blur input on enter if dismissOnEnter', function () {

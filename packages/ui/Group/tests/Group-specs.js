@@ -8,44 +8,44 @@ import {GroupBase} from '../Group';
 describe('Group', () => {
 	const stringItems = ['One', 'Two', 'Three'];
 
-	it('Should call handler with index on activate', function () {
+	it('Should call handler with selected on select', function () {
 		const handleClick = sinon.spy();
 		const subject = mount(
-			<GroupBase childComponent="div" onActivate={handleClick}>
+			<GroupBase childComponent="div" onSelect={handleClick}>
 				{stringItems}
 			</GroupBase>
 		);
 
-		const index = 1;
-		subject.first().childAt(index).simulate('click', {});
+		const selected = 1;
+		subject.first().childAt(selected).simulate('click', {});
 
-		const expected = index;
-		const actual = handleClick.firstCall.args[0].index;
+		const expected = selected;
+		const actual = handleClick.firstCall.args[0].selected;
 
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should call handler with data on activate', function () {
+	it('Should call handler with data on select', function () {
 		const handleClick = sinon.spy();
 		const subject = mount(
-			<GroupBase childComponent="div" onActivate={handleClick}>
+			<GroupBase childComponent="div" onSelect={handleClick}>
 				{stringItems}
 			</GroupBase>
 		);
 
-		const index = 1;
-		subject.first().childAt(index).simulate('click', {});
+		const selected = 1;
+		subject.first().childAt(selected).simulate('click', {});
 
-		const expected = stringItems[index];
+		const expected = stringItems[selected];
 		const actual = handleClick.firstCall.args[0].data;
 
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should call handler on move when activate="onMouseMove"', function () {
+	it('Should call handler on move when select="onMouseMove"', function () {
 		const handleClick = sinon.spy();
 		const subject = mount(
-			<GroupBase childComponent="div" activate='onMouseMove' onActivate={handleClick}>
+			<GroupBase childComponent="div" select='onMouseMove' onSelect={handleClick}>
 				{stringItems}
 			</GroupBase>
 		);
@@ -58,78 +58,62 @@ describe('Group', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	// TODO: only way I could resolve the first repeated child was using find(). Seems like there
-	// should be a better option as this could lead to false positives if the DOM structure changes
-	it('Should select the first item by default', function () {
+	it('Should select the third item with selected=2', function () {
+		const selected = 2;
 		const handleClick = sinon.spy();
 		const subject = mount(
-			<GroupBase childComponent="div" onActivate={handleClick}>
+			<GroupBase childComponent="div" selected={selected} onSelect={handleClick}>
 				{stringItems}
 			</GroupBase>
 		);
 
 		const expected = true;
-		const actual = subject.find('div').first().prop('data-selected');
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('Should select the third item with index=2', function () {
-		const index = 2;
-		const handleClick = sinon.spy();
-		const subject = mount(
-			<GroupBase childComponent="div" index={index} onActivate={handleClick}>
-				{stringItems}
-			</GroupBase>
-		);
-
-		const expected = true;
-		const actual = subject.find('div').at(index).prop('data-selected');
+		const actual = subject.find('div').at(selected).prop('data-selected');
 
 		expect(actual).to.equal(expected);
 	});
 
 	it('Should set {data-active} on the first item', function () {
-		const index = 0;
+		const selected = 0;
 		const handleClick = sinon.spy();
 		const subject = mount(
-			<GroupBase childComponent="div" index={index} selectedProp="data-active" onActivate={handleClick}>
+			<GroupBase childComponent="div" selected={selected} selectedProp="data-active" onSelect={handleClick}>
 				{stringItems}
 			</GroupBase>
 		);
 
 		const expected = true;
-		const actual = subject.find('div').at(index).prop('data-active');
+		const actual = subject.find('div').at(selected).prop('data-active');
 
 		expect(actual).to.equal(expected);
 	});
 
 	it('Should set {children} to be the item by default', function () {
-		const index = 0;
+		const selected = 0;
 		const handleClick = sinon.spy();
 		const subject = mount(
-			<GroupBase childComponent="div" onActivate={handleClick}>
+			<GroupBase childComponent="div" onSelect={handleClick}>
 				{stringItems}
 			</GroupBase>
 		);
 
-		const expected = stringItems[index];
-		const actual = subject.find('div').at(index).prop('children');
+		const expected = stringItems[selected];
+		const actual = subject.find('div').at(selected).prop('children');
 
 		expect(actual).to.equal(expected);
 	});
 
 	it('Should set {data-child} to be the item', function () {
-		const index = 0;
+		const selected = 0;
 		const handleClick = sinon.spy();
 		const subject = mount(
-			<GroupBase childComponent="div" childProp="data-child" onActivate={handleClick}>
+			<GroupBase childComponent="div" childProp="data-child" onSelect={handleClick}>
 				{stringItems}
 			</GroupBase>
 		);
 
-		const expected = stringItems[index];
-		const actual = subject.find('div').at(index).prop('data-child');
+		const expected = stringItems[selected];
+		const actual = subject.find('div').at(selected).prop('data-child');
 
 		expect(actual).to.equal(expected);
 	});

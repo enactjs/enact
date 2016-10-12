@@ -84,7 +84,7 @@ const IconButtonBase = kind({
 
 	render: ({children, small, ...rest}) => {
 		return (
-			<Button {...rest} small={small} minWidth={false}>
+			<Button {...rest} small={small} minWidth={false} marqueeDisabled>
 				<Icon small={small} className={css.icon}>{children}</Icon>
 			</Button>
 		);
