@@ -12,10 +12,10 @@ import Button from '../Button';
 import css from './ToggleButton.less';
 
 /**
-* {@link module:@enact/moonstone/ToggleButton~ToggleButton} is an {@link module:enact/moonstone/Button~Button} that is {@link module:enact/ui/Toggleable~Togleable}.
+* {@link module:@enact/moonstone/ToggleButton~ToggleButton} is a [Button]{@link module:@enact/moonstone/Button~Button} that is [Toggleable]{@link module:@enact/ui/Toggleable~Togleable}.
 *
 * @class ToggleButton
-* @extends module:enact/moonstone/Button~Button
+* @extends module:@enact/moonstone/Button~Button
 * @ui
 * @public
 */
