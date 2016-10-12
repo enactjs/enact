@@ -30,10 +30,11 @@ storiesOf('IconButton')
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
 				disabled={boolean('disabled')}
+				selected={boolean('selected')}
 				small={boolean('small')}
 				src={select('src', ['', fwd, play, rew], '')}
 			>
-				{select('icon', ['', ...iconNames], 'play')}
+				{select('icon', ['', ...iconNames], 'plus')}
 			</IconButton>
 		)
 	);
