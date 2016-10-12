@@ -26,20 +26,20 @@ const fetchAppInfo = (callback, path) => {
 			if (!err && info) {
 				try {
 					appInfo = JSON.parse(info);
-					callback && callback(appInfo);
+					if (callback) callback(appInfo);
 				} catch (e) {
-					console.error('Unable to parse appinfo.json file for ' + appID);
-					callback && callback();
+					console.error('Unable to parse appinfo.json file for ' + fetchAppId);
+					if (callback) callback();
 				}
-			} else {
-				callback && callback();
+			} else if (callback) {
+				callback();
 			}
 		};
-		const req = new XMLHttpRequest();
+		const req = new window.XMLHttpRequest();
 		req.onreadystatechange = function () {
-			if (req.readyState == 4) {
+			if (req.readyState === 4) {
 				if ((req.status >= 200 && req.status < 300) || req.status === 0) {
-					parseInfo(undefined, req.responseText);
+					parseInfo(null, req.responseText);
 				} else {
 					parseInfo({status:404});
 				}
@@ -51,8 +51,8 @@ const fetchAppInfo = (callback, path) => {
 		} catch (e) {
 			parseInfo({status:404});
 		}
-	} else {
-		callback && callback(appInfo);
+	} else if (callback) {
+		callback(appInfo);
 	}
 };
 

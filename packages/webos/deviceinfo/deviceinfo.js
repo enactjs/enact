@@ -21,6 +21,7 @@ const device = {};
 /**
  * Gets the device-specific information regarding model, OS version, specifications, etc.
  * @param {webOS~deviceCallback} callback - The function to call once the information is collected
+ * @returns {undefined}
  */
 const deviceinfo = (callback) => {
 	if (Object.keys(device).length === 0) {

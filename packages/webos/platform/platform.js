@@ -31,7 +31,7 @@ if (window.PalmSystem) {
 			platform.open = true;
 		}
 		window.Mojo = window.Mojo || {relaunch: function () {}};
-		window.PalmSystem.stageReady && window.PalmSystem.stageReady();
+		if (window.PalmSystem.stageReady) window.PalmSystem.stageReady();
 	}
 } else {
 	platform.unknown = true;
