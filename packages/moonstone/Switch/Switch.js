@@ -1,4 +1,5 @@
 import kind from '@enact/core/kind';
+import {withArgs as handle, forward} from '@enact/core/handle';
 import React, {PropTypes} from 'react';
 
 import Icon from '../Icon';
@@ -48,7 +49,18 @@ const SwitchBase = kind({
 		 * @default false
 		 * @public
 		 */
-		disabled: PropTypes.bool
+		disabled: PropTypes.bool,
+
+		/**
+		 * The handler to run when the component is toggled.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @param {String} event.checked - Checked value of item.
+		 * @param {*} event.value - Value passed from `value` prop.
+		 * @public
+		 */
+		onToggle: PropTypes.bool
 	},
 
 	defaultProps: {
@@ -65,15 +77,20 @@ const SwitchBase = kind({
 	computed: {
 		className: ({animated, checked, styler}) => styler.append(
 			{animated, checked}
-		)
+		),
+		onToggle: handle(forward('onClick'), ({checked, onToggle}) => () => {
+			if (onToggle) {
+				onToggle({checked: !checked});
+			}
+		})
 	},
 
-	render: (props) => {
-		delete props.animated;
-		delete props.checked;
+	render: ({onToggle, ...rest}) => {
+		delete rest.animated;
+		delete rest.checked;
 
 		return (
-			<span {...props}>
+			<span {...rest} onClick={onToggle}>
 				<Icon className={css.icon}>circle</Icon>
 			</span>
 		);

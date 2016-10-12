@@ -1,3 +1,9 @@
+/**
+ * Exports the {@link module:@enact/moonstone/SelectableItem~SelectableItem}
+ *
+ * @module @enact/moonstone/SelectableItem
+ */
+
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 
@@ -5,6 +11,15 @@ import {ToggleItemBase} from '../ToggleItem';
 
 import css from './SelectableItem.less';
 
+/**
+ * {@link module:@enact/moonstone/SelectableItem~SelectableItem} is component
+ * that is an Item that is Toggleable. It has two checked states `true` &
+ * `false`. It uses a dot to represent its checked state.
+ *
+ * @class SelectableItem
+ * @ui
+ * @public
+ */
 const SelectableItemBase = kind({
 	name: 'SelectableItem',
 
@@ -18,7 +33,7 @@ const SelectableItemBase = kind({
 		children: PropTypes.string.isRequired,
 
 		/**
-		 * Applies a "checked" visual state to the selectable item.
+		 * When `true`, a "checked" visual state is applied to the selectable item.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -27,7 +42,7 @@ const SelectableItemBase = kind({
 		checked: PropTypes.bool,
 
 		/**
-		 * Applies a disabled visual state to the selectable item.
+		 * When true, a disabled visual state is applied to the selectable item.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -36,7 +51,7 @@ const SelectableItemBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * Applies inline styling to the selectable item.
+		 * When `true`, inline styling is applied to the selectable item.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -58,7 +73,7 @@ const SelectableItemBase = kind({
 		/**
 		 * The value that will be sent to the `onToggle` handler.
 		 *
-		 * @type {String|Number}
+		 * @type {*}
 		 * @default ''
 		 * @public
 		 */
@@ -66,10 +81,7 @@ const SelectableItemBase = kind({
 	},
 
 	defaultProps: {
-		checked: false,
-		disabled: false,
-		inline: false,
-		value: ''
+		checked: false
 	},
 
 	styles: {css},

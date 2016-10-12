@@ -50,16 +50,7 @@ const GroupBase = kind({
 		 * @type {Function}
 		 * @public
 		 */
-		onActivate: PropTypes.func.isRequired,
-
-		/**
-		 * The name of the event that triggers activation.
-		 *
-		 * @type {String}
-		 * @default 'onClick'
-		 * @public
-		 */
-		activate: PropTypes.string,
+		onSelect: PropTypes.func.isRequired,
 
 		/**
 		 * The property on each `childComponent` that receives the data in `children`
@@ -69,15 +60,6 @@ const GroupBase = kind({
 		 * @public
 		 */
 		childProp: PropTypes.string,
-
-		/**
-		 * The index of the currently activated item.
-		 *
-		 * @type {Number}
-		 * @default 0
-		 * @public
-		 */
-		index: PropTypes.number,
 
 		/**
 		 * The property on each `childComponent` that receives the index of the item
@@ -97,6 +79,24 @@ const GroupBase = kind({
 		itemProps: PropTypes.object,
 
 		/**
+		 * The name of the event that triggers activation.
+		 *
+		 * @type {String}
+		 * @default 'onClick'
+		 * @public
+		 */
+		select: PropTypes.string,
+
+		/**
+		 * The index of the currently activated item.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
+		selected: PropTypes.number,
+
+		/**
 		 * The name of the DOM property that represents the selected state.
 		 *
 		 * @type {String}
@@ -107,7 +107,7 @@ const GroupBase = kind({
 	},
 
 	defaultProps: {
-		activate: 'onClick',
+		select: 'onClick',
 		index: 0,
 		indexProp: 'data-index',
 		childProp: 'children',
@@ -122,9 +122,9 @@ const GroupBase = kind({
 	},
 
 	render: (props) => {
-		delete props.onActivate;
-		delete props.activate;
 		delete props.index;
+		delete props.onSelect;
+		delete props.select;
 		delete props.selectedProp;
 
 		return <Repeater {...props} childComponent={GroupItem} />;

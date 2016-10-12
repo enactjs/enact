@@ -11,14 +11,14 @@ StatefulToggleButton.displayName = 'ToggleButton';
 
 // Set up some defaults for info and knobs
 const prop = {
-	backgroundOpacity: {'opaque': 'opaque', 'translucent': 'translucent', 'transparent': 'transparent'}
+	backgroundOpacity: {'opaque': 'opaque', 'translucent': 'translucent', 'transparent': 'transparent'},
+	tallText:{'ิ้  ไั  ஒ  து': 'ิ้  ไั  ஒ  து', 'ÁÉÍÓÚÑÜ': 'ÁÉÍÓÚÑÜ', 'Bản văn': 'Bản văn'}
 };
 
 storiesOf('ToggleButton')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		' ',
-		'The basic ToggleButton',
+		'Long text',
 		() => (
 			<StatefulToggleButton
 				onClick={action('onClick')}
@@ -26,10 +26,24 @@ storiesOf('ToggleButton')
 				disabled={boolean('disabled')}
 				preserveCase={boolean('preserveCase')}
 				small={boolean('small')}
-				toggleOnLabel={text('toggleOnLabel', 'On')}
-				toggleOffLabel={text('toggleOffLabel', 'Off')}
-			>
-				Missing Toggle Label
-			</StatefulToggleButton>
+				toggleOnLabel={text('toggleOnLabel', 'Loooooooooooooooooog On')}
+				toggleOffLabel={text('toggleOffLabel', 'Loooooooooooooooooog Off')}
+			/>
+		)
+	)
+	.addWithInfo(
+		'Tall Characters',
+		() => (
+			<StatefulToggleButton
+				onClick={action('onClick')}
+				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
+				disabled={boolean('disabled')}
+				preserveCase={boolean('preserveCase')}
+				small={boolean('small')}
+				toggleOnLabel={select('toggleOnLabel', prop.tallText, 'ิ้  ไั  ஒ  து')}
+				toggleOffLabel={select('toggleOffLabel', prop.tallText, 'ิ้  ไั  ஒ  து')}
+			/>
 		)
 	);
+
+

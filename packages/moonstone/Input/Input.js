@@ -23,6 +23,15 @@ class InputBase extends React.Component {
 		disabled: PropTypes.bool,
 
 		/**
+		 * When `true`, blurs the input when the "enter" key is pressed.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		dismissOnEnter: PropTypes.bool,
+
+		/**
 		 * The icon to be placed at the end of the input.
 		 *
 		 * @type {String}
@@ -68,15 +77,16 @@ class InputBase extends React.Component {
 		/**
 		 * The value of the input.
 		 *
-		 * @type {String}
+		 * @type {String|Number}
 		 * @default ''
 		 * @public
 		 */
-		value: PropTypes.string
+		value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 	}
 
-	defaultProps: {
+	static defaultProps = {
 		disabled: false,
+		dismissOnEnter: false,
 		placeholder: '',
 		type: 'text',
 		value: ''
@@ -84,25 +94,31 @@ class InputBase extends React.Component {
 
 	inputKeyDown = (e) => {
 		const keyCode = e.nativeEvent.keyCode;
+		const {dismissOnEnter} = this.props;
 
 		e.stopPropagation();
 
 		switch (keyCode) {
+			case 13:
+				if (dismissOnEnter) {
+					this.inputNode.blur();
+				}
+				break;
 			case 37:
 				if (this.inputNode.selectionStart === 0) {
-					Spotlight.move('left');
+					this.spotlightMove('left');
 				}
 				break;
 			case 39:
 				if (this.inputNode.selectionStart === this.inputNode.value.length) {
-					Spotlight.move('right');
+					this.spotlightMove('right');
 				}
 				break;
 			case 38:
-				Spotlight.move('up');
+				this.spotlightMove('up');
 				break;
 			case 40:
-				Spotlight.move('down');
+				this.spotlightMove('down');
 				break;
 			default:
 				break;
@@ -111,6 +127,12 @@ class InputBase extends React.Component {
 
 	getInputNode = (node) => {
 		this.inputNode = node;
+	}
+
+	spotlightMove = (direction) => {
+		if (!Spotlight.move(direction)) {
+			this.inputNode.blur();
+		}
 	}
 
 	render () {
@@ -134,6 +156,7 @@ class InputBase extends React.Component {
 		}
 
 		delete rest['data-container-id'];
+		delete rest.dismissOnEnter;
 
 		return (
 			<label {...containerProps} disabled={disabled} className={decoratorClasses} tabIndex={tabIndex} onKeyDown={onKeyDown} onFocus={onFocus} >

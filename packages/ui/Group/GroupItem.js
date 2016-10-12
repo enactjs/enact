@@ -17,7 +17,7 @@ import kind from '@enact/core/kind';
  */
 const pickGroupItemProps = R.compose(
 	R.objOf('$$GroupItem'),
-	R.pick(['activate', 'childProp', 'index', 'indexProp', 'onActivate', 'selectedProp', 'childComponent'])
+	R.pick(['childComponent', 'childProp', 'indexProp', 'onSelect', 'select', 'selected', 'selectedProp'])
 );
 
 /**
@@ -39,12 +39,12 @@ const GroupItemBase = kind({
 	render: (props) => {
 		const {
 			$$GroupItem: {
-				activate,
 				childComponent: Component,
 				childProp,
-				index: selectedIndex,
 				indexProp,
-				onActivate,
+				onSelect,
+				select,
+				selected: selectedIndex,
 				selectedProp
 			},
 			...rest
@@ -54,7 +54,7 @@ const GroupItemBase = kind({
 		const data = rest[childProp];
 		const selected = index === selectedIndex;
 		if (selectedProp) rest[selectedProp] = selected;
-		if (activate) rest[activate] = (ev) => onActivate({...ev, index, data});
+		if (select && onSelect) rest[select] = () => onSelect({selected: index, data});
 
 		return <Component {...rest} />;
 	}
