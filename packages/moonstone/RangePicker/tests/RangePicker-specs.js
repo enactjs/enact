@@ -31,7 +31,7 @@ describe('RangePicker Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should increase by step amount on decrement press', function () {
+	it('should decrease by step amount on decrement press', function () {
 		const StatefulRangePicker = Changeable(RangePicker);
 
 		const picker = mount(

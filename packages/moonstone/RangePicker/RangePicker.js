@@ -12,8 +12,8 @@ import PickerItem from '../Picker/PickerItem';
 import SpottablePicker from '../Picker/SpottablePicker';
 
 /**
- * {@link module:@enact/moonstone/RangePicker~RangePicker} is a component lets
- * the user select a number from a range of numbers.
+ * {@link module:@enact/moonstone/RangePicker~RangePicker} is a component that
+ * lets the user select a number from a range of numbers.
  *
  * @class RangePicker
  * @ui
@@ -142,7 +142,7 @@ const RangePickerBase = kind({
 		 */
 		step: React.PropTypes.number,
 
-		/*
+		/**
 		 * Choose a specific size for your picker. `'small'`, `'medium'`, `'large'`, or set to `null` to
 		 * assume auto-sizing. `'small'` is good for numeric pickers, `'medium'` for single or short
 		 * word pickers, `'large'` for maximum-sized pickers.
@@ -152,7 +152,7 @@ const RangePickerBase = kind({
 		 */
 		width: React.PropTypes.oneOf([null, 'small', 'medium', 'large']),
 
-		/*
+		/**
 		 * Should the picker stop incrementing when the picker reaches the last element? Set `wrap`
 		 * to true to allow the picker to continue from the opposite end of the list of options.
 		 *
