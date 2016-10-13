@@ -1,3 +1,6 @@
+/* eslint-disable no-console */
+/* global console */
+
 // Convenience wrapper around PmLogLib logging API
 
 // Log level constants

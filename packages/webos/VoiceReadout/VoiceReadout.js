@@ -1,3 +1,6 @@
+/* eslint-disable no-console */
+/* global console */
+
 import {platform} from '../platform';
 import LS2Request from '../LS2Request';
 

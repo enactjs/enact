@@ -1,3 +1,6 @@
+/* eslint-disable no-console */
+/* global console */
+
 /**
  * Fetches the appID of the caller app
  * @returns {String} AppID of the app.
