@@ -14,9 +14,9 @@ import css from './IconButton.less';
 
 /**
  * {@link module:@enact/moonstone/IconButton~IconButton} is a {@link module:@enact/moonstone/Icon~Icon}
- * that acts like a button. Icons are stored as single characters in a special symbol font. Specify
- * the icon image by setting the [children]{@link module:@enact/moonstone/IconButton~IconButton#children}
- * property to a string representing an icon name.
+ * that acts like a button. Icons are stored as single characters in a special symbol font. You may
+ * specify an image by setting the `src` property to a URL indicating the image file's location or a
+ * child string from the [IconList]{@link module:@enact/moonstone/Icon~IconList} (e.g. 'plus').
  *
  * See {@link module:@enact/moonstone/Icon~Icon} for more information on the available font-based icons,
  * as well as specifications for icon image assets.
