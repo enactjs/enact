@@ -22,8 +22,8 @@ storiesOf('Slider')
 				backgroundPercent={number('backgroundPercent')}
 				disabled={boolean('disabled')}
 				height={text('height')}
-				min={number('min')}
 				max={number('max')}
+				min={number('min')}
 				onChange={action('onChange')}
 				step={number('step')}
 				vertical={boolean('vertical')}

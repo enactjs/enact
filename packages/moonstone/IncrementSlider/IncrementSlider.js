@@ -144,12 +144,12 @@ class IncrementSlider extends React.Component {
 		backgroundPercent: PropTypes.number,
 
 		/**
-		* The initial value of the increment slider.
-		*
-		* @type {Number}
-		* @default 0
-		* @public
-		*/
+		 * The initial value of the increment slider.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
 		defaultValue: checkDefaultBounds,
 
 		/**
@@ -190,21 +190,21 @@ class IncrementSlider extends React.Component {
 		onChange: PropTypes.func,
 
 		/**
-		* The amount to increment or decrement the value.
-		*
-		* @type {Number}
-		* @default 1
-		* @public
-		*/
+		 * The amount to increment or decrement the value.
+		 *
+		 * @type {Number}
+		 * @default 1
+		 * @public
+		 */
 		step: PropTypes.number,
 
 		/**
-		* If `true` the increment slider will be oriented vertically.
-		*
-		* @type {Boolean}
-		* @default false
-		* @public
-		*/
+		 * If `true` the increment slider will be oriented vertically.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
 		vertical: PropTypes.bool
 	};
 
