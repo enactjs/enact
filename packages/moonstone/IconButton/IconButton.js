@@ -30,14 +30,6 @@ const IconButtonBase = kind({
 
 	propTypes: {
 		/**
-		 * String description of the icon to be used. All strings supported by
-		 * [Icon]{module:@enact/moonstone/Icon~Icon} are supported.
-		 * @type {String}
-		 * @public
-		 */
-		children: PropTypes.string,
-
-		/**
 		 * The background-color opacity of this icon button; valid values are `'opaque'`,
 		 * `'translucent'`, and `'transparent'`.
 		 *
@@ -46,6 +38,14 @@ const IconButtonBase = kind({
 		 * @public
 		 */
 		backgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'transparent']),
+
+		/**
+		 * String description of the icon to be used. All strings supported by
+		 * [Icon]{module:@enact/moonstone/Icon~Icon} are supported.
+		 * @type {String}
+		 * @public
+		 */
+		children: PropTypes.string,
 
 		/**
 		 * When `true`, the [button]{@glossary button} is shown as disabled and does not
