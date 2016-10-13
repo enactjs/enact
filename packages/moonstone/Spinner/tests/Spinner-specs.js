@@ -4,28 +4,28 @@ import Spinner from '../Spinner';
 import css from '../Spinner.less';
 
 describe('Spinner Specs', () => {
-	it('should have "display: none" on marquee text Spinner has no children', function () {
+	it('should have not have MarqueeText as a child when Spinner has no children', function () {
 		const spinner = mount(
 			<Spinner />
 		);
 
-		const expected = 'none';
-		const actual = spinner.find('MarqueeText').prop('style');
+		const expected = true;
+		const actual = spinner.find('MarqueeText').isEmpty();
 
-		expect(actual).to.have.property('display').equal(expected);
+		expect(actual).to.equal(expected);
 	});
 
-	it('should have "display: none" on marquee text Spinner has children', function () {
+	it('should have MarqueeText as a child when Spinner has children', function () {
 		const spinner = mount(
 			<Spinner>
 				Loading...
 			</Spinner>
 		);
 
-		const expected = 'display';
-		const actual = spinner.find('MarqueeText').prop('style');
+		const expected = false;
+		const actual = spinner.find('MarqueeText').isEmpty();
 
-		expect(actual).to.not.have.property(expected);
+		expect(actual).to.equal(expected);
 	});
 
 	it('should have transparent class when transparent prop equals true', function () {

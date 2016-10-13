@@ -51,19 +51,6 @@
 	/* Speed back up as the ball falls */
 }
 
-@-webkit-keyframes propellerBall {
-	0%   { -webkit-transform: rotateZ(0deg); }
-	100% { -webkit-transform: rotateZ(360deg); }
-}
-@-webkit-keyframes propellerBall2 {
-	0%   { -webkit-transform: rotateZ(120deg); }
-	100% { -webkit-transform: rotateZ(480deg); }
-}
-@-webkit-keyframes propellerBall3 {
-	0%   { -webkit-transform: rotateZ(240deg); }
-	100% { -webkit-transform: rotateZ(600deg); }
-}
-
 @keyframes spinBall {
 	0%        { transform: rotateZ(@moon-spinner-ball-angle); }
 	/* Slow down toward the top */
@@ -112,19 +99,6 @@
 	/* Speed back up as the ball falls */
 }
 
-@keyframes propellerBall {
-	0%   { transform: rotateZ(0deg); }
-	100% { transform: rotateZ(360deg); }
-}
-@keyframes propellerBall2 {
-	0%   { transform: rotateZ(120deg); }
-	100% { transform: rotateZ(480deg); }
-}
-@keyframes propellerBall3 {
-	0%   { transform: rotateZ(240deg); }
-	100% { transform: rotateZ(600deg); }
-}
-
 .spinner {
 	min-height: @moon-spinner-size;
 	min-width: @moon-spinner-size;
@@ -139,7 +113,7 @@
 	> * {
 		display: inline-block;
 	}
-	
+
 	// Horizontally centered
 	&.center {
 		margin: 0;
@@ -163,24 +137,24 @@
 	&.content {
 		padding: ((@moon-button-height - @moon-spinner-size) / 2);
 
-		.spinnerClient {
+		.client {
 			max-width: 399px;
 		}
 	}
 
-	&.running .spinnerBall {
+	&.running .ball {
 		-webkit-animation-play-state: running;
 		animation-play-state: running;
 	}
 
-	.spinnerBallDecorator {
+	.ballDecorator {
 		position: relative;
 		width: @moon-spinner-size;
 		height: @moon-spinner-size;
 		float: left;
 	}
 
-	.spinnerBall {
+	.ball {
 		position: absolute;
 		text-align: center;
 		font-size: 90%;
@@ -193,17 +167,17 @@
 		width: @moon-spinner-ball-width;		// While we're using a font-icon as our ball, we need extra clearance around it, so it's not clipped by the browser's layer composer.
 		padding: 0 1px;
 		left: (50% - (@moon-spinner-ball-width / 2));
-		bottom: (50% - @moon-spinner-ball-height - @moon-spinner-ball-disatance);
-		-webkit-transform-origin: center ((@moon-spinner-ball-disatance / @moon-spinner-ball-height) * -100);
-		transform-origin: center ((@moon-spinner-ball-disatance / @moon-spinner-ball-height) * -100);
+		bottom: (50% - @moon-spinner-ball-height - @moon-spinner-ball-distance);
+		-webkit-transform-origin: center ((@moon-spinner-ball-distance / @moon-spinner-ball-height) * -100);
+		transform-origin: center ((@moon-spinner-ball-distance / @moon-spinner-ball-height) * -100);
 
 		&:after {
-			content: @moon-icon-circle;
+			content: @moon-spinner-icon;
 			font-family: @moon-icon-font-family;
 		}
 	}
 
-	.spinnerBall1 {
+	.ball1 {
 		-webkit-animation-name: spinBall;
 		animation-name: spinBall;
 		color: @moon-spinner-ball1-color;
@@ -211,7 +185,7 @@
 		transform: rotateZ(@moon-spinner-ball-angle);
 	}
 
-	.spinnerBall2 {
+	.ball2 {
 		-webkit-animation-name: spinBall2;
 		animation-name: spinBall2;
 		color: @moon-spinner-ball2-color;
@@ -219,7 +193,7 @@
 		transform: rotateZ(360 - @moon-spinner-ball-angle);
 	}
 
-	.spinnerBall3 {
+	.ball3 {
 		-webkit-animation-name: spinBall3;
 		animation-name: spinBall3;
 		color: @moon-spinner-ball3-color;
@@ -227,7 +201,7 @@
 		transform: rotateZ(360 - (@moon-spinner-ball-angle * 3));
 	}
 
-	.spinnerClient {
+	.client {
 		float: left;
 		line-height: @moon-spinner-size;
 		margin: 0 2.6ex 0 0;
@@ -239,11 +213,11 @@
 	// .-spinner-ball-decorator {
 	// 	-webkit-transform: scaleX(-1);
 	// }
-	.spinnerBallDecorator {
+	.ballDecorator {
 		float: right;
 	}
 
-	.spinnerClient {
+	.client {
 		float: right;
 		margin-left: 2.6ex;
 		margin-right: 0;

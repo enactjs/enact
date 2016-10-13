@@ -6,6 +6,7 @@
 
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
+
 import {MarqueeText} from '../Marquee';
 
 import css from './Spinner.less';
@@ -23,8 +24,8 @@ const SpinnerBase = kind({
 
 	propTypes: {
 		/**
-		 * Sets the spinner to be vertically centered, relative to its containing
-		 * control.
+		 * Sets the spinner to be horizontally centered, relative to its containing
+		 * component.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -42,10 +43,10 @@ const SpinnerBase = kind({
 
 		/**
 		 * Sets the spinner to be vertically centered, relative to its containing
-		 * control.
+		 * component.
 		 *
 		 * @type {Boolean}
-		 * @default true
+		 * @default false
 		 * @public
 		 */
 		middle: PropTypes.bool,
@@ -63,7 +64,7 @@ const SpinnerBase = kind({
 
 	defaultProps: {
 		center: false,
-		middle: true,
+		middle: false,
 		transparent: false
 	},
 
@@ -73,7 +74,17 @@ const SpinnerBase = kind({
 	},
 
 	computed: {
-		displayMarquee: ({children}) => children ? {} : {display: 'none'},
+		marquee: ({children}) => {
+			if (children) {
+				return (
+					<MarqueeText className={css.client}>
+						{children}
+					</MarqueeText>
+				);
+			} else {
+				return null;
+			}
+		},
 		className: ({transparent, middle, center, children, styler}) => {
 			const content = children ? css.content : '';
 			return styler.append(
@@ -82,21 +93,22 @@ const SpinnerBase = kind({
 		}
 	},
 
-	render: ({className, children, displayMarquee}) =>  (
-		<div className={className}>
-			<div className={css.spinnerBallDecorator}>
-				<div className={`${css.spinnerBall} ${css.spinnerBall1}`} />
-				<div className={`${css.spinnerBall} ${css.spinnerBall2}`} />
-				<div className={`${css.spinnerBall} ${css.spinnerBall3}`} />
+	render: ({className, marquee, ...rest}) =>  {
+		delete rest.center;
+		delete rest.middle;
+		delete rest.transparent;
+
+		return (
+			<div {...rest} className={className}>
+				<div className={css.ballDecorator}>
+					<div className={`${css.ball} ${css.ball1}`} />
+					<div className={`${css.ball} ${css.ball2}`} />
+					<div className={`${css.ball} ${css.ball3}`} />
+				</div>
+				{marquee}
 			</div>
-			<MarqueeText
-				style={displayMarquee}
-				className={css.spinnerClient}
-			>
-				{children}
-			</MarqueeText>
-		</div>
-	)
+		);
+	}
 });
 
 export default SpinnerBase;
