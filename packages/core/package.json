@@ -40,7 +40,7 @@
     }
   },
   "eslintConfig": {
-    "extends": "enact"
+    "extends": "enact-internal"
   },
   "dependencies": {
     "react": "~15.3.2",

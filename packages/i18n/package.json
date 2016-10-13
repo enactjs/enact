@@ -44,7 +44,7 @@
     }
   },
   "eslintConfig": {
-    "extends": "enact"
+    "extends": "enact-internal"
   },
   "dependencies": {
     "@enact/core": "1.0.0-alpha.1",

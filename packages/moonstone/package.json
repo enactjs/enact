@@ -40,7 +40,7 @@
     }
   },
   "eslintConfig": {
-    "extends": "enact"
+    "extends": "enact-internal"
   },
   "dependencies": {
     "classnames": "~2.2.5",
