@@ -12,8 +12,8 @@ import {MarqueeText} from '../Marquee';
 import css from './Spinner.less';
 
 /**
- * {@link module:@enact/moonstone/Spinner~Spinner} is a component that shows a
- * spinning animation indicate that some activity is taking place.
+ * {@link module:@enact/moonstone/Spinner~Spinner} is a component that shows a spinning animation
+ * indicate that some activity is taking place.
  *
  * @class Spinner
  * @ui
@@ -24,8 +24,7 @@ const SpinnerBase = kind({
 
 	propTypes: {
 		/**
-		 * Sets the spinner to be horizontally centered, relative to its containing
-		 * component.
+		 * Sets the spinner to be horizontally centered, relative to its containing component.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -42,8 +41,8 @@ const SpinnerBase = kind({
 		children: PropTypes.string,
 
 		/**
-		 * Sets the spinner to be vertically centered, relative to its containing
-		 * component.
+		 * Sets the spinner to be vertically centered, relative to its containing component. This
+		 * option has no effect if `center` is set to `false`.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -88,7 +87,7 @@ const SpinnerBase = kind({
 		className: ({transparent, middle, center, children, styler}) => {
 			const content = children ? css.content : '';
 			return styler.append(
-				{transparent, middle, center, content},
+				{transparent, middle, center, content}
 			);
 		}
 	},
