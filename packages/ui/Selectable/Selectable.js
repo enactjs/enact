@@ -116,7 +116,7 @@ const Selectable = hoc(defaultConfig, (config, Wrapped) => {
 				}
 
 				this.setState({selected});
-				forwardSelect(ev, this.props);
+				forwardSelect(Object.assign({}, ev, {selected}), this.props);
 			}
 		}
 

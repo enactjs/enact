@@ -94,7 +94,7 @@ const GroupBase = kind({
 		 * @default 0
 		 * @public
 		 */
-		selected: PropTypes.number,
+		selected: PropTypes.oneOfType([PropTypes.number, PropTypes.array]),
 
 		/**
 		 * The name of the DOM property that represents the selected state.
@@ -123,6 +123,7 @@ const GroupBase = kind({
 	render: (props) => {
 		delete props.onSelect;
 		delete props.select;
+		delete props.selected;
 		delete props.selectedProp;
 
 		return <Repeater {...props} childComponent={GroupItem} />;
