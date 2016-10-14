@@ -2,6 +2,7 @@ import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 
 import Item from '../Item';
+import {MarqueeDecorator} from '../Marquee';
 
 import css from './LabeledItem.less';
 
@@ -19,12 +20,17 @@ const LabeledItemBase = kind({
 	},
 
 	render: ({children, label, ...rest}) => (
-		<Item {...rest}>
-			<div className={css.text}>{children}</div>
+		<Item {...rest} component='div'>
+			{children}
 			{(label != null) ? (<div className={css.label}>{label}</div>) : null}
 		</Item>
 	)
 });
 
-export default LabeledItemBase;
-export {LabeledItemBase as LabeledItem, LabeledItemBase};
+const LabeledItem = MarqueeDecorator(
+	{className: css.text},
+	LabeledItemBase
+);
+
+export default LabeledItem;
+export {LabeledItem, LabeledItemBase};
