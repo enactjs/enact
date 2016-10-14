@@ -76,7 +76,7 @@ const SpinnerBase = kind({
 		marquee: ({children}) => {
 			if (children) {
 				return (
-					<MarqueeText className={css.client}>
+					<MarqueeText className={css.client} marqueeOn="render">
 						{children}
 					</MarqueeText>
 				);
