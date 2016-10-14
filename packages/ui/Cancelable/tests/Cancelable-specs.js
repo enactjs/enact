@@ -1,9 +1,9 @@
 import React from 'react';
-import {shallow, mount} from 'enzyme';
+import {shallow} from 'enzyme';
 import sinon from 'sinon';
 import Cancelable from '../Cancelable';
 
-describe.only('Cancelable', () => {
+describe('Cancelable', () => {
 
 	// Suite-wide setup
 	const Component = () => (
