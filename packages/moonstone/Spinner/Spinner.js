@@ -92,13 +92,13 @@ const SpinnerBase = kind({
 		}
 	},
 
-	render: ({className, marquee, ...rest}) =>  {
+	render: ({marquee, ...rest}) =>  {
 		delete rest.center;
 		delete rest.middle;
 		delete rest.transparent;
 
 		return (
-			<div {...rest} className={className}>
+			<div {...rest}>
 				<div className={css.ballDecorator}>
 					<div className={`${css.ball} ${css.ball1}`} />
 					<div className={`${css.ball} ${css.ball2}`} />
