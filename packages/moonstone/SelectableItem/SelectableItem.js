@@ -7,7 +7,7 @@
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 
-import {ToggleItemBase} from '../ToggleItem';
+import ToggleItem from '../ToggleItem';
 
 import css from './SelectableItem.less';
 
@@ -84,7 +84,10 @@ const SelectableItemBase = kind({
 		checked: false
 	},
 
-	styles: {css},
+	styles: {
+		css,
+		className: 'selectableItem'
+	},
 
 	computed: {
 		iconClasses: ({checked, styler}) => styler.join(
@@ -94,7 +97,7 @@ const SelectableItemBase = kind({
 	},
 
 	render: (props) => (
-		<ToggleItemBase {...props} icon="circle" />
+		<ToggleItem {...props} icon="circle" />
 	)
 });
 

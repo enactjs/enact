@@ -1,3 +1,9 @@
+/**
+ * Exports the {@link module:@enact/moonstone/Icon~Icon} component.
+ *
+ * @module @enact/moonstone/Icon
+ */
+
 import kind from '@enact/core/kind';
 import ri from '@enact/ui/resolution';
 import React, {PropTypes} from 'react';
@@ -6,19 +12,45 @@ import iconList from './IconList.js';
 
 import css from './Icon.less';
 
+/**
+ * {@link module:@enact/moonstone/Icon~Icon} is a component that displays an icon image.  You may specify an
+ * image by setting the `src` property to a URL indicating the image file's location or a child string from
+ * the [IconList]{@link module:@enact/moonstone/Icon~IconList} (e.g. 'plus').
+ *
+ * @class Icon
+ * @ui
+ * @public
+ */
 const IconBase = kind({
 	name: 'Icon',
 
 	propTypes: {
+		/**
+		 * A string that represents an icon from the [IconList]{@link module:@enact/moonstone/Icon~IconList}.
+		 * Can also be an HTML entity string, unicode reference or hex value (in the form '0x...').
+		 *
+		 * @type {String}
+		 * @public
+		 */
 		children: PropTypes.string,
+
+		/**
+		 * If `true`, apply the 'small' class.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
 		small: PropTypes.bool,
 
 		/**
-		* URL specifying path to icon image.
-		*
-		* @type {String|Object}
-		* @public
-		*/
+		 * URL specifying path to an icon image or an object representing a resolution independent resource (See
+		 * {@link module:@enact/ui/resolution}).
+		 * If both `src` and `children` are specified, they will both be rendered.
+		 *
+		 * @type {String|Object}
+		 * @public
+		 */
 		src: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
 	},
 
