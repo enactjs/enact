@@ -1,6 +1,5 @@
 import React from 'react';
 import GroupBase from '@enact/ui/Group';
-import Selectable from '@enact/ui/Selectable';
 import Expandable from '../Expandable';
 import CheckboxItem from '../CheckboxItem';
 
@@ -15,6 +14,6 @@ const CheckboxItemGroupBase = (props) => (
 
 const ExpandableCheckboxItemGroup = Expandable({
 	close: 'onSelect'
-}, Selectable(CheckboxItemGroupBase));
+}, CheckboxItemGroupBase);
 
 export default ExpandableCheckboxItemGroup;

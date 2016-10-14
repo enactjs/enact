@@ -1,7 +1,11 @@
 import ExpandableCheckboxItemGroup from '@enact/moonstone/ExpandableCheckboxItemGroup';
+import {forward} from '@enact/core/handle';
+import Selectable from '@enact/ui/Selectable';
 import React from 'react';
-import {storiesOf} from '@kadira/storybook';
+import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
+
+const SelectableExpandableCheckboxItemGroup = Selectable(ExpandableCheckboxItemGroup);
 
 class StatefulExpandableCheckboxItemGroup extends React.Component {
 	constructor (props) {
@@ -9,12 +13,14 @@ class StatefulExpandableCheckboxItemGroup extends React.Component {
 		this.state = {
 			open: false
 		};
+		this.forwardOnSelect = forward('onSelect');
 	}
 
-	handleSelect = ({data}) => {
+	handleSelect = (ev) => {
 		this.setState({
-			value: data
+			value: ev.data
 		});
+		this.forwardOnSelect(ev, this.props);
 	}
 
 	handleOpen = () => {
@@ -31,7 +37,7 @@ class StatefulExpandableCheckboxItemGroup extends React.Component {
 
 	render () {
 		return (
-			<ExpandableCheckboxItemGroup
+			<SelectableExpandableCheckboxItemGroup
 				{...this.props}
 				value={this.state.value}
 				open={this.state.open}
@@ -43,13 +49,22 @@ class StatefulExpandableCheckboxItemGroup extends React.Component {
 	}
 }
 
+StatefulExpandableCheckboxItemGroup.displayName = 'ExpandableCheckboxItemGroup';
+StatefulExpandableCheckboxItemGroup.propTypes = Object.assign({}, ExpandableCheckboxItemGroup.propTypes);
+StatefulExpandableCheckboxItemGroup.defaultProps = Object.assign({}, ExpandableCheckboxItemGroup.defaultProps);
+
 storiesOf('ExpandableCheckboxItemGroup')
 	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'Basic usage of ExpandableCheckboxItemGroup',
 		() => (
-			<StatefulExpandableCheckboxItemGroup title={text('title', 'title')} noneText={text('none', 'none')}>
+			<StatefulExpandableCheckboxItemGroup
+				title={text('title', 'title')}
+				noneText={text('none', 'none')}
+				disabled={boolean('disabled', false)}
+				onSelect={action('onSelect')}
+			>
 				{['option1', 'option2', 'option3']}
 			</StatefulExpandableCheckboxItemGroup>
 		)
