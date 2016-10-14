@@ -44,10 +44,8 @@ const GridListImageItemBase = kind({
 		caption: PropTypes.string,
 
 		/**
-		 * A globally accessible data URL that describes a simple
-		 * placeholder image that may be used in samples and applications
-		 * until final graphics are provided. As an SVG image, it will
-		 * expand to fill the desired width and height set in the style.
+		 * A placeholder image to be displayed before the image is loaded.
+		 * For performance purposes, it should be pre-loaded or be a data url.
 		 *
 		 * @type {String}
 		 * @default defaultPlaceholder
@@ -56,7 +54,8 @@ const GridListImageItemBase = kind({
 		placeholder: PropTypes.string,
 
 		/**
-		 * Applies a selected visual effect to the image of selectionEnabled
+		 * When `true`, applies a selected visual effect to the image, but only if `selectionOverlayShowing`
+		 * is also `true`.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -65,8 +64,8 @@ const GridListImageItemBase = kind({
 		selected: PropTypes.bool,
 
 		/**
-		 * Set this to `true` to enable selection support. Selection support adds the styling for a centered icon
-		 * that can be shown when the `selected` value is `true`.
+		 * When `true`, a selection overlay with a centered icon is shown. When `selected` is true,
+		 * a check mark is shown.
 		 *
 		 * @type {Boolean}
 		 * @default false
