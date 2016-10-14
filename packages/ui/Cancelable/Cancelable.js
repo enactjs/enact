@@ -43,6 +43,7 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 		modal,
 		component: Component
 	} = config;
+	const forwardKeyUp = forward('onKeyUp');
 
 	invariant(onCancel, 'onCancel must be specified with Cancelable');
 
@@ -76,8 +77,8 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 		)
 
 		handleKeyUp = handle(
+			(ev) => forwardKeyUp(ev, this.props),
 			forEscape,
-			forward('onKeyUp', this.props),
 			this.cancel,
 			stop
 		)
