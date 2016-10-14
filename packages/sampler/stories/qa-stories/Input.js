@@ -3,7 +3,7 @@ import Input, {InputBase} from '@enact/moonstone/Input';
 import Changeable from '@enact/ui/Changeable';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
+import {withKnobs, boolean, number, select, text} from '@kadira/storybook-addon-knobs';
 
 
 const StatefulInput = Changeable({mutable: true}, Input);
@@ -78,9 +78,9 @@ storiesOf('Input')
 				iconEnd={select('iconEnd', iconNames)}
 				iconStart={select('iconStart', iconNames)}
 				type={inputData.type[1]}
-				min={text('min value', inputData.minValue)}
-				max={text('max value', inputData.maxValue)}
-				value={text('value', inputData.minValue)}
+				min={number('min value', inputData.minValue)}
+				max={number('max value', inputData.maxValue)}
+				value={number('value', inputData.minValue)}
 			/>
 		)
 	);
