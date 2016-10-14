@@ -14,12 +14,16 @@ import css from './IconButton.less';
 
 /**
  * {@link module:@enact/moonstone/IconButton~IconButton} is a {@link module:@enact/moonstone/Icon~Icon}
- * that acts like a button. Icons are stored as single characters in a special symbol font. You may
- * specify an image by setting the `src` property to a URL indicating the image file's location or a
- * child string from the [IconList]{@link module:@enact/moonstone/Icon~IconList} (e.g. 'plus').
+ * that acts like a button. You may specify an image, by setting the `src` property, or a font-based
+ * icon, by setting the child to a string from the [IconList]{@link module:@enact/moonstone/Icon~IconList}.
+ * If both `src` and children are specified, both will be rendered.
  *
- * See {@link module:@enact/moonstone/Icon~Icon} for more information on the available font-based icons,
- * as well as specifications for icon image assets.
+ * Usage:
+ * ```
+ * <IconButton onClick={handleClick} small>
+ *     plus
+ * </IconButton>
+ * ```
  *
  * @class IconButton
  * @ui
@@ -40,8 +44,9 @@ const IconButtonBase = kind({
 		backgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'transparent']),
 
 		/**
-		 * String description of the icon to be used. All strings supported by
-		 * [Icon]{module:@enact/moonstone/Icon~Icon} are supported.
+		 * A string that represents an icon from the [IconList]{@link module:@enact/moonstone/Icon~IconList}.
+		 * Can also be an HTML entity string, Unicode reference or hex value (in the form '0x...').
+		 *
 		 * @type {String}
 		 * @public
 		 */
@@ -88,11 +93,13 @@ const IconButtonBase = kind({
 		small: PropTypes.bool,
 
 		/**
-		* URL specifying path to icon image.
-		*
-		* @type {String|Object}
-		* @public
-		*/
+		 * URL specifying path to an icon image or an object representing a resolution independent resource (See
+		 * {@link module:@enact/ui/resolution}).
+		 * If both `src` and `children` are specified, they will both be rendered.
+		 *
+		 * @type {String|Object}
+		 * @public
+		 */
 		src: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
 	},
 
