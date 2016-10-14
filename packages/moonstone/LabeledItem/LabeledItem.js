@@ -31,7 +31,7 @@ const LabeledItemBase = kind({
 		 * @required
 		 * @public
 		 */
-		children: PropTypes.node,
+		children: PropTypes.node.isRequired,
 
 		/**
 		 * The label to be displayed along with the text.
