@@ -33,7 +33,7 @@ const defaultConfig = {
 	select: 'onSelect',
 
 	/**
-	 * TBD
+	 * Configures to allow multi-selection
 	 * @type {Boolean}
 	 * @default false
 	 */
@@ -70,8 +70,8 @@ const Selectable = hoc(defaultConfig, (config, Wrapped) => {
 
 		static propTypes = {
 			/**
-			 * [array description]
-			 * @type {[type]}
+			 * Selected value(s) for when first rendered.
+			 * @type {Array | String | Number | Boolean}
 			 * @public
 			 */
 			[defaultPropKey]: multi ? React.PropTypes.array : anyPrimitive,

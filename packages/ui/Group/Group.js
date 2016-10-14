@@ -88,10 +88,9 @@ const GroupBase = kind({
 		select: PropTypes.string,
 
 		/**
-		 * The index of the currently activated item.
+		 * The index(es) of the currently activated item.
 		 *
-		 * @type {Number}
-		 * @default 0
+		 * @type {Number | Array}
 		 * @public
 		 */
 		selected: PropTypes.oneOfType([PropTypes.number, PropTypes.array]),
