@@ -1,3 +1,9 @@
+/**
+ * Exports the {@link module:@enact/moonstone/IconButton~IconButton} component.
+ *
+ * @module @enact/moonstone/IconButton
+ */
+
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 
@@ -6,18 +12,27 @@ import Icon from '../Icon';
 
 import css from './IconButton.less';
 
+/**
+ * {@link module:@enact/moonstone/IconButton~IconButton} is a {@link module:@enact/moonstone/Icon~Icon}
+ * that acts like a button. You may specify an image, by setting the `src` property, or a font-based
+ * icon, by setting the child to a string from the [IconList]{@link module:@enact/moonstone/Icon~IconList}.
+ * If both `src` and children are specified, both will be rendered.
+ *
+ * Usage:
+ * ```
+ * <IconButton onClick={handleClick} small>
+ *     plus
+ * </IconButton>
+ * ```
+ *
+ * @class IconButton
+ * @ui
+ * @public
+ */
 const IconButtonBase = kind({
 	name: 'IconButton',
 
 	propTypes: {
-		/**
-		 * String description of the icon to be used. All strings supported by
-		 * [Icon]{module:@enact/moonstone/Icon~Icon} are supported.
-		 * @type {String}
-		 * @public
-		 */
-		children: PropTypes.string.isRequired,
-
 		/**
 		 * The background-color opacity of this icon button; valid values are `'opaque'`,
 		 * `'translucent'`, and `'transparent'`.
@@ -27,6 +42,15 @@ const IconButtonBase = kind({
 		 * @public
 		 */
 		backgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'transparent']),
+
+		/**
+		 * A string that represents an icon from the [IconList]{@link module:@enact/moonstone/Icon~IconList}.
+		 * Can also be an HTML entity string, Unicode reference or hex value (in the form '0x...').
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		children: PropTypes.string,
 
 		/**
 		 * When `true`, the [button]{@glossary button} is shown as disabled and does not
@@ -66,7 +90,17 @@ const IconButtonBase = kind({
 		 * @default false
 		 * @public
 		 */
-		small: PropTypes.bool
+		small: PropTypes.bool,
+
+		/**
+		 * URL specifying path to an icon image or an object representing a resolution independent resource (See
+		 * {@link module:@enact/ui/resolution}).
+		 * If both `src` and `children` are specified, they will both be rendered.
+		 *
+		 * @type {String|Object}
+		 * @public
+		 */
+		src: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
 	},
 
 	defaultProps: {
@@ -82,10 +116,10 @@ const IconButtonBase = kind({
 		className: ({small, styler}) => styler.append({small})
 	},
 
-	render: ({children, small, ...rest}) => {
+	render: ({children, small, src, ...rest}) => {
 		return (
 			<Button {...rest} small={small} minWidth={false} marqueeDisabled>
-				<Icon small={small} className={css.icon}>{children}</Icon>
+				<Icon small={small} className={css.icon} src={src}>{children}</Icon>
 			</Button>
 		);
 	}

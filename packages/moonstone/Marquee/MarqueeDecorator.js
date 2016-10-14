@@ -155,11 +155,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
-			this.distance = null;
 			this.state = {
 				overflow: 'ellipsis'
 			};
 
+			this.invalidateMetrics();
 			this.checkMarqueeOnRender(props);
 		}
 
@@ -173,7 +173,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (next.marqueeOn !== marqueeOn || next.marqueeDisabled !== marqueeDisabled) {
 				this.cancelAnimation();
 			} else if (!childrenEquals(this.props.children, next.children)) {
-				this.distance = null;
+				this.invalidateMetrics();
 				this.cancelAnimation();
 			}
 		}
@@ -227,50 +227,75 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {undefined}
 		 */
 		initMarquee () {
-			this.calcDistance();
+			this.calculateMetrics();
 			if (this.marqueeOnRender) {
 				this.startAnimation(this.props.marqueeOnRenderDelay);
 			}
 		}
 
 		/**
-		* Determine if the marquee should animate
-		*
-		* @param {Number} [distance] Marquee distance
-		* @returns {Boolean} Returns `true` if this control has enough content to animate.
-		* @private
-		*/
-		shouldAnimate (distance) {
-			const d = distance === null ? this.calcDistance() : distance;
-			return d > 0;
+		 * Invalidates marquee metrics requiring them to be recalculated
+		 *
+		 * @returns {undefined}
+		 */
+		invalidateMetrics () {
+			// Null distance is the special value to allow recalculation
+			this.distance = null;
+			// Assume the marquee fits until calculations show otherwise
+			this.contentFits = true;
 		}
 
 		/**
-		* Determines how far the marquee needs to scroll.
+		* Determines if the component should marquee and the distance to animate
 		*
-		* @returns {Number} Marquee distance
-		* @private
+		* @returns {undefined}
 		*/
-		calcDistance () {
+		calculateMetrics () {
 			const node = this.node;
-			let rect;
 
 			// TODO: absolute showing check (or assume that it won't be rendered if it isn't showing?)
 			if (node && this.distance == null) {
-				rect = node.getBoundingClientRect();
-				this.distance = Math.floor(Math.abs(node.scrollWidth - rect.width));
-
-				// if the distance is exactly 0, then the ellipsis
-				// most likely are hiding the content, and marquee does not
-				// need to animate
-				if (this.distance === 0) {
-					this.setState({overflow: 'clip'});
-				} else {
-					this.setState({overflow: 'ellipsis'});
-				}
+				this.distance = this.calculateDistance(node);
+				this.contentFits = !this.shouldAnimate(this.distance);
+				this.setState({
+					overflow: this.calculateTextOverflow(this.distance)
+				});
 			}
+		}
 
-			return this.distance;
+		/**
+		 * Calculates the distance the marquee must travel to reveal all of the content
+		 *
+		 * @param	{DOMNode}	node	DOM Node to measure
+		 * @returns	{Number}			Distance to travel in pixels
+		 */
+		calculateDistance (node) {
+			const rect = node.getBoundingClientRect();
+			const distance = Math.floor(Math.abs(node.scrollWidth - rect.width));
+
+			return distance;
+		}
+
+		/**
+		 * Calculates the text overflow to use to correctly render the ellipsis. If the distance is
+		 * exactly 0, then the ellipsis is most likely hiding the content, and marquee does not need
+		 * to animate.
+		 *
+		 * @param	{Number}	distance	Amount of overflow in pixels
+		 * @returns	{String}				text-overflow value
+		 */
+		calculateTextOverflow (distance) {
+			return distance === 0 ? 'clip' : 'ellipsis';
+		}
+
+		/**
+		 * Calculates if the marquee should animate
+		 *
+		 * @param	{Number}	distance	Amount of overflow in pixels
+		 * @returns	{Boolean}				`true` if it should animated
+		 */
+		shouldAnimate (distance) {
+			return distance > 0;
 		}
 
 		/**
@@ -282,16 +307,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		startAnimation = (delay = this.props.marqueeDelay) => {
 			if (this.state.animating || this.contentFits) return;
 
-			const distance = this.calcDistance();
-
-			this.contentFits = !this.shouldAnimate(distance);
-			if (!this.contentFits) {
-				this.setTimeout(() => {
-					this.setState({
-						animating: true
-					});
-				}, delay);
-			}
+			this.setTimeout(() => {
+				this.setState({
+					animating: true
+				});
+			}, delay);
 		}
 
 		/**
@@ -374,7 +394,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			// TODO: cancel others on hover
-			if ((marqueeOnHover && !marqueeOnFocus) || (disabled && marqueeOnFocus)) {
+			if (marqueeOnHover || (disabled && marqueeOnFocus)) {
 				rest[enter] = this.handleEnter;
 				rest[leave] = this.handleLeave;
 			}

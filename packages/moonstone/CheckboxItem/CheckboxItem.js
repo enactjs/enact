@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import kind from '@enact/core/kind';
 
-import {ToggleItemBase} from '../ToggleItem';
+import ToggleItem from '../ToggleItem';
 
 import css from './CheckboxItem.less';
 
@@ -85,7 +85,7 @@ const CheckboxItemBase = kind({
 	},
 
 	render: (props) => (
-		<ToggleItemBase {...props} icon="check" />
+		<ToggleItem {...props} icon="check" />
 	)
 });
 

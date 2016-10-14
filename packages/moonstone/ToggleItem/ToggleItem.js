@@ -7,8 +7,9 @@
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 
-import Item from '../Item';
 import Icon from '../Icon';
+import Item from '../Item';
+import {MarqueeDecorator} from '../Marquee';
 
 import css from './ToggleItem.less';
 
@@ -31,7 +32,7 @@ const ToggleItemBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		children: PropTypes.string.isRequired,
+		children: PropTypes.node.isRequired,
 
 		/**
 		 * Applies a "checked" visual state to the toggle item.
@@ -137,7 +138,7 @@ const ToggleItemBase = kind({
 		delete rest.inline;
 
 		return (
-			<Item {...rest} onClick={onToggle}>
+			<Item {...rest} component='div' onClick={onToggle}>
 				{icon}
 				{children}
 			</Item>
@@ -145,5 +146,10 @@ const ToggleItemBase = kind({
 	}
 });
 
-export default ToggleItemBase;
-export {ToggleItemBase as ToggleItem, ToggleItemBase};
+const ToggleItem = MarqueeDecorator(
+	{className: css.content},
+	ToggleItemBase
+);
+
+export default ToggleItem;
+export {ToggleItem, ToggleItemBase};
