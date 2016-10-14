@@ -2,13 +2,14 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import Uppercase from '@enact/i18n/Uppercase';
 import Slottable from '@enact/ui/Slottable';
-import Marquee from '../Marquee';
+import {MarqueeDecorator, MarqueeText} from '../Marquee';
 
 import css from './Header.less';
 
 // Create a <h1> and Marquee component that support the uppercase attribute
 const UppercaseH1 = Uppercase('h1');		// Used by compact header, which provides its own inline strings and tags for marqueeing
-const UppercaseMarquee = Uppercase(Marquee);
+const MarqueeH2 = MarqueeDecorator('h2');
+const HeaderH1 = Uppercase(MarqueeDecorator('h1'));
 
 /**
  * A visual header component for a Panel with a title, titleAbove, titleBelow, and subTitleBelow
@@ -99,10 +100,10 @@ const HeaderBase = kind({
 		switch (type) {
 			case 'compact': return (
 				<header {...rest}>
-					<Marquee className={css.headerCell}>
+					<MarqueeText className={css.headerCell} marqueeOn="hover">
 						<UppercaseH1 className={css.title} preserveCase={preserveCase}>{title}</UppercaseH1>
 						<h2 className={css.titleBelow}>{titleBelow}</h2>
-					</Marquee>
+					</MarqueeText>
 					<nav className={css.headerComponents}>{children}</nav>
 				</header>
 			);
@@ -118,11 +119,17 @@ const HeaderBase = kind({
 			// );
 			case 'standard': return (
 				<header {...rest}>
-					<h1 className={css.title}><UppercaseMarquee preserveCase={preserveCase}>{title}</UppercaseMarquee></h1>
+					<HeaderH1 className={css.title} preserveCase={preserveCase} marqueeOn="hover">
+						{title}
+					</HeaderH1>
 					<div className={css.headerRow}>
 						<div className={css.headerCell}>
-							<h2 className={css.titleBelow}><Marquee>{titleBelow}</Marquee></h2>
-							<h2 className={css.subTitleBelow}><Marquee>{subTitleBelow}</Marquee></h2>
+							<MarqueeH2 className={css.titleBelow} marqueeOn="hover">
+								{titleBelow}
+							</MarqueeH2>
+							<MarqueeH2 className={css.subTitleBelow} marqueeOn="hover">
+								{subTitleBelow}
+							</MarqueeH2>
 						</div>
 						<nav className={css.headerComponents}>{children}</nav>
 					</div>

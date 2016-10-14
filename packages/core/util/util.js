@@ -1,4 +1,37 @@
 import R from 'ramda';
+import React from 'react';
+
+const orderedKeys = R.map(R.prop('key'));
+const unorderedKeys = R.compose(R.sort((a, b) => a - b), orderedKeys);
+const unorderedEquals = R.useWith(R.equals, [unorderedKeys, unorderedKeys]);
+const orderedEquals = R.useWith(R.equals, [orderedKeys, orderedKeys]);
+
+/**
+ * Compares the keys of two sets of children and returns `true` if they are equal.
+ *
+ * @param  {Node[]}		prev		Array of children
+ * @param  {Node[]}		next		Array of children
+ * @param  {Boolean}	[ordered]	`true` to require the same order
+ *
+ * @returns {Boolean}				`true` if the children are the same
+ */
+const childrenEquals = (prev, next, ordered = false) => {
+	const prevChildren = React.Children.toArray(prev);
+	const nextChildren = React.Children.toArray(next);
+
+	if (prevChildren.length !== nextChildren.length) {
+		return false;
+	} else if (prevChildren.length === 1 && nextChildren.length === 1) {
+		const c1 = prevChildren[0];
+		const c2 = nextChildren[0];
+
+		return R.equals(c1, c2);
+	} else if (ordered) {
+		return orderedEquals(prevChildren, nextChildren);
+	} else {
+		return unorderedEquals(prevChildren, nextChildren);
+	}
+};
 
 /**
 * Capitalizes a given string.
@@ -51,6 +84,7 @@ const isRenderable = function (tag) {
 
 export {
 	cap,
+	childrenEquals,
 	coerceFunction,
 	coerceArray,
 	isRenderable
