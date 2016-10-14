@@ -1,3 +1,9 @@
+/**
+ * Provides methods to add and remove global event listeners
+ *
+ * @module @enact/moonstone/Cancelable/dispatcher
+ */
+
 const events = {};
 
 const dispatcher = function (ev) {
@@ -9,6 +15,14 @@ const dispatcher = function (ev) {
 	}
 };
 
+/**
+ * Adds a new global event listener
+ *
+ * @param  {String}   name Event name
+ * @param  {Function} fn   Event handler
+ *
+ * @returns {undefined}
+ */
 const on = function (name, fn) {
 	let listeners = events[name];
 
@@ -22,6 +36,14 @@ const on = function (name, fn) {
 	}
 };
 
+/**
+ * Removes a global event listener
+ *
+ * @param  {String}   name Event name
+ * @param  {Function} fn   Event handler
+ *
+ * @returns {undefined}
+ */
 const off = function (name, fn) {
 	const listeners = events[name];
 
