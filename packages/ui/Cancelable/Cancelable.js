@@ -1,28 +1,11 @@
-import {handle, forKeyCode, forward, stop} from '@enact/core/handle';
+import {forKeyCode, forward, handle, stop} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
-import React from 'react';
 import invariant from 'invariant';
+import React from 'react';
+
+import {on, off} from './dispatcher';
 
 const forEscape = forKeyCode(27);
-
-let listening = [];
-const notify = handle(forEscape, () => {
-	listening.forEach(o => o.cancel());
-});
-
-const listen = function (obj) {
-	listening.push(obj);
-	if (listening.length === 1) {
-		document.addEventListener('keyup', notify);
-	}
-};
-
-const stopListening = function (obj) {
-	listening.remove(obj);
-	if (listening.length === 0) {
-		document.removeEventListener('keyup', notify);
-	}
-};
 
 const defaultConfig = {
 	onCancel: null,
@@ -46,13 +29,13 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentDidMount () {
 			if (modal) {
-				listen(this);
+				on('keyup', this.handleModalCancel);
 			}
 		}
 
 		componentWillUnmount () {
 			if (modal) {
-				stopListening(this);
+				off('keyup', this.handleModalCancel);
 			}
 		}
 
@@ -64,6 +47,11 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 				return onCancel(this.props);
 			}
 		}
+
+		handleModalCancel = handle(
+			forEscape,
+			this.cancel
+		)
 
 		handleKeyUp = handle(
 			forEscape,
