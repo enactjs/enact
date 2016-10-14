@@ -8,6 +8,8 @@ import React, {PropTypes} from 'react';
 import kind from '@enact/core/kind';
 import {Spottable} from '@enact/spotlight';
 
+import {MarqueeText} from '../Marquee';
+
 import css from './Item.less';
 
 /**
@@ -22,7 +24,7 @@ import css from './Item.less';
 const ItemBase = kind({
 	name: 'Item',
 
-	propTypes : {
+	propTypes: {
 		/**
 		 * The node to be displayed as the main content of the item.
 		 *
@@ -32,10 +34,11 @@ const ItemBase = kind({
 		children: PropTypes.node.isRequired,
 
 		/**
-		 * The type of DOM node to use to render the item. (e.g 'div', 'span', etc.)
+		 * The type of component to use to render the item. May be a DOM node name (e.g 'div',
+		 * 'span', etc.) or a custom component.
 		 *
 		 * @type {String|Function}
-		 * @default 'div'
+		 * @default module:@enact/moonstone/Marquee~MarqueeText
 		 * @public
 		 */
 		component: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
@@ -51,7 +54,7 @@ const ItemBase = kind({
 	},
 
 	defaultProps: {
-		component: 'div',
+		component: MarqueeText,
 		disabled: false
 	},
 

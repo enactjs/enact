@@ -2,7 +2,7 @@ import {SelectableItemBase} from '@enact/moonstone/SelectableItem';
 import {Toggleable} from '@enact/ui/Toggleable';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean} from '@kadira/storybook-addon-knobs';
+import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
 
 const SelectableItem = Toggleable({prop: 'checked'}, SelectableItemBase);
 SelectableItem.displayName = 'SelectableItem';
@@ -23,7 +23,7 @@ storiesOf('SelectableItem')
 				inline={boolean('inline', false)}
 				onToggle={action('onToggle')}
 			>
-				Hello SelectableItem
+				{text('children', 'Hello SelectableItem')}
 			</SelectableItem>
 		)
 	);
