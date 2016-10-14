@@ -1,5 +1,6 @@
 // ToggleItem
 //
+@import '../styles/variables.less';
 
 .toggleItem {
     display: block;
@@ -16,6 +17,11 @@
 
         &:not(.checked) {
             visibility: hidden;
+        }
+
+        :global(.enact-locale-right-to-left) & {
+        	margin-right: 0;
+        	margin-left: @moon-icon-margin;
         }
     }
 
