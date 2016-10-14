@@ -1,9 +1,9 @@
 var
-	path = require('path'),
-	webpack = require('webpack'),
 	GracefulFsPlugin = require('graceful-fs-webpack-plugin'),
+	LessPluginRi = require('resolution-independence'),
+	path = require('path'),
 	WebOSMetaPlugin = require('webos-meta-webpack-plugin'),
-	LessPluginRi = require('resolution-independence');
+	webpack = require('webpack');
 
 module.exports = {
 	devtool: 'sourcemap',
@@ -67,6 +67,7 @@ module.exports = {
 			}
 		}),
 		new GracefulFsPlugin(),
+		// Keep WebOSMetaPlugin last so we can easily swap out for sampler variations
 		new WebOSMetaPlugin({path:path.join(__dirname, 'webos-meta')})
 	]
 };
