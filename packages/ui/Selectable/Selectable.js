@@ -7,6 +7,7 @@
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
+import {anyPrimitive} from '@enact/ui/validators/PropTypeValidators';
 import React from 'react';
 
 const defaultConfig = {
@@ -32,6 +33,13 @@ const defaultConfig = {
 	select: 'onSelect',
 
 	/**
+	 * TBD
+	 * @type {Boolean}
+	 * @default false
+	 */
+	multi: false,
+
+	/**
 	 * Configures the prop name to pass the current value
 	 *
 	 * @type {String}
@@ -53,7 +61,7 @@ const defaultConfig = {
  * @public
  */
 const Selectable = hoc(defaultConfig, (config, Wrapped) => {
-	const {mutable, prop, select} = config;
+	const {mutable, prop, select, multi} = config;
 	const defaultPropKey = 'default' + cap(prop);
 	const forwardSelect = forward(select);
 
@@ -61,6 +69,13 @@ const Selectable = hoc(defaultConfig, (config, Wrapped) => {
 		static displayName = 'Selectable'
 
 		static propTypes = {
+			/**
+			 * [array description]
+			 * @type {[type]}
+			 * @public
+			 */
+			[defaultPropKey]: multi ? React.PropTypes.array : anyPrimitive,
+
 			/**
 			 * Controls whether the component is disabled.
 			 *
@@ -87,7 +102,19 @@ const Selectable = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleSelect = (ev) => {
 			if (!this.props.disabled) {
-				const selected = ev[prop];
+				let selected = ev[prop];
+				if (multi) {
+					const selectedArr = Array.from(this.state[prop] || []);
+					const index = selectedArr.indexOf(selected);
+					if (index >= 0) {
+						selectedArr.splice(index, 1);
+					} else {
+						selectedArr.push(selected);
+					}
+
+					selected = selectedArr;
+				}
+
 				this.setState({selected});
 				forwardSelect(ev, this.props);
 			}

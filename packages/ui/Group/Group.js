@@ -108,7 +108,6 @@ const GroupBase = kind({
 
 	defaultProps: {
 		select: 'onClick',
-		index: 0,
 		indexProp: 'data-index',
 		childProp: 'children',
 		selectedProp: 'data-selected'
@@ -122,7 +121,6 @@ const GroupBase = kind({
 	},
 
 	render: (props) => {
-		delete props.index;
 		delete props.onSelect;
 		delete props.select;
 		delete props.selectedProp;
