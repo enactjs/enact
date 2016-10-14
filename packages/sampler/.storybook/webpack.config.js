@@ -1,7 +1,8 @@
 var
 	path = require('path'),
 	webpack = require('webpack'),
-	GracefulFsPlugin = require('./GracefulFsPlugin.js'),
+	GracefulFsPlugin = require('graceful-fs-webpack-plugin'),
+	WebOSMetaPlugin = require('webos-meta-webpack-plugin'),
 	LessPluginRi = require('resolution-independence');
 
 module.exports = {
@@ -65,6 +66,7 @@ module.exports = {
 				'NODE_ENV': '"development"'
 			}
 		}),
-		new GracefulFsPlugin()
+		new GracefulFsPlugin(),
+		new WebOSMetaPlugin({path:path.join(__dirname, 'webos-meta')})
 	]
 };
