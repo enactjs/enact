@@ -1,5 +1,5 @@
 /**
- * Exports the {@link module:@enact/moonstone/Spinner~Spinner}
+ * Exports the {@link module:@enact/moonstone/Spinner~Spinner} component.
  *
  * @module @enact/moonstone/Spinner
  */
@@ -13,7 +13,7 @@ import css from './Spinner.less';
 
 /**
  * {@link module:@enact/moonstone/Spinner~Spinner} is a component that shows a spinning animation
- * indicate that some activity is taking place.
+ * to indicate that some activity is taking place.
  *
  * @class Spinner
  * @ui
@@ -24,7 +24,7 @@ const SpinnerBase = kind({
 
 	propTypes: {
 		/**
-		 * Sets the spinner to be horizontally centered, relative to its containing component.
+		 *  When `true`, the spinner is horizontally centered, relative to its containing component.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -41,8 +41,8 @@ const SpinnerBase = kind({
 		children: PropTypes.string,
 
 		/**
-		 * Sets the spinner to be vertically centered, relative to its containing component. This
-		 * option has no effect if `center` is set to `false`.
+		 * When `true`, the spinner is vertically centered, relative to its containing component.
+		 * This option has no effect if `center` is set to `false`.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -51,7 +51,7 @@ const SpinnerBase = kind({
 		middle: PropTypes.bool,
 
 		/**
-		 * Sets the background-color to transparent
+		 * When `true`, the background-color is transparent.
 		 *
 		 *
 		 * @type {Boolean}
