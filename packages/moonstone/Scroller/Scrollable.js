@@ -709,6 +709,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			delete props.className;
 			delete props.cbScrollTo;
 			delete props.style;
+			delete props.hideScrollbars;
 
 			return (
 				(positioningOption !== 'byBrowser' && !hideScrollbars) ? (
