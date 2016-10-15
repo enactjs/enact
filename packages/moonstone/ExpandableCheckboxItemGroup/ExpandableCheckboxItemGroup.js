@@ -24,15 +24,15 @@ import CheckboxItem from '../CheckboxItem';
 const ExpandableCheckboxItemGroupBase = (props) => (
 	<GroupBase
 		childComponent={CheckboxItem}
-		select={'onToggle'}
-		selectedProp={'checked'}
+		select="onToggle"
+		selectedProp="checked"
 		{...props}
 	/>
 );
 
 /**
  * {@link module:@enact/moonstone/ExpandableCheckboxItemGroup~ExpandableCheckboxItemGroup} is an
- * expandable picker comprising grouped CheckboxItems.  Pass in the labels for the CheckboxItems
+ * expandable picker comprising grouped CheckboxItems. Pass in the labels for the CheckboxItems
  * as children of the ExpandableCheckboxItemGroup.
  *
  * Usage:

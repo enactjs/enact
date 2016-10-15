@@ -13,6 +13,8 @@ class StatefulExpandableCheckboxItemGroup extends React.Component {
 		this.state = {
 			open: false
 		};
+		this.forwardOnClose = forward('onClose');
+		this.forwardOnOpen = forward('onOpen');
 		this.forwardOnSelect = forward('onSelect');
 	}
 
@@ -23,16 +25,18 @@ class StatefulExpandableCheckboxItemGroup extends React.Component {
 		this.forwardOnSelect(ev, this.props);
 	}
 
-	handleOpen = () => {
+	handleOpen = (ev) => {
 		this.setState({
 			'open': true
 		});
+		this.forwardOnOpen(ev, this.props);
 	};
 
-	handleClose = () => {
+	handleClose = (ev) => {
 		this.setState({
 			'open': false
 		});
+		this.forwardOnClose(ev, this.props);
 	};
 
 	render () {
@@ -63,6 +67,8 @@ storiesOf('ExpandableCheckboxItemGroup')
 				title={text('title', 'title')}
 				noneText={text('none', 'none')}
 				disabled={boolean('disabled', false)}
+				onClose={action('onClose')}
+				onOpen={action('onOpen')}
 				onSelect={action('onSelect')}
 			>
 				{['option1', 'option2', 'option3']}
