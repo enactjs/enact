@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+- `moonstone/Image` component
+
 ### Changed
 
 - `moonstone/Divider`'s `children` property is now optional
