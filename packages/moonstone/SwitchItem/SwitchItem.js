@@ -1,7 +1,7 @@
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 
-import {ToggleItemBase} from '../ToggleItem';
+import ToggleItem from '../ToggleItem';
 import Switch from '../Switch';
 
 import css from './SwitchItem.less';
@@ -83,7 +83,7 @@ const SwitchItemBase = kind({
 	},
 
 	render: ({iconElem, ...rest}) => (
-		<ToggleItemBase {...rest} icon={iconElem} />
+		<ToggleItem {...rest} icon={iconElem} />
 	)
 });
 
