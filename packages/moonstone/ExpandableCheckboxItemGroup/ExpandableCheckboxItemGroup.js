@@ -1,5 +1,6 @@
 /**
- * Exports the {@link module:@enact/moonstone/ExpandableCheckboxItemGroup~ExpandableCheckboxItemGroup} component.
+ * Exports the {@link module:@enact/moonstone/ExpandableCheckboxItemGroup~ExpandableCheckboxItemGroup} and
+ * {@link module:@enact/moonstone/CheckboxItemGroupBase~ExpandableCheckboxItemGroupBase} components.
  *
  * @module @enact/moonstone/ExpandableCheckboxItemGroup
  */
@@ -10,15 +11,17 @@ import Expandable from '../Expandable';
 import CheckboxItem from '../CheckboxItem';
 
 /**
- * {@link module:@enact/moonstone/ExpandableCheckboxItemGroup~CheckboxItemGroupBase} is a stateless
- * component that is composed of {@link module:@enact/ui/Group~Group} with {@link module:@enact/moonstone/CheckboxItem~CheckboxItem}
- * as a default `childComponent.
+ * {@link module:@enact/moonstone/ExpandableCheckboxItemGroup~ExpandableCheckboxItemGroupBase} is a stateless
+ * component that is composed of {@link module:@enact/ui/Group~Group} with
+ * {@link module:@enact/moonstone/CheckboxItem~CheckboxItem} as a default `childComponent`. This
+ * base version is *not* expandable. You likely want to use
+ * {@link module:@enact/moonstone/ExpandableCheckboxItemGroup~ExpandableCheckboxItemGroup}
  *
- * @class CheckboxItemGroupBase
+ * @class ExpandableCheckboxItemGroupBase
  * @ui
  * @public
  */
-const CheckboxItemGroupBase = (props) => (
+const ExpandableCheckboxItemGroupBase = (props) => (
 	<GroupBase
 		childComponent={CheckboxItem}
 		select={'onToggle'}
@@ -27,9 +30,27 @@ const CheckboxItemGroupBase = (props) => (
 	/>
 );
 
+/**
+ * {@link module:@enact/moonstone/ExpandableCheckboxItemGroup~ExpandableCheckboxItemGroup} is an
+ * expandable picker comprising grouped CheckboxItems.  Pass in the labels for the CheckboxItems
+ * as children of the ExpandableCheckboxItemGroup.
+ *
+ * Usage:
+ * ```
+ * <ExpandableCheckboxItemGroup onSelect={handleSelect}>
+ *     option1
+ *     option2
+ *     option3
+ * </ExpandableCheckboxItemGroup>
+ * ```
+ *
+ * @class ExpandableCheckboxItemGroup
+ * @ui
+ * @public
+ */
 const ExpandableCheckboxItemGroup = Expandable({
 	close: 'onSelect'
-}, CheckboxItemGroupBase);
+}, ExpandableCheckboxItemGroupBase);
 
 export default ExpandableCheckboxItemGroup;
-export {ExpandableCheckboxItemGroup, CheckboxItemGroupBase};
+export {ExpandableCheckboxItemGroup, ExpandableCheckboxItemGroupBase};
