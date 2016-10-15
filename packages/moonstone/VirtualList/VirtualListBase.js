@@ -6,7 +6,7 @@
 
 import React, {Component, PropTypes} from 'react';
 
-import {Spotlight, SpotlightContainerDecorator} from 'enact-spotlight';
+import {Spotlight, SpotlightContainerDecorator} from '@enact/spotlight';
 
 import {dataIndexAttribute, Scrollable} from '../Scroller/Scrollable';
 
