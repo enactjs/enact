@@ -18,7 +18,8 @@
   "scripts": {
     "lerna": "lerna",
     "bootstrap": "lerna bootstrap --concurrency 1",
-    "postinstall": "node ./scripts/npm-bootstrap.js"
+    "link-all": "lerna --concurrency 1 exec -- npm --loglevel error link",
+    "unlink-all": "lerna --concurrency 1 exec -- npm --loglevel error unlink"
   },
   "devDependencies": {
     "lerna": "2.0.0-beta.30"
