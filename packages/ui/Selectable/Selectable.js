@@ -7,8 +7,7 @@
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
-import {anyPrimitive} from '@enact/ui/validators/PropTypeValidators';
-import React from 'react';
+import React, {PropTypes} from 'react';
 
 const defaultConfig = {
 	/**
@@ -33,13 +32,6 @@ const defaultConfig = {
 	select: 'onSelect',
 
 	/**
-	 * Configures to allow multi-selection
-	 * @type {Boolean}
-	 * @default false
-	 */
-	multi: false,
-
-	/**
 	 * Configures the prop name to pass the current value
 	 *
 	 * @type {String}
@@ -61,7 +53,7 @@ const defaultConfig = {
  * @public
  */
 const Selectable = hoc(defaultConfig, (config, Wrapped) => {
-	const {mutable, prop, select, multi} = config;
+	const {mutable, prop, select} = config;
 	const defaultPropKey = 'default' + cap(prop);
 	const forwardSelect = forward(select);
 
@@ -74,7 +66,7 @@ const Selectable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @type {Array | String | Number | Boolean}
 			 * @public
 			 */
-			[defaultPropKey]: multi ? React.PropTypes.array : anyPrimitive,
+			[defaultPropKey]: PropTypes.oneOf([PropTypes.array, PropTypes.string, PropTypes.number, PropTypes.bool]),
 
 			/**
 			 * Controls whether the component is disabled.
@@ -83,7 +75,14 @@ const Selectable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @default false
 			 * @public
 			 */
-			disabled: React.PropTypes.bool
+			disabled: PropTypes.bool,
+
+			/**
+			 * Configures to allow multi-selection
+			 * @type {Boolean}
+			 * @default false
+			 */
+			multi: false
 		}
 
 		constructor (props) {
@@ -103,8 +102,8 @@ const Selectable = hoc(defaultConfig, (config, Wrapped) => {
 		handleSelect = (ev) => {
 			if (!this.props.disabled) {
 				let selected = ev[prop];
-				if (multi) {
-					const selectedArr = Array.from(this.state[prop] || []);
+				if (this.props.multi) {
+					const selectedArr = Array.from(this.state.selected || []);
 					const index = selectedArr.indexOf(selected);
 					if (index >= 0) {
 						selectedArr.splice(index, 1);
@@ -116,7 +115,7 @@ const Selectable = hoc(defaultConfig, (config, Wrapped) => {
 				}
 
 				this.setState({selected});
-				forwardSelect(Object.assign({}, ev, {selected}), this.props);
+				forwardSelect(Object.assign({}, ev, {[prop]: selected}), this.props);
 			}
 		}
 

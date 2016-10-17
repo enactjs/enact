@@ -52,7 +52,7 @@ const GroupItemBase = kind({
 
 		const index = rest[indexProp];
 		const data = rest[childProp];
-		const isSelected = Array.isArray(selected) ? selected.indexOf(index) >= 0 : index === selected;
+		const isSelected = Array.isArray(selected) ? selected.includes(index) : index === selected;
 		if (selectedProp) rest[selectedProp] = isSelected;
 		if (select && onSelect) rest[select] = () => onSelect({selected: index, data});
 
