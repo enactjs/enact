@@ -128,7 +128,7 @@ class TransitionGroup extends React.Component {
 	componentWillReceiveProps (nextProps) {
 		const nextChildMapping = mapChildren(nextProps.children);
 		const prevChildMapping = this.state.children;
-		let children = mergeChildren(prevChildMapping, nextChildMapping);
+		let children = mergeChildren(nextChildMapping, prevChildMapping);
 
 		// drop children exceeding allowed size
 		const drop = children.length - nextProps.size;

@@ -9,7 +9,7 @@ describe('Slider Specs', () => {
 			<Slider
 				min={0}
 				max={100}
-				value={50}
+				defaultValue={50}
 				step={1}
 			/>
 		);
