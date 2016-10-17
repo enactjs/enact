@@ -177,6 +177,8 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => {
 	const handleCancel = (props) => {
 		if (props.open) {
 			props.onClose();
+		} else {
+			// Return `true` to allow event to propagate to containers for unhandled cancel
 			return true;
 		}
 	};
