@@ -44,7 +44,6 @@
     "less-loader": "2.2.3",
     "resolution-independence": "0.0.3",
     "style-loader": "0.13.1",
-    "webos-meta-loader": "enyojs/webos-meta-loader",
     "webos-meta-webpack-plugin": "github:enyojs/webos-meta-webpack-plugin",
     "webpack": "1.13.2"
   },
