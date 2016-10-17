@@ -4,14 +4,15 @@
   "description": "Enact is an open source JavaScript framework containing everything you need to create a fast, scalable mobile or web application.",
   "main": "index.js",
   "scripts": {
-    "test": "enyo-karma start --single-run --browsers PhantomJS",
-    "test-json": "enyo-karma start --single-run --browsers PhantomJS --reporters json",
-    "test-watch": "enyo-karma start --browsers PhantomJS",
-    "transpile": "enyo-transpile",
-    "pack": "enyo-webpack",
-    "pack-p": "enyo-webpack -p",
-    "watch": "enyo-webpack --watch",
-    "clean": "enyo-clean"
+    "clean": "enact clean",
+    "lint": "enact lint --framework",
+    "pack": "enact pack",
+    "pack-p": "enact pack -p",
+    "test": "enact test start --single-run --browsers PhantomJS",
+    "test-json": "enact test start --single-run --browsers PhantomJS --reporters json",
+    "test-watch": "enact test start --browsers PhantomJS",
+    "transpile": "enact transpile",
+    "watch": "enact pack --watch"
   },
   "homepage": "http://enyojs.com/",
   "bugs": "http://jira.enyojs.com/",
@@ -33,8 +34,13 @@
     "mobile",
     "webOS"
   ],
-  "devDependencies": {
-    "enyo-config": "enyojs/enyo-config#test-suite"
+  "enact": {
+    "ri": {
+      "baseSize": 24
+    }
+  },
+  "eslintConfig": {
+    "extends": "enact-internal"
   },
   "dependencies": {
     "react": "~15.3.2",
