@@ -1,6 +1,8 @@
 /* eslint-disable no-console */
 /* global console */
 
+let appInfo = {};
+
 /**
  * Fetches the appID of the caller app
  * @returns {String} AppID of the app.
@@ -16,7 +18,7 @@ const fetchAppId = () => {
  * @callback webOS~appInfoCallback
  * @param {?object} info - JSON data object read from the app's "appinfo.json" file. Undefined if not found.
  */
-let appInfo = {};
+
 /**
  * Fetches the appinfo.json data of the caller app with a cache saved to webOS.appInfo
  * @param {webOS~appInfoCallback} callback - The function to called upon completion
@@ -44,7 +46,7 @@ const fetchAppInfo = (callback, path) => {
 				if ((req.status >= 200 && req.status < 300) || req.status === 0) {
 					parseInfo(null, req.responseText);
 				} else {
-					parseInfo({status:404});
+					parseInfo({status: 404});
 				}
 			}
 		};
@@ -52,7 +54,7 @@ const fetchAppInfo = (callback, path) => {
 			req.open('GET', path || 'appinfo.json', true);
 			req.send(null);
 		} catch (e) {
-			parseInfo({status:404});
+			parseInfo({status: 404});
 		}
 	} else if (callback) {
 		callback(appInfo);
@@ -68,12 +70,12 @@ const fetchAppRootPath = () => {
 	if ('baseURI' in window.document) {
 		base = window.document.baseURI;
 	} else {
-		let baseTags = window.document.getElementsByTagName('base');
+		const baseTags = window.document.getElementsByTagName('base');
 		if (baseTags.length > 0) {
 			base = baseTags[0].href;
 		}
 	}
-	let match = base.match(new RegExp('.*:\/\/[^#]*\/'));
+	const match = base.match(new RegExp('.*:\/\/[^#]*\/'));
 	if (match) {
 		return match[0];
 	}

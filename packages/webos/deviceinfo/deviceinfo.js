@@ -1,5 +1,7 @@
-import {platform} from '../platform';
 import LS2Request from '../LS2Request';
+import {platform} from '../platform';
+
+const device = {};
 
 /**
  * @callback webOS~deviceCallback
@@ -15,8 +17,6 @@ import LS2Request from '../LS2Request';
  * @param {Number} info.screenHeight Height in pixels
  * @param {Boolean} [info.uhd] Whether supports Ultra HD resolution.
  */
-
-const device = {};
 
 /**
  * Gets the device-specific information regarding model, OS version, specifications, etc.
@@ -57,8 +57,8 @@ const deviceinfo = (callback) => {
 					}
 					if (response.firmwareVersion) {
 						device.version = response.firmwareVersion;
-						let segments = device.version.split('.');
-						let keys = ['versionMajor', 'versionMinor', 'versionDot'];
+						const segments = device.version.split('.');
+						const keys = ['versionMajor', 'versionMinor', 'versionDot'];
 						for (let i = 0; i < keys.length; i++) {
 							try {
 								device[keys[i]] = parseInt(segments[i], 10);

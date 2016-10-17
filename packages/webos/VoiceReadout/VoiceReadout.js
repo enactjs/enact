@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 /* global console */
 
-import {platform} from '../platform';
 import LS2Request from '../LS2Request';
+import {platform} from '../platform';
 
 /**
  * Read alert text when accessibility VoiceReadout enabled.
@@ -15,7 +15,7 @@ const readAlert = (string, clear = true) => {
 		const checkAudioGuidance = (callback) => new LS2Request().send({
 			service: 'luna://com.webos.settingsservice',
 			method: 'getSystemSettings',
-			parameters: {'keys' : ['audioGuidance'], 'category': 'option'},
+			parameters: {'keys': ['audioGuidance'], 'category': 'option'},
 			onSuccess: function (res) {
 				if (res && res.settings.audioGuidance === 'on') {
 					callback();
@@ -29,7 +29,7 @@ const readAlert = (string, clear = true) => {
 		const readAlertMessage = () => new LS2Request().send({
 			service: 'luna://com.webos.service.tts',
 			method: 'speak',
-			parameters: {'text':string, 'clear': clear},
+			parameters: {'text': string, 'clear': clear},
 			onFailure: (err) => {
 				console.error('Failed to readAlertMessage: ' + JSON.stringify(err));
 			}
@@ -37,7 +37,7 @@ const readAlert = (string, clear = true) => {
 
 		checkAudioGuidance(readAlertMessage);
 	} else {
-		console.warn("Platform doesn't support TTS api.");
+		console.warn('Platform doesn\'t support TTS api.');
 	}
 };
 
