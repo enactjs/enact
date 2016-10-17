@@ -122,4 +122,55 @@ describe('hoc', () => {
 		expect(actual).to.equal(expected);
 	});
 
+	it('should import propTypes from Wrapped component', function () {
+		const Component = () => null;
+		Component.propTypes = {
+			sourceProp: React.PropTypes.string
+		};
+		const HOC = hoc((config, Wrapped) => {
+			const Comp = () => <Wrapped />;
+			Comp.propTypes = {
+				hocProp: React.PropTypes.string
+			};
+
+			return Comp;
+		});
+
+		const Subject = HOC(Component);
+
+		const expected = {
+			sourceProp: React.PropTypes.string,
+			hocProp: React.PropTypes.string
+		};
+		const actual = Subject.propTypes;
+
+		expect(actual).to.deep.equal(expected);
+	});
+
+	it('should overwrite propTypes from Wrapped component with HOC propTypes', function () {
+		const Component = () => null;
+		Component.propTypes = {
+			sourceProp: React.PropTypes.string
+		};
+		const HOC = hoc((config, Wrapped) => {
+			const Comp = () => <Wrapped />;
+			Comp.propTypes = {
+				hocProp: React.PropTypes.string,
+				sourceProp: React.PropTypes.number
+			};
+
+			return Comp;
+		});
+
+		const Subject = HOC(Component);
+
+		const expected = {
+			sourceProp: React.PropTypes.number,
+			hocProp: React.PropTypes.string
+		};
+		const actual = Subject.propTypes;
+
+		expect(actual).to.deep.equal(expected);
+	});
+
 });
