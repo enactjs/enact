@@ -1,4 +1,31 @@
+import invariant from 'invariant';
+
 import {isRenderable} from '../util';
+
+/**
+ * Constructs, validates, and decorates the component
+ *
+ * @param  {Function} factory HOC Factory
+ * @param  {Object} config  Configuration object
+ * @param  {String|Function} Wrapped Component to wrap with HOC
+ *
+ * @returns {String|Function} New wrapped component
+ * @private
+ */
+const wrap = (factory, config, Wrapped) => {
+	const Component = factory(config, Wrapped);
+
+	invariant(
+		Component && isRenderable(Component),
+		`The HOC factory expected a renderable component but received '${typeof Component}' instead`
+	);
+
+	if (__DEV__) {
+		Component.propTypes = Object.assign({}, Wrapped.propTypes, Component.propTypes);
+	}
+
+	return Component;
+};
 
 /**
  * Constructs a Higher-order Component using an optional set of default configuration parameters and
@@ -34,29 +61,29 @@ import {isRenderable} from '../util';
  *	const CountableDivAsDataNumber = CountableAsDataNumber('div');
  *
  * @param  {Object} defaultConfig Set of default configuration parameters
- * @param  {Function} hawk        Higher-order component
+ * @param  {Function} factory        Higher-order component
  *
  * @returns {Function}             HoC Decorator
  */
-const hoc = (defaultConfig, hawk) => {
+const hoc = (defaultConfig, factory) => {
 
 	// normalize arguments to allow defaultConfig to be omitted
-	let factory = hawk;
+	let hawk = factory;
 	let defaults = defaultConfig;
-	if (!factory && typeof defaultConfig === 'function') {
-		factory = defaultConfig;
+	if (!hawk && typeof defaultConfig === 'function') {
+		hawk = defaultConfig;
 		defaults = null;
 	}
 
 	return (config, maybeWrapped) => {
 		if (isRenderable(config)) {
-			return factory(defaults, config);
+			return wrap(hawk, defaults, config);
 		} else {
 			const cfg = Object.assign({}, defaults, config);
 			if (isRenderable(maybeWrapped)) {
-				return factory(cfg, maybeWrapped);
+				return wrap(hawk, cfg, maybeWrapped);
 			} else {
-				return (Wrapped) => factory(cfg, Wrapped);
+				return (Wrapped) => wrap(hawk, cfg, Wrapped);
 			}
 		}
 	};
