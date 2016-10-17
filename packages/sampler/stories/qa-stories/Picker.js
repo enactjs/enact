@@ -3,7 +3,7 @@ import Pickable from '@enact/ui/Pickable';
 import {icons} from '@enact/moonstone/Icon';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, text, boolean, select} from '@kadira/storybook-addon-knobs';
+import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
 
 const StatefulPicker = Pickable(Picker);
 
@@ -44,7 +44,7 @@ const pickerList = {
 storiesOf('Picker')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'Tall Texts' ,
+		'Tall Texts',
 		() => (
 			<StatefulPicker
 				onChange={action('onChange')}
