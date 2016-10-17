@@ -79,4 +79,5 @@ const deviceinfo = (callback) => {
 	}
 };
 
+export default deviceinfo;
 export {deviceinfo};

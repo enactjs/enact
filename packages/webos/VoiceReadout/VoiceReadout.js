@@ -41,4 +41,5 @@ const readAlert = (string, clear = true) => {
 	}
 };
 
+export default readAlert;
 export {readAlert};

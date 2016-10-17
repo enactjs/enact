@@ -37,4 +37,5 @@ if (window.PalmSystem) {
 	platform.unknown = true;
 }
 
+export default platform;
 export {platform};
