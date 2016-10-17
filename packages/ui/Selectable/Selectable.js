@@ -82,6 +82,10 @@ const Selectable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @type {Boolean}
 			 * @default false
 			 */
+			multi: PropTypes.bool
+		}
+
+		defaultProps: {
 			multi: false
 		}
 
@@ -124,6 +128,7 @@ const Selectable = hoc(defaultConfig, (config, Wrapped) => {
 			if (select) props[select] = this.handleSelect;
 			if (prop) props[prop] = this.state.selected;
 			delete props[defaultPropKey];
+			delete props.multi;
 
 			return <Wrapped {...props} />;
 		}
