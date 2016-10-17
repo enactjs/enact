@@ -25,7 +25,7 @@ const LabeledItemBase = kind({
 
 	propTypes: {
 		/**
-		 * The node to be displayed as the main text of the item.
+		 * The node to be displayed as the main content of the item.
 		 *
 		 * @type {React.node}
 		 * @required
