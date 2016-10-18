@@ -15,7 +15,7 @@ class ExpandableList extends React.Component {
 		this.forwardOnClose = forward('onClose');
 	}
 
-	handleChange = (ev) => {
+	handleSelect = (ev) => {
 		this.setState({
 			value: ev.value
 		});
@@ -40,12 +40,11 @@ class ExpandableList extends React.Component {
 		return (
 			<ExpList
 				{...this.props}
-				label={this.state.label}
 				value={this.state.value}
 				open={this.state.open}
 				onOpen={this.handleOpen}
 				onClose={this.handleClose}
-				onChange={this.handleChange}
+				onSelect={this.handleSelect}
 			/>
 		);
 	}

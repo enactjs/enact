@@ -13,9 +13,17 @@ import iconList from './IconList.js';
 import css from './Icon.less';
 
 /**
- * {@link module:@enact/moonstone/Icon~Icon} is a component that displays an icon image.  You may specify an
- * image by setting the `src` property to a URL indicating the image file's location or a child string from
- * the [IconList]{@link module:@enact/moonstone/Icon~IconList} (e.g. 'plus').
+ * {@link module:@enact/moonstone/Icon~Icon} is a component that displays an icon image.  You may
+ * specify an image, by setting the `src` property, or a font-based icon, by setting the child to a
+ * string from the [IconList]{@link module:@enact/moonstone/Icon~IconList}.  If both `src` and
+ * children are specified, both will be rendered.
+ *
+ * Usage:
+ * ```
+ * <Icon small>
+ *     plus
+ * </Icon>
+ * ```
  *
  * @class Icon
  * @ui
@@ -27,7 +35,7 @@ const IconBase = kind({
 	propTypes: {
 		/**
 		 * A string that represents an icon from the [IconList]{@link module:@enact/moonstone/Icon~IconList}.
-		 * Can also be an HTML entity string, unicode reference or hex value (in the form '0x...').
+		 * Can also be an HTML entity string, Unicode reference or hex value (in the form '0x...').
 		 *
 		 * @type {String}
 		 * @public
