@@ -27,8 +27,10 @@ See the [docs](docs/) for more information.
 
 ## Additional Information
 
-When using `@enact/moonstone` the `SpotlightRootDecorator` is applied automatically by
+When using `@enact/moonstone`, the `SpotlightRootDecorator` is applied automatically by
 `MoonstoneDecorator`.
+
+## Acknowledgments
 
 Spotlight is based on a fork of [JavaScript SpatialNavigation](https://github.com/luke-chang/js-spatial-navigation)
 (c) 2016 Luke Chang, under the terms of the [Mozilla Public License](https://www.mozilla.org/en-US/MPL/2.0/).
