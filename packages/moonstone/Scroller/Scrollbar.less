@@ -1,0 +1,121 @@
+@import '../styles/variables.less';
+
+.scrollbarContainerBase {
+	background: inherit;
+	position: absolute;
+	border-color: transparent;
+	border-style: solid;
+	visibility: visible;
+	opacity: 1;
+	z-index: 100;
+
+	transition: opacity 0.1s linear;
+	-moz-transition: opacity 0.1s linear;
+	-webkit-transition: opacity 0.1s linear;
+
+	transform: translateZ(0);
+	-webkit-transform: translateZ(0);
+}
+
+.scrollbarButtonNoCompositeLayer {
+	&,
+	&:before,
+	&:after,
+	span {
+		will-change: initial;
+	}
+
+	span {
+		-webkit-transform: initial;
+		transform: initial;
+	}
+}
+
+.scrollbarButtonBase {
+	.scrollbarButtonNoCompositeLayer;
+	background-color: transparent;
+	position: absolute;
+	width: @moon-icon-button-small-size;
+	height: @moon-icon-button-small-size;
+	padding: 0;
+	border-color: transparent;
+	margin: 0;
+}
+
+.scrollbarContainerVColumn {
+	.scrollbarContainerBase;
+	width: @moon-icon-button-small-size;
+	border-width: @moon-icon-button-small-size 0;
+	top: 0;
+	right: @moon-spotlight-outset;
+	bottom: @moon-icon-button-small-size;
+
+	.scrollbarUpButton {
+		.scrollbarButtonBase;
+		top: -@moon-icon-button-small-size;
+	}
+
+	.scrollbarBottomButton {
+		.scrollbarButtonBase;
+		bottom: -@moon-icon-button-small-size;
+	}
+}
+
+.scrollbarContainerHColumn {
+	.scrollbarContainerBase;
+	height: @moon-icon-button-small-size;
+	border-width: 0 @moon-icon-button-small-size;
+	left: 0;
+	right: @moon-icon-button-small-size;
+	bottom: 0;
+
+	.scrollbarLeftButton {
+		.scrollbarButtonBase;
+		left: -@moon-icon-button-small-size;
+	}
+
+	.scrollbarRightButton {
+		.scrollbarButtonBase;
+		right: -@moon-icon-button-small-size;
+	}
+}
+
+.scrollbarVthumb {
+	background: #666;
+	position: absolute;
+	width: 3px;
+	height: 3px;
+	right: @moon-icon-button-small-size/2 - 2;
+	z-index: 1;
+	opacity: 0;
+
+	-webkit-transition: opacity 0.1s linear;
+	transition: opacity 0.1s linear;
+
+	-webkit-transform-origin: 0 0 0;
+	transform-origin: 0 0 0;
+}
+
+.scrollerHthumb {
+	background: #666;
+	position: absolute;
+	width: 3px;
+	height: 3px;
+	bottom: @moon-icon-button-small-size/2 - 2;
+	z-index: 1;
+	opacity: 0;
+
+	-webkit-transition: opacity 0.1s linear;
+	transition: opacity 0.1s linear;
+
+	-webkit-transform-origin: 0 0 0;
+	transform-origin: 0 0 0;
+}
+
+.thumbShown {
+	opacity: 0.75;
+}
+
+.thumbHidden {
+	opacity: 0;
+}

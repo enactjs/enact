@@ -115,6 +115,10 @@ const PickerBase = kind({
 		wrap: React.PropTypes.bool
 	},
 
+	defaultProps: {
+		value: 0
+	},
+
 	computed: {
 		max: ({children}) => children.length - 1,
 		children: ({children}) => React.Children.map(children, (child) => {

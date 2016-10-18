@@ -9,7 +9,9 @@ import {cap} from '@enact/core/util';
 import React, {PropTypes} from 'react';
 
 import css from './Divider.less';
-import Marquee from '../Marquee';
+import {MarqueeDecorator} from '../Marquee';
+
+const MarqueeH3 = MarqueeDecorator('h3');
 
 /**
  * {@link module:@enact/moonstone/Divider~Divider} is a simply styled component that may be used as a separator
@@ -43,7 +45,7 @@ const DividerBase = kind({
 	},
 
 	render: ({content, ...rest}) => (
-		<Marquee {...rest}>{content}</Marquee>
+		<MarqueeH3 {...rest} marqueeOn="hover">{content}</MarqueeH3>
 	)
 });
 
