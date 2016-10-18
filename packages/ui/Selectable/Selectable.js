@@ -107,7 +107,7 @@ const Selectable = hoc(defaultConfig, (config, Wrapped) => {
 			if (!this.props.disabled) {
 				let selected = ev[prop];
 				if (this.props.multiple) {
-					const selectedArr = coerceArray(this.state.selected);
+					const selectedArr = coerceArray(this.state.selected || []);
 					const index = selectedArr.indexOf(selected);
 					if (index >= 0) {
 						selectedArr.splice(index, 1);
