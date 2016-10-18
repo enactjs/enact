@@ -66,7 +66,7 @@ const Selectable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @type {Array | String | Number | Boolean}
 			 * @public
 			 */
-			[defaultPropKey]: PropTypes.oneOf([PropTypes.array, PropTypes.string, PropTypes.number, PropTypes.bool]),
+			[defaultPropKey]: PropTypes.oneOfType([PropTypes.array, PropTypes.string, PropTypes.number, PropTypes.bool]),
 
 			/**
 			 * Controls whether the component is disabled.
