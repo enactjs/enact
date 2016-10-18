@@ -1,23 +1,11 @@
-# @enact/core
+# @enact/webos
 
-> `@enact/core` contains the set of basic building blocks for an Enact-based application.
-
-Enact core provides several abstractions to be used with React-based applications.  These include `core/kind`, a
-factory for stateless functional components (SFC's), `core/jobs`, a smart wrapper for `window.setTimeout`,
-`core/hoc`, a Higher Order Component (HOC) factory, and more.
+> `@enact/webos` contains utility functions for working with webOS devices
 
 ## Install
 
 ```
-npm install --save @enact/core
-```
-
-## Test
-
-Tests are implemented in mocha and are run with the Karma runner.
-
-```
-npm test
+npm install --save @enact/webos
 ```
 
 ## Copyright and License Information
@@ -31,3 +19,4 @@ Unless otherwise specified or set forth in the NOTICE file, all content, includi
 http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+

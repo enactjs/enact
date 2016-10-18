@@ -1,10 +1,37 @@
 # Spotlight
 
+> An extensible library for 5-way navigation and focus control
+
 Spotlight is an extensible utility that enables users to navigate
 applications using a keyboard or television remote control.  Responding to input
 from the **UP**, **DOWN**, **LEFT**, **RIGHT**, and **RETURN** keys, Spotlight
 provides a navigation experience that compares favorably to that of a
 computer-with-mouse.
+
+## Usage
+
+```
+import kind from '@enact/core/kind';
+import {SpotlightRootDecorator, Spottable} from '@enact/spotlight';
+
+const MySpottableComponent = Spottable('div');
+
+const MyApp = kind({
+    name: 'MyApp',
+    render: () => (<MySpottableComponent>Hello, Enact!</MySpottableComponent>)
+});
+const MySpotlightApp = SpotlightRootDecorator(MyApp);
+```
+
+See the [docs](docs/) for more information.
+
+## Additional Information
+
+When using `@enact/moonstone` the `SpotlightRootDecorator` is applied automatically by
+`MoonstoneDecorator`.
+
+Spotlight is based on a fork of [JavaScript SpatialNavigation](https://github.com/luke-chang/js-spatial-navigation)
+(c) 2016 Luke Chang, under the terms of the [Mozilla Public License](https://www.mozilla.org/en-US/MPL/2.0/).
 
 ## Copyright and License Information
 

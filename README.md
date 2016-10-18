@@ -1,6 +1,18 @@
 # Enact
 
-A mono-repo containing Enact framework modules
+> A mono-repo containing Enact framework modules
+
+Enact uses lerna to manage the individual modules within this repo.
+
+## Usage
+
+Developers should use the individual npm modules hosted under the `@enact` namespace.
+
+For framework developers, execute the bootstrap command to build and link modules:
+
+```
+npm run bootstrap
+```
 
 ## Copyright and License Information
 

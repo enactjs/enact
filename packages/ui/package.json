@@ -14,18 +14,6 @@
     "transpile": "enact transpile",
     "watch": "enact pack --watch"
   },
-  "homepage": "http://enyojs.com/",
-  "bugs": "http://jira.enyojs.com/",
-  "maintainers": [
-    {
-      "name": "Enyo JS Framework Team",
-      "web": "http://enyojs.com/"
-    }
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/enyojs/enact.git"
-  },
   "license": "Apache-2.0",
   "keywords": [
     "framework",
