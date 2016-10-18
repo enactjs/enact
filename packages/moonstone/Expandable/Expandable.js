@@ -9,7 +9,8 @@ import ExpandableContainer from './ExpandableContainer';
 const defaultConfig = {
 	open: null,
 	close: null,
-	toggle: null
+	toggle: null,
+	labelFunc: null
 };
 
 const wrapMethod = (method, handler, props) => {
@@ -114,7 +115,9 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => kind({
 	computed: {
 		determinedLabel: ({label, noneText, open}) => {
 			if (open) return null;
-			if (label != null) return label;
+			if (config.labelFunc) label = config.labelFunc(label);
+			if (label != null && label !== '') return label;
+
 			return noneText;
 		},
 		handleOpen: ({disabled, onClose, onOpen, onToggle, open}) => {
