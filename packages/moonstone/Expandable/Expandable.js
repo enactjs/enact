@@ -43,7 +43,7 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => {
 			title: PropTypes.string.isRequired,
 
 			/**
-			 * Is this control interactive (false), or not (true)?
+			 * When `true`, applies a disabled style and the control becomes non-interactive.
 			 *
 			 * @type {Boolean}
 			 * @default false
@@ -52,7 +52,7 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => {
 			disabled: PropTypes.bool,
 
 			/**
-			 * The secondary, or supportive text. Typically under the title, a subtitle.
+			 * The secondary, or supportive text. Typically under the `title`, a subtitle.
 			 *
 			 * @type {String|Number}
 			 * @default null
@@ -61,7 +61,7 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => {
 			label: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 
 			/**
-			 * Text to display when no label or value is set. Leave blank to have the initial
+			 * Text to display when no `label` or `value` is set. Leave blank to have the initial
 			 * control not display a label when no option is selected.
 			 *
 			 * @type {String}
@@ -69,7 +69,7 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => {
 			noneText: PropTypes.string,
 
 			/**
-			 * Method to be called when a condition occurs which should cause the expandable to close
+			 * Callback to be called when a condition occurs which should cause the expandable to close
 			 *
 			 * @type {Function}
 			 * @default null
@@ -78,7 +78,7 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => {
 			onClose: PropTypes.func,
 
 			/**
-			 * Method to be called when a condition occurs which should cause the expandable to open
+			 * Callback to be called when a condition occurs which should cause the expandable to open
 			 *
 			 * @type {Function}
 			 * @default null
@@ -91,8 +91,8 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => {
 			// value, imo.
 
 			/**
-			 * Called to request to toggle the expandables open state. If onToggle is specified along
-			 * with onOpen or onClose, onToggle will be called first and then either onOpen or onClose.
+			 * Called to request to toggle the expandable's open state. If `onToggle` is specified along
+			 * with `onOpen` or `onClose`, `onToggle` will be called first, followed by either `onOpen` or `onClose`.
 			 *
 			 * @type {Function}
 			 * @default null
@@ -101,7 +101,7 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => {
 			onToggle: PropTypes.func,
 
 			/**
-			 * Is this control in the expanded state (true), opened, with the contents visible?
+			 * When `true`, the control in rendered in the expanded state, with the contents visible?
 			 *
 			 * @type {Boolean}
 			 * @default false
