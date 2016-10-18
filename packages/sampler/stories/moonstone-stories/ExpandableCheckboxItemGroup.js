@@ -20,7 +20,7 @@ class StatefulExpandableCheckboxItemGroup extends React.Component {
 
 	handleSelect = (ev) => {
 		this.setState({
-			value: ev.data
+			label: ev.data
 		});
 		this.forwardOnSelect(ev, this.props);
 	}
@@ -43,7 +43,7 @@ class StatefulExpandableCheckboxItemGroup extends React.Component {
 		return (
 			<SelectableExpandableCheckboxItemGroup
 				{...this.props}
-				value={this.state.value}
+				label={this.state.label}
 				open={this.state.open}
 				onOpen={this.handleOpen}
 				onClose={this.handleClose}

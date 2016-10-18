@@ -9,8 +9,7 @@ import ExpandableContainer from './ExpandableContainer';
 const defaultConfig = {
 	open: null,
 	close: null,
-	toggle: null,
-	prop: 'value'
+	toggle: null
 };
 
 const wrapMethod = (method, handler, props) => {
@@ -48,13 +47,14 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * The secondary, or supportive text. Typically under the title, a subtitle.
+		 * The initial value or index of the contents of the expandable. Setting this enables
+		 * the initial render of the child component to be pre-selected.
 		 *
-		 * @type {String|Number}
+		 * @type {String|Array}
 		 * @default null
 		 * @public
 		 */
-		label: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+		label: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
 
 		/**
 		 * Text to display when no label or value is set. Leave blank to have the initial
@@ -103,17 +103,7 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => kind({
 		 * @default false
 		 * @public
 		 */
-		open: PropTypes.bool,
-
-		/**
-		 * The initial value or index of the contents of the expandable. Setting this enables
-		 * the initial render of the child component to be pre-selected.
-		 *
-		 * @type {String|Number}
-		 * @default null
-		 * @public
-		 */
-		value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+		open: PropTypes.bool
 	},
 
 	defaultProps: {
@@ -122,10 +112,9 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => kind({
 	},
 
 	computed: {
-		determinedLabel: ({[config.prop]: value, label, noneText, open}) => {
+		determinedLabel: ({label, noneText, open}) => {
 			if (open) return null;
 			if (label != null) return label;
-			if (value != null) return value;
 			return noneText;
 		},
 		handleOpen: ({disabled, onClose, onOpen, onToggle, open}) => {
