@@ -44,7 +44,7 @@ const GroupItemBase = kind({
 				indexProp,
 				onSelect,
 				select,
-				selected: selectedIndex,
+				selected,
 				selectedProp
 			},
 			...rest
@@ -52,8 +52,8 @@ const GroupItemBase = kind({
 
 		const index = rest[indexProp];
 		const data = rest[childProp];
-		const selected = index === selectedIndex;
-		if (selectedProp) rest[selectedProp] = selected;
+		const isSelected = Array.isArray(selected) ? selected.includes(index) : index === selected;
+		if (selectedProp) rest[selectedProp] = isSelected;
 		if (select && onSelect) rest[select] = () => onSelect({selected: index, data});
 
 		return <Component {...rest} />;

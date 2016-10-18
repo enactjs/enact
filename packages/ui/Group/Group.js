@@ -88,13 +88,12 @@ const GroupBase = kind({
 		select: PropTypes.string,
 
 		/**
-		 * The index of the currently activated item.
+		 * The index(es) of the currently activated item.
 		 *
-		 * @type {Number}
-		 * @default 0
+		 * @type {Number | Array}
 		 * @public
 		 */
-		selected: PropTypes.number,
+		selected: PropTypes.oneOfType([PropTypes.number, PropTypes.array]),
 
 		/**
 		 * The name of the DOM property that represents the selected state.
@@ -108,7 +107,6 @@ const GroupBase = kind({
 
 	defaultProps: {
 		select: 'onClick',
-		index: 0,
 		indexProp: 'data-index',
 		childProp: 'children',
 		selectedProp: 'data-selected'
@@ -122,9 +120,9 @@ const GroupBase = kind({
 	},
 
 	render: (props) => {
-		delete props.index;
 		delete props.onSelect;
 		delete props.select;
+		delete props.selected;
 		delete props.selectedProp;
 
 		return <Repeater {...props} childComponent={GroupItem} />;
