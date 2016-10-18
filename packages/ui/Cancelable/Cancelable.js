@@ -65,9 +65,10 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 		cancel = () => {
 			if (typeof onCancel === 'string' && typeof this.props[onCancel] === 'function') {
 				this.props[onCancel]();
-				return true;
 			} else if (typeof onCancel === 'function') {
 				return onCancel(this.props);
+			} else {
+				return true;
 			}
 		}
 
@@ -80,7 +81,9 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 			(ev) => forwardKeyUp(ev, this.props),
 			forEscape,
 			this.cancel,
-			stop
+			// Since both React and our local dispatcher use event delegation, we need to use
+			// stopImmediatePropagation to prevent our peer listeners from firing
+			(ev) => ev.nativeEvent.stopImmediatePropagation()
 		)
 
 		renderWrapped () {
