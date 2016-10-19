@@ -5,9 +5,9 @@
 The UI library contains a set of unstyled components as well as a number of Higher Order Components (HOCs)
 that implement various usage patterns (`Pickable`, `Pressable`, etc.).
 
-## Usage
+## Example
 
-A repeater stamps out copies of a provided component:
+One of the components supplied is `Repeater`. A repeater stamps out copies of a provided component:
 ```
 import kind from '@enact/core/kind';
 import Repeater from '@enact/ui/Repeater';
@@ -22,9 +22,9 @@ const MyApp = kind({
         </Repeater>
     )
 });
+```
 
 See the documentation for each component for more information.
-```
 
 ## Install
 
