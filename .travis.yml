@@ -3,7 +3,7 @@ node_js:
     - "node"
 sudo: false
 install:
-    - npm install -g enyojs/enact-dev
+    - npm install -g enyojs/enact-dev#string-polyfills
     - npm install
     - npm run bootstrap
 script:
