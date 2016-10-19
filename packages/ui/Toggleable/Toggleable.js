@@ -10,9 +10,26 @@ import {cap} from '@enact/core/util';
 import React from 'react';
 
 const defaultConfig = {
+	/**
+	 * Allows a Toggleable component to update its state by incoming props
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 */
+	mutable: false,
 
+	/**
+	 * Configures the event name that activates the component
+	 *
+	 * @type {String}
+	 */
 	activate: null,
 
+	/**
+	 * Configures the event name that deactivates the component
+	 *
+	 * @type {String}
+	 */
 	deactivate: null,
 
 	/**
@@ -43,7 +60,7 @@ const defaultConfig = {
  * @public
  */
 const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
-	const {activate, deactivate, toggle, prop} = config;
+	const {activate, deactivate, mutable, prop, toggle} = config;
 	const defaultPropKey = 'default' + cap(prop);
 	const forwardToggle = forward(toggle);
 	const forwardActivate = forward(activate);
@@ -76,9 +93,17 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
+			const key = (mutable && prop in props) ? prop : defaultPropKey;
 			this.state = {
-				active: props[defaultPropKey]
+				active: props[key]
 			};
+		}
+
+		componentWillReceiveProps (nextProps) {
+			const active = nextProps[prop];
+			if (mutable && this.props[prop] !== active) {
+				this.setState({active});
+			}
 		}
 
 		handleActivate = (ev) => {

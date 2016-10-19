@@ -14,7 +14,7 @@ const icon = (which, props, className) => {
 class InputBase extends React.Component {
 	static propTypes = {
 		/**
-		 * Applies a disabled visual state to the checkbox item.
+		 * When `true`, applies a disabled style and the control becomes non-interactive.
 		 *
 		 * @type {Boolean}
 		 * @default false
