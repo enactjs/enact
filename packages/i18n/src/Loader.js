@@ -17,7 +17,7 @@ const get = (url, callback) => {
 };
 
 function EnyoLoader () {
-	this.base = ilibLocale.substring(0, ilibLocale.lastIndexOf('/locale'));
+	this.base = ilibLocale.path.substring(0, ilibLocale.path.lastIndexOf('/locale'));
 	// TODO: enyo.platform
 	// if (platform.platformName === 'webos') {
 	// 	this.webos = true;
@@ -75,7 +75,7 @@ EnyoLoader.prototype._pathjoin = function (_root, subpath) {
  * @returns {undefined}
  */
 EnyoLoader.prototype._loadFilesAsync = function (context, paths, results, params, callback) {
-	let _root = 'resources';
+	let _root = ilibLocale.resources;
 	if (params && typeof params.root !== 'undefined') {
 		_root = params.root;
 	}
@@ -116,7 +116,7 @@ EnyoLoader.prototype._loadFilesAsync = function (context, paths, results, params
 EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback) {
 	if (sync) {
 		let ret = [];
-		let _root = 'resources';
+		let _root = ilibLocale.resources;
 		let locdata = this._pathjoin(this.base, 'locale');
 		if (params && typeof params.root !== 'undefined') {
 			_root = params.root;
@@ -185,7 +185,7 @@ EnyoLoader.prototype._loadStandardManifests = function () {
 	// util.print('enyo loader: load manifests\n');
 	if (!this.manifest) {
 		this._loadManifest(this.base, 'locale'); // standard ilib locale data
-		this._loadManifest('', 'resources');     // the app's resources dir
+		this._loadManifest('', ilibLocale.resources);     // the app's resources dir
 	}
 };
 
@@ -217,4 +217,3 @@ EnyoLoader.prototype.isAvailable = function (_root, path) {
 
 export default EnyoLoader;
 export {EnyoLoader as Loader};
-
