@@ -51,3 +51,15 @@
 		.vendor-opacity(1);
 	}
 }
+
+// This is not the perminent home for this code. This is effectively theming code, which doesn't
+// have a true home yet. It's effectively a placeholder that will match the end result of what a
+// themable scheme will look like. You've been warned.
+:global(.moon-neutral) {
+	background-color: @moon-neutral-bg-color;
+	color: @moon-neutral-text-color;
+
+	* {
+		color: @moon-neutral-child-text-color;
+	}
+}
