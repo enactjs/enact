@@ -149,7 +149,8 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => {
 						return handler;
 					}
 				}
-			}
+			},
+			open: ({disabled, open}) => open && !disabled
 		},
 
 		render: ({determinedLabel, disabled, handleOpen, open, style, title, onClose, onOpen, onToggle, ...rest}) => {
