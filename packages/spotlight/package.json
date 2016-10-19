@@ -1,25 +1,13 @@
 {
   "name": "@enact/spotlight",
   "version": "1.0.0-alpha.1",
-  "description": "",
+  "description": "A focus management library",
   "main": "index.js",
   "scripts": {
     "clean": "enact clean",
     "lint": "enact lint --framework",
     "test": "echo \"No test suite\" && exit 0",
     "transpile": "enact transpile"
-  },
-  "homepage": "http://enyojs.com/",
-  "bugs": "http://jira.enyojs.com/",
-  "maintainers": [
-    {
-      "name": "Enyo JS Framework Team",
-      "web": "http://enyojs.com/"
-    }
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/enyojs/enact.git"
   },
   "license": "Apache-2.0",
   "enact": {

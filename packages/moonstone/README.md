@@ -1,19 +1,46 @@
-# enyo-ui-moonstone
+# @enact/moonstone
 
-`@enyojs/moonstone` contains the set of reusabled components for an Enyo-based application
-targetting the 10 foot user experiences.
+> `@enact/moonstone` contains the set of reusable components for an Enact-based application
+targeting smart TVs.
 
-# Install
+The moonstone library includes ready-to-use components with default styling applied.
+
+## Usage
 
 ```
-npm install --save enyojs/enyo-ui-moonstone
+import kind from '@enact/core/kind';
+import Button from '@enact/moonstone/Button';
+import MoonstoneDecorator from '@enact/moonstone/MoonstoneDecorator';
+
+const MyApp = kind({
+    name: 'MyApp',
+    render: () => (<Button>Hello, Enact!</Button>);
+});
+const MyMoonstoneApp = MoonstoneDecorator(MyApp);
 ```
 
-# Copyright and License Information
+> Note: The moonstone decorator must be applied to the base component. This decorator also applies
+`@enact/i18n/I18nDecorator`, `@enact/spotlight` and `@enact/ui/resolution` decorators.
+
+## Install
+
+```
+npm install --save @enact/moonstone
+```
+
+## Test
+
+Tests are implemented in mocha and are run with the Karma runner.
+
+```
+npm test
+```
+
+## Copyright and License Information
 
 Unless otherwise specified, all content, including all source code files and documentation files in this repository are:
 
-Copyright (c) 2012-2015 LG Electronics
+Copyright (c) 2012-2016 LG Electronics
 
 Unless otherwise specified or set forth in the NOTICE file, all content, including all source code files and documentation files in this repository are: Licensed under the Apache License, Version 2.0 (the "License"); you may not use this content except in compliance with the License. You may obtain a copy of the License at
 
