@@ -24,8 +24,8 @@ let weekEndStart = 6;
 let weekEndEnd = 0;
 
 // default strings for long and short day strings
-const longDayString = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-const shortDayString = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+const longDayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const shortDayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 const initILib = () => {
 	let i, index;
@@ -42,8 +42,8 @@ const initILib = () => {
 
 	for (i = 0; i < 7; i++) {
 		index = (i + firstDayOfWeek) % 7;
-		longDayString[i] = daysOfWeek[index];
-		shortDayString[i] = days[index];
+		longDayNames[i] = daysOfWeek[index];
+		shortDayNames[i] = days[index];
 	}
 };
 
@@ -77,14 +77,14 @@ const getSelectedDayString = (selectedArr = []) => {
 	} else if (!bWeekEndStart && !bWeekEndEnd && length === 7 - weekendLength) {
 		return everyWeekdayText;
 	} else {
-		return selectedArr.sort().map((dayIndex) => shortDayString[dayIndex]).join(', ');
+		return selectedArr.sort().map((dayIndex) => shortDayNames[dayIndex]).join(', ');
 	}
 };
 
 const DayPickerTransformer = (Wrapped) => (props) => (
 	<Wrapped
 		{...props}
-		children={longDayString}
+		children={longDayNames}
 		label={getSelectedDayString(props.selected)}
 	/>
 );
