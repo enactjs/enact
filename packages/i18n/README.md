@@ -27,7 +27,7 @@ const MyApp = () => (
 const MyI18nApp = I18nDecorator(MyApp);
 ```
 
-`Uppercase` may be used independently of the app decorator. By default, it uppercase the `children` property of
+`Uppercase` may be used independently of the app decorator. By default, it uppercases the `children` property of
 the wrapped component, provided it is a `string`.
 
 ```
