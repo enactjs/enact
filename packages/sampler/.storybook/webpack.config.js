@@ -17,6 +17,7 @@ module.exports = {
 		modulesDirectories: ['web_modules', 'node_modules']
 	},
 	resolveLoader: {
+		root: [path.resolve('./node_modules')],
 		modulesDirectories: ['web_loaders', 'web_modules', 'node_loaders', 'node_modules']
 	},
 	module: {
