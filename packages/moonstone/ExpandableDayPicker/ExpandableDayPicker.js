@@ -50,10 +50,10 @@ const initILib = () => {
 initILib();
 
 /**
- * Determines whether it should return "Everyday", "Every Weekend", "Every Week" or list of
+ * Determines whether it should return "Everyday", "Every Weekend", "Every Weekday" or list of
  * days for a given selected indexes.
- * @param {Array} selectedArr selcted indexes
- * @returns {String} "Everyday", "Every Weekend", "Every Week" or list of days
+ * @param {Array} selectedArr selected indexes
+ * @returns {String} "Every Day", "Every Weekend", "Every Week" or list of days
  * @private
  */
 const getSelectedDayString = (selectedArr = []) => {
@@ -81,14 +81,6 @@ const getSelectedDayString = (selectedArr = []) => {
 	}
 };
 
-/**
- * {@link module:@enact/moonstone/ExpandableDayPicker~ExpandableDayPicker} is a component that
- * allows the user to choose day(s) of the week.
- *
- * @class ExpandableDayPicker
- * @ui
- * @public
- */
 const DayPickerTransformer = (Wrapped) => (props) => (
 	<Wrapped
 		{...props}
@@ -97,6 +89,14 @@ const DayPickerTransformer = (Wrapped) => (props) => (
 	/>
 );
 
+/**
+ * {@link module:@enact/moonstone/ExpandableDayPicker~ExpandableDayPicker} is a component that
+ * allows the user to choose day(s) of the week.
+ *
+ * @class ExpandableDayPicker
+ * @ui
+ * @public
+ */
 const ExpandableDayPicker = Selectable(DayPickerTransformer(Expandable(ExpandableCheckboxItemGroupBase)));
 
 export default ExpandableDayPicker;
