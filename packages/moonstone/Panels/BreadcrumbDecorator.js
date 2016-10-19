@@ -1,5 +1,6 @@
 import {kind, hoc} from '@enact/core';
 import {coerceFunction} from '@enact/core/util';
+import Cancelable from '@enact/ui/Cancelable';
 import ViewManager from '@enact/ui/ViewManager';
 import invariant from 'invariant';
 import React from 'react';
@@ -163,7 +164,21 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 	});
 
-	return Decorator;
+	function handleCancel (props) {
+		const {index, onSelectBreadcrumb} = props;
+		if (index > 0 && onSelectBreadcrumb) {
+			onSelectBreadcrumb({
+				index: index - 1
+			});
+
+			return true;
+		}
+	}
+
+	return Cancelable(
+		{modal: true, onCancel: handleCancel},
+		Decorator
+	);
 });
 
 export default BreadcrumbDecorator;

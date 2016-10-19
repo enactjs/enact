@@ -56,6 +56,24 @@
 }
 
 .decorator {
+	.iconEnd {
+		padding: 0 0 0 9px;
+	}
+
+	.iconStart {
+		padding: 0 9px 0 0;
+	}
+
+	:global(.enact-locale-right-to-left) & {
+		.iconEnd {
+			padding: 0 9px 0 0;
+		}
+
+		.iconStart {
+			padding: 0 0 0 9px;
+		}
+	}
+
 	.moon-divider-text();
 
 	display: inline-block;
@@ -87,7 +105,7 @@
 
 	.decoratorIcon,
 	&:focus .decoratorIcon {
-		width: 18px;
+		width: auto;
 		margin: 0;
 		color: @moon-input-font-color;
 	}

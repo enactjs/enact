@@ -60,12 +60,13 @@ storiesOf('ExpandableList')
 		'Basic usage of ExpandableList',
 		() => (
 			<ExpandableList
+				disabled={boolean('disabled', false)}
+				noneText={text('noneText', 'nothing selected')}
 				onChange={action('onChange')}
 				onClose={action('onClose')}
 				onOpen={action('onOpen')}
+				open={boolean('open', false)}
 				title={text('title', 'title')}
-				noneText={text('noneText', 'nothing selected')}
-				disabled={boolean('disabled', false)}
 			>
 				{['option1', 'option2', 'option3']}
 			</ExpandableList>
