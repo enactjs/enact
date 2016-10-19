@@ -1,7 +1,7 @@
 import React from 'react';
 import {shallow} from 'enzyme';
 import sinon from 'sinon';
-import Cancelable from '../Cancelable';
+import {addCancelHandler, Cancelable, removeCancelHandler} from '../Cancelable';
 
 describe('Cancelable', () => {
 
@@ -40,7 +40,7 @@ describe('Cancelable', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should only call onCancel for escape key', function () {
+	it('should only call onCancel for escape key by default', function () {
 		const handleCancel = sinon.spy();
 		const Comp = Cancelable(
 			{onCancel: handleCancel},
@@ -134,6 +134,29 @@ describe('Cancelable', () => {
 
 		const expected = true;
 		const actual = handleKeyUp.calledOnce;
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should call onCancel when additional cancel handlers pass', function () {
+		const customCancelHandler = (ev) => ev.keyCode !== 461;
+		addCancelHandler(customCancelHandler);
+		const handleCancel = sinon.spy();
+		const Comp = Cancelable(
+			{onCancel: handleCancel},
+			Component
+		);
+
+		const subject = shallow(
+			<Comp />
+		);
+
+		subject.simulate('keyup', makeKeyEvent(461));
+
+		removeCancelHandler(customCancelHandler);
+
+		const expected = true;
+		const actual = handleCancel.calledOnce;
 
 		expect(actual).to.equal(expected);
 	});

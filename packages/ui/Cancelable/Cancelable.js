@@ -4,14 +4,13 @@
  * @module @enact/ui/Cancelable
  */
 
-import {forKeyCode, forward, handle, stop} from '@enact/core/handle';
+import {forward, handle, stopImmediate} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import invariant from 'invariant';
 import React from 'react';
 
+import {forCancel, addCancelHandler, removeCancelHandler} from './cancelHandler';
 import {on, off} from './dispatcher';
-
-const forEscape = forKeyCode(27);
 
 const defaultConfig = {
 	onCancel: null,
@@ -73,17 +72,16 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleModalCancel = handle(
-			forEscape,
-			this.cancel
+			forCancel,
+			this.cancel,
+			stopImmediate
 		)
 
 		handleKeyUp = handle(
 			(ev) => forwardKeyUp(ev, this.props),
-			forEscape,
+			forCancel,
 			this.cancel,
-			// Since both React and our local dispatcher use event delegation, we need to use
-			// stopImmediatePropagation to prevent our peer listeners from firing
-			(ev) => ev.nativeEvent.stopImmediatePropagation()
+			stopImmediate
 		)
 
 		renderWrapped () {
@@ -115,4 +113,8 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 });
 
 export default Cancelable;
-export {Cancelable};
+export {
+	addCancelHandler,
+	Cancelable,
+	removeCancelHandler
+};
