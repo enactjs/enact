@@ -1,5 +1,4 @@
 import ExpandableDayPicker from '@enact/moonstone/ExpandableDayPicker';
-import {forward} from '@enact/core/handle';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
@@ -31,7 +30,6 @@ class StatefulExpandableDayPicker extends React.Component {
 				open={this.state.open}
 				onOpen={this.handleOpen}
 				onClose={this.handleClose}
-				multiple
 			/>
 		);
 	}

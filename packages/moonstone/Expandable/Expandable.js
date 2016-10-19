@@ -9,8 +9,7 @@ import ExpandableContainer from './ExpandableContainer';
 const defaultConfig = {
 	open: null,
 	close: null,
-	toggle: null,
-	labelFunc: null
+	toggle: null
 };
 
 const wrapMethod = (method, handler, props) => {
@@ -48,14 +47,14 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * The initial value or index of the contents of the expandable. Setting this enables
+		 * The initial value of the contents of the expandable. Setting this enables
 		 * the initial render of the child component to be pre-selected.
 		 *
 		 * @type {String}
 		 * @default null
 		 * @public
 		 */
-		label: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
+		label: PropTypes.string,
 
 		/**
 		 * Text to display when no label is set. Leave blank to have the initial
