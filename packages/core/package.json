@@ -6,13 +6,10 @@
   "scripts": {
     "clean": "enact clean",
     "lint": "enact lint --framework",
-    "pack": "enact pack",
-    "pack-p": "enact pack -p",
     "test": "enact test start --single-run --browsers PhantomJS",
     "test-json": "enact test start --single-run --browsers PhantomJS --reporters json",
     "test-watch": "enact test start --browsers PhantomJS",
-    "transpile": "enact transpile",
-    "watch": "enact pack --watch"
+    "transpile": "enact transpile"
   },
   "homepage": "http://enyojs.com/",
   "bugs": "http://jira.enyojs.com/",
