@@ -24,7 +24,7 @@ let weekEndStart = 6;
 let weekEndEnd = 0;
 
 // default strings for long and short day strings
-const longDaySting = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const longDayString = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 const shortDayString = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
 const initILib = () => {
@@ -42,7 +42,7 @@ const initILib = () => {
 
 	for (i = 0; i < 7; i++) {
 		index = (i + firstDayOfWeek) % 7;
-		longDaySting[i] = daysOfWeek[index];
+		longDayString[i] = daysOfWeek[index];
 		shortDayString[i] = days[index];
 	}
 };
@@ -81,27 +81,23 @@ const getSelectedDayString = (selectedArr = []) => {
 	}
 };
 
-const ExpandableDayGroup = Expandable({
-	labelFunc: getSelectedDayString
-}, Selectable(ExpandableCheckboxItemGroupBase));
-
 /**
- * {@link module:@enact/moonstone/ExpandableDayPicker~ExpandableDayPicker} is a stateless component that
+ * {@link module:@enact/moonstone/ExpandableDayPicker~ExpandableDayPicker} is a component that
  * allows the user to choose day(s) of the week.
  *
  * @class ExpandableDayPicker
  * @ui
  * @public
  */
-const ExpandableDayPicker = kind({
-	render: (props) => {
-		return (
-			<ExpandableDayGroup {...props}>
-				{longDaySting}
-			</ExpandableDayGroup>
-		);
-	}
-});
+const DayPickerTransformer = (Wrapped) => (props) => (
+	<Wrapped
+		{...props}
+		children={longDayString}
+		label={getSelectedDayString(props.selected)}
+	/>
+);
+
+const ExpandableDayPicker = Selectable(DayPickerTransformer(Expandable(ExpandableCheckboxItemGroupBase)));
 
 export default ExpandableDayPicker;
 export {ExpandableDayPicker};

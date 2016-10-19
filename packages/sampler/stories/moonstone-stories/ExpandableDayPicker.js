@@ -10,14 +10,6 @@ class StatefulExpandableDayPicker extends React.Component {
 		this.state = {
 			open: false
 		};
-		this.forwardOnSelect = forward('onSelect');
-	}
-
-	handleSelect = (ev) => {
-		this.setState({
-			label: ev.selected
-		});
-		this.forwardOnSelect(ev, this.props);
 	}
 
 	handleOpen = () => {
@@ -36,11 +28,9 @@ class StatefulExpandableDayPicker extends React.Component {
 		return (
 			<ExpandableDayPicker
 				{...this.props}
-				label={this.state.label}
 				open={this.state.open}
 				onOpen={this.handleOpen}
 				onClose={this.handleClose}
-				onSelect={this.handleSelect}
 				multiple
 			/>
 		);

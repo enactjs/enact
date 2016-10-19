@@ -51,14 +51,14 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => kind({
 		 * The initial value or index of the contents of the expandable. Setting this enables
 		 * the initial render of the child component to be pre-selected.
 		 *
-		 * @type {String|Array}
+		 * @type {String}
 		 * @default null
 		 * @public
 		 */
 		label: PropTypes.oneOfType([PropTypes.string, PropTypes.array]),
 
 		/**
-		 * Text to display when no label or value is set. Leave blank to have the initial
+		 * Text to display when no label is set. Leave blank to have the initial
 		 * control not display a label when no option is selected.
 		 *
 		 * @type {String}
@@ -115,7 +115,6 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => kind({
 	computed: {
 		determinedLabel: ({label, noneText, open}) => {
 			if (open) return null;
-			if (config.labelFunc) label = config.labelFunc(label);
 			if (label != null && label !== '') return label;
 
 			return noneText;
