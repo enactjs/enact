@@ -1,13 +1,62 @@
-# enyo-i18n
+# @enact/i18n
 
-Enyo library for ilib globalization/internationalization library.
+> Enact library for internationalization
+
+`@enact/i18n` provides a decorator that can be used to wrap a root component in a React (or Enact) application.
+This decorator provides a context to child components that can be used to determine locale text directionality
+and to update the current locale. Additionally, it provides a locale-aware `Uppercase` Higher Order Component (HOC).
+
+## Usage
+
+```
+import {I18nDecorator, contextTypes} from `@enact/i18n/I18nDecorator`;
+
+const MyComponent = (props, context) => (
+    <div>{context.rtl ? "right to left" : "left to right"}</div>
+);
+
+// Without contextTypes, your component will not receive context!
+MyComponent.contextTypes = contextTypes;
+
+const MyApp = () => (
+    <div>
+        <MyComponent />
+    </div>
+);
+
+const MyI18nApp = I18nDecorator(MyApp);
+```
+
+`Uppercase` may be used independently of the app decorator. By default, it uppercases the `children` property of
+the wrapped component, provided it is a `string`.
+
+```
+import Uppercase from `@enact/i18n/Uppercase`
+
+const MyComponent = (props) => (
+    <div {...props} />
+);
+
+const MyUppercaseComponent = Uppercase(MyComponent);
+```
+Passing `preserveCase` in the props to `MyUppercaseComponent` will prevent uppercasing.
+
+## Install
+
+```
+npm install --save @enact/i18n
+```
+
+## Acknowledgments
+
+This module is built upon the [iLib](http://docs.jedlsoft.com/ilib/jsdoc/) library.
 
 ## Copyright and License Information
 
 Unless otherwise specified, all content, including all source code files and
 documentation files in this repository are:
 
-Copyright (c) 2014 LG Electronics
+Copyright (c) 2016 LG Electronics
 
 Unless otherwise specified or set forth in the NOTICE file, all content,
 including all source code files and documentation files in this repository are:
