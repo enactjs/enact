@@ -15,7 +15,9 @@ describe('Cancelable', () => {
 	const makeKeyEvent = (keyCode) => {
 		return {
 			keyCode,
-			stopPropagation: sinon.spy()
+			nativeEvent: {
+				stopImmediatePropagation: sinon.spy()
+			}
 		};
 	};
 
@@ -91,7 +93,7 @@ describe('Cancelable', () => {
 		subject.simulate('keyup', keyEvent);
 
 		const expected = true;
-		const actual = keyEvent.stopPropagation.calledOnce;
+		const actual = keyEvent.nativeEvent.stopImmediatePropagation.calledOnce;
 
 		expect(actual).to.equal(expected);
 	});
@@ -111,7 +113,7 @@ describe('Cancelable', () => {
 		subject.simulate('keyup', keyEvent);
 
 		const expected = false;
-		const actual = keyEvent.stopPropagation.calledOnce;
+		const actual = keyEvent.nativeEvent.stopImmediatePropagation.calledOnce;
 
 		expect(actual).to.equal(expected);
 	});
