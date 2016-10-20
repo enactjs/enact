@@ -1,18 +1,42 @@
-# enyo-ui
+# @enact/ui
 
-`@enyojs/ui` contains the set of unstyled, reusabled components for an Enyo-based application.
+> `@enact/ui` contains the set of unstyled, reusabled components for an Enact-based application.
 
-# Install
+The UI library contains a set of unstyled components as well as a number of Higher Order Components (HOCs)
+that implement various usage patterns (`Pickable`, `Pressable`, etc.).
+
+## Example
+
+One of the components supplied is `Repeater`. A repeater stamps out copies of a provided component:
+```
+import kind from '@enact/core/kind';
+import Repeater from '@enact/ui/Repeater';
+
+const MyApp = kind({
+    name: 'MyApp',
+    render: () => (
+        <Repeater childComponent="div">
+            One
+            Two
+            Three
+        </Repeater>
+    )
+});
+```
+
+See the documentation for each component for more information.
+
+## Install
 
 ```
-npm install --save enyojs/enyo-ui
+npm install --save @enact/ui
 ```
 
-# Copyright and License Information
+## Copyright and License Information
 
 Unless otherwise specified, all content, including all source code files and documentation files in this repository are:
 
-Copyright (c) 2012-2015 LG Electronics
+Copyright (c) 2012-2016 LG Electronics
 
 Unless otherwise specified or set forth in the NOTICE file, all content, including all source code files and documentation files in this repository are: Licensed under the Apache License, Version 2.0 (the "License"); you may not use this content except in compliance with the License. You may obtain a copy of the License at
 
