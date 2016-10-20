@@ -126,7 +126,7 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => {
 		},
 
 		computed: {
-			determinedLabel: ({[config.prop]: value, label, noneText, open, disabled}) => {
+			determinedLabel: ({[config.prop]: value, disabled, label, noneText, open}) => {
 				if (open && !disabled) return null;
 				if (label != null) return label;
 				if (value != null) return value;
