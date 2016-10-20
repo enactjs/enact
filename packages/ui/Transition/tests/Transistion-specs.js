@@ -75,11 +75,8 @@ describe('Transition Specs', () => {
 		['timingFunction', timingFunctionCombination]
 	];
 
-	const propStyleMap = new Map(propStyleCombination);
-
-	propStyleMap.forEach((val, prop) => {
-		const combos = new Map(val);
-		combos.forEach((value, key) => {
+	propStyleCombination.forEach(([prop, val]) => {
+		val.forEach(([key, value]) => {
 			it(`should apply classes for ${prop}={${value}}`, function () {
 				const propValue = {
 					[prop]: value

@@ -38,7 +38,7 @@ const forCancel = function (ev) {
  * @public
  */
 const addCancelHandler = function (handler) {
-	if (!cancelHandlers.includes(handler)) {
+	if (cancelHandlers.indexOf(handler) < 0) {
 		cancelHandlers.push(handler);
 	}
 };
