@@ -6,11 +6,8 @@
   "scripts": {
     "clean": "enact clean",
     "lint": "enact lint --framework",
-    "pack": "enact pack",
-    "pack-p": "enact pack -p",
     "test": "echo \"No test suite\" && exit 0",
-    "transpile": "enact transpile",
-    "watch": "enact pack --watch"
+    "transpile": "enact transpile"
   },
   "license": "Apache-2.0",
   "keywords": [
