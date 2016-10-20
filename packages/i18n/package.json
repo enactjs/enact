@@ -6,23 +6,8 @@
   "scripts": {
     "clean": "enact clean",
     "lint": "enact lint --framework",
-    "pack": "enact pack",
-    "pack-p": "enact pack -p",
     "test": "echo \"No test suite\" && exit 0",
-    "transpile": "enact transpile",
-    "watch": "enact pack --watch"
-  },
-  "homepage": "http://enyojs.com/",
-  "bugs": "http://jira.enyojs.com/",
-  "maintainers": [
-    {
-      "name": "Enyo JS Framework Team",
-      "web": "http://enyojs.com/"
-    }
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/enyojs/enact.git"
+    "transpile": "enact transpile"
   },
   "license": "Apache-2.0",
   "keywords": [

@@ -1,35 +1,11 @@
-# @enact/ui
+# @enact/webos
 
-> `@enact/ui` contains the set of unstyled, reusabled components for an Enact-based application.
-
-The UI library contains a set of unstyled components as well as a number of Higher Order Components (HOCs)
-that implement various usage patterns (`Pickable`, `Pressable`, etc.).
-
-## Example
-
-One of the components supplied is `Repeater`. A repeater stamps out copies of a provided component:
-```
-import kind from '@enact/core/kind';
-import Repeater from '@enact/ui/Repeater';
-
-const MyApp = kind({
-    name: 'MyApp',
-    render: () => (
-        <Repeater childComponent="div">
-            One
-            Two
-            Three
-        </Repeater>
-    )
-});
-```
-
-See the documentation for each component for more information.
+> `@enact/webos` contains utility functions for working with webOS devices
 
 ## Install
 
 ```
-npm install --save @enact/ui
+npm install --save @enact/webos
 ```
 
 ## Copyright and License Information
@@ -43,3 +19,4 @@ Unless otherwise specified or set forth in the NOTICE file, all content, includi
 http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
