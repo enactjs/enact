@@ -126,8 +126,8 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => {
 		},
 
 		computed: {
-			determinedLabel: ({[config.prop]: value, label, noneText, open}) => {
-				if (open) return null;
+			determinedLabel: ({[config.prop]: value, disabled, label, noneText, open}) => {
+				if (open && !disabled) return null;
 				if (label != null) return label;
 				if (value != null) return value;
 				return noneText;
@@ -149,7 +149,8 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => {
 						return handler;
 					}
 				}
-			}
+			},
+			open: ({disabled, open}) => open && !disabled
 		},
 
 		render: ({determinedLabel, disabled, handleOpen, open, style, title, onClose, onOpen, onToggle, ...rest}) => {
