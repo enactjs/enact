@@ -18,7 +18,7 @@ const CheckboxItemBase = kind({
 		children: PropTypes.string.isRequired,
 
 		/**
-		 * Applies a "checked" visual state to the checkbox item.
+		 * When `true`, a "checked" visual effect is applied to the button.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -27,7 +27,7 @@ const CheckboxItemBase = kind({
 		checked: PropTypes.bool,
 
 		/**
-		 * Applies a disabled visual state to the checkbox item.
+		 * When `true`, applies a disabled style and the control becomes non-interactive.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -36,7 +36,7 @@ const CheckboxItemBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * Applies inline styling to the checkbox item.
+		 * When `true`, an inline visual effect is applied to the button.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -78,10 +78,7 @@ const CheckboxItemBase = kind({
 	},
 
 	computed: {
-		iconClasses: ({checked, styler}) => styler.join(
-			css.icon,
-			{checked}
-		)
+		iconClasses: ({checked}) => !checked ? css.translucent : null
 	},
 
 	render: (props) => (
