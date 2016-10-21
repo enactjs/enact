@@ -1,6 +1,5 @@
 /**
- * Exports the {@link module:@enact/moonstone/ExpandableDayPicker~ExpandableDayPicker} and
- * {@link module:@enact/moonstone/ExpandableDayPicker~ExpandableDayPickerBase} components.
+ * Exports the {@link module:@enact/moonstone/ExpandableDayPicker~ExpandableDayPicker} components.
  *
  * @module @enact/moonstone/ExpandableDayPicker
  */
@@ -8,12 +7,11 @@
 import {$L} from '@enact/i18n';
 import DateFmt from '@enact/i18n/ilib/lib/DateFmt';
 import ilib from '@enact/i18n/ilib/lib/ilib';
+import {kind} from '@enact/core/kind';
 import LocaleInfo from '@enact/i18n/ilib/lib/LocaleInfo';
 import React, {PropTypes} from 'react';
-import Selectable from '@enact/ui/Selectable';
 
-import {ExpandableCheckboxItemGroupBase} from '../ExpandableCheckboxItemGroup';
-import Expandable from '../Expandable';
+import ExpandableCheckboxItemGroup from '../ExpandableCheckboxItemGroup';
 
 const everyDayText = $L('Every Day');
 const everyWeekdayText = $L('Every Weekday');
@@ -53,14 +51,15 @@ initILib();
 /**
  * Determines whether it should return "Every Day", "Every Weekend", "Every Weekday" or list of
  * days for a given selected indexes.
- * @param {Array} selectedArr selected indexes
+ * @param {Object} props props object containing `selected` array
+ * @param {Number[]} props.selected Array of day indexes
  * @returns {String} "Every Day", "Every Weekend", "Every Week" or list of days
  * @private
  */
-const getSelectedDayString = (selectedArr = []) => {
+const getSelectedDayString = ({selected = []}) => {
 	let bWeekEndStart = false,
 		bWeekEndEnd = false,
-		length = selectedArr.length,
+		length = selected.length,
 		weekendLength = weekEndStart === weekEndEnd ? 1 : 2,
 		index;
 
@@ -68,7 +67,7 @@ const getSelectedDayString = (selectedArr = []) => {
 
 	for (let i = 0; i < 7; i++) {
 		// convert the control index to day index
-		index = (selectedArr[i] + firstDayOfWeek) % 7;
+		index = (selected[i] + firstDayOfWeek) % 7;
 		bWeekEndStart = bWeekEndStart || weekEndStart === index;
 		bWeekEndEnd = bWeekEndEnd || weekEndEnd === index;
 	}
@@ -78,181 +77,94 @@ const getSelectedDayString = (selectedArr = []) => {
 	} else if (!bWeekEndStart && !bWeekEndEnd && length === 7 - weekendLength) {
 		return everyWeekdayText;
 	} else {
-		return selectedArr.sort().map((dayIndex) => shortDayNames[dayIndex]).join(', ');
+		return selected.sort().map((dayIndex) => shortDayNames[dayIndex]).join(', ');
 	}
 };
 
-const DayPickerTransformer = (Wrapped) => (props) => (
-	<Wrapped
-		{...props}
-		children={longDayNames}
-		label={getSelectedDayString(props.selected)}
-	/>
-);
-
-const MultiTransformer = (Wrapped) => (props) => (
-	<Wrapped
-		{...props}
-		multiple
-	/>
-);
-
-/**
- * {@link module:@enact/moonstone/ExpandableDayPickerBase~ExpandableDayPicker} is a component that
- * allows the user to choose day(s) of the week. This version allows for dynamically setting the
- * `selected` property.
- *
- * @class ExpandableDayPickerBase
- * @ui
- * @public
- */
-const ExpandableDayPickerBase = MultiTransformer(
-		Selectable(
-			{mutable: true},
-			DayPickerTransformer(Expandable(ExpandableCheckboxItemGroupBase))
-		)
-);
-
-ExpandableDayPickerBase.propTypes = {
-	/**
-	 * The primary text of the Picker.
-	 *
-	 * @type {String}
-	 * @required
-	 * @public
-	 */
-	title: PropTypes.string.isRequired,
-
-	/**
-	 * When `true`, applies a disabled style and the control becomes non-interactive.
-	 *
-	 * @type {Boolean}
-	 * @default false
-	 * @public
-	 */
-	disabled: PropTypes.bool,
-
-	/**
-	 * Callback to be called when a condition occurs which should cause the expandable to close
-	 *
-	 * @type {Function}
-	 * @default null
-	 * @public
-	 */
-	onClose: PropTypes.func,
-
-	/**
-	 * Callback to be called when a condition occurs which should cause the expandable to open
-	 *
-	 * @type {Function}
-	 * @default null
-	 * @public
-	 */
-	onOpen: PropTypes.func,
-
-	/**
-	 * Called when an item is selected. The first parameter will be an object containing a `selected` member,
-	 * containing the array of numbers representing the selected days, 0 indexed
-	 *
-	 * @type {Function}
-	 * @public
-	 */
-	onSelect: PropTypes.func,
-
-	/**
-	 * When `true`, the control in rendered in the expanded state, with the contents visible?
-	 *
-	 * @type {Boolean}
-	 * @default false
-	 * @public
-	 */
-	open: PropTypes.bool,
-
-	/**
-	 * Selected value(s). An array of numbers representing the days of the week, 0 indexed.
-	 * @type {Array}
-	 * @public
-	 */
-	selected: PropTypes.array
-};
 /**
  * {@link module:@enact/moonstone/ExpandableDayPicker~ExpandableDayPicker} is a component that
- * allows the user to choose day(s) of the week. This version manages the state of selected items
- * and only allows setting the initial selected items through `defaultSelected`.
+ * allows the user to choose day(s) of the week.
  *
  * @class ExpandableDayPicker
  * @ui
  * @public
  */
-const ExpandableDayPicker = MultiTransformer(
-		Selectable(
-			{mutable: true},
-			DayPickerTransformer(Expandable(ExpandableCheckboxItemGroupBase))
-		)
-);
+const ExpandableDayPicker = kind({
+	name: 'ExpandableDayPicker',
 
-ExpandableDayPicker.propTypes = {
-	/**
-	 * The primary text of the Picker.
-	 *
-	 * @type {String}
-	 * @required
-	 * @public
-	 */
-	title: PropTypes.string.isRequired,
+	propTypes: {
+		/**
+		 * The primary text of the Picker.
+		 *
+		 * @type {String}
+		 * @required
+		 * @public
+		 */
+		title: PropTypes.string.isRequired,
 
-	/**
-	 * Initial selected value(s). An array of numbers representing the days of the week, 0 indexed.
-	 * @type {Array}
-	 * @public
-	 */
-	defaultSelected: PropTypes.array,
+		/**
+		 * When `true`, applies a disabled style and the control becomes non-interactive.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		disabled: PropTypes.bool,
 
-	/**
-	 * When `true`, applies a disabled style and the control becomes non-interactive.
-	 *
-	 * @type {Boolean}
-	 * @default false
-	 * @public
-	 */
-	disabled: PropTypes.bool,
+		/**
+		 * Callback to be called when a condition occurs which should cause the expandable to close
+		 *
+		 * @type {Function}
+		 * @default null
+		 * @public
+		 */
+		onClose: PropTypes.func,
 
-	/**
-	 * Callback to be called when a condition occurs which should cause the expandable to close
-	 *
-	 * @type {Function}
-	 * @default null
-	 * @public
-	 */
-	onClose: PropTypes.func,
+		/**
+		 * Callback to be called when a condition occurs which should cause the expandable to open
+		 *
+		 * @type {Function}
+		 * @default null
+		 * @public
+		 */
+		onOpen: PropTypes.func,
 
-	/**
-	 * Callback to be called when a condition occurs which should cause the expandable to open
-	 *
-	 * @type {Function}
-	 * @default null
-	 * @public
-	 */
-	onOpen: PropTypes.func,
+		/**
+		 * Called when an item is selected. The first parameter will be an object containing a `selected` member,
+		 * containing the array of numbers representing the selected days, 0 indexed
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onSelect: PropTypes.func,
 
-	/**
-	 * Called when an item is selected. The first parameter will be an object containing a `selected` member,
-	 * containing the array of numbers representing the selected days, 0 indexed
-	 *
-	 * @type {Function}
-	 * @public
-	 */
-	onSelect: PropTypes.func,
+		/**
+		 * When `true`, the control in rendered in the expanded state, with the contents visible?
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		open: PropTypes.bool,
 
-	/**
-	 * When `true`, the control in rendered in the expanded state, with the contents visible?
-	 *
-	 * @type {Boolean}
-	 * @default false
-	 * @public
-	 */
-	open: PropTypes.bool
-};
+		/**
+		 * Selected value(s). An array of numbers representing the days of the week, 0 indexed.
+		 * @type {Array}
+		 * @public
+		 */
+		selected: PropTypes.array
+	},
+
+	computed: {
+		label: getSelectedDayString
+	},
+
+	render: (props) => (
+		<ExpandableCheckboxItemGroup {...props}>
+			{longDayNames}
+		</ExpandableCheckboxItemGroup>
+	)
+});
 
 export default ExpandableDayPicker;
-export {ExpandableDayPicker, ExpandableDayPickerBase};
+export {ExpandableDayPicker, ExpandableDayPicker as EpandableDayPickerBase};
