@@ -6,6 +6,7 @@
   "scripts": {
     "lerna": "lerna",
     "bootstrap": "lerna bootstrap --concurrency 1",
+    "publish": "lerna publish --skip-npm",
     "link-all": "lerna --concurrency 1 exec -- npm --loglevel error link",
     "unlink-all": "lerna --concurrency 1 exec -- npm --loglevel error unlink"
   },
