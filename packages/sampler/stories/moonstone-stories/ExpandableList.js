@@ -1,6 +1,7 @@
 import {ExpandableList as ExpList, ExpandableListBase} from '@enact/moonstone/ExpandableList';
+import {forward} from '@enact/core/handle';
 import React from 'react';
-import {storiesOf} from '@kadira/storybook';
+import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
 
 class ExpandableList extends React.Component {
@@ -9,36 +10,41 @@ class ExpandableList extends React.Component {
 		this.state = {
 			open: false
 		};
+		this.forwardOnChange = forward('onChange');
+		this.forwardOnOpen = forward('onOpen');
+		this.forwardOnClose = forward('onClose');
 	}
 
-	handleChange = ({value}) => {
+	handleSelect = (ev) => {
 		this.setState({
-			value: value
+			value: ev.value
 		});
+		this.forwardOnChange(ev, this.props);
 	}
 
-	handleOpen = () => {
+	handleOpen = (ev) => {
 		this.setState({
 			'open': true
 		});
+		this.forwardOnOpen(ev, this.props);
 	};
 
-	handleClose = () => {
+	handleClose = (ev) => {
 		this.setState({
 			'open': false
 		});
+		this.forwardOnClose(ev, this.props);
 	};
 
 	render () {
 		return (
 			<ExpList
 				{...this.props}
-				label={this.state.label}
 				value={this.state.value}
 				open={this.state.open}
 				onOpen={this.handleOpen}
 				onClose={this.handleClose}
-				onChange={this.handleChange}
+				onSelect={this.handleSelect}
 			/>
 		);
 	}
@@ -54,9 +60,13 @@ storiesOf('ExpandableList')
 		'Basic usage of ExpandableList',
 		() => (
 			<ExpandableList
-				title={text('title', 'title')}
-				noneText={text('noneText', 'nothing selected')}
 				disabled={boolean('disabled', false)}
+				noneText={text('noneText', 'nothing selected')}
+				onChange={action('onChange')}
+				onClose={action('onClose')}
+				onOpen={action('onOpen')}
+				open={boolean('open', false)}
+				title={text('title', 'title')}
 			>
 				{['option1', 'option2', 'option3']}
 			</ExpandableList>

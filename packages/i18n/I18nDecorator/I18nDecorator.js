@@ -9,7 +9,7 @@ import hoc from '@enact/core/hoc';
 import React from 'react';
 
 import '../src/glue';
-import {isRtl, getI18nClasses, updateLocale} from '../src/locale';
+import {isRtlLocale, getI18nClasses, updateLocale} from '../src/locale';
 
 /**
  * `contextTypes` is an object that exports the default context validation rules. These must be applied
@@ -43,31 +43,56 @@ const IntlHoc = hoc((config, Wrapped) => {
 	return class I18nDecorator extends React.Component {
 		static childContextTypes = contextTypes
 		static propTypes = {
-			className: React.PropTypes.string
+			className: React.PropTypes.string,
+			locale: React.PropTypes.string
 		}
 
 		getChildContext () {
 			return {
-				rtl: isRtl(),
+				rtl: isRtlLocale(),
 				updateLocale: this.updateLocale
 			};
 		}
 
+		constructor (props) {
+			super(props);
+
+			if (props.locale) {
+				this.updateLocale(props.locale);
+			}
+		}
+
+		componentWillReceiveProps (newProps) {
+			if (newProps.locale) {
+				this.updateLocale(newProps.locale);
+			}
+		}
+
 		updateLocale = (locale) => {
 			const newLocale = updateLocale(locale);
-			this.setState({
+			const state = {
 				locale: newLocale
-			});
+			};
+
+			// allow calling from constructor by guarding setState
+			if (this.state) {
+				this.setState(state);
+			} else {
+				this.state = state;
+			}
 		}
 
 		render () {
+			const props = Object.assign({}, this.props);
 			let classes = getI18nClasses();
 			if (this.props.className) {
 				classes = this.props.className + ' ' + classes;
 			}
 
+			delete props.locale;
+
 			return (
-				<Wrapped {...this.props} className={classes} />
+				<Wrapped {...props} className={classes} />
 			);
 		}
 	};

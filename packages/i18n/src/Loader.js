@@ -6,8 +6,14 @@ import ilibLocale from '../ilib/locale/ilibmanifest.json';
 
 const get = (url, callback) => {
 	if (typeof window === 'object') {
-		xhr({url, sync: true}, (err, resp, body) => {
-			const error = err || resp.statusCode !== 200 && resp.statusCode;
+		let req;
+		xhr({url, sync: true, beforeSend: (r) => (req = r)}, (err, resp, body) => {
+			let error = err || resp.statusCode !== 200 && resp.statusCode;
+			// false failure from chrome and file:// urls
+			if (error && req.status === 0 && req.response.length > 0) {
+				body = req.response;
+				error = false;
+			}
 			const json = error ? null : JSON.parse(body);
 			callback(json, error);
 		});
@@ -18,10 +24,10 @@ const get = (url, callback) => {
 
 function EnyoLoader () {
 	this.base = ilibLocale.path.substring(0, ilibLocale.path.lastIndexOf('/locale'));
-	// TODO: enyo.platform
-	// if (platform.platformName === 'webos') {
-	// 	this.webos = true;
-	// }
+	// TODO: full enyo.platform implementation for improved accuracy
+	if (typeof window === 'object' && typeof window.PalmSystem === 'object') {
+		this.webos = true;
+	}
 }
 
 EnyoLoader.prototype = new Loader();
@@ -217,3 +223,4 @@ EnyoLoader.prototype.isAvailable = function (_root, path) {
 
 export default EnyoLoader;
 export {EnyoLoader as Loader};
+

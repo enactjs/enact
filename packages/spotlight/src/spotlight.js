@@ -32,7 +32,6 @@ const Spotlight = (function() {
 		straightOverlapThreshold: 0.5,
 		rememberSource: false,
 		selectorDisabled: false,
-		disabled: false,
 		defaultElement: '',     // <extSelector> except "@" syntax.
 		enterTo: '',            // '', 'last-focused', 'default-element'
 		leaveFor: null,         // {left: <extSelector>, right: <extSelector>, up: <extSelector>, down: <extSelector>}
@@ -533,16 +532,11 @@ const Spotlight = (function() {
 	}
 
 	function getContainerId (elem) {
-		let containerId;
 		for (let id in _containers) {
 			if (!_containers[id].selectorDisabled && matchSelector(elem, _containers[id].selector)) {
-				containerId = id;
-				if (id !== spotlightRootContainerName) {
-					break;
-				}
+				return id;
 			}
 		}
-		return containerId;
 	}
 
 	function getContainerNavigableElements (containerId) {
@@ -755,20 +749,6 @@ const Spotlight = (function() {
 			};
 
 			let nextContainerId = getContainerId(next);
-
-			if (_containers[nextContainerId].disabled) {
-				let nextContainerElements = containerNavigableElements[nextContainerId];
-				for (let i = 0, len = nextContainerElements.length; i < len; ++i) {
-					allNavigableElements.splice(allNavigableElements.indexOf(nextContainerElements[i]), 1);
-				}
-				next = navigate(
-					currentFocusedElement,
-					direction,
-					exclude(allNavigableElements, nextContainerElements),
-					config
-				);
-				nextContainerId = next ? getContainerId(next) : currentContainerId;
-			}
 
 			if (currentContainerId !== nextContainerId) {
 				let result = gotoLeaveFor(currentContainerId, direction);
@@ -1009,22 +989,6 @@ const Spotlight = (function() {
 		enableSelector: function (containerId) {
 			if (_containers[containerId]) {
 				_containers[containerId].selectorDisabled = false;
-				return true;
-			}
-			return false;
-		},
-
-		disable: function (containerId) {
-			if (_containers[containerId]) {
-				_containers[containerId].disabled = true;
-				return true;
-			}
-			return false;
-		},
-
-		enable: function (containerId) {
-			if (_containers[containerId]) {
-				_containers[containerId].disabled = false;
 				return true;
 			}
 			return false;

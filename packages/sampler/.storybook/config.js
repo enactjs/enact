@@ -1,9 +1,12 @@
 import {configure, setAddon, addDecorator} from '@kadira/storybook';
 import infoAddon from '@kadira/react-storybook-addon-info';
+import {withKnobs} from '@kadira/storybook-addon-knobs';
 //import backgrounds from 'react-storybook-addon-backgrounds';
 import Moonstone from '../src/MoonstoneEnvironment';
+const req = require.context('../stories/moonstone-stories', true, /.js$/)
 
 addDecorator(Moonstone);
+addDecorator(withKnobs);
 /* Disabling until background works.  TODO: Re-enable import here and in addons.js.
 addDecorator(backgrounds([
 	{name: 'black', value: '#000000'},
@@ -16,24 +19,7 @@ addDecorator(backgrounds([
 setAddon(infoAddon);
 
 function loadStories () {
-	require('../stories/moonstone-stories/Button.js');
-	require('../stories/moonstone-stories/CheckboxItem.js');
-	require('../stories/moonstone-stories/Divider.js');
-	require('../stories/moonstone-stories/ExpandableList.js');
-	require('../stories/moonstone-stories/Icon.js');
-	require('../stories/moonstone-stories/IconButton.js');
-	require('../stories/moonstone-stories/IncrementSlider.js');
-	require('../stories/moonstone-stories/Input.js');
-	require('../stories/moonstone-stories/Item.js');
-	require('../stories/moonstone-stories/LabeledItem.js');
-	require('../stories/moonstone-stories/Picker.js');
-	require('../stories/moonstone-stories/ProgressBar.js');
-	require('../stories/moonstone-stories/RadioItem.js');
-	require('../stories/moonstone-stories/RangePicker.js');
-	require('../stories/moonstone-stories/SelectableItem.js');
-	require('../stories/moonstone-stories/Slider.js');
-	require('../stories/moonstone-stories/SwitchItem.js');
-	require('../stories/moonstone-stories/ToggleButton.js');
+	req.keys().forEach((filename) => req(filename))
 }
 
 configure(loadStories, module);

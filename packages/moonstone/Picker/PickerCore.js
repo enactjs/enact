@@ -1,3 +1,4 @@
+import * as jobs from '@enact/core/jobs';
 import {SlideLeftArranger, SlideBottomArranger, ViewManager} from '@enact/ui/ViewManager';
 import R from 'ramda';
 import React from 'react';
@@ -24,7 +25,15 @@ const selectIncIcon = selectIcon('incrementIcon', 'arrowlargeup', 'arrowlargerig
 
 const selectDecIcon = selectIcon('decrementIcon', 'arrowlargedown', 'arrowlargeleft');
 
+const jobNames = {
+	emulateMouseUp: 'PickerCore.emulateMouseUp'
+};
+
+const emulateMouseEventsTimeout = 175;
+
 // Components
+const TransparentIconButton = (props) => <IconButton {...props} backgroundOpacity="transparent" />;
+
 const PickerCore = class extends React.Component {
 	static displayName = 'PickerCore'
 
@@ -111,7 +120,7 @@ const PickerCore = class extends React.Component {
 		joined: React.PropTypes.bool,
 
 		/**
-		 * By default, the picker will animation transitions between items if it has a defined
+		 * By default, the picker will animate transitions between items if it has a defined
 		 * `width`. Specifying `noAnimation` will prevent any transition animation for the
 		 * component.
 		 *
@@ -157,11 +166,11 @@ const PickerCore = class extends React.Component {
 		/**
 		 * Which button (increment, decrement, or neither) is pressed
 		 *
-		 * @type {String|null}
+		 * @type {Number|null}
 		 * @public
 		 */
 		pressed: React.PropTypes.oneOfType([
-			React.PropTypes.string,
+			React.PropTypes.number,
 			React.PropTypes.bool
 		]),
 
@@ -196,7 +205,7 @@ const PickerCore = class extends React.Component {
 
 		/*
 		 * Should the picker stop incrementing when the picker reaches the last element? Set `wrap`
-		 * to true to allow the picker to continue from the opposite end of the list of options.
+		 * to `true` to allow the picker to continue from the opposite end of the list of options.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -205,6 +214,7 @@ const PickerCore = class extends React.Component {
 	}
 
 	static defaultProps = {
+		orientation: 'horizontal',
 		step: 1,
 		value: 0
 	}
@@ -225,36 +235,60 @@ const PickerCore = class extends React.Component {
 		}
 	}
 
+	componentWillUnmount () {
+		for (const job of Object.keys(jobNames)) {
+			jobs.stopJob(jobNames[job]);
+		}
+	}
+
 	isButtonDisabled = (delta) => {
 		const {disabled, min, max, value, wrap} = this.props;
 		return disabled || (!wrap && R.clamp(min, max, value + delta) === value);
 	}
 
-	handleChange = (n) => {
-		const {min, max, disabled, value, wrap, onChange} = this.props;
+	handleChange = (dir) => {
+		const {disabled, max, min, onChange, step, value, wrap} = this.props;
 		if (!disabled && onChange) {
-			const next = wrap ? wrapRange(min, max, value + n) : R.clamp(min, max, value + n);
-			onChange({
-				value: next
-			});
+			const next = wrap ? wrapRange(min, max, value + (dir * step)) : R.clamp(min, max, value + (dir * step));
+			if (next !== value) {
+				onChange({
+					value: next
+				});
+			}
 		}
 	}
 
-	handleDecClick = () => this.handleChange(-this.props.step)
+	handleDecClick = () => this.handleChange(-1)
 
-	handleIncClick = () => this.handleChange(this.props.step)
+	handleIncClick = () => this.handleChange(1)
 
-	handleDown = (which, ev) => {
+	handleDown = (dir) => {
 		const {joined, onMouseDown} = this.props;
 		if (joined && onMouseDown) {
-			onMouseDown({pressed: which});
-			ev.stopPropagation();
+			onMouseDown({pressed: dir});
 		}
 	}
 
-	handleDecDown = (ev) => this.handleDown('decrement', ev)
+	handleDecDown = () => this.handleDown(-1)
 
-	handleIncDown = (ev) => this.handleDown('increment', ev)
+	handleIncDown = () => this.handleDown(1)
+
+	handleWheel = (ev) => {
+		const {onMouseUp} = this.props;
+		const dir = Math.sign(ev.deltaY);
+
+		// We'll sometimes get a 0/-0 wheel event we need to ignore
+		if (dir) {
+			// fire the onChange event
+			this.handleChange(dir);
+			// simulate mouse down
+			this.handleDown(dir);
+			// set a timer to simulate the mouse up
+			jobs.startJob(jobNames.emulateMouseUp, onMouseUp, emulateMouseEventsTimeout);
+			// prevent the default scroll behavior to avoid bounce back
+			ev.preventDefault();
+		}
+	}
 
 	determineClasses () {
 		const {joined, orientation, pressed, step, width} = this.props;
@@ -263,8 +297,8 @@ const PickerCore = class extends React.Component {
 			css[orientation],
 			css[width],
 			joined ? css.joined : null,
-			!this.isButtonDisabled(step * -1) && pressed === 'decrement' ? css.decrementing : null,
-			!this.isButtonDisabled(step) && pressed === 'increment' ? css.incrementing : null,
+			!this.isButtonDisabled(step * -1) && pressed === -1 ? css.decrementing : null,
+			!this.isButtonDisabled(step) && pressed === 1 ? css.incrementing : null,
 			this.props.className
 		].join(' ');
 	}
@@ -289,12 +323,13 @@ const PickerCore = class extends React.Component {
 		delete rest.max;
 		delete rest.min;
 		delete rest.onChange;
+		delete rest.onMouseDown;
 		delete rest.pressed;
 		delete rest.reverseTransition;
 		delete rest.value;
 		delete rest.wrap;
 
-		const ButtonType = joined ? Icon : IconButton;
+		const ButtonType = joined ? Icon : TransparentIconButton;
 		const incrementIcon = selectIncIcon(this.props);
 		const decrementIcon = selectDecIcon(this.props);
 
@@ -302,20 +337,23 @@ const PickerCore = class extends React.Component {
 		const incrementerDisabled = this.isButtonDisabled(step);
 		const classes = this.determineClasses();
 
+		const handleIncClick = incrementerDisabled ? null : this.handleIncClick;
+		const handleDecClick = decrementerDisabled ? null : this.handleDecClick;
+
 		let arranger;
 		if (width && !disabled) {
 			arranger = orientation === 'vertical' ? SlideBottomArranger : SlideLeftArranger;
 		}
 
 		return (
-			<div {...rest} className={classes} disabled={disabled}>
-				<span className={css.incrementer} disabled={incrementerDisabled} onClick={this.handleIncClick} onMouseDown={this.handleIncDown} onMouseUp={onMouseUp}>
+			<div {...rest} className={classes} disabled={disabled} onWheel={joined ? this.handleWheel : null}>
+				<span className={css.incrementer} disabled={incrementerDisabled} onClick={handleIncClick} onMouseDown={this.handleIncDown} onMouseUp={onMouseUp}>
 					<ButtonType disabled={incrementerDisabled}>{incrementIcon}</ButtonType>
 				</span>
 				<ViewManager arranger={arranger} duration={200} index={index} noAnimation={noAnimation} reverseTransition={this.reverseTransition} className={css.valueWrapper}>
 					{children}
 				</ViewManager>
-				<span className={css.decrementer} disabled={decrementerDisabled} onClick={this.handleDecClick} onMouseDown={this.handleDecDown} onMouseUp={onMouseUp}>
+				<span className={css.decrementer} disabled={decrementerDisabled} onClick={handleDecClick} onMouseDown={this.handleDecDown} onMouseUp={onMouseUp}>
 					<ButtonType disabled={decrementerDisabled}>{decrementIcon}</ButtonType>
 				</span>
 			</div>

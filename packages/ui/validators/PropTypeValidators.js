@@ -37,4 +37,9 @@ const checkDefaultBounds = (props, propName, componentName, ...rest) => {
 
 const chainableCheckDefaultBounds = createChainableTypeChecker(checkDefaultBounds);
 
-export {chainableCheckDefaultBounds as checkDefaultBounds};
+const anyPrimitive = PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]);
+
+export {
+	anyPrimitive,
+	chainableCheckDefaultBounds as checkDefaultBounds
+};

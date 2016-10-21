@@ -5,25 +5,12 @@
  * @module @enact/ui/ViewManager
  */
 
-import R from 'ramda';
+import {childrenEquals} from '@enact/core/util';
 import React from 'react';
-import TransitionGroup from './TransitionGroup';
 
-import {wrapWithView} from './View';
 import {shape} from './Arranger';
-
-const keys = R.compose(R.sort((a, b) => a - b), R.map(R.prop('key')));
-const equals = R.useWith(R.equals, [keys, keys]);
-const childrenEquals = (prev, next) => {
-	const prevChildren = React.Children.toArray(prev);
-	const nextChildren = React.Children.toArray(next);
-
-	if (prevChildren.length !== nextChildren.length) {
-		return false;
-	} else {
-		return equals(prevChildren, nextChildren);
-	}
-};
+import TransitionGroup from './TransitionGroup';
+import {wrapWithView} from './View';
 
 /**
  * A `ViewManager` controls the visibility of a configurable number of views, allowing for them to be
@@ -115,15 +102,6 @@ class ViewManager extends React.Component {
 		component: 'div',
 		duration: 300,
 		index: 0
-	}
-
-	shouldComponentUpdate (nextProps) {
-		// update when the index changes or the children change
-		if (this.props.index !== nextProps.index) {
-			return true;
-		} else {
-			return !childrenEquals(this.props.children, nextProps.children);
-		}
 	}
 
 	componentWillReceiveProps (nextProps) {

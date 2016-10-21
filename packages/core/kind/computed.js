@@ -34,12 +34,12 @@ import R from 'ramda';
  */
 const computed = (cfg, props, ...args) => {
 	const keys = Object.keys(cfg);
-
+	const updated = {};
 	for (let i = keys.length - 1; i >= 0; i--) {
-		props[keys[i]] = cfg[keys[i]](props, ...args);
+		updated[keys[i]] = cfg[keys[i]](props, ...args);
 	}
 
-	return props;
+	return Object.assign(props, updated);
 };
 
 // Reducer to chain computed property transformations

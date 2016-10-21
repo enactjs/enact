@@ -34,14 +34,12 @@
 
 .button {
 	.moon-large-button-text();
-
 	position: relative;
 	overflow: visible;
 	height: @moon-button-height;
 	line-height: (@moon-button-height - (2 * @moon-button-border-width));
-	border-radius: @moon-button-border-radius;
-	background-color: @moon-button-background-color;
-	border: @moon-button-border-width solid transparent;
+	background-color: transparent;
+	border: 0 transparent none;
 	cursor: pointer;
 	white-space: nowrap;
 	display: inline-block;
@@ -52,48 +50,46 @@
 	margin: 0 @moon-spotlight-outset;
 	color: @moon-button-text-color;
 	box-sizing: border-box;
-	// -webkit-transition: transform 0.2s ease-out;
-	-webkit-animation-duration: 0.2s;
-	-webkit-animation-iteration-count: 1;
-	-webkit-animation-timing-function: ease-out;
-	// transition: transform 0.2s ease-out;
-	animation-duration: 0.2s;
-	animation-iteration-count: 1;
-	animation-timing-function: ease-out;
-	vertical-align: middle;
+	z-index: 0;
 
 	> * {
 		text-align: center;
 	}
 
+	.bg {
+		.position(0);
+		position: absolute;
+		content: '';
+		background-color: inherit;
+		z-index: -1;
+		background-color: @moon-button-background-color;
+		border: @moon-button-border-width solid transparent;
+		border-radius: @moon-button-border-radius;
+
+		transform: translateZ(0);
+		will-change: transform;
+		-webkit-animation-duration: 0.2s;
+		-webkit-animation-iteration-count: 1;
+		-webkit-animation-timing-function: ease-out;
+		animation-duration: 0.2s;
+		animation-iteration-count: 1;
+		animation-timing-function: ease-out;
+	}
+
 	// Need 100% width for marquee in button
-	.moon-marquee {
+	.marquee {
 		width: 100%;
 		vertical-align: top;
 		text-align: center;
 	}
 	.moon-taparea(@moon-button-height);
 
-	// Animation Prep
-	&,
-	&:before,
-	&:after,
-	.client {
-		will-change: transform;
-	}
-
-	.client {
-		-webkit-transform: translateZ(0);
-		-webkit-animation: inherit;
-		transform: translateZ(0);
-		animation: inherit;
-	}
-
 	&.minWidth {
 		min-width: @moon-button-large-min-width;
 	}
 
 	&.small {
+		.moon-small-button-text();
 		height: @moon-button-small-height;
 		min-width: @moon-button-small-height;
 		line-height: (@moon-button-small-height - (2 * @moon-button-border-width));
@@ -108,11 +104,11 @@
 		.moon-taparea(@moon-button-small-height);
 	}
 
-	&.translucent {
+	&.translucent .bg {
 		background-color: fade(@moon-button-background-color, @moon-button-translucent-opacity);
 	}
 
-	&.transparent {
+	&.transparent .bg {
 		background-color: transparent;
 	}
 
@@ -120,33 +116,36 @@
 	&:not([disabled]) {
 		&.pressed,
 		&:global(.spottable):active {
-			-webkit-animation-name: expand;
-			animation-name: expand;
-
-			&:before,
-			&:after,
-			.client {
-				-webkit-animation-name: contract;
-				animation-name: contract;
+			.bg {
+				-webkit-animation-name: expand;
+				animation-name: expand;
 			}
 		}
 
 		&:global(.spottable):focus {
-			background-color: @moon-spotlight-border-color;
-			color: @moon-spotlight-text-color;
-		}
+			background-color: transparent;
 
+			.bg {
+				background-color: @moon-spotlight-border-color;
+				color: @moon-spotlight-text-color;
+			}
+		}
 	}
 
 	// 'Selected' state
 	&.selected {
-		border-color: @moon-spotlight-border-color;
+		.bg {
+			border-color: @moon-spotlight-border-color;
+		}
 
 		// 'Selected+Focus' state, seen in grouped buttons
 		&:global(.spottable):focus {
-			border-color: @moon-active-spotlight-border-color;
-			background-color: @moon-spotlight-border-color;
 			color: @moon-spotlight-text-color;
+
+			.bg {
+				border-color: @moon-active-spotlight-border-color;
+				background-color: @moon-spotlight-border-color;
+			}
 		}
 	}
 
@@ -156,7 +155,10 @@
 
 	:global(.moon-neutral) & {
 		color: @moon-neutral-button-text-color;
-		background-color: @moon-neutral-button-bg-color;
+
+		&:before {
+			background-color: @moon-neutral-button-bg-color;
+		}
 
 		* {
 			color: inherit;
@@ -165,7 +167,10 @@
 		&[disabled],
 		&:global(.disabled) {
 			color: @moon-neutral-button-disabled-text-color;
-			background-color: @moon-neutral-button-disabled-bg-color;
+
+			.bg {
+				background-color: @moon-neutral-button-disabled-bg-color;
+			}
 		}
 	}
 }

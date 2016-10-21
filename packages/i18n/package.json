@@ -1,16 +1,13 @@
 {
   "name": "@enact/i18n",
   "main": "./src/index.js",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.2",
   "description": "Internationalization support for Enact using iLib",
   "scripts": {
     "clean": "enact clean",
     "lint": "enact lint --framework",
-    "pack": "enact pack",
-    "pack-p": "enact pack -p",
     "test": "echo \"No test suite\" && exit 0",
-    "transpile": "enact transpile",
-    "watch": "enact pack --watch"
+    "transpile": "enact transpile"
   },
   "license": "Apache-2.0",
   "keywords": [
@@ -35,7 +32,7 @@
     "extends": "enact-internal"
   },
   "dependencies": {
-    "@enact/core": "1.0.0-alpha.1",
+    "@enact/core": "^1.0.0-alpha.2",
     "react": "~15.3.2",
     "react-dom": "~15.3.2",
     "ramda": "~0.22.1",

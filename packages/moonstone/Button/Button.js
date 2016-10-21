@@ -11,16 +11,16 @@ import {Spottable} from '@enact/spotlight';
 import Pressable from '@enact/ui/Pressable';
 import React, {PropTypes} from 'react';
 
+import {MarqueeDecorator} from '../Marquee';
+
 import css from './Button.less';
 
 /**
  * {@link module:@enact/moonstone/Button~ButtonBase} is a stateless Button with Moonstone styling
- * applied.  If the Button's child component is text, it will be uppercased unless `preserveCase` is
- * set.  In most circumstances, you will want to use the Pressable and Spottable version:
+ * applied. In most circumstances, you will want to use the Pressable and Spottable version:
  * {@link module:@enact/moonstone/Button~Button}
  *
  * @class ButtonBase
- * @mixes module:@enact/i18n/Uppercase
  * @ui
  * @public
  */
@@ -64,7 +64,7 @@ const ButtonBase = kind({
 		minWidth: PropTypes.bool,
 
 		/**
-		 * Applies a pressed visual effect to the button
+		 * When `true`, a pressed visual effect is applied to the button
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -73,7 +73,7 @@ const ButtonBase = kind({
 		pressed: PropTypes.bool,
 
 		/**
-		 * Applies a selected visual effect to the button
+		 * When `true`, a selected visual effect is applied to the button
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -124,13 +124,12 @@ const ButtonBase = kind({
 
 		return (
 			<button {...rest}>
+				<div className={css.bg} />
 				<span className={css.client}>{children}</span>
 			</button>
 		);
 	}
 });
-
-const UcButtonBase = Uppercase(ButtonBase);
 
 /**
  * {@link module:@enact/moonstone/Button~Button} is a Button with Moonstone styling, Spottable and
@@ -149,7 +148,16 @@ const UcButtonBase = Uppercase(ButtonBase);
  * @ui
  * @public
  */
-const Button = Pressable(Spottable(UcButtonBase));
+const Button = Uppercase(
+	MarqueeDecorator(
+		{className: css.marquee},
+		Pressable(
+			Spottable(
+				ButtonBase
+			)
+		)
+	)
+);
 
 export default Button;
-export {Button, UcButtonBase as ButtonBase};
+export {Button, ButtonBase};
