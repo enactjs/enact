@@ -25,16 +25,4 @@ describe('Item Specs', () => {
 
 		expect(actual).to.equal(expected);
 	});
-
-	it('should only render a single \<div\> regardless of the number of children', function () {
-		const children = ['Line 1', 42, ['foo', 'bar']];
-		const item = mount(
-			<ItemBase>{children}</ItemBase>
-		);
-
-		const expected = 1;
-		const actual = item.find('div').length;
-
-		expect(actual).to.equal(expected);
-	});
 });

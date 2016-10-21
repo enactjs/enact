@@ -4,19 +4,6 @@
   "description": "Component and QA samples for Enact",
   "private": true,
   "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/enyojs/enact.git"
-  },
-  "keywords": [
-    "enact"
-  ],
-  "author": "EnyoJS",
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/enyojs/enact/issues"
-  },
-  "homepage": "https://github.com/enyojs/enact#readme",
   "scripts": {
     "test": "echo \"No test suite\" && exit 0",
     "pack": "build-storybook -c .storybook -o dist",
@@ -24,6 +11,7 @@
     "serve": "start-storybook -p 8080 -c .storybook",
     "serve-qa": "start-storybook -p 8080 -c .qa-storybook"
   },
+  "license": "Apache-2.0",
   "devDependencies": {
     "babel-core": "6.14.0",
     "babel-loader": "6.2.5",
@@ -37,13 +25,14 @@
     "eslint-config-enact": "enyojs/eslint-config-enact",
     "file-loader": "0.9.0",
     "graceful-fs": "4.1.8",
+    "graceful-fs-webpack-plugin": "github:enyojs/graceful-fs-webpack-plugin",
     "ilib-loader": "enyojs/ilib-loader",
     "json-loader": "0.5.4",
     "less": "2.7.1",
     "less-loader": "2.2.3",
     "resolution-independence": "0.0.3",
     "style-loader": "0.13.1",
-    "webos-meta-loader": "enyojs/webos-meta-loader",
+    "webos-meta-webpack-plugin": "github:enyojs/webos-meta-webpack-plugin",
     "webpack": "1.13.2"
   },
   "dependencies": {

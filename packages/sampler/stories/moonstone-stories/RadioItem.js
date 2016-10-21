@@ -2,7 +2,7 @@ import {RadioItemBase} from '@enact/moonstone/RadioItem';
 import {Toggleable} from '@enact/ui/Toggleable';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean} from '@kadira/storybook-addon-knobs';
+import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
 
 const RadioItem = Toggleable({prop: 'checked'}, RadioItemBase);
 RadioItem.displayName = 'RadioItem';
@@ -23,7 +23,7 @@ storiesOf('RadioItem')
 				inline={boolean('inline', false)}
 				onToggle={action('onToggle')}
 			>
-				Hello RadioItem
+				{text('children', 'Hello RadioItem')}
 			</RadioItem>
 		)
 	);

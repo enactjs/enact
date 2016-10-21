@@ -1,2 +1,11 @@
 // CheckboxItem.less
 //
+
+.checkboxItem {
+	&:global(.spottable):focus {
+		.translucent {
+			visibility: visible;
+			opacity: 0.3;
+		}
+	}
+}

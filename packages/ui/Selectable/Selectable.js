@@ -6,8 +6,8 @@
 
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
-import {cap} from '@enact/core/util';
-import React from 'react';
+import {cap, coerceArray} from '@enact/core/util';
+import React, {PropTypes} from 'react';
 
 const defaultConfig = {
 	/**
@@ -62,13 +62,31 @@ const Selectable = hoc(defaultConfig, (config, Wrapped) => {
 
 		static propTypes = {
 			/**
+			 * Selected value(s) for when first rendered.
+			 * @type {Array | String | Number | Boolean}
+			 * @public
+			 */
+			[defaultPropKey]: PropTypes.oneOfType([PropTypes.array, PropTypes.string, PropTypes.number, PropTypes.bool]),
+
+			/**
 			 * Controls whether the component is disabled.
 			 *
 			 * @type {Boolean}
 			 * @default false
 			 * @public
 			 */
-			disabled: React.PropTypes.bool
+			disabled: PropTypes.bool,
+
+			/**
+			 * Configures to allow multi-selection
+			 * @type {Boolean}
+			 * @default false
+			 */
+			multiple: PropTypes.bool
+		}
+
+		defaultProps: {
+			multiple: false
 		}
 
 		constructor (props) {
@@ -87,9 +105,21 @@ const Selectable = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleSelect = (ev) => {
 			if (!this.props.disabled) {
-				const selected = ev[prop];
+				let selected = ev[prop];
+				if (this.props.multiple) {
+					const selectedArr = coerceArray(this.state.selected || []);
+					const index = selectedArr.indexOf(selected);
+					if (index >= 0) {
+						selectedArr.splice(index, 1);
+					} else {
+						selectedArr.push(selected);
+					}
+
+					selected = selectedArr;
+				}
+
 				this.setState({selected});
-				forwardSelect(ev, this.props);
+				forwardSelect(Object.assign({}, ev, {[prop]: selected}), this.props);
 			}
 		}
 
@@ -98,6 +128,7 @@ const Selectable = hoc(defaultConfig, (config, Wrapped) => {
 			if (select) props[select] = this.handleSelect;
 			if (prop) props[prop] = this.state.selected;
 			delete props[defaultPropKey];
+			delete props.multiple;
 
 			return <Wrapped {...props} />;
 		}
