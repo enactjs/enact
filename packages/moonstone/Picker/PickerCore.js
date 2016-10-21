@@ -191,7 +191,7 @@ const PickerCore = class extends React.Component {
 		 */
 		value: steppedNumber,
 
-		/*
+		/**
 		 * Choose a specific size for your picker. `'small'`, `'medium'`, `'large'`, or set to `null` to
 		 * assume auto-sizing. `'small'` is good for numeric pickers, `'medium'` for single or short
 		 * word pickers, `'large'` for maximum-sized pickers.
@@ -201,7 +201,7 @@ const PickerCore = class extends React.Component {
 		 */
 		width: React.PropTypes.oneOf([null, 'small', 'medium', 'large']),
 
-		/*
+		/**
 		 * Should the picker stop incrementing when the picker reaches the last element? Set `wrap`
 		 * to `true` to allow the picker to continue from the opposite end of the list of options.
 		 *
@@ -306,7 +306,9 @@ const PickerCore = class extends React.Component {
 		const {
 			noAnimation,
 			children,
+			decrementerRef,
 			disabled,
+			incrementerRef,
 			index,
 			joined,
 			onMouseUp,
@@ -346,13 +348,13 @@ const PickerCore = class extends React.Component {
 		return (
 			<div {...rest} className={classes} disabled={disabled} onWheel={joined ? this.handleWheel : null}>
 				<span className={css.incrementer} disabled={incrementerDisabled} onClick={handleIncClick} onMouseDown={this.handleIncDown} onMouseUp={onMouseUp}>
-					<ButtonType disabled={incrementerDisabled}>{incrementIcon}</ButtonType>
+					<ButtonType disabled={incrementerDisabled} componentRef={incrementerRef}>{incrementIcon}</ButtonType>
 				</span>
 				<ViewManager arranger={arranger} duration={200} index={index} noAnimation={noAnimation} reverseTransition={this.reverseTransition} className={css.valueWrapper}>
 					{children}
 				</ViewManager>
 				<span className={css.decrementer} disabled={decrementerDisabled} onClick={handleDecClick} onMouseDown={this.handleDecDown} onMouseUp={onMouseUp}>
-					<ButtonType disabled={decrementerDisabled}>{decrementIcon}</ButtonType>
+					<ButtonType disabled={decrementerDisabled} componentRef={decrementerRef}>{decrementIcon}</ButtonType>
 				</span>
 			</div>
 		);

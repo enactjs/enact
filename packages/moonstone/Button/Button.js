@@ -115,7 +115,7 @@ const ButtonBase = kind({
 		)
 	},
 
-	render: ({children, ...rest}) => {
+	render: ({children, componentRef, ...rest}) => {
 		delete rest.backgroundOpacity;
 		delete rest.minWidth;
 		delete rest.pressed;
@@ -123,7 +123,7 @@ const ButtonBase = kind({
 		delete rest.small;
 
 		return (
-			<button {...rest}>
+			<button {...rest} ref={componentRef}>
 				<div className={css.bg} />
 				<span className={css.client}>{children}</span>
 			</button>

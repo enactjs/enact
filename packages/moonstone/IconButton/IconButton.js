@@ -116,9 +116,9 @@ const IconButtonBase = kind({
 		className: ({small, styler}) => styler.append({small})
 	},
 
-	render: ({children, small, src, ...rest}) => {
+	render: ({children, componentRef, small, src, ...rest}) => {
 		return (
-			<Button {...rest} small={small} minWidth={false} marqueeDisabled>
+			<Button {...rest} small={small} minWidth={false} marqueeDisabled componentRef={componentRef}>
 				<Icon small={small} className={css.icon} src={src}>{children}</Icon>
 			</Button>
 		);

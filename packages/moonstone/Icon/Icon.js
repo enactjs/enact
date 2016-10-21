@@ -112,11 +112,11 @@ const IconBase = kind({
 		}
 	},
 
-	render: (props) => {
-		delete props.small;
-		delete props.src;
+	render: ({componentRef, ...rest}) => {
+		delete rest.small;
+		delete rest.src;
 
-		return <div {...props} />;
+		return <div {...rest} ref={componentRef} />;
 	}
 });
 
