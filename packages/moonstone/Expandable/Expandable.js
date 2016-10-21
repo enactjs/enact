@@ -150,16 +150,16 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => {
 			wrapMethod(config.toggle, onToggle, rest);
 
 			return (
-			<ExpandableContainer style={style} disabled={disabled} open={open}>
-				<LabeledItem
-					disabled={disabled}
-					label={determinedLabel}
-					onClick={handleOpen}
-				>{title}</LabeledItem>
-				<TransitionContainer data-container-disabled={!open} visible={open} duration="short" type="clip">
-					<Wrapped {...rest} disabled={disabled} />
-				</TransitionContainer>
-			</ExpandableContainer>
+				<ExpandableContainer style={style} disabled={disabled} open={open}>
+					<LabeledItem
+						disabled={disabled}
+						label={determinedLabel}
+						onClick={handleOpen}
+					>{title}</LabeledItem>
+					<TransitionContainer data-container-disabled={!open} visible={open} duration="short" type="clip">
+						<Wrapped {...rest} disabled={disabled} />
+					</TransitionContainer>
+				</ExpandableContainer>
 		);
 		}
 	});
