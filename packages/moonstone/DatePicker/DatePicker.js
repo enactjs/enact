@@ -1,0 +1,173 @@
+import DateFactory from 'ilib/DateFactory';
+import DateFmt from 'ilib/DateFmt';
+import React from 'react';
+
+import Expandable from '../Expandable';
+
+import DatePickerBase from './DatePickerBase';
+
+const ExpandableDatePicker = Expandable(
+	{showLabel: true},
+	DatePickerBase
+);
+
+const DatePicker = class extends React.Component {
+	static displayName = 'DatePicker'
+
+	propTypes: {
+		onChange: React.PropTypes.func,
+		open: React.PropTypes.bool,
+		value: React.PropTypes.any // it's a date but React.PropTypes.instanceOf breaks the linter
+	}
+
+	constructor (props) {
+		super(props);
+		this.cancelled = false;
+		this.state = {
+			open: !!props.open,
+			value: props.value
+		};
+
+		this.dateFormat = new DateFmt({
+			date: 'dmwy',
+			length: 'full',
+			timezone: 'local',
+			useNative: false
+		});
+
+		this.order = this.dateFormat.getTemplate().match(/([mdy]+)/ig).map(s => s[0].toLowerCase());
+	}
+
+	componentWillReceiveProps (nextProps) {
+		this.setState({
+			open: 'open' in nextProps ? nextProps.open : this.state.open,
+			value: nextProps.value
+		});
+	}
+
+	updateValue = (value) => {
+		this.setState({
+			value: value
+		});
+	}
+
+	calcValue = () => {
+		let value = this.state.value;
+		if (this.state.open) {
+			value = DateFactory({
+				unixtime: value ? value.getTime() : Date.now(),
+				timezone: 'local'
+			});
+		}
+
+		return value;
+	}
+
+	calcDateComponents = (value) => {
+		let values = {
+			maxMonths: 12,
+			maxDays: 31,
+			year: 1900,
+			month: 1,
+			date: 1
+		};
+
+		if (value) {
+			values.year = value.getYears();
+			values.month = value.getMonths();
+			values.date = value.getDays();
+			values.maxMonths = this.dateFormat.cal.getNumMonths(values.year);
+			values.maxDays = this.dateFormat.cal.getMonLength(values.month, values.year);
+		}
+
+		return values;
+	}
+
+	handleCancel = () => {
+		this.cancelled = true;
+	}
+
+	handleChangeDate = (ev) => {
+		const v = this.calcValue();
+		const value = DateFactory({
+			year: v.getYears(),
+			month: v.getMonths(),
+			day: ev.value
+		});
+
+		this.updateValue(value);
+	}
+
+	handleChangeMonth = (ev) => {
+		const v = this.calcValue();
+		const value = DateFactory({
+			year: v.getYears(),
+			month: ev.value,
+			day: v.getDays()
+		});
+
+		this.updateValue(value);
+	}
+
+	handleChangeYear = (ev) => {
+		const v = this.calcValue();
+		const value = DateFactory({
+			year: ev.value,
+			month: v.getMonths(),
+			day: v.getDays()
+		});
+
+		this.updateValue(value);
+	}
+
+	handleClose = () => {
+		const cancelled = this.cancelled;
+		const value = cancelled ? this.props.value : this.state.value;
+		this.setState({
+			open: false,
+			value
+		}, () => {
+			// need to defer notifications until after the state change to prevent new props coming
+			// in and inadvernently overwriting the above change
+			if (this.props.onChange && !cancelled) {
+				this.props.onChange({
+					value
+				});
+			}
+		});
+
+		this.cancelled = false;
+	}
+
+	handleOpen = () => {
+		this.setState({
+			open: true
+		});
+	}
+
+	render () {
+		const value = this.calcValue();
+		const label = value ? this.dateFormat.format(value) : null;
+		const dateComponents = this.calcDateComponents(value);
+
+		return (
+			<ExpandableDatePicker
+				{...this.props}
+				{...dateComponents}
+				dateFormat={this.dateFormat}
+				label={label}
+				onCancel={this.handleCancel}
+				onChangeDate={this.handleChangeDate}
+				onChangeMonth={this.handleChangeMonth}
+				onChangeYear={this.handleChangeYear}
+				onClose={this.handleClose}
+				onOpen={this.handleOpen}
+				order={this.order}
+				value={value}
+			/>
+		);
+	}
+};
+
+export default DatePicker;
+export {DatePicker, DatePickerBase};

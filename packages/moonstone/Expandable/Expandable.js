@@ -10,10 +10,10 @@ import LabeledItem from '../LabeledItem';
 import ExpandableContainer from './ExpandableContainer';
 
 const defaultConfig = {
-	open: null,
 	close: null,
-	toggle: null,
-	prop: 'value'
+	open: null,
+	showLabel: 'auto',
+	toggle: null
 };
 
 const wrapMethod = (method, handler, props) => {
@@ -29,6 +29,8 @@ const wrapMethod = (method, handler, props) => {
 const TransitionContainer = SpotlightContainerDecorator(Transition);
 
 const Expandable = hoc(defaultConfig, (config, Wrapped) => {
+	const {close: cfgClose, open: cfgOpen, showLabel, toggle} = config;
+
 	const ExpandableBase = kind({
 		name: 'Expandable',
 
@@ -86,20 +88,6 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => {
 			 */
 			onOpen: PropTypes.func,
 
-			// NOTE: considering removing onToggle as I can't see a good use for it once the History API
-			// is in place managing the state of `open`. It's adding complexity without a significant
-			// value, imo.
-
-			/**
-			 * Called to request to toggle the expandable's open state. If `onToggle` is specified along
-			 * with `onOpen` or `onClose`, `onToggle` will be called first, followed by either `onOpen` or `onClose`.
-			 *
-			 * @type {Function}
-			 * @default null
-			 * @public
-			 */
-			onToggle: PropTypes.func,
-
 			/**
 			 * When `true`, the control in rendered in the expanded state, with the contents visible?
 			 *
@@ -107,17 +95,7 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @default false
 			 * @public
 			 */
-			open: PropTypes.bool,
-
-			/**
-			 * The initial value or index of the contents of the expandable. Setting this enables
-			 * the initial render of the child component to be pre-selected.
-			 *
-			 * @type {String|Number}
-			 * @default null
-			 * @public
-			 */
-			value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+			open: PropTypes.bool
 		},
 
 		defaultProps: {
@@ -126,11 +104,13 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => {
 		},
 
 		computed: {
-			determinedLabel: ({[config.prop]: value, disabled, label, noneText, open}) => {
-				if (open && !disabled) return null;
-				if (label != null) return label;
-				if (value != null) return value;
-				return noneText;
+			label: ({disabled, label, noneText, open}) => {
+				const isOpen = open && !disabled;
+				if (showLabel === true || (!isOpen && showLabel)) {
+					return label || noneText;
+				} else {
+					return null;
+				}
 			},
 			handleOpen: ({disabled, onClose, onOpen, onToggle, open}) => {
 				// When disabled, don't attach an event
@@ -153,19 +133,19 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => {
 			open: ({disabled, open}) => open && !disabled
 		},
 
-		render: ({determinedLabel, disabled, handleOpen, open, style, title, onClose, onOpen, onToggle, ...rest}) => {
+		render: ({label, disabled, handleOpen, open, style, title, onClose, onOpen, onToggle, ...rest}) => {
 			delete rest.noneText;
 			delete rest.label;
 
-			wrapMethod(config.close, onClose, rest);
-			wrapMethod(config.open, onOpen, rest);
-			wrapMethod(config.toggle, onToggle, rest);
+			wrapMethod(cfgClose, onClose, rest);
+			wrapMethod(cfgOpen, onOpen, rest);
+			wrapMethod(toggle, onToggle, rest);
 
 			return (
 				<ExpandableContainer style={style} disabled={disabled} open={open}>
 					<LabeledItem
 						disabled={disabled}
-						label={determinedLabel}
+						label={label}
 						onClick={handleOpen}
 					>{title}</LabeledItem>
 					<TransitionContainer data-container-disabled={!open} visible={open} duration="short" type="clip">

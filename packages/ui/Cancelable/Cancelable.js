@@ -49,6 +49,10 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'Cancelable';
 
+		propTypes: {
+			onCancel: React.PropTypes.func
+		}
+
 		componentDidMount () {
 			if (modal) {
 				on('keyup', this.handleModalCancel);
@@ -62,6 +66,10 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		cancel = () => {
+			if (this.props.onCancel) {
+				this.props.onCancel();
+			}
+
 			if (typeof onCancel === 'string' && typeof this.props[onCancel] === 'function') {
 				this.props[onCancel]();
 			} else if (typeof onCancel === 'function') {
@@ -84,30 +92,33 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 			stopImmediate
 		)
 
-		renderWrapped () {
+		renderWrapped (props) {
 			return (
 				<Component onKeyUp={this.handleKeyUp}>
-					<Wrapped {...this.props} />
+					<Wrapped {...props} />
 				</Component>
 			);
 		}
 
-		renderUnwrapped () {
+		renderUnwrapped (props) {
 			return (
-				<Wrapped {...this.props} onKeyUp={this.handleKeyUp} />
+				<Wrapped {...props} onKeyUp={this.handleKeyUp} />
 			);
 		}
 
-		renderModal () {
+		renderModal (props) {
 			return (
-				<Wrapped {...this.props} />
+				<Wrapped {...props} />
 			);
 		}
 
 		render () {
-			return	modal && this.renderModal() ||
-					Component && this.renderWrapped() ||
-					this.renderUnwrapped();
+			const props = Object.assign({}, this.props);
+			delete props.onCancel;
+
+			return	modal && this.renderModal(props) ||
+					Component && this.renderWrapped(props) ||
+					this.renderUnwrapped(props);
 		}
 	};
 });
