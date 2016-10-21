@@ -1,5 +1,6 @@
 // ToggleItem
 //
+@import '../styles/mixins.less';
 @import '../styles/variables.less';
 
 .toggleItem {
@@ -11,17 +12,11 @@
 
 
     .icon {
-        margin-top: 0;
-        margin-bottom: 0;
-        margin-left: 0;
+        margin: 0;
+        .margin-start-end(0, @moon-icon-margin);
 
         &:not(.checked) {
             visibility: hidden;
-        }
-
-        :global(.enact-locale-right-to-left) & {
-        	margin-right: 0;
-        	margin-left: @moon-icon-margin;
         }
     }
 
