@@ -116,10 +116,9 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => {
 		},
 
 		computed: {
-			determinedLabel: ({label, noneText, open}) => {
-				if (open) return null;
-				if (label != null && label !== '') return label;
-
+			determinedLabel: ({disabled, label, noneText, open}) => {
+				if (open && !disabled) return null;
+				if (label != null) return label;
 				return noneText;
 			},
 			handleOpen: ({disabled, onClose, onOpen, onToggle, open}) => {
@@ -139,7 +138,8 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => {
 						return handler;
 					}
 				}
-			}
+			},
+			open: ({disabled, open}) => open && !disabled
 		},
 		render: ({determinedLabel, disabled, handleOpen, open, style, title, onClose, onOpen, onToggle, ...rest}) => {
 			delete rest.noneText;

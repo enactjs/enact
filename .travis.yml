@@ -1,9 +1,9 @@
 language: node_js
-node_js: 
+node_js:
     - "node"
 sudo: false
 install:
-    - npm install -g eslint eslint-plugin-react eslint-plugin-babel babel-eslint
+    - npm install -g enyojs/enact-dev
     - npm install
     - npm run bootstrap
 script:
@@ -11,11 +11,10 @@ script:
     - npm run lerna -- run test
     - echo -e "\x1b\x5b35;1m*** Tests complete\x1b\x5b0m"
     - echo -e "\x1b\x5b35;1m*** Starting eslint...\x1b\x5b0m"
-    - npm run lerna -- exec -- eslint .
+    - npm run lerna -- run lint
     - echo -e "\x1b\x5b35;1m*** eslint complete\x1b\x5b0m"
     - echo -e "\x1b\x5b35;1m*** Starting sampler builds...\x1b\x5b0m"
     - cd packages/sampler
     - npm run pack
     - npm run pack-qa
     - echo -e "\x1b\x5b35;1m*** sampler build complete\x1b\x5b0m"
-
