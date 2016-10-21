@@ -56,26 +56,6 @@
 }
 
 .decorator {
-	.iconEnd {
-		padding: 0 0 0 9px;
-	}
-
-	.iconStart {
-		padding: 0 9px 0 0;
-	}
-
-	:global(.enact-locale-right-to-left) & {
-		.iconEnd {
-			padding: 0 9px 0 0;
-		}
-
-		.iconStart {
-			padding: 0 0 0 9px;
-		}
-	}
-
-	.moon-divider-text();
-
 	display: inline-block;
 	padding: 12px 30px;
 	border-radius: 1008px;
@@ -83,6 +63,19 @@
 	border: @moon-input-border-width solid transparent;
 	background-color: @moon-input-decorator-bg-color;
 	box-sizing: border-box;
+
+	.iconStart,
+	.iconEnd {
+		padding: 0;
+	}
+
+	.iconEnd {
+		.padding-start-end(0, 9px);
+	}
+
+	.iconStart {
+		.padding-start-end(9px, 0);
+	}
 
 	// RIGBY NOTE: multiline is a NOT YET IMPLEMENTED feature that combines <input> and <textarea>
 	// into one control, to simplify input handling.
