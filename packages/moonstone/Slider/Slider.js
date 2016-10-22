@@ -132,20 +132,21 @@ const SliderBase = kind({
 		loadedValue: ({backgroundPercent}) => (backgroundPercent + '%')
 	},
 
-	render: ({percentProgress, loadedValue, max, min, onChange, value, step, vertical, verticalHeight, verticalWidth, sliderRef, ...rest}) => {
+	render: ({percentProgress, loadedValue, max, min, onChange, value, step, vertical, verticalHeight, verticalWidth, sliderRef, barRef, knobRef, loaderRef, inputRef, ...rest}) => {
 		delete rest.backgroundPercent;
 		delete rest.pressed;
 
 		return (
 			<div {...rest} ref={sliderRef}>
 				<div className={css.visibleBar} style={verticalHeight}>
-					<div className={css.load} style={{[vertical ? 'height' : 'width']: loadedValue}} />
-					<div className={css.fill} style={{[vertical ? 'height' : 'width']: percentProgress}} />
-					<div className={css.knob} style={{[vertical ? 'bottom' : 'left']: percentProgress}} />
+					<div className={css.load} ref={loaderRef} style={{[vertical ? 'height' : 'width']: loadedValue}} />
+					<div className={css.fill} ref={barRef} style={{[vertical ? 'height' : 'width']: percentProgress}} />
+					<div className={css.knob} ref={knobRef} style={{[vertical ? 'top' : 'left']: percentProgress}} />
 				</div>
 				<input
 					className={css.sliderBar}
 					type="range"
+					ref={inputRef}
 					max={max}
 					min={min}
 					step={step}
@@ -263,12 +264,38 @@ class Slider extends React.Component {
 	updateValue = (event) => {
 		event.preventDefault();
 		throttleJob('sliderChange', () => {
-			this.setState({value: Number.parseInt(event.target.value)}, this.onChange);
+			const {backgroundPercent, max, vertical} = this.props;
+			const value = Number.parseInt(event.target.value, 10);
+			const percentage = (value / (max || SliderBase.defaultProps.max)) * 100 + '%';
+
+			this.loaderNode.style[vertical ? 'height' : 'width'] = backgroundPercent + '%';
+			this.barNode.style[vertical ? 'height' : 'width'] = percentage;
+			this.knobNode.style[vertical ? 'top' : 'left'] = percentage;
+			this.inputNode.value = value;
+
+			// yup, we're mutating state directly! :dealwithit:
+			this.state.value = value; // eslint-disable-line react/no-direct-mutation-state
 		}, changeDelayMS);
 	}
 
 	getSliderNode = (node) => {
 		this.sliderNode = node;
+	}
+
+	getBarNode = (node) => {
+		this.barNode = node;
+	}
+
+	getKnobNode = (node) => {
+		this.knobNode = node;
+	}
+
+	getLoaderNode = (node) => {
+		this.loaderNode = node;
+	}
+
+	getInputNode = (node) => {
+		this.inputNode = node;
 	}
 
 	handleClick = () => Spotlight.focus(this.sliderNode);
@@ -277,10 +304,13 @@ class Slider extends React.Component {
 		return (
 			<SliderBase
 				{...this.props}
-				value={this.state.value}
 				onChange={this.updateValue}
-				sliderRef={this.getSliderNode}
 				onClick={this.handleClick}
+				barRef={this.getBarNode}
+				inputRef={this.getInputNode}
+				knobRef={this.getKnobNode}
+				loaderRef={this.getLoaderNode}
+				sliderRef={this.getSliderNode}
 			/>
 		);
 	}
