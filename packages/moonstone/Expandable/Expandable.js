@@ -1,4 +1,4 @@
-import {kind, hoc} from '@enact/core';
+import {kind} from '@enact/core';
 import Cancelable from '@enact/ui/Cancelable';
 import Toggleable from '@enact/ui/Toggleable';
 import Transition from '@enact/ui/Transition';
@@ -8,12 +8,6 @@ import React, {PropTypes} from 'react';
 import LabeledItem from '../LabeledItem';
 
 import ExpandableContainer from './ExpandableContainer';
-
-const defaultConfig = {
-	open: null,
-	close: null,
-	toggle: null
-};
 
 const wrapMethod = (method, handler, props) => {
 	if (method && handler) {
@@ -27,7 +21,7 @@ const wrapMethod = (method, handler, props) => {
 
 const TransitionContainer = SpotlightContainerDecorator(Transition);
 
-const Expandable = hoc(defaultConfig, (config, Wrapped) => {
+const Expandable = (Wrapped) => {
 	const ExpandableBase = kind({
 		name: 'Expandable',
 
@@ -118,16 +112,16 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => {
 		computed: {
 			determinedLabel: ({disabled, label, noneText, open}) => {
 				if (open && !disabled) return null;
-				if (label != null) return label;
+				if (label != null && label !== '') return label;
 				return noneText;
 			},
 			handleOpen: ({disabled, onClose, onOpen, onToggle, open}) => {
-			// When disabled, don't attach an event
+				// When disabled, don't attach an event
 				if (!disabled) {
 					const handler = open ? onClose : onOpen;
 					if (onToggle && handler) {
-					// if we have both, we need to wrap them in a function so they can both be
-					// called.
+						// if we have both, we need to wrap them in a function so they can both be
+						// called.
 						return () => {
 							onToggle({open: !open});
 							handler();
@@ -141,13 +135,13 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => {
 			},
 			open: ({disabled, open}) => open && !disabled
 		},
-		render: ({determinedLabel, disabled, handleOpen, open, style, title, onClose, onOpen, onToggle, ...rest}) => {
+		render: ({determinedLabel, disabled, handleOpen, open, style, title, collapseFunc, onClose, ...rest}) => {
+			delete rest.onOpen;
+			delete rest.onToggle;
 			delete rest.noneText;
 			delete rest.label;
 
-			wrapMethod(config.close, onClose, rest);
-			wrapMethod(config.open, onOpen, rest);
-			wrapMethod(config.toggle, onToggle, rest);
+			wrapMethod(collapseFunc, onClose, rest);
 
 			return (
 				<ExpandableContainer style={style} disabled={disabled} open={open}>
@@ -160,7 +154,7 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => {
 						<Wrapped {...rest} disabled={disabled} />
 					</TransitionContainer>
 				</ExpandableContainer>
-		);
+			);
 		}
 	});
 
@@ -180,7 +174,7 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => {
 			ExpandableBase
 		)
 	);
-});
+};
 
 export default Expandable;
 export {Expandable};

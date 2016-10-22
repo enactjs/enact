@@ -94,9 +94,7 @@ const ExpandableListBase = kind({
 	}
 });
 
-const ExpandableList = Expandable({
-	close: 'onSelect'
-}, ExpandableListBase);
+const ExpandableList = Expandable(ExpandableListBase);
 
 export default ExpandableList;
 export {ExpandableList, ExpandableListBase};

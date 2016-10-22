@@ -48,6 +48,7 @@ class StatefulExpandableCheckboxItemGroup extends React.Component {
 				onOpen={this.handleOpen}
 				onClose={this.handleClose}
 				onSelect={this.handleSelect}
+				collapseFunc={'onSelect'}
 			/>
 		);
 	}

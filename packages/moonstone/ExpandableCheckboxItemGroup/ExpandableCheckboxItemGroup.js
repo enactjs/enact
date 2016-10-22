@@ -48,9 +48,7 @@ const ExpandableCheckboxItemGroupBase = (props) => (
  * @ui
  * @public
  */
-const ExpandableCheckboxItemGroup = Expandable({
-	close: 'onSelect'
-}, ExpandableCheckboxItemGroupBase);
+const ExpandableCheckboxItemGroup = Expandable(ExpandableCheckboxItemGroupBase);
 
 export default ExpandableCheckboxItemGroup;
 export {ExpandableCheckboxItemGroup, ExpandableCheckboxItemGroupBase};
