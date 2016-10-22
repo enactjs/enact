@@ -5,19 +5,121 @@ import React from 'react';
 import css from './DatePicker.less';
 import DateComponentPicker from './DateComponentPicker';
 
+
+/**
+* {@link module:@enact/moonstone/DatePicker~DatePickerBase} is the stateless functional date picker
+* component. Should not be used directly but may be composed within another component as it is
+* within {@link module:@enact/moonstone/DatePicker~DatePicker}.
+*
+* @class DatePickerBase
+* @ui
+* @private
+*/
 const DatePickerBase = kind({
 	name: 'DatePicker',
 
 	propTyptes: {
-		date: React.PropTypes.number,
-		maxDays: React.PropTypes.number,
-		maxMonths: React.PropTypes.number,
-		month: React.PropTypes.number,
+		/**
+		 * The `date` component of the Date
+		 *
+		 * @type {Number}
+		 * @required
+		 * @public
+		 */
+		date: React.PropTypes.number.isRequired,
+
+		/**
+		 * The number of days in the month
+		 *
+		 * @type {Number}
+		 * @required
+		 * @public
+		 */
+		maxDays: React.PropTypes.number.isRequired,
+
+		/**
+		 * The number of months in the year
+		 *
+		 * @type {Number}
+		 * @required
+		 * @public
+		 */
+		maxMonths: React.PropTypes.number.isRequired,
+
+		/**
+		 * The `month` component of the Date
+		 *
+		 * @type {Number}
+		 * @required
+		 * @public
+		 */
+		month: React.PropTypes.number.isRequired,
+
+		/**
+		 * The order in which the component pickers are displayed. Should be an array of 3 strings
+		 * containing one of `'m'`, `'d'`, and `'y'`.
+		 *
+		 * @type {String[]}
+		 * @required
+		 * @public
+		 */
+		order: React.PropTypes.arrayOf(React.PropTypes.oneOf(['m', 'd', 'y'])).isRequired,
+
+		/**
+		 * The `year` component of the Date
+		 *
+		 * @type {Number}
+		 * @required
+		 * @public
+		 */
+		year: React.PropTypes.number.isRequired,
+
+		/**
+		 * Handler for changes in the `date` component of the Date
+		 *
+		 * @type {Function}
+		 * @public
+		 */
 		onChangeDate: React.PropTypes.func,
+
+		/**
+		 * Handler for changes in the `month` component of the Date
+		 *
+		 * @type {Function}
+		 * @public
+		 */
 		onChangeMonth: React.PropTypes.func,
+
+		/**
+		 * Handler for changes in the `year` component of the Date
+		 *
+		 * @type {Function}
+		 * @public
+		 */
 		onChangeYear: React.PropTypes.func,
-		order: React.PropTypes.arrayOf(React.PropTypes.oneOf(['m', 'd', 'y'])),
-		year: React.PropTypes.number
+
+		/**
+		 * The maximum selectable `year` value
+		 *
+		 * @type {Number}
+		 * @default 2099
+		 * @public
+		 */
+		maxYear: React.PropTypes.number,
+
+		/**
+		 * The minimum selectable `year` value
+		 *
+		 * @type {Number}
+		 * @default 1900
+		 * @public
+		 */
+		minYear: React.PropTypes.number
+	},
+
+	defaultProps: {
+		maxYear: 2099,
+		minYear: 1900
 	},
 
 	styles: {
@@ -25,7 +127,7 @@ const DatePickerBase = kind({
 		className: 'datePicker'
 	},
 
-	render: ({date, maxDays, maxMonths, month, onChangeDate, onChangeMonth, onChangeYear, order, year, ...rest}) => {
+	render: ({date, maxDays, maxMonths, maxYear, minYear, month, onChangeDate, onChangeMonth, onChangeYear, order, year, ...rest}) => {
 
 		delete rest.dateFormat;
 		delete rest.onChange;
@@ -62,8 +164,8 @@ const DatePickerBase = kind({
 								<DateComponentPicker
 									key="year-picker"
 									label={$L('Year')}
-									min={1900}
-									max={2100}
+									min={minYear}
+									max={maxYear}
 									value={year}
 									onChange={onChangeYear}
 								/>
