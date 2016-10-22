@@ -7,7 +7,7 @@ It uses [React Storybook](https://getstorybook.io/). Component properties can be
 
 ## Usage
 
-To launch the sampler using its built-in web server (on http://localhost:9001/):
+To launch the sampler using its built-in web server (on http://localhost:8080/):
 ```
 npm run serve
 ```
