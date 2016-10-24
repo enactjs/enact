@@ -8,8 +8,8 @@ import {withKnobs, number} from '@kadira/storybook-addon-knobs';
 VirtualList.displayName = 'VirtualList';
 
 const
-	STYLE = {
-		renderItem : {
+	style = {
+		item : {
 			position: 'absolute',
 			width: '100%',
 			height: '72px',
@@ -32,7 +32,7 @@ for (let i = 0; i < 1000; i++) {
 }
 
 const renderItem = ({index, key}) =>
-	<Item key={key} style={STYLE.renderItem}>
+	<Item key={key} style={style.item}>
 		{data[index]}
 	</Item>;
 
@@ -46,7 +46,7 @@ storiesOf('VirtualList')
 				data={data}
 				dataSize={number('dataSize', data.length)}
 				itemSize={ri.scale(number('itemSize', 72))}
-				style={STYLE.listHeight}
+				style={style.listHeight}
 				component={renderItem}
 			/>
 		)

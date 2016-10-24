@@ -5,13 +5,13 @@ import React from 'react';
 import {storiesOf} from '@kadira/storybook';
 import {withKnobs, number} from '@kadira/storybook-addon-knobs';
 
-import defaultImage from '../../images/default-music.png';
+import defaultImage from '../../images/placeholder.png';
 
 VirtualGridList.displayName = 'VirtualGridList';
 
 const
-	STYLE = {
-		renderItem : {
+	style = {
+		item : {
 			position: 'absolute',
 			width: '100%',
 			height: '100%',
@@ -34,11 +34,11 @@ for (let i = 0; i < 1000; i++) {
 }
 
 const renderItem = ({index, key}) => <GridListImageItem
-	key={key}
 	caption={data[index].text}
+	key={key}
 	source={defaultImage}
-	style={STYLE.renderItem}
 	subCaption={data[index].subText}
+	style={style.item}
 />;
 
 storiesOf('VirtualGridList')
@@ -52,7 +52,7 @@ storiesOf('VirtualGridList')
 				dataSize={number('dataSize', data.length)}
 				itemSize={{minWidth: ri.scale(number('minWidth', 180)), minHeight: ri.scale(number('minHeight', 270))}}
 				spacing={ri.scale(number('spacing', 20))}
-				style={STYLE.listHeight}
+				style={style.listHeight}
 				component={renderItem}
 			/>
 		)

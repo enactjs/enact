@@ -5,6 +5,18 @@ import {withKnobs, select} from '@kadira/storybook-addon-knobs';
 
 Scroller.displayName = 'Scroller';
 
+const
+	style = {
+		scroller : {
+			height: '550px',
+			width: '100%'
+		},
+		content : {
+			height: '1000px',
+			width: '2000px'
+		}
+	};
+
 storiesOf('Scroller')
 	.addDecorator(withKnobs)
 	.addWithInfo(
@@ -14,9 +26,9 @@ storiesOf('Scroller')
 			<Scroller
 				horizontal={select('horizontal', ['auto', 'default', 'hidden', 'scroll'], '')}
 				vertical={select('vertical', ['auto', 'default', 'hidden', 'scroll'], '')}
-				style={{height: '550px', width: '100%'}}
+				style={style.scroller}
 			>
-				<div style={{height: '1000px', width: '2000px'}}>
+				<div style={style.content}>
 					Foo<br />Bar<br />Bar<br />Boom boom pow<br />Foo<br />Bar<br />Boom boom pow<br />Foo<br />Bar<br />Boom boom pow<br />
 					Foo<br />Bar<br />Boom boom pow<br />Foo<br />Bar<br />Boom boom pow<br />Foo<br />Bar<br />Boom boom pow. Boom boom pow.
 					Boom boom pow. Boom boom pow. Boom boom pow. Boom boom pow. Boom boom pow. Boom boom pow. Boom boom pow.
