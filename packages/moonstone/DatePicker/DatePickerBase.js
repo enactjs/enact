@@ -114,7 +114,15 @@ const DatePickerBase = kind({
 		 * @default 1900
 		 * @public
 		 */
-		minYear: React.PropTypes.number
+		minYear: React.PropTypes.number,
+
+		/**
+		 * When `true`, omits the labels below the pickers
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		noLabels: React.PropTypes.bool
 	},
 
 	defaultProps: {
@@ -127,7 +135,7 @@ const DatePickerBase = kind({
 		className: 'datePicker'
 	},
 
-	render: ({date, maxDays, maxMonths, maxYear, minYear, month, onChangeDate, onChangeMonth, onChangeYear, order, year, ...rest}) => {
+	render: ({date, maxDays, maxMonths, maxYear, minYear, month, noLabels, onChangeDate, onChangeMonth, onChangeYear, order, year, ...rest}) => {
 
 		delete rest.dateFormat;
 		delete rest.onChange;
@@ -141,7 +149,7 @@ const DatePickerBase = kind({
 							return (
 								<DateComponentPicker
 									key="day-picker"
-									label={$L('Day')}
+									label={noLabels || $L('day')}
 									min={1}
 									max={maxDays}
 									value={date}
@@ -152,7 +160,7 @@ const DatePickerBase = kind({
 							return (
 								<DateComponentPicker
 									key="month-picker"
-									label={$L('Month')}
+									label={noLabels || $L('month')}
 									min={1}
 									max={maxMonths}
 									value={month}
@@ -163,7 +171,7 @@ const DatePickerBase = kind({
 							return (
 								<DateComponentPicker
 									key="year-picker"
-									label={$L('Year')}
+									label={noLabels || $L('year')}
 									min={minYear}
 									max={maxYear}
 									value={year}

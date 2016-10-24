@@ -43,6 +43,15 @@ const DateComponentPickerBase = kind({
 		value: React.PropTypes.number.isRequired,
 
 		/**
+		 * When `true`, applies a disabled style and the control becomes non-interactive.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		disabled: React.PropTypes.bool,
+
+		/**
 		 * The label to display below the picker
 		 *
 		 * @type {String}
@@ -50,11 +59,12 @@ const DateComponentPickerBase = kind({
 		label: React.PropTypes.string
 	},
 
-	render: ({label, max, min, value, ...rest}) => (
+	render: ({disabled, label, max, min, value, ...rest}) => (
 		<div className={css.wrap}>
 			<RangePicker
 				{...rest}
 				className={css.field}
+				disabled={disabled}
 				joined
 				max={max}
 				min={min}

@@ -25,18 +25,91 @@ const ExpandableDatePicker = Expandable(
 const DatePicker = class extends React.Component {
 	static displayName = 'DatePicker'
 
-	propTypes: {
+	static propTypes = {
+		/**
+		 * The primary text of the item.
+		 *
+		 * @type {String}
+		 * @required
+		 * @public
+		 */
+		title: React.PropTypes.string.isRequired,
+
+		/**
+		 * When `true`, applies a disabled style and the control becomes non-interactive.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		disabled: React.PropTypes.bool,
+
+		/**
+		 * The maximum selectable `year` value
+		 *
+		 * @type {Number}
+		 * @default 2099
+		 * @public
+		 */
+		maxYear: React.PropTypes.number,
+
+		/**
+		 * The minimum selectable `year` value
+		 *
+		 * @type {Number}
+		 * @default 1900
+		 * @public
+		 */
+		minYear: React.PropTypes.number,
+
+		/**
+		 * When `true`, omits the labels below the pickers
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		noLabels: React.PropTypes.bool,
+
+		/**
+		 * Text to display when no `label` or `value` is set. Leave blank to have the initial
+		 * control not display a label when no option is selected.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		noneText: React.PropTypes.string,
+
 		/**
 		 * Handler for `onChange` events
 		 *
 		 * @type {Function}
+		 * @public
 		 */
 		onChange: React.PropTypes.func,
+
+		/**
+		 * Callback to be called when a condition occurs which should cause the expandable to close
+		 *
+		 * @type {Function}
+		 * @default null
+		 * @public
+		 */
+		onClose: React.PropTypes.func,
+
+		/**
+		 * Callback to be called when a condition occurs which should cause the expandable to open
+		 *
+		 * @type {Function}
+		 * @default null
+		 * @public
+		 */
+		onOpen: React.PropTypes.func,
 
 		/**
 		 * When `true`, the date picker is expanded to select a new date.
 		 *
 		 * @type {Boolean}
+		 * @public
 		 */
 		open: React.PropTypes.bool,
 
@@ -44,15 +117,21 @@ const DatePicker = class extends React.Component {
 		 * The selected date
 		 *
 		 * @type {Date}
+		 * @public
 		 */
 		value: React.PropTypes.any
+	}
+
+	static defaultProps = {
+		maxYear: 2099,
+		minYear: 1900
 	}
 
 	constructor (props) {
 		super(props);
 		this.cancelled = false;
 		this.state = {
-			open: !!props.open,
+			open: props.open && !props.disabled,
 			value: this.toIDate(props.value)
 		};
 
@@ -68,7 +147,7 @@ const DatePicker = class extends React.Component {
 
 	componentWillReceiveProps (nextProps) {
 		this.setState({
-			open: 'open' in nextProps ? nextProps.open : this.state.open,
+			open: 'open' in nextProps ? (nextProps.open && !nextProps.disabled) : this.state.open,
 			value: nextProps.value
 		});
 	}
@@ -106,7 +185,7 @@ const DatePicker = class extends React.Component {
 	 * Determines the current value using either the value from state or the current time (if the
 	 * picker is open)
 	 *
-	 * @return {IDate} ilib Date object
+	 * @returns {IDate} ilib Date object
 	 */
 	calcValue = () => {
 		let value = this.state.value;
@@ -216,12 +295,14 @@ const DatePicker = class extends React.Component {
 	 * @returns {undefined}
 	 */
 	handleClose = () => {
+		console.log('> handleClose');
 		const cancelled = this.cancelled;
 		const value = cancelled ? this.toIDate(this.props.value) : this.state.value;
 		this.setState({
 			open: false,
 			value
 		}, () => {
+			console.log('> setState callback', this.props.onChange, cancelled);
 			// need to defer notifications until after the state change to prevent new props coming
 			// in and inadvernently overwriting the above change
 			if (this.props.onChange && !cancelled) {
