@@ -821,13 +821,13 @@ const Spotlight = (function() {
 		return false;
 	}
 
-	function preventDefault(evt) {
+	function preventDefault (evt) {
 		evt.preventDefault();
 		evt.stopPropagation();
 		return false;
 	}
 
-	function onAcceleratedKeyDown(evt) {
+	function onAcceleratedKeyDown (evt) {
 		let currentFocusedElement = getCurrent();
 
 		if (!currentFocusedElement) {
@@ -850,8 +850,12 @@ const Spotlight = (function() {
 		}
 	}
 
-	function onKeyUp(evt) {
-		if (!_containerCount || _pause) {
+	function shouldPreventNavigation () {
+		return (!_containerCount || _pause);
+	}
+
+	function onKeyUp (evt) {
+		if (shouldPreventNavigation()) {
 			return;
 		}
 
@@ -863,8 +867,8 @@ const Spotlight = (function() {
 		SpotlightAccelerator.reset();
 	}
 
-	function onKeyDown(evt) {
-		if (!_containerCount || _pause) {
+	function onKeyDown (evt) {
+		if (shouldPreventNavigation()) {
 			return;
 		}
 
@@ -899,22 +903,28 @@ const Spotlight = (function() {
 	}
 
 	function onMouseOver (evt) {
-		if (!_containerCount || _pause) {
+		if (shouldPreventNavigation()) {
 			return;
 		}
 
+		const target = getNavigableTarget(evt.target); // account for child controls
 		_pointerMode = true;
 
-		let target = getNavigableTarget(evt.target), // account for child controls
-			current = getCurrent();
-
-		if (!target) { // we are moving over a non-focusable element, so we force a blur to occur
-			if (current) {
-				current.blur();
-			}
-		} else if (target !== getCurrent()) { // moving over a focusable element
+		if (target && target !== getCurrent()) { // moving over a focusable element
 			focusElement(target, getContainerId(target));
 			preventDefault(evt);
+		}
+	}
+
+	function onMouseMove (evt) {
+		if (shouldPreventNavigation()) {
+			return;
+		}
+
+		const current = getCurrent();
+
+		if (current && !getNavigableTarget(evt.target)) { // we are moving over a non-focusable element, so we force a blur to occur
+			current.blur();
 		}
 	}
 
@@ -951,6 +961,7 @@ const Spotlight = (function() {
 				window.addEventListener('keydown', onKeyDown);
 				window.addEventListener('keyup', onKeyUp);
 				window.addEventListener('mouseover', onMouseOver);
+				window.addEventListener('mousemove', onMouseMove);
 				_initialized = true;
 			}
 		},
@@ -959,6 +970,7 @@ const Spotlight = (function() {
 			window.removeEventListener('keydown', onKeyDown);
 			window.removeEventListener('keyup', onKeyUp);
 			window.removeEventListener('mouseover', onMouseOver);
+			window.removeEventListener('mousemove', onMouseMove);
 			Spotlight.clear();
 			_ids = 0;
 			_initialized = false;
