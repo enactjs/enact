@@ -1,3 +1,9 @@
+/**
+ * Exports the {@link module:@enact/moonstone/Input~Input} component.
+ *
+ * @module @enact/moonstone/Input
+ */
+
 import classNames from 'classnames';
 import {Spotlight, Spottable, SpotlightContainerDecorator, SpotlightFocusableDecorator} from '@enact/spotlight';
 import React, {PropTypes} from 'react';
@@ -34,6 +40,7 @@ class InputBase extends React.Component {
 		/**
 		 * The icon to be placed at the end of the input.
 		 *
+		 * @see {@link module:@enact/moonstone/Icon~Icon}
 		 * @type {String}
 		 * @public
 		 */
@@ -42,6 +49,7 @@ class InputBase extends React.Component {
 		/**
 		 * The icon to be placed at the beginning of the input.
 		 *
+		 * @see {@link module:@enact/moonstone/Icon~Icon}
 		 * @type {String}
 		 * @public
 		 */
