@@ -53,7 +53,7 @@ const DatePicker = class extends React.Component {
 		this.cancelled = false;
 		this.state = {
 			open: !!props.open,
-			value: props.value
+			value: this.toIDate(props.value)
 		};
 
 		this.dateFormat = new DateFmt({
@@ -71,6 +71,22 @@ const DatePicker = class extends React.Component {
 			open: 'open' in nextProps ? nextProps.open : this.state.open,
 			value: nextProps.value
 		});
+	}
+
+	/**
+	 * Converts a Date to an IDate
+	 *
+	 * @param	{Date}	date	Date object
+	 *
+	 * @returns	{IDate}			ilib Date object
+	 */
+	toIDate (date) {
+		if (date) {
+			return DateFactory({
+				unixtime: date.getTime(),
+				timezone: 'local'
+			});
+		}
 	}
 
 	/**
@@ -94,11 +110,8 @@ const DatePicker = class extends React.Component {
 	 */
 	calcValue = () => {
 		let value = this.state.value;
-		if (this.state.open) {
-			value = DateFactory({
-				unixtime: value ? value.getTime() : Date.now(),
-				timezone: 'local'
-			});
+		if (this.state.open && !value) {
+			value = this.toIDate(new Date());
 		}
 
 		return value;
@@ -204,7 +217,7 @@ const DatePicker = class extends React.Component {
 	 */
 	handleClose = () => {
 		const cancelled = this.cancelled;
-		const value = cancelled ? this.props.value : this.state.value;
+		const value = cancelled ? this.toIDate(this.props.value) : this.state.value;
 		this.setState({
 			open: false,
 			value
