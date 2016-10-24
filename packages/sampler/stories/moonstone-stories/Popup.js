@@ -15,7 +15,7 @@ storiesOf('Popup')
 
 			<Popup
 				open={boolean('open', true)}
-				reserveClose={boolean('reserveClose', false)}
+				showCloseButton={boolean('showCloseButton', false)}
 			>
 				<div>{text('children', 'Hello Popup')}</div>
 			</Popup>

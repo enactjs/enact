@@ -52,20 +52,18 @@ const PopupBase = kind({
 		open: PropTypes.bool,
 
 		/**
-		 * Allocate space for the close button so the body of the dialog doesn't overlap the button.
-		 * Enabling this reduces the available width of the body content.
+		 * When `true`, the close button is shown; when `false`, it is hidden.
 		 *
 		 * @type {Boolean}
 		 * @default false
-		 * @public
 		 */
-		reserveClose: PropTypes.bool
+		showCloseButton: PropTypes.bool
 	},
 
 	defaultProps: {
 		anchor: {bottom: 0},
 		open: false,
-		reserveClose: false
+		showCloseButton: false
 	},
 
 	styles: {
@@ -74,16 +72,23 @@ const PopupBase = kind({
 	},
 
 	computed: {
-		className: ({reserveClose, styler}) => styler.append({reserveClose})
+		className: ({showCloseButton, styler}) => styler.append({reserveClose: showCloseButton}),
+		closeButton: ({showCloseButton}) => {
+			if (showCloseButton) {
+				return (
+					<IconButton className={css.closeButton} backgroundOpacity="transparent" small>closex</IconButton>
+				);
+			}
+		}
 	},
 
-	render: ({children, open, ...rest}) => {
+	render: ({closeButton, children, open, ...rest}) => {
 		delete rest.anchor;
-		delete rest.reserveClose;
+		delete rest.showCloseButton;
 		return (
 			<TransitionContainer data-container-disabled={!open} visible={open} direction="down" duration="short" type="slide">
 				<div {...rest}>
-					<IconButton className={css.closeButton} backgroundOpacity="transparent" small>closex</IconButton>
+					{closeButton}
 					<div className={css.body}>
 						{children}
 					</div>

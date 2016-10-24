@@ -19,14 +19,14 @@
 		// border: 1px dashed cyan;		// helpful for debugging layout. Not for production.
 	}
 
-	&.reserveClose .body {
-		margin-right: @moon-icon-button-small-size + @moon-spotlight-outset;
+	&.reserveClose {
+		padding-right: @moon-icon-button-small-size + @moon-spotlight-outset;
 	}
 
 	:global(.enact-locale-right-to-left) & {
-		&.reserveClose .body {
-			margin-right: 0;
-			margin-left: @moon-icon-button-small-size + @moon-spotlight-outset;
+		&.reserveClose {
+			padding-right: 0;
+			padding-left: @moon-icon-button-small-size + @moon-spotlight-outset;
 		}
 
 		.closeButton {

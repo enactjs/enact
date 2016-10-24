@@ -16,7 +16,7 @@ storiesOf('Dialog')
 
 			<Dialog
 				open={boolean('open', true)}
-				reserveClose={boolean('reserveClose', false)}
+				showCloseButton={boolean('showCloseButton', false)}
 				useDivider={boolean('useDivider', false)}
 			>
 				<title>{text('children', 'Hello Dialog')}</title>
