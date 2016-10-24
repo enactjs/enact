@@ -1,8 +1,9 @@
 var
+	GracefulFsPlugin = require('graceful-fs-webpack-plugin'),
+	LessPluginRi = require('resolution-independence'),
 	path = require('path'),
-	webpack = require('webpack'),
-	GracefulFsPlugin = require('./GracefulFsPlugin.js'),
-	LessPluginRi = require('resolution-independence');
+	WebOSMetaPlugin = require('webos-meta-webpack-plugin'),
+	webpack = require('webpack');
 
 module.exports = {
 	devtool: 'sourcemap',
@@ -16,6 +17,7 @@ module.exports = {
 		modulesDirectories: ['web_modules', 'node_modules']
 	},
 	resolveLoader: {
+		root: [path.resolve('./node_modules')],
 		modulesDirectories: ['web_loaders', 'web_modules', 'node_loaders', 'node_modules']
 	},
 	module: {
@@ -39,7 +41,7 @@ module.exports = {
 			},
 			{
 				test:/\.(c|le)ss$/,
-				loader: 'style!css?modules&importLoaders=1!less'
+				loader: 'style!css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!less'
 			},
 			{
 				test: /\.js$|\.es6$|\.jsx$/, loader: 'babel', exclude: /node_modules.(?!@*enact)/, query: {
@@ -65,6 +67,8 @@ module.exports = {
 				'NODE_ENV': '"development"'
 			}
 		}),
-		new GracefulFsPlugin()
+		new GracefulFsPlugin(),
+		// Keep WebOSMetaPlugin last so we can easily swap out for sampler variations
+		new WebOSMetaPlugin({path:path.join(__dirname, 'webos-meta')})
 	]
 };

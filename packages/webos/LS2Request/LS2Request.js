@@ -1,3 +1,6 @@
+/* eslint-disable no-console */
+/* global console */
+
 const refs = {};
 
 const adjustPath = (path) => {
@@ -27,7 +30,6 @@ export default class LS2Request {
 			/* eslint no-unused-expressions: ["error", { "allowShortCircuit": true }]*/
 			onFailure && onFailure({errorCode:-1, errorText:'PalmServiceBridge not found.', returnValue: false});
 			onComplete && onComplete({errorCode:-1, errorText:'PalmServiceBridge not found.', returnValue: false});
-			// eslint-disable-next-line no-undef, no-console
 			console.error('PalmServiceBridge not found.');
 			return;
 		}

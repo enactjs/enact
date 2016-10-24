@@ -7,7 +7,7 @@
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 
-import {ToggleItemBase} from '../ToggleItem';
+import ToggleItem from '../ToggleItem';
 
 import css from './RadioItem.less';
 
@@ -33,7 +33,7 @@ const RadioItemBase = kind({
 		children: PropTypes.string.isRequired,
 
 		/**
-		 * Applies a "checked" visual state to the toggle item.
+		 * Applies a "checked" visual state to the radio item.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -100,7 +100,7 @@ const RadioItemBase = kind({
 	},
 
 	render: (props) => (
-		<ToggleItemBase {...props} icon=" " />
+		<ToggleItem {...props} icon=" " />
 	)
 });
 

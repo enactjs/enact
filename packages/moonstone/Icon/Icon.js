@@ -1,16 +1,65 @@
+/**
+ * Exports the {@link module:@enact/moonstone/Icon~Icon} component.
+ *
+ * @module @enact/moonstone/Icon
+ */
+
 import kind from '@enact/core/kind';
+import ri from '@enact/ui/resolution';
 import React, {PropTypes} from 'react';
 
 import iconList from './IconList.js';
 
 import css from './Icon.less';
 
+/**
+ * {@link module:@enact/moonstone/Icon~Icon} is a component that displays an icon image.  You may
+ * specify an image, by setting the `src` property, or a font-based icon, by setting the child to a
+ * string from the [IconList]{@link module:@enact/moonstone/Icon~IconList}.  If both `src` and
+ * children are specified, both will be rendered.
+ *
+ * Usage:
+ * ```
+ * <Icon small>
+ *     plus
+ * </Icon>
+ * ```
+ *
+ * @class Icon
+ * @ui
+ * @public
+ */
 const IconBase = kind({
 	name: 'Icon',
 
 	propTypes: {
-		children: PropTypes.string.isRequired,
-		small: PropTypes.bool
+		/**
+		 * A string that represents an icon from the [IconList]{@link module:@enact/moonstone/Icon~IconList}.
+		 * Can also be an HTML entity string, Unicode reference or hex value (in the form '0x...').
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		children: PropTypes.string,
+
+		/**
+		 * If `true`, apply the 'small' class.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		small: PropTypes.bool,
+
+		/**
+		 * URL specifying path to an icon image or an object representing a resolution independent resource (See
+		 * {@link module:@enact/ui/resolution}).
+		 * If both `src` and `children` are specified, they will both be rendered.
+		 *
+		 * @type {String|Object}
+		 * @public
+		 */
+		src: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
 	},
 
 	defaultProps: {
@@ -27,7 +76,18 @@ const IconBase = kind({
 			!iconList[icon] && css.dingbat,	// If the icon isn't in our known set, apply our custom font class
 			{pressed, small}
 		),
-		content: ({children: icon}) => {
+		style: ({src, style}) => {
+			let updated = Object.assign({}, style);
+
+			let source = ri.selectSrc(src);
+			if (src && src !== 'none' && src !== 'inherit' && src !== 'initial') {
+				source = `url(${source})`;
+			}
+
+			updated.backgroundImage = source;
+			return updated;
+		},
+		children: ({children: icon}) => {
 			let iconEntity = iconList[icon] || icon;
 
 			if (!iconList[icon]) {
@@ -52,14 +112,11 @@ const IconBase = kind({
 		}
 	},
 
-	render: ({content, ...rest}) => {
-		delete rest.small;
+	render: (props) => {
+		delete props.small;
+		delete props.src;
 
-		return (
-			<div {...rest}>
-				{content}
-			</div>
-		);
+		return <div {...props} />;
 	}
 });
 
