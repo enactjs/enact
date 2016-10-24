@@ -1,5 +1,5 @@
 import React from 'react';
-import {shallow, mount} from 'enzyme';
+import {shallow} from 'enzyme';
 import sinon from 'sinon';
 import DatePicker from '../DatePicker';
 
@@ -9,7 +9,7 @@ describe.skip('DatePicker', () => {
 
 	it('should not generate a label when value is undefined', function () {
 		const subject = shallow(
-			<DatePicker />
+			<DatePicker title="Date" />
 		);
 
 		const expected = null;
@@ -21,7 +21,7 @@ describe.skip('DatePicker', () => {
 	it('should restore the value from props after an onCancel event', function () {
 		const value = new Date(2000, 0, 1);
 		const subject = shallow(
-			<DatePicker value={value} />
+			<DatePicker title="Date" value={value} />
 		);
 
 		subject.simulate('onChangeMonth', {value: 1});
@@ -36,7 +36,7 @@ describe.skip('DatePicker', () => {
 
 	it('should set an internal value when opened', function () {
 		const subject = shallow(
-			<DatePicker open />
+			<DatePicker title="Date" open />
 		);
 
 		const actual = subject.prop('value');
@@ -48,7 +48,7 @@ describe.skip('DatePicker', () => {
 		const handleChange = sinon.spy();
 		const value = new Date(2000, 0, 1);
 		const subject = shallow(
-			<DatePicker value={value} onChange={handleChange} />
+			<DatePicker title="Date" value={value} onChange={handleChange} />
 		);
 
 		subject.simulate('onChangeMonth', {value: 1});
@@ -65,7 +65,7 @@ describe.skip('DatePicker', () => {
 		const handleChange = sinon.spy();
 		const value = new Date(2000, 0, 1);
 		const subject = shallow(
-			<DatePicker value={value} onChange={handleChange} />
+			<DatePicker title="Date" value={value} onChange={handleChange} />
 		);
 
 		subject.simulate('onChangeMonth', {value: 1});
