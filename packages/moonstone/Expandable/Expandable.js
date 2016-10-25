@@ -48,11 +48,11 @@ const Expandable = (Wrapped) => {
 			 * The label to display below the title. By default, the label is only visible when
 			 * the expandable is collapsed.
 			 *
-			 * @type {String}
+			 * @type {String|Number}
 			 * @default null
 			 * @public
 			 */
-			label: PropTypes.string,
+			label: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 
 			/**
 			 * Text to display when no `label` is set. Leave blank to have the initial
