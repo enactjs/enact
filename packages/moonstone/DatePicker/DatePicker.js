@@ -295,14 +295,12 @@ const DatePicker = class extends React.Component {
 	 * @returns {undefined}
 	 */
 	handleClose = () => {
-		console.log('> handleClose');
 		const cancelled = this.cancelled;
 		const value = cancelled ? this.toIDate(this.props.value) : this.state.value;
 		this.setState({
 			open: false,
 			value
 		}, () => {
-			console.log('> setState callback', this.props.onChange, cancelled);
 			// need to defer notifications until after the state change to prevent new props coming
 			// in and inadvernently overwriting the above change
 			if (this.props.onChange && !cancelled) {
