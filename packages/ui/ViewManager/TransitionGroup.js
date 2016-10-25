@@ -132,14 +132,16 @@ class TransitionGroup extends React.Component {
 
 		// drop children exceeding allowed size
 		const drop = children.length - nextProps.size;
-		let dropped = null;
-		if (drop > 0) {
-			[dropped, children] = R.splitAt(drop, children);
-		}
+		const dropped = drop > 0 ? children.splice(drop) : null;
 
-		// cache the new set of children
-		this.setState({children});
+		this.setState({
+			children
+		}, () => {
+			this.reconcileChildren(dropped, prevChildMapping, nextChildMapping);
+		});
+	}
 
+	reconcileChildren (dropped, prevChildMapping, nextChildMapping) {
 		// mark any new child as entering
 		nextChildMapping.forEach(child => {
 			const key = child.key;
@@ -174,9 +176,7 @@ class TransitionGroup extends React.Component {
 				delete this.currentlyTransitioningKeys[child.key];
 			});
 		}
-	}
 
-	componentDidUpdate () {
 		// once the component has been updated, start the enter transition for new children,
 		const keysToEnter = this.keysToEnter;
 		this.keysToEnter = [];
@@ -191,7 +191,6 @@ class TransitionGroup extends React.Component {
 		const keysToLeave = this.keysToLeave;
 		this.keysToLeave = [];
 		keysToLeave.forEach(this.performLeave);
-
 	}
 
 	performAppear = (key) => {
