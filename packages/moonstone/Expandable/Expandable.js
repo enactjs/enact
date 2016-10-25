@@ -29,11 +29,11 @@ const Expandable = (Wrapped) => {
 			/**
 			 * The primary text of the item.
 			 *
-			 * @type {String}
+			 * @type {String|Number}
 			 * @required
 			 * @public
 			 */
-			title: PropTypes.string.isRequired,
+			title: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
 
 			/**
 			 * When `true`, applies a disabled style and the control becomes non-interactive.
@@ -45,8 +45,8 @@ const Expandable = (Wrapped) => {
 			disabled: PropTypes.bool,
 
 			/**
-			 * The initial value of the contents of the expandable. Setting this enables
-			 * the initial render of the child component to be pre-selected.
+			 * The label to display below the title. By default, the label is only visible when
+			 * the expandable is collapsed.
 			 *
 			 * @type {String}
 			 * @default null
@@ -159,11 +159,8 @@ const Expandable = (Wrapped) => {
 	});
 
 	const handleCancel = (props) => {
-		if (props.open) {
+		if (props.open && props.onClose) {
 			props.onClose();
-		} else {
-			// Return `true` to allow event to propagate to containers for unhandled cancel
-			return true;
 		}
 	};
 
