@@ -16,13 +16,14 @@ storiesOf('Dialog')
 
 			<Dialog
 				open={boolean('open', true)}
+				noAnimation={boolean('noAnimation', false)}
 				showCloseButton={boolean('showCloseButton', false)}
 				useDivider={boolean('useDivider', false)}
 			>
 				<title>{text('children', 'Hello Dialog')}</title>
 				<titleBelow>{text('children', 'This is an organized dialog')}</titleBelow>
-				This dialog has content in it and can be very useful for organizing information
-				for the user.
+				<span>This dialog has content in it and can be very useful for organizing information
+				for the user.</span>
 				<buttons>
 					<Button>Ok</Button>
 					<Button>Nevermind</Button>

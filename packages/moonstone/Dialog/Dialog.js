@@ -63,8 +63,7 @@ const DialogBase = kind({
 
 	defaultProps: {
 		anchor: {bottom: 0},
-		open: false,
-		reserveClose: false
+		open: false
 	},
 
 	styles: {
@@ -73,10 +72,12 @@ const DialogBase = kind({
 	},
 
 	computed: {
-		className: ({reserveClose, useDivider, styler}) => styler.append({reserveClose, useDivider})
+		className: ({useDivider, styler}) => styler.append({useDivider})
 	},
 
 	render: ({buttons, children, title, titleBelow, ...rest}) => {
+		delete rest.useDivider;
+
 		return (
 			<Popup {...rest}>
 				<div className={css.titleWrapper}>

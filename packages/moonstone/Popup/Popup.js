@@ -40,6 +40,13 @@ const PopupBase = kind({
 
 		anchor: PropTypes.object,
 
+		/**
+		 * When `true`, popups will not animate on/off screen.
+		 * @type {Boolean}
+		 * @default false
+		 */
+		noAnimation: PropTypes.bool,
+
 		// should fire a provided method when popup is opened and after closed.
 
 		/**
@@ -62,6 +69,7 @@ const PopupBase = kind({
 
 	defaultProps: {
 		anchor: {bottom: 0},
+		noAnimation: false,
 		open: false,
 		showCloseButton: false
 	},
@@ -82,11 +90,11 @@ const PopupBase = kind({
 		}
 	},
 
-	render: ({closeButton, children, open, ...rest}) => {
+	render: ({closeButton, children, noAnimation, open, ...rest}) => {
 		delete rest.anchor;
 		delete rest.showCloseButton;
 		return (
-			<TransitionContainer data-container-disabled={!open} visible={open} direction="down" duration="short" type="slide">
+			<TransitionContainer noAnimation={noAnimation} data-container-disabled={!open} visible={open} direction="down" duration="short" type="slide">
 				<div {...rest}>
 					{closeButton}
 					<div className={css.body}>

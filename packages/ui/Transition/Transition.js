@@ -64,6 +64,12 @@ const TransitionBase = kind({
 		duration: PropTypes.oneOf(['short', 'medium', 'long']),
 
 		/**
+		 * When `true`, it disables transition. When `false`, it animates visibility change.
+		 * @type {Boolean}
+		 */
+		noAnimation: PropTypes.bool,
+
+		/**
 		 * Customize the transition timing function.
 		 * Supported functions are: linear, ease. ease-in-out is the default when none others are specified.
 		 *
@@ -94,6 +100,7 @@ const TransitionBase = kind({
 	},
 
 	defaultProps: {
+		noAnimation: false,
 		direction: 'up',
 		duration: 'medium',
 		timingFunction: 'ease-in-out',
@@ -122,21 +129,25 @@ const TransitionBase = kind({
 		})
 	},
 
-	render: ({classes, children, childRef, ...rest}) => {
+	render: ({noAnimation, classes, childRef, children, visible, ...rest}) => {
 		delete rest.clipHeight;
 		delete rest.direction;
 		delete rest.duration;
 		delete rest.timingFunction;
 		delete rest.type;
-		delete rest.visible;
 
-		return (
-			<div className={classes}>
-				<div {...rest} ref={childRef}>
-					{children}
+		if (!noAnimation) {
+			return (
+				<div className={classes}>
+					<div {...rest} ref={childRef}>
+						{children}
+					</div>
 				</div>
-			</div>
-		);
+			);
+		} else if (visible) {
+			return <div {...rest}>{children}</div>;
+		}
+		return null;
 	}
 });
 
