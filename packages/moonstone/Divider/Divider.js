@@ -29,10 +29,9 @@ const DividerBase = kind({
 		 * The content of the divider.
 		 *
 		 * @type {String}
-		 * @required
 		 * @public
 		 */
-		children: PropTypes.string.isRequired
+		children: PropTypes.string
 	},
 
 	styles: {
@@ -41,7 +40,7 @@ const DividerBase = kind({
 	},
 
 	computed: {
-		content: ({children}) => children.split(' ').map(cap).join(' ')
+		content: ({children}) => children ? children.split(' ').map(cap).join(' ') : ''
 	},
 
 	render: ({content, ...rest}) => (
