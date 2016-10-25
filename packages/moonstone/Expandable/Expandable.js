@@ -55,8 +55,7 @@ const Expandable = (Wrapped) => {
 			label: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 
 			/**
-			 * Text to display when no `label` is set. Leave blank to have the initial
-			 * control not display a label when no option is selected.
+			 * Text to display when no `label` is set.
 			 *
 			 * @type {String}
 			 */
@@ -95,7 +94,7 @@ const Expandable = (Wrapped) => {
 			onToggle: PropTypes.func,
 
 			/**
-			 * When `true`, the control in rendered in the expanded state, with the contents visible?
+			 * When `true`, the control in rendered in the expanded state, with the contents visible
 			 *
 			 * @type {Boolean}
 			 * @default false
