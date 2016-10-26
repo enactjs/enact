@@ -2,7 +2,7 @@ import {ExpandableList as ExpList, ExpandableListBase} from '@enact/moonstone/Ex
 import {forward} from '@enact/core/handle';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
+import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
 
 class ExpandableList extends React.Component {
 	constructor (props) {
@@ -66,6 +66,7 @@ storiesOf('ExpandableList')
 				onClose={action('onClose')}
 				onOpen={action('onOpen')}
 				open={boolean('open', false)}
+				select={select('select', ['none', 'single', 'radio', 'multiple'], 'none')}
 				title={text('title', 'title')}
 			>
 				{['option1', 'option2', 'option3']}

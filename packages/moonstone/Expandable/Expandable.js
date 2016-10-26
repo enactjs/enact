@@ -1,178 +1,20 @@
-import {kind, hoc} from '@enact/core';
 import Cancelable from '@enact/ui/Cancelable';
+import R from 'ramda';
 import Toggleable from '@enact/ui/Toggleable';
-import Transition from '@enact/ui/Transition';
-import {SpotlightContainerDecorator} from '@enact/spotlight';
-import React, {PropTypes} from 'react';
 
-import LabeledItem from '../LabeledItem';
-
-import ExpandableContainer from './ExpandableContainer';
-
-const defaultConfig = {
-	close: null,
-	open: null,
-	showLabel: 'auto',
-	toggle: null
-};
-
-const wrapMethod = (method, handler, props) => {
-	if (method && handler) {
-		const origHandler = props[method];
-		props[method] = (ev) => {
-			if (origHandler) origHandler(ev);
-			handler();
-		};
+const handleCancel = function (props) {
+	if (props.open) {
+		props.onClose();
+	} else {
+		// Return `true` to allow event to propagate to containers for unhandled cancel
+		return true;
 	}
 };
 
-const TransitionContainer = SpotlightContainerDecorator(Transition);
-
-const Expandable = hoc(defaultConfig, (config, Wrapped) => {
-	const {close: cfgClose, open: cfgOpen, showLabel, toggle} = config;
-
-	const ExpandableBase = kind({
-		name: 'Expandable',
-
-		propTypes: {
-			/**
-			 * The primary text of the item.
-			 *
-			 * @type {String}
-			 * @required
-			 * @public
-			 */
-			title: PropTypes.string.isRequired,
-
-			/**
-			 * When `true`, applies a disabled style and the control becomes non-interactive.
-			 *
-			 * @type {Boolean}
-			 * @default false
-			 * @public
-			 */
-			disabled: PropTypes.bool,
-
-			/**
-			 * The secondary, or supportive text. Typically under the `title`, a subtitle.
-			 *
-			 * @type {String|Number}
-			 * @default null
-			 * @public
-			 */
-			label: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-
-			/**
-			 * Text to display when no `label` or `value` is set. Leave blank to have the initial
-			 * control not display a label when no option is selected.
-			 *
-			 * @type {String}
-			 */
-			noneText: PropTypes.string,
-
-			/**
-			 * Callback to be called when a condition occurs which should cause the expandable to close
-			 *
-			 * @type {Function}
-			 * @default null
-			 * @public
-			 */
-			onClose: PropTypes.func,
-
-			/**
-			 * Callback to be called when a condition occurs which should cause the expandable to open
-			 *
-			 * @type {Function}
-			 * @default null
-			 * @public
-			 */
-			onOpen: PropTypes.func,
-
-			/**
-			 * When `true`, the control in rendered in the expanded state, with the contents visible?
-			 *
-			 * @type {Boolean}
-			 * @default false
-			 * @public
-			 */
-			open: PropTypes.bool
-		},
-
-		defaultProps: {
-			disabled: false,
-			open: false
-		},
-
-		computed: {
-			label: ({disabled, label, noneText, open}) => {
-				const isOpen = open && !disabled;
-				if (showLabel === true || (!isOpen && showLabel)) {
-					return label || noneText;
-				} else {
-					return null;
-				}
-			},
-			handleOpen: ({disabled, onClose, onOpen, onToggle, open}) => {
-				// When disabled, don't attach an event
-				if (!disabled) {
-					const handler = open ? onClose : onOpen;
-					if (onToggle && handler) {
-						// if we have both, we need to wrap them in a function so they can both be
-						// called.
-						return () => {
-							onToggle({open: !open});
-							handler();
-						};
-					} else if (onToggle) {
-						return () => onToggle({open: !open});
-					} else {
-						return handler;
-					}
-				}
-			},
-			open: ({disabled, open}) => open && !disabled
-		},
-
-		render: ({label, disabled, handleOpen, open, style, title, onClose, onOpen, onToggle, ...rest}) => {
-			delete rest.noneText;
-			delete rest.label;
-
-			wrapMethod(cfgClose, onClose, rest);
-			wrapMethod(cfgOpen, onOpen, rest);
-			wrapMethod(toggle, onToggle, rest);
-
-			return (
-				<ExpandableContainer style={style} disabled={disabled} open={open}>
-					<LabeledItem
-						disabled={disabled}
-						label={label}
-						onClick={handleOpen}
-					>{title}</LabeledItem>
-					<TransitionContainer data-container-disabled={!open} visible={open} duration="short" type="clip">
-						<Wrapped {...rest} disabled={disabled} />
-					</TransitionContainer>
-				</ExpandableContainer>
-			);
-		}
-	});
-
-	const handleCancel = (props) => {
-		if (props.open) {
-			props.onClose();
-		} else {
-			// Return `true` to allow event to propagate to containers for unhandled cancel
-			return true;
-		}
-	};
-
-	return Toggleable(
-		{activate: 'onOpen', deactivate: 'onClose', mutable: true, prop: 'open'},
-		Cancelable(
-			{component: 'span', onCancel: handleCancel},
-			ExpandableBase
-		)
-	);
-});
+const Expandable = R.compose(
+	Toggleable({activate: 'onOpen', deactivate: 'onClose', mutable: true, prop: 'open'}),
+	Cancelable({component: 'span', onCancel: handleCancel})
+);
 
 export default Expandable;
 export {Expandable};

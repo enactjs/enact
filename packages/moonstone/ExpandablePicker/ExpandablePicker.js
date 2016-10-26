@@ -4,6 +4,7 @@ import React from 'react';
 import pure from 'recompose/pure';
 
 import Expandable from '../Expandable';
+import ExpandableItem from '../ExpandableItem';
 import IconButton from '../IconButton';
 import Picker from '../Picker';
 
@@ -118,28 +119,61 @@ const ExpandablePickerBase = kind({
 	},
 
 	computed: {
-		onChange: ({onChange, value}) => {
-			if (onChange) {
-				return () => {
+		label: ({children, value}) => React.Children.toArray(children)[value],
+		onChange: ({onChange, onClose, value}) => {
+			return () => {
+				if (onClose) {
+					onClose();
+				}
+
+				if (onChange) {
 					onChange({value});
-				};
-			}
+				}
+			};
 		}
 	},
 
-	render: ({children, onChange, onPick, style, value, ...rest}) => (
-		<div style={style} disabled={rest.disabled}>
-			<Picker {...rest} onChange={onPick} value={value}>
-				{children}
-			</Picker>
-			<IconButton onClick={onChange}>check</IconButton>
-		</div>
-	)
+	render: (props) => {
+		const {
+			children,
+			decrementIcon,
+			disabled,
+			incrementIcon,
+			joined,
+			noAnimation,
+			onChange,
+			onPick,
+			orientation,
+			value,
+			width,
+			wrap,
+			...rest
+		} = props;
+
+		return (
+			<ExpandableItem {...rest} disabled={disabled}>
+				<Picker
+					disabled={disabled}
+					onChange={onPick}
+					value={value}
+					decrementIcon={decrementIcon}
+					incrementIcon={incrementIcon}
+					joined={joined}
+					noAnimation={noAnimation}
+					orientation={orientation}
+					width={width}
+					wrap={wrap}
+				>
+					{children}
+				</Picker>
+				<IconButton onClick={onChange}>check</IconButton>
+			</ExpandableItem>
+		);
+	}
 });
 
 const ExpandablePicker = pure(
 	Expandable(
-		{close: 'onChange'},
 		Changeable(
 			// override `change` so we can separate handling onChange for the Picker and onChange for the
 			// ExpandablePicker
