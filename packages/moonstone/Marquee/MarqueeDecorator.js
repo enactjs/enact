@@ -178,7 +178,13 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		componentDidUpdate () {
+		componentDidUpdate (nextProps) {
+			if (nextProps.children !== this.props.children) {
+				this.marqueeOnRender = true;
+			} else {
+				this.marqueeOnRender = false;
+			}
+
 			this.initMarquee();
 		}
 
