@@ -3,7 +3,7 @@ import Changeable from '@enact/ui/Changeable';
 import {icons} from '@enact/moonstone/Icon';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, text, boolean, select} from '@kadira/storybook-addon-knobs';
+import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
 
 const StatefulPicker = Changeable(Picker);
 StatefulPicker.propTypes = Object.assign({}, PickerBase.propTypes, StatefulPicker.propTypes);
