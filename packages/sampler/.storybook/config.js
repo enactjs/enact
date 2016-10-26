@@ -2,8 +2,13 @@ import {configure, setAddon, addDecorator} from '@kadira/storybook';
 import infoAddon from '@kadira/react-storybook-addon-info';
 import {withKnobs} from '@kadira/storybook-addon-knobs';
 //import backgrounds from 'react-storybook-addon-backgrounds';
+import perf from 'react-addons-perf';
 import Moonstone from '../src/MoonstoneEnvironment';
 const req = require.context('../stories/moonstone-stories', true, /.js$/)
+
+if (typeof window === 'object') {
+	window.ReactPerf = perf;
+}
 
 addDecorator(Moonstone);
 addDecorator(withKnobs);
