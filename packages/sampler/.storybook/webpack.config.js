@@ -17,6 +17,7 @@ module.exports = {
 		modulesDirectories: ['web_modules', 'node_modules']
 	},
 	resolveLoader: {
+		root: [path.resolve('./node_modules')],
 		modulesDirectories: ['web_loaders', 'web_modules', 'node_loaders', 'node_modules']
 	},
 	module: {
@@ -40,7 +41,7 @@ module.exports = {
 			},
 			{
 				test:/\.(c|le)ss$/,
-				loader: 'style!css?modules&importLoaders=1!less'
+				loader: 'style!css?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!less'
 			},
 			{
 				test: /\.js$|\.es6$|\.jsx$/, loader: 'babel', exclude: /node_modules.(?!@*enact)/, query: {

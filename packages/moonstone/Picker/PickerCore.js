@@ -32,6 +32,8 @@ const jobNames = {
 const emulateMouseEventsTimeout = 175;
 
 // Components
+const TransparentIconButton = (props) => <IconButton {...props} backgroundOpacity="transparent" />;
+
 const PickerCore = class extends React.Component {
 	static displayName = 'PickerCore'
 
@@ -327,7 +329,7 @@ const PickerCore = class extends React.Component {
 		delete rest.value;
 		delete rest.wrap;
 
-		const ButtonType = joined ? Icon : IconButton;
+		const ButtonType = joined ? Icon : TransparentIconButton;
 		const incrementIcon = selectIncIcon(this.props);
 		const decrementIcon = selectDecIcon(this.props);
 
