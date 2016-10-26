@@ -119,7 +119,7 @@ const DatePicker = class extends React.Component {
 		 * @type {Date}
 		 * @public
 		 */
-		value: React.PropTypes.any
+		value: React.PropTypes.instanceOf(Date)
 	}
 
 	static defaultProps = {
@@ -148,7 +148,7 @@ const DatePicker = class extends React.Component {
 	componentWillReceiveProps (nextProps) {
 		this.setState({
 			open: 'open' in nextProps ? (nextProps.open && !nextProps.disabled) : this.state.open,
-			value: nextProps.value
+			value: 'value' in nextProps ? this.toIDate(nextProps.value) : this.state.value
 		});
 	}
 
@@ -305,7 +305,7 @@ const DatePicker = class extends React.Component {
 			// in and inadvernently overwriting the above change
 			if (this.props.onChange && !cancelled) {
 				this.props.onChange({
-					value
+					value: value && value.getJSDate()
 				});
 			}
 		});

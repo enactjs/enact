@@ -13,10 +13,9 @@ storiesOf('DatePicker')
 		'The basic DatePicker',
 		() => (
 			<Picker
-				title={text('noneText', 'Date')}
+				title={text('title', 'Date')}
 				noneText={text('noneText', 'Nothing Selected')}
 				onChange={action('onChange')}
-				value={date('value', new Date())}
 			/>
 		)
 	);

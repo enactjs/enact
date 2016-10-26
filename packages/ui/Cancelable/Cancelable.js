@@ -46,6 +46,18 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 
 	invariant(onCancel, 'onCancel must be specified with Cancelable');
 
+	const onCancelIsString = typeof onCancel === 'string';
+	const onCancelIsFunction = typeof onCancel === 'function';
+	const dispatchCancelToConfig = function (props) {
+		if (onCancelIsString && typeof props[onCancel] === 'function') {
+			props[onCancel]();
+		} else if (onCancelIsFunction) {
+			return onCancel(props);
+		} else {
+			return true;
+		}
+	};
+
 	return class extends React.Component {
 		static displayName = 'Cancelable';
 
@@ -70,13 +82,7 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 				this.props.onCancel();
 			}
 
-			if (typeof onCancel === 'string' && typeof this.props[onCancel] === 'function') {
-				this.props[onCancel]();
-			} else if (typeof onCancel === 'function') {
-				return onCancel(this.props);
-			} else {
-				return true;
-			}
+			return dispatchCancelToConfig(this.props);
 		}
 
 		handleModalCancel = handle(
