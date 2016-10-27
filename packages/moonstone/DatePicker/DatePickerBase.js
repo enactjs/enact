@@ -2,9 +2,10 @@ import {$L} from '@enact/i18n';
 import kind from '@enact/core/kind';
 import React from 'react';
 
+import ExpandableItem from '../ExpandableItem';
+
 import css from './DatePicker.less';
 import DateComponentPicker from './DateComponentPicker';
-
 
 /**
 * {@link module:@enact/moonstone/DatePicker~DatePickerBase} is the stateless functional date picker
@@ -142,7 +143,7 @@ const DatePickerBase = kind({
 		delete rest.value;
 
 		return (
-			<div {...rest}>
+			<ExpandableItem {...rest} showLabel>
 				{order.map(picker => {
 					switch (picker) {
 						case 'd':
@@ -154,6 +155,7 @@ const DatePickerBase = kind({
 									max={maxDays}
 									value={date}
 									onChange={onChangeDate}
+									wrap
 								/>
 							);
 						case 'm':
@@ -165,6 +167,7 @@ const DatePickerBase = kind({
 									max={maxMonths}
 									value={month}
 									onChange={onChangeMonth}
+									wrap
 								/>
 							);
 						case 'y':
@@ -182,7 +185,7 @@ const DatePickerBase = kind({
 
 					return null;
 				})}
-			</div>
+			</ExpandableItem>
 		);
 	}
 });

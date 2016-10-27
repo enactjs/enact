@@ -5,18 +5,14 @@
 	display: inline-block;
 	direction: ltr;
 
-	& > * {
-		display: inline-block;
-		vertical-align: middle;
-	}
-
 	/* Time/date pickers should always be arranged according to the order of the formatter */
 	:global(.enact-locale-right-to-left) & {
 		direction: rtl;
 	}	
 }
 
-.wrap {
+.dateComponentPicker {
+	display: inline-block;
 	min-width: 96px;
 	text-align: center;
 	margin: 12px 0;

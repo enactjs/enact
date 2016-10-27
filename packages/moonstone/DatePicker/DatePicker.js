@@ -6,11 +6,6 @@ import Expandable from '../Expandable';
 
 import DatePickerBase from './DatePickerBase';
 
-const ExpandableDatePicker = Expandable(
-	{showLabel: true},
-	DatePickerBase
-);
-
 /**
 * {@link module:@enact/moonstone/DatePicker~DatePicker} allows the selection (or simply display) of
 * a day, month, and year.
@@ -131,7 +126,6 @@ const DatePicker = class extends React.Component {
 		super(props);
 		this.cancelled = false;
 		this.state = {
-			open: props.open && !props.disabled,
 			value: this.toIDate(props.value)
 		};
 
@@ -147,7 +141,6 @@ const DatePicker = class extends React.Component {
 
 	componentWillReceiveProps (nextProps) {
 		this.setState({
-			open: 'open' in nextProps ? (nextProps.open && !nextProps.disabled) : this.state.open,
 			value: 'value' in nextProps ? this.toIDate(nextProps.value) : this.state.value
 		});
 	}
@@ -189,7 +182,7 @@ const DatePicker = class extends React.Component {
 	 */
 	calcValue = () => {
 		let value = this.state.value;
-		if (this.state.open && !value) {
+		if (this.props.open && !value) {
 			value = this.toIDate(new Date());
 		}
 
@@ -298,7 +291,6 @@ const DatePicker = class extends React.Component {
 		const cancelled = this.cancelled;
 		const value = cancelled ? this.toIDate(this.props.value) : this.state.value;
 		this.setState({
-			open: false,
 			value
 		}, () => {
 			// need to defer notifications until after the state change to prevent new props coming
@@ -313,25 +305,13 @@ const DatePicker = class extends React.Component {
 		this.cancelled = false;
 	}
 
-	/**
-	 * Handles the `onOpen` event from the ExpandableDatePicker in order to provide it a valid Date
-	 * value if `props.value` is undefined.
-	 *
-	 * @returns {undefined}
-	 */
-	handleOpen = () => {
-		this.setState({
-			open: true
-		});
-	}
-
 	render () {
 		const value = this.calcValue();
 		const label = value ? this.dateFormat.format(value) : null;
 		const dateComponents = this.calcDateComponents(value);
 
 		return (
-			<ExpandableDatePicker
+			<DatePickerBase
 				{...this.props}
 				{...dateComponents}
 				dateFormat={this.dateFormat}
@@ -341,7 +321,6 @@ const DatePicker = class extends React.Component {
 				onChangeMonth={this.handleChangeMonth}
 				onChangeYear={this.handleChangeYear}
 				onClose={this.handleClose}
-				onOpen={this.handleOpen}
 				order={this.order}
 				value={value}
 			/>
@@ -349,5 +328,7 @@ const DatePicker = class extends React.Component {
 	}
 };
 
-export default DatePicker;
-export {DatePicker, DatePickerBase};
+const ExpandableDatePicker = Expandable(DatePicker);
+
+export default ExpandableDatePicker;
+export {ExpandableDatePicker, DatePickerBase};

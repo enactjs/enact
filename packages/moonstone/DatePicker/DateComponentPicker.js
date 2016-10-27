@@ -56,11 +56,24 @@ const DateComponentPickerBase = kind({
 		 *
 		 * @type {String}
 		 */
-		label: React.PropTypes.string
+		label: React.PropTypes.string,
+
+		/*
+		 * When `true`, allow the picker to continue from the opposite end of the list of options.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		wrap: React.PropTypes.bool
 	},
 
-	render: ({disabled, label, max, min, value, ...rest}) => (
-		<div className={css.wrap}>
+	styles: {
+		css,
+		className: 'dateComponentPicker'
+	},
+
+	render: ({className, disabled, label, max, min, value, wrap, ...rest}) => (
+		<div className={className}>
 			<RangePicker
 				{...rest}
 				className={css.field}
@@ -71,7 +84,7 @@ const DateComponentPickerBase = kind({
 				orientation="vertical"
 				value={value}
 				width="small"
-				wrap
+				wrap={wrap}
 			/>
 			{label ? <div className={css.label}>{label}</div> : null}
 		</div>
