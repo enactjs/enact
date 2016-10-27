@@ -3,8 +3,7 @@ import Changeable from '@enact/ui/Changeable';
 import React from 'react';
 import pure from 'recompose/pure';
 
-import Expandable from '../Expandable';
-import ExpandableItem from '../ExpandableItem';
+import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 import IconButton from '../IconButton';
 import Picker from '../Picker';
 
@@ -151,7 +150,7 @@ const ExpandablePickerBase = kind({
 		} = props;
 
 		return (
-			<ExpandableItem {...rest} disabled={disabled}>
+			<ExpandableItemBase {...rest} disabled={disabled}>
 				<Picker
 					disabled={disabled}
 					onChange={onPick}
@@ -167,7 +166,7 @@ const ExpandablePickerBase = kind({
 					{children}
 				</Picker>
 				<IconButton onClick={onChange}>check</IconButton>
-			</ExpandableItem>
+			</ExpandableItemBase>
 		);
 	}
 });

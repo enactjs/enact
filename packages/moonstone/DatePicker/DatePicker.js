@@ -2,7 +2,7 @@ import DateFactory from 'ilib/DateFactory';
 import DateFmt from 'ilib/DateFmt';
 import React from 'react';
 
-import Expandable from '../Expandable';
+import {Expandable} from '../ExpandableItem';
 
 import DatePickerBase from './DatePickerBase';
 

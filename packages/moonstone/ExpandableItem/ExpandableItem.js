@@ -5,6 +5,7 @@ import Transition from '@enact/ui/Transition';
 
 import LabeledItem from '../LabeledItem';
 
+import Expandable from './Expandable';
 import ExpandableContainer from './ExpandableContainer';
 
 const TransitionContainer = SpotlightContainerDecorator(Transition);
@@ -153,5 +154,11 @@ const ExpandableItemBase = kind({
 	}
 });
 
-export default ExpandableItemBase;
-export {ExpandableItemBase as ExpandableItem, ExpandableItemBase};
+const ExpandableItem = Expandable(ExpandableItemBase);
+
+export default ExpandableItem;
+export {
+	Expandable,
+	ExpandableItem,
+	ExpandableItemBase
+};

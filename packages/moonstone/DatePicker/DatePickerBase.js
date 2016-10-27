@@ -2,7 +2,7 @@ import {$L} from '@enact/i18n';
 import kind from '@enact/core/kind';
 import React from 'react';
 
-import ExpandableItem from '../ExpandableItem';
+import {ExpandableItemBase} from '../ExpandableItem';
 
 import css from './DatePicker.less';
 import DateComponentPicker from './DateComponentPicker';
@@ -143,7 +143,7 @@ const DatePickerBase = kind({
 		delete rest.value;
 
 		return (
-			<ExpandableItem {...rest} showLabel>
+			<ExpandableItemBase {...rest} showLabel>
 				{order.map(picker => {
 					switch (picker) {
 						case 'd':
@@ -185,7 +185,7 @@ const DatePickerBase = kind({
 
 					return null;
 				})}
-			</ExpandableItem>
+			</ExpandableItemBase>
 		);
 	}
 });

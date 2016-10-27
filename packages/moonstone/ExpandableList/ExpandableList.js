@@ -4,8 +4,7 @@ import React, {PropTypes} from 'react';
 import {select as selectItem} from '@enact/core/selection';
 
 import CheckboxItem from '../CheckboxItem';
-import Expandable from '../Expandable';
-import ExpandableItem from '../ExpandableItem';
+import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 import Item from '../Item';
 import RadioItem from '../RadioItem';
 
@@ -130,11 +129,17 @@ const ExpandableListBase = kind({
 		delete rest.selected;
 
 		return (
-			<ExpandableItem {...rest}>
-				<Group childComponent={ListItem} childSelect={childSelect} onSelect={onSelect} selected={selected} selectedProp={selectedProp}>
+			<ExpandableItemBase {...rest}>
+				<Group
+					childComponent={ListItem}
+					childSelect={childSelect}
+					onSelect={onSelect}
+					selected={selected}
+					selectedProp={selectedProp}
+				>
 					{children}
 				</Group>
-			</ExpandableItem>
+			</ExpandableItemBase>
 		);
 	}
 });
