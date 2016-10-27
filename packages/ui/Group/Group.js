@@ -138,6 +138,7 @@ const GroupBase = kind({
 	render: (props) => {
 		delete props.onSelect;
 		delete props.childSelect;
+		delete props.select;
 		delete props.selected;
 		delete props.selectedProp;
 
