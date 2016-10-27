@@ -88,8 +88,6 @@ class Scrollbar extends Component {
 		onPrevScroll: () => {}
 	}
 
-	prevButtonDisabled = false
-	nextButtonDisabled = false
 	autoHide = true
 	thumbSize = 0
 	minThumbSizeRatio = 0
@@ -105,6 +103,11 @@ class Scrollbar extends Component {
 	constructor (props) {
 		super(props);
 
+		this.state = {
+			prevButtonDisabled: true,
+			nextButtonDisabled: false
+		};
+
 		this.scrollInfo = {
 			...((props.isVertical) ? upDownInfo : leftRightInfo),
 			clickPrevHandler: props.onPrevScroll,
@@ -115,35 +118,24 @@ class Scrollbar extends Component {
 		this.initThumbRef = this.initRef('thumbRef');
 	}
 
-	updateDisabledAttribute = (type, disabled) => {
-		const
-			buttonDisabled = type + 'ButtonDisabled',
-			buttonNodeRef = this[type + 'ButtonNodeRef'];
-
-		if (disabled !== this[buttonDisabled]) {
-			this[buttonDisabled] = disabled;
-			if (disabled) {
-				buttonNodeRef.setAttribute('disabled', true);
-			} else {
-				buttonNodeRef.removeAttribute('disabled');
-			}
-		}
-	}
-
 	updateButtons = (bounds) => {
 		const
 			{prevButtonNodeRef, nextButtonNodeRef} = this,
+			{prevButtonDisabled, nextButtonDisabled} = this.state,
 			currentPos = this.props.isVertical ? bounds.scrollTop : bounds.scrollLeft,
 			maxPos = this.props.isVertical ? bounds.maxTop : bounds.maxLeft,
-			prevButtonDisabled = currentPos <= 0,
-			nextButtonDisabled = currentPos >= maxPos;
+			shouldDisablePrevButton = currentPos <= 0,
+			shouldDisableNextButton = currentPos >= maxPos;
 
-		this.updateDisabledAttribute('prev', prevButtonDisabled);
-		this.updateDisabledAttribute('next', nextButtonDisabled);
+		if (prevButtonDisabled !== shouldDisablePrevButton) {
+			this.setState({prevButtonDisabled: shouldDisablePrevButton});
+		} else if (nextButtonDisabled !== shouldDisableNextButton) {
+			this.setState({nextButtonDisabled: shouldDisableNextButton});
+		}
 
-		if (prevButtonDisabled && doc.activeElement === prevButtonNodeRef) {
+		if (shouldDisablePrevButton && doc.activeElement === prevButtonNodeRef) {
 			Spotlight.focus(nextButtonNodeRef);
-		} else if (nextButtonDisabled && doc.activeElement === nextButtonNodeRef) {
+		} else if (shouldDisableNextButton && doc.activeElement === nextButtonNodeRef) {
 			Spotlight.focus(prevButtonNodeRef);
 		}
 	}
@@ -212,12 +204,6 @@ class Scrollbar extends Component {
 		this.nextButtonNodeRef = containerRef.children[2];
 	}
 
-	shouldComponentUpdate = (nextProps) => (
-		// We do not support to change onNextScroll, onPrevScroll props dynamically. So we do not need to check them here.
-		(nextProps.className !== this.props.className) ||
-		(nextProps.isVertical !== this.props.isVertical)
-	)
-
 	componentDidUpdate () {
 		this.calculateMetrics();
 	}
@@ -235,17 +221,18 @@ class Scrollbar extends Component {
 	render () {
 		const
 			{className} = this.props,
+			{prevButtonDisabled, nextButtonDisabled} = this.state,
 			{prevIcon, nextIcon, scrollbarClass, thumbClass,
 			prevButtonClass, nextButtonClass, clickPrevHandler, clickNextHandler} = this.scrollInfo,
 			scrollbarClassNames = classNames(className, scrollbarClass);
 
 		return (
 			<div ref={this.initContainerRef} className={scrollbarClassNames}>
-				<IconButton small className={prevButtonClass} onClick={clickPrevHandler}>
+				<IconButton small disabled={prevButtonDisabled} className={prevButtonClass} onClick={clickPrevHandler}>
 					{prevIcon}
 				</IconButton>
 				<div ref={this.initThumbRef} className={thumbClass} />
-				<IconButton small className={nextButtonClass} onClick={clickNextHandler}>
+				<IconButton small disabled={nextButtonDisabled} className={nextButtonClass} onClick={clickNextHandler}>
 					{nextIcon}
 				</IconButton>
 			</div>
