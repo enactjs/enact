@@ -30,7 +30,7 @@ const isSelected = R.curry(function (item, selected) {
  * @public
  */
 const select = R.curry(function (mode, item, selected) {
-	if (mode === 'radio' || (mode === 'multiple' && !selected)) {
+	if (mode === 'radio' || (mode === 'multiple' && selected == null)) {
 		// When selection is disabled, when selecting only 1, or when selecting the
 		// first of multiple, we can forward the source event as is.
 		return item;

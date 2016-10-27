@@ -88,6 +88,21 @@ const GroupBase = kind({
 		onSelect: PropTypes.func,
 
 		/**
+		 * Selection mode for the group
+		 *
+		 * * `single` - Allows for 0 or 1 item to be selected. The selected item may be deselected.
+		 * * `radio` - Allows for 0 or 1 item to be selected. The selected item may only be
+		 *    deselected by selecting another item.
+		 * * `multiple` - Allows 0 to _n_ items to be selected. Each item may be selected or
+		 *    deselected.
+		 *
+		 * @type {String}
+		 * @default 'single'
+		 * @public
+		 */
+		select: PropTypes.oneOf(['single', 'radio', 'multiple']),
+
+		/**
 		 * The index(es) of the currently activated item.
 		 *
 		 * @type {Number | Array}
@@ -109,6 +124,7 @@ const GroupBase = kind({
 		childProp: 'children',
 		childSelect: 'onClick',
 		indexProp: 'data-index',
+		select: 'single',
 		selectedProp: 'data-selected'
 	},
 
