@@ -178,11 +178,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		componentDidUpdate (nextProps) {
-			if (nextProps.children !== this.props.children) {
-				this.marqueeOnRender = true;
+		componentDidUpdate (prevProps) {
+			if (prevProps.children !== this.props.children) {
+				this.childrenChanged = true;
 			} else {
-				this.marqueeOnRender = false;
+				this.childrenChanged = false;
 			}
 
 			this.initMarquee();
@@ -234,7 +234,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		initMarquee () {
 			this.calculateMetrics();
-			if (this.marqueeOnRender) {
+			if (this.marqueeOnRender || this.childrenChanged) {
 				this.startAnimation(this.props.marqueeOnRenderDelay);
 			}
 		}
