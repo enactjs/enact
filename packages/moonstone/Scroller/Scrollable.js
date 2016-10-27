@@ -504,16 +504,14 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		scroll = (left, top, skipPositionContainer = false) => {
-			const {scrollLeft, scrollTop} = this;
-
-			if (left !== scrollLeft) {
+			if (left !== this.scrollLeft) {
 				this.setScrollLeft(left);
 			}
-			if (top !== scrollTop) {
+			if (top !== this.scrollTop) {
 				this.setScrollTop(top);
 			}
 
-			this.childRef.setScrollPosition(scrollLeft, scrollTop, this.dirHorizontal, this.dirVertical, skipPositionContainer);
+			this.childRef.setScrollPosition(this.scrollLeft, this.scrollTop, this.dirHorizontal, this.dirVertical, skipPositionContainer);
 			this.doScrolling();
 		}
 
