@@ -193,11 +193,15 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		checkMarqueeOnRender (props) {
-			this.marqueeOnRender =	props.marqueeOn === 'render' &&
+			this.marqueeOnRender = props.marqueeOn === 'render' &&
 									!props.disabled &&
 									!props.marqueeDisabled;
 
 			return this.marqueeOnRender;
+		}
+
+		checkChildrenChangedOnEvent () {
+			return (this.childrenChanged && this.isFocused) || (this.childrenChanged && this.isHovered);
 		}
 
 		/**
@@ -234,7 +238,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		initMarquee () {
 			this.calculateMetrics();
-			if (this.marqueeOnRender || this.childrenChanged) {
+			if (this.marqueeOnRender || this.checkChildrenChangedOnEvent()) {
 				this.startAnimation(this.props.marqueeOnRenderDelay);
 			}
 		}
@@ -312,7 +316,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		*/
 		startAnimation = (delay = this.props.marqueeDelay) => {
 			if (this.state.animating || this.contentFits) return;
-
 			this.setTimeout(() => {
 				this.setState({
 					animating: true
@@ -359,21 +362,25 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleFocus = (ev) => {
+			this.isFocused = true;
 			this.startAnimation();
 			forwardFocus(ev, this.props);
 		}
 
 		handleBlur = (ev) => {
+			this.isFocused = false;
 			this.cancelAnimation();
 			forwardBlur(ev, this.props);
 		}
 
 		handleEnter = (ev) => {
+			this.isHovered = true;
 			this.startAnimation();
 			forwardEnter(ev, this.props);
 		}
 
 		handleLeave = (ev) => {
+			this.isHovered = false;
 			this.cancelAnimation();
 			forwardLeave(ev, this.props);
 		}
