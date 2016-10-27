@@ -288,21 +288,27 @@ const DatePicker = class extends React.Component {
 	 * @returns {undefined}
 	 */
 	handleClose = () => {
-		const cancelled = this.cancelled;
-		const value = cancelled ? this.toIDate(this.props.value) : this.state.value;
-		this.setState({
-			value
-		}, () => {
-			// need to defer notifications until after the state change to prevent new props coming
-			// in and inadvernently overwriting the above change
-			if (this.props.onChange && !cancelled) {
+		const value = this.toIDate(this.props.value);
+
+		if (this.cancelled) {
+			// If the change was cancelled, revert our state to the value from props
+			this.setState({value});
+			this.cancelled = false;
+		} else if (this.props.onChange) {
+			// If it wasn't cancelled *and* we have an onChange handler to call, determine if the
+			// value actually changed and, if so, call the handler.
+			const changed =	(value == null && this.state.value) ||
+							(value && (
+								value.month !== this.state.value.month ||
+								value.day !== this.state.value.day ||
+								value.year !== this.state.value.year
+							));
+			if (changed) {
 				this.props.onChange({
-					value: value && value.getJSDate()
+					value: this.state.value.getJSDate()
 				});
 			}
-		});
-
-		this.cancelled = false;
+		}
 	}
 
 	render () {
