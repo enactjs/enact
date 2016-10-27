@@ -61,11 +61,11 @@ const ExpandableItemBase = kind({
 		/**
 		 * The secondary, or supportive text. Typically under the `title`, a subtitle.
 		 *
-		 * @type {String|Number}
+		 * @type {String}
 		 * @default null
 		 * @public
 		 */
-		label: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+		label: PropTypes.string,
 
 		/**
 		 * Text to display when no `label` or `value` is set. Leave blank to have the initial

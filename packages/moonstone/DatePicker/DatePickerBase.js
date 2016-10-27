@@ -143,7 +143,7 @@ const DatePickerBase = kind({
 		delete rest.value;
 
 		return (
-			<ExpandableItemBase {...rest} showLabel>
+			<ExpandableItemBase {...rest} showLabel="always">
 				{order.map(picker => {
 					switch (picker) {
 						case 'd':

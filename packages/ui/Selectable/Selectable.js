@@ -97,7 +97,7 @@ const Selectable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillReceiveProps (nextProps) {
-			if (mutable) {
+			if (mutable && prop in nextProps) {
 				const selected = nextProps[prop];
 				this.setState({selected});
 			}

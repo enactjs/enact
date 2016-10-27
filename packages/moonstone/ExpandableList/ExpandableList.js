@@ -62,6 +62,16 @@ const ExpandableListBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
+		 * The secondary, or supportive text. Typically under the `title`, a subtitle. If omitted,
+		 * the label will be generated as a comma-separated list of the selected items.
+		 *
+		 * @type {String}
+		 * @default null
+		 * @public
+		 */
+		label: PropTypes.string,
+
+		/**
 		 * Text to display when no `	` is set. Leave blank to have the initial
 		 * control not display a label when no option is selected.
 		 *
@@ -132,8 +142,10 @@ const ExpandableListBase = kind({
 
 	computed: {
 		// generate a label that concatenates the text of the selected items
-		label: ({children, select, selected}) => {
-			if (children.length && (selected || selected === 0)) {
+		label: ({children, label, select, selected}) => {
+			if (label) {
+				return label;
+			} else if (children.length && (selected || selected === 0)) {
 				const isArray = Array.isArray(selected);
 				if (select === 'multiple' && isArray) {
 					return selected.map(i => children[i]).filter(str => !!str).join(', ');
