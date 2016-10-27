@@ -1,7 +1,7 @@
 /**
- * Exports the {@link module:@enact/moonstone/ExpandableDayPicker~ExpandableDayPicker} components.
+ * Exports the {@link module:@enact/moonstone/DayPicker~DayPicker} components.
  *
- * @module @enact/moonstone/ExpandableDayPicker
+ * @module @enact/moonstone/DayPicker
  */
 
 import {$L} from '@enact/i18n';
@@ -87,15 +87,15 @@ const getSelectedDayString = ({selected = []}) => {
 };
 
 /**
- * {@link module:@enact/moonstone/ExpandableDayPicker~ExpandableDayPicker} is a component that
+ * {@link module:@enact/moonstone/DayPicker~DayPicker} is a component that
  * allows the user to choose day(s) of the week.
  *
- * @class ExpandableDayPicker
+ * @class DayPicker
  * @ui
  * @public
  */
-const ExpandableDayPicker = kind({
-	name: 'ExpandableDayPicker',
+const DayPicker = kind({
+	name: 'DayPicker',
 
 	propTypes: {
 		/**
@@ -153,11 +153,12 @@ const ExpandableDayPicker = kind({
 		open: PropTypes.bool,
 
 		/**
-		 * Selected value(s). An array of numbers representing the days of the week, 0 indexed.
-		 * @type {Array}
+		 * An array of numbers (0-indexed) representing the selected days of the week.
+		 *
+		 * @type {Number|Number{}}
 		 * @public
 		 */
-		selected: PropTypes.array
+		selected: PropTypes.oneOfType([PropTypes.number, PropTypes.arrayOf(PropTypes.number)])
 	},
 
 	computed: {
@@ -171,5 +172,5 @@ const ExpandableDayPicker = kind({
 	)
 });
 
-export default ExpandableDayPicker;
-export {ExpandableDayPicker, ExpandableDayPicker as ExpandableDayPickerBase};
+export default DayPicker;
+export {DayPicker, DayPicker as DayPickerBase};

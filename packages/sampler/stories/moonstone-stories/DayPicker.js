@@ -1,19 +1,19 @@
-import ExpandableDayPicker from '@enact/moonstone/ExpandableDayPicker';
+import DayPicker from '@enact/moonstone/DayPicker';
 import React from 'react';
 import Selectable from '@enact/ui/Selectable';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
 
-const DayPicker = Selectable(ExpandableDayPicker);
-DayPicker.displayName = 'ExpandableDayPicker';
+const SelectableDayPicker = Selectable(DayPicker);
+SelectableDayPicker.displayName = 'DayPicker';
 
-storiesOf('ExpandableDayPicker')
+storiesOf('DayPicker')
 	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
-		'Basic usage of ExpandableDayPicker',
+		'Basic usage of DayPicker',
 		() => (
-			<DayPicker
+			<SelectableDayPicker
 				title={text('title', 'Expandable Day Picker')}
 				noneText={text('none', 'none')}
 				disabled={boolean('disabled', false)}

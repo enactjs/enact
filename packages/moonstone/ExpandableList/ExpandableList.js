@@ -130,7 +130,7 @@ const ExpandableListBase = kind({
 		/**
 		 * Index or array of indices of the selected item(s)
 		 *
-		 * @type {Number}
+		 * @type {Number|Number[]}
 		 * @public
 		 */
 		selected: PropTypes.oneOfType([PropTypes.number, PropTypes.arrayOf(PropTypes.number)])
