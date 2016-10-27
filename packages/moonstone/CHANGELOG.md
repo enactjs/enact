@@ -6,6 +6,11 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+- Added `moonstone/DatePicker`
+- Added `moonstone/ExpandableItem`
+- Overhauled and moved `moonstone/Expandable` into a submodule of `moonstone/ExpandableItem`
+- Overhauled `ExpandableList` to properly support selection
+- Removed `moonstone/ExpandableCheckboxItemGroup` in favor of `ExpandableList`
 - `moonstone/Divider`'s `children` property is now optional
 
 
