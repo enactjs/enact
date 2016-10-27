@@ -1,3 +1,12 @@
+/**
+ * Exports the {@link module:@enact/ui/ExpandableItem~ExpandableItem} and
+ * {@link module:@enact/ui/ExpandableItem~ExpandableItemBase} components and
+ * {@link module:@enact/ui/ExpandableItem~Expandable} higher-order component. The default export is
+ * {@link module:@enact/ui/ExpandableItem~ExpandableItem}.
+ *
+ * @module @enact/ui/ExpandableItem
+ */
+
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 import {SpotlightContainerDecorator} from '@enact/spotlight';
@@ -10,6 +19,15 @@ import ExpandableContainer from './ExpandableContainer';
 
 const TransitionContainer = SpotlightContainerDecorator(Transition);
 
+/**
+ * {@link module:@enact/moonstone/ExpandableItem~ExpandableItem} is a stateless component that
+ * renders a {@link module:@enact/moonstone/LabeledItem~LabeledItem} that can be expanded to show
+ * additional contents.
+ *
+ * @class ExpandableItemBase
+ * @ui
+ * @private
+ */
 const ExpandableItemBase = kind({
 	name: 'ExpandableItem',
 
@@ -154,6 +172,16 @@ const ExpandableItemBase = kind({
 	}
 });
 
+
+/**
+ * {@link module:@enact/moonstone/ExpandableItem~ExpandableItem} renders a
+ * {@link module:@enact/moonstone/LabeledItem~LabeledItem} that can be expanded to show additional
+ * contents.
+ *
+ * @class ExpandableItem
+ * @ui
+ * @public
+ */
 const ExpandableItem = Expandable(ExpandableItemBase);
 
 export default ExpandableItem;

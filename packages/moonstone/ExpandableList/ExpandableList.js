@@ -1,3 +1,11 @@
+/**
+ * Exports the {@link module:@enact/ui/ExpandableList~ExpandableList} and
+ * {@link module:@enact/ui/ExpandableList~ExpandableListBase} components. The default export is
+ * {@link module:@enact/ui/ExpandableList~ExpandableList}.
+ *
+ * @module @enact/ui/ExpandableList
+ */
+
 import Group from '@enact/ui/Group';
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
@@ -6,6 +14,15 @@ import CheckboxItem from '../CheckboxItem';
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 import RadioItem from '../RadioItem';
 
+/**
+ * {@link module:@enact/moonstone/ExpandableList~ExpandableList} is a stateless component that
+ * renders a {@link module:@enact/moonstone/LabeledItem~LabeledItem} that can be expanded to show
+ * a selectable list of items.
+ *
+ * @class ExpandableListBase
+ * @ui
+ * @private
+ */
 const ExpandableListBase = kind({
 	name: 'ExpandableList',
 
@@ -19,6 +36,15 @@ const ExpandableListBase = kind({
 		children: PropTypes.arrayOf(PropTypes.string).isRequired,
 
 		/**
+		 * The primary text of the item.
+		 *
+		 * @type {String}
+		 * @required
+		 * @public
+		 */
+		title: PropTypes.string.isRequired,
+
+		/**
 		 * When `true` and `select` is not `'multiple'`, the expandable will be closed when an item
 		 * is selected.
 		 *
@@ -29,12 +55,37 @@ const ExpandableListBase = kind({
 		autoClose: PropTypes.bool,
 
 		/**
-		 * Called when the expandable is closing. Invoked `onSelect` if `autoClose` is `true`.
+		 * When `true`, applies a disabled style and the control becomes non-interactive.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		disabled: PropTypes.bool,
+
+		/**
+		 * Text to display when no `	` is set. Leave blank to have the initial
+		 * control not display a label when no option is selected.
+		 *
+		 * @type {String}
+		 */
+		noneText: PropTypes.string,
+
+		/**
+		 * Called when the expandable is closing. Also called when selecting an item if `autoClose`
+		 * is `true`.
 		 *
 		 * @type {Function}
 		 * @public
 		 */
 		onClose: PropTypes.func,
+
+		/**
+		 * Called when the expandable is opening
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onOpen: PropTypes.func,
 
 		/**
 		 * Called when an item is selected
@@ -43,6 +94,14 @@ const ExpandableListBase = kind({
 		 * @public
 		 */
 		onSelect: PropTypes.func,
+
+		/**
+		 * When `true`, the expandable is open with its contents visible
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		open: PropTypes.bool,
 
 		/**
 		 * Selection mode for the list
@@ -109,7 +168,7 @@ const ExpandableListBase = kind({
 		delete rest.select;
 
 		return (
-			<ExpandableItemBase {...rest}>
+			<ExpandableItemBase {...rest} showLabel="auto">
 				<Group
 					childComponent={ListItem}
 					childSelect="onToggle"
@@ -125,6 +184,15 @@ const ExpandableListBase = kind({
 	}
 });
 
+/**
+ * {@link module:@enact/moonstone/ExpandableItem~ExpandableItem} renders a
+ * {@link module:@enact/moonstone/LabeledItem~LabeledItem} that can be expanded to show a selectable
+ * list of items.
+ *
+ * @class ExpandableList
+ * @ui
+ * @public
+ */
 const ExpandableList = Expandable(ExpandableListBase);
 
 export default ExpandableList;
