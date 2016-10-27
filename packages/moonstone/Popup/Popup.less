@@ -1,3 +1,4 @@
+@import '~@enact/ui/styles/mixins.less';
 @import '../styles/colors.less';
 @import '../styles/variables.less';
 
@@ -20,15 +21,10 @@
 	}
 
 	&.reserveClose {
-		padding-right: @moon-icon-button-small-size + @moon-spotlight-outset;
+		.padding-start-end(@padding-h, @moon-icon-button-small-size + @moon-spotlight-outset)
 	}
 
 	:global(.enact-locale-right-to-left) & {
-		&.reserveClose {
-			padding-right: 0;
-			padding-left: @moon-icon-button-small-size + @moon-spotlight-outset;
-		}
-
 		.closeButton {
 			right: auto;
 			left: @moon-spotlight-outset;
