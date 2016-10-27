@@ -170,21 +170,16 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		componentWillReceiveProps (next) {
 			const {marqueeOn, marqueeDisabled} = this.props;
 			this.checkMarqueeOnRender(next);
-			if (next.marqueeOn !== marqueeOn || next.marqueeDisabled !== marqueeDisabled) {
-				this.cancelAnimation();
-			} else if (!childrenEquals(this.props.children, next.children)) {
+			this.childrenChanged = !childrenEquals(this.props.children, next.children);
+			if (this.childrenChanged) {
 				this.invalidateMetrics();
+				this.cancelAnimation();
+			} else if (next.marqueeOn !== marqueeOn || next.marqueeDisabled !== marqueeDisabled) {
 				this.cancelAnimation();
 			}
 		}
 
-		componentDidUpdate (prevProps) {
-			if (prevProps.children !== this.props.children) {
-				this.childrenChanged = true;
-			} else {
-				this.childrenChanged = false;
-			}
-
+		componentDidUpdate () {
 			this.initMarquee();
 		}
 
@@ -200,8 +195,18 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			return this.marqueeOnRender;
 		}
 
-		checkChildrenChangedOnEvent () {
-			return (this.childrenChanged && this.isFocused) || (this.childrenChanged && this.isHovered);
+		/**
+		 * Checks to see if the children changed during a condition that should cause us to re-check
+		 * the animation state
+		 *
+		 * @returns {Boolean} - `true` if a possible marquee condition exists
+		 */
+		checkHoverFocus () {
+			return (this.childrenChanged && (
+					(this.isFocused && this.props.marqueeOn === 'focus') ||
+					(this.isHovered && this.props.marqueeOn === 'hover')
+				)
+			);
 		}
 
 		/**
@@ -238,7 +243,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		initMarquee () {
 			this.calculateMetrics();
-			if (this.marqueeOnRender || this.checkChildrenChangedOnEvent()) {
+			if (this.marqueeOnRender || this.checkHoverFocus()) {
 				this.startAnimation(this.props.marqueeOnRenderDelay);
 			}
 		}
