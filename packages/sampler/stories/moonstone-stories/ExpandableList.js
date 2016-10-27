@@ -14,13 +14,14 @@ storiesOf('ExpandableList')
 		'Basic usage of ExpandableList',
 		() => (
 			<List
+				autoClose={boolean('autoClose', false)}
 				disabled={boolean('disabled', false)}
 				noneText={text('noneText', 'nothing selected')}
 				onChange={action('onChange')}
 				onClose={action('onClose')}
 				onOpen={action('onOpen')}
 				open={boolean('open', false)}
-				select={select('select', ['none', 'single', 'radio', 'multiple'], 'none')}
+				select={select('select', ['single', 'radio', 'multiple'], 'single')}
 				title={text('title', 'title')}
 			>
 				{['option1', 'option2', 'option3']}

@@ -49,7 +49,6 @@ const ExpandableListBase = kind({
 		 * is selected.
 		 *
 		 * @type {Boolean}
-		 * @default true
 		 * @public
 		 */
 		autoClose: PropTypes.bool,
@@ -128,7 +127,6 @@ const ExpandableListBase = kind({
 	},
 
 	defaultProps: {
-		autoClose: true,
 		select: 'single'
 	},
 

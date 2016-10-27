@@ -105,15 +105,15 @@ const ExpandableItemBase = kind({
 		/**
 		 * Controls when the label is shown.
 		 *
-		 * * `true` - The label is always visible
-		 * * `false` - The label is always hidden
+		 * * `'always'` - The label is always visible
+		 * * `'never'` - The label is never visible
 		 * * `'auto'` - The label is visible when the expandable is closed
 		 *
-		 * @type {Boolean|String}
+		 * @type {String}
 		 * @default 'auto'
 		 * @public
 		 */
-		showLabel: PropTypes.oneOf([true, false, 'auto'])
+		showLabel: PropTypes.oneOf(['always', 'never', 'auto'])
 	},
 
 	defaultProps: {
@@ -125,7 +125,7 @@ const ExpandableItemBase = kind({
 	computed: {
 		label: ({disabled, label, noneText, open, showLabel}) => {
 			const isOpen = open && !disabled;
-			if (showLabel === true || (!isOpen && showLabel)) {
+			if (showLabel === 'always' || (!isOpen && showLabel !== 'never')) {
 				return label || noneText;
 			} else {
 				return null;
