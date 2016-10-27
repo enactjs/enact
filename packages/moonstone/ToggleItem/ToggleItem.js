@@ -92,6 +92,16 @@ const ToggleItemBase = kind({
 		onToggle: PropTypes.func,
 
 		/**
+		 * Applies translucent style to the `Icon` when the current item has been
+		 * spotlighted and is not checked.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		translucentIcon: PropTypes.bool,
+
+		/**
 		 * The value that will be sent to the `onToggle` handler.
 		 * @type {*}
 		 * @default ''
@@ -106,6 +116,7 @@ const ToggleItemBase = kind({
 		icon: '',
 		iconClasses: '',
 		inline: false,
+		translucentIcon: false,
 		value: ''
 	},
 
@@ -116,12 +127,13 @@ const ToggleItemBase = kind({
 
 	computed: {
 		className: ({inline, styler}) => styler.append({inline}),
-		icon: ({checked, icon, iconClasses, styler}) => {
+		icon: ({checked, icon, iconClasses, translucentIcon, styler}) => {
 			if (React.isValidElement(icon)) {
 				return icon;
 			}
 
-			return <Icon className={styler.join(css.icon, iconClasses, {checked})}>{icon}</Icon>;
+			const translucent = !checked && translucentIcon ? css.translucent : null;
+			return <Icon className={styler.join(css.icon, iconClasses, translucent, {checked})}>{icon}</Icon>;
 		},
 		onToggle: ({onToggle, onClick, checked, disabled, value}) => {
 			if (!disabled && (onToggle || onClick)) {
@@ -136,6 +148,7 @@ const ToggleItemBase = kind({
 	render: ({children, icon, onToggle, ...rest}) => {
 		delete rest.iconClasses;
 		delete rest.inline;
+		delete rest.translucentIcon;
 
 		return (
 			<Item {...rest} component='div' onClick={onToggle}>

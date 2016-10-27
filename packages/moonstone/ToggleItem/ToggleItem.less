@@ -25,4 +25,11 @@
 	.content {
 		flex-grow: 1;
 	}
+
+	&:global(.spottable):focus {
+		.translucent {
+			visibility: visible;
+			opacity: 0.3;
+		}
+	}
 }
