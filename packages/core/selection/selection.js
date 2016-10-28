@@ -30,20 +30,29 @@ const isSelected = R.curry(function (item, selected) {
  * @public
  */
 const select = R.curry(function (mode, item, selected) {
-	if (mode === 'radio' || (mode === 'multiple' && selected == null)) {
+	if (mode === 'radio') {
 		// When selection is disabled, when selecting only 1, or when selecting the
 		// first of multiple, we can forward the source event as is.
 		return item;
 	} else if (mode === 'single') {
 		// When selecting 0 or 1, we have to unselect it if selected
 		return isSelected(item, selected) ? null : item;
+	} else if (selected == null) {
+		// When selection 0 or n but no prior selection, wrap item in an array
+		return [item];
 	} else {
 		// Otherwise we're selecting multiple so we have to either deselect it if
 		// already selected or select it if not.
 		let updated = Array.isArray(selected) ? selected.slice() : [selected];
 		const index = updated.indexOf(item);
 		if (index >= 0) {
-			updated.splice(index, 1);
+			if (updated.length === 1) {
+				// item should be deselected and is the only item in the array so return null
+				updated = null;
+			} else {
+				// otherwise there are multiple selected so remove item
+				updated.splice(index, 1);
+			}
 		} else {
 			// insert and sort
 			updated.push(item);

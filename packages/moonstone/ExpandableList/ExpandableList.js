@@ -170,6 +170,10 @@ const ExpandableListBase = kind({
 			if (handler) {
 				handler(ev);
 			}
+		},
+
+		selected: ({select, selected}) => {
+			return (select === 'single' && Array.isArray(selected)) ? selected[0] : selected;
 		}
 	},
 
