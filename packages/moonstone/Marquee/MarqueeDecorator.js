@@ -160,18 +160,15 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			};
 
 			this.invalidateMetrics();
-			this.checkMarqueeOnRender(props);
 		}
 
 		componentDidMount () {
-			this.initMarquee();
+			this.initMarquee(this.props.marqueeOnRenderDelay);
 		}
 
 		componentWillReceiveProps (next) {
 			const {marqueeOn, marqueeDisabled} = this.props;
-			this.checkMarqueeOnRender(next);
-			this.childrenChanged = !childrenEquals(this.props.children, next.children);
-			if (this.childrenChanged) {
+			if (!childrenEquals(this.props.children, next.children)) {
 				this.invalidateMetrics();
 				this.cancelAnimation();
 			} else if (next.marqueeOn !== marqueeOn || next.marqueeDisabled !== marqueeDisabled) {
@@ -180,33 +177,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidUpdate () {
-			this.initMarquee();
+			this.initMarquee(this.props.delay);
 		}
 
 		componentWillUnmount () {
 			this.clearTimeout();
-		}
-
-		checkMarqueeOnRender (props) {
-			this.marqueeOnRender = props.marqueeOn === 'render' &&
-									!props.disabled &&
-									!props.marqueeDisabled;
-
-			return this.marqueeOnRender;
-		}
-
-		/**
-		 * Checks to see if the children changed during a condition that should cause us to re-check
-		 * the animation state
-		 *
-		 * @returns {Boolean} - `true` if a possible marquee condition exists
-		 */
-		checkHoverFocus () {
-			return (this.childrenChanged && (
-					(this.isFocused && this.props.marqueeOn === 'focus') ||
-					(this.isHovered && this.props.marqueeOn === 'hover')
-				)
-			);
 		}
 
 		/**
@@ -236,15 +211,33 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		/**
+		 * Checks to see if the children changed during a condition that should cause us to re-check
+		 * the animation state
+		 *
+		 * @returns {Boolean} - `true` if a possible marquee condition exists
+		 */
+		shouldStartMarquee () {
+			return	this.distance === null && !this.props.disabled && !this.props.marqueeDisabled &&
+					this.props.marqueeOn === 'render' ||
+					(this.isFocused && this.props.marqueeOn === 'focus') ||
+					(this.isHovered && this.props.marqueeOn === 'hover');
+		}
+
+		/**
 		 * Initializes the marquee by calculating the distance and conditionally starting the
 		 * animation
 		 *
+		 * @param {Number} delay Milliseconds until animation should start
 		 * @returns {undefined}
 		 */
-		initMarquee () {
-			this.calculateMetrics();
-			if (this.marqueeOnRender || this.checkHoverFocus()) {
-				this.startAnimation(this.props.marqueeOnRenderDelay);
+		initMarquee (delay) {
+			// shouldStartMarquee relies on a `null` distance to indicate the metrics have been
+			// invalidated so we have to calculate after this check.
+			if (this.shouldStartMarquee()) {
+				this.calculateMetrics();
+				this.startAnimation(delay);
+			} else {
+				this.calculateMetrics();
 			}
 		}
 
@@ -321,6 +314,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		*/
 		startAnimation = (delay = this.props.marqueeDelay) => {
 			if (this.state.animating || this.contentFits) return;
+
 			this.setTimeout(() => {
 				this.setState({
 					animating: true
