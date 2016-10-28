@@ -17,7 +17,7 @@ storiesOf('ExpandableList')
 				autoClose={boolean('autoClose', false)}
 				disabled={boolean('disabled', false)}
 				noneText={text('noneText', 'nothing selected')}
-				onChange={action('onChange')}
+				onSelect={action('onSelect')}
 				onClose={action('onClose')}
 				onOpen={action('onOpen')}
 				open={boolean('open', false)}
