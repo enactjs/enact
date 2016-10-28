@@ -20,6 +20,14 @@ const isRtlText = function (str) {
 		return rtlPattern.test(str);
 	}
 
+	if (Array.isArray(str)) {
+		return str.reduce((prev, curr) => {
+			if(curr.props.children){
+				return rtlPattern.test(curr.props.children) ? true : prev
+			}
+		}, false)
+	}
+
 	return false;
 };
 
