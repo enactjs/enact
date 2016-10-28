@@ -7,12 +7,6 @@ BodyText.propTypes = Object.assign({}, BodyTextBase.propTypes, BodyText.propType
 BodyText.defaultProps = Object.assign({}, BodyTextBase.defaultProps, BodyText.defaultProps);
 BodyText.displayName = 'BodyText';
 
-// Set up some defaults for info and knobs
-// const prop = {
-// 	// backgroundOpacity: {'opaque': 'opaque', 'translucent': 'translucent', 'transparent': 'transparent'}
-// 	centered : false
-// };
-
 storiesOf('BodyText')
 	.addDecorator(withKnobs)
 	.addWithInfo(
