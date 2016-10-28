@@ -1,6 +1,6 @@
 import {select, isSelected} from '../selection';
 
-describe.only('selection', () => {
+describe('selection', () => {
 
 	// isSelected
 
