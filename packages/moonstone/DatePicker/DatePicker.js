@@ -203,13 +203,13 @@ const DatePicker = class extends React.Component {
 			maxDays: 31,
 			year: 1900,
 			month: 1,
-			date: 1
+			day: 1
 		};
 
 		if (value) {
 			values.year = value.getYears();
 			values.month = value.getMonths();
-			values.date = value.getDays();
+			values.day = value.getDays();
 			values.maxMonths = this.dateFormat.cal.getNumMonths(values.year);
 			values.maxDays = this.dateFormat.cal.getMonLength(values.month, values.year);
 		}

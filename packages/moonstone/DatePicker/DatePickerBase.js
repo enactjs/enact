@@ -21,13 +21,13 @@ const DatePickerBase = kind({
 
 	propTyptes: {
 		/**
-		 * The `date` component of the Date
+		 * The `day` component of the Date
 		 *
 		 * @type {Number}
 		 * @required
 		 * @public
 		 */
-		date: React.PropTypes.number.isRequired,
+		day: React.PropTypes.number.isRequired,
 
 		/**
 		 * The number of days in the month
@@ -136,7 +136,7 @@ const DatePickerBase = kind({
 		className: 'datePicker'
 	},
 
-	render: ({date, maxDays, maxMonths, maxYear, minYear, month, noLabels, onChangeDate, onChangeMonth, onChangeYear, order, year, ...rest}) => {
+	render: ({day, maxDays, maxMonths, maxYear, minYear, month, noLabels, onChangeDate, onChangeMonth, onChangeYear, order, year, ...rest}) => {
 
 		delete rest.dateFormat;
 		delete rest.onChange;
@@ -153,7 +153,7 @@ const DatePickerBase = kind({
 									label={noLabels || $L('day')}
 									min={1}
 									max={maxDays}
-									value={date}
+									value={day}
 									onChange={onChangeDate}
 									wrap
 								/>
