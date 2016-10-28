@@ -59,6 +59,22 @@ const Spotlight = (function() {
 
 	const _enterKeyCodes = [13, 16777221];
 
+	/**
+	 * The key code of the pointer show event.
+	 *
+	 * @type {Number}
+	 * @default 1536
+	 */
+	const _pointerShowKeyCode = 1536;
+
+	/**
+	 * The key code of the pointer hide event.
+	 *
+	 * @type {Number}
+	 * @default 1537
+	 */
+	const _pointerHideKeyCode = 1537;
+
 	const _containerPrefix = 'container-';
 
 	/**
@@ -72,6 +88,31 @@ const Spotlight = (function() {
 	let _defaultContainerId = '';
 	let _lastContainerId = '';
 	let _duringFocusChange = false;
+
+	/**
+	 * Whether Spotlight is in pointer mode (as opposed to 5-way mode).
+	 *
+	 * @type {Boolean}
+	 * @default true
+	 */
+	let _pointerMode = true;
+
+	/**
+	 * Timestamp at the last point the pointer was hidden.
+	 *
+	 * @type {Number}
+	 * @default 0
+	 */
+	let _pointerHiddenTime = 0;
+
+	/**
+	 * Length of time in milliseconds required after hiding pointer before 5-way keys
+	 * are processed.
+	 *
+	 * @type {Number}
+	 * @default 300
+	 */
+	let _pointerHiddenToKeyTimeout = 300;
 
 	/*
 	* polyfills
@@ -533,7 +574,7 @@ const Spotlight = (function() {
 
 	function getContainerId (elem) {
 		for (let id in _containers) {
-			if (!_containers[id].selectorDisabled && matchSelector(elem, _containers[id].selector)) {
+			if (!_containers[id].selectorDisabled && isNavigable(elem, id, true)) {
 				return id;
 			}
 		}
@@ -780,13 +821,13 @@ const Spotlight = (function() {
 		return false;
 	}
 
-	function preventDefault(evt) {
+	function preventDefault (evt) {
 		evt.preventDefault();
 		evt.stopPropagation();
 		return false;
 	}
 
-	function onAcceleratedKeyDown(evt) {
+	function onAcceleratedKeyDown (evt) {
 		let currentFocusedElement = getCurrent();
 
 		if (!currentFocusedElement) {
@@ -809,8 +850,12 @@ const Spotlight = (function() {
 		}
 	}
 
-	function onKeyUp(evt) {
-		if (!_containerCount || _pause) {
+	function shouldPreventNavigation () {
+		return (!_containerCount || _pause);
+	}
+
+	function onKeyUp (evt) {
+		if (shouldPreventNavigation()) {
 			return;
 		}
 
@@ -822,17 +867,35 @@ const Spotlight = (function() {
 		SpotlightAccelerator.reset();
 	}
 
-	function onKeyDown(evt) {
-		if (!_containerCount || _pause) {
+	function onKeyDown (evt) {
+		if (shouldPreventNavigation()) {
 			return;
 		}
 
 		const keyCode = evt.keyCode;
-		if (!_directions[keyCode] && !R.contains(keyCode, _enterKeyCodes)) {
+		const validKeyCodes = [..._enterKeyCodes, _pointerHideKeyCode, _pointerShowKeyCode];
+		if (!_directions[keyCode] && !R.contains(keyCode, validKeyCodes)) {
 			return;
 		}
 
-		SpotlightAccelerator.processKey(evt, onAcceleratedKeyDown);
+		switch (keyCode) {
+			case _pointerHideKeyCode:
+				_pointerMode = false;
+				if (!getCurrent() && _lastContainerId) {
+					Spotlight.focus(getContainerLastFocusedElement(_lastContainerId));
+				}
+				setPointerHideTimestamp();
+				break;
+			case _pointerShowKeyCode:
+				_pointerMode = true;
+				break;
+			default:
+				_pointerMode = false;
+				if (isPointerHideTimestampExpired()) {
+					SpotlightAccelerator.processKey(evt, onAcceleratedKeyDown);
+				}
+				break;
+		}
 
 		if (_directions[keyCode]) {
 			preventDefault(evt);
@@ -840,20 +903,28 @@ const Spotlight = (function() {
 	}
 
 	function onMouseOver (evt) {
-		if (!_containerCount || _pause) {
+		if (shouldPreventNavigation()) {
 			return;
 		}
 
-		let target = getNavigableTarget(evt.target), // account for child controls
-			current = getCurrent();
+		const target = getNavigableTarget(evt.target); // account for child controls
+		_pointerMode = true;
 
-		if (!target) { // we are moving over a non-focusable element, so we force a blur to occur
-			if (current) {
-				current.blur();
-			}
-		} else if (target !== getCurrent()) { // moving over a focusable element
+		if (target && target !== getCurrent()) { // moving over a focusable element
 			focusElement(target, getContainerId(target));
 			preventDefault(evt);
+		}
+	}
+
+	function onMouseMove (evt) {
+		if (shouldPreventNavigation()) {
+			return;
+		}
+
+		const current = getCurrent();
+
+		if (current && !getNavigableTarget(evt.target)) { // we are moving over a non-focusable element, so we force a blur to occur
+			current.blur();
 		}
 	}
 
@@ -873,6 +944,14 @@ const Spotlight = (function() {
 		return false;
 	}
 
+	function isPointerHideTimestampExpired () {
+		return performance.now() >= (_pointerHiddenTime + _pointerHiddenToKeyTimeout);
+	}
+
+	function setPointerHideTimestamp () {
+		_pointerHiddenTime = performance.now();
+	}
+
 	/**
 	/* public methods
 	*/
@@ -882,6 +961,7 @@ const Spotlight = (function() {
 				window.addEventListener('keydown', onKeyDown);
 				window.addEventListener('keyup', onKeyUp);
 				window.addEventListener('mouseover', onMouseOver);
+				window.addEventListener('mousemove', onMouseMove);
 				_initialized = true;
 			}
 		},
@@ -890,6 +970,7 @@ const Spotlight = (function() {
 			window.removeEventListener('keydown', onKeyDown);
 			window.removeEventListener('keyup', onKeyUp);
 			window.removeEventListener('mouseover', onMouseOver);
+			window.removeEventListener('mousemove', onMouseMove);
 			Spotlight.clear();
 			_ids = 0;
 			_initialized = false;
@@ -1073,6 +1154,15 @@ const Spotlight = (function() {
 			} else {
 				_defaultContainerId = containerId;
 			}
+		},
+
+		/**
+		 * Gets the current pointer mode
+		 *
+		 * @return {Boolean} `true` if spotlight is in pointer mode
+		 */
+		getPointerMode: function () {
+			return _pointerMode;
 		}
 	};
 

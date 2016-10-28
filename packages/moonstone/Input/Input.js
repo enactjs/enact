@@ -137,6 +137,12 @@ class InputBase extends React.Component {
 		this.inputNode = node;
 	}
 
+	handleDecoratorClick = (e) => {
+		if (e.target.getAttribute('data-input-decorator') === 'true') {
+			this.inputNode.focus();
+		}
+	}
+
 	spotlightMove = (direction) => {
 		if (!Spotlight.move(direction)) {
 			this.inputNode.blur();
@@ -167,11 +173,11 @@ class InputBase extends React.Component {
 		delete rest.dismissOnEnter;
 
 		return (
-			<label {...containerProps} disabled={disabled} className={decoratorClasses} tabIndex={tabIndex} onKeyDown={onKeyDown} onFocus={onFocus} >
+			<div {...containerProps} data-input-decorator disabled={disabled} className={decoratorClasses} tabIndex={tabIndex} onKeyDown={onKeyDown} onFocus={onFocus} onClick={this.handleDecoratorClick}>
 				{firstIcon}
 				<PlainInput {...rest} decorated disabled={disabled} spotlightDisabled={!spotlightDisabled} onKeyDown={this.inputKeyDown} inputRef={this.getInputNode} />
 				{lastIcon}
-			</label>
+			</div>
 		);
 	}
 }

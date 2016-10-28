@@ -33,6 +33,15 @@ const HeaderBase = kind({
 		]),
 
 		/**
+		 * When `true`, the header content is indented and the header lines are removed.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		fullBleed: React.PropTypes.bool,
+
+		/**
 		 * When true, the case of the [`title`]{@link module:moonstone/Header~Header#title} will
 		 * remain unchanged.
 		 * Uses [Uppercase HOC]{@link module:@enact/i18n/Uppercase~Uppercase} and mirrors the
@@ -82,6 +91,7 @@ const HeaderBase = kind({
 	},
 
 	defaultProps: {
+		fullBleed: false,
 		preserveCase: false,
 		// titleAbove: '00',
 		type: 'standard'
@@ -93,10 +103,12 @@ const HeaderBase = kind({
 	},
 
 	computed: {
-		className: ({type, styler}) => styler.append(type)
+		className: ({fullBleed, type, styler}) => styler.append({fullBleed},type)
 	},
 
-	render: ({children, preserveCase, styler, subTitleBelow, title, titleAbove, titleBelow, type, ...rest}) => {
+	render: ({children, preserveCase, subTitleBelow, title, titleAbove, titleBelow, type, ...rest}) => {
+		delete rest.fullBleed;
+
 		switch (type) {
 			case 'compact': return (
 				<header {...rest}>

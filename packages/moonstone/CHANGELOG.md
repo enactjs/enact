@@ -6,7 +6,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
-- `moonstone/DatePicker`, `moonstone/DayPicker`, and `moonstone/ExpandableItem`
+- `moonstone/DatePicker`, `moonstone/DayPicker`, `moonstone/ExpandableItem`, and `moonstone/Image` components
+- `fullBleed` prop to `moonstone/Panels/Header`. When `true`, the header content is indented and the header lines are removed.
 
 ### Changed
 
