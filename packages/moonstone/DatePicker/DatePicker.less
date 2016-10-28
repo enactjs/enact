@@ -1,0 +1,30 @@
+@import '../styles/variables.less';
+
+.datePicker {
+	padding-left: 48px;
+	display: inline-block;
+	direction: ltr;
+
+	/* Time/date pickers should always be arranged according to the order of the formatter */
+	:global(.enact-locale-right-to-left) & {
+		direction: rtl;
+	}	
+}
+
+.dateComponentPicker {
+	display: inline-block;
+	min-width: 96px;
+	text-align: center;
+	margin: 12px 0;
+	vertical-align: top;
+}
+
+.label {
+	text-align: center;
+	padding: 18px @moon-spotlight-outset;
+	white-space: nowrap;
+}
+
+.wrap.year {
+	min-width: 120px;
+}

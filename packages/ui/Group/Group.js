@@ -45,14 +45,6 @@ const GroupBase = kind({
 		children: PropTypes.array.isRequired,
 
 		/**
-		 * Callback method to be invoked when an item is activated.
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onSelect: PropTypes.func.isRequired,
-
-		/**
 		 * The property on each `childComponent` that receives the data in `children`
 		 *
 		 * @type {String}
@@ -60,6 +52,15 @@ const GroupBase = kind({
 		 * @public
 		 */
 		childProp: PropTypes.string,
+
+		/**
+		 * The name of the event that triggers activation.
+		 *
+		 * @type {String}
+		 * @default 'onClick'
+		 * @public
+		 */
+		childSelect: PropTypes.string,
 
 		/**
 		 * The property on each `childComponent` that receives the index of the item
@@ -79,13 +80,27 @@ const GroupBase = kind({
 		itemProps: PropTypes.object,
 
 		/**
-		 * The name of the event that triggers activation.
+		 * Callback method to be invoked when an item is activated.
 		 *
-		 * @type {String}
-		 * @default 'onClick'
+		 * @type {Function}
 		 * @public
 		 */
-		select: PropTypes.string,
+		onSelect: PropTypes.func,
+
+		/**
+		 * Selection mode for the group
+		 *
+		 * * `single` - Allows for 0 or 1 item to be selected. The selected item may be deselected.
+		 * * `radio` - Allows for 0 or 1 item to be selected. The selected item may only be
+		 *    deselected by selecting another item.
+		 * * `multiple` - Allows 0 to _n_ items to be selected. Each item may be selected or
+		 *    deselected.
+		 *
+		 * @type {String}
+		 * @default 'single'
+		 * @public
+		 */
+		select: PropTypes.oneOf(['single', 'radio', 'multiple']),
 
 		/**
 		 * The index(es) of the currently activated item.
@@ -106,9 +121,10 @@ const GroupBase = kind({
 	},
 
 	defaultProps: {
-		select: 'onClick',
-		indexProp: 'data-index',
 		childProp: 'children',
+		childSelect: 'onClick',
+		indexProp: 'data-index',
+		select: 'single',
 		selectedProp: 'data-selected'
 	},
 
@@ -121,6 +137,7 @@ const GroupBase = kind({
 
 	render: (props) => {
 		delete props.onSelect;
+		delete props.childSelect;
 		delete props.select;
 		delete props.selected;
 		delete props.selectedProp;

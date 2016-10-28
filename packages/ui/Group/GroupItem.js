@@ -6,9 +6,10 @@
  * @module @enact/ui/Group/GroupItem
  */
 
+import kind from '@enact/core/kind';
+import {isSelected, select as selectItem} from '@enact/core/selection';
 import R from 'ramda';
 import React from 'react';
-import kind from '@enact/core/kind';
 
 /**
  * Pick the GroupItem-specific props into a 'private' itemProps key to be extracted by GroupItem
@@ -17,7 +18,7 @@ import kind from '@enact/core/kind';
  */
 const pickGroupItemProps = R.compose(
 	R.objOf('$$GroupItem'),
-	R.pick(['childComponent', 'childProp', 'indexProp', 'onSelect', 'select', 'selected', 'selectedProp'])
+	R.pick(['childComponent', 'childProp', 'childSelect', 'indexProp', 'onSelect', 'select', 'selected', 'selectedProp'])
 );
 
 /**
@@ -41,6 +42,7 @@ const GroupItemBase = kind({
 			$$GroupItem: {
 				childComponent: Component,
 				childProp,
+				childSelect,
 				indexProp,
 				onSelect,
 				select,
@@ -52,9 +54,19 @@ const GroupItemBase = kind({
 
 		const index = rest[indexProp];
 		const data = rest[childProp];
-		const isSelected = Array.isArray(selected) ? selected.includes(index) : index === selected;
-		if (selectedProp) rest[selectedProp] = isSelected;
-		if (select && onSelect) rest[select] = () => onSelect({selected: index, data});
+
+		if (selectedProp) {
+			rest[selectedProp] = isSelected(index, selected);
+		}
+
+		if (childSelect && onSelect) {
+			rest[childSelect] = () => {
+				onSelect({
+					data,
+					selected: selectItem(select, index, selected)
+				});
+			};
+		}
 
 		return <Component {...rest} />;
 	}

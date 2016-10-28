@@ -9,8 +9,6 @@ import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
 import React from 'react';
 
-import {anyPrimitive} from '../validators/PropTypeValidators';
-
 const defaultConfig = {
 	/**
 	 * If a Changeable component is used to maintain uncommitted state within another component,
@@ -67,9 +65,9 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 
 		static propTypes = {
 
-			[defaultPropKey]: anyPrimitive,
+			[defaultPropKey]: React.PropTypes.any,
 
-			[prop]: anyPrimitive,
+			[prop]: React.PropTypes.any,
 
 			/**
 			 * Controls whether the component is disabled.
