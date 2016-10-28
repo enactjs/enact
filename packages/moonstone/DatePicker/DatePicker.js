@@ -297,15 +297,13 @@ const DatePicker = class extends React.Component {
 		} else if (this.props.onChange) {
 			// If it wasn't cancelled *and* we have an onChange handler to call, determine if the
 			// value actually changed and, if so, call the handler.
-			const changed =	(value == null && this.state.value) ||
-							(value && (
-								value.month !== this.state.value.month ||
-								value.day !== this.state.value.day ||
-								value.year !== this.state.value.year
-							));
+			const changed =	value == null ||
+							value.month !== this.state.value.month ||
+							value.day !== this.state.value.day ||
+							value.year !== this.state.value.year;
 			if (changed) {
 				this.props.onChange({
-					value: this.state.value.getJSDate()
+					value: this.calcValue().getJSDate()
 				});
 			}
 		}
