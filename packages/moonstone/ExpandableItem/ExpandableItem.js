@@ -68,8 +68,7 @@ const ExpandableItemBase = kind({
 		label: PropTypes.string,
 
 		/**
-		 * Text to display when no `label` or `value` is set. Leave blank to have the initial
-		 * control not display a label when no option is selected.
+		 * Text to display when no `label` or `value` is set.
 		 *
 		 * @type {String}
 		 */
@@ -94,7 +93,7 @@ const ExpandableItemBase = kind({
 		onOpen: PropTypes.func,
 
 		/**
-		 * When `true`, the control in rendered in the expanded state, with the contents visible?
+		 * When `true`, the control is rendered in the expanded state, with the contents visible
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -103,7 +102,7 @@ const ExpandableItemBase = kind({
 		open: PropTypes.bool,
 
 		/**
-		 * Controls when the label is shown.
+		 * Controls when `label` is shown.
 		 *
 		 * * `'always'` - The label is always visible
 		 * * `'never'` - The label is never visible

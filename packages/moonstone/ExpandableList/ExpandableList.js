@@ -72,8 +72,7 @@ const ExpandableListBase = kind({
 		label: PropTypes.string,
 
 		/**
-		 * Text to display when no `	` is set. Leave blank to have the initial
-		 * control not display a label when no option is selected.
+		 * Text to display when no `label` is set.
 		 *
 		 * @type {String}
 		 */
@@ -115,10 +114,10 @@ const ExpandableListBase = kind({
 		/**
 		 * Selection mode for the list
 		 *
-		 * * `single` - Allows for 0 or 1 item to be selected. The selected item may be deselected.
-		 * * `radio` - Allows for 0 or 1 item to be selected. The selected item may only be
+		 * * `'single'` - Allows for 0 or 1 item to be selected. The selected item may be deselected.
+		 * * `'radio'` - Allows for 0 or 1 item to be selected. The selected item may only be
 		 *    deselected by selecting another item.
-		 * * `multiple` - Allows 0 to _n_ items to be selected. Each item may be selected or
+		 * * `'multiple'` - Allows 0 to _n_ items to be selected. Each item may be selected or
 		 *    deselected.
 		 *
 		 * @type {String}

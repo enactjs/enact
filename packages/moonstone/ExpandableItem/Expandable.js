@@ -2,6 +2,9 @@ import Cancelable from '@enact/ui/Cancelable';
 import R from 'ramda';
 import Toggleable from '@enact/ui/Toggleable';
 
+// TODO: This module may not doc correctly but we'll need to wait until our doc parsing script is
+// ready
+
 /**
  * Called by {@link module:@enact/ui/Cancelable~Cancelable} when a cancel event occurs and calls the
  * `onClose` handler provided by the wrapping Toggleable HOC.

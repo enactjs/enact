@@ -20,7 +20,7 @@ const ExpandablePickerBase = kind({
 		children: React.PropTypes.node.isRequired,
 
 		/**
-		 * Assign a custom icon for the decrementer. All strings supported by [Icon]{Icon} are
+		 * A custom icon for the decrementer. All strings supported by [Icon]{Icon} are
 		 * supported. Without a custom icon, the default is used, and is automatically changed when
 		 * the [orientation]{Icon#orientation} is changed.
 		 *
@@ -30,8 +30,7 @@ const ExpandablePickerBase = kind({
 		decrementIcon: React.PropTypes.string,
 
 		/**
-		 * When `true`, the [button]{@glossary button} is shown as disabled and does not
-		 * generate tap [events]{@glossary event}.
+		 * When `true`, applies a disabled style and the control becomes non-interactive.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -39,7 +38,7 @@ const ExpandablePickerBase = kind({
 		disabled: React.PropTypes.bool,
 
 		/**
-		 * Assign a custom icon for the incrementer. All strings supported by [Icon]{Icon} are
+		 * A custom icon for the incrementer. All strings supported by [Icon]{Icon} are
 		 * supported. Without a custom icon, the default is used, and is automatically changed when
 		 * the [orientation]{Icon#orientation} is changed.
 		 *
@@ -49,9 +48,9 @@ const ExpandablePickerBase = kind({
 		incrementIcon: React.PropTypes.string,
 
 		/**
-		 * Determines the user interaction of the control. A joined picker allows the user to use
+		 * The user interaction of the control. A joined picker allows the user to use
 		 * the arrow keys to adjust the picker's value. The user may no longer use those arrow keys
-		 * to navigate, while this control is focused. A split control allows full navigation,
+		 * to navigate while this control is focused. A non-joined control allows full navigation,
 		 * but requires individual ENTER presses on the incrementer and decrementer buttons.
 		 * Pointer interaction is the same for both formats.
 		 *
@@ -71,7 +70,7 @@ const ExpandablePickerBase = kind({
 		noAnimation: React.PropTypes.bool,
 
 		/**
-		 * A function to run when the control should increment or decrement.
+		 * Callback to be called when the control should increment or decrement.
 		 *
 		 * @type {Function}
 		 * @public
@@ -79,7 +78,7 @@ const ExpandablePickerBase = kind({
 		onChange: React.PropTypes.func,
 
 		/**
-		 * Sets the orientation of the picker, whether the buttons are above and below or on the
+		 * The orientation of the picker, i.e. whether the buttons are above and below or on the
 		 * sides of the value. Must be either `'horizontal'` or `'vertical'`.
 		 *
 		 * @type {String}
@@ -98,7 +97,7 @@ const ExpandablePickerBase = kind({
 		value: React.PropTypes.number,
 
 		/*
-		 * Choose a specific size for your picker. `'small'`, `'medium'`, `'large'`, or set to `null` to
+		 * The size of the picker: `'small'`, `'medium'`, `'large'`, or set to `null` to
 		 * assume auto-sizing. `'small'` is good for numeric pickers, `'medium'` for single or short
 		 * word pickers, `'large'` for maximum-sized pickers.
 		 *
@@ -108,7 +107,7 @@ const ExpandablePickerBase = kind({
 		width: React.PropTypes.oneOf([null, 'small', 'medium', 'large']),
 
 		/*
-		 * Should the picker stop incrementing when the picker reaches the last element? Set `wrap`
+		 * Whether the picker stops incrementing when it reaches the last element. Set `wrap`
 		 * to `true` to allow the picker to continue from the opposite end of the list of options.
 		 *
 		 * @type {Boolean}

@@ -334,5 +334,14 @@ const DatePicker = class extends React.Component {
 
 const ExpandableDatePicker = Expandable(DatePicker);
 
+// Push down propTypes, and, since we don't export DatePicker, go ahead and remove the extra layer
+// This one may be a bit of an exception case and this is not necessarily a pattern we want to
+// apply.
+ExpandableDatePicker.propTypes = Object.assign({}, ExpandableDatePicker.propTypes, DatePicker.propTypes);
+ExpandableDatePicker.defaultProps = Object.assign({}, ExpandableDatePicker.defaultProps, DatePicker.defaultProps);
+ExpandableDatePicker.displayName = 'DatePicker';
+delete DatePicker.propTypes;
+delete DatePicker.defaultProps;
+
 export default ExpandableDatePicker;
-export {ExpandableDatePicker, DatePickerBase};
+export {ExpandableDatePicker as DatePicker, DatePickerBase};

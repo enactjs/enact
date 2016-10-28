@@ -5,6 +5,8 @@ import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
 
 const SelectableDayPicker = Selectable(DayPicker);
+SelectableDayPicker.propTypes = Object.assign({}, DayPicker.propTypes);
+SelectableDayPicker.defaultProps = Object.assign({}, DayPicker.defaultProps);
 SelectableDayPicker.displayName = 'DayPicker';
 
 storiesOf('DayPicker')
@@ -14,7 +16,7 @@ storiesOf('DayPicker')
 		'Basic usage of DayPicker',
 		() => (
 			<SelectableDayPicker
-				title={text('title', 'Expandable Day Picker')}
+				title={text('title', 'Day Picker')}
 				noneText={text('none', 'none')}
 				disabled={boolean('disabled', false)}
 				onSelect={action('onSelect')}
