@@ -12,6 +12,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonstone/Divider`'s `children` property is now optional
+- `moonstone/ToggleItem`'s `inline` now has a `max-width` of `240px`
 
 
 ## [1.0.0-alpha.2] - 2016-10-21
