@@ -1,10 +1,12 @@
-import ExpandableItem from '@enact/moonstone/ExpandableItem';
+import {ExpandableItem, ExpandableItemBase} from '@enact/moonstone/ExpandableItem';
 import Icon from '@enact/moonstone/Icon';
 import Item from '@enact/moonstone/Item';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
 
+ExpandableItem.propTypes = Object.assign({}, ExpandableItemBase.propTypes, ExpandableItem.propTypes);
+ExpandableItem.defaultProps = Object.assign({}, ExpandableItemBase.defaultProps, ExpandableItem.defaultProps);
 ExpandableItem.displayName = 'ExpandableItem';
 
 storiesOf('ExpandableItem')
@@ -24,7 +26,7 @@ storiesOf('ExpandableItem')
 			>
 				<Item>
 					This can be any type of content you might want to
-					render inside an labeled expandable container
+					render inside a labeled expandable container
 				</Item>
 				<Item>
 					<Icon>star</Icon> You could include other components as well <Icon>star</Icon>
