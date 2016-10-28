@@ -6,6 +6,7 @@ import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
 
 Dialog.propTypes = Object.assign({}, DialogBase.propTypes, Dialog.propTypes);
 Dialog.defaultProps = Object.assign({}, DialogBase.defaultProps, Dialog.defaultProps);
+Dialog.displayName = 'Dialog';
 
 storiesOf('Dialog')
 	.addDecorator(withKnobs)
@@ -20,8 +21,8 @@ storiesOf('Dialog')
 				showCloseButton={boolean('showCloseButton', false)}
 				useDivider={boolean('useDivider', false)}
 			>
-				<title>{text('children', 'Hello Dialog')}</title>
-				<titleBelow>{text('children', 'This is an organized dialog')}</titleBelow>
+				<title>{text('title', 'Hello Dialog')}</title>
+				<titleBelow>{text('titleBelow', 'This is an organized dialog')}</titleBelow>
 				<span>This dialog has content in it and can be very useful for organizing information
 				for the user.</span>
 				<buttons>
