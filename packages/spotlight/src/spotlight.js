@@ -90,6 +90,14 @@ const Spotlight = (function() {
 	let _duringFocusChange = false;
 
 	/**
+	 * Whether a 5-way directional key is being held.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 */
+	let _5WayKeyHold = false;
+
+	/**
 	 * Whether Spotlight is in pointer mode (as opposed to 5-way mode).
 	 *
 	 * @type {Boolean}
@@ -792,6 +800,9 @@ const Spotlight = (function() {
 			let nextContainerId = getContainerId(next);
 
 			if (currentContainerId !== nextContainerId) {
+				if (_5WayKeyHold) {
+					return false;
+				}
 				let result = gotoLeaveFor(currentContainerId, direction);
 				if (result) {
 					return true;
@@ -865,6 +876,7 @@ const Spotlight = (function() {
 		}
 
 		SpotlightAccelerator.reset();
+		_5WayKeyHold = false;
 	}
 
 	function onKeyDown (evt) {
@@ -893,6 +905,7 @@ const Spotlight = (function() {
 				_pointerMode = false;
 				if (isPointerHideTimestampExpired()) {
 					SpotlightAccelerator.processKey(evt, onAcceleratedKeyDown);
+					_5WayKeyHold = true;
 				}
 				break;
 		}
