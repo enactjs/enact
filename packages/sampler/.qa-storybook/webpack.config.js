@@ -1,8 +1,6 @@
-var
-	path = require('path'),
-	WebOSMetaPlugin = require('webos-meta-webpack-plugin'),
-	storybookWebpack = require('../.storybook/webpack.config.js');
+/* global __dirname */
+/* eslint-disable no-var */
 
-storybookWebpack.plugins[storybookWebpack.plugins.length-1] = new WebOSMetaPlugin({path:path.join(__dirname, 'webos-meta')});
+var webpack = require('../src/webpack');
 
-module.exports = storybookWebpack;
+module.exports = webpack(__dirname);
