@@ -1,7 +1,7 @@
 /**
- * Exports the {@link module:@enact/ui/Selectable~Selectable} Higher-order Component (HOC).
+ * Exports the {@link ui/Selectable.Selectable} Higher-order Component (HOC).
  *
- * @module @enact/ui/Selectable
+ * @module ui/Selectable
  */
 
 import {forward} from '@enact/core/handle';
@@ -41,7 +41,7 @@ const defaultConfig = {
 };
 
 /**
- * {@link module:@enact/ui/Selectable~Selectable} is a Higher-order Component that applies a 'Selectable' behavior
+ * {@link ui/Selectable.Selectable} is a Higher-order Component that applies a 'Selectable' behavior
  * to its wrapped component.  Its default event and value properties can be configured when applied to a component.
  * In addition, it supports `mutable` config setting that allows the HOC to accept incoming settings for the `prop`.
  *
@@ -49,6 +49,7 @@ const defaultConfig = {
  * HOC manages the state of `value`.  If the `prop` is overridden, the names change correspondingly.
  *
  * @class Selectable
+ * @memberof ui/Selectable
  * @ui
  * @public
  */
@@ -60,7 +61,7 @@ const Selectable = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'Selectable'
 
-		static propTypes = {
+		static propTypes = /** @lends ui/Selectable.Selectable.prototype */ {
 			/**
 			 * Selected value(s) for when first rendered.
 			 * @type {Array | String | Number | Boolean}

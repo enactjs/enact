@@ -1,8 +1,8 @@
-/**
- * Exports the {@link module:@enact/moonstone/Marquee~Marquee} and {@link module:@enact/moonstone/Marquee~MarqueeBase}
- * components. The default export is {@link module:@enact/moonstone/Marquee~Marquee}.
+/*
+ * Exports the {@link moonstone/Marquee.Marquee} and {@link moonstone/Marquee.MarqueeBase}
+ * components. The default export is {@link moonstone/Marquee.Marquee}.
  *
- * @module @enact/moonstone/Marquee
+ * note: not jsdoc on purpose, exports in index.js
  */
 
 import kind from '@enact/core/kind';
@@ -15,17 +15,18 @@ import css from './Marquee.less';
 const animated = css.text + ' ' + css.animate;
 
 /**
- * {@link module:@enact/moonstone/Marquee~MarqueeBase} is a stateless text container element which
+ * {@link moonstone/Marquee.Marquee} is a stateless text container element which
  * implements a text cut-off followed by an ellipsis character.
  *
- * @class MarqueeBase
+ * @class Marquee
+ * @memberof moonstone/Marquee
  * @ui
  * @public
  */
 const MarqueeBase = kind({
 	name: 'Marquee',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/Marquee.Marquee.prototype */ {
 
 		/**
 		 * `true` when the component should be animating
@@ -37,7 +38,7 @@ const MarqueeBase = kind({
 
 		/**
 		 * `children` is the text or a set of components that should be scrolled by the
-		 * {@link module:@enact/moonstone/Marquee~Marquee} component.
+		 * {@link moonstone/Marquee.Marquee} component.
 		 * This prop may be empty in some cases, which is OK.
 		 *
 		 * @type {Node|Node[]}

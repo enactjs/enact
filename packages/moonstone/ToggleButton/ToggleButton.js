@@ -1,7 +1,7 @@
 /**
- * Exports the {@link module:@enact/moonstone/ToggleButton~ToggleButton} component.
+ * Exports the {@link moonstone/ToggleButton.ToggleButton} component.
  *
- * @module @enact/moonstone/ToggleButton
+ * @module moonstone/ToggleButton
  */
 
 import kind from '@enact/core/kind';
@@ -12,16 +12,17 @@ import Button from '../Button';
 import css from './ToggleButton.less';
 
 /**
-* {@link module:@enact/moonstone/ToggleButton~ToggleButton} is a [Button]{@link module:@enact/moonstone/Button~Button} that is [Toggleable]{@link module:@enact/ui/Toggleable~Togleable}.
+* {@link moonstone/ToggleButton.ToggleButton} is a [Button]{@link moonstone/Button.Button} that is [Toggleable]{@link ui/Toggleable.Toggleable}.
 *
 * @class ToggleButton
-* @extends module:@enact/moonstone/Button~Button
+* @memberof moonstone/ToggleButton
+* @extends moonstone/Button.Button
 * @ui
 * @public
 */
 const ToggleButtonBase = kind({
 
-	propTypes: {
+	propTypes: /** @lends moonstone/ToggleButton.ToggleButton.prototype */ {
 		/**
 		 * The background-color opacity of this button; valid values are `'opaque'`, `'translucent'`,
 		 * and `'transparent'`.
