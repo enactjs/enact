@@ -275,11 +275,12 @@ const PickerCore = class extends React.Component {
 	handleIncDown = () => this.handleDown(1)
 
 	handleWheel = (ev) => {
-		const {onMouseUp} = this.props;
+		const {onMouseUp, step} = this.props;
 		const dir = Math.sign(ev.deltaY);
 
-		// We'll sometimes get a 0/-0 wheel event we need to ignore
-		if (dir) {
+		// We'll sometimes get a 0/-0 wheel event we need to ignore or the wheel event has reached
+		// the bounds of the picker
+		if (dir && !this.isButtonDisabled(step * dir)) {
 			// fire the onChange event
 			this.handleChange(dir);
 			// simulate mouse down
