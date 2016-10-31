@@ -4,13 +4,13 @@
  * @module @enact/ui/Cancelable
  */
 
+import {on, off} from '@enact/core/dispatcher';
 import {forward, handle, stopImmediate} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import invariant from 'invariant';
 import React from 'react';
 
 import {forCancel, addCancelHandler, removeCancelHandler} from './cancelHandler';
-import {on, off} from './dispatcher';
 
 const defaultConfig = {
 	onCancel: null,
