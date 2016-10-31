@@ -241,20 +241,21 @@ const PickerCore = class extends React.Component {
 		}
 	}
 
+	computeNextValue = (delta) => {
+		const {min, max, value, wrap} = this.props;
+		return wrap ? wrapRange(min, max, value + delta) : R.clamp(min, max, value + delta);
+	}
+
 	isButtonDisabled = (delta) => {
-		const {disabled, min, max, value, wrap} = this.props;
-		return disabled || (!wrap && R.clamp(min, max, value + delta) === value);
+		const {disabled, value} = this.props;
+		return disabled || this.computeNextValue(delta) === value;
 	}
 
 	handleChange = (dir) => {
-		const {disabled, max, min, onChange, step, value, wrap} = this.props;
+		const {disabled, onChange, step} = this.props;
 		if (!disabled && onChange) {
-			const next = wrap ? wrapRange(min, max, value + (dir * step)) : R.clamp(min, max, value + (dir * step));
-			if (next !== value) {
-				onChange({
-					value: next
-				});
-			}
+			const value = this.computeNextValue(dir * step);
+			onChange({value});
 		}
 	}
 
@@ -274,11 +275,12 @@ const PickerCore = class extends React.Component {
 	handleIncDown = () => this.handleDown(1)
 
 	handleWheel = (ev) => {
-		const {onMouseUp} = this.props;
+		const {onMouseUp, step} = this.props;
 		const dir = Math.sign(ev.deltaY);
 
-		// We'll sometimes get a 0/-0 wheel event we need to ignore
-		if (dir) {
+		// We'll sometimes get a 0/-0 wheel event we need to ignore or the wheel event has reached
+		// the bounds of the picker
+		if (dir && !this.isButtonDisabled(step * dir)) {
 			// fire the onChange event
 			this.handleChange(dir);
 			// simulate mouse down
@@ -290,15 +292,15 @@ const PickerCore = class extends React.Component {
 		}
 	}
 
-	determineClasses () {
-		const {joined, orientation, pressed, step, width} = this.props;
+	determineClasses (decrementerDisabled, incrementerDisabled) {
+		const {joined, orientation, pressed, width} = this.props;
 		return [
 			css.picker,
 			css[orientation],
 			css[width],
 			joined ? css.joined : null,
-			!this.isButtonDisabled(step * -1) && pressed === -1 ? css.decrementing : null,
-			!this.isButtonDisabled(step) && pressed === 1 ? css.incrementing : null,
+			!decrementerDisabled && pressed === -1 ? css.decrementing : null,
+			!incrementerDisabled && pressed === 1 ? css.incrementing : null,
 			this.props.className
 		].join(' ');
 	}
@@ -335,7 +337,7 @@ const PickerCore = class extends React.Component {
 
 		const decrementerDisabled = this.isButtonDisabled(step * -1);
 		const incrementerDisabled = this.isButtonDisabled(step);
-		const classes = this.determineClasses();
+		const classes = this.determineClasses(decrementerDisabled, incrementerDisabled);
 
 		const handleIncClick = incrementerDisabled ? null : this.handleIncClick;
 		const handleDecClick = decrementerDisabled ? null : this.handleDecClick;
