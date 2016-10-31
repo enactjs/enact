@@ -242,15 +242,7 @@ class VirtualListCore extends Component {
 
 	calculateMetrics (props) {
 		const
-			{direction, itemSize, positioningOption, spacing} = props,
-			node = this.getContainerNode(positioningOption);
-
-		if (!node) {
-			return;
-		}
-
-		const
-			{clientWidth, clientHeight} = this.getClientSize(node),
+			{clientWidth, clientHeight, direction, itemSize, positioningOption, spacing} = props,
 			heightInfo = {
 				clientSize: clientHeight,
 				minItemSize: (itemSize.minHeight) ? itemSize.minHeight : null,
@@ -265,6 +257,17 @@ class VirtualListCore extends Component {
 			primary, secondary, dimensionToExtent, thresholdBase;
 
 		this.isPrimaryDirectionVertical = (direction === 'vertical');
+
+		/*if (clientWidth === 0 && clientHeight === 0) {
+			const node = this.getContainerNode(positioningOption);
+			if (!node) {
+				return;
+			}
+
+			const size = this.getClientSize(node);
+			heightInfo.clientSize = size.clientHeight;
+			widthInfo.clientSize = size.clientWidth;
+		}*/
 
 		if (this.isPrimaryDirectionVertical) {
 			primary = heightInfo;
@@ -320,19 +323,25 @@ class VirtualListCore extends Component {
 	}
 
 	calculateScrollBounds (props) {
-		const node = this.getContainerNode(props.positioningOption);
-
-		if (!node) {
-			return;
-		}
-
 		const
-			{clientWidth, clientHeight} = this.getClientSize(node),
+			{clientWidth, clientHeight, positioningOption} = props,
 			{scrollBounds, isPrimaryDirectionVertical} = this;
 		let maxPos;
 
 		scrollBounds.clientWidth = clientWidth;
 		scrollBounds.clientHeight = clientHeight;
+
+		/*if (clientWidth === 0 && clientHeight === 0) {
+			const node = this.getContainerNode(positioningOption);
+			if (!node) {
+				return;
+			}
+
+			const size = this.getClientSize(node);
+			scrollBounds.clientWidth = size.clientWidth;
+			scrollBounds.clientHeight = size.clientHeight;
+		}*/
+
 		scrollBounds.scrollWidth = this.getScrollWidth();
 		scrollBounds.scrollHeight = this.getScrollHeight();
 		scrollBounds.maxLeft = Math.max(0, scrollBounds.scrollWidth - clientWidth);
@@ -597,35 +606,14 @@ class VirtualListCore extends Component {
 		}
 	}
 
-	updateClientSize = () => {
-		const
-			{positioningOption} = this.props,
-			node = this.getContainerNode(positioningOption);
-
-		if (!node) {
-			return;
-		}
-
-		const
-			{isPrimaryDirectionVertical, primary} = this,
-			{clientWidth, clientHeight} = this.getClientSize(node);
-
-		if (isPrimaryDirectionVertical) {
-			primary.clientSize = clientHeight;
-		} else {
-			primary.clientSize = clientWidth;
-		}
-
-		this.updateStatesAndBounds(this.props);
-	}
-
 	// Calculate metrics for VirtualList after the 1st render to know client W/H.
 	// We separate code related with data due to re use it when data changed.
 	componentDidMount () {
+		console.log('VirtualListBase: componentDidMount');
 		const {positioningOption} = this.props;
 
-		this.calculateMetrics(this.props);
-		this.updateStatesAndBounds(this.props);
+		//this.calculateMetrics(this.props);
+		//this.updateStatesAndBounds(this.props);
 
 		if (positioningOption !== 'byBrowser') {
 			const containerNode = this.getContainerNode(positioningOption);
@@ -645,9 +633,12 @@ class VirtualListCore extends Component {
 	// Call updateStatesAndBounds here when dataSize has been changed to update nomOfItems state.
 	// Calling setState within componentWillReceivePropswill not trigger an additional render.
 	componentWillReceiveProps (nextProps) {
+		console.log('VirtualListBase: componentWillReceiveProps');
 		const
-			{direction, itemSize, dataSize, overhang, spacing} = this.props,
+			{clientWidth, clientHeight, direction, itemSize, dataSize, overhang, spacing} = this.props,
 			hasMetricsChanged = (
+				clientWidth !== nextProps.clientWidth ||
+				clientHeight !== nextProps.clientHeight ||
 				direction !== nextProps.direction ||
 				((itemSize instanceof Object) ? (itemSize.minWidth !== nextProps.itemSize.minWidth || itemSize.minHeight !== nextProps.itemSize.minHeight) : itemSize !== nextProps.itemSize) ||
 				overhang !== nextProps.overhang ||
@@ -657,7 +648,7 @@ class VirtualListCore extends Component {
 
 		if (hasMetricsChanged) {
 			this.calculateMetrics(nextProps);
-			this.updateStatesAndBounds(hasDataChanged ? nextProps : this.props);
+			this.updateStatesAndBounds(nextProps);
 		} else if (hasDataChanged) {
 			this.updateStatesAndBounds(nextProps);
 		}
@@ -692,12 +683,15 @@ class VirtualListCore extends Component {
 	}
 
 	render () {
+		console.log('VirtualListBase: render');
 		const
 			props = Object.assign({}, this.props),
 			{positioningOption, onScroll} = this.props,
 			{primary, cc} = this;
 
 		delete props.cbScrollTo;
+		delete props.clientWidth;
+		delete props.clientHeight;
 		delete props.component;
 		delete props.data;
 		delete props.dataSize;
