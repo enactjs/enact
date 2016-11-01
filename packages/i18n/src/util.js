@@ -1,3 +1,5 @@
+import React from 'react';
+
 /**
 * This regex pattern is used by the [isRtlText()]{@link i18n/utils.isRtlText} function.
 *
@@ -20,17 +22,64 @@ const isRtlText = function (str) {
 		return rtlPattern.test(str);
 	}
 
-	if (Array.isArray(str)) {
-		return str.reduce((prev, curr) => {
-			if(curr.props.children){
-				return rtlPattern.test(curr.props.children) ? true : prev
+	return false;
+};
+
+/**
+* Takes a React Element as an input. Performs a BFS to traverse the tree and
+* find if any child uses RTLText.
+*
+* @param {Object}
+* @returns {Boolean} `true` if the element contains RTL text; `false` if not.
+* @private
+*/
+const traverseToFindRtl = (obj) => {
+	let currentObj = obj;
+
+	while (currentObj.props.children) {
+		if (typeof currentObj.props.children === 'object'){
+			const childrenArray = React.Children.toArray(currentObj.props.children);
+
+			for (let i = 0; i < childrenArray.length; i++) {
+				const child = childrenArray[i];
+				if(child.props.children){
+					currentObj = child;
+				}
 			}
-		}, false)
+
+		} else {
+			return isRtlText(currentObj.props.children);
+		}
+	}
+
+};
+
+/**
+* Takes in a React Components children and goes through each to find RTL Text
+*
+* @param {Object | Array}
+* @returns {Boolean} `true` if the element contains RTL text; `false` if not.
+* @public
+*/
+const findRtlText = function (children) {
+	if(typeof children === 'string'){
+		return isRtlText(children);
+	}
+
+	if(typeof children === 'object'){
+		const childrenArray = React.Children.toArray(children);
+
+		return childrenArray.reduce((prev, curr) => {
+			if (React.isValidElement(curr)){
+				return traverseToFindRtl(curr) ? true : prev;
+			}
+		}, false);
 	}
 
 	return false;
 };
 
 export {
+	findRtlText,
 	isRtlText
 };
