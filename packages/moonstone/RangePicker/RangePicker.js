@@ -11,6 +11,14 @@ import PickerCore from '../Picker/PickerCore';
 import PickerItem from '../Picker/PickerItem';
 import SpottablePicker from '../Picker/SpottablePicker';
 
+const digits = (num) => {
+	// minor optimization
+	return	num > -10 && num < 10 && 1 ||
+			num > -100 && num < 100 && 2 ||
+			num > -1000 && num < 1000 && 3 ||
+			Math.floor(Math.log(Math.abs(num)) * Math.LOG10E) + 1;
+};
+
 /**
  * {@link module:@enact/moonstone/RangePicker~RangePicker} is a component that
  * lets the user select a number from a range of numbers.
@@ -133,6 +141,15 @@ const RangePickerBase = kind({
 		orientation: React.PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
+		 * When `true`, pads the display value with zeros up to the number of digits of the value of
+		 * `min` or max`, whichever is greater.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		padded: React.PropTypes.bool,
+
+		/**
 		 * Allow the picker to only increment or decrement by a given value. A step of `2` would
 		 * cause a picker to increment from 10 to 12 to 14, etc.
 		 *
@@ -162,11 +179,29 @@ const RangePickerBase = kind({
 		wrap: React.PropTypes.bool
 	},
 
-	render: (props) => (
-		<PickerCore {...props} index={0}>
-			<PickerItem key={props.value}>{props.value}</PickerItem>
-		</PickerCore>
-	)
+	computed: {
+		label: ({max, min, padded, value}) => {
+			if (padded) {
+				const maxDigits = digits(Math.max(Math.abs(min), Math.abs(max)));
+				const valueDigits = digits(value);
+				const start = value < 0 ? 0 : 1;
+				const padding = '-00000000000000000000';
+
+				return padding.slice(start, maxDigits - valueDigits + start) + Math.abs(value);
+			}
+
+			return value;
+		}
+	},
+
+	render: ({label, value, ...rest}) => {
+		delete rest.padded;
+		return (
+			<PickerCore {...rest} index={0} value={value}>
+				<PickerItem key={value}>{label}</PickerItem>
+			</PickerCore>
+		);
+	}
 });
 
 const RangePicker = SpottablePicker(RangePickerBase);
