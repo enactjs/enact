@@ -124,7 +124,6 @@ const DatePicker = class extends React.Component {
 
 	constructor (props) {
 		super(props);
-		this.cancelled = false;
 		this.state = {
 			value: this.toIDate(props.value)
 		};
@@ -218,16 +217,6 @@ const DatePicker = class extends React.Component {
 	}
 
 	/**
-	 * Handles the `onCancel` event from ExpandableDatePicker indicating that the internal `value`
-	 * should be discarded.
-	 *
-	 * @returns {undefined}
-	 */
-	handleCancel = () => {
-		this.cancelled = true;
-	}
-
-	/**
 	 * Updates the internal `value` when the date changes
 	 *
 	 * @param  {Object} ev onChange event from RangePicker
@@ -285,18 +274,15 @@ const DatePicker = class extends React.Component {
 	 * Handles the `onClose` event from the ExpandableDatePicker by emitting an `onChange` event
 	 * with the updated value if not preceded by an `onCancel` event.
 	 *
-	 * @returns {undefined}
+	 * @param	{Object}	ev	Event payload
+	 * @returns	{undefined}
 	 */
-	handleClose = () => {
+	handleClose = (ev) => {
 		const value = this.toIDate(this.props.value);
 
-		if (this.cancelled) {
-			// If the change was cancelled, revert our state to the value from props
-			this.setState({value});
-			this.cancelled = false;
-		} else if (this.props.onChange) {
-			// If it wasn't cancelled *and* we have an onChange handler to call, determine if the
-			// value actually changed and, if so, call the handler.
+		if (this.props.onChange) {
+			// If we have an onChange handler to call, determine if the value actually changed and,
+			// if so, call the handler.
 			const changed =	value == null ||
 							value.month !== this.state.value.month ||
 							value.day !== this.state.value.day ||
@@ -306,6 +292,10 @@ const DatePicker = class extends React.Component {
 					value: this.calcValue().getJSDate()
 				});
 			}
+		}
+
+		if (this.props.onClose) {
+			this.props.onClose(ev);
 		}
 	}
 
@@ -320,7 +310,6 @@ const DatePicker = class extends React.Component {
 				{...dateComponents}
 				dateFormat={this.dateFormat}
 				label={label}
-				onCancel={this.handleCancel}
 				onChangeDate={this.handleChangeDate}
 				onChangeMonth={this.handleChangeMonth}
 				onChangeYear={this.handleChangeYear}
