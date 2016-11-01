@@ -149,6 +149,7 @@ class VirtualListCore extends Component {
 	}
 
 	scrollBounds = {
+		direction: '',
 		clientWidth: 0,
 		clientHeight: 0,
 		scrollWidth: 0,
@@ -156,6 +157,8 @@ class VirtualListCore extends Component {
 		maxLeft: 0,
 		maxTop: 0
 	}
+
+	isListComponent = true
 
 	primary = null
 	secondary = null
@@ -328,6 +331,7 @@ class VirtualListCore extends Component {
 			{scrollBounds, isPrimaryDirectionVertical} = this;
 		let maxPos;
 
+		scrollBounds.direction = isPrimaryDirectionVertical ? 'vertical' : 'horizontal';
 		scrollBounds.clientWidth = clientWidth;
 		scrollBounds.clientHeight = clientHeight;
 
@@ -612,8 +616,8 @@ class VirtualListCore extends Component {
 		console.log('VirtualListBase: componentDidMount');
 		const {positioningOption} = this.props;
 
-		//this.calculateMetrics(this.props);
-		//this.updateStatesAndBounds(this.props);
+		this.calculateMetrics(this.props);
+		this.updateStatesAndBounds(this.props);
 
 		if (positioningOption !== 'byBrowser') {
 			const containerNode = this.getContainerNode(positioningOption);
@@ -696,7 +700,6 @@ class VirtualListCore extends Component {
 		delete props.data;
 		delete props.dataSize;
 		delete props.direction;
-		delete props.hideScrollbars;
 		delete props.itemSize;
 		delete props.onScroll;
 		delete props.onScrolling;
