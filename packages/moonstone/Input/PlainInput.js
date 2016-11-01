@@ -48,8 +48,6 @@ const PlainInput = Spottable(kind({
 	name: 'PlainInput',
 
 	render: (props) => {
-		delete props.spotlightDisabled;
-
 		return (
 			<PlainInputBase {...props} />
 		);

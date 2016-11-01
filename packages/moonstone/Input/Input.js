@@ -5,11 +5,12 @@
  */
 
 import classNames from 'classnames';
-import {Spotlight, Spottable, SpotlightContainerDecorator, SpotlightFocusableDecorator} from '@enact/spotlight';
+import {SpotlightFocusableDecorator} from '@enact/spotlight';
 import React, {PropTypes} from 'react';
 
 import Icon from '../Icon';
 
+import InputDecorator from './InputDecorator';
 import {PlainInput} from './PlainInput';
 import css from './Input.less';
 
@@ -100,62 +101,57 @@ class InputBase extends React.Component {
 		value: ''
 	}
 
+	blurInput = () => {
+		this.decoratedNode.blur();
+	}
+
 	inputKeyDown = (e) => {
 		const keyCode = e.nativeEvent.keyCode;
 		const {dismissOnEnter} = this.props;
 
-		e.stopPropagation();
-
 		switch (keyCode) {
 			case 13:
 				if (dismissOnEnter) {
-					this.inputNode.blur();
+					this.blurInput();
 				}
 				break;
 			case 37:
-				if (this.inputNode.selectionStart === 0) {
-					this.spotlightMove('left');
+				if (this.decoratedNode.selectionStart === 0) {
+					this.blurInput();
 				}
 				break;
 			case 39:
-				if (this.inputNode.selectionStart === this.inputNode.value.length) {
-					this.spotlightMove('right');
+				if (this.decoratedNode.selectionStart === this.decoratedNode.value.length) {
+					this.blurInput();
 				}
 				break;
 			case 38:
-				this.spotlightMove('up');
-				break;
 			case 40:
-				this.spotlightMove('down');
+				this.blurInput();
 				break;
 			default:
 				break;
 		}
 	}
 
-	getInputNode = (node) => {
-		this.inputNode = node;
+	getDecoratedNode = (node) => {
+		this.decoratedNode = node;
+	}
+
+	getDecoratorNode = (node) => {
+		this.decoratorNode = node;
 	}
 
 	handleDecoratorClick = (e) => {
-		if (e.target.getAttribute('data-input-decorator') === 'true') {
-			this.inputNode.focus();
-		}
-	}
-
-	spotlightMove = (direction) => {
-		if (!Spotlight.move(direction)) {
-			this.inputNode.blur();
+		const {onClick} = this.props;
+		if (e.target !== this.decoratedNode) {
+			this.decoratedNode.focus();
+			if (onClick) onClick(e);
 		}
 	}
 
 	render () {
-		const {disabled, className, iconStart, iconEnd, tabIndex, onKeyDown, onFocus, spotlightDisabled, ...rest} = this.props;
-		const decoratorClasses = classNames(
-			css.decorator,
-			disabled,
-			className
-		);
+		const {disabled, className, iconStart, iconEnd, onFocus, onKeyDown, spotlightDisabled, ...rest} = this.props;
 		const iconClasses = classNames(
 			css.decoratorIcon,
 			iconStart ? css[iconStart] : null,
@@ -163,30 +159,22 @@ class InputBase extends React.Component {
 		);
 		const firstIcon = icon('iconStart', this.props, classNames(iconClasses, css.iconStart)),
 			lastIcon = icon('iconEnd', this.props, classNames(iconClasses, css.iconEnd));
-		const containerProps = {};
 
-		if (spotlightDisabled) {
-			containerProps['data-container-id'] = rest['data-container-id'];
-		}
-
-		delete rest['data-container-id'];
 		delete rest.dismissOnEnter;
 
 		return (
-			<div {...containerProps} data-input-decorator disabled={disabled} className={decoratorClasses} tabIndex={tabIndex} onKeyDown={onKeyDown} onFocus={onFocus} onClick={this.handleDecoratorClick}>
+			<InputDecorator disabled={disabled} className={className} onClick={this.handleDecoratorClick} onFocus={onFocus} onKeyDown={onKeyDown} spotlightDisabled={spotlightDisabled} decoratorRef={this.getDecoratorNode} >
 				{firstIcon}
-				<PlainInput {...rest} decorated disabled={disabled} spotlightDisabled={!spotlightDisabled} onKeyDown={this.inputKeyDown} inputRef={this.getInputNode} />
+				<PlainInput {...rest} disabled={disabled} onKeyDown={this.inputKeyDown} inputRef={this.getDecoratedNode} spotlightDisabled={!spotlightDisabled} />
 				{lastIcon}
-			</div>
+			</InputDecorator>
 		);
 	}
 }
 
-const Input = SpotlightContainerDecorator(
-	SpotlightFocusableDecorator(
-		{useEnterKey: true, pauseSpotlightOnFocus: true},
-		Spottable(InputBase)
-	)
+const Input = SpotlightFocusableDecorator(
+	{useEnterKey: true, pauseSpotlightOnFocus: true},
+	InputBase
 );
 
 export default Input;
