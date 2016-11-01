@@ -7,6 +7,7 @@
 import React, {Component, PropTypes} from 'react';
 
 import {Spotlight, SpotlightContainerDecorator} from '@enact/spotlight';
+import {contextTypes} from '@enact/i18n/I18nDecorator';
 
 import {dataIndexAttribute, Scrollable} from '../Scroller/Scrollable';
 
@@ -134,6 +135,8 @@ class VirtualListCore extends Component {
 		 */
 		spacing: PropTypes.number
 	}
+
+	static contextTypes = contextTypes
 
 	static defaultProps = {
 		cbScrollTo: nop,
@@ -365,6 +368,7 @@ class VirtualListCore extends Component {
 	setScrollPosition (x, y, dirX, dirY, skipPositionContainer = false) {
 		const
 			{firstIndex} = this.state,
+			{rtl} = this.context,
 			{isPrimaryDirectionVertical, threshold, dimensionToExtent, maxFirstIndex, scrollBounds} = this,
 			{gridSize} = this.primary,
 			maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft,
@@ -377,8 +381,8 @@ class VirtualListCore extends Component {
 			pos = y;
 			dir = dirY;
 		} else {
-			pos = x;
-			dir = dirX;
+			pos = rtl ? (maxPos - x) : x;
+			dir = rtl ? -(dirX) : dirX;
 		}
 
 		if (dir === 1 && pos > threshold.max) {
@@ -505,12 +509,14 @@ class VirtualListCore extends Component {
 
 	composeTransform (style, primary, secondary = 0) {
 		const {x, y} = this.getXY(primary, secondary);
-		style.transform = 'translate3d(' + x + 'px,' + y + 'px,0)';
+		const dir = this.context.rtl ? -1 : 1;
+		style.transform = 'translate3d(' + (x * dir) + 'px,' + y + 'px,0)';
 	}
 
 	composeLeftTop (style, primary, secondary = 0) {
 		const {x, y} = this.getXY(primary, secondary);
-		style.left = x + 'px';
+		const dir = this.context.rtl ? -1 : 1;
+		style.left = (x * dir) + 'px';
 		style.top = y + 'px';
 	}
 
@@ -521,8 +527,9 @@ class VirtualListCore extends Component {
 	applyScrollLeftTopToWrapperNode () {
 		const
 			node = this.wrapperRef,
+			dir = this.context.rtl ? -1 : 1,
 			{x, y} = this.getXY(this.scrollPosition, 0);
-		node.scrollLeft = x;
+		node.scrollLeft = (x * dir);
 		node.scrollTop = y;
 	}
 

@@ -50,6 +50,11 @@
 	right: @moon-spotlight-outset;
 	bottom: @moon-icon-button-small-size;
 
+	:global(.enact-locale-right-to-left) & {
+		left: @moon-spotlight-outset;
+		right: auto;
+	}
+
 	.scrollbarUpButton {
 		.scrollbarButtonBase;
 		top: -@moon-icon-button-small-size;
@@ -69,14 +74,29 @@
 	right: @moon-icon-button-small-size;
 	bottom: 0;
 
+	:global(.enact-locale-right-to-left) & {
+		left: @moon-icon-button-small-size;
+		right: 0;
+	}
+
 	.scrollbarLeftButton {
 		.scrollbarButtonBase;
 		left: -@moon-icon-button-small-size;
+
+		:global(.enact-locale-right-to-left) & {
+			left: auto;
+			right:  -@moon-icon-button-small-size;
+		}
 	}
 
 	.scrollbarRightButton {
 		.scrollbarButtonBase;
 		right: -@moon-icon-button-small-size;
+
+		:global(.enact-locale-right-to-left) & {
+			right: auto;
+			left:  -@moon-icon-button-small-size;
+		}
 	}
 }
 

@@ -15,6 +15,12 @@
 	}
 	background: black;
 	padding-right:  @moon-icon-button-small-size + @moon-spotlight-outset;
+
+	:global(.enact-locale-right-to-left) & {
+		padding-left: @moon-icon-button-small-size + @moon-spotlight-outset;
+		padding-right: 0;
+	}
+
 	padding-bottom:  @moon-icon-button-small-size + @moon-spotlight-outset;
 	box-sizing: border-box;
 

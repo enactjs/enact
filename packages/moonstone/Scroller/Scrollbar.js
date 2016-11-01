@@ -9,6 +9,7 @@ import React, {Component, PropTypes} from 'react';
 import ri from '@enact/ui/resolution';
 import Spotlight from '@enact/spotlight';
 import {startJob, stopJob} from '@enact/core/jobs';
+import {contextTypes} from '@enact/i18n/I18nDecorator';
 
 import IconButton from '../IconButton';
 
@@ -82,6 +83,8 @@ class Scrollbar extends Component {
 		onPrevScroll: PropTypes.func
 	}
 
+	static contextTypes = contextTypes
+
 	static defaultProps = {
 		isVertical: true,
 		onNextScroll: () => {},
@@ -122,10 +125,12 @@ class Scrollbar extends Component {
 		const
 			{prevButtonNodeRef, nextButtonNodeRef} = this,
 			{prevButtonDisabled, nextButtonDisabled} = this.state,
+			{rtl} = this.context,
 			currentPos = this.props.isVertical ? bounds.scrollTop : bounds.scrollLeft,
 			maxPos = this.props.isVertical ? bounds.maxTop : bounds.maxLeft,
-			shouldDisablePrevButton = currentPos <= 0,
-			shouldDisableNextButton = currentPos >= maxPos;
+			shouldDisablePrevButton = (this.props.isVertical || !rtl) ? (currentPos <= 0) : (currentPos >= maxPos),
+			shouldDisableNextButton = (this.props.isVertical || !rtl) ? (currentPos >= maxPos) : (currentPos <= 0);
+
 
 		if (prevButtonDisabled !== shouldDisablePrevButton) {
 			this.setState({prevButtonDisabled: shouldDisablePrevButton});
@@ -143,6 +148,7 @@ class Scrollbar extends Component {
 	update (bounds) {
 		let
 			{trackSize, minThumbSizeRatio} = this,
+			{rtl} = this.context,
 			{clientWidth, clientHeight, scrollWidth, scrollHeight, scrollLeft, scrollTop} = bounds,
 			thumbSizeRatioBase = this.props.isVertical ?
 				Math.min(1, clientHeight / scrollHeight) :
@@ -163,7 +169,7 @@ class Scrollbar extends Component {
 		}
 
 		thumbSize = Math.round(thumbSizeRatio * trackSize);
-		thumbPositionRatio = thumbPositionRatio * (1 - thumbSizeRatio);
+		thumbPositionRatio = (this.props.isVertical || !rtl) ? (thumbPositionRatio * (1 - thumbSizeRatio)) : (thumbPositionRatio * (1 - thumbSizeRatio) - 1);
 		thumbPosition = Math.round(thumbPositionRatio * trackSize);
 
 		this.thumbRef.style.transform = this.scrollInfo.matrix(thumbPosition, thumbSize, this.thumbSize);

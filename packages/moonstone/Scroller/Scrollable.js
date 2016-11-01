@@ -11,6 +11,7 @@ import hoc from '@enact/core/hoc';
 import R from 'ramda';
 import React, {Component, PropTypes} from 'react';
 import ri from '@enact/ui/resolution';
+import {contextTypes} from '@enact/i18n/I18nDecorator';
 
 import ScrollAnimator from './ScrollAnimator';
 import Scrollbar from './Scrollbar';
@@ -138,6 +139,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			positioningOption: 'byItem'
 		}
 
+		static contextTypes = contextTypes
+
 		// status
 		horizontalScrollability = false
 		verticalScrollability = false
@@ -173,6 +176,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		scrollTop = 0
 		dirHorizontal = 0
 		dirVertical = 0
+		dirInteger = 1
 
 		// spotlight
 		lastFocusedItem = null
@@ -183,8 +187,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		// scroll animator
 		animator = new ScrollAnimator()
 
-		constructor (props) {
-			super(props);
+		constructor (props, context) {
+			super(props, context);
 
 			this.state = {
 				isHorizontalScrollbarVisible: true,
@@ -192,6 +196,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			};
 
 			this.initChildRef = this.initRef('childRef');
+
+			this.dirInteger = context.rtl ? -1 : 1;
 
 			if (this.props.positioningOption === 'byBrowser') {
 				const {onFocus, onKeyDown, onScroll} = this;
@@ -416,7 +422,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			if (isVertical) {
 				this.accumulatedTargetY = R.clamp(0, this.bounds.maxTop, this.accumulatedTargetY + delta);
 			} else if (isHorizontal) {
-				this.accumulatedTargetX = R.clamp(0, this.bounds.maxLeft, this.accumulatedTargetX + delta);
+				this.accumulatedTargetX = R.clamp(0, this.bounds.maxLeft, this.accumulatedTargetX + (delta * this.dirInteger));
 			}
 
 			this.start(this.accumulatedTargetX, this.accumulatedTargetY, true, silent);
@@ -622,6 +628,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.bounds = this.childRef.getScrollBounds();
 			this.horizontalScrollability = this.childRef.isHorizontal();
 			this.verticalScrollability = this.childRef.isVertical();
+			this.scrollLeft = (this.context.rtl) ? this.bounds.maxLeft : this.scrollLeft;
 
 			if (this.props.positioningOption !== 'byBrowser' && !this.props.hideScrollbars) {
 				// eslint-disable-next-line react/no-did-mount-set-state
