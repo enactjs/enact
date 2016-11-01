@@ -9,8 +9,6 @@ import kind from '@enact/core/kind';
 
 import ToggleItem from '../ToggleItem';
 
-import css from './CheckboxItem.less';
-
 /**
  * {@link module:@enact/moonstone/CheckboxItem~CheckboxItem} is a component that
  * is an Item that is Toggleable. It has two states: `true` (checked) & `false`
@@ -88,16 +86,11 @@ const CheckboxItemBase = kind({
 	},
 
 	styles: {
-		css,
 		className: 'checkboxItem'
 	},
 
-	computed: {
-		iconClasses: ({checked}) => !checked ? css.translucent : null
-	},
-
 	render: (props) => (
-		<ToggleItem {...props} icon="check" />
+		<ToggleItem {...props} translucentIcon icon="check" />
 	)
 });
 

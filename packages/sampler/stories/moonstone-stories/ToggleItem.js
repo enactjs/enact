@@ -27,6 +27,7 @@ storiesOf('ToggleItem')
 					disabled={boolean('disabled', false)}
 					inline={boolean('inline', false)}
 					onToggle={action('onToggle')}
+					translucentIcon={boolean('translucent icon', true)}
 				>
 					{text('children', 'Toggle Item')}
 				</ToggleItem>
