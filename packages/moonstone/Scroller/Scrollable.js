@@ -403,9 +403,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 				doc.activeElement.blur();
 				this.childRef.setContainerDisabled(true);
-
-				this.calculateAccumulatedTarget(delta, isHorizontal, isVertical);
-				this.start(this.accumulatedTargetX, this.accumulatedTargetY);
+				this.scrollToAccumulatedTarget(delta, isHorizontal, isVertical);
 			}
 		}
 
@@ -414,11 +412,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				isHorizontal = this.canScrollHorizontally() && orientation === 'horizontal',
 				isVertical = this.canScrollVertically() && orientation === 'vertical';
 
-			this.calculateAccumulatedTarget(pixelPerScrollbarBtn * direction, isHorizontal, isVertical);
-			this.start(this.accumulatedTargetX, this.accumulatedTargetY);
+			this.scrollToAccumulatedTarget(pixelPerScrollbarBtn * direction, isHorizontal, isVertical);
 		}
 
-		calculateAccumulatedTarget = (delta, isHorizontal, isVertical) => {
+		scrollToAccumulatedTarget = (delta, isHorizontal, isVertical) => {
+			const silent = this.isScrollAnimationTargetAccumulated;
+
 			if (!this.isScrollAnimationTargetAccumulated) {
 				this.accumulatedTargetX = this.scrollLeft;
 				this.accumulatedTargetY = this.scrollTop;
@@ -430,6 +429,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			} else if (isHorizontal) {
 				this.accumulatedTargetX = R.clamp(0, this.bounds.maxLeft, this.accumulatedTargetX + delta);
 			}
+
+			this.start(this.accumulatedTargetX, this.accumulatedTargetY, true, silent);
 		}
 
 		// call scroll callbacks
@@ -462,11 +463,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		// scroll start/stop
 
-		start (targetX, targetY, animate = true, duration) {
+		start (targetX, targetY, animate = true, silent = false, duration) {
 			const {scrollLeft, scrollTop, bounds} = this;
 
 			this.animator.stop();
-			this.doScrollStart();
+			if (!silent) {
+				this.doScrollStart();
+			}
 
 			targetX = R.clamp(0, this.bounds.maxLeft, targetX);
 			targetY = R.clamp(0, this.bounds.maxTop, targetY);
@@ -724,6 +727,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
 				scrollableClasses = classNames(
 					css.scrollable,
+					hideScrollbars ? css.scrollableHiddenScrollbars : null,
 					isHorizontalScrollbarVisible ? null : css.takeAvailableSpaceForVertical,
 					isVerticalScrollbarVisible ? null : css.takeAvailableSpaceForHorizontal,
 					className

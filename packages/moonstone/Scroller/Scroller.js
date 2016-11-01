@@ -23,7 +23,6 @@ const dataContainerDisabledAttribute = 'data-container-disabled';
  * @ui
  * @public
  */
-
 class ScrollerBase extends Component {
 	static propTypes = {
 		children: PropTypes.node.isRequired,

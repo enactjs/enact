@@ -696,7 +696,7 @@ class VirtualListCore extends Component {
 		delete props.data;
 		delete props.dataSize;
 		delete props.direction;
-		delete props.hasThumb;
+		delete props.hideScrollbars;
 		delete props.itemSize;
 		delete props.onScroll;
 		delete props.onScrolling;
@@ -737,4 +737,4 @@ class VirtualListCore extends Component {
 const VirtualListBase = SpotlightContainerDecorator({restrict: 'self-first'}, Scrollable(VirtualListCore));
 
 export default VirtualListBase;
-export {VirtualListBase};
+export {VirtualListCore, VirtualListBase};

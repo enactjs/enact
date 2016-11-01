@@ -1,6 +1,6 @@
 import {ActivityArranger} from './Arrangers';
 import BreadcrumbDecorator from './BreadcrumbDecorator';
-import Viewport from './Viewport';
+import PanelsBase from './Panels';
 
 /**
 * An instance of Panels in which the Panel uses the entire viewable screen with a single breadcrumb
@@ -16,7 +16,7 @@ const ActivityPanels = BreadcrumbDecorator({
 	props: {
 		arranger: ActivityArranger
 	}
-}, Viewport);
+}, PanelsBase);
 
 export default ActivityPanels;
 export {ActivityPanels};
