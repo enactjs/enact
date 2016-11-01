@@ -130,22 +130,10 @@ const ExpandableItemBase = kind({
 				return null;
 			}
 		},
-		handleOpen: ({disabled, onClose, onOpen, onToggle, open}) => {
+		handleOpen: ({disabled, onClose, onOpen, open}) => {
 			// When disabled, don't attach an event
 			if (!disabled) {
-				const handler = open ? onClose : onOpen;
-				if (onToggle && handler) {
-					// if we have both, we need to wrap them in a function so they can both be
-					// called.
-					return () => {
-						onToggle({open: !open});
-						handler();
-					};
-				} else if (onToggle) {
-					return () => onToggle({open: !open});
-				} else {
-					return handler;
-				}
+				return open ? onClose : onOpen;
 			}
 		},
 		open: ({disabled, open}) => open && !disabled
@@ -155,6 +143,8 @@ const ExpandableItemBase = kind({
 		delete rest.noneText;
 		delete rest.label;
 		delete rest.showLabel;
+		delete rest.onOpen;
+		delete rest.onClose;
 
 		return (
 			<ExpandableContainer {...rest} disabled={disabled} open={open}>
