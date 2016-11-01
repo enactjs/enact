@@ -151,13 +151,13 @@ const ExpandableItemBase = kind({
 		open: ({disabled, open}) => open && !disabled
 	},
 
-	render: ({children, disabled, handleOpen, label, open, style, title, ...rest}) => {
+	render: ({children, disabled, handleOpen, label, open, title, ...rest}) => {
 		delete rest.noneText;
 		delete rest.label;
 		delete rest.showLabel;
 
 		return (
-			<ExpandableContainer style={style} disabled={disabled} open={open}>
+			<ExpandableContainer {...rest} disabled={disabled} open={open}>
 				<LabeledItem
 					disabled={disabled}
 					label={label}

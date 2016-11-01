@@ -144,47 +144,49 @@ const DatePickerBase = kind({
 
 		return (
 			<ExpandableItemBase {...rest} showLabel="always">
-				{order.map(picker => {
-					switch (picker) {
-						case 'd':
-							return (
-								<DateComponentPicker
-									key="day-picker"
-									label={noLabels || $L('day')}
-									min={1}
-									max={maxDays}
-									value={day}
-									onChange={onChangeDate}
-									wrap
-								/>
-							);
-						case 'm':
-							return (
-								<DateComponentPicker
-									key="month-picker"
-									label={noLabels || $L('month')}
-									min={1}
-									max={maxMonths}
-									value={month}
-									onChange={onChangeMonth}
-									wrap
-								/>
-							);
-						case 'y':
-							return (
-								<DateComponentPicker
-									key="year-picker"
-									label={noLabels || $L('year')}
-									min={minYear}
-									max={maxYear}
-									value={year}
-									onChange={onChangeYear}
-								/>
-							);
-					}
+				<div className={css.dateComponents}>
+					{order.map(picker => {
+						switch (picker) {
+							case 'd':
+								return (
+									<DateComponentPicker
+										key="day-picker"
+										label={noLabels || $L('day')}
+										min={1}
+										max={maxDays}
+										value={day}
+										onChange={onChangeDate}
+										wrap
+									/>
+								);
+							case 'm':
+								return (
+									<DateComponentPicker
+										key="month-picker"
+										label={noLabels || $L('month')}
+										min={1}
+										max={maxMonths}
+										value={month}
+										onChange={onChangeMonth}
+										wrap
+									/>
+								);
+							case 'y':
+								return (
+									<DateComponentPicker
+										key="year-picker"
+										label={noLabels || $L('year')}
+										min={minYear}
+										max={maxYear}
+										value={year}
+										onChange={onChangeYear}
+									/>
+								);
+						}
 
-					return null;
-				})}
+						return null;
+					})}
+				</div>
 			</ExpandableItemBase>
 		);
 	}
