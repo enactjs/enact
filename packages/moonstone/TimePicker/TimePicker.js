@@ -10,6 +10,28 @@ import {Expandable} from '../ExpandableItem';
 const includeMeridiem = /([khma])(?!\1)/g;
 const excludeMeridiem = /([khm])(?!\1)/g;
 
+const toMinutes = (time) => {
+	const colon = time.indexOf(':');
+	const hour = parseInt(time.substring(0, colon), 10);
+	const minute = parseInt(time.substring(colon + 1), 10);
+	return hour * 60 + minute;
+};
+
+const calcMeridiemRange = ({start, end}) => ({
+	start: toMinutes(start),
+	end: toMinutes(end)
+});
+
+const findMeridiemForTime = (time, meridiems) => {
+	const minutes = time.getHours() * 60 + time.getMinutes();
+	for (let i = 0; i < meridiems.length; i++) {
+		const m = meridiems[i];
+		if (minutes >= m.start && minutes <= m.end) {
+			return i;
+		}
+	}
+};
+
 const TimePickerController = class extends React.Component {
 	constructor (props) {
 		super(props);
@@ -37,8 +59,9 @@ const TimePickerController = class extends React.Component {
 		};
 
 		const merFormatter = new DateFmt(meridiemFormat);
-		this.meridiems = merFormatter.getMeridiemsRange(meridiemFormat);
-		this.meridiemLabels = this.meridiems.map(obj => obj.name);
+		const meridiems = merFormatter.getMeridiemsRange(meridiemFormat);
+		this.meridiemRanges = meridiems.map(calcMeridiemRange);
+		this.meridiemLabels = meridiems.map(obj => obj.name);
 
 		// Set picker format 12 vs 24 hour clock
 		const li = new LocaleInfo();
@@ -131,10 +154,28 @@ const TimePickerController = class extends React.Component {
 	 * @returns {undefined}
 	 */
 	handleChangeMeridiem = (ev) => {
-		// const value = this.calcValue();
-		// value.setHours(ev.value);
+		const value = this.calcValue();
+		const meridiem = this.meridiemRanges[ev.value];
 
-		// this.updateValue(value);
+		if (this.meridiemRanges.length === 2) {
+			// In the common case of 2 meridiems, we'll offset hours by 12 so that picker stays the
+			// same.
+			value.setHours((value.getHours() + 12) % 24);
+		} else {
+			// In the rarer case of > 2 meridiems (e.g. am-ET), try to set hours only first
+			const hours = Math.floor(meridiem.start / 60);
+			value.setHours(hours);
+
+			// but check if it is still out of bounds and update the minutes as well
+			const minutes = hours * 60 + value.getMinutes();
+			if (minutes > meridiem.end) {
+				value.setMinutes(meridiem.end % 60);
+			} else if (minutes < meridiem.start) {
+				value.setMinutes(meridiem.start % 60);
+			}
+		}
+
+		this.updateValue(value);
 	}
 
 	/**
@@ -171,8 +212,7 @@ const TimePickerController = class extends React.Component {
 			values.hour = value.getHours();
 			values.minute = value.getMinutes();
 			if (this.meridiemEnabled) {
-				// TODO: > 2 merdiem support
-				values.meridiem = Math.floor(values.hour / 12);
+				values.meridiem = findMeridiemForTime(value, this.meridiemRanges);
 			}
 		}
 
