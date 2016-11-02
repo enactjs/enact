@@ -2,7 +2,13 @@ import React from 'react';
 import {mount} from 'enzyme';
 import Portal from '../Portal';
 
-describe.only('Portal Specs', () => {
+describe('Portal Specs', () => {
+	beforeEach(() => {
+		const div = document.createElement('div');
+		div.setAttribute('id', 'portal');
+		document.body.appendChild(div);
+	});
+
 	it('should not render if portal is not open', () => {
 		const wrapper = mount(<Portal><p>Hi</p></Portal>);
 
