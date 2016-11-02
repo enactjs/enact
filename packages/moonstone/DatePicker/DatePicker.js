@@ -128,6 +128,10 @@ const DatePicker = class extends React.Component {
 			value: this.toIDate(props.value)
 		};
 
+		this.initI18n();
+	}
+
+	initI18n () {
 		this.dateFormat = new DateFmt({
 			date: 'dmwy',
 			length: 'full',
@@ -308,7 +312,6 @@ const DatePicker = class extends React.Component {
 			<DatePickerBase
 				{...this.props}
 				{...dateComponents}
-				dateFormat={this.dateFormat}
 				label={label}
 				onChangeDate={this.handleChangeDate}
 				onChangeMonth={this.handleChangeMonth}

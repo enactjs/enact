@@ -138,10 +138,6 @@ const DatePickerBase = kind({
 
 	render: ({day, maxDays, maxMonths, maxYear, minYear, month, noLabels, onChangeDate, onChangeMonth, onChangeYear, order, year, ...rest}) => {
 
-		delete rest.dateFormat;
-		delete rest.onChange;
-		delete rest.value;
-
 		return (
 			<ExpandableItemBase {...rest} showLabel="always">
 				<div className={css.dateComponents}>
