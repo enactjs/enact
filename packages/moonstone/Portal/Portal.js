@@ -11,16 +11,18 @@ class Portal extends React.Component {
 	}
 
 	static propTypes = {
-		open: React.PropTypes.bool,
-		onClose: React.PropTypes.func,
 		noAutoDismiss: React.PropTypes.bool,
-		portalClassName: React.PropTypes.string
+		onClose: React.PropTypes.func,
+		open: React.PropTypes.bool,
+		portalClassName: React.PropTypes.string,
+		portalId: React.PropTypes.string
 	}
 
 	static defaultProps = {
-		open: false,
 		noAutoDismiss: false,
-		portalClassName: 'enact-fit enact-untouchable'
+		open: false,
+		portalClassName: 'enact-fit enact-untouchable',
+		portalId: 'portal'
 	}
 
 	componentDidMount () {
@@ -53,14 +55,16 @@ class Portal extends React.Component {
 	handleKeydown = (ev) => {
 		if (ev.keyCode === 27) {
 			ev.preventDefault();
-			this.props.onClose && this.props.onClose();
+			if (this.props.onClose) {
+				this.props.onClose();
+			}
 		}
 	}
 
 	closePortal () {
 		if (this.node) {
 			ReactDOM.unmountComponentAtNode(this.node);
-			document.body.removeChild(this.node);
+			document.getElementById(this.props.portalId).removeChild(this.node);
 		}
 		this.portal = null;
 		this.node = null;
@@ -70,12 +74,12 @@ class Portal extends React.Component {
 		if (!this.node) {
 			this.node = document.createElement('div');
 			this.node.className = this.props.portalClassName;
-			document.body.appendChild(this.node);
+			document.getElementById(this.props.portalId).appendChild(this.node);
 		} else {
 			this.node.className = this.props.portalClassName;
 		}
 
-		this.portal = ReactDOM.unstable_renderSubtreeIntoContainer(this, props.children, this.node);
+		this.portal = ReactDOM.unstable_renderSubtreeIntoContainer(this, React.cloneElement(props.children, {open: props.open}), this.node);
 	}
 
 	render () {

@@ -5,6 +5,7 @@ import I18nDecorator from '@enact/i18n/I18nDecorator';
 import React from 'react';
 import {ResolutionDecorator} from '@enact/ui/resolution';
 import {SpotlightRootDecorator} from '@enact/spotlight';
+import {PortalDecorator} from '../Portal';
 
 import screenTypes from './screenTypes.json';
 import css from './MoonstoneDecorator.less';
@@ -12,6 +13,7 @@ import css from './MoonstoneDecorator.less';
 const defaultConfig = {
 	cancelHandler: forKeyCode(461),
 	i18n: true,
+	portal: true,
 	ri: {
 		screenTypes
 	},
@@ -19,9 +21,10 @@ const defaultConfig = {
 };
 
 const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {ri, i18n, spotlight, cancelHandler} = config;
+	const {ri, i18n, spotlight, portal, cancelHandler} = config;
 	let App = Wrapped;
 
+	if (portal) App = PortalDecorator(App);
 	if (cancelHandler) addCancelHandler(cancelHandler);
 	if (ri) App = ResolutionDecorator(ri, App);
 	if (i18n) App = I18nDecorator(App);
