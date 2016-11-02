@@ -2,13 +2,13 @@ import Changeable from '@enact/ui/Changeable';
 import kind from '@enact/core/kind';
 import React from 'react';
 
-import RangePicker from '../RangePicker';
+import Picker from '../../Picker';
 
-import css from './DatePicker.less';
+import DateComponentPickerChrome from './DateComponentPickerChrome';
 
 /**
 * {@link module:@enact/moonstone/DatePicker~DateComponentPickerBase} allows the selection of one
-* part of the date (date, month, or year).
+* part of a date or time (date, month, year, hour, minute, meridiem).
 *
 * @class DateComponentPickerBase
 * @ui
@@ -19,37 +19,22 @@ const DateComponentPickerBase = kind({
 
 	propTypes: {
 		/**
-		 * The maximum value for the date component
+		 * Display values representing the `value` to select
 		 *
-		 * @type {Number}
+		 * @type {String[]}
 		 * @required
+		 * @public
 		 */
-		max: React.PropTypes.number.isRequired,
-
-		/**
-		 * The minimum value for the date component
-		 *
-		 * @type {Number}
-		 * @required
-		 */
-		min: React.PropTypes.number.isRequired,
+		children: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
 
 		/**
 		 * The value of the date component
 		 *
 		 * @type {Number}
 		 * @required
-		 */
-		value: React.PropTypes.number.isRequired,
-
-		/**
-		 * When `true`, applies a disabled style and the control becomes non-interactive.
-		 *
-		 * @type {Boolean}
-		 * @default false
 		 * @public
 		 */
-		disabled: React.PropTypes.bool,
+		value: React.PropTypes.number.isRequired,
 
 		/**
 		 * The label to display below the picker
@@ -67,27 +52,19 @@ const DateComponentPickerBase = kind({
 		wrap: React.PropTypes.bool
 	},
 
-	styles: {
-		css,
-		className: 'dateComponentPicker'
-	},
-
-	render: ({className, disabled, label, max, min, value, wrap, ...rest}) => (
-		<div className={className}>
-			<RangePicker
+	render: ({children, className, label, value, wrap, ...rest}) => (
+		<DateComponentPickerChrome className={className} label={label}>
+			<Picker
 				{...rest}
-				className={css.field}
-				disabled={disabled}
 				joined
-				max={max}
-				min={min}
 				orientation="vertical"
 				value={value}
 				width="small"
 				wrap={wrap}
-			/>
-			{label ? <div className={css.label}>{label}</div> : null}
-		</div>
+			>
+				{children}
+			</Picker>
+		</DateComponentPickerChrome>
 	)
 });
 

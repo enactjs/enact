@@ -1,0 +1,96 @@
+import Changeable from '@enact/ui/Changeable';
+import kind from '@enact/core/kind';
+import React from 'react';
+
+import RangePicker from '../../RangePicker';
+
+import DateComponentPickerChrome from './DateComponentPickerChrome';
+
+/**
+* {@link module:@enact/moonstone/DatePicker~DateComponentRangePickerBase} allows the selection of one
+* part of a date or time (date, month, year, hour, minute, meridiem).
+*
+* @class DateComponentRangePickerBase
+* @ui
+* @private
+*/
+const DateComponentRangePickerBase = kind({
+	name: 'DateComponentRangePickerBase',
+
+	propTypes: {
+		/**
+		 * The maximum value for the date component
+		 *
+		 * @type {Number}
+		 * @required
+		 */
+		max: React.PropTypes.number.isRequired,
+
+		/**
+		 * The minimum value for the date component
+		 *
+		 * @type {Number}
+		 * @required
+		 */
+		min: React.PropTypes.number.isRequired,
+
+		/**
+		 * The value of the date component
+		 *
+		 * @type {Number}
+		 * @required
+		 */
+		value: React.PropTypes.number.isRequired,
+
+		/**
+		 * The label to display below the picker
+		 *
+		 * @type {String}
+		 */
+		label: React.PropTypes.string,
+
+		/*
+		 * When `true`, allow the picker to continue from the opposite end of the list of options.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		wrap: React.PropTypes.bool
+	},
+
+	render: ({className, label, max, min, value, wrap, ...rest}) => (
+		<DateComponentPickerChrome className={className} label={label}>
+			<RangePicker
+				{...rest}
+				joined
+				max={max}
+				min={min}
+				orientation="vertical"
+				value={value}
+				width="small"
+				wrap={wrap}
+			/>
+		</DateComponentPickerChrome>
+	)
+});
+
+
+/**
+* {@link module:@enact/moonstone/DatePicker~DateComponentRangePicker} allows the selection of one
+* part of the date (date, month, or year). It is a stateful component but allows updates by
+* providing a new `value` via props.
+*
+* @class DateComponentRangePicker
+* @ui
+* @private
+*/
+const DateComponentRangePicker = Changeable(
+	{mutable: true},
+	DateComponentRangePickerBase
+);
+
+export default DateComponentRangePicker;
+export {
+	DateComponentRangePicker,
+	DateComponentRangePickerBase
+};

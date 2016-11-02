@@ -2,10 +2,10 @@ import {$L} from '@enact/i18n';
 import kind from '@enact/core/kind';
 import React from 'react';
 
+import {DateComponentRangePicker} from '../internal/DateComponentPicker';
 import {ExpandableItemBase} from '../ExpandableItem';
 
 import css from './DatePicker.less';
-import DateComponentPicker from './DateComponentPicker';
 
 /**
 * {@link module:@enact/moonstone/DatePicker~DatePickerBase} is the stateless functional date picker
@@ -149,7 +149,7 @@ const DatePickerBase = kind({
 						switch (picker) {
 							case 'd':
 								return (
-									<DateComponentPicker
+									<DateComponentRangePicker
 										key="day-picker"
 										label={noLabels || $L('day')}
 										min={1}
@@ -161,7 +161,7 @@ const DatePickerBase = kind({
 								);
 							case 'm':
 								return (
-									<DateComponentPicker
+									<DateComponentRangePicker
 										key="month-picker"
 										label={noLabels || $L('month')}
 										min={1}
@@ -173,7 +173,8 @@ const DatePickerBase = kind({
 								);
 							case 'y':
 								return (
-									<DateComponentPicker
+									<DateComponentRangePicker
+										className={css.year}
 										key="year-picker"
 										label={noLabels || $L('year')}
 										min={minYear}
