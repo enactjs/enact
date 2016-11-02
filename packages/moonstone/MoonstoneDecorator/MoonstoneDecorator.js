@@ -4,8 +4,8 @@ import hoc from '@enact/core/hoc';
 import I18nDecorator from '@enact/i18n/I18nDecorator';
 import React from 'react';
 import {ResolutionDecorator} from '@enact/ui/resolution';
+import {PortalDecorator} from '@enact/ui/Portal';
 import {SpotlightRootDecorator} from '@enact/spotlight';
-import {PortalDecorator} from '../Portal';
 
 import screenTypes from './screenTypes.json';
 import css from './MoonstoneDecorator.less';
