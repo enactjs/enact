@@ -41,6 +41,12 @@ const TimePickerController = class extends React.Component {
 		this.initI18n();
 	}
 
+	componentWillReceiveProps (nextProps) {
+		this.setState({
+			value: 'value' in nextProps ? this.toIDate(nextProps.value) : this.state.value
+		});
+	}
+
 	initI18n () {
 		const format = {
 			type: 'time',
@@ -179,6 +185,34 @@ const TimePickerController = class extends React.Component {
 	}
 
 	/**
+	 * Handles the `onClose` event from the ExpandableDatePicker by emitting an `onChange` event
+	 * with the updated value if not preceded by an `onCancel` event.
+	 *
+	 * @param	{Object}	ev	Event payload
+	 * @returns	{undefined}
+	 */
+	handleClose = (ev) => {
+		const value = this.toIDate(this.props.value);
+
+		if (this.props.onChange) {
+			// If we have an onChange handler to call, determine if the value actually changed and,
+			// if so, call the handler.
+			const changed =	value == null ||
+							value.hour !== this.state.value.hour ||
+							value.minute !== this.state.value.minute;
+			if (changed) {
+				this.props.onChange({
+					value: this.calcValue().getJSDate()
+				});
+			}
+		}
+
+		if (this.props.onClose) {
+			this.props.onClose(ev);
+		}
+	}
+
+	/**
 	 * Determines the current value using either the value from state or the current time (if the
 	 * picker is open). Always returns a new copy of the data object (if a date is returned).
 	 *
@@ -233,6 +267,7 @@ const TimePickerController = class extends React.Component {
 				onChangeHour={this.handleChangeHour}
 				onChangeMeridiem={this.handleChangeMeridiem}
 				onChangeMinute={this.handleChangeMinute}
+				onClose={this.handleClose}
 				order={this.order}
 			/>
 		);
