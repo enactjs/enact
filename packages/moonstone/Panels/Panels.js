@@ -79,7 +79,7 @@ const PanelsBase = kind({
 	},
 
 	computed: {
-		className: ({noCloseButton, styler}) => styler.join({
+		className: ({noCloseButton, styler}) => styler.append({
 			hasCloseButton: !noCloseButton
 		}),
 		applicationCloseButton: ({noCloseButton, onApplicationClose}) => {
