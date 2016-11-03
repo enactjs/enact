@@ -103,8 +103,8 @@ class Scrollbar extends Component {
 	prevButtonNodeRef = null
 	nextButtonNodeRef = null
 
-	constructor (props) {
-		super(props);
+	constructor (props, context) {
+		super(props, context);
 
 		this.state = {
 			prevButtonDisabled: true,
@@ -116,6 +116,12 @@ class Scrollbar extends Component {
 			clickPrevHandler: props.onPrevScroll,
 			clickNextHandler: props.onNextScroll
 		};
+
+		if (!props.isVertical && context.rtl) {
+			const iconTmp = this.scrollInfo.prevIcon;
+			this.scrollInfo.prevIcon = this.scrollInfo.nextIcon;
+			this.scrollInfo.nextIcon = iconTmp;
+		}
 
 		this.initContainerRef = this.initRef('containerRef');
 		this.initThumbRef = this.initRef('thumbRef');
