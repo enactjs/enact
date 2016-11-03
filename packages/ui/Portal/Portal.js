@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import {ScrimLayer} from './Scrim';
+
 class Portal extends React.Component {
 	static displayName = 'Portal'
 
@@ -15,14 +17,16 @@ class Portal extends React.Component {
 		onClose: React.PropTypes.func,
 		open: React.PropTypes.bool,
 		portalClassName: React.PropTypes.string,
-		portalId: React.PropTypes.string
+		portalId: React.PropTypes.string,
+		scrimType: React.PropTypes.oneOf(['transparent', 'translucent'])
 	}
 
 	static defaultProps = {
 		noAutoDismiss: false,
 		open: false,
 		portalClassName: 'enact-fit enact-untouchable',
-		portalId: 'portal'
+		portalId: 'portal',
+		scrimType: 'translucent'
 	}
 
 	componentDidMount () {
@@ -70,16 +74,20 @@ class Portal extends React.Component {
 		this.node = null;
 	}
 
-	renderPortal (props) {
+	renderPortal ({portalClassName, portalId, ...rest}) {
+		delete rest.noAutoDismiss;
+		delete rest.onClose;
+		// don't delete `rest.open`
+
 		if (!this.node) {
 			this.node = document.createElement('div');
-			this.node.className = this.props.portalClassName;
-			document.getElementById(this.props.portalId).appendChild(this.node);
+			this.node.className = portalClassName;
+			document.getElementById(portalId).appendChild(this.node);
 		} else {
-			this.node.className = this.props.portalClassName;
+			this.node.className = portalClassName;
 		}
 
-		this.portal = ReactDOM.unstable_renderSubtreeIntoContainer(this, React.cloneElement(props.children, {open: props.open}), this.node);
+		this.portal = ReactDOM.unstable_renderSubtreeIntoContainer(this, <ScrimLayer {...rest} />, this.node);
 	}
 
 	render () {

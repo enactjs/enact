@@ -20,8 +20,10 @@ describe('Portal Specs', () => {
 	it('should render if portal is open', () => {
 		const wrapper = mount(<Portal open><p>Hi</p></Portal>);
 
+		// wrapper.find('p').length returns 0
+
 		const expected = 'P';
-		const actual = wrapper.instance().node.firstElementChild.tagName;
+		const actual = wrapper.instance().node.firstElementChild.firstElementChild.tagName;
 		expect(actual).to.equal(expected);
 	});
 });
