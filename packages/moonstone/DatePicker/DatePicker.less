@@ -1,3 +1,5 @@
+@import '~@enact/ui/styles/mixins.less';
+
 @import '../styles/variables.less';
 
 .datePicker {
@@ -11,7 +13,7 @@
 }
 
 .dateComponents {
-	padding-left: 48px;
+	.padding-start-end(48px, inherit);
 }
 
 .year {
