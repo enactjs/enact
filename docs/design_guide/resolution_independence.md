@@ -2,8 +2,8 @@
 
 ## Resolution Independence
 
-Enyo and Moonstone are now resolution-independent, which means that a single app can support multiple screen resolutions,
-including HD (720p), FHD (1080p) and UHD (4k).
+The `@enact/ui/resolution` module provides resolution independence, which means that a single app can support multiple
+screen resolutions, including HD (720p), FHD (1080p) and UHD (4k).
 
 TV apps are still developed using FHD-based pixel measurements in CSS and JavaScript, but the framework will convert these
 FHD-specific measurements into resolution-independent units so that your app will scale to the proper size, regardless of
@@ -20,8 +20,8 @@ physical size at any resolution. For example, if a button is 1-inch wide on an H
 You can use the device emulation feature in the Chrome Web Inspector to switch between HD and FHD resolutions.  If your
 component or view uses JavaScript-based layout, then you will need to reload the page.
 
-Here's the Moonstone Activity Panels Sample as it appears in the Chrome Web Inspector at various resolutions, with the
-"Fit" checkbox disabled (click an image to enlarge):
+Here's a sample Moonstone Activity Panel as it appears in the Chrome Web Inspector at various resolutions, with the "Fit"
+checkbox disabled:
 
 ##### No Resolution Independence Examples
 |   |   |   |
@@ -35,12 +35,12 @@ Here's the Moonstone Activity Panels Sample as it appears in the Chrome Web Insp
 |![720p/HD][hdFitThumb]|![1080p/FHD][fhdFitThumb]|![4K/UHD][uhdFitThumb]|
 |*720p/HD*|*1080p/FHD*|*4K/UHD*|
 
-[hdFullThumb]: https://enyojs.com/docs/latest/developer-guide/assets/resolution-independence-full-hd-thumb.png "720p/HD"
-[fhdFullThumb]: https://enyojs.com/docs/latest/developer-guide/assets/resolution-independence-full-fhd-thumb.png "1080p/FHD"
-[uhdFullThumb]: https://enyojs.com/docs/latest/developer-guide/assets/resolution-independence-full-uhd-thumb.png "4K/UHD"
-[hdFitThumb]: https://enyojs.com/docs/latest/developer-guide/assets/resolution-independence-fit-hd-thumb.png "720p/HD"
-[fhdFitThumb]: https://enyojs.com/docs/latest/developer-guide/assets/resolution-independence-fit-fhd-thumb.png "1080p/FHD"
-[uhdFitThumb]: https://enyojs.com/docs/latest/developer-guide/assets/resolution-independence-fit-uhd-thumb.png "4K/UHD"
+[hdFullThumb]: ./assets/resolution-independence-full-hd-thumb.png "720p/HD"
+[fhdFullThumb]: ./assets/resolution-independence-full-fhd-thumb.png "1080p/FHD"
+[uhdFullThumb]: ./assets/resolution-independence-full-uhd-thumb.png "4K/UHD"
+[hdFitThumb]: ./assets/resolution-independence-fit-hd-thumb.png "720p/HD"
+[fhdFitThumb]: ./assets/resolution-independence-fit-fhd-thumb.png "1080p/FHD"
+[uhdFitThumb]: ./assets/resolution-independence-fit-uhd-thumb.png "4K/UHD"
 
 ### Writing CSS for Resolution Independence
 
