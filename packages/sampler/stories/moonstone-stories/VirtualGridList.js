@@ -30,8 +30,8 @@ const
 			height: ri.scale(550) + 'px'
 		}
 	},
-	data = [],
-	renderItem = ({index, key}) => {
+	items = [],
+	renderItem = ({data, index, key}) => {
 		const {text, subText, source} = data[index];
 		return (
 			<GridListImageItem
@@ -51,7 +51,7 @@ for (let i = 0; i < 1000; i++) {
 		subText = `SubItem ${count}`,
 		color = Math.floor((Math.random() * (0x1000000 - 0x101010)) + 0x101010).toString(16),
 		source = `http://placehold.it/300x300/${color}/ffffff&text=Image ${i}`;
-	data.push({text, subText, source});
+	items.push({text, subText, source});
 }
 
 storiesOf('VirtualGridList')
@@ -63,8 +63,8 @@ storiesOf('VirtualGridList')
 			<VirtualGridList
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
-				data={data}
-				dataSize={number('dataSize', data.length)}
+				data={items}
+				dataSize={number('dataSize', items.length)}
 				direction={select('direction', prop.direction, 'vertical')}
 				hideScrollbars={boolean('hideScrollbars', false)}
 				itemSize={{minWidth: ri.scale(number('minWidth', 180)), minHeight: ri.scale(number('minHeight', 270))}}

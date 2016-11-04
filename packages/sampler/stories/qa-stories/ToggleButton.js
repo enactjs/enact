@@ -18,7 +18,7 @@ const prop = {
 storiesOf('ToggleButton')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'Long text',
+		'with long text',
 		() => (
 			<StatefulToggleButton
 				onClick={action('onClick')}
@@ -32,7 +32,7 @@ storiesOf('ToggleButton')
 		)
 	)
 	.addWithInfo(
-		'Tall Characters',
+		'with tall characters',
 		() => (
 			<StatefulToggleButton
 				onClick={action('onClick')}

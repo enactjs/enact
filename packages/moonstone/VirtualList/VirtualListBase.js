@@ -446,9 +446,10 @@ class VirtualListCore extends Component {
 
 	applyStyleToNewNode = (i, ...rest) => {
 		const
-			{component} = this.props,
+			{component, data} = this.props,
 			{numOfItems} = this.state,
 			itemElement = component({
+				data,
 				index: i,
 				key: i % numOfItems
 			}),

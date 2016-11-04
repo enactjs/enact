@@ -10,7 +10,7 @@ const prop = {
 storiesOf('Divider')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'Long Text',
+		'with long text',
 		() => (
 			<Divider>
 				{text('children', 'This long text is for the marquee test in divider component. This long text is for the marquee test in divider component. This long text is for the marquee test in divider component.')}
@@ -19,7 +19,7 @@ storiesOf('Divider')
 	)
 
 	.addWithInfo(
-		'Tall Text',
+		'with tall characters',
 		() => (
 			<Divider>
 				{select('children', prop.tallText, 'नरेंद्र मोदी')}

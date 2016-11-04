@@ -8,11 +8,12 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/DatePicker`, `moonstone/DayPicker`, `moonstone/ExpandableItem`, `moonstone/Image`, and `moonstone/TimePicker` components
 - `fullBleed` prop to `moonstone/Panels/Header`. When `true`, the header content is indented and the header lines are removed.
+- `marqueeDisabled` prop to `moonstone/Picker`
+- `padded` prop to `moonstone/RangePicker`
 
 ### Changed
 
-- Added `marqueeDisabled` property to `moonstone/Picker`
-- Added `padded` property to `moonstone/RangePicker`
+- `data` parameter passed to `component` prop of `VirtualList`.
 - Overhauled and moved `moonstone/Expandable` into a submodule of `moonstone/ExpandableItem`
 - Overhauled `ExpandableList` to properly support selection
 - Removed `moonstone/ExpandableCheckboxItemGroup` in favor of `ExpandableList`
