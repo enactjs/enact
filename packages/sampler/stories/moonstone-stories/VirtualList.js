@@ -39,15 +39,15 @@ const
 			height: ri.scale(550) + 'px'
 		}
 	},
-	data = [],
-	renderItem = (direction) => ({index, key}) => (
+	items = [],
+	renderItem = (direction) => ({data, index, key}) => (
 		<Item key={key} style={style[direction + 'Item']}>
 			{data[index]}
 		</Item>
 	);
 
 for (let i = 0; i < 1000; i++) {
-	data.push('Item ' + ('00' + i).slice(-3));
+	items.push('Item ' + ('00' + i).slice(-3));
 }
 
 storiesOf('VirtualList')
@@ -59,8 +59,8 @@ storiesOf('VirtualList')
 			<VirtualList
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
-				data={data}
-				dataSize={number('dataSize', data.length)}
+				data={items}
+				dataSize={number('dataSize', items.length)}
 				direction='vertical'
 				hideScrollbars={boolean('hideScrollbars', false)}
 				itemSize={ri.scale(number('itemSize', 72))}
@@ -76,8 +76,8 @@ storiesOf('VirtualList')
 			<VirtualList
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
-				data={data}
-				dataSize={number('dataSize', data.length)}
+				data={items}
+				dataSize={number('dataSize', items.length)}
 				direction='horizontal'
 				hideScrollbars={boolean('hideScrollbars', false)}
 				itemSize={ri.scale(number('itemSize', 270))}
