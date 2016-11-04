@@ -368,7 +368,6 @@ class VirtualListCore extends Component {
 	setScrollPosition (x, y, dirX, dirY, skipPositionContainer = false) {
 		const
 			{firstIndex} = this.state,
-			{rtl} = this.context,
 			{isPrimaryDirectionVertical, threshold, dimensionToExtent, maxFirstIndex, scrollBounds} = this,
 			{gridSize} = this.primary,
 			maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft,
@@ -381,8 +380,8 @@ class VirtualListCore extends Component {
 			pos = y;
 			dir = dirY;
 		} else {
-			pos = rtl ? (maxPos - x) : x;
-			dir = rtl ? -(dirX) : dirX;
+			pos = x;
+			dir = dirX;
 		}
 
 		if (dir === 1 && pos > threshold.max) {
@@ -508,28 +507,32 @@ class VirtualListCore extends Component {
 	getXY = (primary, secondary) => ((this.isPrimaryDirectionVertical) ? {x: secondary, y: primary} : {x: primary, y: secondary})
 
 	composeTransform (style, primary, secondary = 0) {
-		const {x, y} = this.getXY(primary, secondary);
-		const dir = this.context.rtl ? -1 : 1;
-		style.transform = 'translate3d(' + (x * dir) + 'px,' + y + 'px,0)';
+		const
+			{x, y} = this.getXY(primary, secondary),
+			intDirection = this.context.rtl ? -1 : 1;
+
+		style.transform = 'translate3d(' + (x * intDirection) + 'px,' + y + 'px,0)';
 	}
 
 	composeLeftTop (style, primary, secondary = 0) {
-		const {x, y} = this.getXY(primary, secondary);
-		const dir = this.context.rtl ? -1 : 1;
-		style.left = (x * dir) + 'px';
+		const
+			{x, y} = this.getXY(primary, secondary),
+			intDirection = this.context.rtl ? -1 : 1;
+		style.left = (x * intDirection) + 'px';
 		style.top = y + 'px';
 	}
 
 	applyTransformToContainerNode () {
-		this.composeTransform(this.containerRef.style, -this.scrollPosition, 0);
+		const intDirection = this.context.rtl ? -1 : 1;
+		this.composeTransform(this.containerRef.style, -this.scrollPosition * intDirection, 0);
 	}
 
 	applyScrollLeftTopToWrapperNode () {
 		const
 			node = this.wrapperRef,
-			dir = this.context.rtl ? -1 : 1,
+			intDirection = this.context.rtl ? -1 : 1,
 			{x, y} = this.getXY(this.scrollPosition, 0);
-		node.scrollLeft = (x * dir);
+		node.scrollLeft = (x * intDirection);
 		node.scrollTop = y;
 	}
 
@@ -638,9 +641,10 @@ class VirtualListCore extends Component {
 			const containerNode = this.getContainerNode(positioningOption);
 
 			// prevent native scrolling by Spotlight
-			this.preventScroll = function () {
+			this.preventScroll = () => {
 				containerNode.scrollTop = 0;
-				containerNode.scrollLeft = 0;
+				containerNode.scrollLeft = this.context.rtl ? containerNode.scrollWidth : 0;
+				return;
 			};
 
 			if (containerNode && containerNode.addEventListener) {

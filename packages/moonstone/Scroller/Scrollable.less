@@ -34,6 +34,9 @@
 
 .takeAvailableSpaceForHorizontal {
 	padding-right: 0;
+	:global(.enact-locale-right-to-left) & {
+		padding-left: 0;
+	}
 }
 
 .takeAvailableSpaceForVertical {
@@ -46,6 +49,9 @@
 
 .onlyHorizontalScrollbarNeeded {
 	right: 0;
+	:global(.enact-locale-right-to-left) & {
+		left: 0;
+	}
 }
 
 .verticalScrollbarDisabled {

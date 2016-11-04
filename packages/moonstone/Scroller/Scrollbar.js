@@ -131,11 +131,10 @@ class Scrollbar extends Component {
 		const
 			{prevButtonNodeRef, nextButtonNodeRef} = this,
 			{prevButtonDisabled, nextButtonDisabled} = this.state,
-			{rtl} = this.context,
 			currentPos = this.props.isVertical ? bounds.scrollTop : bounds.scrollLeft,
 			maxPos = this.props.isVertical ? bounds.maxTop : bounds.maxLeft,
-			shouldDisablePrevButton = (this.props.isVertical || !rtl) ? (currentPos <= 0) : (currentPos >= maxPos),
-			shouldDisableNextButton = (this.props.isVertical || !rtl) ? (currentPos >= maxPos) : (currentPos <= 0);
+			shouldDisablePrevButton = currentPos <= 0,
+			shouldDisableNextButton = currentPos >= maxPos;
 
 
 		if (prevButtonDisabled !== shouldDisablePrevButton) {
@@ -156,13 +155,14 @@ class Scrollbar extends Component {
 			{trackSize, minThumbSizeRatio} = this,
 			{rtl} = this.context,
 			{clientWidth, clientHeight, scrollWidth, scrollHeight, scrollLeft, scrollTop} = bounds,
+			canScrollDistance = scrollWidth - clientWidth,
 			thumbSizeRatioBase = this.props.isVertical ?
 				Math.min(1, clientHeight / scrollHeight) :
 				Math.min(1, clientWidth / scrollWidth),
 			thumbSizeRatio = Math.max(minThumbSizeRatio, thumbSizeRatioBase),
 			thumbPositionRatio = this.props.isVertical ?
 				scrollTop / (scrollHeight - clientHeight) :
-				scrollLeft / (scrollWidth - clientWidth),
+				(rtl ? (canScrollDistance - scrollLeft) : scrollLeft) / canScrollDistance,
 			thumbSize, thumbPosition;
 
 		// overscroll cases

@@ -7,6 +7,7 @@
 
 import classNames from 'classnames';
 import React, {Component, PropTypes} from 'react';
+import {contextTypes} from '@enact/i18n/I18nDecorator';
 import {SpotlightContainerDecorator} from '@enact/spotlight';
 
 import css from './Scroller.less';
@@ -52,6 +53,8 @@ class ScrollerBase extends Component {
 		vertical: PropTypes.oneOf(['auto', 'hidden', 'scroll'])
 	}
 
+	static contextTypes = contextTypes
+
 	static defaultProps = {
 		horizontal: 'auto',
 		vertical: 'auto'
@@ -69,13 +72,15 @@ class ScrollerBase extends Component {
 	getScrollBounds = () => this.scrollBounds
 
 	setScrollPosition (valX, valY) {
-		const node = this.node;
+		const
+			node = this.node,
+			rtl = this.context.rtl;
 
 		if (this.isVertical()) {
 			node.scrollTop = valY;
 		}
 		if (this.isHorizontal()) {
-			node.scrollLeft = valX;
+			node.scrollLeft = rtl ? (this.scrollBounds.maxLeft - valX) : valX;
 		}
 	}
 

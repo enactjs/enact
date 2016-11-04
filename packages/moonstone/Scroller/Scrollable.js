@@ -130,6 +130,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			style: PropTypes.object
 		}
 
+		static contextTypes = contextTypes
+
 		static defaultProps = {
 			cbScrollTo: nop,
 			hideScrollbars: false,
@@ -138,8 +140,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			onScrollStop: nop,
 			positioningOption: 'byItem'
 		}
-
-		static contextTypes = contextTypes
 
 		// status
 		horizontalScrollability = false
@@ -187,8 +187,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		// scroll animator
 		animator = new ScrollAnimator()
 
-		constructor (props, context) {
-			super(props, context);
+		constructor (props) {
+			super(props);
 
 			this.state = {
 				isHorizontalScrollbarVisible: true,
@@ -196,8 +196,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			};
 
 			this.initChildRef = this.initRef('childRef');
-
-			this.dirInteger = context.rtl ? -1 : 1;
 
 			if (this.props.positioningOption === 'byBrowser') {
 				const {onFocus, onKeyDown, onScroll} = this;
@@ -293,7 +291,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		wheel (e, isHorizontal, isVertical) {
 			const deltaMode = e.deltaMode;
-			let delta = e.deltaY;
+			let delta = (!isVertical && isHorizontal && this.context.rtl) ? -e.deltaY : e.deltaY;
 
 			if (deltaMode === 0) {
 				delta = ri.scale(delta);
@@ -628,7 +626,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.bounds = this.childRef.getScrollBounds();
 			this.horizontalScrollability = this.childRef.isHorizontal();
 			this.verticalScrollability = this.childRef.isVertical();
-			this.scrollLeft = (this.context.rtl) ? this.bounds.maxLeft : this.scrollLeft;
 
 			if (this.props.positioningOption !== 'byBrowser' && !this.props.hideScrollbars) {
 				// eslint-disable-next-line react/no-did-mount-set-state
