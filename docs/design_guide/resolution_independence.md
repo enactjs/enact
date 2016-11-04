@@ -2,12 +2,11 @@
 
 ## Resolution Independence
 
-The `@enact/ui/resolution` module provides resolution independence, which means that a single app can support multiple
-screen resolutions, including HD (720p), FHD (1080p) and UHD (4k).
-
-TV apps are still developed using FHD-based pixel measurements in CSS and JavaScript, but the framework will convert these
-FHD-specific measurements into resolution-independent units so that your app will scale to the proper size, regardless of
-whether it is running at HD, FHD or UHD resolution.
+The `@enact/ui/resolution` module provides means of designing apps and interface code that is resilient against various
+screen dimensions, i.e. resolution independence, which means that a single app can be designed once and automatically
+support multiple defined screen resolutions with everything remaining in proportion and to-scale. For example, screens
+like HD (720p), FHD (1080p) and UHD (4k) could all be supported with a single set of measurements for just one of the
+screens.
 
 ### What a Resolution Independent App Looks Like
 
@@ -44,7 +43,7 @@ checkbox disabled:
 
 ### Writing CSS for Resolution Independence
 
-You can continue to use FHD-based pixel measurements when writing the CSS rules in your app's .less files.
+You can continue to use FHD-based pixel measurements when writing the CSS rules in your app's `.less` files.
 
 Behind the scenes, the framework will automatically convert your FHD-specific measurements to resolution-independent units.
 You don't need to know the implementation details to use this feature, but if you're curious, you can read the section
@@ -97,7 +96,7 @@ already be correct for the target resolution.
 		'uhd': 'http://lorempixel.com/256/256/city/1/'
 	};
 	
-	<Image src={src} sizing={'fill'} />
+	<Image src={src} />
 ```
 
 As shown in this example, you may populate `src` with a hash specifying paths to assets at different resolutions; the
@@ -113,26 +112,26 @@ that something is wrong.
 
 One exception to this rule is if you are using CSS background images. For this and similar cases, we have provided a
 simple way to write resolution-specific selectors. The `@enact/ui/resolution/ResolutionDecorator` HOC applies a class to
-its wrapped component to represent the resolution at which your app is currently running: `enact-res-hd` for 720p HD,
-`enact-res-fhd` for 1080p FHD, and `enact-res-uhd` for 4k UHD.
+its wrapped component (the base level `@enact/moonstone/MoonstoneDecorator` component) to represent the resolution at which your app is
+currently running: `enact-res-hd` for 720p HD, `enact-res-fhd` for 1080p FHD, and `enact-res-uhd` for 4k UHD.
 
 Here's how to use these classes to write resolution-specific selectors:
 
 ```
 	/* Base rule, defaults to FHD */
-    .myComponent {
-        background-image: url('http://lorempixel.com/128/128/city/1/');
-    }
- 
-    /* 720p HD-only rule */
-    .myComponent.enact-res-hd {
-        background-image: url('http://lorempixel.com/64/64/city/1/');
-    }
-
-    /* 4k UHD-only rule */
-    .myComponent.enact-res-uhd {
-        background-image: url('http://lorempixel.com/256/256/city/1/');
-    }
+	.myComponent {
+		background-image: url('http://lorempixel.com/128/128/city/1/');
+	}
+	
+	/* 720p HD-only rule */
+	.myComponent.enact-res-hd {
+		background-image: url('http://lorempixel.com/64/64/city/1/');
+	}
+	
+	/* 4K UHD-only rule */
+	.myComponent.enact-res-uhd {
+		background-image: url('http://lorempixel.com/256/256/city/1/');
+	}
 ```
 
 ### Writing JavaScript for Specific Resolutions
@@ -173,8 +172,8 @@ statements or `switch` statements to execute custom code for a given screen type
 ### How It Works
 
 All controls are still designed and built from a 1080p/FHD perspective, but pixel measurements are converted into a new
-CSS unit called `rem`, whose size we control. Since all measurements are expressed in terms of `rem`, when the screen size
-changes, we can easily scale the elements on the screen by changing the size assigned to the individual `rem` unit (or, in
-other words, adjusting the conversion factor between `rems` and `pixels`).
+relatively sized CSS unit called `rem`, whose size we control. Since all measurements are expressed in terms of `rem`,
+when the screen size changes, we can easily scale the elements on the screen by changing the size assigned to the base
+`rem` unit (or, in other words, adjusting the conversion factor between `rems` and `pixels`).
 
 </section>
