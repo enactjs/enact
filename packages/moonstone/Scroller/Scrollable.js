@@ -176,7 +176,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		scrollTop = 0
 		dirHorizontal = 0
 		dirVertical = 0
-		dirInteger = 1
 
 		// spotlight
 		lastFocusedItem = null
@@ -420,7 +419,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			if (isVertical) {
 				this.accumulatedTargetY = R.clamp(0, this.bounds.maxTop, this.accumulatedTargetY + delta);
 			} else if (isHorizontal) {
-				this.accumulatedTargetX = R.clamp(0, this.bounds.maxLeft, this.accumulatedTargetX + (delta * this.dirInteger));
+				this.accumulatedTargetX = R.clamp(0, this.bounds.maxLeft, this.accumulatedTargetX + delta);
 			}
 
 			this.start(this.accumulatedTargetX, this.accumulatedTargetY, true, silent);

@@ -136,7 +136,6 @@ class Scrollbar extends Component {
 			shouldDisablePrevButton = currentPos <= 0,
 			shouldDisableNextButton = currentPos >= maxPos;
 
-
 		if (prevButtonDisabled !== shouldDisablePrevButton) {
 			this.setState({prevButtonDisabled: shouldDisablePrevButton});
 		} else if (nextButtonDisabled !== shouldDisableNextButton) {

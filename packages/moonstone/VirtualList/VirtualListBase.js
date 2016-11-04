@@ -182,15 +182,17 @@ class VirtualListCore extends Component {
 	// spotlight
 	nodeIndexToBeBlurred = null
 	lastFocusedIndex = null
+	rtlDirection = 1
 
-	constructor (props) {
+	constructor (props, context) {
 		const {positioningOption} = props;
 
-		super(props);
+		super(props, context);
 
 		this.state = {firstIndex: 0, numOfItems: 0};
 		this.initContainerRef = this.initRef('containerRef');
 		this.initWrapperRef = this.initRef('wrapperRef');
+		this.rtlDirection = context.rtl ? -1 : 1;
 
 		switch (positioningOption) {
 			case 'byItem':
@@ -507,32 +509,27 @@ class VirtualListCore extends Component {
 	getXY = (primary, secondary) => ((this.isPrimaryDirectionVertical) ? {x: secondary, y: primary} : {x: primary, y: secondary})
 
 	composeTransform (style, primary, secondary = 0) {
-		const
-			{x, y} = this.getXY(primary, secondary),
-			intDirection = this.context.rtl ? -1 : 1;
+		const {x, y} = this.getXY(primary, secondary);
 
-		style.transform = 'translate3d(' + (x * intDirection) + 'px,' + y + 'px,0)';
+		style.transform = 'translate3d(' + (x * this.rtlDirection) + 'px,' + y + 'px,0)';
 	}
 
 	composeLeftTop (style, primary, secondary = 0) {
-		const
-			{x, y} = this.getXY(primary, secondary),
-			intDirection = this.context.rtl ? -1 : 1;
-		style.left = (x * intDirection) + 'px';
+		const {x, y} = this.getXY(primary, secondary);
+
+		style.left = (x * this.rtlDirection) + 'px';
 		style.top = y + 'px';
 	}
 
 	applyTransformToContainerNode () {
-		const intDirection = this.context.rtl ? -1 : 1;
-		this.composeTransform(this.containerRef.style, -this.scrollPosition * intDirection, 0);
+		this.composeTransform(this.containerRef.style, -this.scrollPosition * this.rtlDirection, 0);
 	}
 
 	applyScrollLeftTopToWrapperNode () {
 		const
 			node = this.wrapperRef,
-			intDirection = this.context.rtl ? -1 : 1,
 			{x, y} = this.getXY(this.scrollPosition, 0);
-		node.scrollLeft = (x * intDirection);
+		node.scrollLeft = (x * this.rtlDirection);
 		node.scrollTop = y;
 	}
 
@@ -644,7 +641,6 @@ class VirtualListCore extends Component {
 			this.preventScroll = () => {
 				containerNode.scrollTop = 0;
 				containerNode.scrollLeft = this.context.rtl ? containerNode.scrollWidth : 0;
-				return;
 			};
 
 			if (containerNode && containerNode.addEventListener) {
