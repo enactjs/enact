@@ -108,7 +108,6 @@ describe('Marquee', () => {
 			</Marquee>
 		);
 
-		// Testing for a positive number after transform3d(
 		const expected = 'rtl';
 		const actual = subject.find(`.${css.text}`).prop('style');
 

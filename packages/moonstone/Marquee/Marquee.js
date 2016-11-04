@@ -120,7 +120,7 @@ const MarqueeBase = kind({
 	computed: {
 		clientClassName: ({animating}) => animating ? animated : css.text,
 		clientStyle: ({animating, children, distance, overflow, speed, forceRTL}, {rtl: contextRtl}) => {
-			let rtl = isRtlText(children);
+			const rtl = forceRTL || isRtlText(children);
 			const overrideRtl = contextRtl !== rtl;
 
 			// We only attempt to set the textAlign of this control if the locale's directionality
@@ -142,11 +142,6 @@ const MarqueeBase = kind({
 			let direction = 'inherit';
 			if (overrideRtl) {
 				direction = rtl ? 'rtl' : 'ltr';
-			}
-
-			if (forceRTL) {
-				direction = 'rtl';
-				rtl = true;
 			}
 
 			const style = {

@@ -4,7 +4,6 @@ import Uppercase from '@enact/i18n/Uppercase';
 import Slottable from '@enact/ui/Slottable';
 import {MarqueeDecorator, MarqueeText} from '../Marquee';
 import {isRtlText} from '@enact/i18n';
-import {contextTypes} from '@enact/i18n/I18nDecorator';
 import css from './Header.less';
 
 // Create a <h1> and Marquee component that support the uppercase attribute
@@ -109,8 +108,8 @@ const HeaderBase = kind({
 	computed: {
 		className: ({fullBleed, type, styler}) => styler.append({fullBleed},type),
 		isRTL: ({title, titleBelow}) => {
-			const RTL = isRtlText(title) || isRtlText(titleBelow);
-			return RTL;
+			const rtl = isRtlText(title) || isRtlText(titleBelow);
+			return rtl;
 		}
 	},
 
