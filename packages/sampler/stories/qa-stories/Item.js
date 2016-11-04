@@ -28,22 +28,22 @@ storiesOf('Item')
 		)
 	)
 	.addWithInfo(
-		'with extra spaces',
-		() => (
-			<Item
-				disabled={boolean('disabled')}
-			>
-				{text('children', inputData.extraSpaceText)}
-			</Item>
-		)
-	)
-	.addWithInfo(
 		'with tall characters',
 		() => (
 			<Item
 				disabled={boolean('disabled')}
 			>
 				{select('value', inputData.tallText,  inputData.tallText[2])}
+			</Item>
+		)
+	)
+	.addWithInfo(
+		'with extra spaces',
+		() => (
+			<Item
+				disabled={boolean('disabled')}
+			>
+				{text('children', inputData.extraSpaceText)}
 			</Item>
 		)
 	)
