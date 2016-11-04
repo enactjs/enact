@@ -43,6 +43,16 @@ const DateComponentPickerBase = kind({
 		 */
 		label: React.PropTypes.string,
 
+		/**
+		 * By default, the picker will animate transitions between items if it has a defined
+		 * `width`. Specifying `noAnimation` will prevent any transition animation for the
+		 * component.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		noAnimation: React.PropTypes.bool,
+
 		/*
 		 * When `true`, allow the picker to continue from the opposite end of the list of options.
 		 *
@@ -52,12 +62,13 @@ const DateComponentPickerBase = kind({
 		wrap: React.PropTypes.bool
 	},
 
-	render: ({children, className, label, value, wrap, ...rest}) => (
+	render: ({children, className, label, noAnimation, value, wrap, ...rest}) => (
 		<DateComponentPickerChrome className={className} label={label}>
 			<Picker
 				{...rest}
 				joined
 				marqueeDisabled
+				noAnimation={noAnimation}
 				orientation="vertical"
 				value={value}
 				width="small"

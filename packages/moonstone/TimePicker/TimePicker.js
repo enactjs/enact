@@ -129,6 +129,15 @@ const TimePickerController = class extends React.Component {
 		}
 	}
 
+	shouldAnimateHour (value) {
+		if (this.meridiemEnabled && this.meridiemRanges.length === 2) {
+			const currentValue = this.calcValue();
+			return !value || value.hour % 12 !== currentValue.hour % 12;
+		}
+
+		return true;
+	}
+
 	/**
 	 * Updates the internal value in state
 	 *
@@ -138,6 +147,7 @@ const TimePickerController = class extends React.Component {
 	 */
 	updateValue = (value) => {
 		this.setState({
+			noHourAnimation: !this.shouldAnimateHour(value),
 			value: DateFactory(value).getTime()
 		});
 	}
@@ -288,6 +298,7 @@ const TimePickerController = class extends React.Component {
 				{...dateComponents}
 				label={label}
 				meridiems={this.meridiemLabels}
+				noHourAnimation={this.state.noHourAnimation}
 				onChangeHour={this.handleChangeHour}
 				onChangeMeridiem={this.handleChangeMeridiem}
 				onChangeMinute={this.handleChangeMinute}

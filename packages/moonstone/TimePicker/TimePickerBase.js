@@ -73,6 +73,15 @@ const TimePickerBase = kind({
 		meridiems: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
 
 		/**
+		 * When `true`, prevents the hour picker from animation. Useful when changing the merdiem
+		 * for locales that only have 2 meridiems.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		noHourAnimation: React.PropTypes.bool,
+
+		/**
 		 * Handler for changes in the `date` component of the time
 		 *
 		 * @type {Function}
@@ -114,7 +123,7 @@ const TimePickerBase = kind({
 		hasMeridiem: ({order}) => order.indexOf('a') >= 0
 	},
 
-	render: ({hasMeridiem, hour, meridiem, meridiems, minute, noLabels, onChangeHour, onChangeMeridiem, onChangeMinute, order, ...rest}) => {
+	render: ({hasMeridiem, hour, meridiem, meridiems, minute, noHourAnimation, noLabels, onChangeHour, onChangeMeridiem, onChangeMinute, order, ...rest}) => {
 		return (
 			<ExpandableItemBase {...rest} showLabel="always">
 				<div className={css.dateComponents}>
@@ -128,6 +137,7 @@ const TimePickerBase = kind({
 										label={noLabels || $L('hour')}
 										value={hour}
 										onChange={onChangeHour}
+										noAnimation={noHourAnimation}
 										wrap
 									>
 										{hasMeridiem ? hours12 : hours24}
