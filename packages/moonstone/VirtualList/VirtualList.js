@@ -82,19 +82,23 @@ const VirtualEPGGridList = kind({
 
 	propTypes: {
 		/**
-		 * Size of an item for the VirtualList; valid value is a number.
-		 * If the direction for the list is vertical, itemSize means the height of an item.
-		 * For horizontal, it means the width of an item.
-		 *
-		 * Usage:
-		 * ```
-		 * <VirtualList itemSize={ri.scale(72)}/>
-		 * ```
+		 * Size of an item for the VirtualEPGGridList; valid value is a number.
+		 * For variable width size, fixedItemSize means the height of an item.
+		 * For variable height size, it means the width of an item.
 		 *
 		 * @type {Number}
 		 * @public
 		 */
-		itemSize: PropTypes.object.isRequired,
+		fixedItemSize: PropTypes.object.isRequired,
+
+		/**
+		 * For variable width size, fixedDataSize is the number of item column.
+		 * For variable height size, it is the number of item row.
+		 *
+		 * @type {Number}
+		 * @public
+		 */
+		fixedDataSize: PropTypes.number.isRequired
 	},
 
 	render: (props) => {
