@@ -108,27 +108,19 @@ const HeaderBase = kind({
 
 	computed: {
 		className: ({fullBleed, type, styler}) => styler.append({fullBleed},type),
-		direction: ({title, titleBelow}, {rtl: contextRtl}) => {
-
-			const rtl = isRtlText(title) || isRtlText(titleBelow);
-			const overrideRtl = contextRtl !== rtl;
-
-			let direction = 'inherit';
-			if (overrideRtl) {
-				direction = rtl ? 'rtl' : 'ltr';
-			}
-
-			return {direction, rtl};
+		isRTL: ({title, titleBelow}) => {
+			const RTL = isRtlText(title) || isRtlText(titleBelow);
+			return RTL;
 		}
 	},
 
-	render: ({children, direction, preserveCase, subTitleBelow, title, titleAbove, titleBelow, type, ...rest}) => {
+	render: ({children, isRTL, preserveCase, subTitleBelow, title, titleAbove, titleBelow, type, ...rest}) => {
 		delete rest.fullBleed;
 
 		switch (type) {
 			case 'compact': return (
 				<header {...rest}>
-					<MarqueeText className={css.headerCell} marqueeOn="hover" customRTL={direction}>
+					<MarqueeText className={css.headerCell} marqueeOn="hover" forceRTL={isRTL}>
 						<UppercaseH1 className={css.title} preserveCase={preserveCase}>{title}</UppercaseH1>
 						<h2 className={css.titleBelow}>{titleBelow}</h2>
 					</MarqueeText>

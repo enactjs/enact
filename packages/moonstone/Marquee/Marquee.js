@@ -71,16 +71,6 @@ const MarqueeBase = kind({
 		clientRef: React.PropTypes.func,
 
 		/**
-		 * Object to override marquee RTL direction.
-		 * Object contains two properties `direction` which is a string with the value of the desired direction and
-		 * 'rtl' which is a Boolean value stating if the text is RTL.
-		 *
-		 * @type {Object}
-		 * @public
-		 */
-		customRTL: React.PropTypes.object,
-
-		/**
 		 * Distance to animate the marquee which is generally the width of the text minus the
 		 * width of the container.
 		 *
@@ -88,6 +78,14 @@ const MarqueeBase = kind({
 		 * @public
 		 */
 		distance: React.PropTypes.number,
+
+		/**
+		 * When set to `true` marquee will be shown with RTL styling.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		forceRTL: React.PropTypes.bool,
 
 		/**
 		 * Callback function for when the marquee completes its animation
@@ -121,7 +119,7 @@ const MarqueeBase = kind({
 
 	computed: {
 		clientClassName: ({animating}) => animating ? animated : css.text,
-		clientStyle: ({animating, children, distance, overflow, speed, customRTL}, {rtl: contextRtl}) => {
+		clientStyle: ({animating, children, distance, overflow, speed, forceRTL}, {rtl: contextRtl}) => {
 			let rtl = isRtlText(children);
 			const overrideRtl = contextRtl !== rtl;
 
@@ -146,9 +144,9 @@ const MarqueeBase = kind({
 				direction = rtl ? 'rtl' : 'ltr';
 			}
 
-			if(customRTL){
-				direction = customRTL.direction;
-				rtl = customRTL.rtl;
+			if (forceRTL) {
+				direction = 'rtl';
+				rtl = true;
 			}
 
 			const style = {

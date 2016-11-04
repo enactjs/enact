@@ -101,5 +101,17 @@ describe('Marquee', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	//TODO: Write test customRTL
+	it('should override RTL when forceRTL is true', function () {
+		const subject = shallow(
+			<Marquee forceRTL>
+				{content}
+			</Marquee>
+		);
+
+		// Testing for a positive number after transform3d(
+		const expected = 'rtl';
+		const actual = subject.find(`.${css.text}`).prop('style');
+
+		expect(actual).to.have.property('direction').to.equal(expected);
+	});
 });
