@@ -6,6 +6,7 @@
  */
 
 import hoc from '@enact/core/hoc';
+import {on, off} from '@enact/core/dispatcher';
 import React from 'react';
 
 import '../src/glue';
@@ -57,8 +58,14 @@ const IntlHoc = hoc((config, Wrapped) => {
 		constructor (props) {
 			super(props);
 
-			if (props.locale) {
-				this.updateLocale(props.locale);
+			this.state = {
+				locale: updateLocale(props.locale)
+			};
+		}
+
+		componentDidMount () {
+			if (typeof window === 'object') {
+				on('languagechange', this.handleLocaleChange, window);
 			}
 		}
 
@@ -68,18 +75,28 @@ const IntlHoc = hoc((config, Wrapped) => {
 			}
 		}
 
-		updateLocale = (locale) => {
-			const newLocale = updateLocale(locale);
-			const state = {
-				locale: newLocale
-			};
-
-			// allow calling from constructor by guarding setState
-			if (this.state) {
-				this.setState(state);
-			} else {
-				this.state = state;
+		componentWillUnmount () {
+			if (typeof window === 'object') {
+				off('languagechange', this.handleLocaleChange, window);
 			}
+		}
+
+		handleLocaleChange = () => {
+			this.updateLocale();
+		}
+
+		/**
+		 * Updates the locale for the application. If `newLocale` is omitted, the locale will be
+		 * reset to the device's default locale.
+		 *
+		 * @param	{String}	newLocale	Locale identifier string
+		 *
+		 * @returns	{undefined}
+		 * @public
+		 */
+		updateLocale = (newLocale) => {
+			const locale = updateLocale(newLocale);
+			this.setState({locale});
 		}
 
 		render () {
