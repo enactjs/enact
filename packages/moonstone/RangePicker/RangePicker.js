@@ -198,7 +198,7 @@ const RangePickerBase = kind({
 		delete rest.padded;
 		return (
 			<PickerCore {...rest} index={0} value={value}>
-				<PickerItem key={value}>{label}</PickerItem>
+				<PickerItem key={value} marqueeDisabled>{label}</PickerItem>
 			</PickerCore>
 		);
 	}

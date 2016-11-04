@@ -57,6 +57,7 @@ const DateComponentPickerBase = kind({
 			<Picker
 				{...rest}
 				joined
+				marqueeDisabled
 				orientation="vertical"
 				value={value}
 				width="small"
