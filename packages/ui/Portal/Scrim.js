@@ -9,9 +9,6 @@ import React from 'react';
 
 import css from './Scrim.less';
 
-let childrenZIndex = 121;
-const defaultZIndex = 120;
-
 /**
  * TBD
  *
@@ -69,7 +66,9 @@ const ScrimLayer = kind({
 		 * @type {String}
 		 * @default `translucent`
 		 */
-		scrimType: React.PropTypes.oneOf(['transparent', 'translucent'])
+		scrimType: React.PropTypes.oneOf(['transparent', 'translucent']).isRequired,
+
+		zIndex: React.PropTypes.number.isRequired
 	},
 
 	defaultProps: {
@@ -77,19 +76,19 @@ const ScrimLayer = kind({
 	},
 
 	computed: {
-		children: ({children, ...rest}) => {
+		children: ({children, zIndex, ...rest}) => {
 			delete rest.scrimType;
 
-			const style = Object.assign({}, children.props.style, {zIndex: childrenZIndex++});
+			const style = Object.assign({}, children.props.style, {zIndex: zIndex + 1});
 			return React.cloneElement(children, {style, ...rest});
 		}
 	},
 
-	render: ({scrimType, children}) => {
+	render: ({scrimType, zIndex, children}) => {
 		return (
 			<div>
 				{children}
-				<Scrim type={scrimType} style={{zIndex: defaultZIndex}} />
+				<Scrim type={scrimType} style={{zIndex}} />
 			</div>
 		);
 	}
