@@ -27,7 +27,7 @@ const prop = {
 storiesOf('CheckboxItem')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'Long Text',
+		'with long text',
 		() => (
 			<CheckboxItemToggle
 				checked={boolean('checked', false)}
@@ -40,7 +40,7 @@ storiesOf('CheckboxItem')
 		)
 	)
 	.addWithInfo(
-		'Tall Text',
+		'with tall characters',
 		() => (
 			<CheckboxItemToggle
 				checked={boolean('checked', false)}
@@ -53,7 +53,7 @@ storiesOf('CheckboxItem')
 		)
 	)
 	.addWithInfo(
-		'Extra Space',
+		'with extra spacing',
 		() => (
 			<CheckboxItemToggle
 				checked={boolean('checked', false)}
@@ -66,7 +66,7 @@ storiesOf('CheckboxItem')
 		)
 	)
 	.addWithInfo(
-		'Right To Left Text',
+		'with right to left text',
 		() => (
 			<CheckboxItemToggle
 				checked={boolean('checked', false)}
@@ -79,7 +79,7 @@ storiesOf('CheckboxItem')
 		)
 	)
 	.addWithInfo(
-		'Group Items',
+		'that is grouped',
 		() => (
 			<SelectableGroup
 				childComponent={CheckboxItem}
