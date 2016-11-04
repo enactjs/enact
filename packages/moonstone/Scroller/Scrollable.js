@@ -169,12 +169,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			maxLeft: 0
 		}
 
-		precalculatedClientSize = {
-			widthWithoutScrollbars: 0,
-			widthWithScrollbars: 0,
-			heightWithoutScrollbars: 0,
-			heightWithScrollbars: 0
-		}
+		precalculatedClientSize = {}
 
 		// for calculating client size
 		renderScrollbars = true
@@ -687,13 +682,14 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			if (this.childRef.getContainerNode) {
 				const
 					containerStyle = getComputedStyle(this.containerRef, null),
-					childStyle = getComputedStyle(this.childRef.getContainerNode(this.props.positioningOption), null),
-					{precalculatedClientSize} = this;
+					childStyle = getComputedStyle(this.childRef.getContainerNode(this.props.positioningOption), null);
 
-				precalculatedClientSize.widthWithoutScrollbars = Number.parseInt(containerStyle.getPropertyValue('width'), 10);
-				precalculatedClientSize.heightWithoutScrollbars = Number.parseInt(containerStyle.getPropertyValue('height'), 10);
-				precalculatedClientSize.widthWithScrollbars = Number.parseInt(childStyle.getPropertyValue('width'), 10);
-				precalculatedClientSize.heightWithScrollbars = Number.parseInt(childStyle.getPropertyValue('height'), 10);
+				this.precalculatedClientSize = {
+					widthWithoutScrollbars: Number.parseInt(containerStyle.getPropertyValue('width'), 10),
+					heightWithoutScrollbars: Number.parseInt(containerStyle.getPropertyValue('height'), 10),
+					widthWithScrollbars: Number.parseInt(childStyle.getPropertyValue('width'), 10),
+					heightWithScrollbars: Number.parseInt(childStyle.getPropertyValue('height'), 10)
+				}
 			}
 		}
 

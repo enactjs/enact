@@ -300,17 +300,6 @@ class VirtualListCore extends Component {
 			}
 		}
 
-		/*if (clientWidth === 0 && clientHeight === 0) {
-			const node = this.getContainerNode(positioningOption);
-			if (!node) {
-				return;
-			}
-
-			const size = this.getClientSize(node);
-			heightInfo.clientSize = size.clientHeight;
-			widthInfo.clientSize = size.clientWidth;
-		}*/
-
 		if (this.isPrimaryDirectionVertical) {
 			primary = heightInfo;
 			secondary = widthInfo;
@@ -372,18 +361,6 @@ class VirtualListCore extends Component {
 
 		scrollBounds.clientWidth = isPrimaryDirectionVertical ? secondary.clientSize : primary.clientSize;
 		scrollBounds.clientHeight = isPrimaryDirectionVertical ? primary.clientSize : secondary.clientSize;
-
-		/*if (clientWidth === 0 && clientHeight === 0) {
-			const node = this.getContainerNode(positioningOption);
-			if (!node) {
-				return;
-			}
-
-			const size = this.getClientSize(node);
-			scrollBounds.clientWidth = size.clientWidth;
-			scrollBounds.clientHeight = size.clientHeight;
-		}*/
-
 		scrollBounds.scrollWidth = this.getScrollWidth();
 		scrollBounds.scrollHeight = this.getScrollHeight();
 		scrollBounds.maxLeft = Math.max(0, scrollBounds.scrollWidth - scrollBounds.clientWidth);
