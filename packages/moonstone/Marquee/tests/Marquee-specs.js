@@ -100,4 +100,6 @@ describe('Marquee', () => {
 		const actual = subject.childAt(0).prop('style').transform.indexOf('-') === -1;
 		expect(actual).to.equal(expected);
 	});
+
+	//TODO: Write test customRTL
 });

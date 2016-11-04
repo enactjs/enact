@@ -3,7 +3,8 @@ import React from 'react';
 import Uppercase from '@enact/i18n/Uppercase';
 import Slottable from '@enact/ui/Slottable';
 import {MarqueeDecorator, MarqueeText} from '../Marquee';
-
+import {isRtlText} from '@enact/i18n';
+import {contextTypes} from '@enact/i18n/I18nDecorator';
 import css from './Header.less';
 
 // Create a <h1> and Marquee component that support the uppercase attribute
@@ -106,16 +107,28 @@ const HeaderBase = kind({
 	},
 
 	computed: {
-		className: ({fullBleed, type, styler}) => styler.append({fullBleed}, type)
+		className: ({fullBleed, type, styler}) => styler.append({fullBleed},type),
+		direction: ({title, titleBelow}, {rtl: contextRtl}) => {
+
+			const rtl = isRtlText(title) || isRtlText(titleBelow);
+			const overrideRtl = contextRtl !== rtl;
+
+			let direction = 'inherit';
+			if (overrideRtl) {
+				direction = rtl ? 'rtl' : 'ltr';
+			}
+
+			return {direction, rtl};
+		}
 	},
 
-	render: ({children, preserveCase, subTitleBelow, title, /* titleAbove, */titleBelow, type, ...rest}) => {
+	render: ({children, direction, preserveCase, subTitleBelow, title, titleAbove, titleBelow, type, ...rest}) => {
 		delete rest.fullBleed;
 
 		switch (type) {
 			case 'compact': return (
 				<header {...rest}>
-					<MarqueeText className={css.headerCell} marqueeOn="hover">
+					<MarqueeText className={css.headerCell} marqueeOn="hover" customRTL={direction}>
 						<UppercaseH1 className={css.title} preserveCase={preserveCase}>{title}</UppercaseH1>
 						<h2 className={css.titleBelow}>{titleBelow}</h2>
 					</MarqueeText>

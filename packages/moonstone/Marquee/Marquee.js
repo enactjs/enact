@@ -6,7 +6,7 @@
  */
 
 import kind from '@enact/core/kind';
-import {findRtlText} from '@enact/i18n';
+import {isRtlText} from '@enact/i18n';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import React from 'react';
 
@@ -71,6 +71,16 @@ const MarqueeBase = kind({
 		clientRef: React.PropTypes.func,
 
 		/**
+		 * Object to override marquee RTL direction.
+		 * Object contains two properties `direction` which is a string with the value of the desired direction and
+		 * 'rtl' which is a Boolean value stating if the text is RTL.
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		customRTL: React.PropTypes.object,
+
+		/**
 		 * Distance to animate the marquee which is generally the width of the text minus the
 		 * width of the container.
 		 *
@@ -111,8 +121,8 @@ const MarqueeBase = kind({
 
 	computed: {
 		clientClassName: ({animating}) => animating ? animated : css.text,
-		clientStyle: ({animating, centered, children, distance, overflow, speed}, {rtl: contextRtl}) => {
-			const rtl = isRtlText(children);
+		clientStyle: ({animating, children, distance, overflow, speed, customRTL}, {rtl: contextRtl}) => {
+			let rtl = isRtlText(children);
 			const overrideRtl = contextRtl !== rtl;
 
 			// We only attempt to set the textAlign of this control if the locale's directionality
@@ -134,6 +144,11 @@ const MarqueeBase = kind({
 			let direction = 'inherit';
 			if (overrideRtl) {
 				direction = rtl ? 'rtl' : 'ltr';
+			}
+
+			if(customRTL){
+				direction = customRTL.direction;
+				rtl = customRTL.rtl;
 			}
 
 			const style = {

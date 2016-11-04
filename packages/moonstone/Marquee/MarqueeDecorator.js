@@ -84,6 +84,16 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			children: React.PropTypes.node,
 
 			/**
+			 * Object to override marquee RTL direction.
+			 * Object contains two properties `direction` which is a string with the value of the desired direction and
+			 * 'rtl' which is a Boolean value stating if the text is RTL.
+			 *
+			 * @type {Object}
+			 * @public
+			 */
+			customRTL: React.PropTypes.object,
+
+			/**
 			 * Disables all marquee behavior except when `marqueeOn` is 'hover'. Will be forwarded
 			 * onto the wrapped component as well.
 			 *
@@ -401,6 +411,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		renderMarquee () {
 			const {
 				children,
+				customRTL,
 				disabled,
 				marqueeCentered,
 				marqueeOn,
@@ -435,6 +446,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						centered={marqueeCentered}
 						className={marqueeClassName}
 						clientRef={this.cacheNode}
+						customRTL={customRTL}
 						distance={this.distance}
 						onMarqueeComplete={this.handleMarqueeComplete}
 						overflow={this.state.overflow}
