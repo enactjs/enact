@@ -8,8 +8,8 @@ import TimePickerBase from './TimePickerBase';
 
 import {Expandable} from '../ExpandableItem';
 
-const includeMeridiem = /([khma])(?!\1)/g;
-const excludeMeridiem = /([khm])(?!\1)/g;
+const includeMeridiem = /([khma])(?!\1)/ig;
+const excludeMeridiem = /([khm])(?!\1)/ig;
 
 const toMinutes = (time) => {
 	const colon = time.indexOf(':');
