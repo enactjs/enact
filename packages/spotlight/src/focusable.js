@@ -104,6 +104,7 @@ const SpotlightFocusableDecoratorHoC = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		onKeyDown = (e) => {
+			console.log('focusable onKeyDown', this.state.innerElementFocused);
 			const keyCode = e.nativeEvent.keyCode;
 			if (!this.props.disabled && R.contains(keyCode, this.props.keyCodes) && e.target === this.wrappedInstance.decoratorNode) {
 				this.setState({innerElementFocused: true, forceFocusChange: true});
@@ -112,6 +113,7 @@ const SpotlightFocusableDecoratorHoC = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		onFocus = (e) => {
+			console.log('focusable onfocus', this.state.innerElementFocused);
 			if (e.target === this.wrappedInstance.decoratedNode) {
 				this.setState({innerElementFocused: true});
 
@@ -151,7 +153,7 @@ const SpotlightFocusableDecoratorHoC = hoc(defaultConfig, (config, Wrapped) => {
 			if (useEnterKey) {
 				props[keyDown] = this.onKeyDown;
 			}
-
+			console.log('focusable render', this.state.innerElementFocused);
 			if (this.state.innerElementFocused) {
 				if (props.className) {
 					props.className += ' ' + focusableClass;
