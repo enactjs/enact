@@ -671,18 +671,18 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		syncWithScrollbarVisibility = (isHorizontalScrollbarVisible, isVerticalScrollbarVisible, shouldUpdate) => {
-			this.syncClientSize(isHorizontalScrollbarVisible, isVerticalScrollbarVisible);
+		syncWithScrollbarsVisibility = (shouldUpdate, ...rest) => {
+			this.syncClientSize(...rest);
 			if (shouldUpdate) {
-				this.updateStateOfScrollbars(isHorizontalScrollbarVisible, isVerticalScrollbarVisible)
+				this.updateStateOfScrollbars(...rest);
 			}
 		}
 
 		calculateClientSize () {
 			if (this.childRef.getContainerNode) {
 				const
-					containerStyle = getComputedStyle(this.containerRef, null),
-					childStyle = getComputedStyle(this.childRef.getContainerNode(this.props.positioningOption), null);
+					containerStyle = getComputedStyle(this.containerRef),
+					childStyle = getComputedStyle(this.childRef.getContainerNode(this.props.positioningOption));
 
 				this.precalculatedClientSize = {
 					widthWithoutScrollbars: Number.parseInt(containerStyle.getPropertyValue('width'), 10),
@@ -707,16 +707,16 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			// The order of updateBoundsAndScrollability() and calculateClientSize() is important
 			this.updateBoundsAndScrollability();
-			if (this.isChildList) {
+			if (this.props.positioningOption !== 'byBrowser' && this.isChildList) {
 				this.calculateClientSize();
 			}
-			this.syncWithScrollbarVisibility(this.shouldShowHorizontalScrollbar(), this.shouldShowVerticalScrollbar(), true);
+			this.syncWithScrollbarsVisibility(true, this.shouldShowHorizontalScrollbar(), this.shouldShowVerticalScrollbar());
 		}
 
 		componentWillReceiveProps (nextProps) {
 			if (this.props.hideScrollbars !== nextProps.hideScrollbars) {
 				this.renderScrollbars = !nextProps.hideScrollbars;
-				this.syncWithScrollbarVisibility(this.canScrollHorizontally(), this.canScrollVertically(), this.renderScrollbars);
+				this.syncWithScrollbarsVisibility(this.renderScrollbars, this.canScrollHorizontally(), this.canScrollVertically());
 			}
 		}
 
@@ -732,7 +732,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						curHorizontalScrollbarVisible !== isHorizontalScrollbarVisible ||
 						curVerticalScrollbarVisible !== isVerticalScrollbarVisible
 					);
-				this.syncWithScrollbarVisibility(curHorizontalScrollbarVisible, curVerticalScrollbarVisible, shouldUpdate);
+				this.syncWithScrollbarsVisibility(shouldUpdate, curHorizontalScrollbarVisible, curVerticalScrollbarVisible);
 			}
 		}
 
