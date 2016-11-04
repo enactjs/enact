@@ -102,7 +102,7 @@ const GridListImageItemBase = kind({
 	},
 
 	computed: {
-		className: ({selected, styler}) => styler.append({selected}),
+		className: ({selected, styler}) => styler.append({selected})
 	},
 
 	render: ({caption, source, subCaption, selectionOverlayShowing, placeholder, ...rest}) => {
