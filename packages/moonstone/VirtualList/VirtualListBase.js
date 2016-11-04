@@ -63,6 +63,24 @@ class VirtualListCore extends Component {
 		cbUpdateScrollbars: PropTypes.func,
 
 		/**
+		 * clientHeight for VirtualList.
+		 * Normally, `Scrollable` should set this value.
+		 *
+		 * @type {Number}
+		 * @private
+		 */
+		clientHeight: PropTypes.number,
+
+		/**
+		 * clientWidth for VirtualList.
+		 * Normally, `Scrollable` should set this value.
+		 *
+		 * @type {Number}
+		 * @private
+		 */
+		clientWidth: PropTypes.number,
+
+		/**
 		 * The render function for an item of the list.
 		 * `index` is for accessing the index of the item.
 		 * `key` MUST be passed as a prop for DOM recycling.
@@ -288,7 +306,7 @@ class VirtualListCore extends Component {
 
 		this.isPrimaryDirectionVertical = (direction === 'vertical');
 
-		if (shouldScrollbarChange) {
+		if (positioningOption !== 'byBrowser' && shouldScrollbarChange) {
 			const {hideScrollbars, precalculatedClientSize} = props;
 
 			if (!hideScrollbars) {
