@@ -102,6 +102,22 @@ class VirtualListCore extends Component {
 		directionOption: PropTypes.oneOf(['fixedHeightVariableWidth', 'fixedWidthVariableHeight']),
 
 		/**
+		 * Get the number of items for each one row
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		getVariableDataSize: PropTypes.func,
+
+		/**
+		 * Get variable item size for a row and a column
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		getVariableItemSize: PropTypes.func,
+
+		/**
 		 * Called when onScroll [events]{@glossary event} occurs.
 		 *
 		 * @type {Function}
@@ -158,6 +174,8 @@ class VirtualListCore extends Component {
 		data: [],
 		dataSize: 0,
 		direction: 'vertical',
+		getVariableDataSize: nop,
+		getVariableItemSize: nop,
 		onScroll: nop,
 		overhang: 3,
 		positioningOption: 'byItem',
@@ -184,8 +202,8 @@ class VirtualListCore extends Component {
 	primaryThreshold = 0
 	maxPrimaryFirstIndex = 0
 	secondaryThresholds = []
-	secondaryFirstIndices: []
-	secondaryLastIndices: []
+	secondaryFirstIndices = []
+	secondaryLastIndices = []
 	curDataSize = 0
 	cc = []
 	scrollPosition = {primary: 0, secondary: 0};
@@ -856,6 +874,7 @@ class VirtualListCore extends Component {
 		delete props.dataSize;
 		delete props.direction;
 		delete props.directionOption;
+		delete props.getVariableDataSize;
 		delete props.getVariableItemSize;
 		delete props.hideScrollbars;
 		delete props.itemSize;

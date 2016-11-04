@@ -106,9 +106,9 @@ const VirtualEPGGridList = kind({
 			dataSize: props.dataSize.fixed,
 			direction: 'vertical',
 			directionOption: 'fixedHeightVariableWidth',
-			itemSize: props.itemSize.fixed,
+			getVariableDataSize: props.dataSize.variable,
 			getVariableItemSize: props.itemSize.variable,
-			getVariableDataSize: props.dataSize.variable
+			itemSize: props.itemSize.fixed
 		});
 
 		return (<VirtualListBase {..._props} />);

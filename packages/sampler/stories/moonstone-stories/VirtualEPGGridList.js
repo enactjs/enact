@@ -90,7 +90,7 @@ const
 storiesOf('VirtualEPGGridList')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'with horizontal variable width items',
+		' ',
 		'Basic usage of VirtualEPGList',
 		() => (
 			<VirtualEPGGridList
