@@ -8,6 +8,8 @@
 import {kind, hoc} from '@enact/core';
 import React from 'react';
 
+import {toUpperCase} from '../';
+
 /**
  * {@link module:@enact/i18n/Uppercase~Uppercase} is a Higher Order Component that is used to wrap
  * an element to provide locale-aware uppercasing of `children`, provided that `children` is a single
@@ -40,7 +42,7 @@ const Uppercase = hoc((config, Wrapped) => kind({
 			if (!preserveCase && React.Children.count(children) === 1) {
 				const content = React.Children.toArray(children)[0];
 				if (typeof content == 'string') {
-					return content.toUpperCase();
+					return toUpperCase(content);
 				}
 			}
 			return children;
