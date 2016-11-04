@@ -71,7 +71,8 @@ const VirtualGridList = kind({
 });
 
 /**
- * {@link module:@enact/moonstone/VirtualList~VirtualEPGGridList} is a VirtualEPGGridList with Moonstone styling.
+ * {@link module:@enact/moonstone/VirtualList~VirtualEPGGridList} is a VirtualList with Moonstone styling
+ * for an EGP app.
  *
  * @class VirtualEPGGridList
  * @ui
@@ -82,35 +83,33 @@ const VirtualEPGGridList = kind({
 
 	propTypes: {
 		/**
-		 * Size of an item for the VirtualEPGGridList; valid value is a number.
-		 * For variable width size, fixedItemSize means the height of an item.
-		 * For variable height size, it means the width of an item.
+		 * Size of an item data for the VirtualEPGGridList; valid value is an object
+		 * that has `fixed` for the number of row and `variable` for the number of colume.
 		 *
-		 * @type {Number}
+		 * @type {Object}
 		 * @public
 		 */
-		fixedItemSize: PropTypes.object.isRequired,
+		dataSize: PropTypes.object.isRequired,
 
 		/**
-		 * For variable width size, fixedDataSize is the number of item column.
-		 * For variable height size, it is the number of item row.
+		 * Size of an item for the VirtualEPGGridList; valid value is an object
+		 * that has `fixed` for an item height and `variable` for an variable item width.
 		 *
-		 * @type {Number}
+		 * @type {Object}
 		 * @public
 		 */
-		fixedDataSize: PropTypes.number.isRequired
+		itemSize: PropTypes.object.isRequired
 	},
 
 	render: (props) => {
 		const _props = Object.assign({}, props, {
-			dataSize: props.fixedDataSize,
+			dataSize: props.dataSize.fixed,
 			direction: 'vertical',
-			directionOption: 'verticalFixedHorizontalVariable',
-			itemSize: props.fixedItemSize
+			directionOption: 'fixedHeightVariableWidth',
+			itemSize: props.itemSize.fixed,
+			getVariableItemSize: props.itemSize.variable,
+			getVariableDataSize: props.dataSize.variable
 		});
-
-		delete _props.fixedDataSize;
-		delete _props.fixedItemSize;
 
 		return (<VirtualListBase {..._props} />);
 	}

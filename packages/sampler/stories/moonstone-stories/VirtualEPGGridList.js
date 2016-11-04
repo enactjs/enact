@@ -95,10 +95,14 @@ storiesOf('VirtualEPGGridList')
 		() => (
 			<VirtualEPGGridList
 				data={programs}
-				fixedDataSize={programs.length}
-				fixedItemSize={ri.scale(83)}
-				getVariableDataSize={getVariableDataSize}
-				getVariableItemSize={getVariableItemSize}
+				dataSize={{
+					fixed: programs.length,
+					variable: getVariableDataSize
+				}}
+				itemSize={{
+					fixed: ri.scale(83),
+					variable: getVariableItemSize
+				}}
 				variableScrollBoundsSize={variableScrollBoundsSize}
 				style={style.list}
 				component={renderItem}
