@@ -2,32 +2,30 @@ import ri from '@enact/ui/resolution';
 import Item from '@enact/moonstone/Item';
 import {VirtualEPGGridList} from '@enact/moonstone/VirtualList';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, number} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@kadira/storybook';
+import {withKnobs} from '@kadira/storybook-addon-knobs';
 
 const
 	style = {
 		list: {
-			overflow: "hidden",
-			width: "100%",
-			height: "576px"
+			overflow: 'hidden',
+			width: '100%',
+			height: ri.scale(576) + 'px'
+		},
+		itemWrapper: {
+			background: '#141416',
+			backgroundClip: 'content-box',
+			position: 'absolute',
+			padding: '0 ' + ri.scale(5) + 'px ' + ri.scale(5) + 'px 0','boxSizing': 'border-box',
+			overflow: 'hidden',
+			willChange: 'transform'
 		},
 		item: {
-			position: "absolute",
-			padding: "0 5px 5px 0","boxSizing": "border-box",
-			overflow: "hidden",
-			willChange: "transform"
-		},
-		item___div: {
-			background: "#141416",
-			height: "100%",
-			fontSize: "33px",
-			lineHeight: "78px",
-			color: "white",
-			textAlign: "left",
-			whiteSpace: "nowrap",
-			WebkitUserSelect: "none",
-			userSelect: "none"
+			height: '100%',
+			fontSize: ri.scale(33) + 'px',
+			lineHeight: ri.scale(78) + 'px',
+			WebkitUserSelect: 'none',
+			userSelect: 'none'
 		}
 	},
 	programName = [
@@ -52,17 +50,17 @@ const
 		'NOVA',
 		'Secrets of the Dead'
 	],
-	variableScrollBoundsSize = 57600 /* 400 ( width per 1 hour )* 24 hr * 6 day */,
+	variableScrollBoundsSize = ri.scale(57600) /* 400 ( width per 1 hour )* 24 hr * 6 day */,
 	getRandomWidth = () => {
-		return parseInt(Math.random() * 20) * 100 + 100;
+		return ri.scale((parseInt(Math.random() * 20) + 1) * 100);
 	};
 
-let data = [];
+let programs = [];
 
 for (let i = 0; i < 2000; i++) {
-	data[i] = [];
+	programs[i] = [];
 	for(let j = 0; j < 200; j++) {
-		data[i][j] = {
+		programs[i][j] = {
 			width: getRandomWidth(),
 			programName: ('00' + i).slice(-3) + '/' + ('00' + j).slice(-3) + ' - ' + programName[(i + j) % 20]
 		};
@@ -80,11 +78,11 @@ const
 		return (
 			<div
 				key={key}
-				style={style.item}
+				style={style.itemWrapper}
 			>
-				<div style={style.item___div}>
+				<Item style={style.item}>
 					{data[fixedIndex][variableIndex].programName}
-				</div>
+				</Item>
 			</div>
 		);
 	};
@@ -96,9 +94,9 @@ storiesOf('VirtualEPGGridList')
 		'Basic usage of VirtualEPGList',
 		() => (
 			<VirtualEPGGridList
-				data={data}
-				fixedDataSize={data.length}
-				fixedItemSize={83}
+				data={programs}
+				fixedDataSize={programs.length}
+				fixedItemSize={ri.scale(83)}
 				getVariableDataSize={getVariableDataSize}
 				getVariableItemSize={getVariableItemSize}
 				variableScrollBoundsSize={variableScrollBoundsSize}
