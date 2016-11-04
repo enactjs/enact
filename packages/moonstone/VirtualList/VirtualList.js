@@ -70,6 +70,48 @@ const VirtualGridList = kind({
 	render: (props) => <VirtualListBase {...props} />
 });
 
+/**
+ * {@link module:@enact/moonstone/VirtualList~VirtualEPGGridList} is a VirtualEPGGridList with Moonstone styling.
+ *
+ * @class VirtualEPGGridList
+ * @ui
+ * @public
+ */
+const VirtualEPGGridList = kind({
+	name: 'VirtualEPGGridList',
+
+	propTypes: {
+		/**
+		 * Size of an item for the VirtualList; valid value is a number.
+		 * If the direction for the list is vertical, itemSize means the height of an item.
+		 * For horizontal, it means the width of an item.
+		 *
+		 * Usage:
+		 * ```
+		 * <VirtualList itemSize={ri.scale(72)}/>
+		 * ```
+		 *
+		 * @type {Number}
+		 * @public
+		 */
+		itemSize: PropTypes.object.isRequired,
+	},
+
+	render: (props) => {
+		const _props = Object.assign({}, props, {
+			dataSize: props.fixedDataSize,
+			direction: 'vertical',
+			directionOption: 'verticalFixedHorizontalVariable',
+			itemSize: props.fixedItemSize
+		});
+
+		delete _props.fixedDataSize;
+		delete _props.fixedItemSize;
+
+		return (<VirtualListBase {..._props} />);
+	}
+});
+
 export default VirtualList;
-export {VirtualList, VirtualGridList};
+export {VirtualList, VirtualGridList, VirtualEPGGridList};
 export * from './GridListImageItem';
