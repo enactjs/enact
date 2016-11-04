@@ -1,5 +1,6 @@
 import DateFactory from 'ilib/DateFactory';
 import DateFmt from 'ilib/DateFmt';
+import ilib from 'ilib/ilib';
 import LocaleInfo from 'ilib/LocaleInfo';
 import React from 'react';
 
@@ -36,78 +37,95 @@ const TimePickerController = class extends React.Component {
 	constructor (props) {
 		super(props);
 		this.state = {
-			value: this.toIDate(props.value, 'local')
+			value: this.toTime(props.value)
 		};
 		this.initI18n();
 	}
 
 	componentWillReceiveProps (nextProps) {
 		this.setState({
-			value: 'value' in nextProps ? this.toIDate(nextProps.value) : this.state.value
+			value: 'value' in nextProps ? this.toTime(nextProps.value) : this.state.value
 		});
 	}
 
+	componentWillUpdate () {
+		// check for a new locale when updating
+		this.initI18n();
+	}
+
 	initI18n () {
-		const format = {
-			type: 'time',
-			useNative: false,
-			timezone: 'local',
-			length: 'full',
-			date: 'dmwy'
-		};
+		const locale = ilib.getLocale();
 
-		this.timeFormat = new DateFmt(format);
+		if (this.locale !== locale) {
+			this.locale = locale;
 
-		const meridiemFormat = {
-			template: 'a',
-			useNative: false,
-			timezone: 'local'
-		};
+			const format = {
+				type: 'time',
+				useNative: false,
+				timezone: 'local',
+				length: 'full',
+				date: 'dmwy'
+			};
 
-		const merFormatter = new DateFmt(meridiemFormat);
-		const meridiems = merFormatter.getMeridiemsRange(meridiemFormat);
-		this.meridiemRanges = meridiems.map(calcMeridiemRange);
-		this.meridiemLabels = meridiems.map(obj => obj.name);
+			this.timeFormat = new DateFmt(format);
 
-		// Set picker format 12 vs 24 hour clock
-		const li = new LocaleInfo();
-		const clockPref = li.getClock();
-		this.meridiemEnabled = clockPref === '12';
+			const meridiemFormat = {
+				template: 'a',
+				useNative: false,
+				timezone: 'local'
+			};
 
-		const filter = this.meridiemEnabled ? includeMeridiem : excludeMeridiem;
-		this.order = this.timeFormat.getTemplate().match(filter).map(s => s[0].toLowerCase());
+			const merFormatter = new DateFmt(meridiemFormat);
+			const meridiems = merFormatter.getMeridiemsRange(meridiemFormat);
+			this.meridiemRanges = meridiems.map(calcMeridiemRange);
+			this.meridiemLabels = meridiems.map(obj => obj.name);
 
-		const timeFormat = {
-			type: 'time',
-			time: 'h',
-			useNative: false,
-			timezone: 'local'
-		};
+			// Set picker format 12 vs 24 hour clock
+			const li = new LocaleInfo();
+			const clockPref = li.getClock();
+			this.meridiemEnabled = clockPref === '12';
 
-		if (clockPref !== 'locale') {
-			timeFormat.clock = clockPref;
+			const filter = this.meridiemEnabled ? includeMeridiem : excludeMeridiem;
+			this.order = this.timeFormat.getTemplate().match(filter).map(s => s[0].toLowerCase());
+
+			const timeFormat = {
+				type: 'time',
+				time: 'h',
+				useNative: false,
+				timezone: 'local'
+			};
+
+			if (clockPref !== 'locale') {
+				timeFormat.clock = clockPref;
+			}
+
+			this.hourFormatter = new DateFmt(timeFormat);
+
+			timeFormat.time = 'm';
+			this.minuteFormatter = new DateFmt(timeFormat);
 		}
-
-		this.hourFormatter = new DateFmt(timeFormat);
-
-		timeFormat.time = 'm';
-		this.minuteFormatter = new DateFmt(timeFormat);
 	}
 
 	/**
-	 * Converts a Date to an IDate
+	 * Converts unix time to an IDate
 	 *
-	 * @param	{Date}		date		Date object
-	 * @param	{String}	timezone	Timezone string (e.g. `'Etc/UTC'`)
+	 * @param	{Number}	time	UNIX time
 	 *
-	 * @returns	{IDate}					ilib Date object
+	 * @returns	{IDate}				ilib Date object
 	 */
-	toIDate (date, timezone) {
-		if (date) {
+	toIDate (time) {
+		if (time) {
 			return DateFactory({
-				unixtime: date.getTime(),
-				timezone
+				timezone: 'local',
+				unixtime: time
 			});
+		}
+	}
+
+	toTime (date) {
+		if (date) {
+			const time = date.getTime();
+			return this.toIDate(time).getTime();
 		}
 	}
 
@@ -120,7 +138,7 @@ const TimePickerController = class extends React.Component {
 	 */
 	updateValue = (value) => {
 		this.setState({
-			value: value
+			value: DateFactory(value).getTime()
 		});
 	}
 
@@ -133,7 +151,7 @@ const TimePickerController = class extends React.Component {
 	 */
 	handleChangeHour = (ev) => {
 		const value = this.calcValue();
-		value.setHours(ev.value);
+		value.hour = ev.value;
 
 		this.updateValue(value);
 	}
@@ -147,7 +165,7 @@ const TimePickerController = class extends React.Component {
 	 */
 	handleChangeMinute = (ev) => {
 		const value = this.calcValue();
-		value.setMinutes(ev.value);
+		value.minute = ev.value;
 
 		this.updateValue(value);
 	}
@@ -166,18 +184,18 @@ const TimePickerController = class extends React.Component {
 		if (this.meridiemRanges.length === 2) {
 			// In the common case of 2 meridiems, we'll offset hours by 12 so that picker stays the
 			// same.
-			value.setHours((value.getHours() + 12) % 24);
+			value.hour = (value.getHours() + 12) % 24;
 		} else {
 			// In the rarer case of > 2 meridiems (e.g. am-ET), try to set hours only first
 			const hours = Math.floor(meridiem.start / 60);
-			value.setHours(hours);
+			value.hour = hours;
 
 			// but check if it is still out of bounds and update the minutes as well
 			const minutes = hours * 60 + value.getMinutes();
 			if (minutes > meridiem.end) {
-				value.setMinutes(meridiem.end % 60);
+				value.minute = meridiem.end % 60;
 			} else if (minutes < meridiem.start) {
-				value.setMinutes(meridiem.start % 60);
+				value.minute = meridiem.start % 60;
 			}
 		}
 
@@ -192,17 +210,14 @@ const TimePickerController = class extends React.Component {
 	 * @returns	{undefined}
 	 */
 	handleClose = (ev) => {
-		const value = this.toIDate(this.props.value);
-
 		if (this.props.onChange) {
 			// If we have an onChange handler to call, determine if the value actually changed and,
 			// if so, call the handler.
-			const changed =	value == null ||
-							value.hour !== this.state.value.hour ||
-							value.minute !== this.state.value.minute;
+			const changed =	this.props.value == null || this.props.value !== this.state.value;
 			if (changed) {
+				const currentValue = this.calcValue();
 				this.props.onChange({
-					value: this.calcValue().getJSDate()
+					value: currentValue.getJSDate()
 				});
 			}
 		}
@@ -224,7 +239,16 @@ const TimePickerController = class extends React.Component {
 		const currentValue = this.state.value;
 
 		// Always use the current value if valid but if not and open, generate a value
-		return currentValue || this.props.open && this.toIDate(new Date(), 'local');
+		if (currentValue) {
+			return DateFactory({
+				unixtime: currentValue
+			});
+		} else if (this.props.open) {
+			return DateFactory({
+				unixtime: Date.now(),
+				timezone: 'local'
+			});
+		}
 	}
 
 	/**
