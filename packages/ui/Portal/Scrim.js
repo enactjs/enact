@@ -10,7 +10,8 @@ import React from 'react';
 import css from './Scrim.less';
 
 /**
- * TBD
+ * {@link module:@enact/ui/Portal~Scrim} provides an overlay that will prevent taps from propagating
+ * to the controls that it covers.
  *
  * @class Scrim
  * @ui
@@ -73,27 +74,41 @@ const ScrimLayer = kind({
 		 * @type {String}
 		 * @default `translucent`
 		 */
-		scrimType: React.PropTypes.oneOf(['transparent', 'translucent'])
+		scrimType: React.PropTypes.oneOf(['transparent', 'translucent']),
+
+		/**
+		 * When `true`, scrim will appear
+		 * @type {Boolean}
+		 * @default false
+		 */
+		scrimVisible: React.PropTypes.bool
 	},
 
 	defaultProps: {
-		scrimType: 'translucent'
+		scrimType: 'translucent',
+		scrimVisible: false
 	},
 
 	computed: {
 		children: ({children, zIndex, ...rest}) => {
 			delete rest.scrimType;
+			delete rest.scrimVisible;
 
 			const style = Object.assign({}, children.props.style, {zIndex: zIndex + 1});
 			return React.cloneElement(children, {style, ...rest});
+		},
+		scrim: ({scrimVisible, zIndex, scrimType}) => {
+			if (scrimVisible) {
+				return <Scrim type={scrimType} style={{zIndex}} />;
+			}
 		}
 	},
 
-	render: ({scrimType, zIndex, children}) => {
+	render: ({scrim, children}) => {
 		return (
-			<div>
+			<div className="enact-scrim-layer">
 				{children}
-				<Scrim type={scrimType} style={{zIndex}} />
+				{scrim}
 			</div>
 		);
 	}

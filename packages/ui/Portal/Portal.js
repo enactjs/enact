@@ -9,6 +9,7 @@ import ReactDOM from 'react-dom';
 
 import {ScrimLayer} from './Scrim';
 
+// the current most highest z-index value for portals
 let scrimZIndex = 120;
 
 /**
@@ -94,8 +95,11 @@ class Portal extends React.Component {
 		if (nextProps.open) {
 			let preserveZIndex = false;
 			if (nextProps.open === this.props.open) {
+				// will not increase zIndex for already opened layer
 				preserveZIndex = true;
 			} else {
+				// increase scrimZIndex by 2 for the new layer
+				scrimZIndex = scrimZIndex + 2;
 				this.prevZIndex = scrimZIndex;
 			}
 			this.renderPortal(nextProps, preserveZIndex);
@@ -143,12 +147,19 @@ class Portal extends React.Component {
 			this.node.className = portalClassName;
 		}
 
-		this.portal = ReactDOM.unstable_renderSubtreeIntoContainer(this,
-			<ScrimLayer zIndex={preserveZIndex ? this.prevZIndex : scrimZIndex} {...rest} />,
-			this.node);
-		if (!preserveZIndex) {
-			scrimZIndex = scrimZIndex + 2;
-		}
+		const scrimProps = {
+			scrimVisible: this.prevZIndex === scrimZIndex,
+			zIndex: preserveZIndex ? this.prevZIndex : scrimZIndex
+		};
+
+		this.portal = ReactDOM.unstable_renderSubtreeIntoContainer(
+			this,
+			<ScrimLayer
+				{...scrimProps}
+				{...rest}
+			/>,
+			this.node
+		);
 	}
 
 	render () {
