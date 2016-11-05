@@ -71,17 +71,14 @@ const
 	getVariableDataSize = ({data, fixedIndex}) => {
 		return data[fixedIndex].length;
 	},
-	getVariableItemSize = ({data, fixedIndex, variableIndex}) => {
-		return data[fixedIndex][variableIndex].width;
+	getVariableItemSize = ({data, index}) => {
+		return data[index.fixed][index.variable].width;
 	},
-	renderItem = ({data, fixedIndex, variableIndex, key}) => {
+	renderItem = ({data, index, key}) => {
 		return (
-			<div
-				key={key}
-				style={style.itemWrapper}
-			>
+			<div key={key} style={style.itemWrapper}>
 				<Item style={style.item}>
-					{data[fixedIndex][variableIndex].programName}
+					{data[index.fixed][index.variable].programName}
 				</Item>
 			</div>
 		);

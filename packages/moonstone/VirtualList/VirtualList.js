@@ -102,7 +102,7 @@ const VirtualEPGGridList = kind({
 	},
 
 	render: (props) => {
-		const _props = Object.assign({}, props, {
+		const epgProps = Object.assign({}, props, {
 			dataSize: props.dataSize.fixed,
 			direction: 'vertical',
 			directionOption: 'fixedHeightVariableWidth',
@@ -111,7 +111,7 @@ const VirtualEPGGridList = kind({
 			itemSize: props.itemSize.fixed
 		});
 
-		return (<VirtualListBase {..._props} />);
+		return (<VirtualListBase {...epgProps} />);
 	}
 });
 
