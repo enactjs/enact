@@ -106,14 +106,25 @@ const HeaderBase = kind({
 	},
 
 	computed: {
-		className: ({fullBleed, type, styler}) => styler.append({fullBleed},type),
+		className: ({fullBleed, type, styler}) => styler.append({fullBleed}, type),
 		isRTL: ({title, titleBelow}) => {
 			const rtl = isRtlText(title) || isRtlText(titleBelow);
 			return rtl;
+		},
+		titleBelowComponent: ({titleBelow, type}) => {
+			switch (type) {
+				case 'compact':
+					return titleBelow ? <h2 className={css.titleBelow}>{titleBelow}</h2> : null;
+				case 'standard':
+					return titleBelow ? <MarqueeH2 className={css.titleBelow} marqueeOn="hover">{titleBelow}</MarqueeH2> : null;
+			}
+		},
+		subTitleBelowComponent: ({subTitleBelow}) => {
+			return subTitleBelow ? <MarqueeH2 className={css.subTitleBelow} marqueeOn="hover">{subTitleBelow}</MarqueeH2> : null;
 		}
 	},
 
-	render: ({children, isRTL, preserveCase, subTitleBelow, title, titleAbove, titleBelow, type, ...rest}) => {
+	render: ({children, isRTL, preserveCase, subTitleBelowComponent, title, titleAbove, titleBelowComponent, type, ...rest}) => {
 		delete rest.fullBleed;
 
 		switch (type) {
@@ -121,7 +132,7 @@ const HeaderBase = kind({
 				<header {...rest}>
 					<MarqueeText className={css.headerCell} marqueeOn="hover" forceRtl={isRTL}>
 						<UppercaseH1 className={css.title} preserveCase={preserveCase}>{title}</UppercaseH1>
-						<h2 className={css.titleBelow}>{titleBelow}</h2>
+						{titleBelowComponent}
 					</MarqueeText>
 					<nav className={css.headerComponents}>{children}</nav>
 				</header>
@@ -143,12 +154,8 @@ const HeaderBase = kind({
 					</HeaderH1>
 					<div className={css.headerRow}>
 						<div className={css.headerCell}>
-							<MarqueeH2 className={css.titleBelow} marqueeOn="hover">
-								{titleBelow}
-							</MarqueeH2>
-							<MarqueeH2 className={css.subTitleBelow} marqueeOn="hover">
-								{subTitleBelow}
-							</MarqueeH2>
+							{titleBelowComponent}
+							{subTitleBelowComponent}
 						</div>
 						<nav className={css.headerComponents}>{children}</nav>
 					</div>
