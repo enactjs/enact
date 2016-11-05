@@ -21,7 +21,8 @@ const
 	nop = () => {},
 	perf = (typeof window === 'object') ? window.performance : {},
 	holdTime = 50,
-	pixelPerLine = ri.scale(40),
+	scrollWheelMultiplier = 5,
+	pixelPerLine = ri.scale(40) * scrollWheelMultiplier,
 	pixelPerScrollbarBtn = ri.scale(100),
 	epsilon = 1,
 	// spotlight
@@ -291,7 +292,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			let delta = e.deltaY;
 
 			if (deltaMode === 0) {
-				delta = ri.scale(delta);
+				delta = ri.scale(delta) * scrollWheelMultiplier;
 			} else if (deltaMode === 1) { // line; firefox
 				delta = delta * pixelPerLine;
 			} else if (deltaMode === 2) { // page
