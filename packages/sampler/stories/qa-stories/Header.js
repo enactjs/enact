@@ -6,7 +6,7 @@ import {withKnobs, text} from '@kadira/storybook-addon-knobs';
 storiesOf('Header')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'RTL Text',
+		'with RTL text',
 		() => (
 			<Header
 				type="compact"

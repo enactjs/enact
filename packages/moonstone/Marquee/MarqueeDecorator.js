@@ -98,7 +98,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @type {Boolean}
 			 * @public
 			 */
-			forceRTL: React.PropTypes.bool,
+			forceRtl: React.PropTypes.bool,
 
 			/**
 			 * When `true`, the contents will be centered regardless of the text directionality.
@@ -409,9 +409,12 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		renderMarquee () {
 			const {
 				children,
-				forceRTL,
 				disabled,
+<<<<<<< 09e58a3d0bbe7290853d032181d307338f96df4d
 				marqueeCentered,
+=======
+				forceRtl,
+>>>>>>> Renames forceRTL to forceRtl, and general clean-up
 				marqueeOn,
 				marqueeSpeed,
 				...rest
@@ -444,8 +447,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						centered={marqueeCentered}
 						className={marqueeClassName}
 						clientRef={this.cacheNode}
-						forceRTL={forceRTL}
 						distance={this.distance}
+						forceRtl={forceRtl}
 						onMarqueeComplete={this.handleMarqueeComplete}
 						overflow={this.state.overflow}
 						speed={marqueeSpeed}

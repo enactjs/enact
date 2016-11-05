@@ -85,7 +85,7 @@ const MarqueeBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		forceRTL: React.PropTypes.bool,
+		forceRtl: React.PropTypes.bool,
 
 		/**
 		 * Callback function for when the marquee completes its animation
@@ -119,8 +119,8 @@ const MarqueeBase = kind({
 
 	computed: {
 		clientClassName: ({animating}) => animating ? animated : css.text,
-		clientStyle: ({animating, children, distance, overflow, speed, forceRTL}, {rtl: contextRtl}) => {
-			const rtl = forceRTL || isRtlText(children);
+		clientStyle: ({animating, children, distance, forceRtl, overflow, speed}, {rtl: contextRtl}) => {
+			const rtl = forceRtl || isRtlText(children);
 			const overrideRtl = contextRtl !== rtl;
 
 			// We only attempt to set the textAlign of this control if the locale's directionality

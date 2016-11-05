@@ -119,7 +119,7 @@ const HeaderBase = kind({
 		switch (type) {
 			case 'compact': return (
 				<header {...rest}>
-					<MarqueeText className={css.headerCell} marqueeOn="hover" forceRTL={isRTL}>
+					<MarqueeText className={css.headerCell} marqueeOn="hover" forceRtl={isRTL}>
 						<UppercaseH1 className={css.title} preserveCase={preserveCase}>{title}</UppercaseH1>
 						<h2 className={css.titleBelow}>{titleBelow}</h2>
 					</MarqueeText>

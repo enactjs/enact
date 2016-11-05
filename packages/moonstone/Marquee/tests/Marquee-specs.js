@@ -101,9 +101,9 @@ describe('Marquee', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should override RTL when forceRTL is true', function () {
+	it('should override RTL when forceRtl is true', function () {
 		const subject = shallow(
-			<Marquee forceRTL>
+			<Marquee forceRtl>
 				{content}
 			</Marquee>
 		);
