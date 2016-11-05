@@ -12,6 +12,9 @@ import {ScrimLayer} from './Scrim';
 // the current most highest z-index value for portals
 let scrimZIndex = 120;
 
+// array of z-indexes for visible layers
+const viewingLayers = [];
+
 /**
  * {@link module:@enact/ui/Portal~Portal} is a component that creates an entry point to the new
  * render tree. This is used for modal components such as popups.
@@ -87,6 +90,7 @@ class Portal extends React.Component {
 		}
 
 		if (this.props.open) {
+			viewingLayers.push(scrimZIndex);
 			this.renderPortal(this.props);
 		}
 	}
@@ -101,6 +105,7 @@ class Portal extends React.Component {
 				// increase scrimZIndex by 2 for the new layer
 				scrimZIndex = scrimZIndex + 2;
 				this.prevZIndex = scrimZIndex;
+				viewingLayers.push(scrimZIndex);
 			}
 			this.renderPortal(nextProps, preserveZIndex);
 		} else {
@@ -129,6 +134,9 @@ class Portal extends React.Component {
 		if (this.node) {
 			ReactDOM.unmountComponentAtNode(this.node);
 			document.getElementById(this.props.portalId).removeChild(this.node);
+
+			const v = viewingLayers.indexOf(scrimZIndex);
+			viewingLayers.splice(v, 1);
 		}
 		this.portal = null;
 		this.node = null;
@@ -148,7 +156,7 @@ class Portal extends React.Component {
 		}
 
 		const scrimProps = {
-			scrimVisible: this.prevZIndex === scrimZIndex,
+			scrimVisible: this.prevZIndex === viewingLayers[viewingLayers.length - 1],
 			zIndex: preserveZIndex ? this.prevZIndex : scrimZIndex
 		};
 
