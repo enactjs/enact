@@ -9,6 +9,8 @@ import ReactDOM from 'react-dom';
 
 import {ScrimLayer} from './Scrim';
 
+let scrimZIndex = 120;
+
 /**
  * {@link module:@enact/ui/Portal~Portal} is a component that creates an entry point to the new
  * render tree. This is used for modal components such as popups.
@@ -88,9 +90,15 @@ class Portal extends React.Component {
 		}
 	}
 
-	componentWillReceiveProps (newProps) {
-		if (newProps.open) {
-			this.renderPortal(newProps);
+	componentWillReceiveProps (nextProps) {
+		if (nextProps.open) {
+			let preserveZIndex = false;
+			if (nextProps.open === this.props.open) {
+				preserveZIndex = true;
+			} else {
+				this.prevZIndex = scrimZIndex;
+			}
+			this.renderPortal(nextProps, preserveZIndex);
 		} else {
 			this.closePortal();
 		}
@@ -122,7 +130,7 @@ class Portal extends React.Component {
 		this.node = null;
 	}
 
-	renderPortal ({portalClassName, portalId, ...rest}) {
+	renderPortal ({portalClassName, portalId, ...rest}, preserveZIndex = false) {
 		delete rest.noAutoDismiss;
 		delete rest.onClose;
 		// don't delete `rest.open`
@@ -135,7 +143,12 @@ class Portal extends React.Component {
 			this.node.className = portalClassName;
 		}
 
-		this.portal = ReactDOM.unstable_renderSubtreeIntoContainer(this, <ScrimLayer {...rest} />, this.node);
+		this.portal = ReactDOM.unstable_renderSubtreeIntoContainer(this,
+			<ScrimLayer zIndex={preserveZIndex ? this.prevZIndex : scrimZIndex} {...rest} />,
+			this.node);
+		if (!preserveZIndex) {
+			scrimZIndex = scrimZIndex + 2;
+		}
 	}
 
 	render () {

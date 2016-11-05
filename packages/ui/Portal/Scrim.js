@@ -62,13 +62,18 @@ const ScrimLayer = kind({
 
 	propTypes: {
 		/**
+		 * z-index of the layer. Scrim will have the z-index of layer, and the children will have
+		 * one higher index to display on top of Scrim.
+		 * @type {Number}
+		 */
+		zIndex: React.PropTypes.number.isRequired,
+
+		/**
 		 * Types of scrim. It can be either `transparent` or `translucent`.
 		 * @type {String}
 		 * @default `translucent`
 		 */
-		scrimType: React.PropTypes.oneOf(['transparent', 'translucent']).isRequired,
-
-		zIndex: React.PropTypes.number.isRequired
+		scrimType: React.PropTypes.oneOf(['transparent', 'translucent'])
 	},
 
 	defaultProps: {
