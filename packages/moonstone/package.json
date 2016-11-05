@@ -25,7 +25,7 @@
     }
   },
   "eslintConfig": {
-    "extends": "enact-internal"
+    "extends": "enact/strict"
   },
   "dependencies": {
     "classnames": "~2.2.5",
