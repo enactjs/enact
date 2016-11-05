@@ -1,5 +1,5 @@
 /**
-* This regex pattern is used by the [isRtlText()]{@link module:enyo/utils#isRtlText} function.
+* This regex pattern is used by the [isRtlText()]{@link i18n/utils.isRtlText} function.
 *
 * Arabic: \u0600-\u06FF\u0750-\u077F\u08A0-\u08FF\uFB50-\uFDFF\uFE70-\uFEFE
 * Hebrew: \u0590-\u05FF\uFB1D-\uFB4F

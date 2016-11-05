@@ -1,8 +1,8 @@
 /**
- * Exports the {@link module:@enact/i18n/I18nDecorator~I18nDecorator} component and
- * {@link module:@enact/i18n/I18nDecorator~contextTypes} validation rules.
+ * Exports the {@link i18n/I18nDecorator.I18nDecorator} component and
+ * {@link i18n/I18nDecorator.contextTypes} validation rules.
  *
- * @module @enact/i18n/I18nDecorator
+ * @module i18n/I18nDecorator
  */
 
 import hoc from '@enact/core/hoc';
@@ -30,7 +30,7 @@ const contextTypes = {
 };
 
 /**
- * {@link module:@enact/i18n/I18nDecorator~I18nDecorator} is a Higher Order Component that is used to wrap
+ * {@link i18n/I18nDecorator.I18nDecorator} is a Higher Order Component that is used to wrap
  * the root element in an app. It provides an `rtl` member on the context of the wrapped component, allowing
  * the children to check the current text directionality as well as an `updateLocale` method that can be
  * used to update the current locale.
@@ -38,12 +38,14 @@ const contextTypes = {
  * There are no configurable options on this HOC.
  *
  * @class I18nDecorator
+ * @memberof i18n/I18nDecorator
+ * @hoc
  * @public
  */
 const IntlHoc = hoc((config, Wrapped) => {
 	return class I18nDecorator extends React.Component {
 		static childContextTypes = contextTypes
-		static propTypes = {
+		static propTypes = /** @lends i18n/I18nDecorator.I18nDecorator */ {
 			className: React.PropTypes.string,
 			locale: React.PropTypes.string
 		}

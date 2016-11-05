@@ -61,6 +61,7 @@ const defaultConfig = {
  * @example
  *	const SpottableComponent = Spottable(Component);
  *
+ * @memberof spotlight
  * @param  {Object} defaultConfig Set of default configuration parameters
  * @param  {Function} Higher-order component
  *
@@ -69,7 +70,7 @@ const defaultConfig = {
 const Spottable = hoc(defaultConfig, (config, Wrapped) => kind({
 	name: 'Spottable',
 
-	propTypes: {
+	propTypes: /** @lends spotlight.Spottable.prototype */ {
 		/**
 		 * Whether or not the component is in a disabled state.
 		 *

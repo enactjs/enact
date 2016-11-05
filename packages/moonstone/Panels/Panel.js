@@ -5,11 +5,13 @@ import React from 'react';
 import css from './Panel.less';
 
 /**
-* {@link module:moonstone/Panel~Panel} is the default kind for controls created inside a
-* [moonstone/Panels]{@link module:moonstone/Panels~Panels} container. A `moonstone/Panels`
-* will typically contain several instances of `moonstone/Panel`.
+* {@link moonstone/Panel.Panel} is the default kind for controls created inside a
+* [moonstone/Panels]{@link moonstone/Panels.Panels} container. A `moonstone/Panels`
+* will typically contain several instances of these.
 *
 * @class Panel
+* @memberof moonstone/Panels
+* @ui
 * @public
 */
 const PanelBase = kind({
@@ -29,6 +31,7 @@ const PanelBase = kind({
 	)
 });
 
+// Note that we only export this (even as PanelBase).  PanelBase is not useful on its own.
 const Panel = Slottable({slots: ['header']}, PanelBase);
 
 export default Panel;

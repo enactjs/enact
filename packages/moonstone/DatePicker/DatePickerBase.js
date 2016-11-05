@@ -1,3 +1,10 @@
+/**
+ * Exports the {@link moonstone/DatePicker/DatePickerBase.DatePickerBase} component.
+ *
+ * @module moonstone/DatePicker/DatePickerBase
+ * @private
+ */
+
 import {$L} from '@enact/i18n';
 import kind from '@enact/core/kind';
 import React from 'react';
@@ -8,14 +15,15 @@ import css from './DatePicker.less';
 import DateComponentPicker from './DateComponentPicker';
 
 /**
-* {@link module:@enact/moonstone/DatePicker~DatePickerBase} is the stateless functional date picker
-* component. Should not be used directly but may be composed within another component as it is
-* within {@link module:@enact/moonstone/DatePicker~DatePicker}.
-*
-* @class DatePickerBase
-* @ui
-* @private
-*/
+ * {@link moonstone/DatePicker/DatePickerBase.DatePickerBase} is the stateless functional date picker
+ * component. Should not be used directly but may be composed within another component as it is
+ * within {@link moonstone/DatePicker.DatePicker}.
+ *
+ * @class DatePickerBase
+ * @memberof moonstone/DatePicker/DatePickerBase
+ * @ui
+ * @private
+ */
 const DatePickerBase = kind({
 	name: 'DatePicker',
 

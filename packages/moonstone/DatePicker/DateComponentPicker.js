@@ -1,3 +1,12 @@
+/**
+ * Exports the {@link moonstone/DatePicker/DateComponentPicker.DateComponentPicker} and
+ * {@link moonstone/DatePicker/DateComponentPicker.DateComponentPickerBase}
+ * components.
+ *
+ * @module moonstone/DatePicker/DateComponentPicker
+ * @private
+ */
+
 import Changeable from '@enact/ui/Changeable';
 import kind from '@enact/core/kind';
 import React from 'react';
@@ -7,17 +16,18 @@ import RangePicker from '../RangePicker';
 import css from './DatePicker.less';
 
 /**
-* {@link module:@enact/moonstone/DatePicker~DateComponentPickerBase} allows the selection of one
-* part of the date (date, month, or year).
-*
-* @class DateComponentPickerBase
-* @ui
-* @private
-*/
+ * {@link moonstone/DatePicker/DataComponentPicker.DateComponentPickerBase} allows the selection of one
+ * part of the date (date, month, or year).
+ *
+ * @class DateComponentPickerBase
+ * @memberof moonstone/DatePicker/DateComponentPicker
+ * @ui
+ * @private
+ */
 const DateComponentPickerBase = kind({
 	name: 'DateComponentPickerBase',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/DatePicker/DateComponentPicker.DateComponentPickerBase.prototype */ {
 		/**
 		 * The maximum value for the date component
 		 *
@@ -93,14 +103,15 @@ const DateComponentPickerBase = kind({
 
 
 /**
-* {@link module:@enact/moonstone/DatePicker~DateComponentPicker} allows the selection of one part of
-* the date (date, month, or year). It is a stateful component but allows updates by providing a new
-* `value` via props.
-*
-* @class DateComponentPicker
-* @ui
-* @private
-*/
+ * {@link moonstone/DatePicker/DateComponentPickerBase.DateComponentPicker} allows the selection of one part of
+ * the date (date, month, or year). It is a stateful component but allows updates by providing a new
+ * `value` via props.
+ *
+ * @class DateComponentPicker
+ * @memberof moonstone/DatePicker/DateComponentPicker
+ * @ui
+ * @private
+ */
 const DateComponentPicker = Changeable(
 	{mutable: true},
 	DateComponentPickerBase
