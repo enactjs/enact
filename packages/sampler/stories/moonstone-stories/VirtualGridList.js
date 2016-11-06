@@ -54,7 +54,7 @@ for (let i = 0; i < 1000; i++) {
 	items.push({text, subText, source});
 }
 
-storiesOf('VirtualGridList')
+storiesOf('VirtualList.VirtualGridList')
 	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',

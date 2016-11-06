@@ -53,7 +53,7 @@ for (let i = 0; i < 1000; i++) {
 storiesOf('VirtualList')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'with vertical direction',
+		' ',
 		'Basic usage of VirtualList',
 		() => (
 			<VirtualList
