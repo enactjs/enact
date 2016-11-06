@@ -76,6 +76,33 @@ class InputBase extends React.Component {
 		onChange: PropTypes.func,
 
 		/**
+		 * The handler to run when clicked.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onClick: PropTypes.func,
+
+		/**
+		 * The handler to run when focused.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onFocus: PropTypes.func,
+
+		/**
+		 * The handler to run when a key is pressed down.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onKeyDown: PropTypes.func,
+
+		/**
 		 * The placeholder text to display.
 		 *
 		 * @type {String}
@@ -83,6 +110,15 @@ class InputBase extends React.Component {
 		 * @public
 		 */
 		placeholder: PropTypes.string,
+
+		/**
+		 * When `true`, spotlight navigation is prevented for the input.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		spotlightDisabled: PropTypes.bool,
 
 		/**
 		 * The type of input. Accepted values correspond to the standard HTML5 input types.

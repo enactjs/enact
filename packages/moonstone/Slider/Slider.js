@@ -70,6 +70,14 @@ const SliderBase = kind({
 		pressed: PropTypes.bool,
 
 		/**
+		 * The method to run when mounted, giving a reference to the DOM.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		sliderRef: PropTypes.func,
+
+		/**
 		 * The amount to increment or decrement the value.
 		 *
 		 * @type {Number}
@@ -255,7 +263,7 @@ class Slider extends React.Component {
 	updateValue = (event) => {
 		event.preventDefault();
 		throttleJob('sliderChange', () => {
-			this.setState({value: Number.parseInt(event.target.value, 10)}, this.onChange);
+			this.setState({value: Number.parseInt(event.target.value)}, this.onChange);
 		}, changeDelayMS);
 	}
 

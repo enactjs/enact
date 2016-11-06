@@ -87,7 +87,15 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => kind({
 		 * @default false
 		 * @public
 		 */
-		spotlightDisabled: React.PropTypes.bool
+		spotlightDisabled: React.PropTypes.bool,
+
+		/**
+		 * The tabindex of the component.
+		 *
+		 * @type {Number}
+		 * @public
+		 */
+		tabIndex: React.PropTypes.number
 	},
 
 	styles: {

@@ -106,10 +106,10 @@ const HeaderBase = kind({
 	},
 
 	computed: {
-		className: ({fullBleed, type, styler}) => styler.append({fullBleed},type)
+		className: ({fullBleed, type, styler}) => styler.append({fullBleed}, type)
 	},
 
-	render: ({children, preserveCase, subTitleBelow, title, titleAbove, titleBelow, type, ...rest}) => {
+	render: ({children, preserveCase, subTitleBelow, title, /* titleAbove, */titleBelow, type, ...rest}) => {
 		delete rest.fullBleed;
 
 		switch (type) {

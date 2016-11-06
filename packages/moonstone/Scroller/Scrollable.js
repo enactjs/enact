@@ -364,7 +364,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			// for virtuallist
 			const
 				item = e.target,
-				index = Number.parseInt(item.getAttribute(dataIndexAttribute), 10);
+				index = Number.parseInt(item.getAttribute(dataIndexAttribute));
 
 			if (!this.isDragging && !isNaN(index) && item !== this.lastFocusedItem && item === doc.activeElement && this.childRef.calculatePositionOnFocus) {
 				const pos = this.childRef.calculatePositionOnFocus(index);
@@ -379,7 +379,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		onKeyDown = (e) => {
 			if (this.childRef.setSpotlightContainerRestrict) {
-				const index = Number.parseInt(e.target.getAttribute(dataIndexAttribute), 10);
+				const index = Number.parseInt(e.target.getAttribute(dataIndexAttribute));
 				this.childRef.setSpotlightContainerRestrict(e.keyCode, index);
 			}
 		}
