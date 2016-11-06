@@ -2,12 +2,13 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [unreleased]
+## [1.0.0-alpha.3] - 2016-11-8
 
 ### Added
 
 - `moonstone/DatePicker`, `moonstone/DayPicker`, `moonstone/ExpandableItem`, and `moonstone/Image` components
 - `fullBleed` prop to `moonstone/Panels/Header`. When `true`, the header content is indented and the header lines are removed.
+- Application close button to `moonstone/Panels`. Fires `onApplicationClose` when clicked. Can be omitted with the `noCloseButton` prop.
 
 ### Changed
 
@@ -17,6 +18,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - Removed `moonstone/ExpandableCheckboxItemGroup` in favor of `ExpandableList`
 - `moonstone/Divider`'s `children` property is now optional
 - `moonstone/ToggleItem`'s `inline` now has a `max-width` of `240px`
+- `moonstone/Input` to use `<div>` instead of `<label>` for wrapping components. No change to
+	functionality, only markup.
 
 
 ## [1.0.0-alpha.2] - 2016-10-21

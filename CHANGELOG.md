@@ -2,11 +2,42 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
-## [unreleased]
+## [1.0.0-alpha.3] - 2016-11-8
+
+### Added
+
+- `core/dispatcher` - an event dispatcher for global events (e.g. `window` and `document` events) that fire outside of the React tree
+- Support for detecting browser locale change events through `languagechange` event in
+	`i18n/I18nDecorator`
+- `moonstone/DatePicker`, `moonstone/DayPicker`, `moonstone/ExpandableItem`, and `moonstone/Image` components
+- `fullBleed` prop to `moonstone/Panels/Header`. When `true`, the header content is indented and the header lines are removed.
+- Application close button to `moonstone/Panels`. Fires `onApplicationClose` when clicked. Can be omitted with the `noCloseButton` prop.
+- Samples for `moonstone/DayPicker`, `moonstone/DatePicker`, `moonstone/ExpandableItem`, `moonstone/Image`,
+	`moonstone/VirtualList`, `moonstone/Scroller` and `moonstone/VirtualList.VirtualGridList`
+- `spotlightDefaultClass` to `@enact/spotlight` export. Applying this class to an item in a
+	container will cause it to be the default spotted item in that container.
+- Selection type support to `ui/Group`
+- Documentation on Flexbox and an Enyo to Enact component migration guide
 
 ### Changed
 
+- `data` parameter passed to `component` prop of `VirtualList`.
+- Overhauled and moved `moonstone/Expandable` into a submodule of `moonstone/ExpandableItem`
+- Overhauled `ExpandableList` to properly support selection
+- Removed `moonstone/ExpandableCheckboxItemGroup` in favor of `ExpandableList`
 - `moonstone/Divider`'s `children` property is now optional
+- `moonstone/ToggleItem`'s `inline` now has a `max-width` of `240px`
+- `moonstone/Input` to use `<div>` instead of `<label>` for wrapping components. No change to
+	functionality, only markup.
+- Spotlight containers now default to focus last selected item when gaining focus.
+- Removed `decorated` prop from `@enact/spotlight/focusable` as this relationship is managed
+	implicitly by the component decorated by `@enact/spotlight/focusable`.
+- Renamed `ui/Group` prop `select` to `childSelect` and added prop `select` to support selection types
+
+### Fixed
+
+- Spotlight stops at container boundaries when 5-way key held down
+- Several issues related to spotting controls in edge cases
 
 
 ## [1.0.0-alpha.2] - 2016-10-21
