@@ -2,7 +2,7 @@ import {SwitchItemBase} from '@enact/moonstone/SwitchItem';
 import {Toggleable} from '@enact/ui/Toggleable';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean} from '@kadira/storybook-addon-knobs';
+import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
 
 const SwitchItem = Toggleable({prop: 'checked'}, SwitchItemBase);
 SwitchItem.propTypes = Object.assign({}, SwitchItem.propTypes, SwitchItemBase.propTypes);
@@ -23,7 +23,7 @@ storiesOf('SwitchItem')
 				inline={boolean('inline', false)}
 				onToggle={action('onToggle')}
 			>
-				Hello SwitchItem
+				{text('children', 'Hello SwitchItem')}
 			</SwitchItem>
 		)
 	);

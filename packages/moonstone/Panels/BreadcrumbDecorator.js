@@ -1,5 +1,6 @@
 import {kind, hoc} from '@enact/core';
 import {coerceFunction} from '@enact/core/util';
+import Cancelable from '@enact/ui/Cancelable';
 import ViewManager from '@enact/ui/ViewManager';
 import invariant from 'invariant';
 import React from 'react';
@@ -9,6 +10,8 @@ import BreadcrumbArranger from './BreadcrumbArranger';
 import IndexedBreadcrumbs from './IndexedBreadcrumbs';
 
 import css from './Panels.less';
+
+// TODO: Figure out how to document private sub-module members
 
 const defaultConfig = {
 	/**
@@ -42,6 +45,8 @@ const defaultConfig = {
  * Higher-order Component that adds breadcrumbs to a Panels component
  *
  * @type {Function}
+ * @hoc
+ * @private
  */
 const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const max = coerceFunction(config.max);
@@ -49,7 +54,7 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const Decorator = kind({
 		name: 'BreadcrumbDecorator',
 
-		propTypes: {
+		propTypes: /** @lends moonstone/Panels.BreadcrumbDecorator.prototype */ {
 			/**
 			 * Array of breadcrumbs or a function that generates an array of breadcrumbs
 			 *
@@ -163,7 +168,21 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 	});
 
-	return Decorator;
+	function handleCancel (props) {
+		const {index, onSelectBreadcrumb} = props;
+		if (index > 0 && onSelectBreadcrumb) {
+			onSelectBreadcrumb({
+				index: index - 1
+			});
+
+			return true;
+		}
+	}
+
+	return Cancelable(
+		{modal: true, onCancel: handleCancel},
+		Decorator
+	);
 });
 
 export default BreadcrumbDecorator;

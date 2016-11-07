@@ -1,7 +1,7 @@
 /**
- * Exports the {@link module:@enact/ui/Toggleable~Toggleable} Higher-order Component (HOC).
+ * Exports the {@link ui/Toggleable.Toggleable} Higher-order Component (HOC).
  *
- * @module @enact/ui/Toggleable
+ * @module ui/Toggleable
  */
 
 import {forward} from '@enact/core/handle';
@@ -10,9 +10,26 @@ import {cap} from '@enact/core/util';
 import React from 'react';
 
 const defaultConfig = {
+	/**
+	 * Allows a Toggleable component to update its state by incoming props
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 */
+	mutable: false,
 
+	/**
+	 * Configures the event name that activates the component
+	 *
+	 * @type {String}
+	 */
 	activate: null,
 
+	/**
+	 * Configures the event name that deactivates the component
+	 *
+	 * @type {String}
+	 */
 	deactivate: null,
 
 	/**
@@ -33,24 +50,25 @@ const defaultConfig = {
 };
 
 /**
- * {@link module:@enact/ui/Toggleable~Toggleable} is a Higher-order Component that applies a 'Toggleable' behavior
+ * {@link ui/Toggleable.Toggleable} is a Higher-order Component that applies a 'Toggleable' behavior
  * to its wrapped component.  Its default event and property can be configured when applied to a component.
  *
  * By default, Toggleable applies the `active` property on click events.
  *
  * @class Toggleable
+ * @memberof ui/Toggleable
  * @ui
  * @public
  */
 const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
-	const {activate, deactivate, toggle, prop} = config;
+	const {activate, deactivate, mutable, prop, toggle} = config;
 	const defaultPropKey = 'default' + cap(prop);
 	const forwardToggle = forward(toggle);
 	const forwardActivate = forward(activate);
 	const forwardDeactivate = forward(deactivate);
 
 	return class Toggleable extends React.Component {
-		static propTypes = {
+		static propTypes = /** @lends ui/Toggleable.Toggleable.prototype */ {
 			/**
 			 * Whether or not the component is in a "toggled" state when first rendered.
 			 * *Note that this property name can be changed by the config. By default it is `defaultActive`.
@@ -76,9 +94,17 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
+			const key = (mutable && prop in props) ? prop : defaultPropKey;
 			this.state = {
-				active: props[defaultPropKey]
+				active: props[key]
 			};
+		}
+
+		componentWillReceiveProps (nextProps) {
+			const active = nextProps[prop];
+			if (mutable && this.props[prop] !== active) {
+				this.setState({active});
+			}
 		}
 
 		handleActivate = (ev) => {

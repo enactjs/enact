@@ -17,7 +17,7 @@ const prop = {
 storiesOf('Button')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'Long Text',
+		'with long text',
 		() => (
 			<Button
 				onClick={action('onClick')}
@@ -33,7 +33,7 @@ storiesOf('Button')
 		)
 	)
 	.addWithInfo(
-		'Tall Characters',
+		'with tall characters',
 		() => (
 			<Button
 				onClick={action('onClick')}
