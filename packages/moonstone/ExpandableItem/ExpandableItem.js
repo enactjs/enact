@@ -9,15 +9,14 @@
 
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
-import {SpotlightContainerDecorator} from '@enact/spotlight';
-import Transition from '@enact/ui/Transition';
 
 import LabeledItem from '../LabeledItem';
 
 import Expandable from './Expandable';
 import ExpandableContainer from './ExpandableContainer';
+import ExpandableTransitionContainer from './ExpandableTransitionContainer';
 
-const TransitionContainer = SpotlightContainerDecorator(Transition);
+// const TransitionContainer = SpotlightContainerDecorator(Transition);
 
 /**
  * {@link module:@enact/moonstone/ExpandableItem~ExpandableItem} is a stateless component that
@@ -163,9 +162,9 @@ const ExpandableItemBase = kind({
 					label={label}
 					onClick={handleOpen}
 				>{title}</LabeledItem>
-				<TransitionContainer data-container-disabled={!open} visible={open} duration="short" type="clip">
+				<ExpandableTransitionContainer data-container-disabled={!open} visible={open} duration="short" type="clip">
 					{children}
-				</TransitionContainer>
+				</ExpandableTransitionContainer>
 			</ExpandableContainer>
 		);
 	}
