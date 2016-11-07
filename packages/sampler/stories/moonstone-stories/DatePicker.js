@@ -1,12 +1,12 @@
 import Changeable from '@enact/ui/Changeable';
-import {DatePicker, DatePickerBase} from '@enact/moonstone/DatePicker';
+import {DatePicker, DatePickerController} from '@enact/moonstone/DatePicker';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
 
 const Picker = Changeable(DatePicker);
-Picker.propTypes = Object.assign({}, DatePickerBase.propTypes, DatePicker.propTypes);
-Picker.defaultProps = Object.assign({}, DatePickerBase.defaultProps, DatePicker.defaultProps);
+Picker.propTypes = DatePickerController.propTypes;
+Picker.defaultProps = DatePickerController.defaultProps;
 Picker.displayName = 'DatePicker';
 
 storiesOf('DatePicker')
