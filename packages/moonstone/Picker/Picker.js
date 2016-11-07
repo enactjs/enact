@@ -1,3 +1,10 @@
+/**
+ * Exports the {@link moonstone/Picker.Picker} and {@link moonstone/Picker.PickerBase}
+ * components. The default export is {@link moonstone/Picker.Picker}.
+ *
+ * @module moonstone/Picker
+ */
+
 import kind from '@enact/core/kind';
 import React from 'react';
 
@@ -5,10 +12,18 @@ import PickerCore from './PickerCore';
 import PickerItem from './PickerItem';
 import SpottablePicker from './SpottablePicker';
 
+/**
+ * The base component for {@link moonstone/Picker.Picker}. This version is not spottable.
+ *
+ * @class PickerBase
+ * @memberof moonstone/Picker
+ * @ui
+ * @public
+ */
 const PickerBase = kind({
 	name: 'Picker',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/Picker.PickerBase.prototype */ {
 		/**
 		 * Children from which to pick
 		 *
@@ -147,6 +162,14 @@ const PickerBase = kind({
 	}
 });
 
+/**
+ * A Picker component that allows selecting values from a list of values.
+ *
+ * @class PickerBase
+ * @memberof moonstone/Picker
+ * @ui
+ * @public
+ */
 const Picker = SpottablePicker(PickerBase);
 
 export default Picker;

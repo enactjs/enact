@@ -7,17 +7,18 @@ import Picker from '../../Picker';
 import DateComponentPickerChrome from './DateComponentPickerChrome';
 
 /**
-* {@link module:@enact/moonstone/DatePicker~DateComponentPickerBase} allows the selection of one
-* part of a date or time (date, month, year, hour, minute, meridiem).
-*
-* @class DateComponentPickerBase
-* @ui
-* @private
-*/
+ * {@link moonstone/internal/DataComponentPicker.DateComponentPickerBase} allows the selection of one
+ * part of the date or time using a {@link moonstone/Picker.Picker}.
+ *
+ * @class DateComponentPickerBase
+ * @memberof moonstone/internal/DateComponentPicker
+ * @ui
+ * @private
+ */
 const DateComponentPickerBase = kind({
 	name: 'DateComponentPickerBase',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/internal/DateComponentPicker.DateComponentPickerBase.prototype */ {
 		/**
 		 * Display values representing the `value` to select
 		 *
@@ -82,14 +83,15 @@ const DateComponentPickerBase = kind({
 
 
 /**
-* {@link module:@enact/moonstone/DatePicker~DateComponentPicker} allows the selection of one part of
-* the date (date, month, or year). It is a stateful component but allows updates by providing a new
-* `value` via props.
-*
-* @class DateComponentPicker
-* @ui
-* @private
-*/
+ * {@link moonstone/internal/DateComponentPickerBase.DateComponentPicker} allows the selection of one part of
+ * the date (date, month, or year). It is a stateful component but allows updates by providing a new
+ * `value` via props.
+ *
+ * @class DateComponentPicker
+ * @memberof moonstone/internal/DateComponentPicker
+ * @ui
+ * @private
+ */
 const DateComponentPicker = Changeable(
 	{mutable: true},
 	DateComponentPickerBase

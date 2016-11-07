@@ -1,9 +1,8 @@
-/**
- * Exports the {@link module:@enact/ui/Group~GroupItem} and {@link module:@enact/ui/Group~GroupItemBase}
- * components as well as the `pickGroupItemProps` method.  The default export is {@link module:@enact/ui/Group~GroupItem}.
+/*
+ * Exports the {@link ui/Group.GroupItem} and {@link ui/Group.GroupItemBase}
+ * components as well as the `pickGroupItemProps` method.  The default export is {@link ui/Group.GroupItem}.
  * `GroupItem` is stateless and is the same as `GroupItemBase`.
- *
- * @module @enact/ui/Group/GroupItem
+ * NOTE: not jsdoc on purpose.
  */
 
 import kind from '@enact/core/kind';
@@ -22,14 +21,15 @@ const pickGroupItemProps = R.compose(
 );
 
 /**
- * {@link module:@enact/ui/Group~GroupItemBase} is a stateless component that is used within a
- * {@link module:@enact/ui/Group~Group}.  It supports passing the configurable selected property and
+ * {@link ui/Group.GroupItemBase} is a stateless component that is used within a
+ * {@link ui/Group.Group}.  It supports passing the configurable selected property and
  * handler to its configured `childComponent`.
  *
  * Note: It receives its properties through the `$$GroupItem` property passed from `Group`'s
- * {@link module:@enact/ui/Repeater~Repeater}.
+ * {@link ui/Repeater.Repeater}.
  *
  * @class GroupItemBase
+ * @memberof ui/Group
  * @ui
  * @private
  */

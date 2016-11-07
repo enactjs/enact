@@ -4,13 +4,15 @@ import React from 'react';
 import css from './DateComponentPicker.less';
 
 /**
-* {@link module:@enact/moonstone/DatePicker~DateComponentPickerBase} allows the selection of one
-* part of the date (date, month, or year).
-*
-* @class DateComponentPickerBase
-* @ui
-* @private
-*/
+ * {@link moonstone/internal/DataComponentPicker.DateComponentPickerChrome} provides the surrounding
+ * markup and styling for a {@link moonstone/internal/DateComponentPicker.DateComponentPicker} or
+ * {@link moonstone/internal/DateComponentPicker.DateComponentRangePicker}.
+ *
+ * @class DateComponentPickerChrome
+ * @memberof moonstone/internal/DateComponentPickerChrome
+ * @ui
+ * @private
+ */
 const DateComponentPickerChromeBase = kind({
 	name: 'DateComponentPickerChrome',
 

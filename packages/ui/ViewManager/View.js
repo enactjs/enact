@@ -1,27 +1,28 @@
 /**
- * Exports the {@link module:@enact/ui/ViewManager~View} component.
+ * Exports the {@link ui/ViewManager.View} component.
  *
- * @module @enact/ui/ViewManager/View
+ * @module ui/ViewManager/View
+ * @private
  */
 
 import React from 'react';
 import ReactDOM from 'react-dom';
 
 import {shape} from './Arranger';
-import shallowEqual from 'recompose/shallowEqual';
 
 const TICK = 17;
 
 /**
- * A `View` wraps a set of children for {@link module:@enact/ui/ViewManager~ViewManager}.
+ * A `View` wraps a set of children for {@link ui/ViewManager.ViewManager}.
  * It is not intended to be used directly
  *
  * @class View
+ * @memberof ui/ViewManager/View
  * @private
  */
 class View extends React.Component {
 
-	static propTypes = {
+	static propTypes = /** @lends ui/ViewManager/View.View.prototype */ {
 		children: React.PropTypes.node.isRequired,
 
 		/**

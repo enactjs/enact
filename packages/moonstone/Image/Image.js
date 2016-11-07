@@ -1,7 +1,7 @@
 /**
- * Exports the {@link module:@enact/moonstone/Image~Image} component.
+ * Exports the {@link moonstone/Image.Image} component.
  *
- * @module @enact/moonstone/Image
+ * @module moonstone/Image
  */
 
 import kind from '@enact/core/kind';
@@ -11,7 +11,7 @@ import {selectSrc} from '@enact/ui/resolution';
 import css from './Image.less';
 
 /**
- * {@link module:@enact/moonstone/Image~Image} is a component designed to display images
+ * {@link moonstone/Image.Image} is a component designed to display images
  * conditionally based on screen size. This component has a default size but should have a size
  * specified for its particular usage using a CSS `className` or inline `style`.
  *
@@ -30,6 +30,7 @@ import css from './Image.less';
  * > If you need a naturally sized image, you can use the native `<img>` element instead.
  *
  * @class Image
+ * @memberof moonstone/Image
  * @ui
  * @public
  */
@@ -37,7 +38,7 @@ import css from './Image.less';
 const ImageBase = kind({
 	name: 'Image',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/Image.Image.prototype */ {
 		/**
 		 * String value or Object of values used to determine which image will appear on
 		 * a specific screenSize.

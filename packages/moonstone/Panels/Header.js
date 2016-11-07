@@ -15,12 +15,15 @@ const HeaderH1 = Uppercase(MarqueeDecorator('h1'));
  * A visual header component for a Panel with a title, titleAbove, titleBelow, and subTitleBelow
  *
  * @class Header
- * @see module:@enact/i18n/Uppercase~Uppercase
+ * @memberof moonstone/Panels
+ * @see i18n/Uppercase.Uppercase
+ * @ui
+ * @public
  */
 const HeaderBase = kind({
 	name: 'Header',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/Panels.Header.prototype */ {
 		/**
 		 * Children provided are added to the header-components area. A space for controls which
 		 * live in the header, apart from the body of the panel view.
@@ -42,10 +45,10 @@ const HeaderBase = kind({
 		fullBleed: React.PropTypes.bool,
 
 		/**
-		 * When true, the case of the [`title`]{@link module:moonstone/Header~Header#title} will
+		 * When true, the case of the [`title`]{@link moonstone/Header.Header#title} will
 		 * remain unchanged.
-		 * Uses [Uppercase HOC]{@link module:@enact/i18n/Uppercase~Uppercase} and mirrors the
-		 * [preserveCase prop]{@link module:@enact/i18n/Uppercase~Uppercase#preserveCase}
+		 * Uses [Uppercase HOC]{@link i18n/Uppercase.Uppercase} and mirrors the
+		 * [preserveCase prop]{@link i18n/Uppercase.Uppercase#preserveCase}
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -151,6 +154,7 @@ const HeaderBase = kind({
 	}
 });
 
+// Note that we only export this (even as HeaderBase).  HeaderBase is not useful on its own.
 const Header = Slottable({slots: ['subTitleBelow', /* 'titleAbove', */'title', 'titleBelow']}, HeaderBase);
 
 // Set up Header so when it's used in a slottable layout (like Panel), it is automatically

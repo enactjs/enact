@@ -11,6 +11,8 @@ import IndexedBreadcrumbs from './IndexedBreadcrumbs';
 
 import css from './Panels.less';
 
+// TODO: Figure out how to document private sub-module members
+
 const defaultConfig = {
 	/**
 	 * Classes to be added to the root node
@@ -43,6 +45,8 @@ const defaultConfig = {
  * Higher-order Component that adds breadcrumbs to a Panels component
  *
  * @type {Function}
+ * @hoc
+ * @private
  */
 const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const max = coerceFunction(config.max);
@@ -50,7 +54,7 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const Decorator = kind({
 		name: 'BreadcrumbDecorator',
 
-		propTypes: {
+		propTypes: /** @lends moonstone/Panels.BreadcrumbDecorator.prototype */ {
 			/**
 			 * Array of breadcrumbs or a function that generates an array of breadcrumbs
 			 *

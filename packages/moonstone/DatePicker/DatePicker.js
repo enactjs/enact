@@ -1,3 +1,10 @@
+/**
+ * Exports the {@link moonstone/DatePicker.DatePicker} and {@link moonstone/DatePicker/DatePickerBase.DatePickerBase}
+ * components.
+ *
+ * @module moonstone/DatePicker
+ */
+
 import DateFactory from 'ilib/DateFactory';
 import DateFmt from 'ilib/DateFmt';
 import React from 'react';
@@ -7,20 +14,21 @@ import {Expandable} from '../ExpandableItem';
 import DatePickerBase from './DatePickerBase';
 
 /**
-* {@link module:@enact/moonstone/DatePicker~DatePicker} allows the selection (or simply display) of
-* a day, month, and year.
-*
-* Set the [value]{@link module:@enact/moonstone/DatePicker~DatePicker#value} property to a standard
-* JavaScript {@glossary Date} object to initialize the picker.
-*
-* @class DatePicker
-* @ui
-* @public
-*/
+ * {@link moonstone/DatePicker.DatePicker} allows the selection (or simply display) of
+ * a day, month, and year.
+ *
+ * Set the [value]{@link moonstone/DatePicker.DatePicker#value} property to a standard
+ * JavaScript {@glossary Date} object to initialize the picker.
+ *
+ * @class DatePicker
+ * @memberof moonstone/DatePicker
+ * @ui
+ * @public
+ */
 const DatePicker = class extends React.Component {
 	static displayName = 'DatePicker'
 
-	static propTypes = {
+	static propTypes = /** @lends moonstone/DatePicker.DatePicker.prototype */ {
 		/**
 		 * The primary text of the item.
 		 *

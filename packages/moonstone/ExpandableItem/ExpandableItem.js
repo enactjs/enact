@@ -1,10 +1,10 @@
 /**
- * Exports the {@link module:@enact/ui/ExpandableItem~ExpandableItem} and
- * {@link module:@enact/ui/ExpandableItem~ExpandableItemBase} components and
- * {@link module:@enact/ui/ExpandableItem~Expandable} higher-order component. The default export is
- * {@link module:@enact/ui/ExpandableItem~ExpandableItem}.
+ * Exports the {@link moonstone/ExpandableItem.ExpandableItem} and
+ * {@link moonstone/ExpandableItem.ExpandableItemBase} components and
+ * {@link moonstone/ExpandableItem/Expandable.Expandable} Higher-Order Component (HOC). The default
+ * export is {@link moonstone/ExpandableItem.ExpandableItem}.
  *
- * @module @enact/ui/ExpandableItem
+ * @module moonstone/ExpandableItem
  */
 
 import kind from '@enact/core/kind';
@@ -20,18 +20,19 @@ import ExpandableContainer from './ExpandableContainer';
 const TransitionContainer = SpotlightContainerDecorator(Transition);
 
 /**
- * {@link module:@enact/moonstone/ExpandableItem~ExpandableItem} is a stateless component that
- * renders a {@link module:@enact/moonstone/LabeledItem~LabeledItem} that can be expanded to show
+ * {@link moonstone/ExpandableItem.ExpandableItem} is a stateless component that
+ * renders a {@link moonstone/LabeledItem.LabeledItem} that can be expanded to show
  * additional contents.
  *
  * @class ExpandableItemBase
+ * @memberof moonstone/ExpandableItem
  * @ui
  * @private
  */
 const ExpandableItemBase = kind({
 	name: 'ExpandableItem',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/ExpandableItem.ExpandableItemBase.prototype */ {
 		/**
 		 * The primary text of the item.
 		 *
@@ -163,12 +164,14 @@ const ExpandableItemBase = kind({
 
 
 /**
- * {@link module:@enact/moonstone/ExpandableItem~ExpandableItem} renders a
- * {@link module:@enact/moonstone/LabeledItem~LabeledItem} that can be expanded to show additional
+ * {@link moonstone/ExpandableItem.ExpandableItem} renders a
+ * {@link moonstone/LabeledItem.LabeledItem} that can be expanded to show additional
  * contents.
  *
  * @class ExpandableItem
+ * @memberof moonstone/ExpandableItem
  * @ui
+ * @mixes moonstone/ExpandableItem.Expandable
  * @public
  */
 const ExpandableItem = Expandable(ExpandableItemBase);

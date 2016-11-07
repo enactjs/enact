@@ -10,7 +10,7 @@ const progressToPercent = (value, max, min) => R.clamp(min, max, (value / max) *
 const ProgressBarBase = kind({
 	name: 'ProgressBar',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/ProgressBar.ProgressBar.prototype */ {
 		/**
 		* The height/width of the loaded portion of the progress bar. Valid values are
 		* between `min` and `max`.

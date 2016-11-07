@@ -6,14 +6,16 @@ import RangePicker from '../../RangePicker';
 
 import DateComponentPickerChrome from './DateComponentPickerChrome';
 
+
 /**
-* {@link module:@enact/moonstone/DatePicker~DateComponentRangePickerBase} allows the selection of one
-* part of a date or time (date, month, year, hour, minute, meridiem).
-*
-* @class DateComponentRangePickerBase
-* @ui
-* @private
-*/
+ * {@link moonstone/internal/DataComponentPicker.DateComponentRangePicker} allows the selection of
+ * one part of the date or time using a {@link moonstone/RangePicker.RangePicker}.
+ *
+ * @class DateComponentRangePicker
+ * @memberof moonstone/internal/DateComponentPicker
+ * @ui
+ * @private
+ */
 const DateComponentRangePickerBase = kind({
 	name: 'DateComponentRangePickerBase',
 
