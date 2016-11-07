@@ -1,5 +1,6 @@
 /**
- * Exports the {@link module:@enact/ui/Portal~Scrim} component and {@link module:@enact/ui/Portal~ScrimLayer} component.
+ * Exports the {@link module:@enact/ui/Portal~Scrim} component and {@link module:@enact/ui/Portal~ScrimLayer}
+ * component. The default export is {@link module:@enact/ui/Portal~Scrim}.
  *
  * @module @enact/ui/Scrim
  */
@@ -52,7 +53,8 @@ const Scrim = kind({
 });
 
 /**
- * TBD
+ * {@link module:@enact/ui/Portal~ScrimLayer} is a layer which adds scrim behind the children.
+ * Children will always have one higher z-index than scrim.
  *
  * @class ScrimLayer
  * @ui
