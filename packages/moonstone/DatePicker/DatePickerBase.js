@@ -147,7 +147,7 @@ const DatePickerBase = kind({
 								return (
 									<DateComponentRangePicker
 										key="day-picker"
-										label={noLabels || $L('day')}
+										label={noLabels ? $L('day') : null}
 										min={1}
 										max={maxDays}
 										value={day}
@@ -159,7 +159,7 @@ const DatePickerBase = kind({
 								return (
 									<DateComponentRangePicker
 										key="month-picker"
-										label={noLabels || $L('month')}
+										label={noLabels ? $L('month') : null}
 										min={1}
 										max={maxMonths}
 										value={month}
@@ -172,7 +172,7 @@ const DatePickerBase = kind({
 									<DateComponentRangePicker
 										className={css.year}
 										key="year-picker"
-										label={noLabels || $L('year')}
+										label={noLabels ? $L('year') : null}
 										min={minYear}
 										max={maxYear}
 										value={year}

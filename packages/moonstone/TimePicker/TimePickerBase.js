@@ -36,6 +36,24 @@ const TimePickerBase = kind({
 		hour: React.PropTypes.number.isRequired,
 
 		/**
+		 * The `meridiem` component of the time
+		 *
+		 * @type {Number}
+		 * @required
+		 * @public
+		 */
+		meridiem: React.PropTypes.number.isRequired,
+
+		/**
+		 * Array of meridiem labels to display
+		 *
+		 * @type {String[]}
+		 * @required
+		 * @public
+		 */
+		meridiems: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
+
+		/**
 		 * The `minute` component of the time
 		 *
 		 * @type {Number}
@@ -55,24 +73,6 @@ const TimePickerBase = kind({
 		order: React.PropTypes.arrayOf(React.PropTypes.oneOf(['h', 'k', 'm', 'a'])).isRequired,
 
 		/**
-		 * The `meridiem` component of the time
-		 *
-		 * @type {Number}
-		 * @required
-		 * @public
-		 */
-		meridiem: React.PropTypes.number.isRequired,
-
-		/**
-		 * Array of meridiem labels to display
-		 *
-		 * @type {String[]}
-		 * @required
-		 * @public
-		 */
-		meridiems: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
-
-		/**
 		 * When `true`, prevents the hour picker from animation. Useful when changing the merdiem
 		 * for locales that only have 2 meridiems.
 		 *
@@ -80,6 +80,14 @@ const TimePickerBase = kind({
 		 * @public
 		 */
 		noHourAnimation: React.PropTypes.bool,
+
+		/**
+		 * When `true`, omits the labels below the pickers
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		noLabels: React.PropTypes.bool,
 
 		/**
 		 * Handler for changes in the `date` component of the time
@@ -90,14 +98,6 @@ const TimePickerBase = kind({
 		onChangeHour: React.PropTypes.func,
 
 		/**
-		 * Handler for changes in the `month` component of the time
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onChangeMinute: React.PropTypes.func,
-
-		/**
 		 * Handler for changes in the `year` component of the time
 		 *
 		 * @type {Function}
@@ -106,12 +106,12 @@ const TimePickerBase = kind({
 		onChangeMeridiem: React.PropTypes.func,
 
 		/**
-		 * When `true`, omits the labels below the pickers
+		 * Handler for changes in the `month` component of the time
 		 *
-		 * @type {Boolean}
+		 * @type {Function}
 		 * @public
 		 */
-		noLabels: React.PropTypes.bool
+		onChangeMinute: React.PropTypes.func
 	},
 
 	styles: {
@@ -134,7 +134,7 @@ const TimePickerBase = kind({
 								return (
 									<DateComponentPicker
 										key="hour-picker"
-										label={noLabels || $L('hour')}
+										label={noLabels ? $L('hour') : null}
 										value={hour}
 										onChange={onChangeHour}
 										noAnimation={noHourAnimation}
@@ -147,7 +147,7 @@ const TimePickerBase = kind({
 								return (
 									<DateComponentRangePicker
 										key="minute-picker"
-										label={noLabels || $L('minute')}
+										label={noLabels ? $L('minute') : null}
 										min={1}
 										max={59}
 										value={minute}
@@ -160,7 +160,7 @@ const TimePickerBase = kind({
 								return (
 									<DateComponentPicker
 										key="meridiem-picker"
-										label={noLabels || $L('meridiem')}
+										label={noLabels ? $L('meridiem') : null}
 										value={meridiem}
 										onChange={onChangeMeridiem}
 										wrap
