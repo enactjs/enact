@@ -134,7 +134,7 @@ const TimePickerBase = kind({
 								return (
 									<DateComponentPicker
 										key="hour-picker"
-										label={noLabels ? $L('hour') : null}
+										label={noLabels ? null : $L('hour')}
 										value={hour}
 										onChange={onChangeHour}
 										noAnimation={noHourAnimation}
@@ -147,7 +147,7 @@ const TimePickerBase = kind({
 								return (
 									<DateComponentRangePicker
 										key="minute-picker"
-										label={noLabels ? $L('minute') : null}
+										label={noLabels ? null : $L('minute')}
 										min={1}
 										max={59}
 										value={minute}
@@ -160,7 +160,7 @@ const TimePickerBase = kind({
 								return (
 									<DateComponentPicker
 										key="meridiem-picker"
-										label={noLabels ? $L('meridiem') : null}
+										label={noLabels ? null : $L('meridiem')}
 										value={meridiem}
 										onChange={onChangeMeridiem}
 										wrap
