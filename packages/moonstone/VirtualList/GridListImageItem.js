@@ -103,18 +103,16 @@ const GridListImageItemBase = kind({
 	},
 
 	computed: {
-		className: ({selected, styler}) => styler.append({selected}),
-		source: ({placeholder, source}) => (source ? source : placeholder)
+		className: ({selected, styler}) => styler.append({selected})
 	},
 
-	render: ({caption, source, subCaption, selectionOverlayShowing, ...rest}) => {
+	render: ({caption, source, subCaption, selectionOverlayShowing, placeholder, ...rest}) => {
 		delete rest.selected;
-		delete rest.placeholder;
 
 		return (
-			<ItemBase {...rest}>
+			<div {...rest}>
 				<div className={css.image}>
-					<img src={source} draggable={false} />
+					<img style={{backgroundImage: `url(${placeholder})`}} src={source} draggable={false} />
 					{
 						selectionOverlayShowing ? (
 							<div className={css.overlayContainer}>
@@ -125,9 +123,9 @@ const GridListImageItemBase = kind({
 						) : null
 					}
 				</div>
-				{caption ? (<div className={css.caption}>{caption}</div>) : null}
-				{subCaption ? (<div className={css.subCaption}>{subCaption}</div>) : null}
-			</ItemBase>
+				{caption ? (<ItemBase className={css.caption}>{caption}</ItemBase>) : null}
+				{subCaption ? (<ItemBase className={css.subCaption}>{subCaption}</ItemBase>) : null}
+			</div>
 		);
 	}
 });
