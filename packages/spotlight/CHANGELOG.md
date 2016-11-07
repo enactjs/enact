@@ -11,8 +11,11 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Changed
 
-- Spotlight containers now default to focus last selected item when gaining focus.
-- Removed `decorated` prop from `@enact/spotlight/focusable` as this relationship is managed
+- Spotlight containers to default to focus last selected item when gaining focus.
+
+### Removed
+
+- `decorated` prop from `@enact/spotlight/focusable` as this relationship is managed
 	implicitly by the component decorated by `@enact/spotlight/focusable`.
 
 ### Fixed

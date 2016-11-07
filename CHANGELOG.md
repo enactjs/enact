@@ -22,17 +22,20 @@ The following is a curated list of changes in the Enact project, newest changes 
 ### Changed
 
 - `data` parameter passed to `component` prop of `VirtualList`.
-- Overhauled and moved `moonstone/Expandable` into a submodule of `moonstone/ExpandableItem`
-- Overhauled `ExpandableList` to properly support selection
-- Removed `moonstone/ExpandableCheckboxItemGroup` in favor of `ExpandableList`
-- `moonstone/Divider`'s `children` property is now optional
-- `moonstone/ToggleItem`'s `inline` now has a `max-width` of `240px`
+- `moonstone/Expandable` into a submodule of `moonstone/ExpandableItem`
+- `ExpandableList` to properly support selection
+- `moonstone/Divider`'s `children` property to be optional
+- `moonstone/ToggleItem`'s `inline` version to have a `max-width` of `240px`
 - `moonstone/Input` to use `<div>` instead of `<label>` for wrapping components. No change to
 	functionality, only markup.
-- Spotlight containers now default to focus last selected item when gaining focus.
-- Removed `decorated` prop from `@enact/spotlight/focusable` as this relationship is managed
+- Spotlight containers to default to focus last selected item when gaining focus.
+- `ui/Group` prop `select` to `childSelect` and added prop `select` to support selection types
+
+### Removed
+
+- `moonstone/ExpandableCheckboxItemGroup` in favor of `ExpandableList`
+- `decorated` prop from `@enact/spotlight/focusable` as this relationship is managed
 	implicitly by the component decorated by `@enact/spotlight/focusable`.
-- Renamed `ui/Group` prop `select` to `childSelect` and added prop `select` to support selection types
 
 ### Fixed
 

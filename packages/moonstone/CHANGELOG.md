@@ -13,14 +13,16 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `data` parameter passed to `component` prop of `VirtualList`.
-- Overhauled and moved `moonstone/Expandable` into a submodule of `moonstone/ExpandableItem`
-- Overhauled `ExpandableList` to properly support selection
-- Removed `moonstone/ExpandableCheckboxItemGroup` in favor of `ExpandableList`
-- `moonstone/Divider`'s `children` property is now optional
-- `moonstone/ToggleItem`'s `inline` now has a `max-width` of `240px`
+- `moonstone/Expandable` into a submodule of `moonstone/ExpandableItem`
+- `ExpandableList` to properly support selection
+- `moonstone/Divider`'s `children` property to be optional
+- `moonstone/ToggleItem`'s `inline` version to have a `max-width` of `240px`
 - `moonstone/Input` to use `<div>` instead of `<label>` for wrapping components. No change to
 	functionality, only markup.
 
+### Removed
+
+- `moonstone/ExpandableCheckboxItemGroup` in favor of `ExpandableList`
 
 ## [1.0.0-alpha.2] - 2016-10-21
 
