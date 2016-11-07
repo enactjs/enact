@@ -1,7 +1,8 @@
 /**
- * Exports the {@link module:@enact/ui/ViewManager~TransitionGroup} component.
+ * Exports the {@link ui/ViewManager.TransitionGroup} component.
  *
- * @module @enact/ui/ViewManager/TransitionGroup
+ * @module ui/ViewManager/TransitionGroup
+ * @private
  */
 
 // Using string refs from the source code of ReactTransitionGroup
@@ -65,11 +66,12 @@ const mergeChildren = R.unionWith(R.eqBy(R.prop('key')));
  * Currently somewhat specialized for the purposes of ViewManager.
  *
  * @class TransitionGroup
+ * @memberof ui/ViewManager/TransitionGroup
  * @private
  */
 
 class TransitionGroup extends React.Component {
-	static propTypes = {
+	static propTypes = /** @lends ui/ViewManager/TransitionGroup.TransitionGroup.prototype */ {
 		children: React.PropTypes.node.isRequired,
 
 		/**
@@ -128,18 +130,20 @@ class TransitionGroup extends React.Component {
 	componentWillReceiveProps (nextProps) {
 		const nextChildMapping = mapChildren(nextProps.children);
 		const prevChildMapping = this.state.children;
-		let children = mergeChildren(prevChildMapping, nextChildMapping);
+		let children = mergeChildren(nextChildMapping, prevChildMapping);
 
 		// drop children exceeding allowed size
 		const drop = children.length - nextProps.size;
-		let dropped = null;
-		if (drop > 0) {
-			[dropped, children] = R.splitAt(drop, children);
-		}
+		const dropped = drop > 0 ? children.splice(drop) : null;
 
-		// cache the new set of children
-		this.setState({children});
+		this.setState({
+			children
+		}, () => {
+			this.reconcileChildren(dropped, prevChildMapping, nextChildMapping);
+		});
+	}
 
+	reconcileChildren (dropped, prevChildMapping, nextChildMapping) {
 		// mark any new child as entering
 		nextChildMapping.forEach(child => {
 			const key = child.key;
@@ -174,9 +178,7 @@ class TransitionGroup extends React.Component {
 				delete this.currentlyTransitioningKeys[child.key];
 			});
 		}
-	}
 
-	componentDidUpdate () {
 		// once the component has been updated, start the enter transition for new children,
 		const keysToEnter = this.keysToEnter;
 		this.keysToEnter = [];
@@ -191,7 +193,6 @@ class TransitionGroup extends React.Component {
 		const keysToLeave = this.keysToLeave;
 		this.keysToLeave = [];
 		keysToLeave.forEach(this.performLeave);
-
 	}
 
 	performAppear = (key) => {

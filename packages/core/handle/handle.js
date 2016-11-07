@@ -73,7 +73,13 @@ const withArgs = handle.withArgs = (...handlers) => {
  * @returns {Function}				Event handler
  */
 const callOnEvent = handle.callOnEvent = (methodName) => (e) => {
-	e[methodName]();
+	if (e[methodName]) {
+		e[methodName]();
+	} else if (e.nativeEvent && e.nativeEvent[methodName]) {
+		// In some cases (notably stopImmediatePropagation), React doesn't include a desired method
+		// on its proxy so we check the native event as well.
+		e.nativeEvent[methodName]();
+	}
 	return false;
 };
 
@@ -135,6 +141,14 @@ const preventDefault = handle.preventDefault = callOnEvent('preventDefault');
 const stop = handle.stop = callOnEvent('stopPropagation');
 
 /**
+ * Calls event.stopImmediatePropagation() and returns false
+ *
+ * @method	stopImmediate
+ * @returns {Function}	Event handler
+ */
+const stopImmediate = handle.stopImmediate = callOnEvent('stopImmediatePropagation');
+
+/**
  * Only allows event handling to continue if `event.keyCode === value`.
  *
  * @method	forKeyCode
@@ -152,5 +166,6 @@ export {
 	handle,
 	preventDefault,
 	stop,
+	stopImmediate,
 	withArgs
 };

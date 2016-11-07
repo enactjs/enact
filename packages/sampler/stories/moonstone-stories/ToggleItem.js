@@ -1,8 +1,8 @@
-import {ToggleItemBase} from '@enact/moonstone/ToggleItem';
+import ToggleItemBase from '@enact/moonstone/ToggleItem';
 import Toggleable from '@enact/ui/Toggleable';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
+import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
 
 import {icons} from '@enact/moonstone/Icon';
 const iconNames = Object.keys(icons);
@@ -28,7 +28,8 @@ storiesOf('ToggleItem')
 					inline={boolean('inline', false)}
 					onToggle={action('onToggle')}
 				>
-					Toggle Item
+					{text('children', 'Toggle Item')}
 				</ToggleItem>
-		);}
+			);
+		}
 	);

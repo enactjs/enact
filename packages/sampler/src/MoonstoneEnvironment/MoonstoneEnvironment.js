@@ -1,7 +1,7 @@
 // Moonstone Environment
 
 import kind from '@enact/core/kind';
-import React from 'react';
+import React, {PropTypes} from 'react';
 import MoonstoneDecorator from '@enact/moonstone/MoonstoneDecorator';
 import {ActivityPanels as Panels, Panel, Header} from '@enact/moonstone/Panels';
 import {select} from '@kadira/storybook-addon-knobs';
@@ -10,6 +10,11 @@ import css from './MoonstoneEnvironment.less';
 
 const PanelsBase = kind({
 	name: 'MoonstoneEnvironment',
+
+	propTypes: {
+		description: PropTypes.string,
+		title: PropTypes.string
+	},
 
 	styles: {
 		css,
@@ -48,16 +53,18 @@ const Moonstone = MoonstoneDecorator(PanelsBase);
 const MoonstoneFullscreen = MoonstoneDecorator(FullscreenBase);
 
 // NOTE: Locales taken from strawman. Might need to add more in the future.
-const locales = [
-	'en-US',
-	'ko-KR',
-	'th-TH ',
-	'ar-SA',
-	'ur-PK',
-	'zh-Hant-HK',
-	'ja-JP',
-	'en-JP'
-];
+const locales = {
+	'local': 'local',
+	'en-US': 'en-US - US English',
+	'ko-KR': 'ko-KR - Korean',
+	'es-ES': 'es-ES - Spanish, with alternate weekends',
+	'th-TH': 'th-TH - Thai, with tall characters',
+	'ar-SA': 'ar-SA - Arabic, RTL and standard font',
+	'ur-PK': 'ur-PK - Urdu, RTL and custom Urdu font',
+	'zh-Hant-HK': 'zh-Hant-HK - Traditional Chinese, custom Hant font',
+	'ja-JP': 'ja-JP - Japanese, custom Japanese font',
+	'en-JP': 'en-JP - English, custom Japanese font'
+};
 
 // NOTE: Knobs cannot set locale in fullscreen mode. This allows the locale to
 // be taken from the URL.
@@ -80,7 +87,6 @@ const getLocaleFromURL = () => {
 };
 
 const StorybookDecorator = (story, config) => {
-
 	const sample = story();
 	return (
 		<Moonstone

@@ -1,7 +1,7 @@
-/**
- * Exports the {@link module:@enact/ui/resolution~ResolutionDecorator} Higher-order Component (HOC).
+/*
+ * Exports the {@link ui/resolution.ResolutionDecorator} Higher-order Component (HOC).
  *
- * @module @enact/ui/resolution/ResolutionDecorator
+ * not jsdoc module on purpose
  */
 
 import React from 'react';
@@ -46,6 +46,9 @@ const defaultConfig = {
  *		{name: 'hd', pxPerRem: 16, width: 1280, height: 720, aspectRatioName: 'hdtv', base: true}
  *	]}, App);
  *
+ * @class ResolutionDecorator
+ * @memberof ui/resolution
+ * @hoc
  * @public
  */
 const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
@@ -56,7 +59,7 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'ResolutionDecorator'
 
-		static propTypes = {
+		static propTypes = /** @lends ui/resolution.ResolutionDecorator.prototype */ {
 			className: React.PropTypes.string
 		}
 

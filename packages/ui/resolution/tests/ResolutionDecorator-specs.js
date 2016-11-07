@@ -33,11 +33,11 @@ describe('ResolutionDecorator Specs', () => {
 	});
 
 	it.skip('should update the resolution when the screen is resized', function () {
-		//TODO: write a test
+		// TODO: write a test
 	});
 
 	it.skip('should not allow dynamic resolution updates when \'dynamic\' config option is false', function () {
-		//TODO: write a test
+		// TODO: write a test
 	});
 
 });

@@ -1,9 +1,8 @@
 /**
- * Exports the {@link module:@enact/ui/Group~Group} and {@link module:@enact/ui/Group~GroupBase}
- * components.  The default export is {@link module:@enact/ui/Group~Group}. `Group` is stateless
- * and is the same as `GroupBase`.
+ * Exports the {@link ui/Group.Group} and {@link ui/Group.GroupItem}
+ * components.  The default export is {@link ui/Group.Group}.
  *
- * @module @enact/ui/Group
+ * @module ui/Group
  */
 
 import R from 'ramda';
@@ -15,17 +14,18 @@ import Repeater from '../Repeater';
 import {GroupItem, pickGroupItemProps} from './GroupItem';
 
 /**
- * {@link module:@enact/ui/Group~GroupBase} is a stateless component that supports single-select of
+ * {@link ui/Group.GroupBase} is a stateless component that supports single-select of
  * its child items via configurable properties and events.
  *
  * @class GroupBase
+ * @memberof ui/Group
  * @ui
  * @public
  */
 const GroupBase = kind({
 	name: 'Group',
 
-	propTypes: {
+	propTypes: /** @lends ui/Group.Group.prototype */ {
 		/**
 		 * Component type to repeat. This can be a React component or a string describing a DOM
 		 * node (e.g. `'div'`)
@@ -45,14 +45,6 @@ const GroupBase = kind({
 		children: PropTypes.array.isRequired,
 
 		/**
-		 * Callback method to be invoked when an item is activated.
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onSelect: PropTypes.func.isRequired,
-
-		/**
 		 * The property on each `childComponent` that receives the data in `children`
 		 *
 		 * @type {String}
@@ -60,6 +52,15 @@ const GroupBase = kind({
 		 * @public
 		 */
 		childProp: PropTypes.string,
+
+		/**
+		 * The name of the event that triggers activation.
+		 *
+		 * @type {String}
+		 * @default 'onClick'
+		 * @public
+		 */
+		childSelect: PropTypes.string,
 
 		/**
 		 * The property on each `childComponent` that receives the index of the item
@@ -79,22 +80,35 @@ const GroupBase = kind({
 		itemProps: PropTypes.object,
 
 		/**
-		 * The name of the event that triggers activation.
+		 * Callback method to be invoked when an item is activated.
 		 *
-		 * @type {String}
-		 * @default 'onClick'
+		 * @type {Function}
 		 * @public
 		 */
-		select: PropTypes.string,
+		onSelect: PropTypes.func,
 
 		/**
-		 * The index of the currently activated item.
+		 * Selection mode for the group
 		 *
-		 * @type {Number}
-		 * @default 0
+		 * * `single` - Allows for 0 or 1 item to be selected. The selected item may be deselected.
+		 * * `radio` - Allows for 0 or 1 item to be selected. The selected item may only be
+		 *    deselected by selecting another item.
+		 * * `multiple` - Allows 0 to _n_ items to be selected. Each item may be selected or
+		 *    deselected.
+		 *
+		 * @type {String}
+		 * @default 'single'
 		 * @public
 		 */
-		selected: PropTypes.number,
+		select: PropTypes.oneOf(['single', 'radio', 'multiple']),
+
+		/**
+		 * The index(es) of the currently activated item.
+		 *
+		 * @type {Number | Array}
+		 * @public
+		 */
+		selected: PropTypes.oneOfType([PropTypes.number, PropTypes.array]),
 
 		/**
 		 * The name of the DOM property that represents the selected state.
@@ -107,10 +121,10 @@ const GroupBase = kind({
 	},
 
 	defaultProps: {
-		select: 'onClick',
-		index: 0,
-		indexProp: 'data-index',
 		childProp: 'children',
+		childSelect: 'onClick',
+		indexProp: 'data-index',
+		select: 'single',
 		selectedProp: 'data-selected'
 	},
 
@@ -122,9 +136,10 @@ const GroupBase = kind({
 	},
 
 	render: (props) => {
-		delete props.index;
 		delete props.onSelect;
+		delete props.childSelect;
 		delete props.select;
+		delete props.selected;
 		delete props.selectedProp;
 
 		return <Repeater {...props} childComponent={GroupItem} />;

@@ -23,6 +23,7 @@ storiesOf('Input')
 			<StatefulInput
 				onChange={action('onChange')}
 				disabled={boolean('disabled')}
+				dismissOnEnter={boolean('dismissOnEnter')}
 				iconEnd={select('iconEnd', iconNames)}
 				iconStart={select('iconStart', iconNames)}
 				placeholder={text('placeholder')}

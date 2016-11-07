@@ -1,0 +1,51 @@
+@import '../styles/variables.less';
+
+.scrollableFill {
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+
+.scrollable {
+	.scrollableFill;
+	.container {
+		.scrollableFill;
+		background: inherit;
+		overflow: hidden;
+	}
+	background: black;
+	padding-right:  @moon-icon-button-small-size + @moon-spotlight-outset;
+	padding-bottom:  @moon-icon-button-small-size + @moon-spotlight-outset;
+	box-sizing: border-box;
+
+	-webkit-transform: translateZ(0);
+	transform: translateZ(0);
+}
+
+.scrollableHiddenScrollbars {
+	overflow: hidden;
+}
+
+.takeAvailableSpaceForHorizontal {
+	padding-right: 0;
+}
+
+.takeAvailableSpaceForVertical {
+	padding-bottom: 0;
+}
+
+.onlyVerticalScrollbarNeeded {
+	bottom: 0;
+}
+
+.onlyHorizontalScrollbarNeeded {
+	right: 0;
+}
+
+.verticalScrollbarDisabled {
+	display: none;
+}
+
+.horizontalScrollbarDisabled {
+	display: none;
+}

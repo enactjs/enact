@@ -1,3 +1,6 @@
-var storybookWebpack = require('../.storybook/webpack.config.js');
+/* global __dirname */
+/* eslint-disable no-var */
 
-module.exports = storybookWebpack;
+var webpack = require('../src/webpack');
+
+module.exports = webpack(__dirname);

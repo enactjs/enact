@@ -1,14 +1,30 @@
+/**
+ * Exports the {@link moonstone/CheckboxItem.CheckboxItem} component.
+ *
+ * @module moonstone/CheckboxItem
+ */
+
 import React, {PropTypes} from 'react';
 import kind from '@enact/core/kind';
 
-import {ToggleItemBase} from '../ToggleItem';
+import ToggleItem from '../ToggleItem';
 
 import css from './CheckboxItem.less';
 
+/**
+ * {@link moonstone/CheckboxItem.CheckboxItem} is a component that
+ * is an Item that is Toggleable. It has two states: `true` (checked) & `false`
+ * (unchecked). It uses a check icon to represent its checked state.
+ *
+ * @class CheckboxItem
+ * @memberof moonstone/CheckboxItem
+ * @ui
+ * @public
+ */
 const CheckboxItemBase = kind({
 	name: 'CheckboxItem',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/CheckboxItem.CheckboxItem.prototype */ {
 		/**
 		 * The string to be displayed as the main content of the checkbox item.
 		 *
@@ -18,7 +34,7 @@ const CheckboxItemBase = kind({
 		children: PropTypes.string.isRequired,
 
 		/**
-		 * Applies a "checked" visual state to the checkbox item.
+		 * When `true`, a "checked" visual effect is applied to the button.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -27,7 +43,7 @@ const CheckboxItemBase = kind({
 		checked: PropTypes.bool,
 
 		/**
-		 * Applies a disabled visual state to the checkbox item.
+		 * When `true`, applies a disabled style and the control becomes non-interactive.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -36,7 +52,7 @@ const CheckboxItemBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * Applies inline styling to the checkbox item.
+		 * When `true`, an inline visual effect is applied to the button.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -78,14 +94,11 @@ const CheckboxItemBase = kind({
 	},
 
 	computed: {
-		iconClasses: ({checked, styler}) => styler.join(
-			css.icon,
-			{checked}
-		)
+		iconClasses: ({checked}) => !checked ? css.translucent : null
 	},
 
 	render: (props) => (
-		<ToggleItemBase {...props} icon="check" />
+		<ToggleItem {...props} icon="check" />
 	)
 });
 

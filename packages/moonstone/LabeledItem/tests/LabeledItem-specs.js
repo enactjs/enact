@@ -1,16 +1,20 @@
 import React from 'react';
 import {mount} from 'enzyme';
+
 import LabeledItem from '../LabeledItem';
+import css from '../LabeledItem.less';
 
 describe('LabeledItem Specs', () => {
+
+	const labelClass = '.' + css.label;
 
 	it('should render a label (\<div\>) by default', function () {
 		const item = mount(
 			<LabeledItem label='The Label'>I am a labeledItem</LabeledItem>
 		);
 
-		const divTag = item.find('div');
-		const expected = 3;
+		const divTag = item.find(labelClass);
+		const expected = 1;
 		const actual = divTag.length;
 
 		expect(actual).to.equal(expected);
@@ -21,8 +25,8 @@ describe('LabeledItem Specs', () => {
 			<LabeledItem>I am a labeledItem</LabeledItem>
 		);
 
-		const divTag = item.find('div');
-		const expected = 2;
+		const divTag = item.find(labelClass);
+		const expected = 0;
 		const actual = divTag.length;
 
 		expect(actual).to.equal(expected);
