@@ -4,7 +4,7 @@ import IconButton from '../IconButton';
 
 describe('IconButton Specs', () => {
 
-	it('should apply same \'small\' prop to both <Icon> and <Button> children', function() {
+	it('should apply same \'small\' prop to both <Icon> and <Button> children', function () {
 		const iconButton = mount(
 			<IconButton small>star</IconButton>
 		);
@@ -16,9 +16,9 @@ describe('IconButton Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should always maintain minWidth=false for its <Button> child', function() {
+	it('should always maintain minWidth=false for its <Button> child', function () {
 		const iconButton = mount(
-			<IconButton minWidth={true}>star</IconButton>
+			<IconButton minWidth>star</IconButton>
 		);
 		const button = iconButton.find('Button');
 		const expected = false;

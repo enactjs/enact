@@ -62,7 +62,7 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'Cancelable';
 
-		propTypes: /** @lends ui/Cancelable.Cancelable.prototype */ {
+		static propTypes = /** @lends ui/Cancelable.Cancelable.prototype */ {
 			onCancel: React.PropTypes.func
 		}
 

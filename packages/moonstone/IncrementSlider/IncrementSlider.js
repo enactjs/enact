@@ -232,7 +232,7 @@ class IncrementSlider extends React.Component {
 
 	updateValue = (event) => {
 		throttleJob('sliderChange', () => {
-			this.setState({value: parseInt(event.target.value, 10)}, this.onChange);
+			this.setState({value: parseInt(event.target.value)}, this.onChange);
 		}, this.changeDelayMS);
 	}
 

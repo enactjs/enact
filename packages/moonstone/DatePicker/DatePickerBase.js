@@ -27,7 +27,7 @@ import DateComponentPicker from './DateComponentPicker';
 const DatePickerBase = kind({
 	name: 'DatePicker',
 
-	propTyptes: {
+	propTypes: {
 		/**
 		 * The `day` component of the Date
 		 *
@@ -84,30 +84,6 @@ const DatePickerBase = kind({
 		year: React.PropTypes.number.isRequired,
 
 		/**
-		 * Handler for changes in the `date` component of the Date
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onChangeDate: React.PropTypes.func,
-
-		/**
-		 * Handler for changes in the `month` component of the Date
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onChangeMonth: React.PropTypes.func,
-
-		/**
-		 * Handler for changes in the `year` component of the Date
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onChangeYear: React.PropTypes.func,
-
-		/**
 		 * The maximum selectable `year` value
 		 *
 		 * @type {Number}
@@ -131,7 +107,31 @@ const DatePickerBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		noLabels: React.PropTypes.bool
+		noLabels: React.PropTypes.bool,
+
+		/**
+		 * Handler for changes in the `date` component of the Date
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onChangeDate: React.PropTypes.func,
+
+		/**
+		 * Handler for changes in the `month` component of the Date
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onChangeMonth: React.PropTypes.func,
+
+		/**
+		 * Handler for changes in the `year` component of the Date
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onChangeYear: React.PropTypes.func
 	},
 
 	defaultProps: {
