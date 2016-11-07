@@ -58,7 +58,7 @@ const locales = {
 	'ur-PK': 'ur-PK - Urdu, RTL and custom Urdu font',
 	'zh-Hant-HK': 'zh-Hant-HK - Traditional Chinese, custom Hant font',
 	'ja-JP': 'ja-JP - Japanese, custom Japanese font',
-	'en-JP': 'en-JP - English, custom Japanese font',
+	'en-JP': 'en-JP - English, custom Japanese font'
 };
 
 // NOTE: Knobs cannot set locale in fullscreen mode. This allows the locale to
