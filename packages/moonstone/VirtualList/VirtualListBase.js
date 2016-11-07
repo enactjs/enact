@@ -28,10 +28,10 @@ const
  * @class VirtualListCore
  * @memberof moonstone/VirtualList/VirtualListBase
  * @ui
- * @public
+ * @private
  */
 class VirtualListCore extends Component {
-	static propTypes = /** @lends moonstone/VirtualList/VirtualListCore.VirtualListCore */ {
+	static propTypes = /** @lends moonstone/VirtualList/VirtualListBase.VirtualListCore.prototype */ {
 		/**
 		 * Size of an item for the list; valid values are either a number for `VirtualList`
 		 * or an object that has `minWidth` and `minHeight` for `VirtualGridList`.
@@ -746,12 +746,12 @@ class VirtualListCore extends Component {
  * {@link moonstone/VirtualList.VirtualList} and
  * {@link moonstone/VirtualList.VirtualGridList} with Scrollable and SpotlightContainerDecorator applied.
  *
- * @class VirtualListCore
+ * @class VirtualListBase
  * @memberof moonstone/VirtualList/VirtualListBase
  * @mixes moonstone/Scrollable
  * @mixes spotlight/SpotlightContainerDecorator
  * @ui
- * @public
+ * @private
  */
 const VirtualListBase = SpotlightContainerDecorator({restrict: 'self-first'}, Scrollable(VirtualListCore));
 
