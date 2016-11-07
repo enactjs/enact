@@ -14,7 +14,7 @@ const hours12 = ['12', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', 
 				'1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'];
 
 /**
-* {@link module:@enact/moonstone/TimePicker~TimePickerBase} is the stateless functional date picker
+* {@link module:@enact/moonstone/TimePicker~TimePickerBase} is the stateless functional time picker
 * component. Should not be used directly but may be composed within another component as it is
 * within {@link module:@enact/moonstone/TimePicker~TimePicker}.
 *
