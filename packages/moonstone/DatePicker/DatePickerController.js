@@ -1,6 +1,7 @@
 
 import DateFactory from 'ilib/DateFactory';
 import DateFmt from 'ilib/DateFmt';
+import ilib from 'ilib/ilib';
 import React from 'react';
 
 import DatePickerBase from './DatePickerBase';
@@ -126,18 +127,31 @@ const DatePickerController = class extends React.Component {
 			value: this.toIDate(props.value)
 		};
 
+		this.order = ['d', 'm', 'y'];
+
+		this.initI18n();
+	}
+
+	componentWillUpdate () {
+		// check for a new locale when updating
 		this.initI18n();
 	}
 
 	initI18n () {
-		this.dateFormat = new DateFmt({
-			date: 'dmwy',
-			length: 'full',
-			timezone: 'local',
-			useNative: false
-		});
+		const locale = ilib.getLocale();
 
-		this.order = this.dateFormat.getTemplate().match(/([mdy]+)/ig).map(s => s[0].toLowerCase());
+		if (this.locale !== locale && typeof window === 'asdf') {
+			this.locale = locale;
+
+			this.dateFormat = new DateFmt({
+				date: 'dmwy',
+				length: 'full',
+				timezone: 'local',
+				useNative: false
+			});
+
+			this.order = this.dateFormat.getTemplate().match(/([mdy]+)/ig).map(s => s[0].toLowerCase());
+		}
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -207,7 +221,7 @@ const DatePickerController = class extends React.Component {
 			day: 1
 		};
 
-		if (value) {
+		if (value && this.dateFormat) {
 			values.year = value.getYears();
 			values.month = value.getMonths();
 			values.day = value.getDays();
@@ -303,7 +317,7 @@ const DatePickerController = class extends React.Component {
 
 	render () {
 		const value = this.calcValue();
-		const label = value ? this.dateFormat.format(value) : null;
+		const label = value && this.dateFormat ? this.dateFormat.format(value) : null;
 		const dateComponents = this.calcDateComponents(value);
 
 		return (

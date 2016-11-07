@@ -19,8 +19,8 @@ const excludeMeridiem = /([khm])(?!\1)/ig;
  */
 const toMinutes = (time) => {
 	const colon = time.indexOf(':');
-	const hour = parseInt(time.substring(0, colon), 10);
-	const minute = parseInt(time.substring(colon + 1), 10);
+	const hour = parseInt(time.substring(0, colon));
+	const minute = parseInt(time.substring(colon + 1));
 	return hour * 60 + minute;
 };
 
@@ -69,6 +69,8 @@ const indexOfMerdiem = (time, meridiems) => {
  * @private
  */
 const TimePickerController = class extends React.Component {
+
+	static displayName = 'TimePicker'
 
 	static propTypes = /** @lends moonstone/TimePicker.TimePickerController.prototype */ {
 		/**
@@ -155,6 +157,11 @@ const TimePickerController = class extends React.Component {
 		this.state = {
 			value: this.toTime(props.value)
 		};
+
+		this.order = ['h', 'm', 'a'];
+		this.meridiemRanges = [];
+		this.meridiemLabels = ['am', 'pm'];
+
 		this.initI18n();
 	}
 
@@ -172,7 +179,7 @@ const TimePickerController = class extends React.Component {
 	initI18n () {
 		const locale = ilib.getLocale();
 
-		if (this.locale !== locale) {
+		if (this.locale !== locale && typeof window === 'asdf') {
 			this.locale = locale;
 
 			const format = {
@@ -405,7 +412,7 @@ const TimePickerController = class extends React.Component {
 
 	render () {
 		const value = this.calcValue();
-		const label = value ? this.timeFormat.format(value) : null;
+		const label = value && this.timeFormat ? this.timeFormat.format(value) : null;
 		const dateComponents = this.calcDateComponents(value);
 
 		return (
