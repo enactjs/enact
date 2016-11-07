@@ -23,6 +23,14 @@ const VirtualList = kind({
 
 	propTypes: {
 		/**
+		 * Size of an item data for the VirtualList; valid value is a number.
+		 *
+		 * @type {Number}
+		 * @public
+		 */
+		dataSize: PropTypes.number.isRequired,
+
+		/**
 		 * Size of an item for the VirtualList; valid value is a number.
 		 * If the direction for the list is vertical, itemSize means the height of an item.
 		 * For horizontal, it means the width of an item.
@@ -53,6 +61,14 @@ const VirtualGridList = kind({
 
 	propTypes: {
 		/**
+		 * Size of an item data for the VirtualGridList; valid value is a number.
+		 *
+		 * @type {Number}
+		 * @public
+		 */
+		dataSize: PropTypes.number.isRequired,
+
+		/**
 		 * Size of an item for the VirtualGridList; valid value is an object that has `minWidth`
 		 * and `minHeight` as properties.
 		 *
@@ -71,20 +87,21 @@ const VirtualGridList = kind({
 });
 
 /**
- * {@link module:@enact/moonstone/VirtualList~VirtualEPGGridList} is a VirtualList with Moonstone styling
+ * {@link module:@enact/moonstone/VirtualList~VirtualVariableGridList} is a VirtualList with Moonstone styling
  * for an EGP app.
  *
- * @class VirtualEPGGridList
+ * @class VirtualVariableGridList
  * @ui
  * @public
  */
-const VirtualEPGGridList = kind({
-	name: 'VirtualEPGGridList',
+const VirtualVariableGridList = kind({
+	name: 'VirtualVariableGridList',
 
 	propTypes: {
 		/**
-		 * Size of an item data for the VirtualEPGGridList; valid value is an object
-		 * that has `fixed` for the number of row and `variable` for the number of colume.
+		 * Size of an item data for the VirtualVariableGridList; valid value is an object
+		 * that has `fixed` for the fixed number of row or columne and `variable` for
+		 * the number of the variable number of row or columne.
 		 *
 		 * @type {Object}
 		 * @public
@@ -92,8 +109,8 @@ const VirtualEPGGridList = kind({
 		dataSize: PropTypes.object.isRequired,
 
 		/**
-		 * Size of an item for the VirtualEPGGridList; valid value is an object
-		 * that has `fixed` for an item height and `variable` for an variable item width.
+		 * Size of an item for the VirtualVariableGridList; valid value is an object
+		 * that has `fixed` for the fixed item size and `variable` for an variable item size.
 		 *
 		 * @type {Object}
 		 * @public
@@ -101,20 +118,9 @@ const VirtualEPGGridList = kind({
 		itemSize: PropTypes.object.isRequired
 	},
 
-	render: (props) => {
-		const epgProps = Object.assign({}, props, {
-			dataSize: props.dataSize.fixed,
-			direction: 'vertical',
-			directionOption: 'fixedHeightVariableWidth',
-			getVariableDataSize: props.dataSize.variable,
-			getVariableItemSize: props.itemSize.variable,
-			itemSize: props.itemSize.fixed
-		});
-
-		return (<VirtualListBase {...epgProps} />);
-	}
+	render: (props) => <VirtualListBase {...props} />
 });
 
 export default VirtualList;
-export {VirtualList, VirtualGridList, VirtualEPGGridList};
+export {VirtualList, VirtualGridList, VirtualVariableGridList};
 export * from './GridListImageItem';

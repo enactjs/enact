@@ -1,6 +1,6 @@
 import ri from '@enact/ui/resolution';
 import Item from '@enact/moonstone/Item';
-import {VirtualEPGGridList} from '@enact/moonstone/VirtualList';
+import {VirtualVariableGridList} from '@enact/moonstone/VirtualList';
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
 import {withKnobs} from '@kadira/storybook-addon-knobs';
@@ -50,7 +50,7 @@ const
 		'NOVA',
 		'Secrets of the Dead'
 	],
-	variableScrollBoundsSize = ri.scale(57600) /* 400 ( width per 1 hour )* 24 hr * 6 day */,
+	variableMaxScrollBoundsSize = ri.scale(57600) /* 400 ( width per 1 hour )* 24 hr * 6 day */,
 	getRandomWidth = () => {
 		return ri.scale((parseInt(Math.random() * 20) + 1) * 100);
 	};
@@ -84,13 +84,13 @@ const
 		);
 	};
 
-storiesOf('VirtualEPGGridList')
+storiesOf('VirtualVariableGridList')
 	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
-		'Basic usage of VirtualEPGList',
+		'Basic usage of VirtualVariableGridList',
 		() => (
-			<VirtualEPGGridList
+			<VirtualVariableGridList
 				data={programs}
 				dataSize={{
 					fixed: programs.length,
@@ -100,7 +100,8 @@ storiesOf('VirtualEPGGridList')
 					fixed: ri.scale(83),
 					variable: getVariableItemSize
 				}}
-				variableScrollBoundsSize={variableScrollBoundsSize}
+				variableDimension={'width'}
+				variableMaxScrollBoundsSize={variableMaxScrollBoundsSize}
 				style={style.list}
 				component={renderItem}
 			/>
