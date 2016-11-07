@@ -1,9 +1,10 @@
 /**
- * Exports the {@link module:@enact/moonstone/VirtualList~VirtualList} and
- * {@link module:@enact/moonstone/VirtualList~VirtualGridList} components. The default export is
- * {@link module:@enact/moonstone/VirtualList~VirtualList}.
+ * Exports the {@link moonstone/VirtualList.VirtualList},
+ * {@link moonstone/VirtualList.VirtualGridList}, and
+ * {@link moonstone/VirtualList.GridListImageItem} components. The default export is
+ * {@link moonstone/VirtualList.VirtualList}.
  *
- * @module @enact/moonstone/VirtualList
+ * @module moonstone/VirtualList
  */
 
 import kind from '@enact/core/kind';
@@ -12,16 +13,17 @@ import React, {PropTypes} from 'react';
 import VirtualListBase from './VirtualListBase';
 
 /**
- * {@link module:@enact/moonstone/VirtualList~VirtualList} is a VirtualList with Moonstone styling.
+ * {@link moonstone/VirtualList.VirtualList} is a VirtualList with Moonstone styling.
  *
  * @class VirtualList
+ * @memberof moonstone/VirtualList
  * @ui
  * @public
  */
 const VirtualList = kind({
 	name: 'VirtualList',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/VirtualList.VirtualList.prototype */ {
 		/**
 		 * Size of an item data for the VirtualList; valid value is a number.
 		 *
@@ -50,16 +52,17 @@ const VirtualList = kind({
 });
 
 /**
- * {@link module:@enact/moonstone/VirtualList~VirtualGridList} is a VirtualGridList with Moonstone styling.
+ * {@link moonstone/VirtualList.VirtualGridList} is a VirtualGridList with Moonstone styling.
  *
  * @class VirtualGridList
+ * @memberof moonstone/VirtualList
  * @ui
  * @public
  */
 const VirtualGridList = kind({
 	name: 'VirtualGridList',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/VirtualList.VirtualGridList.prototype */ {
 		/**
 		 * Size of an item data for the VirtualGridList; valid value is a number.
 		 *

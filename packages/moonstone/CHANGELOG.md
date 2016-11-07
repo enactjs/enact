@@ -11,6 +11,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+- `data` parameter passed to `component` prop of `VirtualList`.
 - Overhauled and moved `moonstone/Expandable` into a submodule of `moonstone/ExpandableItem`
 - Overhauled `ExpandableList` to properly support selection
 - Removed `moonstone/ExpandableCheckboxItemGroup` in favor of `ExpandableList`

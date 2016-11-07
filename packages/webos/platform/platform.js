@@ -10,7 +10,7 @@
 */
 const platform = {};
 
-if (window.PalmSystem) {
+if (typeof window === 'object' && window.PalmSystem) {
 	if (window.navigator.userAgent.indexOf('SmartWatch') > -1) {
 		platform.watch = true;
 	} else if ((window.navigator.userAgent.indexOf('SmartTV') > -1) || (window.navigator.userAgent.indexOf('Large Screen') > -1)) {

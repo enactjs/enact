@@ -1,7 +1,7 @@
 /**
- * Exports the {@link module:@enact/moonstone/IconButton~IconButton} component.
+ * Exports the {@link moonstone/IconButton.IconButton} component.
  *
- * @module @enact/moonstone/IconButton
+ * @module moonstone/IconButton
  */
 
 import kind from '@enact/core/kind';
@@ -13,9 +13,9 @@ import Icon from '../Icon';
 import css from './IconButton.less';
 
 /**
- * {@link module:@enact/moonstone/IconButton~IconButton} is a {@link module:@enact/moonstone/Icon~Icon}
+ * {@link moonstone/IconButton.IconButton} is a {@link moonstone/Icon.Icon}
  * that acts like a button. You may specify an image, by setting the `src` property, or a font-based
- * icon, by setting the child to a string from the [IconList]{@link module:@enact/moonstone/Icon~IconList}.
+ * icon, by setting the child to a string from the [IconList]{@link moonstone/Icon.IconList}.
  * If both `src` and children are specified, both will be rendered.
  *
  * Usage:
@@ -26,13 +26,14 @@ import css from './IconButton.less';
  * ```
  *
  * @class IconButton
+ * @memberof moonstone/IconButton
  * @ui
  * @public
  */
 const IconButtonBase = kind({
 	name: 'IconButton',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/IconButton.IconButton.prototype */ {
 		/**
 		 * The background-color opacity of this icon button; valid values are `'opaque'`,
 		 * `'translucent'`, and `'transparent'`.
@@ -44,7 +45,7 @@ const IconButtonBase = kind({
 		backgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'transparent']),
 
 		/**
-		 * A string that represents an icon from the [IconList]{@link module:@enact/moonstone/Icon~IconList}.
+		 * A string that represents an icon from the [IconList]{@link moonstone/Icon.IconList}.
 		 * Can also be an HTML entity string, Unicode reference or hex value (in the form '0x...').
 		 *
 		 * @type {String}
@@ -94,7 +95,7 @@ const IconButtonBase = kind({
 
 		/**
 		 * URL specifying path to an icon image or an object representing a resolution independent resource (See
-		 * {@link module:@enact/ui/resolution}).
+		 * {@link ui/resolution}).
 		 * If both `src` and `children` are specified, they will both be rendered.
 		 *
 		 * @type {String|Object}

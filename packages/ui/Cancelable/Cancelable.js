@@ -1,16 +1,16 @@
 /**
- * Exports the {@link module:@enact/ui/Cancelable~Cancelable} Higher-order Component (HOC).
+ * Exports the {@link ui/Cancelable.Cancelable} Higher-order Component (HOC).
  *
- * @module @enact/ui/Cancelable
+ * @module ui/Cancelable
  */
 
+import {on, off} from '@enact/core/dispatcher';
 import {forward, handle, stopImmediate} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import invariant from 'invariant';
 import React from 'react';
 
 import {forCancel, addCancelHandler, removeCancelHandler} from './cancelHandler';
-import {on, off} from './dispatcher';
 
 const defaultConfig = {
 	onCancel: null,
@@ -19,7 +19,7 @@ const defaultConfig = {
 };
 
 /**
- * {@link module:@enact/ui/Cancelable~Cancelable} is a Higher-order Component that allows mapping
+ * {@link ui/Cancelable.Cancelable} is a Higher-order Component that allows mapping
  * a cancel key event to existing event handler either directly or via a custom function which can
  * adapt the event payload.
  *
@@ -33,7 +33,8 @@ const defaultConfig = {
  * element.
  *
  * @class Cancelable
- * @ui
+ * @memberof ui/Cancelable
+ * @hoc
  * @public
  */
 const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
@@ -61,7 +62,7 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'Cancelable';
 
-		propTypes: {
+		propTypes: /** @lends ui/Cancelable.Cancelable.prototype */ {
 			onCancel: React.PropTypes.func
 		}
 

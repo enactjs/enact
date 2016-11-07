@@ -1,7 +1,8 @@
 /**
- * Exports the {@link module:@enact/moonstone/Icon~Icon} component.
+ * Exports the {@link moonstone/Icon.Icon} component and the list of icon constants as
+ * [iconList]{@link moonstone/Icon.iconList}.
  *
- * @module @enact/moonstone/Icon
+ * @module moonstone/Icon
  */
 
 import kind from '@enact/core/kind';
@@ -13,9 +14,9 @@ import iconList from './IconList.js';
 import css from './Icon.less';
 
 /**
- * {@link module:@enact/moonstone/Icon~Icon} is a component that displays an icon image.  You may
+ * {@link moonstone/Icon.Icon} is a component that displays an icon image.  You may
  * specify an image, by setting the `src` property, or a font-based icon, by setting the child to a
- * string from the [IconList]{@link module:@enact/moonstone/Icon~IconList}.  If both `src` and
+ * string from the [IconList]{@link moonstone/Icon.IconList}.  If both `src` and
  * children are specified, both will be rendered.
  *
  * Usage:
@@ -26,15 +27,16 @@ import css from './Icon.less';
  * ```
  *
  * @class Icon
+ * @memberof moonstone/Icon
  * @ui
  * @public
  */
 const IconBase = kind({
 	name: 'Icon',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/Icon.Icon.prototype */ {
 		/**
-		 * A string that represents an icon from the [IconList]{@link module:@enact/moonstone/Icon~IconList}.
+		 * A string that represents an icon from the [IconList]{@link moonstone/Icon.IconList}.
 		 * Can also be an HTML entity string, Unicode reference or hex value (in the form '0x...').
 		 *
 		 * @type {String}
@@ -53,7 +55,7 @@ const IconBase = kind({
 
 		/**
 		 * URL specifying path to an icon image or an object representing a resolution independent resource (See
-		 * {@link module:@enact/ui/resolution}).
+		 * {@link ui/resolution}).
 		 * If both `src` and `children` are specified, they will both be rendered.
 		 *
 		 * @type {String|Object}
@@ -119,6 +121,17 @@ const IconBase = kind({
 		return <div {...props} />;
 	}
 });
+
+/**
+ * {@link moonstone/Icon.iconList} is an object whose keys can be used as the child of an
+ * {@link moonstone/Icon.Icon} component.
+ *
+ * @name iconList
+ * @memberof moonstone/Icon
+ * @type Object
+ * @ui
+ * @public
+ */
 
 export default IconBase;
 export {IconBase as Icon, IconBase, iconList as icons};

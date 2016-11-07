@@ -1,7 +1,7 @@
 /**
- * Exports the {@link module:@enact/ui/Toggleable~Toggleable} Higher-order Component (HOC).
+ * Exports the {@link ui/Toggleable.Toggleable} Higher-order Component (HOC).
  *
- * @module @enact/ui/Toggleable
+ * @module ui/Toggleable
  */
 
 import {forward} from '@enact/core/handle';
@@ -50,12 +50,13 @@ const defaultConfig = {
 };
 
 /**
- * {@link module:@enact/ui/Toggleable~Toggleable} is a Higher-order Component that applies a 'Toggleable' behavior
+ * {@link ui/Toggleable.Toggleable} is a Higher-order Component that applies a 'Toggleable' behavior
  * to its wrapped component.  Its default event and property can be configured when applied to a component.
  *
  * By default, Toggleable applies the `active` property on click events.
  *
  * @class Toggleable
+ * @memberof ui/Toggleable
  * @ui
  * @public
  */
@@ -67,7 +68,7 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 	const forwardDeactivate = forward(deactivate);
 
 	return class Toggleable extends React.Component {
-		static propTypes = {
+		static propTypes = /** @lends ui/Toggleable.Toggleable.prototype */ {
 			/**
 			 * Whether or not the component is in a "toggled" state when first rendered.
 			 * *Note that this property name can be changed by the config. By default it is `defaultActive`.

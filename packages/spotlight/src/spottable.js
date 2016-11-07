@@ -2,7 +2,6 @@ import {kind, hoc} from '@enact/core';
 import React from 'react';
 
 const spottableClass = 'spottable';
-const decoratedProp = 'data-spot-decorated';
 
 const ENTER_KEY = 13;
 const REMOTE_OK_KEY = 16777221;
@@ -62,6 +61,7 @@ const defaultConfig = {
  * @example
  *	const SpottableComponent = Spottable(Component);
  *
+ * @memberof spotlight
  * @param  {Object} defaultConfig Set of default configuration parameters
  * @param  {Function} Higher-order component
  *
@@ -70,16 +70,7 @@ const defaultConfig = {
 const Spottable = hoc(defaultConfig, (config, Wrapped) => kind({
 	name: 'Spottable',
 
-	propTypes: {
-		/**
-		 * Whether or not the component is decorated by another spottable component.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		decorated: React.PropTypes.bool,
-
+	propTypes: /** @lends spotlight.Spottable.prototype */ {
 		/**
 		 * Whether or not the component is in a disabled state.
 		 *
@@ -110,10 +101,11 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => kind({
 		onKeyUp: forwardEnter('onKeyUp', 'onMouseUp')
 	},
 
-	render: ({classes, className, decorated, ...rest}) => {
+	render: ({classes, className, ...rest}) => {
 		const spottable = !rest.disabled && !rest.spotlightDisabled;
 		let tabIndex = rest.tabIndex;
-		rest[decoratedProp] = decorated;
+
+		delete rest.spotlightDisabled;
 
 		if (tabIndex == null && spottable) {
 			tabIndex = -1;
@@ -130,4 +122,4 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => kind({
 }));
 
 export default Spottable;
-export {Spottable, spottableClass, decoratedProp};
+export {Spottable, spottableClass};
