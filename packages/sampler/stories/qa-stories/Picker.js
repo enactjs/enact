@@ -37,32 +37,16 @@ const pickerList = {
 		'Onion',
 		'Broccoli',
 		'Spinach'
+	],
+	oneAirport: [
+		'San Francisco Airport Terminal Gate 1'
 	]
 };
 
 storiesOf('Picker')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'Tall Texts',
-		() => (
-			<StatefulPicker
-				onChange={action('onChange')}
-				width={select('width', prop.width, 'large')}
-				orientation={select('orientation', prop.orientation, 'horizontal')}
-				wrap={boolean('wrap')}
-				joined={boolean('joined')}
-				noAnimation={boolean('noAnimation')}
-				disabled={boolean('disabled')}
-				incrementIcon={select('incrementIcon', iconNames)}
-				decrementIcon={select('decrementIcon', iconNames)}
-			>
-				{pickerList.tall}
-			</StatefulPicker>
-		)
-	)
-
-	.addWithInfo(
-		'Long Texts',
+		'with long text',
 		() => (
 			<StatefulPicker
 				onChange={action('onChange')}
@@ -79,9 +63,26 @@ storiesOf('Picker')
 			</StatefulPicker>
 		)
 	)
-
 	.addWithInfo(
-		'Default value',
+		'with tall characters',
+		() => (
+			<StatefulPicker
+				onChange={action('onChange')}
+				width={select('width', prop.width, 'large')}
+				orientation={select('orientation', prop.orientation, 'horizontal')}
+				wrap={boolean('wrap')}
+				joined={boolean('joined')}
+				noAnimation={boolean('noAnimation')}
+				disabled={boolean('disabled')}
+				incrementIcon={select('incrementIcon', iconNames)}
+				decrementIcon={select('decrementIcon', iconNames)}
+			>
+				{pickerList.tall}
+			</StatefulPicker>
+		)
+	)
+	.addWithInfo(
+		'with a default value',
 		() => (
 			<StatefulPicker
 				onChange={action('onChange')}
@@ -96,6 +97,24 @@ storiesOf('Picker')
 				defaultValue={2}
 			>
 				{pickerList.vegetables}
+			</StatefulPicker>
+		)
+	)
+	.addWithInfo(
+		'with one item',
+		() => (
+			<StatefulPicker
+				onChange={action('onChange')}
+				width={select('width', prop.width, 'large')}
+				orientation={select('orientation', prop.orientation)}
+				wrap={boolean('wrap', true)}
+				joined={boolean('joined')}
+				noAnimation={boolean('noAnimation')}
+				disabled={boolean('disabled')}
+				incrementIcon={select('incrementIcon', iconNames)}
+				decrementIcon={select('decrementIcon', iconNames)}
+			>
+				{pickerList.oneAirport}
 			</StatefulPicker>
 		)
 	);
