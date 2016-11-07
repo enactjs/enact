@@ -78,6 +78,14 @@ const ExpandablePickerBase = kind({
 		onChange: React.PropTypes.func,
 
 		/**
+		 * Callback to be called when an item is picked.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onPick: React.PropTypes.func,
+
+		/**
 		 * The orientation of the picker, i.e. whether the buttons are above and below or on the
 		 * sides of the value. Must be either `'horizontal'` or `'vertical'`.
 		 *

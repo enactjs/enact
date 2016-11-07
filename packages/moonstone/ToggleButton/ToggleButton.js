@@ -21,6 +21,7 @@ import css from './ToggleButton.less';
 * @public
 */
 const ToggleButtonBase = kind({
+	name: 'ToggleButton',
 
 	propTypes: /** @lends moonstone/ToggleButton.ToggleButton.prototype */ {
 		/**

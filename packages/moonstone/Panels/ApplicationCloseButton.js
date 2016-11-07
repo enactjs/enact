@@ -16,6 +16,8 @@ import css from './ApplicationCloseButton.less';
  * @private
  */
 const ApplicationCloseButton = kind({
+	name: 'ApplicationCloseButton',
+
 	propTypes: /** @lends ApplicationCloseButton.prototype */ {
 		/**
 		 * A function to run when app close button is clicked

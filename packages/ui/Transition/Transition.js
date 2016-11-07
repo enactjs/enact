@@ -21,6 +21,7 @@ import css from './Transition.less';
  * @public
  */
 const TransitionBase = kind({
+	name: 'TransitionBase',
 
 	propTypes: /** @lends ui/Transition.TransitionBase.prototype */ {
 		children: PropTypes.node.isRequired,
