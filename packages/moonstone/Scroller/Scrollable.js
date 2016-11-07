@@ -346,7 +346,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					doc.activeElement.blur();
 					this.childRef.setContainerDisabled(true);
 					this.isScrollAnimationTargetAccumulated = false;
-					this.start(target.targetX, target.targetY, true, target.duration);
+					this.start(target.targetX, target.targetY, true, true, target.duration);
 				}
 			}
 		}
@@ -370,7 +370,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				const pos = this.childRef.calculatePositionOnFocus(index);
 				if (pos) {
 					if (pos.left !== this.scrollLeft || pos.top !== this.scrollTop) {
-						this.start(pos.left, pos.top, (spotlightAnimationDuration > 0), spotlightAnimationDuration);
+						this.start(pos.left, pos.top, (spotlightAnimationDuration > 0), false, spotlightAnimationDuration);
 					}
 					this.lastFocusedItem = item;
 				}
