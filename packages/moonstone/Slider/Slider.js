@@ -73,7 +73,7 @@ const SliderBase = kind({
 		 * The method to run when mounted, giving a reference to the DOM.
 		 *
 		 * @type {Function}
-		 * @public
+		 * @private
 		 */
 		sliderRef: PropTypes.func,
 

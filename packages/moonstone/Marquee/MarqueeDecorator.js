@@ -164,7 +164,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidMount () {
-			this.initMarquee();
+			this.initMarquee(this.props.marqueeOnRenderDelay);
 		}
 
 		componentWillReceiveProps (next) {
@@ -178,7 +178,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidUpdate () {
-			this.initMarquee();
+			this.initMarquee(this.props.marqueeDelay);
 		}
 
 		componentWillUnmount () {
@@ -228,10 +228,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * Initializes the marquee by calculating the distance and conditionally starting the
 		 * animation
 		 *
-		 * @param {Number} [delay] Milliseconds until animation should start
+		 * @param {Number} delay Milliseconds until animation should start
 		 * @returns {undefined}
 		 */
-		initMarquee (delay = this.props.marqueeOnRenderDelay) {
+		initMarquee (delay) {
 			// shouldStartMarquee relies on a `null` distance to indicate the metrics have been
 			// invalidated so we have to calculate after this check.
 			if (this.shouldStartMarquee()) {
