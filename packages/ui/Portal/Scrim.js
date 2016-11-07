@@ -106,7 +106,7 @@ const ScrimLayer = kind({
 
 	render: ({scrim, children}) => {
 		return (
-			<div className="enact-scrim-layer">
+			<div>
 				{children}
 				{scrim}
 			</div>
