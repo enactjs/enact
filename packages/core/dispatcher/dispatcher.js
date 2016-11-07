@@ -97,7 +97,7 @@ const once = function (name, fn, target = document) {
 		off(name, onceFn, target);
 	};
 
-	on(name, onceFn);
+	on(name, onceFn, target);
 
 	return onceFn;
 };
