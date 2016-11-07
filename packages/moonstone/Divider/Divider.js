@@ -1,7 +1,7 @@
 /**
- * Exports the {@link module:@enact/moonstone/Divider~Divider} component.
+ * Exports the {@link moonstone/Divider.Divider} component.
  *
- * @module @enact/moonstone/Divider
+ * @module moonstone/Divider
  */
 
 import kind from '@enact/core/kind';
@@ -9,28 +9,30 @@ import {cap} from '@enact/core/util';
 import React, {PropTypes} from 'react';
 
 import css from './Divider.less';
-import Marquee from '../Marquee';
+import {MarqueeDecorator} from '../Marquee';
+
+const MarqueeH3 = MarqueeDecorator('h3');
 
 /**
- * {@link module:@enact/moonstone/Divider~Divider} is a simply styled component that may be used as a separator
+ * {@link moonstone/Divider.Divider} is a simply styled component that may be used as a separator
  * between groups of components.
  *
  * @class Divider
+ * @memberof moonstone/Divider
  * @ui
  * @public
  */
 const DividerBase = kind({
 	name: 'Divider',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/Divider.Divider.prototype */ {
 		/**
 		 * The content of the divider.
 		 *
 		 * @type {String}
-		 * @required
 		 * @public
 		 */
-		children: PropTypes.string.isRequired
+		children: PropTypes.string
 	},
 
 	styles: {
@@ -39,11 +41,11 @@ const DividerBase = kind({
 	},
 
 	computed: {
-		content: ({children}) => children.split(' ').map(cap).join(' ')
+		content: ({children}) => children ? children.split(' ').map(cap).join(' ') : ''
 	},
 
 	render: ({content, ...rest}) => (
-		<Marquee {...rest}>{content}</Marquee>
+		<MarqueeH3 {...rest} marqueeOn="hover">{content}</MarqueeH3>
 	)
 });
 

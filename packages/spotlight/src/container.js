@@ -4,15 +4,26 @@ import React from 'react';
 import Spotlight from './spotlight';
 import {spottableClass} from './spottable';
 
+const spotlightDefaultClass = 'spottable-default';
+
 const defaultConfig = {
+	/**
+	 * The selector for the default spottable element within the container.
+	 *
+	 * @type {String}
+	 * @default '.spottable-default'
+	 * @public
+	 */
+	defaultElement: `.${spotlightDefaultClass}`,
+
 	/**
 	 * Directs which component receives focus when gaining focus from another container.
 	 *
 	 * @type {String}
-	 * @default ''
+	 * @default 'last-focused'
 	 * @public
 	 */
-	enterTo: '',
+	enterTo: 'last-focused',
 
 	/**
 	 * Restricts or prioritizes navigation when focus attempts to leave the container.
@@ -32,6 +43,20 @@ const defaultConfig = {
  *	const DefaultContainer = SpotlightContainerDecorator(Component);
  *	const SelfRestrictedContainer = SpotlightContainerDecorator({restrict: 'self-only'}, Component);
  *
+ * To specify a default element to spot in a container, utilize the `spotlightDefaultClass`.
+ *
+ * @example
+ *	import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight';
+ *	const ContainerComponent = SpotlightContainerDecorator(Component);
+ *	const View = kind({
+ *		render: () => {
+ *			<ContainerComponent>
+ *				<SpottableComponent>foo</SpottableComponent>
+ *				<SpottableComponent className={spotlightDefaultClass}>spot me first</SpottableComponent>
+ *			</ContainerComponent>
+ *		}
+ *	});
+ *
  * @param  {Object} defaultConfig Set of default configuration parameters
  * @param  {Function} Higher-order component
  *
@@ -50,9 +75,9 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			let containerId;
 			while (elem && elem !== document && elem.nodeType === 1) {
 				containerId = elem.getAttribute('data-container-id');
-				if (containerId
-						&& containerId != this.state.containerId
-						&& elem.getAttribute('data-container-disabled') == 'true') {
+				if (containerId &&
+						containerId !== this.state.containerId &&
+						elem.getAttribute('data-container-disabled') === 'true') {
 
 					return false;
 				}
@@ -85,4 +110,4 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 });
 
 export default SpotlightContainerDecorator;
-export {SpotlightContainerDecorator};
+export {SpotlightContainerDecorator, spotlightDefaultClass};

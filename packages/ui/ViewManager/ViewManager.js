@@ -1,40 +1,27 @@
 /**
- * Exports the {@link module:@enact/ui/ViewManager~ViewManager} component and the
- * [arrangers]{@link module:@enact/ui/ViewManager~Arranger} for use with it.
+ * Exports the {@link ui/ViewManager.ViewManager} component and the
+ * [arrangers]{@link ui/ViewManager.Arranger} for use with it.
  *
- * @module @enact/ui/ViewManager
+ * @module ui/ViewManager
  */
 
-import R from 'ramda';
 import React from 'react';
-import TransitionGroup from './TransitionGroup';
 
-import {wrapWithView} from './View';
 import {shape} from './Arranger';
-
-const keys = R.compose(R.sort((a, b) => a - b), R.map(R.prop('key')));
-const equals = R.useWith(R.equals, [keys, keys]);
-const childrenEquals = (prev, next) => {
-	const prevChildren = React.Children.toArray(prev);
-	const nextChildren = React.Children.toArray(next);
-
-	if (prevChildren.length !== nextChildren.length) {
-		return false;
-	} else {
-		return equals(prevChildren, nextChildren);
-	}
-};
+import TransitionGroup from './TransitionGroup';
+import {wrapWithView} from './View';
 
 /**
  * A `ViewManager` controls the visibility of a configurable number of views, allowing for them to be
  * transitioned on and off the viewport.
  *
  * @class ViewManager
+ * @memberof ui/ViewManager
  * @public
  */
 class ViewManager extends React.Component {
 
-	static propTypes = {
+	static propTypes = /** @lends ui/ViewManager.ViewManager.prototype */ {
 		/**
 		 * Arranger to control the animation
 		 *

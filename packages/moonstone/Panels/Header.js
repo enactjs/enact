@@ -2,24 +2,28 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import Uppercase from '@enact/i18n/Uppercase';
 import Slottable from '@enact/ui/Slottable';
-import Marquee from '../Marquee';
+import {MarqueeDecorator, MarqueeText} from '../Marquee';
 
 import css from './Header.less';
 
 // Create a <h1> and Marquee component that support the uppercase attribute
 const UppercaseH1 = Uppercase('h1');		// Used by compact header, which provides its own inline strings and tags for marqueeing
-const UppercaseMarquee = Uppercase(Marquee);
+const MarqueeH2 = MarqueeDecorator('h2');
+const HeaderH1 = Uppercase(MarqueeDecorator('h1'));
 
 /**
  * A visual header component for a Panel with a title, titleAbove, titleBelow, and subTitleBelow
  *
  * @class Header
- * @see module:@enact/i18n/Uppercase~Uppercase
+ * @memberof moonstone/Panels
+ * @see i18n/Uppercase.Uppercase
+ * @ui
+ * @public
  */
 const HeaderBase = kind({
 	name: 'Header',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/Panels.Header.prototype */ {
 		/**
 		 * Children provided are added to the header-components area. A space for controls which
 		 * live in the header, apart from the body of the panel view.
@@ -32,10 +36,19 @@ const HeaderBase = kind({
 		]),
 
 		/**
-		 * When true, the case of the [`title`]{@link module:moonstone/Header~Header#title} will
+		 * When `true`, the header content is indented and the header lines are removed.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		fullBleed: React.PropTypes.bool,
+
+		/**
+		 * When true, the case of the [`title`]{@link moonstone/Header.Header#title} will
 		 * remain unchanged.
-		 * Uses [Uppercase HOC]{@link module:@enact/i18n/Uppercase~Uppercase} and mirrors the
-		 * [preserveCase prop]{@link module:@enact/i18n/Uppercase~Uppercase#preserveCase}
+		 * Uses [Uppercase HOC]{@link i18n/Uppercase.Uppercase} and mirrors the
+		 * [preserveCase prop]{@link i18n/Uppercase.Uppercase#preserveCase}
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -81,6 +94,7 @@ const HeaderBase = kind({
 	},
 
 	defaultProps: {
+		fullBleed: false,
 		preserveCase: false,
 		// titleAbove: '00',
 		type: 'standard'
@@ -92,17 +106,19 @@ const HeaderBase = kind({
 	},
 
 	computed: {
-		className: ({type, styler}) => styler.append(type)
+		className: ({fullBleed, type, styler}) => styler.append({fullBleed}, type)
 	},
 
-	render: ({children, preserveCase, styler, subTitleBelow, title, titleAbove, titleBelow, type, ...rest}) => {
+	render: ({children, preserveCase, subTitleBelow, title, /* titleAbove, */titleBelow, type, ...rest}) => {
+		delete rest.fullBleed;
+
 		switch (type) {
 			case 'compact': return (
 				<header {...rest}>
-					<Marquee className={css.headerCell}>
+					<MarqueeText className={css.headerCell} marqueeOn="hover">
 						<UppercaseH1 className={css.title} preserveCase={preserveCase}>{title}</UppercaseH1>
 						<h2 className={css.titleBelow}>{titleBelow}</h2>
-					</Marquee>
+					</MarqueeText>
 					<nav className={css.headerComponents}>{children}</nav>
 				</header>
 			);
@@ -118,11 +134,17 @@ const HeaderBase = kind({
 			// );
 			case 'standard': return (
 				<header {...rest}>
-					<h1 className={css.title}><UppercaseMarquee preserveCase={preserveCase}>{title}</UppercaseMarquee></h1>
+					<HeaderH1 className={css.title} preserveCase={preserveCase} marqueeOn="hover">
+						{title}
+					</HeaderH1>
 					<div className={css.headerRow}>
 						<div className={css.headerCell}>
-							<h2 className={css.titleBelow}><Marquee>{titleBelow}</Marquee></h2>
-							<h2 className={css.subTitleBelow}><Marquee>{subTitleBelow}</Marquee></h2>
+							<MarqueeH2 className={css.titleBelow} marqueeOn="hover">
+								{titleBelow}
+							</MarqueeH2>
+							<MarqueeH2 className={css.subTitleBelow} marqueeOn="hover">
+								{subTitleBelow}
+							</MarqueeH2>
 						</div>
 						<nav className={css.headerComponents}>{children}</nav>
 					</div>
@@ -132,6 +154,7 @@ const HeaderBase = kind({
 	}
 });
 
+// Note that we only export this (even as HeaderBase).  HeaderBase is not useful on its own.
 const Header = Slottable({slots: ['subTitleBelow', /* 'titleAbove', */'title', 'titleBelow']}, HeaderBase);
 
 // Set up Header so when it's used in a slottable layout (like Panel), it is automatically

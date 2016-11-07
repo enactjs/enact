@@ -28,6 +28,8 @@ storiesOf('ToggleButton')
 				small={boolean('small')}
 				toggleOnLabel={text('toggleOnLabel', 'On')}
 				toggleOffLabel={text('toggleOffLabel', 'Off')}
-			/>
+			>
+				Missing Toggle Label
+			</StatefulToggleButton>
 		)
 	);

@@ -5,3 +5,36 @@
 	transform: translateZ(0);
 	will-change: transform;
 }
+
+// Applies RTL-compatible start and end position to a selector
+.position-start-end (@start, @end) {
+	left: @start;
+	right: @end;
+
+	:global(.enact-locale-right-to-left) & {
+		left: @end;
+		right: @start;
+	}
+}
+
+// Applies RTL-compatible start and end margins to a selector
+.margin-start-end (@start, @end) {
+	margin-left: @start;
+	margin-right: @end;
+
+	:global(.enact-locale-right-to-left) & {
+		margin-left: @end;
+		margin-right: @start;
+	}
+}
+
+// Applies RTL-compatible start and end padding to a selector
+.padding-start-end (@start, @end) {
+	padding-left: @start;
+	padding-right: @end;
+
+	:global(.enact-locale-right-to-left) & {
+		padding-left: @end;
+		padding-right: @start;
+	}
+}
