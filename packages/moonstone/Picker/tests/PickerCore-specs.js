@@ -144,6 +144,62 @@ describe('PickerCore Specs', function () {
 		expect(actual).to.equal(expected);
 	});
 
+	it('should enable the increment button when there is a wrapped value to increment', function () {
+		const picker = mount(
+			<PickerCore wrap min={0} max={2} value={2} index={0} />
+		);
+
+		const expected = false;
+		const actual = picker.find(`.${css.incrementer}`).prop('disabled');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should enable the decrement button when there is a wrapped value to decrement', function () {
+		const picker = mount(
+			<PickerCore wrap min={0} max={2} value={2} index={0} />
+		);
+
+		const expected = false;
+		const actual = picker.find(`.${css.incrementer}`).prop('disabled');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should disable the increment button when there is no value to increment', function () {
+		const picker = mount(
+			<PickerCore min={0} max={2} value={2} index={0} />
+		);
+
+		const expected = true;
+		const actual = picker.find(`.${css.incrementer}`).prop('disabled');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should disable the decrement button when there is no value to decrement', function () {
+		const picker = mount(
+			<PickerCore min={0} max={2} value={0} index={0} />
+		);
+
+		const expected = true;
+		const actual = picker.find(`.${css.decrementer}`).prop('disabled');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should disable the increment and decrement buttons when wrapped and there is a single value', function () {
+		const picker = mount(
+			<PickerCore wrap min={0} max={0} value={0} index={0} />
+		);
+
+		const expected = true;
+		const actual = picker.find(`.${css.decrementer}`).prop('disabled') &&
+			picker.find(`.${css.incrementer}`).prop('disabled');
+
+		expect(actual).to.equal(expected);
+	});
+
 	// TODO: not sure if 'joined'/keyPress is broken or test is bad or ??? (skipping for now)
 	it.skip('should allow keyboard increment via arrow keys when \'joined\'', function () {
 		const handleChange = sinon.spy();

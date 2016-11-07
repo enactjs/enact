@@ -1,28 +1,31 @@
 /**
- * Exports the {@link module:@enact/moonstone/Item~Item} component.
+ * Exports the {@link moonstone/Item.Item} and {@link moonstone/Item.ItemBase} components.
  *
- * @module @enact/moonstone/Item
+ * @module moonstone/Item
  */
 
 import React, {PropTypes} from 'react';
 import kind from '@enact/core/kind';
 import {Spottable} from '@enact/spotlight';
 
+import {MarqueeText} from '../Marquee';
+
 import css from './Item.less';
 
 /**
- * {@link module:@enact/moonstone/Item~Item} is a focusable Moonstone-styled control that can display
- * simple text or a set of controls.
+ * {@link moonstone/Item.ItemBase} is a Moonstone-styled control that can display
+ * simple text or a set of controls. Most developers will want to use the spottable
+ * version: {@link moonstone/Item.Item}.
  *
- * @class Item
+ * @class ItemBase
+ * @memberof moonstone/Item
  * @ui
  * @public
  */
-
 const ItemBase = kind({
 	name: 'Item',
 
-	propTypes : {
+	propTypes: /** @lends moonstone/Item.ItemBase.prototype */ {
 		/**
 		 * The node to be displayed as the main content of the item.
 		 *
@@ -32,10 +35,11 @@ const ItemBase = kind({
 		children: PropTypes.node.isRequired,
 
 		/**
-		 * The type of DOM node to use to render the item. (e.g 'div', 'span', etc.)
+		 * The type of component to use to render the item. May be a DOM node name (e.g 'div',
+		 * 'span', etc.) or a custom component.
 		 *
 		 * @type {String|Function}
-		 * @default 'div'
+		 * @default moonstone/Marquee.MarqueeText
 		 * @public
 		 */
 		component: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
@@ -51,7 +55,7 @@ const ItemBase = kind({
 	},
 
 	defaultProps: {
-		component: 'div',
+		component: MarqueeText,
 		disabled: false
 	},
 
@@ -67,6 +71,16 @@ const ItemBase = kind({
 	}
 });
 
+/**
+ * {@link moonstone/Item.Item} is a focusable Moonstone-styled control that can display
+ * simple text or a set of controls.
+ *
+ * @class Item
+ * @memberof moonstone/Item
+ * @mixes spotlight/Spottable
+ * @ui
+ * @public
+ */
 const Item = Spottable(ItemBase);
 
 export default Item;

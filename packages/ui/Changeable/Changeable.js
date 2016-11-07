@@ -1,15 +1,13 @@
 /**
- * Exports the {@link module:@enact/ui/Changeable~Changeable} Higher-order Component (HOC).
+ * Exports the {@link ui/Changeable.Changeable} Higher-order Component (HOC).
  *
- * @module @enact/ui/Changeable
+ * @module ui/Changeable
  */
 
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
 import React from 'react';
-
-import {anyPrimitive} from '../validators/PropTypeValidators';
 
 const defaultConfig = {
 	/**
@@ -44,7 +42,7 @@ const defaultConfig = {
 };
 
 /**
- * {@link module:@enact/ui/Changeable~Changeable} is a Higher-order Component that applies a
+ * {@link ui/Changeable.Changeable} is a Higher-order Component that applies a
  * 'Changeable' behavior to its wrapped component.  Its default event and value properties can be
  * configured when applied to a component. In addition, it supports `mutable` config setting that
  * allows the HOC to accept incoming settings for the `prop`.
@@ -54,7 +52,8 @@ const defaultConfig = {
  * correspondingly.
  *
  * @class Changeable
- * @ui
+ * @memberof ui/Changeable
+ * @hoc
  * @public
  */
 const Changeable = hoc(defaultConfig, (config, Wrapped) => {
@@ -65,11 +64,11 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'Changeable'
 
-		static propTypes = {
+		static propTypes = /** @lends ui/Changeable.Changeable.prototype */ {
 
-			[defaultPropKey]: anyPrimitive,
+			[defaultPropKey]: React.PropTypes.any,
 
-			[prop]: anyPrimitive,
+			[prop]: React.PropTypes.any,
 
 			/**
 			 * Controls whether the component is disabled.

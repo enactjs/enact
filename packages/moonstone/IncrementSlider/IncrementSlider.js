@@ -144,6 +144,15 @@ class IncrementSlider extends React.Component {
 		backgroundPercent: PropTypes.number,
 
 		/**
+		 * The initial value of the increment slider.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
+		defaultValue: checkDefaultBounds,
+
+		/**
 		 * Height, in standard CSS units, of the vertical increment slider. Only takes
 		 * effect on a vertical oriented slider.
 		 *
@@ -181,71 +190,36 @@ class IncrementSlider extends React.Component {
 		onChange: PropTypes.func,
 
 		/**
-		 * The handler to run when the value is incremented.
+		 * The amount to increment or decrement the value.
 		 *
-		 * @type {Function}
-		 * @param {Object} event
+		 * @type {Number}
+		 * @default 1
 		 * @public
 		 */
-		onDecrement: PropTypes.func,
-
-		/**
-		 * The handler to run when the value is decremented.
-		 *
-		 * @type {Function}
-		 * @param {Object} event
-		 * @public
-		 */
-		onIncrement: PropTypes.func,
-
-		/**
-		* The amount to increment or decrement the value.
-		*
-		* @type {Number}
-		* @default 1
-		* @public
-		*/
 		step: PropTypes.number,
 
 		/**
-		* The value of the increment slider.
-		*
-		* @type {Number}
-		* @default 0
-		* @public
-		*/
-		value: checkDefaultBounds,
-
-		/**
-		* If `true` the increment slider will be oriented vertically.
-		*
-		* @type {Boolean}
-		* @default false
-		* @public
-		*/
+		 * If `true` the increment slider will be oriented vertically.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
 		vertical: PropTypes.bool
 	};
 
 	static defaultProps = {
+		defaultValue: 0,
 		max: 100,
 		min: 0,
-		step: 1,
-		value: 0
+		step: 1
 	};
 
 	constructor (props) {
 		super(props);
 		this.state = {
-			value: this.props.value
+			value: this.props.defaultValue
 		};
-	}
-
-	componentWillReceiveProps (nextProps) {
-		if (nextProps.value !== this.props.value) {
-			this.setState({
-				value: nextProps.value
-			});
-		}
 	}
 
 	onChange = () => {
@@ -258,7 +232,7 @@ class IncrementSlider extends React.Component {
 
 	updateValue = (event) => {
 		throttleJob('sliderChange', () => {
-			this.setState({value: parseInt(event.target.value, 10)}, this.onChange);
+			this.setState({value: parseInt(event.target.value)}, this.onChange);
 		}, this.changeDelayMS);
 	}
 

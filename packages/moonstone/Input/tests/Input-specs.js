@@ -1,7 +1,8 @@
 import React from 'react';
-import {shallow} from 'enzyme';
+import {shallow, mount} from 'enzyme';
 import sinon from 'sinon';
 import {PlainInputBase as Input} from '../PlainInput';
+import {InputBase} from '../Input';
 
 describe('Input Specs', () => {
 	it('Should have an input element', function () {
@@ -32,6 +33,26 @@ describe('Input Specs', () => {
 
 		const expected = value;
 		const actual = handleChange.firstCall.args[0].value;
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('Should blur input on enter if dismissOnEnter', function () {
+		const node = document.body.appendChild(document.createElement('div'));
+		const handleChange = sinon.spy();
+
+		const subject = mount(
+			<InputBase onBlur={handleChange} dismissOnEnter />,
+			{attachTo: node}
+		);
+		const input = subject.find('input');
+
+		input.node.focus();
+		input.simulate('keyDown', {nativeEvent: {which: 13, keyCode: 13}});
+		node.remove();
+
+		const expected = true;
+		const actual = handleChange.calledOnce;
 
 		expect(actual).to.equal(expected);
 	});

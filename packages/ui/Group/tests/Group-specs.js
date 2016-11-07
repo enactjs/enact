@@ -42,10 +42,10 @@ describe('Group', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should call handler on move when select="onMouseMove"', function () {
+	it('Should call handler on move when childSelect="onMouseMove"', function () {
 		const handleClick = sinon.spy();
 		const subject = mount(
-			<GroupBase childComponent="div" select='onMouseMove' onSelect={handleClick}>
+			<GroupBase childComponent="div" childSelect='onMouseMove' onSelect={handleClick}>
 				{stringItems}
 			</GroupBase>
 		);

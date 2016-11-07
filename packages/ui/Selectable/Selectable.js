@@ -1,13 +1,13 @@
 /**
- * Exports the {@link module:@enact/ui/Selectable~Selectable} Higher-order Component (HOC).
+ * Exports the {@link ui/Selectable.Selectable} Higher-order Component (HOC).
  *
- * @module @enact/ui/Selectable
+ * @module ui/Selectable
  */
 
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
-import {cap} from '@enact/core/util';
-import React from 'react';
+import {cap, coerceArray} from '@enact/core/util';
+import React, {PropTypes} from 'react';
 
 const defaultConfig = {
 	/**
@@ -41,7 +41,7 @@ const defaultConfig = {
 };
 
 /**
- * {@link module:@enact/ui/Selectable~Selectable} is a Higher-order Component that applies a 'Selectable' behavior
+ * {@link ui/Selectable.Selectable} is a Higher-order Component that applies a 'Selectable' behavior
  * to its wrapped component.  Its default event and value properties can be configured when applied to a component.
  * In addition, it supports `mutable` config setting that allows the HOC to accept incoming settings for the `prop`.
  *
@@ -49,6 +49,7 @@ const defaultConfig = {
  * HOC manages the state of `value`.  If the `prop` is overridden, the names change correspondingly.
  *
  * @class Selectable
+ * @memberof ui/Selectable
  * @ui
  * @public
  */
@@ -60,7 +61,14 @@ const Selectable = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'Selectable'
 
-		static propTypes = {
+		static propTypes = /** @lends ui/Selectable.Selectable.prototype */ {
+			/**
+			 * Selected value(s) for when first rendered.
+			 * @type {Array | String | Number | Boolean}
+			 * @public
+			 */
+			[defaultPropKey]: PropTypes.oneOfType([PropTypes.array, PropTypes.string, PropTypes.number, PropTypes.bool]),
+
 			/**
 			 * Controls whether the component is disabled.
 			 *
@@ -68,7 +76,18 @@ const Selectable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @default false
 			 * @public
 			 */
-			disabled: React.PropTypes.bool
+			disabled: PropTypes.bool,
+
+			/**
+			 * Configures to allow multi-selection
+			 * @type {Boolean}
+			 * @default false
+			 */
+			multiple: PropTypes.bool
+		}
+
+		defaultProps: {
+			multiple: false
 		}
 
 		constructor (props) {
@@ -79,7 +98,7 @@ const Selectable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillReceiveProps (nextProps) {
-			if (mutable) {
+			if (mutable && prop in nextProps) {
 				const selected = nextProps[prop];
 				this.setState({selected});
 			}
@@ -87,9 +106,21 @@ const Selectable = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleSelect = (ev) => {
 			if (!this.props.disabled) {
-				const selected = ev[prop];
+				let selected = ev[prop];
+				if (this.props.multiple) {
+					const selectedArr = coerceArray(this.state.selected || []);
+					const index = selectedArr.indexOf(selected);
+					if (index >= 0) {
+						selectedArr.splice(index, 1);
+					} else {
+						selectedArr.push(selected);
+					}
+
+					selected = selectedArr;
+				}
+
 				this.setState({selected});
-				forwardSelect(ev, this.props);
+				forwardSelect(Object.assign({}, ev, {[prop]: selected}), this.props);
 			}
 		}
 
@@ -98,6 +129,7 @@ const Selectable = hoc(defaultConfig, (config, Wrapped) => {
 			if (select) props[select] = this.handleSelect;
 			if (prop) props[prop] = this.state.selected;
 			delete props[defaultPropKey];
+			delete props.multiple;
 
 			return <Wrapped {...props} />;
 		}

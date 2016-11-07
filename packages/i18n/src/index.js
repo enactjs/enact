@@ -2,12 +2,14 @@ import './glue';
 import ilib from '../ilib/lib/ilib';
 import {$L, toIString} from './$L';
 import {toLowerCase, toUpperCase} from './case';
-import {updateLocale, isRtl} from './locale';
+import {updateLocale, isRtlLocale} from './locale';
+import {isRtlText} from './util';
 
 export default ilib;
 export {
 	$L,
-	isRtl,
+	isRtlLocale,
+	isRtlText,
 	toIString,
 	toLowerCase,
 	toUpperCase,
