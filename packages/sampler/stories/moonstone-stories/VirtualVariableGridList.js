@@ -16,7 +16,8 @@ const
 			background: '#141416',
 			backgroundClip: 'content-box',
 			position: 'absolute',
-			padding: '0 ' + ri.scale(5) + 'px ' + ri.scale(5) + 'px 0','boxSizing': 'border-box',
+			padding: '5px',
+			boxSizing: 'border-box',
 			overflow: 'hidden',
 			willChange: 'transform'
 		},
@@ -87,7 +88,7 @@ const
 storiesOf('VirtualVariableGridList')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		' ',
+		'with variable width item',
 		'Basic usage of VirtualVariableGridList',
 		() => (
 			<VirtualVariableGridList
@@ -101,6 +102,25 @@ storiesOf('VirtualVariableGridList')
 					variable: getVariableItemSize
 				}}
 				variableDimension={'width'}
+				variableMaxScrollBoundsSize={variableMaxScrollBoundsSize}
+				style={style.list}
+				component={renderItem}
+			/>
+		)
+	).addWithInfo(
+		'with variable height item',
+		() => (
+			<VirtualVariableGridList
+				data={programs}
+				dataSize={{
+					fixed: programs.length,
+					variable: getVariableDataSize
+				}}
+				itemSize={{
+					fixed: ri.scale(400),
+					variable: getVariableItemSize
+				}}
+				variableDimension={'height'}
 				variableMaxScrollBoundsSize={variableMaxScrollBoundsSize}
 				style={style.list}
 				component={renderItem}

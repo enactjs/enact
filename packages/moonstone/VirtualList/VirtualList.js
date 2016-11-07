@@ -118,7 +118,15 @@ const VirtualVariableGridList = kind({
 		itemSize: PropTypes.object.isRequired
 	},
 
-	render: (props) => <VirtualListBase {...props} />
+	render: (props) => {
+		const epgProps = Object.assign({}, props);
+
+		if (epgProps.variableDimension === 'height') {
+			epgProps.direction = 'horizontal';
+		}
+
+		return (<VirtualListBase {...epgProps} />);
+	}
 });
 
 export default VirtualList;
