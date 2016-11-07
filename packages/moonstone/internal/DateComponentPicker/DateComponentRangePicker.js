@@ -19,7 +19,7 @@ import DateComponentPickerChrome from './DateComponentPickerChrome';
 const DateComponentRangePickerBase = kind({
 	name: 'DateComponentRangePickerBase',
 
-	propTypes: {
+	propTypes:  /** @lends moonstone/internal/DateComponentPicker.DateComponentRangePicker.prototype */ {
 		/**
 		 * The maximum value for the date component
 		 *

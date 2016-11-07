@@ -27,7 +27,7 @@ import css from './DatePicker.less';
 const DatePickerBase = kind({
 	name: 'DatePicker',
 
-	propTyptes: {
+	propTypes:  /** @lends moonstone/DatePicker.DatePickerBase.prototype */ {
 		/**
 		 * The `day` component of the Date
 		 *

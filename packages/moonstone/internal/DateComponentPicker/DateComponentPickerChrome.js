@@ -9,15 +9,14 @@ import css from './DateComponentPicker.less';
  * {@link moonstone/internal/DateComponentPicker.DateComponentRangePicker}.
  *
  * @class DateComponentPickerChrome
- * @memberof moonstone/internal/DateComponentPickerChrome
+ * @memberof moonstone/internal/DateComponentPicker
  * @ui
  * @private
  */
 const DateComponentPickerChromeBase = kind({
 	name: 'DateComponentPickerChrome',
 
-	propTypes: {
-
+	propTypes:  /** @lends moonstone/internal/DateComponentPicker.DateComponentPickerChrome.prototype */ {
 		/**
 		 * The {@link module:@enact/moonstone/Picker} component
 		 *
