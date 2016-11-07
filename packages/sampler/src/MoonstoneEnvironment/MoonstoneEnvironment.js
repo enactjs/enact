@@ -1,7 +1,7 @@
 // Moonstone Environment
 
 import kind from '@enact/core/kind';
-import React from 'react';
+import React, {PropTypes} from 'react';
 import MoonstoneDecorator from '@enact/moonstone/MoonstoneDecorator';
 import {ActivityPanels as Panels, Panel, Header} from '@enact/moonstone/Panels';
 import {select} from '@kadira/storybook-addon-knobs';
@@ -10,6 +10,11 @@ import css from './MoonstoneEnvironment.less';
 
 const PanelsBase = kind({
 	name: 'MoonstoneEnvironment',
+
+	propTypes: {
+		description: PropTypes.string,
+		title: PropTypes.string
+	},
 
 	styles: {
 		css,
