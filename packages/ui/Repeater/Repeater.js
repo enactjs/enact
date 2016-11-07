@@ -71,7 +71,6 @@ const RepeaterBase = kind({
 	},
 
 	computed: {
-		// eslint-disable-next-line react/display-name, react/prop-types
 		children: ({childComponent: Component, children, childProp, indexProp, itemProps}) => {
 			return children.map((data, index) => {
 				const props = {...itemProps};

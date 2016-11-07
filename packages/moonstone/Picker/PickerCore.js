@@ -305,7 +305,6 @@ const PickerCore = class extends React.Component {
 		].join(' ');
 	}
 
-	// eslint-disable-next-line react/prop-types, react/display-name
 	render () {
 		const {
 			noAnimation,

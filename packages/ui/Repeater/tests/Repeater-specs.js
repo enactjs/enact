@@ -1,5 +1,3 @@
-/* globals describe, it, expect */
-
 import React from 'react';
 import {shallow} from 'enzyme';
 import Repeater from '../Repeater';
@@ -8,7 +6,7 @@ describe('Repeater Specs', () => {
 	const stringItems = ['One', 'Two', 'Three'];
 	const objItems = stringItems.map((content, key) => ({key, content}));
 
-	// eslint-disable-next-line react/prop-types, react/display-name
+	// eslint-disable-next-line enact/prop-types, enact/display-name
 	const CustomType = (props) => <div>{props.content}</div>;
 
 	it('Should have a root span element', function () {
