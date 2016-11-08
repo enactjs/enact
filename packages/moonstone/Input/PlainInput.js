@@ -25,9 +25,39 @@ const PlainInputBase = kind({
 	name: 'PlainInputBase',
 
 	propTypes: /** @lends moonstone/Input/InputBase.InputBase.prototype */ {
+		/**
+		 * When `true`, applies a disabled style and the control becomes non-interactive.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
 		disabled: PropTypes.bool,
+
+		/**
+		 * The method to run when the input mounts, giving a reference to the DOM.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
 		inputRef: PropTypes.func,
+
+		/**
+		 * The type of input. Accepted values correspond to the standard HTML5 input types.
+		 *
+		 * @type {String}
+		 * @default 'text'
+		 * @public
+		 */
 		type: PropTypes.string,
+
+		/**
+		 * The value of the input.
+		 *
+		 * @type {String|Number}
+		 * @default ''
+		 * @public
+		 */
 		value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 	},
 

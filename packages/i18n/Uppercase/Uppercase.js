@@ -22,6 +22,8 @@ import {toUpperCase} from '../';
  * @public
  */
 const Uppercase = hoc((config, Wrapped) => kind({
+	name: 'Uppercase',
+
 	propTypes: /** @lends i18n/Uppercase.Uppercase.prototype */ {
 		/**
 		 * The children string will be uppercased, unless this is set to true.

@@ -28,10 +28,10 @@ const
  * @class VirtualListCore
  * @memberof moonstone/VirtualList/VirtualListBase
  * @ui
- * @public
+ * @private
  */
 class VirtualListCore extends Component {
-	static propTypes = /** @lends moonstone/VirtualList/VirtualListCore.VirtualListCore */ {
+	static propTypes = /** @lends moonstone/VirtualList/VirtualListBase.VirtualListCore.prototype */ {
 		/**
 		 * The render function for an item of the list.
 		 * `index` is for accessing the index of the item.
@@ -911,12 +911,12 @@ class VirtualListCore extends Component {
  * {@link moonstone/VirtualList.VirtualList} and
  * {@link moonstone/VirtualList.VirtualGridList} with Scrollable and SpotlightContainerDecorator applied.
  *
- * @class VirtualListCore
+ * @class VirtualListBase
  * @memberof moonstone/VirtualList/VirtualListBase
  * @mixes moonstone/Scrollable
  * @mixes spotlight/SpotlightContainerDecorator
  * @ui
- * @public
+ * @private
  */
 const VirtualListBase = SpotlightContainerDecorator({restrict: 'self-first'}, Scrollable(VirtualListCore));
 

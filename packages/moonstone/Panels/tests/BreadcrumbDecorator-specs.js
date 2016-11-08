@@ -14,7 +14,7 @@ describe('BreadcrumbDecorator', () => {
 			onSelect: React.PropTypes.func
 		},
 
-		render: ({index, onSelect}) => {
+		render: ({index, onSelect}) => {	// eslint-disable-line enact/prop-types
 			const handleSelect = () => onSelect({index});
 			return <span onClick={handleSelect}>{index}</span>;
 		}
