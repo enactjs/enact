@@ -25,7 +25,7 @@ const VirtualList = kind({
 
 	propTypes: /** @lends moonstone/VirtualList.VirtualList.prototype */ {
 		/**
-		 * Size of an item data for the VirtualList; valid value is a number.
+		 * Size of data for the VirtualList; valid value is a number.
 		 *
 		 * @type {Number}
 		 * @public
@@ -64,7 +64,7 @@ const VirtualGridList = kind({
 
 	propTypes: /** @lends moonstone/VirtualList.VirtualGridList.prototype */ {
 		/**
-		 * Size of an item data for the VirtualGridList; valid value is a number.
+		 * Size of data for the VirtualGridList; valid value is a number.
 		 *
 		 * @type {Number}
 		 * @public
@@ -91,7 +91,7 @@ const VirtualGridList = kind({
 
 /**
  * {@link module:@enact/moonstone/VirtualList~VirtualVariableGridList} is a VirtualList with Moonstone styling
- * for an EGP app.
+ * which has a variable width or height.
  *
  * @class VirtualVariableGridList
  * @ui
@@ -102,9 +102,9 @@ const VirtualVariableGridList = kind({
 
 	propTypes: {
 		/**
-		 * Size of an item data for the VirtualVariableGridList; valid value is an object
-		 * that has `fixed` for the fixed number of row or columne and `variable` for
-		 * the number of the variable number of row or columne.
+		 * Size of data for the VirtualVariableGridList; valid value is an object
+		 * that has `fixed` for the data size of fixed dimension and `variable` for
+		 * the data size of variable dimension.
 		 *
 		 * @type {Object}
 		 * @public
@@ -113,22 +113,40 @@ const VirtualVariableGridList = kind({
 
 		/**
 		 * Size of an item for the VirtualVariableGridList; valid value is an object
-		 * that has `fixed` for the fixed item size and `variable` for an variable item size.
+		 * that has `fixed` for the item size of fixed dimension
+		 * and `variable` for the item sizes of variable dimension.
 		 *
 		 * @type {Object}
 		 * @public
 		 */
-		itemSize: PropTypes.object.isRequired
+		itemSize: PropTypes.object.isRequired,
+
+		/**
+		 * Direction specific options of the list; valid values are `'width'` and `'height'`.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		variableDimension: PropTypes.oneOf(['width', 'height']),
+
+		/**
+		 * For variable width or variable height, we need to define max scroll width or max scroll height
+		 * instead of calculating them from all items.
+		 *
+		 * @type {Number}
+		 * @public
+		 */
+		variableMaxScrollSize: PropTypes.number
 	},
 
-	render: (props) => {
-		const epgProps = Object.assign({}, props);
+	render: (orgProps) => {
+		const props = Object.assign({}, orgProps);
 
-		if (epgProps.variableDimension === 'height') {
-			epgProps.direction = 'horizontal';
+		if (props.variableDimension === 'height') {
+			props.direction = 'horizontal';
 		}
 
-		return (<VirtualListBase {...epgProps} />);
+		return (<VirtualListBase {...props} />);
 	}
 });
 

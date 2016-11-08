@@ -51,7 +51,7 @@ const
 		'NOVA',
 		'Secrets of the Dead'
 	],
-	variableMaxScrollBoundsSize = ri.scale(57600) /* 400 ( width per 1 hour )* 24 hr * 6 day */,
+	variableMaxScrollSize = ri.scale(57600) /* 400 ( width per 1 hour )* 24 hr * 6 day */,
 	getRandomWidth = () => {
 		return ri.scale((parseInt(Math.random() * 20) + 1) * 100);
 	};
@@ -102,7 +102,7 @@ storiesOf('VirtualVariableGridList')
 					variable: getVariableItemSize
 				}}
 				variableDimension={'width'}
-				variableMaxScrollBoundsSize={variableMaxScrollBoundsSize}
+				variableMaxScrollSize={variableMaxScrollSize}
 				style={style.list}
 				component={renderItem}
 			/>
@@ -121,7 +121,7 @@ storiesOf('VirtualVariableGridList')
 					variable: getVariableItemSize
 				}}
 				variableDimension={'height'}
-				variableMaxScrollBoundsSize={variableMaxScrollBoundsSize}
+				variableMaxScrollSize={variableMaxScrollSize}
 				style={style.list}
 				component={renderItem}
 			/>
