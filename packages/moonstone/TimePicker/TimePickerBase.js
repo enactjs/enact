@@ -6,12 +6,17 @@ import {DateComponentPicker, DateComponentRangePicker} from '../internal/DateCom
 import {ExpandableItemBase} from '../ExpandableItem';
 
 import css from './TimePicker.less';
+import {dateComponentPickers} from '../internal/DateComponentPicker/DateComponentPicker.less';
 
 // values to use in hour picker for 24 and 12 hour locales
-const hours24 = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12',
-				'13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'];
-const hours12 = ['12', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12',
-				'1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'];
+const hours24 = [
+	'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11',
+	'12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'
+];
+const hours12 = [
+	'12', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11',
+	'12', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'
+];
 
 /**
 * {@link module:@enact/moonstone/TimePicker~TimePickerBase} is the stateless functional time picker
@@ -126,7 +131,7 @@ const TimePickerBase = kind({
 	render: ({hasMeridiem, hour, meridiem, meridiems, minute, noHourAnimation, noLabels, onChangeHour, onChangeMeridiem, onChangeMinute, order, ...rest}) => {
 		return (
 			<ExpandableItemBase {...rest} showLabel="always">
-				<div className={css.dateComponentPickers}>
+				<div className={dateComponentPickers}>
 					<div className={css.timeComponents}>
 						{order.map(picker => {
 							switch (picker) {

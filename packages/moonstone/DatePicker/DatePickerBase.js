@@ -13,6 +13,7 @@ import {DateComponentRangePicker} from '../internal/DateComponentPicker';
 import {ExpandableItemBase} from '../ExpandableItem';
 
 import css from './DatePicker.less';
+import {dateComponentPickers} from '../internal/DateComponentPicker/DateComponentPicker.less';
 
 /**
  * {@link moonstone/DatePicker/DatePickerBase.DatePickerBase} is the stateless functional date picker
@@ -148,7 +149,7 @@ const DatePickerBase = kind({
 
 		return (
 			<ExpandableItemBase {...rest} showLabel="always">
-				<div className={css.dateComponentPickers}>
+				<div className={dateComponentPickers}>
 					{order.map(picker => {
 						switch (picker) {
 							case 'd':
