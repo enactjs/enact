@@ -29,9 +29,7 @@ const BodyTextBase = kind({
 		 * @default false
 		 * @public
 		 */
-		centered: PropTypes.bool,
-
-		children: PropTypes.node
+		centered: PropTypes.bool
 	},
 
 	defaultProps: {
