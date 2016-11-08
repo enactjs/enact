@@ -179,7 +179,7 @@ const TimePickerController = class extends React.Component {
 	initI18n () {
 		const locale = ilib.getLocale();
 
-		if (this.locale !== locale && typeof window === 'asdf') {
+		if (this.locale !== locale && typeof window === 'object') {
 			this.locale = locale;
 
 			const format = {
@@ -237,7 +237,7 @@ const TimePickerController = class extends React.Component {
 	 * @returns	{IDate}				ilib Date object
 	 */
 	toIDate (time) {
-		if (time) {
+		if (time && this.locale) {
 			return DateFactory({
 				timezone: 'local',
 				unixtime: time
@@ -246,7 +246,7 @@ const TimePickerController = class extends React.Component {
 	}
 
 	toTime (date) {
-		if (date) {
+		if (date && this.locale) {
 			const time = date.getTime();
 			return this.toIDate(time).getTime();
 		}

@@ -140,7 +140,7 @@ const DatePickerController = class extends React.Component {
 	initI18n () {
 		const locale = ilib.getLocale();
 
-		if (this.locale !== locale && typeof window === 'asdf') {
+		if (this.locale !== locale && typeof window === 'object') {
 			this.locale = locale;
 
 			this.dateFormat = new DateFmt({
@@ -168,7 +168,7 @@ const DatePickerController = class extends React.Component {
 	 * @returns	{IDate}			ilib Date object
 	 */
 	toIDate (date) {
-		if (date) {
+		if (date && this.locale) {
 			return DateFactory({
 				unixtime: date.getTime(),
 				timezone: 'local'
@@ -221,7 +221,7 @@ const DatePickerController = class extends React.Component {
 			day: 1
 		};
 
-		if (value && this.dateFormat) {
+		if (value && this.locale) {
 			values.year = value.getYears();
 			values.month = value.getMonths();
 			values.day = value.getDays();
