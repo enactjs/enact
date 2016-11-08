@@ -142,7 +142,7 @@ class Portal extends React.Component {
 		this.node = null;
 	}
 
-	renderPortal ({portalClassName, portalId, ...rest}, preserveZIndex = false) {
+	renderPortal ({portalClassName, portalId, scrimType, ...rest}, preserveZIndex = false) {
 		delete rest.noAutoDismiss;
 		delete rest.onClose;
 		// don't delete `rest.open`
@@ -156,7 +156,8 @@ class Portal extends React.Component {
 		}
 
 		const scrimProps = {
-			scrimVisible: this.prevZIndex === viewingLayers[viewingLayers.length - 1],
+			type: scrimType,
+			visible: this.prevZIndex === viewingLayers[viewingLayers.length - 1],
 			zIndex: preserveZIndex ? this.prevZIndex : scrimZIndex
 		};
 

@@ -1,6 +1,6 @@
 /**
- * Exports the {@link module:@enact/ui/Portal~Scrim} component and {@link module:@enact/ui/Portal~ScrimLayer}
- * component. The default export is {@link module:@enact/ui/Portal~Scrim}.
+ * Exports the {@link module:@enact/ui/Portal~ScrimBase} component and {@link module:@enact/ui/Portal~ScrimLayer}
+ * component. The default export is {@link module:@enact/ui/Portal~ScrimBase}.
  *
  * @module @enact/ui/Scrim
  */
@@ -11,15 +11,15 @@ import React from 'react';
 import css from './Scrim.less';
 
 /**
- * {@link module:@enact/ui/Portal~Scrim} provides an overlay that will prevent taps from propagating
+ * {@link module:@enact/ui/Portal~ScrimBase} provides an overlay that will prevent taps from propagating
  * to the controls that it covers.
  *
- * @class Scrim
+ * @class ScrimBase
  * @ui
- * @public
+ * @private
  */
-const Scrim = kind({
-	name: 'Scrim',
+const ScrimBase = kind({
+	name: 'ScrimBase',
 
 	propTypes: {
 		/**
@@ -36,7 +36,7 @@ const Scrim = kind({
 
 	styles: {
 		css,
-		className: 'enact-scrim enact-fit'
+		className: 'scrim enact-fit'
 	},
 
 	computed: {
@@ -58,7 +58,7 @@ const Scrim = kind({
  *
  * @class ScrimLayer
  * @ui
- * @public
+ * @private
  */
 const ScrimLayer = kind({
 	name: 'ScrimLayer',
@@ -76,39 +76,43 @@ const ScrimLayer = kind({
 		 * @type {String}
 		 * @default `translucent`
 		 */
-		scrimType: React.PropTypes.oneOf(['transparent', 'translucent']),
+		type: React.PropTypes.oneOf(['transparent', 'translucent']),
 
 		/**
 		 * When `true`, scrim will appear
 		 * @type {Boolean}
 		 * @default false
 		 */
-		scrimVisible: React.PropTypes.bool
+		visible: React.PropTypes.bool
 	},
 
 	defaultProps: {
-		scrimType: 'translucent',
-		scrimVisible: false
+		type: 'translucent',
+		visible: false
 	},
 
 	computed: {
 		children: ({children, zIndex, ...rest}) => {
-			delete rest.scrimType;
-			delete rest.scrimVisible;
+			delete rest.type;
+			delete rest.visible;
 
 			const style = Object.assign({}, children.props.style, {zIndex: zIndex + 1});
 			return React.cloneElement(children, {style, ...rest});
 		},
-		scrim: ({scrimVisible, zIndex, scrimType}) => {
-			if (scrimVisible) {
-				return <Scrim type={scrimType} style={{zIndex}} />;
+		scrim: ({visible, zIndex, type}) => {
+			if (visible) {
+				return <ScrimBase type={type} style={{zIndex}} />;
 			}
 		}
 	},
 
-	render: ({scrim, children}) => {
+	render: ({scrim, children, ...rest}) => {
+		delete rest.type;
+		delete rest.visible;
+		delete rest.zIndex;
+
 		return (
-			<div>
+			<div {...rest}>
 				{children}
 				{scrim}
 			</div>
@@ -116,5 +120,5 @@ const ScrimLayer = kind({
 	}
 });
 
-export default Scrim;
-export {Scrim, ScrimLayer};
+export default ScrimBase;
+export {ScrimBase, ScrimLayer};
