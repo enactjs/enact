@@ -270,10 +270,13 @@ const TimePickerController = class extends React.Component {
 	 * @returns {undefined}
 	 */
 	updateValue = (value) => {
+		const newValue = DateFactory(value).getTime();
 		this.setState({
 			noHourAnimation: !this.shouldAnimateHour(value),
-			value: DateFactory(value).getTime()
+			value: newValue
 		});
+
+		return newValue;
 	}
 
 	/**
@@ -285,9 +288,17 @@ const TimePickerController = class extends React.Component {
 	 */
 	handleChangeHour = (ev) => {
 		const value = this.calcValue();
+		const currentHour = value.hour;
 		value.hour = ev.value;
 
-		this.updateValue(value);
+		const newValue = this.updateValue(value);
+
+		// In the case of navigating onto the skipped hour of DST, ilib will return the same value
+		// so we skip that hour and update the value again.
+		if (newValue === this.state.value) {
+			value.hour = ev.value * 2 - currentHour;
+			this.updateValue(value);
+		}
 	}
 
 	/**
