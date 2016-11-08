@@ -1,3 +1,9 @@
+/**
+ * Exports the {@link moonstone/MoonstoneDecorator.MoonstoneDecorator} HOC
+ *
+ * @module moonstone/MoonstoneDecorator
+ */
+
 import {addCancelHandler, removeCancelHandler} from '@enact/ui/Cancelable';
 import {forKeyCode} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
@@ -20,6 +26,19 @@ const defaultConfig = {
 	spotlight: true
 };
 
+/**
+ * {@link moonstone/MoonstoneDecorator.MoonstoneDecorator} is a Higher-order Component that applies
+ * Moonstone theming to an application. It also applies
+ * [resolution independence]{@link ui/resolution.ResolutionDecorator},
+ * [spotlight]{@link spotlight.SpotlightRootDecorator}, and
+ * [internationalization support]{@link i18n/I18nDecorator.I18nDecorator}. It is meant to be applied to
+ * the root element of an app.
+ *
+ * @class MoonstoneDecorator
+ * @memberof moonstone/MoonstoneDecorator
+ * @hoc
+ * @public
+ */
 const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {ri, i18n, spotlight, portal, cancelHandler} = config;
 	let App = Wrapped;

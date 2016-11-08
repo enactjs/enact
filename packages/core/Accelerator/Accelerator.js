@@ -3,7 +3,7 @@
 *
 * Returns a generator function.
 *
-* @module @enact/core/Accelerator
+* @module core/Accelerator
 * @public
 */
 class Accelerator {

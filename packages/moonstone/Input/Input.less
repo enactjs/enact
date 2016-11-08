@@ -36,7 +36,7 @@
 		color: @moon-input-placeholder-color;
 	});
 
-	&:focus {
+	&:global(.spottable):focus {
 		cursor: text;
 		color: @moon-input-font-color;
 		background-color: inherit;
@@ -87,9 +87,8 @@
 	}
 
 	// RIGBY NOTE: Complex focus scenarios are broken at the moment
-	&:focus {
+	&:global(.spottable):focus {
 		border-color: @moon-spotlight-border-color;
-		// color: @moon-spotlight-text-color;
 		background-color: @moon-input-decorator-bg-color;
 	}
 

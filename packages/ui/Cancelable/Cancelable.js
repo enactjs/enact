@@ -1,16 +1,16 @@
 /**
- * Exports the {@link module:@enact/ui/Cancelable~Cancelable} Higher-order Component (HOC).
+ * Exports the {@link ui/Cancelable.Cancelable} Higher-order Component (HOC).
  *
- * @module @enact/ui/Cancelable
+ * @module ui/Cancelable
  */
 
+import {on, off} from '@enact/core/dispatcher';
 import {forward, handle, stopImmediate} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import invariant from 'invariant';
 import React from 'react';
 
 import {forCancel, addCancelHandler, removeCancelHandler} from './cancelHandler';
-import {on, off} from './dispatcher';
 
 const defaultConfig = {
 	onCancel: null,
@@ -19,7 +19,7 @@ const defaultConfig = {
 };
 
 /**
- * {@link module:@enact/ui/Cancelable~Cancelable} is a Higher-order Component that allows mapping
+ * {@link ui/Cancelable.Cancelable} is a Higher-order Component that allows mapping
  * a cancel key event to existing event handler either directly or via a custom function which can
  * adapt the event payload.
  *
@@ -33,7 +33,8 @@ const defaultConfig = {
  * element.
  *
  * @class Cancelable
- * @ui
+ * @memberof ui/Cancelable
+ * @hoc
  * @public
  */
 const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
@@ -46,8 +47,24 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 
 	invariant(onCancel, 'onCancel must be specified with Cancelable');
 
+	const onCancelIsString = typeof onCancel === 'string';
+	const onCancelIsFunction = typeof onCancel === 'function';
+	const dispatchCancelToConfig = function (props) {
+		if (onCancelIsString && typeof props[onCancel] === 'function') {
+			props[onCancel]();
+		} else if (onCancelIsFunction) {
+			return onCancel(props);
+		} else {
+			return true;
+		}
+	};
+
 	return class extends React.Component {
 		static displayName = 'Cancelable';
+
+		static propTypes = /** @lends ui/Cancelable.Cancelable.prototype */ {
+			onCancel: React.PropTypes.func
+		}
 
 		componentDidMount () {
 			if (modal) {
@@ -62,13 +79,11 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		cancel = () => {
-			if (typeof onCancel === 'string' && typeof this.props[onCancel] === 'function') {
-				this.props[onCancel]();
-			} else if (typeof onCancel === 'function') {
-				return onCancel(this.props);
-			} else {
-				return true;
+			if (this.props.onCancel) {
+				this.props.onCancel();
 			}
+
+			return dispatchCancelToConfig(this.props);
 		}
 
 		handleModalCancel = handle(
@@ -84,30 +99,33 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 			stopImmediate
 		)
 
-		renderWrapped () {
+		renderWrapped (props) {
 			return (
 				<Component onKeyUp={this.handleKeyUp}>
-					<Wrapped {...this.props} />
+					<Wrapped {...props} />
 				</Component>
 			);
 		}
 
-		renderUnwrapped () {
+		renderUnwrapped (props) {
 			return (
-				<Wrapped {...this.props} onKeyUp={this.handleKeyUp} />
+				<Wrapped {...props} onKeyUp={this.handleKeyUp} />
 			);
 		}
 
-		renderModal () {
+		renderModal (props) {
 			return (
-				<Wrapped {...this.props} />
+				<Wrapped {...props} />
 			);
 		}
 
 		render () {
-			return	modal && this.renderModal() ||
-					Component && this.renderWrapped() ||
-					this.renderUnwrapped();
+			const props = Object.assign({}, this.props);
+			delete props.onCancel;
+
+			return	modal && this.renderModal(props) ||
+					Component && this.renderWrapped(props) ||
+					this.renderUnwrapped(props);
 		}
 	};
 });

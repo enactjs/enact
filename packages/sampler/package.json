@@ -5,6 +5,7 @@
   "private": true,
   "main": "index.js",
   "scripts": {
+    "lint": "enact lint --framework",
     "test": "echo \"No test suite\" && exit 0",
     "pack": "build-storybook -c .storybook -o dist",
     "pack-qa": "build-storybook -c .qa-storybook -o dist",
@@ -12,6 +13,9 @@
     "serve-qa": "start-storybook -p 8080 -c .qa-storybook"
   },
   "license": "Apache-2.0",
+  "eslintConfig": {
+    "extends": "enact/strict"
+  },
   "devDependencies": {
     "babel-core": "6.14.0",
     "babel-loader": "6.2.5",
@@ -36,15 +40,16 @@
     "webpack": "1.13.2"
   },
   "dependencies": {
-    "@kadira/react-storybook-addon-info": "~3.2.1",
-    "@kadira/storybook": "~2.20.1",
-    "@kadira/storybook-addon-knobs": "~1.2.3",
     "@enact/core": "^1.0.0-alpha.2",
     "@enact/i18n": "^1.0.0-alpha.2",
     "@enact/moonstone": "^1.0.0-alpha.2",
     "@enact/spotlight": "^1.0.0-alpha.2",
     "@enact/ui": "^1.0.0-alpha.2",
+    "@kadira/react-storybook-addon-info": "~3.2.1",
+    "@kadira/storybook": "~2.20.1",
+    "@kadira/storybook-addon-knobs": "~1.2.3",
     "react": "~15.3.2",
+    "react-addons-perf": "~15.3.2",
     "react-dom": "~15.3.2",
     "react-storybook-addon-backgrounds": "~0.0.4"
   }

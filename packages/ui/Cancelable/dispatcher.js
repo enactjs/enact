@@ -1,7 +1,7 @@
 /**
  * Provides methods to add and remove global event listeners
  *
- * @module @enact/moonstone/Cancelable/dispatcher
+ * @module moonstone/Cancelable/dispatcher
  */
 
 const events = {};

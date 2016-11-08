@@ -1,17 +1,63 @@
+/**
+ * Exports the {@link moonstone/Input/PlainInput.PlainInput} and
+ * {@link moonstone/Input/PlainInput.PlainInputBase} components.
+ *
+ * @module moonstone/Input/PlainInput
+ * @private
+ */
+
 import kind from '@enact/core/kind';
 import {Spottable} from '@enact/spotlight';
-import {anyPrimitive} from '@enact/ui/validators/PropTypeValidators';
 import React, {PropTypes} from 'react';
 
 import css from './Input.less';
 
+/**
+ * {@link moonstone/Input/PlainInput.PlainInputBase} is an input component used by the framework
+ * internally.
+ *
+ * @class InputBase
+ * @memberof moonstone/Input/PlainInput
+ * @ui
+ * @private
+ */
 const PlainInputBase = kind({
 	name: 'PlainInputBase',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/Input/InputBase.InputBase.prototype */ {
+		/**
+		 * When `true`, applies a disabled style and the control becomes non-interactive.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
 		disabled: PropTypes.bool,
+
+		/**
+		 * The method to run when the input mounts, giving a reference to the DOM.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
 		inputRef: PropTypes.func,
+
+		/**
+		 * The type of input. Accepted values correspond to the standard HTML5 input types.
+		 *
+		 * @type {String}
+		 * @default 'text'
+		 * @public
+		 */
 		type: PropTypes.string,
+
+		/**
+		 * The value of the input.
+		 *
+		 * @type {String|Number}
+		 * @default ''
+		 * @public
+		 */
 		value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 	},
 
@@ -44,12 +90,20 @@ const PlainInputBase = kind({
 	)
 });
 
+/**
+ * {@link moonstone/Input/PlainInput.PlainInput} is a spottable input component used by the framework
+ * internally.
+ *
+ * @class InputBase
+ * @memberof moonstone/Input/PlainInput
+ * @ui
+ * @mixes spotlight/Spottable
+ * @private
+ */
 const PlainInput = Spottable(kind({
 	name: 'PlainInput',
 
 	render: (props) => {
-		delete props.spotlightDisabled;
-
 		return (
 			<PlainInputBase {...props} />
 		);

@@ -1,7 +1,7 @@
 import {Icon, icons} from '@enact/moonstone/Icon';
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
-import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
+import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
 
 // import icons
 import fwd from '../../images/icon-fwd-btn.png';
@@ -20,7 +20,7 @@ storiesOf('Icon')
 				small={boolean('small')}
 				src={select('src', ['', fwd, play, rew], '')}
 			>
-				{select('icon', ['', ...iconNames], 'plus')}
+				{select('icon', ['', ...iconNames], 'plus') + text('custom icon', '')}
 			</Icon>
 		)
 	);
