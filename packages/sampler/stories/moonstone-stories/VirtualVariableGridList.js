@@ -29,6 +29,7 @@ const
 			userSelect: 'none'
 		}
 	},
+	programs = [],
 	programName = [
 		'On Demand',
 		'To Be Announced',
@@ -56,11 +57,10 @@ const
 		return ri.scale((parseInt(Math.random() * 20) + 1) * 100);
 	};
 
-let programs = [];
 
 for (let i = 0; i < 2000; i++) {
 	programs[i] = [];
-	for(let j = 0; j < 200; j++) {
+	for (let j = 0; j < 200; j++) {
 		programs[i][j] = {
 			width: getRandomWidth(),
 			programName: ('00' + i).slice(-3) + '/' + ('00' + j).slice(-3) + ' - ' + programName[(i + j) % 20]
