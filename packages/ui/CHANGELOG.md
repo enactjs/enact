@@ -6,6 +6,8 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Changed
 
+- Added selection type support to Group
+- Renamed `ui/Group` prop `select` to `childSelect` and added prop `select` to support selection types
 
 ## [1.0.0-alpha.2] - 2016-10-21
 

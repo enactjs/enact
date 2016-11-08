@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact core module, newest chan
 
 ## [unreleased]
 
+### Added
+
+- Added `core/dispatcher` - an event dispatcher for global events (e.g. `window` and `document` events) that fire outside of the React tree
+
 ## [1.0.0-alpha.2] - 2016-10-21
 
 This version includes a lot of refactoring from the previous release. Developers need to switch to the new enact-dev command-line tool.

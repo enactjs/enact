@@ -6,7 +6,9 @@
   "scripts": {
     "clean": "enact clean",
     "lint": "enact lint --framework",
-    "test": "echo \"No test suite\" && exit 0",
+    "test": "enact test start --single-run --browsers PhantomJS",
+    "test-json": "enact test start --single-run --browsers PhantomJS --reporters json",
+    "test-watch": "enact test start --browsers PhantomJS",
     "transpile": "enact transpile"
   },
   "license": "Apache-2.0",
@@ -29,7 +31,7 @@
     }
   },
   "eslintConfig": {
-    "extends": "enact-internal"
+    "extends": "enact/strict"
   },
   "dependencies": {
     "@enact/core": "^1.0.0-alpha.2",

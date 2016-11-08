@@ -1,14 +1,11 @@
 import React from 'react';
 import {mount} from 'enzyme';
-import Expandable from '../Expandable';
+import {ExpandableItemBase} from '../ExpandableItem';
 
-describe('Expandable', () => {
+describe('ExpandableItem', () => {
 	it('should close when disabled', function () {
-		const DivComponent = () => <div>Expand</div>;
-
-		const ExpandableDiv = Expandable(DivComponent);
 		const wrapped = mount(
-			<ExpandableDiv title="foo" open />
+			<ExpandableItemBase open />
 		);
 
 		wrapped.setProps({disabled: true});

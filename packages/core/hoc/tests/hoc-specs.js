@@ -1,4 +1,4 @@
-/* eslint-disable react/display-name */
+/* eslint-disable enact/display-name */
 
 import React from 'react';
 import {shallow, mount} from 'enzyme';

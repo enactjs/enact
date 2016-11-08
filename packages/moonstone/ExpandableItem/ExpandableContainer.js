@@ -1,3 +1,9 @@
+/**
+ * Exports the {@link moonstone/ExpandableItem/ExpandableContainer.ExpandableContainer} component
+ *
+ * @module moonstone/ExpandableItem/ExpandableContainer
+ */
+
 import {Spotlight, SpotlightContainerDecorator} from '@enact/spotlight';
 import React from 'react';
 
@@ -5,14 +11,13 @@ import React from 'react';
  * Restores spotlight focus to root container when closing the container if the previously focused
  * component is contained.
  *
- * @class ExpandableContainer
+ * @class ExpandableContainerBase
  * @private
  */
-
 const ExpandableContainerBase = class extends React.Component {
 	static displayName = 'ExpandableContainer'
 
-	static propTypes = {
+	static propTypes =  /** @lends moonstone/ExpandableItem/ExpandableContainer.ExpandableContainerBase.prototype */ {
 		'data-container-id': React.PropTypes.string,
 		open: React.PropTypes.bool
 	}
@@ -40,6 +45,13 @@ const ExpandableContainerBase = class extends React.Component {
 	}
 };
 
+/**
+ * Restores spotlight focus to root container when closing the container if the previously focused
+ * component is contained.
+ *
+ * @class ExpandableContainer
+ * @private
+ */
 const ExpandableContainer = SpotlightContainerDecorator(ExpandableContainerBase);
 
 export default ExpandableContainer;

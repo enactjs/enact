@@ -1,15 +1,16 @@
 /**
- * Exports the {@link module:@enact/i18n/Uppercase~Uppercase} component and
- * {@link module:@enact/i18n/Uppercase~contextTypes} validation rules.
+ * Exports the {@link i18n/Uppercase.Uppercase} Higher-Order Component (HOC)
  *
- * @module @enact/i18n/Uppercase
+ * @module i18n/Uppercase
  */
 
 import {kind, hoc} from '@enact/core';
 import React from 'react';
 
+import {toUpperCase} from '../';
+
 /**
- * {@link module:@enact/i18n/Uppercase~Uppercase} is a Higher Order Component that is used to wrap
+ * {@link i18n/Uppercase.Uppercase} is a Higher Order Component that is used to wrap
  * an element to provide locale-aware uppercasing of `children`, provided that `children` is a single
  * string. Other values for `children` are unchanged. It supports a `preserveCase` property which can be
  * used to override the uppercase as-needed.
@@ -17,10 +18,13 @@ import React from 'react';
  * There are no configurable options on this HOC.
  *
  * @class Uppercase
+ * @memberof i18n/Uppercase
  * @public
  */
 const Uppercase = hoc((config, Wrapped) => kind({
-	propTypes: {
+	name: 'Uppercase',
+
+	propTypes: /** @lends i18n/Uppercase.Uppercase.prototype */ {
 		/**
 		 * The children string will be uppercased, unless this is set to true.
 		 *
@@ -40,7 +44,7 @@ const Uppercase = hoc((config, Wrapped) => kind({
 			if (!preserveCase && React.Children.count(children) === 1) {
 				const content = React.Children.toArray(children)[0];
 				if (typeof content == 'string') {
-					return content.toUpperCase();
+					return toUpperCase(content);
 				}
 			}
 			return children;
