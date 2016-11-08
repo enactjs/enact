@@ -72,6 +72,12 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => kind({
 
 	propTypes: /** @lends spotlight.Spottable.prototype */ {
 		/**
+		 * TODO: disabling warning, remove after https://jira2.lgsvl.com/browse/PLAT-30066
+		 * @private
+		 */
+		classes: React.PropTypes.any,
+
+		/**
 		 * Whether or not the component is in a disabled state.
 		 *
 		 * @type {Boolean}
@@ -87,7 +93,15 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => kind({
 		 * @default false
 		 * @public
 		 */
-		spotlightDisabled: React.PropTypes.bool
+		spotlightDisabled: React.PropTypes.bool,
+
+		/**
+		 * The tabindex of the component.
+		 *
+		 * @type {Number}
+		 * @public
+		 */
+		tabIndex: React.PropTypes.number
 	},
 
 	styles: {

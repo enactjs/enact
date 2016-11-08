@@ -31,6 +31,7 @@ const
 		}
 	},
 	items = [],
+	// eslint-disable-next-line enact/prop-types
 	renderItem = ({data, index, key}) => {
 		const {text, subText, source} = data[index];
 		return (
