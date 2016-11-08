@@ -148,7 +148,7 @@ const DatePickerBase = kind({
 
 		return (
 			<ExpandableItemBase {...rest} showLabel="always">
-				<div className={css.dateComponents}>
+				<div className={css.dateComponentPickers}>
 					{order.map(picker => {
 						switch (picker) {
 							case 'd':

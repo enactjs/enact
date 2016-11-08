@@ -1,20 +1,4 @@
-@import '~@enact/ui/styles/mixins.less';
-
-@import '../styles/variables.less';
-
-.datePicker {
-	display: inline-block;
-	direction: ltr;
-
-	/* Time/date pickers should always be arranged according to the order of the formatter */
-	:global(.enact-locale-right-to-left) & {
-		direction: rtl;
-	}	
-}
-
-.dateComponents {
-	.padding-start-end(48px, inherit);
-}
+@import '../internal/DateComponentPicker/DateComponentPicker.less';
 
 .year {
 	min-width: 120px;

@@ -126,7 +126,7 @@ const TimePickerBase = kind({
 	render: ({hasMeridiem, hour, meridiem, meridiems, minute, noHourAnimation, noLabels, onChangeHour, onChangeMeridiem, onChangeMinute, order, ...rest}) => {
 		return (
 			<ExpandableItemBase {...rest} showLabel="always">
-				<div className={css.dateComponents}>
+				<div className={css.dateComponentPickers}>
 					<div className={css.timeComponents}>
 						{order.map(picker => {
 							switch (picker) {
