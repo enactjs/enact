@@ -17,7 +17,7 @@ import DateComponentPickerChrome from './DateComponentPickerChrome';
  * @private
  */
 const DateComponentRangePickerBase = kind({
-	name: 'DateComponentRangePickerBase',
+	name: 'DateComponentRangePicker',
 
 	propTypes:  /** @lends moonstone/internal/DateComponentPicker.DateComponentRangePicker.prototype */ {
 		/**
