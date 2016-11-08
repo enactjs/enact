@@ -11,7 +11,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Changed
 
-- Spotlight containers to default to focus last selected item when gaining focus.
+- Spotlight containers to spot the last focused element by default.
 
 ### Removed
 

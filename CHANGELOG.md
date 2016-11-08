@@ -28,7 +28,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 - `moonstone/ToggleItem`'s `inline` version to have a `max-width` of `240px`
 - `moonstone/Input` to use `<div>` instead of `<label>` for wrapping components. No change to
 	functionality, only markup.
-- Spotlight containers to default to focus last selected item when gaining focus.
+- Spotlight containers to spot the last focused element by default.
 - `ui/Group` prop `select` to `childSelect` and added prop `select` to support selection types
 
 ### Removed
