@@ -129,7 +129,7 @@ const DatePickerController = class extends React.Component {
 		this.initI18n();
 
 		this.state = {
-			value: this.toIDate(props.value)
+			value: this.toTime(props.value)
 		};
 	}
 
@@ -157,35 +157,48 @@ const DatePickerController = class extends React.Component {
 
 	componentWillReceiveProps (nextProps) {
 		this.setState({
-			value: 'value' in nextProps ? this.toIDate(nextProps.value) : this.state.value
+			value: 'value' in nextProps ? this.toTime(nextProps.value) : this.state.value
 		});
 	}
 
 	/**
 	 * Converts a Date to an IDate
 	 *
-	 * @param	{Date}	date	Date object
+	 * @param	{Date}	time	Date object
 	 *
 	 * @returns	{IDate}			ilib Date object
 	 */
-	toIDate (date) {
-		if (date && this.locale) {
+	toIDate (time) {
+		if (time && this.locale) {
 			return DateFactory({
-				unixtime: date.getTime(),
+				unixtime: time,
 				timezone: 'local'
 			});
+		}
+	}
+
+	toTime (date) {
+		if (date && this.locale) {
+			const time = date.getTime();
+			return this.toIDate(time).getTime();
 		}
 	}
 
 	/**
 	 * Updates the internal value in state
 	 *
-	 * @param	{IDate}		value ilib Date object
+	 * @param	{IDate}		value	ilib Date object
 	 *
-	 * @returns {undefined}
+	 * @returns {Number}			Updated internal value
 	 */
 	updateValue = (value) => {
-		this.setState({value});
+		const newValue = DateFactory(value).getTime();
+
+		this.setState({
+			value: newValue
+		});
+
+		return newValue;
 	}
 
 	/**
@@ -195,12 +208,19 @@ const DatePickerController = class extends React.Component {
 	 * @returns {IDate} ilib Date object
 	 */
 	calcValue = () => {
-		let value = this.state.value;
-		if (this.props.open && !value) {
-			value = this.toIDate(new Date());
-		}
+		const currentValue = this.state.value;
 
-		return value;
+		// Always use the current value if valid but if not and open, generate a value
+		if (currentValue) {
+			return DateFactory({
+				unixtime: currentValue
+			});
+		} else if (this.props.open) {
+			return DateFactory({
+				unixtime: Date.now(),
+				timezone: 'local'
+			});
+		}
 	}
 
 	/**
@@ -239,12 +259,8 @@ const DatePickerController = class extends React.Component {
 	 * @returns {undefined}
 	 */
 	handleChangeDate = (ev) => {
-		const v = this.calcValue();
-		const value = DateFactory({
-			year: v.getYears(),
-			month: v.getMonths(),
-			day: ev.value
-		});
+		const value = this.calcValue();
+		value.day = ev.value;
 
 		this.updateValue(value);
 	}
@@ -257,12 +273,8 @@ const DatePickerController = class extends React.Component {
 	 * @returns {undefined}
 	 */
 	handleChangeMonth = (ev) => {
-		const v = this.calcValue();
-		const value = DateFactory({
-			year: v.getYears(),
-			month: ev.value,
-			day: v.getDays()
-		});
+		const value = this.calcValue();
+		value.month = ev.value;
 
 		this.updateValue(value);
 	}
@@ -275,12 +287,8 @@ const DatePickerController = class extends React.Component {
 	 * @returns {undefined}
 	 */
 	handleChangeYear = (ev) => {
-		const v = this.calcValue();
-		const value = DateFactory({
-			year: ev.value,
-			month: v.getMonths(),
-			day: v.getDays()
-		});
+		const value = this.calcValue();
+		value.year = ev.value;
 
 		this.updateValue(value);
 	}
@@ -293,18 +301,14 @@ const DatePickerController = class extends React.Component {
 	 * @returns	{undefined}
 	 */
 	handleClose = (ev) => {
-		const value = this.toIDate(this.props.value);
-
 		if (this.props.onChange) {
 			// If we have an onChange handler to call, determine if the value actually changed and,
 			// if so, call the handler.
-			const changed =	value == null ||
-							value.month !== this.state.value.month ||
-							value.day !== this.state.value.day ||
-							value.year !== this.state.value.year;
+			const changed =	this.props.value == null || this.props.value !== this.state.value;
 			if (changed) {
+				const currentValue = this.calcValue();
 				this.props.onChange({
-					value: this.calcValue().getJSDate()
+					value: currentValue.getJSDate()
 				});
 			}
 		}

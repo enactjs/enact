@@ -265,9 +265,9 @@ const TimePickerController = class extends React.Component {
 	/**
 	 * Updates the internal value in state
 	 *
-	 * @param	{IDate}		value ilib Date object
+	 * @param	{IDate}		value	ilib Date object
 	 *
-	 * @returns {undefined}
+	 * @returns {Number}			Updated internal value
 	 */
 	updateValue = (value) => {
 		const newValue = DateFactory(value).getTime();
