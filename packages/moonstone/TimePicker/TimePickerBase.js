@@ -168,6 +168,7 @@ const TimePickerBase = kind({
 						})}
 					</div>
 					{!hasMeridiem ? null : (
+						// eslint-disable-next-line react/jsx-indent
 						<DateComponentPicker
 							key="meridiem-picker"
 							label={noLabels ? null : $L('meridiem')}
