@@ -1,7 +1,8 @@
 /**
- * Exports the {@link module:@enact/moonstone/Scroller/ScrollAnimator~ScrollAnimator} component.
+ * Exports the {@link moonstone/Scroller/ScrollAnimator.ScrollAnimator} component.
  *
- * @module @enact/moonstone/Scroller/ScrollAnimator
+ * @module moonstone/Scroller/ScrollAnimator
+ * @private
  */
 
 import R from 'ramda';
@@ -47,11 +48,11 @@ const
 	perf = (typeof window === 'object') ? window.performance : {};
 
 /**
- * {@link module:@enact/moonstone/Scroller/ScrollAnimator~ScrollAnimator} is the class
+ * {@link moonstone/Scroller/ScrollAnimator.ScrollAnimator} is the class
  * to scroll a list or a scroller with animation.
  *
  * @class ScrollAnimator
- * @ui
+ * @memberof moonstone/Scroller/ScrollAnimator
  * @public
  */
 class ScrollAnimator {

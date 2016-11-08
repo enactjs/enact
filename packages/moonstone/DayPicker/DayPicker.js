@@ -1,7 +1,7 @@
 /**
- * Exports the {@link module:@enact/moonstone/DayPicker~DayPicker} components.
+ * Exports the {@link moonstone/DayPicker.DayPicker} components.
  *
- * @module @enact/moonstone/DayPicker
+ * @module moonstone/DayPicker
  */
 
 import {$L} from '@enact/i18n';
@@ -87,17 +87,18 @@ const getSelectedDayString = ({selected = []}) => {
 };
 
 /**
- * {@link module:@enact/moonstone/DayPicker~DayPicker} is a component that
+ * {@link moonstone/DayPicker.DayPicker} is a component that
  * allows the user to choose day(s) of the week.
  *
  * @class DayPicker
+ * @memberof moonstone/DayPicker
  * @ui
  * @public
  */
 const DayPicker = kind({
 	name: 'DayPicker',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/DayPicker.DayPicker.prototype */ {
 		/**
 		 * The primary text of the Picker.
 		 *

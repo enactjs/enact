@@ -1,7 +1,7 @@
 /**
- * Exports the {@link module:@enact/moonstone/CheckboxItem~CheckboxItem} component.
+ * Exports the {@link moonstone/CheckboxItem.CheckboxItem} component.
  *
- * @module @enact/moonstone/CheckboxItem
+ * @module moonstone/CheckboxItem
  */
 
 import React, {PropTypes} from 'react';
@@ -12,18 +12,19 @@ import ToggleItem from '../ToggleItem';
 import css from './CheckboxItem.less';
 
 /**
- * {@link module:@enact/moonstone/CheckboxItem~CheckboxItem} is a component that
+ * {@link moonstone/CheckboxItem.CheckboxItem} is a component that
  * is an Item that is Toggleable. It has two states: `true` (checked) & `false`
  * (unchecked). It uses a check icon to represent its checked state.
  *
  * @class CheckboxItem
+ * @memberof moonstone/CheckboxItem
  * @ui
  * @public
  */
 const CheckboxItemBase = kind({
 	name: 'CheckboxItem',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/CheckboxItem.CheckboxItem.prototype */ {
 		/**
 		 * The string to be displayed as the main content of the checkbox item.
 		 *

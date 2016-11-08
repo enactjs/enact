@@ -1,9 +1,9 @@
 /**
- * Exports the {@link module:@enact/moonstone/Scroller/Scrollable~Scrollable} Higher-order Component (HOC) and
- * the {@link constant:@enact/moonstone/Scroller/Scrollable~dataIndexAttribute} constant.
- * The default export is {@link module:@enact/moonstone/Scroller/Scrollable~Scrollable}.
+ * Exports the {@link moonstone/Scroller/Scrollable.Scrollable} Higher-order Component (HOC) and
+ * the {@link constant:@enact/moonstone/Scroller/Scrollable.dataIndexAttribute} constant.
+ * The default export is {@link moonstone/Scroller/Scrollable.Scrollable}.
  *
- * @module @enact/moonstone/Scroller/Scrollable
+ * @module moonstone/Scroller/Scrollable
  */
 
 import classNames from 'classnames';
@@ -21,7 +21,8 @@ const
 	nop = () => {},
 	perf = (typeof window === 'object') ? window.performance : {},
 	holdTime = 50,
-	pixelPerLine = ri.scale(40),
+	scrollWheelMultiplier = 5,
+	pixelPerLine = ri.scale(40) * scrollWheelMultiplier,
 	pixelPerScrollbarBtn = ri.scale(100),
 	epsilon = 1,
 	getComputedStyle = (typeof window === 'object') ? window.getComputedStyle : {},
@@ -30,9 +31,9 @@ const
 	spotlightAnimationDuration = 500;
 
 /**
- * {@link module:@enact/moonstone/Scroller/Scrollable~dataIndexAttribute} is the name of a custom attribute
- * which indicates the index of an item in {@link module:@enact/moonstone/VirtualList~VirtualList}
- * or {@link module:@enact/moonstone/VirtualList~VirtualGridList}.
+ * {@link moonstone/Scroller/Scrollable.dataIndexAttribute} is the name of a custom attribute
+ * which indicates the index of an item in {@link moonstone/VirtualList.VirtualList}
+ * or {@link moonstone/VirtualList.VirtualGridList}.
  *
  * @constant dataIndexAttribute
  * @type {String}
@@ -41,7 +42,7 @@ const
 const dataIndexAttribute = 'data-index';
 
 /**
- * {@link module:@enact/moonstone/Scroller/Scrollable~Scrollable} is a Higher-order Component
+ * {@link moonstone/Scroller/Scrollable.Scrollable} is a Higher-order Component
  * that applies a Scrollable behavior to its wrapped component.
  *
  * Scrollable catches `onFocus` and `onKeyDown` events from its wrapped component for spotlight features,
@@ -51,7 +52,8 @@ const dataIndexAttribute = 'data-index';
  * Scrollable calls `onScrollStart`, `onScrolling`, and `onScrollStop` callback functions during scroll.
  *
  * @class Scrollable
- * @ui
+ * @memberof moonstone/Scroller/Scrollable
+ * @hoc
  * @public
  */
 const ScrollableHoC = hoc((config, Wrapped) => {
@@ -297,7 +299,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			let delta = e.deltaY;
 
 			if (deltaMode === 0) {
-				delta = ri.scale(delta);
+				delta = ri.scale(delta) * scrollWheelMultiplier;
 			} else if (deltaMode === 1) { // line; firefox
 				delta = delta * pixelPerLine;
 			} else if (deltaMode === 2) { // page
@@ -369,7 +371,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			// for virtuallist
 			const
 				item = e.target,
-				index = Number.parseInt(item.getAttribute(dataIndexAttribute), 10);
+				index = Number.parseInt(item.getAttribute(dataIndexAttribute));
 
 			if (!this.isDragging && !isNaN(index) && item !== this.lastFocusedItem && item === doc.activeElement && this.childRef.calculatePositionOnFocus) {
 				const pos = this.childRef.calculatePositionOnFocus(index);
@@ -384,7 +386,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		onKeyDown = (e) => {
 			if (this.childRef.setSpotlightContainerRestrict) {
-				const index = Number.parseInt(e.target.getAttribute(dataIndexAttribute), 10);
+				const index = Number.parseInt(e.target.getAttribute(dataIndexAttribute));
 				this.childRef.setSpotlightContainerRestrict(e.keyCode, index);
 			}
 		}

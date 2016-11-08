@@ -1,8 +1,8 @@
 /**
- * Exports the {@link module:@enact/moonstone/Button~Button} and {@link module:@enact/moonstone/Button~ButtonBase}
- * components.  The default export is {@link module:@enact/moonstone/Button~Button}.
+ * Exports the {@link moonstone/Button.Button} and {@link moonstone/Button.ButtonBase}
+ * components.  The default export is {@link moonstone/Button.Button}.
  *
- * @module @enact/moonstone/Button
+ * @module moonstone/Button
  */
 
 import kind from '@enact/core/kind';
@@ -16,18 +16,19 @@ import {MarqueeDecorator} from '../Marquee';
 import css from './Button.less';
 
 /**
- * {@link module:@enact/moonstone/Button~ButtonBase} is a stateless Button with Moonstone styling
+ * {@link moonstone/Button.ButtonBase} is a stateless Button with Moonstone styling
  * applied. In most circumstances, you will want to use the Pressable and Spottable version:
- * {@link module:@enact/moonstone/Button~Button}
+ * {@link moonstone/Button.Button}
  *
  * @class ButtonBase
+ * @memberof moonstone/Button
  * @ui
  * @public
  */
 const ButtonBase = kind({
 	name: 'Button',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/Button.ButtonBase.prototype */ {
 		children: PropTypes.node.isRequired,
 
 		/**
@@ -52,7 +53,7 @@ const ButtonBase = kind({
 
 		/**
 		 * A boolean parameter affecting the minimum width of the button. When `true`,
-		 * the minimum width will be set to 180px (or 130px if [small]{@link module:moonstone/Button~Button#small}
+		 * the minimum width will be set to 180px (or 130px if [small]{@link moonstone/Button.Button#small}
 		 * is `true`). If `false`, the minimum width will be set to the current value of
 		 * `@moon-button-height` (thus forcing the button to be no smaller than a circle with
 		 * diameter `@moon-button-height`).
@@ -132,7 +133,7 @@ const ButtonBase = kind({
 });
 
 /**
- * {@link module:@enact/moonstone/Button~Button} is a Button with Moonstone styling, Spottable and
+ * {@link moonstone/Button.Button} is a Button with Moonstone styling, Spottable and
  * Pressable applied.  If the Button's child component is text, it will be uppercased unless
  * `preserveCase` is set.
  *
@@ -142,9 +143,10 @@ const ButtonBase = kind({
  * ```
  *
  * @class Button
- * @see module:@enact/i18n/Uppercase
- * @mixes module:@enact/spotlight/Spottable
- * @mixes module:@enact/ui/Pressable
+ * @memberof moonstone/Button
+ * @see i18n/Uppercase
+ * @mixes spotlight/Spottable
+ * @mixes ui/Pressable
  * @ui
  * @public
  */

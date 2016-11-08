@@ -1,7 +1,8 @@
 /**
- * Exports the {@link module:@enact/moonstone/RangePicker~RangePicker}
+ * Exports the {@link moonstone/RangePicker.RangePicker} and
+ * {@link moonstone/RangePicker.RangePickerBase} components
  *
- * @module @enact/moonstone/RangePicker
+ * @module moonstone/RangePicker
  */
 
 import kind from '@enact/core/kind';
@@ -12,17 +13,19 @@ import PickerItem from '../Picker/PickerItem';
 import SpottablePicker from '../Picker/SpottablePicker';
 
 /**
- * {@link module:@enact/moonstone/RangePicker~RangePicker} is a component that
- * lets the user select a number from a range of numbers.
+ * {@link moonstone/RangePicker.RangePickerBase} is a component that lets the user select a number
+ * from a range of numbers. This version is not spottable. Developers are encouraged to use
+ * {@link moonstone/RangePicker.RangePicker}.
  *
- * @class RangePicker
+ * @class RangePickerBase
+ * @memberof moonstone/RangePicker
  * @ui
  * @public
  */
 const RangePickerBase = kind({
 	name: 'RangePicker',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/RangePicker.RangePickerBase.prototype */ {
 		/**
 		 * The maximum value selectable by the picker (inclusive).
 		 *
@@ -169,6 +172,15 @@ const RangePickerBase = kind({
 	)
 });
 
+/**
+ * {@link moonstone/RangePicker.RangePicker} is a component that lets the user select a number from
+ * a range of numbers.
+ *
+ * @class RangePicker
+ * @memberof moonstone/RangePicker
+ * @ui
+ * @public
+ */
 const RangePicker = SpottablePicker(RangePickerBase);
 
 export default RangePicker;

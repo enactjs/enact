@@ -1,7 +1,7 @@
 /**
- * Exports the {@link module:@enact/moonstone/Input~Input} component.
+ * Exports the {@link moonstone/Input.Input} and {@link moonstone/Input.InputBase} components.
  *
- * @module @enact/moonstone/Input
+ * @module moonstone/Input
  */
 
 import classNames from 'classnames';
@@ -18,8 +18,18 @@ const icon = (which, props, className) => {
 	return props[which] ? <Icon className={className}>{props[which]}</Icon> : null;
 };
 
+/**
+ * {@link moonstone/Input.InputBase} is a Moonstone styled input component. It supports start and end
+ * icons. Note that this base component is not stateless as many other base components are. However,
+ * it does not support Spotlight. Apps will want to use {@link moonstone/Input.Input}.
+ *
+ * @class InputBase
+ * @memberof moonstone/Input
+ * @ui
+ * @public
+ */
 class InputBase extends React.Component {
-	static propTypes = {
+	static propTypes = /** @lends moonstone/Input.InputBase.prototype */ {
 		/**
 		 * When `true`, applies a disabled style and the control becomes non-interactive.
 		 *
@@ -41,7 +51,7 @@ class InputBase extends React.Component {
 		/**
 		 * The icon to be placed at the end of the input.
 		 *
-		 * @see {@link module:@enact/moonstone/Icon~Icon}
+		 * @see {@link moonstone/Icon.Icon}
 		 * @type {String}
 		 * @public
 		 */
@@ -50,7 +60,7 @@ class InputBase extends React.Component {
 		/**
 		 * The icon to be placed at the beginning of the input.
 		 *
-		 * @see {@link module:@enact/moonstone/Icon~Icon}
+		 * @see {@link moonstone/Icon.Icon}
 		 * @type {String}
 		 * @public
 		 */
@@ -66,6 +76,33 @@ class InputBase extends React.Component {
 		onChange: PropTypes.func,
 
 		/**
+		 * The handler to run when clicked.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onClick: PropTypes.func,
+
+		/**
+		 * The handler to run when focused.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onFocus: PropTypes.func,
+
+		/**
+		 * The handler to run when a key is pressed down.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onKeyDown: PropTypes.func,
+
+		/**
 		 * The placeholder text to display.
 		 *
 		 * @type {String}
@@ -73,6 +110,15 @@ class InputBase extends React.Component {
 		 * @public
 		 */
 		placeholder: PropTypes.string,
+
+		/**
+		 * When `true`, spotlight navigation is prevented for the input.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		spotlightDisabled: PropTypes.bool,
 
 		/**
 		 * The type of input. Accepted values correspond to the standard HTML5 input types.
@@ -172,6 +218,17 @@ class InputBase extends React.Component {
 	}
 }
 
+/**
+ * {@link moonstone/Input.Input} is a Spottable, Moonstone styled input component. It supports pre and post
+ * icons.
+ *
+ * @class Input
+ * @memberof moonstone/Input
+ * @ui
+ * @mixes spotlight/SpotlightFocusableDecorator
+ * @mixes spotlight/Spottable
+ * @public
+ */
 const Input = SpotlightFocusableDecorator(
 	{useEnterKey: true, pauseSpotlightOnFocus: true},
 	InputBase
