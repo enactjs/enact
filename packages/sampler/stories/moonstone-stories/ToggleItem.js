@@ -30,5 +30,6 @@ storiesOf('ToggleItem')
 				>
 					{text('children', 'Toggle Item')}
 				</ToggleItem>
-		);}
+			);
+		}
 	);

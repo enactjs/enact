@@ -37,6 +37,12 @@ const TransitionBase = kind({
 		childRef: PropTypes.func,
 
 		/**
+		 * TODO: disabling warning, remove after https://jira2.lgsvl.com/browse/PLAT-30066
+		 * @private
+		 */
+		classes: PropTypes.any,
+
+		/**
 		 * Specifies the height of the transition when `type` is set to `'clip'`.
 		 *
 		 * @type {Number}

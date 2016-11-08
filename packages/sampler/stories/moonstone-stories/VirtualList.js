@@ -40,6 +40,7 @@ const
 		}
 	},
 	items = [],
+	// eslint-disable-next-line enact/prop-types, enact/display-name
 	renderItem = (direction) => ({data, index, key}) => (
 		<Item key={key} style={style[direction + 'Item']}>
 			{data[index]}
