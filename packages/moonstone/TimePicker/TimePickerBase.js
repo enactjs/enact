@@ -73,7 +73,7 @@ const TimePickerBase = kind({
 		order: React.PropTypes.arrayOf(React.PropTypes.oneOf(['h', 'k', 'm', 'a'])).isRequired,
 
 		/**
-		 * When `true`, prevents the hour picker from animation. Useful when changing the merdiem
+		 * When `true`, prevents the hour picker from animation. Useful when changing the meridiem
 		 * for locales that only have 2 meridiems.
 		 *
 		 * @type {Boolean}
@@ -90,7 +90,7 @@ const TimePickerBase = kind({
 		noLabels: React.PropTypes.bool,
 
 		/**
-		 * Handler for changes in the `date` component of the time
+		 * Handler for changes in the `hour` component of the time
 		 *
 		 * @type {Function}
 		 * @public
@@ -98,7 +98,7 @@ const TimePickerBase = kind({
 		onChangeHour: React.PropTypes.func,
 
 		/**
-		 * Handler for changes in the `year` component of the time
+		 * Handler for changes in the `meridiem` component of the time
 		 *
 		 * @type {Function}
 		 * @public
@@ -106,7 +106,7 @@ const TimePickerBase = kind({
 		onChangeMeridiem: React.PropTypes.func,
 
 		/**
-		 * Handler for changes in the `month` component of the time
+		 * Handler for changes in the `minute` component of the time
 		 *
 		 * @type {Function}
 		 * @public
@@ -127,51 +127,52 @@ const TimePickerBase = kind({
 		return (
 			<ExpandableItemBase {...rest} showLabel="always">
 				<div className={css.dateComponents}>
-					{order.map(picker => {
-						switch (picker) {
-							case 'h':
-							case 'k':
-								return (
-									<DateComponentPicker
-										key="hour-picker"
-										label={noLabels ? null : $L('hour')}
-										value={hour}
-										onChange={onChangeHour}
-										noAnimation={noHourAnimation}
-										wrap
-									>
-										{hasMeridiem ? hours12 : hours24}
-									</DateComponentPicker>
+					<div className={css.timeComponents}>
+						{order.map(picker => {
+							switch (picker) {
+								case 'h':
+								case 'k':
+									return (
+										<DateComponentPicker
+											key="hour-picker"
+											label={noLabels ? null : $L('hour')}
+											value={hour}
+											onChange={onChangeHour}
+											noAnimation={noHourAnimation}
+											wrap
+										>
+											{hasMeridiem ? hours12 : hours24}
+										</DateComponentPicker>
 									);
-							case 'm':
-								return (
-									<DateComponentRangePicker
-										key="minute-picker"
-										label={noLabels ? null : $L('minute')}
-										min={1}
-										max={59}
-										value={minute}
-										onChange={onChangeMinute}
-										padded
-										wrap
-									/>
-								);
-							case 'a':
-								return (
-									<DateComponentPicker
-										key="meridiem-picker"
-										label={noLabels ? null : $L('meridiem')}
-										value={meridiem}
-										onChange={onChangeMeridiem}
-										wrap
-									>
-										{meridiems}
-									</DateComponentPicker>
-								);
-						}
+								case 'm':
+									return (
+										<DateComponentRangePicker
+											key="minute-picker"
+											label={noLabels ? null : $L('minute')}
+											min={1}
+											max={59}
+											value={minute}
+											onChange={onChangeMinute}
+											padded
+											wrap
+										/>
+									);
+							}
 
-						return null;
-					})}
+							return null;
+						})}
+					</div>
+					{!hasMeridiem ? null : (
+						<DateComponentPicker
+							key="meridiem-picker"
+							label={noLabels ? null : $L('meridiem')}
+							value={meridiem}
+							onChange={onChangeMeridiem}
+							wrap
+						>
+							{meridiems}
+						</DateComponentPicker>
+					)}
 				</div>
 			</ExpandableItemBase>
 		);

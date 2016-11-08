@@ -46,7 +46,7 @@ const calcMeridiemRange = ({start, end}) => ({
  *
  * @returns {Number}				Index of `time` in `meridiems`
  */
-const indexOfMerdiem = (time, meridiems) => {
+const indexOfMeridiem = (time, meridiems) => {
 	const minutes = time.getHours() * 60 + time.getMinutes();
 	for (let i = 0; i < meridiems.length; i++) {
 		const m = meridiems[i];
@@ -403,7 +403,7 @@ const TimePickerController = class extends React.Component {
 			values.hour = value.getHours();
 			values.minute = value.getMinutes();
 			if (this.meridiemEnabled) {
-				values.meridiem = indexOfMerdiem(value, this.meridiemRanges);
+				values.meridiem = indexOfMeridiem(value, this.meridiemRanges);
 			}
 		}
 

@@ -184,9 +184,7 @@ const DatePickerController = class extends React.Component {
 	 * @returns {undefined}
 	 */
 	updateValue = (value) => {
-		this.setState({
-			value: value
-		});
+		this.setState({value});
 	}
 
 	/**
