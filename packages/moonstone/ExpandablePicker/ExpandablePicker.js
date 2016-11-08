@@ -1,3 +1,11 @@
+/**
+ * Exports the {@link moonstone/ExpandablePicker.ExpandablePicker} and
+ * {@link moonstone/ExpandablePicker.ExpandablePickerBase} components. The default export is
+ * {@link moonstone/ExpandablePicker.ExpandablePicker}.
+ *
+ * @module moonstone/ExpandablePicker
+ */
+
 import kind from '@enact/core/kind';
 import Changeable from '@enact/ui/Changeable';
 import React from 'react';
@@ -7,10 +15,20 @@ import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 import IconButton from '../IconButton';
 import Picker from '../Picker';
 
+/**
+ * {@link moonstone/ExpandablePicker.ExpandablePickerBase} is a stateless component that
+ * renders a list of items into a picker that allows the user to select only a single item at
+ * a time. It supports increment/decrement buttons for selection.
+ *
+ * @class ExpandablePickerBase
+ * @memberof moonstone/ExpandablePicker
+ * @ui
+ * @public
+ */
 const ExpandablePickerBase = kind({
 	name: 'ExpandablePicker',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/ExpandablePicker.ExpandablePickerBase.prototype */ {
 		/**
 		 * Children from which to pick
 		 *
@@ -178,6 +196,19 @@ const ExpandablePickerBase = kind({
 	}
 });
 
+/**
+ * {@link moonstone/ExpandablePicker.ExpandablePickerBase} is a stateful component that
+ * renders a list of items into a picker that allows the user to select only a single item at
+ * a time. It supports increment/decrement buttons for selection.
+ *
+ * @class ExpandablePicker
+ * @memberof moonstone/ExpandablePicker
+ * @ui
+ * @mixes recompose/pure
+ * @mixes moonstone/ExpandableItem.Expandable
+ * @mixes ui/Changeable.Changeable
+ * @public
+ */
 const ExpandablePicker = pure(
 	Expandable(
 		Changeable(
