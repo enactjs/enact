@@ -4,6 +4,14 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ## [1.0.0-alpha.3] - 2016-11-8
 
+> Note: For those who are using `eslint-config-enact` for in-editor linting, there have been some important changes and reinstallation is necessary. Refer to [https://github.com/enyojs/eslint-config-enact/](https://github.com/enyojs/eslint-config-enact/) for install instructions or reinstall via:
+>
+> ```
+> npm install -g eslint eslint-plugin-react eslint-plugin-babel babel-eslint enyojs/eslint-plugin-enact enyojs/eslint-config-enact
+> ```
+>
+>If you don't use in-editor linting or use a different linting configuration, you can safely ignore this notice.
+
 ### Added
 
 - `core/dispatcher` - an event dispatcher for global events (e.g. `window` and `document` events) that fire outside of the React tree
