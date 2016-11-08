@@ -123,13 +123,14 @@ const DatePickerController = class extends React.Component {
 
 	constructor (props) {
 		super(props);
-		this.state = {
-			value: this.toIDate(props.value)
-		};
 
 		this.order = ['d', 'm', 'y'];
 
 		this.initI18n();
+
+		this.state = {
+			value: this.toIDate(props.value)
+		};
 	}
 
 	componentWillUpdate () {

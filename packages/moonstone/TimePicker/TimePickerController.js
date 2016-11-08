@@ -154,15 +154,16 @@ const TimePickerController = class extends React.Component {
 
 	constructor (props) {
 		super(props);
-		this.state = {
-			value: this.toTime(props.value)
-		};
 
 		this.order = ['h', 'm', 'a'];
 		this.meridiemRanges = [];
 		this.meridiemLabels = ['am', 'pm'];
 
 		this.initI18n();
+
+		this.state = {
+			value: this.toTime(props.value)
+		};
 	}
 
 	componentWillReceiveProps (nextProps) {
