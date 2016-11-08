@@ -1,3 +1,9 @@
+/**
+ * Exports the {@link moonstone/ProgressBar.ProgressBar} component.
+ *
+ * @module moonstone/ProgressBar
+ */
+
 import kind from '@enact/core/kind';
 import {checkDefaultBounds} from '@enact/ui/validators/PropTypeValidators';
 import R from 'ramda';
@@ -7,6 +13,16 @@ import css from './ProgressBar.less';
 
 const progressToPercent = (value, max, min) => R.clamp(min, max, (value / max) * 100) + '%';
 
+/**
+ * {@link moonstone/ProgressBar.ProgressBar} is a component that can display the progress of a
+ * process in a horizontal or vertical bar. A secondary progress indicator can be displayed, which
+ * is different than the primary progress indicator i.e. to indicate background loading progress.
+ *
+ * @class ProgressBar
+ * @memberof moonstone/ProgressBar
+ * @ui
+ * @public
+ */
 const ProgressBarBase = kind({
 	name: 'ProgressBar',
 
