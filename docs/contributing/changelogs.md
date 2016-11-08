@@ -31,7 +31,7 @@ information rather than too little. Some examples may help illustrate this:
 *   Refactored code
 *   Fixed a non-user-visible bug
 
-Comments should be written as markdown and each should begin with a bullet `*`. Component names should be wrapped in \`
+Comments should be written as markdown and each should begin with a bullet `*`. Component names should be wrapped in ``  `  ``
 and include the library name (\`moonstone/Component\`, for example).
 
 #### Sections
