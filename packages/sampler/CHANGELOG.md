@@ -6,8 +6,9 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ### Added
 
-- Samples for `moonstone/DayPicker`, `moonstone/DatePicker`, `moonstone/ExpandableItem`, `moonstone/Image`,
-	`moonstone/VirtualList`, `moonstone/Scroller` and `moonstone/VirtualList.VirtualGridList`
+- Samples for `moonstone/DatePicker`, `moonstone/DayPicker`, `moonstone/ExpandableItem`, `moonstone/Image`,
+	`moonstone/Scroller`, `moonstone/TimePicker`, `moonstone/VirtualList`, and
+	`moonstone/VirtualList.VirtualGridList`
 - Background selection tool
 - `window.ReactPerf` to the Sampler - available when switching to the "iframe" context in the dev tools
 

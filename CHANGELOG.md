@@ -9,11 +9,12 @@ The following is a curated list of changes in the Enact project, newest changes 
 - `core/dispatcher` - an event dispatcher for global events (e.g. `window` and `document` events) that fire outside of the React tree
 - Support for detecting browser locale change events through `languagechange` event in
 	`i18n/I18nDecorator`
-- `moonstone/DatePicker`, `moonstone/DayPicker`, `moonstone/ExpandableItem`, and `moonstone/Image` components
+- `moonstone/DatePicker`, `moonstone/DayPicker`, `moonstone/ExpandableItem`, `moonstone/Image`, and `moonstone/TimePicker` components
 - `fullBleed` prop to `moonstone/Panels/Header`. When `true`, the header content is indented and the header lines are removed.
 - Application close button to `moonstone/Panels`. Fires `onApplicationClose` when clicked. Can be omitted with the `noCloseButton` prop.
-- Samples for `moonstone/DayPicker`, `moonstone/DatePicker`, `moonstone/ExpandableItem`, `moonstone/Image`,
-	`moonstone/VirtualList`, `moonstone/Scroller` and `moonstone/VirtualList.VirtualGridList`
+- Samples for `moonstone/DatePicker`, `moonstone/DayPicker`, `moonstone/ExpandableItem`, `moonstone/Image`,
+	`moonstone/Scroller`, `moonstone/TimePicker`, `moonstone/VirtualList`, and
+	`moonstone/VirtualList.VirtualGridList`
 - `spotlightDefaultClass` to `@enact/spotlight` export. Applying this class to an item in a
 	container will cause it to be the default spotted item in that container.
 - Selection type support to `ui/Group`
