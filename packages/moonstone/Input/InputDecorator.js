@@ -1,7 +1,8 @@
 /**
- * Exports the {@link module:@enact/moonstone/Input/InputDecorator~InputDecorator} component.
+ * Exports the {@link moonstone/Input/InputDecorator.InputDecorator} component.
  *
- * @module @enact/moonstone/Input/InputDecorator
+ * @module moonstone/Input/InputDecorator
+ * @private
  */
 
 import kind from '@enact/core/kind';
@@ -11,18 +12,19 @@ import React, {PropTypes} from 'react';
 import css from './Input.less';
 
 /**
- * {@link module:@enact/moonstone/Input/InputDecorator~InputDecorator} is a control that provides input styling. Any controls
+ * {@link moonstone/Input/InputDecorator.InputDecorator} is a control that provides input styling. Any controls
  * in the InputDecorator will appear to be inside an area styled as an input. Usually,
- * an InputDecorator surrounds a {@link module:@enact/moonstone/Input~Input}:
+ * an InputDecorator surrounds a {@link moonstone/Input.Input}.
  *
- * @class InputDecorator
+ * @class InputDecoratorBase
+ * @memberof moonstone/Input/InputDecorator
  * @ui
- * @public
+ * @private
  */
 const InputDecoratorBase = kind({
 	name: 'InputDecoratorBase',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/Input/InputDecorator.InputDecoratorBase.prototype */ {
 		/**
 		 * The method to run when the decorator mounts, giving a reference to the DOM.
 		 *
@@ -59,6 +61,17 @@ const InputDecoratorBase = kind({
 	)
 });
 
+/**
+ * {@link moonstone/Input/InputDecorator.InputDecorator} is a control that provides input styling.
+ * Any controls in the InputDecorator will appear to be inside an area styled as an input. Usually,
+ * an InputDecorator surrounds a {@link moonstone/Input.Input}.
+ *
+ * @class InputDecorator
+ * @memberof moonstone/Input/InputDecorator
+ * @ui
+ * @mixes spotlight.Spottable
+ * @private
+ */
 const InputDecorator = Spottable({emulateMouse: false}, kind({
 	name: 'InputDecorator',
 

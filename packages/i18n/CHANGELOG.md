@@ -2,8 +2,12 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
-## [unreleased]
+## [1.0.0-alpha.3] - 2016-11-8
 
+### Added
+- Unit tests
+- Support for detecting browser locale change events through `languagechange` event in
+	`i18n/I18nDecorator`
 
 ## [1.0.0-alpha.2] - 2016-10-21
 
