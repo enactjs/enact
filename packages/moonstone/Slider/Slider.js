@@ -9,6 +9,41 @@ import css from './Slider.less';
 
 const changeDelayMS = 20;
 
+const computeLoadedValue = ({backgroundPercent}) => `${backgroundPercent}%`;
+const computePercentProgress = ({value, max}) => {
+	const percentage = (value / max) * 100;
+	return `${percentage}%`;
+};
+const computeLoaderStyleProp = (vertical) => vertical ? 'height' : 'width';
+const computeFillStyleProp = (vertical) => vertical ? 'height' : 'width';
+const computeKnobStyleProp = (vertical) => vertical ? 'top' : 'left';
+
+class VisibleBar extends React.Component {
+	getBarNode = (node) => {
+		this.barNode = node;
+	}
+
+	getKnobNode = (node) => {
+		this.knobNode = node;
+	}
+
+	getLoaderNode = (node) => {
+		this.loaderNode = node;
+	}
+
+	render () {
+		const {loadedValue, percentProgress, vertical, verticalHeight} = this.props;
+
+		return (
+			<div className={css.visibleBar} style={verticalHeight}>
+				<div className={css.load} ref={this.getLoaderNode} style={{[computeLoaderStyleProp(vertical)]: loadedValue}} />
+				<div className={css.fill} ref={this.getBarNode} style={{[computeFillStyleProp(vertical)]: percentProgress}} />
+				<div className={css.knob} ref={this.getKnobNode} style={{[computeKnobStyleProp(vertical)]: percentProgress}} />
+			</div>
+		);
+	}
+}
+
 const SliderBase = kind({
 	name: 'Slider',
 
@@ -31,6 +66,14 @@ const SliderBase = kind({
 		 * @public
 		 */
 		height: PropTypes.string,
+
+		/**
+		 * The method to run when the input mounts, giving a reference to the DOM.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		inputRef: PropTypes.func,
 
 		/**
 		 * The maximum value of the slider.
@@ -102,7 +145,15 @@ const SliderBase = kind({
 		 * @default false
 		 * @public
 		 */
-		vertical: PropTypes.bool
+		vertical: PropTypes.bool,
+
+		/**
+		 * The method to run when the visible bar component mounts, giving a reference to the DOM.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		visibleBarRef: PropTypes.func
 	},
 
 	defaultProps: {
@@ -123,26 +174,26 @@ const SliderBase = kind({
 
 	computed: {
 		className: ({pressed, vertical, styler}) => styler.append({pressed, vertical, horizontal: !vertical}),
-		percentProgress: ({value, max}) => {
-			const percentage = (value / max) * 100;
-			return percentage + '%';
-		},
+		loadedValue: computeLoadedValue,
+		percentProgress: computePercentProgress,
 		verticalHeight: ({vertical, height}) => (vertical ? {height} : null),
-		verticalWidth: ({vertical, height}) => (vertical ? {width: height} : null),
-		loadedValue: ({backgroundPercent}) => (backgroundPercent + '%')
+		verticalWidth: ({vertical, height}) => (vertical ? {width: height} : null)
 	},
 
-	render: ({percentProgress, loadedValue, max, min, onChange, value, step, vertical, verticalHeight, verticalWidth, sliderRef, barRef, knobRef, loaderRef, inputRef, ...rest}) => {
+	render: ({inputRef, loadedValue, max, min, onChange, percentProgress, sliderRef, step, value, verticalHeight, verticalWidth, visibleBarRef, ...rest}) => {
+		const sliderProps = {
+			loadedValue,
+			percentProgress,
+			verticalHeight
+		};
+
 		delete rest.backgroundPercent;
 		delete rest.pressed;
+		delete rest.vertical;
 
 		return (
 			<div {...rest} ref={sliderRef}>
-				<div className={css.visibleBar} style={verticalHeight}>
-					<div className={css.load} ref={loaderRef} style={{[vertical ? 'height' : 'width']: loadedValue}} />
-					<div className={css.fill} ref={barRef} style={{[vertical ? 'height' : 'width']: percentProgress}} />
-					<div className={css.knob} ref={knobRef} style={{[vertical ? 'top' : 'left']: percentProgress}} />
-				</div>
+				<VisibleBar {...sliderProps} ref={visibleBarRef} />
 				<input
 					className={css.sliderBar}
 					type="range"
@@ -264,38 +315,33 @@ class Slider extends React.Component {
 	updateValue = (event) => {
 		event.preventDefault();
 		throttleJob('sliderChange', () => {
+			const {barNode, knobNode, loaderNode} = this.visibleBarNode;
 			const {backgroundPercent, max, vertical} = this.props;
-			const value = Number.parseInt(event.target.value, 10);
-			const percentage = (value / (max || SliderBase.defaultProps.max)) * 100 + '%';
+			const value = Number.parseInt(event.target.value);
+			const percentProgress = computePercentProgress({value, max: (max != null ? max : SliderBase.defaultProps.max)});
+			const loadedValue = computeLoadedValue({backgroundPercent});
 
-			this.loaderNode.style[vertical ? 'height' : 'width'] = backgroundPercent + '%';
-			this.barNode.style[vertical ? 'height' : 'width'] = percentage;
-			this.knobNode.style[vertical ? 'top' : 'left'] = percentage;
+			loaderNode.style[computeLoaderStyleProp(vertical)] = loadedValue;
+			barNode.style[computeFillStyleProp(vertical)] = percentProgress;
+			knobNode.style[computeKnobStyleProp(vertical)] = percentProgress;
 			this.inputNode.value = value;
 
 			// yup, we're mutating state directly! :dealwithit:
 			this.state.value = value; // eslint-disable-line react/no-direct-mutation-state
+			this.onChange();
 		}, changeDelayMS);
+	}
+
+	getInputNode = (node) => {
+		this.inputNode = node;
 	}
 
 	getSliderNode = (node) => {
 		this.sliderNode = node;
 	}
 
-	getBarNode = (node) => {
-		this.barNode = node;
-	}
-
-	getKnobNode = (node) => {
-		this.knobNode = node;
-	}
-
-	getLoaderNode = (node) => {
-		this.loaderNode = node;
-	}
-
-	getInputNode = (node) => {
-		this.inputNode = node;
+	getVisibleBarNode = (node) => {
+		this.visibleBarNode = node;
 	}
 
 	handleClick = () => Spotlight.focus(this.sliderNode);
@@ -306,11 +352,9 @@ class Slider extends React.Component {
 				{...this.props}
 				onChange={this.updateValue}
 				onClick={this.handleClick}
-				barRef={this.getBarNode}
 				inputRef={this.getInputNode}
-				knobRef={this.getKnobNode}
-				loaderRef={this.getLoaderNode}
 				sliderRef={this.getSliderNode}
+				visibleBarRef={this.getVisibleBarNode}
 			/>
 		);
 	}
