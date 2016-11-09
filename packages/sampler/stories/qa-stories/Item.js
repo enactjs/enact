@@ -28,7 +28,7 @@ storiesOf('Item')
 			<Item
 				disabled={boolean('disabled')}
 			>
-				{text('children', inputData.longText)}
+				{text('Children', inputData.longText)}
 			</Item>
 		)
 	)
@@ -48,7 +48,7 @@ storiesOf('Item')
 			<Item
 				disabled={boolean('disabled')}
 			>
-				{text('children', inputData.extraSpaceText)}
+				{text('Children', inputData.extraSpaceText)}
 			</Item>
 		)
 	)
@@ -59,7 +59,7 @@ storiesOf('Item')
 				disabled={boolean('disabled')}
 			>
 				<Button>Click here</Button>
-				{text('children', 'Hello Item')}
+				{text('Children', 'Hello Item')}
 				<Button>Click here</Button>
 				<Image src={'http://lorempixel.com/512/512/city/1/'} sizing='fill' alt='lorempixel' />
 				<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.</p>
@@ -74,12 +74,12 @@ storiesOf('Item')
 			<div>
 				<Item
 				>
-					{text('children', inputData.normalText)}
+					{text('Spottable Text', inputData.normalText)}
 				</Item>
 				<Item
 					disabled
 				>
-					{text('children', inputData.disabledText)}
+					{text('Disabled Text', inputData.disabledText)}
 				</Item>
 				<Item
 				>
@@ -89,11 +89,11 @@ storiesOf('Item')
 						{select('iconstart', ['', ...iconNames], 'plus')}
 					</Icon>
 
-					{text('children', 'Item with text that is spottable with an icon (at the start of the string)')}
+					{text('Text with icon at start', 'Item with text that is spottable with an icon (at the start of the string)')}
 				</Item>
 				<Item
 				>
-					{text('children', 'Item with text that is spottable with an icon(at the end of the string)')}
+					{text('Text with icon at end', 'Item with text that is spottable with an icon(at the end of the string)')}
 					<Icon
 						small={boolean('small')}
 					>
