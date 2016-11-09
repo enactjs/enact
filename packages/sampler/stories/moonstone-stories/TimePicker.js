@@ -1,22 +1,22 @@
 import Changeable from '@enact/ui/Changeable';
-import {DatePicker, DatePickerController} from '@enact/moonstone/DatePicker';
+import {TimePicker, TimePickerController} from '@enact/moonstone/TimePicker';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
 
-const Picker = Changeable(DatePicker);
-Picker.propTypes = DatePickerController.propTypes;
-Picker.defaultProps = DatePickerController.defaultProps;
-Picker.displayName = 'DatePicker';
+const Picker = Changeable(TimePicker);
+Picker.propTypes = TimePickerController.propTypes;
+Picker.defaultProps = TimePickerController.defaultProps;
+Picker.displayName = 'TimePicker';
 
-storiesOf('DatePicker')
+storiesOf('TimePicker')
 	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
-		'The basic DatePicker',
+		'The basic TimePicker',
 		() => (
 			<Picker
-				title={text('title', 'Date')}
+				title={text('title', 'Time')}
 				noLabels={boolean('noLabels', false)}
 				noneText={text('noneText', 'Nothing Selected')}
 				onChange={action('onChange')}
