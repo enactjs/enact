@@ -24,7 +24,8 @@ delete SelectableItemToggle.defaultProps.checked;
 
 const inputData = {
 	longText : 'Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text',
-	disabledLong : 'Default disabled Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text'
+	disabledLong : 'Default disabled Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text',
+	normalText : 'Selectable Item'
 };
 
 storiesOf('SelectableItem')
@@ -38,14 +39,14 @@ storiesOf('SelectableItem')
 					inline={boolean('inline', false)}
 					onToggle={action('onToggle')}
 				>
-					{text('children', inputData.longText)}
+					{text('Enabled text', inputData.longText)}
 				</SelectableItemToggle>
 				<SelectableItemToggle
 					disabled
 					inline={boolean('inline', false)}
 					onToggle={action('onToggle')}
 				>
-					{text('children', inputData.disabledLong)}
+					{text('Disabled text', inputData.disabledLong)}
 				</SelectableItemToggle>
 			</div>
 		)
@@ -55,7 +56,7 @@ storiesOf('SelectableItem')
 		() => (
 			<div>
 				<Divider>
-					{text('children', 'Selectable items with normal text in a group')}
+					{'Selectable items with normal text in a group'}
 				</Divider>
 				<SelectableGroup
 					childComponent={SelectableItem}
@@ -67,10 +68,10 @@ storiesOf('SelectableItem')
 					defaultSelected={1}
 					onSelect={action('onSelect')}
 				>
-					{['Selectable Item 1', 'Selectable Item 2', 'Selectable Item 3']}
+					{[text('Normal Text 1', inputData.normalText + 1), text('Normal Text 2', inputData.normalText + 2), text('Normal Text 3', inputData.normalText + 3)]}
 				</SelectableGroup>
 				<Divider>
-					{text('children', 'Selectable items with long text in a group')}
+					{'Selectable items with long text in a group'}
 				</Divider>
 				<SelectableGroup
 					childComponent={SelectableItem}
@@ -82,7 +83,7 @@ storiesOf('SelectableItem')
 					defaultSelected={1}
 					onSelect={action('onSelect')}
 				>
-					{[inputData.longText, inputData.longText, inputData.longText]}
+					{[text('Long Text 1', 'First ' + inputData.longText), text('Long Text 2', 'Second ' + inputData.longText), text('Long Text 3', 'Third ' + inputData.longText)]}
 				</SelectableGroup>
 			</div>
 		)
