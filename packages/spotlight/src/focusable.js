@@ -121,11 +121,13 @@ const SpotlightFocusableDecoratorHoC = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		onMouseDown = (e) => {
-			if (e.target !== this.wrappedInstance.decoratedNode) {
-				e.preventDefault();
-			}
-			if (!this.state.innerElementFocused) {
-				this.setState({innerElementFocused: true});
+			if (!this.props.disabled) {
+				if (e.target !== this.wrappedInstance.decoratedNode) {
+					e.preventDefault();
+				}
+				if (!this.state.innerElementFocused) {
+					this.setState({innerElementFocused: true});
+				}
 			}
 			forwardMouseDown(e, this.props);
 		}
