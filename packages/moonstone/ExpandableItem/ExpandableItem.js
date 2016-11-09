@@ -27,7 +27,7 @@ const TransitionContainer = SpotlightContainerDecorator(Transition);
  * @class ExpandableItemBase
  * @memberof moonstone/ExpandableItem
  * @ui
- * @private
+ * @public
  */
 const ExpandableItemBase = kind({
 	name: 'ExpandableItem',
