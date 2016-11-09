@@ -1,7 +1,7 @@
 /*
- * Exports the {@link module:@enact/moonstone/VirtualList/GridListImageItem~GridListImageItem} and
- * {@link module:@enact/moonstone/VirtualList/GridListImageItem~GridListImageItemBase} components. The default export is
- * {@link module:@enact/moonstone/VirtualList/GridListImageItem~GridListImageItem}.
+ * Exports the {@link module:@enact/moonstone/VirtualList/GridListImageItem.GridListImageItem} and
+ * {@link module:@enact/moonstone/VirtualList/GridListImageItem.GridListImageItemBase} components. The default export is
+ * {@link module:@enact/moonstone/VirtualList/GridListImageItem.GridListImageItem}.
  *
  * Not a jsdoc module def on purpose. Exported elsewhere.
  */
