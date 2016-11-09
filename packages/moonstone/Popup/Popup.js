@@ -59,18 +59,33 @@ const PopupBase = kind({
 		open: PropTypes.bool,
 
 		/**
+		 * A function to run after transition for hiding is finished.
+		 * @type {Function}
+		 */
+		onHide: PropTypes.func,
+
+		/**
 		 * When `true`, the close button is shown; when `false`, it is hidden.
 		 *
 		 * @type {Boolean}
 		 * @default false
 		 */
-		showCloseButton: PropTypes.bool
+		showCloseButton: PropTypes.bool,
+
+		/**
+		 * Indicates where component should attach to.
+		 *
+		 * @type {String}
+		 * @default 'window'
+		 */
+		target: PropTypes.oneOf(['window', 'activator'])
 	},
 
 	defaultProps: {
 		anchor: {bottom: 0},
 		noAnimation: false,
 		open: false,
+		target: 'window',
 		showCloseButton: false
 	},
 
@@ -87,14 +102,29 @@ const PopupBase = kind({
 					<IconButton className={css.closeButton} backgroundOpacity="transparent" small>closex</IconButton>
 				);
 			}
+		},
+		zIndex: ({style}) => {
+			if (style) {
+				return {zIndex: style.zIndex};
+			}
 		}
 	},
 
-	render: ({closeButton, children, noAnimation, open, ...rest}) => {
+	render: ({closeButton, children, noAnimation, open, onHide, zIndex, ...rest}) => {
 		delete rest.anchor;
 		delete rest.showCloseButton;
 		return (
-			<TransitionContainer noAnimation={noAnimation} data-container-disabled={!open} visible={open} direction="down" duration="short" type="slide">
+			<TransitionContainer
+				noAnimation={noAnimation}
+				data-container-disabled={!open}
+				visible={open}
+				direction="down"
+				duration="short"
+				type="slide"
+				fit
+				style={zIndex}
+				onHide={onHide}
+			>
 				<div {...rest}>
 					{closeButton}
 					<div className={css.body}>

@@ -41,11 +41,25 @@ class Portal extends React.Component {
 		noAutoDismiss: React.PropTypes.bool,
 
 		/**
+		 * A function to run when portal is closed.
+		 *
+		 * @type {Function}
+		 */
+		onClose: React.PropTypes.func,
+
+		/**
 		 * A function to run when `ESC` key is pressed. The function will only invoke if
 		 * `noAutoDismiss` is set to false.
 		 * @type {Function}
 		 */
-		onClose: React.PropTypes.func,
+		onDismiss: React.PropTypes.func,
+
+		/**
+		 * A function to run when portal is opened. It will only be invoked for the first render.
+		 *
+		 * @type {Function}
+		 */
+		onOpen: React.PropTypes.func,
 
 		/**
 		 * When `true`, it renders components into portal.
@@ -97,17 +111,17 @@ class Portal extends React.Component {
 
 	componentWillReceiveProps (nextProps) {
 		if (nextProps.open) {
-			let preserveZIndex = false;
+			let isOpened = false;
 			if (nextProps.open === this.props.open) {
 				// will not increase zIndex for already opened layer
-				preserveZIndex = true;
+				isOpened = true;
 			} else {
 				// increase scrimZIndex by 2 for the new layer
 				scrimZIndex = scrimZIndex + 2;
 				this.prevZIndex = scrimZIndex;
 				viewingLayers.push(scrimZIndex);
 			}
-			this.renderPortal(nextProps, preserveZIndex);
+			this.renderPortal(nextProps, isOpened);
 		} else {
 			this.closePortal();
 		}
@@ -124,8 +138,8 @@ class Portal extends React.Component {
 		// handle `ESC` key
 		if (ev.keyCode === 27) {
 			ev.preventDefault();
-			if (this.props.onClose) {
-				this.props.onClose();
+			if (this.props.onDismiss) {
+				this.props.onDismiss();
 			}
 		}
 	}
@@ -137,15 +151,21 @@ class Portal extends React.Component {
 
 			const v = viewingLayers.indexOf(scrimZIndex);
 			viewingLayers.splice(v, 1);
+
+			if (this.props.onClose) {
+				this.props.onClose();
+			}
 		}
 		this.portal = null;
 		this.node = null;
 	}
 
-	renderPortal ({portalClassName, portalId, scrimType, ...rest}, preserveZIndex = false) {
+	renderPortal ({portalClassName, portalId, scrimType, ...rest}, isOpened = false) {
 		delete rest.noAutoDismiss;
 		delete rest.onClose;
-		// don't delete `rest.open`
+		delete rest.onDismiss;
+		delete rest.onOpen;
+		delete rest.open;
 
 		if (!this.node) {
 			this.node = document.createElement('div');
@@ -158,7 +178,7 @@ class Portal extends React.Component {
 		const scrimProps = {
 			type: scrimType,
 			visible: this.prevZIndex === viewingLayers[viewingLayers.length - 1],
-			zIndex: preserveZIndex ? this.prevZIndex : scrimZIndex
+			zIndex: isOpened ? this.prevZIndex : scrimZIndex
 		};
 
 		this.portal = ReactDOM.unstable_renderSubtreeIntoContainer(
@@ -169,6 +189,10 @@ class Portal extends React.Component {
 			/>,
 			this.node
 		);
+
+		if (!isOpened && this.props.onOpen) {
+			this.props.onOpen();
+		}
 	}
 
 	render () {

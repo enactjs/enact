@@ -72,8 +72,16 @@ const TransitionBase = kind({
 		duration: PropTypes.oneOf(['short', 'medium', 'long']),
 
 		/**
+		 * When `true`, it fill its container's size.
+		 * @type {Boolean}
+		 * @default false
+		 */
+		fit: PropTypes.bool,
+
+		/**
 		 * When `true`, it disables transition. When `false`, it animates visibility change.
 		 * @type {Boolean}
+		 * @default false
 		 */
 		noAnimation: PropTypes.bool,
 
@@ -111,6 +119,7 @@ const TransitionBase = kind({
 		noAnimation: false,
 		direction: 'up',
 		duration: 'medium',
+		fit: false,
 		timingFunction: 'ease-in-out',
 		type: 'slide',
 		visible: true
@@ -123,7 +132,8 @@ const TransitionBase = kind({
 	},
 
 	computed: {
-		className: ({direction, duration, timingFunction, type, visible, styler}) => styler.join(
+		className: ({direction, duration, fit, timingFunction, type, visible, styler}) => styler.join(
+			fit ? 'enact-fit' : null,
 			'transition',
 			visible ? 'shown' : 'hidden',
 			direction && css[direction],
@@ -131,9 +141,10 @@ const TransitionBase = kind({
 			timingFunction && css[timingFunction],
 			css[type]
 		),
-		style: ({clipHeight, type, visible}) => ({
+		style: ({clipHeight, type, visible, style}) => ({
 			height: ((type === 'clip') && visible) ? clipHeight : null,
-			overflow: (type === 'clip') ? 'hidden' : null
+			overflow: (type === 'clip') ? 'hidden' : null,
+			...style
 		})
 	},
 
@@ -141,6 +152,7 @@ const TransitionBase = kind({
 		delete rest.clipHeight;
 		delete rest.direction;
 		delete rest.duration;
+		delete rest.fit;
 		delete rest.timingFunction;
 		delete rest.type;
 
@@ -212,6 +224,12 @@ class Transition extends React.Component {
 		duration: PropTypes.oneOf(['short', 'medium', 'long']),
 
 		/**
+		 * A function to run after transition for hiding is finished.
+		 * @type {Function}
+		 */
+		onHide: PropTypes.func,
+
+		/**
 		 * The transition timing function.
 		 * Supported functions are: `'linear'`, `'ease'` and `'ease-in-out'`
 		 *
@@ -249,13 +267,32 @@ class Transition extends React.Component {
 		visible: true
 	}
 
-
 	constructor () {
 		super();
 
 		this.state = {
 			initialHeight: null
 		};
+	}
+
+	componentWillReceiveProps (nextProps) {
+		const transition = this.refs.transition;
+		if (!nextProps.visible) {
+			transition.addEventListener('transitionend', this.hideDidFinish);
+		} else {
+			transition.removeEventListener('transitionend', this.hideDidFinish);
+		}
+	}
+
+	componentWillUnmount () {
+		const transition = this.refs.transition;
+		transition.removeEventListener('transitionend', this.hideDidFinish);
+	}
+
+	hideDidFinish = (e) => {
+		if (this.props.onHide) {
+			this.props.onHide();
+		}
 	}
 
 	measureInner = (node) => {
@@ -268,9 +305,14 @@ class Transition extends React.Component {
 	}
 
 	render () {
-		const height = this.props.visible ? this.state.initialHeight : 0;
+		const props = Object.assign({}, this.props);
+		delete props.onHide;
+
+		const height = props.visible ? this.state.initialHeight : 0;
 		return (
-			<TransitionBase {...this.props} childRef={this.measureInner} clipHeight={height} />
+			<div ref="transition">
+				<TransitionBase {...props} childRef={this.measureInner} clipHeight={height} />
+			</div>
 		);
 	}
 }

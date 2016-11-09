@@ -18,7 +18,7 @@ const defaultConfig = {
  * By default, Layerable applies applies positioning information to a component, whether it's a
  * floating layer or inline layer. Relative positions, anchored positions, orientations like
  * "up+right" from the anchor point are planned for future support to more easily handle scenarios
- * like Tooltip and CnotextualPopup.
+ * like Tooltip and ContextualPopup.
  *
  *
  * @class Layerable
@@ -47,7 +47,14 @@ const LayerableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 		render () {
 			const props = Object.assign({}, this.props);
-			// Measurements and math to be added here to account for the anchor's information and popup orientation
+			if (Wrapped.defaultProps.target == 'window') {
+				props.style = {
+					...props.style,
+					'position': 'absolute'
+				};
+			} else {
+				// TODO: need to handle activator case
+			}
 
 			// Insert styles from the user, from our defaults, and from our wrapped component defaults
 			props.style = {...props.style, ...props.anchor, ...Wrapped.defaultProps.anchor};
