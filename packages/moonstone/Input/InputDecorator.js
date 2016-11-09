@@ -14,7 +14,7 @@ import css from './Input.less';
 /**
  * {@link moonstone/Input/InputDecorator.InputDecorator} is a control that provides input styling. Any controls
  * in the InputDecorator will appear to be inside an area styled as an input. Usually,
- * an InputDecorator surrounds a {@link moonstone/Input.Input}:
+ * an InputDecorator surrounds a {@link moonstone/Input.Input}.
  *
  * @class InputDecoratorBase
  * @memberof moonstone/Input/InputDecorator
@@ -64,7 +64,7 @@ const InputDecoratorBase = kind({
 /**
  * {@link moonstone/Input/InputDecorator.InputDecorator} is a control that provides input styling.
  * Any controls in the InputDecorator will appear to be inside an area styled as an input. Usually,
- * an InputDecorator surrounds a {@link moonstone/Input.Input}:
+ * an InputDecorator surrounds a {@link moonstone/Input.Input}.
  *
  * @class InputDecorator
  * @memberof moonstone/Input/InputDecorator
