@@ -1,21 +1,9 @@
 import React from 'react';
-import {shallow, mount} from 'enzyme';
+import {mount} from 'enzyme';
 import SelectableItem from '../SelectableItem';
 import css from '../SelectableItem.less';
 
 describe('SelectableItem Specs', () => {
-	it('should render SelectableItem', function () {
-		const selectableItem = shallow(
-			<SelectableItem>
-				Hello SelectableItem
-			</SelectableItem>
-		);
-
-		const actual = selectableItem;
-
-		expect(actual).to.be.ok();
-	});
-
 	it('should render no icon when not checked', function () {
 		const selectableItem = mount(
 			<SelectableItem>

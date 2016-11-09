@@ -9,11 +9,12 @@ import css from './Panels.less';
  * The container for a set of Panels
  *
  * @class Viewport
+ * @private
  */
 const ViewportBase = kind({
 	name: 'Viewport',
 
-	propTypes: {
+	propTypes: /** @lends Viewport.prototype */ {
 		/**
 		 * Set of functions that control how the panels are transitioned into and out of the
 		 * viewport

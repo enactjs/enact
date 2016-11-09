@@ -6,7 +6,7 @@ import React from 'react';
 import Marquee from './Marquee';
 
 /**
- * Default configuration parameters for {@link module:@enact/moonstone/Marquee~MarqueeDecorator}
+ * Default configuration parameters for {@link moonstone/Marquee.MarqueeDecorator}
  *
  * @type {Object}
  */
@@ -53,11 +53,12 @@ const defaultConfig = {
 };
 
 /**
- * {@link module:@enact/moonstone/Marquee~MarqueeDecorator} is a Higher-order Component which makes
+ * {@link moonstone/Marquee.MarqueeDecorator} is a Higher-order Component which makes
  * the Wrapped component's children marquee.
  *
  * @class MarqueeDecorator
- * @ui
+ * @memberof moonstone/marquee
+ * @hoc
  * @public
  */
 const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
@@ -72,7 +73,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'MarqueeDecorator'
 
-		static propTypes = {
+		static propTypes = /** @lends moonstone/Marquee.MarqueeDecorator.prototype */ {
 			/**
 			 * Children to be marqueed
 			 *
@@ -160,38 +161,28 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			};
 
 			this.invalidateMetrics();
-			this.checkMarqueeOnRender(props);
 		}
 
 		componentDidMount () {
-			this.initMarquee();
+			this.initMarquee(this.props.marqueeOnRenderDelay);
 		}
 
 		componentWillReceiveProps (next) {
 			const {marqueeOn, marqueeDisabled} = this.props;
-			this.checkMarqueeOnRender(next);
-			if (next.marqueeOn !== marqueeOn || next.marqueeDisabled !== marqueeDisabled) {
-				this.cancelAnimation();
-			} else if (!childrenEquals(this.props.children, next.children)) {
+			if (!childrenEquals(this.props.children, next.children)) {
 				this.invalidateMetrics();
+				this.cancelAnimation();
+			} else if (next.marqueeOn !== marqueeOn || next.marqueeDisabled !== marqueeDisabled) {
 				this.cancelAnimation();
 			}
 		}
 
 		componentDidUpdate () {
-			this.initMarquee();
+			this.initMarquee(this.props.marqueeDelay);
 		}
 
 		componentWillUnmount () {
 			this.clearTimeout();
-		}
-
-		checkMarqueeOnRender (props) {
-			this.marqueeOnRender =	props.marqueeOn === 'render' &&
-									!props.disabled &&
-									!props.marqueeDisabled;
-
-			return this.marqueeOnRender;
 		}
 
 		/**
@@ -221,15 +212,33 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		/**
+		 * Checks to see if the children changed during a condition that should cause us to re-check
+		 * the animation state
+		 *
+		 * @returns {Boolean} - `true` if a possible marquee condition exists
+		 */
+		shouldStartMarquee () {
+			return	this.distance === null && !this.props.disabled && !this.props.marqueeDisabled &&
+					this.props.marqueeOn === 'render' ||
+					(this.isFocused && this.props.marqueeOn === 'focus') ||
+					(this.isHovered && this.props.marqueeOn === 'hover');
+		}
+
+		/**
 		 * Initializes the marquee by calculating the distance and conditionally starting the
 		 * animation
 		 *
+		 * @param {Number} delay Milliseconds until animation should start
 		 * @returns {undefined}
 		 */
-		initMarquee () {
-			this.calculateMetrics();
-			if (this.marqueeOnRender) {
-				this.startAnimation(this.props.marqueeOnRenderDelay);
+		initMarquee (delay) {
+			// shouldStartMarquee relies on a `null` distance to indicate the metrics have been
+			// invalidated so we have to calculate after this check.
+			if (this.shouldStartMarquee()) {
+				this.calculateMetrics();
+				this.startAnimation(delay);
+			} else {
+				this.calculateMetrics();
 			}
 		}
 
@@ -353,21 +362,25 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleFocus = (ev) => {
+			this.isFocused = true;
 			this.startAnimation();
 			forwardFocus(ev, this.props);
 		}
 
 		handleBlur = (ev) => {
+			this.isFocused = false;
 			this.cancelAnimation();
 			forwardBlur(ev, this.props);
 		}
 
 		handleEnter = (ev) => {
+			this.isHovered = true;
 			this.startAnimation();
 			forwardEnter(ev, this.props);
 		}
 
 		handleLeave = (ev) => {
+			this.isHovered = false;
 			this.cancelAnimation();
 			forwardLeave(ev, this.props);
 		}

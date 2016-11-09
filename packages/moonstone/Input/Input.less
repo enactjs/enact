@@ -35,7 +35,7 @@
 		color: @moon-input-placeholder-color;
 	});
 
-	&:focus {
+	&:global(.spottable):focus {
 		cursor: text;
 		color: @moon-input-font-color;
 		background-color: inherit;
@@ -70,11 +70,11 @@
 	}
 
 	.iconEnd {
-		.padding-start-end(0, 9px);
+		.padding-start-end(18px, 0);
 	}
 
 	.iconStart {
-		.padding-start-end(9px, 0);
+		.padding-start-end(0, 18px);
 	}
 
 	// RIGBY NOTE: multiline is a NOT YET IMPLEMENTED feature that combines <input> and <textarea>
@@ -86,9 +86,8 @@
 	}
 
 	// RIGBY NOTE: Complex focus scenarios are broken at the moment
-	&:focus {
+	&:global(.spottable):focus {
 		border-color: @moon-spotlight-border-color;
-		// color: @moon-spotlight-text-color;
 		background-color: @moon-input-decorator-bg-color;
 	}
 

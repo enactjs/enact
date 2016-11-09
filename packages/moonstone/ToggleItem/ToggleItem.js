@@ -1,7 +1,7 @@
 /**
- * Exports the {@link module:@enact/moonstone/ToggleItem~ToggleItem} component.
+ * Exports the {@link moonstone/ToggleItem.ToggleItem} component.
  *
- * @module @enact/moonstone/ToggleItem
+ * @module moonstone/ToggleItem
  */
 
 import kind from '@enact/core/kind';
@@ -14,18 +14,19 @@ import {MarqueeDecorator} from '../Marquee';
 import css from './ToggleItem.less';
 
 /**
- * {@link module:@enact/moonstone/ToggleItem~ToggleItem} is a component to make a Toggleable Item
+ * {@link moonstone/ToggleItem.ToggleItem} is a component to make a Toggleable Item
  * (e.g Checkbox, RadioItem). It has a customizable prop for icon, so any Moonstone Icon can be used
  * to represent the checked state.
  *
  * @class ToggleItem
+ * @memberof moonstone/ToggleItem
  * @ui
  * @public
  */
 const ToggleItemBase = kind({
 	name: 'ToggleItem',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/ToggleItem.ToggleItem.prototype */ {
 		/**
 		 * The string to be displayed as the main content of the toggle item.
 		 *

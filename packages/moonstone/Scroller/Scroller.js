@@ -1,8 +1,8 @@
 /**
- * Exports the {@link module:@enact/moonstone/Scroller~Scroller} and {@link module:@enact/moonstone/Scroller~ScrollerBase}
- * components. The default export is {@link module:@enact/moonstone/Scroller~Scroller}.
+ * Exports the {@link moonstone/Scroller.Scroller} and {@link moonstone/Scroller.ScrollerBase}
+ * components. The default export is {@link moonstone/Scroller.Scroller}.
  *
- * @module @enact/moonstone/Scroller
+ * @module moonstone/Scroller
  */
 
 import classNames from 'classnames';
@@ -15,17 +15,17 @@ import Scrollable from './Scrollable';
 const dataContainerDisabledAttribute = 'data-container-disabled';
 
 /**
- * {@link module:@enact/moonstone/Scroller~ScrollerBase} is a base component for Scroller.
+ * {@link moonstone/Scroller.ScrollerBase} is a base component for Scroller.
  * In most circumstances, you will want to use the SpotlightContainerDecorator and Scrollable version:
- * {@link module:@enact/moonstone/Scroller~Scroller}
+ * {@link moonstone/Scroller.Scroller}
  *
  * @class ScrollerBase
+ * @memberof moonstone/Scroller
  * @ui
  * @public
  */
-
 class ScrollerBase extends Component {
-	static propTypes = {
+	static propTypes = /** @lends moonstone/Scroller.ScrollerBase.prototype */ {
 		children: PropTypes.node.isRequired,
 
 		className: PropTypes.string,
@@ -161,7 +161,7 @@ class ScrollerBase extends Component {
 }
 
 /**
- * {@link module:@enact/moonstone/Scroller~Scroller} is a Scroller with Moonstone styling,
+ * {@link moonstone/Scroller.Scroller} is a Scroller with Moonstone styling,
  * SpotlightContainerDecorator and Scrollable applied.
  *
  * Usage:
@@ -170,9 +170,10 @@ class ScrollerBase extends Component {
  * ```
  *
  * @class Scroller
- * @mixes module:@enact/moonstone/Scrollable
- * @mixes module:@enact/spotlight/SpotlightContainerDecorator
- * @see module:@enact/moonstone/Scroller~ScrollerBase
+ * @memberof moonstone/Scroller
+ * @mixes moonstone/Scroller.Scrollable
+ * @mixes spotlight.SpotlightContainerDecorator
+ * @see moonstone/Scroller.ScrollerBase
  * @ui
  * @public
  */
