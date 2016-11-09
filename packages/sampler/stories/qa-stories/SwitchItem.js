@@ -20,7 +20,8 @@ SwitchItemToggle.displayName = 'SwitchItem';
 
 const inputData = {
 	longText : 'Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text',
-	disabledLong : 'Default disabled Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text'
+	disabledLong : 'Default disabled Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text',
+	normalText : 'Switch Item'
 };
 
 storiesOf('SwitchItem')
@@ -34,14 +35,14 @@ storiesOf('SwitchItem')
 					inline={boolean('inline', false)}
 					onToggle={action('onToggle')}
 				>
-					{text('children', inputData.longText)}
+					{text('Long Text', inputData.longText)}
 				</SwitchItemToggle>
 				<SwitchItemToggle
 					disabled
 					inline={boolean('inline', false)}
 					onToggle={action('onToggle')}
 				>
-					{text('children', inputData.disabledLong)}
+					{text('Disable Long Text', inputData.disabledLong)}
 				</SwitchItemToggle>
 			</div>
 		)
@@ -51,7 +52,7 @@ storiesOf('SwitchItem')
 		() => (
 			<div>
 				<Divider>
-					{text('children', 'Switch items with normal text in a group')}
+					{'Switch items with normal text in a group'}
 				</Divider>
 				<SelectableGroup
 					childComponent={SwitchItem}
@@ -63,10 +64,10 @@ storiesOf('SwitchItem')
 					defaultSelected={1}
 					onSelect={action('onSelect')}
 				>
-					{['Switch Item 1', 'Switch Item 2', 'Switch Item 3']}
+					{[text('Normal Text 1', inputData.normalText + 1), text('Normal Text 2', inputData.normalText + 2), text('Normal Text 3', inputData.normalText + 3)]}
 				</SelectableGroup>
 				<Divider>
-					{text('children', 'Switch items with long text in a group')}
+					{'Switch items with long text in a group'}
 				</Divider>
 				<SelectableGroup
 					childComponent={SwitchItem}
@@ -78,7 +79,7 @@ storiesOf('SwitchItem')
 					defaultSelected={1}
 					onSelect={action('onSelect')}
 				>
-					{[inputData.longText, inputData.longText, inputData.longText]}
+					{[text('Long Text 1', inputData.longText), text('Long Text 2', inputData.longText), text('Long Text 3', inputData.longText)]}
 				</SelectableGroup>
 			</div>
 		)
