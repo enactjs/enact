@@ -128,7 +128,7 @@ ilib._getPlatform = function () {
     		}
     	} catch (e) {}
     	
-        if (typeof(process) !== 'undefined' && typeof(module) !== 'undefined') {
+        if (typeof(process) !== 'undefined' && !process.browser && typeof(module) !== 'undefined') {
             ilib._platform = "nodejs";
         } else if (typeof(Qt) !== 'undefined') {
             ilib._platform = "qt";
