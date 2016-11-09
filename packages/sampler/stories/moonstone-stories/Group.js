@@ -40,6 +40,7 @@ storiesOf('Group')
 				itemProps={{
 					inline: boolean('ItemProps-Inline', false)
 				}}
+				select={select('select', ['single', 'radio', 'multiple'], 'radio')}
 				selectedProp="checked"	// This will become "selected" after the components props are normalized to ALL be "selected" instead of some "checked" some "selected".
 				defaultSelected={0}
 				onSelect={action('onSelect')}
