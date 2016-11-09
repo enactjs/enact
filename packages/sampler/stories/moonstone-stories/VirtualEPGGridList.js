@@ -5,7 +5,11 @@ import React from 'react';
 import {storiesOf} from '@kadira/storybook';
 import {withKnobs} from '@kadira/storybook-addon-knobs';
 
+// Inline style
 const
+	itemTimelinePadding = ri.scale(50) + 'px ' + ri.scale(10) + 'px ' + ri.scale(10) + 'px',
+	itemChannelInfoBGPadding = '0 ' + ri.scale(5) + 'px ' + ri.scale(5) + 'px 0',
+	itemChannelInfoPadding = ri.scale(10) + 'px 0 ' + ri.scale(10) + 'px ' + ri.scale(20) + 'px',
 	style = {
 		list: {
 			overflow: 'hidden',
@@ -17,12 +21,28 @@ const
 			position: 'absolute',
 			willChange: 'transform'
 		},
-		itemHeader: {
+		// Today
+		itemToday: {
+			background: 'black',
+			width: '100%',
+			height: ri.scale(96) + 'px',
+			position: 'absolute',
+			padding: itemTimelinePadding,
+			boxSizing: 'border-box',
+			bottom: '0',
+			overflow: 'hidden',
+			fontSize: ri.scale(27) + 'px',
+			color: 'white',
+			WebkitUserSelect: 'none',
+			userSelect: 'none'
+		},
+		// Timeline
+		itemTimeline: {
 			background: 'black',
 			width: ri.scale(200) + 'px',
 			height: ri.scale(96) + 'px',
 			position: 'absolute',
-			padding: ri.scale(50) + 'px ' + ri.scale(10) + 'px ' + ri.scale(10) + 'px',
+			padding: itemTimelinePadding,
 			borderLeft: ri.scale(2) + 'px solid #333',
 			boxSizing: 'border-box',
 			bottom: '0',
@@ -32,24 +52,11 @@ const
 			WebkitUserSelect: 'none',
 			userSelect: 'none'
 		},
-		itemToday: {
-			background: 'black',
-			width: '100%',
-			height: ri.scale(96) + 'px',
-			position: 'absolute',
-			padding: ri.scale(50) + 'px ' + ri.scale(10) + 'px ' + ri.scale(10) + 'px',
-			boxSizing: 'border-box',
-			bottom: '0',
-			overflow: 'hidden',
-			fontSize: ri.scale(27) + 'px',
-			color: 'white',
-			WebkitUserSelect: 'none',
-			userSelect: 'none'
-		},
+		// ChannelInfo
 		itemChannelInfoBG: {
 			background: '#2C2E35',
 			backgroundClip: 'content-box',
-			padding: '0 ' + ri.scale(5) + 'px ' + ri.scale(5) + 'px 0',
+			padding: itemChannelInfoBGPadding,
 			boxSizing: 'border-box',
 			overflow: 'hidden',
 			height: '100%'
@@ -57,7 +64,7 @@ const
 		itemChannelInfo: {
 			width: ri.scale(400) + 'px',
 			height: '100%',
-			padding: ri.scale(10) + 'px 0 ' + ri.scale(10) + 'px ' + ri.scale(20) + 'px',
+			padding: itemChannelInfoPadding,
 			boxSizing: 'border-box',
 			color: '#CACACA',
 			fontSize: ri.scale(27) + 'px',
@@ -65,15 +72,16 @@ const
 			WebkitUserSelect: 'none',
 			userSelect: 'none'
 		},
-		itemBG: {
+		// Programs
+		itemProgramBG: {
 			background: '#141416',
 			backgroundClip: 'content-box',
-			padding: '0 ' + ri.scale(5) + 'px ' + ri.scale(5) + 'px 0',
+			padding: itemChannelInfoBGPadding,
 			boxSizing: 'border-box',
 			overflow: 'hidden',
 			height: '100%'
 		},
-		item: {
+		itemProgram: {
 			height: ri.scale(78) + 'px',
 			boxSizing: 'border-box',
 			fontSize: ri.scale(33) + 'px',
@@ -81,30 +89,17 @@ const
 			WebkitUserSelect: 'none',
 			userSelect: 'none'
 		}
-	},
-	programs = [],
-	programName = [
-		'On Demand',
-		'To Be Announced',
-		'Newsedge',
-		'TMZ',
-		'Dish Nation',
-		'Access Hollywood',
-		'The Wendy Williams Show',
-		'Harry',
-		'Extra',
-		'Dish Nation',
-		'TMZ',
-		'FOX 2 News Morning',
-		'Secrets of the Dead',
-		'SciTech Now',
-		'Under the Radar Michigan',
-		'Tavis Smiley',
-		'Charlie Rose',
-		'Nature',
-		'NOVA',
-		'Secrets of the Dead'
-	],
+	};
+
+// CSS
+let sheet = document.createElement('style');
+sheet.innerHTML = '.list > div:first-child {padding-top: 13px;}';
+document.body.appendChild(sheet);
+
+// Raw Data
+const
+	epgData = [],
+	// ChannelInfo
 	channelInfo = [
 		'A&E',
 		'Adult Swim',
@@ -127,6 +122,7 @@ const
 		'GSN',
 		'History'
 	],
+	// Timeline
 	timeline = [
 		'06:00 AM', '06:30 AM',
 		'07:00 AM', '07:30 AM',
@@ -139,35 +135,59 @@ const
 		'02:00 PM', '02:30 PM',
 		'03:00 PM', '03:30 PM'
 	],
+	// Programs
+	programName = [
+		'On Demand',
+		'To Be Announced',
+		'Newsedge',
+		'TMZ',
+		'Dish Nation',
+		'Access Hollywood',
+		'The Wendy Williams Show',
+		'Harry',
+		'Extra',
+		'Dish Nation',
+		'TMZ',
+		'FOX 2 News Morning',
+		'Secrets of the Dead',
+		'SciTech Now',
+		'Under the Radar Michigan',
+		'Tavis Smiley',
+		'Charlie Rose',
+		'Nature',
+		'NOVA',
+		'Secrets of the Dead'
+	],
 	variableMaxScrollSize = ri.scale(4000) /* 400 ( width per 1 hour )* 10 hr */,
 	getRandomWidth = () => {
 		return ri.scale((parseInt(Math.random() * 20) + 1) * 100);
 	};
 
-let sheet = document.createElement('style');
-sheet.innerHTML = '.list > div:first-child {padding-top: 13px;}';
-document.body.appendChild(sheet);
-
+// Data
 for (let i = 0; i < 200; i++) { /* 200 channelInfo */
-	programs[i] = [];
+	epgData[i] = [];
 	for (let j = 0; j < 40; j++) { /* The maximum number of programs per one channel is 40 */
+		// Today
 		if (i === 0 && j === 0) {
-			programs[i][j] = {
+			epgData[i][j] = {
 				width: 405,
 				programName: 'Today'
 			};
+		// ChannelInfo
 		} else if (j === 0) {
-			programs[i][j] = {
+			epgData[i][j] = {
 				width: 405,
 				programName: channelInfo[i % 20]
 			};
+		// Timeline
 		} else if (i === 0) {
-			programs[i][j] = {
+			epgData[i][j] = {
 				width: 200,
 				programName: timeline[(j - 1) % 20]
 			};
+		// Programs
 		} else {
-			programs[i][j] = {
+			epgData[i][j] = {
 				width: getRandomWidth(),
 				programName: ('00' + i).slice(-3) + '/' + ('00' + j).slice(-3) + ' - ' + programName[(i + j) % 20]
 			};
@@ -175,6 +195,7 @@ for (let i = 0; i < 200; i++) { /* 200 channelInfo */
 	}
 }
 
+// Story
 const
 	getVariableDataSize = ({data, fixedIndex}) => {
 		return data[fixedIndex].length;
@@ -183,14 +204,16 @@ const
 		return data[index.fixed][index.variable].width;
 	},
 	renderItem = ({data, index, key}) => {
+		// Today & Timeline
 		if (index.fixed == 0) {
 			return (
 				<div key={key} style={style.itemWrapper}>
-					<div style={index.variable === 0 ? style.itemToday : style.itemHeader}>
+					<div style={index.variable === 0 ? style.itemToday : style.itemTimeline}>
 						{data[index.fixed][index.variable].programName}
 					</div>
 				</div>
 			);
+		// ChannelInfo
 		} else if (index.variable === 0) {
 			return (
 				<div key={key} style={style.itemWrapper}>
@@ -201,11 +224,12 @@ const
 					</div>
 				</div>
 			);
+		// Programs
 		} else  {
 			return (
 				<div key={key} style={style.itemWrapper}>
-					<div style={style.itemBG}>
-						<Item style={style.item}>
+					<div style={style.itemProgramBG}>
+						<Item style={style.itemProgram}>
 							{data[index.fixed][index.variable].programName}
 						</Item>
 					</div>
@@ -220,9 +244,9 @@ storiesOf('VirtualVariableGridList')
 		'for EGP Grid',
 		() => (
 			<VirtualVariableGridList
-				data={programs}
+				data={epgData}
 				dataSize={{
-					fixed: programs.length,
+					fixed: epgData.length,
 					variable: getVariableDataSize
 				}}
 				itemSize={{

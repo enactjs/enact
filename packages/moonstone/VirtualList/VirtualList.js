@@ -112,6 +112,14 @@ const VirtualVariableGridList = kind({
 		dataSize: PropTypes.object.isRequired,
 
 		/**
+		 * To fix the position for first row and column items
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		headerComponent: PropTypes.bool.isRequired,
+
+		/**
 		 * Size of an item for the VirtualVariableGridList; valid value is an object
 		 * that has `fixed` for the item size of fixed dimension
 		 * and `variable` for the item sizes of variable dimension.
@@ -127,7 +135,7 @@ const VirtualVariableGridList = kind({
 		 * @type {String}
 		 * @public
 		 */
-		variableDimension: PropTypes.oneOf(['width', 'height']),
+		variableDimension: PropTypes.oneOf(['width', 'height']).isRequired,
 
 		/**
 		 * For variable width or variable height, we need to define max scroll width or max scroll height
@@ -136,7 +144,7 @@ const VirtualVariableGridList = kind({
 		 * @type {Number}
 		 * @public
 		 */
-		variableMaxScrollSize: PropTypes.number
+		variableMaxScrollSize: PropTypes.number.isRequired
 	},
 
 	render: (orgProps) => {

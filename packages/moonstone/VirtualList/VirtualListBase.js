@@ -592,6 +592,10 @@ class VirtualListCore extends Component {
 		);
 	}
 
+	calcZIndex(primaryPosition, secondaryPosition) {
+		return (primaryPosition === 0 ? 1 : 0) + (secondaryPosition === 0 ? 10 : 0);
+	}
+
 	positionSecondaryItems (i, key, width, height, primaryPosition, position, applyStyle, secondary, variableDimension, data, headerComponent) {
 		let
 			j,
@@ -599,12 +603,7 @@ class VirtualListCore extends Component {
 
 		if (headerComponent && secondary.firstIndices[i] > 0) {
 			size = secondary.itemSize({data, index: {fixed: i, variable: 0}});
-			applyStyle(
-				i, 0, key++, size, height,
-				i === 0 ? 0 : primaryPosition,				// primaryPosition
-				0,											// secondaryPotision
-				true										// isFloat
-			);
+			applyStyle(i, 0, key++, size, height, i === 0 ? 0 : primaryPosition, 0, this.calcZIndex(i, 0) );
 		}
 
 		for (j = secondary.firstIndices[i]; j <= secondary.lastIndices[i]; j++) {
@@ -613,34 +612,24 @@ class VirtualListCore extends Component {
 				if (headerComponent) {
 					applyStyle(
 						i, j, key, size, height,
-						i === 0 ? 0 : primaryPosition,		// primaryPosition
-						j === 0 ? 0 : position,				// secondaryPotision
-						(i === 0 || j === 0) ? true : false	// isFloat
+						i === 0 ? 0 : primaryPosition,
+						j === 0 ? 0 : position,
+						(i === 0 || j === 0) ? this.calcZIndex(i, j) : 0
 					);
 				} else {
-					applyStyle(
-						i, j, key, size, height,
-						primaryPosition,					// primaryPosition
-						position,							// secondaryPotision
-						false								// isFloat
-					);
+					applyStyle(i, j, key, size, height, primaryPosition, position, 0);
 				}
 			} else if (variableDimension === 'height') {
 				size = secondary.itemSize({data, index: {fixed: i, variable: j}});
 				if (headerComponent) {
 					applyStyle(
 						i, j, key, width, size,
-						i === 0 ? 0 : primaryPosition,		// primaryPosition
-						j === 0 ? 0 : position,				// secondaryPotision
-						(i === 0 || j === 0) ? true : false	// isFloat
+						i === 0 ? 0 : primaryPosition,
+						j === 0 ? 0 : position,
+						(i === 0 || j === 0) ? this.calcZIndex(i, j) : 0
 					);
 				} else {
-					applyStyle(
-						i, j, key, width, size,
-						primaryPosition,					// primaryPosition
-						position,							// secondaryPotision
-						false								// isFloat
-					);
+					applyStyle(i, j, key, width, size, primaryPosition, position, 0);
 				}
 			}
 
@@ -691,7 +680,7 @@ class VirtualListCore extends Component {
 			} else {
 				key = i % numOfItems;
 
-				applyStyle(i, null, key, width, height, primaryPosition, secondaryPosition, false);
+				applyStyle(i, null, key, width, height, primaryPosition, secondaryPosition, 0);
 
 				if (++j === dimensionToExtent) {
 					secondaryPosition = 0;
@@ -716,9 +705,9 @@ class VirtualListCore extends Component {
 		this.composeItemPosition(style, ...rest);
 	}
 
-	composeZIndex (style, primaryPosition, secondaryPosition = 0, isFloat) {
-		if (isFloat) {
-			style.zIndex = (primaryPosition === 0 ? 1 : 0) + (secondaryPosition === 0 ? 10 : 0);
+	composeZIndex (style, primaryPosition, secondaryPosition = 0, zIndex) {
+		if (zIndex) {
+			style.zIndex = zIndex;
 		}
 	}
 
@@ -932,6 +921,7 @@ class VirtualListCore extends Component {
 		delete props.dataSize;
 		delete props.direction;
 		delete props.variableDimension;
+		delete props.headerComponent;
 		delete props.hideScrollbars;
 		delete props.itemSize;
 		delete props.onScroll;
