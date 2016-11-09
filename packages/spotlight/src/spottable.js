@@ -1,7 +1,9 @@
-import {kind, hoc} from '@enact/core';
+import {hoc} from '@enact/core';
+import {forward} from '@enact/core/handle';
 import React from 'react';
 
 const spottableClass = 'spottable';
+const spottableDisabledClass = 'spottable-disabled';
 
 const ENTER_KEY = 13;
 const REMOTE_OK_KEY = 16777221;
@@ -67,73 +69,110 @@ const defaultConfig = {
  *
  * @returns {Function} Spottable
  */
-const Spottable = hoc(defaultConfig, (config, Wrapped) => kind({
-	name: 'Spottable',
+const Spottable = hoc(defaultConfig, (config, Wrapped) => {
+	const {emulateMouse} = config;
+	const forwardBlur = forward('onBlur');
+	const forwardFocus = forward('onFocus');
+	const forwardKeyPress = forwardEnter('onKeyPress', 'onClick');
+	const forwardKeyDown = forwardEnter('onKeyDown', 'onMouseDown');
+	const forwardKeyUp = forwardEnter('onKeyUp', 'onMouseUp');
 
-	propTypes: /** @lends spotlight.Spottable.prototype */ {
-		/**
-		 * TODO: disabling warning, remove after https://jira2.lgsvl.com/browse/PLAT-30066
-		 * @private
-		 */
-		classes: React.PropTypes.any,
+	return class extends React.Component {
+		static displayName = 'Spottable'
 
-		/**
-		 * Whether or not the component is in a disabled state.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		disabled: React.PropTypes.bool,
+		static propTypes = {
+			/**
+			 * Whether or not the component is in a disabled state.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			disabled: React.PropTypes.bool,
 
-		/**
-		 * Whether or not the component can be navigated using spotlight.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		spotlightDisabled: React.PropTypes.bool,
+			/**
+			 * Whether or not the component can be navigated using spotlight.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			spotlightDisabled: React.PropTypes.bool,
 
-		/**
-		 * The tabindex of the component.
-		 *
-		 * @type {Number}
-		 * @public
-		 */
-		tabIndex: React.PropTypes.number
-	},
-
-	styles: {
-		className: spottableClass,
-		prop: 'classes'
-	},
-
-	computed: !config.emulateMouse ? null : {
-		onKeyPress: forwardEnter('onKeyPress', 'onClick'),
-		onKeyDown: forwardEnter('onKeyDown', 'onMouseDown'),
-		onKeyUp: forwardEnter('onKeyUp', 'onMouseUp')
-	},
-
-	render: ({classes, className, ...rest}) => {
-		const spottable = !rest.disabled && !rest.spotlightDisabled;
-		let tabIndex = rest.tabIndex;
-
-		delete rest.spotlightDisabled;
-
-		if (tabIndex == null && spottable) {
-			tabIndex = -1;
+			/**
+			 * The tabindex of the component.
+			 *
+			 * @type {Number}
+			 * @public
+			 */
+			tabIndex: React.PropTypes.number
 		}
 
-		return (
-			<Wrapped
-				{...rest}
-				className={spottable ? classes : className}
-				tabIndex={tabIndex}
-			/>
-		);
-	}
-}));
+		constructor (props) {
+			super(props);
+			this.state = {
+				spottableDisabled: false,
+				spotted: false
+			};
+		}
+
+		componentWillReceiveProps (nextProps) {
+			if (!this.props.disabled && nextProps.disabled && this.state.spotted) {
+				this.setState({spottableDisabled: true});
+			}
+		}
+
+		onBlur = (e) => {
+			if (e.currentTarget === e.target) {
+				this.setState({spottableDisabled: false, spotted: false});
+			}
+			forwardBlur(e, this.props);
+		}
+
+		onFocus = (e) => {
+			if (e.currentTarget === e.target) {
+				this.setState({spotted: true});
+			}
+			forwardFocus(e, this.props);
+		}
+
+		render () {
+			const {disabled, spotlightDisabled, ...rest} = this.props;
+			const spottableDisabled = this.state.spottableDisabled && disabled;
+			const spottable = (spottableDisabled || !disabled) && !spotlightDisabled;
+			const classes = spottableDisabled ? spottableClass + ' ' + spottableDisabledClass : spottableClass;
+			const componentDisabled = !spottable && disabled;
+			let tabIndex = rest.tabIndex;
+
+			if (tabIndex == null && spottable) {
+				tabIndex = -1;
+			}
+
+			if (spottable) {
+				rest['onBlur'] = this.onBlur;
+				rest['onFocus'] = this.onFocus;
+				if (emulateMouse && !spottableDisabled) {
+					rest['onKeyPress'] = forwardKeyPress(this.props);
+					rest['onKeyDown'] = forwardKeyDown(this.props);
+					rest['onKeyUp'] = forwardKeyUp(this.props);
+				}
+				if (rest.className) {
+					rest.className += ' ' + classes;
+				} else {
+					rest.className = classes;
+				}
+			}
+
+			return (
+				<Wrapped
+					{...rest}
+					disabled={componentDisabled}
+					tabIndex={tabIndex}
+				/>
+			);
+		}
+	};
+});
 
 export default Spottable;
 export {Spottable, spottableClass};

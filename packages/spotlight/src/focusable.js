@@ -15,6 +15,14 @@ const defaultConfig = {
 	keyDown: 'onKeyDown',
 
 	/**
+	 * Configures the pointer prop name to pass the callback to request a focus change
+	 *
+	 * @type {String}
+	 * @default 'onMouseDown'
+	 */
+	mouseDown: 'onMouseDown',
+
+	/**
 	 * Configures the prop name to pass the callback due to gaining focus
 	 *
 	 * @type {String}
@@ -69,10 +77,11 @@ const focusableClass = 'focused';
  * @returns {Function} SpotlightFocusableDecoratorHoC
  */
 const SpotlightFocusableDecoratorHoC = hoc(defaultConfig, (config, Wrapped) => {
-	const {blur, focus, keyDown, pauseSpotlightOnFocus, useEnterKey} = config;
+	const {blur, focus, keyDown, mouseDown, pauseSpotlightOnFocus, useEnterKey} = config;
 	const forwardBlur = forward('onBlur');
 	const forwardFocus = forward('onFocus');
 	const forwardKeyDown = forward('onKeyDown');
+	const forwardMouseDown = forward(mouseDown);
 
 	return class SpotlightFocusableDecorator extends React.Component {
 		static propTypes = {
@@ -111,20 +120,38 @@ const SpotlightFocusableDecoratorHoC = hoc(defaultConfig, (config, Wrapped) => {
 			forwardKeyDown(e, this.props);
 		}
 
+		onMouseDown = (e) => {
+			if (e.target !== this.wrappedInstance.decoratedNode) {
+				e.preventDefault();
+			}
+			if (!this.state.innerElementFocused) {
+				this.setState({innerElementFocused: true});
+			}
+			forwardMouseDown(e, this.props);
+		}
+
 		onFocus = (e) => {
-			if (e.target === this.wrappedInstance.decoratedNode) {
+			if (e.target === this.wrappedInstance.decoratorNode) {
+				if (this.state.forceFocusChange) {
+					return;
+				}
+				if (!useEnterKey) {
+					this.setState({innerElementFocused: true, forceFocusChange: true});
+				}
+			} else if (e.target === this.wrappedInstance.decoratedNode) {
 				this.setState({innerElementFocused: true});
 
 				if (pauseSpotlightOnFocus) {
 					Spotlight.pause();
 				}
-			} else if (e.target === this.wrappedInstance.decoratorNode && !useEnterKey) {
-				this.setState({innerElementFocused: true, forceFocusChange: true});
 			}
 			forwardFocus(e, this.props);
 		}
 
 		onBlur = (e) => {
+			if (e.target === this.wrappedInstance.decoratorNode && this.state.innerElementFocused) {
+				return;
+			}
 			if (e.target === this.wrappedInstance.decoratedNode) {
 				const activeElement = document.activeElement;
 				this.setState({innerElementFocused: false, forceFocusChange: activeElement && activeElement === document.body});
@@ -147,6 +174,7 @@ const SpotlightFocusableDecoratorHoC = hoc(defaultConfig, (config, Wrapped) => {
 			delete props.keyCodes;
 			props[focus] = this.onFocus;
 			props[blur] = this.onBlur;
+			props[mouseDown] = this.onMouseDown;
 
 			if (useEnterKey) {
 				props[keyDown] = this.onKeyDown;

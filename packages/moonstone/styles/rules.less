@@ -41,13 +41,15 @@
 }
 
 // Disabled components
-[disabled] {
+[disabled],
+:global(.spottable-disabled):focus {
 	.vendor-opacity(@moon-disabled-translucent-opacity);
 
 	cursor: default;
 
 	// Disabled children of disabled components
-	[disabled] {
+	[disabled],
+	:global(.spottable-disabled):focus {
 		.vendor-opacity(1);
 	}
 }
