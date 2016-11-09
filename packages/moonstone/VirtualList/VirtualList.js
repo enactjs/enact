@@ -90,19 +90,19 @@ const VirtualGridList = kind({
 });
 
 /**
- * {@link module:@enact/moonstone/VirtualList~VirtualVariableGridList} is a VirtualList with Moonstone styling
+ * {@link module:@enact/moonstone/VirtualList~VirtualVariableList} is a VirtualList with Moonstone styling
  * which has a variable width or height.
  *
- * @class VirtualVariableGridList
+ * @class VirtualVariableList
  * @ui
  * @public
  */
-const VirtualVariableGridList = kind({
-	name: 'VirtualVariableGridList',
+const VirtualVariableList = kind({
+	name: 'VirtualVariableList',
 
 	propTypes: {
 		/**
-		 * Size of data for the VirtualVariableGridList; valid value is an object
+		 * Size of data for the VirtualVariableList; valid value is an object
 		 * that has `fixed` for the data size of fixed dimension and `variable` for
 		 * the data size of variable dimension.
 		 *
@@ -112,15 +112,7 @@ const VirtualVariableGridList = kind({
 		dataSize: PropTypes.object.isRequired,
 
 		/**
-		 * To fix the position for first row and column items
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		headerComponent: PropTypes.bool.isRequired,
-
-		/**
-		 * Size of an item for the VirtualVariableGridList; valid value is an object
+		 * Size of an item for the VirtualVariableList; valid value is an object
 		 * that has `fixed` for the item size of fixed dimension
 		 * and `variable` for the item sizes of variable dimension.
 		 *
@@ -128,6 +120,14 @@ const VirtualVariableGridList = kind({
 		 * @public
 		 */
 		itemSize: PropTypes.object.isRequired,
+
+		/**
+		 * To fix the position for first row and column items
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		lockHeaders: PropTypes.bool.isRequired,
 
 		/**
 		 * Direction specific options of the list; valid values are `'width'` and `'height'`.
@@ -159,5 +159,5 @@ const VirtualVariableGridList = kind({
 });
 
 export default VirtualList;
-export {VirtualList, VirtualGridList, VirtualVariableGridList};
+export {VirtualList, VirtualGridList, VirtualVariableList};
 export * from './GridListImageItem';

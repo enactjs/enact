@@ -1,6 +1,6 @@
 import ri from '@enact/ui/resolution';
 import Item from '@enact/moonstone/Item';
-import {VirtualVariableGridList} from '@enact/moonstone/VirtualList';
+import {VirtualVariableList} from '@enact/moonstone/VirtualList';
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
 import {withKnobs} from '@kadira/storybook-addon-knobs';
@@ -170,19 +170,19 @@ for (let i = 0; i < 200; i++) { /* 200 channelInfo */
 		// Today
 		if (i === 0 && j === 0) {
 			epgData[i][j] = {
-				width: 405,
+				width: ri.scale(405),
 				programName: 'Today'
 			};
 		// ChannelInfo
 		} else if (j === 0) {
 			epgData[i][j] = {
-				width: 405,
+				width: ri.scale(405),
 				programName: channelInfo[i % 20]
 			};
 		// Timeline
 		} else if (i === 0) {
 			epgData[i][j] = {
-				width: 200,
+				width: ri.scale(200),
 				programName: timeline[(j - 1) % 20]
 			};
 		// Programs
@@ -238,12 +238,12 @@ const
 		}
 	};
 
-storiesOf('VirtualVariableGridList')
+storiesOf('VirtualVariableList')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'for EGP Grid',
+		'for EPG Grid',
 		() => (
-			<VirtualVariableGridList
+			<VirtualVariableList
 				data={epgData}
 				dataSize={{
 					fixed: epgData.length,
@@ -253,11 +253,11 @@ storiesOf('VirtualVariableGridList')
 					fixed: ri.scale(83),
 					variable: getVariableItemSize
 				}}
+				lockHeaders
 				variableDimension={'width'}
 				variableMaxScrollSize={variableMaxScrollSize}
-				style={style.list}
 				className={'list'}
-				headerComponent
+				style={style.list}
 				component={renderItem}
 			/>
 		)

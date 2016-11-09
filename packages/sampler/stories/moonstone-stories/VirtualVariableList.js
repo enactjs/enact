@@ -1,6 +1,6 @@
 import ri from '@enact/ui/resolution';
 import Item from '@enact/moonstone/Item';
-import {VirtualVariableGridList} from '@enact/moonstone/VirtualList';
+import {VirtualVariableList} from '@enact/moonstone/VirtualList';
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
 import {withKnobs} from '@kadira/storybook-addon-knobs';
@@ -85,13 +85,13 @@ const
 		);
 	};
 
-storiesOf('VirtualVariableGridList')
+storiesOf('VirtualVariableList')
 	.addDecorator(withKnobs)
 	.addWithInfo(
 		'with variable width item',
-		'Basic usage of VirtualVariableGridList',
+		'Basic usage of VirtualVariableList',
 		() => (
-			<VirtualVariableGridList
+			<VirtualVariableList
 				data={programs}
 				dataSize={{
 					fixed: programs.length,
@@ -110,7 +110,7 @@ storiesOf('VirtualVariableGridList')
 	).addWithInfo(
 		'with variable height item',
 		() => (
-			<VirtualVariableGridList
+			<VirtualVariableList
 				data={programs}
 				dataSize={{
 					fixed: programs.length,
