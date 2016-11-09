@@ -17,7 +17,8 @@ import css from './Popup.less';
 const TransitionContainer = SpotlightContainerDecorator(Transition);
 
 /**
- * {@link module:@enact/moonstone/Popup~Popup}
+ * {@link module:@enact/moonstone/Popup~Popup} is a modal component that appears at the bottom of
+ * the screen and takes up the full screen width.
  *
  * @class Popup
  * @ui
