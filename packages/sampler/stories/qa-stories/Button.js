@@ -8,18 +8,18 @@ Button.defaultProps = Object.assign({}, ButtonBase.defaultProps, Button.defaultP
 Button.displayName = 'Button';
 
 // Set up some defaults for info and knobs
-const prop = {
-	backgroundOpacity: {'opaque': 'opaque', 'translucent': 'translucent', 'transparent': 'transparent'},
-	longText:{'Loooooooooooooooooog Button': 'Loooooooooooooooooog Button', 'BUTTON   WITH   EXTRA   SPACES': 'BUTTON   WITH   EXTRA   SPACES'},
-	tallText:{'ิ้  ไั  ஒ  து': 'ิ้  ไั  ஒ  து', 'ÁÉÍÓÚÑÜ': 'ÁÉÍÓÚÑÜ', 'Bản văn': 'Bản văn'}
-},
-
-style = {
-	tapArea: {
-		background: 'rgba(0, 100, 200, 0.2)',
-		border: '1px solid rgba(0, 100, 200, 0.4)'
-	}
-};
+const
+	prop = {
+		backgroundOpacity: {'opaque': 'opaque', 'translucent': 'translucent', 'transparent': 'transparent'},
+		longText:{'Loooooooooooooooooog Button': 'Loooooooooooooooooog Button', 'BUTTON   WITH   EXTRA   SPACES': 'BUTTON   WITH   EXTRA   SPACES'},
+		tallText:{'ิ้  ไั  ஒ  து': 'ิ้  ไั  ஒ  து', 'ÁÉÍÓÚÑÜ': 'ÁÉÍÓÚÑÜ', 'Bản văn': 'Bản văn'}
+	},
+	style = {
+		tapArea: {
+			background: 'rgba(0, 100, 200, 0.2)',
+			border: '1px solid rgba(0, 100, 200, 0.4)'
+		}
+	};
 
 storiesOf('Button')
 	.addDecorator(withKnobs)
@@ -56,7 +56,7 @@ storiesOf('Button')
 		)
 	)
 	.addWithInfo(
-		'with no minWidth',
+		'to validate minWidth with a single character',
 		() => (
 			<Button
 				onClick={action('onClick')}
