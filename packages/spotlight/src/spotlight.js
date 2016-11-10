@@ -334,8 +334,8 @@ const Spotlight = (function() {
 		return destPriority.group;
 	}
 
-	function navigate (target, direction, candidates, config) {
-		if (!target || !direction || !candidates || !candidates.length) {
+	function navigate (targetRect, direction, candidates, config) {
+		if (!targetRect || !direction || !candidates || !candidates.length) {
 			return null;
 		}
 
@@ -347,12 +347,6 @@ const Spotlight = (function() {
 			}
 		}
 		if (!rects.length) {
-			return null;
-		}
-
-		// determine bounds of target if DOM node, otherwise assume target is x,y pair
-		let targetRect = target instanceof HTMLElement ? getRect(target) : getPointRect(target);
-		if (!targetRect) {
 			return null;
 		}
 
@@ -812,8 +806,9 @@ const Spotlight = (function() {
 	function spotNextFromPoint (direction, position, containerId) {
 		const config = extend({}, GlobalConfig, _containers[containerId]);
 		const {allNavigableElements} = getNavigableElements();
+		const targetRect = getPointRect(position);
 		const next = navigate(
-			position,
+			targetRect,
 			direction,
 			allNavigableElements,
 			config
@@ -836,6 +831,7 @@ const Spotlight = (function() {
 		}
 
 		const {allNavigableElements, containerNavigableElements} = getNavigableElements();
+		const targetRect = getRect(currentFocusedElement);
 
 		let config = extend({}, GlobalConfig, _containers[currentContainerId]);
 		let next;
@@ -844,7 +840,7 @@ const Spotlight = (function() {
 			let currentContainerNavigableElements = containerNavigableElements[currentContainerId];
 
 			next = navigate(
-				currentFocusedElement,
+				targetRect,
 				direction,
 				exclude(currentContainerNavigableElements, currentFocusedElement),
 				config
@@ -852,7 +848,7 @@ const Spotlight = (function() {
 
 			if (!next && config.restrict === 'self-first') {
 				next = navigate(
-					currentFocusedElement,
+					targetRect,
 					direction,
 					exclude(allNavigableElements, currentContainerNavigableElements),
 					config
@@ -860,7 +856,7 @@ const Spotlight = (function() {
 			}
 		} else {
 			next = navigate(
-				currentFocusedElement,
+				targetRect,
 				direction,
 				exclude(allNavigableElements, currentFocusedElement),
 				config
