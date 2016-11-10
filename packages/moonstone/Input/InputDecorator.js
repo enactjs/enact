@@ -24,10 +24,10 @@ const InputDecoratorBase = kind({
 
 	propTypes: {
 		/**
-		 * The method to run when the decorator mounts, giving a reference to the dom.
+		 * The method to run when the decorator mounts, giving a reference to the DOM.
 		 *
 		 * @type {Function}
-		 * @public
+		 * @private
 		 */
 		decoratorRef: PropTypes.func,
 

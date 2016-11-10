@@ -1,3 +1,4 @@
+/* eslint-disable enact/prop-types */
 import React from 'react';
 import {shallow, mount} from 'enzyme';
 import ViewManager, {SlideLeftArranger} from '../';

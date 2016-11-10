@@ -1,7 +1,8 @@
 /**
- * Exports the {@link module:@enact/moonstone/VirtualList/VirtualListBase~VirtualListBase} component.
+ * Exports the {@link moonstone/VirtualList/VirtualListBase.VirtualListBase} component.
  *
- * @module @enact/moonstone/VirtualList/VirtualListBase
+ * @module moonstone/VirtualList/VirtualListBase
+ * @private
  */
 
 import React, {Component, PropTypes} from 'react';
@@ -20,18 +21,17 @@ const
 	nop = () => {};
 
 /**
- * {@link module:@enact/moonstone/VirtualList/VirtualListBase~VirtualListBase} is a base component for
- * {@link module:@enact/moonstone/VirtualList~VirtualList} and
- * {@link module:@enact/moonstone/VirtualList~VirtualGridList} with Scrollable and SpotlightContainerDecorator applied.
+ * {@link moonstone/VirtualList/VirtualListBase.VirtualListBase} is a base component for
+ * {@link moonstone/VirtualList.VirtualList} and
+ * {@link moonstone/VirtualList.VirtualGridList} with Scrollable and SpotlightContainerDecorator applied.
  *
- * @class VirtualListBase
- * @mixes module:@enact/moonstone/Scrollable
- * @mixes module:@enact/spotlight/SpotlightContainerDecorator
+ * @class VirtualListCore
+ * @memberof moonstone/VirtualList/VirtualListBase
  * @ui
- * @public
+ * @private
  */
 class VirtualListCore extends Component {
-	static propTypes = {
+	static propTypes = /** @lends moonstone/VirtualList/VirtualListBase.VirtualListCore.prototype */ {
 		/**
 		 * Size of an item for the list; valid values are either a number for `VirtualList`
 		 * or an object that has `minWidth` and `minHeight` for `VirtualGridList`.
@@ -741,6 +741,18 @@ class VirtualListCore extends Component {
 	}
 }
 
+/**
+ * {@link moonstone/VirtualList/VirtualListBase.VirtualListBase} is a base component for
+ * {@link moonstone/VirtualList.VirtualList} and
+ * {@link moonstone/VirtualList.VirtualGridList} with Scrollable and SpotlightContainerDecorator applied.
+ *
+ * @class VirtualListBase
+ * @memberof moonstone/VirtualList/VirtualListBase
+ * @mixes moonstone/Scrollable
+ * @mixes spotlight/SpotlightContainerDecorator
+ * @ui
+ * @private
+ */
 const VirtualListBase = SpotlightContainerDecorator({restrict: 'self-first'}, Scrollable(VirtualListCore));
 
 export default VirtualListBase;

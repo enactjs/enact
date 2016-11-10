@@ -2,11 +2,54 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
-## [unreleased]
+## [1.0.0-alpha.3] - 2016-11-8
+
+> Note: For those who are using `eslint-config-enact` for in-editor linting, there have been some important changes and reinstallation is necessary. Refer to [https://github.com/enyojs/eslint-config-enact/](https://github.com/enyojs/eslint-config-enact/) for install instructions or reinstall via:
+>
+> ```
+> npm install -g eslint eslint-plugin-react eslint-plugin-babel babel-eslint enyojs/eslint-plugin-enact enyojs/eslint-config-enact
+> ```
+>
+>If you don't use in-editor linting or use a different linting configuration, you can safely ignore this notice.
+
+### Added
+
+- `core/dispatcher` - an event dispatcher for global events (e.g. `window` and `document` events) that fire outside of the React tree
+- Support for detecting browser locale change events through `languagechange` event in
+	`i18n/I18nDecorator`
+- `moonstone/BodyText`, `moonstone/DatePicker`, `moonstone/DayPicker`, `moonstone/ExpandableItem`, `moonstone/Image`, and `moonstone/TimePicker` components
+- `fullBleed` prop to `moonstone/Panels/Header`. When `true`, the header content is indented and the header lines are removed.
+- Application close button to `moonstone/Panels`. Fires `onApplicationClose` when clicked. Can be omitted with the `noCloseButton` prop.
+- Samples for `moonstone/BodyText`, `moonstone/DatePicker`, `moonstone/DayPicker`,
+	`moonstone/ExpandableItem`, `moonstone/Image`, `moonstone/Scroller`, `moonstone/TimePicker`,
+	`moonstone/VirtualList`, and `moonstone/VirtualList.VirtualGridList`
+- `spotlightDefaultClass` to `@enact/spotlight` export. Applying this class to an item in a
+	container will cause it to be the default spotted item in that container.
+- Selection type support to `ui/Group`
+- Documentation on Flexbox and an Enyo to Enact component migration guide
 
 ### Changed
 
-- `moonstone/Divider`'s `children` property is now optional
+- `data` parameter passed to `component` prop of `VirtualList`.
+- `moonstone/Expandable` into a submodule of `moonstone/ExpandableItem`
+- `ExpandableList` to properly support selection
+- `moonstone/Divider`'s `children` property to be optional
+- `moonstone/ToggleItem`'s `inline` version to have a `max-width` of `240px`
+- `moonstone/Input` to use `<div>` instead of `<label>` for wrapping components. No change to
+	functionality, only markup.
+- Spotlight containers to spot the last focused element by default.
+- `ui/Group` prop `select` to `childSelect` and added prop `select` to support selection types
+
+### Removed
+
+- `moonstone/ExpandableCheckboxItemGroup` in favor of `ExpandableList`
+- `decorated` prop from `@enact/spotlight/focusable` as this relationship is managed
+	implicitly by the component decorated by `@enact/spotlight/focusable`.
+
+### Fixed
+
+- Spotlight stops at container boundaries when 5-way key held down
+- Several issues related to spotting controls in edge cases
 
 
 ## [1.0.0-alpha.2] - 2016-10-21

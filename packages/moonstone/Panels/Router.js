@@ -27,10 +27,17 @@ const propTypes = {
 	])
 };
 
+/**
+ * A Router component for use with {@link moonstone/Panels.Panels}
+ *
+ * @class Router
+ * @memberof moonstone/Panels
+ * @public
+ */
 const Router = class extends React.Component {
 	static displayName = 'Router'
 
-	static propTypes = {
+	static propTypes = /** @lends moonstone/Panels.Router */ {
 		/**
 		 * List of views to render. Will be rendered as a flat array of views suitable for use in
 		 * Panels and not a hierarchy of views as the path implies.
@@ -155,7 +162,49 @@ const Router = class extends React.Component {
 	}
 };
 
+/**
+ * Used with {@link moonstone/Panels.Routable} to define the `path` segment and the
+ * `component` to render. `Route` elements can be nested to build multiple level paths.
+ *
+ * In the below example, `Panels` would render `SettingsPanel` with breadcrumbs to
+ * navigate `AppPanel` and `HomePanel`.
+ *
+ * ```
+ *	<Panels path="/app/home/settings" onSelectBreadcrumb={this.handleNavigate}>
+ *		<Route path="app" component={AppPanel}>
+ *			<Route path="home" component={HomePanel}>
+ *				<Route path="settings" component={SettingsPanel} />
+ *			</Route>
+ *		</Route>
+ *		<Route path="admin" component={AdminPanel} />
+ *		<Route path="help" component={HelpPanel} />
+ *	</Panels>
+ * ```
+ *
+ * @class Route
+ * @memberof moonstone/Panels
+ * @public
+ */
 const Route = () => null;
+
+Route.propTypes = /** @lends moonstone/Popups.Route.prototype */ {
+	/**
+	 * The component to render when the `path` for this Route matches the path of the
+	 * {@link moonstone/Panels.Routable} container.
+	 *
+	 * @type {Element}
+	 * @public
+	 */
+	component: React.PropTypes.element.isRequired,
+
+	/**
+	 * The name of the path segment
+	 *
+	 * @type {String}
+	 * @public
+	 */
+	path: React.PropTypes.string.isRequired
+};
 
 export default Router;
 export {Router, Route, propTypes, toSegments};
