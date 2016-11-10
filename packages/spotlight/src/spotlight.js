@@ -958,7 +958,7 @@ const Spotlight = (function() {
 				if (!_pause) {
 					if (getCurrent()) {
 						SpotlightAccelerator.processKey(evt, onAcceleratedKeyDown);
-					} else if (!spotNextFromPoint(direction, {x: _pointerX, y: _pointerY}, spotlightRootContainerName)) {
+					} else if (!spotNextFromPoint(direction, {x: _pointerX, y: _pointerY}, _lastContainerId)) {
 						Spotlight.focus(getContainerLastFocusedElement(_lastContainerId));
 					}
 					_5WayKeyHold = true;
@@ -1219,6 +1219,17 @@ const Spotlight = (function() {
 			} else {
 				_defaultContainerId = containerId;
 			}
+		},
+
+		/**
+		 * Sets the currently active container.
+		 *
+		 * @param {String} [containerId] The id of the currently active container. If this is not
+		 *	provided, the root container is set as the currently active container.
+		 * @public
+		 */
+		setActiveContainer: function (containerId) {
+			_lastContainerId = containerId || spotlightRootContainerName;
 		},
 
 		/**
