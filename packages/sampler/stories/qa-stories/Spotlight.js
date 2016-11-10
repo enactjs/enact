@@ -43,7 +43,7 @@ storiesOf('Spotlight')
 				<p>
 					The containers below will spot the last-focused element. Keep track of the
 					last-focused element in the container when testing and ensure that the correct
-					element is spotted when re-entering the container.
+					element is spotted when re-entering the container with 5-way.
 				</p>
 				<div style={{display: 'flex'}}>
 					<Container style={style.container}>
