@@ -93,7 +93,7 @@ class Portal extends React.Component {
 	static defaultProps = {
 		noAutoDismiss: false,
 		open: false,
-		portalClassName: 'enact-fit enact-untouchable',
+		portalClassName: 'enact-fit enact-clip enact-untouchable',
 		portalId: 'portal',
 		scrimType: 'translucent'
 	}
