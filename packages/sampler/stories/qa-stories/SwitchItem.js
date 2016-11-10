@@ -79,7 +79,7 @@ storiesOf('SwitchItem')
 					defaultSelected={1}
 					onSelect={action('onSelect')}
 				>
-					{[text('Long Text 1', inputData.longText), text('Long Text 2', inputData.longText), text('Long Text 3', inputData.longText)]}
+					{[text('Long Text 1', 'First ' + inputData.longText), text('Long Text 2', 'Second ' + inputData.longText), text('Long Text 3', 'Third ' + inputData.longText)]}
 				</SelectableGroup>
 			</div>
 		)
