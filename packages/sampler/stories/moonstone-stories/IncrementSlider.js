@@ -11,7 +11,7 @@ storiesOf('IncrementSlider')
 	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
-		'The basic IncrementSlider',
+		'Basic usage of IncrementSlider',
 		() => (
 			<IncrementSlider
 				backgroundPercent={number('backgroundPercent')}
