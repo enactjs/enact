@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- Samples for `ui/Group`.
+
 ## [1.0.0-alpha.3] - 2016-11-8
 
 ### Added
