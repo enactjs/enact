@@ -42,14 +42,14 @@
 
 // Disabled components
 [disabled],
-:global(.spottable-disabled):focus {
+:global(.spottableDisabled):focus {
 	.vendor-opacity(@moon-disabled-translucent-opacity);
 
 	cursor: default;
 
 	// Disabled children of disabled components
 	[disabled],
-	:global(.spottable-disabled):focus {
+	:global(.spottableDisabled):focus {
 		.vendor-opacity(1);
 	}
 }

@@ -3,7 +3,7 @@ import {forward} from '@enact/core/handle';
 import React from 'react';
 
 const spottableClass = 'spottable';
-const spottableDisabledClass = 'spottable-disabled';
+const spottableDisabledClass = 'spottableDisabled';
 
 const ENTER_KEY = 13;
 const REMOTE_OK_KEY = 16777221;
