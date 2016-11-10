@@ -24,8 +24,7 @@ delete SelectableItemToggle.defaultProps.checked;
 
 const inputData = {
 	longText : 'Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text',
-	disabledLong : 'Default disabled Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text',
-	normalText : 'Selectable Item'
+	disabledLong : 'Default disabled Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text'
 };
 
 storiesOf('SelectableItem')
@@ -39,14 +38,14 @@ storiesOf('SelectableItem')
 					inline={boolean('inline', false)}
 					onToggle={action('onToggle')}
 				>
-					{text('Enabled text', inputData.longText)}
+					{text('Long Text', inputData.longText)}
 				</SelectableItemToggle>
 				<SelectableItemToggle
 					disabled
 					inline={boolean('inline', false)}
 					onToggle={action('onToggle')}
 				>
-					{text('Disabled text', inputData.disabledLong)}
+					{text('Disable Long Text', inputData.disabledLong)}
 				</SelectableItemToggle>
 			</div>
 		)
@@ -68,7 +67,7 @@ storiesOf('SelectableItem')
 					defaultSelected={1}
 					onSelect={action('onSelect')}
 				>
-					{[text('Normal Text 1', inputData.normalText + 1), text('Normal Text 2', inputData.normalText + 2), text('Normal Text 3', inputData.normalText + 3)]}
+					{['Selectable Item 1', 'Selectable Item 2', 'Selectable Item 3']}
 				</SelectableGroup>
 				<Divider>
 					{'Selectable items with long text in a group'}
