@@ -6,10 +6,10 @@ import React, {PropTypes} from 'react';
 
 import SliderDecorator from '../internal/SliderDecorator';
 import {
-	computeLoadedValue,
+	computeProportionLoaded,
+	computeProportionProgress,
 	computePercentProgress,
-	computeLoaderStyleProp,
-	computeFillStyleProp,
+	computeBarTransform,
 	computeKnobStyleProp
 } from '../internal/SliderDecorator/util';
 
@@ -18,12 +18,20 @@ import css from './Slider.less';
 class VisibleBar extends React.Component {
 	static propTypes = {
 		/**
-		 * The background progress as a percentage.
+		 * The progress as a proportion.
 		 *
 		 * @type {String}
 		 * @public
 		 */
-		percentBackgroundProgress: PropTypes.string,
+		percentProgress: PropTypes.string,
+
+		/**
+		 * The loaded progress as a proportion.
+		 *
+		 * @type {Number}
+		 * @public
+		 */
+		proportionLoadedProgress: PropTypes.number,
 
 		/**
 		 * The progress as a percentage.
@@ -31,7 +39,7 @@ class VisibleBar extends React.Component {
 		 * @type {String}
 		 * @public
 		 */
-		percentProgress: PropTypes.string,
+		proportionProgress: PropTypes.number,
 
 		/**
 		 * If `true` the slider will be oriented vertically.
@@ -45,10 +53,10 @@ class VisibleBar extends React.Component {
 		 * Height, in standard CSS units, of the vertical slider. Only takes
 		 * effect on a vertical oriented slider, and will be `null` otherwise.
 		 *
-		 * @type {String}
+		 * @type {Object}
 		 * @public
 		 */
-		verticalHeight: PropTypes.string
+		verticalHeight: PropTypes.object
 	}
 
 	getBarNode = (node) => {
@@ -64,12 +72,15 @@ class VisibleBar extends React.Component {
 	}
 
 	render () {
-		const {percentBackgroundProgress, percentProgress, vertical, verticalHeight} = this.props;
+		const {percentProgress, proportionLoadedProgress, proportionProgress, vertical, verticalHeight} = this.props;
+
+		// TODO: explore gpu-accelerated knob placement - need to compute absolute measurements from
+		// percentage applied to parent
 
 		return (
 			<div className={css.visibleBar} style={verticalHeight}>
-				<div className={css.load} ref={this.getLoaderNode} style={{[computeLoaderStyleProp(vertical)]: percentBackgroundProgress}} />
-				<div className={css.fill} ref={this.getBarNode} style={{[computeFillStyleProp(vertical)]: percentProgress}} />
+				<div className={css.load} ref={this.getLoaderNode} style={{transform: computeBarTransform(proportionLoadedProgress, vertical)}} />
+				<div className={css.fill} ref={this.getBarNode} style={{transform: computeBarTransform(proportionProgress, vertical)}} />
 				<div className={css.knob} ref={this.getKnobNode} style={{[computeKnobStyleProp(vertical)]: percentProgress}} />
 			</div>
 		);
@@ -206,22 +217,24 @@ const SliderBase = kind({
 
 	computed: {
 		className: ({pressed, vertical, styler}) => styler.append({pressed, vertical, horizontal: !vertical}),
-		percentBackgroundProgress: computeLoadedValue,
+		proportionLoadedProgress: computeProportionLoaded,
+		proportionProgress: computeProportionProgress,
 		percentProgress: computePercentProgress,
 		verticalHeight: ({vertical, height}) => (vertical ? {height} : null),
 		verticalWidth: ({vertical, height}) => (vertical ? {width: height} : null)
 	},
 
-	render: ({inputRef, percentBackgroundProgress, max, min, onChange, percentProgress, sliderRef, step, value, verticalHeight, verticalWidth, visibleBarRef, ...rest}) => {
+	render: ({inputRef, max, min, onChange, proportionLoadedProgress, proportionProgress, percentProgress, sliderRef, step, value, vertical, verticalHeight, verticalWidth, visibleBarRef, ...rest}) => {
 		const sliderProps = {
-			percentBackgroundProgress,
+			proportionLoadedProgress,
+			proportionProgress,
 			percentProgress,
+			vertical,
 			verticalHeight
 		};
 
 		delete rest.backgroundPercent;
 		delete rest.pressed;
-		delete rest.vertical;
 
 		return (
 			<div {...rest} ref={sliderRef}>

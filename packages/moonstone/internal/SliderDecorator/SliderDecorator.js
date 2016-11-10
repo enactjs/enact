@@ -12,10 +12,10 @@ import R from 'ramda';
 import React, {PropTypes} from 'react';
 
 import {
-	computeLoadedValue,
+	computeProportionLoaded,
+	computeProportionProgress,
 	computePercentProgress,
-	computeLoaderStyleProp,
-	computeFillStyleProp,
+	computeBarTransform,
 	computeKnobStyleProp
 } from './util';
 
@@ -167,11 +167,13 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				// intentionally breaking encapsulation to avoid having to specify multiple refs
 				const {barNode, knobNode, loaderNode} = this.visibleBarNode;
 				const {backgroundPercent, max, vertical} = this.props;
-				const percentProgress = computePercentProgress({value, max: (max != null ? max : Wrapped.defaultProps.max)});
-				const loadedValue = computeLoadedValue({backgroundPercent});
+				const normalizedMax = max != null ? max : Wrapped.defaultProps.max;
+				const proportionLoaded = computeProportionLoaded({backgroundPercent});
+				const proportionProgress = computeProportionProgress({value, max: normalizedMax});
+				const percentProgress = computePercentProgress({value, max: normalizedMax});
 
-				loaderNode.style[computeLoaderStyleProp(vertical)] = loadedValue;
-				barNode.style[computeFillStyleProp(vertical)] = percentProgress;
+				loaderNode.style.transform = computeBarTransform(proportionLoaded, vertical);
+				barNode.style.transform = computeBarTransform(proportionProgress, vertical);
 				knobNode.style[computeKnobStyleProp(vertical)] = percentProgress;
 				this.inputNode.value = value;
 
