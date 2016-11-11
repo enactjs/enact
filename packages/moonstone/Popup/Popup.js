@@ -7,6 +7,7 @@
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 import Transition from '@enact/ui/Transition';
+import Portal from '@enact/ui/Portal';
 import {SpotlightContainerDecorator} from '@enact/spotlight';
 
 import Layerable from '../Layerable';
@@ -137,7 +138,86 @@ const PopupBase = kind({
 	}
 });
 
-const Popup = Layerable(PopupBase);
+const LayerablePopup = Layerable(PopupBase);
+
+class Popup extends React.Component {
+	static propTypes = {
+		/**
+		 * A function to run when `ESC` key is pressed. The function will only invoke if
+		 * `noAutoDismiss` is set to false.
+		 *
+		 * @type {Function}
+		 */
+		onDismiss: PropTypes.func,
+
+		/**
+		 * When `true`, Popup is rendered into portal.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 */
+		open: PropTypes.bool
+	}
+	static defaultProps = {
+		open: false
+	}
+	constructor (props) {
+		super(props);
+		this.state = {
+			portalOpen: false,
+			popupOpen: this.props.noAnimation ? true : false
+		};
+	}
+	componentWillReceiveProps (nextProps) {
+		if (!this.props.open && nextProps.open) {
+			this.setState({
+				portalOpen: true
+			});
+		} else if (this.props.open && !nextProps.open) {
+			let nextState = {
+				popupOpen: false
+			};
+			if (this.props.noAnimation) {
+				nextState = {
+					popupOpen: true,
+					portalOpen: false
+				};
+			}
+			this.setState(nextState);
+		}
+	}
+	shouldComponentUpdate (nextProps, nextState) {
+		return this.props.open != nextProps.open ||
+				this.state.popupOpen != nextState.popupOpen ||
+				this.state.portalOpen != nextState.portalOpen;
+	}
+	handlePortalOpen = () => {
+		if (!this.props.noAnimation) {
+			this.setState({
+				popupOpen: true
+			});
+		}
+	}
+	handlePopupHide = () => {
+		this.setState({
+			portalOpen: false
+		});
+	}
+	render () {
+		const {onClose, onDismiss, ...rest} = this.props;
+
+		return (
+			<Portal
+				open={this.state.portalOpen}
+				onOpen={this.handlePortalOpen}
+				onClose={onClose}
+				onDismiss={onDismiss}
+			>
+				<LayerablePopup {...rest} open={this.state.popupOpen} onHide={this.handlePopupHide} />
+			</Portal>
+		);
+	}
+}
 
 export default Popup;
 export {Popup, PopupBase};
