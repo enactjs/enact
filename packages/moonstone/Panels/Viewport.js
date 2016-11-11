@@ -69,7 +69,7 @@ const ViewportBase = kind({
 				{...rest}
 				noAnimation={noAnimation}
 				arranger={arranger}
-				duration={300}
+				duration={200}
 				index={index}
 				component="main"
 			>

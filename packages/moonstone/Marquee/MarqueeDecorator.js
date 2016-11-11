@@ -230,10 +230,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {undefined}
 		 */
 		clearTimeout () {
-			if (window) {
+			if (window && this.timer) {
 				window.clearTimeout(this.timer);
+				this.timer = null;
 			}
-			this.timer = null;
 		}
 
 		/**

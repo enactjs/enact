@@ -94,7 +94,14 @@ class View extends React.Component {
 	}
 
 	componentWillUnmount () {
-		window.cancelAnimationFrame(this._raf);
+		this.cancelAnimationFrame();
+	}
+
+	cancelAnimationFrame () {
+		if (this._raf) {
+			window.cancelAnimationFrame(this._raf);
+			this._raf = null;
+		}
 	}
 
 	componentWillAppear (callback) {
@@ -158,7 +165,7 @@ class View extends React.Component {
 
 		// Arranges the control each tick and calls the provided callback on complete
 		const fn = (step) => {
-			window.cancelAnimationFrame(this._raf);
+			this.cancelAnimationFrame();
 
 			// percent is the ratio (between 0 and 1) of the current step to the total steps
 			const percent = step / steps;
