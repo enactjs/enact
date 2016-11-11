@@ -36,9 +36,9 @@ storiesOf('Themes')
 					<Divider>Aqua Interface Theme</Divider>
 					<p>Parent class name: <code>aqua</code></p>
 					<div className="row">
-						<Button uppercase={false}>Normal</Button>
-						<Button uppercase={false} small>Aqua</Button>
-						<Button uppercase={false} disabled>Disabled</Button>
+						<Button preserveCase>Normal</Button>
+						<Button preserveCase small>Aqua</Button>
+						<Button preserveCase disabled>Disabled</Button>
 					</div>
 				</div>
 
@@ -57,9 +57,9 @@ storiesOf('Themes')
 					<Divider>Material Design</Divider>
 					<p>Parent class name: <code>material</code></p>
 					<div className="row">
-						<Button uppercase={false}>Normal</Button>
-						<Button uppercase={false}>Material</Button>
-						<Button uppercase={false} disabled>Disabled</Button>
+						<Button preserveCase>Normal</Button>
+						<Button preserveCase>Material</Button>
+						<Button preserveCase disabled>Disabled</Button>
 					</div>
 				</div>
 			</div>

@@ -23,7 +23,7 @@ const PanelsBase = kind({
 
 	render: ({children, title, description, ...rest}) => (
 		<div {...rest}>
-			<Panels>
+			<Panels noCloseButton>
 				<Panel>
 					<Header type="compact" title={title} preserveCase />
 					<div className={css.description}>
