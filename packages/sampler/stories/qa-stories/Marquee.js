@@ -36,7 +36,7 @@ storiesOf('Marquee')
 				marqueeResetDelay={number('marqueeResetDelay', 1000)}
 				marqueeSpeed={number('marqueeSpeed', 60)}
 			>
-				{select('children', LTR, 'The quick brown fox jumped over the lazy dog.  The bean bird flies at sundown.')}
+				{select('children', LTR, LTR[0])}
 			</MarqueeText>
 		)
 	)
@@ -54,7 +54,7 @@ storiesOf('Marquee')
 				marqueeResetDelay={number('marqueeResetDelay', 1000)}
 				marqueeSpeed={number('marqueeSpeed', 60)}
 			>
-				{select('children', RTL, 'שועל החום הזריז קפץ מעל הכלב העצלן.ציפור עפה השעועית עם שקיעה.')}
+				{select('children', RTL, RTL[0])}
 			</MarqueeText>
 		)
 	)
@@ -65,15 +65,15 @@ storiesOf('Marquee')
 			<div>
 				<Item
 					style={{width: '400px'}}
-					marqueeOn={'focus'}
+					marqueeOn="focus"
 				>
-					The quick brown fox jumped over the lazy dog.  The bean bird flies at sundown.
+					{LTR[0]}
 				</Item>
 				<SpottableMarquee
 					style={{width: '400px'}}
-					marqueeOn={'focus'}
+					marqueeOn="focus"
 				>
-					The quick brown fox jumped over the lazy dog.  The bean bird flies at sundown.
+					{LTR[0]}
 				</SpottableMarquee>
 			</div>
 		)
