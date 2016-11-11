@@ -1,5 +1,5 @@
 import * as jobs from '@enact/core/jobs';
-import {SlideLeftArranger, SlideBottomArranger, ViewManager} from '@enact/ui/ViewManager';
+import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
 import R from 'ramda';
 import React from 'react';
 
@@ -343,7 +343,7 @@ const PickerCore = class extends React.Component {
 
 		let arranger;
 		if (width && !disabled) {
-			arranger = orientation === 'vertical' ? SlideBottomArranger : SlideLeftArranger;
+			arranger = orientation === 'vertical' ? SlideTopArranger : SlideLeftArranger;
 		}
 
 		return (
