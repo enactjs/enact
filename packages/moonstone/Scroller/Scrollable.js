@@ -634,27 +634,38 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		syncClientSize = (isHorizontalScrollbarVisible, isVerticalScrollbarVisible) => {
-			if (this.props.positioningOption !== 'byBrowser' && this.isChildList) {
-				const {bounds, precalculatedClientSize} = this;
+			const
+				{positioningOption} = this.props,
+				{bounds, isChildList} = this;
 
-				if (this.renderScrollbars) {
-					bounds.clientWidth = isVerticalScrollbarVisible ? precalculatedClientSize.widthWithScrollbars : precalculatedClientSize.widthWithoutScrollbars;
-					bounds.clientHeight = isHorizontalScrollbarVisible ? precalculatedClientSize.heightWithScrollbars : precalculatedClientSize.heightWithoutScrollbars;
+			if (isChildList) {
+				if (positioningOption !== 'byBrowser') {
+					const {precalculatedClientSize} = this;
+
+					if (this.renderScrollbars) {
+						bounds.clientWidth = isVerticalScrollbarVisible ? precalculatedClientSize.widthWithScrollbars : precalculatedClientSize.widthWithoutScrollbars;
+						bounds.clientHeight = isHorizontalScrollbarVisible ? precalculatedClientSize.heightWithScrollbars : precalculatedClientSize.heightWithoutScrollbars;
+					} else {
+						bounds.clientWidth = precalculatedClientSize.widthWithoutScrollbars;
+						bounds.clientHeight = precalculatedClientSize.heightWithoutScrollbars;
+					}
 				} else {
-					bounds.clientWidth = precalculatedClientSize.widthWithoutScrollbars;
-					bounds.clientHeight = precalculatedClientSize.heightWithoutScrollbars;
+					const node = this.childRef.getContainerNode(positioningOption);
+
+					bounds.clientWidth = node.clientWidth;
+					bounds.clientHeight = node.clientHeight;
 				}
 			}
 		}
 
 		updateStateOfScrollbars = (isHorizontalScrollbarVisible, isVerticalScrollbarVisible) => {
-			if (this.props.positioningOption !== 'byBrowser') {
-				// eslint-disable-next-line react/no-did-mount-set-state
-				this.setState({
-					isHorizontalScrollbarVisible: isHorizontalScrollbarVisible,
-					isVerticalScrollbarVisible: isVerticalScrollbarVisible
-				});
+			// eslint-disable-next-line react/no-did-mount-set-state
+			this.setState({
+				isHorizontalScrollbarVisible: isHorizontalScrollbarVisible,
+				isVerticalScrollbarVisible: isVerticalScrollbarVisible
+			});
 
+			if (this.props.positioningOption !== 'byBrowser') {
 				if (isHorizontalScrollbarVisible && this.scrollbarHorizontalRef) {
 					this.scrollbarHorizontalRef.update({
 						...this.bounds,

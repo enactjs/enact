@@ -281,13 +281,6 @@ class VirtualListCore extends Component {
 		}
 	}
 
-	getClientSize = (node) => {
-		return {
-			clientWidth: node.clientWidth,
-			clientHeight: node.clientHeight
-		};
-	}
-
 	calculateMetrics (props, shouldScrollbarChange) {
 		const
 			{clientWidth, clientHeight, direction, itemSize, positioningOption, spacing} = props,
