@@ -16,8 +16,6 @@ import Expandable from './Expandable';
 import ExpandableContainer from './ExpandableContainer';
 import ExpandableTransitionContainer from './ExpandableTransitionContainer';
 
-// const TransitionContainer = SpotlightContainerDecorator(Transition);
-
 /**
  * {@link module:@enact/moonstone/ExpandableItem~ExpandableItem} is a stateless component that
  * renders a {@link module:@enact/moonstone/LabeledItem~LabeledItem} that can be expanded to show

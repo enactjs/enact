@@ -1,10 +1,20 @@
 import Changeable from '@enact/ui/Changeable';
+import {Spotlight, Spottable} from '@enact/spotlight';
 import React from 'react';
 
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 import {Input} from '../Input';
 
-const inputProp = 'data-expandable-input';
+class Div extends React.Component {
+	render () {
+		const {componentRef, ...rest} = this.props;
+		return (
+			<div {...rest} ref={componentRef} />
+		);
+	}
+}
+
+const SpottableDiv = Spottable(Div);
 
 class ExpandableInputBase extends React.Component {
 	static displayName = 'ExpandableInput'
@@ -56,15 +66,23 @@ class ExpandableInputBase extends React.Component {
 		value: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number])
 	}
 
+	componentDidUpdate (prevProps) {
+		if (!prevProps.open && this.props.open) {
+			this.inputInstance.decoratedNode.focus();
+		}
+	}
+
 	onInputKeyDown = (ev) => {
 		const keyCode = ev.keyCode;
 		switch (keyCode) {
 			case 13:
-			case 38:
-			case 40:
-				if (ev.target.getAttribute(inputProp) === 'true') {
+				if (ev.target === this.inputInstance.decoratedNode) {
 					this.fireChangeEvent();
 				}
+				break;
+			case 38:
+			case 40:
+				this.fireChangeEvent();
 				break;
 		}
 	}
@@ -78,17 +96,23 @@ class ExpandableInputBase extends React.Component {
 		if (onChange) {
 			onChange({value});
 		}
+		Spotlight.focus(this.spotlightDummyNode);
+	}
+
+	getInputInstance = (instance) => {
+		this.focusableInstance = instance;
+		this.inputInstance = instance.wrappedInstance;
+	}
+
+	getSpotlightDummyNode = (node) => {
+		this.spotlightDummyNode = node;
 	}
 
 	render () {
 		const {disabled, onInputChange, placeholder, type, value, ...rest} = this.props;
-		const inputDataProps = {
-			[inputProp]: 'true'
-		};
 		return (
 			<ExpandableItemBase {...rest} disabled={disabled}>
 				<Input
-					{...inputDataProps}
 					disabled={disabled}
 					dismissOnEnter
 					onChange={onInputChange}
@@ -98,6 +122,7 @@ class ExpandableInputBase extends React.Component {
 					type={type}
 					value={value}
 				/>
+				<SpottableDiv componentRef={this.getSpotlightDummyNode} />
 			</ExpandableItemBase>
 		);
 	}
