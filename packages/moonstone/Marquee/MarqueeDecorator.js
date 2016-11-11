@@ -9,6 +9,7 @@ import Marquee from './Marquee';
  * Default configuration parameters for {@link moonstone/Marquee.MarqueeDecorator}
  *
  * @type {Object}
+ * @memberof moonstone/marquee
  */
 const defaultConfig = {
 	/**
