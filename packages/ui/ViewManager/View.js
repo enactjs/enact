@@ -97,6 +97,15 @@ class View extends React.Component {
 		window.cancelAnimationFrame(this._raf);
 	}
 
+	componentWillAppear (callback) {
+		const {arranger} = this.props;
+		if (arranger) {
+			this.prepareTransition(arranger.stay, callback, true);
+		} else {
+			callback();
+		}
+	}
+
 	// This is called at the same time as componentDidMount() for components added to an existing
 	// TransitionGroup. It will block other animations from occurring until callback is called. It
 	// will not be called on the initial render of a TransitionGroup.
@@ -133,15 +142,19 @@ class View extends React.Component {
 	/**
 	 * Initiates a new transition
 	 *
-	 * @param  {Function} arranger Arranger function to call (enter, leave)
-	 * @param  {Function} callback Completion callback
+	 * @param	{Function}	arranger		Arranger function to call (enter, leave)
+	 * @param	{Function}	callback		Completion callback
+	 * @param	{Boolean}	[noAnimation]	`true` to disable animation for this transition
 	 * @returns {undefined}
 	 */
-	prepareTransition = (arranger, callback) => {
-		const {noAnimation, duration, index, previousIndex, reverseTransition} = this.props;
+	prepareTransition = (arranger, callback, noAnimation) => {
+		const {duration, index, previousIndex, reverseTransition} = this.props;
 		const steps = Math.ceil(duration / TICK);
 		/* eslint react/no-find-dom-node: "off" */
 		const node = ReactDOM.findDOMNode(this);
+
+		// disable animation when the instance or props flag is true
+		noAnimation = noAnimation || this.props.noAnimation;
 
 		// Arranges the control each tick and calls the provided callback on complete
 		const fn = (step) => {
