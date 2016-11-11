@@ -1,8 +1,8 @@
 import Divider from '@enact/moonstone/Divider';
 import Item from '@enact/moonstone/Item';
+import React from 'react';
 import ri from '@enact/ui/resolution';
 import Scroller from '@enact/moonstone/Scroller';
-import React from 'react';
 import {storiesOf} from '@kadira/storybook';
 import {withKnobs, text, select} from '@kadira/storybook-addon-knobs';
 
@@ -42,7 +42,7 @@ storiesOf('Divider')
 	)
 
 	.addWithInfo(
-		'Multuple',
+		'Multiple',
 		() => (
 			<div>
 				<Divider>
@@ -95,7 +95,7 @@ storiesOf('Divider')
 	)
 
 	.addWithInfo(
-		'Multuple Scroller',
+		'Multiple Scroller',
 		() => (
 			<Scroller
 				horizontal={'auto'}
