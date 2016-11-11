@@ -1,7 +1,7 @@
 /**
- * Exports the {@link module:@enact/moonstone/SelectableItem~SelectableItem}
+ * Exports the {@link moonstone/SelectableItem.SelectableItem}
  *
- * @module @enact/moonstone/SelectableItem
+ * @module moonstone/SelectableItem
  */
 
 import kind from '@enact/core/kind';
@@ -12,18 +12,19 @@ import ToggleItem from '../ToggleItem';
 import css from './SelectableItem.less';
 
 /**
- * {@link module:@enact/moonstone/SelectableItem~SelectableItem} is component
+ * {@link moonstone/SelectableItem.SelectableItem} is component
  * that is an Item that is Toggleable. It has two checked states `true` &
  * `false`. It uses a dot to represent its checked state.
  *
  * @class SelectableItem
+ * @memberof moonstone/SelectableItem
  * @ui
  * @public
  */
 const SelectableItemBase = kind({
 	name: 'SelectableItem',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/SelectableItem.SelectableItem.prototype */ {
 		/**
 		 * The string to be displayed as the main content of the selectable item.
 		 *

@@ -1,3 +1,5 @@
+@import '~@enact/ui/styles/mixins.less';
+
 @import '../styles/variables.less';
 @import '../styles/text.less';
 
@@ -18,6 +20,10 @@
 	// .titleAbove {
 	// 	.moon-super-header-text();
 	// }
+
+	:global(.hasCloseButton) & {
+		.padding-start-end(0, @moon-spotlight-outset + @moon-icon-button-small-size + @moon-spotlight-outset);
+	}
 
 	.title {
 		.moon-header-text();
@@ -135,5 +141,10 @@
 			border: cyan dashed 1px;
 			background-color: fade(cyan, @alpha);
 		}
+	}
+
+	&.fullBleed {
+		padding: 0 @moon-header-indent-width @moon-spotlight-outset;
+		border: 0;
 	}
 }

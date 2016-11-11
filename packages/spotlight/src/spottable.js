@@ -2,7 +2,6 @@ import {kind, hoc} from '@enact/core';
 import React from 'react';
 
 const spottableClass = 'spottable';
-const decoratedProp = 'data-spot-decorated';
 
 const ENTER_KEY = 13;
 const REMOTE_OK_KEY = 16777221;
@@ -62,6 +61,7 @@ const defaultConfig = {
  * @example
  *	const SpottableComponent = Spottable(Component);
  *
+ * @memberof spotlight
  * @param  {Object} defaultConfig Set of default configuration parameters
  * @param  {Function} Higher-order component
  *
@@ -70,15 +70,12 @@ const defaultConfig = {
 const Spottable = hoc(defaultConfig, (config, Wrapped) => kind({
 	name: 'Spottable',
 
-	propTypes: {
+	propTypes: /** @lends spotlight.Spottable.prototype */ {
 		/**
-		 * Whether or not the component is decorated by another spottable component.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
+		 * TODO: disabling warning, remove after https://jira2.lgsvl.com/browse/PLAT-30066
+		 * @private
 		 */
-		decorated: React.PropTypes.bool,
+		classes: React.PropTypes.any,
 
 		/**
 		 * Whether or not the component is in a disabled state.
@@ -96,7 +93,15 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => kind({
 		 * @default false
 		 * @public
 		 */
-		spotlightDisabled: React.PropTypes.bool
+		spotlightDisabled: React.PropTypes.bool,
+
+		/**
+		 * The tabindex of the component.
+		 *
+		 * @type {Number}
+		 * @public
+		 */
+		tabIndex: React.PropTypes.number
 	},
 
 	styles: {
@@ -110,10 +115,11 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => kind({
 		onKeyUp: forwardEnter('onKeyUp', 'onMouseUp')
 	},
 
-	render: ({classes, className, decorated, ...rest}) => {
+	render: ({classes, className, ...rest}) => {
 		const spottable = !rest.disabled && !rest.spotlightDisabled;
 		let tabIndex = rest.tabIndex;
-		rest[decoratedProp] = decorated;
+
+		delete rest.spotlightDisabled;
 
 		if (tabIndex == null && spottable) {
 			tabIndex = -1;
@@ -130,4 +136,4 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => kind({
 }));
 
 export default Spottable;
-export {Spottable, spottableClass, decoratedProp};
+export {Spottable, spottableClass};

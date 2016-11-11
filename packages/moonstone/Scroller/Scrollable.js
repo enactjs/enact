@@ -1,9 +1,9 @@
 /**
- * Exports the {@link module:@enact/moonstone/Scroller/Scrollable~Scrollable} Higher-order Component (HOC) and
- * the {@link constant:@enact/moonstone/Scroller/Scrollable~dataIndexAttribute} constant.
- * The default export is {@link module:@enact/moonstone/Scroller/Scrollable~Scrollable}.
+ * Exports the {@link moonstone/Scroller/Scrollable.Scrollable} Higher-order Component (HOC) and
+ * the {@link constant:@enact/moonstone/Scroller/Scrollable.dataIndexAttribute} constant.
+ * The default export is {@link moonstone/Scroller/Scrollable.Scrollable}.
  *
- * @module @enact/moonstone/Scroller/Scrollable
+ * @module moonstone/Scroller/Scrollable
  */
 
 import classNames from 'classnames';
@@ -21,7 +21,8 @@ const
 	nop = () => {},
 	perf = (typeof window === 'object') ? window.performance : {},
 	holdTime = 50,
-	pixelPerLine = ri.scale(40),
+	scrollWheelMultiplier = 5,
+	pixelPerLine = ri.scale(40) * scrollWheelMultiplier,
 	pixelPerScrollbarBtn = ri.scale(100),
 	epsilon = 1,
 	// spotlight
@@ -29,9 +30,9 @@ const
 	spotlightAnimationDuration = 500;
 
 /**
- * {@link module:@enact/moonstone/Scroller/Scrollable~dataIndexAttribute} is the name of a custom attribute
- * which indicates the index of an item in {@link module:@enact/moonstone/VirtualList~VirtualList}
- * or {@link module:@enact/moonstone/VirtualList~VirtualGridList}.
+ * {@link moonstone/Scroller/Scrollable.dataIndexAttribute} is the name of a custom attribute
+ * which indicates the index of an item in {@link moonstone/VirtualList.VirtualList}
+ * or {@link moonstone/VirtualList.VirtualGridList}.
  *
  * @constant dataIndexAttribute
  * @type {String}
@@ -40,7 +41,7 @@ const
 const dataIndexAttribute = 'data-index';
 
 /**
- * {@link module:@enact/moonstone/Scroller/Scrollable~Scrollable} is a Higher-order Component
+ * {@link moonstone/Scroller/Scrollable.Scrollable} is a Higher-order Component
  * that applies a Scrollable behavior to its wrapped component.
  *
  * Scrollable catches `onFocus` and `onKeyDown` events from its wrapped component for spotlight features,
@@ -50,7 +51,8 @@ const dataIndexAttribute = 'data-index';
  * Scrollable calls `onScrollStart`, `onScrolling`, and `onScrollStop` callback functions during scroll.
  *
  * @class Scrollable
- * @ui
+ * @memberof moonstone/Scroller/Scrollable
+ * @hoc
  * @public
  */
 const ScrollableHoC = hoc((config, Wrapped) => {
@@ -290,7 +292,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			let delta = e.deltaY;
 
 			if (deltaMode === 0) {
-				delta = ri.scale(delta);
+				delta = ri.scale(delta) * scrollWheelMultiplier;
 			} else if (deltaMode === 1) { // line; firefox
 				delta = delta * pixelPerLine;
 			} else if (deltaMode === 2) { // page
@@ -344,7 +346,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					doc.activeElement.blur();
 					this.childRef.setContainerDisabled(true);
 					this.isScrollAnimationTargetAccumulated = false;
-					this.start(target.targetX, target.targetY, true, target.duration);
+					this.start(target.targetX, target.targetY, true, true, target.duration);
 				}
 			}
 		}
@@ -362,13 +364,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			// for virtuallist
 			const
 				item = e.target,
-				index = Number.parseInt(item.getAttribute(dataIndexAttribute), 10);
+				index = Number.parseInt(item.getAttribute(dataIndexAttribute));
 
 			if (!this.isDragging && !isNaN(index) && item !== this.lastFocusedItem && item === doc.activeElement && this.childRef.calculatePositionOnFocus) {
 				const pos = this.childRef.calculatePositionOnFocus(index);
 				if (pos) {
 					if (pos.left !== this.scrollLeft || pos.top !== this.scrollTop) {
-						this.start(pos.left, pos.top, (spotlightAnimationDuration > 0), spotlightAnimationDuration);
+						this.start(pos.left, pos.top, (spotlightAnimationDuration > 0), false, spotlightAnimationDuration);
 					}
 					this.lastFocusedItem = item;
 				}
@@ -377,7 +379,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		onKeyDown = (e) => {
 			if (this.childRef.setSpotlightContainerRestrict) {
-				const index = Number.parseInt(e.target.getAttribute(dataIndexAttribute), 10);
+				const index = Number.parseInt(e.target.getAttribute(dataIndexAttribute));
 				this.childRef.setSpotlightContainerRestrict(e.keyCode, index);
 			}
 		}
@@ -392,9 +394,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 				doc.activeElement.blur();
 				this.childRef.setContainerDisabled(true);
-
-				this.calculateAccumulatedTarget(delta, isHorizontal, isVertical);
-				this.start(this.accumulatedTargetX, this.accumulatedTargetY);
+				this.scrollToAccumulatedTarget(delta, isHorizontal, isVertical);
 			}
 		}
 
@@ -403,11 +403,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				isHorizontal = this.canScrollHorizontally() && orientation === 'horizontal',
 				isVertical = this.canScrollVertically() && orientation === 'vertical';
 
-			this.calculateAccumulatedTarget(pixelPerScrollbarBtn * direction, isHorizontal, isVertical);
-			this.start(this.accumulatedTargetX, this.accumulatedTargetY);
+			this.scrollToAccumulatedTarget(pixelPerScrollbarBtn * direction, isHorizontal, isVertical);
 		}
 
-		calculateAccumulatedTarget = (delta, isHorizontal, isVertical) => {
+		scrollToAccumulatedTarget = (delta, isHorizontal, isVertical) => {
+			const silent = this.isScrollAnimationTargetAccumulated;
+
 			if (!this.isScrollAnimationTargetAccumulated) {
 				this.accumulatedTargetX = this.scrollLeft;
 				this.accumulatedTargetY = this.scrollTop;
@@ -419,6 +420,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			} else if (isHorizontal) {
 				this.accumulatedTargetX = R.clamp(0, this.bounds.maxLeft, this.accumulatedTargetX + delta);
 			}
+
+			this.start(this.accumulatedTargetX, this.accumulatedTargetY, true, silent);
 		}
 
 		// call scroll callbacks
@@ -451,11 +454,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		// scroll start/stop
 
-		start (targetX, targetY, animate = true, duration) {
+		start (targetX, targetY, animate = true, silent = false, duration) {
 			const {scrollLeft, scrollTop, bounds} = this;
 
 			this.animator.stop();
-			this.doScrollStart();
+			if (!silent) {
+				this.doScrollStart();
+			}
 
 			targetX = R.clamp(0, this.bounds.maxLeft, targetX);
 			targetY = R.clamp(0, this.bounds.maxTop, targetY);
@@ -504,16 +509,14 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		scroll = (left, top, skipPositionContainer = false) => {
-			const {scrollLeft, scrollTop} = this;
-
-			if (left !== scrollLeft) {
+			if (left !== this.scrollLeft) {
 				this.setScrollLeft(left);
 			}
-			if (top !== scrollTop) {
+			if (top !== this.scrollTop) {
 				this.setScrollTop(top);
 			}
 
-			this.childRef.setScrollPosition(scrollLeft, scrollTop, this.dirHorizontal, this.dirVertical, skipPositionContainer);
+			this.childRef.setScrollPosition(this.scrollLeft, this.scrollTop, this.dirHorizontal, this.dirVertical, skipPositionContainer);
 			this.doScrolling();
 		}
 
@@ -698,6 +701,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
 				scrollableClasses = classNames(
 					css.scrollable,
+					hideScrollbars ? css.scrollableHiddenScrollbars : null,
 					isHorizontalScrollbarVisible ? null : css.takeAvailableSpaceForVertical,
 					isVerticalScrollbarVisible ? null : css.takeAvailableSpaceForHorizontal,
 					className

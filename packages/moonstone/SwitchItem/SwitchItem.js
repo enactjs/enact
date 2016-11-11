@@ -1,3 +1,9 @@
+/**
+ * Contains the declaration for the {@link moonstone/SwitchItem.SwitchItem} component.
+ *
+ * @module moonstone/SwitchItem
+ */
+
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 
@@ -6,10 +12,19 @@ import Switch from '../Switch';
 
 import css from './SwitchItem.less';
 
+/**
+ * {@link moonstone/SwitchItem.SwitchItem} represents a Boolean state. It displays a descriptive
+ * text and has a switch that represents the on/off state.
+ *
+ * @class SwitchItem
+ * @memberof moonstone/SwitchItem
+ * @ui
+ * @public
+ */
 const SwitchItemBase = kind({
 	name: 'SwitchItem',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/SwitchItem.SwitchItem.prototype */ {
 		/**
 		 * The string to be displayed as the main content of the switch item.
 		 *

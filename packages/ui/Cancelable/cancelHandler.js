@@ -11,10 +11,10 @@ const cancelHandlers = [
 ];
 
 /**
- * Event handler compatible with {@link module:@enact/core/handle} that allows the handler chain to
+ * Event handler compatible with {@link core/handle} that allows the handler chain to
  * continue for any cancel event. A cancel event is an Escape key press by default but can be
  * extended adding additional handlers using
- * {@link module:@enact/ui/Cancelable/cancelHandler~addCancelHandler}.
+ * {@link ui/Cancelable/cancelHandler.addCancelHandler}.
  *
  * @param  {Object} ev Event object
  * @returns {Boolean} `true` to stop the handler chain
@@ -32,6 +32,7 @@ const forCancel = function (ev) {
 /**
  * Adds an event handler to filter cancel events.
  *
+ * @memberof ui/Cancelable
  * @param {Function} handler	Function that will receive the event and should return `false` if
  *								the event is a cancel event.
  * @returns {undefined}
@@ -46,6 +47,7 @@ const addCancelHandler = function (handler) {
 /**
  * Removes an event handler to filter cancel events
  *
+ * @memberof ui/Cancelable
  * @param  {Function} handler A previously added filter function
  * @returns {undefined}
  * @public

@@ -1,30 +1,100 @@
+/**
+ * Exports the {@link moonstone/ExpandableList.ExpandableList} and
+ * {@link moonstone/ExpandableList.ExpandableListBase} components. The default export is
+ * {@link moonstone/ExpandableList.ExpandableList}.
+ *
+ * @module moonstone/ExpandableList
+ */
+
+import Group from '@enact/ui/Group';
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 
-import Expandable from '../Expandable';
-import Item from '../Item';
+import CheckboxItem from '../CheckboxItem';
+import {Expandable, ExpandableItemBase} from '../ExpandableItem';
+import RadioItem from '../RadioItem';
 
-import {Spottable} from '@enact/spotlight';
-
-const isSelected = function (selected, index) {
-	return index === selected || Array.isArray(selected) && selected.includes(index);
-};
-
-const SpottableDiv = Spottable('div');
-
+/**
+ * {@link moonstone/ExpandableList.ExpandableListBase} is a stateless component that
+ * renders a {@link moonstone/LabeledItem.LabeledItem} that can be expanded to show
+ * a selectable list of items.
+ *
+ * @class ExpandableListBase
+ * @memberof moonstone/ExpandableList
+ * @ui
+ * @public
+ */
 const ExpandableListBase = kind({
 	name: 'ExpandableList',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/ExpandableList.ExpandableListBase.prototype */ {
 		/**
-		 * The tag name or component instance to be used as a template for members of the expandable
-		 * list when the children are strings (not components).
+		 * The items to be displayed in the list
 		 *
-		 * @type {String|Component}
-		 * @default [moonstone/Item]
+		 * @type {String[]}
 		 * @public
 		 */
-		childComponent: PropTypes.oneOfType([PropTypes.element, PropTypes.func]),
+		children: PropTypes.arrayOf(PropTypes.string).isRequired,
+
+		/**
+		 * The primary text of the item.
+		 *
+		 * @type {String}
+		 * @required
+		 * @public
+		 */
+		title: PropTypes.string.isRequired,
+
+		/**
+		 * When `true` and `select` is not `'multiple'`, the expandable will be closed when an item
+		 * is selected.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		autoClose: PropTypes.bool,
+
+		/**
+		 * When `true`, applies a disabled style and the control becomes non-interactive.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		disabled: PropTypes.bool,
+
+		/**
+		 * The secondary, or supportive text. Typically under the `title`, a subtitle. If omitted,
+		 * the label will be generated as a comma-separated list of the selected items.
+		 *
+		 * @type {String}
+		 * @default null
+		 * @public
+		 */
+		label: PropTypes.string,
+
+		/**
+		 * Text to display when no `label` is set.
+		 *
+		 * @type {String}
+		 */
+		noneText: PropTypes.string,
+
+		/**
+		 * Called when the expandable is closing. Also called when selecting an item if `autoClose`
+		 * is `true`.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onClose: PropTypes.func,
+
+		/**
+		 * Called when the expandable is opening
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onOpen: PropTypes.func,
 
 		/**
 		 * Called when an item is selected
@@ -35,68 +105,111 @@ const ExpandableListBase = kind({
 		onSelect: PropTypes.func,
 
 		/**
-		 * Index or array of indices of the selected item(s)
+		 * When `true`, the expandable is open with its contents visible
 		 *
-		 * @type {Number}
+		 * @type {Boolean}
 		 * @public
 		 */
-		selected: PropTypes.oneOfType([PropTypes.number, PropTypes.arrayOf(PropTypes.number)]),
+		open: PropTypes.bool,
 
 		/**
-		 * Name of `boolean` property to set on `childComponent` when an item is selected
+		 * Selection mode for the list
+		 *
+		 * * `'single'` - Allows for 0 or 1 item to be selected. The selected item may be deselected.
+		 * * `'radio'` - Allows for 0 or 1 item to be selected. The selected item may only be
+		 *    deselected by selecting another item.
+		 * * `'multiple'` - Allows 0 to _n_ items to be selected. Each item may be selected or
+		 *    deselected.
 		 *
 		 * @type {String}
+		 * @default 'single'
 		 * @public
 		 */
-		selectedProp: PropTypes.string
+		select: PropTypes.oneOf(['single', 'radio', 'multiple']),
+
+		/**
+		 * Index or array of indices of the selected item(s)
+		 *
+		 * @type {Number|Number[]}
+		 * @public
+		 */
+		selected: PropTypes.oneOfType([PropTypes.number, PropTypes.arrayOf(PropTypes.number)])
 	},
 
 	defaultProps: {
-		childComponent: Item
+		select: 'single'
 	},
 
 	computed: {
-		children: ({children, childComponent, onSelect, selected, selectedProp}) => {
-			// Wrap established elements in only a div (for event and key wiring) instead of using
-			// the childComponent. This only affects children that are qualified elements, not
-			// arrays of strings. Arrays of strings still use the provided childComponent.
-			const onlyStringChild = typeof React.Children.toArray(children)[0] === 'string';
-			const Component = onlyStringChild ? childComponent : SpottableDiv;
-
-			return React.Children.map(children, (item, index) => {
-				const value = (typeof item === 'string') ? item : item.props.value;
-				const itemProps = {
-					children: item,
-					key: index,
-					onClick: null
-				};
-
-				if (onSelect) {
-					itemProps.onClick = () => onSelect({value, selected: index});
+		// generate a label that concatenates the text of the selected items
+		label: ({children, label, select, selected}) => {
+			if (label) {
+				return label;
+			} else if (children.length && (selected || selected === 0)) {
+				const isArray = Array.isArray(selected);
+				if (select === 'multiple' && isArray) {
+					return selected.map(i => children[i]).filter(str => !!str).join(', ');
+				} else {
+					return children[isArray ? selected[0] : selected];
 				}
+			}
+		},
 
-				if (selectedProp) {
-					itemProps[selectedProp] = isSelected(selected, index);
-				}
+		// Selects the appropriate list item based on the selection mode
+		ListItem: ({select}) => {
+			return	select === 'radio' && RadioItem ||
+					CheckboxItem; // for single or multiple
+		},
 
-				return <Component {...itemProps} />;
-			});
+		onSelect: ({autoClose, onClose, onSelect: handler, select}) => (ev) => {
+			// Call onClose if autoClose is enabled and not selecting multiple
+			if (autoClose && onClose && select !== 'multiple') {
+				onClose();
+			}
+
+			if (handler) {
+				handler(ev);
+			}
+		},
+
+		selected: ({select, selected}) => {
+			return (select === 'single' && Array.isArray(selected)) ? selected[0] : selected;
 		}
 	},
 
-	render: (props) => {
-		delete props.childComponent;
-		delete props.onSelect;
-		delete props.selected;
-		delete props.selectedProp;
+	render: ({children, ListItem, onSelect, select, selected, ...rest}) => {
+		delete rest.autoClose;
+		delete rest.select;
 
-		return <div {...props} />;
+		return (
+			<ExpandableItemBase {...rest} showLabel="auto">
+				<Group
+					childComponent={ListItem}
+					childSelect="onToggle"
+					onSelect={onSelect}
+					select={select}
+					selected={selected}
+					selectedProp="checked"
+				>
+					{children}
+				</Group>
+			</ExpandableItemBase>
+		);
 	}
 });
 
-const ExpandableList = Expandable({
-	close: 'onSelect'
-}, ExpandableListBase);
+/**
+ * {@link moonstone/ExpandableList.ExpandableList} renders a
+ * {@link moonstone/LabeledItem.LabeledItem} that can be expanded to show a selectable
+ * list of items.
+ *
+ * @class ExpandableList
+ * @memberof moonstone/ExpandableList
+ * @ui
+ * @mixes moonstone/ExpandableItem.Expandable
+ * @public
+ */
+const ExpandableList = Expandable(ExpandableListBase);
 
 export default ExpandableList;
 export {ExpandableList, ExpandableListBase};

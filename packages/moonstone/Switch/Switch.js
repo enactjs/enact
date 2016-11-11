@@ -1,3 +1,9 @@
+/**
+ * Contains the declaration for the {@link moonstone/Switch.Switch} component.
+ *
+ * @module moonstone/Switch
+ */
+
 import kind from '@enact/core/kind';
 import {withArgs as handle, forward} from '@enact/core/handle';
 import React, {PropTypes} from 'react';
@@ -7,23 +13,18 @@ import Icon from '../Icon';
 import css from './Switch.less';
 
 /**
-* Contains the declaration for the {@link module:moonstone/Switch~Switch} kind.
-* @module moonstone/Switch
-*/
-
-/**
-* {@link module:moonstone/Switch~Switch} represents a Boolean state, and looks like a switch in
-* either the 'on' or 'off' positions.
-*
-* @class Switch
-* @ui
-* @public
-*/
+ * {@link moonstone/Switch.Switch} represents a Boolean state, and looks like a switch in
+ * either the 'on' or 'off' positions.
+ *
+ * @class Switch
+ * @memberof moonstone/Switch
+ * @ui
+ * @public
+ */
 const SwitchBase = kind({
-	/** @lends module:moonstone/Switch~Switch.prototype */
 	name: 'Switch',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/Switch.Switch.prototype */ {
 		/**
 		 * Sets whether this control is animated during change.
 		 *

@@ -4,7 +4,6 @@ import {
 	callOnEvent,
 	forKeyCode,
 	forProp,
-	forWhich,
 	forward,
 	preventDefault,
 	stop,

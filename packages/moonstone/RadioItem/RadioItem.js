@@ -1,7 +1,7 @@
 /**
- * Exports the {@link module:@enact/moonstone/RadioItem~RadioItem}
+ * Exports the {@link moonstone/RadioItem.RadioItem} component.
  *
- * @module @enact/moonstone/RadioItem
+ * @module moonstone/RadioItem
  */
 
 import kind from '@enact/core/kind';
@@ -12,18 +12,19 @@ import ToggleItem from '../ToggleItem';
 import css from './RadioItem.less';
 
 /**
- * {@link module:@enact/moonstone/RadioItem~RadioItem} is a component that
+ * {@link moonstone/RadioItem.RadioItem} is a component that
  * combines a Toggleable radio selector and an Item. It has two checked states
  * `true` & `false`.
  *
  * @class RadioItem
+ * @memberof moonstone/RadioItem
  * @ui
  * @public
  */
 const RadioItemBase = kind({
 	name: 'RadioItem',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/RadioItem.RadioItem.prototype */ {
 		/**
 		 * The string to be displayed as the main content of the radio item.
 		 *

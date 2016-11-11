@@ -75,9 +75,9 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			let containerId;
 			while (elem && elem !== document && elem.nodeType === 1) {
 				containerId = elem.getAttribute('data-container-id');
-				if (containerId
-						&& containerId != this.state.containerId
-						&& elem.getAttribute('data-container-disabled') == 'true') {
+				if (containerId &&
+						containerId !== this.state.containerId &&
+						elem.getAttribute('data-container-disabled') === 'true') {
 
 					return false;
 				}

@@ -1,11 +1,10 @@
 /**
- * Exports the {@link module:@enact/ui/ViewManager~ViewManager} component and the
- * [arrangers]{@link module:@enact/ui/ViewManager~Arranger} for use with it.
+ * Exports the {@link ui/ViewManager.ViewManager} component and the
+ * [arrangers]{@link ui/ViewManager.Arranger} for use with it.
  *
- * @module @enact/ui/ViewManager
+ * @module ui/ViewManager
  */
 
-import {childrenEquals} from '@enact/core/util';
 import React from 'react';
 
 import {shape} from './Arranger';
@@ -17,11 +16,12 @@ import {wrapWithView} from './View';
  * transitioned on and off the viewport.
  *
  * @class ViewManager
+ * @memberof ui/ViewManager
  * @public
  */
 class ViewManager extends React.Component {
 
-	static propTypes = {
+	static propTypes = /** @lends ui/ViewManager.ViewManager.prototype */ {
 		/**
 		 * Arranger to control the animation
 		 *
