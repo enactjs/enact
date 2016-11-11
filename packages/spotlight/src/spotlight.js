@@ -634,8 +634,8 @@ const Spotlight = (function() {
 		return lastFocusedElement;
 	}
 
-	function focusElement (elem, containerId) {
-		if (!elem) {
+	function focusElement (elem, containerId, pointer) {
+		if (!elem || (_pointerMode && !pointer)) {
 			return false;
 		}
 
@@ -697,7 +697,7 @@ const Spotlight = (function() {
 			if (next) {
 				let nextContainerId = getContainerId(next);
 				if (isNavigable(next, nextContainerId)) {
-					return focusElement(next, nextContainerId, direction);
+					return focusElement(next, nextContainerId);
 				}
 			}
 		}
@@ -756,7 +756,7 @@ const Spotlight = (function() {
 
 			let nextContainerId = getContainerId(next);
 			if (isNavigable(next, nextContainerId)) {
-				return focusElement(next, nextContainerId, direction);
+				return focusElement(next, nextContainerId);
 			}
 		}
 		return false;
@@ -800,7 +800,7 @@ const Spotlight = (function() {
 			}
 		}
 
-		return focusElement(next, nextContainerId, direction);
+		return focusElement(next, nextContainerId);
 	}
 
 	function spotNextFromPoint (direction, position, containerId) {
@@ -980,7 +980,7 @@ const Spotlight = (function() {
 		_pointerMode = true;
 
 		if (target && target !== getCurrent()) { // moving over a focusable element
-			focusElement(target, getContainerId(target));
+			focusElement(target, getContainerId(target), true);
 			preventDefault(evt);
 		}
 	}
@@ -1160,7 +1160,12 @@ const Spotlight = (function() {
 				elem = void 0;
 			}
 
-			let autoPause = !_pause && silent;
+			const autoPause = !_pause && silent;
+
+			if (elem) {
+				isString = typeof elem === 'string';
+				isContainerId = isString && _containers[elem];
+			}
 
 			if (autoPause) {
 				Spotlight.pause();
