@@ -2,19 +2,11 @@
 
 ## Using the Fetch API
 
-To perform resource requests, developers should use the [Fetch API][fetchApi].
+The [Fetch API][fetchApi] provides a simple, [Promise][promiseAPI]-based API for retrieving remote resources over HTTP. It should be used in place of XMLHttpRequest to better support isomorphic applications. Web browsers are beginning to support the Fetch API (`fetch`) but for maximum compatibility, the Enact framework provides an isomorphic fetch module (`@enact/core/fetch`) which ensures consistent behavior on server and client.
 
-### Why Fetch?
+## Simple Example
 
-Web browsers are beginning to support the Fetch API (fetch).  For browsers that do not, developers can use a polyfill
-([fetch][polyFetch], for example)  Developers can also use modules (such as [isomorphic-fetch][isoFetch]) to ensure their app
-code is consistent on both client and server.
-
-The Enact framework provides an isomorphic fetch (`@enact/core/fetch`) for your convenience.
-
-#### Simple Example
-
-##### The Old Way (XMLHttpRequest)
+### The Old Way (XMLHttpRequest)
 
 ```
 	function successHandler(response) {  
@@ -32,7 +24,7 @@ The Enact framework provides an isomorphic fetch (`@enact/core/fetch`) for your 
 	request.send();
 ```
 
-##### The New Way (fetch)
+### The New Way (fetch)
 
 ```
 	fetch('./api/some.json').then(function(response) {
@@ -42,10 +34,11 @@ The Enact framework provides an isomorphic fetch (`@enact/core/fetch`) for your 
 	});
 ```
 
-### See Also
-*   Using Fetch][usingFetchApi] - Mozilla Developer Network
+## See Also
+*   Using [Fetch][usingFetchApi] - Mozilla Developer Network
 
 [fetchApi]: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API
+[promiseApi]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
 [usingFetchApi]: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
 [polyFetch]: https://github.com/github/fetch
 [isoFetch]: https://github.com/matthew-andrews/isomorphic-fetch
