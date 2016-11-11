@@ -376,7 +376,7 @@ const PickerCore = class extends React.Component {
 				<span className={css.incrementer} disabled={incrementerDisabled} onClick={handleIncClick} onMouseDown={this.handleIncDown} onMouseUp={onMouseUp}>
 					<ButtonType disabled={incrementerDisabled}>{incrementIcon}</ButtonType>
 				</span>
-				<PickerViewManager arranger={arranger} duration={200} index={index} noAnimation={noAnimation} reverseTransition={this.reverseTransition} className={css.valueWrapper}>
+				<PickerViewManager arranger={arranger} duration={100} index={index} noAnimation={noAnimation} reverseTransition={this.reverseTransition} className={css.valueWrapper}>
 					{children}
 				</PickerViewManager>
 				<span className={css.decrementer} disabled={decrementerDisabled} onClick={handleDecClick} onMouseDown={this.handleDecDown} onMouseUp={onMouseUp}>
