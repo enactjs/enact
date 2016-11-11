@@ -1160,12 +1160,7 @@ const Spotlight = (function() {
 				elem = void 0;
 			}
 
-			const autoPause = !_pause && silent;
-
-			if (elem) {
-				isString = typeof elem === 'string';
-				isContainerId = isString && _containers[elem];
-			}
+			let autoPause = !_pause && silent;
 
 			if (autoPause) {
 				Spotlight.pause();
