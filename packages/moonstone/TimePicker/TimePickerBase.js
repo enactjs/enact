@@ -19,9 +19,9 @@ const hours12 = [
 ];
 
 /**
-* {@link module:@enact/moonstone/TimePicker~TimePickerBase} is the stateless functional time picker
+* {@link moonstone/TimePicker.TimePickerBase} is the stateless functional time picker
 * component. Should not be used directly but may be composed within another component as it is
-* within {@link module:@enact/moonstone/TimePicker~TimePicker}.
+* within {@link moonstone/TimePicker.TimePicker}.
 *
 * @class TimePickerBase
 * @ui
