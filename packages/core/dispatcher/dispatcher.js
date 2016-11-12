@@ -34,7 +34,7 @@ const invoker = R.curry(function (ev, fn) {
  */
 const dispatcher = function (ev) {
 	const name = ev.type;
-	const listeners = getListeners(ev.target, name);
+	const listeners = getListeners(ev.target, name).concat(getListeners(document, name));
 
 	if (listeners) {
 		const inv = invoker(ev);
