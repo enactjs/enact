@@ -6,6 +6,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Cancelable from '../Cancelable';
 
 import {ScrimLayer} from './Scrim';
 
@@ -99,10 +100,6 @@ class Portal extends React.Component {
 	}
 
 	componentDidMount () {
-		if (!this.props.noAutoDismiss) {
-			document.addEventListener('keydown', this.handleKeydown);
-		}
-
 		if (this.props.open) {
 			viewingLayers.push(scrimZIndex);
 			this.renderPortal(this.props);
@@ -128,20 +125,7 @@ class Portal extends React.Component {
 	}
 
 	componentWillUnmount () {
-		if (!this.props.noAutoDismiss) {
-			document.removeEventListener('keydown', this.handleKeydown);
-		}
 		this.closePortal();
-	}
-
-	handleKeydown = (ev) => {
-		// handle `ESC` key
-		if (ev.keyCode === 27) {
-			ev.preventDefault();
-			if (this.props.onDismiss) {
-				this.props.onDismiss();
-			}
-		}
 	}
 
 	closePortal () {
@@ -200,4 +184,13 @@ class Portal extends React.Component {
 	}
 }
 
-export default Portal;
+const handleCancel = function (props) {
+	if (props.open && !props.noAutoDismiss && props.onDismiss) {
+		props.onDismiss();
+	} else {
+		// Return `true` to allow event to propagate to containers for unhandled cancel
+		return true;
+	}
+};
+
+export default Cancelable({modal: true, onCancel: handleCancel}, Portal);
