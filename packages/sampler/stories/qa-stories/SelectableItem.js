@@ -123,7 +123,8 @@ storiesOf('SelectableItem')
 					defaultSelected={1}
 					onSelect={action('onSelect')}
 				>
-					{['Selectable Item 1', 'Selectable Item 2', 'Selectable Item 3']}
+
+					{[text('Normal Text 1', inputData.normalText + 1), text('Normal Text 2', inputData.normalText + 2), text('Normal Text 3', inputData.normalText + 3)]}
 				</SelectableGroup>
 				<Divider>
 					{'Selectable items with long text in a group'}
