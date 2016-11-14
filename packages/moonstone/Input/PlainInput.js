@@ -16,7 +16,7 @@ import css from './Input.less';
  * {@link moonstone/Input/PlainInput.PlainInputBase} is an input component used by the framework
  * internally.
  *
- * @class InputBase
+ * @class PlainInputBase
  * @memberof moonstone/Input/PlainInput
  * @ui
  * @private
@@ -24,7 +24,7 @@ import css from './Input.less';
 const PlainInputBase = kind({
 	name: 'PlainInputBase',
 
-	propTypes: /** @lends moonstone/Input/InputBase.InputBase.prototype */ {
+	propTypes: /** @lends moonstone/Input/PlainInput.PlainInputBase.prototype */ {
 		/**
 		 * When `true`, applies a disabled style and the control becomes non-interactive.
 		 *
@@ -94,10 +94,10 @@ const PlainInputBase = kind({
  * {@link moonstone/Input/PlainInput.PlainInput} is a spottable input component used by the framework
  * internally.
  *
- * @class InputBase
+ * @class PlainInput
  * @memberof moonstone/Input/PlainInput
  * @ui
- * @mixes spotlight/Spottable
+ * @mixes spotlight.Spottable
  * @private
  */
 const PlainInput = Spottable(kind({
