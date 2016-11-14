@@ -689,7 +689,7 @@ const Spotlight = (function() {
 		}
 	}
 
-	function focusExtendedSelector (selector, direction) {
+	function focusExtendedSelector (selector) {
 		if (selector.charAt(0) === '@') {
 			if (selector.length === 1) {
 				return focusContainer();
@@ -756,7 +756,7 @@ const Spotlight = (function() {
 				if (next === '') {
 					return null;
 				}
-				return focusExtendedSelector(next, direction);
+				return focusExtendedSelector(next);
 			}
 
 			let nextContainerId = getContainerId(next);
@@ -829,7 +829,7 @@ const Spotlight = (function() {
 	function spotNext (direction, currentFocusedElement, currentContainerId) {
 		const extSelector = currentFocusedElement.getAttribute('data-spot-' + direction);
 		if (typeof extSelector === 'string') {
-			if (extSelector === '' || !focusExtendedSelector(extSelector, direction)) {
+			if (extSelector === '' || !focusExtendedSelector(extSelector)) {
 				return false;
 			}
 			return true;
