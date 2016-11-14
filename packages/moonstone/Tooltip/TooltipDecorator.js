@@ -50,7 +50,7 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 			* @default 'auto'
 			* @public
 			*/
-			position: React.PropTypes.oneOf(['auto', 'above', 'below', 'left top', 'left bottom', 'left-center', 'right top', 'right bottom', 'below center'])
+			position: React.PropTypes.oneOf(['auto', 'above', 'below', 'left top', 'left bottom', 'left center', 'right top', 'right bottom', 'right center', 'above center', 'below center'])
 		}
 
 		constructor (props) {

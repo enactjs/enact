@@ -1,8 +1,7 @@
 import React, {PropTypes} from 'react';
 import css from './Tooltip.less';
 
-const TooltipArrow = (props) => {
-	
+const TooltipArrow = (props) => {	
 	return  <svg className={css.tooltipArrow} viewBox={props.arrowType=='full' ? '0 0 3 6' : '0 0 3 5'} >
 				<path d={props.type=='full' ? "M0,6C0,5,1,3,3,3C1,3,0,1,0,0V6Z" : "M0,5C0,3,1,0,3,0H0V5Z"} />
 			</svg>
