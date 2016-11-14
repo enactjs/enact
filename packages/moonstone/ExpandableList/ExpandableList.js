@@ -189,7 +189,7 @@ const ExpandableListBase = kind({
 					onSelect={onSelect}
 					select={select}
 					selected={selected}
-					selectedProp="checked"
+					selectedProp="selected"
 				>
 					{children}
 				</Group>
