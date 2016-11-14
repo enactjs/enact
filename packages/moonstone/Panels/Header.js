@@ -107,10 +107,7 @@ const HeaderBase = kind({
 
 	computed: {
 		className: ({fullBleed, type, styler}) => styler.append({fullBleed}, type),
-		isRTL: ({title, titleBelow}) => {
-			const rtl = isRtlText(title) || isRtlText(titleBelow);
-			return rtl;
-		},
+		direction: ({title, titleBelow}) => isRtlText(title) || isRtlText(titleBelow) ? 'rtl' : 'ltr',
 		titleBelowComponent: ({titleBelow, type}) => {
 			switch (type) {
 				case 'compact':
@@ -124,13 +121,14 @@ const HeaderBase = kind({
 		}
 	},
 
-	render: ({children, isRTL, preserveCase, subTitleBelowComponent, title, titleAbove, titleBelowComponent, type, ...rest}) => {
+	render: ({children, direction, preserveCase, subTitleBelowComponent, title, titleAbove, titleBelowComponent, type, ...rest}) => {
 		delete rest.fullBleed;
+		delete rest.titleBelow;
 
 		switch (type) {
 			case 'compact': return (
 				<header {...rest}>
-					<MarqueeText className={css.headerCell} marqueeOn="hover" forceRtl={isRTL}>
+					<MarqueeText className={css.headerCell} marqueeOn="hover" forceDirection={direction}>
 						<UppercaseH1 className={css.title} preserveCase={preserveCase}>{title}</UppercaseH1>
 						{titleBelowComponent}
 					</MarqueeText>

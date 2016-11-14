@@ -21,6 +21,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - Application close button to `moonstone/Panels`. Fires `onApplicationClose` when clicked. Can be omitted with the `noCloseButton` prop.
 - `marqueeDisabled` prop to `moonstone/Picker`
 - `padded` prop to `moonstone/RangePicker`
+- `forceDirection` prop to `moonstone/Marquee`. Forces the direction of `moonstone/Marquee`. Useful for when `RTL` content cannot be auto detected.
 
 ### Changed
 

@@ -103,12 +103,54 @@ describe('Marquee', () => {
 
 	it('should override RTL when forceRtl is true', function () {
 		const subject = shallow(
-			<Marquee forceRtl>
+			<Marquee forceDirection='rtl'>
 				{content}
 			</Marquee>
 		);
 
 		const expected = 'rtl';
+		const actual = subject.find(`.${css.text}`).prop('style');
+
+		expect(actual).to.have.property('direction').to.equal(expected);
+	});
+
+	it('should override direction when forceDirection is ltr and locale is RTL', function () {
+		const subject = shallow(
+			<Marquee forceDirection='ltr'>
+				{content}
+			</Marquee>,
+			{context: {rtl: true}}
+		);
+
+		const expected = 'ltr';
+		const actual = subject.find(`.${css.text}`).prop('style');
+
+		expect(actual).to.have.property('direction').to.equal(expected);
+	});
+
+	it('should have direction of inherit when forceDirection is rtl and context.rtl is true', function () {
+		const subject = shallow(
+			<Marquee forceDirection='rtl'>
+				{content}
+			</Marquee>,
+			{context: {rtl: true}}
+		);
+
+		const expected = 'inherit';
+		const actual = subject.find(`.${css.text}`).prop('style');
+
+		expect(actual).to.have.property('direction').to.equal(expected);
+	});
+
+	it('should have direction of inherit when forceDirection is ltr and context.rtl is false', function () {
+		const subject = shallow(
+			<Marquee forceDirection='ltr'>
+				{content}
+			</Marquee>,
+			{context: {rtl: false}}
+		);
+
+		const expected = 'inherit';
 		const actual = subject.find(`.${css.text}`).prop('style');
 
 		expect(actual).to.have.property('direction').to.equal(expected);
