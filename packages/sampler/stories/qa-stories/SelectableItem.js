@@ -57,90 +57,69 @@ storiesOf('SelectableItem')
 	.addWithInfo(
 		'with tall characters',
 		() => (
-				<SelectableItemToggle
-					disabled={boolean('disabled', false)}
-					inline={boolean('inline', false)}
-					checked={boolean('checked', false)}
-					onToggle={action('onToggle')}
-				>
+			<SelectableItemToggle
+				disabled={boolean('disabled', false)}
+				inline={boolean('inline', false)}
+				checked={boolean('checked', false)}
+				onToggle={action('onToggle')}
+			>
 				{select('children', inputData.tallText, inputData.tallText[0])}
-				</SelectableItemToggle>
+			</SelectableItemToggle>
 		)
 	)
 	.addWithInfo(
 		'with right to left text',
 		() => (
-				<SelectableItemToggle
-					disabled={boolean('disabled', false)}
-					inline={boolean('inline', false)}
-					checked={boolean('checked', false)}
-					onToggle={action('onToggle')}
-				>
+			<SelectableItemToggle
+				disabled={boolean('disabled', false)}
+				inline={boolean('inline', false)}
+				checked={boolean('checked', false)}
+				onToggle={action('onToggle')}
+			>
 				{text('Right to Left Text', inputData.rtlText)}
-				</SelectableItemToggle>
+			</SelectableItemToggle>
 		)
 	)
 	.addWithInfo(
 		'with extra spacing',
 		() => (
-				<SelectableItemToggle
-					disabled={boolean('disabled', false)}
-					inline={boolean('inline', false)}
-					checked={boolean('checked', false)}
-					onToggle={action('onToggle')}
-				>
+			<SelectableItemToggle
+				disabled={boolean('disabled', false)}
+				inline={boolean('inline', false)}
+				checked={boolean('checked', false)}
+				onToggle={action('onToggle')}
+			>
 				{text('extra space text', inputData.extraSpaceText)}
-				</SelectableItemToggle>
+			</SelectableItemToggle>
 		)
 	)
 	.addWithInfo(
 		'with default checked',
 		() => (
-				<SelectableItemToggle
-					disabled={boolean('disabled', false)}
-					inline={boolean('inline', false)}
-					checked={boolean('checked', true)}
-					onToggle={action('onToggle')}
-				>
+			<SelectableItemToggle
+				disabled={boolean('disabled', false)}
+				inline={boolean('inline', false)}
+				checked={boolean('checked', true)}
+				onToggle={action('onToggle')}
+			>
 				{text('children', inputData.normalText)}
-				</SelectableItemToggle>
+			</SelectableItemToggle>
 		)
 	)
 	.addWithInfo(
 		'that is grouped',
 		() => (
-			<div>
-				<Divider>
-					{'Selectable items with normal text in a group'}
-				</Divider>
-				<SelectableGroup
-					childComponent={SelectableItem}
-					itemProps={{
-						inline: boolean('inline', false),
-						disabled: boolean('disabled', false)
-					}}
-					selectedProp="checked"
-					defaultSelected={1}
-					onSelect={action('onSelect')}
-				>
+			<SelectableGroup
+				childComponent={SelectableItem}
+				itemProps={{
+					inline: boolean('inline', false),
+					disabled: boolean('disabled', false)
+				}}
+				selectedProp="checked"
+				onSelect={action('onSelect')}
+			>
 
-					{[text('Normal Text 1', inputData.normalText + 1), text('Normal Text 2', inputData.normalText + 2), text('Normal Text 3', inputData.normalText + 3)]}
-				</SelectableGroup>
-				<Divider>
-					{'Selectable items with long text in a group'}
-				</Divider>
-				<SelectableGroup
-					childComponent={SelectableItem}
-					itemProps={{
-						inline: boolean('inline', false),
-						disabled: boolean('disabled', false)
-					}}
-					selectedProp="checked"
-					defaultSelected={1}
-					onSelect={action('onSelect')}
-				>
-					{[text('Long Text 1', 'First ' + inputData.longText), text('Long Text 2', 'Second ' + inputData.longText), text('Long Text 3', 'Third ' + inputData.longText)]}
-				</SelectableGroup>
-			</div>
+				{[text('Normal Text 1', inputData.normalText + 1), text('Normal Text 2', inputData.normalText + 2), text('Normal Text 3', inputData.normalText + 3)]}
+			</SelectableGroup>
 		)
 	);
