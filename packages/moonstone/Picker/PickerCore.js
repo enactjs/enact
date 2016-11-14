@@ -1,5 +1,5 @@
 import * as jobs from '@enact/core/jobs';
-import {SlideLeftArranger, SlideBottomArranger, ViewManager} from '@enact/ui/ViewManager';
+import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
 import R from 'ramda';
 import React from 'react';
 
@@ -276,7 +276,7 @@ const PickerCore = class extends React.Component {
 
 	handleWheel = (ev) => {
 		const {onMouseUp, step} = this.props;
-		const dir = Math.sign(ev.deltaY);
+		const dir = -Math.sign(ev.deltaY);
 
 		// We'll sometimes get a 0/-0 wheel event we need to ignore or the wheel event has reached
 		// the bounds of the picker
@@ -343,7 +343,7 @@ const PickerCore = class extends React.Component {
 
 		let arranger;
 		if (width && !disabled) {
-			arranger = orientation === 'vertical' ? SlideBottomArranger : SlideLeftArranger;
+			arranger = orientation === 'vertical' ? SlideTopArranger : SlideLeftArranger;
 		}
 
 		return (
