@@ -634,12 +634,12 @@ const Spotlight = (function() {
 		return lastFocusedElement;
 	}
 
-	function focusElement (elem, containerId, pointer) {
+	function focusElement (elem, containerId, fromPointer) {
 		if (!elem) {
 			return false;
 		}
 
-		if ((_pointerMode && !pointer)) {
+		if ((_pointerMode && !fromPointer)) {
 			_containers[containerId].lastFocusedElement = elem;
 			return false;
 		}
