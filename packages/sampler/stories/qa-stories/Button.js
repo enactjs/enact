@@ -88,7 +88,7 @@ storiesOf('Button')
 					minWidth={boolean('minWidth')}
 					preserveCase={boolean('preserveCase')}
 					selected={boolean('selected')}
-					small={true}
+					small
 				>
 					Small Button
 				</Button>
