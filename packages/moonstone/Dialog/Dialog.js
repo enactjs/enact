@@ -1,5 +1,5 @@
 /**
- * Exports the {@link module:@enact/moonstone/Dialog~Dialog}
+ * Exports the {@link module:@enact/moonstone/Dialog.Dialog}
  *
  * @module @enact/moonstone/Dialog
  */
@@ -13,7 +13,7 @@ import Popup from '../Popup';
 import css from './Dialog.less';
 
 /**
- * {@link module:@enact/moonstone/Dialog~Dialog} is modal component with a title, a subtitle, a
+ * {@link module:@enact/moonstone/Dialog.Dialog} is modal component with a title, a subtitle, a
  * message, and an area for additional controls.
  *
  * @class Dialog

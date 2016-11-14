@@ -1,5 +1,5 @@
 /**
- * Exports the {@link module:@enact/ui/Portal~Portal} component.
+ * Exports the {@link module:@enact/ui/Portal.Portal} component.
  *
  * @module @enact/ui/Portal
  */
@@ -17,7 +17,7 @@ let scrimZIndex = 120;
 const viewingLayers = [];
 
 /**
- * {@link module:@enact/ui/Portal~Portal} is a component that creates an entry point to the new
+ * {@link module:@enact/ui/Portal.Portal} is a component that creates an entry point to the new
  * render tree. This is used for modal components such as popups.
  *
  * @class Portal

@@ -1,5 +1,5 @@
 /**
- * Exports the {@link module:@enact/ui/Portal~PortalDecorator} Higher-order Component (HOC).
+ * Exports the {@link module:@enact/ui/Portal.PortalDecorator} Higher-order Component (HOC).
  *
  * @module @enact/ui/Portal/PortalDecorator
  */

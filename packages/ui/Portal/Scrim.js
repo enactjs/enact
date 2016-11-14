@@ -1,6 +1,6 @@
 /**
- * Exports the {@link module:@enact/ui/Portal~ScrimBase} component and {@link module:@enact/ui/Portal~ScrimLayer}
- * component. The default export is {@link module:@enact/ui/Portal~ScrimBase}.
+ * Exports the {@link module:@enact/ui/Portal.ScrimBase} component and {@link module:@enact/ui/Portal.ScrimLayer}
+ * component. The default export is {@link module:@enact/ui/Portal.ScrimBase}.
  *
  * @module @enact/ui/Scrim
  */
@@ -11,7 +11,7 @@ import React from 'react';
 import css from './Scrim.less';
 
 /**
- * {@link module:@enact/ui/Portal~ScrimBase} provides an overlay that will prevent taps from propagating
+ * {@link module:@enact/ui/Portal.ScrimBase} provides an overlay that will prevent taps from propagating
  * to the controls that it covers.
  *
  * @class ScrimBase
@@ -53,7 +53,7 @@ const ScrimBase = kind({
 });
 
 /**
- * {@link module:@enact/ui/Portal~ScrimLayer} is a layer which adds scrim behind the children.
+ * {@link module:@enact/ui/Portal.ScrimLayer} is a layer which adds scrim behind the children.
  * Children will always have one higher z-index than scrim.
  *
  * @class ScrimLayer
