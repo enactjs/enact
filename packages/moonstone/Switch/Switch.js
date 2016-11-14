@@ -1,5 +1,6 @@
 /**
  * Contains the declaration for the {@link moonstone/Switch.Switch} component.
+ *
  * @module moonstone/Switch
  */
 

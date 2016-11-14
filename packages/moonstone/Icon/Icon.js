@@ -96,7 +96,7 @@ const IconBase = kind({
 				if (typeof iconEntity == 'string') {
 					if (iconEntity.indexOf('&#') === 0) {
 						// Convert an HTML entity: &#99999;
-						iconEntity = parseInt(iconEntity.slice(2, -1), 10);
+						iconEntity = parseInt(iconEntity.slice(2, -1));
 					} else if (iconEntity.indexOf('\\u') === 0) {
 						// Convert a unicode reference: \u99999;
 						iconEntity = parseInt(iconEntity.slice(2), 16);

@@ -27,7 +27,11 @@ const calcMax = R.memoize((viewportWidth, width) => Math.floor(viewportWidth / 2
  */
 const AlwaysViewingPanels = BreadcrumbDecorator({
 	className: 'panels alwaysViewing enact-fit',
-	max: () => calcMax(window.innerWidth, breadcrumbWidth),
+	max: () => {
+		if (typeof window === 'object') {
+			return calcMax(window.innerWidth, breadcrumbWidth);
+		}
+	},
 	props: {
 		arranger: AlwaysViewingArranger
 	}

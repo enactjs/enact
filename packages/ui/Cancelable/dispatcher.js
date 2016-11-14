@@ -18,10 +18,12 @@ const dispatcher = function (ev) {
 /**
  * Adds a new global event listener
  *
+ * @function
  * @param  {String}   name Event name
  * @param  {Function} fn   Event handler
  *
  * @returns {undefined}
+ * @memberof memberof moonstone/Cancelable/dispatcher
  */
 const on = function (name, fn) {
 	let listeners = events[name];
@@ -39,10 +41,12 @@ const on = function (name, fn) {
 /**
  * Removes a global event listener
  *
+ * @function
  * @param  {String}   name Event name
  * @param  {Function} fn   Event handler
  *
  * @returns {undefined}
+ * @memberof memberof moonstone/Cancelable/dispatcher
  */
 const off = function (name, fn) {
 	const listeners = events[name];

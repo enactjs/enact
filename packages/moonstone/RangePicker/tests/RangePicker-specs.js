@@ -45,4 +45,26 @@ describe('RangePicker Specs', () => {
 
 		expect(actual).to.equal(expected);
 	});
+
+	it('should pad the value', function () {
+		const picker = mount(
+			<RangePicker min={0} max={100} value={10} step={1} padded />
+		);
+
+		const expected = '010';
+		const actual = picker.find('PickerItem').text();
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should pad the value when min has more digits than max', function () {
+		const picker = mount(
+			<RangePicker min={-1000} max={100} value={10} step={1} padded />
+		);
+
+		const expected = '0010';
+		const actual = picker.find('PickerItem').text();
+
+		expect(actual).to.equal(expected);
+	});
 });

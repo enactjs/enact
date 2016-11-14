@@ -9,6 +9,7 @@ import Marquee from './Marquee';
  * Default configuration parameters for {@link moonstone/Marquee.MarqueeDecorator}
  *
  * @type {Object}
+ * @memberof moonstone/marquee
  */
 const defaultConfig = {
 	/**
@@ -178,7 +179,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidUpdate () {
-			this.initMarquee(this.props.delay);
+			this.initMarquee(this.props.marqueeDelay);
 		}
 
 		componentWillUnmount () {

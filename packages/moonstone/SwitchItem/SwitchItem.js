@@ -1,5 +1,6 @@
 /**
  * Contains the declaration for the {@link moonstone/SwitchItem.SwitchItem} component.
+ *
  * @module moonstone/SwitchItem
  */
 

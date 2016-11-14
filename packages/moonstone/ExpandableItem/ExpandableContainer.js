@@ -2,6 +2,7 @@
  * Exports the {@link moonstone/ExpandableItem/ExpandableContainer.ExpandableContainer} component
  *
  * @module moonstone/ExpandableItem/ExpandableContainer
+ * @private
  */
 
 import {Spotlight, SpotlightContainerDecorator} from '@enact/spotlight';
@@ -12,6 +13,7 @@ import React from 'react';
  * component is contained.
  *
  * @class ExpandableContainerBase
+ * @memberof moonstone/ExpandableItem/ExpandableContainer
  * @private
  */
 const ExpandableContainerBase = class extends React.Component {
@@ -50,6 +52,7 @@ const ExpandableContainerBase = class extends React.Component {
  * component is contained.
  *
  * @class ExpandableContainer
+ * @memberof moonstone/ExpandableItem/ExpandableContainer
  * @private
  */
 const ExpandableContainer = SpotlightContainerDecorator(ExpandableContainerBase);
