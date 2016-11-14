@@ -2,7 +2,7 @@
 
 ## Luna Service API
 
-The [Luna service API][lunaService] is available on webOS platforms and allows developers to create applications that can
+The [Luna service API](http://developer.lge.com/webOSTV/api/webos-service-api/) is available on webOS platforms and allows developers to create applications that can
 make use of platform features, such as the `Settings Service` or the `Media Database`.
 
 ### LS2Request
@@ -25,11 +25,13 @@ The Enact framework provides `@enact/webos/LS2Request` for developers to interac
 		});
 	}
 	
-	findNetworkSuccess (res) {
-		console.log(res);
+	findNetworkSuccess = (res) => {
+		if (res.foundNetworks) {
+			this.setState({
+				foundNetworks: res.foundNetworks
+			});
+		}
 	}
 ```
-
-[lunaService]: http://developer.lge.com/webOSTV/api/webos-service-api/
 
 </section>
