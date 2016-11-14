@@ -11,7 +11,7 @@ import DateComponentPickerChrome from './DateComponentPickerChrome';
  * {@link moonstone/internal/DataComponentPicker.DateComponentRangePicker} allows the selection of
  * one part of the date or time using a {@link moonstone/RangePicker.RangePicker}.
  *
- * @class DateComponentRangePicker
+ * @class DateComponentRangePickerBase
  * @memberof moonstone/internal/DateComponentPicker
  * @ui
  * @private
@@ -19,7 +19,7 @@ import DateComponentPickerChrome from './DateComponentPickerChrome';
 const DateComponentRangePickerBase = kind({
 	name: 'DateComponentRangePicker',
 
-	propTypes:  /** @lends moonstone/internal/DateComponentPicker.DateComponentRangePicker.prototype */ {
+	propTypes:  /** @lends moonstone/internal/DateComponentPicker.DateComponentRangePickerBase.prototype */ {
 		/**
 		 * The maximum value for the date component
 		 *
@@ -89,7 +89,7 @@ const DateComponentRangePickerBase = kind({
 
 
 /**
-* {@link module:@enact/moonstone/DatePicker~DateComponentRangePicker} allows the selection of one
+* {@link moonstone/internal/DateComponentPicker.DateComponentRangePicker} allows the selection of one
 * part of the date (date, month, or year). It is a stateful component but allows updates by
 * providing a new `value` via props.
 *

@@ -20,6 +20,8 @@ storiesOf('DayPicker')
 				noneText={text('none', 'none')}
 				disabled={boolean('disabled', false)}
 				onSelect={action('onSelect')}
+				onOpen={action('onOpen')}
+				onClose={action('onClose')}
 			/>
 		)
 	);
