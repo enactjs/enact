@@ -18,8 +18,6 @@ import css from './Scrollbar.less';
 
 const
 	upDownInfo = {
-		prevIcon: 'arrowsmallup',
-		nextIcon: 'arrowsmalldown',
 		prevButtonClass: css.scrollbarUpButton,
 		nextButtonClass: css.scrollbarBottomButton,
 		scrollbarClass: css.scrollbarContainerVColumn,
@@ -30,8 +28,6 @@ const
 		)
 	},
 	leftRightInfo = {
-		prevIcon: 'arrowsmallleft',
-		nextIcon: 'arrowsmallright',
 		prevButtonClass: css.scrollbarLeftButton,
 		nextButtonClass: css.scrollbarRightButton,
 		scrollbarClass: css.scrollbarContainerHColumn,
@@ -43,6 +39,18 @@ const
 	},
 	autoHideDelay = 200,
 	minThumbSize = ri.scale(4),
+	selectIcon = (isPrev) => (props, context) => {
+		if (props.isVertical) {
+			return (isPrev) ? 'arrowsmallup' : 'arrowsmalldown';
+		} else {
+			if (context.rtl) {
+				return (isPrev) ? 'arrowsmallright' : 'arrowsmallleft';
+			}
+			return (isPrev) ? 'arrowsmallleft' : 'arrowsmallright';
+		}
+	},
+	selectPrevIcon = selectIcon(true),
+	selectNextIcon = selectIcon(false),
 	// spotlight
 	doc = (typeof window === 'object') ? window.document : {};
 
@@ -105,8 +113,8 @@ class Scrollbar extends Component {
 	prevButtonNodeRef = null
 	nextButtonNodeRef = null
 
-	constructor (props, context) {
-		super(props, context);
+	constructor (props) {
+		super(props);
 
 		this.state = {
 			prevButtonDisabled: true,
@@ -118,12 +126,6 @@ class Scrollbar extends Component {
 			clickPrevHandler: props.onPrevScroll,
 			clickNextHandler: props.onNextScroll
 		};
-
-		if (!props.isVertical && context.rtl) {
-			const iconTmp = this.scrollInfo.prevIcon;
-			this.scrollInfo.prevIcon = this.scrollInfo.nextIcon;
-			this.scrollInfo.nextIcon = iconTmp;
-		}
 
 		this.initContainerRef = this.initRef('containerRef');
 		this.initThumbRef = this.initRef('thumbRef');
@@ -156,14 +158,14 @@ class Scrollbar extends Component {
 			{trackSize, minThumbSizeRatio} = this,
 			{rtl} = this.context,
 			{clientWidth, clientHeight, scrollWidth, scrollHeight, scrollLeft, scrollTop} = bounds,
-			canScrollDistance = scrollWidth - clientWidth,
+			scrollLeftRtl = rtl ? (scrollWidth - clientWidth - scrollLeft) : scrollLeft,
 			thumbSizeRatioBase = this.props.isVertical ?
 				Math.min(1, clientHeight / scrollHeight) :
 				Math.min(1, clientWidth / scrollWidth),
 			thumbSizeRatio = Math.max(minThumbSizeRatio, thumbSizeRatioBase),
 			thumbPositionRatio = this.props.isVertical ?
 				scrollTop / (scrollHeight - clientHeight) :
-				(rtl ? (canScrollDistance - scrollLeft) : scrollLeft) / canScrollDistance,
+				scrollLeftRtl / (scrollWidth - clientWidth),
 			thumbSize, thumbPosition;
 
 		// overscroll cases
@@ -235,9 +237,11 @@ class Scrollbar extends Component {
 		const
 			{className} = this.props,
 			{prevButtonDisabled, nextButtonDisabled} = this.state,
-			{prevIcon, nextIcon, scrollbarClass, thumbClass,
+			{scrollbarClass, thumbClass,
 			prevButtonClass, nextButtonClass, clickPrevHandler, clickNextHandler} = this.scrollInfo,
-			scrollbarClassNames = classNames(className, scrollbarClass);
+			scrollbarClassNames = classNames(className, scrollbarClass),
+			prevIcon = selectPrevIcon(this.props, this.context),
+			nextIcon = selectNextIcon(this.props, this.context);
 
 		return (
 			<div ref={this.initContainerRef} className={scrollbarClassNames}>

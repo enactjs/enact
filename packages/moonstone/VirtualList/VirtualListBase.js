@@ -184,15 +184,14 @@ class VirtualListCore extends Component {
 	lastFocusedIndex = null
 	rtlDirection = 1
 
-	constructor (props, context) {
+	constructor (props) {
 		const {positioningOption} = props;
 
-		super(props, context);
+		super(props);
 
 		this.state = {firstIndex: 0, numOfItems: 0};
 		this.initContainerRef = this.initRef('containerRef');
 		this.initWrapperRef = this.initRef('wrapperRef');
-		this.rtlDirection = context.rtl ? -1 : 1;
 
 		switch (positioningOption) {
 			case 'byItem':
@@ -245,7 +244,7 @@ class VirtualListCore extends Component {
 		};
 	}
 
-	calculateMetrics (props) {
+	calculateMetrics (props, context) {
 		const
 			{direction, itemSize, positioningOption, spacing} = props,
 			node = this.getContainerNode(positioningOption);
@@ -268,6 +267,8 @@ class VirtualListCore extends Component {
 			};
 		let
 			primary, secondary, dimensionToExtent, thresholdBase;
+
+		this.rtlDirection = context.rtl ? -1 : 1;
 
 		this.isPrimaryDirectionVertical = (direction === 'vertical');
 
@@ -507,18 +508,18 @@ class VirtualListCore extends Component {
 		this.composeItemPosition(style, ...rest);
 	}
 
-	getXY = (primary, secondary) => ((this.isPrimaryDirectionVertical) ? {x: secondary, y: primary} : {x: primary, y: secondary})
+	getXY = (primary, secondary) => ((this.isPrimaryDirectionVertical) ? {x: secondary, y: primary} : {x: (primary * this.rtlDirection), y: secondary})
 
 	composeTransform (style, primary, secondary = 0) {
 		const {x, y} = this.getXY(primary, secondary);
 
-		style.transform = 'translate3d(' + (x * this.rtlDirection) + 'px,' + y + 'px,0)';
+		style.transform = 'translate3d(' + x + 'px,' + y + 'px,0)';
 	}
 
 	composeLeftTop (style, primary, secondary = 0) {
 		const {x, y} = this.getXY(primary, secondary);
 
-		style.left = (x * this.rtlDirection) + 'px';
+		style.left = x + 'px';
 		style.top = y + 'px';
 	}
 
@@ -530,7 +531,7 @@ class VirtualListCore extends Component {
 		const
 			node = this.wrapperRef,
 			{x, y} = this.getXY(this.scrollPosition, 0);
-		node.scrollLeft = (x * this.rtlDirection);
+		node.scrollLeft = x;
 		node.scrollTop = y;
 	}
 
@@ -632,7 +633,7 @@ class VirtualListCore extends Component {
 	componentDidMount () {
 		const {positioningOption} = this.props;
 
-		this.calculateMetrics(this.props);
+		this.calculateMetrics(this.props, this.context);
 		this.updateStatesAndBounds(this.props);
 
 		if (positioningOption !== 'byBrowser') {
@@ -652,14 +653,16 @@ class VirtualListCore extends Component {
 
 	// Call updateStatesAndBounds here when dataSize has been changed to update nomOfItems state.
 	// Calling setState within componentWillReceivePropswill not trigger an additional render.
-	componentWillReceiveProps (nextProps) {
+	componentWillReceiveProps (nextProps, nextContext) {
 		const
 			{direction, itemSize, dataSize, overhang, spacing} = this.props,
+			{rtl} = this.context,
 			hasMetricsChanged = (
 				direction !== nextProps.direction ||
 				((itemSize instanceof Object) ? (itemSize.minWidth !== nextProps.itemSize.minWidth || itemSize.minHeight !== nextProps.itemSize.minHeight) : itemSize !== nextProps.itemSize) ||
 				overhang !== nextProps.overhang ||
-				spacing !== nextProps.spacing
+				spacing !== nextProps.spacing ||
+				rtl !== nextContext.rtl
 			),
 			hasDataChanged = (dataSize !== nextProps.dataSize);
 

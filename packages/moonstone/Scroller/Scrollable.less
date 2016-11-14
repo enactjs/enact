@@ -1,3 +1,4 @@
+@import '../styles/mixins.less';
 @import '../styles/variables.less';
 
 .scrollableFill {
@@ -14,12 +15,7 @@
 		overflow: hidden;
 	}
 	background: black;
-	padding-right:  @moon-icon-button-small-size + @moon-spotlight-outset;
-
-	:global(.enact-locale-right-to-left) & {
-		padding-left: @moon-icon-button-small-size + @moon-spotlight-outset;
-		padding-right: 0;
-	}
+	.padding-start-end(0, @moon-icon-button-small-size + @moon-spotlight-outset);
 
 	padding-bottom:  @moon-icon-button-small-size + @moon-spotlight-outset;
 	box-sizing: border-box;
@@ -33,10 +29,7 @@
 }
 
 .takeAvailableSpaceForHorizontal {
-	padding-right: 0;
-	:global(.enact-locale-right-to-left) & {
-		padding-left: 0;
-	}
+	.padding-start-end(0, 0);
 }
 
 .takeAvailableSpaceForVertical {
@@ -48,10 +41,7 @@
 }
 
 .onlyHorizontalScrollbarNeeded {
-	right: 0;
-	:global(.enact-locale-right-to-left) & {
-		left: 0;
-	}
+	.position-start-end(0, 0);
 }
 
 .verticalScrollbarDisabled {

@@ -73,7 +73,7 @@
 	margin-left: @start;
 	margin-right: @end;
 
-	.enact-locale-right-to-left & {
+	:global(.enact-locale-right-to-left) & {
 		margin-left: @end;
 		margin-right: @start;
 	}
@@ -84,9 +84,20 @@
 	padding-left: @start;
 	padding-right: @end;
 
-	.enact-locale-right-to-left & {
+	:global(.enact-locale-right-to-left) & {
 		padding-left: @end;
 		padding-right: @start;
+	}
+}
+
+// Applies RTL-compatible start and end position to a selector
+.position-start-end (@start, @end) {
+	left: @start;
+	right: @end;
+
+	:global(.enact-locale-right-to-left) & {
+		left: @end;
+		right: @start;
 	}
 }
 

@@ -11,7 +11,6 @@ import hoc from '@enact/core/hoc';
 import R from 'ramda';
 import React, {Component, PropTypes} from 'react';
 import ri from '@enact/ui/resolution';
-import {contextTypes} from '@enact/i18n/I18nDecorator';
 
 import ScrollAnimator from './ScrollAnimator';
 import Scrollbar from './Scrollbar';
@@ -131,8 +130,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			style: PropTypes.object
 		}
-
-		static contextTypes = contextTypes
 
 		static defaultProps = {
 			cbScrollTo: nop,
@@ -292,7 +289,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		wheel (e, isHorizontal, isVertical) {
 			const deltaMode = e.deltaMode;
-			let delta = (!isVertical && isHorizontal && this.context.rtl) ? -e.deltaY : e.deltaY;
+			let delta = e.deltaY;
 
 			if (deltaMode === 0) {
 				delta = ri.scale(delta) * scrollWheelMultiplier;
