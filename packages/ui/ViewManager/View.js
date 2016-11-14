@@ -99,7 +99,7 @@ class View extends React.Component {
 
 	componentWillAppear (callback) {
 		const {arranger} = this.props;
-		if (arranger) {
+		if (arranger && arranger.stay) {
 			this.prepareTransition(arranger.stay, callback, true);
 		} else {
 			callback();
