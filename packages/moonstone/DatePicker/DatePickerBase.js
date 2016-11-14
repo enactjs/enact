@@ -28,7 +28,7 @@ import {dateComponentPickers} from '../internal/DateComponentPicker/DateComponen
 const DatePickerBase = kind({
 	name: 'DatePickerBase',
 
-	propTypes:  /** @lends moonstone/DatePicker.DatePickerBase.prototype */ {
+	propTypes:  /** @lends moonstone/DatePicker/DatePickerBase.DatePickerBase.prototype */ {
 		/**
 		 * The `day` component of the Date
 		 *

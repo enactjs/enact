@@ -75,7 +75,7 @@ const PickerBase = kind({
 
 		/**
 		 * By default, each picker item is wrapped by a
-		 * {@link module:@enact/moonstone/Marquee~MarqueeText}. When `marqueeDisabled` is `true`,
+		 * {@link moonstone/Marquee.MarqueeText}. When `marqueeDisabled` is `true`,
 		 * the items will not be wrapped.
 		 *
 		 * @type {Boolean}

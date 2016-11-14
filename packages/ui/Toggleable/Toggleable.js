@@ -9,12 +9,19 @@ import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
 import React from 'react';
 
+/**
+ * Default config for {@link ui/Toggleable.Toggleable}
+ *
+ * @memberof ui/Toggleable
+ * @hocconfig
+ */
 const defaultConfig = {
 	/**
 	 * Allows a Toggleable component to update its state by incoming props
 	 *
 	 * @type {Boolean}
 	 * @default false
+	 * @memberof ui/Toggleable.defaultConfig
 	 */
 	mutable: false,
 
@@ -22,6 +29,7 @@ const defaultConfig = {
 	 * Configures the event name that activates the component
 	 *
 	 * @type {String}
+	 * @memberof ui/Toggleable.defaultConfig
 	 */
 	activate: null,
 
@@ -29,6 +37,7 @@ const defaultConfig = {
 	 * Configures the event name that deactivates the component
 	 *
 	 * @type {String}
+	 * @memberof ui/Toggleable.defaultConfig
 	 */
 	deactivate: null,
 
@@ -37,6 +46,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'onToggle'
+	 * @memberof ui/Toggleable.defaultConfig
 	 */
 	toggle: 'onToggle',
 
@@ -45,6 +55,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'active'
+	 * @memberof ui/Toggleable.defaultConfig
 	 */
 	prop: 'active'
 };
