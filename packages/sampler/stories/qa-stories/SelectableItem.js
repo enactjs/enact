@@ -5,7 +5,7 @@ import Divider from '@enact/moonstone/Divider';
 import Group from '@enact/ui/Group';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
+import {withKnobs, boolean, text, select} from '@kadira/storybook-addon-knobs';
 
 
 const SelectableGroup = Selectable(Group);
@@ -14,7 +14,7 @@ SelectableGroup.displayName = 'SelectableGroup';
 SelectableGroup.propTypes = Object.assign({}, Group.propTypes, Selectable.propTypes);
 SelectableGroup.defaultProps = Object.assign({}, Group.defaultProps, Selectable.defaultProps);
 
-const SelectableItemToggle = Toggleable({prop: 'checked'}, SelectableItemBase);
+const SelectableItemToggle = Toggleable({prop: 'checked', mutable: true}, SelectableItemBase);
 SelectableItemToggle.displayName = 'SelectableItem';
 SelectableItemToggle.propTypes = Object.assign({}, SelectableItemToggle.propTypes, SelectableItemBase.propTypes);
 SelectableItemToggle.defaultProps = Object.assign({}, SelectableItemToggle.defaultProps, SelectableItemBase.defaultProps);
@@ -24,7 +24,11 @@ delete SelectableItemToggle.defaultProps.checked;
 
 const inputData = {
 	longText : 'Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text',
-	disabledLong : 'Default disabled Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text'
+	disabledLong : 'Default disabled Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text',
+	tallText : ['नरेंद्र मोदी', ' ฟิ้  ไั  ஒ  து', 'ÃÑÕÂÊÎÔÛÄËÏÖÜŸ'],
+	extraSpaceText : 'This                        Text                               has                      extra                                space',
+	rtlText : 'هناك حقيقة مثبتة منذ زمن طويل وهي',
+	normalText : 'Selectable Item'
 };
 
 storiesOf('SelectableItem')
@@ -48,6 +52,58 @@ storiesOf('SelectableItem')
 					{text('Disable Long Text', inputData.disabledLong)}
 				</SelectableItemToggle>
 			</div>
+		)
+	)
+	.addWithInfo(
+		'with tall characters',
+		() => (
+				<SelectableItemToggle
+					disabled={boolean('disabled', false)}
+					inline={boolean('inline', false)}
+					checked={boolean('checked', false)}
+					onToggle={action('onToggle')}
+				>
+				{select('children', inputData.tallText, inputData.tallText[0])}
+				</SelectableItemToggle>
+		)
+	)
+	.addWithInfo(
+		'with right to left text',
+		() => (
+				<SelectableItemToggle
+					disabled={boolean('disabled', false)}
+					inline={boolean('inline', false)}
+					checked={boolean('checked', false)}
+					onToggle={action('onToggle')}
+				>
+				{text('Right to Left Text', inputData.rtlText)}
+				</SelectableItemToggle>
+		)
+	)
+	.addWithInfo(
+		'with extra spacing',
+		() => (
+				<SelectableItemToggle
+					disabled={boolean('disabled', false)}
+					inline={boolean('inline', false)}
+					checked={boolean('checked', false)}
+					onToggle={action('onToggle')}
+				>
+				{text('extra space text', inputData.extraSpaceText)}
+				</SelectableItemToggle>
+		)
+	)
+	.addWithInfo(
+		'with default checked',
+		() => (
+				<SelectableItemToggle
+					disabled={boolean('disabled', false)}
+					inline={boolean('inline', false)}
+					checked={boolean('checked', true)}
+					onToggle={action('onToggle')}
+				>
+				{text('children', inputData.normalText)}
+				</SelectableItemToggle>
 		)
 	)
 	.addWithInfo(
