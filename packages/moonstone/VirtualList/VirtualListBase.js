@@ -395,7 +395,7 @@ class VirtualListCore extends Component {
 
 	updateSecondaryScrollInfo (primaryIndex, secondaryPosition) {
 		const
-			{data, variableMaxScrollSize} = this.props,
+			{data, lockHeaders, variableMaxScrollSize} = this.props,
 			{secondary} = this,
 			i = primaryIndex,
 			secondaryDataSize = secondary.dataSize({data, fixedIndex: i});
@@ -406,6 +406,10 @@ class VirtualListCore extends Component {
 
 		secondary.positionOffsets[i] = [];
 		secondary.thresholds[i] = {};
+
+		if (lockHeaders) {
+			accumulatedSize = (-1) * secondary.itemSize({data, index: {fixed: i, variable: 0}});
+		}
 
 		for (j = 0; j < secondaryDataSize; j++) {
 			size = secondary.itemSize({data, index: {fixed: i, variable: j}});
@@ -461,10 +465,18 @@ class VirtualListCore extends Component {
 
 	setSecondaryScrollPosition (newPrimaryFirstIndex, pos, dir) {
 		const
+			{lockHeaders} = this.props,
 			{primaryFirstIndex, numOfItems} = this.state,
 			{clientSize, thresholds: secondaryThresholds} = this.secondary;
 		let	shouldUpdateState = false;
 
+		if (lockHeaders && newPrimaryFirstIndex > 0) {
+			if ((dir === 1 && pos + clientSize > secondaryThresholds[0].max) ||
+				(dir === -1 && pos < secondaryThresholds[0].min)) {
+				this.updateSecondaryScrollInfo(0, pos);
+				shouldUpdateState = true;
+			}
+		}
 		for (let i = newPrimaryFirstIndex; i < newPrimaryFirstIndex + numOfItems; i++) {
 			if (
 				// primary boundary
@@ -479,9 +491,6 @@ class VirtualListCore extends Component {
 				this.updateSecondaryScrollInfo(i, pos);
 				shouldUpdateState = true;
 			}
-		}
-		if (shouldUpdateState && this.props.lockHeaders && dir !== 0) {
-			this.updateSecondaryScrollInfo(0, pos);
 		}
 		this.secondary.scrollPosition = pos;
 
@@ -592,8 +601,8 @@ class VirtualListCore extends Component {
 		);
 	}
 
-	calculateZIndex(primaryPosition, secondaryPosition) {
-		return (primaryPosition === 0 ? 1 : 0) + (secondaryPosition === 0 ? 10 : 0);
+	calculateZIndex(primaryIndex, secondaryIndex) {
+		return (primaryIndex === 0 ? 1 : 0) + (secondaryIndex === 0 ? 10 : 0);
 	}
 
 	positionVariableItems (i, key, width, height, primaryPosition, secondaryPosition, applyStyle) {
