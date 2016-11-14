@@ -100,7 +100,8 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			spotlightDisabled: React.PropTypes.bool,
 
 			/**
-			 * The tabindex of the component.
+			 * The tabIndex of the component. This value will default to -1 if left
+			 * unset and the control is spottable.
 			 *
 			 * @type {Number}
 			 * @public
@@ -111,20 +112,13 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 			this.state = {
-				spottableDisabled: false,
 				spotted: false
 			};
 		}
 
-		componentWillReceiveProps (nextProps) {
-			if (!this.props.disabled && nextProps.disabled && this.state.spotted) {
-				this.setState({spottableDisabled: true});
-			}
-		}
-
 		onBlur = (e) => {
 			if (e.currentTarget === e.target) {
-				this.setState({spottableDisabled: false, spotted: false});
+				this.setState({spotted: false});
 			}
 			forwardBlur(e, this.props);
 		}
@@ -138,7 +132,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 		render () {
 			const {disabled, spotlightDisabled, ...rest} = this.props;
-			const spottableDisabled = this.state.spottableDisabled && disabled;
+			const spottableDisabled = this.state.spotted && disabled;
 			const spottable = (spottableDisabled || !disabled) && !spotlightDisabled;
 			const classes = spottableDisabled ? spottableClass + ' ' + spottableDisabledClass : spottableClass;
 			const componentDisabled = !spottable && disabled;

@@ -123,7 +123,7 @@ const SpotlightFocusableDecoratorHoC = hoc(defaultConfig, (config, Wrapped) => {
 		onMouseDown = (e) => {
 			if (!this.props.disabled) {
 				if (e.target !== this.wrappedInstance.decoratedNode) {
-					e.preventDefault();
+					e.preventDefault(); // Prevent an immediate blur event that we can't manage explicitly
 				}
 				if (!this.state.innerElementFocused) {
 					this.setState({innerElementFocused: true});
