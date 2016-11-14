@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `marqueeCentered` prop to `moonstone/MarqueeDecorator` and `moonstone/MarqueeText`
+
+### Changed
+
+### Removed
+
 ## [1.0.0-alpha.3] - 2016-11-8
 
 ### Added
