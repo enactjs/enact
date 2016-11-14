@@ -40,7 +40,5 @@ The [Fetch API][fetchApi] provides a simple, [Promise][promiseAPI]-based API for
 [fetchApi]: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API
 [promiseApi]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
 [usingFetchApi]: https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
-[polyFetch]: https://github.com/github/fetch
-[isoFetch]: https://github.com/matthew-andrews/isomorphic-fetch
 
 </section>
