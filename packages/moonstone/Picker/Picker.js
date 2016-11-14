@@ -1,3 +1,10 @@
+/**
+ * Exports the {@link moonstone/Picker.Picker} and {@link moonstone/Picker.PickerBase}
+ * components. The default export is {@link moonstone/Picker.Picker}.
+ *
+ * @module moonstone/Picker
+ */
+
 import kind from '@enact/core/kind';
 import React from 'react';
 
@@ -5,10 +12,18 @@ import PickerCore from './PickerCore';
 import PickerItem from './PickerItem';
 import SpottablePicker from './SpottablePicker';
 
+/**
+ * The base component for {@link moonstone/Picker.Picker}. This version is not spottable.
+ *
+ * @class PickerBase
+ * @memberof moonstone/Picker
+ * @ui
+ * @public
+ */
 const PickerBase = kind({
 	name: 'Picker',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/Picker.PickerBase.prototype */ {
 		/**
 		 * Children from which to pick
 		 *
@@ -57,6 +72,16 @@ const PickerBase = kind({
 		 * @public
 		 */
 		joined: React.PropTypes.bool,
+
+		/**
+		 * By default, each picker item is wrapped by a
+		 * {@link moonstone/Marquee.MarqueeText}. When `marqueeDisabled` is `true`,
+		 * the items will not be wrapped.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		marqueeDisabled: React.PropTypes.bool,
 
 		/**
 		 * By default, the picker will animate transitions between items if it has a defined
@@ -121,18 +146,30 @@ const PickerBase = kind({
 
 	computed: {
 		max: ({children}) => children.length - 1,
-		children: ({children}) => React.Children.map(children, (child) => {
-			return <PickerItem>{child}</PickerItem>;
+		children: ({children, marqueeDisabled}) => React.Children.map(children, (child) => {
+			return <PickerItem marqueeDisabled={marqueeDisabled}>{child}</PickerItem>;
 		})
 	},
 
-	render: ({children, max, value, ...rest}) => (
-		<PickerCore {...rest} min={0} max={max} index={value} step={1} value={value}>
-			{children}
-		</PickerCore>
-	)
+	render: ({children, max, value, ...rest}) => {
+		delete rest.marqueeDisabled;
+
+		return (
+			<PickerCore {...rest} min={0} max={max} index={value} step={1} value={value}>
+				{children}
+			</PickerCore>
+		);
+	}
 });
 
+/**
+ * A Picker component that allows selecting values from a list of values.
+ *
+ * @class PickerBase
+ * @memberof moonstone/Picker
+ * @ui
+ * @public
+ */
 const Picker = SpottablePicker(PickerBase);
 
 export default Picker;

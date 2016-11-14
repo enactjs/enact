@@ -1,13 +1,13 @@
 /**
- * Exports the {@link module:@enact/moonstone/Panels~Panels} and {@link module:@enact/moonstone/Panels~PanelBase}
- * components. The default export is {@link module:@enact/moonstone/Panels~PanelsBase}.
+ * Exports the {@link moonstone/Panels.Panels} and {@link moonstone/Panels.PanelBase}
+ * components. The default export is {@link moonstone/Panels.PanelsBase}.
  *
  * @module @enact/moonstone/Panels
  */
 
 import kind from '@enact/core/kind';
-import {shape} from '@enact/ui/ViewManager';
 import React from 'react';
+import {shape} from '@enact/ui/ViewManager';
 
 import ApplicationCloseButton from './ApplicationCloseButton';
 import Viewport from './Viewport';
@@ -18,11 +18,12 @@ import css from './Panels.less';
  * Basic Panels component without breadcrumbs or default arranger
  *
  * @class Panels
+ * @memberof moonstone/Panels
  */
 const PanelsBase = kind({
 	name: 'Panels',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/Panels.Panels.prototype */ {
 		/**
 		 * Set of functions that control how the panels are transitioned into and out of the
 		 * viewport
@@ -47,7 +48,7 @@ const PanelsBase = kind({
 		index: React.PropTypes.number,
 
 		/**
-		 * Disable panel transitions
+		 * When `false`, panel transitions are disabled
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -79,7 +80,7 @@ const PanelsBase = kind({
 	},
 
 	computed: {
-		className: ({noCloseButton, styler}) => styler.join({
+		className: ({noCloseButton, styler}) => styler.append({
 			hasCloseButton: !noCloseButton
 		}),
 		applicationCloseButton: ({noCloseButton, onApplicationClose}) => {

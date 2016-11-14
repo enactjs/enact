@@ -6,9 +6,10 @@ import React from 'react';
 import Marquee from './Marquee';
 
 /**
- * Default configuration parameters for {@link module:@enact/moonstone/Marquee~MarqueeDecorator}
+ * Default configuration parameters for {@link moonstone/Marquee.MarqueeDecorator}
  *
  * @type {Object}
+ * @memberof moonstone/marquee
  */
 const defaultConfig = {
 	/**
@@ -53,11 +54,12 @@ const defaultConfig = {
 };
 
 /**
- * {@link module:@enact/moonstone/Marquee~MarqueeDecorator} is a Higher-order Component which makes
+ * {@link moonstone/Marquee.MarqueeDecorator} is a Higher-order Component which makes
  * the Wrapped component's children marquee.
  *
  * @class MarqueeDecorator
- * @ui
+ * @memberof moonstone/marquee
+ * @hoc
  * @public
  */
 const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
@@ -72,7 +74,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'MarqueeDecorator'
 
-		static propTypes = {
+		static propTypes = /** @lends moonstone/Marquee.MarqueeDecorator.prototype */ {
 			/**
 			 * Children to be marqueed
 			 *
@@ -177,7 +179,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidUpdate () {
-			this.initMarquee(this.props.delay);
+			this.initMarquee(this.props.marqueeDelay);
 		}
 
 		componentWillUnmount () {

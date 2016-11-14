@@ -1,7 +1,7 @@
 /**
- * Exports the {@link module:@enact/ui/Changeable~Changeable} Higher-order Component (HOC).
+ * Exports the {@link ui/Changeable.Changeable} Higher-order Component (HOC).
  *
- * @module @enact/ui/Changeable
+ * @module ui/Changeable
  */
 
 import {forward} from '@enact/core/handle';
@@ -9,6 +9,12 @@ import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
 import React from 'react';
 
+/**
+ * Default config for {@link ui/Changeable.Changeable}.
+ *
+ * @memberof ui/Changeable
+ * @hocconfig
+ */
 const defaultConfig = {
 	/**
 	 * If a Changeable component is used to maintain uncommitted state within another component,
@@ -21,6 +27,7 @@ const defaultConfig = {
 	 *
 	 * @type {Boolean}
 	 * @default false
+	 * @memberof ui/Changeable.defaultConfig
 	 */
 	mutable: false,
 
@@ -29,6 +36,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'onChange'
+	 * @memberof ui/Changeable.defaultConfig
 	 */
 	change: 'onChange',
 
@@ -37,12 +45,13 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'value'
+	 * @memberof ui/Changeable.defaultConfig
 	 */
 	prop: 'value'
 };
 
 /**
- * {@link module:@enact/ui/Changeable~Changeable} is a Higher-order Component that applies a
+ * {@link ui/Changeable.Changeable} is a Higher-order Component that applies a
  * 'Changeable' behavior to its wrapped component.  Its default event and value properties can be
  * configured when applied to a component. In addition, it supports `mutable` config setting that
  * allows the HOC to accept incoming settings for the `prop`.
@@ -52,7 +61,8 @@ const defaultConfig = {
  * correspondingly.
  *
  * @class Changeable
- * @ui
+ * @memberof ui/Changeable
+ * @hoc
  * @public
  */
 const Changeable = hoc(defaultConfig, (config, Wrapped) => {
@@ -63,7 +73,7 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'Changeable'
 
-		static propTypes = {
+		static propTypes = /** @lends ui/Changeable.Changeable.prototype */ {
 
 			[defaultPropKey]: React.PropTypes.any,
 

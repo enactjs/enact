@@ -1,10 +1,10 @@
 /**
- * Exports the {@link module:@enact/ui/ExpandableItem~ExpandableItem} and
- * {@link module:@enact/ui/ExpandableItem~ExpandableItemBase} components and
- * {@link module:@enact/ui/ExpandableItem~Expandable} higher-order component. The default export is
- * {@link module:@enact/ui/ExpandableItem~ExpandableItem}.
+ * Exports the {@link moonstone/ExpandableItem.ExpandableItem} and
+ * {@link moonstone/ExpandableItem.ExpandableItemBase} components and
+ * {@link moonstone/ExpandableItem/Expandable.Expandable} Higher-Order Component (HOC). The default
+ * export is {@link moonstone/ExpandableItem.ExpandableItem}.
  *
- * @module @enact/ui/ExpandableItem
+ * @module moonstone/ExpandableItem
  */
 
 import kind from '@enact/core/kind';
@@ -20,18 +20,19 @@ import ExpandableContainer from './ExpandableContainer';
 const TransitionContainer = SpotlightContainerDecorator(Transition);
 
 /**
- * {@link module:@enact/moonstone/ExpandableItem~ExpandableItem} is a stateless component that
- * renders a {@link module:@enact/moonstone/LabeledItem~LabeledItem} that can be expanded to show
+ * {@link moonstone/ExpandableItem.ExpandableItem} is a stateless component that
+ * renders a {@link moonstone/LabeledItem.LabeledItem} that can be expanded to show
  * additional contents.
  *
  * @class ExpandableItemBase
+ * @memberof moonstone/ExpandableItem
  * @ui
- * @private
+ * @public
  */
 const ExpandableItemBase = kind({
 	name: 'ExpandableItem',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/ExpandableItem.ExpandableItemBase.prototype */ {
 		/**
 		 * The primary text of the item.
 		 *
@@ -130,34 +131,24 @@ const ExpandableItemBase = kind({
 				return null;
 			}
 		},
-		handleOpen: ({disabled, onClose, onOpen, onToggle, open}) => {
+		handleOpen: ({disabled, onClose, onOpen, open}) => {
 			// When disabled, don't attach an event
 			if (!disabled) {
-				const handler = open ? onClose : onOpen;
-				if (onToggle && handler) {
-					// if we have both, we need to wrap them in a function so they can both be
-					// called.
-					return () => {
-						onToggle({open: !open});
-						handler();
-					};
-				} else if (onToggle) {
-					return () => onToggle({open: !open});
-				} else {
-					return handler;
-				}
+				return open ? onClose : onOpen;
 			}
 		},
 		open: ({disabled, open}) => open && !disabled
 	},
 
-	render: ({children, disabled, handleOpen, label, open, style, title, ...rest}) => {
+	render: ({children, disabled, handleOpen, label, open, title, ...rest}) => {
 		delete rest.noneText;
 		delete rest.label;
 		delete rest.showLabel;
+		delete rest.onOpen;
+		delete rest.onClose;
 
 		return (
-			<ExpandableContainer style={style} disabled={disabled} open={open}>
+			<ExpandableContainer {...rest} disabled={disabled} open={open}>
 				<LabeledItem
 					disabled={disabled}
 					label={label}
@@ -173,12 +164,14 @@ const ExpandableItemBase = kind({
 
 
 /**
- * {@link module:@enact/moonstone/ExpandableItem~ExpandableItem} renders a
- * {@link module:@enact/moonstone/LabeledItem~LabeledItem} that can be expanded to show additional
+ * {@link moonstone/ExpandableItem.ExpandableItem} renders a
+ * {@link moonstone/LabeledItem.LabeledItem} that can be expanded to show additional
  * contents.
  *
  * @class ExpandableItem
+ * @memberof moonstone/ExpandableItem
  * @ui
+ * @mixes moonstone/ExpandableItem.Expandable
  * @public
  */
 const ExpandableItem = Expandable(ExpandableItemBase);

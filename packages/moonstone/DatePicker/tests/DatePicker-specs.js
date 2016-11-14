@@ -1,59 +1,31 @@
 import React from 'react';
-import {shallow} from 'enzyme';
+import {mount, shallow} from 'enzyme';
 import sinon from 'sinon';
-import DatePicker from '../DatePicker';
+import {DatePicker, DatePickerBase} from '../DatePicker';
 
-describe.skip('DatePicker', () => {
+describe('DatePicker', () => {
 
 	// Suite-wide setup
 
 	it('should not generate a label when value is undefined', function () {
-		const subject = shallow(
+		const subject = mount(
 			<DatePicker title="Date" />
 		);
 
 		const expected = null;
-		const actual = subject.prop('label');
+		const actual = subject.find('ExpandableItem').prop('label');
 
 		expect(actual).to.equal(expected);
 	});
 
-	it('should restore the value from props after an onCancel event', function () {
-		const value = new Date(2000, 0, 1);
-		const subject = shallow(
-			<DatePicker title="Date" value={value} />
-		);
-
-		subject.simulate('onChangeMonth', {value: 1});
-		subject.simulate('onCancel');
-		subject.update();
-
-		const expected = 0;
-		const actual = subject.prop('month');
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('should set an internal value when opened', function () {
-		const subject = shallow(
-			<DatePicker title="Date" open />
-		);
-
-		const actual = subject.prop('value');
-
-		expect(actual).to.exist();
-	});
-
-	it('should emit an onChange event when closed with a value', function () {
+	it('should emit an onChange event when closed', function () {
 		const handleChange = sinon.spy();
-		const value = new Date(2000, 0, 1);
-		const subject = shallow(
-			<DatePicker title="Date" value={value} onChange={handleChange} />
+		const subject = mount(
+			<DatePicker title="Date" open onChange={handleChange} />
 		);
 
-		subject.simulate('onChangeMonth', {value: 1});
-		subject.simulate('onClose');
-		subject.update();
+		const base = subject.find('DatePickerBase');
+		base.prop('onClose')();
 
 		const expected = true;
 		const actual = handleChange.calledOnce;
@@ -61,20 +33,29 @@ describe.skip('DatePicker', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should not emit an onChange event when cancelled', function () {
-		const handleChange = sinon.spy();
-		const value = new Date(2000, 0, 1);
+	it('should omit labels when noLabels is true', function () {
 		const subject = shallow(
-			<DatePicker title="Date" value={value} onChange={handleChange} />
+			<DatePickerBase title="Date" day={1} maxDays={31} month={1} maxMonths={12} year={2000} order={['m', 'd']} noLabels />
 		);
 
-		subject.simulate('onChangeMonth', {value: 1});
-		subject.simulate('onCancel');
-		subject.update();
-
-		const expected = false;
-		const actual = handleChange.calledOnce;
+		const expected = 2;
+		// DateComponentRangePicker is wrapped by Changeable so in a shallow render, we have to
+		// check for that kind
+		const actual = subject.find('Changeable').filterWhere(c => !c.prop('label')).length;
 
 		expect(actual).to.equal(expected);
+	});
+
+	it('should create pickers arranged by order', function () {
+		const subject = shallow(
+			<DatePickerBase title="Date" day={1} maxDays={31} month={1} maxMonths={12} year={2000} order={['m', 'd']} />
+		);
+
+		const expected = ['month', 'day'];
+		// DateComponentRangePicker is wrapped by Changeable so in a shallow render, we have to
+		// check for that kind
+		const actual = subject.find('Changeable').map(c => c.prop('label'));
+
+		expect(actual).to.deep.equal(expected);
 	});
 });

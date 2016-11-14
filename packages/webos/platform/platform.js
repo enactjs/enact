@@ -10,7 +10,7 @@
 */
 const platform = {};
 
-if (window.PalmSystem) {
+if (typeof window === 'object' && window.PalmSystem) {
 	if (window.navigator.userAgent.indexOf('SmartWatch') > -1) {
 		platform.watch = true;
 	} else if ((window.navigator.userAgent.indexOf('SmartTV') > -1) || (window.navigator.userAgent.indexOf('Large Screen') > -1)) {
@@ -19,8 +19,8 @@ if (window.PalmSystem) {
 		try {
 			let legacyInfo = JSON.parse(window.PalmSystem.deviceInfo || '{}');
 			if (legacyInfo.platformVersionMajor && legacyInfo.platformVersionMinor) {
-				let major = parseInt(legacyInfo.platformVersionMajor, 10);
-				let minor = parseInt(legacyInfo.platformVersionMinor, 10);
+				let major = parseInt(legacyInfo.platformVersionMajor);
+				let minor = parseInt(legacyInfo.platformVersionMinor);
 				if (major < 3 || (major === 3 && minor <= 0)) {
 					platform.legacy = true;
 				} else {

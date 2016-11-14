@@ -23,67 +23,39 @@ const
 			lineHeight: ri.scale(70) + 'px',
 			textAlign: 'center'
 		},
-		horizontalItem: {
-			position: 'absolute',
-			hieght: ri.scale(550) + 'px',
-			width: ri.scale(270) + 'px',
-			borderRight: ri.scale(2) + 'px solid #202328',
-			boxSizing: 'border-box',
-
-			color: 'white',
-			fontSize: ri.scale(40) + 'px',
-			lineHeight: ri.scale(550) + 'px',
-			textAlign: 'center'
-		},
 		listHeight: {
 			height: ri.scale(550) + 'px'
 		}
 	},
-	data = [],
-	renderItem = (direction) => ({index, key}) => (
+	items = [],
+	// eslint-disable-next-line enact/prop-types, enact/display-name
+	renderItem = (direction) => ({data, index, key}) => (
 		<Item key={key} style={style[direction + 'Item']}>
 			{data[index]}
 		</Item>
 	);
 
 for (let i = 0; i < 1000; i++) {
-	data.push('Item ' + ('00' + i).slice(-3));
+	items.push('Item ' + ('00' + i).slice(-3));
 }
 
 storiesOf('VirtualList')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'with vertical direction',
+		' ',
 		'Basic usage of VirtualList',
 		() => (
 			<VirtualList
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
-				data={data}
-				dataSize={number('dataSize', data.length)}
+				data={items}
+				dataSize={number('dataSize', items.length)}
 				direction='vertical'
 				hideScrollbars={boolean('hideScrollbars', false)}
 				itemSize={ri.scale(number('itemSize', 72))}
 				spacing={ri.scale(number('spacing', 0))}
 				style={style.listHeight}
 				component={renderItem('vertical')}
-			/>
-		)
-	)
-	.addWithInfo(
-		'with horizontal direction',
-		() => (
-			<VirtualList
-				onScrollStart={action('onScrollStart')}
-				onScrollStop={action('onScrollStop')}
-				data={data}
-				dataSize={number('dataSize', data.length)}
-				direction='horizontal'
-				hideScrollbars={boolean('hideScrollbars', false)}
-				itemSize={ri.scale(number('itemSize', 270))}
-				spacing={ri.scale(number('spacing', 0))}
-				style={style.listHeight}
-				component={renderItem('horizontal')}
 			/>
 		)
 	);

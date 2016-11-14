@@ -1,7 +1,7 @@
 /**
- * Exports the {@link module:@enact/ui/Selectable~Selectable} Higher-order Component (HOC).
+ * Exports the {@link ui/Selectable.Selectable} Higher-order Component (HOC).
  *
- * @module @enact/ui/Selectable
+ * @module ui/Selectable
  */
 
 import {forward} from '@enact/core/handle';
@@ -9,6 +9,12 @@ import hoc from '@enact/core/hoc';
 import {cap, coerceArray} from '@enact/core/util';
 import React, {PropTypes} from 'react';
 
+/**
+ * Default config for {@link ui/Selectable.Selectable}
+ *
+ * @memberof ui/Selectable
+ * @hocconfig
+ */
 const defaultConfig = {
 	/**
 	 * If a Selectable component is used to maintain uncommitted state within another component,
@@ -20,6 +26,7 @@ const defaultConfig = {
 	 *
 	 * @type {Boolean}
 	 * @default false
+	 * @memberof ui/Selectable.defaultConfig
 	 */
 	mutable: false,
 
@@ -28,6 +35,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'onSelect'
+	 * @memberof ui/Selectable.defaultConfig
 	 */
 	select: 'onSelect',
 
@@ -36,12 +44,13 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'selected'
+	 * @memberof ui/Selectable.defaultConfig
 	 */
 	prop: 'selected'
 };
 
 /**
- * {@link module:@enact/ui/Selectable~Selectable} is a Higher-order Component that applies a 'Selectable' behavior
+ * {@link ui/Selectable.Selectable} is a Higher-order Component that applies a 'Selectable' behavior
  * to its wrapped component.  Its default event and value properties can be configured when applied to a component.
  * In addition, it supports `mutable` config setting that allows the HOC to accept incoming settings for the `prop`.
  *
@@ -49,6 +58,7 @@ const defaultConfig = {
  * HOC manages the state of `value`.  If the `prop` is overridden, the names change correspondingly.
  *
  * @class Selectable
+ * @memberof ui/Selectable
  * @ui
  * @public
  */
@@ -60,7 +70,7 @@ const Selectable = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'Selectable'
 
-		static propTypes = {
+		static propTypes = /** @lends ui/Selectable.Selectable.prototype */ {
 			/**
 			 * Selected value(s) for when first rendered.
 			 * @type {Array | String | Number | Boolean}

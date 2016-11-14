@@ -28,7 +28,7 @@ const inputData = {
 storiesOf('Input')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'Long Text',
+		'with long text',
 		() => (
 			<StatefulInput
 				onChange={action('onChange')}
@@ -42,7 +42,7 @@ storiesOf('Input')
 		)
 	)
 	.addWithInfo(
-		'Tall Characters',
+		'with tall characters',
 		() => (
 			<StatefulInput
 				onChange={action('onChange')}
@@ -56,7 +56,7 @@ storiesOf('Input')
 		)
 	)
 	.addWithInfo(
-		'Text with extra spaces',
+		'with extra spacing',
 		() => (
 			<StatefulInput
 				onChange={action('onChange')}
@@ -70,7 +70,7 @@ storiesOf('Input')
 		)
 	)
 	.addWithInfo(
-		'Input with range',
+		'with a range',
 		() => (
 			<StatefulInput
 				onChange={action('onChange')}

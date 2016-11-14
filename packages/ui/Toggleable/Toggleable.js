@@ -1,7 +1,7 @@
 /**
- * Exports the {@link module:@enact/ui/Toggleable~Toggleable} Higher-order Component (HOC).
+ * Exports the {@link ui/Toggleable.Toggleable} Higher-order Component (HOC).
  *
- * @module @enact/ui/Toggleable
+ * @module ui/Toggleable
  */
 
 import {forward} from '@enact/core/handle';
@@ -9,12 +9,19 @@ import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
 import React from 'react';
 
+/**
+ * Default config for {@link ui/Toggleable.Toggleable}
+ *
+ * @memberof ui/Toggleable
+ * @hocconfig
+ */
 const defaultConfig = {
 	/**
 	 * Allows a Toggleable component to update its state by incoming props
 	 *
 	 * @type {Boolean}
 	 * @default false
+	 * @memberof ui/Toggleable.defaultConfig
 	 */
 	mutable: false,
 
@@ -22,6 +29,7 @@ const defaultConfig = {
 	 * Configures the event name that activates the component
 	 *
 	 * @type {String}
+	 * @memberof ui/Toggleable.defaultConfig
 	 */
 	activate: null,
 
@@ -29,6 +37,7 @@ const defaultConfig = {
 	 * Configures the event name that deactivates the component
 	 *
 	 * @type {String}
+	 * @memberof ui/Toggleable.defaultConfig
 	 */
 	deactivate: null,
 
@@ -37,6 +46,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'onToggle'
+	 * @memberof ui/Toggleable.defaultConfig
 	 */
 	toggle: 'onToggle',
 
@@ -45,17 +55,19 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'active'
+	 * @memberof ui/Toggleable.defaultConfig
 	 */
 	prop: 'active'
 };
 
 /**
- * {@link module:@enact/ui/Toggleable~Toggleable} is a Higher-order Component that applies a 'Toggleable' behavior
+ * {@link ui/Toggleable.Toggleable} is a Higher-order Component that applies a 'Toggleable' behavior
  * to its wrapped component.  Its default event and property can be configured when applied to a component.
  *
  * By default, Toggleable applies the `active` property on click events.
  *
  * @class Toggleable
+ * @memberof ui/Toggleable
  * @ui
  * @public
  */
@@ -67,7 +79,7 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 	const forwardDeactivate = forward(deactivate);
 
 	return class Toggleable extends React.Component {
-		static propTypes = {
+		static propTypes = /** @lends ui/Toggleable.Toggleable.prototype */ {
 			/**
 			 * Whether or not the component is in a "toggled" state when first rendered.
 			 * *Note that this property name can be changed by the config. By default it is `defaultActive`.

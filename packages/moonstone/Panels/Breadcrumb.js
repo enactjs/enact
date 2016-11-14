@@ -22,11 +22,12 @@ export const breadcrumbWidth = 96;
  * Vertical, transparent bar generally laid out horizontally used to navigate to a prior Panel.
  *
  * @class Breadcrumb
+ * @memberof moonstone/Panels
  */
 const BreadcrumbBase = kind({
 	name: 'Breadcrumb',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/Panels.Breadcrumb.prototype */ {
 		/**
 		 * Index of the panel for which this is the breadcrumb
 		 *

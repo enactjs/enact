@@ -23,7 +23,7 @@ const radioData = {
 storiesOf('RadioItem')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'Long Text with space',
+		'with long text and spaces',
 		() => (
 			<div>
 				<RadioItem
@@ -44,7 +44,7 @@ storiesOf('RadioItem')
 		)
 	)
 	.addWithInfo(
-		'Long Text without space',
+		'with long text and no spaces',
 		() => (
 			<div>
 				<RadioItem
@@ -65,7 +65,7 @@ storiesOf('RadioItem')
 		)
 	)
 	.addWithInfo(
-		'Tall Text',
+		'with tall characters',
 		() => (
 			<div>
 				<RadioItem
@@ -86,7 +86,7 @@ storiesOf('RadioItem')
 		)
 	)
 	.addWithInfo(
-		'Right to Left Text',
+		'with right to left text',
 		() => (
 			<div>
 				<RadioItem
@@ -107,7 +107,7 @@ storiesOf('RadioItem')
 		)
 	)
 	.addWithInfo(
-		'Default Checked',
+		'checked by default',
 		() => (
 			<div>
 				<RadioItem

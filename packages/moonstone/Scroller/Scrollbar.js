@@ -1,7 +1,8 @@
 /**
- * Exports the {@link module:@enact/moonstone/Scroller/Scrollbar~Scrollbar} component.
+ * Exports the {@link moonstone/Scroller/Scrollbar.Scrollbar} component.
  *
- * @module @enact/moonstone/Scroller/Scrollbar
+ * @module moonstone/Scroller/Scrollbar
+ * @private
  */
 
 import classNames from 'classnames';
@@ -46,15 +47,16 @@ const
 	doc = (typeof window === 'object') ? window.document : {};
 
 /**
- * {@link module:@enact/moonstone/Scroller/Scrollbar~Scrollbar} is a Scrollbar with Moonstone styling.
- * It is used in {@link module:@enact/moonstone/Scrollable~Scrollable}.
+ * {@link moonstone/Scroller/Scrollbar.Scrollbar} is a Scrollbar with Moonstone styling.
+ * It is used in {@link moonstone/Scrollable.Scrollable}.
  *
  * @class Scrollbar
+ * @memberof moonstone/Scroller/Scrollbar
  * @ui
- * @public
+ * @private
  */
 class Scrollbar extends Component {
-	static propTypes = {
+	static propTypes = /** @lends moonstone/Scroller/Scrollbar.Scrollbar.prototype */ {
 		className: PropTypes.any,
 
 		/**
