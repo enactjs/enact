@@ -30,7 +30,7 @@ const inputData = {
 storiesOf('SelectableItem')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'with Long Text',
+		'with long text',
 		() => (
 			<div>
 				<SelectableItemToggle
@@ -51,7 +51,7 @@ storiesOf('SelectableItem')
 		)
 	)
 	.addWithInfo(
-		'Group',
+		'that is grouped',
 		() => (
 			<div>
 				<Divider>
@@ -60,10 +60,10 @@ storiesOf('SelectableItem')
 				<SelectableGroup
 					childComponent={SelectableItem}
 					itemProps={{
-						inline: boolean('ItemProps-Inline', false),
+						inline: boolean('inline', false),
 						disabled: boolean('disabled', false)
 					}}
-					selectedProp='checked'
+					selectedProp="checked"
 					defaultSelected={1}
 					onSelect={action('onSelect')}
 				>
@@ -75,10 +75,10 @@ storiesOf('SelectableItem')
 				<SelectableGroup
 					childComponent={SelectableItem}
 					itemProps={{
-						inline: boolean('ItemProps-Inline', false),
+						inline: boolean('inline', false),
 						disabled: boolean('disabled', false)
 					}}
-					selectedProp='checked'
+					selectedProp="checked"
 					defaultSelected={1}
 					onSelect={action('onSelect')}
 				>
