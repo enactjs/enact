@@ -1,3 +1,10 @@
+/**
+ * Exports the {@link moonstone/Picker.PickerCore} component.
+ * The default export is {@link moonstone/Picker.PickerCore}.
+ *
+ * @module moonstone/Picker
+ */
+
 import * as jobs from '@enact/core/jobs';
 import {SlideLeftArranger, SlideBottomArranger, ViewManager} from '@enact/ui/ViewManager';
 import R from 'ramda';
@@ -34,6 +41,14 @@ const emulateMouseEventsTimeout = 175;
 // Components
 const TransparentIconButton = (props) => <IconButton {...props} backgroundOpacity="transparent" />;
 
+/**
+ * The base component for {@link moonstone/Picker.PickerCore}.
+ *
+ * @class PickerCore
+ * @memberof moonstone/Picker
+ * @ui
+ * @public
+ */
 const PickerCore = class extends React.Component {
 	static displayName = 'PickerCore'
 
@@ -193,7 +208,7 @@ const PickerCore = class extends React.Component {
 		 */
 		value: steppedNumber,
 
-		/*
+		/**
 		 * Choose a specific size for your picker. `'small'`, `'medium'`, `'large'`, or set to `null` to
 		 * assume auto-sizing. `'small'` is good for numeric pickers, `'medium'` for single or short
 		 * word pickers, `'large'` for maximum-sized pickers.
@@ -203,7 +218,7 @@ const PickerCore = class extends React.Component {
 		 */
 		width: React.PropTypes.oneOf([null, 'small', 'medium', 'large']),
 
-		/*
+		/**
 		 * Should the picker stop incrementing when the picker reaches the last element? Set `wrap`
 		 * to `true` to allow the picker to continue from the opposite end of the list of options.
 		 *
