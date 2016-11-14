@@ -93,6 +93,14 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			disabled: React.PropTypes.bool,
 
 			/**
+			 * When `true`, the contents will be centered regardless of the text directionality.
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			marqueeCentered: React.PropTypes.bool,
+
+			/**
 			 * Number of milliseconds to wait before starting marquee when `marqueeOn` is 'hover' or
 			 * 'focus' or before restarting any marquee.
 			 *
@@ -394,6 +402,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const {
 				children,
 				disabled,
+				marqueeCentered,
 				marqueeOn,
 				marqueeSpeed,
 				...rest
@@ -423,6 +432,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				<Wrapped {...rest} disabled={disabled}>
 					<Marquee
 						animating={this.state.animating}
+						centered={marqueeCentered}
 						className={marqueeClassName}
 						clientRef={this.cacheNode}
 						distance={this.distance}
@@ -439,6 +449,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		renderWrapped () {
 			const props = Object.assign({}, this.props);
 
+			delete props.marqueeCentered;
 			delete props.marqueeDelay;
 			delete props.marqueeDisabled;
 			delete props.marqueeOn;
