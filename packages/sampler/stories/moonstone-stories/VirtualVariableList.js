@@ -237,11 +237,11 @@ const
 		}
 	};
 
-storiesOf('VirtualVariableList')
+storiesOf('VirtualList.VirtualVariableList')
 	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
-		'Basic usage of VirtualEPGGridList',
+		'Basic usage of VirtualVariableList',
 		() => (
 			<VirtualVariableList
 				data={epgData}
