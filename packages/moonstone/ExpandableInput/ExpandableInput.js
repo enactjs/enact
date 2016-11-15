@@ -1,20 +1,8 @@
 import Changeable from '@enact/ui/Changeable';
-import {Spotlight, Spottable} from '@enact/spotlight';
 import React from 'react';
 
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 import {Input} from '../Input';
-
-class Div extends React.Component {
-	render () {
-		const {componentRef, ...rest} = this.props;
-		return (
-			<div {...rest} ref={componentRef} />
-		);
-	}
-}
-
-const SpottableDiv = Spottable(Div);
 
 class ExpandableInputBase extends React.Component {
 	static displayName = 'ExpandableInput'
@@ -68,15 +56,17 @@ class ExpandableInputBase extends React.Component {
 
 	componentDidUpdate (prevProps) {
 		if (!prevProps.open && this.props.open) {
-			this.inputInstance.decoratedNode.focus();
+			this.inputContainer.querySelector('input').focus();
 		}
 	}
 
 	onInputKeyDown = (ev) => {
 		const keyCode = ev.keyCode;
+		const isInputFocused = ev.target !== ev.currentTarget;
+
 		switch (keyCode) {
 			case 13:
-				if (ev.target === this.inputInstance.decoratedNode) {
+				if (isInputFocused) {
 					this.fireChangeEvent();
 				}
 				break;
@@ -89,6 +79,7 @@ class ExpandableInputBase extends React.Component {
 
 	fireChangeEvent = () => {
 		const {onChange, onClose, value} = this.props;
+
 		if (onClose) {
 			onClose();
 		}
@@ -96,33 +87,29 @@ class ExpandableInputBase extends React.Component {
 		if (onChange) {
 			onChange({value});
 		}
-		Spotlight.focus(this.spotlightDummyNode);
 	}
 
-	getInputInstance = (instance) => {
-		this.focusableInstance = instance;
-		this.inputInstance = instance.wrappedInstance;
-	}
-
-	getSpotlightDummyNode = (node) => {
-		this.spotlightDummyNode = node;
+	getInputContainerNode = (node) => {
+		this.inputContainer = node;
 	}
 
 	render () {
 		const {disabled, onInputChange, placeholder, type, value, ...rest} = this.props;
 		return (
 			<ExpandableItemBase {...rest} disabled={disabled}>
-				<Input
-					disabled={disabled}
-					dismissOnEnter
-					onChange={onInputChange}
-					onKeyDown={this.onInputKeyDown}
-					placeholder={placeholder}
-					ref={this.getInputInstance}
-					type={type}
-					value={value}
-				/>
-				<SpottableDiv componentRef={this.getSpotlightDummyNode} />
+				<div ref={this.getInputContainerNode}>
+					<Input
+						disabled={disabled}
+						dismissOnEnter
+						onChange={onInputChange}
+						onKeyDown={this.onInputKeyDown}
+						placeholder={placeholder}
+						type={type}
+						value={value}
+						data-spot-up=''
+						data-spot-down=''
+					/>
+				</div>
 			</ExpandableItemBase>
 		);
 	}
