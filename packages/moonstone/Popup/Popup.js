@@ -45,12 +45,28 @@ const PopupBase = kind({
 
 		/**
 		 * When `true`, popups will not animate on/off screen.
+		 *
 		 * @type {Boolean}
 		 * @default false
+		 * @public
 		 */
 		noAnimation: PropTypes.bool,
 
-		// should fire a provided method when popup is opened and after closed.
+		/**
+		 * A function to run when close button is clicked.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onCloseButtonClicked: PropTypes.func,
+
+		/**
+		 * A function to run after transition for hiding is finished.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onHide: PropTypes.func,
 
 		/**
 		 * Is this control in the expanded state (true), opened, with the contents visible?
@@ -62,16 +78,11 @@ const PopupBase = kind({
 		open: PropTypes.bool,
 
 		/**
-		 * A function to run after transition for hiding is finished.
-		 * @type {Function}
-		 */
-		onHide: PropTypes.func,
-
-		/**
 		 * When `true`, the close button is shown; when `false`, it is hidden.
 		 *
 		 * @type {Boolean}
 		 * @default false
+		 * @public
 		 */
 		showCloseButton: PropTypes.bool,
 
@@ -80,6 +91,7 @@ const PopupBase = kind({
 		 *
 		 * @type {String}
 		 * @default 'window'
+		 * @public
 		 */
 		target: PropTypes.oneOf(['window', 'activator'])
 	},
@@ -99,10 +111,17 @@ const PopupBase = kind({
 
 	computed: {
 		className: ({showCloseButton, styler}) => styler.append({reserveClose: showCloseButton}),
-		closeButton: ({showCloseButton}) => {
+		closeButton: ({showCloseButton, onCloseButtonClicked}) => {
 			if (showCloseButton) {
 				return (
-					<IconButton className={css.closeButton} backgroundOpacity="transparent" small>closex</IconButton>
+					<IconButton
+						className={css.closeButton}
+						backgroundOpacity="transparent"
+						small
+						onClick={onCloseButtonClicked}
+					>
+						closex
+					</IconButton>
 				);
 			}
 		},
@@ -115,6 +134,7 @@ const PopupBase = kind({
 
 	render: ({closeButton, children, noAnimation, open, onHide, zIndex, ...rest}) => {
 		delete rest.anchor;
+		delete rest.onCloseButtonClicked;
 		delete rest.showCloseButton;
 		return (
 			<TransitionContainer
@@ -152,54 +172,81 @@ const LayerablePopup = Layerable(PopupBase);
 class Popup extends React.Component {
 	static propTypes = {
 		/**
-		 * A function to run when `ESC` key is pressed. The function will only invoke if
-		 * `noAutoDismiss` is set to false.
+		 * When `true`, popups will not animate on/off screen.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		noAnimation: PropTypes.bool,
+
+		/**
+		 * When `true`, Popup will not close when the user presses `ESC` key.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		noAutoDismiss: React.PropTypes.bool,
+
+		/**
+		 * A function to run when closing action is invoked by the user. These actions include
+		 * pressing `ESC` key or clicking on close button. Normally, callback will set `open`
+		 * state to false.
 		 *
 		 * @type {Function}
+		 * @public
 		 */
-		onDismiss: PropTypes.func,
+		onClose: PropTypes.func,
 
 		/**
 		 * When `true`, Popup is rendered into portal.
 		 *
 		 * @type {Boolean}
 		 * @default false
+		 * @public
 		 */
-		open: PropTypes.bool
+		open: PropTypes.bool,
+
+		/**
+		 * When `true`, the close button is shown; when `false`, it is hidden.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		showCloseButton: PropTypes.bool
 	}
+
 	static defaultProps = {
-		open: false
+		open: false,
+		noAnimation: false,
+		noAutoDismiss: false,
+		showCloseButton: false
 	}
+
 	constructor (props) {
 		super(props);
 		this.state = {
-			portalOpen: false,
-			popupOpen: this.props.noAnimation ? true : false
+			portalOpen: this.props.open || false,
+			popupOpen: this.props.noAnimation
 		};
 	}
+
 	componentWillReceiveProps (nextProps) {
 		if (!this.props.open && nextProps.open) {
 			this.setState({
+				popupOpen: this.props.noAnimation,
 				portalOpen: true
 			});
 		} else if (this.props.open && !nextProps.open) {
-			let nextState = {
-				popupOpen: false
-			};
-			if (this.props.noAnimation) {
-				nextState = {
-					popupOpen: true,
-					portalOpen: false
-				};
-			}
-			this.setState(nextState);
+			this.setState({
+				popupOpen: this.props.noAnimation,
+				portalOpen: !this.props.noAnimation
+			});
 		}
 	}
-	shouldComponentUpdate (nextProps, nextState) {
-		return this.props.open != nextProps.open ||
-				this.state.popupOpen != nextState.popupOpen ||
-				this.state.portalOpen != nextState.portalOpen;
-	}
+
 	handlePortalOpen = () => {
 		if (!this.props.noAnimation) {
 			this.setState({
@@ -207,22 +254,29 @@ class Popup extends React.Component {
 			});
 		}
 	}
+
 	handlePopupHide = () => {
 		this.setState({
 			portalOpen: false
 		});
 	}
+
 	render () {
-		const {onClose, onDismiss, ...rest} = this.props;
+		const {noAutoDismiss, onClose, ...rest} = this.props;
 
 		return (
 			<Portal
+				noAutoDismiss={noAutoDismiss}
 				open={this.state.portalOpen}
 				onOpen={this.handlePortalOpen}
-				onClose={onClose}
-				onDismiss={onDismiss}
+				onDismiss={onClose}
 			>
-				<LayerablePopup {...rest} open={this.state.popupOpen} onHide={this.handlePopupHide} />
+				<LayerablePopup
+					{...rest}
+					open={this.state.popupOpen}
+					onCloseButtonClicked={onClose}
+					onHide={this.handlePopupHide}
+				/>
 			</Portal>
 		);
 	}

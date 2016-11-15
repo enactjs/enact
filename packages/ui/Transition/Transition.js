@@ -73,15 +73,19 @@ const TransitionBase = kind({
 
 		/**
 		 * When `true`, it fill its container's size.
+		 *
 		 * @type {Boolean}
 		 * @default false
+		 * @public
 		 */
 		fit: PropTypes.bool,
 
 		/**
 		 * When `true`, it disables transition. When `false`, it animates visibility change.
+		 *
 		 * @type {Boolean}
 		 * @default false
+		 * @public
 		 */
 		noAnimation: PropTypes.bool,
 

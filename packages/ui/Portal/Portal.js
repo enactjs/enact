@@ -36,9 +36,11 @@ class PortalBase extends React.Component {
 
 	static propTypes = {
 		/**
-		 * When `true`, Portal will hide when the user presses `ESC` key.
+		 * When `true`, Portal will not hide when the user presses `ESC` key.
+		 *
 		 * @type {Boolean}
 		 * @default false
+		 * @public
 		 */
 		noAutoDismiss: React.PropTypes.bool,
 
@@ -46,6 +48,7 @@ class PortalBase extends React.Component {
 		 * A function to run when portal is closed.
 		 *
 		 * @type {Function}
+		 * @public
 		 */
 		onClose: React.PropTypes.func,
 
@@ -53,6 +56,7 @@ class PortalBase extends React.Component {
 		 * A function to run when `ESC` key is pressed. The function will only invoke if
 		 * `noAutoDismiss` is set to false.
 		 * @type {Function}
+		 * @public
 		 */
 		onDismiss: React.PropTypes.func,
 
@@ -60,6 +64,7 @@ class PortalBase extends React.Component {
 		 * A function to run when portal is opened. It will only be invoked for the first render.
 		 *
 		 * @type {Function}
+		 * @public
 		 */
 		onOpen: React.PropTypes.func,
 
@@ -67,27 +72,34 @@ class PortalBase extends React.Component {
 		 * When `true`, it renders components into portal.
 		 * @type {Boolean}
 		 * @default false
+		 * @public
 		 */
 		open: React.PropTypes.bool,
 
 		/**
 		 * CSS classes for Portal.
+		 *
 		 * @type {String}
 		 * @default `enact-fit enact-untouchable`
+		 * @public
 		 */
 		portalClassName: React.PropTypes.string,
 
 		/**
 		 * Element id for portal.
+		 *
 		 * @type {String}
 		 * @default `portal`
+		 * @public
 		 */
 		portalId: React.PropTypes.string,
 
 		/**
 		 * Types of scrim. It can be either `transparent` or `translucent`.
+		 *
 		 * @type {String}
 		 * @default `translucent`
+		 * @public
 		 */
 		scrimType: React.PropTypes.oneOf(['transparent', 'translucent'])
 	}
@@ -103,6 +115,7 @@ class PortalBase extends React.Component {
 	componentDidMount () {
 		if (this.props.open) {
 			viewingLayers.push(scrimZIndex);
+			this.prevZIndex = scrimZIndex;
 			this.renderPortal(this.props);
 		}
 	}
@@ -165,7 +178,6 @@ class PortalBase extends React.Component {
 			visible: this.prevZIndex === viewingLayers[viewingLayers.length - 1],
 			zIndex: isOpened ? this.prevZIndex : scrimZIndex
 		};
-
 		this.portal = ReactDOM.unstable_renderSubtreeIntoContainer(
 			this,
 			<ScrimLayer
