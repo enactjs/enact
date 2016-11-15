@@ -18,8 +18,21 @@ const ExpandableContainerBase = class extends React.Component {
 	}
 
 	componentDidUpdate (prevProps) {
-		if (!this.props.open && prevProps.open) {
-			this.highlightLabeledItem();
+		if (this.props.open !== prevProps.open) {
+			if (this.props.open) {
+				this.highlightContents();
+			} else {
+				this.highlightLabeledItem();
+			}
+		}
+	}
+
+	highlightContents = () => {
+		if (this.containerNode.contains(document.activeElement)) {
+			const contents = this.containerNode.querySelector('[data-expandable-container]');
+			if (contents) {
+				Spotlight.focus(contents.dataset.containerId);
+			}
 		}
 	}
 

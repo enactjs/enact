@@ -148,7 +148,7 @@ const ExpandableItemBase = kind({
 					label={label}
 					onClick={handleOpen}
 				>{title}</LabeledItem>
-				<ExpandableTransitionContainer data-container-disabled={!open} visible={open} duration="short" type="clip">
+				<ExpandableTransitionContainer data-container-disabled={!open} data-expandable-container visible={open} duration="short" type="clip">
 					{children}
 				</ExpandableTransitionContainer>
 			</ExpandableContainer>

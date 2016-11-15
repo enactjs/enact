@@ -54,12 +54,6 @@ class ExpandableInputBase extends React.Component {
 		value: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number])
 	}
 
-	componentDidUpdate (prevProps) {
-		if (!prevProps.open && this.props.open) {
-			this.inputContainer.querySelector('input').focus();
-		}
-	}
-
 	onInputKeyDown = (ev) => {
 		const keyCode = ev.keyCode;
 		const isInputFocused = ev.target !== ev.currentTarget;
@@ -92,28 +86,22 @@ class ExpandableInputBase extends React.Component {
 		}
 	}
 
-	getInputContainerNode = (node) => {
-		this.inputContainer = node;
-	}
-
 	render () {
 		const {disabled, onInputChange, placeholder, type, value, ...rest} = this.props;
 		return (
 			<ExpandableItemBase {...rest} disabled={disabled}>
-				<div ref={this.getInputContainerNode}>
-					<Input
-						disabled={disabled}
-						dismissOnEnter
-						noDecorator
-						onChange={onInputChange}
-						onKeyDown={this.onInputKeyDown}
-						placeholder={placeholder}
-						type={type}
-						value={value}
-						data-spot-up=''
-						data-spot-down=''
-					/>
-				</div>
+				<Input
+					disabled={disabled}
+					dismissOnEnter
+					noDecorator
+					onChange={onInputChange}
+					onKeyDown={this.onInputKeyDown}
+					placeholder={placeholder}
+					type={type}
+					value={value}
+					data-spot-up=''
+					data-spot-down=''
+				/>
 			</ExpandableItemBase>
 		);
 	}
