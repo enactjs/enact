@@ -7,51 +7,54 @@ const preventSpotlightNavigation = (ev) => {
 	ev.nativeEvent.stopImmediatePropagation();
 };
 
-const handleDecoratorClick = (ev) => {
-	// if <div> is event originator
-	if (ev.target === ev.currentTarget) {
-		ev.target.querySelector('input').focus();
-	}
-};
-
-const handleDecoratorBlur = (ev) => {
-	const {currentTarget, target} = ev;
-	// if the event bubbled up
-	if (target !== currentTarget) {
-		currentTarget.focus();
-		preventSpotlightNavigation(ev);
-	}
-};
-
 const focus = (node) => {
 	if (node) {
 		node.focus();
 	}
 };
 
+const focusDecorator = (decorator) => {
+	focus(decorator);
+	Spotlight.resume();
+};
+
+const focusInput = (decorator) => {
+	focus(decorator.querySelector('input'));
+	Spotlight.pause();
+};
+
+const isBubbling = (ev) => ev.currentTarget !== ev.target;
+
 const InputSpotlightDecorator = hoc((config, Wrapped) => kind({
 	name: 'InputSpotlightDecorator',
 
 	computed: {
 		onBlur: ({onBlur}) => (ev) => {
-			handleDecoratorBlur(ev);
+			if (isBubbling(ev)) {
+				focusDecorator(ev.currentTarget);
+				preventSpotlightNavigation(ev);
+			}
+
 			if (onBlur) onBlur(ev);
 		},
 		onClick: ({onClick}) => (ev) => {
-			handleDecoratorClick(ev);
+			// focus the <input> whenever clicking on any part of the component to ensure both that
+			// the <input> has focus and Spotlight is paused.
+			focusInput(ev.currentTarget);
+
 			if (onClick) onClick(ev);
 		},
 		onKeyDown: ({dismissOnEnter, onKeyDown}) => (ev) => {
 			const {currentTarget, keyCode, target} = ev;
-			const shouldFocusInput = target === currentTarget && keyCode === 13;
+			const fromInput = isBubbling(ev);
+			const shouldFocusInput = !fromInput && keyCode === 13;
 
 			if (shouldFocusInput) {
-				focus(currentTarget.querySelector('input'));
+				focusInput(currentTarget);
 			} else {
-				const isInputFocused = target !== currentTarget;
 				const shouldFocusDecorator = (
 					// input is focused and ...
-					isInputFocused && (
+					fromInput && (
 						// on enter + dismissOnEnter
 						(keyCode === 13 && dismissOnEnter) ||
 						// on left + at beginning of selection
@@ -65,15 +68,16 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => kind({
 					)
 				);
 
-				const shouldStopPropagation = isInputFocused && (keyCode === 37 || keyCode === 39);
+				const shouldStopPropagation = fromInput && (keyCode === 37 || keyCode === 39);
 
 				if (shouldFocusDecorator) {
-					focus(currentTarget);
+					focusDecorator(currentTarget);
 					preventSpotlightNavigation(ev);
 				} else if (shouldStopPropagation) {
 					preventSpotlightNavigation(ev);
 				}
 			}
+
 			if (onKeyDown) onKeyDown(ev);
 		}
 	},
