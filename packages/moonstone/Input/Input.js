@@ -5,7 +5,6 @@
  */
 
 import kind from '@enact/core/kind';
-import {Spottable} from '@enact/spotlight';
 import React, {PropTypes} from 'react';
 
 import css from './Input.less';
@@ -148,14 +147,9 @@ const InputBase = kind({
  * @memberof moonstone/Input
  * @ui
  * @mixes moonstone/Input/InputSpotlightDecorator
- * @mixes spotlight/Spottable
  * @public
  */
-const Input = Spottable(
-	InputSpotlightDecorator(
-		InputBase
-	)
-);
+const Input = InputSpotlightDecorator(InputBase);
 
 export default Input;
 export {Input, InputBase};

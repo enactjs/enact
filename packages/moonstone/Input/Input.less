@@ -91,6 +91,11 @@
 		background-color: @moon-input-decorator-bg-color;
 	}
 
+	// an Input that isn't spottable is behaviorly disabled but not visually
+	&:not(:global(.spottable)) .input {
+		pointer-events: none;
+	}
+
 	&:global(.focused) {
 		border-color: @moon-active-border-color;
 	}

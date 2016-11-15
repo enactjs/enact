@@ -52,7 +52,17 @@ const defaultConfig = {
 	 * @default false
 	 * @public
 	 */
-	emulateMouse: true
+	emulateMouse: true,
+
+	/**
+	 * When specified, passes the value of the `spotlightDisabled` prop to the wrapped component. If
+	 * omitted, `spotlightDisabled` is not passed.
+	 *
+	 * @type {String}
+	 * @default null
+	 * @public
+	 */
+	spotlightDisabledProp: null
 };
 
 /**
@@ -66,59 +76,65 @@ const defaultConfig = {
  *
  * @returns {Function} Spottable
  */
-const Spottable = hoc(defaultConfig, (config, Wrapped) => kind({
-	name: 'Spottable',
+const Spottable = hoc(defaultConfig, (config, Wrapped) => {
+	const {emulateMouse, spotlightDisabledProp} = config;
 
-	propTypes: {
-		/**
-		 * Whether or not the component is in a disabled state.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		disabled: React.PropTypes.bool,
+	return kind({
+		name: 'Spottable',
 
-		/**
-		 * Whether or not the component can be navigated using spotlight.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		spotlightDisabled: React.PropTypes.bool
-	},
+		propTypes: {
+			/**
+			 * Whether or not the component is in a disabled state.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			disabled: React.PropTypes.bool,
 
-	styles: {
-		className: spottableClass,
-		prop: 'classes'
-	},
+			/**
+			 * Whether or not the component can be navigated using spotlight.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			spotlightDisabled: React.PropTypes.bool
+		},
 
-	computed: !config.emulateMouse ? null : {
-		onKeyPress: forwardEnter('onKeyPress', 'onClick'),
-		onKeyDown: forwardEnter('onKeyDown', 'onMouseDown'),
-		onKeyUp: forwardEnter('onKeyUp', 'onMouseUp')
-	},
+		styles: {
+			className: spottableClass,
+			prop: 'classes'
+		},
 
-	render: ({classes, className, ...rest}) => {
-		const spottable = !rest.disabled && !rest.spotlightDisabled;
-		let tabIndex = rest.tabIndex;
+		computed: !emulateMouse ? null : {
+			onKeyPress: forwardEnter('onKeyPress', 'onClick'),
+			onKeyDown: forwardEnter('onKeyDown', 'onMouseDown'),
+			onKeyUp: forwardEnter('onKeyUp', 'onMouseUp')
+		},
 
-		delete rest.spotlightDisabled;
+		render: ({classes, className, spotlightDisabled, ...rest}) => {
+			const spottable = !rest.disabled && !spotlightDisabled;
+			let tabIndex = rest.tabIndex;
 
-		if (tabIndex == null && spottable) {
-			tabIndex = -1;
+			if (spotlightDisabledProp) {
+				rest[spotlightDisabledProp] = spotlightDisabled;
+			}
+
+			if (tabIndex == null && spottable) {
+				tabIndex = -1;
+			}
+
+			return (
+				<Wrapped
+					{...rest}
+					className={spottable ? classes : className}
+					tabIndex={tabIndex}
+				/>
+			);
 		}
-
-		return (
-			<Wrapped
-				{...rest}
-				className={spottable ? classes : className}
-				tabIndex={tabIndex}
-			/>
-		);
-	}
-}));
+	});
+});
 
 export default Spottable;
 export {Spottable, spottableClass};
