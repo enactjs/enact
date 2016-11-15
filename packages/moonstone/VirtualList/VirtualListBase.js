@@ -321,10 +321,15 @@ class VirtualListCore extends Component {
 
 	updateStatesAndBounds (props) {
 		const
-			{overhang} = props,
+			{dataSize, overhang} = props,
 			{primaryFirstIndex} = this.state,
 			{dimensionToExtent, primary} = this,
-			numOfItems = Math.min(primary.dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang));
+			numOfItems = Math.min(
+				this.isVirtualVariableList ? dataSize.fixed : dataSize,
+				dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)
+			);
+
+			console.log('numOfItems : ' + numOfItems);
 
 		primary.maxFirstIndex = primary.dataSize - numOfItems;
 
