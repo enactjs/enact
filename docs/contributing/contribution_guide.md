@@ -54,8 +54,8 @@ project. Please read this section carefully if you are interested in contributin
 
 *   Finally, a couple of practical matters to help our Pull Masters stay sane:
 
-	*   Please make sure your contributions follow our Style Guide.  At a minimum, use the `eslint` rules included from an
-	[enact-dev](https://github.com/enyojs/enact-dev) template.
+	*   Please make sure your contributions follow our Style Guide.  At a minimum, ensure your source passes through
+	`npm run lint` with no warnings.
 	*   Please squash pull requests down to a single commit to simplify review and keep history clean.
 	*   Help keep diffs easy to read by not making unnecessary rearrangements to the source code.
 	*   Make sure not to inadvertently change line ending types from Unix to Windows.
