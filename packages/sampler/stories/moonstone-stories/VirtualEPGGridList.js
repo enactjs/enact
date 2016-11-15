@@ -3,7 +3,7 @@ import Item from '@enact/moonstone/Item';
 import {VirtualVariableList} from '@enact/moonstone/VirtualList';
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
-import {withKnobs} from '@kadira/storybook-addon-knobs';
+import {withKnobs, number} from '@kadira/storybook-addon-knobs';
 
 // Inline style
 const
@@ -158,7 +158,6 @@ const
 		'NOVA',
 		'Secrets of the Dead'
 	],
-	variableMaxScrollSize = ri.scale(4000) /* 400 ( width per 1 hour )* 10 hr */,
 	getRandomWidth = () => {
 		return ri.scale((parseInt(Math.random() * 20) + 1) * 100);
 	};
@@ -241,21 +240,22 @@ const
 storiesOf('VirtualVariableList')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'for EPG Grid',
+		' ',
+		'Basic usage of VirtualEPGGridList',
 		() => (
 			<VirtualVariableList
 				data={epgData}
 				dataSize={{
-					fixed: epgData.length,
+					fixed: number('dataSize', epgData.length),
 					variable: getVariableDataSize
 				}}
 				itemSize={{
-					fixed: ri.scale(83),
+					fixed: ri.scale(number('itemSize', 83)),
 					variable: getVariableItemSize
 				}}
 				lockHeaders
 				variableDimension={'width'}
-				variableMaxScrollSize={variableMaxScrollSize}
+				variableMaxScrollSize={ri.scale(number('VariableMaxScrollSize', 4000))} /* 400 ( width per 1 hour )* 10 hr */
 				className={'list'}
 				style={style.list}
 				component={renderItem}
