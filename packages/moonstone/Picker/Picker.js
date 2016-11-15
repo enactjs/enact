@@ -37,7 +37,7 @@ const PickerBase = kind({
 		 * supported. Without a custom icon, the default is used, and is automatically changed when
 		 * the [orientation]{Icon#orientation} is changed.
 		 *
-		 * @type {string}
+		 * @type {String}
 		 * @public
 		 */
 		decrementIcon: React.PropTypes.string,
@@ -56,7 +56,7 @@ const PickerBase = kind({
 		 * supported. Without a custom icon, the default is used, and is automatically changed when
 		 * the [orientation]{Icon#orientation} is changed.
 		 *
-		 * @type {string}
+		 * @type {String}
 		 * @public
 		 */
 		incrementIcon: React.PropTypes.string,
@@ -106,7 +106,6 @@ const PickerBase = kind({
 		 * sides of the value. Must be either `'horizontal'` or `'vertical'`.
 		 *
 		 * @type {String}
-		 * @default 'horizontal'
 		 * @public
 		 */
 		orientation: React.PropTypes.oneOf(['horizontal', 'vertical']),
