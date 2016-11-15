@@ -54,12 +54,13 @@ project. Please read this section carefully if you are interested in contributin
 
 *   Finally, a couple of practical matters to help our Pull Masters stay sane:
 
-	*   Please make sure your contributions follow our Style Guide.
+	*   Please make sure your contributions follow our Style Guide.  At a minimum, use the `eslint` rules included from an
+	[enact-dev](https://github.com/enyojs/enact-dev) template.
 	*   Please squash pull requests down to a single commit to simplify review and keep history clean.
 	*   Help keep diffs easy to read by not making unnecessary rearrangements to the source code.
 	*   Make sure not to inadvertently change line ending types from Unix to Windows.
-	*   Ensure inline API documentation exists and is up-to-date (minimum: kind summary, properties, and public
-		methods). See [Documenting Code for the API Reference](./doc_style.md) for more details.
+	*   Ensure inline API documentation exists and is up-to-date (minimum: component summary and descriptions of all
+	properties). See [Documenting Code for the API Reference](./doc_style.md) for more details.
 	*   When resolving a bug, include the issue key in the commit/pull request comments. Here's a good example:
 		```
 		ENACT-123: Fixed girdle-spring physics on the encabulator scrollbar.

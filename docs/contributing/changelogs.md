@@ -8,7 +8,7 @@ you, fear not. This guide will help you understand this humble file and its use 
 ### Locations
 
 Each Enact library and tool has its own CHANGELOG.md file. This file is located in the corresponding base directory
-(e.g. The CHANGELOG.md for Moonstone is located in `enact/packages/moonstone`). The Enact monorepo also has a root-level
+(e.g. the CHANGELOG.md for Moonstone is located in `enact/packages/moonstone`). The Enact monorepo also has a root-level
 CHANGELOG.md. Developers will primarily concern themselves with the versions located in the libraries and the tools as
 the root level is only updated before releases.
 
