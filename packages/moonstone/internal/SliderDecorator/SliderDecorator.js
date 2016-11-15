@@ -14,9 +14,8 @@ import React, {PropTypes} from 'react';
 import {
 	computeProportionLoaded,
 	computeProportionProgress,
-	computePercentProgress,
 	computeBarTransform,
-	computeKnobStyleProp
+	computeKnobTransform
 } from './util';
 
 const defaultConfig = {
@@ -170,17 +169,16 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				const normalizedMax = max != null ? max : Wrapped.defaultProps.max;
 				const proportionLoaded = computeProportionLoaded({backgroundPercent});
 				const proportionProgress = computeProportionProgress({value, max: normalizedMax});
-				const percentProgress = computePercentProgress({value, max: normalizedMax});
 
 				loaderNode.style.transform = computeBarTransform(proportionLoaded, vertical);
 				barNode.style.transform = computeBarTransform(proportionProgress, vertical);
-				knobNode.style[computeKnobStyleProp(vertical)] = percentProgress;
+				knobNode.style.transform = computeKnobTransform(proportionProgress * this.visibleBarNode.width, vertical, knobNode.offsetHeight / 2);
 				this.inputNode.value = value;
 
 				// yup, we're mutating state directly! :dealwithit:
 				this.state.value = value; // eslint-disable-line react/no-direct-mutation-state
 				this.onChange();
-			}, config.changeDelay);
+			}, 0);
 		}
 
 		getInputNode = (node) => {

@@ -8,23 +8,14 @@ import SliderDecorator from '../internal/SliderDecorator';
 import {
 	computeProportionLoaded,
 	computeProportionProgress,
-	computePercentProgress,
 	computeBarTransform,
-	computeKnobStyleProp
+	computeKnobTransform
 } from '../internal/SliderDecorator/util';
 
 import css from './Slider.less';
 
 class VisibleBar extends React.Component {
 	static propTypes = {
-		/**
-		 * The progress as a proportion.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		percentProgress: PropTypes.string,
-
 		/**
 		 * The loaded progress as a proportion.
 		 *
@@ -65,23 +56,25 @@ class VisibleBar extends React.Component {
 
 	getKnobNode = (node) => {
 		this.knobNode = node;
+		this.knobWidth = node && node.clientWidth / 2;
 	}
 
 	getLoaderNode = (node) => {
 		this.loaderNode = node;
 	}
 
-	render () {
-		const {percentProgress, proportionLoadedProgress, proportionProgress, vertical, verticalHeight} = this.props;
+	getWidth = (node) => {
+		this.width = node && node.clientWidth;
+	}
 
-		// TODO: explore gpu-accelerated knob placement - need to compute absolute measurements from
-		// percentage applied to parent
+	render () {
+		const {proportionLoadedProgress, proportionProgress, vertical, verticalHeight, ...rest} = this.props;
 
 		return (
-			<div className={css.visibleBar} style={verticalHeight}>
+			<div {...rest} className={css.visibleBar} ref={this.getWidth} style={verticalHeight}>
 				<div className={css.load} ref={this.getLoaderNode} style={{transform: computeBarTransform(proportionLoadedProgress, vertical)}} />
 				<div className={css.fill} ref={this.getBarNode} style={{transform: computeBarTransform(proportionProgress, vertical)}} />
-				<div className={css.knob} ref={this.getKnobNode} style={{[computeKnobStyleProp(vertical)]: percentProgress}} />
+				<div className={css.knob} ref={this.getKnobNode} style={{transform: computeKnobTransform(proportionProgress * this.visibleBarWidth, vertical, this.knobWidth)}} />
 			</div>
 		);
 	}
@@ -219,16 +212,14 @@ const SliderBase = kind({
 		className: ({pressed, vertical, styler}) => styler.append({pressed, vertical, horizontal: !vertical}),
 		proportionLoadedProgress: computeProportionLoaded,
 		proportionProgress: computeProportionProgress,
-		percentProgress: computePercentProgress,
 		verticalHeight: ({vertical, height}) => (vertical ? {height} : null),
 		verticalWidth: ({vertical, height}) => (vertical ? {width: height} : null)
 	},
 
-	render: ({inputRef, max, min, onChange, proportionLoadedProgress, proportionProgress, percentProgress, sliderRef, step, value, vertical, verticalHeight, verticalWidth, visibleBarRef, ...rest}) => {
+	render: ({inputRef, max, min, onChange, proportionLoadedProgress, proportionProgress, sliderRef, step, value, vertical, verticalHeight, verticalWidth, visibleBarRef, ...rest}) => {
 		const sliderProps = {
 			proportionLoadedProgress,
 			proportionProgress,
-			percentProgress,
 			vertical,
 			verticalHeight
 		};
