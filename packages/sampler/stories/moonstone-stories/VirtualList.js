@@ -20,8 +20,7 @@ const
 
 			color: 'white',
 			fontSize: ri.scale(40) + 'px',
-			lineHeight: ri.scale(70) + 'px',
-			textAlign: 'left'
+			lineHeight: ri.scale(70) + 'px'
 		},
 		listHeight: {
 			height: ri.scale(550) + 'px'
