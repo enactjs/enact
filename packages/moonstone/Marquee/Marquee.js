@@ -80,6 +80,14 @@ const MarqueeBase = kind({
 		distance: React.PropTypes.number,
 
 		/**
+		 * Forces the `direction` of the marquee. Valid values are `rtl` and `ltr`. This includes non-text elements as well.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		forceDirection: React.PropTypes.oneOf(['rtl', 'ltr']),
+
+		/**
 		 * Callback function for when the marquee completes its animation
 		 *
 		 * @type {Function}
@@ -111,9 +119,10 @@ const MarqueeBase = kind({
 
 	computed: {
 		clientClassName: ({animating}) => animating ? animated : css.text,
-		clientStyle: ({animating, centered, children, distance, overflow, speed}, {rtl: contextRtl}) => {
-			const rtl = isRtlText(children);
-			const overrideRtl = contextRtl !== rtl;
+		clientStyle: ({animating, centered, children, distance, forceDirection, overflow, speed}, {rtl: contextRtl}) => {
+			let rtl = forceDirection ? forceDirection === 'rtl' : isRtlText(children);
+
+			const overrideRtl = forceDirection ? true : contextRtl !== rtl;
 
 			// We only attempt to set the textAlign of this control if the locale's directionality
 			// differs from the directionality of our current marqueeable control (as determined by
