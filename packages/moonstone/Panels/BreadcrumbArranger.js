@@ -24,7 +24,7 @@ const forwardBackward = (f, b) => (config) => {
  * @method
  */
 const positionBreadcrumb = ease(easing, (config) => {
-	const {from, node, percent, to} = config;
+	const {from = 0, node, percent, to} = config;
 	const crumbIndex = node.dataset.index;
 	const dx = (to - from) * percent;
 	const x = (from - crumbIndex);
