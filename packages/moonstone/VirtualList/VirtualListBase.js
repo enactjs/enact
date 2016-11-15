@@ -329,8 +329,6 @@ class VirtualListCore extends Component {
 				dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)
 			);
 
-			console.log('numOfItems : ' + numOfItems);
-
 		primary.maxFirstIndex = primary.dataSize - numOfItems;
 
 		this.setState({primaryFirstIndex: Math.min(primaryFirstIndex, primary.maxFirstIndex), numOfItems});
