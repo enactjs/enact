@@ -1,7 +1,7 @@
 /**
  * Provides methods to add and remove global event listeners
  *
- * @module @enact/core/dispatcher
+ * @module core/dispatcher
  */
 
 import R from 'ramda';
@@ -11,10 +11,13 @@ import getListeners from './listeners';
 /**
  * Wraps event callbacks with a try-catch block to prevent unrelated code from blocking
  *
+ * @function
  * @param	{Event}		ev	Event payload
  * @param	{Function}	fn	Event callback
  *
  * @returns	{undefined}
+ * @memberof core/dispatcher
+ * @private
  */
 const invoker = R.curry(function (ev, fn) {
 	try {
@@ -28,9 +31,12 @@ const invoker = R.curry(function (ev, fn) {
 /**
  * Dispatches an event to the registered handlers
  *
+ * @function
  * @param	{Event}		ev	Event payload
  *
  * @returns {undefined}
+ * @memberof core/dispatcher
+ * @private
  */
 const dispatcher = function (ev) {
 	const name = ev.type;
@@ -45,11 +51,13 @@ const dispatcher = function (ev) {
 /**
  * Adds a new global event listener
  *
+ * @function
  * @param	{String}	name				Event name
  * @param	{Function}	fn					Event handler
  * @param	{Node}		[target=`document`]	Event listener target
  *
  * @returns {undefined}
+ * @memberof core/dispatcher
  */
 const on = function (name, fn, target = document) {
 	const listeners = getListeners(target, name);
@@ -63,11 +71,13 @@ const on = function (name, fn, target = document) {
 /**
  * Removes a global event listener
  *
+ * @function
  * @param	{String}	name				Event name
  * @param	{Function}	fn					Event handler
  * @param	{Node}		[target=`document`]	Event listener target
  *
  * @returns {undefined}
+ * @memberof core/dispatcher
  */
 const off = function (name, fn, target = document) {
 	const listeners = getListeners(target, name);
@@ -84,12 +94,14 @@ const off = function (name, fn, target = document) {
 /**
  * Adds a new global event listener that removes itself after handling one event
  *
+ * @function
  * @param	{String}	name				Event name
  * @param	{Function}	fn					Event handler
  * @param	{Node}		[target=`document`]	Event listener target
  *
  * @returns {Function}						The single-use handler which can be passed to `off` to
  *											remove it.
+ * @memberof core/dispatcher
  */
 const once = function (name, fn, target = document) {
 	const onceFn = function (ev) {
@@ -97,7 +109,7 @@ const once = function (name, fn, target = document) {
 		off(name, onceFn, target);
 	};
 
-	on(name, onceFn);
+	on(name, onceFn, target);
 
 	return onceFn;
 };

@@ -44,10 +44,10 @@ PackedBuffer.prototype.getLongs = function (num) {
 	if (this.buffer && this.index < this.buffer.length) {
 		result = [];
 		for (let i = 0; i < num && this.index + 3 < this.buffer.length; i++) {
-			let longnum = this.buffer[this.index] << 24
-				| this.buffer[this.index + 1] << 16
-				| this.buffer[this.index + 2] << 8
-				| this.buffer[this.index + 3];
+			let longnum = this.buffer[this.index] << 24 |
+				this.buffer[this.index + 1] << 16 |
+				this.buffer[this.index + 2] << 8 |
+				this.buffer[this.index + 3];
 			result.push(longnum);
 			this.index += 4;
 		}

@@ -36,6 +36,7 @@ const pickGroupItemProps = R.compose(
 const GroupItemBase = kind({
 	name: 'GroupItem',
 	// TODO: Add propTypes
+	/* eslint-disable enact/prop-types */
 
 	render: (props) => {
 		const {

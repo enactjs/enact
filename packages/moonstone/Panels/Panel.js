@@ -18,6 +18,17 @@ const PanelBase = kind({
 
 	name: 'Panel',
 
+	propTypes: {
+		/**
+		 * Header for the panel. This is usually passed by the {@link ui/Slottable.Slottable} API by
+		 * using a [Header]{@link moonstone/Panels.Header} component as a child of the Panel.
+		 *
+		 * @type {Header}
+		 * @public
+		 */
+		header: React.PropTypes.node
+	},
+
 	styles: {
 		css,
 		className: 'panel'

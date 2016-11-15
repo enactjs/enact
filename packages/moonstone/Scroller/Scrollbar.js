@@ -50,7 +50,7 @@ const
  * It is used in {@link moonstone/Scrollable.Scrollable}.
  *
  * @class Scrollbar
- * memberof moonstone/Scroller/Scrollbar
+ * @memberof moonstone/Scroller/Scrollbar
  * @ui
  * @private
  */

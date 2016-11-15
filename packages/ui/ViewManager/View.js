@@ -207,7 +207,7 @@ class View extends React.Component {
 // Not a true render method but instead a wrapper for TransitionGroup to wrap arbitrary children
 // with a TransitionGroup-compatible child that supports animation
 //
-// eslint-disable-next-line react/display-name
+// eslint-disable-next-line enact/display-name
 const wrapWithView = (config) => (child) => {
 	return <View {...config}>{child}</View>;
 };

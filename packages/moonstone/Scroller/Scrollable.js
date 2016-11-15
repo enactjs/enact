@@ -346,7 +346,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					doc.activeElement.blur();
 					this.childRef.setContainerDisabled(true);
 					this.isScrollAnimationTargetAccumulated = false;
-					this.start(target.targetX, target.targetY, true, target.duration);
+					this.start(target.targetX, target.targetY, true, true, target.duration);
 				}
 			}
 		}
@@ -364,13 +364,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			// for virtuallist
 			const
 				item = e.target,
-				index = Number.parseInt(item.getAttribute(dataIndexAttribute), 10);
+				index = Number.parseInt(item.getAttribute(dataIndexAttribute));
 
 			if (!this.isDragging && !isNaN(index) && item !== this.lastFocusedItem && item === doc.activeElement && this.childRef.calculatePositionOnFocus) {
 				const pos = this.childRef.calculatePositionOnFocus(index);
 				if (pos) {
 					if (pos.left !== this.scrollLeft || pos.top !== this.scrollTop) {
-						this.start(pos.left, pos.top, (spotlightAnimationDuration > 0), spotlightAnimationDuration);
+						this.start(pos.left, pos.top, (spotlightAnimationDuration > 0), false, spotlightAnimationDuration);
 					}
 					this.lastFocusedItem = item;
 				}
@@ -379,7 +379,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		onKeyDown = (e) => {
 			if (this.childRef.setSpotlightContainerRestrict) {
-				const index = Number.parseInt(e.target.getAttribute(dataIndexAttribute), 10);
+				const index = Number.parseInt(e.target.getAttribute(dataIndexAttribute));
 				this.childRef.setSpotlightContainerRestrict(e.keyCode, index);
 			}
 		}

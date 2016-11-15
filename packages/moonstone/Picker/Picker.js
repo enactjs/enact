@@ -74,6 +74,16 @@ const PickerBase = kind({
 		joined: React.PropTypes.bool,
 
 		/**
+		 * By default, each picker item is wrapped by a
+		 * {@link moonstone/Marquee.MarqueeText}. When `marqueeDisabled` is `true`,
+		 * the items will not be wrapped.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		marqueeDisabled: React.PropTypes.bool,
+
+		/**
 		 * By default, the picker will animate transitions between items if it has a defined
 		 * `width`. Specifying `noAnimation` will prevent any transition animation for the
 		 * component.
@@ -136,16 +146,20 @@ const PickerBase = kind({
 
 	computed: {
 		max: ({children}) => children.length - 1,
-		children: ({children}) => React.Children.map(children, (child) => {
-			return <PickerItem>{child}</PickerItem>;
+		children: ({children, marqueeDisabled}) => React.Children.map(children, (child) => {
+			return <PickerItem marqueeDisabled={marqueeDisabled}>{child}</PickerItem>;
 		})
 	},
 
-	render: ({children, max, value, ...rest}) => (
-		<PickerCore {...rest} min={0} max={max} index={value} step={1} value={value}>
-			{children}
-		</PickerCore>
-	)
+	render: ({children, max, value, ...rest}) => {
+		delete rest.marqueeDisabled;
+
+		return (
+			<PickerCore {...rest} min={0} max={max} index={value} step={1} value={value}>
+				{children}
+			</PickerCore>
+		);
+	}
 });
 
 /**

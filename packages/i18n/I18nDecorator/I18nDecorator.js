@@ -22,6 +22,7 @@ import {isRtlLocale, getI18nClasses, updateLocale} from '../src/locale';
  * myComponent.contextTypes = contextTypes;
  * ```
  *
+ * @memberof i18n/I18nDecorator
  * @public
  */
 const contextTypes = {
