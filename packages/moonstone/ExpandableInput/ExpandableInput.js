@@ -68,6 +68,9 @@ class ExpandableInputBase extends React.Component {
 			case 13:
 				if (isInputFocused) {
 					this.fireChangeEvent();
+					// prevent the onKeyPress event which will fire on ExpandableItem since it will
+					// have received focus
+					ev.preventDefault();
 				}
 				break;
 			case 38:
@@ -101,6 +104,7 @@ class ExpandableInputBase extends React.Component {
 					<Input
 						disabled={disabled}
 						dismissOnEnter
+						noDecorator
 						onChange={onInputChange}
 						onKeyDown={this.onInputKeyDown}
 						placeholder={placeholder}

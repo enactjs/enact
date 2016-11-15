@@ -29,8 +29,8 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => kind({
 	name: 'InputSpotlightDecorator',
 
 	computed: {
-		onBlur: ({onBlur}) => (ev) => {
-			if (isBubbling(ev)) {
+		onBlur: ({onBlur, noDecorator}) => (ev) => {
+			if (!noDecorator && isBubbling(ev)) {
 				focusDecorator(ev.currentTarget);
 				preventSpotlightNavigation(ev);
 			}
@@ -44,7 +44,16 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => kind({
 
 			if (onClick) onClick(ev);
 		},
-		onKeyDown: ({dismissOnEnter, onKeyDown}) => (ev) => {
+		onFocus: ({onFocus, noDecorator}) => (ev) => {
+			// when in noDecorator mode, focusing the decorator directly will cause it to forward
+			// the focus onto the <input>
+			if (noDecorator && !isBubbling(ev)) {
+				focusInput(ev.currentTarget);
+			} else if (onFocus) {
+				onFocus(ev);
+			}
+		},
+		onKeyDown: ({dismissOnEnter, noDecorator, onKeyDown}) => (ev) => {
 			const {currentTarget, keyCode, target} = ev;
 			const fromInput = isBubbling(ev);
 			const shouldFocusInput = !fromInput && keyCode === 13;
@@ -70,7 +79,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => kind({
 
 				const shouldStopPropagation = fromInput && (keyCode === 37 || keyCode === 39);
 
-				if (shouldFocusDecorator) {
+				if (shouldFocusDecorator && !noDecorator) {
 					focusDecorator(currentTarget);
 					preventSpotlightNavigation(ev);
 				} else if (shouldStopPropagation) {
@@ -82,9 +91,12 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => kind({
 		}
 	},
 
-	render: (props) => (
-		<Wrapped {...props} />
-	)
+	render: (props) => {
+		delete props.noDecorator;
+		return (
+			<Wrapped {...props} />
+		);
+	}
 }));
 
 export default InputSpotlightDecorator;

@@ -32,7 +32,7 @@ const handleCancel = function (props) {
  * @private
  */
 const Expandable = R.compose(
-	Toggleable({activate: 'onOpen', deactivate: 'onClose', mutable: true, prop: 'open'}),
+	Toggleable({activate: 'onOpen', deactivate: 'onClose', mutable: true, prop: 'open', toggle: null}),
 	Cancelable({component: 'span', onCancel: handleCancel})
 );
 
