@@ -1,5 +1,6 @@
 /**
- * Exports the {@link module:@enact/ui/Portal.Portal} component.
+ * Exports the {@link module:@enact/ui/Portal.Portal} and  {@link module:@enact/ui/Portal.PortalBase}
+ * component. The default export is {@link module:@enact/ui/Portal.Portal}.
  *
  * @module @enact/ui/Portal
  */
@@ -17,14 +18,14 @@ let scrimZIndex = 120;
 const viewingLayers = [];
 
 /**
- * {@link module:@enact/ui/Portal.Portal} is a component that creates an entry point to the new
+ * {@link module:@enact/ui/Portal.PortalBase} is a component that creates an entry point to the new
  * render tree. This is used for modal components such as popups.
  *
  * @class Portal
  * @ui
  * @public
  */
-class Portal extends React.Component {
+class PortalBase extends React.Component {
 	static displayName = 'Portal'
 
 	constructor (props) {
@@ -193,4 +194,17 @@ const handleCancel = function (props) {
 	}
 };
 
-export default Cancelable({modal: true, onCancel: handleCancel}, Portal);
+/**
+ * {@link module:@enact/ui/Portal.Portal} is a component that creates an entry point to the new
+ * render tree. This is used for modal components such as popups.
+ *
+ * @class Portal
+ * @memberof ui/Portal
+ * @ui
+ * @mixes ui/Cancelable.Cancelable
+ * @public
+ */
+const Portal = Cancelable({modal: true, onCancel: handleCancel}, PortalBase);
+
+export default Portal;
+export {Portal, PortalBase};
