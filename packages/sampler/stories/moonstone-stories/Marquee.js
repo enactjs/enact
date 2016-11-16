@@ -12,6 +12,7 @@ storiesOf('Marquee')
 			<MarqueeText
 				style={{width: '400px'}}
 				disabled={boolean('disabled', false)}
+				marqueeCentered={boolean('marqueeCentered', false)}
 				marqueeDelay={number('marqueeDelay', 1000)}
 				marqueeDisabled={boolean('marqueeDisabled', false)}
 				marqueeOn={select('marqueeOn', ['hover', 'render'], 'render')}

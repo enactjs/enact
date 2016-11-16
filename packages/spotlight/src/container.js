@@ -1,3 +1,4 @@
+import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import React from 'react';
 
@@ -5,6 +6,9 @@ import Spotlight from './spotlight';
 import {spottableClass} from './spottable';
 
 const spotlightDefaultClass = 'spottable-default';
+
+const enterEvent = 'onMouseEnter';
+const leaveEvent = 'onMouseLeave';
 
 const defaultConfig = {
 	/**
@@ -63,6 +67,9 @@ const defaultConfig = {
  * @returns {Function} SpotlightContainerDecorator
  */
 const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
+	const forwardMouseEnter = forward(enterEvent);
+	const forwardMouseLeave = forward(leaveEvent);
+
 	return class extends React.Component {
 		constructor (props) {
 			super(props);
@@ -98,11 +105,23 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			Spotlight.remove(this.state.containerId);
 		}
 
+		handleMouseEnter = (ev) => {
+			Spotlight.setActiveContainer(this.state.containerId);
+			forwardMouseEnter(ev, this.props);
+		}
+
+		handleMouseLeave = (ev) => {
+			Spotlight.setActiveContainer(null);
+			forwardMouseLeave(ev, this.props);
+		}
+
 		render () {
 			const containerId = this.state.containerId,
 				props = Object.assign({}, this.props);
 
 			props['data-container-id'] = containerId;
+			props[enterEvent] = this.handleMouseEnter;
+			props[leaveEvent] = this.handleMouseLeave;
 
 			return <Wrapped {...props} />;
 		}

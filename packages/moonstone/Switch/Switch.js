@@ -1,5 +1,6 @@
 /**
  * Contains the declaration for the {@link moonstone/Switch.Switch} component.
+ *
  * @module moonstone/Switch
  */
 
@@ -34,15 +35,6 @@ const SwitchBase = kind({
 		animated: PropTypes.bool,
 
 		/**
-		 * Sets whether this control is in the "on" or "off" state. `true` for on, `false` for "off".
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		checked: PropTypes.bool,
-
-		/**
 		 * Sets whether this control is disabled, and non-interactive
 		 *
 		 * @type {Boolean}
@@ -56,16 +48,25 @@ const SwitchBase = kind({
 		 *
 		 * @type {Function}
 		 * @param {Object} event
-		 * @param {String} event.checked - Checked value of item.
+		 * @param {String} event.selected - Selected value of item.
 		 * @param {*} event.value - Value passed from `value` prop.
 		 * @public
 		 */
-		onToggle: PropTypes.bool
+		onToggle: PropTypes.bool,
+
+		/**
+		 * Sets whether this control is in the "on" or "off" state. `true` for on, `false` for "off".
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		selected: PropTypes.bool
 	},
 
 	defaultProps: {
 		animated: true,
-		checked: false,
+		selected: false,
 		disabled: false
 	},
 
@@ -75,19 +76,19 @@ const SwitchBase = kind({
 	},
 
 	computed: {
-		className: ({animated, checked, styler}) => styler.append(
-			{animated, checked}
+		className: ({animated, selected, styler}) => styler.append(
+			{animated, selected}
 		),
-		onToggle: handle(forward('onClick'), ({checked, onToggle}) => () => {
+		onToggle: handle(forward('onClick'), ({selected, onToggle}) => () => {
 			if (onToggle) {
-				onToggle({checked: !checked});
+				onToggle({selected: !selected});
 			}
 		})
 	},
 
 	render: ({onToggle, ...rest}) => {
 		delete rest.animated;
-		delete rest.checked;
+		delete rest.selected;
 
 		return (
 			<span {...rest} onClick={onToggle}>

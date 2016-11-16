@@ -1,5 +1,6 @@
 /**
- * Exports the {@link moonstone/ToggleItem.ToggleItem} component.
+ * Exports the {@link moonstone/ToggleItem.ToggleItem} and
+ * {@link moonstone/ToggleItem.ToggleItemBase} components.
  *
  * @module moonstone/ToggleItem
  */
@@ -14,11 +15,12 @@ import {MarqueeDecorator} from '../Marquee';
 import css from './ToggleItem.less';
 
 /**
- * {@link moonstone/ToggleItem.ToggleItem} is a component to make a Toggleable Item
+ * {@link moonstone/ToggleItem.ToggleItemBase} is a component to make a Toggleable Item
  * (e.g Checkbox, RadioItem). It has a customizable prop for icon, so any Moonstone Icon can be used
- * to represent the checked state.
+ * to represent the selected state. Most developers will want to use
+ * the marqueeable version: {@link moonstone/ToggleItem.ToggleItem}
  *
- * @class ToggleItem
+ * @class ToggleItemBase
  * @memberof moonstone/ToggleItem
  * @ui
  * @public
@@ -26,7 +28,7 @@ import css from './ToggleItem.less';
 const ToggleItemBase = kind({
 	name: 'ToggleItem',
 
-	propTypes: /** @lends moonstone/ToggleItem.ToggleItem.prototype */ {
+	propTypes: /** @lends moonstone/ToggleItem.ToggleItemBase.prototype */ {
 		/**
 		 * The string to be displayed as the main content of the toggle item.
 		 *
@@ -34,15 +36,6 @@ const ToggleItemBase = kind({
 		 * @public
 		 */
 		children: PropTypes.node.isRequired,
-
-		/**
-		 * Applies a "checked" visual state to the toggle item.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		checked: PropTypes.bool,
 
 		/**
 		 * Applies a disabled visual state to the toggle item.
@@ -55,7 +48,7 @@ const ToggleItemBase = kind({
 
 		/**
 		 * Icon property accepts a string or an Icon Element. This is the icon that
-		 * will display when checked.
+		 * will display when selected.
 		 *
 		 * @type {String}
 		 * @default ''
@@ -86,11 +79,20 @@ const ToggleItemBase = kind({
 		 *
 		 * @type {Function}
 		 * @param {Object} event
-		 * @param {String} event.checked - Checked value of item.
+		 * @param {String} event.selected - Selected value of item.
 		 * @param {*} event.value - Value passed from `value` prop.
 		 * @public
 		 */
 		onToggle: PropTypes.func,
+
+		/**
+		 * Applies the provided `icon` when the this is `true`.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		selected: PropTypes.bool,
 
 		/**
 		 * The value that will be sent to the `onToggle` handler.
@@ -102,11 +104,11 @@ const ToggleItemBase = kind({
 	},
 
 	defaultProps: {
-		checked: false,
 		disabled: false,
 		icon: '',
 		iconClasses: '',
 		inline: false,
+		selected: false,
 		value: ''
 	},
 
@@ -117,17 +119,17 @@ const ToggleItemBase = kind({
 
 	computed: {
 		className: ({inline, styler}) => styler.append({inline}),
-		icon: ({checked, icon, iconClasses, styler}) => {
+		icon: ({selected, icon, iconClasses, styler}) => {
 			if (React.isValidElement(icon)) {
 				return icon;
 			}
 
-			return <Icon className={styler.join(css.icon, iconClasses, {checked})}>{icon}</Icon>;
+			return <Icon className={styler.join(css.icon, iconClasses, {selected})}>{icon}</Icon>;
 		},
-		onToggle: ({onToggle, onClick, checked, disabled, value}) => {
+		onToggle: ({onToggle, onClick, selected, disabled, value}) => {
 			if (!disabled && (onToggle || onClick)) {
 				return (ev) => {
-					if (onToggle) onToggle({checked: !checked, value});
+					if (onToggle) onToggle({selected: !selected, value});
 					if (onClick) onClick(ev);
 				};
 			}
@@ -147,6 +149,17 @@ const ToggleItemBase = kind({
 	}
 });
 
+/**
+ * {@link moonstone/ToggleItem.ToggleItem} is a component to make a Toggleable Item
+ * (e.g Checkbox, RadioItem). It has a customizable prop for icon, so any Moonstone Icon can be used
+ * to represent the selected state.
+ *
+ * @class ToggleItem
+ * @memberof moonstone/ToggleItem
+ * @ui
+ * @mixes moonstone/marquee.MarqueeDecorator
+ * @public
+ */
 const ToggleItem = MarqueeDecorator(
 	{className: css.content},
 	ToggleItemBase
