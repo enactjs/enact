@@ -364,10 +364,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			// for virtuallist
 			const
 				item = e.target,
-				index = Number.parseInt(item.getAttribute(dataIndexAttribute));
-
-			if (!this.isDragging && !isNaN(index) && item !== this.lastFocusedItem && item === doc.activeElement && this.childRef.calculatePositionOnFocus) {
-				const pos = this.childRef.calculatePositionOnFocus(index);
+				index = item.getAttribute(dataIndexAttribute);
+			if (!this.isDragging && index && item !== this.lastFocusedItem && item === doc.activeElement && this.childRef.calculatePositionOnFocus) {
+				const
+					key = item.getAttribute('key'),
+					pos = this.childRef.calculatePositionOnFocus(index, key);
 				if (pos) {
 					if (pos.left !== this.scrollLeft || pos.top !== this.scrollTop) {
 						this.start(pos.left, pos.top, (spotlightAnimationDuration > 0), false, spotlightAnimationDuration);

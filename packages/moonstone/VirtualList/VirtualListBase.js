@@ -222,6 +222,17 @@ class VirtualListCore extends Component {
 		return {primaryPosition, secondaryPosition};
 	}
 
+	getVariableGridPosition (indices) {
+		const
+			{dimensionToExtent, primary, secondary} = this,
+			i = Number.parseInt(indices[0]),
+			j = Number.parseInt(indices[1]),
+			primaryPosition = Math.floor(i / dimensionToExtent) * primary.gridSize,
+			secondaryPosition = secondary.positionOffsets[i][j];
+
+		return {primaryPosition, secondaryPosition};
+	}
+
 	getItemPosition = (index) => this.gridPositionToItemPosition(this.getGridPosition(index))
 
 	gridPositionToItemPosition = ({primaryPosition, secondaryPosition}) =>
@@ -559,12 +570,14 @@ class VirtualListCore extends Component {
 	}
 
 	applyStyleToExistingNode = (i, j, key, ...rest) => {
-		const node = this.containerRef.children[key];
+		const
+			node = this.containerRef.children[key],
+			id = this.isVirtualVariableList ? (i + '-' + j) : i;
 
 		if (node) {
 			// spotlight
-			node.setAttribute(dataIndexAttribute, i);
-			if (key === this.nodeIndexToBeBlurred && i !== this.lastFocusedIndex) {
+			node.setAttribute(dataIndexAttribute, id);
+			if (key === this.nodeIndexToBeBlurred && id !== this.lastFocusedIndex) {
 				node.blur();
 				this.nodeIndexToBeBlurred = null;
 			}
@@ -575,14 +588,16 @@ class VirtualListCore extends Component {
 	applyStyleToNewNode = (i, j, key, ...rest) => {
 		const
 			{component, data} = this.props,
-			itemElement = this.isVirtualVariableList ?
+			{isVirtualVariableList} = this,
+			id = isVirtualVariableList ? (i + '-' + j) : i,
+			itemElement = isVirtualVariableList ?
 				component({
 					data,
 					index: {
 						fixed: i,
 						variable: j
 					},
-					key: i + '-' + j
+					key: id
 				}) :
 				component({
 					data,
@@ -596,7 +611,7 @@ class VirtualListCore extends Component {
 		this.cc[key] = React.cloneElement(
 			itemElement, {
 				style: {...itemElement.props.style, ...style},
-				[dataIndexAttribute]: i
+				[dataIndexAttribute]: id
 			}
 		);
 	}
@@ -769,14 +784,16 @@ class VirtualListCore extends Component {
 		return (Math.ceil(primary.dataSize / dimensionToExtent) * primary.gridSize) - spacing;
 	}
 
-	calculatePositionOnFocus = (focusedIndex) => {
+	calculatePositionOnFocus = (focusedIndex, key) => {
 		const
-			{primary, numOfItems} = this,
-			offsetToClientEnd = primary.clientSize - primary.itemSize;
+			{primary, isVirtualVariableList} = this,
+			{numOfItems} = this.state,
+			offsetToClientEnd = primary.clientSize - primary.itemSize,
+			index = isVirtualVariableList ? focusedIndex : Number.parseInt(focusedIndex);
 		let
-			gridPosition = this.getGridPosition(focusedIndex);
+			gridPosition = isVirtualVariableList ? this.getVariableGridPosition(index.split('-')) : this.getGridPosition(index);
 
-		this.nodeIndexToBeBlurred = this.lastFocusedIndex % numOfItems;
+		this.nodeIndexToBeBlurred = key;
 		this.lastFocusedIndex = focusedIndex;
 
 		if (primary.clientSize >= primary.itemSize) {
@@ -788,8 +805,10 @@ class VirtualListCore extends Component {
 		}
 
 		// Since the result is used as a target position to be scrolled,
-		// scrondaryPosition should be 0 here.
-		gridPosition.secondaryPosition = 0;
+		// secondaryPosition should be 0 here.
+		if (!isVirtualVariableList) {
+			gridPosition.secondaryPosition = 0;
+		}
 		return this.gridPositionToItemPosition(gridPosition);
 	}
 
