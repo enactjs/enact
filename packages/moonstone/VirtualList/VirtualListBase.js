@@ -892,20 +892,7 @@ class VirtualListCore extends Component {
 			this.calculateMetrics(nextProps);
 			this.updateStatesAndBounds(hasDataChanged ? nextProps : this.props);
 		} else if (hasDataChanged) {
-			const
-				{dimensionToExtent, primary} = this,
-				nextStateNumOfItems = Math.min(
-					this.isVirtualVariableList ? nextProps.dataSize.fixed : nextProps.dataSize,
-					dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + nextProps.overhang)
-				);
-
-			// We need to calulate metrics again if 'numOfItems' is different between current and next value
-			if (this.state.numOfItems !== nextStateNumOfItems) {
-				this.calculateMetrics(nextProps);
-				this.updateStatesAndBounds(nextProps);
-			} else {
-				this.updateStatesAndBounds(nextProps);
-			}
+			this.updateStatesAndBounds(nextProps);
 		}
 	}
 
