@@ -246,16 +246,16 @@ storiesOf('VirtualList.VirtualVariableList')
 			<VirtualVariableList
 				data={epgData}
 				dataSize={{
-					fixed: number('dataSize', epgData.length),
+					fixed: number('dataSize.fixed', epgData.length),
 					variable: getVariableDataSize
 				}}
 				itemSize={{
-					fixed: ri.scale(number('itemSize', 83)),
+					fixed: ri.scale(number('itemSize.fixed', 83)),
 					variable: getVariableItemSize
 				}}
 				lockHeaders
 				variableDimension={'width'}
-				variableMaxScrollSize={ri.scale(number('VariableMaxScrollSize', 4000))} /* 400 ( width per 1 hour )* 10 hr */
+				variableMaxScrollSize={ri.scale(number('variableMaxScrollSize', 4000))} /* 400 ( width per 1 hour )* 10 hr */
 				className={'list'}
 				style={style.list}
 				component={renderItem}
