@@ -86,7 +86,7 @@ describe('Transition Specs', () => {
 				);
 
 				const expected = key;
-				const actual = wrapped.childAt(0).childAt(0).prop('className');
+				const actual = wrapped.childAt(0).prop('className');
 
 				expect(actual).to.contain(expected);
 			});

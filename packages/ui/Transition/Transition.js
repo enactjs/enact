@@ -279,22 +279,8 @@ class Transition extends React.Component {
 		};
 	}
 
-	componentWillReceiveProps (nextProps) {
-		const transition = this.refs.transition;
-		if (!nextProps.visible) {
-			transition.addEventListener('transitionend', this.hideDidFinish);
-		} else {
-			transition.removeEventListener('transitionend', this.hideDidFinish);
-		}
-	}
-
-	componentWillUnmount () {
-		const transition = this.refs.transition;
-		transition.removeEventListener('transitionend', this.hideDidFinish);
-	}
-
-	hideDidFinish = (e) => {
-		if (this.props.onHide) {
+	hideDidFinish = () => {
+		if (!this.props.visible && this.props.onHide) {
 			this.props.onHide();
 		}
 	}
@@ -314,9 +300,7 @@ class Transition extends React.Component {
 
 		const height = props.visible ? this.state.initialHeight : 0;
 		return (
-			<div ref="transition">
-				<TransitionBase {...props} childRef={this.measureInner} clipHeight={height} />
-			</div>
+			<TransitionBase {...props} childRef={this.measureInner} clipHeight={height} onTransitionEnd={this.hideDidFinish} />
 		);
 	}
 }

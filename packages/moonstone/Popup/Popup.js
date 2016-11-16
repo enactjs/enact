@@ -136,6 +136,7 @@ const PopupBase = kind({
 		delete rest.anchor;
 		delete rest.onCloseButtonClicked;
 		delete rest.showCloseButton;
+		delete rest.target;
 		return (
 			<TransitionContainer
 				noAnimation={noAnimation}
