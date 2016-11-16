@@ -18,6 +18,7 @@ import Toggleable from '@enact/ui/Toggleable';
  * @param  {Object} props Current props object
  *
  * @returns {undefined}
+ * @private
  */
 const handleCancel = function (props) {
 	if (props.open) {
@@ -39,7 +40,7 @@ const handleCancel = function (props) {
  * @private
  */
 const Expandable = R.compose(
-	Toggleable({activate: 'onOpen', deactivate: 'onClose', mutable: true, prop: 'open'}),
+	Toggleable({toggle: null, activate: 'onOpen', deactivate: 'onClose', mutable: true, prop: 'open'}),
 	Cancelable({component: 'span', onCancel: handleCancel})
 );
 

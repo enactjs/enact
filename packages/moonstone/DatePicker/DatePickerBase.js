@@ -9,10 +9,11 @@ import {$L} from '@enact/i18n';
 import kind from '@enact/core/kind';
 import React from 'react';
 
+import {DateComponentRangePicker} from '../internal/DateComponentPicker';
 import {ExpandableItemBase} from '../ExpandableItem';
 
 import css from './DatePicker.less';
-import DateComponentPicker from './DateComponentPicker';
+import {dateComponentPickers} from '../internal/DateComponentPicker/DateComponentPicker.less';
 
 /**
  * {@link moonstone/DatePicker/DatePickerBase.DatePickerBase} is the stateless functional date picker
@@ -25,9 +26,9 @@ import DateComponentPicker from './DateComponentPicker';
  * @private
  */
 const DatePickerBase = kind({
-	name: 'DatePicker',
+	name: 'DatePickerBase',
 
-	propTypes: {
+	propTypes:  /** @lends moonstone/DatePicker/DatePickerBase.DatePickerBase.prototype */ {
 		/**
 		 * The `day` component of the Date
 		 *
@@ -146,53 +147,52 @@ const DatePickerBase = kind({
 
 	render: ({day, maxDays, maxMonths, maxYear, minYear, month, noLabels, onChangeDate, onChangeMonth, onChangeYear, order, year, ...rest}) => {
 
-		delete rest.dateFormat;
-		delete rest.onChange;
-		delete rest.value;
-
 		return (
 			<ExpandableItemBase {...rest} showLabel="always">
-				{order.map(picker => {
-					switch (picker) {
-						case 'd':
-							return (
-								<DateComponentPicker
-									key="day-picker"
-									label={noLabels || $L('day')}
-									min={1}
-									max={maxDays}
-									value={day}
-									onChange={onChangeDate}
-									wrap
-								/>
-							);
-						case 'm':
-							return (
-								<DateComponentPicker
-									key="month-picker"
-									label={noLabels || $L('month')}
-									min={1}
-									max={maxMonths}
-									value={month}
-									onChange={onChangeMonth}
-									wrap
-								/>
-							);
-						case 'y':
-							return (
-								<DateComponentPicker
-									key="year-picker"
-									label={noLabels || $L('year')}
-									min={minYear}
-									max={maxYear}
-									value={year}
-									onChange={onChangeYear}
-								/>
-							);
-					}
+				<div className={dateComponentPickers}>
+					{order.map(picker => {
+						switch (picker) {
+							case 'd':
+								return (
+									<DateComponentRangePicker
+										key="day-picker"
+										label={noLabels ? null : $L('day')}
+										min={1}
+										max={maxDays}
+										value={day}
+										onChange={onChangeDate}
+										wrap
+									/>
+								);
+							case 'm':
+								return (
+									<DateComponentRangePicker
+										key="month-picker"
+										label={noLabels ? null : $L('month')}
+										min={1}
+										max={maxMonths}
+										value={month}
+										onChange={onChangeMonth}
+										wrap
+									/>
+								);
+							case 'y':
+								return (
+									<DateComponentRangePicker
+										className={css.year}
+										key="year-picker"
+										label={noLabels ? null : $L('year')}
+										min={minYear}
+										max={maxYear}
+										value={year}
+										onChange={onChangeYear}
+									/>
+								);
+						}
 
-					return null;
-				})}
+						return null;
+					})}
+				</div>
 			</ExpandableItemBase>
 		);
 	}

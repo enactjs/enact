@@ -9,6 +9,12 @@ import hoc from '@enact/core/hoc';
 
 import {init, defineScreenTypes, getScreenTypeObject, getResolutionClasses} from './resolution';
 
+/**
+ * Default config for {@link ui/resolution.ResolutionDecorator}
+ *
+ * @memberof ui/resolution
+ * @hocconfig
+ */
 const defaultConfig = {
 	/**
 	 * When `true`, an event listener will be attached to the window to listen for resize events.
@@ -16,6 +22,7 @@ const defaultConfig = {
 	 * @type {Boolean}
 	 * @default true
 	 * @public
+	 * @memberof ui/resolution.defaultConfig
 	 */
 	dynamic: true,
 
@@ -26,6 +33,7 @@ const defaultConfig = {
 	 * @type {Object[]}
 	 * @default null
 	 * @public
+	 * @memberof ui/resolution.defaultConfig
 	 */
 	screenTypes: null
 };
