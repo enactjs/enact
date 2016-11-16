@@ -84,23 +84,13 @@ const PopupBase = kind({
 		 * @default false
 		 * @public
 		 */
-		showCloseButton: PropTypes.bool,
-
-		/**
-		 * Indicates where component should attach to.
-		 *
-		 * @type {String}
-		 * @default 'window'
-		 * @public
-		 */
-		target: PropTypes.oneOf(['window', 'activator'])
+		showCloseButton: PropTypes.bool
 	},
 
 	defaultProps: {
 		anchor: {bottom: 0},
 		noAnimation: false,
 		open: false,
-		target: 'window',
 		showCloseButton: false
 	},
 
@@ -136,7 +126,6 @@ const PopupBase = kind({
 		delete rest.anchor;
 		delete rest.onCloseButtonClicked;
 		delete rest.showCloseButton;
-		delete rest.target;
 		return (
 			<TransitionContainer
 				noAnimation={noAnimation}

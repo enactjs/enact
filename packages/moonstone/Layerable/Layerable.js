@@ -8,6 +8,14 @@ import hoc from '@enact/core/hoc';
 import React, {PropTypes} from 'react';
 
 const defaultConfig = {
+	/**
+	 * Indicates where component should attach to.
+	 *
+	 * @type {String}
+	 * @default 'window'
+	 * @public
+	 */
+	target: 'window'
 };
 
 /**
@@ -47,7 +55,7 @@ const LayerableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 		render () {
 			const props = Object.assign({}, this.props);
-			if (Wrapped.defaultProps.target == 'window') {
+			if (config.target == 'window') {
 				props.style = {
 					...props.style,
 					'position': 'absolute'
