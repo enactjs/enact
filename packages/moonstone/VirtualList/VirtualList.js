@@ -122,14 +122,6 @@ const VirtualVariableList = kind({
 		itemSize: PropTypes.object.isRequired,
 
 		/**
-		 * To fix the position for first row and column items
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		lockHeaders: PropTypes.bool.isRequired,
-
-		/**
 		 * Direction specific options of the list; valid values are `'width'` and `'height'`.
 		 *
 		 * @type {String}
@@ -144,7 +136,15 @@ const VirtualVariableList = kind({
 		 * @type {Number}
 		 * @public
 		 */
-		variableMaxScrollSize: PropTypes.number.isRequired
+		variableMaxScrollSize: PropTypes.number.isRequired,
+
+		/**
+		 * To fix the position for first row and column items
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		lockHeaders: PropTypes.bool
 	},
 
 	render: (orgProps) => {
