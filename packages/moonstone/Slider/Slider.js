@@ -6,7 +6,7 @@ import React, {PropTypes} from 'react';
 
 import SliderDecorator from '../internal/SliderDecorator';
 import {
-	computeProportionLoaded,
+	computeProportionBackground,
 	computeProportionProgress,
 	computeBarTransform,
 	computeKnobTransform
@@ -17,12 +17,12 @@ import css from './Slider.less';
 class VisibleBar extends React.Component {
 	static propTypes = {
 		/**
-		 * The loaded progress as a proportion.
+		 * The background progress as a proportion.
 		 *
 		 * @type {Number}
 		 * @public
 		 */
-		proportionLoadedProgress: PropTypes.number,
+		proportionBackgroundProgress: PropTypes.number,
 
 		/**
 		 * The progress as a percentage.
@@ -68,11 +68,11 @@ class VisibleBar extends React.Component {
 	}
 
 	render () {
-		const {proportionLoadedProgress, proportionProgress, vertical, verticalHeight, ...rest} = this.props;
+		const {proportionBackgroundProgress, proportionProgress, vertical, verticalHeight, ...rest} = this.props;
 
 		return (
 			<div {...rest} className={css.visibleBar} ref={this.getNode} style={verticalHeight}>
-				<div className={css.load} ref={this.getLoaderNode} style={{transform: computeBarTransform(proportionLoadedProgress, vertical)}} />
+				<div className={css.load} ref={this.getLoaderNode} style={{transform: computeBarTransform(proportionBackgroundProgress, vertical)}} />
 				<div className={css.fill} ref={this.getBarNode} style={{transform: computeBarTransform(proportionProgress, vertical)}} />
 				<div className={css.knob} ref={this.getKnobNode} style={{transform: computeKnobTransform(proportionProgress, vertical, this.node, this.knobWidth)}} />
 			</div>
@@ -210,15 +210,15 @@ const SliderBase = kind({
 
 	computed: {
 		className: ({pressed, vertical, styler}) => styler.append({pressed, vertical, horizontal: !vertical}),
-		proportionLoadedProgress: computeProportionLoaded,
+		proportionBackgroundProgress: computeProportionBackground,
 		proportionProgress: computeProportionProgress,
 		verticalHeight: ({vertical, height}) => (vertical ? {height} : null),
 		verticalWidth: ({vertical, height}) => (vertical ? {width: height} : null)
 	},
 
-	render: ({inputRef, max, min, onChange, proportionLoadedProgress, proportionProgress, sliderRef, step, value, vertical, verticalHeight, verticalWidth, visibleBarRef, ...rest}) => {
+	render: ({inputRef, max, min, onChange, proportionBackgroundProgress, proportionProgress, sliderRef, step, value, vertical, verticalHeight, verticalWidth, visibleBarRef, ...rest}) => {
 		const sliderProps = {
-			proportionLoadedProgress,
+			proportionBackgroundProgress,
 			proportionProgress,
 			vertical,
 			verticalHeight

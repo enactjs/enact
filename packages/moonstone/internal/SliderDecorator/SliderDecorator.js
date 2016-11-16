@@ -12,7 +12,7 @@ import R from 'ramda';
 import React, {PropTypes} from 'react';
 
 import {
-	computeProportionLoaded,
+	computeProportionBackground,
 	computeProportionProgress,
 	computeBarTransform,
 	computeKnobTransform
@@ -28,12 +28,12 @@ const defaultConfig = {
 	changeDelay: 20,
 
 	/**
-	 * When `true`, increment and decrement buttons are displayed.
+	 * When `true`, increment and decrement handlers are connected.
 	 *
 	 * @type {Boolean}
 	 * @default false
 	 */
-	increment: false
+	handlesIncrements: false
 };
 
 /**
@@ -168,10 +168,10 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				const {backgroundPercent, max, min, vertical} = this.props;
 				const normalizedMax = max != null ? max : Wrapped.defaultProps.max;
 				const normalizedMin = min != null ? min : Wrapped.defaultProps.min;
-				const proportionLoaded = computeProportionLoaded({backgroundPercent});
+				const proportionBackground = computeProportionBackground({backgroundPercent});
 				const proportionProgress = computeProportionProgress({value, max: normalizedMax, min: normalizedMin});
 
-				loaderNode.style.transform = computeBarTransform(proportionLoaded, vertical);
+				loaderNode.style.transform = computeBarTransform(proportionBackground, vertical);
 				barNode.style.transform = computeBarTransform(proportionProgress, vertical);
 				knobNode.style.transform = computeKnobTransform(proportionProgress, vertical, node, knobNode.offsetHeight / 2);
 				this.inputNode.value = value;
@@ -194,26 +194,26 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.visibleBarNode = node;
 		}
 
-		clickHandler = () => Spotlight.focus(this.sliderNode);
+		clickHandler = () => Spotlight.focus(this.sliderNode)
 
 		incrementHandler = () => {
-			const {min, max, step} = this.props;
-			let increaseAmt = this.state.value + step;
-
-			increaseAmt = R.clamp(min, max, increaseAmt);
-			this.updateValue(increaseAmt);
+			this.changeValue(1);
 		}
 
 		decrementHandler = () => {
-			const {min, max, step} = this.props;
-			let decreaseAmt = this.state.value - step;
+			this.changeValue(-1);
+		}
 
-			decreaseAmt = R.clamp(min, max, decreaseAmt);
-			this.updateValue(decreaseAmt);
+		changeValue = (direction) => {
+			const {min, max, step} = this.props;
+			let value = this.state.value + (step * direction);
+
+			value = R.clamp(min, max, value);
+			this.updateValue(value);
 		}
 
 		render () {
-			const handlers = !config.increment ? {} : (
+			const handlers = !config.handlesIncrements ? {} : (
 				{
 					onIncrement: this.incrementHandler,
 					onDecrement: this.decrementHandler

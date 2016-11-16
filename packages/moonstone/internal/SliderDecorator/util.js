@@ -1,4 +1,4 @@
-const computeProportionLoaded = ({backgroundPercent}) => backgroundPercent / 100;
+const computeProportionBackground = ({backgroundPercent}) => backgroundPercent / 100;
 const computeProportionProgress = ({value, max, min}) => (value - min) / (max - min);
 const computeBarTransform = (proportion, vertical) => `${vertical ? `scale(1, ${proportion || 0})` : `scale(${proportion || 0}, 1)`} translateZ(0)`;
 const computeKnobTransform = (proportion, vertical, node, knobRadius) => {
@@ -9,7 +9,7 @@ const computeKnobTransform = (proportion, vertical, node, knobRadius) => {
 };
 
 export {
-	computeProportionLoaded,
+	computeProportionBackground,
 	computeProportionProgress,
 	computeBarTransform,
 	computeKnobTransform

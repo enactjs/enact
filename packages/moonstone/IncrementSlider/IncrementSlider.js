@@ -136,7 +136,7 @@ const IncrementSliderBase = kind({
 	)
 });
 
-const SpottableSlider = Pressable(Spottable(SliderDecorator({increment: true}, IncrementSliderBase)));
+const SpottableSlider = Pressable(Spottable(SliderDecorator({handlesIncrements: true}, IncrementSliderBase)));
 
 export default SpottableSlider;
 export {SpottableSlider as IncrementSlider, IncrementSliderBase};
