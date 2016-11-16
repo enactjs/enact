@@ -112,6 +112,7 @@ const InputBase = kind({
 	},
 
 	computed: {
+		className: ({focused, styler}) => styler.append({focused}),
 		onChange: ({onChange}) => (ev) => {
 			if (onChange) {
 				onChange({value: ev.target.value});
@@ -121,6 +122,7 @@ const InputBase = kind({
 
 	render: ({disabled, iconEnd, iconStart, onChange, placeholder, type, value, ...rest}) => {
 		delete rest.dismissOnEnter;
+		delete rest.focused;
 
 		return (
 			<div {...rest} disabled={disabled}>

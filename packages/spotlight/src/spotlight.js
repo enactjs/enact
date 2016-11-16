@@ -623,6 +623,8 @@ const Spotlight = (function() {
 
 		let currentFocusedElement = getCurrent();
 
+		// if (currentFocusedElement === elem) return false;
+
 		let silentFocus = function () {
 			if (currentFocusedElement) {
 				currentFocusedElement.blur();
@@ -916,12 +918,12 @@ const Spotlight = (function() {
 	}
 
 	function onMouseOver (evt) {
+		_pointerMode = true;
 		if (shouldPreventNavigation()) {
 			return;
 		}
 
 		const target = getNavigableTarget(evt.target); // account for child controls
-		_pointerMode = true;
 
 		if (target && target !== getCurrent()) { // moving over a focusable element
 			focusElement(target, getContainerId(target));
