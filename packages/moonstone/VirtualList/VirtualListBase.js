@@ -182,7 +182,6 @@ class VirtualListCore extends Component {
 	// spotlight
 	nodeIndexToBeBlurred = null
 	lastFocusedIndex = null
-	rtlDirection = 1
 
 	constructor (props) {
 		const {positioningOption} = props;
@@ -244,7 +243,7 @@ class VirtualListCore extends Component {
 		};
 	}
 
-	calculateMetrics (props, context) {
+	calculateMetrics (props) {
 		const
 			{direction, itemSize, positioningOption, spacing} = props,
 			node = this.getContainerNode(positioningOption);
@@ -267,8 +266,6 @@ class VirtualListCore extends Component {
 			};
 		let
 			primary, secondary, dimensionToExtent, thresholdBase;
-
-		this.rtlDirection = context.rtl ? -1 : 1;
 
 		this.isPrimaryDirectionVertical = (direction === 'vertical');
 
@@ -508,7 +505,10 @@ class VirtualListCore extends Component {
 		this.composeItemPosition(style, ...rest);
 	}
 
-	getXY = (primary, secondary) => ((this.isPrimaryDirectionVertical) ? {x: secondary, y: primary} : {x: (primary * this.rtlDirection), y: secondary})
+	getXY = (primary, secondary) => {
+		const rtlDirection = this.context.rtl ? -1 : 1;
+		return (this.isPrimaryDirectionVertical ? {x: (secondary * rtlDirection), y: primary} : {x: (primary * rtlDirection), y: secondary});
+	}
 
 	composeTransform (style, primary, secondary = 0) {
 		const {x, y} = this.getXY(primary, secondary);
@@ -524,7 +524,7 @@ class VirtualListCore extends Component {
 	}
 
 	applyTransformToContainerNode () {
-		this.composeTransform(this.containerRef.style, -this.scrollPosition * this.rtlDirection, 0);
+		this.composeTransform(this.containerRef.style, -this.scrollPosition, 0);
 	}
 
 	applyScrollLeftTopToWrapperNode () {
@@ -633,7 +633,7 @@ class VirtualListCore extends Component {
 	componentDidMount () {
 		const {positioningOption} = this.props;
 
-		this.calculateMetrics(this.props, this.context);
+		this.calculateMetrics(this.props);
 		this.updateStatesAndBounds(this.props);
 
 		if (positioningOption !== 'byBrowser') {
@@ -653,16 +653,14 @@ class VirtualListCore extends Component {
 
 	// Call updateStatesAndBounds here when dataSize has been changed to update nomOfItems state.
 	// Calling setState within componentWillReceivePropswill not trigger an additional render.
-	componentWillReceiveProps (nextProps, nextContext) {
+	componentWillReceiveProps (nextProps) {
 		const
 			{direction, itemSize, dataSize, overhang, spacing} = this.props,
-			{rtl} = this.context,
 			hasMetricsChanged = (
 				direction !== nextProps.direction ||
 				((itemSize instanceof Object) ? (itemSize.minWidth !== nextProps.itemSize.minWidth || itemSize.minHeight !== nextProps.itemSize.minHeight) : itemSize !== nextProps.itemSize) ||
 				overhang !== nextProps.overhang ||
-				spacing !== nextProps.spacing ||
-				rtl !== nextContext.rtl
+				spacing !== nextProps.spacing
 			),
 			hasDataChanged = (dataSize !== nextProps.dataSize);
 

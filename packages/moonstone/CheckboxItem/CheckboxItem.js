@@ -13,8 +13,8 @@ import css from './CheckboxItem.less';
 
 /**
  * {@link moonstone/CheckboxItem.CheckboxItem} is a component that
- * is an Item that is Toggleable. It has two states: `true` (checked) & `false`
- * (unchecked). It uses a check icon to represent its checked state.
+ * is an Item that is Toggleable. It has two states: `true` (selected) & `false`
+ * (unselected). It uses a check icon to represent its selected state.
  *
  * @class CheckboxItem
  * @memberof moonstone/CheckboxItem
@@ -32,15 +32,6 @@ const CheckboxItemBase = kind({
 		 * @public
 		 */
 		children: PropTypes.string.isRequired,
-
-		/**
-		 * When `true`, a "checked" visual effect is applied to the button.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		checked: PropTypes.bool,
 
 		/**
 		 * When `true`, applies a disabled style and the control becomes non-interactive.
@@ -65,11 +56,20 @@ const CheckboxItemBase = kind({
 		 *
 		 * @type {Function}
 		 * @param {Object} event
-		 * @param {String} event.checked - Checked value of item.
+		 * @param {String} event.selected - Selected value of item.
 		 * @param {*} event.value - Value passed from `value` prop.
 		 * @public
 		 */
 		onToggle: PropTypes.func,
+
+		/**
+		 * When `true`, a check mark icon is applied to the button.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		selected: PropTypes.bool,
 
 		/**
 		 * The value that will be sent to the `onToggle` handler.
@@ -82,9 +82,9 @@ const CheckboxItemBase = kind({
 	},
 
 	defaultProps: {
-		checked: false,
 		disabled: false,
 		inline: false,
+		selected: false,
 		value: ''
 	},
 
@@ -94,7 +94,7 @@ const CheckboxItemBase = kind({
 	},
 
 	computed: {
-		iconClasses: ({checked}) => !checked ? css.translucent : null
+		iconClasses: ({selected}) => !selected ? css.translucent : null
 	},
 
 	render: (props) => (

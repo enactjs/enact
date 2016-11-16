@@ -34,15 +34,6 @@ const SwitchItemBase = kind({
 		children: PropTypes.string.isRequired,
 
 		/**
-		 * When `true`, a "checked" visual state is applied to the switch item.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		checked: PropTypes.bool,
-
-		/**
 		 * When `true`, a disabled visual state is applied to the switch item.
 		 *
 		 * @type {Boolean}
@@ -65,11 +56,20 @@ const SwitchItemBase = kind({
 		 *
 		 * @type {Function}
 		 * @param {Object} event
-		 * @param {String} event.checked - Checked value of item.
+		 * @param {String} event.selected - Selected value of item.
 		 * @param {*} event.value - Value passed from `value` prop.
 		 * @public
 		 */
 		onToggle: PropTypes.func,
+
+		/**
+		 * When `true`, the dispalyed "switch" icon is set to the "on" position.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		selected: PropTypes.bool,
 
 		/**
 		 * The value that will be sent to the `onToggle` handler.
@@ -82,8 +82,8 @@ const SwitchItemBase = kind({
 	},
 
 	defaultProps: {
-		checked: false,
-		disabled: false
+		disabled: false,
+		selected: false
 	},
 
 	styles: {
@@ -92,8 +92,8 @@ const SwitchItemBase = kind({
 	},
 
 	computed: {
-		iconElem: ({checked, disabled}) => (
-			<Switch checked={checked} disabled={disabled} className={css.switch} />
+		iconElem: ({selected, disabled}) => (
+			<Switch selected={selected} disabled={disabled} className={css.switch} />
 		)
 	},
 

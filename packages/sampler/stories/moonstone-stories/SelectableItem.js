@@ -4,13 +4,13 @@ import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
 
-const SelectableItem = Toggleable({prop: 'checked'}, SelectableItemBase);
+const SelectableItem = Toggleable({prop: 'selected'}, SelectableItemBase);
 SelectableItem.displayName = 'SelectableItem';
 SelectableItem.propTypes = Object.assign({}, SelectableItem.propTypes, SelectableItemBase.propTypes);
 SelectableItem.defaultProps = Object.assign({}, SelectableItem.defaultProps, SelectableItemBase.defaultProps);
 
-delete SelectableItem.propTypes.checked;
-delete SelectableItem.defaultProps.checked;
+delete SelectableItem.propTypes.selected;
+delete SelectableItem.defaultProps.selected;
 
 storiesOf('SelectableItem')
 	.addDecorator(withKnobs)

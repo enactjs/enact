@@ -39,11 +39,11 @@ const
 	},
 	autoHideDelay = 200,
 	minThumbSize = ri.scale(4),
-	selectIcon = (isPrev) => (props, context) => {
-		if (props.isVertical) {
+	selectIcon = (isPrev) => (isVertical, rtl) => {
+		if (isVertical) {
 			return (isPrev) ? 'arrowsmallup' : 'arrowsmalldown';
 		} else {
-			if (context.rtl) {
+			if (rtl) {
 				return (isPrev) ? 'arrowsmallright' : 'arrowsmallleft';
 			}
 			return (isPrev) ? 'arrowsmallleft' : 'arrowsmallright';
@@ -240,8 +240,8 @@ class Scrollbar extends Component {
 			{scrollbarClass, thumbClass,
 			prevButtonClass, nextButtonClass, clickPrevHandler, clickNextHandler} = this.scrollInfo,
 			scrollbarClassNames = classNames(className, scrollbarClass),
-			prevIcon = selectPrevIcon(this.props, this.context),
-			nextIcon = selectNextIcon(this.props, this.context);
+			prevIcon = selectPrevIcon(this.props.isVertical, this.context.rtl),
+			nextIcon = selectNextIcon(this.props.isVertical, this.context.rtl);
 
 		return (
 			<div ref={this.initContainerRef} className={scrollbarClassNames}>
