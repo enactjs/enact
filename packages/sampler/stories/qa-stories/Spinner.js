@@ -6,14 +6,13 @@ import {storiesOf} from '@kadira/storybook';
 import {withKnobs, text, boolean} from '@kadira/storybook-addon-knobs';
 
 // Set up some defaults for info and knobs
-const 
+const
 	prop = {
 		longText:'SpinnerWithLongText SpinnerWithLongText SpinnerWithLongText'
 	},
 	style = {
 		spinnerDiv: {
 			height: ri.scale(15) + 'em',
-			width: '100%',
 			border: 0.01 + 'em dotted red'
 		}
 	};
