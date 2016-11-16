@@ -72,8 +72,7 @@ storiesOf('Item')
 		'sample for spotability test',
 		() => (
 			<div>
-				<Item
-				>
+				<Item>
 					{text('Spottable Text', inputData.normalText)}
 				</Item>
 				<Item
@@ -81,8 +80,7 @@ storiesOf('Item')
 				>
 					{text('Disabled Text', inputData.disabledText)}
 				</Item>
-				<Item
-				>
+				<Item>
 					<Icon
 						small={boolean('small')}
 					>
@@ -91,8 +89,7 @@ storiesOf('Item')
 
 					{text('Text with icon at start', 'Item with text that is spottable with an icon (at the start of the string)')}
 				</Item>
-				<Item
-				>
+				<Item>
 					{text('Text with icon at end', 'Item with text that is spottable with an icon(at the end of the string)')}
 					<Icon
 						small={boolean('small')}
@@ -100,27 +97,26 @@ storiesOf('Item')
 						{select('iconend', ['', ...iconNames], 'pauseforward')}
 					</Icon>
 				</Item>
-				<Item
-				>
+				<Item>
 					<Icon
 						small={boolean('small')}
 					>
-						{select('icon1 in item', ['', ...iconNames], 'gear')}
+						gear
 					</Icon>
 					<Icon
 						small={boolean('small')}
 					>
-						{select('icon2 in item', ['', ...iconNames], 'minus')}
+						minus
 					</Icon>
 					<Icon
 						small={boolean('small')}
 					>
-						{select('icon3 in item', ['', ...iconNames], 'trash')}
+						trash
 					</Icon>
 					<Icon
 						small={boolean('small')}
 					>
-						{select('icon4 in item', ['', ...iconNames], 'flag')}
+						flag
 					</Icon>
 				</Item>
 			</div>
