@@ -3,7 +3,7 @@ import Item from '@enact/moonstone/Item';
 import {VirtualVariableList} from '@enact/moonstone/VirtualList';
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
-import {withKnobs} from '@kadira/storybook-addon-knobs';
+import {withKnobs, number} from '@kadira/storybook-addon-knobs';
 
 // Inline style
 const
@@ -238,19 +238,20 @@ const
 		}
 	};
 
-storiesOf('VirtualVariableList')
+storiesOf('VirtualList.VirtualVariableList')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'for EPG Grid',
+		' ',
+		'Basic usage of VirtualVariableList',
 		() => (
 			<VirtualVariableList
 				data={epgData}
 				dataSize={{
-					fixed: epgData.length,
+					fixed: number('dataSize.fixed', epgData.length),
 					variable: getVariableDataSize
 				}}
 				itemSize={{
-					fixed: ri.scale(83),
+					fixed: ri.scale(number('itemSize.fixed', 83)),
 					variable: getVariableItemSize
 				}}
 				lockHeaders
