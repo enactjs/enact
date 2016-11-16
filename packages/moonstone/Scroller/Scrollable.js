@@ -573,32 +573,16 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 					if (canScrollHorizontally) {
 						if (opt.page === 'left') {
-							if (this.scrollLeft === 0) {
-								left = maxLeft;
-							} else {
-								left = R.clamp(0, maxLeft, this.scrollLeft - clientWidth);
-							}
+							left = (this.scrollLeft === 0) ? maxLeft : R.clamp(0, maxLeft, this.scrollLeft - clientWidth);
 						} else if (opt.page === 'right') {
-							if (this.scrollLeft === maxLeft) {
-								left = 0;
-							} else {
-								left = R.clamp(0, maxLeft, this.scrollLeft + clientWidth);
-							}
+							left = (this.scrollLeft === maxLeft) ? 0 : R.clamp(0, maxLeft, this.scrollLeft + clientWidth);
 						}
 					}
 					if (canScrollVertically) {
 						if (opt.page === 'up') {
-							if (this.scrollTop === 0) {
-								top = maxTop;
-							} else {
-								top = R.clamp(0, maxTop, this.scrollTop - clientHeight);
-							}
+							top = (this.scrollTop === 0) ? maxTop : R.clamp(0, maxTop, this.scrollTop - clientHeight);
 						} else if (opt.page === 'down') {
-							if (this.scrollTop === maxTop) {
-								top = 0;
-							} else {
-								top = R.clamp(0, maxTop, this.scrollTop + clientHeight);
-							}
+							top = (this.scrollTop === maxTop) ? 0 :	R.clamp(0, maxTop, this.scrollTop + clientHeight);
 						}
 					}
 				} else {

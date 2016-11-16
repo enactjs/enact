@@ -270,12 +270,12 @@ storiesOf('VirtualList.VirtualVariableList')
 				<IconButton
 					small
 					onClick={() => global.scrollTo.call(this, {page: 'up'})}
-					style={{position: 'absolute', left: '50%', top: '0', transform: 'translate3d(-50%,0,0)'}}
+					style={{position: 'absolute', left: '50%', top: '0', transform: 'translate3d(-50%, 0, 0)'}}
 				>arrowsmallup</IconButton>
 				<IconButton
 					small
 					onClick={() => global.scrollTo.call(this, {page: 'down'})}
-					style={{position: 'absolute', left: '50%', bottom: '0', transform: 'translate3d(-50%,0,0)'}}
+					style={{position: 'absolute', left: '50%', bottom: '0', transform: 'translate3d(-50%, 0, 0)'}}
 				>arrowsmalldown</IconButton>
 				<IconButton
 					small
