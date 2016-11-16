@@ -256,7 +256,7 @@ storiesOf('VirtualList.VirtualVariableList')
 				}}
 				lockHeaders
 				variableDimension={'width'}
-				variableMaxScrollSize={variableMaxScrollSize} /* 400 ( width per 1 hour )* 10 hr */
+				variableMaxScrollSize={variableMaxScrollSize}
 				className={'list'}
 				style={style.list}
 				component={renderItem}
