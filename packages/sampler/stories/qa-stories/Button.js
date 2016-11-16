@@ -94,34 +94,5 @@ storiesOf('Button')
 				</Button>
 			</div>
 		)
-	)
-	.addWithInfo(
-		'to receive nearest neighbor spotlight',
-		() => (
-			<div>
-				<Button
-					onClick={action('onClick')}
-					backgroundOpacity='translucent'
-					disabled={boolean('disabled')}
-					minWidth={boolean('minWidth')}
-					preserveCase={boolean('preserveCase')}
-					selected={boolean('selected')}
-					small={boolean('small')}
-				>
-					Button
-				</Button>
-				<Button
-					onClick={action('onClick')}
-					backgroundOpacity='transparent'
-					disabled={boolean('disabled')}
-					minWidth={boolean('minWidth')}
-					preserveCase={boolean('preserveCase')}
-					selected={boolean('selected')}
-					small={boolean('small')}
-				>
-					Button
-				</Button>
-			</div>
-		)
 	);
 
