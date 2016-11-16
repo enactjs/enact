@@ -14,6 +14,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Removed
 
+- LESS mixins that belong in `@enact/ui`, so that only moonstone-specific mixins are contained in
+this module. When authoring components and importing mixins, only the local mixins need to be
+imported, as they already import the general mixins.
+
 ## [1.0.0-alpha.3] - 2016-11-8
 
 ### Added

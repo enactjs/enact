@@ -38,3 +38,79 @@
 		padding-right: @start;
 	}
 }
+
+.full-screen-video-player() {
+	position: static !important;
+	display: block !important;
+	margin: 0;
+}
+
+.hide-full-screen-ancestor() {
+	position: absolute !important;
+	overflow: visible !important;
+	padding: 0 !important;
+	margin: 0 !important;
+	width: 100% !important;
+	height: 100% !important;
+}
+
+.input-placeholder(@rule) {
+	&::-webkit-input-placeholder {
+		@rule();
+	}
+	&::-moz-placeholder {
+		@rule();
+	}
+}
+
+// Asign font-kerning rules in a non-proprietary way. Default value being "normal", to enable kerning.
+.font-kerning(@val: normal) {
+	-webkit-font-kerning: @val;
+	font-kerning: @val;
+}
+
+// Provide a set of rules to assign to each vendor-prefixed pseudo selector
+.vendor-fullscreen(@rule) {
+	&:-webkit-full-screen { @rule(); }
+	&:-moz-full-screen { @rule(); }
+	&:-ms-fullscreen { @rule(); }
+	&:-o-full-screen { @rule(); }
+	&:fullscreen { @rule(); }
+}
+
+.vendor-opacity(@opacity) {
+	@opacity-ie: (@opacity * 100);	// Less doesn't like math inside `alpha`
+	opacity: @opacity;
+	filter: alpha(opacity=@opacity-ie);
+}
+
+// Shorthand for positioning code
+.position (@t, @r, @b, @l) {
+	top: @t;
+	right: @r;
+	bottom: @b;
+	left: @l;
+}
+.position (@t, @rl, @b) {
+	top: @t;
+	right: @rl;
+	bottom: @b;
+	left: @rl;
+}
+.position (@tb, @rl) {
+	top: @tb;
+	right: @rl;
+	bottom: @tb;
+	left: @rl;
+}
+.position (@trbl) {
+	top: @trbl;
+	right: @trbl;
+	bottom: @trbl;
+	left: @trbl;
+}
+
+.border-box() {
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+}
