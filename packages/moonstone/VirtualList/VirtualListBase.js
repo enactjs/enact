@@ -222,11 +222,9 @@ class VirtualListCore extends Component {
 		return {primaryPosition, secondaryPosition};
 	}
 
-	getVariableGridPosition (indices) {
+	getVariableGridPosition (i, j) {
 		const
 			{dimensionToExtent, primary, secondary} = this,
-			i = Number.parseInt(indices[0]),
-			j = Number.parseInt(indices[1]),
 			primaryPosition = Math.floor(i / dimensionToExtent) * primary.gridSize,
 			secondaryPosition = secondary.positionOffsets[i][j];
 
@@ -784,31 +782,44 @@ class VirtualListCore extends Component {
 		return (Math.ceil(primary.dataSize / dimensionToExtent) * primary.gridSize) - spacing;
 	}
 
+	adjustPositionOnFocus = (info, pos, itemSize) => {
+		const offsetToClientEnd = info.clientSize - itemSize;
+
+		if (info.clientSize >= itemSize) {
+			if (pos > info.scrollPosition + offsetToClientEnd) {
+				pos -= offsetToClientEnd;
+			} else if (pos > info.scrollPosition) {
+				pos = info.scrollPosition;
+			}
+		}
+
+		return pos;
+	}
+
 	calculatePositionOnFocus = (focusedIndex, key) => {
 		const
-			{primary, isVirtualVariableList} = this,
-			{numOfItems} = this.state,
-			offsetToClientEnd = primary.clientSize - primary.itemSize,
-			index = isVirtualVariableList ? focusedIndex : Number.parseInt(focusedIndex);
-		let
-			gridPosition = isVirtualVariableList ? this.getVariableGridPosition(index.split('-')) : this.getGridPosition(index);
+			{data} = this.props,
+			{primary, secondary, isVirtualVariableList} = this;
+		let gridPosition;
+		if (isVirtualVariableList) {
+			const
+				indices = focusedIndex.split('-'),
+				i = Number.parseInt(indices[0]),
+				j = Number.parseInt(indices[1]);
+
+			gridPosition = this.getVariableGridPosition(i, j);
+			gridPosition.secondaryPosition = this.adjustPositionOnFocus(secondary, gridPosition.secondaryPosition, secondary.itemSize({data, index: {fixed: i, variable: j}}));
+		} else {
+			const index = Number.parseInt(focusedIndex);
+		 	gridPosition = this.getGridPosition(index);
+		 	gridPosition.secondaryPosition = 0;
+		}
+
+		gridPosition.primaryPosition = this.adjustPositionOnFocus(primary, gridPosition.primaryPosition, primary.itemSize);
 
 		this.nodeIndexToBeBlurred = key;
 		this.lastFocusedIndex = focusedIndex;
 
-		if (primary.clientSize >= primary.itemSize) {
-			if (gridPosition.primaryPosition > primary.scrollPosition + offsetToClientEnd) {
-				gridPosition.primaryPosition -= offsetToClientEnd;
-			} else if (gridPosition.primaryPosition > primary.scrollPosition) {
-				gridPosition.primaryPosition = primary.scrollPosition;
-			}
-		}
-
-		// Since the result is used as a target position to be scrolled,
-		// secondaryPosition should be 0 here.
-		if (!isVirtualVariableList) {
-			gridPosition.secondaryPosition = 0;
-		}
 		return this.gridPositionToItemPosition(gridPosition);
 	}
 
