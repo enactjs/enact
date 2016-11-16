@@ -164,15 +164,16 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		updateValue = (value) => {
 			throttleJob('sliderChange', () => {
 				// intentionally breaking encapsulation to avoid having to specify multiple refs
-				const {barNode, knobNode, loaderNode} = this.visibleBarNode;
-				const {backgroundPercent, max, vertical} = this.props;
+				const {barNode, knobNode, loaderNode, node} = this.visibleBarNode;
+				const {backgroundPercent, max, min, vertical} = this.props;
 				const normalizedMax = max != null ? max : Wrapped.defaultProps.max;
+				const normalizedMin = min != null ? min : Wrapped.defaultProps.min;
 				const proportionLoaded = computeProportionLoaded({backgroundPercent});
-				const proportionProgress = computeProportionProgress({value, max: normalizedMax});
+				const proportionProgress = computeProportionProgress({value, max: normalizedMax, min: normalizedMin});
 
 				loaderNode.style.transform = computeBarTransform(proportionLoaded, vertical);
 				barNode.style.transform = computeBarTransform(proportionProgress, vertical);
-				knobNode.style.transform = computeKnobTransform(proportionProgress * this.visibleBarNode.width, vertical, knobNode.offsetHeight / 2);
+				knobNode.style.transform = computeKnobTransform(proportionProgress, vertical, node, knobNode.offsetHeight / 2);
 				this.inputNode.value = value;
 
 				// yup, we're mutating state directly! :dealwithit:

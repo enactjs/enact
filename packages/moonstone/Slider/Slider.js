@@ -56,25 +56,25 @@ class VisibleBar extends React.Component {
 
 	getKnobNode = (node) => {
 		this.knobNode = node;
-		this.knobWidth = node && node.clientWidth / 2;
+		this.knobWidth = node && node.offsetHeight / 2;
 	}
 
 	getLoaderNode = (node) => {
 		this.loaderNode = node;
 	}
 
-	getWidth = (node) => {
-		this.width = node && node.clientWidth;
+	getNode = (node) => {
+		this.node = node;
 	}
 
 	render () {
 		const {proportionLoadedProgress, proportionProgress, vertical, verticalHeight, ...rest} = this.props;
 
 		return (
-			<div {...rest} className={css.visibleBar} ref={this.getWidth} style={verticalHeight}>
+			<div {...rest} className={css.visibleBar} ref={this.getNode} style={verticalHeight}>
 				<div className={css.load} ref={this.getLoaderNode} style={{transform: computeBarTransform(proportionLoadedProgress, vertical)}} />
 				<div className={css.fill} ref={this.getBarNode} style={{transform: computeBarTransform(proportionProgress, vertical)}} />
-				<div className={css.knob} ref={this.getKnobNode} style={{transform: computeKnobTransform(proportionProgress * this.visibleBarWidth, vertical, this.knobWidth)}} />
+				<div className={css.knob} ref={this.getKnobNode} style={{transform: computeKnobTransform(proportionProgress, vertical, this.node, this.knobWidth)}} />
 			</div>
 		);
 	}

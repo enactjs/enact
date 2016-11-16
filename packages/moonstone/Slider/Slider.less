@@ -47,6 +47,7 @@
 		border: @moon-button-border-width solid transparent;
 		transform: translate(-50%,-50%);
 		box-sizing: border-box;
+		will-change: transform;
 	}
 
 	.sliderBar {
@@ -93,6 +94,7 @@
 		.fill,
 		.load {
 			bottom: 0;
+			transform-origin: 0 100%; // the origin should be the bottom when vertical
 		}
 
 		.visibleBar {
