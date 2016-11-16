@@ -2,6 +2,17 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- LESS mixins from `@enact/moonstone` that are general purpose and can be utilized by various UI
+libraries.
+
+### Changed
+
+### Removed
+
 ## [1.0.0-alpha.3] - 2016-11-8
 
 ### Added
