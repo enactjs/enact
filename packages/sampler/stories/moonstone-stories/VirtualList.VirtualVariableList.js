@@ -158,6 +158,7 @@ const
 		'NOVA',
 		'Secrets of the Dead'
 	],
+	variableMaxScrollSize = ri.scale(4000) /* 400 ( width per 1 hour )* 10 hr */,
 	getRandomWidth = () => {
 		return ri.scale((parseInt(Math.random() * 20) + 1) * 100);
 	};
@@ -255,7 +256,7 @@ storiesOf('VirtualList.VirtualVariableList')
 				}}
 				lockHeaders
 				variableDimension={'width'}
-				variableMaxScrollSize={ri.scale(number('variableMaxScrollSize', 4000))} /* 400 ( width per 1 hour )* 10 hr */
+				variableMaxScrollSize={variableMaxScrollSize} /* 400 ( width per 1 hour )* 10 hr */
 				className={'list'}
 				style={style.list}
 				component={renderItem}
