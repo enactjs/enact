@@ -634,8 +634,13 @@ const Spotlight = (function() {
 		return lastFocusedElement;
 	}
 
-	function focusElement (elem, containerId) {
+	function focusElement (elem, containerId, fromPointer) {
 		if (!elem) {
+			return false;
+		}
+
+		if ((_pointerMode && !fromPointer)) {
+			_containers[containerId].lastFocusedElement = elem;
 			return false;
 		}
 
@@ -684,7 +689,7 @@ const Spotlight = (function() {
 		}
 	}
 
-	function focusExtendedSelector (selector, direction) {
+	function focusExtendedSelector (selector) {
 		if (selector.charAt(0) === '@') {
 			if (selector.length === 1) {
 				return focusContainer();
@@ -697,7 +702,7 @@ const Spotlight = (function() {
 			if (next) {
 				let nextContainerId = getContainerId(next);
 				if (isNavigable(next, nextContainerId)) {
-					return focusElement(next, nextContainerId, direction);
+					return focusElement(next, nextContainerId);
 				}
 			}
 		}
@@ -751,12 +756,12 @@ const Spotlight = (function() {
 				if (next === '') {
 					return null;
 				}
-				return focusExtendedSelector(next, direction);
+				return focusExtendedSelector(next);
 			}
 
 			let nextContainerId = getContainerId(next);
 			if (isNavigable(next, nextContainerId)) {
-				return focusElement(next, nextContainerId, direction);
+				return focusElement(next, nextContainerId);
 			}
 		}
 		return false;
@@ -800,7 +805,7 @@ const Spotlight = (function() {
 			}
 		}
 
-		return focusElement(next, nextContainerId, direction);
+		return focusElement(next, nextContainerId);
 	}
 
 	function spotNextFromPoint (direction, position, containerId) {
@@ -824,7 +829,7 @@ const Spotlight = (function() {
 	function spotNext (direction, currentFocusedElement, currentContainerId) {
 		const extSelector = currentFocusedElement.getAttribute('data-spot-' + direction);
 		if (typeof extSelector === 'string') {
-			if (extSelector === '' || !focusExtendedSelector(extSelector, direction)) {
+			if (extSelector === '' || !focusExtendedSelector(extSelector)) {
 				return false;
 			}
 			return true;
@@ -958,7 +963,7 @@ const Spotlight = (function() {
 				if (!_pause) {
 					if (getCurrent()) {
 						SpotlightAccelerator.processKey(evt, onAcceleratedKeyDown);
-					} else if (!spotNextFromPoint(direction, {x: _pointerX, y: _pointerY}, spotlightRootContainerName)) {
+					} else if (!spotNextFromPoint(direction, {x: _pointerX, y: _pointerY}, _lastContainerId)) {
 						Spotlight.focus(getContainerLastFocusedElement(_lastContainerId));
 					}
 					_5WayKeyHold = true;
@@ -980,7 +985,7 @@ const Spotlight = (function() {
 		_pointerMode = true;
 
 		if (target && target !== getCurrent()) { // moving over a focusable element
-			focusElement(target, getContainerId(target));
+			focusElement(target, getContainerId(target), true);
 			preventDefault(evt);
 		}
 	}
@@ -1219,6 +1224,17 @@ const Spotlight = (function() {
 			} else {
 				_defaultContainerId = containerId;
 			}
+		},
+
+		/**
+		 * Sets the currently active container.
+		 *
+		 * @param {String} [containerId] The id of the currently active container. If this is not
+		 *	provided, the root container is set as the currently active container.
+		 * @public
+		 */
+		setActiveContainer: function (containerId) {
+			_lastContainerId = containerId || spotlightRootContainerName;
 		},
 
 		/**

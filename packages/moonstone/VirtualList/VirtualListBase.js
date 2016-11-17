@@ -8,6 +8,7 @@
 import React, {Component, PropTypes} from 'react';
 
 import {Spotlight, SpotlightContainerDecorator} from '@enact/spotlight';
+import {contextTypes} from '@enact/i18n/I18nDecorator';
 
 import {dataIndexAttribute, Scrollable} from '../Scroller/Scrollable';
 
@@ -137,6 +138,8 @@ class VirtualListCore extends Component {
 		 */
 		spacing: PropTypes.number
 	}
+
+	static contextTypes = contextTypes
 
 	static defaultProps = {
 		cbScrollTo: nop,
@@ -895,9 +898,9 @@ class VirtualListCore extends Component {
 			const containerNode = this.getContainerNode(positioningOption);
 
 			// prevent native scrolling by Spotlight
-			this.preventScroll = function () {
+			this.preventScroll = () => {
 				containerNode.scrollTop = 0;
-				containerNode.scrollLeft = 0;
+				containerNode.scrollLeft = this.context.rtl ? containerNode.scrollWidth : 0;
 			};
 
 			if (containerNode && containerNode.addEventListener) {
