@@ -918,7 +918,6 @@ const Spotlight = (function() {
 	}
 
 	function onMouseOver (evt) {
-		_pointerMode = true;
 		if (shouldPreventNavigation()) {
 			return;
 		}
@@ -932,6 +931,8 @@ const Spotlight = (function() {
 	}
 
 	function onMouseMove (evt) {
+		_pointerMode = true;
+
 		if (shouldPreventNavigation()) {
 			return;
 		}
