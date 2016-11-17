@@ -840,17 +840,32 @@ class VirtualListCore extends Component {
 
 	setSpotlightContainerRestrict = (keyCode, index) => {
 		const
-			{isPrimaryDirectionVertical, dimensionToExtent, primary} = this,
-			canMoveBackward = index >= dimensionToExtent,
-			canMoveForward = index < (primary.dataSize - (((primary.dataSize - 1) % dimensionToExtent) + 1));
-		let isSelfOnly = false;
+			{isPrimaryDirectionVertical, dimensionToExtent, primary, isVirtualVariableList} = this;
+		let
+			isSelfOnly = false,
+			i = 0,
+			canMoveBackward,
+			canMoveForward;
+
+		if (isVirtualVariableList) {
+			const indices = index.split('-');
+			i = Number.parseInt(indices[0]);
+			canMoveBackward = i > dimensionToExtent;
+		} else {
+			i = Number.parseInt(index);
+			canMoveBackward = i >= dimensionToExtent;
+		}
+		canMoveForward = i < (primary.dataSize - (((primary.dataSize - 1) % dimensionToExtent) + 1));
 
 		if (isPrimaryDirectionVertical) {
 			if (keyCode === keyUp && canMoveBackward || keyCode === keyDown && canMoveForward) {
 				isSelfOnly = true;
 			}
-		} else if (keyCode === keyLeft && canMoveBackward || keyCode === keyRight && canMoveForward) {
-			isSelfOnly = true;
+		}
+		if (!isPrimaryDirectionVertical || isVirtualVariableList) {
+			if (keyCode === keyLeft && canMoveBackward || keyCode === keyRight && canMoveForward) {
+				isSelfOnly = true;
+			}
 		}
 
 		this.setRestrict(isSelfOnly);

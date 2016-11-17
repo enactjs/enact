@@ -380,8 +380,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		onKeyDown = (e) => {
 			if (this.childRef.setSpotlightContainerRestrict) {
-				const index = Number.parseInt(e.target.getAttribute(dataIndexAttribute));
-				this.childRef.setSpotlightContainerRestrict(e.keyCode, index);
+				this.childRef.setSpotlightContainerRestrict(e.keyCode, e.target.getAttribute(dataIndexAttribute));
 			}
 		}
 
