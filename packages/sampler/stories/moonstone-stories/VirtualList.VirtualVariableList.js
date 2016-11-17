@@ -8,36 +8,30 @@ import {withKnobs, number} from '@kadira/storybook-addon-knobs';
 
 // Inline style
 const
-	itemTimelinePadding = ri.scale(37) + 'px ' + ri.scale(10) + 'px ' + ri.scale(10) + 'px',
-	itemChannelInfoBGPadding = '0 ' + ri.scale(5) + 'px ' + ri.scale(5) + 'px 0',
-	itemChannelInfoPadding = ri.scale(10) + 'px 0 ' + ri.scale(10) + 'px ' + ri.scale(20) + 'px',
 	style = {
 		epg: {
 			background: 'black',
 			position: 'relative',
 			width: '100%',
 			height: ri.scale(581) + 'px',
-			paddingTop: '13px'
+			paddingTop: ri.scale(13) + 'px'
 		},
 		list: {
 			width: '100%',
 			height: '100%'
 		},
 		itemWrapper: {
-			background: 'black',
 			position: 'absolute',
+			border: ri.scale(3) + 'px solid black',
+			boxSizing: 'border-box',
 			willChange: 'transform'
 		},
 		// Today
 		itemToday: {
 			background: 'black',
-			width: '100%',
 			height: '100%',
-			position: 'absolute',
-			padding: itemTimelinePadding,
+			paddingTop: ri.scale(40) + 'px',
 			boxSizing: 'border-box',
-			bottom: '0',
-			overflow: 'hidden',
 			fontSize: ri.scale(27) + 'px',
 			color: 'white',
 			WebkitUserSelect: 'none',
@@ -46,32 +40,19 @@ const
 		// Timeline
 		itemTimeline: {
 			background: 'black',
-			width: ri.scale(200) + 'px',
 			height: '100%',
-			position: 'absolute',
-			padding: itemTimelinePadding,
+			padding: ri.scale(40) + 'px ' + ri.scale(10) + 'px ' + ri.scale(10) + 'px',
 			borderLeft: ri.scale(2) + 'px solid #333',
 			boxSizing: 'border-box',
-			bottom: '0',
-			overflow: 'hidden',
 			fontSize: ri.scale(27) + 'px',
 			color: 'white',
 			WebkitUserSelect: 'none',
 			userSelect: 'none'
 		},
 		// ChannelInfo
-		itemChannelInfoBG: {
-			background: '#2C2E35',
-			backgroundClip: 'content-box',
-			height: '100%',
-			padding: itemChannelInfoBGPadding,
-			boxSizing: 'border-box',
-			overflow: 'hidden'
-		},
 		itemChannelInfo: {
 			width: ri.scale(400) + 'px',
 			height: '100%',
-			padding: itemChannelInfoPadding,
 			boxSizing: 'border-box',
 			color: '#CACACA',
 			fontSize: ri.scale(27) + 'px',
@@ -80,23 +61,20 @@ const
 			userSelect: 'none'
 		},
 		// Programs
-		itemProgramBG: {
-			background: '#141416',
-			backgroundClip: 'content-box',
-			height: '100%',
-			padding: itemChannelInfoBGPadding,
-			boxSizing: 'border-box',
-			overflow: 'hidden'
-		},
 		itemProgram: {
-			height: ri.scale(78) + 'px',
-			boxSizing: 'border-box',
+			height: '100%',
 			fontSize: ri.scale(33) + 'px',
 			lineHeight: ri.scale(78) + 'px',
 			WebkitUserSelect: 'none',
 			userSelect: 'none'
 		}
 	};
+
+// CSS
+let sheet = document.createElement('style');
+sheet.innerHTML = '.channelInfo:not(:focus) {background: #2C2E35;}' +
+    '.program:not(:focus) {background: #141416;}';
+document.body.appendChild(sheet);
 
 // Raw Data
 const
@@ -216,25 +194,21 @@ const
 			);
 		// ChannelInfo
 		} else if (index.variable === 0) {
-			return (
-				<div key={key} style={style.itemWrapper}>
-					<div style={style.itemChannelInfoBG}>
-						<div style={style.itemChannelInfo}>
-							{data[index.fixed][index.variable].programName}
-						</div>
-					</div>
-				</div>
-			);
-		// Programs
-		} else  {
-			return (
-				<div key={key} style={style.itemWrapper}>
-					<div style={style.itemProgramBG}>
-						<Item style={style.itemProgram}>
-							{data[index.fixed][index.variable].programName}
-						</Item>
-					</div>
-				</div>
+			 return (
+                <Item key={key} className={'channelInfo'} style={style.itemWrapper}>
+                    <div style={style.itemChannelInfo}>
+                        {data[index.fixed][index.variable].programName}
+                    </div>
+                </Item>
+            );
+        // Programs
+        } else  {
+            return (
+                <Item key={key} className={'program'} style={style.itemWrapper}>
+                    <div style={style.itemProgram}>
+                        {data[index.fixed][index.variable].programName}
+                    </div>
+				</Item>
 			);
 		}
 	};
