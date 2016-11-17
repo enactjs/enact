@@ -253,7 +253,7 @@ class VirtualListCore extends Component {
 
 	calculateMetrics (props) {
 		const
-			{dataSize, direction, itemSize, positioningOption, spacing} = props,
+			{dataSize, direction, itemSize, positioningOption, spacing, variableDimension} = props,
 			node = this.getContainerNode(positioningOption);
 
 		if (!node) {
@@ -277,8 +277,8 @@ class VirtualListCore extends Component {
 		let primary, secondary, dimensionToExtent, primaryThresholdBase;
 
 		this.isPrimaryDirectionVertical = (direction === 'vertical');
-		this.isVirtualVariableList = ((this.props.variableDimension === 'width') || (this.props.variableDimension === 'height'));
-		this.isVirtualGridList = (this.props.itemSize.minWidth && this.props.itemSize.minHeight);
+		this.isVirtualVariableList = ((variableDimension === 'width') || (variableDimension === 'height'));
+		this.isVirtualGridList = (itemSize.minWidth && itemSize.minHeight);
 
 		if (this.isPrimaryDirectionVertical) {
 			primary = heightInfo;
@@ -302,13 +302,10 @@ class VirtualListCore extends Component {
 
 		if (this.isVirtualVariableList) {
 			primary.itemSize = itemSize.fixed;
-			primary.dataSize = dataSize.fixed;
 			primary.gridSize = primary.itemSize + spacing;
 			secondary.itemSize = itemSize.variable;
-			secondary.dataSize = dataSize.variable;
 			secondary.gridSize = itemSize.fixed + spacing;
 		} else {
-			primary.dataSize = dataSize;
 			primary.gridSize = primary.itemSize + spacing;
 			secondary.gridSize = secondary.itemSize + spacing;
 		}
@@ -332,17 +329,23 @@ class VirtualListCore extends Component {
 		const
 			{dataSize, overhang} = props,
 			{primaryFirstIndex} = this.state,
-			{dimensionToExtent, primary} = this,
-			numOfItems = Math.min(
-				this.isVirtualVariableList ? dataSize.fixed : dataSize,
-				dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)
-			);
+			{dimensionToExtent, primary, secondary, isVirtualVariableList} = this;
+		let numOfItems = dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang);
+
+		if (isVirtualVariableList) {
+			numOfItems = Math.min(dataSize.fixed, numOfItems);
+			primary.dataSize = dataSize.fixed;
+			secondary.dataSize = dataSize.variable;
+		} else {
+			numOfItems = Math.min(dataSize, numOfItems);
+			primary.dataSize = dataSize;
+		}
 
 		primary.maxFirstIndex = primary.dataSize - numOfItems;
 
 		this.setState({primaryFirstIndex: Math.min(primaryFirstIndex, primary.maxFirstIndex), numOfItems});
 		this.calculateScrollBounds(props);
-		if (this.isVirtualVariableList) {
+		if (isVirtualVariableList) {
 			this.initSecondaryScrollInfo(primary.dataSize, numOfItems);
 		}
 	}
@@ -922,7 +925,7 @@ class VirtualListCore extends Component {
 
 		if (hasMetricsChanged) {
 			this.calculateMetrics(nextProps);
-			this.updateStatesAndBounds(hasDataChanged ? nextProps : this.props);
+			this.updateStatesAndBounds(nextProps);
 		} else if (hasDataChanged) {
 			this.updateStatesAndBounds(nextProps);
 		}
