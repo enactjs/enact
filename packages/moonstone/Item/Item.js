@@ -8,6 +8,7 @@ import React, {PropTypes} from 'react';
 import kind from '@enact/core/kind';
 import {Spottable} from '@enact/spotlight';
 
+import {ItemOverlay} from '../ItemOverlay';
 import {MarqueeText} from '../Marquee';
 
 import css from './Item.less';
@@ -34,6 +35,11 @@ const ItemBase = kind({
 		 */
 		children: PropTypes.node.isRequired,
 
+		// Not truly properties of Item, but the default component is MarqueeText, where these are
+		// supporrted and should be passed along without error.
+		afterMarquee: MarqueeText.propTypes.afterMarquee,
+		beforeMarquee: MarqueeText.propTypes.beforeMarquee,
+
 		/**
 		 * The type of component to use to render the item. May be a DOM node name (e.g 'div',
 		 * 'span', etc.) or a custom component.
@@ -51,12 +57,22 @@ const ItemBase = kind({
 		 * @default false
 		 * @public
 		 */
-		disabled: PropTypes.bool
+		disabled: PropTypes.bool,
+
+		/**
+		 * Applies inline styling to the toggle item.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		inline: PropTypes.bool
 	},
 
 	defaultProps: {
 		component: MarqueeText,
-		disabled: false
+		disabled: false,
+		inline: false
 	},
 
 	styles: {
@@ -64,7 +80,20 @@ const ItemBase = kind({
 		className: 'item'
 	},
 
+	computed: {
+		className: ({inline, styler}) => styler.append({inline})
+	},
+
 	render: ({component: Component, ...rest}) => {
+		if (typeof Component === 'string') {
+			// If the component was secified as a generic HTML node (like `div`) then it won't include
+			// support for the after and before marquee props, so we must remove them. We assume the
+			// component is handling its own marqueeing.
+			delete rest.afterMarquee;
+			delete rest.beforeMarquee;
+		}
+		delete rest.inline;
+
 		return (
 			<Component {...rest} />
 		);
@@ -77,11 +106,11 @@ const ItemBase = kind({
  *
  * @class Item
  * @memberof moonstone/Item
- * @mixes spotlight/Spottable
+ * @mixes spotlight/Spottable, moonstone/ItemOverlay
  * @ui
  * @public
  */
-const Item = Spottable(ItemBase);
+const Item = Spottable(ItemOverlay(ItemBase));
 
 export default Item;
 export {Item, ItemBase};

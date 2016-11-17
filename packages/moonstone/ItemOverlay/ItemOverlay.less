@@ -1,0 +1,28 @@
+// ItemOverlay.less
+//
+@import '../styles/mixins.less';
+@import '../styles/variables.less';
+
+.item {
+	.overlay {
+		line-height: 1;
+
+		&.beginning :first-child {
+			.margin-start-end(0, @moon-icon-margin);
+		}
+
+		&.ending :last-child {
+			.margin-start-end(@moon-icon-margin, 0);
+		}
+
+		.icon {
+			margin-top: 0;
+			margin-bottom: 0;
+			vertical-align: top;
+		}
+	}
+
+	&:global(.spottable):not(:focus) .overlay.hidden {
+		display: none;
+	}
+}

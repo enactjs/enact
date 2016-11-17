@@ -1,13 +1,13 @@
-import {CheckboxItemBase} from '@enact/moonstone/CheckboxItem';
-import {Toggleable} from '@enact/ui/Toggleable';
+import CheckboxItem from '@enact/moonstone/CheckboxItem';
+import ToggleItem from '@enact/moonstone/ToggleItem';
+import Item, {ItemBase} from '@enact/moonstone/Item';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
 
-const CheckboxItem = Toggleable({prop: 'selected'}, CheckboxItemBase);
 CheckboxItem.displayName = 'CheckboxItem';
-CheckboxItem.propTypes = Object.assign({}, CheckboxItem.propTypes, CheckboxItemBase.propTypes);
-CheckboxItem.defaultProps = Object.assign({}, CheckboxItem.defaultProps, CheckboxItemBase.defaultProps);
+CheckboxItem.propTypes = Object.assign({}, ItemBase.propTypes, Item.propTypes, ToggleItem.propTypes, CheckboxItem.propTypes);
+CheckboxItem.defaultProps = Object.assign({}, ItemBase.defaultProps, Item.defaultProps, ToggleItem.defaultProps, CheckboxItem.defaultProps);
 
 delete CheckboxItem.propTypes.selected;
 delete CheckboxItem.defaultProps.selected;

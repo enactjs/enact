@@ -1,5 +1,5 @@
-import Item, {ItemBase} from '@enact/moonstone/Item';
 import LabeledItem from '@enact/moonstone/LabeledItem';
+import Item, {ItemBase} from '@enact/moonstone/Item';
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
 import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
@@ -15,7 +15,7 @@ storiesOf('LabeledItem')
 		() => (
 			<LabeledItem
 				label={'Label'}
-				disabled={boolean('disabled')}
+				disabled={boolean('disabled', false)}
 			>
 				{text('children', 'Hello LabeledItem')}
 			</LabeledItem>

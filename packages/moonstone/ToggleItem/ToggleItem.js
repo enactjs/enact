@@ -7,18 +7,51 @@
 
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
+import {Toggleable} from '@enact/ui/Toggleable';
 
 import Icon from '../Icon';
 import Item from '../Item';
-import {MarqueeDecorator} from '../Marquee';
 
 import css from './ToggleItem.less';
+
+const ToggleIcon = kind({
+	name: 'ToggleIcon',
+
+	propTypes: /** @lends moonstone/ToggleItem.ToggleItemBase.prototype */ {
+		selected: PropTypes.bool
+	},
+
+	defaultProps: {
+		selected: false
+	},
+
+	styles: {
+		css,
+		className: 'icon'
+	},
+
+	computed: {
+		className: ({selected, styler}) => styler.append({selected})
+	},
+
+	render: ({children, ...rest}) => {
+		if (React.isValidElement(children)) {
+			return children;
+		}
+		return <Icon {...rest}>{children}</Icon>;
+	}
+});
+
+// Only return an icon component if one is necessary
+// eslint-disable-next-line enact/prop-types, enact/display-name
+const getIcon = (icon) => ({iconClasses, selected, ...rest}) => {
+	return (rest[icon]) ? <ToggleIcon className={iconClasses} selected={selected}>{rest[icon]}</ToggleIcon> : null;
+};
 
 /**
  * {@link moonstone/ToggleItem.ToggleItemBase} is a component to make a Toggleable Item
  * (e.g Checkbox, RadioItem). It has a customizable prop for icon, so any Moonstone Icon can be used
- * to represent the selected state. Most developers will want to use
- * the marqueeable version: {@link moonstone/ToggleItem.ToggleItem}
+ * to represent the selected state.
  *
  * @class ToggleItemBase
  * @memberof moonstone/ToggleItem
@@ -38,6 +71,16 @@ const ToggleItemBase = kind({
 		children: PropTypes.node.isRequired,
 
 		/**
+		 * Icon property accepts a string or an Icon Element. This is the icon that
+		 * will display at the beginning of the item when selected.
+		 *
+		 * @type {String|Element}
+		 * @default null
+		 * @public
+		 */
+		beginningIcon: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+
+		/**
 		 * Applies a disabled visual state to the toggle item.
 		 *
 		 * @type {Boolean}
@@ -48,13 +91,13 @@ const ToggleItemBase = kind({
 
 		/**
 		 * Icon property accepts a string or an Icon Element. This is the icon that
-		 * will display when selected.
+		 * will display at the ending of the item when selected.
 		 *
-		 * @type {String}
-		 * @default ''
+		 * @type {String|Element}
+		 * @default null
 		 * @public
 		 */
-		icon: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+		endingIcon: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
 
 		/**
 		 * CSS classes for Icon
@@ -97,19 +140,20 @@ const ToggleItemBase = kind({
 		/**
 		 * The value that will be sent to the `onToggle` handler.
 		 * @type {*}
-		 * @default ''
+		 * @default null
 		 * @public
 		 */
 		value: PropTypes.any
 	},
 
 	defaultProps: {
+		beginningIcon: null,
 		disabled: false,
-		icon: '',
+		endingIcon: null,
 		iconClasses: '',
 		inline: false,
 		selected: false,
-		value: ''
+		value: null
 	},
 
 	styles: {
@@ -118,14 +162,8 @@ const ToggleItemBase = kind({
 	},
 
 	computed: {
-		className: ({inline, styler}) => styler.append({inline}),
-		icon: ({selected, icon, iconClasses, styler}) => {
-			if (React.isValidElement(icon)) {
-				return icon;
-			}
-
-			return <Icon className={styler.join(css.icon, iconClasses, {selected})}>{icon}</Icon>;
-		},
+		beginningIcon: getIcon('beginningIcon'),
+		endingIcon: getIcon('endingIcon'),
 		onToggle: ({onToggle, onClick, selected, disabled, value}) => {
 			if (!disabled && (onToggle || onClick)) {
 				return (ev) => {
@@ -136,34 +174,17 @@ const ToggleItemBase = kind({
 		}
 	},
 
-	render: ({children, icon, onToggle, ...rest}) => {
+	render: ({beginningIcon, endingIcon, onToggle, ...rest}) => {
 		delete rest.iconClasses;
-		delete rest.inline;
+		delete rest.value;
 
 		return (
-			<Item {...rest} component='div' onClick={onToggle}>
-				{icon}
-				{children}
-			</Item>
+			<Item {...rest} beginningOverlay={beginningIcon} endingOverlay={endingIcon} onClick={onToggle} />
 		);
 	}
 });
 
-/**
- * {@link moonstone/ToggleItem.ToggleItem} is a component to make a Toggleable Item
- * (e.g Checkbox, RadioItem). It has a customizable prop for icon, so any Moonstone Icon can be used
- * to represent the selected state.
- *
- * @class ToggleItem
- * @memberof moonstone/ToggleItem
- * @ui
- * @mixes moonstone/marquee.MarqueeDecorator
- * @public
- */
-const ToggleItem = MarqueeDecorator(
-	{className: css.content},
-	ToggleItemBase
-);
+const ToggleItem = Toggleable({prop: 'selected'}, ToggleItemBase);
 
 export default ToggleItem;
 export {ToggleItem, ToggleItemBase};

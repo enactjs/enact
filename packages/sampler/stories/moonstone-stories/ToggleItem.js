@@ -1,5 +1,5 @@
-import ToggleItemBase from '@enact/moonstone/ToggleItem';
-import Toggleable from '@enact/ui/Toggleable';
+import ToggleItem from '@enact/moonstone/ToggleItem';
+import Item, {ItemBase} from '@enact/moonstone/Item';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
@@ -7,9 +7,8 @@ import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
 import {icons} from '@enact/moonstone/Icon';
 const iconNames = Object.keys(icons);
 
-const ToggleItem = Toggleable({prop: 'selected'}, ToggleItemBase);
-ToggleItem.propTypes = Object.assign({}, ToggleItem.propTypes, ToggleItemBase.propTypes);
-ToggleItem.defaultProps = Object.assign({}, ToggleItem.defaultProps, ToggleItemBase.defaultProps);
+ToggleItem.propTypes = Object.assign({}, ItemBase.propTypes, Item.propTypes, ToggleItem.propTypes);
+ToggleItem.defaultProps = Object.assign({}, ItemBase.defaultProps, Item.defaultProps, ToggleItem.defaultProps);
 ToggleItem.displayName = 'ToggleItem';
 
 delete ToggleItem.propTypes.selected;
@@ -23,7 +22,9 @@ storiesOf('ToggleItem')
 		() => {
 			return (
 				<ToggleItem
-					icon={select('icon', iconNames, 'play')}
+					beginningIcon={select('beginningIcon', iconNames, 'play')}
+					endingIcon={select('endingIcon', iconNames, 'trash')}
+					autoHide={select('autoHide', ['no', 'beginning', 'ending', 'both'], 'no')}
 					disabled={boolean('disabled', false)}
 					inline={boolean('inline', false)}
 					onToggle={action('onToggle')}

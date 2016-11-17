@@ -1,10 +1,10 @@
-import Item, {ItemBase} from '@enact/moonstone/Item';
+import Item from '@enact/moonstone/Item';
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
 import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
 
-Item.propTypes = Object.assign({}, ItemBase.propTypes, Item.propTypes);
-Item.defaultProps = Object.assign({}, ItemBase.defaultProps, Item.defaultProps);
+Item.propTypes = Object.assign({}, Item.propTypes);
+Item.defaultProps = Object.assign({}, Item.defaultProps);
 Item.displayName = 'Item';
 
 storiesOf('Item')
@@ -14,7 +14,7 @@ storiesOf('Item')
 		'Basic usage of Item',
 		() => (
 			<Item
-				disabled={boolean('disabled')}
+				disabled={boolean('disabled', false)}
 			>
 				{text('children', 'Hello Item')}
 			</Item>

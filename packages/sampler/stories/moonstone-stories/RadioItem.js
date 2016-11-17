@@ -1,13 +1,13 @@
-import {RadioItemBase} from '@enact/moonstone/RadioItem';
-import {Toggleable} from '@enact/ui/Toggleable';
+import RadioItem from '@enact/moonstone/RadioItem';
+import ToggleItem from '@enact/moonstone/ToggleItem';
+import Item, {ItemBase} from '@enact/moonstone/Item';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
 
-const RadioItem = Toggleable({prop: 'selected'}, RadioItemBase);
 RadioItem.displayName = 'RadioItem';
-RadioItem.propTypes = Object.assign({}, RadioItem.propTypes, RadioItemBase.propTypes);
-RadioItem.defaultProps = Object.assign({}, RadioItem.defaultProps, RadioItemBase.defaultProps);
+RadioItem.propTypes = Object.assign({}, ItemBase.propTypes, Item.propTypes, ToggleItem.propTypes, RadioItem.propTypes);
+RadioItem.defaultProps = Object.assign({}, ItemBase.defaultProps, Item.defaultProps, ToggleItem.defaultProps, RadioItem.defaultProps);
 
 delete RadioItem.propTypes.selected;
 delete RadioItem.defaultProps.selected;

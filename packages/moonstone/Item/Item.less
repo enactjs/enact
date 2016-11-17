@@ -7,10 +7,22 @@
 
 .item {
 	.moon-text-base (@moon-item-font-size);
-
+	display: flex;
+	align-items: center;
 	line-height: @moon-item-line-height;
 	padding: @moon-item-vertical-padding @moon-spotlight-outset;
 	position: relative;
+
+	&.inline {
+		display: inline-flex;
+		max-width: 240px;
+		box-sizing: border-box;
+	}
+
+	// Apply to the content area to tell it to expand to the available width of the container
+	.content {
+		flex-grow: 1;
+	}
 
 	:global(.enact-locale-non-latin) & {
 		.enact-locale-non-latin .moon-sub-header-text;
