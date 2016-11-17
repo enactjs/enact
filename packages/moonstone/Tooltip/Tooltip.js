@@ -7,6 +7,7 @@ const TooltipArrow = (props) => {
 
 class Tooltip extends React.Component {
 	static defaultProps = {
+		tooltip: '',
 		tooltipType: 'below left-arrow',
 		tooltipTop: '0',
 		tooltipLeft: '0',
@@ -22,7 +23,7 @@ class Tooltip extends React.Component {
 		* @default is not exist
 		* @public
 		*/
-		tooltip: React.PropTypes.string.isRequired,
+		tooltip: React.PropTypes.string,
 
 		/**
 		* Tooltip Type

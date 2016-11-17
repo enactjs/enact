@@ -21,7 +21,7 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 			 * @default is not exist
 			 * @public
 			 */
-			tooltip: React.PropTypes.string.isRequired,
+			tooltip: React.PropTypes.string,
 
 			/**
 			* When `true`, the content will have locale-safe uppercasing applied.
@@ -54,6 +54,7 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 			this.state = {
+				tooltip: '',
 				tooltipType: 'below left',
 				tooltipTop: '0',
 				tooltipLeft: '0',
@@ -181,11 +182,15 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 		}
 
 		handleFocus () {
-			this.show();
+			if (this.props.tooltip.length>0) {
+				this.show();
+			}
 		}
 
 		handleBlur () {
-			this.hide();
+			if (this.props.tooltip.length>0) {
+				this.hide();
+			}
 		}
 
 		show () {

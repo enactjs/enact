@@ -9,8 +9,11 @@ import React, {PropTypes} from 'react';
 
 import Button from '../Button';
 import Icon from '../Icon';
+import {TooltipDecorator} from '../Tooltip';
 
 import css from './IconButton.less';
+
+const IconBase = TooltipDecorator(Icon);
 
 /**
  * {@link moonstone/IconButton.IconButton} is a {@link moonstone/Icon.Icon}
@@ -120,7 +123,7 @@ const IconButtonBase = kind({
 	render: ({children, small, src, ...rest}) => {
 		return (
 			<Button {...rest} small={small} minWidth={false} marqueeDisabled>
-				<Icon small={small} className={css.icon} src={src}>{children}</Icon>
+				<IconBase small={small} className={css.icon} src={src}>{children}</IconBase>
 			</Button>
 		);
 	}
