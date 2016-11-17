@@ -14,10 +14,10 @@ import Repeater from '../Repeater';
 import {GroupItem, pickGroupItemProps} from './GroupItem';
 
 /**
- * {@link ui/Group.GroupBase} is a stateless component that supports single-select of
+ * {@link ui/Group.Group} is a stateless component that supports single-select of
  * its child items via configurable properties and events.
  *
- * @class GroupBase
+ * @class Group
  * @memberof ui/Group
  * @ui
  * @public

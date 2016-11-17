@@ -1,6 +1,6 @@
 import React from 'react';
 import {mount} from 'enzyme';
-import Portal from '../Portal';
+import {PortalBase} from '../Portal';
 
 describe('Portal Specs', () => {
 	beforeEach(() => {
@@ -10,7 +10,7 @@ describe('Portal Specs', () => {
 	});
 
 	it('should not render if portal is not open', () => {
-		const wrapper = mount(<Portal><p>Hi</p></Portal>);
+		const wrapper = mount(<PortalBase><p>Hi</p></PortalBase>);
 
 		const expected = null;
 		const actual = wrapper.instance().node;
@@ -18,9 +18,7 @@ describe('Portal Specs', () => {
 	});
 
 	it('should render if portal is open', () => {
-		const wrapper = mount(<Portal open><p>Hi</p></Portal>);
-
-		// wrapper.find('p').length returns 0
+		const wrapper = mount(<PortalBase open><p>Hi</p></PortalBase>);
 
 		const expected = 'P';
 		const actual = wrapper.instance().node.firstElementChild.firstElementChild.tagName;

@@ -37,7 +37,7 @@ const PickerBase = kind({
 		 * supported. Without a custom icon, the default is used, and is automatically changed when
 		 * the [orientation]{Icon#orientation} is changed.
 		 *
-		 * @type {string}
+		 * @type {String}
 		 * @public
 		 */
 		decrementIcon: React.PropTypes.string,
@@ -56,7 +56,7 @@ const PickerBase = kind({
 		 * supported. Without a custom icon, the default is used, and is automatically changed when
 		 * the [orientation]{Icon#orientation} is changed.
 		 *
-		 * @type {string}
+		 * @type {String}
 		 * @public
 		 */
 		incrementIcon: React.PropTypes.string,
@@ -72,6 +72,16 @@ const PickerBase = kind({
 		 * @public
 		 */
 		joined: React.PropTypes.bool,
+
+		/**
+		 * By default, each picker item is wrapped by a
+		 * {@link moonstone/Marquee.MarqueeText}. When `marqueeDisabled` is `true`,
+		 * the items will not be wrapped.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		marqueeDisabled: React.PropTypes.bool,
 
 		/**
 		 * By default, the picker will animate transitions between items if it has a defined
@@ -96,7 +106,6 @@ const PickerBase = kind({
 		 * sides of the value. Must be either `'horizontal'` or `'vertical'`.
 		 *
 		 * @type {String}
-		 * @default 'horizontal'
 		 * @public
 		 */
 		orientation: React.PropTypes.oneOf(['horizontal', 'vertical']),
@@ -110,7 +119,7 @@ const PickerBase = kind({
 		 */
 		value: React.PropTypes.number,
 
-		/*
+		/**
 		 * Choose a specific size for your picker. `'small'`, `'medium'`, `'large'`, or set to `null` to
 		 * assume auto-sizing. `'small'` is good for numeric pickers, `'medium'` for single or short
 		 * word pickers, `'large'` for maximum-sized pickers.
@@ -120,7 +129,7 @@ const PickerBase = kind({
 		 */
 		width: React.PropTypes.oneOf([null, 'small', 'medium', 'large']),
 
-		/*
+		/**
 		 * Should the picker stop incrementing when the picker reaches the last element? Set `wrap`
 		 * to `true` to allow the picker to continue from the opposite end of the list of options.
 		 *
@@ -136,16 +145,20 @@ const PickerBase = kind({
 
 	computed: {
 		max: ({children}) => children.length - 1,
-		children: ({children}) => React.Children.map(children, (child) => {
-			return <PickerItem>{child}</PickerItem>;
+		children: ({children, marqueeDisabled}) => React.Children.map(children, (child) => {
+			return <PickerItem marqueeDisabled={marqueeDisabled}>{child}</PickerItem>;
 		})
 	},
 
-	render: ({children, max, value, ...rest}) => (
-		<PickerCore {...rest} min={0} max={max} index={value} step={1} value={value}>
-			{children}
-		</PickerCore>
-	)
+	render: ({children, max, value, ...rest}) => {
+		delete rest.marqueeDisabled;
+
+		return (
+			<PickerCore {...rest} min={0} max={max} index={value} step={1} value={value}>
+				{children}
+			</PickerCore>
+		);
+	}
 });
 
 /**
