@@ -6,8 +6,6 @@ import {isRtlText} from '@enact/i18n';
 import css from './TooltipDecorator.less';
 import {Tooltip} from './Tooltip';
 
-const arrowMargin = 18;
-
 const TooltipDecorator = hoc( (config, Wrapped) => {
 	return class extends React.Component {
 		static defaultProps = {
@@ -23,7 +21,7 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 			 * @default is not exist
 			 * @public
 			 */
-			alt: React.PropTypes.string.isRequired,
+			tooltip: React.PropTypes.string.isRequired,
 
 			/**
 			* When `true`, the content will have locale-safe uppercasing applied.
@@ -36,7 +34,7 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 
 			/**
 			* Position of the tooltip with respect to the activating control. Valid values are
-			* `'above'`, `'below'`, `'left top'`, `'left bottom'`, `'right top'`, `'right bottom'`, and
+			* `'above'`, `'below'`, `'above center'`, `'below center'`, `'left top'`, `'left bottom'`, `'left center'`, `'right top'`, `'right bottom'`, `'right center'`, and
 			* `'auto'`. The values starting with `'left`' and `'right'` place the tooltip on the side
 			* (sideways tooltip) with two additional positions available, `'top'` and `'bottom'`, which
 			* places the tooltip content toward the top or bottom, with the tooltip pointer
@@ -56,11 +54,11 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 			this.state = {
-				tooltipType: 'below-left',
-				tooltipTop: 0,
-				tooltipLeft: 0,
-				tooltipVisible: 'hidden',
-				arrowType: 'half'
+				tooltipType: 'below left',
+				tooltipTop: '0',
+				tooltipLeft: '0',
+				arrowType: 'corner',
+				showing: true
 			};
 		}
 
@@ -74,7 +72,7 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 			let aPos; // arrow position
 			let r;
 			let arr;
-			let rtl = isRtlText(this.props.alt);
+			let rtl = isRtlText(this.props.tooltip);
 
 			if ((arr = position.split(' ')).length == 2) {
 				[tPos, aPos] = arr;
@@ -85,7 +83,7 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 				tPos = 'above';
 				aPos = 'left';
 			}
-			
+
 			if (rtl) {
 				if (tPos == 'above' || tPos == 'below') {
 					aPos = aPos == 'left' ? 'right' : 'left';
@@ -95,7 +93,7 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 			}
 
 			r = this.calcPosition(tPos, aPos);
-			
+
 			if (tPos == 'above' || tPos == 'below') {
 				let isCalculate = false;
 
@@ -112,35 +110,36 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 				if (isCalculate) {
 					r = this.calcPosition(tPos, aPos);
 				}
-			}			
+			}
 			
 			this.setState({
-				tooltipType: tPos+"-"+aPos,
+				tooltipType: tPos + ' ' + aPos + "-arrow",
 				tooltipTop: ri.unit(r.tY, 'rem'),
 				tooltipLeft: ri.unit(r.tX, 'rem'),
-				arrowType: aPos == 'center' ? 'full' : 'half'
+				arrowType: aPos == 'center' ? 'edge' : 'corner'
 			});
 		}
 
 		calcPosition (tPos, aPos) {
 			const cBound = this.clientRef.getBoundingClientRect(); // clinet bound
-			const lBound = this.tooltipRef.labelRef.getBoundingClientRect(); // label bound			
+			const lBound = this.tooltipRef.labelRef.getBoundingClientRect(); // label bound
 			let tX, tY; // tooltip position
 
 			switch (tPos) {
 				case 'below':
 					tX = cBound.left + cBound.width/2;
-					tY = cBound.bottom + arrowMargin;	
+					tY = cBound.bottom;
 					
 					if (aPos == 'right') {
 						tX -= lBound.width;
 					} else if (aPos == 'center') {
 						tX -= lBound.width/2;
-					}					
+					}
 					break;
 				case 'above':
 					tX = cBound.left + cBound.width/2;
-					tY = cBound.top - lBound.height - arrowMargin;
+					tY = cBound.top - lBound.height;
+
 					if (aPos == 'right') {
 						tX -= lBound.width;
 					} else if (aPos == 'center') {
@@ -148,7 +147,7 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 					}
 					break;
 				case 'left':
-					tX = cBound.left - lBound.width - arrowMargin;
+					tX = cBound.left - lBound.width;
 					tY = cBound.top + cBound.height/2;
 
 					if (aPos == 'top') {
@@ -158,7 +157,7 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 					}
 					break;
 				case 'right':
-					tX = cBound.right + arrowMargin;
+					tX = cBound.right;
 					tY = cBound.top + cBound.height/2;
 
 					if (aPos == 'top') {
@@ -193,7 +192,7 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 			this.setTimeout(() => {
 				this.adjustPosition();
 				this.setState({
-					tooltipVisible: 'visible'
+					showing: true
 				});
 			}, 500);
 		}
@@ -201,7 +200,7 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 		hide () {
 			this.clearTimeout();
 			this.setState({
-				tooltipVisible: 'hidden'
+				showing: false
 			});
 		}
 
@@ -222,7 +221,7 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 		render () {
 			const style = this.props.style ? this.props.style : {};
 			const props = Object.assign({}, this.props, {
-				alt: this.props.alt && this.props.uppercase ? this.props.alt.toUpperCase() : '',
+				tooltip: this.props.tooltip && this.props.uppercase ? this.props.tooltip.toUpperCase() : '',
 			});
 
 			delete props.style;
@@ -242,8 +241,8 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 							tooltipTop={this.state.tooltipTop}
 							tooltipLeft={this.state.tooltipLeft}
 							arrowType={this.state.arrowType}
-							visible={this.state.tooltipVisible}
-							ref={(tooltip) => this.tooltipRef = tooltip}/>
+							showing={this.state.showing}
+							ref={(tooltip) => this.tooltipRef = tooltip} />
 					</Portal>
 				</div>
 			)
