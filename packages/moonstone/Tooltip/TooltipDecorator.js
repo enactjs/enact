@@ -58,7 +58,7 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 				tooltipTop: '0',
 				tooltipLeft: '0',
 				arrowType: 'corner',
-				showing: true
+				showing: false
 			};
 		}
 
