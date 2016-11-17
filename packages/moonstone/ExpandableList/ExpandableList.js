@@ -15,14 +15,14 @@ import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 import RadioItem from '../RadioItem';
 
 /**
- * {@link moonstone/ExpandableList.ExpandableList} is a stateless component that
+ * {@link moonstone/ExpandableList.ExpandableListBase} is a stateless component that
  * renders a {@link moonstone/LabeledItem.LabeledItem} that can be expanded to show
  * a selectable list of items.
  *
  * @class ExpandableListBase
  * @memberof moonstone/ExpandableList
  * @ui
- * @private
+ * @public
  */
 const ExpandableListBase = kind({
 	name: 'ExpandableList',
@@ -189,7 +189,7 @@ const ExpandableListBase = kind({
 					onSelect={onSelect}
 					select={select}
 					selected={selected}
-					selectedProp="checked"
+					selectedProp="selected"
 				>
 					{children}
 				</Group>

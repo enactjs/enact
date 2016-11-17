@@ -9,12 +9,19 @@ import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
 import React, {PropTypes} from 'react';
 
+/**
+ * Default config for {@link ui/Pressable.Pressable}
+ *
+ * @memberof ui/Pressable
+ * @hocconfig
+ */
 const defaultConfig = {
 	/**
 	 * Configures the event name that activates the Pressable
 	 *
 	 * @type {String}
 	 * @default 'onMouseDown'
+	 * @memberof ui/Pressable.defaultConfig
 	 */
 	depress: 'onMouseDown',
 
@@ -23,6 +30,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'onMouseUp'
+	 * @memberof ui/Pressable.defaultConfig
 	 */
 	release: 'onMouseUp',
 
@@ -31,6 +39,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'pressed'
+	 * @memberof ui/Pressable.defaultConfig
 	 */
 	prop: 'pressed'
 };

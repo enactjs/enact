@@ -37,6 +37,14 @@ const MarqueeBase = kind({
 		animating: React.PropTypes.bool,
 
 		/**
+		 * When `true`, the contents will be centered regardless of the text directionality.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		centered: React.PropTypes.bool,
+
+		/**
 		 * `children` is the text or a set of components that should be scrolled by the
 		 * {@link moonstone/Marquee.Marquee} component.
 		 * This prop may be empty in some cases, which is OK.
@@ -72,6 +80,14 @@ const MarqueeBase = kind({
 		distance: React.PropTypes.number,
 
 		/**
+		 * Forces the `direction` of the marquee. Valid values are `rtl` and `ltr`. This includes non-text elements as well.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		forceDirection: React.PropTypes.oneOf(['rtl', 'ltr']),
+
+		/**
 		 * Callback function for when the marquee completes its animation
 		 *
 		 * @type {Function}
@@ -103,15 +119,18 @@ const MarqueeBase = kind({
 
 	computed: {
 		clientClassName: ({animating}) => animating ? animated : css.text,
-		clientStyle: ({animating, children, distance, overflow, speed}, {rtl: contextRtl}) => {
-			const rtl = isRtlText(children);
-			const overrideRtl = contextRtl !== rtl;
+		clientStyle: ({animating, centered, children, distance, forceDirection, overflow, speed}, {rtl: contextRtl}) => {
+			let rtl = forceDirection ? forceDirection === 'rtl' : isRtlText(children);
+
+			const overrideRtl = forceDirection ? true : contextRtl !== rtl;
 
 			// We only attempt to set the textAlign of this control if the locale's directionality
 			// differs from the directionality of our current marqueeable control (as determined by
 			// the control's content) and it will marquee.
 			let textAlign = null;
-			if (overrideRtl && distance > 0) {
+			if (centered) {
+				textAlign = 'center';
+			} else if (overrideRtl && distance > 0) {
 				if (rtl) {
 					textAlign = 'right';
 				} else {
