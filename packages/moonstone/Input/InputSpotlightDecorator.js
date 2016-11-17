@@ -1,3 +1,4 @@
+import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import React from 'react';
 import {Spotlight, Spottable} from '@enact/spotlight';
@@ -10,6 +11,10 @@ const isBubbling = (ev) => ev.currentTarget !== ev.target;
 
 const InputSpotlightDecorator = hoc((config, Wrapped) => {
 	const Component = Spottable(Wrapped);
+	const forwardBlur = forward('onBlur');
+	const forwardClick = forward('onClick');
+	const forwardFocus = forward('onFocus');
+	const forwardKeyDown = forward('onKeyDown');
 
 	return class extends React.Component {
 		static displayName = 'InputSpotlightDecorator';
@@ -30,6 +35,8 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 
 			if (this.state.focused === 'input') {
 				Spotlight.pause();
+			} else {
+				Spotlight.resume();
 			}
 		}
 
@@ -42,12 +49,10 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 				focused: null,
 				node: null
 			});
-			Spotlight.resume();
 		}
 
 		focusDecorator = (decorator) => {
 			this.focus('decorator', decorator);
-			Spotlight.resume();
 		}
 
 		focusInput = (decorator) => {
@@ -55,56 +60,48 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 		}
 
 		onBlur = (ev) => {
-			const {onBlur, noDecorator} = this.props;
-			if (!noDecorator) {
+			if (!this.props.noDecorator) {
 				if (isBubbling(ev)) {
 					if (Spotlight.getPointerMode()) {
 						this.blur();
-						if (onBlur) {
-							onBlur(ev);
-						}
+						forwardBlur(ev, this.props);
 					} else {
 						this.focusDecorator(ev.currentTarget);
 						ev.stopPropagation();
 					}
 				}
 			} else {
-				Spotlight.resume();
-
 				// only blur when the input should be focused and is the target of the blur
 				if (this.state.focused === 'input' && this.state.node === ev.target) {
 					this.blur();
-					onBlur(ev);
+					forwardBlur(ev, this.props);
 				}
 			}
 		}
 
 		onClick = (ev) => {
-			const {onClick, spotlightDisabled} = this.props;
-
 			// focus the <input> whenever clicking on any part of the component to ensure both that
 			// the <input> has focus and Spotlight is paused.
-			if (!spotlightDisabled) {
+			if (!this.props.spotlightDisabled) {
 				this.focusInput(ev.currentTarget);
 			}
 
-			if (onClick) onClick(ev);
+			forwardClick(ev, this.props);
 		}
 
 		onFocus = (ev) => {
-			const {onFocus, noDecorator} = this.props;
-			if (onFocus) onFocus(ev);
+			forwardFocus(ev, this.props);
 
 			// when in noDecorator mode, focusing the decorator directly will cause it to
 			// forward the focus onto the <input>
-			if (noDecorator && !isBubbling(ev)) {
+			if (this.props.noDecorator && !isBubbling(ev)) {
 				this.focusInput(ev.currentTarget);
 				ev.stopPropagation();
 			}
 		}
 
 		onKeyDown = (ev) => {
-			const {dismissOnEnter, noDecorator, onKeyDown} = this.props;
+			const {dismissOnEnter, noDecorator} = this.props;
 			const {currentTarget, keyCode, target} = ev;
 
 			if (this.state.focused === 'input') {
@@ -141,7 +138,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 				}
 			}
 
-			if (onKeyDown) onKeyDown(ev);
+			forwardKeyDown(ev, this.props);
 		}
 
 		render () {

@@ -54,26 +54,6 @@ class ExpandableInputBase extends React.Component {
 		value: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number])
 	}
 
-	onInputKeyDown = (ev) => {
-		const keyCode = ev.keyCode;
-		const isInputFocused = ev.target !== ev.currentTarget;
-
-		switch (keyCode) {
-			case 13:
-				if (isInputFocused) {
-					this.fireChangeEvent();
-					// prevent the onKeyPress event which will fire on ExpandableItem since it will
-					// have received focus
-					// ev.preventDefault();
-				}
-				break;
-			case 38:
-			case 40:
-				this.fireChangeEvent();
-				break;
-		}
-	}
-
 	fireChangeEvent = () => {
 		const {onChange, onClose, value} = this.props;
 
@@ -86,21 +66,53 @@ class ExpandableInputBase extends React.Component {
 		}
 	}
 
-	handleBlur = () => {
+	handleInputKeyDown = (ev) => {
+		const keyCode = ev.keyCode;
+
+		switch (keyCode) {
+			case 13:
+			case 38:
+			case 40:
+				// prevent Enter onKeyPress which would re-open the expandable when the label
+				// receives focus
+				ev.preventDefault();
+				this.fireChangeEvent();
+				break;
+		}
+	}
+
+	handleInputBlur = () => {
 		this.fireChangeEvent();
+	}
+
+	handleMouseDown = (ev) => {
+		// if the contained <input> has focus, prevent onClicks so that clicking on the LabeledItem
+		// doesn't open the expandable immediately after blurring the <input> closed it.
+		if (ev.currentTarget.contains(document.activeElement)) {
+			ev.preventDefault();
+		}
+	}
+
+	handleInputMouseDown = (ev) => {
+		// prevent onMouseDown events from the <input> itself from bubbling up to be prevented by
+		// handleMouseDown
+		ev.stopPropagation();
 	}
 
 	render () {
 		const {disabled, onInputChange, placeholder, type, value, ...rest} = this.props;
+		delete rest.onChange;
+
 		return (
-			<ExpandableItemBase {...rest} disabled={disabled}>
+			<ExpandableItemBase {...rest} disabled={disabled} label={value} onMouseDown={this.handleMouseDown}>
 				<Input
 					disabled={disabled}
 					dismissOnEnter
 					noDecorator
+					onBlur={this.handleInputBlur}
 					onChange={onInputChange}
-					onBlur={this.handleBlur}
-					onKeyDown={this.onInputKeyDown}
+					onKeyDown={this.handleInputKeyDown}
+					onMouseDown={this.handleInputMouseDown}
 					placeholder={placeholder}
 					type={type}
 					value={value}
