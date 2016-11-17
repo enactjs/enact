@@ -119,32 +119,7 @@ const VirtualVariableList = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		itemSize: PropTypes.object.isRequired,
-
-		/**
-		 * Direction specific options of the list; valid values are `'width'` and `'height'`.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		variableDimension: PropTypes.oneOf(['width', 'height']).isRequired,
-
-		/**
-		 * For variable width or variable height, we need to define max scroll width or max scroll height
-		 * instead of calculating them from all items.
-		 *
-		 * @type {Number}
-		 * @public
-		 */
-		variableMaxScrollSize: PropTypes.number.isRequired,
-
-		/**
-		 * To fix the position for first row and column items
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		lockHeaders: PropTypes.bool
+		itemSize: PropTypes.object.isRequired
 	},
 
 	render: (orgProps) => {

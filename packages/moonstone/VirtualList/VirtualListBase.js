@@ -98,6 +98,14 @@ class VirtualListCore extends Component {
 		direction: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
+		 * To fix the position for first row and column items
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		lockHeaders: PropTypes.bool,
+
+		/**
 		 * Called when onScroll [events]{@glossary event} occurs.
 		 *
 		 * @type {Function}
@@ -136,7 +144,24 @@ class VirtualListCore extends Component {
 		 * @default 0
 		 * @public
 		 */
-		spacing: PropTypes.number
+		spacing: PropTypes.number,
+
+		/**
+		 * Direction specific options of the list; valid values are `'width'` and `'height'`.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		variableDimension: PropTypes.oneOf(['width', 'height']),
+
+		/**
+		 * For variable width or variable height, we need to define max scroll width or max scroll height
+		 * instead of calculating them from all items.
+		 *
+		 * @type {Number}
+		 * @public
+		 */
+		variableMaxScrollSize: PropTypes.number
 	}
 
 	static contextTypes = contextTypes
@@ -256,7 +281,7 @@ class VirtualListCore extends Component {
 
 	calculateMetrics (props) {
 		const
-			{dataSize, direction, itemSize, positioningOption, spacing, variableDimension} = props,
+			{direction, itemSize, positioningOption, spacing, variableDimension} = props,
 			node = this.getContainerNode(positioningOption);
 
 		if (!node) {
@@ -313,7 +338,7 @@ class VirtualListCore extends Component {
 			secondary.gridSize = secondary.itemSize + spacing;
 		}
 
-		primary.maxFirstIndex = 0
+		primary.maxFirstIndex = 0;
 		primaryThresholdBase = primary.gridSize * 2;
 		primary.threshold = {min: -Infinity, max: primaryThresholdBase, base: primaryThresholdBase};
 
@@ -623,7 +648,7 @@ class VirtualListCore extends Component {
 		);
 	}
 
-	calculateZIndex(primaryIndex, secondaryIndex) {
+	calculateZIndex (primaryIndex, secondaryIndex) {
 		return (primaryIndex === 0 ? 1 : 0) + (secondaryIndex === 0 ? 10 : 0);
 	}
 
@@ -677,7 +702,7 @@ class VirtualListCore extends Component {
 
 	positionItems (applyStyle, {updateFrom, updateTo}) {
 		const
-			{data, lockHeaders, positioningOption, variableDimension} = this.props,
+			{lockHeaders, positioningOption, variableDimension} = this.props,
 			{numOfItems} = this.state,
 			{dimensionToExtent, isPrimaryDirectionVertical, isVirtualVariableList, primary, secondary} = this;
 		let
@@ -698,7 +723,7 @@ class VirtualListCore extends Component {
 		} else {
 			width = (isPrimaryDirectionVertical ? secondary.itemSize : primary.itemSize) + 'px';
 			height = (isPrimaryDirectionVertical ? primary.itemSize : secondary.itemSize) + 'px';
-			j = updateFrom % dimensionToExtent
+			j = updateFrom % dimensionToExtent;
 		}
 
 		// First row
@@ -823,9 +848,9 @@ class VirtualListCore extends Component {
 			gridPosition.secondaryPosition = this.adjustPositionOnFocus(secondary, gridPosition.secondaryPosition, secondary.itemSize({data, index: {fixed: i, variable: j}}));
 		} else {
 			const index = Number.parseInt(focusedIndex);
-		 	gridPosition = this.getGridPosition(index);
-		 	gridPosition.primaryPosition = this.adjustPositionOnFocus(primary, gridPosition.primaryPosition, primary.itemSize);
-		 	gridPosition.secondaryPosition = 0;
+			gridPosition = this.getGridPosition(index);
+			gridPosition.primaryPosition = this.adjustPositionOnFocus(primary, gridPosition.primaryPosition, primary.itemSize);
+			gridPosition.secondaryPosition = 0;
 		}
 
 		this.nodeIndexToBeBlurred = key;

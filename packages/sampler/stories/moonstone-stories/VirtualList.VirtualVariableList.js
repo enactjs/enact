@@ -73,7 +73,7 @@ const
 // CSS
 let sheet = document.createElement('style');
 sheet.innerHTML = '.channelInfo:not(:focus) {background: #2C2E35;}' +
-    '.program:not(:focus) {background: #141416;}';
+	'.program:not(:focus) {background: #141416;}';
 document.body.appendChild(sheet);
 
 // Raw Data
@@ -176,6 +176,7 @@ for (let i = 0; i < 200; i++) { /* 200 channelInfo */
 
 // Story
 const
+	nop = () => {},
 	getVariableDataSize = ({data, fixedIndex}) => {
 		return data[fixedIndex].length;
 	},
@@ -184,7 +185,7 @@ const
 	},
 	renderItem = ({data, index, key}) => {
 		// Today & Timeline
-		if (index.fixed == 0) {
+		if (index.fixed === 0) {
 			return (
 				<div key={key} style={style.itemWrapper}>
 					<div style={index.variable === 0 ? style.itemToday : style.itemTimeline}>
@@ -194,20 +195,20 @@ const
 			);
 		// ChannelInfo
 		} else if (index.variable === 0) {
-			 return (
-                <Item key={key} className={'channelInfo'} style={style.itemWrapper}>
-                    <div style={style.itemChannelInfo}>
-                        {data[index.fixed][index.variable].programName}
-                    </div>
-                </Item>
-            );
-        // Programs
-        } else  {
-            return (
-                <Item key={key} className={'program'} style={style.itemWrapper}>
-                    <div style={style.itemProgram}>
-                        {data[index.fixed][index.variable].programName}
-                    </div>
+			return (
+				<Item key={key} className={'channelInfo'} style={style.itemWrapper}>
+					<div style={style.itemChannelInfo}>
+						{data[index.fixed][index.variable].programName}
+					</div>
+				</Item>
+			);
+		// Programs
+		} else {
+			return (
+				<Item key={key} className={'program'} style={style.itemWrapper}>
+					<div style={style.itemProgram}>
+						{data[index.fixed][index.variable].programName}
+					</div>
 				</Item>
 			);
 		}
@@ -221,8 +222,11 @@ storiesOf('VirtualList.VirtualVariableList')
 		() => (
 			<div style={style.epg}>
 				<VirtualVariableList
+					// eslint-disable-next-line react/jsx-no-bind
 					cbScrollTo={(cbScrollTo) => {
-						global.scrollTo = cbScrollTo;
+						if (typeof window === 'object') {
+							window.scrollTo = cbScrollTo;
+						}
 					}}
 					data={epgData}
 					dataSize={{
@@ -243,22 +247,26 @@ storiesOf('VirtualList.VirtualVariableList')
 				/>
 				<IconButton
 					small
-					onClick={() => global.scrollTo.call(this, {page: 'up'})}
+					// eslint-disable-next-line react/jsx-no-bind
+					onClick={(typeof window === 'object') ? () => window.scrollTo.call(this, {page: 'up'}) : nop}
 					style={{position: 'absolute', left: '50%', top: '0', transform: 'translate3d(-50%, 0, 0)'}}
 				>arrowsmallup</IconButton>
 				<IconButton
 					small
-					onClick={() => global.scrollTo.call(this, {page: 'down'})}
+					// eslint-disable-next-line react/jsx-no-bind
+					onClick={(typeof window === 'object') ? () => window.scrollTo.call(this, {page: 'down'}) : nop}
 					style={{position: 'absolute', left: '50%', bottom: '0', transform: 'translate3d(-50%, 0, 0)'}}
 				>arrowsmalldown</IconButton>
 				<IconButton
 					small
-					onClick={() => global.scrollTo.call(this, {page: 'left'})}
+					// eslint-disable-next-line react/jsx-no-bind
+					onClick={(typeof window === 'object') ? () => window.scrollTo.call(this, {page: 'left'}) : nop}
 					style={{position: 'absolute', left: '0', top: '0', transform: 'translateZ(0)'}}
 				>arrowsmallleft</IconButton>
 				<IconButton
 					small
-					onClick={() => global.scrollTo.call(this, {page: 'right'})}
+					// eslint-disable-next-line react/jsx-no-bind
+					onClick={(typeof window === 'object') ? () => window.scrollTo.call(this, {page: 'right'}) : nop}
 					style={{position: 'absolute', right: '0', top: '0', transform: 'translateZ(0)'}}
 				>arrowsmallright</IconButton>
 			</div>
