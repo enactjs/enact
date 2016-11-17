@@ -1,8 +1,8 @@
 /**
- * Exports the {@link module:@enact/ui/Portal.ScrimBase} component and {@link module:@enact/ui/Portal.ScrimLayer}
- * component. The default export is {@link module:@enact/ui/Portal.ScrimBase}.
+ * Exports the {@link ui/Portal.ScrimBase} component and {@link ui/Portal.ScrimLayer}
+ * component. The default export is {@link ui/Portal.ScrimBase}.
  *
- * @module @enact/ui/Scrim
+ * @module ui/Portal/Scrim
  */
 
 import kind from '@enact/core/kind';
@@ -11,10 +11,11 @@ import React from 'react';
 import css from './Scrim.less';
 
 /**
- * {@link module:@enact/ui/Portal.ScrimBase} provides an overlay that will prevent taps from propagating
+ * {@link ui/Portal.ScrimBase} provides an overlay that will prevent taps from propagating
  * to the controls that it covers.
  *
  * @class ScrimBase
+ * @memberOf ui/Portal
  * @ui
  * @private
  */
@@ -24,8 +25,10 @@ const ScrimBase = kind({
 	propTypes: {
 		/**
 		 * Types of scrim. It can be either `transparent` or `translucent`.
+		 *
 		 * @type {String}
 		 * @default `translucent`
+		 * @public
 		 */
 		type: React.PropTypes.oneOf(['transparent', 'translucent'])
 	},
@@ -53,10 +56,11 @@ const ScrimBase = kind({
 });
 
 /**
- * {@link module:@enact/ui/Portal.ScrimLayer} is a layer which adds scrim behind the children.
+ * {@link ui/Portal.ScrimLayer} is a layer which adds scrim behind the children.
  * Children will always have one higher z-index than scrim.
  *
  * @class ScrimLayer
+ * @memberOf ui/Portal
  * @ui
  * @private
  */
@@ -67,21 +71,27 @@ const ScrimLayer = kind({
 		/**
 		 * z-index of the layer. Scrim will have the z-index of layer, and the children will have
 		 * one higher index to display on top of Scrim.
+		 *
 		 * @type {Number}
+		 * @public
 		 */
 		zIndex: React.PropTypes.number.isRequired,
 
 		/**
 		 * Types of scrim. It can be either `transparent` or `translucent`.
+		 *
 		 * @type {String}
 		 * @default `translucent`
+		 * @public
 		 */
 		type: React.PropTypes.oneOf(['transparent', 'translucent']),
 
 		/**
 		 * When `true`, scrim will appear
+		 *
 		 * @type {Boolean}
 		 * @default false
+		 * @public
 		 */
 		visible: React.PropTypes.bool
 	},

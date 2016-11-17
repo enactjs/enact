@@ -1,8 +1,8 @@
 /**
- * Exports the {@link module:@enact/ui/Portal.Portal} and  {@link module:@enact/ui/Portal.PortalBase}
- * component. The default export is {@link module:@enact/ui/Portal.Portal}.
+ * Exports the {@link ui/Portal.Portal} and  {@link ui/Portal.PortalBase}
+ * component. The default export is {@link ui/Portal.Portal}.
  *
- * @module @enact/ui/Portal
+ * @module ui/Portal
  */
 
 import React from 'react';
@@ -18,10 +18,11 @@ let scrimZIndex = 120;
 const viewingLayers = [];
 
 /**
- * {@link module:@enact/ui/Portal.PortalBase} is a component that creates an entry point to the new
+ * {@link ui/Portal.PortalBase} is a component that creates an entry point to the new
  * render tree. This is used for modal components such as popups.
  *
  * @class Portal
+ * @memberOf ui/Portal
  * @ui
  * @public
  */
@@ -55,6 +56,7 @@ class PortalBase extends React.Component {
 		/**
 		 * A function to run when `ESC` key is pressed. The function will only invoke if
 		 * `noAutoDismiss` is set to false.
+		 *
 		 * @type {Function}
 		 * @public
 		 */
@@ -70,6 +72,7 @@ class PortalBase extends React.Component {
 
 		/**
 		 * When `true`, it renders components into portal.
+		 *
 		 * @type {Boolean}
 		 * @default false
 		 * @public
@@ -207,7 +210,7 @@ const handleCancel = function (props) {
 };
 
 /**
- * {@link module:@enact/ui/Portal.Portal} is a component that creates an entry point to the new
+ * {@link ui/Portal.Portal} is a component that creates an entry point to the new
  * render tree. This is used for modal components such as popups.
  *
  * @class Portal

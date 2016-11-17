@@ -1,7 +1,7 @@
 /**
- * Exports the {@link module:@enact/ui/Layerable~Layerable} Higher-order Component (HOC).
+ * Exports the {@link ui/Layerable.Layerable} Higher-order Component (HOC).
  *
- * @module @enact/ui/Layerable
+ * @module ui/Layerable
  */
 
 import hoc from '@enact/core/hoc';
@@ -19,17 +19,16 @@ const defaultConfig = {
 };
 
 /**
- * {@link module:@enact/ui/Layerable~Layerable} is a Higher-order Component that applies a 'Layerable' behavior
+ * {@link ui/Layerable.Layerable} is a Higher-order Component that applies a 'Layerable' behavior
  * to its wrapped component.
- *
  *
  * By default, Layerable applies applies positioning information to a component, whether it's a
  * floating layer or inline layer. Relative positions, anchored positions, orientations like
  * "up+right" from the anchor point are planned for future support to more easily handle scenarios
  * like Tooltip and ContextualPopup.
  *
- *
  * @class Layerable
+ * @memberOf ui/Layerable
  * @ui
  * @public
  */
@@ -55,7 +54,7 @@ const LayerableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 		render () {
 			const props = Object.assign({}, this.props);
-			if (config.target == 'window') {
+			if (config.target === 'window') {
 				props.style = {
 					...props.style,
 					'position': 'absolute'

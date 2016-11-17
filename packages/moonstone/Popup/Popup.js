@@ -1,8 +1,8 @@
 /**
- * Exports the {@link module:@enact/moonstone/Popup.Popup} and {@link module:@enact/moonstone/Popup.PopupBase}.
+ * Exports the {@link moonstone/Popup.Popup} and {@link moonstone/Popup.PopupBase}.
  * The default export is {@link moonstone/Popup.Popup}.
  *
- * @module @enact/moonstone/Popup
+ * @module moonstone/Popup
  */
 
 import kind from '@enact/core/kind';
@@ -19,10 +19,11 @@ import css from './Popup.less';
 const TransitionContainer = SpotlightContainerDecorator(Transition);
 
 /**
- * {@link module:@enact/moonstone/Popup.PopupBase} is a modal component that appears at the bottom of
+ * {@link moonstone/Popup.PopupBase} is a modal component that appears at the bottom of
  * the screen and takes up the full screen width.
  *
  * @class PopupBase
+ * @memberOf moonstone/Popup
  * @ui
  * @public
  */
@@ -152,10 +153,11 @@ const PopupBase = kind({
 const LayerablePopup = Layerable(PopupBase);
 
 /**
- * {@link module:@enact/moonstone/Popup.Popup} is a stateful component that help {@link module:@enact/moonstone/Popup.PopupBase}
- * to appear in {@link module:@enact/ui/Portal.Portal} layer.
+ * {@link moonstone/Popup.Popup} is a stateful component that help {@link moonstone/Popup.PopupBase}
+ * to appear in {@link ui/Portal.Portal} layer.
  *
  * @class Popup
+ * @memberOf moonstone/Popup
  * @ui
  * @public
  */

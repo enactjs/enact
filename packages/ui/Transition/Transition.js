@@ -11,9 +11,9 @@ import kind from '@enact/core/kind';
 import css from './Transition.less';
 
 /**
- * {@link ui/Transition.TransitionBase} is a stateless component that allows for applying transitions
- * to its child items via configurable properties and events. In general, you want to use the stateful version,
- * {@link ui/Transition.Transition}.
+ * {@link ui/Transition.TransitionBase} is a stateless component that allows for applying
+ * transitions to its child items via configurable properties and events. In general, you want to
+ * use the stateful version, {@link ui/Transition.Transition}.
  *
  * @class TransitionBase
  * @memberof ui/Transition
@@ -63,7 +63,8 @@ const TransitionBase = kind({
 
 		/**
 		 * Control how long the transition should take.
-		 * Supported durations are: short (250ms), long (1s). medium (500ms) is default when no others are specified.
+		 * Supported durations are: short (250ms), long (1s). medium (500ms) is default when no
+		 * others are specified.
 		 *
 		 * @type {String}
 		 * @default 'medium'
@@ -91,7 +92,8 @@ const TransitionBase = kind({
 
 		/**
 		 * Customize the transition timing function.
-		 * Supported functions are: linear, ease. ease-in-out is the default when none others are specified.
+		 * Supported functions are: linear, ease. ease-in-out is the default when none others are
+		 * specified.
 		 *
 		 * @type {String}
 		 * @default 'ease-in-out'
@@ -146,9 +148,9 @@ const TransitionBase = kind({
 			css[type]
 		),
 		style: ({clipHeight, type, visible, style}) => ({
+			...style,
 			height: ((type === 'clip') && visible) ? clipHeight : null,
-			overflow: (type === 'clip') ? 'hidden' : null,
-			...style
+			overflow: (type === 'clip') ? 'hidden' : null
 		})
 	},
 
@@ -229,7 +231,9 @@ class Transition extends React.Component {
 
 		/**
 		 * A function to run after transition for hiding is finished.
+		 *
 		 * @type {Function}
+		 * @public
 		 */
 		onHide: PropTypes.func,
 
