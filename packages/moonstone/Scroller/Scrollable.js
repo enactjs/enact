@@ -532,6 +532,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		getPositionForScrollTo = (opt) => {
 			const
+				{maxLeft, maxTop} = this.bounds,
 				canScrollHorizontally = this.canScrollHorizontally(),
 				canScrollVertically = this.canScrollVertically();
 			let
@@ -554,14 +555,34 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						if (opt.align.includes('left')) {
 							left = 0;
 						} else if (opt.align.includes('right')) {
-							left = this.bounds.maxLeft;
+							left = maxLeft;
 						}
 					}
 					if (canScrollVertically) {
 						if (opt.align.includes('top')) {
 							top = 0;
 						} else if (opt.align.includes('bottom')) {
-							top = this.bounds.maxTop;
+							top = maxTop;
+						}
+					}
+				} else if (opt.page) {
+					const
+						{data, itemSize, lockHeaders} = this.props,
+						clientWidth = lockHeaders ? (this.bounds.clientWidth - itemSize.variable({data, index: {fixed: 0, variable: 0}})) : this.bounds.clientWidth,
+						clientHeight = lockHeaders ? (this.bounds.clientHeight - itemSize.fixed) : this.bounds.clientHeight;
+
+					if (canScrollHorizontally) {
+						if (opt.page === 'left') {
+							left = (this.scrollLeft === 0) ? maxLeft : R.clamp(0, maxLeft, this.scrollLeft - clientWidth);
+						} else if (opt.page === 'right') {
+							left = (this.scrollLeft === maxLeft) ? 0 : R.clamp(0, maxLeft, this.scrollLeft + clientWidth);
+						}
+					}
+					if (canScrollVertically) {
+						if (opt.page === 'up') {
+							top = (this.scrollTop === 0) ? maxTop : R.clamp(0, maxTop, this.scrollTop - clientHeight);
+						} else if (opt.page === 'down') {
+							top = (this.scrollTop === maxTop) ? 0 :	R.clamp(0, maxTop, this.scrollTop + clientHeight);
 						}
 					}
 				} else {
@@ -590,7 +611,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			let {left, top} = this.getPositionForScrollTo(opt);
 
 			if (left !== null || top !== null) {
-				this.start((left !== null) ? left : this.scrollLet, (top !== null) ? top : this.scrollTop, opt.animate);
+				this.start((left !== null) ? left : this.scrollLeft, (top !== null) ? top : this.scrollTop, opt.animate);
 			}
 		}
 

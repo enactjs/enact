@@ -1,5 +1,6 @@
 import ri from '@enact/ui/resolution';
 import Item from '@enact/moonstone/Item';
+import IconButton from '@enact/moonstone/IconButton';
 import {VirtualVariableList} from '@enact/moonstone/VirtualList';
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
@@ -7,14 +8,20 @@ import {withKnobs, number} from '@kadira/storybook-addon-knobs';
 
 // Inline style
 const
-	itemTimelinePadding = ri.scale(50) + 'px ' + ri.scale(10) + 'px ' + ri.scale(10) + 'px',
+	itemTimelinePadding = ri.scale(37) + 'px ' + ri.scale(10) + 'px ' + ri.scale(10) + 'px',
 	itemChannelInfoBGPadding = '0 ' + ri.scale(5) + 'px ' + ri.scale(5) + 'px 0',
 	itemChannelInfoPadding = ri.scale(10) + 'px 0 ' + ri.scale(10) + 'px ' + ri.scale(20) + 'px',
 	style = {
-		list: {
-			overflow: 'hidden',
+		epg: {
+			background: 'black',
+			position: 'relative',
 			width: '100%',
-			height: ri.scale(576) + 'px'
+			height: ri.scale(581) + 'px',
+			paddingTop: '13px'
+		},
+		list: {
+			width: '100%',
+			height: '100%'
 		},
 		itemWrapper: {
 			background: 'black',
@@ -25,7 +32,7 @@ const
 		itemToday: {
 			background: 'black',
 			width: '100%',
-			height: ri.scale(96) + 'px',
+			height: '100%',
 			position: 'absolute',
 			padding: itemTimelinePadding,
 			boxSizing: 'border-box',
@@ -40,7 +47,7 @@ const
 		itemTimeline: {
 			background: 'black',
 			width: ri.scale(200) + 'px',
-			height: ri.scale(96) + 'px',
+			height: '100%',
 			position: 'absolute',
 			padding: itemTimelinePadding,
 			borderLeft: ri.scale(2) + 'px solid #333',
@@ -56,10 +63,10 @@ const
 		itemChannelInfoBG: {
 			background: '#2C2E35',
 			backgroundClip: 'content-box',
+			height: '100%',
 			padding: itemChannelInfoBGPadding,
 			boxSizing: 'border-box',
-			overflow: 'hidden',
-			height: '100%'
+			overflow: 'hidden'
 		},
 		itemChannelInfo: {
 			width: ri.scale(400) + 'px',
@@ -76,10 +83,10 @@ const
 		itemProgramBG: {
 			background: '#141416',
 			backgroundClip: 'content-box',
+			height: '100%',
 			padding: itemChannelInfoBGPadding,
 			boxSizing: 'border-box',
-			overflow: 'hidden',
-			height: '100%'
+			overflow: 'hidden'
 		},
 		itemProgram: {
 			height: ri.scale(78) + 'px',
@@ -90,11 +97,6 @@ const
 			userSelect: 'none'
 		}
 	};
-
-// CSS
-let sheet = document.createElement('style');
-sheet.innerHTML = '.list > div:first-child {padding-top: 13px;}';
-document.body.appendChild(sheet);
 
 // Raw Data
 const
@@ -132,8 +134,7 @@ const
 		'11:00 AM', '11:30 AM',
 		'12:00 PM', '12:30 PM',
 		'01:00 PM', '01:30 PM',
-		'02:00 PM', '02:30 PM',
-		'03:00 PM', '03:30 PM'
+		'02:00 PM', '02:30 PM'
 	],
 	// Programs
 	programName = [
@@ -158,7 +159,7 @@ const
 		'NOVA',
 		'Secrets of the Dead'
 	],
-	variableMaxScrollSize = ri.scale(4000) /* 400 ( width per 1 hour )* 10 hr */,
+	variableMaxScrollSize = ri.scale(4005) /* 405 ( width for ChannelInfo ) + 400 ( width per 1 hour )* 9 hr */,
 	getRandomWidth = () => {
 		return ri.scale((parseInt(Math.random() * 20) + 1) * 100);
 	};
@@ -166,7 +167,7 @@ const
 // Data
 for (let i = 0; i < 200; i++) { /* 200 channelInfo */
 	epgData[i] = [];
-	for (let j = 0; j < 40; j++) { /* The maximum number of programs per one channel is 40 */
+	for (let j = 0; j < 19; j++) { /* 1 item for ChannelInfo + 18 items for the maximum number of programs per one channel */
 		// Today
 		if (i === 0 && j === 0) {
 			epgData[i][j] = {
@@ -244,22 +245,48 @@ storiesOf('VirtualList.VirtualVariableList')
 		' ',
 		'Basic usage of VirtualVariableList',
 		() => (
-			<VirtualVariableList
-				data={epgData}
-				dataSize={{
-					fixed: number('dataSize.fixed', epgData.length),
-					variable: getVariableDataSize
-				}}
-				itemSize={{
-					fixed: ri.scale(number('itemSize.fixed', 83)),
-					variable: getVariableItemSize
-				}}
-				lockHeaders
-				variableDimension={'width'}
-				variableMaxScrollSize={variableMaxScrollSize}
-				className={'list'}
-				style={style.list}
-				component={renderItem}
-			/>
+			<div style={style.epg}>
+				<VirtualVariableList
+					cbScrollTo={(cbScrollTo) => {
+						global.scrollTo = cbScrollTo;
+					}}
+					data={epgData}
+					dataSize={{
+						fixed: number('dataSize.fixed', epgData.length),
+						variable: getVariableDataSize
+					}}
+					hideScrollbars
+					itemSize={{
+						fixed: ri.scale(number('itemSize.fixed', 83)),
+						variable: getVariableItemSize
+					}}
+					lockHeaders
+					variableDimension={'width'}
+					variableMaxScrollSize={variableMaxScrollSize}
+					className={'list'}
+					style={style.list}
+					component={renderItem}
+				/>
+				<IconButton
+					small
+					onClick={() => global.scrollTo.call(this, {page: 'up'})}
+					style={{position: 'absolute', left: '50%', top: '0', transform: 'translate3d(-50%, 0, 0)'}}
+				>arrowsmallup</IconButton>
+				<IconButton
+					small
+					onClick={() => global.scrollTo.call(this, {page: 'down'})}
+					style={{position: 'absolute', left: '50%', bottom: '0', transform: 'translate3d(-50%, 0, 0)'}}
+				>arrowsmalldown</IconButton>
+				<IconButton
+					small
+					onClick={() => global.scrollTo.call(this, {page: 'left'})}
+					style={{position: 'absolute', left: '0', top: '0', transform: 'translateZ(0)'}}
+				>arrowsmallleft</IconButton>
+				<IconButton
+					small
+					onClick={() => global.scrollTo.call(this, {page: 'right'})}
+					style={{position: 'absolute', right: '0', top: '0', transform: 'translateZ(0)'}}
+				>arrowsmallright</IconButton>
+			</div>
 		)
 	);
