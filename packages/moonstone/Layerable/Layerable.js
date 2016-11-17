@@ -1,7 +1,7 @@
 /**
- * Exports the {@link ui/Layerable.Layerable} Higher-order Component (HOC).
+ * Exports the {@link moonstone/Layerable.Layerable} Higher-order Component (HOC).
  *
- * @module ui/Layerable
+ * @module moonstone/Layerable
  */
 
 import hoc from '@enact/core/hoc';
@@ -19,7 +19,7 @@ const defaultConfig = {
 };
 
 /**
- * {@link ui/Layerable.Layerable} is a Higher-order Component that applies a 'Layerable' behavior
+ * {@link moonstone/Layerable.Layerable} is a Higher-order Component that applies a 'Layerable' behavior
  * to its wrapped component.
  *
  * By default, Layerable applies applies positioning information to a component, whether it's a
@@ -28,7 +28,7 @@ const defaultConfig = {
  * like Tooltip and ContextualPopup.
  *
  * @class Layerable
- * @memberOf ui/Layerable
+ * @memberOf moonstone/Layerable
  * @ui
  * @public
  */

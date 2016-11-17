@@ -1,7 +1,7 @@
 /**
- * Exports the {@link module:@enact/moonstone/Dialog.Dialog}
+ * Exports the {@link moonstone/Dialog.Dialog}
  *
- * @module @enact/moonstone/Dialog
+ * @module moonstone/Dialog
  */
 
 import kind from '@enact/core/kind';
@@ -13,10 +13,11 @@ import Popup from '../Popup';
 import css from './Dialog.less';
 
 /**
- * {@link module:@enact/moonstone/Dialog.Dialog} is modal component with a title, a subtitle, a
+ * {@link moonstone/Dialog.DialogBase} is a modal component with a title, a subtitle, a
  * message, and an area for additional controls.
  *
- * @class Dialog
+ * @class DialogBase
+ * @memberOf moonstone/Dialog
  * @ui
  * @public
  */
@@ -27,7 +28,8 @@ const DialogBase = kind({
 		/**
 		 * Buttons, typically to close or take action in the dialog.
 		 *
-		 * @type {String}
+		 * @type {React.node}
+		 * @public
 		 */
 		buttons: React.PropTypes.oneOfType([
 			React.PropTypes.arrayOf(React.PropTypes.element),
@@ -49,6 +51,7 @@ const DialogBase = kind({
 		 * Title of the header
 		 *
 		 * @type {String}
+		 * @public
 		 */
 		title: React.PropTypes.string,
 
@@ -56,9 +59,16 @@ const DialogBase = kind({
 		 * Text displayed below the title
 		 *
 		 * @type {String}
+		 * @public
 		 */
 		titleBelow: React.PropTypes.string,
 
+		/**
+		 * Should the dialog use a divider line to separate the titles from the dialog body?
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
 		useDivider: React.PropTypes.bool
 	},
 
@@ -100,6 +110,17 @@ const DialogBase = kind({
 	}
 });
 
+
+/**
+ * {@link moonstone/Dialog.Dialog} is modal component with a title, a subtitle, a
+ * message, and an area for additional controls.
+ *
+ * @class Dialog
+ * @memberOf moonstone/Dialog
+ * @mixes ui/Slottable.Slottable
+ * @ui
+ * @public
+ */
 const Dialog = Slottable({slots: ['title', 'titleBelow', 'buttons']}, DialogBase);
 
 export default Dialog;
