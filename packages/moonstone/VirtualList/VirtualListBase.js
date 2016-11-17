@@ -8,6 +8,7 @@
 import React, {Component, PropTypes} from 'react';
 
 import {Spotlight, SpotlightContainerDecorator} from '@enact/spotlight';
+import {contextTypes} from '@enact/i18n/I18nDecorator';
 
 import {dataIndexAttribute, Scrollable} from '../Scroller/Scrollable';
 
@@ -134,6 +135,8 @@ class VirtualListCore extends Component {
 		 */
 		spacing: PropTypes.number
 	}
+
+	static contextTypes = contextTypes
 
 	static defaultProps = {
 		cbScrollTo: nop,
@@ -502,15 +505,20 @@ class VirtualListCore extends Component {
 		this.composeItemPosition(style, ...rest);
 	}
 
-	getXY = (primary, secondary) => ((this.isPrimaryDirectionVertical) ? {x: secondary, y: primary} : {x: primary, y: secondary})
+	getXY = (primary, secondary) => {
+		const rtlDirection = this.context.rtl ? -1 : 1;
+		return (this.isPrimaryDirectionVertical ? {x: (secondary * rtlDirection), y: primary} : {x: (primary * rtlDirection), y: secondary});
+	}
 
 	composeTransform (style, primary, secondary = 0) {
 		const {x, y} = this.getXY(primary, secondary);
+
 		style.transform = 'translate3d(' + x + 'px,' + y + 'px,0)';
 	}
 
 	composeLeftTop (style, primary, secondary = 0) {
 		const {x, y} = this.getXY(primary, secondary);
+
 		style.left = x + 'px';
 		style.top = y + 'px';
 	}
@@ -632,9 +640,9 @@ class VirtualListCore extends Component {
 			const containerNode = this.getContainerNode(positioningOption);
 
 			// prevent native scrolling by Spotlight
-			this.preventScroll = function () {
+			this.preventScroll = () => {
 				containerNode.scrollTop = 0;
-				containerNode.scrollLeft = 0;
+				containerNode.scrollLeft = this.context.rtl ? containerNode.scrollWidth : 0;
 			};
 
 			if (containerNode && containerNode.addEventListener) {

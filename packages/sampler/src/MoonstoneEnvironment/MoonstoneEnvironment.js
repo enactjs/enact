@@ -90,7 +90,7 @@ const StorybookDecorator = (story, config) => {
 	const sample = story();
 	return (
 		<Moonstone
-			title={config.kind + ' ' + config.story}
+			title={`${config.kind} ${config.story}`.trim()}
 			description={config.description}
 			locale={select('locale', locales, getLocaleFromURL())}
 		>
@@ -103,7 +103,7 @@ const FullscreenStorybookDecorator = (story, config) => {
 	const sample = story();
 	return (
 		<MoonstoneFullscreen
-			title={config.kind + ' ' + config.story}
+			title={`${config.kind} ${config.story}`.trim()}
 			description={config.description}
 			locale={select('locale', locales, getLocaleFromURL())}
 		>

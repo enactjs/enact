@@ -17,6 +17,8 @@
  * limitations under the License.
  */
 
+import './dates';
+
 import ilib from '../ilib/lib/ilib';
 
 import Loader from './Loader';

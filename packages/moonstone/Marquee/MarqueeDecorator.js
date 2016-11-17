@@ -9,6 +9,7 @@ import Marquee from './Marquee';
  * Default configuration parameters for {@link moonstone/Marquee.MarqueeDecorator}
  *
  * @type {Object}
+ * @memberof moonstone/marquee
  */
 const defaultConfig = {
 	/**
@@ -90,6 +91,22 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @public
 			 */
 			disabled: React.PropTypes.bool,
+
+			/**
+			 * Forces the `direction` of the marquee. Valid values are `rtl` and `ltr`. This includes non-text elements as well.
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			forceDirection: React.PropTypes.oneOf(['rtl', 'ltr']),
+
+			/**
+			 * When `true`, the contents will be centered regardless of the text directionality.
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			marqueeCentered: React.PropTypes.bool,
 
 			/**
 			 * Number of milliseconds to wait before starting marquee when `marqueeOn` is 'hover' or
@@ -393,6 +410,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const {
 				children,
 				disabled,
+				marqueeCentered,
+				forceDirection,
 				marqueeOn,
 				marqueeSpeed,
 				...rest
@@ -422,9 +441,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				<Wrapped {...rest} disabled={disabled}>
 					<Marquee
 						animating={this.state.animating}
+						centered={marqueeCentered}
 						className={marqueeClassName}
 						clientRef={this.cacheNode}
 						distance={this.distance}
+						forceDirection={forceDirection}
 						onMarqueeComplete={this.handleMarqueeComplete}
 						overflow={this.state.overflow}
 						speed={marqueeSpeed}
@@ -438,6 +459,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		renderWrapped () {
 			const props = Object.assign({}, this.props);
 
+			delete props.marqueeCentered;
 			delete props.marqueeDelay;
 			delete props.marqueeDisabled;
 			delete props.marqueeOn;
