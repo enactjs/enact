@@ -77,6 +77,14 @@ const ContextualPopupBase = kind({
 		direction: PropTypes.oneOf(['up', 'down', 'left', 'right']),
 
 		/**
+		 * A function to run when close button is clicked.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onCloseButtonClicked: PropTypes.func,
+
+		/**
 		 * When `true`, the close button is shown; when `false`, it is hidden.
 		 *
 		 * @type {Boolean}
@@ -96,16 +104,24 @@ const ContextualPopupBase = kind({
 
 	computed: {
 		className: ({showCloseButton, styler}) => styler.append({reserveClose: showCloseButton}),
-		closeButton: ({showCloseButton}) => {
+		closeButton: ({showCloseButton, onCloseButtonClicked}) => {
 			if (showCloseButton) {
 				return (
-					<IconButton className={css.closeButton} backgroundOpacity="transparent" small>closex</IconButton>
+					<IconButton
+						className={css.closeButton}
+						backgroundOpacity="transparent"
+						small
+						onClick={onCloseButtonClicked}
+					>
+						closex
+					</IconButton>
 				);
 			}
 		}
 	},
 
 	render: ({children, closeButton, direction, ...props}) => {
+		delete props.onCloseButtonClicked;
 		delete props.showCloseButton;
 
 		return (
