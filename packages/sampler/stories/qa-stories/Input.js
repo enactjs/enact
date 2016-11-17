@@ -95,26 +95,26 @@ storiesOf('Input')
 					/>
 				</div>
 				<div>
-				<StatefulInput
-					onChange={action('onChange')}
-					disabled={boolean('disabled')}
-					iconEnd={select('iconEnd', iconNames)}
-					iconStart={select('iconStart', iconNames)}
-					placeholder={text('placeholder')}
-					type={select('type', inputData.type, inputData.type[0])}
-					value={text('value3', inputData.normalText + ' three')}
-				/>
-				<StatefulInput
-					onChange={action('onChange')}
-					disabled={boolean('disabled')}
-					iconEnd={select('iconEnd', iconNames)}
-					iconStart={select('iconStart', iconNames)}
-					placeholder={text('placeholder')}
-					type={select('type', inputData.type, inputData.type[0])}
-					value={text('value4', inputData.normalText + ' four')}
-				/>
+					<StatefulInput
+						onChange={action('onChange')}
+						disabled={boolean('disabled')}
+						iconEnd={select('iconEnd', iconNames)}
+						iconStart={select('iconStart', iconNames)}
+						placeholder={text('placeholder')}
+						type={select('type', inputData.type, inputData.type[0])}
+						value={text('value3', inputData.normalText + ' three')}
+					/>
+					<StatefulInput
+						onChange={action('onChange')}
+						disabled={boolean('disabled')}
+						iconEnd={select('iconEnd', iconNames)}
+						iconStart={select('iconStart', iconNames)}
+						placeholder={text('placeholder')}
+						type={select('type', inputData.type, inputData.type[0])}
+						value={text('value4', inputData.normalText + ' four')}
+					/>
 				</div>
-		</div>
+			</div>
 		)
 	)
 	.addWithInfo(
