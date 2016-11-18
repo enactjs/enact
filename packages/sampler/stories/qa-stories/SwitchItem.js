@@ -60,7 +60,7 @@ storiesOf('SwitchItem')
 						inline: boolean('ItemProps-Inline', false),
 						disabled: boolean('disabled', false)
 					}}
-					selectedProp='selected'
+					selectedProp="selected"
 					defaultSelected={1}
 					onSelect={action('onSelect')}
 				>
@@ -75,7 +75,7 @@ storiesOf('SwitchItem')
 						inline: boolean('ItemProps-Inline', false),
 						disabled: boolean('disabled', false)
 					}}
-					selectedProp='selected'
+					selectedProp="selected"
 					defaultSelected={1}
 					onSelect={action('onSelect')}
 				>
