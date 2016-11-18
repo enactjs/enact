@@ -255,10 +255,10 @@ class Scrollbar extends Component {
 				<IconButton backgroundOpacity="transparent" small disabled={prevButtonDisabled} className={prevButtonClass} onClick={clickPrevHandler}>
 					{prevIcon}
 				</IconButton>
-				<div ref={this.initThumbRef} className={thumbClass} />
 				<IconButton backgroundOpacity="transparent" small disabled={nextButtonDisabled} className={nextButtonClass} onClick={clickNextHandler}>
 					{nextIcon}
 				</IconButton>
+				<div ref={this.initThumbRef} className={thumbClass} />
 			</div>
 		);
 	}
