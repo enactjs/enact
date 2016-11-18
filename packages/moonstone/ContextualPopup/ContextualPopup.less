@@ -4,32 +4,37 @@
 
 .contextualPopup {
 	position: absolute;
-	min-height: 96px;
-	min-width: 96px;
-	border-radius: @moon-contextual-popup-border-radius;
-	border: @moon-button-border-width solid @moon-contextual-popup-border-color;
-	padding: @moon-contextual-popup-padding;
-	background-clip: padding-box;
-	-webkit-background-clip: padding-box;
-	-moz-background-clip: padding-box;
 
-	background-color: @moon-contextual-popup-bg-color;
-
-	.closeButton {
+	.container{
 		position: absolute;
-		right: @moon-spotlight-outset;
-		top: @moon-spotlight-outset;
-		margin: 0;
-	}
+		min-height: 96px;
+		min-width: 96px;
+		border-radius: @moon-contextual-popup-border-radius;
+		border: @moon-button-border-width solid @moon-contextual-popup-border-color;
+		padding: @moon-contextual-popup-padding;
+		background-clip: padding-box;
+		-webkit-background-clip: padding-box;
+		-moz-background-clip: padding-box;
 
-	&.reserveClose {
-		.padding-start-end(@moon-contextual-popup-padding, @moon-icon-button-small-size + @moon-spotlight-outset);
-	}
+		background-color: @moon-contextual-popup-bg-color;
 
-	:global(.enact-locale-right-to-left) & {
 		.closeButton {
-			right: auto;
-			left: @moon-spotlight-outset;
+			position: absolute;
+			right: @moon-spotlight-outset;
+			top: @moon-spotlight-outset;
+			margin: 0;
+		}
+
+		&.reserveClose {
+			.padding-start-end(@moon-contextual-popup-padding, @moon-icon-button-small-size + @moon-spotlight-outset);
+		}
+
+		:global(.enact-locale-right-to-left) & {
+			direction: rtl;
+			.closeButton {
+				right: auto;
+				left: @moon-spotlight-outset;
+			}
 		}
 	}
 
@@ -47,19 +52,13 @@
 		}
 
 		&.up {
-			top: -24px;
-		}
-		&.down {
 			transform: rotate(180deg);
-			bottom: -24px;
-		}
-		&.right {
-			transform: rotate(90deg);
-			right: -24px;
 		}
 		&.left {
+			transform: rotate(90deg);
+		}
+		&.right {
 			transform: rotate(-90deg);
-			left: -24px;
 		}
 	}
 }

@@ -1,7 +1,6 @@
 /**
- * Exports the {@link module:@enact/moonstone/ContextualPopup.ContextualPopup} and
- * {@link module:@enact/moonstone/ContextualPopup.ContextualPopupBase} component. The
- * default export is {@link module:@enact/moonstone/ContextualPopup.ContextualPopup}.
+ * Exports the {@link module:@enact/moonstone/ContextualPopup.ContextualPopupBase} component. The
+ * default export is {@link module:@enact/moonstone/ContextualPopup.ContextualPopupBase}.
  *
  * @module @enact/moonstone/ContextualPopup
  */
@@ -25,11 +24,12 @@ const ContextualPopupArrow = kind({
 	name: 'ContextualPopupArrow',
 
 	propTypes: {
-		direction: PropTypes.oneOf(['up', 'down', 'left', 'right'])
+		direction: PropTypes.oneOf(['up', 'down', 'left', 'right']),
+		position: PropTypes.object
 	},
 
 	defaultProps: {
-		direction: 'left'
+		direction: 'down'
 	},
 
 	styles: {
@@ -41,8 +41,8 @@ const ContextualPopupArrow = kind({
 		className: ({direction, styler}) => styler.append(direction, css.arrow)
 	},
 
-	render: ({className}) => (
-		<svg className={className}>
+	render: ({className, position, ...props}) => (
+		<svg {...props} className={className} style={position}>
 			<path d="M15 0 L0 18 L30 18 Z" className={css.arrowBorder} />
 			<path d="M15 9 L0 27 L30 27 Z" className={css.arrowFill} />
 		</svg>
@@ -71,8 +71,35 @@ const ContextualPopupBase = kind({
 		]).isRequired,
 
 		/**
+		 * [arrowPosition description]
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		arrowPosition: PropTypes.object,
+
+		/**
+		 * [containerPosition description]
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		containerPosition: PropTypes.object,
+
+		/**
+		 * [containerRef description]
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		containerRef: PropTypes.func,
+
+		/**
 		 * [direction description]
+		 *
 		 * @type {String}
+		 * @public
+		 * @default 'down'
 		 */
 		direction: PropTypes.oneOf(['up', 'down', 'left', 'right']),
 
@@ -88,18 +115,20 @@ const ContextualPopupBase = kind({
 		 * When `true`, the close button is shown; when `false`, it is hidden.
 		 *
 		 * @type {Boolean}
+		 * @public
 		 * @default false
 		 */
 		showCloseButton: PropTypes.bool
 	},
 
 	defaultProps: {
+		direction: 'down',
 		showCloseButton: false
 	},
 
 	styles: {
 		css,
-		className: 'contextualPopup moon-neutral'
+		className: 'contextualPopup container moon-neutral'
 	},
 
 	computed: {
@@ -120,14 +149,14 @@ const ContextualPopupBase = kind({
 		}
 	},
 
-	render: ({children, closeButton, direction, ...props}) => {
+	render: ({arrowPosition, containerPosition, containerRef, className, children, closeButton, direction, ...props}) => {
 		delete props.onCloseButtonClicked;
 		delete props.showCloseButton;
 
 		return (
-			<div {...props}>
-				<ContextualPopupArrow direction={direction} />
-				<div>
+			<div {...props} className={css.contextualPopup}>
+				<ContextualPopupArrow direction={direction} position={arrowPosition} />
+				<div className={className} style={containerPosition} ref={containerRef}>
 					{closeButton}
 					{children}
 				</div>
@@ -136,8 +165,5 @@ const ContextualPopupBase = kind({
 	}
 });
 
-// TODO: Wrap with HOC
-const ContextualPopup = ContextualPopupBase;
-
-export default ContextualPopup;
-export {ContextualPopupBase};
+export default ContextualPopupBase;
+export {ContextualPopupBase as ContextualPopup, ContextualPopupBase};
