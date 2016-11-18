@@ -146,6 +146,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		isScrollAnimationTargetAccumulated = false
 		isFirstDragging = false
 		isDragging = false
+		whichScrollbarIsShowing = 'none'
 
 		// mouse handlers
 		eventHandlers = {}
@@ -317,13 +318,17 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		onMouseMove = (e) => {
 			if (this.isDragging) {
-				const {dx, dy} = this.drag(e);
+				const
+					{dx, dy} = this.drag(e),
+					targetX = this.scrollLeft - dx,
+					targetY = this.scrollTop - dy;
 
 				if (this.isFirstDragging) {
 					this.doScrollStart();
 					this.isFirstDragging = false;
 				}
-				this.scroll(this.scrollLeft - dx, this.scrollTop - dy);
+				this.showThumb(targetX, targetY);
+				this.scroll(targetX, targetY);
 			}
 		}
 
@@ -443,13 +448,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		setScrollLeft (v) {
 			this.dirHorizontal = Math.sign(v - this.scrollLeft);
 			this.scrollLeft = R.clamp(0, this.bounds.maxLeft, v);
-			this.updateThumb(this.scrollbarHorizontalRef);
+			this.updateThumb(this.scrollbarHorizontalRef, 'horizontal');
 		}
 
 		setScrollTop (v) {
 			this.dirVertical = Math.sign(v - this.scrollTop);
 			this.scrollTop = R.clamp(0, this.bounds.maxTop, v);
-			this.updateThumb(this.scrollbarVerticalRef);
+			this.updateThumb(this.scrollbarVerticalRef, 'vertical');
 		}
 
 		// scroll start/stop
@@ -471,6 +476,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			if ((bounds.maxTop - targetY) < epsilon) {
 				targetY = bounds.maxTop;
 			}
+
+			this.showThumb(targetX, targetY);
 
 			if (animate) {
 				this.animator.start({
@@ -525,6 +532,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.isScrollAnimationTargetAccumulated = false;
 			this.childRef.setContainerDisabled(false);
 			this.lastFocusedItem = null;
+			this.hideThumb();
 			this.doScrollStop();
 		}
 
@@ -604,18 +612,54 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.verticalScrollability && (this.bounds.scrollHeight > this.bounds.clientHeight) && !isNaN(this.bounds.scrollHeight)
 		)
 
-		updateThumb (scrollbarRef) {
+		showThumb (targetX, targetY) {
+			const {isDragging} = this;
+
+			if (!isDragging) {
+				this.hideThumb();
+			}
 			if (this.props.positioningOption !== 'byBrowser' && !this.props.hideScrollbars) {
-				const isVisible = scrollbarRef.props.isVertical ? this.canScrollVertically : this.canScrollHorizontally;
-				if (isVisible()) {
-					scrollbarRef.showThumb();
-					scrollbarRef.update({
-						...this.bounds,
-						scrollLeft: this.scrollLeft,
-						scrollTop: this.scrollTop
-					});
+				const
+					{scrollLeft, scrollTop} = this,
+					canScrollHorizontally = this.canScrollHorizontally(),
+					canScrollVertically = this.canScrollVertically(),
+					showHorizontalScrollbar = canScrollHorizontally && (isDragging || targetX !== scrollLeft),
+					showVerticalScrollbar = canScrollVertically && (isDragging || targetY !== scrollTop);
+
+				if (showHorizontalScrollbar && showVerticalScrollbar) {
+					this.whichScrollbarIsShowing = 'both';
+					this.scrollbarHorizontalRef.showThumb();
+					this.scrollbarVerticalRef.showThumb();
+				} else if (showHorizontalScrollbar) {
+					this.whichScrollbarIsShowing = 'horizontal';
+					this.scrollbarHorizontalRef.showThumb();
+				} else if (showVerticalScrollbar) {
+					this.whichScrollbarIsShowing = 'vertical';
+					this.scrollbarVerticalRef.showThumb();
 				}
 			}
+		}
+
+		updateThumb (scrollbarRef, orientation) {
+			if (this.whichScrollbarIsShowing === 'both' || orientation === this.whichScrollbarIsShowing) {
+				scrollbarRef.update({
+					...this.bounds,
+					scrollLeft: this.scrollLeft,
+					scrollTop: this.scrollTop
+				});
+			}
+		}
+
+		hideThumb () {
+			if (this.whichScrollbarIsShowing === 'both') {
+				this.scrollbarHorizontalRef.startHidingThumb();
+				this.scrollbarVerticalRef.startHidingThumb();
+			} else if (this.whichScrollbarIsShowing === 'horizontal') {
+				this.scrollbarHorizontalRef.startHidingThumb();
+			} else if (this.whichScrollbarIsShowing === 'vertical') {
+				this.scrollbarVerticalRef.startHidingThumb();
+			}
+			this.whichScrollbarIsShowing = 'none';
 		}
 
 		// component life cycle
