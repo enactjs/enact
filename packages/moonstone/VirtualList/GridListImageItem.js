@@ -6,6 +6,7 @@
  * Not a jsdoc module def on purpose. Exported elsewhere.
  */
 
+import {Image} from '@enact/moonstone/Image';
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 import {Spottable} from '@enact/spotlight';
@@ -14,14 +15,6 @@ import Icon from '../Icon';
 import {ItemBase} from '../Item';
 
 import css from './GridListImageItem.less';
-
-const defaultPlaceholder =
-	'data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC' +
-	'9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48cmVjdCB3aWR0aD0iMTAw' +
-	'JSIgaGVpZ2h0PSIxMDAlIiBzdHlsZT0ic3Ryb2tlOiAjNDQ0OyBzdHJva2Utd2lkdGg6IDE7IGZpbGw6ICNhYW' +
-	'E7IiAvPjxsaW5lIHgxPSIwIiB5MT0iMCIgeDI9IjEwMCUiIHkyPSIxMDAlIiBzdHlsZT0ic3Ryb2tlOiAjNDQ0' +
-	'OyBzdHJva2Utd2lkdGg6IDE7IiAvPjxsaW5lIHgxPSIxMDAlIiB5MT0iMCIgeDI9IjAiIHkyPSIxMDAlIiBzdH' +
-	'lsZT0ic3Ryb2tlOiAjNDQ0OyBzdHJva2Utd2lkdGg6IDE7IiAvPjwvc3ZnPg==';
 
 /**
  * {@link moonstone/VirtualList/GridListImageItem.GridListImageItemBase} is a stateless
@@ -43,16 +36,6 @@ const GridListImageItemBase = kind({
 		 * @public
 		 */
 		caption: PropTypes.string,
-
-		/**
-		 * A placeholder image to be displayed before the image is loaded.
-		 * For performance purposes, it should be pre-loaded or be a data url.
-		 *
-		 * @type {String}
-		 * @default defaultPlaceholder
-		 * @public
-		 */
-		placeholder: PropTypes.string,
 
 		/**
 		 * When `true`, applies a selected visual effect to the image, but only if `selectionOverlayShowing`
@@ -92,7 +75,6 @@ const GridListImageItemBase = kind({
 	},
 
 	defaultProps: {
-		placeholder: defaultPlaceholder,
 		selected: false,
 		selectionOverlayShowing: false
 	},
@@ -106,13 +88,13 @@ const GridListImageItemBase = kind({
 		className: ({selected, styler}) => styler.append({selected})
 	},
 
-	render: ({caption, source, subCaption, selectionOverlayShowing, placeholder, ...rest}) => {
+	render: ({caption, source, subCaption, selectionOverlayShowing, ...rest}) => {
 		delete rest.selected;
 
 		return (
 			<div {...rest}>
 				<div className={css.image}>
-					<img src={source} style={{backgroundImage: `url(${placeholder})`}} draggable={false} />
+					<Image src={source} />
 					{
 						selectionOverlayShowing ? (
 							<div className={css.overlayContainer}>
