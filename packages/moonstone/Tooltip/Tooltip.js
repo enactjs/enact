@@ -80,7 +80,7 @@ class Tooltip extends React.Component {
 				<div
 					ref={(label) => this.labelRef = label}
 					className={css.tooltipLabel}>
-					{this.props.tooltip}
+					{this.props.tooltip.toUpperCase()}
 				</div>
 			</div>
 		);

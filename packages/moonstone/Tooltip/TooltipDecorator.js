@@ -9,8 +9,7 @@ import {Tooltip} from './Tooltip';
 const TooltipDecorator = hoc( (config, Wrapped) => {
 	return class extends React.Component {
 		static defaultProps = {
-			uppercase: true,
-			position: 'auto'
+			tooltipPosition: 'auto'
 		}
 
 		static propTypes = {
@@ -22,15 +21,6 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 			 * @public
 			 */
 			tooltip: React.PropTypes.string,
-
-			/**
-			* When `true`, the content will have locale-safe uppercasing applied.
-			*
-			* @type {Boolean}
-			* @default true
-			* @public
-			*/
-			uppercase: React.PropTypes.bool,
 
 			/**
 			* Position of the tooltip with respect to the activating control. Valid values are
@@ -48,14 +38,14 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 			* @default 'auto'
 			* @public
 			*/
-			position: React.PropTypes.oneOf(['auto', 'above', 'below', 'left top', 'left bottom', 'left center', 'right top', 'right bottom', 'right center', 'above center', 'below center'])
+			tooltipPosition: React.PropTypes.oneOf(['auto', 'above', 'below', 'left top', 'left bottom', 'left center', 'right top', 'right bottom', 'right center', 'above center', 'below center'])
 		}
 
 		constructor (props) {
 			super(props);
 			this.state = {
 				tooltip: '',
-				tooltipType: 'below left',
+				tooltipType: 'below left-arrow',
 				tooltipTop: '0',
 				tooltipLeft: '0',
 				arrowType: 'corner',
@@ -68,7 +58,7 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 		}
 
 		adjustPosition () {
-			const position = this.props.position;
+			const position = this.props.tooltipPosition;
 			let tPos; // tooltip position
 			let aPos; // arrow position
 			let r;
@@ -226,7 +216,7 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 		render () {
 			const style = this.props.style ? this.props.style : {};
 			const props = Object.assign({}, this.props, {
-				tooltip: this.props.tooltip && this.props.uppercase ? this.props.tooltip.toUpperCase() : '',
+				tooltip: this.props.tooltip,
 			});
 
 			delete props.style;
