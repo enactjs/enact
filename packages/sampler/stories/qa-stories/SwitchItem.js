@@ -13,7 +13,7 @@ SelectableGroup.displayName = 'SelectableGroup';
 SelectableGroup.propTypes = Object.assign({}, Group.propTypes, Selectable.propTypes);
 SelectableGroup.defaultProps = Object.assign({}, Group.defaultProps, Selectable.defaultProps);
 
-const SwitchItemToggle = Toggleable({prop: 'checked'}, SwitchItemBase);
+const SwitchItemToggle = Toggleable({prop: 'selected'}, SwitchItemBase);
 SwitchItemToggle.propTypes = Object.assign({}, SwitchItemToggle.propTypes, SwitchItemBase.propTypes);
 SwitchItemToggle.defaultProps = Object.assign({}, SwitchItemToggle.defaultProps, SwitchItemBase.defaultProps);
 SwitchItemToggle.displayName = 'SwitchItem';
@@ -60,7 +60,7 @@ storiesOf('SwitchItem')
 						inline: boolean('ItemProps-Inline', false),
 						disabled: boolean('disabled', false)
 					}}
-					selectedProp='checked'
+					selectedProp="selected"
 					defaultSelected={1}
 					onSelect={action('onSelect')}
 				>
@@ -75,7 +75,7 @@ storiesOf('SwitchItem')
 						inline: boolean('ItemProps-Inline', false),
 						disabled: boolean('disabled', false)
 					}}
-					selectedProp='checked'
+					selectedProp="selected"
 					defaultSelected={1}
 					onSelect={action('onSelect')}
 				>
