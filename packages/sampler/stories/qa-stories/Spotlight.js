@@ -1,7 +1,6 @@
 import Button, {ButtonBase} from '@enact/moonstone/Button';
 import Item from '@enact/moonstone/Item';
 import {SpotlightContainerDecorator} from '@enact/spotlight';
-import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs} from '@kadira/storybook-addon-knobs';
@@ -13,8 +12,10 @@ Button.displayName = 'Button';
 const Container = SpotlightContainerDecorator('div');
 const style = {
 	container: {
-		height: ri.scale(300) + 'px',
-		width: ri.scale(300) + 'px'
+		width: '300px',
+		border: '1px dashed red',
+		margin: '0 12px',
+		padding: '12px'
 	}
 };
 
@@ -43,7 +44,9 @@ storiesOf('Spotlight')
 				<p>
 					The containers below will spot the last-focused element. Keep track of the
 					last-focused element in the container when testing and ensure that the correct
-					element is spotted when re-entering the container with 5-way.
+					element is spotted when re-entering the container with 5-way. If the pointer is
+					inside a container and a 5-way directional key is pressed, the nearest element
+					to the pointer (in the direction specified by the key) will be spotted.
 				</p>
 				<div style={{display: 'flex'}}>
 					<Container style={style.container}>
