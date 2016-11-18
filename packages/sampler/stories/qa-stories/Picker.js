@@ -1,6 +1,7 @@
 import Picker, {PickerBase} from '@enact/moonstone/Picker';
 import Changeable from '@enact/ui/Changeable';
 import {icons} from '@enact/moonstone/Icon';
+import PickerAddRemove from './PickerAddRemove';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
@@ -37,6 +38,12 @@ const pickerList = {
 		'Onion',
 		'Broccoli',
 		'Spinach'
+	],
+	fruits: [
+		'Orange',
+		'Apple',
+		'Banana',
+		'Kiwi'
 	]
 };
 
@@ -95,5 +102,19 @@ storiesOf('Picker')
 			>
 				{pickerList.vegetables}
 			</StatefulPicker>
+		)
+	)
+	.addWithInfo(
+		'Add and Remove',
+		() => (
+			<PickerAddRemove
+				list={pickerList.fruits}
+				orientation={select('orientation', prop.orientation, 'horizontal')}
+				wrap={boolean('wrap')}
+				joined={boolean('joined')}
+				noAnimation={boolean('noAnimation')}
+				disabled={boolean('disabled')}
+			>
+			</PickerAddRemove>
 		)
 	);
