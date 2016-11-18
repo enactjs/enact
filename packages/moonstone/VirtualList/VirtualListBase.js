@@ -429,7 +429,7 @@ class VirtualListCore extends Component {
 		secondary.firstIndices = Array(primaryDataSize);
 		secondary.lastIndices = Array(primaryDataSize);
 		secondary.positionOffsets = Array(primaryDataSize);
-		secondary.thresholds = Array.from({length: primaryDataSize}, () => ({}));
+		secondary.thresholds = Array(primaryDataSize);
 
 		for (let i = 0; i < numOfItems; i++) {
 			this.updateSecondaryScrollInfo(i, 0);
