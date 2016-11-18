@@ -122,7 +122,7 @@ const ItemOverlayHOC = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			let {beginningOverlay, children, endingOverlay, autoHide, ...rest} = Object.assign({}, this.props);
+			let {beginningOverlay, children, endingOverlay, autoHide, ...rest} = this.props;
 
 			// Insert styles from the user, from our defaults, and from our wrapped component defaults
 			rest.className = styling.styler.join(rest.className, css.item,

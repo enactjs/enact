@@ -437,7 +437,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				marqueeOn,
 				marqueeSpeed,
 				...rest
-			} = Object.assign({}, this.props);
+			} = this.props;
 
 			const marqueeOnFocus = marqueeOn === 'focus';
 			const marqueeOnHover = marqueeOn === 'hover';
