@@ -31,10 +31,10 @@ const Overlay = kind({
 
 	propTypes: /** @lends moonstone/Item.ItemBase.prototype */ {
 		/**
-		 * Should this component be hidden or not?
+		 * When `true`, the component is no longer visually reprenested on screen.
 		 *
 		 * @type {Boolean}
-		 * default false
+		 * @default false
 		 * @public
 		 */
 		hidden: PropTypes.bool
