@@ -1,7 +1,6 @@
 import Button, {ButtonBase} from '@enact/moonstone/Button';
 import Item from '@enact/moonstone/Item';
 import {SpotlightContainerDecorator} from '@enact/spotlight';
-import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs} from '@kadira/storybook-addon-knobs';
@@ -13,8 +12,10 @@ Button.displayName = 'Button';
 const Container = SpotlightContainerDecorator('div');
 const style = {
 	container: {
-		height: ri.scale(300) + 'px',
-		width: ri.scale(300) + 'px'
+		width: '300px',
+		border: '1px dashed red',
+		margin: '0 12px',
+		padding: '12px'
 	}
 };
 
