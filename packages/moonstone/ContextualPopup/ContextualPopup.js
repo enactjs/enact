@@ -155,11 +155,11 @@ const ContextualPopupBase = kind({
 
 		return (
 			<div {...props} className={css.contextualPopup}>
-				<ContextualPopupArrow direction={direction} position={arrowPosition} />
 				<div className={className} style={containerPosition} ref={containerRef}>
 					{closeButton}
 					{children}
 				</div>
+				<ContextualPopupArrow direction={direction} position={arrowPosition} />
 			</div>
 		);
 	}
