@@ -37,9 +37,9 @@ const PopupBase = kind({
 		 * @type {Node}
 		 * @public
 		 */
-		children: React.PropTypes.oneOfType([
-			React.PropTypes.arrayOf(React.PropTypes.element),
-			React.PropTypes.element
+		children: PropTypes.oneOfType([
+			PropTypes.arrayOf(PropTypes.element),
+			PropTypes.element
 		]).isRequired,
 
 		anchor: PropTypes.object,
@@ -179,7 +179,7 @@ class Popup extends React.Component {
 		 * @default false
 		 * @public
 		 */
-		noAutoDismiss: React.PropTypes.bool,
+		noAutoDismiss: PropTypes.bool,
 
 		/**
 		 * A function to run when closing action is invoked by the user. These actions include

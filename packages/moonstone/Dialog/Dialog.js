@@ -5,7 +5,7 @@
  */
 
 import kind from '@enact/core/kind';
-import React from 'react';
+import React, {PropTypes} from 'react';
 import Slottable from '@enact/ui/Slottable';
 
 import Popup from '../Popup';
@@ -31,9 +31,9 @@ const DialogBase = kind({
 		 * @type {React.node}
 		 * @public
 		 */
-		buttons: React.PropTypes.oneOfType([
-			React.PropTypes.arrayOf(React.PropTypes.element),
-			React.PropTypes.element
+		buttons: PropTypes.oneOfType([
+			PropTypes.arrayOf(PropTypes.element),
+			PropTypes.element
 		]),
 
 		/**
@@ -42,18 +42,60 @@ const DialogBase = kind({
 		 * @type {Node}
 		 * @public
 		 */
-		children: React.PropTypes.oneOfType([
-			React.PropTypes.arrayOf(React.PropTypes.element),
-			React.PropTypes.element
+		children: PropTypes.oneOfType([
+			PropTypes.arrayOf(PropTypes.element),
+			PropTypes.element
 		]),
 
+		/**
+		 * When `true`, popups will not animate on/off screen.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		noAnimation: PropTypes.bool,
+
+		/**
+		 * A function to run when close button is clicked.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onCloseButtonClicked: PropTypes.func,
+
+		/**
+		 * A function to run after transition for hiding is finished.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onHide: PropTypes.func,
+
+		/**
+		 * Is this control in the expanded state (true), opened, with the contents visible?
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		open: PropTypes.bool,
+
+		/**
+		 * When `true`, the close button is shown; when `false`, it is hidden.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		showCloseButton: PropTypes.bool,
 		/**
 		 * Title of the header
 		 *
 		 * @type {String}
 		 * @public
 		 */
-		title: React.PropTypes.string,
+		title: PropTypes.string,
 
 		/**
 		 * Text displayed below the title
@@ -61,7 +103,7 @@ const DialogBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		titleBelow: React.PropTypes.string,
+		titleBelow: PropTypes.string,
 
 		/**
 		 * Should the dialog use a divider line to separate the titles from the dialog body?
@@ -69,12 +111,14 @@ const DialogBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		useDivider: React.PropTypes.bool
+		useDivider: PropTypes.bool
 	},
 
 	defaultProps: {
 		anchor: {bottom: 0},
-		open: false
+		noAnimation: false,
+		open: false,
+		showCloseButton: false
 	},
 
 	styles: {
