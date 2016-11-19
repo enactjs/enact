@@ -25,7 +25,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static propTypes = {
 			/**
-			 * [popupComponent description]
+			 * The component to use to render popup.
 			 *
 			 * @type {Function}
 			 * @public

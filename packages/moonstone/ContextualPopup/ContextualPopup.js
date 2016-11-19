@@ -62,8 +62,10 @@ const ContextualPopupBase = kind({
 
 	propTypes: {
 		/**
-		 * [children description]
-		 * @type {[type]}
+		 * The element(s) to be displayed in the body of the popup.
+		 *
+		 * @type {Node}
+		 * @public
 		 */
 		children: PropTypes.oneOfType([
 			PropTypes.arrayOf(React.PropTypes.element),
@@ -71,7 +73,7 @@ const ContextualPopupBase = kind({
 		]).isRequired,
 
 		/**
-		 * [arrowPosition description]
+		 * Style object for arrow position.
 		 *
 		 * @type {Object}
 		 * @public
@@ -79,7 +81,7 @@ const ContextualPopupBase = kind({
 		arrowPosition: PropTypes.object,
 
 		/**
-		 * [containerPosition description]
+		 * Style object for container position.
 		 *
 		 * @type {Object}
 		 * @public
@@ -87,7 +89,7 @@ const ContextualPopupBase = kind({
 		containerPosition: PropTypes.object,
 
 		/**
-		 * [containerRef description]
+		 * A callback function to get the reference to the container node.
 		 *
 		 * @type {Function}
 		 * @public
@@ -95,7 +97,7 @@ const ContextualPopupBase = kind({
 		containerRef: PropTypes.func,
 
 		/**
-		 * [direction description]
+		 * Direction of ContextualPopup
 		 *
 		 * @type {String}
 		 * @public
