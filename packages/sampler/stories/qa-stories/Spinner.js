@@ -24,9 +24,9 @@ storiesOf('Spinner')
 		() => (
 			<div style={style.spinnerDiv}>
 				<Spinner
-					transparent={boolean('transparent')}
-					middle={boolean('middle')}
-					center={boolean('center')}
+					transparent={boolean('transparent', false)}
+					middle={boolean('middle', false)}
+					center={boolean('center', false)}
 				>
 					{text('content', prop.longText)}
 				</Spinner>
@@ -39,9 +39,9 @@ storiesOf('Spinner')
 		() => (
 			<div style={style.spinnerDiv}>
 				<Spinner
-					transparent={boolean('transparent')}
-					middle={boolean('middle')}
-					center={boolean('center')}
+					transparent={boolean('transparent', false)}
+					middle={boolean('middle', false)}
+					center={boolean('center', false)}
 				>
 					<Icon>hollowstar</Icon>
 					<Icon>star</Icon>
@@ -56,9 +56,9 @@ storiesOf('Spinner')
 		() => (
 			<div style={style.spinnerDiv}>
 				<Spinner
-					transparent={boolean('transparent')}
-					middle={boolean('middle')}
-					center={boolean('center')}
+					transparent={boolean('transparent', false)}
+					middle={boolean('middle', false)}
+					center={boolean('center', false)}
 				>
 					{text('content', prop.longText)}
 					<Icon>hollowstar</Icon>
@@ -73,9 +73,9 @@ storiesOf('Spinner')
 		() => (
 			<div style={style.spinnerDiv}>
 				<Spinner
-					transparent={boolean('transparent')}
-					middle={boolean('middle')}
-					center={boolean('center')}
+					transparent={boolean('transparent', false)}
+					middle={boolean('middle', false)}
+					center={boolean('center', false)}
 				>
 					<Icon>hollowstar</Icon>
 					<Icon>star</Icon>
