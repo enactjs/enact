@@ -6,12 +6,12 @@
  * Not a jsdoc module def on purpose. Exported elsewhere.
  */
 
-import {Image} from '@enact/moonstone/Image';
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 import {Spottable} from '@enact/spotlight';
 
 import Icon from '../Icon';
+import {Image} from '../Image';
 import {ItemBase} from '../Item';
 
 import css from './GridListImageItem.less';
