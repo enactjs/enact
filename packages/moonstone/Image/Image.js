@@ -10,14 +10,6 @@ import {selectSrc} from '@enact/ui/resolution';
 
 import css from './Image.less';
 
-const defaultPlaceholder =
-	'data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC' +
-	'9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48cmVjdCB3aWR0aD0iMTAw' +
-	'JSIgaGVpZ2h0PSIxMDAlIiBzdHlsZT0ic3Ryb2tlOiAjNDQ0OyBzdHJva2Utd2lkdGg6IDE7IGZpbGw6ICNhYW' +
-	'E7IiAvPjxsaW5lIHgxPSIwIiB5MT0iMCIgeDI9IjEwMCUiIHkyPSIxMDAlIiBzdHlsZT0ic3Ryb2tlOiAjNDQ0' +
-	'OyBzdHJva2Utd2lkdGg6IDE7IiAvPjxsaW5lIHgxPSIxMDAlIiB5MT0iMCIgeDI9IjAiIHkyPSIxMDAlIiBzdH' +
-	'lsZT0ic3Ryb2tlOiAjNDQ0OyBzdHJva2Utd2lkdGg6IDE7IiAvPjwvc3ZnPg==';
-
 /**
  * {@link moonstone/Image.Image} is a component designed to display images
  * conditionally based on screen size. This component has a default size but should have a size
@@ -52,7 +44,7 @@ const ImageBase = kind({
 		 * For performance purposes, it should be pre-loaded or be a data url.
 		 *
 		 * @type {String}
-		 * @default defaultPlaceholder
+		 * @default ''
 		 * @public
 		 */
 		placeholder: PropTypes.string,
@@ -82,7 +74,7 @@ const ImageBase = kind({
 	},
 
 	defaultProps: {
-		placeholder: defaultPlaceholder,
+		placeholder: '',
 		sizing: 'fill'
 	},
 
@@ -92,18 +84,22 @@ const ImageBase = kind({
 	},
 
 	computed: {
+		bgImage: ({src, placeholder}) => {
+			const imageSrc = selectSrc(src);
+			return placeholder ? `url(${imageSrc}), url(${placeholder})` : `url(${imageSrc})`;
+		},
 		className: ({className, sizing, styler}) => {
 			return sizing !== 'none' ? styler.append(sizing) : className;
-		},
-		imageSrc: ({src}) => selectSrc(src)
+		}
 	},
 
-	render: ({imageSrc, placeholder, style, ...rest}) => {
+	render: ({bgImage, style, ...rest}) => {
+		delete rest.placeholder;
 		delete rest.src;
 		delete rest.sizing;
 
 		return (
-			<div {...rest} style={{...style, backgroundImage: `url(${imageSrc}), url(${placeholder})`}} />
+			<div {...rest} style={{...style, backgroundImage: bgImage}} />
 		);
 	}
 });

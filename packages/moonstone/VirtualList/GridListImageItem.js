@@ -16,6 +16,14 @@ import {ItemBase} from '../Item';
 
 import css from './GridListImageItem.less';
 
+const defaultPlaceholder =
+	'data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC' +
+	'9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48cmVjdCB3aWR0aD0iMTAw' +
+	'JSIgaGVpZ2h0PSIxMDAlIiBzdHlsZT0ic3Ryb2tlOiAjNDQ0OyBzdHJva2Utd2lkdGg6IDE7IGZpbGw6ICNhYW' +
+	'E7IiAvPjxsaW5lIHgxPSIwIiB5MT0iMCIgeDI9IjEwMCUiIHkyPSIxMDAlIiBzdHlsZT0ic3Ryb2tlOiAjNDQ0' +
+	'OyBzdHJva2Utd2lkdGg6IDE7IiAvPjxsaW5lIHgxPSIxMDAlIiB5MT0iMCIgeDI9IjAiIHkyPSIxMDAlIiBzdH' +
+	'lsZT0ic3Ryb2tlOiAjNDQ0OyBzdHJva2Utd2lkdGg6IDE7IiAvPjwvc3ZnPg==';
+
 /**
  * {@link moonstone/VirtualList/GridListImageItem.GridListImageItemBase} is a stateless
  * GridListImageItem with Moonstone styling applied.
@@ -94,7 +102,7 @@ const GridListImageItemBase = kind({
 		return (
 			<div {...rest}>
 				<div className={css.image}>
-					<Image src={source} />
+					<Image src={source} placeholder={defaultPlaceholder} />
 					{
 						selectionOverlayShowing ? (
 							<div className={css.overlayContainer}>
