@@ -92,13 +92,13 @@ const SwitchItemBase = kind({
 	},
 
 	computed: {
-		endingIcon: ({selected, disabled}) => (
+		icon: ({selected, disabled}) => (
 			<Switch selected={selected} disabled={disabled} className={css.switch} />
 		)
 	},
 
 	render: (props) => (
-		<ToggleItem {...props} />
+		<ToggleItem {...props} iconPosition="end" />
 	)
 });
 

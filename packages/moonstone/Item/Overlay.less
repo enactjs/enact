@@ -15,10 +15,13 @@
 			.margin-start-end(@moon-icon-margin, 0);
 		}
 
-		.icon {
-			margin-top: 0;
-			margin-bottom: 0;
-			vertical-align: top;
+		&.beginning,
+		&.ending {
+			> * {
+				margin-top: 0;
+				margin-bottom: 0;
+				vertical-align: top;
+			}
 		}
 	}
 

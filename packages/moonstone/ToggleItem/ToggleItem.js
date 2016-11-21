@@ -7,46 +7,11 @@
 
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
-import {Toggleable} from '@enact/ui/Toggleable';
 
-import Icon from '../Icon';
-import Item from '../Item';
+import {ItemOverlay} from '../Item';
 
 import css from './ToggleItem.less';
-
-const ToggleIcon = kind({
-	name: 'ToggleIcon',
-
-	propTypes: /** @lends moonstone/ToggleItem.ToggleItemBase.prototype */ {
-		selected: PropTypes.bool
-	},
-
-	defaultProps: {
-		selected: false
-	},
-
-	styles: {
-		css,
-		className: 'icon'
-	},
-
-	computed: {
-		className: ({selected, styler}) => styler.append({selected})
-	},
-
-	render: ({children, ...rest}) => {
-		if (React.isValidElement(children)) {
-			return children;
-		}
-		return <Icon {...rest}>{children}</Icon>;
-	}
-});
-
-// Only return an icon component if one is necessary
-// eslint-disable-next-line enact/prop-types, enact/display-name
-const getIcon = (icon) => ({iconClasses, selected, ...rest}) => {
-	return (rest[icon]) ? <ToggleIcon className={iconClasses} selected={selected}>{rest[icon]}</ToggleIcon> : null;
-};
+import ToggleIcon from './ToggleIcon';
 
 /**
  * {@link moonstone/ToggleItem.ToggleItemBase} is a component to make a Toggleable Item
@@ -71,16 +36,6 @@ const ToggleItemBase = kind({
 		children: PropTypes.node.isRequired,
 
 		/**
-		 * Icon property accepts a string or an Icon Element. This is the icon that
-		 * will display at the beginning of the item when selected.
-		 *
-		 * @type {String|Element}
-		 * @default null
-		 * @public
-		 */
-		beginningIcon: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-
-		/**
 		 * Applies a disabled visual state to the toggle item.
 		 *
 		 * @type {Boolean}
@@ -90,14 +45,13 @@ const ToggleItemBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * Icon property accepts a string or an Icon Element. This is the icon that
-		 * will display at the ending of the item when selected.
+		 * Icon property accepts a string or an Icon Element.
 		 *
 		 * @type {String|Element}
 		 * @default null
 		 * @public
 		 */
-		endingIcon: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+		icon: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
 
 		/**
 		 * CSS classes for Icon
@@ -107,6 +61,8 @@ const ToggleItemBase = kind({
 		 * @public
 		 */
 		iconClasses: PropTypes.string,
+
+		iconPosition: PropTypes.oneOf(['start', 'end']),
 
 		/**
 		 * Applies inline styling to the toggle item.
@@ -147,10 +103,9 @@ const ToggleItemBase = kind({
 	},
 
 	defaultProps: {
-		beginningIcon: null,
 		disabled: false,
-		endingIcon: null,
 		iconClasses: '',
+		iconPosition: 'start',
 		inline: false,
 		selected: false,
 		value: null
@@ -162,8 +117,24 @@ const ToggleItemBase = kind({
 	},
 
 	computed: {
-		beginningIcon: getIcon('beginningIcon'),
-		endingIcon: getIcon('endingIcon'),
+		beginningIcon: ({iconClasses, selected, icon, iconPosition}) => {
+			if (iconPosition === 'start') {
+				return (
+					<ToggleIcon slot="beginningOverlay" className={iconClasses} selected={selected}>
+						{icon}
+					</ToggleIcon>
+				);
+			}
+		},
+		endingIcon: ({iconClasses, selected, icon, iconPosition}) => {
+			if (iconPosition === 'end') {
+				return (
+					<ToggleIcon slot="endingOverlay" className={iconClasses} selected={selected}>
+						{icon}
+					</ToggleIcon>
+				);
+			}
+		},
 		onToggle: ({onToggle, onClick, selected, disabled, value}) => {
 			if (!disabled && (onToggle || onClick)) {
 				return (ev) => {
@@ -174,17 +145,22 @@ const ToggleItemBase = kind({
 		}
 	},
 
-	render: ({beginningIcon, endingIcon, onToggle, ...rest}) => {
+	render: ({beginningIcon, children, endingIcon, onToggle, ...rest}) => {
+		delete rest.icon;
 		delete rest.iconClasses;
+		delete rest.iconPosition;
+		delete rest.selected;
 		delete rest.value;
 
 		return (
-			<Item {...rest} beginningOverlay={beginningIcon} endingOverlay={endingIcon} onClick={onToggle} />
+			<ItemOverlay {...rest} onClick={onToggle} autoHide="no">
+				{beginningIcon}
+				{children}
+				{endingIcon}
+			</ItemOverlay>
 		);
 	}
 });
 
-const ToggleItem = Toggleable({prop: 'selected'}, ToggleItemBase);
-
-export default ToggleItem;
-export {ToggleItem, ToggleItemBase};
+export default ToggleItemBase;
+export {ToggleItemBase as ToggleItem, ToggleItemBase};
