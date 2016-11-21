@@ -1,7 +1,7 @@
 import Picker, {PickerBase} from '@enact/moonstone/Picker';
 import Changeable from '@enact/ui/Changeable';
 import {icons} from '@enact/moonstone/Icon';
-import PickerAddRemove from './PickerAddRemove';
+import PickerAddRemove from './Components/PickerAddRemove';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';

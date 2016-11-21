@@ -70,14 +70,14 @@ const PickerAddRemove = class extends React.Component {
 				<div>
 					<StatefulInput ref='addInput' placeholder='Value'>
 					</StatefulInput>
-					<Button onClick={this.handleAdd.bind(this)}>
+					<Button onClick={this.handleAdd}>
 						Add
 					</Button>
 				</div>
 				<div>
 					<StatefulInput ref='removeInput' placeholder='Index'>
 					</StatefulInput>
-					<Button onClick={this.handleRemove.bind(this)}>
+					<Button onClick={this.handleRemove}>
 						Remove
 					</Button>
 				</div>
