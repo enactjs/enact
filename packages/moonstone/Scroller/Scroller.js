@@ -145,8 +145,7 @@ class ScrollerBase extends Component {
 			mergedStyle = Object.assign({}, style, {
 				overflowX: props.horizontal,
 				overflowY: props.vertical
-			}),
-			hideNativeScrollbar = !props.hideScrollbars ? css.hideNativeScrollbar : null;
+			});
 
 		delete props.cbScrollTo;
 		delete props.className;
@@ -160,7 +159,7 @@ class ScrollerBase extends Component {
 		delete props.vertical;
 
 		return (
-			<div {...props} ref={this.initRef} className={classNames(className, hideNativeScrollbar)} style={mergedStyle} />
+			<div {...props} ref={this.initRef} className={classNames(className, css.hideNativeScrollbar)} style={mergedStyle} />
 		);
 	}
 }

@@ -55,6 +55,33 @@ class VirtualListCore extends Component {
 		cbScrollTo: PropTypes.func,
 
 		/**
+		 * Callback method of updateScrollbars.
+		 * Normally, `Scrollable` should set this value.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		cbUpdateScrollbars: PropTypes.func,
+
+		/**
+		 * clientHeight for VirtualList.
+		 * Normally, `Scrollable` should set this value.
+		 *
+		 * @type {Number}
+		 * @private
+		 */
+		clientHeight: PropTypes.number,
+
+		/**
+		 * clientWidth for VirtualList.
+		 * Normally, `Scrollable` should set this value.
+		 *
+		 * @type {Number}
+		 * @private
+		 */
+		clientWidth: PropTypes.number,
+
+		/**
 		 * The render function for an item of the list.
 		 * `index` is for accessing the index of the item.
 		 * `key` MUST be passed as a prop for DOM recycling.
@@ -127,6 +154,15 @@ class VirtualListCore extends Component {
 		positioningOption: PropTypes.oneOf(['byItem', 'byContainer', 'byBrowser']),
 
 		/**
+		 * Pre-calculated client sizes with/without vertical/horizontal scrollbars.
+		 * It is used internally for setting client size when direction prop changed.
+		 *
+		 * @type {Object}
+		 * @private
+		 */
+		precalculatedClientSize: PropTypes.object,
+
+		/**
 		 * Spacing between items.
 		 *
 		 * @type {Number}
@@ -140,6 +176,7 @@ class VirtualListCore extends Component {
 
 	static defaultProps = {
 		cbScrollTo: nop,
+		cbUpdateScrollbars: nop,
 		component: ({index, key}) => (<div key={key}>{index}</div>),
 		data: [],
 		dataSize: 0,
@@ -147,6 +184,7 @@ class VirtualListCore extends Component {
 		onScroll: nop,
 		overhang: 3,
 		positioningOption: 'byItem',
+		precalculatedClientSize: {},
 		spacing: 0,
 		style: {}
 	}
@@ -159,6 +197,8 @@ class VirtualListCore extends Component {
 		maxLeft: 0,
 		maxTop: 0
 	}
+
+	isListComponent = true
 
 	primary = null
 	secondary = null
@@ -212,6 +252,14 @@ class VirtualListCore extends Component {
 
 	isHorizontal = () => !this.isPrimaryDirectionVertical
 
+	canScrollHorizontally = () => (
+		!this.isPrimaryDirectionVertical && (this.scrollBounds.scrollWidth > this.scrollBounds.clientWidth) && !isNaN(this.scrollBounds.scrollWidth)
+	)
+
+	canScrollVertically = () => (
+		this.isPrimaryDirectionVertical && (this.scrollBounds.scrollHeight > this.scrollBounds.clientHeight) && !isNaN(this.scrollBounds.scrollHeight)
+	)
+
 	getScrollBounds = () => this.scrollBounds
 
 	getGridPosition (index) {
@@ -236,24 +284,9 @@ class VirtualListCore extends Component {
 		}
 	}
 
-	getClientSize = (node) => {
-		return {
-			clientWidth: node.clientWidth,
-			clientHeight: node.clientHeight
-		};
-	}
-
-	calculateMetrics (props) {
+	calculateMetrics (props, shouldScrollbarChange) {
 		const
-			{direction, itemSize, positioningOption, spacing} = props,
-			node = this.getContainerNode(positioningOption);
-
-		if (!node) {
-			return;
-		}
-
-		const
-			{clientWidth, clientHeight} = this.getClientSize(node),
+			{clientWidth, clientHeight, direction, itemSize, positioningOption, spacing} = props,
 			heightInfo = {
 				clientSize: clientHeight,
 				minItemSize: (itemSize.minHeight) ? itemSize.minHeight : null,
@@ -268,6 +301,18 @@ class VirtualListCore extends Component {
 			primary, secondary, dimensionToExtent, thresholdBase;
 
 		this.isPrimaryDirectionVertical = (direction === 'vertical');
+
+		if (positioningOption !== 'byBrowser' && shouldScrollbarChange) {
+			const {hideScrollbars, precalculatedClientSize} = props;
+
+			if (!hideScrollbars) {
+				widthInfo.clientSize = this.isPrimaryDirectionVertical ? precalculatedClientSize.widthWithoutScrollbars : precalculatedClientSize.widthWithScrollbars;
+				heightInfo.clientSize = this.isPrimaryDirectionVertical ? precalculatedClientSize.heightWithoutScrollbars : precalculatedClientSize.heightWithScrollbars;
+			} else {
+				widthInfo.clientSize = precalculatedClientSize.widthWithoutScrollbars;
+				heightInfo.clientSize = precalculatedClientSize.heightWithoutScrollbars;
+			}
+		}
 
 		if (this.isPrimaryDirectionVertical) {
 			primary = heightInfo;
@@ -323,23 +368,17 @@ class VirtualListCore extends Component {
 	}
 
 	calculateScrollBounds (props) {
-		const node = this.getContainerNode(props.positioningOption);
-
-		if (!node) {
-			return;
-		}
-
 		const
-			{clientWidth, clientHeight} = this.getClientSize(node),
-			{scrollBounds, isPrimaryDirectionVertical} = this;
+			{positioningOption} = props,
+			{scrollBounds, isPrimaryDirectionVertical, primary, secondary} = this;
 		let maxPos;
 
-		scrollBounds.clientWidth = clientWidth;
-		scrollBounds.clientHeight = clientHeight;
+		scrollBounds.clientWidth = isPrimaryDirectionVertical ? secondary.clientSize : primary.clientSize;
+		scrollBounds.clientHeight = isPrimaryDirectionVertical ? primary.clientSize : secondary.clientSize;
 		scrollBounds.scrollWidth = this.getScrollWidth();
 		scrollBounds.scrollHeight = this.getScrollHeight();
-		scrollBounds.maxLeft = Math.max(0, scrollBounds.scrollWidth - clientWidth);
-		scrollBounds.maxTop = Math.max(0, scrollBounds.scrollHeight - clientHeight);
+		scrollBounds.maxLeft = Math.max(0, scrollBounds.scrollWidth - scrollBounds.clientWidth);
+		scrollBounds.maxTop = Math.max(0, scrollBounds.scrollHeight - scrollBounds.clientHeight);
 
 		// correct position
 		maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft;
@@ -606,34 +645,12 @@ class VirtualListCore extends Component {
 		}
 	}
 
-	updateClientSize = () => {
-		const
-			{positioningOption} = this.props,
-			node = this.getContainerNode(positioningOption);
-
-		if (!node) {
-			return;
-		}
-
-		const
-			{isPrimaryDirectionVertical, primary} = this,
-			{clientWidth, clientHeight} = this.getClientSize(node);
-
-		if (isPrimaryDirectionVertical) {
-			primary.clientSize = clientHeight;
-		} else {
-			primary.clientSize = clientWidth;
-		}
-
-		this.updateStatesAndBounds(this.props);
-	}
-
 	// Calculate metrics for VirtualList after the 1st render to know client W/H.
 	// We separate code related with data due to re use it when data changed.
 	componentDidMount () {
 		const {positioningOption} = this.props;
 
-		this.calculateMetrics(this.props);
+		this.calculateMetrics(this.props, false);
 		this.updateStatesAndBounds(this.props);
 
 		if (positioningOption !== 'byBrowser') {
@@ -655,18 +672,24 @@ class VirtualListCore extends Component {
 	// Calling setState within componentWillReceivePropswill not trigger an additional render.
 	componentWillReceiveProps (nextProps) {
 		const
-			{direction, itemSize, dataSize, overhang, spacing} = this.props,
+			{clientWidth, clientHeight, direction, itemSize, dataSize, overhang, spacing} = this.props,
 			hasMetricsChanged = (
+				clientWidth !== nextProps.clientWidth ||
+				clientHeight !== nextProps.clientHeight ||
 				direction !== nextProps.direction ||
 				((itemSize instanceof Object) ? (itemSize.minWidth !== nextProps.itemSize.minWidth || itemSize.minHeight !== nextProps.itemSize.minHeight) : itemSize !== nextProps.itemSize) ||
 				overhang !== nextProps.overhang ||
 				spacing !== nextProps.spacing
 			),
+			shouldScrollbarChange = (
+				direction !== nextProps.direction
+			),
 			hasDataChanged = (dataSize !== nextProps.dataSize);
 
 		if (hasMetricsChanged) {
-			this.calculateMetrics(nextProps);
-			this.updateStatesAndBounds(hasDataChanged ? nextProps : this.props);
+			this.calculateMetrics(nextProps, shouldScrollbarChange);
+			this.updateStatesAndBounds(nextProps);
+			this.props.cbUpdateScrollbars(this.canScrollHorizontally(), this.canScrollVertically());
 		} else if (hasDataChanged) {
 			this.updateStatesAndBounds(nextProps);
 		}
@@ -707,6 +730,9 @@ class VirtualListCore extends Component {
 			{primary, cc} = this;
 
 		delete props.cbScrollTo;
+		delete props.cbUpdateScrollbars;
+		delete props.clientWidth;
+		delete props.clientHeight;
 		delete props.component;
 		delete props.data;
 		delete props.dataSize;
@@ -719,6 +745,7 @@ class VirtualListCore extends Component {
 		delete props.onScrollStop;
 		delete props.overhang;
 		delete props.positioningOption;
+		delete props.precalculatedClientSize;
 		delete props.spacing;
 
 		if (primary) {
