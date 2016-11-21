@@ -12,7 +12,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const MARGIN = ri.scale(12);
 
 	return class extends React.Component {
-		displayName: 'ContextualPopupDecorator'
+		static displayName = 'ContextualPopupDecorator'
 
 		constructor (props) {
 			super(props);
@@ -169,8 +169,8 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const {direction} = this.props;
 			if (direction === 'up' || direction === 'down') {
 				return {
-					isOverTop: client.top - container.height < 0,
-					isOverBottom: client.bottom + container.height > window.innerHeight,
+					isOverTop: client.top - container.height - ARROW_OFFSET < 0,
+					isOverBottom: client.bottom + container.height + ARROW_OFFSET > window.innerHeight,
 					isOverLeft: client.left - (container.width - client.width) / 2 < 0,
 					isOverRight: client.right + (container.width - client.width) / 2 > window.innerWidth
 				};
