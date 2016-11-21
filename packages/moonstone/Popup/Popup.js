@@ -11,7 +11,6 @@ import Transition from '@enact/ui/Transition';
 import FloatLayer from '@enact/ui/FloatLayer';
 import {SpotlightContainerDecorator} from '@enact/spotlight';
 
-import Layerable from '../Layerable';
 import IconButton from '../IconButton';
 
 import css from './Popup.less';
@@ -150,8 +149,6 @@ const PopupBase = kind({
 	}
 });
 
-const LayerablePopup = Layerable(PopupBase);
-
 /**
  * {@link moonstone/Popup.Popup} is a stateful component that help {@link moonstone/Popup.PopupBase}
  * to appear in {@link ui/FloatLayer.FloatLayer}.
@@ -263,7 +260,7 @@ class Popup extends React.Component {
 				onOpen={this.handleFloatingLayerOpen}
 				onDismiss={onClose}
 			>
-				<LayerablePopup
+				<PopupBase
 					{...rest}
 					open={this.state.popupOpen}
 					onCloseButtonClicked={onClose}
