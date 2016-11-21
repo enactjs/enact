@@ -5,18 +5,18 @@ import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
 
 const prop = {
 	tooltipPosition: {
-		'below left': 'below left',
-		'below right': 'below right',
-		'below center': 'below center',
+		'above center': 'above center',
 		'above left': 'above left',
 		'above right': 'above right',
-		'above center': 'above center',
-		'right top': 'right top',
-		'right center': 'right center',
-		'right bottom': 'right bottom',
+		'below center': 'below center',
+		'below left': 'below left',
+		'below right': 'below right',
+		'left bottom': 'left bottom',
+		'left middle': 'left middle',
 		'left top': 'left top',
-		'left center': 'left center',
-		'left bottom': 'left bottom'
+		'right bottom': 'right bottom',
+		'right middle': 'right middle',
+		'right top': 'right top'
 	}
 }
 
@@ -26,7 +26,7 @@ storiesOf('Tooltip')
 		' ',
 		'The basic Tooltip',
 		() => (
-			<div style={{position: 'absolute', left: '50%', transform: 'translateX(-50%)'}}>
+			<div style={{textAlign: 'center'}}>
 				<Button
 					tooltip={text('tooltip', 'tooltip!')}
 					tooltipPosition={select('tooltipPosition', prop.tooltipPosition, 'below left')}

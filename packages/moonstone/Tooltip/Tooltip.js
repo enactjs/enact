@@ -11,7 +11,7 @@ class Tooltip extends React.Component {
 		tooltipType: 'below left-arrow',
 		tooltipTop: '0',
 		tooltipLeft: '0',
-		arrowType: 'corner',
+		tooltipArrowType: 'corner',
 		showing: false
 	}
 
@@ -59,7 +59,7 @@ class Tooltip extends React.Component {
 		* @default 'half'
 		* @public
 		*/
-		arrowType: React.PropTypes.oneOf(['corner', 'edge']),
+		tooltipArrowType: React.PropTypes.oneOf(['corner', 'edge']),
 
 		/**
 		* Tooltip Showing
@@ -76,7 +76,7 @@ class Tooltip extends React.Component {
 			<div
 				className={[css.tooltip, this.props.tooltipType.split(' ').map((c) => css[c]).join(' '), (this.props.showing ? css.shown : '')].join(' ')}
 				style={{left: this.props.tooltipLeft, top: this.props.tooltipTop}}>
-				<TooltipArrow type={this.props.arrowType} />
+				<TooltipArrow type={this.props.tooltipArrowType} />
 				<div
 					ref={(label) => this.labelRef = label}
 					className={css.tooltipLabel}>

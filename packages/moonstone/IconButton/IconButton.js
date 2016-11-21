@@ -8,12 +8,9 @@ import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 
 import Button from '../Button';
-import Icon from '../Icon';
-import {TooltipDecorator} from '../Tooltip';
+import {IconBase} from '../Icon';
 
 import css from './IconButton.less';
-
-const IconBase = TooltipDecorator(Icon);
 
 /**
  * {@link moonstone/IconButton.IconButton} is a {@link moonstone/Icon.Icon}

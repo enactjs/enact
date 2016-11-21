@@ -28,16 +28,16 @@
 		display: inline-block;
 		line-height: 30px;
 		white-space: nowrap;
-		padding: 12px 29px;
+		padding: 12px 30px;
 		color: @moon-tooltip-text-color;
 		background-color: @moon-tooltip-bg-color;
-		border-radius: 34px;
+		border-radius: 33px;
 	}
 
 	&.below {
 		transform: translateY(@tooltip-arrow-width);
 
-	    &.left-arrow {
+		&.left-arrow {
 			.tooltipArrow {
 				transform: rotate(-90deg);
 				left: 0;
@@ -70,7 +70,7 @@
 	&.above {
 		transform: translateY(@tooltip-arrow-width * -1);
 
-	    &.left-arrow {
+		&.left-arrow {
 			.tooltipArrow {
 				transform: translateY(100%) rotate(-90deg) scaleX(-1);
 				left: 0;
@@ -129,7 +129,7 @@
 			}
 		}
 
-		&.center-arrow {
+		&.middle-arrow {
 			.tooltipArrow {
 				transform: translateX(100%) translateY(-50%);
 				top: 50%;
@@ -139,7 +139,7 @@
 	}
 
 	&.right {
-		transform: translateX( (@moon-spotlight-outset * -1) + @tooltip-arrow-width);
+		transform: translateX((@moon-spotlight-outset * -1) + @tooltip-arrow-width);
 
 		&.top-arrow {
 			.tooltipArrow {
@@ -164,7 +164,7 @@
 			}
 		}
 
-		&.center-arrow {
+		&.middle-arrow {
 			.tooltipArrow {
 				transform: translateY(-50%) scaleX(-1);
 				top: 50%;

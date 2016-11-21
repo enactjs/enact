@@ -24,8 +24,9 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 
 			/**
 			* Position of the tooltip with respect to the activating control. Valid values are
-			* `'above'`, `'below'`, `'above center'`, `'below center'`, `'left top'`, `'left bottom'`, `'left center'`, `'right top'`, `'right bottom'`, `'right center'`, and
-			* `'auto'`. The values starting with `'left`' and `'right'` place the tooltip on the side
+			* `'above'`, `'above center'`, `'above left'`, `'above right'`, `'below'`, `'below center'`, `'below left'`, `'below right'`,
+			* `'left bottom'`, `'left middle'`, `'left top'`, `'right bottom'`, `'right middle'`, `'right top'`, `'auto'`.
+			* The values starting with `'left`' and `'right'` place the tooltip on the side
 			* (sideways tooltip) with two additional positions available, `'top'` and `'bottom'`, which
 			* places the tooltip content toward the top or bottom, with the tooltip pointer
 			* middle-aligned to the activator.
@@ -38,7 +39,7 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 			* @default 'auto'
 			* @public
 			*/
-			tooltipPosition: React.PropTypes.oneOf(['auto', 'above', 'below', 'left top', 'left bottom', 'left center', 'right top', 'right bottom', 'right center', 'above center', 'below center'])
+			tooltipPosition: React.PropTypes.oneOf(['auto', 'above', 'above center', 'above left', 'above right', 'below', 'below center', 'below left', 'below right', 'left bottom', 'left middle', 'left top', 'right bottom', 'right middle', 'right top'])
 		}
 
 		constructor (props) {
@@ -48,7 +49,7 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 				tooltipType: 'below left-arrow',
 				tooltipTop: '0',
 				tooltipLeft: '0',
-				arrowType: 'corner',
+				tooltipArrowType: 'corner',
 				showing: false
 			};
 		}
@@ -107,7 +108,7 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 				tooltipType: tPos + ' ' + aPos + "-arrow",
 				tooltipTop: ri.unit(r.tY, 'rem'),
 				tooltipLeft: ri.unit(r.tX, 'rem'),
-				arrowType: aPos == 'center' ? 'edge' : 'corner'
+				tooltipArrowType: aPos == 'center' || aPos == 'middle' ? 'edge' : 'corner'
 			});
 		}
 
@@ -143,7 +144,7 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 
 					if (aPos == 'top') {
 						tY -= lBound.height;
-					} else if(aPos == 'center') {
+					} else if(aPos == 'middle') {
 						tY -= lBound.height/2;
 					}
 					break;
@@ -153,7 +154,7 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 
 					if (aPos == 'top') {
 						tY -= lBound.height;
-					} else if(aPos == 'center') {
+					} else if(aPos == 'middle') {
 						tY -= lBound.height/2;
 					}
 					break;
@@ -172,13 +173,13 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 		}
 
 		handleFocus () {
-			if (this.props.tooltip.length>0) {
+			if (this.props.tooltip && this.props.tooltip.length>0) {
 				this.show();
 			}
 		}
 
 		handleBlur () {
-			if (this.props.tooltip.length>0) {
+			if (this.props.tooltip && this.props.tooltip.length>0) {
 				this.hide();
 			}
 		}
@@ -214,12 +215,13 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 		}
 
 		render () {
-			const style = this.props.style ? this.props.style : {};
-			const props = Object.assign({}, this.props, {
-				tooltip: this.props.tooltip,
-			});
+			const style = this.props.style;
+			const tooltip = this.props.tooltip;
+			const props = Object.assign({}, this.props);
 
 			delete props.style;
+			delete props.tooltip;
+			delete props.tooltipPosition;
 
 			return(
 				<div className={css.tooltipDecorator} style={style}>
@@ -231,11 +233,11 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 					</div>
 					<Portal open={true}>
 						<Tooltip
-							{...props}
+							tooltip = {tooltip}
 							tooltipType={this.state.tooltipType}
 							tooltipTop={this.state.tooltipTop}
 							tooltipLeft={this.state.tooltipLeft}
-							arrowType={this.state.arrowType}
+							tooltipArrowType={this.state.tooltipArrowType}
 							showing={this.state.showing}
 							ref={(tooltip) => this.tooltipRef = tooltip} />
 					</Portal>
