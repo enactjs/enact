@@ -116,6 +116,15 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			onScrollStop: PropTypes.func,
 
 			/**
+			 * It scrolls by page when 'true'
+			 *
+			 * @type {Boolean}
+			 * @default true
+			 * @public
+			 */
+			pageScroll: PropTypes.bool,
+
+			/**
 			 * Options for positioning the items; valid values are `'byItem'`, `'byContainer'`,
 			 * and `'byBrowser'`.
 			 * If `'byItem'`, the list moves each item.
@@ -137,6 +146,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			onScroll: nop,
 			onScrollStart: nop,
 			onScrollStop: nop,
+			pageScroll: true,
 			positioningOption: 'byItem'
 		}
 
@@ -146,6 +156,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		isScrollAnimationTargetAccumulated = false
 		isFirstDragging = false
 		isDragging = false
+		isKeyDown = false
 
 		// mouse handlers
 		eventHandlers = {}
@@ -203,16 +214,26 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					onScroll
 				};
 			} else {
-				const {onFocus, onKeyDown, onMouseDown, onMouseLeave, onMouseMove, onMouseUp, onWheel} = this;
-				this.eventHandlers = {
-					onFocus,
-					onKeyDown,
-					onMouseDown,
-					onMouseLeave,
-					onMouseMove,
-					onMouseUp,
-					onWheel
-				};
+				const {onFocus, onKeyDown, onKeyUp, onMouseDown, onMouseLeave, onMouseMove, onMouseUp, onWheel} = this;
+				if (props.pageScroll) {
+					this.eventHandlers = {
+						onFocus,
+						onKeyDown,
+						onKeyUp,
+						onWheel
+					};
+				} else {
+					this.eventHandlers = {
+						onFocus,
+						onKeyDown,
+						onKeyUp,
+						onMouseDown,
+						onMouseLeave,
+						onMouseMove,
+						onMouseUp,
+						onWheel
+					};
+				}
 			}
 
 			this.verticalScrollbarProps = {
@@ -362,26 +383,33 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		onFocus = (e) => {
 			// for virtuallist
-			const
-				item = e.target,
-				index = Number.parseInt(item.getAttribute(dataIndexAttribute));
+			if (this.isKeyDown && !this.isDragging) {
+				const
+					item = e.target,
+					index = Number.parseInt(item.getAttribute(dataIndexAttribute));
 
-			if (!this.isDragging && !isNaN(index) && item !== this.lastFocusedItem && item === doc.activeElement && this.childRef.calculatePositionOnFocus) {
-				const pos = this.childRef.calculatePositionOnFocus(index);
-				if (pos) {
-					if (pos.left !== this.scrollLeft || pos.top !== this.scrollTop) {
-						this.start(pos.left, pos.top, (spotlightAnimationDuration > 0), false, spotlightAnimationDuration);
+				if (!isNaN(index) && item !== this.lastFocusedItem && item === doc.activeElement && this.childRef.calculatePositionOnFocus) {
+					const pos = this.childRef.calculatePositionOnFocus(index);
+					if (pos) {
+						if (pos.left !== this.scrollLeft || pos.top !== this.scrollTop) {
+							this.start(pos.left, pos.top, (spotlightAnimationDuration > 0), false, spotlightAnimationDuration);
+						}
+						this.lastFocusedItem = item;
 					}
-					this.lastFocusedItem = item;
 				}
 			}
 		}
 
 		onKeyDown = (e) => {
 			if (this.childRef.setSpotlightContainerRestrict) {
+				this.isKeyDown = true;
 				const index = Number.parseInt(e.target.getAttribute(dataIndexAttribute));
 				this.childRef.setSpotlightContainerRestrict(e.keyCode, index);
 			}
+		}
+
+		onKeyUp = () => {
+			this.isKeyDown = false;
 		}
 
 		onWheel = (e) => {

@@ -553,6 +553,7 @@ class VirtualListCore extends Component {
 
 	calculatePositionOnFocus = (focusedIndex) => {
 		const
+			{pageScroll} = this.props,
 			{primary, numOfItems, scrollPosition} = this,
 			offsetToClientEnd = primary.clientSize - primary.itemSize;
 		let
@@ -562,10 +563,12 @@ class VirtualListCore extends Component {
 		this.lastFocusedIndex = focusedIndex;
 
 		if (primary.clientSize >= primary.itemSize) {
-			if (gridPosition.primaryPosition > scrollPosition + offsetToClientEnd) {
-				gridPosition.primaryPosition -= offsetToClientEnd;
-			} else if (gridPosition.primaryPosition > scrollPosition) {
+			if (gridPosition.primaryPosition > scrollPosition + offsetToClientEnd) { // forward over
+				gridPosition.primaryPosition -= pageScroll ? 0 : offsetToClientEnd;
+			} else if (gridPosition.primaryPosition >= scrollPosition) { // inside of client
 				gridPosition.primaryPosition = scrollPosition;
+			} else { // backward over
+				gridPosition.primaryPosition -= pageScroll ? offsetToClientEnd : 0;
 			}
 		}
 
@@ -717,6 +720,7 @@ class VirtualListCore extends Component {
 		delete props.onScrolling;
 		delete props.onScrollStart;
 		delete props.onScrollStop;
+		delete props.pageScroll;
 		delete props.overhang;
 		delete props.positioningOption;
 		delete props.spacing;
