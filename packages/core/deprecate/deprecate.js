@@ -43,9 +43,10 @@ const warn = (msg) => {
 };
 
 /**
- * Marks a function, component or property as deprecated. Deprecated items will log a message on
- * first invocation. Can also be used 'stand-alone' to issue a deprecation warning.  In stand-alone
- * mode it currently will log every time.  In production mode, the deprecation warning disappears.
+ * Marks a function, component or property (via `propTypes`) as deprecated. Deprecated items will
+ * log a message on first invocation. Can also be used 'stand-alone' to issue a deprecation warning.
+ * In stand-alone mode it currently will log every time.  In production mode, the deprecation
+ * warning disappears.
  *
  * @function
  * @param {*} thing - The thing to be wrapped, or the deprecation config in stand-alone
