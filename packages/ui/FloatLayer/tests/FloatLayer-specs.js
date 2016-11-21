@@ -1,29 +1,29 @@
 import React from 'react';
 import {mount} from 'enzyme';
-import {PortalBase} from '../Portal';
+import {FloatLayerBase} from '../FloatLayer';
 
-describe('Portal Specs', () => {
+describe('FloatLayer Specs', () => {
 	beforeEach(() => {
 		const div = document.createElement('div');
-		div.setAttribute('id', 'portal');
+		div.setAttribute('id', 'floatLayer');
 		document.body.appendChild(div);
 	});
 
 	afterEach(() => {
-		const div = document.getElementById('portal');
+		const div = document.getElementById('floatLayer');
 		document.body.removeChild(div);
 	});
 
-	it('should not render if portal is not open', () => {
-		const wrapper = mount(<PortalBase><p>Hi</p></PortalBase>);
+	it('should not render if FloatLayer is not open', () => {
+		const wrapper = mount(<FloatLayerBase><p>Hi</p></FloatLayerBase>);
 
 		const expected = null;
 		const actual = wrapper.instance().node;
 		expect(actual).to.equal(expected);
 	});
 
-	it('should render if portal is open', () => {
-		const wrapper = mount(<PortalBase open><p>Hi</p></PortalBase>);
+	it('should render if FloatLayer is open', () => {
+		const wrapper = mount(<FloatLayerBase open><p>Hi</p></FloatLayerBase>);
 
 		const expected = 'P';
 		const actual = wrapper.instance().node.firstElementChild.firstElementChild.tagName;

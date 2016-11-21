@@ -8,7 +8,7 @@
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 import Transition from '@enact/ui/Transition';
-import Portal from '@enact/ui/Portal';
+import FloatLayer from '@enact/ui/FloatLayer';
 import {SpotlightContainerDecorator} from '@enact/spotlight';
 
 import Layerable from '../Layerable';
@@ -154,7 +154,7 @@ const LayerablePopup = Layerable(PopupBase);
 
 /**
  * {@link moonstone/Popup.Popup} is a stateful component that help {@link moonstone/Popup.PopupBase}
- * to appear in {@link ui/Portal.Portal} layer.
+ * to appear in {@link ui/FloatLayer.FloatLayer}.
  *
  * @class Popup
  * @memberOf moonstone/Popup
@@ -192,7 +192,7 @@ class Popup extends React.Component {
 		onClose: PropTypes.func,
 
 		/**
-		 * When `true`, Popup is rendered into portal.
+		 * When `true`, Popup is rendered into {@link ui/FloatLayer.FloatLayer}.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -220,7 +220,7 @@ class Popup extends React.Component {
 	constructor (props) {
 		super(props);
 		this.state = {
-			portalOpen: this.props.open || false,
+			floatLayerOpen: this.props.open,
 			popupOpen: this.props.noAnimation
 		};
 	}
@@ -229,17 +229,17 @@ class Popup extends React.Component {
 		if (!this.props.open && nextProps.open) {
 			this.setState({
 				popupOpen: this.props.noAnimation,
-				portalOpen: true
+				floatLayerOpen: true
 			});
 		} else if (this.props.open && !nextProps.open) {
 			this.setState({
 				popupOpen: this.props.noAnimation,
-				portalOpen: !this.props.noAnimation
+				floatLayerOpen: !this.props.noAnimation
 			});
 		}
 	}
 
-	handlePortalOpen = () => {
+	handleFloatingLayerOpen = () => {
 		if (!this.props.noAnimation) {
 			this.setState({
 				popupOpen: true
@@ -249,7 +249,7 @@ class Popup extends React.Component {
 
 	handlePopupHide = () => {
 		this.setState({
-			portalOpen: false
+			floatLayerOpen: false
 		});
 	}
 
@@ -257,10 +257,10 @@ class Popup extends React.Component {
 		const {noAutoDismiss, onClose, ...rest} = this.props;
 
 		return (
-			<Portal
+			<FloatLayer
 				noAutoDismiss={noAutoDismiss}
-				open={this.state.portalOpen}
-				onOpen={this.handlePortalOpen}
+				open={this.state.floatLayerOpen}
+				onOpen={this.handleFloatingLayerOpen}
 				onDismiss={onClose}
 			>
 				<LayerablePopup
@@ -269,7 +269,7 @@ class Popup extends React.Component {
 					onCloseButtonClicked={onClose}
 					onHide={this.handlePopupHide}
 				/>
-			</Portal>
+			</FloatLayer>
 		);
 	}
 }

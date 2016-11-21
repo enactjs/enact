@@ -1,8 +1,8 @@
 /* //TODO: JSDOC revisit
- * Exports the {@link ui/Portal.ScrimBase} component and {@link ui/Portal.ScrimLayer}
- * components. The default export is {@link ui/Portal.ScrimBase}.
+ * Exports the {@link ui/FloatLayer.ScrimBase} component and {@link ui/FloatLayer.ScrimLayer}
+ * components. The default export is {@link ui/FloatLayer.ScrimBase}.
  *
- * @module ui/Portal/Scrim
+ * @module ui/FloatLayer/Scrim
  */
 
 import kind from '@enact/core/kind';
@@ -11,18 +11,18 @@ import React from 'react';
 import css from './Scrim.less';
 
 /**
- * {@link ui/Portal.ScrimBase} provides an overlay that will prevent taps from propagating
+ * {@link ui/FloatLayer.ScrimBase} provides an overlay that will prevent taps from propagating
  * to the controls that it covers.
  *
  * @class ScrimBase
- * @memberOf ui/Portal
+ * @memberOf ui/FloatLayer
  * @ui
  * @private
  */
 const ScrimBase = kind({
 	name: 'ScrimBase',
 
-	propTypes: /** @lends ui/Portal.ScrimBase.prototype */ {
+	propTypes: /** @lends ui/FloatLayer.ScrimBase.prototype */ {
 		/**
 		 * Types of scrim. It can be either `transparent` or `translucent`.
 		 *
@@ -56,18 +56,18 @@ const ScrimBase = kind({
 });
 
 /**
- * {@link ui/Portal.ScrimLayer} is a layer which adds scrim behind the children.
+ * {@link ui/FloatLayer.ScrimLayer} is a layer which adds scrim behind the children.
  * Children will always have one higher z-index than scrim.
  *
  * @class ScrimLayer
- * @memberOf ui/Portal
+ * @memberOf ui/FloatLayer
  * @ui
  * @private
  */
 const ScrimLayer = kind({
 	name: 'ScrimLayer',
 
-	propTypes: /** @lends ui/Portal.ScrimLayer.prototype */ {
+	propTypes: /** @lends ui/FloatLayer.ScrimLayer.prototype */ {
 		/**
 		 * z-index of the layer. Scrim will have the z-index of layer, and the children will have
 		 * one higher index to display on top of Scrim.

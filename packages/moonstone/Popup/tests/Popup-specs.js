@@ -6,12 +6,12 @@ import Popup from '../Popup';
 describe('Popup specs', () => {
 	beforeEach(() => {
 		const div = document.createElement('div');
-		div.setAttribute('id', 'portal');
+		div.setAttribute('id', 'floatLayer');
 		document.body.appendChild(div);
 	});
 
 	afterEach(() => {
-		const div = document.getElementById('portal');
+		const div = document.getElementById('floatLayer');
 		document.body.removeChild(div);
 	});
 
@@ -21,7 +21,7 @@ describe('Popup specs', () => {
 		);
 
 		const expected = true;
-		const actual = popup.find('Portal').prop('open');
+		const actual = popup.find('FloatLayer').prop('open');
 
 		expect(actual).to.equal(expected);
 	});
@@ -32,7 +32,7 @@ describe('Popup specs', () => {
 		);
 
 		const expected = false;
-		const actual = popup.find('Portal').prop('open');
+		const actual = popup.find('FloatLayer').prop('open');
 
 		expect(actual).to.equal(expected);
 	});
