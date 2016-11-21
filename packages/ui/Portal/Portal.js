@@ -1,6 +1,6 @@
 /**
  * Exports the {@link ui/Portal.Portal} and  {@link ui/Portal.PortalBase}
- * component. The default export is {@link ui/Portal.Portal}.
+ * components. The default export is {@link ui/Portal.Portal}.
  *
  * @module ui/Portal
  */
@@ -35,7 +35,7 @@ class PortalBase extends React.Component {
 		this.portal = null;
 	}
 
-	static propTypes = {
+	static propTypes = /** @lends ui/Portal.PortalBase.prototype */ {
 		/**
 		 * When `true`, Portal will not hide when the user presses `ESC` key.
 		 *
@@ -55,7 +55,7 @@ class PortalBase extends React.Component {
 
 		/**
 		 * A function to run when `ESC` key is pressed. The function will only invoke if
-		 * `noAutoDismiss` is set to false.
+		 * `noAutoDismiss` is set to `false`.
 		 *
 		 * @type {Function}
 		 * @public
@@ -83,7 +83,7 @@ class PortalBase extends React.Component {
 		 * CSS classes for Portal.
 		 *
 		 * @type {String}
-		 * @default `enact-fit enact-untouchable`
+		 * @default `enact-fit enact-clip enact-untouchable`
 		 * @public
 		 */
 		portalClassName: React.PropTypes.string,

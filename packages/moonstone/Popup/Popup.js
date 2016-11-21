@@ -1,5 +1,5 @@
 /**
- * Exports the {@link moonstone/Popup.Popup} and {@link moonstone/Popup.PopupBase}.
+ * Exports the {@link moonstone/Popup.Popup} and {@link moonstone/Popup.PopupBase} components.
  * The default export is {@link moonstone/Popup.Popup}.
  *
  * @module moonstone/Popup
@@ -30,7 +30,7 @@ const TransitionContainer = SpotlightContainerDecorator(Transition);
 const PopupBase = kind({
 	name: 'Popup',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/Popup.PopupBase.prototype */ {
 		/**
 		 * The element(s) to be displayed in the body of the popup.
 		 *
@@ -162,7 +162,7 @@ const LayerablePopup = Layerable(PopupBase);
  * @public
  */
 class Popup extends React.Component {
-	static propTypes = {
+	static propTypes = /** @lends moonstone/Popup.Popup.prototype */ {
 		/**
 		 * When `true`, popups will not animate on/off screen.
 		 *

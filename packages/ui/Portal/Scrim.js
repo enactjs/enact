@@ -1,6 +1,6 @@
-/**
+/* //TODO: JSDOC revisit
  * Exports the {@link ui/Portal.ScrimBase} component and {@link ui/Portal.ScrimLayer}
- * component. The default export is {@link ui/Portal.ScrimBase}.
+ * components. The default export is {@link ui/Portal.ScrimBase}.
  *
  * @module ui/Portal/Scrim
  */
@@ -22,7 +22,7 @@ import css from './Scrim.less';
 const ScrimBase = kind({
 	name: 'ScrimBase',
 
-	propTypes: {
+	propTypes: /** @lends ui/Portal.ScrimBase.prototype */ {
 		/**
 		 * Types of scrim. It can be either `transparent` or `translucent`.
 		 *
@@ -67,7 +67,7 @@ const ScrimBase = kind({
 const ScrimLayer = kind({
 	name: 'ScrimLayer',
 
-	propTypes: {
+	propTypes: /** @lends ui/Portal.ScrimLayer.prototype */ {
 		/**
 		 * z-index of the layer. Scrim will have the z-index of layer, and the children will have
 		 * one higher index to display on top of Scrim.

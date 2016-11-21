@@ -1,4 +1,4 @@
-/**
+/* //TODO: JSDOC revisit
  * Exports the {@link ui/Portal.PortalDecorator} Higher-order Component (HOC).
  *
  * @module ui/Portal/PortalDecorator
@@ -8,6 +8,12 @@ import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
 import React from 'react';
 
+/**
+ * Default config for {@link ui/Portal.PortalDecorator}.
+ *
+ * @memberof ui/Portal/PortalDecorator
+ * @hocconfig
+ */
 const defaultConfig = {
 	/**
 	 * Element Id of the portal

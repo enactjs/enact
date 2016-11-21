@@ -16,6 +16,12 @@ import {SpotlightRootDecorator} from '@enact/spotlight';
 import screenTypes from './screenTypes.json';
 import css from './MoonstoneDecorator.less';
 
+/**
+ * Default config for {@link moonstone/MoonstoneDecorator.MoonstoneDecorator}.
+ *
+ * @memberof moonstone/MoonstoneDecorator
+ * @hocconfig
+ */
 const defaultConfig = {
 	cancelHandler: forKeyCode(461),
 	i18n: true,

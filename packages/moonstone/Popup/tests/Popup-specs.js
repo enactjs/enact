@@ -3,11 +3,16 @@ import {mount} from 'enzyme';
 
 import Popup from '../Popup';
 
-describe.only('Popup specs', () => {
+describe('Popup specs', () => {
 	beforeEach(() => {
 		const div = document.createElement('div');
 		div.setAttribute('id', 'portal');
 		document.body.appendChild(div);
+	});
+
+	afterEach(() => {
+		const div = document.getElementById('portal');
+		document.body.removeChild(div);
 	});
 
 	it('should be rendered opened if open is set to true', () => {

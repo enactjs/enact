@@ -1,5 +1,6 @@
 /**
- * Exports the {@link moonstone/Dialog.Dialog}
+ * Exports the {@link moonstone/Dialog.Dialog} and {@link moonstone/Dialog.DialogBase} component.
+ * The default export is {@link moonstone/Dialog.Dialog}.
  *
  * @module moonstone/Dialog
  */
@@ -24,7 +25,7 @@ import css from './Dialog.less';
 const DialogBase = kind({
 	name: 'Dialog',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/Dialog.DialogBase.prototype */ {
 		/**
 		 * Buttons, typically to close or take action in the dialog.
 		 *

@@ -9,6 +9,11 @@ describe('Portal Specs', () => {
 		document.body.appendChild(div);
 	});
 
+	afterEach(() => {
+		const div = document.getElementById('portal');
+		document.body.removeChild(div);
+	});
+
 	it('should not render if portal is not open', () => {
 		const wrapper = mount(<PortalBase><p>Hi</p></PortalBase>);
 
