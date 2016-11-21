@@ -1,7 +1,6 @@
 import {SelectableItemBase, SelectableItem} from '@enact/moonstone/SelectableItem';
 import {Toggleable} from '@enact/ui/Toggleable';
 import Selectable from '@enact/ui/Selectable';
-import Divider from '@enact/moonstone/Divider';
 import Group from '@enact/ui/Group';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
@@ -14,13 +13,13 @@ SelectableGroup.displayName = 'SelectableGroup';
 SelectableGroup.propTypes = Object.assign({}, Group.propTypes, Selectable.propTypes);
 SelectableGroup.defaultProps = Object.assign({}, Group.defaultProps, Selectable.defaultProps);
 
-const SelectableItemToggle = Toggleable({prop: 'checked', mutable: true}, SelectableItemBase);
+const SelectableItemToggle = Toggleable({prop: 'selected', mutable: true}, SelectableItemBase);
 SelectableItemToggle.displayName = 'SelectableItem';
 SelectableItemToggle.propTypes = Object.assign({}, SelectableItemToggle.propTypes, SelectableItemBase.propTypes);
 SelectableItemToggle.defaultProps = Object.assign({}, SelectableItemToggle.defaultProps, SelectableItemBase.defaultProps);
 
-delete SelectableItemToggle.propTypes.checked;
-delete SelectableItemToggle.defaultProps.checked;
+delete SelectableItemToggle.propTypes.selected;
+delete SelectableItemToggle.defaultProps.selected;
 
 const inputData = {
 	longText : 'Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text',
@@ -60,7 +59,7 @@ storiesOf('SelectableItem')
 			<SelectableItemToggle
 				disabled={boolean('disabled', false)}
 				inline={boolean('inline', false)}
-				checked={boolean('checked', false)}
+				selected={boolean('selected', false)}
 				onToggle={action('onToggle')}
 			>
 				{select('children', inputData.tallText, inputData.tallText[0])}
@@ -73,7 +72,7 @@ storiesOf('SelectableItem')
 			<SelectableItemToggle
 				disabled={boolean('disabled', false)}
 				inline={boolean('inline', false)}
-				checked={boolean('checked', false)}
+				selected={boolean('selected', false)}
 				onToggle={action('onToggle')}
 			>
 				{text('Right to Left Text', inputData.rtlText)}
@@ -86,7 +85,7 @@ storiesOf('SelectableItem')
 			<SelectableItemToggle
 				disabled={boolean('disabled', false)}
 				inline={boolean('inline', false)}
-				checked={boolean('checked', false)}
+				selected={boolean('selected', false)}
 				onToggle={action('onToggle')}
 			>
 				{text('extra space text', inputData.extraSpaceText)}
@@ -94,12 +93,12 @@ storiesOf('SelectableItem')
 		)
 	)
 	.addWithInfo(
-		'with default checked',
+		'with default selected',
 		() => (
 			<SelectableItemToggle
 				disabled={boolean('disabled', false)}
 				inline={boolean('inline', false)}
-				checked={boolean('checked', true)}
+				selected={boolean('selected', true)}
 				onToggle={action('onToggle')}
 			>
 				{text('children', inputData.normalText)}
@@ -115,7 +114,7 @@ storiesOf('SelectableItem')
 					inline: boolean('inline', false),
 					disabled: boolean('disabled', false)
 				}}
-				selectedProp="checked"
+				selectedProp="selected"
 				onSelect={action('onSelect')}
 			>
 

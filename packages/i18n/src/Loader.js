@@ -1,3 +1,5 @@
+/* global XMLHttpRequest */
+
 import xhr from 'xhr';
 
 import Loader from '../ilib/lib/Loader';
@@ -5,7 +7,8 @@ import ZoneInfoFile from './zoneinfo';
 import ilibLocale from '../ilib/locale/ilibmanifest.json';
 
 const get = (url, callback) => {
-	if (typeof window === 'object') {
+	if (typeof XMLHttpRequest !== 'undefined') {
+		xhr.XMLHttpRequest = XMLHttpRequest || xhr.XMLHttpRequest;
 		let req;
 		xhr({url, sync: true, beforeSend: (r) => (req = r)}, (err, resp, body) => {
 			let error = err || resp.statusCode !== 200 && resp.statusCode;

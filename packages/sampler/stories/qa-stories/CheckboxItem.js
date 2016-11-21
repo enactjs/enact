@@ -6,7 +6,7 @@ import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, text, select} from '@kadira/storybook-addon-knobs';
 
-const CheckboxItemToggle = Toggleable({prop: 'checked', mutable: true}, CheckboxItemBase);
+const CheckboxItemToggle = Toggleable({prop: 'selected', mutable: true}, CheckboxItemBase);
 CheckboxItemToggle.displayName = 'CheckboxItem';
 CheckboxItemToggle.propTypes = Object.assign({}, CheckboxItemToggle.propTypes, CheckboxItemBase.propTypes);
 CheckboxItemToggle.defaultProps = Object.assign({}, CheckboxItemToggle.defaultProps, CheckboxItemBase.defaultProps);
@@ -30,7 +30,7 @@ storiesOf('CheckboxItem')
 		'with long text',
 		() => (
 			<CheckboxItemToggle
-				checked={boolean('checked', false)}
+				selected={boolean('selected', false)}
 				disabled={boolean('disabled', false)}
 				inline={boolean('inline', false)}
 				onToggle={action('onToggle')}
@@ -43,7 +43,7 @@ storiesOf('CheckboxItem')
 		'with tall characters',
 		() => (
 			<CheckboxItemToggle
-				checked={boolean('checked', false)}
+				selected={boolean('selected', false)}
 				disabled={boolean('disabled', false)}
 				inline={boolean('inline', false)}
 				onToggle={action('onToggle')}
@@ -56,7 +56,7 @@ storiesOf('CheckboxItem')
 		'with extra spacing',
 		() => (
 			<CheckboxItemToggle
-				checked={boolean('checked', false)}
+				selected={boolean('selected', false)}
 				disabled={boolean('disabled', false)}
 				inline={boolean('inline', false)}
 				onToggle={action('onToggle')}
@@ -69,7 +69,7 @@ storiesOf('CheckboxItem')
 		'with right to left text',
 		() => (
 			<CheckboxItemToggle
-				checked={boolean('checked', false)}
+				selected={boolean('selected', false)}
 				disabled={boolean('disabled', false)}
 				inline={boolean('inline', false)}
 				onToggle={action('onToggle')}
@@ -88,7 +88,7 @@ storiesOf('CheckboxItem')
 					inline: boolean('ItemProps-Inline', false)
 				}}
 				select={select('select', ['single', 'radio', 'multiple'], 'multiple')}
-				selectedProp="checked"
+				selectedProp="selected"
 				defaultSelected={0}
 				onSelect={action('onSelect')}
 			>

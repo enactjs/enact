@@ -1,9 +1,9 @@
-// import Button from '@enact/moonstone/Button';
+import Button from '@enact/moonstone/Button';
 import CheckboxItem from '@enact/moonstone/CheckboxItem';
 import RadioItem from '@enact/moonstone/RadioItem';
 import SwitchItem from '@enact/moonstone/SwitchItem';
 import Selectable from '@enact/ui/Selectable';
-// import ToggleButton from '@enact/moonstone/ToggleButton';
+import ToggleButton from '@enact/moonstone/ToggleButton';
 import Group from '@enact/ui/Group';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
@@ -18,12 +18,11 @@ SelectableGroup.defaultProps = Object.assign({}, Group.defaultProps, Selectable.
 // Set up some defaults for info and knobs
 const prop = {
 	children: {
-		// Add back Button and ToggleButton once the controls all use a consistent "selectedProp"
-		// 'Button': Button,
+		'Button': Button,
 		'CheckboxItem': CheckboxItem,
 		'RadioItem': RadioItem,
-		'SwitchItem': SwitchItem
-		// 'ToggleButton': ToggleButton
+		'SwitchItem': SwitchItem,
+		'ToggleButton': ToggleButton
 	}
 };
 
@@ -41,7 +40,7 @@ storiesOf('Group')
 					inline: boolean('ItemProps-Inline', false)
 				}}
 				select={select('select', ['single', 'radio', 'multiple'], 'radio')}
-				selectedProp="checked"	// This will become "selected" after the components props are normalized to ALL be "selected" instead of some "checked" some "selected".
+				selectedProp="selected"
 				defaultSelected={0}
 				onSelect={action('onSelect')}
 			>

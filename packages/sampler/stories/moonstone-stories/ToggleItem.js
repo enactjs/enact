@@ -7,13 +7,13 @@ import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
 import {icons} from '@enact/moonstone/Icon';
 const iconNames = Object.keys(icons);
 
-const ToggleItem = Toggleable({prop: 'checked'}, ToggleItemBase);
+const ToggleItem = Toggleable({prop: 'selected'}, ToggleItemBase);
 ToggleItem.propTypes = Object.assign({}, ToggleItem.propTypes, ToggleItemBase.propTypes);
 ToggleItem.defaultProps = Object.assign({}, ToggleItem.defaultProps, ToggleItemBase.defaultProps);
 ToggleItem.displayName = 'ToggleItem';
 
-delete ToggleItem.propTypes.checked;
-delete ToggleItem.defaultProps.checked;
+delete ToggleItem.propTypes.selected;
+delete ToggleItem.defaultProps.selected;
 
 storiesOf('ToggleItem')
 	.addDecorator(withKnobs)
