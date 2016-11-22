@@ -40,16 +40,6 @@ const ImageBase = kind({
 
 	propTypes: /** @lends moonstone/Image.Image.prototype */ {
 		/**
-		 * A placeholder image to be displayed before the image is loaded.
-		 * For performance purposes, it should be pre-loaded or be a data url.
-		 *
-		 * @type {String}
-		 * @default ''
-		 * @public
-		 */
-		placeholder: PropTypes.string,
-
-		/**
 		 * String value or Object of values used to determine which image will appear on
 		 * a specific screenSize.
 		 *
@@ -58,6 +48,16 @@ const ImageBase = kind({
 		 * @public
 		 */
 		src: PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.object]).isRequired,
+
+		/**
+		 * A placeholder image to be displayed before the image is loaded.
+		 * For performance purposes, it should be pre-loaded or be a data url.
+		 *
+		 * @type {String}
+		 * @default ''
+		 * @public
+		 */
+		placeholder: PropTypes.string,
 
 		/**
 		 * Used to set the `background-size` of an Image.
