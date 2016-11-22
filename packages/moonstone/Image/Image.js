@@ -86,7 +86,7 @@ const ImageBase = kind({
 	computed: {
 		bgImage: ({src, placeholder}) => {
 			const imageSrc = selectSrc(src);
-			return placeholder ? `url(${imageSrc}), url(${placeholder})` : `url(${imageSrc})`;
+			return placeholder ? `url("${imageSrc}"), url("${placeholder}")` : `url("${imageSrc}")`;
 		},
 		className: ({className, sizing, styler}) => {
 			return sizing !== 'none' ? styler.append(sizing) : className;
