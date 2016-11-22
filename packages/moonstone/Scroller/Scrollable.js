@@ -23,6 +23,7 @@ const
 	holdTime = 50,
 	scrollWheelMultiplier = 2,
 	pixelPerLine = ri.scale(40) * scrollWheelMultiplier,
+	pixelPerScrollbarBtn = ri.scale(120) * scrollWheelMultiplier,
 	epsilon = 1,
 	// spotlight
 	doc = (typeof window === 'object') ? window.document : {},
@@ -288,7 +289,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		wheel (e, isHorizontal, isVertical) {
 			const deltaMode = e.deltaMode;
-			let delta = -e.nativeEvent.wheelDeltaY || e.deltaY;
+			let delta = -e.nativeEvent.wheelDeltaY;
 
 			if (deltaMode === 0) {
 				delta = ri.scale(delta) * scrollWheelMultiplier;
@@ -400,10 +401,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		onScrollbarBtnHandler = (orientation, direction) => {
 			const
 				isHorizontal = this.canScrollHorizontally() && orientation === 'horizontal',
-				isVertical = this.canScrollVertically() && orientation === 'vertical',
-				pageMultiplier = this.bounds.clientHeight;
+				isVertical = this.canScrollVertically() && orientation === 'vertical';
 
-			this.scrollToAccumulatedTarget(pageMultiplier * direction, isHorizontal, isVertical);
+			this.scrollToAccumulatedTarget(pixelPerScrollbarBtn * direction, isHorizontal, isVertical);
 		}
 
 		scrollToAccumulatedTarget = (delta, isHorizontal, isVertical) => {
