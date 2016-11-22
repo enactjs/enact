@@ -6,6 +6,9 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
+- `ui/FloatLayer`, `ui/FloatLayerDecorator` components
+- `fit`, `noAnimation` props added to `ui/TransitionBase`
+- `onHide` props added to `ui/Transition`
 - LESS mixins from `@enact/moonstone` that are general purpose and can be utilized by various UI
 libraries.
 
