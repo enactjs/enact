@@ -2,6 +2,7 @@
  * Exports the {@link moonstone/internal/SliderDecorator.SliderDecorator} HOC
  *
  * @module moonstone/internal/SliderDecorator
+ * @private
  */
 
 import hoc from '@enact/core/hoc';
@@ -17,7 +18,13 @@ import {
 	computeBarTransform,
 	computeKnobTransform
 } from './util';
-
+/**
+ * Default config for {@link moonstone/SliderDecorator.SliderDecorator}.
+ *
+ * @memberof moonstone/SliderDecorator
+ * @hocconfig
+ * @private
+ */
 const defaultConfig = {
 	/**
 	 * Configures the time in milliseconds to throttle consecutive change events.
@@ -51,7 +58,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'SliderDecorator';
 
-		static propTypes = {
+		static propTypes = /** @lends moonstone/SliderDecorator.SliderDecorator.prototype */{
 			/**
 			 * Background progress, as a percentage.
 			 *
@@ -137,9 +144,12 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static defaultProps = {
 			defaultValue: 0,
+			height: '300px',
 			max: 100,
 			min: 0,
-			step: 1
+			step: 1,
+			pressed: false,
+			vertical: false
 		};
 
 		constructor (props) {

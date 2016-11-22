@@ -1,3 +1,9 @@
+/**
+ * Exports the {@link moonstone/Slider.Slider}
+ *
+ * @module moonstone/Slider
+ */
+
 import kind from '@enact/core/kind';
 import {Spottable} from '@enact/spotlight';
 import Pressable from '@enact/ui/Pressable';
@@ -15,7 +21,7 @@ import {
 import css from './Slider.less';
 
 class VisibleBar extends React.Component {
-	static propTypes = {
+	static propTypes = /** @lends moonstone/Slider.VisibleBar.prototype */{
 		/**
 		 * The background progress as a proportion.
 		 *
@@ -80,10 +86,20 @@ class VisibleBar extends React.Component {
 	}
 }
 
+/**
+ * {@link moonstone/Slider.SliderBase} is a stateless Slider. In most 
+ * circumstances, you will want to use the stateful version.
+ * {@link moonstone/Slider.Slider}
+ *
+ * @class SliderBase
+ * @memberof moonstone/Slider
+ * @ui
+ * @public
+ */
 const SliderBase = kind({
 	name: 'Slider',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/Slider.SliderBase.prototype */{
 		/**
 		 * Background progress, as a percentage.
 		 *
@@ -246,6 +262,18 @@ const SliderBase = kind({
 	}
 });
 
+/**
+ * {@link moonstone/Slider.Slider} is a Slider with 
+ * Moonstone styling, Spottable, Pressable and SliderDecorator applied. It is a 
+ * stateful Slider.
+ *
+ * @class Slider
+ * @memberof moonstone/Slider
+ * @mixes spotlight/Spottable
+ * @mixes ui/Pressable
+ * @ui
+ * @public
+ */
 const SpottableSlider = Pressable(Spottable(SliderDecorator(SliderBase)));
 
 export default SpottableSlider;
