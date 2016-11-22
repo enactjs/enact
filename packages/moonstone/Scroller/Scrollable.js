@@ -144,19 +144,23 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		horizontalScrollability = false
 		verticalScrollability = false
 		isScrollAnimationTargetAccumulated = false
-		isFirstDragging = false
-		isDragging = false
+		isDragging = false /* true if drag events are being catched */
+		isWithinMoveTolerance = false /* true if dragging is started but not over move torlerance yet */
+		moveTolerance = 20 /* pixel distance to handle drag or flicking */
+		isStarted = false /* true if doScrollStart() called but doScrollStop() is not called. */
 
 		// mouse handlers
 		eventHandlers = {}
 
 		// drag info
 		dragInfo = {
-			t: 0,
-			clientX: 0,
-			clientY: 0,
+			startingX: 0,
+			startingY: 0,
+			lastX: 0,
+			lastY: 0,
 			dx: 0,
 			dy: 0,
+			t: 0,
 			dt: 0
 		}
 
@@ -238,10 +242,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			const d = this.dragInfo;
 
 			this.isDragging = true;
-			this.isFirstDragging = true;
+			this.isWithinMoveTolerance = true;
 			d.t = perf.now();
-			d.clientX = e.clientX;
-			d.clientY = e.clientY;
+			d.startingX = d.lastX = e.clientX;
+			d.startingY = d.lastY = e.clientY;
 			d.dx = d.dy = 0;
 		}
 
@@ -250,15 +254,15 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			const d = this.dragInfo;
 
 			if (this.horizontalScrollability) {
-				d.dx = e.clientX - d.clientX;
-				d.clientX = e.clientX;
+				d.dx = e.clientX - d.lastX;
+				d.lastX = e.clientX;
 			} else {
 				d.dx = 0;
 			}
 
 			if (this.verticalScrollability) {
-				d.dy = e.clientY - d.clientY;
-				d.clientY = e.clientY;
+				d.dy = e.clientY - d.lastY;
+				d.lastY = e.clientY;
 			} else {
 				d.dy = 0;
 			}
@@ -275,6 +279,16 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			d.dt = t - d.t;
 			this.isDragging = false;
+		}
+
+		isOverMoveTolerance (e) {
+			const
+				{clientX, clientY} = e,
+				{startingX, startingY} = this.dragInfo,
+				dx = clientX - startingX,
+				dy = clientY - startingY;
+
+			return Math.sqrt(dx * dx + dy * dy) > this.moveTolerance;
 		}
 
 		isFlicking () {
@@ -319,9 +333,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			if (this.isDragging) {
 				const {dx, dy} = this.drag(e);
 
-				if (this.isFirstDragging) {
-					this.doScrollStart();
-					this.isFirstDragging = false;
+				if (this.isWithinMoveTolerance) {
+					if (this.isOverMoveTolerance(e)) {
+						this.doScrollStart();
+						this.isWithinMoveTolerance = false;
+					} else {
+						return;
+					}
 				}
 				this.scroll(this.scrollLeft - dx, this.scrollTop - dy);
 			}
@@ -331,8 +349,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			if (this.isDragging) {
 				this.dragStop(e);
 
-				if (!this.isFlicking()) {
-					this.stop();
+				// if the dragging is not over move tolerance, do nothing.
+				if (!this.isFlicking() || this.isWithinMoveTolerance) {
+					if (this.isStarted) {
+						this.stop();
+					}
 				} else {
 					const
 						d = this.dragInfo,
@@ -427,7 +448,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		// call scroll callbacks
 
 		doScrollStart () {
+			if (this.isStarted) {
+				this.doScrollStop();
+			}
 			this.props.onScrollStart({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop});
+			this.isStarted = true;
 		}
 
 		doScrolling () {
@@ -436,6 +461,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		doScrollStop () {
 			this.props.onScrollStop({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop});
+			this.isStarted = false;
 		}
 
 		// update scroll position
@@ -458,6 +484,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			const {scrollLeft, scrollTop, bounds} = this;
 
 			this.animator.stop();
+
 			if (!silent) {
 				this.doScrollStart();
 			}
