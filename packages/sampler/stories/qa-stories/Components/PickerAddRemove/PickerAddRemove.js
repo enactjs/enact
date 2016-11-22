@@ -54,9 +54,7 @@ class PickerAddRemove extends React.Component {
 	}
 
 	handleRemove = () => {
-		let values = this.state.children;
 		let component = this.removeInput;
-		values.splice(component.state.value, 1);
 		this.setState({
 			children: [
 				...this.state.children.slice(0, component.state.value),
