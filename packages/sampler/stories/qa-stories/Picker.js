@@ -108,13 +108,14 @@ storiesOf('Picker')
 		'Add and Remove',
 		() => (
 			<PickerAddRemove
-				list={pickerList.fruits}
+				width={select('width', prop.width, 'medium')}
 				orientation={select('orientation', prop.orientation, 'horizontal')}
 				wrap={boolean('wrap')}
 				joined={boolean('joined')}
 				noAnimation={boolean('noAnimation')}
 				disabled={boolean('disabled')}
 			>
+				{pickerList.fruits}
 			</PickerAddRemove>
 		)
 	);
