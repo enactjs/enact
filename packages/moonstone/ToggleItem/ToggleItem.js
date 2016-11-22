@@ -10,8 +10,9 @@ import React, {PropTypes} from 'react';
 
 import {ItemOverlay} from '../Item';
 
-import css from './ToggleItem.less';
 import ToggleIcon from './ToggleIcon';
+
+import css from './ToggleItem.less';
 
 /**
  * {@link moonstone/ToggleItem.ToggleItemBase} is a component to make a Toggleable Item
@@ -62,7 +63,14 @@ const ToggleItemBase = kind({
 		 */
 		iconClasses: PropTypes.string,
 
-		iconPosition: PropTypes.oneOf(['start', 'end']),
+		/**
+		 * Specifies on which side (`before` or `after`) of the text the icon appears.
+		 *
+		 * @type {String}
+		 * @default 'before'
+		 * @public
+		 */
+		iconPosition: PropTypes.oneOf(['before', 'after']),
 
 		/**
 		 * Applies inline styling to the toggle item.
@@ -120,7 +128,7 @@ const ToggleItemBase = kind({
 		beginningIcon: ({iconClasses, selected, icon, iconPosition}) => {
 			if (iconPosition === 'start') {
 				return (
-					<ToggleIcon slot="beginningOverlay" className={iconClasses} selected={selected}>
+					<ToggleIcon slot="beforeOverlay" className={iconClasses} selected={selected}>
 						{icon}
 					</ToggleIcon>
 				);
@@ -129,7 +137,7 @@ const ToggleItemBase = kind({
 		endingIcon: ({iconClasses, selected, icon, iconPosition}) => {
 			if (iconPosition === 'end') {
 				return (
-					<ToggleIcon slot="endingOverlay" className={iconClasses} selected={selected}>
+					<ToggleIcon slot="afterOverlay" className={iconClasses} selected={selected}>
 						{icon}
 					</ToggleIcon>
 				);

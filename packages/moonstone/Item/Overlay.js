@@ -4,10 +4,10 @@ import React from 'react';
 import css from './Overlay.less';
 
 /**
- * {@link moonstone/ItemOverlay.Overlay} is the component inserted into an
- * {@link module:@enact/moonstone/ItemOverlay~ItemOverlay} on both sides.
+ * {@link moonstone/Item.Overlay} is the component inserted into each side of an
+ * {@link moonstone/Item~ItemOverlay}.
  *
- * @class ItemBase
+ * @class Overlay
  * @memberof moonstone/Item
  * @ui
  * @public
@@ -15,7 +15,7 @@ import css from './Overlay.less';
 const OverlayBase = kind({
 	name: 'Overlay',
 
-	propTypes: /** @lends moonstone/Item.ItemBase.prototype */ {
+	propTypes: /** @lends moonstone/Item.Overlay.prototype */ {
 		/**
 		 * When `true`, the component is no longer visually reprenested on screen.
 		 *

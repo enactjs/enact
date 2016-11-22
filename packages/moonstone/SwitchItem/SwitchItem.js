@@ -98,7 +98,7 @@ const SwitchItemBase = kind({
 	},
 
 	render: (props) => (
-		<ToggleItem {...props} iconPosition="end" />
+		<ToggleItem {...props} iconPosition="after" />
 	)
 });
 
