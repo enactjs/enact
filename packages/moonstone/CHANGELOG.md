@@ -2,6 +2,22 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `marqueeCentered` prop to `moonstone/MarqueeDecorator` and `moonstone/MarqueeText`
+
+### Changed
+
+- The property `checked` is now called `selected` for consistency across the whole framework. This allows better interoperability when switching between various components.  Affects the following: `CheckboxItem`, `RadioItem`, `SelectableItem`, `Switch`, `SwitchItem`, and `ToggleItem`.
+
+### Removed
+
+- LESS mixins that belong in `@enact/ui`, so that only moonstone-specific mixins are contained in
+this module. When authoring components and importing mixins, only the local mixins need to be
+imported, as they already import the general mixins.
+
 ## [1.0.0-alpha.3] - 2016-11-8
 
 ### Added
@@ -11,6 +27,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - Application close button to `moonstone/Panels`. Fires `onApplicationClose` when clicked. Can be omitted with the `noCloseButton` prop.
 - `marqueeDisabled` prop to `moonstone/Picker`
 - `padded` prop to `moonstone/RangePicker`
+- `forceDirection` prop to `moonstone/Marquee`. Forces the direction of `moonstone/Marquee`. Useful for when `RTL` content cannot be auto detected.
 
 ### Changed
 

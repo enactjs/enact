@@ -18,6 +18,7 @@ import Toggleable from '@enact/ui/Toggleable';
  * @param  {Object} props Current props object
  *
  * @returns {undefined}
+ * @private
  */
 const handleCancel = function (props) {
 	if (props.open) {

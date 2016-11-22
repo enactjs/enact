@@ -20,6 +20,8 @@ storiesOf('TimePicker')
 				noLabels={boolean('noLabels', false)}
 				noneText={text('noneText', 'Nothing Selected')}
 				onChange={action('onChange')}
+				onOpen={action('onOpen')}
+				onClose={action('onClose')}
 			/>
 		)
 	);
