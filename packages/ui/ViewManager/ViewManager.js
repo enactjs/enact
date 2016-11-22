@@ -109,6 +109,10 @@ class ViewManager extends React.Component {
 		this.checkReverse(nextProps);
 	}
 
+	shouldComponentUpdate(nextProps) {	
+		return this.props.children.key !== nextProps.children.key;
+	}
+	
 	/**
 	 * Determines if we should be reversing the transition based on the index of the keys of the
 	 * children.

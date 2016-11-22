@@ -8,6 +8,7 @@
 import kind from '@enact/core/kind';
 import ri from '@enact/ui/resolution';
 import React, {PropTypes} from 'react';
+import pure from 'recompose/pure';
 
 import iconList from './IconList.js';
 
@@ -132,6 +133,6 @@ const IconBase = kind({
  * @ui
  * @public
  */
-
-export default IconBase;
-export {IconBase as Icon, IconBase, iconList as icons};
+const Icon = pure(IconBase);
+export default Icon
+export {Icon, IconBase, iconList as icons};

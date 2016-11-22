@@ -70,7 +70,7 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 	const defaultPropKey = 'default' + cap(prop);
 	const forwardChange = forward(change);
 
-	return class extends React.Component {
+	return class extends React.PureComponent {
 		static displayName = 'Changeable'
 
 		static propTypes = /** @lends ui/Changeable.Changeable.prototype */ {

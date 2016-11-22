@@ -36,7 +36,7 @@ const jobNames = {
 	emulateMouseUp: 'PickerCore.emulateMouseUp'
 };
 
-const emulateMouseEventsTimeout = 400;
+const emulateMouseEventsTimeout = 175;
 
 // Components
 const TransparentIconButton = (props) => <IconButton {...props} backgroundOpacity="transparent" />;
