@@ -116,10 +116,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			onScrollStop: PropTypes.func,
 
 			/**
-			 * It scrolls by page when 'true'
+			 * It scrolls by page when 'true', by item when 'false'
 			 *
 			 * @type {Boolean}
-			 * @default true
+			 * @default false
 			 * @public
 			 */
 			pageScroll: PropTypes.bool,
@@ -146,7 +146,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			onScroll: nop,
 			onScrollStart: nop,
 			onScrollStop: nop,
-			pageScroll: true,
+			pageScroll: false,
 			positioningOption: 'byItem'
 		}
 

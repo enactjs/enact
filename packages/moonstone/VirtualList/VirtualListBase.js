@@ -114,6 +114,15 @@ class VirtualListCore extends Component {
 		overhang: PropTypes.number,
 
 		/**
+		 * It scrolls by page when 'true', by item when 'false'
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		pageScroll: PropTypes.bool,
+
+		/**
 		 * Option for positioning the items; valid values are `'byItem'`, `'byContainer'`,
 		 * and `'byBrowser'`.
 		 * If `'byItem'`, the list moves each item.
@@ -146,6 +155,7 @@ class VirtualListCore extends Component {
 		direction: 'vertical',
 		onScroll: nop,
 		overhang: 3,
+		pageScroll: false,
 		positioningOption: 'byItem',
 		spacing: 0,
 		style: {}
