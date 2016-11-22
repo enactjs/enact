@@ -1,13 +1,10 @@
-// TooltipLabel.less
+// Tooltip.less
 @import '../styles/mixins.less';
 @import '../styles/colors.less';
 @import '../styles/variables.less';
 @import '../styles/text.less';
 
 .tooltip {
-	@tooltip-arrow-width: 18px;
-	@tooltip-arrow-height: 30px;
-
 	position: absolute;
 	visibility: hidden;
 
@@ -17,8 +14,8 @@
 
 	.tooltipArrow {
 		position: absolute;
-		width: @tooltip-arrow-width;
-		height: @tooltip-arrow-height;
+		width: 18px;
+		height: 30px;
 		fill: @moon-tooltip-bg-color;
 		transform-origin: top left;
 	}
@@ -35,8 +32,6 @@
 	}
 
 	&.below {
-		transform: translateY(@tooltip-arrow-width);
-
 		&.left-arrow {
 			.tooltipArrow {
 				transform: rotate(-90deg);
@@ -68,8 +63,6 @@
 	}
 
 	&.above {
-		transform: translateY(@tooltip-arrow-width * -1);
-
 		&.left-arrow {
 			.tooltipArrow {
 				transform: translateY(100%) rotate(-90deg) scaleX(-1);
@@ -104,8 +97,6 @@
 	}
 
 	&.left {
-		transform: translateX(@moon-spotlight-outset - @tooltip-arrow-width);
-
 		&.top-arrow {
 			.tooltipArrow {
 				transform: translate(100%,100%) scaleY(-1);
@@ -139,8 +130,6 @@
 	}
 
 	&.right {
-		transform: translateX((@moon-spotlight-outset * -1) + @tooltip-arrow-width);
-
 		&.top-arrow {
 			.tooltipArrow {
 				transform: rotate(180deg);

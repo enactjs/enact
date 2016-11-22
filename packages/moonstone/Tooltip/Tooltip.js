@@ -37,7 +37,7 @@ class Tooltip extends React.Component {
 		/**
 		* Tooltip Top Position
 		*
-		* @type {number}
+		* @type {string}
 		* @default 0
 		* @public
 		*/
@@ -46,7 +46,7 @@ class Tooltip extends React.Component {
 		/**
 		* Tooltip Left Position
 		*
-		* @type {number}
+		* @type {string}
 		* @default 0
 		* @public
 		*/
@@ -56,7 +56,7 @@ class Tooltip extends React.Component {
 		* Tooltip Arrow Type
 		*
 		* @type {string}
-		* @default 'half'
+		* @default 'corner'
 		* @public
 		*/
 		tooltipArrowType: React.PropTypes.oneOf(['corner', 'edge']),
