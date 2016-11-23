@@ -410,8 +410,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const {
 				children,
 				disabled,
-				marqueeCentered,
 				forceDirection,
+				marqueeCentered,
 				marqueeOn,
 				marqueeSpeed,
 				...rest

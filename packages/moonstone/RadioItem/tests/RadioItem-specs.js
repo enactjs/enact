@@ -11,10 +11,10 @@ describe('RadioItem Specs', () => {
 			</RadioItem>
 		);
 
-		const expected = css.selected;
-		const actual = radioItem.find('Icon').prop('className');
+		const expected = 0;
+		const actual = radioItem.find(`.${css.selected}`).length;
 
-		expect(actual).to.not.contain(expected);
+		expect(actual).to.equal(expected);
 	});
 
 	it('should render correct icon when selected', function () {
@@ -24,10 +24,10 @@ describe('RadioItem Specs', () => {
 			</RadioItem>
 		);
 
-		const expected = css.selected;
-		const actual = radioItem.find('Icon').prop('className');
+		const expected = 1;
+		const actual = radioItem.find(`.${css.selected}`).length;
 
-		expect(actual).to.contain(expected);
+		expect(actual).to.equal(expected);
 	});
 
 });
