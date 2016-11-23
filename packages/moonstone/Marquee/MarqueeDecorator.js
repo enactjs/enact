@@ -76,26 +76,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static propTypes = /** @lends moonstone/Marquee.MarqueeDecorator.prototype */ {
 			/**
-			 * Nodes to be inserted after the marquee element. These are placed inside the wrapped
-			 * element but outside the scrolling region of the marquee. Useful if you need some
-			 * pieces to not roll with the marquee.
-			 *
-			 * @type {Node}
-			 * @public
-			 */
-			afterMarquee: React.PropTypes.node,
-
-			/**
-			 * Nodes to be inserted before the marquee element. These are placed inside the wrapped
-			 * element but outside the scrolling region of the marquee. Useful if you need some
-			 * pieces to not roll with the marquee.
-			 *
-			 * @type {Node}
-			 * @public
-			 */
-			beforeMarquee: React.PropTypes.node,
-
-			/**
 			 * Children to be marqueed
 			 *
 			 * @type {Node}
@@ -428,8 +408,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		renderMarquee () {
 			const {
-				afterMarquee,
-				beforeMarquee,
 				children,
 				disabled,
 				forceDirection,
@@ -453,8 +431,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				rest[leave] = this.handleLeave;
 			}
 
-			delete rest.afterMarquee;
-			delete rest.beforeMarquee;
 			delete rest.marqueeDelay;
 			delete rest.marqueeDisabled;
 			delete rest.marqueeOnRenderDelay;
@@ -463,7 +439,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			return (
 				<Wrapped {...rest} disabled={disabled}>
-					{beforeMarquee}
 					<Marquee
 						animating={this.state.animating}
 						centered={marqueeCentered}
@@ -477,7 +452,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					>
 						{children}
 					</Marquee>
-					{afterMarquee}
 				</Wrapped>
 			);
 		}
@@ -485,8 +459,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		renderWrapped () {
 			const props = Object.assign({}, this.props);
 
-			delete props.afterMarquee;
-			delete props.beforeMarquee;
 			delete props.marqueeCentered;
 			delete props.marqueeDelay;
 			delete props.marqueeDisabled;

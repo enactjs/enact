@@ -7,18 +7,21 @@
 	.overlay {
 		line-height: 1;
 
-		&.beginning :first-child {
+		&.before :first-child {
 			.margin-start-end(0, @moon-icon-margin);
 		}
 
-		&.ending :last-child {
+		&.after :last-child {
 			.margin-start-end(@moon-icon-margin, 0);
 		}
 
-		.icon {
-			margin-top: 0;
-			margin-bottom: 0;
-			vertical-align: top;
+		&.before,
+		&.after {
+			> * {
+				margin-top: 0;
+				margin-bottom: 0;
+				vertical-align: top;
+			}
 		}
 	}
 

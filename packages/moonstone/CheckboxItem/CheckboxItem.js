@@ -98,7 +98,7 @@ const CheckboxItemBase = kind({
 	},
 
 	render: (props) => (
-		<ToggleItem {...props} beginningIcon="check" />
+		<ToggleItem {...props} icon="check" />
 	)
 });
 

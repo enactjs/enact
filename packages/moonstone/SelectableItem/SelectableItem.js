@@ -98,7 +98,7 @@ const SelectableItemBase = kind({
 	},
 
 	render: (props) => (
-		<ToggleItem {...props} beginningIcon="circle" />
+		<ToggleItem {...props} icon="circle" />
 	)
 });
 

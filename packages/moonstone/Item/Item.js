@@ -4,14 +4,15 @@
  * @module moonstone/Item
  */
 
-import React, {PropTypes} from 'react';
 import kind from '@enact/core/kind';
+import React, {PropTypes} from 'react';
+import Slottable from '@enact/ui/Slottable';
 import {Spottable} from '@enact/spotlight';
 
-import {ItemOverlay} from '../ItemOverlay';
-import {MarqueeText} from '../Marquee';
+import {MarqueeDecorator} from '../Marquee';
 
 import css from './Item.less';
+import OverlayDecorator from './OverlayDecorator';
 
 /**
  * {@link moonstone/Item.ItemBase} is a Moonstone-styled control that can display
@@ -35,11 +36,6 @@ const ItemBase = kind({
 		 */
 		children: PropTypes.node.isRequired,
 
-		// Not truly properties of Item, but the default component is MarqueeText, where these are
-		// supporrted and should be passed along without error.
-		afterMarquee: MarqueeText.propTypes.afterMarquee,
-		beforeMarquee: MarqueeText.propTypes.beforeMarquee,
-
 		/**
 		 * The type of component to use to render the item. May be a DOM node name (e.g 'div',
 		 * 'span', etc.) or a custom component.
@@ -60,7 +56,7 @@ const ItemBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * Applies inline styling to the toggle item.
+		 * Applies inline styling to the item.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -70,7 +66,7 @@ const ItemBase = kind({
 	},
 
 	defaultProps: {
-		component: MarqueeText,
+		component: 'div',
 		disabled: false,
 		inline: false
 	},
@@ -85,13 +81,6 @@ const ItemBase = kind({
 	},
 
 	render: ({component: Component, ...rest}) => {
-		if (typeof Component === 'string') {
-			// If the component was secified as a generic HTML node (like `div`) then it won't include
-			// support for the after and before marquee props, so we must remove them. We assume the
-			// component is handling its own marqueeing.
-			delete rest.afterMarquee;
-			delete rest.beforeMarquee;
-		}
 		delete rest.inline;
 
 		return (
@@ -99,6 +88,9 @@ const ItemBase = kind({
 		);
 	}
 });
+
+// cache the MarqueeDecorator so it can be used for Item and ItemOverlay
+const ItemMarqueeDecorator = MarqueeDecorator({className: css.content});
 
 /**
  * {@link moonstone/Item.Item} is a focusable Moonstone-styled control that can display
@@ -110,7 +102,26 @@ const ItemBase = kind({
  * @ui
  * @public
  */
-const Item = Spottable(ItemOverlay(ItemBase));
+const Item = Spottable(
+	ItemMarqueeDecorator(
+		ItemBase
+	)
+);
+
+const ItemOverlay = Spottable(
+	Slottable(
+		{slots: ['overlayAfter', 'overlayBefore']},
+		ItemMarqueeDecorator(
+			OverlayDecorator(
+				ItemBase
+			)
+		)
+	)
+);
 
 export default Item;
-export {Item, ItemBase};
+export {
+	Item,
+	ItemBase,
+	ItemOverlay
+};
