@@ -110,7 +110,7 @@ const Item = Spottable(
 
 const ItemOverlay = Spottable(
 	Slottable(
-		{slots: ['beforeOverlay', 'afterOverlay']},
+		{slots: ['overlayAfter', 'overlayBefore']},
 		ItemMarqueeDecorator(
 			OverlayDecorator(
 				ItemBase

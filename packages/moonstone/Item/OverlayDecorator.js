@@ -7,7 +7,7 @@ import css from './Overlay.less';
 
 /**
  * {@link moonstone/Item~OverlayDecorator} is a Higher-order Component that adds
- * `beforeOverlay` and `afterOverlay` properties to add components before or after the usual
+ * `overlayBefore` and `overlayAfter` properties to add components before or after the usual
  * text content of an Item. The visibility of each can be individually controlled via the `autoHide`
  * property.
  *
@@ -22,19 +22,9 @@ const OverlayDecorator = hoc((config, Wrapped) => {
 
 		propTypes: {
 			/**
-			 * Property accepts a node which will be displayed at the end of the item.
-			 * Typically this will be an icon or multiple icons.
-			 *
-			 * @type {Element}
-			 * @default null
-			 * @public
-			 */
-			afterOverlay: PropTypes.node,
-
-			/**
 			 * Controls the visibility state of the overlays. One, both, or neither overlay can be
-			 * shown when the item is focused. Choosing 'after' will leave `beforeOverlay`
-			 * visible at all times; only `afterOverlay` will have its visibility toggled on focus.
+			 * shown when the item is focused. Choosing 'after' will leave `overlayBefore`
+			 * visible at all times; only `overlayAfter` will have its visibility toggled on focus.
 			 * Valid values are 'before', 'after', 'both' and 'no'. 'no' being no-auto-hiding
 			 * for either overlay. They will both be present regardless of focus.
 			 *
@@ -45,6 +35,16 @@ const OverlayDecorator = hoc((config, Wrapped) => {
 			autoHide: PropTypes.oneOf(['no', 'before', 'after', 'both']),
 
 			/**
+			 * Property accepts a node which will be displayed at the end of the item.
+			 * Typically this will be an icon or multiple icons.
+			 *
+			 * @type {Element}
+			 * @default null
+			 * @public
+			 */
+			overlayAfter: PropTypes.node,
+
+			/**
 			 * Property accepts a node which will be displayed at the beginning of the item.
 			 * Typically this will be an icon or multiple icons.
 			 *
@@ -52,7 +52,7 @@ const OverlayDecorator = hoc((config, Wrapped) => {
 			 * @default null
 			 * @public
 			 */
-			beforeOverlay: PropTypes.node
+			overlayBefore: PropTypes.node
 		},
 
 		defaultProps: {
@@ -68,15 +68,15 @@ const OverlayDecorator = hoc((config, Wrapped) => {
 			className: ({autoHide, styler}) => styler.append({autoHide})
 		},
 
-		render: ({afterOverlay, autoHide, beforeOverlay, children, ...rest}) => {
+		render: ({overlayAfter, autoHide, overlayBefore, children, ...rest}) => {
 			return (
 				<Wrapped {...rest}>
-					<Overlay className={css.beginning} hidden={autoHide === 'before' || autoHide === 'both'}>
-						{beforeOverlay}
+					<Overlay className={css.before} hidden={autoHide === 'before' || autoHide === 'both'}>
+						{overlayBefore}
 					</Overlay>
 					{children}
-					<Overlay className={css.ending} hidden={autoHide === 'after' || autoHide === 'both'}>
-						{afterOverlay}
+					<Overlay className={css.after} hidden={autoHide === 'after' || autoHide === 'both'}>
+						{overlayAfter}
 					</Overlay>
 				</Wrapped>
 			);

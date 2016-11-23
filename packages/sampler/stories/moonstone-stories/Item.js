@@ -19,18 +19,4 @@ storiesOf('Item')
 			>
 				{text('children', 'Hello Item')}
 			</Item>
-		))
-	.addWithInfo(
-		'ItemOverlay',
-		`Basic usage of ItemOverlay --  a specialized version of Item that allows components to
-		be wrapped with overlays that can be conditionally until spotted.`,
-		() => (
-			<ItemOverlay
-				autoHide={select('autoHide', ['after', 'before', 'both', 'no'], 'no')}
-			>
-				<Icon slot="beforeOverlay">play</Icon>
-				{text('children', 'Hello Item')}
-				<Icon slot="afterOverlay">stop</Icon>
-			</ItemOverlay>
-		)
-	);
+		));
