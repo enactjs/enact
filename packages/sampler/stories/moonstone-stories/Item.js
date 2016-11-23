@@ -1,17 +1,16 @@
-import Icon from '@enact/moonstone/Icon';
-import {Item, ItemOverlay} from '@enact/moonstone/Item';
+import {Item, ItemBase} from '@enact/moonstone/Item';
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
-import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
+import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
 
-Item.propTypes = Object.assign({}, Item.propTypes);
-Item.defaultProps = Object.assign({}, Item.defaultProps);
+Item.propTypes = Object.assign({}, ItemBase.propTypes, Item.propTypes);
+Item.defaultProps = Object.assign({}, ItemBase.defaultProps, Item.defaultProps);
 Item.displayName = 'Item';
 
 storiesOf('Item')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'Basic',
+		' ',
 		'Basic usage of Item',
 		() => (
 			<Item
