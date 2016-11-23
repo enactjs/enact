@@ -12,17 +12,19 @@ import {Spottable} from '@enact/spotlight';
 
 import Icon from '../Icon';
 import {Image} from '../Image';
-import {ItemBase} from '../Item';
+import MarqueeDecorator from '../Marquee/MarqueeDecorator';
 
 import css from './GridListImageItem.less';
 
-const defaultPlaceholder =
+const
+	defaultPlaceholder =
 	'data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC' +
 	'9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48cmVjdCB3aWR0aD0iMTAw' +
 	'JSIgaGVpZ2h0PSIxMDAlIiBzdHlsZT0ic3Ryb2tlOiAjNDQ0OyBzdHJva2Utd2lkdGg6IDE7IGZpbGw6ICNhYW' +
 	'E7IiAvPjxsaW5lIHgxPSIwIiB5MT0iMCIgeDI9IjEwMCUiIHkyPSIxMDAlIiBzdHlsZT0ic3Ryb2tlOiAjNDQ0' +
 	'OyBzdHJva2Utd2lkdGg6IDE7IiAvPjxsaW5lIHgxPSIxMDAlIiB5MT0iMCIgeDI9IjAiIHkyPSIxMDAlIiBzdH' +
-	'lsZT0ic3Ryb2tlOiAjNDQ0OyBzdHJva2Utd2lkdGg6IDE7IiAvPjwvc3ZnPg==';
+	'lsZT0ic3Ryb2tlOiAjNDQ0OyBzdHJva2Utd2lkdGg6IDE7IiAvPjwvc3ZnPg==',
+	MarqueeCaption = MarqueeDecorator({className: css.marqueeCaption}, 'div');
 
 /**
  * {@link moonstone/VirtualList/GridListImageItem.GridListImageItemBase} is a stateless
@@ -93,11 +95,14 @@ const GridListImageItemBase = kind({
 	},
 
 	computed: {
+		captions: ({caption, subCaption}) => ('' + (caption || null) + (subCaption ? `\n${subCaption}` : null)),
 		className: ({selected, styler}) => styler.append({selected})
 	},
 
-	render: ({caption, source, subCaption, selectionOverlayShowing, ...rest}) => {
+	render: ({captions, source, selectionOverlayShowing, ...rest}) => {
+		delete rest.caption;
 		delete rest.selected;
+		delete rest.subCaption;
 
 		return (
 			<div {...rest}>
@@ -111,8 +116,13 @@ const GridListImageItemBase = kind({
 						</div>
 					) : null
 				}
-				{caption ? (<ItemBase className={css.caption}>{caption}</ItemBase>) : null}
-				{subCaption ? (<ItemBase className={css.subCaption}>{subCaption}</ItemBase>) : null}
+				{
+					captions ? (
+						<MarqueeCaption className={css.captions} marqueeOn='hover'>
+							{captions}
+						</MarqueeCaption>
+					) : null
+				}
 			</div>
 		);
 	}
