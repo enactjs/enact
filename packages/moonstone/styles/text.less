@@ -129,6 +129,14 @@
 .moon-dialog-content() {
 	font-size: @moon-popup-content-font-size;
 }
+.moon-notification-content() {
+	font-family: @moon-notification-font-family;
+	font-weight: @moon-notification-font-weight;
+	font-style: @moon-notification-font-style;
+	font-size: @moon-notification-font-size;
+	line-height: @moon-body-line-height;
+	.moon-word-break();
+}
 .moon-divider-text() {
 	font-family: @moon-divider-font-family;
 	font-size: @moon-divider-font-size;
@@ -138,6 +146,10 @@
 	letter-spacing: @moon-divider-letter-spacing;
 }
 
+.moon-word-break() {
+	word-wrap: break-word;
+	word-break: keep-all;
+}
 
 //
 // RIGBY NOTES:

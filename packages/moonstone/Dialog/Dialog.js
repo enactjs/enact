@@ -90,6 +90,7 @@ const DialogBase = kind({
 		 * @public
 		 */
 		showCloseButton: PropTypes.bool,
+
 		/**
 		 * Title of the header
 		 *
@@ -116,7 +117,6 @@ const DialogBase = kind({
 	},
 
 	defaultProps: {
-		anchor: {bottom: 0},
 		noAnimation: false,
 		open: false,
 		showCloseButton: false
