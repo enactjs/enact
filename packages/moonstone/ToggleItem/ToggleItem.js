@@ -8,17 +8,16 @@
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 
-import Icon from '../Icon';
-import Item from '../Item';
-import {MarqueeDecorator} from '../Marquee';
+import {ItemOverlay} from '../Item';
+
+import ToggleIcon from './ToggleIcon';
 
 import css from './ToggleItem.less';
 
 /**
  * {@link moonstone/ToggleItem.ToggleItemBase} is a component to make a Toggleable Item
  * (e.g Checkbox, RadioItem). It has a customizable prop for icon, so any Moonstone Icon can be used
- * to represent the selected state. Most developers will want to use
- * the marqueeable version: {@link moonstone/ToggleItem.ToggleItem}
+ * to represent the selected state.
  *
  * @class ToggleItemBase
  * @memberof moonstone/ToggleItem
@@ -47,11 +46,10 @@ const ToggleItemBase = kind({
 		disabled: PropTypes.bool,
 
 		/**
-		 * Icon property accepts a string or an Icon Element. This is the icon that
-		 * will display when selected.
+		 * Icon property accepts a string or an Icon Element.
 		 *
-		 * @type {String}
-		 * @default ''
+		 * @type {String|Element}
+		 * @default null
 		 * @public
 		 */
 		icon: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
@@ -64,6 +62,15 @@ const ToggleItemBase = kind({
 		 * @public
 		 */
 		iconClasses: PropTypes.string,
+
+		/**
+		 * Specifies on which side (`before` or `after`) of the text the icon appears.
+		 *
+		 * @type {String}
+		 * @default 'before'
+		 * @public
+		 */
+		iconPosition: PropTypes.oneOf(['before', 'after']),
 
 		/**
 		 * Applies inline styling to the toggle item.
@@ -97,7 +104,7 @@ const ToggleItemBase = kind({
 		/**
 		 * The value that will be sent to the `onToggle` handler.
 		 * @type {*}
-		 * @default ''
+		 * @default null
 		 * @public
 		 */
 		value: PropTypes.any
@@ -105,11 +112,11 @@ const ToggleItemBase = kind({
 
 	defaultProps: {
 		disabled: false,
-		icon: '',
 		iconClasses: '',
+		iconPosition: 'before',
 		inline: false,
 		selected: false,
-		value: ''
+		value: null
 	},
 
 	styles: {
@@ -118,13 +125,23 @@ const ToggleItemBase = kind({
 	},
 
 	computed: {
-		className: ({inline, styler}) => styler.append({inline}),
-		icon: ({selected, icon, iconClasses, styler}) => {
-			if (React.isValidElement(icon)) {
-				return icon;
+		iconBefore: ({iconClasses, selected, icon, iconPosition}) => {
+			if (iconPosition === 'before') {
+				return (
+					<ToggleIcon slot="overlayBefore" className={iconClasses} selected={selected}>
+						{icon}
+					</ToggleIcon>
+				);
 			}
-
-			return <Icon className={styler.join(css.icon, iconClasses, {selected})}>{icon}</Icon>;
+		},
+		iconAfter: ({iconClasses, selected, icon, iconPosition}) => {
+			if (iconPosition === 'after') {
+				return (
+					<ToggleIcon slot="overlayAfter" className={iconClasses} selected={selected}>
+						{icon}
+					</ToggleIcon>
+				);
+			}
 		},
 		onToggle: ({onToggle, onClick, selected, disabled, value}) => {
 			if (!disabled && (onToggle || onClick)) {
@@ -136,34 +153,22 @@ const ToggleItemBase = kind({
 		}
 	},
 
-	render: ({children, icon, onToggle, ...rest}) => {
+	render: ({children, iconAfter, iconBefore, onToggle, ...rest}) => {
+		delete rest.icon;
 		delete rest.iconClasses;
-		delete rest.inline;
+		delete rest.iconPosition;
+		delete rest.selected;
+		delete rest.value;
 
 		return (
-			<Item {...rest} component='div' onClick={onToggle}>
-				{icon}
+			<ItemOverlay {...rest} onClick={onToggle} autoHide="no">
+				{iconBefore}
 				{children}
-			</Item>
+				{iconAfter}
+			</ItemOverlay>
 		);
 	}
 });
 
-/**
- * {@link moonstone/ToggleItem.ToggleItem} is a component to make a Toggleable Item
- * (e.g Checkbox, RadioItem). It has a customizable prop for icon, so any Moonstone Icon can be used
- * to represent the selected state.
- *
- * @class ToggleItem
- * @memberof moonstone/ToggleItem
- * @ui
- * @mixes moonstone/marquee.MarqueeDecorator
- * @public
- */
-const ToggleItem = MarqueeDecorator(
-	{className: css.content},
-	ToggleItemBase
-);
-
-export default ToggleItem;
-export {ToggleItem, ToggleItemBase};
+export default ToggleItemBase;
+export {ToggleItemBase as ToggleItem, ToggleItemBase};
