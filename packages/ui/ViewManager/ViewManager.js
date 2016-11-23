@@ -81,14 +81,6 @@ class ViewManager extends React.Component {
 		noAnimation: React.PropTypes.bool,
 
 		/**
-		 * When `true` ViewManager will not re-render.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 */
-		preventUpdate: React.PropTypes.bool,
-
-		/**
 		 * Explicitly sets the transition direction. If omitted, the direction is determined
 		 * automaticallly based on the change of index or a string comparison of the first child's
 		 * key
@@ -109,21 +101,12 @@ class ViewManager extends React.Component {
 	static defaultProps = {
 		component: 'div',
 		duration: 300,
-		index: 0,
-		preventUpdate: false
+		index: 0
 	}
 
 	componentWillReceiveProps (nextProps) {
 		this.previousIndex = this.props.index;
 		this.checkReverse(nextProps);
-	}
-
-	shouldComponentUpdate(nextProps) {
-		if (nextProps.preventUpdate) {
-			return false;
-		}
-
-		return true;
 	}
 
 	/**

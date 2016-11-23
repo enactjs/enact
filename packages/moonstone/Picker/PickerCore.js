@@ -9,12 +9,21 @@ import * as jobs from '@enact/core/jobs';
 import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
 import R from 'ramda';
 import React from 'react';
+import shouldUpdate from 'recompose/shouldUpdate';
 
 import Icon from '../Icon';
 import IconButton from '../IconButton';
 
 import {steppedNumber} from './PickerPropTypes';
 import css from './Picker.less';
+
+const PickerViewManager = shouldUpdate((props, nextProps) => {
+	if(nextProps.preventUpdate){
+		return false;
+	}
+
+	return true;
+})(ViewManager);
 
 const wrapRange = (min, max, value) => {
 	if (value > max) {
@@ -248,23 +257,22 @@ const PickerCore = class extends React.Component {
 		} else {
 			this.reverseTransition = nextProps.value < this.props.value;
 		}
+
+		this.determineViewManagerUpdate(nextProps);
 	}
-
-	shouldComponentUpdate(nextProps) {
-		// This will re-render the picker to remove the fingernail, and won't re-render the ViewManager.
-		if (this.props.pressed !== nextProps.pressed && this.props.value === nextProps.value) {
-			this.preventViewManagerUpdate = true;
-		} else {
-			this.preventViewManagerUpdate = false;
-		}
-
-		return true;
-	}
-
 
 	componentWillUnmount () {
 		for (const job of Object.keys(jobNames)) {
 			jobs.stopJob(jobNames[job]);
+		}
+	}
+
+	// This will re-render the picker to remove the fingernail, and won't re-render the ViewManager.
+	determineViewManagerUpdate = (nextProps) => {
+		if (this.props.pressed !== nextProps.pressed && this.props.value === nextProps.value) {
+			this.preventViewManagerUpdate = true;
+		} else {
+			this.preventViewManagerUpdate = false;
 		}
 	}
 
@@ -378,9 +386,9 @@ const PickerCore = class extends React.Component {
 				<span className={css.incrementer} disabled={incrementerDisabled} onClick={handleIncClick} onMouseDown={this.handleIncDown} onMouseUp={onMouseUp}>
 					<ButtonType disabled={incrementerDisabled}>{incrementIcon}</ButtonType>
 				</span>
-				<ViewManager arranger={arranger} duration={200} index={index} noAnimation={noAnimation} reverseTransition={this.reverseTransition} className={css.valueWrapper} preventUpdate={this.preventViewManagerUpdate}>
+				<PickerViewManager arranger={arranger} duration={200} index={index} noAnimation={noAnimation} reverseTransition={this.reverseTransition} className={css.valueWrapper} preventUpdate={this.preventViewManagerUpdate}>
 					{children}
-				</ViewManager>
+				</PickerViewManager>
 				<span className={css.decrementer} disabled={decrementerDisabled} onClick={handleDecClick} onMouseDown={this.handleDecDown} onMouseUp={onMouseUp}>
 					<ButtonType disabled={decrementerDisabled}>{decrementIcon}</ButtonType>
 				</span>

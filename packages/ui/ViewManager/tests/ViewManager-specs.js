@@ -148,30 +148,6 @@ describe('ViewManager', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should not allow child props to update', function () {
-		const content = 'updated';
-		class ViewManagerTest extends React.Component {
-			render () {
-				return (
-					<ViewManager preventUpdate>
-						<div className="view">{this.props.content}</div>
-					</ViewManager>
-				);
-			}
-		}
-
-		const subject = mount(
-			<ViewManagerTest content="original" />
-		);
-
-		subject.setProps({content});
-
-		const expected = 'original';
-		const actual = subject.find('.view').text();
-
-		expect(actual).to.equal(expected);
-	});
-
 	it.skip('should have 1 child {duration}ms after setting new {index}', function (done) {
 		const duration = 50;
 		const subject = mount(

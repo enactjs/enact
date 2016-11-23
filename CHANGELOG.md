@@ -39,7 +39,6 @@ The following is a curated list of changes in the Enact project, newest changes 
 	functionality, only markup.
 - Spotlight containers to spot the last focused element by default.
 - `ui/Group` prop `select` to `childSelect` and added prop `select` to support selection types
-- `ui/ViewManager` added `preventUpdate` prop.
 
 ### Removed
 
