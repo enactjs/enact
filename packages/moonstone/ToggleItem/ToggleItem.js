@@ -125,7 +125,7 @@ const ToggleItemBase = kind({
 	},
 
 	computed: {
-		beginningIcon: ({iconClasses, selected, icon, iconPosition}) => {
+		iconBefore: ({iconClasses, selected, icon, iconPosition}) => {
 			if (iconPosition === 'start') {
 				return (
 					<ToggleIcon slot="overlayBefore" className={iconClasses} selected={selected}>
@@ -134,7 +134,7 @@ const ToggleItemBase = kind({
 				);
 			}
 		},
-		endingIcon: ({iconClasses, selected, icon, iconPosition}) => {
+		iconAfter: ({iconClasses, selected, icon, iconPosition}) => {
 			if (iconPosition === 'end') {
 				return (
 					<ToggleIcon slot="overlayAfter" className={iconClasses} selected={selected}>
@@ -153,7 +153,7 @@ const ToggleItemBase = kind({
 		}
 	},
 
-	render: ({beginningIcon, children, endingIcon, onToggle, ...rest}) => {
+	render: ({iconBefore, children, iconAfter, onToggle, ...rest}) => {
 		delete rest.icon;
 		delete rest.iconClasses;
 		delete rest.iconPosition;
@@ -162,9 +162,9 @@ const ToggleItemBase = kind({
 
 		return (
 			<ItemOverlay {...rest} onClick={onToggle} autoHide="no">
-				{beginningIcon}
+				{iconBefore}
 				{children}
-				{endingIcon}
+				{iconAfter}
 			</ItemOverlay>
 		);
 	}
