@@ -113,7 +113,7 @@ const ToggleItemBase = kind({
 	defaultProps: {
 		disabled: false,
 		iconClasses: '',
-		iconPosition: 'start',
+		iconPosition: 'before',
 		inline: false,
 		selected: false,
 		value: null
@@ -126,7 +126,7 @@ const ToggleItemBase = kind({
 
 	computed: {
 		iconBefore: ({iconClasses, selected, icon, iconPosition}) => {
-			if (iconPosition === 'start') {
+			if (iconPosition === 'before') {
 				return (
 					<ToggleIcon slot="overlayBefore" className={iconClasses} selected={selected}>
 						{icon}
@@ -135,7 +135,7 @@ const ToggleItemBase = kind({
 			}
 		},
 		iconAfter: ({iconClasses, selected, icon, iconPosition}) => {
-			if (iconPosition === 'end') {
+			if (iconPosition === 'after') {
 				return (
 					<ToggleIcon slot="overlayAfter" className={iconClasses} selected={selected}>
 						{icon}
