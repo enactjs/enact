@@ -6,14 +6,7 @@ import Button from '@enact/moonstone/Button';
 import Changeable from '@enact/ui/Changeable';
 
 const StatefulPicker = Changeable(Picker);
-// StatefulPicker.propTypes = Object.assign({}, PickerBase.propTypes, StatefulPicker.propTypes);
-// StatefulPicker.defaultProps = Object.assign({}, PickerBase.defaultProps, StatefulPicker.defaultProps);
-// StatefulPicker.displayName = 'Picker';
-
 const StatefulInput = Changeable({mutable: true}, Input);
-// StatefulInput.propTypes = Object.assign({}, InputBase.propTypes, Input.propTypes);
-// StatefulInput.defaultProps = Object.assign({}, InputBase.defaultProps, Input.defaultProps);
-// StatefulInput.displayName = 'Input';
 
 class PickerAddRemove extends React.Component {
 	static displayName: 'PickerAddRemove'
@@ -44,7 +37,7 @@ class PickerAddRemove extends React.Component {
 	}
 
 	handleAdd = () => {
-		let component = this.addInput;
+		const component = this.addInput;
 		this.setState({
 			children: [
 				...this.state.children,
@@ -54,11 +47,11 @@ class PickerAddRemove extends React.Component {
 	}
 
 	handleRemove = () => {
-		let component = this.removeInput;
+		const component = this.removeInput;
 		this.setState({
 			children: [
 				...this.state.children.slice(0, component.state.value),
-				...this.state.children.slice(component.state.value)
+				...this.state.children.slice(component.state.value + 1)
 			]
 		});
 	}
@@ -102,4 +95,3 @@ class PickerAddRemove extends React.Component {
 }
 
 export default PickerAddRemove;
-export {PickerAddRemove as PickerAddRemove};
