@@ -1,8 +1,8 @@
 /**
- * Exports the {@link ui/FloatLayer.FloatLayer} and  {@link ui/FloatLayer.FloatLayerBase}
- * components. The default export is {@link ui/FloatLayer.FloatLayer}.
+ * Exports the {@link ui/FloatingLayer.FloatingLayer} and  {@link ui/FloatingLayer.FloatingLayerBase}
+ * components. The default export is {@link ui/FloatingLayer.FloatingLayer}.
  *
- * @module ui/FloatLayer
+ * @module ui/FloatingLayer
  */
 
 import React from 'react';
@@ -11,33 +11,33 @@ import Cancelable from '../Cancelable';
 
 import {ScrimLayer} from './Scrim';
 
-// the current most highest z-index value for FloatLayers
+// the current most highest z-index value for FloatingLayers
 let scrimZIndex = 120;
 
 // array of z-indexes for visible layers
 const viewingLayers = [];
 
 /**
- * {@link ui/FloatLayer.FloatLayerBase} is a component that creates an entry point to the new
+ * {@link ui/FloatingLayer.FloatingLayerBase} is a component that creates an entry point to the new
  * render tree. This is used for modal components such as popups.
  *
- * @class FloatLayer
- * @memberOf ui/FloatLayer
+ * @class FloatingLayer
+ * @memberOf ui/FloatingLayer
  * @ui
  * @public
  */
-class FloatLayerBase extends React.Component {
-	static displayName = 'FloatLayer'
+class FloatingLayerBase extends React.Component {
+	static displayName = 'FloatingLayer'
 
 	constructor (props) {
 		super(props);
 		this.node = null;
-		this.FloatLayer = null;
+		this.FloatingLayer = null;
 	}
 
-	static propTypes = /** @lends ui/FloatLayer.FloatLayerBase.prototype */ {
+	static propTypes = /** @lends ui/FloatingLayer.FloatingLayerBase.prototype */ {
 		/**
-		 * CSS classes for FloatLayer.
+		 * CSS classes for FloatingLayer.
 		 *
 		 * @type {String}
 		 * @default `enact-fit enact-clip enact-untouchable`
@@ -55,7 +55,7 @@ class FloatLayerBase extends React.Component {
 		floatLayerId: React.PropTypes.string,
 
 		/**
-		 * When `true`, FloatLayer will not hide when the user presses `ESC` key.
+		 * When `true`, FloatingLayer will not hide when the user presses `ESC` key.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -119,7 +119,7 @@ class FloatLayerBase extends React.Component {
 		if (this.props.open) {
 			viewingLayers.push(scrimZIndex);
 			this.prevZIndex = scrimZIndex;
-			this.renderFloatLayer(this.props);
+			this.renderFloatingLayer(this.props);
 		}
 	}
 
@@ -135,17 +135,17 @@ class FloatLayerBase extends React.Component {
 				this.prevZIndex = scrimZIndex;
 				viewingLayers.push(scrimZIndex);
 			}
-			this.renderFloatLayer(nextProps, isOpened);
+			this.renderFloatingLayer(nextProps, isOpened);
 		} else {
-			this.closeFloatLayer();
+			this.closeFloatingLayer();
 		}
 	}
 
 	componentWillUnmount () {
-		this.closeFloatLayer();
+		this.closeFloatingLayer();
 	}
 
-	closeFloatLayer () {
+	closeFloatingLayer () {
 		if (this.node) {
 			ReactDOM.unmountComponentAtNode(this.node);
 			document.getElementById(this.props.floatLayerId).removeChild(this.node);
@@ -161,7 +161,7 @@ class FloatLayerBase extends React.Component {
 		this.node = null;
 	}
 
-	renderFloatLayer ({floatLayerClassName, floatLayerId, scrimType, ...rest}, isOpened = false) {
+	renderFloatingLayer ({floatLayerClassName, floatLayerId, scrimType, ...rest}, isOpened = false) {
 		delete rest.noAutoDismiss;
 		delete rest.onClose;
 		delete rest.onDismiss;
@@ -210,16 +210,16 @@ const handleCancel = function (props) {
 };
 
 /**
- * {@link ui/FloatLayer.FloatLayer} is a component that creates an entry point to the new
+ * {@link ui/FloatingLayer.FloatingLayer} is a component that creates an entry point to the new
  * render tree. This is used for modal components such as popups.
  *
- * @class FloatLayer
- * @memberof ui/FloatLayer
+ * @class FloatingLayer
+ * @memberof ui/FloatingLayer
  * @ui
  * @mixes ui/Cancelable.Cancelable
  * @public
  */
-const FloatLayer = Cancelable({modal: true, onCancel: handleCancel}, FloatLayerBase);
+const FloatingLayer = Cancelable({modal: true, onCancel: handleCancel}, FloatingLayerBase);
 
-export default FloatLayer;
-export {FloatLayer, FloatLayerBase};
+export default FloatingLayer;
+export {FloatingLayer, FloatingLayerBase};

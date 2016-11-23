@@ -11,7 +11,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
-- `moonstone/MoonstoneDecorator` adds `FloatLayerDecorator`
+- `moonstone/MoonstoneDecorator` adds `FloatingLayerDecorator`
 - The property `checked` is now called `selected` for consistency across the whole framework. This allows better interoperability when switching between various components.  Affects the following: `CheckboxItem`, `RadioItem`, `SelectableItem`, `Switch`, `SwitchItem`, and `ToggleItem`.
 
 ### Removed

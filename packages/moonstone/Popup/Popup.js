@@ -8,7 +8,7 @@
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 import Transition from '@enact/ui/Transition';
-import FloatLayer from '@enact/ui/FloatLayer';
+import FloatingLayer from '@enact/ui/FloatingLayer';
 import {SpotlightContainerDecorator} from '@enact/spotlight';
 
 import IconButton from '../IconButton';
@@ -151,7 +151,7 @@ const PopupBase = kind({
 
 /**
  * {@link moonstone/Popup.Popup} is a stateful component that help {@link moonstone/Popup.PopupBase}
- * to appear in {@link ui/FloatLayer.FloatLayer}.
+ * to appear in {@link ui/FloatingLayer.FloatingLayer}.
  *
  * @class Popup
  * @memberOf moonstone/Popup
@@ -189,7 +189,7 @@ class Popup extends React.Component {
 		onClose: PropTypes.func,
 
 		/**
-		 * When `true`, Popup is rendered into {@link ui/FloatLayer.FloatLayer}.
+		 * When `true`, Popup is rendered into {@link ui/FloatingLayer.FloatingLayer}.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -254,7 +254,7 @@ class Popup extends React.Component {
 		const {noAutoDismiss, onClose, ...rest} = this.props;
 
 		return (
-			<FloatLayer
+			<FloatingLayer
 				noAutoDismiss={noAutoDismiss}
 				open={this.state.floatLayerOpen}
 				onOpen={this.handleFloatingLayerOpen}
@@ -266,7 +266,7 @@ class Popup extends React.Component {
 					onCloseButtonClicked={onClose}
 					onHide={this.handlePopupHide}
 				/>
-			</FloatLayer>
+			</FloatingLayer>
 		);
 	}
 }
