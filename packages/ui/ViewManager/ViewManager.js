@@ -6,6 +6,7 @@
  */
 
 import React from 'react';
+import R from 'ramda';
 
 import {shape} from './Arranger';
 import TransitionGroup from './TransitionGroup';
@@ -109,10 +110,24 @@ class ViewManager extends React.Component {
 		this.checkReverse(nextProps);
 	}
 
-	shouldComponentUpdate(nextProps) {	
-		return this.props.children.key !== nextProps.children.key;
+	shouldComponentUpdate(nextProps) {
+		if (!Array.isArray(nextProps.children) && typeof nextProps.children === 'object') {
+			if(this.props.children.key !== nextProps.children.key){
+				return true;
+			}
+		}
+
+		if (this.props.index !== nextProps.index) {
+			return true
+		}
+
+		if (this.props.reverseTransition !== nextProps.reverseTransition){
+			return false;
+		}
+
+		return !R.equals(nextProps, this.props);
 	}
-	
+
 	/**
 	 * Determines if we should be reversing the transition based on the index of the keys of the
 	 * children.

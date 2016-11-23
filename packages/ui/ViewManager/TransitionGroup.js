@@ -70,7 +70,7 @@ const mergeChildren = R.unionWith(R.eqBy(R.prop('key')));
  * @private
  */
 
-class TransitionGroup extends React.PureComponent {
+class TransitionGroup extends React.Component {
 	static propTypes = /** @lends ui/ViewManager/TransitionGroup.TransitionGroup.prototype */ {
 		children: React.PropTypes.node.isRequired,
 

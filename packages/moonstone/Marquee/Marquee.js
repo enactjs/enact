@@ -9,7 +9,6 @@ import kind from '@enact/core/kind';
 import {isRtlText} from '@enact/i18n';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import React from 'react';
-import pure from 'recompose/pure';
 
 import css from './Marquee.less';
 
@@ -184,7 +183,5 @@ const MarqueeBase = kind({
 
 MarqueeBase.contextTypes = contextTypes;
 
-const Marquee = pure(MarqueeBase);
-
-export default Marquee;
-export {Marquee, MarqueeBase};
+export default MarqueeBase;
+export {MarqueeBase as Marquee, MarqueeBase};
