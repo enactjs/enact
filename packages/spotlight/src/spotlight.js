@@ -906,7 +906,7 @@ const Spotlight = (function() {
 			return;
 		}
 
-		if (_directions[evt.keyCode] && !spotNext(_directions[evt.keyCode], currentFocusedElement, currentContainerId)) {
+		if (_directions[evt.keyCode] && !spotNext(_directions[evt.keyCode], currentFocusedElement, currentContainerId) && currentFocusedElement !== document.activeElement) {
 			focusElement(currentFocusedElement, currentContainerId)
 		}
 	}
@@ -1032,6 +1032,7 @@ const Spotlight = (function() {
 				window.addEventListener('keyup', onKeyUp);
 				window.addEventListener('mouseover', onMouseOver);
 				window.addEventListener('mousemove', onMouseMove);
+				_lastContainerId = spotlightRootContainerName;
 				_initialized = true;
 			}
 		},
@@ -1124,6 +1125,9 @@ const Spotlight = (function() {
 				_containers[containerId] = void 0;
 				_containers = extend({}, _containers);
 				_containerCount--;
+				if (_lastContainerId === containerId) {
+					Spotlight.setActiveContainer(null);
+				}
 				return true;
 			}
 			return false;
