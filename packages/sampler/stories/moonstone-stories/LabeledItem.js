@@ -1,5 +1,5 @@
-import LabeledItem from '@enact/moonstone/LabeledItem';
 import Item, {ItemBase} from '@enact/moonstone/Item';
+import LabeledItem from '@enact/moonstone/LabeledItem';
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
 import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';

@@ -1,16 +1,15 @@
-import SelectableItem from '@enact/moonstone/SelectableItem';
-import ToggleItem from '@enact/moonstone/ToggleItem';
 import Item, {ItemBase} from '@enact/moonstone/Item';
 import React from 'react';
+import SelectableItem from '@enact/moonstone/SelectableItem';
+import Toggleable from '@enact/ui/Toggleable';
+import ToggleItem from '@enact/moonstone/ToggleItem';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
 
-SelectableItem.displayName = 'SelectableItem';
-SelectableItem.propTypes = Object.assign({}, ItemBase.propTypes, Item.propTypes, ToggleItem.propTypes, SelectableItem.propTypes);
-SelectableItem.defaultProps = Object.assign({}, ItemBase.defaultProps, Item.defaultProps, ToggleItem.defaultProps, SelectableItem.defaultProps);
-
-delete SelectableItem.propTypes.selected;
-delete SelectableItem.defaultProps.selected;
+const Component = Toggleable({prop: 'selected'}, SelectableItem);
+Component.propTypes = Object.assign({}, ItemBase.propTypes, Item.propTypes, ToggleItem.propTypes, SelectableItem.propTypes);
+Component.defaultProps = Object.assign({}, ItemBase.defaultProps, Item.defaultProps, ToggleItem.defaultProps, SelectableItem.defaultProps);
+Component.displayName = 'SelectableItem';
 
 storiesOf('SelectableItem')
 	.addDecorator(withKnobs)
@@ -18,12 +17,12 @@ storiesOf('SelectableItem')
 		' ',
 		'Basic usage of SelectableItem',
 		() => (
-			<SelectableItem
+			<Component
 				disabled={boolean('disabled', false)}
 				inline={boolean('inline', false)}
 				onToggle={action('onToggle')}
 			>
 				{text('children', 'Hello SelectableItem')}
-			</SelectableItem>
+			</Component>
 		)
 	);

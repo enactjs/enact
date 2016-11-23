@@ -11,8 +11,9 @@ import {Spottable} from '@enact/spotlight';
 
 import {MarqueeDecorator} from '../Marquee';
 
-import css from './Item.less';
 import OverlayDecorator from './OverlayDecorator';
+
+import css from './Item.less';
 
 /**
  * {@link moonstone/Item.ItemBase} is a Moonstone-styled control that can display

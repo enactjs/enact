@@ -1,14 +1,15 @@
-import {SwitchItem} from '@enact/moonstone/SwitchItem';
+import Item, {ItemBase} from '@enact/moonstone/Item';
 import React from 'react';
+import {SwitchItem} from '@enact/moonstone/SwitchItem';
+import Toggleable from '@enact/ui/Toggleable';
+import ToggleItem from '@enact/moonstone/ToggleItem';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
 
-SwitchItem.propTypes = Object.assign({}, SwitchItem.propTypes);
-SwitchItem.defaultProps = Object.assign({}, SwitchItem.defaultProps);
-SwitchItem.displayName = 'SwitchItem';
-
-delete SwitchItem.propTypes.selected;
-delete SwitchItem.defaultProps.selected;
+const Component = Toggleable({prop: 'selected'}, SwitchItem);
+Component.propTypes = Object.assign({}, ItemBase.propTypes, Item.propTypes, ToggleItem.propTypes, SwitchItem.propTypes);
+Component.defaultProps = Object.assign({}, ItemBase.defaultProps, Item.defaultProps, ToggleItem.defaultProps, SwitchItem.defaultProps);
+Component.displayName = 'SwitchItem';
 
 storiesOf('SwitchItem')
 	.addDecorator(withKnobs)
@@ -16,12 +17,12 @@ storiesOf('SwitchItem')
 		' ',
 		'Basic usage of SwitchItem',
 		() => (
-			<SwitchItem
+			<Component
 				disabled={boolean('disabled', false)}
 				inline={boolean('inline', false)}
 				onToggle={action('onToggle')}
 			>
 				{text('children', 'Hello SwitchItem')}
-			</SwitchItem>
+			</Component>
 		)
 	);

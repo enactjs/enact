@@ -153,7 +153,7 @@ const ToggleItemBase = kind({
 		}
 	},
 
-	render: ({iconBefore, children, iconAfter, onToggle, ...rest}) => {
+	render: ({children, iconAfter, iconBefore, onToggle, ...rest}) => {
 		delete rest.icon;
 		delete rest.iconClasses;
 		delete rest.iconPosition;

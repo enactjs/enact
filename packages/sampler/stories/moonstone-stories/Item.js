@@ -1,4 +1,4 @@
-import {Item, ItemBase} from '@enact/moonstone/Item';
+import Item, {ItemBase} from '@enact/moonstone/Item';
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
 import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';

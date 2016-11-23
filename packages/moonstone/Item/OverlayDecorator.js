@@ -13,7 +13,7 @@ import css from './Overlay.less';
  *
  * @class OverlayDecorator
  * @memberOf moonstone/Item
- * @ui
+ * @hoc
  * @public
  */
 const OverlayDecorator = hoc((config, Wrapped) => {
