@@ -140,7 +140,6 @@ class ViewManager extends React.Component {
 		const childFactory = wrapWithView({duration, arranger, noAnimation, index, previousIndex, reverseTransition});
 
 		delete rest.reverseTransition;
-		delete rest.preventUpdate;
 
 		return (
 			<TransitionGroup {...rest} childFactory={childFactory} size={size + 1}>
