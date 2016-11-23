@@ -250,6 +250,18 @@ const PickerCore = class extends React.Component {
 		}
 	}
 
+	shouldComponentUpdate(nextProps) {
+		// This will re-render the picker to remove the fingernail, and won't re-render the ViewManager.
+		if (this.props.pressed !== nextProps.pressed && this.props.value === nextProps.value) {
+			this.preventViewManagerUpdate = true;
+		} else {
+			this.preventViewManagerUpdate = false;
+		}
+
+		return true;
+	}
+
+
 	componentWillUnmount () {
 		for (const job of Object.keys(jobNames)) {
 			jobs.stopJob(jobNames[job]);
@@ -366,7 +378,7 @@ const PickerCore = class extends React.Component {
 				<span className={css.incrementer} disabled={incrementerDisabled} onClick={handleIncClick} onMouseDown={this.handleIncDown} onMouseUp={onMouseUp}>
 					<ButtonType disabled={incrementerDisabled}>{incrementIcon}</ButtonType>
 				</span>
-				<ViewManager arranger={arranger} duration={200} index={index} noAnimation={noAnimation} reverseTransition={this.reverseTransition} className={css.valueWrapper}>
+				<ViewManager arranger={arranger} duration={200} index={index} noAnimation={noAnimation} reverseTransition={this.reverseTransition} className={css.valueWrapper} preventUpdate={this.preventViewManagerUpdate}>
 					{children}
 				</ViewManager>
 				<span className={css.decrementer} disabled={decrementerDisabled} onClick={handleDecClick} onMouseDown={this.handleDecDown} onMouseUp={onMouseUp}>

@@ -6,7 +6,6 @@
  */
 
 import React from 'react';
-import R from 'ramda';
 
 import {shape} from './Arranger';
 import TransitionGroup from './TransitionGroup';
@@ -82,6 +81,14 @@ class ViewManager extends React.Component {
 		noAnimation: React.PropTypes.bool,
 
 		/**
+		 * When `true` ViewManager will not re-render.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 */
+		preventUpdate: React.PropTypes.bool,
+
+		/**
 		 * Explicitly sets the transition direction. If omitted, the direction is determined
 		 * automaticallly based on the change of index or a string comparison of the first child's
 		 * key
@@ -102,7 +109,8 @@ class ViewManager extends React.Component {
 	static defaultProps = {
 		component: 'div',
 		duration: 300,
-		index: 0
+		index: 0,
+		preventUpdate: false
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -111,21 +119,11 @@ class ViewManager extends React.Component {
 	}
 
 	shouldComponentUpdate(nextProps) {
-		if (!Array.isArray(nextProps.children) && typeof nextProps.children === 'object') {
-			if(this.props.children.key !== nextProps.children.key){
-				return true;
-			}
-		}
-
-		if (this.props.index !== nextProps.index) {
-			return true
-		}
-
-		if (this.props.reverseTransition !== nextProps.reverseTransition){
+		if (nextProps.preventUpdate) {
 			return false;
 		}
 
-		return !R.equals(nextProps, this.props);
+		return true;
 	}
 
 	/**
@@ -159,6 +157,7 @@ class ViewManager extends React.Component {
 		const childFactory = wrapWithView({duration, arranger, noAnimation, index, previousIndex, reverseTransition});
 
 		delete rest.reverseTransition;
+		delete rest.preventUpdate;
 
 		return (
 			<TransitionGroup {...rest} childFactory={childFactory} size={size + 1}>
