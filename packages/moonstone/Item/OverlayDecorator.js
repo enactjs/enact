@@ -6,7 +6,7 @@ import Overlay from './Overlay';
 import css from './Overlay.less';
 
 /**
- * {@link moonstone/Item~OverlayDecorator} is a Higher-order Component that adds
+ * {@link moonstone/Item.OverlayDecorator} is a Higher-order Component that adds
  * `overlayBefore` and `overlayAfter` properties to add components before or after the usual
  * text content of an Item. The visibility of each can be individually controlled via the `autoHide`
  * property.
@@ -20,7 +20,7 @@ const OverlayDecorator = hoc((config, Wrapped) => {
 	return kind({
 		name: 'OverlayDecorator',
 
-		propTypes: {
+		propTypes: /** @lends moonstone/Item.OverlayDecorator.prototype */ {
 			/**
 			 * Controls the visibility state of the overlays. One, both, or neither overlay can be
 			 * shown when the item is focused. Choosing 'after' will leave `overlayBefore`

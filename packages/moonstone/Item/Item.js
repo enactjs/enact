@@ -99,7 +99,7 @@ const ItemMarqueeDecorator = MarqueeDecorator({className: css.content});
  *
  * @class Item
  * @memberof moonstone/Item
- * @mixes spotlight/Spottable, moonstone/ItemOverlay
+ * @mixes spotlight/Spottable
  * @ui
  * @public
  */
@@ -109,6 +109,27 @@ const Item = Spottable(
 	)
 );
 
+/**
+ * {@link moonstone/Item.ItemOverlay} is a focusable Moonstone-styled control that can display
+ * simple text or a set of controls along with overlays before and/or after the contents.
+ *
+ * ```
+ *	<ItemOverlay autoHide="both">
+ *		<overlayBefore>
+ *			<Icon>flag</Icon>
+ *			<Icon>star</Icon>
+ *		</overlayBefore>
+ *		An Item that will show some icons before and after this text when spotted
+ *		<Icon slot="overlayAfter">trash</Icon>
+ *	</ItemOverlay>
+ * ```
+ *
+ * @class ItemOverlay
+ * @memberof moonstone/Item
+ * @mixes spotlight/Spottable, moonstone/Item.OverlayDecorator
+ * @ui
+ * @public
+ */
 const ItemOverlay = Spottable(
 	Slottable(
 		{slots: ['overlayAfter', 'overlayBefore']},

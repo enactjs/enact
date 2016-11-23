@@ -5,7 +5,7 @@ import css from './Overlay.less';
 
 /**
  * {@link moonstone/Item.Overlay} is the component inserted into each side of an
- * {@link moonstone/Item~ItemOverlay}.
+ * {@link moonstone/Item.ItemOverlay}.
  *
  * @class Overlay
  * @memberof moonstone/Item
