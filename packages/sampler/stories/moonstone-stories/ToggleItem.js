@@ -21,7 +21,7 @@ storiesOf('ToggleItem')
 		() => {
 			return (
 				<Component
-					icon={select('icon', iconNames, 'play')}
+					icon={select('icon', iconNames, 'lock')}
 					iconPosition={select('iconPosition', ['before', 'after'], 'before')}
 					disabled={boolean('disabled', false)}
 					inline={boolean('inline', false)}

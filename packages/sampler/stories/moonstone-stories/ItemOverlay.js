@@ -19,15 +19,15 @@ storiesOf('Item')
 		'Basic usage of ItemOverlay',
 		() => (
 			<ItemOverlay
-				autoHide={select('autoHide', ['after', 'before', 'both', 'no'], 'no')}
+				autoHide={select('autoHide', ['after', 'before', 'both', 'no'], 'after')}
 				disabled={boolean('disabled', false)}
 			>
-				<overlayBefore>
-					<Icon>star</Icon>
-					<Icon>play</Icon>
-				</overlayBefore>
+				<Icon slot="overlayBefore">star</Icon>
 				{text('children', 'Hello Item')}
-				<Icon slot="overlayAfter">stop</Icon>
+				<overlayAfter>
+					<Icon>lock</Icon>
+					<Icon>flag</Icon>
+				</overlayAfter>
 			</ItemOverlay>
 		)
 	);
