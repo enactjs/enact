@@ -101,6 +101,10 @@
 		}
 
 		.moon-taparea(@moon-button-small-height);
+
+		:global(.enact-locale-non-latin) & {
+			.enact-locale-non-latin .moon-small-button-text;
+		}
 	}
 
 	&.translucent .bg {
@@ -171,5 +175,9 @@
 				background-color: @moon-neutral-button-disabled-bg-color;
 			}
 		}
+	}
+
+	:global(.enact-locale-non-latin) & {
+		.enact-locale-non-latin .moon-large-button-text;
 	}
 }
