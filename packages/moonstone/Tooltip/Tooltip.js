@@ -8,7 +8,7 @@ const TooltipArrow = (props) => {
 class Tooltip extends React.Component {
 	static defaultProps = {
 		tooltip: '',
-		tooltipType: 'below left-arrow',
+		tooltipType: 'below leftArrow',
 		tooltipTop: '0',
 		tooltipLeft: '0',
 		tooltipArrowType: 'corner',

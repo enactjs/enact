@@ -46,7 +46,7 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 			super(props);
 			this.state = {
 				tooltip: '',
-				tooltipType: 'below left-arrow',
+				tooltipType: 'below leftArrow',
 				tooltipTop: '0',
 				tooltipLeft: '0',
 				tooltipArrowType: 'corner',
@@ -105,7 +105,7 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 			}
 			
 			this.setState({
-				tooltipType: tPos + ' ' + aPos + "-arrow",
+				tooltipType: tPos + ' ' + aPos + "Arrow",
 				tooltipTop: ri.unit(r.tY, 'rem'),
 				tooltipLeft: ri.unit(r.tX, 'rem'),
 				tooltipArrowType: aPos == 'center' || aPos == 'middle' ? 'edge' : 'corner'
@@ -115,14 +115,13 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 		calcPosition (tPos, aPos) {
 			const cBound = this.clientRef.getBoundingClientRect(); // clinet bound
 			const lBound = this.tooltipRef.labelRef.getBoundingClientRect(); // label bound
-			const tooltipMargin = 18; // Distance between Conatiner and Tooltip's Label(This value same as Tooltip Arrow's width).
-			const moonstoneMargin = 12; // Both side of margin value in moonstone component.
+			const tooltipDistance = 18; // distance between client and tooltip's label
 			let tX, tY; // tooltip position
 
 			switch (tPos) {
 				case 'below':
 					tX = cBound.left + cBound.width/2;
-					tY = cBound.bottom + tooltipMargin;
+					tY = cBound.bottom + tooltipDistance;
 					
 					if (aPos == 'right') {
 						tX -= lBound.width;
@@ -132,7 +131,7 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 					break;
 				case 'above':
 					tX = cBound.left + cBound.width/2;
-					tY = cBound.top - lBound.height - tooltipMargin;
+					tY = cBound.top - lBound.height - tooltipDistance;
 
 					if (aPos == 'right') {
 						tX -= lBound.width;
@@ -141,7 +140,7 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 					}
 					break;
 				case 'left':
-					tX = cBound.left - lBound.width - tooltipMargin + moonstoneMargin;
+					tX = cBound.left - lBound.width - tooltipDistance;
 					tY = cBound.top + cBound.height/2;
 
 					if (aPos == 'top') {
@@ -151,7 +150,7 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 					}
 					break;
 				case 'right':
-					tX = cBound.right + tooltipMargin - moonstoneMargin;
+					tX = cBound.right + tooltipDistance;
 					tY = cBound.top + cBound.height/2;
 
 					if (aPos == 'top') {
