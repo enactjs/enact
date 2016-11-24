@@ -14,7 +14,7 @@ storiesOf('Item')
 		'Basic usage of Item',
 		() => (
 			<Item
-				disabled={boolean('disabled')}
+				disabled={boolean('disabled', false)}
 			>
 				{text('children', 'Hello Item')}
 			</Item>

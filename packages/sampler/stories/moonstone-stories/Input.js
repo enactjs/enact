@@ -22,8 +22,8 @@ storiesOf('Input')
 		() => (
 			<StatefulInput
 				onChange={action('onChange')}
-				disabled={boolean('disabled')}
-				dismissOnEnter={boolean('dismissOnEnter')}
+				disabled={boolean('disabled', StatefulInput.defaultProps.disabled)}
+				dismissOnEnter={boolean('dismissOnEnter', StatefulInput.defaultProps.dismissOnEnter)}
 				iconEnd={select('iconEnd', iconNames)}
 				iconStart={select('iconStart', iconNames)}
 				placeholder={text('placeholder')}

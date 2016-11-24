@@ -12,6 +12,7 @@
 	@text-vertical-offset: 6px;
 
 	min-width: 336px;
+	flex-wrap: wrap;	// Allow the label to fall on the next line
 
 	// Header
 	.text {
@@ -34,6 +35,8 @@
 		// The following two margin values must cancel each other out, so there is zero layout impact when `text` is empty.
 		margin-top: -@text-vertical-offset;
 		margin-bottom: @text-vertical-offset;
+		// Force the label to fill the next line in the flexbox container
+		width: 100%;
 
 		:global(.enact-locale-right-to-left) & {
 			padding-left: 0;
@@ -55,8 +58,8 @@
 	}
 
 	&:focus {
-		> .text,
-		> .label {
+		.text,
+		.label {
 			color: inherit;
 		}
 	}

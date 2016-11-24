@@ -25,7 +25,7 @@ describe('CheckboxItem Specs', () => {
 			</CheckboxItem>
 		);
 
-		const expected = null;
+		const expected = '';
 		const actual = checkboxItem.find('ToggleItem').prop('iconClasses');
 
 		expect(actual).to.equal(expected);
