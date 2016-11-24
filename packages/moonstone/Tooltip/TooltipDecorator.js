@@ -173,16 +173,14 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 			}
 		}
 
-		handleFocus () {
-			if (this.props.tooltip && this.props.tooltip.length>0) {
-				this.show();
-			}
+		handleFocus (e) {
+			this.props.tooltip && this.props.tooltip.length>0 && this.show();
+			this.props.onFocus && this.props.onFocus(e);
 		}
 
-		handleBlur () {
-			if (this.props.tooltip && this.props.tooltip.length>0) {
-				this.hide();
-			}
+		handleBlur (e) {
+			this.props.tooltip && this.props.tooltip.length>0 && this.hide();
+			this.props.onBlur && this.props.onBlur(e);
 		}
 
 		show () {
@@ -216,22 +214,18 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 		}
 
 		render () {
-			const style = this.props.style;
-			const tooltip = this.props.tooltip;
+			const {tooltip, children} = this.props;
 			const props = Object.assign({}, this.props);
 
-			delete props.style;
 			delete props.tooltip;
 			delete props.tooltipPosition;
 
 			return(
-				<div className={css.tooltipDecorator} style={style}>
-					<div
-						onBlur={this.handleBlur.bind(this)}
-						onFocus={this.handleFocus.bind(this)}
-						ref={(client) => this.clientRef = client}>
-						<Wrapped {...props}/>
-					</div>
+				<Wrapped {...props}
+					getRef={(r) => this.clientRef = r}
+					onFocus={(e) => this.handleFocus(e)}
+					onBlur={(e) => this.handleBlur(e)}>
+					{children}
 					<Portal open={true}>
 						<Tooltip
 							tooltip = {tooltip}
@@ -242,7 +236,7 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 							showing={this.state.showing}
 							ref={(tooltip) => this.tooltipRef = tooltip} />
 					</Portal>
-				</div>
+				</Wrapped>
 			)
 		}
 	}
