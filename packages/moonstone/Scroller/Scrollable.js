@@ -145,8 +145,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		verticalScrollability = false
 		isScrollAnimationTargetAccumulated = false
 		isDragging = false /* true if drag events are being catched */
-		isWithinMoveTolerance = false /* true if dragging is started but not over move torlerance yet */
-		moveTolerance = 20 /* pixel distance to handle drag or flicking */
+		isNotMoved = false /* true if dragging is started but not over move torlerance yet */
+		moveTolerance = 16 /* pixel distance to handle drag or flicking */
 		isStarted = false /* true if doScrollStart() called but doScrollStop() is not called. */
 
 		// mouse handlers
@@ -154,8 +154,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		// drag info
 		dragInfo = {
-			startingX: 0,
-			startingY: 0,
+			startX: 0,
+			startY: 0,
 			lastX: 0,
 			lastY: 0,
 			dx: 0,
@@ -242,10 +242,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			const d = this.dragInfo;
 
 			this.isDragging = true;
-			this.isWithinMoveTolerance = true;
+			this.isNotMoved = true;
 			d.t = perf.now();
-			d.startingX = d.lastX = e.clientX;
-			d.startingY = d.lastY = e.clientY;
+			d.startX = d.lastX = e.clientX;
+			d.startY = d.lastY = e.clientY;
 			d.dx = d.dy = 0;
 		}
 
@@ -281,14 +281,14 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.isDragging = false;
 		}
 
-		isOverMoveTolerance (e) {
+		checkMoveTolerance (e) {
 			const
 				{clientX, clientY} = e,
-				{startingX, startingY} = this.dragInfo,
-				dx = clientX - startingX,
-				dy = clientY - startingY;
+				{startX, startY} = this.dragInfo,
+				dx = clientX - startX,
+				dy = clientY - startY;
 
-			return Math.sqrt(dx * dx + dy * dy) > this.moveTolerance;
+			return (dx * dx + dy * dy) < this.moveTolerance;
 		}
 
 		isFlicking () {
@@ -333,12 +333,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			if (this.isDragging) {
 				const {dx, dy} = this.drag(e);
 
-				if (this.isWithinMoveTolerance) {
-					if (this.isOverMoveTolerance(e)) {
-						this.doScrollStart();
-						this.isWithinMoveTolerance = false;
-					} else {
+				if (this.isNotMoved) {
+					if (this.checkMoveTolerance(e)) {
 						return;
+					} else {
+						this.doScrollStart();
+						this.isNotMoved = false;
 					}
 				}
 				this.scroll(this.scrollLeft - dx, this.scrollTop - dy);
@@ -350,7 +350,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				this.dragStop(e);
 
 				// if the dragging is not over move tolerance, do nothing.
-				if (!this.isFlicking() || this.isWithinMoveTolerance) {
+				if (!this.isFlicking() || this.isNotMoved) {
 					if (this.isStarted) {
 						this.stop();
 					}
