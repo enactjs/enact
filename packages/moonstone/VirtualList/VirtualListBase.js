@@ -411,7 +411,7 @@ class VirtualListCore extends Component {
 		if (firstIndex !== newFirstIndex) {
 			this.setState({firstIndex: newFirstIndex});
 		} else {
-			this.positionItems(this.applyStyleToExistingNode, this.determineUpdatedNeededIndices(firstIndex));
+			this.positionItems(this.determineUpdatedNeededIndices(firstIndex));
 		}
 	}
 
@@ -463,21 +463,15 @@ class VirtualListCore extends Component {
 
 		this.composeStyle(style, ...rest);
 
-		// if (this.updateFrom <= i && i < this.updateFrom + numOfItems && this.ccc[i % numOfItems]) {
-		// 	this.cc[i % numOfItems] = this.ccc[i % numOfItems];
-		// } else {
-
 		this.cc[i % numOfItems] = React.cloneElement(
 			itemElement, {
 				style: {...itemElement.props.style, ...style},
 				[dataIndexAttribute]: i
 			}
 		);
-
-		// }
 	}
 
-	positionItems (applyStyle, {updateFrom, updateTo}) {
+	positionItems ({updateFrom, updateTo}) {
 		const
 			{positioningOption} = this.props,
 			{isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, scrollPosition} = this;
@@ -492,57 +486,9 @@ class VirtualListCore extends Component {
 		height = (isPrimaryDirectionVertical ? primary.itemSize : secondary.itemSize) + 'px';
 
 		// positioning items
-		/*
-		if (this.updateFrom === 0 && this.updateTo === 0) {
-			for (let i = updateFrom, j = updateFrom % dimensionToExtent; i < updateTo; i++) {
-
-				applyStyle(i, width, height, primaryPosition, secondaryPosition);
-
-				if (++j === dimensionToExtent) {
-					secondaryPosition = 0;
-					primaryPosition += primary.gridSize;
-					j = 0;
-				} else {
-					secondaryPosition += secondary.gridSize;
-				}
-			}
-		} else if (this.updateFrom >= updateFrom) {
-			for (let i = updateFrom, j = updateFrom % dimensionToExtent; i < this.updateFrom; i++) {
-
-				applyStyle(i, width, height, primaryPosition, secondaryPosition);
-
-				if (++j === dimensionToExtent) {
-					secondaryPosition = 0;
-					primaryPosition += primary.gridSize;
-					j = 0;
-				} else {
-					secondaryPosition += secondary.gridSize;
-				}
-			}
-		} else {
-			secondaryPosition = (this.getGridPosition(updateFrom)).secondaryPosition;
-
-			for (let i = this.updateTo, j = updateFrom % dimensionToExtent; i < updateTo; i++) {
-
-				applyStyle(i, width, height, primaryPosition, secondaryPosition);
-
-				if (++j === dimensionToExtent) {
-					secondaryPosition = 0;
-					primaryPosition += primary.gridSize;
-					j = 0;
-				} else {
-					secondaryPosition += secondary.gridSize;
-				}
-			}
-		}
-		*/
 		for (let i = updateFrom, j = updateFrom % dimensionToExtent; i < updateTo; i++) {
 
-			if (
-				(this.updateFrom === 0 && this.updateTo === 0) ||
-				(this.updateFrom > i) ||
-				(this.updateTo <= i)
-			) {
+			if ((!this.updateFrom && !this.updateTo) || (this.updateFrom > i) || (this.updateTo <= i)) {
 				this.applyStyleToNewNode(i, width, height, primaryPosition, secondaryPosition);
 			} else {
 				this.applyStyleToExistingNode(i, width, height, primaryPosition, secondaryPosition);
@@ -759,11 +705,8 @@ class VirtualListCore extends Component {
 			{firstIndex, numOfItems} = this.state,
 			max = Math.min(dataSize, firstIndex + numOfItems);
 
-		// this.ccc = [...this.cc];
-		// this.cc.length = 0;
-		this.positionItems(this.applyStyleToNewNode, {updateFrom: firstIndex, updateTo: max});
+		this.positionItems({updateFrom: firstIndex, updateTo: max});
 		this.positionContainer();
-		// this.ccc.length = 0;
 	}
 
 	render () {
