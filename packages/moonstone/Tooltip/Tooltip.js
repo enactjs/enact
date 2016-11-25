@@ -78,7 +78,7 @@ class Tooltip extends React.Component {
 				style={{left: this.props.tooltipLeft, top: this.props.tooltipTop}}>
 				<TooltipArrow type={this.props.tooltipArrowType} />
 				<div
-					ref={(label) => this.labelRef = label}
+					ref={this.props.getTooltipRef}
 					className={css.tooltipLabel}>
 					{this.props.tooltip.toUpperCase()}
 				</div>

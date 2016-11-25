@@ -123,7 +123,6 @@ const ButtonBase = kind({
 		delete rest.pressed;
 		delete rest.selected;
 		delete rest.small;
-		delete rest.getRef;
 
 		return (
 			<button {...rest}>

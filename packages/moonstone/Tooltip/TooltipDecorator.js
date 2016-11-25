@@ -114,7 +114,7 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 
 		calcPosition (tPos, aPos) {
 			const cBound = this.clientRef.getBoundingClientRect(); // clinet bound
-			const lBound = this.tooltipRef.labelRef.getBoundingClientRect(); // label bound
+			const lBound = this.tooltipRef.getBoundingClientRect(); // label bound
 			const tooltipDistance = 18; // distance between client and tooltip's label
 			let tX, tY; // tooltip position
 
@@ -234,7 +234,7 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 							tooltipLeft={this.state.tooltipLeft}
 							tooltipArrowType={this.state.tooltipArrowType}
 							showing={this.state.showing}
-							ref={(tooltip) => this.tooltipRef = tooltip} />
+							getTooltipRef={(r) => this.tooltipRef = r} />
 					</Portal>
 				</Wrapped>
 			)
