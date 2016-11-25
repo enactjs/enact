@@ -13,9 +13,12 @@ import {SpotlightContainerDecorator} from '@enact/spotlight';
 import Transition from '@enact/ui/Transition';
 
 import LabeledItem from '../LabeledItem';
+import Icon from '../Icon';
 
 import Expandable from './Expandable';
 import ExpandableContainer from './ExpandableContainer';
+
+import css from './Expandable.less';
 
 const TransitionContainer = SpotlightContainerDecorator(Transition);
 
@@ -122,6 +125,10 @@ const ExpandableItemBase = kind({
 		showLabel: 'auto'
 	},
 
+	styles: {
+		css
+	},
+
 	computed: {
 		label: ({disabled, label, noneText, open, showLabel}) => {
 			const isOpen = open && !disabled;
@@ -137,10 +144,17 @@ const ExpandableItemBase = kind({
 				return open ? onClose : onOpen;
 			}
 		},
+		icon: ({open}) => {
+			if (open) {
+				return 'arrowsmallup';
+			} else {
+				return 'arrowsmalldown';
+			}
+		},
 		open: ({disabled, open}) => open && !disabled
 	},
 
-	render: ({children, disabled, handleOpen, label, open, title, ...rest}) => {
+	render: ({children, disabled, handleOpen, label, open, title, icon, ...rest}) => {
 		delete rest.noneText;
 		delete rest.label;
 		delete rest.showLabel;
@@ -153,7 +167,10 @@ const ExpandableItemBase = kind({
 					disabled={disabled}
 					label={label}
 					onClick={handleOpen}
-				>{title}</LabeledItem>
+				>
+					{title}
+					<Icon className={css.expandableIcon}>{icon}</Icon>
+				</LabeledItem>
 				<TransitionContainer data-container-disabled={!open} visible={open} duration="short" type="clip">
 					{children}
 				</TransitionContainer>
