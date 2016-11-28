@@ -473,12 +473,14 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 
 			if (animate) {
-				this.animator.start({
+				this.animator.animate({
 					sourceX: scrollLeft,
 					sourceY: scrollTop,
 					targetX,
 					targetY,
 					duration,
+					horizontalScrollability: this.horizontalScrollability,
+					verticalScrollability: this.verticalScrollability,
 					cbScrollAnimationHandler: this.scrollAnimation
 				});
 			} else {
@@ -487,25 +489,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		scrollAnimation = ({sourceX, sourceY}, {targetX, targetY, duration}, {calcPosX, calcPosY}) => {
-			const
-				curTimeAtTarget = duration,
-				cbScrollAnimationRaf = (curTime) => {
-					if (curTime < curTimeAtTarget) {
-						// scrolling
-						this.scroll(
-							this.horizontalScrollability ? calcPosX(curTime) : sourceX,
-							this.verticalScrollability ? calcPosY(curTime) : sourceY
-						);
-					} else {
-						// scrolling to the target position before stopping
-						this.scroll(targetX, targetY);
-						this.stop();
-					}
-				};
-
-			// animate
-			this.animator.animate(cbScrollAnimationRaf);
+		scrollAnimation = (isAnimating, pos) => {
+			this.scroll(pos.x, pos.y);
+			if (!isAnimating) {
+				this.stop();
+			}
 		}
 
 		scroll = (left, top, skipPositionContainer = false) => {
