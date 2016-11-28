@@ -83,45 +83,31 @@ const IconBase = kind({
 			!iconList[icon] && css.dingbat,	// If the icon isn't in our known set, apply our custom font class
 			{pressed, small}
 		),
-		iconProps: ({children: iconProp, style}) => {
-			let icon = iconList[iconProp];
+		children: ({children}) => {
+			let icon = iconList[children];
 
-			if (!icon) {
-				if (typeof iconProp == 'string') {
-					if (iconProp.indexOf('&#') === 0) {
-						// Convert an HTML entity: &#99999;
-						icon = parseInt(iconProp.slice(2, -1));
-					} else if (iconProp.indexOf('\\u') === 0) {
-						// Convert a unicode reference: \u99999;
-						icon = parseInt(iconProp.slice(2), 16);
-					} else if (iconProp.indexOf('0x') === 0) {
-						// Converts a hex reference in string form
-						icon = String.fromCodePoint(iconProp);
-					} else {
-						// for a path or URI, add it to style
-						style = mergeStyle(style, iconProp);
-					}
-				} else if (typeof iconProp === 'object') {
-					style = mergeStyle(style, iconProp);
-				}
-			}
-
-			if (typeof icon == 'number') {
-				// Converts a hex reference in number form
+			if (icon) {
 				icon = String.fromCodePoint(icon);
+			} else if (typeof children === 'string' && children.length === 1) {
+				icon = children;
 			}
 
-			return {
-				children: icon,
-				style
-			};
+			return icon;
+		},
+		style: ({children, style}) => {
+			const isPath = !iconList[children] && (
+				(typeof children == 'string' && children.length > 1) ||
+				typeof children === 'object'
+			);
+
+			return isPath ? mergeStyle(style, children) : style;
 		}
 	},
 
-	render: ({iconProps, ...rest}) => {
-		delete rest.small;
+	render: (props) => {
+		delete props.small;
 
-		return <div {...rest} {...iconProps} />;
+		return <div {...props} />;
 	}
 });
 
