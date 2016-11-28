@@ -9,6 +9,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `marqueeCentered` prop to `moonstone/MarqueeDecorator` and `moonstone/MarqueeText`
 - `ItemOverlay` component to `moonstone/Item` module
 - `placeholder` prop to `moonstone/Image`
+- Non-latin locale support to all existing Moonstone components.
 
 ### Changed
 
