@@ -172,7 +172,7 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			 * @type {Function}
 			 * @public
 			 */
-			onHold: React.PropTypes.func,
+			onHold: PropTypes.func,
 
 			/**
 			 * The event that regularly fires when a hold persists.
@@ -180,7 +180,7 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			 * @type {Function}
 			 * @public
 			 */
-			onHoldPulse: React.PropTypes.func
+			onHoldPulse: PropTypes.func
 		}
 
 		static defaultProps = {
