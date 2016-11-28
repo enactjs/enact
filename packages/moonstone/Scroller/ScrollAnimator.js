@@ -57,16 +57,16 @@ const
  */
 class ScrollAnimator {
 	rAFId = null
-	timingFunction = 'ease-out'
+	type = 'ease-out'
 
 	/**
-	 * @param {String|null} timingFunction - Timing function to use for animation.  Must be one of
+	 * @param {String|null} type - Timing function to use for animation.  Must be one of
 	 *	`'linear'`, `'ease-in'`, `'ease-out'`, or `'ease-in-out'`, or null. If `null`, defaults to
 	 *	`'ease-out'`.
 	 * @constructor
 	 */
-	constructor (timingFunction) {
-		this.timingFunction = timingFunction || this.timingFunction;
+	constructor (type) {
+		this.timingFunction = timingFunctions[type || this.type];
 	}
 
 	simulate (sourceX, sourceY, velocityX, velocityY) {
@@ -92,18 +92,9 @@ class ScrollAnimator {
 		};
 	}
 
-	animate ({
-		sourceX, sourceY,
-		targetX, targetY,
-		duration = 1000,
-		horizontalScrollability,
-		verticalScrollability,
-		cbScrollAnimationHandler
-	}) {
+	animate (rAFCallbackFuntion) {
 		const
 			startTimeStamp = perf.now(),
-			endTimeStamp = startTimeStamp + duration,
-			timingFunction = timingFunctions[this.timingFunction],
 			fn = () => {
 				const
 					// schedule next frame
@@ -114,18 +105,7 @@ class ScrollAnimator {
 					curTime = curTimeStamp - startTimeStamp;
 
 				this.rAFId = rAFId;
-
-				if (curTimeStamp < endTimeStamp) {
-					cbScrollAnimationHandler(true, {
-						x: horizontalScrollability ? timingFunction(sourceX, targetX, duration, curTime) : sourceX,
-						y: verticalScrollability ? timingFunction(sourceY, targetY, duration, curTime) : sourceY
-					});
-				} else {
-					cbScrollAnimationHandler(false, {
-						x: targetX,
-						y: targetY
-					});
-				}
+				rAFCallbackFuntion(curTime);
 			};
 
 		this.rAFId = rAF(fn);
