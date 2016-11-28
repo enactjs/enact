@@ -50,7 +50,6 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 - Spotlight stops at container boundaries when 5-way key held down
 - Several issues related to spotting controls in edge cases
-- Joined picker now has correct animation onMouseWheel. 
 
 
 ## [1.0.0-alpha.2] - 2016-10-21

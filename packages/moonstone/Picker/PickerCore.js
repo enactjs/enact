@@ -6,8 +6,8 @@
  */
 
 import * as jobs from '@enact/core/jobs';
-import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
 import {childrenEquals} from '@enact/core/util';
+import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
 import R from 'ramda';
 import React from 'react';
 import shouldUpdate from 'recompose/shouldUpdate';
