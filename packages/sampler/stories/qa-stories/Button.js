@@ -1,4 +1,5 @@
 import Button, {ButtonBase} from '@enact/moonstone/Button';
+import Holdable from '@enact/ui/Holdable';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
@@ -7,6 +8,12 @@ import css from './Button.less';
 Button.propTypes = Object.assign({}, ButtonBase.propTypes, Button.propTypes);
 Button.defaultProps = Object.assign({}, ButtonBase.defaultProps, Button.defaultProps);
 Button.displayName = 'Button';
+
+const HoldableButton = Holdable(Button);
+
+HoldableButton.propTypes = Object.assign({}, ButtonBase.propTypes, HoldableButton.propTypes);
+HoldableButton.defaultProps = Object.assign({}, ButtonBase.defaultProps, HoldableButton.defaultProps);
+HoldableButton.displayName = 'HoldableButton';
 
 // Set up some defaults for info and knobs
 const prop = {
@@ -93,6 +100,24 @@ storiesOf('Button')
 					Small Button
 				</Button>
 			</div>
+		)
+	)
+	.addWithInfo(
+		'to validate hold events',
+		() => (
+			<HoldableButton
+				onClick={action('onClick')}
+				onHold={action('onHold')}
+				onHoldPulse={action('onHoldPulse')}
+				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
+				disabled={boolean('disabled')}
+				minWidth={boolean('minWidth')}
+				preserveCase={boolean('preserveCase')}
+				selected={boolean('selected')}
+				small={boolean('small')}
+			>
+				{text('value', 'Holdable Button')}
+			</HoldableButton>
 		)
 	);
 
