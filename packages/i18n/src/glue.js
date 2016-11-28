@@ -26,7 +26,7 @@ import {updateLocale} from './locale';
 
 ilib.setLoaderCallback(new Loader());
 
-if (typeof window === 'object' && typeof window.UILocale !== 'undefined') {
+if (__BROWSER__ && typeof window.UILocale !== 'undefined') {
 	// this is a hack until GF-1581 is fixed
 	ilib.setLocale(window.UILocale);
 }

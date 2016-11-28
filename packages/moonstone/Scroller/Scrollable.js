@@ -19,14 +19,14 @@ import css from './Scrollable.less';
 const
 	calcVelocity = (d, dt) => (d && dt) ? d / dt : 0,
 	nop = () => {},
-	perf = (typeof window === 'object') ? window.performance : {},
+	perf = (__BROWSER__) ? window.performance : {},
 	holdTime = 50,
 	scrollWheelMultiplier = 5,
 	pixelPerLine = ri.scale(40) * scrollWheelMultiplier,
 	pixelPerScrollbarBtn = ri.scale(100),
 	epsilon = 1,
 	// spotlight
-	doc = (typeof window === 'object') ? window.document : {},
+	doc = (__BROWSER__) ? window.document : {},
 	spotlightAnimationDuration = 500;
 
 /**

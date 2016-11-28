@@ -43,9 +43,9 @@ const
 
 	// These guards probably aren't necessary because there shouldn't be any scrolling occurring
 	// in isomorphic mode.
-	rAF = (typeof window === 'object') ? window.requestAnimationFrame : function () {},
-	cAF = (typeof window === 'object') ? window.cancelAnimationFrame : function () {},
-	perf = (typeof window === 'object') ? window.performance : {};
+	rAF = (__BROWSER__) ? window.requestAnimationFrame : function () {},
+	cAF = (__BROWSER__) ? window.cancelAnimationFrame : function () {},
+	perf = (__BROWSER__) ? window.performance : {};
 
 /**
  * {@link moonstone/Scroller/ScrollAnimator.ScrollAnimator} is the class

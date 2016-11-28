@@ -141,7 +141,7 @@ const DatePickerController = class extends React.Component {
 	initI18n () {
 		const locale = ilib.getLocale();
 
-		if (this.locale !== locale && typeof window === 'object') {
+		if (this.locale !== locale && __BROWSER__) {
 			this.locale = locale;
 
 			this.dateFormat = new DateFmt({

@@ -11,8 +11,8 @@ let baseScreen,
 	screenTypes = [{
 		name: 'standard',
 		pxPerRem: 16,
-		width: (typeof window === 'object') ? window.innerWidth : 1920,
-		height: (typeof window === 'object') ? window.innerHeight : 1080,
+		width: (__BROWSER__) ? window.innerWidth : 1920,
+		height: (__BROWSER__) ? window.innerHeight : 1080,
 		aspectRatioName: 'standard',
 		base: true
 	}],	// Assign one sane type in case defineScreenTypes is never run.
@@ -102,8 +102,8 @@ function defineScreenTypes (types) {
  */
 function getScreenType (rez) {
 	rez = rez || {
-		height: (typeof window === 'object') ? window.innerHeight : 1080,
-		width: (typeof window === 'object') ? window.innerWidth : 1920
+		height: (__BROWSER__) ? window.innerHeight : 1080,
+		width: (__BROWSER__) ? window.innerWidth : 1920
 	};
 
 	const types = screenTypes;
@@ -171,7 +171,7 @@ function calculateFontSize (type) {
  * @returns {null} n/a
  */
 function updateBaseFontSize (size) {
-	if (typeof window === 'object') {
+	if (__BROWSER__) {
 		document.documentElement.style.fontSize = size;
 	}
 }

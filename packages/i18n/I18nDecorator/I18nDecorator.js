@@ -67,7 +67,7 @@ const IntlHoc = hoc((config, Wrapped) => {
 		}
 
 		componentDidMount () {
-			if (typeof window === 'object') {
+			if (__BROWSER__) {
 				on('languagechange', this.handleLocaleChange, window);
 			}
 		}
@@ -79,7 +79,7 @@ const IntlHoc = hoc((config, Wrapped) => {
 		}
 
 		componentWillUnmount () {
-			if (typeof window === 'object') {
+			if (__BROWSER__) {
 				off('languagechange', this.handleLocaleChange, window);
 			}
 		}

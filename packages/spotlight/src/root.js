@@ -30,7 +30,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillMount () {
-			if (typeof window === 'object') {
+			if (__BROWSER__) {
 				Spotlight.initialize();
 				Spotlight.add(spotlightRootContainerName, {
 					selector: '.' + spottableClass,

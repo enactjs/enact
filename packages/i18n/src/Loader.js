@@ -28,7 +28,7 @@ const get = (url, callback) => {
 function EnyoLoader () {
 	this.base = ilibLocale.path.substring(0, ilibLocale.path.lastIndexOf('/locale'));
 	// TODO: full enyo.platform implementation for improved accuracy
-	if (typeof window === 'object' && typeof window.PalmSystem === 'object') {
+	if (__BROWSER__ && typeof window.PalmSystem === 'object') {
 		this.webos = true;
 	}
 }
