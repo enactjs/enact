@@ -58,14 +58,6 @@ const NotificationBase = kind({
 		noAnimation: PropTypes.bool,
 
 		/**
-		 * A function to run after transition for hiding is finished.
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onHide: PropTypes.func,
-
-		/**
 		 * Is this control in the expanded state (true), opened, with the contents visible?
 		 *
 		 * @type {Boolean}
