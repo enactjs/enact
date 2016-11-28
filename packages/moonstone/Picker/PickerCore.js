@@ -7,6 +7,7 @@
 
 import * as jobs from '@enact/core/jobs';
 import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
+import {childrenEquals} from '@enact/core/util';
 import R from 'ramda';
 import React from 'react';
 import shouldUpdate from 'recompose/shouldUpdate';
@@ -18,21 +19,10 @@ import {steppedNumber} from './PickerPropTypes';
 import css from './Picker.less';
 
 const PickerViewManager = shouldUpdate((props, nextProps) => {
-	if (!Array.isArray(nextProps.children) && typeof nextProps.children === 'object') {
-		if(props.children.key !== nextProps.children.key){
-			return true;
-		}
-	}
-
-	if (props.index !== nextProps.index) {
-		return true
-	}
-
-	if (props.reverseTransition !== nextProps.reverseTransition){
-		return false;
-	}
-
-	return true;
+	return (
+		props.index !== nextProps.index ||
+		!childrenEquals(props.children, nextProps.children)
+	);
 })(ViewManager);
 
 const wrapRange = (min, max, value) => {
