@@ -1,10 +1,20 @@
-import R from 'ramda';
+import rMap from 'ramda/src/map';
+import rProp from 'ramda/src/prop';
+import rCompose from 'ramda/src/compose';
+import rSort from 'ramda/src/sort';
+import rUseWith from 'ramda/src/useWith';
+import rEquals from 'ramda/src/equals';
+import rUnless from 'ramda/src/unless';
+import rIs from 'ramda/src/is';
+import rAlways from 'ramda/src/always';
+import rIsArrayLike from 'ramda/src/isArrayLike';
+import rOf from 'ramda/src/of';
 import React from 'react';
 
-const orderedKeys = R.map(R.prop('key'));
-const unorderedKeys = R.compose(R.sort((a, b) => a - b), orderedKeys);
-const unorderedEquals = R.useWith(R.equals, [unorderedKeys, unorderedKeys]);
-const orderedEquals = R.useWith(R.equals, [orderedKeys, orderedKeys]);
+const orderedKeys = rMap(rProp('key'));
+const unorderedKeys = rCompose(rSort((a, b) => a - b), orderedKeys);
+const unorderedEquals = rUseWith(rEquals, [unorderedKeys, unorderedKeys]);
+const orderedEquals = rUseWith(rEquals, [orderedKeys, orderedKeys]);
 
 /**
  * Compares the keys of two sets of children and returns `true` if they are equal.
@@ -25,7 +35,7 @@ const childrenEquals = (prev, next, ordered = false) => {
 		const c1 = prevChildren[0];
 		const c2 = nextChildren[0];
 
-		return R.equals(c1, c2);
+		return rEquals(c1, c2);
 	} else if (ordered) {
 		return orderedEquals(prevChildren, nextChildren);
 	} else {
@@ -54,7 +64,7 @@ const cap = function (str) {
  * @param {*} arg Function or value
  * @method
  */
-const coerceFunction = R.unless(R.is(Function), R.always);
+const coerceFunction = rUnless(rIs(Function), rAlways);
 
 /**
  * If `arg` is array-like, return it. Otherwise returns a single element array containing `arg`
@@ -68,7 +78,7 @@ const coerceFunction = R.unless(R.is(Function), R.always);
  * @param {*} arg Array or value
  * @method
  */
-const coerceArray = R.unless(R.isArrayLike, R.of);
+const coerceArray = rUnless(rIsArrayLike, rOf);
 
 /**
  * Loosely determines if `tag` is a renderable component (either a string or a function)

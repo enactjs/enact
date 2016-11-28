@@ -5,9 +5,11 @@
  * @module ui/ViewManager/arrange
  */
 
-import R from 'ramda';
+import rCurry from 'ramda/src/curry';
+import rApply from 'ramda/src/apply';
+import r__ from 'ramda/src/__';
 
-export const transform = R.curry((action, spec, {node}) => {
+export const transform = rCurry((action, spec, {node}) => {
 	const current = node.style.transform;
 	let next = current;
 	if (!current || action === 'replace') {
@@ -36,7 +38,7 @@ export const fadeIn = ({node, percent}) => {
 
 export const accelerate = prependTransform('translateZ(0)');
 
-const slideInOut = R.curry((direction, total, orientation, config) => {
+const slideInOut = rCurry((direction, total, orientation, config) => {
 	const {percent} = config;
 	const p = total * (direction === 'out' ? percent : 1 - percent);
 
@@ -54,7 +56,7 @@ export const slideOutPartial = slideInOut('out');
 export const slideIn = slideInPartial(100);
 export const slideOut = slideOutPartial(100);
 
-export const reverse = R.curry((fn, {reverseTransition, percent, ...rest}) => {
+export const reverse = rCurry((fn, {reverseTransition, percent, ...rest}) => {
 	fn({
 		...rest,
 		percent: reverseTransition ? 1 - percent : percent,
@@ -62,7 +64,7 @@ export const reverse = R.curry((fn, {reverseTransition, percent, ...rest}) => {
 	});
 });
 
-export const startAfter = R.curry((startPercent, fn, config) => {
+export const startAfter = rCurry((startPercent, fn, config) => {
 	const {percent, ...rest} = config;
 	const p = (percent >= startPercent) ? (percent - startPercent) / (1 - startPercent) : 0;
 	fn({
@@ -71,7 +73,7 @@ export const startAfter = R.curry((startPercent, fn, config) => {
 	});
 });
 
-export const endBy = R.curry((endPercent, fn, config) => {
+export const endBy = rCurry((endPercent, fn, config) => {
 	const {percent, ...rest} = config;
 	const p = (percent <= endPercent) ? percent / endPercent : 1;
 	fn({
@@ -80,7 +82,7 @@ export const endBy = R.curry((endPercent, fn, config) => {
 	});
 });
 
-export const ease = R.curry((easing, fn, config) => {
+export const ease = rCurry((easing, fn, config) => {
 	const {percent, ...rest} = config;
 	fn({
 		...rest,
@@ -89,5 +91,5 @@ export const ease = R.curry((easing, fn, config) => {
 });
 
 export const compose = (...arrangers) => (...args) => {
-	arrangers.forEach(R.apply(R.__, args));
+	arrangers.forEach(rApply(r__, args));
 };

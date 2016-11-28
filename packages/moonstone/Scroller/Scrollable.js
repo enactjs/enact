@@ -8,7 +8,7 @@
 
 import classNames from 'classnames';
 import hoc from '@enact/core/hoc';
-import R from 'ramda';
+import rClamp from 'ramda/src/clamp';
 import React, {Component, PropTypes} from 'react';
 import ri from '@enact/ui/resolution';
 
@@ -416,9 +416,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 
 			if (isVertical) {
-				this.accumulatedTargetY = R.clamp(0, this.bounds.maxTop, this.accumulatedTargetY + delta);
+				this.accumulatedTargetY = rClamp(0, this.bounds.maxTop, this.accumulatedTargetY + delta);
 			} else if (isHorizontal) {
-				this.accumulatedTargetX = R.clamp(0, this.bounds.maxLeft, this.accumulatedTargetX + delta);
+				this.accumulatedTargetX = rClamp(0, this.bounds.maxLeft, this.accumulatedTargetX + delta);
 			}
 
 			this.start(this.accumulatedTargetX, this.accumulatedTargetY, true, silent);
@@ -442,13 +442,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		setScrollLeft (v) {
 			this.dirHorizontal = Math.sign(v - this.scrollLeft);
-			this.scrollLeft = R.clamp(0, this.bounds.maxLeft, v);
+			this.scrollLeft = rClamp(0, this.bounds.maxLeft, v);
 			this.updateThumb(this.scrollbarHorizontalRef);
 		}
 
 		setScrollTop (v) {
 			this.dirVertical = Math.sign(v - this.scrollTop);
-			this.scrollTop = R.clamp(0, this.bounds.maxTop, v);
+			this.scrollTop = rClamp(0, this.bounds.maxTop, v);
 			this.updateThumb(this.scrollbarVerticalRef);
 		}
 
@@ -462,8 +462,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				this.doScrollStart();
 			}
 
-			targetX = R.clamp(0, this.bounds.maxLeft, targetX);
-			targetY = R.clamp(0, this.bounds.maxTop, targetY);
+			targetX = rClamp(0, this.bounds.maxLeft, targetX);
+			targetY = rClamp(0, this.bounds.maxTop, targetY);
 
 			if ((bounds.maxLeft - targetX) < epsilon) {
 				targetX = bounds.maxLeft;

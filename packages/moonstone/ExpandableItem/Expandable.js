@@ -5,7 +5,7 @@
  */
 
 import Cancelable from '@enact/ui/Cancelable';
-import R from 'ramda';
+import rCompose from 'ramda/src/compose';
 import Toggleable from '@enact/ui/Toggleable';
 
 // TODO: This module may not doc correctly but we'll need to wait until our doc parsing script is
@@ -39,7 +39,7 @@ const handleCancel = function (props) {
  * @hoc
  * @private
  */
-const Expandable = R.compose(
+const Expandable = rCompose(
 	Toggleable({toggle: null, activate: 'onOpen', deactivate: 'onClose', mutable: true, prop: 'open'}),
 	Cancelable({component: 'span', onCancel: handleCancel})
 );

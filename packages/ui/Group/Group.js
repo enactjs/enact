@@ -5,7 +5,9 @@
  * @module ui/Group
  */
 
-import R from 'ramda';
+import rConverge from 'ramda/src/converge';
+import rMerge from 'ramda/src/merge';
+import rProp from 'ramda/src/prop';
 import React, {PropTypes} from 'react';
 import kind from '@enact/core/kind';
 
@@ -129,9 +131,9 @@ const GroupBase = kind({
 	},
 
 	computed: {
-		itemProps: R.converge(R.merge, [
+		itemProps: rConverge(rMerge, [
 			pickGroupItemProps,
-			R.prop('itemProps')
+			rProp('itemProps')
 		])
 	},
 

@@ -8,7 +8,16 @@
 // Using string refs from the source code of ReactTransitionGroup
 /* eslint-disable react/no-string-refs */
 
-import R from 'ramda';
+import rUseWith from 'ramda/src/useWith';
+import rFindIndex from 'ramda/src/findIndex';
+import rPropEq from 'ramda/src/propEq';
+import rIdentity from 'ramda/src/identity';
+import rCompose from 'ramda/src/compose';
+import rLte from 'ramda/src/lte';
+import rUnionWith from 'ramda/src/unionWith';
+import rEqBy from 'ramda/src/eqBy';
+import rProp from 'ramda/src/prop';
+import rRemove from 'ramda/src/remove';
 import React from 'react';
 
 /**
@@ -20,7 +29,7 @@ import React from 'react';
  * @method
  * @private
  */
-const indexOfChild = R.useWith(R.findIndex, [R.propEq('key'), R.identity]);
+const indexOfChild = rUseWith(rFindIndex, [rPropEq('key'), rIdentity]);
 
 /**
  * Returns `true` if `children` contains `child`
@@ -31,7 +40,7 @@ const indexOfChild = R.useWith(R.findIndex, [R.propEq('key'), R.identity]);
  * @method
  * @private
  */
-const hasChild = R.compose(R.lte(0), indexOfChild);
+const hasChild = rCompose(rLte(0), indexOfChild);
 
 /**
  * Returns an array of non-null children
@@ -55,7 +64,7 @@ const mapChildren = function (children) {
  * @method
  * @private
  */
-const mergeChildren = R.unionWith(R.eqBy(R.prop('key')));
+const mergeChildren = rUnionWith(rEqBy(rProp('key')));
 
 /**
  * Manages the transition of added and removed child components. Children that are added are
@@ -102,7 +111,7 @@ class TransitionGroup extends React.Component {
 	}
 
 	static defaultProps = {
-		childFactory: R.identity,
+		childFactory: rIdentity,
 		component: 'div',
 		size: 2
 	}
@@ -292,7 +301,7 @@ class TransitionGroup extends React.Component {
 
 		this.setState(function (state) {
 			const index = indexOfChild(key, state.children);
-			return {children: R.remove(index, 1, state.children)};
+			return {children: rRemove(index, 1, state.children)};
 		});
 	}
 

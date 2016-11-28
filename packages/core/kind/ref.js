@@ -1,4 +1,4 @@
-import R from 'ramda';
+import rMerge from 'ramda/src/merge';
 
 /*
  * Simplifies reference caching for stateless components by adding a function to props that can
@@ -29,7 +29,7 @@ import R from 'ramda';
  */
 const ref = () => (props) => {
 	const captureRef = (name) => (n) => (captureRef[name] = n);
-	return R.merge(props, {ref: captureRef});
+	return rMerge(props, {ref: captureRef});
 };
 
 export default ref;

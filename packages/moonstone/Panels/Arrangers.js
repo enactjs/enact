@@ -1,6 +1,13 @@
 import quadInOut from 'eases/quad-in-out';
 import {appendTransform, clearTransform, compose, ease, endBy, reverse, slideIn, slideOut} from '@enact/ui/ViewManager/arrange';
 import R from 'ramda';
+import rCompose from 'ramda/src/compose';
+import rEquals from 'ramda/src/equals';
+import rProp from 'ramda/src/prop';
+import rBoth from 'ramda/src/both';
+import rComplement from 'ramda/src/complement';
+import rWhen from 'ramda/src/when';
+import rEither from 'ramda/src/either';
 
 import {breadcrumbWidth} from './Breadcrumb';
 
@@ -68,9 +75,9 @@ const offsetForBreadcrumbs = ({node, percent}) => {
 // Set of conditions used to guard offsetForBreadcrumbs. The offset should be applied when
 // transitioning to any panel other than the first and also for the leave transition when moving to
 // the first panel because the active panel should start at the offset before moving right offscreen
-const toFirst = R.compose(R.equals(0), R.prop('to'));
-const toFirstReverse = R.both(toFirst, R.prop('reverseTransition'));
-const notToFirst = R.complement(toFirst);
+const toFirst = rCompose(rEquals(0), rProp('to'));
+const toFirstReverse = rBoth(toFirst, rProp('reverseTransition'));
+const notToFirst = rComplement(toFirst);
 
 /**
  * Arranger that slides panels in from the right and out to the left allowing space for the single
@@ -79,6 +86,6 @@ const notToFirst = R.complement(toFirst);
  * @type {Arranger}
  */
 export const ActivityArranger = {
-	enter: compose(panelEnter, reverse(R.when(R.either(notToFirst, toFirstReverse), offsetForBreadcrumbs))),
-	leave: compose(panelLeave, R.when(notToFirst, offsetForBreadcrumbs))
+	enter: compose(panelEnter, reverse(rWhen(rEither(notToFirst, toFirstReverse), offsetForBreadcrumbs))),
+	leave: compose(panelLeave, rWhen(notToFirst, offsetForBreadcrumbs))
 };

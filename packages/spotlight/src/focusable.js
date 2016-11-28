@@ -1,6 +1,6 @@
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
-import R from 'ramda';
+import rContains from 'ramda/src/contains';
 import React, {PropTypes} from 'react';
 
 import Spotlight from './spotlight';
@@ -114,7 +114,7 @@ const SpotlightFocusableDecoratorHoC = hoc(defaultConfig, (config, Wrapped) => {
 
 		onKeyDown = (e) => {
 			const keyCode = e.nativeEvent.keyCode;
-			if (!this.props.disabled && R.contains(keyCode, this.props.keyCodes) && e.target === this.wrappedInstance.decoratorNode) {
+			if (!this.props.disabled && rContains(keyCode, this.props.keyCodes) && e.target === this.wrappedInstance.decoratorNode) {
 				this.setState({innerElementFocused: true, forceFocusChange: true});
 			}
 			forwardKeyDown(e, this.props);

@@ -9,7 +9,7 @@
  * Licensed under the MPL license.
  */
 
-import R from 'ramda';
+import rContains from 'ramda/src/contains';
 import Accelerator from '@enact/core/Accelerator';
 import {startJob} from '@enact/core/jobs';
 
@@ -921,7 +921,7 @@ const Spotlight = (function() {
 		}
 
 		const keyCode = evt.keyCode;
-		if (!_directions[keyCode] && !R.contains(keyCode, _enterKeyCodes)) {
+		if (!_directions[keyCode] && !rContains(keyCode, _enterKeyCodes)) {
 			return;
 		}
 
@@ -938,7 +938,7 @@ const Spotlight = (function() {
 		const validKeyCodes = [..._enterKeyCodes, _pointerHideKeyCode, _pointerShowKeyCode];
 		const direction = _directions[keyCode];
 
-		if (!direction && !R.contains(keyCode, validKeyCodes)) {
+		if (!direction && !rContains(keyCode, validKeyCodes)) {
 			return;
 		}
 

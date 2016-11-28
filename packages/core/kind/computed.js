@@ -1,4 +1,9 @@
-import R from 'ramda';
+import rReduce from 'ramda/src/reduce';
+import rAssoc from 'ramda/src/assoc';
+import rUseWith from 'ramda/src/useWith';
+import rFlip from 'ramda/src/flip';
+import rToPairs from 'ramda/src/toPairs';
+import rIdentity from 'ramda/src/identity';
 
 /**
  * Accepts an object of computed property configurations and a property object, passes the property
@@ -43,7 +48,7 @@ const computed = (cfg, props, ...args) => {
 };
 
 // Reducer to chain computed property transformations
-const reduceComputed = R.reduce((acc, v) => R.assoc(v[0], v[1](acc), acc));
+const reduceComputed = rReduce((acc, v) => rAssoc(v[0], v[1](acc), acc));
 
 /**
  * Alternate implementation that passes the altered props to each computed handler so computed props
@@ -67,7 +72,7 @@ const reduceComputed = R.reduce((acc, v) => R.assoc(v[0], v[1](acc), acc));
  * @returns {Function} Function accepting props and returning update props with computed properties
  * @public
  */
-const computedChain = R.useWith(R.flip(reduceComputed), [R.toPairs, R.identity]);
+const computedChain = rUseWith(rFlip(reduceComputed), [rToPairs, rIdentity]);
 
 export default computed;
 export {computed, computedChain};

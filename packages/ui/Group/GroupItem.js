@@ -7,7 +7,9 @@
 
 import kind from '@enact/core/kind';
 import {isSelected, select as selectItem} from '@enact/core/selection';
-import R from 'ramda';
+import rCompose from 'ramda/src/compose';
+import rObjOf from 'ramda/src/objOf';
+import rPick from 'ramda/src/pick';
 import React from 'react';
 
 /**
@@ -15,9 +17,9 @@ import React from 'react';
  * before passing the remaining on to the repeated `childComponent`
  * @private
  */
-const pickGroupItemProps = R.compose(
-	R.objOf('$$GroupItem'),
-	R.pick(['childComponent', 'childProp', 'childSelect', 'indexProp', 'onSelect', 'select', 'selected', 'selectedProp'])
+const pickGroupItemProps = rCompose(
+	rObjOf('$$GroupItem'),
+	rPick(['childComponent', 'childProp', 'childSelect', 'indexProp', 'onSelect', 'select', 'selected', 'selectedProp'])
 );
 
 /**

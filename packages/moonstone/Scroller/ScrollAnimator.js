@@ -5,7 +5,8 @@
  * @private
  */
 
-import R from 'ramda';
+import rClamp from 'ramda';
+import rCurry from 'ramda';
 
 const
 	// Use eases library
@@ -39,7 +40,7 @@ const
 	stopVelocity = 0.04,      // velocity to stop
 	velocityFriction = 0.95,  // velocity decreasing factor
 
-	clampVelocity = R.clamp(-maxVelocity, maxVelocity),
+	clampVelocity = rClamp(-maxVelocity, maxVelocity),
 
 	// These guards probably aren't necessary because there shouldn't be any scrolling occurring
 	// in isomorphic mode.
@@ -157,8 +158,8 @@ class ScrollAnimator {
 				// Curry these at create time. Alternatively, since you have a known usage, you can
 				// create your own pseudo-curried versions and skip the ramda dependency.
 				// (sourceX, targetX, duration) => (currentTime) => { /* function body */ }
-				calcPosX: R.curry(timingFunctions[this.timingFunction])(sourceX, targetX, duration),
-				calcPosY: R.curry(timingFunctions[this.timingFunction])(sourceY, targetY, duration)
+				calcPosX: rCurry(timingFunctions[this.timingFunction])(sourceX, targetX, duration),
+				calcPosY: rCurry(timingFunctions[this.timingFunction])(sourceY, targetY, duration)
 			}
 		);
 	}

@@ -1,4 +1,4 @@
-import R from 'ramda';
+import rEither from 'ramda/src/either';
 
 /**
  * Adds an isRequired validator to `validator`
@@ -33,7 +33,7 @@ const withRequired = function (validator) {
  * @returns {Error|undefined} An Error if the validation failed
  * @method
  */
-const extendPropType = R.either;
+const extendPropType = rEither;
 
 export {
 	withRequired,
