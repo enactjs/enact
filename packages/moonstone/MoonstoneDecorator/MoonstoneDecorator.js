@@ -51,7 +51,7 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {ri, i18n, spotlight, float, overlay, cancelHandler} = config;
 
 	// Apply classes depending on screen type (overlay / fullscreen)
-	const getBgClassName = () => 'enact-fit ' + (overlay ? css.overlay : css.fullscreen);
+	const getBgClassName = () => 'enact-fit' + (overlay ? '' : ` ${css.bg}`);
 
 	let App = Wrapped;
 
