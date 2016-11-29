@@ -69,15 +69,20 @@ class ExpandableInputBase extends React.Component {
 	handleInputKeyDown = (ev) => {
 		const keyCode = ev.keyCode;
 
-		switch (keyCode) {
-			case 13:
-			case 38:
-			case 40:
-				// prevent Enter onKeyPress which would re-open the expandable when the label
-				// receives focus
-				ev.preventDefault();
-				this.fireChangeEvent();
-				break;
+		const isEnter = keyCode === 13;
+		const isUpDown = keyCode === 38 || keyCode === 40;
+
+		if (isEnter) {
+			// prevent Enter onKeyPress which would re-open the expandable when the label
+			// receives focus
+			ev.preventDefault();
+		} else if (isUpDown) {
+			// prevent Spotlight handling up/down since closing the expandable will spot the label
+			ev.nativeEvent.stopImmediatePropagation();
+		}
+
+		if (isEnter || isUpDown) {
+			this.fireChangeEvent();
 		}
 	}
 

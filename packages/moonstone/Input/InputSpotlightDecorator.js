@@ -38,14 +38,19 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			} else {
 				Spotlight.resume();
 			}
+
+			if (this.state.direction) {
+				Spotlight.move(this.state.direction);
+			}
 		}
 
 		focus = (focused, node) => {
-			this.setState({focused, node});
+			this.setState({focused, node, direction: null});
 		}
 
 		blur = () => {
 			this.setState({
+				direction: null,
 				focused: null,
 				node: null
 			});
@@ -59,9 +64,13 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			this.focus('input', decorator.querySelector('input'));
 		}
 
+		leaveOnUpdate = (direction) => {
+			this.setState({direction});
+		}
+
 		onBlur = (ev) => {
 			if (!this.props.noDecorator) {
-				if (isBubbling(ev)) {
+				if (isBubbling(ev) && !this.state.direction) {
 					if (Spotlight.getPointerMode()) {
 						this.blur();
 						forwardBlur(ev, this.props);
@@ -70,12 +79,10 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 						ev.stopPropagation();
 					}
 				}
-			} else {
+			} else if (this.state.focused === 'input' && this.state.node === ev.target) {
 				// only blur when the input should be focused and is the target of the blur
-				if (this.state.focused === 'input' && this.state.node === ev.target) {
-					this.blur();
-					forwardBlur(ev, this.props);
-				}
+				this.blur();
+				forwardBlur(ev, this.props);
 			}
 		}
 
@@ -131,6 +138,14 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 						// prevent 5-way navigation onto other components when focusing the
 						// decorator explicitly
 						preventSpotlightNavigation(ev);
+
+						if (target.value.length === 0 && keyCode !== 13) {
+							const direction =	keyCode === 37 && 'left' ||
+												keyCode === 38 && 'up' ||
+												keyCode === 39 && 'right' ||
+												keyCode === 40 && 'down';
+							this.leaveOnUpdate(direction);
+						}
 					}
 				} else if (keyCode === 37 || keyCode === 39) {
 					// prevent 5-way nav for left/right keys within the <input>
