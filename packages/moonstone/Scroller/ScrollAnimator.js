@@ -5,8 +5,8 @@
  * @private
  */
 
-import rClamp from 'ramda';
-import rCurry from 'ramda';
+import rClamp from 'ramda/src/clamp';
+import rCurry from 'ramda/src/curry';
 
 const
 	// Use eases library

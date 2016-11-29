@@ -1,6 +1,5 @@
 import quadInOut from 'eases/quad-in-out';
 import {appendTransform, clearTransform, compose, ease, endBy, reverse, slideIn, slideOut} from '@enact/ui/ViewManager/arrange';
-import R from 'ramda';
 import rCompose from 'ramda/src/compose';
 import rEquals from 'ramda/src/equals';
 import rProp from 'ramda/src/prop';
