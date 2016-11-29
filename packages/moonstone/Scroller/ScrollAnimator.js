@@ -60,7 +60,7 @@ class ScrollAnimator {
 	type = 'ease-out'
 
 	/**
-	 * @param {String|null} type - Timing function to use for animation.  Must be one of
+	 * @param {String|null} type - Timing function type for list scroll animation.  Must be one of
 	 *	`'linear'`, `'ease-in'`, `'ease-out'`, or `'ease-in-out'`, or null. If `null`, defaults to
 	 *	`'ease-out'`.
 	 * @constructor
