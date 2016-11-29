@@ -3,7 +3,7 @@ import React from 'react';
 
 const contextTypes = {
 	/**
-	 * Called by Marquee instances when marqueeing is canceled (e.g. when blurring an Marquee
+	 * Called by Marquee instances when marqueeing is canceled (e.g. when blurring a Marquee
 	 * set to `marqueeOn='focus'`)
 	 *
 	 * @type {Function}
@@ -25,7 +25,7 @@ const contextTypes = {
 	register: React.PropTypes.func,
 
 	/**
-	 * Called by Marquee instances when marqueeing is started (e.g. when focusing an Marquee
+	 * Called by Marquee instances when marqueeing is started (e.g. when focusing a Marquee
 	 * set to `marqueeOn='focus'`)
 	 *
 	 * @type {Function}
@@ -33,7 +33,7 @@ const contextTypes = {
 	start: React.PropTypes.func,
 
 	/**
-	 * Called to unregister a Marquee instance to be synchronized
+	 * Called to unregister a synchronized Marquee instance
 	 *
 	 * @type {Function}
 	 */

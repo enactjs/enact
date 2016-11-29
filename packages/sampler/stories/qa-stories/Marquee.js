@@ -64,9 +64,10 @@ storiesOf('Marquee')
 		'Synchronized',
 		() => (
 			<Controller style={{width: '400px'}}>
-				{LTR.map(children => (
+				{LTR.map((children, index) => (
 					<MarqueeText
 						disabled={boolean('disabled', false)}
+						key={index}
 						marqueeDelay={number('marqueeDelay', 1000)}
 						marqueeDisabled={boolean('marqueeDisabled', false)}
 						marqueeOn={select('marqueeOn', ['hover', 'render'], 'render')}
