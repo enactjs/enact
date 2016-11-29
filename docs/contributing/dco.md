@@ -1,6 +1,6 @@
-<section>
-
-## Enact Developer Certificate of Origin
+---
+title: Enact Developer Certificate of Origin
+---
 
 <p style='text-align:center;'><strong><em>Enact Developer Grant and Certificate of Origin 1.0</em></strong></p>
 
@@ -24,5 +24,3 @@ consistent with this Project, the open source license indicated in the previous 
 specified by the Project and approved by the Open Source Initiative(OSI) at http://www.opensource.org.
 
 *(Inspired by the Linux Developer Certificate of Origin.)*
-
-</section>

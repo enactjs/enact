@@ -1,8 +1,10 @@
-# Async Actions
+---
+title: Async Actions
+---
 
 Most complex apps rely heavily on fetching data asynchronously. In this document, we present techniques used in Redux to handle an asynchronous data flow.
 
-## Introduction to Middleware and `redux-thunk`
+### Introduction to Middleware and `redux-thunk`
 
 When using an API, you are probably dealing with asynchronous actions. However, the Redux store only supports synchronous actions without using [middleware](http://redux.js.org/docs/advanced/Middleware.html) (more on that later). To use middleware in Redux, we use the [`applyMiddleware()`](http://redux.js.org/docs/api/applyMiddleware.html) store enhancer from Redux. `redux-thunk` middleware is the standard way to handle asynchronous actions.
 
@@ -28,7 +30,7 @@ function incrementAsync() {
 }
 ```
 
-## LS2Request Example
+### LS2Request Example
 
 A combination of `redux-thunk` and `LS2Request` allows us to fetch and display data in a React component. `LS2Request` is a wrapper component for `PalmServiceBridge` and is available from `@enact/webos/LS2Request`. The following example shows a simple fetch routine.
 

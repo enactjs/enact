@@ -1,6 +1,6 @@
-<section>
-
-## Contribution Guide
+---
+title: Contribution Guide
+---
 
 Thank you for helping improve the Enact framework! These documents highlight some of the things you'll need to know before
 submitting code or documentation to the project:
