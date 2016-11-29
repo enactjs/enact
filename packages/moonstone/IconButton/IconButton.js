@@ -91,7 +91,17 @@ const IconButtonBase = kind({
 		 * @default false
 		 * @public
 		 */
-		small: PropTypes.bool
+		small: PropTypes.bool,
+
+		/**
+		 * URL specifying path to an icon image or an object representing a resolution independent resource (See
+		 * {@link ui/resolution}).
+		 * If both `src` and `children` are specified, they will both be rendered.
+		 *
+		 * @type {String|Object}
+		 * @public
+		 */
+		src: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
 	},
 
 	defaultProps: {
@@ -107,10 +117,10 @@ const IconButtonBase = kind({
 		className: ({small, styler}) => styler.append({small})
 	},
 
-	render: ({children, small, ...rest}) => {
+	render: ({children, small, src, ...rest}) => {
 		return (
 			<Button {...rest} small={small} minWidth={false} marqueeDisabled>
-				<Icon small={small} className={css.icon}>{children}</Icon>
+				<Icon small={small} className={css.icon} src={src}>{children}</Icon>
 			</Button>
 		);
 	}
