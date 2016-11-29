@@ -7,7 +7,7 @@ submitting code or documentation to the project:
 
 *   [Coding Style Guide](./code_style.md) - The Enact code style explained
 *   [Documenting Code for the API Reference](./doc_style.md) - How we use jsDoc to document Enact
-*   [Documenting Changes](./changelogs.md) -  The Enact CHANGELOG.md guidelines
+*   [Documenting Changes](./changelogs.md) -  The Enact `CHANGELOG.md` guidelines
 
 ### Contributors Welcome!
 
