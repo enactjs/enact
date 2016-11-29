@@ -25,6 +25,14 @@ const VirtualList = kind({
 
 	propTypes: /** @lends moonstone/VirtualList.VirtualList.prototype */ {
 		/**
+		 * Size of data for the VirtualList; valid value is a number.
+		 *
+		 * @type {Number}
+		 * @public
+		 */
+		dataSize: PropTypes.number.isRequired,
+
+		/**
 		 * Size of an item for the VirtualList; valid value is a number.
 		 * If the direction for the list is vertical, itemSize means the height of an item.
 		 * For horizontal, it means the width of an item.
@@ -56,6 +64,14 @@ const VirtualGridList = kind({
 
 	propTypes: /** @lends moonstone/VirtualList.VirtualGridList.prototype */ {
 		/**
+		 * Size of data for the VirtualGridList; valid value is a number.
+		 *
+		 * @type {Number}
+		 * @public
+		 */
+		dataSize: PropTypes.number.isRequired,
+
+		/**
 		 * Size of an item for the VirtualGridList; valid value is an object that has `minWidth`
 		 * and `minHeight` as properties.
 		 *
@@ -73,6 +89,50 @@ const VirtualGridList = kind({
 	render: (props) => <VirtualListBase {...props} />
 });
 
+/**
+ * {@link module:@enact/moonstone/VirtualList~VirtualVariableList} is a VirtualList with Moonstone styling
+ * which has a variable width or height.
+ *
+ * @class VirtualVariableList
+ * @ui
+ * @public
+ */
+const VirtualVariableList = kind({
+	name: 'VirtualVariableList',
+
+	propTypes: {
+		/**
+		 * Size of data for the VirtualVariableList; valid value is an object
+		 * that has `fixed` for the data size of fixed dimension and `variable` for
+		 * the data size of variable dimension.
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		dataSize: PropTypes.object.isRequired,
+
+		/**
+		 * Size of an item for the VirtualVariableList; valid value is an object
+		 * that has `fixed` for the item size of fixed dimension
+		 * and `variable` for the item sizes of variable dimension.
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		itemSize: PropTypes.object.isRequired
+	},
+
+	render: (orgProps) => {
+		const props = Object.assign({}, orgProps);
+
+		if (props.variableDimension === 'height') {
+			props.direction = 'horizontal';
+		}
+
+		return (<VirtualListBase {...props} />);
+	}
+});
+
 export default VirtualList;
-export {VirtualList, VirtualGridList};
+export {VirtualList, VirtualGridList, VirtualVariableList};
 export * from './GridListImageItem';
