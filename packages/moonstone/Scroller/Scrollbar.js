@@ -52,7 +52,7 @@ const
 	selectPrevIcon = selectIcon(true),
 	selectNextIcon = selectIcon(false),
 	// spotlight
-	doc = (typeof window === 'object') ? window.document : {};
+	doc = (__BROWSER__) ? window.document : {};
 
 /**
  * {@link moonstone/Scroller/Scrollbar.Scrollbar} is a Scrollbar with Moonstone styling.

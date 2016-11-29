@@ -111,7 +111,7 @@ const DayPicker = class extends React.Component {
 
 	initIlib () {
 		const locale = ilib.getLocale();
-		if (this.locale !== locale && typeof window === 'object') {
+		if (this.locale !== locale && __BROWSER__) {
 			this.locale = locale;
 
 			const df = new DateFmt({length: 'full'});

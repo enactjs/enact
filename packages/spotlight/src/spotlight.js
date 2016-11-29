@@ -132,7 +132,7 @@ const Spotlight = (function() {
 		const matchedNodes = (this.parentNode || this.document).querySelectorAll(selector);
 		return [].slice.call(matchedNodes).indexOf(this) >= 0;
 	};
-	if (typeof window === 'object') {
+	if (__BROWSER__) {
 		elementMatchesSelector = window.Element.prototype.matches
 			|| window.Element.prototype.matchesSelector
 			|| window.Element.prototype.mozMatchesSelector
