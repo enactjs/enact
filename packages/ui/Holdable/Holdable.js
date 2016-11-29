@@ -10,8 +10,8 @@ import Spotlight from '@enact/spotlight';
 import R from 'ramda';
 import React, {PropTypes} from 'react';
 
-const eventProps = ['target', 'currentTarget', 'clientX', 'clientY', 'pageX', 'pageY',
-	'screenX', 'screenY', 'altKey', 'ctrlKey', 'metaKey', 'shiftKey', 'detail'];
+const eventProps = ['clientX', 'clientY', 'pageX', 'pageY', 'screenX', 'screenY',
+	'altKey', 'ctrlKey', 'metaKey', 'shiftKey', 'detail'];
 
 const makeEventObject = (ev) => {
 	const e = {};
@@ -40,6 +40,8 @@ const pointerRelease = 'onMouseUp';
 const pointerEnter = 'onMouseEnter';
 const pointerLeave = 'onMouseLeave';
 const pointerMove = 'onMouseMove';
+
+const selectionKeyCodes = [13, 16777221];
 
 /**
  * Default config for {@link ui/Holdable.Holdable}
@@ -158,15 +160,6 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			disabled: PropTypes.bool,
 
 			/**
-			 * An array of valid selector keyCodes
-			 *
-			 * @type {Array}
-			 * @default [13, 16777221]
-			 * @public
-			 */
-			keyCodes: PropTypes.array,
-
-			/**
 			 * The event that fires when a hold is detected.
 			 *
 			 * @type {Function}
@@ -184,8 +177,7 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		static defaultProps = {
-			disabled: false,
-			keyCodes: [13, 16777221]
+			disabled: false
 		}
 
 		componentDidMount () {
@@ -200,7 +192,7 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 		onKeyDepress = (ev) => {
 			if (!this.props.disabled) {
-				if (R.contains(ev.keyCode, this.props.keyCodes) && !Spotlight.getSelectionKeyHold()) {
+				if (R.contains(ev.keyCode, selectionKeyCodes) && !Spotlight.getSelectionKeyHold()) {
 					this.keyEvent = true;
 					this.beginHold(makeEventObject(ev));
 				}
@@ -209,7 +201,7 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		onKeyRelease = (ev) => {
-			if (R.contains(ev.keyCode, this.props.keyCodes)) {
+			if (R.contains(ev.keyCode, selectionKeyCodes)) {
 				this.keyEvent = false;
 				this.endHold();
 			}
