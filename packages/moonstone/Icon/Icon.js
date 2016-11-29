@@ -97,6 +97,9 @@ const IconBase = kind({
 					} else if (iconProp.indexOf('0x') === 0) {
 						// Converts a hex reference in string form
 						icon = String.fromCodePoint(iconProp);
+					} else if (iconProp.length <= 2) {
+						// allowing 2 characters for 4-byte unicode characters specified explicitly
+						icon = iconProp;
 					} else {
 						// for a path or URI, add it to style
 						style = mergeStyle(style, iconProp);
