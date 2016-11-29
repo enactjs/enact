@@ -1,5 +1,5 @@
 ---
-title: Luna Service API
+title: webOS Support Module
 ---
 
 The webOS package includes the following documentation:
