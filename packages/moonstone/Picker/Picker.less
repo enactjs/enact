@@ -104,6 +104,10 @@
 			background-color: @moon-spotlight-border-color;
 			color: @moon-spotlight-text-color;
 		}
+
+		:global(.enact-locale-non-latin) & {
+			.enact-locale-non-latin .moon-picker-text;
+		}
 	}
 
 	&:not(.joined) {
@@ -113,6 +117,10 @@
 			height: @moon-button-height;
 			line-height: @moon-button-height;
 			max-width: 300px;
+
+			:global(.enact-locale-non-latin) & {
+				.enact-locale-non-latin .moon-picker-text;
+			}
 		}
 	}
 
