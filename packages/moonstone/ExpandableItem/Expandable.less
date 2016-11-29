@@ -1,8 +1,25 @@
 // Expandable.less
 //
+@import '../styles/variables.less';
 
-.expandableIcon {
-	position: absolute;
-	right: 0;
-	top: 0;
+.expandableItem {
+	display: inline-block;
+
+	&:after {
+		position: absolute;
+		top: @moon-spotlight-outset - 12px;
+		right: @moon-spotlight-outset + 1px;
+		font-family: @moon-icon-font-family;
+		font-size: @moon-expandable-caret-icon-font-size;
+		content: @moon-expandable-close-caret-icon;
+
+		:global(.enact-locale-right-to-left) & {
+			left: @moon-spotlight-outset + 1px;
+			right: initial;
+		}
+	}
+
+	&[open]:after {
+		content: @moon-expandable-open-caret-icon;
+	}
 }
