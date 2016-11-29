@@ -1,5 +1,5 @@
 /**
- * Exports the {@link moonstone/Slider.Slider}
+ * Exports the {@link moonstone/Slider.Slider} component.
  *
  * @module moonstone/Slider
  */
@@ -20,6 +20,14 @@ import {
 
 import css from './Slider.less';
 
+/**
+ * {@link moonstone/Slider.VisibleBar} is private.
+ *
+ * @class VisibleBar
+ * @memberof moonstone/Slider
+ * @ui
+ * @private
+ */
 class VisibleBar extends React.Component {
 	static propTypes = /** @lends moonstone/Slider.VisibleBar.prototype */{
 		/**
@@ -87,9 +95,8 @@ class VisibleBar extends React.Component {
 }
 
 /**
- * {@link moonstone/Slider.SliderBase} is a stateless Slider. In most 
- * circumstances, you will want to use the stateful version.
- * {@link moonstone/Slider.Slider}
+ * {@link moonstone/Slider.SliderBase} is a stateless Slider. In most circumstances, you will want
+ * to use the stateful version: {@link moonstone/Slider.Slider}
  *
  * @class SliderBase
  * @memberof moonstone/Slider
@@ -263,9 +270,8 @@ const SliderBase = kind({
 });
 
 /**
- * {@link moonstone/Slider.Slider} is a Slider with 
- * Moonstone styling, Spottable, Pressable and SliderDecorator applied. It is a 
- * stateful Slider.
+ * {@link moonstone/Slider.Slider} is a Slider with Moonstone styling, Spottable, Pressable and
+ * SliderDecorator applied. It is a stateful Slider.
  *
  * @class Slider
  * @memberof moonstone/Slider

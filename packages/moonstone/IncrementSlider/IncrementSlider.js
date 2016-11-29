@@ -1,5 +1,5 @@
 /**
- * Exports the {@link moonstone/IncrementSlider.IncrementSlider}
+ * Exports the {@link moonstone/IncrementSlider.IncrementSlider} component.
  *
  * @module moonstone/IncrementSlider
  */
@@ -17,9 +17,9 @@ import {SliderBase} from '../Slider';
 import css from './IncrementSlider.less';
 
 /**
- * {@link moonstone/IncrementSlider.IncrementSliderBase} is a stateless Slider 
+ * {@link moonstone/IncrementSlider.IncrementSliderBase} is a stateless Slider
  * with IconButtons to increment and decrement the value. In most circumstances,
- * you will want to use the stateful version.
+ * you will want to use the stateful version:
  * {@link moonstone/IncrementSlider.IncrementSlider}
  *
  * @class IncrementSliderBase
@@ -154,9 +154,9 @@ const IncrementSliderBase = kind({
 	)
 });
 /**
- * {@link moonstone/IncrementSlider.IncrementSlider} is a IncrementSlider with 
- * Moonstone styling, Spottable, Pressable and SliderDecorator applied. It is a 
- * stateful Slider Slider with IconButtons to increment and decrement the value.
+ * {@link moonstone/IncrementSlider.IncrementSlider} is a IncrementSlider with
+ * Moonstone styling, Spottable, Pressable and SliderDecorator applied. It is a
+ * stateful Slider Slider with IconButtons to increment and decrement the value
  *
  * @class IncrementSlider
  * @memberof moonstone/IncrementSlider

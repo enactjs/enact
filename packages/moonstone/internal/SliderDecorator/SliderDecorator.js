@@ -21,7 +21,7 @@ import {
 /**
  * Default config for {@link moonstone/SliderDecorator.SliderDecorator}.
  *
- * @memberof moonstone/SliderDecorator
+ * @memberof moonstone/internal/SliderDecorator
  * @hocconfig
  * @private
  */
@@ -31,6 +31,7 @@ const defaultConfig = {
 	 *
 	 * @type {Number}
 	 * @default 20
+	 * @memberof moonstone/internal/SliderDecorator.defaultConfig
 	 */
 	changeDelay: 20,
 
@@ -39,6 +40,7 @@ const defaultConfig = {
 	 *
 	 * @type {Boolean}
 	 * @default false
+	 * @memberof moonstone/internal/SliderDecorator.defaultConfig
 	 */
 	handlesIncrements: false
 };
@@ -223,12 +225,10 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const handlers = !config.handlesIncrements ? {} : (
-				{
-					onIncrement: this.incrementHandler,
-					onDecrement: this.decrementHandler
-				}
-			);
+			const handlers = !config.handlesIncrements ? {} : {
+				onIncrement: this.incrementHandler,
+				onDecrement: this.decrementHandler
+			};
 
 			return (
 				<Wrapped
