@@ -27,7 +27,7 @@ const
 	epsilon = 1,
 	// spotlight
 	doc = (typeof window === 'object') ? window.document : {},
-	spotlightAnimationDuration = 500;
+	animationDuration = 1000;
 
 /**
  * {@link moonstone/Scroller/Scrollable.dataIndexAttribute} is the name of a custom attribute
@@ -370,7 +370,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				const pos = this.childRef.calculatePositionOnFocus(index);
 				if (pos) {
 					if (pos.left !== this.scrollLeft || pos.top !== this.scrollTop) {
-						this.start(pos.left, pos.top, (spotlightAnimationDuration > 0), false, spotlightAnimationDuration);
+						this.start(pos.left, pos.top, (animationDuration > 0), false, animationDuration);
 					}
 					this.lastFocusedItem = item;
 				}
@@ -454,7 +454,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		// scroll start/stop
 
-		start (targetX, targetY, animate = true, silent = false, duration = 1000) {
+		start (targetX, targetY, animate = true, silent = false, duration = animationDuration) {
 			const {scrollLeft, scrollTop, bounds} = this;
 
 			this.animator.stop();
