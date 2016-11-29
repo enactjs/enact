@@ -1,7 +1,8 @@
 /**
  * Provides the `deprecate` method
  *
- * @module core/deprecate
+ * @module core/internal/deprecate
+ * @private
  */
 
 // Utility method to format deprecate message
@@ -59,7 +60,8 @@ const warn = (msg) => {
  * @param {Boolean?} config.alwaysWarn - If `true`, a warning will be issued for every access
  * @returns {*} Either a wrapped version of `thing` or an unwrapped version of `thing` in
  *	production or stand-alone mode
- * @memberof core/deprecate
+ * @memberof core/internal/deprecate
+ * @private
  */
 const deprecate = function (thing, config) {
 	if (__DEV__) {
