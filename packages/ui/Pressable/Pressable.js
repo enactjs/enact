@@ -26,6 +26,15 @@ const defaultConfig = {
 	depress: 'onMouseDown',
 
 	/**
+	 * Configures the event name that deactivates the Pressable when onMouseLeave is triggered
+	 *
+	 * @type {String}
+	 * @default 'onMouseLeave'
+	 * @memberof ui/Pressable.defaultConfig
+	 */
+	leave: 'onMouseLeave',
+
+	/**
 	 * Configures the event name that deactivates the Pressable
 	 *
 	 * @type {String}
@@ -56,7 +65,7 @@ const defaultConfig = {
  * @public
  */
 const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
-	const {depress, release, prop} = config;
+	const {depress, release, prop, leave} = config;
 	const defaultPropKey = 'default' + cap(prop);
 	const forwardDepress = forward(depress);
 	const forwardRelease = forward(release);
@@ -107,10 +116,15 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			forwardRelease(ev, this.props);
 		}
 
+		onMouseLeave = (ev) => {
+			this.setState({pressed: false});
+		}
+
 		render () {
 			const props = Object.assign({}, this.props);
 			if (depress) props[depress] = this.onMouseDown;
 			if (release) props[release] = this.onMouseUp;
+			if (leave) props[leave] = this.onMouseLeave;
 			if (prop) props[prop] = this.state.pressed;
 			delete props[defaultPropKey];
 

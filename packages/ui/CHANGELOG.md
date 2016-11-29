@@ -9,6 +9,11 @@ The following is a curated list of changes in the Enact ui module, newest change
 - `ui/RadioDecorator` and `ui/RadioControllerDecorator` to support radio group-style management of components
 - `onAppear`, `onEnter`, `onLeave`, `onStay`, `onTransition`, and `onWillTransition` events to ViewManager
 - `none` to `scrimType` prop values in `ui/FloatingLayer`
+- LESS mixins from `@enact/moonstone` that are general purpose and can be utilized by various UI
+libraries.
+- `onMouseLeave` config option to `ui/Pressable`.
+
+### Changed
 
 ### Removed
 

@@ -97,6 +97,7 @@ imported, as they already import the general mixins.
 - `moonstone/ToggleItem`'s `inline` version to have a `max-width` of `240px`
 - `moonstone/Input` to use `<div>` instead of `<label>` for wrapping components. No change to
 	functionality, only markup.
+- `moonstone/Picker`'s `moonstone/IconButton` now has a `onMouseLeave` prop to remove the pressed state.  
 
 ### Removed
 
@@ -123,3 +124,4 @@ This version includes a lot of refactoring from the previous release. Developers
 
 - Many components were fixed, polished, updated and documented
 - Inline docs updated to be more consistent and comprehensive
+- Fixed `Picker` pressed state staying active when `onMouseUp` occurs outside of button.
