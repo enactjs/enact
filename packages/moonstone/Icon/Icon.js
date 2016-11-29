@@ -13,6 +13,14 @@ import iconList from './IconList.js';
 
 import css from './Icon.less';
 
+/**
+ * Merges consumer styles with the image `src` resolved through the resolution independence module.
+ *
+ * @param	{Object}		style	Style object
+ * @param	{String|Object}	src		URI to image or object of URIs
+ *
+ * @returns	{Object}				Original style object with backgroundImage updated
+ */
 const mergeStyle = function (style, src) {
 	let updated = Object.assign({}, style);
 	let source = ri.selectSrc(src);
@@ -22,6 +30,19 @@ const mergeStyle = function (style, src) {
 
 	updated.backgroundImage = source;
 	return updated;
+};
+
+/**
+ * Tests if a character is a single printable character
+ *
+ * @param	{String}	c	Character to test
+ *
+ * @returns	{Boolean}		`true` if c is a single character
+ */
+const isSingleCharacter = function (c) {
+	return	c.length === 1 ||
+			// check for 4-byte Unicode character
+			c.length === 2 && c.charCodeAt() !== c.codePointAt();
 };
 
 /**
@@ -97,8 +118,8 @@ const IconBase = kind({
 					} else if (iconProp.indexOf('0x') === 0) {
 						// Converts a hex reference in string form
 						icon = String.fromCodePoint(iconProp);
-					} else if (iconProp.length <= 2) {
-						// allowing 2 characters for 4-byte unicode characters specified explicitly
+					} else if (isSingleCharacter(iconProp)) {
+						// A single character is assumed to be an explicit icon string
 						icon = iconProp;
 					} else {
 						// for a path or URI, add it to style
