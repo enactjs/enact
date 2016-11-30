@@ -17,16 +17,21 @@ import Viewport from './Viewport';
 const calcMax = R.memoize((viewportWidth, width) => Math.floor(viewportWidth / 2 / scale(width)));
 
 /**
-* An instance of Panels in which the Panel uses the right half of the viewable screen with
-* breadcrumbs to the left for any panels prior to the active panel.
-*
-* @class AlwaysViewingPanels
-* @ui
-* @public
-*/
+ * An instance of Panels in which the Panel uses the right half of the viewable screen with
+ * breadcrumbs to the left for any panels prior to the active panel.
+ *
+ * @class AlwaysViewingPanels
+ * @memberof moonstone/Panels
+ * @ui
+ * @public
+ */
 const AlwaysViewingPanels = BreadcrumbDecorator({
 	className: 'panels alwaysViewing enact-fit',
-	max: () => calcMax(window.innerWidth, breadcrumbWidth),
+	max: () => {
+		if (typeof window === 'object') {
+			return calcMax(window.innerWidth, breadcrumbWidth);
+		}
+	},
 	props: {
 		arranger: AlwaysViewingArranger
 	}

@@ -1,6 +1,6 @@
 {
   "name": "@enact/ui",
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0-alpha.3",
   "description": "A collection of simplified unstyled cross-platform UI components for Enact",
   "main": "index.js",
   "scripts": {
@@ -25,13 +25,13 @@
     }
   },
   "eslintConfig": {
-    "extends": "enact-internal"
+    "extends": "enact/strict"
   },
   "dependencies": {
-    "@enact/core": "^1.0.0-alpha.2",
+    "@enact/core": "^1.0.0-alpha.3",
     "ramda": "~0.22.1",
-    "react": "~15.3.2",
-    "react-dom": "~15.3.1",
+    "react": "~15.4.0",
+    "react-dom": "~15.4.0",
     "recompose": "~0.20.2",
     "warning": "~3.0.0",
     "invariant": "~2.2.1"

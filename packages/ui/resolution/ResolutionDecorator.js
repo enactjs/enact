@@ -1,7 +1,7 @@
-/**
- * Exports the {@link module:@enact/ui/resolution~ResolutionDecorator} Higher-order Component (HOC).
+/*
+ * Exports the {@link ui/resolution.ResolutionDecorator} Higher-order Component (HOC).
  *
- * @module @enact/ui/resolution/ResolutionDecorator
+ * not jsdoc module on purpose
  */
 
 import React from 'react';
@@ -9,6 +9,12 @@ import hoc from '@enact/core/hoc';
 
 import {init, defineScreenTypes, getScreenTypeObject, getResolutionClasses} from './resolution';
 
+/**
+ * Default config for {@link ui/resolution.ResolutionDecorator}
+ *
+ * @memberof ui/resolution
+ * @hocconfig
+ */
 const defaultConfig = {
 	/**
 	 * When `true`, an event listener will be attached to the window to listen for resize events.
@@ -16,6 +22,7 @@ const defaultConfig = {
 	 * @type {Boolean}
 	 * @default true
 	 * @public
+	 * @memberof ui/resolution.defaultConfig
 	 */
 	dynamic: true,
 
@@ -26,6 +33,7 @@ const defaultConfig = {
 	 * @type {Object[]}
 	 * @default null
 	 * @public
+	 * @memberof ui/resolution.defaultConfig
 	 */
 	screenTypes: null
 };
@@ -46,6 +54,9 @@ const defaultConfig = {
  *		{name: 'hd', pxPerRem: 16, width: 1280, height: 720, aspectRatioName: 'hdtv', base: true}
  *	]}, App);
  *
+ * @class ResolutionDecorator
+ * @memberof ui/resolution
+ * @hoc
  * @public
  */
 const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
@@ -56,7 +67,7 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'ResolutionDecorator'
 
-		static propTypes = {
+		static propTypes = /** @lends ui/resolution.ResolutionDecorator.prototype */ {
 			className: React.PropTypes.string
 		}
 

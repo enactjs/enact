@@ -1,7 +1,7 @@
 /**
- * Exports the {@link module:@enact/moonstone/Image~Image} component.
+ * Exports the {@link moonstone/Image.Image} component.
  *
- * @module @enact/moonstone/Image
+ * @module moonstone/Image
  */
 
 import kind from '@enact/core/kind';
@@ -11,7 +11,7 @@ import {selectSrc} from '@enact/ui/resolution';
 import css from './Image.less';
 
 /**
- * {@link module:@enact/moonstone/Image~Image} is a component designed to display images
+ * {@link moonstone/Image.Image} is a component designed to display images
  * conditionally based on screen size. This component has a default size but should have a size
  * specified for its particular usage using a CSS `className` or inline `style`.
  *
@@ -30,6 +30,7 @@ import css from './Image.less';
  * > If you need a naturally sized image, you can use the native `<img>` element instead.
  *
  * @class Image
+ * @memberof moonstone/Image
  * @ui
  * @public
  */
@@ -37,7 +38,7 @@ import css from './Image.less';
 const ImageBase = kind({
 	name: 'Image',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/Image.Image.prototype */ {
 		/**
 		 * String value or Object of values used to determine which image will appear on
 		 * a specific screenSize.
@@ -47,6 +48,16 @@ const ImageBase = kind({
 		 * @public
 		 */
 		src: PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.object]).isRequired,
+
+		/**
+		 * A placeholder image to be displayed before the image is loaded.
+		 * For performance purposes, it should be pre-loaded or be a data url.
+		 *
+		 * @type {String}
+		 * @default ''
+		 * @public
+		 */
+		placeholder: PropTypes.string,
 
 		/**
 		 * Used to set the `background-size` of an Image.
@@ -63,6 +74,7 @@ const ImageBase = kind({
 	},
 
 	defaultProps: {
+		placeholder: '',
 		sizing: 'fill'
 	},
 
@@ -72,18 +84,22 @@ const ImageBase = kind({
 	},
 
 	computed: {
+		bgImage: ({src, placeholder}) => {
+			const imageSrc = selectSrc(src);
+			return placeholder ? `url("${imageSrc}"), url("${placeholder}")` : `url("${imageSrc}")`;
+		},
 		className: ({className, sizing, styler}) => {
 			return sizing !== 'none' ? styler.append(sizing) : className;
-		},
-		imageSrc: ({src}) => selectSrc(src)
+		}
 	},
 
-	render: ({imageSrc, style, ...rest}) => {
+	render: ({bgImage, style, ...rest}) => {
+		delete rest.placeholder;
 		delete rest.src;
 		delete rest.sizing;
 
 		return (
-			<div {...rest} style={{...style, backgroundImage: `url(${imageSrc})`}} />
+			<div {...rest} style={{...style, backgroundImage: bgImage}} />
 		);
 	}
 });

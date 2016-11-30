@@ -62,6 +62,15 @@ const InputBase = kind({
 		iconStart: PropTypes.string,
 
 		/**
+		 * The handler to run when blurred.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onBlur: PropTypes.func,
+
+		/**
 		 * The handler to run when the input value is changed.
 		 *
 		 * @type {Function}
@@ -71,6 +80,42 @@ const InputBase = kind({
 		onChange: PropTypes.func,
 
 		/**
+		 * The handler to run when clicked.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onClick: PropTypes.func,
+
+		/**
+		 * The handler to run when focused.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onFocus: PropTypes.func,
+
+		/**
+		 * The handler to run when a key is pressed down.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onKeyDown: PropTypes.func,
+
+		/**
+		 * The handler to run when a mouse key is pressed down.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onMouseDown: PropTypes.func,
+
+		/**
 		 * The placeholder text to display.
 		 *
 		 * @type {String}
@@ -78,6 +123,15 @@ const InputBase = kind({
 		 * @public
 		 */
 		placeholder: PropTypes.string,
+
+		/**
+		 * When `true`, spotlight navigation is prevented for the input.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		spotlightDisabled: PropTypes.bool,
 
 		/**
 		 * The type of input. Accepted values correspond to the standard HTML5 input types.

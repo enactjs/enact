@@ -1,5 +1,3 @@
-/* eslint-disable react/prop-types */
-
 import React from 'react';
 import {shallow, mount} from 'enzyme';
 import {Router, Route} from '../Router';

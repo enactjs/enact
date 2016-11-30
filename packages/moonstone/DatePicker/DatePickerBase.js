@@ -1,25 +1,34 @@
+/**
+ * Exports the {@link moonstone/DatePicker/DatePickerBase.DatePickerBase} component.
+ *
+ * @module moonstone/DatePicker/DatePickerBase
+ * @private
+ */
+
 import {$L} from '@enact/i18n';
 import kind from '@enact/core/kind';
 import React from 'react';
 
+import {DateComponentRangePicker} from '../internal/DateComponentPicker';
 import {ExpandableItemBase} from '../ExpandableItem';
 
 import css from './DatePicker.less';
-import DateComponentPicker from './DateComponentPicker';
+import {dateComponentPickers} from '../internal/DateComponentPicker/DateComponentPicker.less';
 
 /**
-* {@link module:@enact/moonstone/DatePicker~DatePickerBase} is the stateless functional date picker
-* component. Should not be used directly but may be composed within another component as it is
-* within {@link module:@enact/moonstone/DatePicker~DatePicker}.
-*
-* @class DatePickerBase
-* @ui
-* @private
-*/
+ * {@link moonstone/DatePicker/DatePickerBase.DatePickerBase} is the stateless functional date picker
+ * component. Should not be used directly but may be composed within another component as it is
+ * within {@link moonstone/DatePicker.DatePicker}.
+ *
+ * @class DatePickerBase
+ * @memberof moonstone/DatePicker/DatePickerBase
+ * @ui
+ * @private
+ */
 const DatePickerBase = kind({
-	name: 'DatePicker',
+	name: 'DatePickerBase',
 
-	propTyptes: {
+	propTypes:  /** @lends moonstone/DatePicker/DatePickerBase.DatePickerBase.prototype */ {
 		/**
 		 * The `day` component of the Date
 		 *
@@ -76,30 +85,6 @@ const DatePickerBase = kind({
 		year: React.PropTypes.number.isRequired,
 
 		/**
-		 * Handler for changes in the `date` component of the Date
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onChangeDate: React.PropTypes.func,
-
-		/**
-		 * Handler for changes in the `month` component of the Date
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onChangeMonth: React.PropTypes.func,
-
-		/**
-		 * Handler for changes in the `year` component of the Date
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onChangeYear: React.PropTypes.func,
-
-		/**
 		 * The maximum selectable `year` value
 		 *
 		 * @type {Number}
@@ -123,7 +108,31 @@ const DatePickerBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		noLabels: React.PropTypes.bool
+		noLabels: React.PropTypes.bool,
+
+		/**
+		 * Handler for changes in the `date` component of the Date
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onChangeDate: React.PropTypes.func,
+
+		/**
+		 * Handler for changes in the `month` component of the Date
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onChangeMonth: React.PropTypes.func,
+
+		/**
+		 * Handler for changes in the `year` component of the Date
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onChangeYear: React.PropTypes.func
 	},
 
 	defaultProps: {
@@ -138,53 +147,52 @@ const DatePickerBase = kind({
 
 	render: ({day, maxDays, maxMonths, maxYear, minYear, month, noLabels, onChangeDate, onChangeMonth, onChangeYear, order, year, ...rest}) => {
 
-		delete rest.dateFormat;
-		delete rest.onChange;
-		delete rest.value;
-
 		return (
 			<ExpandableItemBase {...rest} showLabel="always">
-				{order.map(picker => {
-					switch (picker) {
-						case 'd':
-							return (
-								<DateComponentPicker
-									key="day-picker"
-									label={noLabels || $L('day')}
-									min={1}
-									max={maxDays}
-									value={day}
-									onChange={onChangeDate}
-									wrap
-								/>
-							);
-						case 'm':
-							return (
-								<DateComponentPicker
-									key="month-picker"
-									label={noLabels || $L('month')}
-									min={1}
-									max={maxMonths}
-									value={month}
-									onChange={onChangeMonth}
-									wrap
-								/>
-							);
-						case 'y':
-							return (
-								<DateComponentPicker
-									key="year-picker"
-									label={noLabels || $L('year')}
-									min={minYear}
-									max={maxYear}
-									value={year}
-									onChange={onChangeYear}
-								/>
-							);
-					}
+				<div className={dateComponentPickers}>
+					{order.map(picker => {
+						switch (picker) {
+							case 'd':
+								return (
+									<DateComponentRangePicker
+										key="day-picker"
+										label={noLabels ? null : $L('day')}
+										min={1}
+										max={maxDays}
+										value={day}
+										onChange={onChangeDate}
+										wrap
+									/>
+								);
+							case 'm':
+								return (
+									<DateComponentRangePicker
+										key="month-picker"
+										label={noLabels ? null : $L('month')}
+										min={1}
+										max={maxMonths}
+										value={month}
+										onChange={onChangeMonth}
+										wrap
+									/>
+								);
+							case 'y':
+								return (
+									<DateComponentRangePicker
+										className={css.year}
+										key="year-picker"
+										label={noLabels ? null : $L('year')}
+										min={minYear}
+										max={maxYear}
+										value={year}
+										onChange={onChangeYear}
+									/>
+								);
+						}
 
-					return null;
-				})}
+						return null;
+					})}
+				</div>
 			</ExpandableItemBase>
 		);
 	}

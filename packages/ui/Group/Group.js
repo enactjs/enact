@@ -1,9 +1,8 @@
 /**
- * Exports the {@link module:@enact/ui/Group~Group} and {@link module:@enact/ui/Group~GroupBase}
- * components.  The default export is {@link module:@enact/ui/Group~Group}. `Group` is stateless
- * and is the same as `GroupBase`.
+ * Exports the {@link ui/Group.Group} and {@link ui/Group.GroupItem}
+ * components.  The default export is {@link ui/Group.Group}.
  *
- * @module @enact/ui/Group
+ * @module ui/Group
  */
 
 import R from 'ramda';
@@ -15,17 +14,18 @@ import Repeater from '../Repeater';
 import {GroupItem, pickGroupItemProps} from './GroupItem';
 
 /**
- * {@link module:@enact/ui/Group~GroupBase} is a stateless component that supports single-select of
+ * {@link ui/Group.Group} is a stateless component that supports single-select of
  * its child items via configurable properties and events.
  *
- * @class GroupBase
+ * @class Group
+ * @memberof ui/Group
  * @ui
  * @public
  */
 const GroupBase = kind({
 	name: 'Group',
 
-	propTypes: {
+	propTypes: /** @lends ui/Group.Group.prototype */ {
 		/**
 		 * Component type to repeat. This can be a React component or a string describing a DOM
 		 * node (e.g. `'div'`)

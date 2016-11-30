@@ -1,9 +1,9 @@
 /**
- * Exports the {@link module:@enact/ui/ExpandableList~ExpandableList} and
- * {@link module:@enact/ui/ExpandableList~ExpandableListBase} components. The default export is
- * {@link module:@enact/ui/ExpandableList~ExpandableList}.
+ * Exports the {@link moonstone/ExpandableList.ExpandableList} and
+ * {@link moonstone/ExpandableList.ExpandableListBase} components. The default export is
+ * {@link moonstone/ExpandableList.ExpandableList}.
  *
- * @module @enact/ui/ExpandableList
+ * @module moonstone/ExpandableList
  */
 
 import Group from '@enact/ui/Group';
@@ -15,18 +15,19 @@ import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 import RadioItem from '../RadioItem';
 
 /**
- * {@link module:@enact/moonstone/ExpandableList~ExpandableList} is a stateless component that
- * renders a {@link module:@enact/moonstone/LabeledItem~LabeledItem} that can be expanded to show
+ * {@link moonstone/ExpandableList.ExpandableListBase} is a stateless component that
+ * renders a {@link moonstone/LabeledItem.LabeledItem} that can be expanded to show
  * a selectable list of items.
  *
  * @class ExpandableListBase
+ * @memberof moonstone/ExpandableList
  * @ui
- * @private
+ * @public
  */
 const ExpandableListBase = kind({
 	name: 'ExpandableList',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/ExpandableList.ExpandableListBase.prototype */ {
 		/**
 		 * The items to be displayed in the list
 		 *
@@ -188,7 +189,7 @@ const ExpandableListBase = kind({
 					onSelect={onSelect}
 					select={select}
 					selected={selected}
-					selectedProp="checked"
+					selectedProp="selected"
 				>
 					{children}
 				</Group>
@@ -198,12 +199,14 @@ const ExpandableListBase = kind({
 });
 
 /**
- * {@link module:@enact/moonstone/ExpandableItem~ExpandableItem} renders a
- * {@link module:@enact/moonstone/LabeledItem~LabeledItem} that can be expanded to show a selectable
+ * {@link moonstone/ExpandableList.ExpandableList} renders a
+ * {@link moonstone/LabeledItem.LabeledItem} that can be expanded to show a selectable
  * list of items.
  *
  * @class ExpandableList
+ * @memberof moonstone/ExpandableList
  * @ui
+ * @mixes moonstone/ExpandableItem.Expandable
  * @public
  */
 const ExpandableList = Expandable(ExpandableListBase);

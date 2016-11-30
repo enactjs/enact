@@ -1,22 +1,26 @@
 /**
- * Exports the {@link module:@enact/moonstone/Marquee~Marquee},
- * {@link module:@enact/moonstone/Marquee~MarqueeBase},
- * {@link module:@enact/moonstone/Marquee~MarqueeDecorator}, and
- * {@link module:@enact/moonstone/Marquee~MarqueeText} components.
+ * Exports the {@link moonstone/Marquee.Marquee},
+ * {@link moonstone/Marquee.MarqueeBase},
+ * {@link moonstone/Marquee.MarqueeController},
+ * {@link moonstone/Marquee.MarqueeDecorator}, and
+ * {@link moonstone/Marquee.MarqueeText} components.
  *
- * The default export is {@link module:@enact/moonstone/Marquee~Marquee}.
+ * The default export is {@link moonstone/Marquee.Marquee}.
  *
- * @module @enact/moonstone/Marquee
+ * @module moonstone/Marquee
  */
 
 import Marquee from './Marquee';
+import {MarqueeController, contextTypes} from './MarqueeController';
 import MarqueeDecorator from './MarqueeDecorator';
 import MarqueeText from './MarqueeText';
 
 export default Marquee;
 export {
+	contextTypes as controlContextTypes,
 	Marquee,
 	Marquee as MarqueeBase,
+	MarqueeController,
 	MarqueeDecorator,
 	MarqueeText
 };

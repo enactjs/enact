@@ -61,7 +61,7 @@ const deviceinfo = (callback) => {
 						const keys = ['versionMajor', 'versionMinor', 'versionDot'];
 						for (let i = 0; i < keys.length; i++) {
 							try {
-								device[keys[i]] = parseInt(segments[i], 10);
+								device[keys[i]] = parseInt(segments[i]);
 							} catch (e) {
 								device[keys[i]] = segments[i];
 							}

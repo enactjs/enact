@@ -1,7 +1,7 @@
 // Moonstone Environment
 
 import kind from '@enact/core/kind';
-import React from 'react';
+import React, {PropTypes} from 'react';
 import MoonstoneDecorator from '@enact/moonstone/MoonstoneDecorator';
 import {ActivityPanels as Panels, Panel, Header} from '@enact/moonstone/Panels';
 import {select} from '@kadira/storybook-addon-knobs';
@@ -10,6 +10,11 @@ import css from './MoonstoneEnvironment.less';
 
 const PanelsBase = kind({
 	name: 'MoonstoneEnvironment',
+
+	propTypes: {
+		description: PropTypes.string,
+		title: PropTypes.string
+	},
 
 	styles: {
 		css,
@@ -58,7 +63,7 @@ const locales = {
 	'ur-PK': 'ur-PK - Urdu, RTL and custom Urdu font',
 	'zh-Hant-HK': 'zh-Hant-HK - Traditional Chinese, custom Hant font',
 	'ja-JP': 'ja-JP - Japanese, custom Japanese font',
-	'en-JP': 'en-JP - English, custom Japanese font',
+	'en-JP': 'en-JP - English, custom Japanese font'
 };
 
 // NOTE: Knobs cannot set locale in fullscreen mode. This allows the locale to
@@ -85,7 +90,7 @@ const StorybookDecorator = (story, config) => {
 	const sample = story();
 	return (
 		<Moonstone
-			title={config.kind + ' ' + config.story}
+			title={`${config.kind} ${config.story}`.trim()}
 			description={config.description}
 			locale={select('locale', locales, getLocaleFromURL())}
 		>
@@ -98,7 +103,7 @@ const FullscreenStorybookDecorator = (story, config) => {
 	const sample = story();
 	return (
 		<MoonstoneFullscreen
-			title={config.kind + ' ' + config.story}
+			title={`${config.kind} ${config.story}`.trim()}
 			description={config.description}
 			locale={select('locale', locales, getLocaleFromURL())}
 		>

@@ -1,7 +1,8 @@
 import Button, {ButtonBase} from '@enact/moonstone/Button';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
+import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
+import css from './Button.less';
 
 Button.propTypes = Object.assign({}, ButtonBase.propTypes, Button.propTypes);
 Button.defaultProps = Object.assign({}, ButtonBase.defaultProps, Button.defaultProps);
@@ -17,7 +18,7 @@ const prop = {
 storiesOf('Button')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'Long Text',
+		'with long text',
 		() => (
 			<Button
 				onClick={action('onClick')}
@@ -33,7 +34,7 @@ storiesOf('Button')
 		)
 	)
 	.addWithInfo(
-		'Tall Characters',
+		'with tall characters',
 		() => (
 			<Button
 				onClick={action('onClick')}
@@ -46,6 +47,52 @@ storiesOf('Button')
 			>
 				{select('value', prop.tallText, 'ิ้  ไั  ஒ  து')}
 			</Button>
+		)
+	)
+	.addWithInfo(
+		'to validate minWidth with a single character',
+		() => (
+			<Button
+				onClick={action('onClick')}
+				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
+				disabled={boolean('disabled')}
+				minWidth={boolean('minWidth', false)}
+				preserveCase={boolean('preserveCase')}
+				selected={boolean('selected')}
+				small={boolean('small')}
+			>
+				{text('value', 'A')}
+			</Button>
+		)
+	)
+	.addWithInfo(
+		'with tap area displayed',
+		() => (
+			<div>
+				<Button
+					className={css.tapArea}
+					onClick={action('onClick')}
+					backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
+					disabled={boolean('disabled')}
+					minWidth={boolean('minWidth')}
+					preserveCase={boolean('preserveCase')}
+					selected={boolean('selected')}
+				>
+					Normal Button
+				</Button>
+				<Button
+					className={css.tapArea}
+					onClick={action('onClick')}
+					backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
+					disabled={boolean('disabled')}
+					minWidth={boolean('minWidth')}
+					preserveCase={boolean('preserveCase')}
+					selected={boolean('selected')}
+					small
+				>
+					Small Button
+				</Button>
+			</div>
 		)
 	);
 

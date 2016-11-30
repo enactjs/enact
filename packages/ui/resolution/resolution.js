@@ -1,3 +1,9 @@
+/**
+ * Exports a number of useful methods for resolution independence
+ *
+ * @module ui/resolution
+ */
+
 let baseScreen,
 	orientation,
 	riRatio,
@@ -16,6 +22,7 @@ let baseScreen,
 /**
  * Object that stores all of the pixel conversion factors to each keyed unit.
  *
+ * @memberof ui/resolution
  * @public
  */
 const unitToPixelFactors = {
@@ -29,6 +36,7 @@ const unitToPixelFactors = {
 /**
  * Fetch the screenType object
  *
+ * @memberof ui/resolution
  * @param  {String} type The key string for the screen type object.
  *
  * @returns {Object}     screenTypeObject
@@ -68,6 +76,7 @@ function getScreenTypeObject (type) {
  * ]);
  * ```
  *
+ * @memberof ui/resolution
  * @param {Array} types - An array of objects containing screen configuration data, as in the
  * preceding example.
  * @returns {undefined}
@@ -86,6 +95,7 @@ function defineScreenTypes (types) {
  * match is defined as the screen type that is the closest to the screen resolution without
  * going over. ("The Price is Right" style.)
  *
+ * @memberof ui/resolution
  * @param {Object} [rez] - Optional measurement scheme. Must include `height` and `width` properties.
  * @returns {String} Screen type (e.g., `'fhd'`, `'uhd'`, etc.)
  * @public
@@ -136,6 +146,7 @@ function getScreenType (rez) {
  *
  * This has no effect if the screen is in landscape, or if orientationHandling is unset.
  *
+ * @memberof ui/resolution
  * @param {String} type - Screen type to base size the calculation on. If no
  *     screen type is provided, the current screen type will be used.
  * @returns {String} The calculated pixel size (with unit suffix. Ex: "24px").
@@ -154,6 +165,7 @@ function calculateFontSize (type) {
 }
 
 /**
+ * @memberof ui/resolution
  * @param {String} size A valid CSS measurement to be applied as the base document font size.
  * @private
  * @returns {null} n/a
@@ -167,6 +179,7 @@ function updateBaseFontSize (size) {
 /**
  * Returns the CSS classes for the given `type`
  *
+ * @memberof ui/resolution
  * @param {String} type Screen type
  * @returns {String} classes CSS class names
  * @public
@@ -189,6 +202,7 @@ function getResolutionClasses (type = screenType) {
 /**
  * Returns the ratio of pixels per rem for the given `type` to the pixels per rem for the base type
  *
+ * @memberof ui/resolution
  * @param  {String} [type] Screen type
  *
  * @returns {Number}      ratio
@@ -208,6 +222,7 @@ function getRiRatio (type = screenType) {
 /**
  * Returns the pixels per rem for the given `type`
  *
+ * @memberof ui/resolution
  * @param  {String} [type] Screen type
  *
  * @returns {Number}      pixels per rem
@@ -240,6 +255,7 @@ function getAspectRatio (type) {
  * Returns the name of the aspect ratio for a specified screen type, or for the default
  * screen type if none is provided.
  *
+ * @memberof ui/resolution
  * @param {String} type - Screen type whose aspect ratio name will be returned. If no
  * screen type is provided, the current screen type will be used.
  * @returns {String} The name of the screen type's aspect ratio
@@ -254,6 +270,7 @@ function getAspectRatioName (type) {
  * Takes a provided pixel value and performs a scaling operation based on the current
  * screen type.
  *
+ * @memberof ui/resolution
  * @param {Number} px - The quantity of standard-resolution pixels to scale to the
  * current screen resolution.
  * @returns {Number} The scaled value based on the current screen scaling factor
@@ -266,7 +283,7 @@ function scale (px) {
 /**
  * Convert to various unit formats. Useful for converting pixels to a resolution-independent
  * measurement method, like "rem". Other units are available if defined in the
- * {@link module:enyo/dom#unitToPixelFactors} object.
+ * {@link ui/resolution.unitToPixelFactors} object.
  *
  * ```javascript
  * var
@@ -280,6 +297,7 @@ function scale (px) {
  * // '22.5rem' == frameWithMarginRems
  * ```
  *
+ * @memberof ui/resolution
  * @param {(String|Number)} pixels - The the pixels or math to convert to the unit.
  *	("px" suffix in String format is permitted. ex: `'20px'`)
  * @param {(String)} toUnit - The name of the unit to convert to.
@@ -288,16 +306,16 @@ function scale (px) {
  */
 function unit (pixels, toUnit) {
 	if (!toUnit || !unitToPixelFactors[toUnit]) return;
-	if (typeof pixels === 'string' && pixels.substr(-2) === 'px') pixels = parseInt(pixels.substr(0, pixels.length - 2), 10);
+	if (typeof pixels === 'string' && pixels.substr(-2) === 'px') pixels = parseInt(pixels.substr(0, pixels.length - 2));
 	if (typeof pixels !== 'number') return;
 
 	return (pixels / unitToPixelFactors[toUnit]) + '' + toUnit;
 }
 
 /**
- * The default configurable [options]{@link module:enyo/resolution.selectSrc#options}.
+ * The default configurable [options]{@link ui/resolution.selectSrc#options}.
  *
- * @typedef {Object} module:enyo/resolution.selectSrc
+ * @typedef {Object} ui/resolution.selectSrc
  * @property {String} hd - HD / 720p Resolution image asset source URI/URL
  * @property {String} fhd - FHD / 1080p Resolution image asset source URI/URL
  * @property {String} uhd - UHD / 4K Resolution image asset source URI/URL
@@ -328,7 +346,8 @@ function unit (pixels, toUnit) {
  * {kind: Image, src: http://lorempixel.com/128/128/city/1/', alt: 'Large'},
  * ```
  *
- * @param {(String|module:enyo/resolution~selectSrcSrc)} src - A string containing
+ * @memberof ui/resolution
+ * @param {(String|ui/resolution.selectSrcSrc)} src - A string containing
  * a single image source or a key/value hash/object containing keys representing screen
  * types (`'hd'`, `'fhd'`, `'uhd'`, etc.) and values containing the asset source for
  * that target screen resolution.
@@ -354,6 +373,7 @@ function selectSrc (src) {
  * This will need to be re-run any time the screen size changes, so all the values can be
  * re-cached.
  *
+ * @memberof ui/resolution
  * @returns {undefined} [description]
  * @public
  */
@@ -365,6 +385,11 @@ function init () {
 	updateBaseFontSize(calculateFontSize());
 }
 
+/**
+ * The current configuration
+ *
+ * @memberof ui/resolution
+ */
 config = Object.assign({}, configDefaults);
 
 export {

@@ -1,7 +1,7 @@
 /**
- * Exports the {@link module:@enact/moonstone/SelectableItem~SelectableItem}
+ * Exports the {@link moonstone/SelectableItem.SelectableItem}
  *
- * @module @enact/moonstone/SelectableItem
+ * @module moonstone/SelectableItem
  */
 
 import kind from '@enact/core/kind';
@@ -12,18 +12,19 @@ import ToggleItem from '../ToggleItem';
 import css from './SelectableItem.less';
 
 /**
- * {@link module:@enact/moonstone/SelectableItem~SelectableItem} is component
- * that is an Item that is Toggleable. It has two checked states `true` &
- * `false`. It uses a dot to represent its checked state.
+ * {@link moonstone/SelectableItem.SelectableItem} is component
+ * that is an Item that is Toggleable. It has two selected states `true` &
+ * `false`. It uses a dot to represent its selected state.
  *
  * @class SelectableItem
+ * @memberof moonstone/SelectableItem
  * @ui
  * @public
  */
 const SelectableItemBase = kind({
 	name: 'SelectableItem',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/SelectableItem.SelectableItem.prototype */ {
 		/**
 		 * The string to be displayed as the main content of the selectable item.
 		 *
@@ -31,15 +32,6 @@ const SelectableItemBase = kind({
 		 * @public
 		 */
 		children: PropTypes.string.isRequired,
-
-		/**
-		 * When `true`, a "checked" visual state is applied to the selectable item.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		checked: PropTypes.bool,
 
 		/**
 		 * When true, a disabled visual state is applied to the selectable item.
@@ -64,11 +56,20 @@ const SelectableItemBase = kind({
 		 *
 		 * @type {Function}
 		 * @param {Object} event
-		 * @param {String} event.checked - Checked value of item.
+		 * @param {String} event.selected - Selected value of item.
 		 * @param {*} event.value - Value passed from `value` prop.
 		 * @public
 		 */
 		onToggle: PropTypes.func,
+
+		/**
+		 * When `true`, a dot, indicating it is selected, is shown on the selectable item.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		selected: PropTypes.bool,
 
 		/**
 		 * The value that will be sent to the `onToggle` handler.
@@ -81,7 +82,7 @@ const SelectableItemBase = kind({
 	},
 
 	defaultProps: {
-		checked: false
+		selected: false
 	},
 
 	styles: {
@@ -90,9 +91,9 @@ const SelectableItemBase = kind({
 	},
 
 	computed: {
-		iconClasses: ({checked, styler}) => styler.join(
+		iconClasses: ({selected, styler}) => styler.join(
 			css.dot,
-			{checked}
+			{selected}
 		)
 	},
 

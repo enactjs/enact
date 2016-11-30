@@ -4,30 +4,30 @@ import RadioItem from '../RadioItem';
 import css from '../RadioItem.less';
 
 describe('RadioItem Specs', () => {
-	it('should render correct icon when not checked', function () {
+	it('should render correct icon when not selected', function () {
 		const radioItem = mount(
 			<RadioItem>
 				Hello RadioItem
 			</RadioItem>
 		);
 
-		const expected = css.checked;
-		const actual = radioItem.find('Icon').prop('className');
+		const expected = 0;
+		const actual = radioItem.find(`.${css.selected}`).length;
 
-		expect(actual).to.not.contain(expected);
+		expect(actual).to.equal(expected);
 	});
 
-	it('should render correct icon when checked', function () {
+	it('should render correct icon when selected', function () {
 		const radioItem = mount(
-			<RadioItem checked>
+			<RadioItem selected>
 				Hello RadioItem
 			</RadioItem>
 		);
 
-		const expected = css.checked;
-		const actual = radioItem.find('Icon').prop('className');
+		const expected = 1;
+		const actual = radioItem.find(`.${css.selected}`).length;
 
-		expect(actual).to.contain(expected);
+		expect(actual).to.equal(expected);
 	});
 
 });

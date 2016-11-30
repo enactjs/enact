@@ -1,7 +1,7 @@
 /**
- * Exports the {@link module:@enact/moonstone/LabeledItem~LabeledItem} component.
+ * Exports the {@link moonstone/LabeledItem.LabeledItem} component.
  *
- * @module @enact/moonstone/LabeledItem
+ * @module moonstone/LabeledItem
  */
 
 import kind from '@enact/core/kind';
@@ -13,17 +13,19 @@ import {MarqueeDecorator} from '../Marquee';
 import css from './LabeledItem.less';
 
 /**
- * {@link module:@enact/moonstone/LabeledItem~LabeledItem} is a focusable Moonstone-styled component
- * that combines marquee-enabled text content with a text label.
+ * {@link moonstone/LabeledItem.LabeledItemBase} is a focusable Moonstone-styled component
+ * that combines text content with a text label. Most developers will want to use the
+ * Marquee-enabled version: {@link moonstone/LabeledItem.LabeledItem}
  *
- * @class LabeledItem
+ * @class LabeledItemBase
+ * @memberof moonstone/LabeledItem
  * @ui
  * @public
  */
 const LabeledItemBase = kind({
 	name: 'LabeledItem',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/LabeledItem.LabeledItemBase.prototype */ {
 		/**
 		 * The node to be displayed as the main content of the item.
 		 *
@@ -56,6 +58,15 @@ const LabeledItemBase = kind({
 	)
 });
 
+/**
+ * {@link moonstone/LabeledItem.LabeledItem} is a focusable Moonstone-styled component
+ * that combines marquee-enabled text content with a text label.
+ *
+ * @class LabeledItem
+ * @memberof moonstone/LabeledItem
+ * @ui
+ * @public
+ */
 const LabeledItem = MarqueeDecorator(
 	{className: css.text},
 	LabeledItemBase

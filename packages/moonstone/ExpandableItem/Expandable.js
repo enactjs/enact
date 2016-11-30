@@ -1,3 +1,9 @@
+/**
+ * Exports the {@link moonstone/ExpandableItem/Expandable.Expandable} Higher-Order Component (HOC)
+ *
+ * @module moonstone/ExpandableItem/Expandable
+ */
+
 import Cancelable from '@enact/ui/Cancelable';
 import R from 'ramda';
 import Toggleable from '@enact/ui/Toggleable';
@@ -6,12 +12,13 @@ import Toggleable from '@enact/ui/Toggleable';
 // ready
 
 /**
- * Called by {@link module:@enact/ui/Cancelable~Cancelable} when a cancel event occurs and calls the
+ * Called by {@link ui/Cancelable.Cancelable} when a cancel event occurs and calls the
  * `onClose` handler provided by the wrapping Toggleable HOC.
  *
  * @param  {Object} props Current props object
  *
  * @returns {undefined}
+ * @private
  */
 const handleCancel = function (props) {
 	if (props.open) {
@@ -23,16 +30,17 @@ const handleCancel = function (props) {
 };
 
 /**
- * {@link module:@enact/moonstone/ExpandableItem~Expandable} manages the open state of a component
- * and adds {@link module:@enact/ui/Cancelable~Cancelable} support to call the `onClose` handler on
+ * {@link moonstone/ExpandableItem.Expandable} manages the open state of a component
+ * and adds {@link ui/Cancelable.Cancelable} support to call the `onClose` handler on
  * cancel.
  *
  * @class Expandable
- * @ui
+ * @memberof moonstone/ExpandableItem/Expandable
+ * @hoc
  * @private
  */
 const Expandable = R.compose(
-	Toggleable({activate: 'onOpen', deactivate: 'onClose', mutable: true, prop: 'open', toggle: null}),
+	Toggleable({toggle: null, activate: 'onOpen', deactivate: 'onClose', mutable: true, prop: 'open'}),
 	Cancelable({component: 'span', onCancel: handleCancel})
 );
 

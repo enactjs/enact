@@ -5,7 +5,7 @@ import css from '../CheckboxItem.less';
 
 describe('CheckboxItem Specs', () => {
 
-	it('should have `translucent` icon class when not checked', function () {
+	it('should have `translucent` icon class when not selected', function () {
 		const checkboxItem = mount(
 			<CheckboxItem>
 				Hello CheckboxItem
@@ -18,14 +18,14 @@ describe('CheckboxItem Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should not have `translucent` icon class when checked', function () {
+	it('should not have `translucent` icon class when selected', function () {
 		const checkboxItem = mount(
-			<CheckboxItem checked>
+			<CheckboxItem selected>
 				Hello CheckboxItem
 			</CheckboxItem>
 		);
 
-		const expected = null;
+		const expected = '';
 		const actual = checkboxItem.find('ToggleItem').prop('iconClasses');
 
 		expect(actual).to.equal(expected);

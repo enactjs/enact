@@ -19,8 +19,8 @@ if (typeof window === 'object' && window.PalmSystem) {
 		try {
 			let legacyInfo = JSON.parse(window.PalmSystem.deviceInfo || '{}');
 			if (legacyInfo.platformVersionMajor && legacyInfo.platformVersionMinor) {
-				let major = parseInt(legacyInfo.platformVersionMajor, 10);
-				let minor = parseInt(legacyInfo.platformVersionMinor, 10);
+				let major = parseInt(legacyInfo.platformVersionMajor);
+				let minor = parseInt(legacyInfo.platformVersionMinor);
 				if (major < 3 || (major === 3 && minor <= 0)) {
 					platform.legacy = true;
 				} else {

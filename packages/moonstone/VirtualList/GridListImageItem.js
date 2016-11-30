@@ -1,9 +1,9 @@
-/**
- * Exports the {@link module:@enact/moonstone/VirtualList/GridListImageItem~GridListImageItem} and
- * {@link module:@enact/moonstone/VirtualList/GridListImageItem~GridListImageItemBase} components. The default export is
- * {@link module:@enact/moonstone/VirtualList/GridListImageItem~GridListImageItem}.
+/*
+ * Exports the {@link moonstone/VirtualList/GridListImageItem.GridListImageItem} and
+ * {@link moonstone/VirtualList/GridListImageItem.GridListImageItemBase} components. The default export is
+ * {@link moonstone/VirtualList/GridListImageItem.GridListImageItem}.
  *
- * @module @enact/moonstone/VirtualList/GridListImageItem
+ * Not a jsdoc module def on purpose. Exported elsewhere.
  */
 
 import kind from '@enact/core/kind';
@@ -11,6 +11,7 @@ import React, {PropTypes} from 'react';
 import {Spottable} from '@enact/spotlight';
 
 import Icon from '../Icon';
+import {Image} from '../Image';
 import {ItemBase} from '../Item';
 
 import css from './GridListImageItem.less';
@@ -24,17 +25,18 @@ const defaultPlaceholder =
 	'lsZT0ic3Ryb2tlOiAjNDQ0OyBzdHJva2Utd2lkdGg6IDE7IiAvPjwvc3ZnPg==';
 
 /**
- * {@link module:@enact/moonstone/VirtualList/GridListImageItem~GridListImageItemBase} is a stateless GridListImageItem with Moonstone styling
- * applied.
+ * {@link moonstone/VirtualList/GridListImageItem.GridListImageItemBase} is a stateless
+ * GridListImageItem with Moonstone styling applied.
  *
  * @class GridListImageItemBase
+ * @memberof moonstone/VirtualList
  * @ui
  * @public
  */
 const GridListImageItemBase = kind({
 	name: 'GridListImageItem',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/VirtualList.GridListImageItemBase.prototype */ {
 		/**
 		 * The primary caption to be displayed with the image.
 		 *
@@ -42,16 +44,6 @@ const GridListImageItemBase = kind({
 		 * @public
 		 */
 		caption: PropTypes.string,
-
-		/**
-		 * A placeholder image to be displayed before the image is loaded.
-		 * For performance purposes, it should be pre-loaded or be a data url.
-		 *
-		 * @type {String}
-		 * @default defaultPlaceholder
-		 * @public
-		 */
-		placeholder: PropTypes.string,
 
 		/**
 		 * When `true`, applies a selected visual effect to the image, but only if `selectionOverlayShowing`
@@ -91,7 +83,6 @@ const GridListImageItemBase = kind({
 	},
 
 	defaultProps: {
-		placeholder: defaultPlaceholder,
 		selected: false,
 		selectionOverlayShowing: false
 	},
@@ -102,38 +93,34 @@ const GridListImageItemBase = kind({
 	},
 
 	computed: {
-		className: ({selected, styler}) => styler.append({selected}),
-		source: ({placeholder, source}) => (source ? source : placeholder)
+		className: ({selected, styler}) => styler.append({selected})
 	},
 
 	render: ({caption, source, subCaption, selectionOverlayShowing, ...rest}) => {
 		delete rest.selected;
-		delete rest.placeholder;
 
 		return (
-			<ItemBase {...rest}>
-				<div className={css.image}>
-					<img src={source} draggable={false} />
-					{
-						selectionOverlayShowing ? (
-							<div className={css.overlayContainer}>
-								<div className={css.overlayComponent}>
-									<Icon className={css.icon}>check</Icon>
-								</div>
+			<div {...rest}>
+				<Image className={css.image} src={source} placeholder={defaultPlaceholder} />
+				{
+					selectionOverlayShowing ? (
+						<div className={css.overlayContainer}>
+							<div className={css.overlayComponent}>
+								<Icon className={css.icon}>check</Icon>
 							</div>
-						) : null
-					}
-				</div>
-				{caption ? (<div className={css.caption}>{caption}</div>) : null}
-				{subCaption ? (<div className={css.subCaption}>{subCaption}</div>) : null}
-			</ItemBase>
+						</div>
+					) : null
+				}
+				{caption ? (<ItemBase className={css.caption}>{caption}</ItemBase>) : null}
+				{subCaption ? (<ItemBase className={css.subCaption}>{subCaption}</ItemBase>) : null}
+			</div>
 		);
 	}
 });
 
 /**
- * {@link module:@enact/moonstone/VirtualList/GridListImageItem~GridListImageItem} is a GridListImageItem with Moonstone styling, Spottable
- * applied.
+ * {@link moonstone/VirtualList/GridListImageItem.GridListImageItem} is a GridListImageItem with
+ * Moonstone styling, Spottable applied.
  *
  * Usage:
  * ```
@@ -141,8 +128,9 @@ const GridListImageItemBase = kind({
  * ```
  *
  * @class GridListImageItem
- * @mixes module:@enact/spotlight/Spottable
- * @see module:@enact/moonstone/VirtualList/GridListImageItem~GridListImageItemBase
+ * @memberof moonstone/VirtualList
+ * @mixes spotlight.Spottable
+ * @see moonstone/VirtualList.GridListImageItemBase
  * @ui
  * @public
  */

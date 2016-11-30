@@ -2,7 +2,7 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
-## [unreleased]
+## [1.0.0-alpha.3] - 2016-11-8
 
 ### Added
 
@@ -11,9 +11,17 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Changed
 
-- Spotlight containers now default to focus last selected item when gaining focus.
-- Removed `decorated` prop from `@enact/spotlight/focusable` as this relationship is managed
+- Spotlight containers to spot the last focused element by default.
+
+### Removed
+
+- `decorated` prop from `@enact/spotlight/focusable` as this relationship is managed
 	implicitly by the component decorated by `@enact/spotlight/focusable`.
+
+### Fixed
+
+- Spotlight stops at container boundaries when 5-way key held down
+- Several issues related to spotting controls in edge cases
 
 ## [1.0.0-alpha.2] - 2016-10-21
 

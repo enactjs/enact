@@ -1,7 +1,7 @@
 /**
- * Exports the {@link module:@enact/moonstone/Spinner~Spinner} component.
+ * Exports the {@link moonstone/Spinner.Spinner} component.
  *
- * @module @enact/moonstone/Spinner
+ * @module moonstone/Spinner
  */
 
 import kind from '@enact/core/kind';
@@ -12,17 +12,18 @@ import {MarqueeText} from '../Marquee';
 import css from './Spinner.less';
 
 /**
- * {@link module:@enact/moonstone/Spinner~Spinner} is a component that shows a spinning animation
+ * {@link moonstone/Spinner.Spinner} is a component that shows a spinning animation
  * to indicate that some activity is taking place.
  *
  * @class Spinner
+ * @memberof moonstone/Spinner
  * @ui
  * @public
  */
 const SpinnerBase = kind({
 	name: 'Spinner',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/Spinner.Spinner.prototype */ {
 		/**
 		 *  When `true`, the spinner is horizontally centered, relative to its containing component.
 		 *

@@ -1,6 +1,6 @@
 {
   "name": "@enact/core",
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0-alpha.3",
   "description": "Enact is an open source JavaScript framework containing everything you need to create a fast, scalable mobile or web application.",
   "main": "index.js",
   "scripts": {
@@ -25,12 +25,12 @@
     }
   },
   "eslintConfig": {
-    "extends": "enact-internal"
+    "extends": "enact/strict"
   },
   "dependencies": {
-    "react": "~15.3.2",
-    "react-addons-update": "~15.3.2",
-    "react-dom": "~15.3.2",
+    "react": "~15.4.0",
+    "react-addons-update": "~15.4.0",
+    "react-dom": "~15.4.0",
     "ramda": "~0.22.1",
     "classnames": "~2.2.5"
   }
