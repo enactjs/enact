@@ -18,6 +18,7 @@ import {
 	computeBarTransform,
 	computeKnobTransform
 } from './util';
+
 /**
  * Default config for {@link moonstone/SliderDecorator.SliderDecorator}.
  *
@@ -69,15 +70,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @public
 			 */
 			backgroundPercent: PropTypes.number,
-
-			/**
-			 * The initial value of the slider.
-			 *
-			 * @type {Number}
-			 * @default 0
-			 * @public
-			 */
-			defaultValue: checkDefaultBounds,
 
 			/**
 			 * Height, in standard CSS units, of the vertical slider. Only takes
@@ -135,6 +127,15 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			step: PropTypes.number,
 
 			/**
+			 * The value of the slider.
+			 *
+			 * @type {Number}
+			 * @default 0
+			 * @public
+			 */
+			value: checkDefaultBounds,
+
+			/**
 			 * If `true` the slider will be oriented vertically.
 			 *
 			 * @type {Boolean}
@@ -145,25 +146,30 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		};
 
 		static defaultProps = {
-			defaultValue: 0,
 			height: '300px',
 			max: 100,
 			min: 0,
 			step: 1,
 			pressed: false,
+			value: 0,
 			vertical: false
 		};
 
 		constructor (props) {
 			super(props);
-			this.state = {
-				value: this.props.defaultValue
-			};
+
+			this.value = props.value;
+		}
+
+		componentWillReceiveProps (nextProps) {
+			if (nextProps.value !== this.props.value) {
+				this.updateValue(nextProps.value);
+			}
 		}
 
 		onChange = () => {
 			if (this.props.onChange) {
-				this.props.onChange({value: this.state.value});
+				this.props.onChange({value: this.value});
 			}
 		}
 
@@ -187,11 +193,9 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				barNode.style.transform = computeBarTransform(proportionProgress, vertical);
 				knobNode.style.transform = computeKnobTransform(proportionProgress, vertical, node, knobNode.offsetHeight / 2);
 				this.inputNode.value = value;
-
-				// yup, we're mutating state directly! :dealwithit:
-				this.state.value = value; // eslint-disable-line react/no-direct-mutation-state
+				this.value = value;
 				this.onChange();
-			}, 0);
+			}, config.changeDelay);
 		}
 
 		getInputNode = (node) => {
@@ -218,14 +222,14 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		changeValue = (direction) => {
 			const {min, max, step} = this.props;
-			let value = this.state.value + (step * direction);
+			let value = this.value + (step * direction);
 
 			value = R.clamp(min, max, value);
 			this.updateValue(value);
 		}
 
 		render () {
-			const handlers = !config.handlesIncrements ? {} : {
+			const handlers = !config.handlesIncrements ? null : {
 				onIncrement: this.incrementHandler,
 				onDecrement: this.decrementHandler
 			};
@@ -238,7 +242,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					onClick={this.clickHandler}
 					inputRef={this.getInputNode}
 					sliderRef={this.getSliderNode}
-					value={this.state.value}
+					value={this.value}
 					visibleBarRef={this.getVisibleBarNode}
 				/>
 			);

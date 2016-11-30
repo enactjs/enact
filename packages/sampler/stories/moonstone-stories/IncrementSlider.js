@@ -22,6 +22,7 @@ storiesOf('IncrementSlider')
 				onChange={action('onChange')}
 				step={number('step', IncrementSlider.defaultProps.step)}
 				vertical={boolean('vertical', IncrementSlider.defaultProps.vertical)}
+				value={number('value', IncrementSlider.defaultProps.value)}
 			/>
 		)
 	);

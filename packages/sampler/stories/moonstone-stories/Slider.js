@@ -27,7 +27,7 @@ storiesOf('Slider')
 				onChange={action('onChange')}
 				step={number('step', Slider.defaultProps.step)}
 				vertical={boolean('vertical', Slider.defaultProps.vertical)}
-				defaultValue={50}
+				value={number('value', Slider.defaultProps.value)}
 			/>
 		)
 	);

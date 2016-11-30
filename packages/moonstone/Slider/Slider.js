@@ -222,7 +222,7 @@ const SliderBase = kind({
 		min: 0,
 		pressed: false,
 		step: 1,
-		value: 0,
+		value: 50,
 		vertical: false
 	},
 
@@ -240,19 +240,18 @@ const SliderBase = kind({
 	},
 
 	render: ({inputRef, max, min, onChange, proportionBackgroundProgress, proportionProgress, sliderRef, step, value, vertical, verticalHeight, verticalWidth, visibleBarRef, ...rest}) => {
-		const sliderProps = {
-			proportionBackgroundProgress,
-			proportionProgress,
-			vertical,
-			verticalHeight
-		};
-
 		delete rest.backgroundPercent;
 		delete rest.pressed;
 
 		return (
 			<div {...rest} ref={sliderRef}>
-				<VisibleBar {...sliderProps} ref={visibleBarRef} />
+				<VisibleBar
+					proportionBackgroundProgress={proportionBackgroundProgress}
+					proportionProgress={proportionProgress}
+					ref={visibleBarRef}
+					vertical={vertical}
+					verticalHeight={verticalHeight}
+				/>
 				<input
 					className={css.sliderBar}
 					type="range"
