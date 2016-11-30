@@ -1,8 +1,10 @@
-import React, {PropTypes} from 'react';
 import {hoc} from '@enact/core';
 import ri from '@enact/ui/resolution';
+import {isRtlLocale} from '@enact/i18n/';
+import React, {PropTypes} from 'react';
 
 import {ContextualPopup} from './ContextualPopup';
+import css from './ContextualPopupDecorator.less';
 
 const defaultConfig = {};
 
@@ -21,6 +23,9 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				arrowPosition: {top: 0, left: 0},
 				containerPosition: {top: 0, left: 0}
 			};
+
+			this.overflow = {};
+			this.adjustedDirection = this.props.direction;
 		}
 
 		static propTypes = {
@@ -68,10 +73,10 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			});
 		}
 
-		getContainerPosition (direction, containerNode, clientNode, overflow) {
+		getContainerPosition (containerNode, clientNode) {
 			let position = {};
 
-			switch (direction) {
+			switch (this.adjustedDirection) {
 				case 'up':
 					position = {
 						bottom: ARROW_OFFSET
@@ -96,43 +101,42 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					position = {};
 			}
 
-			this.centerContainerPosition(direction, containerNode, clientNode, position, overflow);
-			return position;
+			return this.centerContainerPosition(containerNode, clientNode, position);
 		}
 
-		centerContainerPosition (direction, containerNode, clientNode, position, overflow) {
-			if (direction === 'up' || direction === 'down') {
-				if (overflow.isOverLeft) {
-					// adjust left
-					position.left = -clientNode.left + MARGIN;
-					// position.left = ARROW_OFFSET;
-				} else if (overflow.isOverRight) {
-					// adjust right
-					position.right = -clientNode.right - MARGIN;
+		centerContainerPosition (containerNode, clientNode, position) {
+			let pos = position;
+			if (this.adjustedDirection === 'up' || this.adjustedDirection === 'down') {
+				if (this.overflow.isOverLeft) {
+					// anchor to the left of the screen
+					pos.left = -clientNode.left + MARGIN;
+				} else if (this.overflow.isOverRight) {
+					// anchor to the right of the screen
+					pos.right = -clientNode.right - MARGIN;
 				} else {
 					// center horizontally
-					position.left = (clientNode.width - containerNode.width) / 2;
+					pos.left = (clientNode.width - containerNode.width) / 2;
 				}
-			} else if (direction === 'left' || direction === 'right') {
-				if (overflow.isOverTop) {
-					// adjust top
-					position.top = -clientNode.top + MARGIN;
-				} else if (overflow.isOverDown) {
-					// adjust bottom
-					position.bottom = -clientNode.bottom - MARGIN;
+			} else if (this.adjustedDirection === 'left' || this.adjustedDirection === 'right') {
+				if (this.overflow.isOverTop) {
+					// anchor to the top of the screen
+					pos.top = -clientNode.top + MARGIN;
+				} else if (this.overflow.isOverDown) {
+					// anchor to the bottom of the screen
+					pos.bottom = -clientNode.bottom - MARGIN;
 				} else {
 					// center vertically
-					position.top = (clientNode.height - containerNode.height) / 2;
+					pos.top = (clientNode.height - containerNode.height) / 2;
 				}
 			}
 
-			return position;
+			return this.adjustRTL(pos);
 		}
 
-		getArrowPosition (direction, clientNode) {
+		getArrowPosition (clientNode) {
 			let position = {};
 
-			switch (direction) {
+			switch (this.adjustedDirection) {
 				case 'up':
 					position = {
 						left: (clientNode.width - ARROW_WIDTH) / 2,
@@ -160,22 +164,23 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				default:
 					position = {};
 			}
-			return position;
+
+			return this.adjustRTL(position);
 		}
 
-		isOverflow (container, client) {
+		calcOverflow (container, client) {
 			// TODO: what if it's rendered inside Portal??
 
 			const {direction} = this.props;
 			if (direction === 'up' || direction === 'down') {
-				return {
+				this.overflow = {
 					isOverTop: client.top - container.height - ARROW_OFFSET < 0,
 					isOverBottom: client.bottom + container.height + ARROW_OFFSET > window.innerHeight,
 					isOverLeft: client.left - (container.width - client.width) / 2 < 0,
 					isOverRight: client.right + (container.width - client.width) / 2 > window.innerWidth
 				};
 			} else {
-				return {
+				this.overflow = {
 					isOverTop: client.top - (container.height - client.height) / 2 < 0,
 					isOverBottom: client.bottom + (container.height - client.height) / 2 > window.innerHeight,
 					isOverLeft: client.left - container.width - MARGIN < 0,
@@ -184,18 +189,26 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		adjustDirection (overflow, direction = this.props.direction) {
-			if (overflow.isOverTop && direction === 'up') {
-				return 'down';
-			} else if (overflow.isOverBottom && direction === 'down') {
-				return 'up';
-			} else if (overflow.isOverLeft && direction === 'left') {
-				return 'right';
-			} else if (overflow.isOverRight && direction === 'right') {
-				return 'left';
+		adjustDirection () {
+			if (this.overflow.isOverTop && this.adjustedDirection === 'up') {
+				this.adjustedDirection = 'down';
+			} else if (this.overflow.isOverBottom && this.adjustedDirection === 'down') {
+				this.adjustedDirection = 'up';
+			} else if (this.overflow.isOverLeft && this.adjustedDirection === 'left') {
+				this.adjustedDirection = 'right';
+			} else if (this.overflow.isOverRight && this.adjustedDirection === 'right') {
+				this.adjustedDirection = 'left';
 			}
+		}
 
-			return direction;
+		adjustRTL (position) {
+			let pos = position;
+			if (isRtlLocale()) {
+				const tmpLeft = pos.left;
+				pos.left = pos.right;
+				pos.right = tmpLeft;
+			}
+			return pos;
 		}
 
 		measureContainer = (node) => {
@@ -203,13 +216,13 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				const containerNode = node.getBoundingClientRect();
 				const clientNode = this.clientNode.getBoundingClientRect();
 
-				const overflow = this.isOverflow(containerNode, clientNode);
-				const direction = this.adjustDirection(overflow);
+				this.calcOverflow(containerNode, clientNode);
+				this.adjustDirection();
 
 				this.setState({
-					direction,
-					arrowPosition: this.getArrowPosition(direction, clientNode),
-					containerPosition: this.getContainerPosition(direction, containerNode, clientNode, overflow)
+					direction: this.adjustedDirection,
+					arrowPosition: this.getArrowPosition(clientNode),
+					containerPosition: this.getContainerPosition(containerNode, clientNode)
 				});
 			}
 		}
@@ -222,7 +235,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const {showCloseButton, popupComponent: PopupComponent, ...props} = this.props;
 
 			return (
-				<div style={{display: 'inline-block'}}>
+				<div className={css.contextualPopupDecorator}>
 					{this.state.open ?
 						<ContextualPopup
 							showCloseButton={showCloseButton}
