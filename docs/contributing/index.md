@@ -72,5 +72,3 @@ project. Please read this section carefully if you are interested in contributin
 
 If you'd like to become more than an occasional contributor, by all means let us know by [email](mailto:contact@enactjs.com) and we'll
 figure out how to get you more involved.
-
-</section>
