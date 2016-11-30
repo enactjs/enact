@@ -51,11 +51,11 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {ri, i18n, spotlight, float, overlay, cancelHandler} = config;
 
 	// Apply classes depending on screen type (overlay / fullscreen)
-	const getBgClassName = () => 'enact-fit' + (overlay ? '' : ` ${css.bg}`);
+	const bgClassName = 'enact-fit' + (overlay ? '' : ` ${css.bg}`);
 
 	let App = Wrapped;
 
-	if (float) App = FloatingLayerDecorator({wrappedClassName: getBgClassName()}, App);
+	if (float) App = FloatingLayerDecorator({wrappedClassName: bgClassName}, App);
 	if (cancelHandler) addCancelHandler(cancelHandler);
 	if (ri) App = ResolutionDecorator(ri, App);
 	if (i18n) App = I18nDecorator(App);
@@ -79,7 +79,7 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		render () {
 			let className = `${css.moon} enact-unselectable`;
 			if (!float) {
-				className += ' ' + getBgClassName();
+				className += ' ' + bgClassName;
 			}
 			if (this.props.className) {
 				className += ` ${this.props.className}`;
