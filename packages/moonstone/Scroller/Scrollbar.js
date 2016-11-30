@@ -127,6 +127,7 @@ class Scrollbar extends Component {
 			clickPrevHandler: props.onPrevScroll,
 			clickNextHandler: props.onNextScroll
 		};
+		this.jobName = perf.now();
 
 		this.initContainerRef = this.initRef('containerRef');
 		this.initThumbRef = this.initRef('thumbRef');
@@ -196,15 +197,9 @@ class Scrollbar extends Component {
 	}
 
 	startHidingThumb () {
-		const
-			{isVertical} = this.props,
-			now = perf.now();
-
 		stopJob(this.jobName);
 
-		this.jobName = now + (isVertical ? 'vThumbHide' : 'hThumbHide');
 		if (this.autoHide) {
-			stopJob(this.jobName);
 			startJob(this.jobName, () => {
 				this.hideThumb();
 			}, autoHideDelay);

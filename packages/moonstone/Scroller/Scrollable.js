@@ -146,7 +146,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		isScrollAnimationTargetAccumulated = false
 		isFirstDragging = false
 		isDragging = false
-		whichScrollbarIsShowing = 'none'
+		visibleScrollbar = 'none'
 
 		// mouse handlers
 		eventHandlers = {}
@@ -627,21 +627,21 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					showVerticalScrollbar = canScrollVertically && (isDragging || targetY !== scrollTop);
 
 				if (showHorizontalScrollbar && showVerticalScrollbar) {
-					this.whichScrollbarIsShowing = 'both';
+					this.visibleScrollbar = 'both';
 					this.scrollbarHorizontalRef.showThumb();
 					this.scrollbarVerticalRef.showThumb();
 				} else if (showHorizontalScrollbar) {
-					this.whichScrollbarIsShowing = 'horizontal';
+					this.visibleScrollbar = 'horizontal';
 					this.scrollbarHorizontalRef.showThumb();
 				} else if (showVerticalScrollbar) {
-					this.whichScrollbarIsShowing = 'vertical';
+					this.visibleScrollbar = 'vertical';
 					this.scrollbarVerticalRef.showThumb();
 				}
 			}
 		}
 
 		updateThumb (scrollbarRef, orientation) {
-			if (this.whichScrollbarIsShowing === 'both' || orientation === this.whichScrollbarIsShowing) {
+			if (this.visibleScrollbar === 'both' || orientation === this.visibleScrollbar) {
 				scrollbarRef.update({
 					...this.bounds,
 					scrollLeft: this.scrollLeft,
@@ -651,15 +651,15 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		hideThumb () {
-			if (this.whichScrollbarIsShowing === 'both') {
+			if (this.visibleScrollbar === 'both') {
 				this.scrollbarHorizontalRef.startHidingThumb();
 				this.scrollbarVerticalRef.startHidingThumb();
-			} else if (this.whichScrollbarIsShowing === 'horizontal') {
+			} else if (this.visibleScrollbar === 'horizontal') {
 				this.scrollbarHorizontalRef.startHidingThumb();
-			} else if (this.whichScrollbarIsShowing === 'vertical') {
+			} else if (this.visibleScrollbar === 'vertical') {
 				this.scrollbarVerticalRef.startHidingThumb();
 			}
-			this.whichScrollbarIsShowing = 'none';
+			this.visibleScrollbar = 'none';
 		}
 
 		// component life cycle
