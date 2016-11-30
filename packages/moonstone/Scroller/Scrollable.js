@@ -116,7 +116,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			onScrollStop: PropTypes.func,
 
 			/**
-			 * It scrolls by page when 'true', by item when 'false'
+			 * It scrolls by page when `true`, by item when `false` via 5 way key
 			 *
 			 * @type {Boolean}
 			 * @default false
@@ -214,26 +214,15 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					onScroll
 				};
 			} else {
-				const {onFocus, onKeyDown, onKeyUp, onMouseDown, onMouseLeave, onMouseMove, onMouseUp, onWheel} = this;
-				if (props.pageScroll) {
-					this.eventHandlers = {
-						onFocus,
-						onKeyDown,
-						onKeyUp,
-						onWheel
-					};
-				} else {
-					this.eventHandlers = {
-						onFocus,
-						onKeyDown,
-						onKeyUp,
-						onMouseDown,
-						onMouseLeave,
-						onMouseMove,
-						onMouseUp,
-						onWheel
-					};
-				}
+				const {onFocus, onKeyDown, onKeyUp, onWheel} = this;
+				// We have removed all mouse event handlers for now.
+				// Revisit later for touch usage.
+				this.eventHandlers = {
+					onFocus,
+					onKeyDown,
+					onKeyUp,
+					onWheel
+				};
 			}
 
 			this.verticalScrollbarProps = {
