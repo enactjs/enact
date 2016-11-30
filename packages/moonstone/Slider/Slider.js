@@ -220,6 +220,7 @@ const SliderBase = kind({
 		height: '300px',
 		max: 100,
 		min: 0,
+		onChange: () => {}, // needed to ensure the base input element is mutable if no change handler is provided
 		pressed: false,
 		step: 1,
 		value: 50,

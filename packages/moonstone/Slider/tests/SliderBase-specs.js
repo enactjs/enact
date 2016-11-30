@@ -5,37 +5,39 @@ import {SliderBase} from '../Slider';
 import css from '../Slider.less';
 
 describe('SliderBase Specs', () => {
-	it('Should have value of 50 on input', function () {
-		const handleChange = sinon.spy();
+	it('Should set value on input', function () {
 		const sliderBase = mount(
-			<SliderBase
-				min={0}
-				max={100}
-				value={50}
-				step={1}
-				onChange={handleChange}
-			/>
+			<SliderBase value={50} />
 		);
 
 		expect(sliderBase.find(`.${css.sliderBar}`).prop('value')).to.equal(50);
 	});
 
-	it('Should have width of 50', function () {
-		const handleChange = sinon.spy();
+	it('Should set max on input', function () {
 		const sliderBase = mount(
-			<SliderBase
-				min={0}
-				max={100}
-				value={50}
-				step={1}
-				onChange={handleChange}
-			/>
+			<SliderBase max={50} />
 		);
 
-		expect(sliderBase.find(`.${css.fill}`).prop('style').width).to.equal('50%');
+		expect(sliderBase.find(`.${css.sliderBar}`).prop('max')).to.equal(50);
 	});
 
-	it('Should have fired change event ', function () {
+	it('Should set min on input', function () {
+		const sliderBase = mount(
+			<SliderBase min={50} />
+		);
+
+		expect(sliderBase.find(`.${css.sliderBar}`).prop('min')).to.equal(50);
+	});
+
+	it('Should set step on input', function () {
+		const sliderBase = mount(
+			<SliderBase step={2} />
+		);
+
+		expect(sliderBase.find(`.${css.sliderBar}`).prop('step')).to.equal(2);
+	});
+
+	it('Should have fired change event', function () {
 		const handleChange = sinon.spy();
 
 		const sliderBase = mount(
