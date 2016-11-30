@@ -238,7 +238,6 @@ class Transition extends React.Component {
 		visible: true
 	}
 
-
 	constructor () {
 		super();
 
@@ -247,19 +246,34 @@ class Transition extends React.Component {
 		};
 	}
 
-	measureInner = (node) => {
-		if (node && this.state.initialHeight === null) {
-			node.style.height = 'auto';
-			const initialHeight = node.getBoundingClientRect().height;
-			this.setState({initialHeight});
-			node.style.height = null;
+	componentDidUpdate (prevProps) {
+		if (this.props.visible === prevProps.visible) {
+			this.measureInner();
+		}
+	}
+
+	measureInner () {
+		if (this.childNode) {
+			this.childNode.style.height = 'auto';
+			const initialHeight = this.childNode.getBoundingClientRect().height;
+			if (initialHeight !== this.state.initialHeight) {
+				this.setState({initialHeight});
+			}
+			this.childNode.style.height = null;
+		}
+	}
+
+	childRef = (node) => {
+		this.childNode = node;
+		if (this.state.initialHeight === null) {
+			this.measureInner();
 		}
 	}
 
 	render () {
 		const height = this.props.visible ? this.state.initialHeight : 0;
 		return (
-			<TransitionBase {...this.props} childRef={this.measureInner} clipHeight={height} />
+			<TransitionBase {...this.props} childRef={this.childRef} clipHeight={height} />
 		);
 	}
 }
