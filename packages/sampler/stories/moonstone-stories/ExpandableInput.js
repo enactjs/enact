@@ -44,7 +44,7 @@ class ExpandableInput extends React.Component {
 				open={this.state.open}
 				onOpen={this.handleOpen}
 				onClose={this.handleClose}
-				onSelect={this.handleSelect}
+				onChange={this.handleSelect}
 			/>
 		);
 	}
