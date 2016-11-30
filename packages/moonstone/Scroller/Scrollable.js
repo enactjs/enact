@@ -616,16 +616,20 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		updateThumb (scrollbarRef) {
-			scrollbarRef.update({
-				...this.bounds,
-				scrollLeft: this.scrollLeft,
-				scrollTop: this.scrollTop
-			});
+			if (this.props.positioningOption !== 'byBrowser' && !this.props.hideScrollbars) {
+				scrollbarRef.update({
+					...this.bounds,
+					scrollLeft: this.scrollLeft,
+					scrollTop: this.scrollTop
+				});
+			}
 		}
 
 		hideThumb () {
-			this.scrollbarHorizontalRef.startHidingThumb();
-			this.scrollbarVerticalRef.startHidingThumb();
+			if (this.props.positioningOption !== 'byBrowser' && !this.props.hideScrollbars) {
+				this.scrollbarHorizontalRef.startHidingThumb();
+				this.scrollbarVerticalRef.startHidingThumb();
+			}
 		}
 
 		// component life cycle
