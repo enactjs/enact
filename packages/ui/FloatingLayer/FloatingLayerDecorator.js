@@ -9,7 +9,7 @@ import kind from '@enact/core/kind';
 import React from 'react';
 
 /**
- * Default config for {@link ui/FloatingLayer.FloatingLayerDecorator}.
+ * Default config for {@link ui/FloatingLayer/FloatingLayerDecorator.FloatingLayerDecorator}.
  *
  * @memberof ui/FloatingLayer/FloatingLayerDecorator
  * @hocconfig
@@ -21,6 +21,7 @@ const defaultConfig = {
 	 * @type {String}
 	 * @default 'floatLayer'
 	 * @public
+	 * memberof ui/FloatingLayer/FloatingLayerDecorator.defaultConfig
 	 */
 	floatLayerId: 'floatLayer'
 };
@@ -29,8 +30,8 @@ const defaultConfig = {
  * Higher-order Component that adds a FloatingLayer adjacent to wrapped component.
  *
  * @class FloatingLayerDecorator
- * @memberof ui/FloatingLayerDecorator
- * @ui
+ * @memberof ui/FloatingLayer/FloatingLayerDecorator
+ * @hoc
  * @public
  */
 const FloatingLayerDecorator = hoc(defaultConfig, (config, Wrapped) => {

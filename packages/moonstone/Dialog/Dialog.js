@@ -1,5 +1,5 @@
 /**
- * Exports the {@link moonstone/Dialog.Dialog} and {@link moonstone/Dialog.DialogBase} component.
+ * Exports the {@link moonstone/Dialog.Dialog} and {@link moonstone/Dialog.DialogBase} components.
  * The default export is {@link moonstone/Dialog.Dialog}.
  *
  * @module moonstone/Dialog
@@ -18,7 +18,7 @@ import css from './Dialog.less';
  * message, and an area for additional controls.
  *
  * @class DialogBase
- * @memberOf moonstone/Dialog
+ * @memberof moonstone/Dialog
  * @ui
  * @public
  */
@@ -49,7 +49,7 @@ const DialogBase = kind({
 		]),
 
 		/**
-		 * When `true`, popups will not animate on/off screen.
+		 * When `true`, the dialog will not animate on/off screen.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -58,7 +58,7 @@ const DialogBase = kind({
 		noAnimation: PropTypes.bool,
 
 		/**
-		 * A function to run when close button is clicked.
+		 * A function to be run when close button is clicked.
 		 *
 		 * @type {Function}
 		 * @public
@@ -66,7 +66,7 @@ const DialogBase = kind({
 		onCloseButtonClicked: PropTypes.func,
 
 		/**
-		 * A function to run after transition for hiding is finished.
+		 * A function to be run after transition for hiding is finished.
 		 *
 		 * @type {Function}
 		 * @public
@@ -74,7 +74,7 @@ const DialogBase = kind({
 		onHide: PropTypes.func,
 
 		/**
-		 * Is this control in the expanded state (true), opened, with the contents visible?
+		 * When `true`, the control is in the expanded state with the contents visible
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -90,6 +90,7 @@ const DialogBase = kind({
 		 * @public
 		 */
 		showCloseButton: PropTypes.bool,
+
 		/**
 		 * Title of the header
 		 *
@@ -107,7 +108,7 @@ const DialogBase = kind({
 		titleBelow: PropTypes.string,
 
 		/**
-		 * Should the dialog use a divider line to separate the titles from the dialog body?
+		 * When `true`, a divider line separates the title from the dialog body
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -116,7 +117,6 @@ const DialogBase = kind({
 	},
 
 	defaultProps: {
-		anchor: {bottom: 0},
 		noAnimation: false,
 		open: false,
 		showCloseButton: false
@@ -161,7 +161,7 @@ const DialogBase = kind({
  * message, and an area for additional controls.
  *
  * @class Dialog
- * @memberOf moonstone/Dialog
+ * @memberof moonstone/Dialog
  * @mixes ui/Slottable.Slottable
  * @ui
  * @public

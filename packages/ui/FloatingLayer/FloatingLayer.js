@@ -9,9 +9,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Cancelable from '../Cancelable';
 
-import {ScrimLayer} from './Scrim';
+import Scrim from './Scrim';
 
-// the current most highest z-index value for FloatingLayers
+// the current highest z-index value for FloatingLayers
 let scrimZIndex = 120;
 
 // array of z-indexes for visible layers
@@ -22,7 +22,7 @@ const viewingLayers = [];
  * render tree. This is used for modal components such as popups.
  *
  * @class FloatingLayer
- * @memberOf ui/FloatingLayer
+ * @memberof ui/FloatingLayer
  * @ui
  * @public
  */
@@ -64,7 +64,7 @@ class FloatingLayerBase extends React.Component {
 		noAutoDismiss: React.PropTypes.bool,
 
 		/**
-		 * A function to run when floating layer is closed.
+		 * A function to be run when floating layer is closed.
 		 *
 		 * @type {Function}
 		 * @public
@@ -72,7 +72,7 @@ class FloatingLayerBase extends React.Component {
 		onClose: React.PropTypes.func,
 
 		/**
-		 * A function to run when `ESC` key is pressed. The function will only invoke if
+		 * A function to be run when `ESC` key is pressed. The function will only invoke if
 		 * `noAutoDismiss` is set to `false`.
 		 *
 		 * @type {Function}
@@ -81,7 +81,7 @@ class FloatingLayerBase extends React.Component {
 		onDismiss: React.PropTypes.func,
 
 		/**
-		 * A function to run when floating layer is opened. It will only be invoked for the first render.
+		 * A function to be run when floating layer is opened. It will only be invoked for the first render.
 		 *
 		 * @type {Function}
 		 * @public
@@ -89,7 +89,7 @@ class FloatingLayerBase extends React.Component {
 		onOpen: React.PropTypes.func,
 
 		/**
-		 * When `true`, it renders components into floating layer.
+		 * When `true`, the floating layer and its components will be rendered.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -98,7 +98,7 @@ class FloatingLayerBase extends React.Component {
 		open: React.PropTypes.bool,
 
 		/**
-		 * Types of scrim. It can be either `transparent` or `translucent`.
+		 * The scrim type. It can be either `'transparent'` or `'translucent'`.
 		 *
 		 * @type {String}
 		 * @default `translucent`
@@ -108,10 +108,10 @@ class FloatingLayerBase extends React.Component {
 	}
 
 	static defaultProps = {
-		noAutoDismiss: false,
-		open: false,
 		floatLayerClassName: 'enact-fit enact-clip enact-untouchable',
 		floatLayerId: 'floatLayer',
+		noAutoDismiss: false,
+		open: false,
 		scrimType: 'translucent'
 	}
 
@@ -125,17 +125,13 @@ class FloatingLayerBase extends React.Component {
 
 	componentWillReceiveProps (nextProps) {
 		if (nextProps.open) {
-			let isOpened = false;
-			if (nextProps.open === this.props.open) {
-				// will not increase zIndex for already opened layer
-				isOpened = true;
-			} else {
+			if (!this.props.open) {
 				// increase scrimZIndex by 2 for the new layer
 				scrimZIndex = scrimZIndex + 2;
 				this.prevZIndex = scrimZIndex;
 				viewingLayers.push(scrimZIndex);
 			}
-			this.renderFloatingLayer(nextProps, isOpened);
+			this.renderFloatingLayer(nextProps, this.props.open);
 		} else {
 			this.closeFloatingLayer();
 		}
@@ -183,7 +179,7 @@ class FloatingLayerBase extends React.Component {
 		};
 		this.floatLayer = ReactDOM.unstable_renderSubtreeIntoContainer(
 			this,
-			<ScrimLayer
+			<Scrim
 				{...scrimProps}
 				{...rest}
 			/>,

@@ -22,7 +22,7 @@ const TransitionContainer = SpotlightContainerDecorator(Transition);
  * the screen and takes up the full screen width.
  *
  * @class PopupBase
- * @memberOf moonstone/Popup
+ * @memberof moonstone/Popup
  * @ui
  * @public
  */
@@ -41,10 +41,8 @@ const PopupBase = kind({
 			PropTypes.element
 		]).isRequired,
 
-		anchor: PropTypes.object,
-
 		/**
-		 * When `true`, popups will not animate on/off screen.
+		 * When `true`, the popup will not animate on/off screen.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -53,7 +51,7 @@ const PopupBase = kind({
 		noAnimation: PropTypes.bool,
 
 		/**
-		 * A function to run when close button is clicked.
+		 * A function to be run when close button is clicked.
 		 *
 		 * @type {Function}
 		 * @public
@@ -61,7 +59,7 @@ const PopupBase = kind({
 		onCloseButtonClicked: PropTypes.func,
 
 		/**
-		 * A function to run after transition for hiding is finished.
+		 * A function to be run after transition for hiding is finished.
 		 *
 		 * @type {Function}
 		 * @public
@@ -69,7 +67,7 @@ const PopupBase = kind({
 		onHide: PropTypes.func,
 
 		/**
-		 * Is this control in the expanded state (true), opened, with the contents visible?
+		 * When `true`, the popup is in the open/expanded state with the contents visible
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -88,7 +86,6 @@ const PopupBase = kind({
 	},
 
 	defaultProps: {
-		anchor: {bottom: 0},
 		noAnimation: false,
 		open: false,
 		showCloseButton: false
@@ -123,7 +120,6 @@ const PopupBase = kind({
 	},
 
 	render: ({closeButton, children, noAnimation, open, onHide, zIndex, ...rest}) => {
-		delete rest.anchor;
 		delete rest.onCloseButtonClicked;
 		delete rest.showCloseButton;
 		return (
@@ -154,14 +150,14 @@ const PopupBase = kind({
  * to appear in {@link ui/FloatingLayer.FloatingLayer}.
  *
  * @class Popup
- * @memberOf moonstone/Popup
+ * @memberof moonstone/Popup
  * @ui
  * @public
  */
 class Popup extends React.Component {
 	static propTypes = /** @lends moonstone/Popup.Popup.prototype */ {
 		/**
-		 * When `true`, popups will not animate on/off screen.
+		 * When `true`, the popup will not animate on/off screen.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -170,7 +166,7 @@ class Popup extends React.Component {
 		noAnimation: PropTypes.bool,
 
 		/**
-		 * When `true`, Popup will not close when the user presses `ESC` key.
+		 * When `true`, the popup will not close when the user presses `ESC` key.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -179,9 +175,9 @@ class Popup extends React.Component {
 		noAutoDismiss: PropTypes.bool,
 
 		/**
-		 * A function to run when closing action is invoked by the user. These actions include
-		 * pressing `ESC` key or clicking on close button. Normally, callback will set `open`
-		 * state to false.
+		 * A function to be run when a closing action is invoked by the user. These actions include
+		 * pressing `ESC` key or clicking on the close button. It is the responsibility of the
+		 * callback to set the `open` state to false.
 		 *
 		 * @type {Function}
 		 * @public
@@ -189,7 +185,8 @@ class Popup extends React.Component {
 		onClose: PropTypes.func,
 
 		/**
-		 * When `true`, Popup is rendered into {@link ui/FloatingLayer.FloatingLayer}.
+		 * When `true`, the popup is rendered. Popups are rendered into the
+		 * [floating layer]{@link ui/FloatingLayer.FloatingLayer}.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -208,9 +205,9 @@ class Popup extends React.Component {
 	}
 
 	static defaultProps = {
-		open: false,
 		noAnimation: false,
 		noAutoDismiss: false,
+		open: false,
 		showCloseButton: false
 	}
 
@@ -225,13 +222,13 @@ class Popup extends React.Component {
 	componentWillReceiveProps (nextProps) {
 		if (!this.props.open && nextProps.open) {
 			this.setState({
-				popupOpen: this.props.noAnimation,
+				popupOpen: nextProps.noAnimation,
 				floatLayerOpen: true
 			});
 		} else if (this.props.open && !nextProps.open) {
 			this.setState({
-				popupOpen: this.props.noAnimation,
-				floatLayerOpen: !this.props.noAnimation
+				popupOpen: nextProps.noAnimation,
+				floatLayerOpen: !nextProps.noAnimation
 			});
 		}
 	}
