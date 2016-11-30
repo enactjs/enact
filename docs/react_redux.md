@@ -10,6 +10,7 @@ Here are some resources to help you get started with React and Redux.
 *   [Official React tutorial](https://facebook.github.io/react/tutorial/tutorial.html)
 *   [Awesome React](https://github.com/enaqx/awesome-react) - a big collection of links (React and related tech)
 *   [Build with React](http://buildwithreact.com/tutorial) - a simple tutorial with inline editor
+*   [inflearn - React and Express](https://www.inflearn.com/course/react-%EA%B0%95%EC%A2%8C-velopert/) - Korean language course (has some Redux, too)
 
 ### Redux
 
