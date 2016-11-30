@@ -172,8 +172,8 @@ class VirtualListCore extends Component {
 	curDataSize = 0
 	cc = []
 	scrollPosition = 0
-	updateFrom = 0
-	updateTo = 0
+	updateFrom = null
+	updateTo = null
 
 	containerRef = null
 	wrapperRef = null
@@ -319,8 +319,8 @@ class VirtualListCore extends Component {
 
 		this.maxFirstIndex = dataSize - numOfItems;
 		this.curDataSize = dataSize;
-		this.updateFrom = 0;
-		this.updateTo = 0;
+		this.updateFrom = null;
+		this.updateTo = null;
 
 		this.setState({firstIndex: Math.min(this.state.firstIndex, this.maxFirstIndex), numOfItems});
 		this.calculateScrollBounds(props);
@@ -489,7 +489,7 @@ class VirtualListCore extends Component {
 		// positioning items
 		for (let i = updateFrom, j = updateFrom % dimensionToExtent; i < updateTo; i++) {
 
-			if ((!this.updateFrom && !this.updateTo) || (this.updateFrom > i) || (this.updateTo <= i)) {
+			if ((this.updateFrom !== null && this.updateTo != null) || (this.updateFrom > i) || (this.updateTo <= i)) {
 				this.applyStyleToNewNode(i, width, height, primaryPosition, secondaryPosition);
 			} else {
 				this.applyStyleToExistingNode(i, width, height, primaryPosition, secondaryPosition);
