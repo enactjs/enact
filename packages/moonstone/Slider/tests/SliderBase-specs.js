@@ -10,7 +10,10 @@ describe('SliderBase Specs', () => {
 			<SliderBase value={50} />
 		);
 
-		expect(sliderBase.find(`.${css.sliderBar}`).prop('value')).to.equal(50);
+		const expected = 50;
+		const actual = sliderBase.find(`.${css.sliderBar}`).prop('value');
+
+		expect(actual).to.equal(expected);
 	});
 
 	it('Should set max on input', function () {
@@ -18,7 +21,10 @@ describe('SliderBase Specs', () => {
 			<SliderBase max={50} />
 		);
 
-		expect(sliderBase.find(`.${css.sliderBar}`).prop('max')).to.equal(50);
+		const expected = 50;
+		const actual = sliderBase.find(`.${css.sliderBar}`).prop('max');
+
+		expect(actual).to.equal(expected);
 	});
 
 	it('Should set min on input', function () {
@@ -26,7 +32,10 @@ describe('SliderBase Specs', () => {
 			<SliderBase min={50} />
 		);
 
-		expect(sliderBase.find(`.${css.sliderBar}`).prop('min')).to.equal(50);
+		const expected = 50;
+		const actual = sliderBase.find(`.${css.sliderBar}`).prop('min');
+
+		expect(actual).to.equal(expected);
 	});
 
 	it('Should set step on input', function () {
@@ -34,10 +43,13 @@ describe('SliderBase Specs', () => {
 			<SliderBase step={2} />
 		);
 
-		expect(sliderBase.find(`.${css.sliderBar}`).prop('step')).to.equal(2);
+		const expected = 2;
+		const actual = sliderBase.find(`.${css.sliderBar}`).prop('step');
+
+		expect(actual).to.equal(expected);
 	});
 
-	it('Should have fired change event', function () {
+	it('Should fire change event', function () {
 		const handleChange = sinon.spy();
 
 		const sliderBase = mount(
@@ -52,7 +64,10 @@ describe('SliderBase Specs', () => {
 
 		sliderBase.find('input').simulate('change', {target: {value: 25}});
 
-		expect(handleChange.calledOnce).to.be.true();
+		const expected = true;
+		const actual = handleChange.calledOnce;
+
+		expect(actual).to.equal(expected);
 
 	});
 });

@@ -19,6 +19,8 @@ import {
 	computeKnobTransform
 } from './util';
 
+const perf = (typeof window === 'object') ? window.performance : {};
+
 /**
  * Default config for {@link moonstone/SliderDecorator.SliderDecorator}.
  *
@@ -158,6 +160,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 
+			this.jobName = `sliderChange${perf.now()}`;
 			this.value = props.value;
 		}
 
@@ -180,7 +183,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		updateValue = (value) => {
-			throttleJob('sliderChange', () => {
+			throttleJob(this.jobName, () => {
 				// intentionally breaking encapsulation to avoid having to specify multiple refs
 				const {barNode, knobNode, loaderNode, node} = this.visibleBarNode;
 				const {backgroundPercent, max, min, vertical} = this.props;
