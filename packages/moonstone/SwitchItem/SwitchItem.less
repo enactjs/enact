@@ -1,15 +1,11 @@
-// ToggleSwitch
+// SwitchItem
 //
-
 @import '../styles/mixins.less';
 @import '../styles/variables.less';
 
 .switchItem {
-    .switch {
-        margin-top: 0;
-        margin-bottom: 0;
-        .margin-start-end(@moon-toggle-item-icon-margin, 0);
-        order: 2;
-        flex-shrink: 0;
-    }
+	.switch {
+		display: block;
+		.margin-start-end(@moon-toggle-item-icon-margin, 0);
+	}
 }

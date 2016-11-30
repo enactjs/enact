@@ -94,7 +94,7 @@ const CheckboxItemBase = kind({
 	},
 
 	computed: {
-		iconClasses: ({selected}) => !selected ? css.translucent : null
+		iconClasses: ({selected, styler}) => styler.join({translucent: !selected})
 	},
 
 	render: (props) => (
