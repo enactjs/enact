@@ -15,7 +15,7 @@ storiesOf('LabeledItem')
 		() => (
 			<LabeledItem
 				label={'Label'}
-				disabled={boolean('disabled')}
+				disabled={boolean('disabled', false)}
 			>
 				{text('children', 'Hello LabeledItem')}
 			</LabeledItem>

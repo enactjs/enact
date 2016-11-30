@@ -67,6 +67,15 @@ class InputBase extends React.Component {
 		iconStart: PropTypes.string,
 
 		/**
+		 * The handler to run when blurred.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onBlur: PropTypes.func,
+
+		/**
 		 * The handler to run when the input value is changed.
 		 *
 		 * @type {Function}
@@ -101,6 +110,15 @@ class InputBase extends React.Component {
 		 * @public
 		 */
 		onKeyDown: PropTypes.func,
+
+		/**
+		 * The handler to run when a mouse key is pressed down.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onMouseDown: PropTypes.func,
 
 		/**
 		 * The placeholder text to display.
@@ -197,7 +215,7 @@ class InputBase extends React.Component {
 	}
 
 	render () {
-		const {disabled, className, iconStart, iconEnd, onFocus, onKeyDown, spotlightDisabled, ...rest} = this.props;
+		const {disabled, className, iconStart, iconEnd, onFocus, onBlur, onMouseDown, onKeyDown, spotlightDisabled, ...rest} = this.props;
 		const iconClasses = classNames(
 			css.decoratorIcon,
 			iconStart ? css[iconStart] : null,
@@ -209,7 +227,7 @@ class InputBase extends React.Component {
 		delete rest.dismissOnEnter;
 
 		return (
-			<InputDecorator disabled={disabled} className={className} onClick={this.handleDecoratorClick} onFocus={onFocus} onKeyDown={onKeyDown} spotlightDisabled={spotlightDisabled} decoratorRef={this.getDecoratorNode} >
+			<InputDecorator disabled={disabled} className={className} onClick={this.handleDecoratorClick} onFocus={onFocus} onBlur={onBlur} onMouseDown={onMouseDown} onKeyDown={onKeyDown} spotlightDisabled={spotlightDisabled} decoratorRef={this.getDecoratorNode} >
 				{firstIcon}
 				<PlainInput {...rest} disabled={disabled} onKeyDown={this.inputKeyDown} inputRef={this.getDecoratedNode} spotlightDisabled={!spotlightDisabled} />
 				{lastIcon}

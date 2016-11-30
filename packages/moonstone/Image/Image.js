@@ -50,6 +50,16 @@ const ImageBase = kind({
 		src: PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.object]).isRequired,
 
 		/**
+		 * A placeholder image to be displayed before the image is loaded.
+		 * For performance purposes, it should be pre-loaded or be a data url.
+		 *
+		 * @type {String}
+		 * @default ''
+		 * @public
+		 */
+		placeholder: PropTypes.string,
+
+		/**
 		 * Used to set the `background-size` of an Image.
 		 *
 		 * * `'fill'` - sets `background-size: cover`
@@ -64,6 +74,7 @@ const ImageBase = kind({
 	},
 
 	defaultProps: {
+		placeholder: '',
 		sizing: 'fill'
 	},
 
@@ -73,18 +84,22 @@ const ImageBase = kind({
 	},
 
 	computed: {
+		bgImage: ({src, placeholder}) => {
+			const imageSrc = selectSrc(src);
+			return placeholder ? `url("${imageSrc}"), url("${placeholder}")` : `url("${imageSrc}")`;
+		},
 		className: ({className, sizing, styler}) => {
 			return sizing !== 'none' ? styler.append(sizing) : className;
-		},
-		imageSrc: ({src}) => selectSrc(src)
+		}
 	},
 
-	render: ({imageSrc, style, ...rest}) => {
+	render: ({bgImage, style, ...rest}) => {
+		delete rest.placeholder;
 		delete rest.src;
 		delete rest.sizing;
 
 		return (
-			<div {...rest} style={{...style, backgroundImage: `url(${imageSrc})`}} />
+			<div {...rest} style={{...style, backgroundImage: bgImage}} />
 		);
 	}
 });
