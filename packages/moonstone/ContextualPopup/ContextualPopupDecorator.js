@@ -47,6 +47,14 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			direction: PropTypes.oneOf(['up', 'down', 'left', 'right']),
 
 			/**
+			 * Classname pass to the popup. You may set width and heights of the popup with it.
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			popupClassName: PropTypes.string,
+
+			/**
 			 * When `true`, it shows close button.
 			 *
 			 * @type {Boolean}
@@ -232,12 +240,13 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const {showCloseButton, popupComponent: PopupComponent, ...props} = this.props;
+			const {showCloseButton, popupComponent: PopupComponent, popupClassName, ...props} = this.props;
 
 			return (
 				<div className={css.contextualPopupDecorator}>
 					{this.state.open ?
 						<ContextualPopup
+							className={popupClassName}
 							showCloseButton={showCloseButton}
 							onCloseButtonClicked={this.handleClose}
 							direction={this.state.direction}
