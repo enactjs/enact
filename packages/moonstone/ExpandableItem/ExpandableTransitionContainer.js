@@ -14,8 +14,32 @@ const ExpandableTransitionContainerBase = class extends React.Component {
 	static displayName = 'ExpandableTransitionContainer'
 
 	static propTypes = {
+		/**
+		 * Set the spotlight container id of the Transition control.
+		 *
+		 * @type {String}
+		 * @default ''
+		 * @public
+		 */
 		'data-container-id': React.PropTypes.string,
-		autoFocus: React.PropTypes.bool
+
+		/**
+		 * Whether the contents of the container should receive spotlight focus when becoming visible.
+		 *
+		 * @type {Boolean}
+		 * @default true
+		 * @public
+		 */
+		autoFocus: React.PropTypes.bool,
+
+		/**
+		 * Set the visibility of the component, which determines whether it's on screen or off.
+		 *
+		 * @type {Boolean}
+		 * @default true
+		 * @public
+		 */
+		visible: React.PropTypes.bool
 	}
 
 	static defaultProps = {

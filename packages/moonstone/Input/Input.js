@@ -44,6 +44,15 @@ const InputBase = kind({
 		dismissOnEnter: PropTypes.bool,
 
 		/**
+		 * When `true`, adds a `focused` class to the input decorator
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		focused: PropTypes.bool,
+
+		/**
 		 * The icon to be placed at the end of the input.
 		 *
 		 * @see {@link moonstone/Icon.Icon}

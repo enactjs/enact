@@ -19,6 +19,35 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'InputSpotlightDecorator';
 
+		static propTypes = {
+			/**
+			 * When `true`, blurs the input when the "enter" key is pressed.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			dismissOnEnter: React.PropTypes.bool,
+
+			/**
+			 * When `true`, prevents the decorator from receiving a visible focus state
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			noDecorator: React.PropTypes.bool,
+
+			/**
+			 * When `true`, prevents navigation of the component using spotlight
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			spotlightDisabled: React.PropTypes.bool
+		}
+
 		constructor (props) {
 			super(props);
 

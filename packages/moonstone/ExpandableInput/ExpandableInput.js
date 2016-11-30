@@ -18,13 +18,39 @@ class ExpandableInputBase extends React.Component {
 		disabled: React.PropTypes.bool,
 
 		/**
-		 * The handler to run when the input value is changed.
+		 * The handler to run when the expandable value is changed.
 		 *
 		 * @type {Function}
 		 * @param {Object} event
 		 * @public
 		 */
 		onChange: React.PropTypes.func,
+
+		/**
+		 * Callback to be called when a condition occurs which should cause the expandable to close
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onClose: React.PropTypes.func,
+
+		/**
+		 * The handler to run when the input value is changed.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onInputChange: React.PropTypes.func,
+
+		/**
+		 * When `true`, the control is rendered in the expanded state, with the contents visible
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		open: React.PropTypes.bool,
 
 		/**
 		 * The placeholder text to display.
@@ -87,7 +113,12 @@ class ExpandableInputBase extends React.Component {
 	}
 
 	handleInputBlur = () => {
-		this.fireChangeEvent();
+		// if `open` is `false`, the contained <input> has lost focus due to 5-way navigation
+		// in `handleInputKeyDown`, where the `fireChangeEvent` method has already been called
+		// verify the expandable is open before calling that method again.
+		if (this.props.open) {
+			this.fireChangeEvent();
+		}
 	}
 
 	handleMouseDown = (ev) => {
@@ -121,8 +152,6 @@ class ExpandableInputBase extends React.Component {
 					placeholder={placeholder}
 					type={type}
 					value={value}
-					data-spot-up=''
-					data-spot-down=''
 				/>
 			</ExpandableItemBase>
 		);
