@@ -9,6 +9,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `marqueeCentered` prop to `moonstone/MarqueeDecorator` and `moonstone/MarqueeText`
 - `ItemOverlay` component to `moonstone/Item` module
 - `placeholder` prop to `moonstone/Image`
+- `moonstone/MarqueeController` component to synchronize multiple `moonstone/Marquee` components
 - Non-latin locale support to all existing Moonstone components.
 
 ### Changed
@@ -21,6 +22,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - LESS mixins that belong in `@enact/ui`, so that only moonstone-specific mixins are contained in
 this module. When authoring components and importing mixins, only the local mixins need to be
 imported, as they already import the general mixins.
+
+### Fixed
+
+- Joined picker so that it now has correct animation when using the mouse wheel.
 
 ## [1.0.0-alpha.3] - 2016-11-8
 
