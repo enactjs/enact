@@ -94,14 +94,17 @@ const RadioItemBase = kind({
 	},
 
 	computed: {
-		iconClasses: ({selected, styler}) => styler.join(
-			css.dot,
-			{selected}
-		)
+		icon: ({selected, styler}) => {
+			const className = styler.join(css.dot, {selected});
+
+			return (
+				<div className={className} />
+			);
+		}
 	},
 
 	render: (props) => (
-		<ToggleItem {...props} icon=" " />
+		<ToggleItem {...props} />
 	)
 });
 

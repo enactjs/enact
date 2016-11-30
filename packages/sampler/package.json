@@ -48,9 +48,9 @@
     "@kadira/react-storybook-addon-info": "~3.2.1",
     "@kadira/storybook": "~2.20.1",
     "@kadira/storybook-addon-knobs": "~1.2.3",
-    "react": "~15.3.2",
-    "react-addons-perf": "~15.3.2",
-    "react-dom": "~15.3.2",
+    "react": "~15.4.0",
+    "react-addons-perf": "~15.4.0",
+    "react-dom": "~15.4.0",
     "react-storybook-addon-backgrounds": "~0.0.4"
   }
 }

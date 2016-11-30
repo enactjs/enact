@@ -323,6 +323,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					this.doScrollStart();
 					this.isFirstDragging = false;
 				}
+				this.showThumb();
 				this.scroll(this.scrollLeft - dx, this.scrollTop - dy);
 			}
 		}
@@ -443,13 +444,17 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		setScrollLeft (v) {
 			this.dirHorizontal = Math.sign(v - this.scrollLeft);
 			this.scrollLeft = R.clamp(0, this.bounds.maxLeft, v);
-			this.updateThumb(this.scrollbarHorizontalRef);
+			if (this.state.isHorizontalScrollbarVisible) {
+				this.updateThumb(this.scrollbarHorizontalRef);
+			}
 		}
 
 		setScrollTop (v) {
 			this.dirVertical = Math.sign(v - this.scrollTop);
 			this.scrollTop = R.clamp(0, this.bounds.maxTop, v);
-			this.updateThumb(this.scrollbarVerticalRef);
+			if (this.state.isVerticalScrollbarVisible) {
+				this.updateThumb(this.scrollbarVerticalRef);
+			}
 		}
 
 		// scroll start/stop
@@ -471,6 +476,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			if ((bounds.maxTop - targetY) < epsilon) {
 				targetY = bounds.maxTop;
 			}
+
+			this.showThumb();
 
 			if (animate) {
 				this.animator.start({
@@ -525,6 +532,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.isScrollAnimationTargetAccumulated = false;
 			this.childRef.setContainerDisabled(false);
 			this.lastFocusedItem = null;
+			this.hideThumb();
 			this.doScrollStop();
 		}
 
@@ -604,16 +612,34 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.verticalScrollability && (this.bounds.scrollHeight > this.bounds.clientHeight) && !isNaN(this.bounds.scrollHeight)
 		)
 
+		showThumb () {
+			if (this.props.positioningOption !== 'byBrowser' && !this.props.hideScrollbars) {
+				if (this.state.isHorizontalScrollbarVisible) {
+					this.scrollbarHorizontalRef.showThumb();
+				}
+				if (this.state.isVerticalScrollbarVisible) {
+					this.scrollbarVerticalRef.showThumb();
+				}
+			}
+		}
+
 		updateThumb (scrollbarRef) {
 			if (this.props.positioningOption !== 'byBrowser' && !this.props.hideScrollbars) {
-				const isVisible = scrollbarRef.props.isVertical ? this.canScrollVertically : this.canScrollHorizontally;
-				if (isVisible()) {
-					scrollbarRef.showThumb();
-					scrollbarRef.update({
-						...this.bounds,
-						scrollLeft: this.scrollLeft,
-						scrollTop: this.scrollTop
-					});
+				scrollbarRef.update({
+					...this.bounds,
+					scrollLeft: this.scrollLeft,
+					scrollTop: this.scrollTop
+				});
+			}
+		}
+
+		hideThumb () {
+			if (this.props.positioningOption !== 'byBrowser' && !this.props.hideScrollbars) {
+				if (this.state.isHorizontalScrollbarVisible) {
+					this.scrollbarHorizontalRef.startHidingThumb();
+				}
+				if (this.state.isVerticalScrollbarVisible) {
+					this.scrollbarVerticalRef.startHidingThumb();
 				}
 			}
 		}
@@ -718,7 +744,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			return (
 				(positioningOption !== 'byBrowser' && !hideScrollbars) ? (
 					<div ref={this.initContainerRef} className={scrollableClasses} style={style}>
-						<Wrapped {...props} {...this.eventHandlers} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={css.container} />
 						<Scrollbar
 							className={verticalScrollbarClassnames}
 							{...this.verticalScrollbarProps}
@@ -727,6 +752,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 							className={horizontalScrollbarClassnames}
 							{...this.horizontalScrollbarProps}
 						/>
+						<Wrapped {...props} {...this.eventHandlers} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={css.container} />
 					</div>
 				) : <Wrapped {...props} {...this.eventHandlers} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={scrollableClasses} style={style} />
 			);
