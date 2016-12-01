@@ -19,7 +19,7 @@ import css from './Scrollable.less';
 const
 	calcVelocity = (d, dt) => (d && dt) ? d / dt : 0,
 	nop = () => {},
-	perf = (typeof window === 'object') ? window.performance : {},
+	perf = (typeof window === 'object') ? window.performance : {now: Date.now},
 	holdTime = 50,
 	scrollWheelMultiplier = 5,
 	pixelPerLine = ri.scale(40) * scrollWheelMultiplier,
