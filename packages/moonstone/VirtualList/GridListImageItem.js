@@ -11,6 +11,7 @@ import React, {PropTypes} from 'react';
 import {Spottable} from '@enact/spotlight';
 
 import Icon from '../Icon';
+import {Image} from '../Image';
 import {ItemBase} from '../Item';
 
 import css from './GridListImageItem.less';
@@ -43,16 +44,6 @@ const GridListImageItemBase = kind({
 		 * @public
 		 */
 		caption: PropTypes.string,
-
-		/**
-		 * A placeholder image to be displayed before the image is loaded.
-		 * For performance purposes, it should be pre-loaded or be a data url.
-		 *
-		 * @type {String}
-		 * @default defaultPlaceholder
-		 * @public
-		 */
-		placeholder: PropTypes.string,
 
 		/**
 		 * When `true`, applies a selected visual effect to the image, but only if `selectionOverlayShowing`
@@ -92,7 +83,6 @@ const GridListImageItemBase = kind({
 	},
 
 	defaultProps: {
-		placeholder: defaultPlaceholder,
 		selected: false,
 		selectionOverlayShowing: false
 	},
@@ -103,31 +93,27 @@ const GridListImageItemBase = kind({
 	},
 
 	computed: {
-		className: ({selected, styler}) => styler.append({selected}),
-		source: ({placeholder, source}) => (source ? source : placeholder)
+		className: ({selected, styler}) => styler.append({selected})
 	},
 
 	render: ({caption, source, subCaption, selectionOverlayShowing, ...rest}) => {
 		delete rest.selected;
-		delete rest.placeholder;
 
 		return (
-			<ItemBase {...rest}>
-				<div className={css.image}>
-					<img src={source} draggable={false} />
-					{
-						selectionOverlayShowing ? (
-							<div className={css.overlayContainer}>
-								<div className={css.overlayComponent}>
-									<Icon className={css.icon}>check</Icon>
-								</div>
+			<div {...rest}>
+				<Image className={css.image} src={source} placeholder={defaultPlaceholder} />
+				{
+					selectionOverlayShowing ? (
+						<div className={css.overlayContainer}>
+							<div className={css.overlayComponent}>
+								<Icon className={css.icon}>check</Icon>
 							</div>
-						) : null
-					}
-				</div>
-				{caption ? (<div className={css.caption}>{caption}</div>) : null}
-				{subCaption ? (<div className={css.subCaption}>{subCaption}</div>) : null}
-			</ItemBase>
+						</div>
+					) : null
+				}
+				{caption ? (<ItemBase className={css.caption}>{caption}</ItemBase>) : null}
+				{subCaption ? (<ItemBase className={css.subCaption}>{subCaption}</ItemBase>) : null}
+			</div>
 		);
 	}
 });

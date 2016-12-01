@@ -53,7 +53,7 @@ const TransitionBase = kind({
 
 		/**
 		 * Sets the direction of transition. Where the component will move *to*; the destination.
-		 * Supported directions are: up, right, down, left.
+		 * Supported directions are: `'up'`, `'right'`, `'down'`, `'left'`.
 		 *
 		 * @type {String}
 		 * @default 'up'
@@ -63,8 +63,8 @@ const TransitionBase = kind({
 
 		/**
 		 * Control how long the transition should take.
-		 * Supported durations are: short (250ms), long (1s). medium (500ms) is default when no
-		 * others are specified.
+		 * Supported durations are: `'short'` (250ms), `'long'` (1s). `'medium'` (500ms) is default
+		 * when no others are specified.
 		 *
 		 * @type {String}
 		 * @default 'medium'
@@ -73,7 +73,7 @@ const TransitionBase = kind({
 		duration: PropTypes.oneOf(['short', 'medium', 'long']),
 
 		/**
-		 * When `true`, it fill its container's size.
+		 * When `true`, the transition fills its container's size.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -82,7 +82,7 @@ const TransitionBase = kind({
 		fit: PropTypes.bool,
 
 		/**
-		 * When `true`, it disables transition. When `false`, it animates visibility change.
+		 * When `true`, transition animation is disabled. When `false`, visibility changes animate.
 		 *
 		 * @type {Boolean}
 		 * @default false

@@ -21,7 +21,7 @@ describe('Popup specs', () => {
 		);
 
 		const expected = true;
-		const actual = popup.find('FloatLayer').prop('open');
+		const actual = popup.find('FloatingLayer').prop('open');
 
 		expect(actual).to.equal(expected);
 	});
@@ -32,7 +32,7 @@ describe('Popup specs', () => {
 		);
 
 		const expected = false;
-		const actual = popup.find('FloatLayer').prop('open');
+		const actual = popup.find('FloatingLayer').prop('open');
 
 		expect(actual).to.equal(expected);
 	});

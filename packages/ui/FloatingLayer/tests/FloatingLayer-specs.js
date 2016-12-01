@@ -1,8 +1,8 @@
 import React from 'react';
 import {mount} from 'enzyme';
-import {FloatLayerBase} from '../FloatLayer';
+import {FloatingLayerBase} from '../FloatingLayer';
 
-describe('FloatLayer Specs', () => {
+describe('FloatingLayer Specs', () => {
 	beforeEach(() => {
 		const div = document.createElement('div');
 		div.setAttribute('id', 'floatLayer');
@@ -14,16 +14,16 @@ describe('FloatLayer Specs', () => {
 		document.body.removeChild(div);
 	});
 
-	it('should not render if FloatLayer is not open', () => {
-		const wrapper = mount(<FloatLayerBase><p>Hi</p></FloatLayerBase>);
+	it('should not render if FloatingLayer is not open', () => {
+		const wrapper = mount(<FloatingLayerBase><p>Hi</p></FloatingLayerBase>);
 
 		const expected = null;
 		const actual = wrapper.instance().node;
 		expect(actual).to.equal(expected);
 	});
 
-	it('should render if FloatLayer is open', () => {
-		const wrapper = mount(<FloatLayerBase open><p>Hi</p></FloatLayerBase>);
+	it('should render if FloatingLayer is open', () => {
+		const wrapper = mount(<FloatingLayerBase open><p>Hi</p></FloatingLayerBase>);
 
 		const expected = 'P';
 		const actual = wrapper.instance().node.firstElementChild.firstElementChild.tagName;

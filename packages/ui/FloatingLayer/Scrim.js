@@ -1,8 +1,10 @@
 /* //TODO: JSDOC revisit
- * Exports the {@link ui/FloatLayer.ScrimBase} component and {@link ui/FloatLayer.ScrimLayer}
- * components. The default export is {@link ui/FloatLayer.ScrimBase}.
+ * Exports the {@link ui/FloatingLayer/Scrim.Scrim} component and
+ * {@link ui/FloatingLayer/Scrim.ScrimBase} components. The default export is
+ * {@link ui/FloatingLayer/Scrim.Scrim}.
  *
- * @module ui/FloatLayer/Scrim
+ * @module ui/FloatingLayer/Scrim
+ * @private
  */
 
 import kind from '@enact/core/kind';
@@ -11,20 +13,20 @@ import React from 'react';
 import css from './Scrim.less';
 
 /**
- * {@link ui/FloatLayer.ScrimBase} provides an overlay that will prevent taps from propagating
+ * {@link ui/FloatingLayer/Scrim.ScrimBase} provides an overlay that will prevent taps from propagating
  * to the controls that it covers.
  *
  * @class ScrimBase
- * @memberOf ui/FloatLayer
+ * @memberof ui/FloatingLayer/Scrim
  * @ui
  * @private
  */
 const ScrimBase = kind({
 	name: 'ScrimBase',
 
-	propTypes: /** @lends ui/FloatLayer.ScrimBase.prototype */ {
+	propTypes: /** @lends ui/FloatingLayer/Scrim.ScrimBase.prototype */ {
 		/**
-		 * Types of scrim. It can be either `transparent` or `translucent`.
+		 * Types of scrim. It can be either `'transparent'` or `'translucent'`.
 		 *
 		 * @type {String}
 		 * @default `translucent`
@@ -56,18 +58,18 @@ const ScrimBase = kind({
 });
 
 /**
- * {@link ui/FloatLayer.ScrimLayer} is a layer which adds scrim behind the children.
+ * {@link ui/FloatingLayer/Scrim.Scrim} is a layer which adds scrim behind the children.
  * Children will always have one higher z-index than scrim.
  *
- * @class ScrimLayer
- * @memberOf ui/FloatLayer
+ * @class Scrim
+ * @memberof ui/FloatingLayer/Scrim
  * @ui
  * @private
  */
-const ScrimLayer = kind({
-	name: 'ScrimLayer',
+const Scrim = kind({
+	name: 'Scrim',
 
-	propTypes: /** @lends ui/FloatLayer.ScrimLayer.prototype */ {
+	propTypes: /** @lends ui/FloatingLayer/Scrim.Scrim.prototype */ {
 		/**
 		 * z-index of the layer. Scrim will have the z-index of layer, and the children will have
 		 * one higher index to display on top of Scrim.
@@ -130,5 +132,5 @@ const ScrimLayer = kind({
 	}
 });
 
-export default ScrimBase;
-export {ScrimBase, ScrimLayer};
+export default Scrim;
+export {ScrimBase, Scrim};

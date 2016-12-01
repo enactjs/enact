@@ -1,43 +1,43 @@
 /**
- * Exports the {@link ui/FloatLayer.FloatLayer} and  {@link ui/FloatLayer.FloatLayerBase}
- * components. The default export is {@link ui/FloatLayer.FloatLayer}.
+ * Exports the {@link ui/FloatingLayer.FloatingLayer} and  {@link ui/FloatingLayer.FloatingLayerBase}
+ * components. The default export is {@link ui/FloatingLayer.FloatingLayer}.
  *
- * @module ui/FloatLayer
+ * @module ui/FloatingLayer
  */
 
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Cancelable from '../Cancelable';
 
-import {ScrimLayer} from './Scrim';
+import Scrim from './Scrim';
 
-// the current most highest z-index value for FloatLayers
+// the current highest z-index value for FloatingLayers
 let scrimZIndex = 120;
 
 // array of z-indexes for visible layers
 const viewingLayers = [];
 
 /**
- * {@link ui/FloatLayer.FloatLayerBase} is a component that creates an entry point to the new
+ * {@link ui/FloatingLayer.FloatingLayerBase} is a component that creates an entry point to the new
  * render tree. This is used for modal components such as popups.
  *
- * @class FloatLayer
- * @memberOf ui/FloatLayer
+ * @class FloatingLayer
+ * @memberof ui/FloatingLayer
  * @ui
  * @public
  */
-class FloatLayerBase extends React.Component {
-	static displayName = 'FloatLayer'
+class FloatingLayerBase extends React.Component {
+	static displayName = 'FloatingLayer'
 
 	constructor (props) {
 		super(props);
 		this.node = null;
-		this.FloatLayer = null;
+		this.floatLayer = null;
 	}
 
-	static propTypes = /** @lends ui/FloatLayer.FloatLayerBase.prototype */ {
+	static propTypes = /** @lends ui/FloatingLayer.FloatingLayerBase.prototype */ {
 		/**
-		 * CSS classes for FloatLayer.
+		 * CSS classes for FloatingLayer.
 		 *
 		 * @type {String}
 		 * @default `enact-fit enact-clip enact-untouchable`
@@ -55,7 +55,7 @@ class FloatLayerBase extends React.Component {
 		floatLayerId: React.PropTypes.string,
 
 		/**
-		 * When `true`, FloatLayer will not hide when the user presses `ESC` key.
+		 * When `true`, FloatingLayer will not hide when the user presses `ESC` key.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -64,7 +64,7 @@ class FloatLayerBase extends React.Component {
 		noAutoDismiss: React.PropTypes.bool,
 
 		/**
-		 * A function to run when floating layer is closed.
+		 * A function to be run when floating layer is closed.
 		 *
 		 * @type {Function}
 		 * @public
@@ -72,7 +72,7 @@ class FloatLayerBase extends React.Component {
 		onClose: React.PropTypes.func,
 
 		/**
-		 * A function to run when `ESC` key is pressed. The function will only invoke if
+		 * A function to be run when `ESC` key is pressed. The function will only invoke if
 		 * `noAutoDismiss` is set to `false`.
 		 *
 		 * @type {Function}
@@ -81,7 +81,7 @@ class FloatLayerBase extends React.Component {
 		onDismiss: React.PropTypes.func,
 
 		/**
-		 * A function to run when floating layer is opened. It will only be invoked for the first render.
+		 * A function to be run when floating layer is opened. It will only be invoked for the first render.
 		 *
 		 * @type {Function}
 		 * @public
@@ -89,7 +89,7 @@ class FloatLayerBase extends React.Component {
 		onOpen: React.PropTypes.func,
 
 		/**
-		 * When `true`, it renders components into floating layer.
+		 * When `true`, the floating layer and its components will be rendered.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -98,7 +98,7 @@ class FloatLayerBase extends React.Component {
 		open: React.PropTypes.bool,
 
 		/**
-		 * Types of scrim. It can be either `transparent` or `translucent`.
+		 * The scrim type. It can be either `'transparent'` or `'translucent'`.
 		 *
 		 * @type {String}
 		 * @default `translucent`
@@ -108,10 +108,10 @@ class FloatLayerBase extends React.Component {
 	}
 
 	static defaultProps = {
-		noAutoDismiss: false,
-		open: false,
 		floatLayerClassName: 'enact-fit enact-clip enact-untouchable',
 		floatLayerId: 'floatLayer',
+		noAutoDismiss: false,
+		open: false,
 		scrimType: 'translucent'
 	}
 
@@ -119,33 +119,29 @@ class FloatLayerBase extends React.Component {
 		if (this.props.open) {
 			viewingLayers.push(scrimZIndex);
 			this.prevZIndex = scrimZIndex;
-			this.renderFloatLayer(this.props);
+			this.renderFloatingLayer(this.props);
 		}
 	}
 
 	componentWillReceiveProps (nextProps) {
 		if (nextProps.open) {
-			let isOpened = false;
-			if (nextProps.open === this.props.open) {
-				// will not increase zIndex for already opened layer
-				isOpened = true;
-			} else {
+			if (!this.props.open) {
 				// increase scrimZIndex by 2 for the new layer
 				scrimZIndex = scrimZIndex + 2;
 				this.prevZIndex = scrimZIndex;
 				viewingLayers.push(scrimZIndex);
 			}
-			this.renderFloatLayer(nextProps, isOpened);
+			this.renderFloatingLayer(nextProps, this.props.open);
 		} else {
-			this.closeFloatLayer();
+			this.closeFloatingLayer();
 		}
 	}
 
 	componentWillUnmount () {
-		this.closeFloatLayer();
+		this.closeFloatingLayer();
 	}
 
-	closeFloatLayer () {
+	closeFloatingLayer () {
 		if (this.node) {
 			ReactDOM.unmountComponentAtNode(this.node);
 			document.getElementById(this.props.floatLayerId).removeChild(this.node);
@@ -161,7 +157,7 @@ class FloatLayerBase extends React.Component {
 		this.node = null;
 	}
 
-	renderFloatLayer ({floatLayerClassName, floatLayerId, scrimType, ...rest}, isOpened = false) {
+	renderFloatingLayer ({floatLayerClassName, floatLayerId, scrimType, ...rest}, isOpened = false) {
 		delete rest.noAutoDismiss;
 		delete rest.onClose;
 		delete rest.onDismiss;
@@ -183,7 +179,7 @@ class FloatLayerBase extends React.Component {
 		};
 		this.floatLayer = ReactDOM.unstable_renderSubtreeIntoContainer(
 			this,
-			<ScrimLayer
+			<Scrim
 				{...scrimProps}
 				{...rest}
 			/>,
@@ -200,7 +196,7 @@ class FloatLayerBase extends React.Component {
 	}
 }
 
-const handleCancel = function (props) {
+const handleCancel = (props) => {
 	if (props.open && !props.noAutoDismiss && props.onDismiss) {
 		props.onDismiss();
 	} else {
@@ -210,16 +206,16 @@ const handleCancel = function (props) {
 };
 
 /**
- * {@link ui/FloatLayer.FloatLayer} is a component that creates an entry point to the new
+ * {@link ui/FloatingLayer.FloatingLayer} is a component that creates an entry point to the new
  * render tree. This is used for modal components such as popups.
  *
- * @class FloatLayer
- * @memberof ui/FloatLayer
+ * @class FloatingLayer
+ * @memberof ui/FloatingLayer
  * @ui
  * @mixes ui/Cancelable.Cancelable
  * @public
  */
-const FloatLayer = Cancelable({modal: true, onCancel: handleCancel}, FloatLayerBase);
+const FloatingLayer = Cancelable({modal: true, onCancel: handleCancel}, FloatingLayerBase);
 
-export default FloatLayer;
-export {FloatLayer, FloatLayerBase};
+export default FloatingLayer;
+export {FloatingLayer, FloatingLayerBase};

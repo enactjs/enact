@@ -10,7 +10,7 @@ import hoc from '@enact/core/hoc';
 import I18nDecorator from '@enact/i18n/I18nDecorator';
 import React from 'react';
 import {ResolutionDecorator} from '@enact/ui/resolution';
-import {FloatLayerDecorator} from '@enact/ui/FloatLayer';
+import {FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
 import {SpotlightRootDecorator} from '@enact/spotlight';
 
 import screenTypes from './screenTypes.json';
@@ -49,7 +49,7 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {ri, i18n, spotlight, float, cancelHandler} = config;
 	let App = Wrapped;
 
-	if (float) App = FloatLayerDecorator(App);
+	if (float) App = FloatingLayerDecorator(App);
 	if (cancelHandler) addCancelHandler(cancelHandler);
 	if (ri) App = ResolutionDecorator(ri, App);
 	if (i18n) App = I18nDecorator(App);
