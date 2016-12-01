@@ -18,7 +18,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Slider` and `moonstone/IncrementSlider` to be more performant. No changes were made to
 	the public API.
 - the implementation of `moonstone/GridListImageItem` so that a placeholder image displays while loading the image, and the caption and subcaption support marqueeing.
->>>>>>> develop
 
 ### Removed
 
