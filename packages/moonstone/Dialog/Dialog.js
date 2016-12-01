@@ -113,7 +113,7 @@ const DialogBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		useDivider: PropTypes.bool
+		showDivider: PropTypes.bool
 	},
 
 	defaultProps: {
@@ -128,11 +128,11 @@ const DialogBase = kind({
 	},
 
 	computed: {
-		className: ({useDivider, styler}) => styler.append({useDivider})
+		className: ({showDivider, styler}) => styler.append({showDivider})
 	},
 
 	render: ({buttons, children, title, titleBelow, ...rest}) => {
-		delete rest.useDivider;
+		delete rest.showDivider;
 
 		return (
 			<Popup {...rest}>
