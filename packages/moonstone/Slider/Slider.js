@@ -13,86 +13,11 @@ import React, {PropTypes} from 'react';
 import SliderDecorator from '../internal/SliderDecorator';
 import {
 	computeProportionBackground,
-	computeProportionProgress,
-	computeBarTransform,
-	computeKnobTransform
+	computeProportionProgress
 } from '../internal/SliderDecorator/util';
 
+import SliderBar from './SliderBar';
 import css from './Slider.less';
-
-/**
- * {@link moonstone/Slider.VisibleBar} is private.
- *
- * @class VisibleBar
- * @memberof moonstone/Slider
- * @ui
- * @private
- */
-class VisibleBar extends React.Component {
-	static propTypes = /** @lends moonstone/Slider.VisibleBar.prototype */{
-		/**
-		 * The background progress as a proportion.
-		 *
-		 * @type {Number}
-		 * @public
-		 */
-		proportionBackgroundProgress: PropTypes.number,
-
-		/**
-		 * The progress as a percentage.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		proportionProgress: PropTypes.number,
-
-		/**
-		 * If `true` the slider will be oriented vertically.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		vertical: PropTypes.bool,
-
-		/**
-		 * Height, in standard CSS units, of the vertical slider. Only takes
-		 * effect on a vertical oriented slider, and will be `null` otherwise.
-		 *
-		 * @type {Object}
-		 * @public
-		 */
-		verticalHeight: PropTypes.object
-	}
-
-	getBarNode = (node) => {
-		this.barNode = node;
-	}
-
-	getKnobNode = (node) => {
-		this.knobNode = node;
-		this.knobWidth = node && node.offsetHeight / 2;
-	}
-
-	getLoaderNode = (node) => {
-		this.loaderNode = node;
-	}
-
-	getNode = (node) => {
-		this.node = node;
-	}
-
-	render () {
-		const {proportionBackgroundProgress, proportionProgress, vertical, verticalHeight, ...rest} = this.props;
-
-		return (
-			<div {...rest} className={css.visibleBar} ref={this.getNode} style={verticalHeight}>
-				<div className={css.load} ref={this.getLoaderNode} style={{transform: computeBarTransform(proportionBackgroundProgress, vertical)}} />
-				<div className={css.fill} ref={this.getBarNode} style={{transform: computeBarTransform(proportionProgress, vertical)}} />
-				<div className={css.knob} ref={this.getKnobNode} style={{transform: computeKnobTransform(proportionProgress, vertical, this.node, this.knobWidth)}} />
-			</div>
-		);
-	}
-}
 
 /**
  * {@link moonstone/Slider.SliderBase} is a stateless Slider. In most circumstances, you will want
@@ -246,7 +171,7 @@ const SliderBase = kind({
 
 		return (
 			<div {...rest} ref={sliderRef}>
-				<VisibleBar
+				<SliderBar
 					proportionBackgroundProgress={proportionBackgroundProgress}
 					proportionProgress={proportionProgress}
 					ref={visibleBarRef}
