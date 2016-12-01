@@ -1,5 +1,5 @@
 import hoc from '@enact/core/hoc';
-import {Spottable} from '@enact/spotlight';
+import {Spotlight, Spottable} from '@enact/spotlight';
 import Pressable from '@enact/ui/Pressable';
 import React from 'react';
 
@@ -12,9 +12,25 @@ const SpottablePicker = hoc(null, (config, Wrapped) => {
 			joined: React.PropTypes.bool
 		}
 
+		componentDidUpdate () {
+			if (this.incrementerNode.disabled && !this.decrementerNode.disabled) {
+				Spotlight.focus(this.decrementerNode);
+			} else if (this.decrementerNode.disabled && !this.incrementerNode.disabled) {
+				Spotlight.focus(this.incrementerNode);
+			}
+		}
+
+		getDecrementerNode = (node) => {
+			this.decrementerNode = node;
+		}
+
+		getIncrementerNode = (node) => {
+			this.incrementerNode = node;
+		}
+
 		render () {
 			const Component = this.props.joined ? Joined : Wrapped;
-			return <Component {...this.props} />;
+			return <Component {...this.props} incrementerRef={this.getIncrementerNode} decrementerRef={this.getDecrementerNode} />;
 		}
 	};
 });

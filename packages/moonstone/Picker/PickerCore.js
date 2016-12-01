@@ -333,7 +333,9 @@ const PickerCore = class extends React.Component {
 		const {
 			noAnimation,
 			children,
+			decrementerRef,
 			disabled,
+			incrementerRef,
 			index,
 			joined,
 			onMouseUp,
@@ -373,13 +375,13 @@ const PickerCore = class extends React.Component {
 		return (
 			<div {...rest} className={classes} disabled={disabled} onWheel={joined ? this.handleWheel : null}>
 				<span className={css.incrementer} disabled={incrementerDisabled} onClick={handleIncClick} onMouseDown={this.handleIncDown} onMouseUp={onMouseUp}>
-					<ButtonType disabled={incrementerDisabled}>{incrementIcon}</ButtonType>
+					<ButtonType disabled={incrementerDisabled} componentRef={incrementerRef}>{incrementIcon}</ButtonType>
 				</span>
 				<PickerViewManager arranger={arranger} duration={200} index={index} noAnimation={noAnimation} reverseTransition={this.reverseTransition} className={css.valueWrapper}>
 					{children}
 				</PickerViewManager>
 				<span className={css.decrementer} disabled={decrementerDisabled} onClick={handleDecClick} onMouseDown={this.handleDecDown} onMouseUp={onMouseUp}>
-					<ButtonType disabled={decrementerDisabled}>{decrementIcon}</ButtonType>
+					<ButtonType disabled={decrementerDisabled} componentRef={decrementerRef}>{decrementIcon}</ButtonType>
 				</span>
 			</div>
 		);
