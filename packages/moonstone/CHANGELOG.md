@@ -24,6 +24,7 @@ imported, as they already import the general mixins.
 ### Fixed
 
 - Joined picker so that it now has correct animation when using the mouse wheel.
+- Fixed bug in DatePicker/TimePicker that prevented it from going before 1969.
 
 ## [1.0.0-alpha.3] - 2016-11-8
 

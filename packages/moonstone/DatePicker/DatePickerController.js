@@ -179,8 +179,8 @@ const DatePickerController = class extends React.Component {
 
 	toTime (date) {
 		if (date && this.locale) {
-			const time = date.getTime();
-			return this.toIDate(time).getTime();
+			const time = date.getTimeExtended();
+			return this.toIDate(time).getTimeExtended();
 		}
 	}
 
@@ -189,14 +189,16 @@ const DatePickerController = class extends React.Component {
 	 *
 	 * @param	{IDate}		value	ilib Date object
 	 *
-	 * @returns {IDate} 			Updated internal value
+	 * @returns {Number}			Updated internal value
 	 */
 	updateValue = (value) => {
+		const newValue = DateFactory(value).getTimeExtended();
+
 		this.setState({
-			value: value
+			value: newValue
 		});
 
-		return value;
+		return newValue;
 	}
 
 	/**
@@ -210,7 +212,9 @@ const DatePickerController = class extends React.Component {
 
 		// Always use the current value if valid but if not and open, generate a value
 		if (currentValue) {
-			return currentValue;
+			return DateFactory({
+				unixtime: currentValue
+			});
 		} else if (this.props.open) {
 			return DateFactory({
 				unixtime: Date.now(),

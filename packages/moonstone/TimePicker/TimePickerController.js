@@ -248,8 +248,8 @@ const TimePickerController = class extends React.Component {
 
 	toTime (date) {
 		if (date && this.locale) {
-			const time = date.getTime();
-			return this.toIDate(time).getTime();
+			const time = date.getTimeExtended();
+			return this.toIDate(time).getTimeExtended();
 		}
 	}
 
@@ -270,7 +270,7 @@ const TimePickerController = class extends React.Component {
 	 * @returns {Number}			Updated internal value
 	 */
 	updateValue = (value) => {
-		const newValue = DateFactory(value).getTime();
+		const newValue = DateFactory(value).getTimeExtended();
 		this.setState({
 			noHourAnimation: !this.shouldAnimateHour(value),
 			value: newValue
