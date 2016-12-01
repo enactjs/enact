@@ -40,14 +40,10 @@ const defaultConfig = {
  */
 const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {ri, i18n, spotlight, cancelHandler} = config;
-	let App = Wrapped;
 
 	if (cancelHandler) addCancelHandler(cancelHandler);
-	if (ri) App = ResolutionDecorator(ri, App);
-	if (i18n) App = I18nDecorator(App);
-	if (spotlight) App = SpotlightRootDecorator(App);
 
-	return class extends React.Component {
+	class Decorator extends React.Component {
 		static displayName = 'MoonstoneDecorator';
 
 		componentDidMount () {
@@ -71,10 +67,18 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			fontGenerator(this.props);
 
 			return (
-				<App {...this.props} className={className} />
+				<Wrapped {...this.props} className={className} />
 			);
 		}
-	};
+	}
+
+	let App = Decorator;
+
+	if (ri) App = ResolutionDecorator(ri, App);
+	if (i18n) App = I18nDecorator(App);
+	if (spotlight) App = SpotlightRootDecorator(App);
+
+	return App;
 });
 
 export default MoonstoneDecorator;
