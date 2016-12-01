@@ -1,5 +1,5 @@
 import {ContextualPopup} from './ContextualPopup';
 import ContextualPopupDecorator from './ContextualPopupDecorator';
 
-export default ContextualPopup;
+export default ContextualPopupDecorator;
 export {ContextualPopup, ContextualPopupDecorator};
