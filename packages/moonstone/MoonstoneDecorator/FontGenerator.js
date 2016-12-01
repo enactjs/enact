@@ -6,6 +6,7 @@
 * @module moonstone/MoonstoneDecorator/FontGenerator
 */
 
+import ilib from '@enact/i18n';
 import Locale from '@enact/i18n/ilib/lib/Locale';
 
 let previousLocale = null;
@@ -49,9 +50,7 @@ let previousLocale = null;
 * @public
 */
 
-function funLocaleSpecificFonts (props) {
-	const locale = props.locale;
-
+function funLocaleSpecificFonts (locale = ilib.getLocale()) {
 	// If the locale is the same as the last time this ran, bail out and don't bother to recompile this again.
 	if (locale === previousLocale) return;
 
