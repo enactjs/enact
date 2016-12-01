@@ -17,15 +17,17 @@ storiesOf('ContextualPopup')
 				<div>{text('popup string', 'Hello Contextual Popup')}</div>
 			);
 			return (
-				<ContextualButton
-					direction={select('direction', ['up', 'down', 'left', 'right'], 'down')}
-					onClick={action('onClick')}
-					onCloseButtonClick={action('onCloseButtonClick')}
-					open={boolean('open', false)}
-					showCloseButton={boolean('showCloseButton', false)}
-					popupComponent={renderPopup}
-				>
-					{text('button string', 'Hello Contextual Button')}
-				</ContextualButton>
+				<div style={{textAlign: 'center'}}>
+					<ContextualButton
+						direction={select('direction', ['up', 'down', 'left', 'right'], 'down')}
+						onClick={action('onClick')}
+						onCloseButtonClick={action('onCloseButtonClick')}
+						open={boolean('open', false)}
+						showCloseButton={boolean('showCloseButton', false)}
+						popupComponent={renderPopup}
+					>
+						{text('button string', 'Hello Contextual Button')}
+					</ContextualButton>
+				</div>
 			);
 		});

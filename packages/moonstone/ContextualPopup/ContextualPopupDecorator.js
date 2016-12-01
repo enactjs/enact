@@ -116,12 +116,12 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					break;
 				case 'right':
 					position = {
-						left: clientNode.width + ARROW_OFFSET
+						left: this.context.rtl ? ARROW_OFFSET : clientNode.width + ARROW_OFFSET
 					};
 					break;
 				case 'left':
 					position = {
-						right: ARROW_OFFSET
+						right: this.context.rtl ? clientNode.width + ARROW_OFFSET : ARROW_OFFSET
 					};
 					break;
 				default:
@@ -144,6 +144,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					// center horizontally
 					pos.left = (clientNode.width - containerNode.width) / 2;
 				}
+				pos = this.adjustRTL(pos);
 			} else if (this.adjustedDirection === 'left' || this.adjustedDirection === 'right') {
 				if (this.overflow.isOverTop) {
 					// anchor to the top of the screen
@@ -157,42 +158,34 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				}
 			}
 
-			return this.adjustRTL(pos);
+			return pos;
 		}
 
 		getArrowPosition (clientNode) {
-			let position = {};
-
 			switch (this.adjustedDirection) {
 				case 'up':
-					position = {
+					return this.adjustRTL({
 						left: (clientNode.width - ARROW_WIDTH) / 2,
 						bottom: 0
-					};
-					break;
+					});
 				case 'down':
-					position = {
+					return this.adjustRTL({
 						left: (clientNode.width - ARROW_WIDTH) / 2,
 						top: clientNode.height
-					};
-					break;
+					});
 				case 'left':
-					position = {
-						right: 0,
+					return {
+						right: this.context.rtl ? clientNode.width : 0,
 						top: (clientNode.height - ARROW_WIDTH) / 2
 					};
-					break;
 				case 'right':
-					position = {
-						left: clientNode.width,
+					return {
+						left:  this.context.rtl ? 0 : clientNode.width,
 						top: (clientNode.height - ARROW_WIDTH) / 2
 					};
-					break;
 				default:
-					position = {};
+					return {};
 			}
-
-			return this.adjustRTL(position);
 		}
 
 		calcOverflow (container, client) {
