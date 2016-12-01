@@ -97,6 +97,14 @@ const SliderBase = kind({
 		pressed: PropTypes.bool,
 
 		/**
+		 * The method to run when the slider bar component mounts, giving a reference to the DOM.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		sliderBarRef: PropTypes.func,
+
+		/**
 		 * The method to run when mounted, giving a reference to the DOM.
 		 *
 		 * @type {Function}
@@ -129,15 +137,7 @@ const SliderBase = kind({
 		 * @default false
 		 * @public
 		 */
-		vertical: PropTypes.bool,
-
-		/**
-		 * The method to run when the visible bar component mounts, giving a reference to the DOM.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		visibleBarRef: PropTypes.func
+		vertical: PropTypes.bool
 	},
 
 	defaultProps: {
@@ -165,7 +165,7 @@ const SliderBase = kind({
 		verticalWidth: ({vertical, height}) => (vertical ? {width: height} : null)
 	},
 
-	render: ({inputRef, max, min, onChange, proportionBackgroundProgress, proportionProgress, sliderRef, step, value, vertical, verticalHeight, verticalWidth, visibleBarRef, ...rest}) => {
+	render: ({inputRef, max, min, onChange, proportionBackgroundProgress, proportionProgress, sliderBarRef, sliderRef, step, value, vertical, verticalHeight, verticalWidth, ...rest}) => {
 		delete rest.backgroundPercent;
 		delete rest.pressed;
 
@@ -174,12 +174,12 @@ const SliderBase = kind({
 				<SliderBar
 					proportionBackgroundProgress={proportionBackgroundProgress}
 					proportionProgress={proportionProgress}
-					ref={visibleBarRef}
+					ref={sliderBarRef}
 					vertical={vertical}
 					verticalHeight={verticalHeight}
 				/>
 				<input
-					className={css.sliderBar}
+					className={css.input}
 					type="range"
 					ref={inputRef}
 					max={max}

@@ -185,7 +185,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		updateValue = (value) => {
 			throttleJob(this.jobName, () => {
 				// intentionally breaking encapsulation to avoid having to specify multiple refs
-				const {barNode, knobNode, loaderNode, node} = this.visibleBarNode;
+				const {barNode, knobNode, loaderNode, node} = this.sliderBarNode;
 				const {backgroundPercent, max, min, vertical} = this.props;
 				const normalizedMax = max != null ? max : Wrapped.defaultProps.max;
 				const normalizedMin = min != null ? min : Wrapped.defaultProps.min;
@@ -209,8 +209,8 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.sliderNode = node;
 		}
 
-		getVisibleBarNode = (node) => {
-			this.visibleBarNode = node;
+		getSliderBarRef = (node) => {
+			this.sliderBarNode = node;
 		}
 
 		clickHandler = () => Spotlight.focus(this.sliderNode)
@@ -246,7 +246,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					inputRef={this.getInputNode}
 					sliderRef={this.getSliderNode}
 					value={this.value}
-					visibleBarRef={this.getVisibleBarNode}
+					sliderBarRef={this.getSliderBarRef}
 				/>
 			);
 		}

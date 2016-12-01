@@ -11,7 +11,7 @@ describe('SliderBase Specs', () => {
 		);
 
 		const expected = 50;
-		const actual = sliderBase.find(`.${css.sliderBar}`).prop('value');
+		const actual = sliderBase.find(`.${css.input}`).prop('value');
 
 		expect(actual).to.equal(expected);
 	});
@@ -22,7 +22,7 @@ describe('SliderBase Specs', () => {
 		);
 
 		const expected = 50;
-		const actual = sliderBase.find(`.${css.sliderBar}`).prop('max');
+		const actual = sliderBase.find(`.${css.input}`).prop('max');
 
 		expect(actual).to.equal(expected);
 	});
@@ -33,7 +33,7 @@ describe('SliderBase Specs', () => {
 		);
 
 		const expected = 50;
-		const actual = sliderBase.find(`.${css.sliderBar}`).prop('min');
+		const actual = sliderBase.find(`.${css.input}`).prop('min');
 
 		expect(actual).to.equal(expected);
 	});
@@ -44,7 +44,7 @@ describe('SliderBase Specs', () => {
 		);
 
 		const expected = 2;
-		const actual = sliderBase.find(`.${css.sliderBar}`).prop('step');
+		const actual = sliderBase.find(`.${css.input}`).prop('step');
 
 		expect(actual).to.equal(expected);
 	});

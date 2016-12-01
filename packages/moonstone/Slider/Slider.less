@@ -33,7 +33,7 @@
 		background-color: @moon-progress-bar-bg-color;
 	}
 
-	.visibleBar {
+	.sliderBar {
 		position: relative;
 		background-color: @moon-progress-bg-color;
 	}
@@ -50,7 +50,7 @@
 		will-change: transform;
 	}
 
-	.sliderBar {
+	.input {
 		position: absolute;
 		top: 0;
 		left: 0;
@@ -72,7 +72,7 @@
 	}
 
 	&.horizontal {
-		.visibleBar {
+		.sliderBar {
 			top: ((@moon-slider-knob-height / 2) -  (@moon-slider-bar-height / 2));
 			height: @moon-slider-bar-height;
 			margin: 0 (@moon-slider-knob-width / 2);
@@ -80,7 +80,7 @@
 		.knob {
 			top: 50%;
 		}
-		.sliderBar {
+		.input {
 			box-sizing: border-box;
 		}
 	}
@@ -97,7 +97,7 @@
 			transform-origin: 0 100%; // the origin should be the bottom when vertical
 		}
 
-		.visibleBar {
+		.sliderBar {
 			width: @moon-slider-bar-height;
 			margin: (@moon-slider-knob-width / 2) ((@moon-slider-knob-height / 2) -  (@moon-slider-bar-height / 2));
 			bottom: 0;
@@ -109,7 +109,7 @@
 			transform: translate(-50%, 50%);
 		}
 
-		.sliderBar {
+		.input {
 			transform: rotate(270deg) translateY(-1.25rem) translate(-100%, 50%);
 			transform-origin: top left;
 			transition: transform 1s ease;
