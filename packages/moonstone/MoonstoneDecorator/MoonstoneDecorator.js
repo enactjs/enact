@@ -12,6 +12,7 @@ import React from 'react';
 import {ResolutionDecorator} from '@enact/ui/resolution';
 import {SpotlightRootDecorator} from '@enact/spotlight';
 
+import fontGenerator from './FontGenerator';
 import screenTypes from './screenTypes.json';
 import css from './MoonstoneDecorator.less';
 
@@ -66,6 +67,8 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.props.className) {
 				className += ` ${this.props.className}`;
 			}
+
+			fontGenerator(this.props);
 
 			return (
 				<App {...this.props} className={className} />
