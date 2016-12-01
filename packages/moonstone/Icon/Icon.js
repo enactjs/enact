@@ -109,7 +109,10 @@ const IconBase = kind({
 
 			if (!icon) {
 				if (typeof iconProp == 'string') {
-					if (iconProp.indexOf('&#') === 0) {
+					if (iconProp.indexOf('&#x') === 0) {
+						// Converts a hex reference in HTML entity form: &#x99999;
+						icon = parseInt(iconProp.slice(3, -1), 16);
+					} else if (iconProp.indexOf('&#') === 0) {
 						// Convert an HTML entity: &#99999;
 						icon = parseInt(iconProp.slice(2, -1));
 					} else if (iconProp.indexOf('\\u') === 0) {
