@@ -1,8 +1,7 @@
 /**
- * Exports the {@link module:@enact/moonstone/ContextualPopup.ContextualPopupBase} component. The
- * default export is {@link module:@enact/moonstone/ContextualPopup.ContextualPopupBase}.
+ * Exports the {@link module:moonstone/ContextualPopup.ContextualPopup} component.
  *
- * @module @enact/moonstone/ContextualPopup
+ * @module moonstone/ContextualPopup
  */
 
 import kind from '@enact/core/kind';
@@ -13,17 +12,18 @@ import IconButton from '../IconButton';
 import css from './ContextualPopup.less';
 
 /**
- * {@link module:@enact/moonstone/ContextualPopup.ContextualPopupArrow} is a SVG arrow for
- * {@link module:@enact/moonstone/ContextualPopup.ContextualPopupBase}.
+ * {@link module:moonstone/ContextualPopup.ContextualPopupArrow} is an SVG arrow for
+ * {@link module:moonstone/ContextualPopup.ContextualPopup}.
  *
  * @class ContextualPopupArrow
  * @ui
  * @private
+ * @memberof moonstone/ContextualPopup
  */
 const ContextualPopupArrow = kind({
 	name: 'ContextualPopupArrow',
 
-	propTypes: {
+	propTypes: /* @lends moonstone/ContextualPopup.ContextualPopupArrow.prototype */ {
 		direction: PropTypes.oneOf(['up', 'down', 'left', 'right']),
 		position: PropTypes.object
 	},
@@ -50,17 +50,18 @@ const ContextualPopupArrow = kind({
 });
 
 /**
- * {@link module:@enact/moonstone/ContextualPopup.ContextualPopupBase} is a modal component that
+ * {@link module:moonstone/ContextualPopup.ContextualPopup} is a modal component that
  * appears in context to an activator.
  *
- * @class ContextualPopupBase
+ * @class ContextualPopup
+ * @memberof moonstone/ContextualPopup
  * @ui
  * @public
  */
 const ContextualPopupBase = kind({
 	name: 'ContextualPopup',
 
-	propTypes: {
+	propTypes: /* @lends moonstone/ContextualPopup.ContextualPopup.prototype */ {
 		/**
 		 * The element(s) to be displayed in the body of the popup.
 		 *
@@ -97,7 +98,7 @@ const ContextualPopupBase = kind({
 		containerRef: PropTypes.func,
 
 		/**
-		 * Direction of ContextualPopup
+		 * Direction of ContextualPopup. Can be one of: `'up'`, `'down'`, `'left'`, or `'right'`.
 		 *
 		 * @type {String}
 		 * @public
@@ -106,7 +107,7 @@ const ContextualPopupBase = kind({
 		direction: PropTypes.oneOf(['up', 'down', 'left', 'right']),
 
 		/**
-		 * A function to run when close button is clicked.
+		 * A function to be run when close button is clicked.
 		 *
 		 * @type {Function}
 		 * @public
