@@ -1,6 +1,6 @@
 /**
  * Exports the {@link moonstone/Notification.Notification} and {@link moonstone/Notification.NotificationBase}
- * component. The default export is {@link moonstone/Notification.Notification}.
+ * components. The default export is {@link moonstone/Notification.Notification}.
  *
  * @module moonstone/Notification
  */
@@ -27,7 +27,8 @@ const NotificationBase = kind({
 
 	propTypes: /** @lends moonstone/Notification.NotificationBase.prototype */ {
 		/**
-		 * Buttons, typically to close or take action in the Notification.
+		 * Buttons, typically to close or take action in the Notification. Buttons must have their
+		 * `small` property set and will be coerced to `small` if not specified.
 		 *
 		 * @type {Node}
 		 * @public
@@ -49,15 +50,6 @@ const NotificationBase = kind({
 		]),
 
 		/**
-		 * When `true`, popups will not animate on/off screen.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		noAnimation: PropTypes.bool,
-
-		/**
 		 * Is this control in the expanded state (true), opened, with the contents visible?
 		 *
 		 * @type {Boolean}
@@ -77,7 +69,6 @@ const NotificationBase = kind({
 	},
 
 	defaultProps: {
-		noAnimation: true,
 		open: false,
 		scrimType: 'transparent'
 	},
@@ -96,13 +87,17 @@ const NotificationBase = kind({
 			}
 		},
 		buttons: ({buttons}) => React.Children.map(buttons, (button) => {
-			return React.cloneElement(button, {small: true});
+			if (!button.props.small) {
+				return React.cloneElement(button, {small: true});
+			} else {
+				return button;
+			}
 		})
 	},
 
 	render: ({buttons, children, ...rest}) => {
 		return (
-			<Popup {...rest}>
+			<Popup noAnimation {...rest}>
 				<div className={css.body}>
 					{children}
 				</div>
