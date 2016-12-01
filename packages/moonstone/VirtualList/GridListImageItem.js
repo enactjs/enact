@@ -13,6 +13,7 @@ import {Spottable} from '@enact/spotlight';
 import Icon from '../Icon';
 import {Image} from '../Image';
 import {ItemBase} from '../Item';
+import {MarqueeController, MarqueeText} from '../Marquee';
 
 import css from './GridListImageItem.less';
 
@@ -22,7 +23,8 @@ const defaultPlaceholder =
 	'JSIgaGVpZ2h0PSIxMDAlIiBzdHlsZT0ic3Ryb2tlOiAjNDQ0OyBzdHJva2Utd2lkdGg6IDE7IGZpbGw6ICNhYW' +
 	'E7IiAvPjxsaW5lIHgxPSIwIiB5MT0iMCIgeDI9IjEwMCUiIHkyPSIxMDAlIiBzdHlsZT0ic3Ryb2tlOiAjNDQ0' +
 	'OyBzdHJva2Utd2lkdGg6IDE7IiAvPjxsaW5lIHgxPSIxMDAlIiB5MT0iMCIgeDI9IjAiIHkyPSIxMDAlIiBzdH' +
-	'lsZT0ic3Ryb2tlOiAjNDQ0OyBzdHJva2Utd2lkdGg6IDE7IiAvPjwvc3ZnPg==';
+	'lsZT0ic3Ryb2tlOiAjNDQ0OyBzdHJva2Utd2lkdGg6IDE7IiAvPjwvc3ZnPg==',
+	Controller = MarqueeController('div');
 
 /**
  * {@link moonstone/VirtualList/GridListImageItem.GridListImageItemBase} is a stateless
@@ -100,7 +102,7 @@ const GridListImageItemBase = kind({
 		delete rest.selected;
 
 		return (
-			<div {...rest}>
+			<Controller {...rest}>
 				<Image className={css.image} src={source} placeholder={defaultPlaceholder} />
 				{
 					selectionOverlayShowing ? (
@@ -111,9 +113,16 @@ const GridListImageItemBase = kind({
 						</div>
 					) : null
 				}
-				{caption ? (<ItemBase className={css.caption}>{caption}</ItemBase>) : null}
-				{subCaption ? (<ItemBase className={css.subCaption}>{subCaption}</ItemBase>) : null}
-			</div>
+				{caption ? (<MarqueeText className={css.caption}>{caption}</MarqueeText>) : null}
+				{subCaption ? (<MarqueeText
+					marqueeDelay={1000}
+					marqueeDisabled={false}
+					marqueeOn={'hover'}
+					marqueeOnRenderDelay={1000}
+					marqueeResetDelay={1000}
+					marqueeSpeed={60}
+					className={css.subCaption}>{subCaption}</MarqueeText>) : null}
+			</Controller>
 		);
 	}
 });
