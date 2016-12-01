@@ -34,8 +34,8 @@ imported, as they already import the general mixins.
 
 ### Fixed
 
-- Joined picker so that it now has correct animation when using the mouse wheel
-- Bug in DatePicker/TimePicker that prevented setting of value earlier than 1969
+- Joined picker so that it now has correct animation when using the mouse wheel.
+- Input direction will now show ellipses on the correct side based on the `value`'s content.
 
 ## [1.0.0-alpha.3] - 2016-11-8
 
