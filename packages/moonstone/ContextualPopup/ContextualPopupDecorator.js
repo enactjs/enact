@@ -1,6 +1,6 @@
 import {hoc} from '@enact/core';
 import ri from '@enact/ui/resolution';
-import {isRtlLocale} from '@enact/i18n/';
+import {contextTypes} from '@enact/i18n/I18nDecorator';
 import React, {PropTypes} from 'react';
 
 import {ContextualPopup} from './ContextualPopup';
@@ -63,6 +63,8 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 */
 			showCloseButton : PropTypes.bool
 		}
+
+		static contextTypes = contextTypes
 
 		static defaultProps = {
 			direction: 'down',
@@ -211,7 +213,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		adjustRTL (position) {
 			let pos = position;
-			if (isRtlLocale()) {
+			if (this.context.rtl) {
 				const tmpLeft = pos.left;
 				pos.left = pos.right;
 				pos.right = tmpLeft;
