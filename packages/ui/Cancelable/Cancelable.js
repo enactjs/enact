@@ -66,7 +66,7 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 			onCancel: React.PropTypes.func
 		}
 
-		componentDidMount () {
+		componentWillMount () {
 			if (modal) {
 				addModal(this);
 			}
