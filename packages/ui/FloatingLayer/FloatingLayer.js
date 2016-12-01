@@ -32,7 +32,7 @@ class FloatingLayerBase extends React.Component {
 	constructor (props) {
 		super(props);
 		this.node = null;
-		this.FloatingLayer = null;
+		this.floatLayer = null;
 	}
 
 	static propTypes = /** @lends ui/FloatingLayer.FloatingLayerBase.prototype */ {
@@ -196,7 +196,7 @@ class FloatingLayerBase extends React.Component {
 	}
 }
 
-const handleCancel = function (props) {
+const handleCancel = (props) => {
 	if (props.open && !props.noAutoDismiss && props.onDismiss) {
 		props.onDismiss();
 	} else {
