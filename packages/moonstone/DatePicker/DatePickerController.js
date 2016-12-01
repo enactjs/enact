@@ -189,16 +189,14 @@ const DatePickerController = class extends React.Component {
 	 *
 	 * @param	{IDate}		value	ilib Date object
 	 *
-	 * @returns {Number}			Updated internal value
+	 * @returns {IDate} 			Updated internal value
 	 */
 	updateValue = (value) => {
-		const newValue = DateFactory(value).getTime();
-
 		this.setState({
-			value: newValue
+			value: value
 		});
 
-		return newValue;
+		return value;
 	}
 
 	/**
@@ -212,9 +210,7 @@ const DatePickerController = class extends React.Component {
 
 		// Always use the current value if valid but if not and open, generate a value
 		if (currentValue) {
-			return DateFactory({
-				unixtime: currentValue
-			});
+			return currentValue;
 		} else if (this.props.open) {
 			return DateFactory({
 				unixtime: Date.now(),
