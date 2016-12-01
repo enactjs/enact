@@ -103,7 +103,9 @@ const GridListImageItemBase = kind({
 
 		return (
 			<Controller {...rest}>
-				<Image className={css.image} src={source} placeholder={defaultPlaceholder} />
+				<MarqueeText marqueeOn={'hover'} className={css.image}>
+					<Image src={source} placeholder={defaultPlaceholder} />
+				</MarqueeText>
 				{
 					selectionOverlayShowing ? (
 						<div className={css.overlayContainer}>
@@ -113,15 +115,8 @@ const GridListImageItemBase = kind({
 						</div>
 					) : null
 				}
-				{caption ? (<MarqueeText className={css.caption}>{caption}</MarqueeText>) : null}
-				{subCaption ? (<MarqueeText
-					marqueeDelay={1000}
-					marqueeDisabled={false}
-					marqueeOn={'hover'}
-					marqueeOnRenderDelay={1000}
-					marqueeResetDelay={1000}
-					marqueeSpeed={60}
-					className={css.subCaption}>{subCaption}</MarqueeText>) : null}
+				{caption ? (<MarqueeText marqueeOn={'hover'} className={css.caption}>{caption}</MarqueeText>) : null}
+				{subCaption ? (<MarqueeText marqueeOn={'hover'} className={css.subCaption}>{subCaption}</MarqueeText>) : null}
 			</Controller>
 		);
 	}
