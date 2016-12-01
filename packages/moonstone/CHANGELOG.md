@@ -15,6 +15,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - the `checked` property to `selected` for consistency across the whole framework. This allows better interoperability when switching between various components.  Affects the following: `CheckboxItem`, `RadioItem`, `SelectableItem`, `Switch`, `SwitchItem`, and `ToggleItem`. Additionally, these now use ItemOverlay to position and handle their Icons.
+- `moonstone/Slider` and `moonstone/IncrementSlider` to be more performant. No changes were made to
+	the public API.
 - the implementation of `moonstone/GridListImageItem` so that a placeholder image displays while loading the image, and the caption and subcaption support marqueeing.
 
 ### Removed
