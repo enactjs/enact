@@ -1,7 +1,7 @@
 import {ContextualPopupDecorator} from '@enact/moonstone/ContextualPopup';
 import Button from '@enact/moonstone/Button';
 import React from 'react';
-import {storiesOf} from '@kadira/storybook';
+import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, text, select} from '@kadira/storybook-addon-knobs';
 
 const ContextualButton = ContextualPopupDecorator(Button);
@@ -19,6 +19,9 @@ storiesOf('ContextualPopup')
 			return (
 				<ContextualButton
 					direction={select('direction', ['up', 'down', 'left', 'right'], 'down')}
+					onClick={action('onClick')}
+					onCloseButtonClick={action('onCloseButtonClick')}
+					open={boolean('open', false)}
 					showCloseButton={boolean('showCloseButton', false)}
 					popupComponent={renderPopup}
 				>

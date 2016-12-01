@@ -1,3 +1,9 @@
+/**
+ * Exports the {@link module:moonstone/ContextualPopup.ContextualPopupDecorator} component.
+ *
+ * @module moonstone/ContextualPopup
+ */
+
 import {hoc} from '@enact/core';
 import ri from '@enact/ui/resolution';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
@@ -19,7 +25,6 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 			this.state = {
-				open: false,
 				arrowPosition: {top: 0, left: 0},
 				containerPosition: {top: 0, left: 0}
 			};
@@ -28,7 +33,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.adjustedDirection = this.props.direction;
 		}
 
-		static propTypes = {
+		static propTypes = /** @lends moonstone/ContextualPopup.ContextualPopupDecorator.prototype */ {
 			/**
 			 * The component to use to render popup.
 			 *
@@ -45,6 +50,23 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @default 'down'
 			 */
 			direction: PropTypes.oneOf(['up', 'down', 'left', 'right']),
+
+			/**
+			 * A function to be run when close button is clicked.
+			 *
+			 * @type {Function}
+			 * @public
+			 */
+			onCloseButtonClick: PropTypes.func,
+
+			/**
+			 * When `true`, the contextual popup will be visible.
+			 *
+			 * @type {Boolean}
+			 * @public
+			 * @default false
+			 */
+			open: PropTypes.bool,
 
 			/**
 			 * Classname pass to the popup. You may set width and heights of the popup with it.
@@ -68,19 +90,14 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static defaultProps = {
 			direction: 'down',
+			open: false,
 			showCloseButton : false
 		}
 
-		handleClose = () => {
-			this.setState({
-				open: false
-			});
-		}
-
-		handleClick = () => {
-			this.setState({
-				open: !this.state.open
-			});
+		componentWillReceiveProps (nextProps) {
+			if (this.props.direction !== nextProps.direction) {
+				this.adjustedDirection = nextProps.direction;
+			}
 		}
 
 		getContainerPosition (containerNode, clientNode) {
@@ -242,15 +259,15 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const {showCloseButton, popupComponent: PopupComponent, popupClassName, ...props} = this.props;
+			const {showCloseButton, popupComponent: PopupComponent, popupClassName, open, onCloseButtonClick, ...props} = this.props;
 
 			return (
 				<div className={css.contextualPopupDecorator}>
-					{this.state.open ?
+					{open ?
 						<ContextualPopup
 							className={popupClassName}
 							showCloseButton={showCloseButton}
-							onCloseButtonClicked={this.handleClose}
+							onCloseButtonClick={onCloseButtonClick}
 							direction={this.state.direction}
 							arrowPosition={this.state.arrowPosition}
 							containerPosition={this.state.containerPosition}
@@ -261,7 +278,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						null
 					}
 					<div ref={this.getClientNode}>
-						<Wrapped {...props} onClick={this.handleClick} />
+						<Wrapped {...props} />
 					</div>
 				</div>
 			);

@@ -24,8 +24,7 @@ const ContextualPopupArrow = kind({
 	name: 'ContextualPopupArrow',
 
 	propTypes: /* @lends moonstone/ContextualPopup.ContextualPopupArrow.prototype */ {
-		direction: PropTypes.oneOf(['up', 'down', 'left', 'right']),
-		position: PropTypes.object
+		direction: PropTypes.oneOf(['up', 'down', 'left', 'right'])
 	},
 
 	defaultProps: {
@@ -41,8 +40,8 @@ const ContextualPopupArrow = kind({
 		className: ({direction, styler}) => styler.append(direction, css.arrow)
 	},
 
-	render: ({className, position, ...props}) => (
-		<svg {...props} className={className} style={position} viewBox="0 0 30 30">
+	render: ({...props}) => (
+		<svg {...props} viewBox="0 0 30 30">
 			<path d="M15 0 L0 18 L30 18 Z" className={css.arrowBorder} />
 			<path d="M15 9 L0 27 L30 27 Z" className={css.arrowFill} />
 		</svg>
@@ -79,7 +78,12 @@ const ContextualPopupBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		arrowPosition: PropTypes.object,
+		arrowPosition: PropTypes.shape({
+			top: React.PropTypes.number,
+			bottom: React.PropTypes.number,
+			left: React.PropTypes.number,
+			right: React.PropTypes.number
+		}),
 
 		/**
 		 * Style object for container position.
@@ -87,7 +91,12 @@ const ContextualPopupBase = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		containerPosition: PropTypes.object,
+		containerPosition: PropTypes.shape({
+			top: React.PropTypes.number,
+			bottom: React.PropTypes.number,
+			left: React.PropTypes.number,
+			right: React.PropTypes.number
+		}),
 
 		/**
 		 * A callback function to get the reference to the container node.
@@ -112,7 +121,7 @@ const ContextualPopupBase = kind({
 		 * @type {Function}
 		 * @public
 		 */
-		onCloseButtonClicked: PropTypes.func,
+		onCloseButtonClick: PropTypes.func,
 
 		/**
 		 * When `true`, the close button is shown; when `false`, it is hidden.
@@ -136,14 +145,14 @@ const ContextualPopupBase = kind({
 
 	computed: {
 		className: ({showCloseButton, styler}) => styler.append({reserveClose: showCloseButton}),
-		closeButton: ({showCloseButton, onCloseButtonClicked}) => {
+		closeButton: ({showCloseButton, onCloseButtonClick}) => {
 			if (showCloseButton) {
 				return (
 					<IconButton
 						className={css.closeButton}
 						backgroundOpacity="transparent"
 						small
-						onClick={onCloseButtonClicked}
+						onClick={onCloseButtonClick}
 					>
 						closex
 					</IconButton>
@@ -153,7 +162,7 @@ const ContextualPopupBase = kind({
 	},
 
 	render: ({arrowPosition, containerPosition, containerRef, className, children, closeButton, direction, ...props}) => {
-		delete props.onCloseButtonClicked;
+		delete props.onCloseButtonClick;
 		delete props.showCloseButton;
 
 		return (
@@ -162,7 +171,7 @@ const ContextualPopupBase = kind({
 					{closeButton}
 					{children}
 				</div>
-				<ContextualPopupArrow direction={direction} position={arrowPosition} />
+				<ContextualPopupArrow direction={direction} style={arrowPosition} />
 			</div>
 		);
 	}
