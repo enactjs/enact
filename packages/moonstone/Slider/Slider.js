@@ -205,7 +205,13 @@ const SliderBase = kind({
  * @ui
  * @public
  */
-const SpottableSlider = Pressable(Spottable(SliderDecorator(SliderBase)));
+const Slider = Pressable(
+	Spottable(
+		SliderDecorator(
+			SliderBase
+		)
+	)
+);
 
-export default SpottableSlider;
-export {SpottableSlider as Slider, SliderBase};
+export default Slider;
+export {Slider, SliderBase};

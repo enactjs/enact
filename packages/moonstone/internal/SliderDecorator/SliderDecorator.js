@@ -19,7 +19,19 @@ import {
 	computeKnobTransform
 } from './util';
 
-const perf = (typeof window === 'object') ? window.performance : {};
+/**
+ * Returns a timestamp for the current time using `window.performance.now()` if available and
+ * falling back to `Date.now()`.
+ *
+ * @returns	{Number}	Timestamp
+ */
+const now = function () {
+	if (typeof window === 'object') {
+		return window.performance.now();
+	} else {
+		return Date.now();
+	}
+};
 
 /**
  * Default config for {@link moonstone/SliderDecorator.SliderDecorator}.
@@ -160,7 +172,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 
-			this.jobName = `sliderChange${perf.now()}`;
+			this.jobName = `sliderChange${now()}`;
 			this.value = props.value;
 		}
 
