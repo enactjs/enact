@@ -23,7 +23,17 @@ const defaultConfig = {
 	 * @public
 	 * memberof ui/FloatingLayer/FloatingLayerDecorator.defaultConfig
 	 */
-	floatLayerId: 'floatLayer'
+	floatLayerId: 'floatLayer',
+
+	/**
+	 * Classname applied to wrapped component. It can be used when you want to only apply
+	 * certain styles to the wrapped component and not to the float layer.
+	 *
+	 * @type {String}
+	 * @default ''
+	 * @public
+	 */
+	wrappedClassName: ''
 };
 
 /**
@@ -35,14 +45,14 @@ const defaultConfig = {
  * @public
  */
 const FloatingLayerDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {floatLayerId} = config;
+	const {floatLayerId, wrappedClassName} = config;
 
 	return kind({
 		name: 'FloatingLayerDecorator',
 
 		render: ({className, ...rest}) => (
 			<div className={className}>
-				<Wrapped {...rest} />
+				<Wrapped {...rest} className={wrappedClassName} />
 				<div id={floatLayerId} />
 			</div>
 		)
