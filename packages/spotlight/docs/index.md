@@ -1,4 +1,7 @@
-# SPOTLIGHT DOCUMENTATION #
+---
+title: Spotlight
+---
+
 
 1. [What Is Spotlight?](#1)
 2. [Modes](#2)
