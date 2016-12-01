@@ -18,7 +18,7 @@ import css from './Notification.less';
  * from the bottom of the screen. It requires a button to be provided and present to close it.
  *
  * @class NotificationBase
- * @memberOf moonstone/Notification
+ * @memberof moonstone/Notification
  * @ui
  * @public
  */
@@ -35,7 +35,7 @@ const NotificationBase = kind({
 		buttons: PropTypes.oneOfType([
 			PropTypes.arrayOf(PropTypes.element),
 			PropTypes.element
-		]),
+		]).isRequired,
 
 		/**
 		 * The element(s) to be displayed in the body of the Notification.
@@ -120,7 +120,7 @@ const NotificationBase = kind({
  * for additional controls.
  *
  * @class Notification
- * @memberOf moonstone/Notification
+ * @memberof moonstone/Notification
  * @mixes ui/Slottable.Slottable
  * @ui
  * @public
