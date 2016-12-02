@@ -1,13 +1,13 @@
-<section>
-
-## Contribution Guide
+---
+title: Contribution Guide
+---
 
 Thank you for helping improve the Enact framework! These documents highlight some of the things you'll need to know before
 submitting code or documentation to the project:
 
 *   [Coding Style Guide](./code_style.md) - The Enact code style explained
 *   [Documenting Code for the API Reference](./doc_style.md) - How we use jsDoc to document Enact
-*   [Documenting Changes](./changelogs.md) -  The Enact CHANGELOG.md guidelines
+*   [Documenting Changes](./changelogs.md) -  The Enact `CHANGELOG.md` guidelines
 
 ### Contributors Welcome!
 
@@ -72,5 +72,3 @@ project. Please read this section carefully if you are interested in contributin
 
 If you'd like to become more than an occasional contributor, by all means let us know by [email](mailto:contact@enactjs.com) and we'll
 figure out how to get you more involved.
-
-</section>

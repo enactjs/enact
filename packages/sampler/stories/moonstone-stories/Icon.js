@@ -18,9 +18,8 @@ storiesOf('Icon')
 		() => (
 			<Icon
 				small={boolean('small')}
-				src={select('src', ['', fwd, play, rew], '')}
 			>
-				{select('icon', ['', ...iconNames], 'plus') + text('custom icon', '')}
+				{select('src', ['', fwd, play, rew], '') + select('icon', ['', ...iconNames], 'plus') + text('custom icon', '')}
 			</Icon>
 		)
 	);

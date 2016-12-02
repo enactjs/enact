@@ -64,10 +64,6 @@ const OverlayDecorator = hoc((config, Wrapped) => {
 			className: 'item'
 		},
 
-		computed: {
-			className: ({autoHide, styler}) => styler.append({autoHide})
-		},
-
 		render: ({overlayAfter, autoHide, overlayBefore, children, ...rest}) => {
 			return (
 				<Wrapped {...rest}>
