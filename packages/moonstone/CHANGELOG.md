@@ -12,6 +12,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `placeholder` prop to `moonstone/Image`
 - `moonstone/MarqueeController` component to synchronize multiple `moonstone/Marquee` components
 - Non-latin locale support to all existing Moonstone components.
+- Language-specific font support.
 
 ### Changed
 
