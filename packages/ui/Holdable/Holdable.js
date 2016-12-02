@@ -85,7 +85,7 @@ const defaultConfig = {
 	 * regardless of how many custom hold events you define.
 	 *
 	 * @type {Array}
-	 * @default [{name: 'hold', time: 2000}]
+	 * @default [{name: 'hold', time: 200}]
 	 * @memberof ui/Holdable.defaultConfig
 	 */
 	events: [
