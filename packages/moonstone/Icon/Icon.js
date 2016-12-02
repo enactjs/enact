@@ -10,6 +10,7 @@ import ri from '@enact/ui/resolution';
 import React, {PropTypes} from 'react';
 
 import iconList from './IconList.js';
+import {TooltipDecorator} from '../Tooltip';
 
 import css from './Icon.less';
 
@@ -133,5 +134,7 @@ const IconBase = kind({
  * @public
  */
 
-export default IconBase;
-export {IconBase as Icon, IconBase, iconList as icons};
+const Icon = TooltipDecorator(IconBase);
+
+export default Icon;
+export {Icon, IconBase, iconList as icons};
