@@ -1,7 +1,7 @@
 /**
- * Exports the {@link module:moonstone/ContextualPopup.ContextualPopup} component.
+ * Exports the {@link moonstone/ContextualPopupDecorator/ContextualPopup.ContextualPopup} component.
  *
- * @module moonstone/ContextualPopup
+ * @module moonstone/ContextualPopupDecorator/ContextualPopup
  */
 
 import kind from '@enact/core/kind';
@@ -12,18 +12,18 @@ import IconButton from '../IconButton';
 import css from './ContextualPopup.less';
 
 /**
- * {@link module:moonstone/ContextualPopup.ContextualPopupArrow} is an SVG arrow for
- * {@link module:moonstone/ContextualPopup.ContextualPopup}.
+ * {@link moonstone/ContextualPopupDecorator/ContextualPopup.ContextualPopupArrow} is an SVG arrow for
+ * {@link moonstone/ContextualPopupDecorator/ContextualPopup.ContextualPopup}.
  *
  * @class ContextualPopupArrow
  * @ui
  * @private
- * @memberof moonstone/ContextualPopup
+ * @memberof moonstone/ContextualPopupDecorator/ContextualPopup
  */
 const ContextualPopupArrow = kind({
 	name: 'ContextualPopupArrow',
 
-	propTypes: /* @lends moonstone/ContextualPopup.ContextualPopupArrow.prototype */ {
+	propTypes: /* @lends moonstone/ContextualPopupDecorator/ContextualPopup.ContextualPopupArrow.prototype */ {
 		direction: PropTypes.oneOf(['up', 'down', 'left', 'right'])
 	},
 
@@ -49,18 +49,18 @@ const ContextualPopupArrow = kind({
 });
 
 /**
- * {@link module:moonstone/ContextualPopup.ContextualPopup} is a modal component that
+ * {@link moonstone/ContextualPopupDecorator.ContextualPopup} is a modal component that
  * appears in context to an activator.
  *
  * @class ContextualPopup
- * @memberof moonstone/ContextualPopup
+ * @memberof moonstone/ContextualPopupDecorator/ContextualPopup
  * @ui
  * @public
  */
 const ContextualPopupBase = kind({
 	name: 'ContextualPopup',
 
-	propTypes: /* @lends moonstone/ContextualPopup.ContextualPopup.prototype */ {
+	propTypes: /* @lends moonstone/ContextualPopupDecorator/ContextualPopup.ContextualPopup.prototype */ {
 		/**
 		 * The element(s) to be displayed in the body of the popup.
 		 *

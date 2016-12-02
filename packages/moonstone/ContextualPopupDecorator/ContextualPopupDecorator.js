@@ -1,7 +1,7 @@
 /**
- * Exports the {@link module:moonstone/ContextualPopup.ContextualPopupDecorator} and
- * {@link module:moonstone/ContextualPopup.ContextualPopup} components. The default export is
- * {@link module:moonstone/ContextualPopup.ContextualPopupDecorator}.
+ * Exports the {@link moonstone/ContextualPopupDecorator.ContextualPopupDecorator} and
+ * {@link moonstone/ContextualPopupDecorator.ContextualPopup} components. The default export is
+ * {@link moonstone/ContextualPopupDecorator.ContextualPopupDecorator}.
  *
  * @module moonstone/ContextualPopup
  */
@@ -45,7 +45,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.adjustedDirection = this.props.direction;
 		}
 
-		static propTypes = /** @lends moonstone/ContextualPopup.ContextualPopupDecorator.prototype */ {
+		static propTypes = /** @lends moonstone/ContextualPopupDecorator.ContextualPopupDecorator.prototype */ {
 			/**
 			 * The component to use to render popup.
 			 *
