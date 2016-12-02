@@ -982,7 +982,6 @@ const Spotlight = (function() {
 		}
 
 		const target = getNavigableTarget(evt.target); // account for child controls
-		_pointerMode = true;
 
 		if (target && target !== getCurrent()) { // moving over a focusable element
 			focusElement(target, getContainerId(target), true);
@@ -991,6 +990,8 @@ const Spotlight = (function() {
 	}
 
 	function onMouseMove (evt) {
+		_pointerMode = true;
+
 		// cache last-known pointer coordinates
 		_pointerX = evt.clientX;
 		_pointerY = evt.clientY;
@@ -1248,6 +1249,17 @@ const Spotlight = (function() {
 		 */
 		getPointerMode: function () {
 			return _pointerMode;
+		},
+
+		/**
+		 * Sets the current pointer mode
+		 *
+		 * @param {Boolean} pointerMode The value of the pointer mode. This determines how
+		 * spotlight manages focus change behaviors.
+		 * @public
+		 */
+		setPointerMode: function (pointerMode) {
+			_pointerMode = pointerMode;
 		}
 	};
 
