@@ -1,0 +1,38 @@
+@import '../styles/rules.less';
+@import '../styles/colors.less';
+@import '../styles/text.less';
+@import '../styles/variables.less';
+
+.dialog {
+	@dialog-spacing: 39px;
+
+	&.showDivider {
+		.titleWrapper {
+			.moon-neutral-divider-border();
+			padding-bottom: 24px;
+			border-bottom-width: 1px;
+		}
+	}
+	.title {
+		.moon-dialog-title();
+		margin: 0 0 6px;
+	}
+	.titleBelow {
+		.moon-dialog-title-below();
+		margin: 0;
+	}
+	.titleWrapper {
+		margin-bottom: @dialog-spacing;
+	}
+	.body {
+		.moon-dialog-content();
+		margin: 0 0 @dialog-spacing;
+	}
+	.buttons {
+		text-align: right;
+
+		:global(.enact-locale-right-to-left) & {
+			text-align: left;
+		}
+	}
+}

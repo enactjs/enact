@@ -99,6 +99,7 @@
 	line-height: @moon-header-line-height;
 	.font-kerning;
 }
+
 .moon-super-header-text() {
 	.moon-font(@moon-super-header-font-family, @moon-non-latin-font-family, {font-size: @moon-non-latin-super-header-font-size;});
 	font-size: @moon-super-header-font-size;
@@ -131,7 +132,11 @@
 		font-weight: @moon-non-latin-font-weight-bold;
 		font-size: @moon-non-latin-popup-header-font-size;
 	});
+	font-weight: @moon-popup-header-font-weight;
+	font-style: @moon-popup-header-font-style;
 	font-size: @moon-popup-header-font-size;
+	line-height: @moon-popup-header-line-height;
+	letter-spacing: @moon-popup-header-letter-spacing;
 	.font-kerning;
 }
 
@@ -139,12 +144,24 @@
 	.moon-popup-header-text();
 }
 
-.moon-dialog-sub-title() {
+.moon-dialog-title-below() {
+	.moon-font(@moon-dialog-title-below-font-family, @moon-non-latin-font-family);
+	font-weight: @moon-dialog-title-below-font-weight;
 	font-size: @moon-popup-sub-header-font-size;
 }
 
 .moon-dialog-content() {
+	.moon-font();
 	font-size: @moon-popup-content-font-size;
+}
+
+.moon-notification-content() {
+	.moon-font(@moon-notification-font-family, @moon-non-latin-font-family-light);
+	font-weight: @moon-notification-font-weight;
+	font-style: @moon-notification-font-style;
+	font-size: @moon-notification-font-size;
+	line-height: @moon-body-line-height;
+	.moon-word-break();
 }
 
 .moon-body-text() {
@@ -153,7 +170,7 @@
 		font-size: @moon-non-latin-body-font-size;
 		line-height: @moon-non-latin-body-line-height;
 	});
-	font-weight: normal;
+	font-weight: @moon-body-font-weight;
 	font-size: @moon-body-font-size;
 	color: @moon-body-text-color;
 	line-height: @moon-body-line-height;

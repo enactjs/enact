@@ -1,6 +1,6 @@
-<section>
-
-## Migrating Enyo Fittables
+---
+title: Migrating Enyo Fittables
+---
 
 Enact does not provide Enyo's **Fittable** components.  If you are porting an Enyo application that uses
 Fittables (`FittableColumns`, `FittableRows`, `FittableLayout`, etc.) to Enact, you can use other methods,
@@ -54,5 +54,3 @@ Note: To keep other children from shrinking, you can apply `flexShrink: 0` style
 
 #### See Also
 *   [A Complete Guide to Flexbox](https://css-tricks.com/snippets/css/a-guide-to-flexbox/)
-
-</section>
