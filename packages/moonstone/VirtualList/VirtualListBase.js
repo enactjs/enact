@@ -55,6 +55,22 @@ class VirtualListCore extends Component {
 		cbScrollTo: PropTypes.func,
 
 		/**
+		 * Client height. If this prop is omitted, VirtualList calculated the client height after rendering itself.
+		 *
+		 * @type {Number}
+		 * @private
+		 */
+		clientHeight: PropTypes.number,
+
+		/**
+		 * Client width. If this prop is omitted, VirtualList calculated the client width after rendering itself.
+		 *
+		 * @type {Number}
+		 * @private
+		 */
+		clientWidth: PropTypes.number,
+
+		/**
 		 * The render function for an item of the list.
 		 * `index` is for accessing the index of the item.
 		 * `key` MUST be passed as a prop for DOM recycling.
@@ -248,14 +264,16 @@ class VirtualListCore extends Component {
 	calculateMetrics (props) {
 		const
 			{direction, itemSize, positioningOption, spacing} = props,
-			node = this.getContainerNode(positioningOption);
+			node = this.getContainerNode(positioningOption),
+			isFixedClientSize = (props.clientWidth && props.clientHeight);
 
-		if (!node) {
+		if (!isFixedClientSize && !node) {
 			return;
 		}
 
 		const
-			{clientWidth, clientHeight} = this.getClientSize(node),
+			clientSize = isFixedClientSize ? props : this.getClientSize(node),
+			{clientWidth, clientHeight} = clientSize,
 			heightInfo = {
 				clientSize: clientHeight,
 				minItemSize: (itemSize.minHeight) ? itemSize.minHeight : null,
@@ -308,7 +326,11 @@ class VirtualListCore extends Component {
 		// eslint-disable-next-line react/no-direct-mutation-state
 		this.state.firstIndex = 0;
 		// eslint-disable-next-line react/no-direct-mutation-state
-		this.state.numOfItems = 0;
+		if (isFixedClientSize) {
+			this.state.numOfItems = secondary.clientSize / primary.gridSize;
+		} else {
+			this.state.numOfItems = 0;
+		}
 	}
 
 	updateStatesAndBounds (props) {
@@ -713,10 +735,12 @@ class VirtualListCore extends Component {
 	render () {
 		const
 			props = Object.assign({}, this.props),
-			{positioningOption, onScroll} = this.props,
+			{clientWidth, clientHeight, positioningOption, onScroll} = this.props,
 			{primary, cc} = this;
 
 		delete props.cbScrollTo;
+		delete props.clientHeight;
+		delete props.clientWidth;
 		delete props.component;
 		delete props.data;
 		delete props.dataSize;
@@ -732,6 +756,9 @@ class VirtualListCore extends Component {
 		delete props.spacing;
 
 		if (primary) {
+			this.renderCalculate();
+		} else if (clientWidth && clientHeight) {
+			this.calculateMetrics(this.props);
 			this.renderCalculate();
 		}
 
