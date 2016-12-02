@@ -2,6 +2,42 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [1.0.0-alpha.4] - 2016-12-2
+
+> NOTE: The framework was update to support React 15.4
+
+### Added
+
+- `moonstone/Popup`, `moonstone/ContextualPopupDecorator`, `moonstone/Notification`, `moonstone/Dialog`, `moonstone/Item.ItemOverlay`, `ui/FloatingLayer` and `ui/FloatingLayer.FloatingLayerDecorator` components
+- `moonstone/Popup`, `moonstone/ContextualPopupDecorator`, `moonstone/Notification`, `moonstone/Dialog`, `moonstone/Item.ItemOverlay` and `ui/Group` samples
+- `marqueeCentered` prop to `moonstone/MarqueeDecorator` and `moonstone/MarqueeText`
+- `placeholder` prop to `moonstone/Image`
+- `moonstone/MarqueeController` component to synchronize multiple `moonstone/Marquee` components
+- Non-latin locale support to all existing Moonstone components
+- Language-specific font support
+- `setPointerMode()` and `setActiveContainer()` methods to `@enact/spotlight` export
+- `fit`, `noAnimation` props to `ui/TransitionBase`
+- `onHide` prop to `ui/Transition`
+
+### Changed
+
+- `moonstone/Icon` and `moonstone/IconButton` so the `children` property supports both font-based icons and images. This removes support for the `src` property.
+- the `checked` property to `selected` for consistency across the whole framework. This allows better interoperability when switching between various components.  Affects the following: `CheckboxItem`, `RadioItem`, `SelectableItem`, `Switch`, `SwitchItem`, and `ToggleItem`. Additionally, these now use `moonstone/Item.ItemOverlay` to position and handle their Icons.
+- documentation to support our doc generation tool
+- `moonstone/Slider` and `moonstone/IncrementSlider` to be more performant. No changes were made to
+	the public API.
+- `moonstone/GridListImageItem` so that a placeholder image displays while loading the image, and the caption and subcaption support marqueeing
+- `moonstone/MoonstoneDecorator` to add `FloatingLayerDecorator`
+
+### Removed
+
+- the `src` property from `moonstone/Icon` and `moonston/IconButton`. Use the support for URLs in
+	the `children` property as noted above.
+
+### Fixed
+
+- Addressed many bugs and performance issues
+
 ## [1.0.0-alpha.3] - 2016-11-8
 
 > Note: For those who are using `eslint-config-enact` for in-editor linting, there have been some important changes and reinstallation is necessary. Refer to [https://github.com/enyojs/eslint-config-enact/](https://github.com/enyojs/eslint-config-enact/) for install instructions or reinstall via:
