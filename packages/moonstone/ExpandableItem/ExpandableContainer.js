@@ -40,8 +40,8 @@ const ExpandableContainerBase = class extends React.Component {
 		noAutoFocus: React.PropTypes.bool,
 
 		/**
-		 * When `true` and used in conjunction with `noAutoFocus` when `false`, the contents of the container will receive spotlight focus
-		 * expanded, even in pointer mode.
+		 * When `true` and used in conjunction with `noAutoFocus` when `false`, the contents of the
+		 * container will receive spotlight focus expanded, even in pointer mode.
 		 *
 		 * @type {Boolean}
 		 * @default false

@@ -1254,7 +1254,7 @@ const Spotlight = (function() {
 		/**
 		 * Sets the current pointer mode
 		 *
-		 * @param {Boolean} [pointerMode] The value of the pointer mode. This determines how
+		 * @param {Boolean} pointerMode The value of the pointer mode. This determines how
 		 * spotlight manages focus change behaviors.
 		 * @public
 		 */
