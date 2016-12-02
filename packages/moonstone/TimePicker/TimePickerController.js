@@ -246,11 +246,15 @@ const TimePickerController = class extends React.Component {
 		}
 	}
 
+	/**
+	 * Converts a JavaScript Date to unix time
+	 *
+	 * @param	{Date}	date	A Date to convert
+	 *
+	 * @returns	{undefined}
+	 */
 	toTime (date) {
-		if (date && this.locale) {
-			const time = date.getTimeExtended();
-			return this.toIDate(time).getTimeExtended();
-		}
+		return date && date.getTime();
 	}
 
 	shouldAnimateHour (value) {
