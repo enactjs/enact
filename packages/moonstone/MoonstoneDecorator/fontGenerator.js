@@ -1,17 +1,19 @@
 /**
-* This module loads Moonstone specific fonts. It only one function and is not inteded to be directly
+* This module loads Moonstone specific fonts. It only includes one function,
+* {@link moonstone/MoonstoneDecorator/fontGenerator.fontGenerator} and is not inteded to be directly
 * included by external developers.
 *
+* @module moonstone/MoonstoneDecorator/fontGenerator
 * @private
-* @module moonstone/MoonstoneDecorator/FontGenerator
 */
 
+import ilib from '@enact/i18n';
 import Locale from '@enact/i18n/ilib/lib/Locale';
 
 let previousLocale = null;
 
 /**
-* `FontGenerator` is the locale-specific font generator, allowing any locale to have its own custom
+* `fontGenerator` is the locale-specific font generator, allowing any locale to have its own custom
 * font. Each locale-font from the configuration block (defined in this file) is generated at
 * run-time. If the locale you're currently in is in the locale-font list an additional
 * `@font-face` rule will be generated that will override the standard "Moonstone LG Display"
@@ -45,13 +47,13 @@ let previousLocale = null;
 * }
 * ```
 *
-* @name International Fonts
-* @public
+* @name fontGenerator
+* @memberof moonstone/MoonstoneDecorator/fontGenerator
+* @param {String} [locale] Locale string defaulting to the current locale
+* @returns {undefined}
+* @private
 */
-
-function funLocaleSpecificFonts (props) {
-	const locale = props.locale;
-
+function fontGenerator (locale = ilib.getLocale()) {
 	// If the locale is the same as the last time this ran, bail out and don't bother to recompile this again.
 	if (locale === previousLocale) return;
 
@@ -60,7 +62,7 @@ function funLocaleSpecificFonts (props) {
 		loc = new Locale(locale),
 		language = loc.getLanguage(),
 		region = loc.getRegion(),
-		styleId = 'enyo-localization-font-override',
+		styleId = 'enact-localization-font-override',
 		// Locale Configuration Block
 		fonts = {
 			'NonLatin': {
@@ -180,4 +182,5 @@ function funLocaleSpecificFonts (props) {
 	styleElem.innerHTML = fontDefinitionCss;
 }
 
-export default funLocaleSpecificFonts;
+export default fontGenerator;
+export {fontGenerator};

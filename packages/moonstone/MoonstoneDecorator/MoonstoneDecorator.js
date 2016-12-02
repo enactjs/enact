@@ -12,7 +12,7 @@ import React from 'react';
 import {ResolutionDecorator} from '@enact/ui/resolution';
 import {SpotlightRootDecorator} from '@enact/spotlight';
 
-import fontGenerator from './FontGenerator';
+import fontGenerator from './fontGenerator';
 import screenTypes from './screenTypes.json';
 import css from './MoonstoneDecorator.less';
 
@@ -40,14 +40,10 @@ const defaultConfig = {
  */
 const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {ri, i18n, spotlight, cancelHandler} = config;
-	let App = Wrapped;
 
 	if (cancelHandler) addCancelHandler(cancelHandler);
-	if (ri) App = ResolutionDecorator(ri, App);
-	if (i18n) App = I18nDecorator(App);
-	if (spotlight) App = SpotlightRootDecorator(App);
 
-	return class extends React.Component {
+	class Decorator extends React.Component {
 		static displayName = 'MoonstoneDecorator';
 
 		componentDidMount () {
@@ -68,13 +64,21 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				className += ` ${this.props.className}`;
 			}
 
-			fontGenerator(this.props);
+			fontGenerator();
 
 			return (
-				<App {...this.props} className={className} />
+				<Wrapped {...this.props} className={className} />
 			);
 		}
-	};
+	}
+
+	let App = Decorator;
+
+	if (ri) App = ResolutionDecorator(ri, App);
+	if (i18n) App = I18nDecorator(App);
+	if (spotlight) App = SpotlightRootDecorator(App);
+
+	return App;
 });
 
 export default MoonstoneDecorator;
