@@ -4,12 +4,12 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ## [1.0.0-alpha.4] - 2016-12-2
 
-> NOTE: The framework was update to support React 15.4
+> NOTE: The framework was updated to support React 15.4
 
 ### Added
 
-- `moonstone/Popup`, `moonstone/ContextualPopupDecorator`, `moonstone/Notification`, `moonstone/Dialog`, `moonstone/Item.ItemOverlay`, `ui/FloatingLayer` and `ui/FloatingLayer.FloatingLayerDecorator` components
-- `moonstone/Popup`, `moonstone/ContextualPopupDecorator`, `moonstone/Notification`, `moonstone/Dialog`, `moonstone/Item.ItemOverlay` and `ui/Group` samples
+- `moonstone/Popup`, `moonstone/ContextualPopupDecorator`, `moonstone/Notification`, `moonstone/Dialog`, `moonstone/ExpandableInput`, `moonstone/Item.ItemOverlay`, `ui/FloatingLayer` and `ui/FloatingLayer.FloatingLayerDecorator` components
+- `moonstone/Popup`, `moonstone/ContextualPopupDecorator`, `moonstone/Notification`, `moonstone/Dialog`, `moonstone/Item.ItemOverlay`, `moonstone/ExpandableInput` and `ui/Group` samples
 - `marqueeCentered` prop to `moonstone/MarqueeDecorator` and `moonstone/MarqueeText`
 - `placeholder` prop to `moonstone/Image`
 - `moonstone/MarqueeController` component to synchronize multiple `moonstone/Marquee` components
@@ -21,6 +21,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ### Changed
 
+- `moonstone/Input` component's `iconStart` and `iconEnd` properties to be `iconBefore` and `iconAfter`, respectively, for consistency with `moonstone/Item.ItemOverlay` naming
 - `moonstone/Icon` and `moonstone/IconButton` so the `children` property supports both font-based icons and images. This removes support for the `src` property.
 - the `checked` property to `selected` for consistency across the whole framework. This allows better interoperability when switching between various components.  Affects the following: `CheckboxItem`, `RadioItem`, `SelectableItem`, `Switch`, `SwitchItem`, and `ToggleItem`. Additionally, these now use `moonstone/Item.ItemOverlay` to position and handle their Icons.
 - documentation to support our doc generation tool

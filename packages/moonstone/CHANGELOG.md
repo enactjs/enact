@@ -6,8 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
-- `moonstone/ExpandableInput` component
-- `moonstone/Popup`, `moonstone/ContextualPopupDecorator`, `moonstone/Notification` and `moonstone/Dialog` components
+- `moonstone/Popup`, `moonstone/ContextualPopupDecorator`, `moonstone/Notification`, `moonstone/Dialog` and `moonstone/ExpandableInput` components
 - `ItemOverlay` component to `moonstone/Item` module
 - `marqueeCentered` prop to `moonstone/MarqueeDecorator` and `moonstone/MarqueeText`
 - `placeholder` prop to `moonstone/Image`
