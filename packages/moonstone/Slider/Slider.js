@@ -148,7 +148,7 @@ const SliderBase = kind({
 		onChange: () => {}, // needed to ensure the base input element is mutable if no change handler is provided
 		pressed: false,
 		step: 1,
-		value: 50,
+		value: 0,
 		vertical: false
 	},
 
