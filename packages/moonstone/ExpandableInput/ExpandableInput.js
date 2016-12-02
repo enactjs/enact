@@ -1,5 +1,4 @@
 import Changeable from '@enact/ui/Changeable';
-import Spotlight from '@enact/spotlight';
 import React from 'react';
 
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
