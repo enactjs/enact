@@ -1,12 +1,15 @@
 @import '../styles/mixins.less';
+@import '../styles/text.less';
 @import '../styles/colors.less';
 @import '../styles/variables.less';
 
 .popup {
-	position: absolute;
-	bottom: 0px;
 	@padding-v: 24px;
 	@padding-h: @moon-spotlight-outset * 4;
+
+	.moon-text-base();
+	position: absolute;
+	bottom: 0px;
 	padding: @padding-v @padding-h;
 	width: 100%;
 	box-sizing: border-box;
