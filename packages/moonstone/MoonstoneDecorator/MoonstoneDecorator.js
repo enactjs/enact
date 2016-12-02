@@ -13,7 +13,7 @@ import {ResolutionDecorator} from '@enact/ui/resolution';
 import {FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
 import {SpotlightRootDecorator} from '@enact/spotlight';
 
-import fontGenerator from './fontGenerator';
+import I18nFontDecorator from './I18nFontDecorator';
 import screenTypes from './screenTypes.json';
 import css from './MoonstoneDecorator.less';
 
@@ -56,9 +56,20 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 	let App = Wrapped;
 	if (float) App = FloatingLayerDecorator({wrappedClassName: bgClassName}, App);
+	if (ri) App = ResolutionDecorator(ri, App);
+	if (i18n) {
+		// Apply the @enact/i18n decorator around the font decorator so the latter will update the
+		// font stylesheet when the locale changes
+		App = I18nDecorator(
+			I18nFontDecorator(
+				App
+			)
+		);
+	}
+	if (spotlight) App = SpotlightRootDecorator(App);
 	if (cancelHandler) addCancelHandler(cancelHandler);
 
-	let Decorator = class extends React.Component {
+	const Decorator = class extends React.Component {
 		static displayName = 'MoonstoneDecorator';
 
 		componentDidMount () {
@@ -82,17 +93,11 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				className += ` ${this.props.className}`;
 			}
 
-			fontGenerator();
-
 			return (
 				<App {...this.props} className={className} />
 			);
 		}
 	};
-
-	if (ri) Decorator = ResolutionDecorator(ri, Decorator);
-	if (i18n) Decorator = I18nDecorator(Decorator);
-	if (spotlight) Decorator = SpotlightRootDecorator(Decorator);
 
 	return Decorator;
 });
