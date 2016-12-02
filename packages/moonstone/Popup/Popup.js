@@ -1,5 +1,5 @@
 /**
- * Exports the {@link moonstone/Popup.Popup} and {@link moonstone/Popup.PopupBase}.
+ * Exports the {@link moonstone/Popup.Popup} and {@link moonstone/Popup.PopupBase} components.
  * The default export is {@link moonstone/Popup.Popup}.
  *
  * @module moonstone/Popup
@@ -8,10 +8,9 @@
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 import Transition from '@enact/ui/Transition';
-import Portal from '@enact/ui/Portal';
+import FloatingLayer from '@enact/ui/FloatingLayer';
 import {SpotlightContainerDecorator} from '@enact/spotlight';
 
-import Layerable from '../Layerable';
 import IconButton from '../IconButton';
 
 import css from './Popup.less';
@@ -23,29 +22,27 @@ const TransitionContainer = SpotlightContainerDecorator(Transition);
  * the screen and takes up the full screen width.
  *
  * @class PopupBase
- * @memberOf moonstone/Popup
+ * @memberof moonstone/Popup
  * @ui
  * @public
  */
 const PopupBase = kind({
 	name: 'Popup',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/Popup.PopupBase.prototype */ {
 		/**
 		 * The element(s) to be displayed in the body of the popup.
 		 *
 		 * @type {Node}
 		 * @public
 		 */
-		children: React.PropTypes.oneOfType([
-			React.PropTypes.arrayOf(React.PropTypes.element),
-			React.PropTypes.element
+		children: PropTypes.oneOfType([
+			PropTypes.arrayOf(PropTypes.element),
+			PropTypes.element
 		]).isRequired,
 
-		anchor: PropTypes.object,
-
 		/**
-		 * When `true`, popups will not animate on/off screen.
+		 * When `true`, the popup will not animate on/off screen.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -54,7 +51,7 @@ const PopupBase = kind({
 		noAnimation: PropTypes.bool,
 
 		/**
-		 * A function to run when close button is clicked.
+		 * A function to be run when close button is clicked.
 		 *
 		 * @type {Function}
 		 * @public
@@ -62,7 +59,7 @@ const PopupBase = kind({
 		onCloseButtonClicked: PropTypes.func,
 
 		/**
-		 * A function to run after transition for hiding is finished.
+		 * A function to be run after transition for hiding is finished.
 		 *
 		 * @type {Function}
 		 * @public
@@ -70,7 +67,7 @@ const PopupBase = kind({
 		onHide: PropTypes.func,
 
 		/**
-		 * Is this control in the expanded state (true), opened, with the contents visible?
+		 * When `true`, the popup is in the open/expanded state with the contents visible
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -89,7 +86,6 @@ const PopupBase = kind({
 	},
 
 	defaultProps: {
-		anchor: {bottom: 0},
 		noAnimation: false,
 		open: false,
 		showCloseButton: false
@@ -124,7 +120,6 @@ const PopupBase = kind({
 	},
 
 	render: ({closeButton, children, noAnimation, open, onHide, zIndex, ...rest}) => {
-		delete rest.anchor;
 		delete rest.onCloseButtonClicked;
 		delete rest.showCloseButton;
 		return (
@@ -150,21 +145,19 @@ const PopupBase = kind({
 	}
 });
 
-const LayerablePopup = Layerable(PopupBase);
-
 /**
  * {@link moonstone/Popup.Popup} is a stateful component that help {@link moonstone/Popup.PopupBase}
- * to appear in {@link ui/Portal.Portal} layer.
+ * to appear in {@link ui/FloatingLayer.FloatingLayer}.
  *
  * @class Popup
- * @memberOf moonstone/Popup
+ * @memberof moonstone/Popup
  * @ui
  * @public
  */
 class Popup extends React.Component {
-	static propTypes = {
+	static propTypes = /** @lends moonstone/Popup.Popup.prototype */ {
 		/**
-		 * When `true`, popups will not animate on/off screen.
+		 * When `true`, the popup will not animate on/off screen.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -173,18 +166,18 @@ class Popup extends React.Component {
 		noAnimation: PropTypes.bool,
 
 		/**
-		 * When `true`, Popup will not close when the user presses `ESC` key.
+		 * When `true`, the popup will not close when the user presses `ESC` key.
 		 *
 		 * @type {Boolean}
 		 * @default false
 		 * @public
 		 */
-		noAutoDismiss: React.PropTypes.bool,
+		noAutoDismiss: PropTypes.bool,
 
 		/**
-		 * A function to run when closing action is invoked by the user. These actions include
-		 * pressing `ESC` key or clicking on close button. Normally, callback will set `open`
-		 * state to false.
+		 * A function to be run when a closing action is invoked by the user. These actions include
+		 * pressing `ESC` key or clicking on the close button. It is the responsibility of the
+		 * callback to set the `open` state to false.
 		 *
 		 * @type {Function}
 		 * @public
@@ -192,13 +185,23 @@ class Popup extends React.Component {
 		onClose: PropTypes.func,
 
 		/**
-		 * When `true`, Popup is rendered into portal.
+		 * When `true`, the popup is rendered. Popups are rendered into the
+		 * [floating layer]{@link ui/FloatingLayer.FloatingLayer}.
 		 *
 		 * @type {Boolean}
 		 * @default false
 		 * @public
 		 */
 		open: PropTypes.bool,
+
+		/**
+		 * Types of scrim. It can be either `transparent` or `translucent`.
+		 *
+		 * @type {String}
+		 * @default `translucent`
+		 * @public
+		 */
+		scrimType: React.PropTypes.oneOf(['transparent', 'translucent']),
 
 		/**
 		 * When `true`, the close button is shown; when `false`, it is hidden.
@@ -211,16 +214,17 @@ class Popup extends React.Component {
 	}
 
 	static defaultProps = {
-		open: false,
 		noAnimation: false,
 		noAutoDismiss: false,
+		open: false,
+		scrimType: 'translucent',
 		showCloseButton: false
 	}
 
 	constructor (props) {
 		super(props);
 		this.state = {
-			portalOpen: this.props.open || false,
+			floatLayerOpen: this.props.open,
 			popupOpen: this.props.noAnimation
 		};
 	}
@@ -228,18 +232,18 @@ class Popup extends React.Component {
 	componentWillReceiveProps (nextProps) {
 		if (!this.props.open && nextProps.open) {
 			this.setState({
-				popupOpen: this.props.noAnimation,
-				portalOpen: true
+				popupOpen: nextProps.noAnimation,
+				floatLayerOpen: true
 			});
 		} else if (this.props.open && !nextProps.open) {
 			this.setState({
-				popupOpen: this.props.noAnimation,
-				portalOpen: !this.props.noAnimation
+				popupOpen: nextProps.noAnimation,
+				floatLayerOpen: !nextProps.noAnimation
 			});
 		}
 	}
 
-	handlePortalOpen = () => {
+	handleFloatingLayerOpen = () => {
 		if (!this.props.noAnimation) {
 			this.setState({
 				popupOpen: true
@@ -249,27 +253,28 @@ class Popup extends React.Component {
 
 	handlePopupHide = () => {
 		this.setState({
-			portalOpen: false
+			floatLayerOpen: false
 		});
 	}
 
 	render () {
-		const {noAutoDismiss, onClose, ...rest} = this.props;
+		const {noAutoDismiss, onClose, scrimType, ...rest} = this.props;
 
 		return (
-			<Portal
+			<FloatingLayer
 				noAutoDismiss={noAutoDismiss}
-				open={this.state.portalOpen}
-				onOpen={this.handlePortalOpen}
+				open={this.state.floatLayerOpen}
+				onOpen={this.handleFloatingLayerOpen}
 				onDismiss={onClose}
+				scrimType={scrimType}
 			>
-				<LayerablePopup
+				<PopupBase
 					{...rest}
 					open={this.state.popupOpen}
 					onCloseButtonClicked={onClose}
 					onHide={this.handlePopupHide}
 				/>
-			</Portal>
+			</FloatingLayer>
 		);
 	}
 }

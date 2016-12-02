@@ -1,43 +1,61 @@
 /**
- * Exports the {@link ui/Portal.Portal} and  {@link ui/Portal.PortalBase}
- * component. The default export is {@link ui/Portal.Portal}.
+ * Exports the {@link ui/FloatingLayer.FloatingLayer} and  {@link ui/FloatingLayer.FloatingLayerBase}
+ * components. The default export is {@link ui/FloatingLayer.FloatingLayer}.
  *
- * @module ui/Portal
+ * @module ui/FloatingLayer
  */
 
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Cancelable from '../Cancelable';
 
-import {ScrimLayer} from './Scrim';
+import Scrim from './Scrim';
 
-// the current most highest z-index value for portals
+// the current highest z-index value for FloatingLayers
 let scrimZIndex = 120;
 
 // array of z-indexes for visible layers
 const viewingLayers = [];
 
 /**
- * {@link ui/Portal.PortalBase} is a component that creates an entry point to the new
+ * {@link ui/FloatingLayer.FloatingLayerBase} is a component that creates an entry point to the new
  * render tree. This is used for modal components such as popups.
  *
- * @class Portal
- * @memberOf ui/Portal
+ * @class FloatingLayer
+ * @memberof ui/FloatingLayer
  * @ui
  * @public
  */
-class PortalBase extends React.Component {
-	static displayName = 'Portal'
+class FloatingLayerBase extends React.Component {
+	static displayName = 'FloatingLayer'
 
 	constructor (props) {
 		super(props);
 		this.node = null;
-		this.portal = null;
+		this.floatLayer = null;
 	}
 
-	static propTypes = {
+	static propTypes = /** @lends ui/FloatingLayer.FloatingLayerBase.prototype */ {
 		/**
-		 * When `true`, Portal will not hide when the user presses `ESC` key.
+		 * CSS classes for FloatingLayer.
+		 *
+		 * @type {String}
+		 * @default `enact-fit enact-clip enact-untouchable`
+		 * @public
+		 */
+		floatLayerClassName: React.PropTypes.string,
+
+		/**
+		 * Element id for floating layer.
+		 *
+		 * @type {String}
+		 * @default `floatLayer`
+		 * @public
+		 */
+		floatLayerId: React.PropTypes.string,
+
+		/**
+		 * When `true`, FloatingLayer will not hide when the user presses `ESC` key.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -46,7 +64,7 @@ class PortalBase extends React.Component {
 		noAutoDismiss: React.PropTypes.bool,
 
 		/**
-		 * A function to run when portal is closed.
+		 * A function to be run when floating layer is closed.
 		 *
 		 * @type {Function}
 		 * @public
@@ -54,8 +72,8 @@ class PortalBase extends React.Component {
 		onClose: React.PropTypes.func,
 
 		/**
-		 * A function to run when `ESC` key is pressed. The function will only invoke if
-		 * `noAutoDismiss` is set to false.
+		 * A function to be run when `ESC` key is pressed. The function will only invoke if
+		 * `noAutoDismiss` is set to `false`.
 		 *
 		 * @type {Function}
 		 * @public
@@ -63,7 +81,7 @@ class PortalBase extends React.Component {
 		onDismiss: React.PropTypes.func,
 
 		/**
-		 * A function to run when portal is opened. It will only be invoked for the first render.
+		 * A function to be run when floating layer is opened. It will only be invoked for the first render.
 		 *
 		 * @type {Function}
 		 * @public
@@ -71,7 +89,7 @@ class PortalBase extends React.Component {
 		onOpen: React.PropTypes.func,
 
 		/**
-		 * When `true`, it renders components into portal.
+		 * When `true`, the floating layer and its components will be rendered.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -80,25 +98,7 @@ class PortalBase extends React.Component {
 		open: React.PropTypes.bool,
 
 		/**
-		 * CSS classes for Portal.
-		 *
-		 * @type {String}
-		 * @default `enact-fit enact-untouchable`
-		 * @public
-		 */
-		portalClassName: React.PropTypes.string,
-
-		/**
-		 * Element id for portal.
-		 *
-		 * @type {String}
-		 * @default `portal`
-		 * @public
-		 */
-		portalId: React.PropTypes.string,
-
-		/**
-		 * Types of scrim. It can be either `transparent` or `translucent`.
+		 * The scrim type. It can be either `'transparent'` or `'translucent'`.
 		 *
 		 * @type {String}
 		 * @default `translucent`
@@ -108,10 +108,10 @@ class PortalBase extends React.Component {
 	}
 
 	static defaultProps = {
+		floatLayerClassName: 'enact-fit enact-clip enact-untouchable',
+		floatLayerId: 'floatLayer',
 		noAutoDismiss: false,
 		open: false,
-		portalClassName: 'enact-fit enact-clip enact-untouchable',
-		portalId: 'portal',
 		scrimType: 'translucent'
 	}
 
@@ -119,36 +119,32 @@ class PortalBase extends React.Component {
 		if (this.props.open) {
 			viewingLayers.push(scrimZIndex);
 			this.prevZIndex = scrimZIndex;
-			this.renderPortal(this.props);
+			this.renderFloatingLayer(this.props);
 		}
 	}
 
 	componentWillReceiveProps (nextProps) {
 		if (nextProps.open) {
-			let isOpened = false;
-			if (nextProps.open === this.props.open) {
-				// will not increase zIndex for already opened layer
-				isOpened = true;
-			} else {
+			if (!this.props.open) {
 				// increase scrimZIndex by 2 for the new layer
 				scrimZIndex = scrimZIndex + 2;
 				this.prevZIndex = scrimZIndex;
 				viewingLayers.push(scrimZIndex);
 			}
-			this.renderPortal(nextProps, isOpened);
+			this.renderFloatingLayer(nextProps, this.props.open);
 		} else {
-			this.closePortal();
+			this.closeFloatingLayer();
 		}
 	}
 
 	componentWillUnmount () {
-		this.closePortal();
+		this.closeFloatingLayer();
 	}
 
-	closePortal () {
+	closeFloatingLayer () {
 		if (this.node) {
 			ReactDOM.unmountComponentAtNode(this.node);
-			document.getElementById(this.props.portalId).removeChild(this.node);
+			document.getElementById(this.props.floatLayerId).removeChild(this.node);
 
 			const v = viewingLayers.indexOf(scrimZIndex);
 			viewingLayers.splice(v, 1);
@@ -157,11 +153,11 @@ class PortalBase extends React.Component {
 				this.props.onClose();
 			}
 		}
-		this.portal = null;
+		this.floatLayer = null;
 		this.node = null;
 	}
 
-	renderPortal ({portalClassName, portalId, scrimType, ...rest}, isOpened = false) {
+	renderFloatingLayer ({floatLayerClassName, floatLayerId, scrimType, ...rest}, isOpened = false) {
 		delete rest.noAutoDismiss;
 		delete rest.onClose;
 		delete rest.onDismiss;
@@ -170,10 +166,10 @@ class PortalBase extends React.Component {
 
 		if (!this.node) {
 			this.node = document.createElement('div');
-			this.node.className = portalClassName;
-			document.getElementById(portalId).appendChild(this.node);
+			this.node.className = floatLayerClassName;
+			document.getElementById(floatLayerId).appendChild(this.node);
 		} else {
-			this.node.className = portalClassName;
+			this.node.className = floatLayerClassName;
 		}
 
 		const scrimProps = {
@@ -181,9 +177,9 @@ class PortalBase extends React.Component {
 			visible: this.prevZIndex === viewingLayers[viewingLayers.length - 1],
 			zIndex: isOpened ? this.prevZIndex : scrimZIndex
 		};
-		this.portal = ReactDOM.unstable_renderSubtreeIntoContainer(
+		this.floatLayer = ReactDOM.unstable_renderSubtreeIntoContainer(
 			this,
-			<ScrimLayer
+			<Scrim
 				{...scrimProps}
 				{...rest}
 			/>,
@@ -200,7 +196,7 @@ class PortalBase extends React.Component {
 	}
 }
 
-const handleCancel = function (props) {
+const handleCancel = (props) => {
 	if (props.open && !props.noAutoDismiss && props.onDismiss) {
 		props.onDismiss();
 	} else {
@@ -210,16 +206,16 @@ const handleCancel = function (props) {
 };
 
 /**
- * {@link ui/Portal.Portal} is a component that creates an entry point to the new
+ * {@link ui/FloatingLayer.FloatingLayer} is a component that creates an entry point to the new
  * render tree. This is used for modal components such as popups.
  *
- * @class Portal
- * @memberof ui/Portal
+ * @class FloatingLayer
+ * @memberof ui/FloatingLayer
  * @ui
  * @mixes ui/Cancelable.Cancelable
  * @public
  */
-const Portal = Cancelable({modal: true, onCancel: handleCancel}, PortalBase);
+const FloatingLayer = Cancelable({modal: true, onCancel: handleCancel}, FloatingLayerBase);
 
-export default Portal;
-export {Portal, PortalBase};
+export default FloatingLayer;
+export {FloatingLayer, FloatingLayerBase};

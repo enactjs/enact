@@ -17,7 +17,11 @@
 	letter-spacing: normal;
 	padding: @moon-app-keepout;
 	color: @moon-text-color;
-	background-color: @moon-background-color;
+
+	&.bg,
+	& > .bg {
+		background-color: @moon-background-color;
+	}
 
 	::selection {
 		color: @moon-spotlight-text-color;
@@ -42,13 +46,15 @@
 }
 
 // Disabled components
-[disabled] {
+[disabled],
+:global(.spottableDisabled):focus {
 	.vendor-opacity(@moon-disabled-translucent-opacity);
 
 	cursor: default;
 
 	// Disabled children of disabled components
-	[disabled] {
+	[disabled],
+	:global(.spottableDisabled):focus {
 		.vendor-opacity(1);
 	}
 }

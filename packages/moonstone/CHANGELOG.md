@@ -6,17 +6,27 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/Popup`, `moonstone/Dialog` components
 - `marqueeCentered` prop to `moonstone/MarqueeDecorator` and `moonstone/MarqueeText`
+- `ItemOverlay` component to `moonstone/Item` module
+- `placeholder` prop to `moonstone/Image`
+- `moonstone/MarqueeController` component to synchronize multiple `moonstone/Marquee` components
 
 ### Changed
 
-- The property `checked` is now called `selected` for consistency across the whole framework. This allows better interoperability when switching between various components.  Affects the following: `CheckboxItem`, `RadioItem`, `SelectableItem`, `Switch`, `SwitchItem`, and `ToggleItem`.
+- `moonstone/MoonstoneDecorator` to add `FloatingLayerDecorator`
+- the `checked` property to `selected` for consistency across the whole framework. This allows better interoperability when switching between various components.  Affects the following: `CheckboxItem`, `RadioItem`, `SelectableItem`, `Switch`, `SwitchItem`, and `ToggleItem`. Additionally, these now use ItemOverlay to position and handle their Icons.
+- `moonstone/GridListImageItem` so that a placeholder image displays while loading the image and the caption and subcaption support marqueeing.
 
 ### Removed
 
 - LESS mixins that belong in `@enact/ui`, so that only moonstone-specific mixins are contained in
 this module. When authoring components and importing mixins, only the local mixins need to be
 imported, as they already import the general mixins.
+
+### Fixed
+
+- Joined picker so that it now has correct animation when using the mouse wheel.
 
 ## [1.0.0-alpha.3] - 2016-11-8
 

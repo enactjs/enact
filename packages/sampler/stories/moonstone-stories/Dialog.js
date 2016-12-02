@@ -1,7 +1,7 @@
 import Dialog, {DialogBase} from '@enact/moonstone/Dialog';
 import Button from '@enact/moonstone/Button';
 import React from 'react';
-import {storiesOf} from '@kadira/storybook';
+import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
 
 Dialog.propTypes = Object.assign({}, DialogBase.propTypes, Dialog.propTypes);
@@ -14,10 +14,11 @@ storiesOf('Dialog')
 		' ',
 		'Basic usage of Dialog',
 		() => (
-
 			<Dialog
 				open={boolean('open', true)}
 				noAnimation={boolean('noAnimation', false)}
+				noAutoDismiss={boolean('noAutoDismiss', false)}
+				onClose={action('onClose')}
 				showCloseButton={boolean('showCloseButton', false)}
 				useDivider={boolean('useDivider', false)}
 			>
