@@ -1,6 +1,6 @@
-<section>
-
-## Enyo to Enact Component Map
+---
+title: Enyo to Enact Component Map
+---
 
 ### Utilities
 |Enyo   |Enact  |Notes  |
@@ -137,6 +137,3 @@ component.
 <sup>2</sup>- The component is generally only used internally by the framework.
 
 <sup>3</sup>- Internal review found dissatisfaction with the component.
-
-
-</section>

@@ -155,8 +155,16 @@
 	:global(.moon-neutral) & {
 		color: @moon-neutral-button-text-color;
 
-		&:before {
+		.bg {
 			background-color: @moon-neutral-button-bg-color;
+		}
+
+		&.translucent .bg {
+			background-color: fade(@moon-neutral-button-bg-color, @moon-button-translucent-opacity);
+		}
+
+		&.transparent .bg {
+			background-color: transparent;
 		}
 
 		* {
