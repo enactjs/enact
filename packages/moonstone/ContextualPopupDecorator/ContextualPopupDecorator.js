@@ -1,5 +1,7 @@
 /**
- * Exports the {@link module:moonstone/ContextualPopup.ContextualPopupDecorator} component.
+ * Exports the {@link module:moonstone/ContextualPopup.ContextualPopupDecorator} and
+ * {@link module:moonstone/ContextualPopup.ContextualPopup} components. The default export is
+ * {@link module:moonstone/ContextualPopup.ContextualPopupDecorator}.
  *
  * @module moonstone/ContextualPopup
  */
@@ -14,6 +16,16 @@ import css from './ContextualPopupDecorator.less';
 
 const defaultConfig = {};
 
+/**
+ * {@link moonstone/ContextualPopupDecorator.ContextualPopupDecorator} is a Higher-order Component
+ * which positions {@link moonstone/ContextualPopupDecorator.ContextualPopup} in relation to
+ * the Wrapped component.
+ *
+ * @class ContextualPopupDecorator
+ * @memberof moonstone/ContextualPopupDecorator
+ * @hoc
+ * @public
+ */
 const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const ARROW_WIDTH = ri.scale(30);
 	const ARROW_OFFSET = ri.scale(18);
@@ -280,3 +292,4 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 });
 
 export default ContextualPopupDecorator;
+export {ContextualPopupDecorator, ContextualPopup};

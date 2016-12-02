@@ -1,4 +1,4 @@
-import {ContextualPopupDecorator} from '@enact/moonstone/ContextualPopup';
+import {ContextualPopupDecorator} from '@enact/moonstone/ContextualPopupDecorator';
 import Button from '@enact/moonstone/Button';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
