@@ -125,7 +125,8 @@ const ExpandableItemBase = kind({
 	},
 
 	styles: {
-		css
+		css,
+		className: 'expandableItem'
 	},
 
 	computed: {
@@ -156,12 +157,17 @@ const ExpandableItemBase = kind({
 		return (
 			<ExpandableContainer {...rest} disabled={disabled} open={open}>
 				<LabeledItem
-					className={css.expandableItem}
-					open={open}
+					className={css.item}
 					disabled={disabled}
 					label={label}
 					onClick={handleOpen}
-				>{title}
+				>
+					<div
+						className={css.header}
+						open={open}
+					>
+						{title}
+					</div>
 				</LabeledItem>
 				<TransitionContainer data-container-disabled={!open} visible={open} duration="short" type="clip">
 					{children}

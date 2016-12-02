@@ -5,21 +5,38 @@
 .expandableItem {
 	display: inline-block;
 
-	&:after {
-		position: absolute;
-		top: @moon-spotlight-outset - 12px;
-		right: @moon-spotlight-outset + 1px;
-		font-family: @moon-icon-font-family;
-		font-size: @moon-expandable-caret-icon-font-size;
-		content: @moon-expandable-close-caret-icon;
-
-		:global(.enact-locale-right-to-left) & {
-			left: @moon-spotlight-outset + 1px;
-			right: initial;
-		}
+	.item {
+		display: inline-block;
+		min-width: auto;
+		width: 100%;
 	}
 
-	&[open]:after {
-		content: @moon-expandable-open-caret-icon;
+	.header {
+		display: inline-block;
+		padding-right: @moon-spotlight-outset + 30px;
+		position: relative;
+
+		&:after {
+			position: absolute;
+			top: @moon-spotlight-outset - 12px;
+			right: @moon-spotlight-outset + 1px;
+			font-family: @moon-icon-font-family;
+			font-size: @moon-expandable-caret-icon-font-size;
+			content: @moon-expandable-close-caret-icon;
+
+			:global(.enact-locale-right-to-left) & {
+				left: @moon-spotlight-outset + 1px;
+				right: initial;
+			}
+		}
+
+		&[open]:after {
+			content: @moon-expandable-open-caret-icon;
+		}
+
+		:global(.enact-locale-right-to-left) & {
+			padding-left: @moon-spotlight-outset + 30px;
+			padding-right: @moon-spotlight-outset;
+		}
 	}
 }
