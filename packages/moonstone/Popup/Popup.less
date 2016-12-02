@@ -1,0 +1,38 @@
+@import '../styles/mixins.less';
+@import '../styles/text.less';
+@import '../styles/colors.less';
+@import '../styles/variables.less';
+
+.popup {
+	@padding-v: 24px;
+	@padding-h: @moon-spotlight-outset * 4;
+
+	.moon-text-base();
+	position: absolute;
+	bottom: 0px;
+	padding: @padding-v @padding-h;
+	width: 100%;
+	box-sizing: border-box;
+
+	.closeButton {
+		position: absolute;
+		right: @moon-spotlight-outset;
+		top: @moon-spotlight-outset;
+		margin: 0;
+	}
+
+	.body {
+		// border: 1px dashed cyan;		// helpful for debugging layout. Not for production.
+	}
+
+	&.reserveClose {
+		.padding-start-end(@padding-h, @moon-icon-button-small-size + @moon-spotlight-outset);
+	}
+
+	:global(.enact-locale-right-to-left) & {
+		.closeButton {
+			right: auto;
+			left: @moon-spotlight-outset;
+		}
+	}
+}

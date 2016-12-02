@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/Popup`, `moonstone/ContextualPopupDecorator`, `moonstone/Notification` and `moonstone/Dialog` components
 - `marqueeCentered` prop to `moonstone/MarqueeDecorator` and `moonstone/MarqueeText`
 - `ItemOverlay` component to `moonstone/Item` module
 - `placeholder` prop to `moonstone/Image`
@@ -14,11 +15,12 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
-- children property of moonstone/Icon and moonstone/IconButton to support both font-based icons and images.
-- the `checked` property to `selected` for consistency across the whole framework. This allows better interoperability when switching between various components.  Affects the following: `CheckboxItem`, `RadioItem`, `SelectableItem`, `Switch`, `SwitchItem`, and `ToggleItem`. Additionally, these now use ItemOverlay to position and handle their Icons.
+- `moonstone/Icon` and `moonstone/IconButton` so the `children` property supports both font-based icons and images.
+- the `checked` property to `selected` for consistency across the whole framework. This allows better interoperability when switching between various components.  Affects the following: `CheckboxItem`, `RadioItem`, `SelectableItem`, `Switch`, `SwitchItem`, and `ToggleItem`. Additionally, these now use `moonstone/Item.ItemOverlay` to position and handle their Icons.
 - `moonstone/Slider` and `moonstone/IncrementSlider` to be more performant. No changes were made to
 	the public API.
-- the implementation of `moonstone/GridListImageItem` so that a placeholder image displays while loading the image, and the caption and subcaption support marqueeing.
+- `moonstone/GridListImageItem` so that a placeholder image displays while loading the image, and the caption and subcaption support marqueeing.
+- `moonstone/MoonstoneDecorator` to add `FloatingLayerDecorator`
 
 ### Removed
 
