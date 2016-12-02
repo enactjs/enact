@@ -1,7 +1,7 @@
 import Notification, {NotificationBase} from '@enact/moonstone/Notification';
 import Button from '@enact/moonstone/Button';
 import React from 'react';
-import {storiesOf} from '@kadira/storybook';
+import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
 
 Notification.propTypes = Object.assign({}, NotificationBase.propTypes, Notification.propTypes);
@@ -16,6 +16,8 @@ storiesOf('Notification')
 		() => (
 			<Notification
 				open={boolean('open', true)}
+				noAutoDismiss={boolean('noAutoDismiss', false)}
+				onClose={action('onClose')}
 			>
 				<span>{text('message', 'Notification has content in it and can be very useful for organizing information for the user.')}</span>
 				<buttons>

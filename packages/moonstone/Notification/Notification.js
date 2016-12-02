@@ -50,6 +50,25 @@ const NotificationBase = kind({
 		]),
 
 		/**
+		 * When `true`, the popup will not close when the user presses `ESC` key.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		noAutoDismiss: PropTypes.bool,
+
+		/**
+		 * A function to be run when a closing action is invoked by the user. These actions include
+		 * pressing `ESC` key or clicking on the close button. It is the responsibility of the
+		 * callback to set the `open` state to false.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onClose: PropTypes.func,
+
+		/**
 		 * Is this control in the expanded state (true), opened, with the contents visible?
 		 *
 		 * @type {Boolean}
