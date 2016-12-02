@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/ExpandableInput` component
 - `moonstone/Popup`, `moonstone/ContextualPopupDecorator`, `moonstone/Notification` and `moonstone/Dialog` components
 - `marqueeCentered` prop to `moonstone/MarqueeDecorator` and `moonstone/MarqueeText`
 - `ItemOverlay` component to `moonstone/Item` module
@@ -16,6 +17,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+- `iconStart` and `iconEnd` properties of `moonstone/Input` to be `iconBefore` and `iconAfter`, respectively, for consistency with `moonstone/Item.ItemOverlay` naming
 - `moonstone/Icon` and `moonstone/IconButton` so the `children` property supports both font-based icons and images.
 - the `checked` property to `selected` for consistency across the whole framework. This allows better interoperability when switching between various components.  Affects the following: `CheckboxItem`, `RadioItem`, `SelectableItem`, `Switch`, `SwitchItem`, and `ToggleItem`. Additionally, these now use `moonstone/Item.ItemOverlay` to position and handle their Icons.
 - `moonstone/Slider` and `moonstone/IncrementSlider` to be more performant. No changes were made to
