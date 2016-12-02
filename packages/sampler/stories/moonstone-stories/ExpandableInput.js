@@ -24,17 +24,17 @@ class ExpandableInput extends React.Component {
 
 	handleOpen = (ev) => {
 		this.setState({
-			'open': true
+			open: true
 		});
 		this.forwardOnOpen(ev, this.props);
-	};
+	}
 
 	handleClose = (ev) => {
 		this.setState({
-			'open': false
+			open: false
 		});
 		this.forwardOnClose(ev, this.props);
-	};
+	}
 
 	render () {
 		return (

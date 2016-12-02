@@ -109,6 +109,8 @@ const ExpandableContainerBase = class extends React.Component {
 	render () {
 		const props = Object.assign({}, this.props);
 		delete props.noAutoFocus;
+		delete props.noPointerMode;
+
 		return (
 			<div {...props} ref={this.getContainerNode} />
 		);
