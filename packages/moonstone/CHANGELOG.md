@@ -6,10 +6,11 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/ExpandableInput` component
 - `marqueeCentered` prop to `moonstone/MarqueeDecorator` and `moonstone/MarqueeText`
 - `ItemOverlay` component to `moonstone/Item` module
 - `placeholder` prop to `moonstone/Image`
-- `moonstone/MarqueeController` component to synchronize multiple `moonstone/Marquee` components
+- `MarqueeController` component to `moonstone/Marquee` to synchronize multiple `Marquee` components
 
 ### Changed
 

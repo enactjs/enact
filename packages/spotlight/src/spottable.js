@@ -54,17 +54,7 @@ const defaultConfig = {
 	 * @default false
 	 * @public
 	 */
-	emulateMouse: true,
-
-	/**
-	 * When specified, passes the value of the `spotlightDisabled` prop to the wrapped component. If
-	 * omitted, `spotlightDisabled` is not passed.
-	 *
-	 * @type {String}
-	 * @default null
-	 * @public
-	 */
-	spotlightDisabledProp: null
+	emulateMouse: true
 };
 
 /**
@@ -80,7 +70,7 @@ const defaultConfig = {
  * @returns {Function} Spottable
  */
 const Spottable = hoc(defaultConfig, (config, Wrapped) => {
-	const {emulateMouse, spotlightDisabledProp} = config;
+	const {emulateMouse} = config;
 	const forwardBlur = forward('onBlur');
 	const forwardFocus = forward('onFocus');
 	const forwardKeyPress = forwardEnter('onKeyPress', 'onClick');
@@ -147,10 +137,6 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			const classes = spottableDisabled ? spottableClass + ' ' + spottableDisabledClass : spottableClass;
 			const componentDisabled = !spottable && disabled;
 			let tabIndex = rest.tabIndex;
-
-			if (spotlightDisabledProp) {
-				rest[spotlightDisabledProp] = spotlightDisabled;
-			}
 
 			if (tabIndex == null && spottable) {
 				tabIndex = -1;

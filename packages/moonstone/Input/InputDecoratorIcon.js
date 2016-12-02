@@ -6,12 +6,32 @@ import Icon from '../Icon';
 
 import css from './Input.less';
 
+/**
+ * The stateless functional base component for {@link moonstone/Input.InputDecoratorIcon}.
+ *
+ * @class InputDecoratorIconBase
+ * @memberof moonstone/Input
+ * @ui
+ * @private
+ */
 const InputDecoratorIconBase = kind({
 	name: 'InputDecoratorIcon',
 
 	propTypes: {
-		position: React.PropTypes.oneOf(['start', 'end']).isRequired,
-		children: React.PropTypes.string
+		/**
+		 * The position of the icon. Either `before` or `after`.
+		 *
+		 * @type {[type]}
+		 */
+		position: React.PropTypes.oneOf(['before', 'after']).isRequired,
+
+		/**
+		 * The icon to be displayed.
+		 *
+		 * @see {@link moonstone/Icon.Icon#children}
+		 * @type {String|Object}
+		 */
+		children: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.object])
 	},
 
 	styles: {
@@ -21,7 +41,7 @@ const InputDecoratorIconBase = kind({
 
 	computed: {
 		className: ({position, styler}) => {
-			return styler.append('icon' + (position === 'start' ? 'Start' : 'End'));
+			return styler.append('icon' + (position === 'before' ? 'Before' : 'After'));
 		}
 	},
 
@@ -34,6 +54,14 @@ const InputDecoratorIconBase = kind({
 	}
 });
 
+/**
+ * An icon displayed either before or after the input field of an {@link moonstone/Input.Input}.
+ *
+ * @class InputDecoratorIcon
+ * @memberof moonstone/Input
+ * @ui
+ * @private
+ */
 const InputDecoratorIcon = onlyUpdateForKeys(['children'])(InputDecoratorIconBase);
 
 export default InputDecoratorIcon;

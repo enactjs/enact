@@ -9,6 +9,15 @@ const preventSpotlightNavigation = (ev) => {
 
 const isBubbling = (ev) => ev.currentTarget !== ev.target;
 
+/**
+ * {@link moonstone/Input.InputSpotlightDecorator} is a Higher-order Component that manages the
+ * spotlight behavior for an {@link moonstone/Input.Input}
+ *
+ * @class InputSpotlightDecorator
+ * @memberof moonstone/InputSpotlightDecorator
+ * @hoc
+ * @private
+ */
 const InputSpotlightDecorator = hoc((config, Wrapped) => {
 	const Component = Spottable(Wrapped);
 	const forwardBlur = forward('onBlur');
@@ -52,6 +61,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			super(props);
 
 			this.state = {
+				direction: null,
 				focused: null,
 				node: null
 			};

@@ -24,13 +24,14 @@ const ExpandableTransitionContainerBase = class extends React.Component {
 		'data-container-id': React.PropTypes.string,
 
 		/**
-		 * Whether the contents of the container should receive spotlight focus when becoming visible.
+		 * When `true`, the contents of the container will not receive spotlight focus when becoming
+		 * visible.
 		 *
 		 * @type {Boolean}
-		 * @default true
+		 * @default false
 		 * @public
 		 */
-		autoFocus: React.PropTypes.bool,
+		noAutoFocus: React.PropTypes.bool,
 
 		/**
 		 * Set the visibility of the component, which determines whether it's on screen or off.
@@ -43,18 +44,19 @@ const ExpandableTransitionContainerBase = class extends React.Component {
 	}
 
 	static defaultProps = {
-		autoFocus: true
+		noAutoFocus: false
 	}
 
 	componentDidUpdate (prevProps) {
-		if (this.props.visible && !prevProps.visible && this.props.autoFocus && !Spotlight.getPointerMode()) {
+		if (this.props.visible && !prevProps.visible && !this.props.noAutoFocus && !Spotlight.getPointerMode()) {
 			Spotlight.focus(this.props['data-container-id']);
 		}
 	}
 
 	render () {
 		const props = Object.assign({}, this.props);
-		delete props.autoFocus;
+		delete props.noAutoFocus;
+
 		return (
 			<Transition {...props} />
 		);

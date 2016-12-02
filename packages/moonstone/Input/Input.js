@@ -59,7 +59,7 @@ const InputBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		iconEnd: PropTypes.string,
+		iconAfter: PropTypes.string,
 
 		/**
 		 * The icon to be placed at the beginning of the input.
@@ -68,7 +68,7 @@ const InputBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		iconStart: PropTypes.string,
+		iconBefore: PropTypes.string,
 
 		/**
 		 * The handler to run when blurred.
@@ -134,15 +134,6 @@ const InputBase = kind({
 		placeholder: PropTypes.string,
 
 		/**
-		 * When `true`, spotlight navigation is prevented for the input.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		spotlightDisabled: PropTypes.bool,
-
-		/**
 		 * The type of input. Accepted values correspond to the standard HTML5 input types.
 		 *
 		 * @type {String}
@@ -183,13 +174,13 @@ const InputBase = kind({
 		}
 	},
 
-	render: ({disabled, iconEnd, iconStart, onChange, placeholder, type, value, ...rest}) => {
+	render: ({disabled, iconAfter, iconBefore, onChange, placeholder, type, value, ...rest}) => {
 		delete rest.dismissOnEnter;
 		delete rest.focused;
 
 		return (
 			<div {...rest} disabled={disabled}>
-				<InputDecoratorIcon position="start">{iconStart}</InputDecoratorIcon>
+				<InputDecoratorIcon position="before">{iconBefore}</InputDecoratorIcon>
 				<input
 					className={css.input}
 					disabled={disabled}
@@ -198,7 +189,7 @@ const InputBase = kind({
 					type={type}
 					value={value}
 				/>
-				<InputDecoratorIcon position="end">{iconEnd}</InputDecoratorIcon>
+				<InputDecoratorIcon position="after">{iconAfter}</InputDecoratorIcon>
 			</div>
 		);
 	}
