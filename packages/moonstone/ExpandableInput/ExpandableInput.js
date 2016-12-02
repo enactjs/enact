@@ -1,4 +1,5 @@
 import Changeable from '@enact/ui/Changeable';
+import Spotlight from '@enact/spotlight';
 import React from 'react';
 
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
@@ -140,7 +141,7 @@ class ExpandableInputBase extends React.Component {
 		delete rest.onChange;
 
 		return (
-			<ExpandableItemBase {...rest} disabled={disabled} label={value} onMouseDown={this.handleMouseDown}>
+			<ExpandableItemBase {...rest} disabled={disabled} label={value} onMouseDown={this.handleMouseDown} noPointerMode>
 				<Input
 					disabled={disabled}
 					dismissOnEnter
