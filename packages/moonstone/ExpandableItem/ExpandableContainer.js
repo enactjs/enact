@@ -27,12 +27,20 @@ const ExpandableContainerBase = class extends React.Component {
 	componentDidUpdate (prevProps) {
 		if (!this.props.open && prevProps.open) {
 			this.highlightLabeledItem();
+		} else if (!prevProps.open && this.props.open) {
+			this.highlightDrawerItem();
 		}
 	}
 
 	highlightLabeledItem = () => {
 		if (this.containerNode.contains(document.activeElement)) {
 			Spotlight.focus(this.props['data-container-id']);
+		}
+	}
+
+	highlightDrawerItem = () => {
+		if (this.containerNode.contains(document.activeElement)) {
+			Spotlight.move('down');
 		}
 	}
 
