@@ -195,6 +195,15 @@ class Popup extends React.Component {
 		open: PropTypes.bool,
 
 		/**
+		 * Types of scrim. It can be either `transparent` or `translucent`.
+		 *
+		 * @type {String}
+		 * @default `translucent`
+		 * @public
+		 */
+		scrimType: React.PropTypes.oneOf(['transparent', 'translucent']),
+
+		/**
 		 * When `true`, the close button is shown; when `false`, it is hidden.
 		 *
 		 * @type {Boolean}
@@ -208,6 +217,7 @@ class Popup extends React.Component {
 		noAnimation: false,
 		noAutoDismiss: false,
 		open: false,
+		scrimType: 'translucent',
 		showCloseButton: false
 	}
 
@@ -248,7 +258,7 @@ class Popup extends React.Component {
 	}
 
 	render () {
-		const {noAutoDismiss, onClose, ...rest} = this.props;
+		const {noAutoDismiss, onClose, scrimType, ...rest} = this.props;
 
 		return (
 			<FloatingLayer
@@ -256,6 +266,7 @@ class Popup extends React.Component {
 				open={this.state.floatLayerOpen}
 				onOpen={this.handleFloatingLayerOpen}
 				onDismiss={onClose}
+				scrimType={scrimType}
 			>
 				<PopupBase
 					{...rest}
