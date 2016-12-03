@@ -83,6 +83,15 @@ const DialogBase = kind({
 		open: PropTypes.bool,
 
 		/**
+		 * Types of scrim. It can be either `'transparent'`, `'translucent'`, or `'none'`.
+		 *
+		 * @type {String}
+		 * @default `translucent`
+		 * @public
+		 */
+		scrimType: React.PropTypes.oneOf(['transparent', 'translucent', 'none']),
+
+		/**
 		 * When `true`, the close button is shown; when `false`, it is hidden.
 		 *
 		 * @type {Boolean}
@@ -90,6 +99,14 @@ const DialogBase = kind({
 		 * @public
 		 */
 		showCloseButton: PropTypes.bool,
+
+		/**
+		 * When `true`, a divider line separates the title from the dialog body
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		showDivider: PropTypes.bool,
 
 		/**
 		 * Title of the header
@@ -105,15 +122,7 @@ const DialogBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		titleBelow: PropTypes.string,
-
-		/**
-		 * When `true`, a divider line separates the title from the dialog body
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		showDivider: PropTypes.bool
+		titleBelow: PropTypes.string
 	},
 
 	defaultProps: {

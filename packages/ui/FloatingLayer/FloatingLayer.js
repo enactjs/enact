@@ -98,13 +98,13 @@ class FloatingLayerBase extends React.Component {
 		open: React.PropTypes.bool,
 
 		/**
-		 * The scrim type. It can be either `'transparent'` or `'translucent'`.
+		 * The scrim type. It can be either `'transparent'`, `'translucent'`, or `'none'`.
 		 *
 		 * @type {String}
 		 * @default `translucent`
 		 * @public
 		 */
-		scrimType: React.PropTypes.oneOf(['transparent', 'translucent'])
+		scrimType: React.PropTypes.oneOf(['transparent', 'translucent', 'none'])
 	}
 
 	static defaultProps = {

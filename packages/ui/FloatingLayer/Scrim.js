@@ -80,13 +80,13 @@ const Scrim = kind({
 		zIndex: React.PropTypes.number.isRequired,
 
 		/**
-		 * Types of scrim. It can be either `transparent` or `translucent`.
+		 * Types of scrim. It can be either `'transparent'`, `'translucent'`, or `'none'`.
 		 *
 		 * @type {String}
 		 * @default `translucent`
 		 * @public
 		 */
-		type: React.PropTypes.oneOf(['transparent', 'translucent']),
+		type: React.PropTypes.oneOf(['transparent', 'translucent', 'none']),
 
 		/**
 		 * When `true`, scrim will appear
@@ -112,7 +112,7 @@ const Scrim = kind({
 			return React.cloneElement(children, {style, ...rest});
 		},
 		scrim: ({visible, zIndex, type}) => {
-			if (visible) {
+			if (visible && type !== 'none') {
 				return <ScrimBase type={type} style={{zIndex}} />;
 			}
 		}
