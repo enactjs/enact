@@ -109,6 +109,16 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			tabIndex: React.PropTypes.number
 		}
 
+		static childContextTypes = {
+			isSpotted: React.PropTypes.bool, 
+		}
+
+		getChildContext() {
+			return {
+				isSpotted: this.state.spotted
+			};
+		}
+
 		constructor (props) {
 			super(props);
 			this.state = {

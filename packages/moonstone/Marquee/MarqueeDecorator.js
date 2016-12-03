@@ -174,6 +174,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			marqueeSpeed: 60
 		}
 
+		static contextTypes = {
+			isSpotted: React.PropTypes.bool
+		}
+
 		constructor (props) {
 			super(props);
 			this.state = {
@@ -199,13 +203,21 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		componentWillReceiveProps (next) {
+		componentWillReceiveProps (next, nextContext) {
 			const {marqueeOn, marqueeDisabled} = this.props;
 			if (!childrenEquals(this.props.children, next.children)) {
 				this.invalidateMetrics();
 				this.cancelAnimation();
 			} else if (next.marqueeOn !== marqueeOn || next.marqueeDisabled !== marqueeDisabled) {
 				this.cancelAnimation();
+			}
+
+			if (this.context && nextContext && this.props.marqueeOn === 'focus') {
+				if (this.context.isSpotted === false && nextContext.isSpotted === true) {
+					this.handleFocusNoForward();
+				} else if (this.context.isSpotted === true && nextContext.isSpotted === false) {
+					this.handleBlurNoForward();
+				}
 			}
 		}
 
@@ -429,6 +441,16 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.isFocused = false;
 			this.cancelAnimation();
 			forwardBlur(ev, this.props);
+		}
+
+		handleFocusNoForward = () => {
+			this.isFocused = true;
+			this.startAnimation();
+		}
+
+		handleBlurNoForward = () => {
+			this.isFocused = false;
+			this.cancelAnimation();
 		}
 
 		handleEnter = (ev) => {
