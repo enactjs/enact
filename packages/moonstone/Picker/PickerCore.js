@@ -8,9 +8,9 @@
 import * as jobs from '@enact/core/jobs';
 import {childrenEquals} from '@enact/core/util';
 import clamp from 'ramda/src/clamp';
-import React from 'react';
 import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
-import shouldUpdate from 'recompose/shouldUpdate';
+import Updatable from '@enact/ui/Updatable';
+import React from 'react';
 
 import Icon from '../Icon';
 import IconButton from '../IconButton';
@@ -18,12 +18,13 @@ import IconButton from '../IconButton';
 import {steppedNumber} from './PickerPropTypes';
 import css from './Picker.less';
 
-const PickerViewManager = shouldUpdate((props, nextProps) => {
+const PickerViewManager = Updatable((props, nextProps, context, nextContext) => {
 	return (
 		props.index !== nextProps.index ||
-		!childrenEquals(props.children, nextProps.children)
+		!childrenEquals(props.children, nextProps.children) ||
+		context.isSpotted !== nextContext.isSpotted
 	);
-})(ViewManager);
+})({isSpotted: React.PropTypes.bool})(ViewManager);
 
 const wrapRange = (min, max, value) => {
 	if (value > max) {

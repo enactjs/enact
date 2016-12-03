@@ -16,6 +16,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/VirtualList` and `moonstone/VirtualGridList` to prevent unwanted scrolling when focused with the pointer
+- Picker's Marquee will now animate when it's parent is focused.
 
 ## [1.0.0-alpha.4] - 2016-12-2
 
