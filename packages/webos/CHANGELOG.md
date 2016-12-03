@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact webos module, newest changes on the top.
 
+## [1.0.0-alpha.4] - 2016-12-2
+
+### Changed
+
+Relocated Luna Service API docs to this module
+
 ## [1.0.0-alpha.3] - 2016-11-8
 
 No significant changes
