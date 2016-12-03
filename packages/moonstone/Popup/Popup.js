@@ -130,7 +130,7 @@ const PopupBase = kind({
 				direction="down"
 				duration="short"
 				type="slide"
-				fit
+				className={css.popupTransitionContainer}
 				style={zIndex}
 				onHide={onHide}
 			>
