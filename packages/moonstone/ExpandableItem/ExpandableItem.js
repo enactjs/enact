@@ -9,15 +9,12 @@
 
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
-import {SpotlightContainerDecorator} from '@enact/spotlight';
-import Transition from '@enact/ui/Transition';
 
 import LabeledItem from '../LabeledItem';
 
 import Expandable from './Expandable';
 import ExpandableContainer from './ExpandableContainer';
-
-const TransitionContainer = SpotlightContainerDecorator(Transition);
+import ExpandableTransitionContainer from './ExpandableTransitionContainer';
 
 /**
  * {@link moonstone/ExpandableItem.ExpandableItem} is a stateless component that
@@ -27,7 +24,7 @@ const TransitionContainer = SpotlightContainerDecorator(Transition);
  * @class ExpandableItemBase
  * @memberof moonstone/ExpandableItem
  * @ui
- * @private
+ * @public
  */
 const ExpandableItemBase = kind({
 	name: 'ExpandableItem',
@@ -141,8 +138,10 @@ const ExpandableItemBase = kind({
 	},
 
 	render: ({children, disabled, handleOpen, label, open, title, ...rest}) => {
-		delete rest.noneText;
 		delete rest.label;
+		delete rest.noneText;
+		delete rest.onClose;
+		delete rest.onOpen;
 		delete rest.showLabel;
 		delete rest.onOpen;
 		delete rest.onClose;
@@ -154,9 +153,9 @@ const ExpandableItemBase = kind({
 					label={label}
 					onClick={handleOpen}
 				>{title}</LabeledItem>
-				<TransitionContainer data-container-disabled={!open} visible={open} duration="short" type="clip">
+				<ExpandableTransitionContainer data-container-disabled={!open} data-expandable-container visible={open} duration="short" type="clip">
 					{children}
-				</TransitionContainer>
+				</ExpandableTransitionContainer>
 			</ExpandableContainer>
 		);
 	}

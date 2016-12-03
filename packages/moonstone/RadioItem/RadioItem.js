@@ -13,7 +13,7 @@ import css from './RadioItem.less';
 
 /**
  * {@link moonstone/RadioItem.RadioItem} is a component that
- * combines a Toggleable radio selector and an Item. It has two checked states
+ * combines a Toggleable radio selector and an Item. It has two selected states
  * `true` & `false`.
  *
  * @class RadioItem
@@ -32,15 +32,6 @@ const RadioItemBase = kind({
 		 * @public
 		 */
 		children: PropTypes.string.isRequired,
-
-		/**
-		 * Applies a "checked" visual state to the radio item.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		checked: PropTypes.bool,
 
 		/**
 		 * Applies a disabled visual state to the radio item.
@@ -65,11 +56,20 @@ const RadioItemBase = kind({
 		 *
 		 * @type {Function}
 		 * @param {Object} event
-		 * @param {String} event.checked - Checked value of item.
+		 * @param {String} event.selected - Selected value of item.
 		 * @param {*} event.value - Value passed from `value` prop.
 		 * @public
 		 */
 		onToggle: PropTypes.func,
+
+		/**
+		 * Applies a filled circle icon to the radio item.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		selected: PropTypes.bool,
 
 		/**
 		 * The value that will be sent to the `onToggle` handler.
@@ -82,9 +82,9 @@ const RadioItemBase = kind({
 	},
 
 	defaultProps: {
-		checked: false,
 		disabled: false,
 		inline: false,
+		selected: false,
 		value: ''
 	},
 
@@ -94,14 +94,17 @@ const RadioItemBase = kind({
 	},
 
 	computed: {
-		iconClasses: ({checked, styler}) => styler.join(
-			css.dot,
-			{checked}
-		)
+		icon: ({selected, styler}) => {
+			const className = styler.join(css.dot, {selected});
+
+			return (
+				<div className={className} />
+			);
+		}
 	},
 
 	render: (props) => (
-		<ToggleItem {...props} icon=" " />
+		<ToggleItem {...props} />
 	)
 });
 

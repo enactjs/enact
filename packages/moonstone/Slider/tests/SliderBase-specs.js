@@ -5,37 +5,51 @@ import {SliderBase} from '../Slider';
 import css from '../Slider.less';
 
 describe('SliderBase Specs', () => {
-	it('Should have value of 50 on input', function () {
-		const handleChange = sinon.spy();
+	it('Should set value on input', function () {
 		const sliderBase = mount(
-			<SliderBase
-				min={0}
-				max={100}
-				value={50}
-				step={1}
-				onChange={handleChange}
-			/>
+			<SliderBase value={50} />
 		);
 
-		expect(sliderBase.find(`.${css.sliderBar}`).prop('value')).to.equal(50);
+		const expected = 50;
+		const actual = sliderBase.find(`.${css.input}`).prop('value');
+
+		expect(actual).to.equal(expected);
 	});
 
-	it('Should have width of 50', function () {
-		const handleChange = sinon.spy();
+	it('Should set max on input', function () {
 		const sliderBase = mount(
-			<SliderBase
-				min={0}
-				max={100}
-				value={50}
-				step={1}
-				onChange={handleChange}
-			/>
+			<SliderBase max={50} />
 		);
 
-		expect(sliderBase.find(`.${css.fill}`).prop('style').width).to.equal('50%');
+		const expected = 50;
+		const actual = sliderBase.find(`.${css.input}`).prop('max');
+
+		expect(actual).to.equal(expected);
 	});
 
-	it('Should have fired change event ', function () {
+	it('Should set min on input', function () {
+		const sliderBase = mount(
+			<SliderBase min={50} />
+		);
+
+		const expected = 50;
+		const actual = sliderBase.find(`.${css.input}`).prop('min');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('Should set step on input', function () {
+		const sliderBase = mount(
+			<SliderBase step={2} />
+		);
+
+		const expected = 2;
+		const actual = sliderBase.find(`.${css.input}`).prop('step');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('Should fire change event', function () {
 		const handleChange = sinon.spy();
 
 		const sliderBase = mount(
@@ -50,7 +64,10 @@ describe('SliderBase Specs', () => {
 
 		sliderBase.find('input').simulate('change', {target: {value: 25}});
 
-		expect(handleChange.calledOnce).to.be.true();
+		const expected = true;
+		const actual = handleChange.calledOnce;
+
+		expect(actual).to.equal(expected);
 
 	});
 });

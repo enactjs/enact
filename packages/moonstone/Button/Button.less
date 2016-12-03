@@ -40,6 +40,7 @@
 	line-height: (@moon-button-height - (2 * @moon-button-border-width));
 	background-color: transparent;
 	border: 0 transparent none;
+	border-radius: @moon-button-border-radius;
 	cursor: pointer;
 	white-space: nowrap;
 	display: inline-block;
@@ -154,8 +155,16 @@
 	:global(.moon-neutral) & {
 		color: @moon-neutral-button-text-color;
 
-		&:before {
+		.bg {
 			background-color: @moon-neutral-button-bg-color;
+		}
+
+		&.translucent .bg {
+			background-color: fade(@moon-neutral-button-bg-color, @moon-button-translucent-opacity);
+		}
+
+		&.transparent .bg {
+			background-color: transparent;
 		}
 
 		* {

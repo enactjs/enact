@@ -1,13 +1,29 @@
+/**
+ * Exports the {@link moonstone/Picker.PickerCore} component.
+ * The default export is {@link moonstone/Picker.PickerCore}.
+ *
+ * @module moonstone/Picker
+ */
+
 import * as jobs from '@enact/core/jobs';
-import {SlideLeftArranger, SlideBottomArranger, ViewManager} from '@enact/ui/ViewManager';
+import {childrenEquals} from '@enact/core/util';
+import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
 import R from 'ramda';
 import React from 'react';
+import shouldUpdate from 'recompose/shouldUpdate';
 
 import Icon from '../Icon';
 import IconButton from '../IconButton';
 
 import {steppedNumber} from './PickerPropTypes';
 import css from './Picker.less';
+
+const PickerViewManager = shouldUpdate((props, nextProps) => {
+	return (
+		props.index !== nextProps.index ||
+		!childrenEquals(props.children, nextProps.children)
+	);
+})(ViewManager);
 
 const wrapRange = (min, max, value) => {
 	if (value > max) {
@@ -34,6 +50,14 @@ const emulateMouseEventsTimeout = 175;
 // Components
 const TransparentIconButton = (props) => <IconButton {...props} backgroundOpacity="transparent" />;
 
+/**
+ * The base component for {@link moonstone/Picker.PickerCore}.
+ *
+ * @class PickerCore
+ * @memberof moonstone/Picker
+ * @ui
+ * @public
+ */
 const PickerCore = class extends React.Component {
 	static displayName = 'PickerCore'
 
@@ -83,7 +107,7 @@ const PickerCore = class extends React.Component {
 		 * supported. Without a custom icon, the default is used, and is automatically changed when
 		 * the [orientation]{Icon#orientation} is changed.
 		 *
-		 * @type {string}
+		 * @type {String}
 		 * @public
 		 */
 		decrementIcon: React.PropTypes.string,
@@ -102,7 +126,7 @@ const PickerCore = class extends React.Component {
 		 * supported. Without a custom icon, the default is used, and is automatically changed when
 		 * the [orientation]{Icon#orientation} is changed.
 		 *
-		 * @type {string}
+		 * @type {String}
 		 * @public
 		 */
 		incrementIcon: React.PropTypes.string,
@@ -193,7 +217,7 @@ const PickerCore = class extends React.Component {
 		 */
 		value: steppedNumber,
 
-		/*
+		/**
 		 * Choose a specific size for your picker. `'small'`, `'medium'`, `'large'`, or set to `null` to
 		 * assume auto-sizing. `'small'` is good for numeric pickers, `'medium'` for single or short
 		 * word pickers, `'large'` for maximum-sized pickers.
@@ -203,7 +227,7 @@ const PickerCore = class extends React.Component {
 		 */
 		width: React.PropTypes.oneOf([null, 'small', 'medium', 'large']),
 
-		/*
+		/**
 		 * Should the picker stop incrementing when the picker reaches the last element? Set `wrap`
 		 * to `true` to allow the picker to continue from the opposite end of the list of options.
 		 *
@@ -276,7 +300,7 @@ const PickerCore = class extends React.Component {
 
 	handleWheel = (ev) => {
 		const {onMouseUp, step} = this.props;
-		const dir = Math.sign(ev.deltaY);
+		const dir = -Math.sign(ev.deltaY);
 
 		// We'll sometimes get a 0/-0 wheel event we need to ignore or the wheel event has reached
 		// the bounds of the picker
@@ -343,7 +367,7 @@ const PickerCore = class extends React.Component {
 
 		let arranger;
 		if (width && !disabled) {
-			arranger = orientation === 'vertical' ? SlideBottomArranger : SlideLeftArranger;
+			arranger = orientation === 'vertical' ? SlideTopArranger : SlideLeftArranger;
 		}
 
 		return (
@@ -351,9 +375,9 @@ const PickerCore = class extends React.Component {
 				<span className={css.incrementer} disabled={incrementerDisabled} onClick={handleIncClick} onMouseDown={this.handleIncDown} onMouseUp={onMouseUp}>
 					<ButtonType disabled={incrementerDisabled}>{incrementIcon}</ButtonType>
 				</span>
-				<ViewManager arranger={arranger} duration={200} index={index} noAnimation={noAnimation} reverseTransition={this.reverseTransition} className={css.valueWrapper}>
+				<PickerViewManager arranger={arranger} duration={200} index={index} noAnimation={noAnimation} reverseTransition={this.reverseTransition} className={css.valueWrapper}>
 					{children}
-				</ViewManager>
+				</PickerViewManager>
 				<span className={css.decrementer} disabled={decrementerDisabled} onClick={handleDecClick} onMouseDown={this.handleDecDown} onMouseUp={onMouseUp}>
 					<ButtonType disabled={decrementerDisabled}>{decrementIcon}</ButtonType>
 				</span>

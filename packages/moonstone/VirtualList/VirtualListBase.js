@@ -8,6 +8,7 @@
 import React, {Component, PropTypes} from 'react';
 
 import {Spotlight, SpotlightContainerDecorator} from '@enact/spotlight';
+import {contextTypes} from '@enact/i18n/I18nDecorator';
 
 import {dataIndexAttribute, Scrollable} from '../Scroller/Scrollable';
 
@@ -135,6 +136,8 @@ class VirtualListCore extends Component {
 		spacing: PropTypes.number
 	}
 
+	static contextTypes = contextTypes
+
 	static defaultProps = {
 		cbScrollTo: nop,
 		component: ({index, key}) => (<div key={key}>{index}</div>),
@@ -169,6 +172,8 @@ class VirtualListCore extends Component {
 	curDataSize = 0
 	cc = []
 	scrollPosition = 0
+	updateFrom = null
+	updateTo = null
 
 	containerRef = null
 	wrapperRef = null
@@ -314,6 +319,8 @@ class VirtualListCore extends Component {
 
 		this.maxFirstIndex = dataSize - numOfItems;
 		this.curDataSize = dataSize;
+		this.updateFrom = null;
+		this.updateTo = null;
 
 		this.setState({firstIndex: Math.min(this.state.firstIndex, this.maxFirstIndex), numOfItems});
 		this.calculateScrollBounds(props);
@@ -405,7 +412,7 @@ class VirtualListCore extends Component {
 		if (firstIndex !== newFirstIndex) {
 			this.setState({firstIndex: newFirstIndex});
 		} else {
-			this.positionItems(this.applyStyleToExistingNode, this.determineUpdatedNeededIndices(firstIndex));
+			this.positionItems(this.determineUpdatedNeededIndices(firstIndex));
 		}
 	}
 
@@ -465,7 +472,7 @@ class VirtualListCore extends Component {
 		);
 	}
 
-	positionItems (applyStyle, {updateFrom, updateTo}) {
+	positionItems ({updateFrom, updateTo}) {
 		const
 			{positioningOption} = this.props,
 			{isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, scrollPosition} = this;
@@ -482,7 +489,11 @@ class VirtualListCore extends Component {
 		// positioning items
 		for (let i = updateFrom, j = updateFrom % dimensionToExtent; i < updateTo; i++) {
 
-			applyStyle(i, width, height, primaryPosition, secondaryPosition);
+			if (this.updateFrom === null || this.updateTo === null || this.updateFrom > i || this.updateTo <= i) {
+				this.applyStyleToNewNode(i, width, height, primaryPosition, secondaryPosition);
+			} else {
+				this.applyStyleToExistingNode(i, width, height, primaryPosition, secondaryPosition);
+			}
 
 			if (++j === dimensionToExtent) {
 				secondaryPosition = 0;
@@ -492,6 +503,9 @@ class VirtualListCore extends Component {
 				secondaryPosition += secondary.gridSize;
 			}
 		}
+
+		this.updateFrom = updateFrom;
+		this.updateTo = updateTo;
 	}
 
 	composeStyle (style, w, h, ...rest) {
@@ -502,15 +516,20 @@ class VirtualListCore extends Component {
 		this.composeItemPosition(style, ...rest);
 	}
 
-	getXY = (primary, secondary) => ((this.isPrimaryDirectionVertical) ? {x: secondary, y: primary} : {x: primary, y: secondary})
+	getXY = (primary, secondary) => {
+		const rtlDirection = this.context.rtl ? -1 : 1;
+		return (this.isPrimaryDirectionVertical ? {x: (secondary * rtlDirection), y: primary} : {x: (primary * rtlDirection), y: secondary});
+	}
 
 	composeTransform (style, primary, secondary = 0) {
 		const {x, y} = this.getXY(primary, secondary);
+
 		style.transform = 'translate3d(' + x + 'px,' + y + 'px,0)';
 	}
 
 	composeLeftTop (style, primary, secondary = 0) {
 		const {x, y} = this.getXY(primary, secondary);
+
 		style.left = x + 'px';
 		style.top = y + 'px';
 	}
@@ -632,9 +651,9 @@ class VirtualListCore extends Component {
 			const containerNode = this.getContainerNode(positioningOption);
 
 			// prevent native scrolling by Spotlight
-			this.preventScroll = function () {
+			this.preventScroll = () => {
 				containerNode.scrollTop = 0;
-				containerNode.scrollLeft = 0;
+				containerNode.scrollLeft = this.context.rtl ? containerNode.scrollWidth : 0;
 			};
 
 			if (containerNode && containerNode.addEventListener) {
@@ -687,8 +706,7 @@ class VirtualListCore extends Component {
 			{firstIndex, numOfItems} = this.state,
 			max = Math.min(dataSize, firstIndex + numOfItems);
 
-		this.cc.length = 0;
-		this.positionItems(this.applyStyleToNewNode, {updateFrom: firstIndex, updateTo: max});
+		this.positionItems({updateFrom: firstIndex, updateTo: max});
 		this.positionContainer();
 	}
 

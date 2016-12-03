@@ -4,12 +4,12 @@
  * @module ui/Cancelable
  */
 
-import {on, off} from '@enact/core/dispatcher';
 import {forward, handle, stopImmediate} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import invariant from 'invariant';
 import React from 'react';
 
+import {addModal, removeModal} from './modalHandler';
 import {forCancel, addCancelHandler, removeCancelHandler} from './cancelHandler';
 
 const defaultConfig = {
@@ -66,15 +66,15 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 			onCancel: React.PropTypes.func
 		}
 
-		componentDidMount () {
+		componentWillMount () {
 			if (modal) {
-				on('keyup', this.handleModalCancel);
+				addModal(this);
 			}
 		}
 
 		componentWillUnmount () {
 			if (modal) {
-				off('keyup', this.handleModalCancel);
+				removeModal(this);
 			}
 		}
 

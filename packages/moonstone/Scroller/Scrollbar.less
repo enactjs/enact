@@ -1,3 +1,4 @@
+@import '../styles/mixins.less';
 @import '../styles/variables.less';
 
 .scrollbarContainerBase {
@@ -7,24 +8,26 @@
 	border-style: solid;
 	visibility: visible;
 	opacity: 1;
-	z-index: 100;
 
 	transition: opacity 0.1s linear;
 	-moz-transition: opacity 0.1s linear;
 	-webkit-transition: opacity 0.1s linear;
-
-	transform: translateZ(0);
-	-webkit-transform: translateZ(0);
 }
 
 .scrollbarButtonNoCompositeLayer {
 	&,
 	&:before,
 	&:after,
+	div,
 	span {
-		will-change: initial;
+		will-change: auto;
 	}
 
+	&:before {
+		content: none;
+	}
+
+	div,
 	span {
 		-webkit-transform: initial;
 		transform: initial;
@@ -47,8 +50,9 @@
 	width: @moon-icon-button-small-size;
 	border-width: @moon-icon-button-small-size 0;
 	top: 0;
-	right: @moon-spotlight-outset;
 	bottom: @moon-icon-button-small-size;
+
+	.position-start-end(auto, @moon-spotlight-outset);
 
 	.scrollbarUpButton {
 		.scrollbarButtonBase;
@@ -65,18 +69,18 @@
 	.scrollbarContainerBase;
 	height: @moon-icon-button-small-size;
 	border-width: 0 @moon-icon-button-small-size;
-	left: 0;
-	right: @moon-icon-button-small-size;
 	bottom: 0;
+
+	.position-start-end(0, @moon-icon-button-small-size);
 
 	.scrollbarLeftButton {
 		.scrollbarButtonBase;
-		left: -@moon-icon-button-small-size;
+		.position-start-end(-@moon-icon-button-small-size, auto);
 	}
 
 	.scrollbarRightButton {
 		.scrollbarButtonBase;
-		right: -@moon-icon-button-small-size;
+		.position-start-end(auto, -@moon-icon-button-small-size);
 	}
 }
 
@@ -86,7 +90,6 @@
 	width: 3px;
 	height: 3px;
 	right: @moon-icon-button-small-size/2 - 2;
-	z-index: 1;
 	opacity: 0;
 
 	-webkit-transition: opacity 0.1s linear;
@@ -102,7 +105,6 @@
 	width: 3px;
 	height: 3px;
 	bottom: @moon-icon-button-small-size/2 - 2;
-	z-index: 1;
 	opacity: 0;
 
 	-webkit-transition: opacity 0.1s linear;

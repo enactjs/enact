@@ -63,7 +63,7 @@ describe('ToggleItem Specs', () => {
 		);
 
 		const expected = 1;
-		const actual = toggleItem.find('Icon').length;
+		const actual = toggleItem.find('ToggleIcon').length;
 
 		expect(actual).to.equal(expected);
 	});

@@ -18,7 +18,7 @@ const DateComponentPickerChromeBase = kind({
 
 	propTypes:  /** @lends moonstone/internal/DateComponentPicker.DateComponentPickerChrome.prototype */ {
 		/**
-		 * The {@link module:@enact/moonstone/Picker} component
+		 * The {@link moonstone/Picker.Picker} component
 		 *
 		 * @type {Element}
 		 */

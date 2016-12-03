@@ -10,15 +10,14 @@ import React, {Component, PropTypes} from 'react';
 import ri from '@enact/ui/resolution';
 import Spotlight from '@enact/spotlight';
 import {startJob, stopJob} from '@enact/core/jobs';
+import {contextTypes} from '@enact/i18n/I18nDecorator';
 
 import IconButton from '../IconButton';
 
 import css from './Scrollbar.less';
 
 const
-	upDownInfo = {
-		prevIcon: 'arrowsmallup',
-		nextIcon: 'arrowsmalldown',
+	verticalProperties = {
 		prevButtonClass: css.scrollbarUpButton,
 		nextButtonClass: css.scrollbarBottomButton,
 		scrollbarClass: css.scrollbarContainerVColumn,
@@ -28,9 +27,7 @@ const
 			'matrix3d(1, 0, 0, 0, 0,' + (scaledSize / natualSize) + ', 0, 0, 0, 0, 1, 0, 0, ' + position + ', 1, 1)'
 		)
 	},
-	leftRightInfo = {
-		prevIcon: 'arrowsmallleft',
-		nextIcon: 'arrowsmallright',
+	horizontalProperties = {
 		prevButtonClass: css.scrollbarLeftButton,
 		nextButtonClass: css.scrollbarRightButton,
 		scrollbarClass: css.scrollbarContainerHColumn,
@@ -42,8 +39,21 @@ const
 	},
 	autoHideDelay = 200,
 	minThumbSize = ri.scale(4),
+	selectIcon = (isPrev) => (isVertical, rtl) => {
+		if (isVertical) {
+			return (isPrev) ? 'arrowsmallup' : 'arrowsmalldown';
+		} else {
+			if (rtl) {
+				return (isPrev) ? 'arrowsmallright' : 'arrowsmallleft';
+			}
+			return (isPrev) ? 'arrowsmallleft' : 'arrowsmallright';
+		}
+	},
+	selectPrevIcon = selectIcon(true),
+	selectNextIcon = selectIcon(false),
 	// spotlight
-	doc = (typeof window === 'object') ? window.document : {};
+	doc = (typeof window === 'object') ? window.document : {},
+	perf = (typeof window === 'object') ? window.performance : {now: Date.now};
 
 /**
  * {@link moonstone/Scroller/Scrollbar.Scrollbar} is a Scrollbar with Moonstone styling.
@@ -84,6 +94,8 @@ class Scrollbar extends Component {
 		onPrevScroll: PropTypes.func
 	}
 
+	static contextTypes = contextTypes
+
 	static defaultProps = {
 		isVertical: true,
 		onNextScroll: () => {},
@@ -110,11 +122,12 @@ class Scrollbar extends Component {
 			nextButtonDisabled: false
 		};
 
-		this.scrollInfo = {
-			...((props.isVertical) ? upDownInfo : leftRightInfo),
+		this.scrollbarInfo = {
+			...((props.isVertical) ? verticalProperties : horizontalProperties),
 			clickPrevHandler: props.onPrevScroll,
 			clickNextHandler: props.onNextScroll
 		};
+		this.jobName = perf.now();
 
 		this.initContainerRef = this.initRef('containerRef');
 		this.initThumbRef = this.initRef('thumbRef');
@@ -124,8 +137,9 @@ class Scrollbar extends Component {
 		const
 			{prevButtonNodeRef, nextButtonNodeRef} = this,
 			{prevButtonDisabled, nextButtonDisabled} = this.state,
-			currentPos = this.props.isVertical ? bounds.scrollTop : bounds.scrollLeft,
-			maxPos = this.props.isVertical ? bounds.maxTop : bounds.maxLeft,
+			{isVertical} = this.props,
+			currentPos = isVertical ? bounds.scrollTop : bounds.scrollLeft,
+			maxPos = isVertical ? bounds.maxTop : bounds.maxLeft,
 			shouldDisablePrevButton = currentPos <= 0,
 			shouldDisableNextButton = currentPos >= maxPos;
 
@@ -143,16 +157,20 @@ class Scrollbar extends Component {
 	}
 
 	update (bounds) {
-		let
+		const
 			{trackSize, minThumbSizeRatio} = this,
+			{isVertical} = this.props,
+			{rtl} = this.context,
 			{clientWidth, clientHeight, scrollWidth, scrollHeight, scrollLeft, scrollTop} = bounds,
-			thumbSizeRatioBase = this.props.isVertical ?
+			scrollLeftRtl = rtl ? (scrollWidth - clientWidth - scrollLeft) : scrollLeft,
+			thumbSizeRatioBase = isVertical ?
 				Math.min(1, clientHeight / scrollHeight) :
-				Math.min(1, clientWidth / scrollWidth),
+				Math.min(1, clientWidth / scrollWidth);
+		let
 			thumbSizeRatio = Math.max(minThumbSizeRatio, thumbSizeRatioBase),
-			thumbPositionRatio = this.props.isVertical ?
+			thumbPositionRatio = isVertical ?
 				scrollTop / (scrollHeight - clientHeight) :
-				scrollLeft / (scrollWidth - clientWidth),
+				scrollLeftRtl / (scrollWidth - clientWidth),
 			thumbSize, thumbPosition;
 
 		// overscroll cases
@@ -165,20 +183,23 @@ class Scrollbar extends Component {
 		}
 
 		thumbSize = Math.round(thumbSizeRatio * trackSize);
-		thumbPositionRatio = thumbPositionRatio * (1 - thumbSizeRatio);
+		thumbPositionRatio = (isVertical || !rtl) ? (thumbPositionRatio * (1 - thumbSizeRatio)) : (thumbPositionRatio * (1 - thumbSizeRatio) - 1);
 		thumbPosition = Math.round(thumbPositionRatio * trackSize);
 
-		this.thumbRef.style.transform = this.scrollInfo.matrix(thumbPosition, thumbSize, this.thumbSize);
+		this.thumbRef.style.transform = this.scrollbarInfo.matrix(thumbPosition, thumbSize, this.thumbSize);
 		this.updateButtons(bounds);
 	}
 
 	showThumb () {
+		stopJob(this.jobName);
 		this.thumbRef.classList.add(css.thumbShown);
 		this.thumbRef.classList.remove(css.thumbHidden);
+	}
 
-		this.jobName = this.props.isVertical ? 'vThumbHide' : 'hThumbHide';
+	startHidingThumb () {
+		stopJob(this.jobName);
+
 		if (this.autoHide) {
-			stopJob(this.jobName);
 			startJob(this.jobName, () => {
 				this.hideThumb();
 			}, autoHideDelay);
@@ -188,13 +209,11 @@ class Scrollbar extends Component {
 	hideThumb () {
 		this.thumbRef.classList.add(css.thumbHidden);
 		this.thumbRef.classList.remove(css.thumbShown);
-
-		this.jobName = this.props.isVertical ? 'vThumbHide' : 'hThumbHide';
 	}
 
 	calculateMetrics () {
-		this.thumbSize = this.thumbRef[this.scrollInfo.sizeProperty];
-		this.trackSize = this.containerRef[this.scrollInfo.sizeProperty];
+		this.thumbSize = this.thumbRef[this.scrollbarInfo.sizeProperty];
+		this.trackSize = this.containerRef[this.scrollbarInfo.sizeProperty];
 		this.minThumbSizeRatio = minThumbSize / this.trackSize;
 	}
 
@@ -222,21 +241,24 @@ class Scrollbar extends Component {
 
 	render () {
 		const
-			{className} = this.props,
+			{className, isVertical} = this.props,
 			{prevButtonDisabled, nextButtonDisabled} = this.state,
-			{prevIcon, nextIcon, scrollbarClass, thumbClass,
-			prevButtonClass, nextButtonClass, clickPrevHandler, clickNextHandler} = this.scrollInfo,
-			scrollbarClassNames = classNames(className, scrollbarClass);
+			{rtl} = this.context,
+			{scrollbarClass, thumbClass,
+			prevButtonClass, nextButtonClass, clickPrevHandler, clickNextHandler} = this.scrollbarInfo,
+			scrollbarClassNames = classNames(className, scrollbarClass),
+			prevIcon = selectPrevIcon(isVertical, rtl),
+			nextIcon = selectNextIcon(isVertical, rtl);
 
 		return (
 			<div ref={this.initContainerRef} className={scrollbarClassNames}>
-				<IconButton small disabled={prevButtonDisabled} className={prevButtonClass} onClick={clickPrevHandler}>
+				<IconButton backgroundOpacity="transparent" small disabled={prevButtonDisabled} className={prevButtonClass} onClick={clickPrevHandler}>
 					{prevIcon}
 				</IconButton>
-				<div ref={this.initThumbRef} className={thumbClass} />
-				<IconButton small disabled={nextButtonDisabled} className={nextButtonClass} onClick={clickNextHandler}>
+				<IconButton backgroundOpacity="transparent" small disabled={nextButtonDisabled} className={nextButtonClass} onClick={clickNextHandler}>
 					{nextIcon}
 				</IconButton>
+				<div ref={this.initThumbRef} className={thumbClass} />
 			</div>
 		);
 	}
