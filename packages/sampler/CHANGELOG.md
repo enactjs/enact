@@ -2,11 +2,11 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
-## [unreleased]
+## [1.0.0-alpha.4] - 2016-12-2
 
 ### Added
 
-- Samples for `moonstone/ExpandableInput` and `ui/Group`.
+- Samples for `ui/Group`, `moonstone/ItemOverlay`, `moonstone/Popup`, `moonstone/ContextualPopupDecorator`, `moonstone/Notification`, `moonstone/ExpandableInput` and `moonstone/Dialog` components
 
 ## [1.0.0-alpha.3] - 2016-11-8
 
