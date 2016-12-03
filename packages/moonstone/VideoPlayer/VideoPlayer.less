@@ -1,0 +1,56 @@
+// VideoPlayer.less
+//
+@import '../../ui/styles/mixins.less';
+@import '../styles/colors.less';
+@import '../styles/variables.less';
+@import '../styles/text.less';
+@import '../styles/mixins.less';
+
+.videoPlayer {
+	position: relative;
+
+	.videoFrame {
+		video {
+			width: 100%;
+			vertical-align: top;
+		}
+	}
+
+	.fullscreen {
+		.bottom {
+			position: absolute;
+			width: 100%;
+			bottom: 0;
+
+			.title {
+				.titleText {
+
+				}
+				.infoBadges {
+
+				}
+			}
+			.sliderFrame {
+
+			}
+			.controlsFrame {
+				position: relative;
+
+				.premiumPlaceholderLeft,
+				.premiumPlaceholderRight {
+					position: absolute;
+					top: 0;
+				}
+				.premiumPlaceholderLeft {
+					left: 0;
+				}
+				.premiumPlaceholderRight {
+					right: 0;
+				}
+				.controlButtons {
+					text-align: center;
+				}
+			}
+		}
+	}
+}
