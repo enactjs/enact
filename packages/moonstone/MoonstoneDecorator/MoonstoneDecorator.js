@@ -13,6 +13,7 @@ import {ResolutionDecorator} from '@enact/ui/resolution';
 import {FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
 import {SpotlightRootDecorator} from '@enact/spotlight';
 
+import I18nFontDecorator from './I18nFontDecorator';
 import screenTypes from './screenTypes.json';
 import css from './MoonstoneDecorator.less';
 
@@ -54,14 +55,21 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const bgClassName = 'enact-fit' + (overlay ? '' : ` ${css.bg}`);
 
 	let App = Wrapped;
-
 	if (float) App = FloatingLayerDecorator({wrappedClassName: bgClassName}, App);
-	if (cancelHandler) addCancelHandler(cancelHandler);
 	if (ri) App = ResolutionDecorator(ri, App);
-	if (i18n) App = I18nDecorator(App);
+	if (i18n) {
+		// Apply the @enact/i18n decorator around the font decorator so the latter will update the
+		// font stylesheet when the locale changes
+		App = I18nDecorator(
+			I18nFontDecorator(
+				App
+			)
+		);
+	}
 	if (spotlight) App = SpotlightRootDecorator(App);
+	if (cancelHandler) addCancelHandler(cancelHandler);
 
-	return class extends React.Component {
+	const Decorator = class extends React.Component {
 		static displayName = 'MoonstoneDecorator';
 
 		componentDidMount () {
@@ -90,6 +98,8 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			);
 		}
 	};
+
+	return Decorator;
 });
 
 export default MoonstoneDecorator;

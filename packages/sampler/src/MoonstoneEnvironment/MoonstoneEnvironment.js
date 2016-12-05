@@ -49,8 +49,8 @@ const FullscreenBase = kind({
 	)
 });
 
-const Moonstone = MoonstoneDecorator(PanelsBase);
-const MoonstoneFullscreen = MoonstoneDecorator(FullscreenBase);
+const Moonstone = MoonstoneDecorator({overlay: true}, PanelsBase);
+const MoonstoneFullscreen = MoonstoneDecorator({overlay: true}, FullscreenBase);
 
 // NOTE: Locales taken from strawman. Might need to add more in the future.
 const locales = {
