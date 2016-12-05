@@ -103,7 +103,7 @@ const GridListImageItemBase = kind({
 
 		return (
 			<Controller {...rest}>
-				<MarqueeText marqueeOn={'hover'} className={css.image}>
+				<MarqueeText marqueeOn="hover" className={css.image}>
 					<Image src={source} placeholder={defaultPlaceholder} />
 				</MarqueeText>
 				{
@@ -115,8 +115,8 @@ const GridListImageItemBase = kind({
 						</div>
 					) : null
 				}
-				{caption ? (<MarqueeText marqueeOn={'hover'} className={css.caption}>{caption}</MarqueeText>) : null}
-				{subCaption ? (<MarqueeText marqueeOn={'hover'} className={css.subCaption}>{subCaption}</MarqueeText>) : null}
+				{caption ? (<MarqueeText marqueeOn="hover" className={css.caption}>{caption}</MarqueeText>) : null}
+				{subCaption ? (<MarqueeText marqueeOn="hover" className={css.subCaption}>{subCaption}</MarqueeText>) : null}
 			</Controller>
 		);
 	}
