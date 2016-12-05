@@ -12,7 +12,6 @@ import {Spottable} from '@enact/spotlight';
 
 import Icon from '../Icon';
 import {Image} from '../Image';
-import {ItemBase} from '../Item';
 import {MarqueeController, MarqueeText} from '../Marquee';
 
 import css from './GridListImageItem.less';
@@ -103,9 +102,7 @@ const GridListImageItemBase = kind({
 
 		return (
 			<Controller {...rest}>
-				<MarqueeText marqueeOn="hover" className={css.image}>
-					<Image src={source} placeholder={defaultPlaceholder} />
-				</MarqueeText>
+				<Image className={css.image} src={source} placeholder={defaultPlaceholder} />
 				{
 					selectionOverlayShowing ? (
 						<div className={css.overlayContainer}>
