@@ -12,6 +12,7 @@ import Pressable from '@enact/ui/Pressable';
 import React, {PropTypes} from 'react';
 
 import {MarqueeDecorator} from '../Marquee';
+import {TooltipDecorator} from '../Tooltip';
 
 import css from './Button.less';
 
@@ -151,11 +152,13 @@ const ButtonBase = kind({
  * @public
  */
 const Button = Uppercase(
-	MarqueeDecorator(
-		{className: css.marquee},
-		Pressable(
-			Spottable(
-				ButtonBase
+	TooltipDecorator(
+		MarqueeDecorator(
+			{className: css.marquee},
+			Pressable(
+				Spottable(
+					ButtonBase
+				)
 			)
 		)
 	)

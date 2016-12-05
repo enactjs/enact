@@ -8,7 +8,7 @@ import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 
 import Button from '../Button';
-import Icon from '../Icon';
+import {IconBase} from '../Icon';
 
 import css from './IconButton.less';
 
@@ -110,7 +110,7 @@ const IconButtonBase = kind({
 	render: ({children, small, ...rest}) => {
 		return (
 			<Button {...rest} small={small} minWidth={false} marqueeDisabled>
-				<Icon small={small} className={css.icon}>{children}</Icon>
+				<IconBase small={small} className={css.icon}>{children}</IconBase>
 			</Button>
 		);
 	}
