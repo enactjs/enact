@@ -22,11 +22,25 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'SpotlightRootDecorator';
 
+		navigableFilter = (elem) => {
+			while (elem && elem !== document && elem.nodeType === 1) {
+				if (elem.getAttribute('data-container-id')) return false;
+				elem = elem.parentNode;
+			}
+		}
+
+		componentWillMount () {
+			if (typeof window === 'object') {
+				Spotlight.initialize();
+				Spotlight.add(spotlightRootContainerName, {
+					selector: '.' + spottableClass,
+					navigableFilter: this.navigableFilter,
+					restrict: 'none'
+				});
+			}
+		}
+
 		componentDidMount () {
-			Spotlight.initialize();
-			Spotlight.add(spotlightRootContainerName, {
-				selector: '.' + spottableClass
-			});
 			Spotlight.focus();
 		}
 

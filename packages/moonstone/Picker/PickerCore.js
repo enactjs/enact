@@ -1,12 +1,29 @@
-import {SlideLeftArranger, SlideBottomArranger, ViewManager} from '@enact/ui/ViewManager';
+/**
+ * Exports the {@link moonstone/Picker.PickerCore} component.
+ * The default export is {@link moonstone/Picker.PickerCore}.
+ *
+ * @module moonstone/Picker
+ */
+
+import * as jobs from '@enact/core/jobs';
+import {childrenEquals} from '@enact/core/util';
+import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
 import R from 'ramda';
 import React from 'react';
+import shouldUpdate from 'recompose/shouldUpdate';
 
 import Icon from '../Icon';
 import IconButton from '../IconButton';
 
 import {steppedNumber} from './PickerPropTypes';
 import css from './Picker.less';
+
+const PickerViewManager = shouldUpdate((props, nextProps) => {
+	return (
+		props.index !== nextProps.index ||
+		!childrenEquals(props.children, nextProps.children)
+	);
+})(ViewManager);
 
 const wrapRange = (min, max, value) => {
 	if (value > max) {
@@ -24,7 +41,23 @@ const selectIncIcon = selectIcon('incrementIcon', 'arrowlargeup', 'arrowlargerig
 
 const selectDecIcon = selectIcon('decrementIcon', 'arrowlargedown', 'arrowlargeleft');
 
+const jobNames = {
+	emulateMouseUp: 'PickerCore.emulateMouseUp'
+};
+
+const emulateMouseEventsTimeout = 175;
+
 // Components
+const TransparentIconButton = (props) => <IconButton {...props} backgroundOpacity="transparent" />;
+
+/**
+ * The base component for {@link moonstone/Picker.PickerCore}.
+ *
+ * @class PickerCore
+ * @memberof moonstone/Picker
+ * @ui
+ * @public
+ */
 const PickerCore = class extends React.Component {
 	static displayName = 'PickerCore'
 
@@ -74,7 +107,7 @@ const PickerCore = class extends React.Component {
 		 * supported. Without a custom icon, the default is used, and is automatically changed when
 		 * the [orientation]{Icon#orientation} is changed.
 		 *
-		 * @type {string}
+		 * @type {String}
 		 * @public
 		 */
 		decrementIcon: React.PropTypes.string,
@@ -93,7 +126,7 @@ const PickerCore = class extends React.Component {
 		 * supported. Without a custom icon, the default is used, and is automatically changed when
 		 * the [orientation]{Icon#orientation} is changed.
 		 *
-		 * @type {string}
+		 * @type {String}
 		 * @public
 		 */
 		incrementIcon: React.PropTypes.string,
@@ -111,7 +144,7 @@ const PickerCore = class extends React.Component {
 		joined: React.PropTypes.bool,
 
 		/**
-		 * By default, the picker will animation transitions between items if it has a defined
+		 * By default, the picker will animate transitions between items if it has a defined
 		 * `width`. Specifying `noAnimation` will prevent any transition animation for the
 		 * component.
 		 *
@@ -157,11 +190,11 @@ const PickerCore = class extends React.Component {
 		/**
 		 * Which button (increment, decrement, or neither) is pressed
 		 *
-		 * @type {String|null}
+		 * @type {Number|null}
 		 * @public
 		 */
 		pressed: React.PropTypes.oneOfType([
-			React.PropTypes.string,
+			React.PropTypes.number,
 			React.PropTypes.bool
 		]),
 
@@ -184,7 +217,7 @@ const PickerCore = class extends React.Component {
 		 */
 		value: steppedNumber,
 
-		/*
+		/**
 		 * Choose a specific size for your picker. `'small'`, `'medium'`, `'large'`, or set to `null` to
 		 * assume auto-sizing. `'small'` is good for numeric pickers, `'medium'` for single or short
 		 * word pickers, `'large'` for maximum-sized pickers.
@@ -194,9 +227,9 @@ const PickerCore = class extends React.Component {
 		 */
 		width: React.PropTypes.oneOf([null, 'small', 'medium', 'large']),
 
-		/*
+		/**
 		 * Should the picker stop incrementing when the picker reaches the last element? Set `wrap`
-		 * to true to allow the picker to continue from the opposite end of the list of options.
+		 * to `true` to allow the picker to continue from the opposite end of the list of options.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -205,6 +238,7 @@ const PickerCore = class extends React.Component {
 	}
 
 	static defaultProps = {
+		orientation: 'horizontal',
 		step: 1,
 		value: 0
 	}
@@ -225,51 +259,76 @@ const PickerCore = class extends React.Component {
 		}
 	}
 
-	isButtonDisabled = (delta) => {
-		const {disabled, min, max, value, wrap} = this.props;
-		return disabled || (!wrap && R.clamp(min, max, value + delta) === value);
-	}
-
-	handleChange = (n) => {
-		const {min, max, disabled, value, wrap, onChange} = this.props;
-		if (!disabled && onChange) {
-			const next = wrap ? wrapRange(min, max, value + n) : R.clamp(min, max, value + n);
-			onChange({
-				value: next
-			});
+	componentWillUnmount () {
+		for (const job of Object.keys(jobNames)) {
+			jobs.stopJob(jobNames[job]);
 		}
 	}
 
-	handleDecClick = () => this.handleChange(-this.props.step)
+	computeNextValue = (delta) => {
+		const {min, max, value, wrap} = this.props;
+		return wrap ? wrapRange(min, max, value + delta) : R.clamp(min, max, value + delta);
+	}
 
-	handleIncClick = () => this.handleChange(this.props.step)
+	isButtonDisabled = (delta) => {
+		const {disabled, value} = this.props;
+		return disabled || this.computeNextValue(delta) === value;
+	}
 
-	handleDown = (which, ev) => {
+	handleChange = (dir) => {
+		const {disabled, onChange, step} = this.props;
+		if (!disabled && onChange) {
+			const value = this.computeNextValue(dir * step);
+			onChange({value});
+		}
+	}
+
+	handleDecClick = () => this.handleChange(-1)
+
+	handleIncClick = () => this.handleChange(1)
+
+	handleDown = (dir) => {
 		const {joined, onMouseDown} = this.props;
 		if (joined && onMouseDown) {
-			onMouseDown({pressed: which});
-			ev.stopPropagation();
+			onMouseDown({pressed: dir});
 		}
 	}
 
-	handleDecDown = (ev) => this.handleDown('decrement', ev)
+	handleDecDown = () => this.handleDown(-1)
 
-	handleIncDown = (ev) => this.handleDown('increment', ev)
+	handleIncDown = () => this.handleDown(1)
 
-	determineClasses () {
-		const {joined, orientation, pressed, step, width} = this.props;
+	handleWheel = (ev) => {
+		const {onMouseUp, step} = this.props;
+		const dir = -Math.sign(ev.deltaY);
+
+		// We'll sometimes get a 0/-0 wheel event we need to ignore or the wheel event has reached
+		// the bounds of the picker
+		if (dir && !this.isButtonDisabled(step * dir)) {
+			// fire the onChange event
+			this.handleChange(dir);
+			// simulate mouse down
+			this.handleDown(dir);
+			// set a timer to simulate the mouse up
+			jobs.startJob(jobNames.emulateMouseUp, onMouseUp, emulateMouseEventsTimeout);
+			// prevent the default scroll behavior to avoid bounce back
+			ev.preventDefault();
+		}
+	}
+
+	determineClasses (decrementerDisabled, incrementerDisabled) {
+		const {joined, orientation, pressed, width} = this.props;
 		return [
 			css.picker,
 			css[orientation],
 			css[width],
 			joined ? css.joined : null,
-			!this.isButtonDisabled(step * -1) && pressed === 'decrement' ? css.decrementing : null,
-			!this.isButtonDisabled(step) && pressed === 'increment' ? css.incrementing : null,
+			!decrementerDisabled && pressed === -1 ? css.decrementing : null,
+			!incrementerDisabled && pressed === 1 ? css.incrementing : null,
 			this.props.className
 		].join(' ');
 	}
 
-	// eslint-disable-next-line react/prop-types, react/display-name
 	render () {
 		const {
 			noAnimation,
@@ -289,33 +348,37 @@ const PickerCore = class extends React.Component {
 		delete rest.max;
 		delete rest.min;
 		delete rest.onChange;
+		delete rest.onMouseDown;
 		delete rest.pressed;
 		delete rest.reverseTransition;
 		delete rest.value;
 		delete rest.wrap;
 
-		const ButtonType = joined ? Icon : IconButton;
+		const ButtonType = joined ? Icon : TransparentIconButton;
 		const incrementIcon = selectIncIcon(this.props);
 		const decrementIcon = selectDecIcon(this.props);
 
 		const decrementerDisabled = this.isButtonDisabled(step * -1);
 		const incrementerDisabled = this.isButtonDisabled(step);
-		const classes = this.determineClasses();
+		const classes = this.determineClasses(decrementerDisabled, incrementerDisabled);
+
+		const handleIncClick = incrementerDisabled ? null : this.handleIncClick;
+		const handleDecClick = decrementerDisabled ? null : this.handleDecClick;
 
 		let arranger;
 		if (width && !disabled) {
-			arranger = orientation === 'vertical' ? SlideBottomArranger : SlideLeftArranger;
+			arranger = orientation === 'vertical' ? SlideTopArranger : SlideLeftArranger;
 		}
 
 		return (
-			<div {...rest} className={classes} disabled={disabled}>
-				<span className={css.incrementer} disabled={incrementerDisabled} onClick={this.handleIncClick} onMouseDown={this.handleIncDown} onMouseUp={onMouseUp}>
+			<div {...rest} className={classes} disabled={disabled} onWheel={joined ? this.handleWheel : null}>
+				<span className={css.incrementer} disabled={incrementerDisabled} onClick={handleIncClick} onMouseDown={this.handleIncDown} onMouseUp={onMouseUp}>
 					<ButtonType disabled={incrementerDisabled}>{incrementIcon}</ButtonType>
 				</span>
-				<ViewManager arranger={arranger} duration={200} index={index} noAnimation={noAnimation} reverseTransition={this.reverseTransition} className={css.valueWrapper}>
+				<PickerViewManager arranger={arranger} duration={200} index={index} noAnimation={noAnimation} reverseTransition={this.reverseTransition} className={css.valueWrapper}>
 					{children}
-				</ViewManager>
-				<span className={css.decrementer} disabled={decrementerDisabled} onClick={this.handleDecClick} onMouseDown={this.handleDecDown} onMouseUp={onMouseUp}>
+				</PickerViewManager>
+				<span className={css.decrementer} disabled={decrementerDisabled} onClick={handleDecClick} onMouseDown={this.handleDecDown} onMouseUp={onMouseUp}>
 					<ButtonType disabled={decrementerDisabled}>{decrementIcon}</ButtonType>
 				</span>
 			</div>

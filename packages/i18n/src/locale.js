@@ -41,7 +41,7 @@ function isNonLatinLocale (spec) {
 	/* eslint-enable operator-linebreak */
 }
 
-function isRtl () {
+function isRtlLocale () {
 	const li = new LocaleInfo();
 	const scriptName = li.getScript();
 	const script = new ScriptInfo(scriptName);
@@ -71,7 +71,7 @@ function getI18nClasses () {
 	}
 
 	// allow enyo to apply right-to-left styles to the app and widgets if necessary
-	if (isRtl()) {
+	if (isRtlLocale()) {
 		classes.push(base + 'right-to-left');
 	}
 
@@ -124,4 +124,4 @@ const updateLocale = function (locale) {
 	return newLocale;
 };
 
-export {updateLocale, isRtl, getI18nClasses};
+export {updateLocale, isRtlLocale, getI18nClasses};

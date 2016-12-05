@@ -1,92 +1,211 @@
-import classNames from 'classnames';
-import {Spotlight, Spottable, SpotlightContainerDecorator, SpotlightFocusableDecorator} from '@enact/spotlight';
+/**
+ * Exports the {@link moonstone/Input.Input} and {@link moonstone/Input.InputBase} components.
+ *
+ * @module moonstone/Input
+ */
+
+import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 
-import Icon from '../Icon';
-
-import {PlainInput, PlainInputBase} from './PlainInput';
 import css from './Input.less';
+import InputDecoratorIcon from './InputDecoratorIcon';
+import InputSpotlightDecorator from './InputSpotlightDecorator';
 
-const icon = (which, props, className) => {
-	return props[which] ? <Icon className={className}>{props[which]}</Icon> : null;
-};
+/**
+ * {@link moonstone/Input.InputBase} is a Moonstone styled input component. It supports start and end
+ * icons. Note that this base component is not stateless as many other base components are. However,
+ * it does not support Spotlight. Apps will want to use {@link moonstone/Input.Input}.
+ *
+ * @class InputBase
+ * @memberof moonstone/Input
+ * @ui
+ * @public
+ */
+const InputBase = kind({
+	name: 'Input',
 
-class InputBase extends React.Component {
-	static propTypes = {
-		...PlainInputBase.propTypes,
+	propTypes: /** @lends moonstone/Input.InputBase.prototype */ {
+		/**
+		 * When `true`, applies a disabled style and the control becomes non-interactive.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
 		disabled: PropTypes.bool,
-		iconEnd: PropTypes.string,
-		iconStart: PropTypes.string
-	}
 
-	constructor (props) {
-		super(props);
-	}
+		/**
+		 * When `true`, blurs the input when the "enter" key is pressed.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		dismissOnEnter: PropTypes.bool,
 
-	inputKeyDown = (e) => {
-		const keyCode = e.nativeEvent.keyCode;
+		/**
+		 * When `true`, adds a `focused` class to the input decorator
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		focused: PropTypes.bool,
 
-		e.stopPropagation();
+		/**
+		 * The icon to be placed at the end of the input.
+		 *
+		 * @see {@link moonstone/Icon.Icon}
+		 * @type {String}
+		 * @public
+		 */
+		iconAfter: PropTypes.string,
 
-		switch (keyCode) {
-			case 37:
-				if (this.inputNode.selectionStart === 0) {
-					Spotlight.move('left');
-				}
-				break;
-			case 39:
-				if (this.inputNode.selectionStart === this.inputNode.value.length) {
-					Spotlight.move('right');
-				}
-				break;
-			case 38:
-				Spotlight.move('up');
-				break;
-			case 40:
-				Spotlight.move('down');
-				break;
-			default:
-				break;
+		/**
+		 * The icon to be placed at the beginning of the input.
+		 *
+		 * @see {@link moonstone/Icon.Icon}
+		 * @type {String}
+		 * @public
+		 */
+		iconBefore: PropTypes.string,
+
+		/**
+		 * The handler to run when blurred.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onBlur: PropTypes.func,
+
+		/**
+		 * The handler to run when the input value is changed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onChange: PropTypes.func,
+
+		/**
+		 * The handler to run when clicked.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onClick: PropTypes.func,
+
+		/**
+		 * The handler to run when focused.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onFocus: PropTypes.func,
+
+		/**
+		 * The handler to run when a key is pressed down.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onKeyDown: PropTypes.func,
+
+		/**
+		 * The handler to run when a mouse key is pressed down.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onMouseDown: PropTypes.func,
+
+		/**
+		 * The placeholder text to display.
+		 *
+		 * @type {String}
+		 * @default ''
+		 * @public
+		 */
+		placeholder: PropTypes.string,
+
+		/**
+		 * The type of input. Accepted values correspond to the standard HTML5 input types.
+		 *
+		 * @type {String}
+		 * @default 'text'
+		 * @public
+		 */
+		type: PropTypes.string,
+
+		/**
+		 * The value of the input.
+		 *
+		 * @type {String|Number}
+		 * @default ''
+		 * @public
+		 */
+		value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+	},
+
+	defaultProps: {
+		disabled: false,
+		dismissOnEnter: false,
+		placeholder: '',
+		type: 'text',
+		value: ''
+	},
+
+	styles: {
+		css,
+		className: 'decorator'
+	},
+
+	computed: {
+		className: ({focused, styler}) => styler.append({focused}),
+		onChange: ({onChange}) => (ev) => {
+			if (onChange) {
+				onChange({value: ev.target.value});
+			}
 		}
-	}
+	},
 
-	getInputNode = (node) => {
-		this.inputNode = node;
-	}
-
-	render () {
-		const {disabled, className, iconStart, iconEnd, tabIndex, onKeyDown, onFocus, spotlightDisabled, ...rest} = this.props;
-		const decoratorClasses = classNames(
-			css.decorator,
-			disabled,
-			className
-		);
-		const iconClasses = classNames(
-			css.decoratorIcon,
-			iconStart ? css[iconStart] : null,
-			iconEnd ? css[iconEnd] : null
-		);
-		const firstIcon = icon('iconStart', this.props, iconClasses),
-			lastIcon = icon('iconEnd', this.props, iconClasses);
-
-		delete rest.containerId;
+	render: ({disabled, iconAfter, iconBefore, onChange, placeholder, type, value, ...rest}) => {
+		delete rest.dismissOnEnter;
+		delete rest.focused;
 
 		return (
-			<label disabled={disabled} className={decoratorClasses} tabIndex={tabIndex} onKeyDown={onKeyDown} onFocus={onFocus} >
-				{firstIcon}
-				<PlainInput {...rest} decorated disabled={disabled} spotlightDisabled={!spotlightDisabled} onKeyDown={this.inputKeyDown} inputRef={this.getInputNode} />
-				{lastIcon}
-			</label>
+			<div {...rest} disabled={disabled}>
+				<InputDecoratorIcon position="before">{iconBefore}</InputDecoratorIcon>
+				<input
+					className={css.input}
+					disabled={disabled}
+					onChange={onChange}
+					placeholder={placeholder}
+					type={type}
+					value={value}
+				/>
+				<InputDecoratorIcon position="after">{iconAfter}</InputDecoratorIcon>
+			</div>
 		);
 	}
-}
+});
 
-const Input = SpotlightContainerDecorator(
-	SpotlightFocusableDecorator(
-		{useEnterKey: true, pauseSpotlightOnFocus: true},
-		Spottable(InputBase)
-	)
-);
+/**
+ * {@link moonstone/Input.Input} is a Spottable, Moonstone styled input component. It supports pre and post
+ * icons.
+ *
+ * @class Input
+ * @memberof moonstone/Input
+ * @ui
+ * @mixes moonstone/Input/InputSpotlightDecorator
+ * @public
+ */
+const Input = InputSpotlightDecorator(InputBase);
 
 export default Input;
 export {Input, InputBase};

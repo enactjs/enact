@@ -1,9 +1,8 @@
 /**
- * Exports the {@link module:@enact/ui/Group~Group} and {@link module:@enact/ui/Group~GroupBase}
- * components.  The default export is {@link module:@enact/ui/Group~Group}. `Group` is stateless
- * and is the same as `GroupBase`.
+ * Exports the {@link ui/Group.Group} and {@link ui/Group.GroupItem}
+ * components.  The default export is {@link ui/Group.Group}.
  *
- * @module @enact/ui/Group
+ * @module ui/Group
  */
 
 import R from 'ramda';
@@ -15,27 +14,44 @@ import Repeater from '../Repeater';
 import {GroupItem, pickGroupItemProps} from './GroupItem';
 
 /**
- * {@link module:@enact/ui/Group~GroupBase} is a stateless component that supports single-select of
+ * {@link ui/Group.Group} is a stateless component that supports single-select of
  * its child items via configurable properties and events.
  *
- * @class GroupBase
+ * @class Group
+ * @memberof ui/Group
  * @ui
  * @public
  */
 const GroupBase = kind({
 	name: 'Group',
 
-	propTypes: {
-		// Somehow, incorporate propTypes from Repeater...
-		...Repeater.propTypes,
-
+	propTypes: /** @lends ui/Group.Group.prototype */ {
 		/**
-		 * Callback method to be invoked when an item is activated.
+		 * Component type to repeat. This can be a React component or a string describing a DOM
+		 * node (e.g. `'div'`)
 		 *
-		 * @type {Function}
+		 * @type {Element}
 		 * @public
 		 */
-		onActivate: PropTypes.func.isRequired,
+		childComponent: PropTypes.oneOfType([PropTypes.string, PropTypes.func]).isRequired,
+
+		/**
+		 * An array of data to be mapped onto the `childComponent`.  For example, an array of
+		 * strings.
+		 *
+		 * @type {Array}
+		 * @public
+		 */
+		children: PropTypes.array.isRequired,
+
+		/**
+		 * The property on each `childComponent` that receives the data in `children`
+		 *
+		 * @type {String}
+		 * @default 'children'
+		 * @public
+		 */
+		childProp: PropTypes.string,
 
 		/**
 		 * The name of the event that triggers activation.
@@ -44,16 +60,55 @@ const GroupBase = kind({
 		 * @default 'onClick'
 		 * @public
 		 */
-		activate: PropTypes.string,
+		childSelect: PropTypes.string,
 
 		/**
-		 * The index of the currently activated item.
+		 * The property on each `childComponent` that receives the index of the item
 		 *
-		 * @type {Number}
-		 * @default 0
+		 * @type {String}
+		 * @default 'data-index'
 		 * @public
 		 */
-		index: PropTypes.number,
+		indexProp: PropTypes.string,
+
+		/**
+		 * An object containing properties to be passed to each child.
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		itemProps: PropTypes.object,
+
+		/**
+		 * Callback method to be invoked when an item is activated.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onSelect: PropTypes.func,
+
+		/**
+		 * Selection mode for the group
+		 *
+		 * * `single` - Allows for 0 or 1 item to be selected. The selected item may be deselected.
+		 * * `radio` - Allows for 0 or 1 item to be selected. The selected item may only be
+		 *    deselected by selecting another item.
+		 * * `multiple` - Allows 0 to _n_ items to be selected. Each item may be selected or
+		 *    deselected.
+		 *
+		 * @type {String}
+		 * @default 'single'
+		 * @public
+		 */
+		select: PropTypes.oneOf(['single', 'radio', 'multiple']),
+
+		/**
+		 * The index(es) of the currently activated item.
+		 *
+		 * @type {Number | Array}
+		 * @public
+		 */
+		selected: PropTypes.oneOfType([PropTypes.number, PropTypes.array]),
 
 		/**
 		 * The name of the DOM property that represents the selected state.
@@ -66,10 +121,11 @@ const GroupBase = kind({
 	},
 
 	defaultProps: {
-		...Repeater.defaultProps,
-		activate: 'onClick',
-		selectedProp: 'data-selected',
-		index: 0
+		childProp: 'children',
+		childSelect: 'onClick',
+		indexProp: 'data-index',
+		select: 'single',
+		selectedProp: 'data-selected'
 	},
 
 	computed: {
@@ -80,9 +136,10 @@ const GroupBase = kind({
 	},
 
 	render: (props) => {
-		delete props.onActivate;
-		delete props.activate;
-		delete props.index;
+		delete props.onSelect;
+		delete props.childSelect;
+		delete props.select;
+		delete props.selected;
 		delete props.selectedProp;
 
 		return <Repeater {...props} childComponent={GroupItem} />;

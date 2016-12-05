@@ -1,17 +1,15 @@
-import {RadioItemBase} from '@enact/moonstone/RadioItem';
-import {Toggleable} from '@enact/ui/Toggleable';
+import Item, {ItemBase} from '@enact/moonstone/Item';
+import RadioItem from '@enact/moonstone/RadioItem';
 import React from 'react';
+import Toggleable from '@enact/ui/Toggleable';
+import ToggleItem from '@enact/moonstone/ToggleItem';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean} from '@kadira/storybook-addon-knobs';
+import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
 
-const RadioItem = Toggleable({prop: 'checked'}, RadioItemBase);
-RadioItem.displayName = 'RadioItem';
-RadioItem.propTypes = Object.assign({}, RadioItem.propTypes, RadioItemBase.propTypes);
-RadioItem.defaultProps = Object.assign({}, RadioItem.defaultProps, RadioItemBase.defaultProps);
-
-delete RadioItem.propTypes.checked;
-delete RadioItem.propTypes.icon;
-delete RadioItem.propTypes.iconClasses;
+const Component = Toggleable({prop: 'selected'}, RadioItem);
+Component.propTypes = Object.assign({}, ItemBase.propTypes, Item.propTypes, ToggleItem.propTypes, RadioItem.propTypes);
+Component.defaultProps = Object.assign({}, ItemBase.defaultProps, Item.defaultProps, ToggleItem.defaultProps, RadioItem.defaultProps);
+Component.displayName = 'RadioItem';
 
 storiesOf('RadioItem')
 	.addDecorator(withKnobs)
@@ -19,12 +17,12 @@ storiesOf('RadioItem')
 		' ',
 		'Basic usage of RadioItem',
 		() => (
-			<RadioItem
+			<Component
 				disabled={boolean('disabled', false)}
 				inline={boolean('inline', false)}
 				onToggle={action('onToggle')}
 			>
-				Hello RadioItem
-			</RadioItem>
+				{text('children', 'Hello RadioItem')}
+			</Component>
 		)
 	);

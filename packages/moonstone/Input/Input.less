@@ -1,5 +1,6 @@
 // Input.less
 //
+@import '~@enact/ui/styles/mixins.less';
 @import '../styles/mixins.less';
 @import '../styles/variables.less';
 @import '../styles/text.less';
@@ -35,7 +36,7 @@
 		color: @moon-input-placeholder-color;
 	});
 
-	&:focus {
+	&:global(.spottable):focus {
 		cursor: text;
 		color: @moon-input-font-color;
 		background-color: inherit;
@@ -56,8 +57,6 @@
 }
 
 .decorator {
-	.moon-divider-text();
-
 	display: inline-block;
 	padding: 12px 30px;
 	border-radius: 1008px;
@@ -65,6 +64,19 @@
 	border: @moon-input-border-width solid transparent;
 	background-color: @moon-input-decorator-bg-color;
 	box-sizing: border-box;
+
+	.iconBefore,
+	.iconAfter {
+		padding: 0;
+	}
+
+	.iconAfter {
+		.padding-start-end(18px, 0);
+	}
+
+	.iconBefore {
+		.padding-start-end(0, 18px);
+	}
 
 	// RIGBY NOTE: multiline is a NOT YET IMPLEMENTED feature that combines <input> and <textarea>
 	// into one control, to simplify input handling.
@@ -75,19 +87,23 @@
 	}
 
 	// RIGBY NOTE: Complex focus scenarios are broken at the moment
-	&:focus {
+	&:global(.spottable):focus {
 		border-color: @moon-spotlight-border-color;
-		// color: @moon-spotlight-text-color;
 		background-color: @moon-input-decorator-bg-color;
 	}
 
-	&:global(.focused) {
+	// an Input that isn't spottable is behaviorly disabled but not visually
+	&:not(:global(.spottable)) .input {
+		pointer-events: none;
+	}
+
+	&.focused {
 		border-color: @moon-active-border-color;
 	}
 
 	.decoratorIcon,
-	&:focus .decoratorIcon {
-		width: 18px;
+	&:global(.spottable):focus .decoratorIcon {
+		width: auto;
 		margin: 0;
 		color: @moon-input-font-color;
 	}

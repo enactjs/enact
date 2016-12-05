@@ -1,4 +1,7 @@
-# Getting Started Notes
+---
+title: Getting Started
+---
+
 
 ```shell
 # clone the repo!

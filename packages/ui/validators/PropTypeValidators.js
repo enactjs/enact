@@ -8,8 +8,8 @@ function createChainableTypeChecker (validate) {
 			let locationName = ReactPropTypeLocationNames[location];
 			if (isRequired) {
 				return new Error(
-					'Required ' + locationName + ' `' + propName + '` was not specified in '
-					+ '`' + componentName + '`.'
+					'Required ' + locationName + ' `' + propName + '` was not specified in ' +
+					'`' + componentName + '`.'
 				);
 			}
 			return null;
@@ -37,4 +37,9 @@ const checkDefaultBounds = (props, propName, componentName, ...rest) => {
 
 const chainableCheckDefaultBounds = createChainableTypeChecker(checkDefaultBounds);
 
-export {chainableCheckDefaultBounds as checkDefaultBounds};
+const anyPrimitive = PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.bool]);
+
+export {
+	anyPrimitive,
+	chainableCheckDefaultBounds as checkDefaultBounds
+};

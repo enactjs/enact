@@ -1,12 +1,12 @@
 import React from 'react';
-import {shallow} from 'enzyme';
+import {mount} from 'enzyme';
 import Divider from '../Divider';
 
 describe('Divider Specs', () => {
 
 	it('should capitalize its content', function () {
 		const content = 'uncapped';
-		const divider = shallow(
+		const divider = mount(
 			<Divider>{content}</Divider>
 		);
 
@@ -15,5 +15,17 @@ describe('Divider Specs', () => {
 
 		expect(actual).to.equal(expected);
 	});
-});
 
+	it('should render a Divider with content', function () {
+		const content = 'Hello Divider!';
+
+		const divider = mount(
+			<Divider>{content}</Divider>
+		);
+
+		const expected = content;
+		const actual = divider.text();
+
+		expect(actual).to.equal(expected);
+	});
+});

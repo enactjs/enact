@@ -40,6 +40,7 @@
 	line-height: (@moon-button-height - (2 * @moon-button-border-width));
 	background-color: transparent;
 	border: 0 transparent none;
+	border-radius: @moon-button-border-radius;
 	cursor: pointer;
 	white-space: nowrap;
 	display: inline-block;
@@ -50,6 +51,7 @@
 	margin: 0 @moon-spotlight-outset;
 	color: @moon-button-text-color;
 	box-sizing: border-box;
+	z-index: 0;
 
 	> * {
 		text-align: center;
@@ -76,7 +78,7 @@
 	}
 
 	// Need 100% width for marquee in button
-	.moon-marquee {
+	.marquee {
 		width: 100%;
 		vertical-align: top;
 		text-align: center;
@@ -93,8 +95,6 @@
 		min-width: @moon-button-small-height;
 		line-height: (@moon-button-small-height - (2 * @moon-button-border-width));
 		padding: 0 @moon-button-small-h-padding;
-		position: relative;
-		overflow: visible;
 
 		&.minWidth {
 			min-width: @moon-button-small-min-width;
@@ -155,8 +155,16 @@
 	:global(.moon-neutral) & {
 		color: @moon-neutral-button-text-color;
 
-		&:before {
+		.bg {
 			background-color: @moon-neutral-button-bg-color;
+		}
+
+		&.translucent .bg {
+			background-color: fade(@moon-neutral-button-bg-color, @moon-button-translucent-opacity);
+		}
+
+		&.transparent .bg {
+			background-color: transparent;
 		}
 
 		* {

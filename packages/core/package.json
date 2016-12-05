@@ -1,29 +1,15 @@
 {
   "name": "@enact/core",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.4",
   "description": "Enact is an open source JavaScript framework containing everything you need to create a fast, scalable mobile or web application.",
   "main": "index.js",
   "scripts": {
-    "test": "enyo-karma start --single-run --browsers PhantomJS",
-    "test-json": "enyo-karma start --single-run --browsers PhantomJS --reporters json",
-    "test-watch": "enyo-karma start --browsers PhantomJS",
-    "transpile": "enyo-transpile",
-    "pack": "enyo-webpack",
-    "pack-p": "enyo-webpack -p",
-    "watch": "enyo-webpack --watch",
-    "clean": "enyo-clean"
-  },
-  "homepage": "http://enyojs.com/",
-  "bugs": "http://jira.enyojs.com/",
-  "maintainers": [
-    {
-      "name": "Enyo JS Framework Team",
-      "web": "http://enyojs.com/"
-    }
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/enyojs/enact.git"
+    "clean": "enact clean",
+    "lint": "enact lint --framework",
+    "test": "enact test start --single-run --browsers PhantomJS",
+    "test-json": "enact test start --single-run --browsers PhantomJS --reporters json",
+    "test-watch": "enact test start --browsers PhantomJS",
+    "transpile": "enact transpile"
   },
   "license": "Apache-2.0",
   "keywords": [
@@ -33,13 +19,18 @@
     "mobile",
     "webOS"
   ],
-  "devDependencies": {
-    "enyo-config": "enyojs/enyo-config#test-suite"
+  "enact": {
+    "ri": {
+      "baseSize": 24
+    }
+  },
+  "eslintConfig": {
+    "extends": "enact/strict"
   },
   "dependencies": {
-    "react": "~15.3.2",
-    "react-addons-update": "~15.3.2",
-    "react-dom": "~15.3.2",
+    "react": "~15.4.0",
+    "react-addons-update": "~15.4.0",
+    "react-dom": "~15.4.0",
     "ramda": "~0.22.1",
     "classnames": "~2.2.5"
   }

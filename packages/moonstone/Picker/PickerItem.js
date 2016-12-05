@@ -1,6 +1,8 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 
+import {MarqueeText} from '../Marquee';
+
 import css from './Picker.less';
 
 const PickerItemBase = kind({
@@ -11,10 +13,8 @@ const PickerItemBase = kind({
 		className: 'item'
 	},
 
-	render: ({children, ...rest}) => (
-		<div {...rest}>
-			{children}
-		</div>
+	render: (props) => (
+		<MarqueeText {...props} marqueeCentered marqueeOn="hover" />
 	)
 });
 

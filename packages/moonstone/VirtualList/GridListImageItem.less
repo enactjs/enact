@@ -1,0 +1,88 @@
+@import '../styles/mixins.less';
+@import '../styles/colors.less';
+@import '../styles/variables.less';
+@import '../styles/text.less';
+
+.gridListImageItem {
+	display: inline-block;
+	padding-bottom: 96px;
+	border: 6px solid transparent;
+	overflow: hidden;
+
+	.icon {
+		background-color: white;
+		position: relative;
+		display: block;
+		border: @moon-button-border-width solid black;
+		border-radius: 50%;
+		margin: 0;
+		opacity: 0.5;
+
+		color: transparent;
+	}
+
+	.image {
+		display: block; // leaving this to prevent whitespace between inline-block elements
+		width: 100%;
+		height: 100%;
+		margin: 0;
+	}
+
+	.overlayComponent {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		-webkit-transform: translateX(-50%) translateY(-50%);
+		transform: translateX(-50%) translateY(-50%);
+	}
+
+	.overlayContainer {
+		background-color: transparent;
+		position: absolute;
+		padding: 12px;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+
+		pointer-events: none;
+	}
+
+	&.selected {
+		.icon {
+			border-color: @moon-accent;
+			opacity: 1;
+
+			color: @moon-accent;
+		}
+	}
+
+	.textEllipsis {
+		position: relative;
+		left: 0px;
+		overflow: hidden;
+
+		white-space: pre;
+		text-overflow: ellipsis;
+		text-align: center;
+
+		pointer-events: none;
+	}
+
+	.caption {
+		.moon-sub-header-text();
+		.textEllipsis;
+	}
+
+	.subCaption {
+		.moon-body-text();
+		.textEllipsis;
+	}
+
+	&:global(.spottable):focus {
+		.caption,
+		.subCaption {
+			color: @moon-spotlight-text-color;
+		}
+	}
+}

@@ -1,25 +1,17 @@
 {
   "name": "enact",
-  "version": "1.0.0-alpha.1",
-  "description": "Monorepo for all next-gen Enyo frontend libraries.",
-  "homepage": "http://enyojs.com/",
-  "bugs": "http://jira.enyojs.com/",
-  "maintainers": [
-    {
-      "name": "Enyo JS Framework Team",
-      "web": "http://enyojs.com/"
-    }
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/enyojs/enact.git"
-  },
+  "version": "1.0.0-alpha.4",
+  "description": "Monorepo for all Enact front end libraries.",
   "private": true,
   "scripts": {
     "lerna": "lerna",
-    "bootstrap": "lerna bootstrap --concurrency 1"
+    "bootstrap": "lerna bootstrap --concurrency 1",
+    "publish": "lerna publish --skip-npm --skip-git",
+    "link-all": "lerna --concurrency 1 exec -- npm --loglevel error link",
+    "unlink-all": "lerna --concurrency 1 exec -- npm --loglevel error unlink"
   },
+  "license": "Apache-2.0",
   "devDependencies": {
-    "lerna": "2.0.0-beta.29"
+    "lerna": "2.0.0-beta.30"
   }
 }

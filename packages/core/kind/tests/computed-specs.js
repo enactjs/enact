@@ -48,6 +48,22 @@ describe('computed', () => {
 		expect(actual).to.equal(expected);
 	});
 
+	it('should not leak updated prop values into other computed props', function () {
+		const props = {
+			count: 1
+		};
+		const cfg = {
+			value: ({count}) => count + 5,
+			count: ({count}) => count + 1
+		};
+
+		const updated = computed(cfg, props);
+
+		const expected = 6;
+		const actual = updated.value;
+		expect(actual).to.equal(expected);
+	});
+
 	it('Should work with its documented example - sum', function () {
 		const updated = computed(exampleCfg, exampleProps);
 

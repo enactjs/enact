@@ -1,16 +1,16 @@
+@import '../styles/mixins.less';
 @import '../styles/variables.less';
 @import '../styles/colors.less';
 
-.dot {
-	@dot-size: @moon-selectable-item-indicator-size - 3px * 2;
+.selectableItem {
+	.dot {
+		@dot-size: @moon-selectable-item-indicator-size - 3px * 2;
 
-	font-size: @dot-size;
-	line-height: @dot-size;
-	vertical-align: top;
-	margin-right: 6px;
-	color: @moon-accent;
+		font-size: @dot-size;
+		color: @moon-accent;
 
-	&:not(.checked) {
-		display: none;
+		&:not(.selected) {
+			display: none;
+		}
 	}
 }

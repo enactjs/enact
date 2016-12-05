@@ -7,13 +7,15 @@ import {Router, propTypes, toSegments} from './Router';
  * Adds support for Routes as children of Panels which are selected via `path` instead of the usual
  * flat array of Panels.
  *
- * @hoc	Routable
+ * @class Routable
+ * @memberof moonstone/Panels
+ * @hoc
  * @public
  */
 const Routable = hoc((config, Wrapped) => kind({
 	name: 'Routable',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/Panels.Routable.prototype */ {
 		/**
 		 * Path of this element.
 		 *

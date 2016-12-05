@@ -11,6 +11,7 @@
 
 import R from 'ramda';
 import Accelerator from '@enact/core/Accelerator';
+import {startJob} from '@enact/core/jobs';
 
 const spotlightRootContainerName = 'spotlightRootDecorator';
 const SpotlightAccelerator = new Accelerator();
@@ -32,7 +33,6 @@ const Spotlight = (function() {
 		straightOverlapThreshold: 0.5,
 		rememberSource: false,
 		selectorDisabled: false,
-		disabled: false,
 		defaultElement: '',     // <extSelector> except "@" syntax.
 		enterTo: '',            // '', 'last-focused', 'default-element'
 		leaveFor: null,         // {left: <extSelector>, right: <extSelector>, up: <extSelector>, down: <extSelector>}
@@ -60,6 +60,22 @@ const Spotlight = (function() {
 
 	const _enterKeyCodes = [13, 16777221];
 
+	/**
+	 * The key code of the pointer show event.
+	 *
+	 * @type {Number}
+	 * @default 1536
+	 */
+	const _pointerShowKeyCode = 1536;
+
+	/**
+	 * The key code of the pointer hide event.
+	 *
+	 * @type {Number}
+	 * @default 1537
+	 */
+	const _pointerHideKeyCode = 1537;
+
 	const _containerPrefix = 'container-';
 
 	/**
@@ -73,6 +89,41 @@ const Spotlight = (function() {
 	let _defaultContainerId = '';
 	let _lastContainerId = '';
 	let _duringFocusChange = false;
+	let _pointerX = null;
+	let _pointerY = null;
+
+	/**
+	 * Whether a 5-way directional key is being held.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 */
+	let _5WayKeyHold = false;
+
+	/**
+	 * Whether Spotlight is in pointer mode (as opposed to 5-way mode).
+	 *
+	 * @type {Boolean}
+	 * @default true
+	 */
+	let _pointerMode = true;
+
+	/**
+	 * Timestamp at the last point the pointer was hidden.
+	 *
+	 * @type {Number}
+	 * @default 0
+	 */
+	let _pointerHiddenTime = 0;
+
+	/**
+	 * Length of time in milliseconds required after hiding pointer before 5-way keys
+	 * are processed.
+	 *
+	 * @type {Number}
+	 * @default 300
+	 */
+	let _pointerHiddenToKeyTimeout = 300;
 
 	/*
 	* polyfills
@@ -112,6 +163,26 @@ const Spotlight = (function() {
 		rect.center.left = rect.center.right = rect.center.x;
 		rect.center.top = rect.center.bottom = rect.center.y;
 		return rect;
+	}
+
+	function getPointRect (position) {
+		const {x, y} = position;
+		return {
+			left: x,
+			top: y,
+			width: 0,
+			height: 0,
+			right: x,
+			bottom: y,
+			center: {
+				x,
+				y,
+				left: x,
+				right: x,
+				top: y,
+				bottom: y
+			}
+		};
 	}
 
 	function partition (rects, targetRect, straightOverlapThreshold) {
@@ -263,8 +334,8 @@ const Spotlight = (function() {
 		return destPriority.group;
 	}
 
-	function navigate (target, direction, candidates, config) {
-		if (!target || !direction || !candidates || !candidates.length) {
+	function navigate (targetRect, direction, candidates, config) {
+		if (!targetRect || !direction || !candidates || !candidates.length) {
 			return null;
 		}
 
@@ -276,11 +347,6 @@ const Spotlight = (function() {
 			}
 		}
 		if (!rects.length) {
-			return null;
-		}
-
-		let targetRect = getRect(target);
-		if (!targetRect) {
 			return null;
 		}
 
@@ -533,16 +599,11 @@ const Spotlight = (function() {
 	}
 
 	function getContainerId (elem) {
-		let containerId;
 		for (let id in _containers) {
-			if (!_containers[id].selectorDisabled && matchSelector(elem, _containers[id].selector)) {
-				containerId = id;
-				if (id !== spotlightRootContainerName) {
-					break;
-				}
+			if (!_containers[id].selectorDisabled && isNavigable(elem, id, true)) {
+				return id;
 			}
 		}
-		return containerId;
 	}
 
 	function getContainerNavigableElements (containerId) {
@@ -573,8 +634,13 @@ const Spotlight = (function() {
 		return lastFocusedElement;
 	}
 
-	function focusElement (elem, containerId) {
+	function focusElement (elem, containerId, fromPointer) {
 		if (!elem) {
+			return false;
+		}
+
+		if ((_pointerMode && !fromPointer)) {
+			_containers[containerId].lastFocusedElement = elem;
 			return false;
 		}
 
@@ -623,7 +689,7 @@ const Spotlight = (function() {
 		}
 	}
 
-	function focusExtendedSelector (selector, direction) {
+	function focusExtendedSelector (selector) {
 		if (selector.charAt(0) === '@') {
 			if (selector.length === 1) {
 				return focusContainer();
@@ -636,7 +702,7 @@ const Spotlight = (function() {
 			if (next) {
 				let nextContainerId = getContainerId(next);
 				if (isNavigable(next, nextContainerId)) {
-					return focusElement(next, nextContainerId, direction);
+					return focusElement(next, nextContainerId);
 				}
 			}
 		}
@@ -690,32 +756,87 @@ const Spotlight = (function() {
 				if (next === '') {
 					return null;
 				}
-				return focusExtendedSelector(next, direction);
+				return focusExtendedSelector(next);
 			}
 
 			let nextContainerId = getContainerId(next);
 			if (isNavigable(next, nextContainerId)) {
-				return focusElement(next, nextContainerId, direction);
+				return focusElement(next, nextContainerId);
 			}
 		}
 		return false;
 	}
 
-	function spotNext (direction, currentFocusedElement, currentContainerId) {
-		let extSelector = currentFocusedElement.getAttribute('data-spot-' + direction);
-		if (typeof extSelector === 'string') {
-			if (extSelector === '' || !focusExtendedSelector(extSelector, direction)) {
-				return false;
-			}
-			return true;
-		}
-
+	function getNavigableElements () {
 		let containerNavigableElements = {};
 		let allNavigableElements = [];
 		for (let id in _containers) {
 			containerNavigableElements[id] = getContainerNavigableElements(id);
 			allNavigableElements = allNavigableElements.concat(containerNavigableElements[id]);
 		}
+		return {allNavigableElements, containerNavigableElements};
+	}
+
+	function focusNext (next, direction, currentContainerId) {
+		const nextContainerId = getContainerId(next);
+
+		if (currentContainerId !== nextContainerId) {
+			if (_5WayKeyHold) {
+				return false;
+			}
+			const result = gotoLeaveFor(currentContainerId, direction);
+			if (result) {
+				return true;
+			} else if (result === null) {
+				return false;
+			}
+
+			let enterToElement;
+			switch (_containers[nextContainerId].enterTo) {
+				case 'last-focused':
+					enterToElement = getContainerLastFocusedElement(nextContainerId) || getContainerDefaultElement(nextContainerId);
+					break;
+				case 'default-element':
+					enterToElement = getContainerDefaultElement(nextContainerId);
+					break;
+			}
+			if (enterToElement) {
+				next = enterToElement;
+			}
+		}
+
+		return focusElement(next, nextContainerId);
+	}
+
+	function spotNextFromPoint (direction, position, containerId) {
+		const config = extend({}, GlobalConfig, _containers[containerId]);
+		const {allNavigableElements} = getNavigableElements();
+		const targetRect = getPointRect(position);
+		const next = navigate(
+			targetRect,
+			direction,
+			allNavigableElements,
+			config
+		);
+
+		if (next) {
+			return focusNext(next, direction, containerId);
+		}
+
+		return false;
+	}
+
+	function spotNext (direction, currentFocusedElement, currentContainerId) {
+		const extSelector = currentFocusedElement.getAttribute('data-spot-' + direction);
+		if (typeof extSelector === 'string') {
+			if (extSelector === '' || !focusExtendedSelector(extSelector)) {
+				return false;
+			}
+			return true;
+		}
+
+		const {allNavigableElements, containerNavigableElements} = getNavigableElements();
+		const targetRect = getRect(currentFocusedElement);
 
 		let config = extend({}, GlobalConfig, _containers[currentContainerId]);
 		let next;
@@ -724,7 +845,7 @@ const Spotlight = (function() {
 			let currentContainerNavigableElements = containerNavigableElements[currentContainerId];
 
 			next = navigate(
-				currentFocusedElement,
+				targetRect,
 				direction,
 				exclude(currentContainerNavigableElements, currentFocusedElement),
 				config
@@ -732,7 +853,7 @@ const Spotlight = (function() {
 
 			if (!next && config.restrict === 'self-first') {
 				next = navigate(
-					currentFocusedElement,
+					targetRect,
 					direction,
 					exclude(allNavigableElements, currentContainerNavigableElements),
 					config
@@ -740,7 +861,7 @@ const Spotlight = (function() {
 			}
 		} else {
 			next = navigate(
-				currentFocusedElement,
+				targetRect,
 				direction,
 				exclude(allNavigableElements, currentFocusedElement),
 				config
@@ -753,46 +874,7 @@ const Spotlight = (function() {
 				destination: next,
 				reverse: _reverseDirections[direction]
 			};
-
-			let nextContainerId = getContainerId(next);
-
-			if (_containers[nextContainerId].disabled) {
-				let nextContainerElements = containerNavigableElements[nextContainerId];
-				for (let i = 0, len = nextContainerElements.length; i < len; ++i) {
-					allNavigableElements.splice(allNavigableElements.indexOf(nextContainerElements[i]), 1);
-				}
-				next = navigate(
-					currentFocusedElement,
-					direction,
-					exclude(allNavigableElements, nextContainerElements),
-					config
-				);
-				nextContainerId = next ? getContainerId(next) : currentContainerId;
-			}
-
-			if (currentContainerId !== nextContainerId) {
-				let result = gotoLeaveFor(currentContainerId, direction);
-				if (result) {
-					return true;
-				} else if (result === null) {
-					return false;
-				}
-
-				let enterToElement;
-				switch (_containers[nextContainerId].enterTo) {
-					case 'last-focused':
-						enterToElement = getContainerLastFocusedElement(nextContainerId) || getContainerDefaultElement(nextContainerId);
-						break;
-					case 'default-element':
-						enterToElement = getContainerDefaultElement(nextContainerId);
-						break;
-				}
-				if (enterToElement) {
-					next = enterToElement;
-				}
-			}
-
-			return focusElement(next, nextContainerId, direction);
+			return focusNext(next, direction, currentContainerId);
 		} else if (gotoLeaveFor(currentContainerId, direction)) {
 			return true;
 		}
@@ -800,13 +882,13 @@ const Spotlight = (function() {
 		return false;
 	}
 
-	function preventDefault(evt) {
+	function preventDefault (evt) {
 		evt.preventDefault();
 		evt.stopPropagation();
 		return false;
 	}
 
-	function onAcceleratedKeyDown(evt) {
+	function onAcceleratedKeyDown (evt) {
 		let currentFocusedElement = getCurrent();
 
 		if (!currentFocusedElement) {
@@ -824,13 +906,17 @@ const Spotlight = (function() {
 			return;
 		}
 
-		if (!spotNext(_directions[evt.keyCode], currentFocusedElement, currentContainerId)) {
+		if (_directions[evt.keyCode] && !spotNext(_directions[evt.keyCode], currentFocusedElement, currentContainerId) && currentFocusedElement !== document.activeElement) {
 			focusElement(currentFocusedElement, currentContainerId)
 		}
 	}
 
-	function onKeyUp(evt) {
-		if (!_containerCount || _pause) {
+	function shouldPreventNavigation () {
+		return (!_containerCount || _pause);
+	}
+
+	function onKeyUp (evt) {
+		if (shouldPreventNavigation()) {
 			return;
 		}
 
@@ -840,19 +926,50 @@ const Spotlight = (function() {
 		}
 
 		SpotlightAccelerator.reset();
+		_5WayKeyHold = false;
 	}
 
-	function onKeyDown(evt) {
-		if (!_containerCount || _pause) {
+	function onKeyDown (evt) {
+		if (shouldPreventNavigation()) {
 			return;
 		}
 
 		const keyCode = evt.keyCode;
-		if (!_directions[keyCode] && !R.contains(keyCode, _enterKeyCodes)) {
+		const validKeyCodes = [..._enterKeyCodes, _pointerHideKeyCode, _pointerShowKeyCode];
+		const direction = _directions[keyCode];
+
+		if (!direction && !R.contains(keyCode, validKeyCodes)) {
 			return;
 		}
 
-		SpotlightAccelerator.processKey(evt, onAcceleratedKeyDown);
+		switch (keyCode) {
+			case _pointerHideKeyCode:
+				startJob('hidePointer', () => {
+					_pointerMode = false;
+					if (!getCurrent() && _lastContainerId) {
+						Spotlight.focus(getContainerLastFocusedElement(_lastContainerId));
+					}
+				}, 30); // 30 is semi-arbitrary, to account for the time it takes for the following
+						// directional key event to fire, and to prevent momentary spotting of the
+						// last focused item - needs to be a value large enough to account for the
+						// potentially-trailing event, but not too large that another unrelated
+						// event can be fired inside the window
+				break;
+			case _pointerShowKeyCode:
+				_pointerMode = true;
+				break;
+			default:
+				_pointerMode = false;
+				if (!_pause) {
+					if (getCurrent()) {
+						SpotlightAccelerator.processKey(evt, onAcceleratedKeyDown);
+					} else if (!spotNextFromPoint(direction, {x: _pointerX, y: _pointerY}, _lastContainerId)) {
+						Spotlight.focus(getContainerLastFocusedElement(_lastContainerId));
+					}
+					_5WayKeyHold = true;
+				}
+				break;
+		}
 
 		if (_directions[keyCode]) {
 			preventDefault(evt);
@@ -860,20 +977,33 @@ const Spotlight = (function() {
 	}
 
 	function onMouseOver (evt) {
-		if (!_containerCount || _pause) {
+		if (shouldPreventNavigation()) {
 			return;
 		}
 
-		let target = getNavigableTarget(evt.target), // account for child controls
-			current = getCurrent();
+		const target = getNavigableTarget(evt.target); // account for child controls
 
-		if (!target) { // we are moving over a non-focusable element, so we force a blur to occur
-			if (current) {
-				current.blur();
-			}
-		} else if (target !== getCurrent()) { // moving over a focusable element
-			focusElement(target, getContainerId(target));
+		if (target && target !== getCurrent()) { // moving over a focusable element
+			focusElement(target, getContainerId(target), true);
 			preventDefault(evt);
+		}
+	}
+
+	function onMouseMove (evt) {
+		_pointerMode = true;
+
+		// cache last-known pointer coordinates
+		_pointerX = evt.clientX;
+		_pointerY = evt.clientY;
+
+		if (shouldPreventNavigation()) {
+			return;
+		}
+
+		const current = getCurrent();
+
+		if (current && !getNavigableTarget(evt.target)) { // we are moving over a non-focusable element, so we force a blur to occur
+			current.blur();
 		}
 	}
 
@@ -902,6 +1032,8 @@ const Spotlight = (function() {
 				window.addEventListener('keydown', onKeyDown);
 				window.addEventListener('keyup', onKeyUp);
 				window.addEventListener('mouseover', onMouseOver);
+				window.addEventListener('mousemove', onMouseMove);
+				_lastContainerId = spotlightRootContainerName;
 				_initialized = true;
 			}
 		},
@@ -910,6 +1042,7 @@ const Spotlight = (function() {
 			window.removeEventListener('keydown', onKeyDown);
 			window.removeEventListener('keyup', onKeyUp);
 			window.removeEventListener('mouseover', onMouseOver);
+			window.removeEventListener('mousemove', onMouseMove);
 			Spotlight.clear();
 			_ids = 0;
 			_initialized = false;
@@ -993,6 +1126,9 @@ const Spotlight = (function() {
 				_containers[containerId] = void 0;
 				_containers = extend({}, _containers);
 				_containerCount--;
+				if (_lastContainerId === containerId) {
+					Spotlight.setActiveContainer(null);
+				}
 				return true;
 			}
 			return false;
@@ -1009,22 +1145,6 @@ const Spotlight = (function() {
 		enableSelector: function (containerId) {
 			if (_containers[containerId]) {
 				_containers[containerId].selectorDisabled = false;
-				return true;
-			}
-			return false;
-		},
-
-		disable: function (containerId) {
-			if (_containers[containerId]) {
-				_containers[containerId].disabled = true;
-				return true;
-			}
-			return false;
-		},
-
-		enable: function (containerId) {
-			if (_containers[containerId]) {
-				_containers[containerId].disabled = false;
 				return true;
 			}
 			return false;
@@ -1109,6 +1229,37 @@ const Spotlight = (function() {
 			} else {
 				_defaultContainerId = containerId;
 			}
+		},
+
+		/**
+		 * Sets the currently active container.
+		 *
+		 * @param {String} [containerId] The id of the currently active container. If this is not
+		 *	provided, the root container is set as the currently active container.
+		 * @public
+		 */
+		setActiveContainer: function (containerId) {
+			_lastContainerId = containerId || spotlightRootContainerName;
+		},
+
+		/**
+		 * Gets the current pointer mode
+		 *
+		 * @return {Boolean} `true` if spotlight is in pointer mode
+		 */
+		getPointerMode: function () {
+			return _pointerMode;
+		},
+
+		/**
+		 * Sets the current pointer mode
+		 *
+		 * @param {Boolean} pointerMode The value of the pointer mode. This determines how
+		 * spotlight manages focus change behaviors.
+		 * @public
+		 */
+		setPointerMode: function (pointerMode) {
+			_pointerMode = pointerMode;
 		}
 	};
 

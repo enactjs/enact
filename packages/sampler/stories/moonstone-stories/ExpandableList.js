@@ -1,51 +1,11 @@
-import {ExpandableList as ExpList, ExpandableListBase} from '@enact/moonstone/ExpandableList';
+import ExpandableList from '@enact/moonstone/ExpandableList';
+import Selectable from '@enact/ui/Selectable';
 import React from 'react';
-import {storiesOf} from '@kadira/storybook';
-import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
+import {storiesOf, action} from '@kadira/storybook';
+import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
 
-class ExpandableList extends React.Component {
-	constructor (props) {
-		super(props);
-		this.state = {
-			open: false
-		};
-	}
-
-	handleChange = ({value}) => {
-		this.setState({
-			value: value
-		});
-	}
-
-	handleOpen = () => {
-		this.setState({
-			'open': true
-		});
-	};
-
-	handleClose = () => {
-		this.setState({
-			'open': false
-		});
-	};
-
-	render () {
-		return (
-			<ExpList
-				{...this.props}
-				label={this.state.label}
-				value={this.state.value}
-				open={this.state.open}
-				onOpen={this.handleOpen}
-				onClose={this.handleClose}
-				onChange={this.handleChange}
-			/>
-		);
-	}
-}
-
-ExpandableList.propTypes = Object.assign({}, ExpList.propTypes, ExpandableListBase.propTypes);
-ExpandableList.defaultProps = Object.assign({}, ExpList.defaultProps, ExpandableListBase.defaultProps);
+const List = Selectable(ExpandableList);
+List.displayName = 'ExpandableList';
 
 storiesOf('ExpandableList')
 	.addDecorator(withKnobs)
@@ -53,12 +13,18 @@ storiesOf('ExpandableList')
 		' ',
 		'Basic usage of ExpandableList',
 		() => (
-			<ExpandableList
-				title={text('title', 'title')}
-				noneText={text('noneText', 'nothing selected')}
+			<List
+				autoClose={boolean('autoClose', false)}
 				disabled={boolean('disabled', false)}
+				noneText={text('noneText', 'nothing selected')}
+				onSelect={action('onSelect')}
+				onClose={action('onClose')}
+				onOpen={action('onOpen')}
+				open={boolean('open', false)}
+				select={select('select', ['single', 'radio', 'multiple'], 'single')}
+				title={text('title', 'title')}
 			>
 				{['option1', 'option2', 'option3']}
-			</ExpandableList>
+			</List>
 		)
 	);

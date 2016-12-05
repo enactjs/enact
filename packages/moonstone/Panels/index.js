@@ -1,3 +1,13 @@
+/**
+ * Exports the {@link moonstone/Panels.Panels}, {@link moonstone/Panels.Panel},
+ * {@link moonstone/Panels.ActivityPanels}, {@link moonstone/Panels.AlwaysViewingPanels},
+ * {@link moonstone/Panels.Breadcrumb}, {@link moonstone/Panels.Header} components. It
+ * also exports the {@link moonstone/Panels.Routable} HOC and {@link moonstone/Panels.Route}
+ * function. The default export is {@link moonstone/Panels.Panels}.
+ *
+ * @module moonstone/Panels
+ */
+
 import ActivityPanels from './ActivityPanels';
 import AlwaysViewingPanels from './AlwaysViewingPanels';
 import Breadcrumb from './Breadcrumb';

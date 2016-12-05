@@ -1,3 +1,4 @@
+/* eslint-disable enact/prop-types */
 import React from 'react';
 import {shallow, mount} from 'enzyme';
 import ViewManager, {SlideLeftArranger} from '../';
@@ -119,6 +120,30 @@ describe('ViewManager', () => {
 
 		const expected = 2;
 		const actual = subject.find('.view').length;
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should allow child props to update', function () {
+		const content = 'updated';
+		class ViewManagerTest extends React.Component {
+			render () {
+				return (
+					<ViewManager>
+						<div className="view">{this.props.content}</div>
+					</ViewManager>
+				);
+			}
+		}
+
+		const subject = mount(
+			<ViewManagerTest content="original" />
+		);
+
+		subject.setProps({content});
+
+		const expected = content;
+		const actual = subject.find('.view').text();
 
 		expect(actual).to.equal(expected);
 	});
