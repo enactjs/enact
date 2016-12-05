@@ -311,6 +311,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		// mouse event handler for JS scroller
 
 		onMouseDown = (e) => {
+			e.stopPropagation();
 			this.animator.stop();
 			this.dragStart(e);
 		}
@@ -318,6 +319,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		onMouseMove = (e) => {
 			if (this.isDragging) {
 				const {dx, dy} = this.drag(e);
+
+				e.stopPropagation();
 
 				if (this.isFirstDragging) {
 					this.doScrollStart();
@@ -328,6 +331,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		onMouseUp = (e) => {
+			e.stopPropagation();
+
 			if (this.isDragging) {
 				this.dragStop(e);
 
@@ -353,10 +358,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		onMouseLeave = (e) => {
 			this.onMouseMove(e);
-			this.onMouseUp();
+			this.onMouseUp(e);
 		}
 
 		onScroll = (e) => {
+			e.stopPropagation();
 			this.scroll(e.target.scrollLeft, e.target.scrollTop, true);
 		}
 
@@ -385,6 +391,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		onWheel = (e) => {
+			e.stopPropagation();
 			e.preventDefault();
 			if (!this.isDragging) {
 				const
