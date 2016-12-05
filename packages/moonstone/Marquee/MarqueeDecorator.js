@@ -112,14 +112,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			forceDirection: React.PropTypes.oneOf(['rtl', 'ltr']),
 
 			/**
-			 * Inline property makes the children components as an inline element
-			 *
-			 * @type {Boolean}
-			 * @public
-			 */
-			inline: React.PropTypes.bool,
-
-			/**
 			 * When `true`, the contents will be centered regardless of the text directionality.
 			 *
 			 * @type {Boolean}
