@@ -53,7 +53,7 @@ const defaultConfig = {
 	leave: 'onMouseLeave',
 
 	/**
-	 * Recalculate the distance if any property(like 'inline') changes. Expects a property.
+	 * Recalculate the distance if any property (like 'inline') changes. Expects a property.
 	 *
 	 * @type {String}
 	 * @default null
