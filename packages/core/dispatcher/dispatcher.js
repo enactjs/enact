@@ -59,12 +59,17 @@ const dispatcher = function (ev) {
  * @returns {undefined}
  * @memberof core/dispatcher
  */
-const on = function (name, fn, target = document) {
-	const listeners = getListeners(target, name);
+const on = function (name, fn, target) {
+	if (!target && typeof document !== 'undefined') {
+		target = document;
+	}
+	if (target) {
+		const listeners = getListeners(target, name);
 
-	const length = listeners.push(fn);
-	if (length === 1) {
-		target.addEventListener(name, dispatcher);
+		const length = listeners.push(fn);
+		if (length === 1) {
+			target.addEventListener(name, dispatcher);
+		}
 	}
 };
 
@@ -79,14 +84,19 @@ const on = function (name, fn, target = document) {
  * @returns {undefined}
  * @memberof core/dispatcher
  */
-const off = function (name, fn, target = document) {
-	const listeners = getListeners(target, name);
-	const index = listeners.indexOf(fn);
+const off = function (name, fn, target) {
+	if (!target && typeof document !== 'undefined') {
+		target = document;
+	}
+	if (target) {
+		const listeners = getListeners(target, name);
+		const index = listeners.indexOf(fn);
 
-	if (index >= 0) {
-		listeners.splice(index, 1);
-		if (listeners.length === 0) {
-			target.removeEventListener(name, dispatcher);
+		if (index >= 0) {
+			listeners.splice(index, 1);
+			if (listeners.length === 0) {
+				target.removeEventListener(name, dispatcher);
+			}
 		}
 	}
 };
@@ -103,7 +113,7 @@ const off = function (name, fn, target = document) {
  *											remove it.
  * @memberof core/dispatcher
  */
-const once = function (name, fn, target = document) {
+const once = function (name, fn, target) {
 	const onceFn = function (ev) {
 		fn(ev);
 		off(name, onceFn, target);
