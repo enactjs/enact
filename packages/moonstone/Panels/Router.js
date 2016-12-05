@@ -195,7 +195,10 @@ Route.propTypes = /** @lends moonstone/Popups.Route.prototype */ {
 	 * @type {Element}
 	 * @public
 	 */
-	component: React.PropTypes.element.isRequired,
+	component: React.PropTypes.oneOfType([
+		React.PropTypes.string,
+		React.PropTypes.func
+	]),
 
 	/**
 	 * The name of the path segment

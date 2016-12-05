@@ -1,6 +1,10 @@
+/* globals console */
+/* eslint no-console: ["error", { allow: ["warn", "error"] }] */
+
 import React from 'react';
 import {shallow, mount} from 'enzyme';
 import {Router, Route} from '../Router';
+import sinon from 'sinon';
 
 describe('Router', () => {
 
@@ -65,6 +69,10 @@ describe('Router', () => {
 	});
 
 	it('should render no children if {path} does not exist in {routes}', function () {
+		// Remove Global Spy and replace with a stub instead
+		console.error.restore();
+		sinon.stub(console, 'error');
+
 		const subject = shallow(
 			<Router routes={routes} path="/help" />
 		);
@@ -153,6 +161,10 @@ describe('Router', () => {
 	});
 
 	it('should render nothing for an invalid path', function () {
+		// Remove Global Spy and replace with a stub instead
+		console.error.restore();
+		sinon.stub(console, 'error');
+
 		const subject = mount(
 			<Router path="/does/not/exist">
 				<Route path="app" component="button">
@@ -170,6 +182,10 @@ describe('Router', () => {
 	});
 
 	it('should render nothing for a partially valid path', function () {
+		// Remove Global Spy and replace with a stub instead
+		console.error.restore();
+		sinon.stub(console, 'error');
+
 		const subject = mount(
 			<Router path="/app/home/other">
 				<Route path="app" component="button">
