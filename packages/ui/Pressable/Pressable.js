@@ -19,7 +19,7 @@ const defaultConfig = {
 	/**
 	 * Configures the event name that activates the Pressable
 	 *
-	 * @type {String}
+	 * @type {String|Array}
 	 * @default 'onMouseDown'
 	 * @memberof ui/Pressable.defaultConfig
 	 */
@@ -28,7 +28,7 @@ const defaultConfig = {
 	/**
 	 * Configures the event name that deactivates the Pressable
 	 *
-	 * @type {String}
+	 * @type {String|Array}
 	 * @default 'onMouseUp'
 	 * @memberof ui/Pressable.defaultConfig
 	 */
@@ -109,8 +109,20 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 		render () {
 			const props = Object.assign({}, this.props);
-			if (depress) props[depress] = this.onMouseDown;
-			if (release) props[release] = this.onMouseUp;
+			if (typeof depress === 'string') {
+				props[depress] = this.onMouseDown;
+			} else if (Array.isArray(depress)) {
+				for (let dep of depress) {
+					props[dep] = this.onMouseDown;
+				}
+			}
+			if (typeof release === 'string') {
+				props[release] = this.onMouseUp;
+			} else if (Array.isArray(release)) {
+				for (let rel of release) {
+					props[rel] = this.onMouseUp;
+				}
+			}
 			if (prop) props[prop] = this.state.pressed;
 			delete props[defaultPropKey];
 

@@ -2,6 +2,17 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+### Changed
+- Pressable now also accepts an array of events for depress/release to support multiple interaction methods
+
+### Removed
+
+### Fixed
+
 ## [1.0.0-alpha.4] - 2016-12-2
 
 ### Added
