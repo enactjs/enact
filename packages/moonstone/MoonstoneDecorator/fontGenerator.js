@@ -54,6 +54,9 @@ let previousLocale = null;
 * @private
 */
 function fontGenerator (locale = ilib.getLocale()) {
+	// If document object is unavailable, bail out.
+	if (typeof document === 'undefined') return;
+
 	// If the locale is the same as the last time this ran, bail out and don't bother to recompile this again.
 	if (locale === previousLocale) return;
 

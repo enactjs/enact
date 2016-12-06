@@ -9,6 +9,15 @@ import R from 'ramda';
 import getListeners from './listeners';
 
 /**
+ * Checks if the default target of `document` exists before returning it, otherwise returns `false`.
+ *
+ * @returns {Node|Boolean}
+ * @memberof core/dispatcher
+ * @private
+ */
+const getDefaultTarget = () => typeof document !== 'undefined' && document;
+
+/**
  * Wraps event callbacks with a try-catch block to prevent unrelated code from blocking
  *
  * @function
@@ -59,12 +68,14 @@ const dispatcher = function (ev) {
  * @returns {undefined}
  * @memberof core/dispatcher
  */
-const on = function (name, fn, target = document) {
-	const listeners = getListeners(target, name);
+const on = function (name, fn, target = getDefaultTarget()) {
+	if (target) {
+		const listeners = getListeners(target, name);
 
-	const length = listeners.push(fn);
-	if (length === 1) {
-		target.addEventListener(name, dispatcher);
+		const length = listeners.push(fn);
+		if (length === 1) {
+			target.addEventListener(name, dispatcher);
+		}
 	}
 };
 
@@ -79,14 +90,16 @@ const on = function (name, fn, target = document) {
  * @returns {undefined}
  * @memberof core/dispatcher
  */
-const off = function (name, fn, target = document) {
-	const listeners = getListeners(target, name);
-	const index = listeners.indexOf(fn);
+const off = function (name, fn, target = getDefaultTarget()) {
+	if (target) {
+		const listeners = getListeners(target, name);
+		const index = listeners.indexOf(fn);
 
-	if (index >= 0) {
-		listeners.splice(index, 1);
-		if (listeners.length === 0) {
-			target.removeEventListener(name, dispatcher);
+		if (index >= 0) {
+			listeners.splice(index, 1);
+			if (listeners.length === 0) {
+				target.removeEventListener(name, dispatcher);
+			}
 		}
 	}
 };
@@ -95,15 +108,15 @@ const off = function (name, fn, target = document) {
  * Adds a new global event listener that removes itself after handling one event
  *
  * @function
- * @param	{String}	name				Event name
- * @param	{Function}	fn					Event handler
- * @param	{Node}		[target=`document`]	Event listener target
+ * @param	{String}	name		Event name
+ * @param	{Function}	fn			Event handler
+ * @param	{Node}		[target]	Event listener target
  *
  * @returns {Function}						The single-use handler which can be passed to `off` to
  *											remove it.
  * @memberof core/dispatcher
  */
-const once = function (name, fn, target = document) {
+const once = function (name, fn, target) {
 	const onceFn = function (ev) {
 		fn(ev);
 		off(name, onceFn, target);
