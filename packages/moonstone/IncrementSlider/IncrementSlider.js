@@ -142,14 +142,16 @@ const IncrementSliderBase = kind({
 	},
 
 	computed: {
+		decrementDisabled: ({min, value}) => value <= min,
+		incrementDisabled: ({max, value}) => value >= max,
 		incrementSliderClasses: ({vertical, styler}) => styler.append({vertical})
 	},
 
-	render: ({onIncrement, onDecrement, incrementSliderClasses, ...rest}) => (
+	render: ({decrementDisabled, onIncrement, onDecrement, incrementDisabled, incrementSliderClasses, ...rest}) => (
 		<div className={incrementSliderClasses}>
-			<IconButton className={css.decrementButton} small onClick={onDecrement}>arrowlargeleft</IconButton>
+			<IconButton className={css.decrementButton} small onClick={onDecrement} disabled={decrementDisabled}>arrowlargeleft</IconButton>
 			<SliderBase {...rest} className={css.slider} />
-			<IconButton className={css.incrementButton} small onClick={onIncrement}>arrowlargeright</IconButton>
+			<IconButton className={css.incrementButton} small onClick={onIncrement} disabled={incrementDisabled}>arrowlargeright</IconButton>
 		</div>
 	)
 });
