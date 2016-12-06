@@ -112,16 +112,16 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			if (typeof depress === 'string') {
 				props[depress] = this.onMouseDown;
 			} else if (Array.isArray(depress)) {
-				for (let dep of depress) {
+				depress.forEach((dep) => {
 					props[dep] = this.onMouseDown;
-				}
+				});
 			}
 			if (typeof release === 'string') {
 				props[release] = this.onMouseUp;
 			} else if (Array.isArray(release)) {
-				for (let rel of release) {
-					props[rel] = this.onMouseUp;
-				}
+				release.forEach((rel) => {
+					props[rel] = this.onMouseDown;
+				});
 			}
 			if (prop) props[prop] = this.state.pressed;
 			delete props[defaultPropKey];
