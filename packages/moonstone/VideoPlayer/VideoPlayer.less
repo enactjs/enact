@@ -19,33 +19,107 @@
 	.fullscreen {
 		.bottom {
 			position: absolute;
-			width: 100%;
-			bottom: 0;
+			bottom: @moon-video-player-bottom-padding;
+			left: @moon-video-player-side-padding;
+			right: @moon-video-player-side-padding;
+			background-color: rgba(0, 0, 0, 0);		// use var
 
+			// Title Container
 			.title {
-				.titleText {
+				@badges-present-transition: transform 500ms ease-in-out;
 
+				color: @moon-video-player-title-color;
+				text-shadow: @moon-video-player-title-text-shadow;
+				.margin-start-end(0, 240px);	// Roughly equivalent to the width + spacing of the time indicators
+
+				&.hiding {
+					opacity: 0;
+					transition: @badges-present-transition, opacity 1000ms ease-in-out;
 				}
-				.infoBadges {
 
+				// Title
+				.titleText {
+					font-family: @moon-font-family;
+					font-size: @moon-video-player-title-size;
+					line-height: @moon-header-line-height;
+					transition: @badges-present-transition;
+					transform: translateY(36px) translateZ(0);
+					.font-kerning;
+
+					&.withBadges {
+						transform: translateY(0) translateZ(0);
+					}
+
+					.enyo-locale-non-latin & {
+						line-height: @moon-non-latin-header-text-line-height;
+					}
+				}
+
+				// Badges and title components
+				.infoComponents {
+					vertical-align: super;
+
+					&.hidden {
+						opacity: 0;
+					}
+					&.showing {
+						transition: opacity 500ms ease-in-out;
+					}
+
+					> * {
+						display: inline-block;
+						margin: 0 6px;
+					}
+
+					.badgeTextIcon {
+						font-family: @moon-font-family-bold;
+						font-size: @moon-video-player-badge-text-size;
+						text-align: center;
+						white-space: nowrap;
+						display: inline-block;
+					}
+
+					.redIcon {
+						background-color: @moon-videoplayer-redicon-bg-color;
+						color: @moon-videoplayer-redicon-text-color;
+					}
+
+					.fontLgIcons {
+						font-family: "LG Icons";
+					}
+
+					:global(.enyo-locale-right-to-left) & {
+						text-align: right;
+					}
 				}
 			}
-			.sliderFrame {
 
+			.sliderFrame {
+				.mediaSlider {
+					margin: 0;
+				}
 			}
 			.controlsFrame {
 				position: relative;
 
-				.premiumPlaceholderLeft,
-				.premiumPlaceholderRight {
+				.leftComponents,
+				.rightComponents {
 					position: absolute;
 					top: 0;
 				}
-				.premiumPlaceholderLeft {
+				.leftComponents {
 					left: 0;
+
+					> :first-child {
+						.margin-start-end(0, @moon-button-h-margin);
+					}
 				}
-				.premiumPlaceholderRight {
+				.rightComponents {
 					right: 0;
+
+					> :last-child {
+						.margin-start-end(@moon-button-h-margin, 0);
+					}
 				}
 				.controlButtons {
 					text-align: center;

@@ -11,14 +11,15 @@ import React from 'react';
 
 import Video, {Controls, Play, Mute, Seek, Fullscreen, Time, Overlay} from 'react-html5video';
 
-import css from './VideoPlayer.less';
 
 import IconButton from '../IconButton';
 import MarqueeText from '../Marquee/MarqueeText';
 import Slider from '../Slider';
 import Spinner from '../Spinner';
 import Panels from '../Panels';
+import Slottable from '@enact/ui/Slottable';
 
+import css from './VideoPlayer.less';
 
 const $L = text => text; // Dummy placeholder
 
@@ -40,6 +41,14 @@ const VideoPlayerBase = class extends React.Component {
 		};
 	}
 
+	isVideoPresent = () => this.video && this.video.videoEl
+
+	isVideoReady = () => this.video && this.video.videoEl && this.video.videoEl.readyState >= this.video.videoEl.HAVE_ENOUGH_DATA
+
+	// getChildContext = () => {
+	// 	return {video: this.video};
+	// }
+
 	reloadVideo = () => {
 		// When changing a HTML5 video, you have to reload it.
 		this.video.load();
@@ -50,18 +59,25 @@ const VideoPlayerBase = class extends React.Component {
 		this.video[action](props);
 	}
 
+	jump = (distance) => () => {
+		if (this.isVideoReady() && typeof this.video.videoEl.duration === 'number') {
+			const el = this.video.videoEl;
+			this.video.seek(el.currentTime + distance);
+		}
+	}
+
 	setVolume = () => {
 		this.video.setVolume(this._volumeInput.valueAsNumber);
 	}
 
 	onProgress = () => {
-		let el = this.video.videoEl;
-		// if (el) {
-		this.setState({
-			percentageLoaded: el.buffered.length && el.buffered.end(el.buffered.length - 1) / el.duration * 100,
-			percentagePlayed: el.currentTime / el.duration * 100
-		});
-		// }
+		if (this.isVideoReady()) {
+			const el = this.video.videoEl;
+			this.setState({
+				percentageLoaded: el.buffered.length && el.buffered.end(el.buffered.length - 1) / el.duration * 100,
+				percentagePlayed: el.currentTime / el.duration * 100
+			});
+		}
 	}
 
 	notYetImplemented = () => {
@@ -69,7 +85,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	render () {
-		const {children, title, infoBadges, leftComponents, rightComponents, ...rest} = this.props;
+		const {children, title, infoComponents, leftComponents, rightComponents, ...rest} = this.props;
 		// if (this.state.videoSource !== children) {
 		// 	this.reloadVideo();
 		// 	this.setState('videoSource', children);
@@ -92,10 +108,11 @@ const VideoPlayerBase = class extends React.Component {
 					<div className={css.bottom}> {/* showing={false} */}
 						<div className={css.title}> {/* hidingDuration={1000} marqueeOnRender */}
 							<MarqueeText className={css.titleText}>{title}</MarqueeText>
-							<div className={css.infoBadges}>{infoBadges}</div> {/* showing={false} showingDuration={500} tabIndex={-1} mixins={[ShowingTransitionSupport]} */}
+							<div className={css.infoComponents}>{infoComponents}</div> {/* showing={false} showingDuration={500} tabIndex={-1} mixins={[ShowingTransitionSupport]} */}
 						</div>
 						<div className={css.sliderFrame}>
 							<Slider
+								className={css.mediaSlider}
 								backgroundPercent={this.state.percentageLoaded}
 								min={0}
 								max={100}
@@ -111,9 +128,9 @@ const VideoPlayerBase = class extends React.Component {
 							*/}
 						</div>
 						<div className={css.controlsFrame} onClick={this.resetAutoTimeout}>
-							<div className={css.premiumPlaceholderLeft + ' ' + css.moonHspacing}>{leftComponents}</div>
-							<div className={css.premiumPlaceholderRight}>
-								<div className={css.moonHspacing}>{rightComponents}</div>
+							<div className={css.leftComponents + ' ' + css.moonHspacing}>{leftComponents}</div>
+							<div className={css.rightComponents + ' ' + css.moonHspacing}>
+								{rightComponents}
 								<IconButton backgroundOpacity="translucent" className={css.moreButton} onClick={this.notYetImplemented}>ellipsis</IconButton>
 							</div>
 							<div className={css.controlsFrameCenter}>
@@ -121,11 +138,11 @@ const VideoPlayerBase = class extends React.Component {
 								<div className={css.controlsContainer}>
 									<div>
 										<div className={css.controlButtons}> {/* rtl={false} */}
-											<IconButton backgroundOpacity="translucent" onClick={this.reloadVideo}>skipbackward</IconButton>
-											<IconButton backgroundOpacity="translucent" onClick={this.send('seek', (this._seekInput ? this._seekInput.valueAsNumber : null))}>backward</IconButton>
+											<IconButton backgroundOpacity="translucent" onClick={this.send('seek', 0)}>skipbackward</IconButton>
+											<IconButton backgroundOpacity="translucent" onClick={this.jump(-10)}>backward</IconButton>
 											<IconButton backgroundOpacity="translucent" onClick={this.send('togglePlay')}>play</IconButton>
-											<IconButton backgroundOpacity="translucent" onClick={this.send('seek', (this._seekInput ? this._seekInput.valueAsNumber : null))}>forward</IconButton>
-											<IconButton backgroundOpacity="translucent" onClick={this.reloadVideo}>skipforward</IconButton>
+											<IconButton backgroundOpacity="translucent" onClick={this.jump(10)}>forward</IconButton>
+											<IconButton backgroundOpacity="translucent" onClick={this.send('seek', (this.video ? this.video.videoEl.duration : 0))}>skipforward</IconButton>
 										</div>
 									</div>
 									<div className={css.moreControls} /> {/* rtl={false} */}
@@ -139,5 +156,10 @@ const VideoPlayerBase = class extends React.Component {
 	}
 };
 
-export default VideoPlayerBase;
-export {VideoPlayerBase as VideoPlayer, VideoPlayerBase};
+VideoPlayerBase.contextTypes = {
+	video: React.PropTypes.object
+};
+const VideoPlayer = Slottable({slots: ['infoComponents', 'leftComponents', 'rightComponents']}, VideoPlayerBase);
+
+export default VideoPlayer;
+export {VideoPlayer, VideoPlayerBase};

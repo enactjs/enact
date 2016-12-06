@@ -1,4 +1,6 @@
 import VideoPlayer, {VideoPlayerBase} from '@enact/moonstone/VideoPlayer';
+import IconButton from '@enact/moonstone/IconButton';
+import Button from '@enact/moonstone/Button';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
@@ -81,15 +83,42 @@ storiesOf('VideoPlayer')
 		' ',
 		'The basic VideoPlayer',
 		() => (
-			<VideoPlayer
-				autoPlay={boolean('autoPlay', true)}
-				loop={boolean('loop', true)}
-				muted={boolean('muted', true)}
-				title={selectVideo(select('video', prop.videoTitles, 0))}
-				poster={videoData.poster}
-				{...prop.eventActions}
+			<div
+				style={{
+					outline: 'teal dashed 1px',
+					position: 'relative'
+				}}
 			>
-				<source src={videoData.source} type="video/mp4" />
-			</VideoPlayer>
+				<label
+					style={{
+						outline: 'teal dashed 1px',
+						backgroundColor: 'rgba(0, 128, 128, 0.5)',
+						color: '#0bb',
+						position: 'absolute',
+						transform: 'translateY(-100%)',
+						borderBottomWidth: 0,
+						padding: '0.1em 1em',
+						fontWeight: 100,
+						fontStyle: 'italic',
+						fontSize: '16px'
+					}}
+				>VideoPlayer Edge</label>
+				<VideoPlayer
+					autoPlay={boolean('autoPlay', true)}
+					loop={boolean('loop', true)}
+					muted={boolean('muted', true)}
+					title={selectVideo(select('video', prop.videoTitles, 0))}
+					poster={videoData.poster}
+					{...prop.eventActions}
+				>
+					<source src={videoData.source} type="video/mp4" />
+					<infoComponents>A video about some things happening to and around some characters. Very exciting stuff.</infoComponents>
+					<leftComponents><IconButton backgroundOpacity="translucent">fullscreen</IconButton></leftComponents>
+					<rightComponents><IconButton backgroundOpacity="translucent">flag</IconButton></rightComponents>
+
+					<Button backgroundOpacity="translucent">Add To Favorites</Button>
+					<IconButton backgroundOpacity="translucent">star</IconButton>
+				</VideoPlayer>
+			</div>
 		)
 	);
