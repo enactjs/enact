@@ -108,9 +108,9 @@ const off = function (name, fn, target = getDefaultTarget()) {
  * Adds a new global event listener that removes itself after handling one event
  *
  * @function
- * @param	{String}	name				Event name
- * @param	{Function}	fn					Event handler
- * @param	{Node}		[target=`document`]	Event listener target
+ * @param	{String}	name		Event name
+ * @param	{Function}	fn			Event handler
+ * @param	{Node}		[target]	Event listener target
  *
  * @returns {Function}						The single-use handler which can be passed to `off` to
  *											remove it.
