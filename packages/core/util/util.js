@@ -1,20 +1,19 @@
-import rMap from 'ramda/src/map';
-import rProp from 'ramda/src/prop';
-import rCompose from 'ramda/src/compose';
-import rSort from 'ramda/src/sort';
-import rUseWith from 'ramda/src/useWith';
-import rEquals from 'ramda/src/equals';
-import rUnless from 'ramda/src/unless';
-import rIs from 'ramda/src/is';
-import rAlways from 'ramda/src/always';
-import rIsArrayLike from 'ramda/src/isArrayLike';
-import rOf from 'ramda/src/of';
+import always from 'ramda/src/always';
+import compose from 'ramda/src/compose';
+import equals from 'ramda/src/equals';
+import isArrayLike from 'ramda/src/isArrayLike';
+import isType from 'ramda/src/is';
+import map from 'ramda/src/map';
+import prop from 'ramda/src/prop';
 import React from 'react';
+import sort from 'ramda/src/sort';
+import unless from 'ramda/src/unless';
+import useWith from 'ramda/src/useWith';
 
-const orderedKeys = rMap(rProp('key'));
-const unorderedKeys = rCompose(rSort((a, b) => a - b), orderedKeys);
-const unorderedEquals = rUseWith(rEquals, [unorderedKeys, unorderedKeys]);
-const orderedEquals = rUseWith(rEquals, [orderedKeys, orderedKeys]);
+const orderedKeys = map(prop('key'));
+const unorderedKeys = compose(sort((a, b) => a - b), orderedKeys);
+const unorderedEquals = useWith(equals, [unorderedKeys, unorderedKeys]);
+const orderedEquals = useWith(equals, [orderedKeys, orderedKeys]);
 
 /**
  * Compares the keys of two sets of children and returns `true` if they are equal.
@@ -35,7 +34,7 @@ const childrenEquals = (prev, next, ordered = false) => {
 		const c1 = prevChildren[0];
 		const c2 = nextChildren[0];
 
-		return rEquals(c1, c2);
+		return equals(c1, c2);
 	} else if (ordered) {
 		return orderedEquals(prevChildren, nextChildren);
 	} else {
@@ -64,7 +63,7 @@ const cap = function (str) {
  * @param {*} arg Function or value
  * @method
  */
-const coerceFunction = rUnless(rIs(Function), rAlways);
+const coerceFunction = unless(isType(Function), always);
 
 /**
  * If `arg` is array-like, return it. Otherwise returns a single element array containing `arg`
@@ -75,10 +74,13 @@ const coerceFunction = rUnless(rIs(Function), rAlways);
  *	const returnsObjArg = coerceArray({0: 'zeroth', length: 1});
  *
  * @see http://ramdajs.com/docs/#isArrayLike
- * @param {*} arg Array or value
+ * @param {*} array Array or value
+ * @returns {Array}	Either `array` or `[array]`
  * @method
  */
-const coerceArray = rUnless(rIsArrayLike, rOf);
+const coerceArray = function (array) {
+	return isArrayLike(array) ? array : [array];
+};
 
 /**
  * Loosely determines if `tag` is a renderable component (either a string or a function)

@@ -8,17 +8,16 @@
 // Using string refs from the source code of ReactTransitionGroup
 /* eslint-disable react/no-string-refs */
 
-import rUseWith from 'ramda/src/useWith';
-import rFindIndex from 'ramda/src/findIndex';
-import rPropEq from 'ramda/src/propEq';
-import rIdentity from 'ramda/src/identity';
-import rCompose from 'ramda/src/compose';
-import rLte from 'ramda/src/lte';
-import rUnionWith from 'ramda/src/unionWith';
-import rEqBy from 'ramda/src/eqBy';
-import rProp from 'ramda/src/prop';
-import rRemove from 'ramda/src/remove';
+import compose from 'ramda/src/compose';
+import eqBy from 'ramda/src/eqBy';
+import findIndex from 'ramda/src/findIndex';
+import identity from 'ramda/src/identity';
+import lte from 'ramda/src/lte';
+import prop from 'ramda/src/prop';
+import propEq from 'ramda/src/propEq';
 import React from 'react';
+import unionWith from 'ramda/src/unionWith';
+import useWith from 'ramda/src/useWith';
 
 /**
  * Returns the index of a child in an array found by `key` matching
@@ -29,7 +28,7 @@ import React from 'react';
  * @method
  * @private
  */
-const indexOfChild = rUseWith(rFindIndex, [rPropEq('key'), rIdentity]);
+const indexOfChild = useWith(findIndex, [propEq('key'), identity]);
 
 /**
  * Returns `true` if `children` contains `child`
@@ -40,7 +39,7 @@ const indexOfChild = rUseWith(rFindIndex, [rPropEq('key'), rIdentity]);
  * @method
  * @private
  */
-const hasChild = rCompose(rLte(0), indexOfChild);
+const hasChild = compose(lte(0), indexOfChild);
 
 /**
  * Returns an array of non-null children
@@ -64,7 +63,7 @@ const mapChildren = function (children) {
  * @method
  * @private
  */
-const mergeChildren = rUnionWith(rEqBy(rProp('key')));
+const mergeChildren = unionWith(eqBy(prop('key')));
 
 /**
  * Manages the transition of added and removed child components. Children that are added are
@@ -111,7 +110,7 @@ class TransitionGroup extends React.Component {
 	}
 
 	static defaultProps = {
-		childFactory: rIdentity,
+		childFactory: identity,
 		component: 'div',
 		size: 2
 	}
@@ -301,7 +300,7 @@ class TransitionGroup extends React.Component {
 
 		this.setState(function (state) {
 			const index = indexOfChild(key, state.children);
-			return {children: rRemove(index, 1, state.children)};
+			return {children: state.children.splice(index, 1)};
 		});
 	}
 

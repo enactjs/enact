@@ -5,11 +5,8 @@
  * @module ui/Group
  */
 
-import rConverge from 'ramda/src/converge';
-import rMerge from 'ramda/src/merge';
-import rProp from 'ramda/src/prop';
-import React, {PropTypes} from 'react';
 import kind from '@enact/core/kind';
+import React, {PropTypes} from 'react';
 
 import Repeater from '../Repeater';
 
@@ -131,10 +128,10 @@ const GroupBase = kind({
 	},
 
 	computed: {
-		itemProps: rConverge(rMerge, [
-			pickGroupItemProps,
-			rProp('itemProps')
-		])
+		itemProps: (props) => Object.assign({},
+			pickGroupItemProps(props),
+			props.itemProps
+		)
 	},
 
 	render: (props) => {

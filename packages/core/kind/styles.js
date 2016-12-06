@@ -1,48 +1,48 @@
-import rCurryN from 'ramda/src/curryN';
-import rIfElse from 'ramda/src/ifElse';
-import rAnd from 'ramda/src/and';
-import rOr from 'ramda/src/or';
-import rPropOr from 'ramda/src/propOr';
-import rUseWith from 'ramda/src/useWith';
-import rCompose from 'ramda/src/compose';
-import rJoin from 'ramda/src/join';
-import rMap from 'ramda/src/map';
-import rSplit from 'ramda/src/split';
-import rFlip from 'ramda/src/flip';
-import rDefaultTo from 'ramda/src/defaultTo';
-import rApply from 'ramda/src/apply';
-import rProps from 'ramda/src/props';
-import rProp from 'ramda/src/prop';
-import rMerge from 'ramda/src/merge';
+import curry from 'ramda/src/curry';
+import compose from 'ramda/src/compose';
+import merge from 'ramda/src/merge';
 import classnames from 'classnames';
 
 import {addInternalProp} from './util';
 
 // Joins two strings in a className-friendly way
-const joinClasses = rCurryN(2, (a, b) => a + ' ' + b);
+const joinClasses = curry((a, b) => a + ' ' + b);
 
 // Creates a function accepting two arguments. When both are truthy, calls fn with both. If either
 // is falsey, returns the truthy one or the first if both are falsey.
-const bothOrEither = (fn) => rIfElse(rAnd, fn, rOr);
+const bothOrEither = curry((fn, a, b) => {
+	if (a && b) {
+		return fn(a, b);
+	} else {
+		return b || a;
+	}
+});
 
 // Returns either the value for the property or the property name itself
-const propOrSelf = rCurryN(2, (b, a) => rPropOr(a, a, b));
+const propOrSelf = curry((obj, prop) => obj && obj[prop] || prop);
 
 // Takes a string (multiple classes can be space-delimited) and a css-modules object and resolves
 // the class names to their css-modules name
-const resolveClassNames = rUseWith(rCompose(rJoin(' '), rMap), [propOrSelf, rSplit(' ')]);
+const resolveClassNames = curry((css, className) => {
+	if (css && className) {
+		return className.split(' ').map(propOrSelf(css)).join(' ');
+	}
 
-// If css and className are truthy, resolve the className. Otherwise, return className defaulted to ''
-const resolveOrSelf = rIfElse(rAnd, resolveClassNames, rFlip(rDefaultTo('')));
+	return className;
+});
 
 // Takes a styles config object and either resolves `className` with `css` or `className` iself
-const localClassName = rCompose(rApply(resolveOrSelf), rProps(['css', 'className']));
+const localClassName = ({css, className}) => propOrSelf(css, className) || '';
 
 // Merges the locally-resolved className and the className from the props
-const mergeClassName = rUseWith(bothOrEither(joinClasses), [localClassName, rProp('className')]);
+const mergeClassName = (config, {className}) => {
+	return bothOrEither(joinClasses, localClassName(config), className);
+};
 
 // Merges the local style object and the style object from the props
-const mergeStyle = rUseWith(bothOrEither(rMerge), [rProp('style'), rProp('style')]);
+const mergeStyle = ({style: componentStyle}, {style: authorStyle}) => {
+	return bothOrEither(merge, componentStyle, authorStyle);
+};
 
 /**
  * Creates the `join()` method of the styler
@@ -54,7 +54,7 @@ const mergeStyle = rUseWith(bothOrEither(rMerge), [rProp('style'), rProp('style'
  */
 const join = (cfg) => {
 	if (cfg.css) {
-		return rCompose(resolveClassNames(cfg.css), classnames);
+		return compose(resolveClassNames(cfg.css), classnames);
 	}
 
 	return classnames;
@@ -63,13 +63,13 @@ const join = (cfg) => {
 /**
  * Creates the `append()` method of the styler
  *
+ * @method append
  * @param {Object} props Render props updated by styles with `className` and `styler.join`
  * @returns {Function} `append()`
- * @method append
  */
 const append = (props) => {
 	const j = props.styler.join;
-	return props.className ? rCompose(joinClasses(props.className), j) : j;
+	return props.className ? compose(joinClasses(props.className), j) : j;
 };
 
 /**

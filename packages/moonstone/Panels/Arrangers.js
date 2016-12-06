@@ -1,12 +1,12 @@
-import quadInOut from 'eases/quad-in-out';
 import {appendTransform, clearTransform, compose, ease, endBy, reverse, slideIn, slideOut} from '@enact/ui/ViewManager/arrange';
+import both from 'ramda/src/both';
+import complement from 'ramda/src/complement';
+import either from 'ramda/src/either';
+import equals from 'ramda/src/equals';
+import prop from 'ramda/src/prop';
+import quadInOut from 'eases/quad-in-out';
 import rCompose from 'ramda/src/compose';
-import rEquals from 'ramda/src/equals';
-import rProp from 'ramda/src/prop';
-import rBoth from 'ramda/src/both';
-import rComplement from 'ramda/src/complement';
-import rWhen from 'ramda/src/when';
-import rEither from 'ramda/src/either';
+import when from 'ramda/src/when';
 
 import {breadcrumbWidth} from './Breadcrumb';
 
@@ -74,9 +74,9 @@ const offsetForBreadcrumbs = ({node, percent}) => {
 // Set of conditions used to guard offsetForBreadcrumbs. The offset should be applied when
 // transitioning to any panel other than the first and also for the leave transition when moving to
 // the first panel because the active panel should start at the offset before moving right offscreen
-const toFirst = rCompose(rEquals(0), rProp('to'));
-const toFirstReverse = rBoth(toFirst, rProp('reverseTransition'));
-const notToFirst = rComplement(toFirst);
+const toFirst = rCompose(equals(0), prop('to'));
+const toFirstReverse = both(toFirst, prop('reverseTransition'));
+const notToFirst = complement(toFirst);
 
 /**
  * Arranger that slides panels in from the right and out to the left allowing space for the single
@@ -85,6 +85,6 @@ const notToFirst = rComplement(toFirst);
  * @type {Arranger}
  */
 export const ActivityArranger = {
-	enter: compose(panelEnter, reverse(rWhen(rEither(notToFirst, toFirstReverse), offsetForBreadcrumbs))),
-	leave: compose(panelLeave, rWhen(notToFirst, offsetForBreadcrumbs))
+	enter: compose(panelEnter, reverse(when(either(notToFirst, toFirstReverse), offsetForBreadcrumbs))),
+	leave: compose(panelLeave, when(notToFirst, offsetForBreadcrumbs))
 };

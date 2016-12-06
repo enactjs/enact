@@ -6,12 +6,12 @@
 
 import kind from '@enact/core/kind';
 import {checkDefaultBounds} from '@enact/ui/validators/PropTypeValidators';
-import rClamp from 'ramda/src/clamp';
+import clamp from 'ramda/src/clamp';
 import React, {PropTypes} from 'react';
 
 import css from './ProgressBar.less';
 
-const progressToPercent = (value, max, min) => rClamp(min, max, (value / max) * 100) + '%';
+const progressToPercent = (value, max, min) => clamp(min, max, (value / max) * 100) + '%';
 
 /**
  * {@link moonstone/ProgressBar.ProgressBar} is a component that can display the progress of a

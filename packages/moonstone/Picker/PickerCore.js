@@ -6,9 +6,9 @@
  */
 
 import * as jobs from '@enact/core/jobs';
-import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
-import rClamp from 'ramda/src/clamp';
+import clamp from 'ramda/src/clamp';
 import React from 'react';
+import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
 
 import Icon from '../Icon';
 import IconButton from '../IconButton';
@@ -258,7 +258,7 @@ const PickerCore = class extends React.Component {
 
 	computeNextValue = (delta) => {
 		const {min, max, value, wrap} = this.props;
-		return wrap ? wrapRange(min, max, value + delta) : rClamp(min, max, value + delta);
+		return wrap ? wrapRange(min, max, value + delta) : clamp(min, max, value + delta);
 	}
 
 	isButtonDisabled = (delta) => {

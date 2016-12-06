@@ -1,4 +1,4 @@
-import rCurry from 'ramda/src/curry';
+import curry from 'ramda/src/curry';
 
 /**
  * Determines if `item` is selected
@@ -9,7 +9,7 @@ import rCurry from 'ramda/src/curry';
  * @returns	{Boolean}				`true` if item is equal to or contained in `selected`
  * @public
  */
-const isSelected = rCurry(function (item, selected) {
+const isSelected = curry(function (item, selected) {
 	return item === selected || Array.isArray(selected) && selected.indexOf(item) >= 0;
 });
 
@@ -29,7 +29,7 @@ const isSelected = rCurry(function (item, selected) {
  * @returns {*|Array}				The updated selection
  * @public
  */
-const select = rCurry(function (mode, item, selected) {
+const select = curry(function (mode, item, selected) {
 	if (mode === 'radio') {
 		// When selection is disabled, when selecting only 1, or when selecting the
 		// first of multiple, we can forward the source event as is.

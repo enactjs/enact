@@ -4,7 +4,7 @@
  * @module core/dispatcher
  */
 
-import rCurry from 'ramda/src/curry';
+import curry from 'ramda/src/curry';
 
 import getListeners from './listeners';
 
@@ -19,7 +19,7 @@ import getListeners from './listeners';
  * @memberof core/dispatcher
  * @private
  */
-const invoker = rCurry(function (ev, fn) {
+const invoker = curry(function (ev, fn) {
 	try {
 		fn(ev);
 	} catch (e) {

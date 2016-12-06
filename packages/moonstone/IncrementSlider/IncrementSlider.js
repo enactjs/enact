@@ -3,7 +3,7 @@ import {throttleJob} from '@enact/core/jobs';
 import {Spottable} from '@enact/spotlight';
 import Pressable from '@enact/ui/Pressable';
 import {checkDefaultBounds} from '@enact/ui/validators/PropTypeValidators';
-import rClamp from 'ramda/src/clamp';
+import clamp from 'ramda/src/clamp';
 import React, {PropTypes} from 'react';
 
 
@@ -240,7 +240,7 @@ class IncrementSlider extends React.Component {
 		const {min, max, step} = this.props;
 		let increaseAmt = this.state.value + step;
 
-		increaseAmt = rClamp(min, max, increaseAmt);
+		increaseAmt = clamp(min, max, increaseAmt);
 		this.setState({value: increaseAmt}, this.onChange);
 	}
 
@@ -248,7 +248,7 @@ class IncrementSlider extends React.Component {
 		const {min, max, step} = this.props;
 		let decreaseAmt = this.state.value - step;
 
-		decreaseAmt = rClamp(min, max, decreaseAmt);
+		decreaseAmt = clamp(min, max, decreaseAmt);
 		this.setState({value: decreaseAmt}, this.onChange);
 	}
 

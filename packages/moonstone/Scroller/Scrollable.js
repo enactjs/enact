@@ -6,9 +6,9 @@
  * @module moonstone/Scroller/Scrollable
  */
 
+import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import hoc from '@enact/core/hoc';
-import rClamp from 'ramda/src/clamp';
 import React, {Component, PropTypes} from 'react';
 import ri from '@enact/ui/resolution';
 
@@ -416,9 +416,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 
 			if (isVertical) {
-				this.accumulatedTargetY = rClamp(0, this.bounds.maxTop, this.accumulatedTargetY + delta);
+				this.accumulatedTargetY = clamp(0, this.bounds.maxTop, this.accumulatedTargetY + delta);
 			} else if (isHorizontal) {
-				this.accumulatedTargetX = rClamp(0, this.bounds.maxLeft, this.accumulatedTargetX + delta);
+				this.accumulatedTargetX = clamp(0, this.bounds.maxLeft, this.accumulatedTargetX + delta);
 			}
 
 			this.start(this.accumulatedTargetX, this.accumulatedTargetY, true, silent);
@@ -442,13 +442,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		setScrollLeft (v) {
 			this.dirHorizontal = Math.sign(v - this.scrollLeft);
-			this.scrollLeft = rClamp(0, this.bounds.maxLeft, v);
+			this.scrollLeft = clamp(0, this.bounds.maxLeft, v);
 			this.updateThumb(this.scrollbarHorizontalRef);
 		}
 
 		setScrollTop (v) {
 			this.dirVertical = Math.sign(v - this.scrollTop);
-			this.scrollTop = rClamp(0, this.bounds.maxTop, v);
+			this.scrollTop = clamp(0, this.bounds.maxTop, v);
 			this.updateThumb(this.scrollbarVerticalRef);
 		}
 
@@ -462,8 +462,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				this.doScrollStart();
 			}
 
-			targetX = rClamp(0, this.bounds.maxLeft, targetX);
-			targetY = rClamp(0, this.bounds.maxTop, targetY);
+			targetX = clamp(0, this.bounds.maxLeft, targetX);
+			targetY = clamp(0, this.bounds.maxTop, targetY);
 
 			if ((bounds.maxLeft - targetX) < epsilon) {
 				targetX = bounds.maxLeft;
