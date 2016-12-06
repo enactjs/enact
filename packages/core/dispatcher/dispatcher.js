@@ -9,6 +9,15 @@ import R from 'ramda';
 import getListeners from './listeners';
 
 /**
+ * Checks if the default target of `document` exists before returning it, otherwise returns `false`.
+ *
+ * @returns {Node|Boolean}
+ * @memberof core/dispatcher
+ * @private
+ */
+const getDefaultTarget = () => typeof document !== 'undefined' && document;
+
+/**
  * Wraps event callbacks with a try-catch block to prevent unrelated code from blocking
  *
  * @function
@@ -59,10 +68,7 @@ const dispatcher = function (ev) {
  * @returns {undefined}
  * @memberof core/dispatcher
  */
-const on = function (name, fn, target) {
-	if (!target && typeof document !== 'undefined') {
-		target = document;
-	}
+const on = function (name, fn, target = getDefaultTarget()) {
 	if (target) {
 		const listeners = getListeners(target, name);
 
@@ -84,10 +90,7 @@ const on = function (name, fn, target) {
  * @returns {undefined}
  * @memberof core/dispatcher
  */
-const off = function (name, fn, target) {
-	if (!target && typeof document !== 'undefined') {
-		target = document;
-	}
+const off = function (name, fn, target = getDefaultTarget()) {
 	if (target) {
 		const listeners = getListeners(target, name);
 		const index = listeners.indexOf(fn);
