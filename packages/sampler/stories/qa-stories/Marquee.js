@@ -1,4 +1,4 @@
-import {MarqueeText} from '@enact/moonstone/Marquee';
+import {MarqueeController, MarqueeText} from '@enact/moonstone/Marquee';
 import Item from '@enact/moonstone/Item';
 import {Spottable} from '@enact/spotlight';
 import React from 'react';
@@ -6,6 +6,7 @@ import {storiesOf} from '@kadira/storybook';
 import {withKnobs, boolean, number, select} from '@kadira/storybook-addon-knobs';
 
 const SpottableMarquee = Spottable(MarqueeText);
+const Controller = MarqueeController('div');
 
 const LTR = [
 	'The quick brown fox jumped over the lazy dog.  The bean bird flies at sundown.',
@@ -56,6 +57,28 @@ storiesOf('Marquee')
 			>
 				{select('children', RTL, RTL[0])}
 			</MarqueeText>
+		)
+	)
+
+	.addWithInfo(
+		'Synchronized',
+		() => (
+			<Controller style={{width: '400px'}}>
+				{LTR.map((children, index) => (
+					<MarqueeText
+						disabled={boolean('disabled', false)}
+						key={index}
+						marqueeDelay={number('marqueeDelay', 1000)}
+						marqueeDisabled={boolean('marqueeDisabled', false)}
+						marqueeOn={select('marqueeOn', ['hover', 'render'], 'render')}
+						marqueeOnRenderDelay={number('marqueeOnRenderDelay', 1000)}
+						marqueeResetDelay={number('marqueeResetDelay', 1000)}
+						marqueeSpeed={number('marqueeSpeed', 60)}
+					>
+						{children}
+					</MarqueeText>
+				))}
+			</Controller>
 		)
 	)
 

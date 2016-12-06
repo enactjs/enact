@@ -46,7 +46,7 @@ const
 	// in isomorphic mode.
 	rAF = (typeof window === 'object') ? window.requestAnimationFrame : function () {},
 	cAF = (typeof window === 'object') ? window.cancelAnimationFrame : function () {},
-	perf = (typeof window === 'object') ? window.performance : {};
+	perf = (typeof window === 'object') ? window.performance : {now: Date.now};
 
 /**
  * {@link moonstone/Scroller/ScrollAnimator.ScrollAnimator} is the class

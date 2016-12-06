@@ -40,7 +40,7 @@ const invoker = curry(function (ev, fn) {
  */
 const dispatcher = function (ev) {
 	const name = ev.type;
-	const listeners = getListeners(ev.target, name);
+	const listeners = getListeners(ev.currentTarget, name);
 
 	if (listeners) {
 		const inv = invoker(ev);
