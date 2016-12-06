@@ -121,8 +121,7 @@ const TransitionBase = kind({
 	},
 
 	computed: {
-		className: ({className, direction, duration, timingFunction, type, visible, styler}) => styler.join(
-			className,
+		className: ({direction, duration, timingFunction, type, visible, styler}) => styler.append(
 			visible ? 'shown' : 'hidden',
 			direction && css[direction],
 			duration && css[duration],
@@ -131,19 +130,21 @@ const TransitionBase = kind({
 		),
 		style: ({clipHeight, type, visible, style}) => type === 'clip' ? {
 			...style,
-			height: (visible) ? clipHeight : null,
+			height: visible ? clipHeight : null,
 			overflow: 'hidden'
 		} : style,
-		childRef: ({childRef, noAnimation}) => !noAnimation && childRef || null
+		childRef: ({childRef, noAnimation}) => noAnimation ? null : childRef
 	},
 
-	render: ({childRef, children, type, ...rest}) => {
+	render: ({childRef, children, noAnimation, type, visible, ...rest}) => {
 		delete rest.clipHeight;
 		delete rest.direction;
 		delete rest.duration;
-		delete rest.noAnimation;
 		delete rest.timingFunction;
-		delete rest.visible;
+
+		if (noAnimation && !visible) {
+			return null;
+		}
 
 		if (type === 'slide') {
 			return (
