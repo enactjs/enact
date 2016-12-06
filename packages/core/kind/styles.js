@@ -32,7 +32,7 @@ const resolveClassNames = curry((css, className) => {
 });
 
 // Takes a styles config object and either resolves `className` with `css` or `className` iself
-const localClassName = ({css, className}) => propOrSelf(css, className) || '';
+const localClassName = ({css, className}) => resolveClassNames(css, className) || '';
 
 // Merges the locally-resolved className and the className from the props
 const mergeClassName = (config, {className}) => {
@@ -107,8 +107,15 @@ const append = (props) => {
 const styles = (cfg, props) => {
 	const prop = cfg.prop || 'className';
 
-	props.style = mergeStyle(cfg, props);
-	props[prop] = mergeClassName(cfg, props);
+	const style = mergeStyle(cfg, props);
+	if (style) {
+		props.style = style;
+	}
+
+	const className = mergeClassName(cfg, props);
+	if (className) {
+		props[prop] = className;
+	}
 
 	// styler should not be automatically spread onto children
 	addInternalProp(props, 'styler', {

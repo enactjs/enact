@@ -16,6 +16,7 @@ import lte from 'ramda/src/lte';
 import prop from 'ramda/src/prop';
 import propEq from 'ramda/src/propEq';
 import React from 'react';
+import remove from 'ramda/src/remove';
 import unionWith from 'ramda/src/unionWith';
 import useWith from 'ramda/src/useWith';
 
@@ -300,7 +301,7 @@ class TransitionGroup extends React.Component {
 
 		this.setState(function (state) {
 			const index = indexOfChild(key, state.children);
-			return {children: state.children.splice(index, 1)};
+			return {children: remove(index, 1, state.children)};
 		});
 	}
 
