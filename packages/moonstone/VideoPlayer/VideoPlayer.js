@@ -28,7 +28,12 @@ const VideoPlayerBase = class extends React.Component {
 	static displayName = VideoPlayerBase;
 
 	static propTypes = {
+		jumpBy: React.PropTypes.number,
 		title: React.PropTypes.string
+	}
+
+	static defaultProps = {
+		jumpBy: 100
 	}
 
 	constructor (props) {
@@ -85,7 +90,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	render () {
-		const {children, title, infoComponents, leftComponents, rightComponents, ...rest} = this.props;
+		const {children, title, jumpBy, infoComponents, leftComponents, rightComponents, ...rest} = this.props;
 		// if (this.state.videoSource !== children) {
 		// 	this.reloadVideo();
 		// 	this.setState('videoSource', children);
@@ -139,9 +144,9 @@ const VideoPlayerBase = class extends React.Component {
 									<div>
 										<div className={css.controlButtons}> {/* rtl={false} */}
 											<IconButton backgroundOpacity="translucent" onClick={this.send('seek', 0)}>skipbackward</IconButton>
-											<IconButton backgroundOpacity="translucent" onClick={this.jump(-10)}>backward</IconButton>
+											<IconButton backgroundOpacity="translucent" onClick={this.jump(-1 * jumpBy)}>backward</IconButton>
 											<IconButton backgroundOpacity="translucent" onClick={this.send('togglePlay')}>play</IconButton>
-											<IconButton backgroundOpacity="translucent" onClick={this.jump(10)}>forward</IconButton>
+											<IconButton backgroundOpacity="translucent" onClick={this.jump(jumpBy)}>forward</IconButton>
 											<IconButton backgroundOpacity="translucent" onClick={this.send('seek', (this.video ? this.video.videoEl.duration : 0))}>skipforward</IconButton>
 										</div>
 									</div>
