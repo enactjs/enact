@@ -1,6 +1,8 @@
 # Change Log
 
-The following is a curated list of changes in the Enact project, newest changes on the top.
+The following is a curated list of changes in the Enact Sampler, newest changes on the top.
+
+## [unreleased]
 
 ## [1.0.0-alpha.4] - 2016-12-2
 
