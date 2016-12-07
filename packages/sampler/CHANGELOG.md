@@ -4,6 +4,11 @@ The following is a curated list of changes in the Enact Sampler, newest changes 
 
 ## [unreleased]
 
+### Changed
+
+- `moonstone/Item.ItemOverlay` to be in a stand-alone sample
+- samples to be up-to-date with API changes
+
 ## [1.0.0-alpha.4] - 2016-12-2
 
 ### Added

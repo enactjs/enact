@@ -12,14 +12,20 @@ ItemOverlay.propTypes = Object.assign({}, Item.propTypes, Overlay.propTypes);
 ItemOverlay.defaultProps = Object.assign({}, Item.defaultProps, Overlay.defaultProps);
 ItemOverlay.displayName = 'ItemOverlay';
 
-storiesOf('Item')
+// Set up some defaults for knobs
+// TODO: Select knob is fundamentally broken.  Need to re-write.  This will throw a console warning
+// but it will work correctly.
+const prop = {
+	autoHide: {'<null>': '<null>', 'after': 'after', 'before': 'before', 'both': 'both'}
+};
+storiesOf('Item.ItemOverlay')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'ItemOverlay',
+		'',
 		'Basic usage of ItemOverlay',
 		() => (
 			<ItemOverlay
-				autoHide={select('autoHide', ['after', 'before', 'both', 'no'], 'after')}
+				autoHide={select('autoHide', prop.autoHide, 'after')}
 				disabled={boolean('disabled', false)}
 			>
 				<Icon slot="overlayBefore">star</Icon>

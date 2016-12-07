@@ -9,6 +9,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Spinner` component's `center` and `middle` properties to a single `centered` peropty
 	that applies both horizontal and vertical centering
 - `moonstone/Popup.PopupBase` component's `onCloseButtonClicked` property to `onCloseButtonClick`
+- `moonstone/Item.ItemOverlay` component's `autoHide` property to remove the `'no'` option. The same
+	effect can be achieved by omitting the property or passing `null`.
 
 ## [1.0.0-alpha.4] - 2016-12-2
 
