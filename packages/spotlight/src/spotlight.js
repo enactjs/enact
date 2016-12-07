@@ -12,6 +12,7 @@
 import R from 'ramda';
 import Accelerator from '@enact/core/Accelerator';
 import {startJob} from '@enact/core/jobs';
+import {spottableClass} from './spottable';
 
 const spotlightRootContainerName = 'spotlightRootDecorator';
 const SpotlightAccelerator = new Accelerator();
@@ -1260,6 +1261,21 @@ const Spotlight = (function() {
 		 */
 		setPointerMode: function (pointerMode) {
 			_pointerMode = pointerMode;
+		},
+
+		/**
+		 * Gets the muted mode value of a spottable element.
+		 *
+		 * @param {Object} [elem] The dom element used to determine the muted status.
+		 * @return {Boolean} `true` if the passed-in control is in muted mode.
+		 * @public
+		 */
+		isMuted: function(elem) {
+			if (!elem) {
+				return false;
+			}
+
+			return matchSelector(elem, '[data-container-muted="true"] .' + spottableClass);
 		}
 	};
 

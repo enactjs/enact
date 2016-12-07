@@ -68,5 +68,24 @@ storiesOf('Spotlight')
 				</div>
 			</div>
 		)
+	)
+	.addWithInfo(
+		'Muted Containers',
+		() => (
+			<div>
+				<p>
+					The container below will be muted. The items within the container can gain
+					focus, but they should not have a typical spotlight highlight. Instead, they
+					should appear as though they do not have focus and they should not generate
+					onFocus or onBlur events in the action logger.
+				</p>
+				<div style={{display: 'flex'}}>
+					<Container style={style.container} data-container-muted>
+						<Item onFocus={action('onFocus')} onBlur={action('onBlur')}>1</Item>
+						<Item onFocus={action('onFocus')} onBlur={action('onBlur')}>2</Item>
+						<Item onFocus={action('onFocus')} onBlur={action('onBlur')}>3</Item>
+					</Container>
+				</div>
+			</div>
+		)
 	);
-

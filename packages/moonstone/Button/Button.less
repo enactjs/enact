@@ -181,3 +181,16 @@
 		}
 	}
 }
+
+[data-container-muted='true'] {
+	.button {
+		&:global(.spottable):focus {
+			background-color: transparent;
+			color: @moon-button-text-color;
+
+			.bg {
+				background-color: @moon-button-background-color;
+			}
+		}
+	}
+}

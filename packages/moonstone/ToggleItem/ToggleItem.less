@@ -20,3 +20,11 @@
 		opacity: 0.3;
 	}
 }
+
+[data-container-muted='true'] {
+	.toggleItem {
+		&:global(.spottable):focus .icon:not(.selected) {
+			visibility: hidden;
+		}
+	}
+}
