@@ -23,6 +23,7 @@ const
 	holdTime = 50,
 	scrollWheelMultiplierForDeltaPixel = 2,
 	pixelPerLine = ri.scale(40) * scrollWheelMultiplierForDeltaPixel,
+	paginationPageMultiplier = 0.8,
 	epsilon = 1,
 	// spotlight
 	doc = (typeof window === 'object') ? window.document : {},
@@ -402,7 +403,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			const
 				isHorizontal = this.canScrollHorizontally() && orientation === 'horizontal',
 				isVertical = this.canScrollVertically() && orientation === 'vertical',
-				pageDistance = isVertical ? this.bounds.clientHeight : this.bounds.clientWidth;
+				pageDistance = (isVertical ? this.bounds.clientHeight : this.bounds.clientWidth) * paginationPageMultiplier;
 
 			this.scrollToAccumulatedTarget(pageDistance * direction, isHorizontal, isVertical);
 		}
