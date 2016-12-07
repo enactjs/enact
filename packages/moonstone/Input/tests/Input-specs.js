@@ -73,7 +73,7 @@ describe('Input Specs', () => {
 	});
 
 	it('Should have dir equal to rtl when there is rtl text', function () {
-		const subject = shallow(
+		const subject = mount(
 			<Input value={'שועל החום הזריז קפץ מעל הכלב העצלן.ציפור עפה השעועית עם שקיעה.'} />
 		);
 
@@ -84,8 +84,30 @@ describe('Input Specs', () => {
 	});
 
 	it('Should have dir equal to ltr when there is ltr text', function () {
-		const subject = shallow(
+		const subject = mount(
 			<Input value={'content'} />
+		);
+
+		const expected = 'ltr';
+		const actual = subject.find('input').prop('dir');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('Should have dir equal to rtl when there is rtl text in the placeholder', function () {
+		const subject = mount(
+			<Input placeholder={'שועל החום הזריז קפץ מעל הכלב העצלן.ציפור עפה השעועית עם שקיעה.'} />
+		);
+
+		const expected = 'rtl';
+		const actual = subject.find('input').prop('dir');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('Should have dir equal to ltr when there is ltr text in the placeholder', function () {
+		const subject = mount(
+			<Input placeholder={'content'} />
 		);
 
 		const expected = 'ltr';

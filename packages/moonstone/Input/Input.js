@@ -5,6 +5,7 @@
  */
 
 import kind from '@enact/core/kind';
+import {isRtlText} from '@enact/i18n';
 import React, {PropTypes} from 'react';
 
 import css from './Input.less';
@@ -167,6 +168,7 @@ const InputBase = kind({
 
 	computed: {
 		className: ({focused, styler}) => styler.append({focused}),
+		dir: ({value, placeholder}) => isRtlText(value) || isRtlText(placeholder) ? 'rtl' : 'ltr',
 		onChange: ({onChange}) => (ev) => {
 			if (onChange) {
 				onChange({value: ev.target.value});
@@ -174,7 +176,7 @@ const InputBase = kind({
 		}
 	},
 
-	render: ({disabled, iconAfter, iconBefore, onChange, placeholder, type, value, ...rest}) => {
+	render: ({dir, disabled, iconAfter, iconBefore, onChange, placeholder, type, value, ...rest}) => {
 		delete rest.dismissOnEnter;
 		delete rest.focused;
 
@@ -182,6 +184,7 @@ const InputBase = kind({
 			<div {...rest} disabled={disabled}>
 				<InputDecoratorIcon position="before">{iconBefore}</InputDecoratorIcon>
 				<input
+					dir={dir}
 					className={css.input}
 					disabled={disabled}
 					onChange={onChange}

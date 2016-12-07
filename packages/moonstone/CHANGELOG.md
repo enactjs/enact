@@ -2,6 +2,20 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+
+### Changed
+
+
+### Removed
+
+
+### Fixed
+- Input direction will now show ellipses on the correct side based on the `value` or `placeholder`'s content.
+
 ## [1.0.0-alpha.4] - 2016-12-2
 
 ### Added
@@ -34,8 +48,8 @@ imported, as they already import the general mixins.
 
 ### Fixed
 
-- Joined picker so that it now has correct animation when using the mouse wheel.
-- Input direction will now show ellipses on the correct side based on the `value`'s content.
+- Joined picker so that it now has correct animation when using the mouse wheel
+- Bug in DatePicker/TimePicker that prevented setting of value earlier than 1969
 
 ## [1.0.0-alpha.3] - 2016-11-8
 
