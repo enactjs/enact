@@ -177,11 +177,15 @@ const DatePickerController = class extends React.Component {
 		}
 	}
 
+	/**
+	 * Converts a JavaScript Date to unix time
+	 *
+	 * @param	{Date}	date	A Date to convert
+	 *
+	 * @returns	{undefined}
+	 */
 	toTime (date) {
-		if (date && this.locale) {
-			const time = date.getTime();
-			return this.toIDate(time).getTime();
-		}
+		return date && date.getTime();
 	}
 
 	/**
@@ -192,7 +196,7 @@ const DatePickerController = class extends React.Component {
 	 * @returns {Number}			Updated internal value
 	 */
 	updateValue = (value) => {
-		const newValue = DateFactory(value).getTime();
+		const newValue = DateFactory(value).getTimeExtended();
 
 		this.setState({
 			value: newValue

@@ -9,7 +9,6 @@
  * Licensed under the MPL license.
  */
 
-import R from 'ramda';
 import Accelerator from '@enact/core/Accelerator';
 import {startJob} from '@enact/core/jobs';
 
@@ -921,7 +920,7 @@ const Spotlight = (function() {
 		}
 
 		const keyCode = evt.keyCode;
-		if (!_directions[keyCode] && !R.contains(keyCode, _enterKeyCodes)) {
+		if (!_directions[keyCode] && _enterKeyCodes.indexOf(keyCode) >= 0) {
 			return;
 		}
 
@@ -935,10 +934,14 @@ const Spotlight = (function() {
 		}
 
 		const keyCode = evt.keyCode;
-		const validKeyCodes = [..._enterKeyCodes, _pointerHideKeyCode, _pointerShowKeyCode];
 		const direction = _directions[keyCode];
 
-		if (!direction && !R.contains(keyCode, validKeyCodes)) {
+		if (!direction && !(
+				_pointerHideKeyCode === keyCode ||
+				_pointerShowKeyCode === keyCode ||
+				_enterKeyCodes.indexOf(keyCode)
+			)
+		) {
 			return;
 		}
 
@@ -982,7 +985,6 @@ const Spotlight = (function() {
 		}
 
 		const target = getNavigableTarget(evt.target); // account for child controls
-		_pointerMode = true;
 
 		if (target && target !== getCurrent()) { // moving over a focusable element
 			focusElement(target, getContainerId(target), true);
@@ -991,6 +993,8 @@ const Spotlight = (function() {
 	}
 
 	function onMouseMove (evt) {
+		_pointerMode = true;
+
 		// cache last-known pointer coordinates
 		_pointerX = evt.clientX;
 		_pointerY = evt.clientY;
@@ -1248,6 +1252,17 @@ const Spotlight = (function() {
 		 */
 		getPointerMode: function () {
 			return _pointerMode;
+		},
+
+		/**
+		 * Sets the current pointer mode
+		 *
+		 * @param {Boolean} pointerMode The value of the pointer mode. This determines how
+		 * spotlight manages focus change behaviors.
+		 * @public
+		 */
+		setPointerMode: function (pointerMode) {
+			_pointerMode = pointerMode;
 		}
 	};
 

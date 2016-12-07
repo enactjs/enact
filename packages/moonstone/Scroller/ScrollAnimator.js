@@ -5,7 +5,7 @@
  * @private
  */
 
-import R from 'ramda';
+import clamp from 'ramda/src/clamp';
 
 const
 	// Use eases library
@@ -39,13 +39,13 @@ const
 	maxVelocity = 100,        // speed cap
 	stopVelocity = 0.04,      // velocity to stop
 	velocityFriction = 0.95,  // velocity decreasing factor
-	clampVelocity = R.clamp(-maxVelocity, maxVelocity),
+	clampVelocity = clamp(-maxVelocity, maxVelocity),
 
 	// These guards probably aren't necessary because there shouldn't be any scrolling occurring
 	// in isomorphic mode.
 	rAF = (typeof window === 'object') ? window.requestAnimationFrame : function () {},
 	cAF = (typeof window === 'object') ? window.cancelAnimationFrame : function () {},
-	perf = (typeof window === 'object') ? window.performance : {};
+	perf = (typeof window === 'object') ? window.performance : {now: Date.now};
 
 /**
  * {@link moonstone/Scroller/ScrollAnimator.ScrollAnimator} is the class

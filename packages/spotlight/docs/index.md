@@ -1,4 +1,7 @@
-# SPOTLIGHT DOCUMENTATION #
+---
+title: Spotlight
+---
+
 
 1. [What Is Spotlight?](#1)
 2. [Modes](#2)
@@ -7,11 +10,10 @@
 5. [SpotlightRootDecorator](#5)
 6. [Spottable](#6)
 7. [Container](#7)
-8. [Focusable](#8)
-9. [Events](#9)
-10. [Spotlight API](#10)
-11. [HOC Parameters](#11)
-12. [Examples](#12)
+8. [Events](#8)
+9. [Spotlight API](#9)
+10. [HOC Parameters](#10)
+11. [Examples](#11)
 
 <a name="1"></a>
 ## 1. What Is Spotlight?
@@ -156,50 +158,7 @@ const Container = SpotlightContainerDecorator(kind({
 
 
 <a name="8"></a>
-## 8. Focusable
-
-Sometimes it's necessary to change the style of an outer-control based on the
-focus state of an inner-control--i.e.: in the case of a decorated spottable control.
-The `SpotlightFocusableDecorator` HOC -- when used with the `SpotlightContainerDecorator`
-HOC -- adds focus and state management in these scenarios by adding the CSS 
-class `.focused` to your spottable outer-control when the spottable inner-control 
-is focused. This allows decorated controls to be styled on a  per-kind basis 
-using `.<kindClass>.focused` selectors.
-
-The `SpotlightFocusableDecorator` HOC provides certain properties that can be used
-to determine which element in your control should be designated as the inner or 
-outer elements, allowing for complex and configurable controls.
-
-To define a focusable control, wrap your base control with the `SpotlightFocusableDecorator`
-& `SpotlightContainerDecorator` HOCs, and designate which controls should receive the
-`onFocus`, `onKeyDown`, `spotlightDisabled`, and `decorated` properties:
-
-```javascript
-import kind from 'enact-core/kind';
-import {Spottable, SpotlightContainerDecorator, SpotlightFocusableDecorator} from 'enact-spotlight';
-
-const SpottableComponent = Spottable(kind({
-	name: 'SpottableComponent',
-	render: (props) => {
-		return (
-			<div {...props} />
-		);
-	}
-}));
-const FocusableComponent = SpotlightContainerDecorator(SpotlightFocusableDecorator(kind({
-	name: 'FocusableComponent',
-	render: ({className, onFocus, onKeyDown, spotlightDisabled, ...rest}) => {
-		return (
-			<SpottableComponent className={className} onFocus={onFocus} onKeyDown={onKeyDown} spotlightDisabled={spotlightDisabled}>
-				<SpottableComponent {...rest} decorated spotlightDisabled={!spotlightDisabled} />
-			</SpottableComponent>
-		);
-	}
-})));
-```
-
-<a name="9"></a>
-## 9. EVENTS ##
+## 8. EVENTS ##
 
 Spotlight uses native DOM events to navigate the available spottable controls and does not
 directly dispatch synthetic events to the currently spotted control.
@@ -208,8 +167,8 @@ To determine if spotlight is the cause of a specific spotted control's key event
 validate the native `target` property of the key event against `document.activeElement`.
 
 
-<a name="10"></a>
-## 10. SPOTLIGHT API ##
+<a name="9"></a>
+## 9. SPOTLIGHT API ##
 
 In order to use the Spotlight API, simply import Spotlight into your application and call
 any of its available methods to manipulate how your application responds to navigation
@@ -238,8 +197,8 @@ matches `selector`. This method has no effect if Spotlight is paused.
 Moves focus in the specified direction of `selector`. If `selector` is not specified,
 Spotlight will move in the given direction of the currently spotted control.
 
-<a name="11"></a>
-## 11. HOC PARAMETERS ##
+<a name="10"></a>
+## 10. HOC PARAMETERS ##
 
 ### Spottable ###
 `spotlightDisabled`
@@ -282,28 +241,8 @@ import Component from './Component';
 const Container = SpotlightContainerDecorator({enterTo: 'last-focused', restrict: 'self-only'}, Component);
 ```
 
-### Focusable ###
-`useEnterKey`
-+ Type: [boolean]
-+ Default: `false`
-
-When `true`, focus will not be moved to the inner-control unless the `<enter>`
-key has been pressed.
-
-`pauseSpotlightOnFocus`
-+ Type: [boolean]
-+ Default: `false`
-
-When `true`, Spotlight will be paused while the inner-control has focus.
-
-```javascript
-import {SpotlightFocusableDecorator} from 'enact-spotlight';
-import Component from './Component';
-const Focusable = SpotlightFocusableDecorator({useEnterKey: true, pauseSpotlightOnFocus: true}, Component);
-```
-
-<a name="12"></a>
-## 12. Examples ##
+<a name="11"></a>
+## 11. Examples ##
 
 #### Basic usage
 
