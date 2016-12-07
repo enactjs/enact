@@ -5,7 +5,7 @@
  * @private
  */
 
-import R from 'ramda';
+import clamp from 'ramda/src/clamp';
 
 const
 	// Use eases library
@@ -34,12 +34,12 @@ const
 		}
 	},
 
+	// for simulate()
 	frameTime = 16.0,         // time for one frame
 	maxVelocity = 100,        // speed cap
 	stopVelocity = 0.04,      // velocity to stop
 	velocityFriction = 0.95,  // velocity decreasing factor
-
-	clampVelocity = R.clamp(-maxVelocity, maxVelocity),
+	clampVelocity = clamp(-maxVelocity, maxVelocity),
 
 	// These guards probably aren't necessary because there shouldn't be any scrolling occurring
 	// in isomorphic mode.
@@ -57,16 +57,16 @@ const
  */
 class ScrollAnimator {
 	rAFId = null
-	timingFunction = 'ease-out'
+	type = 'ease-out'
 
 	/**
-	 * @param {String|null} timingFunction - Timing function to use for animation.  Must be one of
+	 * @param {String|null} type - Timing function type for list scroll animation.  Must be one of
 	 *	`'linear'`, `'ease-in'`, `'ease-out'`, or `'ease-in-out'`, or null. If `null`, defaults to
 	 *	`'ease-out'`.
 	 * @constructor
 	 */
-	constructor (timingFunction) {
-		this.timingFunction = timingFunction || this.timingFunction;
+	constructor (type) {
+		this.timingFunction = timingFunctions[type || this.type];
 	}
 
 	simulate (sourceX, sourceY, velocityX, velocityY) {
@@ -92,9 +92,8 @@ class ScrollAnimator {
 		};
 	}
 
-	animate (cbScrollAnimationRaf) {
+	animate (rAFCallbackFuntion) {
 		const
-			// start timestamp
 			startTimeStamp = perf.now(),
 			fn = () => {
 				const
@@ -106,68 +105,12 @@ class ScrollAnimator {
 					curTime = curTimeStamp - startTimeStamp;
 
 				this.rAFId = rAFId;
-				cbScrollAnimationRaf(curTime);
+				rAFCallbackFuntion(curTime);
 			};
 
 		this.rAFId = rAF(fn);
 	}
 
-	/**
-	 * Start an animation
-	 *
-	 * ```
-	 * let animator = new ScrollAnimator();
-	 *
-	 * animator.start({
-	 * 	sourceX: this.scrollLeft,
-	 * 	sourceY: this.scrollTop,
-	 * 	targetX: this.scrollLeft + 100,
-	 * 	targetY: this.scrollTop + 100,
-	 * 	duration: 500
-	 * });
-	 * ```
-	 *
-	 * @param {Object} options - Animation options
-	 * @param {Number} options.sourceX - source absolute position x
-	 * @param {Number} options.sourceY - source absolute position y
-	 * @param {Number} options.targetX - target absolute position x
-	 * @param {Number} options.targetY - target absolute position y
-	 * @param {Number} options.duration - the duration to move to the target
-	 * @param {Function} options.cbScrollAnimationHandler - A method to call for each animation
-	 * @returns {undefined}
-	 * @public
-	 */
-	start ({
-		sourceX, sourceY,
-		targetX, targetY,
-		duration = 500,
-		cbScrollAnimationHandler
-	}) {
-		// Rather than calling back to cbScrollAnimationHandler so it can call this.animate, start
-		// should probably make the first animate call. Also, seems odd to take an object,
-		// deconstruct it only to create new objects to pass to the callback which it immediately
-		// deconstructs again. In general, I'm not sure it's necessary for the animator to know
-		// start/end values. It is simpler to let it only be concerned with managing the rAF and
-		// the easing functions over a duration. The Scrollable can then calculate its scroll
-		// position based on its internal start/end data.
-		cbScrollAnimationHandler(
-			{sourceX, sourceY},
-			{targetX, targetY, duration},
-			{
-				// Curry these at create time. Alternatively, since you have a known usage, you can
-				// create your own pseudo-curried versions and skip the ramda dependency.
-				// (sourceX, targetX, duration) => (currentTime) => { /* function body */ }
-				calcPosX: R.curry(timingFunctions[this.timingFunction])(sourceX, targetX, duration),
-				calcPosY: R.curry(timingFunctions[this.timingFunction])(sourceY, targetY, duration)
-			}
-		);
-	}
-
-	/**
-	 * Stop an animation
-	 * @returns {undefined}
-	 * @public
-	 */
 	stop () {
 		if (this.rAFId !== null ) {
 			cAF(this.rAFId);
