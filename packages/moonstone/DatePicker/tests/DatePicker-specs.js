@@ -58,4 +58,38 @@ describe('DatePicker', () => {
 
 		expect(actual).to.deep.equal(expected);
 	});
+
+	it('should accept a JavaScript Date for its value prop', function () {
+		const subject = mount(
+			<DatePicker title="Date" value={new Date(2000, 0, 1)} />
+		);
+
+		const yearPicker = subject.find('DateComponentRangePicker').findWhere(p => {
+			return p.type().displayName === 'DateComponentRangePicker' && p.prop('label') === 'year';
+		});
+
+		const expected = 2000;
+		const actual = yearPicker.prop('value');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should accept an updated JavaScript Date for its value prop', function () {
+		const subject = mount(
+			<DatePicker title="Date" value={new Date(2000, 0, 1)} />
+		);
+
+		subject.setProps({
+			value: new Date(1900, 0, 1)
+		});
+
+		const yearPicker = subject.find('DateComponentRangePicker').findWhere(p => {
+			return p.type().displayName === 'DateComponentRangePicker' && p.prop('label') === 'year';
+		});
+
+		const expected = 1900;
+		const actual = yearPicker.prop('value');
+
+		expect(actual).to.equal(expected);
+	});
 });

@@ -34,8 +34,8 @@ storiesOf('Input')
 			<StatefulInput
 				onChange={action('onChange')}
 				disabled={boolean('disabled')}
-				iconEnd={select('iconEnd', iconNames)}
-				iconStart={select('iconStart', iconNames)}
+				iconAfter={select('iconAfter', iconNames)}
+				iconBefore={select('iconBefore', iconNames)}
 				placeholder={text('placeholder')}
 				type={select('type', inputData.type, inputData.type[0])}
 				value={text('value', inputData.longText)}
@@ -48,8 +48,8 @@ storiesOf('Input')
 			<StatefulInput
 				onChange={action('onChange')}
 				disabled={boolean('disabled')}
-				iconEnd={select('iconEnd', iconNames)}
-				iconStart={select('iconStart', iconNames)}
+				iconAfter={select('iconAfter', iconNames)}
+				iconBefore={select('iconBefore', iconNames)}
 				placeholder={text('placeholder', 'Input some tall characters')}
 				type={select('type', inputData.type, inputData.type[0])}
 				value={select('value', inputData.tallText,  inputData.tallText[2])}
@@ -62,8 +62,8 @@ storiesOf('Input')
 			<StatefulInput
 				onChange={action('onChange')}
 				disabled={boolean('disabled')}
-				iconEnd={select('iconEnd', iconNames)}
-				iconStart={select('iconStart', iconNames)}
+				iconAfter={select('iconAfter', iconNames)}
+				iconBefore={select('iconBefore', iconNames)}
 				placeholder={text('placeholder')}
 				type={select('type', inputData.type, inputData.type[0])}
 				value={text('value', inputData.extraSpaceText)}
@@ -78,8 +78,8 @@ storiesOf('Input')
 					<StatefulInput
 						onChange={action('onChange')}
 						disabled={boolean('disabled')}
-						iconEnd={select('iconEnd', iconNames)}
-						iconStart={select('iconStart', iconNames)}
+						iconAfter={select('iconAfter', iconNames)}
+						iconBefore={select('iconBefore', iconNames)}
 						placeholder={text('placeholder')}
 						type={select('type', inputData.type, inputData.type[0])}
 						value={text('value1', inputData.normalText + ' one')}
@@ -87,8 +87,8 @@ storiesOf('Input')
 					<StatefulInput
 						onChange={action('onChange')}
 						disabled={boolean('disabled')}
-						iconEnd={select('iconEnd', iconNames)}
-						iconStart={select('iconStart', iconNames)}
+						iconAfter={select('iconAfter', iconNames)}
+						iconBefore={select('iconBefore', iconNames)}
 						placeholder={text('placeholder')}
 						type={select('type', inputData.type, inputData.type[0])}
 						value={text('value2', inputData.normalText + ' two')}
@@ -98,8 +98,8 @@ storiesOf('Input')
 					<StatefulInput
 						onChange={action('onChange')}
 						disabled={boolean('disabled')}
-						iconEnd={select('iconEnd', iconNames)}
-						iconStart={select('iconStart', iconNames)}
+						iconAfter={select('iconAfter', iconNames)}
+						iconBefore={select('iconBefore', iconNames)}
 						placeholder={text('placeholder')}
 						type={select('type', inputData.type, inputData.type[0])}
 						value={text('value3', inputData.normalText + ' three')}
@@ -107,8 +107,8 @@ storiesOf('Input')
 					<StatefulInput
 						onChange={action('onChange')}
 						disabled={boolean('disabled')}
-						iconEnd={select('iconEnd', iconNames)}
-						iconStart={select('iconStart', iconNames)}
+						iconAfter={select('iconAfter', iconNames)}
+						iconBefore={select('iconBefore', iconNames)}
 						placeholder={text('placeholder')}
 						type={select('type', inputData.type, inputData.type[0])}
 						value={text('value4', inputData.normalText + ' four')}
@@ -123,8 +123,8 @@ storiesOf('Input')
 			<StatefulInput
 				onChange={action('onChange')}
 				disabled={boolean('disabled')}
-				iconEnd={select('iconEnd', iconNames)}
-				iconStart={select('iconStart', iconNames)}
+				iconAfter={select('iconAfter', iconNames)}
+				iconBefore={select('iconBefore', iconNames)}
 				type={inputData.type[1]}
 				min={number('min value', inputData.minValue)}
 				max={number('max value', inputData.maxValue)}

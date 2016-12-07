@@ -11,9 +11,9 @@ import kind from '@enact/core/kind';
 import css from './Transition.less';
 
 /**
- * {@link ui/Transition.TransitionBase} is a stateless component that allows for applying transitions
- * to its child items via configurable properties and events. In general, you want to use the stateful version,
- * {@link ui/Transition.Transition}.
+ * {@link ui/Transition.TransitionBase} is a stateless component that allows for applying
+ * transitions to its child items via configurable properties and events. In general, you want to
+ * use the stateful version, {@link ui/Transition.Transition}.
  *
  * @class TransitionBase
  * @memberof ui/Transition
@@ -53,7 +53,7 @@ const TransitionBase = kind({
 
 		/**
 		 * Sets the direction of transition. Where the component will move *to*; the destination.
-		 * Supported directions are: up, right, down, left.
+		 * Supported directions are: `'up'`, `'right'`, `'down'`, `'left'`.
 		 *
 		 * @type {String}
 		 * @default 'up'
@@ -63,7 +63,8 @@ const TransitionBase = kind({
 
 		/**
 		 * Control how long the transition should take.
-		 * Supported durations are: short (250ms), long (1s). medium (500ms) is default when no others are specified.
+		 * Supported durations are: `'short'` (250ms), `'long'` (1s). `'medium'` (500ms) is default
+		 * when no others are specified.
 		 *
 		 * @type {String}
 		 * @default 'medium'
@@ -72,8 +73,27 @@ const TransitionBase = kind({
 		duration: PropTypes.oneOf(['short', 'medium', 'long']),
 
 		/**
+		 * When `true`, the transition fills its container's size.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		fit: PropTypes.bool,
+
+		/**
+		 * When `true`, transition animation is disabled. When `false`, visibility changes animate.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		noAnimation: PropTypes.bool,
+
+		/**
 		 * Customize the transition timing function.
-		 * Supported functions are: linear, ease. ease-in-out is the default when none others are specified.
+		 * Supported functions are: linear, ease. ease-in-out is the default when none others are
+		 * specified.
 		 *
 		 * @type {String}
 		 * @default 'ease-in-out'
@@ -102,8 +122,10 @@ const TransitionBase = kind({
 	},
 
 	defaultProps: {
+		noAnimation: false,
 		direction: 'up',
 		duration: 'medium',
+		fit: false,
 		timingFunction: 'ease-in-out',
 		type: 'slide',
 		visible: true
@@ -116,7 +138,8 @@ const TransitionBase = kind({
 	},
 
 	computed: {
-		className: ({direction, duration, timingFunction, type, visible, styler}) => styler.join(
+		className: ({direction, duration, fit, timingFunction, type, visible, styler}) => styler.join(
+			fit ? 'enact-fit' : null,
 			'transition',
 			visible ? 'shown' : 'hidden',
 			direction && css[direction],
@@ -124,27 +147,33 @@ const TransitionBase = kind({
 			timingFunction && css[timingFunction],
 			css[type]
 		),
-		style: ({clipHeight, type, visible}) => ({
+		style: ({clipHeight, type, visible, style}) => ({
+			...style,
 			height: ((type === 'clip') && visible) ? clipHeight : null,
 			overflow: (type === 'clip') ? 'hidden' : null
 		})
 	},
 
-	render: ({classes, children, childRef, ...rest}) => {
+	render: ({noAnimation, classes, childRef, children, visible, ...rest}) => {
 		delete rest.clipHeight;
 		delete rest.direction;
 		delete rest.duration;
+		delete rest.fit;
 		delete rest.timingFunction;
 		delete rest.type;
-		delete rest.visible;
 
-		return (
-			<div className={classes}>
-				<div {...rest} ref={childRef}>
-					{children}
+		if (!noAnimation) {
+			return (
+				<div className={classes}>
+					<div {...rest} ref={childRef}>
+						{children}
+					</div>
 				</div>
-			</div>
-		);
+			);
+		} else if (visible) {
+			return <div {...rest}>{children}</div>;
+		}
+		return null;
 	}
 });
 
@@ -201,6 +230,14 @@ class Transition extends React.Component {
 		duration: PropTypes.oneOf(['short', 'medium', 'long']),
 
 		/**
+		 * A function to run after transition for hiding is finished.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onHide: PropTypes.func,
+
+		/**
 		 * The transition timing function.
 		 * Supported functions are: `'linear'`, `'ease'` and `'ease-in-out'`
 		 *
@@ -252,6 +289,12 @@ class Transition extends React.Component {
 		}
 	}
 
+	hideDidFinish = () => {
+		if (!this.props.visible && this.props.onHide) {
+			this.props.onHide();
+		}
+	}
+
 	measureInner () {
 		if (this.childNode) {
 			this.childNode.style.height = 'auto';
@@ -271,9 +314,12 @@ class Transition extends React.Component {
 	}
 
 	render () {
-		const height = this.props.visible ? this.state.initialHeight : 0;
+		const props = Object.assign({}, this.props);
+		delete props.onHide;
+
+		const height = props.visible ? this.state.initialHeight : 0;
 		return (
-			<TransitionBase {...this.props} childRef={this.childRef} clipHeight={height} />
+			<TransitionBase {...props} childRef={this.childRef} clipHeight={height} onTransitionEnd={this.hideDidFinish} />
 		);
 	}
 }
