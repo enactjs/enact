@@ -21,9 +21,9 @@ const
 	nop = () => {},
 	perf = (typeof window === 'object') ? window.performance : {now: Date.now},
 	holdTime = 50,
-	scrollWheelMultiplier = 5,
-	pixelPerLine = ri.scale(40) * scrollWheelMultiplier,
-	pixelPerScrollbarBtn = ri.scale(100),
+	scrollWheelMultiplierForDeltaPixel = 2,
+	pixelPerLine = ri.scale(40) * scrollWheelMultiplierForDeltaPixel,
+	pixelPerScrollbarBtn = ri.scale(120) * scrollWheelMultiplierForDeltaPixel,
 	epsilon = 1,
 	// spotlight
 	doc = (typeof window === 'object') ? window.document : {},
@@ -289,12 +289,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		wheel (e, isHorizontal, isVertical) {
 			const deltaMode = e.deltaMode;
-			let delta = e.deltaY;
+			let delta = (-e.nativeEvent.wheelDeltaY || e.deltaY);
 
 			if (deltaMode === 0) {
-				delta = ri.scale(delta) * scrollWheelMultiplier;
+				delta = ri.scale(delta) * scrollWheelMultiplierForDeltaPixel;
 			} else if (deltaMode === 1) { // line; firefox
-				delta = delta * pixelPerLine;
+				delta = ri.scale(delta) * pixelPerLine;
 			} else if (deltaMode === 2) { // page
 				if (isVertical) {
 					delta = delta > 0 ? this.bounds.clientHeight : -this.bounds.clientHeight;
