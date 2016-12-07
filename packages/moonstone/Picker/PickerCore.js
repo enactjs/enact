@@ -267,8 +267,11 @@ const PickerCore = class extends React.Component {
 	}
 
 	computeNextValue = (delta) => {
+		let val = 0;
 		const {min, max, value, wrap} = this.props;
-		return wrap ? wrapRange(min, max, value + delta) : clamp(min, max, value + delta);
+		if(max > 0)
+			val = wrap ? wrapRange(min, max, value + delta) : clamp(min, max, value + delta);
+		return val;
 	}
 
 	isButtonDisabled = (delta) => {
