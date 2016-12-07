@@ -120,7 +120,7 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 				props[release] = this.onMouseUp;
 			} else if (Array.isArray(release)) {
 				release.forEach((rel) => {
-					props[rel] = this.onMouseDown;
+					props[rel] = this.onMouseUp;
 				});
 			}
 			if (prop) props[prop] = this.state.pressed;
