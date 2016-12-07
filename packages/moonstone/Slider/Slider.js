@@ -42,6 +42,15 @@ const SliderBase = kind({
 		backgroundPercent: PropTypes.number,
 
 		/**
+		 * When `true`, the component is shown as disabled and does not generate events
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		disabled: PropTypes.bool,
+
+		/**
 		 * Height, in standard CSS units, of the vertical slider. Only takes
 		 * effect on a vertical oriented slider.
 		 *
@@ -165,12 +174,12 @@ const SliderBase = kind({
 		verticalWidth: ({vertical, height}) => (vertical ? {width: height} : null)
 	},
 
-	render: ({inputRef, max, min, onChange, proportionBackgroundProgress, proportionProgress, sliderBarRef, sliderRef, step, value, vertical, verticalHeight, verticalWidth, ...rest}) => {
+	render: ({disabled, inputRef, max, min, onChange, proportionBackgroundProgress, proportionProgress, sliderBarRef, sliderRef, step, value, vertical, verticalHeight, verticalWidth, ...rest}) => {
 		delete rest.backgroundPercent;
 		delete rest.pressed;
 
 		return (
-			<div {...rest} ref={sliderRef}>
+			<div {...rest} disabled={disabled} ref={sliderRef}>
 				<SliderBar
 					proportionBackgroundProgress={proportionBackgroundProgress}
 					proportionProgress={proportionProgress}
@@ -180,6 +189,7 @@ const SliderBase = kind({
 				/>
 				<input
 					className={css.input}
+					disabled={disabled}
 					type="range"
 					ref={inputRef}
 					max={max}

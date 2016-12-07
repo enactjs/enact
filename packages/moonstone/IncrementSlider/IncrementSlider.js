@@ -42,6 +42,15 @@ const IncrementSliderBase = kind({
 		backgroundPercent: PropTypes.number,
 
 		/**
+		 * When `true`, the component is shown as disabled and does not generate events
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		disabled: PropTypes.bool,
+
+		/**
 		 * Height, in standard CSS units, of the vertical increment slider. Only takes
 		 * effect on a vertical oriented slider.
 		 *
@@ -142,8 +151,8 @@ const IncrementSliderBase = kind({
 	},
 
 	computed: {
-		decrementDisabled: ({min, value}) => value <= min,
-		incrementDisabled: ({max, value}) => value >= max,
+		decrementDisabled: ({disabled, min, value}) => disabled || value <= min,
+		incrementDisabled: ({disabled, max, value}) => disabled || value >= max,
 		incrementSliderClasses: ({vertical, styler}) => styler.append({vertical})
 	},
 
