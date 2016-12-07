@@ -4,15 +4,15 @@
  * @module moonstone/IncrementSlider
  */
 
-import kind from '@enact/core/kind';
-import {Spottable} from '@enact/spotlight';
-import Pressable from '@enact/ui/Pressable';
 import {checkDefaultBounds} from '@enact/ui/validators/PropTypeValidators';
+import kind from '@enact/core/kind';
+import Pressable from '@enact/ui/Pressable';
 import React, {PropTypes} from 'react';
+import {Spottable} from '@enact/spotlight';
 
-import SliderDecorator from '../internal/SliderDecorator';
 import IconButton from '../IconButton';
 import {SliderBase} from '../Slider';
+import SliderDecorator from '../internal/SliderDecorator';
 
 import css from './IncrementSlider.less';
 
@@ -153,6 +153,7 @@ const IncrementSliderBase = kind({
 		</div>
 	)
 });
+
 /**
  * {@link moonstone/IncrementSlider.IncrementSlider} is a IncrementSlider with
  * Moonstone styling, Spottable, Pressable and SliderDecorator applied. It is a
