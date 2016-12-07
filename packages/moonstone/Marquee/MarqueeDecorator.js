@@ -5,6 +5,7 @@ import React from 'react';
 
 import Marquee from './Marquee';
 import {contextTypes} from './MarqueeController';
+import {contextTypes as spottableContextTypes} from '@enact/spotlight';
 
 /**
  * Default configuration parameters for {@link moonstone/Marquee.MarqueeDecorator}
@@ -75,7 +76,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'MarqueeDecorator'
 
-		static contextTypes = contextTypes
+		static contextTypes = Object.assign(contextTypes, spottableContextTypes);
 
 		static propTypes = /** @lends moonstone/Marquee.MarqueeDecorator.prototype */ {
 			/**
@@ -209,11 +210,13 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		componentDidUpdate () {
+		componentDidUpdate (prevProps, prevState, prevContext) {
 			this.calculateMetrics();
 			if (this.shouldStartMarquee()) {
 				this.startAnimation(this.props.marqueeDelay);
 			}
+
+			this.determineAnimationFromContext(prevContext);
 		}
 
 		componentWillUnmount () {
@@ -414,6 +417,16 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.stop();
 		}
 
+		determineAnimationFromContext = (prevContext) => {
+			if (this.context && prevContext && this.props.marqueeOn === 'focus') {
+				if (this.context.isSpotted === false && prevContext.isSpotted === true && this.isFocused) {
+					this.handleBlurNoForward();
+				} else if (this.context.isSpotted === true && prevContext.isSpotted === false && !this.isFocused) {
+					this.handleFocusNoForward();
+				}
+			}
+		}
+
 		handleMarqueeComplete = (ev) => {
 			this.resetAnimation();
 			ev.stopPropagation();
@@ -429,6 +442,16 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.isFocused = false;
 			this.cancelAnimation();
 			forwardBlur(ev, this.props);
+		}
+
+		handleFocusNoForward = () => {
+			this.isFocused = true;
+			this.startAnimation();
+		}
+
+		handleBlurNoForward = () => {
+			this.isFocused = false;
+			this.cancelAnimation();
 		}
 
 		handleEnter = (ev) => {

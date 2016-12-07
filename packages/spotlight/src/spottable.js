@@ -57,6 +57,16 @@ const defaultConfig = {
 	emulateMouse: true
 };
 
+const contextTypes = {
+	/**
+	 * Context boolean to tell children if their Spottable parent is active.
+	 *
+	 * @type {Boolean}
+	 * @public
+	 */
+	isSpotted: React.PropTypes.bool
+};
+
 /**
  * Constructs a Spotlight 5-way navigation-enabled Higher-order Component.
  *
@@ -107,6 +117,14 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @public
 			 */
 			tabIndex: React.PropTypes.number
+		}
+
+		static childContextTypes = contextTypes
+
+		getChildContext () {
+			return {
+				isSpotted: this.state.spotted
+			};
 		}
 
 		constructor (props) {
@@ -169,4 +187,4 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 });
 
 export default Spottable;
-export {Spottable, spottableClass};
+export {Spottable, spottableClass, contextTypes};
