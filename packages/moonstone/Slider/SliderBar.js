@@ -58,7 +58,6 @@ class SliderBar extends React.Component {
 
 	getKnobNode = (node) => {
 		this.knobNode = node;
-		this.knobWidth = node && node.offsetHeight / 2;
 	}
 
 	getLoaderNode = (node) => {
@@ -70,13 +69,13 @@ class SliderBar extends React.Component {
 	}
 
 	render () {
-		const {proportionBackgroundProgress, proportionProgress, vertical, verticalHeight, ...rest} = this.props;
+		const {proportionBackgroundProgress, proportionProgress, vertical, ...rest} = this.props;
 
 		return (
-			<div {...rest} className={css.sliderBar} ref={this.getNode} style={verticalHeight}>
+			<div {...rest} className={css.sliderBar} ref={this.getNode}>
 				<div className={css.load} ref={this.getLoaderNode} style={{transform: computeBarTransform(proportionBackgroundProgress, vertical)}} />
 				<div className={css.fill} ref={this.getBarNode} style={{transform: computeBarTransform(proportionProgress, vertical)}} />
-				<div className={css.knob} ref={this.getKnobNode} style={{transform: computeKnobTransform(proportionProgress, vertical, this.node, this.knobWidth)}} />
+				<div className={css.knob} ref={this.getKnobNode} style={{transform: computeKnobTransform(proportionProgress, vertical, this.node)}} />
 			</div>
 		);
 	}
