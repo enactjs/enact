@@ -1,10 +1,19 @@
-import R from 'ramda';
+import always from 'ramda/src/always';
+import compose from 'ramda/src/compose';
+import equals from 'ramda/src/equals';
+import isArrayLike from 'ramda/src/isArrayLike';
+import isType from 'ramda/src/is';
+import map from 'ramda/src/map';
+import prop from 'ramda/src/prop';
 import React from 'react';
+import sort from 'ramda/src/sort';
+import unless from 'ramda/src/unless';
+import useWith from 'ramda/src/useWith';
 
-const orderedKeys = R.map(R.prop('key'));
-const unorderedKeys = R.compose(R.sort((a, b) => a - b), orderedKeys);
-const unorderedEquals = R.useWith(R.equals, [unorderedKeys, unorderedKeys]);
-const orderedEquals = R.useWith(R.equals, [orderedKeys, orderedKeys]);
+const orderedKeys = map(prop('key'));
+const unorderedKeys = compose(sort((a, b) => a - b), orderedKeys);
+const unorderedEquals = useWith(equals, [unorderedKeys, unorderedKeys]);
+const orderedEquals = useWith(equals, [orderedKeys, orderedKeys]);
 
 /**
  * Compares the keys of two sets of children and returns `true` if they are equal.
@@ -25,7 +34,7 @@ const childrenEquals = (prev, next, ordered = false) => {
 		const c1 = prevChildren[0];
 		const c2 = nextChildren[0];
 
-		return R.equals(c1, c2);
+		return equals(c1, c2);
 	} else if (ordered) {
 		return orderedEquals(prevChildren, nextChildren);
 	} else {
@@ -54,7 +63,7 @@ const cap = function (str) {
  * @param {*} arg Function or value
  * @method
  */
-const coerceFunction = R.unless(R.is(Function), R.always);
+const coerceFunction = unless(isType(Function), always);
 
 /**
  * If `arg` is array-like, return it. Otherwise returns a single element array containing `arg`
@@ -65,10 +74,13 @@ const coerceFunction = R.unless(R.is(Function), R.always);
  *	const returnsObjArg = coerceArray({0: 'zeroth', length: 1});
  *
  * @see http://ramdajs.com/docs/#isArrayLike
- * @param {*} arg Array or value
+ * @param {*} array Array or value
+ * @returns {Array}	Either `array` or `[array]`
  * @method
  */
-const coerceArray = R.unless(R.isArrayLike, R.of);
+const coerceArray = function (array) {
+	return isArrayLike(array) ? array : [array];
+};
 
 /**
  * Loosely determines if `tag` is a renderable component (either a string or a function)

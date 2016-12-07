@@ -6,9 +6,9 @@
  * @module moonstone/Scroller/Scrollable
  */
 
+import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import hoc from '@enact/core/hoc';
-import R from 'ramda';
 import React, {Component, PropTypes} from 'react';
 import ri from '@enact/ui/resolution';
 
@@ -21,9 +21,9 @@ const
 	nop = () => {},
 	perf = (typeof window === 'object') ? window.performance : {now: Date.now},
 	holdTime = 50,
-	scrollWheelMultiplier = 5,
-	pixelPerLine = ri.scale(40) * scrollWheelMultiplier,
-	pixelPerScrollbarBtn = ri.scale(100),
+	scrollWheelMultiplierForDeltaPixel = 2,
+	pixelPerLine = ri.scale(40) * scrollWheelMultiplierForDeltaPixel,
+	pixelPerScrollbarBtn = ri.scale(120) * scrollWheelMultiplierForDeltaPixel,
 	epsilon = 1,
 	// spotlight
 	doc = (typeof window === 'object') ? window.document : {},
@@ -289,12 +289,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		wheel (e, isHorizontal, isVertical) {
 			const deltaMode = e.deltaMode;
-			let delta = e.deltaY;
+			let delta = (-e.nativeEvent.wheelDeltaY || e.deltaY);
 
 			if (deltaMode === 0) {
-				delta = ri.scale(delta) * scrollWheelMultiplier;
+				delta = ri.scale(delta) * scrollWheelMultiplierForDeltaPixel;
 			} else if (deltaMode === 1) { // line; firefox
-				delta = delta * pixelPerLine;
+				delta = ri.scale(delta) * pixelPerLine;
 			} else if (deltaMode === 2) { // page
 				if (isVertical) {
 					delta = delta > 0 ? this.bounds.clientHeight : -this.bounds.clientHeight;
@@ -417,9 +417,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 
 			if (isVertical) {
-				this.accumulatedTargetY = R.clamp(0, this.bounds.maxTop, this.accumulatedTargetY + delta);
+				this.accumulatedTargetY = clamp(0, this.bounds.maxTop, this.accumulatedTargetY + delta);
 			} else if (isHorizontal) {
-				this.accumulatedTargetX = R.clamp(0, this.bounds.maxLeft, this.accumulatedTargetX + delta);
+				this.accumulatedTargetX = clamp(0, this.bounds.maxLeft, this.accumulatedTargetX + delta);
 			}
 
 			this.start(this.accumulatedTargetX, this.accumulatedTargetY, true, silent);
@@ -443,7 +443,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		setScrollLeft (v) {
 			this.dirHorizontal = Math.sign(v - this.scrollLeft);
-			this.scrollLeft = R.clamp(0, this.bounds.maxLeft, v);
+			this.scrollLeft = clamp(0, this.bounds.maxLeft, v);
 			if (this.state.isHorizontalScrollbarVisible) {
 				this.updateThumb(this.scrollbarHorizontalRef);
 			}
@@ -451,7 +451,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		setScrollTop (v) {
 			this.dirVertical = Math.sign(v - this.scrollTop);
-			this.scrollTop = R.clamp(0, this.bounds.maxTop, v);
+			this.scrollTop = clamp(0, this.bounds.maxTop, v);
 			if (this.state.isVerticalScrollbarVisible) {
 				this.updateThumb(this.scrollbarVerticalRef);
 			}
@@ -467,8 +467,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				this.doScrollStart();
 			}
 
-			targetX = R.clamp(0, this.bounds.maxLeft, targetX);
-			targetY = R.clamp(0, this.bounds.maxTop, targetY);
+			targetX = clamp(0, this.bounds.maxLeft, targetX);
+			targetY = clamp(0, this.bounds.maxTop, targetY);
 
 			if ((bounds.maxLeft - targetX) < epsilon) {
 				targetX = bounds.maxLeft;
