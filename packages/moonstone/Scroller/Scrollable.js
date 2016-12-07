@@ -116,15 +116,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			onScrollStop: PropTypes.func,
 
 			/**
-			 * It scrolls by page when `true`, by item when `false` via 5 way key
-			 *
-			 * @type {Boolean}
-			 * @default false
-			 * @public
-			 */
-			pageScroll: PropTypes.bool,
-
-			/**
 			 * Options for positioning the items; valid values are `'byItem'`, `'byContainer'`,
 			 * and `'byBrowser'`.
 			 * If `'byItem'`, the list moves each item.
@@ -146,7 +137,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			onScroll: nop,
 			onScrollStart: nop,
 			onScrollStop: nop,
-			pageScroll: false,
 			positioningOption: 'byItem'
 		}
 
