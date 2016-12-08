@@ -7,6 +7,7 @@ import {withKnobs, boolean, number, select} from '@kadira/storybook-addon-knobs'
 
 const SpottableMarquee = Spottable(MarqueeText);
 const Controller = MarqueeController('div');
+const SpottableDiv = MarqueeController(Spottable('div'));
 
 const LTR = [
 	'The quick brown fox jumped over the lazy dog.  The bean bird flies at sundown.',
@@ -99,5 +100,37 @@ storiesOf('Marquee')
 					{LTR[0]}
 				</SpottableMarquee>
 			</div>
+		)
+	)
+
+	.addWithInfo(
+		'Synchronized on Focus',
+		() => (
+			<SpottableDiv>
+				<MarqueeText
+					style={{width: '400px'}}
+					disabled={false}
+					marqueeDelay={1000}
+					marqueeDisabled={false}
+					marqueeOn={'focus'}
+					marqueeOnRenderDelay={1000}
+					marqueeResetDelay={1000}
+					marqueeSpeed={60}
+				>
+					{'The quick brown fox jumped over the lazy dog.  The bean bird flies at sundown.'}
+				</MarqueeText>
+				<MarqueeText
+					style={{width: '400px'}}
+					disabled={false}
+					marqueeDelay={1000}
+					marqueeDisabled={false}
+					marqueeOn={'focus'}
+					marqueeOnRenderDelay={1000}
+					marqueeResetDelay={1000}
+					marqueeSpeed={60}
+				>
+					{'The quick brown fox jumped over the lazy dog.  The bean'}
+				</MarqueeText>
+			</SpottableDiv>
 		)
 	);

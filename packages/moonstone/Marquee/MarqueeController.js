@@ -25,6 +25,20 @@ const contextTypes = {
 	register: React.PropTypes.func,
 
 	/**
+	 * Called when a child spottable receives focus
+	 *
+	 * @type {Function}
+	 */
+	focus: React.PropTypes.func,
+
+	/**
+	 * Called when a child spottable receives blur
+	 *
+	 * @type {Function}
+	 */
+	blur: React.PropTypes.func,
+
+	/**
 	 * Called by Marquee instances when marqueeing is started (e.g. when focusing a Marquee
 	 * set to `marqueeOn='focus'`)
 	 *
@@ -58,14 +72,19 @@ const MarqueeController = hoc((config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
-
+			this.state = {
+				isSpotted: false
+			};
 			this.controlled = [];
 		}
 
 		getChildContext () {
 			return {
+				blur: this.handleBlur,
 				cancel: this.handleCancel,
 				complete: this.handleComplete,
+				focus: this.handleFocus,
+				isSpotted: this.state.isSpotted,
 				register: this.handleRegister,
 				start: this.handleStart,
 				unregister: this.handleUnregister
@@ -142,6 +161,14 @@ const MarqueeController = hoc((config, Wrapped) => {
 				this.markIncomplete();
 				this.dispatch('start');
 			}
+		}
+
+		handleFocus = () => {
+			this.setState({isSpotted: true});
+		}
+
+		handleBlur = () => {
+			this.setState({isSpotted: false});
 		}
 
 		/**

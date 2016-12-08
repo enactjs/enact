@@ -119,12 +119,9 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			tabIndex: React.PropTypes.number
 		}
 
-		static childContextTypes = contextTypes
-
-		getChildContext () {
-			return {
-				isSpotted: this.state.spotted
-			};
+		static contextTypes = {
+			blur: React.PropTypes.func,
+			focus: React.PropTypes.func
 		}
 
 		constructor (props) {
@@ -138,12 +135,18 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			if (e.currentTarget === e.target) {
 				this.setState({spotted: false});
 			}
+			if (this.context.blur) {
+				this.context.blur();
+			}
 			forwardBlur(e, this.props);
 		}
 
 		onFocus = (e) => {
 			if (e.currentTarget === e.target) {
 				this.setState({spotted: true});
+			}
+			if (this.context.focus) {
+				this.context.focus();
 			}
 			forwardFocus(e, this.props);
 		}
