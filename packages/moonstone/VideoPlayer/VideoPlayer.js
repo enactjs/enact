@@ -28,7 +28,10 @@ const VideoPlayerBase = class extends React.Component {
 	static displayName = VideoPlayerBase;
 
 	static propTypes = {
+		infoComponents: React.PropTypes.oneOfType([React.PropTypes.arrayOf(React.PropTypes.element), React.PropTypes.element]),
 		jumpBy: React.PropTypes.number,
+		leftComponents: React.PropTypes.oneOfType([React.PropTypes.arrayOf(React.PropTypes.element), React.PropTypes.element]),
+		rightComponents: React.PropTypes.oneOfType([React.PropTypes.arrayOf(React.PropTypes.element), React.PropTypes.element]),
 		title: React.PropTypes.string
 	}
 
@@ -61,7 +64,10 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	send = (action, props) => () => {
-		this.video[action](props);
+		if (this.isVideoReady()) {
+			console.log('sending', action, props);
+			this.video[action](props);
+		}
 	}
 
 	jump = (distance) => () => {
@@ -75,6 +81,11 @@ const VideoPlayerBase = class extends React.Component {
 		this.video.setVolume(this._volumeInput.valueAsNumber);
 	}
 
+	onSliderChange = ({value}) => {
+		console.log('seeking to:', value);
+		this.send('seek', value);
+	}
+
 	onProgress = () => {
 		if (this.isVideoReady()) {
 			const el = this.video.videoEl;
@@ -85,7 +96,7 @@ const VideoPlayerBase = class extends React.Component {
 		}
 	}
 
-	notYetImplemented = () => {
+	notYetImplemented = ( ) => {
 		console.log('Sorry, not yet implemented.');
 	}
 
@@ -95,6 +106,9 @@ const VideoPlayerBase = class extends React.Component {
 		// 	this.reloadVideo();
 		// 	this.setState('videoSource', children);
 		// }
+					// onLoadedMetadata={this.onLoadedMetadata} // loaded new media
+					// onDurationChange={this.onLoadedMetadata} // loaded new media
+					// onAbort={this.onFinished} // loaded new media
 		return (
 			<div className={css.videoPlayer}>
 				<Video
@@ -122,6 +136,8 @@ const VideoPlayerBase = class extends React.Component {
 								min={0}
 								max={100}
 								value={this.state.percentagePlayed}
+								step={0.001}
+								onChange={this.onSliderChange}
 							/> {/*
 								disabled
 								onSeekStart={this.sliderSeekStart}

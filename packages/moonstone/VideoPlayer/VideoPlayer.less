@@ -96,8 +96,212 @@
 
 			.sliderFrame {
 				.mediaSlider {
+
+					padding-left: 0;
+					padding-right: 0;
+
 					margin: 0;
-				}
+
+					// .bar {
+					// 	height: @moon-video-player-transport-slider-height;
+					// 	// @moon-video-player-transport-slider-tap-area;
+					// }
+					// .knob {
+					// 	height: @moon-video-player-transport-slider-knob-size;
+					// 	width: @moon-video-player-transport-slider-knob-size;
+					// 	@moon-video-player-knob-v-offset;
+
+					// }
+
+					.sliderBar {
+						// height: 100%;
+						// margin: 0;
+						// top: inherit;
+					}
+
+					.input {
+						// padding: 0;
+					}
+
+					// .moon-progress-bar.moon-video-player-transport-slider {
+						height: @moon-video-player-transport-slider-height;
+						background-color: rgba(0, 0, 0, 0.6);
+						// margin: ((@moon-video-player-transport-slider-tap-area - @moon-video-player-transport-slider-height) / 2) 0;
+
+						.moon-slider-popup {
+							pointer-events: none;
+
+							&.above {
+								padding-left: 0px;
+							}
+						}
+
+						// Knob
+						.knob {
+							@activate-transition-function: cubic-bezier(0.15, 0.85, 0.6, 1.65);
+							@slide-transition-function:    cubic-bezier(0.15, 0.85, 0.53, 1.09);
+
+							position: absolute;
+							width: (@moon-video-player-transport-slider-knob-size * 2);
+							top: -@moon-video-player-knob-v-offset;
+							height: (@moon-video-player-transport-slider-knob-size * 2);
+							border-radius: @moon-video-player-transport-slider-knob-size;
+							background-color: #fff;
+							display: none;
+							// box-shadow: 0 6px 8px 2px rgba(0, 0, 0, 0.3);
+							-webkit-transform: translateZ(0) translateX(-50%) scale(0.5);
+							transform:         translateZ(0) translateX(-50%) scale(0.5);
+							-webkit-transition: -webkit-transform @activate-transition-function 0.2s;
+							transition:                 transform @activate-transition-function 0.2s;
+
+							.moon-video-player.spotlight-5way-mode & {
+								-webkit-transition: -webkit-transform @activate-transition-function 0.2s, left @slide-transition-function 0.2s;
+								transition:                 transform @activate-transition-function 0.2s, left @slide-transition-function 0.2s;
+							}
+
+							.moon-taparea( -(@moon-video-player-transport-slider-knob-size) ); // The end result of this should be a knob taparea that's the same height as the slider's tap area
+							// This allows the tap area to extend past the edge of the screen, for when the cursor moves
+							// past the end of the slider, and into the little gap that separates the edge of the
+							// normally square tap area, to the edge of the screen. This code widens the taparea so
+							// there's no gap, and the knob still receives the click event.
+							&::before {
+								left: (-(@moon-video-player-side-padding * 2));
+								right: (-(@moon-video-player-side-padding * 2));
+							}
+						}
+						&.visible {
+							.knob {
+								display: block;
+							}
+						}
+						&.pressed {
+							.knob {
+								-webkit-transform: translateZ(0) translateX(-50%) scale(0.75);
+								transform:         translateZ(0) translateX(-50%) scale(0.75);
+							}
+						}
+
+						// Status Indicator
+						.status-indicator {
+							.moon-slider-popup-center {
+								font-family: @moon-font-family;
+								font-size: 24px;
+								color: @moon-white;
+								text-shadow: @moon-video-player-title-text-shadow;
+								line-height: 36px;
+								position: absolute;	// Allows flip-h to work
+								margin: 0 30px;
+
+								.moon-icon {
+									color: inherit;
+								}
+							}
+						}
+
+						// Bars
+						.fill,
+						.load {
+							// height: 100%;
+							// position: absolute;
+							// top: 0;
+							border-top-right-radius: (@moon-video-player-transport-slider-height / 2);
+							border-bottom-right-radius: (@moon-video-player-transport-slider-height / 2);
+						}
+
+						// Bar
+						.fill {
+							background-color: @moon-accent;
+							opacity: 0.8;
+						}
+
+						.load {
+							background-color: @moon-dark-gray;
+							opacity: 0.4;
+						}
+
+						// .popup-label {
+						// 	.moon-large-button-text;
+						// 	.font-kerning(none);
+						// 	white-space: nowrap;
+						// 	vertical-align: top;
+
+						// 	> * {
+						// 		display: inline-block;
+						// 	}
+						// }
+
+						// Indicator
+						// .indicator-wrapper {
+						// 	pointer-events: none;
+						// 	bottom: 42px;
+						// 	text-shadow: @moon-video-player-title-text-shadow;
+						// 	position: absolute;
+
+						// 	&.start {
+						// 		left: 0;
+						// 		text-align: left;
+
+						// 		.enyo-locale-right-to-left & {
+						// 			left: auto;
+						// 			right: 0;
+						// 			text-align: right;
+						// 		}
+						// 	}
+
+						// 	&.end {
+						// 		right: 0;
+						// 		text-align: right;
+
+						// 		.enyo-locale-right-to-left & {
+						// 			right: auto;
+						// 			left: 0;
+						// 			text-align: left;
+						// 		}
+						// 	}
+						// }
+
+						// .indicator-text {
+						// 	font-size: 24px;
+						// 	color: @moon-indicator-text-color;
+						// 	display: inline-block;
+
+						// 	&.separator,
+						// 	&.right {
+						// 		color: @moon-video-player-subdued-text-color;
+						// 	}
+
+						// 	&.separator {
+						// 		padding: 0 1ex;
+						// 	}
+
+						// 	.enyo-locale-right-to-left & {
+						// 		direction: rtl;
+						// 	}
+						// }
+
+						// Reassign video-player specific sizing to the slider's tap-area
+						&::before {
+							top: (@moon-video-player-transport-slider-height / 2) - (@moon-video-player-transport-slider-tap-area / 2);
+							right: -@moon-video-player-side-padding;
+							bottom: auto;
+							left: -@moon-video-player-side-padding;
+							height: @moon-video-player-transport-slider-tap-area;
+						}
+					}
+
+					.enyo-locale-non-latin .moon-video-player-transport-slider {
+						.popup-label {
+							// .enyo-locale-non-latin .moon-large-button-text;
+						}
+						.indicator-text {
+							font-family: @moon-font-family;
+						}
+					}
+
+
+
+
+
 			}
 			.controlsFrame {
 				position: relative;
