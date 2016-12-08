@@ -1,15 +1,11 @@
 import React from 'react';
-import {mount, shallow} from 'enzyme';
+import {mount} from 'enzyme';
 import {Tooltip} from '../Tooltip';
 
 describe('should return the correct text in tooltip', () => {
-	it('should render button tag', function () {
+	it('should render tooltip component', function () {
 		const tooltip = mount(
-			<Tooltip
-	        	tooltip='HELLO'
-	        	showing={true}
-	        >
-	        </Tooltip>
+			<Tooltip text='HELLO' />
 		);
 
 		const expected = 'HELLO';

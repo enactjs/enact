@@ -1,26 +1,27 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
 import {hoc} from '@enact/core';
 import ri from '@enact/ui/resolution';
-import FloatingLayer, {FloatingLayerBase} from '@enact/ui/FloatingLayer';
+import FloatingLayer from '@enact/ui/FloatingLayer';
 import {isRtlText} from '@enact/i18n';
-import css from './TooltipDecorator.less';
 import {Tooltip} from './Tooltip';
 
 const TooltipDecorator = hoc( (config, Wrapped) => {
 	return class extends React.Component {
+		static displayName = 'TooltipDecorator'
+
 		static defaultProps = {
 			tooltipPosition: 'auto'
 		}
 
 		static propTypes = {
 			/**
-			 * Message of tooltip
-			 *
-			 * @type {string}
-			 * @default is not exist
-			 * @public
-			 */
-			tooltip: React.PropTypes.string,
+			* Message of tooltip
+			*
+			* @type {string}
+			* @default is not exist
+			* @public
+			*/
+			tooltipText: React.PropTypes.string,
 
 			/**
 			* Position of the tooltip with respect to the activating control. Valid values are
@@ -39,19 +40,36 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 			* @default 'auto'
 			* @public
 			*/
-			tooltipPosition: React.PropTypes.oneOf(['auto', 'above', 'above center', 'above left', 'above right', 'below', 'below center', 'below left', 'below right', 'left bottom', 'left middle', 'left top', 'right bottom', 'right middle', 'right top'])
+			tooltipPosition: React.PropTypes.oneOf(['auto', 'above', 'above center', 'above left', 'above right', 'below', 'below center', 'below left', 'below right', 'left bottom', 'left middle', 'left top', 'right bottom', 'right middle', 'right top']),
+
+			/**
+			* Delegate focus handler
+			*
+			* @type {string}
+			* @default is not exist
+			* @public
+			*/
+			onFocus: React.PropTypes.func,
+
+			/**
+			* Delegate blur handler
+			*
+			* @type {string}
+			* @default is not exist
+			* @public
+			*/
+			onBlur: React.PropTypes.func
 		}
 
 		constructor (props) {
 			super(props);
+
 			this.state = {
-				tooltip: '',
-				tooltipType: 'below leftArrow',
-				tooltipTop: '0',
-				tooltipLeft: '0',
-				tooltipArrowType: 'corner',
 				showing: false
 			};
+
+			this.handleFocus = this.handleFocus.bind(this);
+			this.handleBlur = this.handleBlur.bind(this);
 		}
 
 		adjustPosition () {
@@ -60,51 +78,51 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 			let aPos; // arrow position
 			let r;
 			let arr;
-			let rtl = isRtlText(this.props.tooltip);
+			let rtl = isRtlText(this.props.tooltipText);
 
-			if ((arr = position.split(' ')).length == 2) {
+			if ((arr = position.split(' ')).length === 2) {
 				[tPos, aPos] = arr;
-			} else if (position == 'above' || position == 'below') {
+			} else if (position === 'above' || position === 'below') {
 				tPos = position;
 				aPos = 'left';
 			} else {
-				tPos = 'above';
+				tPos = 'below';
 				aPos = 'left';
 			}
 
 			if (rtl) {
-				if (tPos == 'above' || tPos == 'below') {
-					aPos = aPos == 'left' ? 'right' : 'left';
-				} else if (tPos == 'left' || tPos == 'right') {
-					tPos = tPos == 'left' ? 'right' : 'left';
+				if (tPos === 'above' || tPos === 'below') {
+					aPos = aPos === 'left' ? 'right' : 'left';
+				} else if (tPos === 'left' || tPos === 'right') {
+					tPos = tPos === 'left' ? 'right' : 'left';
 				}
 			}
 
 			r = this.calcPosition(tPos, aPos);
 
-			if (tPos == 'above' || tPos == 'below') {
+			if (tPos === 'above' || tPos === 'below') {
 				let isCalculate = false;
 
-				if (aPos == 'left' && r.tX + r.tW > window.innerWidth || aPos == 'right' && r.tX < 0) {
+				if (aPos === 'left' && r.tX + r.tW > window.innerWidth || aPos === 'right' && r.tX < 0) {
 					isCalculate = true;
-					aPos = aPos == 'left' ? 'right' : 'left';
+					aPos = aPos === 'left' ? 'right' : 'left';
 				}
 
-				if (tPos == 'below' && r.tY + r.tH > window.innerHeight ||  tPos == 'above' && r.tY < 0 ) {
+				if (tPos === 'below' && r.tY + r.tH > window.innerHeight ||  tPos === 'above' && r.tY < 0 ) {
 					isCalculate = true;
-					tPos = tPos == 'above' ? 'below' : 'above';
+					tPos = tPos === 'above' ? 'below' : 'above';
 				}
 
 				if (isCalculate) {
 					r = this.calcPosition(tPos, aPos);
 				}
 			}
-			
+
 			this.setState({
-				tooltipType: tPos + ' ' + aPos + "Arrow",
-				tooltipTop: ri.unit(r.tY, 'rem'),
-				tooltipLeft: ri.unit(r.tX, 'rem'),
-				tooltipArrowType: aPos == 'center' || aPos == 'middle' ? 'edge' : 'corner'
+				type: tPos + ' ' + aPos + "Arrow",
+				top: ri.unit(r.tY, 'rem'),
+				left: ri.unit(r.tX, 'rem'),
+				arrowType: aPos === 'center' || aPos === 'middle' ? 'edge' : 'corner'
 			});
 		}
 
@@ -118,10 +136,10 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 				case 'below':
 					tX = cBound.left + cBound.width/2;
 					tY = cBound.bottom + tooltipDistance;
-					
-					if (aPos == 'right') {
+
+					if (aPos === 'right') {
 						tX -= lBound.width;
-					} else if (aPos == 'center') {
+					} else if (aPos === 'center') {
 						tX -= lBound.width/2;
 					}
 					break;
@@ -129,9 +147,9 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 					tX = cBound.left + cBound.width/2;
 					tY = cBound.top - lBound.height - tooltipDistance;
 
-					if (aPos == 'right') {
+					if (aPos === 'right') {
 						tX -= lBound.width;
-					} else if (aPos == 'center') {
+					} else if (aPos === 'center') {
 						tX -= lBound.width/2;
 					}
 					break;
@@ -139,9 +157,9 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 					tX = cBound.left - lBound.width - tooltipDistance;
 					tY = cBound.top + cBound.height/2;
 
-					if (aPos == 'top') {
+					if (aPos === 'top') {
 						tY -= lBound.height;
-					} else if(aPos == 'middle') {
+					} else if(aPos === 'middle') {
 						tY -= lBound.height/2;
 					}
 					break;
@@ -149,9 +167,9 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 					tX = cBound.right + tooltipDistance;
 					tY = cBound.top + cBound.height/2;
 
-					if (aPos == 'top') {
+					if (aPos === 'top') {
 						tY -= lBound.height;
-					} else if(aPos == 'middle') {
+					} else if(aPos === 'middle') {
 						tY -= lBound.height/2;
 					}
 					break;
@@ -171,21 +189,21 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 
 		handleFocus (e) {
 			this.clientRef = e.target;
-			this.props.tooltip && this.props.tooltip.length>0 && this.show();			
-			this.props.onFocus && this.props.onFocus(e);
+			if( this.props.tooltipText && this.props.tooltipText.length>0 ) this.show();
+			if( this.props.onFocus ) this.props.onFocus(e);
 		}
 
 		handleBlur (e) {
-			this.props.tooltip && this.props.tooltip.length>0 && this.hide();
-			this.props.onBlur && this.props.onBlur(e);
+			if( this.props.tooltipText && this.props.tooltipText.length>0 ) this.hide();
+			if( this.props.onBlur ) this.props.onBlur(e);
 		}
 
 		show () {
 			this.setTimeout(() => {
-				this.adjustPosition();
 				this.setState({
 					showing: true
 				});
+				this.adjustPosition();
 			}, 500);
 		}
 
@@ -196,7 +214,7 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 			});
 		}
 
-		clearTimeout () {			
+		clearTimeout () {
 			window.clearTimeout(this.timer);
 			this.timer = null;
 		}
@@ -206,26 +224,29 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 			this.timer = window.setTimeout(fn, time);
 		}
 
+		getTooltipRef = (node) => {
+			this.tooltipRef = node;
+		}
+
 		renderTooltip () {
-			const {tooltip, children} = this.props;
+			const {tooltipText, children} = this.props;
 			const props = Object.assign({}, this.props);
-			delete props.tooltip;
+			delete props.tooltipText;
 			delete props.tooltipPosition;
 
 			return(
 				<Wrapped {...props}
-					onFocus={(e) => this.handleFocus(e)}
-					onBlur={(e) => this.handleBlur(e)}>
+					onFocus={this.handleFocus}
+					onBlur={this.handleBlur}>
 					{children}
-					<FloatingLayer open={true} scrimType='none'>
+					<FloatingLayer open={this.state.showing} scrimType='none'>
 						<Tooltip
-							tooltip = {tooltip}
-							tooltipType={this.state.tooltipType}
-							tooltipTop={this.state.tooltipTop}
-							tooltipLeft={this.state.tooltipLeft}
-							tooltipArrowType={this.state.tooltipArrowType}
-							showing={this.state.showing}
-							getTooltipRef={(r) => this.tooltipRef = r} />
+							text={tooltipText}
+							type={this.state.type}
+							top={this.state.top}
+							left={this.state.left}
+							arrowType={this.state.arrowType}
+							getTooltipRef={this.getTooltipRef} />
 					</FloatingLayer>
 				</Wrapped>
 			);
@@ -242,7 +263,7 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 		}
 
 		render () {
-			if (this.props.tooltip) {
+			if (this.props.tooltipText) {
 				return this.renderTooltip();
 			} else {
 				return this.renderWrapped();

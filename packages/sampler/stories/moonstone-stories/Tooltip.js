@@ -1,7 +1,7 @@
 import Button from '@enact/moonstone/Button';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@kadira/storybook';
+import {withKnobs, select, text} from '@kadira/storybook-addon-knobs';
 
 const prop = {
 	tooltipPosition: {
@@ -28,7 +28,7 @@ storiesOf('Tooltip')
 		() => (
 			<div style={{textAlign: 'center'}}>
 				<Button
-					tooltip={text('tooltip', 'tooltip!')}
+					tooltipText={text('tooltipText', 'tooltip!')}
 					tooltipPosition={select('tooltipPosition', prop.tooltipPosition, 'below left')}
 				>
 					hello

@@ -1,21 +1,31 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
+import kind from '@enact/core/kind';
 import css from './Tooltip.less';
 
-const TooltipArrow = (props) => {
-	return <svg className={css.tooltipArrow} viewBox={'0 0 3 5'}><path d={props.type == 'edge' ? 'M0,5C0,4,1,3,3,2.5C1,2,0,1,0,0V5Z' : 'M0,5C0,3,1,0,3,0H0V5Z'} /></svg>
-}
+const TooltipArrow = kind({
+	name: 'TooltipArrpw',
 
-class Tooltip extends React.Component {
-	static defaultProps = {
-		tooltip: '',
-		tooltipType: 'below leftArrow',
-		tooltipTop: '0',
-		tooltipLeft: '0',
-		tooltipArrowType: 'corner',
-		showing: false
+	propTypes: {
+		type: React.PropTypes.string
+	},
+
+	render: ({type}) => {
+		return <svg className={css.tooltipArrow} viewBox={'0 0 3 5'}><path d={type === 'edge' ? 'M0,5C0,4,1,3,3,2.5C1,2,0,1,0,0V5Z' : 'M0,5C0,3,1,0,3,0H0V5Z'} /></svg>
 	}
+});
 
-	static propTypes = {
+const Tooltip = kind({
+	name: 'Tooltip',
+
+	defaultProps: {
+		text: '',
+		type: 'below leftArrow',
+		top: '0',
+		left: '0',
+		arrowType: 'corner',
+	},
+
+	propTypes: {
 		/**
 		* Message of tooltip
 		*
@@ -23,7 +33,7 @@ class Tooltip extends React.Component {
 		* @default is not exist
 		* @public
 		*/
-		tooltip: React.PropTypes.string,
+		text: React.PropTypes.string,
 
 		/**
 		* Tooltip Type
@@ -32,7 +42,7 @@ class Tooltip extends React.Component {
 		* @default 'below-left'
 		* @public
 		*/
-		tooltipType: React.PropTypes.string,
+		type: React.PropTypes.string,
 
 		/**
 		* Tooltip Top Position
@@ -41,7 +51,7 @@ class Tooltip extends React.Component {
 		* @default 0
 		* @public
 		*/
-		tooltipTop: React.PropTypes.string,
+		top: React.PropTypes.string,
 
 		/**
 		* Tooltip Left Position
@@ -50,7 +60,7 @@ class Tooltip extends React.Component {
 		* @default 0
 		* @public
 		*/
-		tooltipLeft: React.PropTypes.string,
+		left: React.PropTypes.string,
 
 		/**
 		* Tooltip Arrow Type
@@ -59,35 +69,42 @@ class Tooltip extends React.Component {
 		* @default 'corner'
 		* @public
 		*/
-		tooltipArrowType: React.PropTypes.oneOf(['corner', 'edge']),
+		arrowType: React.PropTypes.oneOf(['corner', 'edge']),
 
 		/**
-		* Tooltip Showing
+		* Delegate Tooltip's Ref
 		*
-		* @type {bool}
-		* @default 'false'
+		* @type {function}
+		* @default ''
 		* @public
 		*/
-		showing: React.PropTypes.bool
-	}
+		getTooltipRef: React.PropTypes.func
+	},
 
-	render () {
-		const {getTooltipRef} = this.props;
+	styles: {
+		css,
+		className: 'tooltip'
+	},
 
+	computed: {
+		className: ({type, styler}) => styler.append(css[type.split(' ')[0]], css[type.split(' ')[1]])
+	},
+
+	render: ({getTooltipRef, text, left, top, arrowType, className}) => {
 		return(
 			<div
-				className={[css.tooltip, this.props.tooltipType.split(' ').map((c) => css[c]).join(' '), (this.props.showing ? css.shown : '')].join(' ')}
-				style={{left: this.props.tooltipLeft, top: this.props.tooltipTop}}>
-				<TooltipArrow type={this.props.tooltipArrowType} />
+				className={className}
+				style={{left: left, top: top}}>
+				<TooltipArrow type={arrowType} />
 				<div
 					ref={getTooltipRef}
 					className={css.tooltipLabel}>
-					{this.props.tooltip.toUpperCase()}
+					{text.toUpperCase()}
 				</div>
 			</div>
 		);
 	}
-}
+});
 
 export default Tooltip;
 export {Tooltip};
