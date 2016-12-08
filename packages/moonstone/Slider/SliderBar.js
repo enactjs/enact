@@ -1,3 +1,4 @@
+import factory from '@enact/core/factory';
 import React, {PropTypes} from 'react';
 
 import {
@@ -5,84 +6,85 @@ import {
 	computeKnobTransform
 } from '../internal/SliderDecorator/util';
 
-import css from './Slider.less';
+const SliderBarFactory = factory(({css}) => {
 
-/**
- * {@link moonstone/Slider.SliderBar} is private.
- *
- * @class SliderBar
- * @memberof moonstone/Slider
- * @ui
- * @private
- */
+	/**
+	 * {@link moonstone/Slider.SliderBar} is private.
+	 *
+	 * @class SliderBar
+	 * @memberof moonstone/Slider
+	 * @ui
+	 * @private
+	 */
 
-class SliderBar extends React.Component {
-	static propTypes = /** @lends moonstone/Slider.SliderBar.prototype */{
-		/**
-		 * The background progress as a proportion.
-		 *
-		 * @type {Number}
-		 * @public
-		 */
-		proportionBackgroundProgress: PropTypes.number,
+	return class extends React.Component {
+		static displayName = 'SliderBar'
 
-		/**
-		 * The progress as a percentage.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		proportionProgress: PropTypes.number,
+		static propTypes = /** @lends moonstone/Slider.SliderBar.prototype */{
+			/**
+			 * The background progress as a proportion.
+			 *
+			 * @type {Number}
+			 * @public
+			 */
+			proportionBackgroundProgress: PropTypes.number,
 
-		/**
-		 * If `true` the slider will be oriented vertically.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		vertical: PropTypes.bool,
+			/**
+			 * The progress as a percentage.
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			proportionProgress: PropTypes.number,
 
-		/**
-		 * Height, in standard CSS units, of the vertical slider. Only takes
-		 * effect on a vertical oriented slider, and will be `null` otherwise.
-		 *
-		 * @type {Object}
-		 * @public
-		 */
-		verticalHeight: PropTypes.object
-	}
+			/**
+			 * If `true` the slider will be oriented vertically.
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			vertical: PropTypes.bool,
 
-	getBarNode = (node) => {
-		this.barNode = node;
-	}
+			/**
+			 * Height, in standard CSS units, of the vertical slider. Only takes
+			 * effect on a vertical oriented slider, and will be `null` otherwise.
+			 *
+			 * @type {Object}
+			 * @public
+			 */
+			verticalHeight: PropTypes.object
+		}
 
-	getKnobNode = (node) => {
-		this.knobNode = node;
-		this.knobWidth = node && node.offsetHeight / 2;
-	}
+		getBarNode = (node) => {
+			this.barNode = node;
+		}
 
-	getLoaderNode = (node) => {
-		this.loaderNode = node;
-	}
+		getKnobNode = (node) => {
+			this.knobNode = node;
+			this.knobWidth = node && node.offsetHeight / 2;
+		}
 
-	getNode = (node) => {
-		this.node = node;
-	}
+		getLoaderNode = (node) => {
+			this.loaderNode = node;
+		}
 
-	render () {
-		const {proportionBackgroundProgress, proportionProgress, vertical, verticalHeight, ...rest} = this.props;
+		getNode = (node) => {
+			this.node = node;
+		}
 
-		return (
-			<div {...rest} className={css.sliderBar} ref={this.getNode} style={verticalHeight}>
-				<div className={css.load} ref={this.getLoaderNode} style={{transform: computeBarTransform(proportionBackgroundProgress, vertical)}} />
-				<div className={css.fill} ref={this.getBarNode} style={{transform: computeBarTransform(proportionProgress, vertical)}} />
-				<div className={css.knob} ref={this.getKnobNode} style={{transform: computeKnobTransform(proportionProgress, vertical, this.node, this.knobWidth)}} />
-			</div>
-		);
-	}
-}
+		render () {
+			const {proportionBackgroundProgress, proportionProgress, vertical, verticalHeight, ...rest} = this.props;
 
-export default SliderBar;
-export {
-	SliderBar
-};
+			return (
+				<div {...rest} className={css.sliderBar} ref={this.getNode} style={verticalHeight}>
+					<div className={css.load} ref={this.getLoaderNode} style={{transform: computeBarTransform(proportionBackgroundProgress, vertical)}} />
+					<div className={css.fill} ref={this.getBarNode} style={{transform: computeBarTransform(proportionProgress, vertical)}} />
+					<div className={css.knob} ref={this.getKnobNode} style={{transform: computeKnobTransform(proportionProgress, vertical, this.node, this.knobWidth)}} />
+				</div>
+			);
+		}
+	};
+});
+
+export default SliderBarFactory;
+export {SliderBarFactory};
