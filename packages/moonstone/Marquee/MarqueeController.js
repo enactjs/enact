@@ -1,14 +1,8 @@
+import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import React from 'react';
 
 const contextTypes = {
-	/**
-	 * Called when a child `Spottable` receives blur event
-	 *
-	 * @type {Function}
-	 */
-	blur: React.PropTypes.func,
-
 	/**
 	 * Called by Marquee instances when marqueeing is canceled (e.g. when blurring a Marquee
 	 * set to `marqueeOn='focus'`)
@@ -23,20 +17,6 @@ const contextTypes = {
 	 * @type {Function}
 	 */
 	complete: React.PropTypes.func,
-
-	/**
-	 * Called when a child `Spottable` receives focus event
-	 *
-	 * @type {Function}
-	 */
-	focus: React.PropTypes.func,
-
-	/**
-	 * When `true` this means a `Spottable` child is spotted/focused
-	 *
-	 * @type {Bool}
-	 */
-	isSpotted: React.PropTypes.bool,
 
 	/**
 	 * Called to register a Marquee instance to be synchronized
@@ -71,6 +51,8 @@ const contextTypes = {
  * @public
  */
 const MarqueeController = hoc((config, Wrapped) => {
+	const forwardBlur = forward('onBlur');
+	const forwardFocus = forward('onFocus');
 
 	return class extends React.Component {
 		static displayName = 'MarqueeController'
@@ -79,19 +61,13 @@ const MarqueeController = hoc((config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
-			this.state = {
-				isSpotted: false
-			};
 			this.controlled = [];
 		}
 
 		getChildContext () {
 			return {
-				blur: this.handleBlur,
 				cancel: this.handleCancel,
 				complete: this.handleComplete,
-				focus: this.handleFocus,
-				isSpotted: this.state.isSpotted,
 				register: this.handleRegister,
 				start: this.handleStart,
 				unregister: this.handleUnregister
@@ -175,8 +151,9 @@ const MarqueeController = hoc((config, Wrapped) => {
 		 *
 		 * @returns	{undefined}
 		 */
-		handleFocus = () => {
-			this.setState({isSpotted: true});
+		handleFocus = (ev) => {
+			this.dispatch('start');
+			forwardFocus(ev, this.props);
 		}
 
 		/**
@@ -184,8 +161,9 @@ const MarqueeController = hoc((config, Wrapped) => {
 		 *
 		 * @returns	{undefined}
 		 */
-		handleBlur = () => {
-			this.setState({isSpotted: false});
+		handleBlur = (ev) => {
+			this.dispatch('stop');
+			forwardBlur(ev, this.props);
 		}
 
 		/**
@@ -239,7 +217,7 @@ const MarqueeController = hoc((config, Wrapped) => {
 
 		render () {
 			return (
-				<Wrapped {...this.props} />
+				<Wrapped {...this.props} onFocus={this.handleFocus} onBlur={this.handleBlur} />
 			);
 		}
 	};

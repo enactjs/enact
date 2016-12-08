@@ -209,13 +209,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		componentDidUpdate (prevProps, prevState, prevContext) {
+		componentDidUpdate () {
 			this.calculateMetrics();
 			if (this.shouldStartMarquee()) {
 				this.startAnimation(this.props.marqueeDelay);
 			}
-
-			this.determineAnimationFromContext(prevContext);
 		}
 
 		componentWillUnmount () {
@@ -414,22 +412,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			this.stop();
-		}
-
-		/**
-		 * Determine if marquee should be animated based on a change in context.
-		 *
-		 * @param {Object} Previous Context of the component
-		 * @returns {undefined}
-		 */
-		determineAnimationFromContext = (prevContext) => {
-			if (this.context && prevContext && this.props.marqueeOn === 'focus') {
-				if (this.context.isSpotted === false && prevContext.isSpotted === true && this.isFocused) {
-					this.handleBlurNoForward();
-				} else if (this.context.isSpotted === true && prevContext.isSpotted === false && !this.isFocused) {
-					this.handleFocusNoForward();
-				}
-			}
 		}
 
 		handleMarqueeComplete = (ev) => {

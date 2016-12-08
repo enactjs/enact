@@ -57,24 +57,6 @@ const defaultConfig = {
 	emulateMouse: true
 };
 
-const contextTypes = {
-	/**
-	 * Context function to be called when a blur event happens.
-	 *
-	 * @type {Function}
-	 * @public
-	 */
-	blur: React.PropTypes.func,
-
-	/**
-	 * Context function to be called when a focus event happens.
-	 *
-	 * @type {Function}
-	 * @public
-	 */
-	focus: React.PropTypes.func
-};
-
 /**
  * Constructs a Spotlight 5-way navigation-enabled Higher-order Component.
  *
@@ -127,8 +109,6 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			tabIndex: React.PropTypes.number
 		}
 
-		static contextTypes = contextTypes;
-
 		constructor (props) {
 			super(props);
 			this.state = {
@@ -140,18 +120,12 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			if (e.currentTarget === e.target) {
 				this.setState({spotted: false});
 			}
-			if (this.context.blur) {
-				this.context.blur();
-			}
 			forwardBlur(e, this.props);
 		}
 
 		onFocus = (e) => {
 			if (e.currentTarget === e.target) {
 				this.setState({spotted: true});
-			}
-			if (this.context.focus) {
-				this.context.focus();
 			}
 			forwardFocus(e, this.props);
 		}
