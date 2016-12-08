@@ -109,12 +109,12 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		componentWillReceiveProps (nextProps) {
 			if (this.props.direction !== nextProps.direction) {
 				this.adjustedDirection = nextProps.direction;
+				this.setContainerPosition();
 			}
 		}
 
 		getContainerPosition (containerNode, clientNode) {
 			let position = {};
-
 			switch (this.adjustedDirection) {
 				case 'up':
 					position = {
@@ -203,8 +203,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		calcOverflow (container, client) {
 			// TODO: what if it's rendered inside Portal??
 
-			const {direction} = this.props;
-			if (direction === 'up' || direction === 'down') {
+			if (this.adjustedDirection === 'up' || this.adjustedDirection === 'down') {
 				this.overflow = {
 					isOverTop: client.top - container.height - ARROW_OFFSET < 0,
 					isOverBottom: client.bottom + container.height + ARROW_OFFSET > window.innerHeight,
@@ -243,9 +242,9 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			return pos;
 		}
 
-		measureContainer = (node) => {
-			if (node) {
-				const containerNode = node.getBoundingClientRect();
+		setContainerPosition () {
+			if (this.containerNode && this.clientNode) {
+				const containerNode = this.containerNode.getBoundingClientRect();
 				const clientNode = this.clientNode.getBoundingClientRect();
 
 				this.calcOverflow(containerNode, clientNode);
@@ -256,6 +255,13 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					arrowPosition: this.getArrowPosition(clientNode),
 					containerPosition: this.getContainerPosition(containerNode, clientNode)
 				});
+			}
+		}
+
+		getContainerNode = (node) => {
+			if (node) {
+				this.containerNode = node;
+				this.setContainerPosition();
 			}
 		}
 
@@ -276,7 +282,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 							direction={this.state.direction}
 							arrowPosition={this.state.arrowPosition}
 							containerPosition={this.state.containerPosition}
-							containerRef={this.measureContainer}
+							containerRef={this.getContainerNode}
 						>
 							<PopupComponent />
 						</ContextualPopup> :
