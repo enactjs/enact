@@ -309,9 +309,6 @@ class VirtualListCore extends Component {
 		this.state.firstIndex = 0;
 		// eslint-disable-next-line react/no-direct-mutation-state
 		this.state.numOfItems = 0;
-
-		// reset children
-		this.cc = [];
 	}
 
 	updateStatesAndBounds (props) {
