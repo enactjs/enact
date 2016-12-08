@@ -1,4 +1,5 @@
-import R from 'ramda';
+import curry from 'ramda/src/curry';
+import reduce from 'ramda/src/reduce';
 
 /**
  * Allows generating event handlers by chaining functions to filter or short-circuit the handling
@@ -16,7 +17,7 @@ import R from 'ramda';
  * @returns	{Function}		A function that accepts an event which is dispatched to each of the
  *							provided handlers.
  */
-const handle = R.unapply(handlers => (...args) => R.reduce((acc, handler) => {
+const handle = (...handlers) => (...args) => reduce((acc, handler) => {
 	if (acc) {
 		// if a prior handler returned true, do not call any more handlers
 		return true;
@@ -28,7 +29,7 @@ const handle = R.unapply(handlers => (...args) => R.reduce((acc, handler) => {
 	// otherwise, the handler is invalid so continue. This lets us blindly pass potential handlers
 	// from props without adding boilerplate checks everywhere.
 	return false;
-}, false, handlers));
+}, false, handlers);
 
 /**
  * Like `handle()`, accepts a list of handlers to process the event but returns a function that
@@ -95,7 +96,7 @@ const callOnEvent = handle.callOnEvent = (methodName) => (e) => {
  * @param	{*}			value	Value of property
  * @returns {Function}			Event handler
  */
-const forProp = handle.forProp = R.curry((prop, value) => {
+const forProp = handle.forProp = curry((prop, value) => {
 	return (e) => e[prop] !== value;
 });
 
