@@ -20,6 +20,6 @@
   },
   "dependencies": {
     "@enact/core": "^1.0.0-alpha.4",
-    "react": "~15.4.0"
+    "react": "~15.4.1"
   }
 }

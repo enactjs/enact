@@ -30,8 +30,8 @@
   "dependencies": {
     "@enact/core": "^1.0.0-alpha.4",
     "ramda": "~0.22.1",
-    "react": "~15.4.0",
-    "react-dom": "~15.4.0",
+    "react": "~15.4.1",
+    "react-dom": "~15.4.1",
     "recompose": "~0.20.2",
     "warning": "~3.0.0",
     "invariant": "~2.2.1"
