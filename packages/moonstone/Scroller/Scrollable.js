@@ -734,18 +734,17 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				),
 				isBothScrollable = isHorizontalScrollbarVisible && isVerticalScrollbarVisible,
 				verticalScrollbarClassnames = classNames(
-					hideScrollbars ? css.scrollableHiddenVerticalScrollbar : null,
+					hideScrollbars ? css.scrollableHiddenScrollbar : null,
 					isVerticalScrollbarVisible ? (!isBothScrollable && css.onlyVerticalScrollbarNeeded) : css.verticalScrollbarDisabled
 				),
 				horizontalScrollbarClassnames = classNames(
-					hideScrollbars ? css.scrollableHiddenHorizontalScrollbar : null,
+					hideScrollbars ? css.scrollableHiddenScrollbar : null,
 					isHorizontalScrollbarVisible ? (!isBothScrollable && css.onlyHorizontalScrollbarNeeded) : css.horizontalScrollbarDisabled
 				);
 
 			delete props.className;
 			delete props.cbScrollTo;
 			delete props.style;
-			delete props.hideScrollbars;
 
 			return (
 				(positioningOption !== 'byBrowser') ? (

@@ -95,6 +95,15 @@ class VirtualListCore extends Component {
 		direction: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
+		 * Hides the scrollbars when `true`
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
+		hideScrollbars: PropTypes.bool,
+
+		/**
 		 * Called when onScroll [events]{@glossary event} occurs.
 		 *
 		 * @type {Function}
@@ -144,6 +153,7 @@ class VirtualListCore extends Component {
 		data: [],
 		dataSize: 0,
 		direction: 'vertical',
+		hideScrollbars: false,
 		onScroll: nop,
 		overhang: 3,
 		positioningOption: 'byItem',
@@ -669,12 +679,13 @@ class VirtualListCore extends Component {
 	// Calling setState within componentWillReceivePropswill not trigger an additional render.
 	componentWillReceiveProps (nextProps) {
 		const
-			{direction, itemSize, dataSize, overhang, spacing} = this.props,
+			{direction, itemSize, dataSize, overhang, spacing, hideScrollbars} = this.props,
 			hasMetricsChanged = (
 				direction !== nextProps.direction ||
 				((itemSize instanceof Object) ? (itemSize.minWidth !== nextProps.itemSize.minWidth || itemSize.minHeight !== nextProps.itemSize.minHeight) : itemSize !== nextProps.itemSize) ||
 				overhang !== nextProps.overhang ||
-				spacing !== nextProps.spacing
+				spacing !== nextProps.spacing ||
+				hideScrollbars !== nextProps.hideScrollbars
 			),
 			hasDataChanged = (dataSize !== nextProps.dataSize);
 
