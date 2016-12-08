@@ -210,7 +210,10 @@ const TimePickerController = class extends React.Component {
 			this.meridiemEnabled = clockPref === '12';
 
 			const filter = this.meridiemEnabled ? includeMeridiem : excludeMeridiem;
-			this.order = this.timeFormat.getTemplate().match(filter).map(s => s[0].toLowerCase());
+			this.order = this.timeFormat.getTemplate()
+				.replace(/'.*?'/g, '')
+				.match(filter)
+				.map(s => s[0].toLowerCase());
 
 			const timeFormat = {
 				type: 'time',
