@@ -4,7 +4,7 @@
  * @module core/dispatcher
  */
 
-import R from 'ramda';
+import curry from 'ramda/src/curry';
 
 import getListeners from './listeners';
 
@@ -28,7 +28,7 @@ const getDefaultTarget = () => typeof document !== 'undefined' && document;
  * @memberof core/dispatcher
  * @private
  */
-const invoker = R.curry(function (ev, fn) {
+const invoker = curry(function (ev, fn) {
 	try {
 		fn(ev);
 	} catch (e) {

@@ -5,7 +5,6 @@
  */
 
 import {kind, hoc} from '@enact/core';
-import R from 'ramda';
 import React from 'react';
 import warning from 'warning';
 
@@ -14,8 +13,10 @@ import warning from 'warning';
 // change breaking this code. Without it, the slot property will cascade to a DOM node causing a
 // React warning.
 const cloneElement = (child, props, omit) => {
-	if (omit && R.has(omit, child.props)) {
-		return React.createElement(child.type, R.merge(R.dissoc(omit, child.props), props));
+	if (omit && omit in child.props) {
+		const newProps = Object.assign({}, child.props, props);
+		delete newProps[omit];
+		return React.createElement(child.type, newProps);
 	}
 
 	return child;
@@ -23,7 +24,7 @@ const cloneElement = (child, props, omit) => {
 
 const distributeChild = (child, index, slots, props) => {
 	let c, slot;
-	const hasSlot = R.contains(R.__, slots);
+	const hasSlot = (name) => slots.indexOf(name) !== -1;
 
 	if (!React.isValidElement(child)) {
 		return false;
