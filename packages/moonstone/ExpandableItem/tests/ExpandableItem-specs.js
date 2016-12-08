@@ -5,7 +5,9 @@ import {ExpandableItemBase} from '../ExpandableItem';
 describe('ExpandableItem', () => {
 	it('should close when disabled', function () {
 		const wrapped = mount(
-			<ExpandableItemBase open />
+			<ExpandableItemBase title="Item" open>
+				<div>Hello</div>
+			</ExpandableItemBase>
 		);
 
 		wrapped.setProps({disabled: true});

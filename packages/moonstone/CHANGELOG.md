@@ -13,6 +13,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/MarqueeController` component to synchronize multiple `moonstone/Marquee` components
 - Non-latin locale support to all existing Moonstone components
 - Language-specific font support
+- `moonstone/IncrementSlider` now accepts customizable increment and decrement icons, as well as `moonstone/Slider` being more responsive to external styling
 
 ### Changed
 
@@ -23,6 +24,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 	the public API.
 - `moonstone/GridListImageItem` so that a placeholder image displays while loading the image, and the caption and subcaption support marqueeing
 - `moonstone/MoonstoneDecorator` to add `FloatingLayerDecorator`
+- `moonstone/IncrementSlider` in vertical mode looks and works as expected.
 
 ### Removed
 

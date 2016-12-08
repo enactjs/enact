@@ -53,7 +53,7 @@ const Router = class extends React.Component {
 		/**
 		 * The component wrapping the rendered path
 		 *
-		 * @type {Component}
+		 * @type {String|Function}
 		 * @default 'div'
 		 * @public
 		 */
@@ -192,10 +192,13 @@ Route.propTypes = /** @lends moonstone/Popups.Route.prototype */ {
 	 * The component to render when the `path` for this Route matches the path of the
 	 * {@link moonstone/Panels.Routable} container.
 	 *
-	 * @type {Element}
+	 * @type {String|Function}
 	 * @public
 	 */
-	component: React.PropTypes.element.isRequired,
+	component: React.PropTypes.oneOfType([
+		React.PropTypes.string,
+		React.PropTypes.func
+	]).isRequired,
 
 	/**
 	 * The name of the path segment
