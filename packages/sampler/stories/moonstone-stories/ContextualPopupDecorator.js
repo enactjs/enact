@@ -11,11 +11,11 @@ const renderPopup = () => (
 	<div>{text('popup string', 'Hello Contextual Popup')}</div>
 );
 
-storiesOf('ContextualPopup')
+storiesOf('ContextualPopupDecorator')
 	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
-		'Basic usage of ContextualPopup',
+		'Basic usage of ContextualPopupDecorator',
 		() => (
 			<div style={{textAlign: 'center'}}>
 				<ContextualButton
