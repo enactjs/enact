@@ -5,7 +5,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 ## [unreleased]
 
 ### Changed
-- Renamed `ContextualPopup` to `ContextualPopupDecorator`
+- `ContextualPopup` to `ContextualPopupDecorator`
 
 ## [1.0.0-alpha.4] - 2016-12-2
 
