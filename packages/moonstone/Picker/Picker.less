@@ -65,6 +65,7 @@
 		}
 
 		.valueWrapper {
+			.moon-text-base();
 			height: @moon-button-height;
 			line-height: @moon-button-height;
 		}
@@ -109,7 +110,7 @@
 	&:not(.joined) {
 		.valueWrapper {
 			.moon-body-text();
-
+			.moon-locale-non-latin({line-height: @moon-button-height;});
 			height: @moon-button-height;
 			line-height: @moon-button-height;
 			max-width: 300px;

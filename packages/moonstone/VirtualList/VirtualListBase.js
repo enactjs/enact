@@ -182,6 +182,8 @@ class VirtualListCore extends Component {
 	curDataSize = 0
 	cc = []
 	scrollPosition = 0
+	updateFrom = null
+	updateTo = null
 
 	containerRef = null
 	wrapperRef = null
@@ -317,6 +319,9 @@ class VirtualListCore extends Component {
 		this.state.firstIndex = 0;
 		// eslint-disable-next-line react/no-direct-mutation-state
 		this.state.numOfItems = 0;
+
+		// reset children
+		this.cc = [];
 	}
 
 	updateStatesAndBounds (props) {
@@ -327,6 +332,8 @@ class VirtualListCore extends Component {
 
 		this.maxFirstIndex = dataSize - numOfItems;
 		this.curDataSize = dataSize;
+		this.updateFrom = null;
+		this.updateTo = null;
 
 		this.setState({firstIndex: Math.min(this.state.firstIndex, this.maxFirstIndex), numOfItems});
 		this.calculateScrollBounds(props);
@@ -418,7 +425,7 @@ class VirtualListCore extends Component {
 		if (firstIndex !== newFirstIndex) {
 			this.setState({firstIndex: newFirstIndex});
 		} else {
-			this.positionItems(this.applyStyleToExistingNode, this.determineUpdatedNeededIndices(firstIndex));
+			this.positionItems(this.determineUpdatedNeededIndices(firstIndex));
 		}
 	}
 
@@ -478,7 +485,7 @@ class VirtualListCore extends Component {
 		);
 	}
 
-	positionItems (applyStyle, {updateFrom, updateTo}) {
+	positionItems ({updateFrom, updateTo}) {
 		const
 			{positioningOption} = this.props,
 			{isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, scrollPosition} = this;
@@ -495,7 +502,11 @@ class VirtualListCore extends Component {
 		// positioning items
 		for (let i = updateFrom, j = updateFrom % dimensionToExtent; i < updateTo; i++) {
 
-			applyStyle(i, width, height, primaryPosition, secondaryPosition);
+			if (this.updateFrom === null || this.updateTo === null || this.updateFrom > i || this.updateTo <= i) {
+				this.applyStyleToNewNode(i, width, height, primaryPosition, secondaryPosition);
+			} else {
+				this.applyStyleToExistingNode(i, width, height, primaryPosition, secondaryPosition);
+			}
 
 			if (++j === dimensionToExtent) {
 				secondaryPosition = 0;
@@ -505,6 +516,9 @@ class VirtualListCore extends Component {
 				secondaryPosition += secondary.gridSize;
 			}
 		}
+
+		this.updateFrom = updateFrom;
+		this.updateTo = updateTo;
 	}
 
 	composeStyle (style, w, h, ...rest) {
@@ -708,8 +722,7 @@ class VirtualListCore extends Component {
 			{firstIndex, numOfItems} = this.state,
 			max = Math.min(dataSize, firstIndex + numOfItems);
 
-		this.cc.length = 0;
-		this.positionItems(this.applyStyleToNewNode, {updateFrom: firstIndex, updateTo: max});
+		this.positionItems({updateFrom: firstIndex, updateTo: max});
 		this.positionContainer();
 	}
 
