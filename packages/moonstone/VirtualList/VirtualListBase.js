@@ -743,8 +743,8 @@ class VirtualListCore extends Component {
 		delete props.onScrolling;
 		delete props.onScrollStart;
 		delete props.onScrollStop;
-		delete props.pageScroll;
 		delete props.overhang;
+		delete props.pageScroll;
 		delete props.positioningOption;
 		delete props.spacing;
 
