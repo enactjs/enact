@@ -75,7 +75,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'MarqueeDecorator'
 
-		static contextTypes = contextTypes;
+		static contextTypes = contextTypes
 
 		static propTypes = /** @lends moonstone/Marquee.MarqueeDecorator.prototype */ {
 			/**
@@ -429,18 +429,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.isFocused = false;
 			this.cancelAnimation();
 			forwardBlur(ev, this.props);
-		}
-
-		// Only Called when we need to animate based on context.
-		// It doesn't forward the event, because there is no real event to forward.
-		handleFocusNoForward = () => {
-			this.isFocused = true;
-			this.startAnimation();
-		}
-
-		handleBlurNoForward = () => {
-			this.isFocused = false;
-			this.cancelAnimation();
 		}
 
 		handleEnter = (ev) => {

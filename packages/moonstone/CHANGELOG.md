@@ -5,8 +5,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ## [unreleased]
 
 ### Added
-- `moonstone/MarqueeController` ability to handle focus/blur to start and stop Marquees.
-- `ui/Updatable` Higher-order Component that gives allows a developer to add `shouldComponentUpdate` to a component. This accepts changes for `props` and `context`.   
+- Focus/blur handling to `moonstone/MarqueeController` to start and stop Marquees.   
 
 ### Changed
 
@@ -16,7 +15,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Removed
 
 ### Fixed
-- Synced Marquee's will restart if one Marquee is small enough to fit.  
+- Bug where a synchronized marquee whose content fit the available space would prevent restarting of the marquees  
 
 - `moonstone/VirtualList` and `moonstone/VirtualGridList` to prevent unwanted scrolling when focused with the pointer
 - Picker's Marquee will now animate when it's parent is focused.

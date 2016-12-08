@@ -61,6 +61,7 @@ const MarqueeController = hoc((config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
+
 			this.controlled = [];
 		}
 
@@ -147,7 +148,7 @@ const MarqueeController = hoc((config, Wrapped) => {
 		}
 
 		/**
-		 * Handler for the `focus` context function
+		 * Handler for the focus event
 		 *
 		 * @returns	{undefined}
 		 */
@@ -157,7 +158,7 @@ const MarqueeController = hoc((config, Wrapped) => {
 		}
 
 		/**
-		 * Handler for the `blur` context function
+		 * Handler for the blur event
 		 *
 		 * @returns	{undefined}
 		 */
