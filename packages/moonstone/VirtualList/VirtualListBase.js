@@ -118,7 +118,7 @@ class VirtualListCore extends Component {
 		 *
 		 * @type {Boolean}
 		 * @default false
-		 * @public
+		 * @private
 		 */
 		pageScroll: PropTypes.bool,
 
