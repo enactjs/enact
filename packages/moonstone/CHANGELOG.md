@@ -5,7 +5,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ## [unreleased]
 
 ### Added
-- `moonstone/MarqueeController` ability to handle focus/blur to start and stop Marquees. 
+- `moonstone/MarqueeController` ability to handle focus/blur to start and stop Marquees.
+- `ui/Updatable` Higher-order Component that gives allows a developer to add `shouldComponentUpdate` to a component. This accepts changes for `props` and `context`.   
 
 ### Changed
 
