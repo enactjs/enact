@@ -5,7 +5,6 @@ import React from 'react';
 
 import Marquee from './Marquee';
 import {contextTypes} from './MarqueeController';
-import {contextTypes as spottableContextTypes} from '@enact/spotlight';
 
 /**
  * Default configuration parameters for {@link moonstone/Marquee.MarqueeDecorator}
@@ -76,7 +75,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'MarqueeDecorator'
 
-		static contextTypes = Object.assign(contextTypes, spottableContextTypes);
+		static contextTypes = contextTypes;
 
 		static propTypes = /** @lends moonstone/Marquee.MarqueeDecorator.prototype */ {
 			/**
@@ -417,6 +416,12 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.stop();
 		}
 
+		/**
+		 * Determine if marquee should be animated based on a change in context.
+		 *
+		 * @param {Object} Previous Context of the component
+		 * @returns {undefined}
+		 */
 		determineAnimationFromContext = (prevContext) => {
 			if (this.context && prevContext && this.props.marqueeOn === 'focus') {
 				if (this.context.isSpotted === false && prevContext.isSpotted === true && this.isFocused) {
@@ -444,6 +449,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			forwardBlur(ev, this.props);
 		}
 
+		// Only Called when we need to animate based on context.
+		// It doesn't forward the event, because there is no real event to forward.
 		handleFocusNoForward = () => {
 			this.isFocused = true;
 			this.startAnimation();

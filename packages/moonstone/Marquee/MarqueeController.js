@@ -3,6 +3,13 @@ import React from 'react';
 
 const contextTypes = {
 	/**
+	 * Called when a child `Spottable` receives blur event
+	 *
+	 * @type {Function}
+	 */
+	blur: React.PropTypes.func,
+
+	/**
 	 * Called by Marquee instances when marqueeing is canceled (e.g. when blurring a Marquee
 	 * set to `marqueeOn='focus'`)
 	 *
@@ -18,25 +25,25 @@ const contextTypes = {
 	complete: React.PropTypes.func,
 
 	/**
-	 * Called to register a Marquee instance to be synchronized
-	 *
-	 * @type {Function}
-	 */
-	register: React.PropTypes.func,
-
-	/**
-	 * Called when a child spottable receives focus
+	 * Called when a child `Spottable` receives focus event
 	 *
 	 * @type {Function}
 	 */
 	focus: React.PropTypes.func,
 
 	/**
-	 * Called when a child spottable receives blur
+	 * When `true` this means a `Spottable` child is spotted/focused
+	 *
+	 * @type {Bool}
+	 */
+	isSpotted: React.PropTypes.bool,
+
+	/**
+	 * Called to register a Marquee instance to be synchronized
 	 *
 	 * @type {Function}
 	 */
-	blur: React.PropTypes.func,
+	register: React.PropTypes.func,
 
 	/**
 	 * Called by Marquee instances when marqueeing is started (e.g. when focusing a Marquee
@@ -163,10 +170,20 @@ const MarqueeController = hoc((config, Wrapped) => {
 			}
 		}
 
+		/**
+		 * Handler for the `focus` context function
+		 *
+		 * @returns	{undefined}
+		 */
 		handleFocus = () => {
 			this.setState({isSpotted: true});
 		}
 
+		/**
+		 * Handler for the `blur` context function
+		 *
+		 * @returns	{undefined}
+		 */
 		handleBlur = () => {
 			this.setState({isSpotted: false});
 		}

@@ -59,12 +59,20 @@ const defaultConfig = {
 
 const contextTypes = {
 	/**
-	 * Context boolean to tell children if their Spottable parent is active.
+	 * Context function to be called when a blur event happens.
 	 *
-	 * @type {Boolean}
+	 * @type {Function}
 	 * @public
 	 */
-	isSpotted: React.PropTypes.bool
+	blur: React.PropTypes.func,
+
+	/**
+	 * Context function to be called when a focus event happens.
+	 *
+	 * @type {Function}
+	 * @public
+	 */
+	focus: React.PropTypes.func
 };
 
 /**
@@ -119,10 +127,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			tabIndex: React.PropTypes.number
 		}
 
-		static contextTypes = {
-			blur: React.PropTypes.func,
-			focus: React.PropTypes.func
-		}
+		static contextTypes = contextTypes;
 
 		constructor (props) {
 			super(props);
@@ -190,4 +195,4 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 });
 
 export default Spottable;
-export {Spottable, spottableClass, contextTypes};
+export {Spottable, spottableClass};

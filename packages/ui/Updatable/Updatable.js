@@ -19,7 +19,7 @@ import React from 'react';
  * @ui
  * @public
  */
-const UpdatableHOC = testFn => context => WrappedComponent => {
+const UpdatableHOC = testFn => (context = {}) => WrappedComponent => {
 	return class extends React.Component {
 		static displayName = 'Updatable'
 

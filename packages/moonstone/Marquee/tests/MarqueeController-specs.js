@@ -1,13 +1,10 @@
 import React from 'react';
 import {mount} from 'enzyme';
-import {MarqueeController, MarqueeText} from '../index.js';
+import {MarqueeController} from '../index.js';
 import {Spottable} from '@enact/spotlight';
 
 const SpottableDiv = Spottable('div');
 const ControllerDiv = MarqueeController('div');
-// const SpottableDiv = MarqueeController(Spottable('div'));
-
-import css from '../Marquee.less';
 
 describe('Marquee Controller', () => {
 
