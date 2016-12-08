@@ -285,7 +285,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		*/
 		calculateMetrics () {
 			const node = this.node;
-			let offHeight;
 			// TODO: absolute showing check (or assume that it won't be rendered if it isn't showing?)
 			if (node && this.distance == null && !this.props.disabled && !this.props.marqueeDisabled) {
 				this.distance = this.calculateDistance(node);
@@ -293,8 +292,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.setState({
 					overflow: this.calculateTextOverflow(this.distance)
 				});
-			} else {
-				offHeight = node.offsetHeight;
 			}
 		}
 
@@ -340,12 +337,13 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{undefined}
 		 */
 		start = (delay = this.props.marqueeDelay) => {
+			let minDelay = 100;
 			if (!this.state.animating) {
 				this.setTimeout(() => {
 					this.setState({
 						animating: true
 					});
-				}, delay);
+				}, minDelay + delay);
 			}
 		}
 
