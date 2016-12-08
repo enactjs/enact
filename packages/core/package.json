@@ -28,9 +28,9 @@
     "extends": "enact/strict"
   },
   "dependencies": {
-    "react": "~15.4.0",
-    "react-addons-update": "~15.4.0",
-    "react-dom": "~15.4.0",
+    "react": "~15.4.1",
+    "react-addons-update": "~15.4.1",
+    "react-dom": "~15.4.1",
     "ramda": "~0.22.1",
     "classnames": "~2.2.5"
   }

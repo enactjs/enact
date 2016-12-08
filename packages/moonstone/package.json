@@ -36,7 +36,7 @@
     "@enact/ui": "^1.0.0-alpha.4",
     "invariant": "~2.2.1",
     "ramda": "~0.22.1",
-    "react": "~15.4.0",
+    "react": "~15.4.1",
     "recompose": "~0.20.2",
     "warning": "~3.0.0"
   }
