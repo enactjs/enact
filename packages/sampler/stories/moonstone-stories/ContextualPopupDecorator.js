@@ -17,7 +17,7 @@ storiesOf('ContextualPopupDecorator')
 		' ',
 		'Basic usage of ContextualPopupDecorator',
 		() => (
-			<div style={{textAlign: 'center'}}>
+			<div style={{textAlign: 'center', marginTop: '100px'}}>
 				<ContextualButton
 					direction={select('direction', ['up', 'down', 'left', 'right'], 'down')}
 					onClick={action('onClick')}
