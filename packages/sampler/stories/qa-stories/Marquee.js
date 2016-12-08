@@ -104,7 +104,7 @@ storiesOf('Marquee')
 	)
 
 	.addWithInfo(
-		'Synchronized on Focus',
+		'Restart Marquee when Marquee completes',
 		() => (
 			<SpottableDiv>
 				<MarqueeText
@@ -117,7 +117,7 @@ storiesOf('Marquee')
 					marqueeResetDelay={1000}
 					marqueeSpeed={60}
 				>
-					{'The quick brown fox jumped over the lazy dog.  The bean bird flies at sundown.'}
+					{'The quick brown fox.'}
 				</MarqueeText>
 				<MarqueeText
 					style={{width: '400px'}}
@@ -129,7 +129,7 @@ storiesOf('Marquee')
 					marqueeResetDelay={1000}
 					marqueeSpeed={60}
 				>
-					{'The quick brown fox jumped over the lazy dog.  The bean'}
+					{LTR[0]}
 				</MarqueeText>
 			</SpottableDiv>
 		)

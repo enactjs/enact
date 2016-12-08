@@ -5,6 +5,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ## [unreleased]
 
 ### Added
+- `moonstone/MarqueeController` ability to handle focus/blur to start and stop Marquees. 
 
 ### Changed
 
@@ -14,6 +15,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Removed
 
 ### Fixed
+- Synced Marquee's will restart if one Marquee is small enough to fit.  
 
 - `moonstone/VirtualList` and `moonstone/VirtualGridList` to prevent unwanted scrolling when focused with the pointer
 - Picker's Marquee will now animate when it's parent is focused.

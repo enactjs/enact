@@ -1,11 +1,12 @@
 import Picker, {PickerBase} from '@enact/moonstone/Picker';
 import Changeable from '@enact/ui/Changeable';
 import {icons} from '@enact/moonstone/Icon';
+import {MarqueeController} from '@enact/moonstone/Marquee';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
 
-const StatefulPicker = Changeable(Picker);
+const StatefulPicker = MarqueeController(Changeable(Picker));
 StatefulPicker.propTypes = Object.assign({}, PickerBase.propTypes, StatefulPicker.propTypes);
 StatefulPicker.defaultProps = Object.assign({}, PickerBase.defaultProps, StatefulPicker.defaultProps);
 StatefulPicker.displayName = 'Picker';

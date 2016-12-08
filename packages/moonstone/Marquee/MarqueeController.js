@@ -210,7 +210,7 @@ const MarqueeController = hoc((config, Wrapped) => {
 		markComplete (component) {
 			let complete = true;
 			this.controlled.forEach(c => {
-				if (c.component === component) {
+				if (c.component === component || c.component.contentFits) {
 					c.complete = true;
 				}
 
