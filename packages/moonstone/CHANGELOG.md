@@ -4,11 +4,17 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
 ### Changed
 
-- `moonstone/VirtualGridList` to be scrolled by page on focus via 5-way key
-- `moonstone/VirtualList` and `moonstone/VirtualGridList` no longer to be scrolled on focus by mouse
-- `moonstone/Scroller`, `moonstone/VirtualList`, `moonstone/VirtualGridList`, and `moonstone/Scrollable` no longer to support mouse down/move/up events
+- `moonstone/VirtualGridList` to be scrolled by page when navigating with a 5-way direction key
+- `moonstone/VirtualList` and `moonstone/VirtualGridList` to prevent scrolling when focused with the pointer
+- `moonstone/Scroller`, `moonstone/VirtualList`, `moonstone/VirtualGridList`, and `moonstone/Scrollable` to no longer respond to mouse down/move/up events
+
+### Removed
+
+### Fixed
 
 ## [1.0.0-alpha.4] - 2016-12-2
 
