@@ -33,6 +33,7 @@ this module. When authoring components and importing mixins, only the local mixi
 imported, as they already import the general mixins.
 - the `src` property from `moonstone/Icon` and `moonston/IconButton`. Use the support for URLs in
 	the `children` property as noted above.
+- the `height` property from `moonstone/IncrementSlider` and `moonstone/Slider`
 
 ### Fixed
 
