@@ -32,9 +32,8 @@ storiesOf('IconButton')
 				disabled={boolean('disabled')}
 				selected={boolean('selected')}
 				small={boolean('small')}
-				src={select('src', ['', fwd, play, rew], '')}
 			>
-				{select('icon', ['', ...iconNames], 'play') + text('custom icon', '')}
+				{select('src', ['', fwd, play, rew], '') + select('icon', ['', ...iconNames], 'plus') + text('custom icon', '')}
 			</IconButton>
 		)
 	);

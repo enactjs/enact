@@ -92,6 +92,14 @@ const DialogBase = kind({
 		showCloseButton: PropTypes.bool,
 
 		/**
+		 * When `true`, a divider line separates the title from the dialog body
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		showDivider: PropTypes.bool,
+
+		/**
 		 * Title of the header
 		 *
 		 * @type {String}
@@ -105,15 +113,7 @@ const DialogBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		titleBelow: PropTypes.string,
-
-		/**
-		 * When `true`, a divider line separates the title from the dialog body
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		showDivider: PropTypes.bool
+		titleBelow: PropTypes.string
 	},
 
 	defaultProps: {

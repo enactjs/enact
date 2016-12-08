@@ -123,6 +123,15 @@ class VirtualListCore extends Component {
 		overhang: PropTypes.number,
 
 		/**
+		 * It scrolls by page when 'true', by item when 'false'
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @private
+		 */
+		pageScroll: PropTypes.bool,
+
+		/**
 		 * Option for positioning the items; valid values are `'byItem'`, `'byContainer'`,
 		 * and `'byBrowser'`.
 		 * If `'byItem'`, the list moves each item.
@@ -156,6 +165,7 @@ class VirtualListCore extends Component {
 		hideScrollbars: false,
 		onScroll: nop,
 		overhang: 3,
+		pageScroll: false,
 		positioningOption: 'byItem',
 		spacing: 0,
 		style: {}
@@ -319,9 +329,6 @@ class VirtualListCore extends Component {
 		this.state.firstIndex = 0;
 		// eslint-disable-next-line react/no-direct-mutation-state
 		this.state.numOfItems = 0;
-
-		// reset children
-		this.cc = [];
 	}
 
 	updateStatesAndBounds (props) {
@@ -334,6 +341,9 @@ class VirtualListCore extends Component {
 		this.curDataSize = dataSize;
 		this.updateFrom = null;
 		this.updateTo = null;
+
+		// reset children
+		this.cc = [];
 
 		this.setState({firstIndex: Math.min(this.state.firstIndex, this.maxFirstIndex), numOfItems});
 		this.calculateScrollBounds(props);
@@ -577,6 +587,7 @@ class VirtualListCore extends Component {
 
 	calculatePositionOnFocus = (focusedIndex) => {
 		const
+			{pageScroll} = this.props,
 			{primary, numOfItems, scrollPosition} = this,
 			offsetToClientEnd = primary.clientSize - primary.itemSize;
 		let
@@ -586,10 +597,12 @@ class VirtualListCore extends Component {
 		this.lastFocusedIndex = focusedIndex;
 
 		if (primary.clientSize >= primary.itemSize) {
-			if (gridPosition.primaryPosition > scrollPosition + offsetToClientEnd) {
-				gridPosition.primaryPosition -= offsetToClientEnd;
-			} else if (gridPosition.primaryPosition > scrollPosition) {
+			if (gridPosition.primaryPosition > scrollPosition + offsetToClientEnd) { // forward over
+				gridPosition.primaryPosition -= pageScroll ? 0 : offsetToClientEnd;
+			} else if (gridPosition.primaryPosition >= scrollPosition) { // inside of client
 				gridPosition.primaryPosition = scrollPosition;
+			} else { // backward over
+				gridPosition.primaryPosition -= pageScroll ? offsetToClientEnd : 0;
 			}
 		}
 
@@ -742,6 +755,7 @@ class VirtualListCore extends Component {
 		delete props.onScrollStart;
 		delete props.onScrollStop;
 		delete props.overhang;
+		delete props.pageScroll;
 		delete props.positioningOption;
 		delete props.spacing;
 
