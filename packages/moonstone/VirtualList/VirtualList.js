@@ -70,7 +70,7 @@ const VirtualGridList = kind({
 		itemSize: PropTypes.object.isRequired
 	},
 
-	render: (props) => <VirtualListBase {...props} />
+	render: (props) => <VirtualListBase {...props} pageScroll />
 });
 
 export default VirtualList;

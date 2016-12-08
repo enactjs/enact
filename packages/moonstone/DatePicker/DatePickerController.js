@@ -151,7 +151,10 @@ const DatePickerController = class extends React.Component {
 				useNative: false
 			});
 
-			this.order = this.dateFormat.getTemplate().match(/([mdy]+)/ig).map(s => s[0].toLowerCase());
+			this.order = this.dateFormat.getTemplate()
+				.replace(/'.*?'/g, '')
+				.match(/([mdy]+)/ig)
+				.map(s => s[0].toLowerCase());
 		}
 	}
 
