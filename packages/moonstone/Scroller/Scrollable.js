@@ -146,6 +146,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		isScrollAnimationTargetAccumulated = false
 		isFirstDragging = false
 		isDragging = false
+		isKeyDown = false
 
 		// mouse handlers
 		eventHandlers = {}
@@ -203,14 +204,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					onScroll
 				};
 			} else {
-				const {onFocus, onKeyDown, onMouseDown, onMouseLeave, onMouseMove, onMouseUp, onWheel} = this;
+				const {onFocus, onKeyDown, onKeyUp, onWheel} = this;
+				// We have removed all mouse event handlers for now.
+				// Revisit later for touch usage.
 				this.eventHandlers = {
 					onFocus,
 					onKeyDown,
-					onMouseDown,
-					onMouseLeave,
-					onMouseMove,
-					onMouseUp,
+					onKeyUp,
 					onWheel
 				};
 			}
@@ -363,26 +363,33 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		onFocus = (e) => {
 			// for virtuallist
-			const
-				item = e.target,
-				index = Number.parseInt(item.getAttribute(dataIndexAttribute));
+			if (this.isKeyDown && !this.isDragging) {
+				const
+					item = e.target,
+					index = Number.parseInt(item.getAttribute(dataIndexAttribute));
 
-			if (!this.isDragging && !isNaN(index) && item !== this.lastFocusedItem && item === doc.activeElement && this.childRef.calculatePositionOnFocus) {
-				const pos = this.childRef.calculatePositionOnFocus(index);
-				if (pos) {
-					if (pos.left !== this.scrollLeft || pos.top !== this.scrollTop) {
-						this.start(pos.left, pos.top, (animationDuration > 0), false, animationDuration);
+				if (!isNaN(index) && item !== this.lastFocusedItem && item === doc.activeElement && this.childRef.calculatePositionOnFocus) {
+					const pos = this.childRef.calculatePositionOnFocus(index);
+					if (pos) {
+						if (pos.left !== this.scrollLeft || pos.top !== this.scrollTop) {
+							this.start(pos.left, pos.top, (animationDuration > 0), false, animationDuration);
+						}
+						this.lastFocusedItem = item;
 					}
-					this.lastFocusedItem = item;
 				}
 			}
 		}
 
 		onKeyDown = (e) => {
 			if (this.childRef.setSpotlightContainerRestrict) {
+				this.isKeyDown = true;
 				const index = Number.parseInt(e.target.getAttribute(dataIndexAttribute));
 				this.childRef.setSpotlightContainerRestrict(e.keyCode, index);
 			}
+		}
+
+		onKeyUp = () => {
+			this.isKeyDown = false;
 		}
 
 		onWheel = (e) => {
