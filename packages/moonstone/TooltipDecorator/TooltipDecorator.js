@@ -15,13 +15,22 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 
 		static propTypes = {
 			/**
-			* Message of tooltip
+			* Delegate blur handler
 			*
 			* @type {string}
 			* @default is not exist
 			* @public
 			*/
-			tooltipText: React.PropTypes.string,
+			onBlur: React.PropTypes.func,
+
+			/**
+			* Delegate focus handler
+			*
+			* @type {string}
+			* @default is not exist
+			* @public
+			*/
+			onFocus: React.PropTypes.func,
 
 			/**
 			* Position of the tooltip with respect to the activating control. Valid values are
@@ -43,22 +52,13 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 			tooltipPosition: React.PropTypes.oneOf(['auto', 'above', 'above center', 'above left', 'above right', 'below', 'below center', 'below left', 'below right', 'left bottom', 'left middle', 'left top', 'right bottom', 'right middle', 'right top']),
 
 			/**
-			* Delegate focus handler
+			* Message of tooltip
 			*
 			* @type {string}
 			* @default is not exist
 			* @public
 			*/
-			onFocus: React.PropTypes.func,
-
-			/**
-			* Delegate blur handler
-			*
-			* @type {string}
-			* @default is not exist
-			* @public
-			*/
-			onBlur: React.PropTypes.func
+			tooltipText: React.PropTypes.string
 		}
 
 		constructor (props) {
@@ -119,7 +119,7 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 			}
 
 			this.setState({
-				type: tPos + ' ' + aPos + "Arrow",
+				type: tPos + ' ' + aPos + 'Arrow',
 				top: ri.unit(r.tY, 'rem'),
 				left: ri.unit(r.tX, 'rem'),
 				arrowType: aPos === 'center' || aPos === 'middle' ? 'edge' : 'corner'
@@ -134,48 +134,48 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 
 			switch (tPos) {
 				case 'below':
-					tX = cBound.left + cBound.width/2;
+					tX = cBound.left + cBound.width / 2;
 					tY = cBound.bottom + tooltipDistance;
 
 					if (aPos === 'right') {
 						tX -= lBound.width;
 					} else if (aPos === 'center') {
-						tX -= lBound.width/2;
+						tX -= lBound.width / 2;
 					}
 					break;
 				case 'above':
-					tX = cBound.left + cBound.width/2;
+					tX = cBound.left + cBound.width / 2;
 					tY = cBound.top - lBound.height - tooltipDistance;
 
 					if (aPos === 'right') {
 						tX -= lBound.width;
 					} else if (aPos === 'center') {
-						tX -= lBound.width/2;
+						tX -= lBound.width / 2;
 					}
 					break;
 				case 'left':
 					tX = cBound.left - lBound.width - tooltipDistance;
-					tY = cBound.top + cBound.height/2;
+					tY = cBound.top + cBound.height / 2;
 
 					if (aPos === 'top') {
 						tY -= lBound.height;
-					} else if(aPos === 'middle') {
-						tY -= lBound.height/2;
+					} else if (aPos === 'middle') {
+						tY -= lBound.height / 2;
 					}
 					break;
 				case 'right':
 					tX = cBound.right + tooltipDistance;
-					tY = cBound.top + cBound.height/2;
+					tY = cBound.top + cBound.height / 2;
 
 					if (aPos === 'top') {
 						tY -= lBound.height;
-					} else if(aPos === 'middle') {
-						tY -= lBound.height/2;
+					} else if (aPos === 'middle') {
+						tY -= lBound.height / 2;
 					}
 					break;
 				default:
-					tX=0;
-					tY=0;
+					tX = 0;
+					tY = 0;
 					break;
 			}
 
@@ -184,18 +184,18 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 				tY: tY,
 				tW: lBound.width,
 				tH: lBound.height
-			}
+			};
 		}
 
 		handleFocus (e) {
 			this.clientRef = e.target;
-			if( this.props.tooltipText && this.props.tooltipText.length>0 ) this.show();
-			if( this.props.onFocus ) this.props.onFocus(e);
+			if ( this.props.tooltipText && this.props.tooltipText.length > 0 ) this.show();
+			if ( this.props.onFocus ) this.props.onFocus(e);
 		}
 
 		handleBlur (e) {
-			if( this.props.tooltipText && this.props.tooltipText.length>0 ) this.hide();
-			if( this.props.onBlur ) this.props.onBlur(e);
+			if ( this.props.tooltipText && this.props.tooltipText.length > 0 ) this.hide();
+			if ( this.props.onBlur ) this.props.onBlur(e);
 		}
 
 		show () {
@@ -234,10 +234,12 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 			delete props.tooltipText;
 			delete props.tooltipPosition;
 
-			return(
-				<Wrapped {...props}
+			return (
+				<Wrapped
+					{...props}
 					onFocus={this.handleFocus}
-					onBlur={this.handleBlur}>
+					onBlur={this.handleBlur}
+				>
 					{children}
 					<FloatingLayer open={this.state.showing} scrimType='none'>
 						<Tooltip
@@ -246,7 +248,8 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 							top={this.state.top}
 							left={this.state.left}
 							arrowType={this.state.arrowType}
-							getTooltipRef={this.getTooltipRef} />
+							getTooltipRef={this.getTooltipRef}
+						/>
 					</FloatingLayer>
 				</Wrapped>
 			);
@@ -257,7 +260,7 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 			delete props.tooltip;
 			delete props.tooltipPosition;
 
-			return(
+			return (
 				<Wrapped {...props} />
 			);
 		}
@@ -269,7 +272,7 @@ const TooltipDecorator = hoc( (config, Wrapped) => {
 				return this.renderWrapped();
 			}
 		}
-	}
+	};
 });
 
 export default TooltipDecorator;

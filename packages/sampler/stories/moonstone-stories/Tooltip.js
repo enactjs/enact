@@ -18,7 +18,7 @@ const prop = {
 		'right middle': 'right middle',
 		'right top': 'right top'
 	}
-}
+};
 
 storiesOf('Tooltip')
 	.addDecorator(withKnobs)

@@ -10,7 +10,7 @@ const TooltipArrow = kind({
 	},
 
 	render: ({type}) => {
-		return <svg className={css.tooltipArrow} viewBox={'0 0 3 5'}><path d={type === 'edge' ? 'M0,5C0,4,1,3,3,2.5C1,2,0,1,0,0V5Z' : 'M0,5C0,3,1,0,3,0H0V5Z'} /></svg>
+		return <svg className={css.tooltipArrow} viewBox={'0 0 3 5'}><path d={type === 'edge' ? 'M0,5C0,4,1,3,3,2.5C1,2,0,1,0,0V5Z' : 'M0,5C0,3,1,0,3,0H0V5Z'} /></svg>;
 	}
 });
 
@@ -22,46 +22,10 @@ const Tooltip = kind({
 		type: 'below leftArrow',
 		top: '0',
 		left: '0',
-		arrowType: 'corner',
+		arrowType: 'corner'
 	},
 
 	propTypes: {
-		/**
-		* Message of tooltip
-		*
-		* @type {string}
-		* @default is not exist
-		* @public
-		*/
-		text: React.PropTypes.string,
-
-		/**
-		* Tooltip Type
-		*
-		* @type {string}
-		* @default 'below-left'
-		* @public
-		*/
-		type: React.PropTypes.string,
-
-		/**
-		* Tooltip Top Position
-		*
-		* @type {string}
-		* @default 0
-		* @public
-		*/
-		top: React.PropTypes.string,
-
-		/**
-		* Tooltip Left Position
-		*
-		* @type {string}
-		* @default 0
-		* @public
-		*/
-		left: React.PropTypes.string,
-
 		/**
 		* Tooltip Arrow Type
 		*
@@ -78,7 +42,43 @@ const Tooltip = kind({
 		* @default ''
 		* @public
 		*/
-		getTooltipRef: React.PropTypes.func
+		getTooltipRef: React.PropTypes.func,
+
+		/**
+		* Tooltip Left Position
+		*
+		* @type {string}
+		* @default 0
+		* @public
+		*/
+		left: React.PropTypes.string,
+
+		/**
+		* Message of tooltip
+		*
+		* @type {string}
+		* @default is not exist
+		* @public
+		*/
+		text: React.PropTypes.string,
+
+		/**
+		* Tooltip Top Position
+		*
+		* @type {string}
+		* @default 0
+		* @public
+		*/
+		top: React.PropTypes.string,
+
+		/**
+		* Tooltip Type
+		*
+		* @type {string}
+		* @default 'below-left'
+		* @public
+		*/
+		type: React.PropTypes.string
 	},
 
 	styles: {
@@ -91,14 +91,16 @@ const Tooltip = kind({
 	},
 
 	render: ({getTooltipRef, text, left, top, arrowType, className}) => {
-		return(
+		return (
 			<div
 				className={className}
-				style={{left: left, top: top}}>
+				style={{left: left, top: top}}
+			>
 				<TooltipArrow type={arrowType} />
 				<div
 					ref={getTooltipRef}
-					className={css.tooltipLabel}>
+					className={css.tooltipLabel}
+				>
 					{text.toUpperCase()}
 				</div>
 			</div>
