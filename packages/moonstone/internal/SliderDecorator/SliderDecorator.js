@@ -9,7 +9,7 @@ import hoc from '@enact/core/hoc';
 import {throttleJob} from '@enact/core/jobs';
 import Spotlight from '@enact/spotlight';
 import {checkDefaultBounds} from '@enact/ui/validators/PropTypeValidators';
-import R from 'ramda';
+import clamp from 'ramda/src/clamp';
 import React, {PropTypes} from 'react';
 
 import {
@@ -229,7 +229,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const {min, max, step} = this.props;
 			let value = this.value + (step * direction);
 
-			value = R.clamp(min, max, value);
+			value = clamp(min, max, value);
 			this.updateValue(value);
 		}
 
