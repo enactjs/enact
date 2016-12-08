@@ -7,3 +7,4 @@ prepared the following docs to help developers out:
 
 * [Introduction](./redux_intro.md)
 * [Redux Async](./redux_async.md)
+* [React and Redux resources](./react_redux.md)
