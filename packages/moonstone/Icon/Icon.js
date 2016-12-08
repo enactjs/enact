@@ -10,7 +10,7 @@ import ri from '@enact/ui/resolution';
 import React, {PropTypes} from 'react';
 
 import iconList from './IconList.js';
-import {TooltipDecorator} from '../Tooltip';
+import {TooltipDecorator} from '../TooltipDecorator';
 
 import css from './Icon.less';
 

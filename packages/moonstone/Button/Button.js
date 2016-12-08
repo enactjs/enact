@@ -12,7 +12,7 @@ import Pressable from '@enact/ui/Pressable';
 import React, {PropTypes} from 'react';
 
 import {MarqueeDecorator} from '../Marquee';
-import {TooltipDecorator} from '../Tooltip';
+import {TooltipDecorator} from '../TooltipDecorator';
 
 import css from './Button.less';
 
