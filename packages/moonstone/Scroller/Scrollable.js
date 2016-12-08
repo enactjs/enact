@@ -22,7 +22,7 @@ const
 	perf = (typeof window === 'object') ? window.performance : {now: Date.now},
 	holdTime = 50,
 	scrollWheelMultiplierForDeltaPixel = 2,
-	pixelPerLine = ri.scale(40) * scrollWheelMultiplierForDeltaPixel,
+	pixelPerLine = ri.scale(39) * scrollWheelMultiplierForDeltaPixel,
 	paginationPageMultiplier = 0.8,
 	epsilon = 1,
 	// spotlight
