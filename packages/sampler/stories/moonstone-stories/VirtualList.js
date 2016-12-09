@@ -4,7 +4,7 @@ import VirtualList from '@enact/moonstone/VirtualList';
 import {VirtualListCore} from '@enact/moonstone/VirtualList/VirtualListBase';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, number} from '@kadira/storybook-addon-knobs';
+import {withKnobs, number} from '@kadira/storybook-addon-knobs';
 
 VirtualList.propTypes = Object.assign({}, VirtualListCore.propTypes);
 VirtualList.defaultProps = Object.assign({}, VirtualListCore.defaultProps);
@@ -50,7 +50,6 @@ storiesOf('VirtualList')
 				data={items}
 				dataSize={number('dataSize', items.length)}
 				direction='vertical'
-				hideScrollbars={boolean('hideScrollbars', false)}
 				itemSize={ri.scale(number('itemSize', 72))}
 				spacing={ri.scale(number('spacing', 0))}
 				style={style.listHeight}
