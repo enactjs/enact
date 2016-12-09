@@ -12,6 +12,8 @@
 		}
 		.knob {
 			background-color: @moon-slider-spotlight-knob-color;
+			border: @moon-button-border-width solid @moon-slider-spotlight-knob-color;
+			border-style: inherit;
 		}
 	}
 
@@ -49,6 +51,7 @@
 		border: @moon-button-border-width solid transparent;
 		box-sizing: border-box;
 		will-change: transform;
+		-webkit-background-clip: padding;
 	}
 
 	.input {
