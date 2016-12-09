@@ -55,7 +55,7 @@ class VirtualListCore extends Component {
 		cbScrollTo: PropTypes.func,
 
 		/**
-		 * Client height. If this prop is omitted, VirtualList calculated the client height after rendering itself.
+		 * Client height. If `clientWidth` and `clientHeight` are omitted, VirtualList will calculate them after rendering itself.
 		 *
 		 * @type {Number}
 		 * @private
@@ -63,7 +63,7 @@ class VirtualListCore extends Component {
 		clientHeight: PropTypes.number,
 
 		/**
-		 * Client width. If this prop is omitted, VirtualList calculated the client width after rendering itself.
+		 * Client width. If `clientWidth` and `clientHeight` are omitted, VirtualList will calculate them after rendering itself.
 		 *
 		 * @type {Number}
 		 * @private
@@ -265,14 +265,14 @@ class VirtualListCore extends Component {
 		const
 			{dataSize, direction, itemSize, overhang, positioningOption, spacing} = props,
 			node = this.getContainerNode(positioningOption),
-			isFixedClientSize = (props.clientWidth && props.clientHeight);
+			isClientSized = (props.clientWidth && props.clientHeight);
 
-		if (!isFixedClientSize && !node) {
+		if (!isClientSized && !node) {
 			return;
 		}
 
 		const
-			client = isFixedClientSize ? props : this.getClientSize(node),
+			client = isClientSized ? props : this.getClientSize(node),
 			{clientWidth, clientHeight} = client,
 			heightInfo = {
 				clientSize: clientHeight,
@@ -326,7 +326,7 @@ class VirtualListCore extends Component {
 		// eslint-disable-next-line react/no-direct-mutation-state
 		this.state.firstIndex = 0;
 		// eslint-disable-next-line react/no-direct-mutation-state
-		if (isFixedClientSize) {
+		if (isClientSized) {
 			this.state.numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang));
 		} else {
 			this.state.numOfItems = 0;
