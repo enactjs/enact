@@ -7,6 +7,7 @@ import React from 'react';
 
 import Breadcrumb from './Breadcrumb';
 import BreadcrumbArranger from './BreadcrumbArranger';
+import FocusManager from './FocusManager';
 import IndexedBreadcrumbs from './IndexedBreadcrumbs';
 
 import css from './Panels.less';
@@ -148,7 +149,7 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			);
 
 			return (
-				<div className={className}>
+				<FocusManager className={className} index={index}>
 					<ViewManager
 						noAnimation={noAnimation}
 						arranger={BreadcrumbArranger}
@@ -163,7 +164,7 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					<Wrapped {...rest} noAnimation={noAnimation} index={index} {...config.props}>
 						{children}
 					</Wrapped>
-				</div>
+				</FocusManager>
 			);
 		}
 	});

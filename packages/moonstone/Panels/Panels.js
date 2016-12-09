@@ -10,6 +10,7 @@ import React from 'react';
 import {shape} from '@enact/ui/ViewManager';
 
 import ApplicationCloseButton from './ApplicationCloseButton';
+import FocusManager from './FocusManager';
 import Viewport from './Viewport';
 
 import css from './Panels.less';
@@ -64,6 +65,14 @@ const PanelsBase = kind({
 		noCloseButton: React.PropTypes.bool,
 
 		/**
+		 * When `true`, panels will not be wrapped with a focus manager component
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 */
+		noFocusManager: React.PropTypes.bool,
+
+		/**
 		 * A function to run when app close button is clicked
 		 * @type {Function}
 		 */
@@ -71,7 +80,8 @@ const PanelsBase = kind({
 	},
 
 	defaultProps: {
-		noCloseButton: false
+		noCloseButton: false,
+		noFocusManager: false
 	},
 
 	styles: {
@@ -89,19 +99,27 @@ const PanelsBase = kind({
 					<ApplicationCloseButton onApplicationClose={onApplicationClose} />
 				);
 			}
+		},
+		wrapperComponent: (noFocusManager) => {
+			return noFocusManager ? FocusManager : 'div';
 		}
 	},
 
-	render: ({noAnimation, arranger, children, index, applicationCloseButton, ...rest}) => {
+	render: ({noAnimation, arranger, children, index, applicationCloseButton, noFocusManager, wrapperComponent: Component, ...rest}) => {
 		delete rest.noCloseButton;
 		delete rest.onApplicationClose;
+
+		if (!noFocusManager) {
+			rest.index = index;
+		}
+
 		return (
-			<div {...rest}>
+			<Component {...rest}>
 				{applicationCloseButton}
 				<Viewport noAnimation={noAnimation} arranger={arranger} index={index}>
 					{children}
 				</Viewport>
-			</div>
+			</Component>
 		);
 	}
 });
