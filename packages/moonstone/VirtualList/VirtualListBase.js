@@ -272,8 +272,7 @@ class VirtualListCore extends Component {
 		}
 
 		const
-			client = isClientSized ? props : this.getClientSize(node),
-			{clientWidth, clientHeight} = client,
+			{clientWidth, clientHeight} = (isClientSized ? props : this.getClientSize(node)),
 			heightInfo = {
 				clientSize: clientHeight,
 				minItemSize: (itemSize.minHeight) ? itemSize.minHeight : null,
