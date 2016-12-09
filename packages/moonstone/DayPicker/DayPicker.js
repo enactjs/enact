@@ -7,11 +7,14 @@
 import {$L} from '@enact/i18n';
 import {coerceArray} from '@enact/core/util';
 import DateFmt from '@enact/i18n/ilib/lib/DateFmt';
+import {forward} from '@enact/core/handle';
 import ilib from '@enact/i18n/ilib/lib/ilib';
 import LocaleInfo from '@enact/i18n/ilib/lib/LocaleInfo';
 import React, {PropTypes} from 'react';
 
 import ExpandableList from '../ExpandableList';
+
+const forwardSelect = forward('onSelect');
 
 /**
  * {@link moonstone/DayPicker.DayPicker} is a component that
@@ -181,12 +184,8 @@ const DayPicker = class extends React.Component {
 	}
 
 	handleSelect = ({selected}) => {
-		const {onSelect} = this.props;
-		if (onSelect) {
-			onSelect({
-				selected: this.adjustSelection(selected, -this.firstDayOfWeek)
-			});
-		}
+		const adjusted = this.adjustSelection(selected, -this.firstDayOfWeek);
+		forwardSelect({selected: adjusted}, this.props);
 	}
 
 	render () {
