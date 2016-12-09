@@ -27,9 +27,6 @@ const defaultConfig = {};
  * @public
  */
 const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const ARROW_WIDTH = ri.scale(30);
-	const ARROW_OFFSET = ri.scale(18);
-	const MARGIN = ri.scale(12);
 
 	return class extends React.Component {
 		static displayName = 'ContextualPopupDecorator'
@@ -43,6 +40,10 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			this.overflow = {};
 			this.adjustedDirection = this.props.direction;
+
+			this.ARROW_WIDTH = ri.scale(30);
+			this.ARROW_OFFSET = ri.scale(18);
+			this.MARGIN = ri.scale(12);
 		}
 
 		static propTypes = /** @lends moonstone/ContextualPopupDecorator.ContextualPopupDecorator.prototype */ {
@@ -118,22 +119,22 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			switch (this.adjustedDirection) {
 				case 'up':
 					position = {
-						bottom: ARROW_OFFSET
+						bottom: this.ARROW_OFFSET
 					};
 					break;
 				case 'down':
 					position = {
-						top: clientNode.height + ARROW_OFFSET
+						top: clientNode.height + this.ARROW_OFFSET
 					};
 					break;
 				case 'right':
 					position = {
-						left: this.context.rtl ? ARROW_OFFSET : clientNode.width + ARROW_OFFSET
+						left: this.context.rtl ? this.ARROW_OFFSET : clientNode.width + this.ARROW_OFFSET
 					};
 					break;
 				case 'left':
 					position = {
-						right: this.context.rtl ? clientNode.width + ARROW_OFFSET : ARROW_OFFSET
+						right: this.context.rtl ? clientNode.width + this.ARROW_OFFSET : this.ARROW_OFFSET
 					};
 					break;
 				default:
@@ -148,10 +149,10 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.adjustedDirection === 'up' || this.adjustedDirection === 'down') {
 				if (this.overflow.isOverLeft) {
 					// anchor to the left of the screen
-					pos.left = -clientNode.left + MARGIN;
+					pos.left = -clientNode.left + this.MARGIN;
 				} else if (this.overflow.isOverRight) {
 					// anchor to the right of the screen
-					pos.right = -clientNode.right - MARGIN;
+					pos.right = -clientNode.right - this.MARGIN;
 				} else {
 					// center horizontally
 					pos.left = (clientNode.width - containerNode.width) / 2;
@@ -160,10 +161,10 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			} else if (this.adjustedDirection === 'left' || this.adjustedDirection === 'right') {
 				if (this.overflow.isOverTop) {
 					// anchor to the top of the screen
-					pos.top = -clientNode.top + MARGIN;
+					pos.top = -clientNode.top + this.MARGIN;
 				} else if (this.overflow.isOverDown) {
 					// anchor to the bottom of the screen
-					pos.bottom = -clientNode.bottom - MARGIN;
+					pos.bottom = -clientNode.bottom - this.MARGIN;
 				} else {
 					// center vertically
 					pos.top = (clientNode.height - containerNode.height) / 2;
@@ -177,23 +178,23 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			switch (this.adjustedDirection) {
 				case 'up':
 					return this.adjustRTL({
-						left: (clientNode.width - ARROW_WIDTH) / 2,
+						left: (clientNode.width - this.ARROW_WIDTH) / 2,
 						bottom: 0
 					});
 				case 'down':
 					return this.adjustRTL({
-						left: (clientNode.width - ARROW_WIDTH) / 2,
+						left: (clientNode.width - this.ARROW_WIDTH) / 2,
 						top: clientNode.height
 					});
 				case 'left':
 					return {
 						right: this.context.rtl ? clientNode.width : 0,
-						top: (clientNode.height - ARROW_WIDTH) / 2
+						top: (clientNode.height - this.ARROW_WIDTH) / 2
 					};
 				case 'right':
 					return {
 						left:  this.context.rtl ? 0 : clientNode.width,
-						top: (clientNode.height - ARROW_WIDTH) / 2
+						top: (clientNode.height - this.ARROW_WIDTH) / 2
 					};
 				default:
 					return {};
@@ -206,8 +207,8 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const {direction} = this.props;
 			if (direction === 'up' || direction === 'down') {
 				this.overflow = {
-					isOverTop: client.top - container.height - ARROW_OFFSET < 0,
-					isOverBottom: client.bottom + container.height + ARROW_OFFSET > window.innerHeight,
+					isOverTop: client.top - container.height - this.ARROW_OFFSET < 0,
+					isOverBottom: client.bottom + container.height + this.ARROW_OFFSET > window.innerHeight,
 					isOverLeft: client.left - (container.width - client.width) / 2 < 0,
 					isOverRight: client.right + (container.width - client.width) / 2 > window.innerWidth
 				};
@@ -215,8 +216,8 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.overflow = {
 					isOverTop: client.top - (container.height - client.height) / 2 < 0,
 					isOverBottom: client.bottom + (container.height - client.height) / 2 > window.innerHeight,
-					isOverLeft: client.left - container.width - MARGIN < 0,
-					isOverRight: client.right + container.width + MARGIN > window.innerWidth
+					isOverLeft: client.left - container.width - this.MARGIN < 0,
+					isOverRight: client.right + container.width + this.MARGIN > window.innerWidth
 				};
 			}
 		}

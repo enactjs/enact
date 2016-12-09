@@ -86,16 +86,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			backgroundPercent: PropTypes.number,
 
 			/**
-			 * Height, in standard CSS units, of the vertical slider. Only takes
-			 * effect on a vertical oriented slider.
-			 *
-			 * @type {String}
-			 * @default '300px'
-			 * @public
-			 */
-			height: PropTypes.string,
-
-			/**
 			 * The maximum value of the slider.
 			 *
 			 * @type {Number}
@@ -160,7 +150,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		};
 
 		static defaultProps = {
-			height: '300px',
 			max: 100,
 			min: 0,
 			step: 1,
@@ -190,7 +179,8 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleChange = (event) => {
 			event.preventDefault();
-			const value = Number.parseInt(event.target.value);
+			const parseFn = (event.target.value % 1 !== 0) ? 'parseFloat' : 'parseInt',
+				value = Number[parseFn](event.target.value);
 			this.updateValue(value);
 		}
 
@@ -206,7 +196,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 				loaderNode.style.transform = computeBarTransform(proportionBackground, vertical);
 				barNode.style.transform = computeBarTransform(proportionProgress, vertical);
-				knobNode.style.transform = computeKnobTransform(proportionProgress, vertical, node, knobNode.offsetHeight / 2);
+				knobNode.style.transform = computeKnobTransform(proportionProgress, vertical, node);
 				this.inputNode.value = value;
 				this.value = value;
 				this.onChange();
@@ -221,7 +211,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.sliderNode = node;
 		}
 
-		getSliderBarRef = (node) => {
+		getSliderBarNode = (node) => {
 			this.sliderBarNode = node;
 		}
 
@@ -258,7 +248,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					inputRef={this.getInputNode}
 					sliderRef={this.getSliderNode}
 					value={this.value}
-					sliderBarRef={this.getSliderBarRef}
+					sliderBarRef={this.getSliderBarNode}
 				/>
 			);
 		}
