@@ -263,7 +263,7 @@ class VirtualListCore extends Component {
 
 	calculateMetrics (props) {
 		const
-			{direction, itemSize, positioningOption, spacing} = props,
+			{dataSize, direction, itemSize, overhang, positioningOption, spacing} = props,
 			node = this.getContainerNode(positioningOption),
 			isFixedClientSize = (props.clientWidth && props.clientHeight);
 
@@ -272,8 +272,8 @@ class VirtualListCore extends Component {
 		}
 
 		const
-			clientSize = isFixedClientSize ? props : this.getClientSize(node),
-			{clientWidth, clientHeight} = clientSize,
+			client = isFixedClientSize ? props : this.getClientSize(node),
+			{clientWidth, clientHeight} = client,
 			heightInfo = {
 				clientSize: clientHeight,
 				minItemSize: (itemSize.minHeight) ? itemSize.minHeight : null,
@@ -327,7 +327,7 @@ class VirtualListCore extends Component {
 		this.state.firstIndex = 0;
 		// eslint-disable-next-line react/no-direct-mutation-state
 		if (isFixedClientSize) {
-			this.state.numOfItems = secondary.clientSize / primary.gridSize;
+			this.state.numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang));
 		} else {
 			this.state.numOfItems = 0;
 		}
