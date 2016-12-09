@@ -22,8 +22,7 @@ const defaultPlaceholder =
 	'JSIgaGVpZ2h0PSIxMDAlIiBzdHlsZT0ic3Ryb2tlOiAjNDQ0OyBzdHJva2Utd2lkdGg6IDE7IGZpbGw6ICNhYW' +
 	'E7IiAvPjxsaW5lIHgxPSIwIiB5MT0iMCIgeDI9IjEwMCUiIHkyPSIxMDAlIiBzdHlsZT0ic3Ryb2tlOiAjNDQ0' +
 	'OyBzdHJva2Utd2lkdGg6IDE7IiAvPjxsaW5lIHgxPSIxMDAlIiB5MT0iMCIgeDI9IjAiIHkyPSIxMDAlIiBzdH' +
-	'lsZT0ic3Ryb2tlOiAjNDQ0OyBzdHJva2Utd2lkdGg6IDE7IiAvPjwvc3ZnPg==',
-	Controller = MarqueeController('div');
+	'lsZT0ic3Ryb2tlOiAjNDQ0OyBzdHJva2Utd2lkdGg6IDE7IiAvPjwvc3ZnPg==';
 
 /**
  * {@link moonstone/VirtualList/GridListImageItem.GridListImageItemBase} is a stateless
@@ -101,7 +100,7 @@ const GridListImageItemBase = kind({
 		delete rest.selected;
 
 		return (
-			<Controller {...rest}>
+			<div {...rest}>
 				<Image className={css.image} src={source} placeholder={defaultPlaceholder} />
 				{
 					selectionOverlayShowing ? (
@@ -114,7 +113,7 @@ const GridListImageItemBase = kind({
 				}
 				{caption ? (<MarqueeText marqueeOn="focus" className={css.caption}>{caption}</MarqueeText>) : null}
 				{subCaption ? (<MarqueeText marqueeOn="focus" className={css.subCaption}>{subCaption}</MarqueeText>) : null}
-			</Controller>
+			</div>
 		);
 	}
 });
@@ -135,7 +134,7 @@ const GridListImageItemBase = kind({
  * @ui
  * @public
  */
-const GridListImageItem = Spottable(GridListImageItemBase);
+const GridListImageItem = MarqueeController(Spottable(GridListImageItemBase));
 
 export default GridListImageItem;
 export {GridListImageItem, GridListImageItemBase};
