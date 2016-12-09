@@ -2,83 +2,58 @@ import React from 'react';
 import kind from '@enact/core/kind';
 import css from './Tooltip.less';
 
-const TooltipArrow = kind({
-	name: 'TooltipArrpw',
-
-	propTypes: {
-		type: React.PropTypes.string
-	},
-
-	render: ({type}) => {
-		return <svg className={css.tooltipArrow} viewBox={'0 0 3 5'}><path d={type === 'edge' ? 'M0,5C0,4,1,3,3,2.5C1,2,0,1,0,0V5Z' : 'M0,5C0,3,1,0,3,0H0V5Z'} /></svg>;
-	}
-});
-
 const Tooltip = kind({
 	name: 'Tooltip',
-
-	defaultProps: {
-		text: '',
-		type: 'below leftArrow',
-		top: '0',
-		left: '0',
-		arrowType: 'corner'
-	},
 
 	propTypes: {
 		/**
 		* Tooltip Arrow Type
 		*
-		* @type {string}
+		* @type {String}
 		* @default 'corner'
 		* @public
 		*/
 		arrowType: React.PropTypes.oneOf(['corner', 'edge']),
 
 		/**
-		* Delegate Tooltip's Ref
+		* Delegate Tooltip's dom reference
 		*
-		* @type {function}
+		* @type {Function}
 		* @default ''
 		* @public
 		*/
 		getTooltipRef: React.PropTypes.func,
 
 		/**
-		* Tooltip Left Position
+		* Tooltip Position
 		*
-		* @type {string}
-		* @default 0
+		* @type {Object}
 		* @public
 		*/
-		left: React.PropTypes.string,
+		position: React.PropTypes.object,
 
 		/**
 		* Message of tooltip
 		*
-		* @type {string}
-		* @default is not exist
+		* @type {String}
 		* @public
 		*/
 		text: React.PropTypes.string,
 
 		/**
-		* Tooltip Top Position
+		* Type of tooltip
 		*
-		* @type {string}
-		* @default 0
-		* @public
-		*/
-		top: React.PropTypes.string,
-
-		/**
-		* Tooltip Type
-		*
-		* @type {string}
-		* @default 'below-left'
+		* @type {String}
+		* @default 'below leftArrow'
 		* @public
 		*/
 		type: React.PropTypes.string
+	},
+
+	defaultProps: {
+		arrowType: 'corner',
+		text: '',
+		type: 'below leftArrow'
 	},
 
 	styles: {
@@ -90,13 +65,18 @@ const Tooltip = kind({
 		className: ({type, styler}) => styler.append(css[type.split(' ')[0]], css[type.split(' ')[1]])
 	},
 
-	render: ({getTooltipRef, text, left, top, arrowType, className}) => {
+	render: ({getTooltipRef, text, position, arrowType, className, style, ...props}) => {
+		const styles = Object.assign({}, position, style);
+
 		return (
 			<div
 				className={className}
-				style={{left: left, top: top}}
+				style={styles}
+				{...props}
 			>
-				<TooltipArrow type={arrowType} />
+				<svg className={css.tooltipArrow} viewBox={'0 0 3 5'}>
+					<path d={arrowType === 'edge' ? 'M0,5C0,4,1,3,3,2.5C1,2,0,1,0,0V5Z' : 'M0,5C0,3,1,0,3,0H0V5Z'} />
+				</svg>
 				<div
 					ref={getTooltipRef}
 					className={css.tooltipLabel}

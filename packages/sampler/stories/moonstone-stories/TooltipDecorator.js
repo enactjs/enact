@@ -20,11 +20,11 @@ const prop = {
 	}
 };
 
-storiesOf('Tooltip')
+storiesOf('TooltipDecorator')
 	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
-		'The basic Tooltip',
+		'The basic TooltipDecorator',
 		() => (
 			<div style={{textAlign: 'center'}}>
 				<Button
