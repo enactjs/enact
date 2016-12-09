@@ -148,7 +148,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		isDragging = false
 		isKeyDown = false
 
-		// mouse handlers
+		// event handlers
 		eventHandlers = {}
 
 		// drag info
@@ -725,6 +725,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				props = Object.assign({}, this.props),
 				{className, hideScrollbars, positioningOption, style} = this.props,
 				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
+				{onWheel, ...restEvents} = this,
 				scrollableClasses = classNames(
 					css.scrollable,
 					hideScrollbars ? css.scrollableHiddenScrollbars : null,
@@ -743,7 +744,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			return (
 				(positioningOption !== 'byBrowser' && !hideScrollbars) ? (
-					<div {...this.eventHandlers} ref={this.initContainerRef} className={scrollableClasses} style={style}>
+					<div onWheel={onWheel} ref={this.initContainerRef} className={scrollableClasses} style={style}>
 						<Scrollbar
 							className={verticalScrollbarClassnames}
 							{...this.verticalScrollbarProps}
@@ -752,7 +753,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 							className={horizontalScrollbarClassnames}
 							{...this.horizontalScrollbarProps}
 						/>
-						<Wrapped {...props} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={css.container} />
+						<Wrapped {...props} {...restEvents} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={css.container} />
 					</div>
 				) : <Wrapped {...props} {...this.eventHandlers} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={scrollableClasses} style={style} />
 			);
