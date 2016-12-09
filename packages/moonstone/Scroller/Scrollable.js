@@ -744,7 +744,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			return (
 				(positioningOption !== 'byBrowser' && !hideScrollbars) ? (
-					<div onWheel={onWheel} ref={this.initContainerRef} className={scrollableClasses} style={style}>
+					<div ref={this.initContainerRef} className={scrollableClasses} style={style} onWheel={onWheel}>
 						<Scrollbar
 							className={verticalScrollbarClassnames}
 							{...this.verticalScrollbarProps}
