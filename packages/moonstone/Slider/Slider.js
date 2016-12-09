@@ -42,16 +42,6 @@ const SliderBase = kind({
 		backgroundPercent: PropTypes.number,
 
 		/**
-		 * Height, in standard CSS units, of the vertical slider. Only takes
-		 * effect on a vertical oriented slider.
-		 *
-		 * @type {String}
-		 * @default '300px'
-		 * @public
-		 */
-		height: PropTypes.string,
-
-		/**
 		 * The method to run when the input mounts, giving a reference to the DOM.
 		 *
 		 * @type {Function}
@@ -142,7 +132,6 @@ const SliderBase = kind({
 
 	defaultProps: {
 		backgroundPercent: 0,
-		height: '300px',
 		max: 100,
 		min: 0,
 		onChange: () => {}, // needed to ensure the base input element is mutable if no change handler is provided
@@ -160,12 +149,10 @@ const SliderBase = kind({
 	computed: {
 		className: ({pressed, vertical, styler}) => styler.append({pressed, vertical, horizontal: !vertical}),
 		proportionBackgroundProgress: computeProportionBackground,
-		proportionProgress: computeProportionProgress,
-		verticalHeight: ({vertical, height}) => (vertical ? {height} : null),
-		verticalWidth: ({vertical, height}) => (vertical ? {width: height} : null)
+		proportionProgress: computeProportionProgress
 	},
 
-	render: ({inputRef, max, min, onChange, proportionBackgroundProgress, proportionProgress, sliderBarRef, sliderRef, step, value, vertical, verticalHeight, verticalWidth, ...rest}) => {
+	render: ({inputRef, max, min, onChange, proportionBackgroundProgress, proportionProgress, sliderBarRef, sliderRef, step, value, vertical, ...rest}) => {
 		delete rest.backgroundPercent;
 		delete rest.pressed;
 
@@ -176,7 +163,6 @@ const SliderBase = kind({
 					proportionProgress={proportionProgress}
 					ref={sliderBarRef}
 					vertical={vertical}
-					verticalHeight={verticalHeight}
 				/>
 				<input
 					className={css.input}
@@ -187,7 +173,7 @@ const SliderBase = kind({
 					step={step}
 					onChange={onChange}
 					value={value}
-					style={verticalWidth}
+					orient={vertical ? 'vertical' : 'horizontal'}
 				/>
 			</div>
 		);
