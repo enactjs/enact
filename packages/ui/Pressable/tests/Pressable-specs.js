@@ -34,7 +34,7 @@ describe('Pressable Specs', () => {
 		expect(actual).to.have.property(expectedMouseUp).to.be.a(expectedType);
 	});
 
-	it('Should pass event handlers from array to Wrapped', function () {
+	it('should pass event handlers from array to Wrapped', function () {
 		const DivComponent = () => <div>press</div>;
 
 		const expectedMouseDown = 'onMouseDown';

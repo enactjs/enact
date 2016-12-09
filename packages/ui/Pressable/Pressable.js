@@ -93,36 +93,37 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			this.state = {
 				pressed: props[defaultPropKey]
 			};
+			this.eventHandlers = {};
+			if (typeof depress === 'string') {
+				this.eventHandlers[depress] = this.onDepress;
+			} else if (Array.isArray(depress)) {
+				depress.forEach((dep) => {
+					this.eventHandlers[dep] = this.onDepress;
+				});
+			}
+			if (typeof release === 'string') {
+				this.eventHandlers[release] = this.onRelease;
+			} else if (Array.isArray(release)) {
+				release.forEach((rel) => {
+					this.eventHandlers[rel] = this.onRelease;
+				});
+			}
 		}
 
-		onMouseDown = (ev) => {
+		onDepress = (ev) => {
 			if (!this.props.disabled) {
 				this.setState({pressed: ev.pressed || true});
 			}
 			forwardDepress(ev, this.props);
 		}
 
-		onMouseUp = (ev) => {
+		onRelease = (ev) => {
 			this.setState({pressed: false});
 			forwardRelease(ev, this.props);
 		}
 
 		render () {
-			const props = Object.assign({}, this.props);
-			if (typeof depress === 'string') {
-				props[depress] = this.onMouseDown;
-			} else if (Array.isArray(depress)) {
-				depress.forEach((dep) => {
-					props[dep] = this.onMouseDown;
-				});
-			}
-			if (typeof release === 'string') {
-				props[release] = this.onMouseUp;
-			} else if (Array.isArray(release)) {
-				release.forEach((rel) => {
-					props[rel] = this.onMouseUp;
-				});
-			}
+			const props = Object.assign({}, this.props, this.eventHandlers);
 			if (prop) props[prop] = this.state.pressed;
 			delete props[defaultPropKey];
 
