@@ -34,6 +34,37 @@ const
 class VirtualListCore extends Component {
 	static propTypes = /** @lends moonstone/VirtualList/VirtualListBase.VirtualListCore.prototype */ {
 		/**
+		 * The render function for an item of the list.
+		 * `index` is for accessing the index of the item.
+		 * `key` MUST be passed as a prop for DOM recycling.
+		 * Data manipulation can be done in this function.
+		 *
+		 * @type {Function}
+		 * @default ({index, key}) => (<div key={key}>{index}</div>)
+		 * @public
+		 */
+		component: PropTypes.func.isRequired,
+
+		/**
+		 * Data for the list.
+		 * Check mutation of this and determine whether the list should update or not.
+		 *
+		 * @type {Any}
+		 * @default []
+		 * @public
+		 */
+		data: PropTypes.any.isRequired,
+
+		/**
+		 * Size of the data.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
+		dataSize: PropTypes.number.isRequired,
+
+		/**
 		 * Size of an item for the list; valid values are either a number for `VirtualList`
 		 * or an object that has `minWidth` and `minHeight` for `VirtualGridList`.
 		 *
@@ -53,37 +84,6 @@ class VirtualListCore extends Component {
 		 * @private
 		 */
 		cbScrollTo: PropTypes.func,
-
-		/**
-		 * The render function for an item of the list.
-		 * `index` is for accessing the index of the item.
-		 * `key` MUST be passed as a prop for DOM recycling.
-		 * Data manipulation can be done in this function.
-		 *
-		 * @type {Function}
-		 * @default ({index, key}) => (<div key={key}>{index}</div>)
-		 * @public
-		 */
-		component: PropTypes.func,
-
-		/**
-		 * Data for the list.
-		 * Check mutation of this and determine whether the list should update or not.
-		 *
-		 * @type {Any}
-		 * @default []
-		 * @public
-		 */
-		data: PropTypes.any,
-
-		/**
-		 * Size of the data.
-		 *
-		 * @type {Number}
-		 * @default 0
-		 * @public
-		 */
-		dataSize: PropTypes.number,
 
 		/**
 		 * Direction of the list; valid values are `'horizontal'` and `'vertical'`.
