@@ -5,12 +5,16 @@
  */
 
 import React, {Component, PropTypes} from 'react';
+import clamp from 'ramda/src/clamp';
+import classNames from 'classnames';
 
 import kind from '@enact/core/kind';
 import {Spotlight, SpotlightContainerDecorator} from '@enact/spotlight';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 
 import {dataIndexAttribute, Scrollable} from '../Scroller/Scrollable';
+
+import css from './VirtualVariableList.less';
 
 const
 	dataContainerDisabledAttribute = 'data-container-disabled',
@@ -49,25 +53,19 @@ class VirtualVariableListCore extends Component {
 		 * Size of data for the list; valid values are either a number
 		 * or an object that has `fixed` and `variable`.
 		 *
-		 * @type {Number|Object}
+		 * @type {Object}
 		 * @public
 		 */
-		dataSize: PropTypes.oneOfType([
-			PropTypes.number,
-			PropTypes.object
-		]).isRequired,
+		dataSize: PropTypes.object.isRequired,
 
 		/**
 		 * Size of an item for the list; valid values are either a number for `VirtualVariableList`
 		 * or an object that has `minWidth` and `minHeight` for `VirtualGridList`.
 		 *
-		 * @type {Number|Object}
+		 * @type {Object}
 		 * @public
 		 */
-		itemSize: PropTypes.oneOfType([
-			PropTypes.number,
-			PropTypes.object
-		]).isRequired,
+		itemSize: PropTypes.object.isRequired,
 
 		/**
 		 * Callback method of scrollTo.
@@ -128,6 +126,24 @@ class VirtualVariableListCore extends Component {
 		positioningOption: PropTypes.oneOf(['byItem', 'byContainer', 'byBrowser']),
 
 		/**
+		 * Position x.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
+		posX: PropTypes.number,
+		
+		/**
+		 * Position y.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
+		posY: PropTypes.number,
+
+		/**
 		 * Spacing between items.
 		 *
 		 * @type {Number}
@@ -165,6 +181,8 @@ class VirtualVariableListCore extends Component {
 		onScroll: nop,
 		overhang: 3,
 		positioningOption: 'byItem',
+		posX: 0,
+		posY: 0,
 		spacing: 0,
 		style: {}
 	}
@@ -917,10 +935,12 @@ class VirtualVariableListCore extends Component {
 	// Calculate metrics for VirtualVariableList after the 1st render to know client W/H.
 	// We separate code related with data due to re use it when data changed.
 	componentDidMount () {
-		const {positioningOption} = this.props;
+		const {positioningOption, posX, posY} = this.props;
 
 		this.calculateMetrics(this.props);
 		this.updateStatesAndBounds(this.props);
+
+		this.setScrollPosition(posX, posY, this.dirHorizontal, this.dirVertical);
 
 		if (positioningOption !== 'byBrowser') {
 			const containerNode = this.getContainerNode(positioningOption);
@@ -941,7 +961,7 @@ class VirtualVariableListCore extends Component {
 	// Calling setState within componentWillReceivePropswill not trigger an additional render.
 	componentWillReceiveProps (nextProps) {
 		const
-			{direction, itemSize, dataSize, overhang, spacing} = this.props,
+			{direction, itemSize, dataSize, overhang, spacing, posX, posY} = this.props,
 			hasMetricsChanged = (
 				direction !== nextProps.direction ||
 				((itemSize instanceof Object) ? (itemSize.minWidth !== nextProps.itemSize.minWidth || itemSize.minHeight !== nextProps.itemSize.minHeight || itemSize.fixed !== nextProps.itemSize.fixed || itemSize.variable !== nextProps.itemSize.variable) : itemSize !== nextProps.itemSize) ||
@@ -952,6 +972,9 @@ class VirtualVariableListCore extends Component {
 				(dataSize instanceof Object) ?
 				(dataSize.fixed !== nextProps.dataSize.fixed || dataSize.variable !== nextProps.dataSize.variable) :
 				(dataSize !== nextProps.dataSize)
+			),
+			isPositionChanged = (
+				(posX !== nextProps.posX) || (posY !== nextProps.posY)
 			);
 
 		if (hasMetricsChanged) {
@@ -959,6 +982,24 @@ class VirtualVariableListCore extends Component {
 			this.updateStatesAndBounds(nextProps);
 		} else if (hasDataChanged) {
 			this.updateStatesAndBounds(nextProps);
+		}
+
+		if (isPositionChanged) {
+			if (nextProps.direction === 'vertical') {
+				this.setScrollPosition(
+					clamp(0, nextProps.variableMaxScrollSize - this.scrollBounds.clientWidth, nextProps.posX),
+					clamp(0, this.scrollBounds.maxTop, nextProps.posY),
+					Math.sign(nextProps.posX - posX),
+					Math.sign(nextProps.posY - posY)
+				);
+			} else {
+				this.setScrollPosition(
+					clamp(0, this.scrollBounds.maxLeft, nextProps.posX),
+					clamp(0, nextProps.variableMaxScrollSize - this.scrollBounds.clientHeight, nextProps.posY),
+					Math.sign(nextProps.posX - posX),
+					Math.sign(nextProps.posY - posY)
+				);
+			}
 		}
 	}
 
@@ -1045,6 +1086,7 @@ class VirtualVariableListCore extends Component {
 	}
 }
 
+// TBD
 const VirtualVariableListBase = SpotlightContainerDecorator({restrict: 'self-first'}, Scrollable(VirtualVariableListCore));
 
 /**
@@ -1058,26 +1100,9 @@ const VirtualVariableListBase = SpotlightContainerDecorator({restrict: 'self-fir
 const VirtualVariableList = kind({
 	name: 'VirtualVariableList',
 
-	propTypes: {
-		/**
-		 * Size of data for the VirtualVariableList; valid value is an object
-		 * that has `fixed` for the data size of fixed dimension and `variable` for
-		 * the data size of variable dimension.
-		 *
-		 * @type {Object}
-		 * @public
-		 */
-		dataSize: PropTypes.object.isRequired,
-
-		/**
-		 * Size of an item for the VirtualVariableList; valid value is an object
-		 * that has `fixed` for the item size of fixed dimension
-		 * and `variable` for the item sizes of variable dimension.
-		 *
-		 * @type {Object}
-		 * @public
-		 */
-		itemSize: PropTypes.object.isRequired
+	styles: {
+		css,
+		className: 'virtualVariableList'
 	},
 
 	render: (orgProps) => {
@@ -1087,7 +1112,7 @@ const VirtualVariableList = kind({
 			props.direction = 'horizontal';
 		}
 
-		return (<VirtualVariableListBase {...props} />);
+		return (<VirtualVariableListCore {...props} />);
 	}
 });
 
