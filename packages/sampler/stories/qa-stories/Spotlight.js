@@ -80,7 +80,7 @@ storiesOf('Spotlight')
 					onFocus or onBlur events in the action logger.
 				</p>
 				<div style={{display: 'flex'}}>
-					<Container style={style.container} data-container-muted>
+					<Container style={style.container} spotlightMuted>
 						<Item onFocus={action('onFocus')} onBlur={action('onBlur')}>1</Item>
 						<Item onFocus={action('onFocus')} onBlur={action('onBlur')}>2</Item>
 						<Item onFocus={action('onFocus')} onBlur={action('onBlur')}>3</Item>
