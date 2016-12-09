@@ -733,16 +733,21 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					className
 				),
 				isBothScrollable = isHorizontalScrollbarVisible && isVerticalScrollbarVisible,
-				verticalScrollbarClassnames = isVerticalScrollbarVisible ? (!isBothScrollable && css.onlyVerticalScrollbarNeeded) : css.verticalScrollbarDisabled,
-				horizontalScrollbarClassnames = isHorizontalScrollbarVisible ? (!isBothScrollable && css.onlyHorizontalScrollbarNeeded) : css.horizontalScrollbarDisabled;
+				verticalScrollbarClassnames = classNames(
+					hideScrollbars ? css.scrollableHiddenScrollbar : null,
+					isVerticalScrollbarVisible ? (!isBothScrollable && css.onlyVerticalScrollbarNeeded) : css.verticalScrollbarDisabled
+				),
+				horizontalScrollbarClassnames = classNames(
+					hideScrollbars ? css.scrollableHiddenScrollbar : null,
+					isHorizontalScrollbarVisible ? (!isBothScrollable && css.onlyHorizontalScrollbarNeeded) : css.horizontalScrollbarDisabled
+				);
 
 			delete props.className;
 			delete props.cbScrollTo;
 			delete props.style;
-			delete props.hideScrollbars;
 
 			return (
-				(positioningOption !== 'byBrowser' && !hideScrollbars) ? (
+				(positioningOption !== 'byBrowser') ? (
 					<div ref={this.initContainerRef} className={scrollableClasses} style={style}>
 						<Scrollbar
 							className={verticalScrollbarClassnames}
