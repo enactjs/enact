@@ -5,20 +5,19 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ## [unreleased]
 
 ### Added
-- Focus/blur handling to `moonstone/MarqueeController` to start and stop Marquees.   
+- Focus/blur handling to `moonstone/MarqueeController` to start and stop synchronized `moonstone/Marquee` components
 
 ### Changed
 
 - `moonstone/VirtualGridList` to be scrolled by page when navigating with a 5-way direction key
 - `moonstone/Scroller`, `moonstone/VirtualList`, `moonstone/VirtualGridList`, and `moonstone/Scrollable` to no longer respond to mouse down/move/up events
+- `moonstone/Picker` to animate `moonstone/Marquee` children when any part of the `moonstone/Picker` is focused
 
 ### Removed
 
 ### Fixed
-- Bug where a synchronized marquee whose content fit the available space would prevent restarting of the marquees  
-
+- Bug where a synchronized marquee whose content fit the available space would prevent restarting of the marquees
 - `moonstone/VirtualList` and `moonstone/VirtualGridList` to prevent unwanted scrolling when focused with the pointer
-- Picker's Marquee will now animate when it's parent is focused.
 
 ## [1.0.0-alpha.4] - 2016-12-2
 

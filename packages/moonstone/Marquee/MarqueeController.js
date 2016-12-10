@@ -147,20 +147,16 @@ const MarqueeController = hoc((config, Wrapped) => {
 			}
 		}
 
-		/**
+		/*
 		 * Handler for the focus event
-		 *
-		 * @returns	{undefined}
 		 */
 		handleFocus = (ev) => {
 			this.dispatch('start');
 			forwardFocus(ev, this.props);
 		}
 
-		/**
+		/*
 		 * Handler for the blur event
-		 *
-		 * @returns	{undefined}
 		 */
 		handleBlur = (ev) => {
 			this.dispatch('stop');
