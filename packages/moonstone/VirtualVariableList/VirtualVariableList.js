@@ -203,12 +203,10 @@ class VirtualVariableListCore extends Component {
 	secondary = null
 
 	isPrimaryDirectionVertical = true
-	isVirtualGridList = false
-	isVirtualVariableList = false
-	
-	dimensionToExtent = 0
-	cc = []
 	fixedAxis = 'col'
+	dimensionToExtent = 0
+	
+	cc = []
 
 	containerRef = null
 	wrapperRef = null
@@ -247,11 +245,7 @@ class VirtualVariableListCore extends Component {
 		this.fixedAxis = (props.variableAxis === 'row') ? 'col' : 'row';
 	}
 
-	isVertical = () => (this.isVirtualVariableList || this.isPrimaryDirectionVertical)
-
-	isHorizontal = () => (this.isVirtualVariableList || !this.isPrimaryDirectionVertical)
-
-	getScrollBounds = () => (this.scrollBounds)
+	getScrollBounds = () => this.scrollBounds
 
 	getGridPosition (index) {
 		const
@@ -317,8 +311,6 @@ class VirtualVariableListCore extends Component {
 		let primary, secondary, dimensionToExtent, primaryThresholdBase;
 
 		this.isPrimaryDirectionVertical = (direction === 'vertical');
-		this.isVirtualVariableList = ((variableAxis === 'row') || (variableAxis === 'col'));
-		this.isVirtualGridList = (itemSize.minWidth && itemSize.minHeight);
 
 		if (this.isPrimaryDirectionVertical) {
 			primary = heightInfo;
@@ -329,26 +321,10 @@ class VirtualVariableListCore extends Component {
 		}
 		dimensionToExtent = 1;
 
-		if (this.isVirtualGridList) {
-			// the number of columns is the ratio of the available width plus the spacing
-			// by the minimum item width plus the spacing
-			dimensionToExtent = Math.max(Math.floor((secondary.clientSize + spacing) / (secondary.minItemSize + spacing)), 1);
-			// the actual item width is a ratio of the remaining width after all columns
-			// and spacing are accounted for and the number of columns that we know we should have
-			secondary.itemSize = Math.round((secondary.clientSize - (spacing * (dimensionToExtent - 1))) / dimensionToExtent);
-			// the actual item height is related to the item width
-			primary.itemSize = Math.round(primary.minItemSize * (secondary.itemSize / secondary.minItemSize));
-		}
-
-		if (this.isVirtualVariableList) {
-			primary.itemSize = itemSize[variableAxis];
-			primary.gridSize = primary.itemSize + spacing;
-			secondary.itemSize = itemSize[this.fixedAxis];
-			secondary.gridSize = itemSize[variableAxis] + spacing;
-		} else {
-			primary.gridSize = primary.itemSize + spacing;
-			secondary.gridSize = secondary.itemSize + spacing;
-		}
+		primary.itemSize = itemSize[variableAxis];
+		primary.gridSize = primary.itemSize + spacing;
+		secondary.itemSize = itemSize[this.fixedAxis];
+		secondary.gridSize = itemSize[variableAxis] + spacing;
 
 		primary.maxFirstIndex = 0;
 		primaryThresholdBase = primary.gridSize * 2;
@@ -369,30 +345,25 @@ class VirtualVariableListCore extends Component {
 		const
 			{dataSize, overhang, variableAxis} = props,
 			{primaryFirstIndex} = this.state,
-			{dimensionToExtent, fixedAxis, primary, secondary, isVirtualVariableList} = this;
+			{dimensionToExtent, fixedAxis, primary, secondary} = this;
 		let numOfItems = dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang);
 
-		if (isVirtualVariableList) {
-			numOfItems = Math.min(dataSize[variableAxis], numOfItems);
-			primary.dataSize = dataSize[variableAxis];
-			secondary.dataSize = dataSize[fixedAxis];
-		} else {
-			numOfItems = Math.min(dataSize, numOfItems);
-			primary.dataSize = dataSize;
-		}
-
+		numOfItems = Math.min(dataSize[variableAxis], numOfItems);
+		
+		primary.dataSize = dataSize[variableAxis];
 		primary.maxFirstIndex = primary.dataSize - numOfItems;
+		
+		secondary.dataSize = dataSize[fixedAxis];
 
-		this.setState({primaryFirstIndex: Math.min(primaryFirstIndex, primary.maxFirstIndex), numOfItems});
+
+
+		this.setState({numOfItems, primaryFirstIndex: Math.min(primaryFirstIndex, primary.maxFirstIndex)});
 		this.calculateScrollBounds(props);
-		if (isVirtualVariableList) {
-			this.initSecondaryScrollInfo(primary.dataSize, numOfItems);
-		}
+		this.initSecondaryScrollInfo(primary.dataSize, numOfItems);
 	}
 
 	calculateScrollBounds (props) {
-		const
-			node = this.getContainerNode(props.positioningOption);
+		const node = this.getContainerNode(props.positioningOption);
 
 		if (!node) {
 			return;
@@ -566,16 +537,13 @@ class VirtualVariableListCore extends Component {
 		newPrimaryFirstIndex = this.setPrimaryScrollPosition(pos.primary, dir.primary);
 
 		// for secondary direction
-		if (this.isVirtualVariableList) {
-			shouldUpdateState = this.setSecondaryScrollPosition(newPrimaryFirstIndex, pos.secondary, dir.secondary);
-		}
+		shouldUpdateState = this.setSecondaryScrollPosition(newPrimaryFirstIndex, pos.secondary, dir.secondary);
 
 		if (!skipPositionContainer) {
 			this.positionContainer();
 		}
 
-		if ((primaryFirstIndex !== newPrimaryFirstIndex) ||
-			(this.isVirtualVariableList && shouldUpdateState === true)) {
+		if ((primaryFirstIndex !== newPrimaryFirstIndex) || shouldUpdateState === true) {
 			this.setState({primaryFirstIndex: newPrimaryFirstIndex});
 		} else {
 			this.positionItems(this.applyStyleToExistingNode, this.determineUpdatedNeededIndices(primaryFirstIndex));
@@ -604,7 +572,7 @@ class VirtualVariableListCore extends Component {
 	applyStyleToExistingNode = (i, j, key, ...rest) => {
 		const
 			node = this.containerRef.children[key],
-			id = this.isVirtualVariableList ? (i + '-' + j) : i;
+			id = i + '-' + j;
 
 		if (node) {
 			// spotlight
@@ -620,19 +588,13 @@ class VirtualVariableListCore extends Component {
 	applyStyleToNewNode = (i, j, key, ...rest) => {
 		const
 			{component, data, variableAxis} = this.props,
-			{fixedAxis, isVirtualVariableList} = this,
-			id = isVirtualVariableList ? (i + '-' + j) : i,
-			itemElement = isVirtualVariableList ?
-				component({
-					data,
-					index: {[variableAxis]: i, [fixedAxis]: j},
-					key: id
-				}) :
-				component({
-					data,
-					index: i,
-					key
-				}),
+			{fixedAxis} = this,
+			id = i + '-' + j,
+			itemElement = component({
+				data,
+				index: {[variableAxis]: i, [fixedAxis]: j},
+				key: id
+			}),
 			style = {};
 
 		this.composeStyle(style, ...rest);
@@ -649,15 +611,14 @@ class VirtualVariableListCore extends Component {
 		const
 			{clipItem, data, positioningOption, variableAxis} = this.props,
 			{numOfItems} = this.state,
-			{dimensionToExtent, fixedAxis, isPrimaryDirectionVertical, isVirtualVariableList, primary, secondary} = this;
+			{dimensionToExtent, fixedAxis, isPrimaryDirectionVertical, primary, secondary} = this;
 		let
 			{primaryPosition, secondaryPosition} = this.getGridPosition(updateFrom),
 			width,
 			height,
 			key = 0,
 			position,
-			size,
-			j;
+			size;
 
 		primaryPosition -= (positioningOption === 'byItem') ? primary.scrollPosition : 0;
 		if (variableAxis === 'row') {
@@ -666,68 +627,49 @@ class VirtualVariableListCore extends Component {
 		} else if (variableAxis === 'col') {
 			secondaryPosition -= (positioningOption === 'byItem') ? secondary.scrollPosition : 0;
 			width = primary.itemSize;
-		} else {
-			width = (isPrimaryDirectionVertical ? secondary.itemSize : primary.itemSize) + 'px';
-			height = (isPrimaryDirectionVertical ? primary.itemSize : secondary.itemSize) + 'px';
-			j = updateFrom % dimensionToExtent;
 		}
 
 		// positioning items
 		for (let i = updateFrom; i < updateTo; i++) {
-			if (isVirtualVariableList) {
-				position = secondaryPosition + this.secondary.positionOffsets[i][secondary.firstIndices[i]];				
+			position = secondaryPosition + this.secondary.positionOffsets[i][secondary.firstIndices[i]];				
 
-				for (j = secondary.firstIndices[i]; j <= secondary.lastIndices[i]; j++) {
-					size = secondary.itemSize({data, index: {[variableAxis]: i, [fixedAxis]: j}});
+			for (let j = secondary.firstIndices[i]; j <= secondary.lastIndices[i]; j++) {
+				size = secondary.itemSize({data, index: {[variableAxis]: i, [fixedAxis]: j}});
 
-					if (clipItem) {
-						if (position < 0) {
-							size += position;
-							position = 0;
-						}
-						if (position + size > secondary.clientSize) {
-							size = secondary.clientSize - position;
-						}
+				if (clipItem) {
+					if (position < 0) {
+						size += position;
+						position = 0;
 					}
-
-					if (variableAxis === 'row') {
-						applyStyle(i, j, key, size, height, primaryPosition, position);
-					} else if (variableAxis === 'col') {
-						applyStyle(i, j, key, width, size, primaryPosition, position);
+					if (position + size > secondary.clientSize) {
+						size = secondary.clientSize - position;
 					}
-
-					position += size;
-					key++;
 				}
 
-				primaryPosition += primary.gridSize;
-			} else {
-				key = i % numOfItems;
-
-				applyStyle(i, null, key, width, height, primaryPosition, secondaryPosition);
-
-				if (++j === dimensionToExtent) {
-					secondaryPosition = 0;
-					primaryPosition += primary.gridSize;
-					j = 0;
-				} else {
-					secondaryPosition += secondary.gridSize;
+				if (variableAxis === 'row') {
+					applyStyle(i, j, key, size, height, primaryPosition, position);
+				} else if (variableAxis === 'col') {
+					applyStyle(i, j, key, width, size, primaryPosition, position);
 				}
+
+				position += size;
+				key++;
 			}
+
+			primaryPosition += primary.gridSize;
 		}
 	}
 
 	composeStyle (style, width, height, ...rest) {
-		if (this.isVirtualGridList || this.isVirtualVariableList) {
-			style.width = width;
-			style.height = height;
-		}
+		style.width = width;
+		style.height = height;
 		this.composeItemPosition(style, ...rest);
 	}
 
-	getXY = (primaryPosition, secondaryPosition) => (
-		(this.isPrimaryDirectionVertical) ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition}
-	)
+	getXY = (primaryPosition, secondaryPosition) => {
+		const rtlDirection = this.context.rtl ? -1 : 1;
+		return (this.isPrimaryDirectionVertical ? {x: (secondaryPosition * rtlDirection), y: primaryPosition} : {x: (primaryPosition * rtlDirection), y: secondaryPosition});
+	}
 
 	composeTransform (style, primaryPosition, secondaryPosition = 0) {
 		const {x, y} = this.getXY(primaryPosition, secondaryPosition);
@@ -787,23 +729,15 @@ class VirtualVariableListCore extends Component {
 	calculatePositionOnFocus = (focusedIndex, key) => {
 		const
 			{data, variableAxis} = this.props,
-			{fixedAxis, primary, secondary, isVirtualVariableList} = this;
+			{fixedAxis, primary, secondary} = this,
+			indices = focusedIndex.split('-'),
+			i = Number.parseInt(indices[0]),
+			j = Number.parseInt(indices[1]);
 		let gridPosition;
-		if (isVirtualVariableList) {
-			const
-				indices = focusedIndex.split('-'),
-				i = Number.parseInt(indices[0]),
-				j = Number.parseInt(indices[1]);
 
-			gridPosition = this.getVariableGridPosition(i, j);
-			gridPosition.primaryPosition = this.adjustPositionOnFocus(primary, gridPosition.primaryPosition, primary.itemSize, 0);
-			gridPosition.secondaryPosition = this.adjustPositionOnFocus(secondary, gridPosition.secondaryPosition, secondary.itemSize({data, index: {[variableAxis]: i, [fixedAxis]: j}}));
-		} else {
-			const index = Number.parseInt(focusedIndex);
-			gridPosition = this.getGridPosition(index);
-			gridPosition.primaryPosition = this.adjustPositionOnFocus(primary, gridPosition.primaryPosition, primary.itemSize);
-			gridPosition.secondaryPosition = 0;
-		}
+		gridPosition = this.getVariableGridPosition(i, j);
+		gridPosition.primaryPosition = this.adjustPositionOnFocus(primary, gridPosition.primaryPosition, primary.itemSize, 0);
+		gridPosition.secondaryPosition = this.adjustPositionOnFocus(secondary, gridPosition.secondaryPosition, secondary.itemSize({data, index: {[variableAxis]: i, [fixedAxis]: j}}));
 
 		this.nodeIndexToBeBlurred = key;
 		this.lastFocusedIndex = focusedIndex;
@@ -817,21 +751,16 @@ class VirtualVariableListCore extends Component {
 
 	setSpotlightContainerRestrict = (keyCode, index) => {
 		const
-			{isPrimaryDirectionVertical, dimensionToExtent, primary, isVirtualVariableList} = this;
+			{isPrimaryDirectionVertical, dimensionToExtent, primary} = this,
+			indices = index.split('-');
 		let
 			isSelfOnly = false,
 			i = 0,
 			canMoveBackward,
 			canMoveForward;
 
-		if (isVirtualVariableList) {
-			const indices = index.split('-');
-			i = Number.parseInt(indices[0]);
-			canMoveBackward = i > dimensionToExtent;
-		} else {
-			i = Number.parseInt(index);
-			canMoveBackward = i >= dimensionToExtent;
-		}
+		i = Number.parseInt(indices[0]);
+		canMoveBackward = i > dimensionToExtent;
 		canMoveForward = i < (primary.dataSize - (((primary.dataSize - 1) % dimensionToExtent) + 1));
 
 		if (isPrimaryDirectionVertical) {
@@ -839,10 +768,8 @@ class VirtualVariableListCore extends Component {
 				isSelfOnly = true;
 			}
 		}
-		if (!isPrimaryDirectionVertical || isVirtualVariableList) {
-			if (keyCode === keyLeft && canMoveBackward || keyCode === keyRight && canMoveForward) {
-				isSelfOnly = true;
-			}
+		if (keyCode === keyLeft && canMoveBackward || keyCode === keyRight && canMoveForward) {
+			isSelfOnly = true;
 		}
 
 		this.setRestrict(isSelfOnly);
@@ -881,7 +808,7 @@ class VirtualVariableListCore extends Component {
 	// Calculate metrics for VirtualVariableList after the 1st render to know client W/H.
 	// We separate code related with data due to re use it when data changed.
 	componentDidMount () {
-		const {positioningOption, posX, posY} = this.props;
+		const {positioningOption} = this.props;
 
 		this.calculateMetrics(this.props);
 		this.updateStatesAndBounds(this.props);
@@ -905,7 +832,7 @@ class VirtualVariableListCore extends Component {
 	// Calling setState within componentWillReceivePropswill not trigger an additional render.
 	componentWillReceiveProps (nextProps) {
 		const
-			{dataSize, direction, itemSize, overhang, spacing, posX, posY} = this.props,
+			{dataSize, direction, itemSize, overhang, posX, posY, spacing} = this.props,
 			hasMetricsChanged = (
 				direction !== nextProps.direction ||
 				((itemSize instanceof Object) ? (itemSize.minWidth !== nextProps.itemSize.minWidth || itemSize.minHeight !== nextProps.itemSize.minHeight || itemSize.row !== nextProps.itemSize.row || itemSize.col !== nextProps.itemSize.col) : itemSize !== nextProps.itemSize) ||
@@ -923,13 +850,6 @@ class VirtualVariableListCore extends Component {
 
 		this.fixedAxis = (nextProps.variableAxis === 'row') ? 'col' : 'row';
 
-		if (hasMetricsChanged) {
-			this.calculateMetrics(nextProps);
-			this.updateStatesAndBounds(nextProps);
-		} else if (hasDataChanged) {
-			this.updateStatesAndBounds(nextProps);
-		}
-
 		if (isPositionChanged) {
 			if (nextProps.direction === 'vertical') {
 				this.setScrollPosition(
@@ -946,6 +866,13 @@ class VirtualVariableListCore extends Component {
 					Math.sign(nextProps.posY - posY)
 				);
 			}
+		}
+
+		if (hasMetricsChanged) {
+			this.calculateMetrics(nextProps);
+			this.updateStatesAndBounds(hasDataChanged ? nextProps : this.props);
+		} else if (hasDataChanged) {
+			this.updateStatesAndBounds(nextProps);
 		}
 	}
 
@@ -987,6 +914,7 @@ class VirtualVariableListCore extends Component {
 			{primary, cc} = this;
 
 		delete props.cbScrollTo;
+		delete props.clipItem;
 		delete props.component;
 		delete props.data;
 		delete props.dataSize;
