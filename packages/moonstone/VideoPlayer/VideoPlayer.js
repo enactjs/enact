@@ -25,6 +25,29 @@ const MediaSlider = SliderFactory({css});
 
 const $L = text => text; // Dummy placeholder
 
+const zeroPad = (num) => ((num < 10 && num >= 0) ? '0' + num : num);
+
+const parseTime = (time) => {
+	console.log('processing time:', time);
+	// http://stackoverflow.com/questions/6312993/javascript-seconds-to-time-string-with-format-hhmmss
+	// by powtac on Jun 10 '11 at 23:27
+	time = parseInt(time); // don't forget the second param
+	const h   = Math.floor(time / 3600),
+		m = Math.floor((time - (h * 3600)) / 60),
+		s = time - (h * 3600) - (m * 60);
+
+	return {h, m, s};
+	// if (h < 10) {
+	// 	h = '0' + h;
+	// }
+	// 	if (m < 10) {
+	// 	m = '0' + m;
+	// }
+	// 	if (s < 10) {
+	// 	s = '0' + s;
+	// }
+	// return (h ? h + ':' : '') + m + ':' + s;
+};
 
 const VideoPlayerBase = class extends React.Component {
 	static displayName = VideoPlayerBase;
@@ -52,8 +75,16 @@ const VideoPlayerBase = class extends React.Component {
 		};
 	}
 
-	percentToTime (progress, duration) {
-		return progress * duration;
+	secondsToPeriod = (time) => {
+		return 'P' + time + 'S';
+		// time = parseTime(time);
+		// return 'P' + time.h + 'H' + time.m + 'M' + time.s + 'S';
+		// return `PH${h}M${m}S${s}`;
+	}
+
+	secondsToTime = (time) => {
+		time = parseTime(time);
+		return (time.h ? time.h + ':' : '') + zeroPad(time.m) + ':' + zeroPad(time.s);
 	}
 
 	isVideoPresent = () => this.video && this.video.videoEl
@@ -104,8 +135,13 @@ const VideoPlayerBase = class extends React.Component {
 			const el = this.video.videoEl;
 			this.setState({
 				percentageLoaded: el.buffered.length && el.buffered.end(el.buffered.length - 1) / el.duration * 100,
-				percentagePlayed: el.currentTime / el.duration * 100
+				percentagePlayed: el.currentTime / el.duration * 100,
+				currentTimePeriod: this.secondsToPeriod(el.currentTime),
+				currentTime: this.secondsToTime(el.currentTime),
+				totalTimePeriod: this.secondsToPeriod(el.duration),
+				totalTime: this.secondsToTime(el.duration)
 			});
+			console.log('secondsToPeriod:', this.secondsToPeriod(el.duration));
 		}
 	}
 
@@ -142,9 +178,16 @@ const VideoPlayerBase = class extends React.Component {
 				</Video>
 				<div className={css.fullscreen + ' enyo-fit scrim'} onMouseMove={this.mousemove} onClick={this.videoFSTapped}>
 					<div className={css.bottom}> {/* showing={false} */}
-						<div className={css.title}> {/* hidingDuration={1000} marqueeOnRender */}
-							<MarqueeText className={css.titleText + withBadges}>{title}</MarqueeText>
-							<div className={css.infoComponents + infoState}>{infoComponents}</div> {/* showing={false} showingDuration={500} tabIndex={-1} mixins={[ShowingTransitionSupport]} */}
+						<div className={css.infoFrame}>
+							<div className={css.titleFrame}> {/* hidingDuration={1000} marqueeOnRender */}
+								<MarqueeText className={css.title + withBadges}>{title}</MarqueeText>
+								<div className={css.infoComponents + infoState}>{infoComponents}</div> {/* showing={false} showingDuration={500} tabIndex={-1} mixins={[ShowingTransitionSupport]} */}
+							</div>
+							<div className={css.times}>
+								<time className={css.currentTime} dateTime={this.state.currentTimePeriod}>{this.state.currentTime}</time>
+								<span className={css.separator}>/</span>
+								<time className={css.totalTime} dateTime={this.state.totalTimePeriod}>{this.state.totalTime}</time>
+							</div>
 						</div>
 						<div className={css.sliderFrame}>
 							<MediaSlider

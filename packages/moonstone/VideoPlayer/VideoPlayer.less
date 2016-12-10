@@ -24,285 +24,209 @@
 			right: @moon-video-player-side-padding;
 			background-color: rgba(0, 0, 0, 0);		// use var
 
-			// Title Container
-			.title {
-				@badges-present-transition: transform 500ms ease-in-out;
-
-				color: @moon-video-player-title-color;
+			.infoFrame {
+				display: flex;
 				text-shadow: @moon-video-player-title-text-shadow;
-				.margin-start-end(0, 240px);	// Roughly equivalent to the width + spacing of the time indicators
 
-				&.hiding {
-					opacity: 0;
-					transition: @badges-present-transition, opacity 1000ms ease-in-out;
-				}
+				// Title Container
+				.titleFrame {
+					@badges-present-transition: transform 500ms ease-in-out;
 
-				// Title
-				.titleText {
-					font-family: @moon-font-family;
-					font-size: @moon-video-player-title-size;
-					line-height: @moon-header-line-height;
-					transition: @badges-present-transition;
-					transform: translateY(36px) translateZ(0);
-					.font-kerning;
+					flex-grow: 1;
+					color: @moon-video-player-title-color;
+					// text-shadow: @moon-video-player-title-text-shadow;
+					.margin-start-end(0, @moon-spotlight-outset);
 
-					&.withBadges {
-						transform: translateY(0) translateZ(0);
-					}
-
-					.enyo-locale-non-latin & {
-						line-height: @moon-non-latin-header-text-line-height;
-					}
-				}
-
-				// Badges and title components
-				.infoComponents {
-					vertical-align: super;
-
-					&.hidden {
+					&.hiding {
 						opacity: 0;
+						transition: @badges-present-transition, opacity 1000ms ease-in-out;
 					}
-					&.visible {
-						transition: opacity 500ms ease-in-out;
+
+					// Title
+					.title {
+						.moon-text-base(@moon-video-player-title-size);
+						// font-family: @moon-font-family;
+						// font-size: @moon-video-player-title-size;
+						line-height: @moon-header-line-height;
+						transition: @badges-present-transition;
+						transform: translateY(36px) translateZ(0);
+						.font-kerning;
+
+						&.withBadges {
+							transform: translateY(0) translateZ(0);
+						}
+
+						.enyo-locale-non-latin & {
+							line-height: @moon-non-latin-header-text-line-height;
+						}
 					}
+
+					// Badges and title components
+					.infoComponents {
+						vertical-align: super;
+
+						&.hidden {
+							opacity: 0;
+						}
+						&.visible {
+							transition: opacity 500ms ease-in-out;
+						}
+
+						> * {
+							display: inline-block;
+							margin: 0 6px;
+						}
+
+						.badgeTextIcon {
+							font-family: @moon-font-family-bold;
+							font-size: @moon-video-player-badge-text-size;
+							text-align: center;
+							white-space: nowrap;
+							display: inline-block;
+						}
+
+						.redIcon {
+							background-color: @moon-videoplayer-redicon-bg-color;
+							color: @moon-videoplayer-redicon-text-color;
+						}
+
+						.fontLgIcons {
+							font-family: "LG Icons";
+						}
+
+						:global(.enyo-locale-right-to-left) & {
+							text-align: right;
+						}
+					}
+				}
+
+				.times {
+					align-self: flex-end;
+					font-size: 24px;
+					white-space: nowrap;
+					color: @moon-video-player-subdued-text-color;
 
 					> * {
 						display: inline-block;
-						margin: 0 6px;
 					}
 
-					.badgeTextIcon {
-						font-family: @moon-font-family-bold;
-						font-size: @moon-video-player-badge-text-size;
-						text-align: center;
-						white-space: nowrap;
-						display: inline-block;
+					.separator {
+						padding: 0 1ex;
 					}
 
-					.redIcon {
-						background-color: @moon-videoplayer-redicon-bg-color;
-						color: @moon-videoplayer-redicon-text-color;
+					.currentTime {
+						color: @moon-indicator-text-color;
 					}
 
-					.fontLgIcons {
-						font-family: "LG Icons";
-					}
-
-					:global(.enyo-locale-right-to-left) & {
-						text-align: right;
-					}
+					// .enyo-locale-right-to-left & {
+					// 	direction: rtl;
+					// }
 				}
 			}
 
 			.sliderFrame {
 				.mediaSlider {
-
 					padding-left: 0;
 					padding-right: 0;
-
+					height: @moon-video-player-transport-slider-height;
 					margin: 0;
+				}
+				.sliderBar {
+					background-color: rgba(0, 0, 0, 0.6);
+				}
 
-					// .bar {
-					// 	height: @moon-video-player-transport-slider-height;
-					// 	// @moon-video-player-transport-slider-tap-area;
-					// }
-					// .knob {
-					// 	height: @moon-video-player-transport-slider-knob-size;
-					// 	width: @moon-video-player-transport-slider-knob-size;
-					// 	@moon-video-player-knob-v-offset;
+				.input {
+					padding: 0;
+				}
 
-					// }
+				// Knob
+				.knob {
+					@activate-transition-function: cubic-bezier(0.15, 0.85, 0.6, 1.65);
+					@slide-transition-function:    cubic-bezier(0.15, 0.85, 0.53, 1.09);
 
-					.sliderBar {
-						// height: 100%;
-						// margin: 0;
-						// top: inherit;
-						background-color: rgba(0, 0, 0, 0.6);
+					position: absolute;
+					width: @moon-video-player-transport-slider-knob-size;
+					// top: -@moon-video-player-knob-v-offset;
+					height: @moon-video-player-transport-slider-knob-size;
+					border-radius: @moon-video-player-transport-slider-knob-size;
+					background-color: #fff;
+					// display: none;
+					// box-shadow: 0 6px 8px 2px rgba(0, 0, 0, 0.3);
+					-webkit-transform: translateZ(0) translateX(-50%) scale(0.5);
+					transform:         translateZ(0) translateX(-50%) scale(0.5);
+					-webkit-transition: -webkit-transform @slide-transition-function 0.2s;
+					transition:                 transform @slide-transition-function 0.2s;
+
+					.moon-video-player.spotlight-5way-mode & {
+						-webkit-transition: -webkit-transform @activate-transition-function 0.2s, left @slide-transition-function 0.2s;
+						transition:                 transform @activate-transition-function 0.2s, left @slide-transition-function 0.2s;
 					}
 
-					.input {
-						// padding: 0;
+					.moon-taparea( -(@moon-video-player-transport-slider-knob-size) ); // The end result of this should be a knob taparea that's the same height as the slider's tap area
+					// This allows the tap area to extend past the edge of the screen, for when the cursor moves
+					// past the end of the slider, and into the little gap that separates the edge of the
+					// normally square tap area, to the edge of the screen. This code widens the taparea so
+					// there's no gap, and the knob still receives the click event.
+					&::before {
+						left: (-(@moon-video-player-side-padding * 2));
+						right: (-(@moon-video-player-side-padding * 2));
 					}
+				}
+				&.visible {
+					.knob {
+						display: block;
+					}
+				}
+				&.pressed {
+					.knob {
+						-webkit-transform: translateZ(0) translateX(-50%) scale(0.75);
+						transform:         translateZ(0) translateX(-50%) scale(0.75);
+					}
+				}
 
-					// .moon-progress-bar.moon-video-player-transport-slider {
-						height: @moon-video-player-transport-slider-height;
-						// margin: ((@moon-video-player-transport-slider-tap-area - @moon-video-player-transport-slider-height) / 2) 0;
+				// Status Indicator
+				.status-indicator {
+					.moon-slider-popup-center {
+						font-family: @moon-font-family;
+						font-size: 24px;
+						color: @moon-white;
+						text-shadow: @moon-video-player-title-text-shadow;
+						line-height: 36px;
+						position: absolute;	// Allows flip-h to work
+						margin: 0 30px;
 
-						.moon-slider-popup {
-							pointer-events: none;
-
-							&.above {
-								padding-left: 0px;
-							}
-						}
-
-						// Knob
-						.knob {
-							@activate-transition-function: cubic-bezier(0.15, 0.85, 0.6, 1.65);
-							@slide-transition-function:    cubic-bezier(0.15, 0.85, 0.53, 1.09);
-
-							position: absolute;
-							width: @moon-video-player-transport-slider-knob-size;
-							// top: -@moon-video-player-knob-v-offset;
-							height: @moon-video-player-transport-slider-knob-size;
-							border-radius: @moon-video-player-transport-slider-knob-size;
-							background-color: #fff;
-							// display: none;
-							// box-shadow: 0 6px 8px 2px rgba(0, 0, 0, 0.3);
-							-webkit-transform: translateZ(0) translateX(-50%) scale(0.5);
-							transform:         translateZ(0) translateX(-50%) scale(0.5);
-							-webkit-transition: -webkit-transform @slide-transition-function 0.2s;
-							transition:                 transform @slide-transition-function 0.2s;
-
-							.moon-video-player.spotlight-5way-mode & {
-								-webkit-transition: -webkit-transform @activate-transition-function 0.2s, left @slide-transition-function 0.2s;
-								transition:                 transform @activate-transition-function 0.2s, left @slide-transition-function 0.2s;
-							}
-
-							.moon-taparea( -(@moon-video-player-transport-slider-knob-size) ); // The end result of this should be a knob taparea that's the same height as the slider's tap area
-							// This allows the tap area to extend past the edge of the screen, for when the cursor moves
-							// past the end of the slider, and into the little gap that separates the edge of the
-							// normally square tap area, to the edge of the screen. This code widens the taparea so
-							// there's no gap, and the knob still receives the click event.
-							&::before {
-								left: (-(@moon-video-player-side-padding * 2));
-								right: (-(@moon-video-player-side-padding * 2));
-							}
-						}
-						&.visible {
-							.knob {
-								display: block;
-							}
-						}
-						&.pressed {
-							.knob {
-								-webkit-transform: translateZ(0) translateX(-50%) scale(0.75);
-								transform:         translateZ(0) translateX(-50%) scale(0.75);
-							}
-						}
-
-						// Status Indicator
-						.status-indicator {
-							.moon-slider-popup-center {
-								font-family: @moon-font-family;
-								font-size: 24px;
-								color: @moon-white;
-								text-shadow: @moon-video-player-title-text-shadow;
-								line-height: 36px;
-								position: absolute;	// Allows flip-h to work
-								margin: 0 30px;
-
-								.moon-icon {
-									color: inherit;
-								}
-							}
-						}
-
-						// Bars
-						.fill,
-						.load {
-							// height: 100%;
-							// position: absolute;
-							// top: 0;
-							border-top-right-radius: (@moon-video-player-transport-slider-height / 2);
-							border-bottom-right-radius: (@moon-video-player-transport-slider-height / 2);
-						}
-
-						// Bar
-						.fill {
-							background-color: fade(@moon-accent, 80%);
-							// opacity: 0.8;
-						}
-
-						.load {
-							background-color: fade(@moon-dark-gray, 40%);
-							// opacity: 0.4;
-						}
-
-						// .popup-label {
-						// 	.moon-large-button-text;
-						// 	.font-kerning(none);
-						// 	white-space: nowrap;
-						// 	vertical-align: top;
-
-						// 	> * {
-						// 		display: inline-block;
-						// 	}
-						// }
-
-						// Indicator
-						// .indicator-wrapper {
-						// 	pointer-events: none;
-						// 	bottom: 42px;
-						// 	text-shadow: @moon-video-player-title-text-shadow;
-						// 	position: absolute;
-
-						// 	&.start {
-						// 		left: 0;
-						// 		text-align: left;
-
-						// 		.enyo-locale-right-to-left & {
-						// 			left: auto;
-						// 			right: 0;
-						// 			text-align: right;
-						// 		}
-						// 	}
-
-						// 	&.end {
-						// 		right: 0;
-						// 		text-align: right;
-
-						// 		.enyo-locale-right-to-left & {
-						// 			right: auto;
-						// 			left: 0;
-						// 			text-align: left;
-						// 		}
-						// 	}
-						// }
-
-						// .indicator-text {
-						// 	font-size: 24px;
-						// 	color: @moon-indicator-text-color;
-						// 	display: inline-block;
-
-						// 	&.separator,
-						// 	&.right {
-						// 		color: @moon-video-player-subdued-text-color;
-						// 	}
-
-						// 	&.separator {
-						// 		padding: 0 1ex;
-						// 	}
-
-						// 	.enyo-locale-right-to-left & {
-						// 		direction: rtl;
-						// 	}
-						// }
-
-						// Reassign video-player specific sizing to the slider's tap-area
-						&::before {
-							top: (@moon-video-player-transport-slider-height / 2) - (@moon-video-player-transport-slider-tap-area / 2);
-							right: -@moon-video-player-side-padding;
-							bottom: auto;
-							left: -@moon-video-player-side-padding;
-							height: @moon-video-player-transport-slider-tap-area;
+						.moon-icon {
+							color: inherit;
 						}
 					}
+				}
 
-					.enyo-locale-non-latin .moon-video-player-transport-slider {
-						.popup-label {
-							// .enyo-locale-non-latin .moon-large-button-text;
-						}
-						.indicator-text {
-							font-family: @moon-font-family;
-						}
-					}
+				// Bars
+				.fill,
+				.load {
+					border-top-right-radius: (@moon-video-player-transport-slider-height / 2);
+					border-bottom-right-radius: (@moon-video-player-transport-slider-height / 2);
+				}
 
+				// Bar
+				.fill {
+					background-color: fade(@moon-accent, 80%);
+				}
 
+				.load {
+					background-color: fade(@moon-dark-gray, 40%);
+				}
 
-
-
+				// Reassign video-player specific sizing to the slider's tap-area
+				&::before {
+					top: (@moon-video-player-transport-slider-height / 2) - (@moon-video-player-transport-slider-tap-area / 2);
+					right: -@moon-video-player-side-padding;
+					bottom: auto;
+					left: -@moon-video-player-side-padding;
+					height: @moon-video-player-transport-slider-tap-area;
+				}
 			}
+
 			.controlsFrame {
 				position: relative;
 				display: flex;
