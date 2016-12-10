@@ -78,6 +78,14 @@ class VirtualVariableListCore extends Component {
 		cbScrollTo: PropTypes.func,
 
 		/**
+		 * Adjust item width if the item is located in the list edge.
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		clipItem: PropTypes.bool,
+
+		/**
 		 * Direction of the list; valid values are `'horizontal'` and `'vertical'`.
 		 *
 		 * @type {String}
@@ -167,6 +175,7 @@ class VirtualVariableListCore extends Component {
 
 	static defaultProps = {
 		cbScrollTo: nop,
+		clipItem: false,
 		component: nop,
 		data: [],
 		dataSize: 0,
@@ -638,7 +647,7 @@ class VirtualVariableListCore extends Component {
 
 	positionItems (applyStyle, {updateFrom, updateTo}) {
 		const
-			{data, positioningOption, variableAxis} = this.props,
+			{clipItem, data, positioningOption, variableAxis} = this.props,
 			{numOfItems} = this.state,
 			{dimensionToExtent, fixedAxis, isPrimaryDirectionVertical, isVirtualVariableList, primary, secondary} = this;
 		let
@@ -670,6 +679,17 @@ class VirtualVariableListCore extends Component {
 
 				for (j = secondary.firstIndices[i]; j <= secondary.lastIndices[i]; j++) {
 					size = secondary.itemSize({data, index: {[variableAxis]: i, [fixedAxis]: j}});
+
+					if (clipItem) {
+						if (position < 0) {
+							size += position;
+							position = 0;
+						}
+						if (position + size > secondary.clientSize) {
+							size = secondary.clientSize - position;
+						}
+					}
+
 					if (variableAxis === 'row') {
 						applyStyle(i, j, key, size, height, primaryPosition, position);
 					} else if (variableAxis === 'col') {
@@ -1060,6 +1080,7 @@ const VirtualVariableList = kind({
 					component: orgProps.component.colHeader
 				},
 				itemProps = {
+					clipItem: true,
 					data: orgProps.data.item,
 					dataSize: {
 						row: orgProps.dataSize.row,
