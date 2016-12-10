@@ -259,11 +259,9 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		getContainerNode = (node) => {
+			this.containerNode = node;
 			if (node) {
-				this.containerNode = node;
 				this.setContainerPosition();
-			} else {
-				this.containerNode = null;
 			}
 		}
 
