@@ -113,11 +113,6 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		componentWillUnmount () {
-			this.containerNode = null;
-			this.clientNode = null;
-		}
-
 		getContainerPosition (containerNode, clientNode) {
 			let position = {};
 			switch (this.adjustedDirection) {
@@ -267,6 +262,8 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (node) {
 				this.containerNode = node;
 				this.setContainerPosition();
+			} else {
+				this.containerNode = null;
 			}
 		}
 
