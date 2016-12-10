@@ -49,7 +49,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * The method to run when the input mounts, giving a reference to the DOM.
 			 *
 			 * @type {Function}
-			 * 	@private
+			 * @private
 			 */
 			inputRef: PropTypes.func,
 
@@ -184,6 +184,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		}
 	});
 });
+
 const SliderFactory = factory(css => {
 	const Base = SliderBaseFactory(css);
 

@@ -78,7 +78,7 @@ const SliderBarFactory = factory(({css}) => {
 				<div {...rest} className={css.sliderBar} ref={this.getNode}>
 					<div className={css.load} ref={this.getLoaderNode} style={{transform: computeBarTransform(proportionBackgroundProgress, vertical)}} />
 					<div className={css.fill} ref={this.getBarNode} style={{transform: computeBarTransform(proportionProgress, vertical)}} />
-					<div className={css.knob} ref={this.getKnobNode} style={{transform: computeKnobTransform(proportionProgress, vertical, this.node, this.knobWidth)}} />
+					<div className={css.knob} ref={this.getKnobNode} style={{transform: computeKnobTransform(proportionProgress, vertical, this.node)}} />
 				</div>
 			);
 		}

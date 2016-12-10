@@ -62,7 +62,7 @@
 					&.hidden {
 						opacity: 0;
 					}
-					&.showing {
+					&.visible {
 						transition: opacity 500ms ease-in-out;
 					}
 
@@ -117,6 +117,7 @@
 						// height: 100%;
 						// margin: 0;
 						// top: inherit;
+						background-color: rgba(0, 0, 0, 0.6);
 					}
 
 					.input {
@@ -125,7 +126,6 @@
 
 					// .moon-progress-bar.moon-video-player-transport-slider {
 						height: @moon-video-player-transport-slider-height;
-						background-color: rgba(0, 0, 0, 0.6);
 						// margin: ((@moon-video-player-transport-slider-tap-area - @moon-video-player-transport-slider-height) / 2) 0;
 
 						.moon-slider-popup {
@@ -142,17 +142,17 @@
 							@slide-transition-function:    cubic-bezier(0.15, 0.85, 0.53, 1.09);
 
 							position: absolute;
-							width: (@moon-video-player-transport-slider-knob-size * 2);
-							top: -@moon-video-player-knob-v-offset;
-							height: (@moon-video-player-transport-slider-knob-size * 2);
+							width: @moon-video-player-transport-slider-knob-size;
+							// top: -@moon-video-player-knob-v-offset;
+							height: @moon-video-player-transport-slider-knob-size;
 							border-radius: @moon-video-player-transport-slider-knob-size;
 							background-color: #fff;
-							display: none;
+							// display: none;
 							// box-shadow: 0 6px 8px 2px rgba(0, 0, 0, 0.3);
 							-webkit-transform: translateZ(0) translateX(-50%) scale(0.5);
 							transform:         translateZ(0) translateX(-50%) scale(0.5);
-							-webkit-transition: -webkit-transform @activate-transition-function 0.2s;
-							transition:                 transform @activate-transition-function 0.2s;
+							-webkit-transition: -webkit-transform @slide-transition-function 0.2s;
+							transition:                 transform @slide-transition-function 0.2s;
 
 							.moon-video-player.spotlight-5way-mode & {
 								-webkit-transition: -webkit-transform @activate-transition-function 0.2s, left @slide-transition-function 0.2s;
@@ -210,13 +210,13 @@
 
 						// Bar
 						.fill {
-							background-color: @moon-accent;
-							opacity: 0.8;
+							background-color: fade(@moon-accent, 80%);
+							// opacity: 0.8;
 						}
 
 						.load {
-							background-color: @moon-dark-gray;
-							opacity: 0.4;
+							background-color: fade(@moon-dark-gray, 40%);
+							// opacity: 0.4;
 						}
 
 						// .popup-label {
@@ -305,28 +305,56 @@
 			}
 			.controlsFrame {
 				position: relative;
+				display: flex;
 
 				.leftComponents,
 				.rightComponents {
-					position: absolute;
-					top: 0;
+					// Pre-allocate enough space for 2 buttons, statically.
+					width: (@moon-icon-button-size * 2 + @moon-spotlight-outset * 3);
+					white-space: nowrap;
 				}
 				.leftComponents {
-					left: 0;
-
 					> :first-child {
 						.margin-start-end(0, @moon-button-h-margin);
 					}
 				}
 				.rightComponents {
-					right: 0;
-
 					> :last-child {
 						.margin-start-end(@moon-button-h-margin, 0);
 					}
 				}
-				.controlButtons {
-					text-align: center;
+				.centerComponentsContainer {
+					flex-grow: 1;
+
+					// For some dumb unknown reason, when overflow-x:hidden is applied, a bottom gap
+					// is added which forces the presence of a side scrollbar.
+					overflow-x: hidden;
+					overflow-y: visible;
+
+					// Statically allocate space for the premium buttons so the center buttons can always remain centered
+					position: relative;  // 'relative' provides a properly sized frame for light-panels to cling to.
+
+					.centerComponents {
+						transition: 500ms transform ease;
+						will-change: transform;
+						white-space: nowrap;
+
+						&.more {
+							transform: translateX(-100%);
+						}
+						.mediaControls,
+						.moreControls {
+							width: 100%;
+							// border: 1px dotted lime;
+							display: inline-block;
+							box-sizing: border-box;
+							white-space: nowrap;
+							vertical-align: top;
+						}
+						.mediaControls {
+							text-align: center;
+						}
+					}
 				}
 			}
 		}

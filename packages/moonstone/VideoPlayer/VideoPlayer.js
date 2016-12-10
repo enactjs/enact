@@ -14,12 +14,14 @@ import Video, {Controls, Play, Mute, Seek, Fullscreen, Time, Overlay} from 'reac
 
 import IconButton from '../IconButton';
 import MarqueeText from '../Marquee/MarqueeText';
-import Slider from '../Slider';
+import {SliderFactory} from '../Slider';
 import Spinner from '../Spinner';
 import Panels from '../Panels';
 import Slottable from '@enact/ui/Slottable';
 
 import css from './VideoPlayer.less';
+
+const MediaSlider = SliderFactory({css});
 
 const $L = text => text; // Dummy placeholder
 
@@ -28,10 +30,10 @@ const VideoPlayerBase = class extends React.Component {
 	static displayName = VideoPlayerBase;
 
 	static propTypes = {
-		infoComponents: React.PropTypes.oneOfType([React.PropTypes.arrayOf(React.PropTypes.element), React.PropTypes.element]),
+		infoComponents: React.PropTypes.node,
 		jumpBy: React.PropTypes.number,
-		leftComponents: React.PropTypes.oneOfType([React.PropTypes.arrayOf(React.PropTypes.element), React.PropTypes.element]),
-		rightComponents: React.PropTypes.oneOfType([React.PropTypes.arrayOf(React.PropTypes.element), React.PropTypes.element]),
+		leftComponents: React.PropTypes.node,
+		rightComponents: React.PropTypes.node,
 		title: React.PropTypes.string
 	}
 
@@ -43,10 +45,15 @@ const VideoPlayerBase = class extends React.Component {
 		super(props);
 		this.video = null;
 		this.state = {
+			more: false,
 			percentageLoaded: 0,
 			percentagePlayed: 0,
 			videoSource: null
 		};
+	}
+
+	percentToTime (progress, duration) {
+		return progress * duration;
 	}
 
 	isVideoPresent = () => this.video && this.video.videoEl
@@ -65,7 +72,7 @@ const VideoPlayerBase = class extends React.Component {
 
 	send = (action, props) => () => {
 		if (this.isVideoReady()) {
-			console.log('sending', action, props);
+			// console.log('sending', action, props);
 			this.video[action](props);
 		}
 	}
@@ -82,8 +89,14 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	onSliderChange = ({value}) => {
-		console.log('seeking to:', value);
+		// console.log('seeking to:', value);
 		this.send('seek', value);
+	}
+
+	onClickMore = () => {
+		this.setState({
+			more: !this.state.more
+		});
 	}
 
 	onProgress = () => {
@@ -109,6 +122,10 @@ const VideoPlayerBase = class extends React.Component {
 					// onLoadedMetadata={this.onLoadedMetadata} // loaded new media
 					// onDurationChange={this.onLoadedMetadata} // loaded new media
 					// onAbort={this.onFinished} // loaded new media
+		const moreState = (this.state.more) ? ' ' + css.more : '';
+		const infoState = (this.state.more) ? ' ' + css.visible : ' ' + css.hidden;
+		const withBadges = (this.state.more) ? ' ' + css.withBadges : '';
+		console.log('rightComponents:', rightComponents);
 		return (
 			<div className={css.videoPlayer}>
 				<Video
@@ -126,11 +143,11 @@ const VideoPlayerBase = class extends React.Component {
 				<div className={css.fullscreen + ' enyo-fit scrim'} onMouseMove={this.mousemove} onClick={this.videoFSTapped}>
 					<div className={css.bottom}> {/* showing={false} */}
 						<div className={css.title}> {/* hidingDuration={1000} marqueeOnRender */}
-							<MarqueeText className={css.titleText}>{title}</MarqueeText>
-							<div className={css.infoComponents}>{infoComponents}</div> {/* showing={false} showingDuration={500} tabIndex={-1} mixins={[ShowingTransitionSupport]} */}
+							<MarqueeText className={css.titleText + withBadges}>{title}</MarqueeText>
+							<div className={css.infoComponents + infoState}>{infoComponents}</div> {/* showing={false} showingDuration={500} tabIndex={-1} mixins={[ShowingTransitionSupport]} */}
 						</div>
 						<div className={css.sliderFrame}>
-							<Slider
+							<MediaSlider
 								className={css.mediaSlider}
 								backgroundPercent={this.state.percentageLoaded}
 								min={0}
@@ -149,25 +166,23 @@ const VideoPlayerBase = class extends React.Component {
 							*/}
 						</div>
 						<div className={css.controlsFrame} onClick={this.resetAutoTimeout}>
-							<div className={css.leftComponents + ' ' + css.moonHspacing}>{leftComponents}</div>
-							<div className={css.rightComponents + ' ' + css.moonHspacing}>
-								{rightComponents}
-								<IconButton backgroundOpacity="translucent" className={css.moreButton} onClick={this.notYetImplemented}>ellipsis</IconButton>
-							</div>
-							<div className={css.controlsFrameCenter}>
+							<div className={css.leftComponents}>{leftComponents}</div>
+							<div className={css.centerComponentsContainer}>
 								{/* <Panels index={0} className={css.controlsContainer}>*/}
-								<div className={css.controlsContainer}>
-									<div>
-										<div className={css.controlButtons}> {/* rtl={false} */}
-											<IconButton backgroundOpacity="translucent" onClick={this.send('seek', 0)}>skipbackward</IconButton>
-											<IconButton backgroundOpacity="translucent" onClick={this.jump(-1 * jumpBy)}>backward</IconButton>
-											<IconButton backgroundOpacity="translucent" onClick={this.send('togglePlay')}>play</IconButton>
-											<IconButton backgroundOpacity="translucent" onClick={this.jump(jumpBy)}>forward</IconButton>
-											<IconButton backgroundOpacity="translucent" onClick={this.send('seek', (this.video ? this.video.videoEl.duration : 0))}>skipforward</IconButton>
-										</div>
+								<div className={css.centerComponents + moreState}>
+									<div className={css.mediaControls}> {/* rtl={false} */}
+										<IconButton backgroundOpacity="translucent" onClick={this.send('seek', 0)}>skipbackward</IconButton>
+										<IconButton backgroundOpacity="translucent" onClick={this.jump(-1 * jumpBy)}>backward</IconButton>
+										<IconButton backgroundOpacity="translucent" onClick={this.send('togglePlay')}>play</IconButton>
+										<IconButton backgroundOpacity="translucent" onClick={this.jump(jumpBy)}>forward</IconButton>
+										<IconButton backgroundOpacity="translucent" onClick={this.send('seek', (this.video ? this.video.videoEl.duration : 0))}>skipforward</IconButton>
 									</div>
-									<div className={css.moreControls} /> {/* rtl={false} */}
+									<div className={css.moreControls}>{children}</div> {/* rtl={false} */}
 								</div>
+							</div>
+							<div className={css.rightComponents}>
+								{rightComponents}
+								{(children) ? <IconButton backgroundOpacity="translucent" className={css.moreButton} onClick={this.onClickMore}>ellipsis</IconButton> : null}
 							</div>
 						</div>
 					</div>

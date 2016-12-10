@@ -12,12 +12,22 @@ VideoPlayerBase.displayName = 'VideoPlayer';
 // Set up some defaults for info and knobs
 const prop = {
 	videoTitles: [
+		'Louis C.K. Live at the Beacon Theater',
+		'Louis C.K. Oh My God',
 		'Sintel',
 		'Big Buck Bunny',
 		'VideoTest',
 		'Bad Video Source'
 	],
 	videos: [
+		{
+			poster: 'http://dev:8888/a-movie-info-page/Louis%20CK%20Live%20at%20the%20Beacon%20Theater%20(2011)/Louis%20CK%20Live%20at%20the%20Beacon%20Theater%20(2011)-poster.jpg',
+			source: 'http://dev:8888/a-movie-info-page/Louis%20CK%20Live%20at%20the%20Beacon%20Theater%20(2011)/Louis%20CK%20Live%20at%20the%20Beacon%20Theater%20(2011).mp4'
+		},
+		{
+			poster: 'http://dev:8888/a-movie-info-page/Louis%20CK%20Oh%20My%20God%20(2013)/Louis%20CK%20Oh%20My%20God%20(2013)-poster.jpg',
+			source: 'http://dev:8888/a-movie-info-page/Louis%20CK%20Oh%20My%20God%20(2013)/Louis%20CK%20Oh%20My%20God%20(2013).mp4'
+		},
 		{
 			poster: 'http://media.w3.org/2010/05/sintel/poster.png',
 			source: 'http://media.w3.org/2010/05/sintel/trailer.mp4'
@@ -68,14 +78,14 @@ const selectVideo = (index) => {
 	// console.log('selectVideo:', index);
 	if (index != null && prop.videos[index]) {
 		videoData = (prop.videos[index]) ? prop.videos[index] : {};
-		return prop.videoTitles[index].title;
+		return prop.videoTitles[index];
 	}
 };
 
 prop.eventActions = {};
-prop.events.forEach( (ev) => {
-	prop.eventActions[ev] = action(ev);
-});
+// prop.events.forEach( (ev) => {
+// 	prop.eventActions[ev] = action(ev);
+// });
 
 storiesOf('VideoPlayer')
 	.addDecorator(withKnobs)
