@@ -26,6 +26,10 @@ const
 	keyDown	 = 40,
 	nop = () => {};
 
+const
+	rowNumberColFuncShape = PropTypes.shape({row: PropTypes.number.isRequired, col: PropTypes.func.isRequired}),
+	rowFuncColNumberShape = PropTypes.shape({row: PropTypes.func.isRequired, col: PropTypes.number.isRequired});
+
 class VirtualVariableListCore extends Component {
 	static propTypes = /** @lends moonstone/VirtualVariableList/VirtualVariableListBase.VirtualVariableListCore.prototype */ {
 		/**
@@ -35,7 +39,6 @@ class VirtualVariableListCore extends Component {
 		 * Data manipulation can be done in this function.
 		 *
 		 * @type {Function}
-		 * @default ({index, key}) => (<div key={key}>{index}</div>)
 		 * @public
 		 */
 		component: PropTypes.func.isRequired,
@@ -57,7 +60,7 @@ class VirtualVariableListCore extends Component {
 		 * @type {Object}
 		 * @public
 		 */
-		dataSize: PropTypes.object.isRequired,
+		dataSize: PropTypes.oneOfType([rowNumberColFuncShape, rowFuncColNumberShape]).isRequired,
 
 		/**
 		 * Size of an item for the list; valid values are either a number for `VirtualVariableList`
@@ -66,7 +69,7 @@ class VirtualVariableListCore extends Component {
 		 * @type {Object}
 		 * @public
 		 */
-		itemSize: PropTypes.object.isRequired,
+		itemSize: PropTypes.oneOfType([rowNumberColFuncShape, rowFuncColNumberShape]).isRequired,
 
 		/**
 		 * Callback method of scrollTo.
@@ -163,7 +166,7 @@ class VirtualVariableListCore extends Component {
 		spacing: PropTypes.number,
 
 		/**
-		 * Direction specific options of the list; valid values are `'width'` and `'height'`.
+		 * Direction specific options of the list; valid values are `'row'` and `'col'`.
 		 *
 		 * @type {String}
 		 * @public
@@ -176,7 +179,7 @@ class VirtualVariableListCore extends Component {
 	static defaultProps = {
 		cbScrollTo: nop,
 		clipItem: false,
-		component: nop,
+		component: null,
 		data: [],
 		dataSize: 0,
 		direction: 'vertical',
@@ -256,11 +259,11 @@ class VirtualVariableListCore extends Component {
 		return {primaryPosition, secondaryPosition};
 	}
 
-	getVariableGridPosition (i, j) {
+	getVariableGridPosition (primaryIndex, secondaryIndex) {
 		const
 			{dimensionToExtent, primary, secondary} = this,
 			primaryPosition = Math.floor(i / dimensionToExtent) * primary.gridSize,
-			secondaryPosition = secondary.positionOffsets[i][j];
+			secondaryPosition = secondary.positionOffsets[primaryIndex][secondaryIndex];
 
 		return {primaryPosition, secondaryPosition};
 	}
@@ -731,13 +734,13 @@ class VirtualVariableListCore extends Component {
 			{data, variableAxis} = this.props,
 			{fixedAxis, primary, secondary} = this,
 			indices = focusedIndex.split('-'),
-			i = Number.parseInt(indices[0]),
+			primaryIndex = Number.parseInt(indices[0]),
 			j = Number.parseInt(indices[1]);
 		let gridPosition;
 
-		gridPosition = this.getVariableGridPosition(i, j);
+		gridPosition = this.getVariableGridPosition(primaryIndex, secondaryIndex);
 		gridPosition.primaryPosition = this.adjustPositionOnFocus(primary, gridPosition.primaryPosition, primary.itemSize, 0);
-		gridPosition.secondaryPosition = this.adjustPositionOnFocus(secondary, gridPosition.secondaryPosition, secondary.itemSize({data, index: {[variableAxis]: i, [fixedAxis]: j}}));
+		gridPosition.secondaryPosition = this.adjustPositionOnFocus(secondary, gridPosition.secondaryPosition, secondary.itemSize({data, index: {[variableAxis]: primaryIndex, [fixedAxis]: secondaryIndex}}));
 
 		this.nodeIndexToBeBlurred = key;
 		this.lastFocusedIndex = focusedIndex;
@@ -964,6 +967,13 @@ class VirtualVariableListCore extends Component {
 // TBD
 const VirtualVariableListBase = SpotlightContainerDecorator({restrict: 'self-first'}, Scrollable(VirtualVariableListCore));
 
+// PropTypes shapes
+const
+	itemHeadersAnyShape = PropTypes.shape({item: PropTypes.any.isRequired, rowHeader: PropTypes.any.isRequired, colHeader: PropTypes.any.isRequired}),
+	itemHeadersFuncShpae = PropTypes.shape({item: PropTypes.func.isRequired, rowHeader: PropTypes.func.isRequired, colHeader: PropTypes.func.isRequired}),
+	rowNumberColFuncHeadersNumberShape = PropTypes.shape({row: PropTypes.number.isRequired, col: PropTypes.func.isRequired, rowHeader: PropTypes.number.isRequired, colHeader: PropTypes.number.isRequired}),
+	rowFuncColNumberHeadersNumberShape = PropTypes.shape({row: PropTypes.func.isRequired, col: PropTypes.number.isRequired, rowHeader: PropTypes.number.isRequired, colHeader: PropTypes.number.isRequired});
+
 /**
  * {@link module:@enact/moonstone/VirtualVariableList~VirtualVariableList} is a VirtualVariableList with Moonstone styling
  * which has a variable width or height.
@@ -975,64 +985,147 @@ const VirtualVariableListBase = SpotlightContainerDecorator({restrict: 'self-fir
 const VirtualVariableList = kind({
 	name: 'VirtualVariableList',
 
+	propTypes: /** @lends moonstone/VirtualVariableList.VirtualVariableList.prototype */ {
+		/**
+		 * The render function for an item of the list.
+		 * `index` is for accessing the index of the item.
+		 * `key` MUST be passed as a prop for DOM recycling.
+		 * Data manipulation can be done in this function.
+		 *
+		 * @type {Function|Object}
+		 * @public
+		 */
+		component: PropTypes.oneOfType([PropTypes.func, itemHeadersFuncShpae]).isRequired,
+
+		/**
+		 * Data for the list.
+		 * Check mutation of this and determine whether the list should update or not.
+		 *
+		 * @type {Array|Object}
+		 * @public
+		 */
+		data: PropTypes.oneOfType([PropTypes.array, itemHeadersAnyShape]).isRequired,
+		
+		/**
+		 * Size of data for the list; valid values are either a number
+		 * or an object that has `fixed` and `variable`.
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		dataSize: PropTypes.oneOfType([rowNumberColFuncShape, rowFuncColNumberShape, rowNumberColFuncHeadersNumberShape, rowFuncColNumberHeadersNumberShape]).isRequired,
+		
+		/**
+		 * Size of an item for the list; valid values are either a number for `VirtualVariableList`
+		 * or an object that has `minWidth` and `minHeight` for `VirtualGridList`.
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		itemSize: PropTypes.oneOfType([rowNumberColFuncShape, rowFuncColNumberShape, rowNumberColFuncHeadersNumberShape, rowFuncColNumberHeadersNumberShape]).isRequired,
+		
+		/**
+		 * Direction specific options of the list; valid values are `'row'` and `'col'`.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		variableAxis: PropTypes.oneOf(['row', 'col']).isRequired,
+		
+		/**
+		 * Adjust item width if the item is located in the list edge.
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		clipItem: PropTypes.bool,
+		
+		/**
+		 * Use row and col headers; valid values are `'both'` and `'none'`.
+		 *
+		 * @type {Boolean}
+		 * @private
+		 */
+		headers: PropTypes.oneOf(['both', 'none']),
+		/**
+		 * Position x.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
+		posX: PropTypes.number,
+		
+		/**
+		 * Position y.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
+		posY: PropTypes.number
+	},
+
 	styles: {
 		css,
 		className: 'virtualVariableList'
 	},
 
+	computed: {
+		clipItem: ({clipItem}) => (clipItem || true),
+		direction: ({variableAxis}) => variableAxis === 'row' ? 'vertical' : 'horizontal'
+	},
+
 	render: (orgProps) => {
-		if (orgProps.lockHeaders === 'both') {
+		if (orgProps.headers === 'both') {
 			const
-				offsetX = orgProps.itemSize.rowHeader,
-				offsetY = orgProps.itemSize.row,
+				{component, data, dataSize, itemSize, posX, posY, variableAxis, ...rest} = orgProps,
+				offsetX = itemSize.rowHeader,
+				offsetY = itemSize.row,
 				rowProps = {
-					data: orgProps.data.rowHeader,
-					dataSize: orgProps.dataSize.rowHeader,
+					data: data.rowHeader,
+					dataSize: dataSize.rowHeader,
 					direction: 'vertical',
-					hideScrollbars: orgProps.hideScrollbars,
-					itemSize: orgProps.itemSize.row,
+					itemSize: itemSize.row,
 					posX: 0,
-					posY: orgProps.posY,
+					posY,
 					style: {width: offsetX + 'px', height: 'calc(100% - ' + offsetY + 'px)', top: offsetY + 'px'},
-					component: orgProps.component.rowHeader
+					component: component.rowHeader
 				},
 				colProps = {
-					data: orgProps.data.colHeader,
-					dataSize: orgProps.dataSize.colHeader,
+					data: data.colHeader,
+					dataSize: dataSize.colHeader,
 					direction: 'horizontal',
-					hideScrollbars: orgProps.hideScrollbars,
-					itemSize: orgProps.itemSize.colHeader,
-					posX: orgProps.posX,
+					itemSize: itemSize.colHeader,
+					posX,
 					posY: 0,
 					style: {width: 'calc(100% - ' + offsetX + 'px)', height: offsetY + 'px', left: offsetX + 'px'},
-					component: orgProps.component.colHeader
+					component: component.colHeader
 				},
 				itemProps = {
-					clipItem: true,
-					data: orgProps.data.item,
+					...rest,
+					clipItem: orgProps.clipItem,
+					data: data.item,
 					dataSize: {
-						row: orgProps.dataSize.row,
-						col: orgProps.dataSize.col
+						row: dataSize.row,
+						col: dataSize.col
 					},
-					direction: (orgProps.variableAxis === 'col') ? 'horizontal' : 'vertical',
-					hideScrollbars: orgProps.hideScrollbars,
 					itemSize: {
-						row: orgProps.itemSize.row,
-						col: orgProps.itemSize.col
+						row: itemSize.row,
+						col: itemSize.col
 					},
-					maxVariableScrollSize: orgProps.maxVariableScrollSize,
-					posX: orgProps.posX,
-					posY: orgProps.posY,
-					variableAxis: orgProps.variableAxis,
+					posX,
+					posY,
+					variableAxis,
 					style: {width: 'calc(100% - ' + offsetX + 'px)', height: 'calc(100% - ' + offsetY + 'px)', top: offsetY + 'px', left: offsetX + 'px'},
-					component: orgProps.component.item
+					component: component.item
 				},
 				childProps = {
 					style: {width: offsetX + 'px', height: offsetY + 'px'}
 				};
 
 			return (
-				<div className={classNames(orgProps.className, css.lockHeaders)} style={orgProps.style}>
+				<div className={classNames(orgProps.className, css.headers)} style={orgProps.style}>
 					<VirtualListCore {...rowProps} />
 					<VirtualListCore {...colProps} />
 					<VirtualVariableListCore {...itemProps} />
@@ -1040,13 +1133,7 @@ const VirtualVariableList = kind({
 				</div>
 			);
 		} else {
-			const props = Object.assign({}, orgProps);
-
-			if (props.variableAxis === 'col') {
-				props.direction = 'horizontal';
-			}
-
-			return (<VirtualVariableListCore {...props} />);
+			return (<VirtualVariableListCore {...orgProps} />);
 		}
 	}
 });

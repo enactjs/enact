@@ -1,10 +1,13 @@
 import ri from '@enact/ui/resolution';
 import Icon from '@enact/moonstone/Icon';
-import {VirtualVariableList} from '@enact/moonstone/VirtualVariableList';
+import {VirtualVariableList, VirtualVariableListCore} from '@enact/moonstone/VirtualVariableList';
 import clamp from 'ramda/src/clamp';
-import React, {Component} from 'react';
+import React, {Component, propTypes} from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, number} from '@kadira/storybook-addon-knobs';
+import {withKnobs, number} from '@kadira/storybook-addon-knobs';
+
+VirtualVariableList.propTypes = Object.assign({}, VirtualVariableListCore.propTypes);
+VirtualVariableList.defaultProps = Object.assign({}, VirtualVariableListCore.defaultProps);
 
 const
 	channelWidth = 400,
@@ -19,6 +22,7 @@ const
 const
 	style = {
 		epg: {
+			background: 'black',
 			position: 'absolute',
 			width: ri.scale(channelWidth + clientWidth) + 'px',
 			height: ri.scale(itemHeight + clientHeight) + 'px',
@@ -160,12 +164,15 @@ const
 
 // Story
 const
+	// eslint-disable-next-line enact/prop-types
 	getItemLength = ({data, index}) => {
 		return data[index.row].length;
 	},
+	// eslint-disable-next-line enact/prop-types
 	getItemWidth = ({data, index}) => {
 		return data[index.row][index.col].width;
 	},
+	// eslint-disable-next-line enact/prop-types
 	renderRowHeaderItem = ({data, index, key}) => {
 		// ChannelInfo
 		return (
@@ -176,6 +183,7 @@ const
 			</div>
 		);
 	},
+	// eslint-disable-next-line enact/prop-types
 	renderColHeaderItem = ({data, index, key}) => {
 		// Timeline
 		return (
@@ -184,6 +192,7 @@ const
 			</div>
 		);
 	},
+	// eslint-disable-next-line enact/prop-types
 	renderItem = ({data, index, key}) => {
 		// Programs
 		return (
@@ -209,22 +218,21 @@ storiesOf('VirtualVariableList')
 						colHeader: timelineData
 					}}
 					dataSize={{
-						row: programData.length,
+						row: number('dataSize_row', programData.length),
 						col: getItemLength,
 						rowHeader: channelLength,
 						colHeader: timelineData.length
 					}}
-					hideScrollbars
 					itemSize={{
-						row: ri.scale(itemHeight),
+						row: number('itemSize_row', ri.scale(itemHeight)),
 						col: getItemWidth,
 						rowHeader: ri.scale(channelWidth),
 						colHeader: ri.scale(timeWidth)
 					}}
-					lockHeaders="both"
+					headers="both"
 					maxVariableScrollSize={maxVariableScrollSize}
-					// posX={posX}
-					// posY={posY}
+					posX={number('posX', 0)}
+					posY={number('posY', 0)}
 					variableAxis="row"
 					component={{
 						item: renderItem,
@@ -234,31 +242,6 @@ storiesOf('VirtualVariableList')
 				>
 					<div style={style.itemToday}>Today</div>
 				</VirtualVariableList>
-				<Icon
-					small
-					// eslint-disable-next-line react/jsx-no-bind
-					// onClick={() => this.scrollTo('up')}
-					className={style.itemProgram}
-					style={{position: 'absolute', left: '50%', top: '0', transform: 'translate3d(-50%, 0, 0)', WebkitUserSelect: 'none', userSelect: 'none'}}
-				>arrowsmallup</Icon>
-				<Icon
-					small
-					// eslint-disable-next-line react/jsx-no-bind
-					// onClick={() => this.scrollTo('down')}
-					style={{position: 'absolute', left: '50%', bottom: '0', transform: 'translate3d(-50%, 0, 0)', WebkitUserSelect: 'none', userSelect: 'none'}}
-				>arrowsmalldown</Icon>
-				<Icon
-					small
-					// eslint-disable-next-line react/jsx-no-bind
-					// onClick={() => this.scrollTo('left')}
-					style={{position: 'absolute', left: '0', top: '0', transform: 'translateZ(0)', WebkitUserSelect: 'none', userSelect: 'none'}}
-				>arrowsmallleft</Icon>
-				<Icon
-					small
-					// eslint-disable-next-line react/jsx-no-bind
-					// onClick={() => this.scrollTo('right')}
-					style={{position: 'absolute', right: '0', top: '0', transform: 'translateZ(0)', WebkitUserSelect: 'none', userSelect: 'none'}}
-				>arrowsmallright</Icon>
 			</div>
 		)
 	);

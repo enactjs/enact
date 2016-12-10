@@ -41,7 +41,6 @@ class VirtualListCore extends Component {
 		 * Data manipulation can be done in this function.
 		 *
 		 * @type {Function}
-		 * @default ({index, key}) => (<div key={key}>{index}</div>)
 		 * @public
 		 */
 		component: PropTypes.func.isRequired,
@@ -168,7 +167,7 @@ class VirtualListCore extends Component {
 
 	static defaultProps = {
 		cbScrollTo: nop,
-		component: nop,
+		component: null,
 		data: [],
 		dataSize: 0,
 		direction: 'vertical',
