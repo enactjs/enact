@@ -74,7 +74,7 @@ describe('Input Specs', () => {
 
 	it('Should have dir equal to rtl when there is rtl text', function () {
 		const subject = mount(
-			<Input value={'שועל החום הזריז קפץ מעל הכלב העצלן.ציפור עפה השעועית עם שקיעה.'} />
+			<Input value="שועל החום הזריז קפץ מעל הכלב העצלן.ציפור עפה השעועית עם שקי" />
 		);
 
 		const expected = 'rtl';
@@ -85,7 +85,7 @@ describe('Input Specs', () => {
 
 	it('Should have dir equal to ltr when there is ltr text', function () {
 		const subject = mount(
-			<Input value={'content'} />
+			<Input value="content" />
 		);
 
 		const expected = 'ltr';
@@ -96,7 +96,7 @@ describe('Input Specs', () => {
 
 	it('Should have dir equal to rtl when there is rtl text in the placeholder', function () {
 		const subject = mount(
-			<Input placeholder={'שועל החום הזריז קפץ מעל הכלב העצלן.ציפור עפה השעועית עם שקיעה.'} />
+			<Input value="שועל החום הזריז קפץ מעל הכלב העצלן.ציפור עפה השעועית עם שקי" />
 		);
 
 		const expected = 'rtl';
@@ -107,7 +107,35 @@ describe('Input Specs', () => {
 
 	it('Should have dir equal to ltr when there is ltr text in the placeholder', function () {
 		const subject = mount(
-			<Input placeholder={'content'} />
+			<Input placeholder="content" />
+		);
+
+		const expected = 'ltr';
+		const actual = subject.find('input').prop('dir');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('Should have dir equal to rtl when there is ltr text in the placeholder, but rtl text in value', function () {
+		const subject = mount(
+			<Input
+				placeholder="content"
+				value="שועל החום הזריז קפץ מעל הכלב העצלן.ציפור עפה השעועית עם שקי"
+			/>
+		);
+
+		const expected = 'rtl';
+		const actual = subject.find('input').prop('dir');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('Should have dir equal to ltr when there is rtl text in the placeholder, but ltr text in value', function () {
+		const subject = mount(
+			<Input
+				placeholder="שועל החום הזריז קפץ מעל הכלב העצלן.ציפור עפה השעועית עם שקי"
+				value="content"
+			/>
 		);
 
 		const expected = 'ltr';

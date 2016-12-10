@@ -168,7 +168,22 @@ const InputBase = kind({
 
 	computed: {
 		className: ({focused, styler}) => styler.append({focused}),
-		dir: ({value, placeholder}) => isRtlText(value) || isRtlText(placeholder) ? 'rtl' : 'ltr',
+		dir: ({value, placeholder}) => {
+			let direction;
+			if (isRtlText(placeholder)) {
+				direction = 'rtl';
+			} else {
+				direction = 'ltr';
+			}
+
+			if (isRtlText(value)) {
+				direction = 'rtl';
+			} else {
+				direction = 'ltr';
+			}
+
+			return direction;
+		},
 		onChange: ({onChange}) => (ev) => {
 			if (onChange) {
 				onChange({value: ev.target.value});
