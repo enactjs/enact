@@ -7,63 +7,56 @@ import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, number} from '@kadira/storybook-addon-knobs';
 
 const
-	channelWidth = 405,
+	channelWidth = 400,
+	channelLength = 200,
 	timeWidth = 200,
-	itemHeight = 83,
-	clientWidth = channelWidth + timeWidth * 5,
+	itemHeight = 80,
+	clientWidth = timeWidth * 5,
 	clientHeight = itemHeight * 6,
-	channelCnt = 200;
+	maxVariableScrollSize = ri.scale(3600); // 400 ( width per 1 hour ) * 9 hr
 
 // Inline style
 const
 	style = {
 		epg: {
-			background: 'black',
 			position: 'absolute',
-			width: ri.scale(clientWidth) + 'px',
-			height: ri.scale(clientHeight) + 'px',
-			padding: ri.scale(32) + 'px 0'
-		},
-		list: {
-			overflow: 'hidden',
-			transform: 'translateZ(0)',
+			width: ri.scale(channelWidth + clientWidth) + 'px',
+			height: ri.scale(itemHeight + clientHeight) + 'px',
+			padding: ri.scale(32) + 'px 0',
 			color: 'white'
 		},
 		itemWrapper: {
 			position: 'absolute',
 			border: ri.scale(3) + 'px solid black',
 			boxSizing: 'border-box',
-			overflow: 'hidden',
-			willChange: 'transform'
+			overflow: 'hidden'
 		},
 		// Today
 		itemToday: {
 			background: 'black',
-			height: '100%',
-			paddingTop: ri.scale(40) + 'px',
-			boxSizing: 'border-box',
+			width: ri.scale(channelWidth) + 'px',
+			padding: ri.scale(40) + 'px  0 ' + ri.scale(4) + 'px',
 			fontSize: ri.scale(27) + 'px',
-			color: 'white',
 			WebkitUserSelect: 'none',
 			userSelect: 'none'
 		},
 		// Timeline
 		itemTimeline: {
 			background: 'black',
-			height: '100%',
+			position: 'absolute',
+			width: ri.scale(timeWidth) + 'px',
+			height: ri.scale(itemHeight) + 'px',
 			padding: ri.scale(40) + 'px ' + ri.scale(10) + 'px ' + ri.scale(10) + 'px',
 			borderLeft: ri.scale(2) + 'px solid #333',
 			boxSizing: 'border-box',
 			fontSize: ri.scale(27) + 'px',
-			color: 'white',
 			WebkitUserSelect: 'none',
 			userSelect: 'none'
 		},
 		// ChannelInfo
 		itemChannelInfo: {
-			width: ri.scale(400) + 'px',
-			height: '100%',
-			boxSizing: 'border-box',
+			width: ri.scale(channelWidth - 6) + 'px',
+			height: ri.scale(itemHeight - 6) + 'px',
 			color: '#CACACA',
 			fontSize: ri.scale(27) + 'px',
 			lineHeight: ri.scale(58) + 'px',
@@ -86,11 +79,10 @@ sheet.innerHTML = '.channelInfo:not(:focus) {background: #2C2E35;}' +
 	'.program:not(:focus) {background: #141416;}';
 document.body.appendChild(sheet);
 
-// Raw Data
+// Data
 const
-	programData = [],
 	// ChannelInfo
-	channelInfo = [
+	channelInfoData = [
 		'A&E',
 		'Adult Swim',
 		'AMC',
@@ -113,7 +105,7 @@ const
 		'History'
 	],
 	// Timeline
-	timeline = [
+	timelineData = [
 		'06:00 AM', '06:30 AM',
 		'07:00 AM', '07:30 AM',
 		'08:00 AM', '08:30 AM',
@@ -147,61 +139,53 @@ const
 		'NOVA',
 		'Secrets of the Dead'
 	],
-	variableMaxScrollSize = ri.scale(4005) /* 405 ( width for ChannelInfo ) + 400 ( width per 1 hour ) * 9 hr */,
-	scrollBounds = {maxLeft: variableMaxScrollSize - clientWidth, maxTop: 200 * itemHeight - clientHeight},
 	getRandomWidth = () => {
 		return ri.scale((parseInt(Math.random() * 20) + 1) * 100);
-	};
+	},
+	programData = (function() {
+		const data = [];
 
-// Data
-for (let i = 0; i < channelCnt; i++) { /* 200 channelInfo */
-	programData[i] = [];
-	for (let j = 0; j < 19; j++) { /* 1 item for ChannelInfo + 18 items for the maximum number of programs per one channel */
-		programData[i][j] = {
-			width: getRandomWidth(),
-			programName: ('00' + i).slice(-3) + '/' + ('00' + j).slice(-3) + ' - ' + programName[(i + j) % 20]
-		};
-	}
-}
+		for (let i = 0; i < channelLength; i++) {
+			data[i] = [];
+			for (let j = 0; j < timelineData.length; j++) {
+				data[i][j] = {
+					programName: ('00' + i).slice(-3) + '/' + ('00' + j).slice(-3) + ' - ' + programName[(i + j) % 20],
+					width: getRandomWidth()
+				};
+			}
+		}
+
+		return data;
+	})();
 
 // Story
 const
-	getVariableDataSize = ({data, index}) => {
+	getItemLength = ({data, index}) => {
 		return data[index.row].length;
 	},
-	getVariableItemSize = ({data, index}) => {
+	getItemWidth = ({data, index}) => {
 		return data[index.row][index.col].width;
 	},
 	renderRowHeaderItem = ({data, index, key}) => {
-		if (index.row === 0) {
-			// Today
-			return (
-				<div key={key} style={style.itemWrapper}>
-					<div style={style.itemToday}>Today</div>
-				</div>
-			);
-		} else {
-			// ChannelInfo
-			return (
-				<div key={key} className={'channelInfo'} style={style.itemWrapper}>
-					<div style={style.itemChannelInfo}>
-						{data[index.row % 20]}
-					</div>
-				</div>
-			);
-		}
-	},
-	renderColHeaderItem = ({data, index, key}) => {
-		// Timeline
+		// ChannelInfo
 		return (
-			<div key={key} style={style.itemWrapper}>
-				<div style={style.itemTimeline}>
-					{data[(index.col - 1) % 20]}
+			<div key={key} className={'channelInfo'} style={style.itemWrapper}>
+				<div style={style.itemChannelInfo}>
+					{data[index % 20]}
 				</div>
 			</div>
 		);
 	},
+	renderColHeaderItem = ({data, index, key}) => {
+		// Timeline
+		return (
+			<div key={key} style={style.itemTimeline}>
+				{data[index % 20]}
+			</div>
+		);
+	},
 	renderItem = ({data, index, key}) => {
+		// Programs
 		return (
 			<div key={key} className={'program'} style={style.itemWrapper}>
 				<div style={style.itemProgram}>
@@ -221,34 +205,35 @@ storiesOf('VirtualVariableList')
 				<VirtualVariableList
 					data={{
 						item: programData,
-						rowHeader: channelInfo,
-						colHeader: timeline
+						rowHeader: channelInfoData,
+						colHeader: timelineData
 					}}
 					dataSize={{
 						row: programData.length,
-						col: getVariableDataSize,
-						rowHeader: () => channelCnt,
-						colHeader: () => timeline.length
+						col: getItemLength,
+						rowHeader: channelLength,
+						colHeader: timelineData.length
 					}}
 					hideScrollbars
 					itemSize={{
 						row: ri.scale(itemHeight),
-						col: getVariableItemSize,
-						rowHeader: () => ri.scale(channelWidth),
-						colHeader: () => (timeWidth)
+						col: getItemWidth,
+						rowHeader: ri.scale(channelWidth),
+						colHeader: ri.scale(timeWidth)
 					}}
 					lockHeaders="both"
-					maxVariableScrollSize={variableMaxScrollSize}
+					maxVariableScrollSize={maxVariableScrollSize}
 					// posX={posX}
 					// posY={posY}
 					variableAxis="row"
-					style={style.list}
 					component={{
 						item: renderItem,
 						rowHeader: renderRowHeaderItem,
 						colHeader: renderColHeaderItem
 					}}
-				/>
+				>
+					<div style={style.itemToday}>Today</div>
+				</VirtualVariableList>
 				<Icon
 					small
 					// eslint-disable-next-line react/jsx-no-bind

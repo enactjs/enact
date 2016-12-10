@@ -6,6 +6,7 @@
  */
 
 import React, {Component, PropTypes} from 'react';
+import clamp from 'ramda/src/clamp';
 
 import {Spotlight, SpotlightContainerDecorator} from '@enact/spotlight';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
@@ -136,6 +137,24 @@ class VirtualListCore extends Component {
 		positioningOption: PropTypes.oneOf(['byItem', 'byContainer', 'byBrowser']),
 
 		/**
+		 * Position x.
+		 *
+		 * @type {Number}
+		 * @default null
+		 * @private
+		 */
+		posX: PropTypes.number,
+		
+		/**
+		 * Position y.
+		 *
+		 * @type {Number}
+		 * @default null
+		 * @private
+		 */
+		posY: PropTypes.number,
+
+		/**
 		 * Spacing between items.
 		 *
 		 * @type {Number}
@@ -157,6 +176,8 @@ class VirtualListCore extends Component {
 		overhang: 3,
 		pageScroll: false,
 		positioningOption: 'byItem',
+		posX: null,
+		posY: null,
 		spacing: 0,
 		style: {}
 	}
@@ -682,14 +703,35 @@ class VirtualListCore extends Component {
 	// Calling setState within componentWillReceivePropswill not trigger an additional render.
 	componentWillReceiveProps (nextProps) {
 		const
-			{direction, itemSize, dataSize, overhang, spacing} = this.props,
+			{direction, itemSize, dataSize, overhang, posX, posY, spacing} = this.props,
 			hasMetricsChanged = (
 				direction !== nextProps.direction ||
-				((itemSize instanceof Object) ? (itemSize.minWidth !== nextProps.itemSize.minWidth || itemSize.minHeight !== nextProps.itemSize.minHeight) : itemSize !== nextProps.itemSize) ||
+				((itemSize instanceof Object) ? (itemSize.minWiposX, posY, dth !== nextProps.itemSize.minWidth || itemSize.minHeight !== nextProps.itemSize.minHeight) : itemSize !== nextProps.itemSize) ||
 				overhang !== nextProps.overhang ||
 				spacing !== nextProps.spacing
 			),
-			hasDataChanged = (dataSize !== nextProps.dataSize);
+			hasDataChanged = (dataSize !== nextProps.dataSize),
+			isPositionChanged = (
+				(posX !== nextProps.posX) || (posY !== nextProps.posY)
+			);
+
+		if (isPositionChanged && nextProps.posX !== null && nextProps.posY !== null) {
+			if (nextProps.direction === 'vertical') {
+				this.setScrollPosition(
+					posX,
+					clamp(0, this.scrollBounds.maxTop, nextProps.posY),
+					0,
+					Math.sign(nextProps.posY - posY)
+				);
+			} else {
+				this.setScrollPosition(
+					clamp(0, this.scrollBounds.maxLeft, nextProps.posX),
+					posY,
+					Math.sign(nextProps.posX - posX),
+					0
+				);
+			}
+		}
 
 		if (hasMetricsChanged) {
 			this.calculateMetrics(nextProps);
@@ -746,6 +788,8 @@ class VirtualListCore extends Component {
 		delete props.overhang;
 		delete props.pageScroll;
 		delete props.positioningOption;
+		delete props.posX;
+		delete props.posY;
 		delete props.spacing;
 
 		if (primary) {
