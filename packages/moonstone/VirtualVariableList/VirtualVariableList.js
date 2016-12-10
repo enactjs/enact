@@ -37,7 +37,7 @@ class VirtualVariableListCore extends Component {
 		 * @default ({index, key}) => (<div key={key}>{index}</div>)
 		 * @public
 		 */
-		component: PropTypes.object.isRequired,
+		component: PropTypes.func.isRequired,
 
 		/**
 		 * Data for the list.
@@ -342,30 +342,7 @@ class VirtualVariableListCore extends Component {
 		if (this.isVirtualVariableList) {
 			primary.itemSize = itemSize[variableAxis];
 			primary.gridSize = primary.itemSize + spacing;
-			secondary.itemSize = ({data, index}) => {
-				if (index.secondaryIndex === 0) {
-					return itemSize[variableAxis + 'Header']({
-						data: data[variableAxis + 'Header'],
-						index: (variableAxis === 'row') ?
-							{row: index.primaryIndex, col: index.secondaryIndex} :
-							{row: index.secondaryIndex, col: index.primaryIndex}
-					});
-				} else if (index.primaryIndex === 0) {
-					return itemSize[this.fixedAxis + 'Header']({
-						data: data[this.fixedAxis + 'Header'],
-						index: (variableAxis === 'row') ?
-							{row: index.primaryIndex, col: index.secondaryIndex} :
-							{row: index.secondaryIndex, col: index.primaryIndex}
-					});
-				} else {
-					return itemSize[this.fixedAxis]({
-						data: data.item,
-						index: (variableAxis === 'row') ?
-							{row: index.primaryIndex - 1, col: index.secondaryIndex - 1} :
-							{row: index.secondaryIndex - 1, col: index.primaryIndex - 1}
-					});
-				}
-			};
+			secondary.itemSize = itemSize[this.fixedAxis];
 			secondary.gridSize = itemSize[variableAxis] + spacing;
 		} else {
 			primary.gridSize = primary.itemSize + spacing;
@@ -389,32 +366,15 @@ class VirtualVariableListCore extends Component {
 
 	updateStatesAndBounds (props) {
 		const
-			{dataSize, lockHeaders, overhang, variableAxis} = props,
+			{dataSize, overhang, variableAxis} = props,
 			{primaryFirstIndex} = this.state,
-			{dimensionToExtent, fixedAxis, primary, secondary, isVirtualVariableList} = this,
-			headerSize = (lockHeaders === 'both') ? 1 : 0;
+			{dimensionToExtent, fixedAxis, primary, secondary, isVirtualVariableList} = this;
 		let numOfItems = dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang);
 
 		if (isVirtualVariableList) {
-			numOfItems = Math.min(dataSize[variableAxis] + headerSize, numOfItems);
-			primary.dataSize = dataSize[variableAxis] + headerSize;
-			secondary.dataSize = ({data, index}) => {
-				if (index.primaryIndex === 0) {
-					return dataSize[this.fixedAxis + 'Header']({
-						data: data[this.fixedAxis + 'Header'],
-						index: (variableAxis === 'row') ?
-							{row: index.primaryIndex} :
-							{col: index.primaryIndex}
-					}) + headerSize;
-				} else {
-					return dataSize[this.fixedAxis]({
-						data: data.item,
-						index: (variableAxis === 'row') ?
-							{row: index.primaryIndex - 1} :
-							{col: index.primaryIndex - 1}
-					}) + headerSize;
-				}
-			};
+			numOfItems = Math.min(dataSize[variableAxis], numOfItems);
+			primary.dataSize = dataSize[variableAxis];
+			secondary.dataSize = dataSize[fixedAxis];
 		} else {
 			numOfItems = Math.min(dataSize, numOfItems);
 			primary.dataSize = dataSize;
@@ -492,7 +452,7 @@ class VirtualVariableListCore extends Component {
 			{data, lockHeaders, maxVariableScrollSize} = this.props,
 			{secondary} = this,
 			i = primaryIndex,
-			secondaryDataSize = secondary.dataSize({data, index: {primaryIndex}});
+			secondaryDataSize = secondary.dataSize({data, fixedIndex: i});
 		let
 			accumulatedSize = 0,
 			size, // width or height
@@ -502,11 +462,11 @@ class VirtualVariableListCore extends Component {
 		secondary.thresholds[i] = {};
 
 		if (lockHeaders === 'both') {
-			accumulatedSize = (-1) * secondary.itemSize({data, index: {primaryIndex, secondaryIndex: 0}});
+			accumulatedSize = (-1) * secondary.itemSize({data, index: {fixed: i, variable: 0}});
 		}
 
 		for (j = 0; j < secondaryDataSize; j++) {
-			size = secondary.itemSize({data, index: {primaryIndex, secondaryIndex: j}});
+			size = secondary.itemSize({data, index: {fixed: i, variable: j}});
 			secondary.positionOffsets[i][j] = accumulatedSize;
 			if (accumulatedSize <= secondaryPosition && secondaryPosition < accumulatedSize + size) {
 				secondary.firstIndices[i] = j;
@@ -670,45 +630,24 @@ class VirtualVariableListCore extends Component {
 
 	applyStyleToNewNode = (i, j, key, ...rest) => {
 		const
-			{component, data, lockHeaders, variableAxis} = this.props,
+			{component, data} = this.props,
 			{isVirtualVariableList} = this,
 			id = isVirtualVariableList ? (i + '-' + j) : i,
-			style = {};
-		let itemElement;
-
-		if (isVirtualVariableList) {
-			if (lockHeaders === 'both' && j === 0) {
-				itemElement = component.rowHeader({
-					data: data.rowHeader,
-					index: (variableAxis === 'row') ? {row: i} : {col: i},
-					key: id
-				});
-			} else if (lockHeaders === 'both' && i === 0) {
-				itemElement = component.colHeader({
-					data: data.colHeader,
-					index: (variableAxis === 'row') ? {col: j} : {row: j},
-					key: id
-				});
-			} else {
-				itemElement = component.item({
-					data: data.item,
-					index: (variableAxis === 'row') ? {
-						row: i - 1,
-						col: j - 1
-					} : {
-						row: j - 1,
-						col: i - 1
+			itemElement = isVirtualVariableList ?
+				component({
+					data,
+					index: {
+						fixed: i,
+						variable: j
 					},
 					key: id
-				});
-			}
-		} else {
-			itemElement = component({
-				data,
-				index: i,
-				key
-			});
-		}
+				}) :
+				component({
+					data,
+					index: i,
+					key
+				}),
+			style = {};
 
 		this.composeStyle(style, ...rest);
 
@@ -734,14 +673,14 @@ class VirtualVariableListCore extends Component {
 
 		// First column
 		if (lockHeaders === 'both') {
-			size = secondary.itemSize({data, index: {primaryIndex: i, secondaryIndex: 0}});
+			size = secondary.itemSize({data, index: {fixed: i, variable: 0}});
 			applyStyle(i, 0, key++, size, height, this.calculateZIndex(i, 0), i === 0 ? 0 : primaryPosition, 0);
 			secondaryPosition += size;
 			j = j || 1;
 		}
 
 		for (; j <= secondary.lastIndices[i]; j++) {
-			size = secondary.itemSize({data, index: {primaryIndex: i, secondaryIndex: j}});
+			size = secondary.itemSize({data, index: {fixed: i, variable: j}});
 			if (variableAxis === 'row') {
 				if (lockHeaders === 'both') {
 					applyStyle(
@@ -797,7 +736,7 @@ class VirtualVariableListCore extends Component {
 			height = (isPrimaryDirectionVertical ? primary.itemSize : secondary.itemSize) + 'px';
 			j = updateFrom % dimensionToExtent;
 		}
- 
+
 		// First row
 		if (isVirtualVariableList && lockHeaders === 'both' && updateFrom > 0) {
 			position = secondaryPosition + this.secondary.positionOffsets[0][secondary.firstIndices[0]];
@@ -917,7 +856,7 @@ class VirtualVariableListCore extends Component {
 
 			gridPosition = this.getVariableGridPosition(i, j);
 			gridPosition.primaryPosition = this.adjustPositionOnFocus(primary, gridPosition.primaryPosition, primary.itemSize, (lockHeaders === 'both') ? primary.itemSize : 0);
-			gridPosition.secondaryPosition = this.adjustPositionOnFocus(secondary, gridPosition.secondaryPosition, secondary.itemSize({data, index: {secondaryIndex: i, secondaryIndex: j}}));
+			gridPosition.secondaryPosition = this.adjustPositionOnFocus(secondary, gridPosition.secondaryPosition, secondary.itemSize({data, index: {fixed: i, variable: j}}));
 		} else {
 			const index = Number.parseInt(focusedIndex);
 			gridPosition = this.getGridPosition(index);
@@ -1005,6 +944,8 @@ class VirtualVariableListCore extends Component {
 
 		this.calculateMetrics(this.props);
 		this.updateStatesAndBounds(this.props);
+
+		this.setScrollPosition(posX, posY, this.dirHorizontal, this.dirVertical);
 
 		if (positioningOption !== 'byBrowser') {
 			const containerNode = this.getContainerNode(positioningOption);
@@ -1121,8 +1062,6 @@ class VirtualVariableListCore extends Component {
 		delete props.onScrollStop;
 		delete props.overhang;
 		delete props.positioningOption;
-		delete props.posX;
-		delete props.posY;
 		delete props.spacing;
 		delete props.variableAxis;
 
