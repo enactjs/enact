@@ -26,13 +26,15 @@ const
 			padding: ri.scale(32) + 'px 0',
 			color: 'white'
 		},
-		itemWrapper: {
+		// Programs
+		itemProgramWrapper: {
+			background: '#141416',
 			position: 'absolute',
+			padding: 0,
 			border: ri.scale(3) + 'px solid black',
 			boxSizing: 'border-box',
 			overflow: 'hidden'
 		},
-		// Programs
 		itemProgram: {
 			height: '100%',
 			fontSize: ri.scale(33) + 'px',
@@ -41,12 +43,6 @@ const
 			userSelect: 'none'
 		}
 	};
-
-// CSS
-let sheet = document.createElement('style');
-sheet.innerHTML = '.channelInfo:not(:focus) {background: #2C2E35;}' +
-	'.program:not(:focus) {background: #141416;}';
-document.body.appendChild(sheet);
 
 // Data
 const
@@ -106,7 +102,7 @@ const
 	renderItem = ({data, index, key}) => {
 		// Programs
 		return (
-			<div key={key} className={'program'} style={style.itemWrapper}>
+			<div key={key} style={style.itemProgramWrapper}>
 				<div style={style.itemProgram}>
 					{data[index.row][index.col].programName}
 				</div>

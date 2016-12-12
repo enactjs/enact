@@ -27,12 +27,6 @@ const
 			padding: ri.scale(32) + 'px 0',
 			color: 'white'
 		},
-		itemWrapper: {
-			position: 'absolute',
-			border: ri.scale(3) + 'px solid black',
-			boxSizing: 'border-box',
-			overflow: 'hidden'
-		},
 		// Today
 		itemToday: {
 			background: 'black',
@@ -56,6 +50,14 @@ const
 			userSelect: 'none'
 		},
 		// ChannelInfo
+		itemChannelInfoWrapper: {
+			background: '#2C2E35',
+			position: 'absolute',
+			padding: 0,
+			border: ri.scale(3) + 'px solid black',
+			boxSizing: 'border-box',
+			overflow: 'hidden'
+		},
 		itemChannelInfo: {
 			width: ri.scale(channelWidth - 6) + 'px',
 			height: ri.scale(itemHeight - 6) + 'px',
@@ -66,6 +68,14 @@ const
 			userSelect: 'none'
 		},
 		// Programs
+		itemProgramWrapper: {
+			background: '#141416',
+			position: 'absolute',
+			padding: 0,
+			border: ri.scale(3) + 'px solid black',
+			boxSizing: 'border-box',
+			overflow: 'hidden'
+		},
 		itemProgram: {
 			height: '100%',
 			fontSize: ri.scale(33) + 'px',
@@ -74,12 +84,6 @@ const
 			userSelect: 'none'
 		}
 	};
-
-// CSS
-let sheet = document.createElement('style');
-sheet.innerHTML = '.channelInfo:not(:focus) {background: #2C2E35;}' +
-	'.program:not(:focus) {background: #141416;}';
-document.body.appendChild(sheet);
 
 // Data
 const
@@ -174,7 +178,7 @@ const
 	renderRowHeaderItem = ({data, index, key}) => {
 		// ChannelInfo
 		return (
-			<div key={key} className={'channelInfo'} style={style.itemWrapper}>
+			<div key={key} style={style.itemChannelInfoWrapper}>
 				<div style={style.itemChannelInfo}>
 					{data[index % 20]}
 				</div>
@@ -194,7 +198,7 @@ const
 	renderItem = ({data, index, key}) => {
 		// Programs
 		return (
-			<div key={key} className={'program'} style={style.itemWrapper}>
+			<div key={key} style={style.itemProgramWrapper}>
 				<div style={style.itemProgram}>
 					{data[index.row][index.col].programName}
 				</div>
@@ -221,13 +225,13 @@ storiesOf('VirtualVariableList')
 						rowHeader: channelLength,
 						colHeader: timelineData.length
 					}}
+					headers="both"
 					itemSize={{
 						row: number('itemSize_row', ri.scale(itemHeight)),
 						col: getItemWidth,
 						rowHeader: ri.scale(channelWidth),
 						colHeader: ri.scale(timeWidth)
 					}}
-					headers="both"
 					maxVariableScrollSize={maxVariableScrollSize}
 					posX={number('posX', 0)}
 					posY={number('posY', 0)}
