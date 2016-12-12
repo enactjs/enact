@@ -10,25 +10,21 @@
 import React from 'react';
 
 import Video, {Controls, Play, Mute, Seek, Fullscreen, Time, Overlay} from 'react-html5video';
-
+import {$L} from '@enact/i18n';
 
 import IconButton from '../IconButton';
 import MarqueeText from '../Marquee/MarqueeText';
 import {SliderFactory} from '../Slider';
 import Spinner from '../Spinner';
-import Panels from '../Panels';
 import Slottable from '@enact/ui/Slottable';
 
 import css from './VideoPlayer.less';
 
 const MediaSlider = SliderFactory({css});
 
-const $L = text => text; // Dummy placeholder
-
 const zeroPad = (num) => ((num < 10 && num >= 0) ? '0' + num : num);
 
 const parseTime = (time) => {
-	console.log('processing time:', time);
 	// http://stackoverflow.com/questions/6312993/javascript-seconds-to-time-string-with-format-hhmmss
 	// by powtac on Jun 10 '11 at 23:27
 	time = parseInt(time); // don't forget the second param
@@ -50,7 +46,7 @@ const parseTime = (time) => {
 };
 
 const VideoPlayerBase = class extends React.Component {
-	static displayName = VideoPlayerBase;
+	static displayName = 'VideoPlayerBase';
 
 	static propTypes = {
 		infoComponents: React.PropTypes.node,
@@ -141,9 +137,15 @@ const VideoPlayerBase = class extends React.Component {
 				totalTimePeriod: this.secondsToPeriod(el.duration),
 				totalTime: this.secondsToTime(el.duration)
 			});
-			console.log('secondsToPeriod:', this.secondsToPeriod(el.duration));
 		}
 	}
+
+	// Player Button controls
+	onSkipBackward  = () => this.send('seek', 0);
+	onBackward      = (jumpBy) => this.jump(-1 * jumpBy);
+	onPlay          = () => this.send('togglePlay');
+	onForward       = (jumpBy) => this.jump(jumpBy);
+	onSkipForward   = () => this.send('seek', (this.video ? this.video.videoEl.duration : 0));
 
 	notYetImplemented = ( ) => {
 		console.log('Sorry, not yet implemented.');
@@ -161,7 +163,7 @@ const VideoPlayerBase = class extends React.Component {
 		const moreState = (this.state.more) ? ' ' + css.more : '';
 		const infoState = (this.state.more) ? ' ' + css.visible : ' ' + css.hidden;
 		const withBadges = (this.state.more) ? ' ' + css.withBadges : '';
-		console.log('rightComponents:', rightComponents);
+
 		return (
 			<div className={css.videoPlayer}>
 				<Video
@@ -214,11 +216,11 @@ const VideoPlayerBase = class extends React.Component {
 								{/* <Panels index={0} className={css.controlsContainer}>*/}
 								<div className={css.centerComponents + moreState}>
 									<div className={css.mediaControls}> {/* rtl={false} */}
-										<IconButton backgroundOpacity="translucent" onClick={this.send('seek', 0)}>skipbackward</IconButton>
-										<IconButton backgroundOpacity="translucent" onClick={this.jump(-1 * jumpBy)}>backward</IconButton>
-										<IconButton backgroundOpacity="translucent" onClick={this.send('togglePlay')}>play</IconButton>
-										<IconButton backgroundOpacity="translucent" onClick={this.jump(jumpBy)}>forward</IconButton>
-										<IconButton backgroundOpacity="translucent" onClick={this.send('seek', (this.video ? this.video.videoEl.duration : 0))}>skipforward</IconButton>
+										<IconButton backgroundOpacity="translucent" onClick={this.onSkipBackward()}>skipbackward</IconButton>
+										<IconButton backgroundOpacity="translucent" onClick={this.onBackward(jumpBy)}>backward</IconButton>
+										<IconButton backgroundOpacity="translucent" onClick={this.onPlay()}>play</IconButton>
+										<IconButton backgroundOpacity="translucent" onClick={this.onForward(jumpBy)}>forward</IconButton>
+										<IconButton backgroundOpacity="translucent" onClick={this.onSkipForward()}>skipforward</IconButton>
 									</div>
 									<div className={css.moreControls}>{children}</div> {/* rtl={false} */}
 								</div>
