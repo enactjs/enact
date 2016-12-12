@@ -15,7 +15,6 @@ import {VirtualListCore} from '../VirtualList/VirtualListBase';
 import css from './VirtualVariableList.less';
 
 const
-	dataIndexAttribute = 'data-index',
 	rowNumberColFuncShape = PropTypes.shape({row: PropTypes.number.isRequired, col: PropTypes.func.isRequired}),
 	rowFuncColNumberShape = PropTypes.shape({row: PropTypes.func.isRequired, col: PropTypes.number.isRequired});
 
@@ -418,12 +417,9 @@ class VirtualVariableListCore extends Component {
 	}
 
 	applyStyleToExistingNode = (i, j, key, ...rest) => {
-		const
-			node = this.containerRef.children[key],
-			id = i + '-' + j;
+		const node = this.containerRef.children[key];
 
 		if (node) {
-			node.setAttribute(dataIndexAttribute, id);
 			this.composeStyle(node.style, ...rest);
 		}
 	}
@@ -432,11 +428,10 @@ class VirtualVariableListCore extends Component {
 		const
 			{component, data, variableAxis} = this.props,
 			{fixedAxis} = this,
-			id = i + '-' + j,
 			itemElement = component({
 				data,
 				index: {[variableAxis]: i, [fixedAxis]: j},
-				key: id
+				key
 			}),
 			style = {};
 
@@ -444,8 +439,7 @@ class VirtualVariableListCore extends Component {
 
 		this.cc[key] = React.cloneElement(
 			itemElement, {
-				style: {...itemElement.props.style, ...style},
-				[dataIndexAttribute]: id
+				style: {...itemElement.props.style, ...style}
 			}
 		);
 	}
@@ -553,6 +547,13 @@ class VirtualVariableListCore extends Component {
 
 		this.fixedAxis = (nextProps.variableAxis === 'row') ? 'col' : 'row';
 
+		if (hasMetricsChanged) {
+			this.calculateMetrics(nextProps);
+			this.updateStatesAndBounds(hasDataChanged ? nextProps : this.props);
+		} else if (hasDataChanged) {
+			this.updateStatesAndBounds(nextProps);
+		}
+
 		if (isPositionChanged) {
 			if (nextProps.variableAxis === 'row') {
 				this.setScrollPosition(
@@ -569,13 +570,6 @@ class VirtualVariableListCore extends Component {
 					Math.sign(nextProps.posY - posY)
 				);
 			}
-		}
-
-		if (hasMetricsChanged) {
-			this.calculateMetrics(nextProps);
-			this.updateStatesAndBounds(hasDataChanged ? nextProps : this.props);
-		} else if (hasDataChanged) {
-			this.updateStatesAndBounds(nextProps);
 		}
 	}
 

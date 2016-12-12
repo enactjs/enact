@@ -713,6 +713,13 @@ class VirtualListCore extends Component {
 				(posX !== nextProps.posX) || (posY !== nextProps.posY)
 			);
 
+		if (hasMetricsChanged) {
+			this.calculateMetrics(nextProps);
+			this.updateStatesAndBounds(hasDataChanged ? nextProps : this.props);
+		} else if (hasDataChanged) {
+			this.updateStatesAndBounds(nextProps);
+		}
+
 		if (isPositionChanged && nextProps.posX !== null && nextProps.posY !== null) {
 			if (nextProps.direction === 'vertical') {
 				this.setScrollPosition(
@@ -729,13 +736,6 @@ class VirtualListCore extends Component {
 					0
 				);
 			}
-		}
-
-		if (hasMetricsChanged) {
-			this.calculateMetrics(nextProps);
-			this.updateStatesAndBounds(hasDataChanged ? nextProps : this.props);
-		} else if (hasDataChanged) {
-			this.updateStatesAndBounds(nextProps);
 		}
 	}
 
