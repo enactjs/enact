@@ -146,6 +146,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		isScrollAnimationTargetAccumulated = false
 		isFirstDragging = false
 		isDragging = false
+		isPrerender = true
 
 		// mouse handlers
 		eventHandlers = {}
@@ -674,6 +675,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					});
 				}
 			}
+
+			this.isPrerender = false;
 		}
 
 		componentDidUpdate () {
@@ -733,8 +736,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					className
 				),
 				isBothScrollable = isHorizontalScrollbarVisible && isVerticalScrollbarVisible,
-				verticalScrollbarClassnames = isVerticalScrollbarVisible ? (!isBothScrollable && css.onlyVerticalScrollbarNeeded) : css.verticalScrollbarDisabled,
-				horizontalScrollbarClassnames = isHorizontalScrollbarVisible ? (!isBothScrollable && css.onlyHorizontalScrollbarNeeded) : css.horizontalScrollbarDisabled;
+				verticalScrollbarClassnames = isVerticalScrollbarVisible && !this.isPrerender ? (!isBothScrollable && css.onlyVerticalScrollbarNeeded) : css.verticalScrollbarDisabled,
+				horizontalScrollbarClassnames = isHorizontalScrollbarVisible && !this.isPrerender ? (!isBothScrollable && css.onlyHorizontalScrollbarNeeded) : css.horizontalScrollbarDisabled;
 
 			delete props.className;
 			delete props.cbScrollTo;
