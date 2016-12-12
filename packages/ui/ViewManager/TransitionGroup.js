@@ -143,7 +143,7 @@ class TransitionGroup extends React.Component {
 
 		// drop children exceeding allowed size
 		const drop = children.length - nextProps.size;
-		const dropped = drop > 0 ? children.splice(nextProps.size) : null;
+		const dropped = drop > 0 ? children.splice(drop) : null;
 
 		this.setState({
 			children
