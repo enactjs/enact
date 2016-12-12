@@ -143,7 +143,7 @@ class VirtualListCore extends Component {
 		 * @private
 		 */
 		posX: PropTypes.number,
-		
+
 		/**
 		 * Position y.
 		 *
@@ -204,7 +204,7 @@ class VirtualListCore extends Component {
 
 	containerRef = null
 	wrapperRef = null
-	
+
 	composeItemPosition = null
 	positionContainer = null
 

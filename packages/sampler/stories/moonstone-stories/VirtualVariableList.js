@@ -1,9 +1,7 @@
 import ri from '@enact/ui/resolution';
-import Icon from '@enact/moonstone/Icon';
 import {VirtualVariableList, VirtualVariableListCore} from '@enact/moonstone/VirtualVariableList';
-import clamp from 'ramda/src/clamp';
-import React, {Component} from 'react';
-import {storiesOf, action} from '@kadira/storybook';
+import React from 'react';
+import {storiesOf} from '@kadira/storybook';
 import {withKnobs, number} from '@kadira/storybook-addon-knobs';
 
 VirtualVariableList.propTypes = Object.assign({}, VirtualVariableListCore.propTypes);
@@ -78,7 +76,7 @@ const
 	getRandomWidth = () => {
 		return ri.scale((parseInt(Math.random() * 20) + 1) * 100);
 	},
-	programData = (function() {
+	programData = (function () {
 		const data = [];
 
 		for (let i = 0; i < channelLength; i++) {
