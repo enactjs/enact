@@ -306,7 +306,7 @@ class VirtualVariableListCore extends Component {
 				secondary.firstIndices[i] = j;
 				secondary.thresholds[i].min = accumulatedSize;
 			}
-			if (accumulatedSize + size > secondaryPosition + secondary.clientSize) {
+			if (accumulatedSize + size >= secondaryPosition + secondary.clientSize) {
 				secondary.lastIndices[i] = j;
 				secondary.thresholds[i].max = accumulatedSize + size;
 				break;
