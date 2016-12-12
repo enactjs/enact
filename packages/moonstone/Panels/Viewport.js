@@ -1,9 +1,18 @@
+import {findDOMNode} from 'react-dom';
+import {forward, withArgs as handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import ViewManager, {shape} from '@enact/ui/ViewManager';
 import invariant from 'invariant';
 import React from 'react';
+import Spotlight from '@enact/spotlight';
 
 import css from './Panels.less';
+
+const spotPanel = ({view}) => {
+	// eslint-disable-next-line react/no-find-dom-node
+	const node = findDOMNode(view);
+	Spotlight.focus(node && node.dataset.containerId);
+};
 
 /**
  * The container for a set of Panels
@@ -57,7 +66,12 @@ const ViewportBase = kind({
 		className: 'viewport'
 	},
 
-	render: ({arranger, children, index, noAnimation, ...rest}) => {
+	computed: {
+		handleAppear: handle(forward('onAppear'), spotPanel),
+		handleEnter: handle(forward('onEnter'), spotPanel)
+	},
+
+	render: ({arranger, children, handleAppear, handleEnter, index, noAnimation, ...rest}) => {
 		const count = React.Children.count(children);
 		invariant(
 			index === 0 && count === 0 || index < count,
@@ -72,6 +86,8 @@ const ViewportBase = kind({
 				duration={300}
 				index={index}
 				component="main"
+				onAppear={handleAppear}
+				onEnter={handleEnter}
 			>
 				{children}
 			</ViewManager>

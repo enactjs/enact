@@ -11,6 +11,7 @@
 import compose from 'ramda/src/compose';
 import eqBy from 'ramda/src/eqBy';
 import findIndex from 'ramda/src/findIndex';
+import {forward} from '@enact/core/handle';
 import identity from 'ramda/src/identity';
 import lte from 'ramda/src/lte';
 import prop from 'ramda/src/prop';
@@ -66,6 +67,12 @@ const mapChildren = function (children) {
  */
 const mergeChildren = unionWith(eqBy(prop('key')));
 
+// Cached event forwarders
+const forwardOnAppear = forward('onAppear');
+const forwardOnEnter = forward('onEnter');
+const forwardOnLeave = forward('onLeave');
+const forwardOnStay = forward('onStay');
+
 /**
  * Manages the transition of added and removed child components. Children that are added are
  * transitioned in and those removed are transition out via optional callbacks on the child.
@@ -97,6 +104,11 @@ class TransitionGroup extends React.Component {
 		 * @default 'div'
 		 */
 		component: React.PropTypes.any,
+
+		onAppear: React.PropTypes.func,
+		onEnter: React.PropTypes.func,
+		onLeave: React.PropTypes.func,
+		onStay: React.PropTypes.func,
 
 		/**
 		 * Maximum number of rendered children. Used to limit how many visible transitions are
@@ -224,6 +236,10 @@ class TransitionGroup extends React.Component {
 			component.componentDidAppear();
 		}
 
+		forwardOnAppear({
+			view: component
+		}, this.props);
+
 		delete this.currentlyTransitioningKeys[key];
 
 		let currentChildMapping = mapChildren(this.props.children);
@@ -254,6 +270,10 @@ class TransitionGroup extends React.Component {
 			component.componentDidEnter();
 		}
 
+		forwardOnEnter({
+			view: component
+		}, this.props);
+
 		delete this.currentlyTransitioningKeys[key];
 	}
 
@@ -274,6 +294,10 @@ class TransitionGroup extends React.Component {
 		if (component.componentDidStay) {
 			component.componentDidStay();
 		}
+
+		forwardOnStay({
+			view: component
+		}, this.props);
 	}
 
 	performLeave = (key) => {
@@ -296,6 +320,10 @@ class TransitionGroup extends React.Component {
 		if (component.componentDidLeave) {
 			component.componentDidLeave();
 		}
+
+		forwardOnLeave({
+			view: component
+		}, this.props);
 
 		delete this.currentlyTransitioningKeys[key];
 
