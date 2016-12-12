@@ -1,6 +1,6 @@
-<section>
-
-## Documenting Changes
+---
+title: Documenting Changes
+---
 
 Avid developers often wonder if they are doing the right thing when it comes to the CHANGELOG.md file. If this describes
 you, fear not. This guide will help you understand this humble file and its use within the Enact framework.
@@ -64,5 +64,3 @@ functionality of a component, it should likely be listed in the Changed section.
 ```
 * Issue that caused mouse cursor to display upside down
 ```
-
-</section>

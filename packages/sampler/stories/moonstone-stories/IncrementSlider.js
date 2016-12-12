@@ -1,7 +1,7 @@
 import IncrementSlider, {IncrementSliderBase} from '@enact/moonstone/IncrementSlider';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, number, text} from '@kadira/storybook-addon-knobs';
+import {withKnobs, boolean, number, select} from '@kadira/storybook-addon-knobs';
 
 IncrementSlider.propTypes = Object.assign({}, IncrementSliderBase.propTypes, IncrementSlider.propTypes);
 IncrementSlider.defaultProps = Object.assign({}, IncrementSliderBase.defaultProps, IncrementSlider.defaultProps);
@@ -14,9 +14,10 @@ storiesOf('IncrementSlider')
 		'Basic usage of IncrementSlider',
 		() => (
 			<IncrementSlider
-				backgroundPercent={number('backgroundPercent', IncrementSlider.defaultProps.backgroundPercent)}
+				backgroundPercent={number('backgroundPercent', IncrementSlider.defaultProps.backgroundPercent, {range: true, min: 0, max: 100})}
+				incrementIcon={select('incrementIcon', ['', 'plus'])}
+				decrementIcon={select('decrementIcon', ['', 'minus'])}
 				disabled={boolean('disabled', IncrementSlider.defaultProps.disabled)}
-				height={text('height (vertical only)', IncrementSlider.defaultProps.height)}
 				max={number('max', IncrementSlider.defaultProps.max)}
 				min={number('min', IncrementSlider.defaultProps.min)}
 				onChange={action('onChange')}

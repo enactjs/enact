@@ -1,12 +1,11 @@
 import React from 'react';
-import {shallow, mount} from 'enzyme';
+import {mount} from 'enzyme';
 import sinon from 'sinon';
-import {PlainInputBase as Input} from '../PlainInput';
-import {InputBase} from '../Input';
+import Input from '../Input';
 
 describe('Input Specs', () => {
 	it('Should have an input element', function () {
-		const subject = shallow(
+		const subject = mount(
 			<Input />
 		);
 
@@ -14,7 +13,7 @@ describe('Input Specs', () => {
 	});
 
 	it('Should include a placeholder if specified', function () {
-		const subject = shallow(
+		const subject = mount(
 			<Input placeholder="hello" />
 		);
 
@@ -25,7 +24,7 @@ describe('Input Specs', () => {
 		const handleChange = sinon.spy();
 		const value = 'blah';
 		const evt = {target: {value: value}};
-		const subject = shallow(
+		const subject = mount(
 			<Input onChange={handleChange} />
 		);
 
@@ -42,7 +41,7 @@ describe('Input Specs', () => {
 		const handleChange = sinon.spy();
 
 		const subject = mount(
-			<InputBase onBlur={handleChange} dismissOnEnter />,
+			<Input onBlur={handleChange} dismissOnEnter />,
 			{attachTo: node}
 		);
 		const input = subject.find('input');
@@ -58,7 +57,7 @@ describe('Input Specs', () => {
 	});
 
 	it('Should be able to be disabled', function () {
-		const subject = shallow(
+		const subject = mount(
 			<Input disabled />
 		);
 
@@ -66,7 +65,7 @@ describe('Input Specs', () => {
 	});
 
 	it('Should reflect the value if specified', function () {
-		const subject = shallow(
+		const subject = mount(
 			<Input value="hello" />
 		);
 

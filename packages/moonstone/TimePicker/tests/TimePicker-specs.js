@@ -58,4 +58,38 @@ describe('TimePicker', () => {
 
 		expect(actual).to.deep.equal(expected);
 	});
+
+	it('should accept a JavaScript Date for its value prop', function () {
+		const subject = mount(
+			<TimePicker title="Date" value={new Date(2000, 0, 1, 12, 30)} />
+		);
+
+		const minutePicker = subject.find('DateComponentRangePicker').findWhere(p => {
+			return p.type().displayName === 'DateComponentRangePicker' && p.prop('label') === 'minute';
+		});
+
+		const expected = 30;
+		const actual = minutePicker.prop('value');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should accept an updated JavaScript Date for its value prop', function () {
+		const subject = mount(
+			<TimePicker title="Date" value={new Date(2000, 0, 1, 12, 30)} />
+		);
+
+		subject.setProps({
+			value: new Date(2000, 0, 1, 12, 45)
+		});
+
+		const minutePicker = subject.find('DateComponentRangePicker').findWhere(p => {
+			return p.type().displayName === 'DateComponentRangePicker' && p.prop('label') === 'minute';
+		});
+
+		const expected = 45;
+		const actual = minutePicker.prop('value');
+
+		expect(actual).to.equal(expected);
+	});
 });
