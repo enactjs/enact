@@ -193,7 +193,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				});
 			}
 
-			this.calculateMetrics();
 			if (this.props.marqueeOn === 'render') {
 				this.startAnimation(this.props.marqueeOnRenderDelay);
 			}
@@ -210,7 +209,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidUpdate () {
-			this.calculateMetrics();
 			if (this.shouldStartMarquee()) {
 				this.startAnimation(this.props.marqueeDelay);
 			}
@@ -274,8 +272,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		invalidateMetrics () {
 			// Null distance is the special value to allow recalculation
 			this.distance = null;
-			// Assume the marquee fits until calculations show otherwise
-			this.contentFits = true;
+			// Assume the marquee does not fit until calculations show otherwise
+			this.contentFits = false;
 		}
 
 		/**
@@ -340,9 +338,12 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		start = (delay = this.props.marqueeDelay) => {
 			if (!this.state.animating) {
 				this.setTimeout(() => {
-					this.setState({
-						animating: true
-					});
+					this.calculateMetrics();
+					if (!this.contentFits) {
+						this.setState({
+							animating: true
+						});
+					}
 				}, delay);
 			}
 		}
