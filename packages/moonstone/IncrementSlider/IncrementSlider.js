@@ -10,10 +10,10 @@ import Pressable from '@enact/ui/Pressable';
 import React, {PropTypes} from 'react';
 import {Spottable} from '@enact/spotlight';
 
-import IconButton from '../IconButton';
 import {SliderBase} from '../Slider';
 import SliderDecorator from '../internal/SliderDecorator';
 
+import IncrementSliderButton from './IncrementSliderButton';
 import css from './IncrementSlider.less';
 
 /**
@@ -50,6 +50,15 @@ const IncrementSliderBase = kind({
 		 * @public
 		 */
 		decrementIcon: React.PropTypes.string,
+
+		/**
+		 * When `true`, the component is shown as disabled and does not generate events
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		disabled: PropTypes.bool,
 
 		/**
 		 * Assign a custom icon for the incrementer. All strings supported by [Icon]{Icon} are
@@ -151,16 +160,30 @@ const IncrementSliderBase = kind({
 	},
 
 	computed: {
+		decrementDisabled: ({disabled, min, value}) => disabled || value <= min,
+		incrementDisabled: ({disabled, max, value}) => disabled || value >= max,
 		incrementSliderClasses: ({vertical, styler}) => styler.append({vertical, horizontal: !vertical}),
-		incrementIcon: ({incrementIcon, vertical}) => (incrementIcon || (vertical ? 'arrowlargeup' : 'arrowlargeright')),
-		decrementIcon: ({decrementIcon, vertical}) => (decrementIcon || (vertical ? 'arrowlargedown' : 'arrowlargeleft'))
+		decrementIcon: ({decrementIcon, vertical}) => (decrementIcon || (vertical ? 'arrowlargedown' : 'arrowlargeleft')),
+		incrementIcon: ({incrementIcon, vertical}) => (incrementIcon || (vertical ? 'arrowlargeup' : 'arrowlargeright'))
 	},
 
-	render: ({decrementIcon, incrementIcon, onIncrement, onDecrement, incrementSliderClasses, ...rest}) => (
+	render: ({decrementDisabled, decrementIcon, incrementDisabled, incrementIcon, onIncrement, onDecrement, incrementSliderClasses, ...rest}) => (
 		<div className={incrementSliderClasses}>
-			<IconButton className={css.decrementButton} small onClick={onDecrement}>{decrementIcon}</IconButton>
+			<IncrementSliderButton
+				className={css.decrementButton}
+				disabled={decrementDisabled}
+				onClick={onDecrement}
+			>
+				{decrementIcon}
+			</IncrementSliderButton>
 			<SliderBase {...rest} className={css.slider} />
-			<IconButton className={css.incrementButton} small onClick={onIncrement}>{incrementIcon}</IconButton>
+			<IncrementSliderButton
+				className={css.incrementButton}
+				disabled={incrementDisabled}
+				onClick={onIncrement}
+			>
+				{incrementIcon}
+			</IncrementSliderButton>
 		</div>
 	)
 });
