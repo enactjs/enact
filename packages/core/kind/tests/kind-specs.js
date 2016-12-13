@@ -1,5 +1,3 @@
-/* globals describe, it, expect */
-
 import React from 'react';
 import {mount} from 'enzyme';
 import kind from '../kind';
@@ -34,13 +32,6 @@ describe('kind', () => {
 	it('Should assign name to displayName', function () {
 		const expected = 'Kind';
 		const actual = Kind.displayName;
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('Should require {prop} property', function () {
-		const expected = true;
-		const actual = Kind.propTypes.prop({}, 'prop', 'Kind') instanceof Error;
 
 		expect(actual).to.equal(expected);
 	});

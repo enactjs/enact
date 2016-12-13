@@ -11,6 +11,13 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Popup.PopupBase` component's `onCloseButtonClicked` property to `onCloseButtonClick`
 - `moonstone/Item.ItemOverlay` component's `autoHide` property to remove the `'no'` option. The same
 	effect can be achieved by omitting the property or passing `null`.
+- `moonstone/VirtualGridList` to be scrolled by page when navigating with a 5-way direction key
+- `moonstone/Scroller`, `moonstone/VirtualList`, `moonstone/VirtualGridList`, and `moonstone/Scrollable` to no longer respond to mouse down/move/up events
+
+### Fixed
+
+- `moonstone/Input` to show an ellipsis on the correct side based on the text directionality of the `value` or `placeholder` content.
+- `moonstone/VirtualList` and `moonstone/VirtualGridList` to prevent unwanted scrolling when focused with the pointer
 
 ## [1.0.0-alpha.4] - 2016-12-2
 
@@ -23,6 +30,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/MarqueeController` component to synchronize multiple `moonstone/Marquee` components
 - Non-latin locale support to all existing Moonstone components
 - Language-specific font support
+- `moonstone/IncrementSlider` now accepts customizable increment and decrement icons, as well as `moonstone/Slider` being more responsive to external styling
 
 ### Changed
 
@@ -33,6 +41,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 	the public API.
 - `moonstone/GridListImageItem` so that a placeholder image displays while loading the image, and the caption and subcaption support marqueeing
 - `moonstone/MoonstoneDecorator` to add `FloatingLayerDecorator`
+- `moonstone/IncrementSlider` in vertical mode looks and works as expected.
 
 ### Removed
 
@@ -41,6 +50,7 @@ this module. When authoring components and importing mixins, only the local mixi
 imported, as they already import the general mixins.
 - the `src` property from `moonstone/Icon` and `moonston/IconButton`. Use the support for URLs in
 	the `children` property as noted above.
+- the `height` property from `moonstone/IncrementSlider` and `moonstone/Slider`
 
 ### Fixed
 

@@ -222,7 +222,7 @@ class Scrollbar extends Component {
 
 		this.calculateMetrics();
 		this.prevButtonNodeRef = containerRef.children[0];
-		this.nextButtonNodeRef = containerRef.children[2];
+		this.nextButtonNodeRef = containerRef.children[1];
 	}
 
 	componentDidUpdate () {
