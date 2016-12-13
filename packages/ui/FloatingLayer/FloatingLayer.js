@@ -154,7 +154,9 @@ class FloatingLayerBase extends React.Component {
 		return this.node;
 	}
 
-	renderFloatingLayer ({children, floatLayerClassName, floatLayerId, onOpen, scrimType, ...rest}, isOpened = false) {
+	renderFloatingLayer ({children, onOpen, scrimType, ...rest}, isOpened = false) {
+		delete rest.floatLayerClassName;
+		delete rest.floatLayerId;
 		delete rest.noAutoDismiss;
 		delete rest.onClose;
 		delete rest.onDismiss;

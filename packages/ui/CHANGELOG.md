@@ -4,9 +4,13 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
-### Changed
+### Added
 
-- Removed `fit` prop from `ui/Transition` in favor of using `className`
+- `none` to `scrimType` prop values in `ui/FloatingLayer`
+
+### Removed
+
+- `fit` prop from `ui/Transition` in favor of using `className`
 
 ## [1.0.0-alpha.4] - 2016-12-2
 
