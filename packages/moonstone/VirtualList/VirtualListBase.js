@@ -123,16 +123,6 @@ class VirtualListCore extends Component {
 		pageScroll: PropTypes.bool,
 
 		/**
-		 * Predefined client size. If this prop is not defined, VirtualList will calculate them after rendering itself.
-		 * We recommend not to define `predefinedClientSize` in normal case.
-		 * Only use this prop when you use isomorphic build option.
-		 *
-		 * @type {Object}
-		 * @private
-		 */
-		predefinedClientSize: PropTypes.shape({clientWidth: PropTypes.number, clientHeight: PropTypes.number}),
-
-		/**
 		 * Option for positioning the items; valid values are `'byItem'`, `'byContainer'`,
 		 * and `'byBrowser'`.
 		 * If `'byItem'`, the list moves each item.
@@ -144,6 +134,16 @@ class VirtualListCore extends Component {
 		 * @private
 		 */
 		positioningOption: PropTypes.oneOf(['byItem', 'byContainer', 'byBrowser']),
+
+		/**
+		 * Predefined client size. If this prop is not defined, VirtualList will calculate them after rendering itself.
+		 * We recommend not to define `predefinedClientSize` in normal case.
+		 * Only use this prop when you use isomorphic build option.
+		 *
+		 * @type {Object}
+		 * @private
+		 */
+		predefinedClientSize: PropTypes.shape({clientWidth: PropTypes.number, clientHeight: PropTypes.number}),
 
 		/**
 		 * Spacing between items.
@@ -268,7 +268,7 @@ class VirtualListCore extends Component {
 	calculateMetrics (props) {
 		const
 			{dataSize, direction, itemSize, overhang, positioningOption, predefinedClientSize, spacing} = props,
-			node = this.getContainerNode(positioningOption)
+			node = this.getContainerNode(positioningOption);
 
 		if (!predefinedClientSize && !node) {
 			return;
@@ -327,10 +327,11 @@ class VirtualListCore extends Component {
 		this.scrollPosition = 0;
 		// eslint-disable-next-line react/no-direct-mutation-state
 		this.state.firstIndex = 0;
-		// eslint-disable-next-line react/no-direct-mutation-state
 		if (predefinedClientSize) {
+			// eslint-disable-next-line react/no-direct-mutation-state
 			this.state.numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang));
 		} else {
+			// eslint-disable-next-line react/no-direct-mutation-state
 			this.state.numOfItems = 0;
 		}
 	}
@@ -743,7 +744,7 @@ class VirtualListCore extends Component {
 	render () {
 		const
 			props = Object.assign({}, this.props),
-			{clientWidth, clientHeight, positioningOption, predefinedClientSize, onScroll} = this.props,
+			{positioningOption, predefinedClientSize, onScroll} = this.props,
 			{primary, cc} = this;
 
 		delete props.cbScrollTo;
