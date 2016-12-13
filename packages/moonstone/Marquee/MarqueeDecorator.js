@@ -1,6 +1,6 @@
 import hoc from '@enact/core/hoc';
 import {forward} from '@enact/core/handle';
-import {childrenEquals} from '@enact/core/util';
+import {childrenEquals, propEquals} from '@enact/core/util';
 import React from 'react';
 
 import Marquee from './Marquee';
@@ -51,15 +51,7 @@ const defaultConfig = {
 	 * @type {String}
 	 * @default 'onMouseLeave'
 	 */
-	leave: 'onMouseLeave',
-
-	/**
-	 * Recalculate the distance if any property(like 'inline') changes. Expects a property.
-	 *
-	 * @type {String}
-	 * @default null
-	 */
-	recalculateOnPropChange: null
+	leave: 'onMouseLeave'
 };
 
 /**
@@ -72,7 +64,7 @@ const defaultConfig = {
  * @public
  */
 const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {blur, className: marqueeClassName, enter, focus, leave, recalculateOnPropChange} = config;
+	const {blur, className: marqueeClassName, enter, focus, leave} = config;
 
 	// Generate functions to forward events to containers
 	const forwardBlur = forward(blur);
@@ -214,8 +206,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.cancelAnimation();
 			} else if (next.marqueeOn !== marqueeOn || next.marqueeDisabled !== marqueeDisabled) {
 				this.cancelAnimation();
-			} else if (recalculateOnPropChange && this.props[recalculateOnPropChange] !== next[recalculateOnPropChange]) {
+			}
+
+			if (!propEquals(this.props, next)) {
 				this.invalidateMetrics();
+				this.cancelAnimation();
 			}
 		}
 
@@ -431,12 +426,14 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleFocus = (ev) => {
 			this.isFocused = true;
+			this.invalidateMetrics();
 			this.startAnimation();
 			forwardFocus(ev, this.props);
 		}
 
 		handleBlur = (ev) => {
 			this.isFocused = false;
+			this.invalidateMetrics();
 			this.cancelAnimation();
 			forwardBlur(ev, this.props);
 		}
