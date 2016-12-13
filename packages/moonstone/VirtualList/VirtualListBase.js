@@ -141,7 +141,7 @@ class VirtualListCore extends Component {
 		 * Only use this prop when you use isomorphic build option.
 		 *
 		 * @type {Object}
-		 * @private
+		 * @public
 		 */
 		predefinedClientSize: PropTypes.shape({clientWidth: PropTypes.number, clientHeight: PropTypes.number}),
 
