@@ -10,10 +10,10 @@ import Pressable from '@enact/ui/Pressable';
 import React, {PropTypes} from 'react';
 import {Spottable} from '@enact/spotlight';
 
-import IconButton from '../IconButton';
 import {SliderBase} from '../Slider';
 import SliderDecorator from '../internal/SliderDecorator';
 
+import IncrementSliderButton from './IncrementSliderButton';
 import css from './IncrementSlider.less';
 
 /**
@@ -169,9 +169,21 @@ const IncrementSliderBase = kind({
 
 	render: ({decrementDisabled, decrementIcon, incrementDisabled, incrementIcon, onIncrement, onDecrement, incrementSliderClasses, ...rest}) => (
 		<div className={incrementSliderClasses}>
-			<IconButton className={css.decrementButton} small onClick={onDecrement} disabled={decrementDisabled}>{decrementIcon}</IconButton>
+			<IncrementSliderButton
+				className={css.decrementButton}
+				disabled={decrementDisabled}
+				onClick={onDecrement}
+			>
+				{decrementIcon}
+			</IncrementSliderButton>
 			<SliderBase {...rest} className={css.slider} />
-			<IconButton className={css.incrementButton} small onClick={onIncrement} disabled={incrementDisabled}>{incrementIcon}</IconButton>
+			<IncrementSliderButton
+				className={css.incrementButton}
+				disabled={incrementDisabled}
+				onClick={onIncrement}
+			>
+				{incrementIcon}
+			</IncrementSliderButton>
 		</div>
 	)
 });
