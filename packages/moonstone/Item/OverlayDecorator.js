@@ -23,40 +23,33 @@ const OverlayDecorator = hoc((config, Wrapped) => {
 		propTypes: /** @lends moonstone/Item.OverlayDecorator.prototype */ {
 			/**
 			 * Controls the visibility state of the overlays. One, both, or neither overlay can be
-			 * shown when the item is focused. Choosing 'after' will leave `overlayBefore`
-			 * visible at all times; only `overlayAfter` will have its visibility toggled on focus.
-			 * Valid values are 'before', 'after', 'both' and 'no'. 'no' being no-auto-hiding
-			 * for either overlay. They will both be present regardless of focus.
+			 * shown when the item is focused. Choosing `'after'` will leave `overlayBefore` visible
+			 * at all times; only `overlayAfter` will have its visibility toggled on focus.  Valid
+			 * values are `'before'`, `'after'` and `'both'`. Omitting the property will result in
+			 * no-auto-hiding for either overlay. They will both be present regardless of focus.
 			 *
 			 * @type {Boolean}
-			 * @default 'no'
 			 * @public
 			 */
-			autoHide: PropTypes.oneOf(['no', 'before', 'after', 'both']),
+			autoHide: PropTypes.oneOf(['before', 'after', 'both']),
 
 			/**
-			 * Property accepts a node which will be displayed at the end of the item.
-			 * Typically this will be an icon or multiple icons.
+			 * A node which will be displayed at the end of the item.  Typically this will be an
+			 * icon or multiple icons.
 			 *
 			 * @type {Element}
-			 * @default null
 			 * @public
 			 */
 			overlayAfter: PropTypes.node,
 
 			/**
-			 * Property accepts a node which will be displayed at the beginning of the item.
-			 * Typically this will be an icon or multiple icons.
+			 * A node which will be displayed at the beginning of the item.  Typically this will be
+			 * an icon or multiple icons.
 			 *
 			 * @type {Element}
-			 * @default null
 			 * @public
 			 */
 			overlayBefore: PropTypes.node
-		},
-
-		defaultProps: {
-			autoHide: 'no'
 		},
 
 		styles: {
