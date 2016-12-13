@@ -55,22 +55,6 @@ class VirtualListCore extends Component {
 		cbScrollTo: PropTypes.func,
 
 		/**
-		 * Client height. If `clientWidth` and `clientHeight` are omitted, VirtualList will calculate them after rendering itself.
-		 *
-		 * @type {Number}
-		 * @private
-		 */
-		clientHeight: PropTypes.number,
-
-		/**
-		 * Client width. If `clientWidth` and `clientHeight` are omitted, VirtualList will calculate them after rendering itself.
-		 *
-		 * @type {Number}
-		 * @private
-		 */
-		clientWidth: PropTypes.number,
-
-		/**
 		 * The render function for an item of the list.
 		 * `index` is for accessing the index of the item.
 		 * `key` MUST be passed as a prop for DOM recycling.
@@ -137,6 +121,16 @@ class VirtualListCore extends Component {
 		 * @private
 		 */
 		pageScroll: PropTypes.bool,
+
+		/**
+		 * Predefined client size. If this prop is not defined, VirtualList will calculate them after rendering itself.
+		 * We recommend not to define `predefinedClientSize` in normal case.
+		 * Only use this prop when you use isomorphic build option.
+		 *
+		 * @type {Object}
+		 * @private
+		 */
+		predefinedClientSize: PropTypes.shape({clientWidth: PropTypes.number, clientHeight: PropTypes.number}),
 
 		/**
 		 * Option for positioning the items; valid values are `'byItem'`, `'byContainer'`,
@@ -273,16 +267,15 @@ class VirtualListCore extends Component {
 
 	calculateMetrics (props) {
 		const
-			{dataSize, direction, itemSize, overhang, positioningOption, spacing} = props,
-			node = this.getContainerNode(positioningOption),
-			isClientSized = (props.clientWidth && props.clientHeight);
+			{dataSize, direction, itemSize, overhang, positioningOption, predefinedClientSize, spacing} = props,
+			node = this.getContainerNode(positioningOption)
 
-		if (!isClientSized && !node) {
+		if (!predefinedClientSize && !node) {
 			return;
 		}
 
 		const
-			{clientWidth, clientHeight} = (isClientSized ? props : this.getClientSize(node)),
+			{clientWidth, clientHeight} = (predefinedClientSize || this.getClientSize(node)),
 			heightInfo = {
 				clientSize: clientHeight,
 				minItemSize: (itemSize.minHeight) ? itemSize.minHeight : null,
@@ -335,7 +328,7 @@ class VirtualListCore extends Component {
 		// eslint-disable-next-line react/no-direct-mutation-state
 		this.state.firstIndex = 0;
 		// eslint-disable-next-line react/no-direct-mutation-state
-		if (isClientSized) {
+		if (predefinedClientSize) {
 			this.state.numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang));
 		} else {
 			this.state.numOfItems = 0;
@@ -750,12 +743,10 @@ class VirtualListCore extends Component {
 	render () {
 		const
 			props = Object.assign({}, this.props),
-			{clientWidth, clientHeight, positioningOption, onScroll} = this.props,
+			{clientWidth, clientHeight, positioningOption, predefinedClientSize, onScroll} = this.props,
 			{primary, cc} = this;
 
 		delete props.cbScrollTo;
-		delete props.clientHeight;
-		delete props.clientWidth;
 		delete props.component;
 		delete props.data;
 		delete props.dataSize;
@@ -768,12 +759,13 @@ class VirtualListCore extends Component {
 		delete props.onScrollStop;
 		delete props.overhang;
 		delete props.pageScroll;
+		delete props.predefinedClientSize;
 		delete props.positioningOption;
 		delete props.spacing;
 
 		if (primary) {
 			this.renderCalculate();
-		} else if (clientWidth && clientHeight) {
+		} else if (predefinedClientSize) {
 			this.calculateMetrics(this.props);
 			this.renderCalculate();
 		}
