@@ -51,7 +51,15 @@ const defaultConfig = {
 	 * @type {String}
 	 * @default 'onMouseLeave'
 	 */
-	leave: 'onMouseLeave'
+	leave: 'onMouseLeave',
+
+	/**
+	 * Recalculate the distance if any property (like 'inline') changes. Expects a property.
+	 *
+	 * @type {String}
+	 * @default null
+	 */
+	recalculateOnPropChange: null
 };
 
 /**
@@ -64,7 +72,7 @@ const defaultConfig = {
  * @public
  */
 const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {blur, className: marqueeClassName, enter, focus, leave} = config;
+	const {blur, className: marqueeClassName, enter, focus, leave, recalculateOnPropChange} = config;
 
 	// Generate functions to forward events to containers
 	const forwardBlur = forward(blur);
@@ -206,6 +214,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.cancelAnimation();
 			} else if (next.marqueeOn !== marqueeOn || next.marqueeDisabled !== marqueeDisabled) {
 				this.cancelAnimation();
+			} else if (recalculateOnPropChange && this.props[recalculateOnPropChange] !== next[recalculateOnPropChange]) {
+				this.invalidateMetrics();
 			}
 
 			if (!propEquals(this.props, next)) {
