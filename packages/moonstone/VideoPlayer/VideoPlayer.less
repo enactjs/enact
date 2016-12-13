@@ -34,7 +34,6 @@
 
 					flex-grow: 1;
 					color: @moon-video-player-title-color;
-					// text-shadow: @moon-video-player-title-text-shadow;
 					.margin-start-end(0, @moon-spotlight-outset);
 
 					&.hiding {
@@ -45,8 +44,6 @@
 					// Title
 					.title {
 						.moon-text-base(@moon-video-player-title-size);
-						// font-family: @moon-font-family;
-						// font-size: @moon-video-player-title-size;
 						line-height: @moon-header-line-height;
 						transition: @badges-present-transition;
 						transform: translateY(36px) translateZ(0);
@@ -125,18 +122,27 @@
 			}
 
 			.sliderFrame {
+				@slider-padding-v: ((@moon-video-player-slider-tap-area - @moon-video-player-slider-height) / 2);
+
 				.mediaSlider {
-					padding-left: 0;
-					padding-right: 0;
-					height: @moon-video-player-transport-slider-height;
+					padding: @slider-padding-v 0;
+					height: @moon-video-player-slider-height;
 					margin: 0;
 				}
+
 				.sliderBar {
 					background-color: rgba(0, 0, 0, 0.6);
 				}
 
 				.input {
 					padding: 0;
+
+					// Add a tap area that extends to the edges of the screen, to make the slider more accessible
+					&::before {
+						content: '';
+						position: absolute;
+						.position(0, -(@moon-video-player-side-padding));
+					}
 				}
 
 				// Knob
@@ -145,39 +151,30 @@
 					@slide-transition-function:    cubic-bezier(0.15, 0.85, 0.53, 1.09);
 
 					position: absolute;
-					width: @moon-video-player-transport-slider-knob-size;
-					// top: -@moon-video-player-knob-v-offset;
-					height: @moon-video-player-transport-slider-knob-size;
-					border-radius: @moon-video-player-transport-slider-knob-size;
+					width: @moon-video-player-slider-knob-size;
+					height: @moon-video-player-slider-knob-size;
+					border-radius: @moon-video-player-slider-knob-size;
 					background-color: #fff;
-					// display: none;
+					// display: none; // unimplemeted
 					// box-shadow: 0 6px 8px 2px rgba(0, 0, 0, 0.3);
 					-webkit-transform: translateZ(0) translateX(-50%) scale(0.5);
 					transform:         translateZ(0) translateX(-50%) scale(0.5);
 					-webkit-transition: -webkit-transform @slide-transition-function 0.2s;
 					transition:                 transform @slide-transition-function 0.2s;
 
-					.moon-video-player.spotlight-5way-mode & {
+					.moon-video-player.spotlight-5way-mode & { // unimplemeted
 						-webkit-transition: -webkit-transform @activate-transition-function 0.2s, left @slide-transition-function 0.2s;
 						transition:                 transform @activate-transition-function 0.2s, left @slide-transition-function 0.2s;
 					}
-
-					.moon-taparea( -(@moon-video-player-transport-slider-knob-size) ); // The end result of this should be a knob taparea that's the same height as the slider's tap area
-					// This allows the tap area to extend past the edge of the screen, for when the cursor moves
-					// past the end of the slider, and into the little gap that separates the edge of the
-					// normally square tap area, to the edge of the screen. This code widens the taparea so
-					// there's no gap, and the knob still receives the click event.
-					&::before {
-						left: (-(@moon-video-player-side-padding * 2));
-						right: (-(@moon-video-player-side-padding * 2));
-					}
 				}
-				&.visible {
+
+
+				&.visible { // unimplemeted
 					.knob {
 						display: block;
 					}
 				}
-				&.pressed {
+				&.pressed { // unimplemeted
 					.knob {
 						-webkit-transform: translateZ(0) translateX(-50%) scale(0.75);
 						transform:         translateZ(0) translateX(-50%) scale(0.75);
@@ -204,8 +201,8 @@
 				// Bars
 				.fill,
 				.load {
-					border-top-right-radius: (@moon-video-player-transport-slider-height / 2);
-					border-bottom-right-radius: (@moon-video-player-transport-slider-height / 2);
+					border-top-right-radius: (@moon-video-player-slider-height / 2);
+					border-bottom-right-radius: (@moon-video-player-slider-height / 2);
 				}
 
 				// Bar
@@ -215,15 +212,6 @@
 
 				.load {
 					background-color: fade(@moon-dark-gray, 40%);
-				}
-
-				// Reassign video-player specific sizing to the slider's tap-area
-				&::before {
-					top: (@moon-video-player-transport-slider-height / 2) - (@moon-video-player-transport-slider-tap-area / 2);
-					right: -@moon-video-player-side-padding;
-					bottom: auto;
-					left: -@moon-video-player-side-padding;
-					height: @moon-video-player-transport-slider-tap-area;
 				}
 			}
 
@@ -249,14 +237,12 @@
 				}
 				.centerComponentsContainer {
 					flex-grow: 1;
-
-					// For some dumb unknown reason, when overflow-x:hidden is applied, a bottom gap
-					// is added which forces the presence of a side scrollbar.
-					overflow-x: hidden;
-					overflow-y: visible;
-
-					// Statically allocate space for the premium buttons so the center buttons can always remain centered
-					position: relative;  // 'relative' provides a properly sized frame for light-panels to cling to.
+					// Must get clever with the masking. This container must support horizontal
+					// clipping without inhibiting the ability for components to overflow out of
+					// their natural containers. overflow-x:hidden;overflow-y:visible; adds a clip
+					// region and a scrollbar which conflicts with buttons' ability to grow large
+					// when clicked. Basic overflow:hidden cannot be used either, as it clips too.
+					-webkit-mask-image: -webkit-gradient(linear, left top, right top, color-stop(0.9,  rgba(0,0,0,1)), color-stop(1,  rgba(0,0,0,0)));
 
 					.centerComponents {
 						transition: 500ms transform ease;
@@ -269,11 +255,7 @@
 						.mediaControls,
 						.moreControls {
 							width: 100%;
-							// border: 1px dotted lime;
 							display: inline-block;
-							box-sizing: border-box;
-							white-space: nowrap;
-							vertical-align: top;
 						}
 						.mediaControls {
 							text-align: center;
