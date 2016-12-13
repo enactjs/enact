@@ -8,26 +8,35 @@ const defaultConfig = {
 	activate: 'onOpen',
 	activeKey: 'name',
 	activeProp: 'active',
+	deactivate: 'onClose',
 	prop: 'open'
 };
 
 const RadioDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {activate, activeKey, activeProp, prop} = config;
+	const {activate, activeKey, activeProp, deactivate, prop} = config;
 	const forwardActivate = forward(activate);
+	const forwardDeactivate = forward(deactivate);
 
 	return class extends React.Component {
 		static displayName = 'RadioDecorator'
 
-		onActivate = () => {
+		handleActivate = () => {
 			forwardActivate({
 				[activeProp]: this.props[activeKey]
 			}, this.props);
 		}
 
+		handleDeactivate = () => {
+			forwardDeactivate({
+				[activeProp]: null
+			});
+		}
+
 		render () {
 			const props = {
 				...this.props,
-				[activate]: this.onActivate,
+				[activate]: this.handleActivate,
+				[deactivate]: this.handleDeactivate,
 				[prop]: this.props[activeKey] === this.props[activeProp]
 			};
 
