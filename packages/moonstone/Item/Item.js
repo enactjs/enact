@@ -91,7 +91,7 @@ const ItemBase = kind({
 });
 
 // cache the MarqueeDecorator so it can be used for Item and ItemOverlay
-const ItemMarqueeDecorator = MarqueeDecorator({className: css.content, recalculateOnPropChange: 'inline'});
+const ItemMarqueeDecorator = MarqueeDecorator({className: css.content});
 
 /**
  * {@link moonstone/Item.Item} is a focusable Moonstone-styled control that can display
