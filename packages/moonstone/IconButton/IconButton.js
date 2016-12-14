@@ -5,12 +5,15 @@
  */
 
 import kind from '@enact/core/kind';
+import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React, {PropTypes} from 'react';
 
 import Button from '../Button';
-import Icon from '../Icon';
+import IconBase from '../Icon';
 
 import css from './IconButton.less';
+
+const Icon = onlyUpdateForKeys(['small', 'children'])(IconBase);
 
 /**
  * {@link moonstone/IconButton.IconButton} is a {@link moonstone/Icon.Icon}
