@@ -210,7 +210,10 @@ const TimePickerController = class extends React.Component {
 			this.meridiemEnabled = clockPref === '12';
 
 			const filter = this.meridiemEnabled ? includeMeridiem : excludeMeridiem;
-			this.order = this.timeFormat.getTemplate().match(filter).map(s => s[0].toLowerCase());
+			this.order = this.timeFormat.getTemplate()
+				.replace(/'.*?'/g, '')
+				.match(filter)
+				.map(s => s[0].toLowerCase());
 
 			const timeFormat = {
 				type: 'time',
@@ -246,11 +249,15 @@ const TimePickerController = class extends React.Component {
 		}
 	}
 
+	/**
+	 * Converts a JavaScript Date to unix time
+	 *
+	 * @param	{Date}	date	A Date to convert
+	 *
+	 * @returns	{undefined}
+	 */
 	toTime (date) {
-		if (date && this.locale) {
-			const time = date.getTime();
-			return this.toIDate(time).getTime();
-		}
+		return date && date.getTime();
 	}
 
 	shouldAnimateHour (value) {
@@ -270,7 +277,7 @@ const TimePickerController = class extends React.Component {
 	 * @returns {Number}			Updated internal value
 	 */
 	updateValue = (value) => {
-		const newValue = DateFactory(value).getTime();
+		const newValue = DateFactory(value).getTimeExtended();
 		this.setState({
 			noHourAnimation: !this.shouldAnimateHour(value),
 			value: newValue

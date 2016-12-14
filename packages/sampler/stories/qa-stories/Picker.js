@@ -11,9 +11,10 @@ StatefulPicker.defaultProps = Object.assign({}, PickerBase.defaultProps, Statefu
 StatefulPicker.displayName = 'Picker';
 
 const prop = {
-	'orientation': {'horizontal': 'horizontal', 'vertical': 'vertical'},
-	'width': {'null': null, 'small': 'small', 'medium': 'medium', 'large': 'large'}
+	orientation: ['horizontal', 'vertical'],
+	width: ['<null>', 'small', 'medium', 'large']
 };
+const nullify = (v) => v === '<null>' ? null : v;
 
 const iconNames = Object.keys(icons);
 
@@ -37,6 +38,9 @@ const pickerList = {
 		'Onion',
 		'Broccoli',
 		'Spinach'
+	],
+	oneAirport: [
+		'San Francisco Airport Terminal Gate 1'
 	]
 };
 
@@ -47,7 +51,7 @@ storiesOf('Picker')
 		() => (
 			<StatefulPicker
 				onChange={action('onChange')}
-				width={select('width', prop.width, 'large')}
+				width={nullify(select('width', prop.width, 'large'))}
 				orientation={select('orientation', prop.orientation, 'horizontal')}
 				wrap={boolean('wrap')}
 				joined={boolean('joined')}
@@ -65,7 +69,7 @@ storiesOf('Picker')
 		() => (
 			<StatefulPicker
 				onChange={action('onChange')}
-				width={select('width', prop.width, 'large')}
+				width={nullify(select('width', prop.width, 'large'))}
 				orientation={select('orientation', prop.orientation, 'horizontal')}
 				wrap={boolean('wrap')}
 				joined={boolean('joined')}
@@ -83,7 +87,7 @@ storiesOf('Picker')
 		() => (
 			<StatefulPicker
 				onChange={action('onChange')}
-				width={select('width', prop.width, 'medium')}
+				width={nullify(select('width', prop.width, 'medium'))}
 				orientation={select('orientation', prop.orientation, 'horizontal')}
 				wrap={boolean('wrap')}
 				joined={boolean('joined')}
@@ -94,6 +98,24 @@ storiesOf('Picker')
 				defaultValue={2}
 			>
 				{pickerList.vegetables}
+			</StatefulPicker>
+		)
+	)
+	.addWithInfo(
+		'with one item',
+		() => (
+			<StatefulPicker
+				onChange={action('onChange')}
+				width={nullify(select('width', prop.width, 'large'))}
+				orientation={select('orientation', prop.orientation)}
+				wrap={boolean('wrap', true)}
+				joined={boolean('joined')}
+				noAnimation={boolean('noAnimation')}
+				disabled={boolean('disabled')}
+				incrementIcon={select('incrementIcon', iconNames)}
+				decrementIcon={select('decrementIcon', iconNames)}
+			>
+				{pickerList.oneAirport}
 			</StatefulPicker>
 		)
 	);

@@ -6,12 +6,21 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
-- LESS mixins from `@enact/moonstone` that are general purpose and can be utilized by various UI
-libraries.
-
-### Changed
+- `none` to `scrimType` prop values in `ui/FloatingLayer`
 
 ### Removed
+
+- `fit` prop from `ui/Transition` in favor of using `className`
+
+## [1.0.0-alpha.4] - 2016-12-2
+
+### Added
+
+- `ui/FloatingLayer` module with `FloatingLayer` and `FloatingLayerDecorator` components
+- `fit`, `noAnimation` props to `ui/TransitionBase`
+- `onHide` prop to `ui/Transition`
+- LESS mixins from `@enact/moonstone` that are general purpose and can be utilized by various UI
+libraries.
 
 ## [1.0.0-alpha.3] - 2016-11-8
 

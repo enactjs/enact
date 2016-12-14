@@ -5,15 +5,6 @@
 @import '../styles/variables.less';
 
 .toggleItem {
-	display: flex;
-	align-items: center;
-
-	&.inline {
-		display: inline-flex;
-		max-width: 240px;
-		box-sizing: border-box;
-	}
-
 	.icon {
 		margin-top: 0;
 		margin-bottom: 0;
@@ -24,7 +15,8 @@
 		}
 	}
 
-	.content {
-		flex-grow: 1;
+	&:global(.spottable):focus .icon:not(.selected) {
+		visibility: visible;
+		opacity: 0.3;
 	}
 }

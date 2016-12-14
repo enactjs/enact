@@ -25,13 +25,14 @@ const SpinnerBase = kind({
 
 	propTypes: /** @lends moonstone/Spinner.Spinner.prototype */ {
 		/**
-		 *  When `true`, the spinner is horizontally centered, relative to its containing component.
+		 *  When `true`, the spinner is horizontally and vertically centered, relative to its
+		 *  containing component.
 		 *
 		 * @type {Boolean}
 		 * @default false
 		 * @public
 		 */
-		center: PropTypes.bool,
+		centered: PropTypes.bool,
 
 		/**
 		 * The optional string to be displayed as the main content of the spinner.
@@ -40,16 +41,6 @@ const SpinnerBase = kind({
 		 * @public
 		 */
 		children: PropTypes.string,
-
-		/**
-		 * When `true`, the spinner is vertically centered, relative to its containing component.
-		 * This option has no effect if `center` is set to `false`.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		middle: PropTypes.bool,
 
 		/**
 		 * When `true`, the background-color is transparent.
@@ -63,8 +54,7 @@ const SpinnerBase = kind({
 	},
 
 	defaultProps: {
-		center: false,
-		middle: false,
+		centered: false,
 		transparent: false
 	},
 
@@ -85,17 +75,16 @@ const SpinnerBase = kind({
 				return null;
 			}
 		},
-		className: ({transparent, middle, center, children, styler}) => {
+		className: ({transparent, centered, children, styler}) => {
 			const content = children ? css.content : '';
 			return styler.append(
-				{transparent, middle, center, content}
+				{transparent, centered, content}
 			);
 		}
 	},
 
 	render: ({marquee, ...rest}) =>  {
-		delete rest.center;
-		delete rest.middle;
+		delete rest.centered;
 		delete rest.transparent;
 
 		return (
