@@ -41,28 +41,15 @@ describe('Spinner Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should have center class when center prop equals true', function () {
+	it('should have centered class when centered prop equals true', function () {
 		const spinner = shallow(
-			<Spinner center>
+			<Spinner centered>
 				Loading...
 			</Spinner>
 		);
 
 		const expected = true;
-		const actual = spinner.find(`.${css.spinner}`).hasClass(css.center);
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('should have middle class when middle prop equals true', function () {
-		const spinner = shallow(
-			<Spinner middle>
-				Loading...
-			</Spinner>
-		);
-
-		const expected = true;
-		const actual = spinner.find(`.${css.spinner}`).hasClass(css.middle);
+		const actual = spinner.find(`.${css.spinner}`).hasClass(css.centered);
 
 		expect(actual).to.equal(expected);
 	});

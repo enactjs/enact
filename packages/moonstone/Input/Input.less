@@ -65,16 +65,16 @@
 	background-color: @moon-input-decorator-bg-color;
 	box-sizing: border-box;
 
-	.iconStart,
-	.iconEnd {
+	.iconBefore,
+	.iconAfter {
 		padding: 0;
 	}
 
-	.iconEnd {
+	.iconAfter {
 		.padding-start-end(18px, 0);
 	}
 
-	.iconStart {
+	.iconBefore {
 		.padding-start-end(0, 18px);
 	}
 
@@ -92,12 +92,17 @@
 		background-color: @moon-input-decorator-bg-color;
 	}
 
-	&:global(.focused) {
+	// an Input that isn't spottable is behaviorly disabled but not visually
+	&:not(:global(.spottable)) .input {
+		pointer-events: none;
+	}
+
+	&.focused {
 		border-color: @moon-active-border-color;
 	}
 
 	.decoratorIcon,
-	&:focus .decoratorIcon {
+	&:global(.spottable):focus .decoratorIcon {
 		width: auto;
 		margin: 0;
 		color: @moon-input-font-color;

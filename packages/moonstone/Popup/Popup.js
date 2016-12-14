@@ -27,7 +27,7 @@ const TransitionContainer = SpotlightContainerDecorator(Transition);
  * @public
  */
 const PopupBase = kind({
-	name: 'Popup',
+	name: 'PopupBase',
 
 	propTypes: /** @lends moonstone/Popup.PopupBase.prototype */ {
 		/**
@@ -51,12 +51,12 @@ const PopupBase = kind({
 		noAnimation: PropTypes.bool,
 
 		/**
-		 * A function to be run when close button is clicked.
+		 * A function to be run when the close button (if present) is clicked.
 		 *
 		 * @type {Function}
 		 * @public
 		 */
-		onCloseButtonClicked: PropTypes.func,
+		onCloseButtonClick: PropTypes.func,
 
 		/**
 		 * A function to be run after transition for hiding is finished.
@@ -98,14 +98,14 @@ const PopupBase = kind({
 
 	computed: {
 		className: ({showCloseButton, styler}) => styler.append({reserveClose: showCloseButton}),
-		closeButton: ({showCloseButton, onCloseButtonClicked}) => {
+		closeButton: ({showCloseButton, onCloseButtonClick}) => {
 			if (showCloseButton) {
 				return (
 					<IconButton
 						className={css.closeButton}
 						backgroundOpacity="transparent"
 						small
-						onClick={onCloseButtonClicked}
+						onClick={onCloseButtonClick}
 					>
 						closex
 					</IconButton>
@@ -120,7 +120,7 @@ const PopupBase = kind({
 	},
 
 	render: ({closeButton, children, noAnimation, open, onHide, zIndex, ...rest}) => {
-		delete rest.onCloseButtonClicked;
+		delete rest.onCloseButtonClick;
 		delete rest.showCloseButton;
 		return (
 			<TransitionContainer
@@ -177,7 +177,7 @@ class Popup extends React.Component {
 		/**
 		 * A function to be run when a closing action is invoked by the user. These actions include
 		 * pressing `ESC` key or clicking on the close button. It is the responsibility of the
-		 * callback to set the `open` state to false.
+		 * callback to set the `open` property to `false`.
 		 *
 		 * @type {Function}
 		 * @public
@@ -271,7 +271,7 @@ class Popup extends React.Component {
 				<PopupBase
 					{...rest}
 					open={this.state.popupOpen}
-					onCloseButtonClicked={onClose}
+					onCloseButtonClick={onClose}
 					onHide={this.handlePopupHide}
 				/>
 			</FloatingLayer>

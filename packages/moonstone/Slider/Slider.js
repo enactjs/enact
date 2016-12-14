@@ -42,14 +42,13 @@ const SliderBase = kind({
 		backgroundPercent: PropTypes.number,
 
 		/**
-		 * Height, in standard CSS units, of the vertical slider. Only takes
-		 * effect on a vertical oriented slider.
+		 * When `true`, the component is shown as disabled and does not generate events
 		 *
-		 * @type {String}
-		 * @default '300px'
+		 * @type {Boolean}
+		 * @default false
 		 * @public
 		 */
-		height: PropTypes.string,
+		disabled: PropTypes.bool,
 
 		/**
 		 * The method to run when the input mounts, giving a reference to the DOM.
@@ -142,13 +141,12 @@ const SliderBase = kind({
 
 	defaultProps: {
 		backgroundPercent: 0,
-		height: '300px',
 		max: 100,
 		min: 0,
 		onChange: () => {}, // needed to ensure the base input element is mutable if no change handler is provided
 		pressed: false,
 		step: 1,
-		value: 50,
+		value: 0,
 		vertical: false
 	},
 
@@ -160,26 +158,24 @@ const SliderBase = kind({
 	computed: {
 		className: ({pressed, vertical, styler}) => styler.append({pressed, vertical, horizontal: !vertical}),
 		proportionBackgroundProgress: computeProportionBackground,
-		proportionProgress: computeProportionProgress,
-		verticalHeight: ({vertical, height}) => (vertical ? {height} : null),
-		verticalWidth: ({vertical, height}) => (vertical ? {width: height} : null)
+		proportionProgress: computeProportionProgress
 	},
 
-	render: ({inputRef, max, min, onChange, proportionBackgroundProgress, proportionProgress, sliderBarRef, sliderRef, step, value, vertical, verticalHeight, verticalWidth, ...rest}) => {
+	render: ({disabled, inputRef, max, min, onChange, proportionBackgroundProgress, proportionProgress, sliderBarRef, sliderRef, step, value, vertical, ...rest}) => {
 		delete rest.backgroundPercent;
 		delete rest.pressed;
 
 		return (
-			<div {...rest} ref={sliderRef}>
+			<div {...rest} disabled={disabled} ref={sliderRef}>
 				<SliderBar
 					proportionBackgroundProgress={proportionBackgroundProgress}
 					proportionProgress={proportionProgress}
 					ref={sliderBarRef}
 					vertical={vertical}
-					verticalHeight={verticalHeight}
 				/>
 				<input
 					className={css.input}
+					disabled={disabled}
 					type="range"
 					ref={inputRef}
 					max={max}
@@ -187,7 +183,7 @@ const SliderBase = kind({
 					step={step}
 					onChange={onChange}
 					value={value}
-					style={verticalWidth}
+					orient={vertical ? 'vertical' : 'horizontal'}
 				/>
 			</div>
 		);
