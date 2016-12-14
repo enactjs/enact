@@ -111,15 +111,10 @@ const PopupBase = kind({
 					</IconButton>
 				);
 			}
-		},
-		zIndex: ({style}) => {
-			if (style) {
-				return {zIndex: style.zIndex};
-			}
 		}
 	},
 
-	render: ({closeButton, children, noAnimation, open, onHide, zIndex, ...rest}) => {
+	render: ({closeButton, children, noAnimation, open, onHide, ...rest}) => {
 		delete rest.onCloseButtonClick;
 		delete rest.showCloseButton;
 		return (
@@ -131,7 +126,6 @@ const PopupBase = kind({
 				duration="short"
 				type="slide"
 				className={css.popupTransitionContainer}
-				style={zIndex}
 				onHide={onHide}
 			>
 				<div {...rest}>

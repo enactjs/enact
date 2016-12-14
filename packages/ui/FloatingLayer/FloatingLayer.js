@@ -5,6 +5,7 @@
  * @module ui/FloatingLayer
  */
 
+import {on, off} from '@enact/core/dispatcher';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Cancelable from '../Cancelable';
@@ -127,6 +128,30 @@ class FloatingLayerBase extends React.Component {
 		this.closeFloatingLayer();
 	}
 
+	handleClick = (ev) => {
+		if (!this.props.noAutoDismiss && this.props.open && this.props.onDismiss) {
+			let target = ev.target;
+			let children = this.props.scrimType === 'none' ? this.floatLayer.childNodes[0] : this.floatLayer.childNodes[1];
+
+			while (target && target !== this.floatLayer) {
+				if (target === children) return;
+
+				target = target.parentNode;
+			}
+
+			if (this.props.scrimType === 'none') {
+				// ignore first click outside the children for opening
+				if (this.firstOpen) {
+					this.firstOpen = false;
+				} else {
+					this.props.onDismiss();
+				}
+			} else if (target === this.floatLayer) {
+				this.props.onDismiss();
+			}
+		}
+	}
+
 	closeFloatingLayer () {
 		if (this.node) {
 			ReactDOM.unmountComponentAtNode(this.node);
@@ -138,6 +163,10 @@ class FloatingLayerBase extends React.Component {
 		}
 		this.floatLayer = null;
 		this.node = null;
+
+		if (typeof window === 'object') {
+			off('click', this.handleClick, window);
+		}
 	}
 
 	renderNode () {
@@ -172,8 +201,14 @@ class FloatingLayerBase extends React.Component {
 			node
 		);
 
-		if (!isOpened && onOpen) {
-			onOpen();
+		if (!isOpened) {
+			if (onOpen) {
+				onOpen();
+			}
+			if (typeof window === 'object') {
+				if (scrimType === 'none') this.firstOpen = true;
+				on('click', this.handleClick, window);
+			}
 		}
 	}
 
