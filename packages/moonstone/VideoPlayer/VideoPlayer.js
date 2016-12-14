@@ -59,12 +59,46 @@ const
 	// forwardWaiting         = forward('onWaiting')
 	;
 
+/**
+* Mapping of playback rate names to playback rate values that may be set.
+* ```
+* {
+*	fastForward: ['2', '4', '8', '16'],
+*	rewind: ['-2', '-4', '-8', '-16'],
+*	slowForward: ['1/4', '1/2', '1'],
+*	slowRewind: ['-1/2', '-1']
+* }
+* ```
+*
+* @type {Object}
+* @default {
+*	fastForward: ['2', '4', '8', '16'],
+*	rewind: ['-2', '-4', '-8', '-16'],
+*	slowForward: ['1/4', '1/2'],
+*	slowRewind: ['-1/2', '-1']
+* }
+* @public
+*/
+const playbackRateHash = {
+	fastForward: ['2', '4', '8', '16'],
+	rewind: ['-2', '-4', '-8', '-16'],
+	slowForward: ['1/4', '1/2'],
+	slowRewind: ['-1/2', '-1']
+};
+
+
 // const debug = (msg, val) => {
 // 	// if (typeof val === 'boolean' || )
 // 	console.log('%c' + msg + ': ' + (val ? 'FOUND!!!' : 'NOT FOUND'), 'color:' + (val ? 'green' : 'red'));
 // };
 
-const zeroPad = (num) => ((num < 10 && num >= 0) ? '0' + num : num);
+// const zeroPad = (num) => ((num < 10 && num >= 0) ? '0' + num : num);
+const padDigit = (val) => {
+	if (val) {
+		return (String(val).length < 2) ? '0' + val : val;
+	}
+	return '00';
+};
 
 const parseTime = (time) => {
 	// http://stackoverflow.com/questions/6312993/javascript-seconds-to-time-string-with-format-hhmmss
@@ -83,7 +117,7 @@ const secondsToPeriod = (time) => {
 
 const secondsToTime = (time) => {
 	time = parseTime(time);
-	return (time.h ? time.h + ':' : '') + zeroPad(time.m) + ':' + zeroPad(time.s);
+	return (time.h ? time.h + ':' : '') + padDigit(time.m) + ':' + padDigit(time.s);
 };
 
 //
@@ -262,14 +296,6 @@ const VideoPlayerBase = class extends React.Component {
 		this.video.setVolume(this._volumeInput.valueAsNumber);
 	}
 
-	onSliderChange = ({value}) => {
-		if (this.video && this.videoReady) {
-			const el = this.video && this.video.videoEl;
-			// debug('videoEl', el);
-			this.send('seek', value * el.duration);
-		}
-	}
-
 	// Internal Methods
 	updateMainState = () => {
 		if (this.video && this.videoReady) {
@@ -299,6 +325,191 @@ const VideoPlayerBase = class extends React.Component {
 
 			this.setState(updatedState);
 		}
+	}
+
+	/**
+	 * Calculates numeric value of playback rate (with support for fractions).
+	 *
+	 * @private
+	 */
+	calcNumberValueOfPlaybackRate = (rate) => {
+		const pbArray = String(rate).split('/');
+		return (pbArray.length > 1) ? parseInt(pbArray[0]) / parseInt(pbArray[1]) : parseInt(rate);
+	}
+
+	/**
+	 * Changes the playback speed via [selectPlaybackRate()]{@link module:enyo/Video~Video#selectPlaybackRate}.
+	 *
+	 * @public
+	 */
+	fastForward = () => {
+		if (this.video && this.videoReady) {
+			let shouldResumePlayback = false;
+
+			switch (this.prevCommand) {
+				case 'slowForward':
+					if (this.speedIndex === this.playbackRates.length - 1) {
+						// reached to the end of array => go to play
+						this.send('play');
+						return;
+					} else {
+						this.speedIndex = this.clampPlaybackRate(this.speedIndex + 1);
+					}
+					break;
+				case 'pause':
+					this.selectPlaybackRates('slowForward');
+					if (this.state.paused) {
+						shouldResumePlayback = true;
+					}
+					this.speedIndex = 0;
+					this.prevCommand = 'slowForward';
+					break;
+				case 'rewind':
+					this.send('play');
+					this.selectPlaybackRates('fastForward');
+					this.speedIndex = 0;
+					this.prevCommand = 'fastForward';
+					break;
+				case 'slowRewind':
+					this.selectPlaybackRates('slowForward');
+					this.speedIndex = 0;
+					this.prevCommand = 'slowForward';
+					break;
+				case 'fastForward':
+					this.speedIndex = this.clampPlaybackRate(this.speedIndex + 1);
+					this.prevCommand = 'fastForward';
+					break;
+				default:
+					this.selectPlaybackRates('fastForward');
+					this.speedIndex = 0;
+					this.prevCommand = 'fastForward';
+					break;
+			}
+
+			this.setPlaybackRate(this.selectPlaybackRate(this.speedIndex));
+
+			if (shouldResumePlayback) this.send('play');
+		}
+	}
+
+	/**
+	 * Changes the playback speed via [selectPlaybackRate()]{@link module:enyo/Video~Video#selectPlaybackRate}.
+	 *
+	 * @public
+	 */
+	rewind = () => {
+		if (this.video && this.videoReady) {
+			let shouldResumePlayback = false;
+
+			switch (this.prevCommand) {
+				case 'slowRewind':
+					if (this.speedIndex === this.playbackRates.length - 1) {
+						// reached to the end of array => go to rewind
+						this.selectPlaybackRates('rewind');
+						this.speedIndex = 0;
+						this.prevCommand = 'rewind';
+					} else {
+						this.speedIndex = this.clampPlaybackRate(this.speedIndex + 1);
+					}
+					break;
+				case 'fastForward':
+					this.selectPlaybackRates('rewind');
+					this.speedIndex = 0;
+					this.prevCommand = 'rewind';
+					break;
+				case 'slowForward':
+					this.selectPlaybackRates('slowRewind');
+					this.speedIndex = 0;
+					this.prevCommand = 'slowRewind';
+					break;
+				case 'pause':
+					this.selectPlaybackRates('slowRewind');
+					if (this.state.paused && this.state.duration > this.state.currentTime) {
+						shouldResumePlayback = true;
+					}
+					this.speedIndex = 0;
+					this.prevCommand = 'slowRewind';
+					break;
+				case 'rewind':
+					this.speedIndex = this.clampPlaybackRate(this.speedIndex + 1);
+					this.prevCommand = 'rewind';
+					break;
+				default:
+					this.selectPlaybackRates('rewind');
+					this.speedIndex = 0;
+					this.prevCommand = 'rewind';
+					break;
+			}
+
+			this.setPlaybackRate(this.selectPlaybackRate(this.speedIndex));
+
+			if (shouldResumePlayback) this.send('play');
+		}
+	}
+
+	/**
+	 * Sets the playback rate type (from the [keys]{@glossary Object.keys} of
+	 * [playbackRateHash]{@link module:enyo/Video~Video#playbackRateHash}).
+	 *
+	 * @param {String} cmd - Key of the playback rate type.
+	 * @public
+	 */
+	selectPlaybackRates = (cmd) => {
+		this.playbackRates = playbackRateHash[cmd];
+	}
+
+	/**
+	 * Changes [playbackRate]{@link module:enyo/Video~Video#playbackRate} to a valid value when initiating
+	 * fast forward or rewind.
+	 *
+	 * @param {Number} idx - The index of the desired playback rate.
+	 * @public
+	 */
+	clampPlaybackRate = (idx) => {
+		if (!this.playbackRates) {
+			return;
+		}
+
+		return idx % this.playbackRates.length;
+	}
+
+	/**
+	 * Retrieves the playback rate name.
+	 *
+	 * @param {Number} idx - The index of the desired playback rate.
+	 * @returns {String} The playback rate name.
+	 * @public
+	 */
+	selectPlaybackRate = (idx) => {
+		return this.playbackRates[idx];
+	}
+
+	/**
+	 * Sets [playbackRate]{@link module:enyo/Video~Video#playbackRate}.
+	 *
+	 * @param {String} rate - The desired playback rate.
+	 * @public
+	 */
+	setPlaybackRate = (rate) => {
+		// Stop rewind (if happenning)
+		// NYI
+		// this.stopRewindJob();
+
+		// Make sure rate is a string
+		this.playbackRate = rate = String(rate);
+		const pbNumber = this.calcNumberValueOfPlaybackRate(rate);
+		console.log('setPlaybackRate:', rate, pbNumber);
+
+		// Set native playback rate
+		this.send('setPlaybackRate', pbNumber);
+
+		// NYI
+		// if (!(platform.webos || global.PalmSystem)) {
+		// 	// For supporting cross browser behavior
+		// 	if (pbNumber < 0) {
+		// 		this.beginRewind();
+		// 	}
+		// }
 	}
 
 	//
@@ -342,18 +553,39 @@ const VideoPlayerBase = class extends React.Component {
 	//
 	// Player Button controls
 	//
-	onSkipBackward  = () => this.send('seek', 0)
-	onBackward      = () => this.jump(-1 * this.props.jumpBy)
+	onSliderChange = ({value}) => {
+		if (this.video && this.videoReady && !this.scrubbingPassive) {
+			const el = this.video && this.video.videoEl;
+			// debug('videoEl', el);
+			this.send('seek', value * el.duration);
+		}
+	}
+	onSkipBackward  = () => this.jump(-1 * this.props.jumpBy)
+	onBackward      = () => this.rewind()
 	onPlay          = () => {
 		console.log('onPlay');
-		return this.send('togglePlay');
+		this.speedIndex = 0;
+		this.setPlaybackRate(1);
+		if (this.state.paused) {
+			this.send('play');
+			this.prevCommand = 'play';
+		} else {
+			this.send('pause');
+			this.prevCommand = 'pause';
+		}
 	}
-	onForward       = () => this.jump(this.props.jumpBy)
-	onSkipForward   = () => this.send('seek', this.state.duration)
-	onMoreClick = () => {
+	onForward       = () => this.fastForward()
+	onSkipForward   = () => this.jump(this.props.jumpBy)
+	onMoreClick     = () => {
 		this.setState({
 			more: !this.state.more
 		});
+	}
+
+	setVideoRef = (video) => {
+		this.videoReady = !!video;
+		this.video = video;
+		console.log('videoReady:', video);
 	}
 
 
@@ -362,7 +594,8 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	render () {
-		const {children, noSlider, title, infoComponents, leftComponents, rightComponents,
+		const {children, className, noSlider, title, infoComponents, leftComponents, rightComponents, style,
+			// Assign defaults during destructuring to internal methods (here, instead of defaultProps)
 			onBackwardButtonClick = this.onBackward,
 			onForwardButtonClick = this.onForward,
 			onPlayButtonClick = this.onPlay,
@@ -377,12 +610,13 @@ const VideoPlayerBase = class extends React.Component {
 		const withBadges = (this.state.more) ? ' ' + css.withBadges : '';
 
 		return (
-			<div className={css.videoPlayer}>
+			<div className={css.videoPlayer + (className ? ' ' + className : '')} style={style}>
 				{/* Video Section */}
 				<Video
 					{...rest}
 					className={css.videoFrame}
 					controls={false}
+					// ref={this.setVideoRef}	// Ref-ing this only once (smarter) turns out to be less safe because now we don't know when `video` is being "unset", so our `videoReady` is no longer genuine. react-html5video component is re-generating this method each render too. This seems to be part of the origin.
 					ref={video => {
 						// debug('video ref', video);
 						this.videoReady = !!video;
