@@ -708,7 +708,7 @@ class VirtualListCore extends Component {
 
 		if (hasMetricsChanged) {
 			this.calculateMetrics(nextProps);
-			this.updateStatesAndBounds(hasDataChanged ? nextProps : this.props);
+			this.updateStatesAndBounds(nextProps);
 		} else if (hasDataChanged) {
 			this.updateStatesAndBounds(nextProps);
 		}
