@@ -1,11 +1,11 @@
 import ri from '@enact/ui/resolution';
-import {VirtualVariableList, VirtualVariableListCore} from '@enact/moonstone/VirtualVariableList';
+import {VirtualVariableList, PositionableVirtualVariableList} from '@enact/moonstone/VirtualVariableList';
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
 import {withKnobs, number} from '@kadira/storybook-addon-knobs';
 
-VirtualVariableList.propTypes = Object.assign({}, VirtualVariableListCore.propTypes);
-VirtualVariableList.defaultProps = Object.assign({}, VirtualVariableListCore.defaultProps);
+VirtualVariableList.propTypes = Object.assign({}, PositionableVirtualVariableList.propTypes);
+VirtualVariableList.defaultProps = Object.assign({}, PositionableVirtualVariableList.defaultProps);
 
 const
 	channelLength = 200,

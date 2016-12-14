@@ -17,7 +17,7 @@ import css from './VirtualVariableList.less';
 
 const
 	PositionableVirtualList = Positionable(VirtualListCore),
-	PositionableVirtualVariableListCore = Positionable(VirtualVariableListCore);
+	PositionableVirtualVariableList = Positionable(VirtualVariableListCore);
 
 // PropTypes shapes
 const
@@ -137,23 +137,21 @@ const VirtualVariableList = kind({
 		}
 	},
 
-	render: (props) => {
-		if  (props.headers === 'both') {
-			const {rowProps, colProps, itemProps, childProps, children} = props;
-
+	render: ({headers, rowProps, colProps, itemProps, childProps, children, className, style, ...listProps}) => {
+		if  (headers === 'both') {
 			return (
-				<div className={classNames(props.className, css.headers)} style={props.style}>
+				<div className={classNames(className, css.headers)} style={style}>
 					<PositionableVirtualList {...rowProps} />
 					<PositionableVirtualList {...colProps} />
-					<PositionableVirtualVariableListCore {...itemProps} />
+					<PositionableVirtualVariableList {...itemProps} />
 					<div {...childProps}>{children}</div>
 				</div>
 			);
 		} else {
-			return (<VirtualVariableListCore {...props} />);
+			return (<PositionableVirtualVariableList {...listProps} className={className} style={style} />);
 		}
 	}
 });
 
 export default VirtualVariableList;
-export {VirtualVariableList};
+export {VirtualVariableList, PositionableVirtualVariableList, VirtualVariableListCore};
