@@ -2,6 +2,18 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `moonstone/VirtualVariableList` component
+
+### Changed
+
+### Removed
+
+### Fixed
+
 ## [1.0.0-alpha.4] - 2016-12-2
 
 > NOTE: The framework was updated to support React 15.4
