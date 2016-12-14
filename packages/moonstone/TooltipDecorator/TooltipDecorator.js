@@ -1,30 +1,52 @@
-import React, {PropTypes} from 'react';
+/**
+ * Exports the {@link moonstone/TooltipDecorator.TooltipDecorator}, {@link moonstone/TooltipDecorator/Tooltip.Tooltip} and
+ * {@link moonstone/TooltipDecorator/Tooltip.TooltipBase} components.
+ * The default export is {@link moonstone/TooltipDecorator.TooltipDecorator}.
+ *
+ * @module moonstone/ContextualPopup
+ */
+
 import {hoc} from '@enact/core';
 import {startJob, stopJob} from '@enact/core/jobs';
 import ri from '@enact/ui/resolution';
 import FloatingLayer from '@enact/ui/FloatingLayer';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
-import {Tooltip} from './Tooltip';
+import React, {PropTypes} from 'react';
 
+import {Tooltip, TooltipBase} from './Tooltip';
+
+/**
+ * {@link moonstone/TooltipDecorator.TooltipDecorator} is a Higher-order Component which
+ * positions {@link moonstone/TooltipDecorator/Tooltip.Tooltip} in relation to the
+ * Wrapped component.
+ * The tooltip is automatically displayed when the user hovers over the decorator for
+ * a given period of time. The tooltip is positioned around the decorator where there
+ * is available window space.
+ *
+ * @class TooltipDecorator
+ * @memberof moonstone/TooltipDecorator/TooltipDecorator
+ * @ui
+ * @public
+ */
 const TooltipDecorator = hoc((config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'TooltipDecorator'
 
 		static propTypes = {
 			/**
-			* Delegate blur handler
-			*
-			* @type {Function}
-			* @public
-			*/
+			 * A function to be run when Wrapped component loses focus.
+			 *
+			 * @type {Function}
+			 * @public
+			 */
 			onBlur: PropTypes.func,
 
 			/**
-			* Delegate focus handler
-			*
-			* @type {Function}
-			* @public
-			*/
+			 * A function to be run when Wrapped component gets focus.
+			 *
+			 * @type {Function}
+			 * @public
+			 */
 			onFocus: PropTypes.func,
 
 			/**
@@ -49,31 +71,35 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 			showDelay: PropTypes.number,
 
 			/**
-			* Position of the tooltip with respect to the activating control. Valid values are
-			* `'above'`, `'above center'`, `'above left'`, `'above right'`, `'below'`, `'below center'`, `'below left'`, `'below right'`,
-			* `'left bottom'`, `'left middle'`, `'left top'`, `'right bottom'`, `'right middle'`, `'right top'`, `'auto'`.
-			* The values starting with `'left`' and `'right'` place the tooltip on the side
-			* (sideways tooltip) with two additional positions available, `'top'` and `'bottom'`, which
-			* places the tooltip content toward the top or bottom, with the tooltip pointer
-			* middle-aligned to the activator.
-			*
-			* Note: The sideways tooltip does not automatically switch sides if it gets too close or
-			* overlaps with the window bounds, as this may cause undesirable layout implications,
-			* covering your other controls.
-			*
-			* @type {String}
-			* @default 'auto'
-			* @public
-			*/
-			tooltipPosition: PropTypes.oneOf(['auto', 'above', 'above center', 'above left', 'above right', 'below', 'below center', 'below left', 'below right', 'left bottom', 'left middle', 'left top', 'right bottom', 'right middle', 'right top']),
+			 * Position of the tooltip with respect to the activating control. Valid values are
+			 * `'above'`, `'above center'`, `'above left'`, `'above right'`, `'below'`, `'below center'`, `'below left'`, `'below right'`,
+			 * `'left bottom'`, `'left middle'`, `'left top'`, `'right bottom'`, `'right middle'`, `'right top'`, `'auto'`.
+			 * The values starting with `'left`' and `'right'` place the tooltip on the side
+			 * (sideways tooltip) with two additional positions available, `'top'` and `'bottom'`, which
+			 * places the tooltip content toward the top or bottom, with the tooltip pointer
+			 * middle-aligned to the activator.
+			 *
+			 * Note: The sideways tooltip does not automatically switch sides if it gets too close or
+			 * overlaps with the window bounds, as this may cause undesirable layout implications,
+			 * covering your other controls.
+			 *
+			 * @type {String}
+			 * @default 'auto'
+			 * @public
+			 */
+			tooltipPosition: PropTypes.oneOf([
+				'auto', 'above', 'above center', 'above left', 'above right',
+				'below', 'below center', 'below left', 'below right',
+				'left bottom', 'left middle', 'left top',
+				'right bottom', 'right middle', 'right top']),
 
 			/**
-			* Message of tooltip
-			*
-			* @type {String}
-			* @public
-			*/
-			tooltipText: PropTypes.string
+			 * The node to be displayed as the main content of the tooltip.
+			 *
+			 * @type {React.node}
+			 * @public
+			 */
+			tooltipText: PropTypes.node
 		}
 
 		static defaultProps = {
@@ -89,7 +115,7 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 
 			this.state = {
 				showing: false,
-				type: 'below leftArrow',
+				type: 'above leftArrow',
 				position: {
 					left: 0,
 					top: 0
@@ -267,7 +293,7 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 							type={this.state.type}
 							position={this.state.position}
 							arrowType={this.state.arrowType}
-							getTooltipRef={this.getTooltipRef}
+							tooltipRef={this.getTooltipRef}
 							preserveCase={preserveCase}
 						>
 							{tooltipText}
@@ -280,4 +306,4 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 });
 
 export default TooltipDecorator;
-export {TooltipDecorator, Tooltip};
+export {TooltipDecorator, Tooltip, TooltipBase};
