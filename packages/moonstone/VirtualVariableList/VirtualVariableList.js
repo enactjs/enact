@@ -627,6 +627,85 @@ const
 	rowNumberColFuncHeadersNumberShape = PropTypes.shape({row: PropTypes.number.isRequired, col: PropTypes.func.isRequired, rowHeader: PropTypes.number.isRequired, colHeader: PropTypes.number.isRequired}),
 	rowFuncColNumberHeadersNumberShape = PropTypes.shape({row: PropTypes.func.isRequired, col: PropTypes.number.isRequired, rowHeader: PropTypes.number.isRequired, colHeader: PropTypes.number.isRequired});
 
+class PositionableVirtualList extends Component {
+	static propTypes = {
+		/**
+		 * Direction of the list; valid values are `'horizontal'` and `'vertical'`.
+		 *
+		 * @type {String}
+		 * @default 'vertical'
+		 * @public
+		 */
+		direction: PropTypes.oneOf(['horizontal', 'vertical']),
+
+		/**
+		 * Position x.
+		 *
+		 * @type {Number}
+		 * @default null
+		 * @private
+		 */
+		posX: PropTypes.number,
+
+		/**
+		 * Position y.
+		 *
+		 * @type {Number}
+		 * @default null
+		 * @private
+		 */
+		posY: PropTypes.number
+	}
+
+	static defaultProps = {
+		posX: null,
+		posY: null
+	}
+
+	constructor (props) {
+		super(props);
+
+		this.initVirtualListRef = this.initRef('virtualListRef');
+	}
+
+	initRef (prop) {
+		return (ref) => {
+			this[prop] = ref;
+		};
+	}
+
+	componentWillReceiveProps (nextProps) {
+		const
+			{posX, posY} = this.props,
+			isPositionChanged = (posX !== nextProps.posX) || (posY !== nextProps.posY) && nextProps.posX !== null && nextProps.posY !== null;
+
+		if (nextProps.direction === 'vertical') {
+			this.virtualListRef.setScrollPosition(
+				nextProps.posX,
+				nextProps.posY,
+				0,
+				Math.sign(nextProps.posY - posY)
+			);
+		} else {
+			this.virtualListRef.setScrollPosition(
+				nextProps.posX,
+				nextProps.posY,
+				Math.sign(nextProps.posX - posX),
+				0
+			);
+		}
+	}
+
+	render () {
+		const props = Object.assign({}, this.props);
+
+		delete props.posX;
+		delete props.posY;
+
+		return <VirtualListCore {...props} ref={this.initVirtualListRef} />
+	}
+}
+
 /**
  * {@link module:@enact/moonstone/VirtualVariableList~VirtualVariableList} is a VirtualVariableList with Moonstone styling
  * which has a variable width or height.
@@ -777,8 +856,8 @@ const VirtualVariableList = kind({
 
 			return (
 				<div className={classNames(orgProps.className, css.headers)} style={orgProps.style}>
-					<VirtualListCore {...rowProps} />
-					<VirtualListCore {...colProps} />
+					<PositionableVirtualList {...rowProps} />
+					<PositionableVirtualList {...colProps} />
 					<VirtualVariableListCore {...itemProps} />
 					<div {...childProps}>{orgProps.children}</div>
 				</div>
