@@ -6,23 +6,14 @@
 
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
-import Spotlight from '@enact/spotlight';
 import R from 'ramda';
 import React, {PropTypes} from 'react';
 
 const eventProps = ['clientX', 'clientY', 'pageX', 'pageY', 'screenX', 'screenY',
 	'altKey', 'ctrlKey', 'metaKey', 'shiftKey', 'detail'];
 
-const makeEventObject = (ev) => {
-	const e = {};
-	for (let i = 0, p; (p = eventProps[i]); i++) {
-		e[p] = ev[p];
-	}
-	return e;
-};
-
 const makeEvent = (type, ev) => {
-	return Object.assign({}, ev, {type});
+	return {...ev, type};
 };
 
 const perfNow = () => {
@@ -190,11 +181,17 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			this.keyEvent = false;
 		}
 
+		componentWillUnmount () {
+			if (this.holdJob) {
+				this.suspendHold();
+			}
+		}
+
 		onKeyDepress = (ev) => {
 			if (!this.props.disabled) {
-				if (R.contains(ev.keyCode, selectionKeyCodes) && !Spotlight.getSelectionKeyHold()) {
+				if (R.contains(ev.keyCode, selectionKeyCodes) && !this.holdJob) {
 					this.keyEvent = true;
-					this.beginHold(makeEventObject(ev));
+					this.beginHold(R.pick(eventProps, ev));
 				}
 			}
 			forwardKeyDepress(ev, this.props);
@@ -210,7 +207,7 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 		onPointerDown = (ev) => {
 			if (!this.props.disabled && !this.keyEvent) {
-				this.beginHold(makeEventObject(ev));
+				this.beginHold(R.pick(eventProps, ev));
 			}
 			forwardPointerDepress(ev, this.props);
 		}
