@@ -809,16 +809,32 @@ const Spotlight = (function() {
 
 	function spotNextFromPoint (direction, position, containerId) {
 		const config = extend({}, GlobalConfig, _containers[containerId]);
-		const {allNavigableElements} = getNavigableElements();
+		const {allNavigableElements, containerNavigableElements} = getNavigableElements();
 		const targetRect = getPointRect(position);
-		const next = navigate(
-			targetRect,
-			direction,
-			allNavigableElements,
-			config
-		);
+		let next;
+
+		if (config.restrict === 'self-only' || config.restrict === 'self-first') {
+			next = navigate(
+				targetRect,
+				direction,
+				containerNavigableElements[containerId],
+				config
+			);
+		} else {
+			next = navigate(
+				targetRect,
+				direction,
+				allNavigableElements,
+				config
+			);
+		}
 
 		if (next) {
+			_containers[containerId].previous = {
+				target: getContainerLastFocusedElement(_lastContainerId),
+				destination: next,
+				reverse: _reverseDirections[direction]
+			};
 			return focusNext(next, direction, containerId);
 		}
 

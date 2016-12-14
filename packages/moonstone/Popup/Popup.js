@@ -9,13 +9,20 @@ import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 import Transition from '@enact/ui/Transition';
 import FloatingLayer from '@enact/ui/FloatingLayer';
-import {SpotlightContainerDecorator} from '@enact/spotlight';
+import Spotlight, {SpotlightContainerDecorator} from '@enact/spotlight';
 
 import IconButton from '../IconButton';
 
 import css from './Popup.less';
 
-const TransitionContainer = SpotlightContainerDecorator(Transition);
+const TransitionContainer = SpotlightContainerDecorator({preserveId: true}, Transition);
+
+const directions = {
+	'37': 'left',
+	'38': 'up',
+	'39': 'right',
+	'40': 'down'
+};
 
 /**
  * {@link moonstone/Popup.PopupBase} is a modal component that appears at the bottom of
@@ -40,6 +47,15 @@ const PopupBase = kind({
 			PropTypes.arrayOf(PropTypes.element),
 			PropTypes.element
 		]).isRequired,
+
+		/**
+		 * Specifies the container id.
+		 *
+		 * @type {String}
+		 * @default null
+		 * @public
+		 */
+		containerId: PropTypes.string,
 
 		/**
 		 * When `true`, the popup will not animate on/off screen.
@@ -82,13 +98,24 @@ const PopupBase = kind({
 		 * @default false
 		 * @public
 		 */
-		showCloseButton: PropTypes.bool
+		showCloseButton: PropTypes.bool,
+
+		/**
+		 * Restricts or prioritizes navigation when focus attempts to leave the popup. It
+		 * can be either `none`, `self-first`, or `self-only`.
+		 *
+		 * @type {String}
+		 * @default `self-only`
+		 * @public
+		 */
+		spotlightRestrict: PropTypes.oneOf(['none', 'self-first', 'self-only'])
 	},
 
 	defaultProps: {
 		noAnimation: false,
 		open: false,
-		showCloseButton: false
+		showCloseButton: false,
+		spotlightRestrict: 'self-only'
 	},
 
 	styles: {
@@ -119,12 +146,14 @@ const PopupBase = kind({
 		}
 	},
 
-	render: ({closeButton, children, noAnimation, open, onHide, zIndex, ...rest}) => {
+	render: ({closeButton, children, containerId, noAnimation, open, onHide, spotlightRestrict, zIndex, ...rest}) => {
 		delete rest.onCloseButtonClicked;
 		delete rest.showCloseButton;
 		return (
 			<TransitionContainer
 				noAnimation={noAnimation}
+				containerId={containerId}
+				spotlightRestrict={spotlightRestrict}
 				data-container-disabled={!open}
 				visible={open}
 				direction="down"
@@ -155,6 +184,7 @@ const PopupBase = kind({
  * @public
  */
 class Popup extends React.Component {
+
 	static propTypes = /** @lends moonstone/Popup.Popup.prototype */ {
 		/**
 		 * When `true`, the popup will not animate on/off screen.
@@ -185,6 +215,14 @@ class Popup extends React.Component {
 		onClose: PropTypes.func,
 
 		/**
+		 * A function to be run when a key-down action is invoked by the user.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onKeyDown: PropTypes.func,
+
+		/**
 		 * When `true`, the popup is rendered. Popups are rendered into the
 		 * [floating layer]{@link ui/FloatingLayer.FloatingLayer}.
 		 *
@@ -210,7 +248,17 @@ class Popup extends React.Component {
 		 * @default false
 		 * @public
 		 */
-		showCloseButton: PropTypes.bool
+		showCloseButton: PropTypes.bool,
+
+		/**
+		 * Restricts or prioritizes navigation when focus attempts to leave the popup. It
+		 * can be either `none`, `self-first`, or `self-only`.
+		 *
+		 * @type {String}
+		 * @default `self-only`
+		 * @public
+		 */
+		spotlightRestrict: PropTypes.oneOf(['none', 'self-first', 'self-only'])
 	}
 
 	static defaultProps = {
@@ -218,14 +266,16 @@ class Popup extends React.Component {
 		noAutoDismiss: false,
 		open: false,
 		scrimType: 'translucent',
-		showCloseButton: false
+		showCloseButton: false,
+		spotlightRestrict: 'self-only'
 	}
 
 	constructor (props) {
 		super(props);
 		this.state = {
 			floatLayerOpen: this.props.open,
-			popupOpen: this.props.noAnimation
+			popupOpen: this.props.noAnimation,
+			containerId: Spotlight.add()
 		};
 	}
 
@@ -243,6 +293,22 @@ class Popup extends React.Component {
 		}
 	}
 
+	componentDidUpdate (prevProps) {
+		if (this.props.open !== prevProps.open) {
+			if (!this.props.noAnimation) {
+				Spotlight.pause();
+			} else if (this.props.open) {
+				this.spotPopupContent();
+			} else if (prevProps.open) {
+				this.spotActivatorControl();
+			}
+		}
+	}
+
+	componentWillUnmount () {
+		Spotlight.remove(this.state.containerId);
+	}
+
 	handleFloatingLayerOpen = () => {
 		if (!this.props.noAnimation) {
 			this.setState({
@@ -251,10 +317,57 @@ class Popup extends React.Component {
 		}
 	}
 
+	handleKeyDown = (ev) => {
+		const {onClose, onKeyDown} = this.props;
+		const direction = directions[ev.keyCode];
+		let containerNode;
+
+		if (direction) {
+			// prevent default page scrolling
+			ev.preventDefault();
+			// stop propagation to prevent default spotlight behavior
+			ev.stopPropagation();
+
+			// if focus has changed
+			if (Spotlight.move(direction)) {
+				containerNode = document.querySelector('[data-container-id="' + this.state.containerId + '"]');
+
+				// if current focus is not within the popup's container, issue the `onClose` event
+				if (!containerNode.contains(document.activeElement) && onClose) {
+					onClose(ev);
+				}
+			}
+		}
+
+		if (onKeyDown) {
+			onKeyDown(ev);
+		}
+	}
+
 	handlePopupHide = () => {
 		this.setState({
 			floatLayerOpen: false
 		});
+	}
+
+	handleTransitionEnd = (ev) => {
+		if (ev.target.getAttribute('data-container-id') === this.state.containerId) {
+			Spotlight.resume();
+
+			if (this.props.open) {
+				this.spotPopupContent();
+			} else {
+				this.spotActivatorControl();
+			}
+		}
+	}
+
+	spotPopupContent = () => {
+		Spotlight.focus(this.state.containerId);
+	}
+
+	spotActivatorControl = () => {
+		Spotlight.focus();
 	}
 
 	render () {
@@ -266,13 +379,16 @@ class Popup extends React.Component {
 				open={this.state.floatLayerOpen}
 				onOpen={this.handleFloatingLayerOpen}
 				onDismiss={onClose}
+				onTransitionEnd={this.handleTransitionEnd}
 				scrimType={scrimType}
 			>
 				<PopupBase
 					{...rest}
+					containerId={this.state.containerId}
 					open={this.state.popupOpen}
 					onCloseButtonClicked={onClose}
 					onHide={this.handlePopupHide}
+					onKeyDown={this.handleKeyDown}
 				/>
 			</FloatingLayer>
 		);
