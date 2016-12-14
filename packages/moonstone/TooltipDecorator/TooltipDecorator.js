@@ -1,5 +1,6 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import {hoc} from '@enact/core';
+import {startJob, stopJob} from '@enact/core/jobs';
 import ri from '@enact/ui/resolution';
 import FloatingLayer from '@enact/ui/FloatingLayer';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
@@ -16,7 +17,7 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 			* @type {Function}
 			* @public
 			*/
-			onBlur: React.PropTypes.func,
+			onBlur: PropTypes.func,
 
 			/**
 			* Delegate focus handler
@@ -24,7 +25,28 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 			* @type {Function}
 			* @public
 			*/
-			onFocus: React.PropTypes.func,
+			onFocus: PropTypes.func,
+
+			/**
+			 * When true, the case of the [`tooltipText`]{@link moonstone/TooltipDecorator.TooltipDecorator#tooltipText}
+			 * will remain unchanged.
+			 * Uses [Uppercase HOC]{@link i18n/Uppercase.Uppercase} and mirrors the
+			 * [preserveCase prop]{@link i18n/Uppercase.Uppercase#preserveCase}
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			preserveCase: PropTypes.bool,
+
+			/**
+			 * Number of milliseconds to wait before showing tooltip when hover.
+			 *
+			 * @type {Number}
+			 * @default 500
+			 * @public
+			 */
+			showDelay: PropTypes.number,
 
 			/**
 			* Position of the tooltip with respect to the activating control. Valid values are
@@ -43,7 +65,7 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 			* @default 'auto'
 			* @public
 			*/
-			tooltipPosition: React.PropTypes.oneOf(['auto', 'above', 'above center', 'above left', 'above right', 'below', 'below center', 'below left', 'below right', 'left bottom', 'left middle', 'left top', 'right bottom', 'right middle', 'right top']),
+			tooltipPosition: PropTypes.oneOf(['auto', 'above', 'above center', 'above left', 'above right', 'below', 'below center', 'below left', 'below right', 'left bottom', 'left middle', 'left top', 'right bottom', 'right middle', 'right top']),
 
 			/**
 			* Message of tooltip
@@ -51,10 +73,12 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 			* @type {String}
 			* @public
 			*/
-			tooltipText: React.PropTypes.string
+			tooltipText: PropTypes.string
 		}
 
 		static defaultProps = {
+			preserveCase: false,
+			showDelay: 500,
 			tooltipPosition: 'auto'
 		}
 
@@ -191,49 +215,43 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 		}
 
 		handleFocus = (e) => {
-			this.clientRef = e.target;
-			if ( this.props.tooltipText && this.props.tooltipText.length > 0 ) this.show();
-			if ( this.props.onFocus ) this.props.onFocus(e);
+			const {onFocus, tooltipText, showDelay} = this.props;
+
+			if (tooltipText) {
+				this.clientRef = e.target;
+				startJob('showTooltip', () => {
+					this.setState({showing: true});
+					this.adjustPosition();
+				}, showDelay);
+			}
+
+			if (onFocus) {
+				onFocus(e);
+			}
 		}
 
 		handleBlur = (e) => {
-			if ( this.props.tooltipText && this.props.tooltipText.length > 0 ) this.hide();
-			if ( this.props.onBlur ) this.props.onBlur(e);
-		}
+			const {onBlur, tooltipText} = this.props;
 
-		show () {
-			this.setTimeout(() => {
-				this.setState({
-					showing: true
-				});
-				this.adjustPosition();
-			}, 500);
-		}
+			if (tooltipText) {
+				this.clientRef = null;
+				stopJob('showTooltip');
+				this.setState({showing: false});
+			}
 
-		hide () {
-			this.clearTimeout();
-			this.setState({
-				showing: false
-			});
-		}
-
-		clearTimeout () {
-			clearTimeout(this.timer);
-			this.timer = null;
-		}
-
-		setTimeout (fn, time) {
-			this.clearTimeout();
-			this.timer = setTimeout(fn, time);
+			if (onBlur) {
+				onBlur(e);
+			}
 		}
 
 		getTooltipRef = (node) => {
 			this.tooltipRef = node;
 		}
 
-		renderTooltip () {
-			const {tooltipText, children} = this.props;
-			const props = Object.assign({}, this.props);
+		render () {
+			const {children, preserveCase, tooltipText, ...rest} = this.props;
+			const props = Object.assign({}, rest);
+			delete props.showDelay;
 			delete props.tooltipText;
 			delete props.tooltipPosition;
 
@@ -244,35 +262,19 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 					onBlur={this.handleBlur}
 				>
 					{children}
-					<FloatingLayer open={this.state.showing} scrimType='none'>
+					<FloatingLayer open={this.state.showing} scrimType="none">
 						<Tooltip
-							text={tooltipText}
 							type={this.state.type}
 							position={this.state.position}
 							arrowType={this.state.arrowType}
 							getTooltipRef={this.getTooltipRef}
-						/>
+							preserveCase={preserveCase}
+						>
+							{tooltipText}
+						</Tooltip>
 					</FloatingLayer>
 				</Wrapped>
 			);
-		}
-
-		renderWrapped () {
-			const props = Object.assign({}, this.props);
-			delete props.tooltip;
-			delete props.tooltipPosition;
-
-			return (
-				<Wrapped {...props} />
-			);
-		}
-
-		render () {
-			if (this.props.tooltipText) {
-				return this.renderTooltip();
-			} else {
-				return this.renderWrapped();
-			}
 		}
 	};
 });

@@ -1,11 +1,20 @@
-import React from 'react';
 import kind from '@enact/core/kind';
+import Uppercase from '@enact/i18n/Uppercase';
+import React from 'react';
 import css from './Tooltip.less';
 
-const Tooltip = kind({
-	name: 'Tooltip',
+const TooltipBase = kind({
+	name: 'TooltipBase',
 
 	propTypes: {
+		/**
+		 * The node to be displayed as the main content of the tooltip.
+		 *
+		 * @type {React.node}
+		 * @required
+		 */
+		children: React.PropTypes.node.isRequired,
+
 		/**
 		* Tooltip Arrow Type
 		*
@@ -33,14 +42,6 @@ const Tooltip = kind({
 		position: React.PropTypes.object,
 
 		/**
-		* Message of tooltip
-		*
-		* @type {String}
-		* @public
-		*/
-		text: React.PropTypes.string,
-
-		/**
 		* Type of tooltip
 		*
 		* @type {String}
@@ -52,7 +53,6 @@ const Tooltip = kind({
 
 	defaultProps: {
 		arrowType: 'corner',
-		text: '',
 		type: 'below leftArrow'
 	},
 
@@ -65,7 +65,7 @@ const Tooltip = kind({
 		className: ({type, styler}) => styler.append(css[type.split(' ')[0]], css[type.split(' ')[1]])
 	},
 
-	render: ({getTooltipRef, text, position, arrowType, className, style, ...props}) => {
+	render: ({children, getTooltipRef, position, arrowType, className, style, ...props}) => {
 		const styles = Object.assign({}, position, style);
 
 		return (
@@ -81,12 +81,14 @@ const Tooltip = kind({
 					ref={getTooltipRef}
 					className={css.tooltipLabel}
 				>
-					{text.toUpperCase()}
+					{children}
 				</div>
 			</div>
 		);
 	}
 });
 
+const Tooltip = Uppercase(TooltipBase);
+
 export default Tooltip;
-export {Tooltip};
+export {Tooltip, TooltipBase};

@@ -1,5 +1,4 @@
 // Tooltip.less
-@import '../styles/mixins.less';
 @import '../styles/colors.less';
 @import '../styles/variables.less';
 @import '../styles/text.less';
@@ -9,21 +8,20 @@
 
 	.tooltipArrow {
 		position: absolute;
-		width: 18px;
-		height: 30px;
+		width: @moon-tooltip-point-width;
+		height: @moon-tooltip-point-height;
 		fill: @moon-tooltip-bg-color;
 		transform-origin: top left;
 	}
 
 	.tooltipLabel {
 		.moon-small-button-text();
-		display: inline-block;
-		line-height: 30px;
+		line-height: @moon-tooltip-label-height;
 		white-space: nowrap;
-		padding: 12px 30px;
+		padding: @moon-spotlight-outset @moon-tooltip-h-padding;
 		color: @moon-tooltip-text-color;
 		background-color: @moon-tooltip-bg-color;
-		border-radius: 33px;
+		border-radius: @moon-tooltip-border-radius;
 	}
 
 	&.below {
