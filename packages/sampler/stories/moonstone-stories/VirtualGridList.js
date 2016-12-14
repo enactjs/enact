@@ -4,7 +4,7 @@ import {VirtualListCore} from '@enact/moonstone/VirtualList/VirtualListBase';
 import GridListImageItem from '@enact/moonstone/VirtualList/GridListImageItem';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, number, select} from '@kadira/storybook-addon-knobs';
+import {withKnobs, number, select} from '@kadira/storybook-addon-knobs';
 
 VirtualGridList.propTypes = Object.assign({}, VirtualListCore.propTypes);
 VirtualGridList.defaultProps = Object.assign({}, VirtualListCore.defaultProps);
@@ -67,7 +67,6 @@ storiesOf('VirtualList.VirtualGridList')
 				data={items}
 				dataSize={number('dataSize', items.length)}
 				direction={select('direction', prop.direction, 'vertical')}
-				hideScrollbars={boolean('hideScrollbars', false)}
 				itemSize={{minWidth: ri.scale(number('minWidth', 180)), minHeight: ri.scale(number('minHeight', 270))}}
 				spacing={ri.scale(number('spacing', 20))}
 				style={style.listHeight}
