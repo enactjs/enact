@@ -188,8 +188,6 @@ class VirtualVariableListCore extends Component {
 
 		secondary.dataSize = dataSize[fixedAxis];
 
-
-
 		this.setState({numOfItems, primaryFirstIndex: Math.min(primaryFirstIndex, primary.maxFirstIndex)});
 		this.calculateScrollBounds(props);
 		this.initSecondaryScrollInfo(primary.dataSize, numOfItems);
@@ -508,7 +506,7 @@ class VirtualVariableListCore extends Component {
 
 		if (hasMetricsChanged) {
 			this.calculateMetrics(nextProps);
-			this.updateStatesAndBounds(hasDataChanged ? nextProps : this.props);
+			this.updateStatesAndBounds(nextProps);
 		} else if (hasDataChanged) {
 			this.updateStatesAndBounds(nextProps);
 		}

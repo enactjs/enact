@@ -16,7 +16,7 @@ const PositionableHoc = hoc((config, Wrapped) => {
 			 *
 			 * @type {Number}
 			 * @default 0
-			 * @private
+			 * @public
 			 */
 			posX: PropTypes.number,
 
@@ -25,7 +25,7 @@ const PositionableHoc = hoc((config, Wrapped) => {
 			 *
 			 * @type {Number}
 			 * @default 0
-			 * @private
+			 * @public
 			 */
 			posY: PropTypes.number
 		}

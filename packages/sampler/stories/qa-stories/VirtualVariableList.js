@@ -204,6 +204,9 @@ const
 				</div>
 			</div>
 		);
+	},
+	renderCorner = () => {
+		return (<div style={style.itemToday}>Today</div>)
 	};
 
 storiesOf('VirtualVariableList')
@@ -239,11 +242,10 @@ storiesOf('VirtualVariableList')
 					component={{
 						item: renderItem,
 						rowHeader: renderRowHeaderItem,
-						colHeader: renderColHeaderItem
+						colHeader: renderColHeaderItem,
+						corner: renderCorner
 					}}
-				>
-					<div style={style.itemToday}>Today</div>
-				</VirtualVariableList>
+				/>
 			</div>
 		)
 	);

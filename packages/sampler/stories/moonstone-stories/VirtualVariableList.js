@@ -118,7 +118,9 @@ storiesOf('VirtualVariableList')
 		() => (
 			<div style={style.epg}>
 				<VirtualVariableList
-					data={programData}
+					data={{
+						item: programData
+					}}
 					dataSize={{
 						row: number('dataSize_row', programData.length),
 						col: getItemLength
@@ -131,10 +133,10 @@ storiesOf('VirtualVariableList')
 					posX={number('posX', 0)}
 					posY={number('posY', 0)}
 					variableAxis="row"
-					component={renderItem}
-				>
-					<div style={style.itemToday}>Today</div>
-				</VirtualVariableList>
+					component={{
+						item: renderItem
+					}}
+				/>
 			</div>
 		)
 	);

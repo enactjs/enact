@@ -19,14 +19,21 @@ const
 	PositionableVirtualList = Positionable(VirtualListCore),
 	PositionableVirtualVariableList = Positionable(VirtualVariableListCore);
 
-// PropTypes shapes
-const
-	itemHeadersAnyShape = PropTypes.shape({item: PropTypes.any.isRequired, rowHeader: PropTypes.any.isRequired, colHeader: PropTypes.any.isRequired}),
-	itemHeadersFuncShpae = PropTypes.shape({item: PropTypes.func.isRequired, rowHeader: PropTypes.func.isRequired, colHeader: PropTypes.func.isRequired}),
-	rowNumberColFuncShape = PropTypes.shape({row: PropTypes.number.isRequired, col: PropTypes.func.isRequired}),
-	rowFuncColNumberShape = PropTypes.shape({row: PropTypes.func.isRequired, col: PropTypes.number.isRequired}),
-	rowNumberColFuncHeadersNumberShape = PropTypes.shape({row: PropTypes.number.isRequired, col: PropTypes.func.isRequired, rowHeader: PropTypes.number.isRequired, colHeader: PropTypes.number.isRequired}),
-	rowFuncColNumberHeadersNumberShape = PropTypes.shape({row: PropTypes.func.isRequired, col: PropTypes.number.isRequired, rowHeader: PropTypes.number.isRequired, colHeader: PropTypes.number.isRequired});
+// PropTypes shape
+const sizeShape = PropTypes.oneOfType(
+	[PropTypes.shape({
+		row: PropTypes.number.isRequired,
+		col: PropTypes.func.isRequired,
+		rowHeader: PropTypes.number,
+		colHeader: PropTypes.number
+	}),
+	PropTypes.shape({
+		row: PropTypes.func.isRequired,
+		col: PropTypes.number.isRequired,
+		rowHeader: PropTypes.number,
+		colHeader: PropTypes.number
+	})]
+);
 
 /**
  * {@link module:@enact/moonstone/VirtualVariableList~VirtualVariableList} is a VirtualVariableList with Moonstone styling
@@ -49,7 +56,7 @@ const VirtualVariableList = kind({
 		 * @type {Function|Object}
 		 * @public
 		 */
-		component: PropTypes.oneOfType([PropTypes.func, itemHeadersFuncShpae]).isRequired,
+		component: PropTypes.shape({item: PropTypes.func.isRequired, rowHeader: PropTypes.func, colHeader: PropTypes.func, corner: PropTypes.func}).isRequired,
 
 		/**
 		 * Data for the list.
@@ -58,7 +65,7 @@ const VirtualVariableList = kind({
 		 * @type {Array|Object}
 		 * @public
 		 */
-		data: PropTypes.oneOfType([PropTypes.array, itemHeadersAnyShape]).isRequired,
+		data: PropTypes.shape({item: PropTypes.any.isRequired, rowHeader: PropTypes.any, colHeader: PropTypes.any}).isRequired,
 
 		/**
 		 * Size of data for the list.
@@ -66,7 +73,7 @@ const VirtualVariableList = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		dataSize: PropTypes.oneOfType([rowNumberColFuncShape, rowFuncColNumberShape, rowNumberColFuncHeadersNumberShape, rowFuncColNumberHeadersNumberShape]).isRequired,
+		dataSize: sizeShape,
 
 		/**
 		 * Size of an item for the list.
@@ -74,7 +81,7 @@ const VirtualVariableList = kind({
 		 * @type {Object}
 		 * @public
 		 */
-		itemSize: PropTypes.oneOfType([rowNumberColFuncShape, rowFuncColNumberShape, rowNumberColFuncHeadersNumberShape, rowFuncColNumberHeadersNumberShape]).isRequired,
+		itemSize: sizeShape,
 
 		/**
 		 * Option to use row and column headers
@@ -100,7 +107,6 @@ const VirtualVariableList = kind({
 			dataSize: dataSize.rowHeader,
 			direction: 'vertical',
 			itemSize: itemSize.row,
-			posX: 0,
 			posY,
 			style: {width: itemSize.rowHeader + 'px', height: 'calc(100% - ' + itemSize.row + 'px)', top: itemSize.row + 'px'},
 			component: component.rowHeader
@@ -111,11 +117,10 @@ const VirtualVariableList = kind({
 			direction: 'horizontal',
 			itemSize: itemSize.colHeader,
 			posX,
-			posY: 0,
 			style: {width: 'calc(100% - ' + itemSize.rowHeader + 'px)', height: itemSize.row + 'px', left: itemSize.rowHeader + 'px'},
 			component: component.colHeader
 		},
-		itemProps: ({component, data, dataSize, headers, itemSize, maxVariableScrollSize, posX, posY, variableAxis}) => (headers === 'none') ? null : {
+		itemProps: ({component, data, dataSize, headers, itemSize, maxVariableScrollSize, posX, posY, variableAxis}) => ({
 			data: data.item,
 			dataSize: {
 				row: dataSize.row,
@@ -131,24 +136,32 @@ const VirtualVariableList = kind({
 			variableAxis,
 			style: {width: 'calc(100% - ' + itemSize.rowHeader + 'px)', height: 'calc(100% - ' + itemSize.row + 'px)', top: itemSize.row + 'px', left: itemSize.rowHeader + 'px'},
 			component: component.item
-		},
-		childProps: ({headers, itemSize}) => (headers === 'none') ? null : {
-			style: {width: itemSize.rowHeader + 'px', height: itemSize.row + 'px'}
-		}
+		})
 	},
 
-	render: ({headers, rowProps, colProps, itemProps, childProps, children, className, style, ...listProps}) => {
-		if  (headers === 'both') {
+	render: ({headers, rowProps, colProps, itemProps, className, ...rest}) => {
+		const props = Object.assign({}, rest);
+
+		delete props.component;
+		delete props.data;
+		delete props.dataSize;
+		delete props.itemSize;
+		delete props.maxVariableScrollSize;
+		delete props.posX;
+		delete props.posY;
+		delete props.variableAxis;
+
+		if (headers === 'both') {
 			return (
-				<div className={classNames(className, css.headers)} style={style}>
+				<div {...props} className={classNames(className, css.headers)}>
 					<PositionableVirtualList {...rowProps} />
 					<PositionableVirtualList {...colProps} />
 					<PositionableVirtualVariableList {...itemProps} />
-					<div {...childProps}>{children}</div>
+					{rest.component.corner()}
 				</div>
 			);
 		} else {
-			return (<PositionableVirtualVariableList {...listProps} className={className} style={style} />);
+			return (<PositionableVirtualVariableList {...props} {...itemProps} className={className} />);
 		}
 	}
 });
