@@ -10,7 +10,7 @@
 import React from 'react';
 
 import kind from '@enact/core/kind';
-import Video, {Controls, Play, Mute, Seek, Fullscreen, Time, Overlay} from 'react-html5video';
+import Video, {Overlay} from 'react-html5video';
 import {withArgs as handle, forward} from '@enact/core/handle';
 import {$L} from '@enact/i18n';
 // import {childrenEquals} from '@enact/core/util';
@@ -31,6 +31,39 @@ const MediaSlider = shouldUpdate((props, nextProps) => {
 	);
 })(SliderFactory({css}));
 
+// Set-up event forwarding
+// Leaving lots of commented out, ready-to-use methods here in case we want/need them later.
+const
+	// forwardAbort           = forward('onAbort'),
+	// forwardCanPlay         = forward('onCanPlay'),
+	// forwardCanPlayThrough  = forward('onCanPlayThrough'),
+	// forwardDurationChange  = forward('onDurationChange'),
+	// forwardEmptied         = forward('onEmptied'),
+	// forwardEncrypted       = forward('onEncrypted'),
+	// forwardEnded           = forward('onEnded'),
+	// forwardError           = forward('onError'),
+	// forwardLoadedData      = forward('onLoadedData'),
+	forwardLoadedMetadata  = forward('onLoadedMetadata'),
+	// forwardLoadStart       = forward('onLoadStart'),
+	// forwardPause           = forward('onPause'),
+	// forwardPlay            = forward('onPlay'),
+	// forwardPlaying         = forward('onPlaying'),
+	forwardProgress        = forward('onProgress'),
+	// forwardRateChange      = forward('onRateChange'),
+	// forwardSeeked          = forward('onSeeked'),
+	// forwardSeeking         = forward('onSeeking'),
+	// forwardStalled         = forward('onStalled'),
+	// forwardSuspend         = forward('onSuspend'),
+	forwardTimeUpdate      = forward('onTimeUpdate')
+	// forwardVolumeChange    = forward('onVolumeChange'),
+	// forwardWaiting         = forward('onWaiting')
+	;
+
+// const debug = (msg, val) => {
+// 	// if (typeof val === 'boolean' || )
+// 	console.log('%c' + msg + ': ' + (val ? 'FOUND!!!' : 'NOT FOUND'), 'color:' + (val ? 'green' : 'red'));
+// };
+
 const zeroPad = (num) => ((num < 10 && num >= 0) ? '0' + num : num);
 
 const parseTime = (time) => {
@@ -42,23 +75,10 @@ const parseTime = (time) => {
 		s = time - (h * 3600) - (m * 60);
 
 	return {h, m, s};
-	// if (h < 10) {
-	// 	h = '0' + h;
-	// }
-	// 	if (m < 10) {
-	// 	m = '0' + m;
-	// }
-	// 	if (s < 10) {
-	// 	s = '0' + s;
-	// }
-	// return (h ? h + ':' : '') + m + ':' + s;
 };
 
 const secondsToPeriod = (time) => {
 	return 'P' + time + 'S';
-	// time = parseTime(time);
-	// return 'P' + time.h + 'H' + time.m + 'M' + time.s + 'S';
-	// return `PH${h}M${m}S${s}`;
 };
 
 const secondsToTime = (time) => {
@@ -66,6 +86,10 @@ const secondsToTime = (time) => {
 	return (time.h ? time.h + ':' : '') + zeroPad(time.m) + ':' + zeroPad(time.s);
 };
 
+//
+// Times Module
+//  - Used in VideoPlayer
+//
 const TimesBase = kind({
 	name: 'Times',
 
@@ -127,66 +151,62 @@ const Times = shouldUpdate((props, nextProps) => {
 	);
 })(TimesBase);
 
-
-
-const
-	// forwardAbort           = forward('onAbort'),
-	// forwardCanPlay         = forward('onCanPlay'),
-	// forwardCanPlayThrough  = forward('onCanPlayThrough'),
-	forwardDurationChange  = forward('onDurationChange'),
-	// forwardEmptied         = forward('onEmptied'),
-	// forwardEncrypted       = forward('onEncrypted'),
-	// forwardEnded           = forward('onEnded'),
-	// forwardError           = forward('onError'),
-	// forwardLoadedData      = forward('onLoadedData'),
-	forwardLoadedMetadata  = forward('onLoadedMetadata'),
-	// forwardLoadStart       = forward('onLoadStart'),
-	// forwardPause           = forward('onPause'),
-	// forwardPlay            = forward('onPlay'),
-	// forwardPlaying         = forward('onPlaying'),
-	forwardProgress        = forward('onProgress'),
-	// forwardRateChange      = forward('onRateChange'),
-	// forwardSeeked          = forward('onSeeked'),
-	// forwardSeeking         = forward('onSeeking'),
-	// forwardStalled         = forward('onStalled'),
-	// forwardSuspend         = forward('onSuspend'),
-	forwardTimeUpdate      = forward('onTimeUpdate')
-	// forwardVolumeChange    = forward('onVolumeChange'),
-	// forwardWaiting         = forward('onWaiting')
-	;
-
+//
+// VideoPlayer
+//
 const VideoPlayerBase = class extends React.Component {
 	static displayName = 'VideoPlayerBase';
 
 	static propTypes = {
+		autoPlay: React.PropTypes.bool,
 		infoComponents: React.PropTypes.node,
 		jumpBy: React.PropTypes.number,
 		leftComponents: React.PropTypes.node,
+		muted: React.PropTypes.bool,
+		noSlider: React.PropTypes.bool,
+		onBackwardButtonClick: React.PropTypes.func,
+		onForwardButtonClick: React.PropTypes.func,
+		onPlayButtonClick: React.PropTypes.func,
+		onSkipBackwardButtonClick: React.PropTypes.func,
+		onSkipForwardButtonClick: React.PropTypes.func,
 		rightComponents: React.PropTypes.node,
 		title: React.PropTypes.string
 	}
 
 	static defaultProps = {
-		jumpBy: 100
+		autoPlay: true,
+		jumpBy: 100,
+		muted: false,
+		noSlider: false
 	}
 
 	constructor (props) {
 		super(props);
 
 		// Internal State
-		this.currentTime = 0;
-		this.percentageLoaded = 0;
-		this.percentagePlayed = 0;
+		this.videoReady = false;
 		this.scrubbing = false;
 		this.scrubbingPassive = false;
-		this.totalTime = 0;
 		this.video = null;
 
 		// Re-render-necessary State
 		this.state = {
+			buffered: 0,
+			currentTime: 0,
+			duration: 0,
+			error: false,
+			loading: false,
+			muted: !!props.muted,
+			paused: !props.autoPlay,
+			playbackRate: 1,
+			readyState: 0,
+			volume: 1,
+
+			// Non-standard state computed from properties
 			more: false,
-			// percentageLoaded: 0,
-			// percentagePlayed: 0,
+			percentageLoaded: 0,
+			percentagePlayed: 0,
+			playPauseIcon: 'play',
 			videoSource: null
 		};
 	}
@@ -196,20 +216,16 @@ const VideoPlayerBase = class extends React.Component {
 			let prevSource, nextSource;
 
 			React.Children.forEach(this.props.children, (child) => {
-				// console.log(child, ' at index: ' + i);
 				if (child.type === 'source') {
 					prevSource = child.props.children || child.props.src;
 				}
 			});
 			React.Children.forEach(nextProps.children, (child) => {
-				// console.log(child.type + ' at index: ' + i);
 				if (child.type === 'source') {
 					nextSource = child.props.children || child.props.src;
 				}
 			});
 
-			// console.log('selectVideo', (prevSource === nextSource) ? 'no change' : 'NEW SOURCE!!!!!!');
-			// shouldLoadNewSource = (prevSource === nextSource);
 			if (prevSource !== nextSource) {
 				// console.log('Rendering new video:', nextSource);
 				this.reloadVideo();
@@ -218,10 +234,6 @@ const VideoPlayerBase = class extends React.Component {
 		}
 	}
 
-	isVideoPresent = () => this.video && this.video.videoEl
-
-	isVideoReady = () => this.video && this.video.videoEl && this.video.videoEl.readyState >= this.video.videoEl.HAVE_ENOUGH_DATA
-
 	// getChildContext = () => {
 	// 	return {video: this.video};
 	// }
@@ -229,20 +241,20 @@ const VideoPlayerBase = class extends React.Component {
 	reloadVideo = () => {
 		// When changing a HTML5 video, you have to reload it.
 		this.video.load();
+		this.videoReady = false;
 		this.video.play();
 	}
 
 	send = (action, props) => {
-		if (this.isVideoReady()) {
+		if (this.video && this.videoReady) {
 			// console.log('sending', action, props);
 			this.video[action](props);
 		}
 	}
 
 	jump = (distance) => {
-		if (this.isVideoReady() && typeof this.video.videoEl.duration === 'number') {
-			const el = this.video.videoEl;
-			this.video.seek(el.currentTime + distance);
+		if (this.video && this.videoReady) {
+			this.video.seek(this.state.currentTime + distance);
 		}
 	}
 
@@ -251,31 +263,33 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	onSliderChange = ({value}) => {
-		if (this.isVideoReady()) {
-			const el = this.video.videoEl;
+		if (this.video && this.videoReady) {
+			const el = this.video && this.video.videoEl;
+			// debug('videoEl', el);
 			this.send('seek', value * el.duration);
 		}
 	}
 
-	onClickMore = () => {
-		this.setState({
-			more: !this.state.more
-		});
-	}
-
 	// Internal Methods
 	updateMainState = () => {
-		if (this.isVideoReady()) {
+		if (this.video && this.videoReady) {
 			const el = this.video.videoEl;
-			// this.percentageLoaded = el.buffered.length && el.buffered.end(el.buffered.length - 1) / el.duration;
-			// this.percentagePlayed = el.currentTime / el.duration;
-			// this.currentTime = el.currentTime;
-			// this.totalTime = el.duration;
-
 			const updatedState = {
-				percentageLoaded: el.buffered.length && el.buffered.end(el.buffered.length - 1) / el.duration,
+				// Standard video properties
 				currentTime: el.currentTime,
-				totalTime: el.duration
+				duration: el.duration,
+				buffered: el.buffered,
+				paused: el.paused,
+				playPauseIcon: (el.paused ? 'play' : 'pause'),
+				muted: el.muted,
+				volume: el.volume,
+				playbackRate: el.playbackRate,
+				readyState: el.readyState,
+
+				// Non-standard state computed from properties
+				percentageLoaded: el.buffered.length && el.buffered.end(el.buffered.length - 1) / el.duration,
+				error: el.networkState === el.NETWORK_NO_SOURCE,
+				loading: el.readyState < el.HAVE_ENOUGH_DATA
 			};
 
 			if (!this.scrubbingPassive) {
@@ -284,17 +298,6 @@ const VideoPlayerBase = class extends React.Component {
 			}
 
 			this.setState(updatedState);
-			// this.setState({
-			// 	percentageLoaded: el.buffered.length && el.buffered.end(el.buffered.length - 1) / el.duration,
-			// 	percentagePlayed: el.currentTime / el.duration,
-			// 	currentTime: el.currentTime,
-			// 	totalTime: el.duration
-
-			// 	// currentTimePeriod: this.secondsToPeriod(el.currentTime),
-			// 	// currentTime: this.secondsToTime(el.currentTime),
-			// 	// totalTimePeriod: this.secondsToPeriod(el.duration),
-			// 	// totalTime: this.secondsToTime(el.duration)
-			// });
 		}
 	}
 
@@ -315,21 +318,22 @@ const VideoPlayerBase = class extends React.Component {
 	//
 	// Handled Media events
 	//
-	handleDurationChange = (ev) => {
-		// this.updateMainState();
-		console.log('DurationChange:', ev);
-		forwardDurationChange(ev, this.props);
-	}
+	// handleDurationChange = (ev) => {
+	// 	// this.updateMainState();
+	// 	console.log('DurationChange:', ev);
+	// 	this.setState({videoPresent: true});
+	// 	forwardDurationChange(ev, this.props);
+	// }
 	handleLoadedMetadata = (ev) => {
 		// this.updateMainState();
-		console.log('LoadedMetadata:', ev);
+		// console.log('LoadedMetadata:', this.video.videoEl);
+		this.videoReady = true;
 		forwardLoadedMetadata(ev, this.props);
 	}
 	handleProgress = (ev) => {
 		this.updateMainState();
 		forwardProgress(ev, this.props);
 	}
-
 	handleTimeUpdate = (ev) => {
 		this.updateMainState();
 		forwardTimeUpdate(ev, this.props);
@@ -342,23 +346,30 @@ const VideoPlayerBase = class extends React.Component {
 	onBackward      = () => this.jump(-1 * this.props.jumpBy)
 	onPlay          = () => {
 		console.log('onPlay');
-		// debugger;
 		return this.send('togglePlay');
 	}
 	onForward       = () => this.jump(this.props.jumpBy)
-	onSkipForward   = () => this.send('seek', (this.video ? this.video.videoEl.duration : 0))
+	onSkipForward   = () => this.send('seek', this.state.duration)
+	onMoreClick = () => {
+		this.setState({
+			more: !this.state.more
+		});
+	}
+
 
 	notYetImplemented = () => {
 		console.log('Sorry, not yet implemented.');
 	}
 
 	render () {
-		const {children, title, infoComponents, leftComponents, rightComponents, ...rest} = this.props;
+		const {children, noSlider, title, infoComponents, leftComponents, rightComponents,
+			onBackwardButtonClick = this.onBackward,
+			onForwardButtonClick = this.onForward,
+			onPlayButtonClick = this.onPlay,
+			onSkipBackwardButtonClick = this.onSkipBackward,
+			onSkipForwardButtonClick = this.onSkipForward,
+			...rest} = this.props;
 		delete rest.jumpBy;
-
-		// onLoadedMetadata={this.onLoadedMetadata} // loaded new media
-		// onDurationChange={this.onLoadedMetadata} // loaded new media
-		// onAbort={this.onFinished} // loaded new media
 
 		// Handle some class additions when the "more" button is pressed
 		const moreState = (this.state.more) ? ' ' + css.more : '';
@@ -367,32 +378,16 @@ const VideoPlayerBase = class extends React.Component {
 
 		return (
 			<div className={css.videoPlayer}>
+				{/* Video Section */}
 				<Video
 					{...rest}
 					className={css.videoFrame}
 					controls={false}
-					ref={video => (this.video = video)}
-
-					// ontimeupdate={this.timeUpdate}
-					// onloadedmetadata={this.metadataLoaded} //
-					// durationchange={this.durationUpdate} //
-					// onloadeddata={this.dataloaded} //
-					// // onprogress={this._progress} //
-					// onPlay={this._play}
-					// onpause={this._pause} //
-					// onStart={this._start}
-					// onended={this._stop} //
-					// onFastforward={this._fastforward}
-					// onSlowforward={this._slowforward}
-					// onRewind={this._rewind}
-					// onSlowrewind={this._slowrewind}
-					// onJumpForward={this._jumpForward}
-					// onJumpBackward={this._jumpBackward}
-					// onratechange={this.playbackRateChange}
-					// ontap={this.videoTapped} //
-					// oncanplay={this._setCanPlay} //
-					// onwaiting={this._waiting} //
-					// onerror={this._error} //
+					ref={video => {
+						// debug('video ref', video);
+						this.videoReady = !!video;
+						this.video = video;
+					}}
 					onDurationChange={this.handleDurationChange}
 					onLoadedMetadata={this.handleLoadedMetadata}
 					onTimeUpdate={this.handleTimeUpdate}
@@ -403,17 +398,20 @@ const VideoPlayerBase = class extends React.Component {
 						<Spinner className={css.spinner}>{$L('Loading')}</Spinner>
 					</Overlay>
 				</Video>
-				{/* onMouseMove={this.mousemove} onClick={this.videoFSTapped} */}
+
 				<div className={css.fullscreen + ' enyo-fit scrim'}>
 					<div className={css.bottom}> {/* showing={false} */}
+						{/* Info Section: Title, Description, Times */}
 						<div className={css.infoFrame}>
 							<div className={css.titleFrame}> {/* hidingDuration={1000} marqueeOnRender */}
 								<MarqueeText className={css.title + withBadges}>{title}</MarqueeText>
 								<div className={css.infoComponents + infoState}>{infoComponents}</div> {/* showing={false} showingDuration={500} tabIndex={-1} mixins={[ShowingTransitionSupport]} */}
 							</div>
-							<Times current={this.state.currentTime} total={this.state.totalTime} />
+							<Times current={this.state.currentTime} total={this.state.duration} />
 						</div>
-						<div className={css.sliderFrame}>
+
+						{/* Slider Section */}
+						{noSlider ? null : <div className={css.sliderFrame}>
 							<MediaSlider
 								className={css.mediaSlider}
 								backgroundPercent={this.state.percentageLoaded}
@@ -426,34 +424,27 @@ const VideoPlayerBase = class extends React.Component {
 								onMouseLeave={this.onScrubPassive}
 								onMouseDown={this.onScrub}
 								onMouseUp={this.onScrub}
-							/> {/*
-								disabled
-								onSeekStart={this.sliderSeekStart}
-								onSeek={this.sliderSeek}
-								onSeekFinish={this.sliderSeekFinish}
-								onEnterTapArea={this.onEnterSlider}
-								onLeaveTapArea={this.onLeaveSlider}
-								rtl={false}
-							*/}
-						</div>
+							/>
+						</div>}
+
+						{/* Media Controls Section: Left, Center, Right, and More Controls */}
 						<div className={css.controlsFrame} onClick={this.resetAutoTimeout}>
 							<div className={css.leftComponents}>{leftComponents}</div>
 							<div className={css.centerComponentsContainer}>
-								{/* <Panels index={0} className={css.controlsContainer}>*/}
 								<div className={css.centerComponents + moreState}>
 									<div className={css.mediaControls}> {/* rtl={false} */}
-										<IconButton backgroundOpacity="translucent" onClick={this.onSkipBackward}>skipbackward</IconButton>
-										<IconButton backgroundOpacity="translucent" onClick={this.onBackward}>backward</IconButton>
-										<IconButton backgroundOpacity="translucent" onClick={this.onPlay}>play</IconButton>
-										<IconButton backgroundOpacity="translucent" onClick={this.onForward}>forward</IconButton>
-										<IconButton backgroundOpacity="translucent" onClick={this.onSkipForward}>skipforward</IconButton>
+										<IconButton backgroundOpacity="translucent" onClick={onSkipBackwardButtonClick}>skipbackward</IconButton>
+										<IconButton backgroundOpacity="translucent" onClick={onBackwardButtonClick}>backward</IconButton>
+										<IconButton backgroundOpacity="translucent" onClick={onPlayButtonClick}>{this.state.playPauseIcon}</IconButton>
+										<IconButton backgroundOpacity="translucent" onClick={onForwardButtonClick}>forward</IconButton>
+										<IconButton backgroundOpacity="translucent" onClick={onSkipForwardButtonClick}>skipforward</IconButton>
 									</div>
 									<div className={css.moreControls}>{children}</div> {/* rtl={false} */}
 								</div>
 							</div>
 							<div className={css.rightComponents}>
 								{rightComponents}
-								{(children) ? <IconButton backgroundOpacity="translucent" className={css.moreButton} onClick={this.onClickMore}>ellipsis</IconButton> : null}
+								{(children) ? <IconButton backgroundOpacity="translucent" className={css.moreButton} onClick={this.onMoreClick}>ellipsis</IconButton> : null}
 							</div>
 						</div>
 					</div>

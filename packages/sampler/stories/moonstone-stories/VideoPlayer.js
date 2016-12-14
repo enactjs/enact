@@ -105,6 +105,7 @@ storiesOf('VideoPlayer')
 					autoPlay={boolean('autoPlay', true)}
 					loop={boolean('loop', true)}
 					muted={boolean('muted', true)}
+					noSlider={boolean('noSlider', false)}
 					title={text('title', 'Moonstone VideoPlayer Sample Video')}
 					poster={prop.videos[0].poster}
 					{...prop.eventActions}
