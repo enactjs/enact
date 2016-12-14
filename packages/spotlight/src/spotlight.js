@@ -914,10 +914,6 @@ const Spotlight = (function() {
 			return;
 		}
 
-		if (!direction && !SpotlightAccelerator.isAccelerating()) {
-			_selectionKeyHold = true;
-		}
-
 		if (direction && !spotNext(direction, currentFocusedElement, currentContainerId) && currentFocusedElement !== document.activeElement) {
 			focusElement(currentFocusedElement, currentContainerId)
 		}
@@ -933,13 +929,8 @@ const Spotlight = (function() {
 		}
 
 		const keyCode = evt.keyCode;
-		const enterKey = _enterKeyCodes.indexOf(keyCode);
-		if (!_directions[keyCode] && !enterKey) {
+		if (!_directions[keyCode] && !_enterKeyCodes.indexOf(keyCode)) {
 			return;
-		}
-
-		if (enterKey) {
-			_selectionKeyHold = false;
 		}
 
 		SpotlightAccelerator.reset();
@@ -1281,15 +1272,6 @@ const Spotlight = (function() {
 		 */
 		setPointerMode: function (pointerMode) {
 			_pointerMode = pointerMode;
-		},
-
-		/**
-		 * Gets the current status of the selection keys.
-		 *
-		 * @return {Boolean} `true` if a selection key is being held.
-		 */
-		getSelectionKeyHold: function () {
-			return _selectionKeyHold;
 		}
 	};
 
