@@ -85,6 +85,15 @@ const DialogBase = kind({
 		open: PropTypes.bool,
 
 		/**
+		 * Types of scrim. It can be either `'transparent'`, `'translucent'`, or `'none'`.
+		 *
+		 * @type {String}
+		 * @default `translucent`
+		 * @public
+		 */
+		scrimType: React.PropTypes.oneOf(['transparent', 'translucent', 'none']),
+
+		/**
 		 * When `true`, the close button is shown; when `false`, it is hidden.
 		 *
 		 * @type {Boolean}
