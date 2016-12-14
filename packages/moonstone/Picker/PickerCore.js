@@ -16,6 +16,8 @@ import Icon from '../Icon';
 import IconButton from '../IconButton';
 
 import {steppedNumber} from './PickerPropTypes';
+import {checkDefaultBounds} from '@enact/ui/validators/PropTypeValidators';
+
 import css from './Picker.less';
 
 const PickerViewManager = shouldUpdate((props, nextProps) => {
@@ -216,7 +218,7 @@ const PickerCore = class extends React.Component {
 		 * @default 0
 		 * @public
 		 */
-		value: steppedNumber,
+		value: checkDefaultBounds,
 
 		/**
 		 * Choose a specific size for your picker. `'small'`, `'medium'`, `'large'`, or set to `null` to
