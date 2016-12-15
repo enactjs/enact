@@ -285,6 +285,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		*/
 		calculateMetrics () {
 			const node = this.node;
+
 			// TODO: absolute showing check (or assume that it won't be rendered if it isn't showing?)
 			if (node && this.distance == null && !this.props.disabled && !this.props.marqueeDisabled) {
 				this.distance = this.calculateDistance(node);
@@ -337,13 +338,12 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{undefined}
 		 */
 		start = (delay = this.props.marqueeDelay) => {
-			let minDelay = 100;
 			if (!this.state.animating) {
 				this.setTimeout(() => {
 					this.setState({
 						animating: true
 					});
-				}, minDelay + delay);
+				}, delay);
 			}
 		}
 
@@ -398,7 +398,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {undefined}
 		 */
 		resetAnimation = () => {
-			this.setTimeout(this.restartAnimation, this.props.marqueeResetDelay);
+			const minDelay = 100;
+			this.setTimeout(this.restartAnimation, this.props.marqueeResetDelay + minDelay);
 		}
 
 		/**
