@@ -12,6 +12,7 @@ import React from 'react';
 import kind from '@enact/core/kind';
 import Video, {Overlay} from 'react-html5video';
 import {withArgs as handle, forward} from '@enact/core/handle';
+import {startJob, stopJob} from '@enact/core/jobs';
 import {$L} from '@enact/i18n';
 // import {childrenEquals} from '@enact/core/util';
 import shouldUpdate from 'recompose/shouldUpdate';
@@ -91,6 +92,8 @@ const playbackRateHash = {
 // 	// if (typeof val === 'boolean' || )
 // 	console.log('%c' + msg + ': ' + (val ? 'FOUND!!!' : 'NOT FOUND'), 'color:' + (val ? 'green' : 'red'));
 // };
+
+const getNow = () => new Date().getTime();
 
 // const zeroPad = (num) => ((num < 10 && num >= 0) ? '0' + num : num);
 const padDigit = (val) => {
@@ -492,24 +495,70 @@ const VideoPlayerBase = class extends React.Component {
 	 */
 	setPlaybackRate = (rate) => {
 		// Stop rewind (if happenning)
-		// NYI
-		// this.stopRewindJob();
+		this.stopRewindJob();
 
 		// Make sure rate is a string
 		this.playbackRate = rate = String(rate);
 		const pbNumber = this.calcNumberValueOfPlaybackRate(rate);
-		console.log('setPlaybackRate:', rate, pbNumber);
 
 		// Set native playback rate
 		this.send('setPlaybackRate', pbNumber);
 
 		// NYI
 		// if (!(platform.webos || global.PalmSystem)) {
-		// 	// For supporting cross browser behavior
-		// 	if (pbNumber < 0) {
-		// 		this.beginRewind();
-		// 	}
+		//	// For supporting cross browser behavior
+		if (pbNumber < 0) {
+			this.beginRewind();
+		}
 		// }
+	}
+
+	/**
+	 * Calculates the time that has elapsed since. This is necessary for browsers until negative
+	 * playback rate is directly supported.
+	 *
+	 * @private
+	 */
+	rewindManually = () => {
+		const now = getNow(),
+			distance = now - this.rewindBeginTime,
+			pbRate = this.calcNumberValueOfPlaybackRate(this.playbackRate),
+			adjustedDistance = (distance * pbRate) / 1000
+			// newTime = this.getCurrentTime() - adjustedDistance
+			;
+
+		// this.setCurrentTime(newTime);
+		this.jump(adjustedDistance);
+		this.startRewindJob();
+	}
+
+	/**
+	 * Starts rewind job.
+	 *
+	 * @private
+	 */
+	startRewindJob = () => {
+		this.rewindBeginTime = getNow();
+		startJob('rewind', this.rewindManually, 100);
+	}
+
+	/**
+	 * Stops rewind job.
+	 *
+	 * @private
+	 */
+	stopRewindJob = () => {
+		stopJob('rewind');
+	}
+
+	/**
+	 * Implements custom rewind functionality (until browsers support negative playback rate).
+	 *
+	 * @private
+	 */
+	beginRewind = () => {
+		this.send('pause');
+		this.startRewindJob();
 	}
 
 	//
@@ -554,7 +603,7 @@ const VideoPlayerBase = class extends React.Component {
 	// Player Button controls
 	//
 	onSliderChange = ({value}) => {
-		if (this.video && this.videoReady && !this.scrubbingPassive) {
+		if (this.video && this.videoReady && this.scrubbingPassive) {
 			const el = this.video && this.video.videoEl;
 			// debug('videoEl', el);
 			this.send('seek', value * el.duration);
