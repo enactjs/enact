@@ -40,6 +40,16 @@ const ExpandableItemBase = kind({
 		title: PropTypes.string.isRequired,
 
 		/**
+		 * When `true`, the expandable automatically closes when the user navigates to the top of
+		 * the component; if `false`, the user must select/tap the header to close the expandable.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		autoCollapse: PropTypes.bool,
+
+		/**
 		 * The contents of the expandable item displayed when `open` is `true`
 		 *
 		 * @type {Node}
@@ -64,6 +74,16 @@ const ExpandableItemBase = kind({
 		 * @public
 		 */
 		label: PropTypes.string,
+
+		/**
+		 * When `true`, the user is prevented from moving {@glossary Spotlight} past the bottom
+		 * of the expandable (when open) using 5-way controls.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		lockBottom: PropTypes.bool,
 
 		/**
 		 * Text to display when no `label` or `value` is set.
@@ -114,7 +134,9 @@ const ExpandableItemBase = kind({
 	},
 
 	defaultProps: {
+		autoCollapse: false,
 		disabled: false,
+		lockBottom: false,
 		open: false,
 		showLabel: 'auto'
 	},
@@ -134,17 +156,36 @@ const ExpandableItemBase = kind({
 				return open ? onClose : onOpen;
 			}
 		},
+		handleKeyDown: ({autoCollapse, lockBottom, onClose}) => {
+			if (autoCollapse || lockBottom) {
+				return (ev) => {
+					const {keyCode, target} = ev;
+					// Basing first/last child on the parent of the target to support both the use
+					// case here in which the children of the container are spottable and the
+					// ExpandableList use case which has an intermediate child (Group) between the
+					// spottable components and the container.
+					if (autoCollapse && keyCode === 38 && target.parentNode.firstChild === target && onClose) {
+						onClose();
+						ev.nativeEvent.stopImmediatePropagation();
+					} else if (lockBottom && keyCode === 40 && target.parentNode.lastChild === target) {
+						ev.nativeEvent.stopImmediatePropagation();
+					}
+				};
+			}
+		},
 		open: ({disabled, open}) => open && !disabled
 	},
 
-	render: ({children, disabled, handleOpen, label, open, title, ...rest}) => {
+	render: ({children, disabled, handleOpen, label, handleKeyDown, open, title, ...rest}) => {
+		delete rest.autoCollapse;
 		delete rest.label;
+		delete rest.lockBottom;
 		delete rest.noneText;
 		delete rest.onClose;
+		delete rest.onClose;
+		delete rest.onOpen;
 		delete rest.onOpen;
 		delete rest.showLabel;
-		delete rest.onOpen;
-		delete rest.onClose;
 
 		return (
 			<ExpandableContainer {...rest} disabled={disabled} open={open}>
@@ -153,7 +194,14 @@ const ExpandableItemBase = kind({
 					label={label}
 					onClick={handleOpen}
 				>{title}</LabeledItem>
-				<ExpandableTransitionContainer data-container-disabled={!open} data-expandable-container visible={open} duration="short" type="clip">
+				<ExpandableTransitionContainer
+					data-container-disabled={!open}
+					data-expandable-container
+					duration="short"
+					onKeyDown={handleKeyDown}
+					type="clip"
+					visible={open}
+				>
 					{children}
 				</ExpandableTransitionContainer>
 			</ExpandableContainer>

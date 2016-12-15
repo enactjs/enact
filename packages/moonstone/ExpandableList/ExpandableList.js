@@ -182,7 +182,7 @@ const ExpandableListBase = kind({
 		delete rest.select;
 
 		return (
-			<ExpandableItemBase {...rest} showLabel="auto">
+			<ExpandableItemBase {...rest} showLabel="auto" autoCollapse lockBottom>
 				<Group
 					childComponent={ListItem}
 					childSelect="onToggle"
