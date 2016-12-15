@@ -32,7 +32,7 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'TooltipDecorator'
 
-		static propTypes = {
+		static propTypes = /** @lends moonstone/TooltipDecorator.TooltipDecorator.prototype */ {
 			/**
 			 * A function to be run when Wrapped component loses focus.
 			 *

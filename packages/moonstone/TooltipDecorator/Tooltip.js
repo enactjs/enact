@@ -86,7 +86,7 @@ const TooltipLabel = kind({
 const TooltipBase = kind({
 	name: 'TooltipBase',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/TooltipDecorator.TooltipBase.prototype */ {
 		/**
 		 * The text to be displayed as the main content of the tooltip.
 		 *
