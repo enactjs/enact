@@ -22,7 +22,7 @@ function isNonLatinLocale (spec) {
 	const nonLatinLanguageOverrides = ['en-JP'];
 	// We use the latin fonts (with non-Latin fallback) for these languages (even though their
 	// scripts are non-latin)
-	const latinLanguageOverrides = ['ko'];
+	const latinLanguageOverrides = ['ko', 'ha'];
 
 	/* eslint-disable operator-linebreak */
 	return (
@@ -30,12 +30,12 @@ function isNonLatinLocale (spec) {
 			// the language actually is non-latin
 			li.getScript() !== 'Latn' ||
 			// the language is treated as non-latin
-			locale.getLanguage().indexOf(nonLatinLanguageOverrides) !== -1 ||
+			nonLatinLanguageOverrides.indexOf(locale.getLanguage()) !== -1 ||
 			// the combination of language and region is treated as non-latin
-			locale.toString().indexOf(nonLatinLanguageOverrides) !== -1
+			nonLatinLanguageOverrides.indexOf(locale.toString()) !== -1
 		) && (
 			// the non-latin language should be treated as latin
-			locale.getLanguage().indexOf(latinLanguageOverrides) < 0
+			latinLanguageOverrides.indexOf(locale.getLanguage()) < 0
 		)
 	);
 	/* eslint-enable operator-linebreak */
