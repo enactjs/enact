@@ -129,6 +129,12 @@
 					padding: @slider-padding-v 0;
 					height: @moon-video-player-slider-height;
 					margin: 0;
+
+					// Grow the knob when the Slider gets spotted
+					&:global(.spottable):focus .knob::before {
+						transform: scale(0.75);
+						opacity: 1;
+					}
 				}
 
 				.sliderBar {
@@ -151,34 +157,44 @@
 					@activate-transition-function: cubic-bezier(0.15, 0.85, 0.6, 1.65);
 					@slide-transition-function:    cubic-bezier(0.15, 0.85, 0.53, 1.09);
 
+					height: 0;
+					width: 0;
+					border-width: 0;
 					position: absolute;
-					width: @moon-video-player-slider-knob-size;
-					height: @moon-video-player-slider-knob-size;
-					border-radius: @moon-video-player-slider-knob-size;
-					background-color: #fff;
+					// display: none;
+					// border-radius: @moon-video-player-slider-knob-size;
+					// background-color: #fff;
 					// display: none; // unimplemeted
 					// box-shadow: 0 6px 8px 2px rgba(0, 0, 0, 0.3);
-					-webkit-transform: translateZ(0) translateX(-50%) scale(0.5);
-					transform:         translateZ(0) translateX(-50%) scale(0.5);
+					-webkit-transform: translateZ(0) translateX(-50%);
+					transform:         translateZ(0) translateX(-50%);
 					-webkit-transition: -webkit-transform @slide-transition-function 0.2s;
 					transition:                 transform @slide-transition-function 0.2s;
+					will-change: transform;
 
-					.moon-video-player.spotlight-5way-mode & { // unimplemeted
-						-webkit-transition: -webkit-transform @activate-transition-function 0.2s, left @slide-transition-function 0.2s;
-						transition:                 transform @activate-transition-function 0.2s, left @slide-transition-function 0.2s;
+					&::before {
+						content: '';
+						position: absolute;
+						.position(-@moon-video-player-slider-knob-size);
+						width: (@moon-video-player-slider-knob-size * 2);
+						height: (@moon-video-player-slider-knob-size * 2);
+						background-color: #fff;
+						border-radius: @moon-video-player-slider-knob-size;
+						// background-color: fade(cyan, 40%);
+						// outline: 1px solid cyan;
+						-webkit-transform: scale(0.5);
+						transform:         scale(0.5);
+						transform-origin: center center;
+						opacity: 0;
+						will-change: transform opacity;
+						-webkit-transition: -webkit-transform @activate-transition-function 0.2s, opacity ease 0.2s;
+						transition:                 transform @activate-transition-function 0.2s, opacity ease 0.2s;
 					}
 				}
 
-
-				&.visible { // unimplemeted
+				&.scrubbing {
 					.knob {
 						display: block;
-					}
-				}
-				&.pressed { // unimplemeted
-					.knob {
-						-webkit-transform: translateZ(0) translateX(-50%) scale(0.75);
-						transform:         translateZ(0) translateX(-50%) scale(0.75);
 					}
 				}
 
