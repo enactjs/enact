@@ -1,13 +1,55 @@
 import hoc from '@enact/core/hoc';
 import React from 'react';
 
+/**
+ * The `contextTypes` published by {@link ui/RadioDecorator.RadioContainerDecorator} to interact
+ * with {@link ui/RadioDecorator.RadioDecorator} instances.
+ *
+ * @type {Object}
+ * @private
+ */
 const contextTypes = {
+	/**
+	 * Called by a {@link ui/RadioDecorator.RadioDecorator} when it is activated
+	 *
+	 * @type {Function}
+	 */
 	activateRadioItem: React.PropTypes.func,
+
+	/**
+	 * Called by a {@link ui/RadioDecorator.RadioDecorator} when it is deactivated
+	 *
+	 * @type {Function}
+	 */
 	deactivateRadioItem: React.PropTypes.func,
+
+	/**
+	 * Called by a {@link ui/RadioDecorator.RadioDecorator} when it is mounted to register it for
+	 * deactivations.
+	 *
+	 * @type {Function}
+	 */
 	registerRadioItem: React.PropTypes.func,
+
+	/**
+	 * Called by a {@link ui/RadioDecorator.RadioDecorator} when it will be unmouned to deregister
+	 * it for deactivations.
+	 *
+	 * @type {Function}
+	 */
 	unregisterRadioItem: React.PropTypes.func
 };
 
+/**
+ * {@link ui/RadioDecorator.RadioContainerDecorator} is a Higher-order Component that establishes
+ * a radio group context for its descendants. Any descendants that are wrapped by
+ * {@link ui/RadioDecorator.RadioDecorator} will be mutually exlusive.
+ *
+ * @class RadioContainerDecorator
+ * @memberof ui/RadioDecorator
+ * @hoc
+ * @public
+ */
 const RadioContainerDecorator = hoc((config, Wrapped) => {
 
 	return class extends React.Component {
@@ -15,7 +57,7 @@ const RadioContainerDecorator = hoc((config, Wrapped) => {
 
 		static childContextTypes = contextTypes
 
-		static propTypes = /** @lends ui/RadioContainerDecorator.RadioContainerDecorator.prototype */ {
+		static propTypes = /** @lends ui/RadioDecorator.RadioContainerDecorator.prototype */ {
 			/**
 			 * Controls whether the component is disabled.
 			 *
