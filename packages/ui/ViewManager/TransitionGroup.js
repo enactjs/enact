@@ -1,8 +1,5 @@
-/**
- * Exports the {@link ui/ViewManager/TransitionGroup.TransitionGroup} component.
- *
- * @module ui/ViewManager/TransitionGroup
- * @private
+/*
+ * Exports the {@link ui/ViewManager.TransitionGroup} component.
  */
 
 // Using string refs from the source code of ReactTransitionGroup
@@ -75,12 +72,12 @@ const mergeChildren = unionWith(eqBy(prop('key')));
  * Currently somewhat specialized for the purposes of ViewManager.
  *
  * @class TransitionGroup
- * @memberof ui/ViewManager/TransitionGroup
+ * @memberof ui/ViewManager
  * @private
  */
 
 class TransitionGroup extends React.Component {
-	static propTypes = /** @lends ui/ViewManager/TransitionGroup.TransitionGroup.prototype */ {
+	static propTypes = /** @lends ui/ViewManager.TransitionGroup.prototype */ {
 		children: React.PropTypes.node.isRequired,
 
 		/**

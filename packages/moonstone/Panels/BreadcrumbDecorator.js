@@ -1,8 +1,3 @@
-/**
- * @module moonstone/Panels/BreadcrumbDecorator
- * @private
- */
-
 import {kind, hoc} from '@enact/core';
 import {coerceFunction} from '@enact/core/util';
 import Cancelable from '@enact/ui/Cancelable';
@@ -19,9 +14,9 @@ import css from './Panels.less';
 // TODO: Figure out how to document private sub-module members
 
 /**
- * Default config for {@link moonstone/Panels/BreadcrumbDecorator.BreadcrumbDecorator}
+ * Default config for {@link moonstone/Panels.BreadcrumbDecorator}
  * @hocconfig
- * @memberof moonstone/Panels/BreadcrumbDecorator.BreadcrumbDecorator
+ * @memberof moonstone/Panels.BreadcrumbDecorator
  */
 const defaultConfig = {
 	/**
@@ -29,7 +24,7 @@ const defaultConfig = {
 	 *
 	 * @type {string}
 	 * @default null
-	 * @memberof moonstone/Panels/BreadcrumbDecorator.BreadcrumbDecorator.defaultConfig
+	 * @memberof moonstone/Panels.BreadcrumbDecorator.defaultConfig
 	 */
 	className: null,
 
@@ -39,7 +34,7 @@ const defaultConfig = {
 	 *
 	 * @type {number|function}
 	 * @default 0
-	 * @memberof moonstone/Panels/BreadcrumbDecorator.BreadcrumbDecorator.defaultConfig
+	 * @memberof moonstone/Panels.BreadcrumbDecorator.defaultConfig
 	 */
 	max: 0,
 
@@ -48,7 +43,7 @@ const defaultConfig = {
 	 *
 	 * @type {object}
 	 * @default null
-	 * @memberof moonstone/Panels/BreadcrumbDecorator.BreadcrumbDecorator.defaultConfig
+	 * @memberof moonstone/Panels.BreadcrumbDecorator.defaultConfig
 	 */
 	props: null
 };
@@ -61,7 +56,7 @@ const defaultConfig = {
  * @type {Function}
  * @hoc
  * @private
- * @memberof moonstone/Panels/BreadcrumbDecorator
+ * @memberof moonstone/Panels
  */
 const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const max = coerceFunction(config.max);
@@ -69,7 +64,7 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const Decorator = kind({
 		name: 'BreadcrumbDecorator',
 
-		propTypes: /** @lends moonstone/Panels/BreadcrumbDecorator.BreadcrumbDecorator.prototype */ {
+		propTypes: /** @lends moonstone/Panels.BreadcrumbDecorator.prototype */ {
 			/**
 			 * Array of breadcrumbs or a function that generates an array of breadcrumbs
 			 *

@@ -1,8 +1,5 @@
-/**
- * Exports the {@link moonstone/VirtualList/VirtualListBase.VirtualListBase} component.
- *
- * @module moonstone/VirtualList/VirtualListBase
- * @private
+/*
+ * Exports the {@link moonstone/VirtualList.VirtualListBase} component.
  */
 
 import React, {Component, PropTypes} from 'react';
@@ -22,17 +19,17 @@ const
 	nop = () => {};
 
 /**
- * {@link moonstone/VirtualList/VirtualListBase.VirtualListBase} is a base component for
+ * {@link moonstone/VirtualList.VirtualListBase} is a base component for
  * {@link moonstone/VirtualList.VirtualList} and
  * {@link moonstone/VirtualList.VirtualGridList} with Scrollable and SpotlightContainerDecorator applied.
  *
  * @class VirtualListCore
- * @memberof moonstone/VirtualList/VirtualListBase
+ * @memberof moonstone/VirtualList
  * @ui
  * @private
  */
 class VirtualListCore extends Component {
-	static propTypes = /** @lends moonstone/VirtualList/VirtualListBase.VirtualListCore.prototype */ {
+	static propTypes = /** @lends moonstone/VirtualList.VirtualListCore.prototype */ {
 		/**
 		 * Size of an item for the list; valid values are either a number for `VirtualList`
 		 * or an object that has `minWidth` and `minHeight` for `VirtualGridList`.
@@ -777,12 +774,12 @@ class VirtualListCore extends Component {
 }
 
 /**
- * {@link moonstone/VirtualList/VirtualListBase.VirtualListBase} is a base component for
+ * {@link moonstone/VirtualList.VirtualListBase} is a base component for
  * {@link moonstone/VirtualList.VirtualList} and
  * {@link moonstone/VirtualList.VirtualGridList} with Scrollable and SpotlightContainerDecorator applied.
  *
  * @class VirtualListBase
- * @memberof moonstone/VirtualList/VirtualListBase
+ * @memberof moonstone/VirtualList
  * @mixes moonstone/Scrollable
  * @mixes spotlight/SpotlightContainerDecorator
  * @ui

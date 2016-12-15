@@ -1,8 +1,5 @@
-/**
- * Exports the {@link ui/ViewManager/View.View} component.
- *
- * @module ui/ViewManager/View
- * @private
+/*
+ * Exports the {@link ui/ViewManager.View} component.
  */
 
 import React from 'react';
@@ -17,12 +14,12 @@ const TICK = 17;
  * It is not intended to be used directly
  *
  * @class View
- * @memberof ui/ViewManager/View
+ * @memberof ui/ViewManager
  * @private
  */
 class View extends React.Component {
 
-	static propTypes = /** @lends ui/ViewManager/View.View.prototype */ {
+	static propTypes = /** @lends ui/ViewManager.View.prototype */ {
 		children: React.PropTypes.node.isRequired,
 
 		/**

@@ -1,7 +1,5 @@
-/* //TODO: JSDOC revisit
+/*
  * Exports the {@link ui/FloatingLayer.FloatingLayerDecorator} Higher-order Component (HOC).
- *
- * @module ui/FloatingLayer/FloatingLayerDecorator
  */
 
 import hoc from '@enact/core/hoc';
@@ -9,7 +7,7 @@ import kind from '@enact/core/kind';
 import React from 'react';
 
 /**
- * Default config for {@link ui/FloatingLayer/FloatingLayerDecorator.FloatingLayerDecorator}.
+ * Default config for {@link ui/FloatingLayer.FloatingLayerDecorator}.
  *
  * @memberof ui/FloatingLayer.FloatingLayerDecorator
  * @hocconfig

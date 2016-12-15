@@ -1,10 +1,3 @@
-/**
- * Exports the {@link moonstone/Scroller/ScrollAnimator.ScrollAnimator} component.
- *
- * @module moonstone/Scroller/ScrollAnimator
- * @private
- */
-
 import clamp from 'ramda/src/clamp';
 
 const
@@ -48,12 +41,12 @@ const
 	perf = (typeof window === 'object') ? window.performance : {now: Date.now};
 
 /**
- * {@link moonstone/Scroller/ScrollAnimator.ScrollAnimator} is the class
- * to scroll a list or a scroller with animation.
+ * {@link moonstone/Scroller.ScrollAnimator} is the class to scroll a list or a scroller with
+ * animation.
  *
  * @class ScrollAnimator
- * @memberof moonstone/Scroller/ScrollAnimator
- * @public
+ * @memberof moonstone/Scroller
+ * @private
  */
 class ScrollAnimator {
 	rAFId = null
@@ -64,7 +57,7 @@ class ScrollAnimator {
 	 *	`'linear'`, `'ease-in'`, `'ease-out'`, or `'ease-in-out'`, or null. If `null`, defaults to
 	 *	`'ease-out'`.
 	 * @constructor
-	 * @memberof moonstone/Scroller/ScrollAnimator.ScrollAnimator
+	 * @memberof moonstone/Scroller.ScrollAnimator
 	 */
 	constructor (type) {
 		this.timingFunction = timingFunctions[type || this.type];
