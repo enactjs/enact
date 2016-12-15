@@ -37,12 +37,6 @@ const TransitionBase = kind({
 		childRef: PropTypes.func,
 
 		/**
-		 * TODO: disabling warning, remove after https://jira2.lgsvl.com/browse/PLAT-30066
-		 * @private
-		 */
-		classes: PropTypes.any,
-
-		/**
 		 * Specifies the height of the transition when `type` is set to `'clip'`.
 		 *
 		 * @type {Number}
@@ -71,15 +65,6 @@ const TransitionBase = kind({
 		 * @public
 		 */
 		duration: PropTypes.oneOf(['short', 'medium', 'long']),
-
-		/**
-		 * When `true`, the transition fills its container's size.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		fit: PropTypes.bool,
 
 		/**
 		 * When `true`, transition animation is disabled. When `false`, visibility changes animate.
@@ -125,7 +110,6 @@ const TransitionBase = kind({
 		noAnimation: false,
 		direction: 'up',
 		duration: 'medium',
-		fit: false,
 		timingFunction: 'ease-in-out',
 		type: 'slide',
 		visible: true
@@ -133,47 +117,50 @@ const TransitionBase = kind({
 
 	styles: {
 		css,
-		className: 'transitionFrame',
-		prop: 'classes'
+		className: 'transition'
 	},
 
 	computed: {
-		className: ({direction, duration, fit, timingFunction, type, visible, styler}) => styler.join(
-			fit ? 'enact-fit' : null,
-			'transition',
+		className: ({direction, duration, timingFunction, type, visible, styler}) => styler.append(
 			visible ? 'shown' : 'hidden',
 			direction && css[direction],
 			duration && css[duration],
 			timingFunction && css[timingFunction],
 			css[type]
 		),
-		style: ({clipHeight, type, visible, style}) => ({
+		style: ({clipHeight, type, visible, style}) => type === 'clip' ? {
 			...style,
-			height: ((type === 'clip') && visible) ? clipHeight : null,
-			overflow: (type === 'clip') ? 'hidden' : null
-		})
+			height: visible ? clipHeight : null,
+			overflow: 'hidden'
+		} : style,
+		childRef: ({childRef, noAnimation}) => noAnimation ? null : childRef
 	},
 
-	render: ({noAnimation, classes, childRef, children, visible, ...rest}) => {
+	render: ({childRef, children, noAnimation, type, visible, ...rest}) => {
 		delete rest.clipHeight;
 		delete rest.direction;
 		delete rest.duration;
-		delete rest.fit;
 		delete rest.timingFunction;
-		delete rest.type;
 
-		if (!noAnimation) {
+		if (noAnimation && !visible) {
+			return null;
+		}
+
+		if (type === 'slide') {
 			return (
-				<div className={classes}>
+				<div className={css.transitionFrame}>
 					<div {...rest} ref={childRef}>
 						{children}
 					</div>
 				</div>
 			);
-		} else if (visible) {
-			return <div {...rest}>{children}</div>;
+		} else {
+			return (
+				<div {...rest} ref={childRef}>
+					{children}
+				</div>
+			);
 		}
-		return null;
 	}
 });
 

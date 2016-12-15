@@ -25,8 +25,8 @@ describe('FloatingLayer Specs', () => {
 	it('should render if FloatingLayer is open', () => {
 		const wrapper = mount(<FloatingLayerBase open><p>Hi</p></FloatingLayerBase>);
 
-		const expected = 'P';
-		const actual = wrapper.instance().node.firstElementChild.firstElementChild.tagName;
+		const expected = 1;
+		const actual = wrapper.instance().node.querySelectorAll('p').length;
 		expect(actual).to.equal(expected);
 	});
 });

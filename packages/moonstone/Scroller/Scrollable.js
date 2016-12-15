@@ -217,14 +217,14 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			this.verticalScrollbarProps = {
 				ref: this.initRef('scrollbarVerticalRef'),
-				isVertical: true,
+				vertical: true,
 				onPrevScroll: this.initScrollbarBtnHandler('vertical', -1),
 				onNextScroll: this.initScrollbarBtnHandler('vertical', 1)
 			};
 
 			this.horizontalScrollbarProps = {
 				ref: this.initRef('scrollbarHorizontalRef'),
-				isVertical: false,
+				vertical: false,
 				onPrevScroll: this.initScrollbarBtnHandler('horizontal', -1),
 				onNextScroll: this.initScrollbarBtnHandler('horizontal', 1)
 			};
