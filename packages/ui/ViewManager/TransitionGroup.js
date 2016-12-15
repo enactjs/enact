@@ -1,5 +1,5 @@
 /**
- * Exports the {@link ui/ViewManager.TransitionGroup} component.
+ * Exports the {@link ui/ViewManager/TransitionGroup.TransitionGroup} component.
  *
  * @module ui/ViewManager/TransitionGroup
  * @private

@@ -1,5 +1,5 @@
 /**
- * Exports the {@link ui/ViewManager.View} component.
+ * Exports the {@link ui/ViewManager/View.View} component.
  *
  * @module ui/ViewManager/View
  * @private
@@ -146,6 +146,7 @@ class View extends React.Component {
 	 * @param	{Function}	callback		Completion callback
 	 * @param	{Boolean}	[noAnimation]	`true` to disable animation for this transition
 	 * @returns {undefined}
+	 * @private
 	 */
 	prepareTransition = (arranger, callback, noAnimation) => {
 		const {duration, index, previousIndex, reverseTransition} = this.props;
@@ -202,6 +203,7 @@ class View extends React.Component {
 	 * @param  {Number}   step     Current step > 0 and <= total steps for transition
 	 * @param  {Function} callback Completion callback
 	 * @returns {undefined}
+	 * @private
 	 */
 	transition = (step, callback) => {
 		this.setState({step});

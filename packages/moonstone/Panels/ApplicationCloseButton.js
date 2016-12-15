@@ -26,7 +26,7 @@ import css from './ApplicationCloseButton.less';
 const ApplicationCloseButton = kind({
 	name: 'ApplicationCloseButton',
 
-	propTypes: /** @lends moonstone/Panels/ApplicationCloseButton.prototype */ {
+	propTypes: /** @lends moonstone/Panels/ApplicationCloseButton.ApplicationCloseButton.prototype */ {
 		/**
 		 * A function to run when app close button is clicked
 		 *

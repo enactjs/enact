@@ -2,7 +2,8 @@
  * Exports the {@link moonstone/Picker.PickerCore} component.
  * The default export is {@link moonstone/Picker.PickerCore}.
  *
- * @module moonstone/Picker
+ * @module moonstone/Picker/PickerCore
+ * @private
  */
 
 import * as jobs from '@enact/core/jobs';
@@ -51,18 +52,18 @@ const emulateMouseEventsTimeout = 175;
 const TransparentIconButton = (props) => <IconButton {...props} backgroundOpacity="transparent" />;
 
 /**
- * The base component for {@link moonstone/Picker.PickerCore}.
+ * The base component for {@link moonstone/Picker/PickerCore.PickerCore}.
  *
  * @class PickerCore
- * @memberof moonstone/Picker
+ * @memberof moonstone/Picker/PickerCore
  * @ui
- * @public
+ * @private
  */
 
 const PickerCore = class extends React.Component {
 	static displayName = 'PickerCore'
 
-	static propTypes = {
+	static propTypes = /** @lends moonstone/Picker/PickerCore.PickerCore.prototype */ {
 		/**
 		 * Index for internal ViewManager
 		 *

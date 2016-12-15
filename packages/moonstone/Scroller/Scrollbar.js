@@ -69,15 +69,6 @@ class Scrollbar extends Component {
 		className: PropTypes.any,
 
 		/**
-		* If `true`, the scrollbar will be oriented vertically.
-		*
-		* @type {Boolean}
-		* @default true
-		* @public
-		*/
-		vertical: PropTypes.bool,
-
-		/**
 		 * Called when the scrollbar's down/right button is pressed.
 		 *
 		 * @type {Function}
@@ -91,7 +82,16 @@ class Scrollbar extends Component {
 		 * @type {Function}
 		 * @public
 		 */
-		onPrevScroll: PropTypes.func
+		onPrevScroll: PropTypes.func,
+
+		/**
+		 * If `true`, the scrollbar will be oriented vertically.
+		 *
+		 * @type {Boolean}
+		 * @default true
+		 * @public
+		 */
+		vertical: PropTypes.bool
 	}
 
 	static contextTypes = contextTypes

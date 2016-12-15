@@ -11,7 +11,7 @@ import React from 'react';
 /**
  * Default config for {@link ui/FloatingLayer/FloatingLayerDecorator.FloatingLayerDecorator}.
  *
- * @memberof ui/FloatingLayer/FloatingLayerDecorator
+ * @memberof ui/FloatingLayer.FloatingLayerDecorator
  * @hocconfig
  */
 const defaultConfig = {
@@ -21,7 +21,7 @@ const defaultConfig = {
 	 * @type {String}
 	 * @default 'floatLayer'
 	 * @public
-	 * memberof ui/FloatingLayer/FloatingLayerDecorator.defaultConfig
+	 * @memberof ui/FloatingLayer.FloatingLayerDecorator.defaultConfig
 	 */
 	floatLayerId: 'floatLayer',
 
@@ -32,6 +32,7 @@ const defaultConfig = {
 	 * @type {String}
 	 * @default ''
 	 * @public
+	 * @memberof ui/FloatingLayer.FloatingLayerDecorator.defaultConfig
 	 */
 	wrappedClassName: ''
 };
@@ -40,7 +41,7 @@ const defaultConfig = {
  * Higher-order Component that adds a FloatingLayer adjacent to wrapped component.
  *
  * @class FloatingLayerDecorator
- * @memberof ui/FloatingLayer/FloatingLayerDecorator
+ * @memberof ui/FloatingLayer
  * @hoc
  * @public
  */

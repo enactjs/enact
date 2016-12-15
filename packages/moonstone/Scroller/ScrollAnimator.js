@@ -64,6 +64,7 @@ class ScrollAnimator {
 	 *	`'linear'`, `'ease-in'`, `'ease-out'`, or `'ease-in-out'`, or null. If `null`, defaults to
 	 *	`'ease-out'`.
 	 * @constructor
+	 * @memberof moonstone/Scroller/ScrollAnimator.ScrollAnimator
 	 */
 	constructor (type) {
 		this.timingFunction = timingFunctions[type || this.type];

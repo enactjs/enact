@@ -1,9 +1,10 @@
 /**
  * Exports the {@link moonstone/Scroller/Scrollable.Scrollable} Higher-order Component (HOC) and
- * the {@link constant:@enact/moonstone/Scroller/Scrollable.dataIndexAttribute} constant.
+ * the {@link moonstone/Scroller/Scrollable.dataIndexAttribute} constant.
  * The default export is {@link moonstone/Scroller/Scrollable.Scrollable}.
  *
  * @module moonstone/Scroller/Scrollable
+ * @private
  */
 
 import clamp from 'ramda/src/clamp';
@@ -36,7 +37,8 @@ const
  *
  * @constant dataIndexAttribute
  * @type {String}
- * @public
+ * @private
+ * @memberof moonstone/Scroller/Scrollable
  */
 const dataIndexAttribute = 'data-index';
 
@@ -53,11 +55,11 @@ const dataIndexAttribute = 'data-index';
  * @class Scrollable
  * @memberof moonstone/Scroller/Scrollable
  * @hoc
- * @public
+ * @private
  */
 const ScrollableHoC = hoc((config, Wrapped) => {
 	return class Scrollable extends Component {
-		static propTypes = {
+		static propTypes = /** @lends moonstone/Scroller/Scrollable.Scrollable.prototype */ {
 			/**
 			 * The callback function which is called for linking scrollTo function.
 			 * You should specify a callback function as the value of this prop

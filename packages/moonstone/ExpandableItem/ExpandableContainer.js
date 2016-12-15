@@ -26,6 +26,7 @@ const ExpandableContainerBase = class extends React.Component {
 		 * @type {String}
 		 * @default ''
 		 * @public
+		 * @memberof moonstone/ExpandableItem/ExpandableContainer.ExpandableContainerBase.prototype
 		 */
 		'data-container-id': React.PropTypes.string,
 

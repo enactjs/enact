@@ -12,7 +12,7 @@ import css from './Overlay.less';
  * property.
  *
  * @class OverlayDecorator
- * @memberOf moonstone/Item
+ * @memberof moonstone/Item
  * @hoc
  * @public
  */

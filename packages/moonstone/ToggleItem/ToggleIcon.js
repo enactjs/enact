@@ -10,7 +10,7 @@ import css from './ToggleItem.less';
  * {@link moonstone/ToggleItem.ToggleItem}.
  *
  * @class ToggleIcon
- * @memberOf moonstone/ToggleItem
+ * @memberof moonstone/ToggleItem
  * @ui
  * @private
  */
