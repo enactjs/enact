@@ -22,6 +22,10 @@
 		color: @moon-tooltip-text-color;
 		background-color: @moon-tooltip-bg-color;
 		border-radius: @moon-tooltip-border-radius;
+
+		&.multi {
+			white-space: normal;
+		}
 	}
 
 	&.below {
@@ -43,6 +47,7 @@
 			}
 
 			.tooltipLabel {
+				text-align: right;
 				border-top-right-radius: 0;
 			}
 		}
@@ -76,6 +81,7 @@
 			}
 
 			.tooltipLabel {
+				text-align: right;
 				border-bottom-right-radius: 0;
 			}
 		}

@@ -91,12 +91,21 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 				'right bottom', 'right middle', 'right top']),
 
 			/**
-			 * The node to be displayed as the main content of the tooltip.
+			 * The text to be displayed as the main content of the tooltip.
 			 *
-			 * @type {React.node}
+			 * @type {String}
 			 * @public
 			 */
-			tooltipText: PropTypes.node
+			tooltipText: PropTypes.string,
+
+			/**
+			 * The width of tooltip content in pixels (px). If the content goes over the given width,
+			 * then it will automatically wrap texts.
+			 *
+			 * @type {Number}
+			 * @public
+			 */
+			tooltipWidth: PropTypes.number
 		}
 
 		static defaultProps = {
@@ -275,10 +284,9 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 		}
 
 		render () {
-			const {children, preserveCase, tooltipText, ...rest} = this.props;
+			const {children, preserveCase, tooltipText, tooltipWidth, ...rest} = this.props;
 			const props = Object.assign({}, rest);
 			delete props.showDelay;
-			delete props.tooltipText;
 			delete props.tooltipPosition;
 
 			return (
@@ -292,6 +300,7 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 						<Tooltip
 							type={this.state.type}
 							position={this.state.position}
+							width={tooltipWidth}
 							arrowType={this.state.arrowType}
 							tooltipRef={this.getTooltipRef}
 							preserveCase={preserveCase}
