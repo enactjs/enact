@@ -270,17 +270,11 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.clientNode = node;
 		}
 
-		handleClick = (ev) => {
-			this.setState({open: !this.state.open});
-			this.props.onClick(ev);
-		}
-
 		render () {
-			const {children, showCloseButton, popupComponent: PopupComponent, popupClassName, open, onCloseButtonClick, ...props} = this.props;
+			const {showCloseButton, popupComponent: PopupComponent, popupClassName, open, onCloseButtonClick, ...props} = this.props;
 
 			return (
-				<Wrapped {...props} onClick={this.handleClick}>
-					{children}
+				<div className={css.contextualPopupDecorator}>
 					{open ?
 						<ContextualPopup
 							className={popupClassName}
@@ -295,7 +289,10 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						</ContextualPopup> :
 						null
 					}
-				</Wrapped>
+					<div ref={this.getClientNode}>
+						<Wrapped {...props} />
+					</div>
+				</div>
 			);
 		}
 	};
