@@ -12,8 +12,7 @@
 		}
 		.knob {
 			background-color: @moon-slider-spotlight-knob-color;
-			border: @moon-button-border-width solid @moon-slider-spotlight-knob-color;
-			border-style: inherit;
+			border-width: 0; // Setting the border-width:0 removes the border and lets the background fill the entire size that was previously cropped off by the border.
 		}
 	}
 
@@ -51,7 +50,7 @@
 		border: @moon-button-border-width solid transparent;
 		box-sizing: border-box;
 		will-change: transform;
-		-webkit-background-clip: padding;
+		background-clip: padding-box;
 	}
 
 	.input {
