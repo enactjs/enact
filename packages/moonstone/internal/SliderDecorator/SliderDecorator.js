@@ -163,19 +163,13 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			this.jobName = `sliderChange${now()}`;
 			this.state = {
-				value: props.value
+				value: clamp(props.min, props.max, props.value)
 			};
 		}
 
 		componentWillReceiveProps (nextProps) {
 			if (nextProps.value !== this.props.value) {
 				this.updateValue(nextProps.value);
-			}
-		}
-
-		shouldComponentUpdate(nextProps){
-			if (nextProps.min > this.props.value || nextProps.max < this.props.value) {
-				return false;
 			}
 		}
 
@@ -212,7 +206,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.setState({value});
 			this.onChange(value);
 		}
-
 
 		getInputNode = (node) => {
 			this.inputNode = node;
