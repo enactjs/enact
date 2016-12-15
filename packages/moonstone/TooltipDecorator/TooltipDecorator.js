@@ -1,6 +1,6 @@
 /**
- * Exports the {@link moonstone/TooltipDecorator.TooltipDecorator}, {@link moonstone/TooltipDecorator/Tooltip.Tooltip} and
- * {@link moonstone/TooltipDecorator/Tooltip.TooltipBase} components.
+ * Exports the {@link moonstone/TooltipDecorator.TooltipDecorator}, {@link moonstone/TooltipDecorator/Tooltip.Tooltip}
+ * and {@link moonstone/TooltipDecorator/Tooltip.TooltipBase} components.
  * The default export is {@link moonstone/TooltipDecorator.TooltipDecorator}.
  *
  * @module moonstone/ContextualPopup
@@ -72,23 +72,20 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 
 			/**
 			 * Position of the tooltip with respect to the activating control. Valid values are
-			 * `'above'`, `'above center'`, `'above left'`, `'above right'`, `'below'`, `'below center'`, `'below left'`, `'below right'`,
-			 * `'left bottom'`, `'left middle'`, `'left top'`, `'right bottom'`, `'right middle'`, `'right top'`, `'auto'`.
+			 * `'above'`, `'above center'`, `'above left'`, `'above right'`, `'below'`, `'below center'`,
+			 * `'below left'`, `'below right'`, `'left bottom'`, `'left middle'`, `'left top'`,
+			 * `'right bottom'`, `'right middle'`, `'right top'`.
 			 * The values starting with `'left`' and `'right'` place the tooltip on the side
 			 * (sideways tooltip) with two additional positions available, `'top'` and `'bottom'`, which
 			 * places the tooltip content toward the top or bottom, with the tooltip pointer
 			 * middle-aligned to the activator.
 			 *
-			 * Note: The sideways tooltip does not automatically switch sides if it gets too close or
-			 * overlaps with the window bounds, as this may cause undesirable layout implications,
-			 * covering your other controls.
-			 *
 			 * @type {String}
-			 * @default 'auto'
+			 * @default 'above'
 			 * @public
 			 */
 			tooltipPosition: PropTypes.oneOf([
-				'auto', 'above', 'above center', 'above left', 'above right',
+				'above', 'above center', 'above left', 'above right',
 				'below', 'below center', 'below left', 'below right',
 				'left bottom', 'left middle', 'left top',
 				'right bottom', 'right middle', 'right top']),
@@ -105,7 +102,7 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 		static defaultProps = {
 			preserveCase: false,
 			showDelay: 500,
-			tooltipPosition: 'auto'
+			tooltipPosition: 'above'
 		}
 
 		static contextTypes = contextTypes
@@ -113,131 +110,134 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 		constructor (props) {
 			super(props);
 
+			this.overflow = {};
+			this.TOOLTIP_HEIGHT = ri.scale(18); // distance between client and tooltip's label
+
 			this.state = {
 				showing: false,
-				type: 'above leftArrow',
-				position: {
-					left: 0,
-					top: 0
-				},
+				type: '',
+				position: {top: 0, left: 0},
 				arrowType: 'corner'
 			};
 		}
 
 		adjustPosition () {
 			const position = this.props.tooltipPosition;
-			let tPos; // tooltip position
-			let aPos; // arrow position
-			let r;
-			let arr;
+			const arr = position.split(' ');
 
-			if ((arr = position.split(' ')).length === 2) {
-				[tPos, aPos] = arr;
+			if (arr.length === 2) {
+				[this.tooltipDirection, this.arrowAnchor] = arr;
 			} else if (position === 'above' || position === 'below') {
-				tPos = position;
-				aPos = 'left';
+				this.tooltipDirection = position;
+				this.arrowAnchor = 'left';
 			} else {
-				tPos = 'below';
-				aPos = 'left';
+				this.tooltipDirection = 'above';
+				this.arrowAnchor = 'left';
 			}
 
 			if (this.context.rtl) {
-				if (tPos === 'above' || tPos === 'below') {
-					aPos = aPos === 'left' ? 'right' : 'left';
-				} else if (tPos === 'left' || tPos === 'right') {
-					tPos = tPos === 'left' ? 'right' : 'left';
+				if (this.tooltipDirection === 'above' || this.tooltipDirection === 'below') {
+					this.arrowAnchor = this.arrowAnchor === 'left' ? 'right' : 'left';
+				} else if (this.tooltipDirection === 'left' || this.tooltipDirection === 'right') {
+					this.tooltipDirection = this.tooltipDirection === 'left' ? 'right' : 'left';
 				}
 			}
 
-			r = this.calcPosition(tPos, aPos);
+			const tooltipNode = this.tooltipRef.getBoundingClientRect(); // label bound
+			const clientNode = this.clientRef.getBoundingClientRect(); // clinet bound
 
-			if (tPos === 'above' || tPos === 'below') {
-				let isCalculate = false;
-
-				if (aPos === 'left' && r.tX + r.tW > window.innerWidth || aPos === 'right' && r.tX < 0) {
-					isCalculate = true;
-					aPos = aPos === 'left' ? 'right' : 'left';
-				}
-
-				if (tPos === 'below' && r.tY + r.tH > window.innerHeight ||  tPos === 'above' && r.tY < 0 ) {
-					isCalculate = true;
-					tPos = tPos === 'above' ? 'below' : 'above';
-				}
-
-				if (isCalculate) {
-					r = this.calcPosition(tPos, aPos);
-				}
-			}
+			this.calcOverflow(tooltipNode, clientNode);
+			this.adjustDirection();
 
 			this.setState({
-				type: tPos + ' ' + aPos + 'Arrow',
-				position: {
-					top: r.tY,
-					left: r.tX
-				},
-				arrowType: aPos === 'center' || aPos === 'middle' ? 'edge' : 'corner'
+				type: this.tooltipDirection + ' ' + this.arrowAnchor + 'Arrow',
+				position: this.setPosition(tooltipNode, clientNode),
+				arrowType: this.arrowAnchor === 'center' || this.arrowAnchor === 'middle' ? 'edge' : 'corner'
 			});
 		}
 
-		calcPosition (tPos, aPos) {
-			const cBound = this.clientRef.getBoundingClientRect(); // clinet bound
-			const lBound = this.tooltipRef.getBoundingClientRect(); // label bound
-			const tooltipDistance = ri.scale(18); // distance between client and tooltip's label
-			let tX, tY; // tooltip position
+		calcOverflow (tooltip, clientNode) {
+			if (this.tooltipDirection === 'above' || this.tooltipDirection === 'below') {
+				this.overflow = {
+					isOverTop: clientNode.top - tooltip.height - this.TOOLTIP_HEIGHT < 0,
+					isOverBottom: clientNode.bottom + tooltip.height + this.TOOLTIP_HEIGHT > window.innerHeight,
+					isOverLeft: clientNode.left - tooltip.width + (clientNode.width) / 2 < 0,
+					isOverRight: clientNode.right + tooltip.width - (clientNode.width) / 2 > window.innerWidth
+				};
+			} else if (this.tooltipDirection === 'left' || this.tooltipDirection === 'right') {
+				this.overflow = {
+					isOverTop: clientNode.top - (tooltip.height - clientNode.height) / 2 < 0,
+					isOverBottom: clientNode.bottom + (tooltip.height - clientNode.height) / 2 > window.innerHeight,
+					isOverLeft: clientNode.left - tooltip.width - this.TOOLTIP_HEIGHT < 0,
+					isOverRight: clientNode.right + tooltip.width + this.TOOLTIP_HEIGHT > window.innerWidth
+				};
+			}
+		}
 
-			switch (tPos) {
-				case 'below':
-					tX = cBound.left + cBound.width / 2;
-					tY = cBound.bottom + tooltipDistance;
-
-					if (aPos === 'right') {
-						tX -= lBound.width;
-					} else if (aPos === 'center') {
-						tX -= lBound.width / 2;
-					}
-					break;
-				case 'above':
-					tX = cBound.left + cBound.width / 2;
-					tY = cBound.top - lBound.height - tooltipDistance;
-
-					if (aPos === 'right') {
-						tX -= lBound.width;
-					} else if (aPos === 'center') {
-						tX -= lBound.width / 2;
-					}
-					break;
-				case 'left':
-					tX = cBound.left - lBound.width - tooltipDistance;
-					tY = cBound.top + cBound.height / 2;
-
-					if (aPos === 'top') {
-						tY -= lBound.height;
-					} else if (aPos === 'middle') {
-						tY -= lBound.height / 2;
-					}
-					break;
-				case 'right':
-					tX = cBound.right + tooltipDistance;
-					tY = cBound.top + cBound.height / 2;
-
-					if (aPos === 'top') {
-						tY -= lBound.height;
-					} else if (aPos === 'middle') {
-						tY -= lBound.height / 2;
-					}
-					break;
-				default:
-					tX = 0;
-					tY = 0;
-					break;
+		adjustDirection () {
+			// Flip tooltip if it overlows towards the tooltip direction
+			if (this.overflow.isOverTop && this.tooltipDirection === 'above') {
+				this.tooltipDirection = 'below';
+			} else if (this.overflow.isOverBottom && this.tooltipDirection === 'below') {
+				this.tooltipDirection = 'above';
+			} else if (this.overflow.isOverLeft && this.tooltipDirection === 'left') {
+				this.tooltipDirection = 'right';
+			} else if (this.overflow.isOverRight && this.tooltipDirection === 'right') {
+				this.tooltipDirection = 'left';
 			}
 
-			return {
-				tX: tX,
-				tY: tY,
-				tW: lBound.width,
-				tH: lBound.height
-			};
+			// Flip sideways for 'above' and 'below' if it overflows to the sides
+			if (this.tooltipDirection === 'above' || this.tooltipDirection === 'below') {
+				if (this.overflow.isOverRight) {
+					this.arrowAnchor = 'right';
+				} else if (this.overflow.isOverLeft) {
+					this.arrowAnchor = 'left';
+				}
+			}
+		}
+
+		setPosition (tooltipNode, clientNode) {
+			let position = {};
+			switch (this.tooltipDirection) {
+				case 'above':
+					position.top = clientNode.top - tooltipNode.height - this.TOOLTIP_HEIGHT;
+					break;
+				case 'below':
+					position.top = clientNode.bottom + this.TOOLTIP_HEIGHT;
+					break;
+				case 'right':
+					position = {
+						left: clientNode.right + this.TOOLTIP_HEIGHT
+					};
+					break;
+				case 'left':
+					position = {
+						left: clientNode.left - tooltipNode.width - this.TOOLTIP_HEIGHT
+					};
+					break;
+				default:
+					position = {};
+			}
+
+			if (this.tooltipDirection === 'above' || this.tooltipDirection === 'below') {
+				position.left = clientNode.left + clientNode.width / 2;
+
+				if (this.arrowAnchor === 'right') {
+					position.left -= tooltipNode.width;
+				} else if (this.arrowAnchor === 'center') {
+					position.left -= tooltipNode.width / 2;
+				}
+			} else if (this.tooltipDirection === 'left' || this.tooltipDirection === 'right') {
+				position.top = clientNode.top + clientNode.height / 2;
+
+				if (this.arrowAnchor === 'top') {
+					position.top -= tooltipNode.height;
+				} else if (this.arrowAnchor === 'middle') {
+					position.top -= tooltipNode.height / 2;
+				}
+			}
+
+			return position;
 		}
 
 		handleFocus = (e) => {
