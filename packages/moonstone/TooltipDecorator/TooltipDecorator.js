@@ -1,9 +1,9 @@
 /**
- * Exports the {@link moonstone/TooltipDecorator.TooltipDecorator}, {@link moonstone/TooltipDecorator/Tooltip.Tooltip}
- * and {@link moonstone/TooltipDecorator/Tooltip.TooltipBase} components.
- * The default export is {@link moonstone/TooltipDecorator.TooltipDecorator}.
+ * Exports the {@link moonstone/TooltipDecorator.TooltipDecorator} Higher-order Component (HOC),
+ * {@link moonstone/TooltipDecorator/Tooltip.Tooltip} and {@link moonstone/TooltipDecorator/Tooltip.TooltipBase}
+ * components. The default export is {@link moonstone/TooltipDecorator.TooltipDecorator}.
  *
- * @module moonstone/ContextualPopup
+ * @module moonstone/TooltipDecorator
  */
 
 import {hoc} from '@enact/core';

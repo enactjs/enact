@@ -1,9 +1,9 @@
 /**
- * Exports the {@link moonstone/ContextualPopupDecorator.ContextualPopupDecorator} and
- * {@link moonstone/ContextualPopupDecorator/ContextualPopup.ContextualPopup} components.
- * The default export is {@link moonstone/ContextualPopupDecorator.ContextualPopupDecorator}.
+ * Exports the {@link moonstone/ContextualPopupDecorator.ContextualPopupDecorator} Higher-order
+ * Component (HOC) and {@link moonstone/ContextualPopupDecorator/ContextualPopup.ContextualPopup}
+ * component. The default export is {@link moonstone/ContextualPopupDecorator.ContextualPopupDecorator}.
  *
- * @module moonstone/ContextualPopup
+ * @module moonstone/ContextualPopupDecorator
  */
 
 import {hoc} from '@enact/core';
