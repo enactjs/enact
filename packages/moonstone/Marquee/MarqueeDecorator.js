@@ -344,8 +344,12 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{undefined}
 		 */
 		start = (delay = this.props.marqueeDelay) => {
-			if (this.sync && this.contentFits) {
-				this.context.complete(this);
+			if (this.contentFits) {
+				// if marquee isn't necessary (contentFits), do not set `animating` but do mark it
+				// complete if its synchronized so it doesn't block other instances.
+				if (this.sync) {
+					this.context.complete(this);
+				}
 			} else if (!this.state.animating) {
 				this.setTimeout(() => {
 					this.setState({
@@ -374,7 +378,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {undefined}
 		 */
 		startAnimation = (delay) => {
-			if (this.state.animating || this.contentFits) return;
+			if (this.state.animating) return;
 
 			if (this.sync) {
 				this.context.start(this);
