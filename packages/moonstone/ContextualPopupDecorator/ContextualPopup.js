@@ -1,9 +1,3 @@
-/**
- * Exports the {@link moonstone/ContextualPopupDecorator/ContextualPopup.ContextualPopup} component.
- *
- * @module moonstone/ContextualPopupDecorator/ContextualPopup
- */
-
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 
@@ -18,12 +12,12 @@ import css from './ContextualPopup.less';
  * @class ContextualPopupArrow
  * @ui
  * @private
- * @memberof moonstone/ContextualPopupDecorator/ContextualPopup
+ * @memberof moonstone/ContextualPopupDecorator
  */
 const ContextualPopupArrow = kind({
 	name: 'ContextualPopupArrow',
 
-	propTypes: /* @lends moonstone/ContextualPopupDecorator/ContextualPopup.ContextualPopupArrow.prototype */ {
+	propTypes: /** @lends moonstone/ContextualPopupDecorator.ContextualPopupArrow.prototype */ {
 		direction: PropTypes.oneOf(['up', 'down', 'left', 'right'])
 	},
 
@@ -53,14 +47,14 @@ const ContextualPopupArrow = kind({
  * appears in context to an activator.
  *
  * @class ContextualPopup
- * @memberof moonstone/ContextualPopupDecorator/ContextualPopup
+ * @memberof moonstone/ContextualPopupDecorator
  * @ui
  * @public
  */
 const ContextualPopupBase = kind({
 	name: 'ContextualPopup',
 
-	propTypes: /* @lends moonstone/ContextualPopupDecorator/ContextualPopup.ContextualPopup.prototype */ {
+	propTypes: /** @lends moonstone/ContextualPopupDecorator.ContextualPopup.prototype */ {
 		/**
 		 * The element(s) to be displayed in the body of the popup.
 		 *

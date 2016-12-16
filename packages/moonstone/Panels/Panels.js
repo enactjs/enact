@@ -1,10 +1,3 @@
-/**
- * Exports the {@link moonstone/Panels.Panels} and {@link moonstone/Panels.PanelBase}
- * components. The default export is {@link moonstone/Panels.PanelsBase}.
- *
- * @module @enact/moonstone/Panels
- */
-
 import kind from '@enact/core/kind';
 import React from 'react';
 import {shape} from '@enact/ui/ViewManager';

@@ -18,6 +18,7 @@ import {breadcrumbWidth} from './Breadcrumb';
  * @param {Function} f forward function
  * @param {Function} b backward function
  * @returns {Function} Arrangement function
+ * @private
  */
 const forwardBackward = (f, b) => (config) => {
 	const f2 = config.reverseTransition ? b : f;
@@ -29,6 +30,7 @@ const forwardBackward = (f, b) => (config) => {
  *
  * @param   {Function} fn Arrangement function
  * @returns {Function}    Composed arrangement function
+ * @private
  */
 const base = (fn) => reverse(
 	ease(quadInOut,
@@ -50,6 +52,7 @@ const panelLeave = forwardBackward(slideOutLeft, endBy(0.75, slideOutLeft));
  * Arranger that slides panels in from the right and out to the left
  *
  * @type {Arranger}
+ * @private
  */
 export const AlwaysViewingArranger = {
 	enter: panelEnter,
@@ -65,6 +68,7 @@ export const AlwaysViewingArranger = {
  * @param  {Number} options.percent Percentage complete between 0 and 1
  *
  * @returns {undefined}
+ * @private
  */
 const offsetForBreadcrumbs = ({node, percent}) => {
 	const x = breadcrumbWidth * percent;
@@ -83,6 +87,7 @@ const notToFirst = complement(toFirst);
  * breadcrumb when `to` index is greater than zero.
  *
  * @type {Arranger}
+ * @private
  */
 export const ActivityArranger = {
 	enter: compose(panelEnter, reverse(when(either(notToFirst, toFirstReverse), offsetForBreadcrumbs))),
