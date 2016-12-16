@@ -161,15 +161,15 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 				this.overflow = {
 					isOverTop: clientNode.top - tooltip.height - this.TOOLTIP_HEIGHT < 0,
 					isOverBottom: clientNode.bottom + tooltip.height + this.TOOLTIP_HEIGHT > window.innerHeight,
-					isOverLeft: clientNode.left - tooltip.width + (clientNode.width) / 2 < 0,
-					isOverRight: clientNode.right + tooltip.width - (clientNode.width) / 2 > window.innerWidth
+					isOverLeft: clientNode.left - tooltip.width + clientNode.width / 2 < 0,
+					isOverRight: clientNode.right + tooltip.width - clientNode.width / 2 > window.innerWidth
 				};
 			} else if (this.tooltipDirection === 'left' || this.tooltipDirection === 'right') {
 				this.overflow = {
-					isOverTop: clientNode.top - (tooltip.height - clientNode.height) / 2 < 0,
-					isOverBottom: clientNode.bottom + (tooltip.height - clientNode.height) / 2 > window.innerHeight,
-					isOverLeft: clientNode.left - tooltip.width - this.TOOLTIP_HEIGHT < 0,
-					isOverRight: clientNode.right + tooltip.width + this.TOOLTIP_HEIGHT > window.innerWidth
+					isOverTop: clientNode.top - tooltip.height + clientNode.height / 2 < 0,
+					isOverBottom: clientNode.bottom + tooltip.height - clientNode.height / 2 > window.innerHeight,
+					isOverLeft: clientNode.left - tooltip.width < 0,
+					isOverRight: clientNode.right + tooltip.width > window.innerWidth
 				};
 			}
 		}
