@@ -10,11 +10,10 @@
 import React from 'react';
 
 import Video, {Overlay} from 'react-html5video';
-import {withArgs as handle, forward} from '@enact/core/handle';
+import {forward} from '@enact/core/handle';
 import {startJob, stopJob} from '@enact/core/jobs';
 import {$L} from '@enact/i18n';
-// import {childrenEquals} from '@enact/core/util';
-import shouldUpdate from 'recompose/shouldUpdate';
+import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 
 import {calcNumberValueOfPlaybackRate, getNow} from './util';
 import Times from './Times';
@@ -28,12 +27,7 @@ import {SpotlightContainerDecorator} from '@enact/spotlight';
 
 import css from './VideoPlayer.less';
 
-const MediaSlider = shouldUpdate((props, nextProps) => {
-	return (
-		props.backgroundPercent !== nextProps.backgroundPercent ||
-		props.value !== nextProps.value
-	);
-})(SliderFactory({css}));
+const MediaSlider = onlyUpdateForKeys(['backgroundPercent', 'value'])(SliderFactory({css}));
 
 const Container = SpotlightContainerDecorator('div');
 
@@ -83,7 +77,7 @@ const
 *	slowForward: ['1/4', '1/2'],
 *	slowRewind: ['-1/2', '-1']
 * }
-* @public
+* @private
 */
 const playbackRateHash = {
 	fastForward: ['2', '4', '8', '16'],
@@ -160,26 +154,21 @@ const VideoPlayerBase = class extends React.Component {
 
 			React.Children.forEach(this.props.children, (child) => {
 				if (child.type === 'source') {
-					prevSource = child.props.children || child.props.src;
+					prevSource = child.props.src;
 				}
 			});
 			React.Children.forEach(nextProps.children, (child) => {
 				if (child.type === 'source') {
-					nextSource = child.props.children || child.props.src;
+					nextSource = child.props.src;
 				}
 			});
 
 			if (prevSource !== nextSource) {
-				// console.log('Rendering new video:', nextSource);
 				this.reloadVideo();
 				this.setState({videoSource: nextSource});
 			}
 		}
 	}
-
-	// getChildContext = () => {
-	// 	return {video: this.video};
-	// }
 
 
 	//
@@ -477,14 +466,10 @@ const VideoPlayerBase = class extends React.Component {
 	//
 	handleDurationChange = (ev) => {
 		this.updateMainState();
-		// console.log('DurationChange:', ev);
-		// this.setState({videoPresent: true});
 		forwardDurationChange(ev, this.props);
 	}
 	handleLoadedMetadata = (ev) => {
 		this.updateMainState();
-		// console.log('LoadedMetadata:', this.video.videoEl);
-		// this.videoReady = true;
 		forwardLoadedMetadata(ev, this.props);
 	}
 	handleProgress = (ev) => {
@@ -640,9 +625,6 @@ const VideoPlayerBase = class extends React.Component {
 	}
 };
 
-VideoPlayerBase.contextTypes = {
-	video: React.PropTypes.object
-};
 const VideoPlayer = Slottable({slots: ['infoComponents', 'leftComponents', 'rightComponents']}, VideoPlayerBase);
 
 export default VideoPlayer;

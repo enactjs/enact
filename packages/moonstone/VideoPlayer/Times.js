@@ -8,7 +8,7 @@
  * @private
  */
 import React from 'react';
-import shouldUpdate from 'recompose/shouldUpdate';
+import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import kind from '@enact/core/kind';
 
 import {secondsToPeriod, secondsToTime} from './util';
@@ -69,12 +69,7 @@ const TimesBase = kind({
 	}
 });
 
-const Times = shouldUpdate((props, nextProps) => {
-	return (
-		props.current !== nextProps.current ||
-		props.total !== nextProps.total
-	);
-})(TimesBase);
+const Times = onlyUpdateForKeys(['current', 'total'])(TimesBase);
 
 export default Times;
 export {Times, TimesBase};

@@ -1,13 +1,16 @@
-// utils.js
+// VideoPlayer utils.js
 //
+import DurationFmt from '@enact/i18n/ilib/lib/DurationFmt';
 
-// const debug = (msg, val) => {
-// 	// if (typeof val === 'boolean' || )
-// 	console.log('%c' + msg + ': ' + (val ? 'FOUND!!!' : 'NOT FOUND'), 'color:' + (val ? 'green' : 'red'));
-// };
+const durfmt = new DurationFmt({length: 'medium', style: 'clock', useNative: false});
 
 
-// What time is it right this moment
+/**
+ * What time is it right this moment
+ *
+ * @return {Number} Current time in miliseconds.
+ * @public
+ */
 const getNow = function () {
 	if (typeof window === 'object') {
 		return window.performance.now();
@@ -16,35 +19,49 @@ const getNow = function () {
 	}
 };
 
-// const zeroPad = (num) => ((num < 10 && num >= 0) ? '0' + num : num);
-const padDigit = (val) => {
-	if (val) {
-		return (String(val).length < 2) ? '0' + val : val;
+/**
+ * Create a time object (hour, minute, second) from an amount of seconds
+ *
+ * @param  {Number|String} time A duration of time represented in seconds
+ *
+ * @return {Object}       An object with keys {hour, minute, second} representing the duration
+ *                        seconds provided as an argument.
+ * @public
+ */
+const parseTime = (value) => {
+	value = parseFloat(value);
+	const time = {};
+	const hour = Math.floor(value / (60 * 60));
+	time.minute = Math.floor((value / 60) % 60);
+	time.second = Math.floor(value % 60);
+	if (hour) {
+		time.hour = hour;
 	}
-	return '00';
+	return time;
 };
 
-// Create a time object (hours, minutes, seconds) from an amount of seconds
-const parseTime = (time) => {
-	// http://stackoverflow.com/questions/6312993/javascript-seconds-to-time-string-with-format-hhmmss
-	// by powtac on Jun 10 '11 at 23:27
-	time = parseInt(time); // don't forget the second param
-	const h   = Math.floor(time / 3600),
-		m = Math.floor((time - (h * 3600)) / 60),
-		s = time - (h * 3600) - (m * 60);
-
-	return {h, m, s};
+/**
+ * Generate a time usable by <time datetime />
+ *
+ * @param  {Number|String} seconds A duration of time represented in seconds
+ *
+ * @return {String}      String formatted for use in a `datetime` field of a `<time>` tag.
+ * @public
+ */
+const secondsToPeriod = (seconds) => {
+	return 'P' + seconds + 'S';
 };
 
-// Generate a time usable by <time datetime />
-const secondsToPeriod = (time) => {
-	return 'P' + time + 'S';
-};
-
-// Make a human-readable time
-const secondsToTime = (time) => {
-	time = parseTime(time);
-	return (time.h ? time.h + ':' : '') + padDigit(time.m) + ':' + padDigit(time.s);
+/**
+ * Make a human-readable time
+ *
+ * @param  {Number|String} seconds A duration of time represented in seconds
+ *
+ * @return {String}      Formatted duration string
+ * @public
+ */
+const secondsToTime = (seconds) => {
+	return durfmt.format(parseTime(seconds)).toString();
 };
 
 /**
@@ -61,7 +78,6 @@ const calcNumberValueOfPlaybackRate = (rate) => {
 export {
 	calcNumberValueOfPlaybackRate,
 	getNow,
-	padDigit,
 	parseTime,
 	secondsToPeriod,
 	secondsToTime
