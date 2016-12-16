@@ -19,12 +19,12 @@ const TooltipLabel = kind({
 
 	propTypes: {
 		/**
-		 * The text to be displayed as the main content of the tooltip.
+		 * The node to be displayed as the main content of the tooltip.
 		 *
-		 * @type {String}
+		 * @type {React.node}
 		 * @required
 		 */
-		children: PropTypes.string.isRequired,
+		children: PropTypes.node.isRequired,
 
 		/**
 		 * The method to run when the tooltip mounts/unmounts, giving a reference to the DOM.
@@ -88,12 +88,12 @@ const TooltipBase = kind({
 
 	propTypes: /** @lends moonstone/TooltipDecorator.TooltipBase.prototype */ {
 		/**
-		 * The text to be displayed as the main content of the tooltip.
+		 * The node to be displayed as the main content of the tooltip.
 		 *
-		 * @type {String}
+		 * @type {React.node}
 		 * @required
 		 */
-		children: PropTypes.string.isRequired,
+		children: PropTypes.node.isRequired,
 
 		/**
 		 * Position of tooltip arrow in relation to the activator; valid values are
