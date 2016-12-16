@@ -206,23 +206,17 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleMouseMove = (ev) => {
-			if (ev.buttons || this.props.vertical) return;	// We don't want to run this code if any mouse button is being held down. That indicates dragging.
+			// We don't want to run this code if any mouse button is being held down. That indicates dragging.
+			if (ev.buttons || this.props.vertical) return;
 
-			const {knobNode, node} = this.sliderBarNode,
-				{vertical} = this.props,
-				inputPos = this.inputNode.getBoundingClientRect(),
-				inputOffsetX = ev.clientX - inputPos.left,	// Relative position of the mouse on the input
-				barWidth = node.offsetWidth,
-				cs = window.getComputedStyle(this.inputNode),
-				inputPaddingLeft = parseFloat(cs.paddingLeft),
+			const {knobNode, node} = this.sliderBarNode;
 
-				// Don't let the positional value exceed the bar width, and account for the dead-space padding
-				offsetX = clamp(inputPaddingLeft, inputPaddingLeft + barWidth, inputOffsetX),
-				knobOffsetX = offsetX - inputPaddingLeft,	// Pretend the padding doesn't exist when calculating
-				knobProportion = knobOffsetX / barWidth;	// Proportion of the bar to offset by, in pixels
+			// Don't let the positional value exceed the bar width, and account for the dead-space padding
+			const min = parseFloat(window.getComputedStyle(this.inputNode).paddingLeft);
+			const pointer = ev.clientX - this.inputNode.getBoundingClientRect().left;
+			const knob = (clamp(min, min + node.offsetWidth, pointer) - min) / node.offsetWidth;
 
-			// console.log('mousemove:', offsetX, knobOffsetX, barWidth, knobProportion);
-			knobNode.style.transform = computeKnobTransform(knobProportion, vertical, node);
+			knobNode.style.transform = computeKnobTransform(knob, this.props.vertical, node);
 			forwardMouseMove(ev, this.props);
 		}
 
