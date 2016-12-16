@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import React, {Component, PropTypes} from 'react';
 import ri from '@enact/ui/resolution';
+import Holdable from '@enact/ui/Holdable';
 import Spotlight from '@enact/spotlight';
 import {startJob, stopJob} from '@enact/core/jobs';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
@@ -46,7 +47,8 @@ const
 	selectNextIcon = selectIcon(false),
 	// spotlight
 	doc = (typeof window === 'object') ? window.document : {},
-	perf = (typeof window === 'object') ? window.performance : {now: Date.now};
+	perf = (typeof window === 'object') ? window.performance : {now: Date.now},
+	HoldableIconButton = Holdable(IconButton);
 
 /**
  * {@link moonstone/Scroller.Scrollbar} is a Scrollbar with Moonstone styling.
@@ -90,9 +92,9 @@ class Scrollbar extends Component {
 	static contextTypes = contextTypes
 
 	static defaultProps = {
-		vertical: true,
 		onNextScroll: () => {},
-		onPrevScroll: () => {}
+		onPrevScroll: () => {},
+		vertical: true
 	}
 
 	autoHide = true
@@ -245,12 +247,12 @@ class Scrollbar extends Component {
 
 		return (
 			<div ref={this.initContainerRef} className={scrollbarClassNames}>
-				<IconButton backgroundOpacity="transparent" small disabled={prevButtonDisabled} className={prevButtonClass} onClick={clickPrevHandler}>
+				<HoldableIconButton backgroundOpacity="transparent" small disabled={prevButtonDisabled} className={prevButtonClass} onClick={clickPrevHandler} onHoldPulse={clickPrevHandler}>
 					{prevIcon}
-				</IconButton>
-				<IconButton backgroundOpacity="transparent" small disabled={nextButtonDisabled} className={nextButtonClass} onClick={clickNextHandler}>
+				</HoldableIconButton>
+				<HoldableIconButton backgroundOpacity="transparent" small disabled={nextButtonDisabled} className={nextButtonClass} onClick={clickNextHandler} onHoldPulse={clickNextHandler}>
 					{nextIcon}
-				</IconButton>
+				</HoldableIconButton>
 				<div ref={this.initThumbRef} className={thumbClass} />
 			</div>
 		);
