@@ -113,9 +113,9 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 
 			this.state = {
 				showing: false,
-				type: '',
-				position: {top: 0, left: 0},
-				arrowType: 'corner'
+				tooltipDirection: null,
+				arrowAnchor: null,
+				position: {top: 0, left: 0}
 			};
 		}
 
@@ -148,9 +148,9 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 			this.adjustDirection();
 
 			this.setState({
-				type: this.tooltipDirection + ' ' + this.arrowAnchor + 'Arrow',
-				position: this.setPosition(tooltipNode, clientNode),
-				arrowType: this.arrowAnchor === 'center' || this.arrowAnchor === 'middle' ? 'edge' : 'corner'
+				tooltipDirection: this.tooltipDirection,
+				arrowAnchor: this.arrowAnchor,
+				position: this.getPosition(tooltipNode, clientNode)
 			});
 		}
 
@@ -194,7 +194,7 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 			}
 		}
 
-		setPosition (tooltipNode, clientNode) {
+		getPosition (tooltipNode, clientNode) {
 			let position = {};
 			switch (this.tooltipDirection) {
 				case 'above':
@@ -276,10 +276,10 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 					{children}
 					<FloatingLayer open={this.state.showing} scrimType="none">
 						<Tooltip
-							type={this.state.type}
+							direction={this.state.tooltipDirection}
+							arrowAnchor={this.state.arrowAnchor}
 							position={this.state.position}
 							width={tooltipWidth}
-							arrowType={this.state.arrowType}
 							tooltipRef={this.getTooltipRef}
 							preserveCase={tooltipPreserveCase}
 						>

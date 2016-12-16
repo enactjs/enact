@@ -96,13 +96,24 @@ const TooltipBase = kind({
 		children: PropTypes.string.isRequired,
 
 		/**
-		 * Type of tooltip arrows.
+		 * Position of tooltip arrow in relation to the activator; valid values are
+		 * `'left'`, `'center'`, `'right'`, `'top'`, `'middle'`, and `'bottom'`.
 		 *
- 		 * @type {String}
- 		 * @default 'corner'
- 		 * @public
+		 * Note that `'left'`, `'center'`, `'right'` are applicable when direction is in vertical
+		 * orientation (i.e. `'above'`, `'below'`), and `'top'`, `'middle'`, and `'bottom'` are
+		 * applicable when direction is in horizontal orientation (i.e. `'left'`, `'right'`)
+		 *
+		 * @type {String}
 		 */
-		arrowType: PropTypes.oneOf(['corner', 'edge']),
+		arrowAnchor: PropTypes.oneOf(['left', 'center', 'right', 'top', 'middle', 'bottom']),
+
+		/**
+		 * Direction of label in relation to the activator; valid values are `'above'`, `'below'`,
+		 * `'left'`, and `'right'`.
+		 *
+		 * @type {String}
+		 */
+		direction: PropTypes.oneOf(['above', 'below', 'left', 'right']),
 
 		/**
 		 * Style object for tooltip position.
@@ -126,15 +137,6 @@ const TooltipBase = kind({
 		tooltipRef: PropTypes.func,
 
 		/**
-		 * Type of tooltip
-		 *
-		 * @type {String}
-		 * @default 'above leftArrow'
-		 * @public
-		 */
-		type: PropTypes.string,
-
-		/**
 		 * The width of tooltip content in pixels (px). If the content goes over the given width,
 		 * then it will automatically wrap texts.
 		 *
@@ -145,8 +147,8 @@ const TooltipBase = kind({
 	},
 
 	defaultProps: {
-		arrowType: 'corner',
-		type: 'above leftArrow'
+		arrowAnchor: 'left',
+		direction: 'above'
 	},
 
 	styles: {
@@ -155,7 +157,9 @@ const TooltipBase = kind({
 	},
 
 	computed: {
-		className: ({type, styler}) => styler.append(css[type.split(' ')[0]], css[type.split(' ')[1]]),
+		arrowType: ({arrowAnchor}) => (arrowAnchor === 'center' || arrowAnchor === 'middle') ?
+				'M0,5C0,4,1,3,3,2.5C1,2,0,1,0,0V5Z' : 'M0,5C0,3,1,0,3,0H0V5Z',
+		className: ({direction, arrowAnchor, styler}) => styler.append(direction, `${arrowAnchor}Arrow`),
 		style: ({position, style}) => {
 			return {
 				...style,
@@ -165,13 +169,14 @@ const TooltipBase = kind({
 	},
 
 	render: ({children, tooltipRef, arrowType, width, ...rest}) => {
+		delete rest.arrowAnchor;
+		delete rest.direction;
 		delete rest.position;
-		delete rest.type;
 
 		return (
 			<div {...rest}>
 				<svg className={css.tooltipArrow} viewBox="0 0 3 5">
-					<path d={arrowType === 'edge' ? 'M0,5C0,4,1,3,3,2.5C1,2,0,1,0,0V5Z' : 'M0,5C0,3,1,0,3,0H0V5Z'} />
+					<path d={arrowType} />
 				</svg>
 				<TooltipLabel tooltipRef={tooltipRef} width={width}>
 					{children}
