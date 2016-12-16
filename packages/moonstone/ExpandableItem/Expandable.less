@@ -3,39 +3,32 @@
 @import '../styles/variables.less';
 
 .expandableItem {
-	display: inline-block;
-
-	.item {
-		display: block;
-		min-width: auto;
-	}
 
 	.header {
-		display: inline-block;
-		padding-right: @moon-spotlight-outset + 30px;
-		position: relative;
+		display: inline-flex;
+		padding-right: @moon-expandable-icon-large-padding;
 
 		&:after {
 			position: absolute;
-			top: @moon-spotlight-outset - 12px;
-			right: @moon-spotlight-outset + 1px;
+			top: @moon-spotlight-outset - @moon-icon-margin;
+			right: @moon-expandable-icon-position;
 			font-family: @moon-icon-font-family;
 			font-size: @moon-expandable-caret-icon-font-size;
 			content: @moon-expandable-close-caret-icon;
 
 			:global(.enact-locale-right-to-left) & {
-				left: @moon-spotlight-outset + 1px;
+				left: @moon-expandable-icon-position;
 				right: initial;
 			}
 		}
 
-		&[open]:after {
-			content: @moon-expandable-open-caret-icon;
-		}
-
 		:global(.enact-locale-right-to-left) & {
-			padding-left: @moon-spotlight-outset + 30px;
-			padding-right: @moon-spotlight-outset;
+			padding-left: @moon-expandable-icon-large-padding;
+			padding-right: @moon-expandable-icon-small-padding;
 		}
+	}
+
+	&.open .header:after {
+		content: @moon-expandable-open-caret-icon;
 	}
 }
