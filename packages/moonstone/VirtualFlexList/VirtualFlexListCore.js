@@ -1,7 +1,7 @@
 /**
- * Exports the {@link moonstone/VirtualVariableList/VirtualVariableListCore.VirtualVariableListCore} component.
+ * Exports the {@link moonstone/VirtualFlexList/VirtualFlexListCore.VirtualFlexListCore} component.
  *
- * @module moonstone/VirtualVariableList/VirtualVariableListCore
+ * @module moonstone/VirtualFlexList/VirtualFlexListCore
  */
 
 import React, {Component, PropTypes} from 'react';
@@ -10,8 +10,8 @@ const
 	rowNumberColFuncShape = PropTypes.shape({row: PropTypes.number.isRequired, col: PropTypes.func.isRequired}),
 	rowFuncColNumberShape = PropTypes.shape({row: PropTypes.func.isRequired, col: PropTypes.number.isRequired});
 
-class VirtualVariableListCore extends Component {
-	static propTypes = /** @lends moonstone/VirtualVariableList.VirtualVariableListCore.prototype */ {
+class VirtualFlexListCore extends Component {
+	static propTypes = /** @lends moonstone/VirtualFlexList.VirtualFlexListCore.prototype */ {
 		/**
 		 * The render function for an item of the list.
 		 * `index` is for accessing the index of the item.
@@ -477,7 +477,7 @@ class VirtualVariableListCore extends Component {
 
 	getVirtualScrollDimension = () => (this.primary.dataSize * this.primary.itemSize)
 
-	// Calculate metrics for VirtualVariableList after the 1st render to know client W/H.
+	// Calculate metrics for VirtualFlexList after the 1st render to know client W/H.
 	// We separate code related with data due to re use it when data changed.
 	componentDidMount () {
 		this.calculateMetrics(this.props);
@@ -554,5 +554,5 @@ class VirtualVariableListCore extends Component {
 	}
 }
 
-export default VirtualVariableListCore;
-export {VirtualVariableListCore};
+export default VirtualFlexListCore;
+export {VirtualFlexListCore};

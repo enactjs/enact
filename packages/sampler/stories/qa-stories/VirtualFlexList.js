@@ -1,5 +1,5 @@
 import ri from '@enact/ui/resolution';
-import VirtualVariableList from '@enact/moonstone/VirtualVariableList';
+import VirtualFlexList from '@enact/moonstone/VirtualFlexList';
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
 import {withKnobs, number} from '@kadira/storybook-addon-knobs';
@@ -203,14 +203,14 @@ const
 		);
 	};
 
-storiesOf('VirtualVariableList')
+storiesOf('VirtualFlexList')
 	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
-		'Basic usage of VirtualVariableList',
+		'Basic usage of VirtualFlexList',
 		() => (
 			<div style={style.epg}>
-				<VirtualVariableList
+				<VirtualFlexList
 					data={{
 						item: programData,
 						rowHeader: channelInfoData,

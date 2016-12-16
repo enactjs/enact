@@ -1,23 +1,23 @@
 /**
- * Exports the {@link moonstone/VirtualVariableList/VirtualVariableList.VirtualVariableList} component.
+ * Exports the {@link moonstone/VirtualFlexList/VirtualFlexList.VirtualFlexList} component.
  *
- * @module moonstone/VirtualVariableList/VirtualVariableList
+ * @module moonstone/VirtualFlexList/VirtualFlexList
  */
 
-import React, {PropTypes} from 'react';
 import classNames from 'classnames';
+import React, {PropTypes} from 'react';
 
 import kind from '@enact/core/kind';
 
 import {VirtualListCore} from '../VirtualList/VirtualListBase';
 
 import Positionable from './Positionable';
-import {VirtualVariableListCore} from './VirtualVariableListCore';
-import css from './VirtualVariableList.less';
+import {VirtualFlexListCore} from './VirtualFlexListCore';
+import css from './VirtualFlexList.less';
 
 const
 	PositionableVirtualList = Positionable(VirtualListCore),
-	PositionableVirtualVariableList = Positionable(VirtualVariableListCore);
+	PositionableVirtualFlexList = Positionable(VirtualFlexListCore);
 
 // PropTypes shape
 const
@@ -48,24 +48,24 @@ const
 	]);
 
 /**
- * {@link module:@enact/moonstone/VirtualVariableList~VirtualVariableList} is a VirtualVariableList with Moonstone styling
+ * {@link module:@enact/moonstone/VirtualFlexList~VirtualFlexList} is a VirtualFlexList with Moonstone styling
  * which has a variable width or height.
  *
- * @class VirtualVariableList
+ * @class VirtualFlexList
  * @ui
  * @public
  */
-const VirtualVariableList = kind({
-	name: 'VirtualVariableList',
+const VirtualFlexList = kind({
+	name: 'VirtualFlexList',
 
-	propTypes: /** @lends moonstone/VirtualVariableList.VirtualVariableList.prototype */ {
+	propTypes: /** @lends moonstone/VirtualFlexList.VirtualFlexList.prototype */ {
 		/**
 		 * `component` has `item`, `rowHeaer`, `colHeader`, and `corner` properties.
 		 * `item`, `rowHeaer`, and `colHeader` are used for the render function for an item,
 		 * a row header, and a column header of the list. `corner` is used for
 		 * the component for a corner.
 		 * The object including `data`, `index`, and `key` properties is passed as the parameter
-		 * of the render function. `data` is the one of `VirtualVariableList`'s `data` prop.
+		 * of the render function. `data` is the one of `VirtualFlexList`'s `data` prop.
 		 * `index` is for accessing the index of the item, the row header, and the colmun header.
 		 * For the row header, and the colmun header, `index` is a number. For the item,
 		 * `index` is the object which has 'row' property for a row index and
@@ -151,7 +151,7 @@ const VirtualVariableList = kind({
 
 	styles: {
 		css,
-		className: 'virtualVariableList'
+		className: 'VirtualFlexList'
 	},
 
 	computed: {
@@ -212,15 +212,15 @@ const VirtualVariableList = kind({
 				<div {...rest} className={classNames(className, css.headers)}>
 					<PositionableVirtualList {...rowProps} />
 					<PositionableVirtualList {...colProps} />
-					<PositionableVirtualVariableList {...itemProps} />
+					<PositionableVirtualFlexList {...itemProps} />
 					<div {...cornerProps}>{corner}</div>
 				</div>
 			);
 		} else {
-			return (<PositionableVirtualVariableList {...rest} {...itemProps} className={className} />);
+			return (<PositionableVirtualFlexList {...rest} {...itemProps} className={className} />);
 		}
 	}
 });
 
-export default VirtualVariableList;
-export {VirtualVariableList, VirtualVariableList as VirtualVariableListBase};
+export default VirtualFlexList;
+export {VirtualFlexList, VirtualFlexList as VirtualFlexListBase};
