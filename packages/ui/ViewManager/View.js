@@ -1,8 +1,5 @@
-/**
+/*
  * Exports the {@link ui/ViewManager.View} component.
- *
- * @module ui/ViewManager/View
- * @private
  */
 
 import React from 'react';
@@ -17,12 +14,12 @@ const TICK = 17;
  * It is not intended to be used directly
  *
  * @class View
- * @memberof ui/ViewManager/View
+ * @memberof ui/ViewManager
  * @private
  */
 class View extends React.Component {
 
-	static propTypes = /** @lends ui/ViewManager/View.View.prototype */ {
+	static propTypes = /** @lends ui/ViewManager.View.prototype */ {
 		children: React.PropTypes.node.isRequired,
 
 		/**
@@ -146,6 +143,7 @@ class View extends React.Component {
 	 * @param	{Function}	callback		Completion callback
 	 * @param	{Boolean}	[noAnimation]	`true` to disable animation for this transition
 	 * @returns {undefined}
+	 * @private
 	 */
 	prepareTransition = (arranger, callback, noAnimation) => {
 		const {duration, index, previousIndex, reverseTransition} = this.props;
@@ -202,6 +200,7 @@ class View extends React.Component {
 	 * @param  {Number}   step     Current step > 0 and <= total steps for transition
 	 * @param  {Function} callback Completion callback
 	 * @returns {undefined}
+	 * @private
 	 */
 	transition = (step, callback) => {
 		this.setState({step});

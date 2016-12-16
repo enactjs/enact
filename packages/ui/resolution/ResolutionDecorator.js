@@ -12,7 +12,7 @@ import {init, defineScreenTypes, getScreenTypeObject, getResolutionClasses} from
 /**
  * Default config for {@link ui/resolution.ResolutionDecorator}
  *
- * @memberof ui/resolution
+ * @memberof ui/resolution.ResolutionDecorator
  * @hocconfig
  */
 const defaultConfig = {
@@ -22,7 +22,7 @@ const defaultConfig = {
 	 * @type {Boolean}
 	 * @default true
 	 * @public
-	 * @memberof ui/resolution.defaultConfig
+	 * @memberof ui/resolution.ResolutionDecorator.defaultConfig
 	 */
 	dynamic: true,
 
@@ -33,7 +33,7 @@ const defaultConfig = {
 	 * @type {Object[]}
 	 * @default null
 	 * @public
-	 * @memberof ui/resolution.defaultConfig
+	 * @memberof ui/resolution.ResolutionDecorator.defaultConfig
 	 */
 	screenTypes: null
 };
