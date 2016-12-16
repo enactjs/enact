@@ -72,12 +72,13 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			/**
 			 * A function to be run when either the close button is clicked or spotlight focus
-			 * moves outside the boundary of the popup.
+			 * moves outside the boundary of the popup. Setting `spotlightRestrict` to `'self-only'`
+			 * will prevent Spotlight focus from leaving the popup.
 			 *
 			 * @type {Function}
 			 * @public
 			 */
-			onCloseButtonClick: PropTypes.func,
+			onClose: PropTypes.func,
 
 			/**
 			 * When `true`, the contextual popup will be visible.
@@ -89,7 +90,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			open: PropTypes.bool,
 
 			/**
-			 * Classname pass to the popup. You may set width and heights of the popup with it.
+			 * Classname to pass to the popup. You may set width and height of the popup with it.
 			 *
 			 * @type {String}
 			 * @public
@@ -107,7 +108,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			/**
 			 * Restricts or prioritizes navigation when focus attempts to leave the popup. It
-			 * can be either 'none', 'self-first', or 'self-only'.
+			 * can be either `'none'`, `'self-first'`, or `'self-only'`.
 			 *
 			 * @type {String}
 			 * @default 'self-first'
@@ -301,7 +302,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleKeyDown = (ev) => {
-			const {onCloseButtonClick} = this.props;
+			const {onClose} = this.props;
 			const direction = spotlightDirections[ev.keyCode];
 
 			if (direction) {
@@ -313,9 +314,9 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				// if focus has changed
 				if (Spotlight.move(direction)) {
 
-					// if current focus is not within the popup's container, issue the `onCloseButtonClick` event
-					if (!this.containerNode.contains(document.activeElement) && onCloseButtonClick) {
-						onCloseButtonClick(ev);
+					// if current focus is not within the popup's container, issue the `onClose` event
+					if (!this.containerNode.contains(document.activeElement) && onClose) {
+						onClose(ev);
 					}
 				}
 			}
@@ -328,7 +329,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const {showCloseButton, popupComponent: PopupComponent, popupClassName, open, onCloseButtonClick, spotlightRestrict, ...props} = this.props;
+			const {showCloseButton, popupComponent: PopupComponent, popupClassName, open, onClose, spotlightRestrict, ...props} = this.props;
 
 			return (
 				<div className={css.contextualPopupDecorator}>
@@ -336,7 +337,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						<ContextualPopupContainer
 							className={popupClassName}
 							showCloseButton={showCloseButton}
-							onCloseButtonClick={onCloseButtonClick}
+							onCloseButtonClick={onClose}
 							direction={this.state.direction}
 							arrowPosition={this.state.arrowPosition}
 							containerPosition={this.state.containerPosition}

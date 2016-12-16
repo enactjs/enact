@@ -60,8 +60,7 @@ const PopupBase = kind({
 		noAnimation: PropTypes.bool,
 
 		/**
-		 * A function to be run when either the close button (if present) is clicked or spotlight focus
-		 * moves outside the boundary of the popup.
+		 * A function to be run when either the close button (if present) is clicked
 		 *
 		 * @type {Function}
 		 * @public
@@ -96,7 +95,7 @@ const PopupBase = kind({
 
 		/**
 		 * Restricts or prioritizes navigation when focus attempts to leave the popup. It
-		 * can be either 'none', 'self-first', or 'self-only'.
+		 * can be either `'none'`, `'self-first'`, or `'self-only'`.
 		 *
 		 * @type {String}
 		 * @default 'self-only'
@@ -201,8 +200,8 @@ class Popup extends React.Component {
 		/**
 		 * A function to be run when a closing action is invoked by the user. These actions include
 		 * pressing `ESC` key, clicking on the close button, or spotlight focus moves outside the
-		 * boundary of the popup. It is the responsibility of the callback to set the `open` property
-		 * to `false`.
+		 * boundary of the popup (when `spotlightRestrict` is not `'self-only'`). It is the
+		 * responsibility of the callback to set the `open` property to `false`.
 		 *
 		 * @type {Function}
 		 * @public
@@ -237,7 +236,7 @@ class Popup extends React.Component {
 		scrimType: React.PropTypes.oneOf(['transparent', 'translucent', 'none']),
 
 		/**
-		 * When `true`, the close button is shown; when `false`, it is hidden.
+		 * When `true`, the popup includes a close button; when `false`, none is included.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -247,7 +246,7 @@ class Popup extends React.Component {
 
 		/**
 		 * Restricts or prioritizes navigation when focus attempts to leave the popup. It
-		 * can be either 'none', 'self-first', or 'self-only'.
+		 * can be either `'none'`, `'self-first'`, or `'self-only'`.
 		 *
 		 * @type {String}
 		 * @default 'self-only'
