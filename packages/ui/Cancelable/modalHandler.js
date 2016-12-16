@@ -12,6 +12,7 @@ const modals = [];
  * @param	{Object}	ev	Event payload
  *
  * @returns	{undefined}
+ * @private
  */
 const dispatchToModals = (ev) => {
 	for (let i = modals.length - 1, handled = false; !handled && i >= 0; i--) {
@@ -25,6 +26,7 @@ const dispatchToModals = (ev) => {
  * @param	{ui/Cancelable.Cancelable}	obj	Cancelable instance
  *
  * @returns	{undefined}
+ * @private
  */
 const addModal = (obj) => {
 	if (modals.push(obj) === 1) {
@@ -38,6 +40,7 @@ const addModal = (obj) => {
  * @param	{ui/Cancelable.Cancelable}	obj	Cancelable instance
  *
  * @returns	{undefined}
+ * @private
  */
 const removeModal = (obj) => {
 	const index = modals.indexOf(obj);

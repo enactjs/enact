@@ -14,7 +14,8 @@ const SpottableDiv = Spottable('div');
  *
  * @type {Number}
  * @default 96;
- * @public
+ * @private
+ * @memberof moonstone/Panels
  */
 export const breadcrumbWidth = 96;
 

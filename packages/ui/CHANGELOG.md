@@ -6,12 +6,15 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
+- `none` to `scrimType` prop values in `ui/FloatingLayer`
+
 ### Changed
+
 - `ui/Pressable` to also accept an array of events for depress/release, to support multiple interaction methods
 
 ### Removed
 
-### Fixed
+- `fit` prop from `ui/Transition` in favor of using `className`
 
 ## [1.0.0-alpha.4] - 2016-12-2
 

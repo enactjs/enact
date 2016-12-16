@@ -20,7 +20,7 @@ const ExpandableTransitionContainerBase = kind({
 		 *
 		 * @type {Boolean}
 		 * @default true
-		 * @public
+		 * @private
 		 */
 		visible: React.PropTypes.bool
 	},

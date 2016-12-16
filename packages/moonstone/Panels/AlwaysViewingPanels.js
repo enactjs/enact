@@ -13,6 +13,7 @@ import Viewport from './Viewport';
  * @param {Number} width         width of a breadcrumb
  *
  * @returns {Number} Number of breadcrumbs that can completely fit in that space
+ * @private
  */
 const calcMax = memoize((viewportWidth, width) => Math.floor(viewportWidth / 2 / scale(width)));
 

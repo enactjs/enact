@@ -5,7 +5,7 @@ import React from 'react';
 import css from './Panel.less';
 
 /**
-* {@link moonstone/Panel.Panel} is the default kind for controls created inside a
+* {@link moonstone/Panels.Panel} is the default kind for controls created inside a
 * [moonstone/Panels]{@link moonstone/Panels.Panels} container. A `moonstone/Panels`
 * will typically contain several instances of these.
 *
@@ -18,7 +18,7 @@ const PanelBase = kind({
 
 	name: 'Panel',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/Panels.Panel.prototype */ {
 		/**
 		 * Header for the panel. This is usually passed by the {@link ui/Slottable.Slottable} API by
 		 * using a [Header]{@link moonstone/Panels.Header} component as a child of the Panel.
