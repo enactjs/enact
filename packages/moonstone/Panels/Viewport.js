@@ -11,7 +11,16 @@ import css from './Panels.less';
 const spotPanel = ({view}) => {
 	// eslint-disable-next-line react/no-find-dom-node
 	const node = findDOMNode(view);
-	Spotlight.focus(node && node.dataset.containerId);
+	if (node) {
+		const containerSelector = `[data-container-id=${node.dataset.containerId}]`;
+		const body = node.querySelector(`${containerSelector} header ~ .spottable`);
+		const header = node.querySelector(`${containerSelector} header .spottable`);
+		const spottable = body || header;
+
+		if (spottable) {
+			Spotlight.focus(spottable);
+		}
+	}
 };
 
 /**
@@ -68,10 +77,12 @@ const ViewportBase = kind({
 
 	computed: {
 		handleAppear: handle(forward('onAppear'), spotPanel),
-		handleEnter: handle(forward('onEnter'), spotPanel)
+		handleEnter: handle(forward('onEnter'), spotPanel),
+		handleTransition: handle(forward('onTransition'), Spotlight.resume),
+		handleWillTransition: handle(forward('onWillTransition'), Spotlight.pause)
 	},
 
-	render: ({arranger, children, handleAppear, handleEnter, index, noAnimation, ...rest}) => {
+	render: ({arranger, children, handleAppear, handleEnter, handleTransition, handleWillTransition, index, noAnimation, ...rest}) => {
 		const count = React.Children.count(children);
 		invariant(
 			index === 0 && count === 0 || index < count,
@@ -88,6 +99,8 @@ const ViewportBase = kind({
 				component="main"
 				onAppear={handleAppear}
 				onEnter={handleEnter}
+				onTransition={handleTransition}
+				onWillTransition={handleWillTransition}
 			>
 				{children}
 			</ViewManager>
