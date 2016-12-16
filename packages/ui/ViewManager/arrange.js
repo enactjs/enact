@@ -1,8 +1,5 @@
-/**
+/*
  * Exports a number of methods for use with {@link ui/ViewManager}.
- *
- * @private
- * @module ui/ViewManager/arrange
  */
 
 import curry from 'ramda/src/curry';
