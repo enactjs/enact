@@ -71,7 +71,8 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			direction: PropTypes.oneOf(['up', 'down', 'left', 'right']),
 
 			/**
-			 * A function to be run when close button is clicked.
+			 * A function to be run when either the close button is clicked or spotlight focus
+			 * moves outside the boundary of the popup.
 			 *
 			 * @type {Function}
 			 * @public
@@ -135,7 +136,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.props.open && !prevProps.open) {
 				this.spotPopupContent();
 			} else if (!this.props.open && prevProps.open) {
-				this.spotActivatorControl();
+				Spotlight.focus();
 			}
 		}
 
@@ -324,10 +325,6 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		spotPopupContent = () => {
 			Spotlight.focus(this.state.containerId);
-		}
-
-		spotActivatorControl = () => {
-			Spotlight.focus();
 		}
 
 		render () {

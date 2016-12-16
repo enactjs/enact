@@ -60,7 +60,8 @@ const PopupBase = kind({
 		noAnimation: PropTypes.bool,
 
 		/**
-		 * A function to be run when the close button (if present) is clicked.
+		 * A function to be run when either the close button (if present) is clicked or spotlight focus
+		 * moves outside the boundary of the popup.
 		 *
 		 * @type {Function}
 		 * @public
@@ -199,8 +200,9 @@ class Popup extends React.Component {
 
 		/**
 		 * A function to be run when a closing action is invoked by the user. These actions include
-		 * pressing `ESC` key or clicking on the close button. It is the responsibility of the
-		 * callback to set the `open` property to `false`.
+		 * pressing `ESC` key, clicking on the close button, or spotlight focus moves outside the
+		 * boundary of the popup. It is the responsibility of the callback to set the `open` property
+		 * to `false`.
 		 *
 		 * @type {Function}
 		 * @public
@@ -293,7 +295,7 @@ class Popup extends React.Component {
 			} else if (this.props.open) {
 				this.spotPopupContent();
 			} else if (prevProps.open) {
-				this.spotActivatorControl();
+				Spotlight.focus();
 			}
 		}
 	}
@@ -350,17 +352,13 @@ class Popup extends React.Component {
 			if (this.props.open) {
 				this.spotPopupContent();
 			} else {
-				this.spotActivatorControl();
+				Spotlight.focus();
 			}
 		}
 	}
 
 	spotPopupContent = () => {
 		Spotlight.focus(this.state.containerId);
-	}
-
-	spotActivatorControl = () => {
-		Spotlight.focus();
 	}
 
 	render () {
