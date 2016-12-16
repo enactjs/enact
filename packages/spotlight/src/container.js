@@ -74,22 +74,21 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'SpotlightContainerDecorator';
 
-		static propTypes = {
+		static propTypes = /** @lends spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator */ {
 			/**
 			 * Specifies the container id. If the value is `null`, an id will be generated.
 			 *
 			 * @type {String}
-			 * @default null
 			 * @public
 			 */
 			containerId: PropTypes.string,
 
 			/**
 			 * Restricts or prioritizes navigation when focus attempts to leave the container. It
-			 * can be either `none`, `self-first`, or `self-only`.
+			 * can be either 'none', 'self-first', or 'self-only'.
 			 *
 			 * @type {String}
-			 * @default `none`
+			 * @default 'none'
 			 * @public
 			 */
 			spotlightRestrict: PropTypes.oneOf(['none', 'self-first', 'self-only'])

@@ -10,7 +10,7 @@ import {forward} from '@enact/core/handle';
 import {hoc} from '@enact/core';
 import ri from '@enact/ui/resolution';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
-import Spotlight, {SpotlightContainerDecorator} from '@enact/spotlight';
+import Spotlight, {SpotlightContainerDecorator, spotlightDirections} from '@enact/spotlight';
 import React, {PropTypes} from 'react';
 
 import {ContextualPopup} from './ContextualPopup';
@@ -19,13 +19,6 @@ import css from './ContextualPopupDecorator.less';
 const defaultConfig = {};
 const ContextualPopupContainer = SpotlightContainerDecorator({preserveId: true}, ContextualPopup);
 const depress = 'onKeyDown';
-
-const directions = {
-	'37': 'left',
-	'38': 'up',
-	'39': 'right',
-	'40': 'down'
-};
 
 /**
  * {@link moonstone/ContextualPopupDecorator.ContextualPopupDecorator} is a Higher-order Component
@@ -113,10 +106,10 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			/**
 			 * Restricts or prioritizes navigation when focus attempts to leave the popup. It
-			 * can be either `none`, `self-first`, or `self-only`.
+			 * can be either 'none', 'self-first', or 'self-only'.
 			 *
 			 * @type {String}
-			 * @default `self-first`
+			 * @default 'self-first'
 			 * @public
 			 */
 			spotlightRestrict: PropTypes.oneOf(['none', 'self-first', 'self-only'])
@@ -308,7 +301,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleKeyDown = (ev) => {
 			const {onCloseButtonClick} = this.props;
-			const direction = directions[ev.keyCode];
+			const direction = spotlightDirections[ev.keyCode];
 
 			if (direction) {
 				// prevent default page scrolling

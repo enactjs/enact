@@ -12,6 +12,12 @@
 import Accelerator from '@enact/core/Accelerator';
 import {startJob} from '@enact/core/jobs';
 
+const spotlightDirections = {
+	'37': 'left',
+	'38': 'up',
+	'39': 'right',
+	'40': 'down'
+};
 const spotlightRootContainerName = 'spotlightRootDecorator';
 const SpotlightAccelerator = new Accelerator();
 const Spotlight = (function() {
@@ -43,12 +49,7 @@ const Spotlight = (function() {
 	/**
 	* constants
 	*/
-	const _directions = {
-		'37': 'left',
-		'38': 'up',
-		'39': 'right',
-		'40': 'down'
-	};
+	const _directions = spotlightDirections;
 
 	const _reverseDirections = {
 		'left': 'right',
@@ -1287,4 +1288,4 @@ const Spotlight = (function() {
 })();
 
 export default Spotlight;
-export {Spotlight, spotlightRootContainerName};
+export {Spotlight, spotlightRootContainerName, spotlightDirections};

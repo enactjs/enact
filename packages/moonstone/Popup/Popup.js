@@ -9,20 +9,13 @@ import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 import Transition from '@enact/ui/Transition';
 import FloatingLayer from '@enact/ui/FloatingLayer';
-import Spotlight, {SpotlightContainerDecorator} from '@enact/spotlight';
+import Spotlight, {SpotlightContainerDecorator, spotlightDirections} from '@enact/spotlight';
 
 import IconButton from '../IconButton';
 
 import css from './Popup.less';
 
 const TransitionContainer = SpotlightContainerDecorator({preserveId: true}, Transition);
-
-const directions = {
-	'37': 'left',
-	'38': 'up',
-	'39': 'right',
-	'40': 'down'
-};
 
 /**
  * {@link moonstone/Popup.PopupBase} is a modal component that appears at the bottom of
@@ -102,10 +95,10 @@ const PopupBase = kind({
 
 		/**
 		 * Restricts or prioritizes navigation when focus attempts to leave the popup. It
-		 * can be either `none`, `self-first`, or `self-only`.
+		 * can be either 'none', 'self-first', or 'self-only'.
 		 *
 		 * @type {String}
-		 * @default `self-only`
+		 * @default 'self-only'
 		 * @public
 		 */
 		spotlightRestrict: PropTypes.oneOf(['none', 'self-first', 'self-only'])
@@ -319,7 +312,7 @@ class Popup extends React.Component {
 
 	handleKeyDown = (ev) => {
 		const {onClose, onKeyDown} = this.props;
-		const direction = directions[ev.keyCode];
+		const direction = spotlightDirections[ev.keyCode];
 		let containerNode;
 
 		if (direction) {
