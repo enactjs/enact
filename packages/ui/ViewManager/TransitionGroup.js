@@ -72,6 +72,8 @@ const forwardOnAppear = forward('onAppear');
 const forwardOnEnter = forward('onEnter');
 const forwardOnLeave = forward('onLeave');
 const forwardOnStay = forward('onStay');
+const forwardOnTransition = forward('onTransition');
+const forwardOnWillTransition = forward('onWillTransition');
 
 /**
  * Manages the transition of added and removed child components. Children that are added are
@@ -105,10 +107,47 @@ class TransitionGroup extends React.Component {
 		 */
 		component: React.PropTypes.any,
 
+		/**
+		 * Called when each view is rendered during initial construction.
+		 *
+		 * @type {Function}
+		 */
 		onAppear: React.PropTypes.func,
+
+		/**
+		 * Called when each view completes its transition into the viewport.
+		 *
+		 * @type {Function}
+		 */
 		onEnter: React.PropTypes.func,
+
+		/**
+		 * Called when each view completes its transition out of the viewport.
+		 *
+		 * @type {Function}
+		 */
 		onLeave: React.PropTypes.func,
+
+		/**
+		 * Called when each view completes its transition within the viewport.
+		 *
+		 * @type {Function}
+		 */
 		onStay: React.PropTypes.func,
+
+		/**
+		 * Called once when all views have completed their transition.
+		 *
+		 * @type {Function}
+		 */
+		onTransition: React.PropTypes.func,
+
+		/**
+		 * Called once before views begin their transition.
+		 *
+		 * @type {Function}
+		 */
+		onWillTransition: React.PropTypes.func,
 
 		/**
 		 * Maximum number of rendered children. Used to limit how many visible transitions are
@@ -200,6 +239,8 @@ class TransitionGroup extends React.Component {
 			});
 		}
 
+		forwardOnWillTransition(null, this.props);
+
 		// once the component has been updated, start the enter transition for new children,
 		const keysToEnter = this.keysToEnter;
 		this.keysToEnter = [];
@@ -214,6 +255,14 @@ class TransitionGroup extends React.Component {
 		const keysToLeave = this.keysToLeave;
 		this.keysToLeave = [];
 		keysToLeave.forEach(this.performLeave);
+	}
+
+	completeTransition (key) {
+		delete this.currentlyTransitioningKeys[key];
+
+		if (Object.keys(this.currentlyTransitioningKeys).length === 0) {
+			forwardOnTransition(null, this.props);
+		}
 	}
 
 	performAppear = (key) => {
@@ -240,7 +289,7 @@ class TransitionGroup extends React.Component {
 			view: component
 		}, this.props);
 
-		delete this.currentlyTransitioningKeys[key];
+		this.completeTransition(key);
 
 		let currentChildMapping = mapChildren(this.props.children);
 
@@ -274,7 +323,7 @@ class TransitionGroup extends React.Component {
 			view: component
 		}, this.props);
 
-		delete this.currentlyTransitioningKeys[key];
+		this.completeTransition(key);
 	}
 
 	performStay = (key) => {
@@ -325,7 +374,7 @@ class TransitionGroup extends React.Component {
 			view: component
 		}, this.props);
 
-		delete this.currentlyTransitioningKeys[key];
+		this.completeTransition(key);
 
 		this.setState(function (state) {
 			const index = indexOfChild(key, state.children);
@@ -348,6 +397,12 @@ class TransitionGroup extends React.Component {
 		delete props.size;
 		delete props.childFactory;
 		delete props.component;
+		delete props.onAppear;
+		delete props.onEnter;
+		delete props.onLeave;
+		delete props.onStay;
+		delete props.onTransition;
+		delete props.onWillTransition;
 
 		return React.createElement(
 			this.props.component,

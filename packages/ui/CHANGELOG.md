@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+## Added
+
+- `onAppear`, `onEnter`, `onLeave`, `onStay`, `onTransition`, and `onWillTransition` events to ViewManager
+
 ## [1.0.0-alpha.4] - 2016-12-2
 
 ### Added
