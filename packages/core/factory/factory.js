@@ -39,7 +39,7 @@ const feature = function (prop, fn, defaultConfig, config) {
  *
  * import componentCss from './Button.less';
  *
- * const ButtonFactory = factory({css: componentCss}, ({css}) =>> {
+ * const ButtonFactory = factory({css: componentCss}, ({css}) => {
  * 	return kind({
  * 		name: 'Button',
  *
