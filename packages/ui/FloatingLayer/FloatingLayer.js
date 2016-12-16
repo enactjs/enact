@@ -1,4 +1,4 @@
-import {on, off} from '@enact/core/dispatcher';
+import {on, off, once} from '@enact/core/dispatcher';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Cancelable from '../Cancelable';
@@ -123,23 +123,13 @@ class FloatingLayerBase extends React.Component {
 
 	handleClick = (ev) => {
 		if (!this.props.noAutoDismiss && this.props.open && this.props.onDismiss) {
-			let target = ev.target;
-			let children = this.props.scrimType === 'none' ? this.floatLayer.childNodes[0] : this.floatLayer.childNodes[1];
+			const scrim = this.floatLayer.querySelector('[data-ui-scrim]');
 
-			while (target && target !== this.floatLayer) {
-				if (target === children) return;
-
-				target = target.parentNode;
-			}
-
-			if (this.props.scrimType === 'none') {
-				// ignore first click outside the children for opening
-				if (this.firstOpen) {
-					this.firstOpen = false;
-				} else {
+			if (scrim) {
+				if (scrim.contains(ev.target)) {
 					this.props.onDismiss();
 				}
-			} else if (target === this.floatLayer) {
+			} else if (!this.floatLayer.contains(ev.target)) {
 				this.props.onDismiss();
 			}
 		}
@@ -188,7 +178,7 @@ class FloatingLayerBase extends React.Component {
 		this.floatLayer = ReactDOM.unstable_renderSubtreeIntoContainer(
 			this,
 			<div {...rest}>
-				{scrimType !== 'none' ? <Scrim type={scrimType} /> : null}
+				{scrimType !== 'none' ? <Scrim type={scrimType} data-ui-scrim /> : null}
 				{children}
 			</div>,
 			node
@@ -199,7 +189,10 @@ class FloatingLayerBase extends React.Component {
 				onOpen();
 			}
 			if (typeof window === 'object') {
-				if (scrimType === 'none') this.firstOpen = true;
+				if (scrimType === 'none') {
+					// consume first click
+					once('click', () => {}, window);
+				}
 				on('click', this.handleClick, window);
 			}
 		}
