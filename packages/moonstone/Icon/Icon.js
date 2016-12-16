@@ -164,7 +164,7 @@ const IconBase = kind({
  * @public
  */
 
- const Icon = TooltipDecorator(IconBase);
+const Icon = TooltipDecorator(IconBase);
 
 export default IconBase;
 export {Icon, IconBase, iconList as icons};

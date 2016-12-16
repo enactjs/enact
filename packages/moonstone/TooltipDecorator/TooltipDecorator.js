@@ -1,12 +1,13 @@
 /**
  * Exports the {@link moonstone/TooltipDecorator.TooltipDecorator} Higher-order Component (HOC),
- * {@link moonstone/TooltipDecorator/Tooltip.Tooltip} and {@link moonstone/TooltipDecorator/Tooltip.TooltipBase}
+ * {@link moonstone/TooltipDecorator.Tooltip} and {@link moonstone/TooltipDecorator/TooltipBase}
  * components. The default export is {@link moonstone/TooltipDecorator.TooltipDecorator}.
  *
  * @module moonstone/TooltipDecorator
  */
 
 import {hoc} from '@enact/core';
+import {forward} from '@enact/core/handle';
 import {startJob, stopJob} from '@enact/core/jobs';
 import ri from '@enact/ui/resolution';
 import FloatingLayer from '@enact/ui/FloatingLayer';
@@ -29,38 +30,14 @@ import {Tooltip, TooltipBase} from './Tooltip';
  * @public
  */
 const TooltipDecorator = hoc((config, Wrapped) => {
+
+	const forwardBlur = forward('onBlur');
+	const forwardFocus = forward('onFocus');
+
 	return class extends React.Component {
 		static displayName = 'TooltipDecorator'
 
 		static propTypes = /** @lends moonstone/TooltipDecorator.TooltipDecorator.prototype */ {
-			/**
-			 * A function to be run when Wrapped component loses focus.
-			 *
-			 * @type {Function}
-			 * @public
-			 */
-			onBlur: PropTypes.func,
-
-			/**
-			 * A function to be run when Wrapped component gets focus.
-			 *
-			 * @type {Function}
-			 * @public
-			 */
-			onFocus: PropTypes.func,
-
-			/**
-			 * When true, the case of the [`tooltipText`]{@link moonstone/TooltipDecorator.TooltipDecorator#tooltipText}
-			 * will remain unchanged.
-			 * Uses [Uppercase HOC]{@link i18n/Uppercase.Uppercase} and mirrors the
-			 * [preserveCase prop]{@link i18n/Uppercase.Uppercase#preserveCase}
-			 *
-			 * @type {Boolean}
-			 * @default false
-			 * @public
-			 */
-			preserveCase: PropTypes.bool,
-
 			/**
 			 * Number of milliseconds to wait before showing tooltip when hover.
 			 *
@@ -91,6 +68,18 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 				'right bottom', 'right middle', 'right top']),
 
 			/**
+			 * When true, the case of the [`tooltipText`]{@link moonstone/TooltipDecorator.TooltipDecorator#tooltipText}
+			 * will remain unchanged.
+			 * Uses [Uppercase HOC]{@link i18n/Uppercase.Uppercase} and mirrors the
+			 * [preserveCase prop]{@link i18n/Uppercase.Uppercase#preserveCase}
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			tooltipPreserveCase: PropTypes.bool,
+
+			/**
 			 * The text to be displayed as the main content of the tooltip.
 			 *
 			 * @type {String}
@@ -102,16 +91,16 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 			 * The width of tooltip content in pixels (px). If the content goes over the given width,
 			 * then it will automatically wrap texts.
 			 *
-			 * @type {Number}
+			 * @type {Number|null}
 			 * @public
 			 */
 			tooltipWidth: PropTypes.number
 		}
 
 		static defaultProps = {
-			preserveCase: false,
 			showDelay: 500,
-			tooltipPosition: 'above'
+			tooltipPosition: 'above',
+			tooltipPreserveCase: false
 		}
 
 		static contextTypes = contextTypes
@@ -215,14 +204,10 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 					position.top = clientNode.bottom + this.TOOLTIP_HEIGHT;
 					break;
 				case 'right':
-					position = {
-						left: clientNode.right + this.TOOLTIP_HEIGHT
-					};
+					position.left = clientNode.right + this.TOOLTIP_HEIGHT;
 					break;
 				case 'left':
-					position = {
-						left: clientNode.left - tooltipNode.width - this.TOOLTIP_HEIGHT
-					};
+					position.left = clientNode.left - tooltipNode.width - this.TOOLTIP_HEIGHT;
 					break;
 				default:
 					position = {};
@@ -249,34 +234,28 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 			return position;
 		}
 
-		handleFocus = (e) => {
-			const {onFocus, tooltipText, showDelay} = this.props;
+		handleFocus = (ev) => {
+			const {tooltipText, showDelay} = this.props;
 
 			if (tooltipText) {
-				this.clientRef = e.target;
+				this.clientRef = ev.target;
 				startJob('showTooltip', () => {
 					this.setState({showing: true});
 					this.adjustPosition();
 				}, showDelay);
 			}
 
-			if (onFocus) {
-				onFocus(e);
-			}
+			forwardFocus(ev, this.props);
 		}
 
-		handleBlur = (e) => {
-			const {onBlur, tooltipText} = this.props;
-
-			if (tooltipText) {
+		handleBlur = (ev) => {
+			if (this.props.tooltipText) {
 				this.clientRef = null;
 				stopJob('showTooltip');
 				this.setState({showing: false});
 			}
 
-			if (onBlur) {
-				onBlur(e);
-			}
+			forwardBlur(ev, this.props);
 		}
 
 		getTooltipRef = (node) => {
@@ -284,14 +263,13 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 		}
 
 		render () {
-			const {children, preserveCase, tooltipText, tooltipWidth, ...rest} = this.props;
-			const props = Object.assign({}, rest);
-			delete props.showDelay;
-			delete props.tooltipPosition;
+			const {children, tooltipPreserveCase, tooltipText, tooltipWidth, ...rest} = this.props;
+			delete rest.showDelay;
+			delete rest.tooltipPosition;
 
 			return (
 				<Wrapped
-					{...props}
+					{...rest}
 					onFocus={this.handleFocus}
 					onBlur={this.handleBlur}
 				>
@@ -303,7 +281,7 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 							width={tooltipWidth}
 							arrowType={this.state.arrowType}
 							tooltipRef={this.getTooltipRef}
-							preserveCase={preserveCase}
+							preserveCase={tooltipPreserveCase}
 						>
 							{tooltipText}
 						</Tooltip>

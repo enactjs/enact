@@ -27,7 +27,7 @@ const TooltipLabel = kind({
 		children: PropTypes.string.isRequired,
 
 		/**
-		 * The method to run when the tooltip mounts, giving a reference to the DOM.
+		 * The method to run when the tooltip mounts/unmounts, giving a reference to the DOM.
 		 *
 		 * @type {Function}
 		 * @public
@@ -36,7 +36,7 @@ const TooltipLabel = kind({
 
 		/**
 		 * The width of tooltip content in pixels (px). If the content goes over the given width,
-		 * then it will automatically wrap texts.
+		 * then it will automatically wrap.
 		 *
 		 * @type {Number}
 		 * @public
@@ -118,7 +118,7 @@ const TooltipBase = kind({
 		}),
 
 		/**
-		 * The method to run when the tooltip mounts, giving a reference to the DOM.
+		 * The method to run when the tooltip mounts/unmounts, giving a reference to the DOM.
 		 *
 		 * @type {Function}
 		 * @public
@@ -188,7 +188,7 @@ const TooltipBase = kind({
  *
  * @class Tooltip
  * @memberof moonstone/TooltipDecorator
- * @see i18n/Uppercase
+ * @mixes i18n/Uppercase.Uppercase
  * @ui
  * @public
  */
