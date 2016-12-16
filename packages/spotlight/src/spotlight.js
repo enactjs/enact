@@ -100,6 +100,14 @@ const Spotlight = (function() {
 	let _5WayKeyHold = false;
 
 	/**
+	 * Whether a selection key is being held.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 */
+	let _selectionKeyHold = false;
+
+	/**
 	 * Whether Spotlight is in pointer mode (as opposed to 5-way mode).
 	 *
 	 * @type {Boolean}
@@ -889,6 +897,7 @@ const Spotlight = (function() {
 
 	function onAcceleratedKeyDown (evt) {
 		let currentFocusedElement = getCurrent();
+		const direction = _directions[evt.keyCode];
 
 		if (!currentFocusedElement) {
 			if (_lastContainerId) {
@@ -905,7 +914,7 @@ const Spotlight = (function() {
 			return;
 		}
 
-		if (_directions[evt.keyCode] && !spotNext(_directions[evt.keyCode], currentFocusedElement, currentContainerId) && currentFocusedElement !== document.activeElement) {
+		if (direction && !spotNext(direction, currentFocusedElement, currentContainerId) && currentFocusedElement !== document.activeElement) {
 			focusElement(currentFocusedElement, currentContainerId)
 		}
 	}
@@ -920,7 +929,7 @@ const Spotlight = (function() {
 		}
 
 		const keyCode = evt.keyCode;
-		if (!_directions[keyCode] && _enterKeyCodes.indexOf(keyCode) >= 0) {
+		if (!_directions[keyCode] && !_enterKeyCodes.indexOf(keyCode)) {
 			return;
 		}
 
