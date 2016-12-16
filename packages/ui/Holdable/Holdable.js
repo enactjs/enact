@@ -6,7 +6,8 @@
 
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
-import R from 'ramda';
+import contains from 'ramda/src/contains';
+import pick from 'ramda/src/pick';
 import React, {PropTypes} from 'react';
 
 const eventProps = ['clientX', 'clientY', 'pageX', 'pageY', 'screenX', 'screenY',
@@ -189,16 +190,16 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 		onKeyDepress = (ev) => {
 			if (!this.props.disabled) {
-				if (R.contains(ev.keyCode, selectionKeyCodes) && !this.holdJob) {
+				if (contains(ev.keyCode, selectionKeyCodes) && !this.holdJob) {
 					this.keyEvent = true;
-					this.beginHold(R.pick(eventProps, ev));
+					this.beginHold(pick(eventProps, ev));
 				}
 			}
 			forwardKeyDepress(ev, this.props);
 		}
 
 		onKeyRelease = (ev) => {
-			if (R.contains(ev.keyCode, selectionKeyCodes)) {
+			if (contains(ev.keyCode, selectionKeyCodes)) {
 				this.keyEvent = false;
 				this.endHold();
 			}
@@ -207,7 +208,7 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 		onPointerDown = (ev) => {
 			if (!this.props.disabled && !this.keyEvent) {
-				this.beginHold(R.pick(eventProps, ev));
+				this.beginHold(pick(eventProps, ev));
 			}
 			forwardPointerDepress(ev, this.props);
 		}

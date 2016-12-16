@@ -929,7 +929,7 @@ const Spotlight = (function() {
 		}
 
 		const keyCode = evt.keyCode;
-		if (!_directions[keyCode] && !_enterKeyCodes.indexOf(keyCode)) {
+		if (!_directions[keyCode] && _enterKeyCodes.indexOf(keyCode) >= 0) {
 			return;
 		}
 
