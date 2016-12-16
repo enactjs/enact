@@ -43,6 +43,7 @@ const sizeShape = PropTypes.oneOfType(
  * which has a variable width or height.
  *
  * @class VirtualVariableList
+ * @memberof moonstone/VirtualVariableList
  * @ui
  * @public
  */

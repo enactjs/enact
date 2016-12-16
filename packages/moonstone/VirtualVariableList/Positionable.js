@@ -8,6 +8,15 @@ import React, {Component, PropTypes} from 'react';
 
 import hoc from '@enact/core/hoc';
 
+/**
+ * {@link moonstone/VirtualVariableList.Positionable} is a Higher-order Component
+ * that applies a VirtualVariableList behavior to its wrapped component.
+ *
+ * @class Positionable
+ * @memberof moonstone/VirtualVariableList
+ * @hoc
+ * @public
+ */
 const PositionableHoc = hoc((config, Wrapped) => {
 	return class Positionable extends Component {
 		static propTypes = {
