@@ -186,8 +186,8 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 				this.suspendHold();
 			}
 
-			if (this.downEvent) {
-				off(pointerRelease, this.onPointerRelease);
+			if (this.onceOnPointerRelease) {
+				off(pointerRelease, this.onceOnPointerRelease);
 			}
 		}
 
@@ -217,6 +217,7 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		onPointerRelease = () => {
+			this.onceOnPointerRelease = null;
 			this.endHold();
 		}
 
@@ -270,7 +271,7 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.next) {
 				this.holdJob = setInterval(this.handleHoldPulse, frequency);
 			}
-			once(pointerRelease, this.onPointerRelease);
+			this.onceOnPointerRelease = once(pointerRelease, this.onPointerRelease);
 		}
 
 		endHold = () => {
