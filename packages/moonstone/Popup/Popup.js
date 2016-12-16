@@ -245,10 +245,10 @@ class Popup extends React.Component {
 
 		/**
 		 * Restricts or prioritizes navigation when focus attempts to leave the popup. It
-		 * can be either `none`, `self-first`, or `self-only`.
+		 * can be either 'none', 'self-first', or 'self-only'.
 		 *
 		 * @type {String}
-		 * @default `self-only`
+		 * @default 'self-only'
 		 * @public
 		 */
 		spotlightRestrict: PropTypes.oneOf(['none', 'self-first', 'self-only'])
