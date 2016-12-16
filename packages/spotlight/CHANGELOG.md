@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [1.0.0-alpha.4] - 2016-12-2
+
+### Added
+
+- `setPointerMode()` and `setActiveContainer()` methods
+
 ## [1.0.0-alpha.3] - 2016-11-8
 
 ### Added
@@ -11,7 +17,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Changed
 
-- Spotlight containers to spot the last focused element by default.
+- Spotlight containers to spot the last focused element by default
 
 ### Removed
 

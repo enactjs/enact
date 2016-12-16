@@ -1,20 +1,22 @@
-/**
- * Exports the {@link moonstone/Picker.PickerCore} component.
- * The default export is {@link moonstone/Picker.PickerCore}.
- *
- * @module moonstone/Picker
- */
-
 import * as jobs from '@enact/core/jobs';
-import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
-import R from 'ramda';
+import {childrenEquals} from '@enact/core/util';
+import clamp from 'ramda/src/clamp';
 import React from 'react';
+import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
+import shouldUpdate from 'recompose/shouldUpdate';
 
 import Icon from '../Icon';
 import IconButton from '../IconButton';
 
 import {steppedNumber} from './PickerPropTypes';
 import css from './Picker.less';
+
+const PickerViewManager = shouldUpdate((props, nextProps) => {
+	return (
+		props.index !== nextProps.index ||
+		!childrenEquals(props.children, nextProps.children)
+	);
+})(ViewManager);
 
 const wrapRange = (min, max, value) => {
 	if (value > max) {
@@ -47,12 +49,13 @@ const TransparentIconButton = (props) => <IconButton {...props} backgroundOpacit
  * @class PickerCore
  * @memberof moonstone/Picker
  * @ui
- * @public
+ * @private
  */
+
 const PickerCore = class extends React.Component {
 	static displayName = 'PickerCore'
 
-	static propTypes = {
+	static propTypes = /** @lends moonstone/Picker.PickerCore.prototype */ {
 		/**
 		 * Index for internal ViewManager
 		 *
@@ -258,7 +261,7 @@ const PickerCore = class extends React.Component {
 
 	computeNextValue = (delta) => {
 		const {min, max, value, wrap} = this.props;
-		return wrap ? wrapRange(min, max, value + delta) : R.clamp(min, max, value + delta);
+		return wrap ? wrapRange(min, max, value + delta) : clamp(min, max, value + delta);
 	}
 
 	isButtonDisabled = (delta) => {
@@ -366,9 +369,9 @@ const PickerCore = class extends React.Component {
 				<span className={css.incrementer} disabled={incrementerDisabled} onClick={handleIncClick} onMouseDown={this.handleIncDown} onMouseUp={onMouseUp}>
 					<ButtonType disabled={incrementerDisabled}>{incrementIcon}</ButtonType>
 				</span>
-				<ViewManager arranger={arranger} duration={200} index={index} noAnimation={noAnimation} reverseTransition={this.reverseTransition} className={css.valueWrapper}>
+				<PickerViewManager arranger={arranger} duration={200} index={index} noAnimation={noAnimation} reverseTransition={this.reverseTransition} className={css.valueWrapper}>
 					{children}
-				</ViewManager>
+				</PickerViewManager>
 				<span className={css.decrementer} disabled={decrementerDisabled} onClick={handleDecClick} onMouseDown={this.handleDecDown} onMouseUp={onMouseUp}>
 					<ButtonType disabled={decrementerDisabled}>{decrementIcon}</ButtonType>
 				</span>

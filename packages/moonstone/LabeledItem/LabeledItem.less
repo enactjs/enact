@@ -25,7 +25,11 @@
 
 	// Text
 	.label {
-		font-family: @moon-expandable-value-font-family;
+		.moon-font(@moon-expandable-value-font-family, @moon-non-latin-font-family-light, {
+			font-weight: @moon-non-latin-body-font-weight;
+			font-size: @moon-non-latin-body-font-size;
+			line-height: @moon-non-latin-body-line-height;
+		});
 		font-size: @moon-expandable-value-font-size;
 		font-weight: @moon-expandable-value-font-weight;
 		font-style: @moon-expandable-value-font-style;
@@ -40,10 +44,6 @@
 
 		:global(.enact-locale-right-to-left) & {
 			padding-left: 0;
-		}
-
-		:global(.enact-locale-non-latin) & {
-			.enact-locale-non-latin .moon-body-text;
 		}
 
 		.moon-neutral & {

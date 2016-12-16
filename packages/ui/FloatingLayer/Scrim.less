@@ -1,0 +1,9 @@
+@import '../styles/mixins.less';
+
+.scrim {
+	&.translucent {
+		pointer-events: auto;
+		background-color: #000000;
+		.vendor-opacity(0.3)
+	}
+}

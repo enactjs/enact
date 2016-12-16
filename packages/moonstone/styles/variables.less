@@ -1,6 +1,5 @@
 // Variables
 //
-@import './fonts.less';
 @import './colors.less';
 
 // App
@@ -45,6 +44,7 @@
 @moon-expandable-value-font-size:   27px;
 @moon-expandable-client-item-font-size:   27px;
 @moon-divider-font-size:            24px;
+@moon-notification-font-size:       30px;
 @moon-button-large-font-size:       36px;
 @moon-button-small-font-size:       27px;
 @moon-clock-minute-font-size:       60px;
@@ -77,6 +77,10 @@
 @moon-non-latin-font-family: "Moonstone LG Display";
 @moon-non-latin-font-family-light: "Moonstone LG Display";  // Formerly weight: Light
 @moon-non-latin-font-family-bold: "Moonstone LG Display";   // Formerly weight: Bold
+@moon-non-latin-font-weight: 500;
+@moon-non-latin-font-weight-bold: 500;
+@moon-non-latin-font-weight-light: 300;
+@moon-non-latin-body-font-weight: @moon-non-latin-font-weight-light;
 
 @moon-header-font-family: @moon-alt-font-family;
 @moon-header-font-weight: normal;
@@ -88,12 +92,6 @@
 @moon-non-latin-header-text-line-height: 1.5em;
 @moon-non-latin-medium-header-line-height: 1.5em;
 @moon-non-latin-small-header-line-height: 1.5em;
-
-@moon-popup-header-font-family: @moon-header-font-family;
-@moon-popup-header-font-weight: normal;
-@moon-popup-header-letter-spacing: normal;
-@moon-popup-header-font-style: normal;
-@moon-popup-header-line-height: normal;
 
 @moon-sub-header-font-family: @moon-font-family;
 @moon-sub-header-font-weight: bold;
@@ -108,6 +106,15 @@
 @moon-super-header-letter-spacing: normal;
 @moon-super-header-font-style: normal;
 @moon-super-header-line-height: normal;
+
+@moon-popup-header-font-family: @moon-header-font-family;
+@moon-popup-header-font-weight: normal;
+@moon-popup-header-font-style: normal;
+@moon-popup-header-line-height: normal;
+@moon-popup-header-letter-spacing: normal;
+
+@moon-dialog-title-below-font-family: @moon-sub-header-font-family;
+@moon-dialog-title-below-font-weight: bold;
 
 @moon-body-font-family: @moon-font-family;
 @moon-body-font-weight: 300;
@@ -269,3 +276,22 @@
 @moon-expandable-open-caret-icon: "\0EFFEE";
 @moon-expandable-close-caret-icon: "\0EFFED";
 @moon-expandable-caret-icon-font-size: 48px;
+
+// ContextualPopup
+// ---------------------------------------
+@moon-contextual-popup-border-radius: 15px;
+@moon-contextual-popup-padding: 18px;
+@moon-contextual-popup-arrow-height: 30px;
+@moon-contextual-popup-arrow-width: 30px;
+
+// Notification
+// ---------------------------------------
+@moon-notification-font-family: "MuseoSans";
+@moon-notification-font-weight: 500;
+@moon-notification-font-style: normal;
+@moon-notification-background-opacity: 95%;
+@moon-notification-border-opacity: 30%;
+@moon-notification-border-width: 6px;
+@moon-notification-border-radius: 15px;
+@moon-notification-out-border-radius: 18px;
+@moon-notification-button-gap: 9px;

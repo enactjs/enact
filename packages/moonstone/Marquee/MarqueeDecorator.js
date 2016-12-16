@@ -4,19 +4,22 @@ import {childrenEquals} from '@enact/core/util';
 import React from 'react';
 
 import Marquee from './Marquee';
+import {contextTypes} from './MarqueeController';
 
 /**
  * Default configuration parameters for {@link moonstone/Marquee.MarqueeDecorator}
  *
  * @type {Object}
- * @memberof moonstone/marquee
+ * @memberof moonstone/Marquee.MarqueeDecorator
+ * @hocconfig
  */
 const defaultConfig = {
 	/**
-	 * Property containing the callback to stop the animation when `marqueeOn` is 'focus'
+	 * Property containing the callback to stop the animation when `marqueeOn` is `'focus'`
 	 *
 	 * @type {String}
 	 * @default 'onBlur'
+	 * @memberof moonstone/Marquee.MarqueeDecorator.defaultConfig
 	 */
 	blur: 'onBlur',
 
@@ -25,30 +28,34 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default null
+	 * @memberof moonstone/Marquee.MarqueeDecorator.defaultConfig
 	 */
 	className: null,
 
 	/**
-	 * Property containing the callback to start the animation when `marqueeOn` is 'hover'
+	 * Property containing the callback to start the animation when `marqueeOn` is `'hover'`
 	 *
 	 * @type {String}
 	 * @default 'onMouseEnter'
+	 * @memberof moonstone/Marquee.MarqueeDecorator.defaultConfig
 	 */
 	enter: 'onMouseEnter',
 
 	/**
-	 * Property containing the callback to start the animation when `marqueeOn` is 'focus'
+	 * Property containing the callback to start the animation when `marqueeOn` is `'focus'`
 	 *
 	 * @type {String}
 	 * @default 'onFocus'
+	 * @memberof moonstone/Marquee.MarqueeDecorator.defaultConfig
 	 */
 	focus: 'onFocus',
 
 	/**
-	 * Property containing the callback to stop the animation when `marqueeOn` is 'hover'
+	 * Property containing the callback to stop the animation when `marqueeOn` is `'hover'`
 	 *
 	 * @type {String}
 	 * @default 'onMouseLeave'
+	 * @memberof moonstone/Marquee.MarqueeDecorator.defaultConfig
 	 */
 	leave: 'onMouseLeave'
 };
@@ -58,7 +65,7 @@ const defaultConfig = {
  * the Wrapped component's children marquee.
  *
  * @class MarqueeDecorator
- * @memberof moonstone/marquee
+ * @memberof moonstone/Marquee
  * @hoc
  * @public
  */
@@ -73,6 +80,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 	return class extends React.Component {
 		static displayName = 'MarqueeDecorator'
+
+		static contextTypes = contextTypes
 
 		static propTypes = /** @lends moonstone/Marquee.MarqueeDecorator.prototype */ {
 			/**
@@ -176,12 +185,24 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.state = {
 				overflow: 'ellipsis'
 			};
+			this.sync = false;
 
 			this.invalidateMetrics();
 		}
 
 		componentDidMount () {
-			this.initMarquee(this.props.marqueeOnRenderDelay);
+			if (this.context.register) {
+				this.sync = true;
+				this.context.register(this, {
+					start: this.start,
+					stop: this.stop
+				});
+			}
+
+			this.calculateMetrics();
+			if (this.props.marqueeOn === 'render') {
+				this.startAnimation(this.props.marqueeOnRenderDelay);
+			}
 		}
 
 		componentWillReceiveProps (next) {
@@ -195,11 +216,18 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidUpdate () {
-			this.initMarquee(this.props.marqueeDelay);
+			this.calculateMetrics();
+			if (this.shouldStartMarquee()) {
+				this.startAnimation(this.props.marqueeDelay);
+			}
 		}
 
 		componentWillUnmount () {
 			this.clearTimeout();
+			if (this.sync) {
+				this.sync = false;
+				this.context.unregister(this);
+			}
 		}
 
 		/**
@@ -235,28 +263,13 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {Boolean} - `true` if a possible marquee condition exists
 		 */
 		shouldStartMarquee () {
-			return	this.distance === null && !this.props.disabled && !this.props.marqueeDisabled &&
+			return (
+				!this.sync && (
 					this.props.marqueeOn === 'render' ||
 					(this.isFocused && this.props.marqueeOn === 'focus') ||
-					(this.isHovered && this.props.marqueeOn === 'hover');
-		}
-
-		/**
-		 * Initializes the marquee by calculating the distance and conditionally starting the
-		 * animation
-		 *
-		 * @param {Number} delay Milliseconds until animation should start
-		 * @returns {undefined}
-		 */
-		initMarquee (delay) {
-			// shouldStartMarquee relies on a `null` distance to indicate the metrics have been
-			// invalidated so we have to calculate after this check.
-			if (this.shouldStartMarquee()) {
-				this.calculateMetrics();
-				this.startAnimation(delay);
-			} else {
-				this.calculateMetrics();
-			}
+					(this.isHovered && this.props.marqueeOn === 'hover')
+				)
+			);
 		}
 
 		/**
@@ -280,7 +293,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const node = this.node;
 
 			// TODO: absolute showing check (or assume that it won't be rendered if it isn't showing?)
-			if (node && this.distance == null) {
+			if (node && this.distance == null && !this.props.disabled && !this.props.marqueeDisabled) {
 				this.distance = this.calculateDistance(node);
 				this.contentFits = !this.shouldAnimate(this.distance);
 				this.setState({
@@ -325,19 +338,47 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		/**
-		* Starts marquee animation.
-		*
-		* @param {Number} [delay] Milleseconds to wait before animating
-		* @returns {undefined}
-		*/
-		startAnimation = (delay = this.props.marqueeDelay) => {
+		 * Starts the animation without synchronizing
+		 *
+		 * @param	{Number}	[delay]	Milleseconds to wait before animating
+		 * @returns	{undefined}
+		 */
+		start = (delay = this.props.marqueeDelay) => {
+			if (!this.state.animating) {
+				this.setTimeout(() => {
+					this.setState({
+						animating: true
+					});
+				}, delay);
+			}
+		}
+
+		/**
+		 * Stops the animation
+		 *
+		 * @returns	{undefined}
+		 */
+		stop = () => {
+			this.clearTimeout();
+			this.setState({
+				animating: false
+			});
+		}
+
+		/**
+		 * Starts marquee animation with synchronization
+		 *
+		 * @param {Number} [delay] Milleseconds to wait before animating
+		 * @returns {undefined}
+		 */
+		startAnimation = (delay) => {
 			if (this.state.animating || this.contentFits) return;
 
-			this.setTimeout(() => {
-				this.setState({
-					animating: true
-				});
-			}, delay);
+			if (this.sync) {
+				this.context.start(this);
+			}
+
+			this.start(delay);
 		}
 
 		/**
@@ -349,7 +390,12 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.setState({
 				animating: false
 			});
-			this.startAnimation();
+			// synchronized Marquees defer to the controller to restart them
+			if (this.sync) {
+				this.context.complete(this);
+			} else {
+				this.startAnimation();
+			}
 		}
 
 		/**
@@ -367,10 +413,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {undefined}
 		 */
 		cancelAnimation = () => {
-			this.clearTimeout();
-			this.setState({
-				animating: false
-			});
+			if (this.sync) {
+				this.context.cancel(this);
+			}
+
+			this.stop();
 		}
 
 		handleMarqueeComplete = (ev) => {

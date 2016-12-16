@@ -1,7 +1,7 @@
 /**
  * Exports the {@link moonstone/ExpandableItem.ExpandableItem} and
  * {@link moonstone/ExpandableItem.ExpandableItemBase} components and
- * {@link moonstone/ExpandableItem/Expandable.Expandable} Higher-Order Component (HOC). The default
+ * {@link moonstone/ExpandableItem.Expandable} Higher-Order Component (HOC). The default
  * export is {@link moonstone/ExpandableItem.ExpandableItem}.
  *
  * @module moonstone/ExpandableItem
@@ -9,8 +9,6 @@
 
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
-import {SpotlightContainerDecorator} from '@enact/spotlight';
-import Transition from '@enact/ui/Transition';
 
 import LabeledItem from '../LabeledItem';
 
@@ -19,7 +17,7 @@ import ExpandableContainer from './ExpandableContainer';
 
 import css from './Expandable.less';
 
-const TransitionContainer = SpotlightContainerDecorator(Transition);
+import ExpandableTransitionContainer from './ExpandableTransitionContainer';
 
 /**
  * {@link moonstone/ExpandableItem.ExpandableItem} is a stateless component that
@@ -148,8 +146,10 @@ const ExpandableItemBase = kind({
 	},
 
 	render: ({children, disabled, handleOpen, label, open, title, ...rest}) => {
-		delete rest.noneText;
 		delete rest.label;
+		delete rest.noneText;
+		delete rest.onClose;
+		delete rest.onOpen;
 		delete rest.showLabel;
 		delete rest.onOpen;
 		delete rest.onClose;
@@ -169,9 +169,9 @@ const ExpandableItemBase = kind({
 						{title}
 					</div>
 				</LabeledItem>
-				<TransitionContainer data-container-disabled={!open} visible={open} duration="short" type="clip">
+				<ExpandableTransitionContainer data-container-disabled={!open} data-expandable-container visible={open} duration="short" type="clip">
 					{children}
-				</TransitionContainer>
+				</ExpandableTransitionContainer>
 			</ExpandableContainer>
 		);
 	}
