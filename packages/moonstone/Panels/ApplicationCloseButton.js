@@ -1,10 +1,3 @@
-/**
- * Exports the {@link moonstone/Panels/ApplicationCloseButton.ApplicationCloseButton} component.
- *
- * @module moonstone/Panels/ApplicationCloseButton
- * @private
- */
-
 import kind from '@enact/core/kind';
 import React from 'react';
 
@@ -20,13 +13,13 @@ import css from './ApplicationCloseButton.less';
  * like save user work or close database connections.
  *
  * @class ApplicationCloseButton
- * @memberof moonstone/Panels/ApplicationCloseButton
+ * @memberof moonstone/Panels
  * @private
  */
 const ApplicationCloseButton = kind({
 	name: 'ApplicationCloseButton',
 
-	propTypes: /** @lends moonstone/Panels/ApplicationCloseButton.prototype */ {
+	propTypes: /** @lends moonstone/Panels.ApplicationCloseButton.prototype */ {
 		/**
 		 * A function to run when app close button is clicked
 		 *
