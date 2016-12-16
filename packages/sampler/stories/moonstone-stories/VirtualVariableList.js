@@ -1,29 +1,28 @@
 import ri from '@enact/ui/resolution';
-import {VirtualVariableList, PositionableVirtualVariableList} from '@enact/moonstone/VirtualVariableList';
+import VirtualVariableList from '@enact/moonstone/VirtualVariableList';
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
 import {withKnobs, number} from '@kadira/storybook-addon-knobs';
 
-VirtualVariableList.propTypes = Object.assign({}, PositionableVirtualVariableList.propTypes);
-VirtualVariableList.defaultProps = Object.assign({}, PositionableVirtualVariableList.defaultProps);
-
 const
+	channelWidth = ri.scale(420),
 	channelLength = 200,
-	timeWidth = 200,
+	timeWidth = ri.scale(210),
 	timelineLength = 18,
-	itemHeight = 80,
+	itemHeight = ri.scale(81),
 	clientWidth = timeWidth * 5,
 	clientHeight = itemHeight * 6,
-	maxVariableScrollSize = ri.scale(3600); // 400 ( width per 1 hour ) * 9 hr
+	maxVariableScrollSize = timeWidth * 18; // for 9 hr
 
 // Inline style
 const
 	style = {
 		epg: {
+			background: 'black',
 			position: 'absolute',
-			width: ri.scale(clientWidth) + 'px',
-			height: ri.scale(clientHeight) + 'px',
-			padding: ri.scale(32) + 'px 0',
+			width: (channelWidth + clientWidth) + 'px',
+			height: (itemHeight + clientHeight) + 'px',
+			padding: ri.scale(33) + 'px 0',
 			color: 'white'
 		},
 		// Programs
@@ -70,7 +69,7 @@ const
 		'Secrets of the Dead'
 	],
 	getRandomWidth = () => {
-		return ri.scale((parseInt(Math.random() * 20) + 1) * 100);
+		return (parseInt(Math.random() * 10) + 1) * timeWidth;
 	},
 	programData = (function () {
 		const data = [];
@@ -126,12 +125,12 @@ storiesOf('VirtualVariableList')
 						col: getItemLength
 					}}
 					itemSize={{
-						row: number('itemSize_row', ri.scale(itemHeight)),
+						row: number('itemSize_row', itemHeight),
 						col: getItemWidth
 					}}
 					maxVariableScrollSize={maxVariableScrollSize}
-					posX={number('posX', 0)}
-					posY={number('posY', 0)}
+					x={number('x', 0)}
+					y={number('y', 0)}
 					variableAxis="row"
 					component={{
 						item: renderItem

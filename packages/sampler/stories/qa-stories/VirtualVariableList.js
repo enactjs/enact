@@ -1,20 +1,17 @@
 import ri from '@enact/ui/resolution';
-import {VirtualVariableList, PositionableVirtualVariableList} from '@enact/moonstone/VirtualVariableList';
+import VirtualVariableList from '@enact/moonstone/VirtualVariableList';
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
 import {withKnobs, number} from '@kadira/storybook-addon-knobs';
 
-VirtualVariableList.propTypes = Object.assign({}, PositionableVirtualVariableList.propTypes);
-VirtualVariableList.defaultProps = Object.assign({}, PositionableVirtualVariableList.defaultProps);
-
 const
-	channelWidth = 400,
+	channelWidth = ri.scale(420),
 	channelLength = 200,
-	timeWidth = 200,
-	itemHeight = 80,
+	timeWidth = ri.scale(210),
+	itemHeight = ri.scale(81),
 	clientWidth = timeWidth * 5,
 	clientHeight = itemHeight * 6,
-	maxVariableScrollSize = ri.scale(3600); // 400 ( width per 1 hour ) * 9 hr
+	maxVariableScrollSize = timeWidth * 18; // for 9 hr
 
 // Inline style
 const
@@ -22,16 +19,16 @@ const
 		epg: {
 			background: 'black',
 			position: 'absolute',
-			width: ri.scale(channelWidth + clientWidth) + 'px',
-			height: ri.scale(itemHeight + clientHeight) + 'px',
-			padding: ri.scale(32) + 'px 0',
+			width: (channelWidth + clientWidth) + 'px',
+			height: (itemHeight + clientHeight) + 'px',
+			padding: ri.scale(33) + 'px 0',
 			color: 'white'
 		},
 		// Today
 		itemToday: {
 			background: 'black',
-			width: ri.scale(channelWidth) + 'px',
-			padding: ri.scale(40) + 'px  0 ' + ri.scale(4) + 'px',
+			width: channelWidth + 'px',
+			padding: ri.scale(39) + 'px  0 ' + ri.scale(6) + 'px',
 			fontSize: ri.scale(27) + 'px',
 			WebkitUserSelect: 'none',
 			userSelect: 'none'
@@ -40,10 +37,10 @@ const
 		itemTimeline: {
 			background: 'black',
 			position: 'absolute',
-			width: ri.scale(timeWidth) + 'px',
-			height: ri.scale(itemHeight) + 'px',
-			padding: ri.scale(40) + 'px ' + ri.scale(10) + 'px ' + ri.scale(10) + 'px',
-			borderLeft: ri.scale(2) + 'px solid #333',
+			width: timeWidth + 'px',
+			height: itemHeight + 'px',
+			padding: ri.scale(39) + 'px ' + ri.scale(9) + 'px ' + ri.scale(9) + 'px',
+			borderLeft: ri.scale(3) + 'px solid #333',
 			boxSizing: 'border-box',
 			fontSize: ri.scale(27) + 'px',
 			WebkitUserSelect: 'none',
@@ -59,8 +56,8 @@ const
 			overflow: 'hidden'
 		},
 		itemChannelInfo: {
-			width: ri.scale(channelWidth - 6) + 'px',
-			height: ri.scale(itemHeight - 6) + 'px',
+			width: (channelWidth - ri.scale(6)) + 'px',
+			height: (itemHeight - ri.scale(6)) + 'px',
 			color: '#CACACA',
 			fontSize: ri.scale(27) + 'px',
 			lineHeight: ri.scale(58) + 'px',
@@ -146,7 +143,7 @@ const
 		'Secrets of the Dead'
 	],
 	getRandomWidth = () => {
-		return ri.scale((parseInt(Math.random() * 20) + 1) * 100);
+		return (parseInt(Math.random() * 10) + 1) * timeWidth;
 	},
 	programData = (function () {
 		const data = [];
@@ -204,9 +201,6 @@ const
 				</div>
 			</div>
 		);
-	},
-	renderCorner = () => {
-		return (<div style={style.itemToday}>Today</div>)
 	};
 
 storiesOf('VirtualVariableList')
@@ -230,20 +224,20 @@ storiesOf('VirtualVariableList')
 					}}
 					headers="both"
 					itemSize={{
-						row: number('itemSize_row', ri.scale(itemHeight)),
+						row: number('itemSize_row', itemHeight),
 						col: getItemWidth,
-						rowHeader: ri.scale(channelWidth),
-						colHeader: ri.scale(timeWidth)
+						rowHeader: channelWidth,
+						colHeader: timeWidth
 					}}
 					maxVariableScrollSize={maxVariableScrollSize}
-					posX={number('posX', 0)}
-					posY={number('posY', 0)}
+					x={number('x', 0)}
+					y={number('y', 0)}
 					variableAxis="row"
 					component={{
 						item: renderItem,
 						rowHeader: renderRowHeaderItem,
 						colHeader: renderColHeaderItem,
-						corner: renderCorner
+						corner: (<div style={style.itemToday}>Today</div>)
 					}}
 				/>
 			</div>

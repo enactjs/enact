@@ -8,8 +8,8 @@ import React, {Component, PropTypes} from 'react';
 
 import hoc from '@enact/core/hoc';
 
-const PositionableHoc = hoc((config, Wrapped) => {
-	return class Positionable extends Component {
+const Positionable = hoc((config, Wrapped) => {
+	return class extends Component {
 		static propTypes = {
 			/**
 			 * Position x.
@@ -18,7 +18,7 @@ const PositionableHoc = hoc((config, Wrapped) => {
 			 * @default 0
 			 * @public
 			 */
-			posX: PropTypes.number,
+			x: PropTypes.number,
 
 			/**
 			 * Position y.
@@ -27,35 +27,26 @@ const PositionableHoc = hoc((config, Wrapped) => {
 			 * @default 0
 			 * @public
 			 */
-			posY: PropTypes.number
+			y: PropTypes.number
 		}
 
 		static defaultProps = {
-			posX: 0,
-			posY: 0
+			x: 0,
+			y: 0
 		}
 
-		constructor (props) {
-			super(props);
-
-			this.initVirtualListRef = this.initRef('virtualListRef');
-		}
-
-		initRef (prop) {
-			return (ref) => {
-				this[prop] = ref;
-			};
-		}
+		// eslint-disabled-next-line no-return-assign
+		initVirtualListRef = (ref) => (this.virtualListRef = ref)
 
 		componentWillReceiveProps (nextProps) {
-			const {posX, posY} = this.props;
+			const {x, y} = this.props;
 
-			if (posX !== nextProps.posX || posY !== nextProps.posY) {
+			if (x !== nextProps.x || y !== nextProps.y) {
 				this.virtualListRef.setScrollPosition(
-					nextProps.posX,
-					nextProps.posY,
-					Math.sign(nextProps.posX - posX),
-					Math.sign(nextProps.posY - posY)
+					nextProps.x,
+					nextProps.y,
+					Math.sign(nextProps.x - x),
+					Math.sign(nextProps.y - y)
 				);
 			}
 		}
@@ -63,13 +54,13 @@ const PositionableHoc = hoc((config, Wrapped) => {
 		render () {
 			const props = Object.assign({}, this.props);
 
-			delete props.posX;
-			delete props.posY;
+			delete props.x;
+			delete props.y;
 
 			return (<Wrapped {...props} ref={this.initVirtualListRef} />);
 		}
 	};
 });
 
-export default PositionableHoc;
-export {PositionableHoc};
+export default Positionable;
+export {Positionable};

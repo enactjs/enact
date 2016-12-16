@@ -99,8 +99,6 @@ class VirtualVariableListCore extends Component {
 	primary = null
 	secondary = null
 
-	fixedAxis = 'col'
-
 	cc = []
 
 	containerRef = null
