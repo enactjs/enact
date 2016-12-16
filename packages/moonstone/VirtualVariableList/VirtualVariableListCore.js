@@ -1,7 +1,7 @@
 /**
- * Exports the {@link moonstone/VirtualVariableList/VirtualVariableListCore.VirtualVariableListCore} component.
+ * Exports the {@link moonstone/VirtualVariableList.VirtualVariableListCore} component.
  *
- * @module moonstone/VirtualVariableList/VirtualVariableListCore
+ * @module moonstone/VirtualVariableListCore
  */
 
 import React, {Component, PropTypes} from 'react';
@@ -10,6 +10,14 @@ const
 	rowNumberColFuncShape = PropTypes.shape({row: PropTypes.number.isRequired, col: PropTypes.func.isRequired}),
 	rowFuncColNumberShape = PropTypes.shape({row: PropTypes.func.isRequired, col: PropTypes.number.isRequired});
 
+/**
+ * {@link moonstone/VirtualVariableList.VirtualVariableListCore} is a base component for VirtualVariableList.
+ *
+ * @class VirtualVariableListCore
+ * @memberof moonstone/VirtualVariableList
+ * @ui
+ * @private
+ */
 class VirtualVariableListCore extends Component {
 	static propTypes = /** @lends moonstone/VirtualVariableList.VirtualVariableListCore.prototype */ {
 		/**
