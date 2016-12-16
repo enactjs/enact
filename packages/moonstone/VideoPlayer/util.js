@@ -8,7 +8,13 @@
 
 
 // What time is it right this moment
-const getNow = () => new Date().getTime();
+const getNow = function () {
+	if (typeof window === 'object') {
+		return window.performance.now();
+	} else {
+		return Date.now();
+	}
+};
 
 // const zeroPad = (num) => ((num < 10 && num >= 0) ? '0' + num : num);
 const padDigit = (val) => {

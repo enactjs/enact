@@ -600,6 +600,7 @@ const VideoPlayerBase = class extends React.Component {
 							<MediaSlider
 								className={css.mediaSlider}
 								backgroundPercent={this.state.percentageLoaded}
+								detachedKnob
 								min={0}
 								max={1}
 								value={this.state.percentagePlayed}
