@@ -1,7 +1,7 @@
 /**
- * Exports the {@link moonstone/VirtualVariableList/Positionable.Positionable} component.
+ * Exports the {@link moonstone/VirtualVariableList.Positionable} component.
  *
- * @module moonstone/VirtualVariableList/Positionable
+ * @module moonstone/Positionable
  */
 
 import React, {Component, PropTypes} from 'react';

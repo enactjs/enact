@@ -1,7 +1,10 @@
 /**
- * Exports the {@link moonstone/VirtualVariableList/VirtualVariableList.VirtualVariableList} component.
+ * Exports the {@link moonstone/VirtualVariableList.VirtualVariableList},
+ * {@link moonstone/VirtualVariableList.PositionableVirtualVariableList}, and
+ * {@link moonstone/VirtualVariableList.VirtualVariableListCore} components.
+ * The default export is {@link moonstone/VirtualVariableList.VirtualVariableList}.
  *
- * @module moonstone/VirtualVariableList/VirtualVariableList
+ * @module moonstone/VirtualVariableList
  */
 
 import React, {PropTypes} from 'react';
