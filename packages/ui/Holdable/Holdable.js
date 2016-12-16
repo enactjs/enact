@@ -4,6 +4,7 @@
  * @module ui/Holdable
  */
 
+import {off, once} from '@enact/core/dispatcher';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import contains from 'ramda/src/contains';
@@ -28,7 +29,7 @@ const outOfRange = (start, end, tolerance) => {
 const keyDepress = 'onKeyDown';
 const keyRelease = 'onKeyUp';
 const pointerDepress = 'onMouseDown';
-const pointerRelease = 'onMouseUp';
+const pointerRelease = 'mouseup';
 const pointerEnter = 'onMouseEnter';
 const pointerLeave = 'onMouseLeave';
 const pointerMove = 'onMouseMove';
@@ -73,8 +74,7 @@ const defaultConfig = {
 	 *
 	 * Regardless of how many custom hold events you define, `onholdpulse` events
 	 * will start firing after the first custom hold event fires, and continue until
-	 * the user stops holding. Likewise, only one `onrelease` event will fire,
-	 * regardless of how many custom hold events you define.
+	 * the user stops holding.
 	 *
 	 * @type {Array}
 	 * @default [{name: 'hold', time: 200}]
@@ -135,7 +135,6 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 	const forwardKeyDepress = forward(keyDepress);
 	const forwardKeyRelease = forward(keyRelease);
 	const forwardPointerDepress = forward(pointerDepress);
-	const forwardPointerRelease = forward(pointerRelease);
 	const forwardPointerEnter = forward(pointerEnter);
 	const forwardPointerLeave = forward(pointerLeave);
 	const forwardPointerMove = forward(pointerMove);
@@ -186,6 +185,10 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.holdJob) {
 				this.suspendHold();
 			}
+
+			if (this.downEvent) {
+				off(pointerRelease, this.onPointerRelease);
+			}
 		}
 
 		onKeyDepress = (ev) => {
@@ -206,21 +209,20 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			forwardKeyRelease(ev, this.props);
 		}
 
-		onPointerDown = (ev) => {
+		onPointerDepress = (ev) => {
 			if (!this.props.disabled && !this.keyEvent) {
 				this.beginHold(pick(eventProps, ev));
 			}
 			forwardPointerDepress(ev, this.props);
 		}
 
-		onPointerUp = (ev) => {
+		onPointerRelease = () => {
 			this.endHold();
-			forwardPointerRelease(ev, this.props);
 		}
 
 		onPointerEnter = (ev) => {
 			if (!this.props.disabled) {
-				if (resume && endHold === 'onLeave') {
+				if (resume && endHold === 'onLeave' && this.downEvent) {
 					this.resumeHold();
 				}
 			}
@@ -268,6 +270,7 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.next) {
 				this.holdJob = setInterval(this.handleHoldPulse, frequency);
 			}
+			once(pointerRelease, this.onPointerRelease);
 		}
 
 		endHold = () => {
@@ -322,8 +325,7 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			const props = Object.assign({}, this.props);
 			props[keyDepress] = this.onKeyDepress;
 			props[keyRelease] = this.onKeyRelease;
-			props[pointerDepress] = this.onPointerDown;
-			props[pointerRelease] = this.onPointerUp;
+			props[pointerDepress] = this.onPointerDepress;
 			props[pointerEnter] = this.onPointerEnter;
 			props[pointerLeave] = this.onPointerLeave;
 			props[pointerMove] = this.onPointerMove;
