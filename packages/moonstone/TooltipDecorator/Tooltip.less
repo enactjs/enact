@@ -26,14 +26,14 @@
 		:global(.enact-locale-right-to-left) & {
 			text-align: right;
 		}
-		
+
 		&.multi {
 			white-space: normal;
 		}
 	}
 
 	&.below {
-		&.leftArrow {
+		&.rightArrow {
 			.tooltipArrow {
 				transform: rotate(-90deg);
 				left: 0;
@@ -44,7 +44,7 @@
 			}
 		}
 
-		&.rightArrow {
+		&.leftArrow {
 			.tooltipArrow {
 				transform: translateX(100%) rotate(-90deg) scaleY(-1);
 				right: 0;
@@ -65,7 +65,7 @@
 	}
 
 	&.above {
-		&.leftArrow {
+		&.rightArrow {
 			.tooltipArrow {
 				transform: translateY(100%) rotate(-90deg) scaleX(-1);
 				left: 0;
@@ -77,7 +77,7 @@
 			}
 		}
 
-		&.rightArrow {
+		&.leftArrow {
 			.tooltipArrow {
 				transform: translate(100%, 100%) rotate(90deg);
 				bottom: 0;

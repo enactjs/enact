@@ -104,6 +104,8 @@ const TooltipBase = kind({
 		 * applicable when direction is in horizontal orientation (i.e. `'left'`, `'right'`)
 		 *
 		 * @type {String}
+		 * @default 'right'
+		 * @public
 		 */
 		arrowAnchor: PropTypes.oneOf(['left', 'center', 'right', 'top', 'middle', 'bottom']),
 
@@ -112,6 +114,8 @@ const TooltipBase = kind({
 		 * `'left'`, and `'right'`.
 		 *
 		 * @type {String}
+		 * @default 'above'
+		 * @public
 		 */
 		direction: PropTypes.oneOf(['above', 'below', 'left', 'right']),
 
@@ -147,7 +151,7 @@ const TooltipBase = kind({
 	},
 
 	defaultProps: {
-		arrowAnchor: 'left',
+		arrowAnchor: 'right',
 		direction: 'above'
 	},
 

@@ -129,10 +129,10 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 				[this.tooltipDirection, this.arrowAnchor] = arr;
 			} else if (position === 'above' || position === 'below') {
 				this.tooltipDirection = position;
-				this.arrowAnchor = 'left';
+				this.arrowAnchor = 'right';
 			} else {
 				this.tooltipDirection = 'above';
-				this.arrowAnchor = 'left';
+				this.arrowAnchor = 'right';
 			}
 
 			if (this.context.rtl) {
@@ -189,9 +189,9 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 			// Flip sideways for 'above' and 'below' if it overflows to the sides
 			if (this.tooltipDirection === 'above' || this.tooltipDirection === 'below') {
 				if (this.overflow.isOverRight) {
-					this.arrowAnchor = 'right';
-				} else if (this.overflow.isOverLeft) {
 					this.arrowAnchor = 'left';
+				} else if (this.overflow.isOverLeft) {
+					this.arrowAnchor = 'right';
 				}
 			}
 		}
@@ -218,7 +218,7 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 			if (this.tooltipDirection === 'above' || this.tooltipDirection === 'below') {
 				position.left = clientNode.left + clientNode.width / 2;
 
-				if (this.arrowAnchor === 'right') {
+				if (this.arrowAnchor === 'left') {
 					position.left -= tooltipNode.width;
 				} else if (this.arrowAnchor === 'center') {
 					position.left -= tooltipNode.width / 2;
