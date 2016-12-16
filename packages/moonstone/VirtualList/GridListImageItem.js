@@ -111,8 +111,8 @@ const GridListImageItemBase = kind({
 						</div>
 					) : null
 				}
-				{caption ? (<MarqueeText marqueeOn="focus" className={css.caption}>{caption}</MarqueeText>) : null}
-				{subCaption ? (<MarqueeText marqueeOn="focus" className={css.subCaption}>{subCaption}</MarqueeText>) : null}
+				{caption ? (<MarqueeText marqueeOn="hover" className={css.caption}>{caption}</MarqueeText>) : null}
+				{subCaption ? (<MarqueeText marqueeOn="hover" className={css.subCaption}>{subCaption}</MarqueeText>) : null}
 			</div>
 		);
 	}
@@ -134,7 +134,12 @@ const GridListImageItemBase = kind({
  * @ui
  * @public
  */
-const GridListImageItem = MarqueeController(Spottable(GridListImageItemBase));
+const GridListImageItem = MarqueeController(
+	{startOnFocus: true},
+	Spottable(
+		GridListImageItemBase
+	)
+);
 
 export default GridListImageItem;
 export {GridListImageItem, GridListImageItemBase};
