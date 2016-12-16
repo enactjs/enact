@@ -1,4 +1,4 @@
-import {on, off, once} from '@enact/core/dispatcher';
+import {on, off} from '@enact/core/dispatcher';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Cancelable from '../Cancelable';
@@ -147,9 +147,7 @@ class FloatingLayerBase extends React.Component {
 		this.floatLayer = null;
 		this.node = null;
 
-		if (typeof window === 'object') {
-			off('click', this.handleClick, window);
-		}
+		off('click', this.handleClick);
 	}
 
 	renderNode () {
@@ -188,13 +186,8 @@ class FloatingLayerBase extends React.Component {
 			if (onOpen) {
 				onOpen();
 			}
-			if (typeof window === 'object') {
-				if (scrimType === 'none') {
-					// consume first click
-					once('click', () => {}, window);
-				}
-				on('click', this.handleClick, window);
-			}
+
+			on('click', this.handleClick);
 		}
 	}
 
