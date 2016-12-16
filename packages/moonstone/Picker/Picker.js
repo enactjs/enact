@@ -166,7 +166,7 @@ const PickerBase = kind({
 /**
  * A Picker component that allows selecting values from a list of values.
  *
- * @class PickerBase
+ * @class Picker
  * @memberof moonstone/Picker
  * @ui
  * @public

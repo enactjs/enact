@@ -2,12 +2,19 @@ import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import React from 'react';
 
+/**
+ * Context propTypes for MarqueeController
+ *
+ * @memberof moonstone/Marquee.Marquee
+ * @private
+ */
 const contextTypes = {
 	/**
 	 * Called by Marquee instances when marqueeing is canceled (e.g. when blurring a Marquee
 	 * set to `marqueeOn='focus'`)
 	 *
 	 * @type {Function}
+	 * @memberof moonstone/Marquee.Marquee.contextTypes
 	 */
 	cancel: React.PropTypes.func,
 
@@ -15,6 +22,7 @@ const contextTypes = {
 	 * Called by Marquee instances when marqueeing has completed
 	 *
 	 * @type {Function}
+	 * @memberof moonstone/Marquee.Marquee.contextTypes
 	 */
 	complete: React.PropTypes.func,
 
@@ -22,6 +30,7 @@ const contextTypes = {
 	 * Called to register a Marquee instance to be synchronized
 	 *
 	 * @type {Function}
+	 * @memberof moonstone/Marquee.Marquee.contextTypes
 	 */
 	register: React.PropTypes.func,
 
@@ -30,6 +39,7 @@ const contextTypes = {
 	 * set to `marqueeOn='focus'`)
 	 *
 	 * @type {Function}
+	 * @memberof moonstone/Marquee.Marquee.contextTypes
 	 */
 	start: React.PropTypes.func,
 
@@ -37,6 +47,7 @@ const contextTypes = {
 	 * Called to unregister a synchronized Marquee instance
 	 *
 	 * @type {Function}
+	 * @memberof moonstone/Marquee.Marquee.contextTypes
 	 */
 	unregister: React.PropTypes.func
 };

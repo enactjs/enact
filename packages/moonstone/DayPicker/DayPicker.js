@@ -7,11 +7,14 @@
 import {$L} from '@enact/i18n';
 import {coerceArray} from '@enact/core/util';
 import DateFmt from '@enact/i18n/ilib/lib/DateFmt';
+import {forward} from '@enact/core/handle';
 import ilib from '@enact/i18n/ilib/lib/ilib';
 import LocaleInfo from '@enact/i18n/ilib/lib/LocaleInfo';
 import React, {PropTypes} from 'react';
 
 import ExpandableList from '../ExpandableList';
+
+const forwardSelect = forward('onSelect');
 
 /**
  * {@link moonstone/DayPicker.DayPicker} is a component that
@@ -158,8 +161,7 @@ const DayPicker = class extends React.Component {
 		if (length === 7) return this.everyDayText;
 
 		for (let i = 0; i < 7; i++) {
-			// convert the control index to day index
-			index = (selected[i] + this.firstDayOfWeek) % 7;
+			index = selected[i];
 			bWeekEndStart = bWeekEndStart || this.weekEndStart === index;
 			bWeekEndEnd = bWeekEndEnd || this.weekEndEnd === index;
 		}
@@ -173,12 +175,31 @@ const DayPicker = class extends React.Component {
 		}
 	}
 
+	adjustSelection (selected, amount) {
+		if (selected != null && amount !== 0) {
+			selected = selected.map(day => (day - amount + 7) % 7);
+		}
+
+		return selected;
+	}
+
+	handleSelect = ({selected}) => {
+		const adjusted = this.adjustSelection(selected, -this.firstDayOfWeek);
+		forwardSelect({selected: adjusted}, this.props);
+	}
+
 	render () {
-		const {selected, ...rest} = this.props;
-		const label = this.getSelectedDayString(selected);
+		const label = this.getSelectedDayString(this.props.selected);
+		const selected = this.adjustSelection(this.props.selected, this.firstDayOfWeek);
 
 		return (
-			<ExpandableList {...rest} label={label} select="multiple" selected={selected}>
+			<ExpandableList
+				{...this.props}
+				label={label}
+				onSelect={this.handleSelect}
+				select="multiple"
+				selected={selected}
+			>
 				{this.longDayNames}
 			</ExpandableList>
 		);
