@@ -41,6 +41,25 @@ const contextTypes = {
 	unregister: React.PropTypes.func
 };
 
+
+/**
+ * Default configuration parameters for {@link moonstone/Marquee.MarqueeController}
+ *
+ * @type {Object}
+ * @memberof moonstone/Marquee
+ */
+const defaultConfig = {
+	/**
+	 * When `true`, any `onFocus` events that bubble to the controller will start the contained
+	 * Marquee instances. This is useful when a component contains Marquee instances that need to be
+	 * started with sibling components are focused.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 */
+	startOnFocus: false
+};
+
 /**
  * {@link moonstone/Marquee.MarqueeController} is a Higher-order Component which will synchronize
  * contained Marquee's.
@@ -50,7 +69,8 @@ const contextTypes = {
  * @hoc
  * @public
  */
-const MarqueeController = hoc((config, Wrapped) => {
+const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
+	const {startOnFocus} = config;
 	const forwardBlur = forward('onBlur');
 	const forwardFocus = forward('onFocus');
 
@@ -202,7 +222,7 @@ const MarqueeController = hoc((config, Wrapped) => {
 		markComplete (component) {
 			let complete = true;
 			this.controlled.forEach(c => {
-				if (c.component === component || c.component.contentFits) {
+				if (c.component === component) {
 					c.complete = true;
 				}
 
@@ -213,8 +233,18 @@ const MarqueeController = hoc((config, Wrapped) => {
 		}
 
 		render () {
+			let props = this.props;
+
+			if (startOnFocus) {
+				props = {
+					...this.props,
+					onBlur: this.handleBlur,
+					onFocus: this.handleFocus
+				};
+			}
+
 			return (
-				<Wrapped {...this.props} onFocus={this.handleFocus} onBlur={this.handleBlur} />
+				<Wrapped {...props} />
 			);
 		}
 	};

@@ -338,7 +338,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{undefined}
 		 */
 		start = (delay = this.props.marqueeDelay) => {
-			if (!this.state.animating) {
+			if (this.sync && this.contentFits) {
+				this.context.complete(this);
+			} else if (!this.state.animating) {
 				this.setTimeout(() => {
 					this.setState({
 						animating: true
