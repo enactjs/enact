@@ -142,7 +142,7 @@ const TooltipBase = kind({
 
 		/**
 		 * The width of tooltip content in pixels (px). If the content goes over the given width,
-		 * then it will automatically wrap texts.
+		 * then it will automatically wrap.
 		 *
 		 * @type {Number}
 		 * @public
