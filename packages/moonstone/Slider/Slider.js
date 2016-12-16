@@ -46,6 +46,17 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			backgroundPercent: PropTypes.number,
 
 			/**
+			 * The slider can change its behavior to have the knob follow the cursor as it moves
+			 * across the slider, without applying the position. A click or drag behaves the same.
+			 * This is primarily used by media playback. Setting this to `true` enables this behavior.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @private
+			 */
+			detachedKnob: PropTypes.bool,
+
+			/**
 			 * When `true`, the component is shown as disabled and does not generate events
 			 *
 			 * @type {Boolean}
@@ -89,6 +100,16 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * @public
 			 */
 			onChange: PropTypes.func,
+
+			/**
+			 * The handler to run when the mouse is moved across the slider.
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @param {Number} event.value Value of the slider
+			 * @public
+			 */
+			onMouseMove: PropTypes.func,
 
 			/**
 			 * When `true`, a pressed visual effect is applied
@@ -145,6 +166,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 
 		defaultProps: {
 			backgroundPercent: 0,
+			detachedKnob: false,
 			max: 100,
 			min: 0,
 			onChange: () => {}, // needed to ensure the base input element is mutable if no change handler is provided
@@ -165,8 +187,9 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			proportionProgress: computeProportionProgress
 		},
 
-		render: ({disabled, inputRef, max, min, onChange, proportionBackgroundProgress, proportionProgress, sliderBarRef, sliderRef, step, value, vertical, ...rest}) => {
+		render: ({disabled, inputRef, max, min, onChange, onMouseMove, proportionBackgroundProgress, proportionProgress, sliderBarRef, sliderRef, step, value, vertical, ...rest}) => {
 			delete rest.backgroundPercent;
+			delete rest.detachedKnob;
 			delete rest.pressed;
 
 			return (
@@ -186,6 +209,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						min={min}
 						step={step}
 						onChange={onChange}
+						onMouseMove={onMouseMove}
 						value={value}
 						orient={vertical ? 'vertical' : 'horizontal'}
 					/>

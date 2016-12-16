@@ -11,6 +11,7 @@ import Spotlight from '@enact/spotlight';
 import {checkDefaultBounds} from '@enact/ui/validators/PropTypeValidators';
 import clamp from 'ramda/src/clamp';
 import React, {PropTypes} from 'react';
+import {forward} from '@enact/core/handle';
 
 import {
 	computeProportionBackground,
@@ -60,6 +61,12 @@ const defaultConfig = {
 	handlesIncrements: false
 };
 
+// Set-up event forwarding
+const
+	forwardChange     = forward('onChange'),
+	forwardMouseMove  = forward('onMouseMove'),
+	forwardMouseOut   = forward('onMouseOut');
+
 /**
  * {@link moonstone/internal/SliderDecorator.SliderDecorator} is a Higher-order Component that
  * provides common functionality for slider-like components. Essentially, this HOC implements a
@@ -75,7 +82,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'SliderDecorator';
 
-		static propTypes = /** @lends moonstone/SliderDecorator.SliderDecorator.prototype */{
+		static propTypes = /** @lends moonstone/SliderDecorator.SliderDecorator.prototype */ {
 			/**
 			 * Background progress, as a percentage.
 			 *
@@ -84,6 +91,17 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @public
 			 */
 			backgroundPercent: PropTypes.number,
+
+			/**
+			 * The slider can change its behavior to have the knob follow the cursor as it moves
+			 * across the slider, without applying the position. A click or drag behaves the same.
+			 * This is primarily used by media playback. Setting this to `true` enables this behavior.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @private
+			 */
+			detachedKnob: PropTypes.bool,
 
 			/**
 			 * The maximum value of the slider.
@@ -179,18 +197,45 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		handleChange = (event) => {
-			event.preventDefault();
-			const parseFn = (event.target.value % 1 !== 0) ? 'parseFloat' : 'parseInt',
-				value = Number[parseFn](event.target.value);
+		handleChange = (ev) => {
+			ev.preventDefault();
+			const parseFn = (ev.target.value % 1 !== 0) ? 'parseFloat' : 'parseInt',
+				value = Number[parseFn](ev.target.value);
 			this.submitValue(value);
+			forwardChange(ev, this.props);
+		}
+
+		handleMouseMove = (ev) => {
+			if (ev.buttons || this.props.vertical) return;	// We don't want to run this code if any mouse button is being held down. That indicates dragging.
+
+			const {knobNode, node} = this.sliderBarNode,
+				{vertical} = this.props,
+				inputPos = this.inputNode.getBoundingClientRect(),
+				inputOffsetX = ev.clientX - inputPos.left,	// Relative position of the mouse on the input
+				barWidth = node.offsetWidth,
+				cs = window.getComputedStyle(this.inputNode),
+				inputPaddingLeft = parseFloat(cs.paddingLeft),
+
+				// Don't let the positional value exceed the bar width, and account for the dead-space padding
+				offsetX = clamp(inputPaddingLeft, inputPaddingLeft + barWidth, inputOffsetX),
+				knobOffsetX = offsetX - inputPaddingLeft,	// Pretend the padding doesn't exist when calculating
+				knobProportion = knobOffsetX / barWidth;	// Proportion of the bar to offset by, in pixels
+
+			// console.log('mousemove:', offsetX, knobOffsetX, barWidth, knobProportion);
+			knobNode.style.transform = computeKnobTransform(knobProportion, vertical, node);
+			forwardMouseMove(ev, this.props);
+		}
+
+		handleMouseOut = (ev) => {
+			this.updateUI(this.state.value);
+			forwardMouseOut(ev, this.props);
 		}
 
 		submitValue = (value) => {
 			throttleJob(this.jobName, () => this.updateValue(value), config.changeDelay);
 		}
 
-		updateValue = (value) => {
+		updateUI = (value) => {
 			// intentionally breaking encapsulation to avoid having to specify multiple refs
 			const {barNode, knobNode, loaderNode, node} = this.sliderBarNode;
 			const {backgroundPercent, max, min, vertical} = this.props;
@@ -202,6 +247,10 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			loaderNode.style.transform = computeBarTransform(proportionBackground, vertical);
 			barNode.style.transform = computeBarTransform(proportionProgress, vertical);
 			knobNode.style.transform = computeKnobTransform(proportionProgress, vertical, node);
+		}
+
+		updateValue = (value) => {
+			this.updateUI(value);
 			this.inputNode.value = value;
 			this.setState({value});
 			this.onChange(value);
@@ -247,12 +296,14 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				<Wrapped
 					{...this.props}
 					{...handlers}
+					inputRef={this.getInputNode}
 					onChange={this.handleChange}
 					onClick={this.clickHandler}
-					inputRef={this.getInputNode}
+					onMouseMove={this.props.detachedKnob ? this.handleMouseMove : null}
+					onMouseOut={this.props.detachedKnob ? this.handleMouseOut : null}
+					sliderBarRef={this.getSliderBarNode}
 					sliderRef={this.getSliderNode}
 					value={this.state.value}
-					sliderBarRef={this.getSliderBarNode}
 				/>
 			);
 		}
