@@ -17,6 +17,8 @@ import IconButton from '../IconButton';
 
 import css from './Scrollbar.less';
 
+const HoldableIconButton = Holdable(IconButton);
+
 const
 	verticalProperties = {
 		prevButtonClass: css.scrollbarUpButton,
@@ -39,6 +41,7 @@ const
 		)
 	},
 	autoHideDelay = 200,
+	nop = () => {},
 	minThumbSize = ri.scale(4),
 	selectIcon = (isPrev) => (isVertical, rtl) => {
 		if (isVertical) {
@@ -54,8 +57,7 @@ const
 	selectNextIcon = selectIcon(false),
 	// spotlight
 	doc = (typeof window === 'object') ? window.document : {},
-	perf = (typeof window === 'object') ? window.performance : {now: Date.now},
-	HoldableIconButton = Holdable(IconButton);
+	perf = (typeof window === 'object') ? window.performance : {now: Date.now};
 
 /**
  * {@link moonstone/Scroller/Scrollbar.Scrollbar} is a Scrollbar with Moonstone styling.
@@ -99,8 +101,8 @@ class Scrollbar extends Component {
 	static contextTypes = contextTypes
 
 	static defaultProps = {
-		onNextScroll: () => {},
-		onPrevScroll: () => {},
+		onNextScroll: nop,
+		onPrevScroll: nop,
 		vertical: true
 	}
 
