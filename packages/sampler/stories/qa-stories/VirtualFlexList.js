@@ -8,6 +8,7 @@ const
 	channelWidth = ri.scale(420),
 	channelLength = 200,
 	timeWidth = ri.scale(210),
+	timeHeight = ri.scale(99),
 	itemHeight = ri.scale(81),
 	clientWidth = timeWidth * 5,
 	clientHeight = itemHeight * 6,
@@ -28,7 +29,7 @@ const
 		itemToday: {
 			background: 'black',
 			width: channelWidth + 'px',
-			padding: ri.scale(39) + 'px  0 ' + ri.scale(6) + 'px',
+			padding: ri.scale(57) + 'px  0 ' + ri.scale(6) + 'px',
 			fontSize: ri.scale(27) + 'px',
 			WebkitUserSelect: 'none',
 			userSelect: 'none'
@@ -38,8 +39,8 @@ const
 			background: 'black',
 			position: 'absolute',
 			width: timeWidth + 'px',
-			height: itemHeight + 'px',
-			padding: ri.scale(39) + 'px ' + ri.scale(9) + 'px ' + ri.scale(9) + 'px',
+			height: timeHeight + 'px',
+			padding: ri.scale(57) + 'px ' + ri.scale(9) + 'px ' + ri.scale(9) + 'px',
 			borderLeft: ri.scale(3) + 'px solid #333',
 			boxSizing: 'border-box',
 			fontSize: ri.scale(27) + 'px',
@@ -211,34 +212,41 @@ storiesOf('VirtualFlexList')
 		() => (
 			<div style={style.epg}>
 				<VirtualFlexList
-					data={{
-						item: programData,
-						rowHeader: channelInfoData,
-						colHeader: timelineData
+					corner={{
+						component: (<div style={style.itemToday}>Today</div>)
 					}}
-					dataSize={{
-						row: number('dataSize_row', programData.length),
-						col: getItemLength,
-						rowHeader: channelLength,
-						colHeader: timelineData.length
+					headers={{
+						col: {
+							component: renderColHeaderItem,
+							count:  number('headers_col_count', timelineData.length),
+							data: timelineData,
+							height: number('headers_col_height', timeHeight),
+							width: number('headers_col_width', timeWidth)
+						},
+						row: {
+							component: renderRowHeaderItem,
+							count:  number('headers_row_count', channelLength),
+							data: channelInfoData,
+							height: number('headers_row_height', itemHeight),
+							width: number('headers_row_width', channelWidth)
+						}
 					}}
-					headers="both"
-					itemSize={{
-						row: number('itemSize_row', itemHeight),
-						col: getItemWidth,
-						rowHeader: channelWidth,
-						colHeader: timeWidth
+					items={{
+						col: {
+							count: getItemLength
+						},
+						component: renderItem,
+						data: programData,
+						height: number('items_height', itemHeight),
+						row: {
+							count: number('items_row_count', programData.length)
+						},
+						width: getItemWidth
 					}}
-					maxVariableScrollSize={maxVariableScrollSize}
+					maxVariableScrollSize={number('maxVariableScrollSize', maxVariableScrollSize)}
+					variableAxis="row"
 					x={number('x', 0)}
 					y={number('y', 0)}
-					variableAxis="row"
-					component={{
-						item: renderItem,
-						rowHeader: renderRowHeaderItem,
-						colHeader: renderColHeaderItem,
-						corner: (<div style={style.itemToday}>Today</div>)
-					}}
 				/>
 			</div>
 		)
