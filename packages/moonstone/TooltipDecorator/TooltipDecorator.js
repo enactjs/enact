@@ -24,6 +24,8 @@ import {Tooltip, TooltipBase} from './Tooltip';
  * a given period of time. The tooltip is positioned around the decorator where there
  * is available window space.
  *
+ * Note that the direction of tooltip will be flipped horizontally in RTL locales.
+ *
  * @class TooltipDecorator
  * @memberof moonstone/TooltipDecorator/TooltipDecorator
  * @ui
@@ -119,7 +121,7 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 			};
 		}
 
-		adjustPosition () {
+		setTooltipLayout () {
 			const position = this.props.tooltipPosition;
 			const arr = position.split(' ');
 
@@ -241,7 +243,6 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 				this.clientRef = ev.target;
 				startJob('showTooltip', () => {
 					this.setState({showing: true});
-					this.adjustPosition();
 				}, showDelay);
 			}
 
@@ -260,6 +261,9 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 
 		getTooltipRef = (node) => {
 			this.tooltipRef = node;
+			if (node) {
+				this.setTooltipLayout();
+			}
 		}
 
 		render () {

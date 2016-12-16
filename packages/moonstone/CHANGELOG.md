@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 - `moonstone/TooltipDecorator` component
+- `moonstone/TooltipDecorator` to `moonstone/Button`, and `moonstone/IconButton`, components.
 
 ### Changed
 
