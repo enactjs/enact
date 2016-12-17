@@ -90,22 +90,165 @@ const playbackRateHash = {
 //
 // VideoPlayer
 //
+/**
+ * {@link moonstone/VideoPlayer.VideoPlayerBase} is a standard HTML5 video player for Moonstone. It
+ * behaves, responds to, and operates like a standard `<video>` tag in its support for `<source>`s
+ * and accepts several additional custom tags like `<infoComponents>`, `<leftComponents>`, and
+ * `<rightComponents>`. Any additional children will be rendered into the "more" controls area.
+ *
+ * Example usage:
+ * ```
+ * 	<VideoPlayer title="Hilarious Cat Video" poster="http://my.cat.videos/boots-poster.jpg">
+ *		<source src="http://my.cat.videos/boots.mp4" type="video/mp4" />
+ *		<infoComponents>A video about my cat Boots, wearing boots.</infoComponents>
+ *		<leftComponents><IconButton backgroundOpacity="translucent">star</IconButton></leftComponents>
+ *		<rightComponents><IconButton backgroundOpacity="translucent">flag</IconButton></rightComponents>
+ *
+ *		<Button backgroundOpacity="translucent">Add To Favorites</Button>
+ *		<IconButton backgroundOpacity="translucent">search</IconButton>
+ *	</VideoPlayer>
+ * ```
+ *
+ *
+ * @class VideoPlayerBase
+ * @memberof moonstone/VideoPlayer
+ * @ui
+ * @public
+ */
 const VideoPlayerBase = class extends React.Component {
 	static displayName = 'VideoPlayerBase';
 
 	static propTypes = {
+		/**
+		 * The video will start playing immedietly after it's loaded.
+		 *
+		 * @type {Boolean}
+		 * @default true
+		 * @public
+		 */
 		autoPlay: React.PropTypes.bool,
+
+		/**
+		 * These components are placed into the slot to the left of the media controls.
+		 *
+		 * @type {Node}
+		 * @public
+		 */
 		infoComponents: React.PropTypes.node,
+
+		/**
+		 * Background progress, as a percentage.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
 		jumpBy: React.PropTypes.number,
+
+		/**
+		 * These components are placed below the title. Typically these will be media descriptor
+		 * icons, like how many audio channels, what codec the video uses, but can also be a
+		 * description for the video or anything else that seems appropriate to provide information
+		 * about the video to the user.
+		 *
+		 * @type {Node}
+		 * @public
+		 */
 		leftComponents: React.PropTypes.node,
+
+		/**
+		 * Disable audio for this video. In a TV context, this is handled by the remote control,
+		 * not programatically in the VideoPlayer API.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
 		muted: React.PropTypes.bool,
+
+		/**
+		 * Removes the "jump" buttons. The buttons that skip forward or backward in the video.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		noJumpButtons: React.PropTypes.bool,
+
+		/**
+		 * Removes the "rate" buttons. The buttons that change the playback rate of the video.
+		 * Double speed, half speed, reverse 4x speed, etc.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		noRateButtons: React.PropTypes.bool,
+
+		/**
+		 * Removes the media slider.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
 		noSlider: React.PropTypes.bool,
+
+		/**
+		 * An override function for when the user clicks the Backward button.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
 		onBackwardButtonClick: React.PropTypes.func,
+
+		/**
+		 * An override function for when the user clicks the Forward button.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
 		onForwardButtonClick: React.PropTypes.func,
+
+		/**
+		 * An override function for when the user clicks the JumpBackward button.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onJumpBackwardButtonClick: React.PropTypes.func,
+
+		/**
+		 * An override function for when the user clicks the JumpForward button.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onJumpForwardButtonClick: React.PropTypes.func,
+
+		/**
+		 * An override function for when the user clicks the Play button.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
 		onPlayButtonClick: React.PropTypes.func,
-		onSkipBackwardButtonClick: React.PropTypes.func,
-		onSkipForwardButtonClick: React.PropTypes.func,
+
+		/**
+		 * These components are placed into the slot to the right of the media controls.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
 		rightComponents: React.PropTypes.node,
+
+		/**
+		 * Set a title for the video being played.
+		 *
+		 * @type {String}
+		 * @public
+		 */
 		title: React.PropTypes.string
 	}
 
@@ -113,6 +256,8 @@ const VideoPlayerBase = class extends React.Component {
 		autoPlay: true,
 		jumpBy: 100,
 		muted: false,
+		noJumpButtons: false,
+		noRateButtons: false,
 		noSlider: false
 	}
 
@@ -181,9 +326,16 @@ const VideoPlayerBase = class extends React.Component {
 		this.video.play();
 	}
 
+	/**
+	 * The primary means of interacting with the `<video>` element.
+	 *
+	 * @param  {String} action The method to preform.
+	 * @param  {Multiple} props  The arguments, in the format that the action method requires.
+	 *
+	 * @public
+	 */
 	send = (action, props) => {
 		if (this.video && this.videoReady) {
-			// console.log('sending', action, props);
 			this.video[action](props);
 		}
 	}
@@ -451,12 +603,11 @@ const VideoPlayerBase = class extends React.Component {
 	// Handled local events
 	//
 	onScrubPassive = (ev) => {
-		console.log('onScrubPassive:', ev.type);
 		this.scrubbingPassive = (ev.type === 'mouseenter');
 	}
-
 	onScrub = (ev) => {
-		console.log('onScrub:', ev.type);
+		// This will be wired up to tooltip when that piece is ready.,
+		// Currently just a placeholder to verify this aspect works.
 		this.scrubbing = (ev.type === 'mousedown');
 	}
 
@@ -486,16 +637,14 @@ const VideoPlayerBase = class extends React.Component {
 	// Player Button controls
 	//
 	onSliderChange = ({value}) => {
-		if (this.video && this.videoReady && this.scrubbingPassive) {
-			const el = this.video && this.video.videoEl;
-			// debug('videoEl', el);
+		if (value && this.video && this.videoReady && this.scrubbingPassive) {
+			const el = this.video.videoEl;
 			this.send('seek', value * el.duration);
 		}
 	}
-	onSkipBackward  = () => this.jump(-1 * this.props.jumpBy)
+	onJumpBackward  = () => this.jump(-1 * this.props.jumpBy)
 	onBackward      = () => this.rewind()
 	onPlay          = () => {
-		// console.log('onPlay');
 		this.speedIndex = 0;
 		this.setPlaybackRate(1);
 		if (this.state.paused) {
@@ -507,7 +656,7 @@ const VideoPlayerBase = class extends React.Component {
 		}
 	}
 	onForward       = () => this.fastForward()
-	onSkipForward   = () => this.jump(this.props.jumpBy)
+	onJumpForward   = () => this.jump(this.props.jumpBy)
 	onMoreClick     = () => {
 		this.setState({
 			more: !this.state.more
@@ -517,31 +666,26 @@ const VideoPlayerBase = class extends React.Component {
 	setVideoRef = (video) => {
 		this.videoReady = !!video;
 		this.video = video;
-		console.log('videoReady:', video);
-	}
-
-
-	notYetImplemented = () => {
-		console.log('Sorry, not yet implemented.');
 	}
 
 	render () {
-		const {children, className, noSlider, title, infoComponents, leftComponents, rightComponents, style,
+		const {children, className, infoComponents, leftComponents, noJumpButtons, noRateButtons, noSlider, rightComponents, title, style,
 			// Assign defaults during destructuring to internal methods (here, instead of defaultProps)
 			onBackwardButtonClick = this.onBackward,
 			onForwardButtonClick = this.onForward,
 			onPlayButtonClick = this.onPlay,
-			onSkipBackwardButtonClick = this.onSkipBackward,
-			onSkipForwardButtonClick = this.onSkipForward,
+			onJumpBackwardButtonClick = this.onJumpBackward,
+			onJumpForwardButtonClick = this.onJumpForward,
 			...rest} = this.props;
 		delete rest.jumpBy;
 
 		const scrubbingClass = (this.scrubbingPassive) ? ' ' + css.scrubbing : '';
 
 		// Handle some class additions when the "more" button is pressed
-		const moreState = (this.state.more) ? ' ' + css.more : '';
-		const infoState = (this.state.more) ? ' ' + css.visible : ' ' + css.hidden;
+		const moreState  = (this.state.more) ? ' ' + css.more : '';
+		const infoState  = (this.state.more) ? ' ' + css.visible : ' ' + css.hidden;
 		const withBadges = (this.state.more) ? ' ' + css.withBadges : '';
+		const moreIcon   = (this.state.more) ? 'arrowhookleft' : 'ellipsis';
 		const mediaDisabled = !!(this.state.more);
 		const moreDisabled = !(this.state.more);
 
@@ -604,18 +748,18 @@ const VideoPlayerBase = class extends React.Component {
 							<div className={css.centerComponentsContainer}>
 								<div className={css.centerComponents + moreState}>
 									<Container className={css.mediaControls} data-container-disabled={mediaDisabled}> {/* rtl={false} */}
-										<IconButton backgroundOpacity="translucent" onClick={onSkipBackwardButtonClick}>skipbackward</IconButton>
-										<IconButton backgroundOpacity="translucent" onClick={onBackwardButtonClick}>backward</IconButton>
+										{noJumpButtons ? null : <IconButton backgroundOpacity="translucent" onClick={onJumpBackwardButtonClick}>skipbackward</IconButton>}
+										{noRateButtons ? null : <IconButton backgroundOpacity="translucent" onClick={onBackwardButtonClick}>backward</IconButton>}
 										<IconButton backgroundOpacity="translucent" onClick={onPlayButtonClick}>{this.state.playPauseIcon}</IconButton>
-										<IconButton backgroundOpacity="translucent" onClick={onForwardButtonClick}>forward</IconButton>
-										<IconButton backgroundOpacity="translucent" onClick={onSkipForwardButtonClick}>skipforward</IconButton>
+										{noRateButtons ? null : <IconButton backgroundOpacity="translucent" onClick={onForwardButtonClick}>forward</IconButton>}
+										{noJumpButtons ? null : <IconButton backgroundOpacity="translucent" onClick={onJumpForwardButtonClick}>skipforward</IconButton>}
 									</Container>
 									<Container className={css.moreControls} data-container-disabled={moreDisabled}>{children}</Container> {/* rtl={false} */}
 								</div>
 							</div>
 							<div className={css.rightComponents}>
 								{rightComponents}
-								{(children) ? <IconButton backgroundOpacity="translucent" className={css.moreButton} onClick={this.onMoreClick}>ellipsis</IconButton> : null}
+								{(children) ? <IconButton backgroundOpacity="translucent" className={css.moreButton} onClick={this.onMoreClick}>{moreIcon}</IconButton> : null}
 							</div>
 						</div>
 					</div>

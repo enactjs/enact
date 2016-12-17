@@ -99,8 +99,8 @@
 				}
 
 				.times {
+					.moon-text-base(24px);
 					align-self: flex-end;
-					font-size: 24px;
 					white-space: nowrap;
 					color: @moon-video-player-subdued-text-color;
 
@@ -259,7 +259,22 @@
 						}
 						.mediaControls {
 							text-align: center;
+							direction: ltr;
 						}
+					}
+
+					:global(.enact-locale-right-to-left) & {
+						-webkit-mask-image: -webkit-gradient(linear, right top, left top, color-stop(0.9,  rgba(0,0,0,1)), color-stop(1,  rgba(0,0,0,0)));
+
+						.centerComponents.more {
+							transform: translateX(100%);
+						}
+					}
+				}
+
+				:global(.enact-locale-right-to-left) & {
+					.moreButton {
+						transform: scaleX(-1);
 					}
 				}
 			}
