@@ -251,8 +251,8 @@ class VirtualFlexListCore extends Component {
 		secondary.positionOffsets = Array(primaryDataSize);
 		secondary.thresholds = Array(primaryDataSize);
 
-		for (let i = 0; i < numOfItems; i++) {
-			this.updateSecondaryScrollInfo(i, 0);
+		for (let primaryIndex = 0; primaryIndex < numOfItems; primaryIndex++) {
+			this.updateSecondaryScrollInfo(primaryIndex, 0);
 		}
 	}
 
@@ -260,41 +260,40 @@ class VirtualFlexListCore extends Component {
 		const
 			{data, maxVariableScrollSize, variableAxis} = this.props,
 			{fixedAxis, secondary} = this,
-			i = primaryIndex,
-			secondaryDataSize = secondary.dataSize({data, index:{[variableAxis]: i}});
+			secondaryDataSize = secondary.dataSize({data, index:{[variableAxis]: primaryIndex}});
 		let
 			accumulatedSize = 0,
 			size, // width or height
-			j;
+			secondaryIndex;
 
-		secondary.positionOffsets[i] = [];
-		secondary.thresholds[i] = {};
+		secondary.positionOffsets[primaryIndex] = [];
+		secondary.thresholds[primaryIndex] = {};
 
-		for (j = 0; j < secondaryDataSize; j++) {
-			size = secondary.itemSize({data, index: {[variableAxis]: i, [fixedAxis]: j}});
-			secondary.positionOffsets[i][j] = accumulatedSize;
+		for (secondaryIndex = 0; secondaryIndex < secondaryDataSize; secondaryIndex++) {
+			size = secondary.itemSize({data, index: {[variableAxis]: primaryIndex, [fixedAxis]: secondaryIndex}});
+			secondary.positionOffsets[primaryIndex][secondaryIndex] = accumulatedSize;
 			if (accumulatedSize <= secondaryPosition && secondaryPosition < accumulatedSize + size) {
-				if (j > 0) {
-					secondary.firstIndices[i] =  j - 1;
+				if (secondaryIndex > 0) {
+					secondary.firstIndices[primaryIndex] = secondaryIndex - 1;
 				} else {
-					secondary.firstIndices[i] =  j;
+					secondary.firstIndices[primaryIndex] = secondaryIndex;
 				}
-				secondary.thresholds[i].min = accumulatedSize;
+				secondary.thresholds[primaryIndex].min = accumulatedSize;
 			}
 			if (accumulatedSize + size >= secondaryPosition + secondary.clientSize) {
-				if (j < secondaryDataSize - 1 && accumulatedSize + size < maxVariableScrollSize) {
-					secondary.lastIndices[i] =  j + 1;
+				if (secondaryIndex < secondaryDataSize - 1 && accumulatedSize + size < maxVariableScrollSize) {
+					secondary.lastIndices[primaryIndex] = secondaryIndex + 1;
 				} else {
-					secondary.lastIndices[i] =  j;
+					secondary.lastIndices[primaryIndex] = secondaryIndex;
 				}
-				secondary.thresholds[i].max = accumulatedSize + size;
+				secondary.thresholds[primaryIndex].max = accumulatedSize + size;
 				break;
 			}
 			accumulatedSize += size;
 		}
-		if (j === secondaryDataSize || !secondary.thresholds[i].max) {
-			secondary.lastIndices[i] = secondaryDataSize - 1;
-			secondary.thresholds[i].max = maxVariableScrollSize;
+		if (secondaryIndex === secondaryDataSize || !secondary.thresholds[primaryIndex].max) {
+			secondary.lastIndices[primaryIndex] = secondaryDataSize - 1;
+			secondary.thresholds[primaryIndex].max = maxVariableScrollSize;
 		}
 	}
 
@@ -337,18 +336,18 @@ class VirtualFlexListCore extends Component {
 			{clientSize, thresholds: secondaryThresholds} = this.secondary;
 		let	shouldUpdateState = false;
 
-		for (let i = newPrimaryFirstIndex; i < newPrimaryFirstIndex + numOfItems; i++) {
+		for (let primaryIndex = newPrimaryFirstIndex; primaryIndex < newPrimaryFirstIndex + numOfItems; primaryIndex++) {
 			if (
 				// primary boundary
-				(primaryFirstIndex < newPrimaryFirstIndex && i >= primaryFirstIndex + numOfItems) ||
-				(primaryFirstIndex > newPrimaryFirstIndex && i < primaryFirstIndex) ||
+				(primaryFirstIndex < newPrimaryFirstIndex && primaryIndex >= primaryFirstIndex + numOfItems) ||
+				(primaryFirstIndex > newPrimaryFirstIndex && primaryIndex < primaryFirstIndex) ||
 				// secondary boundary
-				(dir === 1 && pos + clientSize > secondaryThresholds[i].max) ||
-				(dir === -1 && pos < secondaryThresholds[i].min) ||
+				(dir === 1 && pos + clientSize > secondaryThresholds[primaryIndex].max) ||
+				(dir === -1 && pos < secondaryThresholds[primaryIndex].min) ||
 				// threshold was not defined yet
-				(!(secondaryThresholds[i].max || secondaryThresholds[i].min))
+				(!(secondaryThresholds[primaryIndex].max || secondaryThresholds[primaryIndex].min))
 			) {
-				this.updateSecondaryScrollInfo(i, pos);
+				this.updateSecondaryScrollInfo(primaryIndex, pos);
 				shouldUpdateState = true;
 			}
 		}
@@ -395,10 +394,10 @@ class VirtualFlexListCore extends Component {
 		}
 	}
 
-	applyStyleToExistingNode = (i, j, cnt, partitionIndex, scrollDirection, ...rest) => {
+	applyStyleToExistingNode = (primaryIndex, secondaryIndex, cnt, partitionIndex, scrollDirection, ...rest) => {
 		const
 			node = this.childRef.children[cnt],
-			id = scrollDirection === null ? (i + '-' + j) : (i + '-' + j + '-' + scrollDirection);
+			id = scrollDirection === null ? (primaryIndex + '-' + secondaryIndex) : (primaryIndex + '-' + secondaryIndex + '-' + scrollDirection);
 
 		if (node) {
 			node.setAttribute(dataIndexAttribute, id);
@@ -410,15 +409,15 @@ class VirtualFlexListCore extends Component {
 		}
 	}
 
-	applyStyleToNewNode = (i, j, cnt, partitionIndex, scrollDirection, ...rest) => {
+	applyStyleToNewNode = (primaryIndex, secondaryIndex, cnt, partitionIndex, scrollDirection, ...rest) => {
 		const
 			{component, data, variableAxis} = this.props,
 			{fixedAxis} = this,
-			id = scrollDirection === null ? (i + '-' + j) : (i + '-' + j + '-' + scrollDirection),
-			key = i + '-' + j + '-' + partitionIndex,
+			id = scrollDirection === null ? (primaryIndex + '-' + secondaryIndex) : (primaryIndex + '-' + secondaryIndex + '-' + scrollDirection),
+			key = primaryIndex + '-' + secondaryIndex + '-' + partitionIndex,
 			itemElement = component({
 				data,
-				index: {[variableAxis]: i, [fixedAxis]: j},
+				index: {[variableAxis]: primaryIndex, [fixedAxis]: secondaryIndex},
 				key
 			}),
 			style = {};
@@ -470,11 +469,11 @@ class VirtualFlexListCore extends Component {
 		}
 
 		// positioning items
-		for (let i = updateFrom; i < updateTo; i++) {
-			position = secondaryPosition + this.secondary.positionOffsets[i][secondary.firstIndices[i]];
+		for (let primaryIndex = updateFrom; primaryIndex < updateTo; primaryIndex++) {
+			position = secondaryPosition + this.secondary.positionOffsets[primaryIndex][secondary.firstIndices[primaryIndex]];
 
-			for (let j = secondary.firstIndices[i]; j <= secondary.lastIndices[i]; j++) {
-				size = secondary.itemSize({data, index: {[variableAxis]: i, [fixedAxis]: j}});
+			for (let secondaryIndex = secondary.firstIndices[primaryIndex]; secondaryIndex <= secondary.lastIndices[primaryIndex]; secondaryIndex++) {
+				size = secondary.itemSize({data, index: {[variableAxis]: primaryIndex, [fixedAxis]: secondaryIndex}});
 				partitionIndex = this.getPartitionIndex(position);
 
 				// To clip items if positioned in the list edge divided into the following 3 sections
@@ -489,7 +488,7 @@ class VirtualFlexListCore extends Component {
 					isOnlyOnLeftSide = position + size <= 0,
 					isFromLeftSideToList = 0 < position + size && !isOnRightSide,
 					isFromListToRightSide = 0 <= position && position < secondary.clientSize,
-					applyStyleToSplitNode = this.applyStyleToSplitNode(applyStyle, i, j, primaryPosition, width, height);
+					applyStyleToSplitNode = this.applyStyleToSplitNode(applyStyle, primaryIndex, secondaryIndex, primaryPosition, width, height);
 
 				// 1) Positioned from the left side to the right side
 				if (isOnLeftSide && isOnRightSide) {
@@ -619,18 +618,18 @@ class VirtualFlexListCore extends Component {
 		}
 	}
 
-	setSpotlightContainerRestrict = (keyCode, index) => {
+	setSpotlightContainerRestrict = (keyCode, dataIndex) => {
 		const {primary} = this;
 		let
 			isSelfOnly = false,
-			i = 0,
+			primaryIndex = 0,
 			canMoveBackward,
 			canMoveForward;
 
-		const indices = index.split('-');
-		i = Number.parseInt(indices[0]);
-		canMoveBackward = i > 1;
-		canMoveForward = i < (primary.dataSize - 1);
+		const indices = dataIndex.split('-');
+		primaryIndex = Number.parseInt(indices[0]);
+		canMoveBackward = primaryIndex > 1;
+		canMoveForward = primaryIndex < (primary.dataSize - 1);
 
 		if (this.props.variableAxis === 'row') {
 			if (keyCode === keyUp && canMoveBackward || keyCode === keyDown && canMoveForward) {
