@@ -36,7 +36,7 @@ const TooltipLabel = kind({
 
 		/**
 		 * The width of tooltip content in pixels (px). If the content goes over the given width,
-		 * then it will automatically wrap.
+		 * then it will automatically wrap. When `null`, content does not wrap.
 		 *
 		 * @type {Number}
 		 * @public
@@ -142,7 +142,7 @@ const TooltipBase = kind({
 
 		/**
 		 * The width of tooltip content in pixels (px). If the content goes over the given width,
-		 * then it will automatically wrap.
+		 * then it will automatically wrap. When `null`, content does not wrap.
 		 *
 		 * @type {Number}
 		 * @public
