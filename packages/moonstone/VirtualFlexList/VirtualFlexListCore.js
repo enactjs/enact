@@ -688,7 +688,7 @@ class VirtualFlexListCore extends Component {
 
 		const childRef = this.childRef;
 
-			// prevent native scrolling by Spotlight
+		// prevent native scrolling by Spotlight
 		this.preventScroll = () => {
 			childRef.scrollTop = 0;
 			childRef.scrollLeft = this.context.rtl ? childRef.scrollWidth : 0;
@@ -697,7 +697,6 @@ class VirtualFlexListCore extends Component {
 		if (childRef && childRef.addEventListener) {
 			childRef.addEventListener('scroll', this.preventScroll);
 		}
-
 	}
 
 	// Call updateStatesAndBounds here when dataSize has been changed to update nomOfItems state.
