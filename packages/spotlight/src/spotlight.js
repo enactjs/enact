@@ -1303,11 +1303,11 @@ const Spotlight = (function() {
 		/**
 		 * Returns the currently spotted control.
 		 *
-		 * @return {Object} The control that currently has focus.
+		 * @return {Object} The control that currently has focus, if available
 		 * @public
 		 */
 		getCurrent: function () {
-			return document.activeElement;
+			return getCurrent();
 		}
 	};
 
