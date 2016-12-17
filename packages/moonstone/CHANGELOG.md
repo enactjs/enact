@@ -4,6 +4,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+- `Moonstone/VideoPlayer` component
+
 ### Changed
 
 - `moonstone/Spinner` component's `center` and `middle` properties to a single `centered` property
