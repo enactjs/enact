@@ -146,7 +146,7 @@ class VirtualListCore extends Component {
 
 	static defaultProps = {
 		cbScrollTo: nop,
-		component: ({index, key}) => (<div key={key}>{index}</div>),
+		component: nop,
 		data: [],
 		dataSize: 0,
 		direction: 'vertical',
@@ -186,7 +186,6 @@ class VirtualListCore extends Component {
 	wrapperRef = null
 	composeItemPosition = null
 	positionContainer = null
-	job = null
 
 	// spotlight
 	nodeIndexToBeBlurred = null
@@ -265,16 +264,15 @@ class VirtualListCore extends Component {
 			{clientWidth, clientHeight} = this.getClientSize(node),
 			heightInfo = {
 				clientSize: clientHeight,
-				minItemSize: (itemSize.minHeight) ? itemSize.minHeight : null,
+				minItemSize: itemSize.minHeight || null,
 				itemSize: itemSize
 			},
 			widthInfo = {
 				clientSize: clientWidth,
-				minItemSize: (itemSize.minWidth) ? itemSize.minWidth : null,
+				minItemSize: itemSize.minWidth || null,
 				itemSize: itemSize
 			};
-		let
-			primary, secondary, dimensionToExtent, thresholdBase;
+		let primary, secondary, dimensionToExtent, thresholdBase;
 
 		this.isPrimaryDirectionVertical = (direction === 'vertical');
 
@@ -437,7 +435,7 @@ class VirtualListCore extends Component {
 				updateTo: firstIndex + numOfItems
 			};
 		} else {
-			let diff = firstIndex - oldFirstIndex;
+			const diff = firstIndex - oldFirstIndex;
 			return {
 				updateFrom: (0 < diff && diff < numOfItems ) ? oldFirstIndex + numOfItems : firstIndex,
 				updateTo: (-numOfItems < diff && diff <= 0 ) ? oldFirstIndex : firstIndex + numOfItems
@@ -445,15 +443,15 @@ class VirtualListCore extends Component {
 		}
 	}
 
-	applyStyleToExistingNode = (i, ...rest) => {
+	applyStyleToExistingNode = (primaryIndex, ...rest) => {
 		const
 			{numOfItems} = this.state,
-			node = this.containerRef.children[i % numOfItems];
+			node = this.containerRef.children[primaryIndex % numOfItems];
 
 		if (node) {
 			// spotlight
-			node.setAttribute(dataIndexAttribute, i);
-			if ((i % numOfItems) === this.nodeIndexToBeBlurred && i !== this.lastFocusedIndex) {
+			node.setAttribute(dataIndexAttribute, primaryIndex);
+			if ((primaryIndex % numOfItems) === this.nodeIndexToBeBlurred && primaryIndex !== this.lastFocusedIndex) {
 				node.blur();
 				this.nodeIndexToBeBlurred = null;
 			}
@@ -461,23 +459,23 @@ class VirtualListCore extends Component {
 		}
 	}
 
-	applyStyleToNewNode = (i, ...rest) => {
+	applyStyleToNewNode = (primaryIndex, ...rest) => {
 		const
 			{component, data} = this.props,
 			{numOfItems} = this.state,
 			itemElement = component({
 				data,
-				index: i,
-				key: i % numOfItems
+				index: primaryIndex,
+				key: primaryIndex % numOfItems
 			}),
 			style = {};
 
 		this.composeStyle(style, ...rest);
 
-		this.cc[i % numOfItems] = React.cloneElement(
+		this.cc[primaryIndex % numOfItems] = React.cloneElement(
 			itemElement, {
 				style: {...itemElement.props.style, ...style},
-				[dataIndexAttribute]: i
+				[dataIndexAttribute]: primaryIndex
 			}
 		);
 	}
@@ -497,18 +495,18 @@ class VirtualListCore extends Component {
 		height = (isPrimaryDirectionVertical ? primary.itemSize : secondary.itemSize) + 'px';
 
 		// positioning items
-		for (let i = updateFrom, j = updateFrom % dimensionToExtent; i < updateTo; i++) {
+		for (let primaryIndex = updateFrom, secondaryIndex = updateFrom % dimensionToExtent; primaryIndex < updateTo; primaryIndex++) {
 
-			if (this.updateFrom === null || this.updateTo === null || this.updateFrom > i || this.updateTo <= i) {
-				this.applyStyleToNewNode(i, width, height, primaryPosition, secondaryPosition);
+			if (this.updateFrom === null || this.updateTo === null || this.updateFrom > primaryIndex || this.updateTo <= primaryIndex) {
+				this.applyStyleToNewNode(primaryIndex, width, height, primaryPosition, secondaryPosition);
 			} else {
-				this.applyStyleToExistingNode(i, width, height, primaryPosition, secondaryPosition);
+				this.applyStyleToExistingNode(primaryIndex, width, height, primaryPosition, secondaryPosition);
 			}
 
-			if (++j === dimensionToExtent) {
+			if (++secondaryIndex === dimensionToExtent) {
 				secondaryPosition = 0;
 				primaryPosition += primary.gridSize;
-				j = 0;
+				secondaryIndex = 0;
 			} else {
 				secondaryPosition += secondary.gridSize;
 			}
@@ -518,27 +516,27 @@ class VirtualListCore extends Component {
 		this.updateTo = updateTo;
 	}
 
-	composeStyle (style, w, h, ...rest) {
+	composeStyle (style, width, height, ...rest) {
 		if (this.isItemSized) {
-			style.width = w;
-			style.height = h;
+			style.width = width;
+			style.height = height;
 		}
 		this.composeItemPosition(style, ...rest);
 	}
 
-	getXY = (primary, secondary) => {
+	getXY = (primaryIndex, secondaryIndex) => {
 		const rtlDirection = this.context.rtl ? -1 : 1;
-		return (this.isPrimaryDirectionVertical ? {x: (secondary * rtlDirection), y: primary} : {x: (primary * rtlDirection), y: secondary});
+		return (this.isPrimaryDirectionVertical ? {x: (secondaryIndex * rtlDirection), y: primaryIndex} : {x: (primaryIndex * rtlDirection), y: secondaryIndex});
 	}
 
-	composeTransform (style, primary, secondary = 0) {
-		const {x, y} = this.getXY(primary, secondary);
+	composeTransform (style, primaryIndex, secondaryIndex = 0) {
+		const {x, y} = this.getXY(primaryIndex, secondaryIndex);
 
 		style.transform = 'translate3d(' + x + 'px,' + y + 'px,0)';
 	}
 
-	composeLeftTop (style, primary, secondary = 0) {
-		const {x, y} = this.getXY(primary, secondary);
+	composeLeftTop (style, primaryIndex, secondaryIndex = 0) {
+		const {x, y} = this.getXY(primaryIndex, secondaryIndex);
 
 		style.left = x + 'px';
 		style.top = y + 'px';
@@ -679,7 +677,7 @@ class VirtualListCore extends Component {
 	// Calling setState within componentWillReceivePropswill not trigger an additional render.
 	componentWillReceiveProps (nextProps) {
 		const
-			{direction, itemSize, dataSize, overhang, spacing} = this.props,
+			{dataSize, direction, itemSize, overhang, spacing} = this.props,
 			hasMetricsChanged = (
 				direction !== nextProps.direction ||
 				((itemSize instanceof Object) ? (itemSize.minWidth !== nextProps.itemSize.minWidth || itemSize.minHeight !== nextProps.itemSize.minHeight) : itemSize !== nextProps.itemSize) ||
