@@ -10,14 +10,16 @@ import {contextTypes} from './MarqueeController';
  * Default configuration parameters for {@link moonstone/Marquee.MarqueeDecorator}
  *
  * @type {Object}
- * @memberof moonstone/Marquee
+ * @memberof moonstone/Marquee.MarqueeDecorator
+ * @hocconfig
  */
 const defaultConfig = {
 	/**
-	 * Property containing the callback to stop the animation when `marqueeOn` is 'focus'
+	 * Property containing the callback to stop the animation when `marqueeOn` is `'focus'`
 	 *
 	 * @type {String}
 	 * @default 'onBlur'
+	 * @memberof moonstone/Marquee.MarqueeDecorator.defaultConfig
 	 */
 	blur: 'onBlur',
 
@@ -26,30 +28,34 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default null
+	 * @memberof moonstone/Marquee.MarqueeDecorator.defaultConfig
 	 */
 	className: null,
 
 	/**
-	 * Property containing the callback to start the animation when `marqueeOn` is 'hover'
+	 * Property containing the callback to start the animation when `marqueeOn` is `'hover'`
 	 *
 	 * @type {String}
 	 * @default 'onMouseEnter'
+	 * @memberof moonstone/Marquee.MarqueeDecorator.defaultConfig
 	 */
 	enter: 'onMouseEnter',
 
 	/**
-	 * Property containing the callback to start the animation when `marqueeOn` is 'focus'
+	 * Property containing the callback to start the animation when `marqueeOn` is `'focus'`
 	 *
 	 * @type {String}
 	 * @default 'onFocus'
+	 * @memberof moonstone/Marquee.MarqueeDecorator.defaultConfig
 	 */
 	focus: 'onFocus',
 
 	/**
-	 * Property containing the callback to stop the animation when `marqueeOn` is 'hover'
+	 * Property containing the callback to stop the animation when `marqueeOn` is `'hover'`
 	 *
 	 * @type {String}
 	 * @default 'onMouseLeave'
+	 * @memberof moonstone/Marquee.MarqueeDecorator.defaultConfig
 	 */
 	leave: 'onMouseLeave'
 };

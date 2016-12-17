@@ -1,7 +1,7 @@
 /**
  * Exports the {@link moonstone/ExpandableItem.ExpandableItem} and
  * {@link moonstone/ExpandableItem.ExpandableItemBase} components and
- * {@link moonstone/ExpandableItem/Expandable.Expandable} Higher-Order Component (HOC). The default
+ * {@link moonstone/ExpandableItem.Expandable} Higher-Order Component (HOC). The default
  * export is {@link moonstone/ExpandableItem.ExpandableItem}.
  *
  * @module moonstone/ExpandableItem

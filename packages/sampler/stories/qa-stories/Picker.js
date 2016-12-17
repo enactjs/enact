@@ -11,9 +11,10 @@ StatefulPicker.defaultProps = Object.assign({}, PickerBase.defaultProps, Statefu
 StatefulPicker.displayName = 'Picker';
 
 const prop = {
-	'orientation': {'horizontal': 'horizontal', 'vertical': 'vertical'},
-	'width': {'null': null, 'small': 'small', 'medium': 'medium', 'large': 'large'}
+	orientation: ['horizontal', 'vertical'],
+	width: ['<null>', 'small', 'medium', 'large']
 };
+const nullify = (v) => v === '<null>' ? null : v;
 
 const iconNames = Object.keys(icons);
 
@@ -50,7 +51,7 @@ storiesOf('Picker')
 		() => (
 			<StatefulPicker
 				onChange={action('onChange')}
-				width={select('width', prop.width, 'large')}
+				width={nullify(select('width', prop.width, 'large'))}
 				orientation={select('orientation', prop.orientation, 'horizontal')}
 				wrap={boolean('wrap')}
 				joined={boolean('joined')}
@@ -68,7 +69,7 @@ storiesOf('Picker')
 		() => (
 			<StatefulPicker
 				onChange={action('onChange')}
-				width={select('width', prop.width, 'large')}
+				width={nullify(select('width', prop.width, 'large'))}
 				orientation={select('orientation', prop.orientation, 'horizontal')}
 				wrap={boolean('wrap')}
 				joined={boolean('joined')}
@@ -86,7 +87,7 @@ storiesOf('Picker')
 		() => (
 			<StatefulPicker
 				onChange={action('onChange')}
-				width={select('width', prop.width, 'medium')}
+				width={nullify(select('width', prop.width, 'medium'))}
 				orientation={select('orientation', prop.orientation, 'horizontal')}
 				wrap={boolean('wrap')}
 				joined={boolean('joined')}
@@ -105,7 +106,7 @@ storiesOf('Picker')
 		() => (
 			<StatefulPicker
 				onChange={action('onChange')}
-				width={select('width', prop.width, 'large')}
+				width={nullify(select('width', prop.width, 'large'))}
 				orientation={select('orientation', prop.orientation)}
 				wrap={boolean('wrap', true)}
 				joined={boolean('joined')}

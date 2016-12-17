@@ -4,18 +4,23 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
-### Added
-
 ### Changed
 
+- `moonstone/Spinner` component's `center` and `middle` properties to a single `centered` property
+	that applies both horizontal and vertical centering
+- `moonstone/Popup.PopupBase` component's `onCloseButtonClicked` property to `onCloseButtonClick`
+- `moonstone/Item.ItemOverlay` component's `autoHide` property to remove the `'no'` option. The same
+	effect can be achieved by omitting the property or passing `null`.
 - `moonstone/VirtualGridList` to be scrolled by page when navigating with a 5-way direction key
 - `moonstone/Scroller`, `moonstone/VirtualList`, `moonstone/VirtualGridList`, and `moonstone/Scrollable` to no longer respond to mouse down/move/up events
 
-### Removed
-
 ### Fixed
 
+- `moonstone/Input` to show an ellipsis on the correct side based on the text directionality of the `value` or `placeholder` content.
 - `moonstone/VirtualList` and `moonstone/VirtualGridList` to prevent unwanted scrolling when focused with the pointer
+## [1.0.0-alpha.5] - 2016-12-16
+
+No changes.
 
 ## [1.0.0-alpha.4] - 2016-12-2
 
