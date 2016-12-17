@@ -130,7 +130,7 @@ const TimePickerBase = kind({
 
 	render: ({hasMeridiem, hour, meridiem, meridiems, minute, noHourAnimation, noLabels, onChangeHour, onChangeMeridiem, onChangeMinute, order, ...rest}) => {
 		return (
-			<ExpandableItemBase {...rest} showLabel="always" autoCollpase={false} lockBottom={false}>
+			<ExpandableItemBase {...rest} showLabel="always" autoCollapse={false} lockBottom={false}>
 				<div className={dateComponentPickers}>
 					<div className={css.timeComponents}>
 						{order.map(picker => {
