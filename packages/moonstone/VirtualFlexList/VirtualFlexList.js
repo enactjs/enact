@@ -139,6 +139,14 @@ const VirtualFlexList = kind({
 
 	propTypes: /** @lends moonstone/VirtualFlexList.VirtualFlexList.prototype */ {
 		/**
+		 * Direction specific options of the list; valid values are `'row'` and `'col'`.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		flexAxis: PropTypes.oneOf(['row', 'col']).isRequired,
+
+		/**
 		 * List items including the following properties.
 		 *
 		 * `col` has `count` property for the number of items horizontally.
@@ -168,15 +176,7 @@ const VirtualFlexList = kind({
 		 * @type {Number}
 		 * @public
 		 */
-		maxVariableScrollSize: PropTypes.number.isRequired,
-
-		/**
-		 * Direction specific options of the list; valid values are `'row'` and `'col'`.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		variableAxis: PropTypes.oneOf(['row', 'col']).isRequired,
+		maxListSizeAlongFlexAxis: PropTypes.number.isRequired,
 
 		/**
 		 * The component for the list corner.
@@ -251,20 +251,20 @@ const VirtualFlexList = kind({
 			{style: {width: headers.row.width + 'px', height: headers.col.height + 'px', overflow: 'hidden'}} :
 			null
 		),
-		itemProps: ({headers, items, maxVariableScrollSize, variableAxis, x, y}) => ({
+		itemProps: ({flexAxis, headers, items, maxListSizeAlongFlexAxis, x, y}) => ({
 			data: items.data,
 			dataSize: {
 				row: items.row.count,
 				col: items.col.count
 			},
+			flexAxis,
 			itemSize: {
 				row: items.height,
 				col: items.width
 			},
-			maxVariableScrollSize,
+			maxListSizeAlongFlexAxis,
 			x,
 			y,
-			variableAxis,
 			style: headers ?
 				{width: 'calc(100% - ' + headers.row.width + 'px)', height: 'calc(100% - ' + headers.col.height + 'px)', top: headers.col.height + 'px', left: headers.row.width + 'px'} :
 				{width: '100%', height: '100%'},
@@ -288,9 +288,9 @@ const VirtualFlexList = kind({
 	render: ({className, colHeaderProps, corner, cornerProps, headers, itemProps, rowHeaderProps, ...rest}) => {
 		const cornerComponent = corner ? corner.component : null;
 
+		delete rest.flexAxis;
 		delete rest.items;
-		delete rest.maxVariableScrollSize;
-		delete rest.variableAxis;
+		delete rest.maxListSizeAlongFlexAxis;
 		delete rest.x;
 		delete rest.y;
 
