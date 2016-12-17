@@ -8,6 +8,7 @@
 
 import {hoc} from '@enact/core';
 import ri from '@enact/ui/resolution';
+import FloatingLayer from '@enact/ui/FloatingLayer';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import React, {PropTypes} from 'react';
 
@@ -65,12 +66,12 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			direction: PropTypes.oneOf(['up', 'down', 'left', 'right']),
 
 			/**
-			 * A function to be run when close button is clicked.
+			 * A function to be run when ContextualPopup closes.
 			 *
 			 * @type {Function}
 			 * @public
 			 */
-			onCloseButtonClick: PropTypes.func,
+			onClose: PropTypes.func,
 
 			/**
 			 * When `true`, the contextual popup will be visible.
@@ -271,26 +272,25 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const {showCloseButton, popupComponent: PopupComponent, popupClassName, open, onCloseButtonClick, ...props} = this.props;
+			const {showCloseButton, popupComponent: PopupComponent, popupClassName, open, onClose, ...rest} = this.props;
 
 			return (
 				<div className={css.contextualPopupDecorator}>
-					{open ?
+					<FloatingLayer open={open} scrimType="none" onDismiss={onClose}>
 						<ContextualPopup
 							className={popupClassName}
 							showCloseButton={showCloseButton}
-							onCloseButtonClick={onCloseButtonClick}
+							onCloseButtonClick={onClose}
 							direction={this.state.direction}
 							arrowPosition={this.state.arrowPosition}
 							containerPosition={this.state.containerPosition}
 							containerRef={this.getContainerNode}
 						>
 							<PopupComponent />
-						</ContextualPopup> :
-						null
-					}
+						</ContextualPopup>
+					</FloatingLayer>
 					<div ref={this.getClientNode}>
-						<Wrapped {...props} />
+						<Wrapped {...rest} />
 					</div>
 				</div>
 			);
