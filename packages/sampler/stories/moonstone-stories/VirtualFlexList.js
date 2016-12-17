@@ -1,4 +1,5 @@
 import ri from '@enact/ui/resolution';
+import Item from '@enact/moonstone/Item';
 import VirtualFlexList from '@enact/moonstone/VirtualFlexList';
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
@@ -27,7 +28,6 @@ const
 		},
 		// Programs
 		itemProgramWrapper: {
-			background: '#141416',
 			position: 'absolute',
 			padding: 0,
 			border: ri.scale(3) + 'px solid black',
@@ -36,10 +36,7 @@ const
 		},
 		itemProgram: {
 			height: '100%',
-			fontSize: ri.scale(33) + 'px',
-			lineHeight: ri.scale(78) + 'px',
-			WebkitUserSelect: 'none',
-			userSelect: 'none'
+			fontSize: ri.scale(33) + 'px'
 		}
 	};
 
@@ -101,11 +98,11 @@ const
 	renderItem = ({data, index, key}) => {
 		// Programs
 		return (
-			<div key={key} style={style.itemProgramWrapper}>
+			<Item key={key} style={style.itemProgramWrapper}>
 				<div style={style.itemProgram}>
 					{data[index.row][index.col].programName}
 				</div>
-			</div>
+			</Item>
 		);
 	};
 
@@ -118,6 +115,7 @@ storiesOf('VirtualFlexList')
 			<div style={style.epg}>
 				<VirtualFlexList
 					items={{
+						background: '#141416',
 						col: {
 							count: getItemLength
 						},
