@@ -395,7 +395,7 @@ class VirtualFlexListCore extends Component {
 		}
 	}
 
-	applyStyleToExistingNode = (i, j, cnt, partition, scrollDirection, ...rest) => {
+	applyStyleToExistingNode = (i, j, cnt, partitionIndex, scrollDirection, ...rest) => {
 		const
 			node = this.childRef.children[cnt],
 			id = scrollDirection === null ? (i + '-' + j) : (i + '-' + j + '-' + scrollDirection);
@@ -410,12 +410,12 @@ class VirtualFlexListCore extends Component {
 		}
 	}
 
-	applyStyleToNewNode = (i, j, cnt, partition, scrollDirection, ...rest) => {
+	applyStyleToNewNode = (i, j, cnt, partitionIndex, scrollDirection, ...rest) => {
 		const
 			{component, data, variableAxis} = this.props,
 			{fixedAxis} = this,
 			id = scrollDirection === null ? (i + '-' + j) : (i + '-' + j + '-' + scrollDirection),
-			key = i + '-' + j + '-' + partition,
+			key = i + '-' + j + '-' + partitionIndex,
 			itemElement = component({
 				data,
 				index: {[variableAxis]: i, [fixedAxis]: j},
@@ -433,6 +433,19 @@ class VirtualFlexListCore extends Component {
 		);
 	}
 
+	applyStyleToSplitNode = (applyStyle, primaryIndex, secondaryIndex, primaryPosition, width, height) => (secondaryPosition, size, cnt, partitionIndex, scrollDirection) => {
+		const {variableAxis} = this.props;
+		return applyStyle(primaryIndex, secondaryIndex, cnt, partitionIndex, scrollDirection, (variableAxis === 'row') ? size : width, (variableAxis === 'row') ? height : size, primaryPosition, secondaryPosition);
+	}
+
+	getPartitionIndex(position) {
+		if (position < 0) {
+			return Math.floor((-position - 1) / this.secondary.clientSize, 10);
+		} else {
+			return Math.floor(position / this.secondary.clientSize, 10);
+		}
+	}
+
 	positionItems (applyStyle, {updateFrom, updateTo}) {
 		const
 			{data, maxVariableScrollSize, variableAxis} = this.props,
@@ -444,7 +457,8 @@ class VirtualFlexListCore extends Component {
 			height,
 			cnt = 0,
 			position,
-			size;
+			size,
+			partitionIndex;
 
 		primaryPosition -= primary.scrollPosition;
 		if (variableAxis === 'row') {
@@ -461,72 +475,58 @@ class VirtualFlexListCore extends Component {
 
 			for (let j = secondary.firstIndices[i]; j <= secondary.lastIndices[i]; j++) {
 				size = secondary.itemSize({data, index: {[variableAxis]: i, [fixedAxis]: j}});
+				partitionIndex = this.getPartitionIndex(position);
 
-				// clip items if they are located in the list edge
-				// There are 3 sections. Section 1 for less than 0, Section 2 between 0 and less than client size, and Section 3 equal to or over client size
-				// 1) If a list item is located between Section 1 and Section 3
-				if (position < 0 && position + size > secondary.clientSize) {
-					const
-						partitionIndex = Math.floor((-position - 1) / secondary.clientSize, 10),
-						key = {
-							left: partitionIndex,
-							middle: partitionIndex + 1,
-							right: partitionIndex + 2
-						};
+				// To clip items if positioned in the list edge divided into the following 3 sections
+				// 1) on the left side of the list
+				// 2) on the list
+				// 3) on the right side of the list
+				// Depending on the sections, the items could be split into two or three.
 
-					applyStyle(i, j, cnt++, key.left, 'left', (variableAxis === 'row') ? -position : width, (variableAxis === 'row') ? height : -position, primaryPosition, position);
-					applyStyle(i, j, cnt++, key.middle, null, (variableAxis === 'row') ? secondary.clientSize : width, (variableAxis === 'row') ? height : secondary.clientSize, primaryPosition, 0);
+				const
+					isOnLeftSide = position < 0,
+					isOnRightSide = position + size > secondary.clientSize,
+					isOnlyOnLeftSide = position + size <= 0,
+					isFromLeftSideToList = 0 < position + size && !isOnRightSide,
+					isFromListToRightSide = 0 <= position && position < secondary.clientSize,
+					applyStyleToSplitNode = this.applyStyleToSplitNode(applyStyle, i, j, primaryPosition, width, height);
+
+				// 1) Positioned from the left side to the right side
+				if (isOnLeftSide && isOnRightSide) {
+					applyStyleToSplitNode(position, -position, cnt++, partitionIndex++, 'left');
+					applyStyleToSplitNode(0, secondary.clientSize, cnt++, partitionIndex++, null);
 					if (secondary.clientSize + secondary.scrollPosition < maxVariableScrollSize) {
-						applyStyle(i, j, cnt++, key.right, 'right', (variableAxis === 'row') ? position + size - secondary.clientSize : width, (variableAxis === 'row') ? height : position + size - secondary.clientSize, primaryPosition, secondary.clientSize);
+						applyStyleToSplitNode(secondary.clientSize, position + size - secondary.clientSize, cnt++, partitionIndex, 'right');
 					}
 					break;
-				// 2) If a list item is located at Section 1
-				} else if (position + size <= 0) {
-					const
-						partitionIndex = Math.floor((-position - 1) / secondary.clientSize, 10),
-						key = partitionIndex;
-
-					applyStyle(i, j, cnt++, key, 'left', (variableAxis === 'row') ? size : width, (variableAxis === 'row') ? height : size, primaryPosition, position);
+				// 2) Positioned only on the left side
+				} else if (isOnlyOnLeftSide) {
+					applyStyleToSplitNode(position, size, cnt++, partitionIndex, 'left');
 					position += size;
-				// 3) If a list item is located between Section 1 and Section 2
-				} else if (position < 0 && position + size > 0) {
-					const
-						partitionIndex = Math.floor((-position - 1) / secondary.clientSize, 10),
-						key = {
-							left: partitionIndex,
-							middle: partitionIndex + 1
-						};
-
-					applyStyle(i, j, cnt++, key.left, 'left', (variableAxis === 'row') ? -position : width, (variableAxis === 'row') ? height : -position, primaryPosition, position);
-					applyStyle(i, j, cnt++, key.middle, null, (variableAxis === 'row') ? size + position : width, (variableAxis === 'row') ? height : size + position, primaryPosition, 0);
+				// 3) Positioned from the left side to the list
+				} else if (isOnLeftSide && isFromLeftSideToList) {
+					applyStyleToSplitNode(position, -position, cnt++, partitionIndex++, 'left');
+					applyStyleToSplitNode(0, size + position, cnt++, partitionIndex++, null);
 					position += size;
-				// 4) If a list item is located between Section 2 and Section 3
-				} else if (position >= 0 && position < secondary.clientSize && position + size > secondary.clientSize) {
-					const
-						partitionIndex = Math.floor(position / secondary.clientSize, 10),
-						key = {
-							middle: partitionIndex,
-							right: partitionIndex + 1
-						};
-
-					applyStyle(i, j, cnt++, key.middle, null, (variableAxis === 'row') ? secondary.clientSize - position : width, (variableAxis === 'row') ? height : secondary.clientSize - position, primaryPosition, position);
+				// 4) Positioned from the list to the right side
+				} else if (isFromListToRightSide && isOnRightSide) {
+					applyStyleToSplitNode(position, secondary.clientSize - position, cnt++, partitionIndex++, null);
 					if (secondary.clientSize + secondary.scrollPosition < maxVariableScrollSize) {
-						applyStyle(i, j, cnt++, key.right, 'right', (variableAxis === 'row') ? position + size - secondary.clientSize : width, (variableAxis === 'row') ? height : position + size - secondary.clientSize, primaryPosition, secondary.clientSize);
+						applyStyleToSplitNode(secondary.clientSize, position + size - secondary.clientSize, cnt++, partitionIndex, 'right');
 					}
 					break;
-				// 5) If a list item is located at Section 2 or at Section 3
 				} else {
-					const key = 0;
-					let scrollDirection = null;
+				// 5) Positioned only on the list or only on the right side
+					let scrollDirection = null; // on a list by default
 
-					if (position + size > secondary.clientSize) {
+					if (isOnRightSide) {
 						scrollDirection = 'right';
-					} else if (position < 0) {
+					} else if (isOnLeftSide) {
 						scrollDirection = 'left';
 					}
 
 					// eslint-disabled-next-line no-nested-ternary
-					applyStyle(i, j, cnt++, key, scrollDirection, (variableAxis === 'row') ? size : width, (variableAxis === 'row') ? height : size, primaryPosition, position);
+					applyStyleToSplitNode(position, size, cnt++, 0, scrollDirection);
 					position += size;
 				}
 			}
@@ -589,8 +589,8 @@ class VirtualFlexListCore extends Component {
 		const
 			{primary, secondary} = this,
 			indices = focusedIndex.split('-'),
-			i = Number.parseInt(indices[0]),
-			j = Number.parseInt(indices[1]),
+			primaryIndex = Number.parseInt(indices[0]),
+			secondaryIndex = Number.parseInt(indices[1]),
 			direction = indices[2];
 		let gridPosition;
 
@@ -604,7 +604,7 @@ class VirtualFlexListCore extends Component {
 
 		// To move along the primary axis
 
-		gridPosition = this.getVariableGridPosition(i, j);
+		gridPosition = this.getVariableGridPosition(primaryIndex , secondaryIndex);
 
 		if (gridPosition.primaryPosition < primary.scrollPosition || gridPosition.primaryPosition >= primary.clientSize + primary.scrollPosition) {
 			gridPosition.primaryPosition = this.adjustPrimaryPositionOnFocus(primary, gridPosition.primaryPosition, primary.itemSize);
