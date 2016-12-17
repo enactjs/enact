@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [1.0.0-alpha.5] - 2016-12-16
+
+### Fixed
+
+- `core/dispatcher` to support pre-rendering
+
 ## [1.0.0-alpha.4] - 2016-12-2
 
 > NOTE: The framework was updated to support React 15.4

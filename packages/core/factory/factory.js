@@ -26,7 +26,7 @@ const feature = function (prop, fn, defaultConfig, config) {
 /**
  * Creates a factory function which reconciles a default configuration object (`defaultConfig`) and
  * a customized configuration object and provides the result to an executing function (`fn`). The
- * configuration objects are processed be features which determine how to reconcile the values from
+ * configuration objects are processed by features which determine how to reconcile the values from
  * each.
  *
  * Currently, `factory` only supports the `css` feature which expects its key to contain a map
@@ -37,20 +37,23 @@ const feature = function (prop, fn, defaultConfig, config) {
  * import factory from '@enact/core/factory';
  * import kind from '@enact/core/kind';
  *
- * import componentCss from './CustomComponent.less';
+ * import componentCss from './Button.less';
  *
- * const ButtonFactory = factory({css: componentCss}, ({css}) =>> {
+ * const ButtonFactory = factory({css: componentCss}, ({css}) => {
  * 	return kind({
  * 		name: 'Button',
  *
+ *		// Since 'button' will be resolved against the combined `css` map, it can be overridden too
  * 		styles: {
  * 			css,
  * 			className: 'button'
  * 		},
  *
+ *		// Component authors can also prevent overrides by using their css map directly as is done
+ *		// with the `inner` class below
  * 		render: ({children, ...rest}) => (
  * 			<button {...rest}>
- * 				<div className={css.inner}>
+ * 				<div className={componentCss.inner}>
  * 					{children}
  * 				</div>
  * 			</button>
@@ -58,6 +61,8 @@ const feature = function (prop, fn, defaultConfig, config) {
  * 	});
  * });
  *
+ * // If `buttonCss` includes a `button` class, it will be appended to the `button` class of the
+ * // `Button` component.
  * import buttonCss from './CustomButton.less';
  * CustomizedButton = ButtonFactory({css: buttonCss});
  *

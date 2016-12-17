@@ -25,6 +25,7 @@ import {
  * falling back to `Date.now()`.
  *
  * @returns	{Number}	Timestamp
+ * @private
  */
 const now = function () {
 	if (typeof window === 'object') {
@@ -35,7 +36,7 @@ const now = function () {
 };
 
 /**
- * Default config for {@link moonstone/SliderDecorator.SliderDecorator}.
+ * Default config for {@link moonstone/internal/SliderDecorator.SliderDecorator}.
  *
  * @memberof moonstone/internal/SliderDecorator
  * @hocconfig
@@ -82,7 +83,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'SliderDecorator';
 
-		static propTypes = /** @lends moonstone/SliderDecorator.SliderDecorator.prototype */ {
+		static propTypes = /** @lends moonstone/internal/SliderDecorator.SliderDecorator.prototype */{
 			/**
 			 * Background progress, as a percentage.
 			 *
