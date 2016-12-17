@@ -6,6 +6,17 @@
 
 import React, {Component, PropTypes} from 'react';
 
+import {Spotlight} from '@enact/spotlight';
+
+const
+	dataContainerDisabledAttribute = 'data-container-disabled',
+	dataContainerIdAttribute = 'data-container-id',
+	dataIndexAttribute = 'data-index',
+	keyLeft	 = 37,
+	keyUp	 = 38,
+	keyRight = 39,
+	keyDown	 = 40;
+
 const
 	rowNumberColFuncShape = PropTypes.shape({row: PropTypes.number.isRequired, col: PropTypes.func.isRequired}),
 	rowFuncColNumberShape = PropTypes.shape({row: PropTypes.func.isRequired, col: PropTypes.number.isRequired});
@@ -101,20 +112,21 @@ class VirtualFlexListCore extends Component {
 
 	cc = []
 
-	containerRef = null
+	childRef = null
+
+	// spotlight
+	nodeIndexToBeBlurred = null
+	lastFocusedIndex = null
 
 	constructor (props) {
 		super(props);
 
 		this.state = {numOfItems: 0, primaryFirstIndex: 0};
-		this.initContainerRef = this.initRef('containerRef');
 
 		this.fixedAxis = (props.variableAxis === 'row') ? 'col' : 'row';
 	}
 
 	getScrollBounds = () => this.scrollBounds
-
-	getContainerNode = () => this.containerRef
 
 	getClientSize = (node) => {
 		return {
@@ -126,14 +138,14 @@ class VirtualFlexListCore extends Component {
 	calculateMetrics (props) {
 		const
 			{itemSize, variableAxis} = props,
-			node = this.getContainerNode();
+			childRef = this.childRef;
 
-		if (!node) {
+		if (!childRef) {
 			return;
 		}
 
 		const
-			{clientWidth, clientHeight} = this.getClientSize(node),
+			{clientWidth, clientHeight} = this.getClientSize(childRef),
 			heightInfo = {
 				clientSize: clientHeight,
 				itemSize,
@@ -192,16 +204,16 @@ class VirtualFlexListCore extends Component {
 	}
 
 	calculateScrollBounds (props) {
-		const node = this.getContainerNode();
+		const childRef = this.childRef;
 
-		if (!node) {
+		if (!childRef) {
 			return;
 		}
 
 		const
 			{maxVariableScrollSize, variableAxis} = props,
 			{scrollBounds} = this,
-			{clientWidth, clientHeight} = this.getClientSize(node);
+			{clientWidth, clientHeight} = this.getClientSize(childRef);
 		let maxPos;
 
 		scrollBounds.clientWidth = clientWidth;
@@ -262,11 +274,19 @@ class VirtualFlexListCore extends Component {
 			size = secondary.itemSize({data, index: {[variableAxis]: i, [fixedAxis]: j}});
 			secondary.positionOffsets[i][j] = accumulatedSize;
 			if (accumulatedSize <= secondaryPosition && secondaryPosition < accumulatedSize + size) {
-				secondary.firstIndices[i] = j;
+				if (j > 0) {
+					secondary.firstIndices[i] =  j - 1;
+				} else {
+					secondary.firstIndices[i] =  j;
+				}
 				secondary.thresholds[i].min = accumulatedSize;
 			}
 			if (accumulatedSize + size >= secondaryPosition + secondary.clientSize) {
-				secondary.lastIndices[i] = j;
+				if (j < secondaryDataSize - 1 && accumulatedSize + size < maxVariableScrollSize) {
+					secondary.lastIndices[i] =  j + 1;
+				} else {
+					secondary.lastIndices[i] =  j;
+				}
 				secondary.thresholds[i].max = accumulatedSize + size;
 				break;
 			}
@@ -341,22 +361,22 @@ class VirtualFlexListCore extends Component {
 		const
 			{variableAxis} = this.props,
 			{numOfItems, primaryFirstIndex} = this.state,
-			isAariableAxisRow = (variableAxis === 'row');
+			isVariableAxisRow = (variableAxis === 'row');
 		let
 			dir = {primary: 0},
 			pos,
 			newPrimaryFirstIndex,
 			shouldUpdateState = false;
 
-		if (isAariableAxisRow) {
+		if (isVariableAxisRow) {
 			pos = {primary: y, secondary: x};
 			dir = {primary: dirY, secondary: dirX};
 		} else if (variableAxis === 'col') {
 			pos = {primary: x, secondary: y};
 			dir = {primary: dirX, secondary: dirY};
 		} else {
-			pos = {primary: (isAariableAxisRow) ? y : x};
-			dir = {primary: (isAariableAxisRow) ? dirY : dirX};
+			pos = {primary: (isVariableAxisRow) ? y : x};
+			dir = {primary: (isVariableAxisRow) ? dirY : dirX};
 		}
 
 		// for primary direction
@@ -375,18 +395,27 @@ class VirtualFlexListCore extends Component {
 		}
 	}
 
-	applyStyleToExistingNode = (i, j, key, ...rest) => {
-		const node = this.containerRef.children[key];
+	applyStyleToExistingNode = (i, j, cnt, partition, scrollDirection, ...rest) => {
+		const
+			node = this.childRef.children[cnt],
+			id = scrollDirection === null ? (i + '-' + j) : (i + '-' + j + '-' + scrollDirection);
 
 		if (node) {
+			node.setAttribute(dataIndexAttribute, id);
+			if (cnt === this.nodeIndexToBeBlurred && id !== this.lastFocusedIndex) {
+				node.blur();
+				this.nodeIndexToBeBlurred = null;
+			}
 			this.composeStyle(node.style, ...rest);
 		}
 	}
 
-	applyStyleToNewNode = (i, j, key, ...rest) => {
+	applyStyleToNewNode = (i, j, cnt, partition, scrollDirection, ...rest) => {
 		const
 			{component, data, variableAxis} = this.props,
 			{fixedAxis} = this,
+			id = scrollDirection === null ? (i + '-' + j) : (i + '-' + j + '-' + scrollDirection),
+			key = i + '-' + j + '-' + partition,
 			itemElement = component({
 				data,
 				index: {[variableAxis]: i, [fixedAxis]: j},
@@ -396,23 +425,24 @@ class VirtualFlexListCore extends Component {
 
 		this.composeStyle(style, ...rest);
 
-		this.cc[key] = React.cloneElement(
+		this.cc[cnt] = React.cloneElement(
 			itemElement, {
-				style: {...itemElement.props.style, ...style}
+				style: {...itemElement.props.style, ...style},
+				[dataIndexAttribute]: id
 			}
 		);
 	}
 
 	positionItems (applyStyle, {updateFrom, updateTo}) {
 		const
-			{data, variableAxis} = this.props,
+			{data, maxVariableScrollSize, variableAxis} = this.props,
 			{fixedAxis, primary, secondary} = this;
 		let
 			primaryPosition = primary.itemSize * updateFrom,
 			secondaryPosition = 0,
 			width,
 			height,
-			key = 0,
+			cnt = 0,
 			position,
 			size;
 
@@ -433,22 +463,72 @@ class VirtualFlexListCore extends Component {
 				size = secondary.itemSize({data, index: {[variableAxis]: i, [fixedAxis]: j}});
 
 				// clip items if they are located in the list edge
-				if (position < 0) {
-					size += position;
-					position = 0;
-				}
-				if (position + size > secondary.clientSize) {
-					size = secondary.clientSize - position;
-				}
+				// There are 3 sections. Section 1 for less than 0, Section 2 between 0 and less than client size, and Section 3 equal to or over client size
+				// 1) If a list item is located between Section 1 and Section 3
+				if (position < 0 && position + size > secondary.clientSize) {
+					const
+						partitionIndex = Math.floor((-position - 1) / secondary.clientSize, 10),
+						key = {
+							left: partitionIndex,
+							middle: partitionIndex + 1,
+							right: partitionIndex + 2
+						};
 
-				if (variableAxis === 'row') {
-					applyStyle(i, j, key, size, height, primaryPosition, position);
-				} else if (variableAxis === 'col') {
-					applyStyle(i, j, key, width, size, primaryPosition, position);
-				}
+					applyStyle(i, j, cnt++, key.left, 'left', (variableAxis === 'row') ? -position : width, (variableAxis === 'row') ? height : -position, primaryPosition, position);
+					applyStyle(i, j, cnt++, key.middle, null, (variableAxis === 'row') ? secondary.clientSize : width, (variableAxis === 'row') ? height : secondary.clientSize, primaryPosition, 0);
+					if (secondary.clientSize + secondary.scrollPosition < maxVariableScrollSize) {
+						applyStyle(i, j, cnt++, key.right, 'right', (variableAxis === 'row') ? position + size - secondary.clientSize : width, (variableAxis === 'row') ? height : position + size - secondary.clientSize, primaryPosition, secondary.clientSize);
+					}
+					break;
+				// 2) If a list item is located at Section 1
+				} else if (position + size <= 0) {
+					const
+						partitionIndex = Math.floor((-position - 1) / secondary.clientSize, 10),
+						key = partitionIndex;
 
-				position += size;
-				key++;
+					applyStyle(i, j, cnt++, key, 'left', (variableAxis === 'row') ? size : width, (variableAxis === 'row') ? height : size, primaryPosition, position);
+					position += size;
+				// 3) If a list item is located between Section 1 and Section 2
+				} else if (position < 0 && position + size > 0) {
+					const
+						partitionIndex = Math.floor((-position - 1) / secondary.clientSize, 10),
+						key = {
+							left: partitionIndex,
+							middle: partitionIndex + 1
+						};
+
+					applyStyle(i, j, cnt++, key.left, 'left', (variableAxis === 'row') ? -position : width, (variableAxis === 'row') ? height : -position, primaryPosition, position);
+					applyStyle(i, j, cnt++, key.middle, null, (variableAxis === 'row') ? size + position : width, (variableAxis === 'row') ? height : size + position, primaryPosition, 0);
+					position += size;
+				// 4) If a list item is located between Section 2 and Section 3
+				} else if (position >= 0 && position < secondary.clientSize && position + size > secondary.clientSize) {
+					const
+						partitionIndex = Math.floor(position / secondary.clientSize, 10),
+						key = {
+							middle: partitionIndex,
+							right: partitionIndex + 1
+						};
+
+					applyStyle(i, j, cnt++, key.middle, null, (variableAxis === 'row') ? secondary.clientSize - position : width, (variableAxis === 'row') ? height : secondary.clientSize - position, primaryPosition, position);
+					if (secondary.clientSize + secondary.scrollPosition < maxVariableScrollSize) {
+						applyStyle(i, j, cnt++, key.right, 'right', (variableAxis === 'row') ? position + size - secondary.clientSize : width, (variableAxis === 'row') ? height : position + size - secondary.clientSize, primaryPosition, secondary.clientSize);
+					}
+					break;
+				// 5) If a list item is located at Section 2 or at Section 3
+				} else {
+					const key = 0;
+					let scrollDirection = null;
+
+					if (position + size > secondary.clientSize) {
+						scrollDirection = 'right';
+					} else if (position < 0) {
+						scrollDirection = 'left';
+					}
+
+					// eslint-disabled-next-line no-nested-ternary
+					applyStyle(i, j, cnt++, key, scrollDirection, (variableAxis === 'row') ? size : width, (variableAxis === 'row') ? height : size, primaryPosition, position);
+					position += size;
+				}
 			}
 
 			primaryPosition += primary.itemSize;
@@ -477,11 +557,122 @@ class VirtualFlexListCore extends Component {
 
 	getVirtualScrollDimension = () => (this.primary.dataSize * this.primary.itemSize)
 
+	// Spotlight
+
+	getVariableGridPosition (primaryIndex, secondaryIndex) {
+		const
+			{primary, secondary} = this,
+			primaryPosition = primaryIndex * primary.itemSize,
+			secondaryPosition = secondary.positionOffsets[primaryIndex][secondaryIndex];
+
+		return {primaryPosition, secondaryPosition};
+	}
+
+	adjustPrimaryPositionOnFocus = (info, pos, itemSize) => {
+		const offsetToClientEnd = info.clientSize - itemSize;
+
+		if (info.clientSize >= itemSize) {
+			if (pos > info.scrollPosition + offsetToClientEnd) {
+				pos = info.scrollPosition + info.clientSize;
+			} else if (pos >= info.scrollPosition) {
+				pos = info.scrollPosition;
+			} else {
+				pos = info.scrollPosition - info.clientSize;
+			}
+		}
+		return pos;
+	}
+
+	gridPositionToItemPosition = ({primaryPosition, secondaryPosition}) => ( (this.props.variableAxis === 'row') ? {left: secondaryPosition, top: primaryPosition} : {left: primaryPosition, top: secondaryPosition})
+
+	calculateFlexPositionOnFocus = (focusedIndex, key) => {
+		const
+			{primary, secondary} = this,
+			indices = focusedIndex.split('-'),
+			i = Number.parseInt(indices[0]),
+			j = Number.parseInt(indices[1]),
+			direction = indices[2];
+		let gridPosition;
+
+		// To move along the secondary axis
+
+		if (direction === 'right') {
+			return this.gridPositionToItemPosition({primaryPosition: primary.scrollPosition, secondaryPosition: secondary.scrollPosition + secondary.clientSize});
+		} else if (direction === 'left') {
+			return this.gridPositionToItemPosition({primaryPosition: primary.scrollPosition, secondaryPosition: secondary.scrollPosition - secondary.clientSize});
+		}
+
+		// To move along the primary axis
+
+		gridPosition = this.getVariableGridPosition(i, j);
+
+		if (gridPosition.primaryPosition < primary.scrollPosition || gridPosition.primaryPosition >= primary.clientSize + primary.scrollPosition) {
+			gridPosition.primaryPosition = this.adjustPrimaryPositionOnFocus(primary, gridPosition.primaryPosition, primary.itemSize);
+			gridPosition.secondaryPosition = this.secondary.scrollPosition;
+
+			this.nodeIndexToBeBlurred = key;
+			this.lastFocusedIndex = focusedIndex;
+
+			return this.gridPositionToItemPosition(gridPosition);
+		} else {
+			return null;
+		}
+	}
+
+	setSpotlightContainerRestrict = (keyCode, index) => {
+		const {primary} = this;
+		let
+			isSelfOnly = false,
+			i = 0,
+			canMoveBackward,
+			canMoveForward;
+
+		const indices = index.split('-');
+		i = Number.parseInt(indices[0]);
+		canMoveBackward = i > 1;
+		canMoveForward = i < (primary.dataSize - 1);
+
+		if (this.props.variableAxis === 'row') {
+			if (keyCode === keyUp && canMoveBackward || keyCode === keyDown && canMoveForward) {
+				isSelfOnly = true;
+			}
+		} else if (keyCode === keyLeft && canMoveBackward || keyCode === keyRight && canMoveForward) {
+			isSelfOnly = true;
+		}
+
+		this.setRestrict(isSelfOnly);
+	}
+
+	setRestrict = (bool) => {
+		Spotlight.set(this.props[dataContainerIdAttribute], {restrict: (bool) ? 'self-only' : 'self-first'});
+	}
+
+	setContainerDisabled = (bool) => {
+		const childRef = this.childRef;
+
+		if (childRef) {
+			childRef.setAttribute(dataContainerDisabledAttribute, bool);
+		}
+	}
+
 	// Calculate metrics for VirtualFlexList after the 1st render to know client W/H.
 	// We separate code related with data due to re use it when data changed.
 	componentDidMount () {
 		this.calculateMetrics(this.props);
 		this.updateStatesAndBounds(this.props);
+
+		const childRef = this.childRef;
+
+			// prevent native scrolling by Spotlight
+		this.preventScroll = () => {
+			childRef.scrollTop = 0;
+			childRef.scrollLeft = this.context.rtl ? childRef.scrollWidth : 0;
+		};
+
+		if (childRef && childRef.addEventListener) {
+			childRef.addEventListener('scroll', this.preventScroll);
+		}
+
 	}
 
 	// Call updateStatesAndBounds here when dataSize has been changed to update nomOfItems state.
@@ -512,11 +703,8 @@ class VirtualFlexListCore extends Component {
 
 	// render
 
-	initRef (prop) {
-		return (ref) => {
-			this[prop] = ref;
-		};
-	}
+	// eslint-disabled-next-line no-return-assign
+	initchildRef = (ref) => (this.childRef = ref)
 
 	renderCalculate () {
 		const
@@ -547,7 +735,7 @@ class VirtualFlexListCore extends Component {
 		}
 
 		return (
-			<div {...props} ref={this.initContainerRef}>
+			<div {...props} ref={this.initchildRef}>
 				{cc}
 			</div>
 		);
