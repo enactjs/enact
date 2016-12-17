@@ -1,5 +1,7 @@
 /**
- * Exports the {@link moonstone/VirtualFlexList/VirtualFlexList.VirtualFlexList} component.
+ * Exports the {@link moonstone/VirtualFlexList.VirtualFlexList} and
+ * {@link moonstone/VirtualFlexList.VirtualFlexListBase} components.
+ * The default export is {@link moonstone/VirtualFlexList.VirtualFlexList}.
  *
  * @module moonstone/VirtualFlexList/VirtualFlexList
  */
@@ -89,7 +91,7 @@ const headersShape = PropTypes.shape({
  */
 
 /**
- * The shape for the list items. for {@link moonstone/VirtualFlexList.items}.
+ * The shape for the list items for {@link moonstone/VirtualFlexList.items}.
  *
  * @typedef {Object} itemsShape
  * @memberof moonstone/VirtualFlexList
@@ -132,6 +134,7 @@ const itemsShape = PropTypes.oneOfType([
  * which has a variable width or height.
  *
  * @class VirtualFlexList
+ * @memberof moonstone/VirtualFlexList
  * @ui
  * @public
  */

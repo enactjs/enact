@@ -1,7 +1,7 @@
 /**
- * Exports the {@link moonstone/VirtualFlexList/Positionable.Positionable} component.
+ * Exports the {@link moonstone/VirtualFlexList.Positionable} component.
  *
- * @module moonstone/VirtualFlexList/Positionable
+ * @module moonstone/Positionable
  */
 
 import clamp from 'ramda/src/clamp';
@@ -14,6 +14,15 @@ const
 	doc = (typeof window === 'object') ? window.document : {},
 	nop = () => {};
 
+/**
+ * {@link moonstone/VirtualFlexList.Positionable} is a Higher-order Component
+ * to move its wrapped component.
+ *
+ * @class Positionable
+ * @memberof moonstone/VirtualFlexList
+ * @hoc
+ * @public
+ */
 const Positionable = hoc((config, Wrapped) => {
 	return class extends Component {
 		static propTypes = {

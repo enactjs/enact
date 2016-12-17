@@ -1,7 +1,7 @@
 /**
- * Exports the {@link moonstone/VirtualFlexList/VirtualFlexListCore.VirtualFlexListCore} component.
+ * Exports the {@link moonstone/VirtualFlexList.VirtualFlexListCore} component.
  *
- * @module moonstone/VirtualFlexList/VirtualFlexListCore
+ * @module moonstone/VirtualFlexListCore
  */
 
 import React, {Component, PropTypes} from 'react';
@@ -17,15 +17,41 @@ const
 	keyRight = 39,
 	keyDown	 = 40;
 
-const
-	rowNumberColFuncShape = PropTypes.shape({row: PropTypes.number.isRequired, col: PropTypes.func.isRequired}),
-	rowFuncColNumberShape = PropTypes.shape({row: PropTypes.func.isRequired, col: PropTypes.number.isRequired});
+/**
+ * The shape for the list item data size or item size for {@link moonstone/VirtualFlexList.dataSize}
+ * or {@link moonstone/VirtualFlexList.itemSize}.
+ *
+ * @typedef {Object} sizeShape
+ * @memberof moonstone/VirtualFlexListCore
+ * @property {Number|Function} col - The data size or item size or the function to get them for column items.
+ * @property {Number|Function} row - The data size or item size or the function to get them for row items.
+ */
+const sizeShape = PropTypes.oneOfType([
+	PropTypes.shape({
+		row: PropTypes.number.isRequired,
+		col: PropTypes.func.isRequired
+	}),
+	PropTypes.shape({
+		row: PropTypes.func.isRequired,
+		col: PropTypes.number.isRequired
+	})
+]);
 
+/**
+ * {@link moonstone/VirtualFlexList.VirtualFlexListCore} is a base component for VirtualFlexList.
+ *
+ * @class VirtualFlexListCore
+ * @memberof moonstone/VirtualFlexList
+ * @ui
+ * @private
+ */
 class VirtualFlexListCore extends Component {
-	static propTypes = /** @lends moonstone/VirtualFlexList.VirtualFlexListCore.prototype */ {
+	static propTypes = /** @lends moonstone/VirtualFlexList.VirtualFlexList.prototype */ {
 		/**
 		 * The render function for an item of the list.
-		 * `index` is for accessing the index of the item.
+		 * `data` is same with the `data` prop in the list.
+		 * `index` is for accessing the index of the item and is the object
+		 * which has `row` property for a row index and `col` property for a column index.
 		 * `key` MUST be passed as a prop for DOM recycling.
 		 * Data manipulation can be done in this function.
 		 *
@@ -38,8 +64,7 @@ class VirtualFlexListCore extends Component {
 		 * Data for the list.
 		 * Check mutation of this and determine whether the list should update or not.
 		 *
-		 * @type {Any}
-		 * @default []
+		 * @type {Object}
 		 * @public
 		 */
 		data: PropTypes.any.isRequired,
@@ -47,18 +72,18 @@ class VirtualFlexListCore extends Component {
 		/**
 		 * Size of data for the list.
 		 *
-		 * @type {Object}
+		 * @type {moonstone/VirtualFlexList.sizeShape}
 		 * @public
 		 */
-		dataSize: PropTypes.oneOfType([rowNumberColFuncShape, rowFuncColNumberShape]).isRequired,
+		dataSize: sizeShape.isRequired,
 
 		/**
 		 * Size of an item for the list.
 		 *.
-		 * @type {Object}
+		 * @type {moonstone/VirtualFlexList.sizeShape}
 		 * @public
 		 */
-		itemSize: PropTypes.oneOfType([rowNumberColFuncShape, rowFuncColNumberShape]).isRequired,
+		itemSize: sizeShape.isRequired,
 
 		/**
 		 * For variable width or variable height, we need to define max scroll width or max scroll height
@@ -84,6 +109,7 @@ class VirtualFlexListCore extends Component {
 		 * Direction specific options of the list; valid values are `'row'` and `'col'`.
 		 *
 		 * @type {String}
+		 * default `'row'`
 		 * @public
 		 */
 		variableAxis: PropTypes.oneOf(['row', 'col'])
