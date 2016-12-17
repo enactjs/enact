@@ -134,7 +134,8 @@ const ExpandableItemBase = kind({
 				return open ? onClose : onOpen;
 			}
 		},
-		open: ({disabled, open}) => open && !disabled
+		titleIcon: ({open}) => (open ? 'arrowlargeup' : 'arrowlargedown'),
+		open: ({disabled, open}) => (open && !disabled)
 	},
 
 	render: ({children, disabled, handleOpen, label, open, title, ...rest}) => {
