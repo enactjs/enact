@@ -2,7 +2,7 @@ import hoc from '@enact/core/hoc';
 import React from 'react';
 
 /**
- * The `contextTypes` published by {@link ui/RadioDecorator.RadioContainerDecorator} to interact
+ * The `contextTypes` published by {@link ui/RadioDecorator.RadioControllerDecorator} to interact
  * with {@link ui/RadioDecorator.RadioDecorator} instances.
  *
  * @type {Object}
@@ -41,23 +41,23 @@ const contextTypes = {
 };
 
 /**
- * {@link ui/RadioDecorator.RadioContainerDecorator} is a Higher-order Component that establishes
+ * {@link ui/RadioDecorator.RadioControllerDecorator} is a Higher-order Component that establishes
  * a radio group context for its descendants. Any descendants that are wrapped by
  * {@link ui/RadioDecorator.RadioDecorator} will be mutually exlusive.
  *
- * @class RadioContainerDecorator
+ * @class RadioControllerDecorator
  * @memberof ui/RadioDecorator
  * @hoc
  * @public
  */
-const RadioContainerDecorator = hoc((config, Wrapped) => {
+const RadioControllerDecorator = hoc((config, Wrapped) => {
 
 	return class extends React.Component {
-		static displayName = 'RadioContainerDecorator'
+		static displayName = 'RadioControllerDecorator'
 
 		static childContextTypes = contextTypes
 
-		static propTypes = /** @lends ui/RadioDecorator.RadioContainerDecorator.prototype */ {
+		static propTypes = /** @lends ui/RadioDecorator.RadioControllerDecorator.prototype */ {
 			/**
 			 * Controls whether the component is disabled.
 			 *
@@ -123,8 +123,8 @@ const RadioContainerDecorator = hoc((config, Wrapped) => {
 	};
 });
 
-export default RadioContainerDecorator;
+export default RadioControllerDecorator;
 export {
 	contextTypes,
-	RadioContainerDecorator
+	RadioControllerDecorator
 };

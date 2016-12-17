@@ -1,6 +1,6 @@
 /**
  * Exports the {@link ui/RadioDecorator.RadioDecorator} and
- * {@link ui/RadioDecorator.RadioContainerDecorator} Higher-order Components (HOCs).
+ * {@link ui/RadioDecorator.RadioControllerDecorator} Higher-order Components (HOCs).
  *
  * @module ui/RadioDecorator
  */
@@ -9,7 +9,7 @@ import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import React from 'react';
 
-import {contextTypes, RadioContainerDecorator} from './RadioContainerDecorator';
+import {contextTypes, RadioControllerDecorator} from './RadioControllerDecorator';
 
 /**
  * Default config for {@link ui/RadioDecorator.RadioDecorator}.
@@ -36,7 +36,7 @@ const defaultConfig = {
 /**
  * {@link ui/RadioDecorator.RadioDecorator} is a Higher-order Component that allows another
  * component to have a mutually exclusive relationship with other descendants of the same
- * {@link ui/RadioDecorator.RadioContainerDecorator}.
+ * {@link ui/RadioDecorator.RadioControllerDecorator}.
  *
  * When the `activate` event for the wrapped component is called, the component is activated and the
  * previously activated component, if any, is deactivated by invoking the `deactivate` event.
@@ -69,7 +69,7 @@ const RadioDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		/**
-		 * Invoked by a RadioContainerDecorator when the wrapped component should be deactivated
+		 * Invoked by a RadioControllerDecorator when the wrapped component should be deactivated
 		 *
 		 * @returns {undefined}
 		 */
@@ -107,7 +107,7 @@ const RadioDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 export default RadioDecorator;
 export {
-	RadioContainerDecorator,
+	RadioControllerDecorator,
 	RadioDecorator
 };
 

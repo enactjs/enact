@@ -1,7 +1,7 @@
 import ExpandableList from '@enact/moonstone/ExpandableList';
 import Button from '@enact/moonstone/Button';
 import kind from '@enact/core/kind';
-import {RadioContainerDecorator, RadioDecorator} from '@enact/ui/RadioDecorator';
+import {RadioControllerDecorator, RadioDecorator} from '@enact/ui/RadioDecorator';
 import React from 'react';
 import Selectable from '@enact/ui/Selectable';
 import {storiesOf, action} from '@kadira/storybook';
@@ -37,8 +37,8 @@ class ExpandableListChildrenLengthUpdate extends React.Component {
 	}
 }
 
-const ModalExpandableList = RadioDecorator(Selectable(ExpandableList));
-const GroupedExpandables = RadioContainerDecorator(
+const SelectableExpandableList = Selectable(ExpandableList);
+const GroupedExpandables = RadioControllerDecorator(
 	kind({
 		name: 'GroupedExpandables',
 		propTypes: {
@@ -47,15 +47,15 @@ const GroupedExpandables = RadioContainerDecorator(
 		},
 		render: ({onOpen, active}) => (
 			<div>
-				<ModalExpandableList title="First" name="first" active={active} onOpen={onOpen}>
+				<SelectableExpandableList title="First" name="first" active={active} onOpen={onOpen}>
 					{['One', 'Two', 'Three']}
-				</ModalExpandableList>
-				<ModalExpandableList title="Second" name="second" active={active} onOpen={onOpen}>
+				</SelectableExpandableList>
+				<SelectableExpandableList title="Second" name="second" active={active} onOpen={onOpen}>
 					{['Fourth', 'Fifth', 'Sixth']}
-				</ModalExpandableList>
-				<ModalExpandableList title="Third" name="third" active={active} onOpen={onOpen}>
+				</SelectableExpandableList>
+				<SelectableExpandableList title="Third" name="third" active={active} onOpen={onOpen}>
 					{['Seventh', 'Eighth', 'Nineth']}
-				</ModalExpandableList>
+				</SelectableExpandableList>
 			</div>
 		)
 	})
@@ -86,25 +86,25 @@ storiesOf('ExpandableList')
 		`
 Example
 
-	const ModalExpandableList = RadioDecorator(Selectable(ExpandableList));
-	const GroupedExpandables = RadioContainerDecorator(
+	const SelectableExpandableList = Selectable(ExpandableList);
+	const GroupedExpandables = RadioControllerDecorator(
 		kind({
 			name: 'GroupedExpandables',
 			propTypes: {
-				active: React.PropTypes.bool,
+				active: React.PropTypes.string,
 				onOpen: React.PropTypes.func
 			},
 			render: ({onOpen, active}) => (
 				<div>
-					<ModalExpandableList title="First" name="first" active={active} onOpen={onOpen}>
+					<SelectableExpandableList title="First" name="first" active={active} onOpen={onOpen}>
 						{['One', 'Two', 'Three']}
-					</ModalExpandableList>
-					<ModalExpandableList title="Second" name="second" active={active} onOpen={onOpen}>
+					</SelectableExpandableList>
+					<SelectableExpandableList title="Second" name="second" active={active} onOpen={onOpen}>
 						{['Fourth', 'Fifth', 'Sixth']}
-					</ModalExpandableList>
-					<ModalExpandableList title="Third" name="third" active={active} onOpen={onOpen}>
+					</SelectableExpandableList>
+					<SelectableExpandableList title="Third" name="third" active={active} onOpen={onOpen}>
 						{['Seventh', 'Eighth', 'Nineth']}
-					</ModalExpandableList>
+					</SelectableExpandableList>
 				</div>
 			)
 		})
