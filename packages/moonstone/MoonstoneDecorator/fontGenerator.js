@@ -1,10 +1,7 @@
-/**
+/*
 * This module loads Moonstone specific fonts. It only includes one function,
-* {@link moonstone/MoonstoneDecorator/fontGenerator.fontGenerator} and is not inteded to be directly
+* {@link moonstone/MoonstoneDecorator.fontGenerator} and is not intended to be directly
 * included by external developers.
-*
-* @module moonstone/MoonstoneDecorator/fontGenerator
-* @private
 */
 
 import ilib from '@enact/i18n';
@@ -48,7 +45,7 @@ let previousLocale = null;
 * ```
 *
 * @name fontGenerator
-* @memberof moonstone/MoonstoneDecorator/fontGenerator
+* @memberof moonstone/MoonstoneDecorator
 * @param {String} [locale] Locale string defaulting to the current locale
 * @returns {undefined}
 * @private

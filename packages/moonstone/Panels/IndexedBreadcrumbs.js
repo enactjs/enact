@@ -9,6 +9,7 @@ import Breadcrumb from './Breadcrumb';
  * @param {Number} max        Maximum number of breadcrumbs to dispaly
  * @param {Function} onSelect Handler for selecting a breadcrumb
  * @returns {React.element[]} Array of breadcrumbs
+ * @private
  */
 const IndexedBreadcrumbs = (index, max, onSelect) => {
 	const breadcrumbs = new Array(index < max ? index : max);

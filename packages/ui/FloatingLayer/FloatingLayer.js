@@ -1,10 +1,3 @@
-/**
- * Exports the {@link ui/FloatingLayer.FloatingLayer} and  {@link ui/FloatingLayer.FloatingLayerBase}
- * components. The default export is {@link ui/FloatingLayer.FloatingLayer}.
- *
- * @module ui/FloatingLayer
- */
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Cancelable from '../Cancelable';
@@ -15,7 +8,7 @@ import Scrim from './Scrim';
  * {@link ui/FloatingLayer.FloatingLayerBase} is a component that creates an entry point to the new
  * render tree. This is used for modal components such as popups.
  *
- * @class FloatingLayer
+ * @class FloatingLayerBase
  * @memberof ui/FloatingLayer
  * @ui
  * @public
