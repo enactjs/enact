@@ -437,7 +437,7 @@ class VirtualFlexListCore extends Component {
 		return applyStyle(primaryIndex, secondaryIndex, cnt, partitionIndex, scrollDirection, (variableAxis === 'row') ? size : width, (variableAxis === 'row') ? height : size, primaryPosition, secondaryPosition);
 	}
 
-	getPartitionIndex(position) {
+	getPartitionIndex (position) {
 		if (position < 0) {
 			return Math.floor((-position - 1) / this.secondary.clientSize, 10);
 		} else {
@@ -582,7 +582,7 @@ class VirtualFlexListCore extends Component {
 		return pos;
 	}
 
-	gridPositionToItemPosition = ({primaryPosition, secondaryPosition}) => ( (this.props.variableAxis === 'row') ? {left: secondaryPosition, top: primaryPosition} : {left: primaryPosition, top: secondaryPosition})
+	gridPositionToItemPosition = ({primaryPosition, secondaryPosition}) => ( (this.props.variableAxis === 'row') ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition})
 
 	calculateFlexPositionOnFocus = (focusedIndex, key) => {
 		const
@@ -603,7 +603,7 @@ class VirtualFlexListCore extends Component {
 
 		// To move along the primary axis
 
-		gridPosition = this.getVariableGridPosition(primaryIndex , secondaryIndex);
+		gridPosition = this.getVariableGridPosition(primaryIndex, secondaryIndex);
 
 		if (gridPosition.primaryPosition < primary.scrollPosition || gridPosition.primaryPosition >= primary.clientSize + primary.scrollPosition) {
 			gridPosition.primaryPosition = this.adjustPrimaryPositionOnFocus(primary, gridPosition.primaryPosition, primary.itemSize);

@@ -88,8 +88,8 @@ const Positionable = hoc((config, Wrapped) => {
 					pos = this.childRef.calculateFlexPositionOnFocus(index, key);
 				}
 				if (pos) {
-					if (pos.left !== this.props.x || pos.top !== this.props.y) {
-						this.props.doPosition({x: pos.left, y: pos.top});
+					if (pos.x !== this.props.x || pos.y !== this.props.y) {
+						this.props.doPosition({x: pos.x, y: pos.y});
 					}
 					this.lastFocusedItem = item;
 				}
