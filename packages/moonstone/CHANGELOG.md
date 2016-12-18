@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 - `autoCollapse` and `lockBottom` properties to `ExpandableItem`
+- `noAutoCollapse` and `noLockBottom` properties to `ExpandableList`
 
 ### Changed
 

@@ -148,7 +148,7 @@ const DatePickerBase = kind({
 	render: ({day, maxDays, maxMonths, maxYear, minYear, month, noLabels, onChangeDate, onChangeMonth, onChangeYear, order, year, ...rest}) => {
 
 		return (
-			<ExpandableItemBase {...rest} showLabel="always" autoCollapse={false} lockBottom={false}>
+			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false}>
 				<div className={dateComponentPickers}>
 					{order.map(picker => {
 						switch (picker) {

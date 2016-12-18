@@ -40,8 +40,10 @@ storiesOf('ExpandableList')
 		'with children length update',
 		() => (
 			<ExpandableListChildrenLengthUpdate
-				autoClose={boolean('autoClose', false)}
+				autoCloseOnSelect={boolean('autoCloseOnSelect', false)}
 				disabled={boolean('disabled', false)}
+				noAutoClose={boolean('noAutoClose', false)}
+				noLockBottom={boolean('noLockBottom', false)}
 				noneText={text('noneText', 'nothing selected')}
 				onSelect={action('onSelect')}
 				onClose={action('onClose')}

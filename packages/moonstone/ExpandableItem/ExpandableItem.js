@@ -47,7 +47,7 @@ const ExpandableItemBase = kind({
 		 * @default false
 		 * @public
 		 */
-		autoCollapse: PropTypes.bool,
+		autoClose: PropTypes.bool,
 
 		/**
 		 * The contents of the expandable item displayed when `open` is `true`
@@ -134,7 +134,7 @@ const ExpandableItemBase = kind({
 	},
 
 	defaultProps: {
-		autoCollapse: false,
+		autoClose: false,
 		disabled: false,
 		lockBottom: false,
 		open: false,
@@ -156,15 +156,15 @@ const ExpandableItemBase = kind({
 				return open ? onClose : onOpen;
 			}
 		},
-		handleKeyDown: ({autoCollapse, lockBottom, onClose}) => {
-			if (autoCollapse || lockBottom) {
+		handleKeyDown: ({autoClose, lockBottom, onClose}) => {
+			if (autoClose || lockBottom) {
 				return (ev) => {
 					const {keyCode, target} = ev;
 					// Basing first/last child on the parent of the target to support both the use
 					// case here in which the children of the container are spottable and the
 					// ExpandableList use case which has an intermediate child (Group) between the
 					// spottable components and the container.
-					if (autoCollapse && keyCode === 38 && target.parentNode.firstChild === target && onClose) {
+					if (autoClose && keyCode === 38 && target.parentNode.firstChild === target && onClose) {
 						onClose();
 						ev.nativeEvent.stopImmediatePropagation();
 					} else if (lockBottom && keyCode === 40 && target.parentNode.lastChild === target) {
@@ -177,7 +177,7 @@ const ExpandableItemBase = kind({
 	},
 
 	render: ({children, disabled, handleOpen, label, handleKeyDown, open, title, ...rest}) => {
-		delete rest.autoCollapse;
+		delete rest.autoClose;
 		delete rest.label;
 		delete rest.lockBottom;
 		delete rest.noneText;
