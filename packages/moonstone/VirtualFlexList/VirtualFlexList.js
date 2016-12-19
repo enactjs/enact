@@ -79,11 +79,11 @@ const headersShape = PropTypes.shape({
  *
  * @typedef {Object} itemsShape
  * @memberof moonstone/VirtualFlexList
- * @property {Number|Function} col - It has `count` property for the number of items horizontally.
+ * @property {Number|Function} col - The number of items or the function to get it horizontally.
  * @property {Function} component - The render function for an item.
  * @property {Object} data - Any data which is passed as the render funtion.
  * @property {Number|Function} height - The item height.
- * @property {Number|Function} row - It has `count` property for the number of items vertically.
+ * @property {Number|Function} row - The number of items or the function to get it vertically.
  * @property {Number|Function} width - The item width.
  */
 const itemsShape = PropTypes.oneOfType([
