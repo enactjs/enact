@@ -37,6 +37,7 @@ class ExpandableListChildrenLengthUpdate extends React.Component {
 
 const ExpandableGroup = RadioControllerDecorator('div');
 ExpandableGroup.displayName = 'ExpandableGroup';
+ExpandableList.displayName = 'ExpandableList';
 
 storiesOf('ExpandableList')
 	.addDecorator(withKnobs)
@@ -67,7 +68,7 @@ storiesOf('ExpandableList')
 					{['Fourth', 'Fifth', 'Sixth']}
 				</ExpandableList>
 				<ExpandableList title="Third">
-					{['Seventh', 'Eighth', 'Nineth']}
+					{['Seventh', 'Eighth', 'Ninth']}
 				</ExpandableList>
 			</ExpandableGroup>
 		)

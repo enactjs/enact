@@ -23,6 +23,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default null
+	 * @memberof ui/RadioDecorator.defaultConfig
 	 */
 	activate: null,
 
@@ -31,6 +32,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default null
+	 * @memberof ui/RadioDecorator.defaultConfig
 	 */
 	deactivate: null,
 
@@ -38,6 +40,8 @@ const defaultConfig = {
 	 * The name of a boolean prop that, when `true`, should activate the wrapped component.
 	 *
 	 * @type {String}
+	 * @default 'active'
+	 * @memberof ui/RadioDecorator.defaultConfig
 	 */
 	prop: 'active'
 };
