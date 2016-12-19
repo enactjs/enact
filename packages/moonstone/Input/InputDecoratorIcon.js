@@ -17,7 +17,7 @@ import css from './Input.less';
 const InputDecoratorIconBase = kind({
 	name: 'InputDecoratorIcon',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/Input.InputDecoratorIconBase.prototype */ {
 		/**
 		 * The position of the icon. Either `before` or `after`.
 		 *

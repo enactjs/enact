@@ -1,30 +1,66 @@
-/* //TODO: JSDOC revisit
- * Exports the {@link ui/FloatingLayer/Scrim.Scrim} component and
- * {@link ui/FloatingLayer/Scrim.ScrimBase} components. The default export is
- * {@link ui/FloatingLayer/Scrim.Scrim}.
- *
- * @module ui/FloatingLayer/Scrim
- * @private
- */
-
-import kind from '@enact/core/kind';
 import React from 'react';
 
 import css from './Scrim.less';
 
+const transparentClassName = css.scrim + ' enact-fit ' + css.transparent;
+const translucentClassName = css.scrim + ' enact-fit ' + css.translucent;
+
+// Stores references to any Scrim instances whose type is translucent to ensure that only the top-
+// most Scrim is visible to avoid stacking scrims.
+const scrimStack = [];
+
 /**
- * {@link ui/FloatingLayer/Scrim.ScrimBase} provides an overlay that will prevent taps from propagating
+ * Pushes a translucent scrim to the top of the stack and hiding the previously top
+ *
+ * @param {ui/FloatingLayer.Scrim} scrim A scrim instance to add
+ * @returns {undefined}
+ * @private
+ */
+function pushTranslucentScrim (scrim) {
+	const last = scrimStack.length - 1;
+	if (last >= 0) {
+		// if there are other translucent scrims, hide the topmost one assuming the others have been
+		// hidden correctly by previous calls
+		scrimStack[last].hide();
+	}
+
+	scrimStack.push(scrim);
+}
+
+/**
+ * Removes a translucent scrim from the stack. If the scrim was the top-most, removing it will show
+ * the next scrim. If not, it will just be removed
+ *
+ * @param {ui/FloatingLayer.Scrim} scrim A scrim instance to remove
+ * @returns {undefined}
+ * @private
+ */
+function removeTranslucentScrim (scrim) {
+	const index = scrimStack.indexOf(scrim);
+	const last = scrimStack.length - 1;
+	if (index === last) {
+		// if scrim is the top of the stack (most likely case), show the one below it then pop it
+		scrimStack.pop();
+		if (scrimStack.length) {
+			scrimStack[scrimStack.length - 1].show();
+		}
+	} else {
+		// if it's in the middle of the stack, just remove it
+		scrimStack.splice(index, 1);
+	}
+}
+
+/**
+ * {@link ui/FloatingLayer.Scrim} provides an overlay that will prevent taps from propagating
  * to the controls that it covers.
  *
- * @class ScrimBase
- * @memberof ui/FloatingLayer/Scrim
+ * @class Scrim
+ * @memberof ui/FloatingLayer
  * @ui
  * @private
  */
-const ScrimBase = kind({
-	name: 'ScrimBase',
-
-	propTypes: /** @lends ui/FloatingLayer/Scrim.ScrimBase.prototype */ {
+class Scrim extends React.Component {
+	static propTypes = /** @lends ui/FloatingLayer.Scrim.prototype */ {
 		/**
 		 * Types of scrim. It can be either `'transparent'` or `'translucent'`.
 		 *
@@ -33,104 +69,56 @@ const ScrimBase = kind({
 		 * @public
 		 */
 		type: React.PropTypes.oneOf(['transparent', 'translucent'])
-	},
+	}
 
-	defaultProps: {
+	static defaultProps = {
 		type: 'translucent'
-	},
-
-	styles: {
-		css,
-		className: 'scrim enact-fit'
-	},
-
-	computed: {
-		className: ({type, styler}) => styler.append([type])
-	},
-
-	render: (props) => {
-		delete props.type;
-
-		return (
-			<div {...props} />
-		);
 	}
-});
 
-/**
- * {@link ui/FloatingLayer/Scrim.Scrim} is a layer which adds scrim behind the children.
- * Children will always have one higher z-index than scrim.
- *
- * @class Scrim
- * @memberof ui/FloatingLayer/Scrim
- * @ui
- * @private
- */
-const Scrim = kind({
-	name: 'Scrim',
+	constructor (props) {
+		super(props);
 
-	propTypes: /** @lends ui/FloatingLayer/Scrim.Scrim.prototype */ {
-		/**
-		 * z-index of the layer. Scrim will have the z-index of layer, and the children will have
-		 * one higher index to display on top of Scrim.
-		 *
-		 * @type {Number}
-		 * @public
-		 */
-		zIndex: React.PropTypes.number.isRequired,
+		this.state = {
+			visible: true
+		};
+	}
 
-		/**
-		 * Types of scrim. It can be either `transparent` or `translucent`.
-		 *
-		 * @type {String}
-		 * @default `translucent`
-		 * @public
-		 */
-		type: React.PropTypes.oneOf(['transparent', 'translucent']),
+	show = () => this.setState({visible: true})
 
-		/**
-		 * When `true`, scrim will appear
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		visible: React.PropTypes.bool
-	},
+	hide = () => this.setState({visible: false})
 
-	defaultProps: {
-		type: 'translucent',
-		visible: false
-	},
-
-	computed: {
-		children: ({children, zIndex, ...rest}) => {
-			delete rest.type;
-			delete rest.visible;
-
-			const style = Object.assign({}, children.props.style, {zIndex: zIndex + 1});
-			return React.cloneElement(children, {style, ...rest});
-		},
-		scrim: ({visible, zIndex, type}) => {
-			if (visible) {
-				return <ScrimBase type={type} style={{zIndex}} />;
-			}
+	componentWillReceiveProps (nextProps) {
+		if (this.props.type === 'translucent' && nextProps.type !== 'translucent') {
+			removeTranslucentScrim(this);
+			this.setState({visible: true});
 		}
-	},
-
-	render: ({scrim, children, ...rest}) => {
-		delete rest.type;
-		delete rest.visible;
-		delete rest.zIndex;
-
-		return (
-			<div {...rest}>
-				{children}
-				{scrim}
-			</div>
-		);
 	}
-});
+
+	componentWillMount () {
+		if (this.props.type === 'translucent') {
+			pushTranslucentScrim(this);
+		}
+	}
+
+	componentWillUnmount () {
+		if (this.props.type === 'translucent') {
+			removeTranslucentScrim(this);
+		}
+	}
+
+	render () {
+		if (this.state.visible) {
+			const {type, ...rest} = this.props;
+			const className = type === 'transparent' ? transparentClassName : translucentClassName;
+
+			return (
+				<div {...rest} className={className} />
+			);
+		}
+
+		return null;
+	}
+}
 
 export default Scrim;
-export {ScrimBase, Scrim};
+export {Scrim};

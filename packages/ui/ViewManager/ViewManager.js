@@ -1,6 +1,6 @@
 /**
  * Exports the {@link ui/ViewManager.ViewManager} component and the
- * [arrangers]{@link ui/ViewManager.Arranger} for use with it.
+ * arrangers for use with it.
  *
  * @module ui/ViewManager
  */
@@ -157,6 +157,7 @@ class ViewManager extends React.Component {
 	 *
 	 * @param  {Object} nextProps New props
 	 * @returns {undefined}
+	 * @private
 	 */
 	checkReverse (nextProps) {
 		// null or undefined => determine automatically

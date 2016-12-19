@@ -1,7 +1,7 @@
 /**
  * Exports the {@link moonstone/TimePicker.TimePicker},
- * {@link moonstone/TimePicker/TimePickerBase.TimePickerBase}, and
- * {@link moonstone/TimePicker/TimePickerController.TimePickerController} components.
+ * {@link moonstone/TimePicker.TimePickerBase}, and
+ * {@link moonstone/TimePicker.TimePickerController} components.
  *
  * @module moonstone/TimePicker
  */

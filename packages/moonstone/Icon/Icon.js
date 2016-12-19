@@ -20,6 +20,7 @@ import css from './Icon.less';
  * @param	{String|Object}	src		URI to image or object of URIs
  *
  * @returns	{Object}				Original style object with backgroundImage updated
+ * @private
  */
 const mergeStyle = function (style, src) {
 	let updated = Object.assign({}, style);
@@ -38,6 +39,7 @@ const mergeStyle = function (style, src) {
  * @param	{String}	c	Character to test
  *
  * @returns	{Boolean}		`true` if c is a single character
+ * @private
  */
 const isSingleCharacter = function (c) {
 	return	c.length === 1 ||
