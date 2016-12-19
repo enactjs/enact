@@ -1,10 +1,3 @@
-/**
- * Exports the {@link moonstone/Picker.PickerCore} component.
- * The default export is {@link moonstone/Picker.PickerCore}.
- *
- * @module moonstone/Picker
- */
-
 import * as jobs from '@enact/core/jobs';
 import {childrenEquals} from '@enact/core/util';
 import clamp from 'ramda/src/clamp';
@@ -56,13 +49,13 @@ const TransparentIconButton = (props) => <IconButton {...props} backgroundOpacit
  * @class PickerCore
  * @memberof moonstone/Picker
  * @ui
- * @public
+ * @private
  */
 
 const PickerCore = class extends React.Component {
 	static displayName = 'PickerCore'
 
-	static propTypes = {
+	static propTypes = /** @lends moonstone/Picker.PickerCore.prototype */ {
 		/**
 		 * Index for internal ViewManager
 		 *

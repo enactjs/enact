@@ -39,7 +39,16 @@ const SliderBase = kind({
 		 * @default 0
 		 * @public
 		 */
-		backgroundPercent: PropTypes.number,
+		backgroundPercent: checkDefaultBounds,
+
+		/**
+		 * When `true`, the component is shown as disabled and does not generate events
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		disabled: PropTypes.bool,
 
 		/**
 		 * The method to run when the input mounts, giving a reference to the DOM.
@@ -152,12 +161,12 @@ const SliderBase = kind({
 		proportionProgress: computeProportionProgress
 	},
 
-	render: ({inputRef, max, min, onChange, proportionBackgroundProgress, proportionProgress, sliderBarRef, sliderRef, step, value, vertical, ...rest}) => {
+	render: ({disabled, inputRef, max, min, onChange, proportionBackgroundProgress, proportionProgress, sliderBarRef, sliderRef, step, value, vertical, ...rest}) => {
 		delete rest.backgroundPercent;
 		delete rest.pressed;
 
 		return (
-			<div {...rest} ref={sliderRef}>
+			<div {...rest} disabled={disabled} ref={sliderRef}>
 				<SliderBar
 					proportionBackgroundProgress={proportionBackgroundProgress}
 					proportionProgress={proportionProgress}
@@ -166,6 +175,7 @@ const SliderBase = kind({
 				/>
 				<input
 					className={css.input}
+					disabled={disabled}
 					type="range"
 					ref={inputRef}
 					max={max}
