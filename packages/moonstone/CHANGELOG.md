@@ -11,7 +11,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
-- `autoClose` property of `moonstone/ExpandableList` to be `autoCloseOnSelect` to disambiguate it with the added `autoClose` on 5-way up
+- `autoClose` property of `moonstone/ExpandableList` to be `closeOnSelect` to disambiguate it with the added `autoClose` on 5-way up
 - `moonstone/Spinner` component's `center` and `middle` properties to a single `centered` property
 	that applies both horizontal and vertical centering
 - `moonstone/Popup.PopupBase` component's `onCloseButtonClicked` property to `onCloseButtonClick`

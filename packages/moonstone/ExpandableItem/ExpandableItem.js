@@ -40,8 +40,9 @@ const ExpandableItemBase = kind({
 		title: PropTypes.string.isRequired,
 
 		/**
-		 * When `true`, the expandable automatically closes when the user navigates to the top of
-		 * the component; if `false`, the user must select/tap the header to close the expandable.
+		 * When `true`, the expandable automatically closes when the user navigates to the `title`
+		 * of the component using 5-way controls; if `false`, the user must select/tap the header to
+		 * close the expandable.
 		 *
 		 * @type {Boolean}
 		 * @default false

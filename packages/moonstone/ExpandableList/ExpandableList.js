@@ -52,7 +52,7 @@ const ExpandableListBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		autoCloseOnSelect: PropTypes.bool,
+		closeOnSelect: PropTypes.bool,
 
 		/**
 		 * When `true`, applies a disabled style and the control becomes non-interactive.
@@ -74,9 +74,9 @@ const ExpandableListBase = kind({
 
 		/**
 		 * When `true`, the expandable will not automatically close when the user navigates to the
-		 * top of the component.
+		 * `title` of the component using 5-way controls.
 		 *
-		 * This does not affect `autoCloseOnSelect`.
+		 * This does not affect `closeOnSelect`.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -103,7 +103,7 @@ const ExpandableListBase = kind({
 
 		/**
 		 * Called when the expandable is closing. Also called when selecting an item if
-		 * `autoCloseOnSelect` is `true`.
+		 * `closeOnSelect` is `true`.
 		 *
 		 * @type {Function}
 		 * @public
@@ -183,9 +183,9 @@ const ExpandableListBase = kind({
 					CheckboxItem; // for single or multiple
 		},
 
-		onSelect: ({autoCloseOnSelect, onClose, onSelect: handler, select}) => (ev) => {
-			// Call onClose if autoCloseOnSelect is enabled and not selecting multiple
-			if (autoCloseOnSelect && onClose && select !== 'multiple') {
+		onSelect: ({closeOnSelect, onClose, onSelect: handler, select}) => (ev) => {
+			// Call onClose if closeOnSelect is enabled and not selecting multiple
+			if (closeOnSelect && onClose && select !== 'multiple') {
 				onClose();
 			}
 
@@ -200,7 +200,7 @@ const ExpandableListBase = kind({
 	},
 
 	render: ({children, ListItem, noAutoClose, noLockBottom, onSelect, select, selected, ...rest}) => {
-		delete rest.autoCloseOnSelect;
+		delete rest.closeOnSelect;
 		delete rest.select;
 
 		return (
