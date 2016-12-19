@@ -5,6 +5,7 @@ import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean} from '@kadira/storybook-addon-knobs';
 
 // TODO: Convert to kind
+// Inspired by: http://stackoverflow.com/questions/20037122/draw-an-arrow-between-two-divs
 class Arrow extends React.Component {
 	static propTypes = {
 		start: React.PropTypes.object.isRequired,
@@ -66,9 +67,9 @@ storiesOf('About Sampler')
 				>
 					Welcome to the Enact sampler!
 				</BodyText>
-			<Button onClick={action('onClick')}>
-				Click me
-			</Button>
+				<Button onClick={action('onClick')}>
+					Click me
+				</Button>
 			</div>
 		)
 	);
