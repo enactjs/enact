@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `moonstone/VirtualList` now mutes its container instead of disabling it during scroll events
+
 ## [1.0.0-alpha.4] - 2016-12-2
 
 ### Added
