@@ -116,30 +116,20 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		getContainerPosition (containerNode, clientNode) {
-			let position = {};
+			const position = {};
 			switch (this.adjustedDirection) {
 				case 'up':
-					position = {
-						bottom: this.ARROW_OFFSET
-					};
+					position.top = clientNode.top - this.ARROW_OFFSET - containerNode.height;
 					break;
 				case 'down':
-					position = {
-						top: clientNode.height + this.ARROW_OFFSET
-					};
+					position.top = clientNode.bottom + this.ARROW_OFFSET;
 					break;
 				case 'right':
-					position = {
-						left: this.context.rtl ? this.ARROW_OFFSET : clientNode.width + this.ARROW_OFFSET
-					};
+					position.left = /* this.context.rtl ? this.ARROW_OFFSET :*/ clientNode.right + this.ARROW_OFFSET;
 					break;
 				case 'left':
-					position = {
-						right: this.context.rtl ? clientNode.width + this.ARROW_OFFSET : this.ARROW_OFFSET
-					};
+					position.left = /* this.context.rtl ? clientNode.width + this.ARROW_OFFSET : */clientNode.left - containerNode.width - this.ARROW_OFFSET;
 					break;
-				default:
-					position = {};
 			}
 
 			return this.centerContainerPosition(containerNode, clientNode, position);
@@ -150,25 +140,25 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.adjustedDirection === 'up' || this.adjustedDirection === 'down') {
 				if (this.overflow.isOverLeft) {
 					// anchor to the left of the screen
-					pos.left = -clientNode.left + this.MARGIN;
+					pos.left = this.MARGIN;
 				} else if (this.overflow.isOverRight) {
 					// anchor to the right of the screen
-					pos.right = -clientNode.right - this.MARGIN;
+					pos.left = window.innerWidth - containerNode.width - this.MARGIN;
 				} else {
 					// center horizontally
-					pos.left = (clientNode.width - containerNode.width) / 2;
+					pos.left = clientNode.left + (clientNode.width - containerNode.width) / 2;
 				}
 				pos = this.adjustRTL(pos);
 			} else if (this.adjustedDirection === 'left' || this.adjustedDirection === 'right') {
 				if (this.overflow.isOverTop) {
 					// anchor to the top of the screen
-					pos.top = -clientNode.top + this.MARGIN;
-				} else if (this.overflow.isOverDown) {
+					pos.top = this.MARGIN;
+				} else if (this.overflow.isOverBottom) {
 					// anchor to the bottom of the screen
-					pos.bottom = -clientNode.bottom - this.MARGIN;
+					pos.top = window.innerHeight - containerNode.height - this.MARGIN;
 				} else {
 					// center vertically
-					pos.top = (clientNode.height - containerNode.height) / 2;
+					pos.top = clientNode.top - (containerNode.height - clientNode.height) / 2;
 				}
 			}
 
@@ -179,23 +169,23 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			switch (this.adjustedDirection) {
 				case 'up':
 					return this.adjustRTL({
-						left: (clientNode.width - this.ARROW_WIDTH) / 2,
-						bottom: 0
+						left: clientNode.left + (clientNode.width - this.ARROW_WIDTH) / 2,
+						top: clientNode.top - this.ARROW_WIDTH
 					});
 				case 'down':
 					return this.adjustRTL({
-						left: (clientNode.width - this.ARROW_WIDTH) / 2,
-						top: clientNode.height
+						left: clientNode.left + (clientNode.width - this.ARROW_WIDTH) / 2,
+						top: clientNode.bottom
 					});
 				case 'left':
 					return {
-						right: this.context.rtl ? clientNode.width : 0,
-						top: (clientNode.height - this.ARROW_WIDTH) / 2
+						left: this.context.rtl ? clientNode.left + clientNode.width : clientNode.left - this.ARROW_WIDTH,
+						top: clientNode.top + (clientNode.height - this.ARROW_WIDTH) / 2
 					};
 				case 'right':
 					return {
-						left:  this.context.rtl ? 0 : clientNode.width,
-						top: (clientNode.height - this.ARROW_WIDTH) / 2
+						left:  this.context.rtl ? clientNode.left : clientNode.left + clientNode.width,
+						top: clientNode.top + (clientNode.height - this.ARROW_WIDTH) / 2
 					};
 				default:
 					return {};
@@ -203,23 +193,22 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		calcOverflow (container, client) {
-			// TODO: what if it's rendered inside Portal??
+			let containerHeight, containerWidth;
 
 			if (this.adjustedDirection === 'up' || this.adjustedDirection === 'down') {
-				this.overflow = {
-					isOverTop: client.top - container.height - this.ARROW_OFFSET < 0,
-					isOverBottom: client.bottom + container.height + this.ARROW_OFFSET > window.innerHeight,
-					isOverLeft: client.left - (container.width - client.width) / 2 < 0,
-					isOverRight: client.right + (container.width - client.width) / 2 > window.innerWidth
-				};
+				containerHeight = container.height;
+				containerWidth = (container.width - client.width) / 2;
 			} else {
-				this.overflow = {
-					isOverTop: client.top - (container.height - client.height) / 2 < 0,
-					isOverBottom: client.bottom + (container.height - client.height) / 2 > window.innerHeight,
-					isOverLeft: client.left - container.width - this.MARGIN < 0,
-					isOverRight: client.right + container.width + this.MARGIN > window.innerWidth
-				};
+				containerHeight = (container.height - client.height) / 2;
+				containerWidth = container.width;
 			}
+
+			this.overflow = {
+				isOverTop: client.top - containerHeight - this.ARROW_OFFSET - this.MARGIN < 0,
+				isOverBottom: client.bottom + containerHeight + this.ARROW_OFFSET + this.MARGIN  > window.innerHeight,
+				isOverLeft: client.left - containerWidth - this.ARROW_OFFSET - this.MARGIN < 0,
+				isOverRight: client.right + containerWidth + this.ARROW_OFFSET + this.MARGIN > window.innerWidth
+			};
 		}
 
 		adjustDirection () {
