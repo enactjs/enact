@@ -199,7 +199,7 @@ class VirtualFlexListCore extends Component {
 		}
 
 		const
-			{maxFlexScrollSize, flexAxis} = props,
+			{flexAxis, maxFlexScrollSize} = props,
 			{scrollBounds} = this,
 			{clientWidth, clientHeight} = this.getClientSize(node);
 		let maxPos;

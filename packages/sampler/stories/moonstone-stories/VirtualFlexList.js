@@ -117,6 +117,7 @@ storiesOf('VirtualFlexList')
 		() => (
 			<div style={style.epg}>
 				<VirtualFlexList
+					flexAxis="row"
 					items={{
 						colCount: getItemLength,
 						component: renderItem,
@@ -126,7 +127,6 @@ storiesOf('VirtualFlexList')
 						width: getItemWidth
 					}}
 					maxFlexScrollSize={number('maxFlexScrollSize', maxFlexScrollSize)}
-					variableAxis="row"
 					x={number('x', 0)}
 					y={number('y', 0)}
 				/>
