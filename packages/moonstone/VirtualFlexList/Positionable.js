@@ -45,7 +45,7 @@ const Positionable = hoc((config, Wrapped) => {
 			y: PropTypes.number.isRequired,
 
 			/**
-			 * Called whtn position updates internally
+			 * Called when position updates internally
 			 *
 			 * @type {Function}
 			 * @public
@@ -59,17 +59,19 @@ const Positionable = hoc((config, Wrapped) => {
 			 * @default false
 			 * @public
 			 */
-			gesture: PropTypes.bool
+			navigation: PropTypes.bool
 		}
 
 		static defaultProps = {
-			gesture: false,
 			doPosition: nop,
+			navigation: false,
 			x: 0,
 			y: 0
 		}
 
-		// internal variables
+		/*
+		 * Internal variables
+		 */
 
 		// status
 		childRef = null
@@ -77,10 +79,12 @@ const Positionable = hoc((config, Wrapped) => {
 		// spotlight
 		lastFocusedItem = null
 
-		// event handling
+		/*
+		 * Event handling
+		 */
 
 		onFocus = (e) => {
-			if (this.props.gesture) {
+			if (this.props.navigation) {
 				const
 					item = e.target,
 					index = item.getAttribute(dataIndexAttribute),
@@ -96,9 +100,10 @@ const Positionable = hoc((config, Wrapped) => {
 				} else if (this.childRef.calculateFlexPositionOnFocus && typeof index === 'string') {
 					pos = this.childRef.calculateFlexPositionOnFocus(index, key);
 				}
+
 				if (pos) {
-					if (pos.x !== this.props.x || pos.y !== this.props.y) {
-						this.props.doPosition({x: pos.x, y: pos.y});
+					if (pos.left !== this.props.x || pos.top !== this.props.y) {
+						this.props.doPosition({x: pos.left, y: pos.top});
 					}
 					this.lastFocusedItem = item;
 				}
@@ -106,36 +111,32 @@ const Positionable = hoc((config, Wrapped) => {
 		}
 
 		onKeyDown = (e) => {
-			if (this.props.gesture && this.childRef.setSpotlightContainerRestrict) {
+			if (this.props.navigation && this.childRef.setSpotlightContainerRestrict) {
 				const index = e.target.getAttribute(dataIndexAttribute);
 				this.childRef.setSpotlightContainerRestrict(e.keyCode, index);
 			}
 		}
 
-		onWheel = (ev) => {
-			if (this.props.gesture) {
+		onWheel = (e) => {
+			if (this.props.navigation) {
 				let y;
 
-				ev.preventDefault();
+				e.preventDefault();
 
-				if (ev.deltaY > 0) {
+				if (e.deltaY > 0) {
 					y = clamp(0, this.bounds.maxTop, this.props.y + this.bounds.clientHeight);
-				} else if (ev.deltaY < 0) {
+				} else if (e.deltaY < 0) {
 					y = clamp(0, this.bounds.maxTop, this.props.y - this.bounds.clientHeight);
 				} else {
 					y = this.props.y;
 				}
-				this.props.doPosition({x: null, y});
+				this.props.doPosition({x: this.props.x, y});
 			}
 		}
 
-		// positioning
-
-		doPosition () {
-			this.props.doPosition({x: this.scrollLeft, y: this.scrollTop});
-		}
-
-		// life cycle methods
+		/*
+		 * Life cycle methods
+		 */
 
 		componentDidMount () {
 			this.bounds = this.childRef.getScrollBounds();
@@ -160,7 +161,7 @@ const Positionable = hoc((config, Wrapped) => {
 		render () {
 			const
 				{onFocus, onKeyDown, onKeyUp, onWheel} = this,
-				props = Object.assign({}, this.props, (this.props.gesture) ? {
+				props = Object.assign({}, this.props, (this.props.navigation) ? {
 					onFocus,
 					onKeyDown,
 					onKeyUp,
@@ -168,9 +169,9 @@ const Positionable = hoc((config, Wrapped) => {
 				} : {});
 
 			delete props.doPosition;
+			delete props.navigation;
 			delete props.x;
 			delete props.y;
-			delete props.gesture;
 
 			return (<Wrapped {...props} ref={this.initChildRef} />);
 		}

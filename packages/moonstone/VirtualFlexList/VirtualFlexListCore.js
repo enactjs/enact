@@ -420,14 +420,14 @@ class VirtualFlexListCore extends Component {
 		}
 	}
 
-	applyStyleToExistingNode = (primaryIndex, secondaryIndex, cnt, partitionIndex, scrollDirection, ...rest) => {
+	applyStyleToExistingNode = (primaryIndex, secondaryIndex, count, partitionIndex, scrollDirection, ...rest) => {
 		const
-			node = this.childRef.children[cnt],
+			node = this.childRef.children[count],
 			id = scrollDirection === null ? (primaryIndex + '-' + secondaryIndex) : (primaryIndex + '-' + secondaryIndex + '-' + scrollDirection);
 
 		if (node) {
 			node.setAttribute(dataIndexAttribute, id);
-			if (cnt === this.nodeIndexToBeBlurred && id !== this.lastFocusedIndex) {
+			if (count === this.nodeIndexToBeBlurred && id !== this.lastFocusedIndex) {
 				node.blur();
 				this.nodeIndexToBeBlurred = null;
 			}
@@ -435,7 +435,7 @@ class VirtualFlexListCore extends Component {
 		}
 	}
 
-	applyStyleToNewNode = (primaryIndex, secondaryIndex, cnt, partitionIndex, scrollDirection, ...rest) => {
+	applyStyleToNewNode = (primaryIndex, secondaryIndex, count, partitionIndex, scrollDirection, ...rest) => {
 		const
 			{component, data, variableAxis} = this.props,
 			{fixedAxis} = this,
@@ -450,7 +450,7 @@ class VirtualFlexListCore extends Component {
 
 		this.composeStyle(style, ...rest);
 
-		this.cc[cnt] = React.cloneElement(
+		this.cc[count] = React.cloneElement(
 			itemElement, {
 				style: {...itemElement.props.style, ...style},
 				[dataIndexAttribute]: id
@@ -458,9 +458,9 @@ class VirtualFlexListCore extends Component {
 		);
 	}
 
-	applyStyleToSplitNode = (applyStyle, primaryIndex, secondaryIndex, primaryPosition, width, height) => (secondaryPosition, size, cnt, partitionIndex, scrollDirection) => {
+	applyStyleToSplitNode = (applyStyle, primaryIndex, secondaryIndex, primaryPosition, width, height) => (secondaryPosition, size, count, partitionIndex, scrollDirection) => {
 		const {variableAxis} = this.props;
-		return applyStyle(primaryIndex, secondaryIndex, cnt, partitionIndex, scrollDirection, (variableAxis === 'row') ? size : width, (variableAxis === 'row') ? height : size, primaryPosition, secondaryPosition);
+		return applyStyle(primaryIndex, secondaryIndex, count, partitionIndex, scrollDirection, (variableAxis === 'row') ? size : width, (variableAxis === 'row') ? height : size, primaryPosition, secondaryPosition);
 	}
 
 	getPartitionIndex (position) {
@@ -480,7 +480,7 @@ class VirtualFlexListCore extends Component {
 			secondaryPosition = 0,
 			width,
 			height,
-			cnt = 0,
+			count = 0,
 			position,
 			size,
 			partitionIndex;
@@ -518,26 +518,26 @@ class VirtualFlexListCore extends Component {
 
 				// 1) Positioned from the left side to the right side
 				if (isOnLeftSide && isOnRightSide) {
-					applyStyleToSplitNode(position, -position, cnt++, partitionIndex++, 'left');
-					applyStyleToSplitNode(0, secondary.clientSize, cnt++, partitionIndex++, null);
+					applyStyleToSplitNode(position, -position, count++, partitionIndex++, 'left');
+					applyStyleToSplitNode(0, secondary.clientSize, count++, partitionIndex++, null);
 					if (secondary.clientSize + secondary.scrollPosition < maxVariableScrollSize) {
-						applyStyleToSplitNode(secondary.clientSize, position + size - secondary.clientSize, cnt++, partitionIndex, 'right');
+						applyStyleToSplitNode(secondary.clientSize, position + size - secondary.clientSize, count++, partitionIndex, 'right');
 					}
 					break;
 				// 2) Positioned only on the left side
 				} else if (isOnlyOnLeftSide) {
-					applyStyleToSplitNode(position, size, cnt++, partitionIndex, 'left');
+					applyStyleToSplitNode(position, size, count++, partitionIndex, 'left');
 					position += size;
 				// 3) Positioned from the left side to the list
 				} else if (isOnLeftSide && isFromLeftSideToList) {
-					applyStyleToSplitNode(position, -position, cnt++, partitionIndex++, 'left');
-					applyStyleToSplitNode(0, size + position, cnt++, partitionIndex++, null);
+					applyStyleToSplitNode(position, -position, count++, partitionIndex++, 'left');
+					applyStyleToSplitNode(0, size + position, count++, partitionIndex++, null);
 					position += size;
 				// 4) Positioned from the list to the right side
 				} else if (isFromListToRightSide && isOnRightSide) {
-					applyStyleToSplitNode(position, secondary.clientSize - position, cnt++, partitionIndex++, null);
+					applyStyleToSplitNode(position, secondary.clientSize - position, count++, partitionIndex++, null);
 					if (secondary.clientSize + secondary.scrollPosition < maxVariableScrollSize) {
-						applyStyleToSplitNode(secondary.clientSize, position + size - secondary.clientSize, cnt++, partitionIndex, 'right');
+						applyStyleToSplitNode(secondary.clientSize, position + size - secondary.clientSize, count++, partitionIndex, 'right');
 					}
 					break;
 				} else {
@@ -551,7 +551,7 @@ class VirtualFlexListCore extends Component {
 					}
 
 					// eslint-disabled-next-line no-nested-ternary
-					applyStyleToSplitNode(position, size, cnt++, 0, scrollDirection);
+					applyStyleToSplitNode(position, size, count++, 0, scrollDirection);
 					position += size;
 				}
 			}
@@ -608,7 +608,7 @@ class VirtualFlexListCore extends Component {
 		return pos;
 	}
 
-	gridPositionToItemPosition = ({primaryPosition, secondaryPosition}) => ( (this.props.variableAxis === 'row') ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition})
+	gridPositionToItemPosition = ({primaryPosition, secondaryPosition}) => ( (this.props.variableAxis === 'row') ? {left: secondaryPosition, top: primaryPosition} : {left: primaryPosition, top: secondaryPosition})
 
 	calculateFlexPositionOnFocus = (focusedIndex, key) => {
 		const
@@ -728,7 +728,7 @@ class VirtualFlexListCore extends Component {
 	// render
 
 	// eslint-disabled-next-line no-return-assign
-	initchildRef = (ref) => (this.childRef = ref)
+	initChildRef = (ref) => (this.childRef = ref)
 
 	renderCalculate () {
 		const
@@ -759,7 +759,7 @@ class VirtualFlexListCore extends Component {
 		}
 
 		return (
-			<div {...props} ref={this.initchildRef}>
+			<div {...props} ref={this.initChildRef}>
 				{cc}
 			</div>
 		);

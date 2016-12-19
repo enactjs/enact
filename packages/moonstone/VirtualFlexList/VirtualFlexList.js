@@ -23,6 +23,8 @@ const
 	SpotlightPositionableVirtualList = SpotlightContainerDecorator(Positionable(VirtualListCore)),
 	SpotlightPositionableVirtualFlexList = SpotlightContainerDecorator(Positionable(VirtualFlexListCore));
 
+const nop = () => {};
+
 // PropTypes shape
 
 /**
@@ -168,6 +170,14 @@ class VirtualFlexList extends Component {
 		corner: cornerShape,
 
 		/**
+		 * Called when position updates
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		doPosition: PropTypes.func,
+
+		/**
 		 * List row and column headers including the following properties.
 		 *
 		 * `col` for a column header
@@ -208,6 +218,10 @@ class VirtualFlexList extends Component {
 		y: PropTypes.number
 	}
 
+	static defaultProps = {
+		doPosition: nop
+	}
+
 	constructor (props) {
 		super(props);
 
@@ -218,10 +232,10 @@ class VirtualFlexList extends Component {
 	}
 
 	doPosition = ({x, y}) => {
-		this.setState({
-			x: x === null ? this.state.x : x,
-			y: y === null ? this.state.y : y
-		});
+		const doPosition = this.props.doPosition;
+
+		this.setState({x, y});
+		doPosition({x, y});
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -261,12 +275,12 @@ class VirtualFlexList extends Component {
 					col: items.colCount
 				},
 				doPosition: this.doPosition,
-				gesture: true,
 				itemSize: {
 					row: items.height,
 					col: items.width
 				},
 				maxVariableScrollSize,
+				navigation: true,
 				x: this.state.x,
 				y: this.state.y,
 				variableAxis,
@@ -282,8 +296,8 @@ class VirtualFlexList extends Component {
 					dataSize: headers.row.count,
 					direction: 'vertical',
 					doPosition: this.doPosition,
-					gesture: true,
 					itemSize: headers.row.height,
+					navigation: true,
 					pageScroll: true,
 					y: this.state.y,
 					style: {background: headers.row.background, width: headers.row.width + 'px', height: 'calc(100% - ' + headers.row.height + 'px)', top: headers.col.height + 'px'},
@@ -291,6 +305,8 @@ class VirtualFlexList extends Component {
 				} :
 				null
 			);
+
+		delete rest.doPosition;
 
 		if (headers) {
 			return (
