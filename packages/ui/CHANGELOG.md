@@ -11,6 +11,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 - `onHide` prop to `ui/Transition`
 - LESS mixins from `@enact/moonstone` that are general purpose and can be utilized by various UI
 libraries.
+- `ui/RadioDecorator` and `ui/RadioControllerDecorator` to support radio group-style management of components
 
 ## [1.0.0-alpha.3] - 2016-11-8
 

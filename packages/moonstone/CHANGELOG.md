@@ -10,6 +10,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/VirtualGridList` to be scrolled by page when navigating with a 5-way direction key
 - `moonstone/Scroller`, `moonstone/VirtualList`, `moonstone/VirtualGridList`, and `moonstone/Scrollable` to no longer respond to mouse down/move/up events
+- `moonstone/Expandable` to support being managed, radio group-style, by a component wrapped with `ui/RadioControllerDecorator`
 
 ### Removed
 
