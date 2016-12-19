@@ -7,18 +7,28 @@
 
 import kind from '@enact/core/kind';
 import {isSelected, select as selectItem} from '@enact/core/selection';
-import R from 'ramda';
 import React from 'react';
 
 /**
  * Pick the GroupItem-specific props into a 'private' itemProps key to be extracted by GroupItem
  * before passing the remaining on to the repeated `childComponent`
+ *
+ * @param {Object} props Group props
+ * @returns {Object} GroupItem props
  * @private
  */
-const pickGroupItemProps = R.compose(
-	R.objOf('$$GroupItem'),
-	R.pick(['childComponent', 'childProp', 'childSelect', 'indexProp', 'onSelect', 'select', 'selected', 'selectedProp'])
-);
+const pickGroupItemProps = (props) => ({
+	$$GroupItem: {
+		childComponent: props.childComponent,
+		childProp: props.childProp,
+		childSelect: props.childSelect,
+		indexProp: props.indexProp,
+		onSelect: props.onSelect,
+		select: props.select,
+		selected: props.selected,
+		selectedProp: props.selectedProp
+	}
+});
 
 /**
  * {@link ui/Group.GroupItemBase} is a stateless component that is used within a

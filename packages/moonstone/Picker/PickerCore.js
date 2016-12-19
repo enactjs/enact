@@ -1,15 +1,8 @@
-/**
- * Exports the {@link moonstone/Picker.PickerCore} component.
- * The default export is {@link moonstone/Picker.PickerCore}.
- *
- * @module moonstone/Picker
- */
-
 import * as jobs from '@enact/core/jobs';
 import {childrenEquals} from '@enact/core/util';
-import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
-import R from 'ramda';
+import clamp from 'ramda/src/clamp';
 import React from 'react';
+import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
 import shouldUpdate from 'recompose/shouldUpdate';
 
 import Icon from '../Icon';
@@ -56,12 +49,13 @@ const TransparentIconButton = (props) => <IconButton {...props} backgroundOpacit
  * @class PickerCore
  * @memberof moonstone/Picker
  * @ui
- * @public
+ * @private
  */
+
 const PickerCore = class extends React.Component {
 	static displayName = 'PickerCore'
 
-	static propTypes = {
+	static propTypes = /** @lends moonstone/Picker.PickerCore.prototype */ {
 		/**
 		 * Index for internal ViewManager
 		 *
@@ -267,7 +261,7 @@ const PickerCore = class extends React.Component {
 
 	computeNextValue = (delta) => {
 		const {min, max, value, wrap} = this.props;
-		return wrap ? wrapRange(min, max, value + delta) : R.clamp(min, max, value + delta);
+		return wrap ? wrapRange(min, max, value + delta) : clamp(min, max, value + delta);
 	}
 
 	isButtonDisabled = (delta) => {

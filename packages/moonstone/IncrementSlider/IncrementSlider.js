@@ -4,16 +4,16 @@
  * @module moonstone/IncrementSlider
  */
 
-import kind from '@enact/core/kind';
-import {Spottable} from '@enact/spotlight';
-import Pressable from '@enact/ui/Pressable';
 import {checkDefaultBounds} from '@enact/ui/validators/PropTypeValidators';
+import kind from '@enact/core/kind';
+import Pressable from '@enact/ui/Pressable';
 import React, {PropTypes} from 'react';
+import {Spottable} from '@enact/spotlight';
 
-import SliderDecorator from '../internal/SliderDecorator';
-import IconButton from '../IconButton';
 import {SliderBase} from '../Slider';
+import SliderDecorator from '../internal/SliderDecorator';
 
+import IncrementSliderButton from './IncrementSliderButton';
 import css from './IncrementSlider.less';
 
 /**
@@ -42,14 +42,33 @@ const IncrementSliderBase = kind({
 		backgroundPercent: PropTypes.number,
 
 		/**
-		 * Height, in standard CSS units, of the vertical increment slider. Only takes
-		 * effect on a vertical oriented slider.
+		 * Assign a custom icon for the decrementer. All strings supported by [Icon]{Icon} are
+		 * supported. Without a custom icon, the default is used, and is automatically changed when
+		 * [vertical]{moonstone/IncrementSlider#vertical} is changed.
 		 *
 		 * @type {String}
-		 * @default '300px'
 		 * @public
 		 */
-		height: PropTypes.string,
+		decrementIcon: React.PropTypes.string,
+
+		/**
+		 * When `true`, the component is shown as disabled and does not generate events
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		disabled: PropTypes.bool,
+
+		/**
+		 * Assign a custom icon for the incrementer. All strings supported by [Icon]{Icon} are
+		 * supported. Without a custom icon, the default is used, and is automatically changed when
+		 * [vertical]{moonstone/IncrementSlider#vertical} is changed.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		incrementIcon: React.PropTypes.string,
 
 		/**
 		 * The maximum value of the increment slider.
@@ -127,7 +146,6 @@ const IncrementSliderBase = kind({
 
 	defaultProps: {
 		backgroundPercent: 0,
-		height: '300px',
 		max: 100,
 		min: 0,
 		pressed: false,
@@ -142,17 +160,34 @@ const IncrementSliderBase = kind({
 	},
 
 	computed: {
-		incrementSliderClasses: ({vertical, styler}) => styler.append({vertical})
+		decrementDisabled: ({disabled, min, value}) => disabled || value <= min,
+		incrementDisabled: ({disabled, max, value}) => disabled || value >= max,
+		incrementSliderClasses: ({vertical, styler}) => styler.append({vertical, horizontal: !vertical}),
+		decrementIcon: ({decrementIcon, vertical}) => (decrementIcon || (vertical ? 'arrowlargedown' : 'arrowlargeleft')),
+		incrementIcon: ({incrementIcon, vertical}) => (incrementIcon || (vertical ? 'arrowlargeup' : 'arrowlargeright'))
 	},
 
-	render: ({onIncrement, onDecrement, incrementSliderClasses, ...rest}) => (
+	render: ({decrementDisabled, decrementIcon, incrementDisabled, incrementIcon, onIncrement, onDecrement, incrementSliderClasses, ...rest}) => (
 		<div className={incrementSliderClasses}>
-			<IconButton className={css.decrementButton} small onClick={onDecrement}>arrowlargeleft</IconButton>
+			<IncrementSliderButton
+				className={css.decrementButton}
+				disabled={decrementDisabled}
+				onClick={onDecrement}
+			>
+				{decrementIcon}
+			</IncrementSliderButton>
 			<SliderBase {...rest} className={css.slider} />
-			<IconButton className={css.incrementButton} small onClick={onIncrement}>arrowlargeright</IconButton>
+			<IncrementSliderButton
+				className={css.incrementButton}
+				disabled={incrementDisabled}
+				onClick={onIncrement}
+			>
+				{incrementIcon}
+			</IncrementSliderButton>
 		</div>
 	)
 });
+
 /**
  * {@link moonstone/IncrementSlider.IncrementSlider} is a IncrementSlider with
  * Moonstone styling, Spottable, Pressable and SliderDecorator applied. It is a

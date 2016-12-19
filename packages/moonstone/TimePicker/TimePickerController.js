@@ -16,6 +16,7 @@ const excludeMeridiem = /([khm])(?!\1)/ig;
  * @param	{String}	time	Time in the format `HH:mm`
  *
  * @returns	{Number}			Time in minute
+ * @private
  */
 const toMinutes = (time) => {
 	const colon = time.indexOf(':');
@@ -32,6 +33,7 @@ const toMinutes = (time) => {
  * @param	{String}	options.end		End time of meridiem
  *
  * @returns	{Object}					Contains start and end time in minutes
+ * @private
  */
 const calcMeridiemRange = ({start, end}) => ({
 	start: toMinutes(start),
@@ -45,6 +47,7 @@ const calcMeridiemRange = ({start, end}) => ({
  * @param	{Object[]}	meridiems	Array of meridiems with `start` and `end` members in minutes
  *
  * @returns {Number}				Index of `time` in `meridiems`
+ * @private
  */
 const indexOfMeridiem = (time, meridiems) => {
 	const minutes = time.getHours() * 60 + time.getMinutes();
@@ -66,7 +69,7 @@ const indexOfMeridiem = (time, meridiems) => {
  * @class TimePickerController
  * @memberof moonstone/TimePicker
  * @ui
- * @private
+ * @public
  */
 const TimePickerController = class extends React.Component {
 
@@ -210,7 +213,10 @@ const TimePickerController = class extends React.Component {
 			this.meridiemEnabled = clockPref === '12';
 
 			const filter = this.meridiemEnabled ? includeMeridiem : excludeMeridiem;
-			this.order = this.timeFormat.getTemplate().match(filter).map(s => s[0].toLowerCase());
+			this.order = this.timeFormat.getTemplate()
+				.replace(/'.*?'/g, '')
+				.match(filter)
+				.map(s => s[0].toLowerCase());
 
 			const timeFormat = {
 				type: 'time',
@@ -236,6 +242,7 @@ const TimePickerController = class extends React.Component {
 	 * @param	{Number}	time	UNIX time
 	 *
 	 * @returns	{IDate}				ilib Date object
+	 * @private
 	 */
 	toIDate (time) {
 		if (time && this.locale) {
@@ -252,6 +259,7 @@ const TimePickerController = class extends React.Component {
 	 * @param	{Date}	date	A Date to convert
 	 *
 	 * @returns	{undefined}
+	 * @private
 	 */
 	toTime (date) {
 		return date && date.getTime();
@@ -272,6 +280,7 @@ const TimePickerController = class extends React.Component {
 	 * @param	{IDate}		value	ilib Date object
 	 *
 	 * @returns {Number}			Updated internal value
+	 * @private
 	 */
 	updateValue = (value) => {
 		const newValue = DateFactory(value).getTimeExtended();
@@ -289,6 +298,7 @@ const TimePickerController = class extends React.Component {
 	 * @param  {Object} ev onChange event from RangePicker
 	 *
 	 * @returns {undefined}
+	 * @private
 	 */
 	handleChangeHour = (ev) => {
 		const value = this.calcValue();
@@ -311,6 +321,7 @@ const TimePickerController = class extends React.Component {
 	 * @param  {Object} ev onChange event from RangePicker
 	 *
 	 * @returns {undefined}
+	 * @private
 	 */
 	handleChangeMinute = (ev) => {
 		const value = this.calcValue();
@@ -325,6 +336,7 @@ const TimePickerController = class extends React.Component {
 	 * @param  {Object} ev onChange event from RangePicker
 	 *
 	 * @returns {undefined}
+	 * @private
 	 */
 	handleChangeMeridiem = (ev) => {
 		const value = this.calcValue();
@@ -357,6 +369,7 @@ const TimePickerController = class extends React.Component {
 	 *
 	 * @param	{Object}	ev	Event payload
 	 * @returns	{undefined}
+	 * @private
 	 */
 	handleClose = (ev) => {
 		if (this.props.onChange) {
@@ -383,6 +396,7 @@ const TimePickerController = class extends React.Component {
 	 * @param	{String}	timezone 	Timezone string
 	 *
 	 * @returns	{IDate}		ilib		Date object
+	 * @private
 	 */
 	calcValue = () => {
 		const currentValue = this.state.value;
@@ -407,6 +421,7 @@ const TimePickerController = class extends React.Component {
 	 * @param	{IDate}		value	ilib Date object
 	 *
 	 * @returns	{Object}			Date components object
+	 * @private
 	 */
 	calcDateComponents = (value) => {
 		let values = {

@@ -161,7 +161,7 @@ const ToggleItemBase = kind({
 		delete rest.value;
 
 		return (
-			<ItemOverlay {...rest} onClick={onToggle} autoHide="no">
+			<ItemOverlay {...rest} onClick={onToggle}>
 				{iconBefore}
 				{children}
 				{iconAfter}

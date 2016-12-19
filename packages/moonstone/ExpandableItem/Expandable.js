@@ -1,11 +1,5 @@
-/**
- * Exports the {@link moonstone/ExpandableItem/Expandable.Expandable} Higher-Order Component (HOC)
- *
- * @module moonstone/ExpandableItem/Expandable
- */
-
 import Cancelable from '@enact/ui/Cancelable';
-import R from 'ramda';
+import compose from 'ramda/src/compose';
 import Toggleable from '@enact/ui/Toggleable';
 
 // TODO: This module may not doc correctly but we'll need to wait until our doc parsing script is
@@ -35,11 +29,11 @@ const handleCancel = function (props) {
  * cancel.
  *
  * @class Expandable
- * @memberof moonstone/ExpandableItem/Expandable
+ * @memberof moonstone/ExpandableItem
  * @hoc
- * @private
+ * @public
  */
-const Expandable = R.compose(
+const Expandable = compose(
 	Toggleable({toggle: null, activate: 'onOpen', deactivate: 'onClose', mutable: true, prop: 'open'}),
 	Cancelable({component: 'span', onCancel: handleCancel})
 );

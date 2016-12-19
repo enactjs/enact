@@ -14,7 +14,7 @@ const isBubbling = (ev) => ev.currentTarget !== ev.target;
  * spotlight behavior for an {@link moonstone/Input.Input}
  *
  * @class InputSpotlightDecorator
- * @memberof moonstone/InputSpotlightDecorator
+ * @memberof moonstone/Input/InputSpotlightDecorator
  * @hoc
  * @private
  */
@@ -28,7 +28,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'InputSpotlightDecorator';
 
-		static propTypes = {
+		static propTypes = /** @lends moonstone/Input/InputSpotlightDecorator.InputSpotlightDecorator.prototype */ {
 			/**
 			 * When `true`, blurs the input when the "enter" key is pressed.
 			 *

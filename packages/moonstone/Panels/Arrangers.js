@@ -1,6 +1,12 @@
-import quadInOut from 'eases/quad-in-out';
 import {appendTransform, clearTransform, compose, ease, endBy, reverse, slideIn, slideOut} from '@enact/ui/ViewManager/arrange';
-import R from 'ramda';
+import both from 'ramda/src/both';
+import complement from 'ramda/src/complement';
+import either from 'ramda/src/either';
+import equals from 'ramda/src/equals';
+import prop from 'ramda/src/prop';
+import quadInOut from 'eases/quad-in-out';
+import rCompose from 'ramda/src/compose';
+import when from 'ramda/src/when';
 
 import {breadcrumbWidth} from './Breadcrumb';
 
@@ -12,6 +18,7 @@ import {breadcrumbWidth} from './Breadcrumb';
  * @param {Function} f forward function
  * @param {Function} b backward function
  * @returns {Function} Arrangement function
+ * @private
  */
 const forwardBackward = (f, b) => (config) => {
 	const f2 = config.reverseTransition ? b : f;
@@ -23,6 +30,7 @@ const forwardBackward = (f, b) => (config) => {
  *
  * @param   {Function} fn Arrangement function
  * @returns {Function}    Composed arrangement function
+ * @private
  */
 const base = (fn) => reverse(
 	ease(quadInOut,
@@ -44,6 +52,7 @@ const panelLeave = forwardBackward(slideOutLeft, endBy(0.75, slideOutLeft));
  * Arranger that slides panels in from the right and out to the left
  *
  * @type {Arranger}
+ * @private
  */
 export const AlwaysViewingArranger = {
 	enter: panelEnter,
@@ -59,6 +68,7 @@ export const AlwaysViewingArranger = {
  * @param  {Number} options.percent Percentage complete between 0 and 1
  *
  * @returns {undefined}
+ * @private
  */
 const offsetForBreadcrumbs = ({node, percent}) => {
 	const x = breadcrumbWidth * percent;
@@ -68,17 +78,18 @@ const offsetForBreadcrumbs = ({node, percent}) => {
 // Set of conditions used to guard offsetForBreadcrumbs. The offset should be applied when
 // transitioning to any panel other than the first and also for the leave transition when moving to
 // the first panel because the active panel should start at the offset before moving right offscreen
-const toFirst = R.compose(R.equals(0), R.prop('to'));
-const toFirstReverse = R.both(toFirst, R.prop('reverseTransition'));
-const notToFirst = R.complement(toFirst);
+const toFirst = rCompose(equals(0), prop('to'));
+const toFirstReverse = both(toFirst, prop('reverseTransition'));
+const notToFirst = complement(toFirst);
 
 /**
  * Arranger that slides panels in from the right and out to the left allowing space for the single
  * breadcrumb when `to` index is greater than zero.
  *
  * @type {Arranger}
+ * @private
  */
 export const ActivityArranger = {
-	enter: compose(panelEnter, reverse(R.when(R.either(notToFirst, toFirstReverse), offsetForBreadcrumbs))),
-	leave: compose(panelLeave, R.when(notToFirst, offsetForBreadcrumbs))
+	enter: compose(panelEnter, reverse(when(either(notToFirst, toFirstReverse), offsetForBreadcrumbs))),
+	leave: compose(panelLeave, when(notToFirst, offsetForBreadcrumbs))
 };

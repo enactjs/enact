@@ -9,7 +9,7 @@ import hoc from '@enact/core/hoc';
 import {throttleJob} from '@enact/core/jobs';
 import Spotlight from '@enact/spotlight';
 import {checkDefaultBounds} from '@enact/ui/validators/PropTypeValidators';
-import R from 'ramda';
+import clamp from 'ramda/src/clamp';
 import React, {PropTypes} from 'react';
 
 import {
@@ -24,6 +24,7 @@ import {
  * falling back to `Date.now()`.
  *
  * @returns	{Number}	Timestamp
+ * @private
  */
 const now = function () {
 	if (typeof window === 'object') {
@@ -34,7 +35,7 @@ const now = function () {
 };
 
 /**
- * Default config for {@link moonstone/SliderDecorator.SliderDecorator}.
+ * Default config for {@link moonstone/internal/SliderDecorator.SliderDecorator}.
  *
  * @memberof moonstone/internal/SliderDecorator
  * @hocconfig
@@ -75,7 +76,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'SliderDecorator';
 
-		static propTypes = /** @lends moonstone/SliderDecorator.SliderDecorator.prototype */{
+		static propTypes = /** @lends moonstone/internal/SliderDecorator.SliderDecorator.prototype */{
 			/**
 			 * Background progress, as a percentage.
 			 *
@@ -84,16 +85,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @public
 			 */
 			backgroundPercent: PropTypes.number,
-
-			/**
-			 * Height, in standard CSS units, of the vertical slider. Only takes
-			 * effect on a vertical oriented slider.
-			 *
-			 * @type {String}
-			 * @default '300px'
-			 * @public
-			 */
-			height: PropTypes.string,
 
 			/**
 			 * The maximum value of the slider.
@@ -160,7 +151,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		};
 
 		static defaultProps = {
-			height: '300px',
 			max: 100,
 			min: 0,
 			step: 1,
@@ -173,7 +163,9 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 
 			this.jobName = `sliderChange${now()}`;
-			this.value = props.value;
+			this.state = {
+				value: props.value
+			};
 		}
 
 		componentWillReceiveProps (nextProps) {
@@ -182,36 +174,40 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		onChange = () => {
+		onChange = (value) => {
 			if (this.props.onChange) {
-				this.props.onChange({value: this.value});
+				this.props.onChange({value});
 			}
 		}
 
 		handleChange = (event) => {
 			event.preventDefault();
-			const value = Number.parseInt(event.target.value);
-			this.updateValue(value);
+			const parseFn = (event.target.value % 1 !== 0) ? 'parseFloat' : 'parseInt',
+				value = Number[parseFn](event.target.value);
+			this.submitValue(value);
+		}
+
+		submitValue = (value) => {
+			throttleJob(this.jobName, () => this.updateValue(value), config.changeDelay);
 		}
 
 		updateValue = (value) => {
-			throttleJob(this.jobName, () => {
-				// intentionally breaking encapsulation to avoid having to specify multiple refs
-				const {barNode, knobNode, loaderNode, node} = this.sliderBarNode;
-				const {backgroundPercent, max, min, vertical} = this.props;
-				const normalizedMax = max != null ? max : Wrapped.defaultProps.max;
-				const normalizedMin = min != null ? min : Wrapped.defaultProps.min;
-				const proportionBackground = computeProportionBackground({backgroundPercent});
-				const proportionProgress = computeProportionProgress({value, max: normalizedMax, min: normalizedMin});
+			// intentionally breaking encapsulation to avoid having to specify multiple refs
+			const {barNode, knobNode, loaderNode, node} = this.sliderBarNode;
+			const {backgroundPercent, max, min, vertical} = this.props;
+			const normalizedMax = max != null ? max : Wrapped.defaultProps.max;
+			const normalizedMin = min != null ? min : Wrapped.defaultProps.min;
+			const proportionBackground = computeProportionBackground({backgroundPercent});
+			const proportionProgress = computeProportionProgress({value, max: normalizedMax, min: normalizedMin});
 
-				loaderNode.style.transform = computeBarTransform(proportionBackground, vertical);
-				barNode.style.transform = computeBarTransform(proportionProgress, vertical);
-				knobNode.style.transform = computeKnobTransform(proportionProgress, vertical, node, knobNode.offsetHeight / 2);
-				this.inputNode.value = value;
-				this.value = value;
-				this.onChange();
-			}, config.changeDelay);
+			loaderNode.style.transform = computeBarTransform(proportionBackground, vertical);
+			barNode.style.transform = computeBarTransform(proportionProgress, vertical);
+			knobNode.style.transform = computeKnobTransform(proportionProgress, vertical, node);
+			this.inputNode.value = value;
+			this.setState({value});
+			this.onChange(value);
 		}
+
 
 		getInputNode = (node) => {
 			this.inputNode = node;
@@ -221,7 +217,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.sliderNode = node;
 		}
 
-		getSliderBarRef = (node) => {
+		getSliderBarNode = (node) => {
 			this.sliderBarNode = node;
 		}
 
@@ -237,10 +233,10 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		changeValue = (direction) => {
 			const {min, max, step} = this.props;
-			let value = this.value + (step * direction);
+			let value = this.state.value + (step * direction);
 
-			value = R.clamp(min, max, value);
-			this.updateValue(value);
+			value = clamp(min, max, value);
+			this.submitValue(value);
 		}
 
 		render () {
@@ -257,8 +253,8 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					onClick={this.clickHandler}
 					inputRef={this.getInputNode}
 					sliderRef={this.getSliderNode}
-					value={this.value}
-					sliderBarRef={this.getSliderBarRef}
+					value={this.state.value}
+					sliderBarRef={this.getSliderBarNode}
 				/>
 			);
 		}

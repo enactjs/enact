@@ -9,7 +9,6 @@
  * Licensed under the MPL license.
  */
 
-import R from 'ramda';
 import Accelerator from '@enact/core/Accelerator';
 import {startJob} from '@enact/core/jobs';
 import {spottableClass} from './spottable';
@@ -100,6 +99,14 @@ const Spotlight = (function() {
 	 * @default false
 	 */
 	let _5WayKeyHold = false;
+
+	/**
+	 * Whether a selection key is being held.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 */
+	let _selectionKeyHold = false;
 
 	/**
 	 * Whether Spotlight is in pointer mode (as opposed to 5-way mode).
@@ -891,6 +898,7 @@ const Spotlight = (function() {
 
 	function onAcceleratedKeyDown (evt) {
 		let currentFocusedElement = getCurrent();
+		const direction = _directions[evt.keyCode];
 
 		if (!currentFocusedElement) {
 			if (_lastContainerId) {
@@ -907,7 +915,7 @@ const Spotlight = (function() {
 			return;
 		}
 
-		if (_directions[evt.keyCode] && !spotNext(_directions[evt.keyCode], currentFocusedElement, currentContainerId) && currentFocusedElement !== document.activeElement) {
+		if (direction && !spotNext(direction, currentFocusedElement, currentContainerId) && currentFocusedElement !== document.activeElement) {
 			focusElement(currentFocusedElement, currentContainerId)
 		}
 	}
@@ -922,7 +930,7 @@ const Spotlight = (function() {
 		}
 
 		const keyCode = evt.keyCode;
-		if (!_directions[keyCode] && !R.contains(keyCode, _enterKeyCodes)) {
+		if (!_directions[keyCode] && _enterKeyCodes.indexOf(keyCode) >= 0) {
 			return;
 		}
 
@@ -936,10 +944,14 @@ const Spotlight = (function() {
 		}
 
 		const keyCode = evt.keyCode;
-		const validKeyCodes = [..._enterKeyCodes, _pointerHideKeyCode, _pointerShowKeyCode];
 		const direction = _directions[keyCode];
 
-		if (!direction && !R.contains(keyCode, validKeyCodes)) {
+		if (!direction && !(
+				_pointerHideKeyCode === keyCode ||
+				_pointerShowKeyCode === keyCode ||
+				_enterKeyCodes.indexOf(keyCode)
+			)
+		) {
 			return;
 		}
 

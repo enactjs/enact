@@ -1,15 +1,21 @@
-/**
+/*
  * Exports the {@link ui/ViewManager.TransitionGroup} component.
- *
- * @module ui/ViewManager/TransitionGroup
- * @private
  */
 
 // Using string refs from the source code of ReactTransitionGroup
 /* eslint-disable react/no-string-refs */
 
-import R from 'ramda';
+import compose from 'ramda/src/compose';
+import eqBy from 'ramda/src/eqBy';
+import findIndex from 'ramda/src/findIndex';
+import identity from 'ramda/src/identity';
+import lte from 'ramda/src/lte';
+import prop from 'ramda/src/prop';
+import propEq from 'ramda/src/propEq';
 import React from 'react';
+import remove from 'ramda/src/remove';
+import unionWith from 'ramda/src/unionWith';
+import useWith from 'ramda/src/useWith';
 
 /**
  * Returns the index of a child in an array found by `key` matching
@@ -20,7 +26,7 @@ import React from 'react';
  * @method
  * @private
  */
-const indexOfChild = R.useWith(R.findIndex, [R.propEq('key'), R.identity]);
+const indexOfChild = useWith(findIndex, [propEq('key'), identity]);
 
 /**
  * Returns `true` if `children` contains `child`
@@ -31,7 +37,7 @@ const indexOfChild = R.useWith(R.findIndex, [R.propEq('key'), R.identity]);
  * @method
  * @private
  */
-const hasChild = R.compose(R.lte(0), indexOfChild);
+const hasChild = compose(lte(0), indexOfChild);
 
 /**
  * Returns an array of non-null children
@@ -55,7 +61,7 @@ const mapChildren = function (children) {
  * @method
  * @private
  */
-const mergeChildren = R.unionWith(R.eqBy(R.prop('key')));
+const mergeChildren = unionWith(eqBy(prop('key')));
 
 /**
  * Manages the transition of added and removed child components. Children that are added are
@@ -66,12 +72,12 @@ const mergeChildren = R.unionWith(R.eqBy(R.prop('key')));
  * Currently somewhat specialized for the purposes of ViewManager.
  *
  * @class TransitionGroup
- * @memberof ui/ViewManager/TransitionGroup
+ * @memberof ui/ViewManager
  * @private
  */
 
 class TransitionGroup extends React.Component {
-	static propTypes = /** @lends ui/ViewManager/TransitionGroup.TransitionGroup.prototype */ {
+	static propTypes = /** @lends ui/ViewManager.TransitionGroup.prototype */ {
 		children: React.PropTypes.node.isRequired,
 
 		/**
@@ -102,7 +108,7 @@ class TransitionGroup extends React.Component {
 	}
 
 	static defaultProps = {
-		childFactory: R.identity,
+		childFactory: identity,
 		component: 'div',
 		size: 2
 	}
@@ -292,7 +298,7 @@ class TransitionGroup extends React.Component {
 
 		this.setState(function (state) {
 			const index = indexOfChild(key, state.children);
-			return {children: R.remove(index, 1, state.children)};
+			return {children: remove(index, 1, state.children)};
 		});
 	}
 
