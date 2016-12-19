@@ -4,16 +4,15 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
-## Added
-
-- `onAppear`, `onEnter`, `onLeave`, `onStay`, `onTransition`, and `onWillTransition` events to ViewManager
 ### Added
 
+- `onAppear`, `onEnter`, `onLeave`, `onStay`, `onTransition`, and `onWillTransition` events to ViewManager
 - `none` to `scrimType` prop values in `ui/FloatingLayer`
 
 ### Removed
 
 - `fit` prop from `ui/Transition` in favor of using `className`
+
 ## [1.0.0-alpha.5] - 2016-12-16
 
 No changes.
