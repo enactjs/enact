@@ -182,8 +182,6 @@ const ExpandableItemBase = kind({
 		delete rest.lockBottom;
 		delete rest.noneText;
 		delete rest.onClose;
-		delete rest.onClose;
-		delete rest.onOpen;
 		delete rest.onOpen;
 		delete rest.showLabel;
 
