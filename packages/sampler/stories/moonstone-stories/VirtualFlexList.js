@@ -116,15 +116,11 @@ storiesOf('VirtualFlexList')
 				<VirtualFlexList
 					items={{
 						background: '#141416',
-						col: {
-							count: getItemLength
-						},
+						colCount: getItemLength,
 						component: renderItem,
 						data: programData,
 						height: number('items_height', itemHeight),
-						row: {
-							count: number('items_row_count', programData.length)
-						},
+						rowCount: number('items_row_count', programData.length),
 						width: getItemWidth
 					}}
 					maxVariableScrollSize={number('maxVariableScrollSize', maxVariableScrollSize)}

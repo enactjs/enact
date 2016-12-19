@@ -75,56 +75,32 @@ const headersShape = PropTypes.shape({
 });
 
 /**
- * The number of item row information in a list for {@link moonstone/VirtualFlexList.itemsShape}.
- *
- * @typedef {Object} itemsCol
- * @memberof moonstone/VirtualFlexList
- * @property {Number|Function} count - Item count. It could be a number or the function to get it.
- */
-
-/**
- *  The number of item column information in a list {@link moonstone/VirtualFlexList.itemsShape}.
- *
- * @typedef {Object} itemsRow
- * @memberof moonstone/VirtualFlexList
- * @property {Number|Function} count - Item count. It could be a number or the function to get it.
- */
-
-/**
- * The shape for the list items for {@link moonstone/VirtualFlexList.items}.
+ * The shape for the list items. for {@link moonstone/VirtualFlexList.items}.
  *
  * @typedef {Object} itemsShape
  * @memberof moonstone/VirtualFlexList
- * @property {itemsCol} col - It has `count` property for the number of items horizontally.
- * @property {Number|Function} component - The render function for an item.
+ * @property {Number|Function} col - It has `count` property for the number of items horizontally.
+ * @property {Function} component - The render function for an item.
  * @property {Object} data - Any data which is passed as the render funtion.
  * @property {Number|Function} height - The item height.
- * @property {itemsRow} row - It has `count` property for the number of items vertically.
+ * @property {Number|Function} row - It has `count` property for the number of items vertically.
  * @property {Number|Function} width - The item width.
  */
 const itemsShape = PropTypes.oneOfType([
 	PropTypes.shape({
-		col: PropTypes.shape({
-			count: PropTypes.func.isRequired
-		}),
+		colCount: PropTypes.func.isRequired,
 		component: PropTypes.func.isRequired,
 		data: PropTypes.any.isRequired,
 		height: PropTypes.number.isRequired,
-		row: PropTypes.shape({
-			count: PropTypes.number.isRequired
-		}),
+		rowCount: PropTypes.number.isRequired,
 		width: PropTypes.func.isRequired
 	}),
 	PropTypes.shape({
-		col: PropTypes.shape({
-			count: PropTypes.number.isRequired
-		}),
+		colCount: PropTypes.number.isRequired,
 		component: PropTypes.func.isRequired,
 		data: PropTypes.any.isRequired,
 		height: PropTypes.func.isRequired,
-		row: PropTypes.shape({
-			count: PropTypes.func.isRequired
-		}),
+		rowCount: PropTypes.func.isRequired,
 		width: PropTypes.number.isRequired
 	})
 ]);
@@ -281,8 +257,8 @@ class VirtualFlexList extends Component {
 			itemProps = {
 				data: items.data,
 				dataSize: {
-					row: items.row.count,
-					col: items.col.count
+					row: items.rowCount,
+					col: items.colCount
 				},
 				doPosition: this.doPosition,
 				gesture: true,

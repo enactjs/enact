@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 ### Added
 
-- `moonstone/VirtualVariableList` component
+- `moonstone/VirtualFlexList` component
 
 ### Changed
 
