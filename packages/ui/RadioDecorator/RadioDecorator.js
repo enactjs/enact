@@ -22,15 +22,24 @@ const defaultConfig = {
 	 * The event indicating the wrapped component is activated
 	 *
 	 * @type {String}
+	 * @default null
 	 */
-	activate: 'onOpen',
+	activate: null,
 
 	/**
 	 * The event indicating the wrapped component is deactivated
 	 *
 	 * @type {String}
+	 * @default null
 	 */
-	deactivate: 'onClose'
+	deactivate: null,
+
+	/**
+	 * The name of a boolean prop that, when `true`, should activate the wrapped component.
+	 *
+	 * @type {String}
+	 */
+	prop: 'active'
 };
 
 /**
@@ -47,7 +56,7 @@ const defaultConfig = {
  * @public
  */
 const RadioDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {activate, deactivate} = config;
+	const {activate, deactivate, prop} = config;
 	const forwardActivate = forward(activate);
 	const forwardDeactivate = forward(deactivate);
 
@@ -56,15 +65,36 @@ const RadioDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static contextTypes = contextTypes
 
+		constructor (props) {
+			super(props);
+
+			// indicates we have a controller in context with which to sync activations
+			this.sync = false;
+		}
+
 		componentDidMount () {
 			if (this.context.registerRadioItem) {
+				this.sync = true;
 				this.context.registerRadioItem(this);
+
+				this.notifyController(this.props);
 			}
 		}
 
+		componentWillReceiveProps (nextProps) {
+			this.notifyController(nextProps);
+		}
+
 		componentWillUnount () {
-			if (this.context.unregisterRadioItem) {
+			if (this.sync) {
+				this.sync = false;
 				this.context.unregisterRadioItem(this);
+			}
+		}
+
+		notifyController (props) {
+			if (this.sync && prop && props[prop]) {
+				this.context.activateRadioItem(this);
 			}
 		}
 
@@ -78,7 +108,7 @@ const RadioDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleActivate = () => {
-			if (this.context.activateRadioItem) {
+			if (this.sync) {
 				this.context.activateRadioItem(this);
 			}
 
@@ -86,7 +116,7 @@ const RadioDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleDeactivate = () => {
-			if (this.context.deactivateRadioItem) {
+			if (this.sync) {
 				this.context.deactivateRadioItem(this);
 			}
 
@@ -94,11 +124,13 @@ const RadioDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const props = {
-				...this.props,
-				[activate]: this.handleActivate,
-				[deactivate]: this.handleDeactivate
-			};
+			let props = this.props;
+
+			if (activate || deactivate) {
+				props = Object.assign({}, this.props);
+				if (activate) props[activate] = this.handleActivate;
+				if (deactivate) props[deactivate] = this.handleDeactivate;
+			}
 
 			return <Wrapped  {...props} />;
 		}

@@ -57,17 +57,6 @@ const RadioControllerDecorator = hoc((config, Wrapped) => {
 
 		static childContextTypes = contextTypes
 
-		static propTypes = /** @lends ui/RadioDecorator.RadioControllerDecorator.prototype */ {
-			/**
-			 * Controls whether the component is disabled.
-			 *
-			 * @type {Boolean}
-			 * @default false
-			 * @public
-			 */
-			disabled: React.PropTypes.bool	// eslint-disable-line react/sort-prop-types
-		}
-
 		constructor (props) {
 			super(props);
 

@@ -42,7 +42,7 @@ const handleCancel = function (props) {
  */
 const Expandable = compose(
 	Toggleable({toggle: null, activate: 'onOpen', deactivate: 'onClose', mutable: true, prop: 'open'}),
-	RadioDecorator,
+	RadioDecorator({activate: 'onOpen', deactivate: 'onClose', prop: 'open'}),
 	Cancelable({component: 'span', onCancel: handleCancel})
 );
 
