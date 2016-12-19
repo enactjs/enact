@@ -19,6 +19,32 @@ const
 	nop = () => {};
 
 /**
+ * The shape for the grid list item size in a list for {@link moonstone/VirtualList.listItemSizeShape}.
+ *
+ * @typedef {Object} gridListItemSizeShape
+ * @memberof moonstone/VirtualList
+ * @property {Number} minWidth - The minimum width of the grid list item.
+ * @property {Number} minHeight - The minimum height of the grid list item.
+ */
+const gridListItemSizeShape = PropTypes.shape({
+	minWidth: PropTypes.number.isRequired,
+	minHeight:  PropTypes.number.isRequired
+});
+
+/**
+ * The shape for the item size in a list for {@link moonstone/VirtualList.itemSize}.
+ *
+ * @typedef {Number|Object} listItemSizeShape
+ * @memberof moonstone/VirtualList
+ * @property {Number} minWidth - The minimum width of the grid list item.
+ * @property {Number} minHeight - The minimum height of the grid list item.
+ */
+const listItemSizeShape = PropTypes.oneOfType([
+	PropTypes.number,
+	gridListItemSizeShape,
+]);
+
+/**
  * {@link moonstone/VirtualList.VirtualListBase} is a base component for
  * {@link moonstone/VirtualList.VirtualList} and
  * {@link moonstone/VirtualList.VirtualGridList} with Scrollable and SpotlightContainerDecorator applied.
@@ -34,13 +60,10 @@ class VirtualListCore extends Component {
 		 * Size of an item for the list; valid values are either a number for `VirtualList`
 		 * or an object that has `minWidth` and `minHeight` for `VirtualGridList`.
 		 *
-		 * @type {Number|Object}
+		 * @type {moonstone/VirtualList.listItemSizeShape}
 		 * @public
 		 */
-		itemSize: PropTypes.oneOfType([
-			PropTypes.number,
-			PropTypes.object
-		]).isRequired,
+		itemSize: listItemSizeShape.isRequired,
 
 		/**
 		 * Callback method of scrollTo.
@@ -58,7 +81,6 @@ class VirtualListCore extends Component {
 		 * Data manipulation can be done in this function.
 		 *
 		 * @type {Function}
-		 * @default ({index, key}) => (<div key={key}>{index}</div>)
 		 * @public
 		 */
 		component: PropTypes.func,
@@ -146,7 +168,7 @@ class VirtualListCore extends Component {
 
 	static defaultProps = {
 		cbScrollTo: nop,
-		component: nop,
+		component: null,
 		data: [],
 		dataSize: 0,
 		direction: 'vertical',
@@ -524,19 +546,19 @@ class VirtualListCore extends Component {
 		this.composeItemPosition(style, ...rest);
 	}
 
-	getXY = (primaryIndex, secondaryIndex) => {
+	getXY = (primaryPosition, secondaryPosition) => {
 		const rtlDirection = this.context.rtl ? -1 : 1;
-		return (this.isPrimaryDirectionVertical ? {x: (secondaryIndex * rtlDirection), y: primaryIndex} : {x: (primaryIndex * rtlDirection), y: secondaryIndex});
+		return (this.isPrimaryDirectionVertical ? {x: (secondaryPosition * rtlDirection), y: primaryPosition} : {x: (primaryPosition * rtlDirection), y: secondaryPosition});
 	}
 
-	composeTransform (style, primaryIndex, secondaryIndex = 0) {
-		const {x, y} = this.getXY(primaryIndex, secondaryIndex);
+	composeTransform (style, primaryPosition, secondaryPosition = 0) {
+		const {x, y} = this.getXY(primaryPosition, secondaryPosition);
 
 		style.transform = 'translate3d(' + x + 'px,' + y + 'px,0)';
 	}
 
-	composeLeftTop (style, primaryIndex, secondaryIndex = 0) {
-		const {x, y} = this.getXY(primaryIndex, secondaryIndex);
+	composeLeftTop (style, primaryPosition, secondaryPosition = 0) {
+		const {x, y} = this.getXY(primaryPosition, secondaryPosition);
 
 		style.left = x + 'px';
 		style.top = y + 'px';
