@@ -226,8 +226,7 @@ const ExpandableListBase = kind({
 });
 
 /**
-
-	* {@link moonstone/ExpandableList.ExpandableList} renders a
+ * {@link moonstone/ExpandableList.ExpandableList} renders a
  * {@link moonstone/LabeledItem.LabeledItem} that can be expanded to show a selectable
  * list of items.
  *
