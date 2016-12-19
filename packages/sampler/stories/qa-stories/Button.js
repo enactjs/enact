@@ -66,6 +66,35 @@ storiesOf('Button')
 		)
 	)
 	.addWithInfo(
+		'to test background to sit behind the containing element',
+		() => (
+			<div className={css.bgColor}>
+				<Button
+					onClick={action('onClick')}
+					backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
+					disabled={boolean('disabled')}
+					minWidth={boolean('minWidth', false)}
+					preserveCase={boolean('preserveCase')}
+					selected={boolean('selected')}
+					small={boolean('small')}
+				>
+					Normal Button
+				</Button>
+				<Button
+					onClick={action('onClick')}
+					backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
+					disabled={boolean('disabled')}
+					minWidth={boolean('minWidth')}
+					preserveCase={boolean('preserveCase')}
+					selected={boolean('selected')}
+					small
+				>
+					Small Button
+				</Button>
+			</div>
+		)
+	)
+	.addWithInfo(
 		'with tap area displayed',
 		() => (
 			<div>
