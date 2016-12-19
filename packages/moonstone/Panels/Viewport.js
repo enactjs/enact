@@ -12,9 +12,8 @@ const spotPanel = ({view}) => {
 	// eslint-disable-next-line react/no-find-dom-node
 	const node = findDOMNode(view);
 	if (node) {
-		const containerSelector = `[data-container-id=${node.dataset.containerId}]`;
-		const body = node.querySelector(`${containerSelector} header ~ .spottable`);
-		const header = node.querySelector(`${containerSelector} header .spottable`);
+		const body = node.querySelector('section .spottable');
+		const header = node.querySelector('header .spottable');
 		const spottable = body || header;
 
 		if (spottable) {
