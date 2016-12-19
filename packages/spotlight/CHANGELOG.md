@@ -8,6 +8,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 - `isMuted()` method to `@enact/spotlight`
 - `spotlightMuted` prop to `@enact/spotlight/container`
+
 ## [1.0.0-alpha.5] - 2016-12-16
 
 No changes.
