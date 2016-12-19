@@ -12,7 +12,7 @@ const
 	itemHeight = ri.scale(81),
 	clientWidth = timeWidth * 5,
 	clientHeight = itemHeight * 6,
-	maxVariableScrollSize = timeWidth * 18; // for 9 hr
+	maxFlexScrollSize = timeWidth * 18; // for 9 hr
 
 // Inline style
 const
@@ -125,7 +125,7 @@ storiesOf('VirtualFlexList')
 						rowCount: number('items_row_count', programData.length),
 						width: getItemWidth
 					}}
-					maxVariableScrollSize={number('maxVariableScrollSize', maxVariableScrollSize)}
+					maxFlexScrollSize={number('maxFlexScrollSize', maxFlexScrollSize)}
 					variableAxis="row"
 					x={number('x', 0)}
 					y={number('y', 0)}

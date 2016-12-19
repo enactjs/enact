@@ -64,7 +64,7 @@ class VirtualFlexListCore extends Component {
 		 * @type {Number}
 		 * @public
 		 */
-		maxListSizeAlongFlexAxis: PropTypes.number,
+		maxFlexScrollSize: PropTypes.number,
 
 		/**
 		 * Number of spare DOM node.
@@ -199,15 +199,15 @@ class VirtualFlexListCore extends Component {
 		}
 
 		const
-			{maxListSizeAlongFlexAxis, flexAxis} = props,
+			{maxFlexScrollSize, flexAxis} = props,
 			{scrollBounds} = this,
 			{clientWidth, clientHeight} = this.getClientSize(node);
 		let maxPos;
 
 		scrollBounds.clientWidth = clientWidth;
 		scrollBounds.clientHeight = clientHeight;
-		scrollBounds.scrollWidth = (flexAxis === 'row') ? maxListSizeAlongFlexAxis : this.getScrollWidth();
-		scrollBounds.scrollHeight = (flexAxis === 'col') ? maxListSizeAlongFlexAxis : this.getScrollHeight();
+		scrollBounds.scrollWidth = (flexAxis === 'row') ? maxFlexScrollSize : this.getScrollWidth();
+		scrollBounds.scrollHeight = (flexAxis === 'col') ? maxFlexScrollSize : this.getScrollHeight();
 		scrollBounds.maxLeft = Math.max(0, scrollBounds.scrollWidth - clientWidth);
 		scrollBounds.maxTop = Math.max(0, scrollBounds.scrollHeight - clientHeight);
 
@@ -246,7 +246,7 @@ class VirtualFlexListCore extends Component {
 
 	updateSecondaryScrollInfo (primaryIndex, secondaryPosition) {
 		const
-			{data, flexAxis, maxListSizeAlongFlexAxis} = this.props,
+			{data, flexAxis, maxFlexScrollSize} = this.props,
 			{fixedAxis, secondary} = this,
 			i = primaryIndex,
 			secondaryDataSize = secondary.dataSize({data, index:{[flexAxis]: i}});
@@ -274,7 +274,7 @@ class VirtualFlexListCore extends Component {
 		}
 		if (j === secondaryDataSize || !secondary.thresholds[i].max) {
 			secondary.lastIndices[i] = secondaryDataSize - 1;
-			secondary.thresholds[i].max = maxListSizeAlongFlexAxis;
+			secondary.thresholds[i].max = maxFlexScrollSize;
 		}
 	}
 
@@ -539,7 +539,7 @@ class VirtualFlexListCore extends Component {
 		delete props.dataSize;
 		delete props.flexAxis;
 		delete props.itemSize;
-		delete props.maxListSizeAlongFlexAxis;
+		delete props.maxFlexScrollSize;
 		delete props.overhang;
 
 		if (primary) {

@@ -152,7 +152,7 @@ const VirtualFlexList = kind({
 		 * @type {Number}
 		 * @public
 		 */
-		maxListSizeAlongFlexAxis: PropTypes.number.isRequired,
+		maxFlexScrollSize: PropTypes.number.isRequired,
 
 		/**
 		 * The component for the list corner.
@@ -227,7 +227,7 @@ const VirtualFlexList = kind({
 			{style: {width: headers.row.width + 'px', height: headers.col.height + 'px', overflow: 'hidden'}} :
 			null
 		),
-		itemProps: ({flexAxis, headers, items, maxListSizeAlongFlexAxis, x, y}) => ({
+		itemProps: ({flexAxis, headers, items, maxFlexScrollSize, x, y}) => ({
 			data: items.data,
 			dataSize: {
 				row: items.rowCount,
@@ -238,7 +238,7 @@ const VirtualFlexList = kind({
 				row: items.height,
 				col: items.width
 			},
-			maxListSizeAlongFlexAxis,
+			maxFlexScrollSize,
 			x,
 			y,
 			style: headers ?
@@ -266,7 +266,7 @@ const VirtualFlexList = kind({
 
 		delete rest.flexAxis;
 		delete rest.items;
-		delete rest.maxListSizeAlongFlexAxis;
+		delete rest.maxFlexScrollSize;
 		delete rest.x;
 		delete rest.y;
 
