@@ -207,7 +207,11 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			this.controlled.forEach((controlled) => {
 				const {component: controlledComponent, [action]: handler} = controlled;
 				if (component !== controlledComponent && typeof handler === 'function') {
-					handler.call(controlledComponent);
+					const complete = handler.call(controlledComponent);
+
+					if (action === 'start' && complete) {
+						controlled.complete = true;
+					}
 				}
 			});
 		}
