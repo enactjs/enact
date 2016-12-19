@@ -36,7 +36,8 @@ const contextTypes = {
 
 	/**
 	 * Called by Marquee instances when marqueeing is started (e.g. when focusing a Marquee
-	 * set to `marqueeOn='focus'`)
+	 * set to `marqueeOn='focus'`). If the Marquee instance should not or does not need to marquee,
+	 * the function can return `true` to mark itself complete.
 	 *
 	 * @type {Function}
 	 * @memberof moonstone/Marquee.Marquee.contextTypes
@@ -209,6 +210,8 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 				if (component !== controlledComponent && typeof handler === 'function') {
 					const complete = handler.call(controlledComponent);
 
+					// Returning `true` from a start request means that the marqueeing is
+					// unnecessary and is therefore complete
 					if (action === 'start' && complete) {
 						controlled.complete = true;
 					}
