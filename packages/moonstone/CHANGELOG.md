@@ -6,11 +6,12 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
-- `autoCollapse` and `lockBottom` properties to `ExpandableItem`
-- `noAutoCollapse` and `noLockBottom` properties to `ExpandableList`
+- `autoClose` and `lockBottom` properties to `ExpandableItem`
+- `noAutoClose` and `noLockBottom` properties to `ExpandableList`
 
 ### Changed
 
+- `autoClose` property of `moonstone/ExpandableList` to be `autoCloseOnSelect` to disambiguate it with the added `autoClose` on 5-way up
 - `moonstone/Spinner` component's `center` and `middle` properties to a single `centered` property
 	that applies both horizontal and vertical centering
 - `moonstone/Popup.PopupBase` component's `onCloseButtonClicked` property to `onCloseButtonClick`
