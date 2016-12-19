@@ -14,7 +14,7 @@ import {contextTypes, RadioControllerDecorator} from './RadioControllerDecorator
 /**
  * Default config for {@link ui/RadioDecorator.RadioDecorator}.
  *
- * @memberof ui/RadioDecorator
+ * @memberof ui/RadioDecorator.RadioDecorator
  * @hocconfig
  */
 const defaultConfig = {
@@ -23,7 +23,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default null
-	 * @memberof ui/RadioDecorator.defaultConfig
+	 * @memberof ui/RadioDecorator.RadioDecorator.defaultConfig
 	 */
 	activate: null,
 
@@ -32,7 +32,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default null
-	 * @memberof ui/RadioDecorator.defaultConfig
+	 * @memberof ui/RadioDecorator.RadioDecorator.defaultConfig
 	 */
 	deactivate: null,
 
@@ -41,7 +41,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'active'
-	 * @memberof ui/RadioDecorator.defaultConfig
+	 * @memberof ui/RadioDecorator.RadioDecorator.defaultConfig
 	 */
 	prop: 'active'
 };
