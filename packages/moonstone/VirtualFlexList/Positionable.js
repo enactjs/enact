@@ -93,7 +93,7 @@ const Positionable = hoc((config, Wrapped) => {
 						pos = this.childRef.calculatePositionOnFocus(index, key);
 					}
 				// For VirtualFlexList
-				} else if (this.childRef.calculateFlexPositionOnFocus) {
+				} else if (this.childRef.calculateFlexPositionOnFocus && typeof index === 'string') {
 					pos = this.childRef.calculateFlexPositionOnFocus(index, key);
 				}
 				if (pos) {
