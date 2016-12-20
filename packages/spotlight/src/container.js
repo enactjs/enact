@@ -82,6 +82,10 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			spotlightMuted: PropTypes.bool
 		}
 
+		static defaultProps = {
+			spotlightMuted: false
+		}
+
 		constructor (props) {
 			super(props);
 			this.state = {
