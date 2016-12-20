@@ -92,7 +92,7 @@ const RadioDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		componentWillUnount () {
 			if (this.sync) {
 				this.sync = false;
-				this.context.unregisterRadioItem(this);
+				this.context.deregisterRadioItem(this);
 			}
 		}
 

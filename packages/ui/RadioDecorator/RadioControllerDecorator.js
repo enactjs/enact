@@ -32,18 +32,18 @@ const contextTypes = {
 	registerRadioItem: React.PropTypes.func,
 
 	/**
-	 * Called by a {@link ui/RadioDecorator.RadioDecorator} when it will be unmouned to deregister
+	 * Called by a {@link ui/RadioDecorator.RadioDecorator} when it will be unmounted to deregister
 	 * it for deactivations.
 	 *
 	 * @type {Function}
 	 */
-	unregisterRadioItem: React.PropTypes.func
+	deregisterRadioItem: React.PropTypes.func
 };
 
 /**
  * {@link ui/RadioDecorator.RadioControllerDecorator} is a Higher-order Component that establishes
  * a radio group context for its descendants. Any descendants that are wrapped by
- * {@link ui/RadioDecorator.RadioDecorator} will be mutually exlusive.
+ * {@link ui/RadioDecorator.RadioDecorator} will be mutually exclusive.
  *
  * @class RadioControllerDecorator
  * @memberof ui/RadioDecorator
@@ -69,7 +69,7 @@ const RadioControllerDecorator = hoc((config, Wrapped) => {
 				activateRadioItem: this.activate,
 				deactivateRadioItem: this.deactivate,
 				registerRadioItem: this.register,
-				unregisterRadioItem: this.unregister
+				deregisterRadioItem: this.deregister
 			};
 		}
 
@@ -99,7 +99,7 @@ const RadioControllerDecorator = hoc((config, Wrapped) => {
 			}
 		}
 
-		unregister = (item) => {
+		deregister = (item) => {
 			const index = this.radioItems.indexOf(item);
 			if (index !== -1) {
 				this.radioItems.splice(index, 1);
