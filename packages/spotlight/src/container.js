@@ -1,6 +1,6 @@
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
-import React from 'react';
+import React, {PropTypes} from 'react';
 
 import Spotlight from './spotlight';
 import {spottableClass} from './spottable';
@@ -71,6 +71,21 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const forwardMouseLeave = forward(leaveEvent);
 
 	return class extends React.Component {
+		static propTypes = {
+			/**
+			 * Whether or not the container is in muted mode.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			spotlightMuted: PropTypes.bool
+		}
+
+		static defaultProps = {
+			spotlightMuted: false
+		}
+
 		constructor (props) {
 			super(props);
 			this.state = {
@@ -116,14 +131,18 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const containerId = this.state.containerId,
-				props = Object.assign({}, this.props);
+			const containerId = this.state.containerId;
+			const {spotlightMuted, ...rest} = this.props;
 
-			props['data-container-id'] = containerId;
-			props[enterEvent] = this.handleMouseEnter;
-			props[leaveEvent] = this.handleMouseLeave;
+			rest['data-container-id'] = containerId;
+			rest[enterEvent] = this.handleMouseEnter;
+			rest[leaveEvent] = this.handleMouseLeave;
 
-			return <Wrapped {...props} />;
+			if (spotlightMuted) {
+				rest['data-container-muted'] = spotlightMuted;
+			}
+
+			return <Wrapped {...rest} />;
 		}
 	};
 });
