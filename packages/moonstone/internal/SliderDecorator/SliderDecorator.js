@@ -64,9 +64,9 @@ const defaultConfig = {
 
 // Set-up event forwarding
 const
-	forwardChange     = forward('onChange'),
-	forwardMouseMove  = forward('onMouseMove'),
-	forwardMouseOut   = forward('onMouseOut');
+	forwardChange      = forward('onChange'),
+	forwardMouseMove   = forward('onMouseMove'),
+	forwardMouseLeave  = forward('onMouseLeave');
 
 /**
  * {@link moonstone/internal/SliderDecorator.SliderDecorator} is a Higher-order Component that
@@ -181,6 +181,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 
 			this.jobName = `sliderChange${now()}`;
+			this.knobPosition = null;
 			this.state = {
 				value: props.value
 			};
@@ -210,20 +211,24 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			// We don't want to run this code if any mouse button is being held down. That indicates dragging.
 			if (ev.buttons || this.props.vertical) return;
 
-			const {knobNode, node} = this.sliderBarNode;
+			const node = this.sliderBarNode.node;
 
 			// Don't let the positional value exceed the bar width, and account for the dead-space padding
 			const min = parseFloat(window.getComputedStyle(this.inputNode).paddingLeft);
 			const pointer = ev.clientX - this.inputNode.getBoundingClientRect().left;
 			const knob = (clamp(min, min + node.offsetWidth, pointer) - min) / node.offsetWidth;
 
-			knobNode.style.transform = computeKnobTransform(knob, this.props.vertical, node);
+			// Update our instance's knowledge of where the knob should be
+			this.knobPosition = knob;
+
+			this.updateUI(this.state.value);
 			forwardMouseMove(ev, this.props);
 		}
 
-		handleMouseOut = (ev) => {
+		handleMouseLeave = (ev) => {
+			this.knobPosition = null;
 			this.updateUI(this.state.value);
-			forwardMouseOut(ev, this.props);
+			forwardMouseLeave(ev, this.props);
 		}
 
 		submitValue = (value) => {
@@ -238,10 +243,12 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const normalizedMin = min != null ? min : Wrapped.defaultProps.min;
 			const proportionBackground = computeProportionBackground({backgroundPercent});
 			const proportionProgress = computeProportionProgress({value, max: normalizedMax, min: normalizedMin});
+			const knobProgress = this.knobPosition != null ? this.knobPosition : proportionProgress;
 
 			loaderNode.style.transform = computeBarTransform(proportionBackground, vertical);
 			barNode.style.transform = computeBarTransform(proportionProgress, vertical);
-			knobNode.style.transform = computeKnobTransform(proportionProgress, vertical, node);
+			// If we know the knob should be in a custom place, use that place; otherwise, sync it with the progress.
+			knobNode.style.transform = computeKnobTransform(knobProgress, vertical, node);
 		}
 
 		updateValue = (value) => {
@@ -291,11 +298,12 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				<Wrapped
 					{...this.props}
 					{...handlers}
+					scrubbing={(this.knobPosition != null)}
 					inputRef={this.getInputNode}
 					onChange={this.handleChange}
 					onClick={this.clickHandler}
 					onMouseMove={this.props.detachedKnob ? this.handleMouseMove : null}
-					onMouseOut={this.props.detachedKnob ? this.handleMouseOut : null}
+					onMouseLeave={this.props.detachedKnob ? this.handleMouseLeave : null}
 					sliderBarRef={this.getSliderBarNode}
 					sliderRef={this.getSliderNode}
 					value={this.state.value}

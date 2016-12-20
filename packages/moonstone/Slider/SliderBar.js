@@ -22,6 +22,17 @@ const SliderBarFactory = factory(({css}) => {
 
 		static propTypes = /** @lends moonstone/Slider.SliderBar.prototype */{
 			/**
+			 * The slider can change its behavior to have the knob follow the cursor as it moves
+			 * across the slider, without applying the position. A click or drag behaves the same.
+			 * This is primarily used by media playback. Setting this to `true` enables this behavior.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @private
+			 */
+			detachedKnob: PropTypes.bool,
+
+			/**
 			 * The background progress as a proportion.
 			 *
 			 * @type {Number}
@@ -36,6 +47,17 @@ const SliderBarFactory = factory(({css}) => {
 			 * @public
 			 */
 			proportionProgress: PropTypes.number,
+
+			/**
+			 * `scrubbing` only has an effect with a datachedKnob, and is a performance optimization
+			 * to not allow re-assignment of the knob's value (and therefore position) during direct
+			 * user interaction.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			scrubbing: PropTypes.bool,
 
 			/**
 			 * If `true` the slider will be oriented vertically.
@@ -72,13 +94,13 @@ const SliderBarFactory = factory(({css}) => {
 		}
 
 		render () {
-			const {proportionBackgroundProgress, proportionProgress, vertical, ...rest} = this.props;
+			const {detachedKnob, proportionBackgroundProgress, proportionProgress, scrubbing, vertical, ...rest} = this.props;
 
 			return (
 				<div {...rest} className={css.sliderBar} ref={this.getNode}>
 					<div className={css.load} ref={this.getLoaderNode} style={{transform: computeBarTransform(proportionBackgroundProgress, vertical)}} />
 					<div className={css.fill} ref={this.getBarNode} style={{transform: computeBarTransform(proportionProgress, vertical)}} />
-					<div className={css.knob} ref={this.getKnobNode} style={{transform: computeKnobTransform(proportionProgress, vertical, this.node)}} />
+					<div className={css.knob} ref={this.getKnobNode} style={(detachedKnob && !scrubbing) ? {transform: computeKnobTransform(proportionProgress, vertical, this.node)} : null} />
 				</div>
 			);
 		}

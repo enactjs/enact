@@ -266,8 +266,6 @@ const VideoPlayerBase = class extends React.Component {
 
 		// Internal State
 		this.videoReady = false;
-		this.scrubbing = false;
-		this.scrubbingPassive = false;
 		this.video = null;
 
 		// Re-render-necessary State
@@ -371,10 +369,7 @@ const VideoPlayerBase = class extends React.Component {
 				loading: el.readyState < el.HAVE_ENOUGH_DATA
 			};
 
-			if (!this.scrubbingPassive) {
-				// If passively scrubbing, don't update the progress of the played state, so we can move around the scrubber without being interrupted.
-				updatedState.percentagePlayed = el.currentTime / el.duration;
-			}
+			updatedState.percentagePlayed = el.currentTime / el.duration;
 
 			this.setState(updatedState);
 		}
@@ -600,19 +595,6 @@ const VideoPlayerBase = class extends React.Component {
 
 
 	//
-	// Handled local events
-	//
-	onScrubPassive = (ev) => {
-		this.scrubbingPassive = (ev.type === 'mouseenter');
-	}
-	onScrub = (ev) => {
-		// This will be wired up to tooltip when that piece is ready.,
-		// Currently just a placeholder to verify this aspect works.
-		this.scrubbing = (ev.type === 'mousedown');
-	}
-
-
-	//
 	// Handled Media events
 	//
 	handleDurationChange = (ev) => {
@@ -637,7 +619,7 @@ const VideoPlayerBase = class extends React.Component {
 	// Player Button controls
 	//
 	onSliderChange = ({value}) => {
-		if (value && this.video && this.videoReady && this.scrubbingPassive) {
+		if (value && this.video && this.videoReady) {
 			const el = this.video.videoEl;
 			this.send('seek', value * el.duration);
 		}
@@ -678,8 +660,6 @@ const VideoPlayerBase = class extends React.Component {
 			onJumpForwardButtonClick = this.onJumpForward,
 			...rest} = this.props;
 		delete rest.jumpBy;
-
-		const scrubbingClass = (this.scrubbingPassive) ? ' ' + css.scrubbing : '';
 
 		// Handle some class additions when the "more" button is pressed
 		const moreState  = (this.state.more) ? ' ' + css.more : '';
@@ -725,7 +705,7 @@ const VideoPlayerBase = class extends React.Component {
 						</div>
 
 						{/* Slider Section */}
-						{noSlider ? null : <div className={css.sliderFrame + scrubbingClass}>
+						{noSlider ? null : <div className={css.sliderFrame}>
 							<MediaSlider
 								className={css.mediaSlider}
 								backgroundPercent={this.state.percentageLoaded}
@@ -735,10 +715,6 @@ const VideoPlayerBase = class extends React.Component {
 								value={this.state.percentagePlayed}
 								step={0.00001}
 								onChange={this.onSliderChange}
-								onMouseEnter={this.onScrubPassive}
-								onMouseLeave={this.onScrubPassive}
-								onMouseDown={this.onScrub}
-								onMouseUp={this.onScrub}
 							/>
 						</div>}
 
