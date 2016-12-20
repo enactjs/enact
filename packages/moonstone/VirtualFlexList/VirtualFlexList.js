@@ -14,14 +14,13 @@ import {SpotlightContainerDecorator} from '@enact/spotlight';
 import {VirtualListCore} from '../VirtualList/VirtualListBase';
 
 import Positionable from './Positionable';
-import {VirtualFlexListCore} from './VirtualFlexListCore';
+import {VirtualFlexListBase} from './VirtualFlexListBase';
 
 import css from './VirtualFlexList.less';
 
 const
 	PositionableVirtualList = Positionable(VirtualListCore),
-	SpotlightPositionableVirtualList = SpotlightContainerDecorator(Positionable(VirtualListCore)),
-	SpotlightPositionableVirtualFlexList = SpotlightContainerDecorator(Positionable(VirtualFlexListCore));
+	SpotlightPositionableVirtualList = SpotlightContainerDecorator(Positionable(VirtualListCore));
 
 const nop = () => {};
 
@@ -311,15 +310,15 @@ class VirtualFlexList extends Component {
 				<div {...rest} className={classNames(css.virtualFlexList, css.headers)}>
 					<SpotlightPositionableVirtualList {...rowHeaderProps} />
 					<PositionableVirtualList {...colHeaderProps} />
-					<SpotlightPositionableVirtualFlexList {...itemProps} />
+					<VirtualFlexListBase {...itemProps} />
 					<div {...cornerProps}>{cornerComponent}</div>
 				</div>
 			);
 		} else {
-			return (<SpotlightPositionableVirtualFlexList {...rest} {...itemProps} className={css.virtualFlexList} />);
+			return (<VirtualFlexListBase {...rest} {...itemProps} className={css.virtualFlexList} />);
 		}
 	}
 }
 
 export default VirtualFlexList;
-export {VirtualFlexList, VirtualFlexList as VirtualFlexListBase};
+export {VirtualFlexList, VirtualFlexListBase};

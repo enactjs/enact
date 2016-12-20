@@ -6,7 +6,9 @@
 
 import React, {Component, PropTypes} from 'react';
 
-import {Spotlight} from '@enact/spotlight';
+import {Spotlight, SpotlightContainerDecorator} from '@enact/spotlight';
+
+import Positionable from './Positionable';
 
 const
 	dataContainerDisabledAttribute = 'data-container-disabled',
@@ -766,5 +768,7 @@ class VirtualFlexListCore extends Component {
 	}
 }
 
-export default VirtualFlexListCore;
-export {VirtualFlexListCore};
+const VirtualFlexListBase = SpotlightContainerDecorator(Positionable(VirtualFlexListCore));
+
+export default VirtualFlexListBase;
+export {VirtualFlexListCore, VirtualFlexListBase};
