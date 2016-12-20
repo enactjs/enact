@@ -1,5 +1,6 @@
 import React from 'react';
 import {mount} from 'enzyme';
+import sinon from 'sinon';
 import {RadioControllerDecorator, RadioDecorator} from '../RadioDecorator';
 
 describe('RadioDecorator', () => {
@@ -140,4 +141,34 @@ describe('RadioDecorator', () => {
 		expect(parentActual).to.equal(parentExpected);
 	});
 
+
+	it.only('should not call deactivate callback on inactive items', function () {
+		const handleDeactivate = sinon.spy();
+		const Component = RadioDecorator({deactivate: 'onClick', prop: 'active'}, Item);
+
+		// deactivate() is only called when there was a previously active item
+		const Wrapper = ({active}) => (	// eslint-disable-line enact/prop-types
+			<Controller>
+				<Component active={!active} />
+				<Component active={active} />
+				<Component onClick={handleDeactivate} />
+			</Controller>
+		);
+
+		// create a controller with no active item
+		const subject = mount(
+			<Wrapper />
+		);
+
+		// activate the second item via prop change
+		subject.setProps({
+			active: true
+		});
+
+		// verify that the deactivate handler wasn't called
+		const expected = false;
+		const actual = handleDeactivate.called;
+
+		expect(actual).to.equal(expected);
+	});
 });

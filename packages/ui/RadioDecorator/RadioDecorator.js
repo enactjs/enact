@@ -98,6 +98,7 @@ const RadioDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		notifyController (props) {
 			if (this.sync && prop && props[prop]) {
+				// console.log('notify', prop, deactivate);
 				this.context.activateRadioItem(this);
 			}
 		}
