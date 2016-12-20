@@ -14,6 +14,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualGridList` to be scrolled by page when navigating with a 5-way direction key
 - `moonstone/Scroller`, `moonstone/VirtualList`, `moonstone/VirtualGridList`, and `moonstone/Scrollable` to no longer respond to mouse down/move/up events
 - `moonstone/VirtualList` to mute its container instead of disabling it during scroll events
+- `moonstone/VirtualList`, `moonstone/VirtualGridList`, and `moonstone/Scroller` to continue scrolling when holding down the paging controls
 
 ### Fixed
 

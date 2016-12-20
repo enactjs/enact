@@ -10,7 +10,7 @@ import IconButton from '../IconButton';
 
 import css from './Scrollbar.less';
 
-const HoldableIconButton = Holdable(IconButton);
+const HoldableIconButton = Holdable({endHold: 'onLeave'}, IconButton);
 
 const
 	verticalProperties = {
