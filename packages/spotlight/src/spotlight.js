@@ -1288,6 +1288,41 @@ const Spotlight = (function() {
 			}
 
 			return matchSelector(elem, '[data-container-muted="true"] .' + spottableClass);
+		},
+
+		/**
+		 * Determines whether Spotlight is currently paused.
+		 *
+		 * @return {Boolean} `true` if Spotlight is currently paused.
+		 * @public
+		 */
+		isPaused: function () {
+			return _pause;
+		},
+
+		/**
+		 * Determines whether an element is spottable.
+		 *
+		 * @param {Object} [elem] The dom element used to determine the spottable status.
+		 * @return {Boolean} `true` if the element being evaluated is currently spottable.
+		 * @public
+		 */
+		isSpottable: function (elem) {
+			if (!elem) {
+				return false;
+			}
+
+			return matchSelector(elem, '.' + spottableClass);
+		},
+
+		/**
+		 * Returns the currently spotted control.
+		 *
+		 * @return {Object} The control that currently has focus, if available
+		 * @public
+		 */
+		getCurrent: function () {
+			return getCurrent();
 		}
 	};
 
