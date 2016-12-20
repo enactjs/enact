@@ -138,7 +138,7 @@ const ExpandableItemBase = kind({
 		open: ({disabled, open}) => (open && !disabled)
 	},
 
-	render: ({children, disabled, handleOpen, label, open, title, ...rest}) => {
+	render: ({children, disabled, handleOpen, label, open, title, titleIcon, ...rest}) => {
 		delete rest.label;
 		delete rest.noneText;
 		delete rest.onClose;
@@ -153,6 +153,7 @@ const ExpandableItemBase = kind({
 					disabled={disabled}
 					label={label}
 					onClick={handleOpen}
+					titleIcon={titleIcon}
 				>{title}</LabeledItem>
 				<ExpandableTransitionContainer data-container-disabled={!open} data-expandable-container visible={open} duration="short" type="clip">
 					{children}
