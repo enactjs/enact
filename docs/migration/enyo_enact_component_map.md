@@ -54,10 +54,9 @@ how to use it.
 | `Calendar` | | unused<sup>1</sup> |
 | `CaptionDecorator` | | unused<sup>1</sup> |
 | `ChannelInfo` | | deprecated |
-| `Checkbox` | use `@enact/ui/Toggleable` HoC or `@enact/moonstone/CheckboxItem` | |
+| `Checkbox` | use `@enact/ui/Toggleable` HOC or `@enact/moonstone/CheckboxItem` | |
 | `CheckboxItem` | `CheckboxItem` | |
 | `ClampedText` | | unused<sup>1</sup> |
-| `Clock` | * | under review |
 | `ContextualPopup` | `ContextualPopup` | provided in `@enact/moonstone/ContextualPopupDecorator` |
 | `ContextualPopupButton` | | deprecated |
 | `ContextualPopupDecorator` | `ContextualPopupDecorator` | |
@@ -80,8 +79,8 @@ how to use it.
 | `GridListImageItem` | `GridListImageItem` | provided in `@enact/moonstone/VirtualList` |
 | `Header` | `Header` | provided in `@enact/moonstone/Panels` |
 | `HighlightText` | | unused<sup>1</sup> |
-| `History` | use `@enact/ui/Cancelable` HoC for history-type activities | |
-| `HistorySupport` | use `@enact/ui/Cancelable` HoC for history-type activities | |
+| `History` | use `@enact/ui/Cancelable` HOC for history-type activities | |
+| `HistorySupport` | use `@enact/ui/Cancelable` HOC for history-type activities | |
 | `Icon` | `Icon` | |
 | `IconButton` | `IconButton` | |
 | `Image` | `Image` | |
@@ -93,13 +92,14 @@ how to use it.
 | `ItemOverlay` | `ItemOverlay` | provided in `@enact/moonstone/Item` |
 | `LabeledTextItem` | `LabeledItem` | |
 | `LightPanels` | `ViewManager` | |
-| `ListActions` | * | under development |
+| `ListActions` |  use `@enact/moonstone/IconButton` and `@enact/moonstone/ContextualPopupDecorator`| |
 | `Marquee` | `Marquee` | |
 | `MoonAnimator` | | unwanted<sup>3</sup> |
 | `MoonArranger` | | unwanted<sup>3</sup> |
 | `NewPagingControl` | | see `PagingControl` |
+| `Notification` | `Notification` | |
 | `ObjectActionDecorator` | | unwanted<sup>3</sup> |
-| `Overlay` | use `@enact/ui/Layerable` HoC | under review |
+| `Overlay` | use `@enact/ui/Layerable` HOC | under review |
 | `PagingControl` | use `@enact/moonstone/IconButton` and custom handlers | |
 | `Panel` | `Panel` | provided in `@enact/moonstone/Panels` |
 | `Panels` | `Panels` | |
@@ -108,13 +108,13 @@ how to use it.
 | `ProgressBar` | `ProgressBar` | |
 | `ProgressButton` | | unused<sup>1</sup> |
 | `RadioItem` | `RadioItem` | |
-| `RadioItemGroup` | use `@enact/ui/Group` HoC with `@enact/moonstone/RadioItem`s | |
+| `RadioItemGroup` | use `@enact/ui/Group` HOC with `@enact/moonstone/RadioItem`s | |
 | `RichText` | | unused<sup>1</sup> |
 | `Scrim` | `Scrim` | provided in `@enact/ui/FloatingLayer` |
-| `Scrollable` | `Scrollable` | HoC provided in `@enact/moonstone/Scroller` |
-| `ScrollControls` | use `Scrollable` HoC | |
+| `Scrollable` | `Scrollable` | HOC provided in `@enact/moonstone/Scroller` |
+| `ScrollControls` | use `Scrollable` HOC | |
 | `Scroller` | `Scroller` | |
-| `ScrollStrategy` | use `Scrollable` HoC | |
+| `ScrollStrategy` | use `Scrollable` HOC | |
 | `ScrollThumb` | | internal usage<sup>2</sup> |
 | `SelectableItem` | `SelectableItem` | |
 | `SimpleIntegerPicker` | `RangePicker` | use `joined=true` |
@@ -129,13 +129,13 @@ how to use it.
 | `ToggleItem` | `SwitchItem` or `ToggleItem` | `@enact/moonstone/SwitchItem` is a specific extension of `@enact/moonstone/ToggleItem` |
 | `ToggleSwitch` | `Switch` | |
 | `ToggleText` | | unused<sup>1</sup> |
-| `Tooltip` | `Tooltip` | |
-| `TooltipDecorator` | n/a | deprecated |
+| `Tooltip` | `Tooltip` | provided in `@enact/moonstone/TooltipDecorator`; wraps `@enact/moonstone/Button` and `@enact/moonstone/IconButton` |
+| `TooltipDecorator` | `TooltipDecorator` | |
 | `VideoFeedback` | | unused<sup>1</sup> |
 | `VideoFullscreenToggleButton` | | unused<sup>1</sup> |
 | `VideoInfoBackground` | | unused<sup>1</sup> |
 | `VideoInfoHeader` | | unused<sup>1</sup> |
-| `VideoPlayer` | * | under review |
+| `VideoPlayer` | `VideoPlayer` | |
 | `VideoTransportSlider` | | unused<sup>1</sup> |
 
 <sup>1</sup>- Internal review of Moonstone applications revealed no usage of the
