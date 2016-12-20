@@ -66,30 +66,14 @@ storiesOf('Button')
 		)
 	)
 	.addWithInfo(
-		'to test background to sit behind the containing element',
+		'to test if the parent element\'s background causes occlusion',
 		() => (
 			<div className={css.bgColor}>
 				<Button
 					onClick={action('onClick')}
-					backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
 					disabled={boolean('disabled')}
-					minWidth={boolean('minWidth', false)}
-					preserveCase={boolean('preserveCase')}
-					selected={boolean('selected')}
-					small={boolean('small')}
 				>
 					Normal Button
-				</Button>
-				<Button
-					onClick={action('onClick')}
-					backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
-					disabled={boolean('disabled')}
-					minWidth={boolean('minWidth')}
-					preserveCase={boolean('preserveCase')}
-					selected={boolean('selected')}
-					small
-				>
-					Small Button
 				</Button>
 			</div>
 		)
