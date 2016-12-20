@@ -1,0 +1,34 @@
+// Expandable.less
+//
+@import '../styles/variables.less';
+
+.expandableItem {
+
+	.header {
+		display: inline-flex;
+		padding-right: @moon-expandable-icon-large-padding;
+
+		&:after {
+			position: absolute;
+			top: @moon-spotlight-outset - @moon-icon-margin;
+			right: @moon-expandable-icon-position;
+			font-family: @moon-icon-font-family;
+			font-size: @moon-expandable-caret-icon-font-size;
+			content: @moon-expandable-close-caret-icon;
+
+			:global(.enact-locale-right-to-left) & {
+				left: @moon-expandable-icon-position;
+				right: initial;
+			}
+		}
+
+		:global(.enact-locale-right-to-left) & {
+			padding-left: @moon-expandable-icon-large-padding;
+			padding-right: @moon-expandable-icon-small-padding;
+		}
+	}
+
+	&.open .header:after {
+		content: @moon-expandable-open-caret-icon;
+	}
+}

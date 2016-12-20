@@ -11,10 +11,12 @@ import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 
 import LabeledItem from '../LabeledItem';
-
+import Item, {ItemOverlay} from '../Item';
 import Expandable from './Expandable';
 import ExpandableContainer from './ExpandableContainer';
 import ExpandableTransitionContainer from './ExpandableTransitionContainer';
+
+import css from './Expandable.less';
 
 /**
  * {@link moonstone/ExpandableItem.ExpandableItem} is a stateless component that
@@ -119,6 +121,11 @@ const ExpandableItemBase = kind({
 		showLabel: 'auto'
 	},
 
+	styles: {
+		css,
+		className: 'expandableItem'
+	},
+
 	computed: {
 		label: ({disabled, label, noneText, open, showLabel}) => {
 			const isOpen = open && !disabled;
@@ -134,7 +141,8 @@ const ExpandableItemBase = kind({
 				return open ? onClose : onOpen;
 			}
 		},
-		open: ({disabled, open}) => open && !disabled
+		open: ({disabled, open}) => open && !disabled,
+		className: ({open, styler}) => styler.append({open})
 	},
 
 	render: ({children, disabled, handleOpen, label, open, title, ...rest}) => {
@@ -148,11 +156,14 @@ const ExpandableItemBase = kind({
 
 		return (
 			<ExpandableContainer {...rest} disabled={disabled} open={open}>
-				<LabeledItem
-					disabled={disabled}
-					label={label}
-					onClick={handleOpen}
-				>{title}</LabeledItem>
+				<ItemOverlay onClick={handleOpen}>
+					<Item
+						className={css.header}
+					>{title}</Item>
+					<LabeledItem
+						label={label}
+					/>
+				</ItemOverlay>
 				<ExpandableTransitionContainer data-container-disabled={!open} data-expandable-container visible={open} duration="short" type="clip">
 					{children}
 				</ExpandableTransitionContainer>
