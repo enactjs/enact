@@ -2,6 +2,18 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `predefinedClientSize prop to `moonstone/VirtualList`
+
+### Changed
+
+### Removed
+
+### Fixed
+
 ## [1.0.0-alpha.5] - 2016-12-16
 
 ### Fixed

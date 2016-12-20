@@ -133,6 +133,16 @@ class VirtualListCore extends Component {
 		positioningOption: PropTypes.oneOf(['byItem', 'byContainer', 'byBrowser']),
 
 		/**
+		 * Predefined client size. If this prop is not defined, VirtualList will calculate them after rendering itself.
+		 * We recommend not to define `predefinedClientSize` in normal case.
+		 * Only use this prop when you use isomorphic build option.
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		predefinedClientSize: PropTypes.shape({clientWidth: PropTypes.number, clientHeight: PropTypes.number}),
+
+		/**
 		 * Spacing between items.
 		 *
 		 * @type {Number}
@@ -254,15 +264,15 @@ class VirtualListCore extends Component {
 
 	calculateMetrics (props) {
 		const
-			{direction, itemSize, positioningOption, spacing} = props,
+			{dataSize, direction, itemSize, overhang, positioningOption, predefinedClientSize, spacing} = props,
 			node = this.getContainerNode(positioningOption);
 
-		if (!node) {
+		if (!predefinedClientSize && !node) {
 			return;
 		}
 
 		const
-			{clientWidth, clientHeight} = this.getClientSize(node),
+			{clientWidth, clientHeight} = (predefinedClientSize || this.getClientSize(node)),
 			heightInfo = {
 				clientSize: clientHeight,
 				minItemSize: (itemSize.minHeight) ? itemSize.minHeight : null,
@@ -314,8 +324,13 @@ class VirtualListCore extends Component {
 		this.scrollPosition = 0;
 		// eslint-disable-next-line react/no-direct-mutation-state
 		this.state.firstIndex = 0;
-		// eslint-disable-next-line react/no-direct-mutation-state
-		this.state.numOfItems = 0;
+		if (predefinedClientSize) {
+			// eslint-disable-next-line react/no-direct-mutation-state
+			this.state.numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang));
+		} else {
+			// eslint-disable-next-line react/no-direct-mutation-state
+			this.state.numOfItems = 0;
+		}
 	}
 
 	updateStatesAndBounds (props) {
@@ -690,7 +705,7 @@ class VirtualListCore extends Component {
 
 		if (hasMetricsChanged) {
 			this.calculateMetrics(nextProps);
-			this.updateStatesAndBounds(hasDataChanged ? nextProps : this.props);
+			this.updateStatesAndBounds(nextProps);
 		} else if (hasDataChanged) {
 			this.updateStatesAndBounds(nextProps);
 		}
@@ -726,7 +741,7 @@ class VirtualListCore extends Component {
 	render () {
 		const
 			props = Object.assign({}, this.props),
-			{positioningOption, onScroll} = this.props,
+			{positioningOption, predefinedClientSize, onScroll} = this.props,
 			{primary, cc} = this;
 
 		delete props.cbScrollTo;
@@ -742,10 +757,14 @@ class VirtualListCore extends Component {
 		delete props.onScrollStop;
 		delete props.overhang;
 		delete props.pageScroll;
+		delete props.predefinedClientSize;
 		delete props.positioningOption;
 		delete props.spacing;
 
 		if (primary) {
+			this.renderCalculate();
+		} else if (predefinedClientSize) {
+			this.calculateMetrics(this.props);
 			this.renderCalculate();
 		}
 
