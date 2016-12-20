@@ -398,6 +398,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {undefined}
 		 */
 		resetAnimation = () => {
+			// without a mimimum delay, a marquee can fail to restart if the values of `marqueeDelay`
+			// and `marqueeResetDelay` are both very low values (such as 0). This appears to be a quirk
+			// due to running a series of callbacks through `setTimeout` methods at a low value (0).
 			const minDelay = 100;
 			this.setTimeout(this.restartAnimation, this.props.marqueeResetDelay + minDelay);
 		}
