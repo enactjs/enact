@@ -7,29 +7,24 @@
  * @ui
  * @private
  */
-import React from 'react';
 
-import Video, {Overlay} from 'react-html5video';
+import {$L} from '@enact/i18n';
 import {forward} from '@enact/core/handle';
 import {startJob, stopJob} from '@enact/core/jobs';
-import {$L} from '@enact/i18n';
-import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
+import React from 'react';
+import Slottable from '@enact/ui/Slottable';
+import Video, {Overlay} from 'react-html5video';
+
+import Spinner from '../Spinner';
 
 import {calcNumberValueOfPlaybackRate, getNow} from './util';
+import MediaControls from './MediaControls';
+import MediaTitle from './MediaTitle';
+import MediaSlider from './MediaSlider';
 import Times from './Times';
-
-import IconButton from '../IconButton';
-import MarqueeText from '../Marquee/MarqueeText';
-import {SliderFactory} from '../Slider';
-import Spinner from '../Spinner';
-import Slottable from '@enact/ui/Slottable';
-import {SpotlightContainerDecorator} from '@enact/spotlight';
 
 import css from './VideoPlayer.less';
 
-const MediaSlider = onlyUpdateForKeys(['backgroundPercent', 'value'])(SliderFactory({css}));
-
-const Container = SpotlightContainerDecorator('div');
 
 // Set-up event forwarding
 // Leaving lots of commented out, ready-to-use methods here in case we want/need them later.
@@ -619,7 +614,7 @@ const VideoPlayerBase = class extends React.Component {
 	// Player Button controls
 	//
 	onSliderChange = ({value}) => {
-		if (value && this.video && this.videoReady) {
+		if (value && this.video && this.video.videoEl && this.videoReady) {
 			const el = this.video.videoEl;
 			this.send('seek', value * el.duration);
 		}
@@ -662,10 +657,6 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.jumpBy;
 
 		// Handle some class additions when the "more" button is pressed
-		const moreState  = (this.state.more) ? ' ' + css.more : '';
-		const infoState  = (this.state.more) ? ' ' + css.visible : ' ' + css.hidden;
-		const withBadges = (this.state.more) ? ' ' + css.withBadges : '';
-		const moreIcon   = (this.state.more) ? 'arrowhookleft' : 'ellipsis';
 		const mediaDisabled = !!(this.state.more);
 		const moreDisabled = !(this.state.more);
 
@@ -697,47 +688,40 @@ const VideoPlayerBase = class extends React.Component {
 					<div className={css.bottom}> {/* showing={false} */}
 						{/* Info Section: Title, Description, Times */}
 						<div className={css.infoFrame}>
-							<div className={css.titleFrame}> {/* hidingDuration={1000} marqueeOnRender */}
-								<MarqueeText className={css.title + withBadges}>{title}</MarqueeText>
-								<div className={css.infoComponents + infoState}>{infoComponents}</div> {/* showing={false} showingDuration={500} tabIndex={-1} mixins={[ShowingTransitionSupport]} */}
-							</div>
+							<MediaTitle
+								title={title}
+								visible={this.state.more}
+							>
+								{infoComponents}
+							</MediaTitle>
 							<Times current={this.state.currentTime} total={this.state.duration} />
 						</div>
 
-						{/* Slider Section */}
-						{noSlider ? null : <div className={css.sliderFrame}>
-							<MediaSlider
-								className={css.mediaSlider}
-								backgroundPercent={this.state.percentageLoaded}
-								detachedKnob
-								min={0}
-								max={1}
-								value={this.state.percentagePlayed}
-								step={0.00001}
-								onChange={this.onSliderChange}
-							/>
-						</div>}
+						{noSlider ? null : <MediaSlider
+							backgroundPercent={this.state.percentageLoaded}
+							value={this.state.percentagePlayed}
+							onChange={this.onSliderChange}
+						/>}
 
-						{/* Media Controls Section: Left, Center, Right, and More Controls */}
-						<div className={css.controlsFrame} onClick={this.resetAutoTimeout}>
-							<div className={css.leftComponents}>{leftComponents}</div>
-							<div className={css.centerComponentsContainer}>
-								<div className={css.centerComponents + moreState}>
-									<Container className={css.mediaControls} data-container-disabled={mediaDisabled}> {/* rtl={false} */}
-										{noJumpButtons ? null : <IconButton backgroundOpacity="translucent" onClick={onJumpBackwardButtonClick}>skipbackward</IconButton>}
-										{noRateButtons ? null : <IconButton backgroundOpacity="translucent" onClick={onBackwardButtonClick}>backward</IconButton>}
-										<IconButton backgroundOpacity="translucent" onClick={onPlayButtonClick}>{this.state.playPauseIcon}</IconButton>
-										{noRateButtons ? null : <IconButton backgroundOpacity="translucent" onClick={onForwardButtonClick}>forward</IconButton>}
-										{noJumpButtons ? null : <IconButton backgroundOpacity="translucent" onClick={onJumpForwardButtonClick}>skipforward</IconButton>}
-									</Container>
-									<Container className={css.moreControls} data-container-disabled={moreDisabled}>{children}</Container> {/* rtl={false} */}
-								</div>
-							</div>
-							<div className={css.rightComponents}>
-								{rightComponents}
-								{(children) ? <IconButton backgroundOpacity="translucent" className={css.moreButton} onClick={this.onMoreClick}>{moreIcon}</IconButton> : null}
-							</div>
-						</div>
+						<MediaControls
+							leftComponents={leftComponents}
+							mediaDisabled={mediaDisabled}
+							moreDisabled={moreDisabled}
+							noJumpButtons={noJumpButtons}
+							noRateButtons={noRateButtons}
+							onBackwardButtonClick={onBackwardButtonClick}
+							onClick={this.resetAutoTimeout}
+							onForwardButtonClick={onForwardButtonClick}
+							onJumpBackwardButtonClick={onJumpBackwardButtonClick}
+							onJumpForwardButtonClick={onJumpForwardButtonClick}
+							onPlayButtonClick={onPlayButtonClick}
+							onToggleMore={this.onMoreClick}
+							playPauseIcon={this.state.playPauseIcon}
+							rightComponents={rightComponents}
+							showMoreComponents={this.state.more}
+						>
+							{children}
+						</MediaControls>
 					</div>
 				</div>
 			</div>
