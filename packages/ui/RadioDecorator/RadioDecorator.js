@@ -108,7 +108,9 @@ const RadioDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {undefined}
 		 */
 		deactivate = () => {
-			forwardDeactivate(null, this.props);
+			if (this.props[prop]) {
+				forwardDeactivate(null, this.props);
+			}
 		}
 
 		handleActivate = () => {
