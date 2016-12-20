@@ -10,7 +10,7 @@ import {contextTypes} from '@enact/i18n/I18nDecorator';
 import {dataIndexAttribute, Scrollable} from '../Scroller/Scrollable';
 
 const
-	dataContainerDisabledAttribute = 'data-container-disabled',
+	dataContainerMutedAttribute = 'data-container-muted',
 	dataContainerIdAttribute = 'data-container-id',
 	keyLeft	 = 37,
 	keyUp	 = 38,
@@ -626,7 +626,7 @@ class VirtualListCore extends Component {
 		const containerNode = this.getContainerNode(this.props.positioningOption);
 
 		if (containerNode) {
-			containerNode.setAttribute(dataContainerDisabledAttribute, bool);
+			containerNode.setAttribute(dataContainerMutedAttribute, bool);
 		}
 	}
 
