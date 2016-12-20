@@ -216,6 +216,8 @@
 			}
 
 			.controlsFrame {
+				@expanding-button-clearance: 3px;
+
 				position: relative;
 				display: flex;
 
@@ -224,6 +226,7 @@
 					// Pre-allocate enough space for 2 buttons, statically.
 					width: (@moon-icon-button-size * 2 + @moon-spotlight-outset * 3);
 					white-space: nowrap;
+					padding: @expanding-button-clearance 0;
 				}
 				.leftComponents {
 					> :first-child {
@@ -243,6 +246,7 @@
 					// region and a scrollbar which conflicts with buttons' ability to grow large
 					// when clicked. Basic overflow:hidden cannot be used either, as it clips too.
 					-webkit-mask-image: -webkit-gradient(linear, left top, right top, color-stop(0.9,  rgba(0,0,0,1)), color-stop(1,  rgba(0,0,0,0)));
+					padding: @expanding-button-clearance 0;
 
 					.centerComponents {
 						transition: 500ms transform ease;
