@@ -5,6 +5,7 @@ import Spotlight from './spotlight';
 
 const spottableClass = 'spottable';
 const spottableDisabledClass = 'spottableDisabled';
+const spottableIdProp = 'data-spottable-id';
 
 const ENTER_KEY = 13;
 const REMOTE_OK_KEY = 16777221;
@@ -101,6 +102,25 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			spotlightDisabled: React.PropTypes.bool,
 
 			/**
+			 * The spottable id of the control to highlight if the current control
+			 * has focus and is removed from the dom.
+			 *
+			 * @type {String}
+			 * @default null
+			 * @public
+			 */
+			spottableDisappearToId: React.PropTypes.string,
+
+			/**
+			 * The id of the spottable control.
+			 *
+			 * @type {String}
+			 * @default null
+			 * @public
+			 */
+			spottableId: React.PropTypes.string,
+
+			/**
 			 * The tabIndex of the component. This value will default to -1 if left
 			 * unset and the control is spottable.
 			 *
@@ -115,6 +135,19 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			this.state = {
 				spotted: false
 			};
+		}
+
+		componentWillUnmount () {
+			const {spottableDisappearToId} = this.props;
+
+			if (this.state.spotted && spottableDisappearToId) {
+				const next = document.querySelector(`[${spottableIdProp}='${spottableDisappearToId}']`);
+
+				if (next) {
+					Spotlight.setPointerMode(false);
+					Spotlight.focus(next);
+				}
+			}
 		}
 
 		onBlur = (e) => {
@@ -142,18 +175,23 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const {disabled, spotlightDisabled, ...rest} = this.props;
+			const {disabled, spottableId, spotlightDisabled, ...rest} = this.props;
 			const spottableDisabled = this.state.spotted && disabled;
 			const spottable = (spottableDisabled || !disabled) && !spotlightDisabled;
 			const classes = spottableDisabled ? spottableClass + ' ' + spottableDisabledClass : spottableClass;
 			const componentDisabled = !spottable && disabled;
 			let tabIndex = rest.tabIndex;
 
+			delete rest.spottableDisappearToId;
+
 			if (tabIndex == null && spottable) {
 				tabIndex = -1;
 			}
 
 			if (spottable) {
+				if (spottableId) {
+					rest[spottableIdProp] = spottableId;
+				}
 				rest['onBlur'] = this.onBlur;
 				rest['onFocus'] = this.onFocus;
 				if (emulateMouse && !spottableDisabled) {
