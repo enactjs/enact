@@ -71,6 +71,8 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const forwardMouseLeave = forward(leaveEvent);
 
 	return class extends React.Component {
+		static displayName = 'SpotlightContainerDecorator'
+
 		constructor (props) {
 			super(props);
 			this.state = {
