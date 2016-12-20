@@ -39,7 +39,7 @@ const SliderBase = kind({
 		 * @default 0
 		 * @public
 		 */
-		backgroundPercent: PropTypes.number,
+		backgroundPercent: checkDefaultBounds,
 
 		/**
 		 * When `true`, the component is shown as disabled and does not generate events
