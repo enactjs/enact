@@ -1,5 +1,5 @@
 import kind from '@enact/core/kind';
-import IconButton from '@enact/moonstone/IconButton';
+import IconButton from '../IconButton';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
 
