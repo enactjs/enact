@@ -32,19 +32,6 @@ const gridListItemSizeShape = PropTypes.shape({
 });
 
 /**
- * The shape for the item size in a list for {@link moonstone/VirtualList.itemSize}.
- *
- * @typedef {Number|Object} listItemSizeShape
- * @memberof moonstone/VirtualList
- * @property {Number} minWidth - The minimum width of the grid list item.
- * @property {Number} minHeight - The minimum height of the grid list item.
- */
-const listItemSizeShape = PropTypes.oneOfType([
-	PropTypes.number,
-	gridListItemSizeShape,
-]);
-
-/**
  * {@link moonstone/VirtualList.VirtualListBase} is a base component for
  * {@link moonstone/VirtualList.VirtualList} and
  * {@link moonstone/VirtualList.VirtualGridList} with Scrollable and SpotlightContainerDecorator applied.
@@ -60,10 +47,13 @@ class VirtualListCore extends Component {
 		 * Size of an item for the list; valid values are either a number for `VirtualList`
 		 * or an object that has `minWidth` and `minHeight` for `VirtualGridList`.
 		 *
-		 * @type {moonstone/VirtualList.listItemSizeShape}
+		 * @type {Number|moonstone/VirtualList.gridListItemSizeShape}
 		 * @public
 		 */
-		itemSize: listItemSizeShape.isRequired,
+		itemSize: PropTypes.oneOfType([
+			PropTypes.number,
+			gridListItemSizeShape
+		]).isRequired,
 
 		/**
 		 * Callback method of scrollTo.
@@ -808,4 +798,4 @@ class VirtualListCore extends Component {
 const VirtualListBase = SpotlightContainerDecorator({restrict: 'self-first'}, Scrollable(VirtualListCore));
 
 export default VirtualListBase;
-export {VirtualListCore, VirtualListBase};
+export {gridListItemSizeShape, VirtualListCore, VirtualListBase};
