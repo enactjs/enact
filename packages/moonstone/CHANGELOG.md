@@ -21,6 +21,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Expandable` to support being managed, radio group-style, by a component wrapped with `RadioControllerDecorator` from `ui/RadioDecorator`
 - `moonstone/Picker` to animate `moonstone/Marquee` children when any part of the `moonstone/Picker` is focused
 - `moonstone/VirtualList` to mute its container instead of disabling it during scroll events
+- `moonstone/VirtualList`, `moonstone/VirtualGridList`, and `moonstone/Scroller` to continue scrolling when holding down the paging controls
 
 ### Fixed
 
