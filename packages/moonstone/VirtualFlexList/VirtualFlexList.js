@@ -232,10 +232,8 @@ class VirtualFlexList extends Component {
 	}
 
 	doPosition = ({x, y}) => {
-		const doPosition = this.props.doPosition;
-
 		this.setState({x, y});
-		doPosition({x, y});
+		this.props.doPosition({x, y});
 	}
 
 	componentWillReceiveProps (nextProps) {
