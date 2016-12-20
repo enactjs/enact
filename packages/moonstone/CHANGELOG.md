@@ -4,6 +4,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+- Focus/blur handling to `moonstone/MarqueeController` to start and stop synchronized `moonstone/Marquee` components
+
 ### Changed
 
 - `moonstone/Spinner` component's `center` and `middle` properties to a single `centered` property
@@ -13,9 +16,11 @@ The following is a curated list of changes in the Enact moonstone module, newest
 	effect can be achieved by omitting the property or passing `null`.
 - `moonstone/VirtualGridList` to be scrolled by page when navigating with a 5-way direction key
 - `moonstone/Scroller`, `moonstone/VirtualList`, `moonstone/VirtualGridList`, and `moonstone/Scrollable` to no longer respond to mouse down/move/up events
+- `moonstone/Picker` to animate `moonstone/Marquee` children when any part of the `moonstone/Picker` is focused
 - `moonstone/VirtualList` to mute its container instead of disabling it during scroll events
 
 ### Fixed
+- Bug where a synchronized marquee whose content fit the available space would prevent restarting of the marquees
 
 - `moonstone/Input` to show an ellipsis on the correct side based on the text directionality of the `value` or `placeholder` content.
 - `moonstone/VirtualList` and `moonstone/VirtualGridList` to prevent unwanted scrolling when focused with the pointer
