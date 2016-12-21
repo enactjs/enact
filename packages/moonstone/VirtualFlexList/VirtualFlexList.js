@@ -227,29 +227,23 @@ class VirtualFlexList extends Component {
 	}
 
 	/*
-	 * Position
+	 * Calculate the position and the size of the header and the item lists.
 	 */
 
-	getColHeaderProps = ({headers}, {itemsOriginLeft, itemsOriginTop, itemsListWidth}) => (
-		headers ?
-		{
-			data: headers.col.data,
-			dataSize: headers.col.count,
-			direction: 'horizontal',
-			itemSize: headers.col.width,
-			style: {background: headers.col.background, width: itemsListWidth, height: itemsOriginTop, left: itemsOriginLeft},
-			component: headers.col.component
-		} :
-		null
-	)
+	getColHeaderProps = ({headers}, {itemsOriginLeft, itemsOriginTop, itemsListWidth}) => ({
+		data: headers.col.data,
+		dataSize: headers.col.count,
+		direction: 'horizontal',
+		itemSize: headers.col.width,
+		style: {background: headers.col.background, width: itemsListWidth, height: itemsOriginTop, left: itemsOriginLeft},
+		component: headers.col.component
+	})
 
-	getCornerProps = ({corner, headers}, {itemsOriginLeft, itemsOriginTop}) => (
-		corner && headers ?
-		{style: {background: corner.background, width: itemsOriginLeft, height: itemsOriginTop, overflow: 'hidden'}} :
-		null
-	)
+	getCornerProps = ({corner, headers}, {itemsOriginLeft, itemsOriginTop}) => ({
+		style: {background: corner.background, width: itemsOriginLeft, height: itemsOriginTop, overflow: 'hidden'}
+	})
 
-	getItemProps = ({headers, items, maxFlexScrollSize}, {itemsOriginLeft, itemsOriginTop, itemsListWidth, itemsListHeight}, flexAxis) => ({
+	getItemsProps = ({headers, items, maxFlexScrollSize}, {itemsOriginLeft, itemsOriginTop, itemsListWidth, itemsListHeight}, flexAxis) => ({
 		data: items.data,
 		dataSize: {
 			row: items.rowCount,
@@ -269,31 +263,26 @@ class VirtualFlexList extends Component {
 		component: items.component
 	})
 
-	getRowHeaderProps = ({headers}, {itemsOriginLeft, itemsOriginTop, itemsListHeight}) => (
-		headers ?
-		{
-			data: headers.row.data,
-			dataSize: headers.row.count,
-			direction: 'vertical',
-			setPosition: this.setPosition,
-			itemSize: headers.row.height,
-			navigation: true,
-			pageScroll: true,
-			style: {background: headers.row.background, width: itemsOriginLeft, height: itemsListHeight, top: itemsOriginTop},
-			component: headers.row.component
-		} :
-		null
-	)
+	getRowHeaderProps = ({headers}, {itemsOriginLeft, itemsOriginTop, itemsListHeight}) => ({
+		data: headers.row.data,
+		dataSize: headers.row.count,
+		direction: 'vertical',
+		setPosition: this.setPosition,
+		itemSize: headers.row.height,
+		navigation: true,
+		pageScroll: true,
+		style: {background: headers.row.background, width: itemsOriginLeft, height: itemsListHeight, top: itemsOriginTop},
+		component: headers.row.component
+	})
 
 	getComponentProps = () => {
 		const
 			{props} = this,
-			{headers, items} = props,
+			{corner, headers, items} = props,
 			flexAxis = (typeof items.colCount === 'function' && typeof items.width === 'function') ? 'row' : 'col';
-		let size;
 
 		if (headers) {
-			size = {
+			const size = {
 				itemsOriginLeft: headers.row.width + 'px',
 				itemsOriginTop: headers.col.height + 'px',
 				itemsListWidth: 'calc(100% - ' + headers.row.width + 'px)',
@@ -301,26 +290,30 @@ class VirtualFlexList extends Component {
 			};
 
 			return {
-				corner: this.getCornerProps(props, size),
+				corner: corner ? this.getCornerProps(props, size) : null,
 				headers: {
 					col: this.getColHeaderProps(props, size),
 					row: this.getRowHeaderProps(props, size)
 				},
-				items: this.getItemProps(props, size, flexAxis)
+				items: this.getItemsProps(props, size, flexAxis)
 			};
 		} else {
-			size = {
-				itemsOriginLeft: 0,
-				itemsOriginTop: 0,
-				itemsListWidth: '100%',
-				itemsListHeight: '100%'
-			};
-
 			return {
-				items: this.getItemProps(props, size, flexAxis)
+				items: this.getItemsProps(props, {
+					itemsOriginLeft: 0,
+					itemsOriginTop: 0,
+					itemsListWidth: '100%',
+					itemsListHeight: '100%'
+				}, flexAxis)
 			};
 		}
 	}
+
+	getCorner = (corner, props) => (corner ? <div {...props}>{corner.component}</div> : null)
+
+	/*
+	 * Callback fuctions
+	 */
 
 	setPosition = ({x, y}) => {
 		this.setState({x, y});
@@ -343,9 +336,7 @@ class VirtualFlexList extends Component {
 		const
 			props = Object.assign({}, this.props),
 			{x, y} = this.state,
-			componentProps = this.componentProps,
-			cornerComponent = props.corner ? props.corner.component : null;
-
+			componentProps = this.componentProps;
 
 		delete props.corner;
 		delete props.doPosition;
@@ -360,7 +351,8 @@ class VirtualFlexList extends Component {
 				<SpotlightPositionableVirtualList {...componentProps.headers.row} y={y} />
 				<PositionableVirtualList {...componentProps.headers.col} x={x} />
 				<VirtualFlexListBase {...componentProps.items} x={x} y={y} />
-				<div {...componentProps.corner}>{cornerComponent}</div>
+				{this.getCorner(this.props.corner, componentProps.corner)}
+
 			</div> :
 			<VirtualFlexListBase {...props} {...componentProps.items} className={css.virtualFlexList} />
 		);

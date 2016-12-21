@@ -87,7 +87,8 @@ const Positionable = hoc((config, Wrapped) => {
 			if (this.props.navigation) {
 				const
 					item = e.target,
-					index = item.getAttribute(dataIndexAttribute);
+					index = item.getAttribute(dataIndexAttribute),
+					key = item.getAttribute('key');
 				let pos;
 
 				// For VirtualList
@@ -97,7 +98,7 @@ const Positionable = hoc((config, Wrapped) => {
 					}
 				// For VirtualFlexList
 				} else if (this.childRef.calculateFlexPositionOnFocus && typeof index === 'string') {
-					pos = this.childRef.calculateFlexPositionOnFocus(index);
+					pos = this.childRef.calculateFlexPositionOnFocus(index, key);
 				}
 
 				if (pos) {

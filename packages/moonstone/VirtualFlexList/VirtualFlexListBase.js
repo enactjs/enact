@@ -28,7 +28,7 @@ const
  * @typedef {Object} sizeShape
  * @memberof moonstone/VirtualFlexListCore
  * @property {Number|Function} col - The size for column data/item. It should be either number or function to get it.
- * @property {Number|Function} row - The size for column data/item. It should be either number or function to get it.
+ * @property {Number|Function} row - The size for row data/item. It should be either number or function to get it.
  */
 const sizeShape = PropTypes.oneOfType([
 	PropTypes.shape({
@@ -470,7 +470,7 @@ class VirtualFlexListCore extends Component {
 		const
 			{component, data, flexAxis} = this.props,
 			{fixedAxis} = this,
-			id = scrollDirection === null ? (primaryIndex + '-' + secondaryIndex) : (primaryIndex + '-' + secondaryIndex + '-' + scrollDirection),
+			id = primaryIndex + '-' + secondaryIndex + (scrollDirection ? '-' + scrollDirection : ''),
 			key = primaryIndex + '-' + secondaryIndex + '-' + partitionIndex,
 			itemElement = component({
 				data,
@@ -505,15 +505,15 @@ class VirtualFlexListCore extends Component {
 	positionItems (applyStyle, {updateFrom, updateTo}) {
 		const
 			{data, flexAxis, maxFlexScrollSize} = this.props,
-			{fixedAxis, primary, secondary} = this;
-		let
-			primaryPosition = primary.itemSize * updateFrom,
-			secondaryPosition = 0,
+			{fixedAxis, primary, secondary} = this,
 			secondaryScrollPosition = secondary.scrollPosition,
 			secondaryClientSize = secondary.clientSize,
 			secondaryFirstIndices = secondary.firstIndices,
 			secondaryLastIndices = secondary.lastIndices,
-			secondaryPositionOffsets = secondary.positionOffsets,
+			secondaryPositionOffsets = secondary.positionOffsets;
+		let
+			primaryPosition = primary.itemSize * updateFrom,
+			secondaryPosition = 0,
 			width,
 			height,
 			count = 0,
