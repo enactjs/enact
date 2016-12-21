@@ -6,15 +6,19 @@
  * @module moonstone/ContextualPopupDecorator
  */
 
+import {forward} from '@enact/core/handle';
 import {hoc} from '@enact/core';
 import ri from '@enact/ui/resolution';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
+import Spotlight, {SpotlightContainerDecorator, spotlightDirections} from '@enact/spotlight';
 import React, {PropTypes} from 'react';
 
 import {ContextualPopup} from './ContextualPopup';
 import css from './ContextualPopupDecorator.less';
 
 const defaultConfig = {};
+const ContextualPopupContainer = SpotlightContainerDecorator({preserveId: true}, ContextualPopup);
+const depress = 'onKeyDown';
 
 /**
  * {@link moonstone/ContextualPopupDecorator.ContextualPopupDecorator} is a Higher-order Component
@@ -27,6 +31,7 @@ const defaultConfig = {};
  * @public
  */
 const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
+	const forwardDepress = forward(depress);
 
 	return class extends React.Component {
 		static displayName = 'ContextualPopupDecorator'
@@ -35,7 +40,8 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 			this.state = {
 				arrowPosition: {top: 0, left: 0},
-				containerPosition: {top: 0, left: 0}
+				containerPosition: {top: 0, left: 0},
+				containerId: Spotlight.add()
 			};
 
 			this.overflow = {};
@@ -65,12 +71,14 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			direction: PropTypes.oneOf(['up', 'down', 'left', 'right']),
 
 			/**
-			 * A function to be run when close button is clicked.
+			 * A function to be run when either the close button is clicked or spotlight focus
+			 * moves outside the boundary of the popup. Setting `spotlightRestrict` to `'self-only'`
+			 * will prevent Spotlight focus from leaving the popup.
 			 *
 			 * @type {Function}
 			 * @public
 			 */
-			onCloseButtonClick: PropTypes.func,
+			onClose: PropTypes.func,
 
 			/**
 			 * When `true`, the contextual popup will be visible.
@@ -82,7 +90,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			open: PropTypes.bool,
 
 			/**
-			 * Classname pass to the popup. You may set width and heights of the popup with it.
+			 * Classname to pass to the popup. You may set width and height of the popup with it.
 			 *
 			 * @type {String}
 			 * @public
@@ -96,7 +104,17 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @public
 			 * @default false
 			 */
-			showCloseButton : PropTypes.bool
+			showCloseButton : PropTypes.bool,
+
+			/**
+			 * Restricts or prioritizes navigation when focus attempts to leave the popup. It
+			 * can be either `'none'`, `'self-first'`, or `'self-only'`.
+			 *
+			 * @type {String}
+			 * @default 'self-first'
+			 * @public
+			 */
+			spotlightRestrict: PropTypes.oneOf(['none', 'self-first', 'self-only'])
 		}
 
 		static contextTypes = contextTypes
@@ -104,7 +122,8 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		static defaultProps = {
 			direction: 'down',
 			open: false,
-			showCloseButton : false
+			showCloseButton: false,
+			spotlightRestrict: 'self-first'
 		}
 
 		componentWillReceiveProps (nextProps) {
@@ -112,6 +131,18 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.adjustedDirection = nextProps.direction;
 				this.setContainerPosition();
 			}
+		}
+
+		componentDidUpdate (prevProps) {
+			if (this.props.open && !prevProps.open) {
+				this.spotPopupContent();
+			} else if (!this.props.open && prevProps.open) {
+				Spotlight.focus();
+			}
+		}
+
+		componentWillUnmount () {
+			Spotlight.remove(this.state.containerId);
 		}
 
 		getContainerPosition (containerNode, clientNode) {
@@ -270,23 +301,53 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.clientNode = node;
 		}
 
+		handleKeyDown = (ev) => {
+			const {onClose} = this.props;
+			const direction = spotlightDirections[ev.keyCode];
+
+			if (direction) {
+				// prevent default page scrolling
+				ev.preventDefault();
+				// stop propagation to prevent default spotlight behavior
+				ev.stopPropagation();
+
+				// if focus has changed
+				if (Spotlight.move(direction)) {
+
+					// if current focus is not within the popup's container, issue the `onClose` event
+					if (!this.containerNode.contains(document.activeElement) && onClose) {
+						onClose(ev);
+					}
+				}
+			}
+
+			forwardDepress(ev, this.props);
+		}
+
+		spotPopupContent = () => {
+			Spotlight.focus(this.state.containerId);
+		}
+
 		render () {
-			const {showCloseButton, popupComponent: PopupComponent, popupClassName, open, onCloseButtonClick, ...props} = this.props;
+			const {showCloseButton, popupComponent: PopupComponent, popupClassName, open, onClose, spotlightRestrict, ...props} = this.props;
 
 			return (
 				<div className={css.contextualPopupDecorator}>
 					{open ?
-						<ContextualPopup
+						<ContextualPopupContainer
 							className={popupClassName}
 							showCloseButton={showCloseButton}
-							onCloseButtonClick={onCloseButtonClick}
+							onCloseButtonClick={onClose}
 							direction={this.state.direction}
 							arrowPosition={this.state.arrowPosition}
 							containerPosition={this.state.containerPosition}
 							containerRef={this.getContainerNode}
+							containerId={this.state.containerId}
+							spotlightRestrict={spotlightRestrict}
+							onKeyDown={this.handleKeyDown}
 						>
 							<PopupComponent />
-						</ContextualPopup> :
+						</ContextualPopupContainer> :
 						null
 					}
 					<div ref={this.getClientNode}>
