@@ -5,6 +5,7 @@
  */
 
 import kind from '@enact/core/kind';
+import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React, {PropTypes} from 'react';
 
 import Button from '../Button';
@@ -12,11 +13,12 @@ import Icon from '../Icon';
 
 import css from './IconButton.less';
 
+const OptimizedIcon = onlyUpdateForKeys(['small', 'children'])(Icon);
+
 /**
- * {@link moonstone/IconButton.IconButton} is a {@link moonstone/Icon.Icon}
- * that acts like a button. You may specify an image, by setting the `src` property, or a font-based
- * icon, by setting the child to a string from the [IconList]{@link moonstone/Icon.IconList}.
- * If both `src` and children are specified, both will be rendered.
+ * {@link moonstone/IconButton.IconButton} is a {@link moonstone/Icon.Icon} that acts like a button.
+ * You may specify an image or a font-based icon by setting the children to either the path to the
+ * image or a string from the [IconList]{@link moonstone/Icon.IconList}.
  *
  * Usage:
  * ```
@@ -110,7 +112,7 @@ const IconButtonBase = kind({
 	render: ({children, small, ...rest}) => {
 		return (
 			<Button {...rest} small={small} minWidth={false} marqueeDisabled>
-				<Icon small={small} className={css.icon}>{children}</Icon>
+				<OptimizedIcon small={small} className={css.icon}>{children}</OptimizedIcon>
 			</Button>
 		);
 	}
