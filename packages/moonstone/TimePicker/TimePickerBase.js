@@ -24,6 +24,7 @@ const hours12 = [
 * within {@link moonstone/TimePicker.TimePicker}.
 *
 * @class TimePickerBase
+* @memberof moonstone/TimePicker
 * @ui
 * @private
 */

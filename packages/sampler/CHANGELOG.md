@@ -14,6 +14,10 @@ The following is a curated list of changes in the Enact Sampler, newest changes 
 ### Changed
 - `ContextualPopup` to `ContextualPopupDecorator`
 
+## [1.0.0-alpha.5] - 2016-12-16
+
+No changes.
+
 ## [1.0.0-alpha.4] - 2016-12-2
 
 ### Added

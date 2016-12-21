@@ -1,13 +1,7 @@
-/**
- * Exports the {@link moonstone/Scroller/Scrollbar.Scrollbar} component.
- *
- * @module moonstone/Scroller/Scrollbar
- * @private
- */
-
 import classNames from 'classnames';
 import React, {Component, PropTypes} from 'react';
 import ri from '@enact/ui/resolution';
+import Holdable from '@enact/ui/Holdable';
 import Spotlight from '@enact/spotlight';
 import {startJob, stopJob} from '@enact/core/jobs';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
@@ -15,6 +9,8 @@ import {contextTypes} from '@enact/i18n/I18nDecorator';
 import IconButton from '../IconButton';
 
 import css from './Scrollbar.less';
+
+const HoldableIconButton = Holdable({endHold: 'onLeave'}, IconButton);
 
 const
 	verticalProperties = {
@@ -38,6 +34,7 @@ const
 		)
 	},
 	autoHideDelay = 200,
+	nop = () => {},
 	minThumbSize = ri.scale(4),
 	selectIcon = (isPrev) => (isVertical, rtl) => {
 		if (isVertical) {
@@ -56,26 +53,17 @@ const
 	perf = (typeof window === 'object') ? window.performance : {now: Date.now};
 
 /**
- * {@link moonstone/Scroller/Scrollbar.Scrollbar} is a Scrollbar with Moonstone styling.
+ * {@link moonstone/Scroller.Scrollbar} is a Scrollbar with Moonstone styling.
  * It is used in {@link moonstone/Scrollable.Scrollable}.
  *
  * @class Scrollbar
- * @memberof moonstone/Scroller/Scrollbar
+ * @memberof moonstone/Scroller
  * @ui
  * @private
  */
 class Scrollbar extends Component {
-	static propTypes = /** @lends moonstone/Scroller/Scrollbar.Scrollbar.prototype */ {
+	static propTypes = /** @lends moonstone/Scroller.Scrollbar.prototype */ {
 		className: PropTypes.any,
-
-		/**
-		* If `true`, the scrollbar will be oriented vertically.
-		*
-		* @type {Boolean}
-		* @default true
-		* @public
-		*/
-		vertical: PropTypes.bool,
 
 		/**
 		 * Called when the scrollbar's down/right button is pressed.
@@ -91,15 +79,24 @@ class Scrollbar extends Component {
 		 * @type {Function}
 		 * @public
 		 */
-		onPrevScroll: PropTypes.func
+		onPrevScroll: PropTypes.func,
+
+		/**
+		 * If `true`, the scrollbar will be oriented vertically.
+		 *
+		 * @type {Boolean}
+		 * @default true
+		 * @public
+		 */
+		vertical: PropTypes.bool
 	}
 
 	static contextTypes = contextTypes
 
 	static defaultProps = {
-		vertical: true,
-		onNextScroll: () => {},
-		onPrevScroll: () => {}
+		onNextScroll: nop,
+		onPrevScroll: nop,
+		vertical: true
 	}
 
 	autoHide = true
@@ -252,12 +249,12 @@ class Scrollbar extends Component {
 
 		return (
 			<div ref={this.initContainerRef} className={scrollbarClassNames}>
-				<IconButton backgroundOpacity="transparent" small disabled={prevButtonDisabled} className={prevButtonClass} onClick={clickPrevHandler}>
+				<HoldableIconButton backgroundOpacity="transparent" small disabled={prevButtonDisabled} className={prevButtonClass} onClick={clickPrevHandler} onHoldPulse={clickPrevHandler}>
 					{prevIcon}
-				</IconButton>
-				<IconButton backgroundOpacity="transparent" small disabled={nextButtonDisabled} className={nextButtonClass} onClick={clickNextHandler}>
+				</HoldableIconButton>
+				<HoldableIconButton backgroundOpacity="transparent" small disabled={nextButtonDisabled} className={nextButtonClass} onClick={clickNextHandler} onHoldPulse={clickNextHandler}>
 					{nextIcon}
-				</IconButton>
+				</HoldableIconButton>
 				<div ref={this.initThumbRef} className={thumbClass} />
 			</div>
 		);

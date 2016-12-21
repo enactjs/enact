@@ -20,11 +20,11 @@ storiesOf('ContextualPopupDecorator')
 			<div style={{textAlign: 'center', marginTop: '100px'}}>
 				<ContextualButton
 					direction={select('direction', ['up', 'down', 'left', 'right'], 'down')}
-					onClick={action('onClick')}
-					onCloseButtonClick={action('onCloseButtonClick')}
+					onClose={action('onClose')}
 					open={boolean('open', false)}
 					showCloseButton={boolean('showCloseButton', false)}
 					popupComponent={renderPopup}
+					spotlightRestrict={select('spotlightRestrict', ['none', 'self-first', 'self-only'], 'self-first')}
 				>
 					{text('button string', 'Hello Contextual Button')}
 				</ContextualButton>

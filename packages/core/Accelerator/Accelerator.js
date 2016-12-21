@@ -1,74 +1,84 @@
 /**
-* Accelerator provides logic for accelerating and throttling.
-*
-* Returns a generator function.
-*
-* @module core/Accelerator
-* @public
-*/
-class Accelerator {
-	constructor (frequency) {
+ * Provides the {@link core/Accelerator.Accelerator} class.
+ *
+ * @module core/Accelerator
+ */
 
-		/**
-		* Whether the instance is currently in an accelerating state.
-		*
-		* @type {Boolean}
-		* @default false
-		*/
+/**
+ * @class Accelerator
+ * @memberof core/Accelerator
+ */
+class Accelerator {
+	/**
+	 * @constructor
+	 * @param {Number[]} frequency - Controls the frequency with which the acceleration will
+	 *	"freeze". While frozen, the current target item cannot change, and all events are directed
+	 *	to it.
+	 * @memberof core/Accelerator.Accelerator
+	 */
+	constructor (frequency = [3, 3, 3, 2, 2, 2, 1]) {
+
+		/*
+		 * Whether the instance is currently in an accelerating state.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 */
 		this.accelerating = false;
 
-		/**
-		* The current count of skipped events.
-		*
-		* @type {Integer}
-		* @default 0
-		*/
+		/*
+		 * The current count of skipped events.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 */
 		this.skipped = 0;
 
-		/**
-		* The timestamp of the last evaluated event.
-		*
-		* @type {Integer}
-		* @default 0
-		*/
+		/*
+		 * The timestamp of the last evaluated event.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 */
 		this.time = 0;
 
-		/**
-		* The keyCode of the last evaluated event.
-		*
-		* @type {Integer}
-		* @default 0
-		*/
+		/*
+		 * The keyCode of the last evaluated event.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 */
 		this.keyCode = 0;
 
-		/**
-		* Whether the instance is in a state of being canceled.
-		*
-		* @type {Boolean}
-		* @default false
-		*/
+		/*
+		 * Whether the instance is in a state of being canceled.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 */
 		this.canceled = false;
 
-		/**
-		* Controls the frequency with which the acceleration will "freeze". While frozen,
-		* the current target item cannot change, and all events are directed to it.
-		*
-		* @type {Array}
-		* @default [3, 3, 3, 2, 2, 2, 1]
-		* @public
-		*/
-		this.frequency = frequency || [3, 3, 3, 2, 2, 2, 1];
+		/*
+		 * Controls the frequency with which the acceleration will "freeze". While frozen,
+		 * the current target item cannot change, and all events are directed to it.
+		 *
+		 * @type {Array}
+		 * @default [3, 3, 3, 2, 2, 2, 1]
+		 * @public
+		 */
+		this.frequency = frequency;
 	}
 
 	/**
-	* Called with the current keydown event and callback, which will be called when the event is
-	* allowed through.
-	*
-	* @param  {Object} event - The current event to validate.
-	* @param  {Function} callback - The callback to execute.
-	* @returns {Boolean} `true` if the event was consumed by processKey and callback was not called
-	* @public
-	*/
+	 * Called with the current keydown event and callback, which will be called when the event is
+	 * allowed through.
+	 *
+	 * @param  {Object} event - The current event to validate.
+	 * @param  {Function} callback - The callback to execute.
+	 * @returns {Boolean} `true` if the event was consumed by processKey and callback was not called
+	 * @public
+	 * @memberof core/Accelerator.Accelerator
+	 */
 	processKey = (event, callback) => {
 		switch (event.type) {
 			case 'keydown':
@@ -113,11 +123,12 @@ class Accelerator {
 	}
 
 	/**
-	* Resets the Accelerator instance to the default values.
-	*
-	* @returns {undefined}
-	* @public
-	*/
+	 * Resets the Accelerator instance to the default values.
+	 *
+	 * @returns {undefined}
+	 * @public
+	 * @memberof core/Accelerator.Accelerator
+	 */
 	reset = () => {
 		this.skipped = 0;
 		this.time = 0;
@@ -127,21 +138,23 @@ class Accelerator {
 	}
 
 	/**
-	* Cancels the Accelerator.
-	*
-	* @returns {undefined}
-	* @public
-	*/
+	 * Cancels the Accelerator.
+	 *
+	 * @returns {undefined}
+	 * @public
+	 * @memberof core/Accelerator.Accelerator
+	 */
 	cancel = () => {
 		this.canceled = true;
 	}
 
 	/**
-	* Verifies that the Accelerator is active.
-	*
-	* @returns {Boolean} `true` if the Accelerator is active; otherwise, `false`.
-	* @public
-	*/
+	 * Verifies that the Accelerator is active.
+	 *
+	 * @returns {Boolean} `true` if the Accelerator is active; otherwise, `false`.
+	 * @public
+	 * @memberof core/Accelerator.Accelerator
+	 */
 	isAccelerating = () => {
 		return this.accelerating;
 	}
