@@ -5,6 +5,7 @@
  * @param	{Object}	[componentCss]	Component class name map
  * @param	{Object}	[authorCss]		Customization class name map
  * @returns	{Object}					Combined class name map
+ * @private
  */
 const feature = function (componentCss, authorCss) {
 	if (authorCss && componentCss) {

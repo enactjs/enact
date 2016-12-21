@@ -4,8 +4,14 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+- `RadioDecorator` and `RadioControllerDecorator` components in `ui/RadioDecorator` module
+- Focus/blur handling to `moonstone/MarqueeController` to start and stop synchronized `moonstone/Marquee` components
+
 ### Changed
 
+- `moonstone/ContextualPopupDecorator.ContextualPopupDecorator` component's `onCloseButtonClick` property to `onClose`
 - `moonstone/Spinner` component's `center` and `middle` properties to a single `centered` property
 	that applies both horizontal and vertical centering
 - `moonstone/Popup.PopupBase` component's `onCloseButtonClicked` property to `onCloseButtonClick`
@@ -13,11 +19,21 @@ The following is a curated list of changes in the Enact moonstone module, newest
 	effect can be achieved by omitting the property or passing `null`.
 - `moonstone/VirtualGridList` to be scrolled by page when navigating with a 5-way direction key
 - `moonstone/Scroller`, `moonstone/VirtualList`, `moonstone/VirtualGridList`, and `moonstone/Scrollable` to no longer respond to mouse down/move/up events
+- `moonstone/Expandable` to support being managed, radio group-style, by a component wrapped with `RadioControllerDecorator` from `ui/RadioDecorator`
+- `moonstone/Picker` to animate `moonstone/Marquee` children when any part of the `moonstone/Picker` is focused
+- `moonstone/VirtualList` to mute its container instead of disabling it during scroll events
+- `moonstone/VirtualList`, `moonstone/VirtualGridList`, and `moonstone/Scroller` to continue scrolling when holding down the paging controls
 
 ### Fixed
 
+- `moonstone/Popup` and `moonstone/ContextualPopup` 5-way navigation behavior using spotlight.
+- Bug where a synchronized marquee whose content fit the available space would prevent restarting of the marquees
 - `moonstone/Input` to show an ellipsis on the correct side based on the text directionality of the `value` or `placeholder` content.
 - `moonstone/VirtualList` and `moonstone/VirtualGridList` to prevent unwanted scrolling when focused with the pointer
+
+## [1.0.0-alpha.5] - 2016-12-16
+
+No changes.
 
 ## [1.0.0-alpha.4] - 2016-12-2
 
