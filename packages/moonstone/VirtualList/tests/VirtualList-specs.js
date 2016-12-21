@@ -6,68 +6,6 @@ import Item from '../../Item';
 import VirtualList from '../VirtualList';
 
 describe('VirtualList Specs', () => {
-	describe('Default props Specs', () => {
-		it('Should have the default \'data\' length of 0', function () {
-			const subject = mount(
-				<VirtualList itemSize={30} />
-			);
-
-			const expected = 0;
-			const actual = subject.find('VirtualListCore').prop('data').length;
-
-			expect(actual).to.equal(expected);
-		});
-
-		it('Should have the default \'direction\' of \'vertical\'', function () {
-			const subject = mount(
-				<VirtualList itemSize={30} />
-			);
-
-			const expected = 'vertical';
-			const actual = subject.find('VirtualListCore').prop('direction');
-
-			expect(actual).to.equal(expected);
-		});
-
-		it('Should have the default \'spacing\' of 0', function () {
-			const subject = mount(
-				<VirtualList itemSize={30} />
-			);
-
-			const expected = 0;
-			const actual = subject.find('VirtualListCore').prop('spacing');
-
-			expect(actual).to.equal(expected);
-		});
-	});
-
-	describe('Default \'component\' prop Spec', () => {
-		const
-			data = [],
-			dataSize = 100;
-
-		for (let i = 0; i < dataSize; i++) {
-			data.push({name: 'Account ' + i});
-		}
-
-		const subject = mount(
-			<VirtualList
-				data={data}
-				dataSize={dataSize}
-				itemSize={30}
-			/>
-		);
-
-		it('Should render a list item of default \'component\'', function () {
-			// VirtualListBase - defaultProps
-			// component: ({index, key}) => (<div key={key}>{index}</div>)
-			const expected = '<div data-index="0">0</div>';
-			const actual = subject.find('VirtualListCore').children().at(0).html();
-
-			expect(actual).to.equal(expected);
-		});
-	});
-
 	describe('Set and change props Specs', () => {
 		let
 			myScrollTo,
