@@ -88,13 +88,22 @@ class VirtualFlexListCore extends Component {
 		itemSize: sizeShape.isRequired,
 
 		/**
+		 * Direction specific options of the list; valid values are `'row'` and `'col'`.
+		 *
+		 * @type {String}
+		 * default `'row'`
+		 * @public
+		 */
+		flexAxis: PropTypes.oneOf(['row', 'col']),
+
+		/**
 		 * For variable width or variable height, we need to define max scroll width or max scroll height
 		 * instead of calculating them from all items.
 		 *
 		 * @type {Number}
 		 * @public
 		 */
-		maxVariableScrollSize: PropTypes.number,
+		maxFlexScrollSize: PropTypes.number,
 
 		/**
 		 * Number of spare DOM node.
@@ -105,24 +114,15 @@ class VirtualFlexListCore extends Component {
 		 * @default 3
 		 * @private
 		 */
-		overhang: PropTypes.number,
-
-		/**
-		 * Direction specific options of the list; valid values are `'row'` and `'col'`.
-		 *
-		 * @type {String}
-		 * default `'row'`
-		 * @public
-		 */
-		variableAxis: PropTypes.oneOf(['row', 'col'])
+		overhang: PropTypes.number
 	}
 
 	static defaultProps = {
 		component: null,
 		data: [],
 		dataSize: 0,
+		flexAxis: 'row',
 		overhang: 3,
-		variableAxis: 'row',
 		style: {}
 	}
 
@@ -155,7 +155,7 @@ class VirtualFlexListCore extends Component {
 
 		this.state = {numOfItems: 0, primaryFirstIndex: 0};
 
-		this.fixedAxis = (props.variableAxis === 'row') ? 'col' : 'row';
+		this.fixedAxis = (props.flexAxis === 'row') ? 'col' : 'row';
 	}
 
 	/*
@@ -173,7 +173,7 @@ class VirtualFlexListCore extends Component {
 
 	calculateMetrics (props) {
 		const
-			{itemSize, variableAxis} = props,
+			{flexAxis, itemSize} = props,
 			childRef = this.childRef;
 
 		if (!childRef) {
@@ -196,7 +196,7 @@ class VirtualFlexListCore extends Component {
 			};
 		let primary, secondary, primaryThresholdBase;
 
-		if (variableAxis === 'row') {
+		if (flexAxis === 'row') {
 			primary = heightInfo;
 			secondary = widthInfo;
 		} else {
@@ -204,7 +204,7 @@ class VirtualFlexListCore extends Component {
 			secondary = heightInfo;
 		}
 
-		primary.itemSize = itemSize[variableAxis];
+		primary.itemSize = itemSize[flexAxis];
 		secondary.itemSize = itemSize[this.fixedAxis];
 
 		primary.maxFirstIndex = 0;
@@ -222,14 +222,14 @@ class VirtualFlexListCore extends Component {
 
 	updateStatesAndBounds (props) {
 		const
-			{dataSize, overhang, variableAxis} = props,
+			{dataSize, flexAxis, overhang} = props,
 			{primaryFirstIndex} = this.state,
 			{fixedAxis, primary, secondary} = this;
 		let numOfItems = Math.ceil(primary.clientSize / primary.itemSize) + overhang;
 
-		numOfItems = Math.min(dataSize[variableAxis], numOfItems);
+		numOfItems = Math.min(dataSize[flexAxis], numOfItems);
 
-		primary.dataSize = dataSize[variableAxis];
+		primary.dataSize = dataSize[flexAxis];
 		primary.maxFirstIndex = primary.dataSize - numOfItems;
 
 		secondary.dataSize = dataSize[fixedAxis];
@@ -239,9 +239,9 @@ class VirtualFlexListCore extends Component {
 		this.initSecondaryScrollInfo(primary.dataSize, numOfItems);
 	}
 
-	getScrollHeight = () => ((this.props.variableAxis === 'row') ? this.getVirtualScrollDimension() : this.scrollBounds.clientHeight)
+	getScrollHeight = () => ((this.props.flexAxis === 'row') ? this.getVirtualScrollDimension() : this.scrollBounds.clientHeight)
 
-	getScrollWidth = () => ((this.props.variableAxis === 'row') ? this.scrollBounds.clientWidth : this.getVirtualScrollDimension())
+	getScrollWidth = () => ((this.props.flexAxis === 'row') ? this.scrollBounds.clientWidth : this.getVirtualScrollDimension())
 
 	getVirtualScrollDimension = () => (this.primary.dataSize * this.primary.itemSize)
 
@@ -253,20 +253,20 @@ class VirtualFlexListCore extends Component {
 		}
 
 		const
-			{maxVariableScrollSize, variableAxis} = props,
+			{flexAxis, maxFlexScrollSize} = props,
 			{scrollBounds} = this,
 			{clientWidth, clientHeight} = this.getClientSize(childRef);
 		let maxPos;
 
 		scrollBounds.clientWidth = clientWidth;
 		scrollBounds.clientHeight = clientHeight;
-		scrollBounds.scrollWidth = (variableAxis === 'row') ? maxVariableScrollSize : this.getScrollWidth();
-		scrollBounds.scrollHeight = (variableAxis === 'col') ? maxVariableScrollSize : this.getScrollHeight();
+		scrollBounds.scrollWidth = (flexAxis === 'row') ? maxFlexScrollSize : this.getScrollWidth();
+		scrollBounds.scrollHeight = (flexAxis === 'col') ? maxFlexScrollSize : this.getScrollHeight();
 		scrollBounds.maxLeft = Math.max(0, scrollBounds.scrollWidth - clientWidth);
 		scrollBounds.maxTop = Math.max(0, scrollBounds.scrollHeight - clientHeight);
 
 		// correct position
-		maxPos = (variableAxis === 'row') ? scrollBounds.maxTop : scrollBounds.maxLeft;
+		maxPos = (flexAxis === 'row') ? scrollBounds.maxTop : scrollBounds.maxLeft;
 
 		this.syncPrimaryThreshold(maxPos);
 	}
@@ -300,9 +300,9 @@ class VirtualFlexListCore extends Component {
 
 	updateSecondaryScrollInfo (primaryIndex, secondaryPosition) {
 		const
-			{data, maxVariableScrollSize, variableAxis} = this.props,
+			{data, flexAxis, maxFlexScrollSize} = this.props,
 			{fixedAxis, secondary} = this,
-			secondaryDataSize = secondary.dataSize({data, index:{[variableAxis]: primaryIndex}});
+			secondaryDataSize = secondary.dataSize({data, index:{[flexAxis]: primaryIndex}});
 		let
 			accumulatedSize = 0,
 			size, // width or height
@@ -312,7 +312,7 @@ class VirtualFlexListCore extends Component {
 		secondary.thresholds[primaryIndex] = {};
 
 		for (secondaryIndex = 0; secondaryIndex < secondaryDataSize; secondaryIndex++) {
-			size = secondary.itemSize({data, index: {[variableAxis]: primaryIndex, [fixedAxis]: secondaryIndex}});
+			size = secondary.itemSize({data, index: {[flexAxis]: primaryIndex, [fixedAxis]: secondaryIndex}});
 			secondary.positionOffsets[primaryIndex][secondaryIndex] = accumulatedSize;
 			if (accumulatedSize <= secondaryPosition && secondaryPosition < accumulatedSize + size) {
 				if (secondaryIndex > 0) {
@@ -323,7 +323,7 @@ class VirtualFlexListCore extends Component {
 				secondary.thresholds[primaryIndex].min = accumulatedSize;
 			}
 			if (accumulatedSize + size >= secondaryPosition + secondary.clientSize) {
-				if (secondaryIndex < secondaryDataSize - 1 && accumulatedSize + size < maxVariableScrollSize) {
+				if (secondaryIndex < secondaryDataSize - 1 && accumulatedSize + size < maxFlexScrollSize) {
 					secondary.lastIndices[primaryIndex] = secondaryIndex + 1;
 				} else {
 					secondary.lastIndices[primaryIndex] = secondaryIndex;
@@ -335,7 +335,7 @@ class VirtualFlexListCore extends Component {
 		}
 		if (secondaryIndex === secondaryDataSize || !secondary.thresholds[primaryIndex].max) {
 			secondary.lastIndices[primaryIndex] = secondaryDataSize - 1;
-			secondary.thresholds[primaryIndex].max = maxVariableScrollSize;
+			secondary.thresholds[primaryIndex].max = maxFlexScrollSize;
 		}
 	}
 
@@ -345,11 +345,11 @@ class VirtualFlexListCore extends Component {
 
 	setPrimaryScrollPosition (pos, dir) {
 		const
-			{variableAxis} = this.props,
+			{flexAxis} = this.props,
 			{primaryFirstIndex} = this.state,
 			{primary, scrollBounds} = this,
 			{itemSize, maxFirstIndex, threshold} = primary,
-			maxPos = (variableAxis === 'row') ? scrollBounds.maxTop : scrollBounds.maxLeft,
+			maxPos = (flexAxis === 'row') ? scrollBounds.maxTop : scrollBounds.maxLeft,
 			minOfMax = threshold.base,
 			maxOfMin = maxPos - minOfMax;
 		let
@@ -404,9 +404,9 @@ class VirtualFlexListCore extends Component {
 
 	setScrollPosition (x, y, dirX, dirY) {
 		const
-			{variableAxis} = this.props,
+			{flexAxis} = this.props,
 			{numOfItems, primaryFirstIndex} = this.state,
-			isFlexAxisRow = (variableAxis === 'row');
+			isFlexAxisRow = (flexAxis === 'row');
 		let
 			dir = {primary: 0},
 			pos,
@@ -416,7 +416,7 @@ class VirtualFlexListCore extends Component {
 		if (isFlexAxisRow) {
 			pos = {primary: y, secondary: x};
 			dir = {primary: dirY, secondary: dirX};
-		} else if (variableAxis === 'col') {
+		} else if (flexAxis === 'col') {
 			pos = {primary: x, secondary: y};
 			dir = {primary: dirX, secondary: dirY};
 		} else {
@@ -461,13 +461,13 @@ class VirtualFlexListCore extends Component {
 
 	applyStyleToNewNode = (primaryIndex, secondaryIndex, count, partitionIndex, scrollDirection, ...rest) => {
 		const
-			{component, data, variableAxis} = this.props,
+			{component, data, flexAxis} = this.props,
 			{fixedAxis} = this,
 			id = scrollDirection === null ? (primaryIndex + '-' + secondaryIndex) : (primaryIndex + '-' + secondaryIndex + '-' + scrollDirection),
 			key = primaryIndex + '-' + secondaryIndex + '-' + partitionIndex,
 			itemElement = component({
 				data,
-				index: {[variableAxis]: primaryIndex, [fixedAxis]: secondaryIndex},
+				index: {[flexAxis]: primaryIndex, [fixedAxis]: secondaryIndex},
 				key
 			}),
 			style = {};
@@ -483,8 +483,8 @@ class VirtualFlexListCore extends Component {
 	}
 
 	applyStyleToSplitNode = (applyStyle, primaryIndex, secondaryIndex, primaryPosition, width, height) => (secondaryPosition, size, count, partitionIndex, scrollDirection) => {
-		const {variableAxis} = this.props;
-		return applyStyle(primaryIndex, secondaryIndex, count, partitionIndex, scrollDirection, (variableAxis === 'row') ? size : width, (variableAxis === 'row') ? height : size, primaryPosition, secondaryPosition);
+		const {flexAxis} = this.props;
+		return applyStyle(primaryIndex, secondaryIndex, count, partitionIndex, scrollDirection, (flexAxis === 'row') ? size : width, (flexAxis === 'row') ? height : size, primaryPosition, secondaryPosition);
 	}
 
 	getPartitionIndex (position) {
@@ -497,7 +497,7 @@ class VirtualFlexListCore extends Component {
 
 	positionItems (applyStyle, {updateFrom, updateTo}) {
 		const
-			{data, maxVariableScrollSize, variableAxis} = this.props,
+			{data, flexAxis, maxFlexScrollSize} = this.props,
 			{fixedAxis, primary, secondary} = this;
 		let
 			primaryPosition = primary.itemSize * updateFrom,
@@ -510,10 +510,10 @@ class VirtualFlexListCore extends Component {
 			partitionIndex;
 
 		primaryPosition -= primary.scrollPosition;
-		if (variableAxis === 'row') {
+		if (flexAxis === 'row') {
 			secondaryPosition -= secondary.scrollPosition;
 			height = primary.itemSize;
-		} else if (variableAxis === 'col') {
+		} else if (flexAxis === 'col') {
 			secondaryPosition -= secondary.scrollPosition;
 			width = primary.itemSize;
 		}
@@ -523,7 +523,7 @@ class VirtualFlexListCore extends Component {
 			position = secondaryPosition + this.secondary.positionOffsets[primaryIndex][secondary.firstIndices[primaryIndex]];
 
 			for (let secondaryIndex = secondary.firstIndices[primaryIndex]; secondaryIndex <= secondary.lastIndices[primaryIndex]; secondaryIndex++) {
-				size = secondary.itemSize({data, index: {[variableAxis]: primaryIndex, [fixedAxis]: secondaryIndex}});
+				size = secondary.itemSize({data, index: {[flexAxis]: primaryIndex, [fixedAxis]: secondaryIndex}});
 				partitionIndex = this.getPartitionIndex(position);
 
 				// To clip items if positioned in the list edge divided into the following 3 sections
@@ -544,7 +544,7 @@ class VirtualFlexListCore extends Component {
 				if (isOnLeftSide && isOnRightSide) {
 					applyStyleToSplitNode(position, -position, count++, partitionIndex++, 'left');
 					applyStyleToSplitNode(0, secondary.clientSize, count++, partitionIndex++, null);
-					if (secondary.clientSize + secondary.scrollPosition < maxVariableScrollSize) {
+					if (secondary.clientSize + secondary.scrollPosition < maxFlexScrollSize) {
 						applyStyleToSplitNode(secondary.clientSize, position + size - secondary.clientSize, count++, partitionIndex, 'right');
 					}
 					break;
@@ -560,7 +560,7 @@ class VirtualFlexListCore extends Component {
 				// 4) Positioned from the list to the right side
 				} else if (isFromListToRightSide && isOnRightSide) {
 					applyStyleToSplitNode(position, secondary.clientSize - position, count++, partitionIndex++, null);
-					if (secondary.clientSize + secondary.scrollPosition < maxVariableScrollSize) {
+					if (secondary.clientSize + secondary.scrollPosition < maxFlexScrollSize) {
 						applyStyleToSplitNode(secondary.clientSize, position + size - secondary.clientSize, count++, partitionIndex, 'right');
 					}
 					break;
@@ -592,7 +592,7 @@ class VirtualFlexListCore extends Component {
 
 	getXY = (primaryPosition, secondaryPosition) => {
 		const rtlDirection = this.context.rtl ? -1 : 1;
-		return ((this.props.variableAxis === 'row') ? {x: (secondaryPosition * rtlDirection), y: primaryPosition} : {x: (primaryPosition * rtlDirection), y: secondaryPosition});
+		return ((this.props.flexAxis === 'row') ? {x: (secondaryPosition * rtlDirection), y: primaryPosition} : {x: (primaryPosition * rtlDirection), y: secondaryPosition});
 	}
 
 	composeTransform (style, primaryPosition, secondaryPosition = 0) {
@@ -628,7 +628,7 @@ class VirtualFlexListCore extends Component {
 		return pos;
 	}
 
-	gridPositionToItemPosition = ({primaryPosition, secondaryPosition}) => ( (this.props.variableAxis === 'row') ? {left: secondaryPosition, top: primaryPosition} : {left: primaryPosition, top: secondaryPosition})
+	gridPositionToItemPosition = ({primaryPosition, secondaryPosition}) => ( (this.props.flexAxis === 'row') ? {left: secondaryPosition, top: primaryPosition} : {left: primaryPosition, top: secondaryPosition})
 
 	calculateFlexPositionOnFocus = (focusedIndex, key) => {
 		const
@@ -677,7 +677,7 @@ class VirtualFlexListCore extends Component {
 		canMoveBackward = primaryIndex > 1;
 		canMoveForward = primaryIndex < (primary.dataSize - 1);
 
-		if (this.props.variableAxis === 'row') {
+		if (this.props.flexAxis === 'row') {
 			if (keyCode === keyUp && canMoveBackward || keyCode === keyDown && canMoveForward) {
 				isSelfOnly = true;
 			}
@@ -727,11 +727,11 @@ class VirtualFlexListCore extends Component {
 	// Calling setState within componentWillReceivePropswill not trigger an additional render.
 	componentWillReceiveProps (nextProps) {
 		const
-			{dataSize, itemSize, overhang, variableAxis} = this.props,
+			{dataSize, flexAxis, itemSize, overhang} = this.props,
 			hasMetricsChanged = (
 				((itemSize instanceof Object) ? (itemSize.minWidth !== nextProps.itemSize.minWidth || itemSize.minHeight !== nextProps.itemSize.minHeight || itemSize.row !== nextProps.itemSize.row || itemSize.col !== nextProps.itemSize.col) : itemSize !== nextProps.itemSize) ||
 				overhang !== nextProps.overhang ||
-				variableAxis !== nextProps.variableAxis
+				flexAxis !== nextProps.flexAxis
 			),
 			hasDataChanged = (
 				(dataSize instanceof Object) ?
@@ -739,7 +739,7 @@ class VirtualFlexListCore extends Component {
 				(dataSize !== nextProps.dataSize)
 			);
 
-		this.fixedAxis = (nextProps.variableAxis === 'row') ? 'col' : 'row';
+		this.fixedAxis = (nextProps.flexAxis === 'row') ? 'col' : 'row';
 
 		if (hasMetricsChanged) {
 			this.calculateMetrics(nextProps);
@@ -771,10 +771,10 @@ class VirtualFlexListCore extends Component {
 		delete props.component;
 		delete props.data;
 		delete props.dataSize;
+		delete props.flexAxis;
 		delete props.itemSize;
-		delete props.maxVariableScrollSize;
+		delete props.maxFlexScrollSize;
 		delete props.overhang;
-		delete props.variableAxis;
 
 		if (primary) {
 			this.renderCalculate();

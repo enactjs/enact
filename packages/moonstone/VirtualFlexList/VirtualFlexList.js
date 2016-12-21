@@ -156,15 +156,7 @@ class VirtualFlexList extends Component {
 		 * @type {Number}
 		 * @public
 		 */
-		maxVariableScrollSize: PropTypes.number.isRequired,
-
-		/**
-		 * Direction specific options of the list; valid values are `'row'` and `'col'`.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		variableAxis: PropTypes.oneOf(['row', 'col']).isRequired,
+		maxFlexScrollSize: PropTypes.number.isRequired,
 
 		/**
 		 * The component for the list corner.
@@ -253,7 +245,8 @@ class VirtualFlexList extends Component {
 
 	render () {
 		const
-			{items, maxVariableScrollSize, variableAxis, corner, headers, ...rest} = this.props,
+			{corner, headers, items, maxFlexScrollSize, ...rest} = this.props,
+			flexAxis = (typeof items.colCount === 'function' && typeof items.width === 'function') ? 'row' : 'col',
 			cornerComponent = corner ? corner.component : null,
 			colHeaderProps = (
 				headers ?
@@ -280,15 +273,15 @@ class VirtualFlexList extends Component {
 					col: items.colCount
 				},
 				doPosition: this.doPosition,
+				flexAxis,
 				itemSize: {
 					row: items.height,
 					col: items.width
 				},
-				maxVariableScrollSize,
+				maxFlexScrollSize,
 				navigation: true,
 				x: this.state.x,
 				y: this.state.y,
-				variableAxis,
 				style: headers ?
 					{background: items.background, width: 'calc(100% - ' + headers.row.width + 'px)', height: 'calc(100% - ' + headers.col.height + 'px)', top: headers.col.height + 'px', left: headers.row.width + 'px'} :
 					{background: items.background, width: '100%', height: '100%'},
