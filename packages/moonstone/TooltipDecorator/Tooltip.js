@@ -1,78 +1,9 @@
 import kind from '@enact/core/kind';
-import {isRtlText} from '@enact/i18n';
 import Uppercase from '@enact/i18n/Uppercase';
 import React, {PropTypes} from 'react';
 
+import TooltipLabel from './TooltipLabel';
 import css from './Tooltip.less';
-
-/**
- * {@link moonstone/TooltipDecorator.TooltipLabel} is a stateless tooltip component with
- * Moonston styling applied.
- *
- * @class TooltipLabel
- * @memberof moonstone/TooltipDecorator
- * @ui
- * @private
- */
-const TooltipLabel = kind({
-	name: 'TooltipLabel',
-
-	propTypes: {
-		/**
-		 * The node to be displayed as the main content of the tooltip.
-		 *
-		 * @type {React.node}
-		 * @required
-		 */
-		children: PropTypes.node.isRequired,
-
-		/**
-		 * The method to run when the tooltip mounts/unmounts, giving a reference to the DOM.
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		tooltipRef: PropTypes.func,
-
-		/**
-		 * The width of tooltip content in pixels (px). If the content goes over the given width,
-		 * then it will automatically wrap. When `null`, content does not wrap.
-		 *
-		 * @type {Number}
-		 * @public
-		 */
-		width: PropTypes.number
-	},
-
-	styles: {
-		css,
-		className: 'tooltipLabel'
-	},
-
-	computed: {
-		className: ({width, styler}) => styler.append({multi: !!width}),
-		style: ({children, width, style}) => {
-			return {
-				...style,
-				direction: isRtlText(children) ? 'rtl' : 'ltr',
-				width
-			};
-		}
-	},
-
-	render: ({children, tooltipRef, ...rest}) => {
-		delete rest.width;
-
-		return (
-			<div
-				{...rest}
-				ref={tooltipRef}
-			>
-				{children}
-			</div>
-		);
-	}
-});
 
 /**
  * {@link moonstone/TooltipDecorator.TooltipBase} is a stateless tooltip component with
@@ -84,7 +15,7 @@ const TooltipLabel = kind({
  * @public
  */
 const TooltipBase = kind({
-	name: 'TooltipBase',
+	name: 'Tooltip',
 
 	propTypes: /** @lends moonstone/TooltipDecorator.TooltipBase.prototype */ {
 		/**
