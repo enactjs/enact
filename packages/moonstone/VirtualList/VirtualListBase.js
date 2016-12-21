@@ -47,6 +47,17 @@ const gridListItemSizeShape = PropTypes.shape({
 class VirtualListCore extends Component {
 	static propTypes = /** @lends moonstone/VirtualList.VirtualListCore.prototype */ {
 		/**
+		 * The render function for an item of the list.
+		 * `index` is for accessing the index of the item.
+		 * `key` MUST be passed as a prop for DOM recycling.
+		 * Data manipulation can be done in this function.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		component: PropTypes.func.isRequired,
+
+		/**
 		 * Size of an item for the list; valid values are either a number for `VirtualList`
 		 * or an object that has `minWidth` and `minHeight` for `VirtualGridList`.
 		 *
@@ -66,17 +77,6 @@ class VirtualListCore extends Component {
 		 * @private
 		 */
 		cbScrollTo: PropTypes.func,
-
-		/**
-		 * The render function for an item of the list.
-		 * `index` is for accessing the index of the item.
-		 * `key` MUST be passed as a prop for DOM recycling.
-		 * Data manipulation can be done in this function.
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		component: PropTypes.func,
 
 		/**
 		 * Data for the list.
@@ -161,7 +161,6 @@ class VirtualListCore extends Component {
 
 	static defaultProps = {
 		cbScrollTo: nop,
-		component: null,
 		data: [],
 		dataSize: 0,
 		direction: 'vertical',
