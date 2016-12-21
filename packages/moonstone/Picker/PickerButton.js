@@ -35,7 +35,7 @@ const PickerButtonBase = kind({
 	}
 });
 
-const OnlyUpdate = onlyUpdateForKeys(['disabled', 'icon', 'joined', 'onClick', 'onMouseUp']);
+const OnlyUpdate = onlyUpdateForKeys(['disabled', 'icon', 'joined', 'onMouseUp']);
 const PickerButton = OnlyUpdate(PickerButtonBase);
 
 export default PickerButton;
