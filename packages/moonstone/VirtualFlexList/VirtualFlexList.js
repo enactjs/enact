@@ -116,7 +116,7 @@ const itemsShape = PropTypes.oneOfType([
 
 /**
  * {@link module:@enact/moonstone/VirtualFlexList~VirtualFlexList} is a VirtualFlexList with Moonstone styling
- * which has a variable width or height.
+ * which has a flex width or height.
  *
  * @class VirtualFlexList
  * @memberof moonstone/VirtualFlexList
@@ -150,7 +150,7 @@ class VirtualFlexList extends Component {
 		items: itemsShape.isRequired,
 
 		/**
-		 * For variable width or variable height, we need to define max scroll width or max scroll height
+		 * For flex width or variable height, we need to define max scroll width or max scroll height
 		 * instead of calculating them from all items.
 		 *
 		 * @type {Number}

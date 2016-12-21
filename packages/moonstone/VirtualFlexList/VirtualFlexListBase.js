@@ -97,7 +97,7 @@ class VirtualFlexListCore extends Component {
 		flexAxis: PropTypes.oneOf(['row', 'col']),
 
 		/**
-		 * For variable width or variable height, we need to define max scroll width or max scroll height
+		 * For flex width or variable height, we need to define max scroll width or max scroll height
 		 * instead of calculating them from all items.
 		 *
 		 * @type {Number}
@@ -604,7 +604,7 @@ class VirtualFlexListCore extends Component {
 	 * Spotlight
 	 */
 
-	getVariableGridPosition (primaryIndex, secondaryIndex) {
+	getFlexGridPosition (primaryIndex, secondaryIndex) {
 		const
 			{primary, secondary} = this,
 			primaryPosition = primaryIndex * primary.itemSize,
@@ -649,7 +649,7 @@ class VirtualFlexListCore extends Component {
 
 		// To move along the primary axis
 
-		gridPosition = this.getVariableGridPosition(primaryIndex, secondaryIndex);
+		gridPosition = this.getFlexGridPosition(primaryIndex, secondaryIndex);
 
 		if (gridPosition.primaryPosition < primary.scrollPosition || gridPosition.primaryPosition >= primary.clientSize + primary.scrollPosition) {
 			gridPosition.primaryPosition = this.adjustPrimaryPositionOnFocus(primary, gridPosition.primaryPosition, primary.itemSize);
