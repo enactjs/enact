@@ -1,8 +1,9 @@
 import kind from '@enact/core/kind';
-import Icon from '@enact/moonstone/Icon';
-import IconButton from '@enact/moonstone/IconButton';
 import React from 'react';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
+
+import Icon from '../Icon';
+import IconButton from '../IconButton';
 
 // Components
 const TransparentIconButton = (props) => <IconButton {...props} backgroundOpacity="transparent" />;
@@ -34,7 +35,7 @@ const PickerButtonBase = kind({
 	}
 });
 
-const OnlyUpdate = onlyUpdateForKeys(['disabled', 'icon', 'joined']);
+const OnlyUpdate = onlyUpdateForKeys(['disabled', 'icon', 'joined', 'onClick', 'onMouseUp']);
 const PickerButton = OnlyUpdate(PickerButtonBase);
 
 export default PickerButton;

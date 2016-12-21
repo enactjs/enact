@@ -280,9 +280,17 @@ const PickerCore = class extends React.Component {
 		}
 	}
 
-	handleDecClick = () => this.handleChange(-1)
+	handleDecClick = () => {
+		if (!this.isButtonDisabled(this.props.step * -1)) {
+			this.handleChange(-1);
+		}
+	}
 
-	handleIncClick = () => this.handleChange(1)
+	handleIncClick = () => {
+		if (!this.isButtonDisabled(this.props.step)) {
+			this.handleChange(1);
+		}
+	}
 
 	handleDown = (dir) => {
 		const {joined, onMouseDown} = this.props;
@@ -358,9 +366,6 @@ const PickerCore = class extends React.Component {
 		const incrementerDisabled = this.isButtonDisabled(step);
 		const classes = this.determineClasses(decrementerDisabled, incrementerDisabled);
 
-		const handleIncClick = incrementerDisabled ? null : this.handleIncClick;
-		const handleDecClick = decrementerDisabled ? null : this.handleDecClick;
-
 		let arranger;
 		if (width && !disabled) {
 			arranger = orientation === 'vertical' ? SlideTopArranger : SlideLeftArranger;
@@ -371,7 +376,7 @@ const PickerCore = class extends React.Component {
 				<PickerButton
 					className={css.incrementer}
 					disabled={incrementerDisabled}
-					onClick={handleIncClick}
+					onClick={this.handleIncClick}
 					onMouseDown={this.handleIncDown}
 					onMouseUp={onMouseUp}
 					joined={joined}
@@ -390,7 +395,7 @@ const PickerCore = class extends React.Component {
 				<PickerButton
 					className={css.decrementer}
 					disabled={decrementerDisabled}
-					onClick={handleDecClick}
+					onClick={this.handleDecClick}
 					onMouseDown={this.handleDecDown}
 					onMouseUp={onMouseUp}
 					joined={joined}
@@ -401,6 +406,5 @@ const PickerCore = class extends React.Component {
 	}
 };
 
-export
-	default PickerCore;
+export default PickerCore;
 export {PickerCore};
