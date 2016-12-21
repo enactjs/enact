@@ -125,9 +125,9 @@ const ButtonBase = kind({
 		delete rest.small;
 
 		return (
-			<div aria-role="button" {...rest}>
+			<div role="button" {...rest}>
 				<div className={css.bg} />
-				<span className={css.client}>{children}</span>
+				<div className={css.client}>{children}</div>
 			</div>
 		);
 	}
