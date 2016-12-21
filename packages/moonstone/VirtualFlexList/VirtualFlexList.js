@@ -223,7 +223,7 @@ class VirtualFlexList extends Component {
 			y: props.y
 		};
 
-		this.componentProps = this.getComponentProps();
+		this.componentProps = this.getComponentProps(props);
 	}
 
 	/*
@@ -257,9 +257,7 @@ class VirtualFlexList extends Component {
 		},
 		maxFlexScrollSize,
 		navigation: true,
-		style: headers ?
-			{background: items.background, width: itemsListWidth, height: itemsListHeight, top: itemsOriginTop, left: itemsOriginLeft} :
-			{background: items.background, width: '100%', height: '100%'},
+		style: {background: items.background, width: itemsListWidth, height: itemsListHeight, top: itemsOriginTop, left: itemsOriginLeft},
 		component: items.component
 	})
 
@@ -275,9 +273,8 @@ class VirtualFlexList extends Component {
 		component: headers.row.component
 	})
 
-	getComponentProps = () => {
+	getComponentProps = (props) => {
 		const
-			{props} = this,
 			{corner, headers, items} = props,
 			flexAxis = (typeof items.colCount === 'function' && typeof items.width === 'function') ? 'row' : 'col';
 
@@ -325,7 +322,14 @@ class VirtualFlexList extends Component {
 	 */
 
 	componentWillReceiveProps (nextProps) {
-		const {x, y} = this.props;
+		const {headers, items, x, y} = this.props;
+
+		if (
+			items.colCount !== nextProps.items.colCount || items.height !== nextProps.items.height || items.rowCount !== nextProps.items.rowCount ||
+			headers && (headers.col.count !== nextProps.headers.col.count || headers.row.count !== nextProps.headers.row.count)
+		) {
+			this.componentProps = this.getComponentProps(nextProps);
+		}
 
 		if (x !== nextProps.x || y !== nextProps.y) {
 			this.setState({x: nextProps.x, y: nextProps.y});
@@ -354,7 +358,7 @@ class VirtualFlexList extends Component {
 				{this.getCorner(this.props.corner, componentProps.corner)}
 
 			</div> :
-			<VirtualFlexListBase {...props} {...componentProps.items} className={css.virtualFlexList} />
+			<VirtualFlexListBase {...props} {...componentProps.items} x={x} y={y} className={css.virtualFlexList} />
 		);
 	}
 }
