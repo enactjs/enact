@@ -43,18 +43,6 @@ const childrenEquals = (prev, next, ordered = false) => {
 };
 
 /**
- * Compares the props of previous and next and returns `true` if they are equal.
- *
- * @param  {Node[]}		prev		Array of previous props
- * @param  {Node[]}		next		Array of next props
- *
- * @returns {Boolean}				`true` if both the props are the same
- */
-const propEquals = (prev, next) => {
-	return equals(prev, next);
-};
-
-/**
 * Capitalizes a given string.
 *
 * @param {String} str - The string to capitalize.
@@ -111,6 +99,5 @@ export {
 	childrenEquals,
 	coerceFunction,
 	coerceArray,
-	isRenderable,
-	propEquals
+	isRenderable
 };

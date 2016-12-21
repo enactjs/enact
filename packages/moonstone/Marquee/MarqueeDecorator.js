@@ -1,6 +1,6 @@
 import hoc from '@enact/core/hoc';
 import {forward} from '@enact/core/handle';
-import {childrenEquals, propEquals} from '@enact/core/util';
+import {childrenEquals} from '@enact/core/util';
 import React from 'react';
 
 import Marquee from './Marquee';
@@ -46,6 +46,15 @@ const defaultConfig = {
 	focus: 'onFocus',
 
 	/**
+	* Invalidate the distance if any property (like 'inline') changes.
+	* Expects an array of props which on change trigger invalidateMetrics.
+	*
+	* @type {Array}
+	* @default null
+	*/
+	invalidateProps: null,
+
+	/**
 	 * Property containing the callback to stop the animation when `marqueeOn` is 'hover'
 	 *
 	 * @type {String}
@@ -64,7 +73,7 @@ const defaultConfig = {
  * @public
  */
 const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {blur, className: marqueeClassName, enter, focus, leave} = config;
+	const {blur, className: marqueeClassName, enter, focus, invalidateProps, leave} = config;
 
 	// Generate functions to forward events to containers
 	const forwardBlur = forward(blur);
@@ -206,11 +215,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.cancelAnimation();
 			} else if (next.marqueeOn !== marqueeOn || next.marqueeDisabled !== marqueeDisabled) {
 				this.cancelAnimation();
-			}
-
-			if (!propEquals(this.props, next)) {
+			} else if (invalidateProps && this.didPropChange(invalidateProps, this.props, next)) {
 				this.invalidateMetrics();
-				this.cancelAnimation();
 			}
 		}
 
@@ -239,6 +245,19 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				window.clearTimeout(this.timer);
 			}
 			this.timer = null;
+		}
+
+		/**
+		* Checks whether any of the invalidateProps has changed or not
+		*
+		* @param {Array}	propList	An array of invalidateProps
+		* @param {Object}   prev	Previous props
+		* @param {Object}   next	Next props
+		* @returns {Boolean} 'yes' if any of the props change, 'no' if none of the props change
+		*/
+		didPropChange (propList, prev, next) {
+			let hasPropsChanged = propList.map(i => prev[i] !== next[i]);
+			return hasPropsChanged.indexOf(true) !== -1;
 		}
 
 		/**
