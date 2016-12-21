@@ -58,7 +58,8 @@ const contextTypes = {
  * Default configuration parameters for {@link moonstone/Marquee.MarqueeController}
  *
  * @type {Object}
- * @memberof moonstone/Marquee
+ * @memberof moonstone/Marquee.MarqueeController
+ * @hocconfig
  */
 const defaultConfig = {
 	/**
@@ -68,6 +69,7 @@ const defaultConfig = {
 	 *
 	 * @type {Boolean}
 	 * @default false
+	 * @memberof moonstone/Marquee.MarqueeController.defaultConfig
 	 */
 	startOnFocus: false
 };
