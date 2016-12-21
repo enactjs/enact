@@ -206,11 +206,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillReceiveProps (next) {
-			const {marqueeOn, marqueeDisabled} = this.props;
+			const {marqueeOn, marqueeDisabled, marqueeSpeed} = this.props;
 			if (!childrenEquals(this.props.children, next.children)) {
 				this.invalidateMetrics();
 				this.cancelAnimation();
-			} else if (next.marqueeOn !== marqueeOn || next.marqueeDisabled !== marqueeDisabled) {
+			} else if (next.marqueeOn !== marqueeOn || next.marqueeDisabled !== marqueeDisabled || next.marqueeSpeed !== marqueeSpeed) {
 				this.cancelAnimation();
 			}
 		}
