@@ -14,9 +14,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `autoClose` property of `moonstone/ExpandableList` to be `closeOnSelect` to disambiguate it from the added `autoClose` on 5-way up
 - `RadioDecorator` and `RadioControllerDecorator` components in `ui/RadioDecorator` module
 - Focus/blur handling to `moonstone/MarqueeController` to start and stop synchronized `moonstone/Marquee` components
-
-### Changed
-
 - `moonstone/ContextualPopupDecorator.ContextualPopupDecorator` component's `onCloseButtonClick` property to `onClose`
 - `moonstone/Spinner` component's `center` and `middle` properties to a single `centered` property
 	that applies both horizontal and vertical centering
@@ -29,6 +26,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Picker` to animate `moonstone/Marquee` children when any part of the `moonstone/Picker` is focused
 - `moonstone/VirtualList` to mute its container instead of disabling it during scroll events
 - `moonstone/VirtualList`, `moonstone/VirtualGridList`, and `moonstone/Scroller` to continue scrolling when holding down the paging controls
+- `moonstone/VirtualList` to require a `component` prop and not have a default value
 
 ### Fixed
 
