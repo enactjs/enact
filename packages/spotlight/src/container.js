@@ -84,6 +84,15 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			containerId: PropTypes.string,
 
 			/**
+			 * Whether or not the container is in muted mode.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			spotlightMuted: PropTypes.bool,
+
+			/**
 			 * Restricts or prioritizes navigation when focus attempts to leave the container. It
 			 * can be either 'none', 'self-first', or 'self-only'.
 			 *
@@ -94,7 +103,8 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			spotlightRestrict: PropTypes.oneOf(['none', 'self-first', 'self-only'])
 		}
 
-		defaultProps = {
+		static defaultProps = {
+			spotlightMuted: false,
 			spotlightRestrict: 'none'
 		}
 
@@ -159,15 +169,19 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const props = Object.assign({}, this.props);
-			delete props.containerId;
-			delete props.spotlightRestrict;
+			const {spotlightMuted, ...rest} = this.props;
+			delete rest.containerId;
+			delete rest.spotlightRestrict;
 
-			props['data-container-id'] = this.state.id;
-			props[enterEvent] = this.handleMouseEnter;
-			props[leaveEvent] = this.handleMouseLeave;
+			rest['data-container-id'] = this.state.id;
+			rest[enterEvent] = this.handleMouseEnter;
+			rest[leaveEvent] = this.handleMouseLeave;
 
-			return <Wrapped {...props} />;
+			if (spotlightMuted) {
+				rest['data-container-muted'] = spotlightMuted;
+			}
+
+			return <Wrapped {...rest} />;
 		}
 	};
 });
