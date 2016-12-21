@@ -1,5 +1,6 @@
 import Cancelable from '@enact/ui/Cancelable';
 import compose from 'ramda/src/compose';
+import RadioDecorator from '@enact/ui/RadioDecorator';
 import Toggleable from '@enact/ui/Toggleable';
 
 // TODO: This module may not doc correctly but we'll need to wait until our doc parsing script is
@@ -35,6 +36,7 @@ const handleCancel = function (props) {
  */
 const Expandable = compose(
 	Toggleable({toggle: null, activate: 'onOpen', deactivate: 'onClose', mutable: true, prop: 'open'}),
+	RadioDecorator({activate: 'onOpen', deactivate: 'onClose', prop: 'open'}),
 	Cancelable({component: 'span', onCancel: handleCancel})
 );
 
