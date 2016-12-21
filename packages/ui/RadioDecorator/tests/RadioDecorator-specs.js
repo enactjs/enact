@@ -142,7 +142,7 @@ describe('RadioDecorator', () => {
 	});
 
 
-	it.only('should not call deactivate callback on inactive items', function () {
+	it('should not call deactivate callback on inactive items', function () {
 		const handleDeactivate = sinon.spy();
 		const Component = RadioDecorator({deactivate: 'onClick', prop: 'active'}, Item);
 
