@@ -8,16 +8,18 @@
  * @private
  */
 
+import React from 'react';
 import {$L} from '@enact/i18n';
 import {forward} from '@enact/core/handle';
 import {startJob, stopJob} from '@enact/core/jobs';
-import React from 'react';
+import {on} from '@enact/core/dispatcher';
 import Slottable from '@enact/ui/Slottable';
-import Video, {Overlay} from 'react-html5video';
+import Video from 'react-html5video';
 
 import Spinner from '../Spinner';
 
 import {calcNumberValueOfPlaybackRate, getNow} from './util';
+import Overlay from './Overlay';
 import MediaControls from './MediaControls';
 import MediaTitle from './MediaTitle';
 import MediaSlider from './MediaSlider';
@@ -114,6 +116,16 @@ const VideoPlayerBase = class extends React.Component {
 	static displayName = 'VideoPlayerBase';
 
 	static propTypes = {
+		/**
+		* Amount of time (in milliseconds) after which control buttons are automatically hidden.
+		* Setting this to 0 or `null` disables autoClose, requiring user input to open and close.
+		*
+		* @type {Number}
+		* @default 7000
+		* @public
+		*/
+		autoCloseTimeout: React.PropTypes.number,
+
 		/**
 		 * The video will start playing immedietly after it's loaded.
 		 *
@@ -248,6 +260,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	static defaultProps = {
+		autoCloseTimeout: 7000,
 		autoPlay: true,
 		jumpBy: 100,
 		muted: false,
@@ -277,12 +290,20 @@ const VideoPlayerBase = class extends React.Component {
 			volume: 1,
 
 			// Non-standard state computed from properties
+			bottomControlsVisible: false,
 			more: false,
 			percentageLoaded: 0,
 			percentagePlayed: 0,
 			playPauseIcon: 'play',
 			videoSource: null
 		};
+	}
+
+	componentDidMount () {
+		if (typeof window === 'object') {
+			on('mousemove', this.activityDetected, window);
+			on('keypress', this.activityDetected, window);
+		}
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -588,6 +609,21 @@ const VideoPlayerBase = class extends React.Component {
 		this.startRewindJob();
 	}
 
+	activityDetected = () => {
+		// console.count('ActivityDetected');
+		this.startAutoCloseTimeout();
+	}
+
+	startAutoCloseTimeout = () => {
+		if (this.props.autoCloseTimeout) {
+			startJob('autoClose', this.hideControls, this.props.autoCloseTimeout);
+		}
+	}
+
+	hideControls = () => {
+		this.setState({bottomControlsVisible: false});
+	}
+
 
 	//
 	// Handled Media events
@@ -611,8 +647,11 @@ const VideoPlayerBase = class extends React.Component {
 
 
 	//
-	// Player Button controls
+	// Player Interaction events
 	//
+	onVideoClick = () => {
+		this.setState({bottomControlsVisible: !this.state.bottomControlsVisible});
+	}
 	onSliderChange = ({value}) => {
 		if (value && this.video && this.video.videoEl && this.videoReady) {
 			const el = this.video.videoEl;
@@ -635,6 +674,7 @@ const VideoPlayerBase = class extends React.Component {
 	onForward       = () => this.fastForward()
 	onJumpForward   = () => this.jump(this.props.jumpBy)
 	onMoreClick     = () => {
+		this.startAutoCloseTimeout();	// Interupt and restart the timer if we activate "more".
 		this.setState({
 			more: !this.state.more
 		});
@@ -654,6 +694,7 @@ const VideoPlayerBase = class extends React.Component {
 			onJumpBackwardButtonClick = this.onJumpBackward,
 			onJumpForwardButtonClick = this.onJumpForward,
 			...rest} = this.props;
+		delete rest.autoCloseTimeout;
 		delete rest.jumpBy;
 
 		// Handle some class additions when the "more" button is pressed
@@ -679,12 +720,13 @@ const VideoPlayerBase = class extends React.Component {
 					onProgress={this.handleProgress}
 				>
 					{children}
-					<Overlay>
-						<Spinner className={css.spinner}>{$L('Loading')}</Spinner>
-					</Overlay>
 				</Video>
 
-				<div className={css.fullscreen + ' enyo-fit scrim'}>
+				<Overlay onClick={this.onVideoClick} onMouseMove={this.onVideoMouseMove}>
+					{this.state.readyState >= 4 ? null : <Spinner className={css.spinner} centered>{$L('Loading...')}</Spinner>}
+				</Overlay>
+
+				{this.state.bottomControlsVisible ? <div className={css.fullscreen + ' enyo-fit scrim'}>
 					<div className={css.bottom}> {/* showing={false} */}
 						{/* Info Section: Title, Description, Times */}
 						<div className={css.infoFrame}>
@@ -723,7 +765,7 @@ const VideoPlayerBase = class extends React.Component {
 							{children}
 						</MediaControls>
 					</div>
-				</div>
+				</div> : null}
 			</div>
 		);
 	}

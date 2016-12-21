@@ -121,6 +121,17 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			pressed: PropTypes.bool,
 
 			/**
+			 * `scrubbing` only has an effect with a datachedKnob, and is a performance optimization
+			 * to not allow re-assignment of the knob's value (and therefore position) during direct
+			 * user interaction.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			scrubbing: PropTypes.bool,
+
+			/**
 			 * The method to run when the slider bar component mounts, giving a reference to the DOM.
 			 *
 			 * @type {Function}
@@ -187,7 +198,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			proportionProgress: computeProportionProgress
 		},
 
-		render: ({disabled, inputRef, max, min, onChange, onMouseMove, proportionBackgroundProgress, proportionProgress, sliderBarRef, sliderRef, step, value, vertical, ...rest}) => {
+		render: ({disabled, inputRef, max, min, onChange, onMouseMove, proportionBackgroundProgress, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, value, vertical, ...rest}) => {
 			delete rest.backgroundPercent;
 			delete rest.detachedKnob;
 			delete rest.pressed;
@@ -199,6 +210,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						proportionProgress={proportionProgress}
 						ref={sliderBarRef}
 						vertical={vertical}
+						scrubbing={scrubbing}
 					/>
 					<input
 						className={css.input}
