@@ -11,6 +11,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+- `moonstone/ContextualPopupDecorator.ContextualPopupDecorator` component's `onCloseButtonClick` property to `onClose`
 - `moonstone/Spinner` component's `center` and `middle` properties to a single `centered` property
 	that applies both horizontal and vertical centering
 - `moonstone/Popup.PopupBase` component's `onCloseButtonClicked` property to `onCloseButtonClick`
@@ -25,6 +26,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Popup` and `moonstone/ContextualPopup` 5-way navigation behavior using spotlight.
 - Bug where a synchronized marquee whose content fit the available space would prevent restarting of the marquees
 - `moonstone/Input` to show an ellipsis on the correct side based on the text directionality of the `value` or `placeholder` content.
 - `moonstone/VirtualList` and `moonstone/VirtualGridList` to prevent unwanted scrolling when focused with the pointer
