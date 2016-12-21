@@ -74,4 +74,20 @@ storiesOf('ExpandableList')
 				</ExpandableList>
 			</ExpandableGroup>
 		)
+	)
+	.addWithInfo(
+		'with multiples (to test "lockBottom" prop)',
+		() => (
+			<div>
+				<ExpandableList title="First">
+					{['One', 'Two', 'Three']}
+				</ExpandableList>
+				<ExpandableList title="Second">
+					{['Fourth', 'Fifth', 'Sixth']}
+				</ExpandableList>
+				<ExpandableList title="Third">
+					{['Seventh', 'Eighth', 'Ninth']}
+				</ExpandableList>
+			</div>
+		)
 	);

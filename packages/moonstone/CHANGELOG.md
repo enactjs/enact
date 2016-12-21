@@ -11,7 +11,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
-- `autoClose` property of `moonstone/ExpandableList` to be `closeOnSelect` to disambiguate it with the added `autoClose` on 5-way up
+- `autoClose` property of `moonstone/ExpandableList` to be `closeOnSelect` to disambiguate it from the added `autoClose` on 5-way up
 - `RadioDecorator` and `RadioControllerDecorator` components in `ui/RadioDecorator` module
 - Focus/blur handling to `moonstone/MarqueeController` to start and stop synchronized `moonstone/Marquee` components
 
