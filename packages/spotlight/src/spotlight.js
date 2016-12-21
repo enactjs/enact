@@ -11,7 +11,14 @@
 
 import Accelerator from '@enact/core/Accelerator';
 import {startJob} from '@enact/core/jobs';
+import {spottableClass} from './spottable';
 
+const spotlightDirections = {
+	'37': 'left',
+	'38': 'up',
+	'39': 'right',
+	'40': 'down'
+};
 const spotlightRootContainerName = 'spotlightRootDecorator';
 const SpotlightAccelerator = new Accelerator();
 const Spotlight = (function() {
@@ -43,12 +50,7 @@ const Spotlight = (function() {
 	/**
 	* constants
 	*/
-	const _directions = {
-		'37': 'left',
-		'38': 'up',
-		'39': 'right',
-		'40': 'down'
-	};
+	const _directions = spotlightDirections;
 
 	const _reverseDirections = {
 		'left': 'right',
@@ -817,16 +819,32 @@ const Spotlight = (function() {
 
 	function spotNextFromPoint (direction, position, containerId) {
 		const config = extend({}, GlobalConfig, _containers[containerId]);
-		const {allNavigableElements} = getNavigableElements();
+		const {allNavigableElements, containerNavigableElements} = getNavigableElements();
 		const targetRect = getPointRect(position);
-		const next = navigate(
-			targetRect,
-			direction,
-			allNavigableElements,
-			config
-		);
+		let next;
+
+		if (config.restrict === 'self-only' || config.restrict === 'self-first') {
+			next = navigate(
+				targetRect,
+				direction,
+				containerNavigableElements[containerId],
+				config
+			);
+		} else {
+			next = navigate(
+				targetRect,
+				direction,
+				allNavigableElements,
+				config
+			);
+		}
 
 		if (next) {
+			_containers[containerId].previous = {
+				target: getContainerLastFocusedElement(_lastContainerId),
+				destination: next,
+				reverse: _reverseDirections[direction]
+			};
 			return focusNext(next, direction, containerId);
 		}
 
@@ -1272,6 +1290,56 @@ const Spotlight = (function() {
 		 */
 		setPointerMode: function (pointerMode) {
 			_pointerMode = pointerMode;
+		},
+
+		/**
+		 * Gets the muted mode value of a spottable element.
+		 *
+		 * @param {Object} [elem] The dom element used to determine the muted status.
+		 * @return {Boolean} `true` if the passed-in control is in muted mode.
+		 * @public
+		 */
+		isMuted: function(elem) {
+			if (!elem) {
+				return false;
+			}
+
+			return matchSelector(elem, '[data-container-muted="true"] .' + spottableClass);
+		},
+
+		/**
+		 * Determines whether Spotlight is currently paused.
+		 *
+		 * @return {Boolean} `true` if Spotlight is currently paused.
+		 * @public
+		 */
+		isPaused: function () {
+			return _pause;
+		},
+
+		/**
+		 * Determines whether an element is spottable.
+		 *
+		 * @param {Object} [elem] The dom element used to determine the spottable status.
+		 * @return {Boolean} `true` if the element being evaluated is currently spottable.
+		 * @public
+		 */
+		isSpottable: function (elem) {
+			if (!elem) {
+				return false;
+			}
+
+			return matchSelector(elem, '.' + spottableClass);
+		},
+
+		/**
+		 * Returns the currently spotted control.
+		 *
+		 * @return {Object} The control that currently has focus, if available
+		 * @public
+		 */
+		getCurrent: function () {
+			return getCurrent();
 		}
 	};
 
@@ -1280,4 +1348,4 @@ const Spotlight = (function() {
 })();
 
 export default Spotlight;
-export {Spotlight, spotlightRootContainerName};
+export {Spotlight, spotlightRootContainerName, spotlightDirections};

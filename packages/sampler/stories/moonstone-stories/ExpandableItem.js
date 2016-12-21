@@ -16,8 +16,10 @@ storiesOf('ExpandableItem')
 		'Basic usage of ExpandableItem',
 		() => (
 			<ExpandableItem
+				autoClose={boolean('autoClose', false)}
 				disabled={boolean('disabled', false)}
 				label={text('label', 'label')}
+				lockBottom={boolean('lockBottom', false)}
 				onClose={action('onClose')}
 				onOpen={action('onOpen')}
 				open={boolean('open', false)}

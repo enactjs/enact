@@ -146,3 +146,13 @@
 		}
 	}
 }
+
+[data-container-muted='true'] {
+	.slider {
+		&:global(.spottable):focus {
+			.knob {
+				background-color: @moon-slider-knob-bg-color;
+			}
+		}
+	}
+}

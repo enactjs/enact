@@ -45,6 +45,13 @@
 	color: @moon-spotlight-text-color;
 }
 
+[data-container-muted='true'] {
+	:global(.spottable):focus {
+		background-color: @moon-background-color;
+		color: @moon-text-color;
+	}
+}
+
 // Disabled components
 [disabled],
 :global(.spottableDisabled):focus {

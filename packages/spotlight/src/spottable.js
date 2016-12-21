@@ -1,6 +1,7 @@
 import {hoc} from '@enact/core';
 import {forward} from '@enact/core/handle';
 import React from 'react';
+import Spotlight from './spotlight';
 
 const spottableClass = 'spottable';
 const spottableDisabledClass = 'spottableDisabled';
@@ -120,14 +121,24 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			if (e.currentTarget === e.target) {
 				this.setState({spotted: false});
 			}
-			forwardBlur(e, this.props);
+
+			if (Spotlight.isMuted(e.target)) {
+				e.stopPropagation();
+			} else {
+				forwardBlur(e, this.props);
+			}
 		}
 
 		onFocus = (e) => {
 			if (e.currentTarget === e.target) {
 				this.setState({spotted: true});
 			}
-			forwardFocus(e, this.props);
+
+			if (Spotlight.isMuted(e.target)) {
+				e.stopPropagation();
+			} else {
+				forwardFocus(e, this.props);
+			}
 		}
 
 		render () {
