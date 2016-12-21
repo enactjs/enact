@@ -71,11 +71,11 @@ const MediaControls = kind({
 				<div className={css.centerComponentsContainer}>
 					<div className={centerClassName}>
 						<Container className={css.mediaControls} data-container-disabled={mediaDisabled}> {/* rtl={false} */}
-							{noJumpButtons ? null : <MediaButton backgroundOpacity="translucent" onClick={onJumpBackwardButtonClick}>skipbackward</MediaButton>}
-							{noRateButtons ? null : <MediaButton backgroundOpacity="translucent" onClick={onBackwardButtonClick}>backward</MediaButton>}
-							<MediaButton backgroundOpacity="translucent" onClick={onPlayButtonClick}>{playPauseIcon}</MediaButton>
-							{noRateButtons ? null : <MediaButton backgroundOpacity="translucent" onClick={onForwardButtonClick}>forward</MediaButton>}
-							{noJumpButtons ? null : <MediaButton backgroundOpacity="translucent" onClick={onJumpForwardButtonClick}>skipforward</MediaButton>}
+							{noJumpButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaDisabled} onClick={onJumpBackwardButtonClick}>skipbackward</MediaButton>}
+							{noRateButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaDisabled} onClick={onBackwardButtonClick}>backward</MediaButton>}
+							<MediaButton backgroundOpacity="translucent" disabled={mediaDisabled} onClick={onPlayButtonClick}>{playPauseIcon}</MediaButton>
+							{noRateButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaDisabled} onClick={onForwardButtonClick}>forward</MediaButton>}
+							{noJumpButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaDisabled} onClick={onJumpForwardButtonClick}>skipforward</MediaButton>}
 						</Container>
 						<Container className={css.moreControls} data-container-disabled={moreDisabled}>
 							{children}

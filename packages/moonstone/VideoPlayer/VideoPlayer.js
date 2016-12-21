@@ -27,55 +27,96 @@ import Times from './Times';
 
 import css from './VideoPlayer.less';
 
+// Video ReadyStates
+// - Commented are currently unused.
+//
+// const HAVE_NOTHING      = 0;  // no information whether or not the audio/video is ready
+// const HAVE_METADATA     = 1;  // metadata for the audio/video is ready
+// const HAVE_CURRENT_DATA = 2;  // data for the current playback position is available, but not enough data to play next frame/millisecond
+// const HAVE_FUTURE_DATA  = 3;  // data for the current and at least the next frame is available
+const HAVE_ENOUGH_DATA  = 4;  // enough data available to start playing
+
 
 // Set-up event forwarding
 // Leaving lots of commented out, ready-to-use methods here in case we want/need them later.
-const
-	// forwardAbort           = forward('onAbort'),
-	// forwardCanPlay         = forward('onCanPlay'),
-	// forwardCanPlayThrough  = forward('onCanPlayThrough'),
-	forwardDurationChange  = forward('onDurationChange'),
-	// forwardEmptied         = forward('onEmptied'),
-	// forwardEncrypted       = forward('onEncrypted'),
-	// forwardEnded           = forward('onEnded'),
-	// forwardError           = forward('onError'),
-	// forwardLoadedData      = forward('onLoadedData'),
-	forwardLoadedMetadata  = forward('onLoadedMetadata'),
-	// forwardLoadStart       = forward('onLoadStart'),
-	// forwardPause           = forward('onPause'),
-	// forwardPlay            = forward('onPlay'),
-	// forwardPlaying         = forward('onPlaying'),
-	forwardProgress        = forward('onProgress'),
-	// forwardRateChange      = forward('onRateChange'),
-	// forwardSeeked          = forward('onSeeked'),
-	// forwardSeeking         = forward('onSeeking'),
-	// forwardStalled         = forward('onStalled'),
-	// forwardSuspend         = forward('onSuspend'),
-	forwardTimeUpdate      = forward('onTimeUpdate')
-	// forwardVolumeChange    = forward('onVolumeChange'),
-	// forwardWaiting         = forward('onWaiting')
-	;
+const handledMediaEventsMap = {
+	abort           : 'onAbort',
+	canplay         : 'onCanPlay',
+	canplaythrough  : 'onCanPlayThrough',
+	durationchange  : 'onDurationChange',
+	emptied         : 'onEmptied',
+	encrypted       : 'onEncrypted',
+	ended           : 'onEnded',
+	error           : 'onError',
+	loadeddata      : 'onLoadedData',
+	loadedmetadata  : 'onLoadedMetadata',
+	loadstart       : 'onLoadStart',
+	pause           : 'onPause',
+	play            : 'onPlay',
+	playing         : 'onPlaying',
+	progress        : 'onProgress',
+	ratechange      : 'onRateChange',
+	seeked          : 'onSeeked',
+	seeking         : 'onSeeking',
+	stalled         : 'onStalled',
+	suspend         : 'onSuspend',
+	timeupdate      : 'onTimeUpdate',
+	volumechange    : 'onVolumeChange',
+	waiting         : 'onWaiting'
+};
+
+// const handledMediaEvents = [
+// 	'onAbort',
+// 	// 'onCanPlay',
+// 	// 'onCanPlayThrough',
+// 	'onDurationChange',
+// 	'onEmptied',
+// 	// 'onEncrypted',
+// 	// 'onEnded',
+// 	'onError',
+// 	// 'onLoadedData',
+// 	'onLoadedMetadata',
+// 	// 'onLoadStart',
+// 	// 'onPause',
+// 	// 'onPlay',
+// 	// 'onPlaying',
+// 	'onProgress',
+// 	// 'onRateChange',
+// 	// 'onSeeked',
+// 	// 'onSeeking',
+// 	'onStalled',
+// 	'onSuspend',
+// 	'onTimeUpdate'
+// 	// 'onVolumeChange',
+// 	// 'onWaiting',
+// ];
+
+// const handledMediaEventsMap = {};
+// handledMediaEvents.map((eventName) => {
+// 	const shortName = eventName.substring(2).toLowerCase();
+// 	handledMediaEventsMap[shortName] = eventName;
+// });
 
 /**
-* Mapping of playback rate names to playback rate values that may be set.
-* ```
-* {
-*	fastForward: ['2', '4', '8', '16'],
-*	rewind: ['-2', '-4', '-8', '-16'],
-*	slowForward: ['1/4', '1/2', '1'],
-*	slowRewind: ['-1/2', '-1']
-* }
-* ```
-*
-* @type {Object}
-* @default {
-*	fastForward: ['2', '4', '8', '16'],
-*	rewind: ['-2', '-4', '-8', '-16'],
-*	slowForward: ['1/4', '1/2'],
-*	slowRewind: ['-1/2', '-1']
-* }
-* @private
-*/
+ * Mapping of playback rate names to playback rate values that may be set.
+ * ```
+ * {
+ *	fastForward: ['2', '4', '8', '16'],
+ *	rewind: ['-2', '-4', '-8', '-16'],
+ *	slowForward: ['1/4', '1/2', '1'],
+ *	slowRewind: ['-1/2', '-1']
+ * }
+ * ```
+ *
+ * @type {Object}
+ * @default {
+ *	fastForward: ['2', '4', '8', '16'],
+ *	rewind: ['-2', '-4', '-8', '-16'],
+ *	slowForward: ['1/4', '1/2'],
+ *	slowRewind: ['-1/2', '-1']
+ * }
+ * @private
+ */
 const playbackRateHash = {
 	fastForward: ['2', '4', '8', '16'],
 	rewind: ['-2', '-4', '-8', '-16'],
@@ -275,6 +316,15 @@ const VideoPlayerBase = class extends React.Component {
 		// Internal State
 		this.videoReady = false;
 		this.video = null;
+		this.handledMediaForwards = {};
+		this.handledMediaEvents = {};
+
+		// Generate event handling forwarders and a smooth block to pass to <Video>
+		for (let key in handledMediaEventsMap) {
+			const eventName = handledMediaEventsMap[key];
+			this.handledMediaForwards[eventName] = forward(eventName);
+			this.handledMediaEvents[eventName] = this.handleEvent;
+		}
 
 		// Re-render-necessary State
 		this.state = {
@@ -365,7 +415,7 @@ const VideoPlayerBase = class extends React.Component {
 	// Internal Methods
 	//
 	updateMainState = () => {
-		if (this.videoReady && this.video && this.video.videoEl && this.video.videoEl.duration != null) {
+		if (this.videoReady && this.video && this.video.videoEl && this.video.videoEl != null) {
 			const el = this.video.videoEl;
 			const updatedState = {
 				// Standard video properties
@@ -381,11 +431,20 @@ const VideoPlayerBase = class extends React.Component {
 
 				// Non-standard state computed from properties
 				percentageLoaded: el.buffered.length && el.buffered.end(el.buffered.length - 1) / el.duration,
+				percentagePlayed: el.currentTime / el.duration,
 				error: el.networkState === el.NETWORK_NO_SOURCE,
 				loading: el.readyState < el.HAVE_ENOUGH_DATA
 			};
 
-			updatedState.percentagePlayed = el.currentTime / el.duration;
+			// If there's an error, we're obviously not loading, no matter what the readyState is.
+			if (updatedState.error) updatedState.loading = false;
+
+			updatedState.mediaControlsDisabled = (
+				updatedState.more ||
+				updatedState.readyState < HAVE_ENOUGH_DATA ||
+				!updatedState.duration ||
+				updatedState.error
+			);
 
 			this.setState(updatedState);
 		}
@@ -628,21 +687,13 @@ const VideoPlayerBase = class extends React.Component {
 	//
 	// Handled Media events
 	//
-	handleDurationChange = (ev) => {
+	handleEvent = (ev) => {
 		this.updateMainState();
-		forwardDurationChange(ev, this.props);
-	}
-	handleLoadedMetadata = (ev) => {
-		this.updateMainState();
-		forwardLoadedMetadata(ev, this.props);
-	}
-	handleProgress = (ev) => {
-		this.updateMainState();
-		forwardProgress(ev, this.props);
-	}
-	handleTimeUpdate = (ev) => {
-		this.updateMainState();
-		forwardTimeUpdate(ev, this.props);
+		// fetch the forward() we generated earlier, using the event type as a key to find the real event name.
+		const fwd = this.handledMediaForwards[handledMediaEventsMap[ev.type]];
+		if (fwd) {
+			fwd(ev, this.props);
+		}
 	}
 
 
@@ -697,8 +748,7 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.autoCloseTimeout;
 		delete rest.jumpBy;
 
-		// Handle some class additions when the "more" button is pressed
-		const mediaDisabled = !!(this.state.more);
+		// Handle some cases when the "more" button is pressed
 		const moreDisabled = !(this.state.more);
 
 		return (
@@ -709,21 +759,13 @@ const VideoPlayerBase = class extends React.Component {
 					className={css.videoFrame}
 					controls={false}
 					ref={this.setVideoRef}	// Ref-ing this only once (smarter) turns out to be less safe because now we don't know when `video` is being "unset", so our `videoReady` is no longer genuine. react-html5video component is re-generating this method each render too. This seems to be part of the origin.
-					// ref={video => {
-					// 	// debug('video ref', video);
-					// 	this.videoReady = !!video;
-					// 	this.video = video;
-					// }}
-					onDurationChange={this.handleDurationChange}
-					onLoadedMetadata={this.handleLoadedMetadata}
-					onTimeUpdate={this.handleTimeUpdate}
-					onProgress={this.handleProgress}
+					{...this.handledMediaEvents}
 				>
 					{children}
 				</Video>
 
 				<Overlay onClick={this.onVideoClick} onMouseMove={this.onVideoMouseMove}>
-					{this.state.readyState >= 4 ? null : <Spinner className={css.spinner} centered>{$L('Loading...')}</Spinner>}
+					{this.state.loading ? <Spinner className={css.spinner} centered>{$L('Loading...')}</Spinner> : null}
 				</Overlay>
 
 				{this.state.bottomControlsVisible ? <div className={css.fullscreen + ' enyo-fit scrim'}>
@@ -747,7 +789,7 @@ const VideoPlayerBase = class extends React.Component {
 
 						<MediaControls
 							leftComponents={leftComponents}
-							mediaDisabled={mediaDisabled}
+							mediaDisabled={this.state.mediaControlsDisabled}
 							moreDisabled={moreDisabled}
 							noJumpButtons={noJumpButtons}
 							noRateButtons={noRateButtons}

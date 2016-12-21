@@ -37,29 +37,29 @@ const prop = {
 		}
 	],
 	events: [
-		'onAbort',
-		'onCanPlay',
-		'onCanPlayThrough',
+		// 'onAbort',
+		// 'onCanPlay',
+		// 'onCanPlayThrough',
 		'onDurationChange',
-		'onEmptied',
-		'onEncrypted',
-		'onEnded',
-		'onError',
-		'onLoadedData',
+		// 'onEmptied',
+		// 'onEncrypted',
+		// 'onEnded',
+		// 'onError',
+		// 'onLoadedData',
 		'onLoadedMetadata',
 		'onLoadStart',
-		'onPause',
+		// 'onPause',
 		'onPlay',
-		'onPlaying',
+		// 'onPlaying',
 		'onProgress',
-		'onRateChange',
-		'onSeeked',
-		'onSeeking',
-		'onStalled',
-		'onSuspend',
-		'onTimeUpdate',
-		'onVolumeChange',
-		'onWaiting'
+		// 'onRateChange',
+		// 'onSeeked',
+		// 'onSeeking',
+		// 'onStalled',
+		// 'onSuspend',
+		'onTimeUpdate'
+		// 'onVolumeChange',
+		// 'onWaiting'
 	]
 };
 
@@ -71,9 +71,9 @@ for (let index = 0; index < prop.videos.length; index++) {
 }
 
 prop.eventActions = {};
-// prop.events.forEach( (ev) => {
-// 	prop.eventActions[ev] = action(ev);
-// });
+prop.events.forEach( (ev) => {
+	prop.eventActions[ev] = action(ev);
+});
 
 storiesOf('VideoPlayer')
 	.addDecorator(withKnobs)
