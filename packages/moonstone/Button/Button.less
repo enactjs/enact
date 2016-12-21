@@ -38,8 +38,6 @@
 	overflow: visible;
 	height: @moon-button-height;
 	line-height: (@moon-button-height - (2 * @moon-button-border-width));
-	background-color: transparent;
-	border: 0 transparent none;
 	border-radius: @moon-button-border-radius;
 	cursor: pointer;
 	white-space: nowrap;
@@ -52,10 +50,8 @@
 	color: @moon-button-text-color;
 	box-sizing: border-box;
 	z-index: 0;
-
-	> * {
-		text-align: center;
-	}
+	text-align: center;
+	.moon-taparea(@moon-button-height);
 
 	.bg {
 		.position(0);
@@ -77,13 +73,13 @@
 		animation-timing-function: ease-out;
 	}
 
-	// Need 100% width for marquee in button
-	.marquee {
-		width: 100%;
-		vertical-align: top;
-		text-align: center;
+	.client {
+		padding: @moon-button-border-width;	// We match the amount removed by the line-height above, so the text doesn't overlap the border
+		display: flex;
+		align-items: center;
+		box-sizing: border-box;
+		height: 100%;
 	}
-	.moon-taparea(@moon-button-height);
 
 	&.minWidth {
 		min-width: @moon-button-large-min-width;
