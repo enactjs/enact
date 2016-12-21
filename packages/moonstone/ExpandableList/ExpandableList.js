@@ -52,7 +52,7 @@ const ExpandableListBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		autoClose: PropTypes.bool,
+		closeOnSelect: PropTypes.bool,
 
 		/**
 		 * When `true`, applies a disabled style and the control becomes non-interactive.
@@ -73,6 +73,28 @@ const ExpandableListBase = kind({
 		label: PropTypes.string,
 
 		/**
+		 * When `true`, the expandable will not automatically close when the user navigates to the
+		 * `title` of the component using 5-way controls.
+		 *
+		 * This does not affect `closeOnSelect`.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		noAutoClose: PropTypes.bool,
+
+		/**
+		 * When `true`, the user may move {@glossary Spotlight} past the bottom of the expandable
+		 * (when open) using 5-way controls.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		noLockBottom: PropTypes.bool,
+
+		/**
 		 * Text to display when no `label` is set.
 		 *
 		 * @type {String}
@@ -80,8 +102,8 @@ const ExpandableListBase = kind({
 		noneText: PropTypes.string,
 
 		/**
-		 * Called when the expandable is closing. Also called when selecting an item if `autoClose`
-		 * is `true`.
+		 * Called when the expandable is closing. Also called when selecting an item if
+		 * `closeOnSelect` is `true`.
 		 *
 		 * @type {Function}
 		 * @public
@@ -161,9 +183,9 @@ const ExpandableListBase = kind({
 					CheckboxItem; // for single or multiple
 		},
 
-		onSelect: ({autoClose, onClose, onSelect: handler, select}) => (ev) => {
-			// Call onClose if autoClose is enabled and not selecting multiple
-			if (autoClose && onClose && select !== 'multiple') {
+		onSelect: ({closeOnSelect, onClose, onSelect: handler, select}) => (ev) => {
+			// Call onClose if closeOnSelect is enabled and not selecting multiple
+			if (closeOnSelect && onClose && select !== 'multiple') {
 				onClose();
 			}
 
@@ -177,12 +199,17 @@ const ExpandableListBase = kind({
 		}
 	},
 
-	render: ({children, ListItem, onSelect, select, selected, ...rest}) => {
-		delete rest.autoClose;
+	render: ({children, ListItem, noAutoClose, noLockBottom, onSelect, select, selected, ...rest}) => {
+		delete rest.closeOnSelect;
 		delete rest.select;
 
 		return (
-			<ExpandableItemBase {...rest} showLabel="auto">
+			<ExpandableItemBase
+				{...rest}
+				showLabel="auto"
+				autoClose={!noAutoClose}
+				lockBottom={!noLockBottom}
+			>
 				<Group
 					childComponent={ListItem}
 					childSelect="onToggle"
