@@ -34,7 +34,7 @@ const ContextualPopupArrow = kind({
 		className: ({direction, styler}) => styler.append(direction, css.arrow)
 	},
 
-	render: ({...props}) => (
+	render: (props) => (
 		<svg {...props} viewBox="0 0 30 30">
 			<path d="M15 0 L0 18 L30 18 Z" className={css.arrowBorder} />
 			<path d="M15 9 L0 27 L30 27 Z" className={css.arrowFill} />
@@ -155,12 +155,12 @@ const ContextualPopupBase = kind({
 		}
 	},
 
-	render: ({arrowPosition, containerPosition, containerRef, className, children, closeButton, direction, ...props}) => {
-		delete props.onCloseButtonClick;
-		delete props.showCloseButton;
+	render: ({arrowPosition, containerPosition, containerRef, className, children, closeButton, direction, ...rest}) => {
+		delete rest.onCloseButtonClick;
+		delete rest.showCloseButton;
 
 		return (
-			<div {...props} className={css.contextualPopup}>
+			<div {...rest} className={css.contextualPopup}>
 				<div className={className} style={containerPosition} ref={containerRef}>
 					{closeButton}
 					{children}

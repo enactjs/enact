@@ -1,3 +1,4 @@
+import {on, off} from '@enact/core/dispatcher';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Cancelable from '../Cancelable';
@@ -120,6 +121,14 @@ class FloatingLayerBase extends React.Component {
 		this.closeFloatingLayer();
 	}
 
+	handleClick = () => {
+		if (!this.props.noAutoDismiss && this.props.open && this.props.onDismiss) {
+			this.props.onDismiss();
+		}
+	}
+
+	stopPropagation = (ev) => ev.nativeEvent.stopImmediatePropagation()
+
 	closeFloatingLayer () {
 		if (this.node) {
 			ReactDOM.unmountComponentAtNode(this.node);
@@ -131,6 +140,8 @@ class FloatingLayerBase extends React.Component {
 		}
 		this.floatLayer = null;
 		this.node = null;
+
+		off('click', this.handleClick);
 	}
 
 	renderNode () {
@@ -159,14 +170,20 @@ class FloatingLayerBase extends React.Component {
 		this.floatLayer = ReactDOM.unstable_renderSubtreeIntoContainer(
 			this,
 			<div {...rest}>
-				{scrimType !== 'none' ? <Scrim type={scrimType} /> : null}
-				{children}
+				{scrimType !== 'none' ? <Scrim type={scrimType} onClick={this.handleClick} /> : null}
+				{React.cloneElement(children, {onClick: this.stopPropagation})}
 			</div>,
 			node
 		);
 
-		if (!isOpened && onOpen) {
-			onOpen();
+		if (!isOpened) {
+			if (onOpen) {
+				onOpen();
+			}
+
+			if (scrimType === 'none') {
+				on('click', this.handleClick);
+			}
 		}
 	}
 
