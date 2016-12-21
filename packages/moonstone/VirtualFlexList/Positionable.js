@@ -45,26 +45,26 @@ const Positionable = hoc((config, Wrapped) => {
 			y: PropTypes.number.isRequired,
 
 			/**
-			 * Called when position updates internally
-			 *
-			 * @type {Function}
-			 * @public
-			 */
-			doPosition: PropTypes.func,
-
-			/**
 			 * Support 5 way navigation and wheel event handling with spotlight
 			 *
 			 * @type {Boolean}
 			 * @default false
 			 * @public
 			 */
-			navigation: PropTypes.bool
+			navigation: PropTypes.bool,
+
+			/**
+			 * Called when position updates internally
+			 *
+			 * @type {Function}
+			 * @public
+			 */
+			setPosition: PropTypes.func
 		}
 
 		static defaultProps = {
-			doPosition: nop,
 			navigation: false,
+			setPosition: nop,
 			x: 0,
 			y: 0
 		}
@@ -87,23 +87,22 @@ const Positionable = hoc((config, Wrapped) => {
 			if (this.props.navigation) {
 				const
 					item = e.target,
-					index = item.getAttribute(dataIndexAttribute),
-					key = item.getAttribute('key');
+					index = item.getAttribute(dataIndexAttribute);
 				let pos;
 
 				// For VirtualList
 				if (this.childRef.calculatePositionOnFocus) {
 					if (index && item !== this.lastFocusedItem && item === doc.activeElement) {
-						pos = this.childRef.calculatePositionOnFocus(index, key);
+						pos = this.childRef.calculatePositionOnFocus(index);
 					}
 				// For VirtualFlexList
 				} else if (this.childRef.calculateFlexPositionOnFocus && typeof index === 'string') {
-					pos = this.childRef.calculateFlexPositionOnFocus(index, key);
+					pos = this.childRef.calculateFlexPositionOnFocus(index);
 				}
 
 				if (pos) {
 					if (pos.left !== this.props.x || pos.top !== this.props.y) {
-						this.props.doPosition({x: pos.left, y: pos.top});
+						this.props.setPosition({x: pos.left, y: pos.top});
 					}
 					this.lastFocusedItem = item;
 				}
@@ -118,19 +117,9 @@ const Positionable = hoc((config, Wrapped) => {
 		}
 
 		onWheel = (e) => {
-			if (this.props.navigation) {
-				let y;
-
+			if (this.props.navigation && e.deltaY) {
 				e.preventDefault();
-
-				if (e.deltaY > 0) {
-					y = clamp(0, this.bounds.maxTop, this.props.y + this.bounds.clientHeight);
-				} else if (e.deltaY < 0) {
-					y = clamp(0, this.bounds.maxTop, this.props.y - this.bounds.clientHeight);
-				} else {
-					y = this.props.y;
-				}
-				this.props.doPosition({x: this.props.x, y});
+				this.props.setPosition({x: this.props.x, y: clamp(0, this.bounds.maxTop, this.props.y + this.bounds.clientHeight * Math.sign(e.deltaY))});
 			}
 		}
 
@@ -155,8 +144,9 @@ const Positionable = hoc((config, Wrapped) => {
 			}
 		}
 
-		// eslint-disabled-next-line no-return-assign
-		initChildRef = (ref) => (this.childRef = ref)
+		initChildRef = (ref) => {
+			this.childRef = ref;
+		}
 
 		render () {
 			const
@@ -168,8 +158,8 @@ const Positionable = hoc((config, Wrapped) => {
 					onWheel
 				} : {});
 
-			delete props.doPosition;
 			delete props.navigation;
+			delete props.setPosition;
 			delete props.x;
 			delete props.y;
 

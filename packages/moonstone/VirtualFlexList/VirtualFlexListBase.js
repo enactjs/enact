@@ -1,5 +1,7 @@
 /**
- * Exports the {@link moonstone/VirtualFlexList.VirtualFlexListCore} component.
+ * Exports the {@link moonstone/VirtualFlexList.VirtualFlexListBase} and
+ * {@link moonstone/VirtualFlexList.VirtualFlexListCore} components.
+ * The default export is {@link moonstone/VirtualFlexList.VirtualFlexListBase}.
  *
  * @module moonstone/VirtualFlexListCore
  */
@@ -20,13 +22,13 @@ const
 	keyDown	 = 40;
 
 /**
- * The shape for the list item data size or item size for {@link moonstone/VirtualFlexList.dataSize}
+ * The shape for {@link moonstone/VirtualFlexList.dataSize}
  * or {@link moonstone/VirtualFlexList.itemSize}.
  *
  * @typedef {Object} sizeShape
  * @memberof moonstone/VirtualFlexListCore
- * @property {Number|Function} col - The data size or item size or the function to get them for column items.
- * @property {Number|Function} row - The data size or item size or the function to get them for row items.
+ * @property {Number|Function} col - The size for column data/item. It should be either number or function to get it.
+ * @property {Number|Function} row - The size for column data/item. It should be either number or function to get it.
  */
 const sizeShape = PropTypes.oneOfType([
 	PropTypes.shape({
@@ -51,7 +53,7 @@ class VirtualFlexListCore extends Component {
 	static propTypes = /** @lends moonstone/VirtualFlexList.VirtualFlexList.prototype */ {
 		/**
 		 * The render function for an item of the list.
-		 * `data` is same with the `data` prop in the list.
+		 * `data` is the same with the `data` prop in the list.
 		 * `index` is for accessing the index of the item and is the object
 		 * which has `row` property for a row index and `col` property for a column index.
 		 * `key` MUST be passed as a prop for DOM recycling.
@@ -81,7 +83,7 @@ class VirtualFlexListCore extends Component {
 
 		/**
 		 * Size of an item for the list.
-		 *.
+		 *
 		 * @type {moonstone/VirtualFlexList.sizeShape}
 		 * @public
 		 */
@@ -91,13 +93,13 @@ class VirtualFlexListCore extends Component {
 		 * Direction specific options of the list; valid values are `'row'` and `'col'`.
 		 *
 		 * @type {String}
-		 * default `'row'`
+		 * @default `'row'`
 		 * @public
 		 */
 		flexAxis: PropTypes.oneOf(['row', 'col']),
 
 		/**
-		 * For flex width or variable height, we need to define max scroll width or max scroll height
+		 * For variable width or variable height, we need to define max scroll width or max scroll height
 		 * instead of calculating them from all items.
 		 *
 		 * @type {Number}
@@ -149,6 +151,10 @@ class VirtualFlexListCore extends Component {
 	// spotlight
 	nodeIndexToBeBlurred = null
 	lastFocusedIndex = null
+
+	/*
+	 * Constructor
+	 */
 
 	constructor (props) {
 		super(props);
@@ -302,40 +308,41 @@ class VirtualFlexListCore extends Component {
 		const
 			{data, flexAxis, maxFlexScrollSize} = this.props,
 			{fixedAxis, secondary} = this,
-			secondaryDataSize = secondary.dataSize({data, index:{[flexAxis]: primaryIndex}});
+			{clientSize, firstIndices, itemSize, lastIndices, positionOffsets, thresholds} = secondary,
+			dataSize = secondary.dataSize({data, index:{[flexAxis]: primaryIndex}});
 		let
 			accumulatedSize = 0,
 			size, // width or height
-			secondaryIndex;
+			index;
 
-		secondary.positionOffsets[primaryIndex] = [];
-		secondary.thresholds[primaryIndex] = {};
+		positionOffsets[primaryIndex] = [];
+		thresholds[primaryIndex] = {};
 
-		for (secondaryIndex = 0; secondaryIndex < secondaryDataSize; secondaryIndex++) {
-			size = secondary.itemSize({data, index: {[flexAxis]: primaryIndex, [fixedAxis]: secondaryIndex}});
-			secondary.positionOffsets[primaryIndex][secondaryIndex] = accumulatedSize;
+		for (index = 0; index < dataSize; index++) {
+			size = itemSize({data, index: {[flexAxis]: primaryIndex, [fixedAxis]: index}});
+			positionOffsets[primaryIndex][index] = accumulatedSize;
 			if (accumulatedSize <= secondaryPosition && secondaryPosition < accumulatedSize + size) {
-				if (secondaryIndex > 0) {
-					secondary.firstIndices[primaryIndex] = secondaryIndex - 1;
+				if (index > 0) {
+					firstIndices[primaryIndex] = index - 1;
 				} else {
-					secondary.firstIndices[primaryIndex] = secondaryIndex;
+					firstIndices[primaryIndex] = index;
 				}
-				secondary.thresholds[primaryIndex].min = accumulatedSize;
+				thresholds[primaryIndex].min = accumulatedSize;
 			}
-			if (accumulatedSize + size >= secondaryPosition + secondary.clientSize) {
-				if (secondaryIndex < secondaryDataSize - 1 && accumulatedSize + size < maxFlexScrollSize) {
-					secondary.lastIndices[primaryIndex] = secondaryIndex + 1;
+			if (accumulatedSize + size >= secondaryPosition + clientSize) {
+				if (index < dataSize - 1 && accumulatedSize + size < maxFlexScrollSize) {
+					lastIndices[primaryIndex] = index + 1;
 				} else {
-					secondary.lastIndices[primaryIndex] = secondaryIndex;
+					lastIndices[primaryIndex] = index;
 				}
-				secondary.thresholds[primaryIndex].max = accumulatedSize + size;
+				thresholds[primaryIndex].max = accumulatedSize + size;
 				break;
 			}
 			accumulatedSize += size;
 		}
-		if (secondaryIndex === secondaryDataSize || !secondary.thresholds[primaryIndex].max) {
-			secondary.lastIndices[primaryIndex] = secondaryDataSize - 1;
-			secondary.thresholds[primaryIndex].max = maxFlexScrollSize;
+		if (index === dataSize || !thresholds[primaryIndex].max) {
+			lastIndices[primaryIndex] = dataSize - 1;
+			thresholds[primaryIndex].max = maxFlexScrollSize;
 		}
 	}
 
@@ -447,7 +454,7 @@ class VirtualFlexListCore extends Component {
 	applyStyleToExistingNode = (primaryIndex, secondaryIndex, count, partitionIndex, scrollDirection, ...rest) => {
 		const
 			node = this.childRef.children[count],
-			id = scrollDirection === null ? (primaryIndex + '-' + secondaryIndex) : (primaryIndex + '-' + secondaryIndex + '-' + scrollDirection);
+			id = primaryIndex + '-' + secondaryIndex + (scrollDirection ? '-' + scrollDirection : '');
 
 		if (node) {
 			node.setAttribute(dataIndexAttribute, id);
@@ -502,6 +509,11 @@ class VirtualFlexListCore extends Component {
 		let
 			primaryPosition = primary.itemSize * updateFrom,
 			secondaryPosition = 0,
+			secondaryScrollPosition = secondary.scrollPosition,
+			secondaryClientSize = secondary.clientSize,
+			secondaryFirstIndices = secondary.firstIndices,
+			secondaryLastIndices = secondary.lastIndices,
+			secondaryPositionOffsets = secondary.positionOffsets,
 			width,
 			height,
 			count = 0,
@@ -511,18 +523,18 @@ class VirtualFlexListCore extends Component {
 
 		primaryPosition -= primary.scrollPosition;
 		if (flexAxis === 'row') {
-			secondaryPosition -= secondary.scrollPosition;
+			secondaryPosition -= secondaryScrollPosition;
 			height = primary.itemSize;
 		} else if (flexAxis === 'col') {
-			secondaryPosition -= secondary.scrollPosition;
+			secondaryPosition -= secondaryScrollPosition;
 			width = primary.itemSize;
 		}
 
 		// positioning items
 		for (let primaryIndex = updateFrom; primaryIndex < updateTo; primaryIndex++) {
-			position = secondaryPosition + this.secondary.positionOffsets[primaryIndex][secondary.firstIndices[primaryIndex]];
+			position = secondaryPosition + secondaryPositionOffsets[primaryIndex][secondaryFirstIndices[primaryIndex]];
 
-			for (let secondaryIndex = secondary.firstIndices[primaryIndex]; secondaryIndex <= secondary.lastIndices[primaryIndex]; secondaryIndex++) {
+			for (let secondaryIndex = secondaryFirstIndices[primaryIndex]; secondaryIndex <= secondaryLastIndices[primaryIndex]; secondaryIndex++) {
 				size = secondary.itemSize({data, index: {[flexAxis]: primaryIndex, [fixedAxis]: secondaryIndex}});
 				partitionIndex = this.getPartitionIndex(position);
 
@@ -534,18 +546,18 @@ class VirtualFlexListCore extends Component {
 
 				const
 					isOnLeftSide = position < 0,
-					isOnRightSide = position + size > secondary.clientSize,
+					isOnRightSide = position + size > secondaryClientSize,
 					isOnlyOnLeftSide = position + size <= 0,
 					isFromLeftSideToList = 0 < position + size && !isOnRightSide,
-					isFromListToRightSide = 0 <= position && position < secondary.clientSize,
+					isFromListToRightSide = 0 <= position && position < secondaryClientSize,
 					applyStyleToSplitNode = this.applyStyleToSplitNode(applyStyle, primaryIndex, secondaryIndex, primaryPosition, width, height);
 
 				// 1) Positioned from the left side to the right side
 				if (isOnLeftSide && isOnRightSide) {
 					applyStyleToSplitNode(position, -position, count++, partitionIndex++, 'left');
-					applyStyleToSplitNode(0, secondary.clientSize, count++, partitionIndex++, null);
-					if (secondary.clientSize + secondary.scrollPosition < maxFlexScrollSize) {
-						applyStyleToSplitNode(secondary.clientSize, position + size - secondary.clientSize, count++, partitionIndex, 'right');
+					applyStyleToSplitNode(0, secondaryClientSize, count++, partitionIndex++, null);
+					if (secondaryClientSize + secondaryScrollPosition < maxFlexScrollSize) {
+						applyStyleToSplitNode(secondaryClientSize, position + size - secondaryClientSize, count++, partitionIndex, 'right');
 					}
 					break;
 				// 2) Positioned only on the left side
@@ -559,9 +571,9 @@ class VirtualFlexListCore extends Component {
 					position += size;
 				// 4) Positioned from the list to the right side
 				} else if (isFromListToRightSide && isOnRightSide) {
-					applyStyleToSplitNode(position, secondary.clientSize - position, count++, partitionIndex++, null);
-					if (secondary.clientSize + secondary.scrollPosition < maxFlexScrollSize) {
-						applyStyleToSplitNode(secondary.clientSize, position + size - secondary.clientSize, count++, partitionIndex, 'right');
+					applyStyleToSplitNode(position, secondaryClientSize - position, count++, partitionIndex++, null);
+					if (secondaryClientSize + secondaryScrollPosition < maxFlexScrollSize) {
+						applyStyleToSplitNode(secondaryClientSize, position + size - secondaryClientSize, count++, partitionIndex, 'right');
 					}
 					break;
 				} else {
@@ -749,8 +761,9 @@ class VirtualFlexListCore extends Component {
 		}
 	}
 
-	// eslint-disabled-next-line no-return-assign
-	initChildRef = (ref) => (this.childRef = ref)
+	initChildRef = (ref) => {
+		this.childRef = ref;
+	}
 
 	renderCalculate () {
 		const
