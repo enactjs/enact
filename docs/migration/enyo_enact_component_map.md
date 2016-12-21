@@ -8,7 +8,7 @@ title: Enyo to Enact Component Map
 |Enyo   |Enact  |Notes  |
 |:----: |:----: |------:|
 | `animation` | use `@enact/ui/Transition` | |
-| `dispatcher` | use React state management/Redux | |
+| `dispatcher` | `@enact/core/dispatcher` | |
 | `dom` | | not required |
 | `hooks` | | not required |
 | `jobs` | `jobs` | provided in `@enact/core` module |
@@ -22,12 +22,12 @@ title: Enyo to Enact Component Map
 |:----: |:----: |------:|
 | `Application` | | not required (index.js + root element = application) |
 | `Animator` | use `@enact/ui/Transition` | |
-| `Audio` | * | under development |
+| `Audio` | * | under review |
 | `Collection` | use React state management/Redux | |
 | `DataRepeater` | `Repeater` | |
 | `Model` | use React state management/Redux | |
 | `NewDataList` | `VirtualList` | |
-| `Signals` | use React state management/Redux | |
+| `Signals` | `@enact/core/dispatcher` (provides `on()`, `off()`, and `once()` methods) | |
 
 ### Layout Components
 
@@ -64,7 +64,6 @@ how to use it.
 | `DataList` | `VirtualList` | |
 | `DataTable` | | unused<sup>1</sup> |
 | `DatePicker` | `DatePicker` | |
-| `DateTimePickerBase` | `Picker`s will have separate base components | |
 | `DayPicker` | `DayPicker` | |
 | `Dialog` | `Dialog` | |
 | `Divider` | `Divider` | |
