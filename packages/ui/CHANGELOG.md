@@ -14,6 +14,10 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 - `fit` prop from `ui/Transition` in favor of using `className`
 
+### Changed
+
+- `autoDismiss` to handle both ESC key and click events in `ui/FloatingLayer`
+
 ## [1.0.0-alpha.5] - 2016-12-16
 
 No changes.
