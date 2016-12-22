@@ -9,7 +9,7 @@ import kind from '@enact/core/kind';
 import Pressable from '@enact/ui/Pressable';
 import React, {PropTypes} from 'react';
 import {Spottable} from '@enact/spotlight';
-
+import {isRtlLocale} from '@enact/i18n';
 import {SliderBase} from '../Slider';
 import SliderDecorator from '../internal/SliderDecorator';
 
@@ -163,8 +163,28 @@ const IncrementSliderBase = kind({
 		decrementDisabled: ({disabled, min, value}) => disabled || value <= min,
 		incrementDisabled: ({disabled, max, value}) => disabled || value >= max,
 		incrementSliderClasses: ({vertical, styler}) => styler.append({vertical, horizontal: !vertical}),
-		decrementIcon: ({decrementIcon, vertical}) => (decrementIcon || (vertical ? 'arrowlargedown' : 'arrowlargeleft')),
-		incrementIcon: ({incrementIcon, vertical}) => (incrementIcon || (vertical ? 'arrowlargeup' : 'arrowlargeright'))
+		decrementIcon: ({decrementIcon, vertical}) => {
+			if (decrementIcon) {
+				return decrementIcon;
+			} else if (vertical) {
+				return 'arrowlargedown';
+			} else if (isRtlLocale()) {
+				return 'arrowlargeright';
+			} else {
+				return 'arrowlargeleft';
+			}
+		},
+		incrementIcon: ({incrementIcon, vertical}) => {
+			if (incrementIcon) {
+				return incrementIcon;
+			} else if (vertical) {
+				return 'arrowlargeup';
+			} else if (isRtlLocale()) {
+				return 'arrowlargeleft';
+			} else {
+				return 'arrowlargeright';
+			}
+		}
 	},
 
 	render: ({decrementDisabled, decrementIcon, incrementDisabled, incrementIcon, onIncrement, onDecrement, incrementSliderClasses, ...rest}) => (
