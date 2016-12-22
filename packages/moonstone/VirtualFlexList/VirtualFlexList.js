@@ -1,24 +1,28 @@
 /**
- * Exports the {@link moonstone/VirtualFlexList/VirtualFlexList.VirtualFlexList} component.
+ * Exports the {@link moonstone/VirtualFlexList.VirtualFlexList} and
+ * {@link moonstone/VirtualFlexList.VirtualFlexListBase} components.
+ * The default export is {@link moonstone/VirtualFlexList.VirtualFlexList}.
  *
  * @module moonstone/VirtualFlexList/VirtualFlexList
  */
 
 import classNames from 'classnames';
-import React, {PropTypes} from 'react';
+import React, {Component, PropTypes} from 'react';
 
-import kind from '@enact/core/kind';
+import {SpotlightContainerDecorator} from '@enact/spotlight';
 
 import {VirtualListCore} from '../VirtualList/VirtualListBase';
 
 import Positionable from './Positionable';
-import {VirtualFlexListCore} from './VirtualFlexListCore';
+import {VirtualFlexListBase} from './VirtualFlexListBase';
 
 import css from './VirtualFlexList.less';
 
 const
 	PositionableVirtualList = Positionable(VirtualListCore),
-	PositionableVirtualFlexList = Positionable(VirtualFlexListCore);
+	SpotlightPositionableVirtualList = SpotlightContainerDecorator(Positionable(VirtualListCore));
+
+const nop = () => {};
 
 // PropTypes shape
 
@@ -107,13 +111,12 @@ const itemsShape = PropTypes.oneOfType([
  * which has a variable width or height.
  *
  * @class VirtualFlexList
+ * @memberof moonstone/VirtualFlexList
  * @ui
  * @public
  */
-const VirtualFlexList = kind({
-	name: 'VirtualFlexList',
-
-	propTypes: /** @lends moonstone/VirtualFlexList.VirtualFlexList.prototype */ {
+class VirtualFlexList extends Component {
+	static propTypes = /** @lends moonstone/VirtualFlexList.VirtualFlexList.prototype */ {
 		/**
 		 * List items including the following properties.
 		 *
@@ -123,6 +126,7 @@ const VirtualFlexList = kind({
 		 * `height` is the item height.
 		 * `row` has `count` property for the number of items vertically.
 		 * `width` is the item width.
+		 * `background` is for `background` style.
 		 *
 		 * The object including `data`, `index`, and `key` properties
 		 * is passed as the parameter of the `component` render function.
@@ -156,12 +160,21 @@ const VirtualFlexList = kind({
 
 		/**
 		 * The component for the list corner.
-		 * It has `component` property to render the list corner.
+		 * It has `component` property to render the list corner and
+		 * `background` property for `background` style.
 		 *
 		 * @type {moonstone/VirtualFlexList.cornerShape}
 		 * @public
 		 */
 		corner: cornerShape,
+
+		/**
+		 * Called when position updates
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		doPosition: PropTypes.func,
 
 		/**
 		 * List row and column headers including the following properties.
@@ -176,6 +189,7 @@ const VirtualFlexList = kind({
 		 * `data` is any data which is passed as the render funtion.
 		 * `height` is the item height.
 		 * `width` is the item width.
+		 * `background` is for `background` style.
 		 *
 		 * `data` is the same prop with this prop.
 		 * `index` is for accessing the index of the item and is an number.
@@ -201,89 +215,110 @@ const VirtualFlexList = kind({
 		 * @public
 		 */
 		y: PropTypes.number
-	},
+	}
 
-	styles: {
-		css,
-		className: 'virtualFlexList'
-	},
+	static defaultProps = {
+		doPosition: nop
+	}
 
-	computed: {
-		colHeaderProps: ({headers, x}) => (
-			headers ?
-			{
-				data: headers.col.data,
-				dataSize: headers.col.count,
-				direction: 'horizontal',
-				itemSize: headers.col.width,
-				x,
-				style: {width: 'calc(100% - ' + headers.row.width + 'px)', height: headers.col.height + 'px', left: headers.row.width + 'px'},
-				component: headers.col.component
-			} :
-			null
-		),
-		cornerProps: ({headers}) => (
-			headers ?
-			{style: {width: headers.row.width + 'px', height: headers.col.height + 'px', overflow: 'hidden'}} :
-			null
-		),
-		itemProps: ({headers, items, maxVariableScrollSize, variableAxis, x, y}) => ({
-			data: items.data,
-			dataSize: {
-				row: items.rowCount,
-				col: items.colCount
+	constructor (props) {
+		super(props);
+
+		this.state = {
+			x: props.x,
+			y: props.y
+		};
+	}
+
+	doPosition = ({x, y}) => {
+		this.setState({x, y});
+		this.props.doPosition({x, y});
+	}
+
+	componentWillReceiveProps (nextProps) {
+		const {x, y} = this.props;
+
+		if (x !== nextProps.x || y !== nextProps.y) {
+			this.setState({x: nextProps.x, y: nextProps.y});
+		}
+	}
+
+	render () {
+		const
+			{items, maxVariableScrollSize, variableAxis, corner, headers, ...rest} = this.props,
+			cornerComponent = corner ? corner.component : null,
+			colHeaderProps = (
+				headers ?
+				{
+					data: headers.col.data,
+					dataSize: headers.col.count,
+					direction: 'horizontal',
+					itemSize: headers.col.width,
+					x: this.state.x,
+					style: {background: headers.col.background, width: 'calc(100% - ' + headers.row.width + 'px)', height: headers.col.height + 'px', left: headers.row.width + 'px'},
+					component: headers.col.component
+				} :
+				null
+			),
+			cornerProps = (
+				headers ?
+				{style: {background: corner.background, width: headers.row.width + 'px', height: headers.col.height + 'px', overflow: 'hidden'}} :
+				null
+			),
+			itemProps = {
+				data: items.data,
+				dataSize: {
+					row: items.rowCount,
+					col: items.colCount
+				},
+				doPosition: this.doPosition,
+				itemSize: {
+					row: items.height,
+					col: items.width
+				},
+				maxVariableScrollSize,
+				navigation: true,
+				x: this.state.x,
+				y: this.state.y,
+				variableAxis,
+				style: headers ?
+					{background: items.background, width: 'calc(100% - ' + headers.row.width + 'px)', height: 'calc(100% - ' + headers.col.height + 'px)', top: headers.col.height + 'px', left: headers.row.width + 'px'} :
+					{background: items.background, width: '100%', height: '100%'},
+				component: items.component
 			},
-			itemSize: {
-				row: items.height,
-				col: items.width
-			},
-			maxVariableScrollSize,
-			x,
-			y,
-			variableAxis,
-			style: headers ?
-				{width: 'calc(100% - ' + headers.row.width + 'px)', height: 'calc(100% - ' + headers.col.height + 'px)', top: headers.col.height + 'px', left: headers.row.width + 'px'} :
-				{width: '100%', height: '100%'},
-			component: items.component
-		}),
-		rowHeaderProps: ({headers, y}) => (
-			headers ?
-			{
-				data: headers.row.data,
-				dataSize: headers.row.count,
-				direction: 'vertical',
-				itemSize: headers.row.height,
-				y,
-				style: {width: headers.row.width + 'px', height: 'calc(100% - ' + headers.row.height + 'px)', top: headers.col.height + 'px'},
-				component: headers.row.component
-			} :
-			null
-		)
-	},
+			rowHeaderProps = (
+				headers ?
+				{
+					data: headers.row.data,
+					dataSize: headers.row.count,
+					direction: 'vertical',
+					doPosition: this.doPosition,
+					itemSize: headers.row.height,
+					navigation: true,
+					pageScroll: true,
+					y: this.state.y,
+					style: {background: headers.row.background, width: headers.row.width + 'px', height: 'calc(100% - ' + headers.row.height + 'px)', top: headers.col.height + 'px'},
+					component: headers.row.component
+				} :
+				null
+			);
 
-	render: ({className, colHeaderProps, corner, cornerProps, headers, itemProps, rowHeaderProps, ...rest}) => {
-		const cornerComponent = corner ? corner.component : null;
-
-		delete rest.items;
-		delete rest.maxVariableScrollSize;
-		delete rest.variableAxis;
-		delete rest.x;
-		delete rest.y;
+		delete rest.doPosition;
 
 		if (headers) {
 			return (
-				<div {...rest} className={classNames(className, css.headers)}>
-					<PositionableVirtualList {...rowHeaderProps} />
+				<div {...rest} className={classNames(css.virtualFlexList, css.headers)}>
+					<SpotlightPositionableVirtualList {...rowHeaderProps} />
 					<PositionableVirtualList {...colHeaderProps} />
-					<PositionableVirtualFlexList {...itemProps} />
+					<VirtualFlexListBase {...itemProps} />
 					<div {...cornerProps}>{cornerComponent}</div>
 				</div>
 			);
 		} else {
-			return (<PositionableVirtualFlexList {...rest} {...itemProps} className={className} />);
+			return (<VirtualFlexListBase {...rest} {...itemProps} className={css.virtualFlexList} />);
 		}
 	}
-});
+}
 
 export default VirtualFlexList;
-export {VirtualFlexList, VirtualFlexList as VirtualFlexListBase};
+export {VirtualFlexList, VirtualFlexListBase};
