@@ -325,10 +325,11 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		render () {
 			const {showCloseButton, popupComponent: PopupComponent, popupClassName, open, onClose, spotlightRestrict, ...rest} = this.props;
+			const scrimType = spotlightRestrict === 'self-only' ? 'transparent' : 'none';
 
 			return (
 				<div className={css.contextualPopupDecorator}>
-					<FloatingLayer open={open} scrimType="none" onDismiss={onClose}>
+					<FloatingLayer open={open} scrimType={scrimType} onDismiss={onClose}>
 						<ContextualPopupContainer
 							className={popupClassName}
 							showCloseButton={showCloseButton}
