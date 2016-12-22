@@ -220,7 +220,7 @@ class View extends React.Component {
 
 		if (callback(start, end, time)) {
 			this._raf = requestAnimationFrame(() => {
-				const current = performance.now();
+				const current = now();
 				this.transition(start, end, current, callback);
 			});
 		} else {
