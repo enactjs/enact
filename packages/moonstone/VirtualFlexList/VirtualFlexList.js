@@ -163,7 +163,7 @@ class VirtualFlexList extends Component {
 		 * @type {moonstone/VirtualFlexList.cornerShape}
 		 * @public
 		 */
-		corner: cornerShape
+		corner: cornerShape,
 
 		/**
 		 * Row and column headers in a list including the following properties.
@@ -194,7 +194,7 @@ class VirtualFlexList extends Component {
 		 * @type {Function}
 		 * @public
 		 */
-		onPositionChange: PropTypes.func,,
+		onPositionChange: PropTypes.func,
 
 		/**
 		 * Position x.
