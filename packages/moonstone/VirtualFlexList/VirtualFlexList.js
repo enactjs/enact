@@ -23,7 +23,7 @@ const
 	PositionableVirtualList = Positionable(VirtualListCore),
 	SpotlightPositionableVirtualList = SpotlightContainerDecorator(Positionable(VirtualListCore));
 
-const forwardPositioinChange = forward('onPositionChange');
+const forwardPositionChange = forward('onPositionChange');
 
 const nop = () => {};
 
@@ -320,7 +320,7 @@ class VirtualFlexList extends Component {
 
 	onPositionChange = (position) => {
 		this.setState(position);
-		forwardPositioinChange(position, this.props);
+		forwardPositionChange(position, this.props);
 	}
 
 	/*
