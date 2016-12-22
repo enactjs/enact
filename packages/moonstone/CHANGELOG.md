@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/TooltipDecorator` component
 - `autoClose` and `lockBottom` properties to `ExpandableItem`
 - `noAutoClose` and `noLockBottom` properties to `ExpandableList`
 
@@ -22,6 +23,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 	effect can be achieved by omitting the property or passing `null`.
 - `moonstone/VirtualGridList` to be scrolled by page when navigating with a 5-way direction key
 - `moonstone/Scroller`, `moonstone/VirtualList`, `moonstone/VirtualGridList`, and `moonstone/Scrollable` to no longer respond to mouse down/move/up events
+- `moonstone/Button` to include `moonstone/TooltipDecorator`
 - `moonstone/Expandable` to support being managed, radio group-style, by a component wrapped with `RadioControllerDecorator` from `ui/RadioDecorator`
 - `moonstone/Picker` to animate `moonstone/Marquee` children when any part of the `moonstone/Picker` is focused
 - `moonstone/VirtualList` to mute its container instead of disabling it during scroll events
