@@ -7,14 +7,13 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 - `moonstone/TooltipDecorator` component
-- `autoClose` and `lockBottom` properties to `ExpandableItem`
-- `noAutoClose` and `noLockBottom` properties to `ExpandableList`
+- `moonstone/ExpandableItem` properties `autoClose` and `lockBottom`
+- `moonstone/ExpandableList` properties `noAutoClose` and `noLockBottom`
+- `moonstone/MarqueeController` focus/blur handling to to start and stop synchronized `moonstone/Marquee` components
 
 ### Changed
 
-- `autoClose` property of `moonstone/ExpandableList` to be `closeOnSelect` to disambiguate it from the added `autoClose` on 5-way up
-- `RadioDecorator` and `RadioControllerDecorator` components in `ui/RadioDecorator` module
-- Focus/blur handling to `moonstone/MarqueeController` to start and stop synchronized `moonstone/Marquee` components
+- `moonstone/ExpandableList` property `autoClose` to `closeOnSelect` to disambiguate it from the added `autoClose` on 5-way up
 - `moonstone/ContextualPopupDecorator.ContextualPopupDecorator` component's `onCloseButtonClick` property to `onClose`
 - `moonstone/Spinner` component's `center` and `middle` properties to a single `centered` property
 	that applies both horizontal and vertical centering
