@@ -105,7 +105,10 @@ const Positionable = hoc((config, Wrapped) => {
 
 			if (pos) {
 				if (pos.left !== this.props.x || pos.top !== this.props.y) {
-					this.props.onPositionChange({x: pos.left, y: pos.top});
+					this.props.onPositionChange({
+						x: clamp(0, this.bounds.maxLeft, pos.left),
+						y: clamp(0, this.bounds.maxTop, pos.top)
+					});
 				}
 				this.lastFocusedItem = item;
 			}
