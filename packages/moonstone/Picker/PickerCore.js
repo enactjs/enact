@@ -1,5 +1,6 @@
 import * as jobs from '@enact/core/jobs';
 import {childrenEquals} from '@enact/core/util';
+import Holdable from '@enact/ui/Holdable';
 import clamp from 'ramda/src/clamp';
 import React from 'react';
 import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
@@ -38,6 +39,7 @@ const jobNames = {
 
 const emulateMouseEventsTimeout = 175;
 
+const HoldablePickerButton = Holdable({resume: true, endHold: 'onLeave'}, PickerButton);
 
 /**
  * The base component for {@link moonstone/Picker.PickerCore}.
@@ -314,6 +316,20 @@ const PickerCore = class extends React.Component {
 		}
 	}
 
+	handleDecPulse = () => {
+		if (!this.isButtonDisabled(this.props.step * -1)) {
+			this.handleDecDown();
+			this.handleChange(-1);
+		}
+	}
+
+	handleIncPulse = () => {
+		if (!this.isButtonDisabled(this.props.step)) {
+			this.handleIncDown();
+			this.handleChange(1);
+		}
+	}
+
 	determineClasses (decrementerDisabled, incrementerDisabled) {
 		const {joined, orientation, pressed, width} = this.props;
 		return [
@@ -358,20 +374,21 @@ const PickerCore = class extends React.Component {
 		const decrementerDisabled = this.isButtonDisabled(step * -1);
 		const incrementerDisabled = this.isButtonDisabled(step);
 		const classes = this.determineClasses(decrementerDisabled, incrementerDisabled);
-
 		let arranger;
+
 		if (width && !disabled) {
 			arranger = orientation === 'vertical' ? SlideTopArranger : SlideLeftArranger;
 		}
 
 		return (
 			<div {...rest} className={classes} disabled={disabled} onWheel={joined ? this.handleWheel : null}>
-				<PickerButton
+				<HoldablePickerButton
 					className={css.incrementer}
 					disabled={incrementerDisabled}
 					onClick={this.handleIncClick}
 					onMouseDown={this.handleIncDown}
 					onMouseUp={onMouseUp}
+					onHoldPulse={this.handleIncPulse}
 					joined={joined}
 					icon={incrementIcon}
 				/>
@@ -385,12 +402,13 @@ const PickerCore = class extends React.Component {
 				>
 					{children}
 				</PickerViewManager>
-				<PickerButton
+				<HoldablePickerButton
 					className={css.decrementer}
 					disabled={decrementerDisabled}
 					onClick={this.handleDecClick}
 					onMouseDown={this.handleDecDown}
 					onMouseUp={onMouseUp}
+					onHoldPulse={this.handleDecPulse}
 					joined={joined}
 					icon={decrementIcon}
 				/>

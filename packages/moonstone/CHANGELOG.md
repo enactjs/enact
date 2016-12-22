@@ -7,14 +7,13 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 - `moonstone/TooltipDecorator` component
-- `autoClose` and `lockBottom` properties to `ExpandableItem`
-- `noAutoClose` and `noLockBottom` properties to `ExpandableList`
+- `moonstone/ExpandableItem` properties `autoClose` and `lockBottom`
+- `moonstone/ExpandableList` properties `noAutoClose` and `noLockBottom`
+- `moonstone/MarqueeController` focus/blur handling to to start and stop synchronized `moonstone/Marquee` components
 
 ### Changed
 
-- `autoClose` property of `moonstone/ExpandableList` to be `closeOnSelect` to disambiguate it from the added `autoClose` on 5-way up
-- `RadioDecorator` and `RadioControllerDecorator` components in `ui/RadioDecorator` module
-- Focus/blur handling to `moonstone/MarqueeController` to start and stop synchronized `moonstone/Marquee` components
+- `moonstone/ExpandableList` property `autoClose` to `closeOnSelect` to disambiguate it from the added `autoClose` on 5-way up
 - `moonstone/ContextualPopupDecorator.ContextualPopupDecorator` component's `onCloseButtonClick` property to `onClose`
 - `moonstone/Spinner` component's `center` and `middle` properties to a single `centered` property
 	that applies both horizontal and vertical centering
@@ -31,6 +30,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualList` to mute its container instead of disabling it during scroll events
 - `moonstone/VirtualList`, `moonstone/VirtualGridList`, and `moonstone/Scroller` to continue scrolling when holding down the paging controls
 - `moonstone/VirtualList` to require a `component` prop and not have a default value
+- `moonstone/Picker` to continuously change when a button is held down by adding `ui/Holdable`.
 
 ### Fixed
 
@@ -38,6 +38,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - Bug where a synchronized marquee whose content fit the available space would prevent restarting of the marquees
 - `moonstone/Input` to show an ellipsis on the correct side based on the text directionality of the `value` or `placeholder` content.
 - `moonstone/VirtualList` and `moonstone/VirtualGridList` to prevent unwanted scrolling when focused with the pointer
+- `moonstone/Picker` to remove fingernail when a the pointer is held down, but the pointer is moved off the `joined` picker.
 - `moonstone/LabeledItem` to include marquee on both `title` and `label`, and be synchronized
 
 ## [1.0.0-alpha.5] - 2016-12-16
