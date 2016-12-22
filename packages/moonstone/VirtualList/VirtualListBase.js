@@ -479,8 +479,7 @@ class VirtualListCore extends Component {
 			{numOfItems} = this.state,
 			itemElement = component({
 				data,
-				index: primaryIndex,
-				key: primaryIndex % numOfItems
+				index: primaryIndex
 			}),
 			style = {};
 
@@ -488,8 +487,9 @@ class VirtualListCore extends Component {
 
 		this.cc[primaryIndex % numOfItems] = React.cloneElement(
 			itemElement, {
-				style: {...itemElement.props.style, ...style},
-				[dataIndexAttribute]: primaryIndex
+				[dataIndexAttribute]: primaryIndex,
+				key: primaryIndex % numOfItems,
+				style: {...itemElement.props.style, ...style}
 			}
 		);
 	}
