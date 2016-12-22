@@ -64,6 +64,19 @@ const defaultConfig = {
 };
 
 /**
+* Checks whether any of the invalidateProps has changed or not
+*
+* @param {Array}	propList	An array of invalidateProps
+* @param {Object}   prev	Previous props
+* @param {Object}   next	Next props
+* @returns {Boolean} 'yes' if any of the props change, 'no' if none of the props change
+*/
+const didPropChange = function (propList, prev, next) {
+	const hasPropsChanged = propList.map(i => prev[i] !== next[i]);
+	return hasPropsChanged.indexOf(true) !== -1;
+};
+
+/**
  * {@link moonstone/Marquee.MarqueeDecorator} is a Higher-order Component which makes
  * the Wrapped component's children marquee.
  *
@@ -210,13 +223,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentWillReceiveProps (next) {
 			const {marqueeOn, marqueeDisabled} = this.props;
-			if (!childrenEquals(this.props.children, next.children)) {
+			if ((!childrenEquals(this.props.children, next.children)) || (invalidateProps && didPropChange(invalidateProps, this.props, next))) {
 				this.invalidateMetrics();
 				this.cancelAnimation();
 			} else if (next.marqueeOn !== marqueeOn || next.marqueeDisabled !== marqueeDisabled) {
 				this.cancelAnimation();
-			} else if (invalidateProps && this.didPropChange(invalidateProps, this.props, next)) {
-				this.invalidateMetrics();
 			}
 		}
 
@@ -245,19 +256,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				window.clearTimeout(this.timer);
 			}
 			this.timer = null;
-		}
-
-		/**
-		* Checks whether any of the invalidateProps has changed or not
-		*
-		* @param {Array}	propList	An array of invalidateProps
-		* @param {Object}   prev	Previous props
-		* @param {Object}   next	Next props
-		* @returns {Boolean} 'yes' if any of the props change, 'no' if none of the props change
-		*/
-		didPropChange (propList, prev, next) {
-			let hasPropsChanged = propList.map(i => prev[i] !== next[i]);
-			return hasPropsChanged.indexOf(true) !== -1;
 		}
 
 		/**
