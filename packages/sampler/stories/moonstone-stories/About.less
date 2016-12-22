@@ -1,0 +1,71 @@
+@bg-color: powderblue;
+
+b {
+	border-radius: 5px;
+	background-color: aliceblue;
+	padding: 2px 10px;
+	margin-left: 5px;
+}
+
+svg {
+	position: absolute;
+}
+
+line {
+	stroke: @bg-color;
+	stroke-width: 3;
+}
+
+circle {
+	fill: @bg-color;
+}
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	} to {
+		opacity: 1;
+	}
+}
+
+.hintDialog {
+	position: fixed;
+	opacity: 0;
+	animation: fadeIn ease-in 1;
+	animation-fill-mode: forwards;
+	animation-duration: 1s;
+	&:nth-of-type(1) {
+		animation-delay: 0.1s;
+	}
+	&:nth-of-type(2) {
+		animation-delay: .6s;
+	}
+	&:nth-of-type(3) {
+		animation-delay: 1.2s;
+	}
+	&:nth-of-type(4) {
+		animation-delay: 1.8s;
+	}
+	&:nth-of-type(5) {
+		animation-delay: 2.4s;
+	}
+}
+
+.text {
+	display: inline-block;
+	margin: 12px 50px;
+	padding: 20px;
+	border-radius: 5px;
+	background-color: @bg-color;
+	color: black;
+	font-size: 22px;
+	box-shadow: 2px 2px 10px slategray;
+}
+
+.icon {
+	margin: 0;
+	padding: 0;
+	color: orange;
+	font-size: 12px;
+	line-height: 0;
+}
