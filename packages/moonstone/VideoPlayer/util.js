@@ -1,9 +1,5 @@
 // VideoPlayer utils.js
 //
-import DurationFmt from '@enact/i18n/ilib/lib/DurationFmt';
-
-const durfmt = new DurationFmt({length: 'medium', style: 'clock', useNative: false});
-
 
 /**
  * What time is it right this moment
@@ -60,7 +56,7 @@ const secondsToPeriod = (seconds) => {
  * @return {String}      Formatted duration string
  * @public
  */
-const secondsToTime = (seconds) => {
+const secondsToTime = (seconds, durfmt) => {
 	return durfmt.format(parseTime(seconds)).toString();
 };
 

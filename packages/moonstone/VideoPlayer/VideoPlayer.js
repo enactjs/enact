@@ -1,18 +1,12 @@
-/**
- * A player for video
- * {@link moonstone/VideoPlayer}.
- *
- * @class VideoPlayer
- * @memberOf moonstone/VideoPlayer
- * @ui
- * @private
- */
-
+//
+// VideoPlayer
+//
 import React from 'react';
 import {$L} from '@enact/i18n';
+import DurationFmt from '@enact/i18n/ilib/lib/DurationFmt';
 import {forward} from '@enact/core/handle';
 import {startJob, stopJob} from '@enact/core/jobs';
-import {on} from '@enact/core/dispatcher';
+import {on, off} from '@enact/core/dispatcher';
 import Slottable from '@enact/ui/Slottable';
 import Video from 'react-html5video';
 
@@ -37,8 +31,7 @@ import css from './VideoPlayer.less';
 const HAVE_ENOUGH_DATA  = 4;  // enough data available to start playing
 
 
-// Set-up event forwarding
-// Leaving lots of commented out, ready-to-use methods here in case we want/need them later.
+// Set-up event forwarding map. These are all of the supported media events
 const handledMediaEventsMap = {
 	abort           : 'onAbort',
 	canplay         : 'onCanPlay',
@@ -65,37 +58,6 @@ const handledMediaEventsMap = {
 	waiting         : 'onWaiting'
 };
 
-// const handledMediaEvents = [
-// 	'onAbort',
-// 	// 'onCanPlay',
-// 	// 'onCanPlayThrough',
-// 	'onDurationChange',
-// 	'onEmptied',
-// 	// 'onEncrypted',
-// 	// 'onEnded',
-// 	'onError',
-// 	// 'onLoadedData',
-// 	'onLoadedMetadata',
-// 	// 'onLoadStart',
-// 	// 'onPause',
-// 	// 'onPlay',
-// 	// 'onPlaying',
-// 	'onProgress',
-// 	// 'onRateChange',
-// 	// 'onSeeked',
-// 	// 'onSeeking',
-// 	'onStalled',
-// 	'onSuspend',
-// 	'onTimeUpdate'
-// 	// 'onVolumeChange',
-// 	// 'onWaiting',
-// ];
-
-// const handledMediaEventsMap = {};
-// handledMediaEvents.map((eventName) => {
-// 	const shortName = eventName.substring(2).toLowerCase();
-// 	handledMediaEventsMap[shortName] = eventName;
-// });
 
 /**
  * Mapping of playback rate names to playback rate values that may be set.
@@ -125,28 +87,8 @@ const playbackRateHash = {
 };
 
 
-//
-// VideoPlayer
-//
 /**
- * {@link moonstone/VideoPlayer.VideoPlayerBase} is a standard HTML5 video player for Moonstone. It
- * behaves, responds to, and operates like a standard `<video>` tag in its support for `<source>`s
- * and accepts several additional custom tags like `<infoComponents>`, `<leftComponents>`, and
- * `<rightComponents>`. Any additional children will be rendered into the "more" controls area.
- *
- * Example usage:
- * ```
- * 	<VideoPlayer title="Hilarious Cat Video" poster="http://my.cat.videos/boots-poster.jpg">
- *		<source src="http://my.cat.videos/boots.mp4" type="video/mp4" />
- *		<infoComponents>A video about my cat Boots, wearing boots.</infoComponents>
- *		<leftComponents><IconButton backgroundOpacity="translucent">star</IconButton></leftComponents>
- *		<rightComponents><IconButton backgroundOpacity="translucent">flag</IconButton></rightComponents>
- *
- *		<Button backgroundOpacity="translucent">Add To Favorites</Button>
- *		<IconButton backgroundOpacity="translucent">search</IconButton>
- *	</VideoPlayer>
- * ```
- *
+ * A player for video {@link moonstone/VideoPlayerBase}.
  *
  * @class VideoPlayerBase
  * @memberof moonstone/VideoPlayer
@@ -154,9 +96,9 @@ const playbackRateHash = {
  * @public
  */
 const VideoPlayerBase = class extends React.Component {
-	static displayName = 'VideoPlayerBase';
+	static displayName = 'VideoPlayerBase'
 
-	static propTypes = {
+	static propTypes = /** @lends moonstone/VideoPlayer.VideoPlayerBase.prototype */{
 		/**
 		* Amount of time (in milliseconds) after which control buttons are automatically hidden.
 		* Setting this to 0 or `null` disables autoClose, requiring user input to open and close.
@@ -185,10 +127,11 @@ const VideoPlayerBase = class extends React.Component {
 		infoComponents: React.PropTypes.node,
 
 		/**
-		 * Background progress, as a percentage.
+		 * The amount of seconds the player should skip forward or backward when a "jump" button is
+		 * pressed.
 		 *
 		 * @type {Number}
-		 * @default 0
+		 * @default 30
 		 * @public
 		 */
 		jumpBy: React.PropTypes.number,
@@ -285,8 +228,7 @@ const VideoPlayerBase = class extends React.Component {
 		/**
 		 * These components are placed into the slot to the right of the media controls.
 		 *
-		 * @type {Number}
-		 * @default 0
+		 * @type {Node}
 		 * @public
 		 */
 		rightComponents: React.PropTypes.node,
@@ -303,7 +245,7 @@ const VideoPlayerBase = class extends React.Component {
 	static defaultProps = {
 		autoCloseTimeout: 7000,
 		autoPlay: true,
-		jumpBy: 100,
+		jumpBy: 30,
 		muted: false,
 		noJumpButtons: false,
 		noRateButtons: false,
@@ -314,10 +256,13 @@ const VideoPlayerBase = class extends React.Component {
 		super(props);
 
 		// Internal State
+		this.instanceId = Math.random();
 		this.videoReady = false;
 		this.video = null;
 		this.handledMediaForwards = {};
 		this.handledMediaEvents = {};
+
+		this.initI18n();
 
 		// Generate event handling forwarders and a smooth block to pass to <Video>
 		for (let key in handledMediaEventsMap) {
@@ -344,20 +289,25 @@ const VideoPlayerBase = class extends React.Component {
 			more: false,
 			percentageLoaded: 0,
 			percentagePlayed: 0,
-			playPauseIcon: 'play',
-			videoSource: null
+			playPauseIcon: 'play'
 		};
 	}
 
+	componentWillUpdate () {
+		this.initI18n();
+	}
 	componentDidMount () {
-		if (typeof window === 'object') {
-			on('mousemove', this.activityDetected, window);
-			on('keypress', this.activityDetected, window);
-		}
+		on('mousemove', this.activityDetected);
+		on('keypress', this.activityDetected);
+	}
+
+	componentWillUnmount () {
+		off('mousemove', this.activityDetected);
+		off('keypress', this.activityDetected);
 	}
 
 	componentWillReceiveProps (nextProps) {
-		// Detect a change to the ideo source and reload if necessary.
+		// Detect a change to the video source and reload if necessary.
 		if (nextProps.children) {
 			let prevSource, nextSource;
 
@@ -374,7 +324,6 @@ const VideoPlayerBase = class extends React.Component {
 
 			if (prevSource !== nextSource) {
 				this.reloadVideo();
-				this.setState({videoSource: nextSource});
 			}
 		}
 	}
@@ -386,7 +335,6 @@ const VideoPlayerBase = class extends React.Component {
 	reloadVideo = () => {
 		// When changing a HTML5 video, you have to reload it.
 		this.video.load();
-		this.videoReady = false;
 		this.video.play();
 	}
 
@@ -414,6 +362,10 @@ const VideoPlayerBase = class extends React.Component {
 	//
 	// Internal Methods
 	//
+	initI18n = () => {
+		this.durfmt = new DurationFmt({length: 'medium', style: 'clock', useNative: false});
+	}
+
 	updateMainState = () => {
 		if (this.videoReady && this.video && this.video.videoEl && this.video.videoEl != null) {
 			const el = this.video.videoEl;
@@ -502,7 +454,6 @@ const VideoPlayerBase = class extends React.Component {
 		this.setPlaybackRate(this.selectPlaybackRate(this.speedIndex));
 
 		if (shouldResumePlayback) this.send('play');
-		// }
 	}
 
 	/**
@@ -557,7 +508,6 @@ const VideoPlayerBase = class extends React.Component {
 		this.setPlaybackRate(this.selectPlaybackRate(this.speedIndex));
 
 		if (shouldResumePlayback) this.send('play');
-		// }
 	}
 
 	/**
@@ -646,7 +596,7 @@ const VideoPlayerBase = class extends React.Component {
 	 */
 	startRewindJob = () => {
 		this.rewindBeginTime = getNow();
-		startJob('rewind', this.rewindManually, 100);
+		startJob('rewind' + this.instanceId, this.rewindManually, 100);
 	}
 
 	/**
@@ -655,7 +605,7 @@ const VideoPlayerBase = class extends React.Component {
 	 * @private
 	 */
 	stopRewindJob = () => {
-		stopJob('rewind');
+		stopJob('rewind' + this.instanceId);
 	}
 
 	/**
@@ -675,7 +625,7 @@ const VideoPlayerBase = class extends React.Component {
 
 	startAutoCloseTimeout = () => {
 		if (this.props.autoCloseTimeout) {
-			startJob('autoClose', this.hideControls, this.props.autoCloseTimeout);
+			startJob('autoClose' + this.instanceId, this.hideControls, this.props.autoCloseTimeout);
 		}
 	}
 
@@ -778,7 +728,7 @@ const VideoPlayerBase = class extends React.Component {
 							>
 								{infoComponents}
 							</MediaTitle>
-							<Times current={this.state.currentTime} total={this.state.duration} />
+							<Times current={this.state.currentTime} total={this.state.duration} formatter={this.durfmt} />
 						</div>
 
 						{noSlider ? null : <MediaSlider
@@ -813,6 +763,32 @@ const VideoPlayerBase = class extends React.Component {
 	}
 };
 
+/**
+ * {@link moonstone/VideoPlayer.VideoPlayer} is a standard HTML5 video player for Moonstone. It
+ * behaves, responds to, and operates like a standard `<video>` tag in its support for `<source>`s
+ * and accepts several additional custom tags like `<infoComponents>`, `<leftComponents>`, and
+ * `<rightComponents>`. Any additional children will be rendered into the "more" controls area.
+ *
+ * Example usage:
+ * ```
+ * 	<VideoPlayer title="Hilarious Cat Video" poster="http://my.cat.videos/boots-poster.jpg">
+ *		<source src="http://my.cat.videos/boots.mp4" type="video/mp4" />
+ *		<infoComponents>A video about my cat Boots, wearing boots.</infoComponents>
+ *		<leftComponents><IconButton backgroundOpacity="translucent">star</IconButton></leftComponents>
+ *		<rightComponents><IconButton backgroundOpacity="translucent">flag</IconButton></rightComponents>
+ *
+ *		<Button backgroundOpacity="translucent">Add To Favorites</Button>
+ *		<IconButton backgroundOpacity="translucent">search</IconButton>
+ *	</VideoPlayer>
+ * ```
+ *
+ * @module moonstone/VideoPlayer
+ * @class VideoPlayer
+ * @memberof moonstone/VideoPlayer
+ * @mixes ui/Slots
+ * @ui
+ * @public
+ */
 const VideoPlayer = Slottable({slots: ['infoComponents', 'leftComponents', 'rightComponents']}, VideoPlayerBase);
 
 export default VideoPlayer;

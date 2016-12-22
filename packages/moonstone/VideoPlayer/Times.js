@@ -20,6 +20,15 @@ const TimesBase = kind({
 
 	propTypes: /** @lends moonstone/BodyText.BodyText.prototype */ {
 		/**
+		 * An instance of a Duration Formatter from i18n. {@link i18n/ilib/lib/DurationFmt.DurationFmt}
+		 *
+		 * @type {Object}
+		 * @default 0
+		 * @public
+		 */
+		formatter: React.PropTypes.object.isRequired,
+
+		/**
 		 * The current time in seconds of the video source.
 		 *
 		 * @type {Number}
@@ -50,13 +59,14 @@ const TimesBase = kind({
 
 	computed: {
 		currentPeriod:   ({current}) => secondsToPeriod(current),
-		currentReadable: ({current}) => secondsToTime(current),
+		currentReadable: ({current, formatter}) => secondsToTime(current, formatter),
 		totalPeriod:     ({total}) => secondsToPeriod(total),
-		totalReadable:   ({total}) => secondsToTime(total)
+		totalReadable:   ({total, formatter}) => secondsToTime(total, formatter)
 	},
 
 	render: ({currentPeriod, currentReadable, totalPeriod, totalReadable, ...rest}) => {
 		delete rest.current;
+		delete rest.formatter;
 		delete rest.total;
 
 		return (

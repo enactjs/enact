@@ -298,12 +298,12 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				<Wrapped
 					{...this.props}
 					{...handlers}
-					scrubbing={(this.knobPosition != null)}
 					inputRef={this.getInputNode}
 					onChange={this.handleChange}
 					onClick={this.clickHandler}
-					onMouseMove={this.props.detachedKnob ? this.handleMouseMove : null}
 					onMouseLeave={this.props.detachedKnob ? this.handleMouseLeave : null}
+					onMouseMove={this.props.detachedKnob ? this.handleMouseMove : null}
+					scrubbing={(this.knobPosition != null)}
 					sliderBarRef={this.getSliderBarNode}
 					sliderRef={this.getSliderNode}
 					value={this.state.value}
