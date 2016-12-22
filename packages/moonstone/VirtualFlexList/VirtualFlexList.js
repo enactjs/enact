@@ -165,10 +165,13 @@ class VirtualFlexList extends Component {
 		/**
 		 * Called when position updates
 		 *
+		 * The object including `x`, `y` properties for position,
+		 * are passed as the parameters of the `doPositionChange` callback function.
+		 *
 		 * @type {Function}
 		 * @public
 		 */
-		doPosition: PropTypes.func,
+		doPositionChange: PropTypes.func,
 
 		/**
 		 * Row and column headers in a list including the following properties.
@@ -208,7 +211,7 @@ class VirtualFlexList extends Component {
 	}
 
 	static defaultProps = {
-		doPosition: nop
+		doPositionChange: nop
 	}
 
 	/*
@@ -309,12 +312,12 @@ class VirtualFlexList extends Component {
 	getCorner = (corner, props) => (corner ? <div {...props}>{corner.component}</div> : null)
 
 	/*
-	 * Callback fuctions
+	 * Callback functions
 	 */
 
 	setPosition = ({x, y}) => {
 		this.setState({x, y});
-		this.props.doPosition({x, y});
+		this.props.doPositionChange({x, y});
 	}
 
 	/*
@@ -343,7 +346,7 @@ class VirtualFlexList extends Component {
 			componentProps = this.componentProps;
 
 		delete props.corner;
-		delete props.doPosition;
+		delete props.doPositionChange;
 		delete props.headers;
 		delete props.items;
 		delete props.maxFlexScrollSize;

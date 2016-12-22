@@ -21,7 +21,7 @@ const
  * @class Positionable
  * @memberof moonstone/VirtualFlexList
  * @hoc
- * @public
+ * @private
  */
 const Positionable = hoc((config, Wrapped) => {
 	return class extends Component {
@@ -51,20 +51,23 @@ const Positionable = hoc((config, Wrapped) => {
 			 * @default false
 			 * @public
 			 */
-			navigation: PropTypes.bool,
+			handlesNavigation: PropTypes.bool,
 
 			/**
 			 * Called when position updates internally
 			 *
+			 * The object including `x`, `y` properties for position,
+			 * are passed as the parameters of the `onPositionChange` callback function.
+			 *
 			 * @type {Function}
 			 * @public
 			 */
-			setPosition: PropTypes.func
+			onPositionChange: PropTypes.func
 		}
 
 		static defaultProps = {
-			navigation: false,
-			setPosition: nop,
+			handlesNavigation: false,
+			onPositionChange: nop,
 			x: 0,
 			y: 0
 		}
@@ -84,43 +87,41 @@ const Positionable = hoc((config, Wrapped) => {
 		 */
 
 		onFocus = (e) => {
-			if (this.props.navigation) {
-				const
-					item = e.target,
-					index = item.getAttribute(dataIndexAttribute),
-					key = item.getAttribute('key');
-				let pos;
+			const
+				item = e.target,
+				index = item.getAttribute(dataIndexAttribute),
+				key = item.getAttribute('key');
+			let pos;
 
-				// For VirtualList
-				if (this.childRef.calculatePositionOnFocus) {
-					if (index && item !== this.lastFocusedItem && item === doc.activeElement) {
-						pos = this.childRef.calculatePositionOnFocus(index);
-					}
-				// For VirtualFlexList
-				} else if (this.childRef.calculateFlexPositionOnFocus && typeof index === 'string') {
-					pos = this.childRef.calculateFlexPositionOnFocus(index, key);
+			// For VirtualList
+			if (this.childRef.calculatePositionOnFocus) {
+				if (index && item !== this.lastFocusedItem && item === doc.activeElement) {
+					pos = this.childRef.calculatePositionOnFocus(index);
 				}
+			// For VirtualFlexList
+			} else if (this.childRef.calculateFlexPositionOnFocus && typeof index === 'string') {
+				pos = this.childRef.calculateFlexPositionOnFocus(index, key);
+			}
 
-				if (pos) {
-					if (pos.left !== this.props.x || pos.top !== this.props.y) {
-						this.props.setPosition({x: pos.left, y: pos.top});
-					}
-					this.lastFocusedItem = item;
+			if (pos) {
+				if (pos.left !== this.props.x || pos.top !== this.props.y) {
+					this.props.onPositionChange({x: pos.left, y: pos.top});
 				}
+				this.lastFocusedItem = item;
 			}
 		}
 
 		onKeyDown = (e) => {
-			if (this.props.navigation && this.childRef.setSpotlightContainerRestrict) {
+			if (this.childRef.setSpotlightContainerRestrict) {
 				const index = e.target.getAttribute(dataIndexAttribute);
 				this.childRef.setSpotlightContainerRestrict(e.keyCode, index);
 			}
 		}
 
 		onWheel = (e) => {
-			if (this.props.navigation && e.deltaY) {
+			if (e.deltaY) {
 				e.preventDefault();
-				this.props.setPosition({x: this.props.x, y: clamp(0, this.bounds.maxTop, this.props.y + this.bounds.clientHeight * Math.sign(e.deltaY))});
+				this.props.onPositionChange({x: this.props.x, y: clamp(0, this.bounds.maxTop, this.props.y + this.bounds.clientHeight * Math.sign(e.deltaY))});
 			}
 		}
 
@@ -151,16 +152,15 @@ const Positionable = hoc((config, Wrapped) => {
 
 		render () {
 			const
-				{onFocus, onKeyDown, onKeyUp, onWheel} = this,
-				props = Object.assign({}, this.props, (this.props.navigation) ? {
+				{onFocus, onKeyDown, onWheel} = this,
+				props = Object.assign({}, this.props, (this.props.handlesNavigation) ? {
 					onFocus,
 					onKeyDown,
-					onKeyUp,
 					onWheel
 				} : {});
 
-			delete props.navigation;
-			delete props.setPosition;
+			delete props.handlesNavigation;
+			delete props.onPositionChange;
 			delete props.x;
 			delete props.y;
 
