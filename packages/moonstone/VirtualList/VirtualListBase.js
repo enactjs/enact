@@ -58,6 +58,23 @@ class VirtualListCore extends Component {
 		component: PropTypes.func.isRequired,
 
 		/**
+		 * Data for the list.
+		 * Check mutation of this and determine whether the list should update or not.
+		 *
+		 * @type {Any}
+		 * @public
+		 */
+		data: PropTypes.any.isRequired,
+
+		/**
+		 * Size of the data.
+		 *
+		 * @type {Number}
+		 * @public
+		 */
+		dataSize: PropTypes.number.isRequired,
+
+		/**
 		 * Size of an item for the list; valid values are either a number for `VirtualList`
 		 * or an object that has `minWidth` and `minHeight` for `VirtualGridList`.
 		 *
@@ -77,25 +94,6 @@ class VirtualListCore extends Component {
 		 * @private
 		 */
 		cbScrollTo: PropTypes.func,
-
-		/**
-		 * Data for the list.
-		 * Check mutation of this and determine whether the list should update or not.
-		 *
-		 * @type {Any}
-		 * @default []
-		 * @public
-		 */
-		data: PropTypes.any,
-
-		/**
-		 * Size of the data.
-		 *
-		 * @type {Number}
-		 * @default 0
-		 * @public
-		 */
-		dataSize: PropTypes.number,
 
 		/**
 		 * Direction of the list; valid values are `'horizontal'` and `'vertical'`.
@@ -161,8 +159,6 @@ class VirtualListCore extends Component {
 
 	static defaultProps = {
 		cbScrollTo: nop,
-		data: [],
-		dataSize: 0,
 		direction: 'vertical',
 		onScroll: nop,
 		overhang: 3,

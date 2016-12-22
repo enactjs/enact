@@ -30,7 +30,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Picker` to animate `moonstone/Marquee` children when any part of the `moonstone/Picker` is focused
 - `moonstone/VirtualList` to mute its container instead of disabling it during scroll events
 - `moonstone/VirtualList`, `moonstone/VirtualGridList`, and `moonstone/Scroller` to continue scrolling when holding down the paging controls
-- `moonstone/VirtualList` to require a `component` prop and not have a default value
+- `moonstone/VirtualList` to require `component`, `data`, and `dataSize` props and not have a default value
 
 ### Fixed
 

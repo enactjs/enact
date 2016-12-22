@@ -12,7 +12,7 @@ describe('VirtualList Specs', () => {
 			resultScrollLeft;
 
 		const
-			data = [],
+			items = [],
 			dataSize = 100,
 			getScrollTo = (scrollTo) => {
 				myScrollTo = scrollTo;
@@ -22,20 +22,20 @@ describe('VirtualList Specs', () => {
 			};
 
 		for (let i = 0; i < dataSize; i++) {
-			data.push({name: 'Account ' + i});
+			items.push({name: 'Account ' + i});
 		}
 
 		const subject = mount(
 			<VirtualList
 				cbScrollTo={getScrollTo}
-				data={data}
+				data={items}
 				dataSize={dataSize}
 				direction={'horizontal'}
 				itemSize={30}
 				onScrollStop={handlerOnScrollStop}
 				style={{backgroundColor: 'red', width: '500px', height: '700px'}}
 				// eslint-disable-next-line react/jsx-no-bind
-				component={({index}) => (<Item>{data[index].name}</Item>)}
+				component={({data, index}) => (<Item>{data[index].name}</Item>)}
 			/>
 		);
 
@@ -90,8 +90,8 @@ describe('VirtualList Specs', () => {
 
 		describe('Change props Specs', () => {
 			it('Should change value of the prop \'data\' to \'Password 0\'', function () {
-				data[0] = {name: 'Password 0'};
-				subject.setProps({data: data});
+				items[0] = {name: 'Password 0'};
+				subject.setProps({data: items});
 
 				const expected = 'Password 0';
 				const actual = subject.find('VirtualListCore').children().at(0).text();

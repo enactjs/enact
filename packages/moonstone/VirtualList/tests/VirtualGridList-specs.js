@@ -7,20 +7,20 @@ import {VirtualGridList} from '../VirtualList';
 
 describe('VirtualGridList Specs', () => {
 	const
-		data = [],
+		items = [],
 		dataSize = 10;
 
 	for (let i = 0; i < dataSize; i++) {
-		data.push({text: 'Account ' + i});
+		items.push({text: 'Account ' + i});
 	}
 
 	const subject = mount(
 		<VirtualGridList
-			data={data}
+			data={items}
 			dataSize={dataSize}
 			itemSize={{minWidth: 30, minHeight: 40}}
 			// eslint-disable-next-line react/jsx-no-bind
-			component={({index}) => (<Item><div>{data[index].text}</div></Item>)}
+			component={({data, index}) => (<Item><div>{data[index].text}</div></Item>)}
 		/>
 	);
 
