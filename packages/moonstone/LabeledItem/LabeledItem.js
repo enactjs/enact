@@ -62,7 +62,7 @@ const LabeledItemBase = kind({
 	},
 
 	render: ({children, label, titleIcon, ...rest}) => (
-		<Controller {...rest} component='div'>
+		<Controller {...rest}>
 			<div className={css.text}>
 				<MarqueeText className={css.title}>{children}</MarqueeText>
 				{(titleIcon != null) ? <Icon small className={css.icon}>{titleIcon}</Icon> : null}
