@@ -65,8 +65,8 @@ storiesOf('VirtualList.VirtualGridList')
 				data={items}
 				dataSize={number('dataSize', items.length)}
 				direction={select('direction', prop.direction, 'vertical')}
-				itemSize={{minWidth: number('minWidth', ri.scale(180)), minHeight: number('minHeight', ri.scale(270))}}
-				spacing={number('spacing', ri.scale(20))}
+				itemSize={{minWidth: ri.scale(number('minWidth', 180)), minHeight: ri.scale(number('minHeight', 270))}}
+				spacing={ri.scale(number('spacing', 20))}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
 				style={style.list}

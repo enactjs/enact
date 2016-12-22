@@ -40,8 +40,8 @@ storiesOf('VirtualList')
 				data={items}
 				dataSize={number('dataSize', items.length)}
 				direction='vertical'
-				itemSize={number('itemSize', ri.scale(72))}
-				spacing={number('spacing', 0)}
+				itemSize={ri.scale(number('itemSize', 72))}
+				spacing={ri.scale(number('spacing', 0))}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
 				style={style.list}
