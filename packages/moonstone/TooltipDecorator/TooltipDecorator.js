@@ -6,13 +6,13 @@
  * @module moonstone/TooltipDecorator
  */
 
-import {hoc} from '@enact/core';
-import {forward} from '@enact/core/handle';
-import {startJob, stopJob} from '@enact/core/jobs';
-import ri from '@enact/ui/resolution';
-import FloatingLayer from '@enact/ui/FloatingLayer';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
+import hoc from '@enact/core/hoc';
+import FloatingLayer from '@enact/ui/FloatingLayer';
+import {forward} from '@enact/core/handle';
 import React, {PropTypes} from 'react';
+import ri from '@enact/ui/resolution';
+import {startJob, stopJob} from '@enact/core/jobs';
 
 import {Tooltip, TooltipBase} from './Tooltip';
 
@@ -35,11 +35,22 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 
 	const forwardBlur = forward('onBlur');
 	const forwardFocus = forward('onFocus');
+	const forwardMouseOver = forward('onMouseOver');
+	const forwardMouseOut = forward('onMouseOut');
 
 	return class extends React.Component {
 		static displayName = 'TooltipDecorator'
 
 		static propTypes = /** @lends moonstone/TooltipDecorator.TooltipDecorator.prototype */ {
+			/**
+			 * When `true`, the component is shown as disabled but will show a tooltip, if present.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			disabled: PropTypes.bool,
+
 			/**
 			 * Number of milliseconds to wait before showing tooltip when hover.
 			 *
@@ -47,7 +58,7 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 			 * @default 500
 			 * @public
 			 */
-			showDelay: PropTypes.number,
+			tooltipDelay: PropTypes.number,
 
 			/**
 			 * Position of the tooltip with respect to the activating control. Valid values are
@@ -100,7 +111,8 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 		}
 
 		static defaultProps = {
-			showDelay: 500,
+			disabled: false,
+			tooltipDelay: 500,
 			tooltipPosition: 'above',
 			tooltipPreserveCase: false
 		}
@@ -110,7 +122,6 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 		constructor (props) {
 			super(props);
 
-			this.overflow = {};
 			this.TOOLTIP_HEIGHT = ri.scale(18); // distance between client and tooltip's label
 
 			this.state = {
@@ -124,48 +135,43 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 		setTooltipLayout () {
 			const position = this.props.tooltipPosition;
 			const arr = position.split(' ');
+			let tooltipDirection = null;
+			let arrowAnchor = null;
 
 			if (arr.length === 2) {
-				[this.tooltipDirection, this.arrowAnchor] = arr;
+				[tooltipDirection, arrowAnchor] = arr;
 			} else if (position === 'above' || position === 'below') {
-				this.tooltipDirection = position;
-				this.arrowAnchor = 'right';
+				tooltipDirection = position;
+				arrowAnchor = 'right';
 			} else {
-				this.tooltipDirection = 'above';
-				this.arrowAnchor = 'right';
-			}
-
-			if (this.context.rtl) {
-				if (this.tooltipDirection === 'above' || this.tooltipDirection === 'below') {
-					this.arrowAnchor = this.arrowAnchor === 'left' ? 'right' : 'left';
-				} else if (this.tooltipDirection === 'left' || this.tooltipDirection === 'right') {
-					this.tooltipDirection = this.tooltipDirection === 'left' ? 'right' : 'left';
-				}
+				tooltipDirection = 'above';
+				arrowAnchor = 'right';
 			}
 
 			const tooltipNode = this.tooltipRef.getBoundingClientRect(); // label bound
-			const clientNode = this.clientRef.getBoundingClientRect(); // clinet bound
+			const clientNode = this.clientRef.getBoundingClientRect(); // client bound
+			const overflow = this.calcOverflow(tooltipNode, clientNode, tooltipDirection);
 
-			this.calcOverflow(tooltipNode, clientNode);
-			this.adjustDirection();
+			tooltipDirection = this.adjustDirection(tooltipDirection, overflow);
+			arrowAnchor = this.adjustAnchor(arrowAnchor, tooltipDirection, overflow);
 
 			this.setState({
-				tooltipDirection: this.tooltipDirection,
-				arrowAnchor: this.arrowAnchor,
-				position: this.getPosition(tooltipNode, clientNode)
+				tooltipDirection,
+				arrowAnchor,
+				position: this.getPosition(tooltipNode, clientNode, arrowAnchor, tooltipDirection)
 			});
 		}
 
-		calcOverflow (tooltip, clientNode) {
-			if (this.tooltipDirection === 'above' || this.tooltipDirection === 'below') {
-				this.overflow = {
+		calcOverflow (tooltip, clientNode, tooltipDirection) {
+			if (tooltipDirection === 'above' || tooltipDirection === 'below') {
+				return {
 					isOverTop: clientNode.top - tooltip.height - this.TOOLTIP_HEIGHT < 0,
 					isOverBottom: clientNode.bottom + tooltip.height + this.TOOLTIP_HEIGHT > window.innerHeight,
 					isOverLeft: clientNode.left - tooltip.width + clientNode.width / 2 < 0,
 					isOverRight: clientNode.right + tooltip.width - clientNode.width / 2 > window.innerWidth
 				};
-			} else if (this.tooltipDirection === 'left' || this.tooltipDirection === 'right') {
-				this.overflow = {
+			} else if (tooltipDirection === 'left' || tooltipDirection === 'right') {
+				return {
 					isOverTop: clientNode.top - tooltip.height + clientNode.height / 2 < 0,
 					isOverBottom: clientNode.bottom + tooltip.height - clientNode.height / 2 > window.innerHeight,
 					isOverLeft: clientNode.left - tooltip.width < 0,
@@ -174,31 +180,45 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 			}
 		}
 
-		adjustDirection () {
+		adjustDirection (tooltipDirection, overflow) {
+			if (this.context.rtl && (tooltipDirection === 'left' || tooltipDirection === 'right')) {
+				tooltipDirection = tooltipDirection === 'left' ? 'right' : 'left';
+			}
+
 			// Flip tooltip if it overlows towards the tooltip direction
-			if (this.overflow.isOverTop && this.tooltipDirection === 'above') {
-				this.tooltipDirection = 'below';
-			} else if (this.overflow.isOverBottom && this.tooltipDirection === 'below') {
-				this.tooltipDirection = 'above';
-			} else if (this.overflow.isOverLeft && this.tooltipDirection === 'left') {
-				this.tooltipDirection = 'right';
-			} else if (this.overflow.isOverRight && this.tooltipDirection === 'right') {
-				this.tooltipDirection = 'left';
+			if (overflow.isOverTop && tooltipDirection === 'above') {
+				tooltipDirection = 'below';
+			} else if (overflow.isOverBottom && tooltipDirection === 'below') {
+				tooltipDirection = 'above';
+			} else if (overflow.isOverLeft && tooltipDirection === 'left') {
+				tooltipDirection = 'right';
+			} else if (overflow.isOverRight && tooltipDirection === 'right') {
+				tooltipDirection = 'left';
+			}
+
+			return tooltipDirection;
+		}
+
+		adjustAnchor (arrowAnchor, tooltipDirection, overflow) {
+			if (this.context.rtl && (tooltipDirection === 'above' || tooltipDirection === 'below')) {
+				arrowAnchor = arrowAnchor === 'left' ? 'right' : 'left';
 			}
 
 			// Flip sideways for 'above' and 'below' if it overflows to the sides
-			if (this.tooltipDirection === 'above' || this.tooltipDirection === 'below') {
-				if (this.overflow.isOverRight) {
-					this.arrowAnchor = 'left';
-				} else if (this.overflow.isOverLeft) {
-					this.arrowAnchor = 'right';
+			if (tooltipDirection === 'above' || tooltipDirection === 'below') {
+				if (overflow.isOverRight) {
+					arrowAnchor = 'left';
+				} else if (overflow.isOverLeft) {
+					arrowAnchor = 'right';
 				}
 			}
+
+			return arrowAnchor;
 		}
 
-		getPosition (tooltipNode, clientNode) {
+		getPosition (tooltipNode, clientNode, arrowAnchor, tooltipDirection) {
 			let position = {};
-			switch (this.tooltipDirection) {
+			switch (tooltipDirection) {
 				case 'above':
 					position.top = clientNode.top - tooltipNode.height - this.TOOLTIP_HEIGHT;
 					break;
@@ -215,20 +235,20 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 					position = {};
 			}
 
-			if (this.tooltipDirection === 'above' || this.tooltipDirection === 'below') {
+			if (tooltipDirection === 'above' || tooltipDirection === 'below') {
 				position.left = clientNode.left + clientNode.width / 2;
 
-				if (this.arrowAnchor === 'left') {
+				if (arrowAnchor === 'left') {
 					position.left -= tooltipNode.width;
-				} else if (this.arrowAnchor === 'center') {
+				} else if (arrowAnchor === 'center') {
 					position.left -= tooltipNode.width / 2;
 				}
-			} else if (this.tooltipDirection === 'left' || this.tooltipDirection === 'right') {
+			} else if (tooltipDirection === 'left' || tooltipDirection === 'right') {
 				position.top = clientNode.top + clientNode.height / 2;
 
-				if (this.arrowAnchor === 'top') {
+				if (arrowAnchor === 'top') {
 					position.top -= tooltipNode.height;
-				} else if (this.arrowAnchor === 'middle') {
+				} else if (arrowAnchor === 'middle') {
 					position.top -= tooltipNode.height / 2;
 				}
 			}
@@ -236,26 +256,46 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 			return position;
 		}
 
-		handleFocus = (ev) => {
-			const {tooltipText, showDelay} = this.props;
+		showTooltip (client) {
+			const {tooltipText, tooltipDelay} = this.props;
 
 			if (tooltipText) {
-				this.clientRef = ev.target;
+				this.clientRef = client;
 				startJob('showTooltip', () => {
 					this.setState({showing: true});
-				}, showDelay);
+				}, tooltipDelay);
 			}
-
-			forwardFocus(ev, this.props);
 		}
 
-		handleBlur = (ev) => {
+		hideTooltip () {
 			if (this.props.tooltipText) {
 				this.clientRef = null;
 				stopJob('showTooltip');
 				this.setState({showing: false});
 			}
+		}
 
+		handleMouseOver = (ev) => {
+			if (this.props.disabled) {
+				this.showTooltip(ev.target);
+			}
+			forwardMouseOver(ev, this.props);
+		}
+
+		handleMouseOut = (ev) => {
+			if (this.props.disabled) {
+				this.hideTooltip();
+			}
+			forwardMouseOut(ev, this.props);
+		}
+
+		handleFocus = (ev) => {
+			this.showTooltip(ev.target);
+			forwardFocus(ev, this.props);
+		}
+
+		handleBlur = (ev) => {
+			this.hideTooltip();
 			forwardBlur(ev, this.props);
 		}
 
@@ -268,24 +308,26 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 
 		render () {
 			const {children, tooltipPreserveCase, tooltipText, tooltipWidth, ...rest} = this.props;
-			delete rest.showDelay;
+			delete rest.tooltipDelay;
 			delete rest.tooltipPosition;
 
 			return (
 				<Wrapped
 					{...rest}
-					onFocus={this.handleFocus}
 					onBlur={this.handleBlur}
+					onFocus={this.handleFocus}
+					onMouseOut={this.handleMouseOut}
+					onMouseOver={this.handleMouseOver}
 				>
 					{children}
 					<FloatingLayer open={this.state.showing} scrimType="none">
 						<Tooltip
-							direction={this.state.tooltipDirection}
 							arrowAnchor={this.state.arrowAnchor}
+							direction={this.state.tooltipDirection}
 							position={this.state.position}
-							width={tooltipWidth}
-							tooltipRef={this.getTooltipRef}
 							preserveCase={tooltipPreserveCase}
+							tooltipRef={this.getTooltipRef}
+							width={tooltipWidth}
 						>
 							{tooltipText}
 						</Tooltip>

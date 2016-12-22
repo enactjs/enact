@@ -125,10 +125,10 @@ const ButtonBase = kind({
 		delete rest.small;
 
 		return (
-			<button {...rest}>
+			<div role="button" {...rest}>
 				<div className={css.bg} />
-				<span className={css.client}>{children}</span>
-			</button>
+				<div className={css.client}>{children}</div>
+			</div>
 		);
 	}
 });
