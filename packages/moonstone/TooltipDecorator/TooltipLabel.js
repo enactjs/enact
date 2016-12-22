@@ -1,7 +1,6 @@
 import kind from '@enact/core/kind';
 import {isRtlText} from '@enact/i18n';
 import React, {PropTypes} from 'react';
-import {scale} from '@enact/ui/resolution';
 
 import css from './Tooltip.less';
 
@@ -55,7 +54,7 @@ const TooltipLabel = kind({
 			return {
 				...style,
 				direction: isRtlText(children) ? 'rtl' : 'ltr',
-				width: scale(width)
+				width
 			};
 		}
 	},
