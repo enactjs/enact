@@ -48,8 +48,8 @@ class VirtualListCore extends Component {
 	static propTypes = /** @lends moonstone/VirtualList.VirtualListCore.prototype */ {
 		/**
 		 * The render function for an item of the list.
+		 * `data` is for the item data.
 		 * `index` is for accessing the index of the item.
-		 * `key` MUST be passed as a prop for DOM recycling.
 		 * Data manipulation can be done in this function.
 		 *
 		 * @type {Function}

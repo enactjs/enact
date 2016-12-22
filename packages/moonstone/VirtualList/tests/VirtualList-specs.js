@@ -35,11 +35,7 @@ describe('VirtualList Specs', () => {
 				onScrollStop={handlerOnScrollStop}
 				style={{backgroundColor: 'red', width: '500px', height: '700px'}}
 				// eslint-disable-next-line react/jsx-no-bind
-				component={({index, key}) => (
-					<Item key={key}>
-						{data[index].name}
-					</Item>
-				)}
+				component={({index}) => (<Item>{data[index].name}</Item>)}
 			/>
 		);
 

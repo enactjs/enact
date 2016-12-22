@@ -20,11 +20,7 @@ describe('VirtualGridList Specs', () => {
 			dataSize={dataSize}
 			itemSize={{minWidth: 30, minHeight: 40}}
 			// eslint-disable-next-line react/jsx-no-bind
-			component={({index, key}) => (
-				<Item key={key}>
-					<div>{data[index].text}</div>
-				</Item>
-			)}
+			component={({index}) => (<Item><div>{data[index].text}</div></Item>)}
 		/>
 	);
 
