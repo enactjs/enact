@@ -1,12 +1,3 @@
-/**
- * Times
- * {@link moonstone/VideoPlayer}.
- *
- * @class Times
- * @memberOf moonstone/VideoPlayer/Times
- * @ui
- * @private
- */
 import React from 'react';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import kind from '@enact/core/kind';
@@ -15,10 +6,18 @@ import {secondsToPeriod, secondsToTime} from './util';
 
 import css from './VideoPlayer.less';
 
+/**
+ * Times {@link moonstone/VideoPlayer}.
+ *
+ * @class Times
+ * @memberOf moonstone/VideoPlayer/Times
+ * @ui
+ * @private
+ */
 const TimesBase = kind({
 	name: 'Times',
 
-	propTypes: /** @lends moonstone/BodyText.BodyText.prototype */ {
+	propTypes: /** @lends moonstone/VideoPlayer.Times.prototype */ {
 		/**
 		 * An instance of a Duration Formatter from i18n. {@link i18n/ilib/lib/DurationFmt.DurationFmt}
 		 *
@@ -79,7 +78,7 @@ const TimesBase = kind({
 	}
 });
 
-const Times = onlyUpdateForKeys(['current', 'total'])(TimesBase);
+const Times = onlyUpdateForKeys(['current', 'formatter', 'total'])(TimesBase);
 
 export default Times;
 export {Times, TimesBase};
