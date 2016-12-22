@@ -9,6 +9,7 @@
 import classNames from 'classnames';
 import React, {Component, PropTypes} from 'react';
 
+import {forward} from '@enact/core/handle';
 import {SpotlightContainerDecorator} from '@enact/spotlight';
 
 import {VirtualListCore} from '../VirtualList/VirtualListBase';
@@ -21,6 +22,8 @@ import css from './VirtualFlexList.less';
 const
 	PositionableVirtualList = Positionable(VirtualListCore),
 	SpotlightPositionableVirtualList = SpotlightContainerDecorator(Positionable(VirtualListCore));
+
+const forwardPositioinChange = forward('onPositionChange');
 
 const nop = () => {};
 
@@ -166,12 +169,12 @@ class VirtualFlexList extends Component {
 		 * Called when position updates
 		 *
 		 * The object including `x`, `y` properties for position,
-		 * are passed as the parameters of the `doPositionChange` callback function.
+		 * are passed as the parameters of the `onPositionChange` callback function.
 		 *
 		 * @type {Function}
 		 * @public
 		 */
-		doPositionChange: PropTypes.func,
+		onPositionChange: PropTypes.func,
 
 		/**
 		 * Row and column headers in a list including the following properties.
@@ -211,7 +214,7 @@ class VirtualFlexList extends Component {
 	}
 
 	static defaultProps = {
-		doPositionChange: nop
+		onPositionChange: nop
 	}
 
 	/*
@@ -252,14 +255,14 @@ class VirtualFlexList extends Component {
 			row: items.rowCount,
 			col: items.colCount
 		},
-		setPosition: this.setPosition,
+		onPositionChange: this.onPositionChange,
 		flexAxis,
+		handlesNavigation: true,
 		itemSize: {
 			row: items.height,
 			col: items.width
 		},
 		maxFlexScrollSize,
-		navigation: true,
 		style: {background: items.background, width: itemsListWidth, height: itemsListHeight, top: itemsOriginTop, left: itemsOriginLeft},
 		component: items.component
 	})
@@ -268,9 +271,9 @@ class VirtualFlexList extends Component {
 		data: headers.row.data,
 		dataSize: headers.row.count,
 		direction: 'vertical',
-		setPosition: this.setPosition,
+		onPositionChange: this.onPositionChange,
+		handlesNavigation: true,
 		itemSize: headers.row.height,
-		navigation: true,
 		pageScroll: true,
 		style: {background: headers.row.background, width: itemsOriginLeft, height: itemsListHeight, top: itemsOriginTop},
 		component: headers.row.component
@@ -315,9 +318,9 @@ class VirtualFlexList extends Component {
 	 * Callback functions
 	 */
 
-	setPosition = ({x, y}) => {
-		this.setState({x, y});
-		this.props.doPositionChange({x, y});
+	onPositionChange = (position) => {
+		this.setState(position);
+		forwardPositioinChange(position, this.props);
 	}
 
 	/*
@@ -346,7 +349,7 @@ class VirtualFlexList extends Component {
 			componentProps = this.componentProps;
 
 		delete props.corner;
-		delete props.doPositionChange;
+		delete props.onPositionChange;
 		delete props.headers;
 		delete props.items;
 		delete props.maxFlexScrollSize;
