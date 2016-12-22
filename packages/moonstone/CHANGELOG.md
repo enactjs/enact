@@ -23,6 +23,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 	effect can be achieved by omitting the property or passing `null`.
 - `moonstone/VirtualGridList` to be scrolled by page when navigating with a 5-way direction key
 - `moonstone/Scroller`, `moonstone/VirtualList`, `moonstone/VirtualGridList`, and `moonstone/Scrollable` to no longer respond to mouse down/move/up events
+- all Expandables to include a state arrow UI element
+- `moonstone/LabeledItem` to support a `titleIcon` property which positions just after the title text
 - `moonstone/Button` to include `moonstone/TooltipDecorator`
 - `moonstone/Expandable` to support being managed, radio group-style, by a component wrapped with `RadioControllerDecorator` from `ui/RadioDecorator`
 - `moonstone/Picker` to animate `moonstone/Marquee` children when any part of the `moonstone/Picker` is focused
@@ -36,6 +38,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - Bug where a synchronized marquee whose content fit the available space would prevent restarting of the marquees
 - `moonstone/Input` to show an ellipsis on the correct side based on the text directionality of the `value` or `placeholder` content.
 - `moonstone/VirtualList` and `moonstone/VirtualGridList` to prevent unwanted scrolling when focused with the pointer
+- `moonstone/LabeledItem` to include marquee on both `title` and `label`, and be synchronized
 
 ## [1.0.0-alpha.5] - 2016-12-16
 
