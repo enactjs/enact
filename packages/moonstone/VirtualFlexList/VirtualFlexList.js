@@ -163,18 +163,7 @@ class VirtualFlexList extends Component {
 		 * @type {moonstone/VirtualFlexList.cornerShape}
 		 * @public
 		 */
-		corner: cornerShape,
-
-		/**
-		 * Called when position updates
-		 *
-		 * The object including `x`, `y` properties for position,
-		 * are passed as the parameters of the `onPositionChange` callback function.
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onPositionChange: PropTypes.func,
+		corner: cornerShape
 
 		/**
 		 * Row and column headers in a list including the following properties.
@@ -195,6 +184,17 @@ class VirtualFlexList extends Component {
 		 * @public
 		 */
 		headers: headersShape,
+
+		/**
+		 * Called when position updates
+		 *
+		 * The object including `x`, `y` properties for position,
+		 * are passed as the parameters of the `onPositionChange` callback function.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onPositionChange: PropTypes.func,,
 
 		/**
 		 * Position x.
@@ -255,7 +255,6 @@ class VirtualFlexList extends Component {
 			row: items.rowCount,
 			col: items.colCount
 		},
-		onPositionChange: this.onPositionChange,
 		flexAxis,
 		handlesNavigation: true,
 		itemSize: {
@@ -263,6 +262,7 @@ class VirtualFlexList extends Component {
 			col: items.width
 		},
 		maxFlexScrollSize,
+		onPositionChange: this.onPositionChange,
 		style: {background: items.background, width: itemsListWidth, height: itemsListHeight, top: itemsOriginTop, left: itemsOriginLeft},
 		component: items.component
 	})
@@ -271,9 +271,9 @@ class VirtualFlexList extends Component {
 		data: headers.row.data,
 		dataSize: headers.row.count,
 		direction: 'vertical',
-		onPositionChange: this.onPositionChange,
 		handlesNavigation: true,
 		itemSize: headers.row.height,
+		onPositionChange: this.onPositionChange,
 		pageScroll: true,
 		style: {background: headers.row.background, width: itemsOriginLeft, height: itemsListHeight, top: itemsOriginTop},
 		component: headers.row.component
@@ -349,10 +349,10 @@ class VirtualFlexList extends Component {
 			componentProps = this.componentProps;
 
 		delete props.corner;
-		delete props.onPositionChange;
 		delete props.headers;
 		delete props.items;
 		delete props.maxFlexScrollSize;
+		delete props.onPositionChange;
 		delete props.x;
 		delete props.y;
 
