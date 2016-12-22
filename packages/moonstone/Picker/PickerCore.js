@@ -39,7 +39,6 @@ const jobNames = {
 
 const emulateMouseEventsTimeout = 175;
 
-// const HoldableButtonWrapper = Holdable({resume: true, endHold: 'onLeave'}, (props) => <span {...props} />);
 const HoldablePickerButton = Holdable({resume: true, endHold: 'onLeave'}, PickerButton);
 
 /**
