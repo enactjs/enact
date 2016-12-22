@@ -6,9 +6,7 @@ import React from 'react';
 import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
 import shouldUpdate from 'recompose/shouldUpdate';
 
-import Icon from '../Icon';
-import IconButton from '../IconButton';
-
+import PickerButton from './PickerButton';
 import {steppedNumber} from './PickerPropTypes';
 import css from './Picker.less';
 
@@ -41,10 +39,9 @@ const jobNames = {
 
 const emulateMouseEventsTimeout = 175;
 
-// Components
-const TransparentIconButton = (props) => <IconButton {...props} backgroundOpacity="transparent" />;
+// const HoldableButtonWrapper = Holdable({resume: true, endHold: 'onLeave'}, (props) => <span {...props} />);
+const HoldablePickerButton = Holdable({resume: true, endHold: 'onLeave'}, PickerButton);
 
-const HoldableButtonWrapper = Holdable({resume: true, endHold: 'onLeave'}, (props) => <span {...props} />);
 /**
  * The base component for {@link moonstone/Picker.PickerCore}.
  *
@@ -279,9 +276,17 @@ const PickerCore = class extends React.Component {
 		}
 	}
 
-	handleDecClick = () => this.handleChange(-1)
+	handleDecClick = () => {
+		if (!this.isButtonDisabled(this.props.step * -1)) {
+			this.handleChange(-1);
+		}
+	}
 
-	handleIncClick = () => this.handleChange(1)
+	handleIncClick = () => {
+		if (!this.isButtonDisabled(this.props.step)) {
+			this.handleChange(1);
+		}
+	}
 
 	handleDown = (dir) => {
 		const {joined, onMouseDown} = this.props;
@@ -313,13 +318,17 @@ const PickerCore = class extends React.Component {
 	}
 
 	handleDecPulse = () => {
-		this.handleDecDown();
-		this.handleDecClick();
+		if (!this.isButtonDisabled(this.props.step * -1)) {
+			this.handleDecDown();
+			this.handleChange(-1);
+		}
 	}
 
 	handleIncPulse = () => {
-		this.handleIncDown();
-		this.handleIncClick();
+		if (!this.isButtonDisabled(this.props.step)) {
+			this.handleIncDown();
+			this.handleChange(1);
+		}
 	}
 
 	determineClasses (decrementerDisabled, incrementerDisabled) {
@@ -360,36 +369,50 @@ const PickerCore = class extends React.Component {
 		delete rest.value;
 		delete rest.wrap;
 
-		const ButtonType = joined ? Icon : TransparentIconButton;
 		const incrementIcon = selectIncIcon(this.props);
 		const decrementIcon = selectDecIcon(this.props);
 
 		const decrementerDisabled = this.isButtonDisabled(step * -1);
 		const incrementerDisabled = this.isButtonDisabled(step);
 		const classes = this.determineClasses(decrementerDisabled, incrementerDisabled);
-
-		const handleIncClick = incrementerDisabled ? null : this.handleIncClick;
-		const handleDecClick = decrementerDisabled ? null : this.handleDecClick;
-
-		const handleIncPulse = incrementerDisabled ? null : this.handleIncPulse;
-		const handleDecPulse = decrementerDisabled ? null : this.handleDecPulse;
-
 		let arranger;
+
 		if (width && !disabled) {
 			arranger = orientation === 'vertical' ? SlideTopArranger : SlideLeftArranger;
 		}
 
 		return (
 			<div {...rest} className={classes} disabled={disabled} onWheel={joined ? this.handleWheel : null}>
-				<HoldableButtonWrapper className={css.incrementer} disabled={incrementerDisabled} onClick={handleIncClick} onMouseDown={this.handleIncDown} onMouseUp={onMouseUp} onHoldPulse={handleIncPulse}>
-					<ButtonType disabled={incrementerDisabled}>{incrementIcon}</ButtonType>
-				</HoldableButtonWrapper>
-				<PickerViewManager arranger={arranger} duration={200} index={index} noAnimation={noAnimation} reverseTransition={this.reverseTransition} className={css.valueWrapper}>
+				<HoldablePickerButton
+					className={css.incrementer}
+					disabled={incrementerDisabled}
+					onClick={this.handleIncClick}
+					onMouseDown={this.handleIncDown}
+					onMouseUp={onMouseUp}
+					onHoldPulse={this.handleIncPulse}
+					joined={joined}
+					icon={incrementIcon}
+				/>
+				<PickerViewManager
+					arranger={arranger}
+					duration={100}
+					index={index}
+					noAnimation={noAnimation}
+					reverseTransition={this.reverseTransition}
+					className={css.valueWrapper}
+				>
 					{children}
 				</PickerViewManager>
-				<HoldableButtonWrapper className={css.decrementer} disabled={decrementerDisabled} onClick={handleDecClick} onMouseDown={this.handleDecDown} onMouseUp={onMouseUp} onHoldPulse={handleDecPulse}>
-					<ButtonType disabled={decrementerDisabled}>{decrementIcon}</ButtonType>
-				</HoldableButtonWrapper>
+				<HoldablePickerButton
+					className={css.decrementer}
+					disabled={decrementerDisabled}
+					onClick={this.handleDecClick}
+					onMouseDown={this.handleDecDown}
+					onMouseUp={onMouseUp}
+					onHoldPulse={this.handleDecPulse}
+					joined={joined}
+					icon={decrementIcon}
+				/>
 			</div>
 		);
 	}
