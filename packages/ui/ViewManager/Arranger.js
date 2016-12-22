@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import {accelerate, clearTransform, compose, fadeIn, fadeOut, reverse, slideInPartial, slideOutPartial} from './arrange';
+import {accelerate, clearTransform, compose, reverse, slideInPartial, slideOutPartial} from './arrange';
 
 /**
  * A basic arranger that must be configured with `enter` and `leave` direction
@@ -14,8 +14,8 @@ import {accelerate, clearTransform, compose, fadeIn, fadeOut, reverse, slideInPa
  * @public
  */
 export const SlideArranger = ({amount = 100, enter, leave}) => ({
-	enter: reverse(compose(clearTransform, fadeIn, slideInPartial(amount, enter), accelerate)),
-	leave: reverse(compose(clearTransform, fadeOut, slideOutPartial(amount, leave), accelerate))
+	enter: reverse(compose(clearTransform, slideInPartial(amount, enter), accelerate)),
+	leave: reverse(compose(clearTransform, slideOutPartial(amount, leave), accelerate))
 });
 
 /**
