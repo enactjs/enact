@@ -1,6 +1,10 @@
-//
-// VideoPlayer
-//
+/**
+ * Exports the {@link moonstone/VideoPlayer.VideoPlayer} and
+ * {@link moonstone/VideoPlayer.VideoPlayerBase} components. The default export is
+ * {@link moonstone/VideoPlayer.VideoPlayer}.
+ *
+ * @module moonstone/VideoPlayer
+ */
 import React from 'react';
 import {$L} from '@enact/i18n';
 import DurationFmt from '@enact/i18n/ilib/lib/DurationFmt';
@@ -344,7 +348,7 @@ const VideoPlayerBase = class extends React.Component {
 	 * @param  {String} action The method to preform.
 	 * @param  {Multiple} props  The arguments, in the format that the action method requires.
 	 *
-	 * @public
+	 * @private
 	 */
 	send = (action, props) => {
 		if (this.video && this.videoReady) {
@@ -403,9 +407,9 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	/**
-	 * Changes the playback speed via [selectPlaybackRate()]{@link module:enyo/Video~Video#selectPlaybackRate}.
+	 * Changes the playback speed via [selectPlaybackRate()]{@link moonstone/VideoPlayer.VideoPlayer#selectPlaybackRate}.
 	 *
-	 * @public
+	 * @private
 	 */
 	fastForward = () => {
 		// if (this.video && this.videoReady) {
@@ -457,9 +461,9 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	/**
-	 * Changes the playback speed via [selectPlaybackRate()]{@link module:enyo/Video~Video#selectPlaybackRate}.
+	 * Changes the playback speed via [selectPlaybackRate()]{@link moonstone/VideoPlayer.VideoPlayer#selectPlaybackRate}.
 	 *
-	 * @public
+	 * @private
 	 */
 	rewind = () => {
 		// if (this.video && this.videoReady) {
@@ -512,21 +516,21 @@ const VideoPlayerBase = class extends React.Component {
 
 	/**
 	 * Sets the playback rate type (from the [keys]{@glossary Object.keys} of
-	 * [playbackRateHash]{@link module:enyo/Video~Video#playbackRateHash}).
+	 * [playbackRateHash]{@link moonstone/VideoPlayer.VideoPlayer#playbackRateHash}).
 	 *
 	 * @param {String} cmd - Key of the playback rate type.
-	 * @public
+	 * @private
 	 */
 	selectPlaybackRates = (cmd) => {
 		this.playbackRates = playbackRateHash[cmd];
 	}
 
 	/**
-	 * Changes [playbackRate]{@link module:enyo/Video~Video#playbackRate} to a valid value when initiating
+	 * Changes [playbackRate]{@link moonstone/VideoPlayer.VideoPlayer#playbackRate} to a valid value when initiating
 	 * fast forward or rewind.
 	 *
 	 * @param {Number} idx - The index of the desired playback rate.
-	 * @public
+	 * @private
 	 */
 	clampPlaybackRate = (idx) => {
 		if (!this.playbackRates) {
@@ -541,17 +545,17 @@ const VideoPlayerBase = class extends React.Component {
 	 *
 	 * @param {Number} idx - The index of the desired playback rate.
 	 * @returns {String} The playback rate name.
-	 * @public
+	 * @private
 	 */
 	selectPlaybackRate = (idx) => {
 		return this.playbackRates[idx];
 	}
 
 	/**
-	 * Sets [playbackRate]{@link module:enyo/Video~Video#playbackRate}.
+	 * Sets [playbackRate]{@link moonstone/VideoPlayer.VideoPlayer#playbackRate}.
 	 *
 	 * @param {String} rate - The desired playback rate.
-	 * @public
+	 * @private
 	 */
 	setPlaybackRate = (rate) => {
 		// Stop rewind (if happenning)
@@ -771,7 +775,7 @@ const VideoPlayerBase = class extends React.Component {
  *
  * Example usage:
  * ```
- * 	<VideoPlayer title="Hilarious Cat Video" poster="http://my.cat.videos/boots-poster.jpg">
+ *	<VideoPlayer title="Hilarious Cat Video" poster="http://my.cat.videos/boots-poster.jpg">
  *		<source src="http://my.cat.videos/boots.mp4" type="video/mp4" />
  *		<infoComponents>A video about my cat Boots, wearing boots.</infoComponents>
  *		<leftComponents><IconButton backgroundOpacity="translucent">star</IconButton></leftComponents>
@@ -782,10 +786,9 @@ const VideoPlayerBase = class extends React.Component {
  *	</VideoPlayer>
  * ```
  *
- * @module moonstone/VideoPlayer
  * @class VideoPlayer
  * @memberof moonstone/VideoPlayer
- * @mixes ui/Slots
+ * @mixes ui/Slottable.Slottable
  * @ui
  * @public
  */

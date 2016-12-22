@@ -10,7 +10,7 @@ import css from './VideoPlayer.less';
  * Times {@link moonstone/VideoPlayer}.
  *
  * @class Times
- * @memberOf moonstone/VideoPlayer/Times
+ * @memberof moonstone/VideoPlayer
  * @ui
  * @private
  */

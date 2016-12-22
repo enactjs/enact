@@ -5,7 +5,7 @@
  * What time is it right this moment
  *
  * @return {Number} Current time in miliseconds.
- * @public
+ * @private
  */
 const getNow = function () {
 	if (typeof window === 'object') {
@@ -22,7 +22,7 @@ const getNow = function () {
  *
  * @return {Object}       An object with keys {hour, minute, second} representing the duration
  *                        seconds provided as an argument.
- * @public
+ * @private
  */
 const parseTime = (value) => {
 	value = parseFloat(value);
@@ -42,7 +42,7 @@ const parseTime = (value) => {
  * @param  {Number|String} seconds A duration of time represented in seconds
  *
  * @return {String}      String formatted for use in a `datetime` field of a `<time>` tag.
- * @public
+ * @private
  */
 const secondsToPeriod = (seconds) => {
 	return 'P' + seconds + 'S';
@@ -54,7 +54,7 @@ const secondsToPeriod = (seconds) => {
  * @param  {Number|String} seconds A duration of time represented in seconds
  *
  * @return {String}      Formatted duration string
- * @public
+ * @private
  */
 const secondsToTime = (seconds, durfmt) => {
 	return durfmt.format(parseTime(seconds)).toString();
