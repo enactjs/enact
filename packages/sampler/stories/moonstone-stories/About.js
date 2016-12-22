@@ -1,43 +1,49 @@
+import kind from '@enact/core/kind';
 import BodyText from '@enact/moonstone/BodyText';
 import Button from '@enact/moonstone/Button';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean} from '@kadira/storybook-addon-knobs';
 
-// TODO: Convert to kind
 // Inspired by: http://stackoverflow.com/questions/20037122/draw-an-arrow-between-two-divs
-class Arrow extends React.Component {
-	static propTypes = {
+const Arrow = kind({
+	name: 'Arrow',
+
+	propTypes: {
 		start: React.PropTypes.object.isRequired,
 		stop: React.PropTypes.object.isRequired
-	}
+	},
 
-	render () {
-		let style = {
-			position: 'absolute'
-		};
+	computed: {
+		style: () => {
+			return {position: 'absolute'};
+		},
+		pathD: ({start, stop}) => {
+			return 'M' + start.x + ',' + start.y + ' L' + stop.x + ',' + stop.y;
+		},
+		width: ({start, stop}) => {
+			return Math.max(start.x, stop.x) + 25;
+		},
+		height: ({start, stop}) => {
+			return Math.max(start.y, stop.y) + 25;
+		}
+	},
 
-		let pathD = 'M' + this.props.start.x + ',' + this.props.start.y + ' ';
-		pathD += 'L' + this.props.stop.x + ',' + this.props.stop.y;
+	render: ({style, pathD, width, height}) => (
+		<svg width={width} height={height} style={style} >
+			<defs>
+				<marker markerWidth="13" markerHeight="13" refX="2" refY="6" orient="auto" id="arrow">
+					<path d="M2,1 L2,10 L10,6 L2,2" style={{fill:'red'}} />
+				</marker>
+			</defs>
 
-		let width = Math.max(this.props.start.x, this.props.stop.x) + 25;
-		let height = Math.max(this.props.start.y, this.props.stop.y) + 25;
-
-		return (
-			<svg width={width} height={height} style={style} >
-				<defs>
-					<marker markerWidth="13" markerHeight="13" refX="2" refY="6" orient="auto" id="arrow">
-						<path d="M2,1 L2,10 L10,6 L2,2" style={{fill:'red'}} />
-					</marker>
-				</defs>
-
-				<path
-					d={pathD}
-					style={{stroke:'red', strokeWidth: '3px', fill: 'none', markerEnd: 'url(#arrow)'}}
-				/>
-			</svg>);
-	}
-}
+			<path
+				d={pathD}
+				style={{stroke:'red', strokeWidth: '3px', fill: 'none', markerEnd: 'url(#arrow)'}}
+			/>
+		</svg>
+	)
+});
 
 storiesOf('About Sampler')
 	.addDecorator(withKnobs)
@@ -73,4 +79,3 @@ storiesOf('About Sampler')
 			</div>
 		)
 	);
-
