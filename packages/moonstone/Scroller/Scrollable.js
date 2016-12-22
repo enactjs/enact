@@ -597,7 +597,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			let {left, top} = this.getPositionForScrollTo(opt);
 
 			if (left !== null || top !== null) {
-				this.start((left !== null) ? left : this.scrollLet, (top !== null) ? top : this.scrollTop, opt.animate);
+				this.start((left !== null) ? left : this.scrollLeft, (top !== null) ? top : this.scrollTop, opt.animate);
 			}
 		}
 
