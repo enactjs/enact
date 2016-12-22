@@ -677,17 +677,17 @@ class VirtualFlexListCore extends Component {
 	}
 
 	setSpotlightContainerRestrict = (keyCode, dataIndex) => {
-		const {primary} = this;
-		let
-			isSelfOnly = false,
-			primaryIndex = 0,
-			canMoveBackward,
-			canMoveForward;
+		if (typeof dataIndex !== 'string') {
+			return;
+		}
 
-		const indices = dataIndex.split('-');
-		primaryIndex = Number.parseInt(indices[0]);
-		canMoveBackward = primaryIndex > 1;
-		canMoveForward = primaryIndex < (primary.dataSize - 1);
+		const
+			{primary} = this,
+			indices = dataIndex.split('-'),
+			primaryIndex = Number.parseInt(indices[0]),
+			canMoveBackward = primaryIndex > 1,
+			canMoveForward = primaryIndex < (primary.dataSize - 1);
+		let isSelfOnly = false;
 
 		if (this.props.flexAxis === 'row') {
 			if (keyCode === keyUp && canMoveBackward || keyCode === keyDown && canMoveForward) {
