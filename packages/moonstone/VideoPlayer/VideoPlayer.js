@@ -45,8 +45,6 @@ const handledMediaEventsMap = {
 	encrypted       : 'onEncrypted',
 	ended           : 'onEnded',
 	error           : 'onError',
-	InterruptBegin  : 'onInterruptBegin',
-	InterruptEnd    : 'onInterruptEnd',
 	loadeddata      : 'onLoadedData',
 	loadedmetadata  : 'onLoadedMetadata',
 	loadstart       : 'onLoadStart',

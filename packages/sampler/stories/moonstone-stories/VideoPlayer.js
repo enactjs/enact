@@ -45,8 +45,6 @@ const prop = {
 		'onEncrypted',
 		'onEnded',
 		'onError',
-		'onInterruptBegin',
-		'onInterruptEnd',
 		'onLoadedData',
 		'onLoadedMetadata',
 		'onLoadStart',
