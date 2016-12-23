@@ -78,8 +78,8 @@ storiesOf('About Sampler')
 				<Button onClick={action('onClick')} selected={boolean('button selected', false)}>
 					Click me
 				</Button>
-				<div className={css.hintDialog} style={{top: '50', right: '-20px'}}>
-					<Pointer pointDirection='topRight' length={30} style={{top: '-20', right: '25'}} />
+				<div className={css.hintDialog} style={{top: '50px', right: '-20px'}}>
+					<Pointer pointDirection='topRight' length={30} style={{top: '-20px', right: '25px'}} />
 					<div className={css.text}>
 						Click <b>?</b> to see the live source code for the sample.
 					</div>
