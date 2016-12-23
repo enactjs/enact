@@ -10,15 +10,8 @@ import css from './VideoPlayer.less';
 const Container = SpotlightContainerDecorator('div');
 const MediaButton = onlyUpdateForKeys([
 	'children',
-	'leftComponents',
-	'mediaDisabled',
-	'moreDisabled',
-	'moreDisabled',
-	'noJumpButtons',
-	'noRateButtons',
-	'onClick',
-	'playPauseIcon',
-	'rightComponents'
+	'disabled',
+	'onClick'
 ])(IconButton);
 
 const MediaControls = kind({

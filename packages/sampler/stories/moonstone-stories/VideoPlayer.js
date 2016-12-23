@@ -37,29 +37,31 @@ const prop = {
 		}
 	],
 	events: [
-		// 'onAbort',
-		// 'onCanPlay',
-		// 'onCanPlayThrough',
+		'onAbort',
+		'onCanPlay',
+		'onCanPlayThrough',
 		'onDurationChange',
-		// 'onEmptied',
-		// 'onEncrypted',
-		// 'onEnded',
-		// 'onError',
-		// 'onLoadedData',
+		'onEmptied',
+		'onEncrypted',
+		'onEnded',
+		'onError',
+		'onInterruptBegin',
+		'onInterruptEnd',
+		'onLoadedData',
 		'onLoadedMetadata',
 		'onLoadStart',
-		// 'onPause',
+		'onPause',
 		'onPlay',
-		// 'onPlaying',
+		'onPlaying',
 		'onProgress',
-		// 'onRateChange',
-		// 'onSeeked',
-		// 'onSeeking',
-		// 'onStalled',
-		// 'onSuspend',
-		'onTimeUpdate'
-		// 'onVolumeChange',
-		// 'onWaiting'
+		'onRateChange',
+		'onSeeked',
+		'onSeeking',
+		'onStalled',
+		'onSuspend',
+		'onTimeUpdate',
+		'onVolumeChange',
+		'onWaiting'
 	]
 };
 
@@ -102,14 +104,14 @@ storiesOf('VideoPlayer')
 					}}
 				>VideoPlayer Edge</label>
 				<VideoPlayer
-					autoPlay={boolean('autoPlay', true)}
 					loop={boolean('loop', true)}
 					muted={boolean('muted', true)}
-					noRateButtons={boolean('noRateButtons', false)}
+					noAutoPlay={boolean('noAutoPlay', false)}
 					noJumpButtons={boolean('noJumpButtons', false)}
+					noRateButtons={boolean('noRateButtons', false)}
 					noSlider={boolean('noSlider', false)}
-					title={text('title', 'Moonstone VideoPlayer Sample Video')}
 					poster={prop.videos[0].poster}
+					title={text('title', 'Moonstone VideoPlayer Sample Video')}
 					{...prop.eventActions}
 				>
 					<source src={select('source', videoSource, prop.videos[0].source)} type="video/mp4" />

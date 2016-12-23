@@ -20,19 +20,15 @@
 	.overlay {
 		position: absolute;
 		.position(0);
-		// background-repeat: repeat;
-		// background-size: 64px 64px;
-		// @bars-opacity: 0.25;
-		// background-image: linear-gradient(to bottom right, rgba(0, 0, 0, 0) 25%, rgba(255, 204, 0, @bars-opacity) 25%, rgba(255, 204, 0, @bars-opacity) 50%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0) 75%, rgba(255, 204, 0, @bars-opacity) 75%);
 	}
 
 	.fullscreen {
 		.bottom {
 			position: absolute;
-			bottom: @moon-video-player-bottom-padding;
-			left: @moon-video-player-side-padding;
-			right: @moon-video-player-side-padding;
-			background-color: rgba(0, 0, 0, 0);		// use var
+			bottom: @moon-video-player-padding-bottom;
+			left: @moon-video-player-padding-side;
+			right: @moon-video-player-padding-side;
+			background-color: @moon-video-player-bottom-bg-color;
 
 			.infoFrame {
 				display: flex;
@@ -94,8 +90,8 @@
 						}
 
 						.redIcon {
-							background-color: @moon-videoplayer-redicon-bg-color;
-							color: @moon-videoplayer-redicon-text-color;
+							background-color: @moon-video-player-redicon-bg-color;
+							color: @moon-video-player-redicon-text-color;
 						}
 
 						.fontLgIcons {
@@ -109,7 +105,7 @@
 				}
 
 				.times {
-					.moon-text-base(24px);
+					.moon-text-base(@moon-video-player-indicator-text-size);
 					align-self: flex-end;
 					white-space: nowrap;
 					color: @moon-video-player-subdued-text-color;
@@ -123,7 +119,7 @@
 					}
 
 					.currentTime {
-						color: @moon-indicator-text-color;
+						color: @moon-video-player-indicator-text-color;
 					}
 
 					// .enyo-locale-right-to-left & {
@@ -147,10 +143,6 @@
 					}
 				}
 
-				.sliderBar {
-					background-color: rgba(0, 0, 0, 0.6);
-				}
-
 				.input {
 					padding: 0;
 
@@ -158,8 +150,26 @@
 					&::before {
 						content: '';
 						position: absolute;
-						.position(0, -(@moon-video-player-side-padding));
+						.position(0, -(@moon-video-player-padding-side));
 					}
+				}
+
+				.sliderBar {
+					background-color: @moon-video-player-slider-bg-color;
+				}
+
+				.fill,
+				.load {
+					border-top-right-radius: (@moon-video-player-slider-height / 2);
+					border-bottom-right-radius: (@moon-video-player-slider-height / 2);
+				}
+
+				.load {
+					background-color: @moon-video-player-slider-load-color;
+				}
+
+				.fill {
+					background-color: @moon-video-player-slider-fill-color;
 				}
 
 				// Knob
@@ -174,7 +184,7 @@
 						width: (@moon-video-player-slider-knob-size * 2);
 						height: (@moon-video-player-slider-knob-size * 2);
 						border-width: 0;
-						background-color: #fff;
+						background-color: @moon-video-player-slider-knob-color;
 						border-radius: @moon-video-player-slider-knob-size;
 						-webkit-transform: @moon-translate-center scale(0.5);
 						transform:         @moon-translate-center scale(0.5);
@@ -195,8 +205,8 @@
 				.status-indicator {
 					.moon-slider-popup-center {
 						font-family: @moon-font-family;
-						font-size: 24px;
-						color: @moon-white;
+						font-size: @moon-video-player-indicator-text-size;
+						color: @moon-video-player-indicator-text-color;
 						text-shadow: @moon-video-player-title-text-shadow;
 						line-height: 36px;
 						position: absolute;	// Allows flip-h to work
@@ -206,22 +216,6 @@
 							color: inherit;
 						}
 					}
-				}
-
-				// Bars
-				.fill,
-				.load {
-					border-top-right-radius: (@moon-video-player-slider-height / 2);
-					border-bottom-right-radius: (@moon-video-player-slider-height / 2);
-				}
-
-				// Bar
-				.fill {
-					background-color: fade(@moon-accent, 80%);
-				}
-
-				.load {
-					background-color: fade(@moon-dark-gray, 40%);
 				}
 			}
 

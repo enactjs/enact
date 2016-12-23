@@ -45,6 +45,8 @@ const handledMediaEventsMap = {
 	encrypted       : 'onEncrypted',
 	ended           : 'onEnded',
 	error           : 'onError',
+	InterruptBegin  : 'onInterruptBegin',
+	InterruptEnd    : 'onInterruptEnd',
 	loadeddata      : 'onLoadedData',
 	loadedmetadata  : 'onLoadedMetadata',
 	loadstart       : 'onLoadStart',
@@ -114,15 +116,6 @@ const VideoPlayerBase = class extends React.Component {
 		autoCloseTimeout: React.PropTypes.number,
 
 		/**
-		 * The video will start playing immedietly after it's loaded.
-		 *
-		 * @type {Boolean}
-		 * @default true
-		 * @public
-		 */
-		autoPlay: React.PropTypes.bool,
-
-		/**
 		 * These components are placed into the slot to the left of the media controls.
 		 *
 		 * @type {Node}
@@ -160,6 +153,15 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		muted: React.PropTypes.bool,
+
+		/**
+		 * By default, the video will start playing immediately after it's loaded, unless this is set.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		noAutoPlay: React.PropTypes.bool,
 
 		/**
 		 * Removes the "jump" buttons. The buttons that skip forward or backward in the video.
@@ -248,7 +250,7 @@ const VideoPlayerBase = class extends React.Component {
 
 	static defaultProps = {
 		autoCloseTimeout: 7000,
-		autoPlay: true,
+		noAutoPlay: false,
 		jumpBy: 30,
 		muted: false,
 		noJumpButtons: false,
@@ -283,7 +285,7 @@ const VideoPlayerBase = class extends React.Component {
 			error: false,
 			loading: false,
 			muted: !!props.muted,
-			paused: !props.autoPlay,
+			paused: props.noAutoPlay,
 			playbackRate: 1,
 			readyState: 0,
 			volume: 1,
@@ -691,7 +693,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	render () {
-		const {children, className, infoComponents, leftComponents, noJumpButtons, noRateButtons, noSlider, rightComponents, title, style,
+		const {children, className, infoComponents, leftComponents, noAutoPlay, noJumpButtons, noRateButtons, noSlider, rightComponents, title, style,
 			// Assign defaults during destructuring to internal methods (here, instead of defaultProps)
 			onBackwardButtonClick = this.onBackward,
 			onForwardButtonClick = this.onForward,
@@ -710,6 +712,7 @@ const VideoPlayerBase = class extends React.Component {
 				{/* Video Section */}
 				<Video
 					{...rest}
+					autoPlay={!noAutoPlay}
 					className={css.videoFrame}
 					controls={false}
 					ref={this.setVideoRef}	// Ref-ing this only once (smarter) turns out to be less safe because now we don't know when `video` is being "unset", so our `videoReady` is no longer genuine. react-html5video component is re-generating this method each render too. This seems to be part of the origin.

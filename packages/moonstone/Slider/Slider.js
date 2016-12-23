@@ -35,15 +35,15 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 	return kind({
 		name: 'Slider',
 
-	propTypes: /** @lends moonstone/Slider.SliderBase.prototype */{
-		/**
-		 * Background progress, as a percentage.
-		 *
-		 * @type {Number}
-		 * @default 0
-		 * @public
-		 */
-		backgroundPercent: checkDefaultBounds,
+		propTypes: /** @lends moonstone/Slider.SliderBase.prototype */{
+			/**
+			 * Background progress, as a percentage.
+			 *
+			 * @type {Number}
+			 * @default 0
+			 * @public
+			 */
+			backgroundPercent: checkDefaultBounds,
 
 			/**
 			 * The slider can change its behavior to have the knob follow the cursor as it moves
