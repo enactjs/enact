@@ -1,4 +1,5 @@
 import {MarqueeController, MarqueeText} from '@enact/moonstone/Marquee';
+import MarqueeStartStop from './Components/MarqueeStartStop';
 import Item from '@enact/moonstone/Item';
 import {Spottable} from '@enact/spotlight';
 import React from 'react';
@@ -132,5 +133,13 @@ storiesOf('Marquee')
 					{LTR[0]}
 				</MarqueeText>
 			</SpottableDiv>
+		)
+	)
+
+	.addWithInfo(
+		'Start Stop',
+		() => (
+			<MarqueeStartStop>
+			</MarqueeStartStop>
 		)
 	);
