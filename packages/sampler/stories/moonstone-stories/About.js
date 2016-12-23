@@ -109,7 +109,7 @@ storiesOf('About Sampler')
 				<div className={css.hintDialog} style={{bottom: '30px', left: '250px'}}>
 					<Pointer pointDirection='bottomLeft' length={83} style={{left: '25px'}} />
 					<div className={css.text}>
-						<b>Knobs</b> : adjust component properties
+						<b>Knobs</b> : adjust component properties.
 					</div>
 				</div>
 			</div>
