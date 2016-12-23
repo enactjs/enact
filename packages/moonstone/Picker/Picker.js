@@ -144,7 +144,7 @@ const PickerBase = kind({
 	},
 
 	computed: {
-		max: ({children}) => children && children.length ? children.length - 1 : 0;
+		max: ({children}) => children && children.length ? children.length - 1 : 0,
 		children: ({children, marqueeDisabled}) => React.Children.map(children, (child) => {
 			return <PickerItem marqueeDisabled={marqueeDisabled}>{child}</PickerItem>;
 		})
