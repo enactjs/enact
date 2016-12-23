@@ -143,20 +143,6 @@ const ExpandableItemBase = kind({
 	},
 
 	computed: {
-		label: ({disabled, label, noneText, open, showLabel}) => {
-			const isOpen = open && !disabled;
-			if (showLabel === 'always' || (!isOpen && showLabel !== 'never')) {
-				return label || noneText;
-			} else {
-				return null;
-			}
-		},
-		handleOpen: ({disabled, onClose, onOpen, open}) => {
-			// When disabled, don't attach an event
-			if (!disabled) {
-				return open ? onClose : onOpen;
-			}
-		},
 		handleKeyDown: ({autoClose, lockBottom, onClose}) => {
 			if (autoClose || lockBottom) {
 				return (ev) => {
@@ -174,10 +160,25 @@ const ExpandableItemBase = kind({
 				};
 			}
 		},
-		open: ({disabled, open}) => open && !disabled
+		handleOpen: ({disabled, onClose, onOpen, open}) => {
+			// When disabled, don't attach an event
+			if (!disabled) {
+				return open ? onClose : onOpen;
+			}
+		},
+		label: ({disabled, label, noneText, open, showLabel}) => {
+			const isOpen = open && !disabled;
+			if (showLabel === 'always' || (!isOpen && showLabel !== 'never')) {
+				return label || noneText;
+			} else {
+				return null;
+			}
+		},
+		open: ({disabled, open}) => (open && !disabled),
+		titleIcon: ({open}) => (open ? 'arrowlargeup' : 'arrowlargedown')
 	},
 
-	render: ({children, disabled, handleOpen, label, handleKeyDown, open, title, ...rest}) => {
+	render: ({children, disabled, handleKeyDown, handleOpen, label, open, title, titleIcon, ...rest}) => {
 		delete rest.autoClose;
 		delete rest.label;
 		delete rest.lockBottom;
@@ -192,6 +193,7 @@ const ExpandableItemBase = kind({
 					disabled={disabled}
 					label={label}
 					onClick={handleOpen}
+					titleIcon={titleIcon}
 				>{title}</LabeledItem>
 				<ExpandableTransitionContainer
 					data-container-disabled={!open}

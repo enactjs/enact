@@ -7,15 +7,17 @@
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 
+import Icon from '../Icon';
 import Item from '../Item';
-import {MarqueeDecorator} from '../Marquee';
+import {MarqueeController, MarqueeText} from '../Marquee';
+
+const Controller = MarqueeController(Item);
 
 import css from './LabeledItem.less';
 
 /**
  * {@link moonstone/LabeledItem.LabeledItemBase} is a focusable Moonstone-styled component
- * that combines text content with a text label. Most developers will want to use the
- * Marquee-enabled version: {@link moonstone/LabeledItem.LabeledItem}
+ * that combines marquee-able text content with a synchronized marquee-able text label.
  *
  * @class LabeledItemBase
  * @memberof moonstone/LabeledItem
@@ -42,7 +44,16 @@ const LabeledItemBase = kind({
 		 * @default null
 		 * @public
 		 */
-		label: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+		label: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+
+		/**
+		 * Icon to be displayed next to the title text.
+		 *
+		 * @type {String}
+		 * @default null
+		 * @public
+		 */
+		titleIcon: PropTypes.string
 	},
 
 	styles: {
@@ -50,27 +61,16 @@ const LabeledItemBase = kind({
 		className: 'labeleditem'
 	},
 
-	render: ({children, label, ...rest}) => (
-		<Item {...rest} component='div'>
-			{children}
-			{(label != null) ? (<div className={css.label}>{label}</div>) : null}
-		</Item>
+	render: ({children, label, titleIcon, ...rest}) => (
+		<Controller {...rest}>
+			<div className={css.text}>
+				<MarqueeText className={css.title}>{children}</MarqueeText>
+				{(titleIcon != null) ? <Icon small className={css.icon}>{titleIcon}</Icon> : null}
+			</div>
+			{(label != null) ? <MarqueeText className={css.label}>{label}</MarqueeText> : null}
+		</Controller>
 	)
 });
 
-/**
- * {@link moonstone/LabeledItem.LabeledItem} is a focusable Moonstone-styled component
- * that combines marquee-enabled text content with a text label.
- *
- * @class LabeledItem
- * @memberof moonstone/LabeledItem
- * @ui
- * @public
- */
-const LabeledItem = MarqueeDecorator(
-	{className: css.text},
-	LabeledItemBase
-);
-
-export default LabeledItem;
-export {LabeledItem, LabeledItemBase};
+export default LabeledItemBase;
+export {LabeledItemBase as LabeledItem, LabeledItemBase};
