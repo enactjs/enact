@@ -15,8 +15,7 @@ import shouldUpdate from 'recompose/shouldUpdate';
 import Icon from '../Icon';
 import IconButton from '../IconButton';
 
-import {steppedNumber} from './PickerPropTypes';
-import {checkDefaultBounds} from '@enact/ui/validators/PropTypeValidators';
+import {steppedNumber, validValue} from './PickerPropTypes';
 
 import css from './Picker.less';
 
@@ -218,7 +217,7 @@ const PickerCore = class extends React.Component {
 		 * @default 0
 		 * @public
 		 */
-		value: checkDefaultBounds,
+		value: validValue,
 
 		/**
 		 * Choose a specific size for your picker. `'small'`, `'medium'`, `'large'`, or set to `null` to
