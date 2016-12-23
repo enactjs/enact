@@ -169,9 +169,16 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillReceiveProps (nextProps) {
-			if (nextProps.value !== this.props.value || nextProps.max < this.state.value || nextProps.min > this.state.value) {
-				this.updateValue(clamp(nextProps.min, nextProps.max, nextProps.value));
+			if (nextProps.value !== this.props.value) {
+				this.updateValue(clamp(this.props.min, this.props.max, nextProps.value));
 			}
+		}
+
+		shouldComponentUpdate(nextProps) {
+			if (nextProps.max < this.state.value || nextProps.min > this.state.value) {
+				return false;
+			}
+			return true;
 		}
 
 		onChange = (value) => {
