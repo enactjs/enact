@@ -108,6 +108,6 @@ Current: `isRtlText()` provided by `@enact/i18n`
 ```
 import {isRtlText} from '@enact/i18n';
 
-const isRtl = isRtlText('שועל החום');
-const isLtr = isRtlText('LTR Text');
+const isHebrewRtl = isRtlText('שועל החום');
+const isEnglishRtl = isRtlText('LTR Text');
 ```
