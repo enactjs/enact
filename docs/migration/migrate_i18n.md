@@ -12,15 +12,15 @@ The `I18nDecorator` is usually applied at the root level of an application and p
 
 `ilib` modules can be accessed via different paths.
 
-Previous: `enyo-ilib/[MODULE_NAME]`
+**Previous:** `enyo-ilib/[MODULE_NAME]`
 
-Current: `@enact/i18n/ilib/lib/[MODULE_NAME]`
+**Current:** `@enact/i18n/ilib/lib/[MODULE_NAME]`
 
 ### String translation
 
-Previous: `$L()`
+**Previous:** `$L()`
 
-Current: `$L()`
+**Current:** `$L()`
 
 ```
 import {$L} from '@enact/i18n';
@@ -30,9 +30,9 @@ const MyTranslatedString = $L('Hello World');
 
 ### String Translation - ilib string
 
-Previous: `$L.rb()`
+**Previous:** `$L.rb()`
 
-Current: `toIString()`.
+**Current:** `toIString()`.
 
 ```
 import {toIString} from '@enact/i18n';
@@ -43,9 +43,9 @@ const MyIStringText = MyIString.toString();
 
 ### Updating the locale
 
-Previous: The `updateLocale()` method of the `enyo/i18n` library could be invoked
+**Previous:** The `updateLocale()` method of the `enyo/i18n` library could be invoked
 
-Current: The `updateLocale()` method is available for any component whose ancestor is wrapped with the `I18nDecorator`, which provides this method as part of the `context`.
+**Current:** The `updateLocale()` method is available for any component whose ancestor is wrapped with the `I18nDecorator`, which provides this method as part of the `context`.
 
 ```
 import Button from '@enact/moonstone/Button';
@@ -77,9 +77,9 @@ class MyComponent extends React.Component {
 
 ### Current Locale Text Directionality
 
-Previous: Components could check the value of `this.rtl`
+**Previous:** Components could check the value of `this.rtl`
 
-Current: Using `context`, any component whose ancestor is wrapped with `I18nDecorator` can check the value of `rtl`. Additionally, the value of `context.rtl` can be updated by any intermediary component, which will affect all descendants.
+**Current:** Using `context`, any component whose ancestor is wrapped with `I18nDecorator` can check the value of `rtl`. Additionally, the value of `context.rtl` can be updated by any intermediary component, which will affect all descendants.
 
 ```
 import Button from '@enact/moonstone/Button';
@@ -101,13 +101,25 @@ class MyComponent extends React.Component {
 
 ### Determine Text Directionality
 
-Previous: `isRtl()` provided by `enyo/utils`
+**Previous:** `isRtl()` provided by `enyo/utils`
 
-Current: `isRtlText()` provided by `@enact/i18n`
+**Current:** `isRtlText()` provided by `@enact/i18n`
 
 ```
 import {isRtlText} from '@enact/i18n';
 
 const isHebrewRtl = isRtlText('שועל החום');
 const isEnglishRtl = isRtlText('LTR Text');
+```
+
+### i18n Classes
+
+**Previous:** `enyo-locale-...`
+
+**Current:** `enact-locale-...`
+
+```css
+.div .enact-locale-non-latin {
+    background-color: green;
+}
 ```
