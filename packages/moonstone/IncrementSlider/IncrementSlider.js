@@ -180,7 +180,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 				>
 					{decrementIcon}
 				</IncrementSliderButton>
-				<SliderBase {...rest} className={css.slider} css={{knob: css.knob}} />
+				<SliderBase {...rest} className={css.slider} />
 				<IncrementSliderButton
 					className={css.incrementButton}
 					disabled={incrementDisabled}

@@ -248,9 +248,9 @@ const VideoPlayerBase = class extends React.Component {
 
 	static defaultProps = {
 		autoCloseTimeout: 7000,
-		noAutoPlay: false,
 		jumpBy: 30,
 		muted: false,
+		noAutoPlay: false,
 		noJumpButtons: false,
 		noRateButtons: false,
 		noSlider: false
@@ -308,6 +308,8 @@ const VideoPlayerBase = class extends React.Component {
 	componentWillUnmount () {
 		off('mousemove', this.activityDetected);
 		off('keypress', this.activityDetected);
+		this.stopRewindJob();
+		this.stopAutoCloseTimeout();
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -631,6 +633,10 @@ const VideoPlayerBase = class extends React.Component {
 		if (this.props.autoCloseTimeout) {
 			startJob('autoClose' + this.instanceId, this.hideControls, this.props.autoCloseTimeout);
 		}
+	}
+
+	stopAutoCloseTimeout = () => {
+		stopJob('autoClose' + this.instanceId);
 	}
 
 	hideControls = () => {

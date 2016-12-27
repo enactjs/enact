@@ -18,7 +18,7 @@ const getNow = function () {
 /**
  * Create a time object (hour, minute, second) from an amount of seconds
  *
- * @param  {Number|String} time A duration of time represented in seconds
+ * @param  {Number|String} value A duration of time represented in seconds
  *
  * @return {Object}       An object with keys {hour, minute, second} representing the duration
  *                        seconds provided as an argument.
@@ -52,6 +52,9 @@ const secondsToPeriod = (seconds) => {
  * Make a human-readable time
  *
  * @param  {Number|String} seconds A duration of time represented in seconds
+ * @param {DurationFmt} durfmt An instance of a {@link i18n/ilib/lib/DurationFmt.DurationFmt} object
+ *                             from iLib confugured to display time used by the {@Link VideoPlayer}
+ *                             component.
  *
  * @return {String}      Formatted duration string
  * @private
