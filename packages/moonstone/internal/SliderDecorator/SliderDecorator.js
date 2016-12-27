@@ -195,7 +195,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentDidUpdate (prevProps) {
 			if (prevProps.vertical !== this.props.vertical) {
-				this.updateUI(this.props.value);
+				this.updateUI(this.state.value);
 			}
 		}
 

@@ -28,7 +28,7 @@ const MediaTitleBase = kind({
 		children: React.PropTypes.node,
 
 		/**
-		 * Control whether the
+		 * Control whether the children (infoComponents) are displayed.
 		 *
 		 * @type {Object}
 		 * @public
