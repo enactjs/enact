@@ -3,6 +3,7 @@ import React from 'react';
 import {shape} from '@enact/ui/ViewManager';
 
 import ApplicationCloseButton from './ApplicationCloseButton';
+import CancelDecorator from './CancelDecorator';
 import Viewport from './Viewport';
 
 import css from './Panels.less';
@@ -60,7 +61,14 @@ const PanelsBase = kind({
 		 * A function to run when app close button is clicked
 		 * @type {Function}
 		 */
-		onApplicationClose: React.PropTypes.func
+		onApplicationClose: React.PropTypes.func,
+
+		/**
+		 * Callback to handle cancel/back key events
+		 *
+		 * @type {Function}
+		 */
+		onBack: React.PropTypes.func
 	},
 
 	defaultProps: {
@@ -90,6 +98,7 @@ const PanelsBase = kind({
 	render: ({noAnimation, arranger, children, index, applicationCloseButton, ...rest}) => {
 		delete rest.noCloseButton;
 		delete rest.onApplicationClose;
+		delete rest.onBack;
 
 		return (
 			<div {...rest}>
@@ -102,5 +111,7 @@ const PanelsBase = kind({
 	}
 });
 
-export default PanelsBase;
-export {PanelsBase as Panels, PanelsBase};
+const Panels = CancelDecorator({cancel: 'onBack'}, PanelsBase);
+
+export default Panels;
+export {Panels, PanelsBase};
