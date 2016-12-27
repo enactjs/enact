@@ -5,6 +5,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ## [unreleased]
 
 ### Added
+- `Moonstone/VideoPlayer` component
 
 - `moonstone/VirtualFlexList` component to support variably sized rows or columns
 - `moonstone/TooltipDecorator` component
