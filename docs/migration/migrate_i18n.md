@@ -45,7 +45,7 @@ const MyIStringText = MyIString.toString();
 
 Previous: The `updateLocale()` method of the `enyo/i18n` library could be invoked
 
-Current: The `updateLocale()` method is available for any component whose ancestor is wrapped with the `I18nDecorator`, which provides this method as part of the 
+Current: The `updateLocale()` method is available for any component whose ancestor is wrapped with the `I18nDecorator`, which provides this method as part of the `context`.
 
 ```
 import Button from '@enact/moonstone/Button';
