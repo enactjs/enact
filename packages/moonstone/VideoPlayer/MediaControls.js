@@ -14,6 +14,14 @@ const MediaButton = onlyUpdateForKeys([
 	'onClick'
 ])(IconButton);
 
+/**
+ * MediaControls {@link moonstone/VideoPlayer}.
+ *
+ * @class MediaControls
+ * @memberof moonstone/VideoPlayer
+ * @ui
+ * @private
+ */
 const MediaControls = kind({
 	name: 'MediaControls',
 

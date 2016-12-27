@@ -6,13 +6,42 @@ import {MarqueeText} from '../Marquee';
 
 import css from './VideoPlayer.less';
 
+/**
+ * MediaTitle {@link moonstone/VideoPlayer}.
+ *
+ * @class MediaTitle
+ * @memberof moonstone/VideoPlayer
+ * @ui
+ * @private
+ */
 const MediaTitleBase = kind({
 	name: 'MediaTitle',
 
 	propTypes: {
+		/**
+		 * Anything supplied to `children` will be rendered. Typically this will be informational
+		 * badges indicating aspect ratio, audio channels, etc, but it could also be a description.
+		 *
+		 * @type {Node}
+		 * @public
+		 */
 		children: React.PropTypes.node,
-		title: React.PropTypes.string,
-		visible: React.PropTypes.bool
+
+		/**
+		 * Control whether the
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		infoVisible: React.PropTypes.bool,
+
+		/**
+		 * A title string to identify the media's title.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		title: React.PropTypes.string
 	},
 
 	styles: {
@@ -21,18 +50,18 @@ const MediaTitleBase = kind({
 	},
 
 	computed: {
-		childrenClassName: ({visible, styler}) => styler.join(
+		childrenClassName: ({infoVisible, styler}) => styler.join(
 			'infoComponents',
-			visible ? 'visible' : 'hidden'
+			infoVisible ? 'visible' : 'hidden'
 		),
-		titleClassName: ({visible, styler}) => styler.join({
+		titleClassName: ({infoVisible, styler}) => styler.join({
 			title: true,
-			withBadges: visible
+			infoVisible
 		})
 	},
 
 	render: ({children, childrenClassName, title, titleClassName, ...rest}) => {
-		delete rest.visible;
+		delete rest.infoVisible;
 
 		return (
 			<div {...rest}> {/* hidingDuration={1000} marqueeOnRender */}
@@ -47,7 +76,7 @@ const MediaTitleBase = kind({
 	}
 });
 
-const MediaTitle = onlyUpdateForKeys(['children', 'title', 'visible'])(MediaTitleBase);
+const MediaTitle = onlyUpdateForKeys(['children', 'title', 'infoVisible'])(MediaTitleBase);
 
 export default MediaTitle;
 export {

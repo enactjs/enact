@@ -4,6 +4,16 @@ import React from 'react';
 
 import css from './VideoPlayer.less';
 
+/**
+ * Overlay {@link moonstone/VideoPlayer}. This covers the Video piece of the
+ * {@link moonstone/VideoPlayer} to prevent unnecessary VideoPlayer repaints due to mouse-moves.
+ * It also acts as a container for overlaid elements, like the {@link moonstone/Spinner}.
+ *
+ * @class Overlay
+ * @memberof moonstone/VideoPlayer
+ * @ui
+ * @private
+ */
 const OverlayBase = kind({
 	name: 'Overlay',
 

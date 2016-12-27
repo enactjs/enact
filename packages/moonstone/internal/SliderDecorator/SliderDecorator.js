@@ -193,6 +193,12 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
+		componentDidUpdate (prevProps) {
+			if (prevProps.vertical !== this.props.vertical) {
+				this.updateUI(this.props.value);
+			}
+		}
+
 		onChange = (value) => {
 			if (this.props.onChange) {
 				this.props.onChange({value});

@@ -735,7 +735,7 @@ const VideoPlayerBase = class extends React.Component {
 						<div className={css.infoFrame}>
 							<MediaTitle
 								title={title}
-								visible={this.state.more}
+								infoVisible={this.state.more}
 							>
 								{infoComponents}
 							</MediaTitle>
