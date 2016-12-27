@@ -30,14 +30,51 @@ Unlike simple functions with must be declared before any metadata can be attache
 components encourage a consistent ordering of keys for top-down readability:
 
 > The `name` component accepts these `propTypes` which have the following default values
-> `defaultProps`. It is formatted according to the CSS modules map and `className` in `style`. That
+> `defaultProps`. It is formatted according to the CSS modules map and `className` in `styles`. That
 > data is used to produce several `computed` properties which ultimately are provided to `render` to
 > create the final component heirarchy.
 
-## Compared with React Components
+```
+import kind from '@enact/core/kind';
+import React from 'react';
 
-While SFCs have some important benefits, not every problem can be effectively solved with SFCs
-alone. Sometimes creating component instances that extent `React.Component` is necessary. Here are a
+const Badge = kind({
+	name: 'Badge',
+
+	propTypes: {
+		children: React.PropTypes.string.isRequired,
+		greeting: React.PropTypes.string,
+	},
+
+	defaultProps: {
+		greeting: 'Hello, my name is ...'
+	},
+
+	styles: {
+		css,
+		className: 'badge'
+	},
+
+	computed: {
+		children: ({children, greeting}) => `${greeting} ${children}`
+	},
+
+	render: ({children, ...rest}) => {
+		delete rest.greeting;
+
+		return (
+			<div {...rest}>
+				{children}
+			</div>
+		);
+	}
+});
+```
+
+## SFCs Compared with React Components
+
+While SFCs have some important benefits, not every problem can be effectively solved with them
+alone. Sometimes creating component instances that extend `React.Component` is necessary. Here are a
 few possible reasons:
 
 * You need access to the [component lifecycle methods](https://facebook.github.io/react/docs/react-component.html#the-component-lifecycle)
@@ -107,14 +144,12 @@ const Countable = hoc({prop: 'data-count'}, (config, Wrapped) => {
 	}
 });
 
-const CountableAsDataNumber({prop: 'data-number'});
-const CountableDiv('div');
+const CountableAsDataNumber = Countable({prop: 'data-number'});
+const CountableDiv = Countable('div');
 const CountableDivAsDataNumber = CountableAsDataNumber('div');
 ```
 
 ## Adding Design-Time Customizations to Components
-
-> **Note**: 
 
 While many of our components are very flexible using properties, we've found that sometimes an app
 needs the ability to further customize it. Generally, this type of customization isn't variable at
@@ -138,36 +173,41 @@ However, we do think this is an important feature for the framework and will con
 throughout and improve the overall developer experience around it. Here's a short example to whet
 your appetite.
 
-	import factory from '@enact/core/factory';
-	import kind from '@enact/core/kind';
-	
-	import componentCss from './Button.less';
-	
-	const ButtonFactory = factory({css: componentCss}, ({css}) => {
-		return kind({
-			name: 'Button',
-	
-			// Since 'button' will be resolved against the combined `css` map, it can be overridden too
-			styles: {
-				css,
-				className: 'button'
-			},
-	
-			// Component authors can also prevent overrides by using their css map directly as is done
-			// with the `inner` class below
-			render: ({children, ...rest}) => (
-				<button {...rest}>
-					<div className={componentCss.inner}>
-						{children}
-					</div>
-				</button>
-			)
-		});
+```
+import factory from '@enact/core/factory';
+import kind from '@enact/core/kind';
+import React from 'react';
+
+import componentCss from './Button.less';
+
+const ButtonFactory = factory({css: componentCss}, ({css}) => {
+	return kind({
+		name: 'Button',
+
+		// Since 'button' will be resolved against the combined `css` map, it can be overridden too
+		styles: {
+			css,
+			className: 'button'
+		},
+
+		// Component authors can also prevent overrides by using their css map directly as is done
+		// with the `inner` class below
+		render: ({children, ...rest}) => (
+			<button {...rest}>
+				<div className={componentCss.inner}>
+					{children}
+				</div>
+			</button>
+		)
 	});
-	
-	// If `buttonCss` includes a `button` class, it will be appended to the `button` class of the
-	// `Button` component.
-	import buttonCss from './CustomButton.less';
-	CustomizedButton = ButtonFactory({css: buttonCss});
-	
-	<CustomizedButton />
+});
+```
+
+```
+// If `buttonCss` includes a `button` class, it will be appended to the `button` class of the
+// `Button` component.
+import buttonCss from './CustomButton.less';
+CustomizedButton = ButtonFactory({css: buttonCss});
+
+<CustomizedButton />
+```
