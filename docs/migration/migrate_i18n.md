@@ -2,10 +2,14 @@
 title: Migrating i18n
 ---
 
-### i18n
-The `I18nDecorator` provides `ilib` features and is usually applied at the root level of an application. `MoonstoneDecorator` automatically applies `I18nDecorator` by default, and this can be configured via its `i18n` setting.
+### Adding Base Internationalization Support
 
-### Module paths
+The `I18nDecorator` is usually applied at the root level of an application and provides basic internationalization support to your application. It adds locale and text directionality CSS classes, provides automatic re-rendering when the locale changes via the `onlanguagechange` event, and adds [`context`](https://facebook.github.io/react/docs/context.html "React Context") parameters for downstream components to [update the locale](#updating-the-locale) or [determine the current text directionality](#current-locale-text-directionality).
+
+> **Note:** `MoonstoneDecorator` automatically applies `I18nDecorator` by default but can be disabled by settings its `i18n` config property to `false`.
+
+### ilib Modules
+
 `ilib` modules can be accessed via different paths.
 
 Previous: `enyo-ilib/[MODULE_NAME]`
@@ -13,6 +17,7 @@ Previous: `enyo-ilib/[MODULE_NAME]`
 Current: `@enact/i18n/ilib/lib/[MODULE_NAME]`
 
 ### String translation
+
 Previous: `$L()`
 
 Current: `$L()`
@@ -23,7 +28,8 @@ import {$L} from '@enact/i18n';
 const MyTranslatedString = $L('Hello World');
 ```
 
-### Ilib string
+### String Translation - ilib string
+
 Previous: `$L.rb()`
 
 Current: `toIString()`.
@@ -36,9 +42,10 @@ const MyIStringText = MyIString.toString();
 ```
 
 ### Updating the locale
+
 Previous: The `updateLocale()` method of the `enyo/i18n` library could be invoked
 
-Current: The `updateLocale()` method is available for any component whose ancestor is wrapped with the `I18nDecorator`, which provides this method as part of the [`context`](https://facebook.github.io/react/docs/context.html "React Context").
+Current: The `updateLocale()` method is available for any component whose ancestor is wrapped with the `I18nDecorator`, which provides this method as part of the 
 
 ```
 import Button from '@enact/moonstone/Button';
@@ -68,7 +75,8 @@ class MyComponent extends React.Component {
 }
 ```
 
-### RTL
+### Current Locale Text Directionality
+
 Previous: Components could check the value of `this.rtl`
 
 Current: Using `context`, any component whose ancestor is wrapped with `I18nDecorator` can check the value of `rtl`. Additionally, the value of `context.rtl` can be updated by any intermediary component, which will affect all descendants.
@@ -89,4 +97,17 @@ class MyComponent extends React.Component {
 		);
 	}
 }
+```
+
+### Determine Text Directionality
+
+Previous: `isRtl()` provided by `enyo/utils`
+
+Current: `isRtlText()` provided by `@enact/i18n`
+
+```
+import {isRtlText} from '@enact/i18n';
+
+const isRtl = isRtlText('שועל החום');
+const isLtr = isRtlText('LTR Text');
 ```
