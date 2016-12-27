@@ -42,7 +42,7 @@ Current: The `updateLocale()` method is available for any component whose ancest
 
 ```
 import Button from '@enact/moonstone/Button';
-import {contextTypes} from '@enact/i18n';
+import {contextTypes} from '@enact/i18n/I18nDecorator';
 import React from 'react';
 
 class MyComponent extends React.Component {
@@ -75,7 +75,7 @@ Current: Using `context`, any component whose ancestor is wrapped with `I18nDeco
 
 ```
 import Button from '@enact/moonstone/Button';
-import {contextTypes} from '@enact/i18n';
+import {contextTypes} from '@enact/i18n/I18nDecorator';
 import React from 'react';
 
 class MyComponent extends React.Component {
