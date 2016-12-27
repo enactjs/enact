@@ -4,7 +4,7 @@
  *
  * @module i18n/I18nDecorator
  */
-
+import ilib from '../ilib/lib/ilib';
 import hoc from '@enact/core/hoc';
 import {on, off} from '@enact/core/dispatcher';
 import React from 'react';
@@ -60,9 +60,10 @@ const IntlHoc = hoc((config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
+			const locale = props.locale && props.locale !== ilib.locale ? updateLocale(props.locale) : ilib.locale;
 
 			this.state = {
-				locale: updateLocale(props.locale)
+				locale: locale
 			};
 		}
 
