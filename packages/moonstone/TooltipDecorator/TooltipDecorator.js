@@ -1,6 +1,6 @@
 /**
  * Exports the {@link moonstone/TooltipDecorator.TooltipDecorator} Higher-order Component (HOC),
- * {@link moonstone/TooltipDecorator.Tooltip} and {@link moonstone/TooltipDecorator/TooltipBase}
+ * {@link moonstone/TooltipDecorator.Tooltip} and {@link moonstone/TooltipDecorator.TooltipBase}
  * components. The default export is {@link moonstone/TooltipDecorator.TooltipDecorator}.
  *
  * @module moonstone/TooltipDecorator
@@ -27,7 +27,7 @@ import {Tooltip, TooltipBase} from './Tooltip';
  * Note that the direction of tooltip will be flipped horizontally in RTL locales.
  *
  * @class TooltipDecorator
- * @memberof moonstone/TooltipDecorator/TooltipDecorator
+ * @memberof moonstone/TooltipDecorator
  * @hoc
  * @public
  */

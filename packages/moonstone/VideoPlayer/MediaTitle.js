@@ -17,10 +17,10 @@ import css from './VideoPlayer.less';
 const MediaTitleBase = kind({
 	name: 'MediaTitle',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/VideoPlayer.MediaTitle.prototype */ {
 		/**
 		 * Anything supplied to `children` will be rendered. Typically this will be informational
-		 * badges indicating aspect ratio, audio channels, etc, but it could also be a description.
+		 * badges indicating aspect ratio, audio channels, etc., but it could also be a description.
 		 *
 		 * @type {Node}
 		 * @public

@@ -102,7 +102,7 @@ const playbackRateHash = {
 const VideoPlayerBase = class extends React.Component {
 	static displayName = 'VideoPlayerBase'
 
-	static propTypes = /** @lends moonstone/VideoPlayer.VideoPlayerBase.prototype */{
+	static propTypes = /** @lends moonstone/VideoPlayer.VideoPlayerBase.prototype */ {
 		/**
 		* Amount of time (in milliseconds) after which control buttons are automatically hidden.
 		* Setting this to 0 or `null` disables autoClose, requiring user input to open and close.

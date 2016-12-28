@@ -17,7 +17,7 @@ import css from './VideoPlayer.less';
 const OverlayBase = kind({
 	name: 'Overlay',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/VideoPlayer.Overlay.prototype */ {
 		children: React.PropTypes.node
 	},
 

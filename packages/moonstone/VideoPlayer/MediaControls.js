@@ -25,7 +25,7 @@ const MediaButton = onlyUpdateForKeys([
 const MediaControls = kind({
 	name: 'MediaControls',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/VideoPlayer.MediaControls.prototype */ {
 		leftComponents: React.PropTypes.node,
 		mediaDisabled: React.PropTypes.bool,
 		moreDisabled: React.PropTypes.bool,
