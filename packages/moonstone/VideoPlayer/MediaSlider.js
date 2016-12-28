@@ -19,7 +19,7 @@ const Slider = SliderFactory({css});
 const MediaSliderBase = kind({
 	name: 'MediaSlider',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/VideoPlayer.MediaSlider.prototype */ {
 		/**
 		 * Background progress, as a percentage.
 		 *
