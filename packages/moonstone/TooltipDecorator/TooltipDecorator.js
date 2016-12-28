@@ -28,7 +28,7 @@ import {Tooltip, TooltipBase} from './Tooltip';
  *
  * @class TooltipDecorator
  * @memberof moonstone/TooltipDecorator/TooltipDecorator
- * @ui
+ * @hoc
  * @public
  */
 const TooltipDecorator = hoc((config, Wrapped) => {
