@@ -101,6 +101,24 @@ storiesOf('Picker')
 		)
 	)
 	.addWithInfo(
+		'with no items (PLAT-30963)',
+		() => (
+			<StatefulPicker
+				onChange={action('onChange')}
+				width={select('width', prop.width, 'large')}
+				orientation={select('orientation', prop.orientation)}
+				wrap={boolean('wrap', true)}
+				joined={boolean('joined')}
+				noAnimation={boolean('noAnimation')}
+				disabled={boolean('disabled')}
+				incrementIcon={select('incrementIcon', iconNames)}
+				decrementIcon={select('decrementIcon', iconNames)}
+			>
+				{[]}
+			</StatefulPicker>
+		)
+	)
+	.addWithInfo(
 		'with one item',
 		() => (
 			<StatefulPicker
