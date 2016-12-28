@@ -12,14 +12,19 @@ ItemOverlay.propTypes = Object.assign({}, Item.propTypes, Overlay.propTypes);
 ItemOverlay.defaultProps = Object.assign({}, Item.defaultProps, Overlay.defaultProps);
 ItemOverlay.displayName = 'ItemOverlay';
 
-storiesOf('Item')
+const prop = {
+	autoHide: ['<null>', 'after', 'before', 'both']
+};
+const nullify = (v) => v === '<null>' ? null : v;
+
+storiesOf('Item.ItemOverlay')
 	.addDecorator(withKnobs)
 	.addWithInfo(
-		'ItemOverlay',
+		'',
 		'Basic usage of ItemOverlay',
 		() => (
 			<ItemOverlay
-				autoHide={select('autoHide', ['after', 'before', 'both', 'no'], 'after')}
+				autoHide={nullify(select('autoHide', prop.autoHide, 'after'))}
 				disabled={boolean('disabled', false)}
 			>
 				<Icon slot="overlayBefore">star</Icon>

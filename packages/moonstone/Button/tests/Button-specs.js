@@ -4,19 +4,6 @@ import Button from '../Button';
 
 describe('Button Specs', () => {
 
-	it('should render a single \<button\> tag', function () {
-		const msg = 'Hello Button!';
-		const button = mount(
-			<Button>{msg}</Button>
-		);
-
-		const buttonTag = button.find('button');
-		const expected = 1;
-		const actual = buttonTag.length;
-
-		expect(actual).to.equal(expected);
-	});
-
 	it('should render with button text upper-cased', function () {
 		let msg = 'Hello Button!';
 

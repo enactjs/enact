@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact webos module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- Documentation in **docs** directory
+
+## [1.0.0-alpha.5] - 2016-12-16
+
+No changes.
+
 ## [1.0.0-alpha.4] - 2016-12-2
 
 ### Changed

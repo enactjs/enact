@@ -1,6 +1,6 @@
 /**
  * Exports the {@link ui/ViewManager.ViewManager} component and the
- * [arrangers]{@link ui/ViewManager.Arranger} for use with it.
+ * arrangers for use with it.
  *
  * @module ui/ViewManager
  */
@@ -81,6 +81,48 @@ class ViewManager extends React.Component {
 		noAnimation: React.PropTypes.bool,
 
 		/**
+		 * Called when each view is rendered during initial construction.
+		 *
+		 * @type {Function}
+		 */
+		onAppear: React.PropTypes.func,
+
+		/**
+		 * Called when each view completes its transition into the viewport.
+		 *
+		 * @type {Function}
+		 */
+		onEnter: React.PropTypes.func,
+
+		/**
+		 * Called when each view completes its transition out of the viewport.
+		 *
+		 * @type {Function}
+		 */
+		onLeave: React.PropTypes.func,
+
+		/**
+		 * Called when each view completes its transition within the viewport.
+		 *
+		 * @type {Function}
+		 */
+		onStay: React.PropTypes.func,
+
+		/**
+		 * Called once when all views have completed their transition.
+		 *
+		 * @type {Function}
+		 */
+		onTransition: React.PropTypes.func,
+
+		/**
+		 * Called once before views begin their transition.
+		 *
+		 * @type {Function}
+		 */
+		onWillTransition: React.PropTypes.func,
+
+		/**
 		 * Explicitly sets the transition direction. If omitted, the direction is determined
 		 * automaticallly based on the change of index or a string comparison of the first child's
 		 * key
@@ -115,6 +157,7 @@ class ViewManager extends React.Component {
 	 *
 	 * @param  {Object} nextProps New props
 	 * @returns {undefined}
+	 * @private
 	 */
 	checkReverse (nextProps) {
 		// null or undefined => determine automatically

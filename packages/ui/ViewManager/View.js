@@ -1,8 +1,5 @@
-/**
+/*
  * Exports the {@link ui/ViewManager.View} component.
- *
- * @module ui/ViewManager/View
- * @private
  */
 
 import React from 'react';
@@ -10,19 +7,24 @@ import ReactDOM from 'react-dom';
 
 import {shape} from './Arranger';
 
-const TICK = 17;
+// Isomorphic guards
+const nop = function () {};
+const isBrowser = typeof window === 'object';
+const cancelAnimationFrame = isBrowser ? window.cancelAnimationFrame.bind(window) : nop;
+const requestAnimationFrame = isBrowser ? window.requestAnimationFrame.bind(window) : nop;
+const now = isBrowser ? window.performance.now.bind(window.performance) : nop;
 
 /**
  * A `View` wraps a set of children for {@link ui/ViewManager.ViewManager}.
  * It is not intended to be used directly
  *
  * @class View
- * @memberof ui/ViewManager/View
+ * @memberof ui/ViewManager
  * @private
  */
 class View extends React.Component {
 
-	static propTypes = /** @lends ui/ViewManager/View.View.prototype */ {
+	static propTypes = /** @lends ui/ViewManager.View.prototype */ {
 		children: React.PropTypes.node.isRequired,
 
 		/**
@@ -73,28 +75,23 @@ class View extends React.Component {
 
 	constructor (props) {
 		super(props);
-		this.state = {
-			step: null
-		};
-	}
-
-	shouldComponentUpdate (nextProps, nextState) {
-		// we're storing the current step in state but don't want to trigger a render on change
-		// because that's handled in the rAF.
-		if (nextState.step !== this.state.step) {
-			return false;
-		}
-
-		return true;
+		this.animation = null;
 	}
 
 	componentWillReceiveProps (nextProps) {
 		// changeDirection let's us know we need to switch mid-transition
-		this.changeDirection = this.state.step ? this.props.reverseTransition !== nextProps.reverseTransition : false;
+		this.changeDirection = this.animation ? this.props.reverseTransition !== nextProps.reverseTransition : false;
 	}
 
 	componentWillUnmount () {
-		window.cancelAnimationFrame(this._raf);
+		this.cancelAnimationFrame();
+	}
+
+	cancelAnimationFrame () {
+		if (this._raf) {
+			cancelAnimationFrame(this._raf);
+			this._raf = null;
+		}
 	}
 
 	componentWillAppear (callback) {
@@ -146,10 +143,12 @@ class View extends React.Component {
 	 * @param	{Function}	callback		Completion callback
 	 * @param	{Boolean}	[noAnimation]	`true` to disable animation for this transition
 	 * @returns {undefined}
+	 * @private
 	 */
 	prepareTransition = (arranger, callback, noAnimation) => {
 		const {duration, index, previousIndex, reverseTransition} = this.props;
-		const steps = Math.ceil(duration / TICK);
+		const startTime = now();
+		const endTime = startTime + duration;
 		/* eslint react/no-find-dom-node: "off" */
 		const node = ReactDOM.findDOMNode(this);
 
@@ -157,11 +156,11 @@ class View extends React.Component {
 		noAnimation = noAnimation || this.props.noAnimation;
 
 		// Arranges the control each tick and calls the provided callback on complete
-		const fn = (step) => {
-			window.cancelAnimationFrame(this._raf);
+		const fn = (start, end, time) => {
+			this.cancelAnimationFrame();
 
 			// percent is the ratio (between 0 and 1) of the current step to the total steps
-			const percent = step / steps;
+			const percent = (time - start) / (end - start);
 			if (!noAnimation && percent < 1) {
 				// the transition is still in progress so call the arranger
 				arranger({
@@ -176,7 +175,7 @@ class View extends React.Component {
 			} else {
 				// the transition is complete so clean up and ensure we fire a final arrange with
 				// a value of 1.
-				this.setState({step: null});
+				this.animation = null;
 				arranger({
 					node,
 					percent: 1,
@@ -190,23 +189,40 @@ class View extends React.Component {
 			}
 		};
 
-		// When a new transition is initiated mid-transition, this.state.step will hold the previous
-		// progress. This assumes that the duration hasn't changed.
-		let initialStep = (this.state.step && this.changeDirection) ? steps - this.state.step : 0;
-		this.transition(initialStep, fn);
+		let initialTime = 0;
+
+		// When a new transition is initiated mid-transition, adjust time to account for the current
+		// percent complete.
+		if (this.animation && this.changeDirection) {
+			const a = this.animation;
+			const percentComplete = (a.time - a.start) / (a.end - a.start);
+			initialTime = (endTime - startTime) * (1 - percentComplete);
+		}
+
+		this.transition(startTime, endTime, initialTime, fn);
 	}
 
 	/**
 	 * Calls the arranger method and schedules the next animation frame
 	 *
-	 * @param  {Number}   step     Current step > 0 and <= total steps for transition
-	 * @param  {Function} callback Completion callback
+	 * @param   {Number}    start    Animation start time
+	 * @param   {Number}    end      Animation end time
+	 * @param   {Number}    time     Current animation time
+	 * @param   {Function}  callback Completion callback
 	 * @returns {undefined}
+	 * @private
 	 */
-	transition = (step, callback) => {
-		this.setState({step});
-		if (callback(step)) {
-			this._raf = window.requestAnimationFrame(() => this.transition(step + 1, callback));
+	transition = (start, end, time, callback) => {
+		const a = this.animation = this.animation || {};
+		a.start = start;
+		a.end = end;
+		a.time = time;
+
+		if (callback(start, end, time)) {
+			this._raf = requestAnimationFrame(() => {
+				const current = now();
+				this.transition(start, end, current, callback);
+			});
 		} else {
 			this._raf = null;
 		}
