@@ -109,11 +109,9 @@ function getI18nClasses () {
  * @returns {undefined}
  */
 const updateLocale = function (locale) {
-	// if there is a new locale, blow away the cache to force it to reload the manifest files for the new app
-	if (typeof locale !== 'undefined' && locale !== ilib.locale && ilib._load) {
-		// eslint-disable-next-line no-undefined
-		ilib._load.manifest = undefined;
-	}
+	// blow away the cache to force it to reload the manifest files for the new app
+	// eslint-disable-next-line no-undefined
+	if (ilib._load) ilib._load.manifest = undefined;
 	// ilib handles falsy values and automatically uses local locale when encountered which
 	// is expected and desired
 	ilib.setLocale(locale);

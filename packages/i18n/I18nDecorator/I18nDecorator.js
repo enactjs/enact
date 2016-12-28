@@ -60,7 +60,8 @@ const IntlHoc = hoc((config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
-			const locale = props.locale && props.locale !== ilib.locale ? updateLocale(props.locale) : ilib.locale;
+			const ilibLocale = ilib.getLocale();
+			const locale = props.locale && props.locale !== ilibLocale ? updateLocale(props.locale) : ilibLocale;
 
 			this.state = {
 				locale: locale
