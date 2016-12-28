@@ -23,7 +23,7 @@ const IncrementSliderButtonBase = kind({
 	},
 
 	render: (props) => (
-		<IconButton {...props} small />
+		<IconButton {...props} backgroundOpacity='transparent' small />
 	)
 });
 
