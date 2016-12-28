@@ -64,14 +64,14 @@ const defaultConfig = {
 };
 
 /**
-* Checks whether any of the invalidateProps has changed or not
-*
-* @param {Array}	propList	An array of invalidateProps
-* @param {Object}   prev	Previous props
-* @param {Object}   next	Next props
-* @returns {Boolean} 'yes' if any of the props change, 'no' if none of the props change
-*/
-const didPropChange = function (propList, prev, next) {
+ * Checks whether any of the invalidateProps has changed or not
+ *
+ * @param {Array} propList An array of invalidateProps
+ * @param {Object} prev Previous props
+ * @param {Object} next Next props
+ * @returns {Boolean} `true` if any of the props changed
+ */
+const didPropChange = (propList, prev, next) => {
 	const hasPropsChanged = propList.map(i => prev[i] !== next[i]);
 	return hasPropsChanged.indexOf(true) !== -1;
 };
