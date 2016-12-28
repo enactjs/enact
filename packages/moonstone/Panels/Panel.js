@@ -1,6 +1,7 @@
 import kind from '@enact/core/kind';
-import Slottable from '@enact/ui/Slottable';
 import React from 'react';
+import Slottable from '@enact/ui/Slottable';
+import {SpotlightContainerDecorator} from '@enact/spotlight';
 
 import css from './Panel.less';
 
@@ -42,8 +43,12 @@ const PanelBase = kind({
 	)
 });
 
-// Note that we only export this (even as PanelBase).  PanelBase is not useful on its own.
-const Panel = Slottable({slots: ['header']}, PanelBase);
+const Panel = SpotlightContainerDecorator(
+	Slottable(
+		{slots: ['header']},
+		PanelBase
+	)
+);
 
 export default Panel;
-export {Panel, Panel as PanelBase};
+export {Panel, PanelBase};

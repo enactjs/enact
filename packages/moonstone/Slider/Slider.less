@@ -10,7 +10,7 @@
 		.fill {
 			background-color: @moon-slider-spotlight-bar-color;
 		}
-		.knob {
+		.knob::before {
 			background-color: @moon-slider-spotlight-knob-color;
 			border-width: 0; // Setting the border-width:0 removes the border and lets the background fill the entire size that was previously cropped off by the border.
 		}
@@ -39,18 +39,29 @@
 		height: 100%;
 		width: 100%;
 		background-color: @moon-progress-bg-color;
+		direction: ltr;	// Always arrange this according to LTR rules
 	}
 
 	.knob {
 		position: absolute;
-		height: @moon-slider-knob-height;
-		width: @moon-slider-knob-width;
-		background-color: @moon-slider-knob-bg-color;
-		border-radius: (@moon-slider-knob-height / 2);
-		border: @moon-button-border-width solid transparent;
-		box-sizing: border-box;
 		will-change: transform;
-		background-clip: padding-box;
+
+		&::before {
+			content: '';
+			position: absolute;
+			height: @moon-slider-knob-height;
+			width: @moon-slider-knob-width;
+			// Vertically and horizontally center this knob.
+			// Using this method rather than -top -left so the knob is more intuitively customizable.
+			-webkit-transform: @moon-translate-center;
+			transform:         @moon-translate-center;
+			background-color: @moon-slider-knob-bg-color;
+			border-radius: (@moon-slider-knob-height / 2);
+			border: @moon-button-border-width solid transparent;
+			box-sizing: border-box;
+			will-change: transform;
+			background-clip: padding-box;
+		}
 	}
 
 	.input {
@@ -72,6 +83,10 @@
 			box-sizing: border-box;
 			visibility: hidden;
 		}
+
+		:global(.enact-locale-right-to-left) & {
+			direction: ltr;
+		}
 	}
 
 	&.horizontal {
@@ -82,7 +97,7 @@
 		// .sliderBar {}
 		.knob {
 			top: 50%;
-			transform: translate(-50%,-50%);
+			left: 0;
 		}
 		.input {
 			padding: 0 @h-gap;
@@ -110,7 +125,6 @@
 		.knob {
 			top: 0;
 			left: 50%;
-			transform: translate(-50%, 50%);
 		}
 
 		.input {
@@ -127,7 +141,7 @@
 	&:global(.spottable):focus {
 		background-color: transparent;
 
-		.knob {
+		.knob::before {
 			background-color: @moon-slider-spotlight-knob-color;
 		}
 	}
