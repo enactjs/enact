@@ -1,20 +1,12 @@
-/**
- * Exports the {@link moonstone/Picker.PickerCore} component.
- * The default export is {@link moonstone/Picker.PickerCore}.
- *
- * @module moonstone/Picker
- */
-
 import * as jobs from '@enact/core/jobs';
 import {childrenEquals} from '@enact/core/util';
+import Holdable from '@enact/ui/Holdable';
 import clamp from 'ramda/src/clamp';
 import React from 'react';
 import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
 import shouldUpdate from 'recompose/shouldUpdate';
 
-import Icon from '../Icon';
-import IconButton from '../IconButton';
-
+import PickerButton from './PickerButton';
 import {steppedNumber, validValue} from './PickerPropTypes';
 
 import css from './Picker.less';
@@ -48,8 +40,7 @@ const jobNames = {
 
 const emulateMouseEventsTimeout = 175;
 
-// Components
-const TransparentIconButton = (props) => <IconButton {...props} backgroundOpacity="transparent" />;
+const HoldablePickerButton = Holdable({resume: true, endHold: 'onLeave'}, PickerButton);
 
 /**
  * The base component for {@link moonstone/Picker.PickerCore}.
@@ -57,13 +48,13 @@ const TransparentIconButton = (props) => <IconButton {...props} backgroundOpacit
  * @class PickerCore
  * @memberof moonstone/Picker
  * @ui
- * @public
+ * @private
  */
 
 const PickerCore = class extends React.Component {
 	static displayName = 'PickerCore'
 
-	static propTypes = {
+	static propTypes = /** @lends moonstone/Picker.PickerCore.prototype */ {
 		/**
 		 * Index for internal ViewManager
 		 *
@@ -285,9 +276,17 @@ const PickerCore = class extends React.Component {
 		}
 	}
 
-	handleDecClick = () => this.handleChange(-1)
+	handleDecClick = () => {
+		if (!this.isButtonDisabled(this.props.step * -1)) {
+			this.handleChange(-1);
+		}
+	}
 
-	handleIncClick = () => this.handleChange(1)
+	handleIncClick = () => {
+		if (!this.isButtonDisabled(this.props.step)) {
+			this.handleChange(1);
+		}
+	}
 
 	handleDown = (dir) => {
 		const {joined, onMouseDown} = this.props;
@@ -315,6 +314,20 @@ const PickerCore = class extends React.Component {
 			jobs.startJob(jobNames.emulateMouseUp, onMouseUp, emulateMouseEventsTimeout);
 			// prevent the default scroll behavior to avoid bounce back
 			ev.preventDefault();
+		}
+	}
+
+	handleDecPulse = () => {
+		if (!this.isButtonDisabled(this.props.step * -1)) {
+			this.handleDecDown();
+			this.handleChange(-1);
+		}
+	}
+
+	handleIncPulse = () => {
+		if (!this.isButtonDisabled(this.props.step)) {
+			this.handleIncDown();
+			this.handleChange(1);
 		}
 	}
 
@@ -356,33 +369,50 @@ const PickerCore = class extends React.Component {
 		delete rest.value;
 		delete rest.wrap;
 
-		const ButtonType = joined ? Icon : TransparentIconButton;
 		const incrementIcon = selectIncIcon(this.props);
 		const decrementIcon = selectDecIcon(this.props);
 
 		const decrementerDisabled = this.isButtonDisabled(step * -1);
 		const incrementerDisabled = this.isButtonDisabled(step);
 		const classes = this.determineClasses(decrementerDisabled, incrementerDisabled);
-
-		const handleIncClick = incrementerDisabled ? null : this.handleIncClick;
-		const handleDecClick = decrementerDisabled ? null : this.handleDecClick;
-
 		let arranger;
+
 		if (width && !disabled) {
 			arranger = orientation === 'vertical' ? SlideTopArranger : SlideLeftArranger;
 		}
 
 		return (
 			<div {...rest} className={classes} disabled={disabled} onWheel={joined ? this.handleWheel : null}>
-				<span className={css.incrementer} disabled={incrementerDisabled} onClick={handleIncClick} onMouseDown={this.handleIncDown} onMouseUp={onMouseUp}>
-					<ButtonType disabled={incrementerDisabled}>{incrementIcon}</ButtonType>
-				</span>
-				<PickerViewManager arranger={arranger} duration={200} index={index} noAnimation={noAnimation} reverseTransition={this.reverseTransition} className={css.valueWrapper}>
+				<HoldablePickerButton
+					className={css.incrementer}
+					disabled={incrementerDisabled}
+					onClick={this.handleIncClick}
+					onMouseDown={this.handleIncDown}
+					onMouseUp={onMouseUp}
+					onHoldPulse={this.handleIncPulse}
+					joined={joined}
+					icon={incrementIcon}
+				/>
+				<PickerViewManager
+					arranger={arranger}
+					duration={100}
+					index={index}
+					noAnimation={noAnimation}
+					reverseTransition={this.reverseTransition}
+					className={css.valueWrapper}
+				>
 					{children}
 				</PickerViewManager>
-				<span className={css.decrementer} disabled={decrementerDisabled} onClick={handleDecClick} onMouseDown={this.handleDecDown} onMouseUp={onMouseUp}>
-					<ButtonType disabled={decrementerDisabled}>{decrementIcon}</ButtonType>
-				</span>
+				<HoldablePickerButton
+					className={css.decrementer}
+					disabled={decrementerDisabled}
+					onClick={this.handleDecClick}
+					onMouseDown={this.handleDecDown}
+					onMouseUp={onMouseUp}
+					onHoldPulse={this.handleDecPulse}
+					joined={joined}
+					icon={decrementIcon}
+				/>
 			</div>
 		);
 	}

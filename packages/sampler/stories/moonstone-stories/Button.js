@@ -9,7 +9,7 @@ Button.displayName = 'Button';
 
 // Set up some defaults for info and knobs
 const prop = {
-	backgroundOpacity: {'opaque': 'opaque', 'translucent': 'translucent', 'transparent': 'transparent'}
+	backgroundOpacity: ['opaque', 'translucent', 'transparent']
 };
 
 storiesOf('Button')
@@ -21,11 +21,11 @@ storiesOf('Button')
 			<Button
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
-				disabled={boolean('disabled')}
-				minWidth={boolean('minWidth')}
-				preserveCase={boolean('preserveCase')}
-				selected={boolean('selected')}
-				small={boolean('small')}
+				disabled={boolean('disabled', Button.defaultProps.disabled)}
+				minWidth={boolean('minWidth', Button.defaultProps.minWidth)}
+				preserveCase={boolean('preserveCase', Button.defaultProps.preserveCase)}
+				selected={boolean('selected', Button.defaultProps.selected)}
+				small={boolean('small', Button.defaultProps.small)}
 			>
 				{text('children', 'Click Me')}
 			</Button>

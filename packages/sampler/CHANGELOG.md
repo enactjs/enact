@@ -4,15 +4,18 @@ The following is a curated list of changes in the Enact Sampler, newest changes 
 
 ## [unreleased]
 
+### Added
+- `moonstone/TooltipDecorator` sample
+
 ### Changed
 
 - `moonstone/Item.ItemOverlay` to be in a stand-alone sample
 - samples to be up-to-date with API changes
+- `moonstone/ContextualPopup` to `moonstone/ContextualPopupDecorator`
 
-## [unreleased]
+## [1.0.0-alpha.5] - 2016-12-16
 
-### Changed
-- `ContextualPopup` to `ContextualPopupDecorator`
+No changes.
 
 ## [1.0.0-alpha.4] - 2016-12-2
 

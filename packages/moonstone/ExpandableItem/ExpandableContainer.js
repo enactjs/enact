@@ -1,10 +1,3 @@
-/**
- * Exports the {@link moonstone/ExpandableItem/ExpandableContainer.ExpandableContainer} component
- *
- * @module moonstone/ExpandableItem/ExpandableContainer
- * @private
- */
-
 import {Spotlight, SpotlightContainerDecorator} from '@enact/spotlight';
 import React from 'react';
 
@@ -13,19 +6,20 @@ import React from 'react';
  * component is contained.
  *
  * @class ExpandableContainerBase
- * @memberof moonstone/ExpandableItem/ExpandableContainer
+ * @memberof moonstone/ExpandableItem
  * @private
  */
 const ExpandableContainerBase = class extends React.Component {
 	static displayName = 'ExpandableContainer'
 
-	static propTypes =  /** @lends moonstone/ExpandableItem/ExpandableContainer.ExpandableContainerBase.prototype */ {
+	static propTypes =  /** @lends moonstone/ExpandableItem.ExpandableContainerBase.prototype */ {
 		/**
 		 * Set the spotlight container id of the Expandable control.
 		 *
 		 * @type {String}
 		 * @default ''
 		 * @public
+		 * @memberof moonstone/ExpandableItem.ExpandableContainerBase.prototype
 		 */
 		'data-container-id': React.PropTypes.string,
 
@@ -122,7 +116,7 @@ const ExpandableContainerBase = class extends React.Component {
  * component is contained.
  *
  * @class ExpandableContainer
- * @memberof moonstone/ExpandableItem/ExpandableContainer
+ * @memberof moonstone/ExpandableItem
  * @private
  */
 const ExpandableContainer = SpotlightContainerDecorator(ExpandableContainerBase);
