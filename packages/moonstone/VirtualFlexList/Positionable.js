@@ -1,7 +1,5 @@
-/**
+/*
  * Exports the {@link moonstone/VirtualFlexList.Positionable} component.
- *
- * @module moonstone/Positionable
  */
 
 import clamp from 'ramda/src/clamp';
@@ -25,7 +23,7 @@ const
  */
 const Positionable = hoc((config, Wrapped) => {
 	return class extends Component {
-		static propTypes = {
+		static propTypes = /** @lends moonstone/VirtualFlexList.Positionable.prototype */ {
 			/**
 			 * Position x.
 			 *

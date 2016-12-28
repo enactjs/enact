@@ -1,9 +1,7 @@
-/**
+/*
  * Exports the {@link moonstone/VirtualFlexList.VirtualFlexListBase} and
  * {@link moonstone/VirtualFlexList.VirtualFlexListCore} components.
  * The default export is {@link moonstone/VirtualFlexList.VirtualFlexListBase}.
- *
- * @module moonstone/VirtualFlexListCore
  */
 
 import React, {Component, PropTypes} from 'react';
@@ -26,7 +24,7 @@ const
  * or {@link moonstone/VirtualFlexList.itemSize}.
  *
  * @typedef {Object} sizeShape
- * @memberof moonstone/VirtualFlexListCore
+ * @memberof moonstone/VirtualFlexList
  * @property {Number|Function} col - The size for column data/item. It should be either number or function to get it.
  * @property {Number|Function} row - The size for row data/item. It should be either number or function to get it.
  */
@@ -50,7 +48,7 @@ const sizeShape = PropTypes.oneOfType([
  * @private
  */
 class VirtualFlexListCore extends Component {
-	static propTypes = /** @lends moonstone/VirtualFlexList.VirtualFlexList.prototype */ {
+	static propTypes = /** @lends moonstone/VirtualFlexList.VirtualFlexListCore.prototype */ {
 		/**
 		 * The render function for an item of the list.
 		 * `data` is the same with the `data` prop in the list.
@@ -801,6 +799,14 @@ class VirtualFlexListCore extends Component {
 	}
 }
 
+/**
+ * {@link moonstone/VirtualFlexList.VirtualFlexListBase} is a base component for VirtualFlexList.
+ *
+ * @class VirtualFlexListBase
+ * @memberof moonstone/VirtualFlexList
+ * @ui
+ * @public
+ */
 const VirtualFlexListBase = SpotlightContainerDecorator(Positionable(VirtualFlexListCore));
 
 export default VirtualFlexListBase;
