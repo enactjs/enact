@@ -39,6 +39,7 @@ storiesOf('Picker')
 				disabled={boolean('disabled')}
 				incrementIcon={text('incrementIcon')}
 				decrementIcon={text('decrementIcon')}
+				reverse={boolean('reverse')}
 			>
 				{airports}
 			</StatefulPicker>

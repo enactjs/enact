@@ -191,6 +191,17 @@ const PickerCore = class extends React.Component {
 		]),
 
 		/**
+		 * When `true`, the picker buttons operate in the reverse direction such that pressing
+		 * up/left decrements the value and down/right increments the value. This is more natural
+		 * for vertical lists of text options where "up" implies a spatial change rather than
+		 * incrementing the value.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		reverse: React.PropTypes.bool,
+
+		/**
 		 * Allow the picker to only increment or decrement by a given value. A step of `2` would
 		 * cause a picker to increment from 10 to 12 to 14, etc.
 		 *
@@ -262,28 +273,30 @@ const PickerCore = class extends React.Component {
 		return wrap ? wrapRange(min, max, value + delta) : clamp(min, max, value + delta);
 	}
 
+	adjustDirection = (dir) => this.props.reverse ? -dir : dir
+
 	isButtonDisabled = (delta) => {
 		const {disabled, value} = this.props;
-		return disabled || this.computeNextValue(delta) === value;
+		return disabled || this.computeNextValue(this.adjustDirection(delta)) === value;
 	}
 
-	handleChange = (dir) => {
+	updateValue = (dir) => {
 		const {disabled, onChange, step} = this.props;
 		if (!disabled && onChange) {
-			const value = this.computeNextValue(dir * step);
+			const value = this.computeNextValue(this.adjustDirection(dir) * step);
 			onChange({value});
 		}
 	}
 
 	handleDecClick = () => {
-		if (!this.isButtonDisabled(this.props.step * -1)) {
-			this.handleChange(-1);
+		if (!this.isButtonDisabled(-this.props.step)) {
+			this.updateValue(-1);
 		}
 	}
 
 	handleIncClick = () => {
 		if (!this.isButtonDisabled(this.props.step)) {
-			this.handleChange(1);
+			this.updateValue(1);
 		}
 	}
 
@@ -306,7 +319,7 @@ const PickerCore = class extends React.Component {
 		// the bounds of the picker
 		if (dir && !this.isButtonDisabled(step * dir)) {
 			// fire the onChange event
-			this.handleChange(dir);
+			this.updateValue(dir);
 			// simulate mouse down
 			this.handleDown(dir);
 			// set a timer to simulate the mouse up
@@ -319,14 +332,14 @@ const PickerCore = class extends React.Component {
 	handleDecPulse = () => {
 		if (!this.isButtonDisabled(this.props.step * -1)) {
 			this.handleDecDown();
-			this.handleChange(-1);
+			this.updateValue(-1);
 		}
 	}
 
 	handleIncPulse = () => {
 		if (!this.isButtonDisabled(this.props.step)) {
 			this.handleIncDown();
-			this.handleChange(1);
+			this.updateValue(1);
 		}
 	}
 
@@ -364,7 +377,7 @@ const PickerCore = class extends React.Component {
 		delete rest.onChange;
 		delete rest.onMouseDown;
 		delete rest.pressed;
-		delete rest.reverseTransition;
+		delete rest.reverse;
 		delete rest.value;
 		delete rest.wrap;
 
