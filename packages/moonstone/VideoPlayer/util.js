@@ -63,6 +63,8 @@ const secondsToTime = (seconds, durfmt) => {
 	if (durfmt) {
 		return durfmt.format(parseTime(seconds)).toString();
 	}
+
+	return '00:00';
 };
 
 /**
