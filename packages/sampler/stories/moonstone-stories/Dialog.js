@@ -22,7 +22,7 @@ storiesOf('Dialog')
 				showCloseButton={boolean('showCloseButton', false)}
 				showDivider={boolean('showDivider', false)}
 			>
-				<title>{text('title', 'Hello Dialog')}</title>
+				<title>{text('title', 'Hello Dialogggggggggggggggggggggggggggggggggggggggggggggggggggggggggg Title')}</title>
 				<titleBelow>{text('titleBelow', 'This is an organized dialog')}</titleBelow>
 				<span>This dialog has content in it and can be very useful for organizing information
 				for the user.</span>

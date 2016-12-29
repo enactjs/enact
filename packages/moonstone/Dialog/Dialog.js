@@ -8,7 +8,7 @@
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 import Slottable from '@enact/ui/Slottable';
-
+import {MarqueeText} from '../Marquee';
 import Popup from '../Popup';
 
 import css from './Dialog.less';
@@ -148,9 +148,9 @@ const DialogBase = kind({
 		return (
 			<Popup {...rest}>
 				<div className={css.titleWrapper}>
-					<h1 className={css.title}>
+					<MarqueeText  marqueeOn='render' marqueeOnRenderDelay={5000} marqueeDelay={5000} className={css.title}>
 						{title}
-					</h1>
+					</MarqueeText>
 					<h2 className={css.titleBelow}>
 						{titleBelow}
 					</h2>
@@ -165,7 +165,6 @@ const DialogBase = kind({
 		);
 	}
 });
-
 
 /**
  * {@link moonstone/Dialog.Dialog} is modal component with a title, a subtitle, a
