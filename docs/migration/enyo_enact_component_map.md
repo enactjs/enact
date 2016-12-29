@@ -41,7 +41,7 @@ title: Enyo to Enact Component Map
 | `AnimatedButton` | | deprecated |
 | `ApplicationCloseButton` | `ApplicationCloseButton` | provided in `@enact/moonstone/Panels` |
 | `AudioPlayback` | | previously work-in-progress (WIP)/unused |
-| `BodyText` | * | under review |
+| `BodyText` | `BodyText` | |
 | `BreadCrumbArranger` | `BreadCrumbArranger` | provided in `@enact/moonstone/Panels` |
 | `Button` | `Button` | |
 | `Calendar` | | unused<sup>1</sup> |
@@ -51,9 +51,9 @@ title: Enyo to Enact Component Map
 | `CheckboxItem` | `CheckboxItem` | |
 | `ClampedText` | | unused<sup>1</sup> |
 | `Clock` | * | under review |
-| `ContextualPopup` | * | under development |
+| `ContextualPopup` | `ContextualPopupDecorator` |  |
 | `ContextualPopupButton` | | deprecated |
-| `ContextualPopupDecorator` | * | under review |
+| `ContextualPopupDecorator` | `ContextualPopupDecorator` | |
 | `DataGridList` | `VirtualGridList` | |
 | `DataList` | `VirtualList` | |
 | `DataTable` | | unused<sup>1</sup> |

@@ -4,8 +4,9 @@ title: Migrating Enyo Applications
 
 ## Overview
 
-You may be attempting to migrate an Enyo application to Enact.  As there is no direct upgrade path, migrating an existing
-application (Enyo or not) to Enact can be considered more as an opportunity to aggressively refactor.
+Migrating from Enyo to Enact can be a challenge. There are many new concepts to learn and, while many of the same
+Moonstone components exist, their APIs have changes. Given this, you can look at this as an opportunity to
+aggressively refactor your app.
 
 >***Please do not attempt to directly port your application. Enact is a wholly different approach to application structure
 which is incompatible with the older techniques.***
@@ -26,10 +27,34 @@ application.***
 Source files are generally arranged in the project like so:
 ```
 project_root/   (package.json lives here)
+  assets/       (images and other non-source content)
   resources/    (ilibmanifest.json lives here)
   src/          (this directory may be important)
   webos-meta/   (helpful companion files for packaging webOS applications)
 ```
+
+#### Component Usage
+
+While many Moonstone components retained the same names they had in Enyo, some have changed. We have prepared
+the [Enyo to Enact Component Map](./enyo_enact_component_map.md) to help with the transition.
+
+In general, the `content` property is now handled by the implicit `children` property of components. Boolean
+properties can be shorted to just the property name.  For example, `moonstone/Button` in Enyo was configured
+like this:
+
+```
+    { name: 'MyButton', kind: Button, small: true, content: 'Click Me!'}
+```
+
+In Enact, the same effect is achieved like this:
+
+```
+    <Button small>Click Me!</Button>
+```
+
+Enact declarations are similar yet simpler than their Enyo counterparts. Further, some options and components
+that were not used have been removed in Enact. Please refer to [module documentation](../../../modules/)
+to see the exact APIs for each component.
 
 #### `enact-dev` vs. `enyo-dev`
 
@@ -70,8 +95,8 @@ the [Spotlight event documentation](../spotlight/index.md).
 Enyo's `Collection` and `Model` do not have analogs in Enact.  All applications utilizing these components will need a
 hefty refactoring of their usage and interactions.
 
-Enact uses the [Flux application architecture](https://facebook.github.io/flux/docs/overview.html#content) paradigm.  For complex data
-management and application state management, developers can use [Redux](../redux/index.md).
+Enact suggests the use of the [Flux application architecture](https://facebook.github.io/flux/docs/overview.html#content).  For complex data
+management and application state management, developers should use [Redux](../redux/index.md).
 
 ### View Management
 
