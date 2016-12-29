@@ -60,7 +60,9 @@ const secondsToPeriod = (seconds) => {
  * @private
  */
 const secondsToTime = (seconds, durfmt) => {
-	return durfmt.format(parseTime(seconds)).toString();
+	if (durfmt) {
+		return durfmt.format(parseTime(seconds)).toString();
+	}
 };
 
 /**
