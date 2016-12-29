@@ -8,7 +8,7 @@ import PanelsBase from './Panels';
  *
  * **Note** ActivityPanels requires that the `data-index` property that all panels variations add to
  * its children be applied to the root DOM node of each child in order to manage layout correctly.
- * It is recommended that your spread any extra props on the root node but you may also handle this
+ * It is recommended that you spread any extra props on the root node but you may also handle this
  * property explicitly if necessary.
  *
  * @class ActivityPanels
