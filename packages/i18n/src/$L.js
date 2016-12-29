@@ -41,13 +41,17 @@ function createResBundle (locale) {
  * @returns {ilib.IString} The translated string
  */
 function toIString (str) {
-	const rb = getResBundle();
-	const isObject = typeof str === 'object';
-	if (rb) {
-		return isObject ? rb.getString(str.value, str.key) : rb.getString(str);
+	if (typeof window === 'object') {
+		const rb = getResBundle();
+		const isObject = typeof str === 'object';
+		if (rb) {
+			return isObject ? rb.getString(str.value, str.key) : rb.getString(str);
+		}
+
+		return new IString(isObject ? str.value : str);
 	}
 
-	return new IString(isObject ? str.value : str);
+	return String(str);
 }
 
 /**
@@ -58,7 +62,11 @@ function toIString (str) {
  * @returns {String} The translated string.
  */
 function $L (str) {
-	return String(toIString(str));
+	if (typeof window === 'object') {
+		return String(toIString(str));
+	}
+
+	return String(str);
 }
 
 /**
