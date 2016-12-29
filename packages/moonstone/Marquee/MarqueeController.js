@@ -1,12 +1,20 @@
+import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import React from 'react';
 
+/**
+ * Context propTypes for MarqueeController
+ *
+ * @memberof moonstone/Marquee.Marquee
+ * @private
+ */
 const contextTypes = {
 	/**
 	 * Called by Marquee instances when marqueeing is canceled (e.g. when blurring a Marquee
 	 * set to `marqueeOn='focus'`)
 	 *
 	 * @type {Function}
+	 * @memberof moonstone/Marquee.Marquee.contextTypes
 	 */
 	cancel: React.PropTypes.func,
 
@@ -14,6 +22,7 @@ const contextTypes = {
 	 * Called by Marquee instances when marqueeing has completed
 	 *
 	 * @type {Function}
+	 * @memberof moonstone/Marquee.Marquee.contextTypes
 	 */
 	complete: React.PropTypes.func,
 
@@ -21,14 +30,17 @@ const contextTypes = {
 	 * Called to register a Marquee instance to be synchronized
 	 *
 	 * @type {Function}
+	 * @memberof moonstone/Marquee.Marquee.contextTypes
 	 */
 	register: React.PropTypes.func,
 
 	/**
 	 * Called by Marquee instances when marqueeing is started (e.g. when focusing a Marquee
-	 * set to `marqueeOn='focus'`)
+	 * set to `marqueeOn='focus'`). If the Marquee instance should not or does not need to marquee,
+	 * the function can return `true` to mark itself complete.
 	 *
 	 * @type {Function}
+	 * @memberof moonstone/Marquee.Marquee.contextTypes
 	 */
 	start: React.PropTypes.func,
 
@@ -36,8 +48,30 @@ const contextTypes = {
 	 * Called to unregister a synchronized Marquee instance
 	 *
 	 * @type {Function}
+	 * @memberof moonstone/Marquee.Marquee.contextTypes
 	 */
 	unregister: React.PropTypes.func
+};
+
+
+/**
+ * Default configuration parameters for {@link moonstone/Marquee.MarqueeController}
+ *
+ * @type {Object}
+ * @memberof moonstone/Marquee.MarqueeController
+ * @hocconfig
+ */
+const defaultConfig = {
+	/**
+	 * When `true`, any `onFocus` events that bubble to the controller will start the contained
+	 * Marquee instances. This is useful when a component contains Marquee instances that need to be
+	 * started with sibling components are focused.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @memberof moonstone/Marquee.MarqueeController.defaultConfig
+	 */
+	startOnFocus: false
 };
 
 /**
@@ -49,7 +83,10 @@ const contextTypes = {
  * @hoc
  * @public
  */
-const MarqueeController = hoc((config, Wrapped) => {
+const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
+	const {startOnFocus} = config;
+	const forwardBlur = forward('onBlur');
+	const forwardFocus = forward('onFocus');
 
 	return class extends React.Component {
 		static displayName = 'MarqueeController'
@@ -144,6 +181,22 @@ const MarqueeController = hoc((config, Wrapped) => {
 			}
 		}
 
+		/*
+		 * Handler for the focus event
+		 */
+		handleFocus = (ev) => {
+			this.dispatch('start');
+			forwardFocus(ev, this.props);
+		}
+
+		/*
+		 * Handler for the blur event
+		 */
+		handleBlur = (ev) => {
+			this.dispatch('stop');
+			forwardBlur(ev, this.props);
+		}
+
 		/**
 		 * Invokes the `action` handler for each synchronized component except the invoking
 		 * `component`.
@@ -157,7 +210,13 @@ const MarqueeController = hoc((config, Wrapped) => {
 			this.controlled.forEach((controlled) => {
 				const {component: controlledComponent, [action]: handler} = controlled;
 				if (component !== controlledComponent && typeof handler === 'function') {
-					handler.call(controlledComponent);
+					const complete = handler.call(controlledComponent);
+
+					// Returning `true` from a start request means that the marqueeing is
+					// unnecessary and is therefore complete
+					if (action === 'start' && complete) {
+						controlled.complete = true;
+					}
 				}
 			});
 		}
@@ -194,8 +253,18 @@ const MarqueeController = hoc((config, Wrapped) => {
 		}
 
 		render () {
+			let props = this.props;
+
+			if (startOnFocus) {
+				props = {
+					...this.props,
+					onBlur: this.handleBlur,
+					onFocus: this.handleFocus
+				};
+			}
+
 			return (
-				<Wrapped {...this.props} />
+				<Wrapped {...props} />
 			);
 		}
 	};

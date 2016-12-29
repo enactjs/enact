@@ -20,6 +20,7 @@ storiesOf('Slider')
 		() => (
 			<Slider
 				backgroundPercent={number('backgroundPercent', Slider.defaultProps.backgroundPercent, {range: true, min: 0, max: 100})}
+				detachedKnob={boolean('detachedKnob', false)}
 				disabled={boolean('disabled', Slider.defaultProps.disabled)}
 				max={number('max', Slider.defaultProps.max)}
 				min={number('min', Slider.defaultProps.min)}

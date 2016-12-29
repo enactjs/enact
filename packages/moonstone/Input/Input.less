@@ -118,6 +118,19 @@
 	}
 }
 
+[data-container-muted='true'] {
+	.decorator {
+		&.focused {
+			border-color: transparent;
+		}
+
+		&:global(.spottable):focus {
+			background-color: @moon-input-decorator-bg-color;
+			border-color: transparent;
+		}
+	}
+}
+
 :global .enact-locale-non-latin {
 	:local .decorator {
 		padding: 6px 30px 12px;

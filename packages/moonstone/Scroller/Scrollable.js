@@ -1,9 +1,7 @@
-/**
- * Exports the {@link moonstone/Scroller/Scrollable.Scrollable} Higher-order Component (HOC) and
- * the {@link constant:@enact/moonstone/Scroller/Scrollable.dataIndexAttribute} constant.
- * The default export is {@link moonstone/Scroller/Scrollable.Scrollable}.
- *
- * @module moonstone/Scroller/Scrollable
+/*
+ * Exports the {@link moonstone/Scroller.Scrollable} Higher-order Component (HOC) and
+ * the {@link moonstone/Scroller.dataIndexAttribute} constant.
+ * The default export is {@link moonstone/Scroller.Scrollable}.
  */
 
 import clamp from 'ramda/src/clamp';
@@ -30,18 +28,19 @@ const
 	animationDuration = 1000;
 
 /**
- * {@link moonstone/Scroller/Scrollable.dataIndexAttribute} is the name of a custom attribute
+ * {@link moonstone/Scroller.dataIndexAttribute} is the name of a custom attribute
  * which indicates the index of an item in {@link moonstone/VirtualList.VirtualList}
  * or {@link moonstone/VirtualList.VirtualGridList}.
  *
  * @constant dataIndexAttribute
  * @type {String}
- * @public
+ * @private
+ * @memberof moonstone/Scroller
  */
 const dataIndexAttribute = 'data-index';
 
 /**
- * {@link moonstone/Scroller/Scrollable.Scrollable} is a Higher-order Component
+ * {@link moonstone/Scroller.Scrollable} is a Higher-order Component
  * that applies a Scrollable behavior to its wrapped component.
  *
  * Scrollable catches `onFocus` and `onKeyDown` events from its wrapped component for spotlight features,
@@ -51,13 +50,13 @@ const dataIndexAttribute = 'data-index';
  * Scrollable calls `onScrollStart`, `onScrolling`, and `onScrollStop` callback functions during scroll.
  *
  * @class Scrollable
- * @memberof moonstone/Scroller/Scrollable
+ * @memberof moonstone/Scroller
  * @hoc
- * @public
+ * @private
  */
 const ScrollableHoC = hoc((config, Wrapped) => {
 	return class Scrollable extends Component {
-		static propTypes = {
+		static propTypes = /** @lends moonstone/Scroller.Scrollable.prototype */ {
 			/**
 			 * The callback function which is called for linking scrollTo function.
 			 * You should specify a callback function as the value of this prop
@@ -217,14 +216,14 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			this.verticalScrollbarProps = {
 				ref: this.initRef('scrollbarVerticalRef'),
-				isVertical: true,
+				vertical: true,
 				onPrevScroll: this.initScrollbarBtnHandler('vertical', -1),
 				onNextScroll: this.initScrollbarBtnHandler('vertical', 1)
 			};
 
 			this.horizontalScrollbarProps = {
 				ref: this.initRef('scrollbarHorizontalRef'),
-				isVertical: false,
+				vertical: false,
 				onPrevScroll: this.initScrollbarBtnHandler('horizontal', -1),
 				onNextScroll: this.initScrollbarBtnHandler('horizontal', 1)
 			};
@@ -598,7 +597,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			let {left, top} = this.getPositionForScrollTo(opt);
 
 			if (left !== null || top !== null) {
-				this.start((left !== null) ? left : this.scrollLet, (top !== null) ? top : this.scrollTop, opt.animate);
+				this.start((left !== null) ? left : this.scrollLeft, (top !== null) ? top : this.scrollTop, opt.animate);
 			}
 		}
 

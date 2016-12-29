@@ -1,10 +1,3 @@
-/**
- * Exports the {@link moonstone/DatePicker/DatePickerBase.DatePickerBase} component.
- *
- * @module moonstone/DatePicker/DatePickerBase
- * @private
- */
-
 import {$L} from '@enact/i18n';
 import kind from '@enact/core/kind';
 import React from 'react';
@@ -16,19 +9,19 @@ import css from './DatePicker.less';
 import {dateComponentPickers} from '../internal/DateComponentPicker/DateComponentPicker.less';
 
 /**
- * {@link moonstone/DatePicker/DatePickerBase.DatePickerBase} is the stateless functional date picker
+ * {@link moonstone/DatePicker.DatePickerBase} is the stateless functional date picker
  * component. Should not be used directly but may be composed within another component as it is
  * within {@link moonstone/DatePicker.DatePicker}.
  *
  * @class DatePickerBase
- * @memberof moonstone/DatePicker/DatePickerBase
+ * @memberof moonstone/DatePicker
  * @ui
  * @private
  */
 const DatePickerBase = kind({
 	name: 'DatePickerBase',
 
-	propTypes:  /** @lends moonstone/DatePicker/DatePickerBase.DatePickerBase.prototype */ {
+	propTypes:  /** @lends moonstone/DatePicker.DatePickerBase.prototype */ {
 		/**
 		 * The `day` component of the Date
 		 *
@@ -148,7 +141,7 @@ const DatePickerBase = kind({
 	render: ({day, maxDays, maxMonths, maxYear, minYear, month, noLabels, onChangeDate, onChangeMonth, onChangeYear, order, year, ...rest}) => {
 
 		return (
-			<ExpandableItemBase {...rest} showLabel="always">
+			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false}>
 				<div className={dateComponentPickers}>
 					{order.map(picker => {
 						switch (picker) {
