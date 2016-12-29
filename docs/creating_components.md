@@ -1,12 +1,12 @@
 ---
-title: Creating Components
+title: Creating Components the Enact Way
 ---
 
-The Enact framework is built upon the great foundation of [React](https://facebook.github.io/react).
+The Enact framework is built upon the foundation of [React](https://facebook.github.io/react).
 As a result, any component that is built for React can be used in Enact and any of the patterns for
 creating a component in React can also be used in Enact. To address some of the common use cases we
 encountered, we've included a few modules with `@enact/core` that standardize the "Enact way" for
-some of these patterns and provide some sugar to simplify developer boilerplate.
+and provide some 'sugar' to reduce developer boilerplate.
 
 ## Creating Stateless Functional Components
 
@@ -16,23 +16,27 @@ Computer's model into the User's mental model. SFCs are a pure implementation of
 responsibility. They accept an object of properties and map them into a component hierarchy using
 JSX.
 
-In very simple components, a simple function is sufficient to perform that mapping. However, as
-components grow more complex, you find that you need to merge incoming data with fixed data or
+In very simple components, a single function is sufficient to perform that mapping. However, as
+components grow more complex, you often find that you need to merge incoming data with fixed data or
 transform incoming data into other formats. This often leads you to decompose logic out of your main
-render method for improve clarity and maintainability. This process led us to create
+render method for improved clarity and maintainability. This process led us to create
 `@enact/core/kind`.
 
 The `kind()` factory creates SFCs from a configuration object. It adds declarative sugar for setting
-the display name, merging incoming `className` and `style` with component values, computing property
-values allowing you to merge or transform incoming data outside of your render function.
+the display name, merging incoming `className` and `style` properties with component values, and computing property
+values, allowing you to merge or transform incoming data outside of your render function.
 
-Unlike simple functions with must be declared before any metadata can be attached, `kind()`
+Unlike simple functions which must be declared before any metadata can be attached, `kind()`
 components encourage a consistent ordering of keys for top-down readability:
 
-> The `name` component accepts these `propTypes` which have the following default values
+> The `name` component accepts these `propTypes`, which have the following default values,
 > `defaultProps`. It is formatted according to the CSS modules map and `className` in `styles`. That
 > data is used to produce several `computed` properties which ultimately are provided to `render` to
 > create the final component heirarchy.
+
+For the following sample, the `'Badge'` component accepts the `children` and `greeting` properties, with
+`greeting` having a default of `'Hello, my name is ...'`. It applies the `'badge'` `className` (combined
+with any passed-in `className`), it computes a new value for `children` and renders the result.
 
 ```
 import kind from '@enact/core/kind';
@@ -71,6 +75,8 @@ const Badge = kind({
 });
 ```
 
+> Note: You should be sure to delete any properties that are only used in calculations to avoid warnings during rendering.
+
 ## SFCs Compared with React Components
 
 While SFCs have some important benefits, not every problem can be effectively solved with them
@@ -80,12 +86,12 @@ few possible reasons:
 * You need access to the [component lifecycle methods](https://facebook.github.io/react/docs/react-component.html#the-component-lifecycle)
 * You need to maintain some component state (and it's not managed by something like Redux)
 * You need consistent event handler references to prevent unnecessary renders
-* You need to expose imperative APIs (though you should avoid this when possible)
+* You need to expose imperative APIs (though you should always avoid this when possible)
 
 The way in which you would achieve each of these is beyond the scope of this discussion but each are
-valid reasons to create a custom instance of `React.Component`. However, these reasons to not
-preclude you from creating a SFC for the primary render logic. Your `React.Component` can do
-whatever work it needs to do and defer the property to user interface mapping to the SFC.
+valid reasons to create a custom instance of `React.Component`. However, these reasons do not
+preclude you from creating an SFC for the primary render logic. Your `React.Component` can do
+whatever work it needs to do and defer the property-to-user-interface mapping to the SFC.
 
 ## Higher-Order Components
 
@@ -94,23 +100,23 @@ components. In the general sense, they are functions that accept a component (a 
 `div`, an SFC, or a `React.Component`), decorate that component in some way, and return either the
 original component or a new component that wraps the original component.
 
-Enact provides several HOCs within `@enact/ui` and `@enact/moonstone` to provide consistent
-behaviors across other components. All of these HOCs were created using the `hoc()` factory from
-`@enact/core/hoc` which gives them a couple key features.
+Enact provides several HOCs within `@enact/ui` and `@enact/moonstone` that allow us to provide consistent
+behaviors across components. All of these HOCs were created using the `hoc()` factory from
+`@enact/core/hoc`. This factory gives them a couple key features:
 
-* Every HOC is configurable by passing an object with parameters to the HOC function. This object is
+* HOCs can be configurable by passing an object with parameters to the HOC function. This object is
   merged with a set of default configuration parameters.
-* Every HOC is flexible in its usage. It can either:
+* HOCs are flexible in their usage. They can:
   * Accept a configuration object and a component 
     ```
     const MyButton = Toggleable({toggle: 'onClick', prop: 'selected'}, Button);
     ```
-  * Accept only component and use its default configuration, or
+  * Accept only a component and use the default configuration:
     ```
     const MyButton = Toggleable(Button);
     ```
-  * Accept a configuration object in one invocation and the component in a second invocation. This
-    allows you to reuse a pre-configured HOC on multiple components.
+  * Accept a configuration object in one invocation and a component in a second invocation. This
+    allows you to reuse a pre-configured HOC on multiple components:
     ```
     const ToggleDecorator = Toggleable({toggle: 'onClick', prop: 'selected'});
     const MyButton = ToggleDecorator(Button);
@@ -118,7 +124,7 @@ behaviors across other components. All of these HOCs were created using the `hoc
     ```
 
 If you need to create your own HOCs, you can import the `hoc()` factory to take advantage of these
-features yourself. The factory accepts an optional default configuration object and a function. The
+features. The factory accepts an optional default configuration object and a function. The
 function will receive the merged configuration object and the Wrapped component and should return
 a component.
 
@@ -151,27 +157,27 @@ const CountableDivAsDataNumber = CountableAsDataNumber('div');
 
 ## Adding Design-Time Customizations to Components
 
-While many of our components are very flexible using properties, we've found that sometimes an app
-needs the ability to further customize it. Generally, this type of customization isn't variable at
-run-time and is primarily to adjust the visual design of the component. To support this use case,
+While many of our components are easily configured using properties, we've found that sometimes an app
+needs the more flexibility. Generally, this type of customization isn't variable at
+run-time and is primarily used to adjust the visual design of a component. To support this use case,
 we've introduced the `factory()` function.
 
-Like `hoc()`, `factory()` accepts a configuration object which is merged with the components default
+Like `hoc()`, `factory()` accepts a configuration object which is merged with the component's default
 configuration. Unlike `hoc()`, `factory()` only supports a known set of configuration keys rather
-than an arbitrary set. Currently, the only supported key is `css` which allows authors to provide
-a custom CSS class name map which is merged with the components CSS class name map. This feature
-allows authors to override the style of particular children within the component's internal
+than an arbitrary set. Currently, the only supported key is `css`, which allows authors to provide
+a custom CSS class name map which is merged with the component's CSS class name map. This feature
+allows for overriding the style of particular children within the component's internal
 heirarchy.
 
 A few important notes about this feature:
 
-* This is a recent addition to Enact and has not been widely adopted by framework components yet.
-* Not every class will be customizeable in order to promote UX consistency
+* This is a recent addition to Enact and has not been widely adopted by framework components yet
+* In order to promote UX consistency, not every class will be customizeable
 * We do not yet have a means to document which classes may be customized
 
-However, we do think this is an important feature for the framework and will continue to roll it out
+However, we do think this is an important feature for the framework and we will continue to roll it out
 throughout and improve the overall developer experience around it. Here's a short example to whet
-your appetite.
+your appetite:
 
 ```
 import factory from '@enact/core/factory';
