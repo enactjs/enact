@@ -102,7 +102,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			onChange: PropTypes.func,
 
 			/**
-			 * The handler to run when the value is incremented.
+			 * The handler to run when the value is decremented.
 			 *
 			 * @type {Function}
 			 * @param {Object} event
@@ -111,7 +111,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			onDecrement: PropTypes.func,
 
 			/**
-			 * The handler to run when the value is decremented.
+			 * The handler to run when the value is incremented.
 			 *
 			 * @type {Function}
 			 * @param {Object} event
@@ -179,7 +179,12 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 				>
 					{decrementIcon}
 				</IncrementSliderButton>
-				<Slider {...rest} className={css.slider} />
+				<SliderBase
+					{...rest}
+					className={css.slider}
+					onDecrement={onDecrement}
+					onIncrement={onIncrement}
+				/>
 				<IncrementSliderButton
 					className={css.incrementButton}
 					disabled={incrementDisabled}
@@ -208,9 +213,16 @@ const IncrementSliderFactory = factory((config) => {
 	 * @public
 	 */
 	return Pressable(
+<<<<<<< HEAD
 		SliderDecorator(
 			{handlesIncrements: true},
 			Base
+=======
+		Spottable(
+			SliderDecorator(
+				Base
+			)
+>>>>>>> 8b484df... add basic 5-way support to sliders
 		)
 	);
 });

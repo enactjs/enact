@@ -50,16 +50,7 @@ const defaultConfig = {
 	 * @default 20
 	 * @memberof moonstone/internal/SliderDecorator.defaultConfig
 	 */
-	changeDelay: 20,
-
-	/**
-	 * When `true`, increment and decrement handlers are connected.
-	 *
-	 * @type {Boolean}
-	 * @default false
-	 * @memberof moonstone/internal/SliderDecorator.defaultConfig
-	 */
-	handlesIncrements: false
+	changeDelay: 20
 };
 
 // Set-up event forwarding
@@ -309,18 +300,14 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const handlers = !config.handlesIncrements ? null : {
-				onIncrement: this.incrementHandler,
-				onDecrement: this.decrementHandler
-			};
-
 			return (
 				<Wrapped
 					{...this.props}
-					{...handlers}
 					inputRef={this.getInputNode}
 					onChange={this.handleChange}
 					onClick={this.handleClick}
+					onDecrement={this.decrementHandler}
+					onIncrement={this.incrementHandler}
 					onMouseLeave={this.props.detachedKnob ? this.handleMouseLeave : null}
 					onMouseMove={this.props.detachedKnob ? this.handleMouseMove : null}
 					scrubbing={(this.knobPosition != null)}

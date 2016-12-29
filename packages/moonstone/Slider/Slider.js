@@ -5,6 +5,7 @@
  */
 
 import factory from '@enact/core/factory';
+import {forward, withArgs as handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import Pressable from '@enact/ui/Pressable';
 import React, {PropTypes} from 'react';
@@ -96,6 +97,24 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * @public
 			 */
 			onChange: PropTypes.func,
+
+			/**
+			 * The handler to run when the value is decremented.
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @public
+			 */
+			onDecrement: PropTypes.func,
+
+			/**
+			 * The handler to run when the value is incremented.
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @public
+			 */
+			onIncrement: PropTypes.func,
 
 			/**
 			 * The handler to run when the mouse is moved across the slider.
@@ -190,15 +209,27 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 
 		computed: {
 			className: ({pressed, vertical, styler}) => styler.append({pressed, vertical, horizontal: !vertical}),
+			handleKeyDown: handle(
+				forward('onKeyDown'),
+				(ev, {onDecrement, onIncrement}) => {
+					if (onDecrement && ev.keyCode === 37) {
+						onDecrement();
+					} else if (onIncrement && ev.keyCode === 39) {
+						onIncrement();
+					}
+				}
+			),
 			proportionProgress: computeProportionProgress
 		},
 
-		render: ({disabled, inputRef, max, min, onChange, onMouseMove, backgroundProgress, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, value, vertical, ...rest}) => {
+		render: ({backgroundProgress, disabled, handleKeyDown, inputRef, max, min, onChange, onMouseMove, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, value, vertical, ...rest}) => {
 			delete rest.detachedKnob;
+			delete rest.onDecrement;
+			delete rest.onIncrement;
 			delete rest.pressed;
 
 			return (
-				<div {...rest} disabled={disabled} ref={sliderRef}>
+				<div {...rest} disabled={disabled} onKeyDown={handleKeyDown} ref={sliderRef}>
 					<SliderBar
 						proportionBackgroundProgress={backgroundProgress}
 						proportionProgress={proportionProgress}
