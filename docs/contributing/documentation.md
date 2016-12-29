@@ -6,7 +6,7 @@ Almost all documentation for Enact is generated directly from the source code or
 
 ## Documentation Overview
 
-In-line documentation uses standard [jsDoc tags](http://usejsdoc.org/) with some addtional Enact-specific tags. In-line documentation appears within comment blocks that begin with double asterisks:
+In-line documentation uses standard [jsDoc tags](http://usejsdoc.org/) with some additional Enact-specific tags. In-line documentation appears within comment blocks that begin with double asterisks:
 
 ```
 /**
@@ -16,11 +16,11 @@ In-line documentation uses standard [jsDoc tags](http://usejsdoc.org/) with some
 
 Descriptions within jsDoc comments use [Markdown](https://daringfireball.net/projects/markdown/syntax). Enact style is to set off variable names, properties, short sections of code, types and other symbolic information within code markers: `` `name` ``. Filenames are set off with double asterisks:  `**package.json**`. Code blocks, when they appear, should be set off with the code block marker: ```` ``` ````.
 
-There are three general levels of documentation that will appear within files within Enact modules.  Each will be discussed in turn.
+There are three general levels of documentation that will appear within the source files of Enact modules.  Each will be discussed in turn.
 
 ## Module Documentation
 
-Each module within Enact should have one (and only one) file that includes the `@module` tag. The name of the module should be prefixed with the name of the package it is part of (e.g. `moonstone/Button`). Each module has a limited number of exports so they should be documented within the module block and the default export should be identified:
+Each module within Enact should have one (and only one) file that includes the `@module` tag. The name of the module should be prefixed with the name of the package that contains it (e.g. `moonstone/Button`). Each module has a limited number of exports so they should be documented within the module block and the default export should be identified:
 
 ```
 /**
@@ -35,7 +35,7 @@ Usually this block will appear in the file with the same name as the module.  If
 
 ## Class Level Documentation
 
-Class level documentation includes components and Higher-order Components (HOCs).  Each component or HOC export should have a class level block that discusses the features and a provides a usage example. This block also serves as a place to indicate any HOCs that may be applied or cross-reference related components.
+Class level documentation includes components and Higher-order Components (HOCs).  Each component or HOC export should have a class level block that discusses the features and provides an example usage. This block also serves as a place to indicate any HOCs that may be applied or to cross-reference related components.
 
 ### Components
 
@@ -156,10 +156,10 @@ Property-level documentation refers to documentation within a component or HOC. 
 ```
 
 * In the description, be sure to call out anything important about the property. If the property only accepts a range of inputs, list the appropriate values, being sure to use code blocks to set off the values. If the property relates to another property, be sure to provide a `@link` to the other property.
-* `@lends` must appear following the colon and before the `{` in the `proptypes` declaration.  The string following `@lends` can be constructed with the following formula:  Module Name + '.' + Component Name + '.prototype'
+* `@lends` must appear following the colon (or equal if it is a HOC and you are extending React.Component) and before the `{` in the `proptypes` declaration.  The string following `@lends` can be constructed with the following formula:  Module Name + '.' + Component Name + '.prototype'
 * `@type` is used to indicate the type or types the property accepts. Multiple types are separated by the pipe character `|` and arrays are indicated by adding `[]` to the base type. Common types include: `Number`, `String`, `Object`, `Boolean` and `Node`. Type definitions for custom types can be created.
 * `@required` should be applied to any property that has `isRequired` set on it.
-* `@default` can be used to indicate the default value (if applicable) of a property. Only properties that appear in the `defaultProps` section should be listed here. Values should not be wrapped in code blocks.
+* `@default` can be used to indicate the default value (if applicable) of a property. Only properties that appear in the `defaultProps` section should use this. Values should not be wrapped in code blocks.
 
 In general, we do not provide jsDoc comments for methods that appear within components as we do not expose any public methods this way.
 
@@ -182,7 +182,7 @@ There are some special cases that appear within the Enact framework. One example
 ```
 
 * `@function` indicates the documentation belongs to a function.
-* `@param` should be repeated for each parameter. The type(s) is set within curly braces, followed by the name of the parameter. A short description of the parameter follows. Default parameter values are set documented by included them within square brackets in the name position as shown above.
+* `@param` should be repeated for each parameter. The type(s) is set within curly braces, followed by the name of the parameter. A short description of the parameter follows. Default parameter values are documented by including them within square brackets in the name position as shown above.
 * `@returns` indicates the type of the return. Functions that have no return should be documented as returning `{undefined}` to keep ESLint happy.
 
 ## Verifying Correct Documentation

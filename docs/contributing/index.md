@@ -6,7 +6,7 @@ Thank you for helping improve the Enact framework! These documents highlight som
 submitting code or documentation to the project:
 
 *   [Coding Style Guide](./code_style.md) - The Enact code style explained
-*   [Documention Style Guide](./documentation.md) - How we use jsDoc comments to document Enact
+*   [Documentation Style Guide](./documentation.md) - How we use jsDoc comments to document Enact
 *   [Documenting Changes](./changelogs.md) -  The Enact `CHANGELOG.md` guidelines
 
 ### Contributors Welcome!
