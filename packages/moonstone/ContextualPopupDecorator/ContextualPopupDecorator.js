@@ -22,7 +22,7 @@ const depress = 'onKeyDown';
 
 /**
  * {@link moonstone/ContextualPopupDecorator.ContextualPopupDecorator} is a Higher-order Component
- * which positions {@link moonstone/ContextualPopupDecorator/ContextualPopup.ContextualPopup} in
+ * which positions {@link moonstone/ContextualPopupDecorator.ContextualPopup} in
  * relation to the Wrapped component.
  *
  * @class ContextualPopupDecorator
