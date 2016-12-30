@@ -19,7 +19,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Changed
 
-- `autoDismiss` to handle both ESC key and click events in `ui/FloatingLayer`
+- `ui/FloatingLayer` property `autoDismiss` to handle both ESC key and click events
 
 ## [1.0.0-alpha.5] - 2016-12-16
 

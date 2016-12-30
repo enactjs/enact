@@ -11,6 +11,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualFlexList` Work-In-Progress component to support variably sized rows or columns
 - `moonstone/ExpandableItem` properties `autoClose` and `lockBottom`
 - `moonstone/ExpandableList` properties `noAutoClose` and `noLockBottom`
+- `moonstone/ContextualPopup` property `noAutoDismiss`
 
 ### Changed
 
