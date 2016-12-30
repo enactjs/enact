@@ -55,7 +55,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'active'
-	 * @memberof ui/Toggleable.defaultConfig
+	 * @memberof ui/Toggleable.Toggleable.defaultConfig
 	 */
 	prop: 'active'
 };
