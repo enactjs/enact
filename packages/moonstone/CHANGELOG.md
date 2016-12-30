@@ -11,9 +11,11 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/ExpandableItem` properties `autoClose` and `lockBottom`
 - `moonstone/ExpandableList` properties `noAutoClose` and `noLockBottom`
 - `moonstone/MarqueeController` focus/blur handling to to start and stop synchronized `moonstone/Marquee` components
+- `moonstone/Panels.Panels` property `onBack` and support for `ui/Cancelable`
 
 ### Changed
 
+- `moonstone/Panels.Routable` to require a `navigate` configuration property indicating the event callback for back or cancel actions
 - `moonstone/ExpandableList` property `autoClose` to `closeOnSelect` to disambiguate it from the added `autoClose` on 5-way up
 - `moonstone/ContextualPopupDecorator.ContextualPopupDecorator` component's `onCloseButtonClick` property to `onClose`
 - `moonstone/Spinner` component's `center` and `middle` properties to a single `centered` property
