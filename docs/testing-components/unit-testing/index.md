@@ -2,11 +2,42 @@
 title: Unit Testing
 ---
 
-## Before Getting Started
+## Prerequisites
 
-Please refer to our document [Test Driven Development(TDD)](../test-driven-development/index.md), it contains how to run tests
-and how they fit in our testing strategy. It also contains more information about TDD and the methodology behind it.  This
-document is a deeper dive into the unit test specifically.
+### Running Tests
+
+If you have created a enact project using the `enact-dev` it will have everything you need 
+to run tests. For a single-run, execute `enact test start --single-run --browsers PhantomJS`. 
+You can also have the tests automatically run each time the filesystem changes simply with 
+`enact test start`. If you built your app using `enact-dev` you can also use 
+`npm run test` and `npm run test-watch` for short. Both commands will execute 
+the test suite and output the results to the console. If you are working on 
+framework modules, at a minimum you should perform the single test run on your 
+module before creating a pull request on a branch.
+
+### File Structure
+
+Tests should be placed into a `tests` directory within the component directory.  Test files begin with the name of the
+component or item under test and end with the `"-specs.js"` suffix.
+
+	+ src
+		+ components
+			+ IconButton
+				+tests
+					IconButton-specs.js			<-- Tests go here!
+				IconButton.js
+				package.json
+
+### Tools
+
+We use a dizzying number of tools to perform unit testing.  A quick overview of the different tools can be helpful.
+
+*   [Karma](https://karma-runner.github.io/1.0/index.html) - A tool for running tests in a browser (real or headless).  This tool launches Mocha.
+*   [Mocha](https://mochajs.org/) - A test framework.  This tool lets us set up suites of tests
+*   [Chai](http://chaijs.com/) - An assertion library.  This library lets us write expressive tests in the suites.  We use a wrapper called `dirty-chai` to avoid linting problems with Chai's use of properties for validation.
+*   [Sinon](http://sinonjs.org/) - A mock library.  Useful for adding mocks and spies to components under test.
+*   [Enzyme](http://airbnb.io/enzyme/) - A test library for use with React.  It allows us to shallowly render components and inspect the output.
+*   [PhantomJS](http://phantomjs.org/) - A 'headless' browser.  This allows us to execute tests quickly without having to launch a controlled browser environment and without having to actually render content to the screen.
 
 ## Unit Testing
 
@@ -17,6 +48,8 @@ just tests a function/method. For Enact framework developers testing will also e
 
 We are using [Mocha](https://mochajs.org/) with [Chai](http://chaijs.com/) as our testing framework. We won't cover all the functions this gives us in this document. We
 suggest looking at the [Chai API](http://chaijs.com/api/) after finishing this if you want to know all of the things Chai can give you.
+
+We are also using Chai's [expect](http://chaijs.com/guide/styles/) syntax.
 
 Say you have a function like this:
 
@@ -110,17 +143,17 @@ The three main parts about Enzyme that you need to know are it's rendering metho
 
 ### shallow()
 
-`shallow` is the virtual DOM representation. It will only render the component plus one level of children. This allows
+[Shallow](https://github.com/airbnb/enzyme/blob/master/docs/api/shallow.md) is the virtual DOM representation. It will only render the component plus one level of children. This allows
 us to stay within the smaller confines of a component when testing.
 
 ### mount()
 
-`mount` is the virtual DOM representation.  It will render everything inside the component, including all nested children.
+[mount](https://github.com/airbnb/enzyme/blob/master/docs/api/mount.md) is the virtual DOM representation. It will render everything inside the component, including all nested children.
 This is a little beyond unit testing as you start to test the integration of a few components.
 
 ### render()
 
-`render` is the DOM representation. It will print a string of the output dom that the browser sees.
+[render](https://github.com/airbnb/enzyme/blob/master/docs/api/render.md) is the DOM representation. It will print a string of the output dom that the browser sees.
 
 ## Why Unit Testing?
 
@@ -275,3 +308,9 @@ impossible. For example, if you are using Redux for complex application/componen
 effects to get some of your data.  The Async Action Creators section in
 [http://redux.js.org/docs/recipes/WritingTests.html](http://redux.js.org/docs/recipes/WritingTests.html) shows how you can
 write tests in those cases.
+
+## What to do next
+
+Please refer to our document [Test Driven Development(TDD)](../test-driven-development/index.md), it contains how to run tests
+and how they fit in our testing strategy. It also contains more information about TDD and the methodology behind it. This
+document is a deeper dive into the unit test specifically.

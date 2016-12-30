@@ -2,6 +2,11 @@
 title: Test Driven Development(TDD)
 ---
 
+## Before Getting Started
+
+Please refer to our document [Unit Testing](../unit-testing/index.md), it gives 
+the basic information on what unit testing is and how to start unit testing.
+
 ## Overview
 
 This document describes the test-first methodology we aspire to on the Enact team.  The concept behind Test Driven
@@ -118,36 +123,3 @@ Static rendering or [render](https://github.com/airbnb/enzyme/blob/master/docs/a
 *   `html()` - Returns the raw HTML of the selected node
 *   `children()` - Returns the children of the selected node
 *   `find()` - searches the node for the passed-in selector
-
-## Running Tests
-
-After writing tests, the next most fun part of TDD is running them. The `enact-dev` tools provides an easy way to run tests.
-For a single-run, execute `enact test start --single-run --browsers PhantomJS`.  You can also have the tests automatically
-run each time the filesystem changes simply with `enact test start`. If you built your app using `enact-dev` you can also use 
-`npm run test` and `npm run test-watch` for short. Both commands will execute the test suite and output
-the results to the console.  If you are working on framework modules, at a minimum you should perform the single test run
-on your module before creating a pull request on a branch.
-
-## File Structure
-
-Tests should be placed into a `tests` directory within the component directory.  Test files begin with the name of the
-component or item under test and end with the `"-specs.js"` suffix.
-
-	+ src
-		+ components
-			+ IconButton
-				+tests
-					IconButton-specs.js			<-- Tests go here!
-				IconButton.js
-				package.json
-
-## Tools
-
-We use a dizzying number of tools to perform unit testing.  A quick overview of the different tools can be helpful.
-
-*   [Karma](https://karma-runner.github.io/1.0/index.html) - A tool for running tests in a browser (real or headless).  This tool launches Mocha.
-*   [Mocha](https://mochajs.org/) - A test framework.  This tool lets us set up suites of tests
-*   [Chai](http://chaijs.com/) - An assertion library.  This library lets us write expressive tests in the suites.  We use a wrapper called `dirty-chai` to avoid linting problems with Chai's use of properties for validation.
-*   [Sinon](http://sinonjs.org/) - A mock library.  Useful for adding mocks and spies to components under test.
-*   [Enzyme](http://airbnb.io/enzyme/) - A test library for use with React.  It allows us to shallowly render components and inspect the output.
-*   [PhantomJS](http://phantomjs.org/) - A 'headless' browser.  This allows us to execute tests quickly without having to launch a controlled browser environment and without having to actually render content to the screen.
