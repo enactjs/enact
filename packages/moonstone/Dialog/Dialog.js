@@ -8,10 +8,12 @@
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 import Slottable from '@enact/ui/Slottable';
-import {MarqueeText} from '../Marquee';
+import {MarqueeDecorator} from '../Marquee';
 import Popup from '../Popup';
-
+import Uppercase from '@enact/i18n/Uppercase';
 import css from './Dialog.less';
+
+const MarqueeH1 = Uppercase(MarqueeDecorator('h1'));
 
 /**
  * {@link moonstone/Dialog.DialogBase} is a modal component with a title, a subtitle, a
@@ -148,9 +150,9 @@ const DialogBase = kind({
 		return (
 			<Popup {...rest}>
 				<div className={css.titleWrapper}>
-					<MarqueeText  marqueeOn='render' marqueeOnRenderDelay={5000} className={css.title}>
+					<MarqueeH1 marqueeOn='render' marqueeOnRenderDelay={5000} className={css.title}>
 						{title}
-					</MarqueeText>
+					</MarqueeH1>
 					<h2 className={css.titleBelow}>
 						{titleBelow}
 					</h2>
