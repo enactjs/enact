@@ -20,6 +20,7 @@ storiesOf('Dialog')
 				noAutoDismiss={boolean('noAutoDismiss', false)}
 				onClose={action('onClose')}
 				showCloseButton={boolean('showCloseButton', false)}
+				preserveCase={boolean('preserveCase', false)}
 				showDivider={boolean('showDivider', false)}
 			>
 				<title>{text('title', 'Hello Dialogggggggggggggggggggggggggggggggggggggggggggggggggggggggggg Title')}</title>

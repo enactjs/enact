@@ -87,6 +87,15 @@ const DialogBase = kind({
 		open: PropTypes.bool,
 
 		/**
+		 * When `true`, the case of the text will be as it is in the title
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		preserveCase: PropTypes.bool,
+
+		/**
 		 * Types of scrim. It can be either `'transparent'`, `'translucent'`, or `'none'`.
 		 *
 		 * @type {String}
@@ -132,6 +141,7 @@ const DialogBase = kind({
 	defaultProps: {
 		noAnimation: false,
 		open: false,
+		preserveCase: false,
 		showCloseButton: false
 	},
 
@@ -144,13 +154,13 @@ const DialogBase = kind({
 		className: ({showDivider, styler}) => styler.append({showDivider})
 	},
 
-	render: ({buttons, children, title, titleBelow, ...rest}) => {
+	render: ({buttons, children, preserveCase, title, titleBelow, ...rest}) => {
 		delete rest.showDivider;
 
 		return (
 			<Popup {...rest}>
 				<div className={css.titleWrapper}>
-					<MarqueeH1 marqueeOn='render' marqueeOnRenderDelay={5000} className={css.title}>
+					<MarqueeH1 preserveCase={preserveCase} marqueeOn='render' marqueeOnRenderDelay={5000} className={css.title}>
 						{title}
 					</MarqueeH1>
 					<h2 className={css.titleBelow}>
