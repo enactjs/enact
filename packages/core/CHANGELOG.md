@@ -2,17 +2,11 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
-## [unreleased]
+## [1.0.0-beta.1] - 2016-12-30
 
 ### Added
 
 - `core/factory` which provides the means to support design-time customization of components
-
-### Changed
-
-### Removed
-
-### Fixed
 
 ## [1.0.0-alpha.5] - 2016-12-16
 

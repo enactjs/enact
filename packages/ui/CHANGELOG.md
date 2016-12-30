@@ -2,16 +2,15 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
+## [1.0.0-beta.1] - 2016-12-30
 
 ### Added
 
 - `ui/RadioDecorator` and `ui/RadioControllerDecorator` to support radio group-style management of components
+- `ui/Holdable` Higher-order Component
 - `ui/ViewManager` events `onAppear`, `onEnter`, `onLeave`, `onStay`, `onTransition`, and `onWillTransition`
 - `ui/FloatingLayer` `scrimType` prop value `none`
 - `ui/Pressable` config option `onMouseLeave`
-
-### Changed
 
 ### Removed
 

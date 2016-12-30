@@ -2,10 +2,10 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
-## [unreleased]
+## [1.0.0-beta.1] - 2016-12-30
 
 ### Added
-- `moonstone/TooltipDecorator` sample
+- `moonstone/TooltipDecorator`, `moonstone/VideoPlayer` and `moonstone/VirtualFlexList` samples
 
 ### Changed
 
