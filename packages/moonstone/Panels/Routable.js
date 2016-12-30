@@ -1,8 +1,16 @@
-import {hoc, kind} from '@enact/core';
+import hoc from '@enact/core/hoc';
+import invariant from 'invariant';
+import kind from '@enact/core/kind';
 import React from 'react';
 
 import {Router, propTypes, toSegments} from './Router';
 
+/**
+ * Default config for {@link moonstone/Panels.Routable}
+ *
+ * @memberof moonstone/Panels
+ * @hocconfig
+ */
 const defaultConfig = {
 	navigate: null
 };
@@ -19,12 +27,14 @@ const defaultConfig = {
 const Routable = hoc(defaultConfig, (config, Wrapped) => {
 	const {navigate} = config;
 
+	invariant(navigate, 'navigate must be specified with Routable');
+
 	return kind({
 		name: 'Routable',
 
 		propTypes: /** @lends moonstone/Panels.Routable.prototype */ {
 			/**
-			 * Path of this element.
+			 * Path to the active panel
 			 *
 			 * May either be a URI-style path (`'/app/home/settings'`) or an array
 			 * of strings (`['app', 'home', 'settings']`)
