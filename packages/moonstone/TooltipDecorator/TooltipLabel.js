@@ -16,7 +16,7 @@ import css from './Tooltip.less';
 const TooltipLabel = kind({
 	name: 'TooltipLabel',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/TooltipDecorator.TooltipLabel.prototype */ {
 		/**
 		 * The node to be displayed as the main content of the tooltip.
 		 *

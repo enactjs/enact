@@ -3,7 +3,7 @@
  * {@link moonstone/VirtualFlexList.VirtualFlexListBase} components.
  * The default export is {@link moonstone/VirtualFlexList.VirtualFlexList}.
  *
- * @module moonstone/VirtualFlexList/VirtualFlexList
+ * @module moonstone/VirtualFlexList
  */
 
 import classNames from 'classnames';
