@@ -12,6 +12,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 - `moonstone/VirtualFlexList` Work-In-Progress component (with sample) to support variably sized rows or columns
 - `moonstone/ExpandableItem` properties `autoClose` and `lockBottom`
 - `moonstone/ExpandableList` properties `noAutoClose` and `noLockBottom`
+- `moonstone/ContextualPopup` property `noAutoDismiss`
 - `moonstone/Dialog` property `scrimType`
 - `moonstone/Popup` property `spotlightRestrict`
 - `@enact/spotlight.Spotlight` methods `isPaused()`, `isSpottable()`, `getCurrent()`, and `isMuted()`
@@ -45,6 +46,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 - `moonstone/VirtualList`, `moonstone/VirtualGridList`, and `moonstone/Scroller` to continue scrolling when holding down the paging controls
 - `moonstone/VirtualList` to require a `component` prop and not have a default value
 - `moonstone/Picker` to continuously change when a button is held down by adding `ui/Holdable`.
+- `ui/FloatingLayer` property `autoDismiss` to handle both ESC key and click events
 
 ### Removed
 
