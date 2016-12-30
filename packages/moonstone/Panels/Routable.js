@@ -8,10 +8,15 @@ import {Router, propTypes, toSegments} from './Router';
 /**
  * Default config for {@link moonstone/Panels.Routable}
  *
- * @memberof moonstone/Panels
+ * @memberof moonstone/Panels.Routable
  * @hocconfig
  */
 const defaultConfig = {
+	/**
+	 * The event callback invoked when navigating back up the path
+	 *
+	 * @type {Function}
+	 */
 	navigate: null
 };
 
