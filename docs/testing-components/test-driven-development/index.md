@@ -89,7 +89,7 @@ has its benefits and drawbacks.  A summary of the methods follows.
 
 ### Shallow Rendering - `shallow()`
 
-Shallow rendering renders the component specified but does not render any of its children.  This can be useful when you
+[Shallow](https://github.com/airbnb/enzyme/blob/master/docs/api/shallow.md) rendering renders the component specified but does not render any of its children.  This can be useful when you
 only want to test the output of the single object.  If you need to be able to test that properties get passed to children,
 then you will need to use Mount rendering.  Once a component is rendered a number of methods are available to inspect the
 output.  These include:
@@ -107,12 +107,12 @@ output.  These include:
 
 ### Full Rendering - `mount()`
 
-Full rendering renders the component specified as well as all children.  This can be useful when you need to be able to
+Full rendering or [mount](https://github.com/airbnb/enzyme/blob/master/docs/api/mount.md) renders the component specified as well as all children.  This can be useful when you need to be able to
 test that properties get passed to children. Mount rendering uses the same methods as Shallow rendering listed above.
 
 ### Static Rendering - `render()`
 
-Static generates the HTML output from the specified component.  Static rendering has several utility methods including:
+Static rendering or [render](https://github.com/airbnb/enzyme/blob/master/docs/api/render.md), generates the HTML output from the specified component.  Static rendering has several utility methods including:
 
 *   `text()` - Returns the text of the selected node
 *   `html()` - Returns the raw HTML of the selected node
@@ -123,7 +123,8 @@ Static generates the HTML output from the specified component.  Static rendering
 
 After writing tests, the next most fun part of TDD is running them. The `enact-dev` tools provides an easy way to run tests.
 For a single-run, execute `enact test start --single-run --browsers PhantomJS`.  You can also have the tests automatically
-run each time the filesystem changes simply with `enact test start`.  Both commands will execute the test suite and output
+run each time the filesystem changes simply with `enact test start`. If you built your app using `enact-dev` you can also use 
+`npm run test` and `npm run test-watch` for short. Both commands will execute the test suite and output
 the results to the console.  If you are working on framework modules, at a minimum you should perform the single test run
 on your module before creating a pull request on a branch.
 
