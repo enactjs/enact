@@ -116,7 +116,7 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			forwardRelease(ev, this.props);
 		}
 
-		onMouseLeave = (ev) => {
+		onMouseLeave = () => {
 			this.setState({pressed: false});
 		}
 
