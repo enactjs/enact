@@ -2,16 +2,18 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [unreleased]
+## [1.0.0-beta.1] - 2016-12-30
 
 ### Added
 
+- `Moonstone/VideoPlayer` and `moonstone/TooltipDecorator` components and samples
 - `moonstone/Panels.Panels` property `onBack` to support `ui/Cancelable`
-- `Moonstone/VideoPlayer` and `moonstone/TooltipDecorator` components
 - `moonstone/VirtualFlexList` Work-In-Progress component to support variably sized rows or columns
 - `moonstone/ExpandableItem` properties `autoClose` and `lockBottom`
 - `moonstone/ExpandableList` properties `noAutoClose` and `noLockBottom`
 - `moonstone/ContextualPopup` property `noAutoDismiss`
+- `moonstone/Dialog` property `scrimType`
+- `moonstone/Popup` property `spotlightRestrict`
 
 ### Changed
 
@@ -19,6 +21,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/MarqueeController` focus/blur handling to start and stop synchronized `moonstone/Marquee` components
 - `moonstone/ExpandableList` property `autoClose` to `closeOnSelect` to disambiguate it from the added `autoClose` on 5-way up
 - `moonstone/ContextualPopupDecorator.ContextualPopupDecorator` component's `onCloseButtonClick` property to `onClose`
+- `moonstone/Dialog` component's `onCloseButtonClicked` property to `onClose`
 - `moonstone/Spinner` component's `center` and `middle` properties to a single `centered` property
 	that applies both horizontal and vertical centering
 - `moonstone/Popup.PopupBase` component's `onCloseButtonClicked` property to `onCloseButtonClick`
