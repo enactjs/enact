@@ -45,8 +45,10 @@ storiesOf('ExpandableList')
 		'with children length update',
 		() => (
 			<ExpandableListChildrenLengthUpdate
-				autoClose={boolean('autoClose', false)}
+				closeOnSelect={boolean('closeOnSelect', false)}
 				disabled={boolean('disabled', false)}
+				noAutoClose={boolean('noAutoClose', false)}
+				noLockBottom={boolean('noLockBottom', false)}
 				noneText={text('noneText', 'nothing selected')}
 				onSelect={action('onSelect')}
 				onClose={action('onClose')}
@@ -71,5 +73,21 @@ storiesOf('ExpandableList')
 					{['Seventh', 'Eighth', 'Ninth']}
 				</ExpandableList>
 			</ExpandableGroup>
+		)
+	)
+	.addWithInfo(
+		'with multiples (to test "lockBottom" prop)',
+		() => (
+			<div>
+				<ExpandableList title="First">
+					{['One', 'Two', 'Three']}
+				</ExpandableList>
+				<ExpandableList title="Second">
+					{['Fourth', 'Fifth', 'Sixth']}
+				</ExpandableList>
+				<ExpandableList title="Third">
+					{['Seventh', 'Eighth', 'Ninth']}
+				</ExpandableList>
+			</div>
 		)
 	);

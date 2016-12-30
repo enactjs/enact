@@ -64,6 +64,8 @@ const PanelsBase = kind({
 	},
 
 	defaultProps: {
+		index: 0,
+		noAnimation: false,
 		noCloseButton: false
 	},
 
@@ -88,6 +90,7 @@ const PanelsBase = kind({
 	render: ({noAnimation, arranger, children, index, applicationCloseButton, ...rest}) => {
 		delete rest.noCloseButton;
 		delete rest.onApplicationClose;
+
 		return (
 			<div {...rest}>
 				{applicationCloseButton}

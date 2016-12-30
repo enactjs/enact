@@ -236,7 +236,9 @@ class TransitionGroup extends React.Component {
 			});
 		}
 
-		forwardOnWillTransition(null, this.props);
+		if (this.keysToEnter.length) {
+			forwardOnWillTransition(null, this.props);
+		}
 
 		// once the component has been updated, start the enter transition for new children,
 		const keysToEnter = this.keysToEnter;

@@ -1,5 +1,5 @@
 /**
- * Exports the {@link moonstone/ContextualPopupDecorator.ContextualPopupDecorator} Higer-order
+ * Exports the {@link moonstone/ContextualPopupDecorator.ContextualPopupDecorator} Higher-order
  * Component (HOC) and the {@link moonstone/ContextualPopupDecorator.ContextualPopup} component.
  * The default export is {@link moonstone/ContextualPopupDecorator.ContextualPopupDecorator}.
  *
