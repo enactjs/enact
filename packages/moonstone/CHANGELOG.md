@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/Panels.Panels` property `onBack` to support `ui/Cancelable`
 - `Moonstone/VideoPlayer` and `moonstone/TooltipDecorator` components
 - `moonstone/VirtualFlexList` Work-In-Progress component to support variably sized rows or columns
 - `moonstone/ExpandableItem` properties `autoClose` and `lockBottom`
@@ -13,6 +14,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+- `moonstone/Panels.Routable` to require a `navigate` configuration property indicating the event callback for back or cancel actions
 - `moonstone/MarqueeController` focus/blur handling to start and stop synchronized `moonstone/Marquee` components
 - `moonstone/ExpandableList` property `autoClose` to `closeOnSelect` to disambiguate it from the added `autoClose` on 5-way up
 - `moonstone/ContextualPopupDecorator.ContextualPopupDecorator` component's `onCloseButtonClick` property to `onClose`

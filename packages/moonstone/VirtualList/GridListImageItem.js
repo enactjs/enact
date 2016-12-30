@@ -1,7 +1,7 @@
 /*
- * Exports the {@link moonstone/VirtualList/GridListImageItem.GridListImageItem} and
- * {@link moonstone/VirtualList/GridListImageItem.GridListImageItemBase} components. The default export is
- * {@link moonstone/VirtualList/GridListImageItem.GridListImageItem}.
+ * Exports the {@link moonstone/VirtualList.GridListImageItem} and
+ * {@link moonstone/VirtualList.GridListImageItemBase} components. The default export is
+ * {@link moonstone/VirtualList.GridListImageItem}.
  *
  * Not a jsdoc module def on purpose. Exported elsewhere.
  */
@@ -25,7 +25,7 @@ const defaultPlaceholder =
 	'lsZT0ic3Ryb2tlOiAjNDQ0OyBzdHJva2Utd2lkdGg6IDE7IiAvPjwvc3ZnPg==';
 
 /**
- * {@link moonstone/VirtualList/GridListImageItem.GridListImageItemBase} is a stateless
+ * {@link moonstone/VirtualList.GridListImageItemBase} is a stateless
  * GridListImageItem with Moonstone styling applied.
  *
  * @class GridListImageItemBase
@@ -119,7 +119,7 @@ const GridListImageItemBase = kind({
 });
 
 /**
- * {@link moonstone/VirtualList/GridListImageItem.GridListImageItem} is a GridListImageItem with
+ * {@link moonstone/VirtualList.GridListImageItem} is a GridListImageItem with
  * Moonstone styling, Spottable applied.
  *
  * Usage:

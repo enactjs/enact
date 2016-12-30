@@ -18,7 +18,7 @@ import {Tooltip, TooltipBase} from './Tooltip';
 
 /**
  * {@link moonstone/TooltipDecorator.TooltipDecorator} is a Higher-order Component which
- * positions {@link moonstone/TooltipDecorator/Tooltip.Tooltip} in relation to the
+ * positions {@link moonstone/TooltipDecorator.Tooltip} in relation to the
  * Wrapped component.
  * The tooltip is automatically displayed when the user hovers over the decorator for
  * a given period of time. The tooltip is positioned around the decorator where there
@@ -28,7 +28,7 @@ import {Tooltip, TooltipBase} from './Tooltip';
  *
  * @class TooltipDecorator
  * @memberof moonstone/TooltipDecorator
- * @ui
+ * @hoc
  * @public
  */
 const TooltipDecorator = hoc((config, Wrapped) => {
