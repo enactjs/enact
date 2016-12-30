@@ -72,6 +72,15 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			direction: PropTypes.oneOf(['up', 'down', 'left', 'right']),
 
 			/**
+			 * When `true`, the popup will not close when the user presses `ESC` key or click outside.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			noAutoDismiss: PropTypes.bool,
+
+			/**
 			 * A function to be run when either the close button is clicked or spotlight focus
 			 * moves outside the boundary of the popup. Setting `spotlightRestrict` to `'self-only'`
 			 * will prevent Spotlight focus from leaving the popup.
@@ -242,6 +251,12 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				isOverLeft: client.left - containerWidth - this.ARROW_OFFSET - this.MARGIN < 0,
 				isOverRight: client.right + containerWidth + this.ARROW_OFFSET + this.MARGIN > window.innerWidth
 			};
+
+			if (this.context.rtl) {
+				const tempOverflowLeft = this.overflow.isOverLeft;
+				this.overflow.isOverLeft = this.overflow.isOverRight;
+				this.overflow.isOverRight = tempOverflowLeft;
+			}
 		}
 
 		adjustDirection () {
@@ -324,12 +339,12 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const {showCloseButton, popupComponent: PopupComponent, popupClassName, open, onClose, spotlightRestrict, ...rest} = this.props;
+			const {showCloseButton, popupComponent: PopupComponent, popupClassName, noAutoDismiss, open, onClose, spotlightRestrict, ...rest} = this.props;
 			const scrimType = spotlightRestrict === 'self-only' ? 'transparent' : 'none';
 
 			return (
 				<div className={css.contextualPopupDecorator}>
-					<FloatingLayer open={open} scrimType={scrimType} onDismiss={onClose}>
+					<FloatingLayer open={open} scrimType={scrimType} noAutoDismiss={noAutoDismiss} onDismiss={onClose}>
 						<ContextualPopupContainer
 							className={popupClassName}
 							showCloseButton={showCloseButton}
