@@ -16,13 +16,15 @@ const defaultConfig = {
 	 * The event callback invoked when navigating back up the path
 	 *
 	 * @type {Function}
+	 * @required
+	 * @memberof moonstone/Panels.Routable.defaultConfig
 	 */
 	navigate: null
 };
 
 /**
  * Adds support for Routes as children of Panels which are selected via `path` instead of the usual
- * flat array of Panels.
+ * flat array of Panels. When using `Routable` you must specify the `navigate` config option.
  *
  * @class Routable
  * @memberof moonstone/Panels
