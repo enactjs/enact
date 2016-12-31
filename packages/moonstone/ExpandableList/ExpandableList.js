@@ -32,6 +32,7 @@ const ExpandableListBase = kind({
 		 * The items to be displayed in the list
 		 *
 		 * @type {String[]}
+		 * @required
 		 * @public
 		 */
 		children: PropTypes.arrayOf(PropTypes.string).isRequired,
