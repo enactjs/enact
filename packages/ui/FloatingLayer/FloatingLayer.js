@@ -1,27 +1,15 @@
-/**
- * Exports the {@link ui/FloatingLayer.FloatingLayer} and  {@link ui/FloatingLayer.FloatingLayerBase}
- * components. The default export is {@link ui/FloatingLayer.FloatingLayer}.
- *
- * @module ui/FloatingLayer
- */
-
+import {on, off} from '@enact/core/dispatcher';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Cancelable from '../Cancelable';
 
 import Scrim from './Scrim';
 
-// the current highest z-index value for FloatingLayers
-let scrimZIndex = 120;
-
-// array of z-indexes for visible layers
-const viewingLayers = [];
-
 /**
  * {@link ui/FloatingLayer.FloatingLayerBase} is a component that creates an entry point to the new
  * render tree. This is used for modal components such as popups.
  *
- * @class FloatingLayer
+ * @class FloatingLayerBase
  * @memberof ui/FloatingLayer
  * @ui
  * @public
@@ -98,13 +86,13 @@ class FloatingLayerBase extends React.Component {
 		open: React.PropTypes.bool,
 
 		/**
-		 * The scrim type. It can be either `'transparent'` or `'translucent'`.
+		 * The scrim type. It can be either `'transparent'`, `'translucent'`, or `'none'`.
 		 *
 		 * @type {String}
 		 * @default `translucent`
 		 * @public
 		 */
-		scrimType: React.PropTypes.oneOf(['transparent', 'translucent'])
+		scrimType: React.PropTypes.oneOf(['transparent', 'translucent', 'none'])
 	}
 
 	static defaultProps = {
@@ -117,20 +105,12 @@ class FloatingLayerBase extends React.Component {
 
 	componentDidMount () {
 		if (this.props.open) {
-			viewingLayers.push(scrimZIndex);
-			this.prevZIndex = scrimZIndex;
 			this.renderFloatingLayer(this.props);
 		}
 	}
 
 	componentWillReceiveProps (nextProps) {
 		if (nextProps.open) {
-			if (!this.props.open) {
-				// increase scrimZIndex by 2 for the new layer
-				scrimZIndex = scrimZIndex + 2;
-				this.prevZIndex = scrimZIndex;
-				viewingLayers.push(scrimZIndex);
-			}
 			this.renderFloatingLayer(nextProps, this.props.open);
 		} else {
 			this.closeFloatingLayer();
@@ -141,13 +121,24 @@ class FloatingLayerBase extends React.Component {
 		this.closeFloatingLayer();
 	}
 
+	handleClick = () => {
+		if (!this.props.noAutoDismiss && this.props.open && this.props.onDismiss) {
+			this.props.onDismiss();
+		}
+	}
+
+	stopPropagation = (ev) => {
+		ev.nativeEvent.stopImmediatePropagation();
+
+		if (this.props.children.props.onClick) {
+			this.props.children.props.onClick();
+		}
+	}
+
 	closeFloatingLayer () {
 		if (this.node) {
 			ReactDOM.unmountComponentAtNode(this.node);
 			document.getElementById(this.props.floatLayerId).removeChild(this.node);
-
-			const v = viewingLayers.indexOf(scrimZIndex);
-			viewingLayers.splice(v, 1);
 
 			if (this.props.onClose) {
 				this.props.onClose();
@@ -155,39 +146,50 @@ class FloatingLayerBase extends React.Component {
 		}
 		this.floatLayer = null;
 		this.node = null;
+
+		off('click', this.handleClick);
 	}
 
-	renderFloatingLayer ({floatLayerClassName, floatLayerId, scrimType, ...rest}, isOpened = false) {
-		delete rest.noAutoDismiss;
-		delete rest.onClose;
-		delete rest.onDismiss;
-		delete rest.onOpen;
-		delete rest.open;
+	renderNode () {
+		const {floatLayerClassName, floatLayerId} = this.props;
 
 		if (!this.node) {
 			this.node = document.createElement('div');
-			this.node.className = floatLayerClassName;
 			document.getElementById(floatLayerId).appendChild(this.node);
-		} else {
-			this.node.className = floatLayerClassName;
 		}
 
-		const scrimProps = {
-			type: scrimType,
-			visible: this.prevZIndex === viewingLayers[viewingLayers.length - 1],
-			zIndex: isOpened ? this.prevZIndex : scrimZIndex
-		};
+		this.node.className = floatLayerClassName;
+		this.node.style.zIndex = 100;
+
+		return this.node;
+	}
+
+	renderFloatingLayer ({children, onOpen, scrimType, ...rest}, isOpened = false) {
+		delete rest.floatLayerClassName;
+		delete rest.floatLayerId;
+		delete rest.noAutoDismiss;
+		delete rest.onClose;
+		delete rest.onDismiss;
+		delete rest.open;
+
+		const node = this.renderNode();
 		this.floatLayer = ReactDOM.unstable_renderSubtreeIntoContainer(
 			this,
-			<Scrim
-				{...scrimProps}
-				{...rest}
-			/>,
-			this.node
+			<div {...rest}>
+				{scrimType !== 'none' ? <Scrim type={scrimType} onClick={this.handleClick} /> : null}
+				{React.cloneElement(children, {onClick: this.stopPropagation})}
+			</div>,
+			node
 		);
 
-		if (!isOpened && this.props.onOpen) {
-			this.props.onOpen();
+		if (!isOpened) {
+			if (onOpen) {
+				onOpen();
+			}
+
+			if (scrimType === 'none') {
+				on('click', this.handleClick);
+			}
 		}
 	}
 

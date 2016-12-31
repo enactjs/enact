@@ -45,7 +45,7 @@ const HeaderBase = kind({
 		fullBleed: React.PropTypes.bool,
 
 		/**
-		 * When true, the case of the [`title`]{@link moonstone/Header.Header#title} will
+		 * When true, the case of the [`title`]{@link moonstone/Panels.Header#title} will
 		 * remain unchanged.
 		 * Uses [Uppercase HOC]{@link i18n/Uppercase.Uppercase} and mirrors the
 		 * [preserveCase prop]{@link i18n/Uppercase.Uppercase#preserveCase}
@@ -121,7 +121,7 @@ const HeaderBase = kind({
 		}
 	},
 
-	render: ({children, direction, preserveCase, subTitleBelowComponent, title, titleAbove, titleBelowComponent, type, ...rest}) => {
+	render: ({children, direction, preserveCase, subTitleBelowComponent, title, /* titleAbove, */titleBelowComponent, type, ...rest}) => {
 		delete rest.fullBleed;
 		delete rest.titleBelow;
 

@@ -11,8 +11,7 @@ storiesOf('Spinner')
 		() => (
 			<Spinner
 				transparent={boolean('transparent', false)}
-				middle={boolean('middle', false)}
-				center={boolean('center', false)}
+				centered={boolean('centered', false)}
 			>
 				{text('content', '')}
 			</Spinner>

@@ -1,5 +1,5 @@
+import memoize from 'ramda/src/memoize';
 import {scale} from '@enact/ui/resolution';
-import R from 'ramda';
 
 import {AlwaysViewingArranger} from './Arrangers';
 import {breadcrumbWidth} from './Breadcrumb';
@@ -13,8 +13,9 @@ import Viewport from './Viewport';
  * @param {Number} width         width of a breadcrumb
  *
  * @returns {Number} Number of breadcrumbs that can completely fit in that space
+ * @private
  */
-const calcMax = R.memoize((viewportWidth, width) => Math.floor(viewportWidth / 2 / scale(width)));
+const calcMax = memoize((viewportWidth, width) => Math.floor(viewportWidth / 2 / scale(width)));
 
 /**
  * An instance of Panels in which the Panel uses the right half of the viewable screen with

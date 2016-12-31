@@ -58,12 +58,14 @@ const DialogBase = kind({
 		noAnimation: PropTypes.bool,
 
 		/**
-		 * A function to be run when close button is clicked.
+		 * A function to be run when a closing action is invoked by the user. These actions include
+		 * pressing `ESC` key or clicking on the close button. It is the responsibility of the
+		 * callback to set the `open` property to `false`.
 		 *
 		 * @type {Function}
 		 * @public
 		 */
-		onCloseButtonClicked: PropTypes.func,
+		onClose: PropTypes.func,
 
 		/**
 		 * A function to be run after transition for hiding is finished.
@@ -83,6 +85,15 @@ const DialogBase = kind({
 		open: PropTypes.bool,
 
 		/**
+		 * Types of scrim. It can be either `'transparent'`, `'translucent'`, or `'none'`.
+		 *
+		 * @type {String}
+		 * @default `translucent`
+		 * @public
+		 */
+		scrimType: React.PropTypes.oneOf(['transparent', 'translucent', 'none']),
+
+		/**
 		 * When `true`, the close button is shown; when `false`, it is hidden.
 		 *
 		 * @type {Boolean}
@@ -90,6 +101,14 @@ const DialogBase = kind({
 		 * @public
 		 */
 		showCloseButton: PropTypes.bool,
+
+		/**
+		 * When `true`, a divider line separates the title from the dialog body
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		showDivider: PropTypes.bool,
 
 		/**
 		 * Title of the header
@@ -105,15 +124,7 @@ const DialogBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		titleBelow: PropTypes.string,
-
-		/**
-		 * When `true`, a divider line separates the title from the dialog body
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		showDivider: PropTypes.bool
+		titleBelow: PropTypes.string
 	},
 
 	defaultProps: {

@@ -57,32 +57,30 @@
 		}
 	}
 
-	.textEllipsis {
-		position: relative;
-		left: 0px;
-		overflow: hidden;
-
-		white-space: pre;
-		text-overflow: ellipsis;
-		text-align: center;
-
-		pointer-events: none;
-	}
-
 	.caption {
 		.moon-sub-header-text();
-		.textEllipsis;
+		text-align: center;
 	}
 
 	.subCaption {
 		.moon-body-text();
-		.textEllipsis;
+		text-align: center;
 	}
 
 	&:global(.spottable):focus {
 		.caption,
 		.subCaption {
 			color: @moon-spotlight-text-color;
+		}
+	}
+}
+
+[data-container-muted='true'] {
+	.gridListImageItem {
+		&:global(.spottable):focus {
+			.subCaption {
+				color: @moon-body-text-color;
+			}
 		}
 	}
 }

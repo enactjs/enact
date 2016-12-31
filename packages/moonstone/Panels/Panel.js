@@ -1,11 +1,12 @@
 import kind from '@enact/core/kind';
-import Slottable from '@enact/ui/Slottable';
 import React from 'react';
+import Slottable from '@enact/ui/Slottable';
+import {SpotlightContainerDecorator} from '@enact/spotlight';
 
 import css from './Panel.less';
 
 /**
-* {@link moonstone/Panel.Panel} is the default kind for controls created inside a
+* {@link moonstone/Panels.Panel} is the default kind for controls created inside a
 * [moonstone/Panels]{@link moonstone/Panels.Panels} container. A `moonstone/Panels`
 * will typically contain several instances of these.
 *
@@ -18,7 +19,7 @@ const PanelBase = kind({
 
 	name: 'Panel',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/Panels.Panel.prototype */ {
 		/**
 		 * Header for the panel. This is usually passed by the {@link ui/Slottable.Slottable} API by
 		 * using a [Header]{@link moonstone/Panels.Header} component as a child of the Panel.
@@ -42,8 +43,12 @@ const PanelBase = kind({
 	)
 });
 
-// Note that we only export this (even as PanelBase).  PanelBase is not useful on its own.
-const Panel = Slottable({slots: ['header']}, PanelBase);
+const Panel = SpotlightContainerDecorator(
+	Slottable(
+		{slots: ['header']},
+		PanelBase
+	)
+);
 
 export default Panel;
-export {Panel, Panel as PanelBase};
+export {Panel, PanelBase};

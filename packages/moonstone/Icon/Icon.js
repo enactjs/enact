@@ -20,6 +20,7 @@ import css from './Icon.less';
  * @param	{String|Object}	src		URI to image or object of URIs
  *
  * @returns	{Object}				Original style object with backgroundImage updated
+ * @private
  */
 const mergeStyle = function (style, src) {
 	let updated = Object.assign({}, style);
@@ -38,6 +39,7 @@ const mergeStyle = function (style, src) {
  * @param	{String}	c	Character to test
  *
  * @returns	{Boolean}		`true` if c is a single character
+ * @private
  */
 const isSingleCharacter = function (c) {
 	return	c.length === 1 ||
@@ -152,9 +154,63 @@ const IconBase = kind({
 	}
 });
 
+// Let's find a way to import this list directly, and bonus feature, render our icons in the docs next to their names.
 /**
  * {@link moonstone/Icon.iconList} is an object whose keys can be used as the child of an
  * {@link moonstone/Icon.Icon} component.
+ *
+ * List of Icons:
+ * ```
+ * plus
+ * minus
+ * arrowhookleft
+ * arrowhookright
+ * ellipsis
+ * check
+ * circle
+ * stop
+ * play
+ * pause
+ * forward
+ * backward
+ * skipforward
+ * skipbackward
+ * pauseforward
+ * pausebackward
+ * pausejumpforward
+ * pausejumpbackward
+ * jumpforward
+ * jumpbackward
+ * denselist
+ * bulletlist
+ * list
+ * drawer
+ * arrowlargedown
+ * arrowlargeup
+ * arrowlargeleft
+ * arrowlargeright
+ * arrowsmallup
+ * arrowsmalldown
+ * arrowsmallleft
+ * arrowsmallright
+ * closex
+ * search
+ * rollforward
+ * rollbackward
+ * exitfullscreen
+ * fullscreen
+ * arrowextend
+ * arrowshrink
+ * flag
+ * funnel
+ * trash
+ * star
+ * hollowstar
+ * halfstar
+ * gear
+ * plug
+ * lock
+ * ```
  *
  * @name iconList
  * @memberof moonstone/Icon

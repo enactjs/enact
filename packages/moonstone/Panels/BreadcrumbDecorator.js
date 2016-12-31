@@ -1,24 +1,30 @@
 import {kind, hoc} from '@enact/core';
 import {coerceFunction} from '@enact/core/util';
-import Cancelable from '@enact/ui/Cancelable';
 import ViewManager from '@enact/ui/ViewManager';
 import invariant from 'invariant';
 import React from 'react';
 
 import Breadcrumb from './Breadcrumb';
 import BreadcrumbArranger from './BreadcrumbArranger';
+import CancelDecorator from './CancelDecorator';
 import IndexedBreadcrumbs from './IndexedBreadcrumbs';
 
 import css from './Panels.less';
 
 // TODO: Figure out how to document private sub-module members
 
+/**
+ * Default config for {@link moonstone/Panels.BreadcrumbDecorator}
+ * @hocconfig
+ * @memberof moonstone/Panels.BreadcrumbDecorator
+ */
 const defaultConfig = {
 	/**
 	 * Classes to be added to the root node
 	 *
 	 * @type {string}
 	 * @default null
+	 * @memberof moonstone/Panels.BreadcrumbDecorator.defaultConfig
 	 */
 	className: null,
 
@@ -28,6 +34,7 @@ const defaultConfig = {
 	 *
 	 * @type {number|function}
 	 * @default 0
+	 * @memberof moonstone/Panels.BreadcrumbDecorator.defaultConfig
 	 */
 	max: 0,
 
@@ -36,6 +43,7 @@ const defaultConfig = {
 	 *
 	 * @type {object}
 	 * @default null
+	 * @memberof moonstone/Panels.BreadcrumbDecorator.defaultConfig
 	 */
 	props: null
 };
@@ -44,9 +52,11 @@ const defaultConfig = {
 /**
  * Higher-order Component that adds breadcrumbs to a Panels component
  *
+ * @class BreadcrumbDecorator
  * @type {Function}
  * @hoc
  * @private
+ * @memberof moonstone/Panels
  */
 const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const max = coerceFunction(config.max);
@@ -168,19 +178,8 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 	});
 
-	function handleCancel (props) {
-		const {index, onSelectBreadcrumb} = props;
-		if (index > 0 && onSelectBreadcrumb) {
-			onSelectBreadcrumb({
-				index: index - 1
-			});
-
-			return true;
-		}
-	}
-
-	return Cancelable(
-		{modal: true, onCancel: handleCancel},
+	return CancelDecorator(
+		{cancel: 'onSelectBreadcrumb'},
 		Decorator
 	);
 });

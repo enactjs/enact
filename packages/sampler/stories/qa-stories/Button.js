@@ -66,6 +66,19 @@ storiesOf('Button')
 		)
 	)
 	.addWithInfo(
+		'to test if the parent element\'s background causes occlusion',
+		() => (
+			<div className={css.bgColor}>
+				<Button
+					onClick={action('onClick')}
+					disabled={boolean('disabled')}
+				>
+					Normal Button
+				</Button>
+			</div>
+		)
+	)
+	.addWithInfo(
 		'with tap area displayed',
 		() => (
 			<div>

@@ -25,7 +25,10 @@
 		}
 	}
 
-	&:global(.spottable):not(:focus) .overlay.hidden {
-		display: none;
+	&:global(.spottable):not(:focus),
+	&[disabled] {
+		.overlay.hidden {
+			display: none;
+		}
 	}
 }

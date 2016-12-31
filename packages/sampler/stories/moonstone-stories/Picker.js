@@ -11,9 +11,10 @@ StatefulPicker.displayName = 'Picker';
 
 // Set up some defaults for info and knobs
 const prop = {
-	orientation: {'horizontal': 'horizontal', 'vertical': 'vertical'},
-	width: {'null': null, 'small': 'small', 'medium': 'medium', 'large': 'large'}
+	orientation: ['horizontal', 'vertical'],
+	width: ['<null>', 'small', 'medium', 'large']
 };
+const nullify = (v) => v === '<null>' ? null : v;
 
 const airports = [
 	'San Francisco Airport Terminal Gate 1',
@@ -30,7 +31,7 @@ storiesOf('Picker')
 		() => (
 			<StatefulPicker
 				onChange={action('onChange')}
-				width={select('width', prop.width, 'large')}
+				width={nullify(select('width', prop.width, 'large'))}
 				orientation={select('orientation', prop.orientation)}
 				wrap={boolean('wrap')}
 				joined={boolean('joined')}

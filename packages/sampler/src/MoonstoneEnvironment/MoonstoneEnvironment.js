@@ -8,6 +8,11 @@ import {select} from '@kadira/storybook-addon-knobs';
 
 import css from './MoonstoneEnvironment.less';
 
+const reloadPage = () => {
+	const {protocol, host} = window.location;
+	window.parent.location.href = protocol + '//' + host;
+};
+
 const PanelsBase = kind({
 	name: 'MoonstoneEnvironment',
 
@@ -23,7 +28,7 @@ const PanelsBase = kind({
 
 	render: ({children, title, description, ...rest}) => (
 		<div {...rest}>
-			<Panels>
+			<Panels onApplicationClose={reloadPage}>
 				<Panel>
 					<Header type="compact" title={title} preserveCase />
 					<div className={css.description}>
@@ -49,8 +54,8 @@ const FullscreenBase = kind({
 	)
 });
 
-const Moonstone = MoonstoneDecorator(PanelsBase);
-const MoonstoneFullscreen = MoonstoneDecorator(FullscreenBase);
+const Moonstone = MoonstoneDecorator({overlay: true}, PanelsBase);
+const MoonstoneFullscreen = MoonstoneDecorator({overlay: true}, FullscreenBase);
 
 // NOTE: Locales taken from strawman. Might need to add more in the future.
 const locales = {

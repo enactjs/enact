@@ -4,12 +4,12 @@ const computeBarTransform = (proportion = 0, vertical) => {
 	const scaleStyle = vertical ? `scale(1, ${proportion})` : `scale(${proportion}, 1)`;
 	return `${scaleStyle} translateZ(0)`;
 };
-const computeKnobTransform = (proportion, vertical, node, knobRadius) => {
+const computeKnobTransform = (proportion, vertical, node) => {
 	if (node) {
 		if (vertical) {
-			return `translate3d(-50%, ${(1 - proportion) * node.clientHeight - knobRadius}px, 0)`;
+			return `translate3d(0, ${(1 - proportion) * node.clientHeight}px, 0)`;
 		} else {
-			return `translate3d(${proportion * node.clientWidth - knobRadius}px, -50%, 0)`;
+			return `translate3d(${proportion * node.clientWidth}px, 0, 0)`;
 		}
 	}
 };

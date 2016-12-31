@@ -24,6 +24,7 @@ const hours12 = [
 * within {@link moonstone/TimePicker.TimePicker}.
 *
 * @class TimePickerBase
+* @memberof moonstone/TimePicker
 * @ui
 * @private
 */
@@ -130,7 +131,7 @@ const TimePickerBase = kind({
 
 	render: ({hasMeridiem, hour, meridiem, meridiems, minute, noHourAnimation, noLabels, onChangeHour, onChangeMeridiem, onChangeMinute, order, ...rest}) => {
 		return (
-			<ExpandableItemBase {...rest} showLabel="always">
+			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false}>
 				<div className={dateComponentPickers}>
 					<div className={css.timeComponents}>
 						{order.map(picker => {

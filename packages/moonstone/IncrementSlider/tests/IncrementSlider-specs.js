@@ -40,4 +40,32 @@ describe('SliderBase Specs', () => {
 
 		expect(actual).to.equal(expected);
 	});
+
+	it('Should disable decrement button when value === min', function () {
+		const incrementSlider = mount(
+			<IncrementSlider
+				value={0}
+				min={0}
+			/>
+		);
+
+		const expected = true;
+		const actual = incrementSlider.find(`.${css.decrementButton}`).prop('disabled');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('Should disable increment button when value === max', function () {
+		const incrementSlider = mount(
+			<IncrementSlider
+				value={10}
+				max={10}
+			/>
+		);
+
+		const expected = true;
+		const actual = incrementSlider.find(`.${css.incrementButton}`).prop('disabled');
+
+		expect(actual).to.equal(expected);
+	});
 });

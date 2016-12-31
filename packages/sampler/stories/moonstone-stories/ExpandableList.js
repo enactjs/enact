@@ -14,8 +14,10 @@ storiesOf('ExpandableList')
 		'Basic usage of ExpandableList',
 		() => (
 			<List
-				autoClose={boolean('autoClose', false)}
+				closeOnSelect={boolean('closeOnSelect', false)}
 				disabled={boolean('disabled', false)}
+				noAutoClose={boolean('noAutoClose', false)}
+				noLockBottom={boolean('noLockBottom', false)}
 				noneText={text('noneText', 'nothing selected')}
 				onSelect={action('onSelect')}
 				onClose={action('onClose')}

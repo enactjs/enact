@@ -1,3 +1,4 @@
+import factory from '@enact/core/factory';
 import React, {PropTypes} from 'react';
 
 import {
@@ -5,84 +6,106 @@ import {
 	computeKnobTransform
 } from '../internal/SliderDecorator/util';
 
-import css from './Slider.less';
+const SliderBarFactory = factory(({css}) => {
 
-/**
- * {@link moonstone/Slider.SliderBar} is private.
- *
- * @class SliderBar
- * @memberof moonstone/Slider
- * @ui
- * @private
- */
+	/**
+	 * {@link moonstone/Slider.SliderBar} is private.
+	 *
+	 * @class SliderBar
+	 * @memberof moonstone/Slider
+	 * @ui
+	 * @private
+	 */
 
-class SliderBar extends React.Component {
-	static propTypes = /** @lends moonstone/Slider.SliderBar.prototype */{
-		/**
-		 * The background progress as a proportion.
-		 *
-		 * @type {Number}
-		 * @public
-		 */
-		proportionBackgroundProgress: PropTypes.number,
+	return class extends React.Component {
+		static displayName = 'SliderBar'
 
-		/**
-		 * The progress as a percentage.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		proportionProgress: PropTypes.number,
+		static propTypes = /** @lends moonstone/Slider.SliderBar.prototype */{
+			/**
+			 * The slider can change its behavior to have the knob follow the cursor as it moves
+			 * across the slider, without applying the position. A click or drag behaves the same.
+			 * This is primarily used by media playback. Setting this to `true` enables this behavior.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @private
+			 */
+			detachedKnob: PropTypes.bool,
 
-		/**
-		 * If `true` the slider will be oriented vertically.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		vertical: PropTypes.bool,
+			/**
+			 * The background progress as a proportion.
+			 *
+			 * @type {Number}
+			 * @public
+			 */
+			proportionBackgroundProgress: PropTypes.number,
 
-		/**
-		 * Height, in standard CSS units, of the vertical slider. Only takes
-		 * effect on a vertical oriented slider, and will be `null` otherwise.
-		 *
-		 * @type {Object}
-		 * @public
-		 */
-		verticalHeight: PropTypes.object
-	}
+			/**
+			 * The progress as a percentage.
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			proportionProgress: PropTypes.number,
 
-	getBarNode = (node) => {
-		this.barNode = node;
-	}
+			/**
+			 * `scrubbing` only has an effect with a datachedKnob, and is a performance optimization
+			 * to not allow re-assignment of the knob's value (and therefore position) during direct
+			 * user interaction.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			scrubbing: PropTypes.bool,
 
-	getKnobNode = (node) => {
-		this.knobNode = node;
-		this.knobWidth = node && node.offsetHeight / 2;
-	}
+			/**
+			 * If `true` the slider will be oriented vertically.
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			vertical: PropTypes.bool,
 
-	getLoaderNode = (node) => {
-		this.loaderNode = node;
-	}
+			/**
+			 * Height, in standard CSS units, of the vertical slider. Only takes
+			 * effect on a vertical oriented slider, and will be `null` otherwise.
+			 *
+			 * @type {Object}
+			 * @public
+			 */
+			verticalHeight: PropTypes.object
+		}
 
-	getNode = (node) => {
-		this.node = node;
-	}
+		getBarNode = (node) => {
+			this.barNode = node;
+		}
 
-	render () {
-		const {proportionBackgroundProgress, proportionProgress, vertical, verticalHeight, ...rest} = this.props;
+		getKnobNode = (node) => {
+			this.knobNode = node;
+		}
 
-		return (
-			<div {...rest} className={css.sliderBar} ref={this.getNode} style={verticalHeight}>
-				<div className={css.load} ref={this.getLoaderNode} style={{transform: computeBarTransform(proportionBackgroundProgress, vertical)}} />
-				<div className={css.fill} ref={this.getBarNode} style={{transform: computeBarTransform(proportionProgress, vertical)}} />
-				<div className={css.knob} ref={this.getKnobNode} style={{transform: computeKnobTransform(proportionProgress, vertical, this.node, this.knobWidth)}} />
-			</div>
-		);
-	}
-}
+		getLoaderNode = (node) => {
+			this.loaderNode = node;
+		}
 
-export default SliderBar;
-export {
-	SliderBar
-};
+		getNode = (node) => {
+			this.node = node;
+		}
+
+		render () {
+			const {detachedKnob, proportionBackgroundProgress, proportionProgress, scrubbing, vertical, ...rest} = this.props;
+
+			return (
+				<div {...rest} className={css.sliderBar} ref={this.getNode}>
+					<div className={css.load} ref={this.getLoaderNode} style={{transform: computeBarTransform(proportionBackgroundProgress, vertical)}} />
+					<div className={css.fill} ref={this.getBarNode} style={{transform: computeBarTransform(proportionProgress, vertical)}} />
+					<div className={css.knob} ref={this.getKnobNode} style={(detachedKnob && !scrubbing) ? {transform: computeKnobTransform(proportionProgress, vertical, this.node)} : null} />
+				</div>
+			);
+		}
+	};
+});
+
+export default SliderBarFactory;
+export {SliderBarFactory};
