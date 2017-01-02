@@ -361,14 +361,15 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		onFocus = (e) => {
-			// for virtuallist
 			if (this.isKeyDown && !this.isDragging) {
 				const
 					item = e.target,
-					index = Number.parseInt(item.getAttribute(dataIndexAttribute));
+					index = Number.parseInt(item.getAttribute(dataIndexAttribute)),
+					focusableCheck = (item !== this.lastFocusedItem && item === doc.activeElement && this.childRef.calculatePositionOnFocus);
 
-				if (!isNaN(index) && item !== this.lastFocusedItem && item === doc.activeElement && this.childRef.calculatePositionOnFocus) {
-					const pos = this.childRef.calculatePositionOnFocus(index);
+				if (focusableCheck) {
+					// checking index for virtualList
+					const pos = !isNaN(index) ? this.childRef.calculatePositionOnFocus(index) : this.childRef.calculatePositionOnFocus(item);
 					if (pos) {
 						if (pos.left !== this.scrollLeft || pos.top !== this.scrollTop) {
 							this.start(pos.left, pos.top, (animationDuration > 0), false, animationDuration);
@@ -382,8 +383,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		onKeyDown = (e) => {
 			if (this.childRef.setSpotlightContainerRestrict) {
 				this.isKeyDown = true;
-				const index = Number.parseInt(e.target.getAttribute(dataIndexAttribute));
-				this.childRef.setSpotlightContainerRestrict(e.keyCode, index);
+				const item = e.target;
+				this.childRef.setSpotlightContainerRestrict(e.keyCode, item);
+			} else {
+				this.isKeyDown = true;
 			}
 		}
 

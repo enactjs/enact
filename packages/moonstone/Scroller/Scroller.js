@@ -70,6 +70,11 @@ class ScrollerBase extends Component {
 		maxTop: 0
 	}
 
+	scrollPos = {
+		top: 0,
+		left: 0
+	}
+
 	getScrollBounds = () => this.scrollBounds
 
 	setScrollPosition (valX, valY) {
@@ -79,10 +84,39 @@ class ScrollerBase extends Component {
 
 		if (this.isVertical()) {
 			node.scrollTop = valY;
+			this.scrollPos.top = valY;
 		}
 		if (this.isHorizontal()) {
 			node.scrollLeft = rtl ? (this.scrollBounds.maxLeft - valX) : valX;
+			this.scrollPos.left = valX;
 		}
+	}
+
+	calculatePositionOnFocus = (focusedItem) => {
+		const
+			rtlDirection = this.context.rtl ? -1 : 1,
+			bounds = {
+				left: this.scrollPos.left * rtlDirection,
+				top: this.scrollPos.top
+			};
+
+		if (this.isVertical()) {
+			if (focusedItem.offsetTop + focusedItem.offsetHeight > (this.scrollBounds.clientHeight + bounds.top)) {
+				this.scrollPos.top += ((focusedItem.offsetTop + focusedItem.offsetHeight) - (this.scrollBounds.clientHeight + bounds.top));
+			} else if (focusedItem.offsetTop <= bounds.top) {
+				this.scrollPos.top += (focusedItem.offsetTop - bounds.top);
+			}
+		}
+
+		if (this.isHorizontal()) {
+			if (focusedItem.offsetLeft + focusedItem.offsetWidth > (this.scrollBounds.clientWidth + bounds.left)) {
+				this.scrollPos.left += rtlDirection * ((focusedItem.offsetLeft + focusedItem.offsetWidth) - (this.scrollBounds.clientWidth + bounds.left));
+			} else if (focusedItem.offsetLeft <= bounds.left) {
+				this.scrollPos.left += rtlDirection * (focusedItem.offsetLeft - bounds.left);
+			}
+		}
+
+		return this.scrollPos;
 	}
 
 	getScrollPos = (item) => {
