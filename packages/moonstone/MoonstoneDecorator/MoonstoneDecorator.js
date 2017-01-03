@@ -4,8 +4,7 @@
  * @module moonstone/MoonstoneDecorator
  */
 
-import {addCancelHandler, removeCancelHandler} from '@enact/ui/Cancelable';
-import {forKeyCode} from '@enact/core/handle';
+import {add} from '@enact/core/keymap';
 import hoc from '@enact/core/hoc';
 import I18nDecorator from '@enact/i18n/I18nDecorator';
 import React from 'react';
@@ -24,7 +23,6 @@ import css from './MoonstoneDecorator.less';
  * @hocconfig
  */
 const defaultConfig = {
-	cancelHandler: forKeyCode(461),
 	i18n: true,
 	float: true,
 	overlay: false,
@@ -49,7 +47,7 @@ const defaultConfig = {
  * @public
  */
 const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {ri, i18n, spotlight, float, overlay, cancelHandler} = config;
+	const {ri, i18n, spotlight, float, overlay} = config;
 
 	// Apply classes depending on screen type (overlay / fullscreen)
 	const bgClassName = 'enact-fit' + (overlay ? '' : ` ${css.bg}`);
@@ -67,22 +65,12 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		);
 	}
 	if (spotlight) App = SpotlightRootDecorator(App);
-	if (cancelHandler) addCancelHandler(cancelHandler);
+
+	// add webOS back key for cancel key map
+	add('cancel', 461);
 
 	const Decorator = class extends React.Component {
 		static displayName = 'MoonstoneDecorator';
-
-		componentDidMount () {
-			if (cancelHandler) {
-				addCancelHandler(cancelHandler);
-			}
-		}
-
-		componentWillUnmount () {
-			if (cancelHandler) {
-				removeCancelHandler(cancelHandler);
-			}
-		}
 
 		render () {
 			let className = `${css.moon} enact-unselectable`;
