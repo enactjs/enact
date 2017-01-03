@@ -6,7 +6,7 @@ import {addAll} from './keymap';
 
 // Add the default 5-way navigation key codes
 addAll({
-	enter: 13,
+	enter: [13, 16777221],
 	left: 37,
 	up: 38,
 	right: 39,

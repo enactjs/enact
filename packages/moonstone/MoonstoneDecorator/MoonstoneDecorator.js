@@ -69,7 +69,6 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	// add webOS-specific key maps
 	addAll({
 		cancel: 461,
-		enter: 16777221,
 		pointerHide: 1537,
 		pointerShow: 1536
 	});
