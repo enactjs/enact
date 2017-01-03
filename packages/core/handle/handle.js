@@ -1,6 +1,8 @@
 import curry from 'ramda/src/curry';
 import reduce from 'ramda/src/reduce';
 
+import {is} from '../keymap';
+
 /**
  * Allows generating event handlers by chaining functions to filter or short-circuit the handling
  * flow. Any handler that returns true will stop the chain.
@@ -158,11 +160,22 @@ const stopImmediate = handle.stopImmediate = callOnEvent('stopImmediatePropagati
  */
 const forKeyCode = handle.forKeyCode = forProp('keyCode');
 
+/**
+ * Only allows event handling to continue if the event's keyCode is mapped to `name` within
+ * {@link core/keymap}.
+ *
+ * @method	forKey
+ * @param	{String}	name	Name from {@link core/keymap}
+ * @returns	{Function}			Event handler
+ */
+const forKey = handle.forKey = (name) => (ev) => !is(name, ev.keyCode);
+
 export default handle;
 export {
 	callOnEvent,
 	forward,
 	forProp,
+	forKey,
 	forKeyCode,
 	handle,
 	preventDefault,
