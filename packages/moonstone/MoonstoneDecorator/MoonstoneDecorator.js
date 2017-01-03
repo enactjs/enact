@@ -4,7 +4,7 @@
  * @module moonstone/MoonstoneDecorator
  */
 
-import {add} from '@enact/core/keymap';
+import {addAll} from '@enact/core/keymap';
 import hoc from '@enact/core/hoc';
 import I18nDecorator from '@enact/i18n/I18nDecorator';
 import React from 'react';
@@ -66,8 +66,13 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	}
 	if (spotlight) App = SpotlightRootDecorator(App);
 
-	// add webOS back key for cancel key map
-	add('cancel', 461);
+	// add webOS-specific key maps
+	addAll({
+		cancel: 461,
+		enter: 16777221,
+		pointerHide: 1537,
+		pointerShow: 1536
+	});
 
 	const Decorator = class extends React.Component {
 		static displayName = 'MoonstoneDecorator';

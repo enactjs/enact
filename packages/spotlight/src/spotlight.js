@@ -10,15 +10,9 @@
  */
 
 import Accelerator from '@enact/core/Accelerator';
-import {addAll, is} from '@enact/core/keymap';
+import {is} from '@enact/core/keymap';
 import {startJob} from '@enact/core/jobs';
 import {spottableClass} from './spottable';
-
-addAll({
-	enter: 16777221,
-	pointerShow: 1536,
-	pointerHide: 1537
-});
 
 const isDown = is('down');
 const isEnter = is('enter');
