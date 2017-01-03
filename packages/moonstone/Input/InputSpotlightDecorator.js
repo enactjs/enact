@@ -151,13 +151,13 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			const {dismissOnEnter, noDecorator} = this.props;
 			const {currentTarget, keyCode, target} = ev;
 
-			const isDown = is('down', keyCode);
-			const isEnter = is('enter', keyCode);
-			const isLeft = is('left', keyCode);
-			const isRight = is('right', keyCode);
-			const isUp = is('up', keyCode);
-
 			if (this.state.focused === 'input') {
+				const isDown = is('down', keyCode);
+				const isEnter = is('enter', keyCode);
+				const isLeft = is('left', keyCode);
+				const isRight = is('right', keyCode);
+				const isUp = is('up', keyCode);
+
 				// switch focus to the decorator ...
 				const shouldFocusDecorator = (
 					// on enter + dismissOnEnter
