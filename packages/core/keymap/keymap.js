@@ -27,6 +27,15 @@ import curry from 'ramda/src/curry';
 const map = {};
 
 /**
+ * Utility to safely convert keymap name to lower case
+ *
+ * @param   {String} name  Name for keyCode
+ *
+ * @returns {String}       Name for keyCode in lower case
+ */
+const toLowerCase = (name) => name ? name.toLowerCase() : '';
+
+/**
  * Iterates over `set` and invokes `fn` with the key and value of each item
  *
  * @param   {Function}  fn   Function to invoke
@@ -64,12 +73,13 @@ const oneOrArray = curry(function (fn, name, keyCode) {
  * @returns {undefined}
  */
 const addOne = curry(function (name, keyCode) {
+	name = toLowerCase(name);
 	if (name in map) {
 		const index = map[name].indexOf(keyCode);
 		if (index === -1) {
 			map[name].push(keyCode);
 		}
-	} else {
+	} else if (name) {
 		map[name] = [keyCode];
 	}
 });
@@ -83,6 +93,7 @@ const addOne = curry(function (name, keyCode) {
  * @returns {undefined}
  */
 const removeOne = curry(function (name, keyCode) {
+	name = toLowerCase(name);
 	if (name in map) {
 		const keys = map[name];
 		if (keys.length === 0) {
@@ -151,6 +162,7 @@ const removeAll = forEachObj(remove);
  * @public
  */
 const is = curry(function (name, keyCode) {
+	name = toLowerCase(name);
 	return name in map && map[name].indexOf(keyCode) >= 0;
 });
 
