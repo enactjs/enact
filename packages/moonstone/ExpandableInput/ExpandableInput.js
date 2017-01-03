@@ -1,4 +1,5 @@
 import Changeable from '@enact/ui/Changeable';
+import {is} from '@enact/core/keymap';
 import React from 'react';
 
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
@@ -95,8 +96,8 @@ class ExpandableInputBase extends React.Component {
 	handleInputKeyDown = (ev) => {
 		const keyCode = ev.keyCode;
 
-		const isEnter = keyCode === 13;
-		const isUpDown = keyCode === 38 || keyCode === 40;
+		const isEnter = is('enter', keyCode);
+		const isUpDown = is('up', keyCode) || is('down', keyCode);
 
 		if (isEnter) {
 			// prevent Enter onKeyPress which would re-open the expandable when the label
