@@ -31,9 +31,6 @@ const getDirection = function (keyCode) {
 			isRight(keyCode) && 'right' ||
 			isUp(keyCode) && 'up';
 };
-const is5Way = function (keyCode) {
-	return isEnter(keyCode) || !!getDirection(keyCode);
-};
 const isPointerShow = is('pointerShow');
 const isPointerHide = is('pointerHide');
 
