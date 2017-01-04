@@ -113,17 +113,6 @@ const PickerBase = kind({
 		orientation: React.PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
-		 * When `true`, the picker buttons operate in the reverse direction such that pressing
-		 * up/left decrements the value and down/right increments the value. This is more natural
-		 * for vertical lists of text options where "up" implies a spatial change rather than
-		 * incrementing the value.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		reverse: React.PropTypes.bool,
-
-		/**
 		 * Index of the selected child
 		 *
 		 * @type {Number}
@@ -167,7 +156,7 @@ const PickerBase = kind({
 		delete rest.marqueeDisabled;
 
 		return (
-			<PickerCore {...rest} min={0} max={max} index={value} step={1} value={value}>
+			<PickerCore {...rest} min={0} max={max} index={value} step={1} value={value} reverse>
 				{children}
 			</PickerCore>
 		);

@@ -59,7 +59,6 @@ storiesOf('Picker')
 				disabled={boolean('disabled')}
 				incrementIcon={select('incrementIcon', iconNames)}
 				decrementIcon={select('decrementIcon', iconNames)}
-				reverse={boolean('reverse')}
 			>
 				{pickerList.long}
 			</StatefulPicker>
@@ -78,7 +77,6 @@ storiesOf('Picker')
 				disabled={boolean('disabled')}
 				incrementIcon={select('incrementIcon', iconNames)}
 				decrementIcon={select('decrementIcon', iconNames)}
-				reverse={boolean('reverse')}
 			>
 				{pickerList.tall}
 			</StatefulPicker>
@@ -98,7 +96,6 @@ storiesOf('Picker')
 				incrementIcon={select('incrementIcon', iconNames)}
 				decrementIcon={select('decrementIcon', iconNames)}
 				defaultValue={2}
-				reverse={boolean('reverse')}
 			>
 				{pickerList.vegetables}
 			</StatefulPicker>
@@ -117,7 +114,6 @@ storiesOf('Picker')
 				disabled={boolean('disabled')}
 				incrementIcon={select('incrementIcon', iconNames)}
 				decrementIcon={select('decrementIcon', iconNames)}
-				reverse={boolean('reverse')}
 			>
 				{pickerList.oneAirport}
 			</StatefulPicker>
