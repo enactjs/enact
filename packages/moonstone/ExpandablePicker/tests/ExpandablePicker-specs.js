@@ -50,4 +50,28 @@ describe('ExpandablePicker Specs', () => {
 
 		expect(actual).to.equal(expected);
 	});
+
+	it('should pass 0 to onChange as default', function () {
+
+		const expandablePicker = mount(
+			<ExpandablePicker title='Options' onChange={onChange}>
+				{['Option one', 'Option two', 'Option three']}
+			</ExpandablePicker>
+		);
+
+		function onChange (e) {
+			expandablePicker.setState({value: e.value});
+		}
+
+		const expandable = expandablePicker.find('MarqueeText').first();
+		const checkButton = expandablePicker.find('Icon').last();
+
+		expandable.simulate('click');
+		checkButton.simulate('click');
+
+		const expected = 0;
+		const actual = expandablePicker.state('value');
+
+		expect(actual).to.equal(expected);
+	});
 });

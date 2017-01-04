@@ -151,7 +151,11 @@ const ExpandablePickerBase = kind({
 				}
 
 				if (onChange) {
-					onChange({value});
+					if (value) {
+						onChange({value});
+					} else {
+						onChange({value: 0});
+					}
 				}
 			};
 		}
