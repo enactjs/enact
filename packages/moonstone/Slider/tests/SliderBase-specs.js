@@ -29,7 +29,7 @@ describe('SliderBase Specs', () => {
 
 	it('Should set min on input', function () {
 		const sliderBase = mount(
-			<SliderBase min={50} value={50} />
+			<SliderBase backgroundPercent={50} min={50} value={50} />
 		);
 
 		const expected = 50;
