@@ -1,13 +1,13 @@
 import * as jobs from '@enact/core/jobs';
 import {childrenEquals} from '@enact/core/util';
-import Holdable from '@enact/ui/Holdable';
 import clamp from 'ramda/src/clamp';
 import React from 'react';
-import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
 import shouldUpdate from 'recompose/shouldUpdate';
+import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
 
 import PickerButton from './PickerButton';
 import {steppedNumber} from './PickerPropTypes';
+
 import css from './Picker.less';
 
 const PickerViewManager = shouldUpdate((props, nextProps) => {
@@ -34,26 +34,24 @@ const selectIncIcon = selectIcon('incrementIcon', 'arrowlargeup', 'arrowlargerig
 const selectDecIcon = selectIcon('decrementIcon', 'arrowlargedown', 'arrowlargeleft');
 
 const jobNames = {
-	emulateMouseUp: 'PickerCore.emulateMouseUp'
+	emulateMouseUp: 'Picker.emulateMouseUp'
 };
 
 const emulateMouseEventsTimeout = 175;
 
-const HoldablePickerButton = Holdable({resume: true, endHold: 'onLeave'}, PickerButton);
-
 /**
- * The base component for {@link moonstone/Picker.PickerCore}.
+ * The base component for {@link moonstone/internal/Picker.Picker}.
  *
- * @class PickerCore
- * @memberof moonstone/Picker
+ * @class Picker
+ * @memberof moonstone/internal/Picker
  * @ui
  * @private
  */
 
-const PickerCore = class extends React.Component {
-	static displayName = 'PickerCore'
+const Picker = class extends React.Component {
+	static displayName = 'Picker'
 
-	static propTypes = /** @lends moonstone/Picker.PickerCore.prototype */ {
+	static propTypes = /** @lends moonstone/internal/Picker.Picker.prototype */ {
 		/**
 		 * Index for internal ViewManager
 		 *
@@ -395,7 +393,7 @@ const PickerCore = class extends React.Component {
 
 		return (
 			<div {...rest} className={classes} disabled={disabled} onWheel={joined ? this.handleWheel : null}>
-				<HoldablePickerButton
+				<PickerButton
 					className={css.incrementer}
 					disabled={incrementerDisabled}
 					onClick={this.handleIncClick}
@@ -415,7 +413,7 @@ const PickerCore = class extends React.Component {
 				>
 					{children}
 				</PickerViewManager>
-				<HoldablePickerButton
+				<PickerButton
 					className={css.decrementer}
 					disabled={decrementerDisabled}
 					onClick={this.handleDecClick}
@@ -430,5 +428,6 @@ const PickerCore = class extends React.Component {
 	}
 };
 
-export default PickerCore;
-export {PickerCore};
+export default Picker;
+export {Picker};
+export PickerItem from './PickerItem';

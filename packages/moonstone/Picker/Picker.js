@@ -10,8 +10,7 @@ import React from 'react';
 
 import {MarqueeController} from '../Marquee';
 
-import PickerCore from './PickerCore';
-import PickerItem from './PickerItem';
+import PickerCore, {PickerItem} from '../internal/Picker';
 import SpottablePicker from './SpottablePicker';
 
 /**

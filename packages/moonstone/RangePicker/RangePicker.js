@@ -8,8 +8,7 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 
-import PickerCore from '../Picker/PickerCore';
-import PickerItem from '../Picker/PickerItem';
+import {Picker, PickerItem} from '../internal/Picker';
 import SpottablePicker from '../Picker/SpottablePicker';
 
 const digits = (num) => {
@@ -200,9 +199,9 @@ const RangePickerBase = kind({
 	render: ({label, value, ...rest}) => {
 		delete rest.padded;
 		return (
-			<PickerCore {...rest} index={0} value={value} reverse={false}>
+			<Picker {...rest} index={0} value={value} reverse={false}>
 				<PickerItem key={value} marqueeDisabled>{label}</PickerItem>
-			</PickerCore>
+			</Picker>
 		);
 	}
 });
