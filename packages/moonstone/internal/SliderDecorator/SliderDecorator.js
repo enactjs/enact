@@ -187,6 +187,10 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 
+		componentDidMount () {
+			this.updateUI(this.state.value);
+		}
+
 		componentWillReceiveProps (nextProps) {
 			if (nextProps.value !== this.props.value) {
 				this.updateValue(nextProps.value);
