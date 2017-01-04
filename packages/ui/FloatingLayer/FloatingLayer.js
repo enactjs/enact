@@ -127,7 +127,13 @@ class FloatingLayerBase extends React.Component {
 		}
 	}
 
-	stopPropagation = (ev) => ev.nativeEvent.stopImmediatePropagation()
+	stopPropagation = (ev) => {
+		ev.nativeEvent.stopImmediatePropagation();
+
+		if (this.props.children.props.onClick) {
+			this.props.children.props.onClick();
+		}
+	}
 
 	closeFloatingLayer () {
 		if (this.node) {
