@@ -58,6 +58,14 @@ const DateComponentPickerBase = kind({
 		 */
 		noAnimation: React.PropTypes.bool,
 
+		/**
+		 * When `true`, the picker buttons operate in the reverse direction.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		reverse: React.PropTypes.bool,
+
 		/*
 		 * When `true`, allow the picker to continue from the opposite end of the list of options.
 		 *
@@ -74,7 +82,7 @@ const DateComponentPickerBase = kind({
 		max: ({children}) => React.Children.count(children) - 1
 	},
 
-	render: ({children, className, label, max, noAnimation, value, wrap, ...rest}) => (
+	render: ({children, className, label, max, noAnimation, reverse, value, wrap, ...rest}) => (
 		<DateComponentPickerChrome className={className} label={label}>
 			<Picker
 				{...rest}
@@ -85,7 +93,7 @@ const DateComponentPickerBase = kind({
 				min={0}
 				noAnimation={noAnimation}
 				orientation="vertical"
-				reverse={false}
+				reverse={reverse}
 				step={1}
 				value={value}
 				width="small"

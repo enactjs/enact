@@ -145,6 +145,7 @@ const TimePickerBase = kind({
 											value={hour}
 											onChange={onChangeHour}
 											noAnimation={noHourAnimation}
+											reverse
 											wrap
 										>
 											{hasMeridiem ? hours12 : hours24}
