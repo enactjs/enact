@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `moonstone/Picker` component's buttons to reverse their operation such that 'up' selects the previous item and 'down' the next
+
 ## [1.0.0-beta.1] - 2016-12-30
 
 ### Added
