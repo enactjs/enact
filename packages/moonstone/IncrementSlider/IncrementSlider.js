@@ -18,7 +18,7 @@ import IncrementSliderButton from './IncrementSliderButton';
 import componentCss from './IncrementSlider.less';
 
 const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
-	const SliderBase = SliderBaseFactory({css});
+	const SliderBase = Spottable(SliderBaseFactory({css}));
 
 	/**
 	 * {@link moonstone/IncrementSlider.IncrementSliderBase} is a stateless Slider
