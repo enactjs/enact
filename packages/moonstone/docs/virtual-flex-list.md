@@ -17,7 +17,7 @@ This document describes VirtualFlexList.
             *   `width` is the item width.
             *   `height` is the item height.
         *   `component` is the render function for an item.
-        *   `data` is any data which will be passed to the render function.
+        *   `data` is any data which will be passed to the render function of item (`component` prop).
         *   `background` is a value of `background` CSS property. e.g. background: 'black', background: 'url("assets/img.jpg") cover no-repeat', or etc. The `background` prop is only optional in `items` prop.
     *   `maxFlexScrollSize`: The predefined max scroll size for variable width or height.
 *   For VirtualFlexList with variable width,
@@ -28,7 +28,7 @@ This document describes VirtualFlexList.
     *   The type of `rowCount` and `height` should be a function returning the count and the size of each item.
     *   The type of `colCount` and `width` should be a number.
 *   Either `width` or `height` of the item can be variable.
-*   Example for variable width VirtualFlexList:
+*   Example for VirtualFlexList with variable width:
     ```
     const renderItem = ({data, index, key}) => {
     		// Programs
@@ -71,7 +71,7 @@ This document describes VirtualFlexList.
                 *   `width` is the item width.
                 *   `height` is the item height.
             *   `component` is the render function for an item.
-            *   `data` is any data which will be passed to the render function.
+            *   `data` is any data which will be passed to the render function of item (`component` prop).
             *   `background` is a value of `background` CSS property. e.g. background: 'black', background: 'url("assets/img.jpg") cover no-repeat', or etc.
     *   Example:
         ```
