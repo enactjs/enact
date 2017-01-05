@@ -20,6 +20,8 @@ const PanelBase = kind({
 	name: 'Panel',
 
 	propTypes: /** @lends moonstone/Panels.Panel.prototype */ {
+		entering: React.PropTypes.bool,
+
 		/**
 		 * Header for the panel. This is usually passed by the {@link ui/Slottable.Slottable} API by
 		 * using a [Header]{@link moonstone/Panels.Header} component as a child of the Panel.
@@ -35,12 +37,24 @@ const PanelBase = kind({
 		className: 'panel'
 	},
 
-	render: ({children, header, ...rest}) => (
-		<article {...rest}>
-			<div className={css.header}>{header}</div>
-			<section className={css.body}>{children}</section>
-		</article>
-	)
+	computed: {
+		children: ({children, entering}) => entering ? null : children,
+		bodyClassName: ({entering, styler}) => styler.append({
+			body: true,
+			visible: !entering
+		})
+	},
+
+	render: ({bodyClassName, children, header, ...rest}) => {
+		delete rest.entering;
+
+		return (
+			<article {...rest}>
+				<div className={css.header}>{header}</div>
+				<section className={bodyClassName}>{children}</section>
+			</article>
+		);
+	}
 });
 
 const Panel = SpotlightContainerDecorator(

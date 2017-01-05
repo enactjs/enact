@@ -103,6 +103,8 @@ const ViewportBase = kind({
 				onEnter={handleEnter}
 				onTransition={handleTransition}
 				onWillTransition={handleWillTransition}
+				enteringDelay={150}
+				enteringProp="entering"
 			>
 				{children}
 			</ViewManager>

@@ -70,12 +70,18 @@ class View extends React.Component {
 		 * @type {Boolean}
 		 * @default false
 		 */
-		reverseTransition: React.PropTypes.bool
+		reverseTransition: React.PropTypes.bool,
+
+		enteringDelay: React.PropTypes.number,
+		enteringProp: React.PropTypes.string
 	}
 
 	constructor (props) {
 		super(props);
 		this.animation = null;
+		this.state = {
+			entering: true
+		};
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -103,6 +109,12 @@ class View extends React.Component {
 		}
 	}
 
+	componentDidAppear () {
+		this.setState({
+			entering: false
+		});
+	}
+
 	// This is called at the same time as componentDidMount() for components added to an existing
 	// TransitionGroup. It will block other animations from occurring until callback is called. It
 	// will not be called on the initial render of a TransitionGroup.
@@ -112,6 +124,18 @@ class View extends React.Component {
 			this.prepareTransition(reverseTransition ? arranger.leave : arranger.enter, callback);
 		} else {
 			callback();
+		}
+	}
+
+	componentDidEnter () {
+		const {enteringDelay, enteringProp} = this.props;
+
+		if (enteringProp) {
+			setTimeout(() => {
+				this.setState({
+					entering: false
+				});
+			}, enteringDelay);
 		}
 	}
 
@@ -229,7 +253,13 @@ class View extends React.Component {
 	}
 
 	render () {
-		return React.Children.only(this.props.children);
+		const {enteringProp, children} = this.props;
+
+		if (enteringProp) {
+			return React.cloneElement(children, {[enteringProp]: this.state.entering});
+		} else {
+			return React.Children.only(children);
+		}
 	}
 }
 

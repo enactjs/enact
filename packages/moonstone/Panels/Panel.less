@@ -21,4 +21,10 @@
 	z-index: 1;
 	flex: 1;
 	min-height: 0;
+	opacity: 0;
+	transition: opacity 200ms linear;
+
+	&.visible {
+		opacity: 1;
+	}
 }
