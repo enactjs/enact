@@ -2,7 +2,7 @@ import ri from '@enact/ui/resolution';
 import Item from '@enact/moonstone/Item';
 import VirtualFlexList from '@enact/moonstone/VirtualFlexList';
 import React from 'react';
-import {storiesOf} from '@kadira/storybook';
+import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, number} from '@kadira/storybook-addon-knobs';
 
 const
@@ -125,6 +125,7 @@ storiesOf('VirtualFlexList')
 					maxFlexScrollSize={ri.scale(number('maxFlexScrollSize', maxFlexScrollSize))}
 					x={number('x', 0)}
 					y={number('y', 0)}
+					onPositionChange={action('onPositionChange')}
 				/>
 			</div>
 		)
