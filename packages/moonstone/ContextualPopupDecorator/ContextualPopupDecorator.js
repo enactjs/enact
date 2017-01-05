@@ -1,24 +1,29 @@
 /**
- * Exports the {@link moonstone/ContextualPopupDecorator.ContextualPopupDecorator} Higer-order
+ * Exports the {@link moonstone/ContextualPopupDecorator.ContextualPopupDecorator} Higher-order
  * Component (HOC) and the {@link moonstone/ContextualPopupDecorator.ContextualPopup} component.
  * The default export is {@link moonstone/ContextualPopupDecorator.ContextualPopupDecorator}.
  *
  * @module moonstone/ContextualPopupDecorator
  */
 
+import {forward} from '@enact/core/handle';
 import {hoc} from '@enact/core';
 import ri from '@enact/ui/resolution';
+import FloatingLayer from '@enact/ui/FloatingLayer';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
+import Spotlight, {SpotlightContainerDecorator, spotlightDirections} from '@enact/spotlight';
 import React, {PropTypes} from 'react';
 
 import {ContextualPopup} from './ContextualPopup';
 import css from './ContextualPopupDecorator.less';
 
 const defaultConfig = {};
+const ContextualPopupContainer = SpotlightContainerDecorator({preserveId: true}, ContextualPopup);
+const depress = 'onKeyDown';
 
 /**
  * {@link moonstone/ContextualPopupDecorator.ContextualPopupDecorator} is a Higher-order Component
- * which positions {@link moonstone/ContextualPopupDecorator/ContextualPopup.ContextualPopup} in
+ * which positions {@link moonstone/ContextualPopupDecorator.ContextualPopup} in
  * relation to the Wrapped component.
  *
  * @class ContextualPopupDecorator
@@ -27,6 +32,7 @@ const defaultConfig = {};
  * @public
  */
 const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
+	const forwardDepress = forward(depress);
 
 	return class extends React.Component {
 		static displayName = 'ContextualPopupDecorator'
@@ -35,7 +41,8 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 			this.state = {
 				arrowPosition: {top: 0, left: 0},
-				containerPosition: {top: 0, left: 0}
+				containerPosition: {top: 0, left: 0},
+				containerId: Spotlight.add()
 			};
 
 			this.overflow = {};
@@ -65,12 +72,23 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			direction: PropTypes.oneOf(['up', 'down', 'left', 'right']),
 
 			/**
-			 * A function to be run when close button is clicked.
+			 * When `true`, the popup will not close when the user presses `ESC` key or click outside.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			noAutoDismiss: PropTypes.bool,
+
+			/**
+			 * A function to be run when either the close button is clicked or spotlight focus
+			 * moves outside the boundary of the popup. Setting `spotlightRestrict` to `'self-only'`
+			 * will prevent Spotlight focus from leaving the popup.
 			 *
 			 * @type {Function}
 			 * @public
 			 */
-			onCloseButtonClick: PropTypes.func,
+			onClose: PropTypes.func,
 
 			/**
 			 * When `true`, the contextual popup will be visible.
@@ -82,7 +100,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			open: PropTypes.bool,
 
 			/**
-			 * Classname pass to the popup. You may set width and heights of the popup with it.
+			 * Classname to pass to the popup. You may set width and height of the popup with it.
 			 *
 			 * @type {String}
 			 * @public
@@ -96,7 +114,17 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @public
 			 * @default false
 			 */
-			showCloseButton : PropTypes.bool
+			showCloseButton : PropTypes.bool,
+
+			/**
+			 * Restricts or prioritizes navigation when focus attempts to leave the popup. It
+			 * can be either `'none'`, `'self-first'`, or `'self-only'`.
+			 *
+			 * @type {String}
+			 * @default 'self-first'
+			 * @public
+			 */
+			spotlightRestrict: PropTypes.oneOf(['none', 'self-first', 'self-only'])
 		}
 
 		static contextTypes = contextTypes
@@ -104,7 +132,8 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		static defaultProps = {
 			direction: 'down',
 			open: false,
-			showCloseButton : false
+			showCloseButton: false,
+			spotlightRestrict: 'self-first'
 		}
 
 		componentWillReceiveProps (nextProps) {
@@ -114,60 +143,62 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		getContainerPosition (containerNode, clientNode) {
-			let position = {};
-			switch (this.adjustedDirection) {
-				case 'up':
-					position = {
-						bottom: this.ARROW_OFFSET
-					};
-					break;
-				case 'down':
-					position = {
-						top: clientNode.height + this.ARROW_OFFSET
-					};
-					break;
-				case 'right':
-					position = {
-						left: this.context.rtl ? this.ARROW_OFFSET : clientNode.width + this.ARROW_OFFSET
-					};
-					break;
-				case 'left':
-					position = {
-						right: this.context.rtl ? clientNode.width + this.ARROW_OFFSET : this.ARROW_OFFSET
-					};
-					break;
-				default:
-					position = {};
+		componentDidUpdate (prevProps) {
+			if (this.props.open && !prevProps.open) {
+				this.spotPopupContent();
+			} else if (!this.props.open && prevProps.open) {
+				Spotlight.focus();
 			}
-
-			return this.centerContainerPosition(containerNode, clientNode, position);
 		}
 
-		centerContainerPosition (containerNode, clientNode, position) {
-			let pos = position;
+		componentWillUnmount () {
+			Spotlight.remove(this.state.containerId);
+		}
+
+		getContainerPosition (containerNode, clientNode) {
+			const position = this.centerContainerPosition(containerNode, clientNode);
+
+			switch (this.adjustedDirection) {
+				case 'up':
+					position.top = clientNode.top - this.ARROW_OFFSET - containerNode.height;
+					break;
+				case 'down':
+					position.top = clientNode.bottom + this.ARROW_OFFSET;
+					break;
+				case 'right':
+					position.left = this.context.rtl ? clientNode.left - containerNode.width - this.ARROW_OFFSET : clientNode.right + this.ARROW_OFFSET;
+					break;
+				case 'left':
+					position.left = this.context.rtl ? clientNode.right + this.ARROW_OFFSET : clientNode.left - containerNode.width - this.ARROW_OFFSET;
+					break;
+			}
+
+			return this.adjustRTL(position);
+		}
+
+		centerContainerPosition (containerNode, clientNode) {
+			let pos = {};
 			if (this.adjustedDirection === 'up' || this.adjustedDirection === 'down') {
 				if (this.overflow.isOverLeft) {
 					// anchor to the left of the screen
-					pos.left = -clientNode.left + this.MARGIN;
+					pos.left = this.MARGIN;
 				} else if (this.overflow.isOverRight) {
 					// anchor to the right of the screen
-					pos.right = -clientNode.right - this.MARGIN;
+					pos.left = window.innerWidth - containerNode.width - this.MARGIN;
 				} else {
 					// center horizontally
-					pos.left = (clientNode.width - containerNode.width) / 2;
+					pos.left = clientNode.left + (clientNode.width - containerNode.width) / 2;
 				}
-				pos = this.adjustRTL(pos);
 			} else if (this.adjustedDirection === 'left' || this.adjustedDirection === 'right') {
 				if (this.overflow.isOverTop) {
 					// anchor to the top of the screen
-					pos.top = -clientNode.top + this.MARGIN;
-				} else if (this.overflow.isOverDown) {
+					pos.top = this.MARGIN;
+				} else if (this.overflow.isOverBottom) {
 					// anchor to the bottom of the screen
-					pos.bottom = -clientNode.bottom - this.MARGIN;
+					pos.top = window.innerHeight - containerNode.height - this.MARGIN;
 				} else {
 					// center vertically
-					pos.top = (clientNode.height - containerNode.height) / 2;
+					pos.top = clientNode.top - (containerNode.height - clientNode.height) / 2;
 				}
 			}
 
@@ -175,49 +206,56 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		getArrowPosition (clientNode) {
+			const position = {};
+
+			if (this.adjustedDirection === 'up' || this.adjustedDirection === 'down') {
+				position.left = clientNode.left + (clientNode.width - this.ARROW_WIDTH) / 2;
+			} else {
+				position.top = clientNode.top + (clientNode.height - this.ARROW_WIDTH) / 2;
+			}
+
 			switch (this.adjustedDirection) {
 				case 'up':
-					return this.adjustRTL({
-						left: (clientNode.width - this.ARROW_WIDTH) / 2,
-						bottom: 0
-					});
+					position.top = clientNode.top - this.ARROW_WIDTH;
+					break;
 				case 'down':
-					return this.adjustRTL({
-						left: (clientNode.width - this.ARROW_WIDTH) / 2,
-						top: clientNode.height
-					});
+					position.top = clientNode.bottom;
+					break;
 				case 'left':
-					return {
-						right: this.context.rtl ? clientNode.width : 0,
-						top: (clientNode.height - this.ARROW_WIDTH) / 2
-					};
+					position.left = this.context.rtl ? clientNode.left + clientNode.width : clientNode.left - this.ARROW_WIDTH;
+					break;
 				case 'right':
-					return {
-						left:  this.context.rtl ? 0 : clientNode.width,
-						top: (clientNode.height - this.ARROW_WIDTH) / 2
-					};
+					position.left = this.context.rtl ? clientNode.left - this.ARROW_WIDTH : clientNode.left + clientNode.width;
+					break;
 				default:
 					return {};
 			}
+
+			return this.adjustRTL(position);
 		}
 
 		calcOverflow (container, client) {
-			// TODO: what if it's rendered inside Portal??
+			let containerHeight, containerWidth;
 
 			if (this.adjustedDirection === 'up' || this.adjustedDirection === 'down') {
-				this.overflow = {
-					isOverTop: client.top - container.height - this.ARROW_OFFSET < 0,
-					isOverBottom: client.bottom + container.height + this.ARROW_OFFSET > window.innerHeight,
-					isOverLeft: client.left - (container.width - client.width) / 2 < 0,
-					isOverRight: client.right + (container.width - client.width) / 2 > window.innerWidth
-				};
+				containerHeight = container.height;
+				containerWidth = (container.width - client.width) / 2;
 			} else {
-				this.overflow = {
-					isOverTop: client.top - (container.height - client.height) / 2 < 0,
-					isOverBottom: client.bottom + (container.height - client.height) / 2 > window.innerHeight,
-					isOverLeft: client.left - container.width - this.MARGIN < 0,
-					isOverRight: client.right + container.width + this.MARGIN > window.innerWidth
-				};
+				containerHeight = (container.height - client.height) / 2;
+				containerWidth = container.width;
+			}
+
+			this.overflow = {
+				isOverTop: client.top - containerHeight - this.ARROW_OFFSET - this.MARGIN < 0,
+				isOverBottom: client.bottom + containerHeight + this.ARROW_OFFSET + this.MARGIN  > window.innerHeight,
+				isOverLeft: client.left - containerWidth - this.ARROW_OFFSET - this.MARGIN < 0,
+				isOverRight: client.right + containerWidth + this.ARROW_OFFSET + this.MARGIN > window.innerWidth
+			};
+
+			if (this.context.rtl) {
+				const tempOverflowLeft = this.overflow.isOverLeft;
+				this.overflow.isOverLeft = this.overflow.isOverRight;
+				this.overflow.isOverRight = tempOverflowLeft;
 			}
 		}
 
@@ -246,7 +284,10 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		setContainerPosition () {
 			if (this.containerNode && this.clientNode) {
 				const containerNode = this.containerNode.getBoundingClientRect();
-				const clientNode = this.clientNode.getBoundingClientRect();
+				const {top, left, bottom, right, width, height} = this.clientNode.getBoundingClientRect();
+				const clientNode = {top, left, bottom, right, width, height};
+				clientNode.left = this.context.rtl ? window.innerWidth - right : left;
+				clientNode.right = this.context.rtl ? window.innerWidth - left : right;
 
 				this.calcOverflow(containerNode, clientNode);
 				this.adjustDirection();
@@ -270,27 +311,57 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.clientNode = node;
 		}
 
+		handleKeyDown = (ev) => {
+			const {onClose} = this.props;
+			const direction = spotlightDirections[ev.keyCode];
+
+			if (direction) {
+				// prevent default page scrolling
+				ev.preventDefault();
+				// stop propagation to prevent default spotlight behavior
+				ev.stopPropagation();
+
+				// if focus has changed
+				if (Spotlight.move(direction)) {
+
+					// if current focus is not within the popup's container, issue the `onClose` event
+					if (!this.containerNode.contains(document.activeElement) && onClose) {
+						onClose(ev);
+					}
+				}
+			}
+
+			forwardDepress(ev, this.props);
+		}
+
+		spotPopupContent = () => {
+			Spotlight.focus(this.state.containerId);
+		}
+
 		render () {
-			const {showCloseButton, popupComponent: PopupComponent, popupClassName, open, onCloseButtonClick, ...props} = this.props;
+			const {showCloseButton, popupComponent: PopupComponent, popupClassName, noAutoDismiss, open, onClose, spotlightRestrict, ...rest} = this.props;
+			const scrimType = spotlightRestrict === 'self-only' ? 'transparent' : 'none';
 
 			return (
 				<div className={css.contextualPopupDecorator}>
-					{open ?
-						<ContextualPopup
+					<FloatingLayer open={open} scrimType={scrimType} noAutoDismiss={noAutoDismiss} onDismiss={onClose}>
+						<ContextualPopupContainer
 							className={popupClassName}
 							showCloseButton={showCloseButton}
-							onCloseButtonClick={onCloseButtonClick}
+							onCloseButtonClick={onClose}
 							direction={this.state.direction}
 							arrowPosition={this.state.arrowPosition}
 							containerPosition={this.state.containerPosition}
 							containerRef={this.getContainerNode}
+							containerId={this.state.containerId}
+							spotlightRestrict={spotlightRestrict}
+							onKeyDown={this.handleKeyDown}
 						>
 							<PopupComponent />
-						</ContextualPopup> :
-						null
-					}
+						</ContextualPopupContainer>
+					</FloatingLayer>
 					<div ref={this.getClientNode}>
-						<Wrapped {...props} />
+						<Wrapped {...rest} />
 					</div>
 				</div>
 			);

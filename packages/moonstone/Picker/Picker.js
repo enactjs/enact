@@ -8,6 +8,8 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 
+import {MarqueeController} from '../Marquee';
+
 import PickerCore from './PickerCore';
 import PickerItem from './PickerItem';
 import SpottablePicker from './SpottablePicker';
@@ -144,7 +146,7 @@ const PickerBase = kind({
 	},
 
 	computed: {
-		max: ({children}) => children.length - 1,
+		max: ({children}) => children && children.length ? children.length - 1 : 0,
 		children: ({children, marqueeDisabled}) => React.Children.map(children, (child) => {
 			return <PickerItem marqueeDisabled={marqueeDisabled}>{child}</PickerItem>;
 		})
@@ -169,7 +171,12 @@ const PickerBase = kind({
  * @ui
  * @public
  */
-const Picker = SpottablePicker(PickerBase);
+const Picker = MarqueeController(
+	{startOnFocus: true},
+	SpottablePicker(
+		PickerBase
+	)
+);
 
 export default Picker;
 export {Picker, PickerBase};

@@ -1,7 +1,7 @@
 /*
- * Exports the {@link moonstone/VirtualList/GridListImageItem.GridListImageItem} and
- * {@link moonstone/VirtualList/GridListImageItem.GridListImageItemBase} components. The default export is
- * {@link moonstone/VirtualList/GridListImageItem.GridListImageItem}.
+ * Exports the {@link moonstone/VirtualList.GridListImageItem} and
+ * {@link moonstone/VirtualList.GridListImageItemBase} components. The default export is
+ * {@link moonstone/VirtualList.GridListImageItem}.
  *
  * Not a jsdoc module def on purpose. Exported elsewhere.
  */
@@ -22,11 +22,10 @@ const defaultPlaceholder =
 	'JSIgaGVpZ2h0PSIxMDAlIiBzdHlsZT0ic3Ryb2tlOiAjNDQ0OyBzdHJva2Utd2lkdGg6IDE7IGZpbGw6ICNhYW' +
 	'E7IiAvPjxsaW5lIHgxPSIwIiB5MT0iMCIgeDI9IjEwMCUiIHkyPSIxMDAlIiBzdHlsZT0ic3Ryb2tlOiAjNDQ0' +
 	'OyBzdHJva2Utd2lkdGg6IDE7IiAvPjxsaW5lIHgxPSIxMDAlIiB5MT0iMCIgeDI9IjAiIHkyPSIxMDAlIiBzdH' +
-	'lsZT0ic3Ryb2tlOiAjNDQ0OyBzdHJva2Utd2lkdGg6IDE7IiAvPjwvc3ZnPg==',
-	Controller = MarqueeController('div');
+	'lsZT0ic3Ryb2tlOiAjNDQ0OyBzdHJva2Utd2lkdGg6IDE7IiAvPjwvc3ZnPg==';
 
 /**
- * {@link moonstone/VirtualList/GridListImageItem.GridListImageItemBase} is a stateless
+ * {@link moonstone/VirtualList.GridListImageItemBase} is a stateless
  * GridListImageItem with Moonstone styling applied.
  *
  * @class GridListImageItemBase
@@ -101,7 +100,7 @@ const GridListImageItemBase = kind({
 		delete rest.selected;
 
 		return (
-			<Controller {...rest}>
+			<div {...rest}>
 				<Image className={css.image} src={source} placeholder={defaultPlaceholder} />
 				{
 					selectionOverlayShowing ? (
@@ -114,13 +113,13 @@ const GridListImageItemBase = kind({
 				}
 				{caption ? (<MarqueeText marqueeOn="hover" className={css.caption}>{caption}</MarqueeText>) : null}
 				{subCaption ? (<MarqueeText marqueeOn="hover" className={css.subCaption}>{subCaption}</MarqueeText>) : null}
-			</Controller>
+			</div>
 		);
 	}
 });
 
 /**
- * {@link moonstone/VirtualList/GridListImageItem.GridListImageItem} is a GridListImageItem with
+ * {@link moonstone/VirtualList.GridListImageItem} is a GridListImageItem with
  * Moonstone styling, Spottable applied.
  *
  * Usage:
@@ -135,7 +134,12 @@ const GridListImageItemBase = kind({
  * @ui
  * @public
  */
-const GridListImageItem = Spottable(GridListImageItemBase);
+const GridListImageItem = MarqueeController(
+	{startOnFocus: true},
+	Spottable(
+		GridListImageItemBase
+	)
+);
 
 export default GridListImageItem;
 export {GridListImageItem, GridListImageItemBase};

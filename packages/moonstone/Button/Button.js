@@ -12,6 +12,7 @@ import Pressable from '@enact/ui/Pressable';
 import React, {PropTypes} from 'react';
 
 import {MarqueeDecorator} from '../Marquee';
+import {TooltipDecorator} from '../TooltipDecorator';
 
 import css from './Button.less';
 
@@ -124,10 +125,10 @@ const ButtonBase = kind({
 		delete rest.small;
 
 		return (
-			<button {...rest}>
+			<div role="button" {...rest}>
 				<div className={css.bg} />
-				<span className={css.client}>{children}</span>
-			</button>
+				<div className={css.client}>{children}</div>
+			</div>
 		);
 	}
 });
@@ -144,18 +145,21 @@ const ButtonBase = kind({
  *
  * @class Button
  * @memberof moonstone/Button
- * @see i18n/Uppercase
- * @mixes spotlight/Spottable
- * @mixes ui/Pressable
+ * @mixes i18n/Uppercase.Uppercase
+ * @mixes moonstone/TooltipDecorator.TooltipDecorator
+ * @mixes spotlight.Spottable
+ * @mixes ui/Pressable.Pressable
  * @ui
  * @public
  */
 const Button = Uppercase(
-	MarqueeDecorator(
-		{className: css.marquee},
-		Pressable(
-			Spottable(
-				ButtonBase
+	TooltipDecorator(
+		MarqueeDecorator(
+			{className: css.marquee},
+			Pressable(
+				Spottable(
+					ButtonBase
+				)
 			)
 		)
 	)

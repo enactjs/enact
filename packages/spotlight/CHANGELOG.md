@@ -2,6 +2,18 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [1.0.0-beta.1] - 2016-12-30
+
+### Added
+
+- `@enact/spotlight.Spotlight` methods `isPaused()`, `isSpottable()`, `getCurrent()`, and `isMuted()`
+- `@enact/spotlight.SpotlightContainerDecorator` property `spotlightMuted`
+- `@enact/spotlight.spotlightDirections` export
+
+## [1.0.0-alpha.5] - 2016-12-16
+
+No changes.
+
 ## [1.0.0-alpha.4] - 2016-12-2
 
 ### Added

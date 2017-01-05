@@ -181,4 +181,25 @@ describe('Pressable Specs', () => {
 		expect(handleDepress.calledOnce).to.equal(true);
 	});
 
+	it('should cause pressed to be true on event', function () {
+		const DivComponent = ({onMouseDown, onMouseLeave}) =>
+			<div onMouseDown={onMouseDown} onMouseLeave={onMouseLeave}>press</div>;
+
+		const PressableDiv = Pressable(DivComponent);
+		const wrapped = mount(<PressableDiv />);
+		wrapped.find('DivComponent').simulate('mousedown');
+
+		const expected = true;
+		const actual = wrapped.find('DivComponent').prop('pressed');
+
+		expect(actual).to.equal(expected);
+
+		wrapped.find('DivComponent').simulate('mouseleave');
+
+		const expectedLeave = false;
+		const actualLeave = wrapped.find('DivComponent').prop('pressed');
+
+		expect(actualLeave).to.equal(expectedLeave);
+	});
+
 });

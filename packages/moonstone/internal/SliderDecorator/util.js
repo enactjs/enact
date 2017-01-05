@@ -7,9 +7,9 @@ const computeBarTransform = (proportion = 0, vertical) => {
 const computeKnobTransform = (proportion, vertical, node) => {
 	if (node) {
 		if (vertical) {
-			return `translateY(-50%) translate3d(-50%, ${(1 - proportion) * node.clientHeight}px, 0)`;
+			return `translate3d(0, ${(1 - proportion) * node.clientHeight}px, 0)`;
 		} else {
-			return `translateX(-50%) translate3d(${proportion * node.clientWidth}px, -50%, 0)`;
+			return `translate3d(${proportion * node.clientWidth}px, 0, 0)`;
 		}
 	}
 };
