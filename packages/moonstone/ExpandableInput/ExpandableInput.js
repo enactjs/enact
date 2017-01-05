@@ -125,6 +125,10 @@ class ExpandableInputBase extends React.Component {
 		// if the contained <input> has focus, prevent onClicks so that clicking on the LabeledItem
 		// doesn't open the expandable immediately after blurring the <input> closed it.
 		if (ev.currentTarget.contains(document.activeElement)) {
+			if (this.props.open) {
+				const {onChange, value} = this.props;
+				onChange({value});
+			}
 			ev.preventDefault();
 		}
 	}
