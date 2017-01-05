@@ -200,7 +200,7 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 		}
 
 		adjustAnchor (arrowAnchor, tooltipDirection, overflow) {
-			if (this.context.rtl && (tooltipDirection === 'above' || tooltipDirection === 'below')) {
+			if (this.context.rtl && arrowAnchor !== 'center' && (tooltipDirection === 'above' || tooltipDirection === 'below')) {
 				arrowAnchor = arrowAnchor === 'left' ? 'right' : 'left';
 			}
 
