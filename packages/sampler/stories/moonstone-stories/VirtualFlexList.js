@@ -13,7 +13,7 @@ const
 	itemHeight = ri.scale(81),
 	clientWidth = timeWidth * 5,
 	clientHeight = itemHeight * 6,
-	maxFlexScrollSize = timeWidth * 18; // for 9 hr
+	maxFlexScrollSize = 210 * 18; // for 9 hr
 
 // Inline style
 const
@@ -24,7 +24,6 @@ const
 			width: (channelWidth + clientWidth) + 'px',
 			height: (itemHeight + clientHeight) + 'px',
 			padding: ri.scale(33) + 'px 0',
-			color: 'white'
 		},
 		// Programs
 		itemProgramWrapper: {
@@ -119,11 +118,11 @@ storiesOf('VirtualFlexList')
 						colCount: getItemLength,
 						component: renderItem,
 						data: programData,
-						height: number('items_height', itemHeight),
-						rowCount: number('items_row_count', programData.length),
+						height: ri.scale(number('items.height', 81)),
+						rowCount: number('items.rowCount', programData.length),
 						width: getItemWidth
 					}}
-					maxFlexScrollSize={number('maxFlexScrollSize', maxFlexScrollSize)}
+					maxFlexScrollSize={ri.scale(number('maxFlexScrollSize', maxFlexScrollSize))}
 					x={number('x', 0)}
 					y={number('y', 0)}
 				/>
