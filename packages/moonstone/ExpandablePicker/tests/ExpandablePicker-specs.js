@@ -1,6 +1,6 @@
-
 import React from 'react';
 import {mount} from 'enzyme';
+import sinon from 'sinon';
 import ExpandablePicker from '../ExpandablePicker';
 
 describe('ExpandablePicker Specs', () => {
@@ -8,15 +8,12 @@ describe('ExpandablePicker Specs', () => {
 	it('should close onChange', function () {
 
 		const expandablePicker = mount(
-			<ExpandablePicker title='Options'>
+			<ExpandablePicker title='Options' open>
 				{['Option one', 'Option two', 'Option three']}
 			</ExpandablePicker>
 		);
 
-		const expandable = expandablePicker.find('MarqueeText').first();
 		const checkButton = expandablePicker.find('Icon').last();
-
-		expandable.simulate('click');
 		checkButton.simulate('click');
 
 		const expected = false;
@@ -26,51 +23,36 @@ describe('ExpandablePicker Specs', () => {
 	});
 
 	it('should include value in onChange', function () {
-
+		const value = 2;
+		const handleChange = sinon.spy();
 		const expandablePicker = mount(
-			<ExpandablePicker title='Options' onChange={onChange}>
+			<ExpandablePicker title='Options' onChange={handleChange} open value={value}>
 				{['Option one', 'Option two', 'Option three']}
 			</ExpandablePicker>
 		);
 
-		function onChange (e) {
-			expandablePicker.setState({value: e.value});
-		}
-
-		const expandable = expandablePicker.find('MarqueeText').first();
-		const nextButton = expandablePicker.find('PickerButton').first();
-		const checkButton = expandablePicker.find('Icon').last();
-
-		expandable.simulate('click');
-		nextButton.simulate('click');
+		const checkButton = expandablePicker.find('IconButton').last();
 		checkButton.simulate('click');
 
-		const expected = 1;
-		const actual = expandablePicker.state('value');
+		const expected = value;
+		const actual = handleChange.firstCall.args[0].value;
 
 		expect(actual).to.equal(expected);
 	});
 
-	it('should pass 0 to onChange as default', function () {
-
+	it('should include value in onChange', function () {
+		const handleChange = sinon.spy();
 		const expandablePicker = mount(
-			<ExpandablePicker title='Options' onChange={onChange}>
+			<ExpandablePicker title='Options' onChange={handleChange} open>
 				{['Option one', 'Option two', 'Option three']}
 			</ExpandablePicker>
 		);
 
-		function onChange (e) {
-			expandablePicker.setState({value: e.value});
-		}
-
-		const expandable = expandablePicker.find('MarqueeText').first();
-		const checkButton = expandablePicker.find('Icon').last();
-
-		expandable.simulate('click');
+		const checkButton = expandablePicker.find('IconButton').last();
 		checkButton.simulate('click');
 
 		const expected = 0;
-		const actual = expandablePicker.state('value');
+		const actual = handleChange.firstCall.args[0].value;
 
 		expect(actual).to.equal(expected);
 	});
