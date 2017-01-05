@@ -23,7 +23,7 @@ const
 			position: 'absolute',
 			width: (channelWidth + clientWidth) + 'px',
 			height: (itemHeight + clientHeight) + 'px',
-			padding: ri.scale(33) + 'px 0',
+			padding: ri.scale(33) + 'px 0'
 		},
 		// Programs
 		itemProgramWrapper: {
