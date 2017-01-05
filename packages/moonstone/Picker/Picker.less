@@ -140,8 +140,16 @@
 		}
 	}
 
-	&.vertical .valueWrapper {
-		display: block;
+	&.vertical {
+		.valueWrapper {
+			display: block;
+		}
+
+		&.small {
+			.valueWrapper {
+				width: inherit;
+			}
+		}
 	}
 
 	&.vertical {
