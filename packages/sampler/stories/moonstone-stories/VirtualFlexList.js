@@ -13,7 +13,7 @@ const
 	itemHeight = ri.scale(81),
 	clientWidth = timeWidth * 5,
 	clientHeight = itemHeight * 6,
-	maxFlexScrollSize = 210 * 18; // for 9 hr
+	maxFlexScrollSize = timeWidth * 18; // for 9 hr
 
 // Inline style
 const
@@ -122,7 +122,7 @@ storiesOf('VirtualFlexList')
 						rowCount: number('items.rowCount', programData.length),
 						width: getItemWidth
 					}}
-					maxFlexScrollSize={ri.scale(number('maxFlexScrollSize', maxFlexScrollSize))}
+					maxFlexScrollSize={maxFlexScrollSize}
 					x={ri.scale(number('x', 0))}
 					y={ri.scale(number('y', 0))}
 					onPositionChange={action('onPositionChange')}
