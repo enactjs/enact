@@ -2,8 +2,6 @@
 //
 @import '../styles/variables.less';
 
-@increment-slider-padding: @moon-slider-bar-height * 2;
-
 .incrementSlider {
 	direction: ltr;	// Always arrange this according to LTR rules
 	&.horizontal {
@@ -11,7 +9,8 @@
 
 		.slider {
 			flex-grow: 1;
-			padding: @increment-slider-padding (@increment-slider-padding * 0.1);
+			padding-left: @moon-spotlight-outset;
+			padding-right: @moon-spotlight-outset;
 		}
 	}
 
@@ -29,9 +28,6 @@
 		.slider {
 			flex-grow: 1;
 			order: 2;
-			margin-top: @moon-spotlight-outset;
-			margin-bottom: @moon-spotlight-outset;
-			padding: (@increment-slider-padding * 0.5) @increment-slider-padding;
 		}
 		.incrementButton {
 			order: 1;
