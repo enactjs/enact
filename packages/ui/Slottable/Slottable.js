@@ -89,7 +89,7 @@ const defaultConfig = {
  *
  * @class Slottable
  * @memberof ui/Slottable
- * @ui
+ * @hoc
  * @public
  */
 const Slottable = hoc(defaultConfig, (config, Wrapped) => {

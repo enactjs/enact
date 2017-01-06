@@ -6,9 +6,9 @@
  * @module moonstone/VideoPlayer
  */
 import React from 'react';
-import {$L} from '@enact/i18n';
 import DurationFmt from '@enact/i18n/ilib/lib/DurationFmt';
 import {forward} from '@enact/core/handle';
+import ilib, {$L} from '@enact/i18n';
 import {startJob, stopJob} from '@enact/core/jobs';
 import {on, off} from '@enact/core/dispatcher';
 import Slottable from '@enact/ui/Slottable';
@@ -92,7 +92,7 @@ const playbackRateHash = {
 
 
 /**
- * A player for video {@link moonstone/VideoPlayerBase}.
+ * A player for video {@link moonstone/VideoPlayer.VideoPlayerBase}.
  *
  * @class VideoPlayerBase
  * @memberof moonstone/VideoPlayer
@@ -369,7 +369,13 @@ const VideoPlayerBase = class extends React.Component {
 	// Internal Methods
 	//
 	initI18n = () => {
-		this.durfmt = new DurationFmt({length: 'medium', style: 'clock', useNative: false});
+		const locale = ilib.getLocale();
+
+		if (this.locale !== locale && typeof window === 'object') {
+			this.locale = locale;
+
+			this.durfmt = new DurationFmt({length: 'medium', style: 'clock', useNative: false});
+		}
 	}
 
 	updateMainState = () => {

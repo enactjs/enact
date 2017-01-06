@@ -10,12 +10,19 @@ const spotlightDefaultClass = 'spottable-default';
 const enterEvent = 'onMouseEnter';
 const leaveEvent = 'onMouseLeave';
 
+/**
+ * Default config for {@link spotlight.SpotlightContainerDecorator}
+ *
+ * @memberof spotlight.SpotlightContainerDecorator
+ * @hocconfig
+ */
 const defaultConfig = {
 	/**
 	 * The selector for the default spottable element within the container.
 	 *
 	 * @type {String}
 	 * @default '.spottable-default'
+	 * @memberof spotlight.SpotlightContainerDecorator.defaultConfig
 	 * @public
 	 */
 	defaultElement: `.${spotlightDefaultClass}`,
@@ -25,6 +32,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'last-focused'
+	 * @memberof spotlight.SpotlightContainerDecorator.defaultConfig
 	 * @public
 	 */
 	enterTo: 'last-focused',
@@ -34,6 +42,7 @@ const defaultConfig = {
 	 *
 	 * @type {Boolean}
 	 * @default false
+	 * @memberof spotlight.SpotlightContainerDecorator.defaultConfig
 	 * @public
 	 */
 	preserveId: false
@@ -65,6 +74,9 @@ const defaultConfig = {
  * @param  {Function} Higher-order component
  *
  * @returns {Function} SpotlightContainerDecorator
+ * @class SpotlightContainerDecorator
+ * @memberof spotlight
+ * @hoc
  */
 const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const forwardMouseEnter = forward(enterEvent);
@@ -74,7 +86,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'SpotlightContainerDecorator';
 
-		static propTypes = /** @lends spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator */ {
+		static propTypes = /** @lends spotlight.SpotlightContainerDecorator.protoype */ {
 			/**
 			 * Specifies the container id. If the value is `null`, an id will be generated.
 			 *
