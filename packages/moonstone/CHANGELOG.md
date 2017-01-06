@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
-- `invalidateProps` prop to `moonstone/MarqueeDecorator`. The marquee distance is invalidated when any of the specified prop(s) changes.
+- `invalidateProps` prop to `moonstone/MarqueeDecorator`. The marquee distance is invalidated when any of the specified props change.
 
 ## [1.0.0-beta.1] - 2016-12-30
 
