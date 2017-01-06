@@ -2,11 +2,17 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `invalidateProps` prop to `moonstone/MarqueeDecorator`. The marquee distance is invalidated when any of the specified prop(s) changes.
+
 ## [1.0.0-beta.1] - 2016-12-30
 
 ### Added
 
-- `Moonstone/VideoPlayer` and `moonstone/TooltipDecorator` components and samples
+- `moonstone/VideoPlayer` and `moonstone/TooltipDecorator` components and samples
 - `moonstone/Panels.Panels` property `onBack` to support `ui/Cancelable`
 - `moonstone/VirtualFlexList` Work-In-Progress component to support variably sized rows or columns
 - `moonstone/ExpandableItem` properties `autoClose` and `lockBottom`
