@@ -123,8 +123,8 @@ storiesOf('VirtualFlexList')
 						width: getItemWidth
 					}}
 					maxFlexScrollSize={ri.scale(number('maxFlexScrollSize', maxFlexScrollSize))}
-					x={number('x', 0)}
-					y={number('y', 0)}
+					x={ri.scale(number('x', 0))}
+					y={ri.scale(number('y', 0))}
 					onPositionChange={action('onPositionChange')}
 				/>
 			</div>

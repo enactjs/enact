@@ -10,7 +10,6 @@ VirtualGridList.propTypes = Object.assign({}, VirtualListCore.propTypes);
 VirtualGridList.defaultProps = Object.assign({}, VirtualListCore.defaultProps);
 
 const
-	// Set up some defaults for info and knobs
 	prop = {
 		direction: {'horizontal': 'horizontal', 'vertical': 'vertical'}
 	},
@@ -46,7 +45,7 @@ const
 	};
 
 for (let i = 0; i < 1000; i++) {
-	let
+	const
 		count = ('00' + i).slice(-3),
 		text = `Item ${count}`,
 		subText = `SubItem ${count}`,
