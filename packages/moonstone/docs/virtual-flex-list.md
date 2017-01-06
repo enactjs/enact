@@ -2,14 +2,14 @@
 title: Using VirtualFlexList
 ---
 
-This document describes VirtualFlexList.
+This document describes `moonstone/VirtualFlexList`.
 
 ## VirtualFlexList
 
 ### Basic usage of VirtualFlexList
 
-*   At least two props below are required to show a list properly.
-    *   `items`: `items` including the following properties.
+*   At least two props below are required to show a list properly:
+    *   `items`: An object including the following properties.
         *   The number of items
             *   `colCount` is the number of items horizontally.
             *   `rowCount` is the number of items vertically.
@@ -18,17 +18,17 @@ This document describes VirtualFlexList.
             *   `height` is the item height.
         *   `component` is the render function for an item.
         *   `data` is any data which will be passed to the render function of item (`component` prop).
-        *   `background` is a value of `background` CSS property. e.g. background: 'black', background: 'url("assets/img.jpg") cover no-repeat', or etc. The `background` prop is only optional in `items` prop.
+        *   `background` is a value of `background` CSS property. e.g. `background: 'black'`, `background: 'url("assets/img.jpg") cover no-repeat'`, etc. The `background` prop is only optional in `items` prop.
     *   `maxFlexScrollSize`: The predefined max scroll size for variable width or height.
-*   For VirtualFlexList with variable width,
+*   For `VirtualFlexList` with variable width:
     *   The type of `colCount` and `width` should be a function returning the count and the size of each item.
     *   The type of `rowCount` and `height` should be a number.
 
-    For VirtualFlexList with variable height,
+    For `VirtualFlexList` with variable height:
     *   The type of `rowCount` and `height` should be a function returning the count and the size of each item.
     *   The type of `colCount` and `width` should be a number.
 *   Either `width` or `height` of the item can be variable.
-*   Example for VirtualFlexList with variable width:
+*   Example for `VirtualFlexList` with variable width:
     ```
     const renderItem = ({data, index, key}) => {
     		// Programs
@@ -57,14 +57,14 @@ This document describes VirtualFlexList.
 
 ### Optional props of VirtualFlexList
 
-*   `corner` and `headers` props
+*   `corner` and `headers` props:
     *   `corner` : The component for corner in a list. It has `component` and `background` properties.
         *   `component` is the render function for a corner.
         *   `background` is a value of `background` CSS property. e.g. background: 'black', background: 'url("assets/img.jpg") cover no-repeat', or etc.
-    *   `headers` : Row and column headers in a list including the following properties.
+    *   `headers` : Row and column headers in a list including the following properties:
         *   `col` for a column header
         *   `row` for a row header
-        *   Those properties have the following properties like `items` prop.
+        *   Those properties have the following properties like `items` prop:
             *   The number of items
                 *   `count` is the property for the number of items vertically.
             *   The item size
@@ -72,7 +72,7 @@ This document describes VirtualFlexList.
                 *   `height` is the item height.
             *   `component` is the render function for an item.
             *   `data` is any data which will be passed to the render function of item (`component` prop).
-            *   `background` is a value of `background` CSS property. e.g. background: 'black', background: 'url("assets/img.jpg") cover no-repeat', or etc.
+            *   `background` is a value of `background` CSS property. e.g.: `background: 'black'`, `background: 'url("assets/img.jpg") cover no-repeat'`
     *   Example:
         ```
         const
@@ -147,8 +147,8 @@ This document describes VirtualFlexList.
         />
         ```
 
-*   `x` and `y` props
-    *   You could pass `x` and `y` props as the position of VirtualFlexList to move it.
+*   `x` and `y` props:
+    *   You can pass `x` and `y` props as the position of `VirtualFlexList` to move it.
     *   Example:
         ```
         //app.js
@@ -183,14 +183,14 @@ This document describes VirtualFlexList.
         ```
 
 ### Common rules of Items for VirtualFlexList
-*   VirtualFlexList provides the same common rules of items.
+*   `VirtualFlexList` provides the same common rules of items.
 *   Please check "[Common rules of Items for VirtualList/VirtualGridList](./virtual-list-scroller.md#common-rules-of-items-for-virtuallistvirtualgridlist)" in the guide of [Using VirtualList, VirtualGridList and Scroller](./virtual-list-scroller.md).
 
-## Event Callbacks for VirtualFlexList
+### Event Callbacks for VirtualFlexList
 
-*   `onPositionChange` callback function prop
-    *   You can specify a callback function for position event.
-    *   When moving VirtualFlexList, `onPositionChange` event is fired with the object including `x`, `y` properties which are the position of VirtualFlexList.
+*   `onPositionChange` callback function prop:
+    *   You can specify a callback function to receive position events.
+    *   When moving `VirtualFlexList`, `onPositionChange` event is fired. The first argument to the callback is an object including `x`, `y` properties which are the position of `VirtualFlexList`.
     *   Example:
 
     ```
