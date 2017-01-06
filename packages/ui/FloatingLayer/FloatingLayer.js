@@ -28,7 +28,7 @@ class FloatingLayerBase extends React.Component {
 		 * CSS classes for FloatingLayer.
 		 *
 		 * @type {String}
-		 * @default `enact-fit enact-clip enact-untouchable`
+		 * @default 'enact-fit enact-clip enact-untouchable'
 		 * @public
 		 */
 		floatLayerClassName: React.PropTypes.string,
@@ -37,7 +37,7 @@ class FloatingLayerBase extends React.Component {
 		 * Element id for floating layer.
 		 *
 		 * @type {String}
-		 * @default `floatLayer`
+		 * @default 'floatLayer'
 		 * @public
 		 */
 		floatLayerId: React.PropTypes.string,
@@ -89,7 +89,7 @@ class FloatingLayerBase extends React.Component {
 		 * The scrim type. It can be either `'transparent'`, `'translucent'`, or `'none'`.
 		 *
 		 * @type {String}
-		 * @default `translucent`
+		 * @default 'translucent'
 		 * @public
 		 */
 		scrimType: React.PropTypes.oneOf(['transparent', 'translucent', 'none'])

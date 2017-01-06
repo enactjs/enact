@@ -20,7 +20,7 @@ const TooltipLabel = kind({
 		/**
 		 * The node to be displayed as the main content of the tooltip.
 		 *
-		 * @type {React.node}
+		 * @type {Node}
 		 * @required
 		 */
 		children: PropTypes.node.isRequired,

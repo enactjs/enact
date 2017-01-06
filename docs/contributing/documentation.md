@@ -163,6 +163,8 @@ Property-level documentation refers to documentation within a component or HOC. 
 
 In general, we do not provide jsDoc comments for methods that appear within components as we do not expose any public methods this way.
 
+> Note: We use three types to refer to renderable items: `Node`, `Element`, and `Component`. `Node` refers to any renderable thing, `Element` to one and only one renderable thing, and `Component` is either a string which represents the DOM node name (e.g. `'div'`) or a function that returns a React.Element (e.g. `moonstone/Button`).
+
 ## Special Cases
 
 There are some special cases that appear within the Enact framework. One example is `core/dispatcher`, which exports a set of utility functions. In this file, there are no class-level exports and all the functions are documented using jsDoc tags.  Here is the documentation for the `on` function:
