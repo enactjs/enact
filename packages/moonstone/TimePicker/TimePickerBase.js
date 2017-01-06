@@ -18,6 +18,36 @@ const hours12 = [
 	'12', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'
 ];
 
+class HourPicker extends React.Component {
+	static propTypes = {
+		children: React.PropTypes.arrayOf(React.PropTypes.string),
+		value: React.PropTypes.number
+	}
+
+	constructor () {
+		super();
+
+		this.state = {
+			noAnimation: false
+		};
+	}
+
+	componentWillReceiveProps (nextProps) {
+		const {children, value} = this.props;
+		const {children: nextChildren, value: nextValue} = nextProps;
+
+		this.setState({
+			noAnimation: children[value] === nextChildren[nextValue]
+		});
+	}
+
+	render () {
+		return (
+			<DateComponentPicker {...this.props} {...this.state} />
+		);
+	}
+}
+
 /**
 * {@link moonstone/TimePicker.TimePickerBase} is the stateless functional time picker
 * component. Should not be used directly but may be composed within another component as it is
@@ -79,15 +109,6 @@ const TimePickerBase = kind({
 		order: React.PropTypes.arrayOf(React.PropTypes.oneOf(['h', 'k', 'm', 'a'])).isRequired,
 
 		/**
-		 * When `true`, prevents the hour picker from animation. Useful when changing the meridiem
-		 * for locales that only have 2 meridiems.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		noHourAnimation: React.PropTypes.bool,
-
-		/**
 		 * When `true`, omits the labels below the pickers
 		 *
 		 * @type {Boolean}
@@ -129,7 +150,7 @@ const TimePickerBase = kind({
 		hasMeridiem: ({order}) => order.indexOf('a') >= 0
 	},
 
-	render: ({hasMeridiem, hour, meridiem, meridiems, minute, noHourAnimation, noLabels, onChangeHour, onChangeMeridiem, onChangeMinute, order, ...rest}) => {
+	render: ({hasMeridiem, hour, meridiem, meridiems, minute, noLabels, onChangeHour, onChangeMeridiem, onChangeMinute, order, ...rest}) => {
 		return (
 			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false}>
 				<div className={dateComponentPickers}>
@@ -139,16 +160,15 @@ const TimePickerBase = kind({
 								case 'h':
 								case 'k':
 									return (
-										<DateComponentPicker
+										<HourPicker
 											key="hour-picker"
 											label={noLabels ? null : $L('hour')}
 											value={hour}
 											onChange={onChangeHour}
-											noAnimation={noHourAnimation}
 											wrap
 										>
 											{hasMeridiem ? hours12 : hours24}
-										</DateComponentPicker>
+										</HourPicker>
 									);
 								case 'm':
 									return (
