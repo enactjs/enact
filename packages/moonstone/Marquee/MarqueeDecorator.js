@@ -455,14 +455,12 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleFocus = (ev) => {
 			this.isFocused = true;
-			this.invalidateMetrics();
 			this.startAnimation();
 			forwardFocus(ev, this.props);
 		}
 
 		handleBlur = (ev) => {
 			this.isFocused = false;
-			this.invalidateMetrics();
 			this.cancelAnimation();
 			forwardBlur(ev, this.props);
 		}
