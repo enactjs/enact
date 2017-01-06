@@ -104,6 +104,10 @@
 .activity {
 	.viewport {
 		left: 0;
+
+		> :not([data-index='0']) {
+			width: calc(~"100% - " @moon-breadcrumb-width);
+		}
 	}
 
 	.breadcrumbs {

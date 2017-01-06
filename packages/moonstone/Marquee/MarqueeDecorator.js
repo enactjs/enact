@@ -51,6 +51,15 @@ const defaultConfig = {
 	focus: 'onFocus',
 
 	/**
+	* Invalidate the distance if any property (like 'inline') changes.
+	* Expects an array of props which on change trigger invalidateMetrics.
+	*
+	* @type {Array}
+	* @default null
+	*/
+	invalidateProps: null,
+
+	/**
 	 * Property containing the callback to stop the animation when `marqueeOn` is `'hover'`
 	 *
 	 * @type {String}
@@ -58,6 +67,19 @@ const defaultConfig = {
 	 * @memberof moonstone/Marquee.MarqueeDecorator.defaultConfig
 	 */
 	leave: 'onMouseLeave'
+};
+
+/**
+ * Checks whether any of the invalidateProps has changed or not
+ *
+ * @param {Array} propList An array of invalidateProps
+ * @param {Object} prev Previous props
+ * @param {Object} next Next props
+ * @returns {Boolean} `true` if any of the props changed
+ */
+const didPropChange = (propList, prev, next) => {
+	const hasPropsChanged = propList.map(i => prev[i] !== next[i]);
+	return hasPropsChanged.indexOf(true) !== -1;
 };
 
 /**
@@ -70,7 +92,7 @@ const defaultConfig = {
  * @public
  */
 const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {blur, className: marqueeClassName, enter, focus, leave} = config;
+	const {blur, className: marqueeClassName, enter, focus, invalidateProps, leave} = config;
 
 	// Generate functions to forward events to containers
 	const forwardBlur = forward(blur);
@@ -206,7 +228,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentWillReceiveProps (next) {
 			const {marqueeOn, marqueeDisabled, marqueeSpeed} = this.props;
-			if (!childrenEquals(this.props.children, next.children)) {
+			if ((!childrenEquals(this.props.children, next.children)) || (invalidateProps && didPropChange(invalidateProps, this.props, next))) {
 				this.invalidateMetrics();
 				this.cancelAnimation();
 			} else if (next.marqueeOn !== marqueeOn || next.marqueeDisabled !== marqueeDisabled || next.marqueeSpeed !== marqueeSpeed) {
