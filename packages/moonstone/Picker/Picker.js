@@ -146,6 +146,7 @@ const PickerBase = kind({
 
 	computed: {
 		max: ({children}) => children && children.length ? children.length - 1 : 0,
+		reverse: ({orientation}) => (orientation === 'vertical'),
 		children: ({children, marqueeDisabled}) => React.Children.map(children, (child) => {
 			return <PickerItem marqueeDisabled={marqueeDisabled}>{child}</PickerItem>;
 		})
@@ -155,7 +156,7 @@ const PickerBase = kind({
 		delete rest.marqueeDisabled;
 
 		return (
-			<PickerCore {...rest} min={0} max={max} index={value} step={1} value={value} reverse>
+			<PickerCore {...rest} min={0} max={max} index={value} step={1} value={value}>
 				{children}
 			</PickerCore>
 		);
