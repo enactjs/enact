@@ -41,6 +41,24 @@ describe('IncrementSlider Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
+	it.skip('Should not call onChange on prop change', function () {
+		const handleChange = sinon.spy();
+		const value = 50;
+		const incrementSlider = mount(
+			<IncrementSlider
+				onChange={handleChange}
+				value={value}
+			/>
+		);
+
+		incrementSlider.setProps({onChange: handleChange, value: value + 1});
+
+		const expected = false;
+		const actual = handleChange.called;
+
+		expect(actual).to.equal(expected);
+	});
+
 	it('Should disable decrement button when value === min', function () {
 		const incrementSlider = mount(
 			<IncrementSlider
@@ -100,7 +118,7 @@ describe('IncrementSlider Specs', () => {
 		incrementSlider.find(`.${css.incrementButton}`).simulate('click');
 
 		const expected = false;
-		const actual = handleIncrement.calledOnce;
+		const actual = handleIncrement.called;
 
 		expect(actual).to.equal(expected);
 	});
@@ -136,7 +154,7 @@ describe('IncrementSlider Specs', () => {
 		incrementSlider.find(`.${css.decrementButton}`).simulate('click');
 
 		const expected = false;
-		const actual = handleDecrement.calledOnce;
+		const actual = handleDecrement.called;
 
 		expect(actual).to.equal(expected);
 	});
