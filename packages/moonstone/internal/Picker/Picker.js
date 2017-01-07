@@ -223,10 +223,17 @@ const Picker = class extends React.Component {
 		 * assume auto-sizing. `'small'` is good for numeric pickers, `'medium'` for single or short
 		 * word pickers, `'large'` for maximum-sized pickers.
 		 *
-		 * @type {String}
+		 * You may also supply a number. This number will determine the minumum size of the Picker.
+		 * Setting a number to less than the number of characters in your longest value may produce
+		 * unexpected results.
+		 *
+		 * @type {String|Number}
 		 * @public
 		 */
-		width: React.PropTypes.oneOf([null, 'small', 'medium', 'large']),
+		width: React.PropTypes.oneOfType([
+			React.PropTypes.oneOf([null, 'small', 'medium', 'large']),
+			React.PropTypes.number
+		]),
 
 		/**
 		 * Should the picker stop incrementing when the picker reaches the last element? Set `wrap`
@@ -390,6 +397,10 @@ const Picker = class extends React.Component {
 		if (width && !disabled) {
 			arranger = orientation === 'vertical' ? SlideTopArranger : SlideLeftArranger;
 		}
+		let sizingChars;
+		if (typeof width === 'number') {
+			sizingChars = '0'.repeat(width);
+		}
 
 		return (
 			<div {...rest} className={classes} disabled={disabled} onWheel={joined ? this.handleWheel : null}>
@@ -403,16 +414,18 @@ const Picker = class extends React.Component {
 					joined={joined}
 					icon={incrementIcon}
 				/>
-				<PickerViewManager
-					arranger={arranger}
-					duration={100}
-					index={index}
-					noAnimation={noAnimation}
-					reverseTransition={this.reverseTransition}
-					className={css.valueWrapper}
-				>
-					{children}
-				</PickerViewManager>
+				<div className={css.valueWrapper}>
+					<div className={css.sizingPlaceholder}>{sizingChars}</div>
+					<PickerViewManager
+						arranger={arranger}
+						duration={100}
+						index={index}
+						noAnimation={noAnimation}
+						reverseTransition={this.reverseTransition}
+					>
+						{children}
+					</PickerViewManager>
+				</div>
 				<PickerButton
 					className={css.decrementer}
 					disabled={decrementerDisabled}
