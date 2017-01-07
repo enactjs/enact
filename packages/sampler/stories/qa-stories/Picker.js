@@ -140,7 +140,7 @@ storiesOf('Picker')
 		)
 	)
 	.addWithInfo(
-		'Empty Picker with Add and Remove',
+		'with item add/remove (ENYO-2448)',
 		() => (
 			<PickerAddRemove
 				width={select('width', prop.width, 'medium')}

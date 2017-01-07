@@ -31,31 +31,49 @@ class PickerAddRemove extends React.Component {
 
 	constructor (props) {
 		super(props);
+
 		this.state = {
 			children: props.children
 		};
 	}
 
 	handleAdd = () => {
-		const value = this.value,
-			index = this.index;
-		let children = this.state.children;
+		const children = this.state.children,
+			index = this.index == null ? children.length : this.index;
 
-		children.splice(index.state.value, 0, value.state.value);
+		children.splice(index, 0, this.value);
 
 		this.setState({
 			children: children
 		});
+
+		this.reset();
 	}
 
 	handleRemove = () => {
-		const index = parseInt(this.index.state.value);
+		const index = parseInt(this.index);
+
 		this.setState({
 			children: [
 				...this.state.children.slice(0, index),
 				...this.state.children.slice(index + 1)
 			]
 		});
+
+		this.reset();
+	}
+
+	handleIndexChange = ({value: index}) => {
+		this.index = index;
+	}
+
+	handleValueChange = ({value}) => {
+		this.value = value;
+	}
+
+	reset = () => {
+		this.index = null;
+		this.value = null;
 	}
 
 	render () {
@@ -68,18 +86,14 @@ class PickerAddRemove extends React.Component {
 				</div>
 				<div>
 					<StatefulInput
-						ref={(c) => {
-							this.value = c;
-						}}
-						placeholder='Value'
+						onChange={this.handleValueChange}
+						placeholder="value"
 					/>
 				</div>
 				<div>
 					<StatefulInput
-						ref={(c) => {
-							this.index = c;
-						}}
-						placeholder='Index'
+						onChange={this.handleIndexChange}
+						placeholder="index"
 					/>
 				</div>
 				<Button onClick={this.handleAdd}>
