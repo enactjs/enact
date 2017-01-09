@@ -31,7 +31,8 @@ const unitToPixelFactors = {
  * Fetch the screenType object
  *
  * @memberof ui/resolution
- * @param  {String} type The key string for the screen type object.
+ * @param  {String} type The key string for the screen type object. If falsy, the current
+ *	screenType is used
  *
  * @returns {Object}     screenTypeObject
  * @private
