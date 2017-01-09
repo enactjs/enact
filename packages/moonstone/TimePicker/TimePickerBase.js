@@ -18,6 +18,15 @@ const hours12 = [
 	'12', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'
 ];
 
+/**
+ * {@link moonstone/TimePicker/TimePickerBase.HourPicker} is a utility component to prevent the
+ * animation of the picker when the display text doesn't change for 12-hour locales.
+ *
+ * @class HourPicker
+ * @memberof moonstone/TimePicker/TimePickerBase
+ * @ui
+ * @private
+ */
 class HourPicker extends React.Component {
 	static propTypes = {
 		children: React.PropTypes.arrayOf(React.PropTypes.string),

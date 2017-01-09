@@ -18,14 +18,14 @@ describe('DatePicker', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should emit an onChange event when closed', function () {
+	it('should emit an onChange event when changing a component picker', function () {
 		const handleChange = sinon.spy();
 		const subject = mount(
-			<DatePicker title="Date" open onChange={handleChange} />
+			<DatePicker value={new Date(2000, 6, 15)} title="Date" open onChange={handleChange} />
 		);
 
-		const base = subject.find('DatePickerBase');
-		base.prop('onClose')();
+		const base = subject.find('DateComponentRangePicker').first();
+		base.prop('onChange')({value: 0});
 
 		const expected = true;
 		const actual = handleChange.calledOnce;
