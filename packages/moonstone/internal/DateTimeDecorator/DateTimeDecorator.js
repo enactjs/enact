@@ -1,3 +1,10 @@
+/**
+ * Exports the {@link moonstone/internal/DateTimeDecorator.DateTimeDecorator} higher-order component
+ *
+ * @module moonstone/internal/DateTimeDecorator
+ * @private
+ */
+
 import Cancelable from '@enact/ui/Cancelable';
 import DateFactory from '@enact/i18n/ilib/lib/DateFactory';
 import hoc from '@enact/core/hoc';
@@ -19,7 +26,7 @@ const CancelableDecorator = Cancelable({
 });
 
 /**
- * {@link moonstone/internal/DateTimeDecorator.DateTimeDecorator} provides common behavior for a
+ * {@link moonstone/internal/DateTimeDecorator.DateTimeDecorator} provides common behavior for
  * {@link moonstone/DatePicker.DatePicker} and {@link moonstone/TimePicker.TimePicker}.
  *
  * @class DateTimeDecorator
