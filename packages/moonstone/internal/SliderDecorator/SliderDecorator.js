@@ -192,9 +192,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillReceiveProps (nextProps) {
-			if (nextProps.value !== this.props.value) {
-				this.updateValue(nextProps.value);
-			}
+			this.updateValue(nextProps.value);
 		}
 
 		componentDidUpdate (prevProps) {
@@ -219,7 +217,10 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleMouseMove = (ev) => {
 			// We don't want to run this code if any mouse button is being held down. That indicates dragging.
-			if (ev.buttons || this.props.vertical) return;
+			if (ev.buttons || this.props.vertical) {
+				forwardMouseLeave(ev, this.props);
+				return;
+			}
 
 			const node = this.sliderBarNode.node;
 

@@ -6,10 +6,9 @@
 
 import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
-import {Spottable} from '@enact/spotlight';
 import Pressable from '@enact/ui/Pressable';
-import {checkDefaultBounds} from '@enact/ui/validators/PropTypeValidators';
 import React, {PropTypes} from 'react';
+import {Spottable} from '@enact/spotlight';
 
 import SliderDecorator from '../internal/SliderDecorator';
 import {
@@ -43,7 +42,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * @default 0
 			 * @public
 			 */
-			backgroundPercent: checkDefaultBounds,
+			backgroundPercent: PropTypes.number,
 
 			/**
 			 * The slider can change its behavior to have the knob follow the cursor as it moves
@@ -163,7 +162,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * @default 0
 			 * @public
 			 */
-			value: checkDefaultBounds,
+			value: PropTypes.number,
 
 			/**
 			 * If `true` the slider will be oriented vertically.

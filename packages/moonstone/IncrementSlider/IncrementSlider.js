@@ -4,7 +4,6 @@
  * @module moonstone/IncrementSlider
  */
 
-import {checkDefaultBounds} from '@enact/ui/validators/PropTypeValidators';
 import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
 import Pressable from '@enact/ui/Pressable';
@@ -136,7 +135,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			* @default 0
 			* @public
 			*/
-			value: checkDefaultBounds,
+			value: PropTypes.number,
 
 			/**
 			* If `true` the increment slider will be oriented vertically.
