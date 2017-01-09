@@ -26,6 +26,49 @@ describe('Slider Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
+	it('Should not fire change event more than once', function () {
+		const handleChange = sinon.spy();
+		const value = 25;
+
+		const slider = mount(
+			<Slider
+				min={0}
+				max={100}
+				value={50}
+				step={1}
+				onChange={handleChange}
+			/>
+		);
+
+		slider.find(`.${css.input}`).simulate('change', {target: {value}});
+
+		const expected = true;
+		const actual = handleChange.calledOnce;
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('Should forward value in change event', function () {
+		const handleChange = sinon.spy();
+		const value = 25;
+
+		const slider = mount(
+			<Slider
+				min={0}
+				max={100}
+				value={50}
+				step={1}
+				onChange={handleChange}
+			/>
+		);
+
+		slider.find(`.${css.input}`).simulate('change', {target: {value}});
+
+		const expected = value;
+		const actual = handleChange.args[0][0].value;
+
+		expect(actual).to.equal(expected);
+	});
 
 	// I don't feel super great about this test but I'm not sure how else to be able to check
 	// that values that are applied directly to the DOM are the values that should be applied

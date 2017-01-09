@@ -1,7 +1,7 @@
 import React from 'react';
 import sinon from 'sinon';
 import {mount} from 'enzyme';
-import {SliderBase, SliderBaseFactory} from '../Slider';
+import {SliderBase} from '../Slider';
 import css from '../Slider.less';
 
 describe('SliderBase Specs', () => {

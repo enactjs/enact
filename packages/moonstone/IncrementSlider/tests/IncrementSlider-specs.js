@@ -41,6 +41,24 @@ describe('IncrementSlider Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
+	it('Should only call onChange once', function () {
+		const handleChange = sinon.spy();
+		const value = 50;
+		const incrementSlider = mount(
+			<IncrementSlider
+				onChange={handleChange}
+				value={value}
+			/>
+		);
+
+		incrementSlider.find(`.${css.incrementButton}`).simulate('click');
+
+		const expected = true;
+		const actual = handleChange.calledOnce;
+
+		expect(actual).to.equal(expected);
+	});
+
 	it('Should not call onChange on prop change', function () {
 		const handleChange = sinon.spy();
 		const value = 50;
