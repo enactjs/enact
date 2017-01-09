@@ -41,6 +41,7 @@ describe('ExpandablePicker Specs', () => {
 	});
 
 	it('should include default value in onChange when value is not specified', function () {
+		const value = 0;
 		const handleChange = sinon.spy();
 		const expandablePicker = mount(
 			<ExpandablePickerBase title='Options' onChange={handleChange} open>
@@ -51,7 +52,7 @@ describe('ExpandablePicker Specs', () => {
 		const checkButton = expandablePicker.find('IconButton').last();
 		checkButton.simulate('click');
 
-		const expected = expandablePicker.props().value;
+		const expected = value;
 		const actual = handleChange.firstCall.args[0].value;
 
 		expect(actual).to.equal(expected);
