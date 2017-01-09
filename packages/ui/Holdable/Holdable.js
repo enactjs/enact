@@ -39,8 +39,9 @@ const selectionKeyCodes = [13, 16777221];
 /**
  * Default config for {@link ui/Holdable.Holdable}
  *
- * @memberof ui/Holdable
+ * @memberof ui/Holdable.Holdable
  * @hocconfig
+ * @public
  */
 const defaultConfig = {
 	/**
@@ -56,7 +57,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'onMove'
-	 * @memberof ui/Holdable.defaultConfig
+	 * @memberof ui/Holdable.Holdable.defaultConfig
 	 */
 	endHold: 'onMove',
 
@@ -78,7 +79,7 @@ const defaultConfig = {
 	 *
 	 * @type {Array}
 	 * @default [{name: 'hold', time: 200}]
-	 * @memberof ui/Holdable.defaultConfig
+	 * @memberof ui/Holdable.Holdable.defaultConfig
 	 */
 	events: [
 		{name: 'hold', time: 200}
@@ -92,7 +93,7 @@ const defaultConfig = {
 	 *
 	 * @type {Number}
 	 * @default 200
-	 * @memberof ui/Holdable.defaultConfig
+	 * @memberof ui/Holdable.Holdable.defaultConfig
 	 */
 	frequency: 200,
 
@@ -104,7 +105,7 @@ const defaultConfig = {
 	 *
 	 * @type {Number}
 	 * @default 16
-	 * @memberof ui/Holdable.defaultConfig
+	 * @memberof ui/Holdable.Holdable.defaultConfig
 	 */
 	moveTolerance: 16,
 
@@ -116,7 +117,7 @@ const defaultConfig = {
 	 *
 	 * @type {Boolean}
 	 * @default false
-	 * @memberof ui/Holdable.defaultConfig
+	 * @memberof ui/Holdable.Holdable.defaultConfig
 	 */
 	resume: false
 };
@@ -127,7 +128,7 @@ const defaultConfig = {
  *
  * @class Holdable
  * @memberof ui/Holdable
- * @ui
+ * @hoc
  * @public
  */
 const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
@@ -140,7 +141,7 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 	const forwardPointerMove = forward(pointerMove);
 
 	return class Holdable extends React.Component {
-		static propTypes = /** @lends ui/Holdable.Holdable */ {
+		static propTypes = /** @lends ui/Holdable.Holdable.prototype */ {
 			/**
 			 * Whether or not the component is in a disabled state.
 			 *

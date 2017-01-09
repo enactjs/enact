@@ -118,7 +118,7 @@ const itemsShape = PropTypes.oneOfType([
 ]);
 
 /**
- * {@link module:@enact/moonstone/VirtualFlexList~VirtualFlexList} is a VirtualFlexList with Moonstone styling
+ * {@link moonstone/VirtualFlexList~VirtualFlexList} is a VirtualFlexList with Moonstone styling
  * which has a variable width or height.
  *
  * @class VirtualFlexList

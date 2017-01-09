@@ -17,7 +17,6 @@ import css from './Transition.less';
  *
  * @class TransitionBase
  * @memberof ui/Transition
- * @ui
  * @public
  */
 const TransitionBase = kind({
@@ -170,7 +169,6 @@ const TransitionBase = kind({
  *
  * @class Transition
  * @memberof ui/Transition
- * @ui
  * @public
  */
 class Transition extends React.Component {

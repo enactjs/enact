@@ -2,7 +2,7 @@
 title: Enyo to Enact Component Map
 ---
 
-> **Enact version**: beta-1
+> **Enact version**: 1.0.0-beta.1
 
 ### Utilities
 |Enyo   |Enact  |Notes  |
@@ -57,6 +57,7 @@ how to use it.
 | `Checkbox` | use `@enact/ui/Toggleable` HOC or `@enact/moonstone/CheckboxItem` | |
 | `CheckboxItem` | `CheckboxItem` | |
 | `ClampedText` | | unused<sup>1</sup> |
+| `Clock` | * | under review |
 | `ContextualPopup` | `ContextualPopup` | provided in `@enact/moonstone/ContextualPopupDecorator` |
 | `ContextualPopupButton` | | deprecated |
 | `ContextualPopupDecorator` | `ContextualPopupDecorator` | |

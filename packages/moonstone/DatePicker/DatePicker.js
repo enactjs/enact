@@ -1,5 +1,5 @@
 /**
- * Exports the {@link moonstone/DatePicker.DatePicker} and {@link moonstone/DatePicker/DatePickerBase.DatePickerBase}
+ * Exports the {@link moonstone/DatePicker.DatePicker} and {@link moonstone/DatePicker.DatePickerBase}
  * components.
  *
  * @module moonstone/DatePicker
