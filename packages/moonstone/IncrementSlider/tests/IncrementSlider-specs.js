@@ -41,7 +41,7 @@ describe('IncrementSlider Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it.skip('Should not call onChange on prop change', function () {
+	it('Should not call onChange on prop change', function () {
 		const handleChange = sinon.spy();
 		const value = 50;
 		const incrementSlider = mount(
