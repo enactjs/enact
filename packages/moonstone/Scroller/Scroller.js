@@ -92,33 +92,6 @@ class ScrollerBase extends Component {
 		}
 	}
 
-	calculatePositionOnFocus = (focusedItem) => {
-		const
-			rtlDirection = this.context.rtl ? -1 : 1,
-			bounds = {
-				left: this.scrollPos.left * rtlDirection,
-				top: this.scrollPos.top
-			};
-
-		if (this.isVertical()) {
-			if (focusedItem.offsetTop + focusedItem.offsetHeight > (this.scrollBounds.clientHeight + bounds.top)) {
-				this.scrollPos.top += ((focusedItem.offsetTop + focusedItem.offsetHeight) - (this.scrollBounds.clientHeight + bounds.top));
-			} else if (focusedItem.offsetTop <= bounds.top) {
-				this.scrollPos.top += (focusedItem.offsetTop - bounds.top);
-			}
-		}
-
-		if (this.isHorizontal()) {
-			if (focusedItem.offsetLeft + focusedItem.offsetWidth > (this.scrollBounds.clientWidth + bounds.left)) {
-				this.scrollPos.left += rtlDirection * ((focusedItem.offsetLeft + focusedItem.offsetWidth) - (this.scrollBounds.clientWidth + bounds.left));
-			} else if (focusedItem.offsetLeft <= bounds.left) {
-				this.scrollPos.left += rtlDirection * (focusedItem.offsetLeft - bounds.left);
-			}
-		}
-
-		return this.scrollPos;
-	}
-
 	getScrollPos = (item) => {
 		let node = item;
 		const
@@ -136,6 +109,31 @@ class ScrollerBase extends Component {
 		}
 
 		return bounds;
+	}
+
+	calculatePositionOnFocus = (focusedItem) => {
+		const
+			rtlDirection = this.context.rtl ? -1 : 1,
+			currentLeft = this.scrollPos.left * rtlDirection,
+			currentTop = this.scrollPos.top;
+
+		if (this.isVertical()) {
+			if (focusedItem.offsetTop + focusedItem.offsetHeight > (this.scrollBounds.clientHeight + currentTop)) {
+				this.scrollPos.top += ((focusedItem.offsetTop + focusedItem.offsetHeight) - (this.scrollBounds.clientHeight + currentTop));
+			} else if (focusedItem.offsetTop < currentTop) {
+				this.scrollPos.top += (focusedItem.offsetTop - currentTop);
+			}
+		}
+
+		if (this.isHorizontal()) {
+			if (focusedItem.offsetLeft + focusedItem.offsetWidth > (this.scrollBounds.clientWidth + currentLeft)) {
+				this.scrollPos.left += rtlDirection * ((focusedItem.offsetLeft + focusedItem.offsetWidth) - (this.scrollBounds.clientWidth + currentLeft));
+			} else if (focusedItem.offsetLeft < currentLeft) {
+				this.scrollPos.left += rtlDirection * (focusedItem.offsetLeft - currentLeft);
+			}
+		}
+
+		return this.scrollPos;
 	}
 
 	isVertical = () => (this.props.vertical !== 'hidden')

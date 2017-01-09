@@ -368,7 +368,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					focusableCheck = (item !== this.lastFocusedItem && item === doc.activeElement && this.childRef.calculatePositionOnFocus);
 
 				if (focusableCheck) {
-					// checking index for virtualList
+					// checking index for VirtualList
 					const pos = !isNaN(index) ? this.childRef.calculatePositionOnFocus(index) : this.childRef.calculatePositionOnFocus(item);
 					if (pos) {
 						if (pos.left !== this.scrollLeft || pos.top !== this.scrollTop) {
@@ -382,9 +382,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		onKeyDown = (e) => {
 			if (this.childRef.setSpotlightContainerRestrict) {
+				const index = Number.parseInt(e.target.getAttribute(dataIndexAttribute));
 				this.isKeyDown = true;
-				const item = e.target;
-				this.childRef.setSpotlightContainerRestrict(e.keyCode, item);
+				this.childRef.setSpotlightContainerRestrict(e.keyCode, index);
 			} else {
 				this.isKeyDown = true;
 			}
