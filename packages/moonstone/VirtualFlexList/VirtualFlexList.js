@@ -21,7 +21,7 @@ import css from './VirtualFlexList.less';
 
 const
 	PositionableVirtualList = Positionable(VirtualListCore),
-	SpotlightPositionableVirtualList = SpotlightContainerDecorator(Positionable(VirtualListCore));
+	SpotlightPositionableVirtualList = SpotlightContainerDecorator({enterTo: 'default-element'}, Positionable(VirtualListCore));
 
 const forwardPositionChange = forward('onPositionChange');
 
