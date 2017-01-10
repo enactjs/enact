@@ -55,3 +55,29 @@ export const validateRange = (value, min, max, component,
 	}
 };
 
+/**
+ * Issues a warning to the console if `value`, adjusted for `min` is not evenly
+ * divisible by `step`. In production mode, no action is taken.
+ *
+ * @function
+ * @param {Number} value The value to validate
+ * @param {Number} min   The minimum acceptable value to validate
+ * @param {Number} step  The step
+ * @param {String} component The name of the invoker, used to decorate warning message
+ * @param {String} [valueName='value'] The name of the value property
+ * @param {String} [minName='min'] The name of the min property
+ * @param {String} [stepName='step'] The name of the step property
+ *
+ * @returns {undefined}
+ * @memberof moonstone/internal/validators
+ * @private
+ */
+export const validateStepped = (value, min, step, component,
+					valueName = '"value"', minName = '"min"', stepName = '"step"') => {
+	if (__DEV__) {
+		if ((value - min) % step !== 0) {
+			warn(`Warning: ${component} ${valueName} (${value}) must be evenly divisible by ${stepName} (${step})`);
+		}
+	}
+};
+

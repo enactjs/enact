@@ -83,8 +83,6 @@ const ProgressBarBase = kind({
 	},
 
 	render: ({backgroundProgress, progress, progressCssProp, ...rest}) => {
-		delete rest.max;
-		delete rest.min;
 		delete rest.validate;
 		delete rest.vertical;
 

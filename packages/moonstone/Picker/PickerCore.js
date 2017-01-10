@@ -5,9 +5,10 @@ import clamp from 'ramda/src/clamp';
 import React from 'react';
 import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
 import shouldUpdate from 'recompose/shouldUpdate';
+import {validateRange, validateStepped} from '../internal/validators';
+
 
 import PickerButton from './PickerButton';
-import {steppedNumber} from './PickerPropTypes';
 import css from './Picker.less';
 
 const PickerViewManager = shouldUpdate((props, nextProps) => {
@@ -68,7 +69,7 @@ const PickerCore = class extends React.Component {
 		 * @type {Number}
 		 * @public
 		 */
-		max: steppedNumber.isRequired,
+		max: React.PropTypes.number.isRequired,
 
 		/**
 		 * The minimum value selectable by the picker (inclusive).
@@ -207,7 +208,7 @@ const PickerCore = class extends React.Component {
 		 * @default 0
 		 * @public
 		 */
-		value: steppedNumber,
+		value: React.PropTypes.number,
 
 		/**
 		 * Choose a specific size for your picker. `'small'`, `'medium'`, `'large'`, or set to `null` to
@@ -235,10 +236,26 @@ const PickerCore = class extends React.Component {
 		value: 0
 	}
 
+	constructor (props) {
+		super(props);
+
+		if (__DEV__) {
+			validateRange(props.value, props.min, props.max, PickerCore.displayName);
+			validateStepped(props.value, props.min, props.step, PickerCore.displayName);
+			validateStepped(props.max, props.min, props.step, PickerCore.displayName, '"max"');
+		}
+	}
+
 	componentWillReceiveProps (nextProps) {
 		const first = nextProps.min;
 		const last = nextProps.max;
+		const nextValue = nextProps.value;
 
+		if (__DEV__) {
+			validateRange(nextValue, first, last, PickerCore.displayName);
+			validateStepped(nextValue, first, nextProps.step, PickerCore.displayName);
+			validateStepped(last, first, nextProps.step, PickerCore.displayName, '"max"');
+		}
 		const wrapToStart = nextProps.wrap && nextProps.value === first && this.props.value === last;
 		const wrapToEnd = nextProps.wrap && nextProps.value === last && this.props.value === first;
 
