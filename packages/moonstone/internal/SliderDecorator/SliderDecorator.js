@@ -194,14 +194,11 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentWillReceiveProps ({min, max, value: _value}) {
 			if ((min !== this.props.min) || (max !== this.props.max) ||
-					(_value !== this.props.value)) {
+					(_value !== this.state.value)) {
 				this.normalizedMax = max != null ? max : Wrapped.defaultProps.max;
 				this.normalizedMin = min != null ? min : Wrapped.defaultProps.min;
 				const value = clamp(this.normalizedMin, this.normalizedMax, _value);
-				// Don't update our internal state unless user requested change to value
-				if ((_value !== this.props.value) && (value !== this.state.value)) {
-					this.setState({value});
-				}
+				this.setState({value});
 			}
 		}
 
