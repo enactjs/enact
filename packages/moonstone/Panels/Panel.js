@@ -20,6 +20,17 @@ const PanelBase = kind({
 	name: 'Panel',
 
 	propTypes: /** @lends moonstone/Panels.Panel.prototype */ {
+		/**
+		 * When `true`, only the `header` is rendered and the body components are not. Setting to
+		 * `true` will cause all components to be rendered and the body components will fade in.
+		 *
+		 * When a Panel is used within {@link moonstone/Panels.Panels},
+		 * {@link moonstone/Panels.ActivityPanels}, or {@link moonstone/Panels.AlwaysViewingPanels},
+		 * this property will be set automatically to `true` on render and `false` after animating
+		 * into view.
+		 *
+		 * @type {Boolean}
+		 */
 		entering: React.PropTypes.bool,
 
 		/**

@@ -78,13 +78,14 @@ const ViewportBase = kind({
 		children: ({children}) => React.Children.map(children, (child, index) => {
 			return React.cloneElement(child, {'data-index': index});
 		}),
+		enteringProp: ({noAnimation}) => noAnimation ? null : 'entering',
 		handleAppear: handle(forward('onAppear'), spotPanel),
 		handleEnter: handle(forward('onEnter'), spotPanel),
 		handleTransition: handle(forward('onTransition'), Spotlight.resume),
 		handleWillTransition: handle(forward('onWillTransition'), Spotlight.pause)
 	},
 
-	render: ({arranger, children, handleAppear, handleEnter, handleTransition, handleWillTransition, index, noAnimation, ...rest}) => {
+	render: ({arranger, children, enteringProp, handleAppear, handleEnter, handleTransition, handleWillTransition, index, noAnimation, ...rest}) => {
 		const count = React.Children.count(children);
 		invariant(
 			index === 0 && count === 0 || index < count,
@@ -94,17 +95,17 @@ const ViewportBase = kind({
 		return (
 			<ViewManager
 				{...rest}
-				noAnimation={noAnimation}
 				arranger={arranger}
-				duration={200}
-				index={index}
 				component="main"
+				duration={200}
+				enteringDelay={150}
+				enteringProp={enteringProp}
+				index={index}
+				noAnimation={noAnimation}
 				onAppear={handleAppear}
 				onEnter={handleEnter}
 				onTransition={handleTransition}
 				onWillTransition={handleWillTransition}
-				enteringDelay={150}
-				enteringProp="entering"
 			>
 				{children}
 			</ViewManager>

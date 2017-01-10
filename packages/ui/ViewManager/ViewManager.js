@@ -65,6 +65,27 @@ class ViewManager extends React.Component {
 		end: React.PropTypes.number,
 
 		/**
+		 * Time, in milliseconds, to wait after a view has entered to inform it by pass the
+		 * `enteringProp` as false.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 */
+		enteringDelay: React.PropTypes.number,
+
+		/**
+		 * Name of the property to pass to the wrapped view to indicate when it is entering the
+		 * viewport. When `true`, the view has been created but has not transitioned into place.
+		 * When `false`, the view has finished its transition.
+		 *
+		 * The notification can be delayed by setting `enteringDelay`. If not set, the view will not
+		 * be notified of the change in transition.
+		 *
+		 * @type {String}
+		 */
+		enteringProp: React.PropTypes.string,
+
+		/**
 		 * Index of active view
 		 *
 		 * @type {Number}
@@ -137,10 +158,7 @@ class ViewManager extends React.Component {
 		 * @type {Number}
 		 * @default value of index
 		 */
-		start: React.PropTypes.number,
-
-		enteringDelay: React.PropTypes.number,
-		enteringProp: React.PropTypes.string
+		start: React.PropTypes.number
 	}
 
 	static defaultProps = {
