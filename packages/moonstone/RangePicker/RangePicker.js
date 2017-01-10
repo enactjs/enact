@@ -5,12 +5,14 @@
  * @module moonstone/RangePicker
  */
 
+import clamp from 'ramda/src/clamp';
 import kind from '@enact/core/kind';
 import React from 'react';
 
 import PickerCore from '../Picker/PickerCore';
 import PickerItem from '../Picker/PickerItem';
 import SpottablePicker from '../Picker/SpottablePicker';
+import {validateRange} from '../internal/validators';
 
 const digits = (num) => {
 	// minor optimization
@@ -194,6 +196,12 @@ const RangePickerBase = kind({
 			}
 
 			return value;
+		},
+		value: ({min, max, value}) => {
+			if (__DEV__) {
+				validateRange(value, min, max, 'RangePicker');
+			}
+			return clamp(min, max, value);
 		}
 	},
 

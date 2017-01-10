@@ -5,10 +5,12 @@
  * @module moonstone/Picker
  */
 
+import clamp from 'ramda/src/clamp';
 import kind from '@enact/core/kind';
 import React from 'react';
 
 import {MarqueeController} from '../Marquee';
+import {validateRange} from '../internal/validators';
 
 import PickerCore from './PickerCore';
 import PickerItem from './PickerItem';
@@ -149,7 +151,14 @@ const PickerBase = kind({
 		max: ({children}) => children && children.length ? children.length - 1 : 0,
 		children: ({children, marqueeDisabled}) => React.Children.map(children, (child) => {
 			return <PickerItem marqueeDisabled={marqueeDisabled}>{child}</PickerItem>;
-		})
+		}),
+		value: ({value, children}) => {
+			const max = children && children.length ? children.length - 1 : 0;
+			if (__DEV__) {
+				validateRange(value, 0, max, 'Picker', '"value"', 'min', 'max index');
+			}
+			return clamp(0, max, value);
+		}
 	},
 
 	render: ({children, max, value, ...rest}) => {
