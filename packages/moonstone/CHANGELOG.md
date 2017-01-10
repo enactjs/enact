@@ -8,6 +8,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/MarqueeDecorator` property `invalidateProps` that specifies which props cause the marquee distance to be invalidated.
 
+### Changed
+
+- `moonstone/Panels.Panels` and variations to defer rendering of Panel body components until transition completes
+
 ## [1.0.0-beta.1] - 2016-12-30
 
 ### Added
