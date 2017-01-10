@@ -42,7 +42,7 @@ storiesOf('VirtualList')
 		' ',
 		'Basic usage of VirtualList',
 		() => {
-			const itemSize = ri.scale(number('item.size', 72));
+			const itemSize = ri.scale(number('itemSize', 72));
 			return (
 				<VirtualList
 					data={items}
