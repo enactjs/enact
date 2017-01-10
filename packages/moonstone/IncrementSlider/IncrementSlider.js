@@ -36,13 +36,13 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 
 		propTypes: /** @lends moonstone/IncrementSlider.IncrementSliderBase.prototype */ {
 			/**
-			 * Background progress, as a percentage.
+			 * Background progress, as a proportion between `0` and `1`.
 			 *
 			 * @type {Number}
 			 * @default 0
 			 * @public
 			 */
-			backgroundPercent: PropTypes.number,
+			backgroundProgress: PropTypes.number,
 
 			/**
 			 * Assign a custom icon for the decrementer. All strings supported by [Icon]{Icon} are
@@ -148,7 +148,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		},
 
 		defaultProps: {
-			backgroundPercent: 0,
+			backgroundProgress: 0,
 			max: 100,
 			min: 0,
 			pressed: false,

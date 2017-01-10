@@ -21,7 +21,7 @@ storiesOf('Slider')
 		'Basic usage of Slider',
 		() => (
 			<ChangeableSlider
-				backgroundPercent={number('backgroundPercent', Slider.defaultProps.backgroundPercent, {range: true, min: 0, max: 100})}
+				backgroundProgress={number('backgroundProgress', Slider.defaultProps.backgroundProgress, {range: true, min: 0, max: 1, step: 0.01})}
 				detachedKnob={boolean('detachedKnob', false)}
 				disabled={boolean('disabled', Slider.defaultProps.disabled)}
 				max={number('max', Slider.defaultProps.max)}

@@ -16,7 +16,7 @@ storiesOf('IncrementSlider')
 		'Basic usage of IncrementSlider',
 		() => (
 			<ChangeableSlider
-				backgroundPercent={number('backgroundPercent', ChangeableSlider.defaultProps.backgroundPercent, {range: true, min: 0, max: 100})}
+				backgroundProgress={number('backgroundProgress', ChangeableSlider.defaultProps.backgroundProgress, {range: true, min: 0, max: 1, step: 0.01})}
 				incrementIcon={select('incrementIcon', ['', 'plus'])}
 				decrementIcon={select('decrementIcon', ['', 'minus'])}
 				disabled={boolean('disabled', ChangeableSlider.defaultProps.disabled)}

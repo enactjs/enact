@@ -12,8 +12,9 @@ import clamp from 'ramda/src/clamp';
 import React, {PropTypes} from 'react';
 import {forward} from '@enact/core/handle';
 
+import {validateRange} from '../validators';
+
 import {
-	computeProportionBackground,
 	computeProportionProgress,
 	computeBarTransform,
 	computeKnobTransform
@@ -62,9 +63,7 @@ const defaultConfig = {
 };
 
 // Set-up event forwarding
-const
-	forwardChange      = forward('onChange'),
-	forwardMouseMove   = forward('onMouseMove'),
+const forwardMouseMove = forward('onMouseMove'),
 	forwardMouseLeave  = forward('onMouseLeave');
 
 /**
@@ -79,18 +78,18 @@ const
  * @private
  */
 const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	return class extends React.Component {
+	return class SliderDecoratorClass extends React.Component {
 		static displayName = 'SliderDecorator';
 
 		static propTypes = /** @lends moonstone/internal/SliderDecorator.SliderDecorator.prototype */{
 			/**
-			 * Background progress, as a percentage.
+			 * Background progress, as a proportion between `0` and `1`.
 			 *
 			 * @type {Number}
 			 * @default 0
 			 * @public
 			 */
-			backgroundPercent: PropTypes.number,
+			backgroundProgress: PropTypes.number,
 
 			/**
 			 * The slider can change its behavior to have the knob follow the cursor as it moves
@@ -186,19 +185,29 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.state = {
 				value: clamp(this.normalizedMin, this.normalizedMax, props.value)
 			};
+			if (__DEV__) {
+				validateRange(props.value, props.min, props.max, SliderDecoratorClass.displayName);
+				validateRange(props.backgroundProgress, 0, 1, SliderDecoratorClass.displayName,
+					'backgroundProgress', 'min', 'max');
+			}
 		}
 
 		componentDidMount () {
 			this.updateUI(this.state.value);
 		}
 
-		componentWillReceiveProps ({min, max, value: _value}) {
+		componentWillReceiveProps ({backgroundProgress, min, max, value: _value}) {
 			if ((min !== this.props.min) || (max !== this.props.max) ||
 					(_value !== this.state.value)) {
 				this.normalizedMax = max != null ? max : Wrapped.defaultProps.max;
 				this.normalizedMin = min != null ? min : Wrapped.defaultProps.min;
 				const value = clamp(this.normalizedMin, this.normalizedMax, _value);
 				this.setState({value});
+			}
+			if (__DEV__) {
+				validateRange(_value, min, max, SliderDecoratorClass.displayName);
+				validateRange(backgroundProgress, 0, 1, SliderDecoratorClass.displayName,
+					'backgroundProgress', 'min', 'max');
 			}
 		}
 
@@ -253,12 +262,11 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		updateUI = (value) => {
 			// intentionally breaking encapsulation to avoid having to specify multiple refs
 			const {barNode, knobNode, loaderNode, node} = this.sliderBarNode;
-			const {backgroundPercent, vertical} = this.props;
-			const proportionBackground = computeProportionBackground({backgroundPercent});
+			const {backgroundProgress, vertical} = this.props;
 			const proportionProgress = computeProportionProgress({value, max: this.normalizedMax, min: this.normalizedMin});
 			const knobProgress = this.knobPosition != null ? this.knobPosition : proportionProgress;
 
-			loaderNode.style.transform = computeBarTransform(proportionBackground, vertical);
+			loaderNode.style.transform = computeBarTransform(backgroundProgress, vertical);
 			barNode.style.transform = computeBarTransform(proportionProgress, vertical);
 			// If we know the knob should be in a custom place, use that place; otherwise, sync it with the progress.
 			knobNode.style.transform = computeKnobTransform(knobProgress, vertical, node);

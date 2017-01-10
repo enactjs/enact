@@ -1,6 +1,5 @@
 import clamp from 'ramda/src/clamp';
 
-const computeProportionBackground = ({backgroundPercent}) => backgroundPercent / 100;
 const computeProportionProgress = ({value, max, min}) => (value - min) / (max - min);
 const computeBarTransform = (_proportion = 0, vertical) => {
 	const proportion = clamp(0, 1, _proportion);
@@ -19,7 +18,6 @@ const computeKnobTransform = (_proportion, vertical, node) => {
 };
 
 export {
-	computeProportionBackground,
 	computeProportionProgress,
 	computeBarTransform,
 	computeKnobTransform

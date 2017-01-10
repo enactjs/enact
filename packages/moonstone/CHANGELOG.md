@@ -14,6 +14,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonstone/ProgressBar` properties `progress` and `backgroundProgress` to accept a number between 0 and 1.
+- `moonstone/Slider` and `moonstone/IncrementSlider` property `backgroundPercent` to `backgroundProgress` which now accepts a number between 0 and 1.
 
 ### Removed
 

@@ -215,7 +215,7 @@ describe('Slider Specs', () => {
 	});
 
 	// Note: This was causing a value out of bounds error, but should not have as
-	// backgroundPercent is percent, not an absolute value
+	// backgroundProgress is percent, not an absolute value
 	it('Should not change background position when min changed', function () {
 		const node = document.body.appendChild(document.createElement('div'));
 		const slider = mount(
@@ -224,7 +224,7 @@ describe('Slider Specs', () => {
 				max={100}
 				value={0}
 				step={1}
-				backgroundPercent={30}
+				backgroundProgress={0.3}
 				style={{width: '100px'}}
 			/>,
 			{attachTo: node}

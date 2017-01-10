@@ -11,10 +11,7 @@ import React, {PropTypes} from 'react';
 import {Spottable} from '@enact/spotlight';
 
 import SliderDecorator from '../internal/SliderDecorator';
-import {
-	computeProportionBackground,
-	computeProportionProgress
-} from '../internal/SliderDecorator/util';
+import {computeProportionProgress} from '../internal/SliderDecorator/util';
 
 import {SliderBarFactory} from './SliderBar';
 import componentCss from './Slider.less';
@@ -36,13 +33,13 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 
 		propTypes: /** @lends moonstone/Slider.SliderBase.prototype */{
 			/**
-			 * Background progress, as a percentage.
+			 * Background progress, as a proportion between `0` and `1`.
 			 *
 			 * @type {Number}
 			 * @default 0
 			 * @public
 			 */
-			backgroundPercent: PropTypes.number,
+			backgroundProgress: PropTypes.number,
 
 			/**
 			 * The slider can change its behavior to have the knob follow the cursor as it moves
@@ -175,7 +172,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		},
 
 		defaultProps: {
-			backgroundPercent: 0,
+			backgroundProgress: 0,
 			detachedKnob: false,
 			max: 100,
 			min: 0,
@@ -193,19 +190,17 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 
 		computed: {
 			className: ({pressed, vertical, styler}) => styler.append({pressed, vertical, horizontal: !vertical}),
-			proportionBackgroundProgress: computeProportionBackground,
 			proportionProgress: computeProportionProgress
 		},
 
-		render: ({disabled, inputRef, max, min, onChange, onMouseMove, proportionBackgroundProgress, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, value, vertical, ...rest}) => {
-			delete rest.backgroundPercent;
+		render: ({disabled, inputRef, max, min, onChange, onMouseMove, backgroundProgress, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, value, vertical, ...rest}) => {
 			delete rest.detachedKnob;
 			delete rest.pressed;
 
 			return (
 				<div {...rest} disabled={disabled} ref={sliderRef}>
 					<SliderBar
-						proportionBackgroundProgress={proportionBackgroundProgress}
+						proportionBackgroundProgress={backgroundProgress}
 						proportionProgress={proportionProgress}
 						ref={sliderBarRef}
 						vertical={vertical}
