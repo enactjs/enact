@@ -11,7 +11,7 @@ import {is} from '../keymap';
  *  const submit = (e) => {
  *		console.log('Submitting the data!');
  *  };
- *	const submitOnEnter = handle(handle.forKeyCode(13), handle.stop, submit);
+ *	const submitOnEnter = handle(handle.forKey('enter'), handle.stop, submit);
  *	return (<input onKeyPress={submitOnEnter}>);
  *
  * @method	handle
@@ -40,10 +40,10 @@ const handle = (...handlers) => (...args) => reduce((acc, handler) => {
  * extra args, to the handlers.
  *
  * @example
- *	import {withArgs, forKeyCode, stop} from '@enact/core/handle';
+ *	import {withArgs, forKey, stop} from '@enact/core/handle';
  *	kind({
  *		computed: {
- *			onSubmit: withArgs(forKeyCode(13), stop, (e, props) => {
+ *			onSubmit: withArgs(forKey('enter'), stop, (e, props) => {
  *				// block submission for blank data unless the prop allows it
  *				if (e.target.value === '' && !props.allowBlank) return true;
  *				console.log('Submitting the data!');

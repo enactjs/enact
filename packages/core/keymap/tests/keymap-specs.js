@@ -29,8 +29,7 @@ describe('keymap', () => {
 		const expected = true;
 		const actual = keymap.is('testEnter', 13) && keymap.is('testEnter', 16777221);
 
-		keymap.remove('testEnter', 13);
-		keymap.remove('testEnter', 16777221);
+		keymap.remove('testEnter', [13, 16777221]);
 
 		expect(actual).to.equal(expected);
 	});
@@ -87,20 +86,18 @@ describe('keymap', () => {
 		keymap.add('testEnter', 13);
 
 		const expected = true;
-		const actual = keymap.is('testEnter', 13);
+		const actual = keymap.is('TeStEnTeR', 13);
 
 		keymap.remove('testEnter', 13);
 
 		expect(actual).to.equal(expected);
 	});
 
-	it('should not add entry a falsey name', function () {
+	it('should not add entry with a falsey name', function () {
 		keymap.add('', 13);
 
 		const expected = false;
 		const actual = keymap.is('', 13);
-
-		keymap.remove('', 13);
 
 		expect(actual).to.equal(expected);
 	});

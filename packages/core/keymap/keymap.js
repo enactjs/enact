@@ -96,10 +96,10 @@ const removeOne = curry(function (name, keyCode) {
 	name = toLowerCase(name);
 	if (name in map) {
 		const keys = map[name];
-		if (keys.length === 0) {
+		const index = keys.indexOf(keyCode);
+		if (index === -1) {
 			delete map[name];
 		} else {
-			const index = keys.indexOf(keyCode);
 			keys.splice(index, 1);
 		}
 	}

@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `core/keymap` module to abstract keyboard key codes behind common names (e.g. 'up' and 'down')
+
 ## [1.0.0-beta.1] - 2016-12-30
 
 ### Added
