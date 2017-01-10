@@ -142,6 +142,10 @@ const ExpandablePickerBase = kind({
 		wrap: React.PropTypes.bool
 	},
 
+	defaultProps: {
+		value: 0
+	},
+
 	computed: {
 		label: ({children, value}) => React.Children.toArray(children)[value],
 		onChange: ({onChange, onClose, value}) => {

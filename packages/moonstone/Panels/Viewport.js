@@ -75,6 +75,9 @@ const ViewportBase = kind({
 	},
 
 	computed: {
+		children: ({children}) => React.Children.map(children, (child, index) => {
+			return React.cloneElement(child, {'data-index': index});
+		}),
 		handleAppear: handle(forward('onAppear'), spotPanel),
 		handleEnter: handle(forward('onEnter'), spotPanel),
 		handleTransition: handle(forward('onTransition'), Spotlight.resume),
