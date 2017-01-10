@@ -18,7 +18,7 @@ import IncrementSliderButton from './IncrementSliderButton';
 import componentCss from './IncrementSlider.less';
 
 const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
-	const SliderBase = Spottable(SliderBaseFactory({css}));
+	const Slider = Spottable(SliderBaseFactory({css}));
 
 	/**
 	 * {@link moonstone/IncrementSlider.IncrementSliderBase} is a stateless Slider
@@ -180,7 +180,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 				>
 					{decrementIcon}
 				</IncrementSliderButton>
-				<SliderBase {...rest} className={css.slider} />
+				<Slider {...rest} className={css.slider} />
 				<IncrementSliderButton
 					className={css.incrementButton}
 					disabled={incrementDisabled}
@@ -209,11 +209,9 @@ const IncrementSliderFactory = factory((config) => {
 	 * @public
 	 */
 	return Pressable(
-		Spottable(
-			SliderDecorator(
-				{handlesIncrements: true},
-				Base
-			)
+		SliderDecorator(
+			{handlesIncrements: true},
+			Base
 		)
 	);
 });
