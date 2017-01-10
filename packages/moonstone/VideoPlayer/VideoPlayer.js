@@ -749,7 +749,7 @@ const VideoPlayerBase = class extends React.Component {
 						</div>
 
 						{noSlider ? null : <MediaSlider
-							backgroundPercent={this.state.percentageLoaded}
+							backgroundProgress={this.state.percentageLoaded}
 							value={this.state.percentagePlayed}
 							onChange={this.onSliderChange}
 						/>}

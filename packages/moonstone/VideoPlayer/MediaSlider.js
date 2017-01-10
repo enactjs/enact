@@ -21,13 +21,13 @@ const MediaSliderBase = kind({
 
 	propTypes: /** @lends moonstone/VideoPlayer.MediaSlider.prototype */ {
 		/**
-		 * Background progress, as a percentage.
+		 * Background progress, as a proportion from `0` to `1`
 		 *
 		 * @type {Number}
 		 * @default 0
 		 * @public
 		 */
-		backgroundPercent: React.PropTypes.number,
+		backgroundProgress: React.PropTypes.number,
 
 		/**
 		 * When `true`, the component is shown as disabled and does not generate events
@@ -72,7 +72,7 @@ const MediaSliderBase = kind({
 	)
 });
 
-const MediaSlider = onlyUpdateForKeys(['backgroundPercent', 'value'])(MediaSliderBase);
+const MediaSlider = onlyUpdateForKeys(['backgroundProgress', 'value'])(MediaSliderBase);
 
 export default MediaSlider;
 export {
