@@ -5,13 +5,14 @@
  */
 
 import kind from '@enact/core/kind';
-import {checkDefaultBounds} from '@enact/ui/validators/PropTypeValidators';
 import clamp from 'ramda/src/clamp';
 import React, {PropTypes} from 'react';
 
+import {validateRange} from '../internal/validators';
+
 import css from './ProgressBar.less';
 
-const progressToPercent = (value, max, min) => clamp(min, max, (value / max) * 100) + '%';
+const progressToPercent = (value) => (clamp(0, 1, value) * 100) + '%';
 
 /**
  * {@link moonstone/ProgressBar.ProgressBar} is a component that can display the progress of a
@@ -28,42 +29,24 @@ const ProgressBarBase = kind({
 
 	propTypes: /** @lends moonstone/ProgressBar.ProgressBar.prototype */ {
 		/**
-		* The height/width of the loaded portion of the progress bar. Valid values are
-		* between `min` and `max`.
+		* The proportion of the loaded portion of the progress bar. Valid values are
+		* between `0` and `1`.
 		*
 		* @type {Number}
 		* @default 0
 		* @public
 		*/
-		backgroundProgress: checkDefaultBounds,
+		backgroundProgress: PropTypes.number,
 
 		/**
-		* The maximum value of the progress bar.
-		*
-		* @type {Number}
-		* @default 100
-		* @public
-		*/
-		max: PropTypes.number,
-
-		/**
-		* The minimum value of the progress bar.
+		* The proportion of the filled portion of the progress bar. Valid values are
+		* between `0` and `1`.
 		*
 		* @type {Number}
 		* @default 0
 		* @public
 		*/
-		min: PropTypes.number,
-
-		/**
-		* The height/width of the filled portion of the progress bar. Valid values are
-		* between `min` and `max`.
-		*
-		* @type {Number}
-		* @default 0
-		* @public
-		*/
-		progress: checkDefaultBounds,
+		progress: PropTypes.number,
 
 		/**
 		* If `true` the progress bar will be oriented vertically.
@@ -77,8 +60,6 @@ const ProgressBarBase = kind({
 
 	defaultProps: {
 		backgroundProgress: 0,
-		max: 100,
-		min: 0,
 		progress: 0,
 		vertical: false
 	},
@@ -90,14 +71,21 @@ const ProgressBarBase = kind({
 
 	computed: {
 		className: ({vertical, styler}) => styler.append({vertical}),
-		progress: ({progress, max, min}) => progressToPercent(progress, max, min),
-		backgroundProgress: ({backgroundProgress, max, min}) => progressToPercent(backgroundProgress, max, min),
-		progressCssProp: ({vertical}) => (vertical ? 'height' : 'width')
+		progress: ({progress}) => progressToPercent(progress),
+		backgroundProgress: ({backgroundProgress}) => progressToPercent(backgroundProgress),
+		progressCssProp: ({vertical}) => (vertical ? 'height' : 'width'),
+		validate: ({backgroundProgress, progress}) => {
+			if (__DEV__) {
+				validateRange(backgroundProgress, 0, 1, 'ProgressBar', 'backgroundProgress', 'min', 'max');
+				validateRange(progress, 0, 1, 'ProgressBar', 'progress', 'min', 'max');
+			}
+		}
 	},
 
 	render: ({backgroundProgress, progress, progressCssProp, ...rest}) => {
 		delete rest.max;
 		delete rest.min;
+		delete rest.validate;
 		delete rest.vertical;
 
 		return (
