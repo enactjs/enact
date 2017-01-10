@@ -14,7 +14,6 @@ const
 		item: {
 			position: 'absolute',
 			width: '100%',
-			height: ri.scale(72) + 'px',
 			borderBottom: ri.scale(2) + 'px solid #202328',
 			boxSizing: 'border-box'
 		},
@@ -24,11 +23,14 @@ const
 	},
 	items = [],
 	// eslint-disable-next-line enact/prop-types, enact/display-name
-	renderItem = ({data, index, key}) => (
-		<Item key={key} style={style.item}>
-			{data[index]}
-		</Item>
-	);
+	renderItem = (size) => ({data, index, key}) => {
+		const itemStyle = {height: size + 'px', ...style.item};
+		return (
+			<Item key={key} style={itemStyle}>
+				{data[index]}
+			</Item>
+		);
+	};
 
 for (let i = 0; i < 1000; i++) {
 	items.push('Item ' + ('00' + i).slice(-3));
@@ -39,16 +41,19 @@ storiesOf('VirtualList')
 	.addWithInfo(
 		' ',
 		'Basic usage of VirtualList',
-		() => (
-			<VirtualList
-				data={items}
-				dataSize={number('dataSize', items.length)}
-				itemSize={ri.scale(number('itemSize', 72))}
-				spacing={ri.scale(number('spacing', 0))}
-				onScrollStart={action('onScrollStart')}
-				onScrollStop={action('onScrollStop')}
-				style={style.list}
-				component={renderItem}
-			/>
-		)
+		() => {
+			const itemSize = ri.scale(number('item.size', 72));
+			return (
+				<VirtualList
+					data={items}
+					dataSize={number('dataSize', items.length)}
+					itemSize={itemSize}
+					spacing={ri.scale(number('spacing', 0))}
+					onScrollStart={action('onScrollStart')}
+					onScrollStop={action('onScrollStop')}
+					style={style.list}
+					component={renderItem(itemSize)}
+				/>
+			);
+		}
 	);
