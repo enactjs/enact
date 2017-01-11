@@ -12,7 +12,7 @@ import React, {PropTypes} from 'react';
 /**
  * Default config for {@link ui/Pressable.Pressable}
  *
- * @memberof ui/Pressable
+ * @memberof ui/Pressable.Pressable
  * @hocconfig
  */
 const defaultConfig = {
@@ -21,7 +21,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'onMouseDown'
-	 * @memberof ui/Pressable.defaultConfig
+	 * @memberof ui/Pressable.Pressable.defaultConfig
 	 */
 	depress: 'onMouseDown',
 
@@ -30,7 +30,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'onMouseLeave'
-	 * @memberof ui/Pressable.defaultConfig
+	 * @memberof ui/Pressable.Pressable.defaultConfig
 	 */
 	leave: 'onMouseLeave',
 
@@ -39,7 +39,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'onMouseUp'
-	 * @memberof ui/Pressable.defaultConfig
+	 * @memberof ui/Pressable.Pressable.defaultConfig
 	 */
 	release: 'onMouseUp',
 
@@ -48,7 +48,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'pressed'
-	 * @memberof ui/Pressable.defaultConfig
+	 * @memberof ui/Pressable.Pressable.defaultConfig
 	 */
 	prop: 'pressed'
 };
@@ -61,7 +61,7 @@ const defaultConfig = {
  *
  * @class Pressable
  * @memberof ui/Pressable
- * @ui
+ * @hoc
  * @public
  */
 const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
@@ -71,7 +71,7 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 	const forwardRelease = forward(release);
 
 	return class Pressable extends React.Component {
-		static propTypes = /** @lends ui/Pressable.Pressable */ {
+		static propTypes = /** @lends ui/Pressable.Pressable.prototype */ {
 			/**
 			 * Whether or not the component is in a "pressed" state when first rendered.
 			 * *Note that this property name can be changed by the config. By default it is `defaultPressed`.
@@ -116,7 +116,7 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			forwardRelease(ev, this.props);
 		}
 
-		onMouseLeave = (ev) => {
+		onMouseLeave = () => {
 			this.setState({pressed: false});
 		}
 

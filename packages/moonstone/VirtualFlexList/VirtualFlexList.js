@@ -3,7 +3,7 @@
  * {@link moonstone/VirtualFlexList.VirtualFlexListBase} components.
  * The default export is {@link moonstone/VirtualFlexList.VirtualFlexList}.
  *
- * @module moonstone/VirtualFlexList/VirtualFlexList
+ * @module moonstone/VirtualFlexList
  */
 
 import classNames from 'classnames';
@@ -118,7 +118,7 @@ const itemsShape = PropTypes.oneOfType([
 ]);
 
 /**
- * {@link module:@enact/moonstone/VirtualFlexList~VirtualFlexList} is a VirtualFlexList with Moonstone styling
+ * {@link moonstone/VirtualFlexList~VirtualFlexList} is a VirtualFlexList with Moonstone styling
  * which has a variable width or height.
  *
  * @class VirtualFlexList

@@ -146,9 +146,9 @@ const ButtonBase = kind({
  * @class Button
  * @memberof moonstone/Button
  * @mixes i18n/Uppercase.Uppercase
- * @mixes moonstone/TooltipDecorator
- * @mixes spotlight/Spottable
- * @mixes ui/Pressable
+ * @mixes moonstone/TooltipDecorator.TooltipDecorator
+ * @mixes spotlight.Spottable
+ * @mixes ui/Pressable.Pressable
  * @ui
  * @public
  */

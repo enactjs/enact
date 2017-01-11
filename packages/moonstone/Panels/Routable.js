@@ -1,66 +1,91 @@
-import {hoc, kind} from '@enact/core';
+import hoc from '@enact/core/hoc';
+import invariant from 'invariant';
+import kind from '@enact/core/kind';
 import React from 'react';
 
 import {Router, propTypes, toSegments} from './Router';
 
 /**
+ * Default config for {@link moonstone/Panels.Routable}
+ *
+ * @memberof moonstone/Panels.Routable
+ * @hocconfig
+ */
+const defaultConfig = {
+	/**
+	 * The event callback invoked when navigating back up the path
+	 *
+	 * @type {Function}
+	 * @required
+	 * @memberof moonstone/Panels.Routable.defaultConfig
+	 */
+	navigate: null
+};
+
+/**
  * Adds support for Routes as children of Panels which are selected via `path` instead of the usual
- * flat array of Panels.
+ * flat array of Panels. When using `Routable` you must specify the `navigate` config option.
  *
  * @class Routable
  * @memberof moonstone/Panels
  * @hoc
  * @public
  */
-const Routable = hoc((config, Wrapped) => kind({
-	name: 'Routable',
+const Routable = hoc(defaultConfig, (config, Wrapped) => {
+	const {navigate} = config;
 
-	propTypes: /** @lends moonstone/Panels.Routable.prototype */ {
-		/**
-		 * Path of this element.
-		 *
-		 * May either be a URI-style path (`'/app/home/settings'`) or an array
-		 * of strings (`['app', 'home', 'settings']`)
-		 *
-		 * @type {String|String[]}
-		 * @public
-		 */
-		path: propTypes.path.isRequired,
+	invariant(navigate, 'navigate must be specified with Routable');
 
-		/**
-		 * Decorates payload with path for `index`
-		 *
-		 * @type {Function}
-		 */
-		onSelectBreadcrumb: React.PropTypes.func
-	},
+	return kind({
+		name: 'Routable',
 
-	computed: {
-		// Determines the `index` as 1 less than the number of segments in the path
-		index: ({path}) => toSegments(path).length - 1,
+		propTypes: /** @lends moonstone/Panels.Routable.prototype */ {
+			/**
+			 * Path to the active panel
+			 *
+			 * May either be a URI-style path (`'/app/home/settings'`) or an array
+			 * of strings (`['app', 'home', 'settings']`)
+			 *
+			 * @type {String|String[]}
+			 * @public
+			 */
+			path: propTypes.path.isRequired,
 
-		// Adds `path` to the payload of onSelectBreadcrumb in the same format (String, or String[])
-		// as the current path prop.
-		onSelectBreadcrumb: ({path, onSelectBreadcrumb: handler}) => {
-			if (handler) {
-				return ({index, ...rest}) => {
-					const p = toSegments(path).slice(0, index + 1);
-					handler({
-						...rest,
-						index,
-						path: Array.isArray(path) ? p : '/' + p.join('/')
-					});
-				};
+			/**
+			 * Decorates payload with path for `index`
+			 *
+			 * @type {Function}
+			 */
+			[navigate]: React.PropTypes.func
+		},
+
+		computed: {
+			// Determines the `index` as 1 less than the number of segments in the path
+			index: ({path}) => toSegments(path).length - 1,
+
+			// Adds `path` to the payload of navigate handler in the same format (String, or String[])
+			// as the current path prop.
+			[navigate]: ({path, [navigate]: handler}) => {
+				if (handler) {
+					return ({index, ...rest}) => {
+						const p = toSegments(path).slice(0, index + 1);
+						handler({
+							...rest,
+							index,
+							path: Array.isArray(path) ? p : '/' + p.join('/')
+						});
+					};
+				}
 			}
-		}
-	},
+		},
 
-	render: ({children, index, path, ...rest}) => (
-		<Router {...rest} path={path} component={Wrapped} index={index}>
-			{children}
-		</Router>
-	)
-}));
+		render: ({children, index, path, ...rest}) => (
+			<Router {...rest} path={path} component={Wrapped} index={index}>
+				{children}
+			</Router>
+		)
+	});
+});
 
 export default Routable;
 export {Routable};

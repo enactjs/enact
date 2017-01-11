@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
+## [1.0.0-beta.1] - 2016-12-30
+
+### Fixed
+
+- `i18n/I18nDecorator` issue causing multiple requests for ilibmanifest.
+
 ## [1.0.0-alpha.5] - 2016-12-16
 
 No changes.
