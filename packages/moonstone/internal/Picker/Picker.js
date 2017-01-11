@@ -392,14 +392,15 @@ const Picker = class extends React.Component {
 		const decrementerDisabled = this.isButtonDisabled(step * -1);
 		const incrementerDisabled = this.isButtonDisabled(step);
 		const classes = this.determineClasses(decrementerDisabled, incrementerDisabled);
-		let arranger;
 
+		let arranger;
 		if (width && !disabled) {
 			arranger = orientation === 'vertical' ? SlideTopArranger : SlideLeftArranger;
 		}
-		let sizingChars;
-		if (typeof width === 'number') {
-			sizingChars = '0'.repeat(width);
+
+		let sizingPlaceholder = null;
+		if (typeof width === 'number' && width > 0) {
+			sizingPlaceholder = <div className={css.sizingPlaceholder}>{ '0'.repeat(width) }</div>;
 		}
 
 		return (
@@ -415,7 +416,7 @@ const Picker = class extends React.Component {
 					icon={incrementIcon}
 				/>
 				<div className={css.valueWrapper}>
-					<div className={css.sizingPlaceholder}>{sizingChars}</div>
+					{sizingPlaceholder}
 					<PickerViewManager
 						arranger={arranger}
 						duration={100}

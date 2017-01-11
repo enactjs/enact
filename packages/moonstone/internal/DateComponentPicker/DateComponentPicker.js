@@ -95,7 +95,6 @@ const DateComponentPickerBase = kind({
 				reverse={reverse}
 				step={1}
 				value={value}
-				width="small"
 				wrap={wrap}
 			>
 				{children}
