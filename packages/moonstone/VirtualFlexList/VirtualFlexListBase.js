@@ -6,6 +6,7 @@
 
 import React, {Component, PropTypes} from 'react';
 
+import {is} from '@enact/core/keymap';
 import {Spotlight, SpotlightContainerDecorator} from '@enact/spotlight';
 
 import Positionable from './Positionable';
@@ -14,10 +15,10 @@ const
 	dataContainerDisabledAttribute = 'data-container-disabled',
 	dataContainerIdAttribute = 'data-container-id',
 	dataIndexAttribute = 'data-index',
-	keyLeft	 = 37,
-	keyUp	 = 38,
-	keyRight = 39,
-	keyDown	 = 40;
+	isDown = is('down'),
+	isLeft = is('left'),
+	isRight = is('right'),
+	isUp = is('up');
 
 /**
  * The shape for {@link moonstone/VirtualFlexList.dataSize}
@@ -688,10 +689,10 @@ class VirtualFlexListCore extends Component {
 		let isSelfOnly = false;
 
 		if (this.props.flexAxis === 'row') {
-			if (keyCode === keyUp && canMoveBackward || keyCode === keyDown && canMoveForward) {
+			if (isUp(keyCode) && canMoveBackward || isDown(keyCode) && canMoveForward) {
 				isSelfOnly = true;
 			}
-		} else if (keyCode === keyLeft && canMoveBackward || keyCode === keyRight && canMoveForward) {
+		} else if (isLeft(keyCode) && canMoveBackward || isRight(keyCode) && canMoveForward) {
 			isSelfOnly = true;
 		}
 

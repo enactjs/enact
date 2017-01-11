@@ -7,6 +7,7 @@
 
 import React, {Component, PropTypes} from 'react';
 
+import {is} from '@enact/core/keymap';
 import {Spotlight, SpotlightContainerDecorator} from '@enact/spotlight';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 
@@ -15,10 +16,10 @@ import {dataIndexAttribute, Scrollable} from '../Scroller/Scrollable';
 const
 	dataContainerMutedAttribute = 'data-container-muted',
 	dataContainerIdAttribute = 'data-container-id',
-	keyLeft	 = 37,
-	keyUp	 = 38,
-	keyRight = 39,
-	keyDown	 = 40,
+	isDown = is('down'),
+	isLeft = is('left'),
+	isRight = is('right'),
+	isUp = is('up'),
 	nop = () => {};
 
 /**
@@ -624,10 +625,10 @@ class VirtualListCore extends Component {
 		let isSelfOnly = false;
 
 		if (isPrimaryDirectionVertical) {
-			if (keyCode === keyUp && canMoveBackward || keyCode === keyDown && canMoveForward) {
+			if (isUp(keyCode) && canMoveBackward || isDown(keyCode) && canMoveForward) {
 				isSelfOnly = true;
 			}
-		} else if (keyCode === keyLeft && canMoveBackward || keyCode === keyRight && canMoveForward) {
+		} else if (isLeft(keyCode) && canMoveBackward || isRight(keyCode) && canMoveForward) {
 			isSelfOnly = true;
 		}
 

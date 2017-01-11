@@ -10,15 +10,24 @@
  */
 
 import Accelerator from '@enact/core/Accelerator';
+import {is} from '@enact/core/keymap';
 import {startJob} from '@enact/core/jobs';
 import {spottableClass} from './spottable';
 
-const spotlightDirections = {
-	'37': 'left',
-	'38': 'up',
-	'39': 'right',
-	'40': 'down'
+const isDown = is('down');
+const isEnter = is('enter');
+const isLeft = is('left');
+const isRight = is('right');
+const isUp = is('up');
+const getDirection = function (keyCode) {
+	return	isDown(keyCode) && 'down' ||
+			isLeft(keyCode) && 'left' ||
+			isRight(keyCode) && 'right' ||
+			isUp(keyCode) && 'up';
 };
+const isPointerShow = is('pointerShow');
+const isPointerHide = is('pointerHide');
+
 const spotlightRootContainerName = 'spotlightRootDecorator';
 const SpotlightAccelerator = new Accelerator();
 const Spotlight = (function() {
@@ -47,35 +56,12 @@ const Spotlight = (function() {
 		navigableFilter: null
 	};
 
-	/**
-	* constants
-	*/
-	const _directions = spotlightDirections;
-
 	const _reverseDirections = {
 		'left': 'right',
 		'up': 'down',
 		'right': 'left',
 		'down': 'up'
 	};
-
-	const _enterKeyCodes = [13, 16777221];
-
-	/**
-	 * The key code of the pointer show event.
-	 *
-	 * @type {Number}
-	 * @default 1536
-	 */
-	const _pointerShowKeyCode = 1536;
-
-	/**
-	 * The key code of the pointer hide event.
-	 *
-	 * @type {Number}
-	 * @default 1537
-	 */
-	const _pointerHideKeyCode = 1537;
 
 	const _containerPrefix = 'container-';
 
@@ -915,7 +901,7 @@ const Spotlight = (function() {
 
 	function onAcceleratedKeyDown (evt) {
 		let currentFocusedElement = getCurrent();
-		const direction = _directions[evt.keyCode];
+		const direction = getDirection(evt.keyCode);
 
 		if (!currentFocusedElement) {
 			if (_lastContainerId) {
@@ -942,17 +928,12 @@ const Spotlight = (function() {
 	}
 
 	function onKeyUp (evt) {
-		if (shouldPreventNavigation()) {
-			return;
-		}
-
 		const keyCode = evt.keyCode;
-		if (!_directions[keyCode] && _enterKeyCodes.indexOf(keyCode) >= 0) {
-			return;
-		}
 
-		SpotlightAccelerator.reset();
-		_5WayKeyHold = false;
+		if (!shouldPreventNavigation() && !getDirection(keyCode) && !isEnter(keyCode)) {
+			SpotlightAccelerator.reset();
+			_5WayKeyHold = false;
+		}
 	}
 
 	function onKeyDown (evt) {
@@ -961,47 +942,44 @@ const Spotlight = (function() {
 		}
 
 		const keyCode = evt.keyCode;
-		const direction = _directions[keyCode];
+		const direction = getDirection(keyCode);
 
 		if (!direction && !(
-				_pointerHideKeyCode === keyCode ||
-				_pointerShowKeyCode === keyCode ||
-				_enterKeyCodes.indexOf(keyCode)
+				isPointerHide(keyCode) ||
+				isPointerShow(keyCode) ||
+				isEnter(keyCode)
 			)
 		) {
 			return;
 		}
 
-		switch (keyCode) {
-			case _pointerHideKeyCode:
-				startJob('hidePointer', () => {
-					_pointerMode = false;
-					if (!getCurrent() && _lastContainerId) {
-						Spotlight.focus(getContainerLastFocusedElement(_lastContainerId));
-					}
-				}, 30); // 30 is semi-arbitrary, to account for the time it takes for the following
-						// directional key event to fire, and to prevent momentary spotting of the
-						// last focused item - needs to be a value large enough to account for the
-						// potentially-trailing event, but not too large that another unrelated
-						// event can be fired inside the window
-				break;
-			case _pointerShowKeyCode:
-				_pointerMode = true;
-				break;
-			default:
+		if (isPointerHide(keyCode)) {
+			// 30ms is semi-arbitrary, to account for the time it takes for the following
+			// directional key event to fire, and to prevent momentary spotting of the
+			// last focused item - needs to be a value large enough to account for the
+			// potentially-trailing event, but not too large that another unrelated
+			// event can be fired inside the window
+			startJob('hidePointer', () => {
 				_pointerMode = false;
-				if (!_pause) {
-					if (getCurrent()) {
-						SpotlightAccelerator.processKey(evt, onAcceleratedKeyDown);
-					} else if (!spotNextFromPoint(direction, {x: _pointerX, y: _pointerY}, _lastContainerId)) {
-						Spotlight.focus(getContainerLastFocusedElement(_lastContainerId));
-					}
-					_5WayKeyHold = true;
+				if (!getCurrent() && _lastContainerId) {
+					Spotlight.focus(getContainerLastFocusedElement(_lastContainerId));
 				}
-				break;
+			}, 30);
+		} else if (isPointerShow(keyCode)) {
+			_pointerMode = true;
+		} else {
+			_pointerMode = false;
+			if (!_pause) {
+				if (getCurrent()) {
+					SpotlightAccelerator.processKey(evt, onAcceleratedKeyDown);
+				} else if (!spotNextFromPoint(direction, {x: _pointerX, y: _pointerY}, _lastContainerId)) {
+					Spotlight.focus(getContainerLastFocusedElement(_lastContainerId));
+				}
+				_5WayKeyHold = true;
+			}
 		}
 
-		if (_directions[keyCode]) {
+		if (direction) {
 			preventDefault(evt);
 		}
 	}
@@ -1348,4 +1326,4 @@ const Spotlight = (function() {
 })();
 
 export default Spotlight;
-export {Spotlight, spotlightRootContainerName, spotlightDirections};
+export {Spotlight, spotlightRootContainerName, getDirection};
