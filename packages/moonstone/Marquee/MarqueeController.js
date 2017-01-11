@@ -71,7 +71,18 @@ const defaultConfig = {
 	 * @default false
 	 * @memberof moonstone/Marquee.MarqueeController.defaultConfig
 	 */
-	startOnFocus: false
+	startOnFocus: false,
+
+	/**
+	 * When `true`, any `onMouseEnter` events that bubble to the controller will start the contained
+	 * Marquee instances. This is useful when a component contains Marquee instances that need to be
+	 * started with sibling components are focused.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @memberof moonstone/Marquee.MarqueeController.defaultConfig
+	 */
+	startOnMouseEnter: false
 };
 
 /**
@@ -84,9 +95,11 @@ const defaultConfig = {
  * @public
  */
 const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
-	const {startOnFocus} = config;
+	const {startOnFocus, startOnMouseEnter} = config;
 	const forwardBlur = forward('onBlur');
 	const forwardFocus = forward('onFocus');
+	const forwardMouseEnter = forward('onMouseEnter');
+	const forwardMouseLeave = forward('onMouseLeave');
 
 	return class extends React.Component {
 		static displayName = 'MarqueeController'
@@ -197,6 +210,22 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			forwardBlur(ev, this.props);
 		}
 
+		/*
+		 * Handler for the MouseEnter event
+		 */
+		handleMouseEnter = (ev) => {
+			this.dispatch('start');
+			forwardMouseEnter(ev, this.props);
+		}
+
+		/*
+		 * Handler for the MouseLeave event
+		 */
+		handleMouseLeave = (ev) => {
+			this.dispatch('stop');
+			forwardMouseLeave(ev, this.props);
+		}
+
 		/**
 		 * Invokes the `action` handler for each synchronized component except the invoking
 		 * `component`.
@@ -260,6 +289,12 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 					...this.props,
 					onBlur: this.handleBlur,
 					onFocus: this.handleFocus
+				};
+			} else if (startOnMouseEnter) {
+				props = {
+					...this.props,
+					onMouseEnter: this.handleMouseEnter,
+					onMouseLeave: this.handleMouseLeave
 				};
 			}
 

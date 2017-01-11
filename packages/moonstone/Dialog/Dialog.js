@@ -8,7 +8,7 @@
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 import Slottable from '@enact/ui/Slottable';
-import {MarqueeDecorator} from '../Marquee';
+import {MarqueeController, MarqueeDecorator} from '../Marquee';
 import Popup from '../Popup';
 import Uppercase from '@enact/i18n/Uppercase';
 import css from './Dialog.less';
@@ -188,7 +188,7 @@ const DialogBase = kind({
  * @ui
  * @public
  */
-const Dialog = Slottable({slots: ['title', 'titleBelow', 'buttons']}, DialogBase);
+const Dialog = Slottable({slots: ['title', 'titleBelow', 'buttons']}, MarqueeController({startOnMouseEnter:true}, DialogBase));
 
 export default Dialog;
 export {Dialog, DialogBase};
