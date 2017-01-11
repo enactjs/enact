@@ -31,7 +31,7 @@ const LabeledItemBase = kind({
 		/**
 		 * The node to be displayed as the main content of the item.
 		 *
-		 * @type {React.node}
+		 * @type {Node}
 		 * @required
 		 * @public
 		 */
@@ -41,7 +41,6 @@ const LabeledItemBase = kind({
 		 * The label to be displayed along with the text.
 		 *
 		 * @type {String|Number}
-		 * @default null
 		 * @public
 		 */
 		label: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
@@ -50,7 +49,6 @@ const LabeledItemBase = kind({
 		 * Icon to be displayed next to the title text.
 		 *
 		 * @type {String}
-		 * @default null
 		 * @public
 		 */
 		titleIcon: PropTypes.string

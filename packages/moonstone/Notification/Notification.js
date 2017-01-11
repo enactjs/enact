@@ -81,7 +81,7 @@ const NotificationBase = kind({
 		 * Types of scrim. It can be either `'transparent'`, `'translucent'`, or `'none'`.
 		 *
 		 * @type {String}
-		 * @default `transparent`
+		 * @default 'transparent'
 		 * @public
 		 */
 		scrimType: React.PropTypes.oneOf(['transparent', 'translucent', 'none'])

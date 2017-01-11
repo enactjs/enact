@@ -37,7 +37,7 @@ const RangePickerBase = kind({
 		/**
 		 * The maximum value selectable by the picker (inclusive).
 		 *
-		 * @type {[Number}
+		 * @type {Number}
 		 * @public
 		 */
 		max: React.PropTypes.number.isRequired,
@@ -45,7 +45,7 @@ const RangePickerBase = kind({
 		/**
 		 * The minimum value selectable by the picker (inclusive).
 		 *
-		 * @type {[Number}
+		 * @type {Number}
 		 * @public
 		 */
 		min: React.PropTypes.number.isRequired,
@@ -61,7 +61,7 @@ const RangePickerBase = kind({
 		/**
 		 * Children from which to pick
 		 *
-		 * @type {React.node}
+		 * @type {Node}
 		 * @public
 		 */
 		children: React.PropTypes.node,

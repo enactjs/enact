@@ -32,7 +32,7 @@ const ItemBase = kind({
 		/**
 		 * The node to be displayed as the main content of the item.
 		 *
-		 * @type {React.node}
+		 * @type {Node}
 		 * @public
 		 */
 		children: PropTypes.node.isRequired,
@@ -41,8 +41,8 @@ const ItemBase = kind({
 		 * The type of component to use to render the item. May be a DOM node name (e.g 'div',
 		 * 'span', etc.) or a custom component.
 		 *
-		 * @type {String|Function}
-		 * @default moonstone/Marquee.MarqueeText
+		 * @type {String|Node}
+		 * @default 'div'
 		 * @public
 		 */
 		component: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
@@ -99,7 +99,8 @@ const ItemMarqueeDecorator = MarqueeDecorator({className: css.content, invalidat
  *
  * @class Item
  * @memberof moonstone/Item
- * @mixes spotlight/Spottable
+ * @mixes spotlight.Spottable
+ * @mixes moonstone/Marquee.MarqueeDecorator
  * @ui
  * @public
  */
@@ -126,7 +127,8 @@ const Item = Spottable(
  *
  * @class ItemOverlay
  * @memberof moonstone/Item
- * @mixes spotlight/Spottable, moonstone/Item.OverlayDecorator
+ * @mixes spotlight.Spottable
+ * @mixes moonstone/Marquee.MarqueeDecorator
  * @ui
  * @public
  */
