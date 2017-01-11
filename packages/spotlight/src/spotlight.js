@@ -930,7 +930,7 @@ const Spotlight = (function() {
 	function onKeyUp (evt) {
 		const keyCode = evt.keyCode;
 
-		if (!shouldPreventNavigation() && !getDirection(keyCode) && !isEnter(keyCode)) {
+		if (!shouldPreventNavigation() && getDirection(keyCode) && !isEnter(keyCode)) {
 			SpotlightAccelerator.reset();
 			_5WayKeyHold = false;
 		}
