@@ -1,8 +1,8 @@
 /*
- * Exports the {@link moonstone/VirtualList.VirtualListBase},
- * {@link moonstone/VirtualList.VirtualListCore},
- * {@link moonstone/VirtualList.gridListItemSizeShape} components. The default export is
- * {@link moonstone/VirtualList.VirtualListBase}.
+ * Exports the {@link moonstone/VirtualList.VirtualListBase} and
+ * {@link moonstone/VirtualList.VirtualListCore} components and the
+ * {@link moonstone/VirtualList.gridListItemSizeShape} validator. The default
+ * export is {@link moonstone/VirtualList.VirtualListBase}.
  */
 
 import React, {Component, PropTypes} from 'react';
