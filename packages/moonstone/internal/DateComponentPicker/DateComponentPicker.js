@@ -88,7 +88,6 @@ const DateComponentPickerBase = kind({
 				{...rest}
 				index={value}
 				joined
-				marqueeDisabled
 				max={max}
 				min={0}
 				noAnimation={noAnimation}
