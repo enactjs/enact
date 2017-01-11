@@ -7,7 +7,8 @@ import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewMa
 import shouldUpdate from 'recompose/shouldUpdate';
 
 import PickerButton from './PickerButton';
-import {steppedNumber} from './PickerPropTypes';
+import {steppedNumber, validValue} from './PickerPropTypes';
+
 import css from './Picker.less';
 
 const PickerViewManager = shouldUpdate((props, nextProps) => {
@@ -207,7 +208,7 @@ const PickerCore = class extends React.Component {
 		 * @default 0
 		 * @public
 		 */
-		value: steppedNumber,
+		value: validValue,
 
 		/**
 		 * Choose a specific size for your picker. `'small'`, `'medium'`, `'large'`, or set to `null` to
