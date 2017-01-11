@@ -13,6 +13,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/MarqueeDecorator` property `invalidateProps` that specifies which props cause the marquee distance to be invalidated.
 - `moonstone/Picker` and derivatives may now use numeric width, which represents the amount of characters to use for sizing. `width={4}` represents four characters, `2` for two characters, etc. `width` still accepts the size-name strings.
 
+### Fixed
+
+- `moonstone/IncrementSlider` so that the knob is spottable via pointer, and 5-way navigation between the knob and the increment/decrement buttons is functional
+
 ## [1.0.0-beta.1] - 2016-12-30
 
 ### Added

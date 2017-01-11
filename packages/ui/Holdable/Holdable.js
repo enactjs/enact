@@ -7,7 +7,7 @@
 import {off, once} from '@enact/core/dispatcher';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
-import contains from 'ramda/src/contains';
+import {is} from '@enact/core/keymap';
 import pick from 'ramda/src/pick';
 import React, {PropTypes} from 'react';
 
@@ -34,7 +34,7 @@ const pointerEnter = 'onMouseEnter';
 const pointerLeave = 'onMouseLeave';
 const pointerMove = 'onMouseMove';
 
-const selectionKeyCodes = [13, 16777221];
+const isEnter = is('enter');
 
 /**
  * Default config for {@link ui/Holdable.Holdable}
@@ -194,7 +194,7 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 		onKeyDepress = (ev) => {
 			if (!this.props.disabled) {
-				if (contains(ev.keyCode, selectionKeyCodes) && !this.holdJob) {
+				if (isEnter(ev.keyCode) && !this.holdJob) {
 					this.keyEvent = true;
 					this.beginHold(pick(eventProps, ev));
 				}
@@ -203,7 +203,7 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		onKeyRelease = (ev) => {
-			if (contains(ev.keyCode, selectionKeyCodes)) {
+			if (isEnter(ev.keyCode)) {
 				this.keyEvent = false;
 				this.endHold();
 			}

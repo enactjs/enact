@@ -1,6 +1,8 @@
 import curry from 'ramda/src/curry';
 import reduce from 'ramda/src/reduce';
 
+import {is} from '../keymap';
+
 /**
  * Allows generating event handlers by chaining functions to filter or short-circuit the handling
  * flow. Any handler that returns true will stop the chain.
@@ -9,7 +11,7 @@ import reduce from 'ramda/src/reduce';
  *  const submit = (e) => {
  *		console.log('Submitting the data!');
  *  };
- *	const submitOnEnter = handle(handle.forKeyCode(13), handle.stop, submit);
+ *	const submitOnEnter = handle(handle.forKey('enter'), handle.stop, submit);
  *	return (<input onKeyPress={submitOnEnter}>);
  *
  * @method	handle
@@ -38,10 +40,10 @@ const handle = (...handlers) => (...args) => reduce((acc, handler) => {
  * extra args, to the handlers.
  *
  * @example
- *	import {withArgs, forKeyCode, stop} from '@enact/core/handle';
+ *	import {withArgs, forKey, stop} from '@enact/core/handle';
  *	kind({
  *		computed: {
- *			onSubmit: withArgs(forKeyCode(13), stop, (e, props) => {
+ *			onSubmit: withArgs(forKey('enter'), stop, (e, props) => {
  *				// block submission for blank data unless the prop allows it
  *				if (e.target.value === '' && !props.allowBlank) return true;
  *				console.log('Submitting the data!');
@@ -158,11 +160,22 @@ const stopImmediate = handle.stopImmediate = callOnEvent('stopImmediatePropagati
  */
 const forKeyCode = handle.forKeyCode = forProp('keyCode');
 
+/**
+ * Only allows event handling to continue if the event's keyCode is mapped to `name` within
+ * {@link core/keymap}.
+ *
+ * @method	forKey
+ * @param	{String}	name	Name from {@link core/keymap}
+ * @returns	{Function}			Event handler
+ */
+const forKey = handle.forKey = (name) => (ev) => !is(name, ev.keyCode);
+
 export default handle;
 export {
 	callOnEvent,
 	forward,
 	forProp,
+	forKey,
 	forKeyCode,
 	handle,
 	preventDefault,
