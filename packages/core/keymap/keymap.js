@@ -39,7 +39,7 @@ const toLowerCase = (name) => name ? name.toLowerCase() : '';
  * Iterates over `set` and invokes `fn` with the key and value of each item
  *
  * @param   {Function}  fn   Function to invoke
- * @param   {Object}    set  An map of names to keyCodes
+ * @param   {Object}    set  A map of names to keyCodes
  *
  * @returns {undefined}
  */
@@ -120,7 +120,7 @@ const add = oneOrArray(addOne);
 /**
  * Registers a set of key codes.
  *
- * @param   {Object}    set  An map of names to keyCodes
+ * @param   {Object}    set  A map of names to keyCodes
  *
  * @returns {undefined}
  * @method addAll
@@ -143,7 +143,7 @@ const remove = oneOrArray(removeOne);
 /**
  * Deregisters a set of key codes.
  *
- * @param   {Object}    set  An map of names to keyCodes
+ * @param   {Object}    set  A map of names to keyCodes
  *
  * @returns {undefined}
  * @method removeAll
