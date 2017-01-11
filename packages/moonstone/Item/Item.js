@@ -127,7 +127,7 @@ const Item = Spottable(
  *
  * @class ItemOverlay
  * @memberof moonstone/Item
- * @mixes spotlight/Spottable
+ * @mixes spotlight.Spottable
  * @mixes moonstone/Marquee.MarqueeDecorator
  * @ui
  * @public
