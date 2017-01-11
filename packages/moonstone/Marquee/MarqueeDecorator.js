@@ -432,7 +432,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {undefined}
 		 */
 		resetAnimation = () => {
-			this.setTimeout(this.restartAnimation, this.props.marqueeResetDelay);
+			let marqueeResetDelay = Math.max(40, this.props.marqueeResetDelay);
+			this.setTimeout(this.restartAnimation, marqueeResetDelay);
 		}
 
 		/**
