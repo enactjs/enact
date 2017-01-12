@@ -79,7 +79,7 @@ const Picker = class extends React.Component {
 		/**
 		 * Children from which to pick
 		 *
-		 * @type {React.node}
+		 * @type {Node}
 		 * @public
 		 */
 		children: React.PropTypes.node,

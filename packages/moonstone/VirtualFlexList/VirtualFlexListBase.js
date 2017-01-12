@@ -92,7 +92,7 @@ class VirtualFlexListCore extends Component {
 		 * Direction specific options of the list; valid values are `'row'` and `'col'`.
 		 *
 		 * @type {String}
-		 * @default `'row'`
+		 * @default 'row'
 		 * @public
 		 */
 		flexAxis: PropTypes.oneOf(['row', 'col']),
