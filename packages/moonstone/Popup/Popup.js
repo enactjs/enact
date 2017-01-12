@@ -9,7 +9,7 @@ import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 import Transition from '@enact/ui/Transition';
 import FloatingLayer from '@enact/ui/FloatingLayer';
-import Spotlight, {SpotlightContainerDecorator, spotlightDirections} from '@enact/spotlight';
+import Spotlight, {SpotlightContainerDecorator, getDirection} from '@enact/spotlight';
 
 import IconButton from '../IconButton';
 
@@ -224,7 +224,7 @@ class Popup extends React.Component {
 		 * Types of scrim. It can be either `'transparent'`, `'translucent'`, or `'none'`.`.
 		 *
 		 * @type {String}
-		 * @default `translucent`
+		 * @default 'translucent'
 		 * @public
 		 */
 		scrimType: React.PropTypes.oneOf(['transparent', 'translucent', 'none']),
@@ -307,7 +307,7 @@ class Popup extends React.Component {
 
 	handleKeyDown = (ev) => {
 		const {onClose, onKeyDown} = this.props;
-		const direction = spotlightDirections[ev.keyCode];
+		const direction = getDirection(ev.keyCode);
 		let containerNode;
 
 		if (direction) {

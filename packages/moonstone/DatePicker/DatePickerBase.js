@@ -150,10 +150,11 @@ const DatePickerBase = kind({
 									<DateComponentRangePicker
 										key="day-picker"
 										label={noLabels ? null : $L('day')}
-										min={1}
 										max={maxDays}
-										value={day}
+										min={1}
 										onChange={onChangeDate}
+										value={day}
+										width={2}
 										wrap
 									/>
 								);
@@ -162,10 +163,11 @@ const DatePickerBase = kind({
 									<DateComponentRangePicker
 										key="month-picker"
 										label={noLabels ? null : $L('month')}
-										min={1}
 										max={maxMonths}
-										value={month}
+										min={1}
 										onChange={onChangeMonth}
+										value={month}
+										width={2}
 										wrap
 									/>
 								);
@@ -175,10 +177,11 @@ const DatePickerBase = kind({
 										className={css.year}
 										key="year-picker"
 										label={noLabels ? null : $L('year')}
-										min={minYear}
 										max={maxYear}
-										value={year}
+										min={minYear}
 										onChange={onChangeYear}
+										value={year}
+										width={4}
 									/>
 								);
 						}

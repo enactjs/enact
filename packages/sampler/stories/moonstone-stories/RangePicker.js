@@ -16,9 +16,17 @@ delete StatefulRangePicker.propTypes.value;
 // Set up some defaults for info and knobs
 const prop = {
 	orientation: ['horizontal', 'vertical'],
-	width: ['<null>', 'small', 'medium', 'large']
+	width: ['<null>', 'small', 'medium', 'large', 1, 2, 3, 4, 5, 6]
 };
-const nullify = (v) => v === '<null>' ? null : v;
+const nullify = (v) => {
+	if (v === '<null>') {
+		return null;
+	}
+	if (!isNaN(parseInt(v))) {
+		return parseInt(v);
+	}
+	return v;
+};
 
 const iconNames = ['', ...Object.keys(icons)];
 
@@ -35,11 +43,11 @@ storiesOf('RangePicker')
 				step={number('step', 5)}
 				defaultValue={0}
 				width={nullify(select('width', prop.width, 'small'))}
-				orientation={select('orientation', prop.orientation)}
-				wrap={boolean('wrap')}
-				joined={boolean('joined')}
-				noAnimation={boolean('noAnimation')}
-				disabled={boolean('disabled')}
+				orientation={select('orientation', prop.orientation, 'horizontal')}
+				wrap={boolean('wrap', false)}
+				joined={boolean('joined', false)}
+				noAnimation={boolean('noAnimation', false)}
+				disabled={boolean('disabled', false)}
 				incrementIcon={select('incrementIcon', iconNames)}
 				decrementIcon={select('decrementIcon', iconNames)}
 			/>

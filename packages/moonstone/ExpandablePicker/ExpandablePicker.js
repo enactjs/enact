@@ -32,7 +32,7 @@ const ExpandablePickerBase = kind({
 		/**
 		 * Children from which to pick
 		 *
-		 * @type {React.node}
+		 * @type {Node}
 		 * @public
 		 */
 		children: React.PropTypes.node.isRequired,
@@ -140,6 +140,10 @@ const ExpandablePickerBase = kind({
 		 * @public
 		 */
 		wrap: React.PropTypes.bool
+	},
+
+	defaultProps: {
+		value: 0
 	},
 
 	computed: {
