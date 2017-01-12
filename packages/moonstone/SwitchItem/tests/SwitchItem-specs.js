@@ -21,7 +21,7 @@ describe('SwitchItem Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should pass selected Switch element', function () {
+	it('should pass selected to Switch element', function () {
 
 		const switchItem = mount(
 			<SwitchItem selected>
@@ -37,7 +37,7 @@ describe('SwitchItem Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should pass disabled Switch element', function () {
+	it('should pass disabled to Switch element', function () {
 
 		const switchItem = mount(
 			<SwitchItem disabled>
