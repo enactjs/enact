@@ -2,6 +2,7 @@ import React from 'react';
 import {mount} from 'enzyme';
 import sinon from 'sinon';
 import Input from '../Input';
+import Spotlight from '@enact/spotlight';
 
 describe('Input Specs', () => {
 	it('Should have an input element', function () {
@@ -141,6 +142,36 @@ describe('Input Specs', () => {
 		const expected = 'ltr';
 		const actual = subject.find('input').prop('dir');
 
+		expect(actual).to.equal(expected);
+	});
+
+	it('Should pause spotlight when input has focus', function () {
+		const pauseSpy = sinon.spy(Spotlight, 'pause');
+		const subject = mount(
+			<Input />
+		);
+
+		subject.simulate('click');
+
+		const expected = true;
+		const actual = pauseSpy.calledOnce;
+
+		Spotlight.pause.restore();
+		expect(actual).to.equal(expected);
+	});
+
+	it('Should not resume spotlight if it never had focus', function () {
+		const resumeSpy = sinon.spy(Spotlight, 'resume');
+		const subject = mount(
+			<Input />
+		);
+
+		subject.setState({});
+
+		const expected = false;
+		const actual = resumeSpy.called;
+
+		Spotlight.resume.restore();
 		expect(actual).to.equal(expected);
 	});
 });
