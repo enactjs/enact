@@ -30,7 +30,8 @@ const MediaTitleBase = kind({
 		/**
 		 * Control whether the children (infoComponents) are displayed.
 		 *
-		 * @type {Object}
+		 * @type {Boolean}
+		 * @default false
 		 * @public
 		 */
 		infoVisible: React.PropTypes.bool,
@@ -41,7 +42,21 @@ const MediaTitleBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		title: React.PropTypes.string
+		title: React.PropTypes.string,
+
+		/**
+		 * Setting this to false effectively hides the entire component. Setting it to `false` after
+		 * the control has rendered causes a fade-out transition. Setting to `true` after or during
+		 * the transition makes the component immediately visible again, without delay or transition.
+		 *
+		 * @type {String}
+		 * @default true
+		 * @public
+		 */
+		// This property uniquely defaults to true, because it doesn't make sense to have it false
+		// and have the control be initially invisible, and is named "visible" to match the other
+		// props (current and possible future). Having an `infoVisible` and a `hidden` prop seems weird.
+		visible: React.PropTypes.bool
 	},
 
 	styles: {
@@ -54,6 +69,9 @@ const MediaTitleBase = kind({
 			'infoComponents',
 			infoVisible ? 'visible' : 'hidden'
 		),
+		className: ({visible, styler}) => styler.append(
+			visible ? 'visible' : 'hidden'
+		),
 		titleClassName: ({infoVisible, styler}) => styler.join({
 			title: true,
 			infoVisible
@@ -62,13 +80,14 @@ const MediaTitleBase = kind({
 
 	render: ({children, childrenClassName, title, titleClassName, ...rest}) => {
 		delete rest.infoVisible;
+		delete rest.visible;
 
 		return (
-			<div {...rest}> {/* hidingDuration={1000} marqueeOnRender */}
-				<MarqueeText className={titleClassName}>
+			<div {...rest}>
+				<MarqueeText className={titleClassName} marqueeOn="render">
 					{title}
 				</MarqueeText>
-				<div className={childrenClassName}>  {/* showing={false} showingDuration={500} tabIndex={-1} mixins={[ShowingTransitionSupport]} */}
+				<div className={childrenClassName}>  {/* tabIndex={-1} */}
 					{children}
 				</div>
 			</div>
@@ -76,7 +95,7 @@ const MediaTitleBase = kind({
 	}
 });
 
-const MediaTitle = onlyUpdateForKeys(['children', 'title', 'infoVisible'])(MediaTitleBase);
+const MediaTitle = onlyUpdateForKeys(['children', 'title', 'infoVisible', 'visible'])(MediaTitleBase);
 
 export default MediaTitle;
 export {
