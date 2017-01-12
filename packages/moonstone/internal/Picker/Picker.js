@@ -1,13 +1,13 @@
 import * as jobs from '@enact/core/jobs';
 import {childrenEquals} from '@enact/core/util';
-import Holdable from '@enact/ui/Holdable';
 import clamp from 'ramda/src/clamp';
 import React from 'react';
-import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
 import shouldUpdate from 'recompose/shouldUpdate';
+import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
 
 import PickerButton from './PickerButton';
 import {steppedNumber} from './PickerPropTypes';
+
 import css from './Picker.less';
 
 const PickerViewManager = shouldUpdate((props, nextProps) => {
@@ -34,26 +34,24 @@ const selectIncIcon = selectIcon('incrementIcon', 'arrowlargeup', 'arrowlargerig
 const selectDecIcon = selectIcon('decrementIcon', 'arrowlargedown', 'arrowlargeleft');
 
 const jobNames = {
-	emulateMouseUp: 'PickerCore.emulateMouseUp'
+	emulateMouseUp: 'Picker.emulateMouseUp'
 };
 
 const emulateMouseEventsTimeout = 175;
 
-const HoldablePickerButton = Holdable({resume: true, endHold: 'onLeave'}, PickerButton);
-
 /**
- * The base component for {@link moonstone/Picker.PickerCore}.
+ * The base component for {@link moonstone/internal/Picker.Picker}.
  *
- * @class PickerCore
- * @memberof moonstone/Picker
+ * @class Picker
+ * @memberof moonstone/internal/Picker
  * @ui
  * @private
  */
 
-const PickerCore = class extends React.Component {
-	static displayName = 'PickerCore'
+const Picker = class extends React.Component {
+	static displayName = 'Picker'
 
-	static propTypes = /** @lends moonstone/Picker.PickerCore.prototype */ {
+	static propTypes = /** @lends moonstone/internal/Picker.Picker.prototype */ {
 		/**
 		 * Index for internal ViewManager
 		 *
@@ -191,6 +189,17 @@ const PickerCore = class extends React.Component {
 		]),
 
 		/**
+		 * When `true`, the picker buttons operate in the reverse direction such that pressing
+		 * up/left decrements the value and down/right increments the value. This is more natural
+		 * for vertical lists of text options where "up" implies a spatial change rather than
+		 * incrementing the value.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		reverse: React.PropTypes.bool,
+
+		/**
 		 * Allow the picker to only increment or decrement by a given value. A step of `2` would
 		 * cause a picker to increment from 10 to 12 to 14, etc.
 		 *
@@ -214,10 +223,17 @@ const PickerCore = class extends React.Component {
 		 * assume auto-sizing. `'small'` is good for numeric pickers, `'medium'` for single or short
 		 * word pickers, `'large'` for maximum-sized pickers.
 		 *
-		 * @type {String}
+		 * You may also supply a number. This number will determine the minumum size of the Picker.
+		 * Setting a number to less than the number of characters in your longest value may produce
+		 * unexpected results.
+		 *
+		 * @type {String|Number}
 		 * @public
 		 */
-		width: React.PropTypes.oneOf([null, 'small', 'medium', 'large']),
+		width: React.PropTypes.oneOfType([
+			React.PropTypes.oneOf([null, 'small', 'medium', 'large']),
+			React.PropTypes.number
+		]),
 
 		/**
 		 * Should the picker stop incrementing when the picker reaches the last element? Set `wrap`
@@ -262,28 +278,30 @@ const PickerCore = class extends React.Component {
 		return wrap ? wrapRange(min, max, value + delta) : clamp(min, max, value + delta);
 	}
 
+	adjustDirection = (dir) => this.props.reverse ? -dir : dir
+
 	isButtonDisabled = (delta) => {
 		const {disabled, value} = this.props;
-		return disabled || this.computeNextValue(delta) === value;
+		return disabled || this.computeNextValue(this.adjustDirection(delta)) === value;
 	}
 
-	handleChange = (dir) => {
+	updateValue = (dir) => {
 		const {disabled, onChange, step} = this.props;
 		if (!disabled && onChange) {
-			const value = this.computeNextValue(dir * step);
+			const value = this.computeNextValue(this.adjustDirection(dir) * step);
 			onChange({value});
 		}
 	}
 
 	handleDecClick = () => {
-		if (!this.isButtonDisabled(this.props.step * -1)) {
-			this.handleChange(-1);
+		if (!this.isButtonDisabled(-this.props.step)) {
+			this.updateValue(-1);
 		}
 	}
 
 	handleIncClick = () => {
 		if (!this.isButtonDisabled(this.props.step)) {
-			this.handleChange(1);
+			this.updateValue(1);
 		}
 	}
 
@@ -306,7 +324,7 @@ const PickerCore = class extends React.Component {
 		// the bounds of the picker
 		if (dir && !this.isButtonDisabled(step * dir)) {
 			// fire the onChange event
-			this.handleChange(dir);
+			this.updateValue(dir);
 			// simulate mouse down
 			this.handleDown(dir);
 			// set a timer to simulate the mouse up
@@ -319,14 +337,14 @@ const PickerCore = class extends React.Component {
 	handleDecPulse = () => {
 		if (!this.isButtonDisabled(this.props.step * -1)) {
 			this.handleDecDown();
-			this.handleChange(-1);
+			this.updateValue(-1);
 		}
 	}
 
 	handleIncPulse = () => {
 		if (!this.isButtonDisabled(this.props.step)) {
 			this.handleIncDown();
-			this.handleChange(1);
+			this.updateValue(1);
 		}
 	}
 
@@ -364,7 +382,7 @@ const PickerCore = class extends React.Component {
 		delete rest.onChange;
 		delete rest.onMouseDown;
 		delete rest.pressed;
-		delete rest.reverseTransition;
+		delete rest.reverse;
 		delete rest.value;
 		delete rest.wrap;
 
@@ -374,15 +392,20 @@ const PickerCore = class extends React.Component {
 		const decrementerDisabled = this.isButtonDisabled(step * -1);
 		const incrementerDisabled = this.isButtonDisabled(step);
 		const classes = this.determineClasses(decrementerDisabled, incrementerDisabled);
-		let arranger;
 
+		let arranger;
 		if (width && !disabled) {
 			arranger = orientation === 'vertical' ? SlideTopArranger : SlideLeftArranger;
 		}
 
+		let sizingPlaceholder = null;
+		if (typeof width === 'number' && width > 0) {
+			sizingPlaceholder = <div className={css.sizingPlaceholder}>{ '0'.repeat(width) }</div>;
+		}
+
 		return (
 			<div {...rest} className={classes} disabled={disabled} onWheel={joined ? this.handleWheel : null}>
-				<HoldablePickerButton
+				<PickerButton
 					className={css.incrementer}
 					disabled={incrementerDisabled}
 					onClick={this.handleIncClick}
@@ -392,17 +415,19 @@ const PickerCore = class extends React.Component {
 					joined={joined}
 					icon={incrementIcon}
 				/>
-				<PickerViewManager
-					arranger={arranger}
-					duration={100}
-					index={index}
-					noAnimation={noAnimation}
-					reverseTransition={this.reverseTransition}
-					className={css.valueWrapper}
-				>
-					{children}
-				</PickerViewManager>
-				<HoldablePickerButton
+				<div className={css.valueWrapper}>
+					{sizingPlaceholder}
+					<PickerViewManager
+						arranger={arranger}
+						duration={100}
+						index={index}
+						noAnimation={noAnimation}
+						reverseTransition={this.reverseTransition}
+					>
+						{children}
+					</PickerViewManager>
+				</div>
+				<PickerButton
 					className={css.decrementer}
 					disabled={decrementerDisabled}
 					onClick={this.handleDecClick}
@@ -417,5 +442,6 @@ const PickerCore = class extends React.Component {
 	}
 };
 
-export default PickerCore;
-export {PickerCore};
+export default Picker;
+export {Picker};
+export PickerItem from './PickerItem';

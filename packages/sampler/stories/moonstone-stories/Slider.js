@@ -19,8 +19,8 @@ storiesOf('Slider')
 		'Basic usage of Slider',
 		() => (
 			<Slider
-				backgroundPercent={number('backgroundPercent', Slider.defaultProps.backgroundPercent, {range: true, min: 0, max: 100})}
-				detachedKnob={boolean('detachedKnob', false)}
+				backgroundPercent={number('backgroundPercent', Slider.defaultProps.backgroundPercent, {range: true, min: Slider.defaultProps.mim, max: Slider.defaultProps.max})}
+				detachedKnob={boolean('detachedKnob', Slider.defaultProps.detachedKnob)}
 				disabled={boolean('disabled', Slider.defaultProps.disabled)}
 				max={number('max', Slider.defaultProps.max)}
 				min={number('min', Slider.defaultProps.min)}

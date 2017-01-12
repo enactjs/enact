@@ -2,7 +2,7 @@ import React from 'react';
 import {mount} from 'enzyme';
 import RangePicker from '../RangePicker';
 import Changeable from '@enact/ui/Changeable';
-import css from '../../Picker/Picker.less';
+import css from '../../internal/Picker/Picker.less';
 
 describe('RangePicker Specs', () => {
 	it('should render a single child with the current value', function () {

@@ -1,10 +1,14 @@
 import Changeable from '@enact/ui/Changeable';
 import kind from '@enact/core/kind';
+import Pressable from '@enact/ui/Pressable';
 import React from 'react';
+import {Spottable} from '@enact/spotlight';
 
-import Picker from '../../Picker';
+import PickerCore, {PickerItem} from '../Picker';
 
 import DateComponentPickerChrome from './DateComponentPickerChrome';
+
+const Picker = Pressable(Spottable(PickerCore));
 
 /**
  * {@link moonstone/internal/DataComponentPicker.DateComponentPickerBase} allows the selection of one
@@ -54,6 +58,14 @@ const DateComponentPickerBase = kind({
 		 */
 		noAnimation: React.PropTypes.bool,
 
+		/**
+		 * When `true`, the picker buttons operate in the reverse direction.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		reverse: React.PropTypes.bool,
+
 		/*
 		 * When `true`, allow the picker to continue from the opposite end of the list of options.
 		 *
@@ -63,16 +75,26 @@ const DateComponentPickerBase = kind({
 		wrap: React.PropTypes.bool
 	},
 
-	render: ({children, className, label, noAnimation, value, wrap, ...rest}) => (
+	computed: {
+		children: ({children}) => React.Children.map(children, (child) => (
+			<PickerItem marqueeDisabled>{child}</PickerItem>
+		)),
+		max: ({children}) => React.Children.count(children) - 1
+	},
+
+	render: ({children, className, label, max, noAnimation, reverse, value, wrap, ...rest}) => (
 		<DateComponentPickerChrome className={className} label={label}>
 			<Picker
 				{...rest}
+				index={value}
 				joined
-				marqueeDisabled
+				max={max}
+				min={0}
 				noAnimation={noAnimation}
 				orientation="vertical"
+				reverse={reverse}
+				step={1}
 				value={value}
-				width="small"
 				wrap={wrap}
 			>
 				{children}
