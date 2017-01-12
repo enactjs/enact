@@ -84,6 +84,12 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			}
 		}
 
+		componentWillUnmount () {
+			if (this.state.focused === 'input') {
+				Spotlight.resume();
+			}
+		}
+
 		focus = (focused, node) => {
 			this.setState({focused, node, direction: null});
 		}

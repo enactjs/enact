@@ -160,16 +160,17 @@ describe('Input Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should not resume spotlight if it never had focus', function () {
+	it('Should resume spotlight on unmount', function () {
 		const resumeSpy = sinon.spy(Spotlight, 'resume');
 		const subject = mount(
 			<Input />
 		);
 
-		subject.setState({});
+		subject.simulate('click');
+		subject.unmount();
 
-		const expected = false;
-		const actual = resumeSpy.called;
+		const expected = true;
+		const actual = resumeSpy.calledOnce;
 
 		Spotlight.resume.restore();
 		expect(actual).to.equal(expected);
