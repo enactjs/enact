@@ -1,14 +1,14 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import sinon from 'sinon';
-import PickerCore from '../PickerCore';
+import Picker from '../Picker';
 import css from '../Picker.less';
 
-describe('PickerCore Specs', function () {
+describe('Picker Specs', function () {
 
 	it('should have a default \'value\' of 0', function () {
 		const picker = mount(
-			<PickerCore index={0} min={0} max={0} />
+			<Picker index={0} min={0} max={0} />
 		);
 
 		const expected = 0;
@@ -17,10 +17,10 @@ describe('PickerCore Specs', function () {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should return an object \{value: Number\} that represents the next value of the PickerCore component when clicking the increment \<span\>', function () {
+	it('should return an object \{value: Number\} that represents the next value of the Picker component when clicking the increment \<span\>', function () {
 		const handleChange = sinon.spy();
 		const picker = mount(
-			<PickerCore onChange={handleChange} min={-1} max={1} value={0} index={0} />
+			<Picker onChange={handleChange} min={-1} max={1} value={0} index={0} />
 		);
 
 		picker.find(`.${css.incrementer}`).simulate('click');
@@ -31,10 +31,10 @@ describe('PickerCore Specs', function () {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should return an object \{value: Number\} that represents the next value of the PickerCore component when clicking the decrement \<span\>', function () {
+	it('should return an object \{value: Number\} that represents the next value of the Picker component when clicking the decrement \<span\>', function () {
 		const handleChange = sinon.spy();
 		const picker = mount(
-			<PickerCore onChange={handleChange} min={-1} max={1} value={0} index={0} />
+			<Picker onChange={handleChange} min={-1} max={1} value={0} index={0} />
 		);
 
 		picker.find(`.${css.decrementer}`).simulate('click');
@@ -48,7 +48,7 @@ describe('PickerCore Specs', function () {
 	it('should not run the onChange handler when disabled', function () {
 		const handleChange = sinon.spy();
 		const picker = mount(
-			<PickerCore onChange={handleChange} disabled min={0} max={0} value={0} index={0} />
+			<Picker onChange={handleChange} disabled min={0} max={0} value={0} index={0} />
 		);
 
 		picker.find(`.${css.incrementer}`).simulate('click');
@@ -62,7 +62,7 @@ describe('PickerCore Specs', function () {
 	it('should wrap to the beginning of the value range if \'wrap\' is true', function () {
 		const handleChange = sinon.spy();
 		const picker = mount(
-			<PickerCore onChange={handleChange} wrap min={-1} max={0} value={0} index={0} />
+			<Picker onChange={handleChange} wrap min={-1} max={0} value={0} index={0} />
 		);
 
 		picker.find(`.${css.incrementer}`).simulate('click');
@@ -76,7 +76,7 @@ describe('PickerCore Specs', function () {
 	it('should wrap to the end of the value range if \'wrap\' is true', function () {
 		const handleChange = sinon.spy();
 		const picker = mount(
-			<PickerCore onChange={handleChange} wrap min={0} max={1} value={0} index={0} />
+			<Picker onChange={handleChange} wrap min={0} max={1} value={0} index={0} />
 		);
 
 		picker.find(`.${css.decrementer}`).simulate('click');
@@ -90,7 +90,7 @@ describe('PickerCore Specs', function () {
 	it('should increment by \'step\' value', function () {
 		const handleChange = sinon.spy();
 		const picker = mount(
-			<PickerCore onChange={handleChange} step={3} min={0} max={6} value={0} index={0} />
+			<Picker onChange={handleChange} step={3} min={0} max={6} value={0} index={0} />
 		);
 		const button = picker.find(`.${css.incrementer}`);
 
@@ -104,7 +104,7 @@ describe('PickerCore Specs', function () {
 	it('should decrement by \'step\' value', function () {
 		const handleChange = sinon.spy();
 		const picker = mount(
-			<PickerCore onChange={handleChange} step={3} min={0} max={3} value={3} index={0} />
+			<Picker onChange={handleChange} step={3} min={0} max={3} value={3} index={0} />
 		);
 		const button = picker.find(`.${css.decrementer}`);
 
@@ -118,7 +118,7 @@ describe('PickerCore Specs', function () {
 	it('should increment by \'step\' value and wrap successfully', function () {
 		const handleChange = sinon.spy();
 		const picker = mount(
-			<PickerCore onChange={handleChange} wrap step={3} min={0} max={3} value={3} index={0} />
+			<Picker onChange={handleChange} wrap step={3} min={0} max={3} value={3} index={0} />
 		);
 
 		picker.find(`.${css.incrementer}`).simulate('click');
@@ -132,7 +132,7 @@ describe('PickerCore Specs', function () {
 	it('should decrement by \'step\' value and wrap successfully', function () {
 		const handleChange = sinon.spy();
 		const picker = mount(
-			<PickerCore onChange={handleChange} wrap step={3} min={0} max={9} value={0} index={0} />
+			<Picker onChange={handleChange} wrap step={3} min={0} max={9} value={0} index={0} />
 		);
 
 		picker.find(`.${css.decrementer}`).simulate('click');
@@ -145,7 +145,7 @@ describe('PickerCore Specs', function () {
 
 	it('should enable the increment button when there is a wrapped value to increment', function () {
 		const picker = mount(
-			<PickerCore wrap min={0} max={2} value={2} index={0} />
+			<Picker wrap min={0} max={2} value={2} index={0} />
 		);
 
 		const expected = false;
@@ -156,7 +156,7 @@ describe('PickerCore Specs', function () {
 
 	it('should enable the decrement button when there is a wrapped value to decrement', function () {
 		const picker = mount(
-			<PickerCore wrap min={0} max={2} value={2} index={0} />
+			<Picker wrap min={0} max={2} value={2} index={0} />
 		);
 
 		const expected = false;
@@ -167,7 +167,7 @@ describe('PickerCore Specs', function () {
 
 	it('should disable the increment button when there is no value to increment', function () {
 		const picker = mount(
-			<PickerCore min={0} max={2} value={2} index={0} />
+			<Picker min={0} max={2} value={2} index={0} />
 		);
 
 		const expected = true;
@@ -178,7 +178,7 @@ describe('PickerCore Specs', function () {
 
 	it('should disable the decrement button when there is no value to decrement', function () {
 		const picker = mount(
-			<PickerCore min={0} max={2} value={0} index={0} />
+			<Picker min={0} max={2} value={0} index={0} />
 		);
 
 		const expected = true;
@@ -189,7 +189,7 @@ describe('PickerCore Specs', function () {
 
 	it('should disable the increment and decrement buttons when wrapped and there is a single value', function () {
 		const picker = mount(
-			<PickerCore wrap min={0} max={0} value={0} index={0} />
+			<Picker wrap min={0} max={0} value={0} index={0} />
 		);
 
 		const expected = true;
@@ -203,7 +203,7 @@ describe('PickerCore Specs', function () {
 	it.skip('should allow keyboard increment via arrow keys when \'joined\'', function () {
 		const handleChange = sinon.spy();
 		const picker = mount(
-			<PickerCore onChange={handleChange} min={-1} max={1} value={0} index={0} joined />
+			<Picker onChange={handleChange} min={-1} max={1} value={0} index={0} joined />
 		);
 
 		const button = picker.find(`.${css.incrementer}`);
@@ -220,7 +220,7 @@ describe('PickerCore Specs', function () {
 	it.skip('should allow keyboard decrement via arrow keys when \'joined\'', function () {
 		const handleChange = sinon.spy();
 		const picker = mount(
-			<PickerCore onChange={handleChange} min={-1} max={1} value={0} index={0} joined />
+			<Picker onChange={handleChange} min={-1} max={1} value={0} index={0} joined />
 		);
 
 		const button = picker.find(`.${css.decrementer}`);
