@@ -1,6 +1,6 @@
 import RangePicker, {RangePickerBase} from '@enact/moonstone/RangePicker';
 import Changeable from '@enact/ui/Changeable';
-import {icons} from '@enact/moonstone/Icon';
+import {decrementIcons, incrementIcons} from './icons';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, number, select} from '@kadira/storybook-addon-knobs';
@@ -28,8 +28,6 @@ const nullify = (v) => {
 	return v;
 };
 
-const iconNames = ['', ...Object.keys(icons)];
-
 storiesOf('RangePicker')
 	.addDecorator(withKnobs)
 	.addWithInfo(
@@ -48,8 +46,8 @@ storiesOf('RangePicker')
 				joined={boolean('joined', false)}
 				noAnimation={boolean('noAnimation', false)}
 				disabled={boolean('disabled', false)}
-				incrementIcon={select('incrementIcon', iconNames)}
-				decrementIcon={select('decrementIcon', iconNames)}
+				incrementIcon={select('incrementIcon', ['', ...incrementIcons])}
+				decrementIcon={select('decrementIcon', ['', ...decrementIcons])}
 			/>
 		)
 	);

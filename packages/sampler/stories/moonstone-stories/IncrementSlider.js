@@ -1,5 +1,6 @@
 import Changeable from '@enact/ui/Changeable';
 import IncrementSlider, {IncrementSliderBase} from '@enact/moonstone/IncrementSlider';
+import {decrementIcons, incrementIcons} from './icons';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, number, select} from '@kadira/storybook-addon-knobs';
@@ -17,8 +18,8 @@ storiesOf('IncrementSlider')
 		() => (
 			<ChangeableSlider
 				backgroundProgress={number('backgroundProgress', ChangeableSlider.defaultProps.backgroundProgress, {range: true, min: 0, max: 1, step: 0.01})}
-				incrementIcon={select('incrementIcon', ['', 'plus'])}
-				decrementIcon={select('decrementIcon', ['', 'minus'])}
+				incrementIcon={select('incrementIcon', ['', ...incrementIcons])}
+				decrementIcon={select('decrementIcon', ['', ...decrementIcons])}
 				disabled={boolean('disabled', ChangeableSlider.defaultProps.disabled)}
 				max={number('max', ChangeableSlider.defaultProps.max)}
 				min={number('min', ChangeableSlider.defaultProps.min)}
