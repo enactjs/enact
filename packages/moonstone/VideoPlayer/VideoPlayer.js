@@ -8,7 +8,7 @@
 import React from 'react';
 import DurationFmt from '@enact/i18n/ilib/lib/DurationFmt';
 import {forward} from '@enact/core/handle';
-import ilib, {$L} from '@enact/i18n';
+import ilib from '@enact/i18n';
 import {startJob, stopJob} from '@enact/core/jobs';
 import {on, off} from '@enact/core/dispatcher';
 import Slottable from '@enact/ui/Slottable';
@@ -779,7 +779,7 @@ const VideoPlayerBase = class extends React.Component {
 				</Video>
 
 				<Overlay onClick={this.onVideoClick} onMouseMove={this.onVideoMouseMove}>
-					{this.state.loading ? <Spinner className={css.spinner} centered /> : null}
+					{this.state.loading ? <Spinner centered /> : null}
 				</Overlay>
 
 				{this.state.bottomControlsVisible ? <div className={css.fullscreen + ' enyo-fit scrim'}>
