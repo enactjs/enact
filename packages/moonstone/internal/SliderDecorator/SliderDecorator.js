@@ -183,7 +183,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.jobName = `sliderChange${now()}`;
 			this.knobPosition = null;
 			this.state = {
-				value: props.value
+				value: clamp(props.min, props.max, props.value)
 			};
 		}
 
@@ -193,8 +193,15 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentWillReceiveProps (nextProps) {
 			if (nextProps.value !== this.props.value) {
-				this.updateValue(nextProps.value);
+				this.updateValue(clamp(this.props.min, this.props.max, nextProps.value));
 			}
+		}
+
+		shouldComponentUpdate(nextProps) {
+			if (nextProps.max < this.state.value || nextProps.min > this.state.value) {
+				return false;
+			}
+			return true;
 		}
 
 		componentDidUpdate (prevProps) {
