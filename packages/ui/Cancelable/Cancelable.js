@@ -6,6 +6,7 @@
 
 import {forward, handle, stopImmediate} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
+import {add} from '@enact/core/keymap';
 import invariant from 'invariant';
 import React from 'react';
 
@@ -17,6 +18,9 @@ const defaultConfig = {
 	modal: false,
 	component: null
 };
+
+// Add keymap for escape key
+add('cancel', 27);
 
 /**
  * {@link ui/Cancelable.Cancelable} is a Higher-order Component that allows mapping

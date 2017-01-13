@@ -7,11 +7,11 @@
  */
 
 import {forward} from '@enact/core/handle';
-import {hoc} from '@enact/core';
+import hoc from '@enact/core/hoc';
 import ri from '@enact/ui/resolution';
 import FloatingLayer from '@enact/ui/FloatingLayer';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
-import Spotlight, {SpotlightContainerDecorator, spotlightDirections} from '@enact/spotlight';
+import Spotlight, {SpotlightContainerDecorator, getDirection} from '@enact/spotlight';
 import React, {PropTypes} from 'react';
 
 import {ContextualPopup} from './ContextualPopup';
@@ -313,7 +313,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleKeyDown = (ev) => {
 			const {onClose} = this.props;
-			const direction = spotlightDirections[ev.keyCode];
+			const direction = getDirection(ev.keyCode);
 
 			if (direction) {
 				// prevent default page scrolling

@@ -31,12 +31,12 @@ storiesOf('Picker')
 		() => (
 			<StatefulPicker
 				onChange={action('onChange')}
-				width={nullify(select('width', prop.width, 'large'))}
-				orientation={select('orientation', prop.orientation)}
-				wrap={boolean('wrap')}
-				joined={boolean('joined')}
-				noAnimation={boolean('noAnimation')}
-				disabled={boolean('disabled')}
+				width={nullify(select('width', prop.width, prop.width[3]))}
+				orientation={select('orientation', prop.orientation, prop.orientation[0])}
+				wrap={boolean('wrap', false)}
+				joined={boolean('joined', false)}
+				noAnimation={boolean('noAnimation', false)}
+				disabled={boolean('disabled', false)}
 				incrementIcon={text('incrementIcon')}
 				decrementIcon={text('decrementIcon')}
 			>

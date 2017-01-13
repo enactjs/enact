@@ -31,7 +31,7 @@ const DialogBase = kind({
 		/**
 		 * Buttons, typically to close or take action in the dialog.
 		 *
-		 * @type {React.node}
+		 * @type {Node}
 		 * @public
 		 */
 		buttons: PropTypes.oneOfType([
@@ -99,7 +99,7 @@ const DialogBase = kind({
 		 * Types of scrim. It can be either `'transparent'`, `'translucent'`, or `'none'`.
 		 *
 		 * @type {String}
-		 * @default `translucent`
+		 * @default 'translucent'
 		 * @public
 		 */
 		scrimType: React.PropTypes.oneOf(['transparent', 'translucent', 'none']),

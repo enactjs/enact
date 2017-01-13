@@ -80,7 +80,6 @@ const DateComponentRangePickerBase = kind({
 				noAnimation={noAnimation}
 				orientation="vertical"
 				value={value}
-				width="small"
 				wrap={wrap}
 			/>
 		</DateComponentPickerChrome>

@@ -33,9 +33,9 @@ const
  * or {@link moonstone/VirtualList.VirtualGridList}.
  *
  * @constant dataIndexAttribute
+ * @memberof moonstone/Scroller
  * @type {String}
  * @private
- * @memberof moonstone/Scroller
  */
 const dataIndexAttribute = 'data-index';
 

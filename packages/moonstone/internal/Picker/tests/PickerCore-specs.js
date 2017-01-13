@@ -1,7 +1,7 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import sinon from 'sinon';
-import PickerCore from '../PickerCore';
+import PickerCore from '../Picker';
 import {stepped} from '../PickerPropTypes';
 import css from '../Picker.less';
 
