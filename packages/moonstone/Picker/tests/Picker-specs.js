@@ -16,7 +16,7 @@ describe('Picker Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should set the max of <Picker> to be one less than the number of children', function () {
+	it('should set the max of <PickerCore> to be one less than the number of children', function () {
 		const picker = mount(
 			<Picker value={1}>
 				{[1, 2, 3, 4]}
@@ -29,3 +29,4 @@ describe('Picker Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 });
+
