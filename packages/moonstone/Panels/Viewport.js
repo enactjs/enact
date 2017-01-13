@@ -49,7 +49,7 @@ const forwardOnWillTransition = forward('onWillTransition');
 const ViewportBase = kind({
 	name: 'ViewportBase',
 
-	propTypes: /** @lends Viewport.prototype */ {
+	propTypes: /** @lends ViewportBase.prototype */ {
 		/**
 		 * Set of functions that control how the panels are transitioned into and out of the
 		 * viewport
