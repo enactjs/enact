@@ -5,7 +5,7 @@ import {Slider} from '../Slider';
 import css from '../Slider.less';
 
 describe('Slider Specs', () => {
-	it('Should not fire change event on props change', function () {
+	it('should not fire change event on props change', function () {
 		const handleChange = sinon.spy();
 
 		const slider = mount(
@@ -26,7 +26,7 @@ describe('Slider Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should not fire change event more than once', function () {
+	it('should not fire change event more than once', function () {
 		const handleChange = sinon.spy();
 		const value = 25;
 
@@ -48,7 +48,7 @@ describe('Slider Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should forward value in change event', function () {
+	it('should forward value in change event', function () {
 		const handleChange = sinon.spy();
 		const value = 25;
 
@@ -73,7 +73,7 @@ describe('Slider Specs', () => {
 	// I don't feel super great about this test but I'm not sure how else to be able to check
 	// that values that are applied directly to the DOM are the values that should be applied
 	// This validates ENYO-3734 fix
-	it('Should apply the right knob position on startup', function () {
+	it('should apply the right knob position on startup', function () {
 		const node = document.body.appendChild(document.createElement('div'));
 		mount(
 			<Slider
@@ -96,7 +96,7 @@ describe('Slider Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should not position knob outside slider', function () {
+	it('should not position knob outside slider', function () {
 		const node = document.body.appendChild(document.createElement('div'));
 		mount(
 			<Slider
@@ -119,7 +119,7 @@ describe('Slider Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should apply min/max on mount', function () {
+	it('should apply min/max on mount', function () {
 		const node = document.body.appendChild(document.createElement('div'));
 		mount(
 			<Slider
@@ -142,7 +142,7 @@ describe('Slider Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should update value, min, max together', function () {
+	it('should update value, min, max together', function () {
 		const node = document.body.appendChild(document.createElement('div'));
 		const slider = mount(
 			<Slider
@@ -166,7 +166,7 @@ describe('Slider Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should clamp knob position when min changed', function () {
+	it('should clamp knob position when min changed', function () {
 		const node = document.body.appendChild(document.createElement('div'));
 		const slider = mount(
 			<Slider
@@ -190,7 +190,7 @@ describe('Slider Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should clamp bar position when min changed', function () {
+	it('should clamp bar position when min changed', function () {
 		const node = document.body.appendChild(document.createElement('div'));
 		const slider = mount(
 			<Slider
@@ -216,7 +216,7 @@ describe('Slider Specs', () => {
 
 	// Note: This was causing a value out of bounds error, but should not have as
 	// backgroundProgress is percent, not an absolute value
-	it('Should not change background position when min changed', function () {
+	it('should not change background position when min changed', function () {
 		const node = document.body.appendChild(document.createElement('div'));
 		const slider = mount(
 			<Slider

@@ -4,7 +4,7 @@ import name from '../name';
 
 describe('name', () => {
 
-	it('Should assign name to displayName of render method', function () {
+	it('should assign name to displayName of render method', function () {
 		const render = () => {};
 		const cfg = 'MyComponent';
 

@@ -5,7 +5,7 @@ import {IncrementSlider, IncrementSliderBase} from '../IncrementSlider';
 import css from '../IncrementSlider.less';
 
 describe('IncrementSlider Specs', () => {
-	it('Should decrement value', function () {
+	it('should decrement value', function () {
 		const handleChange = sinon.spy();
 		const value = 50;
 		const incrementSlider = mount(
@@ -23,7 +23,7 @@ describe('IncrementSlider Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should increment value', function () {
+	it('should increment value', function () {
 		const handleChange = sinon.spy();
 		const value = 50;
 		const incrementSlider = mount(
@@ -41,7 +41,7 @@ describe('IncrementSlider Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should only call onChange once', function () {
+	it('should only call onChange once', function () {
 		const handleChange = sinon.spy();
 		const value = 50;
 		const incrementSlider = mount(
@@ -59,7 +59,7 @@ describe('IncrementSlider Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should not call onChange on prop change', function () {
+	it('should not call onChange on prop change', function () {
 		const handleChange = sinon.spy();
 		const value = 50;
 		const incrementSlider = mount(
@@ -77,7 +77,7 @@ describe('IncrementSlider Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should disable decrement button when value === min', function () {
+	it('should disable decrement button when value === min', function () {
 		const incrementSlider = mount(
 			<IncrementSlider
 				value={0}
@@ -91,7 +91,7 @@ describe('IncrementSlider Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should disable increment button when value === max', function () {
+	it('should disable increment button when value === max', function () {
 		const incrementSlider = mount(
 			<IncrementSlider
 				value={10}
@@ -105,7 +105,7 @@ describe('IncrementSlider Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should invoke onIncrement when increment button is clicked', function () {
+	it('should invoke onIncrement when increment button is clicked', function () {
 		const handleIncrement = sinon.spy();
 		const value = 50;
 		const incrementSlider = mount(
@@ -123,7 +123,7 @@ describe('IncrementSlider Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should not invoke onIncrement when at upper bounds', function () {
+	it('should not invoke onIncrement when at upper bounds', function () {
 		const handleIncrement = sinon.spy();
 		const value = 100;
 		const incrementSlider = mount(
@@ -141,7 +141,7 @@ describe('IncrementSlider Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should invoke onDecrement when increment button is clicked', function () {
+	it('should invoke onDecrement when increment button is clicked', function () {
 		const handleDecrement = sinon.spy();
 		const value = 50;
 		const incrementSlider = mount(
@@ -159,7 +159,7 @@ describe('IncrementSlider Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should not invoke onDecrement when at lower bounds', function () {
+	it('should not invoke onDecrement when at lower bounds', function () {
 		const handleDecrement = sinon.spy();
 		const value = 0;
 		const incrementSlider = mount(
@@ -177,7 +177,7 @@ describe('IncrementSlider Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should use custom incrementIcon', function () {
+	it('should use custom incrementIcon', function () {
 		const icon = 'plus';
 		const incrementSlider = mount(
 			<IncrementSlider incrementIcon={icon} />
@@ -189,7 +189,7 @@ describe('IncrementSlider Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should use custom decrementIcon', function () {
+	it('should use custom decrementIcon', function () {
 		const icon = 'minus';
 		const incrementSlider = mount(
 			<IncrementSlider decrementIcon={icon} />

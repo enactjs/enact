@@ -7,7 +7,7 @@ import Pressable from '../Pressable';
 
 describe('Pressable Specs', () => {
 
-	it('Should pass pressed to Wrapped', function () {
+	it('should pass pressed to Wrapped', function () {
 		const DivComponent = () => <div>press</div>;
 
 		const PressableDiv = Pressable(DivComponent);
@@ -19,7 +19,7 @@ describe('Pressable Specs', () => {
 		expect(actual).to.have.property(expected);
 	});
 
-	it('Should pass mouse event handlers to Wrapped', function () {
+	it('should pass mouse event handlers to Wrapped', function () {
 		const DivComponent = () => <div>press</div>;
 
 		const PressableDiv = Pressable(DivComponent);
