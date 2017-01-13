@@ -1,20 +1,32 @@
 import {findDOMNode} from 'react-dom';
-import {forward, withArgs as handle} from '@enact/core/handle';
+import {forward} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import ViewManager, {shape} from '@enact/ui/ViewManager';
 import invariant from 'invariant';
 import React from 'react';
-import Spotlight from '@enact/spotlight';
+import Spotlight, {spottableClass} from '@enact/spotlight';
 
 import css from './Panels.less';
 
-const spotPanel = ({view}) => {
+const findNode = (view) => {
 	// eslint-disable-next-line react/no-find-dom-node
-	const node = findDOMNode(view);
+	return findDOMNode(view);
+};
+
+const spotPanel = ({view, lastFocusedIndex}) => {
+	const node = findNode(view);
+
 	if (node) {
-		const body = node.querySelector('section .spottable');
-		const header = node.querySelector('header .spottable');
-		const spottable = body || header;
+		let lastFocusedSpottable;
+
+		if (lastFocusedIndex >= 0) {
+			const spottables = node.querySelectorAll(`.${spottableClass}`);
+			if (lastFocusedIndex < spottables.length) {
+				lastFocusedSpottable = spottables[lastFocusedIndex];
+			}
+		}
+
+		const spottable = lastFocusedSpottable || node.querySelector(`section .${spottableClass}`) || node.querySelector(`header .${spottableClass}`);
 
 		if (spottable) {
 			Spotlight.focus(spottable);
@@ -22,14 +34,20 @@ const spotPanel = ({view}) => {
 	}
 };
 
+const initialFocusedIndex = -1;
+const forwardOnAppear = forward('onAppear');
+const forwardOnEnter = forward('onEnter');
+const forwardOnTransition = forward('onTransition');
+const forwardOnWillTransition = forward('onWillTransition');
+
 /**
  * The container for a set of Panels
  *
- * @class Viewport
+ * @class ViewportBase
  * @private
  */
 const ViewportBase = kind({
-	name: 'Viewport',
+	name: 'ViewportBase',
 
 	propTypes: /** @lends Viewport.prototype */ {
 		/**
@@ -61,7 +79,35 @@ const ViewportBase = kind({
 		 * @type {Boolean}
 		 * @default false
 		 */
-		noAnimation: React.PropTypes.bool
+		noAnimation: React.PropTypes.bool,
+
+		/**
+		 * Called when each view is rendered during initial construction.
+		 *
+		 * @type {Function}
+		 */
+		onAppear: React.PropTypes.func,
+
+		/**
+		 * Called when each view completes its transition into the viewport.
+		 *
+		 * @type {Function}
+		 */
+		onEnter: React.PropTypes.func,
+
+		/**
+		 * Called once when all views have completed their transition.
+		 *
+		 * @type {Function}
+		 */
+		onTransition: React.PropTypes.func,
+
+		/**
+		 * Called once before views begin their transition.
+		 *
+		 * @type {Function}
+		 */
+		onWillTransition: React.PropTypes.func
 	},
 
 	defaultProps: {
@@ -77,14 +123,10 @@ const ViewportBase = kind({
 	computed: {
 		children: ({children}) => React.Children.map(children, (child, index) => {
 			return React.cloneElement(child, {'data-index': index});
-		}),
-		handleAppear: handle(forward('onAppear'), spotPanel),
-		handleEnter: handle(forward('onEnter'), spotPanel),
-		handleTransition: handle(forward('onTransition'), Spotlight.resume),
-		handleWillTransition: handle(forward('onWillTransition'), Spotlight.pause)
+		})
 	},
 
-	render: ({arranger, children, handleAppear, handleEnter, handleTransition, handleWillTransition, index, noAnimation, ...rest}) => {
+	render: ({arranger, children, index, noAnimation, onAppear, onEnter, onTransition, onWillTransition, ...rest}) => {
 		const count = React.Children.count(children);
 		invariant(
 			index === 0 && count === 0 || index < count,
@@ -99,10 +141,10 @@ const ViewportBase = kind({
 				duration={200}
 				index={index}
 				component="main"
-				onAppear={handleAppear}
-				onEnter={handleEnter}
-				onTransition={handleTransition}
-				onWillTransition={handleWillTransition}
+				onAppear={onAppear}
+				onEnter={onEnter}
+				onTransition={onTransition}
+				onWillTransition={onWillTransition}
 			>
 				{children}
 			</ViewManager>
@@ -110,5 +152,114 @@ const ViewportBase = kind({
 	}
 });
 
-export default ViewportBase;
-export {ViewportBase as Viewport, ViewportBase};
+/**
+ * A stateful component that helps ViewportBase by handling life-cycle and focus management tasks.
+ *
+ * @class Viewport
+ * @private
+ */
+class Viewport extends React.Component {
+	static displayName = 'Viewport';
+
+	static propTypes = /** @lends Viewport.prototype */ {
+		/**
+		 * Set of functions that control how the panels are transitioned into and out of the
+		 * viewport
+		 *
+		 * @type {Arranger}
+		 */
+		arranger: shape,
+
+		/**
+		 * Panels to be rendered
+		 *
+		 * @type {Panel}
+		 */
+		children: React.PropTypes.node,
+
+		/**
+		 * Index of the active panel
+		 *
+		 * @type {Number}
+		 * @default 0
+		 */
+		index: React.PropTypes.number,
+
+		/**
+		 * Disable panel transitions
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 */
+		noAnimation: React.PropTypes.bool
+	}
+
+	static defaultProps = {
+		index: 0,
+		noAnimation: false
+	}
+
+	constructor (props) {
+		super(props);
+		this.state = {
+			lastFocusedIndices: this.props.children.map(() => {
+				return initialFocusedIndex;
+			})
+		};
+	}
+
+	componentWillReceiveProps (nextProps) {
+		const {index} = this.props;
+		const node = findNode(this);
+		const current = Spotlight.getCurrent();
+
+		if (index !== nextProps.index && node.contains(current)) {
+			const {lastFocusedIndices} = this.state;
+			const spottables = node.querySelectorAll(`.${spottableClass}`);
+			let focusedIndex = initialFocusedIndex;
+
+			for (let i = 0, len = spottables.length; i < len; ++i) {
+				if (spottables[i] === current) {
+					focusedIndex = i;
+					break;
+				}
+			}
+
+			lastFocusedIndices[index] = focusedIndex;
+			this.setState({lastFocusedIndices});
+		}
+	}
+
+	handleAppear = ({view}) => {
+		spotPanel({view, lastFocusedIndex: this.state.lastFocusedIndices[this.props.index]});
+		forwardOnAppear(view, this.props);
+	}
+
+	handleEnter = ({view}) => {
+		spotPanel({view, lastFocusedIndex: this.state.lastFocusedIndices[this.props.index]});
+		forwardOnEnter(view, this.props);
+	}
+
+	handleTransition = () => {
+		Spotlight.resume();
+		forwardOnTransition(null, this.props);
+	}
+
+	handleWillTransition = () => {
+		Spotlight.pause();
+		forwardOnWillTransition(null, this.props);
+	}
+
+	render () {
+		const {children, ...rest} = this.props;
+
+		return (
+			<ViewportBase {...rest} onAppear={this.handleAppear} onEnter={this.handleEnter} onTransition={this.handleTransition} onWillTransition={this.handleWillTransition}>
+				{children}
+			</ViewportBase>
+		);
+	}
+}
+
+export default Viewport;
+export {Viewport, ViewportBase};

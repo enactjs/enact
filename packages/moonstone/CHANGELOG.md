@@ -8,6 +8,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/MarqueeDecorator` property `invalidateProps` that specifies which props cause the marquee distance to be invalidated.
 
+### Changed
+
+- `moonstone/Panels.Viewport` sets focus on the last-focused spottable control (if available) when navigating panels
+
 ### Fixed
 
 - `moonstone/IncrementSlider` so that the knob is spottable via pointer, and 5-way navigation between the knob and the increment/decrement buttons is functional

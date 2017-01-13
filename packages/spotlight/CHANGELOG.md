@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ## [unreleased]
 
+### Added
+
+- `@enact/spotlight.spottableClass` export
+
 ### Removed
 
 - `@enact/spotlight.spotlightDirections` export and replaced it with `getDirection()` 
