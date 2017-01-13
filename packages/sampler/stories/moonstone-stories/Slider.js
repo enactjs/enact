@@ -21,7 +21,7 @@ storiesOf('Slider')
 		'Basic usage of Slider',
 		() => (
 			<ChangeableSlider
-				backgroundProgress={number('backgroundProgress', ChangeableSlider.defaultProps.backgroundProgress, {range: true, min: Slider.defaultProps.mim, max: Slider.defaultProps.max, step: ChangeableSlider.defaultProps.step})}
+				backgroundProgress={number('backgroundProgress', ChangeableSlider.defaultProps.backgroundProgress, {range: true, min: 0, max: 1, step: 0.01})}
 				detachedKnob={boolean('detachedKnob', ChangeableSlider.defaultProps.detachedKnob)}
 				disabled={boolean('disabled', ChangeableSlider.defaultProps.disabled)}
 				max={number('max', ChangeableSlider.defaultProps.max)}

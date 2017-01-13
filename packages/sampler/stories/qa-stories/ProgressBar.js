@@ -14,10 +14,10 @@ storiesOf('ProgressBar')
 		'The basic ProgressBar',
 		() => (
 			<ProgressBar
-				backgroundProgress={number('backgroundProgress')}
-				progress={number('progress')}
-				vertical={boolean('vertical')}
-				disabled={boolean('disabled')}
+				backgroundProgress={number('backgroundProgress', 0)}
+				progress={number('progress', 0)}
+				vertical={boolean('vertical', false)}
+				disabled={boolean('disabled', false)}
 			/>
 		)
 	);
