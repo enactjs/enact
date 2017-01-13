@@ -141,12 +141,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			const {spottableDisappearToId} = this.props;
 
 			if (this.state.spotted && spottableDisappearToId) {
-				const next = document.querySelector(`[${spottableIdProp}='${spottableDisappearToId}']`);
-
-				if (next) {
-					Spotlight.setPointerMode(false);
-					Spotlight.focus(next);
-				}
+				Spotlight.focus(`[${spottableIdProp}='${spottableDisappearToId}']`);
 			}
 		}
 
