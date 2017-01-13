@@ -9,8 +9,8 @@ import {select} from '@kadira/storybook-addon-knobs';
 import css from './MoonstoneEnvironment.less';
 
 const reloadPage = () => {
-	const {protocol, host} = window.location;
-	window.parent.location.href = protocol + '//' + host;
+	const {protocol, host, pathname} = window.location;
+	window.parent.location.href = protocol + '//' + host + pathname;
 };
 
 const PanelsBase = kind({

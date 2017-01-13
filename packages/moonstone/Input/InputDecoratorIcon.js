@@ -21,7 +21,7 @@ const InputDecoratorIconBase = kind({
 		/**
 		 * The position of the icon. Either `before` or `after`.
 		 *
-		 * @type {[type]}
+		 * @type {String}
 		 */
 		position: React.PropTypes.oneOf(['before', 'after']).isRequired,
 

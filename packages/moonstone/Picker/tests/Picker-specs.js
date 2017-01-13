@@ -24,7 +24,7 @@ describe('Picker Specs', () => {
 		);
 
 		const expected = 3;
-		const actual = picker.find('PickerCore').prop('max');
+		const actual = picker.find('Picker').last().prop('max');
 
 		expect(actual).to.equal(expected);
 	});

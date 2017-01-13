@@ -12,8 +12,7 @@ import React from 'react';
 import {MarqueeController} from '../Marquee';
 import {validateRange} from '../internal/validators';
 
-import PickerCore from './PickerCore';
-import PickerItem from './PickerItem';
+import PickerCore, {PickerItem} from '../internal/Picker';
 import SpottablePicker from './SpottablePicker';
 
 /**
@@ -31,7 +30,7 @@ const PickerBase = kind({
 		/**
 		 * Children from which to pick
 		 *
-		 * @type {React.node}
+		 * @type {Node}
 		 * @public
 		 */
 		children: React.PropTypes.node.isRequired,
@@ -128,10 +127,17 @@ const PickerBase = kind({
 		 * assume auto-sizing. `'small'` is good for numeric pickers, `'medium'` for single or short
 		 * word pickers, `'large'` for maximum-sized pickers.
 		 *
-		 * @type {String}
+		 * You may also supply a number. This number will determine the minumum size of the Picker.
+		 * Setting a number to less than the number of characters in your longest value may produce
+		 * unexpected results.
+		 *
+		 * @type {String|Number}
 		 * @public
 		 */
-		width: React.PropTypes.oneOf([null, 'small', 'medium', 'large']),
+		width: React.PropTypes.oneOfType([
+			React.PropTypes.oneOf([null, 'small', 'medium', 'large']),
+			React.PropTypes.number
+		]),
 
 		/**
 		 * Should the picker stop incrementing when the picker reaches the last element? Set `wrap`
@@ -149,6 +155,7 @@ const PickerBase = kind({
 
 	computed: {
 		max: ({children}) => children && children.length ? children.length - 1 : 0,
+		reverse: ({orientation}) => (orientation === 'vertical'),
 		children: ({children, marqueeDisabled}) => React.Children.map(children, (child) => {
 			return <PickerItem marqueeDisabled={marqueeDisabled}>{child}</PickerItem>;
 		}),
