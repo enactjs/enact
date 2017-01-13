@@ -202,7 +202,7 @@ class Viewport extends React.Component {
 	constructor (props) {
 		super(props);
 		this.state = {
-			lastFocusedIndices: this.props.children.map(() => {
+			lastFocusedIndices: React.Children.map(this.props.children, () => {
 				return initialFocusedIndex;
 			})
 		};
