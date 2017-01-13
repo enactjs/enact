@@ -27,7 +27,7 @@ describe('ProgressBar Specs', () => {
 	it('should have height of 50%', () => {
 		const progressBar = mount(
 			<ProgressBar
-				progress={0.50}
+				progress={0.5}
 				vertical
 			/>
 		);
@@ -38,7 +38,7 @@ describe('ProgressBar Specs', () => {
 	it('should have background height of 50%', () => {
 		const progressBar = mount(
 			<ProgressBar
-				progress={0.50}
+				progress={0.5}
 				backgroundProgress={0.75}
 				vertical
 			/>

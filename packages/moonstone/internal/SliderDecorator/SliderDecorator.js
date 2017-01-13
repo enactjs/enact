@@ -231,7 +231,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		handleMouseMove = (ev) => {
 			// We don't want to run this code if any mouse button is being held down. That indicates dragging.
 			if (ev.buttons || this.props.vertical) {
-				forwardMouseLeave(ev, this.props);
+				forwardMouseMove(ev, this.props);
 				return;
 			}
 
