@@ -215,17 +215,8 @@ class Viewport extends React.Component {
 
 		if (index !== nextProps.index && node.contains(current)) {
 			const {lastFocusedIndices} = this.state;
-			const spottables = node.querySelectorAll(`.${spottableClass}`);
-			let focusedIndex = initialFocusedIndex;
-
-			for (let i = 0, len = spottables.length; i < len; ++i) {
-				if (spottables[i] === current) {
-					focusedIndex = i;
-					break;
-				}
-			}
-
-			lastFocusedIndices[index] = focusedIndex;
+			// we must convert our NodeList to an Array in order to find the index of current
+			lastFocusedIndices[index] = [].slice.call(node.querySelectorAll(`.${spottableClass}`)).indexOf(current);
 			this.setState({lastFocusedIndices});
 		}
 	}
