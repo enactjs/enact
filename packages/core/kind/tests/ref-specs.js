@@ -6,7 +6,7 @@ import ref from '../ref';
 
 describe('ref', () => {
 
-	it('Should add a ref function to the provided props', function () {
+	it('should add a ref function to the provided props', function () {
 		const props = ref()({count: 1});
 
 		const expected = 'function';
@@ -15,7 +15,7 @@ describe('ref', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should return unique capture functions for each call', function () {
+	it('should return unique capture functions for each call', function () {
 		const props1 = ref()({count: 1});
 		const props2 = ref()({count: 2});
 
@@ -25,7 +25,7 @@ describe('ref', () => {
 		expect(actual).to.not.equal(expected);
 	});
 
-	it('Should store a named reference', function () {
+	it('should store a named reference', function () {
 		const props = ref()({count: 1});
 		props.ref('control1')({name: 'storedRef'});
 

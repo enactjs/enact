@@ -4,7 +4,7 @@ import propTypes from '../propTypes';
 
 describe('propTypes', () => {
 
-	it('Should assign propTypes to propTypes of render method', function () {
+	it('should assign propTypes to propTypes of render method', function () {
 		const render = () => {};
 		const cfg = {
 			count: () => true

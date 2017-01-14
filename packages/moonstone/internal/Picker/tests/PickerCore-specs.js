@@ -2,7 +2,6 @@ import React from 'react';
 import {mount} from 'enzyme';
 import sinon from 'sinon';
 import PickerCore from '../Picker';
-import {stepped} from '../PickerPropTypes';
 import css from '../Picker.less';
 
 describe('PickerCore Specs', function () {
@@ -232,46 +231,5 @@ describe('PickerCore Specs', function () {
 		const actual = handleChange.args[0][0].value;
 		expect(actual).to.equal(expected);
 
-	});
-});
-
-describe('stepped specs', function () {
-	it('should validate prop is a number and divisible by step', function () {
-		const props = {
-			min: 0,
-			value: 9,
-			step: 3
-		};
-
-		const expected = false;
-		const actual = stepped(props, 'value') instanceof Error;
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('should return an error when prop is not divisible by step', function () {
-		const props = {
-			min: 0,
-			value: 10,
-			step: 3
-		};
-
-		const expected = true;
-		const actual = stepped(props, 'value') instanceof Error;
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('should return an error when prop is not a number', function () {
-		const props = {
-			min: 0,
-			value: 'not a number',
-			step: 3
-		};
-
-		const expected = true;
-		const actual = stepped(props, 'value') instanceof Error;
-
-		expect(actual).to.equal(expected);
 	});
 });
