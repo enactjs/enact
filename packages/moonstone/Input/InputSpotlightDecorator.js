@@ -69,7 +69,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 		}
 
 		componentDidUpdate (_, prevState) {
-			if (this.state.node) {
+			if (this.state.node && (this.state.node !== prevState.node)) {
 				this.state.node.focus();
 			}
 
@@ -124,6 +124,8 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 						this.focusDecorator(ev.currentTarget);
 						ev.stopPropagation();
 					}
+				} if (!this.state.focused === 'input') {	// Blurring decorator but not focusing input
+					this.blur();
 				}
 			} else if (this.state.focused === 'input' && this.state.node === ev.target) {
 				// only blur when the input should be focused and is the target of the blur
