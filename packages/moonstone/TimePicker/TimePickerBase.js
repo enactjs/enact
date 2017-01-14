@@ -158,7 +158,7 @@ const TimePickerBase = kind({
 											key="minute-picker"
 											label={noLabels ? null : $L('minute')}
 											max={59}
-											min={1}
+											min={0}
 											onChange={onChangeMinute}
 											padded
 											value={minute}

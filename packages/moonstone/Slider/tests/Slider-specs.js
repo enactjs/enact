@@ -98,6 +98,10 @@ describe('Slider Specs', () => {
 
 	it('should not position knob outside slider', function () {
 		const node = document.body.appendChild(document.createElement('div'));
+		// eslint-disable-next-line
+		console.warn.restore();
+		const spy = sinon.stub(console, 'warn');
+
 		mount(
 			<Slider
 				min={0}
@@ -114,9 +118,13 @@ describe('Slider Specs', () => {
 		const expected = 'translate3d(100px, 0, 0)';
 		const actual = knob.style.transform;
 
+		const warningExpected = 'Warning: SliderDecorator "value" (150) greater than "max" (100)';
+		const warningActual = spy.args[0][0];
+
 		node.remove();
 
 		expect(actual).to.equal(expected);
+		expect(warningActual).to.equal(warningExpected);
 	});
 
 	it('should apply min/max on mount', function () {
@@ -168,6 +176,9 @@ describe('Slider Specs', () => {
 
 	it('should clamp knob position when min changed', function () {
 		const node = document.body.appendChild(document.createElement('div'));
+		// eslint-disable-next-line
+		console.warn.restore();
+		const spy = sinon.stub(console, 'warn');
 		const slider = mount(
 			<Slider
 				min={0}
@@ -185,13 +196,21 @@ describe('Slider Specs', () => {
 		const expected = 'translate3d(0px, 0, 0)';
 		const actual = knob.style.transform;
 
+		const warningExpected = 'Warning: SliderDecorator "value" (0) less than "min" (50)';
+		const warningActual = spy.args[0][0];
+
+
 		node.remove();
 
 		expect(actual).to.equal(expected);
+		expect(warningActual).to.equal(warningExpected);
 	});
 
 	it('should clamp bar position when min changed', function () {
 		const node = document.body.appendChild(document.createElement('div'));
+		// eslint-disable-next-line
+		console.warn.restore();
+		const spy = sinon.stub(console, 'warn');
 		const slider = mount(
 			<Slider
 				min={0}
@@ -209,15 +228,22 @@ describe('Slider Specs', () => {
 		const expected = 'scale(0, 1) translateZ(0)';
 		const actual = knob.style.transform;
 
+		const warningExpected = 'Warning: SliderDecorator "value" (0) less than "min" (50)';
+		const warningActual = spy.args[0][0];
+
 		node.remove();
 
 		expect(actual).to.equal(expected);
+		expect(warningActual).to.equal(warningExpected);
 	});
 
 	// Note: This was causing a value out of bounds error, but should not have as
 	// backgroundProgress is percent, not an absolute value
 	it('should not change background position when min changed', function () {
 		const node = document.body.appendChild(document.createElement('div'));
+		// eslint-disable-next-line
+		console.warn.restore();
+		const spy = sinon.stub(console, 'warn');
 		const slider = mount(
 			<Slider
 				min={0}
@@ -236,8 +262,12 @@ describe('Slider Specs', () => {
 		const expected = 'scale(0.3, 1) translateZ(0)';
 		const actual = knob.style.transform;
 
+		const warningExpected = 'Warning: SliderDecorator "value" (0) less than "min" (50)';
+		const warningActual = spy.args[0][0];
+
 		node.remove();
 
 		expect(actual).to.equal(expected);
+		expect(warningActual).to.equal(warningExpected);
 	});
 });
