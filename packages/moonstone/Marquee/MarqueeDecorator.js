@@ -176,7 +176,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			marqueeOnRenderDelay: React.PropTypes.number,
 
 			/**
-			 * Number of milliseconds to wait before resetting the marquee after it finishes.
+			 * Number of milliseconds to wait before resetting the marquee after it finishes. A
+			 * minimum of 40 milliseconds is enforced.
 			 *
 			 * @type {Number}
 			 * @default 1000
