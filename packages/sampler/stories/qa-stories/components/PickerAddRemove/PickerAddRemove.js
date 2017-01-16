@@ -32,26 +32,32 @@ class PickerAddRemove extends React.Component {
 	constructor (props) {
 		super(props);
 
+		this.value = '';
+		this.index = 0;
 		this.state = {
 			children: props.children
 		};
 	}
 
+	componentWillUpdate () {
+		this.value = '';
+		this.index = 0;
+	}
+
 	handleAdd = () => {
 		const children = this.state.children,
-			index = this.index == null ? children.length : this.index;
+			index = this.index,
+			value = this.value || 'sample' + (children ? children.length : 0);
 
-		children.splice(index, 0, this.value);
+		children.splice(index, 0, value);
 
 		this.setState({
 			children: children
 		});
-
-		this.reset();
 	}
 
 	handleRemove = () => {
-		const index = parseInt(this.index);
+		const index = this.index;
 
 		this.setState({
 			children: [
@@ -59,21 +65,18 @@ class PickerAddRemove extends React.Component {
 				...this.state.children.slice(index + 1)
 			]
 		});
-
-		this.reset();
 	}
 
-	handleIndexChange = ({value: index}) => {
+	handleIndexChange = ({value}) => {
+		let index = parseInt(value);
+		if (isNaN(index)) {
+			index = 0;
+		}
 		this.index = index;
 	}
 
 	handleValueChange = ({value}) => {
 		this.value = value;
-	}
-
-	reset = () => {
-		this.index = null;
-		this.value = null;
 	}
 
 	render () {
