@@ -14,8 +14,7 @@ class IncrementSliderDelayValue extends React.Component {
 		min: React.PropTypes.number,
 		step: React.PropTypes.number,
 		value: checkDefaultBounds,
-		vertical: React.PropTypes.bool,
-		wait: React.PropTypes.number,
+		vertical: React.PropTypes.bool
 	};
 
 	static defaultProps: {
@@ -25,36 +24,32 @@ class IncrementSliderDelayValue extends React.Component {
 		pressed: false,
 		step: 1,
 		value: 0,
-		vertical: false,
-		wait: 1000
+		vertical: false
 	};
 
 	constructor (props) {
 		super(props);
 		this.state = {
-			value: props.value,
-			count: 0
+			value: props.value
 		};
 	}
 
-	changeValue() {
-		if(this.state.count < 4) {
-			if(this.state.value == 100) {
-				this.setState({value: 0});
-			} else {
-				this.setState({value: 100});
-			}
-			this.setState({count: this.state.count + 1});
+	changeValue () {
+		if (this.state.value === 100) {
+			this.setState({value: 0});
 		} else {
-			clearInterval(this.intervalId);
-			this.setState({count: 0});
+			this.setState({value: 100});
 		}
 	}
 
 	componentDidMount () {
-		this.intervalId = setInterval(this.changeValue.bind(this), 10000);
+		this.intervalId = setInterval(this.changeValue.bind(this), 5000);
 	}
-	
+
+	componentWillUnmount () {
+		clearInterval(this.intervalId);
+	}
+
 	render () {
 		return (
 			<div>

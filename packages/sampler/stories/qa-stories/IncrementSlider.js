@@ -14,18 +14,7 @@ storiesOf('IncrementSlider')
 		'IncrementSlider PLAT-28221',
 		() => (
 			<div>
-				<IncrementSlider
-					backgroundPercent={IncrementSlider.defaultProps.backgroundPercent}
-					incrementIcon={''}
-					decrementIcon={''}
-					disabled={IncrementSlider.defaultProps.disabled}
-					max={IncrementSlider.defaultProps.max}
-					min={IncrementSlider.defaultProps.min}
-					onChange={action('onChange')}
-					step={IncrementSlider.defaultProps.step}
-					vertical={IncrementSlider.defaultProps.vertical}
-					value={IncrementSlider.defaultProps.value}
-				/>
+				<IncrementSlider />
 				<IncrementSliderDelayValue
 					backgroundPercent={number('backgroundPercent', IncrementSlider.defaultProps.backgroundPercent, {range: true, min: 0, max: 100})}
 					incrementIcon={select('incrementIcon', ['', 'plus'])}
