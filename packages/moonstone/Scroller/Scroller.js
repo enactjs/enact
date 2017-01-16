@@ -7,8 +7,8 @@
  */
 
 import classNames from 'classnames';
-import React, {Component, PropTypes} from 'react';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
+import React, {Component, PropTypes} from 'react';
 import {SpotlightContainerDecorator} from '@enact/spotlight';
 
 import css from './Scroller.less';

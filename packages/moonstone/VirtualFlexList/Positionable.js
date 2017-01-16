@@ -3,9 +3,8 @@
  */
 
 import clamp from 'ramda/src/clamp';
-import React, {Component, PropTypes} from 'react';
-
 import hoc from '@enact/core/hoc';
+import React, {Component, PropTypes} from 'react';
 
 const
 	dataIndexAttribute = 'data-index',
