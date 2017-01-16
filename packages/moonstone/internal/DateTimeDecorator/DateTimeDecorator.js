@@ -74,10 +74,8 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 			this.initI18n();
 
 			const initialValue = this.toTime(props.value);
-			this.state = {
-				initialValue,
-				value: initialValue
-			};
+			const value = props.open && !initialValue ? Date.now() : initialValue;
+			this.state = {initialValue, value};
 
 			this.handlers = {};
 			if (handlers) {
@@ -117,7 +115,7 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 				if (!newValue) {
 					this.emitChange(this.toIDate(value));
 				}
-			} else if (newValue) {
+			} else {
 				this.setState({
 					value: newValue
 				});
