@@ -189,8 +189,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			super(props);
 
 			this.state = {
-				isHorizontalScrollbarVisible: true,
-				isVerticalScrollbarVisible: true
+				isHorizontalScrollbarVisible: false,
+				isVerticalScrollbarVisible: false
 			};
 
 			this.initChildRef = this.initRef('childRef');
