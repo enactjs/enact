@@ -15,7 +15,7 @@ describe('computed', () => {
 		z: 4
 	};
 
-	it('Should add new props to updated object', function () {
+	it('should add new props to updated object', function () {
 		const props = {
 			value: true
 		};
@@ -31,7 +31,7 @@ describe('computed', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should overwrite properties with computed values', function () {
+	it('should overwrite properties with computed values', function () {
 		const props = {
 			value: true,
 			count: 2
@@ -64,7 +64,7 @@ describe('computed', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should work with its documented example - sum', function () {
+	it('should work with its documented example - sum', function () {
 		const updated = computed(exampleCfg, exampleProps);
 
 		const expected = 9;
@@ -73,7 +73,7 @@ describe('computed', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should work with its documented example - product', function () {
+	it('should work with its documented example - product', function () {
 		const updated = computed(exampleCfg, exampleProps);
 
 		const expected = 24;

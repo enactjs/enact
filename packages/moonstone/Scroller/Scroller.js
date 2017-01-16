@@ -1,6 +1,7 @@
 /**
- * Exports the {@link moonstone/Scroller.Scroller} and {@link moonstone/Scroller.ScrollerBase}
- * components. The default export is {@link moonstone/Scroller.Scroller}.
+ * Exports the {@link moonstone/Scroller.Scroller} and 
+ * {@link moonstone/Scroller.ScrollerBase} components.
+ * The default export is {@link moonstone/Scroller.Scroller}.
  *
  * @module moonstone/Scroller
  */

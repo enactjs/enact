@@ -79,7 +79,7 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			/**
 			 * Panels to be rendered
 			 *
-			 * @type {React.node}
+			 * @type {Node}
 			 */
 			children: React.PropTypes.node,
 

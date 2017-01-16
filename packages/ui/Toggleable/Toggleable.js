@@ -112,7 +112,7 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillReceiveProps (nextProps) {
-			const active = nextProps[prop];
+			const active = !!nextProps[prop];
 			if (mutable && this.props[prop] !== active) {
 				this.setState({active});
 			}

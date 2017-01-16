@@ -5,12 +5,13 @@
  * @module moonstone/RangePicker
  */
 
+import clamp from 'ramda/src/clamp';
 import kind from '@enact/core/kind';
 import React from 'react';
 
-import PickerCore from '../Picker/PickerCore';
-import PickerItem from '../Picker/PickerItem';
+import {Picker, PickerItem} from '../internal/Picker';
 import SpottablePicker from '../Picker/SpottablePicker';
+import {validateRange} from '../internal/validators';
 
 const digits = (num) => {
 	// minor optimization
@@ -37,7 +38,7 @@ const RangePickerBase = kind({
 		/**
 		 * The maximum value selectable by the picker (inclusive).
 		 *
-		 * @type {[Number}
+		 * @type {Number}
 		 * @public
 		 */
 		max: React.PropTypes.number.isRequired,
@@ -45,7 +46,7 @@ const RangePickerBase = kind({
 		/**
 		 * The minimum value selectable by the picker (inclusive).
 		 *
-		 * @type {[Number}
+		 * @type {Number}
 		 * @public
 		 */
 		min: React.PropTypes.number.isRequired,
@@ -61,7 +62,7 @@ const RangePickerBase = kind({
 		/**
 		 * Children from which to pick
 		 *
-		 * @type {React.node}
+		 * @type {Node}
 		 * @public
 		 */
 		children: React.PropTypes.node,
@@ -167,10 +168,17 @@ const RangePickerBase = kind({
 		 * assume auto-sizing. `'small'` is good for numeric pickers, `'medium'` for single or short
 		 * word pickers, `'large'` for maximum-sized pickers.
 		 *
-		 * @type {String}
+		 * You may also supply a number. This number will determine the minumum size of the Picker.
+		 * Setting a number to less than the number of characters in your longest value may produce
+		 * unexpected results.
+		 *
+		 * @type {String|Number}
 		 * @public
 		 */
-		width: React.PropTypes.oneOf([null, 'small', 'medium', 'large']),
+		width: React.PropTypes.oneOfType([
+			React.PropTypes.oneOf([null, 'small', 'medium', 'large']),
+			React.PropTypes.number
+		]),
 
 		/**
 		 * Should the picker stop incrementing when the picker reaches the last element? Set `wrap`
@@ -194,15 +202,21 @@ const RangePickerBase = kind({
 			}
 
 			return value;
+		},
+		value: ({min, max, value}) => {
+			if (__DEV__) {
+				validateRange(value, min, max, 'RangePicker');
+			}
+			return clamp(min, max, value);
 		}
 	},
 
 	render: ({label, value, ...rest}) => {
 		delete rest.padded;
 		return (
-			<PickerCore {...rest} index={0} value={value}>
+			<Picker {...rest} index={0} value={value} reverse={false}>
 				<PickerItem key={value} marqueeDisabled>{label}</PickerItem>
-			</PickerCore>
+			</Picker>
 		);
 	}
 });

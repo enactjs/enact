@@ -48,7 +48,7 @@ const ToggleItemBase = kind({
 		/**
 		 * Icon property accepts a string or an Icon Element.
 		 *
-		 * @type {String|Element}
+		 * @type {String|moonstone/Icon.Icon}
 		 * @default null
 		 * @public
 		 */

@@ -5,7 +5,7 @@ title: Contribution Guide
 Thank you for helping improve the Enact framework! These documents highlight some of the things you'll need to know before
 submitting code or documentation to the project:
 
-*   [Coding Style Guide](./code_style.md) - The Enact code style explained
+<!-- *   [Coding Style Guide](./code_style.md) - The Enact code style explained -->
 *   [Documentation Style Guide](./documentation.md) - How we use jsDoc comments to document Enact
 *   [Documenting Changes](./changelogs.md) -  The Enact `CHANGELOG.md` guidelines
 
@@ -60,7 +60,7 @@ project. Please read this section carefully if you are interested in contributin
 	*   Help keep diffs easy to read by not making unnecessary rearrangements to the source code.
 	*   Make sure not to inadvertently change line ending types from Unix to Windows.
 	*   Ensure inline API documentation exists and is up-to-date (minimum: component summary and descriptions of all
-	properties). See [Documenting Code for the API Reference](./doc_style.md) for more details.
+	properties). See the [Documentation Style Guide](./documentation.md) for more details.
 	*   When resolving a bug, include the issue key in the commit/pull request comments. Here's a good example:
 		```
 		ENACT-123: Fixed girdle-spring physics on the encabulator scrollbar.

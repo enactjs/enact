@@ -7,6 +7,7 @@
  * @module moonstone/ExpandableItem
  */
 
+import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 
@@ -15,6 +16,9 @@ import LabeledItem from '../LabeledItem';
 import Expandable from './Expandable';
 import ExpandableContainer from './ExpandableContainer';
 import ExpandableTransitionContainer from './ExpandableTransitionContainer';
+
+const isUp = is('up');
+const isDown = is('down');
 
 /**
  * {@link moonstone/ExpandableItem.ExpandableItem} is a stateless component that
@@ -151,10 +155,10 @@ const ExpandableItemBase = kind({
 					// case here in which the children of the container are spottable and the
 					// ExpandableList use case which has an intermediate child (Group) between the
 					// spottable components and the container.
-					if (autoClose && keyCode === 38 && target.parentNode.firstChild === target && onClose) {
+					if (autoClose && isUp(keyCode) && target.parentNode.firstChild === target && onClose) {
 						onClose();
 						ev.nativeEvent.stopImmediatePropagation();
-					} else if (lockBottom && keyCode === 40 && target.parentNode.lastChild === target) {
+					} else if (lockBottom && isDown(keyCode) && target.parentNode.lastChild === target) {
 						ev.nativeEvent.stopImmediatePropagation();
 					}
 				};
