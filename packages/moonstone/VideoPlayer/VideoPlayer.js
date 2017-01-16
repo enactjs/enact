@@ -322,6 +322,7 @@ const VideoPlayerBase = class extends React.Component {
 		off('keypress', this.activityDetected);
 		this.stopRewindJob();
 		this.stopAutoCloseTimeout();
+		this.stopDelayedTitleHide();
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -666,6 +667,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	hideControls = () => {
+		this.stopDelayedTitleHide();
 		this.setState({bottomControlsVisible: false});
 	}
 

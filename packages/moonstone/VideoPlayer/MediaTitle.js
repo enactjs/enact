@@ -59,6 +59,11 @@ const MediaTitleBase = kind({
 		visible: React.PropTypes.bool
 	},
 
+	defaultProps: {
+		infoVisible: false,
+		visible: true
+	},
+
 	styles: {
 		css,
 		className: 'titleFrame'
