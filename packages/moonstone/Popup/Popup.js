@@ -224,7 +224,7 @@ class Popup extends React.Component {
 		 * Types of scrim. It can be either `'transparent'`, `'translucent'`, or `'none'`.`.
 		 *
 		 * @type {String}
-		 * @default `translucent`
+		 * @default 'translucent'
 		 * @public
 		 */
 		scrimType: React.PropTypes.oneOf(['transparent', 'translucent', 'none']),

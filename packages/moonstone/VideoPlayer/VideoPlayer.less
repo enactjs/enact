@@ -41,11 +41,12 @@
 
 					flex-grow: 1;
 					color: @moon-video-player-title-color;
+					opacity: 1;
 					.margin-start-end(0, @moon-spotlight-outset);
 
-					&.hiding {
+					&.hidden {
+						transition: opacity 1000ms ease-in-out;
 						opacity: 0;
-						transition: @badges-present-transition, opacity 1000ms ease-in-out;
 					}
 
 					// Title
@@ -264,6 +265,10 @@
 						.moreControls {
 							width: 100%;
 							display: inline-block;
+
+							> * {
+								vertical-align: top;
+							}
 						}
 						.mediaControls {
 							text-align: center;

@@ -99,7 +99,7 @@ class TransitionGroup extends React.Component {
 		/**
 		 * Type of component wrapping the children. May be a DOM node or a custom React component.
 		 *
-		 * @type {String|React.Component}
+		 * @type {String|Component}
 		 * @default 'div'
 		 */
 		component: React.PropTypes.any,
