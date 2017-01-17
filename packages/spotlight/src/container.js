@@ -115,7 +115,12 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			/**
 			 * Restricts or prioritizes navigation when focus attempts to leave the container. It
-			 * can be either 'none', 'self-first', or 'self-only'.
+			 * can be either 'none', 'self-first', or 'self-only'. Specifying 'self-first' indicates that
+			 * elements within the container will have a higher likelihood to be chosen as the next
+			 * navigable element. Specifying 'self-only' indicates that elements in other containers
+			 * cannot be navigated to by using 5-way navigation - however, elements in other containers
+			 * can still receive focus by calling `Spotlight.focus(elem)` explicitly. Specying 'none'
+			 * indicates there should be no restrictions when 5-way navigating the container.
 			 *
 			 * @type {String}
 			 * @default 'none'
@@ -125,6 +130,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		static defaultProps = {
+			spotlightDisabled: false,
 			spotlightMuted: false,
 			spotlightRestrict: 'none'
 		}
