@@ -5,7 +5,7 @@ import {SliderBase} from '../Slider';
 import css from '../Slider.less';
 
 describe('SliderBase Specs', () => {
-	it('Should set value on input', function () {
+	it('should set value on input', function () {
 		const sliderBase = mount(
 			<SliderBase value={50} />
 		);
@@ -16,7 +16,7 @@ describe('SliderBase Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should set max on input', function () {
+	it('should set max on input', function () {
 		const sliderBase = mount(
 			<SliderBase max={50} />
 		);
@@ -27,7 +27,7 @@ describe('SliderBase Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should set min on input', function () {
+	it('should set min on input', function () {
 		const sliderBase = mount(
 			<SliderBase min={50} value={50} />
 		);
@@ -38,7 +38,7 @@ describe('SliderBase Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should set step on input', function () {
+	it('should set step on input', function () {
 		const sliderBase = mount(
 			<SliderBase step={2} />
 		);
@@ -49,7 +49,7 @@ describe('SliderBase Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should fire change event', function () {
+	it('should fire change event', function () {
 		const handleChange = sinon.spy();
 
 		const sliderBase = mount(

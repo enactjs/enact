@@ -33,14 +33,14 @@ class ViewManager extends React.Component {
 		 * Views to be managed. May be any renderable component including custom React components or
 		 * primitive DOM nodes.
 		 *
-		 * @type {React.PropTypes.node}
+		 * @type {Node}
 		 */
 		children: React.PropTypes.node,
 
 		/**
 		 * Type of component wrapping the children. May be a DOM node or a custom React component.
 		 *
-		 * @type {String|React.Component}
+		 * @type {String|Component}
 		 * @default 'div'
 		 */
 		component: React.PropTypes.oneOfType([

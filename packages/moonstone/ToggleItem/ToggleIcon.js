@@ -21,7 +21,7 @@ const ToggleIconBase = kind({
 		/**
 		 * Nothing, a string, or an {@link moonstone/Icon.Icon}
 		 *
-		 * @type {React.node}
+		 * @type {Node}
 		 */
 		children: React.PropTypes.node,
 

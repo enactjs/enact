@@ -11,7 +11,7 @@ describe('styles', () => {
 
 	// className tests
 
-	it('Should add cfg.className to props', function () {
+	it('should add cfg.className to props', function () {
 		const cfg = {
 			className: 'button'
 		};
@@ -24,7 +24,7 @@ describe('styles', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should resolve cfg.className to the cfg.css map', function () {
+	it('should resolve cfg.className to the cfg.css map', function () {
 		const cfg = {
 			css,
 			className: 'button'
@@ -38,7 +38,7 @@ describe('styles', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should pass through props.className when cfg.className absent', function () {
+	it('should pass through props.className when cfg.className absent', function () {
 		const props = {
 			className: 'button'
 		};
@@ -50,7 +50,7 @@ describe('styles', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should append cfg.className with props.className', function () {
+	it('should append cfg.className with props.className', function () {
 		const props = {
 			className: 'custom-button'
 		};
@@ -66,7 +66,7 @@ describe('styles', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should resolve cfg.className and append with props.className', function () {
+	it('should resolve cfg.className and append with props.className', function () {
 		const props = {
 			className: 'custom-button'
 		};
@@ -85,7 +85,7 @@ describe('styles', () => {
 
 	// style tests
 
-	it('Should add cfg.style to props', function () {
+	it('should add cfg.style to props', function () {
 		const cfg = {
 			style: {
 				color: 'green'
@@ -100,7 +100,7 @@ describe('styles', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should pass through props.style when cfg.style absent', function () {
+	it('should pass through props.style when cfg.style absent', function () {
 		const props = {
 			style: {
 				color: 'green'
@@ -114,7 +114,7 @@ describe('styles', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should merge cfg.style and props.style', function () {
+	it('should merge cfg.style and props.style', function () {
 		const props = {
 			style: {
 				color: 'green'
@@ -136,7 +136,7 @@ describe('styles', () => {
 
 	// Doesn't support merging shorthand properties and individual properties
 	// e.g. borderWidth: 3px + border: 1px solid black = border: 3px solid black
-	it('Should not merge shorthand properties', function () {
+	it('should not merge shorthand properties', function () {
 		const props = {
 			style: {
 				borderWidth: '3px'
@@ -158,7 +158,7 @@ describe('styles', () => {
 
 	// styler tests
 
-	it('Should add styler.join() to props', function () {
+	it('should add styler.join() to props', function () {
 		const updated = styles({}, {});
 
 		const expected = 'function';
@@ -167,7 +167,7 @@ describe('styles', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should join classes together with a space', function () {
+	it('should join classes together with a space', function () {
 		const updated = styles({}, {});
 
 		const expected = 'abc def';
@@ -176,7 +176,7 @@ describe('styles', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should resolve join classes to css map', function () {
+	it('should resolve join classes to css map', function () {
 		const updated = styles({css}, {});
 
 		const expected = css.button + ' ' + css.client;
@@ -185,7 +185,7 @@ describe('styles', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should not resolve author classes to css map', function () {
+	it('should not resolve author classes to css map', function () {
 		const cfg = {
 			css,
 			className: 'button'
@@ -201,7 +201,7 @@ describe('styles', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should append resolved class names to props.className', function () {
+	it('should append resolved class names to props.className', function () {
 		const cfg = {
 			css,
 			className: 'button'
