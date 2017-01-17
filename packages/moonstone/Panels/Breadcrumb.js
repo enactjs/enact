@@ -1,5 +1,5 @@
 import kind from '@enact/core/kind';
-import {Spottable} from '@enact/spotlight';
+import {Spotlight, Spottable} from '@enact/spotlight';
 import React from 'react';
 
 import css from './Panels.less';
@@ -51,6 +51,8 @@ const BreadcrumbBase = kind({
 
 	computed: {
 		onSelect: ({index, onSelect: handler, onClick}) => (ev) => {
+			// clear Spotlight focus
+			ev.target.blur();
 			if (onClick) onClick(ev);
 			if (handler) handler({index});
 		}

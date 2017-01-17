@@ -111,13 +111,17 @@
 	}
 
 	.breadcrumbs {
+		background-color: @moon-background-color;
+		opacity: 1;
+		transition: opacity 200ms linear;
 		width: @moon-breadcrumb-width;
-	}
 
-	// prevents breadcrumbs from capturing pointer events when the first panel is visible without
-	// any breadcrumbs
-	.breadcrumbs:empty {
-		pointer-events: none;
+		// prevents breadcrumbs from capturing pointer events when the first panel is visible without
+		// any breadcrumbs
+		&.hidden {
+			opacity: 0;
+			pointer-events: none;
+		}
 	}
 }
 
