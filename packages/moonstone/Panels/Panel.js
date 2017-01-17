@@ -1,9 +1,21 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import Slottable from '@enact/ui/Slottable';
-import {SpotlightContainerDecorator} from '@enact/spotlight';
+import {Spotlight, SpotlightContainerDecorator} from '@enact/spotlight';
 
 import css from './Panel.less';
+
+const spotPanel = (node) => {
+	if (node && !node.contains(document.activeElement)) {
+		const body = node.querySelector('section .spottable');
+		const header = node.querySelector('header .spottable');
+		const spottable = body || header;
+
+		if (spottable) {
+			Spotlight.focus(spottable);
+		}
+	}
+};
 
 /**
 * {@link moonstone/Panels.Panel} is the default kind for controls created inside a
@@ -49,6 +61,10 @@ const PanelBase = kind({
 	},
 
 	computed: {
+		// In order to spot the body components, we defer spotting until !entering. If the Panel
+		// opts out of entering support by explicitly setting it to false, it'll spot on first
+		// render.
+		spotOnRender: ({entering}) => entering ? null : spotPanel,
 		children: ({children, entering}) => entering ? null : children,
 		bodyClassName: ({entering, styler}) => styler.append({
 			body: true,
@@ -56,11 +72,11 @@ const PanelBase = kind({
 		})
 	},
 
-	render: ({bodyClassName, children, header, ...rest}) => {
+	render: ({bodyClassName, children, header, spotOnRender, ...rest}) => {
 		delete rest.entering;
 
 		return (
-			<article {...rest}>
+			<article {...rest} ref={spotOnRender}>
 				<div className={css.header}>{header}</div>
 				<section className={bodyClassName}>{children}</section>
 			</article>
