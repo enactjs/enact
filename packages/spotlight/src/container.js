@@ -96,6 +96,15 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			containerId: PropTypes.string,
 
 			/**
+			 * When `true`, controls in the container cannot be navigated.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			spotlightDisabled: PropTypes.bool,
+
+			/**
 			 * Whether or not the container is in muted mode.
 			 *
 			 * @type {Boolean}
@@ -181,13 +190,17 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const {spotlightMuted, ...rest} = this.props;
+			const {spotlightDisabled, spotlightMuted, ...rest} = this.props;
 			delete rest.containerId;
 			delete rest.spotlightRestrict;
 
 			rest['data-container-id'] = this.state.id;
 			rest[enterEvent] = this.handleMouseEnter;
 			rest[leaveEvent] = this.handleMouseLeave;
+
+			if (spotlightDisabled) {
+				rest['data-container-disabled'] = spotlightDisabled;
+			}
 
 			if (spotlightMuted) {
 				rest['data-container-muted'] = spotlightMuted;

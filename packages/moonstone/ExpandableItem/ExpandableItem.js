@@ -200,10 +200,10 @@ const ExpandableItemBase = kind({
 					titleIcon={titleIcon}
 				>{title}</LabeledItem>
 				<ExpandableTransitionContainer
-					data-container-disabled={!open}
 					data-expandable-container
 					duration="short"
 					onKeyDown={handleKeyDown}
+					spotlightDisabled={!open}
 					type="clip"
 					visible={open}
 				>

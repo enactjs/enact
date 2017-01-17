@@ -12,7 +12,7 @@ title: Spotlight
 7. [Container](#7)
 8. [Events](#8)
 9. [Spotlight API](#9)
-10. [HOC Parameters](#10)
+10. [HOC Parameters and Properties](#10)
 11. [Examples](#11)
 
 <a name="1"></a>
@@ -72,6 +72,24 @@ following types:
 - a single DOM element
 - a string `'@<containerId>'` to indicate the specified container
 - the string `'@'` to indicate the default container
+
+There may be times where it is preferable to specify a selector instead of relying on a reference to an element
+or `@<containerId>`. Each time a Spottable control receives focus via 5-way or pointer navigation, Spotlight updates
+its cache of available Spottable controls. So for example, if your container DOM is updated programmatically, followed
+by the need to set focus on a newly-created default Spottable control, you will be unable to spot the control by
+calling focus on the container.
+
+```javascript
+Spotlight.focus('container-name');
+```
+
+Be default, Spotlight will not always update its cache of available Spottable controls when simply attempting to
+set focus. This is done for performance reasons. Instead, you can supply a `querySelector` string that will allow
+Spotlight to parse the selector, re-indexing the available Spottable controls.
+
+```javascript
+Spotlight.focus('[data-container-id="container-name"] .spottable');
+```
 
 <a name="5"></a>
 ## 5. SpotlightRootDecorator
@@ -138,22 +156,23 @@ const Container = SpotlightContainerDecorator(kind({
 In a way, containers may be thought of as the branches--and spottable controls
 as the leaves--of the Spotlight navigation tree.
 
-A special `data-container-disabled` attribute may be applied to the container's
-node to temporarily disable the specified container's spottable controls:
+A `spotlightDisabled` property may be applied to the container to temporarily disable the specified container's
+spottable controls:
 
 ```javascript
 import kind from 'enact-core/kind';
 import {SpotlightContainerDecorator} from 'enact-spotlight';
-const Container = SpotlightContainerDecorator(kind({
-	name: 'Container',
+const Container = SpotlightContainerDecorator('div');
+const App = kind({
+	name: 'App',
 	render: (props) => {
 		return (
-			<div {...props} data-container-disabled>
+			<Container {...props} spotlightDisabled>
 				{/* A list of spottable controls */}
-			</div>
+			</Container>
 		);
 	}
-}));
+});
 ```
 
 
@@ -198,22 +217,62 @@ Moves focus in the specified direction of `selector`. If `selector` is not speci
 Spotlight will move in the given direction of the currently spotted control.
 
 <a name="10"></a>
-## 10. HOC PARAMETERS ##
+## 10. HOC PARAMETERS AND PROPERTIES ##
+
+##### Spotlight HOC Parameters #####
+
+Parameters in the form of an object can be passed as an initial argument to a HOC when creating a
+Spotlight control. In these cases, the HOC parameter should remain static and unchanged in the
+life-cycle of the control.
+
+```javascript
+import {Spottable} from 'enact-spotlight';
+// spottable control that doesn't emit `onClick` events when pressing the enter key
+const Control = Spottable({emulateMouse: false}, 'div');
+```
+
+##### Spotlight HOC Properties #####
+
+Spotlight HOCs are able to use properties that are passed to them via parent controls. These properties
+are passed like any other Enact control.
+
+```javascript
+import kind from 'enact-core/kind';
+import {Spottable} from 'enact-spotlight';
+
+const SpottableComponent = Spottable('div');
+const App = kind({
+	render: () => (<SpottableComponent spotlightDisabled />)
+});
+```
 
 ### Spottable ###
+
+##### Parameters #####
+
+`emulateMouse`
++ Type: [boolean]
++ Default: `true`
+
+Whether or not the component should emulate mouse events as a response to Spotlight 5-way events.
+
+##### Properties #####
 `spotlightDisabled`
 + Type: [boolean]
 + Default: `false`
 
 May be added to temporarily make a control not spottable.
 
-`decorated`
-+ Type: [boolean]
-+ Default: `false`
-
-Designates whether a control is being decorated by another spottable control.
-
 ### Container ###
+
+##### Parameters #####
+
+`defaultElement`
++ Type: [string]
++ Default: `'.spottable-default'`
+
+The selector for the default spottable element within the container.
+
 `enterTo`
 + Type: [string]
 + Values: [`''`, `'last-focused'`, or `'default-element'`]
@@ -222,18 +281,41 @@ Designates whether a control is being decorated by another spottable control.
 If the focus originates from another container, you can define which element in
 this container receives focus first.
 
-`restrict`
+`preserveId`
++ Type: [boolean]
++ Default: `false`
+
+Whether the container will preserve the id when it unmounts.
+
+#### Properties ####
+
+`containerId`
++ Type: [string]
+
+Specifies the container id. If the value is `null`, an id will be generated.
+
+`spotlightDisabled`
++ Type: [boolean]
++ Default: `false`
+
+When `true`, controls in the container cannot be navigated.
+
+`spotlightMuted`
++ Type: [boolean]
++ Default: `false`
+
+Whether or not the container is in muted mode. When in muted mode, Spottable controls within the container
+can still gain focus, however their `:focus` CSS styles will not be applied, giving them the appearance
+of not having focus. Muting a container is generally done to temporarily disable CSS changes and
+default `onFocus` and `onBlur` events without removing focus from the container itself - which would
+happen if you disabled the container using `spotlightDisabled`.
+
+`spotlightRestrict`
 + Type: [string]
 + Values: [`'none'`, `'self-first'`, or `'self-only'`]
 + Default: `'none'`
 
 Restricts or prioritizes focus to the controls in the current container.
-
-`disabled`
-+ Type: [boolean]
-+ Default: `false`
-
-When `true`, controls in the container cannot be navigated.
 
 ```javascript
 import {SpotlightContainerDecorator} from 'enact-spotlight';
