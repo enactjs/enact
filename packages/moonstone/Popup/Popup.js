@@ -141,8 +141,8 @@ const PopupBase = kind({
 			<TransitionContainer
 				noAnimation={noAnimation}
 				containerId={containerId}
+				spotlightDisabled={!open}
 				spotlightRestrict={spotlightRestrict}
-				data-container-disabled={!open}
 				visible={open}
 				direction="down"
 				duration="short"
