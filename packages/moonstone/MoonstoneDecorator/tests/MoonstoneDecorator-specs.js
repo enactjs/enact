@@ -1,5 +1,3 @@
-/* globals describe, it, expect */
-
 import React from 'react';
 import {mount} from 'enzyme';
 import MoonstoneDecorator from '../';
