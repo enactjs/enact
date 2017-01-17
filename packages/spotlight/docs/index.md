@@ -41,21 +41,21 @@ whenever suitable input is received--i.e.: it switches to pointer mode on
 <a name="3"></a>
 ## 3. Navigation
 
-Spotlight enables navigation between controls by assigning focus to one control 
-at a time.  Focus-enabled controls are considered to be "spottable". These spottable 
-controls take on the CSS class `.spottable`, which allow focused controls to be styled 
+Spotlight enables navigation between controls by assigning focus to one control
+at a time.  Focus-enabled controls are considered to be "spottable". These spottable
+controls take on the CSS class `.spottable`, which allow focused controls to be styled
 on a per-kind basis using `.<kindClass>.spottable:focus` selectors.
 
 Spotlight uses the native HTML DOM `focus` method to assign focus to controls. Form
 elements can gain focus by default, but Spotlight designates a `tabindex` value to its
 controls, meaning even a simple `div` can be a spottable control.
 
-When an application loads, Spotlight will initially spot the first spottable 
+When an application loads, Spotlight will initially spot the first spottable
 control. If a control has been programmatically spotted via `Spotlight.focus(element)`
 immediately after being rendered, that control will be spotted instead.
 
-In 5-way mode, Spotlight uses an algorithm to determine which spottable control 
-is the nearest one in the direction of navigation.  The coordinates of a 
+In 5-way mode, Spotlight uses an algorithm to determine which spottable control
+is the nearest one in the direction of navigation.  The coordinates of a
 spottable control are derived from its actual position on the screen.
 
 It's worth noting that spottable controls may be found on different hierarchical
@@ -93,11 +93,11 @@ Spotlight.focus('[data-container-id="container-name"] .spottable');
 
 <a name="5"></a>
 ## 5. SpotlightRootDecorator
-The `SpotlightRootDecorator` is a top-level HOC (Higher Order Component) that is 
+The `SpotlightRootDecorator` is a top-level HOC (Higher Order Component) that is
 required to use Spotlight. It is responsible for initializing the Spotlight instance
 and managing navigation event listeners.
 
-To use Spotlight in an application, simply import and wrap the `SpotlightRootDecorator` 
+To use Spotlight in an application, simply import and wrap the `SpotlightRootDecorator`
 HOC around your application view:
 
 ```javascript
@@ -125,17 +125,17 @@ wrap your base control with the `Spottable` HOC, like so:
 ## 7. Containers
 
 In order to organize controls into navigation groups, we have created Spotlight
-containers. 
+containers.
 
 A good example of how containers should be used is a set of radio buttons that
 must be navigable separately from the rest of the app's controls.
 
-When a Spotlight container is focused, it passes the focus to its own configurable 
-hierarchy of spottable child controls--specifically, to the last spottable child to 
+When a Spotlight container is focused, it passes the focus to its own configurable
+hierarchy of spottable child controls--specifically, to the last spottable child to
 hold focus before the focus moved outside of the container.  If the container in
 question has never been focused, it passes focus to its first spottable child.
 
-To define a container, wrap your base control with the `SpotlightContainerDecorator` 
+To define a container, wrap your base control with the `SpotlightContainerDecorator`
 HOC:
 
 ```javascript
@@ -182,7 +182,7 @@ const App = kind({
 Spotlight uses native DOM events to navigate the available spottable controls and does not
 directly dispatch synthetic events to the currently spotted control.
 
-To determine if spotlight is the cause of a specific spotted control's key event, you can 
+To determine if spotlight is the cause of a specific spotted control's key event, you can
 validate the native `target` property of the key event against `document.activeElement`.
 
 
@@ -206,7 +206,7 @@ Resumes Spotlight navigation.
 #### `Spotlight.focus([containerId/selector])` ####
 + `containerId/selector`: (optional) String / Selector (without @ syntax)
 
-Dispatches focus to the specified containerId or the first spottable child that 
+Dispatches focus to the specified containerId or the first spottable child that
 matches `selector`. This method has no effect if Spotlight is paused.
 
 #### `Spotlight.move(direction, [selector])` ####
@@ -234,7 +234,7 @@ const Control = Spottable({emulateMouse: false}, 'div');
 ##### Spotlight HOC Properties #####
 
 Spotlight HOCs are able to use properties that are passed to them via parent controls. These properties
-are passed like any other Enact control.
+are passed like in any other Enact component.
 
 ```javascript
 import kind from 'enact-core/kind';
