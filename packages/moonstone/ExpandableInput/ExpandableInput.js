@@ -6,7 +6,6 @@ import React from 'react';
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 import {Input} from '../Input';
 
-const forwardClose = forward('onClose');
 const forwardMouseDown = forward('onMouseDown');
 
 class ExpandableInputBase extends React.Component {
@@ -142,9 +141,9 @@ class ExpandableInputBase extends React.Component {
 		ev.stopPropagation();
 	}
 
-	handleClose = (ev) => {
+	handleClose = () => {
 		this.fireChangeEvent();
-		forwardClose(ev);
+		// not forwarding event because this is being done in fireChangeEvent
 	}
 
 	render () {
