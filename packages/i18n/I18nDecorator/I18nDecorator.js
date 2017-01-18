@@ -4,7 +4,7 @@
  *
  * @module i18n/I18nDecorator
  */
-
+import ilib from '../ilib/lib/ilib';
 import hoc from '@enact/core/hoc';
 import {on, off} from '@enact/core/dispatcher';
 import React from 'react';
@@ -46,7 +46,7 @@ const contextTypes = {
 const IntlHoc = hoc((config, Wrapped) => {
 	return class I18nDecorator extends React.Component {
 		static childContextTypes = contextTypes
-		static propTypes = /** @lends i18n/I18nDecorator.I18nDecorator */ {
+		static propTypes = /** @lends i18n/I18nDecorator.I18nDecorator.prototype */ {
 			className: React.PropTypes.string,
 			locale: React.PropTypes.string
 		}
@@ -60,9 +60,11 @@ const IntlHoc = hoc((config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
+			const ilibLocale = ilib.getLocale();
+			const locale = props.locale && props.locale !== ilibLocale ? updateLocale(props.locale) : ilibLocale;
 
 			this.state = {
-				locale: updateLocale(props.locale)
+				locale: locale
 			};
 		}
 

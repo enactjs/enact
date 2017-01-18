@@ -8,13 +8,13 @@
 import hoc from '@enact/core/hoc';
 import {throttleJob} from '@enact/core/jobs';
 import Spotlight from '@enact/spotlight';
-import {checkDefaultBounds} from '@enact/ui/validators/PropTypeValidators';
 import clamp from 'ramda/src/clamp';
 import React, {PropTypes} from 'react';
 import {forward} from '@enact/core/handle';
 
+import {validateRange} from '../validators';
+
 import {
-	computeProportionBackground,
 	computeProportionProgress,
 	computeBarTransform,
 	computeKnobTransform
@@ -63,9 +63,7 @@ const defaultConfig = {
 };
 
 // Set-up event forwarding
-const
-	forwardChange      = forward('onChange'),
-	forwardMouseMove   = forward('onMouseMove'),
+const forwardMouseMove = forward('onMouseMove'),
 	forwardMouseLeave  = forward('onMouseLeave');
 
 /**
@@ -80,18 +78,18 @@ const
  * @private
  */
 const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	return class extends React.Component {
+	return class SliderDecoratorClass extends React.Component {
 		static displayName = 'SliderDecorator';
 
 		static propTypes = /** @lends moonstone/internal/SliderDecorator.SliderDecorator.prototype */{
 			/**
-			 * Background progress, as a percentage.
+			 * Background progress, as a proportion between `0` and `1`.
 			 *
 			 * @type {Number}
 			 * @default 0
 			 * @public
 			 */
-			backgroundPercent: PropTypes.number,
+			backgroundProgress: PropTypes.number,
 
 			/**
 			 * The slider can change its behavior to have the knob follow the cursor as it moves
@@ -156,7 +154,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @default 0
 			 * @public
 			 */
-			value: checkDefaultBounds,
+			value: PropTypes.number,
 
 			/**
 			 * If `true` the slider will be oriented vertically.
@@ -182,21 +180,39 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			this.jobName = `sliderChange${now()}`;
 			this.knobPosition = null;
+			this.normalizedMax = props.max != null ? props.max : Wrapped.defaultProps.max;
+			this.normalizedMin = props.min != null ? props.min : Wrapped.defaultProps.min;
 			this.state = {
-				value: props.value
+				value: clamp(this.normalizedMin, this.normalizedMax, props.value)
 			};
-		}
-
-		componentWillReceiveProps (nextProps) {
-			if (nextProps.value !== this.props.value) {
-				this.updateValue(nextProps.value);
+			if (__DEV__) {
+				validateRange(props.value, props.min, props.max, SliderDecoratorClass.displayName);
+				validateRange(props.backgroundProgress, 0, 1, SliderDecoratorClass.displayName,
+					'backgroundProgress', 'min', 'max');
 			}
 		}
 
-		componentDidUpdate (prevProps) {
-			if (prevProps.vertical !== this.props.vertical) {
-				this.updateUI(this.state.value);
+		componentDidMount () {
+			this.updateUI(this.state.value);
+		}
+
+		componentWillReceiveProps ({backgroundProgress, min, max, value: _value}) {
+			if ((min !== this.props.min) || (max !== this.props.max) ||
+					(_value !== this.state.value)) {
+				this.normalizedMax = max != null ? max : Wrapped.defaultProps.max;
+				this.normalizedMin = min != null ? min : Wrapped.defaultProps.min;
+				const value = clamp(this.normalizedMin, this.normalizedMax, _value);
+				this.setState({value});
 			}
+			if (__DEV__) {
+				validateRange(_value, min, max, SliderDecoratorClass.displayName);
+				validateRange(backgroundProgress, 0, 1, SliderDecoratorClass.displayName,
+					'backgroundProgress', 'min', 'max');
+			}
+		}
+
+		componentDidUpdate () {
+			this.updateUI(this.state.value);
 		}
 
 		onChange = (value) => {
@@ -207,15 +223,17 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleChange = (ev) => {
 			ev.preventDefault();
-			const parseFn = (ev.target.value % 1 !== 0) ? 'parseFloat' : 'parseInt',
-				value = Number[parseFn](ev.target.value);
+			const parseFn = (ev.target.value % 1 !== 0) ? parseFloat : parseInt,
+				value = parseFn(ev.target.value);
 			this.submitValue(value);
-			forwardChange(ev, this.props);
 		}
 
 		handleMouseMove = (ev) => {
 			// We don't want to run this code if any mouse button is being held down. That indicates dragging.
-			if (ev.buttons || this.props.vertical) return;
+			if (ev.buttons || this.props.vertical) {
+				forwardMouseMove(ev, this.props);
+				return;
+			}
 
 			const node = this.sliderBarNode.node;
 
@@ -244,21 +262,17 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		updateUI = (value) => {
 			// intentionally breaking encapsulation to avoid having to specify multiple refs
 			const {barNode, knobNode, loaderNode, node} = this.sliderBarNode;
-			const {backgroundPercent, max, min, vertical} = this.props;
-			const normalizedMax = max != null ? max : Wrapped.defaultProps.max;
-			const normalizedMin = min != null ? min : Wrapped.defaultProps.min;
-			const proportionBackground = computeProportionBackground({backgroundPercent});
-			const proportionProgress = computeProportionProgress({value, max: normalizedMax, min: normalizedMin});
+			const {backgroundProgress, vertical} = this.props;
+			const proportionProgress = computeProportionProgress({value, max: this.normalizedMax, min: this.normalizedMin});
 			const knobProgress = this.knobPosition != null ? this.knobPosition : proportionProgress;
 
-			loaderNode.style.transform = computeBarTransform(proportionBackground, vertical);
+			loaderNode.style.transform = computeBarTransform(backgroundProgress, vertical);
 			barNode.style.transform = computeBarTransform(proportionProgress, vertical);
 			// If we know the knob should be in a custom place, use that place; otherwise, sync it with the progress.
 			knobNode.style.transform = computeKnobTransform(knobProgress, vertical, node);
 		}
 
 		updateValue = (value) => {
-			this.updateUI(value);
 			this.inputNode.value = value;
 			this.setState({value});
 			this.onChange(value);
@@ -276,7 +290,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.sliderBarNode = node;
 		}
 
-		clickHandler = () => Spotlight.focus(this.sliderNode)
+		handleClick = () => Spotlight.focus(this.sliderNode)
 
 		incrementHandler = () => {
 			this.changeValue(1);
@@ -306,7 +320,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					{...handlers}
 					inputRef={this.getInputNode}
 					onChange={this.handleChange}
-					onClick={this.clickHandler}
+					onClick={this.handleClick}
 					onMouseLeave={this.props.detachedKnob ? this.handleMouseLeave : null}
 					onMouseMove={this.props.detachedKnob ? this.handleMouseMove : null}
 					scrubbing={(this.knobPosition != null)}

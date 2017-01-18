@@ -1,9 +1,9 @@
 // Picker
 //
-@import '../styles/colors.less';
-@import '../styles/variables.less';
-@import '../styles/text.less';
-@import '../styles/mixins.less';
+@import '../../styles/colors.less';
+@import '../../styles/variables.less';
+@import '../../styles/text.less';
+@import '../../styles/mixins.less';
 
 .picker {
 	@button-width: (@moon-button-height - 12);
@@ -25,6 +25,20 @@
 		border-radius: inherit;
 	}
 
+	.sizingPlaceholder,
+	.valueWrapper {
+		.moon-text-base();
+		.moon-locale-non-latin({line-height: @moon-button-height;});
+		height: @moon-button-height;
+		line-height: @moon-button-height;
+		max-width: 300px;
+	}
+
+	.sizingPlaceholder {
+		height: 0;
+		visibility: hidden;
+	}
+
 	.valueWrapper {
 		overflow: hidden;
 		vertical-align: bottom;
@@ -44,14 +58,16 @@
 	}
 
 	&.horizontal {
+		display: inline-flex;
+
 		.incrementer {
-			float: right;
+			order: 3;
 		}
 		.decrementer {
-			float: left;
+			order: 1;
 		}
 		.valueWrapper {
-			display: inline-block;
+			order: 2;
 		}
 	}
 
@@ -62,12 +78,6 @@
 		&.incrementing .incrementer,
 		&.decrementing .decrementer {
 			transform: scale(0.8);
-		}
-
-		.valueWrapper {
-			.moon-text-base();
-			height: @moon-button-height;
-			line-height: @moon-button-height;
 		}
 
 		&.horizontal {
@@ -107,16 +117,6 @@
 		}
 	}
 
-	&:not(.joined) {
-		.valueWrapper {
-			.moon-body-text();
-			.moon-locale-non-latin({line-height: @moon-button-height;});
-			height: @moon-button-height;
-			line-height: @moon-button-height;
-			max-width: 300px;
-		}
-	}
-
 	&.small .valueWrapper {
 		width: 60px;
 	}
@@ -134,7 +134,7 @@
 			position: relative;
 
 			.item {
-				position: absolute;
+				position: relative;
 				.position(0);
 			}
 		}

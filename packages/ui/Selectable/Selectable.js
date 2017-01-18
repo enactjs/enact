@@ -12,7 +12,7 @@ import React, {PropTypes} from 'react';
 /**
  * Default config for {@link ui/Selectable.Selectable}
  *
- * @memberof ui/Selectable
+ * @memberof ui/Selectable.Selectable
  * @hocconfig
  */
 const defaultConfig = {
@@ -26,7 +26,7 @@ const defaultConfig = {
 	 *
 	 * @type {Boolean}
 	 * @default false
-	 * @memberof ui/Selectable.defaultConfig
+	 * @memberof ui/Selectable.Selectable.defaultConfig
 	 */
 	mutable: false,
 
@@ -35,7 +35,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'onSelect'
-	 * @memberof ui/Selectable.defaultConfig
+	 * @memberof ui/Selectable.Selectable.defaultConfig
 	 */
 	select: 'onSelect',
 
@@ -44,7 +44,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'selected'
-	 * @memberof ui/Selectable.defaultConfig
+	 * @memberof ui/Selectable.Selectable.defaultConfig
 	 */
 	prop: 'selected'
 };
@@ -59,7 +59,7 @@ const defaultConfig = {
  *
  * @class Selectable
  * @memberof ui/Selectable
- * @ui
+ * @hoc
  * @public
  */
 const Selectable = hoc(defaultConfig, (config, Wrapped) => {

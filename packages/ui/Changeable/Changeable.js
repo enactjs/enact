@@ -12,7 +12,7 @@ import React from 'react';
 /**
  * Default config for {@link ui/Changeable.Changeable}.
  *
- * @memberof ui/Changeable
+ * @memberof ui/Changeable.Changeable
  * @hocconfig
  */
 const defaultConfig = {
@@ -27,7 +27,7 @@ const defaultConfig = {
 	 *
 	 * @type {Boolean}
 	 * @default false
-	 * @memberof ui/Changeable.defaultConfig
+	 * @memberof ui/Changeable.Changeable.defaultConfig
 	 */
 	mutable: false,
 
@@ -36,7 +36,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'onChange'
-	 * @memberof ui/Changeable.defaultConfig
+	 * @memberof ui/Changeable.Changeable.defaultConfig
 	 */
 	change: 'onChange',
 
@@ -45,7 +45,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'value'
-	 * @memberof ui/Changeable.defaultConfig
+	 * @memberof ui/Changeable.Changeable.defaultConfig
 	 */
 	prop: 'value'
 };

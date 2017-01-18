@@ -6,9 +6,9 @@
  * @module moonstone/VideoPlayer
  */
 import React from 'react';
-import {$L} from '@enact/i18n';
 import DurationFmt from '@enact/i18n/ilib/lib/DurationFmt';
 import {forward} from '@enact/core/handle';
+import ilib from '@enact/i18n';
 import {startJob, stopJob} from '@enact/core/jobs';
 import {on, off} from '@enact/core/dispatcher';
 import Slottable from '@enact/ui/Slottable';
@@ -92,7 +92,7 @@ const playbackRateHash = {
 
 
 /**
- * A player for video {@link moonstone/VideoPlayerBase}.
+ * A player for video {@link moonstone/VideoPlayer.VideoPlayerBase}.
  *
  * @class VideoPlayerBase
  * @memberof moonstone/VideoPlayer
@@ -243,7 +243,17 @@ const VideoPlayerBase = class extends React.Component {
 		 * @type {String}
 		 * @public
 		 */
-		title: React.PropTypes.string
+		title: React.PropTypes.string,
+
+		/**
+		 * The amount of time in miliseconds that should pass before the title disappears from the
+		 * controls. Setting this to `0` disables the hiding.
+		 *
+		 * @type {Number}
+		 * @default 4000
+		 * @public
+		 */
+		titleHideDelay: React.PropTypes.number
 	}
 
 	static defaultProps = {
@@ -253,7 +263,8 @@ const VideoPlayerBase = class extends React.Component {
 		noAutoPlay: false,
 		noJumpButtons: false,
 		noRateButtons: false,
-		noSlider: false
+		noSlider: false,
+		titleHideDelay: 4000
 	}
 
 	constructor (props) {
@@ -293,7 +304,8 @@ const VideoPlayerBase = class extends React.Component {
 			more: false,
 			percentageLoaded: 0,
 			percentagePlayed: 0,
-			playPauseIcon: 'play'
+			playPauseIcon: 'play',
+			titleVisible: true
 		};
 	}
 
@@ -310,6 +322,7 @@ const VideoPlayerBase = class extends React.Component {
 		off('keypress', this.activityDetected);
 		this.stopRewindJob();
 		this.stopAutoCloseTimeout();
+		this.stopDelayedTitleHide();
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -369,7 +382,13 @@ const VideoPlayerBase = class extends React.Component {
 	// Internal Methods
 	//
 	initI18n = () => {
-		this.durfmt = new DurationFmt({length: 'medium', style: 'clock', useNative: false});
+		const locale = ilib.getLocale();
+
+		if (this.locale !== locale && typeof window === 'object') {
+			this.locale = locale;
+
+			this.durfmt = new DurationFmt({length: 'medium', style: 'clock', useNative: false});
+		}
 	}
 
 	updateMainState = () => {
@@ -639,8 +658,31 @@ const VideoPlayerBase = class extends React.Component {
 		stopJob('autoClose' + this.instanceId);
 	}
 
+	showControls = () => {
+		this.startDelayedTitleHide();
+		this.setState({
+			bottomControlsVisible: true,
+			titleVisible: true
+		});
+	}
+
 	hideControls = () => {
+		this.stopDelayedTitleHide();
 		this.setState({bottomControlsVisible: false});
+	}
+
+	startDelayedTitleHide = () => {
+		if (this.props.titleHideDelay) {
+			startJob('titleHideDelay' + this.instanceId, this.hideTitle, this.props.titleHideDelay);
+		}
+	}
+
+	stopDelayedTitleHide = () => {
+		stopJob('titleHideDelay' + this.instanceId);
+	}
+
+	hideTitle = () => {
+		this.setState({titleVisible: false});
 	}
 
 
@@ -661,7 +703,11 @@ const VideoPlayerBase = class extends React.Component {
 	// Player Interaction events
 	//
 	onVideoClick = () => {
-		this.setState({bottomControlsVisible: !this.state.bottomControlsVisible});
+		if (this.state.bottomControlsVisible) {
+			this.hideControls();
+		} else {
+			this.showControls();
+		}
 	}
 	onSliderChange = ({value}) => {
 		if (value && this.video && this.video.videoEl && this.videoReady) {
@@ -685,9 +731,17 @@ const VideoPlayerBase = class extends React.Component {
 	onForward       = () => this.fastForward()
 	onJumpForward   = () => this.jump(this.props.jumpBy)
 	onMoreClick     = () => {
-		this.startAutoCloseTimeout();	// Interupt and restart the timer if we activate "more".
+		this.startAutoCloseTimeout();	// Interupt and restart the timer since "more" button was clicked.
+		if (this.state.more) {
+			// Restore the title-hide now that we're finished with "more".
+			this.startDelayedTitleHide();
+		} else {
+			// Interrupt the title-hide since we don't want it hiding autonomously in "more".
+			this.stopDelayedTitleHide();
+		}
 		this.setState({
-			more: !this.state.more
+			more: !this.state.more,
+			titleVisible: true
 		});
 	}
 
@@ -707,6 +761,7 @@ const VideoPlayerBase = class extends React.Component {
 			...rest} = this.props;
 		delete rest.autoCloseTimeout;
 		delete rest.jumpBy;
+		delete rest.titleHideDelay;
 
 		// Handle some cases when the "more" button is pressed
 		const moreDisabled = !(this.state.more);
@@ -726,15 +781,16 @@ const VideoPlayerBase = class extends React.Component {
 				</Video>
 
 				<Overlay onClick={this.onVideoClick} onMouseMove={this.onVideoMouseMove}>
-					{this.state.loading ? <Spinner className={css.spinner} centered>{$L('Loading...')}</Spinner> : null}
+					{this.state.loading ? <Spinner centered /> : null}
 				</Overlay>
 
 				{this.state.bottomControlsVisible ? <div className={css.fullscreen + ' enyo-fit scrim'}>
-					<div className={css.bottom}> {/* showing={false} */}
+					<div className={css.bottom}>
 						{/* Info Section: Title, Description, Times */}
 						<div className={css.infoFrame}>
 							<MediaTitle
 								title={title}
+								visible={this.state.titleVisible}
 								infoVisible={this.state.more}
 							>
 								{infoComponents}
@@ -743,7 +799,7 @@ const VideoPlayerBase = class extends React.Component {
 						</div>
 
 						{noSlider ? null : <MediaSlider
-							backgroundPercent={this.state.percentageLoaded}
+							backgroundProgress={this.state.percentageLoaded}
 							value={this.state.percentagePlayed}
 							onChange={this.onSliderChange}
 						/>}

@@ -73,8 +73,10 @@ export default class LS2Request {
 			};
 		}
 
-		if ((parsedMsg.errorCode || parsedMsg.returnValue === false) && onFailure) {
-			onFailure(parsedMsg);
+		if ((parsedMsg.errorCode || parsedMsg.returnValue === false)) {
+			if (onFailure) {
+				onFailure(parsedMsg);
+			}
 		} else if (onSuccess) {
 			onSuccess(parsedMsg);
 		}

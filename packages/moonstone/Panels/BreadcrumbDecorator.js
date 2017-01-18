@@ -1,12 +1,12 @@
 import {kind, hoc} from '@enact/core';
 import {coerceFunction} from '@enact/core/util';
-import Cancelable from '@enact/ui/Cancelable';
 import ViewManager from '@enact/ui/ViewManager';
 import invariant from 'invariant';
 import React from 'react';
 
 import Breadcrumb from './Breadcrumb';
 import BreadcrumbArranger from './BreadcrumbArranger';
+import CancelDecorator from './CancelDecorator';
 import IndexedBreadcrumbs from './IndexedBreadcrumbs';
 
 import css from './Panels.less';
@@ -79,7 +79,7 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			/**
 			 * Panels to be rendered
 			 *
-			 * @type {React.node}
+			 * @type {Node}
 			 */
 			children: React.PropTypes.node,
 
@@ -178,19 +178,8 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 	});
 
-	function handleCancel (props) {
-		const {index, onSelectBreadcrumb} = props;
-		if (index > 0 && onSelectBreadcrumb) {
-			onSelectBreadcrumb({
-				index: index - 1
-			});
-
-			return true;
-		}
-	}
-
-	return Cancelable(
-		{modal: true, onCancel: handleCancel},
+	return CancelDecorator(
+		{cancel: 'onSelectBreadcrumb'},
 		Decorator
 	);
 });

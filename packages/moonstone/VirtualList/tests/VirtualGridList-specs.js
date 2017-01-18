@@ -28,7 +28,7 @@ describe('VirtualGridList Specs', () => {
 		/>
 	);
 
-	it('Should apply item size', function () {
+	it('should apply item size', function () {
 		const expectedMinWidth = 30;
 		const expectedMinHeight = 40;
 		const actualMinWidth = subject.find('VirtualListCore').prop('itemSize').minWidth;

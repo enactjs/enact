@@ -21,7 +21,7 @@ const TooltipBase = kind({
 		/**
 		 * The node to be displayed as the main content of the tooltip.
 		 *
-		 * @type {React.node}
+		 * @type {Node}
 		 * @required
 		 */
 		children: PropTypes.node.isRequired,
@@ -75,7 +75,7 @@ const TooltipBase = kind({
 		 * The width of tooltip content in pixels (px). If the content goes over the given width,
 		 * then it will automatically wrap. When `null`, content does not wrap.
 		 *
-		 * @type {Number}
+		 * @type {Number|null}
 		 * @public
 		 */
 		width: PropTypes.number

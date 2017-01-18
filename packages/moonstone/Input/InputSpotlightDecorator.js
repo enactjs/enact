@@ -1,5 +1,6 @@
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
+import {is} from '@enact/core/keymap';
 import React from 'react';
 import {Spotlight, Spottable} from '@enact/spotlight';
 
@@ -67,19 +68,25 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			};
 		}
 
-		componentDidUpdate () {
-			if (this.state.node) {
+		componentDidUpdate (_, prevState) {
+			if (this.state.node && (this.state.node !== prevState.node)) {
 				this.state.node.focus();
 			}
 
 			if (this.state.focused === 'input') {
 				Spotlight.pause();
-			} else {
+			} else if (prevState.focused === 'input') {
 				Spotlight.resume();
 			}
 
 			if (this.state.direction) {
 				Spotlight.move(this.state.direction);
+			}
+		}
+
+		componentWillUnmount () {
+			if (this.state.focused === 'input') {
+				Spotlight.resume();
 			}
 		}
 
@@ -117,6 +124,8 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 						this.focusDecorator(ev.currentTarget);
 						ev.stopPropagation();
 					}
+				} if (!this.state.focused === 'input') {	// Blurring decorator but not focusing input
+					this.blur();
 				}
 			} else if (this.state.focused === 'input' && this.state.node === ev.target) {
 				// only blur when the input should be focused and is the target of the blur
@@ -151,18 +160,24 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			const {currentTarget, keyCode, target} = ev;
 
 			if (this.state.focused === 'input') {
+				const isDown = is('down', keyCode);
+				const isEnter = is('enter', keyCode);
+				const isLeft = is('left', keyCode);
+				const isRight = is('right', keyCode);
+				const isUp = is('up', keyCode);
+
 				// switch focus to the decorator ...
 				const shouldFocusDecorator = (
 					// on enter + dismissOnEnter
-					(keyCode === 13 && dismissOnEnter) ||
+					(isEnter && dismissOnEnter) ||
 					// on left + at beginning of selection
-					(keyCode === 37 && target.selectionStart === 0) ||
+					(isLeft && target.selectionStart === 0) ||
 					// on right + at end of selection
-					(keyCode === 39 && target.selectionStart === target.value.length) ||
+					(isRight && target.selectionStart === target.value.length) ||
 					// on up
-					keyCode === 38 ||
+					isUp ||
 					// on down
-					keyCode === 40
+					isDown
 				);
 
 				if (shouldFocusDecorator) {
@@ -170,7 +185,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 						this.focusDecorator(currentTarget);
 
 						// prevent Enter onKeyPress which triggers an onClick via Spotlight
-						if (keyCode === 13) {
+						if (isEnter) {
 							ev.preventDefault();
 						}
 
@@ -178,15 +193,15 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 						// decorator explicitly
 						preventSpotlightNavigation(ev);
 
-						if (target.value.length === 0 && keyCode !== 13) {
-							const direction =	keyCode === 37 && 'left' ||
-												keyCode === 38 && 'up' ||
-												keyCode === 39 && 'right' ||
-												keyCode === 40 && 'down';
+						if (target.value.length === 0 && !isEnter) {
+							const direction =	isLeft && 'left' ||
+												isUp && 'up' ||
+												isRight && 'right' ||
+												isDown && 'down';
 							this.leaveOnUpdate(direction);
 						}
 					}
-				} else if (keyCode === 37 || keyCode === 39) {
+				} else if (isLeft || isRight) {
 					// prevent 5-way nav for left/right keys within the <input>
 					preventSpotlightNavigation(ev);
 				}

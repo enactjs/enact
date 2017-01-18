@@ -33,9 +33,9 @@ const
  * or {@link moonstone/VirtualList.VirtualGridList}.
  *
  * @constant dataIndexAttribute
+ * @memberof moonstone/Scroller
  * @type {String}
  * @private
- * @memberof moonstone/Scroller
  */
 const dataIndexAttribute = 'data-index';
 
@@ -551,10 +551,14 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					if (canScrollHorizontally) {
 						// We need '!=' to check if opt.potision.x is null or undefined
 						left = opt.position.x != null ? opt.position.x : this.scrollLeft;
+					} else {
+						left = 0;
 					}
 					if (canScrollVertically) {
 						// We need '!=' to check if opt.potision.y is null or undefined
 						top = opt.position.y != null ? opt.position.y : this.scrollTop;
+					} else {
+						top = 0;
 					}
 				} else if (typeof opt.align === 'string') {
 					if (canScrollHorizontally) {

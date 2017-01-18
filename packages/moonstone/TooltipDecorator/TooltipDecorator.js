@@ -18,7 +18,7 @@ import {Tooltip, TooltipBase} from './Tooltip';
 
 /**
  * {@link moonstone/TooltipDecorator.TooltipDecorator} is a Higher-order Component which
- * positions {@link moonstone/TooltipDecorator/Tooltip.Tooltip} in relation to the
+ * positions {@link moonstone/TooltipDecorator.Tooltip} in relation to the
  * Wrapped component.
  * The tooltip is automatically displayed when the user hovers over the decorator for
  * a given period of time. The tooltip is positioned around the decorator where there
@@ -28,7 +28,7 @@ import {Tooltip, TooltipBase} from './Tooltip';
  *
  * @class TooltipDecorator
  * @memberof moonstone/TooltipDecorator
- * @ui
+ * @hoc
  * @public
  */
 const TooltipDecorator = hoc((config, Wrapped) => {
@@ -200,12 +200,12 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 		}
 
 		adjustAnchor (arrowAnchor, tooltipDirection, overflow) {
-			if (this.context.rtl && (tooltipDirection === 'above' || tooltipDirection === 'below')) {
-				arrowAnchor = arrowAnchor === 'left' ? 'right' : 'left';
-			}
-
-			// Flip sideways for 'above' and 'below' if it overflows to the sides
 			if (tooltipDirection === 'above' || tooltipDirection === 'below') {
+				if (this.context.rtl && arrowAnchor !== 'center') {
+					arrowAnchor = arrowAnchor === 'left' ? 'right' : 'left';
+				}
+
+				// Flip sideways if it overflows to the sides
 				if (overflow.isOverRight) {
 					arrowAnchor = 'left';
 				} else if (overflow.isOverLeft) {

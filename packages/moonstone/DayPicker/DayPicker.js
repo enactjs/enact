@@ -87,7 +87,7 @@ const DayPicker = class extends React.Component {
 		/**
 		 * An array of numbers (0-indexed) representing the selected days of the week.
 		 *
-		 * @type {Number|Number{}}
+		 * @type {Number|Number[]}
 		 * @public
 		 */
 		selected: PropTypes.oneOfType([PropTypes.number, PropTypes.arrayOf(PropTypes.number)])
