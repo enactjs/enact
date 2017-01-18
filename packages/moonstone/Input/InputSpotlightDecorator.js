@@ -68,19 +68,25 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			};
 		}
 
-		componentDidUpdate () {
-			if (this.state.node) {
+		componentDidUpdate (_, prevState) {
+			if (this.state.node && (this.state.node !== prevState.node)) {
 				this.state.node.focus();
 			}
 
 			if (this.state.focused === 'input') {
 				Spotlight.pause();
-			} else {
+			} else if (prevState.focused === 'input') {
 				Spotlight.resume();
 			}
 
 			if (this.state.direction) {
 				Spotlight.move(this.state.direction);
+			}
+		}
+
+		componentWillUnmount () {
+			if (this.state.focused === 'input') {
+				Spotlight.resume();
 			}
 		}
 
@@ -118,6 +124,8 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 						this.focusDecorator(ev.currentTarget);
 						ev.stopPropagation();
 					}
+				} if (!this.state.focused === 'input') {	// Blurring decorator but not focusing input
+					this.blur();
 				}
 			} else if (this.state.focused === 'input' && this.state.node === ev.target) {
 				// only blur when the input should be focused and is the target of the blur
