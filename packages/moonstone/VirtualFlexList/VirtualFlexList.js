@@ -7,17 +7,15 @@
  */
 
 import classNames from 'classnames';
-import React, {Component, PropTypes} from 'react';
-
 import {forward} from '@enact/core/handle';
+import React, {Component, PropTypes} from 'react';
 import {SpotlightContainerDecorator} from '@enact/spotlight';
 
 import {VirtualListCore} from '../VirtualList/VirtualListBase';
 
+import css from './VirtualFlexList.less';
 import Positionable from './Positionable';
 import {VirtualFlexListBase} from './VirtualFlexListBase';
-
-import css from './VirtualFlexList.less';
 
 const
 	PositionableVirtualList = Positionable(VirtualListCore),
