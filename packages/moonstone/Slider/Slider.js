@@ -5,17 +5,55 @@
  */
 
 import factory from '@enact/core/factory';
-import {forward, withArgs as handle} from '@enact/core/handle';
+import {forKey, forward, withArgs as handle, stopImmediate} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import Pressable from '@enact/ui/Pressable';
 import React, {PropTypes} from 'react';
 import {Spottable} from '@enact/spotlight';
+import Toggleable from '@enact/ui/Toggleable';
 
 import SliderDecorator from '../internal/SliderDecorator';
 import {computeProportionProgress} from '../internal/SliderDecorator/util';
 
 import {SliderBarFactory} from './SliderBar';
 import componentCss from './Slider.less';
+
+const isActive = (ev, props) => !props.active;
+const isIncrement = (ev, props) => forKey(props.vertical ? 'up' : 'right', ev);
+const isDecrement = (ev, props) => forKey(props.vertical ? 'down' : 'left', ev);
+const isNavigateAway = (ev, props) => {
+	if (props.vertical) {
+		return !(forKey('left', ev) || forKey('right', ev));
+	} else {
+		return !(forKey('up', ev) || forKey('down', ev));
+	}
+};
+
+const handleDecrement = handle(
+	isActive,
+	isDecrement,
+	forward('onDecrement'),
+	stopImmediate
+);
+
+const handleIncrement = handle(
+	isActive,
+	isIncrement,
+	forward('onIncrement'),
+	stopImmediate
+);
+
+const handleNavigateAway = handle(
+	isActive,
+	isNavigateAway,
+	forward('onActivate')
+);
+
+const handleActivate = handle(
+	forKey('enter'),
+	forward('onActivate'),
+	stopImmediate
+);
 
 const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 	const SliderBar = SliderBarFactory({css});
@@ -33,6 +71,9 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		name: 'Slider',
 
 		propTypes: /** @lends moonstone/Slider.SliderBase.prototype */{
+
+			active: PropTypes.bool,
+
 			/**
 			 * Background progress, as a proportion between `0` and `1`.
 			 *
@@ -87,6 +128,8 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * @public
 			 */
 			min: PropTypes.number,
+
+			onActivate: PropTypes.func,
 
 			/**
 			 * The handler to run when the value is changed.
@@ -208,28 +251,40 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		},
 
 		computed: {
-			className: ({pressed, vertical, styler}) => styler.append({pressed, vertical, horizontal: !vertical}),
+			className: ({active, pressed, vertical, styler}) => styler.append({
+				active,
+				pressed,
+				vertical,
+				horizontal: !vertical
+			}),
 			handleKeyDown: handle(
 				forward('onKeyDown'),
-				(ev, {onDecrement, onIncrement}) => {
-					if (onDecrement && ev.keyCode === 37) {
-						onDecrement();
-					} else if (onIncrement && ev.keyCode === 39) {
-						onIncrement();
-					}
+				(ev, props) => {
+					// console.log(ev, props);
+					return	handleDecrement(props)(ev) &&
+							handleIncrement(props)(ev) &&
+							handleNavigateAway(props)(ev) &&
+							handleActivate(props)(ev);
 				}
+			),
+			handleMouseOut: handle(
+				forward('onMouseOut'),
+				isActive,
+				forward('onActivate')
 			),
 			proportionProgress: computeProportionProgress
 		},
 
-		render: ({backgroundProgress, disabled, handleKeyDown, inputRef, max, min, onChange, onMouseMove, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, value, vertical, ...rest}) => {
+		render: ({backgroundProgress, disabled, handleKeyDown, handleMouseOut, inputRef, max, min, onChange, onMouseMove, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, value, vertical, ...rest}) => {
+			delete rest.active;
 			delete rest.detachedKnob;
+			delete rest.onActivate;
 			delete rest.onDecrement;
 			delete rest.onIncrement;
 			delete rest.pressed;
 
 			return (
-				<div {...rest} disabled={disabled} onKeyDown={handleKeyDown} ref={sliderRef}>
+				<div {...rest} disabled={disabled} onKeyDown={handleKeyDown} onMouseOut={handleMouseOut} ref={sliderRef}>
 					<SliderBar
 						proportionBackgroundProgress={backgroundProgress}
 						proportionProgress={proportionProgress}
@@ -271,9 +326,12 @@ const SliderFactory = factory(css => {
 	 * @public
 	 */
 	return Pressable(
-		Spottable(
-			SliderDecorator(
-				Base
+		Toggleable(
+			{toggle: 'onActivate'},
+			Spottable(
+				SliderDecorator(
+					Base
+				)
 			)
 		)
 	);

@@ -9,6 +9,7 @@ import kind from '@enact/core/kind';
 import Pressable from '@enact/ui/Pressable';
 import React, {PropTypes} from 'react';
 import {Spottable} from '@enact/spotlight';
+import Toggleable from '@enact/ui/Toggleable';
 
 import {SliderBaseFactory} from '../Slider';
 import SliderDecorator from '../internal/SliderDecorator';
@@ -179,7 +180,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 				>
 					{decrementIcon}
 				</IncrementSliderButton>
-				<SliderBase
+				<Slider
 					{...rest}
 					className={css.slider}
 					onDecrement={onDecrement}
@@ -213,16 +214,11 @@ const IncrementSliderFactory = factory((config) => {
 	 * @public
 	 */
 	return Pressable(
-<<<<<<< HEAD
-		SliderDecorator(
-			{handlesIncrements: true},
-			Base
-=======
-		Spottable(
+		Toggleable(
+			{toggle: 'onActivate'},
 			SliderDecorator(
 				Base
 			)
->>>>>>> 8b484df... add basic 5-way support to sliders
 		)
 	);
 });

@@ -1,3 +1,4 @@
+import all from 'ramda/src/all';
 import curry from 'ramda/src/curry';
 import reduce from 'ramda/src/reduce';
 
@@ -19,19 +20,23 @@ import {is} from '../keymap';
  * @returns	{Function}		A function that accepts an event which is dispatched to each of the
  *							provided handlers.
  */
-const handle = (...handlers) => (...args) => reduce((acc, handler) => {
-	if (acc) {
-		// if a prior handler returned true, do not call any more handlers
-		return true;
-	} else if (typeof handler === 'function') {
-		// if the current handler is a function, call it
-		return handler(...args);
-	}
+const handle = (...handlers) => (...args) => {
+	const result = reduce((acc, handler) => {
+		if (acc) {
+			// if a prior handler returned true, do not call any more handlers
+			return true;
+		} else if (typeof handler === 'function') {
+			// if the current handler is a function, call it
+			return handler(...args);
+		}
 
-	// otherwise, the handler is invalid so continue. This lets us blindly pass potential handlers
-	// from props without adding boilerplate checks everywhere.
-	return false;
-}, false, handlers);
+		// otherwise, the handler is invalid so continue. This lets us blindly pass potential handlers
+		// from props without adding boilerplate checks everywhere.
+		return false;
+	}, false, handlers);
+
+	return result;
+};
 
 /**
  * Like `handle()`, accepts a list of handlers to process the event but returns a function that
@@ -91,14 +96,14 @@ const callOnEvent = handle.callOnEvent = (methodName) => (e) => {
  *
  * @example
  *  // submit() called only if event.x === 0
- *	handle(handle.forProp('x', 0), submit)
+ *	handle(handle.forEventProp('x', 0), submit)
  *
- * @method	forProp
+ * @method	forEventProp
  * @param	{String}	prop	Name of property on event
  * @param	{*}			value	Value of property
  * @returns {Function}			Event handler
  */
-const forProp = handle.forProp = curry((prop, value) => {
+const forEventProp = handle.forEventProp = curry((prop, value) => {
 	return (e) => e[prop] !== value;
 });
 
@@ -158,7 +163,7 @@ const stopImmediate = handle.stopImmediate = callOnEvent('stopImmediatePropagati
  * @param	{Number}	value	`keyCode` to test
  * @returns	{Function}			Event handler
  */
-const forKeyCode = handle.forKeyCode = forProp('keyCode');
+const forKeyCode = handle.forKeyCode = forEventProp('keyCode');
 
 /**
  * Only allows event handling to continue if the event's keyCode is mapped to `name` within
@@ -168,15 +173,34 @@ const forKeyCode = handle.forKeyCode = forProp('keyCode');
  * @param	{String}	name	Name from {@link core/keymap}
  * @returns	{Function}			Event handler
  */
-const forKey = handle.forKey = (name) => (ev) => !is(name, ev.keyCode);
+const forKey = handle.forKey = curry((name, ev) => {
+	return !is(name, ev.keyCode);
+});
+
+/**
+ * Stops handling if the value of `prop` on the event does not equal `value`
+ *
+ * @example
+ *  // submit() called only if event.x === 0
+ *	handle(handle.forEventProp('x', 0), submit)
+ *
+ * @method	forEventProp
+ * @param	{String}	prop	Name of property on event
+ * @param	{*}			value	Value of property
+ * @returns {Function}			Event handler
+ */
+const forProp = handle.forProp = curry((prop, value) => {
+	return (e, props) => props[prop] !== value;
+});
 
 export default handle;
 export {
 	callOnEvent,
 	forward,
-	forProp,
+	forEventProp,
 	forKey,
 	forKeyCode,
+	forProp,
 	handle,
 	preventDefault,
 	stop,
