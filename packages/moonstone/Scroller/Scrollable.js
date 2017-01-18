@@ -360,22 +360,28 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.scroll(e.target.scrollLeft, e.target.scrollTop, true);
 		}
 
+		startScrollOnFocus = (pos, item) => {
+			if (pos) {
+				if (pos.left !== this.scrollLeft || pos.top !== this.scrollTop) {
+					this.start(pos.left, pos.top, (animationDuration > 0), false, animationDuration);
+				}
+				this.lastFocusedItem = item;
+			}
+		}
+
 		onFocus = (e) => {
 			if (this.isKeyDown && !this.isDragging) {
 				const
 					item = e.target,
 					index = Number.parseInt(item.getAttribute(dataIndexAttribute)),
-					focusableCheck = (item !== this.lastFocusedItem && item === doc.activeElement && this.childRef.calculatePositionOnFocus);
+					focusableCheck = (item !== this.lastFocusedItem && item === doc.activeElement);
 
-				if (focusableCheck) {
-					// checking index for VirtualList
-					const pos = !isNaN(index) ? this.childRef.calculatePositionOnFocus(index) : this.childRef.calculatePositionOnFocus(item);
-					if (pos) {
-						if (pos.left !== this.scrollLeft || pos.top !== this.scrollTop) {
-							this.start(pos.left, pos.top, (animationDuration > 0), false, animationDuration);
-						}
-						this.lastFocusedItem = item;
-					}
+				if (!isNaN(index) && focusableCheck && this.childRef.calculatePositionOnFocus) {
+					const pos = this.childRef.calculatePositionOnFocus(index);
+					this.startScrollOnFocus(pos, item);
+				} else if (item && focusableCheck && this.childRef.calculatePositionOnFocusInScroller) {
+					const pos = this.childRef.calculatePositionOnFocusInScroller(item);
+					this.startScrollOnFocus(pos, item);
 				}
 			}
 		}
@@ -383,11 +389,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		onKeyDown = (e) => {
 			if (this.childRef.setSpotlightContainerRestrict) {
 				const index = Number.parseInt(e.target.getAttribute(dataIndexAttribute));
-				this.isKeyDown = true;
 				this.childRef.setSpotlightContainerRestrict(e.keyCode, index);
-			} else {
-				this.isKeyDown = true;
 			}
+			this.isKeyDown = true;
 		}
 
 		onKeyUp = () => {
