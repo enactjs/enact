@@ -21,13 +21,6 @@ import componentCss from './Slider.less';
 const isActive = (ev, props) => !props.active;
 const isIncrement = (ev, props) => forKey(props.vertical ? 'up' : 'right', ev);
 const isDecrement = (ev, props) => forKey(props.vertical ? 'down' : 'left', ev);
-const isNavigateAway = (ev, props) => {
-	if (props.vertical) {
-		return !(forKey('left', ev) || forKey('right', ev));
-	} else {
-		return !(forKey('up', ev) || forKey('down', ev));
-	}
-};
 
 const handleDecrement = handle(
 	isActive,
@@ -41,12 +34,6 @@ const handleIncrement = handle(
 	isIncrement,
 	forward('onIncrement'),
 	stopImmediate
-);
-
-const handleNavigateAway = handle(
-	isActive,
-	isNavigateAway,
-	forward('onActivate')
 );
 
 const handleActivate = handle(
@@ -263,7 +250,6 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 					// console.log(ev, props);
 					return	handleDecrement(props)(ev) &&
 							handleIncrement(props)(ev) &&
-							handleNavigateAway(props)(ev) &&
 							handleActivate(props)(ev);
 				}
 			),
