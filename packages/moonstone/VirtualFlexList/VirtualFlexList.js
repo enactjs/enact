@@ -19,7 +19,7 @@ import {VirtualFlexListBase} from './VirtualFlexListBase';
 
 const
 	PositionableVirtualList = Positionable(VirtualListCore),
-	SpotlightPositionableVirtualList = SpotlightContainerDecorator(Positionable(VirtualListCore));
+	SpotlightPositionableVirtualList = SpotlightContainerDecorator({enterTo: ''}, Positionable(VirtualListCore));
 
 const forwardPositionChange = forward('onPositionChange');
 

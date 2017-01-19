@@ -807,7 +807,7 @@ class VirtualFlexListCore extends Component {
  * @ui
  * @public
  */
-const VirtualFlexListBase = SpotlightContainerDecorator(Positionable(VirtualFlexListCore));
+const VirtualFlexListBase = SpotlightContainerDecorator({enterTo: ''}, Positionable(VirtualFlexListCore));
 
 export default VirtualFlexListBase;
 export {VirtualFlexListBase};
