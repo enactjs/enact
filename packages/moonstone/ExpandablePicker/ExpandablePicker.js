@@ -147,17 +147,18 @@ const ExpandablePickerBase = kind({
 	},
 
 	computed: {
-		label: ({children, value}) => React.Children.toArray(children)[value],
-		onChange: ({onChange, onClose, value}) => {
-			return () => {
-				if (onClose) {
-					onClose();
-				}
+		label: ({children, value}) => React.Children.toArray(children)[value]
+	},
 
-				if (onChange) {
-					onChange({value});
-				}
-			};
+	handlers: {
+		onChange: (ev, {onChange, onClose, value}) => {
+			if (onClose) {
+				onClose();
+			}
+
+			if (onChange) {
+				onChange({value});
+			}
 		}
 	},
 

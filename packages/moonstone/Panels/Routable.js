@@ -61,20 +61,20 @@ const Routable = hoc(defaultConfig, (config, Wrapped) => {
 
 		computed: {
 			// Determines the `index` as 1 less than the number of segments in the path
-			index: ({path}) => toSegments(path).length - 1,
+			index: ({path}) => toSegments(path).length - 1
+		},
 
+		handlers: {
 			// Adds `path` to the payload of navigate handler in the same format (String, or String[])
 			// as the current path prop.
-			[navigate]: ({path, [navigate]: handler}) => {
+			[navigate]: ({index, ...rest}, {path, [navigate]: handler}) => {
 				if (handler) {
-					return ({index, ...rest}) => {
-						const p = toSegments(path).slice(0, index + 1);
-						handler({
-							...rest,
-							index,
-							path: Array.isArray(path) ? p : '/' + p.join('/')
-						});
-					};
+					const p = toSegments(path).slice(0, index + 1);
+					handler({
+						...rest,
+						index,
+						path: Array.isArray(path) ? p : '/' + p.join('/')
+					});
 				}
 			}
 		},

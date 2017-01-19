@@ -142,13 +142,14 @@ const ToggleItemBase = kind({
 					</ToggleIcon>
 				);
 			}
-		},
-		onToggle: ({onToggle, onClick, selected, disabled, value}) => {
+		}
+	},
+
+	handlers: {
+		onToggle: (ev, {onToggle, onClick, selected, disabled, value}) => {
 			if (!disabled && (onToggle || onClick)) {
-				return (ev) => {
-					if (onToggle) onToggle({selected: !selected, value});
-					if (onClick) onClick(ev);
-				};
+				if (onToggle) onToggle({selected: !selected, value});
+				if (onClick) onClick(ev);
 			}
 		}
 	},

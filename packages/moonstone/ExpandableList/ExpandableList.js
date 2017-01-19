@@ -184,19 +184,21 @@ const ExpandableListBase = kind({
 					CheckboxItem; // for single or multiple
 		},
 
-		onSelect: ({closeOnSelect, onClose, onSelect: handler, select}) => (ev) => {
+		selected: ({select, selected}) => {
+			return (select === 'single' && Array.isArray(selected)) ? selected[0] : selected;
+		}
+	},
+
+	handlers: {
+		onSelect: (ev, {closeOnSelect, onClose, onSelect, select}) => {
 			// Call onClose if closeOnSelect is enabled and not selecting multiple
 			if (closeOnSelect && onClose && select !== 'multiple') {
 				onClose();
 			}
 
-			if (handler) {
-				handler(ev);
+			if (onSelect) {
+				onSelect(ev);
 			}
-		},
-
-		selected: ({select, selected}) => {
-			return (select === 'single' && Array.isArray(selected)) ? selected[0] : selected;
 		}
 	},
 

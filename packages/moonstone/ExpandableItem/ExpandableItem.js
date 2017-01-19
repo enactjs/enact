@@ -147,29 +147,6 @@ const ExpandableItemBase = kind({
 	},
 
 	computed: {
-		handleKeyDown: ({autoClose, lockBottom, onClose}) => {
-			if (autoClose || lockBottom) {
-				return (ev) => {
-					const {keyCode, target} = ev;
-					// Basing first/last child on the parent of the target to support both the use
-					// case here in which the children of the container are spottable and the
-					// ExpandableList use case which has an intermediate child (Group) between the
-					// spottable components and the container.
-					if (autoClose && isUp(keyCode) && target.parentNode.firstChild === target && onClose) {
-						onClose();
-						ev.nativeEvent.stopImmediatePropagation();
-					} else if (lockBottom && isDown(keyCode) && target.parentNode.lastChild === target) {
-						ev.nativeEvent.stopImmediatePropagation();
-					}
-				};
-			}
-		},
-		handleOpen: ({disabled, onClose, onOpen, open}) => {
-			// When disabled, don't attach an event
-			if (!disabled) {
-				return open ? onClose : onOpen;
-			}
-		},
 		label: ({disabled, label, noneText, open, showLabel}) => {
 			const isOpen = open && !disabled;
 			if (showLabel === 'always' || (!isOpen && showLabel !== 'never')) {
@@ -180,6 +157,34 @@ const ExpandableItemBase = kind({
 		},
 		open: ({disabled, open}) => (open && !disabled),
 		titleIcon: ({open}) => (open ? 'arrowlargeup' : 'arrowlargedown')
+	},
+
+	handlers: {
+		handleKeyDown: (ev, {autoClose, lockBottom, onClose}) => {
+			if (autoClose || lockBottom) {
+				const {keyCode, target} = ev;
+				// Basing first/last child on the parent of the target to support both the use
+				// case here in which the children of the container are spottable and the
+				// ExpandableList use case which has an intermediate child (Group) between the
+				// spottable components and the container.
+				if (autoClose && isUp(keyCode) && target.parentNode.firstChild === target && onClose) {
+					onClose();
+					ev.nativeEvent.stopImmediatePropagation();
+				} else if (lockBottom && isDown(keyCode) && target.parentNode.lastChild === target) {
+					ev.nativeEvent.stopImmediatePropagation();
+				}
+			}
+		},
+		handleOpen: (ev, {disabled, onClose, onOpen, open}) => {
+			// When disabled, don't attach an event
+			if (!disabled) {
+				if (open) {
+					onClose(ev);
+				} else {
+					onOpen(ev);
+				}
+			}
+		}
 	},
 
 	render: ({children, disabled, handleKeyDown, handleOpen, label, open, title, titleIcon, ...rest}) => {
