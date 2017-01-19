@@ -132,6 +132,10 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 			};
 		}
 
+		componentWillUnmount () {
+			stopJob('showTooltip');
+		}
+
 		setTooltipLayout () {
 			const position = this.props.tooltipPosition;
 			const arr = position.split(' ');
