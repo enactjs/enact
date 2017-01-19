@@ -118,6 +118,15 @@ const TimePickerBase = kind({
 		order: React.PropTypes.arrayOf(React.PropTypes.oneOf(['h', 'k', 'm', 'a'])).isRequired,
 
 		/**
+		 * The primary text of the item.
+		 *
+		 * @type {String}
+		 * @required
+		 * @public
+		 */
+		title: React.PropTypes.string.isRequired,
+
+		/**
 		 * When `true`, omits the labels below the pickers
 		 *
 		 * @type {Boolean}
