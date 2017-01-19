@@ -281,7 +281,11 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.sliderBarNode = node;
 		}
 
-		handleClick = () => Spotlight.focus(this.sliderNode)
+		handleClick = () => {
+			if (Spotlight.getCurrent() !== this.sliderNode) {
+				Spotlight.focus(this.sliderNode);
+			}
+		}
 
 		incrementHandler = () => {
 			this.changeValue(1);

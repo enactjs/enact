@@ -267,15 +267,15 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 							handleActivate(props)(ev);
 				}
 			),
-			handleMouseOut: handle(
-				forward('onMouseOut'),
+			handleBlur: handle(
+				forward('onBlur'),
 				isActive,
 				forward('onActivate')
 			),
 			proportionProgress: computeProportionProgress
 		},
 
-		render: ({backgroundProgress, disabled, handleKeyDown, handleMouseOut, inputRef, max, min, onChange, onMouseMove, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, value, vertical, ...rest}) => {
+		render: ({backgroundProgress, disabled, handleKeyDown, handleBlur, inputRef, max, min, onChange, onMouseMove, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, value, vertical, ...rest}) => {
 			delete rest.active;
 			delete rest.detachedKnob;
 			delete rest.onActivate;
@@ -284,7 +284,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			delete rest.pressed;
 
 			return (
-				<div {...rest} disabled={disabled} onKeyDown={handleKeyDown} onMouseOut={handleMouseOut} ref={sliderRef}>
+				<div {...rest} disabled={disabled} onKeyDown={handleKeyDown} onBlur={handleBlur} ref={sliderRef}>
 					<SliderBar
 						proportionBackgroundProgress={backgroundProgress}
 						proportionProgress={proportionProgress}
