@@ -124,6 +124,15 @@ const ToggleItemBase = kind({
 		className: 'toggleItem'
 	},
 
+	handlers: {
+		onToggle: (ev, {onToggle, onClick, selected, disabled, value}) => {
+			if (!disabled && (onToggle || onClick)) {
+				if (onToggle) onToggle({selected: !selected, value});
+				if (onClick) onClick(ev);
+			}
+		}
+	},
+
 	computed: {
 		iconBefore: ({iconClasses, selected, icon, iconPosition}) => {
 			if (iconPosition === 'before') {
@@ -141,15 +150,6 @@ const ToggleItemBase = kind({
 						{icon}
 					</ToggleIcon>
 				);
-			}
-		}
-	},
-
-	handlers: {
-		onToggle: (ev, {onToggle, onClick, selected, disabled, value}) => {
-			if (!disabled && (onToggle || onClick)) {
-				if (onToggle) onToggle({selected: !selected, value});
-				if (onClick) onClick(ev);
 			}
 		}
 	},

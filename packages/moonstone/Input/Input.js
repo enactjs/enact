@@ -166,17 +166,17 @@ const InputBase = kind({
 		className: 'decorator'
 	},
 
-	computed: {
-		className: ({focused, styler}) => styler.append({focused}),
-		dir: ({value, placeholder}) => isRtlText(value || placeholder) ? 'rtl' : 'ltr'
-	},
-
 	handlers: {
 		onChange: (ev, {onChange}) => {
 			if (onChange) {
 				onChange({value: ev.target.value});
 			}
 		}
+	},
+
+	computed: {
+		className: ({focused, styler}) => styler.append({focused}),
+		dir: ({value, placeholder}) => isRtlText(value || placeholder) ? 'rtl' : 'ltr'
 	},
 
 	render: ({dir, disabled, iconAfter, iconBefore, onChange, placeholder, type, value, ...rest}) => {

@@ -75,18 +75,18 @@ const SwitchBase = kind({
 		className: 'switch'
 	},
 
-	computed: {
-		className: ({animated, selected, styler}) => styler.append(
-			{animated, selected}
-		)
-	},
-
 	handlers: {
 		onToggle: handle(forward('onClick'), (ev, {selected, onToggle}) => () => {
 			if (onToggle) {
 				onToggle({selected: !selected});
 			}
 		})
+	},
+
+	computed: {
+		className: ({animated, selected, styler}) => styler.append(
+			{animated, selected}
+		)
 	},
 
 	render: ({onToggle, ...rest}) => {

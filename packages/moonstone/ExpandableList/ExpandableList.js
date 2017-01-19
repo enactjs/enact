@@ -163,6 +163,19 @@ const ExpandableListBase = kind({
 		select: 'single'
 	},
 
+	handlers: {
+		onSelect: (ev, {closeOnSelect, onClose, onSelect, select}) => {
+			// Call onClose if closeOnSelect is enabled and not selecting multiple
+			if (closeOnSelect && onClose && select !== 'multiple') {
+				onClose();
+			}
+
+			if (onSelect) {
+				onSelect(ev);
+			}
+		}
+	},
+
 	computed: {
 		// generate a label that concatenates the text of the selected items
 		label: ({children, label, select, selected}) => {
@@ -186,19 +199,6 @@ const ExpandableListBase = kind({
 
 		selected: ({select, selected}) => {
 			return (select === 'single' && Array.isArray(selected)) ? selected[0] : selected;
-		}
-	},
-
-	handlers: {
-		onSelect: (ev, {closeOnSelect, onClose, onSelect, select}) => {
-			// Call onClose if closeOnSelect is enabled and not selecting multiple
-			if (closeOnSelect && onClose && select !== 'multiple') {
-				onClose();
-			}
-
-			if (onSelect) {
-				onSelect(ev);
-			}
 		}
 	},
 

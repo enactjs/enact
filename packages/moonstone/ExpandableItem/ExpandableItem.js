@@ -146,19 +146,6 @@ const ExpandableItemBase = kind({
 		showLabel: 'auto'
 	},
 
-	computed: {
-		label: ({disabled, label, noneText, open, showLabel}) => {
-			const isOpen = open && !disabled;
-			if (showLabel === 'always' || (!isOpen && showLabel !== 'never')) {
-				return label || noneText;
-			} else {
-				return null;
-			}
-		},
-		open: ({disabled, open}) => (open && !disabled),
-		titleIcon: ({open}) => (open ? 'arrowlargeup' : 'arrowlargedown')
-	},
-
 	handlers: {
 		handleKeyDown: (ev, {autoClose, lockBottom, onClose}) => {
 			if (autoClose || lockBottom) {
@@ -185,6 +172,19 @@ const ExpandableItemBase = kind({
 				}
 			}
 		}
+	},
+
+	computed: {
+		label: ({disabled, label, noneText, open, showLabel}) => {
+			const isOpen = open && !disabled;
+			if (showLabel === 'always' || (!isOpen && showLabel !== 'never')) {
+				return label || noneText;
+			} else {
+				return null;
+			}
+		},
+		open: ({disabled, open}) => (open && !disabled),
+		titleIcon: ({open}) => (open ? 'arrowlargeup' : 'arrowlargedown')
 	},
 
 	render: ({children, disabled, handleKeyDown, handleOpen, label, open, title, titleIcon, ...rest}) => {

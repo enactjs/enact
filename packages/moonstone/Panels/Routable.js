@@ -59,11 +59,6 @@ const Routable = hoc(defaultConfig, (config, Wrapped) => {
 			[navigate]: React.PropTypes.func
 		},
 
-		computed: {
-			// Determines the `index` as 1 less than the number of segments in the path
-			index: ({path}) => toSegments(path).length - 1
-		},
-
 		handlers: {
 			// Adds `path` to the payload of navigate handler in the same format (String, or String[])
 			// as the current path prop.
@@ -77,6 +72,11 @@ const Routable = hoc(defaultConfig, (config, Wrapped) => {
 					});
 				}
 			}
+		},
+
+		computed: {
+			// Determines the `index` as 1 less than the number of segments in the path
+			index: ({path}) => toSegments(path).length - 1
 		},
 
 		render: ({children, index, path, ...rest}) => (

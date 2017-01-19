@@ -74,17 +74,17 @@ const ViewportBase = kind({
 		className: 'viewport'
 	},
 
-	computed: {
-		children: ({children}) => React.Children.map(children, (child, index) => {
-			return React.cloneElement(child, {'data-index': index});
-		})
-	},
-
 	handlers: {
 		onAppear: handle(forward('onAppear'), spotPanel),
 		onEnter: handle(forward('onEnter'), spotPanel),
 		onTransition: handle(forward('onTransition'), Spotlight.resume),
 		onWillTransition: handle(forward('onWillTransition'), Spotlight.pause)
+	},
+
+	computed: {
+		children: ({children}) => React.Children.map(children, (child, index) => {
+			return React.cloneElement(child, {'data-index': index});
+		})
 	},
 
 	render: ({arranger, children, index, noAnimation, ...rest}) => {
