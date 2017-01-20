@@ -108,15 +108,6 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			onMouseMove: PropTypes.func,
 
 			/**
-			 * The handler to run when the component is removed while retaining focus.
-			 *
-			 * @type {Function}
-			 * @param {Object} event
-			 * @public
-			 */
-			//onSpotlightDisappear: PropTypes.func,
-
-			/**
 			 * When `true`, a pressed visual effect is applied
 			 *
 			 * @type {Boolean}
