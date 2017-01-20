@@ -1,9 +1,12 @@
 import Changeable from '@enact/ui/Changeable';
+import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import React from 'react';
 
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 import {Input} from '../Input';
+
+const forwardMouseDown = forward('onMouseDown');
 
 class ExpandableInputBase extends React.Component {
 	static displayName = 'ExpandableInput'
@@ -137,6 +140,8 @@ class ExpandableInputBase extends React.Component {
 		if (ev.currentTarget.contains(document.activeElement)) {
 			ev.preventDefault();
 		}
+
+		forwardMouseDown(ev);
 	}
 
 	handleInputMouseDown = (ev) => {
@@ -145,12 +150,25 @@ class ExpandableInputBase extends React.Component {
 		ev.stopPropagation();
 	}
 
+	handleClose = () => {
+		this.fireChangeEvent();
+		// not forwarding event because this is being done in fireChangeEvent
+	}
+
 	render () {
 		const {disabled, onInputChange, onSpotlightDisappear, placeholder, type, value, ...rest} = this.props;
 		delete rest.onChange;
 
 		return (
-			<ExpandableItemBase {...rest} disabled={disabled} label={value} onMouseDown={this.handleMouseDown} onSpotlightDisappear={onSpotlightDisappear} noPointerMode>
+			<ExpandableItemBase
+				{...rest}
+				disabled={disabled}
+				label={value}
+				noPointerMode
+				onClose={this.handleClose}
+				onMouseDown={this.handleMouseDown}
+				onSpotlightDisappear={onSpotlightDisappear}
+			>
 				<Input
 					disabled={disabled}
 					dismissOnEnter

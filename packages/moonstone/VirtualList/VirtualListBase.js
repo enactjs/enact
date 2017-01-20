@@ -5,11 +5,10 @@
  * export is {@link moonstone/VirtualList.VirtualListBase}.
  */
 
-import React, {Component, PropTypes} from 'react';
-
-import {is} from '@enact/core/keymap';
-import {Spotlight, SpotlightContainerDecorator} from '@enact/spotlight';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
+import {is} from '@enact/core/keymap';
+import React, {Component, PropTypes} from 'react';
+import {Spotlight, SpotlightContainerDecorator} from '@enact/spotlight';
 
 import {dataIndexAttribute, Scrollable} from '../Scroller/Scrollable';
 

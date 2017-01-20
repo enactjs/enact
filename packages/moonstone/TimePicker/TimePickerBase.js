@@ -154,7 +154,6 @@ const TimePickerBase = kind({
 											noAnimation={noHourAnimation}
 											onChange={onChangeHour}
 											onSpotlightDisappear={onSpotlightDisappear}
-											reverse
 											value={hour}
 											width={2}
 											wrap
