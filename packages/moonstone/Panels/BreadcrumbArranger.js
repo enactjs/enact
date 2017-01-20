@@ -10,6 +10,7 @@ import {ease, replaceTransform, startAfter} from '@enact/ui/ViewManager/arrange'
  * @param {Function} b backward function
  * @returns {Function} Arrangement function
  * @method
+ * @private
  */
 const forwardBackward = (f, b) => (config) => {
 	const f2 = config.reverseTransition ? b : f;
@@ -22,9 +23,10 @@ const forwardBackward = (f, b) => (config) => {
  * @param  {Object} config  Arrangement configuration object
  * @returns {undefined}
  * @method
+ * @private
  */
 const positionBreadcrumb = ease(easing, (config) => {
-	const {from, node, percent, to} = config;
+	const {from = 0, node, percent, to} = config;
 	const crumbIndex = node.dataset.index;
 	const dx = (to - from) * percent;
 	const x = (from - crumbIndex);
@@ -39,6 +41,7 @@ const positionBreadcrumb = ease(easing, (config) => {
  * @param  {Object} config  Arrangement configuration object
  * @returns {undefined}
  * @method
+ * @private
  */
 const enter = forwardBackward(
 	startAfter(0.75, positionBreadcrumb),
@@ -49,6 +52,7 @@ const enter = forwardBackward(
  * Arranger for panel breadcrumbs
  *
  * @type {Arranger}
+ * @private
  */
 const BreadcrumbArranger = {
 	enter: enter,

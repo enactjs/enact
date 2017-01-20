@@ -1,6 +1,7 @@
 import Picker, {PickerBase} from '@enact/moonstone/Picker';
 import Changeable from '@enact/ui/Changeable';
 import {icons} from '@enact/moonstone/Icon';
+import PickerAddRemove from './components/PickerAddRemove';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
@@ -11,9 +12,10 @@ StatefulPicker.defaultProps = Object.assign({}, PickerBase.defaultProps, Statefu
 StatefulPicker.displayName = 'Picker';
 
 const prop = {
-	'orientation': {'horizontal': 'horizontal', 'vertical': 'vertical'},
-	'width': {'null': null, 'small': 'small', 'medium': 'medium', 'large': 'large'}
+	orientation: ['horizontal', 'vertical'],
+	width: ['<null>', 'small', 'medium', 'large']
 };
+const nullify = (v) => v === '<null>' ? null : v;
 
 const iconNames = Object.keys(icons);
 
@@ -37,7 +39,11 @@ const pickerList = {
 		'Onion',
 		'Broccoli',
 		'Spinach'
-	]
+	],
+	oneAirport: [
+		'San Francisco Airport Terminal Gate 1'
+	],
+	emptyList: []
 };
 
 storiesOf('Picker')
@@ -47,7 +53,7 @@ storiesOf('Picker')
 		() => (
 			<StatefulPicker
 				onChange={action('onChange')}
-				width={select('width', prop.width, 'large')}
+				width={nullify(select('width', prop.width, 'large'))}
 				orientation={select('orientation', prop.orientation, 'horizontal')}
 				wrap={boolean('wrap')}
 				joined={boolean('joined')}
@@ -65,7 +71,7 @@ storiesOf('Picker')
 		() => (
 			<StatefulPicker
 				onChange={action('onChange')}
-				width={select('width', prop.width, 'large')}
+				width={nullify(select('width', prop.width, 'large'))}
 				orientation={select('orientation', prop.orientation, 'horizontal')}
 				wrap={boolean('wrap')}
 				joined={boolean('joined')}
@@ -83,7 +89,7 @@ storiesOf('Picker')
 		() => (
 			<StatefulPicker
 				onChange={action('onChange')}
-				width={select('width', prop.width, 'medium')}
+				width={nullify(select('width', prop.width, 'medium'))}
 				orientation={select('orientation', prop.orientation, 'horizontal')}
 				wrap={boolean('wrap')}
 				joined={boolean('joined')}
@@ -95,5 +101,56 @@ storiesOf('Picker')
 			>
 				{pickerList.vegetables}
 			</StatefulPicker>
+		)
+	)
+	.addWithInfo(
+		'with no items (PLAT-30963)',
+		() => (
+			<StatefulPicker
+				onChange={action('onChange')}
+				width={select('width', prop.width, 'large')}
+				orientation={select('orientation', prop.orientation)}
+				wrap={boolean('wrap', true)}
+				joined={boolean('joined')}
+				noAnimation={boolean('noAnimation')}
+				disabled={boolean('disabled')}
+				incrementIcon={select('incrementIcon', iconNames)}
+				decrementIcon={select('decrementIcon', iconNames)}
+			>
+				{[]}
+			</StatefulPicker>
+		)
+	)
+	.addWithInfo(
+		'with one item',
+		() => (
+			<StatefulPicker
+				onChange={action('onChange')}
+				width={nullify(select('width', prop.width, 'large'))}
+				orientation={select('orientation', prop.orientation)}
+				wrap={boolean('wrap', true)}
+				joined={boolean('joined')}
+				noAnimation={boolean('noAnimation')}
+				disabled={boolean('disabled')}
+				incrementIcon={select('incrementIcon', iconNames)}
+				decrementIcon={select('decrementIcon', iconNames)}
+			>
+				{pickerList.oneAirport}
+			</StatefulPicker>
+		)
+	)
+	.addWithInfo(
+		'with item add/remove (ENYO-2448)',
+		() => (
+			<PickerAddRemove
+				width={select('width', prop.width, 'medium')}
+				orientation={select('orientation', prop.orientation, 'horizontal')}
+				wrap={boolean('wrap')}
+				joined={boolean('joined')}
+				noAnimation={boolean('noAnimation')}
+				disabled={boolean('disabled')}
+			>
+				{pickerList.emptyList}
+			</PickerAddRemove>
 		)
 	);

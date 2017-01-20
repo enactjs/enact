@@ -1,12 +1,27 @@
 # Change Log
 
-The following is a curated list of changes in the Enact project, newest changes on the top.
+The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
-## [unreleased]
+## [1.0.0-beta.1] - 2016-12-30
+
+### Added
+- `moonstone/TooltipDecorator`, `moonstone/VideoPlayer` and `moonstone/VirtualFlexList` samples
+
+### Changed
+
+- `moonstone/Item.ItemOverlay` to be in a stand-alone sample
+- samples to be up-to-date with API changes
+- `moonstone/ContextualPopup` to `moonstone/ContextualPopupDecorator`
+
+## [1.0.0-alpha.5] - 2016-12-16
+
+No changes.
+
+## [1.0.0-alpha.4] - 2016-12-2
 
 ### Added
 
-- Samples for `ui/Group`.
+- Samples for `ui/Group`, `moonstone/ItemOverlay`, `moonstone/Popup`, `moonstone/ContextualPopupDecorator`, `moonstone/Notification`, `moonstone/ExpandableInput` and `moonstone/Dialog` components
 
 ## [1.0.0-alpha.3] - 2016-11-8
 

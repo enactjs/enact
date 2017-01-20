@@ -1,15 +1,22 @@
-/**
+/*
  * Exports the {@link ui/ViewManager.TransitionGroup} component.
- *
- * @module ui/ViewManager/TransitionGroup
- * @private
  */
 
 // Using string refs from the source code of ReactTransitionGroup
 /* eslint-disable react/no-string-refs */
 
-import R from 'ramda';
+import compose from 'ramda/src/compose';
+import eqBy from 'ramda/src/eqBy';
+import findIndex from 'ramda/src/findIndex';
+import {forward} from '@enact/core/handle';
+import identity from 'ramda/src/identity';
+import lte from 'ramda/src/lte';
+import prop from 'ramda/src/prop';
+import propEq from 'ramda/src/propEq';
 import React from 'react';
+import remove from 'ramda/src/remove';
+import unionWith from 'ramda/src/unionWith';
+import useWith from 'ramda/src/useWith';
 
 /**
  * Returns the index of a child in an array found by `key` matching
@@ -20,7 +27,7 @@ import React from 'react';
  * @method
  * @private
  */
-const indexOfChild = R.useWith(R.findIndex, [R.propEq('key'), R.identity]);
+const indexOfChild = useWith(findIndex, [propEq('key'), identity]);
 
 /**
  * Returns `true` if `children` contains `child`
@@ -31,7 +38,7 @@ const indexOfChild = R.useWith(R.findIndex, [R.propEq('key'), R.identity]);
  * @method
  * @private
  */
-const hasChild = R.compose(R.lte(0), indexOfChild);
+const hasChild = compose(lte(0), indexOfChild);
 
 /**
  * Returns an array of non-null children
@@ -55,7 +62,15 @@ const mapChildren = function (children) {
  * @method
  * @private
  */
-const mergeChildren = R.unionWith(R.eqBy(R.prop('key')));
+const mergeChildren = unionWith(eqBy(prop('key')));
+
+// Cached event forwarders
+const forwardOnAppear = forward('onAppear');
+const forwardOnEnter = forward('onEnter');
+const forwardOnLeave = forward('onLeave');
+const forwardOnStay = forward('onStay');
+const forwardOnTransition = forward('onTransition');
+const forwardOnWillTransition = forward('onWillTransition');
 
 /**
  * Manages the transition of added and removed child components. Children that are added are
@@ -66,12 +81,12 @@ const mergeChildren = R.unionWith(R.eqBy(R.prop('key')));
  * Currently somewhat specialized for the purposes of ViewManager.
  *
  * @class TransitionGroup
- * @memberof ui/ViewManager/TransitionGroup
+ * @memberof ui/ViewManager
  * @private
  */
 
 class TransitionGroup extends React.Component {
-	static propTypes = /** @lends ui/ViewManager/TransitionGroup.TransitionGroup.prototype */ {
+	static propTypes = /** @lends ui/ViewManager.TransitionGroup.prototype */ {
 		children: React.PropTypes.node.isRequired,
 
 		/**
@@ -84,10 +99,52 @@ class TransitionGroup extends React.Component {
 		/**
 		 * Type of component wrapping the children. May be a DOM node or a custom React component.
 		 *
-		 * @type {String|React.Component}
+		 * @type {String|Component}
 		 * @default 'div'
 		 */
 		component: React.PropTypes.any,
+
+		/**
+		 * Called when each view is rendered during initial construction.
+		 *
+		 * @type {Function}
+		 */
+		onAppear: React.PropTypes.func,
+
+		/**
+		 * Called when each view completes its transition into the viewport.
+		 *
+		 * @type {Function}
+		 */
+		onEnter: React.PropTypes.func,
+
+		/**
+		 * Called when each view completes its transition out of the viewport.
+		 *
+		 * @type {Function}
+		 */
+		onLeave: React.PropTypes.func,
+
+		/**
+		 * Called when each view completes its transition within the viewport.
+		 *
+		 * @type {Function}
+		 */
+		onStay: React.PropTypes.func,
+
+		/**
+		 * Called once when all views have completed their transition.
+		 *
+		 * @type {Function}
+		 */
+		onTransition: React.PropTypes.func,
+
+		/**
+		 * Called once before views begin their transition.
+		 *
+		 * @type {Function}
+		 */
+		onWillTransition: React.PropTypes.func,
 
 		/**
 		 * Maximum number of rendered children. Used to limit how many visible transitions are
@@ -102,7 +159,7 @@ class TransitionGroup extends React.Component {
 	}
 
 	static defaultProps = {
-		childFactory: R.identity,
+		childFactory: identity,
 		component: 'div',
 		size: 2
 	}
@@ -179,6 +236,10 @@ class TransitionGroup extends React.Component {
 			});
 		}
 
+		if (this.keysToEnter.length) {
+			forwardOnWillTransition(null, this.props);
+		}
+
 		// once the component has been updated, start the enter transition for new children,
 		const keysToEnter = this.keysToEnter;
 		this.keysToEnter = [];
@@ -193,6 +254,14 @@ class TransitionGroup extends React.Component {
 		const keysToLeave = this.keysToLeave;
 		this.keysToLeave = [];
 		keysToLeave.forEach(this.performLeave);
+	}
+
+	completeTransition (key) {
+		delete this.currentlyTransitioningKeys[key];
+
+		if (Object.keys(this.currentlyTransitioningKeys).length === 0) {
+			forwardOnTransition(null, this.props);
+		}
 	}
 
 	performAppear = (key) => {
@@ -215,7 +284,11 @@ class TransitionGroup extends React.Component {
 			component.componentDidAppear();
 		}
 
-		delete this.currentlyTransitioningKeys[key];
+		forwardOnAppear({
+			view: component
+		}, this.props);
+
+		this.completeTransition(key);
 
 		let currentChildMapping = mapChildren(this.props.children);
 
@@ -245,7 +318,11 @@ class TransitionGroup extends React.Component {
 			component.componentDidEnter();
 		}
 
-		delete this.currentlyTransitioningKeys[key];
+		forwardOnEnter({
+			view: component
+		}, this.props);
+
+		this.completeTransition(key);
 	}
 
 	performStay = (key) => {
@@ -265,6 +342,10 @@ class TransitionGroup extends React.Component {
 		if (component.componentDidStay) {
 			component.componentDidStay();
 		}
+
+		forwardOnStay({
+			view: component
+		}, this.props);
 	}
 
 	performLeave = (key) => {
@@ -288,11 +369,15 @@ class TransitionGroup extends React.Component {
 			component.componentDidLeave();
 		}
 
-		delete this.currentlyTransitioningKeys[key];
+		forwardOnLeave({
+			view: component
+		}, this.props);
+
+		this.completeTransition(key);
 
 		this.setState(function (state) {
 			const index = indexOfChild(key, state.children);
-			return {children: R.remove(index, 1, state.children)};
+			return {children: remove(index, 1, state.children)};
 		});
 	}
 
@@ -311,6 +396,12 @@ class TransitionGroup extends React.Component {
 		delete props.size;
 		delete props.childFactory;
 		delete props.component;
+		delete props.onAppear;
+		delete props.onEnter;
+		delete props.onLeave;
+		delete props.onStay;
+		delete props.onTransition;
+		delete props.onWillTransition;
 
 		return React.createElement(
 			this.props.component,

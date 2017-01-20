@@ -1,8 +1,8 @@
 /**
  * Exports the {@link moonstone/VirtualList.VirtualList},
  * {@link moonstone/VirtualList.VirtualGridList}, and
- * {@link moonstone/VirtualList.GridListImageItem} components. The default export is
- * {@link moonstone/VirtualList.VirtualList}.
+ * {@link moonstone/VirtualList.GridListImageItem} components.
+ * The default export is {@link moonstone/VirtualList.VirtualList}.
  *
  * @module moonstone/VirtualList
  */
@@ -10,7 +10,7 @@
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 
-import VirtualListBase from './VirtualListBase';
+import VirtualListBase, {gridListItemSizeShape} from './VirtualListBase';
 
 /**
  * {@link moonstone/VirtualList.VirtualList} is a VirtualList with Moonstone styling.
@@ -64,13 +64,13 @@ const VirtualGridList = kind({
 		 * <VirtualGridList itemSize={{minWidth: ri.scale(180), minHeight: ri.scale(270)}}/>
 		 * ```
 		 *
-		 * @type {Object}
+		 * @type {moonstone/VirtualList.gridListItemSizeShape}
 		 * @public
 		 */
-		itemSize: PropTypes.object.isRequired
+		itemSize: gridListItemSizeShape.isRequired
 	},
 
-	render: (props) => <VirtualListBase {...props} />
+	render: (props) => <VirtualListBase {...props} pageScroll />
 });
 
 export default VirtualList;

@@ -1,9 +1,3 @@
-/**
- * Exports a number of useful methods for resolution independence
- *
- * @module ui/resolution
- */
-
 let baseScreen,
 	orientation,
 	riRatio,
@@ -37,7 +31,8 @@ const unitToPixelFactors = {
  * Fetch the screenType object
  *
  * @memberof ui/resolution
- * @param  {String} type The key string for the screen type object.
+ * @param  {String} type The key string for the screen type object. If falsy, the current
+ *	screenType is used
  *
  * @returns {Object}     screenTypeObject
  * @private
@@ -238,6 +233,7 @@ function getUnitToPixelFactors (type = screenType) {
  * Calculates the aspect ratio of the specified screen type. If no screen type is provided,
  * the current screen type is used.
  *
+ * @memberof ui/resolution
  * @param {String} type - Screen type whose aspect ratio will be calculated. If no screen
  * type is provided, the current screen type is used.
  * @returns {Number} The calculated screen ratio (e.g., `1.333`, `1.777`, `2.333`, etc.)
@@ -313,9 +309,10 @@ function unit (pixels, toUnit) {
 }
 
 /**
- * The default configurable [options]{@link ui/resolution.selectSrc#options}.
+ * The default configurable options for {@link ui/resolution.selectSrc}.
  *
- * @typedef {Object} ui/resolution.selectSrc
+ * @typedef {Object} selectSrcOptions
+ * @memberof ui/resolution
  * @property {String} hd - HD / 720p Resolution image asset source URI/URL
  * @property {String} fhd - FHD / 1080p Resolution image asset source URI/URL
  * @property {String} uhd - UHD / 4K Resolution image asset source URI/URL
@@ -347,7 +344,7 @@ function unit (pixels, toUnit) {
  * ```
  *
  * @memberof ui/resolution
- * @param {(String|ui/resolution.selectSrcSrc)} src - A string containing
+ * @param {(String|ui/resolution.selectSrcSrcOptions)} src - A string containing
  * a single image source or a key/value hash/object containing keys representing screen
  * types (`'hd'`, `'fhd'`, `'uhd'`, etc.) and values containing the asset source for
  * that target screen resolution.

@@ -1,6 +1,5 @@
 // Variables
 //
-@import './fonts.less';
 @import './colors.less';
 
 // App
@@ -45,6 +44,7 @@
 @moon-expandable-value-font-size:   27px;
 @moon-expandable-client-item-font-size:   27px;
 @moon-divider-font-size:            24px;
+@moon-notification-font-size:       30px;
 @moon-button-large-font-size:       36px;
 @moon-button-small-font-size:       27px;
 @moon-clock-minute-font-size:       60px;
@@ -77,6 +77,10 @@
 @moon-non-latin-font-family: "Moonstone LG Display";
 @moon-non-latin-font-family-light: "Moonstone LG Display";  // Formerly weight: Light
 @moon-non-latin-font-family-bold: "Moonstone LG Display";   // Formerly weight: Bold
+@moon-non-latin-font-weight: 500;
+@moon-non-latin-font-weight-bold: 500;
+@moon-non-latin-font-weight-light: 300;
+@moon-non-latin-body-font-weight: @moon-non-latin-font-weight-light;
 
 @moon-header-font-family: @moon-alt-font-family;
 @moon-header-font-weight: normal;
@@ -88,12 +92,6 @@
 @moon-non-latin-header-text-line-height: 1.5em;
 @moon-non-latin-medium-header-line-height: 1.5em;
 @moon-non-latin-small-header-line-height: 1.5em;
-
-@moon-popup-header-font-family: @moon-header-font-family;
-@moon-popup-header-font-weight: normal;
-@moon-popup-header-letter-spacing: normal;
-@moon-popup-header-font-style: normal;
-@moon-popup-header-line-height: normal;
 
 @moon-sub-header-font-family: @moon-font-family;
 @moon-sub-header-font-weight: bold;
@@ -108,6 +106,15 @@
 @moon-super-header-letter-spacing: normal;
 @moon-super-header-font-style: normal;
 @moon-super-header-line-height: normal;
+
+@moon-popup-header-font-family: @moon-header-font-family;
+@moon-popup-header-font-weight: normal;
+@moon-popup-header-font-style: normal;
+@moon-popup-header-line-height: normal;
+@moon-popup-header-letter-spacing: normal;
+
+@moon-dialog-title-below-font-family: @moon-sub-header-font-family;
+@moon-dialog-title-below-font-weight: bold;
 
 @moon-body-font-family: @moon-font-family;
 @moon-body-font-weight: 300;
@@ -163,6 +170,7 @@
 @moon-button-h-padding: 27px;
 @moon-button-small-h-padding: 18px;
 @moon-button-pressed-scale: 0.05;
+@moon-button-h-margin: @moon-spotlight-outset;
 
 // Divider
 @moon-divider-border-width: 3px;
@@ -263,3 +271,48 @@
 // Date/Time Pickers
 // ---------------------------------------
 @moon-date-component-pickers-padding: 48px;
+
+// ContextualPopup
+// ---------------------------------------
+@moon-contextual-popup-border-radius: 15px;
+@moon-contextual-popup-padding: 18px;
+@moon-contextual-popup-arrow-height: 30px;
+@moon-contextual-popup-arrow-width: 30px;
+
+// Notification
+// ---------------------------------------
+@moon-notification-font-family: "MuseoSans";
+@moon-notification-font-weight: 500;
+@moon-notification-font-style: normal;
+@moon-notification-background-opacity: 95%;
+@moon-notification-border-opacity: 30%;
+@moon-notification-border-width: 6px;
+@moon-notification-border-radius: 15px;
+@moon-notification-out-border-radius: 18px;
+@moon-notification-button-gap: 9px;
+
+// Tooltip
+// ---------------------------------------
+@moon-tooltip-point-width: 18px;
+@moon-tooltip-point-height: 30px;
+@moon-tooltip-border-radius: 33px;
+@moon-tooltip-label-height: 30px;
+@moon-tooltip-h-padding: 30px;
+
+// Video
+// ---------------------------------------
+// @moon-video-feedback-icon-font-pause-size:         48px;		// Needed later, when feedback is implementad.
+// @moon-video-feedback-icon-font-play-size:          48px;		// Needed later, when feedback is implementad.
+// @moon-video-feedback-icon-font-size:               72px;		// Needed later, when feedback is implementad.
+@moon-video-player-badge-text-size:                24px;
+@moon-video-player-indicator-text-size:            24px;
+@moon-video-player-padding-bottom:                 30px;
+@moon-video-player-padding-side:                   60px;
+@moon-video-player-slider-height:                  9px;
+@moon-video-player-slider-knob-size:               24px;
+@moon-video-player-slider-tap-area:                81px;
+@moon-video-player-title-size:                     48px;
+
+// Generic
+// ---------------------------------------
+@moon-translate-center: translate3d(-50%, -50%, 0);

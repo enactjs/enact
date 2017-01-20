@@ -3,23 +3,34 @@
 @import '../styles/variables.less';
 
 .incrementSlider {
-	position: relative;
-	margin: @moon-spotlight-outset;
+	direction: ltr;	// Always arrange this according to LTR rules
+	&.horizontal {
+		display: flex;
 
-	.decrementButton,
-	.incrementButton {
-		position: absolute;
-		top: 0;
-	}
-	.decrementButton {
-		left: 0;
-	}
-	.incrementButton {
-		right: 0;
+		.slider {
+			flex-grow: 1;
+			padding-left: @moon-spotlight-outset;
+			padding-right: @moon-spotlight-outset;
+		}
 	}
 
-	.slider {
-		margin-left: @moon-icon-button-small-size + @moon-spotlight-outset + 45px;
-		margin-right: @moon-icon-button-small-size + @moon-spotlight-outset + 45px;
+	&.vertical {
+		display: inline-flex;
+		flex-direction: column;
+
+		.decrementButton,
+		.incrementButton {
+			display: block;
+		}
+		.decrementButton {
+			order: 3;
+		}
+		.slider {
+			flex-grow: 1;
+			order: 2;
+		}
+		.incrementButton {
+			order: 1;
+		}
 	}
 }

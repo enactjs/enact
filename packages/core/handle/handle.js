@@ -1,4 +1,7 @@
-import R from 'ramda';
+import curry from 'ramda/src/curry';
+import reduce from 'ramda/src/reduce';
+
+import {is} from '../keymap';
 
 /**
  * Allows generating event handlers by chaining functions to filter or short-circuit the handling
@@ -8,7 +11,7 @@ import R from 'ramda';
  *  const submit = (e) => {
  *		console.log('Submitting the data!');
  *  };
- *	const submitOnEnter = handle(handle.forKeyCode(13), handle.stop, submit);
+ *	const submitOnEnter = handle(handle.forKey('enter'), handle.stop, submit);
  *	return (<input onKeyPress={submitOnEnter}>);
  *
  * @method	handle
@@ -16,7 +19,7 @@ import R from 'ramda';
  * @returns	{Function}		A function that accepts an event which is dispatched to each of the
  *							provided handlers.
  */
-const handle = R.unapply(handlers => (...args) => R.reduce((acc, handler) => {
+const handle = (...handlers) => (...args) => reduce((acc, handler) => {
 	if (acc) {
 		// if a prior handler returned true, do not call any more handlers
 		return true;
@@ -28,7 +31,7 @@ const handle = R.unapply(handlers => (...args) => R.reduce((acc, handler) => {
 	// otherwise, the handler is invalid so continue. This lets us blindly pass potential handlers
 	// from props without adding boilerplate checks everywhere.
 	return false;
-}, false, handlers));
+}, false, handlers);
 
 /**
  * Like `handle()`, accepts a list of handlers to process the event but returns a function that
@@ -37,10 +40,10 @@ const handle = R.unapply(handlers => (...args) => R.reduce((acc, handler) => {
  * extra args, to the handlers.
  *
  * @example
- *	import {withArgs, forKeyCode, stop} from '@enact/core/handle';
+ *	import {withArgs, forKey, stop} from '@enact/core/handle';
  *	kind({
  *		computed: {
- *			onSubmit: withArgs(forKeyCode(13), stop, (e, props) => {
+ *			onSubmit: withArgs(forKey('enter'), stop, (e, props) => {
  *				// block submission for blank data unless the prop allows it
  *				if (e.target.value === '' && !props.allowBlank) return true;
  *				console.log('Submitting the data!');
@@ -95,7 +98,7 @@ const callOnEvent = handle.callOnEvent = (methodName) => (e) => {
  * @param	{*}			value	Value of property
  * @returns {Function}			Event handler
  */
-const forProp = handle.forProp = R.curry((prop, value) => {
+const forProp = handle.forProp = curry((prop, value) => {
 	return (e) => e[prop] !== value;
 });
 
@@ -157,11 +160,22 @@ const stopImmediate = handle.stopImmediate = callOnEvent('stopImmediatePropagati
  */
 const forKeyCode = handle.forKeyCode = forProp('keyCode');
 
+/**
+ * Only allows event handling to continue if the event's keyCode is mapped to `name` within
+ * {@link core/keymap}.
+ *
+ * @method	forKey
+ * @param	{String}	name	Name from {@link core/keymap}
+ * @returns	{Function}			Event handler
+ */
+const forKey = handle.forKey = (name) => (ev) => !is(name, ev.keyCode);
+
 export default handle;
 export {
 	callOnEvent,
 	forward,
 	forProp,
+	forKey,
 	forKeyCode,
 	handle,
 	preventDefault,

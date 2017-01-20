@@ -2,72 +2,9 @@ import {mount} from 'enzyme';
 import React from 'react';
 
 import Item from '../../Item';
-
 import VirtualList from '../VirtualList';
 
 describe('VirtualList Specs', () => {
-	describe('Default props Specs', () => {
-		it('Should have the default \'data\' length of 0', function () {
-			const subject = mount(
-				<VirtualList itemSize={30} />
-			);
-
-			const expected = 0;
-			const actual = subject.find('VirtualListCore').prop('data').length;
-
-			expect(actual).to.equal(expected);
-		});
-
-		it('Should have the default \'direction\' of \'vertical\'', function () {
-			const subject = mount(
-				<VirtualList itemSize={30} />
-			);
-
-			const expected = 'vertical';
-			const actual = subject.find('VirtualListCore').prop('direction');
-
-			expect(actual).to.equal(expected);
-		});
-
-		it('Should have the default \'spacing\' of 0', function () {
-			const subject = mount(
-				<VirtualList itemSize={30} />
-			);
-
-			const expected = 0;
-			const actual = subject.find('VirtualListCore').prop('spacing');
-
-			expect(actual).to.equal(expected);
-		});
-	});
-
-	describe('Default \'component\' prop Spec', () => {
-		const
-			data = [],
-			dataSize = 100;
-
-		for (let i = 0; i < dataSize; i++) {
-			data.push({name: 'Account ' + i});
-		}
-
-		const subject = mount(
-			<VirtualList
-				data={data}
-				dataSize={dataSize}
-				itemSize={30}
-			/>
-		);
-
-		it('Should render a list item of default \'component\'', function () {
-			// VirtualListBase - defaultProps
-			// component: ({index, key}) => (<div key={key}>{index}</div>)
-			const expected = '<div data-index="0">0</div>';
-			const actual = subject.find('VirtualListCore').children().at(0).html();
-
-			expect(actual).to.equal(expected);
-		});
-	});
-
 	describe('Set and change props Specs', () => {
 		let
 			myScrollTo,
@@ -106,28 +43,28 @@ describe('VirtualList Specs', () => {
 		);
 
 		describe('Set props Specs', () => {
-			it('Should render a list item of \'data\'', function () {
+			it('should render a list item of \'data\'', function () {
 				const expected = 'Account 0';
 				const actual = subject.find('VirtualListCore').children().at(0).text();
 
 				expect(actual).to.equal(expected);
 			});
 
-			it('Should have the prop \'dataSize\' of 100', function () {
+			it('should have the prop \'dataSize\' of 100', function () {
 				const expected = 100;
 				const actual = subject.find('VirtualListCore').prop('dataSize');
 
 				expect(actual).to.equal(expected);
 			});
 
-			it('Should have the prop \'direction\' of \'horizontal\'', function () {
+			it('should have the prop \'direction\' of \'horizontal\'', function () {
 				const expected = 'horizontal';
 				const actual = subject.find('VirtualListCore').prop('direction');
 
 				expect(actual).to.equal(expected);
 			});
 
-			it('Should apply list size', function () {
+			it('should apply list size', function () {
 				const expectedWidth = '500px';
 				const expectedHeight = '700px';
 				const actualWidth = subject.prop('style').width;
@@ -137,14 +74,14 @@ describe('VirtualList Specs', () => {
 				expect(actualHeight).to.equal(expectedHeight);
 			});
 
-			it('Should apply background color', function () {
+			it('should apply background color', function () {
 				const expected = 'red';
 				const actual = subject.prop('style').backgroundColor;
 
 				expect(actual).to.equal(expected);
 			});
 
-			it('Should scroll with cbScrollTo prop', function () {
+			it('should scroll with cbScrollTo prop', function () {
 				myScrollTo({position: {x: 10}, animate: false});
 
 				const expected = 10;
@@ -155,7 +92,7 @@ describe('VirtualList Specs', () => {
 		});
 
 		describe('Change props Specs', () => {
-			it('Should change value of the prop \'data\' to \'Password 0\'', function () {
+			it('should change value of the prop \'data\' to \'Password 0\'', function () {
 				data[0] = {name: 'Password 0'};
 				subject.setProps({data: data});
 
@@ -165,7 +102,7 @@ describe('VirtualList Specs', () => {
 				expect(actual).to.equal(expected);
 			});
 
-			it('Should change value of the prop \'direction\' to \'horizontal\'', function () {
+			it('should change value of the prop \'direction\' to \'horizontal\'', function () {
 				subject.setProps({direction: 'vertical'});
 
 				const expected = 'vertical';
@@ -174,7 +111,7 @@ describe('VirtualList Specs', () => {
 				expect(actual).to.equal(expected);
 			});
 
-			it('Should change value of the prop \'spacing\' to 5', function () {
+			it('should change value of the prop \'spacing\' to 5', function () {
 				subject.setProps({spacing: 5});
 
 				const expected = 5;
@@ -183,7 +120,7 @@ describe('VirtualList Specs', () => {
 				expect(actual).to.equal(expected);
 			});
 
-			it('Should change value of the props \'style\' to \'backgroundColor\', \'width\', and \'height\'', function () {
+			it('should change value of the props \'style\' to \'backgroundColor\', \'width\', and \'height\'', function () {
 				subject.setProps({style: {backgroundColor: 'blue', width: '400px', height: '600px'}});
 
 				const expectedBackgroundColor = 'blue';

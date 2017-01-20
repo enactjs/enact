@@ -1,0 +1,296 @@
+// VideoPlayer.less
+//
+@import '~@enact/ui/styles/mixins.less';
+@import '../styles/colors.less';
+@import '../styles/variables.less';
+@import '../styles/text.less';
+@import '../styles/mixins.less';
+
+.videoPlayer {
+	position: relative;
+	overflow: hidden;
+
+	.videoFrame {
+		video {
+			width: 100%;
+			vertical-align: top;
+		}
+	}
+
+	.overlay {
+		position: absolute;
+		.position(0);
+	}
+
+	.fullscreen {
+		.bottom {
+			position: absolute;
+			bottom: @moon-video-player-padding-bottom;
+			left: @moon-video-player-padding-side;
+			right: @moon-video-player-padding-side;
+			background-color: @moon-video-player-bottom-bg-color;
+
+			.infoFrame {
+				display: flex;
+				text-shadow: @moon-video-player-title-text-shadow;
+				margin-bottom: @moon-spotlight-outset;
+
+				// Title Container
+				.titleFrame {
+					@badges-present-transition: transform 500ms ease-in-out;
+
+					flex-grow: 1;
+					color: @moon-video-player-title-color;
+					opacity: 1;
+					.margin-start-end(0, @moon-spotlight-outset);
+
+					&.hidden {
+						transition: opacity 1000ms ease-in-out;
+						opacity: 0;
+					}
+
+					// Title
+					.title {
+						.moon-text-base(@moon-video-player-title-size);
+						line-height: @moon-header-line-height;
+						transition: @badges-present-transition;
+						transform: translateY(36px) translateZ(0);
+						.font-kerning;
+
+						&.infoVisible {
+							transform: translateY(0) translateZ(0);
+						}
+
+						.enyo-locale-non-latin & {
+							line-height: @moon-non-latin-header-text-line-height;
+						}
+					}
+
+					// Badges and title components
+					.infoComponents {
+						vertical-align: super;
+
+						&.hidden {
+							opacity: 0;
+						}
+						&.visible {
+							transition: opacity 500ms ease-in-out;
+						}
+
+						> * {
+							display: inline-block;
+							margin: 0 6px;
+						}
+
+						.badgeTextIcon {
+							font-family: @moon-font-family-bold;
+							font-size: @moon-video-player-badge-text-size;
+							text-align: center;
+							white-space: nowrap;
+							display: inline-block;
+						}
+
+						.redIcon {
+							background-color: @moon-video-player-redicon-bg-color;
+							color: @moon-video-player-redicon-text-color;
+						}
+
+						.fontLgIcons {
+							font-family: "LG Icons";
+						}
+
+						:global(.enyo-locale-right-to-left) & {
+							text-align: right;
+						}
+					}
+				}
+
+				.times {
+					.moon-text-base(@moon-video-player-indicator-text-size);
+					align-self: flex-end;
+					white-space: nowrap;
+					color: @moon-video-player-subdued-text-color;
+
+					> * {
+						display: inline-block;
+					}
+
+					.separator {
+						padding: 0 1ex;
+					}
+
+					.currentTime {
+						color: @moon-video-player-indicator-text-color;
+					}
+
+					// .enyo-locale-right-to-left & {
+					// 	direction: rtl;
+					// }
+				}
+			}
+
+			.sliderFrame {
+				@slider-padding-v: ((@moon-video-player-slider-tap-area - @moon-video-player-slider-height) / 2);
+
+				.mediaSlider {
+					padding: @slider-padding-v 0;
+					height: @moon-video-player-slider-height;
+					margin: 0;
+
+					// Grow the knob when the Slider gets spotted
+					&:global(.spottable):focus .knob::before {
+						transform: @moon-translate-center scale(0.75);
+						opacity: 1;
+					}
+				}
+
+				.input {
+					padding: 0;
+
+					// Add a tap area that extends to the edges of the screen, to make the slider more accessible
+					&::before {
+						content: '';
+						position: absolute;
+						.position(0, -(@moon-video-player-padding-side));
+					}
+				}
+
+				.sliderBar {
+					background-color: @moon-video-player-slider-bg-color;
+				}
+
+				.fill,
+				.load {
+					border-top-right-radius: (@moon-video-player-slider-height / 2);
+					border-bottom-right-radius: (@moon-video-player-slider-height / 2);
+				}
+
+				.load {
+					background-color: @moon-video-player-slider-load-color;
+				}
+
+				.fill {
+					background-color: @moon-video-player-slider-fill-color;
+				}
+
+				// Knob
+				.knob {
+					@activate-transition-function: cubic-bezier(0.15, 0.85, 0.6, 1.65);
+					@slide-transition-function:    cubic-bezier(0.15, 0.85, 0.53, 1.09);
+
+					-webkit-transition: -webkit-transform @slide-transition-function 0.2s;
+					transition:                 transform @slide-transition-function 0.2s;
+
+					&::before {
+						width: (@moon-video-player-slider-knob-size * 2);
+						height: (@moon-video-player-slider-knob-size * 2);
+						border-width: 0;
+						background-color: @moon-video-player-slider-knob-color;
+						border-radius: @moon-video-player-slider-knob-size;
+						-webkit-transform: @moon-translate-center scale(0.5);
+						transform:         @moon-translate-center scale(0.5);
+						opacity: 0;
+						will-change: transform opacity;
+						-webkit-transition: -webkit-transform @activate-transition-function 0.2s, opacity ease 0.2s;
+						transition:                 transform @activate-transition-function 0.2s, opacity ease 0.2s;
+					}
+				}
+
+				&.scrubbing {
+					.knob {
+						display: block;
+					}
+				}
+
+				// Status Indicator
+				.status-indicator {
+					.moon-slider-popup-center {
+						font-family: @moon-font-family;
+						font-size: @moon-video-player-indicator-text-size;
+						color: @moon-video-player-indicator-text-color;
+						text-shadow: @moon-video-player-title-text-shadow;
+						line-height: 36px;
+						position: absolute;	// Allows flip-h to work
+						margin: 0 30px;
+
+						.moon-icon {
+							color: inherit;
+						}
+					}
+				}
+			}
+
+			.controlsFrame {
+				@expanding-button-clearance: 3px;
+
+				position: relative;
+				display: flex;
+
+				.leftComponents,
+				.rightComponents {
+					// Pre-allocate enough space for 2 buttons, statically.
+					width: (@moon-icon-button-size * 2 + @moon-spotlight-outset * 3);
+					white-space: nowrap;
+					padding: @expanding-button-clearance 0;
+				}
+				.leftComponents {
+					> :first-child {
+						.margin-start-end(0, @moon-button-h-margin);
+					}
+				}
+				.rightComponents {
+					> :last-child {
+						.margin-start-end(@moon-button-h-margin, 0);
+					}
+				}
+				.centerComponentsContainer {
+					flex-grow: 1;
+					// Must get clever with the masking. This container must support horizontal
+					// clipping without inhibiting the ability for components to overflow out of
+					// their natural containers. overflow-x:hidden;overflow-y:visible; adds a clip
+					// region and a scrollbar which conflicts with buttons' ability to grow large
+					// when clicked. Basic overflow:hidden cannot be used either, as it clips too.
+					-webkit-mask-image: -webkit-gradient(linear, left top, right top, color-stop(0.9,  rgba(0,0,0,1)), color-stop(1,  rgba(0,0,0,0)));
+					padding: @expanding-button-clearance 0;
+
+					.centerComponents {
+						transition: 500ms transform ease;
+						will-change: transform;
+						white-space: nowrap;
+
+						&.more {
+							transform: translateX(-100%);
+						}
+						.mediaControls,
+						.moreControls {
+							width: 100%;
+							display: inline-block;
+
+							> * {
+								vertical-align: top;
+							}
+						}
+						.mediaControls {
+							text-align: center;
+							direction: ltr;
+						}
+					}
+
+					:global(.enact-locale-right-to-left) & {
+						-webkit-mask-image: -webkit-gradient(linear, right top, left top, color-stop(0.9,  rgba(0,0,0,1)), color-stop(1,  rgba(0,0,0,0)));
+
+						.centerComponents.more {
+							transform: translateX(100%);
+						}
+					}
+				}
+
+				:global(.enact-locale-right-to-left) & {
+					.moreButton {
+						transform: scaleX(-1);
+					}
+				}
+			}
+		}
+	}
+}

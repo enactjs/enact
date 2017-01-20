@@ -1,11 +1,13 @@
 /**
- * Exports the {@link moonstone/Scroller.Scroller} and {@link moonstone/Scroller.ScrollerBase}
- * components. The default export is {@link moonstone/Scroller.Scroller}.
+ * Exports the {@link moonstone/Scroller.Scroller} and 
+ * {@link moonstone/Scroller.ScrollerBase} components.
+ * The default export is {@link moonstone/Scroller.Scroller}.
  *
  * @module moonstone/Scroller
  */
 
 import classNames from 'classnames';
+import {contextTypes} from '@enact/i18n/I18nDecorator';
 import React, {Component, PropTypes} from 'react';
 import {SpotlightContainerDecorator} from '@enact/spotlight';
 
@@ -53,6 +55,8 @@ class ScrollerBase extends Component {
 		vertical: PropTypes.oneOf(['auto', 'hidden', 'scroll'])
 	}
 
+	static contextTypes = contextTypes
+
 	static defaultProps = {
 		horizontal: 'auto',
 		vertical: 'auto'
@@ -70,13 +74,15 @@ class ScrollerBase extends Component {
 	getScrollBounds = () => this.scrollBounds
 
 	setScrollPosition (valX, valY) {
-		const node = this.node;
+		const
+			node = this.node,
+			rtl = this.context.rtl;
 
 		if (this.isVertical()) {
 			node.scrollTop = valY;
 		}
 		if (this.isHorizontal()) {
-			node.scrollLeft = valX;
+			node.scrollLeft = rtl ? (this.scrollBounds.maxLeft - valX) : valX;
 		}
 	}
 

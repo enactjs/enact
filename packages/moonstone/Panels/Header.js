@@ -3,7 +3,7 @@ import React from 'react';
 import Uppercase from '@enact/i18n/Uppercase';
 import Slottable from '@enact/ui/Slottable';
 import {MarqueeDecorator, MarqueeText} from '../Marquee';
-
+import {isRtlText} from '@enact/i18n';
 import css from './Header.less';
 
 // Create a <h1> and Marquee component that support the uppercase attribute
@@ -45,7 +45,7 @@ const HeaderBase = kind({
 		fullBleed: React.PropTypes.bool,
 
 		/**
-		 * When true, the case of the [`title`]{@link moonstone/Header.Header#title} will
+		 * When true, the case of the [`title`]{@link moonstone/Panels.Header#title} will
 		 * remain unchanged.
 		 * Uses [Uppercase HOC]{@link i18n/Uppercase.Uppercase} and mirrors the
 		 * [preserveCase prop]{@link i18n/Uppercase.Uppercase#preserveCase}
@@ -106,18 +106,31 @@ const HeaderBase = kind({
 	},
 
 	computed: {
-		className: ({fullBleed, type, styler}) => styler.append({fullBleed}, type)
+		className: ({fullBleed, type, styler}) => styler.append({fullBleed}, type),
+		direction: ({title, titleBelow}) => isRtlText(title) || isRtlText(titleBelow) ? 'rtl' : 'ltr',
+		titleBelowComponent: ({titleBelow, type}) => {
+			switch (type) {
+				case 'compact':
+					return titleBelow ? <h2 className={css.titleBelow}>{titleBelow}</h2> : null;
+				case 'standard':
+					return titleBelow ? <MarqueeH2 className={css.titleBelow} marqueeOn="hover">{titleBelow}</MarqueeH2> : null;
+			}
+		},
+		subTitleBelowComponent: ({subTitleBelow}) => {
+			return subTitleBelow ? <MarqueeH2 className={css.subTitleBelow} marqueeOn="hover">{subTitleBelow}</MarqueeH2> : null;
+		}
 	},
 
-	render: ({children, preserveCase, subTitleBelow, title, /* titleAbove, */titleBelow, type, ...rest}) => {
+	render: ({children, direction, preserveCase, subTitleBelowComponent, title, /* titleAbove, */titleBelowComponent, type, ...rest}) => {
 		delete rest.fullBleed;
+		delete rest.titleBelow;
 
 		switch (type) {
 			case 'compact': return (
 				<header {...rest}>
-					<MarqueeText className={css.headerCell} marqueeOn="hover">
+					<MarqueeText className={css.headerCell} marqueeOn="hover" forceDirection={direction}>
 						<UppercaseH1 className={css.title} preserveCase={preserveCase}>{title}</UppercaseH1>
-						<h2 className={css.titleBelow}>{titleBelow}</h2>
+						{titleBelowComponent}
 					</MarqueeText>
 					<nav className={css.headerComponents}>{children}</nav>
 				</header>
@@ -139,12 +152,8 @@ const HeaderBase = kind({
 					</HeaderH1>
 					<div className={css.headerRow}>
 						<div className={css.headerCell}>
-							<MarqueeH2 className={css.titleBelow} marqueeOn="hover">
-								{titleBelow}
-							</MarqueeH2>
-							<MarqueeH2 className={css.subTitleBelow} marqueeOn="hover">
-								{subTitleBelow}
-							</MarqueeH2>
+							{titleBelowComponent}
+							{subTitleBelowComponent}
 						</div>
 						<nav className={css.headerComponents}>{children}</nav>
 					</div>

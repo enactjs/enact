@@ -1,13 +1,14 @@
-import {forKeyCode} from '@enact/core/handle';
+import {forKey} from '@enact/core/handle';
 
 /**
  * Array of cancel handlers. If any of these returns `false`, `forCancel` will return `false`;
  *
  * @type {Function[]}
+ * @private
  */
 const cancelHandlers = [
 	// always support the Escape key
-	forKeyCode(27)
+	forKey('cancel')
 ];
 
 /**
@@ -18,6 +19,7 @@ const cancelHandlers = [
  *
  * @param  {Object} ev Event object
  * @returns {Boolean} `true` to stop the handler chain
+ * @private
  */
 const forCancel = function (ev) {
 	let stop = true;

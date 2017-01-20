@@ -5,6 +5,7 @@
  */
 
 import kind from '@enact/core/kind';
+import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React, {PropTypes} from 'react';
 
 import Button from '../Button';
@@ -12,11 +13,12 @@ import Icon from '../Icon';
 
 import css from './IconButton.less';
 
+const OptimizedIcon = onlyUpdateForKeys(['small', 'children'])(Icon);
+
 /**
- * {@link moonstone/IconButton.IconButton} is a {@link moonstone/Icon.Icon}
- * that acts like a button. You may specify an image, by setting the `src` property, or a font-based
- * icon, by setting the child to a string from the [IconList]{@link moonstone/Icon.IconList}.
- * If both `src` and children are specified, both will be rendered.
+ * {@link moonstone/IconButton.IconButton} is a {@link moonstone/Icon.Icon} that acts like a button.
+ * You may specify an image or a font-based icon by setting the children to either the path to the
+ * image or a string from the [IconList]{@link moonstone/Icon.IconList}.
  *
  * Usage:
  * ```
@@ -45,10 +47,10 @@ const IconButtonBase = kind({
 		backgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'transparent']),
 
 		/**
-		 * A string that represents an icon from the [IconList]{@link moonstone/Icon.IconList}.
-		 * Can also be an HTML entity string, Unicode reference or hex value (in the form '0x...').
+		 * The icon displayed within the button.
 		 *
-		 * @type {String}
+		 * @see {@link moonstone/Icon.Icon#children}
+		 * @type {String|Object}
 		 * @public
 		 */
 		children: PropTypes.string,
@@ -91,17 +93,7 @@ const IconButtonBase = kind({
 		 * @default false
 		 * @public
 		 */
-		small: PropTypes.bool,
-
-		/**
-		 * URL specifying path to an icon image or an object representing a resolution independent resource (See
-		 * {@link ui/resolution}).
-		 * If both `src` and `children` are specified, they will both be rendered.
-		 *
-		 * @type {String|Object}
-		 * @public
-		 */
-		src: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
+		small: PropTypes.bool
 	},
 
 	defaultProps: {
@@ -117,10 +109,10 @@ const IconButtonBase = kind({
 		className: ({small, styler}) => styler.append({small})
 	},
 
-	render: ({children, small, src, ...rest}) => {
+	render: ({children, small, ...rest}) => {
 		return (
 			<Button {...rest} small={small} minWidth={false} marqueeDisabled>
-				<Icon small={small} className={css.icon} src={src}>{children}</Icon>
+				<OptimizedIcon small={small} className={css.icon}>{children}</OptimizedIcon>
 			</Button>
 		);
 	}

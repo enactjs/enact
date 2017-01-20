@@ -5,11 +5,14 @@
  * @module moonstone/Picker
  */
 
+import clamp from 'ramda/src/clamp';
 import kind from '@enact/core/kind';
 import React from 'react';
 
-import PickerCore from './PickerCore';
-import PickerItem from './PickerItem';
+import {MarqueeController} from '../Marquee';
+import {validateRange} from '../internal/validators';
+
+import PickerCore, {PickerItem} from '../internal/Picker';
 import SpottablePicker from './SpottablePicker';
 
 /**
@@ -27,7 +30,7 @@ const PickerBase = kind({
 		/**
 		 * Children from which to pick
 		 *
-		 * @type {React.node}
+		 * @type {Node}
 		 * @public
 		 */
 		children: React.PropTypes.node.isRequired,
@@ -37,7 +40,7 @@ const PickerBase = kind({
 		 * supported. Without a custom icon, the default is used, and is automatically changed when
 		 * the [orientation]{Icon#orientation} is changed.
 		 *
-		 * @type {string}
+		 * @type {String}
 		 * @public
 		 */
 		decrementIcon: React.PropTypes.string,
@@ -56,7 +59,7 @@ const PickerBase = kind({
 		 * supported. Without a custom icon, the default is used, and is automatically changed when
 		 * the [orientation]{Icon#orientation} is changed.
 		 *
-		 * @type {string}
+		 * @type {String}
 		 * @public
 		 */
 		incrementIcon: React.PropTypes.string,
@@ -75,7 +78,7 @@ const PickerBase = kind({
 
 		/**
 		 * By default, each picker item is wrapped by a
-		 * {@link module:@enact/moonstone/Marquee~MarqueeText}. When `marqueeDisabled` is `true`,
+		 * {@link moonstone/Marquee.MarqueeText}. When `marqueeDisabled` is `true`,
 		 * the items will not be wrapped.
 		 *
 		 * @type {Boolean}
@@ -106,7 +109,6 @@ const PickerBase = kind({
 		 * sides of the value. Must be either `'horizontal'` or `'vertical'`.
 		 *
 		 * @type {String}
-		 * @default 'horizontal'
 		 * @public
 		 */
 		orientation: React.PropTypes.oneOf(['horizontal', 'vertical']),
@@ -120,17 +122,24 @@ const PickerBase = kind({
 		 */
 		value: React.PropTypes.number,
 
-		/*
+		/**
 		 * Choose a specific size for your picker. `'small'`, `'medium'`, `'large'`, or set to `null` to
 		 * assume auto-sizing. `'small'` is good for numeric pickers, `'medium'` for single or short
 		 * word pickers, `'large'` for maximum-sized pickers.
 		 *
-		 * @type {String}
+		 * You may also supply a number. This number will determine the minumum size of the Picker.
+		 * Setting a number to less than the number of characters in your longest value may produce
+		 * unexpected results.
+		 *
+		 * @type {String|Number}
 		 * @public
 		 */
-		width: React.PropTypes.oneOf([null, 'small', 'medium', 'large']),
+		width: React.PropTypes.oneOfType([
+			React.PropTypes.oneOf([null, 'small', 'medium', 'large']),
+			React.PropTypes.number
+		]),
 
-		/*
+		/**
 		 * Should the picker stop incrementing when the picker reaches the last element? Set `wrap`
 		 * to `true` to allow the picker to continue from the opposite end of the list of options.
 		 *
@@ -145,10 +154,18 @@ const PickerBase = kind({
 	},
 
 	computed: {
-		max: ({children}) => children.length - 1,
+		max: ({children}) => children && children.length ? children.length - 1 : 0,
+		reverse: ({orientation}) => (orientation === 'vertical'),
 		children: ({children, marqueeDisabled}) => React.Children.map(children, (child) => {
 			return <PickerItem marqueeDisabled={marqueeDisabled}>{child}</PickerItem>;
-		})
+		}),
+		value: ({value, children}) => {
+			const max = children && children.length ? children.length - 1 : 0;
+			if (__DEV__) {
+				validateRange(value, 0, max, 'Picker', '"value"', 'min', 'max index');
+			}
+			return clamp(0, max, value);
+		}
 	},
 
 	render: ({children, max, value, ...rest}) => {
@@ -165,12 +182,17 @@ const PickerBase = kind({
 /**
  * A Picker component that allows selecting values from a list of values.
  *
- * @class PickerBase
+ * @class Picker
  * @memberof moonstone/Picker
  * @ui
  * @public
  */
-const Picker = SpottablePicker(PickerBase);
+const Picker = MarqueeController(
+	{startOnFocus: true},
+	SpottablePicker(
+		PickerBase
+	)
+);
 
 export default Picker;
 export {Picker, PickerBase};

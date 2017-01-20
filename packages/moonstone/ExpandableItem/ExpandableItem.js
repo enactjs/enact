@@ -1,23 +1,24 @@
 /**
  * Exports the {@link moonstone/ExpandableItem.ExpandableItem} and
  * {@link moonstone/ExpandableItem.ExpandableItemBase} components and
- * {@link moonstone/ExpandableItem/Expandable.Expandable} Higher-Order Component (HOC). The default
+ * {@link moonstone/ExpandableItem.Expandable} Higher-Order Component (HOC). The default
  * export is {@link moonstone/ExpandableItem.ExpandableItem}.
  *
  * @module moonstone/ExpandableItem
  */
 
+import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
-import {SpotlightContainerDecorator} from '@enact/spotlight';
-import Transition from '@enact/ui/Transition';
 
 import LabeledItem from '../LabeledItem';
 
 import Expandable from './Expandable';
 import ExpandableContainer from './ExpandableContainer';
+import ExpandableTransitionContainer from './ExpandableTransitionContainer';
 
-const TransitionContainer = SpotlightContainerDecorator(Transition);
+const isUp = is('up');
+const isDown = is('down');
 
 /**
  * {@link moonstone/ExpandableItem.ExpandableItem} is a stateless component that
@@ -41,6 +42,17 @@ const ExpandableItemBase = kind({
 		 * @public
 		 */
 		title: PropTypes.string.isRequired,
+
+		/**
+		 * When `true`, the expandable automatically closes when the user navigates to the `title`
+		 * of the component using 5-way controls; if `false`, the user must select/tap the header to
+		 * close the expandable.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		autoClose: PropTypes.bool,
 
 		/**
 		 * The contents of the expandable item displayed when `open` is `true`
@@ -67,6 +79,16 @@ const ExpandableItemBase = kind({
 		 * @public
 		 */
 		label: PropTypes.string,
+
+		/**
+		 * When `true`, the user is prevented from moving {@glossary Spotlight} past the bottom
+		 * of the expandable (when open) using 5-way controls.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		lockBottom: PropTypes.bool,
 
 		/**
 		 * Text to display when no `label` or `value` is set.
@@ -117,18 +139,29 @@ const ExpandableItemBase = kind({
 	},
 
 	defaultProps: {
+		autoClose: false,
 		disabled: false,
+		lockBottom: false,
 		open: false,
 		showLabel: 'auto'
 	},
 
 	computed: {
-		label: ({disabled, label, noneText, open, showLabel}) => {
-			const isOpen = open && !disabled;
-			if (showLabel === 'always' || (!isOpen && showLabel !== 'never')) {
-				return label || noneText;
-			} else {
-				return null;
+		handleKeyDown: ({autoClose, lockBottom, onClose}) => {
+			if (autoClose || lockBottom) {
+				return (ev) => {
+					const {keyCode, target} = ev;
+					// Basing first/last child on the parent of the target to support both the use
+					// case here in which the children of the container are spottable and the
+					// ExpandableList use case which has an intermediate child (Group) between the
+					// spottable components and the container.
+					if (autoClose && isUp(keyCode) && target.parentNode.firstChild === target && onClose) {
+						onClose();
+						ev.nativeEvent.stopImmediatePropagation();
+					} else if (lockBottom && isDown(keyCode) && target.parentNode.lastChild === target) {
+						ev.nativeEvent.stopImmediatePropagation();
+					}
+				};
 			}
 		},
 		handleOpen: ({disabled, onClose, onOpen, open}) => {
@@ -137,15 +170,26 @@ const ExpandableItemBase = kind({
 				return open ? onClose : onOpen;
 			}
 		},
-		open: ({disabled, open}) => open && !disabled
+		label: ({disabled, label, noneText, open, showLabel}) => {
+			const isOpen = open && !disabled;
+			if (showLabel === 'always' || (!isOpen && showLabel !== 'never')) {
+				return label || noneText;
+			} else {
+				return null;
+			}
+		},
+		open: ({disabled, open}) => (open && !disabled),
+		titleIcon: ({open}) => (open ? 'arrowlargeup' : 'arrowlargedown')
 	},
 
-	render: ({children, disabled, handleOpen, label, open, title, ...rest}) => {
-		delete rest.noneText;
+	render: ({children, disabled, handleKeyDown, handleOpen, label, open, title, titleIcon, ...rest}) => {
+		delete rest.autoClose;
 		delete rest.label;
-		delete rest.showLabel;
-		delete rest.onOpen;
+		delete rest.lockBottom;
+		delete rest.noneText;
 		delete rest.onClose;
+		delete rest.onOpen;
+		delete rest.showLabel;
 
 		return (
 			<ExpandableContainer {...rest} disabled={disabled} open={open}>
@@ -153,10 +197,18 @@ const ExpandableItemBase = kind({
 					disabled={disabled}
 					label={label}
 					onClick={handleOpen}
+					titleIcon={titleIcon}
 				>{title}</LabeledItem>
-				<TransitionContainer data-container-disabled={!open} visible={open} duration="short" type="clip">
+				<ExpandableTransitionContainer
+					data-expandable-container
+					duration="short"
+					onKeyDown={handleKeyDown}
+					spotlightDisabled={!open}
+					type="clip"
+					visible={open}
+				>
 					{children}
-				</TransitionContainer>
+				</ExpandableTransitionContainer>
 			</ExpandableContainer>
 		);
 	}

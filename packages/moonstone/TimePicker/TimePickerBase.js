@@ -19,11 +19,12 @@ const hours12 = [
 ];
 
 /**
-* {@link module:@enact/moonstone/TimePicker~TimePickerBase} is the stateless functional time picker
+* {@link moonstone/TimePicker.TimePickerBase} is the stateless functional time picker
 * component. Should not be used directly but may be composed within another component as it is
-* within {@link module:@enact/moonstone/TimePicker~TimePicker}.
+* within {@link moonstone/TimePicker.TimePicker}.
 *
 * @class TimePickerBase
+* @memberof moonstone/TimePicker
 * @ui
 * @private
 */
@@ -130,7 +131,7 @@ const TimePickerBase = kind({
 
 	render: ({hasMeridiem, hour, meridiem, meridiems, minute, noHourAnimation, noLabels, onChangeHour, onChangeMeridiem, onChangeMinute, order, ...rest}) => {
 		return (
-			<ExpandableItemBase {...rest} showLabel="always">
+			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false}>
 				<div className={dateComponentPickers}>
 					<div className={css.timeComponents}>
 						{order.map(picker => {
@@ -141,9 +142,11 @@ const TimePickerBase = kind({
 										<DateComponentPicker
 											key="hour-picker"
 											label={noLabels ? null : $L('hour')}
-											value={hour}
-											onChange={onChangeHour}
 											noAnimation={noHourAnimation}
+											onChange={onChangeHour}
+											reverse
+											value={hour}
+											width={2}
 											wrap
 										>
 											{hasMeridiem ? hours12 : hours24}
@@ -154,11 +157,12 @@ const TimePickerBase = kind({
 										<DateComponentRangePicker
 											key="minute-picker"
 											label={noLabels ? null : $L('minute')}
-											min={1}
 											max={59}
-											value={minute}
+											min={0}
 											onChange={onChangeMinute}
 											padded
+											value={minute}
+											width={2}
 											wrap
 										/>
 									);
@@ -172,8 +176,9 @@ const TimePickerBase = kind({
 						<DateComponentPicker
 							key="meridiem-picker"
 							label={noLabels ? null : $L('meridiem')}
-							value={meridiem}
 							onChange={onChangeMeridiem}
+							value={meridiem}
+							width="small"
 							wrap
 						>
 							{meridiems}

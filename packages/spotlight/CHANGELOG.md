@@ -2,6 +2,34 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `spotlightDisabled` prop support in `@enact/spotlight/container`
+
+### Removed
+
+- `@enact/spotlight.spotlightDirections` export and replaced it with `getDirection()` 
+
+## [1.0.0-beta.1] - 2016-12-30
+
+### Added
+
+- `@enact/spotlight.Spotlight` methods `isPaused()`, `isSpottable()`, `getCurrent()`, and `isMuted()`
+- `@enact/spotlight.SpotlightContainerDecorator` property `spotlightMuted`
+- `@enact/spotlight.spotlightDirections` export
+
+## [1.0.0-alpha.5] - 2016-12-16
+
+No changes.
+
+## [1.0.0-alpha.4] - 2016-12-2
+
+### Added
+
+- `setPointerMode()` and `setActiveContainer()` methods
+
 ## [1.0.0-alpha.3] - 2016-11-8
 
 ### Added
@@ -11,7 +39,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Changed
 
-- Spotlight containers to spot the last focused element by default.
+- Spotlight containers to spot the last focused element by default
 
 ### Removed
 

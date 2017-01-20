@@ -1,10 +1,3 @@
-/**
- * Exports the {@link moonstone/DatePicker/DatePickerBase.DatePickerBase} component.
- *
- * @module moonstone/DatePicker/DatePickerBase
- * @private
- */
-
 import {$L} from '@enact/i18n';
 import kind from '@enact/core/kind';
 import React from 'react';
@@ -16,12 +9,12 @@ import css from './DatePicker.less';
 import {dateComponentPickers} from '../internal/DateComponentPicker/DateComponentPicker.less';
 
 /**
- * {@link moonstone/DatePicker/DatePickerBase.DatePickerBase} is the stateless functional date picker
+ * {@link moonstone/DatePicker.DatePickerBase} is the stateless functional date picker
  * component. Should not be used directly but may be composed within another component as it is
  * within {@link moonstone/DatePicker.DatePicker}.
  *
  * @class DatePickerBase
- * @memberof moonstone/DatePicker/DatePickerBase
+ * @memberof moonstone/DatePicker
  * @ui
  * @private
  */
@@ -148,7 +141,7 @@ const DatePickerBase = kind({
 	render: ({day, maxDays, maxMonths, maxYear, minYear, month, noLabels, onChangeDate, onChangeMonth, onChangeYear, order, year, ...rest}) => {
 
 		return (
-			<ExpandableItemBase {...rest} showLabel="always">
+			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false}>
 				<div className={dateComponentPickers}>
 					{order.map(picker => {
 						switch (picker) {
@@ -157,10 +150,11 @@ const DatePickerBase = kind({
 									<DateComponentRangePicker
 										key="day-picker"
 										label={noLabels ? null : $L('day')}
-										min={1}
 										max={maxDays}
-										value={day}
+										min={1}
 										onChange={onChangeDate}
+										value={day}
+										width={2}
 										wrap
 									/>
 								);
@@ -169,10 +163,11 @@ const DatePickerBase = kind({
 									<DateComponentRangePicker
 										key="month-picker"
 										label={noLabels ? null : $L('month')}
-										min={1}
 										max={maxMonths}
-										value={month}
+										min={1}
 										onChange={onChangeMonth}
+										value={month}
+										width={2}
 										wrap
 									/>
 								);
@@ -182,10 +177,11 @@ const DatePickerBase = kind({
 										className={css.year}
 										key="year-picker"
 										label={noLabels ? null : $L('year')}
-										min={minYear}
 										max={maxYear}
-										value={year}
+										min={minYear}
 										onChange={onChangeYear}
+										value={year}
+										width={4}
 									/>
 								);
 						}

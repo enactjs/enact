@@ -17,11 +17,12 @@ const iconNames = ['', ...Object.keys(icons)];
 const inputData = {
 	longText : 'Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text',
 	tallText : ['नरेंद्र मोदी', ' ฟิ้  ไั  ஒ  து', 'ÃÑÕÂÊÎÔÛÄËÏÖÜŸ'],
-	extraSpaceText : 'This		Text 		has			extra 		space',
+	extraSpaceText : 'This                                              Text                         has                           extra                                           space',
 	defaultNumber : 10,
 	type: ['text', 'number', 'password'],
 	minValue: 0,
-	maxValue: 10
+	maxValue: 10,
+	normalText: 'Input field'
 };
 
 
@@ -33,8 +34,8 @@ storiesOf('Input')
 			<StatefulInput
 				onChange={action('onChange')}
 				disabled={boolean('disabled')}
-				iconEnd={select('iconEnd', iconNames)}
-				iconStart={select('iconStart', iconNames)}
+				iconAfter={select('iconAfter', iconNames)}
+				iconBefore={select('iconBefore', iconNames)}
 				placeholder={text('placeholder')}
 				type={select('type', inputData.type, inputData.type[0])}
 				value={text('value', inputData.longText)}
@@ -47,8 +48,8 @@ storiesOf('Input')
 			<StatefulInput
 				onChange={action('onChange')}
 				disabled={boolean('disabled')}
-				iconEnd={select('iconEnd', iconNames)}
-				iconStart={select('iconStart', iconNames)}
+				iconAfter={select('iconAfter', iconNames)}
+				iconBefore={select('iconBefore', iconNames)}
 				placeholder={text('placeholder', 'Input some tall characters')}
 				type={select('type', inputData.type, inputData.type[0])}
 				value={select('value', inputData.tallText,  inputData.tallText[2])}
@@ -61,12 +62,59 @@ storiesOf('Input')
 			<StatefulInput
 				onChange={action('onChange')}
 				disabled={boolean('disabled')}
-				iconEnd={select('iconEnd', iconNames)}
-				iconStart={select('iconStart', iconNames)}
+				iconAfter={select('iconAfter', iconNames)}
+				iconBefore={select('iconBefore', iconNames)}
 				placeholder={text('placeholder')}
 				type={select('type', inputData.type, inputData.type[0])}
 				value={text('value', inputData.extraSpaceText)}
 			/>
+		)
+	)
+	.addWithInfo(
+		'5 way test',
+		() => (
+			<div>
+				<div>
+					<StatefulInput
+						onChange={action('onChange')}
+						disabled={boolean('disabled')}
+						iconAfter={select('iconAfter', iconNames)}
+						iconBefore={select('iconBefore', iconNames)}
+						placeholder={text('placeholder')}
+						type={select('type', inputData.type, inputData.type[0])}
+						value={text('value1', inputData.normalText + ' one')}
+					/>
+					<StatefulInput
+						onChange={action('onChange')}
+						disabled={boolean('disabled')}
+						iconAfter={select('iconAfter', iconNames)}
+						iconBefore={select('iconBefore', iconNames)}
+						placeholder={text('placeholder')}
+						type={select('type', inputData.type, inputData.type[0])}
+						value={text('value2', inputData.normalText + ' two')}
+					/>
+				</div>
+				<div>
+					<StatefulInput
+						onChange={action('onChange')}
+						disabled={boolean('disabled')}
+						iconAfter={select('iconAfter', iconNames)}
+						iconBefore={select('iconBefore', iconNames)}
+						placeholder={text('placeholder')}
+						type={select('type', inputData.type, inputData.type[0])}
+						value={text('value3', inputData.normalText + ' three')}
+					/>
+					<StatefulInput
+						onChange={action('onChange')}
+						disabled={boolean('disabled')}
+						iconAfter={select('iconAfter', iconNames)}
+						iconBefore={select('iconBefore', iconNames)}
+						placeholder={text('placeholder')}
+						type={select('type', inputData.type, inputData.type[0])}
+						value={text('value4', inputData.normalText + ' four')}
+					/>
+				</div>
+			</div>
 		)
 	)
 	.addWithInfo(
@@ -75,8 +123,8 @@ storiesOf('Input')
 			<StatefulInput
 				onChange={action('onChange')}
 				disabled={boolean('disabled')}
-				iconEnd={select('iconEnd', iconNames)}
-				iconStart={select('iconStart', iconNames)}
+				iconAfter={select('iconAfter', iconNames)}
+				iconBefore={select('iconBefore', iconNames)}
 				type={inputData.type[1]}
 				min={number('min value', inputData.minValue)}
 				max={number('max value', inputData.maxValue)}

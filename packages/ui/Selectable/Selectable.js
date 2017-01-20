@@ -9,6 +9,12 @@ import hoc from '@enact/core/hoc';
 import {cap, coerceArray} from '@enact/core/util';
 import React, {PropTypes} from 'react';
 
+/**
+ * Default config for {@link ui/Selectable.Selectable}
+ *
+ * @memberof ui/Selectable.Selectable
+ * @hocconfig
+ */
 const defaultConfig = {
 	/**
 	 * If a Selectable component is used to maintain uncommitted state within another component,
@@ -20,6 +26,7 @@ const defaultConfig = {
 	 *
 	 * @type {Boolean}
 	 * @default false
+	 * @memberof ui/Selectable.Selectable.defaultConfig
 	 */
 	mutable: false,
 
@@ -28,6 +35,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'onSelect'
+	 * @memberof ui/Selectable.Selectable.defaultConfig
 	 */
 	select: 'onSelect',
 
@@ -36,6 +44,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'selected'
+	 * @memberof ui/Selectable.Selectable.defaultConfig
 	 */
 	prop: 'selected'
 };
@@ -50,7 +59,7 @@ const defaultConfig = {
  *
  * @class Selectable
  * @memberof ui/Selectable
- * @ui
+ * @hoc
  * @public
  */
 const Selectable = hoc(defaultConfig, (config, Wrapped) => {

@@ -1,27 +1,32 @@
+import Changeable from '@enact/ui/Changeable';
 import IncrementSlider, {IncrementSliderBase} from '@enact/moonstone/IncrementSlider';
+import {decrementIcons, incrementIcons} from './icons';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, number, text} from '@kadira/storybook-addon-knobs';
+import {withKnobs, boolean, number, select} from '@kadira/storybook-addon-knobs';
 
-IncrementSlider.propTypes = Object.assign({}, IncrementSliderBase.propTypes, IncrementSlider.propTypes);
-IncrementSlider.defaultProps = Object.assign({}, IncrementSliderBase.defaultProps, IncrementSlider.defaultProps);
-IncrementSlider.displayName = 'IncrementSlider';
+const ChangeableSlider = Changeable({mutable: true}, IncrementSlider);
+ChangeableSlider.propTypes = Object.assign({}, IncrementSliderBase.propTypes, IncrementSlider.propTypes);
+ChangeableSlider.defaultProps = Object.assign({}, IncrementSliderBase.defaultProps, IncrementSlider.defaultProps);
+ChangeableSlider.displayName = 'IncrementSlider';
 
 storiesOf('IncrementSlider')
 	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
-		'The basic IncrementSlider',
+		'Basic usage of IncrementSlider',
 		() => (
-			<IncrementSlider
-				backgroundPercent={number('backgroundPercent')}
-				disabled={boolean('disabled')}
-				height={text('height (vertical only)')}
-				max={number('max')}
-				min={number('min')}
+			<ChangeableSlider
+				backgroundProgress={number('backgroundProgress', ChangeableSlider.defaultProps.backgroundProgress, {range: true, min: 0, max: 1, step: 0.01})}
+				incrementIcon={select('incrementIcon', ['', ...incrementIcons])}
+				decrementIcon={select('decrementIcon', ['', ...decrementIcons])}
+				disabled={boolean('disabled', ChangeableSlider.defaultProps.disabled)}
+				max={number('max', ChangeableSlider.defaultProps.max)}
+				min={number('min', ChangeableSlider.defaultProps.min)}
 				onChange={action('onChange')}
-				step={number('step')}
-				vertical={boolean('vertical')}
+				step={number('step', ChangeableSlider.defaultProps.step)}
+				vertical={boolean('vertical', ChangeableSlider.defaultProps.vertical)}
+				value={number('value', ChangeableSlider.defaultProps.value)}
 			/>
 		)
 	);

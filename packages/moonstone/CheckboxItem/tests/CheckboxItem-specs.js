@@ -1,34 +1,21 @@
+
 import React from 'react';
-import {mount} from 'enzyme';
+import {shallow} from 'enzyme';
 import CheckboxItem from '../CheckboxItem';
-import css from '../CheckboxItem.less';
 
 describe('CheckboxItem Specs', () => {
 
-	it('should have `translucent` icon class when not checked', function () {
-		const checkboxItem = mount(
+	it('should always use the check icon', function () {
+
+		const checkbox = shallow(
 			<CheckboxItem>
-				Hello CheckboxItem
+				Checkbox
 			</CheckboxItem>
 		);
 
-		const expected = css.translucent;
-		const actual = checkboxItem.find('ToggleItem').prop('iconClasses');
+		const expected = 'check';
+		const actual = checkbox.prop('icon');
 
 		expect(actual).to.equal(expected);
 	});
-
-	it('should not have `translucent` icon class when checked', function () {
-		const checkboxItem = mount(
-			<CheckboxItem checked>
-				Hello CheckboxItem
-			</CheckboxItem>
-		);
-
-		const expected = null;
-		const actual = checkboxItem.find('ToggleItem').prop('iconClasses');
-
-		expect(actual).to.equal(expected);
-	});
-
 });

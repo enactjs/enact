@@ -10,11 +10,10 @@ storiesOf('Spinner')
 		'Basic usage of Spinner',
 		() => (
 			<Spinner
-				transparent={boolean('transparent')}
-				middle={boolean('middle')}
-				center={boolean('center')}
+				transparent={boolean('transparent', false)}
+				centered={boolean('centered', false)}
 			>
-				{text('children', '')}
+				{text('content', '')}
 			</Spinner>
 		)
 	);

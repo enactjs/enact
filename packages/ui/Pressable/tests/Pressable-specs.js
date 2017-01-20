@@ -7,7 +7,7 @@ import Pressable from '../Pressable';
 
 describe('Pressable Specs', () => {
 
-	it('Should pass pressed to Wrapped', function () {
+	it('should pass pressed to Wrapped', function () {
 		const DivComponent = () => <div>press</div>;
 
 		const PressableDiv = Pressable(DivComponent);
@@ -19,7 +19,7 @@ describe('Pressable Specs', () => {
 		expect(actual).to.have.property(expected);
 	});
 
-	it('Should pass mouse event handlers to Wrapped', function () {
+	it('should pass mouse event handlers to Wrapped', function () {
 		const DivComponent = () => <div>press</div>;
 
 		const PressableDiv = Pressable(DivComponent);
@@ -156,6 +156,27 @@ describe('Pressable Specs', () => {
 
 		expect(handleRelease.calledOnce).to.equal(true);
 		expect(handleDepress.calledOnce).to.equal(true);
+	});
+
+	it('should cause pressed to be true on event', function () {
+		const DivComponent = ({onMouseDown, onMouseLeave}) =>
+			<div onMouseDown={onMouseDown} onMouseLeave={onMouseLeave}>press</div>;
+
+		const PressableDiv = Pressable(DivComponent);
+		const wrapped = mount(<PressableDiv />);
+		wrapped.find('DivComponent').simulate('mousedown');
+
+		const expected = true;
+		const actual = wrapped.find('DivComponent').prop('pressed');
+
+		expect(actual).to.equal(expected);
+
+		wrapped.find('DivComponent').simulate('mouseleave');
+
+		const expectedLeave = false;
+		const actualLeave = wrapped.find('DivComponent').prop('pressed');
+
+		expect(actualLeave).to.equal(expectedLeave);
 	});
 
 });

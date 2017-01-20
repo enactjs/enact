@@ -12,19 +12,27 @@
 	@text-vertical-offset: 6px;
 
 	min-width: 336px;
+	flex-wrap: wrap;	// Allow the label to fall on the next line
 
 	// Header
 	.text {
-		display: block;
-		box-sizing: border-box;
-		max-width: 100%;
-		position: relative;
-		vertical-align: top;
+		display: flex;
+
+		.title {
+			overflow: hidden;
+		}
+		.icon {
+			margin-bottom: 0;
+		}
 	}
 
 	// Text
 	.label {
-		font-family: @moon-expandable-value-font-family;
+		.moon-font(@moon-expandable-value-font-family, @moon-non-latin-font-family-light, {
+			font-weight: @moon-non-latin-body-font-weight;
+			font-size: @moon-non-latin-body-font-size;
+			line-height: @moon-non-latin-body-line-height;
+		});
 		font-size: @moon-expandable-value-font-size;
 		font-weight: @moon-expandable-value-font-weight;
 		font-style: @moon-expandable-value-font-style;
@@ -34,13 +42,11 @@
 		// The following two margin values must cancel each other out, so there is zero layout impact when `text` is empty.
 		margin-top: -@text-vertical-offset;
 		margin-bottom: @text-vertical-offset;
+		// Force the label to fill the next line in the flexbox container
+		width: 100%;
 
 		:global(.enact-locale-right-to-left) & {
 			padding-left: 0;
-		}
-
-		:global(.enact-locale-non-latin) & {
-			.enact-locale-non-latin .moon-body-text;
 		}
 
 		.moon-neutral & {
@@ -55,8 +61,8 @@
 	}
 
 	&:focus {
-		> .text,
-		> .label {
+		.text,
+		.label {
 			color: inherit;
 		}
 	}

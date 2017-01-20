@@ -2,6 +2,28 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `core/keymap` module to abstract keyboard key codes behind common names (e.g. 'up' and 'down')
+
+## [1.0.0-beta.1] - 2016-12-30
+
+### Added
+
+- `core/factory` which provides the means to support design-time customization of components
+
+## [1.0.0-alpha.5] - 2016-12-16
+
+### Fixed
+
+- `core/dispatcher` to support pre-rendering
+
+## [1.0.0-alpha.4] - 2016-12-2
+
+No developer-facing changes.
+
 ## [1.0.0-alpha.3] - 2016-11-8
 
 ### Added

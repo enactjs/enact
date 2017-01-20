@@ -1,5 +1,3 @@
-/* globals describe, it, expect */
-
 import React from 'react';
 import {mount} from 'enzyme';
 import kind from '../kind';
@@ -31,21 +29,14 @@ describe('kind', () => {
 		}
 	});
 
-	it('Should assign name to displayName', function () {
+	it('should assign name to displayName', function () {
 		const expected = 'Kind';
 		const actual = Kind.displayName;
 
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should require {prop} property', function () {
-		const expected = true;
-		const actual = Kind.propTypes.prop({}, 'prop', 'Kind') instanceof Error;
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('Should default {label} property', function () {
+	it('should default {label} property', function () {
 		const subject = <Kind prop={1} />;
 
 		const expected = 'Label';
@@ -54,7 +45,7 @@ describe('kind', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should default {label} property when explicitly undefined', function () {
+	it('should default {label} property when explicitly undefined', function () {
 		// Explicitly testing for undefined
 		// eslint-disable-next-line no-undefined
 		const subject = <Kind prop={1} label={undefined} />;
@@ -65,7 +56,7 @@ describe('kind', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should add className defined in styles', function () {
+	it('should add className defined in styles', function () {
 		const subject = mount(
 			<Kind prop={1} />
 		);
@@ -76,7 +67,7 @@ describe('kind', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should compute {value} property', function () {
+	it('should compute {value} property', function () {
 		const subject = mount(
 			<Kind prop={1} />
 		);

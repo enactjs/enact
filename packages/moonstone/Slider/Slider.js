@@ -1,292 +1,260 @@
+/**
+ * Exports the {@link moonstone/Slider.Slider} component.
+ *
+ * @module moonstone/Slider
+ */
+
+import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
-import {throttleJob} from '@enact/core/jobs';
-import {Spotlight, Spottable} from '@enact/spotlight';
 import Pressable from '@enact/ui/Pressable';
-import {checkDefaultBounds} from '@enact/ui/validators/PropTypeValidators';
 import React, {PropTypes} from 'react';
+import {Spottable} from '@enact/spotlight';
 
-import css from './Slider.less';
+import SliderDecorator from '../internal/SliderDecorator';
+import {computeProportionProgress} from '../internal/SliderDecorator/util';
 
-const changeDelayMS = 20;
+import {SliderBarFactory} from './SliderBar';
+import componentCss from './Slider.less';
 
-const SliderBase = kind({
-	name: 'Slider',
+const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
+	const SliderBar = SliderBarFactory({css});
 
-	propTypes : {
-		/**
-		 * Background progress, as a percentage.
-		 *
-		 * @type {Number}
-		 * @default 0
-		 * @public
-		 */
-		backgroundPercent: PropTypes.number,
+	/**
+	 * {@link moonstone/Slider.SliderBase} is a stateless Slider. In most circumstances, you will want
+	 * to use the stateful version: {@link moonstone/Slider.Slider}
+	 *
+	 * @class SliderBase
+	 * @memberof moonstone/Slider
+	 * @ui
+	 * @public
+	 */
+	return kind({
+		name: 'Slider',
 
-		/**
-		 * Height, in standard CSS units, of the vertical slider. Only takes
-		 * effect on a vertical oriented slider.
-		 *
-		 * @type {String}
-		 * @default '300px'
-		 * @public
-		 */
-		height: PropTypes.string,
+		propTypes: /** @lends moonstone/Slider.SliderBase.prototype */{
+			/**
+			 * Background progress, as a proportion between `0` and `1`.
+			 *
+			 * @type {Number}
+			 * @default 0
+			 * @public
+			 */
+			backgroundProgress: PropTypes.number,
 
-		/**
-		 * The maximum value of the slider.
-		 *
-		 * @type {Number}
-		 * @default 100
-		 * @public
-		 */
-		max: PropTypes.number,
+			/**
+			 * The slider can change its behavior to have the knob follow the cursor as it moves
+			 * across the slider, without applying the position. A click or drag behaves the same.
+			 * This is primarily used by media playback. Setting this to `true` enables this behavior.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @private
+			 */
+			detachedKnob: PropTypes.bool,
 
-		/**
-		 * The minimum value of the slider.
-		 *
-		 * @type {Number}
-		 * @default 0
-		 * @public
-		 */
-		min: PropTypes.number,
+			/**
+			 * When `true`, the component is shown as disabled and does not generate events
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			disabled: PropTypes.bool,
 
-		/**
-		 * The handler to run when the value is changed.
-		 *
-		 * @type {Function}
-		 * @param {Object} event
-		 * @param {Number} event.value Value of the slider
-		 * @public
-		 */
-		onChange: PropTypes.func,
+			/**
+			 * The method to run when the input mounts, giving a reference to the DOM.
+			 *
+			 * @type {Function}
+			 * @private
+			 */
+			inputRef: PropTypes.func,
 
-		/**
-		 * When `true`, a pressed visual effect is applied
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		pressed: PropTypes.bool,
+			/**
+			 * The maximum value of the slider.
+			 *
+			 * @type {Number}
+			 * @default 100
+			 * @public
+			 */
+			max: PropTypes.number,
 
-		/**
-		 * The method to run when mounted, giving a reference to the DOM.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		sliderRef: PropTypes.func,
+			/**
+			 * The minimum value of the slider.
+			 *
+			 * @type {Number}
+			 * @default 0
+			 * @public
+			 */
+			min: PropTypes.number,
 
-		/**
-		 * The amount to increment or decrement the value.
-		 *
-		 * @type {Number}
-		 * @default 1
-		 * @public
-		 */
-		step: PropTypes.number,
+			/**
+			 * The handler to run when the value is changed.
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @param {Number} event.value Value of the slider
+			 * @public
+			 */
+			onChange: PropTypes.func,
 
-		/**
-		 * The value of the slider.
-		 *
-		 * @type {Number}
-		 * @default 0
-		 * @public
-		 */
-		value: checkDefaultBounds,
+			/**
+			 * The handler to run when the mouse is moved across the slider.
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @param {Number} event.value Value of the slider
+			 * @public
+			 */
+			onMouseMove: PropTypes.func,
 
-		/**
-		 * If `true` the slider will be oriented vertically.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		vertical: PropTypes.bool
-	},
+			/**
+			 * When `true`, a pressed visual effect is applied
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			pressed: PropTypes.bool,
 
-	defaultProps: {
-		backgroundPercent: 0,
-		height: '300px',
-		max: 100,
-		min: 0,
-		pressed: false,
-		step: 1,
-		value: 0,
-		vertical: false
-	},
+			/**
+			 * `scrubbing` only has an effect with a datachedKnob, and is a performance optimization
+			 * to not allow re-assignment of the knob's value (and therefore position) during direct
+			 * user interaction.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			scrubbing: PropTypes.bool,
 
-	styles: {
-		css: css,
-		className: 'slider'
-	},
+			/**
+			 * The method to run when the slider bar component mounts, giving a reference to the DOM.
+			 *
+			 * @type {Function}
+			 * @private
+			 */
+			sliderBarRef: PropTypes.func,
 
-	computed: {
-		className: ({pressed, vertical, styler}) => styler.append({pressed, vertical, horizontal: !vertical}),
-		percentProgress: ({value, max}) => {
-			const percentage = (value / max) * 100;
-			return percentage + '%';
+			/**
+			 * The method to run when mounted, giving a reference to the DOM.
+			 *
+			 * @type {Function}
+			 * @private
+			 */
+			sliderRef: PropTypes.func,
+
+			/**
+			 * The amount to increment or decrement the value.
+			 *
+			 * @type {Number}
+			 * @default 1
+			 * @public
+			 */
+			step: PropTypes.number,
+
+			/**
+			 * The value of the slider.
+			 *
+			 * @type {Number}
+			 * @default 0
+			 * @public
+			 */
+			value: PropTypes.number,
+
+			/**
+			 * If `true` the slider will be oriented vertically.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			vertical: PropTypes.bool
 		},
-		verticalHeight: ({vertical, height}) => (vertical ? {height} : null),
-		verticalWidth: ({vertical, height}) => (vertical ? {width: height} : null),
-		loadedValue: ({backgroundPercent}) => (backgroundPercent + '%')
-	},
 
-	render: ({percentProgress, loadedValue, max, min, onChange, value, step, vertical, verticalHeight, verticalWidth, sliderRef, ...rest}) => {
-		delete rest.backgroundPercent;
-		delete rest.pressed;
+		defaultProps: {
+			backgroundProgress: 0,
+			detachedKnob: false,
+			max: 100,
+			min: 0,
+			onChange: () => {}, // needed to ensure the base input element is mutable if no change handler is provided
+			pressed: false,
+			step: 1,
+			value: 0,
+			vertical: false
+		},
 
-		return (
-			<div {...rest} ref={sliderRef}>
-				<div className={css.visibleBar} style={verticalHeight}>
-					<div className={css.load} style={{[vertical ? 'height' : 'width']: loadedValue}} />
-					<div className={css.fill} style={{[vertical ? 'height' : 'width']: percentProgress}} />
-					<div className={css.knob} style={{[vertical ? 'bottom' : 'left']: percentProgress}} />
+		styles: {
+			css,
+			className: 'slider'
+		},
+
+		computed: {
+			className: ({pressed, vertical, styler}) => styler.append({pressed, vertical, horizontal: !vertical}),
+			proportionProgress: computeProportionProgress
+		},
+
+		render: ({disabled, inputRef, max, min, onChange, onMouseMove, backgroundProgress, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, value, vertical, ...rest}) => {
+			delete rest.detachedKnob;
+			delete rest.pressed;
+
+			return (
+				<div {...rest} disabled={disabled} ref={sliderRef}>
+					<SliderBar
+						proportionBackgroundProgress={backgroundProgress}
+						proportionProgress={proportionProgress}
+						ref={sliderBarRef}
+						vertical={vertical}
+						scrubbing={scrubbing}
+					/>
+					<input
+						className={css.input}
+						disabled={disabled}
+						type="range"
+						ref={inputRef}
+						max={max}
+						min={min}
+						step={step}
+						onChange={onChange}
+						onMouseMove={onMouseMove}
+						value={value}
+						orient={vertical ? 'vertical' : 'horizontal'}
+					/>
 				</div>
-				<input
-					className={css.sliderBar}
-					type="range"
-					max={max}
-					min={min}
-					step={step}
-					onChange={onChange}
-					value={value}
-					style={verticalWidth}
-				/>
-			</div>
-		);
-	}
+			);
+		}
+	});
 });
 
-class Slider extends React.Component {
-	static propTypes = {
-		/**
-		 * Background progress, as a percentage.
-		 *
-		 * @type {Number}
-		 * @default 0
-		 * @public
-		 */
-		backgroundPercent: PropTypes.number,
+const SliderFactory = factory(css => {
+	const Base = SliderBaseFactory(css);
 
-		/**
-		 * The initial value of the slider.
-		 *
-		 * @type {Number}
-		 * @default 0
-		 * @public
-		 */
-		defaultValue: checkDefaultBounds,
+	/**
+	 * {@link moonstone/Slider.Slider} is a Slider with Moonstone styling, Spottable, Pressable and
+	 * SliderDecorator applied. It is a stateful Slider.
+	 *
+	 * @class Slider
+	 * @memberof moonstone/Slider
+	 * @mixes spotlight/Spottable
+	 * @mixes ui/Pressable
+	 * @ui
+	 * @public
+	 */
+	return Pressable(
+		Spottable(
+			SliderDecorator(
+				Base
+			)
+		)
+	);
+});
 
-		/**
-		 * Height, in standard CSS units, of the vertical slider. Only takes
-		 * effect on a vertical oriented slider.
-		 *
-		 * @type {String}
-		 * @default '300px'
-		 * @public
-		 */
-		height: PropTypes.string,
+const SliderBase = SliderBaseFactory();
+const Slider = SliderFactory();
 
-		/**
-		 * The maximum value of the slider.
-		 *
-		 * @type {Number}
-		 * @default 100
-		 * @public
-		 */
-		max: PropTypes.number,
-
-		/**
-		 * The minimum value of the slider.
-		 *
-		 * @type {Number}
-		 * @default 0
-		 * @public
-		 */
-		min: PropTypes.number,
-
-		/**
-		 * The handler to run when the value is changed.
-		 *
-		 * @type {Function}
-		 * @param {Object} event
-		 * @public
-		 */
-		onChange: PropTypes.func,
-
-		/**
-		 * When `true`, a pressed visual effect is applied
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		pressed: PropTypes.bool,
-
-		/**
-		 * The amount to increment or decrement the value.
-		 *
-		 * @type {Number}
-		 * @default 1
-		 * @public
-		 */
-		step: PropTypes.number,
-
-		/**
-		 * If `true` the slider will be oriented vertically.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		vertical: PropTypes.bool
-	};
-
-	static defaultProps = {
-		defaultValue: 0
-	};
-
-	constructor (props) {
-		super(props);
-		this.state = {
-			value: this.props.defaultValue
-		};
-	}
-
-	onChange = () => {
-		if (this.props.onChange) {
-			this.props.onChange({value: this.state.value});
-		}
-	}
-
-	updateValue = (event) => {
-		event.preventDefault();
-		throttleJob('sliderChange', () => {
-			this.setState({value: Number.parseInt(event.target.value)}, this.onChange);
-		}, changeDelayMS);
-	}
-
-	getSliderNode = (node) => {
-		this.sliderNode = node;
-	}
-
-	handleClick = () => Spotlight.focus(this.sliderNode);
-
-	render () {
-		return (
-			<SliderBase
-				{...this.props}
-				value={this.state.value}
-				onChange={this.updateValue}
-				sliderRef={this.getSliderNode}
-				onClick={this.handleClick}
-			/>
-		);
-	}
-}
-
-const SpottableSlider = Pressable(Spottable(Slider));
-
-export default SpottableSlider;
-export {SpottableSlider as Slider, SliderBase};
+export default Slider;
+export {
+	Slider,
+	SliderBase,
+	SliderBaseFactory,
+	SliderFactory
+};

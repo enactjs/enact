@@ -19,10 +19,10 @@ function isNonLatinLocale (spec) {
 
 	// We use the non-latin fonts for these languages (even though their scripts are technically
 	// considered latin)
-	const nonLatinLanguageOverrides = ['ha', 'hu', 'vi', 'en-JP'];
+	const nonLatinLanguageOverrides = ['en-JP'];
 	// We use the latin fonts (with non-Latin fallback) for these languages (even though their
 	// scripts are non-latin)
-	const latinLanguageOverrides = ['ko'];
+	const latinLanguageOverrides = ['ko', 'ha'];
 
 	/* eslint-disable operator-linebreak */
 	return (
@@ -30,12 +30,12 @@ function isNonLatinLocale (spec) {
 			// the language actually is non-latin
 			li.getScript() !== 'Latn' ||
 			// the language is treated as non-latin
-			locale.getLanguage().indexOf(nonLatinLanguageOverrides) !== -1 ||
+			nonLatinLanguageOverrides.indexOf(locale.getLanguage()) !== -1 ||
 			// the combination of language and region is treated as non-latin
-			locale.toString().indexOf(nonLatinLanguageOverrides) !== -1
+			nonLatinLanguageOverrides.indexOf(locale.toString()) !== -1
 		) && (
 			// the non-latin language should be treated as latin
-			locale.getLanguage().indexOf(latinLanguageOverrides) < 0
+			latinLanguageOverrides.indexOf(locale.getLanguage()) < 0
 		)
 	);
 	/* eslint-enable operator-linebreak */
@@ -112,6 +112,8 @@ const updateLocale = function (locale) {
 	// blow away the cache to force it to reload the manifest files for the new app
 	// eslint-disable-next-line no-undefined
 	if (ilib._load) ilib._load.manifest = undefined;
+	// remove the cache of the platform name to allow transition between snapshot and browser
+	delete ilib._platform;
 	// ilib handles falsy values and automatically uses local locale when encountered which
 	// is expected and desired
 	ilib.setLocale(locale);

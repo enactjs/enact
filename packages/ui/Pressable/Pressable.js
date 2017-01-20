@@ -9,20 +9,37 @@ import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
 import React, {PropTypes} from 'react';
 
+/**
+ * Default config for {@link ui/Pressable.Pressable}
+ *
+ * @memberof ui/Pressable.Pressable
+ * @hocconfig
+ */
 const defaultConfig = {
 	/**
 	 * Configures the event name that activates the Pressable
 	 *
 	 * @type {String}
 	 * @default 'onMouseDown'
+	 * @memberof ui/Pressable.Pressable.defaultConfig
 	 */
 	depress: 'onMouseDown',
+
+	/**
+	 * Configures the event name that deactivates the Pressable when onMouseLeave is triggered
+	 *
+	 * @type {String}
+	 * @default 'onMouseLeave'
+	 * @memberof ui/Pressable.Pressable.defaultConfig
+	 */
+	leave: 'onMouseLeave',
 
 	/**
 	 * Configures the event name that deactivates the Pressable
 	 *
 	 * @type {String}
 	 * @default 'onMouseUp'
+	 * @memberof ui/Pressable.Pressable.defaultConfig
 	 */
 	release: 'onMouseUp',
 
@@ -31,6 +48,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'pressed'
+	 * @memberof ui/Pressable.Pressable.defaultConfig
 	 */
 	prop: 'pressed'
 };
@@ -43,17 +61,17 @@ const defaultConfig = {
  *
  * @class Pressable
  * @memberof ui/Pressable
- * @ui
+ * @hoc
  * @public
  */
 const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
-	const {depress, release, prop} = config;
+	const {depress, release, prop, leave} = config;
 	const defaultPropKey = 'default' + cap(prop);
 	const forwardDepress = forward(depress);
 	const forwardRelease = forward(release);
 
 	return class Pressable extends React.Component {
-		static propTypes = /** @lends ui/Pressable.Pressable */ {
+		static propTypes = /** @lends ui/Pressable.Pressable.prototype */ {
 			/**
 			 * Whether or not the component is in a "pressed" state when first rendered.
 			 * *Note that this property name can be changed by the config. By default it is `defaultPressed`.
@@ -98,10 +116,15 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			forwardRelease(ev, this.props);
 		}
 
+		onMouseLeave = () => {
+			this.setState({pressed: false});
+		}
+
 		render () {
 			const props = Object.assign({}, this.props);
 			if (depress) props[depress] = this.onMouseDown;
 			if (release) props[release] = this.onMouseUp;
+			if (leave) props[leave] = this.onMouseLeave;
 			if (prop) props[prop] = this.state.pressed;
 			delete props[defaultPropKey];
 

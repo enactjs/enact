@@ -8,7 +8,7 @@ import {GroupBase} from '../Group';
 describe('Group', () => {
 	const stringItems = ['One', 'Two', 'Three'];
 
-	it('Should call handler with selected on select', function () {
+	it('should call handler with selected on select', function () {
 		const handleClick = sinon.spy();
 		const subject = mount(
 			<GroupBase childComponent="div" onSelect={handleClick}>
@@ -25,7 +25,7 @@ describe('Group', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should call handler with data on select', function () {
+	it('should call handler with data on select', function () {
 		const handleClick = sinon.spy();
 		const subject = mount(
 			<GroupBase childComponent="div" onSelect={handleClick}>
@@ -42,7 +42,7 @@ describe('Group', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should call handler on move when childSelect="onMouseMove"', function () {
+	it('should call handler on move when childSelect="onMouseMove"', function () {
 		const handleClick = sinon.spy();
 		const subject = mount(
 			<GroupBase childComponent="div" childSelect='onMouseMove' onSelect={handleClick}>
@@ -58,7 +58,7 @@ describe('Group', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should select the third item with selected=2', function () {
+	it('should select the third item with selected=2', function () {
 		const selected = 2;
 		const handleClick = sinon.spy();
 		const subject = mount(
@@ -73,7 +73,7 @@ describe('Group', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should set {data-active} on the first item', function () {
+	it('should set {data-active} on the first item', function () {
 		const selected = 0;
 		const handleClick = sinon.spy();
 		const subject = mount(
@@ -88,7 +88,7 @@ describe('Group', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should set {children} to be the item by default', function () {
+	it('should set {children} to be the item by default', function () {
 		const selected = 0;
 		const handleClick = sinon.spy();
 		const subject = mount(
@@ -103,7 +103,7 @@ describe('Group', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should set {data-child} to be the item', function () {
+	it('should set {data-child} to be the item', function () {
 		const selected = 0;
 		const handleClick = sinon.spy();
 		const subject = mount(

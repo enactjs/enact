@@ -37,7 +37,7 @@ const propTypes = {
 const Router = class extends React.Component {
 	static displayName = 'Router'
 
-	static propTypes = /** @lends moonstone/Panels.Router */ {
+	static propTypes = /** @lends moonstone/Panels.Router.prototype */ {
 		/**
 		 * List of views to render. Will be rendered as a flat array of views suitable for use in
 		 * Panels and not a hierarchy of views as the path implies.
@@ -53,7 +53,7 @@ const Router = class extends React.Component {
 		/**
 		 * The component wrapping the rendered path
 		 *
-		 * @type {Component}
+		 * @type {String|Function}
 		 * @default 'div'
 		 * @public
 		 */
@@ -187,21 +187,26 @@ const Router = class extends React.Component {
  */
 const Route = () => null;
 
-Route.propTypes = /** @lends moonstone/Popups.Route.prototype */ {
+Route.propTypes = {
 	/**
 	 * The component to render when the `path` for this Route matches the path of the
 	 * {@link moonstone/Panels.Routable} container.
 	 *
-	 * @type {Element}
+	 * @type {String|Function}
 	 * @public
+	 * @memberof moonstone/Panels.Route.prototype
 	 */
-	component: React.PropTypes.element.isRequired,
+	component: React.PropTypes.oneOfType([
+		React.PropTypes.string,
+		React.PropTypes.func
+	]).isRequired,
 
 	/**
 	 * The name of the path segment
 	 *
 	 * @type {String}
 	 * @public
+	 * @memberof moonstone/Panels.Route.prototype
 	 */
 	path: React.PropTypes.string.isRequired
 };

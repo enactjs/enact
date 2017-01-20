@@ -4,12 +4,13 @@
  * @module ui/Cancelable
  */
 
-import {on, off} from '@enact/core/dispatcher';
 import {forward, handle, stopImmediate} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
+import {add} from '@enact/core/keymap';
 import invariant from 'invariant';
 import React from 'react';
 
+import {addModal, removeModal} from './modalHandler';
 import {forCancel, addCancelHandler, removeCancelHandler} from './cancelHandler';
 
 const defaultConfig = {
@@ -17,6 +18,9 @@ const defaultConfig = {
 	modal: false,
 	component: null
 };
+
+// Add keymap for escape key
+add('cancel', 27);
 
 /**
  * {@link ui/Cancelable.Cancelable} is a Higher-order Component that allows mapping
@@ -66,15 +70,15 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 			onCancel: React.PropTypes.func
 		}
 
-		componentDidMount () {
+		componentWillMount () {
 			if (modal) {
-				on('keyup', this.handleModalCancel);
+				addModal(this);
 			}
 		}
 
 		componentWillUnmount () {
 			if (modal) {
-				off('keyup', this.handleModalCancel);
+				removeModal(this);
 			}
 		}
 

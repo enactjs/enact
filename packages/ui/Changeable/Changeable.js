@@ -9,6 +9,12 @@ import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
 import React from 'react';
 
+/**
+ * Default config for {@link ui/Changeable.Changeable}.
+ *
+ * @memberof ui/Changeable.Changeable
+ * @hocconfig
+ */
 const defaultConfig = {
 	/**
 	 * If a Changeable component is used to maintain uncommitted state within another component,
@@ -21,6 +27,7 @@ const defaultConfig = {
 	 *
 	 * @type {Boolean}
 	 * @default false
+	 * @memberof ui/Changeable.Changeable.defaultConfig
 	 */
 	mutable: false,
 
@@ -29,6 +36,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'onChange'
+	 * @memberof ui/Changeable.Changeable.defaultConfig
 	 */
 	change: 'onChange',
 
@@ -37,6 +45,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'value'
+	 * @memberof ui/Changeable.Changeable.defaultConfig
 	 */
 	prop: 'value'
 };
