@@ -176,7 +176,7 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 			const {onChange} = this.props;
 			if (onChange) {
 				onChange({
-					value: date && date.getJSDate()
+					value: date ? date.getJSDate() : null
 				});
 			}
 		}
@@ -212,13 +212,15 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 		handleCancel = () => {
 			const {initialValue} = this.state;
 
-			// if we're cancelling, reset our state and emit an onChange with the initial value
-			this.setState({
-				value: initialValue,
-				initialValue: null
-			});
+			if (this.props.open) {
+				// if we're cancelling, reset our state and emit an onChange with the initial value
+				this.setState({
+					value: initialValue,
+					initialValue: null
+				});
 
-			this.emitChange(this.toIDate(initialValue));
+				this.emitChange(this.toIDate(initialValue));
+			}
 		}
 
 		render () {
