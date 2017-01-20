@@ -114,7 +114,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * @param {Object} event
 			 * @public
 			 */
-			onSpotlightDisappear: PropTypes.func,
+			//onSpotlightDisappear: PropTypes.func,
 
 			/**
 			 * When `true`, a pressed visual effect is applied
@@ -202,7 +202,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			proportionProgress: computeProportionProgress
 		},
 
-		render: ({disabled, inputRef, max, min, onChange, onMouseMove, onSpotlightDisappear, backgroundProgress, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, value, vertical, ...rest}) => {
+		render: ({disabled, inputRef, max, min, onChange, onMouseMove, backgroundProgress, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, value, vertical, ...rest}) => {
 			delete rest.detachedKnob;
 			delete rest.pressed;
 
@@ -225,7 +225,6 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						step={step}
 						onChange={onChange}
 						onMouseMove={onMouseMove}
-						onSpotlightDisappear={onSpotlightDisappear}
 						value={value}
 						orient={vertical ? 'vertical' : 'horizontal'}
 					/>
