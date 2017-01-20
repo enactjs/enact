@@ -1,5 +1,5 @@
 /**
- * Exports the {@link moonstone/Scroller.Scroller} and 
+ * Exports the {@link moonstone/Scroller.Scroller} and
  * {@link moonstone/Scroller.ScrollerBase} components.
  * The default export is {@link moonstone/Scroller.Scroller}.
  *
