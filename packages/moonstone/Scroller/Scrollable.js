@@ -409,6 +409,14 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
+		handleTransitionHeightChange = (ev) => {
+			// Only call forceUpdate if the transition is changing the height property.
+			// We need to call a forceUpdate after a transition so the scroller can recalculate to the correct height.
+			if (ev.nativeEvent.propertyName === 'height') {
+				this.forceUpdate();
+			}
+		}
+
 		onScrollbarBtnHandler = (orientation, direction) => {
 			const
 				isHorizontal = this.canScrollHorizontally() && orientation === 'horizontal',
@@ -751,7 +759,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			return (
 				(positioningOption !== 'byBrowser' && !hideScrollbars) ? (
-					<div ref={this.initContainerRef} className={scrollableClasses} style={style} onWheel={onWheel}>
+					<div ref={this.initContainerRef} className={scrollableClasses} style={style} onWheel={onWheel} onTransitionEnd={this.handleTransitionHeightChange}>
 						<Scrollbar
 							className={verticalScrollbarClassnames}
 							{...this.verticalScrollbarProps}
