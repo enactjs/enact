@@ -6,6 +6,11 @@ import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, text, select} from '@kadira/storybook-addon-knobs';
 
+const ExpandableGroup = RadioControllerDecorator('div');
+ExpandableGroup.displayName = 'ExpandableGroup';
+ExpandableList.displayName = 'ExpandableList';
+const SelectableList = Selectable(ExpandableList);
+
 const prop = {
 	listArray: [['a', 'b', 'c'], ['c', 'd', 'e', 'f', 'g']]
 };
@@ -35,11 +40,6 @@ class ExpandableListChildrenLengthUpdate extends React.Component {
 		);
 	}
 }
-
-const ExpandableGroup = RadioControllerDecorator('div');
-ExpandableGroup.displayName = 'ExpandableGroup';
-ExpandableList.displayName = 'ExpandableList';
-const SelectableList = Selectable(ExpandableList);
 
 storiesOf('ExpandableList')
 	.addDecorator(withKnobs)
