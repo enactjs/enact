@@ -5,7 +5,6 @@ import Spotlight from './spotlight';
 
 const spottableClass = 'spottable';
 const spottableDisabledClass = 'spottableDisabled';
-const spottableIdProp = 'data-spottable-id';
 
 const ENTER_KEY = 13;
 const REMOTE_OK_KEY = 16777221;
