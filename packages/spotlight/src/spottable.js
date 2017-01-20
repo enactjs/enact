@@ -93,6 +93,15 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			disabled: React.PropTypes.bool,
 
 			/**
+			 * The handler to run when the component is removed while retaining focus.
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @public
+			 */
+			onSpotlightDisappear: React.PropTypes.func,
+
+			/**
 			 * Whether or not the component can be navigated using spotlight.
 			 *
 			 * @type {Boolean}
@@ -100,25 +109,6 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @public
 			 */
 			spotlightDisabled: React.PropTypes.bool,
-
-			/**
-			 * The spottable id of the control to highlight if the current control
-			 * has focus and is removed from the dom.
-			 *
-			 * @type {String}
-			 * @default null
-			 * @public
-			 */
-			spottableDisappearToId: React.PropTypes.string,
-
-			/**
-			 * The id of the spottable control.
-			 *
-			 * @type {String}
-			 * @default null
-			 * @public
-			 */
-			spottableId: React.PropTypes.string,
 
 			/**
 			 * The tabIndex of the component. This value will default to -1 if left
@@ -138,10 +128,10 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillUnmount () {
-			const {spottableDisappearToId} = this.props;
+			const {onSpotlightDisappear} = this.props;
 
-			if (this.state.spotted && spottableDisappearToId) {
-				Spotlight.focus(`[${spottableIdProp}='${spottableDisappearToId}']`);
+			if (this.state.spotted && onSpotlightDisappear) {
+				onSpotlightDisappear();
 			}
 		}
 
@@ -170,23 +160,20 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const {disabled, spottableId, spotlightDisabled, ...rest} = this.props;
+			const {disabled, spotlightDisabled, ...rest} = this.props;
 			const spottableDisabled = this.state.spotted && disabled;
 			const spottable = (spottableDisabled || !disabled) && !spotlightDisabled;
 			const classes = spottableDisabled ? spottableClass + ' ' + spottableDisabledClass : spottableClass;
 			const componentDisabled = !spottable && disabled;
 			let tabIndex = rest.tabIndex;
 
-			delete rest.spottableDisappearToId;
+			delete rest.onSpotlightDisappear;
 
 			if (tabIndex == null && spottable) {
 				tabIndex = -1;
 			}
 
 			if (spottable) {
-				if (spottableId) {
-					rest[spottableIdProp] = spottableId;
-				}
 				rest['onBlur'] = this.onBlur;
 				rest['onFocus'] = this.onFocus;
 				if (emulateMouse && !spottableDisabled) {

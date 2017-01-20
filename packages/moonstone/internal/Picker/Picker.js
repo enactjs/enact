@@ -168,6 +168,15 @@ const Picker = class extends React.Component {
 		onMouseUp: React.PropTypes.func,
 
 		/**
+		 * The handler to run when the component is removed while retaining focus.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightDisappear: React.PropTypes.func,
+
+		/**
 		 * Sets the orientation of the picker, whether the buttons are above and below or on the
 		 * sides of the value. Must be either `'horizontal'` or `'vertical'`.
 		 *
@@ -385,6 +394,7 @@ const Picker = class extends React.Component {
 			index,
 			joined,
 			onMouseUp,
+			onSpotlightDisappear,
 			orientation,
 			step,
 			width,
@@ -428,6 +438,7 @@ const Picker = class extends React.Component {
 					onMouseDown={this.handleIncDown}
 					onMouseUp={onMouseUp}
 					onHoldPulse={this.handleIncPulse}
+					onSpotlightDisappear={onSpotlightDisappear}
 					joined={joined}
 					icon={incrementIcon}
 				/>
@@ -450,6 +461,7 @@ const Picker = class extends React.Component {
 					onMouseDown={this.handleDecDown}
 					onMouseUp={onMouseUp}
 					onHoldPulse={this.handleDecPulse}
+					onSpotlightDisappear={onSpotlightDisappear}
 					joined={joined}
 					icon={decrementIcon}
 				/>
