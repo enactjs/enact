@@ -371,17 +371,14 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		onFocus = (e) => {
 			if (this.isKeyDown && !this.isDragging) {
-				const
-					item = e.target,
-					index = Number.parseInt(item.getAttribute(dataIndexAttribute)),
-					focusableCheck = (item !== this.lastFocusedItem && item === doc.activeElement);
+				const item = e.target,
+					positionFn = this.childRef.calculatePositionOnFocus;
 
-				if (!isNaN(index) && focusableCheck && this.childRef.calculatePositionOnFocus) {
-					const pos = this.childRef.calculatePositionOnFocus(index);
-					this.startScrollOnFocus(pos, item);
-				} else if (item && focusableCheck && this.childRef.calculatePositionOnFocusInScroller) {
-					const pos = this.childRef.calculatePositionOnFocusInScroller(item);
-					this.startScrollOnFocus(pos, item);
+				if (item && item !== this.lastFocusedItem && item === doc.activeElement && positionFn) {
+					const pos = positionFn(item);
+					if (pos) {
+						this.startScrollOnFocus(pos, item);
+					}
 				}
 			}
 		}

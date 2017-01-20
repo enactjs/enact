@@ -111,7 +111,7 @@ class ScrollerBase extends Component {
 		return bounds;
 	}
 
-	calculatePositionOnFocusInScroller = (focusedItem) => {
+	calculatePositionOnFocus = (focusedItem) => {
 		const
 			rtlDirection = this.context.rtl ? -1 : 1,
 			currentLeft = this.scrollPos.left * rtlDirection,
