@@ -16,6 +16,8 @@ import {startJob, stopJob} from '@enact/core/jobs';
 
 import {Tooltip, TooltipBase} from './Tooltip';
 
+let currentTooltip; // needed to know whether or not we should stop a showing job when unmounting
+
 /**
  * {@link moonstone/TooltipDecorator.TooltipDecorator} is a Higher-order Component which
  * positions {@link moonstone/TooltipDecorator.Tooltip} in relation to the
@@ -133,7 +135,10 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 		}
 
 		componentWillUnmount () {
-			stopJob('showTooltip');
+			if (currentTooltip === this) {
+				currentTooltip = null;
+				stopJob('showTooltip');
+			}
 		}
 
 		setTooltipLayout () {
@@ -265,6 +270,7 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 
 			if (tooltipText) {
 				this.clientRef = client;
+				currentTooltip = this;
 				startJob('showTooltip', () => {
 					this.setState({showing: true});
 				}, tooltipDelay);
@@ -274,6 +280,7 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 		hideTooltip () {
 			if (this.props.tooltipText) {
 				this.clientRef = null;
+				currentTooltip = null;
 				stopJob('showTooltip');
 				this.setState({showing: false});
 			}
