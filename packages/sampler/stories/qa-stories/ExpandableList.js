@@ -1,14 +1,12 @@
-import ExpandableList from '@enact/moonstone/ExpandableList';
-import Selectable from '@enact/ui/Selectable';
 import Button from '@enact/moonstone/Button';
+import ExpandableList from '@enact/moonstone/ExpandableList';
 import {RadioControllerDecorator} from '@enact/ui/RadioDecorator';
 import React from 'react';
+import Selectable from '@enact/ui/Selectable';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, text, select} from '@kadira/storybook-addon-knobs';
 
 const ExpandableGroup = RadioControllerDecorator('div');
-ExpandableGroup.displayName = 'ExpandableGroup';
-ExpandableList.displayName = 'ExpandableList';
 const SelectableList = Selectable(ExpandableList);
 
 const prop = {
