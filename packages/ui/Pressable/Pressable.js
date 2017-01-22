@@ -19,7 +19,7 @@ const defaultConfig = {
 	/**
 	 * Configures the event name that activates the Pressable
 	 *
-	 * @type {String}
+	 * @type {String|Array}
 	 * @default 'onMouseDown'
 	 * @memberof ui/Pressable.Pressable.defaultConfig
 	 */
@@ -37,7 +37,7 @@ const defaultConfig = {
 	/**
 	 * Configures the event name that deactivates the Pressable
 	 *
-	 * @type {String}
+	 * @type {String|Array}
 	 * @default 'onMouseUp'
 	 * @memberof ui/Pressable.Pressable.defaultConfig
 	 */
@@ -102,16 +102,34 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			this.state = {
 				pressed: props[defaultPropKey]
 			};
+			this.eventHandlers = {};
+			if (typeof depress === 'string') {
+				this.eventHandlers[depress] = this.onDepress;
+			} else if (Array.isArray(depress)) {
+				depress.forEach((dep) => {
+					this.eventHandlers[dep] = this.onDepress;
+				});
+			}
+			if (typeof release === 'string') {
+				this.eventHandlers[release] = this.onRelease;
+			} else if (Array.isArray(release)) {
+				release.forEach((rel) => {
+					this.eventHandlers[rel] = this.onRelease;
+				});
+			}
+			if (leave) {
+				this.eventHandlers[leave] = this.onMouseLeave;
+			}
 		}
 
-		onMouseDown = (ev) => {
+		onDepress = (ev) => {
 			if (!this.props.disabled) {
 				this.setState({pressed: ev.pressed || true});
 			}
 			forwardDepress(ev, this.props);
 		}
 
-		onMouseUp = (ev) => {
+		onRelease = (ev) => {
 			this.setState({pressed: false});
 			forwardRelease(ev, this.props);
 		}
@@ -121,10 +139,7 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const props = Object.assign({}, this.props);
-			if (depress) props[depress] = this.onMouseDown;
-			if (release) props[release] = this.onMouseUp;
-			if (leave) props[leave] = this.onMouseLeave;
+			const props = Object.assign({}, this.props, this.eventHandlers);
 			if (prop) props[prop] = this.state.pressed;
 			delete props[defaultPropKey];
 

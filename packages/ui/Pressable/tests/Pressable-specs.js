@@ -34,6 +34,29 @@ describe('Pressable Specs', () => {
 		expect(actual).to.have.property(expectedMouseUp).to.be.a(expectedType);
 	});
 
+	it('should pass event handlers from array to Wrapped', function () {
+		const DivComponent = () => <div>press</div>;
+
+		const expectedMouseDown = 'onMouseDown';
+		const expectedMouseUp = 'onMouseUp';
+		const expectedTouchStart = 'onTouchStart';
+		const expectedTouchEnd = 'onTouchEnd';
+		const expectedType = 'function';
+
+		const PressableDiv = Pressable({
+			depress: [expectedMouseDown, expectedTouchStart],
+			release: [expectedMouseUp, expectedTouchEnd]
+		}, DivComponent);
+		const wrapped = shallow(<PressableDiv />);
+
+		const actual = wrapped.find('DivComponent').props();
+
+		expect(actual).to.have.property(expectedMouseDown).to.be.a(expectedType);
+		expect(actual).to.have.property(expectedMouseUp).to.be.a(expectedType);
+		expect(actual).to.have.property(expectedTouchStart).to.be.a(expectedType);
+		expect(actual).to.have.property(expectedTouchEnd).to.be.a(expectedType);
+	});
+
 	it('should pass custom pressed prop to Wrapped in configured prop', function () {
 		const DivComponent = () => <div>press</div>;
 
