@@ -19,6 +19,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/ProgressBar` properties `progress` and `backgroundProgress` to accept a number between 0 and 1.
 - `moonstone/Slider` and `moonstone/IncrementSlider` property `backgroundPercent` to `backgroundProgress` which now accepts a number between 0 and 1
 - `moonstone/Slider` to not ignore `value` prop when it is the same as the previous value
+- `moonstone/Scrollable` to not display scrollbar controls by default.
 
 ### Removed
 
