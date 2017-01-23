@@ -49,7 +49,7 @@ const DividerBase = kind({
 		 * additional spacing above your {@link moonstone/Divider.Divider}.
 		 *
 		 * @type {String}
-		 * @default "normal"
+		 * @default 'normal'
 		 * @public
 		 */
 		spacing: PropTypes.oneOf(['normal', 'small', 'medium', 'large', 'none'])
