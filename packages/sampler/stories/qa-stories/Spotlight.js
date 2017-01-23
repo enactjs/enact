@@ -1,5 +1,6 @@
 import Button, {ButtonBase} from '@enact/moonstone/Button';
 import Item from '@enact/moonstone/Item';
+import Popup from '@enact/moonstone/Popup';
 import {SpotlightContainerDecorator} from '@enact/spotlight';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
@@ -18,6 +19,37 @@ const style = {
 		padding: '12px'
 	}
 };
+
+class PopupFocusTest extends React.Component {
+	constructor (props) {
+		super(props);
+		this.state = {
+			popupOpen: false
+		};
+	}
+
+	handleTogglePopup = () => {
+		this.setState({popupOpen: !this.state.popupOpen});
+	}
+
+	render () {
+		return (
+			<div>
+				<p>
+					Open the popup by using 5-way selection on the &quot;Open Popup&quot; buttons.
+					When the popup is visible, select the popup&apos;s close button to close the popup.
+					Focus should return to the button used to originally open the popup. Verify this
+					behavior for each of the buttons.
+				</p>
+				<Button onClick={this.handleTogglePopup}>Open Popup</Button>
+				<Button onClick={this.handleTogglePopup}>Open Popup</Button>
+				<Popup onClose={this.handleTogglePopup} open={this.state.popupOpen} showCloseButton>
+					<div>This is a Popup</div>
+				</Popup>
+			</div>
+		);
+	}
+}
 
 storiesOf('Spotlight')
 	.addDecorator(withKnobs)
@@ -87,5 +119,11 @@ storiesOf('Spotlight')
 					</Container>
 				</div>
 			</div>
+		)
+	)
+	.addWithInfo(
+		'Popup Focus Targets',
+		() => (
+			<PopupFocusTest />
 		)
 	);
