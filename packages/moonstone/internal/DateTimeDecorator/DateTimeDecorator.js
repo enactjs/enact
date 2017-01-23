@@ -181,30 +181,8 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 			}
 		}
 
-		/**
-		 * Determines the current value using either the value from state or the current time (if the
-		 * picker is open)
-		 *
-		 * @returns {IDate} ilib Date object
-		 */
-		calcValue = () => {
-			const currentValue = this.state.value;
-
-			// Always use the current value if valid but if not and open, generate a value
-			if (currentValue) {
-				return DateFactory({
-					unixtime: currentValue
-				});
-			} else if (this.props.open) {
-				return DateFactory({
-					unixtime: Date.now(),
-					timezone: 'local'
-				});
-			}
-		}
-
 		handlePickerChange = (handler, ev) => {
-			const value = this.calcValue();
+			const value = this.toIDate(this.state.value);
 			handler(ev, value, this.i18nContext);
 			this.updateValue(value);
 		}
