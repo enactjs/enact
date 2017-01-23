@@ -1,5 +1,6 @@
 import {hoc} from '@enact/core';
 import {forward} from '@enact/core/handle';
+import {is} from '@enact/core/keymap';
 import React from 'react';
 import Spotlight from './spotlight';
 
@@ -74,9 +75,10 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 	const {emulateMouse} = config;
 	const forwardBlur = forward('onBlur');
 	const forwardFocus = forward('onFocus');
-	const forwardKeyPress = forwardEnter('onKeyPress', 'onClick');
-	const forwardKeyDown = forwardEnter('onKeyDown', 'onMouseDown');
-	const forwardKeyUp = forwardEnter('onKeyUp', 'onMouseUp');
+	const forwardEnterKeyPress = forwardEnter('onKeyPress', 'onClick');
+	const forwardEnterKeyDown = forwardEnter('onKeyDown', 'onMouseDown');
+	const forwardEnterKeyUp = forwardEnter('onKeyUp', 'onMouseUp');
+	const forwardKeyDown = forward('onKeyDown');
 
 	return class extends React.Component {
 		static displayName = 'Spottable'
@@ -90,6 +92,42 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @public
 			 */
 			disabled: React.PropTypes.bool,
+
+			/**
+			 * The handler to run when the 5-way down key is pressed.
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @public
+			 */
+			onSpotlightDown: React.PropTypes.func,
+
+			/**
+			 * The handler to run when the 5-way left key is pressed.
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @public
+			 */
+			onSpotlightLeft: React.PropTypes.func,
+
+			/**
+			 * The handler to run when the 5-way right key is pressed.
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @public
+			 */
+			onSpotlightRight: React.PropTypes.func,
+
+			/**
+			 * The handler to run when the 5-way up key is pressed.
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @public
+			 */
+			onSpotlightUp: React.PropTypes.func,
 
 			/**
 			 * Whether or not the component can be navigated using spotlight.
@@ -141,6 +179,27 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
+		onKeyDown = (e) => {
+			const {disabled, onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp} = this.props;
+			const keyCode = e.keyCode;
+
+			if (onSpotlightDown && is('down', keyCode)) {
+				onSpotlightDown(e);
+			} else if (onSpotlightLeft && is('left', keyCode)) {
+				onSpotlightLeft(e);
+			} else if (onSpotlightRight && is('right', keyCode)) {
+				onSpotlightRight(e);
+			} else if (onSpotlightUp && is('up', keyCode)) {
+				onSpotlightUp(e);
+			}
+
+			if (emulateMouse && !(this.state.spotted && disabled) && is('enter', keyCode)) {
+				forwardEnterKeyDown(this.props)(e);
+			} else {
+				forwardKeyDown(e, this.props);
+			}
+		}
+
 		render () {
 			const {disabled, spotlightDisabled, ...rest} = this.props;
 			const spottableDisabled = this.state.spotted && disabled;
@@ -149,6 +208,11 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			const componentDisabled = !spottable && disabled;
 			let tabIndex = rest.tabIndex;
 
+			delete rest.onSpotlightDown;
+			delete rest.onSpotlightLeft;
+			delete rest.onSpotlightRight;
+			delete rest.onSpotlightUp;
+
 			if (tabIndex == null && spottable) {
 				tabIndex = -1;
 			}
@@ -156,10 +220,11 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			if (spottable) {
 				rest['onBlur'] = this.onBlur;
 				rest['onFocus'] = this.onFocus;
+				rest['onKeyDown'] = this.onKeyDown;
+
 				if (emulateMouse && !spottableDisabled) {
-					rest['onKeyPress'] = forwardKeyPress(this.props);
-					rest['onKeyDown'] = forwardKeyDown(this.props);
-					rest['onKeyUp'] = forwardKeyUp(this.props);
+					rest['onKeyPress'] = forwardEnterKeyPress(this.props);
+					rest['onKeyUp'] = forwardEnterKeyUp(this.props);
 				}
 				if (rest.className) {
 					rest.className += ' ' + classes;

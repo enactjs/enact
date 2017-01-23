@@ -1,6 +1,6 @@
 import Button, {ButtonBase} from '@enact/moonstone/Button';
 import Item from '@enact/moonstone/Item';
-import {SpotlightContainerDecorator} from '@enact/spotlight';
+import Spotlight, {SpotlightContainerDecorator} from '@enact/spotlight';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs} from '@kadira/storybook-addon-knobs';
@@ -86,6 +86,27 @@ storiesOf('Spotlight')
 						<Item onFocus={action('onFocus')} onBlur={action('onBlur')}>3</Item>
 					</Container>
 				</div>
+			</div>
+		)
+	)
+	.addWithInfo(
+		'Directional Events',
+		() => (
+			<div>
+				<p>
+					The item below will emit onSpotlight[Direction] events when attempting
+					to 5-way navigate from the item. Highlight the item below and press any of
+					the 5-way directional keys to verify a matching directional event in the
+					action logger.
+				</p>
+				<Item
+					onSpotlightDown={action('onSpotlightDown')}
+					onSpotlightLeft={action('onSpotlightLeft')}
+					onSpotlightRight={action('onSpotlightRight')}
+					onSpotlightUp={action('onSpotlightUp')}
+				>
+					Item
+				</Item>
 			</div>
 		)
 	);
