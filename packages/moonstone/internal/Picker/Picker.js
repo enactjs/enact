@@ -4,6 +4,7 @@ import clamp from 'ramda/src/clamp';
 import React from 'react';
 import shouldUpdate from 'recompose/shouldUpdate';
 import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
+import {getDirection} from '@enact/spotlight';
 import {validateRange, validateStepped} from '../validators';
 
 import PickerButton from './PickerButton';
@@ -364,6 +365,28 @@ const Picker = class extends React.Component {
 		}
 	}
 
+	handleKeyDown = (ev) => {
+		const direction = getDirection(ev.keyCode);
+
+		const directions = {
+			up: this.handleIncClick,
+			down: this.handleDecClick,
+			right: this.handleIncClick,
+			left: this.handleDecClick
+		};
+
+		const isVertical = this.props.orientation === 'vertical' && (direction === 'up' || direction === 'down');
+		const isHorizontal = this.props.orientation === 'horizontal' && (direction === 'right' || direction === 'left');
+
+		if (isVertical) {
+			directions[direction]();
+			ev.stopPropagation();
+		} else if (isHorizontal) {
+			directions[direction]();
+			ev.stopPropagation();
+		}
+	}
+
 	determineClasses (decrementerDisabled, incrementerDisabled) {
 		const {joined, orientation, pressed, width} = this.props;
 		return [
@@ -420,7 +443,7 @@ const Picker = class extends React.Component {
 		}
 
 		return (
-			<div {...rest} className={classes} disabled={disabled} onWheel={joined ? this.handleWheel : null}>
+			<div {...rest} className={classes} disabled={disabled} onWheel={joined ? this.handleWheel : null} onKeyDown={joined ? this.handleKeyDown : null}>
 				<PickerButton
 					className={css.incrementer}
 					disabled={incrementerDisabled}

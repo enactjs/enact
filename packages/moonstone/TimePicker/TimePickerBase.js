@@ -144,7 +144,6 @@ const TimePickerBase = kind({
 											label={noLabels ? null : $L('hour')}
 											noAnimation={noHourAnimation}
 											onChange={onChangeHour}
-											reverse
 											value={hour}
 											width={2}
 											wrap
