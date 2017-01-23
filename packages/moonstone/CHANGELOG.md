@@ -13,6 +13,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/MarqueeDecorator` property `invalidateProps` that specifies which props cause the marquee distance to be invalidated.
 - developer-mode warnings to several components to warn when values are out-of-range
 - `moonstone/Picker` when `joined` the ability to be incremented and decremented by arrow keys.
+- `onSpotlightDisappear` event property support for spottable moonstone components
 
 ### Changed
 
