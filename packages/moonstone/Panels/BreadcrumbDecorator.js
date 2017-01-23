@@ -19,7 +19,14 @@ import css from './Panels.less';
  * @memberof moonstone/Panels.BreadcrumbDecorator
  */
 const defaultConfig = {
-	BreacrumbViewManager: ViewManager,
+	/**
+	 * {@link ui/ViewManager.ViewManager} for breadcrumbs
+	 *
+	 * @type {Component}
+	 * @default ui/ViewManager.ViewManager
+	 * @memberof moonstone/Panels.BreadcrumbDecorator.defaultConfig
+	 */
+	BreadcrumbViewManager: ViewManager,
 
 	/**
 	 * Classes to be added to the root node
