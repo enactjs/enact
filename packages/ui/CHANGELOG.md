@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `ui/resolution` function `scaleToRem` for those times when you have a size in pixels that you want to convert directly to `rem` to support automatic dynamic resizing.
+
 ## [1.0.0-beta.1] - 2016-12-30
 
 ### Added
@@ -11,7 +17,6 @@ The following is a curated list of changes in the Enact ui module, newest change
 - `ui/ViewManager` events `onAppear`, `onEnter`, `onLeave`, `onStay`, `onTransition`, and `onWillTransition`
 - `ui/FloatingLayer` `scrimType` prop value `none`
 - `ui/Pressable` config option `onMouseLeave`
-- `ui/resolution` has a new convenience function exported. `scaleToRem` for those times when you have a size in pixels that you want to convert directly to `rem` to support automatic dynamic resizing.
 
 ### Removed
 
