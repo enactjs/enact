@@ -56,6 +56,7 @@ const defaultConfig = {
 	*
 	* @type {Array}
 	* @default null
+	* @memberof moonstone/Marquee.MarqueeDecorator.defaultConfig
 	*/
 	invalidateProps: null,
 
@@ -72,6 +73,7 @@ const defaultConfig = {
 /**
  * Checks whether any of the invalidateProps has changed or not
  *
+ * @memberof moonstone/Marquee.MarqueeDecorator
  * @param {Array} propList An array of invalidateProps
  * @param {Object} prev Previous props
  * @param {Object} next Next props
