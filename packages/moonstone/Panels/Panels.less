@@ -104,25 +104,31 @@
 .activity {
 	.viewport {
 		left: 0;
-
-		> :not([data-index='0']) {
-			width: calc(~"100% - " @moon-breadcrumb-width);
-		}
 	}
 
 	.breadcrumbs {
-		background-color: @moon-background-color;
-		opacity: 1;
-		transition: opacity 200ms linear;
 		width: @moon-breadcrumb-width;
+	}
 
-		// prevents breadcrumbs from capturing pointer events when the first panel is visible without
-		// any breadcrumbs
-		&.hidden {
-			opacity: 0;
+	&:not([data-index='0']) {
+		.viewport {
+			clip-path: inset(0px 0px 0px @moon-breadcrumb-width);
+
+			> * {
+				width: calc(~"100% - " @moon-breadcrumb-width);
+			}
+		}
+	}
+
+	&[data-index='0'] {
+		// prevents breadcrumbs from capturing pointer events when the first panel is visible
+		// without any breadcrumbs
+		.breadcrumbs {
+			z-index: -1;
 			pointer-events: none;
 		}
 	}
+
 }
 
 .alwaysViewing {

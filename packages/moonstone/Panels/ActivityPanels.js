@@ -1,30 +1,6 @@
 import {ActivityArranger} from './Arrangers';
 import BreadcrumbDecorator from './BreadcrumbDecorator';
-import kind from '@enact/core/kind';
 import {PanelsBase} from './Panels';
-import React from 'react';
-import ViewManager from '@enact/ui/ViewManager';
-
-import css from './Panels.less';
-
-const BreadcrumbViewManager = kind({
-	name: 'BreadcrumbViewManager',
-
-	styles: {
-		css
-	},
-
-	computed: {
-		// Hide the breadcrumbs when navigating to the first panel
-		className: ({index, styler}) => styler.append({
-			hidden: index < 0
-		})
-	},
-
-	render: (props) => (
-		<ViewManager {...props} />
-	)
-});
 
 /**
  * An instance of Panels in which the Panel uses the entire viewable screen with a single breadcrumb
@@ -41,7 +17,6 @@ const BreadcrumbViewManager = kind({
  * @public
  */
 const ActivityPanels = BreadcrumbDecorator({
-	BreadcrumbViewManager,
 	className: 'panels activity enact-fit',
 	max: 1,
 	panelArranger: ActivityArranger

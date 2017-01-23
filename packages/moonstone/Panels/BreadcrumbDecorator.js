@@ -20,15 +20,6 @@ import css from './Panels.less';
  */
 const defaultConfig = {
 	/**
-	 * {@link ui/ViewManager.ViewManager} for breadcrumbs
-	 *
-	 * @type {Component}
-	 * @default ui/ViewManager.ViewManager
-	 * @memberof moonstone/Panels.BreadcrumbDecorator.defaultConfig
-	 */
-	BreadcrumbViewManager: ViewManager,
-
-	/**
 	 * Classes to be added to the root node
 	 *
 	 * @type {string}
@@ -68,7 +59,7 @@ const defaultConfig = {
  * @memberof moonstone/Panels
  */
 const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {max, BreadcrumbViewManager, panelArranger, className: cfgClassName} = config;
+	const {max, panelArranger, className: cfgClassName} = config;
 	const calcMax = coerceFunction(max);
 
 	const Decorator = kind({
@@ -168,8 +159,8 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			);
 
 			return (
-				<div className={className}>
-					<BreadcrumbViewManager
+				<div className={className} data-index={index}>
+					<ViewManager
 						arranger={BreadcrumbArranger}
 						className={css.breadcrumbs}
 						duration={300}
@@ -179,7 +170,7 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						start={0}
 					>
 						{breadcrumbs}
-					</BreadcrumbViewManager>
+					</ViewManager>
 					<Wrapped
 						{...rest}
 						arranger={panelArranger}
