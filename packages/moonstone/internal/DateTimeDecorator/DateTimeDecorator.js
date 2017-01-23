@@ -108,6 +108,7 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 				// if we're opening, store the current value as the initial value for cancellation
 				this.setState({
 					initialValue: newValue,
+					pickerValue: null,
 					value
 				});
 
@@ -188,13 +189,14 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 		}
 
 		handleCancel = () => {
-			const {initialValue} = this.state;
+			const {initialValue, value} = this.state;
 
 			if (this.props.open) {
 				// if we're cancelling, reset our state and emit an onChange with the initial value
 				this.setState({
 					value: initialValue,
-					initialValue: null
+					initialValue: null,
+					pickerValue: value
 				});
 
 				this.emitChange(this.toIDate(initialValue));
@@ -204,7 +206,11 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 		render () {
 			const value = this.toIDate(this.state.value);
 			const label = value && this.i18nContext ? this.i18nContext.formatter.format(value) : null;
-			const props = customProps(this.i18nContext, value);
+
+			// pickerValue is only set when cancelling to prevent the unexpected changing of the
+			// picker values before closing.
+			const pickerValue = this.state.pickerValue ? this.toIDate(this.state.pickerValue) : value;
+			const props = customProps(this.i18nContext, pickerValue);
 			const order = this.i18nContext ? this.i18nContext.order : defaultOrder;
 
 			return (
