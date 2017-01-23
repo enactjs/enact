@@ -16,7 +16,6 @@
  * @module core/keymap
  */
 
-
 import curry from 'ramda/src/curry';
 
 /**
@@ -26,6 +25,7 @@ import curry from 'ramda/src/curry';
  * @memberof core/keymap
  *
  * @type {Object}
+ * @private
  */
 const map = {};
 
@@ -36,6 +36,7 @@ const map = {};
  * @param   {String} name  Name for keyCode
  *
  * @returns {String}       Name for keyCode in lower case
+ * @private
  */
 const toLowerCase = (name) => name ? name.toLowerCase() : '';
 
@@ -47,6 +48,7 @@ const toLowerCase = (name) => name ? name.toLowerCase() : '';
  * @param   {Object}    set  A map of names to keyCodes
  *
  * @returns {undefined}
+ * @private
  */
 const forEachObj = curry(function (fn, set) {
 	Object.keys(set).forEach(name => fn(name, set[name]));
@@ -61,6 +63,7 @@ const forEachObj = curry(function (fn, set) {
  * @param   {Number|Number[]} keyCode  A key code or array of key codes
  *
  * @returns {undefined}
+ * @private
  */
 const oneOrArray = curry(function (fn, name, keyCode) {
 	if (Array.isArray(keyCode)) {
@@ -78,6 +81,7 @@ const oneOrArray = curry(function (fn, name, keyCode) {
  * @param   {Number}    keyCode  A key code
  *
  * @returns {undefined}
+ * @private
  */
 const addOne = curry(function (name, keyCode) {
 	name = toLowerCase(name);
@@ -99,6 +103,7 @@ const addOne = curry(function (name, keyCode) {
  * @param   {Number}    keyCode  A key code
  *
  * @returns {undefined}
+ * @private
  */
 const removeOne = curry(function (name, keyCode) {
 	name = toLowerCase(name);
