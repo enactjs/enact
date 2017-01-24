@@ -20,6 +20,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Picker` component's buttons to reverse their operation such that 'up' selects the previous item and 'down' the next
 - `moonstone/Divider` to now behave as a simple horizontal line when no text content is provided
 - `moonstone/Scrollable` to not display scrollbar controls by default.
+- `moonstone/DatePicker` and `moonstone/TimePicker` to emit `onChange` event whenever the value is changed, not just when the component is closed.
 
 ### Removed
 
