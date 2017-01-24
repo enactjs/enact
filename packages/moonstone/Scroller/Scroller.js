@@ -32,7 +32,7 @@ class ScrollerBase extends Component {
 
 		className: PropTypes.string,
 
-		/*
+		/**
 		 * Specifies how to horizontally scroll. Acceptable values are `'auto'`, `'default'` ,
 		 * `'hidden'`, and `'scroll'`.
 		 *
@@ -44,7 +44,7 @@ class ScrollerBase extends Component {
 
 		style: PropTypes.object,
 
-		/*
+		/**
 		 * Specifies how to vertically scroll. Acceptable values are `'auto'`, `'auto'` ,
 		 * `'hidden'`, and `'scroll'`.
 		 *
