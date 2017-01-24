@@ -199,7 +199,9 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 					pickerValue: value
 				});
 
-				this.emitChange(this.toIDate(initialValue));
+				if (initialValue !== value) {
+					this.emitChange(this.toIDate(initialValue));
+				}
 			}
 		}
 
