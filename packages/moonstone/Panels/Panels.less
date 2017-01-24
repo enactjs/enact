@@ -107,7 +107,8 @@
 		.viewport {
 			clip-path: inset(0px 0px 0px @moon-breadcrumb-width);
 
-			> * {
+			// > *:not([data-index='0']) prevents an unnecessary resize/jump of panel 0 during transition.
+			> *:not([data-index='0']) {
 				padding-left: 0;
 				width: calc(~"100% - " @moon-breadcrumb-width);
 			}
