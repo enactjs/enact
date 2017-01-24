@@ -2,7 +2,6 @@ import {mount} from 'enzyme';
 import React from 'react';
 
 import Item from '../../Item';
-
 import VirtualList from '../VirtualList';
 
 describe('VirtualList Specs', () => {

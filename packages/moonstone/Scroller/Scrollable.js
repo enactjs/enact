@@ -10,9 +10,9 @@ import hoc from '@enact/core/hoc';
 import React, {Component, PropTypes} from 'react';
 import ri from '@enact/ui/resolution';
 
+import css from './Scrollable.less';
 import ScrollAnimator from './ScrollAnimator';
 import Scrollbar from './Scrollbar';
-import css from './Scrollable.less';
 
 const
 	calcVelocity = (d, dt) => (d && dt) ? d / dt : 0,
@@ -189,8 +189,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			super(props);
 
 			this.state = {
-				isHorizontalScrollbarVisible: true,
-				isVerticalScrollbarVisible: true
+				isHorizontalScrollbarVisible: false,
+				isVerticalScrollbarVisible: false
 			};
 
 			this.initChildRef = this.initRef('childRef');
@@ -551,10 +551,14 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					if (canScrollHorizontally) {
 						// We need '!=' to check if opt.potision.x is null or undefined
 						left = opt.position.x != null ? opt.position.x : this.scrollLeft;
+					} else {
+						left = 0;
 					}
 					if (canScrollVertically) {
 						// We need '!=' to check if opt.potision.y is null or undefined
 						top = opt.position.y != null ? opt.position.y : this.scrollTop;
+					} else {
+						top = 0;
 					}
 				} else if (typeof opt.align === 'string') {
 					if (canScrollHorizontally) {
