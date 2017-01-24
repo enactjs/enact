@@ -48,6 +48,15 @@ class ExpandableInputBase extends React.Component {
 		onInputChange: React.PropTypes.func,
 
 		/**
+		 * The handler to run when the component is removed while retaining focus.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightDisappear: React.PropTypes.func,
+
+		/**
 		 * When `true`, the control is rendered in the expanded state, with the contents visible
 		 *
 		 * @type {Boolean}
@@ -147,7 +156,7 @@ class ExpandableInputBase extends React.Component {
 	}
 
 	render () {
-		const {disabled, onInputChange, placeholder, type, value, ...rest} = this.props;
+		const {disabled, onInputChange, onSpotlightDisappear, placeholder, type, value, ...rest} = this.props;
 		delete rest.onChange;
 
 		return (
@@ -158,6 +167,7 @@ class ExpandableInputBase extends React.Component {
 				noPointerMode
 				onClose={this.handleClose}
 				onMouseDown={this.handleMouseDown}
+				onSpotlightDisappear={onSpotlightDisappear}
 			>
 				<Input
 					disabled={disabled}
@@ -167,6 +177,7 @@ class ExpandableInputBase extends React.Component {
 					onChange={onInputChange}
 					onKeyDown={this.handleInputKeyDown}
 					onMouseDown={this.handleInputMouseDown}
+					onSpotlightDisappear={onSpotlightDisappear}
 					placeholder={placeholder}
 					type={type}
 					value={value}

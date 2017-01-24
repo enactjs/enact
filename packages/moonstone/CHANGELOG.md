@@ -4,21 +4,22 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
-### Changed
-
-- `moonstone/Picker` component's buttons to reverse their operation such that 'up' selects the previous item and 'down' the next
-
 ### Added
 
-- `moonstone/MarqueeDecorator` property `invalidateProps` that specifies which props cause the marquee distance to be invalidated.
+- `moonstone/MarqueeDecorator` property `invalidateProps` that specifies which props cause the marquee distance to be invalidated
 - developer-mode warnings to several components to warn when values are out-of-range
+- `moonstone/Divider` property `spacing` which adjusts the amount of empty space above and below the `Divider`. `normal`, `small`, `medium`, `large`, and `none` are available.
 - `moonstone/Picker` when `joined` the ability to be incremented and decremented by arrow keys.
+- `onSpotlightDisappear` event property support for spottable moonstone components
 
 ### Changed
 
 - `moonstone/ProgressBar` properties `progress` and `backgroundProgress` to accept a number between 0 and 1.
 - `moonstone/Slider` and `moonstone/IncrementSlider` property `backgroundPercent` to `backgroundProgress` which now accepts a number between 0 and 1
 - `moonstone/Slider` to not ignore `value` prop when it is the same as the previous value
+- `moonstone/Picker` component's buttons to reverse their operation such that 'up' selects the previous item and 'down' the next
+- `moonstone/Divider` to now behave as a simple horizontal line when no text content is provided
+- `moonstone/Scrollable` to not display scrollbar controls by default.
 
 ### Removed
 

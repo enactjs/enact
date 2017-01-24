@@ -125,7 +125,16 @@ const DatePickerBase = kind({
 		 * @type {Function}
 		 * @public
 		 */
-		onChangeYear: React.PropTypes.func
+		onChangeYear: React.PropTypes.func,
+
+		/**
+		 * The handler to run when the component is removed while retaining focus.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightDisappear: React.PropTypes.func
 	},
 
 	defaultProps: {
@@ -138,10 +147,10 @@ const DatePickerBase = kind({
 		className: 'datePicker'
 	},
 
-	render: ({day, maxDays, maxMonths, maxYear, minYear, month, noLabels, onChangeDate, onChangeMonth, onChangeYear, order, year, ...rest}) => {
+	render: ({day, maxDays, maxMonths, maxYear, minYear, month, noLabels, onChangeDate, onChangeMonth, onChangeYear, onSpotlightDisappear, order, year, ...rest}) => {
 
 		return (
-			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false}>
+			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false} onSpotlightDisappear={onSpotlightDisappear}>
 				<div className={dateComponentPickers}>
 					{order.map(picker => {
 						switch (picker) {
@@ -153,6 +162,7 @@ const DatePickerBase = kind({
 										max={maxDays}
 										min={1}
 										onChange={onChangeDate}
+										onSpotlightDisappear={onSpotlightDisappear}
 										value={day}
 										width={2}
 										wrap
@@ -166,6 +176,7 @@ const DatePickerBase = kind({
 										max={maxMonths}
 										min={1}
 										onChange={onChangeMonth}
+										onSpotlightDisappear={onSpotlightDisappear}
 										value={month}
 										width={2}
 										wrap
@@ -180,6 +191,7 @@ const DatePickerBase = kind({
 										max={maxYear}
 										min={minYear}
 										onChange={onChangeYear}
+										onSpotlightDisappear={onSpotlightDisappear}
 										value={year}
 										width={4}
 									/>
