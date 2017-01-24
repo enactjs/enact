@@ -66,7 +66,7 @@ const VirtualList = kind({
 		 * @public
 		 */
 
-		 /**
+		/**
 		 * Size of the data.
 		 *
 		 * @name dataSize
@@ -77,7 +77,7 @@ const VirtualList = kind({
 		 * @public
 		 */
 
-		 /**
+		/**
 		 * Direction of the list; valid values are `'horizontal'` and `'vertical'`.
 		 *
 		 * @name direction
@@ -88,7 +88,7 @@ const VirtualList = kind({
 		 * @public
 		 */
 
-		 /**
+		/**
 		 * Spacing between items.
 		 *
 		 * @name spacing
@@ -156,7 +156,7 @@ const VirtualGridList = kind({
 		 * @public
 		 */
 
-		 /**
+		/**
 		 * Size of the data.
 		 *
 		 * @name dataSize
@@ -167,7 +167,7 @@ const VirtualGridList = kind({
 		 * @public
 		 */
 
-		 /**
+		/**
 		 * Direction of the list; valid values are `'horizontal'` and `'vertical'`.
 		 *
 		 * @name direction
@@ -178,7 +178,7 @@ const VirtualGridList = kind({
 		 * @public
 		 */
 
-		 /**
+		/**
 		 * Spacing between items.
 		 *
 		 * @name spacing
