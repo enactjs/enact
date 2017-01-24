@@ -78,7 +78,6 @@ const ButtonBase = kind({
 		 * When `true`, a selected visual effect is applied to the button
 		 *
 		 * @type {Boolean}
-		 * @default false
 		 * @public
 		 */
 		selected: PropTypes.bool,
@@ -101,7 +100,6 @@ const ButtonBase = kind({
 		disabled: false,
 		minWidth: true,
 		pressed: false,
-		selected: false,
 		small: false
 	},
 
@@ -118,6 +116,12 @@ const ButtonBase = kind({
 	},
 
 	render: ({children, ...rest}) => {
+		// Do not add the ARIA attribute if the selected prop is omitted to avoid the potentially
+		// confusing readout for the common case of a standalone Button or IconButton.
+		if ('selected' in rest) {
+			rest['aria-pressed'] = rest.selected;
+		}
+
 		delete rest.backgroundOpacity;
 		delete rest.minWidth;
 		delete rest.pressed;

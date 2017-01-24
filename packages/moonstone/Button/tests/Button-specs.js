@@ -1,6 +1,6 @@
 import React from 'react';
-import {mount} from 'enzyme';
-import Button from '../Button';
+import {mount, shallow} from 'enzyme';
+import {Button, ButtonBase} from '../Button';
 
 describe('Button Specs', () => {
 
@@ -36,6 +36,28 @@ describe('Button Specs', () => {
 
 		const expected = 1;
 		const actual = button.find({disabled: true}).length;
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should not add "aria-pressed" when "selected" is omitted', function () {
+		const button = shallow(
+			<ButtonBase />
+		);
+
+		const expected = false;
+		const actual = 'aria-pressed' in button.props();
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should set "aria-pressed" to the value of "selected"', function () {
+		const button = shallow(
+			<ButtonBase selected={false} />
+		);
+
+		const expected = false;
+		const actual = button.prop('aria-pressed');
 
 		expect(actual).to.equal(expected);
 	});
