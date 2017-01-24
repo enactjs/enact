@@ -335,6 +335,10 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		spotPopupContent = () => {
+			if (this.props.spotlightRestrict === 'self-only') {
+				Spotlight.setPointerMode(false);
+			}
+
 			Spotlight.focus(this.state.containerId);
 		}
 

@@ -138,7 +138,6 @@ const PopupBase = kind({
 	render: ({closeButton, children, containerId, noAnimation, open, onHide, spotlightModal, spotlightRestrict, ...rest}) => {
 		delete rest.onCloseButtonClick;
 		delete rest.showCloseButton;
-
 		return (
 			<TransitionContainer
 				noAnimation={noAnimation}
