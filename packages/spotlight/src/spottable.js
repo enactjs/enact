@@ -92,6 +92,15 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			disabled: React.PropTypes.bool,
 
 			/**
+			 * The handler to run when the component is removed while retaining focus.
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @public
+			 */
+			onSpotlightDisappear: React.PropTypes.func,
+
+			/**
 			 * Whether or not the component can be navigated using spotlight.
 			 *
 			 * @type {Boolean}
@@ -115,6 +124,14 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			this.state = {
 				spotted: false
 			};
+		}
+
+		componentWillUnmount () {
+			const {onSpotlightDisappear} = this.props;
+
+			if (this.state.spotted && onSpotlightDisappear) {
+				onSpotlightDisappear();
+			}
 		}
 
 		onBlur = (e) => {
@@ -148,6 +165,8 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			const classes = spottableDisabled ? spottableClass + ' ' + spottableDisabledClass : spottableClass;
 			const componentDisabled = !spottable && disabled;
 			let tabIndex = rest.tabIndex;
+
+			delete rest.onSpotlightDisappear;
 
 			if (tabIndex == null && spottable) {
 				tabIndex = -1;
