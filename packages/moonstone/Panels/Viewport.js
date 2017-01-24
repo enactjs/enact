@@ -96,7 +96,7 @@ const ViewportBase = kind({
 				{...rest}
 				noAnimation={noAnimation}
 				arranger={arranger}
-				duration={200}
+				duration={250}
 				index={index}
 				component="main"
 				onAppear={handleAppear}
