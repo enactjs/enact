@@ -103,11 +103,20 @@
 		width: @moon-breadcrumb-width;
 	}
 
+	.viewport {
+		-webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+		clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+
+		transition: clip-path linear 0ms, -webkit-clip-path linear 0ms;
+	}
+
 	&:not([data-index='0']) {
 		.viewport {
-			clip-path: inset(0px 0px 0px @moon-breadcrumb-width);
+			-webkit-clip-path: polygon(@moon-breadcrumb-width 0, 100% 0, 100% 100%, @moon-breadcrumb-width 100%);
+			clip-path: polygon(@moon-breadcrumb-width 0, 100% 0, 100% 100%, @moon-breadcrumb-width 100%);
+			transition-delay: 250ms;
 
-			> * {
+			> :not([data-index='0']) {
 				padding-left: 0;
 				width: calc(~"100% - " @moon-breadcrumb-width);
 			}
