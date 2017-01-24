@@ -45,12 +45,12 @@ class DisappearTest extends React.Component {
 	}
 
 	startTimer = () => {
-		this.timer = setTimeout(this.removeButton, 4000);
+		this.timer = window.setTimeout(this.removeButton, 4000);
 	}
 
 	stopTimer = () => {
 		if (this.timer) {
-			this.clearTimeout(this.timer);
+			window.clearTimeout(this.timer);
 		}
 	}
 
