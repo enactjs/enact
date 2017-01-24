@@ -1,6 +1,5 @@
 import React from 'react';
 import {shallow} from 'enzyme';
-import sinon from 'sinon';
 import A11yDecorator from '../A11yDecorator';
 
 describe('A11yDecorator', () => {
@@ -119,6 +118,22 @@ describe('A11yDecorator', () => {
 		);
 
 		const expected = 'LABEL';
+		const actual = subject.prop('aria-label');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should support configuring the prop to source the content', function () {
+		const TestComponent = A11yDecorator(
+			{prop: 'title'},
+			({title}) => <div>{title}</div>
+		);
+
+		const subject = shallow(
+			<TestComponent accessibilityPreHint="PREHINT" accessibilityHint="HINT" title="TITLE" />
+		);
+
+		const expected = 'PREHINT TITLE HINT';
 		const actual = subject.prop('aria-label');
 
 		expect(actual).to.equal(expected);
