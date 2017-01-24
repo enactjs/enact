@@ -117,7 +117,16 @@ const TimePickerBase = kind({
 		 * @type {Function}
 		 * @public
 		 */
-		onChangeMinute: React.PropTypes.func
+		onChangeMinute: React.PropTypes.func,
+
+		/**
+		 * The handler to run when the component is removed while retaining focus.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightDisappear: React.PropTypes.func
 	},
 
 	styles: {
@@ -129,9 +138,9 @@ const TimePickerBase = kind({
 		hasMeridiem: ({order}) => order.indexOf('a') >= 0
 	},
 
-	render: ({hasMeridiem, hour, meridiem, meridiems, minute, noHourAnimation, noLabels, onChangeHour, onChangeMeridiem, onChangeMinute, order, ...rest}) => {
+	render: ({hasMeridiem, hour, meridiem, meridiems, minute, noHourAnimation, noLabels, onChangeHour, onChangeMeridiem, onChangeMinute, onSpotlightDisappear, order, ...rest}) => {
 		return (
-			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false}>
+			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false} onSpotlightDisappear={onSpotlightDisappear}>
 				<div className={dateComponentPickers}>
 					<div className={css.timeComponents}>
 						{order.map(picker => {
@@ -144,6 +153,7 @@ const TimePickerBase = kind({
 											label={noLabels ? null : $L('hour')}
 											noAnimation={noHourAnimation}
 											onChange={onChangeHour}
+											onSpotlightDisappear={onSpotlightDisappear}
 											value={hour}
 											width={2}
 											wrap
@@ -159,6 +169,7 @@ const TimePickerBase = kind({
 											max={59}
 											min={0}
 											onChange={onChangeMinute}
+											onSpotlightDisappear={onSpotlightDisappear}
 											padded
 											value={minute}
 											width={2}
@@ -176,6 +187,7 @@ const TimePickerBase = kind({
 							key="meridiem-picker"
 							label={noLabels ? null : $L('meridiem')}
 							onChange={onChangeMeridiem}
+							onSpotlightDisappear={onSpotlightDisappear}
 							value={meridiem}
 							width="small"
 							wrap

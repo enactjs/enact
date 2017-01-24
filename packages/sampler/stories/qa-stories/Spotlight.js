@@ -1,6 +1,6 @@
 import Button, {ButtonBase} from '@enact/moonstone/Button';
 import Item from '@enact/moonstone/Item';
-import {SpotlightContainerDecorator} from '@enact/spotlight';
+import Spotlight, {SpotlightContainerDecorator} from '@enact/spotlight';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs} from '@kadira/storybook-addon-knobs';
@@ -18,6 +18,66 @@ const style = {
 		padding: '12px'
 	}
 };
+
+class DisappearTest extends React.Component {
+	constructor (props) {
+		super(props);
+
+		this.state = {
+			showButton: true
+		};
+	}
+
+	componentWillUnmount () {
+		this.stopTimer();
+	}
+
+	removeButton = () => {
+		this.setState({showButton: false});
+	}
+
+	restoreButton = () => {
+		this.setState({showButton: true});
+	}
+
+	resetFocus = () => {
+		Spotlight.focus('[data-component-id="restoreButton"]');
+	}
+
+	startTimer = () => {
+		this.timer = window.setTimeout(this.removeButton, 4000);
+	}
+
+	stopTimer = () => {
+		if (this.timer) {
+			window.clearTimeout(this.timer);
+		}
+	}
+
+	render () {
+		return (
+			<div>
+				5-way select to set focus to the Focus Me button and wait until 4s has elapsed, and observe the focused
+				button is removed and the remaining button gains focus.
+				{this.state.showButton ? (
+					<Button
+						onBlur={this.stopTimer}
+						onFocus={this.startTimer}
+						onSpotlightDisappear={this.resetFocus}
+					>
+						Focus me
+					</Button>
+				) : null}
+				<Button
+					data-component-id='restoreButton'
+					onClick={this.restoreButton}
+				>
+					Restore Button
+				</Button>
+			</div>
+		);
+	}
+}
 
 storiesOf('Spotlight')
 	.addDecorator(withKnobs)
@@ -87,5 +147,11 @@ storiesOf('Spotlight')
 					</Container>
 				</div>
 			</div>
+		)
+	)
+	.addWithInfo(
+		'Disappearing Spottable',
+		() => (
+			<DisappearTest />
 		)
 	);

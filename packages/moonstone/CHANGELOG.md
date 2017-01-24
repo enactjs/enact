@@ -10,6 +10,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - developer-mode warnings to several components to warn when values are out-of-range
 - `moonstone/Divider` property `spacing` which adjusts the amount of empty space above and below the `Divider`. `normal`, `small`, `medium`, `large`, and `none` are available.
 - `moonstone/Picker` when `joined` the ability to be incremented and decremented by arrow keys.
+- `onSpotlightDisappear` event property support for spottable moonstone components
 
 ### Changed
 

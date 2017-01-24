@@ -49,6 +49,15 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			noDecorator: React.PropTypes.bool,
 
 			/**
+			 * The handler to run when the component is removed while retaining focus.
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @public
+			 */
+			onSpotlightDisappear: React.PropTypes.func,
+
+			/**
 			 * When `true`, prevents navigation of the component using spotlight
 			 *
 			 * @type {Boolean}
@@ -86,7 +95,13 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 
 		componentWillUnmount () {
 			if (this.state.focused === 'input') {
+				const {onSpotlightDisappear} = this.props;
+
 				Spotlight.resume();
+
+				if (onSpotlightDisappear) {
+					onSpotlightDisappear();
+				}
 			}
 		}
 
