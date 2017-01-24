@@ -22,7 +22,6 @@ import curry from 'ramda/src/curry';
  * The singleton map of names to keyCodes. If a name doesn't have any keyCodes mapped to it, it will
  * not exist in this map. If it does, its value will be an array of its keyCodes.
  *
- *
  * @type {Object}
  * @private
  */
