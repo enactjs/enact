@@ -96,6 +96,15 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			containerId: PropTypes.string,
 
 			/**
+			 * When `true`, prevents pointer-leave events from changing the active container
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			noPointerLeave: PropTypes.bool,
+
+			/**
 			 * When `true`, controls in the container cannot be navigated.
 			 *
 			 * @type {Boolean}
@@ -130,6 +139,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		static defaultProps = {
+			noPointerLeave: false,
 			spotlightDisabled: false,
 			spotlightMuted: false,
 			spotlightRestrict: 'none'
@@ -191,7 +201,10 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleMouseLeave = (ev) => {
-			Spotlight.setActiveContainer(null);
+			if (Spotlight.getPointerMode() && !this.props.noPointerLeave) {
+				Spotlight.setActiveContainer(null);
+			}
+
 			forwardMouseLeave(ev, this.props);
 		}
 
@@ -199,6 +212,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const {spotlightDisabled, spotlightMuted, ...rest} = this.props;
 			delete rest.containerId;
 			delete rest.spotlightRestrict;
+			delete rest.noPointerLeave;
 
 			rest['data-container-id'] = this.state.id;
 			rest[enterEvent] = this.handleMouseEnter;

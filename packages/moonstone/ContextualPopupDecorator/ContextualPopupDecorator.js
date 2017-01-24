@@ -340,7 +340,8 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		render () {
 			const {showCloseButton, popupComponent: PopupComponent, popupClassName, noAutoDismiss, open, onClose, spotlightRestrict, ...rest} = this.props;
-			const scrimType = spotlightRestrict === 'self-only' ? 'transparent' : 'none';
+			const spotlightModal = spotlightRestrict === 'self-only';
+			const scrimType = spotlightModal ? 'transparent' : 'none';
 
 			return (
 				<div className={css.contextualPopupDecorator}>
@@ -356,6 +357,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 							containerId={this.state.containerId}
 							spotlightRestrict={spotlightRestrict}
 							onKeyDown={this.handleKeyDown}
+							noPointerLeave={spotlightModal}
 						>
 							<PopupComponent />
 						</ContextualPopupContainer>

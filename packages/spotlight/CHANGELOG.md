@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Added
 
-- `spotlightDisabled` prop support in `@enact/spotlight/container`
+- `spotlightDisabled` and `noPointerLeave` prop support in `@enact/spotlight/container`
 - `onSpotlightDisappear` event property support in `@enact/spotlight/spottable`
 
 ### Removed

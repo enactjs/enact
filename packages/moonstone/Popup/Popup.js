@@ -131,12 +131,14 @@ const PopupBase = kind({
 					</IconButton>
 				);
 			}
-		}
+		},
+		spotlightModal: ({spotlightRestrict}) => (spotlightRestrict === 'self-only')
 	},
 
-	render: ({closeButton, children, containerId, noAnimation, open, onHide, spotlightRestrict, ...rest}) => {
+	render: ({closeButton, children, containerId, noAnimation, open, onHide, spotlightModal, spotlightRestrict, ...rest}) => {
 		delete rest.onCloseButtonClick;
 		delete rest.showCloseButton;
+
 		return (
 			<TransitionContainer
 				noAnimation={noAnimation}
@@ -149,6 +151,7 @@ const PopupBase = kind({
 				type="slide"
 				className={css.popupTransitionContainer}
 				onHide={onHide}
+				noPointerLeave={spotlightModal}
 			>
 				<div {...rest}>
 					{closeButton}
@@ -351,6 +354,9 @@ class Popup extends React.Component {
 	}
 
 	spotPopupContent = () => {
+		if (this.props.spotlightRestrict === 'self-only') {
+			Spotlight.setPointerMode(false);
+		}
 		Spotlight.focus(this.state.containerId);
 	}
 
