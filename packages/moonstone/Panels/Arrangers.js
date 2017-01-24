@@ -64,9 +64,19 @@ export const AlwaysViewingArranger = {
  * @returns {undefined}
  * @private
  */
-const offsetForBreadcrumbs = ({node}) => {
+const offsetForBreadcrumbs = ({from, to, node}) => {
 	const isFirst = node && node.dataset && node.dataset.index === '0';
 
+	// Only use the stylesheet's clipPath when we're transitioning TO a panel that needs a clip (index=1)
+	// But don't whenwe're transitioning back to the first one.
+	if ((from < to && to != 1) || (from > to && to != 0)) {
+		console.log('clip necessary, use the stylesheet rules');
+		// node.parentNode IS A TERRIBLE WAY TO GET viewport... BUT it does what is needed here. Suggestions?
+		node.parentNode.style.clipPath = null;
+	} else {
+		console.log('NO need to clip. Make our own rules!');
+		node.parentNode.style.clipPath = 'none';
+	}
 	if (!isFirst) {
 		const x = unit(scale(breadcrumbWidth), 'rem');
 		appendTransform(`translateX(${x})`, {node});
