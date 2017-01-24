@@ -109,6 +109,11 @@
 
 		// Using transition only so that we can delay it for non-zero indices. See comment below.
 		transition: clip-path linear 0ms, -webkit-clip-path linear 0ms;
+
+		> :not([data-index='0']) {
+			padding-left: 0;
+			width: calc(~"100% - " @moon-breadcrumb-width);
+		}
 	}
 
 	&:not([data-index='0']) {
@@ -120,11 +125,6 @@
 			// setting the clip-path until the panel animation completes but only when changing to
 			// a non-zero index so that it is removed immediately when changing to the first panel.
 			transition-delay: 250ms;
-
-			> :not([data-index='0']) {
-				padding-left: 0;
-				width: calc(~"100% - " @moon-breadcrumb-width);
-			}
 		}
 	}
 
