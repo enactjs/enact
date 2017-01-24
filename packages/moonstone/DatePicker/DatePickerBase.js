@@ -69,6 +69,15 @@ const DatePickerBase = kind({
 		order: React.PropTypes.arrayOf(React.PropTypes.oneOf(['m', 'd', 'y'])).isRequired,
 
 		/**
+		 * The primary text of the item.
+		 *
+		 * @type {String}
+		 * @required
+		 * @public
+		 */
+		title: React.PropTypes.string.isRequired,
+
+		/**
 		 * The `year` component of the Date
 		 *
 		 * @type {Number}
