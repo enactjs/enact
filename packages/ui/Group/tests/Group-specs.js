@@ -2,7 +2,7 @@
 
 import React from 'react';
 import sinon from 'sinon';
-import {mount} from 'enzyme';
+import {mount, shallow} from 'enzyme';
 import {GroupBase} from '../Group';
 
 describe('Group', () => {
@@ -114,6 +114,32 @@ describe('Group', () => {
 
 		const expected = stringItems[selected];
 		const actual = subject.find('div').at(selected).prop('data-child');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should set aria-multiselectable when select="multiple"', function () {
+		const subject = shallow(
+			<GroupBase childComponent="div" select="multiple">
+				{stringItems}
+			</GroupBase>
+		);
+
+		const expected = true;
+		const actual = subject.prop('aria-multiselectable');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should set role to listbox', function () {
+		const subject = shallow(
+			<GroupBase childComponent="div" select="multiple">
+				{stringItems}
+			</GroupBase>
+		);
+
+		const expected = 'listbox';
+		const actual = subject.prop('role');
 
 		expect(actual).to.equal(expected);
 	});
