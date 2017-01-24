@@ -81,11 +81,15 @@ const ItemBase = kind({
 		className: ({inline, styler}) => styler.append({inline})
 	},
 
-	render: ({component: Component, ...rest}) => {
+	render: ({component: Component, disabled, ...rest}) => {
 		delete rest.inline;
 
 		return (
-			<Component {...rest} />
+			<Component
+				{...rest}
+				aria-disabled={disabled}
+				disabled={disabled}
+			/>
 		);
 	}
 });
