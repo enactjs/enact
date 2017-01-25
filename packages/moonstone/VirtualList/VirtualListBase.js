@@ -13,6 +13,8 @@ import {contextTypes} from '@enact/i18n/I18nDecorator';
 
 import {dataIndexAttribute, Scrollable} from '../Scroller/Scrollable';
 
+import css from './VirtualListBase.less';
+
 const
 	dataContainerMutedAttribute = 'data-container-muted',
 	dataContainerIdAttribute = 'data-container-id',
@@ -197,6 +199,8 @@ class VirtualListCore extends Component {
 	updateFrom = null
 	updateTo = null
 
+	containerStyle = {}
+	wrapperStyle = {}
 	containerRef = null
 	wrapperRef = null
 	composeItemPosition = null
@@ -357,8 +361,9 @@ class VirtualListCore extends Component {
 		}
 
 		const
-			{clientWidth, clientHeight} = this.getClientSize(node),
-			{scrollBounds, isPrimaryDirectionVertical} = this;
+			{scrollBounds, isPrimaryDirectionVertical} = this,
+			{positioningOption} = props,
+			{clientWidth, clientHeight} = this.getClientSize(node);
 		let maxPos;
 
 		scrollBounds.clientWidth = clientWidth;
@@ -375,6 +380,23 @@ class VirtualListCore extends Component {
 
 		if (this.scrollPosition > maxPos) {
 			this.props.cbScrollTo({position: (isPrimaryDirectionVertical) ? {y: maxPos} : {x: maxPos}});
+		}
+
+		if (positioningOption !== 'byItem') {
+			if (isPrimaryDirectionVertical) {
+				this.containerStyle = {height: scrollBounds.scrollHeight};
+				this.wrapperStyle['overflowY'] = 'scroll';
+				delete this.wrapperStyle['overflowX'];
+			} else {
+				this.containerStyle = {width: scrollBounds.scrollWidth};
+				this.wrapperStyle['overflowX'] = 'scroll';
+				delete this.wrapperStyle['overflowY'];
+			}
+			if (positioningOption === 'byBrowser') {
+				this.wrapperStyle['willChange'] = 'left, top';
+			} else { // 'byContainer'
+				this.containerStyle['willChange'] = 'transform';
+			}
 		}
 	}
 
@@ -536,6 +558,11 @@ class VirtualListCore extends Component {
 			style.width = width;
 			style.height = height;
 		}
+
+		if (this.props.positioningOption !== 'byItem') {
+			style.willChange = 'left, top';
+		}
+
 		this.composeItemPosition(style, ...rest);
 	}
 
@@ -567,10 +594,6 @@ class VirtualListCore extends Component {
 			{x, y} = this.getXY(this.scrollPosition, 0);
 		node.scrollLeft = x;
 		node.scrollTop = y;
-	}
-
-	composeOverflow (style) {
-		style[this.isPrimaryDirectionVertical ? 'overflowY' : 'overflowX'] = 'scroll';
 	}
 
 	getScrollHeight = () => (this.isPrimaryDirectionVertical ? this.getVirtualScrollDimension() : this.scrollBounds.clientHeight)
@@ -769,15 +792,14 @@ class VirtualListCore extends Component {
 				</div>
 			);
 		} else {
-			const {className, style, ...rest} = props;
-
-			if (positioningOption === 'byBrowser') {
-				this.composeOverflow(style);
-			}
+			const
+				{className, style, ...rest} = props,
+				{containerStyle, wrapperStyle} = this,
+				mergedStyle = {...style, ...wrapperStyle};
 
 			return (
-				<div ref={this.initWrapperRef} className={className} style={style} onScroll={onScroll}>
-					<div {...rest} ref={this.initContainerRef}>
+				<div ref={this.initWrapperRef} className={css.list} style={mergedStyle} onScroll={onScroll}>
+					<div {...rest} ref={this.initContainerRef} style={containerStyle}>
 						{cc}
 					</div>
 				</div>
