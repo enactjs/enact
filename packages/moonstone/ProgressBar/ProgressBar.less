@@ -5,6 +5,7 @@
 	position: relative;
 	height: @moon-progress-bar-height;
 	background-color: @moon-progress-bar-background;
+	direction: ltr;
 
 	&.vertical {
 		min-height: 120px;
@@ -29,9 +30,5 @@
 		height: 100%;
 		position: absolute;
 		background-color: @moon-progress-bar-background-loaded;
-	}
-
-	:global(.enact-locale-right-to-left) & {
-		direction: ltr;
 	}
 }
