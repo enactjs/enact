@@ -3,7 +3,7 @@ import IconButton from '@enact/moonstone/IconButton';
 import Button from '@enact/moonstone/Button';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
+import {withKnobs, boolean, number, select, text} from '@kadira/storybook-addon-knobs';
 
 VideoPlayerBase.propTypes = Object.assign({}, VideoPlayerBase.propTypes, VideoPlayer.propTypes);
 VideoPlayerBase.defaultProps = Object.assign({}, VideoPlayerBase.defaultProps, VideoPlayer.defaultProps);
@@ -102,6 +102,7 @@ storiesOf('VideoPlayer')
 					}}
 				>VideoPlayer Edge</label>
 				<VideoPlayer
+					autoCloseTimeout={number('autoCloseTimeout', 7000)}
 					loop={boolean('loop', true)}
 					muted={boolean('muted', true)}
 					noAutoPlay={boolean('noAutoPlay', false)}
@@ -110,6 +111,7 @@ storiesOf('VideoPlayer')
 					noSlider={boolean('noSlider', false)}
 					poster={prop.videos[0].poster}
 					title={text('title', 'Moonstone VideoPlayer Sample Video')}
+					titleHideDelay={number('titleHideDelay', 4000)}
 					{...prop.eventActions}
 				>
 					<source src={select('source', videoSource, prop.videos[0].source)} type="video/mp4" />

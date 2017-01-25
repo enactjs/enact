@@ -1,8 +1,9 @@
 import Picker, {PickerBase} from '@enact/moonstone/Picker';
 import Changeable from '@enact/ui/Changeable';
+import {decrementIcons, incrementIcons} from './icons';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, text, boolean, select} from '@kadira/storybook-addon-knobs';
+import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
 
 const StatefulPicker = Changeable(Picker);
 StatefulPicker.propTypes = Object.assign({}, PickerBase.propTypes, StatefulPicker.propTypes);
@@ -37,8 +38,8 @@ storiesOf('Picker')
 				joined={boolean('joined', false)}
 				noAnimation={boolean('noAnimation', false)}
 				disabled={boolean('disabled', false)}
-				incrementIcon={text('incrementIcon')}
-				decrementIcon={text('decrementIcon')}
+				incrementIcon={select('incrementIcon', ['', ...incrementIcons])}
+				decrementIcon={select('decrementIcon', ['', ...decrementIcons])}
 			>
 				{airports}
 			</StatefulPicker>

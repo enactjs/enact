@@ -4,9 +4,8 @@
  * The default export is {@link moonstone/VirtualFlexList.VirtualFlexListBase}.
  */
 
-import React, {Component, PropTypes} from 'react';
-
 import {is} from '@enact/core/keymap';
+import React, {Component, PropTypes} from 'react';
 import {Spotlight, SpotlightContainerDecorator} from '@enact/spotlight';
 
 import Positionable from './Positionable';
@@ -808,7 +807,7 @@ class VirtualFlexListCore extends Component {
  * @ui
  * @public
  */
-const VirtualFlexListBase = SpotlightContainerDecorator(Positionable(VirtualFlexListCore));
+const VirtualFlexListBase = SpotlightContainerDecorator({enterTo: ''}, Positionable(VirtualFlexListCore));
 
 export default VirtualFlexListBase;
 export {VirtualFlexListBase};

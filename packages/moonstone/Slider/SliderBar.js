@@ -41,9 +41,9 @@ const SliderBarFactory = factory(({css}) => {
 			proportionBackgroundProgress: PropTypes.number,
 
 			/**
-			 * The progress as a percentage.
+			 * The proportion of progress as a number between 0 and 1.
 			 *
-			 * @type {String}
+			 * @type {Number}
 			 * @public
 			 */
 			proportionProgress: PropTypes.number,

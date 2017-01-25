@@ -56,6 +56,7 @@ const defaultConfig = {
 	*
 	* @type {Array}
 	* @default null
+	* @memberof moonstone/Marquee.MarqueeDecorator.defaultConfig
 	*/
 	invalidateProps: null,
 
@@ -76,6 +77,7 @@ const defaultConfig = {
  * @param {Object} prev Previous props
  * @param {Object} next Next props
  * @returns {Boolean} `true` if any of the props changed
+ * @private
  */
 const didPropChange = (propList, prev, next) => {
 	const hasPropsChanged = propList.map(i => prev[i] !== next[i]);
@@ -176,7 +178,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			marqueeOnRenderDelay: React.PropTypes.number,
 
 			/**
-			 * Number of milliseconds to wait before resetting the marquee after it finishes.
+			 * Number of milliseconds to wait before resetting the marquee after it finishes. A
+			 * minimum of 40 milliseconds is enforced.
 			 *
 			 * @type {Number}
 			 * @default 1000
@@ -432,7 +435,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {undefined}
 		 */
 		resetAnimation = () => {
-			this.setTimeout(this.restartAnimation, this.props.marqueeResetDelay);
+			const marqueeResetDelay = Math.max(40, this.props.marqueeResetDelay);
+			this.setTimeout(this.restartAnimation, marqueeResetDelay);
 		}
 
 		/**

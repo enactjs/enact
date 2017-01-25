@@ -4,9 +4,10 @@ import clamp from 'ramda/src/clamp';
 import React from 'react';
 import shouldUpdate from 'recompose/shouldUpdate';
 import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
+import {getDirection} from '@enact/spotlight';
+import {validateRange, validateStepped} from '../validators';
 
 import PickerButton from './PickerButton';
-import {steppedNumber} from './PickerPropTypes';
 
 import css from './Picker.less';
 
@@ -66,7 +67,7 @@ const Picker = class extends React.Component {
 		 * @type {Number}
 		 * @public
 		 */
-		max: steppedNumber.isRequired,
+		max: React.PropTypes.number.isRequired,
 
 		/**
 		 * The minimum value selectable by the picker (inclusive).
@@ -168,6 +169,15 @@ const Picker = class extends React.Component {
 		onMouseUp: React.PropTypes.func,
 
 		/**
+		 * The handler to run when the component is removed while retaining focus.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightDisappear: React.PropTypes.func,
+
+		/**
 		 * Sets the orientation of the picker, whether the buttons are above and below or on the
 		 * sides of the value. Must be either `'horizontal'` or `'vertical'`.
 		 *
@@ -216,7 +226,7 @@ const Picker = class extends React.Component {
 		 * @default 0
 		 * @public
 		 */
-		value: steppedNumber,
+		value: React.PropTypes.number,
 
 		/**
 		 * Choose a specific size for your picker. `'small'`, `'medium'`, `'large'`, or set to `null` to
@@ -251,10 +261,26 @@ const Picker = class extends React.Component {
 		value: 0
 	}
 
+	constructor (props) {
+		super(props);
+
+		if (__DEV__) {
+			validateRange(props.value, props.min, props.max, Picker.displayName);
+			validateStepped(props.value, props.min, props.step, Picker.displayName);
+			validateStepped(props.max, props.min, props.step, Picker.displayName, '"max"');
+		}
+	}
+
 	componentWillReceiveProps (nextProps) {
 		const first = nextProps.min;
 		const last = nextProps.max;
+		const nextValue = nextProps.value;
 
+		if (__DEV__) {
+			validateRange(nextValue, first, last, Picker.displayName);
+			validateStepped(nextValue, first, nextProps.step, Picker.displayName);
+			validateStepped(last, first, nextProps.step, Picker.displayName, '"max"');
+		}
 		const wrapToStart = nextProps.wrap && nextProps.value === first && this.props.value === last;
 		const wrapToEnd = nextProps.wrap && nextProps.value === last && this.props.value === first;
 
@@ -348,6 +374,28 @@ const Picker = class extends React.Component {
 		}
 	}
 
+	handleKeyDown = (ev) => {
+		const direction = getDirection(ev.keyCode);
+
+		const directions = {
+			up: this.handleIncClick,
+			down: this.handleDecClick,
+			right: this.handleIncClick,
+			left: this.handleDecClick
+		};
+
+		const isVertical = this.props.orientation === 'vertical' && (direction === 'up' || direction === 'down');
+		const isHorizontal = this.props.orientation === 'horizontal' && (direction === 'right' || direction === 'left');
+
+		if (isVertical) {
+			directions[direction]();
+			ev.stopPropagation();
+		} else if (isHorizontal) {
+			directions[direction]();
+			ev.stopPropagation();
+		}
+	}
+
 	determineClasses (decrementerDisabled, incrementerDisabled) {
 		const {joined, orientation, pressed, width} = this.props;
 		return [
@@ -369,6 +417,7 @@ const Picker = class extends React.Component {
 			index,
 			joined,
 			onMouseUp,
+			onSpotlightDisappear,
 			orientation,
 			step,
 			width,
@@ -404,7 +453,7 @@ const Picker = class extends React.Component {
 		}
 
 		return (
-			<div {...rest} className={classes} disabled={disabled} onWheel={joined ? this.handleWheel : null}>
+			<div {...rest} className={classes} disabled={disabled} onWheel={joined ? this.handleWheel : null} onKeyDown={joined ? this.handleKeyDown : null}>
 				<PickerButton
 					className={css.incrementer}
 					disabled={incrementerDisabled}
@@ -412,6 +461,7 @@ const Picker = class extends React.Component {
 					onMouseDown={this.handleIncDown}
 					onMouseUp={onMouseUp}
 					onHoldPulse={this.handleIncPulse}
+					onSpotlightDisappear={onSpotlightDisappear}
 					joined={joined}
 					icon={incrementIcon}
 				/>
@@ -434,6 +484,7 @@ const Picker = class extends React.Component {
 					onMouseDown={this.handleDecDown}
 					onMouseUp={onMouseUp}
 					onHoldPulse={this.handleDecPulse}
+					onSpotlightDisappear={onSpotlightDisappear}
 					joined={joined}
 					icon={decrementIcon}
 				/>

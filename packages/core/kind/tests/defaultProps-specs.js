@@ -13,7 +13,7 @@ describe('defaultProps', () => {
 		children: 'Content'
 	};
 
-	it('Should assign object to defaultProps on render method', function () {
+	it('should assign object to defaultProps on render method', function () {
 		const render = () => {};
 		const props = {
 			value: true
@@ -27,7 +27,7 @@ describe('defaultProps', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should add omitted props', function () {
+	it('should add omitted props', function () {
 		const subject = shallow(
 			<Simple />
 		);
@@ -38,7 +38,7 @@ describe('defaultProps', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should add explicitly undefined props', function () {
+	it('should add explicitly undefined props', function () {
 		const subject = shallow(
 			<Simple color={void 0} />
 		);
@@ -49,7 +49,7 @@ describe('defaultProps', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should allow defaults to be overridden', function () {
+	it('should allow defaults to be overridden', function () {
 		const color = 'green';
 		const subject = shallow(
 			<Simple color={color} />

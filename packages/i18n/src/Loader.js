@@ -3,6 +3,7 @@
 import xhr from 'xhr';
 
 import Loader from '../ilib/lib/Loader';
+import LocaleInfo from '../ilib/lib/LocaleInfo';
 import ZoneInfoFile from './zoneinfo';
 import ilibLocale from '../ilib/locale/ilibmanifest.json';
 
@@ -102,8 +103,14 @@ EnyoLoader.prototype._loadFilesAsync = function (context, paths, results, params
 			}
 
 			let resultFunc = (json, err) => {
-				// eslint-disable-next-line no-undefined
-				results.push(!err && (typeof json === 'object') ? json : undefined);
+				if (!err && (typeof json === 'object')) {
+					results.push(json);
+				} else if (path === 'localeinfo.json') {
+					results.push(LocaleInfo.defaultInfo);
+				} else {
+					// eslint-disable-next-line no-undefined
+					results.push(undefined);
+				}
 				if (paths.length > 0) {
 					this._loadFilesAsync(context, paths, results, params, callback);
 				} else {
@@ -153,9 +160,14 @@ EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback) {
 				}
 
 				if (!found) {
-					// not there, so fill in a blank entry in the array
-					// eslint-disable-next-line no-undefined
-					ret.push(undefined);
+					if (path === 'localeinfo.json') {
+						// Use default locale info when xhr on root localeinfo.json fails/skips
+						ret.push(LocaleInfo.defaultInfo);
+					} else {
+						// not there, so fill in a blank entry in the array
+						// eslint-disable-next-line no-undefined
+						ret.push(undefined);
+					}
 				}
 			}
 		}.bind(this));

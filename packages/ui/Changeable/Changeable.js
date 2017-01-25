@@ -97,7 +97,7 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillReceiveProps (nextProps) {
-			if (mutable) {
+			if (mutable && prop in nextProps) {
 				const value = nextProps[prop];
 				this.setState({value});
 			}
