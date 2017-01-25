@@ -139,6 +139,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			positioningOption: 'byItem'
 		}
 
+		static childContextTypes = {
+			updateSize: PropTypes.func
+		}
+
 		// status
 		horizontalScrollability = false
 		verticalScrollability = false
@@ -229,6 +233,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			};
 
 			props.cbScrollTo(this.scrollTo);
+		}
+
+		getChildContext () {
+			return {
+				updateSize: () => this.forceUpdate()
+			};
 		}
 
 		// handle an input event
@@ -406,14 +416,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				doc.activeElement.blur();
 				this.childRef.setContainerDisabled(true);
 				this.scrollToAccumulatedTarget(delta, isHorizontal, isVertical);
-			}
-		}
-
-		handleTransitionHeightChange = (ev) => {
-			// Only call forceUpdate if the transition is changing the height property.
-			// We need to call a forceUpdate after a transition so the scroller can recalculate to the correct height.
-			if (ev.nativeEvent.propertyName === 'height') {
-				this.forceUpdate();
 			}
 		}
 
@@ -759,7 +761,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			return (
 				(positioningOption !== 'byBrowser' && !hideScrollbars) ? (
-					<div ref={this.initContainerRef} className={scrollableClasses} style={style} onWheel={onWheel} onTransitionEnd={this.handleTransitionHeightChange}>
+					<div ref={this.initContainerRef} className={scrollableClasses} style={style} onWheel={onWheel}>
 						<Scrollbar
 							className={verticalScrollbarClassnames}
 							{...this.verticalScrollbarProps}

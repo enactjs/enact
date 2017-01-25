@@ -58,6 +58,10 @@ const ExpandableContainerBase = class extends React.Component {
 		noPointerMode: false
 	}
 
+	static contextTypes = {
+		updateSize: React.PropTypes.func
+	}
+
 	componentDidUpdate (prevProps) {
 		if (this.props.open !== prevProps.open) {
 			const pointerMode = Spotlight.getPointerMode();
@@ -100,13 +104,19 @@ const ExpandableContainerBase = class extends React.Component {
 		this.containerNode = node;
 	}
 
+	handleTransitionEnd = (ev) => {
+		if (ev.nativeEvent.propertyName === 'height') {
+			this.context.updateSize();
+		}
+	}
+
 	render () {
 		const props = Object.assign({}, this.props);
 		delete props.noAutoFocus;
 		delete props.noPointerMode;
 
 		return (
-			<div {...props} ref={this.getContainerNode} />
+			<div {...props} ref={this.getContainerNode} onTransitionEnd={this.handleTransitionEnd} />
 		);
 	}
 };
