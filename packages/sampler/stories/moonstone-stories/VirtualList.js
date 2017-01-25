@@ -45,14 +45,14 @@ storiesOf('VirtualList')
 			const itemSize = ri.scale(number('itemSize', 72));
 			return (
 				<VirtualList
+					component={renderItem(itemSize)}
 					data={items}
 					dataSize={number('dataSize', items.length)}
 					itemSize={itemSize}
-					spacing={ri.scale(number('spacing', 0))}
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
+					spacing={ri.scale(number('spacing', 0))}
 					style={style.list}
-					component={renderItem(itemSize)}
 				/>
 			);
 		}
