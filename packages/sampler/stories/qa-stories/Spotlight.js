@@ -150,6 +150,27 @@ storiesOf('Spotlight')
 		)
 	)
 	.addWithInfo(
+		'Directional Events',
+		() => (
+			<div>
+				<p>
+					The item below will emit onSpotlight[Direction] events when attempting
+					to 5-way navigate from the item. Highlight the item below and press any of
+					the 5-way directional keys to verify a matching directional event in the
+					action logger.
+				</p>
+				<Item
+					onSpotlightDown={action('onSpotlightDown')}
+					onSpotlightLeft={action('onSpotlightLeft')}
+					onSpotlightRight={action('onSpotlightRight')}
+					onSpotlightUp={action('onSpotlightUp')}
+				>
+					Item
+				</Item>
+			</div>
+		)
+	)
+	.addWithInfo(
 		'Disappearing Spottable',
 		() => (
 			<DisappearTest />
