@@ -18,19 +18,24 @@ const PickerButtonBase = kind({
 			React.PropTypes.string,
 			React.PropTypes.object
 		]),
-		joined: React.PropTypes.bool
+		joined: React.PropTypes.bool,
+		onSpotlightDisappear: React.PropTypes.func
 	},
 
 	computed: {
 		ButtonType: ({joined}) => joined ? Icon : TransparentIconButton
 	},
 
-	render: ({ButtonType, disabled, icon, ...rest}) => {
-		delete rest.joined;
+	render: ({ButtonType, disabled, icon, joined, onSpotlightDisappear, ...rest}) => {
+		const spotlightProps = {onSpotlightDisappear};
+
+		if (joined) {
+			delete spotlightProps.onSpotlightDisappear;
+		}
 
 		return (
 			<span {...rest} disabled={disabled}>
-				<ButtonType disabled={disabled}>{icon}</ButtonType>
+				<ButtonType disabled={disabled} {...spotlightProps}>{icon}</ButtonType>
 			</span>
 		);
 	}

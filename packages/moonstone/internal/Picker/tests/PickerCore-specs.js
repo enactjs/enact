@@ -199,37 +199,107 @@ describe('PickerCore Specs', function () {
 		expect(actual).to.equal(expected);
 	});
 
-	// TODO: not sure if 'joined'/keyPress is broken or test is bad or ??? (skipping for now)
-	it.skip('should allow keyboard increment via arrow keys when \'joined\'', function () {
+	it('should allow keyboard decrement via left arrow keys when \'joined\' and \'horizontal\'', function () {
 		const handleChange = sinon.spy();
 		const picker = mount(
 			<PickerCore onChange={handleChange} min={-1} max={1} value={0} index={0} joined />
 		);
 
-		const button = picker.find(`.${css.incrementer}`);
-		const expected = 1;
-		// TODO is it right, up, or both, depends on orientation?
-		button.simulate('keyPress', {keyCode: 39}); // right
-		// button.simulate('keyPress', {keyCode: 38}); // up
+		const expected = -1;
+		picker.simulate('keyDown', {keyCode: 37});
 		const actual = handleChange.args[0][0].value;
-		expect(actual).to.equal(expected);
 
+		expect(actual).to.equal(expected);
 	});
 
-	// TODO: not sure if 'joined'/keyPress is broken or test is bad or ??? (skipping for now)
-	it.skip('should allow keyboard decrement via arrow keys when \'joined\'', function () {
+	it('should allow keyboard increment via right arrow keys when \'joined\' and \'horizontal\'', function () {
 		const handleChange = sinon.spy();
 		const picker = mount(
 			<PickerCore onChange={handleChange} min={-1} max={1} value={0} index={0} joined />
 		);
 
-		const button = picker.find(`.${css.decrementer}`);
-		const expected = -1;
-		// TODO is it left, down, or both, depends on orientation?
-		button.simulate('keyPress', {keyCode: 37}); // left
-		// button.simulate('keyPress', {keyCode: 40}); // down
+		const expected = 1;
+		picker.simulate('keyDown', {keyCode: 39});
 		const actual = handleChange.args[0][0].value;
-		expect(actual).to.equal(expected);
 
+		expect(actual).to.equal(expected);
+	});
+
+	it('should allow keyboard decrement via down arrow keys when \'joined\' and \'vertical\'', function () {
+		const handleChange = sinon.spy();
+		const picker = mount(
+			<PickerCore onChange={handleChange} min={-1} max={1} value={0} index={0} joined orientation="vertical" />
+		);
+
+		const expected = -1;
+		picker.simulate('keyDown', {keyCode: 40});
+		const actual = handleChange.args[0][0].value;
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should allow keyboard decrement via up arrow keys when \'joined\' and \'vertical\'', function () {
+		const handleChange = sinon.spy();
+		const picker = mount(
+			<PickerCore onChange={handleChange} min={-1} max={1} value={0} index={0} joined orientation="vertical" />
+		);
+
+		const expected = 1;
+		picker.simulate('keyDown', {keyCode: 38});
+		const actual = handleChange.args[0][0].value;
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should not allow keyboard decrement via left arrow keys when \'joined\' and \'vertical\'', function () {
+		const handleChange = sinon.spy();
+		const picker = mount(
+			<PickerCore onChange={handleChange} min={-1} max={1} value={0} index={0} joined orientation="vertical" />
+		);
+
+		const expected = false;
+		picker.simulate('keyDown', {keyCode: 37});
+		const actual = handleChange.called;
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should not allow keyboard increment via right arrow keys when \'joined\' and \'vertical\'', function () {
+		const handleChange = sinon.spy();
+		const picker = mount(
+			<PickerCore onChange={handleChange} min={-1} max={1} value={0} index={0} joined orientation="vertical" />
+		);
+
+		const expected = false;
+		picker.simulate('keyDown', {keyCode: 39});
+		const actual = handleChange.called;
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should not allow keyboard decrement via down arrow keys when \'joined\' and \'horizontal\'', function () {
+		const handleChange = sinon.spy();
+		const picker = mount(
+			<PickerCore onChange={handleChange} min={-1} max={1} value={0} index={0} joined orientation="horizontal" />
+		);
+
+		const expected = false;
+		picker.simulate('keyDown', {keyCode: 40});
+		const actual = handleChange.called;
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should not allow keyboard increment via up arrow keys when \'joined\' and \'horizontal\'', function () {
+		const handleChange = sinon.spy();
+		const picker = mount(
+			<PickerCore onChange={handleChange} min={-1} max={1} value={0} index={0} joined orientation="horizontal" />
+		);
+
+		const expected = false;
+		picker.simulate('keyDown', {keyCode: 38});
+		const actual = handleChange.called;
+
+		expect(actual).to.equal(expected);
 	});
 });
