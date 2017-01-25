@@ -105,7 +105,7 @@ const ExpandableContainerBase = class extends React.Component {
 	}
 
 	handleTransitionEnd = (ev) => {
-		if (ev.nativeEvent.propertyName === 'height') {
+		if (ev.nativeEvent.propertyName === 'height' && this.context.updateSize) {
 			this.context.updateSize();
 		}
 	}
