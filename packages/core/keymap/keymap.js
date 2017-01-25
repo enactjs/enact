@@ -23,6 +23,7 @@ import curry from 'ramda/src/curry';
  * not exist in this map. If it does, its value will be an array of its keyCodes.
  *
  * @type {Object}
+ * @private
  */
 const map = {};
 
@@ -32,6 +33,7 @@ const map = {};
  * @param   {String} name  Name for keyCode
  *
  * @returns {String}       Name for keyCode in lower case
+ * @private
  */
 const toLowerCase = (name) => name ? name.toLowerCase() : '';
 
@@ -42,6 +44,7 @@ const toLowerCase = (name) => name ? name.toLowerCase() : '';
  * @param   {Object}    set  A map of names to keyCodes
  *
  * @returns {undefined}
+ * @private
  */
 const forEachObj = curry(function (fn, set) {
 	Object.keys(set).forEach(name => fn(name, set[name]));
@@ -55,6 +58,7 @@ const forEachObj = curry(function (fn, set) {
  * @param   {Number|Number[]} keyCode  A key code or array of key codes
  *
  * @returns {undefined}
+ * @private
  */
 const oneOrArray = curry(function (fn, name, keyCode) {
 	if (Array.isArray(keyCode)) {
@@ -71,6 +75,7 @@ const oneOrArray = curry(function (fn, name, keyCode) {
  * @param   {Number}    keyCode  A key code
  *
  * @returns {undefined}
+ * @private
  */
 const addOne = curry(function (name, keyCode) {
 	name = toLowerCase(name);
@@ -91,6 +96,7 @@ const addOne = curry(function (name, keyCode) {
  * @param   {Number}    keyCode  A key code
  *
  * @returns {undefined}
+ * @private
  */
 const removeOne = curry(function (name, keyCode) {
 	name = toLowerCase(name);
@@ -108,6 +114,7 @@ const removeOne = curry(function (name, keyCode) {
 /**
  * Registers `keyCode` for `name`
  *
+ * @memberof core/keymap
  * @param   {String}          name     Name for the key code
  * @param   {Number|Number[]} keyCode  A key code or array of key codes
  *
@@ -120,6 +127,7 @@ const add = oneOrArray(addOne);
 /**
  * Registers a set of key codes.
  *
+ * @memberof core/keymap
  * @param   {Object}    set  A map of names to keyCodes
  *
  * @returns {undefined}
@@ -131,6 +139,7 @@ const addAll = forEachObj(add);
 /**
  * Deregisters `keyCode` from `name`.
  *
+ * @memberof core/keymap
  * @param   {String}          name     Name for the key code
  * @param   {Number|Number[]} keyCode  A key code or array of key codes
  *
@@ -143,6 +152,7 @@ const remove = oneOrArray(removeOne);
 /**
  * Deregisters a set of key codes.
  *
+ * @memberof core/keymap
  * @param   {Object}    set  A map of names to keyCodes
  *
  * @returns {undefined}
@@ -154,6 +164,7 @@ const removeAll = forEachObj(remove);
 /**
  * Determines if `keyCode` is mapped to `name`.
  *
+ * @memberof core/keymap
  * @param   {String}    name     Name for the key code
  * @param   {Number}    keyCode  A key code
  *

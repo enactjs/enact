@@ -5,11 +5,10 @@
  * export is {@link moonstone/VirtualList.VirtualListBase}.
  */
 
-import React, {Component, PropTypes} from 'react';
-
-import {is} from '@enact/core/keymap';
-import {Spotlight, SpotlightContainerDecorator} from '@enact/spotlight';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
+import {is} from '@enact/core/keymap';
+import React, {Component, PropTypes} from 'react';
+import {Spotlight, SpotlightContainerDecorator} from '@enact/spotlight';
 
 import {dataIndexAttribute, Scrollable} from '../Scroller/Scrollable';
 
@@ -608,31 +607,35 @@ class VirtualListCore extends Component {
 		return (Math.ceil(curDataSize / dimensionToExtent) * primary.gridSize) - spacing;
 	}
 
-	calculatePositionOnFocus = (focusedIndex) => {
+	calculatePositionOnFocus = (item) => {
 		const
 			{pageScroll} = this.props,
 			{primary, numOfItems, scrollPosition} = this,
-			offsetToClientEnd = primary.clientSize - primary.itemSize;
-		let
-			gridPosition = this.getGridPosition(focusedIndex);
+			offsetToClientEnd = primary.clientSize - primary.itemSize,
+			focusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
 
-		this.nodeIndexToBeBlurred = this.lastFocusedIndex % numOfItems;
-		this.lastFocusedIndex = focusedIndex;
+		if (!isNaN(focusedIndex)) {
+			let
+				gridPosition = this.getGridPosition(focusedIndex);
 
-		if (primary.clientSize >= primary.itemSize) {
-			if (gridPosition.primaryPosition > scrollPosition + offsetToClientEnd) { // forward over
-				gridPosition.primaryPosition -= pageScroll ? 0 : offsetToClientEnd;
-			} else if (gridPosition.primaryPosition >= scrollPosition) { // inside of client
-				gridPosition.primaryPosition = scrollPosition;
-			} else { // backward over
-				gridPosition.primaryPosition -= pageScroll ? offsetToClientEnd : 0;
+			this.nodeIndexToBeBlurred = this.lastFocusedIndex % numOfItems;
+			this.lastFocusedIndex = focusedIndex;
+
+			if (primary.clientSize >= primary.itemSize) {
+				if (gridPosition.primaryPosition > scrollPosition + offsetToClientEnd) { // forward over
+					gridPosition.primaryPosition -= pageScroll ? 0 : offsetToClientEnd;
+				} else if (gridPosition.primaryPosition >= scrollPosition) { // inside of client
+					gridPosition.primaryPosition = scrollPosition;
+				} else { // backward over
+					gridPosition.primaryPosition -= pageScroll ? offsetToClientEnd : 0;
+				}
 			}
-		}
 
-		// Since the result is used as a target position to be scrolled,
-		// scrondaryPosition should be 0 here.
-		gridPosition.secondaryPosition = 0;
-		return this.gridPositionToItemPosition(gridPosition);
+			// Since the result is used as a target position to be scrolled,
+			// scrondaryPosition should be 0 here.
+			gridPosition.secondaryPosition = 0;
+			return this.gridPositionToItemPosition(gridPosition);
+		}
 	}
 
 	setRestrict = (bool) => {

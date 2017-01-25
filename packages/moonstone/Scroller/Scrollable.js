@@ -11,9 +11,9 @@ import {startJob, stopJob} from '@enact/core/jobs';
 import React, {Component, PropTypes} from 'react';
 import ri from '@enact/ui/resolution';
 
+import css from './Scrollable.less';
 import ScrollAnimator from './ScrollAnimator';
 import Scrollbar from './Scrollbar';
-import css from './Scrollable.less';
 
 const
 	calcVelocity = (d, dt) => (d && dt) ? d / dt : 0,
@@ -195,8 +195,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			super(props);
 
 			this.state = {
-				isHorizontalScrollbarVisible: true,
-				isVerticalScrollbarVisible: true
+				isHorizontalScrollbarVisible: false,
+				isVerticalScrollbarVisible: false
 			};
 
 			this.initChildRef = this.initRef('childRef');
@@ -393,20 +393,24 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		// event handlers for Spotlight support
 
-		onFocus = (e) => {
-			// for virtuallist
-			if (this.isKeyDown && !this.isDragging) {
-				const
-					item = e.target,
-					index = Number.parseInt(item.getAttribute(dataIndexAttribute));
+		startScrollOnFocus = (pos, item) => {
+			if (pos) {
+				if (pos.left !== this.scrollLeft || pos.top !== this.scrollTop) {
+					this.start(pos.left, pos.top, (animationDuration > 0), false, animationDuration);
+				}
+				this.lastFocusedItem = item;
+			}
+		}
 
-				if (!isNaN(index) && item !== this.lastFocusedItem && item === doc.activeElement && this.childRef.calculatePositionOnFocus) {
-					const pos = this.childRef.calculatePositionOnFocus(index);
+		onFocus = (e) => {
+			if (this.isKeyDown && !this.isDragging) {
+				const item = e.target,
+					positionFn = this.childRef.calculatePositionOnFocus;
+
+				if (item && item !== this.lastFocusedItem && item === doc.activeElement && positionFn) {
+					const pos = positionFn(item);
 					if (pos) {
-						if (pos.left !== this.scrollLeft || pos.top !== this.scrollTop) {
-							this.start(pos.left, pos.top, (animationDuration > 0), false, animationDuration);
-						}
-						this.lastFocusedItem = item;
+						this.startScrollOnFocus(pos, item);
 					}
 				}
 			}
@@ -414,10 +418,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		onKeyDown = (e) => {
 			if (this.childRef.setSpotlightContainerRestrict) {
-				this.isKeyDown = true;
 				const index = Number.parseInt(e.target.getAttribute(dataIndexAttribute));
 				this.childRef.setSpotlightContainerRestrict(e.keyCode, index);
 			}
+			this.isKeyDown = true;
 		}
 
 		onKeyUp = () => {
