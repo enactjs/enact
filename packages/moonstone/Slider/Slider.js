@@ -10,7 +10,6 @@ import kind from '@enact/core/kind';
 import Pressable from '@enact/ui/Pressable';
 import React, {PropTypes} from 'react';
 import {Spottable} from '@enact/spotlight';
-import Toggleable from '@enact/ui/Toggleable';
 
 import SliderDecorator from '../internal/SliderDecorator';
 import {computeProportionProgress} from '../internal/SliderDecorator/util';
@@ -18,7 +17,7 @@ import {computeProportionProgress} from '../internal/SliderDecorator/util';
 import {SliderBarFactory} from './SliderBar';
 import componentCss from './Slider.less';
 
-const isActive = (ev, props) => !props.active;
+const isActive = (ev, props) => !(props.active || props.detachedKnob);
 const isIncrement = (ev, props) => forKey(props.vertical ? 'up' : 'right', ev);
 const isDecrement = (ev, props) => forKey(props.vertical ? 'down' : 'left', ev);
 
@@ -312,12 +311,9 @@ const SliderFactory = factory(css => {
 	 * @public
 	 */
 	return Pressable(
-		Toggleable(
-			{toggle: 'onActivate'},
-			Spottable(
-				SliderDecorator(
-					Base
-				)
+		Spottable(
+			SliderDecorator(
+				Base
 			)
 		)
 	);

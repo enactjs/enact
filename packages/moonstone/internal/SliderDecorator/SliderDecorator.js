@@ -174,6 +174,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.normalizedMax = props.max != null ? props.max : Wrapped.defaultProps.max;
 			this.normalizedMin = props.min != null ? props.min : Wrapped.defaultProps.min;
 			this.state = {
+				active: false,
 				value: clamp(this.normalizedMin, this.normalizedMax, props.value)
 			};
 			if (__DEV__) {
@@ -233,6 +234,8 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const pointer = ev.clientX - this.inputNode.getBoundingClientRect().left;
 			const knob = (clamp(min, min + node.offsetWidth, pointer) - min) / node.offsetWidth;
 
+			this.current5WayStep = (this.normalizedMax - this.normalizedMin) * knob - this.state.value;
+
 			// Update our instance's knowledge of where the knob should be
 			this.knobPosition = knob;
 
@@ -287,12 +290,44 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
+		handleActivate = () => {
+			if (this.props.detachedKnob) {
+				if (this.current5WayStep) {
+					const value = clamp(this.props.min, this.props.max, this.state.value + this.current5WayStep);
+					this.current5WayStep = 0;
+					this.submitValue(value);
+				}
+			} else {
+				this.setState({
+					active: !this.state.active
+				});
+			}
+		}
+
+		handleBlur = () => {
+			if (this.current5WayStep) {
+				this.current5WayStep = 0;
+				this.knobPosition = null;
+				this.updateUI(this.state.value);
+			}
+		}
+
+		current5WayStep = 0
+		moveKnob (direction) {
+			this.current5WayStep += direction * this.props.step;
+			const value = this.state.value + this.current5WayStep;
+			this.knobPosition = computeProportionProgress({value, max: this.normalizedMax, min: this.normalizedMin});
+			this.updateUI(this.state.value);
+		}
+
 		incrementHandler = () => {
-			this.changeValue(1);
+			const fn = this.props.detachedKnob ? 'moveKnob' : 'changeValue';
+			this[fn](1);
 		}
 
 		decrementHandler = () => {
-			this.changeValue(-1);
+			const fn = this.props.detachedKnob ? 'moveKnob' : 'changeValue';
+			this[fn](-1);
 		}
 
 		changeValue = (direction) => {
@@ -307,7 +342,10 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			return (
 				<Wrapped
 					{...this.props}
+					active={this.state.active}
 					inputRef={this.getInputNode}
+					onActivate={this.handleActivate}
+					onBlur={this.handleBlur}
 					onChange={this.handleChange}
 					onClick={this.handleClick}
 					onDecrement={this.decrementHandler}

@@ -15,7 +15,7 @@
 	&.pressed {
 		.knob::before {
 			background-color: @moon-slider-spotlight-knob-color;
-			border-width: 0; // Setting the border-width:0 removes the border and lets the background fill the entire size that was previously cropped off by the border.
+			transform: @moon-translate-center scale(1.25);
 		}
 	}
 
@@ -63,6 +63,7 @@
 			border: @moon-button-border-width solid transparent;
 			box-sizing: border-box;
 			will-change: transform;
+			transition: transform linear 50ms;
 		}
 	}
 
