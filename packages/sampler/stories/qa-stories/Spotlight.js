@@ -19,6 +19,66 @@ const style = {
 	}
 };
 
+class DisappearTest extends React.Component {
+	constructor (props) {
+		super(props);
+
+		this.state = {
+			showButton: true
+		};
+	}
+
+	componentWillUnmount () {
+		this.stopTimer();
+	}
+
+	removeButton = () => {
+		this.setState({showButton: false});
+	}
+
+	restoreButton = () => {
+		this.setState({showButton: true});
+	}
+
+	resetFocus = () => {
+		Spotlight.focus('[data-component-id="restoreButton"]');
+	}
+
+	startTimer = () => {
+		this.timer = window.setTimeout(this.removeButton, 4000);
+	}
+
+	stopTimer = () => {
+		if (this.timer) {
+			window.clearTimeout(this.timer);
+		}
+	}
+
+	render () {
+		return (
+			<div>
+				5-way select to set focus to the Focus Me button and wait until 4s has elapsed, and observe the focused
+				button is removed and the remaining button gains focus.
+				{this.state.showButton ? (
+					<Button
+						onBlur={this.stopTimer}
+						onFocus={this.startTimer}
+						onSpotlightDisappear={this.resetFocus}
+					>
+						Focus me
+					</Button>
+				) : null}
+				<Button
+					data-component-id='restoreButton'
+					onClick={this.restoreButton}
+				>
+					Restore Button
+				</Button>
+			</div>
+		);
+	}
+}
+
 storiesOf('Spotlight')
 	.addDecorator(withKnobs)
 	.addWithInfo(
@@ -108,5 +168,11 @@ storiesOf('Spotlight')
 					Item
 				</Item>
 			</div>
+		)
+	)
+	.addWithInfo(
+		'Disappearing Spottable',
+		() => (
+			<DisappearTest />
 		)
 	);

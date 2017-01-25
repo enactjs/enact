@@ -42,6 +42,25 @@ storiesOf('Divider')
 	)
 
 	.addWithInfo(
+		'with an element below',
+		() => (
+			<div>
+				<div>
+					Adjust the spacing prop to see how the Divider is positioned with respect to the element below.
+				</div>
+				<Divider
+					spacing={select('spacing', ['normal', 'small', 'medium', 'large', 'none'])}
+				>
+					{text('children', 'Hello World')}
+				</Divider>
+				<Item>
+					Some content below
+				</Item>
+			</div>
+		)
+	)
+
+	.addWithInfo(
 		'Multiple',
 		() => (
 			<div>

@@ -56,6 +56,7 @@ const defaultConfig = {
 	*
 	* @type {Array}
 	* @default null
+	* @memberof moonstone/Marquee.MarqueeDecorator.defaultConfig
 	*/
 	invalidateProps: null,
 
@@ -76,6 +77,7 @@ const defaultConfig = {
  * @param {Object} prev Previous props
  * @param {Object} next Next props
  * @returns {Boolean} `true` if any of the props changed
+ * @private
  */
 const didPropChange = (propList, prev, next) => {
 	const hasPropsChanged = propList.map(i => prev[i] !== next[i]);

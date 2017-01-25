@@ -2,7 +2,7 @@ import ri from '@enact/ui/resolution';
 import Item from '@enact/moonstone/Item';
 import VirtualFlexList from '@enact/moonstone/VirtualFlexList';
 import React from 'react';
-import {storiesOf} from '@kadira/storybook';
+import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, number} from '@kadira/storybook-addon-knobs';
 
 const
@@ -23,8 +23,7 @@ const
 			position: 'absolute',
 			width: (channelWidth + clientWidth) + 'px',
 			height: (itemHeight + clientHeight) + 'px',
-			padding: ri.scale(33) + 'px 0',
-			color: 'white'
+			padding: ri.scale(33) + 'px 0'
 		},
 		// Programs
 		itemProgramWrapper: {
@@ -119,13 +118,14 @@ storiesOf('VirtualFlexList')
 						colCount: getItemLength,
 						component: renderItem,
 						data: programData,
-						height: number('items_height', itemHeight),
-						rowCount: number('items_row_count', programData.length),
+						height: ri.scale(number('items.height', 81)),
+						rowCount: number('items.rowCount', programData.length),
 						width: getItemWidth
 					}}
-					maxFlexScrollSize={number('maxFlexScrollSize', maxFlexScrollSize)}
-					x={number('x', 0)}
-					y={number('y', 0)}
+					maxFlexScrollSize={maxFlexScrollSize}
+					onPositionChange={action('onPositionChange')}
+					x={ri.scale(number('x', 0))}
+					y={ri.scale(number('y', 0))}
 				/>
 			</div>
 		)
