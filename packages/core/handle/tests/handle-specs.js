@@ -2,8 +2,8 @@ import sinon from 'sinon';
 import {
 	handle,
 	callOnEvent,
+	forEventProp,
 	forKeyCode,
-	forProp,
 	forward,
 	preventDefault,
 	stop,
@@ -121,7 +121,7 @@ describe('handle', () => {
 		const prop = 'index';
 		const value = 0;
 		const handler = sinon.spy();
-		const callback = handle(forProp(prop, value), handler);
+		const callback = handle(forEventProp(prop, value), handler);
 
 		// undefined shouldn't pass
 		callback(makeEvent());
