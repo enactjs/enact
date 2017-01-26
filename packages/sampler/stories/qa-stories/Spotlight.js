@@ -134,7 +134,7 @@ storiesOf('Spotlight')
 					inside a container and a 5-way directional key is pressed, the nearest element
 					to the pointer (in the direction specified by the key) will be spotted.
 				</p>
-				<div style={{display: 'flex'}}>
+				<div style={style.flexBox}>
 					<Container style={style.container}>
 						<Item>1</Item>
 						<Item>2</Item>
@@ -165,7 +165,7 @@ storiesOf('Spotlight')
 					should appear as though they do not have focus and they should not generate
 					onFocus or onBlur events in the action logger.
 				</p>
-				<div style={{display: 'flex'}}>
+				<div style={style.flexBox}>
 					<Container style={style.container} spotlightMuted>
 						<Item onFocus={action('onFocus')} onBlur={action('onBlur')}>1</Item>
 						<Item onFocus={action('onFocus')} onBlur={action('onBlur')}>2</Item>
