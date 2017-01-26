@@ -176,6 +176,8 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 					className={css.decrementButton}
 					disabled={decrementDisabled}
 					onClick={onDecrement}
+					onHold={onDecrement}
+					onHoldPulse={onDecrement}
 				>
 					{decrementIcon}
 				</IncrementSliderButton>
@@ -184,6 +186,8 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 					className={css.incrementButton}
 					disabled={incrementDisabled}
 					onClick={onIncrement}
+					onHold={onIncrement}
+					onHoldPulse={onIncrement}
 				>
 					{incrementIcon}
 				</IncrementSliderButton>

@@ -19,7 +19,9 @@ const IncrementSliderButtonBase = kind({
 	name: 'IncrementSliderButton',
 
 	computed: {
-		onClick: ({disabled, onClick}) => disabled ? null : onClick
+		onClick: ({disabled, onClick}) => disabled ? null : onClick,
+		onHold: ({disabled, onHold}) => disabled ? null : onHold,
+		onHoldPulse: ({disabled, onHoldPulse}) => disabled ? null : onHoldPulse
 	},
 
 	render: (props) => (
