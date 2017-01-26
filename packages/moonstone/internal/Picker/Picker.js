@@ -210,6 +210,15 @@ const Picker = class extends React.Component {
 		reverse: React.PropTypes.bool,
 
 		/**
+		 * When `true`, the component cannot be navigated using spotlight.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		spotlightDisabled: React.PropTypes.bool,
+
+		/**
 		 * Allow the picker to only increment or decrement by a given value. A step of `2` would
 		 * cause a picker to increment from 10 to 12 to 14, etc.
 		 *
@@ -257,6 +266,7 @@ const Picker = class extends React.Component {
 
 	static defaultProps = {
 		orientation: 'horizontal',
+		spotlightDisabled: false,
 		step: 1,
 		value: 0
 	}
@@ -419,6 +429,7 @@ const Picker = class extends React.Component {
 			onMouseUp,
 			onSpotlightDisappear,
 			orientation,
+			spotlightDisabled,
 			step,
 			width,
 			...rest
@@ -464,6 +475,7 @@ const Picker = class extends React.Component {
 					onSpotlightDisappear={onSpotlightDisappear}
 					joined={joined}
 					icon={incrementIcon}
+					spotlightDisabled={spotlightDisabled}
 				/>
 				<div className={css.valueWrapper}>
 					{sizingPlaceholder}
@@ -487,6 +499,7 @@ const Picker = class extends React.Component {
 					onSpotlightDisappear={onSpotlightDisappear}
 					joined={joined}
 					icon={decrementIcon}
+					spotlightDisabled={spotlightDisabled}
 				/>
 			</div>
 		);

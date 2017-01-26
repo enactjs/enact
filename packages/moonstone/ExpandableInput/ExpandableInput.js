@@ -75,6 +75,15 @@ class ExpandableInputBase extends React.Component {
 		placeholder: React.PropTypes.string,
 
 		/**
+		 * When `true`, the component cannot be navigated using spotlight.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		spotlightDisabled: React.PropTypes.bool,
+
+		/**
 		 * The type of input. Accepted values correspond to the standard HTML5 input types.
 		 *
 		 * @type {String}
@@ -91,6 +100,10 @@ class ExpandableInputBase extends React.Component {
 		 * @public
 		 */
 		value: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number])
+	}
+
+	static defaultProps = {
+		spotlightDisabled: false
 	}
 
 	fireChangeEvent = () => {
@@ -156,7 +169,7 @@ class ExpandableInputBase extends React.Component {
 	}
 
 	render () {
-		const {disabled, onInputChange, onSpotlightDisappear, placeholder, type, value, ...rest} = this.props;
+		const {disabled, onInputChange, onSpotlightDisappear, placeholder, spotlightDisabled, type, value, ...rest} = this.props;
 		delete rest.onChange;
 
 		return (
@@ -168,6 +181,7 @@ class ExpandableInputBase extends React.Component {
 				onClose={this.handleClose}
 				onMouseDown={this.handleMouseDown}
 				onSpotlightDisappear={onSpotlightDisappear}
+				spotlightDisabled={spotlightDisabled}
 			>
 				<Input
 					disabled={disabled}
@@ -179,6 +193,7 @@ class ExpandableInputBase extends React.Component {
 					onMouseDown={this.handleInputMouseDown}
 					onSpotlightDisappear={onSpotlightDisappear}
 					placeholder={placeholder}
+					spotlightDisabled={spotlightDisabled}
 					type={type}
 					value={value}
 				/>
