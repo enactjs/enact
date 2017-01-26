@@ -159,7 +159,9 @@ const Button = Uppercase(
 			{className: css.marquee},
 			Pressable(
 				Spottable(
-					Holdable(ButtonBase)
+					Holdable(
+						ButtonBase
+					)
 				)
 			)
 		)
