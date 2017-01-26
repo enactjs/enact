@@ -2,7 +2,6 @@ import {mount} from 'enzyme';
 import React from 'react';
 
 import Item from '../../Item';
-
 import {VirtualGridList} from '../VirtualList';
 
 describe('VirtualGridList Specs', () => {
@@ -28,7 +27,7 @@ describe('VirtualGridList Specs', () => {
 		/>
 	);
 
-	it('Should apply item size', function () {
+	it('should apply item size', function () {
 		const expectedMinWidth = 30;
 		const expectedMinHeight = 40;
 		const actualMinWidth = subject.find('VirtualListCore').prop('itemSize').minWidth;

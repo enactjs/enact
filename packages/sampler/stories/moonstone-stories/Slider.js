@@ -1,16 +1,18 @@
-import Slider, {SliderBase} from '@enact/moonstone/Slider';
+import Changeable from '@enact/ui/Changeable';
 import React from 'react';
+import Slider, {SliderBase} from '@enact/moonstone/Slider';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, number} from '@kadira/storybook-addon-knobs';
 
-Slider.propTypes = Object.assign({}, SliderBase.propTypes, Slider.propTypes);
-Slider.defaultProps = Object.assign({}, SliderBase.defaultProps, Slider.defaultProps);
-Slider.displayName = 'Slider';
+const ChangeableSlider = Changeable({mutable: true}, Slider);
+ChangeableSlider.propTypes = Object.assign({}, SliderBase.propTypes, Slider.propTypes);
+ChangeableSlider.defaultProps = Object.assign({}, SliderBase.defaultProps, Slider.defaultProps);
+ChangeableSlider.displayName = 'Slider';
 
-delete Slider.propTypes.pressed;
-delete Slider.defaultProps.pressed;
-delete Slider.propTypes.defaultPressed;
-delete Slider.defaultProps.defaultPressed;
+delete ChangeableSlider.propTypes.pressed;
+delete ChangeableSlider.defaultProps.pressed;
+delete ChangeableSlider.propTypes.defaultPressed;
+delete ChangeableSlider.defaultProps.defaultPressed;
 
 storiesOf('Slider')
 	.addDecorator(withKnobs)
@@ -18,16 +20,16 @@ storiesOf('Slider')
 		' ',
 		'Basic usage of Slider',
 		() => (
-			<Slider
-				backgroundPercent={number('backgroundPercent', Slider.defaultProps.backgroundPercent, {range: true, min: 0, max: 100})}
-				detachedKnob={boolean('detachedKnob', false)}
-				disabled={boolean('disabled', Slider.defaultProps.disabled)}
-				max={number('max', Slider.defaultProps.max)}
-				min={number('min', Slider.defaultProps.min)}
+			<ChangeableSlider
+				backgroundProgress={number('backgroundProgress', ChangeableSlider.defaultProps.backgroundProgress, {range: true, min: 0, max: 1, step: 0.01})}
+				detachedKnob={boolean('detachedKnob', ChangeableSlider.defaultProps.detachedKnob)}
+				disabled={boolean('disabled', ChangeableSlider.defaultProps.disabled)}
+				max={number('max', ChangeableSlider.defaultProps.max)}
+				min={number('min', ChangeableSlider.defaultProps.min)}
 				onChange={action('onChange')}
-				step={number('step', Slider.defaultProps.step)}
-				vertical={boolean('vertical', Slider.defaultProps.vertical)}
-				value={number('value', Slider.defaultProps.value)}
+				step={number('step', ChangeableSlider.defaultProps.step)}
+				vertical={boolean('vertical', ChangeableSlider.defaultProps.vertical)}
+				value={number('value', ChangeableSlider.defaultProps.value)}
 			/>
 		)
 	);

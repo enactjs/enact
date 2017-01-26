@@ -6,7 +6,26 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
-- `moonstone/MarqueeDecorator` property `invalidateProps` that specifies which props cause the marquee distance to be invalidated.
+- `moonstone/MarqueeDecorator` property `invalidateProps` that specifies which props cause the marquee distance to be invalidated
+- developer-mode warnings to several components to warn when values are out-of-range
+- `moonstone/Divider` property `spacing` which adjusts the amount of empty space above and below the `Divider`. `normal`, `small`, `medium`, `large`, and `none` are available.
+- `moonstone/Picker` when `joined` the ability to be incremented and decremented by arrow keys.
+- `onSpotlightDisappear` event property support for spottable moonstone components
+
+### Changed
+
+- `moonstone/ProgressBar` properties `progress` and `backgroundProgress` to accept a number between 0 and 1.
+- `moonstone/Slider` and `moonstone/IncrementSlider` property `backgroundPercent` to `backgroundProgress` which now accepts a number between 0 and 1
+- `moonstone/Slider` to not ignore `value` prop when it is the same as the previous value
+- `moonstone/Picker` component's buttons to reverse their operation such that 'up' selects the previous item and 'down' the next
+- `moonstone/Divider` to now behave as a simple horizontal line when no text content is provided
+- `moonstone/Scrollable` to not display scrollbar controls by default.
+- `moonstone/DatePicker` and `moonstone/TimePicker` to emit `onChange` event whenever the value is changed, not just when the component is closed.
+
+### Removed
+
+- `moonstone/ProgressBar` properties `min` and `max`
+- `moonstone/Picker` and derivatives may now use numeric width, which represents the amount of characters to use for sizing. `width={4}` represents four characters, `2` for two characters, etc. `width` still accepts the size-name strings.
 
 ### Changed
 
@@ -15,6 +34,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/IncrementSlider` so that the knob is spottable via pointer, and 5-way navigation between the knob and the increment/decrement buttons is functional
+- `moonstone/Slider` and `moonstone/IncrementSlider` to not fire `onChange` for value changes from props
 
 ## [1.0.0-beta.1] - 2016-12-30
 
@@ -25,6 +45,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualFlexList` Work-In-Progress component to support variably sized rows or columns
 - `moonstone/ExpandableItem` properties `autoClose` and `lockBottom`
 - `moonstone/ExpandableList` properties `noAutoClose` and `noLockBottom`
+- `moonstone/Picker` property `reverse`
 - `moonstone/ContextualPopup` property `noAutoDismiss`
 - `moonstone/Dialog` property `scrimType`
 - `moonstone/Popup` property `spotlightRestrict`

@@ -69,6 +69,15 @@ const DatePickerBase = kind({
 		order: React.PropTypes.arrayOf(React.PropTypes.oneOf(['m', 'd', 'y'])).isRequired,
 
 		/**
+		 * The primary text of the item.
+		 *
+		 * @type {String}
+		 * @required
+		 * @public
+		 */
+		title: React.PropTypes.string.isRequired,
+
+		/**
 		 * The `year` component of the Date
 		 *
 		 * @type {Number}
@@ -125,7 +134,16 @@ const DatePickerBase = kind({
 		 * @type {Function}
 		 * @public
 		 */
-		onChangeYear: React.PropTypes.func
+		onChangeYear: React.PropTypes.func,
+
+		/**
+		 * The handler to run when the component is removed while retaining focus.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightDisappear: React.PropTypes.func
 	},
 
 	defaultProps: {
@@ -138,10 +156,10 @@ const DatePickerBase = kind({
 		className: 'datePicker'
 	},
 
-	render: ({day, maxDays, maxMonths, maxYear, minYear, month, noLabels, onChangeDate, onChangeMonth, onChangeYear, order, year, ...rest}) => {
+	render: ({day, maxDays, maxMonths, maxYear, minYear, month, noLabels, onChangeDate, onChangeMonth, onChangeYear, onSpotlightDisappear, order, year, ...rest}) => {
 
 		return (
-			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false}>
+			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false} onSpotlightDisappear={onSpotlightDisappear}>
 				<div className={dateComponentPickers}>
 					{order.map(picker => {
 						switch (picker) {
@@ -150,10 +168,12 @@ const DatePickerBase = kind({
 									<DateComponentRangePicker
 										key="day-picker"
 										label={noLabels ? null : $L('day')}
-										min={1}
 										max={maxDays}
-										value={day}
+										min={1}
 										onChange={onChangeDate}
+										onSpotlightDisappear={onSpotlightDisappear}
+										value={day}
+										width={2}
 										wrap
 									/>
 								);
@@ -162,10 +182,12 @@ const DatePickerBase = kind({
 									<DateComponentRangePicker
 										key="month-picker"
 										label={noLabels ? null : $L('month')}
-										min={1}
 										max={maxMonths}
-										value={month}
+										min={1}
 										onChange={onChangeMonth}
+										onSpotlightDisappear={onSpotlightDisappear}
+										value={month}
+										width={2}
 										wrap
 									/>
 								);
@@ -175,10 +197,12 @@ const DatePickerBase = kind({
 										className={css.year}
 										key="year-picker"
 										label={noLabels ? null : $L('year')}
-										min={minYear}
 										max={maxYear}
-										value={year}
+										min={minYear}
 										onChange={onChangeYear}
+										onSpotlightDisappear={onSpotlightDisappear}
+										value={year}
+										width={4}
 									/>
 								);
 						}

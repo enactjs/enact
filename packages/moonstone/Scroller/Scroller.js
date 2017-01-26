@@ -1,5 +1,5 @@
 /**
- * Exports the {@link moonstone/Scroller.Scroller} and 
+ * Exports the {@link moonstone/Scroller.Scroller} and
  * {@link moonstone/Scroller.ScrollerBase} components.
  * The default export is {@link moonstone/Scroller.Scroller}.
  *
@@ -7,8 +7,8 @@
  */
 
 import classNames from 'classnames';
-import React, {Component, PropTypes} from 'react';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
+import React, {Component, PropTypes} from 'react';
 import {SpotlightContainerDecorator} from '@enact/spotlight';
 
 import css from './Scroller.less';
@@ -32,7 +32,7 @@ class ScrollerBase extends Component {
 
 		className: PropTypes.string,
 
-		/*
+		/**
 		 * Specifies how to horizontally scroll. Acceptable values are `'auto'`, `'default'` ,
 		 * `'hidden'`, and `'scroll'`.
 		 *
@@ -44,7 +44,7 @@ class ScrollerBase extends Component {
 
 		style: PropTypes.object,
 
-		/*
+		/**
 		 * Specifies how to vertically scroll. Acceptable values are `'auto'`, `'auto'` ,
 		 * `'hidden'`, and `'scroll'`.
 		 *
@@ -71,6 +71,11 @@ class ScrollerBase extends Component {
 		maxTop: 0
 	}
 
+	scrollPos = {
+		top: 0,
+		left: 0
+	}
+
 	getScrollBounds = () => this.scrollBounds
 
 	setScrollPosition (valX, valY) {
@@ -80,9 +85,11 @@ class ScrollerBase extends Component {
 
 		if (this.isVertical()) {
 			node.scrollTop = valY;
+			this.scrollPos.top = valY;
 		}
 		if (this.isHorizontal()) {
 			node.scrollLeft = rtl ? (this.scrollBounds.maxLeft - valX) : valX;
+			this.scrollPos.left = valX;
 		}
 	}
 
@@ -103,6 +110,31 @@ class ScrollerBase extends Component {
 		}
 
 		return bounds;
+	}
+
+	calculatePositionOnFocus = (focusedItem) => {
+		const
+			rtlDirection = this.context.rtl ? -1 : 1,
+			currentLeft = this.scrollPos.left * rtlDirection,
+			currentTop = this.scrollPos.top;
+
+		if (this.isVertical()) {
+			if (focusedItem.offsetTop + focusedItem.offsetHeight > (this.scrollBounds.clientHeight + currentTop)) {
+				this.scrollPos.top += ((focusedItem.offsetTop + focusedItem.offsetHeight) - (this.scrollBounds.clientHeight + currentTop));
+			} else if (focusedItem.offsetTop < currentTop) {
+				this.scrollPos.top += (focusedItem.offsetTop - currentTop);
+			}
+		}
+
+		if (this.isHorizontal()) {
+			if (focusedItem.offsetLeft + focusedItem.offsetWidth > (this.scrollBounds.clientWidth + currentLeft)) {
+				this.scrollPos.left += rtlDirection * ((focusedItem.offsetLeft + focusedItem.offsetWidth) - (this.scrollBounds.clientWidth + currentLeft));
+			} else if (focusedItem.offsetLeft < currentLeft) {
+				this.scrollPos.left += rtlDirection * (focusedItem.offsetLeft - currentLeft);
+			}
+		}
+
+		return this.scrollPos;
 	}
 
 	isVertical = () => (this.props.vertical !== 'hidden')

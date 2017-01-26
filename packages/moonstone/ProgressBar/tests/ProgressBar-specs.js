@@ -4,30 +4,30 @@ import ProgressBar from '../ProgressBar';
 import css from '../ProgressBar.less';
 
 describe('ProgressBar Specs', () => {
-	it('Should have width of 50%', () => {
+	it('should have width of 50%', () => {
 		const progressBar = mount(
 			<ProgressBar
-				progress={50}
+				progress={0.5}
 			/>
 		);
 
 		expect(progressBar.find(`.${css.fill}`).prop('style').width).to.equal('50%');
 	});
 
-	it('Should have background width of 75%', () => {
+	it('should have background width of 75%', () => {
 		const progressBar = mount(
 			<ProgressBar
-				backgroundProgress={75}
+				backgroundProgress={0.75}
 			/>
 		);
 
 		expect(progressBar.find(`.${css.load}`).prop('style').width).to.equal('75%');
 	});
 
-	it('Should have height of 50%', () => {
+	it('should have height of 50%', () => {
 		const progressBar = mount(
 			<ProgressBar
-				progress={50}
+				progress={0.5}
 				vertical
 			/>
 		);
@@ -35,29 +35,15 @@ describe('ProgressBar Specs', () => {
 		expect(progressBar.find(`.${css.fill}`).prop('style').height).to.equal('50%');
 	});
 
-	it('Should have background height of 50%', () => {
+	it('should have background height of 50%', () => {
 		const progressBar = mount(
 			<ProgressBar
-				progress={50}
-				backgroundProgress={75}
+				progress={0.5}
+				backgroundProgress={0.75}
 				vertical
 			/>
 		);
 
 		expect(progressBar.find(`.${css.load}`).prop('style').height).to.equal('75%');
-	});
-
-	it('Should have progress height of 25%', () => {
-		const progressBar = mount(
-			<ProgressBar
-				progress={50}
-				backgroundProgress={75}
-				min={0}
-				max={200}
-				vertical
-			/>
-		);
-
-		expect(progressBar.find(`.${css.fill}`).prop('style').height).to.equal('25%');
 	});
 });
