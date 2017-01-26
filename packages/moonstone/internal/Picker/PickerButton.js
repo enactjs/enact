@@ -45,7 +45,7 @@ const PickerButtonBase = kind({
 
 const PickerButton = Holdable(
 	{resume: true, endHold: 'onLeave'},
-	onlyUpdateForKeys(['disabled', 'icon', 'joined', 'onMouseUp'])(
+	onlyUpdateForKeys(['disabled', 'icon', 'joined', 'onMouseUp', 'spotlightDisabled'])(
 		PickerButtonBase
 	)
 );
