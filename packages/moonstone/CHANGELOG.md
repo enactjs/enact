@@ -21,15 +21,12 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Divider` to now behave as a simple horizontal line when no text content is provided
 - `moonstone/Scrollable` to not display scrollbar controls by default.
 - `moonstone/DatePicker` and `moonstone/TimePicker` to emit `onChange` event whenever the value is changed, not just when the component is closed.
+- `moonstone/Panels.Viewport` sets focus on the last-focused spottable control (if available) when navigating panels
 
 ### Removed
 
 - `moonstone/ProgressBar` properties `min` and `max`
 - `moonstone/Picker` and derivatives may now use numeric width, which represents the amount of characters to use for sizing. `width={4}` represents four characters, `2` for two characters, etc. `width` still accepts the size-name strings.
-
-### Changed
-
-- `moonstone/Panels.Viewport` sets focus on the last-focused spottable control (if available) when navigating panels
 
 ### Fixed
 
