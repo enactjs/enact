@@ -63,7 +63,7 @@ const ViewportBase = kind({
 		children: ({children}) => React.Children.map(children, (child, index) => {
 			return React.cloneElement(child, {'data-index': index});
 		}),
-		enteringProp: ({noAnimation}) => noAnimation ? null : 'entering',
+		enteringProp: ({noAnimation}) => noAnimation ? null : 'showChildren',
 		handleTransition: handle(forward('onTransition'), Spotlight.resume),
 		handleWillTransition: handle(forward('onWillTransition'), Spotlight.pause)
 	},

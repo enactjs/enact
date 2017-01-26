@@ -22,7 +22,8 @@
 	flex: 1;
 	min-height: 0;
 	opacity: 0;
-	transition: opacity 200ms linear;
+	transition: opacity 200ms ease-out;
+	will-change: opacity;
 
 	&.visible {
 		opacity: 1;

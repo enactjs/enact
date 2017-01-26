@@ -33,6 +33,15 @@ const PanelBase = kind({
 
 	propTypes: /** @lends moonstone/Panels.Panel.prototype */ {
 		/**
+		 * Header for the panel. This is usually passed by the {@link ui/Slottable.Slottable} API by
+		 * using a [Header]{@link moonstone/Panels.Header} component as a child of the Panel.
+		 *
+		 * @type {Header}
+		 * @public
+		 */
+		header: React.PropTypes.node,
+
+		/**
 		 * When `true`, only the `header` is rendered and the body components are not. Setting to
 		 * `true` will cause all components to be rendered and the body components will fade in.
 		 *
@@ -42,17 +51,14 @@ const PanelBase = kind({
 		 * into view.
 		 *
 		 * @type {Boolean}
-		 */
-		entering: React.PropTypes.bool,
-
-		/**
-		 * Header for the panel. This is usually passed by the {@link ui/Slottable.Slottable} API by
-		 * using a [Header]{@link moonstone/Panels.Header} component as a child of the Panel.
-		 *
-		 * @type {Header}
+		 * @default false
 		 * @public
 		 */
-		header: React.PropTypes.node
+		showChildren: React.PropTypes.bool
+	},
+
+	defaultProps: {
+		showChildren: false
 	},
 
 	styles: {
@@ -61,19 +67,19 @@ const PanelBase = kind({
 	},
 
 	computed: {
-		// In order to spot the body components, we defer spotting until !entering. If the Panel
-		// opts out of entering support by explicitly setting it to false, it'll spot on first
+		// In order to spot the body components, we defer spotting until !showChildren. If the Panel
+		// opts out of showChildren support by explicitly setting it to false, it'll spot on first
 		// render.
-		spotOnRender: ({entering}) => entering ? null : spotPanel,
-		children: ({children, entering}) => entering ? null : children,
-		bodyClassName: ({entering, styler}) => styler.append({
+		spotOnRender: ({showChildren}) => showChildren ? null : spotPanel,
+		children: ({children, showChildren}) => showChildren ? null : children,
+		bodyClassName: ({showChildren, styler}) => styler.append({
 			body: true,
-			visible: !entering
+			visible: !showChildren
 		})
 	},
 
 	render: ({bodyClassName, children, header, spotOnRender, ...rest}) => {
-		delete rest.entering;
+		delete rest.showChildren;
 
 		return (
 			<article {...rest} ref={spotOnRender}>
