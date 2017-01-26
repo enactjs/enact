@@ -101,6 +101,8 @@ class View extends React.Component {
 	constructor (props) {
 		super(props);
 		this.animation = null;
+		this._raf = null;
+		this._enteringTimeout = null;
 		this.state = {
 			entering: true
 		};
@@ -113,12 +115,20 @@ class View extends React.Component {
 
 	componentWillUnmount () {
 		this.cancelAnimationFrame();
+		this.cancelEntering();
 	}
 
 	cancelAnimationFrame () {
 		if (this._raf) {
 			cancelAnimationFrame(this._raf);
 			this._raf = null;
+		}
+	}
+
+	cancelEntering () {
+		if (this._enteringTimeout) {
+			clearTimeout(this._enteringTimeout);
+			this._enteringTimeout = null;
 		}
 	}
 
@@ -153,10 +163,11 @@ class View extends React.Component {
 		const {enteringDelay, enteringProp} = this.props;
 
 		if (enteringProp) {
-			setTimeout(() => {
+			this._enteringTimeout = setTimeout(() => {
 				this.setState({
 					entering: false
 				});
+				this._enteringTimeout = null;
 			}, enteringDelay);
 		}
 	}
@@ -175,6 +186,7 @@ class View extends React.Component {
 	// called.
 	componentWillLeave (callback) {
 		const {arranger, reverseTransition} = this.props;
+		this.cancelEntering();
 		if (arranger) {
 			this.prepareTransition(reverseTransition ? arranger.enter : arranger.leave, callback);
 		} else {
