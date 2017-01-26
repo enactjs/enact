@@ -72,7 +72,7 @@ const PanelBase = kind({
 		// render.
 		spotOnRender: ({showChildren}) => showChildren ? null : spotPanel,
 		children: ({children, showChildren}) => showChildren ? null : children,
-		bodyClassName: ({showChildren, styler}) => styler.append({
+		bodyClassName: ({showChildren, styler}) => styler.join({
 			body: true,
 			visible: !showChildren
 		})
