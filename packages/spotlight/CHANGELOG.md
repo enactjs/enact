@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 ### Added
 
 - `spotlightDisabled` prop support in `@enact/spotlight/container`
+- `onSpotlightDown`, `onSpotlightLeft`, `onSpotlightRight`, and `onSpotlightUp` prop support in `@enact/spotlight/spottable`
 - `onSpotlightDisappear` event property support in `@enact/spotlight/spottable`
 
 ### Removed

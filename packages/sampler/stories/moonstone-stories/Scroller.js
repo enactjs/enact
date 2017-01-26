@@ -9,7 +9,6 @@ Scroller.propTypes = Object.assign({}, ScrollerBase.propTypes);
 Scroller.defaultProps = Object.assign({}, ScrollerBase.defaultProps);
 
 const
-	// Set up some defaults for info and knobs
 	prop = {
 		horizontal: {'auto': 'auto', 'hidden': 'hidden', 'scroll': 'scroll'},
 		vertical: {'auto': 'auto', 'hidden': 'hidden', 'scroll': 'scroll'}
@@ -35,11 +34,11 @@ storiesOf('Scroller')
 		'Basic usage of Scroller',
 		() => (
 			<Scroller
-				onScrollStart={action('onScrollStart')}
-				onScrollStop={action('onScrollStop')}
+				hideScrollbars={boolean('hideScrollbars', false)}
 				horizontal={select('horizontal', prop.horizontal, 'auto')}
 				vertical={select('vertical', prop.vertical, 'auto')}
-				hideScrollbars={boolean('hideScrollbars', false)}
+				onScrollStart={action('onScrollStart')}
+				onScrollStop={action('onScrollStop')}
 				style={style.scroller}
 			>
 				<div style={style.content}>
