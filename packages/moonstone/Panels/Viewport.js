@@ -83,7 +83,7 @@ const ViewportBase = kind({
 				{...rest}
 				arranger={arranger}
 				component="main"
-				duration={200}
+				duration={250}
 				enteringDelay={100}
 				enteringProp={enteringProp}
 				index={index}
