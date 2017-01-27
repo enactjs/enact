@@ -1,4 +1,3 @@
-import {findDOMNode} from 'react-dom';
 import {forward, withArgs as handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import ViewManager, {shape} from '@enact/ui/ViewManager';
@@ -7,20 +6,6 @@ import React from 'react';
 import Spotlight from '@enact/spotlight';
 
 import css from './Panels.less';
-
-const spotPanel = ({view}) => {
-	// eslint-disable-next-line react/no-find-dom-node
-	const node = findDOMNode(view);
-	if (node) {
-		const body = node.querySelector('section .spottable');
-		const header = node.querySelector('header .spottable');
-		const spottable = body || header;
-
-		if (spottable) {
-			Spotlight.focus(spottable);
-		}
-	}
-};
 
 /**
  * The container for a set of Panels
@@ -78,13 +63,12 @@ const ViewportBase = kind({
 		children: ({children}) => React.Children.map(children, (child, index) => {
 			return React.cloneElement(child, {'data-index': index});
 		}),
-		handleAppear: handle(forward('onAppear'), spotPanel),
-		handleEnter: handle(forward('onEnter'), spotPanel),
+		enteringProp: ({noAnimation}) => noAnimation ? null : 'showChildren',
 		handleTransition: handle(forward('onTransition'), Spotlight.resume),
 		handleWillTransition: handle(forward('onWillTransition'), Spotlight.pause)
 	},
 
-	render: ({arranger, children, handleAppear, handleEnter, handleTransition, handleWillTransition, index, noAnimation, ...rest}) => {
+	render: ({arranger, children, enteringProp, handleTransition, handleWillTransition, index, noAnimation, ...rest}) => {
 		const count = React.Children.count(children);
 		invariant(
 			index === 0 && count === 0 || index < count,
@@ -94,13 +78,13 @@ const ViewportBase = kind({
 		return (
 			<ViewManager
 				{...rest}
-				noAnimation={noAnimation}
 				arranger={arranger}
-				duration={200}
-				index={index}
 				component="main"
-				onAppear={handleAppear}
-				onEnter={handleEnter}
+				duration={200}
+				enteringDelay={100}
+				enteringProp={enteringProp}
+				index={index}
+				noAnimation={noAnimation}
 				onTransition={handleTransition}
 				onWillTransition={handleWillTransition}
 			>

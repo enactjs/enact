@@ -7,6 +7,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 - `moonstone/MarqueeDecorator` property `invalidateProps` that specifies which props cause the marquee distance to be invalidated
+- `moonstone/Panels.Panel` property `showChildren` to support deferring rendering the panel body until animation completes.
+- `moonstone/MarqueeDecorator` property `invalidateProps` that specifies which props cause the marquee distance to be invalidated.
 - developer-mode warnings to several components to warn when values are out-of-range
 - `moonstone/Divider` property `spacing` which adjusts the amount of empty space above and below the `Divider`. `normal`, `small`, `medium`, `large`, and `none` are available.
 - `moonstone/Picker` when `joined` the ability to be incremented and decremented by arrow keys.
@@ -14,6 +16,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+- `moonstone/Panels.Panels` and variations to defer rendering the children of contained `Panel` instances until animation completes.
 - `moonstone/ProgressBar` properties `progress` and `backgroundProgress` to accept a number between 0 and 1.
 - `moonstone/Slider` and `moonstone/IncrementSlider` property `backgroundPercent` to `backgroundProgress` which now accepts a number between 0 and 1
 - `moonstone/Slider` to not ignore `value` prop when it is the same as the previous value
@@ -31,6 +34,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/IncrementSlider` so that the knob is spottable via pointer, and 5-way navigation between the knob and the increment/decrement buttons is functional
 - `moonstone/Slider` and `moonstone/IncrementSlider` to not fire `onChange` for value changes from props
+
+### Changed
+
+- `moonstone/Panels.Panels` and variations to defer rendering of Panel body components until transition completes
 
 ## [1.0.0-beta.1] - 2016-12-30
 
