@@ -1,11 +1,10 @@
-/* global XMLHttpRequest */
+/* global XMLHttpRequest, ILIB_BASE_PATH, ILIB_RESOURCES_PATH, ILIB_CACHE_ID */
 
 import xhr from 'xhr';
 
 import Loader from '../ilib/lib/Loader';
 import LocaleInfo from '../ilib/lib/LocaleInfo';
 import ZoneInfoFile from './zoneinfo';
-import ilibLocale from '../ilib/locale/ilibmanifest.json';
 
 const get = (url, callback) => {
 	if (typeof XMLHttpRequest !== 'undefined') {
@@ -26,8 +25,12 @@ const get = (url, callback) => {
 	}
 };
 
+const iLibBase = ILIB_BASE_PATH;
+const iLibResources = ILIB_RESOURCES_PATH;
+const CacheID = ILIB_CACHE_ID;
+
 function EnyoLoader () {
-	this.base = ilibLocale.path.substring(0, ilibLocale.path.lastIndexOf('/locale'));
+	this.base = iLibBase;
 	// TODO: full enyo.platform implementation for improved accuracy
 	if (typeof window === 'object' && typeof window.PalmSystem === 'object') {
 		this.webos = true;
@@ -85,7 +88,7 @@ EnyoLoader.prototype._pathjoin = function (_root, subpath) {
  * @returns {undefined}
  */
 EnyoLoader.prototype._loadFilesAsync = function (context, paths, results, params, callback) {
-	let _root = ilibLocale.resources;
+	let _root = iLibResources;
 	if (params && typeof params.root !== 'undefined') {
 		_root = params.root;
 	}
@@ -132,7 +135,7 @@ EnyoLoader.prototype._loadFilesAsync = function (context, paths, results, params
 EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback) {
 	if (sync) {
 		let ret = [];
-		let _root = ilibLocale.resources;
+		let _root = iLibResources;
 		let locdata = this._pathjoin(this.base, 'locale');
 		if (params && typeof params.root !== 'undefined') {
 			_root = params.root;
@@ -206,7 +209,7 @@ EnyoLoader.prototype._loadStandardManifests = function () {
 	// util.print('enyo loader: load manifests\n');
 	if (!this.manifest) {
 		this._loadManifest(this.base, 'locale'); // standard ilib locale data
-		this._loadManifest('', ilibLocale.resources);     // the app's resources dir
+		this._loadManifest('', iLibResources);     // the app's resources dir
 	}
 };
 
