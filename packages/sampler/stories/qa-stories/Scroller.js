@@ -23,7 +23,6 @@ storiesOf('Scroller')
 			>
 				<StatefullExpandableList
 					closeOnSelect
-					open={false}
 					title="Expandable List in Scroller"
 				>
 					{itemData}

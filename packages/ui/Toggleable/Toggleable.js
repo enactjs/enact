@@ -112,13 +112,10 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillReceiveProps (nextProps) {
-			const active = !!nextProps[prop];
-
-			// if the prop changes which causes a new state then setState
-			const isChanged = (active !== !!this.props[prop] && this.state.active !== active);
-
-			if (mutable && prop in nextProps && isChanged) {
-				this.setState({active});
+			if (mutable && prop in nextProps) {
+				this.setState({
+					active: !!nextProps[prop]
+				});
 			}
 		}
 
