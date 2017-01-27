@@ -81,19 +81,20 @@ const GroupItemBase = kind({
 				selected,
 				selectedProp
 			},
-			handleSelect
+			handleSelect,
+			...rest
 		} = props;
 
 		if (selectedProp) {
-			const index = props[indexProp];
-			props[selectedProp] = isSelected(index, selected);
+			const index = rest[indexProp];
+			rest[selectedProp] = isSelected(index, selected);
 		}
 
 		if (childSelect) {
-			props[childSelect] = handleSelect;
+			rest[childSelect] = handleSelect;
 		}
 
-		return <Component {...props} />;
+		return <Component {...rest} />;
 	}
 });
 
