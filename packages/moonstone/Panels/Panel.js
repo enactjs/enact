@@ -42,7 +42,7 @@ const PanelBase = kind({
 		header: React.PropTypes.node,
 
 		/**
-		 * When `true`, only the `header` is rendered and the body components are not. Setting to
+		 * When `false`, only the `header` is rendered and the body components are not. Setting to
 		 * `true` will cause all components to be rendered and the body components will fade in.
 		 *
 		 * When a Panel is used within {@link moonstone/Panels.Panels},

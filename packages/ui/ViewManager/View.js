@@ -42,7 +42,7 @@ class View extends React.Component {
 		arranger: shape,
 
 		/**
-		 * Time, in milliseconds, to wait after a view has entered to inform it by pass the
+		 * Time, in milliseconds, to wait after a view has entered to inform it by passing the
 		 * `enteringProp` as false.
 		 *
 		 * @type {Number}
