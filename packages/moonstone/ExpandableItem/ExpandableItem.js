@@ -116,6 +116,15 @@ const ExpandableItemBase = kind({
 		onOpen: PropTypes.func,
 
 		/**
+		 * The handler to run when the component is removed while retaining focus.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightDisappear: PropTypes.func,
+
+		/**
 		 * When `true`, the control is rendered in the expanded state, with the contents visible
 		 *
 		 * @type {Boolean}
@@ -187,7 +196,7 @@ const ExpandableItemBase = kind({
 		titleIcon: ({open}) => (open ? 'arrowlargeup' : 'arrowlargedown')
 	},
 
-	render: ({children, disabled, handleKeyDown, handleOpen, label, open, title, titleIcon, ...rest}) => {
+	render: ({children, disabled, handleKeyDown, handleOpen, label, open, onSpotlightDisappear, title, titleIcon, ...rest}) => {
 		delete rest.autoClose;
 		delete rest.label;
 		delete rest.lockBottom;
@@ -202,6 +211,7 @@ const ExpandableItemBase = kind({
 					disabled={disabled}
 					label={label}
 					onClick={handleOpen}
+					onSpotlightDisappear={onSpotlightDisappear}
 					titleIcon={titleIcon}
 				>{title}</LabeledItem>
 				<ExpandableTransitionContainer

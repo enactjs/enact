@@ -104,6 +104,15 @@ const ExpandablePickerBase = kind({
 		onPick: React.PropTypes.func,
 
 		/**
+		 * The handler to run when the component is removed while retaining focus.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightDisappear: React.PropTypes.func,
+
+		/**
 		 * The orientation of the picker, i.e. whether the buttons are above and below or on the
 		 * sides of the value. Must be either `'horizontal'` or `'vertical'`.
 		 *
@@ -172,6 +181,7 @@ const ExpandablePickerBase = kind({
 			noAnimation,
 			onChange,
 			onPick,
+			onSpotlightDisappear,
 			orientation,
 			value,
 			width,
@@ -180,7 +190,7 @@ const ExpandablePickerBase = kind({
 		} = props;
 
 		return (
-			<ExpandableItemBase {...rest} disabled={disabled}>
+			<ExpandableItemBase {...rest} disabled={disabled} onSpotlightDisappear={onSpotlightDisappear}>
 				<Picker
 					disabled={disabled}
 					onChange={onPick}
@@ -189,13 +199,14 @@ const ExpandablePickerBase = kind({
 					incrementIcon={incrementIcon}
 					joined={joined}
 					noAnimation={noAnimation}
+					onSpotlightDisappear={onSpotlightDisappear}
 					orientation={orientation}
 					width={width}
 					wrap={wrap}
 				>
 					{children}
 				</Picker>
-				<IconButton onClick={onChange}>check</IconButton>
+				<IconButton onClick={onChange} onSpotlightDisappear={onSpotlightDisappear}>check</IconButton>
 			</ExpandableItemBase>
 		);
 	}
