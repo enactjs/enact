@@ -1,10 +1,10 @@
 import classNames from 'classnames';
+import {contextTypes} from '@enact/i18n/I18nDecorator';
+import Holdable from '@enact/ui/Holdable';
 import React, {Component, PropTypes} from 'react';
 import ri from '@enact/ui/resolution';
-import Holdable from '@enact/ui/Holdable';
 import Spotlight from '@enact/spotlight';
 import {startJob, stopJob} from '@enact/core/jobs';
-import {contextTypes} from '@enact/i18n/I18nDecorator';
 
 import IconButton from '../IconButton';
 

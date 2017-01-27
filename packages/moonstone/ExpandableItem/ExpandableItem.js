@@ -116,6 +116,15 @@ const ExpandableItemBase = kind({
 		onOpen: PropTypes.func,
 
 		/**
+		 * The handler to run when the component is removed while retaining focus.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightDisappear: PropTypes.func,
+
+		/**
 		 * When `true`, the control is rendered in the expanded state, with the contents visible
 		 *
 		 * @type {Boolean}
@@ -146,30 +155,35 @@ const ExpandableItemBase = kind({
 		showLabel: 'auto'
 	},
 
-	computed: {
-		handleKeyDown: ({autoClose, lockBottom, onClose}) => {
+	handlers: {
+		handleKeyDown: (ev, {autoClose, lockBottom, onClose}) => {
 			if (autoClose || lockBottom) {
-				return (ev) => {
-					const {keyCode, target} = ev;
-					// Basing first/last child on the parent of the target to support both the use
-					// case here in which the children of the container are spottable and the
-					// ExpandableList use case which has an intermediate child (Group) between the
-					// spottable components and the container.
-					if (autoClose && isUp(keyCode) && target.parentNode.firstChild === target && onClose) {
-						onClose();
-						ev.nativeEvent.stopImmediatePropagation();
-					} else if (lockBottom && isDown(keyCode) && target.parentNode.lastChild === target) {
-						ev.nativeEvent.stopImmediatePropagation();
-					}
-				};
+				const {keyCode, target} = ev;
+				// Basing first/last child on the parent of the target to support both the use
+				// case here in which the children of the container are spottable and the
+				// ExpandableList use case which has an intermediate child (Group) between the
+				// spottable components and the container.
+				if (autoClose && isUp(keyCode) && target.parentNode.firstChild === target && onClose) {
+					onClose();
+					ev.nativeEvent.stopImmediatePropagation();
+				} else if (lockBottom && isDown(keyCode) && target.parentNode.lastChild === target) {
+					ev.nativeEvent.stopImmediatePropagation();
+				}
 			}
 		},
-		handleOpen: ({disabled, onClose, onOpen, open}) => {
+		handleOpen: (ev, {disabled, onClose, onOpen, open}) => {
 			// When disabled, don't attach an event
 			if (!disabled) {
-				return open ? onClose : onOpen;
+				if (open) {
+					onClose(ev);
+				} else {
+					onOpen(ev);
+				}
 			}
-		},
+		}
+	},
+
+	computed: {
 		label: ({disabled, label, noneText, open, showLabel}) => {
 			const isOpen = open && !disabled;
 			if (showLabel === 'always' || (!isOpen && showLabel !== 'never')) {
@@ -182,7 +196,7 @@ const ExpandableItemBase = kind({
 		titleIcon: ({open}) => (open ? 'arrowlargeup' : 'arrowlargedown')
 	},
 
-	render: ({children, disabled, handleKeyDown, handleOpen, label, open, title, titleIcon, ...rest}) => {
+	render: ({children, disabled, handleKeyDown, handleOpen, label, open, onSpotlightDisappear, title, titleIcon, ...rest}) => {
 		delete rest.autoClose;
 		delete rest.label;
 		delete rest.lockBottom;
@@ -197,13 +211,14 @@ const ExpandableItemBase = kind({
 					disabled={disabled}
 					label={label}
 					onClick={handleOpen}
+					onSpotlightDisappear={onSpotlightDisappear}
 					titleIcon={titleIcon}
 				>{title}</LabeledItem>
 				<ExpandableTransitionContainer
-					data-container-disabled={!open}
 					data-expandable-container
 					duration="short"
 					onKeyDown={handleKeyDown}
+					spotlightDisabled={!open}
 					type="clip"
 					visible={open}
 				>
