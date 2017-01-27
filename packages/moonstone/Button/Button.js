@@ -8,7 +8,6 @@
 import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
 import {Spottable} from '@enact/spotlight';
-import Holdable from '@enact/ui/Holdable';
 import Pressable from '@enact/ui/Pressable';
 import React, {PropTypes} from 'react';
 
@@ -159,9 +158,7 @@ const Button = Uppercase(
 			{className: css.marquee},
 			Pressable(
 				Spottable(
-					Holdable(
-						ButtonBase
-					)
+					ButtonBase
 				)
 			)
 		)

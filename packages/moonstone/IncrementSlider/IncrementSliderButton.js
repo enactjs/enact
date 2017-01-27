@@ -1,4 +1,5 @@
 import kind from '@enact/core/kind';
+import Holdable from '@enact/ui/Holdable';
 import IconButton from '../IconButton';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
@@ -24,13 +25,20 @@ const IncrementSliderButtonBase = kind({
 		onHoldPulse: ({disabled, onHoldPulse}) => disabled ? null : onHoldPulse
 	},
 
-	render: (props) => (
-		<IconButton {...props} backgroundOpacity="transparent" small />
-	)
+	render: ({...rest}) => {
+		delete rest.onHold;
+		delete rest.onHoldPulse;
+
+		return (
+			<IconButton {...rest} backgroundOpacity="transparent" small />
+		);
+	}
 });
 
 const OnlyUpdate = onlyUpdateForKeys(['children', 'disabled']);
-const IncrementSliderButton = OnlyUpdate(IncrementSliderButtonBase);
+const IncrementSliderButton = Holdable(
+	OnlyUpdate(IncrementSliderButtonBase)
+);
 
 export default IncrementSliderButton;
 export {
