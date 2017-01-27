@@ -236,6 +236,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.cancelAnimation();
 			} else if (next.marqueeOn !== marqueeOn || next.marqueeDisabled !== marqueeDisabled || next.marqueeSpeed !== marqueeSpeed) {
 				this.cancelAnimation();
+				if (next.marqueeSpeed !== marqueeSpeed && this.sync) {
+					this.startAnimation(this.props.marqueeDelay);
+				}
 			}
 		}
 
