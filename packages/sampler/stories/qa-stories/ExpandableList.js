@@ -1,9 +1,13 @@
-import ExpandableList from '@enact/moonstone/ExpandableList';
 import Button from '@enact/moonstone/Button';
+import ExpandableList from '@enact/moonstone/ExpandableList';
 import {RadioControllerDecorator} from '@enact/ui/RadioDecorator';
 import React from 'react';
+import Selectable from '@enact/ui/Selectable';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, text, select} from '@kadira/storybook-addon-knobs';
+
+const ExpandableGroup = RadioControllerDecorator('div');
+const SelectableList = Selectable(ExpandableList);
 
 const prop = {
 	listArray: [['a', 'b', 'c'], ['c', 'd', 'e', 'f', 'g']]
@@ -27,17 +31,13 @@ class ExpandableListChildrenLengthUpdate extends React.Component {
 		return (
 			<div>
 				<Button onClick={this.updateValue}>update value</Button>
-				<ExpandableList {...this.props}>
+				<SelectableList {...this.props}>
 					{prop.listArray[this.state.index]}
-				</ExpandableList>
+				</SelectableList>
 			</div>
 		);
 	}
 }
-
-const ExpandableGroup = RadioControllerDecorator('div');
-ExpandableGroup.displayName = 'ExpandableGroup';
-ExpandableList.displayName = 'ExpandableList';
 
 storiesOf('ExpandableList')
 	.addDecorator(withKnobs)
@@ -63,15 +63,15 @@ storiesOf('ExpandableList')
 		'grouped',
 		() => (
 			<ExpandableGroup>
-				<ExpandableList title="First">
+				<SelectableList title="First">
 					{['One', 'Two', 'Three']}
-				</ExpandableList>
-				<ExpandableList title="Second">
+				</SelectableList>
+				<SelectableList title="Second">
 					{['Fourth', 'Fifth', 'Sixth']}
-				</ExpandableList>
-				<ExpandableList title="Third">
+				</SelectableList>
+				<SelectableList title="Third">
 					{['Seventh', 'Eighth', 'Ninth']}
-				</ExpandableList>
+				</SelectableList>
 			</ExpandableGroup>
 		)
 	)
@@ -79,15 +79,15 @@ storiesOf('ExpandableList')
 		'with multiples (to test "lockBottom" prop)',
 		() => (
 			<div>
-				<ExpandableList title="First">
+				<SelectableList title="First">
 					{['One', 'Two', 'Three']}
-				</ExpandableList>
-				<ExpandableList title="Second">
+				</SelectableList>
+				<SelectableList title="Second">
 					{['Fourth', 'Fifth', 'Sixth']}
-				</ExpandableList>
-				<ExpandableList title="Third">
+				</SelectableList>
+				<SelectableList title="Third">
 					{['Seventh', 'Eighth', 'Ninth']}
-				</ExpandableList>
+				</SelectableList>
 			</div>
 		)
 	);

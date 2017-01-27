@@ -128,6 +128,15 @@ const ExpandableListBase = kind({
 		onSelect: PropTypes.func,
 
 		/**
+		 * The handler to run when the component is removed while retaining focus.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightDisappear: PropTypes.func,
+
+		/**
 		 * When `true`, the expandable is open with its contents visible
 		 *
 		 * @type {Boolean}
@@ -163,7 +172,22 @@ const ExpandableListBase = kind({
 		select: 'single'
 	},
 
+	handlers: {
+		onSelect: (ev, {closeOnSelect, onClose, onSelect, select}) => {
+			// Call onClose if closeOnSelect is enabled and not selecting multiple
+			if (closeOnSelect && onClose && select !== 'multiple') {
+				onClose();
+			}
+
+			if (onSelect) {
+				onSelect(ev);
+			}
+		}
+	},
+
 	computed: {
+		itemProps: ({onSpotlightDisappear}) => ({onSpotlightDisappear}),
+
 		// generate a label that concatenates the text of the selected items
 		label: ({children, label, select, selected}) => {
 			if (label) {
@@ -184,23 +208,12 @@ const ExpandableListBase = kind({
 					CheckboxItem; // for single or multiple
 		},
 
-		onSelect: ({closeOnSelect, onClose, onSelect: handler, select}) => (ev) => {
-			// Call onClose if closeOnSelect is enabled and not selecting multiple
-			if (closeOnSelect && onClose && select !== 'multiple') {
-				onClose();
-			}
-
-			if (handler) {
-				handler(ev);
-			}
-		},
-
 		selected: ({select, selected}) => {
 			return (select === 'single' && Array.isArray(selected)) ? selected[0] : selected;
 		}
 	},
 
-	render: ({children, ListItem, noAutoClose, noLockBottom, onSelect, select, selected, ...rest}) => {
+	render: ({children, itemProps, ListItem, noAutoClose, noLockBottom, onSelect, select, selected, ...rest}) => {
 		delete rest.closeOnSelect;
 		delete rest.select;
 
@@ -214,6 +227,7 @@ const ExpandableListBase = kind({
 				<Group
 					childComponent={ListItem}
 					childSelect="onToggle"
+					itemProps={itemProps}
 					onSelect={onSelect}
 					select={select}
 					selected={selected}

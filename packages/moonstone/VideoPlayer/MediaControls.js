@@ -82,14 +82,14 @@ const MediaControls = kind({
 				<div className={css.leftComponents}>{leftComponents}</div>
 				<div className={css.centerComponentsContainer}>
 					<div className={centerClassName}>
-						<Container className={css.mediaControls} data-container-disabled={mediaDisabled}> {/* rtl={false} */}
+						<Container className={css.mediaControls} spotlightDisabled={mediaDisabled}> {/* rtl={false} */}
 							{noJumpButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaDisabled} onClick={onJumpBackwardButtonClick}>skipbackward</MediaButton>}
 							{noRateButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaDisabled} onClick={onBackwardButtonClick}>backward</MediaButton>}
 							<MediaButton backgroundOpacity="translucent" disabled={mediaDisabled} onClick={onPlayButtonClick}>{playPauseIcon}</MediaButton>
 							{noRateButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaDisabled} onClick={onForwardButtonClick}>forward</MediaButton>}
 							{noJumpButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaDisabled} onClick={onJumpForwardButtonClick}>skipforward</MediaButton>}
 						</Container>
-						<Container className={css.moreControls} data-container-disabled={moreDisabled}>
+						<Container className={css.moreControls} spotlightDisabled={moreDisabled}>
 							{children}
 						</Container> {/* rtl={false} */}
 					</div>

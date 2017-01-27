@@ -282,12 +282,10 @@ class Transition extends React.Component {
 
 	measureInner () {
 		if (this.childNode) {
-			this.childNode.style.height = 'auto';
-			const initialHeight = this.childNode.getBoundingClientRect().height;
+			const initialHeight = this.childNode.scrollHeight;
 			if (initialHeight !== this.state.initialHeight) {
 				this.setState({initialHeight});
 			}
-			this.childNode.style.height = null;
 		}
 	}
 

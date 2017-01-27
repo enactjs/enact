@@ -6,7 +6,12 @@ The following is a curated list of changes in the Enact core module, newest chan
 
 ### Added
 
+- Support for a new `handlers` block for components created with `core/kind` to allow cached event handlers
 - `core/keymap` module to abstract keyboard key codes behind common names (e.g. 'up' and 'down')
+
+### Removed
+
+- `core/handle.withArgs` helper function which is no longer needed with the addition of the `handlers` support in `kind()`
 
 ## [1.0.0-beta.1] - 2016-12-30
 
