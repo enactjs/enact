@@ -49,10 +49,10 @@ const BreadcrumbBase = kind({
 		className: 'breadcrumb'
 	},
 
-	computed: {
-		onSelect: ({index, onSelect: handler, onClick}) => (ev) => {
+	handlers: {
+		onSelect: (ev, {index, onSelect, onClick}) => {
 			if (onClick) onClick(ev);
-			if (handler) handler({index});
+			if (onSelect) onSelect({index});
 		}
 	},
 

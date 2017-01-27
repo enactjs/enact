@@ -172,6 +172,19 @@ const ExpandableListBase = kind({
 		select: 'single'
 	},
 
+	handlers: {
+		onSelect: (ev, {closeOnSelect, onClose, onSelect, select}) => {
+			// Call onClose if closeOnSelect is enabled and not selecting multiple
+			if (closeOnSelect && onClose && select !== 'multiple') {
+				onClose();
+			}
+
+			if (onSelect) {
+				onSelect(ev);
+			}
+		}
+	},
+
 	computed: {
 		itemProps: ({onSpotlightDisappear}) => ({onSpotlightDisappear}),
 
@@ -193,17 +206,6 @@ const ExpandableListBase = kind({
 		ListItem: ({select}) => {
 			return	select === 'radio' && RadioItem ||
 					CheckboxItem; // for single or multiple
-		},
-
-		onSelect: ({closeOnSelect, onClose, onSelect: handler, select}) => (ev) => {
-			// Call onClose if closeOnSelect is enabled and not selecting multiple
-			if (closeOnSelect && onClose && select !== 'multiple') {
-				onClose();
-			}
-
-			if (handler) {
-				handler(ev);
-			}
 		},
 
 		selected: ({select, selected}) => {

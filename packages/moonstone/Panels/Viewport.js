@@ -1,4 +1,4 @@
-import {forward, withArgs as handle} from '@enact/core/handle';
+import {forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import ViewManager, {shape} from '@enact/ui/ViewManager';
 import invariant from 'invariant';
@@ -59,16 +59,19 @@ const ViewportBase = kind({
 		className: 'viewport'
 	},
 
+	handlers: {
+		onTransition: handle(forward('onTransition'), Spotlight.resume),
+		onWillTransition: handle(forward('onWillTransition'), Spotlight.pause)
+	},
+
 	computed: {
 		children: ({children}) => React.Children.map(children, (child, index) => {
 			return React.cloneElement(child, {'data-index': index});
 		}),
-		enteringProp: ({noAnimation}) => noAnimation ? null : 'showChildren',
-		handleTransition: handle(forward('onTransition'), Spotlight.resume),
-		handleWillTransition: handle(forward('onWillTransition'), Spotlight.pause)
+		enteringProp: ({noAnimation}) => noAnimation ? null : 'showChildren'
 	},
 
-	render: ({arranger, children, enteringProp, handleTransition, handleWillTransition, index, noAnimation, ...rest}) => {
+	render: ({arranger, children, enteringProp, index, noAnimation, ...rest}) => {
 		const count = React.Children.count(children);
 		invariant(
 			index === 0 && count === 0 || index < count,
@@ -85,8 +88,6 @@ const ViewportBase = kind({
 				enteringProp={enteringProp}
 				index={index}
 				noAnimation={noAnimation}
-				onTransition={handleTransition}
-				onWillTransition={handleWillTransition}
 			>
 				{children}
 			</ViewManager>

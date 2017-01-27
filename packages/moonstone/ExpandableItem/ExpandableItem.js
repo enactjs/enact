@@ -155,30 +155,35 @@ const ExpandableItemBase = kind({
 		showLabel: 'auto'
 	},
 
-	computed: {
-		handleKeyDown: ({autoClose, lockBottom, onClose}) => {
+	handlers: {
+		handleKeyDown: (ev, {autoClose, lockBottom, onClose}) => {
 			if (autoClose || lockBottom) {
-				return (ev) => {
-					const {keyCode, target} = ev;
-					// Basing first/last child on the parent of the target to support both the use
-					// case here in which the children of the container are spottable and the
-					// ExpandableList use case which has an intermediate child (Group) between the
-					// spottable components and the container.
-					if (autoClose && isUp(keyCode) && target.parentNode.firstChild === target && onClose) {
-						onClose();
-						ev.nativeEvent.stopImmediatePropagation();
-					} else if (lockBottom && isDown(keyCode) && target.parentNode.lastChild === target) {
-						ev.nativeEvent.stopImmediatePropagation();
-					}
-				};
+				const {keyCode, target} = ev;
+				// Basing first/last child on the parent of the target to support both the use
+				// case here in which the children of the container are spottable and the
+				// ExpandableList use case which has an intermediate child (Group) between the
+				// spottable components and the container.
+				if (autoClose && isUp(keyCode) && target.parentNode.firstChild === target && onClose) {
+					onClose();
+					ev.nativeEvent.stopImmediatePropagation();
+				} else if (lockBottom && isDown(keyCode) && target.parentNode.lastChild === target) {
+					ev.nativeEvent.stopImmediatePropagation();
+				}
 			}
 		},
-		handleOpen: ({disabled, onClose, onOpen, open}) => {
+		handleOpen: (ev, {disabled, onClose, onOpen, open}) => {
 			// When disabled, don't attach an event
 			if (!disabled) {
-				return open ? onClose : onOpen;
+				if (open) {
+					onClose(ev);
+				} else {
+					onOpen(ev);
+				}
 			}
-		},
+		}
+	},
+
+	computed: {
 		label: ({disabled, label, noneText, open, showLabel}) => {
 			const isOpen = open && !disabled;
 			if (showLabel === 'always' || (!isOpen && showLabel !== 'never')) {
