@@ -25,9 +25,14 @@ const get = (url, callback) => {
 	}
 };
 
-const iLibBase = ILIB_BASE_PATH;
-const iLibResources = ILIB_RESOURCES_PATH;
-const CacheID = ILIB_CACHE_ID;
+const iLibBase = (typeof ILIB_BASE_PATH !== 'undefined') ?
+		ILIB_BASE_PATH : 'node_modules/@enact/i18n/ilib/locale';
+const iLibResources = (typeof ILIB_RESOURCES_PATH !== 'undefined') ?
+		ILIB_RESOURCES_PATH : 'resources';
+const cachePrefix = 'ENACT-ILIB-';
+const cacheKey = cachePrefix + 'CACHE-ID';
+const cacheID = (typeof ILIB_CACHE_ID !== 'undefined') ?
+		ILIB_CACHE_ID : null;
 
 function EnyoLoader () {
 	this.base = iLibBase;
@@ -75,7 +80,6 @@ EnyoLoader.prototype._pathjoin = function (_root, subpath) {
  * zero files to load, so instead it will be the one to call the
  * callback to notify the caller that all the content is loaded.
  *
- * @param {Object} context function to call this method in the context of
  * @param {Array.<string>} paths array of strings containing relative paths for required locale data
  *	files
  * @param {Array} results empty array in which to place the resulting json when it is loaded from a
@@ -87,17 +91,20 @@ EnyoLoader.prototype._pathjoin = function (_root, subpath) {
  *
  * @returns {undefined}
  */
-EnyoLoader.prototype._loadFilesAsync = function (context, paths, results, params, callback) {
+EnyoLoader.prototype._loadFilesAsync = function (paths, results, params, callback) {
 	let _root = iLibResources;
 	if (params && typeof params.root !== 'undefined') {
 		_root = params.root;
 	}
 	if (paths.length > 0) {
 		let path = paths.shift(),
+			cache = params.cache.shift(),
 			url;
 
 		if (this.webos && path.indexOf('zoneinfo') !== -1) {
 			results.push(this._createZoneFile(path));
+		} else if (cache) {
+			results.push(cache);
 		} else {
 			if (this.isAvailable(_root, path)) {
 				url = this._pathjoin(_root, path);
@@ -107,6 +114,7 @@ EnyoLoader.prototype._loadFilesAsync = function (context, paths, results, params
 
 			let resultFunc = (json, err) => {
 				if (!err && (typeof json === 'object')) {
+					params.updateCache = true;
 					results.push(json);
 				} else if (path === 'localeinfo.json') {
 					results.push(LocaleInfo.defaultInfo);
@@ -115,10 +123,10 @@ EnyoLoader.prototype._loadFilesAsync = function (context, paths, results, params
 					results.push(undefined);
 				}
 				if (paths.length > 0) {
-					this._loadFilesAsync(context, paths, results, params, callback);
+					this._loadFilesAsync(paths, results, params, callback);
 				} else {
 					// only the bottom item on the stack will call the callback
-					callback.call(context, results);
+					callback(results);
 				}
 			};
 
@@ -132,7 +140,48 @@ EnyoLoader.prototype._loadFilesAsync = function (context, paths, results, params
 	}
 };
 
+EnyoLoader.prototype._loadFilesCache = function (paths) {
+	if (typeof window !== 'undefined' && window.localStorage && paths.length > 0) {
+		let stored = window.localStorage.getItem(cachePrefix + paths[0]);
+		if (stored) {
+			let target = JSON.stringify(paths);
+			if (stored === target) {
+				return JSON.parse(window.localStorage.getItem(cachePrefix + target));
+			} else {
+				window.localStorage.removeItem(cachePrefix + stored);
+				window.localStorage.removeItem(cachePrefix + paths[0]);
+			}
+		}
+	}
+	return new Array(paths.length);
+};
+
+EnyoLoader.prototype._storeFilesCache = function (paths, data) {
+	if (typeof window !== 'undefined' && window.localStorage && paths.length > 0) {
+		let target = JSON.stringify(paths);
+		window.localStorage.setItem(cachePrefix + paths[0], target);
+		window.localStorage.setItem(cachePrefix + target, JSON.stringify(data));
+	}
+};
+
+EnyoLoader.prototype._validateCache = function () {
+	if (typeof window !== 'undefined' && window.localStorage) {
+		let activeID = window.localStorage.getItem(cacheKey);
+		if (activeID !== cacheID) {
+			for (let i = 0; i < window.localStorage.length; i++) {
+				let key = window.localStorage.key(i);
+				if (key.indexOf(cachePrefix) === 0) {
+					window.localStorage.removeItem(key);
+					i--;
+				}
+			}
+			window.localStorage.setItem(cacheKey, cacheID);
+		}
+	}
+};
+
 EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback) {
+	params.cache = this._loadFilesCache(paths);
 	if (sync) {
 		let ret = [];
 		let _root = iLibResources;
@@ -141,14 +190,17 @@ EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback) {
 			_root = params.root;
 		}
 		// synchronous
-		paths.forEach(function (path) {
+		paths.forEach(function (path, index) {
 			if (this.webos && path.indexOf('zoneinfo') !== -1) {
 				ret.push(this._createZoneFile(path));
+			} else if (params.cache[index]) {
+				ret.push(params.cache[index]);
 			} else {
 				let found = false;
 
 				const handler = (json, err) => {
 					if (!err && typeof json === 'object') {
+						params.updateCache = true;
 						ret.push(json);
 						found = true;
 					}
@@ -175,6 +227,9 @@ EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback) {
 			}
 		}.bind(this));
 
+		if (params.updateCache) {
+			this._storeFilesCache(paths, ret);
+		}
 		if (typeof callback === 'function') {
 			callback.call(this, ret);
 		}
@@ -183,7 +238,14 @@ EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback) {
 
 	// asynchronous
 	const results = [];
-	this._loadFilesAsync(this, paths, results, params, callback);
+	this._loadFilesAsync(paths.slice(0), results, params, function (res) {
+		if (params.updateCache) {
+			this._storeFilesCache(paths, res);
+		}
+		if (typeof callback === 'function') {
+			callback.call(this, res);
+		}
+	}.bind(this));
 };
 
 EnyoLoader.prototype._loadManifest = function (_root, subpath) {
@@ -199,15 +261,31 @@ EnyoLoader.prototype._loadManifest = function (_root, subpath) {
 	const handler = (json, err) => {
 		// console.log((!inSender.failed && json ? 'success' : 'failed'));
 		// star indicates there was no ilibmanifest.json, so always try to load files from that dir
-		this.manifest[dirpath] = (!err && typeof json === 'object') ? json.files : '*';
+		if (!err && typeof json === 'object') {
+			if (typeof window !== 'undefined' && window.localStorage) {
+				window.localStorage.setItem(cachePrefix + filepath, JSON.stringify(json));
+			}
+			this.manifest[dirpath] = json.files;
+		} else {
+			this.manifest[dirpath] = '*';
+		}
 	};
 
-	get(filepath, handler);
+	let cachedManifest;
+	if (typeof window !== 'undefined' && window.localStorage) {
+		cachedManifest = window.localStorage.getItem(cachePrefix + filepath);
+	}
+	if (cachedManifest) {
+		this.manifest[dirpath] = JSON.parse(cachedManifest).files;
+	} else {
+		get(filepath, handler);
+	}
 };
 
 EnyoLoader.prototype._loadStandardManifests = function () {
 	// util.print('enyo loader: load manifests\n');
 	if (!this.manifest) {
+		this._validateCache();
 		this._loadManifest(this.base, 'locale'); // standard ilib locale data
 		this._loadManifest('', iLibResources);     // the app's resources dir
 	}
