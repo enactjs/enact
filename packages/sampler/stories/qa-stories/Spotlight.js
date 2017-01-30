@@ -59,6 +59,7 @@ const StatefulRadioItem = Toggleable({prop: 'selected'}, RadioItem);
 const StatefulSelectableItem = Toggleable({prop: 'selected'}, SelectableItem);
 const StatefulSlider = Changeable(Slider);
 const StatefulSwitchItem = Toggleable({prop: 'selected'}, SwitchItem);
+const StatefulToggleButton = Toggleable({toggle: 'onClick', prop: 'selected'}, ToggleButton);
 const StatefulToggleItem = Toggleable({prop: 'selected'}, ToggleItem);
 
 class DisappearTest extends React.Component {
@@ -237,11 +238,11 @@ storiesOf('Spotlight')
 							>
 								Button
 							</Button>
-							<ToggleButton
+							<StatefulToggleButton
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 							>
 								ToggleButton
-							</ToggleButton>
+							</StatefulToggleButton>
 							<IconButton
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 							>
