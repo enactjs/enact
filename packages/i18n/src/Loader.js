@@ -91,20 +91,20 @@ EnyoLoader.prototype._pathjoin = function (_root, subpath) {
  *
  * @returns {undefined}
  */
-EnyoLoader.prototype._loadFilesAsync = function (paths, results, params, callback) {
+EnyoLoader.prototype._loadFilesAsync = function (paths, results, params, cache, callback) {
 	let _root = iLibResources;
 	if (params && typeof params.root !== 'undefined') {
 		_root = params.root;
 	}
 	if (paths.length > 0) {
 		let path = paths.shift(),
-			cache = params.cache.shift(),
+			cacheItem = cache.data.shift(),
 			url;
 
 		if (this.webos && path.indexOf('zoneinfo') !== -1) {
 			results.push(this._createZoneFile(path));
-		} else if (cache) {
-			results.push(cache);
+		} else if (cacheItem) {
+			results.push(cacheItem);
 		} else {
 			if (this.isAvailable(_root, path)) {
 				url = this._pathjoin(_root, path);
@@ -114,7 +114,7 @@ EnyoLoader.prototype._loadFilesAsync = function (paths, results, params, callbac
 
 			let resultFunc = (json, err) => {
 				if (!err && (typeof json === 'object')) {
-					params.updateCache = true;
+					cache.update = true;
 					results.push(json);
 				} else if (path === 'localeinfo.json') {
 					results.push(LocaleInfo.defaultInfo);
@@ -123,7 +123,7 @@ EnyoLoader.prototype._loadFilesAsync = function (paths, results, params, callbac
 					results.push(undefined);
 				}
 				if (paths.length > 0) {
-					this._loadFilesAsync(paths, results, params, callback);
+					this._loadFilesAsync(paths, results, params, cache, callback);
 				} else {
 					// only the bottom item on the stack will call the callback
 					callback(results);
@@ -181,7 +181,7 @@ EnyoLoader.prototype._validateCache = function () {
 };
 
 EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback) {
-	params.cache = this._loadFilesCache(paths);
+	let cache = {data: this._loadFilesCache(paths)};
 	if (sync) {
 		let ret = [];
 		let _root = iLibResources;
@@ -193,14 +193,14 @@ EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback) {
 		paths.forEach(function (path, index) {
 			if (this.webos && path.indexOf('zoneinfo') !== -1) {
 				ret.push(this._createZoneFile(path));
-			} else if (params.cache[index]) {
-				ret.push(params.cache[index]);
+			} else if (cache.data[index]) {
+				ret.push(cache.data[index]);
 			} else {
 				let found = false;
 
 				const handler = (json, err) => {
 					if (!err && typeof json === 'object') {
-						params.updateCache = true;
+						cache.update = true;
 						ret.push(json);
 						found = true;
 					}
@@ -227,7 +227,7 @@ EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback) {
 			}
 		}.bind(this));
 
-		if (params.updateCache) {
+		if (cache.update) {
 			this._storeFilesCache(paths, ret);
 		}
 		if (typeof callback === 'function') {
@@ -238,8 +238,8 @@ EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback) {
 
 	// asynchronous
 	const results = [];
-	this._loadFilesAsync(paths.slice(0), results, params, function (res) {
-		if (params.updateCache) {
+	this._loadFilesAsync(paths.slice(0), results, params, cache, function (res) {
+		if (cache.update) {
 			this._storeFilesCache(paths, res);
 		}
 		if (typeof callback === 'function') {
