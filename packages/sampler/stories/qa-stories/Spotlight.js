@@ -4,7 +4,7 @@ import Popup from '@enact/moonstone/Popup';
 import Spotlight, {SpotlightContainerDecorator} from '@enact/spotlight';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs} from '@kadira/storybook-addon-knobs';
+import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
 
 Button.propTypes = Object.assign({}, ButtonBase.propTypes, Button.propTypes);
 Button.defaultProps = Object.assign({}, ButtonBase.defaultProps, Button.defaultProps);
@@ -81,6 +81,20 @@ class DisappearTest extends React.Component {
 }
 
 class PopupFocusTest extends React.Component {
+	static propTypes = {
+		noAnimation: React.PropTypes.bool,
+		noAutoDismiss: React.PropTypes.bool,
+		scrimType: React.PropTypes.oneOf(['transparent', 'translucent', 'none']),
+		spotlightRestrict: React.PropTypes.oneOf(['none', 'self-first', 'self-only'])
+	}
+
+	static defaultProps = {
+		noAnimation: false,
+		noAutoDismiss: false,
+		scrimType: 'translucent',
+		spotlightRestrict: 'self-only'
+	}
+
 	constructor (props) {
 		super(props);
 		this.state = {
@@ -88,11 +102,17 @@ class PopupFocusTest extends React.Component {
 		};
 	}
 
-	handleTogglePopup = () => {
-		this.setState({popupOpen: !this.state.popupOpen});
+	handleClosePopup = () => {
+		this.setState({popupOpen: false});
+	}
+
+	handleOpenPopup = () => {
+		this.setState({popupOpen: true});
 	}
 
 	render () {
+		const {noAnimation, noAutoDismiss, scrimType, spotlightRestrict} = this.props;
+
 		return (
 			<div>
 				<p>
@@ -101,9 +121,17 @@ class PopupFocusTest extends React.Component {
 					Focus should return to the button used to originally open the popup. Verify this
 					behavior for each of the buttons.
 				</p>
-				<Button onClick={this.handleTogglePopup}>Open Popup</Button>
-				<Button onClick={this.handleTogglePopup}>Open Popup</Button>
-				<Popup onClose={this.handleTogglePopup} open={this.state.popupOpen} showCloseButton>
+				<Button onClick={this.handleOpenPopup}>Open Popup</Button>
+				<Button onClick={this.handleOpenPopup}>Open Popup</Button>
+				<Popup
+					noAnimation={noAnimation}
+					noAutoDismiss={noAutoDismiss}
+					onClose={this.handleClosePopup}
+					open={this.state.popupOpen}
+					scrimType={scrimType}
+					showCloseButton
+					spotlightRestrict={spotlightRestrict}
+				>
 					<div>This is a Popup</div>
 				</Popup>
 			</div>
@@ -190,6 +218,11 @@ storiesOf('Spotlight')
 	.addWithInfo(
 		'Popup Focus Targets',
 		() => (
-			<PopupFocusTest />
+			<PopupFocusTest
+				noAnimation={boolean('noAnimation', false)}
+				noAutoDismiss={boolean('noAutoDismiss', false)}
+				scrimType={select('scrimType', ['none', 'transparent', 'translucent'], 'translucent')}
+				spotlightRestrict={select('spotlightRestrict', ['none', 'self-first', 'self-only'], 'self-only')}
+			/>
 		)
 	);

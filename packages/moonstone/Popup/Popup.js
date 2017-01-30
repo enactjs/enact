@@ -355,7 +355,10 @@ class Popup extends React.Component {
 	}
 
 	spotActivator = (activator) => {
-		if (!Spotlight.focus(activator)) {
+		const activeElement = document.activeElement;
+		const containerNode = document.querySelector('[data-container-id="' + this.state.containerId + '"]');
+
+		if ((activeElement === document.body || (containerNode && containerNode.contains(activeElement))) && !Spotlight.focus(activator)) {
 			Spotlight.focus();
 		}
 	}
