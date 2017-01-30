@@ -16,6 +16,8 @@ import {startJob, stopJob} from '@enact/core/jobs';
 
 import {Tooltip, TooltipBase} from './Tooltip';
 
+let currentTooltip; // needed to know whether or not we should stop a showing job when unmounting
+
 /**
  * {@link moonstone/TooltipDecorator.TooltipDecorator} is a Higher-order Component which
  * positions {@link moonstone/TooltipDecorator.Tooltip} in relation to the
@@ -132,6 +134,13 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 			};
 		}
 
+		componentWillUnmount () {
+			if (currentTooltip === this) {
+				currentTooltip = null;
+				stopJob('showTooltip');
+			}
+		}
+
 		setTooltipLayout () {
 			const position = this.props.tooltipPosition;
 			const arr = position.split(' ');
@@ -200,12 +209,12 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 		}
 
 		adjustAnchor (arrowAnchor, tooltipDirection, overflow) {
-			if (this.context.rtl && (tooltipDirection === 'above' || tooltipDirection === 'below')) {
-				arrowAnchor = arrowAnchor === 'left' ? 'right' : 'left';
-			}
-
-			// Flip sideways for 'above' and 'below' if it overflows to the sides
 			if (tooltipDirection === 'above' || tooltipDirection === 'below') {
+				if (this.context.rtl && arrowAnchor !== 'center') {
+					arrowAnchor = arrowAnchor === 'left' ? 'right' : 'left';
+				}
+
+				// Flip sideways if it overflows to the sides
 				if (overflow.isOverRight) {
 					arrowAnchor = 'left';
 				} else if (overflow.isOverLeft) {
@@ -261,6 +270,7 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 
 			if (tooltipText) {
 				this.clientRef = client;
+				currentTooltip = this;
 				startJob('showTooltip', () => {
 					this.setState({showing: true});
 				}, tooltipDelay);
@@ -270,6 +280,7 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 		hideTooltip () {
 			if (this.props.tooltipText) {
 				this.clientRef = null;
+				currentTooltip = null;
 				stopJob('showTooltip');
 				this.setState({showing: false});
 			}

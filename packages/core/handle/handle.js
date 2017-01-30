@@ -1,6 +1,8 @@
 import curry from 'ramda/src/curry';
 import reduce from 'ramda/src/reduce';
 
+import {is} from '../keymap';
+
 /**
  * Allows generating event handlers by chaining functions to filter or short-circuit the handling
  * flow. Any handler that returns true will stop the chain.
@@ -9,7 +11,7 @@ import reduce from 'ramda/src/reduce';
  *  const submit = (e) => {
  *		console.log('Submitting the data!');
  *  };
- *	const submitOnEnter = handle(handle.forKeyCode(13), handle.stop, submit);
+ *	const submitOnEnter = handle(handle.forKey('enter'), handle.stop, submit);
  *	return (<input onKeyPress={submitOnEnter}>);
  *
  * @method	handle
@@ -30,37 +32,6 @@ const handle = (...handlers) => (...args) => reduce((acc, handler) => {
 	// from props without adding boilerplate checks everywhere.
 	return false;
 }, false, handlers);
-
-/**
- * Like `handle()`, accepts a list of handlers to process the event but returns a function that
- * accepts an additional list of args that will be included as additional arguments to the handlers.
- * That function returns the event handler that accepts the event and passes it, along with the
- * extra args, to the handlers.
- *
- * @example
- *	import {withArgs, forKeyCode, stop} from '@enact/core/handle';
- *	kind({
- *		computed: {
- *			onSubmit: withArgs(forKeyCode(13), stop, (e, props) => {
- *				// block submission for blank data unless the prop allows it
- *				if (e.target.value === '' && !props.allowBlank) return true;
- *				console.log('Submitting the data!');
- *			})
- *		},
- *		render: ({onSubmit}) => (
- *			<input onKeyPress={submitOnEnter} />
- *		)
- *	});
- *
- * @method	withArgs
- * @param	{...Function}	handlers List of handlers to process the event
- * @returns	{Function}		A function that accepts a list of args which returns a function that
- *							accepts an event which is dispatched to each of the provided handlers.
- */
-const withArgs = handle.withArgs = (...handlers) => {
-	const handler = handle(...handlers);
-	return (...args) => (e) => handler(e, ...args);
-};
 
 /**
  * Calls a named function on the event and returns false
@@ -104,13 +75,9 @@ const forProp = handle.forProp = curry((prop, value) => {
  * Forwards the event to a function at `name` on `props`. The return value of the forwarded function
  * is ignored.
  *
- * **Note:** Can only be used with `withArgs` which allows extra args to be passed to the handlers.
- * If you have a reference to the function instead of the name, it can be passed directly to
- * `handle()` as a handler.
- *
  * @example
  *	const props = {onSubmit: (e) => doSomething()};
- *	const handleClick = withArgs(forward('onSubmit'))(props);
+ *	const handleClick = handle(forward('onSubmit'))(ev, props);
  *
  * @method	forward
  * @param	{String}	name	Name of method on the `props`
@@ -158,15 +125,25 @@ const stopImmediate = handle.stopImmediate = callOnEvent('stopImmediatePropagati
  */
 const forKeyCode = handle.forKeyCode = forProp('keyCode');
 
+/**
+ * Only allows event handling to continue if the event's keyCode is mapped to `name` within
+ * {@link core/keymap}.
+ *
+ * @method	forKey
+ * @param	{String}	name	Name from {@link core/keymap}
+ * @returns	{Function}			Event handler
+ */
+const forKey = handle.forKey = (name) => (ev) => !is(name, ev.keyCode);
+
 export default handle;
 export {
 	callOnEvent,
 	forward,
 	forProp,
+	forKey,
 	forKeyCode,
 	handle,
 	preventDefault,
 	stop,
-	stopImmediate,
-	withArgs
+	stopImmediate
 };

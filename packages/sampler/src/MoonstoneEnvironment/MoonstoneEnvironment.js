@@ -3,14 +3,14 @@
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 import MoonstoneDecorator from '@enact/moonstone/MoonstoneDecorator';
-import {ActivityPanels as Panels, Panel, Header} from '@enact/moonstone/Panels';
+import {Panels, Panel, Header} from '@enact/moonstone/Panels';
 import {select} from '@kadira/storybook-addon-knobs';
 
 import css from './MoonstoneEnvironment.less';
 
 const reloadPage = () => {
-	const {protocol, host} = window.location;
-	window.parent.location.href = protocol + '//' + host;
+	const {protocol, host, pathname} = window.location;
+	window.parent.location.href = protocol + '//' + host + pathname;
 };
 
 const PanelsBase = kind({

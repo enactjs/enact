@@ -123,6 +123,7 @@ const HeaderBase = kind({
 
 	render: ({children, direction, preserveCase, subTitleBelowComponent, title, /* titleAbove, */titleBelowComponent, type, ...rest}) => {
 		delete rest.fullBleed;
+		delete rest.subTitleBelow;
 		delete rest.titleBelow;
 
 		switch (type) {

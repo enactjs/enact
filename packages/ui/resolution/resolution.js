@@ -31,7 +31,8 @@ const unitToPixelFactors = {
  * Fetch the screenType object
  *
  * @memberof ui/resolution
- * @param  {String} type The key string for the screen type object.
+ * @param  {String} type The key string for the screen type object. If falsy, the current
+ *	screenType is used
  *
  * @returns {Object}     screenTypeObject
  * @private
@@ -296,7 +297,7 @@ function scale (px) {
  * @param {(String|Number)} pixels - The the pixels or math to convert to the unit.
  *	("px" suffix in String format is permitted. ex: `'20px'`)
  * @param {(String)} toUnit - The name of the unit to convert to.
- * @returns {(Number|undefined)} Resulting conversion, in case of malformed input, `undefined`
+ * @returns {(String|undefined)} Resulting conversion in CSS safe format, in case of malformed input, `undefined`
  * @public
  */
 function unit (pixels, toUnit) {
@@ -306,6 +307,18 @@ function unit (pixels, toUnit) {
 
 	return (pixels / unitToPixelFactors[toUnit]) + '' + toUnit;
 }
+
+/**
+ * Shorthand for when you know you need to scale some pixel value and have it converted to "rem" for
+ * proper scaling. This runs {@link ui/resolution.scale} and {@link ui/resolution.unit} together.
+ *
+ * @memberof ui/resolution
+ * @param {(String|Number)} pixels - The the pixels or math to convert to the unit.
+ *	("px" suffix in String format is permitted. ex: `'20px'`)
+ * @returns {(Number|undefined)} Resulting conversion, in case of malformed input, `undefined`
+ * @public
+ */
+const scaleToRem = (pixels) => unit(scale(pixels), 'rem');
 
 /**
  * The default configurable options for {@link ui/resolution.selectSrc}.
@@ -399,6 +412,7 @@ export {
 	getScreenType,
 	init,
 	scale,
+	scaleToRem,
 	selectSrc,
 	unit,
 	unitToPixelFactors
