@@ -1,6 +1,29 @@
 import Button, {ButtonBase} from '@enact/moonstone/Button';
+import CheckboxItem from '@enact/moonstone/CheckboxItem';
+import DatePicker from '@enact/moonstone/DatePicker';
+import DayPicker from '@enact/moonstone/DayPicker';
+import Divider from '@enact/moonstone/Divider';
+import ExpandableInput from '@enact/moonstone/ExpandableInput';
+import ExpandableItem from '@enact/moonstone/ExpandableItem';
+import ExpandableList from '@enact/moonstone/ExpandableList';
+import ExpandablePicker from '@enact/moonstone/ExpandablePicker';
+import IconButton from '@enact/moonstone/IconButton';
+import IncrementSlider from '@enact/moonstone/IncrementSlider';
+import Input from '@enact/moonstone/Input';
 import Item from '@enact/moonstone/Item';
+import LabeledItem from '@enact/moonstone/LabeledItem';
+import Picker from '@enact/moonstone/Picker';
 import Popup from '@enact/moonstone/Popup';
+import RadioItem from '@enact/moonstone/RadioItem';
+import SelectableItem from '@enact/moonstone/SelectableItem';
+import SwitchItem from '@enact/moonstone/SwitchItem';
+import TimePicker from '@enact/moonstone/TimePicker';
+import ToggleButton from '@enact/moonstone/ToggleButton';
+import ToggleItem from '@enact/moonstone/ToggleItem';
+import Slider from '@enact/moonstone/Slider';
+import Changeable from '@enact/ui/Changeable';
+import Selectable from '@enact/ui/Selectable';
+import Toggleable from '@enact/ui/Toggleable';
 import Spotlight, {SpotlightContainerDecorator} from '@enact/spotlight';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
@@ -17,8 +40,28 @@ const style = {
 		border: '1px dashed red',
 		margin: '0 12px',
 		padding: '12px'
+	},
+	flexBox: {
+		display: 'flex'
+	},
+	flexItem: {
+		flex: '1'
 	}
 };
+
+const Items = ['First', 'Second', 'Third'];
+const StatefulCheckboxItem = Toggleable({prop: 'selected'}, CheckboxItem);
+const StatefulDayPicker = Selectable(DayPicker);
+const StatefulExpandableList = Selectable(ExpandableList);
+const StatefulIncrementSlider = Changeable(IncrementSlider);
+const StatefulInput = Changeable(Input);
+const StatefulPicker = Changeable(Picker);
+const StatefulRadioItem = Toggleable({prop: 'selected'}, RadioItem);
+const StatefulSelectableItem = Toggleable({prop: 'selected'}, SelectableItem);
+const StatefulSlider = Changeable(Slider);
+const StatefulSwitchItem = Toggleable({prop: 'selected'}, SwitchItem);
+const StatefulToggleButton = Toggleable({toggle: 'onClick', prop: 'selected'}, ToggleButton);
+const StatefulToggleItem = Toggleable({prop: 'selected'}, ToggleItem);
 
 class DisappearTest extends React.Component {
 	constructor (props) {
@@ -168,7 +211,7 @@ storiesOf('Spotlight')
 					inside a container and a 5-way directional key is pressed, the nearest element
 					to the pointer (in the direction specified by the key) will be spotted.
 				</p>
-				<div style={{display: 'flex'}}>
+				<div style={style.flexBox}>
 					<Container style={style.container}>
 						<Item>1</Item>
 						<Item>2</Item>
@@ -199,13 +242,34 @@ storiesOf('Spotlight')
 					should appear as though they do not have focus and they should not generate
 					onFocus or onBlur events in the action logger.
 				</p>
-				<div style={{display: 'flex'}}>
+				<div style={style.flexBox}>
 					<Container style={style.container} spotlightMuted>
 						<Item onFocus={action('onFocus')} onBlur={action('onBlur')}>1</Item>
 						<Item onFocus={action('onFocus')} onBlur={action('onBlur')}>2</Item>
 						<Item onFocus={action('onFocus')} onBlur={action('onBlur')}>3</Item>
 					</Container>
 				</div>
+			</div>
+		)
+	)
+	.addWithInfo(
+		'Directional Events',
+		() => (
+			<div>
+				<p>
+					The item below will emit onSpotlight[Direction] events when attempting
+					to 5-way navigate from the item. Highlight the item below and press any of
+					the 5-way directional keys to verify a matching directional event in the
+					action logger.
+				</p>
+				<Item
+					onSpotlightDown={action('onSpotlightDown')}
+					onSpotlightLeft={action('onSpotlightLeft')}
+					onSpotlightRight={action('onSpotlightRight')}
+					onSpotlightUp={action('onSpotlightUp')}
+				>
+					Item
+				</Item>
 			</div>
 		)
 	)
@@ -224,5 +288,139 @@ storiesOf('Spotlight')
 				scrimType={select('scrimType', ['none', 'transparent', 'translucent'], 'translucent')}
 				spotlightRestrict={select('spotlightRestrict', ['none', 'self-first', 'self-only'], 'self-only')}
 			/>
+	)
+	.addWithInfo(
+		'Kitchen Sink',
+		() => (
+			<div>
+				<p>
+					Use the knobs to test the available behaviors for the spottable components
+					below.
+				</p>
+				<div style={style.flexBox}>
+					<div style={style.flexItem}>
+						<Divider>
+							Misc Components
+						</Divider>
+						<div style={style.flexBox}>
+							<Button
+								spotlightDisabled={boolean('spotlightDisabled', false)}
+							>
+								Button
+							</Button>
+							<StatefulToggleButton
+								spotlightDisabled={boolean('spotlightDisabled', false)}
+							>
+								ToggleButton
+							</StatefulToggleButton>
+							<IconButton
+								spotlightDisabled={boolean('spotlightDisabled', false)}
+							>
+								plus
+							</IconButton>
+						</div>
+						<div style={style.flexBox}>
+							<StatefulInput
+								spotlightDisabled={boolean('spotlightDisabled', false)}
+							/>
+						</div>
+						<div style={style.flexBox}>
+							<StatefulPicker
+								spotlightDisabled={boolean('spotlightDisabled', false)}
+							>
+								{Items}
+							</StatefulPicker>
+							<StatefulPicker
+								joined
+								spotlightDisabled={boolean('spotlightDisabled', false)}
+							>
+								{Items}
+							</StatefulPicker>
+						</div>
+						<StatefulIncrementSlider
+							spotlightDisabled={boolean('spotlightDisabled', false)}
+						/>
+						<StatefulSlider
+							spotlightDisabled={boolean('spotlightDisabled', false)}
+						/>
+						<Item
+							spotlightDisabled={boolean('spotlightDisabled', false)}
+						>
+							Item
+						</Item>
+						<LabeledItem
+							label={'Label'}
+							spotlightDisabled={boolean('spotlightDisabled', false)}
+						>
+							LabeledItem
+						</LabeledItem>
+					</div>
+					<div style={style.flexItem}>
+						<Divider>
+							Expandables
+						</Divider>
+						<ExpandableItem
+							spotlightDisabled={boolean('spotlightDisabled', false)}
+							title={'Various Items in an ExpandableItem'}
+						>
+							<StatefulCheckboxItem
+								spotlightDisabled={boolean('spotlightDisabled', false)}
+							>
+								CheckboxItem
+							</StatefulCheckboxItem>
+							<StatefulRadioItem
+								spotlightDisabled={boolean('spotlightDisabled', false)}
+							>
+								RadioItem
+							</StatefulRadioItem>
+							<StatefulSelectableItem
+								spotlightDisabled={boolean('spotlightDisabled', false)}
+							>
+								SelectableItem
+							</StatefulSelectableItem>
+							<StatefulSwitchItem
+								spotlightDisabled={boolean('spotlightDisabled', false)}
+							>
+								SwitchItem
+							</StatefulSwitchItem>
+							<StatefulToggleItem
+								icon={'plus'}
+								spotlightDisabled={boolean('spotlightDisabled', false)}
+							>
+								ToggleItem
+							</StatefulToggleItem>
+						</ExpandableItem>
+						<StatefulExpandableList
+							noLockBottom
+							spotlightDisabled={boolean('spotlightDisabled', false)}
+							title={'ExpandableList'}
+						>
+							{Items}
+						</StatefulExpandableList>
+						<ExpandableInput
+							spotlightDisabled={boolean('spotlightDisabled', false)}
+							title={'ExpandableInput'}
+						/>
+						<ExpandablePicker
+							spotlightDisabled={boolean('spotlightDisabled', false)}
+							title={'ExpandablePicker'}
+						>
+							{Items}
+						</ExpandablePicker>
+						<DatePicker
+							spotlightDisabled={boolean('spotlightDisabled', false)}
+							title={'DatePicker'}
+						/>
+						<StatefulDayPicker
+							spotlightDisabled={boolean('spotlightDisabled', false)}
+							title={'DayPicker'}
+						/>
+						<TimePicker
+							spotlightDisabled={boolean('spotlightDisabled', false)}
+							title={'TimePicker'}
+						/>
+					</div>
+				</div>
+			</div>
 		)
 	);

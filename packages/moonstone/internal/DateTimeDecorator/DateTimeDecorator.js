@@ -207,13 +207,22 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 
 		render () {
 			const value = this.toIDate(this.state.value);
-			const label = value && this.i18nContext ? this.i18nContext.formatter.format(value) : null;
-
 			// pickerValue is only set when cancelling to prevent the unexpected changing of the
 			// picker values before closing.
 			const pickerValue = this.state.pickerValue ? this.toIDate(this.state.pickerValue) : value;
-			const props = customProps(this.i18nContext, pickerValue);
-			const order = this.i18nContext ? this.i18nContext.order : defaultOrder;
+
+			let label = null;
+			let props = null;
+			let order = defaultOrder;
+
+			// Guard for isomorphic builds
+			if (this.i18nContext) {
+				if (value) {
+					label = this.i18nContext.formatter.format(value);
+				}
+				props = customProps(this.i18nContext, pickerValue);
+				order = this.i18nContext.order;
+			}
 
 			return (
 				<Component
