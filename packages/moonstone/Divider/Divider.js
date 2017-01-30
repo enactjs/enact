@@ -36,13 +36,13 @@ const DividerBase = kind({
 		children: PropTypes.string,
 
 		/**
-		 * Add a standard sized margin around your divider.
+		 * The size of the spacing around the divider.
 		 *
-		 * * "normal" (default) spacing is slightly larger than the standard spotlight spacing.
-		 * * "small" is the same size as spotlight spacing.
-		 * * "medium" is 2x spotlight.
-		 * * "large" is 3x spotlight.
-		 * * "none" has no spacing at all. Neighboring elements will directly touch the divider.
+		 * * `'normal'` (default) spacing is slightly larger than the standard spotlight spacing.
+		 * * `'small'` is the same size as spotlight spacing.
+		 * * `'medium'` is 2x spotlight.
+		 * * `'large'` is 3x spotlight.
+		 * * `'none'` has no spacing at all. Neighboring elements will directly touch the divider.
 		 *
 		 * _Note:_ Spacing is separate from margin with regard to `margin-top`. It ensures a
 		 * consistent distance from the bottom horizontal line. It's safe to use `margin-top` to add

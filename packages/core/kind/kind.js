@@ -1,5 +1,6 @@
 import computed from './computed';
 import defaultProps from './defaultProps';
+import handlers from './handlers';
 import name from './name';
 import propTypes from './propTypes';
 import styles from './styles';
@@ -46,7 +47,7 @@ import styles from './styles';
  */
 const kind = (config) => {
 	// addition prop decorations would be chained here (after config.render)
-	const render = (props, context, updater) => {
+	let render = (props, context, updater) => {
 		let p = Object.assign({}, props);
 		if (config.styles) p = styles(config.styles, p, context, updater);
 		if (config.computed) p = computed(config.computed, p, context, updater);
@@ -55,6 +56,9 @@ const kind = (config) => {
 
 	// render() decorations
 	if (config.name) name(config.name, render);
+	if (config.handlers) {
+		render = handlers(config.handlers, render);
+	}
 	if (config.propTypes) propTypes(config.propTypes, render);
 	if (config.defaultProps) defaultProps(config.defaultProps, render);
 

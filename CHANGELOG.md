@@ -2,6 +2,47 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [1.0.0-beta.2] - 2017-01-30
+
+### Added
+
+- Support for a new `handlers` block for components created with `core/kind` to allow cached event handlers
+- `core/handle` handler `forKey`
+- `core/keymap` module to abstract keyboard key codes behind common names (e.g. 'up' and 'down')
+- `moonstone/Panels.Panel` property `showChildren` to support deferring rendering the panel body until animation completes
+- `moonstone/MarqueeDecorator` property `invalidateProps` that specifies which props cause the marquee distance to be invalidated
+- developer-mode warnings to several components to warn when values are out-of-range
+- `moonstone/Divider` property `spacing` which adjusts the amount of empty space above and below the `Divider`. `'normal'`, `'small'`, `'medium'`, `'large'`, and `'none'` are available.
+- `moonstone/Picker` when `joined` the ability to be incremented and decremented by arrow keys
+- `onSpotlightDisappear` event property support for spottable moonstone components
+- `spotlight.SpotlightContainerDecorator` support for `spotlightDisabled` prop
+- `spotlight.Spottable` support for `onSpotlightDown`, `onSpotlightLeft`, `onSpotlightRight`, and `onSpotlightUp` properties
+- `spotlight.Spotlight` method `getDirection` to replace `spotlightDirections`
+- `ui/ViewManager` properties `enteringDelay` and `enteringProp` to aid deferred rendering of views
+- `ui/resolution` function `scaleToRem` for those times when you have a size in pixels that you want to convert directly to `rem` to support automatic dynamic resizing
+
+### Changed
+
+- `moonstone/Panels.Panels` and variations to defer rendering the children of contained `Panel` instances until animation completes
+- `moonstone/ProgressBar` properties `progress` and `backgroundProgress` to accept a number between 0 and 1
+- `moonstone/Slider` and `moonstone/IncrementSlider` property `backgroundPercent` to `backgroundProgress` which now accepts a number between 0 and 1
+- `moonstone/Slider` to not ignore `value` prop when it is the same as the previous value
+- `moonstone/Picker` component's buttons to reverse their operation such that 'up' selects the previous item and 'down' the next
+- `moonstone/Picker` and derivatives may now use numeric width, which represents the amount of characters to use for sizing. `width={4}` represents four characters, `2` for two characters, etc. `width` still accepts the size-name strings.
+- `moonstone/Divider` to now behave as a simple horizontal line when no text content is provided
+- `moonstone/Scrollable` to not display scrollbar controls by default
+- `moonstone/DatePicker` and `moonstone/TimePicker` to emit `onChange` event whenever the value is changed, not just when the component is closed
+
+### Removed
+
+- `core/handle.withArgs` helper function which is no longer needed with the addition of the `handlers` support in `kind()`
+- `moonstone/ProgressBar` properties `min` and `max`
+- `spotlight` `spotlightDirections`
+
+### Fixed
+
+- `moonstone/IncrementSlider` so that the knob is spottable via pointer, and 5-way navigation between the knob and the increment/decrement buttons is functional
+- `moonstone/Slider` and `moonstone/IncrementSlider` to not fire `onChange` for value changes from props
 ## [1.0.0-beta.1] - 2016-12-30
 
 ### Added
@@ -15,9 +56,9 @@ The following is a curated list of changes in the Enact project, newest changes 
 - `moonstone/ContextualPopup` property `noAutoDismiss`
 - `moonstone/Dialog` property `scrimType`
 - `moonstone/Popup` property `spotlightRestrict`
-- `@enact/spotlight.Spotlight` methods `isPaused()`, `isSpottable()`, `getCurrent()`, and `isMuted()`
-- `@enact/spotlight.SpotlightContainerDecorator` property `spotlightMuted`
-- `@enact/spotlight.spotlightDirections` export
+- `spotlight.Spotlight` methods `isPaused()`, `isSpottable()`, `getCurrent()`, and `isMuted()`
+- `spotlight.SpotlightContainerDecorator` property `spotlightMuted`
+- `spotlight.spotlightDirections` export
 - `ui/RadioDecorator` and `ui/RadioControllerDecorator` to support radio group-style management of components
 - `ui/Holdable` Higher-order Component
 - `ui/ViewManager` events `onAppear`, `onEnter`, `onLeave`, `onStay`, `onTransition`, and `onWillTransition`

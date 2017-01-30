@@ -39,13 +39,13 @@ const defaultConfig = {
 	max: 0,
 
 	/**
-	 * Static props to apply to the wrapped component which supercede any waterfalled props
+	 * Arranger for Panels
 	 *
 	 * @type {object}
 	 * @default null
 	 * @memberof moonstone/Panels.BreadcrumbDecorator.defaultConfig
 	 */
-	props: null
+	panelArranger: null
 };
 
 
@@ -59,7 +59,8 @@ const defaultConfig = {
  * @memberof moonstone/Panels
  */
 const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const max = coerceFunction(config.max);
+	const {max, panelArranger, className: cfgClassName} = config;
+	const calcMax = coerceFunction(max);
 
 	const Decorator = kind({
 		name: 'BreadcrumbDecorator',
@@ -116,13 +117,13 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		styles: {
 			css,
-			className: config.className
+			className: cfgClassName
 		},
 
 		computed: {
 			// Invokes the breadcrumb generator, if provided
 			breadcrumbs: ({breadcrumbs, index, onSelectBreadcrumb}) => {
-				const x = max();
+				const x = calcMax(index);
 				if (Array.isArray(breadcrumbs)) {
 					// limit the number of breadcrumbs based on the index and config.max
 					const start = Math.max(index - x, 0);
@@ -158,19 +159,24 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			);
 
 			return (
-				<div className={className}>
+				<div className={className} data-index={index}>
 					<ViewManager
-						noAnimation={noAnimation}
 						arranger={BreadcrumbArranger}
 						className={css.breadcrumbs}
-						index={index - 1}
 						duration={300}
+						end={calcMax()}
+						index={index - 1}
+						noAnimation={noAnimation}
 						start={0}
-						end={max()}
 					>
 						{breadcrumbs}
 					</ViewManager>
-					<Wrapped {...rest} noAnimation={noAnimation} index={index} {...config.props}>
+					<Wrapped
+						{...rest}
+						arranger={panelArranger}
+						index={index}
+						noAnimation={noAnimation}
+					>
 						{children}
 					</Wrapped>
 				</div>
