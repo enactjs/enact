@@ -288,6 +288,7 @@ storiesOf('Spotlight')
 				scrimType={select('scrimType', ['none', 'transparent', 'translucent'], 'translucent')}
 				spotlightRestrict={select('spotlightRestrict', ['none', 'self-first', 'self-only'], 'self-only')}
 			/>
+		)
 	)
 	.addWithInfo(
 		'Kitchen Sink',
