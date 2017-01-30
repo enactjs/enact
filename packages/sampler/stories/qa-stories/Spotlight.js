@@ -20,6 +20,9 @@ import TimePicker from '@enact/moonstone/TimePicker';
 import ToggleButton from '@enact/moonstone/ToggleButton';
 import ToggleItem from '@enact/moonstone/ToggleItem';
 import Slider from '@enact/moonstone/Slider';
+import Changeable from '@enact/ui/Changeable';
+import Selectable from '@enact/ui/Selectable';
+import Toggleable from '@enact/ui/Toggleable';
 import Spotlight, {SpotlightContainerDecorator} from '@enact/spotlight';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
@@ -44,6 +47,17 @@ const style = {
 		flex: '1'
 	}
 };
+
+const Items = ['First', 'Second', 'Third'];
+const StatefulCheckboxItem = Toggleable({prop: 'selected'}, CheckboxItem);
+const StatefulDayPicker = Selectable(DayPicker);
+const StatefulExpandableList = Selectable(ExpandableList);
+const StatefulInput = Changeable(Input);
+const StatefulPicker = Changeable(Picker);
+const StatefulRadioItem = Toggleable({prop: 'selected'}, RadioItem);
+const StatefulSelectableItem = Toggleable({prop: 'selected'}, SelectableItem);
+const StatefulSwitchItem = Toggleable({prop: 'selected'}, SwitchItem);
+const StatefulToggleItem = Toggleable({prop: 'selected'}, ToggleItem);
 
 class DisappearTest extends React.Component {
 	constructor (props) {
@@ -100,6 +114,155 @@ class DisappearTest extends React.Component {
 				>
 					Restore Button
 				</Button>
+			</div>
+		);
+	}
+}
+
+class KitchenSinkTest extends React.Component {
+	static propTypes = {
+		spotlightDisabled: React.PropTypes.bool
+	}
+
+	static defaultProps = {
+		spotlightDisabled: false
+	}
+
+	render () {
+		const {spotlightDisabled} = this.props;
+
+		return (
+			<div>
+				<p>
+					Use the knobs to test the available behaviors for the spottable components
+					below.
+				</p>
+				<div style={style.flexBox}>
+					<div style={style.flexItem}>
+						<Divider>
+							Misc Components
+						</Divider>
+						<div style={style.flexBox}>
+							<Button
+								spotlightDisabled={spotlightDisabled}
+							>
+								Button
+							</Button>
+							<ToggleButton
+								spotlightDisabled={spotlightDisabled}
+							>
+								ToggleButton
+							</ToggleButton>
+							<IconButton
+								spotlightDisabled={spotlightDisabled}
+							>
+								plus
+							</IconButton>
+						</div>
+						<div style={style.flexBox}>
+							<StatefulInput
+								spotlightDisabled={spotlightDisabled}
+							/>
+						</div>
+						<div style={style.flexBox}>
+							<StatefulPicker
+								spotlightDisabled={spotlightDisabled}
+							>
+								{Items}
+							</StatefulPicker>
+							<StatefulPicker
+								joined
+								spotlightDisabled={spotlightDisabled}
+							>
+								{Items}
+							</StatefulPicker>
+						</div>
+						<IncrementSlider
+							spotlightDisabled={spotlightDisabled}
+							value={50}
+						/>
+						<Slider
+							spotlightDisabled={spotlightDisabled}
+							value={50}
+						/>
+						<Item
+							spotlightDisabled={spotlightDisabled}
+						>
+							Item
+						</Item>
+						<LabeledItem
+							label={'Label'}
+							spotlightDisabled={spotlightDisabled}
+						>
+							LabeledItem
+						</LabeledItem>
+					</div>
+					<div style={style.flexItem}>
+						<Divider>
+							Expandables
+						</Divider>
+						<ExpandableItem
+							spotlightDisabled={spotlightDisabled}
+							title={'Various Items in an ExpandableItem'}
+						>
+							<StatefulCheckboxItem
+								spotlightDisabled={spotlightDisabled}
+							>
+								CheckboxItem
+							</StatefulCheckboxItem>
+							<StatefulRadioItem
+								spotlightDisabled={spotlightDisabled}
+							>
+								RadioItem
+							</StatefulRadioItem>
+							<StatefulSelectableItem
+								spotlightDisabled={spotlightDisabled}
+							>
+								SelectableItem
+							</StatefulSelectableItem>
+							<StatefulSwitchItem
+								spotlightDisabled={spotlightDisabled}
+							>
+								SwitchItem
+							</StatefulSwitchItem>
+							<StatefulToggleItem
+								icon={'plus'}
+								spotlightDisabled={spotlightDisabled}
+							>
+								ToggleItem
+							</StatefulToggleItem>
+						</ExpandableItem>
+						<StatefulExpandableList
+							noLockBottom
+							spotlightDisabled={spotlightDisabled}
+							title={'ExpandableList'}
+						>
+							{Items}
+						</StatefulExpandableList>
+						<ExpandableInput
+							spotlightDisabled={spotlightDisabled}
+							title={'ExpandableInput'}
+						/>
+						<ExpandablePicker
+							spotlightDisabled={spotlightDisabled}
+							title={'ExpandablePicker'}
+						>
+							{Items}
+						</ExpandablePicker>
+						<DatePicker
+							spotlightDisabled={spotlightDisabled}
+							title={'DatePicker'}
+						/>
+						<StatefulDayPicker
+							spotlightDisabled={spotlightDisabled}
+							title={'DayPicker'}
+						/>
+						<TimePicker
+							spotlightDisabled={spotlightDisabled}
+							title={'TimePicker'}
+						/>
+					</div>
+				</div>
 			</div>
 		);
 	}
@@ -205,140 +368,6 @@ storiesOf('Spotlight')
 	.addWithInfo(
 		'Kitchen Sink',
 		() => (
-			<div>
-				<p>
-					Use the knobs to test the available behaviors for the spottable components
-					below. Note that changes for certain components won&apos;t take effect
-					until the sample has been reloaded.
-				</p>
-				<div style={style.flexBox}>
-					<div style={style.flexItem}>
-						<Divider>
-							Misc Components
-						</Divider>
-						<div style={style.flexBox}>
-							<Button
-								spotlightDisabled={boolean('spotlightDisabled', false)}
-							>
-								Button
-							</Button>
-							<ToggleButton
-								spotlightDisabled={boolean('spotlightDisabled', false)}
-							>
-								ToggleButton
-							</ToggleButton>
-							<IconButton
-								spotlightDisabled={boolean('spotlightDisabled', false)}
-							>
-								plus
-							</IconButton>
-						</div>
-						<div style={style.flexBox}>
-							<Input
-								spotlightDisabled={boolean('spotlightDisabled', false)}
-							/>
-						</div>
-						<div style={style.flexBox}>
-							<Picker
-								spotlightDisabled={boolean('spotlightDisabled', false)}
-								value={1}
-							>
-								{['First', 'Second', 'Third']}
-							</Picker>
-							<Picker
-								joined
-								spotlightDisabled={boolean('spotlightDisabled', false)}
-								value={1}
-							>
-								{['First', 'Second', 'Third']}
-							</Picker>
-						</div>
-						<IncrementSlider
-							spotlightDisabled={boolean('spotlightDisabled', false)}
-							value={50}
-						/>
-						<Slider
-							spotlightDisabled={boolean('spotlightDisabled', false)}
-							value={50}
-						/>
-						<LabeledItem
-							label={'Label'}
-							spotlightDisabled={boolean('spotlightDisabled', false)}
-						>
-							LabeledItem
-						</LabeledItem>
-					</div>
-					<div style={style.flexItem}>
-						<Divider>
-							Expandables
-						</Divider>
-						<ExpandableItem
-							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title={'Various Items in an ExpandableItem'}
-						>
-							<Item
-								spotlightDisabled={boolean('spotlightDisabled', false)}
-							>
-								Item
-							</Item>
-							<CheckboxItem
-								spotlightDisabled={boolean('spotlightDisabled', false)}
-							>
-								CheckboxItem
-							</CheckboxItem>
-							<RadioItem
-								spotlightDisabled={boolean('spotlightDisabled', false)}
-							>
-								RadioItem
-							</RadioItem>
-							<SelectableItem
-								spotlightDisabled={boolean('spotlightDisabled', false)}
-							>
-								SelectableItem
-							</SelectableItem>
-							<SwitchItem
-								spotlightDisabled={boolean('spotlightDisabled', false)}
-							>
-								SwitchItem
-							</SwitchItem>
-							<ToggleItem
-								spotlightDisabled={boolean('spotlightDisabled', false)}
-							>
-								ToggleItem
-							</ToggleItem>
-						</ExpandableItem>
-						<ExpandableList
-							noLockBottom
-							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title={'ExpandableList'}
-						>
-							{['First', 'Second', 'Third']}
-						</ExpandableList>
-						<ExpandableInput
-							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title={'ExpandableInput'}
-						/>
-						<ExpandablePicker
-							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title={'ExpandablePicker'}
-							value={1}
-						>
-							{['💥 boom', '😩🖐 facepalm', '🍩 doughnut']}
-						</ExpandablePicker>
-						<DatePicker
-							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title={'DatePicker'}
-						/>
-						<DayPicker
-							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title={'DayPicker'}
-						/>
-						<TimePicker
-							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title={'TimePicker'}
-						/>
-					</div>
-				</div>
-			</div>
+			<KitchenSinkTest spotlightDisabled={boolean('spotlightDisabled', false)} />
 		)
 	);
