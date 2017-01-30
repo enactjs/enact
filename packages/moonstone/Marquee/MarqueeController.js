@@ -238,7 +238,9 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		dispatch (action, component) {
 			this.controlled.forEach((controlled) => {
 				const {component: controlledComponent, [action]: handler} = controlled;
+
 				if (component !== controlledComponent && typeof handler === 'function') {
+					controlledComponent.isControlled = true;
 					const complete = handler.call(controlledComponent);
 
 					// Returning `true` from a start request means that the marqueeing is
@@ -277,7 +279,6 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 
 				complete = complete && c.complete;
 			});
-
 			return complete;
 		}
 
