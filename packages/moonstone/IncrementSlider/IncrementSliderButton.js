@@ -4,6 +4,8 @@ import IconButton from '../IconButton';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
 
+const HoldableIconButton = Holdable(IconButton);
+
 /**
  * {@link moonstone/IncrementSlider.IncrementSliderButton} is an
  * {@link moonstone/IconButton.IconButton} customized for
@@ -20,25 +22,25 @@ const IncrementSliderButtonBase = kind({
 	name: 'IncrementSliderButton',
 
 	computed: {
-		onClick: ({disabled, onClick}) => disabled ? null : onClick,
-		onHold: ({disabled, onHold}) => disabled ? null : onHold,
-		onHoldPulse: ({disabled, onHoldPulse}) => disabled ? null : onHoldPulse
+		onClick: ({disabled, onClick}) => disabled ? null : onClick
 	},
 
-	render: ({...rest}) => {
-		delete rest.onHold;
-		delete rest.onHoldPulse;
-
+	render: ({onClick, ...rest}) => {
 		return (
-			<IconButton {...rest} backgroundOpacity="transparent" small />
+			<HoldableIconButton
+				{...rest}
+				backgroundOpacity="transparent"
+				onClick={onClick}
+				onHold={onClick}
+				onHoldPulse={onClick}
+				small
+			/>
 		);
 	}
 });
 
 const OnlyUpdate = onlyUpdateForKeys(['children', 'disabled']);
-const IncrementSliderButton = Holdable(
-	OnlyUpdate(IncrementSliderButtonBase)
-);
+const IncrementSliderButton = OnlyUpdate(IncrementSliderButtonBase);
 
 export default IncrementSliderButton;
 export {
