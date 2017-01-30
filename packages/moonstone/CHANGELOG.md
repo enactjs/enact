@@ -34,6 +34,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/IncrementSlider` so that the knob is spottable via pointer, and 5-way navigation between the knob and the increment/decrement buttons is functional
 - `moonstone/Slider` and `moonstone/IncrementSlider` to not fire `onChange` for value changes from props
+- `spotlightDisabled` property support for spottable moonstone components
 
 ### Changed
 

@@ -144,7 +144,16 @@ const ExpandableItemBase = kind({
 		 * @default 'auto'
 		 * @public
 		 */
-		showLabel: PropTypes.oneOf(['always', 'never', 'auto'])
+		showLabel: PropTypes.oneOf(['always', 'never', 'auto']),
+
+		/**
+		 * When `true`, the component cannot be navigated using spotlight.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		spotlightDisabled: PropTypes.bool
 	},
 
 	defaultProps: {
@@ -152,7 +161,8 @@ const ExpandableItemBase = kind({
 		disabled: false,
 		lockBottom: false,
 		open: false,
-		showLabel: 'auto'
+		showLabel: 'auto',
+		spotlightDisabled: false
 	},
 
 	handlers: {
@@ -193,10 +203,11 @@ const ExpandableItemBase = kind({
 			}
 		},
 		open: ({disabled, open}) => (open && !disabled),
-		titleIcon: ({open}) => (open ? 'arrowlargeup' : 'arrowlargedown')
+		titleIcon: ({open}) => (open ? 'arrowlargeup' : 'arrowlargedown'),
+		transitionSpotlightDisabled: ({open, spotlightDisabled}) => (spotlightDisabled || !open)
 	},
 
-	render: ({children, disabled, handleKeyDown, handleOpen, label, open, onSpotlightDisappear, title, titleIcon, ...rest}) => {
+	render: ({children, disabled, handleKeyDown, handleOpen, label, open, onSpotlightDisappear, spotlightDisabled, title, titleIcon, transitionSpotlightDisabled, ...rest}) => {
 		delete rest.autoClose;
 		delete rest.label;
 		delete rest.lockBottom;
@@ -206,19 +217,20 @@ const ExpandableItemBase = kind({
 		delete rest.showLabel;
 
 		return (
-			<ExpandableContainer {...rest} disabled={disabled} open={open}>
+			<ExpandableContainer {...rest} disabled={disabled} open={open} spotlightDisabled={spotlightDisabled}>
 				<LabeledItem
 					disabled={disabled}
 					label={label}
 					onClick={handleOpen}
 					onSpotlightDisappear={onSpotlightDisappear}
+					spotlightDisabled={spotlightDisabled}
 					titleIcon={titleIcon}
 				>{title}</LabeledItem>
 				<ExpandableTransitionContainer
 					data-expandable-container
 					duration="short"
 					onKeyDown={handleKeyDown}
-					spotlightDisabled={!open}
+					spotlightDisabled={transitionSpotlightDisabled}
 					type="clip"
 					visible={open}
 				>

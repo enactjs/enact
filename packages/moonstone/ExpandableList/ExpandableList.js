@@ -165,11 +165,21 @@ const ExpandableListBase = kind({
 		 * @type {Number|Number[]}
 		 * @public
 		 */
-		selected: PropTypes.oneOfType([PropTypes.number, PropTypes.arrayOf(PropTypes.number)])
+		selected: PropTypes.oneOfType([PropTypes.number, PropTypes.arrayOf(PropTypes.number)]),
+
+		/**
+		 * When `true`, the component cannot be navigated using spotlight.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		spotlightDisabled: PropTypes.bool
 	},
 
 	defaultProps: {
-		select: 'single'
+		select: 'single',
+		spotlightDisabled: false
 	},
 
 	handlers: {
@@ -186,7 +196,7 @@ const ExpandableListBase = kind({
 	},
 
 	computed: {
-		itemProps: ({onSpotlightDisappear}) => ({onSpotlightDisappear}),
+		itemProps: ({onSpotlightDisappear, spotlightDisabled}) => ({onSpotlightDisappear, spotlightDisabled}),
 
 		// generate a label that concatenates the text of the selected items
 		label: ({children, label, select, selected}) => {
