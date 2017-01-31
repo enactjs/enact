@@ -139,7 +139,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			onSpotlightUp: React.PropTypes.func,
 
 			/**
-			 * Whether or not the component can be navigated using spotlight.
+			 * When `true`, the component cannot be navigated using spotlight.
 			 *
 			 * @type {Boolean}
 			 * @default false

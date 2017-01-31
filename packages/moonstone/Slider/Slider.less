@@ -141,6 +141,18 @@
 		}
 	}
 
+	&:global(.spottable) {
+		&.pressed {
+			.fill {
+				background-color: @moon-slider-spotlight-bar-color;
+			}
+			.knob::before {
+				background-color: @moon-slider-spotlight-knob-color;
+			}
+		}
+
+	}
+
 	&:global(.spottable):focus {
 		background-color: transparent;
 

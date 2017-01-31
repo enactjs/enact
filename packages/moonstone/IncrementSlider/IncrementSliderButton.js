@@ -18,8 +18,12 @@ import React from 'react';
 const IncrementSliderButtonBase = kind({
 	name: 'IncrementSliderButton',
 
-	computed: {
-		onClick: ({disabled, onClick}) => disabled ? null : onClick
+	handlers: {
+		onClick: (ev, {disabled, onClick}) => {
+			if (!disabled) {
+				onClick(ev);
+			}
+		}
 	},
 
 	render: (props) => (
@@ -27,7 +31,7 @@ const IncrementSliderButtonBase = kind({
 	)
 });
 
-const OnlyUpdate = onlyUpdateForKeys(['children', 'disabled']);
+const OnlyUpdate = onlyUpdateForKeys(['children', 'disabled', 'spotlightDisabled']);
 const IncrementSliderButton = OnlyUpdate(IncrementSliderButtonBase);
 
 export default IncrementSliderButton;

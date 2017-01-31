@@ -6,8 +6,7 @@ import {
 	forKeyCode,
 	forward,
 	preventDefault,
-	stop,
-	withArgs
+	stop
 } from '../handle';
 
 describe('handle', () => {
@@ -138,33 +137,6 @@ describe('handle', () => {
 			[prop]: value
 		}));
 		expect(handler.calledOnce).to.equal(true);
-	});
-
-	it('should append args when using withArgs', function () {
-		const handler = sinon.spy();
-		const props = {
-			index: 0
-		};
-		const callback = withArgs(handler)(props);
-		callback(makeEvent());
-
-		const expected = props.index;
-		const actual = handler.firstCall.args[1].index;
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('should forward to named function on first additional arg', function () {
-		const props = {
-			onClick: sinon.spy()
-		};
-		const callback = withArgs(forward('onClick'))(props);
-		callback(makeEvent());
-
-		const expected = true;
-		const actual = props.onClick.calledOnce;
-
-		expect(actual).to.equal(expected);
 	});
 
 });

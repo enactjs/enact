@@ -165,7 +165,20 @@ const TimePickerBase = kind({
 		 * @param {Object} event
 		 * @public
 		 */
-		onSpotlightDisappear: React.PropTypes.func
+		onSpotlightDisappear: React.PropTypes.func,
+
+		/**
+		 * When `true`, the component cannot be navigated using spotlight.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		spotlightDisabled: React.PropTypes.bool
+	},
+
+	defaultProps: {
+		spotlightDisabled: false
 	},
 
 	styles: {
@@ -177,9 +190,9 @@ const TimePickerBase = kind({
 		hasMeridiem: ({order}) => order.indexOf('a') >= 0
 	},
 
-	render: ({hasMeridiem, hour, meridiem, meridiems, minute, noLabels, onChangeHour, onChangeMeridiem, onChangeMinute, onSpotlightDisappear, order, ...rest}) => {
+	render: ({hasMeridiem, hour, meridiem, meridiems, minute, noLabels, onChangeHour, onChangeMeridiem, onChangeMinute, onSpotlightDisappear, order, spotlightDisabled, ...rest}) => {
 		return (
-			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false} onSpotlightDisappear={onSpotlightDisappear}>
+			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled}>
 				<div className={dateComponentPickers}>
 					<div className={css.timeComponents}>
 						{order.map(picker => {
@@ -192,6 +205,7 @@ const TimePickerBase = kind({
 											label={noLabels ? null : $L('hour')}
 											onChange={onChangeHour}
 											onSpotlightDisappear={onSpotlightDisappear}
+											spotlightDisabled={spotlightDisabled}
 											value={hour}
 											width={2}
 											wrap
@@ -208,6 +222,7 @@ const TimePickerBase = kind({
 											min={0}
 											onChange={onChangeMinute}
 											onSpotlightDisappear={onSpotlightDisappear}
+											spotlightDisabled={spotlightDisabled}
 											padded
 											value={minute}
 											width={2}
@@ -226,6 +241,7 @@ const TimePickerBase = kind({
 							label={noLabels ? null : $L('meridiem')}
 							onChange={onChangeMeridiem}
 							onSpotlightDisappear={onSpotlightDisappear}
+							spotlightDisabled={spotlightDisabled}
 							value={meridiem}
 							width="small"
 							wrap
