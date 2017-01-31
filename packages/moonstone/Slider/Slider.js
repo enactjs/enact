@@ -5,7 +5,7 @@
  */
 
 import factory from '@enact/core/factory';
-import {forKey, forward, withArgs as handle, stopImmediate} from '@enact/core/handle';
+import {forKey, forward, handle, stopImmediate} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import Pressable from '@enact/ui/Pressable';
 import React, {PropTypes} from 'react';
@@ -236,6 +236,23 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			className: 'slider'
 		},
 
+		handlers: {
+			onBlur: handle(
+				forward('onBlur'),
+				isActive,
+				forward('onActivate')
+			),
+			onKeyDown: handle(
+				forward('onKeyDown'),
+				(ev, props) => {
+					// console.log(ev, props);
+					return	handleDecrement(ev, props) &&
+							handleIncrement(ev, props) &&
+							handleActivate(ev, props);
+				}
+			)
+		},
+
 		computed: {
 			className: ({active, pressed, vertical, styler}) => styler.append({
 				active,
@@ -243,24 +260,10 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 				vertical,
 				horizontal: !vertical
 			}),
-			handleKeyDown: handle(
-				forward('onKeyDown'),
-				(ev, props) => {
-					// console.log(ev, props);
-					return	handleDecrement(props)(ev) &&
-							handleIncrement(props)(ev) &&
-							handleActivate(props)(ev);
-				}
-			),
-			handleBlur: handle(
-				forward('onBlur'),
-				isActive,
-				forward('onActivate')
-			),
 			proportionProgress: computeProportionProgress
 		},
 
-		render: ({backgroundProgress, disabled, handleKeyDown, handleBlur, inputRef, max, min, onChange, onMouseMove, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, value, vertical, ...rest}) => {
+		render: ({backgroundProgress, disabled, onKeyDown, onBlur, inputRef, max, min, onChange, onMouseMove, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, value, vertical, ...rest}) => {
 			delete rest.active;
 			delete rest.detachedKnob;
 			delete rest.onActivate;
@@ -269,7 +272,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			delete rest.pressed;
 
 			return (
-				<div {...rest} disabled={disabled} onKeyDown={handleKeyDown} onBlur={handleBlur} ref={sliderRef}>
+				<div {...rest} disabled={disabled} onKeyDown={onKeyDown} onBlur={onBlur} ref={sliderRef}>
 					<SliderBar
 						proportionBackgroundProgress={backgroundProgress}
 						proportionProgress={proportionProgress}
