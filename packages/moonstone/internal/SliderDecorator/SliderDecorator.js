@@ -54,8 +54,9 @@ const defaultConfig = {
 };
 
 // Set-up event forwarding
-const forwardMouseMove = forward('onMouseMove'),
-	forwardMouseLeave  = forward('onMouseLeave');
+const forwardChange = forward('onChange');
+const forwardMouseMove = forward('onMouseMove');
+const forwardMouseLeave  = forward('onMouseLeave');
 
 /**
  * {@link moonstone/internal/SliderDecorator.SliderDecorator} is a Higher-order Component that
@@ -92,6 +93,19 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @private
 			 */
 			detachedKnob: PropTypes.bool,
+
+			/**
+			 * The amount to increment or decrement the position of the knob via 5-way controls.
+			 * When `detachedKnob` is false, the knob must first be activated by selecting it. When
+			 * `detachedKnob` is true, the knob will respond to direction key presses without
+			 * activation.
+			 *
+			 * If not specified, `step` is used for the default value.
+			 *
+			 * @type {Number}
+			 * @public
+			 */
+			knobStep: PropTypes.number,
 
 			/**
 			 * The maximum value of the slider.
@@ -169,6 +183,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 
+			this.current5WayValue = null;
 			this.jobName = `sliderChange${now()}`;
 			this.knobPosition = null;
 			this.normalizedMax = props.max != null ? props.max : Wrapped.defaultProps.max;
@@ -185,7 +200,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidMount () {
-			this.updateUI(this.state.value);
+			this.updateUI();
 		}
 
 		componentWillReceiveProps ({backgroundProgress, min, max, value: _value}) {
@@ -204,20 +219,67 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidUpdate () {
-			this.updateUI(this.state.value);
+			this.updateUI();
 		}
 
-		onChange = (value) => {
-			if (this.props.onChange) {
-				this.props.onChange({value});
-			}
+		throttleUpdateValue = (value) => {
+			throttleJob(this.jobName, () => {
+				this.inputNode.value = value;
+				this.setState({value});
+				forwardChange({value}, this.props);
+			}, config.changeDelay);
+		}
+
+		throttleUpdateValueByAmount = (amount) => {
+			const {min, max} = this.props;
+			let value = this.state.value + amount;
+
+			value = clamp(min, max, value);
+			this.throttleUpdateValue(value);
+		}
+
+		moveKnobByAmount (amount) {
+			const value = this.current5WayValue === null ? this.state.value : this.current5WayValue;
+			this.current5WayValue = value + amount;
+			this.knobPosition = computeProportionProgress({
+				max: this.normalizedMax,
+				min: this.normalizedMin,
+				value: this.current5WayValue
+			});
+			this.updateUI();
+		}
+
+		updateUI = () => {
+			// intentionally breaking encapsulation to avoid having to specify multiple refs
+			const {barNode, knobNode, loaderNode, node} = this.sliderBarNode;
+			const {backgroundProgress, vertical} = this.props;
+			const {value} = this.state;
+			const proportionProgress = computeProportionProgress({value, max: this.normalizedMax, min: this.normalizedMin});
+			const knobProgress = this.knobPosition != null ? this.knobPosition : proportionProgress;
+
+			loaderNode.style.transform = computeBarTransform(backgroundProgress, vertical);
+			barNode.style.transform = computeBarTransform(proportionProgress, vertical);
+			// If we know the knob should be in a custom place, use that place; otherwise, sync it with the progress.
+			knobNode.style.transform = computeKnobTransform(knobProgress, vertical, node);
+		}
+
+		getInputNode = (node) => {
+			this.inputNode = node;
+		}
+
+		getSliderNode = (node) => {
+			this.sliderNode = node;
+		}
+
+		getSliderBarNode = (node) => {
+			this.sliderBarNode = node;
 		}
 
 		handleChange = (ev) => {
 			ev.preventDefault();
 			const parseFn = (ev.target.value % 1 !== 0) ? parseFloat : parseInt,
 				value = parseFn(ev.target.value);
-			this.submitValue(value);
+			this.throttleUpdateValue(value);
 		}
 
 		handleMouseMove = (ev) => {
@@ -234,54 +296,19 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const pointer = ev.clientX - this.inputNode.getBoundingClientRect().left;
 			const knob = (clamp(min, min + node.offsetWidth, pointer) - min) / node.offsetWidth;
 
-			this.current5WayStep = (this.normalizedMax - this.normalizedMin) * knob - this.state.value;
+			this.current5WayValue = (this.normalizedMax - this.normalizedMin) * knob;
 
 			// Update our instance's knowledge of where the knob should be
 			this.knobPosition = knob;
 
-			this.updateUI(this.state.value);
+			this.updateUI();
 			forwardMouseMove(ev, this.props);
 		}
 
 		handleMouseLeave = (ev) => {
 			this.knobPosition = null;
-			this.updateUI(this.state.value);
+			this.updateUI();
 			forwardMouseLeave(ev, this.props);
-		}
-
-		submitValue = (value) => {
-			throttleJob(this.jobName, () => this.updateValue(value), config.changeDelay);
-		}
-
-		updateUI = (value) => {
-			// intentionally breaking encapsulation to avoid having to specify multiple refs
-			const {barNode, knobNode, loaderNode, node} = this.sliderBarNode;
-			const {backgroundProgress, vertical} = this.props;
-			const proportionProgress = computeProportionProgress({value, max: this.normalizedMax, min: this.normalizedMin});
-			const knobProgress = this.knobPosition != null ? this.knobPosition : proportionProgress;
-
-			loaderNode.style.transform = computeBarTransform(backgroundProgress, vertical);
-			barNode.style.transform = computeBarTransform(proportionProgress, vertical);
-			// If we know the knob should be in a custom place, use that place; otherwise, sync it with the progress.
-			knobNode.style.transform = computeKnobTransform(knobProgress, vertical, node);
-		}
-
-		updateValue = (value) => {
-			this.inputNode.value = value;
-			this.setState({value});
-			this.onChange(value);
-		}
-
-		getInputNode = (node) => {
-			this.inputNode = node;
-		}
-
-		getSliderNode = (node) => {
-			this.sliderNode = node;
-		}
-
-		getSliderBarNode = (node) => {
-			this.sliderBarNode = node;
 		}
 
 		handleClick = () => {
@@ -292,10 +319,10 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleActivate = () => {
 			if (this.props.detachedKnob) {
-				if (this.current5WayStep) {
-					const value = clamp(this.props.min, this.props.max, this.state.value + this.current5WayStep);
-					this.current5WayStep = 0;
-					this.submitValue(value);
+				if (this.current5WayValue !== null) {
+					const value = clamp(this.props.min, this.props.max, this.current5WayValue);
+					this.current5WayValue = null;
+					this.throttleUpdateValue(value);
 				}
 			} else {
 				this.setState({
@@ -305,51 +332,48 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleBlur = () => {
-			if (this.current5WayStep) {
-				this.current5WayStep = 0;
+			if (this.current5WayValue !== null) {
+				this.current5WayValue = null;
 				this.knobPosition = null;
-				this.updateUI(this.state.value);
+				this.updateUI();
 			}
 		}
 
-		current5WayStep = 0
-		moveKnob (direction) {
-			this.current5WayStep += direction * this.props.step;
-			const value = this.state.value + this.current5WayStep;
-			this.knobPosition = computeProportionProgress({value, max: this.normalizedMax, min: this.normalizedMin});
-			this.updateUI(this.state.value);
+		handleIncrement = () => {
+			const {detachedKnob, knobStep, step} = this.props;
+			const amount = typeof knobStep === 'number' ? knobStep : step;
+			if (detachedKnob) {
+				this.moveKnobByAmount(amount);
+			} else {
+				this.throttleUpdateValueByAmount(amount);
+			}
 		}
 
-		incrementHandler = () => {
-			const fn = this.props.detachedKnob ? 'moveKnob' : 'changeValue';
-			this[fn](1);
-		}
-
-		decrementHandler = () => {
-			const fn = this.props.detachedKnob ? 'moveKnob' : 'changeValue';
-			this[fn](-1);
-		}
-
-		changeValue = (direction) => {
-			const {min, max, step} = this.props;
-			let value = this.state.value + (step * direction);
-
-			value = clamp(min, max, value);
-			this.submitValue(value);
+		handleDecrement = () => {
+			const {detachedKnob, knobStep, step} = this.props;
+			const amount = typeof knobStep === 'number' ? knobStep : step;
+			if (detachedKnob) {
+				this.moveKnobByAmount(-amount);
+			} else {
+				this.throttleUpdateValueByAmount(-amount);
+			}
 		}
 
 		render () {
+			const props = Object.assign({}, this.props);
+			delete props.knobStep;
+
 			return (
 				<Wrapped
-					{...this.props}
+					{...props}
 					active={this.state.active}
 					inputRef={this.getInputNode}
 					onActivate={this.handleActivate}
 					onBlur={this.handleBlur}
 					onChange={this.handleChange}
 					onClick={this.handleClick}
-					onDecrement={this.decrementHandler}
-					onIncrement={this.incrementHandler}
+					onDecrement={this.handleDecrement}
+					onIncrement={this.handleIncrement}
 					onMouseLeave={this.props.detachedKnob ? this.handleMouseLeave : null}
 					onMouseMove={this.props.detachedKnob ? this.handleMouseMove : null}
 					scrubbing={(this.knobPosition != null)}
