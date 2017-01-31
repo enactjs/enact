@@ -50,8 +50,6 @@ const DialogBase = kind({
 			PropTypes.element
 		]),
 
-		handleMarquee: PropTypes.func,
-
 		/**
 		 * When `true`, the dialog will not animate on/off screen.
 		 *
@@ -160,9 +158,9 @@ const DialogBase = kind({
 		delete rest.showDivider;
 
 		return (
-			<Popup {...rest} >
+			<Popup {...rest}>
 				<div className={css.titleWrapper}>
-					<MarqueeH1 preserveCase={preserveCase} marqueeOn={'render'} marqueeOnRenderDelay={5000} className={css.title}>
+					<MarqueeH1 preserveCase={preserveCase} marqueeOn="render" marqueeOnRenderDelay={5000} className={css.title}>
 						{title}
 					</MarqueeH1>
 					<h2 className={css.titleBelow}>
@@ -191,7 +189,7 @@ const DialogBase = kind({
  * @ui
  * @public
  */
-const Dialog = Slottable({slots: ['title', 'titleBelow', 'buttons']}, MarqueeController({startOnMouseEnter: true}, DialogBase));
+const Dialog = Slottable({slots: ['title', 'titleBelow', 'buttons']}, MarqueeController({startOnMouseEnter:true}, DialogBase));
 
 export default Dialog;
 export {Dialog, DialogBase};
