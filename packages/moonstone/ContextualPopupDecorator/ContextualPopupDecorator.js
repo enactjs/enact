@@ -260,13 +260,13 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		adjustDirection () {
-			if (this.overflow.isOverTop && this.adjustedDirection === 'up') {
+			if (this.overflow.isOverTop && !this.overflow.isOverBottom && this.adjustedDirection === 'up') {
 				this.adjustedDirection = 'down';
-			} else if (this.overflow.isOverBottom && this.adjustedDirection === 'down') {
+			} else if (this.overflow.isOverBottom && !this.overflow.isOverTop && this.adjustedDirection === 'down') {
 				this.adjustedDirection = 'up';
-			} else if (this.overflow.isOverLeft && this.adjustedDirection === 'left') {
+			} else if (this.overflow.isOverLeft && !this.overflow.isOverRight && this.adjustedDirection === 'left') {
 				this.adjustedDirection = 'right';
-			} else if (this.overflow.isOverRight && this.adjustedDirection === 'right') {
+			} else if (this.overflow.isOverRight && !this.overflow.isOverLeft && this.adjustedDirection === 'right') {
 				this.adjustedDirection = 'left';
 			}
 		}
