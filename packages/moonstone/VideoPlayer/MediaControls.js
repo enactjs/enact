@@ -1,7 +1,7 @@
 import kind from '@enact/core/kind';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
-import {SpotlightContainerDecorator} from '@enact/spotlight';
+import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight';
 
 import IconButton from '../IconButton';
 
@@ -85,7 +85,7 @@ const MediaControls = kind({
 						<Container className={css.mediaControls} spotlightDisabled={mediaDisabled}> {/* rtl={false} */}
 							{noJumpButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaDisabled} onClick={onJumpBackwardButtonClick}>skipbackward</MediaButton>}
 							{noRateButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaDisabled} onClick={onBackwardButtonClick}>backward</MediaButton>}
-							<MediaButton backgroundOpacity="translucent" disabled={mediaDisabled} onClick={onPlayButtonClick}>{playPauseIcon}</MediaButton>
+							<MediaButton className={spotlightDefaultClass} backgroundOpacity="translucent" disabled={mediaDisabled} onClick={onPlayButtonClick}>{playPauseIcon}</MediaButton>
 							{noRateButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaDisabled} onClick={onForwardButtonClick}>forward</MediaButton>}
 							{noJumpButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaDisabled} onClick={onJumpForwardButtonClick}>skipforward</MediaButton>}
 						</Container>

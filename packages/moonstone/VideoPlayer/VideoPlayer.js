@@ -12,6 +12,7 @@ import ilib from '@enact/i18n';
 import {startJob, stopJob} from '@enact/core/jobs';
 import {on, off} from '@enact/core/dispatcher';
 import Slottable from '@enact/ui/Slottable';
+import {Spottable, SpotlightContainerDecorator, getDirection} from '@enact/spotlight';
 import Video from 'react-html5video';
 
 import Spinner from '../Spinner';
@@ -24,6 +25,9 @@ import MediaSlider from './MediaSlider';
 import Times from './Times';
 
 import css from './VideoPlayer.less';
+
+const SpottableDiv = Spottable('div');
+const Container = SpotlightContainerDecorator({enterTo: 'default-element'}, 'div');
 
 // Video ReadyStates
 // - Commented are currently unused.
@@ -312,6 +316,7 @@ const VideoPlayerBase = class extends React.Component {
 	componentWillUpdate () {
 		this.initI18n();
 	}
+
 	componentDidMount () {
 		on('mousemove', this.activityDetected);
 		on('keypress', this.activityDetected);
@@ -649,7 +654,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	startAutoCloseTimeout = () => {
-		if (this.props.autoCloseTimeout) {
+		if (this.props.autoCloseTimeout && !this.state.more) {
 			startJob('autoClose' + this.instanceId, this.hideControls, this.props.autoCloseTimeout);
 		}
 	}
@@ -698,6 +703,11 @@ const VideoPlayerBase = class extends React.Component {
 		}
 	}
 
+	handleKeyDownFromControls = (ev) => {
+		if (getDirection(ev.keyCode) === 'down') {
+			this.hideControls();
+		}
+	}
 
 	//
 	// Player Interaction events
@@ -731,11 +741,12 @@ const VideoPlayerBase = class extends React.Component {
 	onForward       = () => this.fastForward()
 	onJumpForward   = () => this.jump(this.props.jumpBy)
 	onMoreClick     = () => {
-		this.startAutoCloseTimeout();	// Interupt and restart the timer since "more" button was clicked.
 		if (this.state.more) {
+			this.startAutoCloseTimeout();	// Restore the timer since we are leaving "more.
 			// Restore the title-hide now that we're finished with "more".
 			this.startDelayedTitleHide();
 		} else {
+			this.stopAutoCloseTimeout();	// Interupt the timer since controls should not hide while viewing "more".
 			// Interrupt the title-hide since we don't want it hiding autonomously in "more".
 			this.stopDelayedTitleHide();
 		}
@@ -780,12 +791,12 @@ const VideoPlayerBase = class extends React.Component {
 					{children}
 				</Video>
 
-				<Overlay onClick={this.onVideoClick} onMouseMove={this.onVideoMouseMove}>
+				<Overlay onClick={this.onVideoClick}>
 					{this.state.loading ? <Spinner centered /> : null}
 				</Overlay>
 
 				{this.state.bottomControlsVisible ? <div className={css.fullscreen + ' enyo-fit scrim'}>
-					<div className={css.bottom}>
+					<Container className={css.bottom} onSpotlightDown={this.showControls}>
 						{/* Info Section: Title, Description, Times */}
 						<div className={css.infoFrame}>
 							<MediaTitle
@@ -802,6 +813,7 @@ const VideoPlayerBase = class extends React.Component {
 							backgroundProgress={this.state.percentageLoaded}
 							value={this.state.percentagePlayed}
 							onChange={this.onSliderChange}
+							onSpotlightUp={this.hideControls}
 						/>}
 
 						<MediaControls
@@ -820,11 +832,19 @@ const VideoPlayerBase = class extends React.Component {
 							playPauseIcon={this.state.playPauseIcon}
 							rightComponents={rightComponents}
 							showMoreComponents={this.state.more}
+							onKeyDown={this.handleKeyDownFromControls}
 						>
 							{children}
 						</MediaControls>
-					</div>
+					</Container>
 				</div> : null}
+				<SpottableDiv
+					// This captures spotlight focus for use with 5-way.
+					// It's non-visible but lives at the top of the VideoPlayer.
+					className={css.controlsHandleAbove}
+					onSpotlightDown={this.showControls}
+					onClick={this.showControls}
+				/>
 			</div>
 		);
 	}
