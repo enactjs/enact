@@ -1,9 +1,11 @@
 import {ExpandableInput as ExpInput, ExpandableInputBase} from '@enact/moonstone/ExpandableInput';
 import Changeable from '@enact/ui/Changeable';
+import {icons} from '@enact/moonstone/Icon';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
+import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
 
+const iconNames = ['', ...Object.keys(icons)];
 const ExpandableInput = Changeable({mutable: true}, ExpInput);
 
 ExpandableInput.propTypes = Object.assign({}, ExpInput.propTypes, ExpandableInputBase.propTypes);
@@ -22,6 +24,8 @@ storiesOf('ExpandableInput')
 		() => (
 			<ExpandableInput
 				disabled={boolean('disabled', false)}
+				iconAfter={select('iconAfter', iconNames)}
+				iconBefore={select('iconBefore', iconNames)}
 				noneText={text('noneText', 'nothing inputted')}
 				onChange={action('onChange')}
 				onClose={action('onClose')}
