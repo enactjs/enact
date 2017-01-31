@@ -2,6 +2,11 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+- `moonstone/VideoPlayer` support for 5-way show/hide of media playback controls
+
 ## [1.0.0-beta.2] - 2017-01-30
 
 ### Added
@@ -13,7 +18,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Picker` when `joined` the ability to be incremented and decremented by arrow keys
 - `onSpotlightDisappear` event property support for spottable moonstone components
 - `moonstone/VideoPlayer` property `titleHideDelay`
-- `moonstone/VideoPlayer` now supports 5-way show/hide of media playback controls
 
 ### Changed
 
