@@ -17,6 +17,10 @@ import css from './Popup.less';
 
 const TransitionContainer = SpotlightContainerDecorator({preserveId: true}, Transition);
 
+const getContainerNode = (containerId) => {
+	return document.querySelector(`[data-container-id='${containerId}']`);
+};
+
 /**
  * {@link moonstone/Popup.PopupBase} is a modal component that appears at the bottom of
  * the screen and takes up the full screen width.
@@ -321,7 +325,7 @@ class Popup extends React.Component {
 
 			// if focus has changed
 			if (Spotlight.move(direction)) {
-				containerNode = document.querySelector('[data-container-id="' + this.state.containerId + '"]');
+				containerNode = getContainerNode(this.state.containerId);
 
 				// if current focus is not within the popup's container, issue the `onClose` event
 				if (!containerNode.contains(document.activeElement) && onClose) {
@@ -356,7 +360,7 @@ class Popup extends React.Component {
 
 	spotActivator = (activator) => {
 		const activeElement = document.activeElement;
-		const containerNode = document.querySelector('[data-container-id="' + this.state.containerId + '"]');
+		const containerNode = getContainerNode(this.state.containerId);
 
 		if ((activeElement === document.body || (containerNode && containerNode.contains(activeElement))) && !Spotlight.focus(activator)) {
 			Spotlight.focus();
