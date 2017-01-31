@@ -796,7 +796,7 @@ const VideoPlayerBase = class extends React.Component {
 				</Overlay>
 
 				{this.state.bottomControlsVisible ? <div className={css.fullscreen + ' enyo-fit scrim'}>
-					<Container className={css.bottom} onSpotlightDown={this.showControls}>
+					<Container className={css.bottom}>
 						{/* Info Section: Title, Description, Times */}
 						<div className={css.infoFrame}>
 							<MediaTitle
