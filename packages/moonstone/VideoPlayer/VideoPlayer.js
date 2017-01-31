@@ -778,7 +778,7 @@ const VideoPlayerBase = class extends React.Component {
 		const moreDisabled = !(this.state.more);
 
 		return (
-			<div className={css.videoPlayer + (className ? ' ' + className : '')} style={style}>
+			<div className={css.videoPlayer + (className ? ' ' + className : '')} style={style} onFocus={this.activityDetected}>
 				{/* Video Section */}
 				<Video
 					{...rest}
