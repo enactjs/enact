@@ -6,19 +6,6 @@
 	margin: 0 @moon-spotlight-outset;
 	height: 240px;	// Vertical sizing here. Being here instead of in .vertical requires less precedence when overriding the style from app-code.
 
-	&.active, &.pressed {
-		.fill {
-			background-color: @moon-slider-spotlight-bar-color;
-		}
-	}
-
-	&.pressed {
-		.knob::before {
-			background-color: @moon-slider-spotlight-knob-color;
-			transform: @moon-translate-center scale(1.25);
-		}
-	}
-
 	.fill,
 	.load {
 		height: 100%;
@@ -142,28 +129,35 @@
 	}
 
 	&:global(.spottable) {
+		&.active,
 		&.pressed {
 			.fill {
 				background-color: @moon-slider-spotlight-bar-color;
 			}
+		}
+
+		&.pressed,
+		&:focus {
 			.knob::before {
 				background-color: @moon-slider-spotlight-knob-color;
 			}
 		}
 
-	}
-
-	&:global(.spottable):focus {
-		background-color: transparent;
-
-		.knob::before {
-			background-color: @moon-slider-spotlight-knob-color;
+		&.pressed,
+		&:focus.active {
+			.knob::before {
+				transform: @moon-translate-center scale(1.25);
+			}
 		}
 
-		&.active {
-			.knob::before {
-				background-color: @moon-slider-knob-bg-color;
-				border-color: @moon-slider-spotlight-knob-color;
+		&:focus {
+			background-color: transparent;
+
+			&.active {
+				.knob::before {
+					background-color: @moon-slider-knob-bg-color;
+					border-color: @moon-slider-spotlight-knob-color;
+				}
 			}
 		}
 	}
