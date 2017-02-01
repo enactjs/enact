@@ -673,7 +673,7 @@ const VideoPlayerBase = class extends React.Component {
 
 	hideControls = () => {
 		this.stopDelayedTitleHide();
-		this.setState({bottomControlsVisible: false});
+		this.setState({bottomControlsVisible: false, more: false});
 	}
 
 	startDelayedTitleHide = () => {
