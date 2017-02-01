@@ -22,13 +22,13 @@ const cancelHandlers = [
  * @private
  */
 const forCancel = function (ev) {
-	let stop = true;
+	let ok = false;
 	cancelHandlers.forEach(fn => {
-		// if any handler returns false, do not stop the handler chain
-		stop = stop && fn(ev);
+		// if any handler returns true, do not ok the handler chain
+		ok = ok || fn(ev);
 	});
 
-	return stop;
+	return ok;
 };
 
 /**

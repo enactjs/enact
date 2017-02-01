@@ -76,7 +76,7 @@ const SwitchBase = kind({
 	},
 
 	handlers: {
-		onToggle: handle(forward('onClick'), (ev, {selected, onToggle}) => () => {
+		onToggle: handle(forward('onClick'), (ev, {selected, onToggle}) => {
 			if (onToggle) {
 				onToggle({selected: !selected});
 			}

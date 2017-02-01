@@ -4,7 +4,7 @@
  * @module ui/Changeable
  */
 
-import {forward} from '@enact/core/handle';
+import {forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
 import React from 'react';
@@ -68,7 +68,6 @@ const defaultConfig = {
 const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 	const {mutable, prop, change} = config;
 	const defaultPropKey = 'default' + cap(prop);
-	const forwardChange = forward(change);
 
 	return class extends React.Component {
 		static displayName = 'Changeable'
@@ -103,13 +102,16 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		handleChange = (ev) => {
-			if (!this.props.disabled) {
+		handle = handle.bind(this)
+
+		handleChange = this.handle(
+			(ev, {disabled}) => !disabled,
+			forward('onChange'),
+			(ev) => {
 				const value = ev[prop];
 				this.setState({value});
-				forwardChange(ev, this.props);
 			}
-		}
+		)
 
 		render () {
 			const props = Object.assign({}, this.props);

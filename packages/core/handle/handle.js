@@ -1,7 +1,21 @@
+import allPass from 'ramda/src/allPass';
+import always from 'ramda/src/always';
+import compose from 'ramda/src/compose';
 import curry from 'ramda/src/curry';
-import reduce from 'ramda/src/reduce';
+import identity from 'ramda/src/identity';
+import ifElse from 'ramda/src/ifElse';
+import isType from 'ramda/src/is';
+import map from 'ramda/src/map';
+import T from 'ramda/src/T';
 
 import {is} from '../keymap';
+
+// Ensures that everything passed to `allPass` is a function so that if null values are passed they
+// do not impede the event flow
+const makeSafeHandler = ifElse(isType(Function), identity, always(T));
+
+// Accepts an array of handlers, sanitizes them, and returns a handler function
+const makeHandler = compose(allPass, map(makeSafeHandler));
 
 /**
  * Allows generating event handlers by chaining functions to filter or short-circuit the handling
@@ -19,19 +33,21 @@ import {is} from '../keymap';
  * @returns	{Function}		A function that accepts an event which is dispatched to each of the
  *							provided handlers.
  */
-const handle = (...handlers) => (...args) => reduce((acc, handler) => {
-	if (acc) {
-		// if a prior handler returned true, do not call any more handlers
-		return true;
-	} else if (typeof handler === 'function') {
-		// if the current handler is a function, call it
-		return handler(...args);
-	}
+const handle = function (...handlers) {
+	const h = makeHandler(handlers);
+	h.displayName = 'handle';
 
-	// otherwise, the handler is invalid so continue. This lets us blindly pass potential handlers
-	// from props without adding boilerplate checks everywhere.
-	return false;
-}, false, handlers);
+	return (ev, props, context) => {
+		// if handle() was bound to a class, use its props and context. otherwise, we accept
+		// incoming props/context as would be provided by computed/handlers from kind()
+		if (this) {
+			props = this.props;
+			context = this.context;
+		}
+
+		return h(ev, props, context);
+	};
+};
 
 /**
  * Calls a named function on the event and returns false
@@ -52,7 +68,7 @@ const callOnEvent = handle.callOnEvent = (methodName) => (e) => {
 		// on its proxy so we check the native event as well.
 		e.nativeEvent[methodName]();
 	}
-	return false;
+	return true;
 };
 
 /**
@@ -68,7 +84,7 @@ const callOnEvent = handle.callOnEvent = (methodName) => (e) => {
  * @returns {Function}			Event handler
  */
 const forProp = handle.forProp = curry((prop, value) => {
-	return (e) => e[prop] !== value;
+	return (e) => e[prop] === value;
 });
 
 /**
@@ -89,7 +105,7 @@ const forward = handle.foward = name => (e, props) => {
 		fn(e);
 	}
 
-	return false;
+	return true;
 };
 
 /**
@@ -133,7 +149,7 @@ const forKeyCode = handle.forKeyCode = forProp('keyCode');
  * @param	{String}	name	Name from {@link core/keymap}
  * @returns	{Function}			Event handler
  */
-const forKey = handle.forKey = (name) => (ev) => !is(name, ev.keyCode);
+const forKey = handle.forKey = (name) => (ev) => is(name, ev.keyCode);
 
 export default handle;
 export {

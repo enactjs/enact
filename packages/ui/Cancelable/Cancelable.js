@@ -47,19 +47,17 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 		modal,
 		component: Component
 	} = config;
-	const forwardKeyUp = forward('onKeyUp');
 
 	invariant(onCancel, 'onCancel must be specified with Cancelable');
 
 	const onCancelIsString = typeof onCancel === 'string';
 	const onCancelIsFunction = typeof onCancel === 'function';
-	const dispatchCancelToConfig = function (props) {
+	const dispatchCancelToConfig = function (ev, props) {
 		if (onCancelIsString && typeof props[onCancel] === 'function') {
 			props[onCancel]();
+			return true;
 		} else if (onCancelIsFunction) {
 			return onCancel(props);
-		} else {
-			return true;
 		}
 	};
 
@@ -82,25 +80,18 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		cancel = () => {
-			if (this.props.onCancel) {
-				this.props.onCancel();
-			}
+		handle = handle.bind(this)
 
-			return dispatchCancelToConfig(this.props);
-		}
-
-		handleModalCancel = handle(
+		handleCancel = this.handle(
 			forCancel,
-			this.cancel,
+			forward('onCancel'),
+			dispatchCancelToConfig,
 			stopImmediate
 		)
 
-		handleKeyUp = handle(
-			(ev) => forwardKeyUp(ev, this.props),
-			forCancel,
-			this.cancel,
-			stopImmediate
+		handleKeyUp = this.handle(
+			forward('onKeyUp'),
+			this.handleCancel
 		)
 
 		renderWrapped (props) {

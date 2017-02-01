@@ -15,8 +15,8 @@ const modals = [];
  * @private
  */
 const dispatchToModals = (ev) => {
-	for (let i = modals.length - 1, handled = false; !handled && i >= 0; i--) {
-		handled = !modals[i].handleModalCancel(ev);
+	for (let i = modals.length - 1, ok = true; ok && i >= 0; i--) {
+		ok = modals[i].handleCancel(ev);
 	}
 };
 
