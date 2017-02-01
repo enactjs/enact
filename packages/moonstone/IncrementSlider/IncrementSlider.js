@@ -239,11 +239,8 @@ const IncrementSliderFactory = factory((config) => {
 	 * @public
 	 */
 	return Pressable(
-		Toggleable(
-			{toggle: 'onActivate'},
-			SliderDecorator(
-				Base
-			)
+		SliderDecorator(
+			Base
 		)
 	);
 });

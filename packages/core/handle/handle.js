@@ -1,4 +1,3 @@
-import all from 'ramda/src/all';
 import curry from 'ramda/src/curry';
 import reduce from 'ramda/src/reduce';
 
@@ -143,14 +142,14 @@ const forKey = handle.forKey = curry((name, ev) => {
 });
 
 /**
- * Stops handling if the value of `prop` on the event does not equal `value`
+ * Stops handling if the value of `prop` on the props does not equal `value`
  *
  * @example
- *  // submit() called only if event.x === 0
- *	handle(handle.forEventProp('x', 0), submit)
+ *  // submit() called only if props.checked === true
+ *	handle(handle.forProp('checked', true), submit)
  *
- * @method	forEventProp
- * @param	{String}	prop	Name of property on event
+ * @method	forProp
+ * @param	{String}	prop	Name of property on props object
  * @param	{*}			value	Value of property
  * @returns {Function}			Event handler
  */

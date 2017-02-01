@@ -58,6 +58,13 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 
 		propTypes: /** @lends moonstone/Slider.SliderBase.prototype */{
 
+			/**
+			 * When `true`, the knob displays selected and can be moved using 5-way controls.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
 			active: PropTypes.bool,
 
 			/**
@@ -115,6 +122,12 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 */
 			min: PropTypes.number,
 
+			/**
+			 * The handler when the knob is activated or deactivated by selecting it via 5-way
+			 *
+			 * @type {Function}
+			 * @public
+			 */
 			onActivate: PropTypes.func,
 
 			/**
@@ -220,6 +233,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		},
 
 		defaultProps: {
+			active: false,
 			backgroundProgress: 0,
 			detachedKnob: false,
 			max: 100,

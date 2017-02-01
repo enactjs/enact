@@ -4,6 +4,7 @@ import {
 	callOnEvent,
 	forEventProp,
 	forKeyCode,
+	forProp,
 	forward,
 	preventDefault,
 	stop
@@ -116,7 +117,7 @@ describe('handle', () => {
 		expect(handler.calledOnce).to.equal(true);
 	});
 
-	it('should only call handler for specified prop', function () {
+	it('should only call handler for specified event prop', function () {
 		const prop = 'index';
 		const value = 0;
 		const handler = sinon.spy();
@@ -139,4 +140,20 @@ describe('handle', () => {
 		expect(handler.calledOnce).to.equal(true);
 	});
 
+	it('should only call handler for specified prop', function () {
+		const handler = sinon.spy();
+		const callback = handle(forProp('checked', true), handler);
+
+		// undefined shouldn't pass
+		callback({}, {});
+		expect(handler.calledOnce).to.equal(false);
+
+		// == check shouldn't pass
+		callback({}, {checked: 1});
+		expect(handler.calledOnce).to.equal(false);
+
+		// // === should pass
+		callback({}, {checked: true});
+		expect(handler.calledOnce).to.equal(true);
+	});
 });
