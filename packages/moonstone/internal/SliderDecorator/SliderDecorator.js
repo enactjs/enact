@@ -54,7 +54,9 @@ const defaultConfig = {
 };
 
 // Set-up event forwarding
+const forwardBlur = forward('onBlur');
 const forwardChange = forward('onChange');
+const forwardClick = forward('onClick');
 const forwardMouseMove = forward('onMouseMove');
 const forwardMouseLeave  = forward('onMouseLeave');
 
@@ -93,6 +95,15 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @private
 			 */
 			detachedKnob: PropTypes.bool,
+
+			/**
+			 * When `true`, the component is shown as disabled and does not generate events
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			disabled: PropTypes.bool,
 
 			/**
 			 * The amount to increment or decrement the position of the knob via 5-way controls.
@@ -276,6 +287,8 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleChange = (ev) => {
+			if (this.props.disabled) return;
+
 			ev.preventDefault();
 			const parseFn = (ev.target.value % 1 !== 0) ? parseFloat : parseInt,
 				value = parseFn(ev.target.value);
@@ -283,11 +296,10 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleMouseMove = (ev) => {
+			forwardMouseMove(ev, this.props);
+
 			// We don't want to run this code if any mouse button is being held down. That indicates dragging.
-			if (ev.buttons || this.props.vertical) {
-				forwardMouseMove(ev, this.props);
-				return;
-			}
+			if (this.props.disabled || ev.buttons || this.props.vertical) return;
 
 			const node = this.sliderBarNode.node;
 
@@ -302,22 +314,28 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.knobPosition = knob;
 
 			this.updateUI();
-			forwardMouseMove(ev, this.props);
 		}
 
 		handleMouseLeave = (ev) => {
+			forwardMouseLeave(ev, this.props);
+
+			if (this.props.disabled) return;
+
 			this.knobPosition = null;
 			this.updateUI();
-			forwardMouseLeave(ev, this.props);
 		}
 
-		handleClick = () => {
-			if (Spotlight.getCurrent() !== this.sliderNode) {
+		handleClick = (ev) => {
+			forwardClick(ev, this.props);
+
+			if (!this.props.disabled && Spotlight.getCurrent() !== this.sliderNode) {
 				Spotlight.focus(this.sliderNode);
 			}
 		}
 
 		handleActivate = () => {
+			if (this.props.disabled) return;
+
 			if (this.props.detachedKnob) {
 				if (this.current5WayValue !== null) {
 					const value = clamp(this.props.min, this.props.max, this.current5WayValue);
@@ -331,7 +349,9 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		handleBlur = () => {
+		handleBlur = (ev) => {
+			forwardBlur(ev, this.props);
+
 			if (this.current5WayValue !== null) {
 				this.current5WayValue = null;
 				this.knobPosition = null;
@@ -340,6 +360,8 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleIncrement = () => {
+			if (this.props.disabled) return;
+
 			const {detachedKnob, knobStep, step} = this.props;
 			const amount = typeof knobStep === 'number' ? knobStep : step;
 			if (detachedKnob) {
@@ -350,6 +372,8 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleDecrement = () => {
+			if (this.props.disabled) return;
+
 			const {detachedKnob, knobStep, step} = this.props;
 			const amount = typeof knobStep === 'number' ? knobStep : step;
 			if (detachedKnob) {
