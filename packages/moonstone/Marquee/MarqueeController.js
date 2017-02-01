@@ -97,7 +97,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 
 			this.controlled = [];
-			this.hover = false;
+			this.isFocused = false;
 		}
 
 		getChildContext () {
@@ -126,7 +126,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 				component
 			});
 
-			if (this.hover) {
+			if (this.isFocused) {
 				this.dispatch('start');
 			}
 		}
@@ -190,7 +190,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 * Handler for the focus event
 		 */
 		handleFocus = (ev) => {
-			this.hover = true;
+			this.isFocused = true;
 			this.dispatch('start');
 			forwardFocus(ev, this.props);
 		}
@@ -199,7 +199,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 * Handler for the blur event
 		 */
 		handleBlur = (ev) => {
-			this.hover = false;
+			this.isFocused = false;
 			this.dispatch('stop');
 			forwardBlur(ev, this.props);
 		}
