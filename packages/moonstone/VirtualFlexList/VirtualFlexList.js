@@ -7,6 +7,7 @@
  */
 
 import classNames from 'classnames';
+import {contextTypes} from '@enact/i18n/I18nDecorator';
 import {forward} from '@enact/core/handle';
 import React, {Component, PropTypes} from 'react';
 import {SpotlightContainerDecorator} from '@enact/spotlight';
@@ -211,6 +212,8 @@ class VirtualFlexList extends Component {
 		y: PropTypes.number
 	}
 
+	static contextTypes = contextTypes
+
 	static defaultProps = {
 		onPositionChange: nop
 	}
@@ -219,7 +222,7 @@ class VirtualFlexList extends Component {
 	 * Constructor
 	 */
 
-	constructor (props) {
+	constructor (props, context) {
 		super(props);
 
 		this.state = {
@@ -227,7 +230,7 @@ class VirtualFlexList extends Component {
 			y: props.y
 		};
 
-		this.componentProps = this.getComponentProps(props);
+		this.componentProps = this.getComponentProps(props, context);
 	}
 
 	/*
@@ -239,12 +242,12 @@ class VirtualFlexList extends Component {
 		dataSize: headers.col.count,
 		direction: 'horizontal',
 		itemSize: headers.col.width,
-		style: {background: headers.col.background, width: itemsListWidth, height: itemsOriginTop, left: itemsOriginLeft},
+		style: {background: headers.col.background, width: itemsListWidth, height: itemsOriginTop, transform: 'translate3d(' + itemsOriginLeft + ', 0, 0)'},
 		component: headers.col.component
 	})
 
 	getCornerProps = ({corner, headers}, {itemsOriginLeft, itemsOriginTop}) => ({
-		style: {background: corner.background, width: itemsOriginLeft, height: itemsOriginTop, overflow: 'hidden'}
+		style: {background: corner.background, width: itemsOriginLeft, height: itemsOriginTop, overflow: 'hidden', transform: 'translate3d(0, 0, 0)'}
 	})
 
 	getItemsProps = ({headers, items, maxFlexScrollSize}, {itemsOriginLeft, itemsOriginTop, itemsListWidth, itemsListHeight}, flexAxis) => ({
@@ -261,7 +264,7 @@ class VirtualFlexList extends Component {
 		},
 		maxFlexScrollSize,
 		onPositionChange: this.onPositionChange,
-		style: {background: items.background, width: itemsListWidth, height: itemsListHeight, top: itemsOriginTop, left: itemsOriginLeft},
+		style: {background: items.background, width: itemsListWidth, height: itemsListHeight, transform: 'translate3d(' + itemsOriginLeft + ', ' + itemsOriginTop + ', 0)'},
 		component: items.component
 	})
 
@@ -273,18 +276,19 @@ class VirtualFlexList extends Component {
 		itemSize: headers.row.height,
 		onPositionChange: this.onPositionChange,
 		pageScroll: true,
-		style: {background: headers.row.background, width: itemsOriginLeft, height: itemsListHeight, top: itemsOriginTop},
+		style: {background: headers.row.background, width: itemsOriginLeft, height: itemsListHeight, transform: 'translate3d(0, ' + itemsOriginTop + ', 0)'},
 		component: headers.row.component
 	})
 
-	getComponentProps = (props) => {
+	getComponentProps = (props, context) => {
 		const
 			{corner, headers, items} = props,
-			flexAxis = (typeof items.colCount === 'function' && typeof items.width === 'function') ? 'row' : 'col';
+			flexAxis = (typeof items.colCount === 'function' && typeof items.width === 'function') ? 'row' : 'col',
+			rtlDirection = context.rtl ? -1 : 1;
 
 		if (headers) {
 			const size = {
-				itemsOriginLeft: headers.row.width + 'px',
+				itemsOriginLeft: headers.row.width * rtlDirection + 'px',
 				itemsOriginTop: headers.col.height + 'px',
 				itemsListWidth: 'calc(100% - ' + headers.row.width + 'px)',
 				itemsListHeight: 'calc(100% - ' + headers.col.height + 'px)'
@@ -325,14 +329,17 @@ class VirtualFlexList extends Component {
 	 * Life cycle methods
 	 */
 
-	componentWillReceiveProps (nextProps) {
-		const {headers, items, x, y} = this.props;
+	componentWillReceiveProps (nextProps, nextContext) {
+		const
+			{headers, items, x, y} = this.props,
+			{rtl} = this.context;
 
 		if (
 			items.colCount !== nextProps.items.colCount || items.height !== nextProps.items.height || items.rowCount !== nextProps.items.rowCount ||
-			headers && (headers.col.count !== nextProps.headers.col.count || headers.row.count !== nextProps.headers.row.count)
+			headers && (headers.col.count !== nextProps.headers.col.count || headers.row.count !== nextProps.headers.row.count) ||
+			rtl !== nextContext.rtl
 		) {
-			this.componentProps = this.getComponentProps(nextProps);
+			this.componentProps = this.getComponentProps(nextProps, nextContext);
 		}
 
 		if (x !== nextProps.x || y !== nextProps.y) {
