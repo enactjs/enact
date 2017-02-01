@@ -332,12 +332,14 @@ const Picker = class extends React.Component {
 	handleDecClick = () => {
 		if (!this.isButtonDisabled(-this.props.step)) {
 			this.updateValue(-1);
+			this.handleDown(-1);
 		}
 	}
 
 	handleIncClick = () => {
 		if (!this.isButtonDisabled(this.props.step)) {
 			this.updateValue(1);
+			this.handleDown(1);
 		}
 	}
 
@@ -406,6 +408,10 @@ const Picker = class extends React.Component {
 		}
 	}
 
+	handleKeyUp = () => {
+		this.handleDown(0);
+	}
+
 	determineClasses (decrementerDisabled, incrementerDisabled) {
 		const {joined, orientation, pressed, width} = this.props;
 		return [
@@ -464,7 +470,7 @@ const Picker = class extends React.Component {
 		}
 
 		return (
-			<div {...rest} className={classes} disabled={disabled} onWheel={joined ? this.handleWheel : null} onKeyDown={joined ? this.handleKeyDown : null}>
+			<div {...rest} className={classes} disabled={disabled} onWheel={joined ? this.handleWheel : null} onKeyDown={joined ? this.handleKeyDown : null} onKeyUp={joined ? this.handleKeyUp : null}>
 				<PickerButton
 					className={css.incrementer}
 					disabled={incrementerDisabled}
