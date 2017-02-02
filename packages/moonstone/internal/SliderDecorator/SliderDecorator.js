@@ -197,12 +197,12 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.current5WayValue = null;
 			this.jobName = `sliderChange${now()}`;
 			this.knobPosition = null;
-			this.normalizedMax = props.max != null ? props.max : Wrapped.defaultProps.max;
-			this.normalizedMin = props.min != null ? props.min : Wrapped.defaultProps.min;
+			this.normalizeBounds(props);
 			this.state = {
 				active: false,
-				value: clamp(this.normalizedMin, this.normalizedMax, props.value)
+				value: this.clamp(props.value)
 			};
+
 			if (__DEV__) {
 				validateRange(props.value, props.min, props.max, SliderDecoratorClass.displayName);
 				validateRange(props.backgroundProgress, 0, 1, SliderDecoratorClass.displayName,
@@ -214,16 +214,18 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.updateUI();
 		}
 
-		componentWillReceiveProps ({backgroundProgress, min, max, value: _value}) {
-			if ((min !== this.props.min) || (max !== this.props.max) ||
-					(_value !== this.state.value)) {
-				this.normalizedMax = max != null ? max : Wrapped.defaultProps.max;
-				this.normalizedMin = min != null ? min : Wrapped.defaultProps.min;
-				const value = clamp(this.normalizedMin, this.normalizedMax, _value);
-				this.setState({value});
+		componentWillReceiveProps (nextProps) {
+			const {backgroundProgress, max, min, value} = nextProps;
+
+			if ((min !== this.props.min) || (max !== this.props.max) || (value !== this.state.value)) {
+				this.normalizeBounds(nextProps);
+				this.setState({
+					value: this.clamp(value)
+				});
 			}
+
 			if (__DEV__) {
-				validateRange(_value, min, max, SliderDecoratorClass.displayName);
+				validateRange(value, min, max, SliderDecoratorClass.displayName);
 				validateRange(backgroundProgress, 0, 1, SliderDecoratorClass.displayName,
 					'backgroundProgress', 'min', 'max');
 			}
@@ -231,6 +233,15 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentDidUpdate () {
 			this.updateUI();
+		}
+
+		normalizeBounds (props) {
+			this.normalizedMax = props.max != null ? props.max : Wrapped.defaultProps.max;
+			this.normalizedMin = props.min != null ? props.min : Wrapped.defaultProps.min;
+		}
+
+		clamp (value) {
+			return clamp(this.normalizedMin, this.normalizedMax, value);
 		}
 
 		throttleUpdateValue = (value) => {
@@ -242,16 +253,12 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		throttleUpdateValueByAmount = (amount) => {
-			const {min, max} = this.props;
-			let value = this.state.value + amount;
-
-			value = clamp(min, max, value);
-			this.throttleUpdateValue(value);
+			this.throttleUpdateValue(this.clamp(this.state.value + amount));
 		}
 
 		moveKnobByAmount (amount) {
 			const value = this.current5WayValue === null ? this.state.value : this.current5WayValue;
-			this.current5WayValue = value + amount;
+			this.current5WayValue = this.clamp(value + amount);
 			this.knobPosition = computeProportionProgress({
 				max: this.normalizedMax,
 				min: this.normalizedMin,
@@ -338,9 +345,8 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			if (this.props.detachedKnob) {
 				if (this.current5WayValue !== null) {
-					const value = clamp(this.props.min, this.props.max, this.current5WayValue);
+					this.throttleUpdateValue(this.clamp(this.current5WayValue));
 					this.current5WayValue = null;
-					this.throttleUpdateValue(value);
 				}
 			} else {
 				this.setState({
