@@ -2,11 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
+## [1.0.0-beta.2] - 2017-01-30
 
 ### Added
 
-- `ui/resolution` function `scaleToRem` for those times when you have a size in pixels that you want to convert directly to `rem` to support automatic dynamic resizing.
+- `ui/ViewManager` properties `enteringDelay` and `enteringProp` to aid deferred rendering of views
+- `ui/resolution` function `scaleToRem` for those times when you have a size in pixels that you want to convert directly to `rem` to support automatic dynamic resizing
 
 ## [1.0.0-beta.1] - 2016-12-30
 

@@ -143,12 +143,22 @@ const DatePickerBase = kind({
 		 * @param {Object} event
 		 * @public
 		 */
-		onSpotlightDisappear: React.PropTypes.func
+		onSpotlightDisappear: React.PropTypes.func,
+
+		/**
+		 * When `true`, the component cannot be navigated using spotlight.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		spotlightDisabled: React.PropTypes.bool
 	},
 
 	defaultProps: {
 		maxYear: 2099,
-		minYear: 1900
+		minYear: 1900,
+		spotlightDisabled: false
 	},
 
 	styles: {
@@ -156,10 +166,10 @@ const DatePickerBase = kind({
 		className: 'datePicker'
 	},
 
-	render: ({day, maxDays, maxMonths, maxYear, minYear, month, noLabels, onChangeDate, onChangeMonth, onChangeYear, onSpotlightDisappear, order, year, ...rest}) => {
+	render: ({day, maxDays, maxMonths, maxYear, minYear, month, noLabels, onChangeDate, onChangeMonth, onChangeYear, onSpotlightDisappear, order, spotlightDisabled, year, ...rest}) => {
 
 		return (
-			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false} onSpotlightDisappear={onSpotlightDisappear}>
+			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled}>
 				<div className={dateComponentPickers}>
 					{order.map(picker => {
 						switch (picker) {
@@ -172,6 +182,7 @@ const DatePickerBase = kind({
 										min={1}
 										onChange={onChangeDate}
 										onSpotlightDisappear={onSpotlightDisappear}
+										spotlightDisabled={spotlightDisabled}
 										value={day}
 										width={2}
 										wrap
@@ -186,6 +197,7 @@ const DatePickerBase = kind({
 										min={1}
 										onChange={onChangeMonth}
 										onSpotlightDisappear={onSpotlightDisappear}
+										spotlightDisabled={spotlightDisabled}
 										value={month}
 										width={2}
 										wrap
@@ -201,6 +213,7 @@ const DatePickerBase = kind({
 										min={minYear}
 										onChange={onChangeYear}
 										onSpotlightDisappear={onSpotlightDisappear}
+										spotlightDisabled={spotlightDisabled}
 										value={year}
 										width={4}
 									/>
