@@ -16,11 +16,12 @@ import Video from 'react-html5video';
 
 import Spinner from '../Spinner';
 
-import {calcNumberValueOfPlaybackRate, getNow} from './util';
+import {calcNumberValueOfPlaybackRate, getNow, secondsToTime} from './util';
 import Overlay from './Overlay';
 import MediaControls from './MediaControls';
 import MediaTitle from './MediaTitle';
 import MediaSlider from './MediaSlider';
+import MediaFeedback from './MediaFeedback';
 import Times from './Times';
 
 import css from './VideoPlayer.less';
@@ -802,7 +803,12 @@ const VideoPlayerBase = class extends React.Component {
 							backgroundProgress={this.state.percentageLoaded}
 							value={this.state.percentagePlayed}
 							onChange={this.onSliderChange}
-						/>}
+						>
+							<div className={css.sliderTooltip + ' ' + (this.state.percentagePlayed > 0.5 ? css.left : css.right)}>
+								<MediaFeedback state={this.prevCommand}>{this.state.playbackRate}</MediaFeedback>
+								{secondsToTime(this.state.currentTime, this.durfmt)}
+							</div>
+						</MediaSlider>}
 
 						<MediaControls
 							leftComponents={leftComponents}

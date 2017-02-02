@@ -277,7 +277,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			proportionProgress: computeProportionProgress
 		},
 
-		render: ({backgroundProgress, disabled, onKeyDown, onBlur, inputRef, max, min, onChange, onMouseMove, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, value, vertical, ...rest}) => {
+		render: ({backgroundProgress, children, disabled, onKeyDown, onBlur, inputRef, max, min, onChange, onMouseMove, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, value, vertical, ...rest}) => {
 			delete rest.active;
 			delete rest.detachedKnob;
 			delete rest.onActivate;
@@ -293,7 +293,9 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						ref={sliderBarRef}
 						vertical={vertical}
 						scrubbing={scrubbing}
-					/>
+					>
+						{children}
+					</SliderBar>
 					<input
 						className={css.input}
 						disabled={disabled}
