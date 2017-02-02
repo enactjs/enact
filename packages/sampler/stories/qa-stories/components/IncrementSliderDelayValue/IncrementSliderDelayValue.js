@@ -35,7 +35,7 @@ class IncrementSliderDelayValue extends React.Component {
 	}
 
 	componentDidMount () {
-		this.intervalId = setInterval(this.changeValue.bind(this), 5000);
+		this.intervalId = setInterval(this.changeValue, 5000);
 	}
 
 	componentWillUnmount () {
