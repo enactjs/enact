@@ -3,7 +3,7 @@ import {IncrementSlider} from '@enact/moonstone/IncrementSlider';
 import {checkDefaultBounds} from '@enact/ui/validators/PropTypeValidators';
 
 class IncrementSliderDelayValue extends React.Component {
-	static displayName: 'IncrementSliderDelayValue';
+	static displayName: 'IncrementSliderDelayValue'
 
 	static propTypes = {
 		backgroundPercent: React.PropTypes.number,
@@ -15,9 +15,9 @@ class IncrementSliderDelayValue extends React.Component {
 		step: React.PropTypes.number,
 		value: checkDefaultBounds,
 		vertical: React.PropTypes.bool
-	};
+	}
 
-	static defaultProps: {
+	static defaultProps = {
 		backgroundPercent: 0,
 		max: 100,
 		min: 0,
@@ -25,21 +25,13 @@ class IncrementSliderDelayValue extends React.Component {
 		step: 1,
 		value: 0,
 		vertical: false
-	};
+	}
 
 	constructor (props) {
 		super(props);
 		this.state = {
 			value: props.value
 		};
-	}
-
-	changeValue () {
-		if (this.state.value === 100) {
-			this.setState({value: 0});
-		} else {
-			this.setState({value: 100});
-		}
 	}
 
 	componentDidMount () {
@@ -50,14 +42,16 @@ class IncrementSliderDelayValue extends React.Component {
 		clearInterval(this.intervalId);
 	}
 
+	changeValue = () => {
+		if (this.state.value === 100) {
+			this.setState({value: 0});
+		} else {
+			this.setState({value: 100});
+		}
+	}
+
 	render () {
-		return (
-			<div>
-				<IncrementSlider
-					value={this.state.value}
-				/>
-			</div>
-		);
+		return <IncrementSlider value={this.state.value} />;
 	}
 }
 
