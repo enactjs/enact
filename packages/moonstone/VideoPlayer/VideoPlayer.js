@@ -315,6 +315,8 @@ const VideoPlayerBase = class extends React.Component {
 	componentDidMount () {
 		on('mousemove', this.activityDetected);
 		on('keypress', this.activityDetected);
+		this.showControls();
+		this.startAutoCloseTimeout();
 	}
 
 	componentWillUnmount () {
