@@ -42,7 +42,8 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.state = {
 				arrowPosition: {top: 0, left: 0},
 				containerPosition: {top: 0, left: 0},
-				containerId: Spotlight.add()
+				containerId: Spotlight.add(),
+				activator: null
 			};
 
 			this.overflow = {};
@@ -141,13 +142,23 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.adjustedDirection = nextProps.direction;
 				this.setContainerPosition();
 			}
+
+			if (!this.props.open && nextProps.open) {
+				this.setState({
+					activator: Spotlight.getCurrent()
+				});
+			} else if (this.props.open && !nextProps.open) {
+				this.setState({
+					activator: null
+				});
+			}
 		}
 
-		componentDidUpdate (prevProps) {
+		componentDidUpdate (prevProps, prevState) {
 			if (this.props.open && !prevProps.open) {
 				this.spotPopupContent();
 			} else if (!this.props.open && prevProps.open) {
-				Spotlight.focus();
+				this.spotActivator(prevState.activator);
 			}
 		}
 
@@ -332,6 +343,12 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			forwardDepress(ev, this.props);
+		}
+
+		spotActivator = (activator) => {
+			if (!Spotlight.focus(activator)) {
+				Spotlight.focus();
+			}
 		}
 
 		spotPopupContent = () => {
