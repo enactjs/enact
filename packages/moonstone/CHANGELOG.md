@@ -8,6 +8,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/ExpandableInput` properties `iconAfter` and `iconBefore` to display icons after and before the input, respectively
 
+### Changed
+
+- `moonstone/IncrementSlider` to change when the buttons are held down
+
 ## [1.0.0-beta.2] - 2017-01-30
 
 ### Added
