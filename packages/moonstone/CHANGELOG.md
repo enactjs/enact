@@ -11,6 +11,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonstone/IncrementSlider` to change when the buttons are held down
+- `moonstone/VideoPlayer` now shows controls on initial render
 
 ## [1.0.0-beta.2] - 2017-01-30
 
@@ -35,7 +36,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Divider` to now behave as a simple horizontal line when no text content is provided
 - `moonstone/Scrollable` to not display scrollbar controls by default
 - `moonstone/DatePicker` and `moonstone/TimePicker` to emit `onChange` event whenever the value is changed, not just when the component is closed
-- `moonstone/VideoPlayer` now shows controls on initial render
 
 ### Removed
 
