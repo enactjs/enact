@@ -110,7 +110,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 
-		/**
+		/*
 		 * Registers `component` with a set of handlers for `start` and `stop`
 		 *
 		 * @param	{Object}	component	A component, typically a React component instance, on
@@ -120,18 +120,20 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {undefined}
 		 */
 		handleRegister = (component, handlers) => {
+			const needsStart = this.isFocused;
+
 			this.controlled.push({
 				...handlers,
-				complete: false,
+				complete: !needsStart,
 				component
 			});
 
-			if (this.isFocused) {
+			if (needsStart) {
 				this.dispatch('start');
 			}
 		}
 
-		/**
+		/*
 		 * Unregisters `component` for synchronization
 		 *
 		 * @param	{Object}	component	A previously registered component
@@ -139,15 +141,20 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{undefined}
 		 */
 		handleUnregister = (component) => {
+			let wasRunning = false;
 			for (let i = 0; i < this.controlled.length; i++) {
 				if (this.controlled[i].component === component) {
+					wasRunning = !this.controlled[i].complete;
 					this.controlled.splice(i, 1);
 					break;
 				}
 			}
+			if (wasRunning && !this.anyIncomplete()) {
+				this.dispatch('start');
+			}
 		}
 
-		/**
+		/*
 		 * Handler for the `start` context function
 		 *
 		 * @param	{Object}	component	A previously registered component
@@ -159,7 +166,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			this.dispatch('start', component);
 		}
 
-		/**
+		/*
 		 * Handler for the `cancel` context function
 		 *
 		 * @param	{Object}	component	A previously registered component
@@ -171,7 +178,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			this.dispatch('stop', component);
 		}
 
-		/**
+		/*
 		 * Handler for the `complete` context function
 		 *
 		 * @param	{Object}	component	A previously registered component
@@ -204,7 +211,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			forwardBlur(ev, this.props);
 		}
 
-		/**
+		/*
 		 * Invokes the `action` handler for each synchronized component except the invoking
 		 * `component`.
 		 *
@@ -228,7 +235,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			});
 		}
 
-		/**
+		/*
 		 * Marks all components incomplete
 		 *
 		 * @returns	{undefined}
@@ -239,7 +246,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			});
 		}
 
-		/**
+		/*
 		 * Marks `component` complete
 		 *
 		 * @param	{Object}	component	A previously registered component
@@ -257,6 +264,17 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			});
 
 			return complete;
+		}
+
+		/*
+		 * Checks for any incomplete components
+		 *
+		 * @returns {Boolean} `true` if any component is incomplete
+		 */
+		anyIncomplete () {
+			return this.controlled.reduce((res, component) => {
+				return res || !component.complete;
+			}, false);
 		}
 
 		render () {
