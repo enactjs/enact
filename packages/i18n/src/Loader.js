@@ -25,14 +25,11 @@ const get = (url, callback) => {
 	}
 };
 
-const iLibBase = (typeof ILIB_BASE_PATH !== 'undefined') ?
-		ILIB_BASE_PATH : 'node_modules/@enact/i18n/ilib/locale';
-const iLibResources = (typeof ILIB_RESOURCES_PATH !== 'undefined') ?
-		ILIB_RESOURCES_PATH : 'resources';
+const iLibBase = ILIB_BASE_PATH;
+const iLibResources = ILIB_RESOURCES_PATH;
 const cachePrefix = 'ENACT-ILIB-';
 const cacheKey = cachePrefix + 'CACHE-ID';
-const cacheID = (typeof ILIB_CACHE_ID !== 'undefined') ?
-		ILIB_CACHE_ID : null;
+const cacheID = ILIB_CACHE_ID;
 
 function EnyoLoader () {
 	this.base = iLibBase;
@@ -165,7 +162,7 @@ EnyoLoader.prototype._storeFilesCache = function (paths, data) {
 };
 
 EnyoLoader.prototype._validateCache = function () {
-	if (typeof window !== 'undefined' && window.localStorage) {
+	if (typeof window !== 'undefined' && window.localStoragez) {
 		let activeID = window.localStorage.getItem(cacheKey);
 		if (activeID !== cacheID) {
 			for (let i = 0; i < window.localStorage.length; i++) {
