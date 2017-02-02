@@ -1,5 +1,5 @@
 import {mount} from 'enzyme';
-import React from 'react';
+import React, {PropTypes} from 'react';
 
 import Item from '../../Item';
 import VirtualList from '../VirtualList';
@@ -18,7 +18,19 @@ describe('VirtualList Specs', () => {
 			},
 			handlerOnScrollStop = (e) => {
 				resultScrollLeft = e.scrollLeft;
+			},
+			renderItem = ({index, key}) => {
+				return (
+					<Item key={key}>
+						{data[index].name}
+					</Item>
+				);
 			};
+
+		renderItem.propTypes = {
+			index: PropTypes.number,
+			key: PropTypes.any
+		};
 
 		for (let i = 0; i < dataSize; i++) {
 			data.push({name: 'Account ' + i});
@@ -27,18 +39,13 @@ describe('VirtualList Specs', () => {
 		const subject = mount(
 			<VirtualList
 				cbScrollTo={getScrollTo}
+				component={renderItem}
 				data={data}
 				dataSize={dataSize}
 				direction={'horizontal'}
 				itemSize={30}
 				onScrollStop={handlerOnScrollStop}
 				style={{backgroundColor: 'red', width: '500px', height: '700px'}}
-				// eslint-disable-next-line react/jsx-no-bind
-				component={({index, key}) => (
-					<Item key={key}>
-						{data[index].name}
-					</Item>
-				)}
 			/>
 		);
 

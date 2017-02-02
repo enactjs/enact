@@ -1,5 +1,5 @@
 import {mount} from 'enzyme';
-import React from 'react';
+import React, {PropTypes} from 'react';
 
 import Item from '../../Item';
 import {VirtualGridList} from '../VirtualList';
@@ -7,7 +7,19 @@ import {VirtualGridList} from '../VirtualList';
 describe('VirtualGridList Specs', () => {
 	const
 		data = [],
-		dataSize = 10;
+		dataSize = 10,
+		renderItem = ({index, key}) => {
+			return (
+				<Item key={key}>
+					<div>{data[index].text}</div>
+				</Item>
+			);
+		};
+
+	renderItem.propTypes = {
+		index: PropTypes.number,
+		key: PropTypes.any
+	};
 
 	for (let i = 0; i < dataSize; i++) {
 		data.push({text: 'Account ' + i});
@@ -18,12 +30,7 @@ describe('VirtualGridList Specs', () => {
 			data={data}
 			dataSize={dataSize}
 			itemSize={{minWidth: 30, minHeight: 40}}
-			// eslint-disable-next-line react/jsx-no-bind
-			component={({index, key}) => (
-				<Item key={key}>
-					<div>{data[index].text}</div>
-				</Item>
-			)}
+			component={renderItem}
 		/>
 	);
 
