@@ -36,10 +36,7 @@ const
 
 	// These guards probably aren't necessary because there shouldn't be any scrolling occurring
 	// in isomorphic mode.
-	rAF = (typeof window === 'object') ? window.requestAnimationFrame : function () {},
-	cAF = (typeof window === 'object') ? window.cancelAnimationFrame : function () {},
 	perf = (typeof window === 'object') ? window.performance : {now: Date.now};
-
 /**
  * {@link moonstone/Scroller.ScrollAnimator} is the class to scroll a list or a scroller with
  * animation.
@@ -51,7 +48,6 @@ const
 class ScrollAnimator {
 	rAFId = null
 	type = 'ease-out'
-
 	/**
 	 * @param {String|null} type - Timing function type for list scroll animation.  Must be one of
 	 *	`'linear'`, `'ease-in'`, `'ease-out'`, or `'ease-in-out'`, or null. If `null`, defaults to
@@ -88,6 +84,7 @@ class ScrollAnimator {
 
 	animate (rAFCallbackFuntion) {
 		const
+			rAF = window.requestAnimationFrame,
 			startTimeStamp = perf.now(),
 			fn = () => {
 				const
@@ -106,6 +103,8 @@ class ScrollAnimator {
 	}
 
 	stop () {
+		const cAF = window.cancelAnimationFrame;
+
 		if (this.rAFId !== null ) {
 			cAF(this.rAFId);
 			this.rAFId = null;
