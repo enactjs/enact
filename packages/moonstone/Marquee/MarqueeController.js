@@ -95,7 +95,6 @@ const defaultConfig = {
  * @public
  */
 const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
-	const {startOnFocus, startOnMouseEnter} = config;
 	const forwardBlur = forward('onBlur');
 	const forwardFocus = forward('onFocus');
 	const forwardMouseEnter = forward('onMouseEnter');
@@ -222,7 +221,6 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 * Handler for the MouseLeave event
 		 */
 		handleMouseLeave = (ev) => {
-			this.dispatch('stop');
 			forwardMouseLeave(ev, this.props);
 		}
 
@@ -240,7 +238,6 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 				const {component: controlledComponent, [action]: handler} = controlled;
 
 				if (component !== controlledComponent && typeof handler === 'function') {
-					controlledComponent.isControlled = true;
 					const complete = handler.call(controlledComponent);
 
 					// Returning `true` from a start request means that the marqueeing is
@@ -285,19 +282,13 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		render () {
 			let props = this.props;
 
-			if (startOnFocus) {
-				props = {
-					...this.props,
-					onBlur: this.handleBlur,
-					onFocus: this.handleFocus
-				};
-			} else if (startOnMouseEnter) {
-				props = {
-					...this.props,
-					onMouseEnter: this.handleMouseEnter,
-					onMouseLeave: this.handleMouseLeave
-				};
-			}
+			props = {
+				...this.props,
+				onBlur: this.handleBlur,
+				onFocus: this.handleFocus,
+				onMouseEnter: this.handleMouseEnter,
+				onMouseLeave: this.handleMouseLeave
+			};
 
 			return (
 				<Wrapped {...props} />

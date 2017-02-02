@@ -364,12 +364,16 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * Starts the animation without synchronizing
 		 *
 		 * @param	{Number}	[delay]	Milleseconds to wait before animating
+		 * @param {String} [typeOfEvent] If the event is triggered on an uncontrolled or unsychronised component, the value is direct
 		 * @returns	{undefined}
 		 */
-		start = (delay = this.props.marqueeDelay) => {
+		start = (delay = this.props.marqueeDelay, typeOfEvent) => {
 
-			if (this.isControlled && this.props.marqueeOn === 'focus') {
-				return;
+			if (!typeOfEvent && this.sync) {
+				this.restartControlled = true;
+				if (this.props.marqueeOn === 'focus') return;
+			} else {
+				this.restartControlled = false;
 			}
 
 			if (this.contentFits) {
@@ -392,11 +396,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		/**
 		 * Stops the animation
 		 *
-		 * @param {String} [type] If the event is triggered on an uncontrolled or unsychronised component, the value is direct
+		 * @param {String} [typeOfEvent] If the event is triggered on an uncontrolled or unsychronised component, the value is direct
 		 * @returns	{undefined}
 		 */
-		stop = (type) => {
-			if (!type) {
+		stop = (typeOfEvent) => {
+			if (!typeOfEvent) {
 				return;
 			}
 			this.clearTimeout();
@@ -412,12 +416,15 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {undefined}
 		 */
 		startAnimation = (delay) => {
+			let typeOfEvent;
 			if (this.state.animating) return;
-			this.isControlled = false;
+
 			if (this.sync) {
 				this.context.start(this);
 			}
-			this.start(delay);
+
+			typeOfEvent = 'direct';
+			this.start(delay, typeOfEvent);
 		}
 
 		/**
@@ -430,7 +437,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				animating: false
 			});
 
-			if (this.isControlled) {
+			if (this.restartControlled || this.sync) {
 				this.startAnimation();
 			}
 
