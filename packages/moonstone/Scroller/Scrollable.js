@@ -6,6 +6,7 @@
 
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
+import {contextTypes} from '@enact/i18n/I18nDecorator';
 import hoc from '@enact/core/hoc';
 import {startJob, stopJob} from '@enact/core/jobs';
 import React, {Component, PropTypes} from 'react';
@@ -141,6 +142,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			positioningOption: 'byItem'
 		}
 
+		static contextTypes = contextTypes
+
 		// status
 		horizontalScrollability = false
 		verticalScrollability = false
@@ -187,12 +190,16 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		// scroll animator
 		animator = new ScrollAnimator()
 
+		// Right-To-Left
+		rtlDirection = 1 // 1: LTR, -1: RTL
+		isFirstRendered = true
+
 		// browser native scrolling
 		jobName = ''
 		scrolling = false
 
-		constructor (props) {
-			super(props);
+		constructor (props, context) {
+			super(props, context);
 
 			this.state = {
 				isHorizontalScrollbarVisible: false,
@@ -200,6 +207,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			};
 
 			this.initChildRef = this.initRef('childRef');
+
+			this.rtlDirection = context.rtl ? -1 : 1;
 
 			if (this.props.positioningOption === 'byBrowser') {
 				const {onFocus, onKeyDown, onKeyUp, onScroll} = this;
@@ -257,7 +266,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			const d = this.dragInfo;
 
 			if (this.horizontalScrollability) {
-				d.dx = e.clientX - d.clientX;
+				d.dx = (e.clientX - d.clientX) * this.rtlDirection;
 				d.clientX = e.clientX;
 			} else {
 				d.dx = 0;
@@ -381,13 +390,19 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		// event handler for browser native scroll
 
 		onScroll = (e) => {
+			let {scrollLeft, scrollTop} = e.target;
+
 			if (!this.scrolling) {
 				this.scrollStartOnScroll();
 			}
 
-			this.scroll(e.target.scrollLeft, e.target.scrollTop, true);
-			this.hideThumb();
+			if (this.context.rtl) {
+				/* NOTE: this calculation only works for Chrome */
+				scrollLeft = this.bounds.maxLeft - scrollLeft;
+			}
+			this.scroll(scrollLeft, scrollTop, true);
 
+			this.hideThumb();
 			startJob(this.jobName, this.scrollStopOnScroll, scrollStopWaiting);
 		}
 
@@ -713,6 +728,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					});
 				}
 			}
+
+			this.isFirstRendered = true;
 		}
 
 		componentDidUpdate () {
@@ -739,6 +756,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			if (this.childRef.updateClientSize) {
 				this.childRef.updateClientSize();
+			}
+
+			if (this.isFirstRendered) {
+				this.isFirstRendered = false;
+				if (this.childRef.readyForRtl) {
+					this.childRef.readyForRtl();
+				}
 			}
 		}
 

@@ -203,7 +203,7 @@ class VirtualListCore extends Component {
 	containerRef = null
 	wrapperRef = null
 	composeItemPosition = null
-	positionContainer = null
+	composeContainerPosition = null
 
 	// spotlight
 	nodeIndexToBeBlurred = null
@@ -221,15 +221,17 @@ class VirtualListCore extends Component {
 		switch (positioningOption) {
 			case 'byItem':
 				this.composeItemPosition = this.composeTransform;
-				this.positionContainer = nop;
+				this.composeContainerPosition = nop;
 				break;
 			case 'byContainer':
 				this.composeItemPosition = this.composeLeftTop;
-				this.positionContainer = this.applyTransformToContainerNode;
+				this.composeContainerPosition = this.applyTransformToContainerNode;
 				break;
 			case 'byBrowser':
 				this.composeItemPosition = this.composeLeftTop;
-				this.positionContainer = this.applyScrollLeftTopToWrapperNode;
+				this.composeContainerPosition = this.applyScrollLeftTopToWrapperNode;
+				this.wrapperStyle.overflowX = 'scroll';
+				this.wrapperStyle.overflowY = 'scroll';
 				break;
 		}
 	}
@@ -382,19 +384,23 @@ class VirtualListCore extends Component {
 		}
 
 		if (positioningOption !== 'byItem') {
+			const {wrapperStyle, containerStyle} = this;
+
 			if (isPrimaryDirectionVertical) {
-				this.containerStyle = {height: scrollBounds.scrollHeight};
-				this.wrapperStyle['overflowY'] = 'scroll';
-				delete this.wrapperStyle['overflowX'];
+				wrapperStyle.overflowY = 'scroll';
+				wrapperStyle.overflowX = 'hidden';
 			} else {
-				this.containerStyle = {width: scrollBounds.scrollWidth};
-				this.wrapperStyle['overflowX'] = 'scroll';
-				delete this.wrapperStyle['overflowY'];
+				wrapperStyle.overflowX = 'scroll';
+				wrapperStyle.overflowY = 'hidden';
 			}
+
+			containerStyle.width = scrollBounds.scrollWidth;
+			containerStyle.height = scrollBounds.scrollHeight;
+
 			if (positioningOption === 'byBrowser') {
-				this.wrapperStyle['willChange'] = 'left, top';
+				wrapperStyle.willChange = 'left, top';
 			} else { // 'byContainer'
-				this.containerStyle['willChange'] = 'transform';
+				containerStyle.willChange = 'transform';
 			}
 		}
 	}
@@ -524,9 +530,16 @@ class VirtualListCore extends Component {
 		// we only calculate position of the first child
 		let
 			{primaryPosition, secondaryPosition} = this.getGridPosition(updateFrom),
+			primaryGridSize = primary.gridSize,
 			width, height;
 
-		primaryPosition -= (positioningOption === 'byItem') ? scrollPosition : 0;
+		if (positioningOption === 'byItem') {
+			primaryPosition -= scrollPosition;
+		} else if (this.context.rtl && !this.isPrimaryDirectionVertical) {
+			/* NOTE: this calculation only works for Chrome */
+			primaryPosition += this.primary.itemSize - this.scrollBounds.clientWidth;
+		}
+
 		width = (isPrimaryDirectionVertical ? secondary.itemSize : primary.itemSize) + 'px';
 		height = (isPrimaryDirectionVertical ? primary.itemSize : secondary.itemSize) + 'px';
 
@@ -541,7 +554,7 @@ class VirtualListCore extends Component {
 
 			if (++secondaryIndex === dimensionToExtent) {
 				secondaryPosition = 0;
-				primaryPosition += primary.gridSize;
+				primaryPosition += primaryGridSize;
 				secondaryIndex = 0;
 			} else {
 				secondaryPosition += secondary.gridSize;
@@ -552,13 +565,32 @@ class VirtualListCore extends Component {
 		this.updateTo = updateTo;
 	}
 
+	positionContainer () {
+		const
+			{positioningOption} = this.props;
+		if (positioningOption !== 'byItem') {
+			let scrollPosition = this.scrollPosition;
+			/* NOTE: this calculation only works for Chrome */
+			if (this.context.rtl && !this.isPrimaryDirectionVertical) {
+				if (positioningOption === 'byBrowser') {
+					scrollPosition -= this.scrollBounds.maxLeft;
+				} else { // 'byContainer'
+					scrollPosition = -scrollPosition - this.scrollBounds.maxLeft;
+				}
+			}
+			this.composeContainerPosition(scrollPosition);
+		}
+	}
+
 	composeStyle (style, width, height, ...rest) {
 		if (this.isItemSized) {
 			style.width = width;
 			style.height = height;
 		}
 
-		if (this.props.positioningOption !== 'byItem') {
+		if (this.props.positioningOption === 'byItem') {
+			style.willChange = 'transform';
+		} else {
 			style.willChange = 'left, top';
 		}
 
@@ -583,14 +615,14 @@ class VirtualListCore extends Component {
 		style.top = y + 'px';
 	}
 
-	applyTransformToContainerNode () {
-		this.composeTransform(this.containerRef.style, -this.scrollPosition, 0);
+	applyTransformToContainerNode (scrollPosition) {
+		this.composeTransform(this.containerRef.style, scrollPosition, 0);
 	}
 
-	applyScrollLeftTopToWrapperNode () {
+	applyScrollLeftTopToWrapperNode (scrollPosition) {
 		const
 			node = this.wrapperRef,
-			{x, y} = this.getXY(this.scrollPosition, 0);
+			{x, y} = this.getXY(scrollPosition, 0);
 		node.scrollLeft = x;
 		node.scrollTop = y;
 	}
@@ -691,6 +723,17 @@ class VirtualListCore extends Component {
 		this.updateStatesAndBounds(this.props);
 	}
 
+	// for RTL support on byBrowser mode
+	readyForRtl = () => {
+		const {positioningOption} = this.props;
+
+		if (this.context.rtl && positioningOption === 'byBrowser') {
+			/* NOTE: this calculation only works for Chrome */
+			const node = this.getContainerNode(positioningOption);
+			node.scrollLeft = this.scrollBounds.maxLeft;
+		}
+	}
+
 	// Calculate metrics for VirtualList after the 1st render to know client W/H.
 	// We separate code related with data due to re use it when data changed.
 	componentDidMount () {
@@ -705,6 +748,7 @@ class VirtualListCore extends Component {
 			// prevent native scrolling by Spotlight
 			this.preventScroll = () => {
 				containerNode.scrollTop = 0;
+				/* NOTE: this calculation only works for Chrome */
 				containerNode.scrollLeft = this.context.rtl ? containerNode.scrollWidth : 0;
 			};
 
