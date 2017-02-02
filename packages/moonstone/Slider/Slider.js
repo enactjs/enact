@@ -264,6 +264,18 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 							handleIncrement(ev, props) &&
 							handleActivate(ev, props);
 				}
+			),
+			onMouseUp: handle(
+				forward('onMouseUp'),
+				(ev) => {
+					// This bit of hackery allows us to use the <input> for dragging but sends the
+					// focus back to the component when the pointer is released. It works because,
+					// for some reason, the <input> still sends a mouseup event even when the
+					// pointer is released while off the <input>.
+					if (ev.target.nodeName === 'INPUT') {
+						ev.currentTarget.focus();
+					}
+				}
 			)
 		},
 
@@ -277,7 +289,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			proportionProgress: computeProportionProgress
 		},
 
-		render: ({backgroundProgress, children, disabled, onKeyDown, onBlur, inputRef, max, min, onChange, onMouseMove, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, value, vertical, ...rest}) => {
+		render: ({backgroundProgress, children, disabled, inputRef, max, min, onBlur, onChange, onKeyDown, onMouseMove, onMouseUp, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, value, vertical, ...rest}) => {
 			delete rest.active;
 			delete rest.detachedKnob;
 			delete rest.onActivate;
@@ -286,7 +298,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			delete rest.pressed;
 
 			return (
-				<div {...rest} disabled={disabled} onKeyDown={onKeyDown} onBlur={onBlur} ref={sliderRef}>
+				<div {...rest} disabled={disabled} onBlur={onBlur} onKeyDown={onKeyDown} onMouseUp={onMouseUp} ref={sliderRef}>
 					<SliderBar
 						proportionBackgroundProgress={backgroundProgress}
 						proportionProgress={proportionProgress}
