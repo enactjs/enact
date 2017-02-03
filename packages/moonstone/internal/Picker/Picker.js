@@ -291,16 +291,6 @@ const Picker = class extends React.Component {
 			validateStepped(nextValue, first, nextProps.step, Picker.displayName);
 			validateStepped(last, first, nextProps.step, Picker.displayName, '"max"');
 		}
-		const wrapToStart = nextProps.wrap && nextProps.value === first && this.props.value === last;
-		const wrapToEnd = nextProps.wrap && nextProps.value === last && this.props.value === first;
-
-		if (wrapToStart) {
-			this.reverseTransition = false;
-		} else if (wrapToEnd) {
-			this.reverseTransition = true;
-		} else {
-			this.reverseTransition = nextProps.value < this.props.value;
-		}
 	}
 
 	componentWillUnmount () {
@@ -323,10 +313,16 @@ const Picker = class extends React.Component {
 
 	updateValue = (dir) => {
 		const {disabled, onChange, step} = this.props;
+		this.setTransitionDirection(dir);
 		if (!disabled && onChange) {
 			const value = this.computeNextValue(this.adjustDirection(dir) * step);
 			onChange({value});
 		}
+	}
+
+	setTransitionDirection = (dir) => {
+		// change the tranistion direction based on the button press
+		this.reverseTransition = !(dir > 0);
 	}
 
 	handleDecClick = () => {
