@@ -321,7 +321,7 @@ const Picker = class extends React.Component {
 	}
 
 	setTransitionDirection = (dir) => {
-		// change the tranistion direction based on the button press
+		// change the transition direction based on the button press
 		this.reverseTransition = !(dir > 0);
 	}
 
