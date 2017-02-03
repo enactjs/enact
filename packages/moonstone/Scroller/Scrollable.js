@@ -3,7 +3,7 @@
  * the {@link moonstone/Scroller.dataIndexAttribute} constant.
  * The default export is {@link moonstone/Scroller.Scrollable}.
  */
-
+import {add, is} from '@enact/core/keymap';
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import hoc from '@enact/core/hoc';
@@ -13,6 +13,9 @@ import ri from '@enact/ui/resolution';
 import css from './Scrollable.less';
 import ScrollAnimator from './ScrollAnimator';
 import Scrollbar from './Scrollbar';
+
+add('pageUp', 33);
+add('pageDown', 34);
 
 const
 	calcVelocity = (d, dt) => (d && dt) ? d / dt : 0,
@@ -25,7 +28,9 @@ const
 	epsilon = 1,
 	// spotlight
 	doc = (typeof window === 'object') ? window.document : {},
-	animationDuration = 1000;
+	animationDuration = 1000,
+	isPageUp = is('pageUp'),
+	isPageDown = is('pageDown');
 
 /**
  * {@link moonstone/Scroller.dataIndexAttribute} is the name of a custom attribute
@@ -388,6 +393,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				const index = Number.parseInt(e.target.getAttribute(dataIndexAttribute));
 				this.childRef.setSpotlightContainerRestrict(e.keyCode, index);
 			}
+			if (isPageUp(e.keyCode) || isPageDown(e.keyCode)) {
+				this.onMoveToPage(e);
+			}
 			this.isKeyDown = true;
 		}
 
@@ -406,6 +414,19 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				doc.activeElement.blur();
 				this.childRef.setContainerDisabled(true);
 				this.scrollToAccumulatedTarget(delta, isHorizontal, isVertical);
+			}
+		}
+
+		onMoveToPage = (e) => {
+			const
+				isHorizontal = this.canScrollHorizontally(),
+				isVertical = this.canScrollVertically(),
+				pageDistance = (isVertical ? this.bounds.clientHeight : this.bounds.clientWidth) * paginationPageMultiplier;
+
+			if (isPageUp(e.keyCode)) {
+				this.scrollToAccumulatedTarget(-pageDistance, isHorizontal, isVertical);
+			} else if (isPageDown(e.keyCode)) {
+				this.scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
 			}
 		}
 
@@ -751,7 +772,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			return (
 				(positioningOption !== 'byBrowser' && !hideScrollbars) ? (
-					<div ref={this.initContainerRef} className={scrollableClasses} style={style} onWheel={onWheel}>
+					<div ref={this.initContainerRef} className={scrollableClasses} style={style} onWheel={onWheel} onKeyDown={this.onMoveToPage}>
 						<Scrollbar
 							className={verticalScrollbarClassnames}
 							{...this.verticalScrollbarProps}
