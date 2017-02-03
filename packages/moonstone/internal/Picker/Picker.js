@@ -415,9 +415,12 @@ const Picker = class extends React.Component {
 		}
 	}
 
-	handleKeyUp = () => {
-		const {onMouseUp} = this.props;
-		jobs.startJob(jobNames.emulateMouseUp, onMouseUp, emulateMouseEventsTimeout);
+	handleKeyUp = (ev) => {
+		const direction = getDirection(ev.keyCode);
+
+		if (direction === 'left' || direction === 'right') {
+			this.handleUp();
+		}
 	}
 
 	determineClasses (decrementerDisabled, incrementerDisabled) {
