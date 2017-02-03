@@ -211,6 +211,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				overflow: 'ellipsis'
 			};
 			this.sync = false;
+			this.forceRestartMarquee = false;
 
 			this.invalidateMetrics();
 		}
@@ -243,6 +244,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.shouldStartMarquee()) {
 				this.startAnimation(this.props.marqueeDelay);
 			}
+			this.forceRestartMarquee = false;
 		}
 
 		componentWillUnmount () {
@@ -287,7 +289,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		shouldStartMarquee () {
 			return (
-				!this.sync && (
+				// restart un-synced marquees or marqueeOn="render" synced marquees that were
+				// cancelled due to a prop change
+				(!this.sync || this.forceRestartMarquee) && (
 					this.props.marqueeOn === 'render' ||
 					(this.isFocused && this.props.marqueeOn === 'focus') ||
 					(this.isHovered && this.props.marqueeOn === 'hover')
@@ -448,6 +452,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		cancelAnimation = () => {
 			if (this.sync) {
+				this.forceRestartMarquee = true;
 				this.context.cancel(this);
 			}
 
