@@ -393,9 +393,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				const index = Number.parseInt(e.target.getAttribute(dataIndexAttribute));
 				this.childRef.setSpotlightContainerRestrict(e.keyCode, index);
 			}
-			if (isPageUp(e.keyCode) || isPageDown(e.keyCode)) {
-				this.onMoveToPage(e);
-			}
 			this.isKeyDown = true;
 		}
 
@@ -418,15 +415,20 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		onMoveToPage = (e) => {
-			const
-				isHorizontal = this.canScrollHorizontally(),
-				isVertical = this.canScrollVertically(),
-				pageDistance = (isVertical ? this.bounds.clientHeight : this.bounds.clientWidth) * paginationPageMultiplier;
+			const keyCode = e.keyCode;
 
-			if (isPageUp(e.keyCode)) {
-				this.scrollToAccumulatedTarget(-pageDistance, isHorizontal, isVertical);
-			} else if (isPageDown(e.keyCode)) {
-				this.scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
+			if (isPageUp(keyCode) || isPageDown(keyCode)) {
+				const
+					isHorizontal = this.canScrollHorizontally(),
+					isVertical = this.canScrollVertically(),
+					{scrollToAccumulatedTarget, bounds} = this,
+					pageDistance = (isVertical ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
+
+				if (isPageUp(keyCode)) {
+					scrollToAccumulatedTarget(-pageDistance, isHorizontal, isVertical);
+				} else {
+					scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
+				}
 			}
 		}
 
