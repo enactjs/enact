@@ -11,6 +11,7 @@ describe('VirtualList Specs', () => {
 			resultScrollLeft;
 
 		const
+			dataSize = 100,
 			items = [],
 			getScrollTo = (scrollTo) => {
 				myScrollTo = scrollTo;
@@ -32,7 +33,7 @@ describe('VirtualList Specs', () => {
 			key: PropTypes.any
 		};
 
-		for (let i = 0; i < 100; i++) {
+		for (let i = 0; i < dataSize; i++) {
 			items.push({name: 'Account ' + i});
 		}
 
@@ -41,7 +42,7 @@ describe('VirtualList Specs', () => {
 				cbScrollTo={getScrollTo}
 				component={renderItem}
 				data={items}
-				dataSize={100}
+				dataSize={dataSize}
 				direction={'horizontal'}
 				itemSize={30}
 				onScrollStop={handlerOnScrollStop}

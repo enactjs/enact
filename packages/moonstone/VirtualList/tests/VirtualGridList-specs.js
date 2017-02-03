@@ -6,6 +6,7 @@ import {VirtualGridList} from '../VirtualList';
 
 describe('VirtualGridList Specs', () => {
 	const
+		dataSize = 10,
 		items = [],
 		renderItem = ({data, index, key}) => {
 			return (
@@ -21,7 +22,7 @@ describe('VirtualGridList Specs', () => {
 		key: PropTypes.any
 	};
 
-	for (let i = 0; i < 10; i++) {
+	for (let i = 0; i < dataSize; i++) {
 		items.push({text: 'Account ' + i});
 	}
 
@@ -29,7 +30,7 @@ describe('VirtualGridList Specs', () => {
 		<VirtualGridList
 			component={renderItem}
 			data={items}
-			dataSize={10}
+			dataSize={dataSize}
 			itemSize={{minWidth: 30, minHeight: 40}}
 		/>
 	);
