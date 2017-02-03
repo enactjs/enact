@@ -319,9 +319,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (node && this.distance == null && !this.props.disabled && !this.props.marqueeDisabled) {
 				this.distance = this.calculateDistance(node);
 				this.contentFits = !this.shouldAnimate(this.distance);
-				if(this.sync && this.contentFits) {
-					this.context.complete(this);
-				}
 				this.setState({
 					overflow: this.calculateTextOverflow(this.distance)
 				});
@@ -382,6 +379,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						this.setState({
 							animating: true
 						});
+					} else {
+						this.context.complete(this);
 					}
 				}, delay);
 			}
