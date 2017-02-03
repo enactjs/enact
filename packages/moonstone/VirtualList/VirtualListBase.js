@@ -566,8 +566,7 @@ class VirtualListCore extends Component {
 	}
 
 	positionContainer () {
-		const
-			{positioningOption} = this.props;
+		const {positioningOption} = this.props;
 		if (positioningOption !== 'byItem') {
 			let scrollPosition = this.scrollPosition;
 			/* NOTE: this calculation only works for Chrome */
@@ -842,10 +841,11 @@ class VirtualListCore extends Component {
 			const
 				{className, style, ...rest} = props,
 				{containerStyle, wrapperStyle} = this,
-				mergedStyle = {...style, ...wrapperStyle};
+				mergedStyle = {...style, ...wrapperStyle},
+				mergedClasses = classNames(css.list, className);
 
 			return (
-				<div ref={this.initWrapperRef} className={css.list} style={mergedStyle} onScroll={onScroll}>
+				<div ref={this.initWrapperRef} className={mergedClasses} style={mergedStyle} onScroll={onScroll}>
 					<div {...rest} ref={this.initContainerRef} style={containerStyle}>
 						{cc}
 					</div>

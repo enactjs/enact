@@ -8,9 +8,9 @@ import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import hoc from '@enact/core/hoc';
-import {startJob, stopJob} from '@enact/core/jobs';
 import React, {Component, PropTypes} from 'react';
 import ri from '@enact/ui/resolution';
+import {startJob, stopJob} from '@enact/core/jobs';
 
 import css from './Scrollable.less';
 import ScrollAnimator from './ScrollAnimator';
@@ -191,7 +191,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		animator = new ScrollAnimator()
 
 		// Right-To-Left
-		rtlDirection = 1 // 1: LTR, -1: RTL
 		isFirstRendered = true
 
 		// browser native scrolling
