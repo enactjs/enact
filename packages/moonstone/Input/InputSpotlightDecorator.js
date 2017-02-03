@@ -31,6 +31,15 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 
 		static propTypes = /** @lends moonstone/Input/InputSpotlightDecorator.InputSpotlightDecorator.prototype */ {
 			/**
+			 * When `true`, applies a disabled style and the control becomes non-interactive.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			disabled: React.PropTypes.bool,
+
+			/**
 			 * When `true`, blurs the input when the "enter" key is pressed.
 			 *
 			 * @type {Boolean}
@@ -150,9 +159,11 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 		}
 
 		onClick = (ev) => {
+			const {disabled, spotlightDisabled} = this.props;
+
 			// focus the <input> whenever clicking on any part of the component to ensure both that
 			// the <input> has focus and Spotlight is paused.
-			if (!this.props.spotlightDisabled) {
+			if (!disabled && !spotlightDisabled) {
 				this.focusInput(ev.currentTarget);
 			}
 
