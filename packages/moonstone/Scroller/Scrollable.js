@@ -419,16 +419,15 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			if (isPageUp(keyCode) || isPageDown(keyCode)) {
 				const
+					{scrollToAccumulatedTarget, bounds} = this,
 					isHorizontal = this.canScrollHorizontally(),
 					isVertical = this.canScrollVertically(),
-					{scrollToAccumulatedTarget, bounds} = this,
-					pageDistance = (isVertical ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
+					pageDistance = 
+						(isVertical ? bounds.clientHeight : bounds.clientWidth) * 
+						(isPageUp(keyCode) ? -1 : 1) * 
+						paginationPageMultiplier;
 
-				if (isPageUp(keyCode)) {
-					scrollToAccumulatedTarget(-pageDistance, isHorizontal, isVertical);
-				} else {
-					scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
-				}
+				scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
 			}
 		}
 
