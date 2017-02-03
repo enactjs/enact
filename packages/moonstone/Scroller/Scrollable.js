@@ -23,8 +23,6 @@ const
 	pixelPerLine = ri.scale(39) * scrollWheelMultiplierForDeltaPixel,
 	paginationPageMultiplier = 0.8,
 	epsilon = 1,
-	// spotlight
-	doc = (typeof window === 'object') ? window.document : {},
 	animationDuration = 1000;
 
 /**
@@ -342,13 +340,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 							calcVelocity(-d.dx, d.dt),
 							calcVelocity(-d.dy, d.dt)
 						);
-					let spotItem = doc.activeElement;
 
-					if (!spotItem) {
-						spotItem = window.document.activeElement;
+					if (typeof window !== 'undefined') {
+						window.document.activeElement.blur();
 					}
-
-					spotItem.blur();
 					this.childRef.setContainerDisabled(true);
 					this.isScrollAnimationTargetAccumulated = false;
 					this.start(target.targetX, target.targetY, true, true, target.duration);
@@ -378,9 +373,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			if (this.isKeyDown && !this.isDragging) {
 				const item = e.target,
 					positionFn = this.childRef.calculatePositionOnFocus;
-				let spotItem = doc.activeElement;
+				let spotItem = null;
 
-				if (!spotItem) {
+				if (typeof window !== 'undefined') {
 					spotItem = window.document.activeElement;
 				}
 
@@ -412,13 +407,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					isHorizontal = this.canScrollHorizontally(),
 					isVertical = this.canScrollVertically(),
 					delta = this.wheel(e, isHorizontal, isVertical);
-				let spotItem = doc.activeElement;
 
-				if (!spotItem) {
-					spotItem = window.document.activeElement;
+				if (typeof window !== 'undefined') {
+					window.document.activeElement.blur();
 				}
-
-				spotItem.blur();
 				this.childRef.setContainerDisabled(true);
 				this.scrollToAccumulatedTarget(delta, isHorizontal, isVertical);
 			}
@@ -673,7 +665,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.verticalScrollability = this.childRef.isVertical();
 
 			if (this.props.positioningOption !== 'byBrowser' && !this.props.hideScrollbars) {
-				// FIXME onWheel and onFocus doesn't work on the v8 snapshot.
+				// FIXME `onWheel` and `onFocus` don't work on the v8 snapshot.
 				this.containerRef.addEventListener('wheel', this.onWheel);
 				this.childRef.containerRef.addEventListener('focus', this.onFocus, true);
 				// eslint-disable-next-line react/no-did-mount-set-state
@@ -698,7 +690,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					});
 				}
 			} else {
-				// FIXME onWheel and onFocus doesn't work on the v8 snapshot.
+				// FIXME `onWheel` and `onFocus` don't work on the v8 snapshot.
 				this.childRef.containerRef.addEventListener('scroll', this.onScroll);
 				this.childRef.containerRef.addEventListener('focus', this.onFocus, true);
 			}
