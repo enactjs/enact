@@ -129,7 +129,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 
 			this.controlled.push({
 				...handlers,
-				complete: STATE.inactive,
+				state: STATE.inactive,
 				component
 			});
 
