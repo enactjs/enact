@@ -81,7 +81,7 @@ const defaultConfig = {
 const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const forwardMouseEnter = forward(enterEvent);
 	const forwardMouseLeave = forward(leaveEvent);
-	const {preserveId} = config;
+	const {preserveId, ...containerConfig} = config;
 
 	return class extends React.Component {
 		static displayName = 'SpotlightContainerDecorator';
@@ -174,7 +174,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentWillMount () {
 			const selector = '[data-container-id="' + this.state.id + '"]:not([data-container-disabled="true"]) .' + spottableClass,
-				cfg = Object.assign({}, config, {selector, navigableFilter: this.navigableFilter, restrict: this.props.spotlightRestrict});
+				cfg = Object.assign({}, containerConfig, {selector, navigableFilter: this.navigableFilter, restrict: this.props.spotlightRestrict});
 
 			Spotlight.set(this.state.id, cfg);
 		}

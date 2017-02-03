@@ -1033,7 +1033,7 @@ const Spotlight = (function() {
 	}
 
 	function isFocusable (elem) {
-		for (const id of _containers.keys()){
+		for (const id of _containers.keys()){ // check *all* the containers to see if the specified element is a focusable element
 			if (isNavigable(elem, id, true)) return true;
 		}
 		return false;
@@ -1089,12 +1089,12 @@ const Spotlight = (function() {
 			}
 
 			for (let key in config) {
-				if (typeof GlobalConfig[key] === 'undefined') {
-					if (containerId) {
-						delete config[key];
-					} else if (typeof config[key] !== 'undefined') {
-						GlobalConfig[key] = config[key];
-					}
+				const validKey = typeof GlobalConfig[key] !== 'undefined';
+
+				if (!containerId && typeof validKey && typeof config[key] !== 'undefined') {
+					GlobalConfig[key] = config[key];
+				} else if (containerId && !validKey) {
+					delete config[key];
 				}
 			}
 
