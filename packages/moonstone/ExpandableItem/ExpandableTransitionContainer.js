@@ -1,7 +1,8 @@
 import kind from '@enact/core/kind';
+import React from 'react';
+import Resizable from '@enact/ui/Resizable';
 import {SpotlightContainerDecorator} from '@enact/spotlight';
 import Transition from '@enact/ui/Transition';
-import React from 'react';
 
 /**
  * Changes spotlight focus to transition container when opening the container if the previously focused
@@ -32,7 +33,12 @@ const ExpandableTransitionContainerBase = kind({
 	}
 });
 
-const ExpandableTransitionContainer = SpotlightContainerDecorator(ExpandableTransitionContainerBase);
+const ExpandableTransitionContainer = SpotlightContainerDecorator(
+	Resizable(
+		{resize: 'onTransitionEnd', filter: (ev) => ev.propertyName !== 'height'},
+		ExpandableTransitionContainerBase
+	)
+);
 
 export default ExpandableTransitionContainer;
 export {ExpandableTransitionContainer, ExpandableTransitionContainerBase};
