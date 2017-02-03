@@ -11,15 +11,14 @@ describe('VirtualList Specs', () => {
 			resultScrollLeft;
 
 		const
-			data = [],
-			dataSize = 100,
+			items = [],
 			getScrollTo = (scrollTo) => {
 				myScrollTo = scrollTo;
 			},
 			handlerOnScrollStop = (e) => {
 				resultScrollLeft = e.scrollLeft;
 			},
-			renderItem = ({index, key}) => {
+			renderItem = ({data, index, key}) => {
 				return (
 					<Item key={key}>
 						{data[index].name}
@@ -28,20 +27,21 @@ describe('VirtualList Specs', () => {
 			};
 
 		renderItem.propTypes = {
+			data: PropTypes.any,
 			index: PropTypes.number,
 			key: PropTypes.any
 		};
 
-		for (let i = 0; i < dataSize; i++) {
-			data.push({name: 'Account ' + i});
+		for (let i = 0; i < 100; i++) {
+			items.push({name: 'Account ' + i});
 		}
 
 		const subject = mount(
 			<VirtualList
 				cbScrollTo={getScrollTo}
 				component={renderItem}
-				data={data}
-				dataSize={dataSize}
+				data={items}
+				dataSize={100}
 				direction={'horizontal'}
 				itemSize={30}
 				onScrollStop={handlerOnScrollStop}
@@ -50,7 +50,7 @@ describe('VirtualList Specs', () => {
 		);
 
 		describe('Set props Specs', () => {
-			it('should render a list item of \'data\'', function () {
+			it('should render a list item of \'items\'', function () {
 				const expected = 'Account 0';
 				const actual = subject.find('VirtualListCore').children().at(0).text();
 
@@ -72,13 +72,13 @@ describe('VirtualList Specs', () => {
 			});
 
 			it('should apply list size', function () {
-				const expectedWidth = '500px';
 				const expectedHeight = '700px';
-				const actualWidth = subject.prop('style').width;
+				const expectedWidth = '500px';
 				const actualHeight = subject.prop('style').height;
+				const actualWidth = subject.prop('style').width;
 
-				expect(actualWidth).to.equal(expectedWidth);
 				expect(actualHeight).to.equal(expectedHeight);
+				expect(actualWidth).to.equal(expectedWidth);
 			});
 
 			it('should apply background color', function () {
@@ -100,8 +100,8 @@ describe('VirtualList Specs', () => {
 
 		describe('Change props Specs', () => {
 			it('should change value of the prop \'data\' to \'Password 0\'', function () {
-				data[0] = {name: 'Password 0'};
-				subject.setProps({data: data});
+				items[0] = {name: 'Password 0'};
+				subject.setProps({data: items});
 
 				const expected = 'Password 0';
 				const actual = subject.find('VirtualListCore').children().at(0).text();
@@ -109,7 +109,7 @@ describe('VirtualList Specs', () => {
 				expect(actual).to.equal(expected);
 			});
 
-			it('should change value of the prop \'direction\' to \'horizontal\'', function () {
+			it('should change value of the prop \'direction\' to \'vertical\'', function () {
 				subject.setProps({direction: 'vertical'});
 
 				const expected = 'vertical';
@@ -127,19 +127,19 @@ describe('VirtualList Specs', () => {
 				expect(actual).to.equal(expected);
 			});
 
-			it('should change value of the props \'style\' to \'backgroundColor\', \'width\', and \'height\'', function () {
-				subject.setProps({style: {backgroundColor: 'blue', width: '400px', height: '600px'}});
+			it('should change value of the props \'style\' to \'backgroundColor\', \'height\', and \'width\'', function () {
+				subject.setProps({style: {backgroundColor: 'blue', height: '600px', width: '400px'}});
 
 				const expectedBackgroundColor = 'blue';
-				const expectedWidth = '400px';
 				const expectedHeight = '600px';
+				const expectedWidth = '400px';
 				const actualBackgroundColor = subject.prop('style').backgroundColor;
-				const actualWidth = subject.prop('style').width;
 				const actualHeight = subject.prop('style').height;
+				const actualWidth = subject.prop('style').width;
 
 				expect(actualBackgroundColor).to.equal(expectedBackgroundColor);
-				expect(actualWidth).to.equal(expectedWidth);
 				expect(actualHeight).to.equal(expectedHeight);
+				expect(actualWidth).to.equal(expectedWidth);
 			});
 		});
 	});
