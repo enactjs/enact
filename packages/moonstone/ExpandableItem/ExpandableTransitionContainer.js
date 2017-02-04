@@ -35,7 +35,7 @@ const ExpandableTransitionContainerBase = kind({
 
 const ExpandableTransitionContainer = SpotlightContainerDecorator(
 	Resizable(
-		{resize: 'onTransitionEnd', filter: (ev) => ev.propertyName !== 'height'},
+		{resize: 'onTransitionEnd', filter: (ev) => ev.propertyName === 'height'},
 		ExpandableTransitionContainerBase
 	)
 );

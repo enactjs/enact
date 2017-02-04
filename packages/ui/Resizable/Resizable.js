@@ -68,6 +68,14 @@ const Resizable = hoc(defaultConfig, (config, Wrapped) => {
 
 	invariant(resize, `resize is required by Resizable but was omitted when applied to ${Wrapped.displayName}`);
 
+	// Temporary 'adapter' function until handle() is updated to use `true` return values continue
+	let filterHandler = null;
+	if (filter) {
+		filterHandler = function (ev) {
+			return !filter(ev);
+		};
+	}
+
 	return class extends React.Component {
 		static displayName = 'Resizable'
 
@@ -97,7 +105,7 @@ const Resizable = hoc(defaultConfig, (config, Wrapped) => {
 				return !this.context.invalidateBounds;
 			},
 			// optionally filter the event before notifying the container
-			filter,
+			filterHandler,
 			this.invalidateBounds
 		)
 
