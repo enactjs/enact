@@ -22,6 +22,24 @@ class ExpandableInputBase extends React.Component {
 		disabled: React.PropTypes.bool,
 
 		/**
+		 * The icon to be placed at the end of the input.
+		 *
+		 * @see {@link moonstone/Icon.Icon}
+		 * @type {String}
+		 * @public
+		 */
+		iconAfter: React.PropTypes.string,
+
+		/**
+		 * The icon to be placed at the beginning of the input.
+		 *
+		 * @see {@link moonstone/Icon.Icon}
+		 * @type {String}
+		 * @public
+		 */
+		iconBefore: React.PropTypes.string,
+
+		/**
 		 * The handler to run when the expandable value is changed.
 		 *
 		 * @type {Function}
@@ -169,7 +187,7 @@ class ExpandableInputBase extends React.Component {
 	}
 
 	render () {
-		const {disabled, onInputChange, onSpotlightDisappear, placeholder, spotlightDisabled, type, value, ...rest} = this.props;
+		const {disabled, iconAfter, iconBefore, onInputChange, onSpotlightDisappear, placeholder, spotlightDisabled, type, value, ...rest} = this.props;
 		delete rest.onChange;
 
 		return (
@@ -186,6 +204,8 @@ class ExpandableInputBase extends React.Component {
 				<Input
 					disabled={disabled}
 					dismissOnEnter
+					iconAfter={iconAfter}
+					iconBefore={iconBefore}
 					noDecorator
 					onBlur={this.handleInputBlur}
 					onChange={onInputChange}
