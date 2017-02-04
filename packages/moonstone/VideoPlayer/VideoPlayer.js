@@ -105,14 +105,25 @@ const VideoPlayerBase = class extends React.Component {
 
 	static propTypes = /** @lends moonstone/VideoPlayer.VideoPlayerBase.prototype */ {
 		/**
-		* Amount of time (in milliseconds) after which control buttons are automatically hidden.
-		* Setting this to 0 or `null` disables autoClose, requiring user input to open and close.
-		*
-		* @type {Number}
-		* @default 7000
-		* @public
-		*/
+		 * Amount of time (in milliseconds) after which control buttons are automatically hidden.
+		 * Setting this to 0 or `null` disables autoClose, requiring user input to open and close.
+		 *
+		 * @type {Number}
+		 * @default 7000
+		 * @public
+		 */
 		autoCloseTimeout: React.PropTypes.number,
+
+		/**
+		 * Amount of time (in milliseconds) after which the feedback text/icon part of the slider's
+		 * tooltip will automatically hidden after the last action.
+		 * Setting this to 0 or `null` disables feedbackHideDelay; feedback will always be present.
+		 *
+		 * @type {Number}
+		 * @default 2000
+		 * @public
+		 */
+		feedbackHideDelay: React.PropTypes.number,
 
 		/**
 		 * These components are placed into the slot to the left of the media controls.
@@ -259,6 +270,7 @@ const VideoPlayerBase = class extends React.Component {
 
 	static defaultProps = {
 		autoCloseTimeout: 7000,
+		feedbackHideDelay: 2000,
 		jumpBy: 30,
 		muted: false,
 		noAutoPlay: false,
@@ -277,6 +289,10 @@ const VideoPlayerBase = class extends React.Component {
 		this.video = null;
 		this.handledMediaForwards = {};
 		this.handledMediaEvents = {};
+		this.prevCommand = (props.noAutoPlay ? 'pause' : 'play');
+		this.speedIndex = 0;
+		this.selectPlaybackRates('fastForward');
+		this.startDelayedFeedbackHide();
 
 		this.initI18n();
 
@@ -302,10 +318,13 @@ const VideoPlayerBase = class extends React.Component {
 
 			// Non-standard state computed from properties
 			bottomControlsVisible: false,
+			feedbackVisible: true,
 			more: false,
 			percentageLoaded: 0,
 			percentagePlayed: 0,
 			playPauseIcon: 'play',
+			sliderScrubbing: false,
+			sliderKnobProportion: 0,
 			titleVisible: true
 		};
 	}
@@ -324,6 +343,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.stopRewindJob();
 		this.stopAutoCloseTimeout();
 		this.stopDelayedTitleHide();
+		this.stopDelayedFeedbackHide();
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -367,12 +387,16 @@ const VideoPlayerBase = class extends React.Component {
 	 * @private
 	 */
 	send = (action, props) => {
+		this.showFeedback();
+		this.startDelayedFeedbackHide();
 		if (this.video && this.videoReady) {
 			this.video[action](props);
 		}
 	}
 
 	jump = (distance) => {
+		this.showFeedback();
+		this.startDelayedFeedbackHide();
 		if (this.video && this.videoReady) {
 			this.video.seek(this.state.currentTime + distance);
 		}
@@ -392,7 +416,15 @@ const VideoPlayerBase = class extends React.Component {
 		}
 	}
 
-	updateMainState = () => {
+	updateMainState = (ev) => {
+		if (ev) {
+			// If this is called from a callback, where ev gets populated. update the state of our
+			// scrubbing variable. Otherwise, lease it in the last place it was. Scrubbing is only
+			// controlled via the ev callback method, but this method can run in other contexts.
+			this.sliderScrubbing = ev.detached;
+			this.sliderKnobProportion = ev.proportion;
+		}
+
 		if (this.videoReady && this.video && this.video.videoEl && this.video.videoEl != null) {
 			const el = this.video.videoEl;
 			const updatedState = {
@@ -411,7 +443,8 @@ const VideoPlayerBase = class extends React.Component {
 				percentageLoaded: el.buffered.length && el.buffered.end(el.buffered.length - 1) / el.duration,
 				percentagePlayed: el.currentTime / el.duration,
 				error: el.networkState === el.NETWORK_NO_SOURCE,
-				loading: el.readyState < el.HAVE_ENOUGH_DATA
+				loading: el.readyState < el.HAVE_ENOUGH_DATA,
+				sliderTooltipTime: this.sliderScrubbing ? (this.sliderKnobProportion * el.duration) : el.currentTime
 			};
 
 			// If there's an error, we're obviously not loading, no matter what the readyState is.
@@ -480,6 +513,9 @@ const VideoPlayerBase = class extends React.Component {
 		this.setPlaybackRate(this.selectPlaybackRate(this.speedIndex));
 
 		if (shouldResumePlayback) this.send('play');
+		else this.stopDelayedFeedbackHide();
+
+		this.showFeedback();
 	}
 
 	/**
@@ -534,6 +570,9 @@ const VideoPlayerBase = class extends React.Component {
 		this.setPlaybackRate(this.selectPlaybackRate(this.speedIndex));
 
 		if (shouldResumePlayback) this.send('play');
+		else this.stopDelayedFeedbackHide();
+
+		this.showFeedback();
 	}
 
 	/**
@@ -686,6 +725,23 @@ const VideoPlayerBase = class extends React.Component {
 		this.setState({titleVisible: false});
 	}
 
+	startDelayedFeedbackHide = () => {
+		if (this.props.feedbackHideDelay) {
+			startJob('feedbackHideDelay' + this.instanceId, this.hideFeedback, this.props.feedbackHideDelay);
+		}
+	}
+
+	stopDelayedFeedbackHide = () => {
+		stopJob('feedbackHideDelay' + this.instanceId);
+	}
+
+	showFeedback = () => {
+		this.setState({feedbackVisible: true});
+	}
+
+	hideFeedback = () => {
+		this.setState({feedbackVisible: false});
+	}
 
 	//
 	// Handled Media events
@@ -752,15 +808,16 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	render () {
-		const {children, className, infoComponents, leftComponents, noAutoPlay, noJumpButtons, noRateButtons, noSlider, rightComponents, title, style,
+		const {children, className, infoComponents, leftComponents, noAutoPlay, noJumpButtons, noRateButtons, noSlider, rightComponents, style, title,
 			// Assign defaults during destructuring to internal methods (here, instead of defaultProps)
 			onBackwardButtonClick = this.onBackward,
 			onForwardButtonClick = this.onForward,
-			onPlayButtonClick = this.onPlay,
 			onJumpBackwardButtonClick = this.onJumpBackward,
 			onJumpForwardButtonClick = this.onJumpForward,
+			onPlayButtonClick = this.onPlay,
 			...rest} = this.props;
 		delete rest.autoCloseTimeout;
+		delete rest.feedbackHideDelay;
 		delete rest.jumpBy;
 		delete rest.titleHideDelay;
 
@@ -803,10 +860,13 @@ const VideoPlayerBase = class extends React.Component {
 							backgroundProgress={this.state.percentageLoaded}
 							value={this.state.percentagePlayed}
 							onChange={this.onSliderChange}
+							onKnobMove={this.updateMainState}
 						>
-							<div className={css.sliderTooltip + ' ' + (this.state.percentagePlayed > 0.5 ? css.left : css.right)}>
-								<Feedback playbackState={this.prevCommand}>{this.state.playbackRate}</Feedback>
-								{secondsToTime(this.state.currentTime, this.durfmt)}
+							<div className={css.sliderTooltip}>
+								<Feedback playbackState={this.prevCommand} visible={this.state.feedbackVisible} >
+									{this.selectPlaybackRate(this.speedIndex)}
+								</Feedback>
+								{secondsToTime(this.state.sliderTooltipTime, this.durfmt)}
 							</div>
 						</MediaSlider>}
 

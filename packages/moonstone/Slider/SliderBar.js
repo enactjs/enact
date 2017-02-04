@@ -33,6 +33,19 @@ const SliderBarFactory = factory(({css}) => {
 			detachedKnob: PropTypes.bool,
 
 			/**
+			 * The handler to run when the knob moves. This method is only called when running
+			 * `Slider` with `detatchedKnob`. If you need to run a callback without a detached knob
+			 * use the more traditional `onChange` property.
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @param {Number} event.proportion The proportional position of the knob across the slider
+			 * @param {Boolean} event.detached `true` if the knob is currently detached, `false` otherwise
+			 * @public
+			 */
+			onKnobMove: PropTypes.func,
+
+			/**
 			 * The background progress as a proportion.
 			 *
 			 * @type {Number}
@@ -95,6 +108,7 @@ const SliderBarFactory = factory(({css}) => {
 
 		render () {
 			const {children, detachedKnob, proportionBackgroundProgress, proportionProgress, scrubbing, vertical, ...rest} = this.props;
+			delete rest.onKnobMove;
 
 			return (
 				<div {...rest} className={css.sliderBar} ref={this.getNode}>

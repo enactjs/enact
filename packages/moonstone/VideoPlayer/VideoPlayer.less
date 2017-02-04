@@ -148,46 +148,15 @@
 						}
 					}
 					.sliderTooltip {
+						.moon-text-base(@moon-video-slider-tooltip-font-size);
+						color: @moon-white;
+						text-shadow: @moon-video-player-title-text-shadow;
+						line-height: @moon-video-slider-tooltip-line-height;
 						white-space: nowrap;
-						font-size: 15px;
-						font-weight: bold;
-						color: white;
-
 						position: absolute;
 						top: 6px;
 						transition: transform 100ms ease-in-out;
-						will-change: opacity, transform;
-						opacity: 1;
-
-						&.hidden {
-							transition: opacity 1000ms ease-in-out;
-							opacity: 0;
-						}
-
-						.feedback {
-							display: inline-block;
-							-webkit-margin-end: 6px;
-
-							> * {
-								display: inline-block;
-								margin: 0 6px;
-
-								&:first-child {
-									-webkit-margin-start: 0;
-								}
-								&:last-child {
-									-webkit-margin-end: 0;
-								}
-							}
-
-							.icon {
-								color: inherit;
-								font-size: 30px;
-								line-height: 15px;
-								width: 15px;
-								height: 15px;
-							}
-						}
+						will-change: transform;
 					}
 					.knob[data-climax="rising"] {
 						.sliderTooltip {

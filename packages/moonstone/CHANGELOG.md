@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 - `moonstone/Slider` property `knobSelect` as part of enabling 5-way support to `moonstone/Slider`, `moonstone/IncrementSlider` and the media slider for `moonstone/VideoPlayer`
+- `moonstone/Slider` property `onKnobMove` to fire when the knob position changes, independently from the `moonstone/Slider` value
 
 ## [1.0.0-beta.2] - 2017-01-30
 

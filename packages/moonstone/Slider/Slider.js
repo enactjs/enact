@@ -159,6 +159,19 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			onIncrement: PropTypes.func,
 
 			/**
+			 * The handler to run when the knob moves. This method is only called when running
+			 * `Slider` with `detatchedKnob`. If you need to run a callback without a detached knob
+			 * use the more traditional `onChange` property.
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @param {Number} event.proportion The proportional position of the knob across the slider
+			 * @param {Boolean} event.detached `true` if the knob is currently detached, `false` otherwise
+			 * @public
+			 */
+			onKnobMove: PropTypes.func,
+
+			/**
 			 * The handler to run when the mouse is moved across the slider.
 			 *
 			 * @type {Function}
@@ -289,7 +302,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			proportionProgress: computeProportionProgress
 		},
 
-		render: ({backgroundProgress, children, disabled, inputRef, max, min, onBlur, onChange, onKeyDown, onMouseMove, onMouseUp, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, value, vertical, ...rest}) => {
+		render: ({backgroundProgress, children, disabled, inputRef, max, min, onBlur, onChange, onKeyDown, onKnobMove, onMouseMove, onMouseUp, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, value, vertical, ...rest}) => {
 			delete rest.active;
 			delete rest.detachedKnob;
 			delete rest.onActivate;
@@ -300,6 +313,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			return (
 				<div {...rest} disabled={disabled} onBlur={onBlur} onKeyDown={onKeyDown} onMouseUp={onMouseUp} ref={sliderRef}>
 					<SliderBar
+						onKnobMove={onKnobMove}
 						proportionBackgroundProgress={backgroundProgress}
 						proportionProgress={proportionProgress}
 						ref={sliderBarRef}
