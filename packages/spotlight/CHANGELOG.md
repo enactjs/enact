@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `spotlight.Spotlight` behavior to not set focus on spottable components animating past the pointer when not in pointer-mode.
+
 ## [1.0.0-beta.2] - 2017-01-30
 
 ### Added
