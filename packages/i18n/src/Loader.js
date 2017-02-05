@@ -162,7 +162,7 @@ EnyoLoader.prototype._storeFilesCache = function (paths, data) {
 };
 
 EnyoLoader.prototype._validateCache = function () {
-	if (typeof window !== 'undefined' && window.localStoragez) {
+	if (typeof window !== 'undefined' && window.localStorage) {
 		let activeID = window.localStorage.getItem(cacheKey);
 		if (activeID !== cacheID) {
 			for (let i = 0; i < window.localStorage.length; i++) {
