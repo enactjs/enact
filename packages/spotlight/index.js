@@ -1,7 +1,7 @@
 import {Spotlight, getDirection} from './src/spotlight';
 import {SpotlightRootDecorator} from './src/root';
 import {SpotlightContainerDecorator, spotlightDefaultClass} from './src/container';
-import {Spottable} from './src/spottable';
+import {Spottable, spottableClass} from './src/spottable';
 
 export default Spotlight;
-export {Spotlight, SpotlightRootDecorator, SpotlightContainerDecorator, Spottable, spotlightDefaultClass, getDirection};
+export {Spotlight, SpotlightRootDecorator, SpotlightContainerDecorator, Spottable, spotlightDefaultClass, getDirection, spottableClass};

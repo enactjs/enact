@@ -7,10 +7,12 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 - `moonstone/ExpandableInput` properties `iconAfter` and `iconBefore` to display icons after and before the input, respectively
+- `moonstone/Panels.Viewport` as a stateful component, which manages the last-focused spottable component for each view
 
 ### Changed
 
 - `moonstone/IncrementSlider` to change when the buttons are held down
+- `moonstone/Panels.Panel` sets focus on the last-focused spottable control (if available) after rendering
 
 ### Fixed
 
