@@ -6,8 +6,8 @@
 
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
+import {getDirection} from '@enact/spotlight';
 import hoc from '@enact/core/hoc';
-import {is} from '@enact/core/keymap';
 import React, {Component, PropTypes} from 'react';
 import ri from '@enact/ui/resolution';
 
@@ -26,11 +26,7 @@ const
 	epsilon = 1,
 	// spotlight
 	doc = (typeof window === 'object') ? window.document : {},
-	animationDuration = 1000,
-	isDown = is('down'),
-	isLeft = is('left'),
-	isRight = is('right'),
-	isUp = is('up');
+	animationDuration = 1000;
 
 /**
  * {@link moonstone/Scroller.dataIndexAttribute} is the name of a custom attribute
@@ -388,20 +384,18 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		onKeyDown = (e) => {
-			const keyCode = e.keyCode;
-			if  (isDown(keyCode) || isLeft(keyCode) || isRight(keyCode) || isUp(keyCode)) {
+		onKeyDown = ({keyCode, target}) => {
+			if  (getDirection(keyCode)) {
 				if (this.childRef.setSpotlightContainerRestrict) {
-					const index = Number.parseInt(e.target.getAttribute(dataIndexAttribute));
+					const index = Number.parseInt(target.getAttribute(dataIndexAttribute));
 					this.childRef.setSpotlightContainerRestrict(keyCode, index);
 				}
 				this.isKeyDown = true;
 			}
 		}
 
-		onKeyUp = (e) => {
-			const keyCode = e.keyCode;
-			if  (isDown(keyCode) || isLeft(keyCode) || isRight(keyCode) || isUp(keyCode)) {
+		onKeyUp = ({keyCode}) => {
+			if  (getDirection(keyCode)) {
 				this.isKeyDown = false;
 			}
 		}
