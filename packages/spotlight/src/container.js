@@ -7,6 +7,25 @@ import {spottableClass} from './spottable';
 
 const spotlightDefaultClass = 'spottable-default';
 
+/*
+ * Walks up the DOM heirarchy to find the first ancestor that is a spotlight container
+ *
+ * @param   {Node}   node
+ *
+ * @returns {String}       Container ID of the parent container or `null` if not found
+ */
+const findParentContainerId = function (node) {
+	let parentContainerId = null;
+	while ((node = node.parentNode)) {
+		if (node.dataset.containerId) {
+			parentContainerId = node.dataset.containerId;
+			break;
+		}
+	}
+
+	return parentContainerId;
+};
+
 const enterEvent = 'onMouseEnter';
 const leaveEvent = 'onMouseLeave';
 
@@ -191,7 +210,8 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleMouseLeave = (ev) => {
-			Spotlight.setActiveContainer(null);
+			const parentContainerId = findParentContainerId(ev.currentTarget);
+			Spotlight.setActiveContainer(parentContainerId);
 			forwardMouseLeave(ev, this.props);
 		}
 
