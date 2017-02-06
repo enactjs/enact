@@ -40,8 +40,6 @@ class PickerAddRemove extends React.Component {
 	}
 
 	componentWillUpdate () {
-		this.value = '';
-		this.index = 0;
 	}
 
 	handleAdd = () => {
@@ -59,13 +57,12 @@ class PickerAddRemove extends React.Component {
 	}
 
 	handleRemove = () => {
-		const index = this.index;
+		const children = Object.assign({}, this.state.children),
+			index = this.index;
+		delete children[index];
 
 		this.setState({
-			children: [
-				...this.state.children.slice(0, index),
-				...this.state.children.slice(index + 1)
-			]
+			children: children
 		});
 	}
 
@@ -82,11 +79,13 @@ class PickerAddRemove extends React.Component {
 	}
 
 	render () {
+		const pickerChildren = Object.values(this.state.children);
+
 		return (
 			<div>
 				<div>
 					<StatefulPicker {...this.props}>
-						{Object.values(this.state.children)}
+						{pickerChildren}
 					</StatefulPicker>
 				</div>
 				<div>
