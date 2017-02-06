@@ -153,15 +153,19 @@ const ToggleItemBase = kind({
 		}
 	},
 
-	render: ({children, iconAfter, iconBefore, onToggle, ...rest}) => {
+	render: ({children, iconAfter, iconBefore, onToggle, selected, ...rest}) => {
 		delete rest.icon;
 		delete rest.iconClasses;
 		delete rest.iconPosition;
-		delete rest.selected;
 		delete rest.value;
 
 		return (
-			<ItemOverlay {...rest} onClick={onToggle}>
+			<ItemOverlay
+				{...rest}
+				aria-checked={selected}
+				onClick={onToggle}
+				role="checkbox"
+			>
 				{iconBefore}
 				{children}
 				{iconAfter}
