@@ -447,7 +447,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		doScrollStop () {
-			this.props.onScrollStop({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop});
+			this.props.onScrollStop({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, firstVisibleIndex: this.bounds.firstVisibleIndex, lastVisibleIndex: this.bounds.lastVisibleIndex});
 		}
 
 		// update scroll position
