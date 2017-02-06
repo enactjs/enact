@@ -3,7 +3,7 @@
  * the {@link moonstone/Scroller.dataIndexAttribute} constant.
  * The default export is {@link moonstone/Scroller.Scrollable}.
  */
-import {add, is} from '@enact/core/keymap';
+import {is} from '@enact/core/keymap';
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import hoc from '@enact/core/hoc';
@@ -13,9 +13,6 @@ import ri from '@enact/ui/resolution';
 import css from './Scrollable.less';
 import ScrollAnimator from './ScrollAnimator';
 import Scrollbar from './Scrollbar';
-
-add('pageUp', 33);
-add('pageDown', 34);
 
 const
 	calcVelocity = (d, dt) => (d && dt) ? d / dt : 0,
@@ -180,6 +177,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		scrollTop = 0
 		dirHorizontal = 0
 		dirVertical = 0
+		pageDistanceForUp = 0
+		pageDistanceForDown = 0
 
 		// spotlight
 		lastFocusedItem = null
@@ -396,6 +395,18 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.isKeyDown = true;
 		}
 
+		onKeyDownOfContainer = ({keyCode}) => {
+			if (isPageUp(keyCode) || isPageDown(keyCode)) {
+				const
+					{scrollToAccumulatedTarget, bounds} = this,
+					isHorizontal = this.canScrollHorizontally(),
+					isVertical = this.canScrollVertically(),
+					pageDistance = isPageUp(keyCode) ? this.pageDistanceForUp : this.pageDistanceForDown;
+
+				scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
+			}
+		}
+
 		onKeyUp = () => {
 			this.isKeyDown = false;
 		}
@@ -411,23 +422,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				doc.activeElement.blur();
 				this.childRef.setContainerDisabled(true);
 				this.scrollToAccumulatedTarget(delta, isHorizontal, isVertical);
-			}
-		}
-
-		onMoveToPage = (e) => {
-			const keyCode = e.keyCode;
-
-			if (isPageUp(keyCode) || isPageDown(keyCode)) {
-				const
-					{scrollToAccumulatedTarget, bounds} = this,
-					isHorizontal = this.canScrollHorizontally(),
-					isVertical = this.canScrollVertically(),
-					pageDistance = 
-						(isVertical ? bounds.clientHeight : bounds.clientWidth) * 
-						(isPageUp(keyCode) ? -1 : 1) * 
-						paginationPageMultiplier;
-
-				scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
 			}
 		}
 
@@ -730,6 +724,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			if (this.childRef.updateClientSize) {
 				this.childRef.updateClientSize();
 			}
+
+			this.pageDistanceForDown = (this.state.isVerticalScrollbarVisible ? this.bounds.clientHeight : this.bounds.clientWidth) * paginationPageMultiplier;
+			this.pageDistanceForUp = this.pageDistanceForDown * -1;
 		}
 
 		componentWillUnmount () {
@@ -773,7 +770,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			return (
 				(positioningOption !== 'byBrowser' && !hideScrollbars) ? (
-					<div ref={this.initContainerRef} className={scrollableClasses} style={style} onWheel={onWheel} onKeyDown={this.onMoveToPage}>
+					<div ref={this.initContainerRef} className={scrollableClasses} style={style} onWheel={onWheel} onKeyDown={this.onKeyDownOfContainer}>
 						<Scrollbar
 							className={verticalScrollbarClassnames}
 							{...this.verticalScrollbarProps}

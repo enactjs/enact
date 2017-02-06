@@ -13,4 +13,10 @@ addAll({
 	down: 40
 });
 
+// Add other generic keys except for default 5-way key codes
+addAll({
+	pageUp: 33,
+	pageDown: 34
+});
+
 export * from './keymap';
