@@ -557,7 +557,7 @@ class VirtualListCore extends Component {
 	positionItems ({updateFrom, updateTo}) {
 		const
 			{positioningOption} = this.props,
-			{isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, scrollPosition, moreInfo} = this;
+			{isPrimaryDirectionVertical, dimensionToExtent, moreInfo, primary, secondary, scrollPosition} = this;
 
 		// we only calculate position of the first child
 		let
