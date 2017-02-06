@@ -4,7 +4,6 @@ import {
 	callOnEvent,
 	forKeyCode,
 	forProp,
-	forward,
 	preventDefault,
 	stop
 } from '../handle';
