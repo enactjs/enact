@@ -6,24 +6,27 @@ import {Spotlight, SpotlightContainerDecorator, spottableClass} from '@enact/spo
 import css from './Panel.less';
 
 const spotPanel = (node) => {
-	if (node && !node.contains(document.activeElement)) {
-		const focusIndex = node.getAttribute('data-focus-index');
-		let lastFocusedSpottable;
+	if (node) {
+		const focusIndex = parseInt(node.getAttribute('data-focus-index'));
 
-		if (focusIndex && focusIndex >= 0) {
-			const spottables = node.querySelectorAll(`.${spottableClass}`);
+		if (!isNaN(focusIndex)) {
+			let lastFocusedSpottable;
 
-			if (focusIndex < spottables.length) {
-				lastFocusedSpottable = spottables[focusIndex];
+			if (focusIndex >= 0) {
+				const spottables = node.querySelectorAll(`.${spottableClass}`);
+
+				if (focusIndex < spottables.length) {
+					lastFocusedSpottable = spottables[focusIndex];
+				}
 			}
-		}
 
-		const body = node.querySelector('section .spottable');
-		const header = node.querySelector('header .spottable');
-		const spottable = lastFocusedSpottable || body || header;
+			const body = node.querySelector('section .spottable');
+			const header = node.querySelector('header .spottable');
+			const spottable = lastFocusedSpottable || body || header;
 
-		if (spottable) {
-			Spotlight.focus(spottable);
+			if (spottable) {
+				Spotlight.focus(spottable);
+			}
 		}
 	}
 };
