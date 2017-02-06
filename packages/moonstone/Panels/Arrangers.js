@@ -82,5 +82,8 @@ const offsetForBreadcrumbs = ({node}) => {
  */
 export const ActivityArranger = {
 	enter: compose(panelEnter, reverse(offsetForBreadcrumbs)),
-	leave: compose(panelLeave, offsetForBreadcrumbs)
+	leave: compose(panelLeave, offsetForBreadcrumbs),
+	// Need a stay arrangement in case the initial index for ActivityPanels is > 0 so the panel is
+	// correctly offset for the breadcrumbs.
+	stay: offsetForBreadcrumbs
 };
