@@ -4,17 +4,13 @@
 
 import {addAll} from './keymap';
 
-// Add the default 5-way navigation key codes
+// Add the generic key codes
 addAll({
 	enter: [13, 16777221],
 	left: 37,
 	up: 38,
 	right: 39,
-	down: 40
-});
-
-// Add other generic keys except for default 5-way key codes
-addAll({
+	down: 40,
 	pageUp: 33,
 	pageDown: 34
 });
