@@ -5,7 +5,7 @@
  */
 
 import kind from '@enact/core/kind';
-import {withArgs as handle, forward} from '@enact/core/handle';
+import {handle, forward} from '@enact/core/handle';
 import React, {PropTypes} from 'react';
 
 import Icon from '../Icon';
@@ -75,15 +75,18 @@ const SwitchBase = kind({
 		className: 'switch'
 	},
 
-	computed: {
-		className: ({animated, selected, styler}) => styler.append(
-			{animated, selected}
-		),
-		onToggle: handle(forward('onClick'), ({selected, onToggle}) => () => {
+	handlers: {
+		onToggle: handle(forward('onClick'), (ev, {selected, onToggle}) => () => {
 			if (onToggle) {
 				onToggle({selected: !selected});
 			}
 		})
+	},
+
+	computed: {
+		className: ({animated, selected, styler}) => styler.append(
+			{animated, selected}
+		)
 	},
 
 	render: ({onToggle, ...rest}) => {

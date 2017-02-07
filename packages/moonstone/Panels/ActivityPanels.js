@@ -19,9 +19,7 @@ import {PanelsBase} from './Panels';
 const ActivityPanels = BreadcrumbDecorator({
 	className: 'panels activity enact-fit',
 	max: 1,
-	props: {
-		arranger: ActivityArranger
-	}
+	panelArranger: ActivityArranger
 }, PanelsBase);
 
 export default ActivityPanels;

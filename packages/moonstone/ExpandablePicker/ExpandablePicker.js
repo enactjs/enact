@@ -123,6 +123,15 @@ const ExpandablePickerBase = kind({
 		orientation: React.PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
+		 * When `true`, the component cannot be navigated using spotlight.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		spotlightDisabled: React.PropTypes.bool,
+
+		/**
 		 * Index of the selected child
 		 *
 		 * @type {Number}
@@ -152,22 +161,24 @@ const ExpandablePickerBase = kind({
 	},
 
 	defaultProps: {
+		spotlightDisabled: false,
 		value: 0
 	},
 
-	computed: {
-		label: ({children, value}) => React.Children.toArray(children)[value],
-		onChange: ({onChange, onClose, value}) => {
-			return () => {
-				if (onClose) {
-					onClose();
-				}
+	handlers: {
+		onChange: (ev, {onChange, onClose, value}) => {
+			if (onClose) {
+				onClose();
+			}
 
-				if (onChange) {
-					onChange({value});
-				}
-			};
+			if (onChange) {
+				onChange({value});
+			}
 		}
+	},
+
+	computed: {
+		label: ({children, value}) => React.Children.toArray(children)[value]
 	},
 
 	render: (props) => {
@@ -182,6 +193,7 @@ const ExpandablePickerBase = kind({
 			onPick,
 			onSpotlightDisappear,
 			orientation,
+			spotlightDisabled,
 			value,
 			width,
 			wrap,
@@ -189,7 +201,7 @@ const ExpandablePickerBase = kind({
 		} = props;
 
 		return (
-			<ExpandableItemBase {...rest} disabled={disabled} onSpotlightDisappear={onSpotlightDisappear}>
+			<ExpandableItemBase {...rest} disabled={disabled} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled}>
 				<Picker
 					disabled={disabled}
 					onChange={onPick}
@@ -200,12 +212,13 @@ const ExpandablePickerBase = kind({
 					noAnimation={noAnimation}
 					onSpotlightDisappear={onSpotlightDisappear}
 					orientation={orientation}
+					spotlightDisabled={spotlightDisabled}
 					width={width}
 					wrap={wrap}
 				>
 					{children}
 				</Picker>
-				<IconButton onClick={onChange} onSpotlightDisappear={onSpotlightDisappear}>check</IconButton>
+				<IconButton onClick={onChange} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled}>check</IconButton>
 			</ExpandableItemBase>
 		);
 	}

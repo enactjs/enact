@@ -19,18 +19,20 @@ const PickerButtonBase = kind({
 			React.PropTypes.object
 		]),
 		joined: React.PropTypes.bool,
-		onSpotlightDisappear: React.PropTypes.func
+		onSpotlightDisappear: React.PropTypes.func,
+		spotlightDisabled: React.PropTypes.bool
 	},
 
 	computed: {
 		ButtonType: ({joined}) => joined ? Icon : TransparentIconButton
 	},
 
-	render: ({ButtonType, disabled, icon, joined, onSpotlightDisappear, ...rest}) => {
-		const spotlightProps = {onSpotlightDisappear};
+	render: ({ButtonType, disabled, icon, joined, onSpotlightDisappear, spotlightDisabled, ...rest}) => {
+		const spotlightProps = {onSpotlightDisappear, spotlightDisabled};
 
 		if (joined) {
 			delete spotlightProps.onSpotlightDisappear;
+			delete spotlightProps.spotlightDisabled;
 		}
 
 		return (
@@ -43,7 +45,7 @@ const PickerButtonBase = kind({
 
 const PickerButton = Holdable(
 	{resume: true, endHold: 'onLeave'},
-	onlyUpdateForKeys(['disabled', 'icon', 'joined', 'onMouseUp'])(
+	onlyUpdateForKeys(['disabled', 'icon', 'joined', 'onMouseUp', 'spotlightDisabled'])(
 		PickerButtonBase
 	)
 );

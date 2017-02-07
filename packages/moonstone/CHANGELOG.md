@@ -6,31 +6,50 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
-- `moonstone/MarqueeDecorator` property `invalidateProps` that specifies which props cause the marquee distance to be invalidated
-- developer-mode warnings to several components to warn when values are out-of-range
-- `moonstone/Divider` property `spacing` which adjusts the amount of empty space above and below the `Divider`. `normal`, `small`, `medium`, `large`, and `none` are available.
-- `moonstone/Picker` when `joined` the ability to be incremented and decremented by arrow keys.
-- `onSpotlightDisappear` event property support for spottable moonstone components
+- `moonstone/ExpandableInput` properties `iconAfter` and `iconBefore` to display icons after and before the input, respectively
 
 ### Changed
 
-- `moonstone/ProgressBar` properties `progress` and `backgroundProgress` to accept a number between 0 and 1.
+- `moonstone/IncrementSlider` to change when the buttons are held down
+
+### Fixed
+
+- `moonstone/marquee.MarqueeController` to start marquee on newly registered components when controller has focus and to restart synced marquees after completion
+
+## [1.0.0-beta.2] - 2017-01-30
+
+### Added
+
+- `moonstone/Panels.Panel` property `showChildren` to support deferring rendering the panel body until animation completes
+- `moonstone/MarqueeDecorator` property `invalidateProps` that specifies which props cause the marquee distance to be invalidated
+- developer-mode warnings to several components to warn when values are out-of-range
+- `moonstone/Divider` property `spacing` which adjusts the amount of empty space above and below the `Divider`. `'normal'`, `'small'`, `'medium'`, `'large'`, and `'none'` are available.
+- `moonstone/Picker` when `joined` the ability to be incremented and decremented by arrow keys
+- `onSpotlightDisappear` event property support for spottable moonstone components
+- `moonstone/VideoPlayer` property `titleHideDelay`
+
+### Changed
+
+- `moonstone/Panels.Panels` and variations to defer rendering the children of contained `Panel` instances until animation completes
+- `moonstone/ProgressBar` properties `progress` and `backgroundProgress` to accept a number between 0 and 1
 - `moonstone/Slider` and `moonstone/IncrementSlider` property `backgroundPercent` to `backgroundProgress` which now accepts a number between 0 and 1
 - `moonstone/Slider` to not ignore `value` prop when it is the same as the previous value
 - `moonstone/Picker` component's buttons to reverse their operation such that 'up' selects the previous item and 'down' the next
+- `moonstone/Picker` and derivatives may now use numeric width, which represents the amount of characters to use for sizing. `width={4}` represents four characters, `2` for two characters, etc. `width` still accepts the size-name strings.
 - `moonstone/Divider` to now behave as a simple horizontal line when no text content is provided
-- `moonstone/Scrollable` to not display scrollbar controls by default.
-- `moonstone/DatePicker` and `moonstone/TimePicker` to emit `onChange` event whenever the value is changed, not just when the component is closed.
+- `moonstone/Scrollable` to not display scrollbar controls by default
+- `moonstone/DatePicker` and `moonstone/TimePicker` to emit `onChange` event whenever the value is changed, not just when the component is closed
 
 ### Removed
 
 - `moonstone/ProgressBar` properties `min` and `max`
-- `moonstone/Picker` and derivatives may now use numeric width, which represents the amount of characters to use for sizing. `width={4}` represents four characters, `2` for two characters, etc. `width` still accepts the size-name strings.
 
 ### Fixed
 
 - `moonstone/IncrementSlider` so that the knob is spottable via pointer, and 5-way navigation between the knob and the increment/decrement buttons is functional
 - `moonstone/Slider` and `moonstone/IncrementSlider` to not fire `onChange` for value changes from props
+- `spotlightDisabled` property support for spottable moonstone components
+- `moonstone/Popup` and `moonstone/ContextualPopupDecorator` so that when the popup is closed, spotlight focus returns to the control that had focus prior to the popup opening.
 
 ## [1.0.0-beta.1] - 2016-12-30
 

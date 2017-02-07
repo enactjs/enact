@@ -16,14 +16,6 @@
  * computed(cfg)(props) // => {x: 2, y: 3, z: 4, sum: 9, product: 24}
  * ```
  *
- * Can also be used to generate or alter handlers by returning a function.
- *
- * ```
- * const cfg = {
- *	handleClick: (props) => (e) => props.onChange(e.value)
- * }
- * ```
- *
  * @method computed
  * @param {Object} cfg Configuration object mapping transformation functions to property names
  * @param {Object} props Render props

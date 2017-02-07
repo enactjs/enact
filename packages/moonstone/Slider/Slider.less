@@ -7,11 +7,7 @@
 	height: 240px;	// Vertical sizing here. Being here instead of in .vertical requires less precedence when overriding the style from app-code.
 
 	&.pressed {
-		.fill {
-			background-color: @moon-slider-spotlight-bar-color;
-		}
 		.knob::before {
-			background-color: @moon-slider-spotlight-knob-color;
 			border-width: 0; // Setting the border-width:0 removes the border and lets the background fill the entire size that was previously cropped off by the border.
 		}
 	}
@@ -136,6 +132,18 @@
 			-webkit-appearance: slider-vertical; /* WebKit */
 			opacity: 0.0001;	// This needs to be still visible to remain interactive, so we can't simply set visibility:hidden or display:none or even -webkit-appearance:none. This becomes effectively invisible with 0.0001
 		}
+	}
+
+	&:global(.spottable) {
+		&.pressed {
+			.fill {
+				background-color: @moon-slider-spotlight-bar-color;
+			}
+			.knob::before {
+				background-color: @moon-slider-spotlight-knob-color;
+			}
+		}
+
 	}
 
 	&:global(.spottable):focus {
