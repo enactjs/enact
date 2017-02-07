@@ -9,6 +9,7 @@ import kind from '@enact/core/kind';
 import Pressable from '@enact/ui/Pressable';
 import React, {PropTypes} from 'react';
 import {Spottable} from '@enact/spotlight';
+import Toggleable from '@enact/ui/Toggleable';
 
 import {SliderBaseFactory} from '../Slider';
 import SliderDecorator from '../internal/SliderDecorator';
@@ -102,7 +103,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			onChange: PropTypes.func,
 
 			/**
-			 * The handler to run when the value is incremented.
+			 * The handler to run when the value is decremented.
 			 *
 			 * @type {Function}
 			 * @param {Object} event
@@ -111,7 +112,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			onDecrement: PropTypes.func,
 
 			/**
-			 * The handler to run when the value is decremented.
+			 * The handler to run when the value is incremented.
 			 *
 			 * @type {Function}
 			 * @param {Object} event
@@ -200,7 +201,14 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 				>
 					{decrementIcon}
 				</IncrementSliderButton>
-				<Slider {...rest} className={css.slider} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled} />
+				<Slider
+					{...rest}
+					className={css.slider}
+					onDecrement={onDecrement}
+					onIncrement={onIncrement}
+					onSpotlightDisappear={onSpotlightDisappear}
+					spotlightDisabled={spotlightDisabled}
+				/>
 				<IncrementSliderButton
 					className={css.incrementButton}
 					disabled={incrementDisabled}
@@ -232,7 +240,6 @@ const IncrementSliderFactory = factory((config) => {
 	 */
 	return Pressable(
 		SliderDecorator(
-			{handlesIncrements: true},
 			Base
 		)
 	);
