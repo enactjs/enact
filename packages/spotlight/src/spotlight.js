@@ -71,8 +71,7 @@ const Spotlight = (function() {
 	let _ids = 0;
 	let _initialized = false;
 	let _pause = false;
-	let _containers = {};
-	let _containerCount = 0;
+	const _containers = new Map();
 	let _defaultContainerId = '';
 	let _lastContainerId = '';
 	let _duringFocusChange = false;
@@ -504,7 +503,7 @@ const Spotlight = (function() {
 		/* eslint no-constant-condition: ["error", { "checkLoops": false }]*/
 		while (true) {
 			id = _containerPrefix + String(++_ids);
-			if (!_containers[id]) {
+			if (!_containers.get(id)) {
 				break;
 			}
 		}
@@ -572,17 +571,19 @@ const Spotlight = (function() {
 	}
 
 	function isNavigable (elem, containerId, verifyContainerSelector) {
-		if (!elem || !containerId || !_containers[containerId] || _containers[containerId].selectorDisabled) {
+		const config = _containers.get(containerId);
+
+		if (!elem || !containerId || !config || config.selectorDisabled) {
 			return false;
 		}
 		if ((elem.offsetWidth <= 0 && elem.offsetHeight <= 0)) {
 			return false;
 		}
-		if (verifyContainerSelector && !matchSelector(elem, _containers[containerId].selector)) {
+		if (verifyContainerSelector && !matchSelector(elem, config.selector)) {
 			return false;
 		}
-		if (typeof _containers[containerId].navigableFilter === 'function') {
-			if (_containers[containerId].navigableFilter(elem, containerId) === false) {
+		if (typeof config.navigableFilter === 'function') {
+			if (config.navigableFilter(elem, containerId) === false) {
 				return false;
 			}
 		} else if (typeof GlobalConfig.navigableFilter === 'function') {
@@ -594,21 +595,24 @@ const Spotlight = (function() {
 	}
 
 	function getContainerId (elem) {
-		for (let id in _containers) {
-			if (!_containers[id].selectorDisabled && isNavigable(elem, id, true)) {
+		const containers = [..._containers.keys()];
+
+		for (let i = containers.length; i-- > 0;) {
+			const id = containers[i];
+			if (!_containers.get(id).selectorDisabled && isNavigable(elem, id, true)) {
 				return id;
 			}
 		}
 	}
 
 	function getContainerNavigableElements (containerId) {
-		return parseSelector(_containers[containerId].selector).filter(function (elem) {
+		return parseSelector(_containers.get(containerId).selector).filter(function (elem) {
 			return isNavigable(elem, containerId);
 		});
 	}
 
 	function getContainerDefaultElement (containerId) {
-		let defaultElement = _containers[containerId].defaultElement;
+		let defaultElement = _containers.get(containerId).defaultElement;
 		if (!defaultElement) {
 			return null;
 		}
@@ -622,7 +626,7 @@ const Spotlight = (function() {
 	}
 
 	function getContainerLastFocusedElement (containerId) {
-		let lastFocusedElement = _containers[containerId].lastFocusedElement;
+		const lastFocusedElement = _containers.get(containerId).lastFocusedElement;
 		if (!isNavigable(lastFocusedElement, containerId, true)) {
 			return null;
 		}
@@ -635,7 +639,7 @@ const Spotlight = (function() {
 		}
 
 		if ((_pointerMode && !fromPointer)) {
-			_containers[containerId].lastFocusedElement = elem;
+			_containers.get(containerId).lastFocusedElement = elem;
 			return false;
 		}
 
@@ -679,7 +683,7 @@ const Spotlight = (function() {
 			containerId = getContainerId(elem);
 		}
 		if (containerId) {
-			_containers[containerId].lastFocusedElement = elem;
+			_containers.get(containerId).lastFocusedElement = elem;
 			_lastContainerId = containerId;
 		}
 	}
@@ -707,8 +711,9 @@ const Spotlight = (function() {
 	function focusContainer (containerId) {
 		let range = [];
 		let addRange = function (id) {
+			const config = _containers.get(id);
 			if (id && range.indexOf(id) < 0
-					&& _containers[id] && !_containers[id].selectorDisabled) {
+					&& config && !config.selectorDisabled) {
 				range.push(id);
 			}
 		};
@@ -718,14 +723,14 @@ const Spotlight = (function() {
 		} else {
 			addRange(_defaultContainerId);
 			addRange(_lastContainerId);
-			Object.keys(_containers).map(addRange);
+			[..._containers.keys()].map(addRange);
 		}
 
 		for (let i = 0; i < range.length; i++) {
 			let id = range[i];
 			let next;
 
-			if (_containers[id].enterTo === 'last-focused') {
+			if (_containers.get(id).enterTo === 'last-focused') {
 				next = getContainerLastFocusedElement(id)
 					|| getContainerDefaultElement(id)
 					|| getContainerNavigableElements(id)[0];
@@ -744,8 +749,10 @@ const Spotlight = (function() {
 	}
 
 	function gotoLeaveFor (containerId, direction) {
-		if (_containers[containerId].leaveFor && typeof _containers[containerId].leaveFor[direction] !== 'undefined') {
-			let next = _containers[containerId].leaveFor[direction];
+		const config = _containers.get(containerId);
+
+		if (config.leaveFor && typeof config.leaveFor[direction] !== 'undefined') {
+			const next = config.leaveFor[direction];
 
 			if (typeof next === 'string') {
 				if (next === '') {
@@ -765,7 +772,8 @@ const Spotlight = (function() {
 	function getNavigableElements () {
 		let containerNavigableElements = {};
 		let allNavigableElements = [];
-		for (let id in _containers) {
+
+		for (const id of _containers.keys()) {
 			containerNavigableElements[id] = getContainerNavigableElements(id);
 			allNavigableElements = allNavigableElements.concat(containerNavigableElements[id]);
 		}
@@ -787,7 +795,7 @@ const Spotlight = (function() {
 			}
 
 			let enterToElement;
-			switch (_containers[nextContainerId].enterTo) {
+			switch (_containers.get(nextContainerId).enterTo) {
 				case 'last-focused':
 					enterToElement = getContainerLastFocusedElement(nextContainerId) || getContainerDefaultElement(nextContainerId);
 					break;
@@ -804,7 +812,7 @@ const Spotlight = (function() {
 	}
 
 	function spotNextFromPoint (direction, position, containerId) {
-		const config = extend({}, GlobalConfig, _containers[containerId]);
+		const config = extend({}, GlobalConfig, _containers.get(containerId));
 		const {allNavigableElements, containerNavigableElements} = getNavigableElements();
 		const targetRect = getPointRect(position);
 		let next;
@@ -826,7 +834,7 @@ const Spotlight = (function() {
 		}
 
 		if (next) {
-			_containers[containerId].previous = {
+			_containers.get(containerId).previous = {
 				target: getContainerLastFocusedElement(_lastContainerId),
 				destination: next,
 				reverse: _reverseDirections[direction]
@@ -849,7 +857,7 @@ const Spotlight = (function() {
 		const {allNavigableElements, containerNavigableElements} = getNavigableElements();
 		const targetRect = getRect(currentFocusedElement);
 
-		let config = extend({}, GlobalConfig, _containers[currentContainerId]);
+		const config = extend({}, GlobalConfig, _containers.get(currentContainerId));
 		let next;
 
 		if (config.restrict === 'self-only' || config.restrict === 'self-first') {
@@ -880,7 +888,7 @@ const Spotlight = (function() {
 		}
 
 		if (next) {
-			_containers[currentContainerId].previous = {
+			_containers.get(currentContainerId).previous = {
 				target: currentFocusedElement,
 				destination: next,
 				reverse: _reverseDirections[direction]
@@ -924,13 +932,13 @@ const Spotlight = (function() {
 	}
 
 	function shouldPreventNavigation () {
-		return (!_containerCount || _pause);
+		return (!_containers.size || _pause);
 	}
 
 	function onKeyUp (evt) {
 		const keyCode = evt.keyCode;
 
-		if (!shouldPreventNavigation() && getDirection(keyCode)) {
+		if (getDirection(keyCode) || isEnter(keyCode)) {
 			SpotlightAccelerator.reset();
 			_5WayKeyHold = false;
 		}
@@ -985,7 +993,9 @@ const Spotlight = (function() {
 	}
 
 	function onMouseOver (evt) {
-		if (shouldPreventNavigation()) {
+		// a motionless pointer over animated spottable dom (such as list scrolling via 5-way) still emits
+		// an `onMouseOver` event even when `_pointerMode` is `false`, in which case we terminate early.
+		if (!_pointerMode || shouldPreventNavigation()) {
 			return;
 		}
 
@@ -1025,7 +1035,7 @@ const Spotlight = (function() {
 	}
 
 	function isFocusable (elem) {
-		for (let id in _containers) { // check *all* the containers to see if the specified element is a focusable element
+		for (const id of _containers.keys()){ // check *all* the containers to see if the specified element is a focusable element
 			if (isNavigable(elem, id, true)) return true;
 		}
 		return false;
@@ -1057,8 +1067,7 @@ const Spotlight = (function() {
 		},
 
 		clear: function () {
-			_containers = {};
-			_containerCount = 0;
+			_containers.clear();
 			_defaultContainerId = '';
 			_lastContainerId = '';
 			_duringFocusChange = false;
@@ -1074,7 +1083,7 @@ const Spotlight = (function() {
 			} else if (typeof arguments[0] === 'string' && typeof arguments[1] === 'object') {
 				containerId = arguments[0];
 				config = arguments[1];
-				if (!_containers[containerId]) {
+				if (!_containers.get(containerId)) {
 					throw new Error('Container "' + containerId + '" doesn\'t exist!');
 				}
 			} else {
@@ -1082,18 +1091,18 @@ const Spotlight = (function() {
 			}
 
 			for (let key in config) {
-				if (typeof GlobalConfig[key] !== 'undefined') {
-					if (containerId) {
-						_containers[containerId][key] = config[key];
-					} else if (typeof config[key] !== 'undefined') {
-						GlobalConfig[key] = config[key];
-					}
+				const validKey = typeof GlobalConfig[key] !== 'undefined';
+
+				if (!containerId && validKey && typeof config[key] !== 'undefined') {
+					GlobalConfig[key] = config[key];
+				} else if (containerId && !validKey) {
+					delete config[key];
 				}
 			}
 
 			if (containerId) {
 				// remove "undefined" items
-				_containers[containerId] = extend({}, _containers[containerId]);
+				_containers.set(containerId, extend({}, config));
 			}
 		},
 
@@ -1114,12 +1123,11 @@ const Spotlight = (function() {
 				containerId = (typeof config.id === 'string') ? config.id : generateId();
 			}
 
-			if (_containers[containerId]) {
+			if (_containers.get(containerId)) {
 				throw new Error('Container "' + containerId + '" has already existed!');
 			}
 
-			_containers[containerId] = {};
-			_containerCount++;
+			_containers.set(containerId, config);
 
 			Spotlight.set(containerId, config);
 
@@ -1130,10 +1138,8 @@ const Spotlight = (function() {
 			if (!containerId || typeof containerId !== 'string') {
 				throw new Error('Please assign the "containerId"!');
 			}
-			if (_containers[containerId]) {
-				_containers[containerId] = void 0;
-				_containers = extend({}, _containers);
-				_containerCount--;
+			if (_containers.get(containerId)) {
+				_containers.delete(containerId);
 				if (_lastContainerId === containerId) {
 					Spotlight.setActiveContainer(null);
 				}
@@ -1143,16 +1149,22 @@ const Spotlight = (function() {
 		},
 
 		disableSelector: function (containerId) {
-			if (_containers[containerId]) {
-				_containers[containerId].selectorDisabled = true;
+			const config = _containers.get(containerId);
+
+			if (config) {
+				config.selectorDisabled = true;
+				_containers.set(containerId, config)
 				return true;
 			}
 			return false;
 		},
 
 		enableSelector: function (containerId) {
-			if (_containers[containerId]) {
-				_containers[containerId].selectorDisabled = false;
+			const config = _containers.get(containerId);
+
+			if (config) {
+				config.selectorDisabled = false;
+				_containers.set(containerId, config)
 				return true;
 			}
 			return false;
@@ -1185,9 +1197,9 @@ const Spotlight = (function() {
 			}
 
 			if (!elem) {
-				result  = focusContainer();
+				result = focusContainer();
 			} else if (typeof elem === 'string') {
-				if (_containers[elem]) {
+				if (_containers.get(elem)) {
 					result = focusContainer(elem);
 				} else {
 					result = focusExtendedSelector(elem);
@@ -1232,7 +1244,7 @@ const Spotlight = (function() {
 		setDefaultContainer: function (containerId) {
 			if (!containerId) {
 				_defaultContainerId = '';
-			} else if (!_containers[containerId]) {
+			} else if (!_containers.get(containerId)) {
 				throw new Error('Container "' + containerId + '" doesn\'t exist!');
 			} else {
 				_defaultContainerId = containerId;
