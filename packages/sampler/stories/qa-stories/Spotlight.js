@@ -113,7 +113,7 @@ class DisappearTest extends React.Component {
 					</Button>
 				) : null}
 				<Button
-					data-component-id='restoreButton'
+					data-component-id="restoreButton"
 					onClick={this.restoreButton}
 				>
 					Restore Button
