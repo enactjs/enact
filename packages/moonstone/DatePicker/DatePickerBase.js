@@ -181,7 +181,7 @@ const DatePickerBase = kind({
 	render: ({day, handleKeyDown, maxDays, maxMonths, maxYear, minYear, month, noLabels, onChangeDate, onChangeMonth, onChangeYear, onSpotlightDisappear, order, spotlightDisabled, year, ...rest}) => {
 
 		return (
-			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false} onKeyDown={handleKeyDown} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled} >
+			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false} onKeyDown={handleKeyDown} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled}>
 				<div className={dateComponentPickers}>
 					{order.map(picker => {
 						switch (picker) {
