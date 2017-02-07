@@ -1091,7 +1091,7 @@ const Spotlight = (function() {
 			for (let key in config) {
 				const validKey = typeof GlobalConfig[key] !== 'undefined';
 
-				if (!containerId && typeof validKey && typeof config[key] !== 'undefined') {
+				if (!containerId && validKey && typeof config[key] !== 'undefined') {
 					GlobalConfig[key] = config[key];
 				} else if (containerId && !validKey) {
 					delete config[key];
