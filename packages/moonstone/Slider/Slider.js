@@ -259,7 +259,6 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			onKeyDown: handle(
 				forward('onKeyDown'),
 				(ev, props) => {
-					// console.log(ev, props);
 					return	handleDecrement(ev, props) &&
 							handleIncrement(ev, props) &&
 							handleActivate(ev, props);
