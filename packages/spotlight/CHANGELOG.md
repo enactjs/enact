@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Fixed
 
+- `spotlight.Spotlight` behavior to not set focus on spottable components animating past the pointer when not in pointer-mode.
 - `spotlight.Spotlight` 5-way behavior where selecting a spottable component may require multiple attempts before performing actions
 
 ## [1.0.0-beta.2] - 2017-01-30
