@@ -139,21 +139,40 @@ class Viewport extends React.Component {
 	}
 
 	componentWillReceiveProps (nextProps) {
-		const {index} = this.props;
-		const {index: nextIndex} = nextProps;
+		const {index, children} = this.props;
+		const {index: nextIndex, children: nextChildren} = nextProps;
+		const childrenCount = React.Children.count(children);
+		const nextChildrenCount = React.Children.count(nextChildren);
+		const childrenChanged = childrenCount !== nextChildrenCount;
+		const indexChanged = index !== nextIndex;
 
-		if (index !== nextIndex) {
-			const {lastFocusIndices} = this.state;
-			// eslint-disable-next-line react/no-find-dom-node
-			const node = findDOMNode(this);
-			const current = Spotlight.getCurrent();
+		if (childrenChanged || indexChanged) {
+			let {lastFocusIndices} = this.state;
 
-			if (node.contains(current)) {
-				// we convert our NodeList to an Array in order to find the index of current
-				lastFocusIndices[index] = [].slice.call(node.querySelectorAll(`.${spottableClass}`)).indexOf(current);
-			} else {
-				lastFocusIndices[index] = initialFocusIndex;
-				lastFocusIndices[nextIndex] = false;
+			if (childrenChanged) {
+				lastFocusIndices = React.Children.map(nextChildren, (nextChild, nextChildIndex) => {
+					return nextChildIndex < childrenCount ? lastFocusIndices[nextChildIndex] : initialFocusIndex;
+				});
+			}
+
+			if (indexChanged) {
+				// eslint-disable-next-line react/no-find-dom-node
+				const node = findDOMNode(this);
+				const current = Spotlight.getCurrent();
+				const isIndexValid = index < nextChildrenCount - 1;
+
+				if (node.contains(current)) {
+					if (isIndexValid) {
+						// we convert our NodeList to an Array in order to find the index of current
+						lastFocusIndices[index] = [].slice.call(node.querySelectorAll(`.${spottableClass}`)).indexOf(current);
+					}
+				} else {
+					if (isIndexValid) {
+						lastFocusIndices[index] = initialFocusIndex;
+					}
+
+					lastFocusIndices[nextIndex] = false;
+				}
 			}
 
 			this.setState({lastFocusIndices});
