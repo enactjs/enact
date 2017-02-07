@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 ### Added
 
 - `spotlight.spottableClass` export
+
 ### Fixed
 
 - `spotlight.Spotlight` behavior to follow container config rules when navigating between containers
