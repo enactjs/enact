@@ -930,7 +930,7 @@ const Spotlight = (function() {
 	function onKeyUp (evt) {
 		const keyCode = evt.keyCode;
 
-		if (!shouldPreventNavigation() && getDirection(keyCode)) {
+		if (getDirection(keyCode) || isEnter(keyCode)) {
 			SpotlightAccelerator.reset();
 			_5WayKeyHold = false;
 		}
@@ -985,7 +985,9 @@ const Spotlight = (function() {
 	}
 
 	function onMouseOver (evt) {
-		if (shouldPreventNavigation()) {
+		// a motionless pointer over animated spottable dom (such as list scrolling via 5-way) still emits
+		// an `onMouseOver` event even when `_pointerMode` is `false`, in which case we terminate early.
+		if (!_pointerMode || shouldPreventNavigation()) {
 			return;
 		}
 
