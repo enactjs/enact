@@ -1,4 +1,5 @@
 import {$L} from '@enact/i18n';
+import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
 import React from 'react';
 
@@ -186,13 +187,24 @@ const TimePickerBase = kind({
 		className: 'timePicker'
 	},
 
+	handlers: {
+		handleKeyDown: (ev, {open, onClose}) => {
+			const {keyCode} = ev;
+			const isEnter = is('enter', keyCode);
+			if (isEnter  && open &&  onClose ) {
+				onClose();
+				ev.preventDefault();
+			}
+		}
+	},
+
 	computed: {
 		hasMeridiem: ({order}) => order.indexOf('a') >= 0
 	},
 
-	render: ({hasMeridiem, hour, meridiem, meridiems, minute, noLabels, onChangeHour, onChangeMeridiem, onChangeMinute, onSpotlightDisappear, order, spotlightDisabled, ...rest}) => {
+	render: ({hasMeridiem, handleKeyDown, hour, meridiem, meridiems, minute, noLabels, onChangeHour, onChangeMeridiem, onChangeMinute, onSpotlightDisappear, order, spotlightDisabled, ...rest}) => {
 		return (
-			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled}>
+			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false} onKeyDown={handleKeyDown} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled}>
 				<div className={dateComponentPickers}>
 					<div className={css.timeComponents}>
 						{order.map(picker => {

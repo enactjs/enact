@@ -1,4 +1,5 @@
 import {$L} from '@enact/i18n';
+import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
 import React from 'react';
 
@@ -166,10 +167,21 @@ const DatePickerBase = kind({
 		className: 'datePicker'
 	},
 
-	render: ({day, maxDays, maxMonths, maxYear, minYear, month, noLabels, onChangeDate, onChangeMonth, onChangeYear, onSpotlightDisappear, order, spotlightDisabled, year, ...rest}) => {
+	handlers: {
+		handleKeyDown: (ev, {open, onClose}) => {
+			const {keyCode} = ev;
+			const isEnter = is('enter', keyCode);
+			if (isEnter  && open &&  onClose ) {
+				onClose();
+				ev.preventDefault();
+			}
+		}
+	},
+
+	render: ({day, handleKeyDown, maxDays, maxMonths, maxYear, minYear, month, noLabels, onChangeDate, onChangeMonth, onChangeYear, onSpotlightDisappear, order, spotlightDisabled, year, ...rest}) => {
 
 		return (
-			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled}>
+			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false} onKeyDown={handleKeyDown} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled} >
 				<div className={dateComponentPickers}>
 					{order.map(picker => {
 						switch (picker) {
