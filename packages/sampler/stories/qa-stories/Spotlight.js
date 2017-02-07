@@ -105,7 +105,6 @@ class DisappearTest extends React.Component {
 				button is removed and the remaining button gains focus.
 				{this.state.showButton ? (
 					<Button
-						onBlur={this.stopTimer}
 						onFocus={this.startTimer}
 						onSpotlightDisappear={this.resetFocus}
 					>
@@ -113,7 +112,7 @@ class DisappearTest extends React.Component {
 					</Button>
 				) : null}
 				<Button
-					data-component-id='restoreButton'
+					data-component-id="restoreButton"
 					onClick={this.restoreButton}
 				>
 					Restore Button
