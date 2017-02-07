@@ -442,6 +442,8 @@ const Picker = class extends React.Component {
 		const incrementerDisabled = this.isButtonDisabled(step);
 		const classes = this.determineClasses(decrementerDisabled, incrementerDisabled);
 
+		const selectedValue = (children && children[index]) ? children[index].props.children : '';
+
 		let arranger;
 		if (width && !disabled) {
 			arranger = orientation === 'vertical' ? SlideTopArranger : SlideLeftArranger;
@@ -455,17 +457,22 @@ const Picker = class extends React.Component {
 		return (
 			<div {...rest} className={classes} disabled={disabled} onWheel={joined ? this.handleWheel : null} onKeyDown={joined ? this.handleKeyDown : null}>
 				<PickerButton
+					aria-label={selectedValue + ' next item'}
 					className={css.incrementer}
 					disabled={incrementerDisabled}
+					icon={incrementIcon}
+					joined={joined}
 					onClick={this.handleIncClick}
+					onHoldPulse={this.handleIncPulse}
 					onMouseDown={this.handleIncDown}
 					onMouseUp={onMouseUp}
-					onHoldPulse={this.handleIncPulse}
 					onSpotlightDisappear={onSpotlightDisappear}
-					joined={joined}
-					icon={incrementIcon}
 				/>
-				<div className={css.valueWrapper}>
+				<div
+					aria-valuetext={selectedValue}
+					className={css.valueWrapper}
+					role="spinbutton"
+				>
 					{sizingPlaceholder}
 					<PickerViewManager
 						arranger={arranger}
@@ -478,15 +485,16 @@ const Picker = class extends React.Component {
 					</PickerViewManager>
 				</div>
 				<PickerButton
+					aria-label={selectedValue + ' previous item'}
 					className={css.decrementer}
 					disabled={decrementerDisabled}
+					icon={decrementIcon}
+					joined={joined}
 					onClick={this.handleDecClick}
+					onHoldPulse={this.handleDecPulse}
 					onMouseDown={this.handleDecDown}
 					onMouseUp={onMouseUp}
-					onHoldPulse={this.handleDecPulse}
 					onSpotlightDisappear={onSpotlightDisappear}
-					joined={joined}
-					icon={decrementIcon}
 				/>
 			</div>
 		);
