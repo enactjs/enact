@@ -142,8 +142,8 @@ EnyoLoader.prototype._loadFilesCache = function (paths) {
 	if (typeof window !== 'undefined' && window.localStorage && paths.length > 0) {
 		let stored = window.localStorage.getItem(cachePrefix + paths[0]);
 		if (stored) {
-			let target = JSON.stringify(paths);
-			let data = JSON.parse(stored);
+			const target = JSON.stringify(paths);
+			const data = JSON.parse(stored);
 			if (data.target === target) {
 				return data.value;
 			} else {
