@@ -62,6 +62,23 @@ It's worth noting that spottable controls may be found on different hierarchical
 levels of a component tree.  Spotlight facilitates seamless navigation
 among the topmost spottable components found in the tree.
 
+Spottable controls can receive `onSpotlight[Direction]` properties to handle custom
+navigation actions.  This is mainly a convenience function used for preventing natural
+5-way behavior and setting focus on specific spottable components that may not normally
+be in the next component to be spotted.
+
+```javascript
+handleSpotlightDown = (e) => {
+	e.preventDefault();
+	e.stopPropagation();
+	Spotlight.focus('[data-component-id="myButton"]');
+}
+```
+```jsx harmony
+<Button data-component-id='myButton'>Source Button</Button>
+<Button onSpotlightDown={this.handleSpotlightDown}>Target Button</Button>
+```
+
 <a name="4"></a>
 ## 4. Selectors
 
