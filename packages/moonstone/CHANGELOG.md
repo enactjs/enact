@@ -7,10 +7,13 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 - `moonstone/ExpandableInput` properties `iconAfter` and `iconBefore` to display icons after and before the input, respectively
+- `moonstone/Marquee.MarqueeController` config option `startOnHover`
+- `moonstone/Dialog` property `preserveCase`, which affects `title` text
 
 ### Changed
 
 - `moonstone/IncrementSlider` to change when the buttons are held down
+- `moonstone/Dialog` to marquee `title` and `titleBelow`
 
 ### Fixed
 
