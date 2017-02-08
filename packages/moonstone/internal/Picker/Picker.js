@@ -40,6 +40,17 @@ const jobNames = {
 
 const emulateMouseEventsTimeout = 175;
 
+const ariaLabel = {
+	horizontal: {
+		dec: 'previous item',
+		inc: ' next item'
+	},
+	vertical: {
+		dec: ' down item',
+		inc: ' up item'
+	}
+};
+
 /**
  * The base component for {@link moonstone/internal/Picker.Picker}.
  *
@@ -442,7 +453,12 @@ const Picker = class extends React.Component {
 		const incrementerDisabled = this.isButtonDisabled(step);
 		const classes = this.determineClasses(decrementerDisabled, incrementerDisabled);
 
-		const selectedValue = (children && children[index]) ? children[index].props.children : '';
+		const selectedValue =
+			(Array.isArray(children)) ?
+				((children && children[index]) ? children[index].props.children : '') :
+				children.props.children;
+		const decAriaLabel = ariaLabel[orientation]['dec'];
+		const incAriaLabel = ariaLabel[orientation]['inc'];
 
 		let arranger;
 		if (width && !disabled) {
@@ -457,7 +473,7 @@ const Picker = class extends React.Component {
 		return (
 			<div {...rest} className={classes} disabled={disabled} onWheel={joined ? this.handleWheel : null} onKeyDown={joined ? this.handleKeyDown : null}>
 				<PickerButton
-					aria-label={selectedValue + ' next item'}
+					aria-label={selectedValue + incAriaLabel}
 					className={css.incrementer}
 					disabled={incrementerDisabled}
 					icon={incrementIcon}
@@ -485,7 +501,7 @@ const Picker = class extends React.Component {
 					</PickerViewManager>
 				</div>
 				<PickerButton
-					aria-label={selectedValue + ' previous item'}
+					aria-label={selectedValue + decAriaLabel}
 					className={css.decrementer}
 					disabled={decrementerDisabled}
 					icon={decrementIcon}
