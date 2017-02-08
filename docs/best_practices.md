@@ -7,6 +7,10 @@ title: Enact Best Practices
 This document lists some best practices that have been distilled by the Enact framework team.  It is incomplete and you
 are encouraged to check for updates when you begin a new Enact project.
 
+## Source Formatting
+
+The Enact framework team provides an [ESLint configuration](https://github.com/enyojs/eslint-config-enact) that developers are encouraged to use for their projects.
+
 ## Applications
 
 Developers are strongly encouraged to use the [`enact-dev` tools](https://github.com/enyojs/enact-dev) to create a starting
