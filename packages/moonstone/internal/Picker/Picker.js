@@ -34,8 +34,19 @@ const selectIncIcon = selectIcon('incrementIcon', 'arrowlargeup', 'arrowlargerig
 
 const selectDecIcon = selectIcon('decrementIcon', 'arrowlargedown', 'arrowlargeleft');
 
-const jobNames = {
-	emulateMouseUp: 'Picker.emulateMouseUp'
+/**
+ * Returns a timestamp for the current time using `window.performance.now()` if available and
+ * falling back to `Date.now()`.
+ *
+ * @returns	{Number}	Timestamp
+ * @private
+ */
+const now = function () {
+	if (typeof window === 'object') {
+		return window.performance.now();
+	} else {
+		return Date.now();
+	}
 };
 
 const emulateMouseEventsTimeout = 175;
@@ -279,6 +290,8 @@ const Picker = class extends React.Component {
 			validateStepped(props.value, props.min, props.step, Picker.displayName);
 			validateStepped(props.max, props.min, props.step, Picker.displayName, '"max"');
 		}
+
+		this.jobName = `mouseUpHandler${now()}`;
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -304,9 +317,7 @@ const Picker = class extends React.Component {
 	}
 
 	componentWillUnmount () {
-		for (const job of Object.keys(jobNames)) {
-			jobs.stopJob(jobNames[job]);
-		}
+		jobs.stopJob(this.jobName);
 	}
 
 	computeNextValue = (delta) => {
@@ -353,7 +364,7 @@ const Picker = class extends React.Component {
 	handleUp = () => {
 		const {joined, onMouseUp} = this.props;
 		if (joined && onMouseUp) {
-			jobs.startJob(jobNames.emulateMouseUp, onMouseUp, emulateMouseEventsTimeout);
+			jobs.startJob(this.jobName, onMouseUp, emulateMouseEventsTimeout);
 		}
 	}
 
@@ -373,7 +384,7 @@ const Picker = class extends React.Component {
 			// simulate mouse down
 			this.handleDown(dir);
 			// set a timer to simulate the mouse up
-			jobs.startJob(jobNames.emulateMouseUp, onMouseUp, emulateMouseEventsTimeout);
+			jobs.startJob(this.jobName, onMouseUp, emulateMouseEventsTimeout);
 			// prevent the default scroll behavior to avoid bounce back
 			ev.preventDefault();
 		}
