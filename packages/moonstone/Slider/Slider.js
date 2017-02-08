@@ -5,6 +5,7 @@
  */
 
 import factory from '@enact/core/factory';
+import {forKey, forward, handle, stopImmediate} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import Pressable from '@enact/ui/Pressable';
 import React, {PropTypes} from 'react';
@@ -15,6 +16,30 @@ import {computeProportionProgress} from '../internal/SliderDecorator/util';
 
 import {SliderBarFactory} from './SliderBar';
 import componentCss from './Slider.less';
+
+const isActive = (ev, props) => !(props.active || props.detachedKnob);
+const isIncrement = (ev, props) => forKey(props.vertical ? 'up' : 'right', ev);
+const isDecrement = (ev, props) => forKey(props.vertical ? 'down' : 'left', ev);
+
+const handleDecrement = handle(
+	isActive,
+	isDecrement,
+	forward('onDecrement'),
+	stopImmediate
+);
+
+const handleIncrement = handle(
+	isActive,
+	isIncrement,
+	forward('onIncrement'),
+	stopImmediate
+);
+
+const handleActivate = handle(
+	forKey('enter'),
+	forward('onActivate'),
+	stopImmediate
+);
 
 const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 	const SliderBar = SliderBarFactory({css});
@@ -32,6 +57,16 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		name: 'Slider',
 
 		propTypes: /** @lends moonstone/Slider.SliderBase.prototype */{
+
+			/**
+			 * When `true`, the knob displays selected and can be moved using 5-way controls.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			active: PropTypes.bool,
+
 			/**
 			 * Background progress, as a proportion between `0` and `1`.
 			 *
@@ -88,6 +123,14 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			min: PropTypes.number,
 
 			/**
+			 * The handler when the knob is activated or deactivated by selecting it via 5-way
+			 *
+			 * @type {Function}
+			 * @public
+			 */
+			onActivate: PropTypes.func,
+
+			/**
 			 * The handler to run when the value is changed.
 			 *
 			 * @type {Function}
@@ -96,6 +139,24 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * @public
 			 */
 			onChange: PropTypes.func,
+
+			/**
+			 * The handler to run when the value is decremented.
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @public
+			 */
+			onDecrement: PropTypes.func,
+
+			/**
+			 * The handler to run when the value is incremented.
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @public
+			 */
+			onIncrement: PropTypes.func,
 
 			/**
 			 * The handler to run when the mouse is moved across the slider.
@@ -172,6 +233,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		},
 
 		defaultProps: {
+			active: false,
 			backgroundProgress: 0,
 			detachedKnob: false,
 			max: 100,
@@ -188,17 +250,54 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			className: 'slider'
 		},
 
+		handlers: {
+			onBlur: handle(
+				forward('onBlur'),
+				isActive,
+				forward('onActivate')
+			),
+			onKeyDown: handle(
+				forward('onKeyDown'),
+				(ev, props) => {
+					return	handleDecrement(ev, props) &&
+							handleIncrement(ev, props) &&
+							handleActivate(ev, props);
+				}
+			),
+			onMouseUp: handle(
+				forward('onMouseUp'),
+				(ev) => {
+					// This bit of hackery allows us to use the <input> for dragging but sends the
+					// focus back to the component when the pointer is released. It works because,
+					// for some reason, the <input> still sends a mouseup event even when the
+					// pointer is released while off the <input>.
+					if (ev.target.nodeName === 'INPUT') {
+						ev.currentTarget.focus();
+					}
+				}
+			)
+		},
+
 		computed: {
-			className: ({pressed, vertical, styler}) => styler.append({pressed, vertical, horizontal: !vertical}),
+			className: ({active, pressed, vertical, styler}) => styler.append({
+				active,
+				pressed,
+				vertical,
+				horizontal: !vertical
+			}),
 			proportionProgress: computeProportionProgress
 		},
 
-		render: ({disabled, inputRef, max, min, onChange, onMouseMove, backgroundProgress, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, value, vertical, ...rest}) => {
+		render: ({backgroundProgress, disabled, inputRef, max, min, onBlur, onChange, onKeyDown, onMouseMove, onMouseUp, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, value, vertical, ...rest}) => {
+			delete rest.active;
 			delete rest.detachedKnob;
+			delete rest.onActivate;
+			delete rest.onDecrement;
+			delete rest.onIncrement;
 			delete rest.pressed;
 
 			return (
-				<div {...rest} disabled={disabled} ref={sliderRef}>
+				<div {...rest} disabled={disabled} onBlur={onBlur} onKeyDown={onKeyDown} onMouseUp={onMouseUp} ref={sliderRef}>
 					<SliderBar
 						proportionBackgroundProgress={backgroundProgress}
 						proportionProgress={proportionProgress}

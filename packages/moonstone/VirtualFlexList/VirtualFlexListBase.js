@@ -130,6 +130,67 @@ class VirtualFlexListCore extends Component {
 	}
 
 	/*
+	 * Constructor
+	 */
+
+	constructor (props) {
+		super(props);
+
+		this.state = {numOfItems: 0, primaryFirstIndex: 0};
+
+		this.fixedAxis = (props.flexAxis === 'row') ? 'col' : 'row';
+	}
+
+	/*
+	 * Life cycle methods
+	 */
+
+	// Calculate metrics for VirtualFlexList after the 1st render to know client W/H.
+	// We separate code related with data due to re use it when data changed.
+	componentDidMount () {
+		this.calculateMetrics(this.props);
+		this.updateStatesAndBounds(this.props);
+
+		const childRef = this.childRef;
+
+		// prevent native scrolling by Spotlight
+		this.preventScroll = () => {
+			childRef.scrollTop = 0;
+			childRef.scrollLeft = this.context.rtl ? childRef.scrollWidth : 0;
+		};
+
+		if (childRef && childRef.addEventListener) {
+			childRef.addEventListener('scroll', this.preventScroll);
+		}
+	}
+
+	// Call updateStatesAndBounds here when dataSize has been changed to update nomOfItems state.
+	// Calling setState within componentWillReceivePropswill not trigger an additional render.
+	componentWillReceiveProps (nextProps) {
+		const
+			{dataSize, flexAxis, itemSize, overhang} = this.props,
+			hasMetricsChanged = (
+				((itemSize instanceof Object) ? (itemSize.minWidth !== nextProps.itemSize.minWidth || itemSize.minHeight !== nextProps.itemSize.minHeight || itemSize.row !== nextProps.itemSize.row || itemSize.col !== nextProps.itemSize.col) : itemSize !== nextProps.itemSize) ||
+				overhang !== nextProps.overhang ||
+				flexAxis !== nextProps.flexAxis
+			),
+			hasDataChanged = (
+				(dataSize instanceof Object) ?
+				(dataSize.row !== nextProps.dataSize.row || dataSize.col !== nextProps.dataSize.col) :
+				(dataSize !== nextProps.dataSize)
+			);
+
+		this.fixedAxis = (nextProps.flexAxis === 'row') ? 'col' : 'row';
+
+		if (hasMetricsChanged) {
+			this.calculateMetrics(nextProps);
+			this.updateStatesAndBounds(nextProps);
+		} else if (hasDataChanged) {
+			this.updateStatesAndBounds(nextProps);
+		}
+	}
+
+	/*
 	 * Class private variables
 	 */
 
@@ -152,18 +213,6 @@ class VirtualFlexListCore extends Component {
 	// spotlight
 	nodeIndexToBeBlurred = null
 	lastFocusedIndex = null
-
-	/*
-	 * Constructor
-	 */
-
-	constructor (props) {
-		super(props);
-
-		this.state = {numOfItems: 0, primaryFirstIndex: 0};
-
-		this.fixedAxis = (props.flexAxis === 'row') ? 'col' : 'row';
-	}
 
 	/*
 	 * Metrics and scroll bounds
@@ -712,55 +761,6 @@ class VirtualFlexListCore extends Component {
 
 		if (childRef) {
 			childRef.setAttribute(dataContainerDisabledAttribute, bool);
-		}
-	}
-
-	/*
-	 * Life cycle methods
-	 */
-
-	// Calculate metrics for VirtualFlexList after the 1st render to know client W/H.
-	// We separate code related with data due to re use it when data changed.
-	componentDidMount () {
-		this.calculateMetrics(this.props);
-		this.updateStatesAndBounds(this.props);
-
-		const childRef = this.childRef;
-
-		// prevent native scrolling by Spotlight
-		this.preventScroll = () => {
-			childRef.scrollTop = 0;
-			childRef.scrollLeft = this.context.rtl ? childRef.scrollWidth : 0;
-		};
-
-		if (childRef && childRef.addEventListener) {
-			childRef.addEventListener('scroll', this.preventScroll);
-		}
-	}
-
-	// Call updateStatesAndBounds here when dataSize has been changed to update nomOfItems state.
-	// Calling setState within componentWillReceivePropswill not trigger an additional render.
-	componentWillReceiveProps (nextProps) {
-		const
-			{dataSize, flexAxis, itemSize, overhang} = this.props,
-			hasMetricsChanged = (
-				((itemSize instanceof Object) ? (itemSize.minWidth !== nextProps.itemSize.minWidth || itemSize.minHeight !== nextProps.itemSize.minHeight || itemSize.row !== nextProps.itemSize.row || itemSize.col !== nextProps.itemSize.col) : itemSize !== nextProps.itemSize) ||
-				overhang !== nextProps.overhang ||
-				flexAxis !== nextProps.flexAxis
-			),
-			hasDataChanged = (
-				(dataSize instanceof Object) ?
-				(dataSize.row !== nextProps.dataSize.row || dataSize.col !== nextProps.dataSize.col) :
-				(dataSize !== nextProps.dataSize)
-			);
-
-		this.fixedAxis = (nextProps.flexAxis === 'row') ? 'col' : 'row';
-
-		if (hasMetricsChanged) {
-			this.calculateMetrics(nextProps);
-			this.updateStatesAndBounds(nextProps);
-		} else if (hasDataChanged) {
-			this.updateStatesAndBounds(nextProps);
 		}
 	}
 

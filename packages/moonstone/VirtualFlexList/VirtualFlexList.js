@@ -234,6 +234,28 @@ class VirtualFlexList extends Component {
 	}
 
 	/*
+	 * Life cycle methods
+	 */
+
+	componentWillReceiveProps (nextProps, nextContext) {
+		const
+			{headers, items, x, y} = this.props,
+			{rtl} = this.context;
+
+		if (
+			items.colCount !== nextProps.items.colCount || items.height !== nextProps.items.height || items.rowCount !== nextProps.items.rowCount ||
+			headers && (headers.col.count !== nextProps.headers.col.count || headers.row.count !== nextProps.headers.row.count) ||
+			rtl !== nextContext.rtl
+		) {
+			this.componentProps = this.getComponentProps(nextProps, nextContext);
+		}
+
+		if (x !== nextProps.x || y !== nextProps.y) {
+			this.setState({x: nextProps.x, y: nextProps.y});
+		}
+	}
+
+	/*
 	 * Calculate the position and the size of the header and the item lists.
 	 */
 
@@ -323,28 +345,6 @@ class VirtualFlexList extends Component {
 	onPositionChange = (position) => {
 		this.setState(position);
 		forwardPositionChange(position, this.props);
-	}
-
-	/*
-	 * Life cycle methods
-	 */
-
-	componentWillReceiveProps (nextProps, nextContext) {
-		const
-			{headers, items, x, y} = this.props,
-			{rtl} = this.context;
-
-		if (
-			items.colCount !== nextProps.items.colCount || items.height !== nextProps.items.height || items.rowCount !== nextProps.items.rowCount ||
-			headers && (headers.col.count !== nextProps.headers.col.count || headers.row.count !== nextProps.headers.row.count) ||
-			rtl !== nextContext.rtl
-		) {
-			this.componentProps = this.getComponentProps(nextProps, nextContext);
-		}
-
-		if (x !== nextProps.x || y !== nextProps.y) {
-			this.setState({x: nextProps.x, y: nextProps.y});
-		}
 	}
 
 	render () {
