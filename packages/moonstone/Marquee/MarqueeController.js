@@ -77,7 +77,19 @@ const defaultConfig = {
 	 * @default false
 	 * @memberof moonstone/Marquee.MarqueeController.defaultConfig
 	 */
-	startOnFocus: false
+	startOnFocus: false,
+
+	/**
+	 * When `true`, any `onMouseEnter` events that bubble to the controller will start the contained
+	 * Marquee instances. This is useful when a component contains Marquee instances that need to be
+	 * started with sibling components are hovered. Note: This setting will take precedence over
+	 * `startOnFocus`.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @memberof moonstone/Marquee.MarqueeController.defaultConfig
+	 */
+	startOnHover: false
 };
 
 /**
@@ -90,9 +102,11 @@ const defaultConfig = {
  * @public
  */
 const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
-	const {startOnFocus} = config;
+	const {startOnFocus, startOnHover} = config;
 	const forwardBlur = forward('onBlur');
 	const forwardFocus = forward('onFocus');
+	const forwardMouseEnter = forward('onMouseEnter');
+	const forwardMouseLeave = forward('onMouseLeave');
 
 	return class extends React.Component {
 		static displayName = 'MarqueeController'
@@ -216,6 +230,23 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		/*
+		 * Handler for the MouseEnter event
+		 */
+		handleMouseEnter = (ev) => {
+			this.dispatch('start');
+			forwardMouseEnter(ev, this.props);
+		}
+
+		/*
+		 * Handler for the MouseLeave event
+		 */
+		handleMouseLeave = (ev) => {
+			this.dispatch('stop');
+			this.markAll(STATE.inactive);
+			forwardMouseLeave(ev, this.props);
+		}
+
+		/*
 		 * Invokes the `action` handler for each synchronized component except the invoking
 		 * `component`.
 		 *
@@ -234,7 +265,11 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 					// unnecessary and is therefore not awaiting a finish
 					if (action === 'start' && complete) {
 						controlled.state = STATE.ready;
+					} else {
+						controlled.state = STATE.active;
 					}
+				} else if (component === controlledComponent) {
+					controlled.state = STATE.active;
 				}
 			});
 		}
@@ -298,7 +333,13 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		render () {
 			let props = this.props;
 
-			if (startOnFocus) {
+			if (startOnHover) {
+				props = {
+					...this.props,
+					onMouseEnter: this.handleMouseEnter,
+					onMouseLeave: this.handleMouseLeave
+				};
+			} else if (startOnFocus) {
 				props = {
 					...this.props,
 					onBlur: this.handleBlur,

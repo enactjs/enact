@@ -13,7 +13,9 @@ import Popup from '../Popup';
 import Uppercase from '@enact/i18n/Uppercase';
 import css from './Dialog.less';
 
-const MarqueeH1 = Uppercase(MarqueeDecorator('h1'));
+const MarqueeH1 = Uppercase(MarqueeDecorator('h1')),
+	MarqueeH2 = MarqueeDecorator('h2'),
+	MarqueeControlDiv = MarqueeController('div');
 
 /**
  * {@link moonstone/Dialog.DialogBase} is a modal component with a title, a subtitle, a
@@ -87,7 +89,7 @@ const DialogBase = kind({
 		open: PropTypes.bool,
 
 		/**
-		 * When `true`, the case of the text will be as it is in the title
+		 * When `true`, the case of `title` will be preserved
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -159,14 +161,14 @@ const DialogBase = kind({
 
 		return (
 			<Popup {...rest}>
-				<div className={css.titleWrapper}>
+				<MarqueeControlDiv className={css.titleWrapper}>
 					<MarqueeH1 preserveCase={preserveCase} marqueeOn="render" marqueeOnRenderDelay={5000} className={css.title}>
 						{title}
 					</MarqueeH1>
-					<h2 className={css.titleBelow}>
+					<MarqueeH2 className={css.titleBelow} marqueeOn="render" marqueeOnRenderDelay={5000}>
 						{titleBelow}
-					</h2>
-				</div>
+					</MarqueeH2>
+				</MarqueeControlDiv>
 				<div className={css.body}>
 					{children}
 				</div>
@@ -189,7 +191,7 @@ const DialogBase = kind({
  * @ui
  * @public
  */
-const Dialog = Slottable({slots: ['title', 'titleBelow', 'buttons']}, MarqueeController({startOnMouseEnter:true}, DialogBase));
+const Dialog = Slottable({slots: ['title', 'titleBelow', 'buttons']}, DialogBase);
 
 export default Dialog;
 export {Dialog, DialogBase};
