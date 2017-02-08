@@ -16,6 +16,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/marquee.MarqueeController` to start marquee on newly registered components when controller has focus and to restart synced marquees after completion
+- `moonstone/Scroller` to recalculate when an expandable child opens.
 
 ## [1.0.0-beta.2] - 2017-01-30
 
