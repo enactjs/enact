@@ -37,10 +37,6 @@ const MediaControlsContainer = SpotlightContainerDecorator({
 	}
 }, MediaControls);
 
-const focusDefaultMediaControl = () => {
-	return Spotlight.focus(`.${css.bottom} .${spotlightDefaultClass}.${spottableClass}`);
-};
-
 // Video ReadyStates
 // - Commented are currently unused.
 //
@@ -329,9 +325,9 @@ const VideoPlayerBase = class extends React.Component {
 		if (
 			this.state.bottomControlsVisible &&
 			!prevState.bottomControlsVisible &&
-			document.querySelector(`.${css.videoPlayer}`).contains(Spotlight.getCurrent())
+			this.player.contains(Spotlight.getCurrent())
 		) {
-			focusDefaultMediaControl();
+			this.focusDefaultMediaControl();
 		}
 	}
 
@@ -341,9 +337,9 @@ const VideoPlayerBase = class extends React.Component {
 		if (
 			this.state.bottomControlsVisible &&
 			!nextState.bottomControlsVisible &&
-			document.querySelector(`.${css.bottom}`).contains(Spotlight.getCurrent())
+			this.player.contains(Spotlight.getCurrent())
 		) {
-			Spotlight.focus(`.${css.controlsHandleAbove}.${spottableClass}`);
+			Spotlight.focus(this.player.querySelector(`.${css.controlsHandleAbove}.${spottableClass}`));
 		}
 	}
 
@@ -744,9 +740,13 @@ const VideoPlayerBase = class extends React.Component {
 			ev.preventDefault();
 			ev.stopPropagation();
 			Spotlight.setPointerMode(false);
-			focusDefaultMediaControl();
+			this.focusDefaultMediaControl();
 		}
 	}
+
+	focusDefaultMediaControl = () => {
+		return Spotlight.focus(this.player.querySelector(`.${css.bottom} .${spotlightDefaultClass}.${spottableClass}`));
+	};
 
 	//
 	// Player Interaction events
@@ -795,6 +795,10 @@ const VideoPlayerBase = class extends React.Component {
 		});
 	}
 
+	setPlayerRef = (node) => {
+		this.player = node;
+	}
+
 	setVideoRef = (video) => {
 		this.videoReady = !!video;
 		this.video = video;
@@ -817,7 +821,7 @@ const VideoPlayerBase = class extends React.Component {
 		const moreDisabled = !(this.state.more);
 
 		return (
-			<div className={css.videoPlayer + (className ? ' ' + className : '')} style={style} onKeyDown={this.activityDetected}>
+			<div className={css.videoPlayer + (className ? ' ' + className : '')} style={style} onKeyDown={this.activityDetected} ref={this.setPlayerRef}>
 				{/* Video Section */}
 				<Video
 					{...rest}
