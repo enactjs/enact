@@ -42,6 +42,7 @@
 					flex-grow: 1;
 					color: @moon-video-player-title-color;
 					opacity: 1;
+					overflow: hidden;
 					.margin-start-end(0, @moon-spotlight-outset);
 
 					&.hidden {
@@ -138,9 +139,14 @@
 					margin: 0;
 
 					// Grow the knob when the Slider gets spotted
-					&:global(.spottable):focus .knob::before {
-						transform: @moon-translate-center scale(0.75);
-						opacity: 1;
+					&:global(.spottable):focus {
+						.knob::before {
+							transform: @moon-translate-center scale(0.5);
+							opacity: 1;
+						}
+						&.pressed .knob::before {
+							transform: @moon-translate-center scale(0.75);
+						}
 					}
 				}
 

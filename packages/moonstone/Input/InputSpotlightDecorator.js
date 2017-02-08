@@ -31,6 +31,15 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 
 		static propTypes = /** @lends moonstone/Input/InputSpotlightDecorator.InputSpotlightDecorator.prototype */ {
 			/**
+			 * When `true`, applies a disabled style and the control becomes non-interactive.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			disabled: React.PropTypes.bool,
+
+			/**
 			 * When `true`, blurs the input when the "enter" key is pressed.
 			 *
 			 * @type {Boolean}
@@ -78,7 +87,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 		}
 
 		componentDidUpdate (_, prevState) {
-			if (this.state.node && (this.state.node !== prevState.node)) {
+			if (this.state.node) {
 				this.state.node.focus();
 			}
 
@@ -139,20 +148,30 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 						this.focusDecorator(ev.currentTarget);
 						ev.stopPropagation();
 					}
-				} if (!this.state.focused === 'input') {	// Blurring decorator but not focusing input
+				} else if (!ev.currentTarget.contains(ev.relatedTarget)) {
+					// Blurring decorator but not focusing input
+					forwardBlur(ev, this.props);
 					this.blur();
 				}
 			} else if (this.state.focused === 'input' && this.state.node === ev.target) {
-				// only blur when the input should be focused and is the target of the blur
-				this.blur();
-				forwardBlur(ev, this.props);
+				if (ev.currentTarget === ev.relatedTarget) {
+					// if the focused item (ev.relatedTarget) is the current target (the decorator),
+					// prevent the blur from propagating so the input will be re-focused on update.
+					ev.stopPropagation();
+				} else {
+					// only blur when the input should be focused and is the target of the blur
+					this.blur();
+					forwardBlur(ev, this.props);
+				}
 			}
 		}
 
 		onClick = (ev) => {
+			const {disabled, spotlightDisabled} = this.props;
+
 			// focus the <input> whenever clicking on any part of the component to ensure both that
 			// the <input> has focus and Spotlight is paused.
-			if (!this.props.spotlightDisabled) {
+			if (!disabled && !spotlightDisabled) {
 				this.focusInput(ev.currentTarget);
 			}
 

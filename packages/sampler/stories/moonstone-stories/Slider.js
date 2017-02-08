@@ -24,6 +24,7 @@ storiesOf('Slider')
 				backgroundProgress={number('backgroundProgress', ChangeableSlider.defaultProps.backgroundProgress, {range: true, min: 0, max: 1, step: 0.01})}
 				detachedKnob={boolean('detachedKnob', ChangeableSlider.defaultProps.detachedKnob)}
 				disabled={boolean('disabled', ChangeableSlider.defaultProps.disabled)}
+				knobStep={number('knobStep')}
 				max={number('max', ChangeableSlider.defaultProps.max)}
 				min={number('min', ChangeableSlider.defaultProps.min)}
 				onChange={action('onChange')}
