@@ -1,4 +1,5 @@
 import * as jobs from '@enact/core/jobs';
+import {forward} from '@enact/core/handle';
 import {childrenEquals} from '@enact/core/util';
 import clamp from 'ramda/src/clamp';
 import React from 'react';
@@ -49,7 +50,12 @@ const now = function () {
 	}
 };
 
+// Timeout for MouseUp
 const emulateMouseEventsTimeout = 175;
+
+// Set-up event forwarding
+const forwardKeyUp = forward('onKeyUp');
+const forwardMouseUp = forward('onMouseUp');
 
 /**
  * The base component for {@link moonstone/internal/Picker.Picker}.
@@ -361,9 +367,12 @@ const Picker = class extends React.Component {
 		}
 	}
 
-	handleUp = () => {
+	handleUp = (ev) => {
 		const {joined, onMouseUp} = this.props;
 		if (joined && onMouseUp) {
+			if (ev) {
+				forwardMouseUp(ev, this.props);
+			}
 			jobs.startJob(this.jobName, onMouseUp, emulateMouseEventsTimeout);
 		}
 	}
@@ -429,6 +438,8 @@ const Picker = class extends React.Component {
 	handleKeyUp = (ev) => {
 		const direction = getDirection(ev.keyCode);
 		const isVertical = this.props.orientation === 'vertical';
+
+		forwardKeyUp(ev, this.props);
 
 		if (!isVertical && (direction === 'left' || direction === 'right')) {
 			this.handleUp();
