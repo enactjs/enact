@@ -383,7 +383,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						this.setState({
 							animating: true
 						});
-					} else {
+					} else if (this.sync) {
 						this.context.complete(this);
 					}
 				}, delay);
