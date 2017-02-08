@@ -313,7 +313,7 @@ const Picker = class extends React.Component {
 
 	updateValue = (dir) => {
 		const {disabled, onChange, step} = this.props;
-		this.setTransitionDirection(dir);
+		this.setTransitionDirection(this.adjustDirection(dir));
 		if (!disabled && onChange) {
 			const value = this.computeNextValue(this.adjustDirection(dir) * step);
 			onChange({value});
