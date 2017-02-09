@@ -216,6 +216,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 
 				if (shouldFocusDecorator) {
 					if (!noDecorator) {
+						if (ev.target.type === 'number') ev.preventDefault();
 						this.focusDecorator(currentTarget);
 
 						// prevent Enter onKeyPress which triggers an onClick via Spotlight
@@ -240,7 +241,6 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 					preventSpotlightNavigation(ev);
 				}
 			}
-
 			forwardKeyDown(ev, this.props);
 		}
 
