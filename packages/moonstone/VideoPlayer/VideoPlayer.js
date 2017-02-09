@@ -30,13 +30,6 @@ const spottableClass = 'spottable';
 const SpottableDiv = Spottable('div');
 const Container = SpotlightContainerDecorator({enterTo: ''}, 'div');
 
-const MediaControlsContainer = SpotlightContainerDecorator({
-	enterTo: '',
-	leaveFor: {
-		up: `.${css.bottom} [data-media-slider].${spottableClass}`
-	}
-}, MediaControls);
-
 // Video ReadyStates
 // - Commented are currently unused.
 //
@@ -858,10 +851,9 @@ const VideoPlayerBase = class extends React.Component {
 							onChange={this.onSliderChange}
 							onSpotlightUp={this.hideControls}
 							onSpotlightDown={this.handleSpotlightDownFromSlider}
-							data-media-slider
 						/>}
 
-						<MediaControlsContainer
+						<MediaControls
 							leftComponents={leftComponents}
 							mediaDisabled={this.state.mediaControlsDisabled}
 							moreDisabled={moreDisabled}
@@ -880,7 +872,7 @@ const VideoPlayerBase = class extends React.Component {
 							onKeyDown={this.handleKeyDownFromControls}
 						>
 							{children}
-						</MediaControlsContainer>
+						</MediaControls>
 					</Container>
 				</div> : null}
 				<SpottableDiv
