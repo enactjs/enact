@@ -7,10 +7,6 @@ title: Enact Best Practices
 This document lists some best practices that have been distilled by the Enact framework team.  It is incomplete and you
 are encouraged to check for updates when you begin a new Enact project.
 
-## Source Formatting
-
-The Enact framework team provides an [ESLint configuration](https://github.com/enyojs/eslint-config-enact) that developers are encouraged to use for their projects.
-
 ## Applications
 
 Developers are strongly encouraged to use the [`enact-dev` tools](https://github.com/enyojs/enact-dev) to create a starting
@@ -21,6 +17,10 @@ to lock the versions of the application's dependencies (and all of those depende
 
 > <a href="http://javascript.tutorialhorizon.com/2015/03/21/what-is-npm-shrinkwrap-and-when-is-it-needed/">http://javascript.tutorialhorizon.com/2015/03/21/what-is-npm-shrinkwrap-and-when-is-it-needed/</a>
 presents a brief article explaining why and when to use `npm shrinkwrap`.
+
+## Code Conventions
+
+An `enact-dev`-created project also provides linting (`npm run lint`) to statically analyze your code.  Additionally, the Enact programming conventions are provided as a separate [module](https://github.com/enyojs/eslint-config-enact) (also included in `enact-dev`-created projects).  Developers are encouraged to enable in-editor analysis of their code to catch potential issues as early as possible.  The module documentation details how to set up various editors.
 
 ## Components
 
