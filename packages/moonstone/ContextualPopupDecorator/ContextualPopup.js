@@ -148,7 +148,7 @@ const ContextualPopupBase = kind({
 						backgroundOpacity="transparent"
 						small
 						onClick={onCloseButtonClick}
-						aria-label={$L("Close")}
+						aria-label={$L('Close')}
 					>
 						closex
 					</IconButton>

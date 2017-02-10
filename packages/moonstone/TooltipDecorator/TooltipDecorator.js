@@ -339,6 +339,8 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 							preserveCase={tooltipPreserveCase}
 							tooltipRef={this.getTooltipRef}
 							width={tooltipWidth}
+							aria-live="off"
+							role="alert"
 						>
 							{tooltipText}
 						</Tooltip>
