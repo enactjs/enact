@@ -437,14 +437,14 @@ const Picker = class extends React.Component {
 
 	handleKeyUp = (ev) => {
 		const direction = getDirection(ev.keyCode);
-		const isVertical = this.props.orientation === 'vertical';
+		const isVertical = this.props.orientation === 'vertical' && (direction === 'up' || direction === 'down');
+		const isHorizontal = this.props.orientation === 'horizontal' && (direction === 'right' || direction === 'left');
 
 		forwardKeyUp(ev, this.props);
 
-		if (!isVertical && (direction === 'left' || direction === 'right')) {
+		if (isVertical) {
 			this.handleUp();
-		}
-		if (isVertical && (direction === 'up' || direction === 'down')) {
+		} else if (isHorizontal) {
 			this.handleUp();
 		}
 	}
