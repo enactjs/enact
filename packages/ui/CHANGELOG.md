@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `ui/Resizable` Higher-order Component to facilitate notification of resized components
+
 ## [1.0.0-beta.2] - 2017-01-30
 
 ### Added

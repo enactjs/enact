@@ -38,7 +38,8 @@ const MediaControls = kind({
 		onPlayButtonClick: React.PropTypes.func,
 		onToggleMore: React.PropTypes.func,
 		playPauseIcon:React.PropTypes.node,
-		rightComponents: React.PropTypes.node
+		rightComponents: React.PropTypes.node,
+		showMoreComponents: React.PropTypes.bool
 	},
 
 	styles: {

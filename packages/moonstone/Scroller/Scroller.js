@@ -62,6 +62,14 @@ class ScrollerBase extends Component {
 		vertical: 'auto'
 	}
 
+	componentDidMount () {
+		this.calculateMetrics();
+	}
+
+	componentDidUpdate () {
+		this.calculateMetrics();
+	}
+
 	scrollBounds = {
 		clientWidth: 0,
 		clientHeight: 0,
@@ -157,14 +165,6 @@ class ScrollerBase extends Component {
 		if (this.node) {
 			this.node.setAttribute(dataContainerDisabledAttribute, bool);
 		}
-	}
-
-	componentDidMount () {
-		this.calculateMetrics();
-	}
-
-	componentDidUpdate () {
-		this.calculateMetrics();
 	}
 
 	initRef = (ref) => {
