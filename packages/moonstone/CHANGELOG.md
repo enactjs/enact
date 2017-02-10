@@ -12,6 +12,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonstone/IncrementSlider` to change when the buttons are held down
+- `moonstone/VideoPlayer` now shows controls on initial render
 
 ### Fixed
 
