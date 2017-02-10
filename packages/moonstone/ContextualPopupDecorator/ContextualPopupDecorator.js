@@ -385,6 +385,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 							spotlightRestrict={spotlightRestrict}
 							onKeyDown={this.handleKeyDown}
 							aria-label={aria}
+							aria-live="off"
 							role={role}
 						>
 							<PopupComponent />
