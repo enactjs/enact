@@ -19,7 +19,7 @@ const states = {
 	stop          : {iconStart: null,             iconEnd: null,            allowHide: true,   message: null}
 };
 
-const getIcon = (placement) => ({playbackState: s}) => {
+const getIcon = (placement) => ({playbackState: s}) => { // eslint-disable-line enact/display-name, enact/prop-types
 	const iconResize = (s === 'play' || s === 'pause') ? ' ' + css.shrink : '';
 	if (states[s] && states[s][placement]) {
 		return <Icon className={css.icon + iconResize}>{states[s][placement]}</Icon>;
