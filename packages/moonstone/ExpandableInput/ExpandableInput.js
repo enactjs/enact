@@ -1,3 +1,4 @@
+import {$L} from '@enact/i18n';
 import Changeable from '@enact/ui/Changeable';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
@@ -11,7 +12,16 @@ const forwardMouseDown = forward('onMouseDown');
 class ExpandableInputBase extends React.Component {
 	static displayName = 'ExpandableInput'
 
-	static propTypes = {
+	static propTypes =  /** @lends moonstone/ExpandableInput.ExpandableInputBase.prototype */  {
+		/**
+		 * The primary text of the item.
+		 *
+		 * @type {String}
+		 * @required
+		 * @public
+		 */
+		title: React.PropTypes.string.isRequired,
+
 		/**
 		 * When `true`, applies a disabled style and the control becomes non-interactive.
 		 *
@@ -124,6 +134,19 @@ class ExpandableInputBase extends React.Component {
 		spotlightDisabled: false
 	}
 
+	calcAriaLabel () {
+		const hint = $L('edit box');
+		const {title, type} = this.props;
+		let {value = ''} = this.props;
+
+		if (type === 'password' && value) {
+			const character = value.length > 1 ? $L('characters') : $L('character');
+			value = `${value.length} ${character}`;
+		}
+
+		return `${title} ${value} ${hint}`;
+	}
+
 	fireChangeEvent = () => {
 		const {onChange, onClose, value} = this.props;
 
@@ -193,8 +216,9 @@ class ExpandableInputBase extends React.Component {
 		return (
 			<ExpandableItemBase
 				{...rest}
+				aria-label={this.calcAriaLabel()}
 				disabled={disabled}
-				label={value}
+				label={type === 'password' ? null : value}
 				noPointerMode
 				onClose={this.handleClose}
 				onMouseDown={this.handleMouseDown}

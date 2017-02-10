@@ -44,6 +44,14 @@ const ExpandableItemBase = kind({
 		title: PropTypes.string.isRequired,
 
 		/**
+		 * An ARIA label to be applied to the title component.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		'aria-label': PropTypes.string,
+
+		/**
 		 * When `true`, the expandable automatically closes when the user navigates to the `title`
 		 * of the component using 5-way controls; if `false`, the user must select/tap the header to
 		 * close the expandable.
@@ -204,9 +212,8 @@ const ExpandableItemBase = kind({
 		transitionSpotlightDisabled: ({open, spotlightDisabled}) => (spotlightDisabled || !open)
 	},
 
-	render: ({children, disabled, handleKeyDown, handleOpen, label, open, onSpotlightDisappear, spotlightDisabled, title, titleIcon, transitionSpotlightDisabled, ...rest}) => {
+	render: ({'aria-label': ariaLabel, children, disabled, handleKeyDown, handleOpen, label, open, onSpotlightDisappear, spotlightDisabled, title, titleIcon, transitionSpotlightDisabled, ...rest}) => {
 		delete rest.autoClose;
-		delete rest.label;
 		delete rest.lockBottom;
 		delete rest.noneText;
 		delete rest.onClose;
@@ -216,6 +223,7 @@ const ExpandableItemBase = kind({
 		return (
 			<ExpandableContainer {...rest} disabled={disabled} open={open} spotlightDisabled={spotlightDisabled}>
 				<LabeledItem
+					aria-label={ariaLabel}
 					disabled={disabled}
 					label={label}
 					onClick={handleOpen}
