@@ -187,8 +187,9 @@ const InputBase = kind({
 			<div {...rest} disabled={disabled}>
 				<InputDecoratorIcon position="before">{iconBefore}</InputDecoratorIcon>
 				<input
-					dir={dir}
+					aria-disabled={disabled}
 					className={css.input}
+					dir={dir}
 					disabled={disabled}
 					onChange={onChange}
 					placeholder={placeholder}
