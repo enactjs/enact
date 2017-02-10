@@ -138,14 +138,15 @@ EnyoLoader.prototype._loadFilesAsync = function (paths, results, params, cache, 
 };
 
 EnyoLoader.prototype._loadFilesCache = function (paths) {
+	this._validateCache();
 	if (typeof window !== 'undefined' && window.localStorage && paths.length > 0) {
 		let stored = window.localStorage.getItem(cachePrefix + paths[0]);
 		if (stored) {
-			let target = JSON.stringify(paths);
-			if (stored === target) {
-				return JSON.parse(window.localStorage.getItem(cachePrefix + target));
+			const target = JSON.stringify(paths);
+			const data = JSON.parse(stored);
+			if (data.target === target) {
+				return data.value;
 			} else {
-				window.localStorage.removeItem(cachePrefix + stored);
 				window.localStorage.removeItem(cachePrefix + paths[0]);
 			}
 		}
@@ -156,13 +157,12 @@ EnyoLoader.prototype._loadFilesCache = function (paths) {
 EnyoLoader.prototype._storeFilesCache = function (paths, data) {
 	if (typeof window !== 'undefined' && window.localStorage && paths.length > 0) {
 		let target = JSON.stringify(paths);
-		window.localStorage.setItem(cachePrefix + paths[0], target);
-		window.localStorage.setItem(cachePrefix + target, JSON.stringify(data));
+		window.localStorage.setItem(cachePrefix + paths[0], JSON.stringify({target:target, value:data}));
 	}
 };
 
 EnyoLoader.prototype._validateCache = function () {
-	if (typeof window !== 'undefined' && window.localStorage) {
+	if (!this._cacheValidated && typeof window !== 'undefined' && window.localStorage) {
 		let activeID = window.localStorage.getItem(cacheKey);
 		if (activeID !== cacheID) {
 			for (let i = 0; i < window.localStorage.length; i++) {
@@ -175,6 +175,7 @@ EnyoLoader.prototype._validateCache = function () {
 			window.localStorage.setItem(cacheKey, cacheID);
 		}
 	}
+	this._cacheValidated = true;
 };
 
 EnyoLoader.prototype.loadFiles = function (paths, sync, params, callback) {

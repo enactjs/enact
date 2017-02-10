@@ -82,6 +82,14 @@ const ToggleItemBase = kind({
 		inline: PropTypes.bool,
 
 		/**
+		 * The handler to run when the toggle item is toggled. Developers should
+		 * generally use `onToggle` instead.
+		 *
+		 * @type {Function}
+		 */
+		onClick: React.PropTypes.func,
+
+		/**
 		 * The handler to run when the toggle item is toggled.
 		 *
 		 * @type {Function}
