@@ -1,3 +1,4 @@
+import {$L} from '@enact/i18n';
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 
@@ -147,6 +148,7 @@ const ContextualPopupBase = kind({
 						backgroundOpacity="transparent"
 						small
 						onClick={onCloseButtonClick}
+						aria-label={$L("Close")}
 					>
 						closex
 					</IconButton>
@@ -162,8 +164,8 @@ const ContextualPopupBase = kind({
 		return (
 			<div {...rest} className={css.contextualPopup}>
 				<div className={className} style={containerPosition} ref={containerRef}>
-					{closeButton}
 					{children}
+					{closeButton}
 				</div>
 				<ContextualPopupArrow direction={direction} style={arrowPosition} />
 			</div>

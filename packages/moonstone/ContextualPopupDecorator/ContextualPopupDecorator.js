@@ -17,7 +17,33 @@ import React, {PropTypes} from 'react';
 import {ContextualPopup} from './ContextualPopup';
 import css from './ContextualPopupDecorator.less';
 
-const defaultConfig = {};
+/**
+ * Default configuration parameters for {@link moonstone/ContextualPopupDecorator.ContextualPopupDecorator}
+ *
+ * @type {Object}
+ * @memberof moonstone/ContextualPopupDecorator.ContextualPopupDecorator
+ * @hocconfig
+ */
+const defaultConfig = {
+	/**
+	 * aria-label to be added to ContextualPopupContainer
+	 *
+	 * @type {String|null}
+	 * @default null
+	 * @memberof moonstone/ContextualPopupDecorator.ContextualPopupDecorator.defaultConfig
+	 */
+	'aria-label': null,
+
+	/**
+	 * Role to be added to ContextualPopupContainer
+	 * Set to 'dialog' if you don't want to read all contents of contextualPopup.
+	 *
+	 * @type {String}
+	 * @default 'alert'
+	 * @memberof moonstone/ContextualPopupDecorator.ContextualPopupDecorator.defaultConfig
+	 */
+	role: 'alert'
+};
 const ContextualPopupContainer = SpotlightContainerDecorator({preserveId: true}, ContextualPopup);
 const depress = 'onKeyDown';
 
@@ -32,7 +58,9 @@ const depress = 'onKeyDown';
  * @public
  */
 const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const forwardDepress = forward(depress);
+	const
+		forwardDepress = forward(depress),
+		{'aria-label': aria, role} = config;
 
 	return class extends React.Component {
 		static displayName = 'ContextualPopupDecorator'
@@ -356,6 +384,8 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 							containerId={this.state.containerId}
 							spotlightRestrict={spotlightRestrict}
 							onKeyDown={this.handleKeyDown}
+							aria-label={aria}
+							role={role}
 						>
 							<PopupComponent />
 						</ContextualPopupContainer>
