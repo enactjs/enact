@@ -54,8 +54,12 @@ const now = function () {
 const emulateMouseEventsTimeout = 175;
 
 // Set-up event forwarding
-const forwardKeyUp = forward('onKeyUp');
-const forwardMouseUp = forward('onMouseUp');
+const forwardClick = forward('onClick'),
+	forwardKeyDown = forward('onKeyDown'),
+	forwardKeyUp = forward('onKeyUp'),
+	forwardMouseDown = forward('onMouseDown'),
+	forwardMouseUp = forward('onMouseUp'),
+	forwardWheel = forward('onWheel');
 
 /**
  * The base component for {@link moonstone/internal/Picker.Picker}.
@@ -346,14 +350,20 @@ const Picker = class extends React.Component {
 		}
 	}
 
-	handleDecClick = () => {
+	handleDecClick = (ev) => {
+		if (ev) {
+			forwardClick(ev, this.props);
+		}
 		if (!this.isButtonDisabled(-this.props.step)) {
 			this.updateValue(-1);
 			this.handleDown(-1);
 		}
 	}
 
-	handleIncClick = () => {
+	handleIncClick = (ev) => {
+		if (ev) {
+			forwardClick(ev, this.props);
+		}
 		if (!this.isButtonDisabled(this.props.step)) {
 			this.updateValue(1);
 			this.handleDown(1);
@@ -369,33 +379,45 @@ const Picker = class extends React.Component {
 
 	handleUp = (ev) => {
 		const {joined, onMouseUp} = this.props;
+		forwardMouseUp(ev, this.props);
 		if (joined && onMouseUp) {
-			if (ev) {
-				forwardMouseUp(ev, this.props);
-			}
 			jobs.startJob(this.jobName, onMouseUp, emulateMouseEventsTimeout);
 		}
 	}
 
-	handleDecDown = () => this.handleDown(-1)
+	handleDecDown = (ev) => {
+		if (ev) {
+			forwardMouseDown(ev, this.props);
+		}
+		this.handleDown(-1);
+	}
 
-	handleIncDown = () => this.handleDown(1)
+	handleIncDown = (ev) => {
+		if (ev) {
+			forwardMouseDown(ev, this.props);
+		}
+		this.handleDown(1);
+	}
 
 	handleWheel = (ev) => {
-		const {onMouseUp, step} = this.props;
-		const dir = -Math.sign(ev.deltaY);
+		const {joined, onMouseUp, step} = this.props;
+		forwardWheel(ev, this.props);
 
-		// We'll sometimes get a 0/-0 wheel event we need to ignore or the wheel event has reached
-		// the bounds of the picker
-		if (dir && !this.isButtonDisabled(step * dir)) {
-			// fire the onChange event
-			this.updateValue(dir);
-			// simulate mouse down
-			this.handleDown(dir);
-			// set a timer to simulate the mouse up
-			jobs.startJob(this.jobName, onMouseUp, emulateMouseEventsTimeout);
-			// prevent the default scroll behavior to avoid bounce back
-			ev.preventDefault();
+		if (joined) {
+			const dir = -Math.sign(ev.deltaY);
+
+			// We'll sometimes get a 0/-0 wheel event we need to ignore or the wheel event has reached
+			// the bounds of the picker
+			if (dir && !this.isButtonDisabled(step * dir)) {
+				// fire the onChange event
+				this.updateValue(dir);
+				// simulate mouse down
+				this.handleDown(dir);
+				// set a timer to simulate the mouse up
+				jobs.startJob(this.jobName, onMouseUp, emulateMouseEventsTimeout);
+				// prevent the default scroll behavior to avoid bounce back
+				ev.preventDefault();
+			}
 		}
 	}
 
@@ -414,38 +436,41 @@ const Picker = class extends React.Component {
 	}
 
 	handleKeyDown = (ev) => {
-		const direction = getDirection(ev.keyCode);
+		const {joined} = this.props;
+		forwardKeyDown(ev, this.props);
 
-		const directions = {
-			up: this.handleIncClick,
-			down: this.handleDecClick,
-			right: this.handleIncClick,
-			left: this.handleDecClick
-		};
+		if (joined) {
+			const direction = getDirection(ev.keyCode);
 
-		const isVertical = this.props.orientation === 'vertical' && (direction === 'up' || direction === 'down');
-		const isHorizontal = this.props.orientation === 'horizontal' && (direction === 'right' || direction === 'left');
+			const directions = {
+				up: this.handleIncClick,
+				down: this.handleDecClick,
+				right: this.handleIncClick,
+				left: this.handleDecClick
+			};
 
-		if (isVertical) {
-			directions[direction]();
-			ev.stopPropagation();
-		} else if (isHorizontal) {
-			directions[direction]();
-			ev.stopPropagation();
+			const isVertical = this.props.orientation === 'vertical' && (direction === 'up' || direction === 'down');
+			const isHorizontal = this.props.orientation === 'horizontal' && (direction === 'right' || direction === 'left');
+
+			if (isVertical || isHorizontal) {
+				directions[direction]();
+				ev.stopPropagation();
+			}
 		}
 	}
 
 	handleKeyUp = (ev) => {
-		const direction = getDirection(ev.keyCode);
-		const isVertical = this.props.orientation === 'vertical' && (direction === 'up' || direction === 'down');
-		const isHorizontal = this.props.orientation === 'horizontal' && (direction === 'right' || direction === 'left');
-
+		const {joined, onMouseUp} = this.props;
 		forwardKeyUp(ev, this.props);
 
-		if (isVertical) {
-			this.handleUp();
-		} else if (isHorizontal) {
-			this.handleUp();
+		if (joined) {
+			const direction = getDirection(ev.keyCode);
+			const isVertical = this.props.orientation === 'vertical' && (direction === 'up' || direction === 'down');
+			const isHorizontal = this.props.orientation === 'horizontal' && (direction === 'right' || direction === 'left');
+
+			if (isVertical || isHorizontal) {
+				jobs.startJob(this.jobName, onMouseUp, emulateMouseEventsTimeout);
+			}
 		}
 	}
 
@@ -507,7 +532,14 @@ const Picker = class extends React.Component {
 		}
 
 		return (
-			<div {...rest} className={classes} disabled={disabled} onWheel={joined ? this.handleWheel : null} onKeyDown={joined ? this.handleKeyDown : null} onKeyUp={joined ? this.handleKeyUp : null}>
+			<div
+				{...rest}
+				className={classes}
+				disabled={disabled}
+				onWheel={this.handleWheel}
+				onKeyDown={this.handleKeyDown}
+				onKeyUp={this.handleKeyUp}
+			>
 				<PickerButton
 					className={css.incrementer}
 					disabled={incrementerDisabled}
