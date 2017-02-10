@@ -197,6 +197,8 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 				if (isEnter(ev.keyCode) && !this.holdJob) {
 					this.keyEvent = true;
 					this.beginHold(pick(eventProps, ev));
+				} else {
+					this.endHold();
 				}
 			}
 			forwardKeyDepress(ev, this.props);
