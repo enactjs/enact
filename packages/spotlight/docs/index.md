@@ -280,6 +280,19 @@ Whether or not the component should emulate mouse events as a response to Spotli
 
 May be added to temporarily make a control not spottable.
 
+`onSpotlightLeft`
+`onSpotlightRight`
+`onSpotlightUp`
+`onSpotlightDown`
++ Type: [function]
+
+A callback function to override default spotlight behavior when exiting the spottable control.
+
+`onSpotlightDisappear`
++ Type: [function]
+
+A callback function to be called when the component is removed while retaining focus.
+
 ### Container ###
 
 ##### Parameters #####
