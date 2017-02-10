@@ -25,6 +25,20 @@ const VirtualList = kind({
 
 	propTypes: /** @lends moonstone/VirtualList.VirtualList.prototype */ {
 		/**
+		 * The render function for an item of the list.
+		 * `index` is for accessing the index of the item.
+		 * `key` MUST be passed as a prop for DOM recycling.
+		 * Data manipulation can be done in this function.
+		 *
+		 * @name component
+		 * @type {Function}
+		 * @required
+		 * @memberof moonstone/VirtualList.VirtualList
+		 * @instance
+		 * @public
+		 */
+
+		/**
 		 * Size of an item for the VirtualList; valid value is a number.
 		 * If the direction for the list is vertical, itemSize means the height of an item.
 		 * For horizontal, it means the width of an item.
@@ -35,9 +49,55 @@ const VirtualList = kind({
 		 * ```
 		 *
 		 * @type {Number}
+		 * @required
 		 * @public
 		 */
 		itemSize: PropTypes.number.isRequired
+
+		/**
+		 * Data for the list.
+		 * Check mutation of this and determine whether the list should update or not.
+		 *
+		 * @name data
+		 * @type {Any}
+		 * @default []
+		 * @memberof moonstone/VirtualList.VirtualList
+		 * @instance
+		 * @public
+		 */
+
+		/**
+		 * Size of the data.
+		 *
+		 * @name dataSize
+		 * @type {Number}
+		 * @default 0
+		 * @memberof moonstone/VirtualList.VirtualList
+		 * @instance
+		 * @public
+		 */
+
+		/**
+		 * Direction of the list; valid values are `'horizontal'` and `'vertical'`.
+		 *
+		 * @name direction
+		 * @type {String}
+		 * @default 'vertical'
+		 * @memberof moonstone/VirtualList.VirtualList
+		 * @instance
+		 * @public
+		 */
+
+		/**
+		 * Spacing between items.
+		 *
+		 * @name spacing
+		 * @type {Number}
+		 * @default 0
+		 * @memberof moonstone/VirtualList.VirtualList
+		 * @instance
+		 * @public
+		 */
 	},
 
 	render: (props) => <VirtualListBase {...props} />
@@ -56,6 +116,20 @@ const VirtualGridList = kind({
 
 	propTypes: /** @lends moonstone/VirtualList.VirtualGridList.prototype */ {
 		/**
+		 * The render function for an item of the list.
+		 * `index` is for accessing the index of the item.
+		 * `key` MUST be passed as a prop for DOM recycling.
+		 * Data manipulation can be done in this function.
+		 *
+		 * @name component
+		 * @type {Function}
+		 * @required
+		 * @memberof moonstone/VirtualList.VirtualGridList
+		 * @instance
+		 * @public
+		 */
+
+		/**
 		 * Size of an item for the VirtualGridList; valid value is an object that has `minWidth`
 		 * and `minHeight` as properties.
 		 *
@@ -65,9 +139,55 @@ const VirtualGridList = kind({
 		 * ```
 		 *
 		 * @type {moonstone/VirtualList.gridListItemSizeShape}
+		 * @required
 		 * @public
 		 */
 		itemSize: gridListItemSizeShape.isRequired
+
+		/**
+		 * Data for the list.
+		 * Check mutation of this and determine whether the list should update or not.
+		 *
+		 * @name data
+		 * @type {Any}
+		 * @default []
+		 * @memberof moonstone/VirtualList.VirtualGridList
+		 * @instance
+		 * @public
+		 */
+
+		/**
+		 * Size of the data.
+		 *
+		 * @name dataSize
+		 * @type {Number}
+		 * @default 0
+		 * @memberof moonstone/VirtualList.VirtualGridList
+		 * @instance
+		 * @public
+		 */
+
+		/**
+		 * Direction of the list; valid values are `'horizontal'` and `'vertical'`.
+		 *
+		 * @name direction
+		 * @type {String}
+		 * @default 'vertical'
+		 * @memberof moonstone/VirtualList.VirtualGridList
+		 * @instance
+		 * @public
+		 */
+
+		/**
+		 * Spacing between items.
+		 *
+		 * @name spacing
+		 * @type {Number}
+		 * @default 0
+		 * @memberof moonstone/VirtualList.VirtualGridList
+		 * @instance
+		 * @public
+		 */
 	},
 
 	render: (props) => <VirtualListBase {...props} pageScroll />

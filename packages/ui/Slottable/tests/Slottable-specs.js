@@ -19,9 +19,9 @@ describe('Slottable Specs', () => {
 		));
 		const subject = mount(
 			<Component>
-				<div slot='a'>A</div>
-				<div slot='b'>B</div>
-				<div slot='c'>C</div>
+				<div slot="a">A</div>
+				<div slot="b">B</div>
+				<div slot="c">C</div>
 			</Component>
 		);
 
@@ -42,10 +42,10 @@ describe('Slottable Specs', () => {
 		));
 		const subject = mount(
 			<Component>
-				<div slot='a'>A</div>
-				<div slot='b'>B</div>
+				<div slot="a">A</div>
+				<div slot="b">B</div>
 				<custom>D</custom>
-				<div slot='c'>C</div>
+				<div slot="c">C</div>
 			</Component>
 		);
 
@@ -73,10 +73,10 @@ describe('Slottable Specs', () => {
 		));
 		const subject = mount(
 			<Component>
-				<div slot='a'>A</div>
-				<div slot='b'>B</div>
+				<div slot="a">A</div>
+				<div slot="b">B</div>
 				<Custom>D</Custom>
-				<div slot='c'>C</div>
+				<div slot="c">C</div>
 			</Component>
 		);
 
@@ -96,8 +96,8 @@ describe('Slottable Specs', () => {
 		));
 		const subject = mount(
 			<Component>
-				<div slot='a'>A</div>
-				<div slot='b'>B</div>
+				<div slot="a">A</div>
+				<div slot="b">B</div>
 				<div>C</div>
 			</Component>
 		);
@@ -123,9 +123,9 @@ describe('Slottable Specs', () => {
 
 		const subject = mount(
 			<Component>
-				<div slot='a'>A</div>
-				<div slot='b'>B</div>
-				<div slot='c'>C</div>
+				<div slot="a">A</div>
+				<div slot="b">B</div>
+				<div slot="c">C</div>
 			</Component>
 		);
 

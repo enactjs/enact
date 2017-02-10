@@ -41,6 +41,13 @@ const BreadcrumbBase = kind({
 		 *
 		 * @type {Function}
 		 */
+		onClick: React.PropTypes.func,
+
+		/**
+		 * Called when the breadcrumb is clicked
+		 *
+		 * @type {Function}
+		 */
 		onSelect: React.PropTypes.func
 	},
 
@@ -49,10 +56,13 @@ const BreadcrumbBase = kind({
 		className: 'breadcrumb'
 	},
 
-	computed: {
-		onSelect: ({index, onSelect: handler, onClick}) => (ev) => {
+	handlers: {
+		onSelect: (ev, {index, onSelect, onClick}) => {
+			// clear Spotlight focus
+			ev.target.blur();
+
 			if (onClick) onClick(ev);
-			if (handler) handler({index});
+			if (onSelect) onSelect({index});
 		}
 	},
 

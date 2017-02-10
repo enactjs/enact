@@ -32,7 +32,7 @@ class ScrollerBase extends Component {
 
 		className: PropTypes.string,
 
-		/*
+		/**
 		 * Specifies how to horizontally scroll. Acceptable values are `'auto'`, `'default'` ,
 		 * `'hidden'`, and `'scroll'`.
 		 *
@@ -44,7 +44,7 @@ class ScrollerBase extends Component {
 
 		style: PropTypes.object,
 
-		/*
+		/**
 		 * Specifies how to vertically scroll. Acceptable values are `'auto'`, `'auto'` ,
 		 * `'hidden'`, and `'scroll'`.
 		 *
@@ -62,6 +62,14 @@ class ScrollerBase extends Component {
 		vertical: 'auto'
 	}
 
+	componentDidMount () {
+		this.calculateMetrics();
+	}
+
+	componentDidUpdate () {
+		this.calculateMetrics();
+	}
+
 	scrollBounds = {
 		clientWidth: 0,
 		clientHeight: 0,
@@ -69,6 +77,11 @@ class ScrollerBase extends Component {
 		scrollHeight: 0,
 		maxLeft: 0,
 		maxTop: 0
+	}
+
+	scrollPos = {
+		top: 0,
+		left: 0
 	}
 
 	getScrollBounds = () => this.scrollBounds
@@ -80,9 +93,11 @@ class ScrollerBase extends Component {
 
 		if (this.isVertical()) {
 			node.scrollTop = valY;
+			this.scrollPos.top = valY;
 		}
 		if (this.isHorizontal()) {
 			node.scrollLeft = rtl ? (this.scrollBounds.maxLeft - valX) : valX;
+			this.scrollPos.left = valX;
 		}
 	}
 
@@ -105,6 +120,31 @@ class ScrollerBase extends Component {
 		return bounds;
 	}
 
+	calculatePositionOnFocus = (focusedItem) => {
+		const
+			rtlDirection = this.context.rtl ? -1 : 1,
+			currentLeft = this.scrollPos.left * rtlDirection,
+			currentTop = this.scrollPos.top;
+
+		if (this.isVertical()) {
+			if (focusedItem.offsetTop + focusedItem.offsetHeight > (this.scrollBounds.clientHeight + currentTop)) {
+				this.scrollPos.top += ((focusedItem.offsetTop + focusedItem.offsetHeight) - (this.scrollBounds.clientHeight + currentTop));
+			} else if (focusedItem.offsetTop < currentTop) {
+				this.scrollPos.top += (focusedItem.offsetTop - currentTop);
+			}
+		}
+
+		if (this.isHorizontal()) {
+			if (focusedItem.offsetLeft + focusedItem.offsetWidth > (this.scrollBounds.clientWidth + currentLeft)) {
+				this.scrollPos.left += rtlDirection * ((focusedItem.offsetLeft + focusedItem.offsetWidth) - (this.scrollBounds.clientWidth + currentLeft));
+			} else if (focusedItem.offsetLeft < currentLeft) {
+				this.scrollPos.left += rtlDirection * (focusedItem.offsetLeft - currentLeft);
+			}
+		}
+
+		return this.scrollPos;
+	}
+
 	isVertical = () => (this.props.vertical !== 'hidden')
 
 	isHorizontal = () => (this.props.horizontal !== 'hidden')
@@ -125,14 +165,6 @@ class ScrollerBase extends Component {
 		if (this.node) {
 			this.node.setAttribute(dataContainerDisabledAttribute, bool);
 		}
-	}
-
-	componentDidMount () {
-		this.calculateMetrics();
-	}
-
-	componentDidUpdate () {
-		this.calculateMetrics();
 	}
 
 	initRef = (ref) => {

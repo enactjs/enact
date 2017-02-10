@@ -10,7 +10,6 @@ VirtualGridList.propTypes = Object.assign({}, VirtualListCore.propTypes);
 VirtualGridList.defaultProps = Object.assign({}, VirtualListCore.defaultProps);
 
 const
-	// Set up some defaults for info and knobs
 	prop = {
 		direction: {'horizontal': 'horizontal', 'vertical': 'vertical'}
 	},
@@ -26,7 +25,7 @@ const
 
 			color: '#fff'
 		},
-		listHeight: {
+		list: {
 			height: ri.scale(550) + 'px'
 		}
 	},
@@ -46,7 +45,7 @@ const
 	};
 
 for (let i = 0; i < 1000; i++) {
-	let
+	const
 		count = ('00' + i).slice(-3),
 		text = `Item ${count}`,
 		subText = `SubItem ${count}`,
@@ -62,14 +61,14 @@ storiesOf('VirtualList.VirtualGridList')
 		'Basic usage of VirtualGridList',
 		() => (
 			<VirtualGridList
-				onScrollStart={action('onScrollStart')}
-				onScrollStop={action('onScrollStop')}
 				data={items}
 				dataSize={number('dataSize', items.length)}
 				direction={select('direction', prop.direction, 'vertical')}
 				itemSize={{minWidth: ri.scale(number('minWidth', 180)), minHeight: ri.scale(number('minHeight', 270))}}
 				spacing={ri.scale(number('spacing', 20))}
-				style={style.listHeight}
+				onScrollStart={action('onScrollStart')}
+				onScrollStop={action('onScrollStop')}
+				style={style.list}
 				component={renderItem}
 			/>
 		)

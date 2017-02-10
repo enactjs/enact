@@ -61,7 +61,7 @@ storiesOf('Item')
 				<Button>Click here</Button>
 				{text('Children', 'Hello Item')}
 				<Button>Click here</Button>
-				<Image src={'http://lorempixel.com/512/512/city/1/'} sizing='fill' alt='lorempixel' />
+				<Image src={'http://lorempixel.com/512/512/city/1/'} sizing="fill" alt="lorempixel" />
 				<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.</p>
 				<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.</p>
 				<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.</p>
