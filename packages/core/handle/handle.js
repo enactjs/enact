@@ -87,9 +87,9 @@ const forEventProp = handle.forEventProp = curry((prop, value) => {
  * @param	{String}	name	Name of method on the `props`
  * @returns	{Function}			Event handler
  */
-const forward = handle.foward = name => (e, props) => {
+const forward = handle.forward = name => (e, props) => {
 	const fn = props && props[name];
-	if (typeof fn == 'function') {
+	if (typeof fn === 'function') {
 		fn(e);
 	}
 
