@@ -50,6 +50,14 @@ class ExpandableInputBase extends React.Component {
 		iconBefore: React.PropTypes.string,
 
 		/**
+		 * Text to display when no `value` is set.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		noneText: React.PropTypes.string,
+
+		/**
 		 * The handler to run when the expandable value is changed.
 		 *
 		 * @type {Function}
@@ -136,7 +144,7 @@ class ExpandableInputBase extends React.Component {
 
 	calcAriaLabel () {
 		const hint = $L('edit box');
-		const {title, type} = this.props;
+		const {noneText, title, type} = this.props;
 		let {value = ''} = this.props;
 
 		if (type === 'password' && value) {
@@ -144,7 +152,16 @@ class ExpandableInputBase extends React.Component {
 			value = `${value.length} ${character}`;
 		}
 
-		return `${title} ${value} ${hint}`;
+		return `${title} ${value || noneText || ''} ${hint}`;
+	}
+
+	calcLabel () {
+		const {noneText, type, value} = this.props;
+		if (type === 'password') {
+			return null;
+		} else {
+			return value || noneText;
+		}
 	}
 
 	fireChangeEvent = () => {
@@ -218,7 +235,7 @@ class ExpandableInputBase extends React.Component {
 				{...rest}
 				aria-label={this.calcAriaLabel()}
 				disabled={disabled}
-				label={type === 'password' ? null : value}
+				label={this.calcLabel()}
 				noPointerMode
 				onClose={this.handleClose}
 				onMouseDown={this.handleMouseDown}
