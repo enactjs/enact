@@ -10,6 +10,14 @@ const preventSpotlightNavigation = (ev) => {
 
 const isBubbling = (ev) => ev.currentTarget !== ev.target;
 
+const safeSelectionStart = (target) => {
+	try {
+		return target.selectionStart;
+	} catch (err) {
+		return 0;
+	}
+};
+
 /**
  * {@link moonstone/Input.InputSpotlightDecorator} is a Higher-order Component that manages the
  * spotlight behavior for an {@link moonstone/Input.Input}
@@ -205,9 +213,9 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 					// on enter + dismissOnEnter
 					(isEnter && dismissOnEnter) ||
 					// on left + at beginning of selection
-					(isLeft && target.selectionStart === 0) ||
-					// on right + at end of selection
-					(isRight && target.selectionStart === target.value.length) ||
+					(isLeft && safeSelectionStart(target) === 0) ||
+					// on right + at end of selection (note: fails on non-selectable types usually)
+					(isRight && safeSelectionStart(target) === target.value.length) ||
 					// on up
 					isUp ||
 					// on down
@@ -216,7 +224,9 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 
 				if (shouldFocusDecorator) {
 					if (!noDecorator) {
-						if (ev.target.type === 'number') ev.preventDefault();
+						if (ev.target.type === 'number') {
+							ev.preventDefault();
+						}
 						this.focusDecorator(currentTarget);
 
 						// prevent Enter onKeyPress which triggers an onClick via Spotlight
