@@ -170,7 +170,7 @@ class Viewport extends React.Component {
 					if (isIndexValid) {
 						lastFocusIndices[index] = initialFocusIndex;
 					}
-					if (!(!Spotlight.getPointerMode() && typeof current === 'undefined')) {
+					if (!(!Spotlight.getPointerMode() && !current)) {
 						lastFocusIndices[nextIndex] = false;
 					}
 				}
