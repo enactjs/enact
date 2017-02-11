@@ -101,7 +101,7 @@ class PickerAddRemove extends React.Component {
 					/>
 				</div>
 				<Button onClick={this.handleAdd}>
-					Add
+					Add/Replace
 				</Button>
 				<Button onClick={this.handleRemove}>
 					Remove
