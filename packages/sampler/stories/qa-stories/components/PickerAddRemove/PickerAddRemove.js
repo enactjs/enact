@@ -47,7 +47,7 @@ class PickerAddRemove extends React.Component {
 	handleAddReplace = () => {
 		const children = this.state.children,
 			index = this.index,
-			value = this.value || 'sample' + (children ? children.length : 0),
+			value = this.value || 'sample' + this.index,
 			newChild = {};
 
 		newChild[index] = value;
