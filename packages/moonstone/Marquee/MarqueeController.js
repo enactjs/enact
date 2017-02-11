@@ -82,18 +82,6 @@ const defaultConfig = {
 	marqueeOnFocus: false,
 
 	/**
-	 * When `true`, any `onMouseEnter` events that bubble to the controller will start the contained
-	 * Marquee instances. This is useful when a component contains Marquee instances that need to be
-	 * started with sibling components are hovered. Note: This setting will take precedence over
-	 * `marqueeOnFocus`.
-	 *
-	 * @type {Boolean}
-	 * @default false
-	 * @memberof moonstone/Marquee.MarqueeController.defaultConfig
-	 */
-	marqueeOnHover: false,
-
-	/**
 	 * Deprecated: When `true`, any `onFocus` events that bubble to the
 	 * controller will start the contained Marquee instances. This is useful
 	 * when a component contains Marquee instances that need to be started with
@@ -117,11 +105,9 @@ const defaultConfig = {
  * @public
  */
 const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
-	const {marqueeOnFocus, marqueeOnHover, startOnFocus} = config;
+	const {marqueeOnFocus, startOnFocus} = config;
 	const forwardBlur = forward('onBlur');
 	const forwardFocus = forward('onFocus');
-	const forwardMouseEnter = forward('onMouseEnter');
-	const forwardMouseLeave = forward('onMouseLeave');
 
 	if (__DEV__ && typeof startOnFocus !== 'undefined') {
 		deprecate({name: 'startOnFocus', since: '1.0.0-beta.3', replacedBy: 'marqueeOnFocus', until: '1.0.0'});
@@ -249,23 +235,6 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		/*
-		 * Handler for the MouseEnter event
-		 */
-		handleMouseEnter = (ev) => {
-			this.dispatch('start');
-			forwardMouseEnter(ev, this.props);
-		}
-
-		/*
-		 * Handler for the MouseLeave event
-		 */
-		handleMouseLeave = (ev) => {
-			this.dispatch('stop');
-			this.markAll(STATE.inactive);
-			forwardMouseLeave(ev, this.props);
-		}
-
-		/*
 		 * Invokes the `action` handler for each synchronized component except the invoking
 		 * `component`.
 		 *
@@ -352,13 +321,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		render () {
 			let props = this.props;
 
-			if (marqueeOnHover) {
-				props = {
-					...this.props,
-					onMouseEnter: this.handleMouseEnter,
-					onMouseLeave: this.handleMouseLeave
-				};
-			} else if (marqueeOnFocus || startOnFocus) {
+			if (marqueeOnFocus || startOnFocus) {
 				props = {
 					...this.props,
 					onBlur: this.handleBlur,
