@@ -11,7 +11,7 @@ script:
     - npm run lerna -- run test
     - echo -e "\x1b\x5b35;1m*** Tests complete\x1b\x5b0m"
     - echo -e "\x1b\x5b35;1m*** Starting eslint...\x1b\x5b0m"
-    - npm run lerna -- run lint
+    - npm run lerna -- run lint -- -- -- --max-warnings 0 .
     - echo -e "\x1b\x5b35;1m*** eslint complete\x1b\x5b0m"
     - echo -e "\x1b\x5b35;1m*** Starting sampler builds...\x1b\x5b0m"
     - cd packages/sampler

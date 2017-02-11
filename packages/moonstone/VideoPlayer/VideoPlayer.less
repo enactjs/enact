@@ -139,9 +139,14 @@
 					margin: 0;
 
 					// Grow the knob when the Slider gets spotted
-					&:global(.spottable):focus .knob::before {
-						transform: @moon-translate-center scale(0.75);
-						opacity: 1;
+					&:global(.spottable):focus {
+						.knob::before {
+							transform: @moon-translate-center scale(0.5);
+							opacity: 1;
+						}
+						&.pressed .knob::before {
+							transform: @moon-translate-center scale(0.75);
+						}
 					}
 				}
 
