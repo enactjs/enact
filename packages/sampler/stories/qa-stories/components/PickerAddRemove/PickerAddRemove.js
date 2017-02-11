@@ -42,7 +42,7 @@ class PickerAddRemove extends React.Component {
 	componentWillUpdate () {
 	}
 
-	handleAdd = () => {
+	handleAddReplace = () => {
 		const children = this.state.children,
 			index = this.index,
 			value = this.value || 'sample' + (children ? children.length : 0),
@@ -100,7 +100,7 @@ class PickerAddRemove extends React.Component {
 						placeholder="index"
 					/>
 				</div>
-				<Button onClick={this.handleAdd}>
+				<Button onClick={this.handleAddReplace}>
 					Add/Replace
 				</Button>
 				<Button onClick={this.handleRemove}>
