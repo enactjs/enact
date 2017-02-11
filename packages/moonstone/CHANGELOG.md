@@ -13,8 +13,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonstone/IncrementSlider` to change when the buttons are held down
-- `moonstone/Panels.Panel` sets focus on the last-focused spottable control (if available) after rendering
 - `moonstone/Marquee` to allow disabled marquees to animate
+- `moonstone/Panels.Panel` sets focus on the last-focused spottable control (if available) after rendering
 
 ### Fixed
 
