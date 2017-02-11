@@ -40,6 +40,8 @@ class PickerAddRemove extends React.Component {
 	}
 
 	componentWillUpdate () {
+		this.value = '';
+		this.index = 0;
 	}
 
 	handleAddReplace = () => {
@@ -89,15 +91,19 @@ class PickerAddRemove extends React.Component {
 					</StatefulPicker>
 				</div>
 				<div>
+					Value:
 					<StatefulInput
 						onChange={this.handleValueChange}
 						placeholder="value"
+						value={this.value}
 					/>
 				</div>
 				<div>
+					Index:
 					<StatefulInput
 						onChange={this.handleIndexChange}
 						placeholder="index"
+						value={this.index}
 					/>
 				</div>
 				<Button onClick={this.handleAddReplace}>
