@@ -56,7 +56,6 @@ const emulateMouseEventsTimeout = 175;
 // Set-up event forwarding
 const forwardClick = forward('onClick'),
 	forwardKeyDown = forward('onKeyDown'),
-	forwardKeyUp = forward('onKeyUp'),
 	forwardMouseDown = forward('onMouseDown'),
 	forwardMouseUp = forward('onMouseUp'),
 	forwardWheel = forward('onWheel');
@@ -433,7 +432,7 @@ const Picker = class extends React.Component {
 	}
 
 	handleKeyDown = (ev) => {
-		const {joined} = this.props;
+		const {joined, onMouseUp} = this.props;
 		forwardKeyDown(ev, this.props);
 
 		if (joined) {
@@ -452,20 +451,6 @@ const Picker = class extends React.Component {
 			if (isVertical || isHorizontal) {
 				directions[direction]();
 				ev.stopPropagation();
-			}
-		}
-	}
-
-	handleKeyUp = (ev) => {
-		const {joined, onMouseUp} = this.props;
-		forwardKeyUp(ev, this.props);
-
-		if (joined) {
-			const direction = getDirection(ev.keyCode);
-			const isVertical = this.props.orientation === 'vertical' && (direction === 'up' || direction === 'down');
-			const isHorizontal = this.props.orientation === 'horizontal' && (direction === 'right' || direction === 'left');
-
-			if (isVertical || isHorizontal) {
 				jobs.startJob(this.jobName, onMouseUp, emulateMouseEventsTimeout);
 			}
 		}
@@ -535,7 +520,6 @@ const Picker = class extends React.Component {
 				disabled={disabled}
 				onWheel={this.handleWheel}
 				onKeyDown={this.handleKeyDown}
-				onKeyUp={this.handleKeyUp}
 			>
 				<PickerButton
 					className={css.incrementer}
