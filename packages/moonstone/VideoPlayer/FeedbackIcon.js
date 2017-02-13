@@ -1,16 +1,25 @@
 import kind from '@enact/core/kind';
 import React from 'react';
+
 import Icon from '../Icon';
 
 import css from './Feedback.less';
 
+/**
+ * Feedback Icon for {@link moonstone/VideoPlayer.Feedback}.
+ *
+ * @class FeedbackIcon
+ * @memberof moonstone/VideoPlayer
+ * @ui
+ * @private
+ */
 const FeedbackIconBase = kind({
 	name: 'FeedbackIcon',
 
 	propTypes: {
 		placement: React.PropTypes.string,
-		playbackState: React.propTypes.string,
-		states: React.propTypes.arrayObj(React.PropTypes.object)
+		playbackState: React.PropTypes.string,
+		states: React.PropTypes.arrayOf(React.PropTypes.object)
 	},
 
 	styles: {
