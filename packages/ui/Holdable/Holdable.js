@@ -236,11 +236,7 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 				if (endHold === 'onMove' && this.downEvent) {
 					if (outOfRange(ev.clientY, this.downEvent.clientY, moveTolerance) || outOfRange(ev.clientX, this.downEvent.clientX, moveTolerance)) {
 						if (this.holdJob) {
-							if (resume) {
-								this.suspendHold();
-							} else {
-								this.endHold();
-							}
+							this.endOrSuspendHold();
 						}
 					} else if (resume && !this.holdJob) {
 						this.resumeHold();
@@ -283,6 +279,14 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			this.next = null;
 		}
 
+		endOrSuspendHold = () => {
+			if (resume) {
+				this.suspendHold();
+			} else {
+				this.endHold();
+			}
+		}
+
 		suspendHold = () => {
 			clearInterval(this.holdJob);
 			this.holdJob = null;
@@ -301,7 +305,16 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.pulsing) {
 				const ev = makeEvent('holdpulse', e);
 				ev.holdTime = holdTime;
-				if (onHoldPulse) onHoldPulse(ev);
+				if (onHoldPulse) {
+					onHoldPulse(ev);
+					once('mousemove', (evt) => {
+						if (outOfRange(evt.clientY, e.clientY, moveTolerance) || outOfRange(evt.clientX, e.clientX, moveTolerance)) {
+							if (this.holdJob) {
+								this.endOrSuspendHold();
+							}
+						}
+					});
+				}
 			}
 		}
 
