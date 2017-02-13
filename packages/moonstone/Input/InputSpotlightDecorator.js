@@ -10,10 +10,13 @@ const preventSpotlightNavigation = (ev) => {
 
 const isBubbling = (ev) => ev.currentTarget !== ev.target;
 
+// A regex to check for input types that allow selectionStart
+const SELECTABLE_TYPES = /text|password|search|tel|url/;
+
 const safeSelectionStart = (target) => {
-	try {
+	if (SELECTABLE_TYPES.test(target.type)) {
 		return target.selectionStart;
-	} catch (err) {
+	} else {
 		return 0;
 	}
 };
