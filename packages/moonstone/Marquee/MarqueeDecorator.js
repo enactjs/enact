@@ -321,7 +321,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const node = this.node;
 
 			// TODO: absolute showing check (or assume that it won't be rendered if it isn't showing?)
-			if (node && this.distance == null && !this.props.disabled && !this.props.marqueeDisabled) {
+			if (node && this.distance == null && !this.props.marqueeDisabled) {
 				this.distance = this.calculateDistance(node);
 				this.contentFits = !this.shouldAnimate(this.distance);
 				this.setState({
@@ -372,7 +372,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{undefined}
 		 */
 		start = (delay = this.props.marqueeDelay) => {
-			if (this.props.disabled || this.props.marqueeDisabled || this.contentFits) {
+			if (this.props.marqueeDisabled || this.contentFits) {
 				// if marquee isn't necessary (contentFits), do not set `animating` but return
 				// `true` to mark it complete if its synchronized so it doesn't block other
 				// instances.

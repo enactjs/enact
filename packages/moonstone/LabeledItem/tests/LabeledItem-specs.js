@@ -10,7 +10,7 @@ describe('LabeledItem Specs', () => {
 
 	it('should render a label (\<div\>) by default', function () {
 		const item = mount(
-			<LabeledItem label='The Label'>I am a labeledItem</LabeledItem>
+			<LabeledItem label="The Label">I am a labeledItem</LabeledItem>
 		);
 
 		const divTag = item.find(labelClass);

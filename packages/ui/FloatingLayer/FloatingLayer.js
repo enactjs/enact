@@ -17,12 +17,6 @@ import Scrim from './Scrim';
 class FloatingLayerBase extends React.Component {
 	static displayName = 'FloatingLayer'
 
-	constructor (props) {
-		super(props);
-		this.node = null;
-		this.floatLayer = null;
-	}
-
 	static propTypes = /** @lends ui/FloatingLayer.FloatingLayerBase.prototype */ {
 		/**
 		 * CSS classes for FloatingLayer.
@@ -101,6 +95,12 @@ class FloatingLayerBase extends React.Component {
 		noAutoDismiss: false,
 		open: false,
 		scrimType: 'translucent'
+	}
+
+	constructor (props) {
+		super(props);
+		this.node = null;
+		this.floatLayer = null;
 	}
 
 	componentDidMount () {
