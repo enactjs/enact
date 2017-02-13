@@ -243,7 +243,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentDidUpdate () {
 			if (this.shouldStartMarquee()) {
-				this.startAnimation(this.props.marqueeDelay);
+				this.startAnimation(this.props.marqueeOn === 'render' ? this.props.marqueeOnRenderDelay : this.props.marqueeDelay);
 			}
 			this.forceRestartMarquee = false;
 		}
@@ -456,7 +456,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		cancelAnimation = () => {
 			if (this.sync) {
 				this.forceRestartMarquee = true;
-				this.context.cancel(this);
+				if (this.state.animating) {
+					this.context.cancel(this);
+				}
 			}
 
 			this.stop();
