@@ -416,15 +416,7 @@ const VideoPlayerBase = class extends React.Component {
 		}
 	}
 
-	updateMainState = (ev) => {
-		if (ev) {
-			// If this is called from a callback, where ev gets populated. update the state of our
-			// scrubbing variable. Otherwise, lease it in the last place it was. Scrubbing is only
-			// controlled via the ev callback method, but this method can run in other contexts.
-			this.sliderScrubbing = ev.detached;
-			this.sliderKnobProportion = ev.proportion;
-		}
-
+	updateMainState = () => {
 		if (this.videoReady && this.video && this.video.videoEl && this.video.videoEl != null) {
 			const el = this.video.videoEl;
 			const updatedState = {
@@ -755,6 +747,10 @@ const VideoPlayerBase = class extends React.Component {
 		}
 	}
 
+	handleKnobMove = (ev) => {
+		this.sliderScrubbing = ev.detached;
+		this.sliderKnobProportion = ev.proportion;
+	}
 
 	//
 	// Player Interaction events
@@ -860,7 +856,7 @@ const VideoPlayerBase = class extends React.Component {
 							backgroundProgress={this.state.percentageLoaded}
 							value={this.state.percentagePlayed}
 							onChange={this.onSliderChange}
-							onKnobMove={this.updateMainState}
+							onKnobMove={this.handleKnobMove}
 						>
 							<div className={css.sliderTooltip}>
 								<Feedback playbackState={this.prevCommand} visible={this.state.feedbackVisible} >
