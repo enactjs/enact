@@ -216,6 +216,8 @@ const ExpandableItemBase = kind({
 		return (
 			<ExpandableContainer {...rest} disabled={disabled} open={open} spotlightDisabled={spotlightDisabled}>
 				<LabeledItem
+					aria-label={rest['aria-label']}
+					data-aria-label={rest['data-aria-label']}
 					disabled={disabled}
 					label={label}
 					onClick={handleOpen}

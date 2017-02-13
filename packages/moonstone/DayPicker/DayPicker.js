@@ -145,7 +145,7 @@ const DayPicker = class extends React.Component {
 	 *
 	 * @param {Number[]} [selected] Array of day indexes
 	 *
-	 * @returns {String} "Every Day", "Every Weekend", "Every Week" or list of days
+	 * @returns {Object} contains "Every Day", "Every Weekend", "Every Week" or list of days and string for aria-label
 	 */
 	getSelectedDayString (selected = []) {
 		selected = coerceArray(selected);
@@ -167,11 +167,14 @@ const DayPicker = class extends React.Component {
 		}
 
 		if (bWeekEndStart && bWeekEndEnd && length === weekendLength) {
-			return this.everyWeekendText;
+			return {label: this.everyWeekendText};
 		} else if (!bWeekEndStart && !bWeekEndEnd && length === 7 - weekendLength) {
-			return this.everyWeekdayText;
+			return {label: this.everyWeekdayText};
 		} else {
-			return selected.sort().map((dayIndex) => this.shortDayNames[dayIndex]).join(', ');
+			const
+				label = selected.sort().map((dayIndex) => this.shortDayNames[dayIndex]).join(', '),
+				ariaLabel = selected.sort().map((dayIndex) => this.longDayNames[dayIndex]).join(', ');
+			return {label, ariaLabel};
 		}
 	}
 
@@ -189,13 +192,14 @@ const DayPicker = class extends React.Component {
 	}
 
 	render () {
-		const label = this.getSelectedDayString(this.props.selected);
+		const {label, ariaLabel} = this.getSelectedDayString(this.props.selected);
 		const selected = this.adjustSelection(this.props.selected, this.firstDayOfWeek);
 
 		return (
 			<ExpandableList
 				{...this.props}
 				label={label}
+				data-aria-label={ariaLabel || null}
 				onSelect={this.handleSelect}
 				select="multiple"
 				selected={selected}
