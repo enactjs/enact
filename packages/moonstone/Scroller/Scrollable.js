@@ -6,7 +6,8 @@
 
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
-import {contextTypes} from '@enact/i18n/I18nDecorator';
+import {contextTypes as contextTypesResize} from '@enact/ui/Resizable';
+import {contextTypes as contextTypesRtl} from '@enact/i18n/I18nDecorator';
 import hoc from '@enact/core/hoc';
 import React, {Component, PropTypes} from 'react';
 import ri from '@enact/ui/resolution';
@@ -142,7 +143,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			positioningOption: 'byItem'
 		}
 
-		static contextTypes = contextTypes
+		static childContextTypes = {...contextTypesResize, ...contextTypesRtl}
 
 		// status
 		horizontalScrollability = false
@@ -245,6 +246,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			};
 
 			props.cbScrollTo(this.scrollTo);
+		}
+
+		getChildContext () {
+			return {
+				invalidateBounds: this.enqueueForceUpdate
+			};
 		}
 
 		// handle an input event
@@ -768,6 +775,19 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		componentWillUnmount () {
 			// Before call cancelAnimationFrame, you must send scrollStop Event.
 			this.animator.stop();
+			if (this.timerForceUpdate) clearTimeout(this.timerForceUpdate);
+		}
+
+		enqueueForceUpdate = () => {
+			// forceUpdate is a bit jarring and may interrupt other actions like animation so we'll
+			// queue it up in case we get multiple calls (e.g. when grouped expandables toggle).
+			//
+			// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
+			// state member.
+			this.timerForceUpdate = setTimeout(() => {
+				this.timerForceUpdate = null;
+				this.forceUpdate();
+			}, 32);
 		}
 
 		// render

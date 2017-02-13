@@ -5,6 +5,7 @@
  * export is {@link moonstone/VirtualList.VirtualListBase}.
  */
 
+import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import {is} from '@enact/core/keymap';
 import React, {Component, PropTypes} from 'react';
@@ -174,6 +175,87 @@ class VirtualListCore extends Component {
 		style: {}
 	}
 
+	constructor (props, context) {
+		const {positioningOption} = props;
+
+		super(props, context);
+
+		this.state = {firstIndex: 0, numOfItems: 0};
+		this.initContainerRef = this.initRef('containerRef');
+		this.initWrapperRef = this.initRef('wrapperRef');
+
+		switch (positioningOption) {
+			case 'byItem':
+				this.composeItemPosition = this.composeTransform;
+				this.composeContainerPosition = nop;
+				break;
+			case 'byContainer':
+				this.composeItemPosition = this.composeLeftTop;
+				this.composeContainerPosition = this.applyTransformToContainerNode;
+				break;
+			case 'byBrowser':
+				this.composeItemPosition = this.composeLeftTop;
+				this.composeContainerPosition = this.applyScrollLeftTopToWrapperNode;
+				this.wrapperStyle.overflowX = 'scroll';
+				this.wrapperStyle.overflowY = 'scroll';
+				break;
+		}
+	}
+
+	// Calculate metrics for VirtualList after the 1st render to know client W/H.
+	// We separate code related with data due to re use it when data changed.
+	componentDidMount () {
+		const {positioningOption} = this.props;
+
+		this.calculateMetrics(this.props);
+		this.updateStatesAndBounds(this.props);
+
+		if (positioningOption !== 'byBrowser') {
+			const containerNode = this.getContainerNode(positioningOption);
+
+			// prevent native scrolling by Spotlight
+			this.preventScroll = () => {
+				containerNode.scrollTop = 0;
+				/* NOTE: this calculation only works for Chrome */
+				containerNode.scrollLeft = this.context.rtl ? containerNode.scrollWidth : 0;
+			};
+
+			if (containerNode && containerNode.addEventListener) {
+				containerNode.addEventListener('scroll', this.preventScroll);
+			}
+		}
+	}
+
+	// Call updateStatesAndBounds here when dataSize has been changed to update nomOfItems state.
+	// Calling setState within componentWillReceivePropswill not trigger an additional render.
+	componentWillReceiveProps (nextProps) {
+		const
+			{dataSize, direction, itemSize, overhang, spacing} = this.props,
+			hasMetricsChanged = (
+				direction !== nextProps.direction ||
+				((itemSize instanceof Object) ? (itemSize.minWidth !== nextProps.itemSize.minWidth || itemSize.minHeight !== nextProps.itemSize.minHeight) : itemSize !== nextProps.itemSize) ||
+				overhang !== nextProps.overhang ||
+				spacing !== nextProps.spacing
+			),
+			hasDataChanged = (dataSize !== nextProps.dataSize);
+
+		if (hasMetricsChanged) {
+			this.calculateMetrics(nextProps);
+			this.updateStatesAndBounds(hasDataChanged ? nextProps : this.props);
+		} else if (hasDataChanged) {
+			this.updateStatesAndBounds(nextProps);
+		}
+	}
+
+	componentWillUnmount () {
+		const containerNode = this.getContainerNode(this.props.positioningOption);
+
+		// remove a function for preventing native scrolling by Spotlight
+		if (containerNode && containerNode.removeEventListener) {
+			containerNode.removeEventListener('scroll', this.preventScroll);
+		}
+	}
+
 	scrollBounds = {
 		clientWidth: 0,
 		clientHeight: 0,
@@ -208,33 +290,6 @@ class VirtualListCore extends Component {
 	// spotlight
 	nodeIndexToBeBlurred = null
 	lastFocusedIndex = null
-
-	constructor (props) {
-		const {positioningOption} = props;
-
-		super(props);
-
-		this.state = {firstIndex: 0, numOfItems: 0};
-		this.initContainerRef = this.initRef('containerRef');
-		this.initWrapperRef = this.initRef('wrapperRef');
-
-		switch (positioningOption) {
-			case 'byItem':
-				this.composeItemPosition = this.composeTransform;
-				this.composeContainerPosition = nop;
-				break;
-			case 'byContainer':
-				this.composeItemPosition = this.composeLeftTop;
-				this.composeContainerPosition = this.applyTransformToContainerNode;
-				break;
-			case 'byBrowser':
-				this.composeItemPosition = this.composeLeftTop;
-				this.composeContainerPosition = this.applyScrollLeftTopToWrapperNode;
-				this.wrapperStyle.overflowX = 'scroll';
-				this.wrapperStyle.overflowY = 'scroll';
-				break;
-		}
-	}
 
 	isVertical = () => this.isPrimaryDirectionVertical
 
@@ -730,60 +785,6 @@ class VirtualListCore extends Component {
 			/* NOTE: this calculation only works for Chrome */
 			const node = this.getContainerNode(positioningOption);
 			node.scrollLeft = this.scrollBounds.maxLeft;
-		}
-	}
-
-	// Calculate metrics for VirtualList after the 1st render to know client W/H.
-	// We separate code related with data due to re use it when data changed.
-	componentDidMount () {
-		const {positioningOption} = this.props;
-
-		this.calculateMetrics(this.props);
-		this.updateStatesAndBounds(this.props);
-
-		if (positioningOption !== 'byBrowser') {
-			const containerNode = this.getContainerNode(positioningOption);
-
-			// prevent native scrolling by Spotlight
-			this.preventScroll = () => {
-				containerNode.scrollTop = 0;
-				/* NOTE: this calculation only works for Chrome */
-				containerNode.scrollLeft = this.context.rtl ? containerNode.scrollWidth : 0;
-			};
-
-			if (containerNode && containerNode.addEventListener) {
-				containerNode.addEventListener('scroll', this.preventScroll);
-			}
-		}
-	}
-
-	// Call updateStatesAndBounds here when dataSize has been changed to update nomOfItems state.
-	// Calling setState within componentWillReceivePropswill not trigger an additional render.
-	componentWillReceiveProps (nextProps) {
-		const
-			{dataSize, direction, itemSize, overhang, spacing} = this.props,
-			hasMetricsChanged = (
-				direction !== nextProps.direction ||
-				((itemSize instanceof Object) ? (itemSize.minWidth !== nextProps.itemSize.minWidth || itemSize.minHeight !== nextProps.itemSize.minHeight) : itemSize !== nextProps.itemSize) ||
-				overhang !== nextProps.overhang ||
-				spacing !== nextProps.spacing
-			),
-			hasDataChanged = (dataSize !== nextProps.dataSize);
-
-		if (hasMetricsChanged) {
-			this.calculateMetrics(nextProps);
-			this.updateStatesAndBounds(hasDataChanged ? nextProps : this.props);
-		} else if (hasDataChanged) {
-			this.updateStatesAndBounds(nextProps);
-		}
-	}
-
-	componentWillUnmount () {
-		const containerNode = this.getContainerNode(this.props.positioningOption);
-
-		// remove a function for preventing native scrolling by Spotlight
-		if (containerNode && containerNode.removeEventListener) {
-			containerNode.removeEventListener('scroll', this.preventScroll);
 		}
 	}
 

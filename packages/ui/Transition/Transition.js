@@ -5,10 +5,13 @@
  * @module ui/Transition
  */
 
-import React, {PropTypes} from 'react';
+import {forward} from '@enact/core/handle';
 import kind from '@enact/core/kind';
+import React, {PropTypes} from 'react';
 
 import css from './Transition.less';
+
+const forwardTransitionEnd = forward('onTransitionEnd');
 
 /**
  * {@link ui/Transition.TransitionBase} is a stateless component that allows for applying
@@ -274,7 +277,8 @@ class Transition extends React.Component {
 		}
 	}
 
-	hideDidFinish = () => {
+	hideDidFinish = (ev) => {
+		forwardTransitionEnd(ev, this.props);
 		if (!this.props.visible && this.props.onHide) {
 			this.props.onHide();
 		}

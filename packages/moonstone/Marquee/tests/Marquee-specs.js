@@ -103,7 +103,7 @@ describe('Marquee', () => {
 
 	it('should override RTL when forceRtl is true', function () {
 		const subject = shallow(
-			<Marquee forceDirection='rtl'>
+			<Marquee forceDirection="rtl">
 				{content}
 			</Marquee>
 		);
@@ -116,7 +116,7 @@ describe('Marquee', () => {
 
 	it('should override direction when forceDirection is ltr and locale is RTL', function () {
 		const subject = shallow(
-			<Marquee forceDirection='ltr'>
+			<Marquee forceDirection="ltr">
 				{content}
 			</Marquee>,
 			{context: {rtl: true}}
@@ -130,7 +130,7 @@ describe('Marquee', () => {
 
 	it('should have direction of rtl when forceDirection is rtl and context.rtl is true', function () {
 		const subject = shallow(
-			<Marquee forceDirection='rtl'>
+			<Marquee forceDirection="rtl">
 				{content}
 			</Marquee>,
 			{context: {rtl: true}}
@@ -144,7 +144,7 @@ describe('Marquee', () => {
 
 	it('should have direction of ltr when forceDirection is ltr and context.rtl is false', function () {
 		const subject = shallow(
-			<Marquee forceDirection='ltr'>
+			<Marquee forceDirection="ltr">
 				{content}
 			</Marquee>,
 			{context: {rtl: false}}

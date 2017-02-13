@@ -83,9 +83,11 @@ class Scrim extends React.Component {
 		};
 	}
 
-	show = () => this.setState({visible: true})
-
-	hide = () => this.setState({visible: false})
+	componentWillMount () {
+		if (this.props.type === 'translucent') {
+			pushTranslucentScrim(this);
+		}
+	}
 
 	componentWillReceiveProps (nextProps) {
 		if (this.props.type === 'translucent' && nextProps.type !== 'translucent') {
@@ -94,17 +96,15 @@ class Scrim extends React.Component {
 		}
 	}
 
-	componentWillMount () {
-		if (this.props.type === 'translucent') {
-			pushTranslucentScrim(this);
-		}
-	}
-
 	componentWillUnmount () {
 		if (this.props.type === 'translucent') {
 			removeTranslucentScrim(this);
 		}
 	}
+
+	show = () => this.setState({visible: true})
+
+	hide = () => this.setState({visible: false})
 
 	render () {
 		if (this.state.visible) {

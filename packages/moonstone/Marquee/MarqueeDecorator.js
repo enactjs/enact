@@ -211,6 +211,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				overflow: 'ellipsis'
 			};
 			this.sync = false;
+			this.forceRestartMarquee = false;
 
 			this.invalidateMetrics();
 		}
@@ -243,6 +244,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.shouldStartMarquee()) {
 				this.startAnimation(this.props.marqueeDelay);
 			}
+			this.forceRestartMarquee = false;
 		}
 
 		componentWillUnmount () {
@@ -287,7 +289,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		shouldStartMarquee () {
 			return (
-				!this.sync && (
+				// restart un-synced marquees or marqueeOn="render" synced marquees that were
+				// cancelled due to a prop change
+				(!this.sync || this.forceRestartMarquee) && (
 					this.props.marqueeOn === 'render' ||
 					(this.isFocused && this.props.marqueeOn === 'focus') ||
 					(this.isHovered && this.props.marqueeOn === 'hover')
@@ -316,7 +320,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const node = this.node;
 
 			// TODO: absolute showing check (or assume that it won't be rendered if it isn't showing?)
-			if (node && this.distance == null && !this.props.disabled && !this.props.marqueeDisabled) {
+			if (node && this.distance == null && !this.props.marqueeDisabled) {
 				this.distance = this.calculateDistance(node);
 				this.contentFits = !this.shouldAnimate(this.distance);
 				this.setState({
@@ -367,7 +371,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{undefined}
 		 */
 		start = (delay = this.props.marqueeDelay) => {
-			if (this.contentFits) {
+			if (this.props.marqueeDisabled || this.contentFits) {
 				// if marquee isn't necessary (contentFits), do not set `animating` but return
 				// `true` to mark it complete if its synchronized so it doesn't block other
 				// instances.
@@ -379,6 +383,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						this.setState({
 							animating: true
 						});
+					} else if (this.sync) {
+						this.context.complete(this);
 					}
 				}, delay);
 			}
@@ -446,6 +452,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		cancelAnimation = () => {
 			if (this.sync) {
+				this.forceRestartMarquee = true;
 				this.context.cancel(this);
 			}
 
