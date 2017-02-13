@@ -162,7 +162,7 @@ const ContextualPopupBase = kind({
 		delete rest.showCloseButton;
 
 		return (
-			<div {...rest} className={css.contextualPopup}>
+			<div aria-live="off" role="alert" {...rest} className={css.contextualPopup}>
 				<div className={className} style={containerPosition} ref={containerRef}>
 					{children}
 					{closeButton}

@@ -43,7 +43,7 @@ describe('Popup specs', () => {
 		);
 
 		const expected = 'alert';
-		const actual = popup.prop('role');
+		const actual = popup.find('PopupBase').prop('role');
 
 		expect(actual).to.equal(expected);
 	});
@@ -54,7 +54,7 @@ describe('Popup specs', () => {
 		);
 
 		const expected = 'dialog';
-		const actual = popup.prop('role');
+		const actual = popup.find('PopupBase').prop('role');
 
 		expect(actual).to.equal(expected);
 	});
