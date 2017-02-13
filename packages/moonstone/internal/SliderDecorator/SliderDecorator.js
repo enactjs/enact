@@ -147,7 +147,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			/**
 			 * The handler to run when the knob moves. This method is only called when running
-			 * `Slider` with `detatchedKnob`. If you need to run a callback without a detached knob
+			 * `Slider` with `detachedKnob`. If you need to run a callback without a detached knob
 			 * use the more traditional `onChange` property.
 			 *
 			 * @type {Function}
@@ -293,7 +293,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			// If we know the knob should be in a custom place, use that place; otherwise, sync it with the progress.
 			knobNode.style.transform = computeKnobTransform(knobProgress, vertical, node);
 			knobNode.dataset.climax = knobProgress > 0.5 ? 'falling' : 'rising';
-			this.handleKnobMove({proportion: knobProgress, detached: (knobProgress !== proportionProgress)});
+			this.notifyKnobMove(knobProgress, knobProgress !== proportionProgress);
 		}
 
 		getInputNode = (node) => {
@@ -308,6 +308,16 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.sliderBarNode = node;
 		}
 
+		notifyKnobMove = (proportion, detached) => {
+			const {disabled, detachedKnob, onKnobMove} = this.props;
+			if (!disabled && detachedKnob && onKnobMove) {
+				onKnobMove({
+					proportion,
+					detached
+				});
+			}
+		}
+
 		handleChange = (ev) => {
 			if (this.props.disabled) return;
 
@@ -315,14 +325,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const parseFn = (ev.target.value % 1 !== 0) ? parseFloat : parseInt,
 				value = parseFn(ev.target.value);
 			this.throttleUpdateValue(value);
-		}
-
-		handleKnobMove = (args) => {
-			if (this.props.disabled || !this.props.detachedKnob) return;
-
-			if (this.props.onKnobMove) {
-				this.props.onKnobMove(args);
-			}
 		}
 
 		handleMouseMove = (ev) => {
