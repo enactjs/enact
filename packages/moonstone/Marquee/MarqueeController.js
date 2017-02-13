@@ -186,8 +186,10 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{undefined}
 		 */
 		handleStart = (component) => {
-			this.markAll(STATE.ready);
-			this.dispatch('start', component);
+			if (!this.anyRunning()) {
+				this.markAll(STATE.ready);
+				this.dispatch('start', component);
+			}
 		}
 
 		/*
