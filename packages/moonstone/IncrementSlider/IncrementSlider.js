@@ -102,7 +102,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			onChange: PropTypes.func,
 
 			/**
-			 * The handler to run when the value is incremented.
+			 * The handler to run when the value is decremented.
 			 *
 			 * @type {Function}
 			 * @param {Object} event
@@ -111,13 +111,31 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			onDecrement: PropTypes.func,
 
 			/**
-			 * The handler to run when the value is decremented.
+			 * The handler to run when the value is incremented.
 			 *
 			 * @type {Function}
 			 * @param {Object} event
 			 * @public
 			 */
 			onIncrement: PropTypes.func,
+
+			/**
+			 * The handler to run when the component is removed while retaining focus.
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @public
+			 */
+			onSpotlightDisappear: PropTypes.func,
+
+			/**
+			 * When `true`, the component cannot be navigated using spotlight.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			spotlightDisabled: PropTypes.bool,
 
 			/**
 			* The amount to increment or decrement the value.
@@ -152,6 +170,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			max: 100,
 			min: 0,
 			pressed: false,
+			spotlightDisabled: false,
 			step: 1,
 			value: 0,
 			vertical: false
@@ -170,20 +189,31 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			incrementIcon: ({incrementIcon, vertical}) => (incrementIcon || (vertical ? 'arrowlargeup' : 'arrowlargeright'))
 		},
 
-		render: ({decrementDisabled, decrementIcon, incrementDisabled, incrementIcon, onIncrement, onDecrement, incrementSliderClasses, ...rest}) => (
+		render: ({decrementDisabled, decrementIcon, incrementDisabled, incrementIcon, incrementSliderClasses, onIncrement, onDecrement, onSpotlightDisappear, spotlightDisabled, ...rest}) => (
 			<div className={incrementSliderClasses}>
 				<IncrementSliderButton
 					className={css.decrementButton}
 					disabled={decrementDisabled}
 					onClick={onDecrement}
+					onSpotlightDisappear={onSpotlightDisappear}
+					spotlightDisabled={spotlightDisabled}
 				>
 					{decrementIcon}
 				</IncrementSliderButton>
-				<Slider {...rest} className={css.slider} />
+				<Slider
+					{...rest}
+					className={css.slider}
+					onDecrement={onDecrement}
+					onIncrement={onIncrement}
+					onSpotlightDisappear={onSpotlightDisappear}
+					spotlightDisabled={spotlightDisabled}
+				/>
 				<IncrementSliderButton
 					className={css.incrementButton}
 					disabled={incrementDisabled}
 					onClick={onIncrement}
+					onSpotlightDisappear={onSpotlightDisappear}
+					spotlightDisabled={spotlightDisabled}
 				>
 					{incrementIcon}
 				</IncrementSliderButton>
@@ -209,7 +239,6 @@ const IncrementSliderFactory = factory((config) => {
 	 */
 	return Pressable(
 		SliderDecorator(
-			{handlesIncrements: true},
 			Base
 		)
 	);

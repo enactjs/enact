@@ -19,49 +19,22 @@ import {is} from '../keymap';
  * @returns	{Function}		A function that accepts an event which is dispatched to each of the
  *							provided handlers.
  */
-const handle = (...handlers) => (...args) => reduce((acc, handler) => {
-	if (acc) {
-		// if a prior handler returned true, do not call any more handlers
-		return true;
-	} else if (typeof handler === 'function') {
-		// if the current handler is a function, call it
-		return handler(...args);
-	}
+const handle = (...handlers) => (...args) => {
+	const result = reduce((acc, handler) => {
+		if (acc) {
+			// if a prior handler returned true, do not call any more handlers
+			return true;
+		} else if (typeof handler === 'function') {
+			// if the current handler is a function, call it
+			return handler(...args);
+		}
 
-	// otherwise, the handler is invalid so continue. This lets us blindly pass potential handlers
-	// from props without adding boilerplate checks everywhere.
-	return false;
-}, false, handlers);
+		// otherwise, the handler is invalid so continue. This lets us blindly pass potential handlers
+		// from props without adding boilerplate checks everywhere.
+		return false;
+	}, false, handlers);
 
-/**
- * Like `handle()`, accepts a list of handlers to process the event but returns a function that
- * accepts an additional list of args that will be included as additional arguments to the handlers.
- * That function returns the event handler that accepts the event and passes it, along with the
- * extra args, to the handlers.
- *
- * @example
- *	import {withArgs, forKey, stop} from '@enact/core/handle';
- *	kind({
- *		computed: {
- *			onSubmit: withArgs(forKey('enter'), stop, (e, props) => {
- *				// block submission for blank data unless the prop allows it
- *				if (e.target.value === '' && !props.allowBlank) return true;
- *				console.log('Submitting the data!');
- *			})
- *		},
- *		render: ({onSubmit}) => (
- *			<input onKeyPress={submitOnEnter} />
- *		)
- *	});
- *
- * @method	withArgs
- * @param	{...Function}	handlers List of handlers to process the event
- * @returns	{Function}		A function that accepts a list of args which returns a function that
- *							accepts an event which is dispatched to each of the provided handlers.
- */
-const withArgs = handle.withArgs = (...handlers) => {
-	const handler = handle(...handlers);
-	return (...args) => (e) => handler(e, ...args);
+	return result;
 };
 
 /**
@@ -91,14 +64,14 @@ const callOnEvent = handle.callOnEvent = (methodName) => (e) => {
  *
  * @example
  *  // submit() called only if event.x === 0
- *	handle(handle.forProp('x', 0), submit)
+ *	handle(handle.forEventProp('x', 0), submit)
  *
- * @method	forProp
+ * @method	forEventProp
  * @param	{String}	prop	Name of property on event
  * @param	{*}			value	Value of property
  * @returns {Function}			Event handler
  */
-const forProp = handle.forProp = curry((prop, value) => {
+const forEventProp = handle.forEventProp = curry((prop, value) => {
 	return (e) => e[prop] !== value;
 });
 
@@ -106,13 +79,9 @@ const forProp = handle.forProp = curry((prop, value) => {
  * Forwards the event to a function at `name` on `props`. The return value of the forwarded function
  * is ignored.
  *
- * **Note:** Can only be used with `withArgs` which allows extra args to be passed to the handlers.
- * If you have a reference to the function instead of the name, it can be passed directly to
- * `handle()` as a handler.
- *
  * @example
  *	const props = {onSubmit: (e) => doSomething()};
- *	const handleClick = withArgs(forward('onSubmit'))(props);
+ *	const handleClick = handle(forward('onSubmit'))(ev, props);
  *
  * @method	forward
  * @param	{String}	name	Name of method on the `props`
@@ -158,7 +127,7 @@ const stopImmediate = handle.stopImmediate = callOnEvent('stopImmediatePropagati
  * @param	{Number}	value	`keyCode` to test
  * @returns	{Function}			Event handler
  */
-const forKeyCode = handle.forKeyCode = forProp('keyCode');
+const forKeyCode = handle.forKeyCode = forEventProp('keyCode');
 
 /**
  * Only allows event handling to continue if the event's keyCode is mapped to `name` within
@@ -168,18 +137,36 @@ const forKeyCode = handle.forKeyCode = forProp('keyCode');
  * @param	{String}	name	Name from {@link core/keymap}
  * @returns	{Function}			Event handler
  */
-const forKey = handle.forKey = (name) => (ev) => !is(name, ev.keyCode);
+const forKey = handle.forKey = curry((name, ev) => {
+	return !is(name, ev.keyCode);
+});
+
+/**
+ * Stops handling if the value of `prop` on the props does not equal `value`
+ *
+ * @example
+ *  // submit() called only if props.checked === true
+ *	handle(handle.forProp('checked', true), submit)
+ *
+ * @method	forProp
+ * @param	{String}	prop	Name of property on props object
+ * @param	{*}			value	Value of property
+ * @returns {Function}			Event handler
+ */
+const forProp = handle.forProp = curry((prop, value) => {
+	return (e, props) => props[prop] !== value;
+});
 
 export default handle;
 export {
 	callOnEvent,
 	forward,
-	forProp,
+	forEventProp,
 	forKey,
 	forKeyCode,
+	forProp,
 	handle,
 	preventDefault,
 	stop,
-	stopImmediate,
-	withArgs
+	stopImmediate
 };

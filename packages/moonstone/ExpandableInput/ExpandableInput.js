@@ -22,6 +22,24 @@ class ExpandableInputBase extends React.Component {
 		disabled: React.PropTypes.bool,
 
 		/**
+		 * The icon to be placed at the end of the input.
+		 *
+		 * @see {@link moonstone/Icon.Icon}
+		 * @type {String}
+		 * @public
+		 */
+		iconAfter: React.PropTypes.string,
+
+		/**
+		 * The icon to be placed at the beginning of the input.
+		 *
+		 * @see {@link moonstone/Icon.Icon}
+		 * @type {String}
+		 * @public
+		 */
+		iconBefore: React.PropTypes.string,
+
+		/**
 		 * The handler to run when the expandable value is changed.
 		 *
 		 * @type {Function}
@@ -75,6 +93,15 @@ class ExpandableInputBase extends React.Component {
 		placeholder: React.PropTypes.string,
 
 		/**
+		 * When `true`, the component cannot be navigated using spotlight.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		spotlightDisabled: React.PropTypes.bool,
+
+		/**
 		 * The type of input. Accepted values correspond to the standard HTML5 input types.
 		 *
 		 * @type {String}
@@ -91,6 +118,10 @@ class ExpandableInputBase extends React.Component {
 		 * @public
 		 */
 		value: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number])
+	}
+
+	static defaultProps = {
+		spotlightDisabled: false
 	}
 
 	fireChangeEvent = () => {
@@ -156,7 +187,7 @@ class ExpandableInputBase extends React.Component {
 	}
 
 	render () {
-		const {disabled, onInputChange, onSpotlightDisappear, placeholder, type, value, ...rest} = this.props;
+		const {disabled, iconAfter, iconBefore, onInputChange, onSpotlightDisappear, placeholder, spotlightDisabled, type, value, ...rest} = this.props;
 		delete rest.onChange;
 
 		return (
@@ -168,10 +199,13 @@ class ExpandableInputBase extends React.Component {
 				onClose={this.handleClose}
 				onMouseDown={this.handleMouseDown}
 				onSpotlightDisappear={onSpotlightDisappear}
+				spotlightDisabled={spotlightDisabled}
 			>
 				<Input
 					disabled={disabled}
 					dismissOnEnter
+					iconAfter={iconAfter}
+					iconBefore={iconBefore}
 					noDecorator
 					onBlur={this.handleInputBlur}
 					onChange={onInputChange}
@@ -179,6 +213,7 @@ class ExpandableInputBase extends React.Component {
 					onMouseDown={this.handleInputMouseDown}
 					onSpotlightDisappear={onSpotlightDisappear}
 					placeholder={placeholder}
+					spotlightDisabled={spotlightDisabled}
 					type={type}
 					value={value}
 				/>

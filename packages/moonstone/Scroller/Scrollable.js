@@ -8,6 +8,7 @@ import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import hoc from '@enact/core/hoc';
 import React, {Component, PropTypes} from 'react';
+import {contextTypes} from '@enact/ui/Resizable';
 import ri from '@enact/ui/resolution';
 
 import css from './Scrollable.less';
@@ -139,6 +140,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			positioningOption: 'byItem'
 		}
 
+		static childContextTypes = contextTypes
+
 		// status
 		horizontalScrollability = false
 		verticalScrollability = false
@@ -229,6 +232,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			};
 
 			props.cbScrollTo(this.scrollTo);
+		}
+
+		getChildContext () {
+			return {
+				invalidateBounds: this.enqueueForceUpdate
+			};
 		}
 
 		// handle an input event
@@ -360,20 +369,24 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.scroll(e.target.scrollLeft, e.target.scrollTop, true);
 		}
 
-		onFocus = (e) => {
-			// for virtuallist
-			if (this.isKeyDown && !this.isDragging) {
-				const
-					item = e.target,
-					index = Number.parseInt(item.getAttribute(dataIndexAttribute));
+		startScrollOnFocus = (pos, item) => {
+			if (pos) {
+				if (pos.left !== this.scrollLeft || pos.top !== this.scrollTop) {
+					this.start(pos.left, pos.top, (animationDuration > 0), false, animationDuration);
+				}
+				this.lastFocusedItem = item;
+			}
+		}
 
-				if (!isNaN(index) && item !== this.lastFocusedItem && item === doc.activeElement && this.childRef.calculatePositionOnFocus) {
-					const pos = this.childRef.calculatePositionOnFocus(index);
+		onFocus = (e) => {
+			if (this.isKeyDown && !this.isDragging) {
+				const item = e.target,
+					positionFn = this.childRef.calculatePositionOnFocus;
+
+				if (item && item !== this.lastFocusedItem && item === doc.activeElement && positionFn) {
+					const pos = positionFn(item);
 					if (pos) {
-						if (pos.left !== this.scrollLeft || pos.top !== this.scrollTop) {
-							this.start(pos.left, pos.top, (animationDuration > 0), false, animationDuration);
-						}
-						this.lastFocusedItem = item;
+						this.startScrollOnFocus(pos, item);
 					}
 				}
 			}
@@ -381,10 +394,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		onKeyDown = (e) => {
 			if (this.childRef.setSpotlightContainerRestrict) {
-				this.isKeyDown = true;
 				const index = Number.parseInt(e.target.getAttribute(dataIndexAttribute));
 				this.childRef.setSpotlightContainerRestrict(e.keyCode, index);
 			}
+			this.isKeyDown = true;
 		}
 
 		onKeyUp = () => {
@@ -709,6 +722,19 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		componentWillUnmount () {
 			// Before call cancelAnimationFrame, you must send scrollStop Event.
 			this.animator.stop();
+			if (this.timerForceUpdate) clearTimeout(this.timerForceUpdate);
+		}
+
+		enqueueForceUpdate = () => {
+			// forceUpdate is a bit jarring and may interrupt other actions like animation so we'll
+			// queue it up in case we get multiple calls (e.g. when grouped expandables toggle).
+			//
+			// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
+			// state member.
+			this.timerForceUpdate = setTimeout(() => {
+				this.timerForceUpdate = null;
+				this.forceUpdate();
+			}, 32);
 		}
 
 		// render

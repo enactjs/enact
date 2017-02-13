@@ -2,12 +2,11 @@ import sinon from 'sinon';
 import {
 	handle,
 	callOnEvent,
+	forEventProp,
 	forKeyCode,
 	forProp,
-	forward,
 	preventDefault,
-	stop,
-	withArgs
+	stop
 } from '../handle';
 
 describe('handle', () => {
@@ -117,11 +116,11 @@ describe('handle', () => {
 		expect(handler.calledOnce).to.equal(true);
 	});
 
-	it('should only call handler for specified prop', function () {
+	it('should only call handler for specified event prop', function () {
 		const prop = 'index';
 		const value = 0;
 		const handler = sinon.spy();
-		const callback = handle(forProp(prop, value), handler);
+		const callback = handle(forEventProp(prop, value), handler);
 
 		// undefined shouldn't pass
 		callback(makeEvent());
@@ -140,31 +139,20 @@ describe('handle', () => {
 		expect(handler.calledOnce).to.equal(true);
 	});
 
-	it('should append args when using withArgs', function () {
+	it('should only call handler for specified prop', function () {
 		const handler = sinon.spy();
-		const props = {
-			index: 0
-		};
-		const callback = withArgs(handler)(props);
-		callback(makeEvent());
+		const callback = handle(forProp('checked', true), handler);
 
-		const expected = props.index;
-		const actual = handler.firstCall.args[1].index;
+		// undefined shouldn't pass
+		callback({}, {});
+		expect(handler.calledOnce).to.equal(false);
 
-		expect(actual).to.equal(expected);
+		// == check shouldn't pass
+		callback({}, {checked: 1});
+		expect(handler.calledOnce).to.equal(false);
+
+		// // === should pass
+		callback({}, {checked: true});
+		expect(handler.calledOnce).to.equal(true);
 	});
-
-	it('should forward to named function on first additional arg', function () {
-		const props = {
-			onClick: sinon.spy()
-		};
-		const callback = withArgs(forward('onClick'))(props);
-		callback(makeEvent());
-
-		const expected = true;
-		const actual = props.onClick.calledOnce;
-
-		expect(actual).to.equal(expected);
-	});
-
 });

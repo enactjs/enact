@@ -4,6 +4,7 @@ var
 	GracefulFsPlugin = require('graceful-fs-webpack-plugin'),
 	LessPluginRi = require('resolution-independence'),
 	path = require('path'),
+	ILibPlugin = require('ilib-webpack-plugin'),
 	WebOSMetaPlugin = require('webos-meta-webpack-plugin'),
 	webpack = require('webpack');
 
@@ -30,12 +31,8 @@ function configure (dirname) {
 					loader: 'webos-meta'
 				},
 				{
-					test: /ilibmanifest\.json$/,
-					loader: 'ilib'
-				},
-				{
 					test: /\.json$/,
-					exclude: [/appinfo\.json$/, /ilibmanifest\.json$/],
+					exclude: /appinfo\.json$/,
 					loader: 'json'
 				},
 				{
@@ -71,6 +68,10 @@ function configure (dirname) {
 				}
 			}),
 			new GracefulFsPlugin(),
+			// Automatically configure iLib library within @enact/i18n. Additionally,
+			// ensure the locale data files and the resource files are copied during
+			// the build to the output directory.
+			new ILibPlugin(),
 			// Keep WebOSMetaPlugin last so we can easily swap out for sampler variations
 			new WebOSMetaPlugin({path:path.join(dirname, 'webos-meta')})
 		]
