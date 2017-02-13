@@ -4,7 +4,7 @@
  * @module ui/Holdable
  */
 
-import {off, once} from '@enact/core/dispatcher';
+import {off, on, once} from '@enact/core/dispatcher';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
@@ -192,6 +192,15 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
+		onDocumentPointerMove = (ev) => {
+			const e = this.downEvent;
+			if (outOfRange(ev.clientY, e.clientY, moveTolerance) || outOfRange(ev.clientX, e.clientX, moveTolerance)) {
+				if (this.holdJob) {
+					this.endOrSuspendHold();
+				}
+			}
+		}
+
 		onKeyDepress = (ev) => {
 			if (!this.props.disabled) {
 				if (isEnter(ev.keyCode) && !this.holdJob) {
@@ -269,6 +278,7 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 				this.holdJob = setInterval(this.handleHoldPulse, frequency);
 			}
 			this.onceOnPointerRelease = once(pointerRelease, this.onPointerRelease);
+			on('mousemove', this.onDocumentPointerMove);
 		}
 
 		endHold = () => {
@@ -277,6 +287,7 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			this.pulsing = false;
 			this.unsent = null;
 			this.next = null;
+			off('mousemove', this.onDocumentPointerMove);
 		}
 
 		endOrSuspendHold = () => {
@@ -307,13 +318,6 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 				ev.holdTime = holdTime;
 				if (onHoldPulse) {
 					onHoldPulse(ev);
-					once('mousemove', (evt) => {
-						if (outOfRange(evt.clientY, e.clientY, moveTolerance) || outOfRange(evt.clientX, e.clientX, moveTolerance)) {
-							if (this.holdJob) {
-								this.endOrSuspendHold();
-							}
-						}
-					});
 				}
 			}
 		}
