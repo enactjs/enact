@@ -2,22 +2,10 @@ import kind from '@enact/core/kind';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
 
-import css from './Feedback.less';
 import FeedbackIcon from './FeedbackIcon';
+import states from './FeedbackIcons.js';
 
-const states = {
-	play          : {allowHide: true,   message: null,  position: 'after'},
-	pause         : {allowHide: true,   message: null,  position: 'after'},
-	rewind        : {allowHide: false,  message: 'x',   position: 'before'},
-	slowRewind    : {allowHide: false,  message: 'x',   position: 'before'},
-	fastForward   : {allowHide: false,  message: 'x',   position: 'after'},
-	slowForward   : {allowHide: false,  message: 'x',   position: 'after'},
-	jumpBackward  : {allowHide: true,   message: null,  position: 'before'},
-	jumpForward   : {allowHide: true,   message: null,  position: 'after'},
-	jumpToStart   : {allowHide: true,   message: null,  position: 'before'},
-	jumpToEnd     : {allowHide: true,   message: null,  position: 'after'},
-	stop          : {allowHide: true,   message: null,  position: null}
-};
+import css from './Feedback.less';
 
 /**
  * Feedback {@link moonstone/VideoPlayer}. This displays the media's playback rate and other
@@ -41,6 +29,8 @@ const FeedbackBase = kind({
 		 *
 		 * Each state understands where its related icon should be positioned, and whether it should
 		 * respond to changes to the `visible` property.
+		 *
+		 * This string feeds directly into {@link moonstone/FeedbackIcon.FeedbackIcon}.
 		 *
 		 * @type {String}
 		 * @public

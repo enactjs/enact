@@ -2,22 +2,10 @@ import kind from '@enact/core/kind';
 import React from 'react';
 
 import Icon from '../Icon';
+import iconMap from './FeedbackIcons.js';
 
 import css from './Feedback.less';
 
-const iconMap = {
-	play          : 'play',
-	pause         : 'pause',
-	rewind        : 'backward',
-	slowRewind    : 'pausebackward',
-	fastForward   : 'forward',
-	slowForward   : 'pauseforward',
-	jumpBackward  : 'skipbackward',
-	jumpForward   : 'skipforward',
-	jumpToStart   : 'skipbackward',
-	jumpToEnd     : 'skipforward',
-	stop          : null
-};
 
 /**
  * Feedback Icon for {@link moonstone/VideoPlayer.Feedback}.
@@ -31,7 +19,15 @@ const FeedbackIconBase = kind({
 	name: 'FeedbackIcon',
 
 	propTypes: {
-		children: React.PropTypes.string
+		/**
+		 * Refers to one of the following possible media playback states.
+		 * "play", "pause", "rewind", "slowRewind", "fastForward", "slowForward", "jumpBackward",
+		 * "jumpForward", "jumpToStart", "jumpToEnd", "stop".
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		children: React.PropTypes.oneOf(Object.keys(iconMap))
 	},
 
 	styles: {
@@ -40,7 +36,7 @@ const FeedbackIconBase = kind({
 	},
 
 	computed: {
-		children: ({children}) => children && iconMap[children],
+		children: ({children}) => children && iconMap[children] && iconMap[children].icon,
 		className: ({children, styler}) => styler.append({
 			shrink: children === 'play' || children === 'pause'
 		})
