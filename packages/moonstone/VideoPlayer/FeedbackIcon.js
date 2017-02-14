@@ -5,6 +5,20 @@ import Icon from '../Icon';
 
 import css from './Feedback.less';
 
+const states = {
+	play          : {before: null,             after: 'play'},
+	pause         : {before: null,             after: 'pause'},
+	rewind        : {before: 'backward',       after: null},
+	slowRewind    : {before: 'pausebackward',  after: null},
+	fastForward   : {before: null,             after: 'forward'},
+	slowForward   : {before: null,             after: 'pauseforward'},
+	jumpBackward  : {before: 'skipbackward',   after: null},
+	jumpForward   : {before: null,             after: 'skipforward'},
+	jumpToStart   : {before: 'skipbackward',   after: null},
+	jumpToEnd     : {before: null,             after: 'skipforward'},
+	stop          : {before: null,             after: null}
+};
+
 /**
  * Feedback Icon for {@link moonstone/VideoPlayer.Feedback}.
  *
@@ -17,9 +31,8 @@ const FeedbackIconBase = kind({
 	name: 'FeedbackIcon',
 
 	propTypes: {
-		placement: React.PropTypes.string,
 		playbackState: React.PropTypes.string,
-		states: React.PropTypes.arrayOf(React.PropTypes.object)
+		position: React.PropTypes.string
 	},
 
 	styles: {
@@ -28,15 +41,14 @@ const FeedbackIconBase = kind({
 	},
 
 	computed: {
-		children: ({placement, playbackState, states}) => {
-			return [playbackState] && states[playbackState][placement];
-		},
 		className: ({playbackState, styler}) => styler.append({
 			shrink: playbackState === 'play' || playbackState === 'pause'
 		})
 	},
 
-	render: ({children, ...rest}) => {
+	render: ({playbackState, position, ...rest}) => {
+
+		const children = states[playbackState] && states[playbackState][position];
 		if (children) {
 			return (
 				<Icon {...rest}>{children}</Icon>

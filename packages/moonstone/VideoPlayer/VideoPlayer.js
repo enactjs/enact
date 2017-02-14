@@ -747,11 +747,6 @@ const VideoPlayerBase = class extends React.Component {
 		}
 	}
 
-	handleKnobMove = (ev) => {
-		this.sliderScrubbing = ev.detached;
-		this.sliderKnobProportion = ev.proportion;
-	}
-
 	//
 	// Player Interaction events
 	//
@@ -767,6 +762,10 @@ const VideoPlayerBase = class extends React.Component {
 			const el = this.video.videoEl;
 			this.send('seek', value * el.duration);
 		}
+	}
+	handleKnobMove = (ev) => {
+		this.sliderScrubbing = ev.detached;
+		this.sliderKnobProportion = ev.proportion;
 	}
 	onJumpBackward  = () => this.jump(-1 * this.props.jumpBy)
 	onBackward      = () => this.rewind()

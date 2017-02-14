@@ -6,17 +6,17 @@ import css from './Feedback.less';
 import FeedbackIcon from './FeedbackIcon';
 
 const states = {
-	play          : {iconStart: null,             iconEnd: 'play',          allowHide: true,   message: null},
-	pause         : {iconStart: null,             iconEnd: 'pause',         allowHide: true,   message: null},
-	rewind        : {iconStart: 'backward',       iconEnd: null,            allowHide: false,  message: 'x'},
-	slowRewind    : {iconStart: 'pausebackward',  iconEnd: null,            allowHide: false,  message: 'x'},
-	fastForward   : {iconStart: null,             iconEnd: 'forward',       allowHide: false,  message: 'x'},
-	slowForward   : {iconStart: null,             iconEnd: 'pauseforward',  allowHide: false,  message: 'x'},
-	jumpBackward  : {iconStart: 'skipbackward',   iconEnd: null,            allowHide: true,   message: null},
-	jumpForward   : {iconStart: null,             iconEnd: 'skipforward',   allowHide: true,   message: null},
-	jumpToStart   : {iconStart: 'skipbackward',   iconEnd: null,            allowHide: true,   message: null},
-	jumpToEnd     : {iconStart: null,             iconEnd: 'skipforward',   allowHide: true,   message: null},
-	stop          : {iconStart: null,             iconEnd: null,            allowHide: true,   message: null}
+	play          : {allowHide: true,   message: null},
+	pause         : {allowHide: true,   message: null},
+	rewind        : {allowHide: false,  message: 'x'},
+	slowRewind    : {allowHide: false,  message: 'x'},
+	fastForward   : {allowHide: false,  message: 'x'},
+	slowForward   : {allowHide: false,  message: 'x'},
+	jumpBackward  : {allowHide: true,   message: null},
+	jumpForward   : {allowHide: true,   message: null},
+	jumpToStart   : {allowHide: true,   message: null},
+	jumpToEnd     : {allowHide: true,   message: null},
+	stop          : {allowHide: true,   message: null}
 };
 
 /**
@@ -89,9 +89,9 @@ const FeedbackBase = kind({
 		delete rest.visible;
 		return (
 			<div {...rest}>
-				<FeedbackIcon position="iconStart" playbackState={playbackState} states={states} />
+				<FeedbackIcon position="before" playbackState={playbackState} />
 				{children ? <div className={css.message}>{children}</div> : null}
-				<FeedbackIcon position="iconEnd" playbackState={playbackState} states={states} />
+				<FeedbackIcon position="after" playbackState={playbackState} />
 			</div>
 		);
 	}
