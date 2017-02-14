@@ -227,6 +227,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 
 				if (shouldFocusDecorator) {
 					if (!noDecorator) {
+						// we really only support the number type properly, so only handling this case
 						if (ev.target.type === 'number') {
 							ev.preventDefault();
 						}
