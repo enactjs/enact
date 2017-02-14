@@ -109,14 +109,11 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) => kind({
 	styles: {
 		css: {
 			...componentCss,
-			/**
+			/*
 			 * Allowed CSS Class Overrides
 			 *
 			 * * .bg	The background of the button, used on a child of button.
 			 * * .selected	The selected state of the button, applied to the base element.
-			 *
-			 * @memberof moonstone/Button
-			 * @public
 			 */
 			bg: css.bg,
 			selected: css.selected
