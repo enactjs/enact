@@ -5,6 +5,7 @@
  * @private
  */
 
+import {$L} from '@enact/i18n';
 import hoc from '@enact/core/hoc';
 import {throttleJob} from '@enact/core/jobs';
 import Spotlight from '@enact/spotlight';
@@ -195,6 +196,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 
 			this.current5WayValue = null;
+			this.isKnobMoving = false;
 			this.jobName = `sliderChange${now()}`;
 			this.knobPosition = null;
 			this.normalizeBounds(props);
@@ -300,6 +302,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const parseFn = (ev.target.value % 1 !== 0) ? parseFloat : parseInt,
 				value = parseFn(ev.target.value);
 			this.throttleUpdateValue(value);
+
 		}
 
 		handleMouseMove = (ev) => {
@@ -363,6 +366,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.knobPosition = null;
 				this.updateUI();
 			}
+			this.isKnobMoving = false;
 		}
 
 		handleIncrement = () => {
@@ -375,6 +379,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			} else {
 				this.throttleUpdateValueByAmount(amount);
 			}
+			this.isKnobMoving = this.state.active;
 		}
 
 		handleDecrement = () => {
@@ -387,6 +392,16 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			} else {
 				this.throttleUpdateValueByAmount(-amount);
 			}
+			this.isKnobMoving = this.state.active;
+		}
+
+		calcAriaValueText = () => {
+			const
+				{vertical} = this.props,
+				{value, active} = this.state,
+				activeHint = vertical ? $L('change a value with up down button') : $L('change a value with left right button');
+
+			return (active && !this.isKnobMoving) ? activeHint : value;
 		}
 
 		render () {
@@ -397,6 +412,8 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				<Wrapped
 					{...props}
 					active={this.state.active}
+					aria-disabled={this.props.disabled}
+					aria-valuetext={this.calcAriaValueText()}
 					inputRef={this.getInputNode}
 					onActivate={this.handleActivate}
 					onBlur={this.handleBlur}
@@ -406,6 +423,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					onIncrement={this.handleIncrement}
 					onMouseLeave={this.props.detachedKnob ? this.handleMouseLeave : null}
 					onMouseMove={this.props.detachedKnob ? this.handleMouseMove : null}
+					role="slider"
 					scrubbing={(this.knobPosition != null)}
 					sliderBarRef={this.getSliderBarNode}
 					sliderRef={this.getSliderNode}
