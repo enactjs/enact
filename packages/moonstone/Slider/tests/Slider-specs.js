@@ -270,4 +270,37 @@ describe('Slider Specs', () => {
 		expect(actual).to.equal(expected);
 		expect(warningActual).to.equal(warningExpected);
 	});
+
+	it('should set "aria-valuetext" to hint string when knob is active and vertical is false', function () {
+		const slider = shallow(
+			<Slider active={true} />
+		);
+
+		const expected = 'change a value with left right button';
+		const actual = slider.prop('aria-valuetext');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should set "aria-valuetext" to hint string when knob is active and vertical is true', function () {
+		const slider = shallow(
+			<Slider active={true} vertical/>
+		);
+
+		const expected = 'change a value with up down button';
+		const actual = slider.prop('aria-valuetext');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should set "aria-valuetext" to value when value is changed', function () {
+		const slider = shallow(
+			<Slider value={0} />
+		);
+
+		const expected = '0';
+		const actual = slider.prop('aria-valuetext');
+
+		expect(actual).to.equal(expected);
+	});
 });
