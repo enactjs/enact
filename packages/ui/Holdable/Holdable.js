@@ -183,9 +183,7 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillUnmount () {
-			if (this.holdJob) {
-				this.suspendHold();
-			}
+			this.suspendHold();
 
 			if (this.onceOnPointerRelease) {
 				off(pointerRelease, this.onceOnPointerRelease);
@@ -195,9 +193,7 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		onDocumentPointerMove = (ev) => {
 			const e = this.downEvent;
 			if (outOfRange(ev.clientY, e.clientY, moveTolerance) || outOfRange(ev.clientX, e.clientX, moveTolerance)) {
-				if (this.holdJob) {
-					this.endOrSuspendHold();
-				}
+				this.endOrSuspendHold();
 			}
 		}
 
@@ -244,9 +240,7 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			if (!this.props.disabled) {
 				if (endHold === 'onMove' && this.downEvent) {
 					if (outOfRange(ev.clientY, this.downEvent.clientY, moveTolerance) || outOfRange(ev.clientX, this.downEvent.clientX, moveTolerance)) {
-						if (this.holdJob) {
-							this.endOrSuspendHold();
-						}
+						this.endOrSuspendHold();
 					} else if (resume && !this.holdJob) {
 						this.resumeHold();
 					}
