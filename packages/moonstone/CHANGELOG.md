@@ -13,6 +13,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/IncrementSlider` to change when the buttons are held down
 - `moonstone/Marquee` to allow disabled marquees to animate
+- `moonstone/Button`, `moonstone/IconButton`, `moonstone/Item` to not forward `onClick` when `disabled`
 
 ### Fixed
 

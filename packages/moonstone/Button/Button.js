@@ -44,7 +44,7 @@ const ButtonBase = kind({
 
 		/**
 		 * When `true`, the [button]{@glossary button} is shown as disabled and does not
-		 * generate tap [events]{@glossary event}.
+		 * generate `onClick` [events]{@glossary event}.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -115,6 +115,14 @@ const ButtonBase = kind({
 			{pressed, small, minWidth, selected},
 			backgroundOpacity
 		)
+	},
+
+	handlers: {
+		onClick: (ev, {disabled, onClick}) => {
+			if (!disabled && onClick) {
+				onClick(ev);
+			}
+		}
 	},
 
 	render: ({children, ...rest}) => {

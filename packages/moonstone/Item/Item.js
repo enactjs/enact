@@ -81,6 +81,14 @@ const ItemBase = kind({
 		className: ({inline, styler}) => styler.append({inline})
 	},
 
+	handlers: {
+		onClick: (ev, {disabled, onClick}) => {
+			if (!disabled && onClick) {
+				onClick(ev);
+			}
+		}
+	},
+
 	render: ({component: Component, ...rest}) => {
 		delete rest.inline;
 
