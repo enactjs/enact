@@ -16,10 +16,11 @@ import ExpandableList from '../ExpandableList';
 
 const forwardSelect = forward('onSelect');
 const SELECTED_DAY_TYPES = {
-    EVERY_DAY: 0,
-    EVERY_WEEKDAY: 1,
-    EVERY_WEEKEND: 2,
-    SELECTED_DAYS: 3
+	EVERY_DAY: 0,
+	EVERY_WEEKDAY: 1,
+	EVERY_WEEKEND: 2,
+	SELECTED_DAYS: 3,
+	SELECTED_NONE: 4
 };
 
 /**
@@ -164,6 +165,7 @@ const DayPicker = class extends React.Component {
 			weekendLength = this.weekEndStart === this.weekEndEnd ? 1 : 2;
 
 		if (length === 7) return SELECTED_DAY_TYPES.EVERY_DAY;
+		if (length === 0) return SELECTED_DAY_TYPES.SELECTED_NONE;
 
 		for (let i = 0; i < 7; i++) {
 			index = selected[i];
@@ -197,7 +199,7 @@ const DayPicker = class extends React.Component {
 			return this.everyWeekendText;
 		} else if (type === SELECTED_DAY_TYPES.EVERY_WEEKDAY) {
 			return this.everyWeekdayText;
-		} else {
+		} else if (type === SELECTED_DAY_TYPES.SELECTED_DAYS) {
 			return selected.sort().map((dayIndex) => selectDayStrings[dayIndex]).join(', ');
 		}
 	}
@@ -217,14 +219,14 @@ const DayPicker = class extends React.Component {
 
 	render () {
 		const
-			{noneText, selected, title} = this.props,
+			{selected, title} = this.props,
 			type = this.calcSelectedDayType(this.props.selected),
 			label = this.getSelectedDayString(type, this.shortDayNames),
 			adjustSelected = this.adjustSelection(selected, this.firstDayOfWeek);
 		let ariaLabel = null;
 
 		if (type === SELECTED_DAY_TYPES.SELECTED_DAYS) {
-			ariaLabel = title + ' ' + (this.getSelectedDayString(type, this.longDayNames) || noneText || '');
+			ariaLabel = title + ' ' + this.getSelectedDayString(type, this.longDayNames);
 		}
 
 		return (
