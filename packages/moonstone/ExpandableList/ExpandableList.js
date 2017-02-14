@@ -232,6 +232,7 @@ const ExpandableListBase = kind({
 			<ExpandableItemBase
 				{...rest}
 				aria-multiselectable={multiSelected}
+				role="listbox"
 				showLabel="auto"
 				autoClose={!noAutoClose}
 				lockBottom={!noLockBottom}
