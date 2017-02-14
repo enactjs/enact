@@ -155,8 +155,8 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 				}
 			}
 
-			const allInactive = this.allInactive();
-			if (allInactive) {
+			const shouldBeReady = this.allInactive();
+			if (shouldBeReady) {
 				this.markAll(STATE.ready);
 			}
 
