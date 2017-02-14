@@ -35,7 +35,7 @@ class PickerAddRemove extends React.Component {
 		this.value = '';
 		this.index = 0;
 		this.state = {
-			children: props.children
+			children: {}
 		};
 	}
 
@@ -44,26 +44,27 @@ class PickerAddRemove extends React.Component {
 		this.index = 0;
 	}
 
-	handleAdd = () => {
+	handleAddReplace = () => {
 		const children = this.state.children,
 			index = this.index,
-			value = this.value || 'sample' + (children ? children.length : 0);
+			value = this.value || 'sample' + index,
+			newChild = {};
 
-		children.splice(index, 0, value);
+		newChild[index] = value;
+		const newChildren = Object.assign({}, children, newChild);
 
 		this.setState({
-			children: children
+			children: newChildren
 		});
 	}
 
 	handleRemove = () => {
-		const index = this.index;
+		const children = Object.assign({}, this.state.children),
+			index = this.index;
+		delete children[index];
 
 		this.setState({
-			children: [
-				...this.state.children.slice(0, index),
-				...this.state.children.slice(index + 1)
-			]
+			children: children
 		});
 	}
 
@@ -80,27 +81,33 @@ class PickerAddRemove extends React.Component {
 	}
 
 	render () {
+		const pickerChildren = Object.values(this.state.children);
+
 		return (
 			<div>
 				<div>
 					<StatefulPicker {...this.props}>
-						{this.state.children}
+						{pickerChildren}
 					</StatefulPicker>
 				</div>
 				<div>
+					Value:
 					<StatefulInput
 						onChange={this.handleValueChange}
 						placeholder="value"
+						value={this.value}
 					/>
 				</div>
 				<div>
+					Index:
 					<StatefulInput
 						onChange={this.handleIndexChange}
 						placeholder="index"
+						value={this.index}
 					/>
 				</div>
-				<Button onClick={this.handleAdd}>
-					Add
+				<Button onClick={this.handleAddReplace}>
+					Add/Replace
 				</Button>
 				<Button onClick={this.handleRemove}>
 					Remove

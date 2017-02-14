@@ -8,12 +8,15 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Slider` properties `active`, `disabled`, `knobStep`, `onActivate`, `onDecrement`, and `onIncrement` as part of enabling 5-way support to `moonstone/Slider`, `moonstone/IncrementSlider` and the media slider for `moonstone/VideoPlayer`
 - `moonstone/ExpandableInput` properties `iconAfter` and `iconBefore` to display icons after and before the input, respectively
+- `moonstone/Dialog` property `preserveCase`, which affects `title` text
 - `moonstone/Panels.Viewport` as a stateful component, which manages the last-focused spottable component for each view
 
 ### Changed
 
 - `moonstone/IncrementSlider` to change when the buttons are held down
 - `moonstone/Marquee` to allow disabled marquees to animate
+- `moonstone/Dialog` to marquee `title` and `titleBelow`
+- `moonstone/Marquee.MarqueeController` config option `startOnFocus` to `marqueeOnFocus`. `startOnFocus` is deprecated and will be removed in a future update.
 - `moonstone/Panels.Panel` sets focus on the last-focused spottable control (if available) after rendering
 
 ### Fixed
