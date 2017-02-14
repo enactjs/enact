@@ -88,7 +88,7 @@ const SpinnerBase = kind({
 		delete rest.transparent;
 
 		return (
-			<div {...rest}>
+			<div aria-live="off" role="alert" {...rest}>
 				<div className={css.ballDecorator}>
 					<div className={`${css.ball} ${css.ball1}`} />
 					<div className={`${css.ball} ${css.ball2}`} />
