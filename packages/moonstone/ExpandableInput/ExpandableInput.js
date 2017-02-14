@@ -1,11 +1,10 @@
-import {$L} from '@enact/i18n';
 import Changeable from '@enact/ui/Changeable';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import React from 'react';
 
+import {calcAriaLabel, Input} from '../Input';
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
-import {Input} from '../Input';
 
 const forwardMouseDown = forward('onMouseDown');
 
@@ -143,16 +142,8 @@ class ExpandableInputBase extends React.Component {
 	}
 
 	calcAriaLabel () {
-		const hint = $L('edit box');
-		const {noneText, title, type} = this.props;
-		let {value = ''} = this.props;
-
-		if (type === 'password' && value) {
-			const character = value.length > 1 ? $L('characters') : $L('character');
-			value = `${value.length} ${character}`;
-		}
-
-		return `${title} ${value || noneText || ''} ${hint}`;
+		const {noneText, title, type, value} = this.props;
+		return calcAriaLabel(title, type, value || noneText);
 	}
 
 	calcLabel () {
@@ -240,6 +231,7 @@ class ExpandableInputBase extends React.Component {
 				onClose={this.handleClose}
 				onMouseDown={this.handleMouseDown}
 				onSpotlightDisappear={onSpotlightDisappear}
+				showLabel={type === 'password' ? 'never' : 'auto'}
 				spotlightDisabled={spotlightDisabled}
 			>
 				<Input
