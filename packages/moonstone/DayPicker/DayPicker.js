@@ -15,6 +15,12 @@ import React, {PropTypes} from 'react';
 import ExpandableList from '../ExpandableList';
 
 const forwardSelect = forward('onSelect');
+const SELECTED_DAY_TYPES = {
+    EVERY_DAY: 0,
+    EVERY_WEEKDAY: 1,
+    EVERY_WEEKEND: 2,
+    SELECTED_DAYS: 3
+};
 
 /**
  * {@link moonstone/DayPicker.DayPicker} is a component that
@@ -140,14 +146,13 @@ const DayPicker = class extends React.Component {
 	}
 
 	/**
-	 * Determines whether it should return "Every Day", "Every Weekend", "Every Weekday" or list of
-	 * days for a given selected indexes.
+	 * Determines whether it should return day type number for a given selected indexes.
 	 *
 	 * @param {Number[]} [selected] Array of day indexes
 	 *
-	 * @returns {Object} contains "Every Day", "Every Weekend", "Every Week" or list of days and string for aria-label
+	 * @returns {Number}
 	 */
-	getSelectedDayString (selected = []) {
+	calcSelectedDayType (selected = []) {
 		selected = coerceArray(selected);
 
 		let bWeekEndStart = false,
@@ -158,7 +163,7 @@ const DayPicker = class extends React.Component {
 			length = selected.length,
 			weekendLength = this.weekEndStart === this.weekEndEnd ? 1 : 2;
 
-		if (length === 7) return this.everyDayText;
+		if (length === 7) return SELECTED_DAY_TYPES.EVERY_DAY;
 
 		for (let i = 0; i < 7; i++) {
 			index = selected[i];
@@ -167,14 +172,33 @@ const DayPicker = class extends React.Component {
 		}
 
 		if (bWeekEndStart && bWeekEndEnd && length === weekendLength) {
-			return {label: this.everyWeekendText};
+			return SELECTED_DAY_TYPES.EVERY_WEEKEND;
 		} else if (!bWeekEndStart && !bWeekEndEnd && length === 7 - weekendLength) {
-			return {label: this.everyWeekdayText};
+			return SELECTED_DAY_TYPES.EVERY_WEEKDAY;
 		} else {
-			const
-				label = selected.sort().map((dayIndex) => this.shortDayNames[dayIndex]).join(', '),
-				ariaLabel = selected.sort().map((dayIndex) => this.longDayNames[dayIndex]).join(', ');
-			return {label, ariaLabel};
+			return SELECTED_DAY_TYPES.SELECTED_DAYS;
+		}
+	}
+
+	/**
+	 * Determines whether it should return "Every Day", "Every Weekend", "Every Weekday" or list of
+	 * days for a given selected day type.
+	 *
+	 * @param {Number} selected day type
+	 *
+	 * @returns {String} "Every Day", "Every Weekend", "Every Week" or list of days
+	 */
+	getSelectedDayString = (type, selectDayStrings) => {
+		const selected = coerceArray(this.props.selected);
+
+		if (type === SELECTED_DAY_TYPES.EVERY_DAY) {
+			return this.everyDayText;
+		} else if (type === SELECTED_DAY_TYPES.EVERY_WEEKEND) {
+			return this.everyWeekendText;
+		} else if (type === SELECTED_DAY_TYPES.EVERY_WEEKDAY) {
+			return this.everyWeekdayText;
+		} else {
+			return selected.sort().map((dayIndex) => selectDayStrings[dayIndex]).join(', ');
 		}
 	}
 
@@ -192,17 +216,25 @@ const DayPicker = class extends React.Component {
 	}
 
 	render () {
-		const {label, ariaLabel} = this.getSelectedDayString(this.props.selected);
-		const selected = this.adjustSelection(this.props.selected, this.firstDayOfWeek);
+		const
+			{noneText, selected, title} = this.props,
+			type = this.calcSelectedDayType(this.props.selected),
+			label = this.getSelectedDayString(type, this.shortDayNames),
+			adjustSelected = this.adjustSelection(selected, this.firstDayOfWeek);
+		let ariaLabel = null;
+
+		if (type === SELECTED_DAY_TYPES.SELECTED_DAYS) {
+			ariaLabel = title + ' ' + (this.getSelectedDayString(type, this.longDayNames) || noneText || '');
+		}
 
 		return (
 			<ExpandableList
 				{...this.props}
+				aria-label={ariaLabel}
 				label={label}
-				data-aria-label={ariaLabel || null}
 				onSelect={this.handleSelect}
 				select="multiple"
-				selected={selected}
+				selected={adjustSelected}
 			>
 				{this.longDayNames}
 			</ExpandableList>

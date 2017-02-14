@@ -65,7 +65,7 @@ const LabeledItemBase = kind({
 				<MarqueeText className={css.title}>{children}</MarqueeText>
 				{(titleIcon != null) ? <Icon small className={css.icon}>{titleIcon}</Icon> : null}
 			</div>
-			{(label != null) ? <MarqueeText aria-label={rest['data-aria-label']} className={css.label}>{label}</MarqueeText> : null}
+			{(label != null) ? <MarqueeText className={css.label}>{label}</MarqueeText> : null}
 		</Controller>
 	)
 });
