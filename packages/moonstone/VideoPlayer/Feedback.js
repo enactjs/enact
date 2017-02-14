@@ -6,17 +6,17 @@ import css from './Feedback.less';
 import FeedbackIcon from './FeedbackIcon';
 
 const states = {
-	play          : {allowHide: true,   message: null},
-	pause         : {allowHide: true,   message: null},
-	rewind        : {allowHide: false,  message: 'x'},
-	slowRewind    : {allowHide: false,  message: 'x'},
-	fastForward   : {allowHide: false,  message: 'x'},
-	slowForward   : {allowHide: false,  message: 'x'},
-	jumpBackward  : {allowHide: true,   message: null},
-	jumpForward   : {allowHide: true,   message: null},
-	jumpToStart   : {allowHide: true,   message: null},
-	jumpToEnd     : {allowHide: true,   message: null},
-	stop          : {allowHide: true,   message: null}
+	play          : {allowHide: true,   message: null,  position: 'after'},
+	pause         : {allowHide: true,   message: null,  position: 'after'},
+	rewind        : {allowHide: false,  message: 'x',   position: 'before'},
+	slowRewind    : {allowHide: false,  message: 'x',   position: 'before'},
+	fastForward   : {allowHide: false,  message: 'x',   position: 'after'},
+	slowForward   : {allowHide: false,  message: 'x',   position: 'after'},
+	jumpBackward  : {allowHide: true,   message: null,  position: 'before'},
+	jumpForward   : {allowHide: true,   message: null,  position: 'after'},
+	jumpToStart   : {allowHide: true,   message: null,  position: 'before'},
+	jumpToEnd     : {allowHide: true,   message: null,  position: 'after'},
+	stop          : {allowHide: true,   message: null,  position: null}
 };
 
 /**
@@ -89,9 +89,9 @@ const FeedbackBase = kind({
 		delete rest.visible;
 		return (
 			<div {...rest}>
-				<FeedbackIcon position="before" playbackState={playbackState} />
+				{states[playbackState].position === 'before' ? <FeedbackIcon>{playbackState}</FeedbackIcon> : null}
 				{children ? <div className={css.message}>{children}</div> : null}
-				<FeedbackIcon position="after" playbackState={playbackState} />
+				{states[playbackState].position === 'after' ? <FeedbackIcon>{playbackState}</FeedbackIcon> : null}
 			</div>
 		);
 	}

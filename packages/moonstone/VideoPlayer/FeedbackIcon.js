@@ -5,18 +5,18 @@ import Icon from '../Icon';
 
 import css from './Feedback.less';
 
-const states = {
-	play          : {before: null,             after: 'play'},
-	pause         : {before: null,             after: 'pause'},
-	rewind        : {before: 'backward',       after: null},
-	slowRewind    : {before: 'pausebackward',  after: null},
-	fastForward   : {before: null,             after: 'forward'},
-	slowForward   : {before: null,             after: 'pauseforward'},
-	jumpBackward  : {before: 'skipbackward',   after: null},
-	jumpForward   : {before: null,             after: 'skipforward'},
-	jumpToStart   : {before: 'skipbackward',   after: null},
-	jumpToEnd     : {before: null,             after: 'skipforward'},
-	stop          : {before: null,             after: null}
+const iconMap = {
+	play          : 'play',
+	pause         : 'pause',
+	rewind        : 'backward',
+	slowRewind    : 'pausebackward',
+	fastForward   : 'forward',
+	slowForward   : 'pauseforward',
+	jumpBackward  : 'skipbackward',
+	jumpForward   : 'skipforward',
+	jumpToStart   : 'skipbackward',
+	jumpToEnd     : 'skipforward',
+	stop          : null
 };
 
 /**
@@ -31,8 +31,7 @@ const FeedbackIconBase = kind({
 	name: 'FeedbackIcon',
 
 	propTypes: {
-		playbackState: React.PropTypes.string,
-		position: React.PropTypes.string
+		children: React.PropTypes.string
 	},
 
 	styles: {
@@ -41,14 +40,13 @@ const FeedbackIconBase = kind({
 	},
 
 	computed: {
-		className: ({playbackState, styler}) => styler.append({
-			shrink: playbackState === 'play' || playbackState === 'pause'
+		children: ({children}) => children && iconMap[children],
+		className: ({children, styler}) => styler.append({
+			shrink: children === 'play' || children === 'pause'
 		})
 	},
 
-	render: ({playbackState, position, ...rest}) => {
-
-		const children = states[playbackState] && states[playbackState][position];
+	render: ({children, ...rest}) => {
 		if (children) {
 			return (
 				<Icon {...rest}>{children}</Icon>
