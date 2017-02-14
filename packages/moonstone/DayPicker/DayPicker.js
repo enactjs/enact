@@ -154,9 +154,11 @@ const DayPicker = class extends React.Component {
 	 * @returns {Number}
 	 */
 	calcSelectedDayType (selected = []) {
+		if (selected === null || selected.length === 0) return SELECTED_DAY_TYPES.SELECTED_NONE;
 		selected = coerceArray(selected);
 
-		let bWeekEndStart = false,
+		let
+			bWeekEndStart = false,
 			bWeekEndEnd = false,
 			index;
 
@@ -165,7 +167,6 @@ const DayPicker = class extends React.Component {
 			weekendLength = this.weekEndStart === this.weekEndEnd ? 1 : 2;
 
 		if (length === 7) return SELECTED_DAY_TYPES.EVERY_DAY;
-		if (length === 0) return SELECTED_DAY_TYPES.SELECTED_NONE;
 
 		for (let i = 0; i < 7; i++) {
 			index = selected[i];
