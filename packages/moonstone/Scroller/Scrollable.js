@@ -776,10 +776,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					<div ref={this.initContainerRef} className={scrollableClasses} style={style} onWheel={onWheel}>
 						<Scrollbar
 							className={verticalScrollbarClassnames}
+							disabled={!isVerticalScrollbarVisible}
 							{...this.verticalScrollbarProps}
 						/>
 						<Scrollbar
 							className={horizontalScrollbarClassnames}
+							disabled={!isHorizontalScrollbarVisible}
 							{...this.horizontalScrollbarProps}
 						/>
 						<Wrapped {...props} {...restEvents} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={css.container} />
