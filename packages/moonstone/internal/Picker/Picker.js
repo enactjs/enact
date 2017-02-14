@@ -329,12 +329,14 @@ const Picker = class extends React.Component {
 	handleDecClick = () => {
 		if (!this.isButtonDisabled(-this.props.step)) {
 			this.updateValue(-1);
+			this.handleDown(-1);
 		}
 	}
 
 	handleIncClick = () => {
 		if (!this.isButtonDisabled(this.props.step)) {
 			this.updateValue(1);
+			this.handleDown(1);
 		}
 	}
 
@@ -342,6 +344,13 @@ const Picker = class extends React.Component {
 		const {joined, onMouseDown} = this.props;
 		if (joined && onMouseDown) {
 			onMouseDown({pressed: dir});
+		}
+	}
+
+	handleUp = () => {
+		const {joined, onMouseUp} = this.props;
+		if (joined && onMouseUp) {
+			jobs.startJob(jobNames.emulateMouseUp, onMouseUp, emulateMouseEventsTimeout);
 		}
 	}
 
@@ -403,6 +412,18 @@ const Picker = class extends React.Component {
 		}
 	}
 
+	handleKeyUp = (ev) => {
+		const direction = getDirection(ev.keyCode);
+		const isVertical = this.props.orientation === 'vertical';
+
+		if (!isVertical && (direction === 'left' || direction === 'right')) {
+			this.handleUp();
+		}
+		if (isVertical && (direction === 'up' || direction === 'down')) {
+			this.handleUp();
+		}
+	}
+
 	determineClasses (decrementerDisabled, incrementerDisabled) {
 		const {joined, orientation, pressed, width} = this.props;
 		return [
@@ -423,7 +444,6 @@ const Picker = class extends React.Component {
 			disabled,
 			index,
 			joined,
-			onMouseUp,
 			onSpotlightDisappear,
 			orientation,
 			spotlightDisabled,
@@ -438,6 +458,7 @@ const Picker = class extends React.Component {
 		delete rest.min;
 		delete rest.onChange;
 		delete rest.onMouseDown;
+		delete rest.onMouseUp;
 		delete rest.pressed;
 		delete rest.reverse;
 		delete rest.value;
@@ -461,13 +482,13 @@ const Picker = class extends React.Component {
 		}
 
 		return (
-			<div {...rest} className={classes} disabled={disabled} onWheel={joined ? this.handleWheel : null} onKeyDown={joined ? this.handleKeyDown : null}>
+			<div {...rest} className={classes} disabled={disabled} onWheel={joined ? this.handleWheel : null} onKeyDown={joined ? this.handleKeyDown : null} onKeyUp={joined ? this.handleKeyUp : null}>
 				<PickerButton
 					className={css.incrementer}
 					disabled={incrementerDisabled}
 					onClick={this.handleIncClick}
 					onMouseDown={this.handleIncDown}
-					onMouseUp={onMouseUp}
+					onMouseUp={this.handleUp}
 					onHoldPulse={this.handleIncPulse}
 					onSpotlightDisappear={onSpotlightDisappear}
 					joined={joined}
@@ -491,7 +512,7 @@ const Picker = class extends React.Component {
 					disabled={decrementerDisabled}
 					onClick={this.handleDecClick}
 					onMouseDown={this.handleDecDown}
-					onMouseUp={onMouseUp}
+					onMouseUp={this.handleUp}
 					onHoldPulse={this.handleDecPulse}
 					onSpotlightDisappear={onSpotlightDisappear}
 					joined={joined}
