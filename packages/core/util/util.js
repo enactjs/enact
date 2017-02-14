@@ -94,10 +94,32 @@ const isRenderable = function (tag) {
 	return type === 'function' || type === 'string';
 };
 
+/**
+ * Removes `aria-` prefixed props and the `role` prop from `props` and returns them in a new object.
+ * Useful when redirecting ARIA-related props from a non-focusable root element to a focusable
+ * child element.
+ *
+ * @param   {Object} props  Props object
+ *
+ * @returns {Object}        ARIA-related props
+ */
+const extractAriaProps = function (props) {
+	const aria = {};
+	Object.keys(props).forEach(key => {
+		if (key === 'role' || key.indexOf('aria-') === 0) {
+			aria[key] = props[key];
+			delete props[key];
+		}
+	});
+
+	return aria;
+};
+
 export {
 	cap,
 	childrenEquals,
 	coerceFunction,
 	coerceArray,
-	isRenderable
+	isRenderable,
+	extractAriaProps
 };
