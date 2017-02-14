@@ -154,6 +154,12 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 					break;
 				}
 			}
+
+			const allInactive = this.allInactive();
+			if (allInactive) {
+				this.markAll(STATE.ready);
+			}
+
 			if (wasRunning && !this.anyRunning()) {
 				this.dispatch('start');
 			}
@@ -203,6 +209,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		handleFocus = (ev) => {
 			this.dispatch('start');
+			this.markAll(STATE.ready);
 			forwardFocus(ev, this.props);
 		}
 
