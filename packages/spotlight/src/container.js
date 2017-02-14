@@ -6,7 +6,6 @@ import Spotlight from './spotlight';
 import {spottableClass} from './spottable';
 
 const spotlightDefaultClass = 'spottable-default';
-
 const enterEvent = 'onMouseEnter';
 const leaveEvent = 'onMouseLeave';
 
@@ -191,7 +190,9 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleMouseLeave = (ev) => {
-			Spotlight.setActiveContainer(null);
+			const parentContainer = ev.currentTarget.parentNode.closest('[data-container-id]');
+			const activeContainer = parentContainer ? parentContainer.dataset.containerId : null;
+			Spotlight.setActiveContainer(activeContainer);
 			forwardMouseLeave(ev, this.props);
 		}
 
