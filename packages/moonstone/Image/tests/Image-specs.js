@@ -1,5 +1,5 @@
 import React from 'react';
-import {mount} from 'enzyme';
+import {mount, shallow} from 'enzyme';
 import Image from '../Image';
 import css from '../Image.less';
 
@@ -43,4 +43,15 @@ describe('Image Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
+
+	it('should set role to img by default', function () {
+		const image = shallow(
+			<Image src={src} sizing="fit" />
+		);
+
+		const expected = 'img';
+		const actual = image.prop('role');
+
+		expect(actual).to.equal(expected);
+	});
 });

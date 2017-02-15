@@ -5,6 +5,7 @@
  * @module moonstone/Popup
  */
 
+import {$L} from '@enact/i18n';
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 import Transition from '@enact/ui/Transition';
@@ -16,6 +17,10 @@ import IconButton from '../IconButton';
 import css from './Popup.less';
 
 const TransitionContainer = SpotlightContainerDecorator({preserveId: true}, Transition);
+
+const getContainerNode = (containerId) => {
+	return document.querySelector(`[data-container-id='${containerId}']`);
+};
 
 /**
  * {@link moonstone/Popup.PopupBase} is a modal component that appears at the bottom of
@@ -126,6 +131,7 @@ const PopupBase = kind({
 						backgroundOpacity="transparent"
 						small
 						onClick={onCloseButtonClick}
+						aria-label={$L('Close')}
 					>
 						closex
 					</IconButton>
@@ -151,10 +157,10 @@ const PopupBase = kind({
 				onHide={onHide}
 			>
 				<div {...rest}>
-					{closeButton}
 					<div className={css.body}>
 						{children}
 					</div>
+					{closeButton}
 				</div>
 			</TransitionContainer>
 		);
@@ -263,7 +269,8 @@ class Popup extends React.Component {
 		this.state = {
 			floatLayerOpen: this.props.open,
 			popupOpen: this.props.noAnimation,
-			containerId: Spotlight.add()
+			containerId: Spotlight.add(),
+			activator: null
 		};
 	}
 
@@ -271,24 +278,26 @@ class Popup extends React.Component {
 		if (!this.props.open && nextProps.open) {
 			this.setState({
 				popupOpen: nextProps.noAnimation,
-				floatLayerOpen: true
+				floatLayerOpen: true,
+				activator: Spotlight.getCurrent()
 			});
 		} else if (this.props.open && !nextProps.open) {
 			this.setState({
 				popupOpen: nextProps.noAnimation,
-				floatLayerOpen: !nextProps.noAnimation
+				floatLayerOpen: !nextProps.noAnimation,
+				activator: nextProps.noAnimation ? null : this.state.activator
 			});
 		}
 	}
 
-	componentDidUpdate (prevProps) {
+	componentDidUpdate (prevProps, prevState) {
 		if (this.props.open !== prevProps.open) {
 			if (!this.props.noAnimation) {
 				Spotlight.pause();
 			} else if (this.props.open) {
 				this.spotPopupContent();
 			} else if (prevProps.open) {
-				Spotlight.focus();
+				this.spotActivator(prevState.activator);
 			}
 		}
 	}
@@ -318,7 +327,7 @@ class Popup extends React.Component {
 
 			// if focus has changed
 			if (Spotlight.move(direction)) {
-				containerNode = document.querySelector('[data-container-id="' + this.state.containerId + '"]');
+				containerNode = getContainerNode(this.state.containerId);
 
 				// if current focus is not within the popup's container, issue the `onClose` event
 				if (!containerNode.contains(document.activeElement) && onClose) {
@@ -334,7 +343,8 @@ class Popup extends React.Component {
 
 	handlePopupHide = () => {
 		this.setState({
-			floatLayerOpen: false
+			floatLayerOpen: false,
+			activator: null
 		});
 	}
 
@@ -345,8 +355,17 @@ class Popup extends React.Component {
 			if (this.props.open) {
 				this.spotPopupContent();
 			} else {
-				Spotlight.focus();
+				this.spotActivator(this.state.activator);
 			}
+		}
+	}
+
+	spotActivator = (activator) => {
+		const activeElement = document.activeElement;
+		const containerNode = getContainerNode(this.state.containerId);
+
+		if ((activeElement === document.body || (containerNode && containerNode.contains(activeElement))) && !Spotlight.focus(activator)) {
+			Spotlight.focus();
 		}
 	}
 
@@ -367,6 +386,8 @@ class Popup extends React.Component {
 				scrimType={scrimType}
 			>
 				<PopupBase
+					aria-live="off"
+					role="alert"
 					{...rest}
 					containerId={this.state.containerId}
 					open={this.state.popupOpen}

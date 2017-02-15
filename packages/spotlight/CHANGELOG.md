@@ -4,22 +4,31 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ## [unreleased]
 
+### Fixed
+
+- `spotlight.Spotlight` behavior to follow container config rules when navigating between containers
+- `spotlight.Spotlight` behavior to not set focus on spottable components animating past the pointer when not in pointer-mode
+- `spotlight.Spotlight` 5-way behavior where selecting a spottable component may require multiple attempts before performing actions
+
+## [1.0.0-beta.2] - 2017-01-30
+
 ### Added
 
-- `spotlightDisabled` prop support in `@enact/spotlight/container`
-- `onSpotlightDisappear` event property support in `@enact/spotlight/spottable`
+- `spotlight.SpotlightContainerDecorator` support for `spotlightDisabled` prop
+- `spotlight.Spottable` support for `onSpotlightDown`, `onSpotlightLeft`, `onSpotlightRight`, and `onSpotlightUp` properties
+- `spotlight.Spotlight` method `getDirection()` to replace `spotlightDirections`
 
 ### Removed
 
-- `@enact/spotlight.spotlightDirections` export and replaced it with `getDirection()` 
+- `spotlight.Spotlight` `spotlightDirections`
 
 ## [1.0.0-beta.1] - 2016-12-30
 
 ### Added
 
-- `@enact/spotlight.Spotlight` methods `isPaused()`, `isSpottable()`, `getCurrent()`, and `isMuted()`
-- `@enact/spotlight.SpotlightContainerDecorator` property `spotlightMuted`
-- `@enact/spotlight.spotlightDirections` export
+- `spotlight.Spotlight` methods `isPaused()`, `isSpottable()`, `getCurrent()`, and `isMuted()`
+- `spotlight.SpotlightContainerDecorator` property `spotlightMuted`
+- `spotlight.spotlightDirections` export
 
 ## [1.0.0-alpha.5] - 2016-12-16
 

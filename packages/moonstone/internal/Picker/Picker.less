@@ -14,6 +14,8 @@
 	position: relative;
 	direction: ltr;
 	text-align: center;
+	margin-left: @moon-spotlight-outset;
+	margin-right: @moon-spotlight-outset;
 
 	&:before {
 		.position(0);
@@ -41,6 +43,8 @@
 
 	.valueWrapper {
 		overflow: hidden;
+		margin-left: auto;
+		margin-right: auto;
 		vertical-align: bottom;
 		color: inherit;
 	}
@@ -62,9 +66,11 @@
 
 		.incrementer {
 			order: 3;
+			margin-left: @moon-spotlight-outset;
 		}
 		.decrementer {
 			order: 1;
+			margin-right: @moon-spotlight-outset;
 		}
 		.valueWrapper {
 			order: 2;
@@ -73,7 +79,6 @@
 
 	&.joined {
 		color: @moon-button-text-color;
-		margin: 0 @moon-spotlight-outset;
 
 		&.incrementing .incrementer,
 		&.decrementing .decrementer {

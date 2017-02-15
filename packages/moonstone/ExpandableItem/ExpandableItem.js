@@ -44,6 +44,14 @@ const ExpandableItemBase = kind({
 		title: PropTypes.string.isRequired,
 
 		/**
+		 * An ARIA label to be applied to the title component.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		'aria-label': PropTypes.string,
+
+		/**
 		 * When `true`, the expandable automatically closes when the user navigates to the `title`
 		 * of the component using 5-way controls; if `false`, the user must select/tap the header to
 		 * close the expandable.
@@ -75,7 +83,6 @@ const ExpandableItemBase = kind({
 		 * The secondary, or supportive text. Typically under the `title`, a subtitle.
 		 *
 		 * @type {String}
-		 * @default null
 		 * @public
 		 */
 		label: PropTypes.string,
@@ -101,7 +108,6 @@ const ExpandableItemBase = kind({
 		 * Callback to be called when a condition occurs which should cause the expandable to close
 		 *
 		 * @type {Function}
-		 * @default null
 		 * @public
 		 */
 		onClose: PropTypes.func,
@@ -110,7 +116,6 @@ const ExpandableItemBase = kind({
 		 * Callback to be called when a condition occurs which should cause the expandable to open
 		 *
 		 * @type {Function}
-		 * @default null
 		 * @public
 		 */
 		onOpen: PropTypes.func,
@@ -144,7 +149,16 @@ const ExpandableItemBase = kind({
 		 * @default 'auto'
 		 * @public
 		 */
-		showLabel: PropTypes.oneOf(['always', 'never', 'auto'])
+		showLabel: PropTypes.oneOf(['always', 'never', 'auto']),
+
+		/**
+		 * When `true`, the component cannot be navigated using spotlight.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		spotlightDisabled: PropTypes.bool
 	},
 
 	defaultProps: {
@@ -152,33 +166,39 @@ const ExpandableItemBase = kind({
 		disabled: false,
 		lockBottom: false,
 		open: false,
-		showLabel: 'auto'
+		showLabel: 'auto',
+		spotlightDisabled: false
+	},
+
+	handlers: {
+		handleKeyDown: (ev, {autoClose, lockBottom, onClose}) => {
+			if (autoClose || lockBottom) {
+				const {keyCode, target} = ev;
+				// Basing first/last child on the parent of the target to support both the use
+				// case here in which the children of the container are spottable and the
+				// ExpandableList use case which has an intermediate child (Group) between the
+				// spottable components and the container.
+				if (autoClose && isUp(keyCode) && target.parentNode.firstChild === target && onClose) {
+					onClose();
+					ev.nativeEvent.stopImmediatePropagation();
+				} else if (lockBottom && isDown(keyCode) && target.parentNode.lastChild === target) {
+					ev.nativeEvent.stopImmediatePropagation();
+				}
+			}
+		},
+		handleOpen: (ev, {disabled, onClose, onOpen, open}) => {
+			// When disabled, don't attach an event
+			if (!disabled) {
+				if (open) {
+					onClose(ev);
+				} else {
+					onOpen(ev);
+				}
+			}
+		}
 	},
 
 	computed: {
-		handleKeyDown: ({autoClose, lockBottom, onClose}) => {
-			if (autoClose || lockBottom) {
-				return (ev) => {
-					const {keyCode, target} = ev;
-					// Basing first/last child on the parent of the target to support both the use
-					// case here in which the children of the container are spottable and the
-					// ExpandableList use case which has an intermediate child (Group) between the
-					// spottable components and the container.
-					if (autoClose && isUp(keyCode) && target.parentNode.firstChild === target && onClose) {
-						onClose();
-						ev.nativeEvent.stopImmediatePropagation();
-					} else if (lockBottom && isDown(keyCode) && target.parentNode.lastChild === target) {
-						ev.nativeEvent.stopImmediatePropagation();
-					}
-				};
-			}
-		},
-		handleOpen: ({disabled, onClose, onOpen, open}) => {
-			// When disabled, don't attach an event
-			if (!disabled) {
-				return open ? onClose : onOpen;
-			}
-		},
 		label: ({disabled, label, noneText, open, showLabel}) => {
 			const isOpen = open && !disabled;
 			if (showLabel === 'always' || (!isOpen && showLabel !== 'never')) {
@@ -188,10 +208,11 @@ const ExpandableItemBase = kind({
 			}
 		},
 		open: ({disabled, open}) => (open && !disabled),
-		titleIcon: ({open}) => (open ? 'arrowlargeup' : 'arrowlargedown')
+		titleIcon: ({open}) => (open ? 'arrowlargeup' : 'arrowlargedown'),
+		transitionSpotlightDisabled: ({open, spotlightDisabled}) => (spotlightDisabled || !open)
 	},
 
-	render: ({children, disabled, handleKeyDown, handleOpen, label, open, onSpotlightDisappear, title, titleIcon, ...rest}) => {
+	render: ({'aria-label': ariaLabel, children, disabled, handleKeyDown, handleOpen, label, open, onSpotlightDisappear, spotlightDisabled, title, titleIcon, transitionSpotlightDisabled, ...rest}) => {
 		delete rest.autoClose;
 		delete rest.label;
 		delete rest.lockBottom;
@@ -201,19 +222,21 @@ const ExpandableItemBase = kind({
 		delete rest.showLabel;
 
 		return (
-			<ExpandableContainer {...rest} disabled={disabled} open={open}>
+			<ExpandableContainer {...rest} disabled={disabled} open={open} spotlightDisabled={spotlightDisabled}>
 				<LabeledItem
+					aria-label={ariaLabel}
 					disabled={disabled}
 					label={label}
 					onClick={handleOpen}
 					onSpotlightDisappear={onSpotlightDisappear}
+					spotlightDisabled={spotlightDisabled}
 					titleIcon={titleIcon}
 				>{title}</LabeledItem>
 				<ExpandableTransitionContainer
 					data-expandable-container
 					duration="short"
 					onKeyDown={handleKeyDown}
-					spotlightDisabled={!open}
+					spotlightDisabled={transitionSpotlightDisabled}
 					type="clip"
 					visible={open}
 				>

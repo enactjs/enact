@@ -4,9 +4,25 @@ The following is a curated list of changes in the Enact core module, newest chan
 
 ## [unreleased]
 
+### Addded
+
+- `core/handle` function `forProp` to test properties passed to a component
+
+### Changed
+
+- `core/handle` function `forProp` to be called `forEventProp` to test for properties on an event
+
+## [1.0.0-beta.2] - 2017-01-30
+
 ### Added
 
+- Support for a new `handlers` block for components created with `core/kind` to allow cached event handlers
+- `core/handle` handler `forKey`
 - `core/keymap` module to abstract keyboard key codes behind common names (e.g. 'up' and 'down')
+
+### Removed
+
+- `core/handle.withArgs` helper function which is no longer needed with the addition of the `handlers` support in `kind()`
 
 ## [1.0.0-beta.1] - 2016-12-30
 

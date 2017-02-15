@@ -172,6 +172,84 @@ class VirtualListCore extends Component {
 		style: {}
 	}
 
+	constructor (props) {
+		const {positioningOption} = props;
+
+		super(props);
+
+		this.state = {firstIndex: 0, numOfItems: 0};
+		this.initContainerRef = this.initRef('containerRef');
+		this.initWrapperRef = this.initRef('wrapperRef');
+
+		switch (positioningOption) {
+			case 'byItem':
+				this.composeItemPosition = this.composeTransform;
+				this.positionContainer = nop;
+				break;
+			case 'byContainer':
+				this.composeItemPosition = this.composeLeftTop;
+				this.positionContainer = this.applyTransformToContainerNode;
+				break;
+			case 'byBrowser':
+				this.composeItemPosition = this.composeLeftTop;
+				this.positionContainer = this.applyScrollLeftTopToWrapperNode;
+				break;
+		}
+	}
+
+	// Calculate metrics for VirtualList after the 1st render to know client W/H.
+	// We separate code related with data due to re use it when data changed.
+	componentDidMount () {
+		const {positioningOption} = this.props;
+
+		this.calculateMetrics(this.props);
+		this.updateStatesAndBounds(this.props);
+
+		if (positioningOption !== 'byBrowser') {
+			const containerNode = this.getContainerNode(positioningOption);
+
+			// prevent native scrolling by Spotlight
+			this.preventScroll = () => {
+				containerNode.scrollTop = 0;
+				containerNode.scrollLeft = this.context.rtl ? containerNode.scrollWidth : 0;
+			};
+
+			if (containerNode && containerNode.addEventListener) {
+				containerNode.addEventListener('scroll', this.preventScroll);
+			}
+		}
+	}
+
+	// Call updateStatesAndBounds here when dataSize has been changed to update nomOfItems state.
+	// Calling setState within componentWillReceivePropswill not trigger an additional render.
+	componentWillReceiveProps (nextProps) {
+		const
+			{dataSize, direction, itemSize, overhang, spacing} = this.props,
+			hasMetricsChanged = (
+				direction !== nextProps.direction ||
+				((itemSize instanceof Object) ? (itemSize.minWidth !== nextProps.itemSize.minWidth || itemSize.minHeight !== nextProps.itemSize.minHeight) : itemSize !== nextProps.itemSize) ||
+				overhang !== nextProps.overhang ||
+				spacing !== nextProps.spacing
+			),
+			hasDataChanged = (dataSize !== nextProps.dataSize);
+
+		if (hasMetricsChanged) {
+			this.calculateMetrics(nextProps);
+			this.updateStatesAndBounds(hasDataChanged ? nextProps : this.props);
+		} else if (hasDataChanged) {
+			this.updateStatesAndBounds(nextProps);
+		}
+	}
+
+	componentWillUnmount () {
+		const containerNode = this.getContainerNode(this.props.positioningOption);
+
+		// remove a function for preventing native scrolling by Spotlight
+		if (containerNode && containerNode.removeEventListener) {
+			containerNode.removeEventListener('scroll', this.preventScroll);
+		}
+	}
+
 	scrollBounds = {
 		clientWidth: 0,
 		clientHeight: 0,
@@ -204,31 +282,6 @@ class VirtualListCore extends Component {
 	// spotlight
 	nodeIndexToBeBlurred = null
 	lastFocusedIndex = null
-
-	constructor (props) {
-		const {positioningOption} = props;
-
-		super(props);
-
-		this.state = {firstIndex: 0, numOfItems: 0};
-		this.initContainerRef = this.initRef('containerRef');
-		this.initWrapperRef = this.initRef('wrapperRef');
-
-		switch (positioningOption) {
-			case 'byItem':
-				this.composeItemPosition = this.composeTransform;
-				this.positionContainer = nop;
-				break;
-			case 'byContainer':
-				this.composeItemPosition = this.composeLeftTop;
-				this.positionContainer = this.applyTransformToContainerNode;
-				break;
-			case 'byBrowser':
-				this.composeItemPosition = this.composeLeftTop;
-				this.positionContainer = this.applyScrollLeftTopToWrapperNode;
-				break;
-		}
-	}
 
 	isVertical = () => this.isPrimaryDirectionVertical
 
@@ -584,31 +637,35 @@ class VirtualListCore extends Component {
 		return (Math.ceil(curDataSize / dimensionToExtent) * primary.gridSize) - spacing;
 	}
 
-	calculatePositionOnFocus = (focusedIndex) => {
+	calculatePositionOnFocus = (item) => {
 		const
 			{pageScroll} = this.props,
 			{primary, numOfItems, scrollPosition} = this,
-			offsetToClientEnd = primary.clientSize - primary.itemSize;
-		let
-			gridPosition = this.getGridPosition(focusedIndex);
+			offsetToClientEnd = primary.clientSize - primary.itemSize,
+			focusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
 
-		this.nodeIndexToBeBlurred = this.lastFocusedIndex % numOfItems;
-		this.lastFocusedIndex = focusedIndex;
+		if (!isNaN(focusedIndex)) {
+			let
+				gridPosition = this.getGridPosition(focusedIndex);
 
-		if (primary.clientSize >= primary.itemSize) {
-			if (gridPosition.primaryPosition > scrollPosition + offsetToClientEnd) { // forward over
-				gridPosition.primaryPosition -= pageScroll ? 0 : offsetToClientEnd;
-			} else if (gridPosition.primaryPosition >= scrollPosition) { // inside of client
-				gridPosition.primaryPosition = scrollPosition;
-			} else { // backward over
-				gridPosition.primaryPosition -= pageScroll ? offsetToClientEnd : 0;
+			this.nodeIndexToBeBlurred = this.lastFocusedIndex % numOfItems;
+			this.lastFocusedIndex = focusedIndex;
+
+			if (primary.clientSize >= primary.itemSize) {
+				if (gridPosition.primaryPosition > scrollPosition + offsetToClientEnd) { // forward over
+					gridPosition.primaryPosition -= pageScroll ? 0 : offsetToClientEnd;
+				} else if (gridPosition.primaryPosition >= scrollPosition) { // inside of client
+					gridPosition.primaryPosition = scrollPosition;
+				} else { // backward over
+					gridPosition.primaryPosition -= pageScroll ? offsetToClientEnd : 0;
+				}
 			}
-		}
 
-		// Since the result is used as a target position to be scrolled,
-		// scrondaryPosition should be 0 here.
-		gridPosition.secondaryPosition = 0;
-		return this.gridPositionToItemPosition(gridPosition);
+			// Since the result is used as a target position to be scrolled,
+			// scrondaryPosition should be 0 here.
+			gridPosition.secondaryPosition = 0;
+			return this.gridPositionToItemPosition(gridPosition);
+		}
 	}
 
 	setRestrict = (bool) => {
@@ -662,59 +719,6 @@ class VirtualListCore extends Component {
 		}
 
 		this.updateStatesAndBounds(this.props);
-	}
-
-	// Calculate metrics for VirtualList after the 1st render to know client W/H.
-	// We separate code related with data due to re use it when data changed.
-	componentDidMount () {
-		const {positioningOption} = this.props;
-
-		this.calculateMetrics(this.props);
-		this.updateStatesAndBounds(this.props);
-
-		if (positioningOption !== 'byBrowser') {
-			const containerNode = this.getContainerNode(positioningOption);
-
-			// prevent native scrolling by Spotlight
-			this.preventScroll = () => {
-				containerNode.scrollTop = 0;
-				containerNode.scrollLeft = this.context.rtl ? containerNode.scrollWidth : 0;
-			};
-
-			if (containerNode && containerNode.addEventListener) {
-				containerNode.addEventListener('scroll', this.preventScroll);
-			}
-		}
-	}
-
-	// Call updateStatesAndBounds here when dataSize has been changed to update nomOfItems state.
-	// Calling setState within componentWillReceivePropswill not trigger an additional render.
-	componentWillReceiveProps (nextProps) {
-		const
-			{dataSize, direction, itemSize, overhang, spacing} = this.props,
-			hasMetricsChanged = (
-				direction !== nextProps.direction ||
-				((itemSize instanceof Object) ? (itemSize.minWidth !== nextProps.itemSize.minWidth || itemSize.minHeight !== nextProps.itemSize.minHeight) : itemSize !== nextProps.itemSize) ||
-				overhang !== nextProps.overhang ||
-				spacing !== nextProps.spacing
-			),
-			hasDataChanged = (dataSize !== nextProps.dataSize);
-
-		if (hasMetricsChanged) {
-			this.calculateMetrics(nextProps);
-			this.updateStatesAndBounds(hasDataChanged ? nextProps : this.props);
-		} else if (hasDataChanged) {
-			this.updateStatesAndBounds(nextProps);
-		}
-	}
-
-	componentWillUnmount () {
-		const containerNode = this.getContainerNode(this.props.positioningOption);
-
-		// remove a function for preventing native scrolling by Spotlight
-		if (containerNode && containerNode.removeEventListener) {
-			containerNode.removeEventListener('scroll', this.preventScroll);
-		}
 	}
 
 	// render

@@ -1,9 +1,21 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import Slottable from '@enact/ui/Slottable';
-import {SpotlightContainerDecorator} from '@enact/spotlight';
+import {Spotlight, SpotlightContainerDecorator} from '@enact/spotlight';
 
 import css from './Panel.less';
+
+const spotPanel = (node) => {
+	if (node && !node.contains(document.activeElement)) {
+		const body = node.querySelector('section .spottable');
+		const header = node.querySelector('header .spottable');
+		const spottable = body || header;
+
+		if (spottable) {
+			Spotlight.focus(spottable);
+		}
+	}
+};
 
 /**
 * {@link moonstone/Panels.Panel} is the default kind for controls created inside a
@@ -27,7 +39,26 @@ const PanelBase = kind({
 		 * @type {Header}
 		 * @public
 		 */
-		header: React.PropTypes.node
+		header: React.PropTypes.node,
+
+		/**
+		 * When `false`, only the `header` is rendered and the body components are not. Setting to
+		 * `true` will cause all components to be rendered and the body components will fade in.
+		 *
+		 * When a Panel is used within {@link moonstone/Panels.Panels},
+		 * {@link moonstone/Panels.ActivityPanels}, or {@link moonstone/Panels.AlwaysViewingPanels},
+		 * this property will be set automatically to `true` on render and `false` after animating
+		 * into view.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		showChildren: React.PropTypes.bool
+	},
+
+	defaultProps: {
+		showChildren: false
 	},
 
 	styles: {
@@ -35,12 +66,28 @@ const PanelBase = kind({
 		className: 'panel'
 	},
 
-	render: ({children, header, ...rest}) => (
-		<article {...rest}>
-			<div className={css.header}>{header}</div>
-			<section className={css.body}>{children}</section>
-		</article>
-	)
+	computed: {
+		// In order to spot the body components, we defer spotting until !showChildren. If the Panel
+		// opts out of showChildren support by explicitly setting it to false, it'll spot on first
+		// render.
+		spotOnRender: ({showChildren}) => showChildren ? null : spotPanel,
+		children: ({children, showChildren}) => showChildren ? null : children,
+		bodyClassName: ({showChildren, styler}) => styler.join({
+			body: true,
+			visible: !showChildren
+		})
+	},
+
+	render: ({bodyClassName, children, header, spotOnRender, ...rest}) => {
+		delete rest.showChildren;
+
+		return (
+			<article {...rest} ref={spotOnRender}>
+				<div className={css.header}>{header}</div>
+				<section className={bodyClassName}>{children}</section>
+			</article>
+		);
+	}
 });
 
 const Panel = SpotlightContainerDecorator(
