@@ -42,7 +42,7 @@ const emulateMouseEventsTimeout = 175;
 
 const ariaLabel = {
 	horizontal: {
-		dec: 'previous item',
+		dec: ' previous item',
 		inc: ' next item'
 	},
 	vertical: {
@@ -330,6 +330,10 @@ const Picker = class extends React.Component {
 		}
 
 		this.state = {focus: false};
+
+		if (props.open === null) {
+			this.enableAriaValueText = true;
+		}
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -354,9 +358,9 @@ const Picker = class extends React.Component {
 		}
 
 		if (nextProps.joined) {
-			if (!this.props.open && nextProps.open || !nextProps.open) {
+			if (this.props.open === false && nextProps.open === true || nextProps.open === false) {
 				this.enableAriaValueText = false;
-			} else if (this.props.open && nextProps.open) {
+			} else {
 				this.enableAriaValueText = true;
 			}
 		}
@@ -509,6 +513,7 @@ const Picker = class extends React.Component {
 			orientation,
 			spotlightDisabled,
 			step,
+			value,
 			width,
 			...rest
 		} = this.props;
@@ -523,7 +528,6 @@ const Picker = class extends React.Component {
 		delete rest.onMouseDown;
 		delete rest.pressed;
 		delete rest.reverse;
-		delete rest.value;
 		delete rest.wrap;
 
 		const incrementIcon = selectIncIcon(this.props);
@@ -539,11 +543,13 @@ const Picker = class extends React.Component {
 		// Sometimes this.props.value is not equal to node text content.
 		// For example, when `PM` is shown in AM/PM picker, its value is 1 and its node.textContent is `PM`.
 		// In this case, Screen readers should read `PM` instead of 1.
-		let value;
-		if (Array.isArray(children)) {
-			value = (children && children[index]) ? children[index].props.children : '';
+		let valueText;
+		if (children && Array.isArray(children)) {
+			valueText = (children && children[index]) ? children[index].props.children : value;
+		} else if (children && children.props && !children.props.children) {
+			valueText = children.props.children;
 		} else {
-			value = children.props.children;
+			valueText = value;
 		}
 
 		const a11yProps = {
@@ -551,9 +557,9 @@ const Picker = class extends React.Component {
 				onFocus: this.handleFocus,
 				onBlur: this.handleBlur
 			},
-			dec: joined ? null : {'aria-label': value + incAriaLabel},
-			inc: joined ? null : {'aria-label': value + decAriaLabel},
-			value: {'aria-valuetext': (!joined || (this.state.focus && this.enableAriaValueText)) ? value + accessibilityHint : null}
+			dec: joined ? null : {'aria-label': valueText + incAriaLabel},
+			inc: joined ? null : {'aria-label': valueText + decAriaLabel},
+			value: {'aria-valuetext': (!joined || (this.state.focus && this.enableAriaValueText)) ? valueText + accessibilityHint : null}
 		};
 
 		let arranger;
