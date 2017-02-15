@@ -210,11 +210,11 @@ const TimePickerBase = kind({
 								case 'k':
 									return (
 										<HourPicker
+											ariaEnable={rest.open}
 											key="hour-picker"
 											label={noLabels ? null : $L('hour')}
 											onChange={onChangeHour}
 											onSpotlightDisappear={onSpotlightDisappear}
-											open={rest.open}
 											spotlightDisabled={spotlightDisabled}
 											value={hour}
 											width={2}
@@ -226,13 +226,13 @@ const TimePickerBase = kind({
 								case 'm':
 									return (
 										<DateComponentRangePicker
+											ariaEnable={rest.open}
 											key="minute-picker"
 											label={noLabels ? null : $L('minute')}
 											max={59}
 											min={0}
 											onChange={onChangeMinute}
 											onSpotlightDisappear={onSpotlightDisappear}
-											open={rest.open}
 											spotlightDisabled={spotlightDisabled}
 											padded
 											value={minute}
@@ -248,11 +248,11 @@ const TimePickerBase = kind({
 					{!hasMeridiem ? null : (
 						// eslint-disable-next-line react/jsx-indent
 						<DateComponentPicker
+							ariaEnable={rest.open}
 							key="meridiem-picker"
 							label={noLabels ? null : $L('meridiem')}
 							onChange={onChangeMeridiem}
 							onSpotlightDisappear={onSpotlightDisappear}
-							open={rest.open}
 							spotlightDisabled={spotlightDisabled}
 							value={meridiem}
 							width="small"

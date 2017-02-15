@@ -71,6 +71,15 @@ const Picker = class extends React.Component {
 
 	static propTypes = /** @lends moonstone/internal/Picker.Picker.prototype */ {
 		/**
+		 * When `false`, screen readers do not read the value in the picker even thought it is updated.
+		 *
+		 * @type {Boolean|null}
+		 * @default false
+		 * @public
+		 */
+		ariaEnable: React.PropTypes.bool,
+
+		/**
 		 * Index for internal ViewManager
 		 *
 		 * @type {Number}
@@ -220,15 +229,6 @@ const Picker = class extends React.Component {
 		onSpotlightDisappear: React.PropTypes.func,
 
 		/**
-		 * When `true`, the component is in {@link moonstone/ExpandableItem.ExpandableItem}, and the component get focus, its content is readable.
-		 *
-		 * @type {Boolean|null}
-		 * @default false
-		 * @public
-		 */
-		open: React.PropTypes.bool,
-
-		/**
 		 * Sets the orientation of the picker, whether the buttons are above and below or on the
 		 * sides of the value. Must be either `'horizontal'` or `'vertical'`.
 		 *
@@ -317,7 +317,7 @@ const Picker = class extends React.Component {
 
 	static defaultProps = {
 		accessibilityHint: '',
-		open: null,
+		ariaEnable: null,
 		orientation: 'horizontal',
 		spotlightDisabled: false,
 		step: 1,
@@ -337,7 +337,7 @@ const Picker = class extends React.Component {
 
 		this.state = {focus: false};
 
-		if (props.open === null) {
+		if (props.ariaEnable === null) {
 			this.enableAriaValueText = true;
 		}
 	}
@@ -364,7 +364,7 @@ const Picker = class extends React.Component {
 		}
 
 		if (nextProps.joined) {
-			if (this.props.open === false && nextProps.open === true || nextProps.open === false) {
+			if (this.props.ariaEnable === false && nextProps.ariaEnable === true || nextProps.ariaEnable === false) {
 				this.enableAriaValueText = false;
 			} else {
 				this.enableAriaValueText = true;
@@ -509,6 +509,7 @@ const Picker = class extends React.Component {
 	render () {
 		const {
 			accessibilityHint,
+			ariaEnable,
 			noAnimation,
 			children,
 			disabled,
@@ -516,7 +517,6 @@ const Picker = class extends React.Component {
 			joined,
 			onMouseUp,
 			onSpotlightDisappear,
-			open,
 			orientation,
 			spotlightDisabled,
 			step,
@@ -567,7 +567,7 @@ const Picker = class extends React.Component {
 			},
 			dec: joined ? null : {'aria-label': valueText + incAriaLabelForButton},
 			inc: joined ? null : {'aria-label': valueText + decAriaLabelForButton},
-			valueText: {'aria-valuetext': (!joined || joined && open === null || (this.state.focus && this.enableAriaValueText)) ? valueText + accessibilityHint + ariaLabelForValue : null}
+			valueText: {'aria-valuetext': (!joined || joined && ariaEnable === null || (this.state.focus && this.enableAriaValueText)) ? valueText + accessibilityHint + ariaLabelForValue : null}
 		};
 
 		let arranger;

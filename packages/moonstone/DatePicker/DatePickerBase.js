@@ -185,13 +185,13 @@ const DatePickerBase = kind({
 							case 'd':
 								return (
 									<DateComponentRangePicker
+										ariaEnable={rest.open}
 										key="day-picker"
 										label={noLabels ? null : $L('day')}
 										max={maxDays}
 										min={1}
 										onChange={onChangeDate}
 										onSpotlightDisappear={onSpotlightDisappear}
-										open={rest.open}
 										spotlightDisabled={spotlightDisabled}
 										value={day}
 										width={2}
@@ -201,13 +201,13 @@ const DatePickerBase = kind({
 							case 'm':
 								return (
 									<DateComponentRangePicker
+										ariaEnable={rest.open}
 										key="month-picker"
 										label={noLabels ? null : $L('month')}
 										max={maxMonths}
 										min={1}
 										onChange={onChangeMonth}
 										onSpotlightDisappear={onSpotlightDisappear}
-										open={rest.open}
 										spotlightDisabled={spotlightDisabled}
 										value={month}
 										width={2}
@@ -217,6 +217,7 @@ const DatePickerBase = kind({
 							case 'y':
 								return (
 									<DateComponentRangePicker
+										ariaEnable={rest.open}
 										className={css.year}
 										key="year-picker"
 										label={noLabels ? null : $L('year')}
@@ -224,7 +225,6 @@ const DatePickerBase = kind({
 										min={minYear}
 										onChange={onChangeYear}
 										onSpotlightDisappear={onSpotlightDisappear}
-										open={rest.open}
 										spotlightDisabled={spotlightDisabled}
 										value={year}
 										width={4}

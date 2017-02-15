@@ -1,6 +1,5 @@
 import React from 'react';
 import {mount} from 'enzyme';
-import sinon from 'sinon';
 import Changeable from '@enact/ui/Changeable';
 import Picker from '../Picker';
 import css from '../../internal/Picker/Picker.less';
@@ -33,8 +32,6 @@ describe('Picker Specs', () => {
 
 		expect(actual).to.equal(expected);
 	});
-
-	// a11y
 
 	it('should set the aria-label attribute properly in the next icon button of <Picker>', function () {
 		const picker = mount(
