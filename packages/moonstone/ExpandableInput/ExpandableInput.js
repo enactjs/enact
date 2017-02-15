@@ -143,7 +143,8 @@ class ExpandableInputBase extends React.Component {
 
 	calcAriaLabel () {
 		const {noneText, title, type, value} = this.props;
-		return calcAriaLabel(title, type, value || noneText);
+		const returnVal = (type === 'password') ? value : (value || noneText);
+		return calcAriaLabel(title, type, returnVal);
 	}
 
 	calcLabel () {
