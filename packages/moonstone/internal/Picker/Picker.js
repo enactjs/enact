@@ -1,6 +1,6 @@
 import * as jobs from '@enact/core/jobs';
-import {childrenEquals} from '@enact/core/util';
 import clamp from 'ramda/src/clamp';
+import equals from 'ramda/src/equals';
 import React from 'react';
 import shouldUpdate from 'recompose/shouldUpdate';
 import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
@@ -14,7 +14,7 @@ import css from './Picker.less';
 const PickerViewManager = shouldUpdate((props, nextProps) => {
 	return (
 		props.index !== nextProps.index ||
-		!childrenEquals(props.children, nextProps.children)
+		!equals(props.children, nextProps.children)
 	);
 })(ViewManager);
 

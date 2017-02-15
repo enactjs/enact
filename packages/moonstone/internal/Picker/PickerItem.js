@@ -35,8 +35,15 @@ const PickerItemBase = kind({
 		className: 'item'
 	},
 
-	render: ({disabled, joined, ...rest}) => {
-		const marqueeControl =  !disabled && joined ? 'focus' : 'hover';
+	computed: {
+		marqueeControl: ({disabled, joined}) => {
+			return !disabled && joined ? 'focus' : 'hover';
+		}
+	},
+
+	render: ({marqueeControl, ...rest}) => {
+		delete rest.disabled;
+		delete rest.joined;
 		return (
 			<MarqueeText {...rest} marqueeCentered marqueeOn={marqueeControl} />
 		);
