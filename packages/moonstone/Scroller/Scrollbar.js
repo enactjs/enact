@@ -96,18 +96,6 @@ class Scrollbar extends Component {
 		vertical: true
 	}
 
-	autoHide = true
-	thumbSize = 0
-	minThumbSizeRatio = 0
-	trackSize = 0
-	jobName = ''
-
-	// component refs
-	containerRef = null
-	thumbRef = null
-	prevButtonNodeRef = null
-	nextButtonNodeRef = null
-
 	constructor (props) {
 		super(props);
 
@@ -129,6 +117,34 @@ class Scrollbar extends Component {
 		this.initContainerRef = this.initRef('containerRef');
 		this.initThumbRef = this.initRef('thumbRef');
 	}
+
+	componentDidMount () {
+		const {containerRef} = this;
+
+		this.calculateMetrics();
+		this.prevButtonNodeRef = containerRef.children[0];
+		this.nextButtonNodeRef = containerRef.children[1];
+	}
+
+	componentDidUpdate () {
+		this.calculateMetrics();
+	}
+
+	componentWillUnmount () {
+		stopJob(this.jobName);
+	}
+
+	autoHide = true
+	thumbSize = 0
+	minThumbSizeRatio = 0
+	trackSize = 0
+	jobName = ''
+
+	// component refs
+	containerRef = null
+	thumbRef = null
+	prevButtonNodeRef = null
+	nextButtonNodeRef = null
 
 	updateButtons = (bounds) => {
 		const
@@ -217,22 +233,6 @@ class Scrollbar extends Component {
 		this.thumbSize = this.thumbRef[this.scrollbarInfo.sizeProperty];
 		this.trackSize = this.containerRef[this.scrollbarInfo.sizeProperty];
 		this.minThumbSizeRatio = minThumbSize / this.trackSize;
-	}
-
-	componentDidMount () {
-		const {containerRef} = this;
-
-		this.calculateMetrics();
-		this.prevButtonNodeRef = containerRef.children[0];
-		this.nextButtonNodeRef = containerRef.children[1];
-	}
-
-	componentDidUpdate () {
-		this.calculateMetrics();
-	}
-
-	componentWillUnmount () {
-		stopJob(this.jobName);
 	}
 
 	initRef (prop) {
