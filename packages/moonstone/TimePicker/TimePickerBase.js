@@ -168,6 +168,15 @@ const TimePickerBase = kind({
 		onSpotlightDisappear: React.PropTypes.func,
 
 		/**
+		 * When `true`, the control is rendered in the expanded state, with the contents visible
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		open: React.PropTypes.bool,
+
+		/**
 		 * When `true`, the component cannot be navigated using spotlight.
 		 *
 		 * @type {Boolean}
@@ -205,6 +214,7 @@ const TimePickerBase = kind({
 											label={noLabels ? null : $L('hour')}
 											onChange={onChangeHour}
 											onSpotlightDisappear={onSpotlightDisappear}
+											open={rest.open}
 											spotlightDisabled={spotlightDisabled}
 											value={hour}
 											width={2}
@@ -222,6 +232,7 @@ const TimePickerBase = kind({
 											min={0}
 											onChange={onChangeMinute}
 											onSpotlightDisappear={onSpotlightDisappear}
+											open={rest.open}
 											spotlightDisabled={spotlightDisabled}
 											padded
 											value={minute}
@@ -241,6 +252,7 @@ const TimePickerBase = kind({
 							label={noLabels ? null : $L('meridiem')}
 							onChange={onChangeMeridiem}
 							onSpotlightDisappear={onSpotlightDisappear}
+							open={rest.open}
 							spotlightDisabled={spotlightDisabled}
 							value={meridiem}
 							width="small"

@@ -146,6 +146,15 @@ const DatePickerBase = kind({
 		onSpotlightDisappear: React.PropTypes.func,
 
 		/**
+		 * When `true`, the control is rendered in the expanded state, with the contents visible
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		open: React.PropTypes.bool,
+
+		/**
 		 * When `true`, the component cannot be navigated using spotlight.
 		 *
 		 * @type {Boolean}
@@ -182,6 +191,7 @@ const DatePickerBase = kind({
 										min={1}
 										onChange={onChangeDate}
 										onSpotlightDisappear={onSpotlightDisappear}
+										open={rest.open}
 										spotlightDisabled={spotlightDisabled}
 										value={day}
 										width={2}
@@ -197,6 +207,7 @@ const DatePickerBase = kind({
 										min={1}
 										onChange={onChangeMonth}
 										onSpotlightDisappear={onSpotlightDisappear}
+										open={rest.open}
 										spotlightDisabled={spotlightDisabled}
 										value={month}
 										width={2}
@@ -213,6 +224,7 @@ const DatePickerBase = kind({
 										min={minYear}
 										onChange={onChangeYear}
 										onSpotlightDisappear={onSpotlightDisappear}
+										open={rest.open}
 										spotlightDisabled={spotlightDisabled}
 										value={year}
 										width={4}

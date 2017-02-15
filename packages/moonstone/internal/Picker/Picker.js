@@ -89,6 +89,15 @@ const Picker = class extends React.Component {
 		min: React.PropTypes.number.isRequired,
 
 		/**
+		 * Accessibility hint
+		 * For example, `hour`, `year`, and `meridiem`
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		accessibilityHint: React.PropTypes.string,
+
+		/**
 		 * Children from which to pick
 		 *
 		 * @type {Node}
@@ -156,12 +165,28 @@ const Picker = class extends React.Component {
 		noAnimation: React.PropTypes.bool,
 
 		/**
+		 * Skip to read a value when blured to support a11y.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onBlur: React.PropTypes.func,
+
+		/**
 		 * A function to run when the control should increment or decrement.
 		 *
 		 * @type {Function}
 		 * @public
 		 */
 		onChange: React.PropTypes.func,
+
+		/**
+		 * Read a value when focused to support a11y.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onFocus: React.PropTypes.func,
 
 		/**
 		 * Initiate the pressed state
@@ -187,6 +212,15 @@ const Picker = class extends React.Component {
 		 * @public
 		 */
 		onSpotlightDisappear: React.PropTypes.func,
+
+		/**
+		 * When `true`, the component is in {@link moonstone/ExpandableItem.ExpandableItem}, and the component get focus, its content is readable.
+		 *
+		 * @type {Boolean|null}
+		 * @default false
+		 * @public
+		 */
+		open: React.PropTypes.bool,
 
 		/**
 		 * Sets the orientation of the picker, whether the buttons are above and below or on the
@@ -276,11 +310,15 @@ const Picker = class extends React.Component {
 	}
 
 	static defaultProps = {
+		accessibilityHint: '',
+		open: null,
 		orientation: 'horizontal',
 		spotlightDisabled: false,
 		step: 1,
 		value: 0
 	}
+
+	enableAriaValueText = false
 
 	constructor (props) {
 		super(props);
@@ -290,6 +328,8 @@ const Picker = class extends React.Component {
 			validateStepped(props.value, props.min, props.step, Picker.displayName);
 			validateStepped(props.max, props.min, props.step, Picker.displayName, '"max"');
 		}
+
+		this.state = {focus: false};
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -311,6 +351,14 @@ const Picker = class extends React.Component {
 			this.reverseTransition = true;
 		} else {
 			this.reverseTransition = nextProps.value < this.props.value;
+		}
+
+		if (nextProps.joined) {
+			if (!this.props.open && nextProps.open || !nextProps.open) {
+				this.enableAriaValueText = false;
+			} else if (this.props.open && nextProps.open) {
+				this.enableAriaValueText = true;
+			}
 		}
 	}
 
@@ -417,6 +465,24 @@ const Picker = class extends React.Component {
 		}
 	}
 
+	handleFocus = (e) => {
+		const {onFocus} = this.props;
+
+		this.setState({focus: true});
+		if (onFocus) {
+			onFocus(e);
+		}
+	}
+
+	handleBlur = (e) => {
+		const {onBlur} = this.props;
+
+		this.setState({focus: false});
+		if (onBlur) {
+			onBlur(e);
+		}
+	}
+
 	determineClasses (decrementerDisabled, incrementerDisabled) {
 		const {joined, orientation, pressed, width} = this.props;
 		return [
@@ -432,6 +498,7 @@ const Picker = class extends React.Component {
 
 	render () {
 		const {
+			accessibilityHint,
 			noAnimation,
 			children,
 			disabled,
@@ -450,7 +517,9 @@ const Picker = class extends React.Component {
 		delete rest.incrementIcon;
 		delete rest.max;
 		delete rest.min;
+		delete rest.onBlur;
 		delete rest.onChange;
+		delete rest.onFocus;
 		delete rest.onMouseDown;
 		delete rest.pressed;
 		delete rest.reverse;
@@ -464,12 +533,28 @@ const Picker = class extends React.Component {
 		const incrementerDisabled = this.isButtonDisabled(step);
 		const classes = this.determineClasses(decrementerDisabled, incrementerDisabled);
 
-		const selectedValue =
-			(Array.isArray(children)) ?
-				((children && children[index]) ? children[index].props.children : '') :
-				children.props.children;
 		const decAriaLabel = ariaLabel[orientation]['dec'];
 		const incAriaLabel = ariaLabel[orientation]['inc'];
+
+		// Sometimes this.props.value is not equal to node text content.
+		// For example, when `PM` is shown in AM/PM picker, its value is 1 and its node.textContent is `PM`.
+		// In this case, Screen readers should read `PM` instead of 1.
+		let value;
+		if (Array.isArray(children)) {
+			value = (children && children[index]) ? children[index].props.children : '';
+		} else {
+			value = children.props.children;
+		}
+
+		const a11yProps = {
+			picker: {
+				onFocus: this.handleFocus,
+				onBlur: this.handleBlur
+			},
+			dec: joined ? null : {'aria-label': value + incAriaLabel},
+			inc: joined ? null : {'aria-label': value + decAriaLabel},
+			value: {'aria-valuetext': (!joined || (this.state.focus && this.enableAriaValueText)) ? value + accessibilityHint : null}
+		};
 
 		let arranger;
 		if (width && !disabled) {
@@ -478,13 +563,13 @@ const Picker = class extends React.Component {
 
 		let sizingPlaceholder = null;
 		if (typeof width === 'number' && width > 0) {
-			sizingPlaceholder = <div className={css.sizingPlaceholder}>{ '0'.repeat(width) }</div>;
+			sizingPlaceholder = <div className={css.sizingPlaceholder} aria-hidden>{ '0'.repeat(width) }</div>;
 		}
 
 		return (
-			<div {...rest} className={classes} disabled={disabled} onWheel={joined ? this.handleWheel : null} onKeyDown={joined ? this.handleKeyDown : null}>
+			<div {...rest} {...a11yProps.picker} className={classes} disabled={disabled} onWheel={joined ? this.handleWheel : null} onKeyDown={joined ? this.handleKeyDown : null}>
 				<PickerButton
-					aria-label={selectedValue + incAriaLabel}
+					{...a11yProps.dec}
 					className={css.incrementer}
 					disabled={incrementerDisabled}
 					icon={incrementIcon}
@@ -497,12 +582,13 @@ const Picker = class extends React.Component {
 					spotlightDisabled={spotlightDisabled}
 				/>
 				<div
-					aria-valuetext={selectedValue}
+					{...a11yProps.value}
 					className={css.valueWrapper}
 					role="spinbutton"
 				>
 					{sizingPlaceholder}
 					<PickerViewManager
+						aria-hidden
 						arranger={arranger}
 						duration={100}
 						index={index}
@@ -513,7 +599,7 @@ const Picker = class extends React.Component {
 					</PickerViewManager>
 				</div>
 				<PickerButton
-					aria-label={selectedValue + decAriaLabel}
+					{...a11yProps.inc}
 					className={css.decrementer}
 					disabled={decrementerDisabled}
 					icon={decrementIcon}
