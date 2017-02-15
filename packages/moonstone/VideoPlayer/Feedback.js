@@ -1,30 +1,11 @@
 import kind from '@enact/core/kind';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
-import Icon from '../Icon';
+
+import FeedbackIcon from './FeedbackIcon';
+import states from './FeedbackIcons.js';
 
 import css from './Feedback.less';
-
-const states = {
-	play          : {iconStart: null,             iconEnd: 'play',          allowHide: true,   message: null},
-	pause         : {iconStart: null,             iconEnd: 'pause',         allowHide: true,   message: null},
-	rewind        : {iconStart: 'backward',       iconEnd: null,            allowHide: false,  message: 'x'},
-	slowRewind    : {iconStart: 'pausebackward',  iconEnd: null,            allowHide: false,  message: 'x'},
-	fastForward   : {iconStart: null,             iconEnd: 'forward',       allowHide: false,  message: 'x'},
-	slowForward   : {iconStart: null,             iconEnd: 'pauseforward',  allowHide: false,  message: 'x'},
-	jumpBackward  : {iconStart: 'skipbackward',   iconEnd: null,            allowHide: true,   message: null},
-	jumpForward   : {iconStart: null,             iconEnd: 'skipforward',   allowHide: true,   message: null},
-	jumpToStart   : {iconStart: 'skipbackward',   iconEnd: null,            allowHide: true,   message: null},
-	jumpToEnd     : {iconStart: null,             iconEnd: 'skipforward',   allowHide: true,   message: null},
-	stop          : {iconStart: null,             iconEnd: null,            allowHide: true,   message: null}
-};
-
-const getIcon = (placement) => ({playbackState: s}) => { // eslint-disable-line enact/display-name, enact/prop-types
-	const iconResize = (s === 'play' || s === 'pause') ? ' ' + css.shrink : '';
-	if (states[s] && states[s][placement]) {
-		return <Icon className={css.icon + iconResize}>{states[s][placement]}</Icon>;
-	}
-};
 
 /**
  * Feedback {@link moonstone/VideoPlayer}. This displays the media's playback rate and other
@@ -48,6 +29,8 @@ const FeedbackBase = kind({
 		 *
 		 * Each state understands where its related icon should be positioned, and whether it should
 		 * respond to changes to the `visible` property.
+		 *
+		 * This string feeds directly into {@link moonstone/FeedbackIcon.FeedbackIcon}.
 		 *
 		 * @type {String}
 		 * @public
@@ -78,8 +61,6 @@ const FeedbackBase = kind({
 
 	computed: {
 		className: ({playbackState: s, styler, visible}) => styler.append({hidden: !visible && states[s] && states[s].allowHide}),
-		iconStart: getIcon('iconStart'),
-		iconEnd: getIcon('iconEnd'),
 		children: ({children, playbackState: s}) => {
 			if (states[s]) {
 				// Working with a known state
@@ -93,14 +74,14 @@ const FeedbackBase = kind({
 		}
 	},
 
-	render: ({children, iconStart, iconEnd, ...rest}) => {
+	render: ({children, playbackState, ...rest}) => {
 		delete rest.playbackState;
 		delete rest.visible;
 		return (
 			<div {...rest}>
-				{iconStart}
+				{states[playbackState].position === 'before' ? <FeedbackIcon>{playbackState}</FeedbackIcon> : null}
 				{children ? <div className={css.message}>{children}</div> : null}
-				{iconEnd}
+				{states[playbackState].position === 'after' ? <FeedbackIcon>{playbackState}</FeedbackIcon> : null}
 			</div>
 		);
 	}
