@@ -332,6 +332,8 @@ const VideoPlayerBase = class extends React.Component {
 			!nextState.bottomControlsVisible &&
 			this.player.contains(Spotlight.getCurrent())
 		) {
+			// set focus to the hidden spottable control - maintaining focus on available spottable
+			// controls, which prevents an addiitional 5-way attempt in order to re-show media controls
 			Spotlight.focus(this.player.querySelector(`.${css.controlsHandleAbove}.${spottableClass}`));
 		}
 	}
