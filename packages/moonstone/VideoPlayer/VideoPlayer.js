@@ -332,6 +332,7 @@ const VideoPlayerBase = class extends React.Component {
 	componentWillUpdate () {
 		this.initI18n();
 	}
+
 	componentDidMount () {
 		on('mousemove', this.activityDetected);
 		on('keypress', this.activityDetected);
