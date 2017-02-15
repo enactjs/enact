@@ -12,7 +12,7 @@ import ilib from '@enact/i18n';
 import {startJob, stopJob} from '@enact/core/jobs';
 import {on, off} from '@enact/core/dispatcher';
 import Slottable from '@enact/ui/Slottable';
-import {Spottable, SpotlightContainerDecorator, getDirection} from '@enact/spotlight';
+import {Spotlight, Spottable, SpotlightContainerDecorator, getDirection, spotlightDefaultClass} from '@enact/spotlight';
 import Video from 'react-html5video';
 
 import Spinner from '../Spinner';
@@ -26,8 +26,9 @@ import Times from './Times';
 
 import css from './VideoPlayer.less';
 
+const spottableClass = 'spottable';
 const SpottableDiv = Spottable('div');
-const Container = SpotlightContainerDecorator({enterTo: 'default-element'}, 'div');
+const Container = SpotlightContainerDecorator({enterTo: ''}, 'div');
 
 // Video ReadyStates
 // - Commented are currently unused.
@@ -313,8 +314,29 @@ const VideoPlayerBase = class extends React.Component {
 		};
 	}
 
-	componentWillUpdate () {
+	// Added to set default focus on the media control (play) when controls become visible.
+	componentDidUpdate (prevProps, prevState) {
+		if (
+			this.state.bottomControlsVisible &&
+			!prevState.bottomControlsVisible &&
+			this.player.contains(Spotlight.getCurrent())
+		) {
+			this.focusDefaultMediaControl();
+		}
+	}
+
+	componentWillUpdate (nextProps, nextState) {
 		this.initI18n();
+
+		if (
+			this.state.bottomControlsVisible &&
+			!nextState.bottomControlsVisible &&
+			this.player.contains(Spotlight.getCurrent())
+		) {
+			// set focus to the hidden spottable control - maintaining focus on available spottable
+			// controls, which prevents an addiitional 5-way attempt in order to re-show media controls
+			Spotlight.focus(this.player.querySelector(`.${css.controlsHandleAbove}.${spottableClass}`));
+		}
 	}
 
 	componentDidMount () {
@@ -709,6 +731,19 @@ const VideoPlayerBase = class extends React.Component {
 		}
 	}
 
+	handleSpotlightDownFromSlider = (ev) => {
+		if (!this.state.mediaControlsDisabled && !this.state.more) {
+			ev.preventDefault();
+			ev.stopPropagation();
+			Spotlight.setPointerMode(false);
+			this.focusDefaultMediaControl();
+		}
+	}
+
+	focusDefaultMediaControl = () => {
+		return Spotlight.focus(this.player.querySelector(`.${css.bottom} .${spotlightDefaultClass}.${spottableClass}`));
+	};
+
 	//
 	// Player Interaction events
 	//
@@ -756,6 +791,10 @@ const VideoPlayerBase = class extends React.Component {
 		});
 	}
 
+	setPlayerRef = (node) => {
+		this.player = node;
+	}
+
 	setVideoRef = (video) => {
 		this.videoReady = !!video;
 		this.video = video;
@@ -778,7 +817,7 @@ const VideoPlayerBase = class extends React.Component {
 		const moreDisabled = !(this.state.more);
 
 		return (
-			<div className={css.videoPlayer + (className ? ' ' + className : '')} style={style} onKeyDown={this.activityDetected}>
+			<div className={css.videoPlayer + (className ? ' ' + className : '')} style={style} onKeyDown={this.activityDetected} ref={this.setPlayerRef}>
 				{/* Video Section */}
 				<Video
 					{...rest}
@@ -814,6 +853,7 @@ const VideoPlayerBase = class extends React.Component {
 							value={this.state.percentagePlayed}
 							onChange={this.onSliderChange}
 							onSpotlightUp={this.hideControls}
+							onSpotlightDown={this.handleSpotlightDownFromSlider}
 						/>}
 
 						<MediaControls
