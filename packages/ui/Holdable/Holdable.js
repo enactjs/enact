@@ -190,9 +190,8 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		onDocumentPointerMove = (ev) => {
-			const e = this.downEvent;
-			if (outOfRange(ev.clientY, e.clientY, moveTolerance) || outOfRange(ev.clientX, e.clientX, moveTolerance)) {
+		onDocumentPointerMove = () => {
+			if (this.pointerOutOfBounds) {
 				this.endOrSuspendHold();
 			}
 		}
@@ -228,6 +227,8 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		onPointerEnter = (ev) => {
+			this.pointerOutOfBounds = false;
+			once('mouseleave', this.onPointerLeave, this._reactInternalInstance._hostParent._hostNode.firstElementChild);
 			if (!this.props.disabled) {
 				if (resume && endHold === 'onLeave' && this.downEvent) {
 					this.resumeHold();
@@ -257,6 +258,7 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 					this.endHold();
 				}
 			}
+			this.pointerOutOfBounds = true;
 			forwardPointerLeave(ev, this.props);
 		}
 
