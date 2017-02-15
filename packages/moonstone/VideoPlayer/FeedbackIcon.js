@@ -2,22 +2,10 @@ import kind from '@enact/core/kind';
 import React from 'react';
 
 import Icon from '../Icon';
+import iconMap from './FeedbackIcons.js';
 
 import css from './Feedback.less';
 
-const states = {
-	play          : {before: null,             after: 'play'},
-	pause         : {before: null,             after: 'pause'},
-	rewind        : {before: 'backward',       after: null},
-	slowRewind    : {before: 'pausebackward',  after: null},
-	fastForward   : {before: null,             after: 'forward'},
-	slowForward   : {before: null,             after: 'pauseforward'},
-	jumpBackward  : {before: 'skipbackward',   after: null},
-	jumpForward   : {before: null,             after: 'skipforward'},
-	jumpToStart   : {before: 'skipbackward',   after: null},
-	jumpToEnd     : {before: null,             after: 'skipforward'},
-	stop          : {before: null,             after: null}
-};
 
 /**
  * Feedback Icon for {@link moonstone/VideoPlayer.Feedback}.
@@ -31,8 +19,15 @@ const FeedbackIconBase = kind({
 	name: 'FeedbackIcon',
 
 	propTypes: {
-		playbackState: React.PropTypes.string,
-		position: React.PropTypes.string
+		/**
+		 * Refers to one of the following possible media playback states.
+		 * "play", "pause", "rewind", "slowRewind", "fastForward", "slowForward", "jumpBackward",
+		 * "jumpForward", "jumpToStart", "jumpToEnd", "stop".
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		children: React.PropTypes.oneOf(Object.keys(iconMap))
 	},
 
 	styles: {
@@ -41,14 +36,13 @@ const FeedbackIconBase = kind({
 	},
 
 	computed: {
-		className: ({playbackState, styler}) => styler.append({
-			shrink: playbackState === 'play' || playbackState === 'pause'
+		children: ({children}) => children && iconMap[children] && iconMap[children].icon,
+		className: ({children, styler}) => styler.append({
+			shrink: children === 'play' || children === 'pause'
 		})
 	},
 
-	render: ({playbackState, position, ...rest}) => {
-
-		const children = states[playbackState] && states[playbackState][position];
+	render: ({children, ...rest}) => {
 		if (children) {
 			return (
 				<Icon {...rest}>{children}</Icon>
