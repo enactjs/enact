@@ -314,6 +314,7 @@ const VideoPlayerBase = class extends React.Component {
 		};
 	}
 
+	// Added to set default focus on the media control (play) when controls become visible.
 	componentDidUpdate (prevProps, prevState) {
 		if (
 			this.state.bottomControlsVisible &&
