@@ -1,3 +1,4 @@
+import {$L} from '@enact/i18n';
 import * as jobs from '@enact/core/jobs';
 import {childrenEquals} from '@enact/core/util';
 import clamp from 'ramda/src/clamp';
@@ -40,16 +41,21 @@ const jobNames = {
 
 const emulateMouseEventsTimeout = 175;
 
-const ariaLabel = {
+const ariaLabelForButton = {
 	horizontal: {
-		dec: ' previous item',
-		inc: ' next item'
+		dec: ' ' + $L('previous item'),
+		inc: ' ' + $L('next item')
 	},
 	vertical: {
-		dec: ' down item',
-		inc: ' up item'
+		dec: ' ' + $L('previous item'), // Should be changed to `down item`
+		inc: ' ' + $L('next item') // Should be changed to `up item`
 	}
 };
+
+const ariaLableForValue = {
+	horizontal: ' ' + $L('change a value with left right button'), // Should be changed to `change a value with next and previous button` string,
+	vertical: ' ' + $L('change a value with up down button')
+}
 
 /**
  * The base component for {@link moonstone/internal/Picker.Picker}.
@@ -510,6 +516,7 @@ const Picker = class extends React.Component {
 			joined,
 			onMouseUp,
 			onSpotlightDisappear,
+			open,
 			orientation,
 			spotlightDisabled,
 			step,
@@ -537,8 +544,9 @@ const Picker = class extends React.Component {
 		const incrementerDisabled = this.isButtonDisabled(step);
 		const classes = this.determineClasses(decrementerDisabled, incrementerDisabled);
 
-		const decAriaLabel = ariaLabel[orientation]['dec'];
-		const incAriaLabel = ariaLabel[orientation]['inc'];
+		const decAriaLabelForButton = ariaLabelForButton[orientation]['dec'];
+		const incAriaLabelForButton = ariaLabelForButton[orientation]['inc'];
+		const ariaLabelForValue = joined ? ariaLableForValue[orientation] : '';
 
 		// Sometimes this.props.value is not equal to node text content.
 		// For example, when `PM` is shown in AM/PM picker, its value is 1 and its node.textContent is `PM`.
@@ -557,9 +565,9 @@ const Picker = class extends React.Component {
 				onFocus: this.handleFocus,
 				onBlur: this.handleBlur
 			},
-			dec: joined ? null : {'aria-label': valueText + incAriaLabel},
-			inc: joined ? null : {'aria-label': valueText + decAriaLabel},
-			value: {'aria-valuetext': (!joined || (this.state.focus && this.enableAriaValueText)) ? valueText + accessibilityHint : null}
+			dec: joined ? null : {'aria-label': valueText + incAriaLabelForButton},
+			inc: joined ? null : {'aria-label': valueText + decAriaLabelForButton},
+			valueText: {'aria-valuetext': (!joined || joined && open === null || (this.state.focus && this.enableAriaValueText)) ? valueText + accessibilityHint + ariaLabelForValue : null}
 		};
 
 		let arranger;
@@ -588,7 +596,7 @@ const Picker = class extends React.Component {
 					spotlightDisabled={spotlightDisabled}
 				/>
 				<div
-					{...a11yProps.value}
+					{...a11yProps.valueText}
 					className={css.valueWrapper}
 					role="spinbutton"
 				>
