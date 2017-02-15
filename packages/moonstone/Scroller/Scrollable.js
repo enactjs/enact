@@ -674,9 +674,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.verticalScrollability = this.childRef.isVertical();
 
 			if (this.props.positioningOption !== 'byBrowser' && !this.props.hideScrollbars) {
-				// FIXME `onWheel` and `onFocus` don't work on the v8 snapshot.
+				// FIXME `onWheel` don't work on the v8 snapshot.
 				this.containerRef.addEventListener('wheel', this.onWheel);
-				this.childRef.containerRef.addEventListener('focus', this.onFocus, true);
 				// eslint-disable-next-line react/no-did-mount-set-state
 				this.setState({
 					isHorizontalScrollbarVisible: this.canScrollHorizontally(),
@@ -699,10 +698,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					});
 				}
 			} else {
-				// FIXME `onWheel` and `onFocus` don't work on the v8 snapshot.
+				// FIXME `onScroll` don't work on the v8 snapshot.
 				this.childRef.containerRef.addEventListener('scroll', this.onScroll);
-				this.childRef.containerRef.addEventListener('focus', this.onFocus, true);
 			}
+			// FIXME `onFocus` don't work on the v8 snapshot.
+			this.childRef.containerRef.addEventListener('focus', this.onFocus, true);
 		}
 
 		componentDidUpdate () {
