@@ -253,12 +253,15 @@ class VirtualListCore extends Component {
 	scrollBounds = {
 		clientWidth: 0,
 		clientHeight: 0,
-		firstVisibleIndex: null,
-		lastVisibleIndex: null,
 		scrollWidth: 0,
 		scrollHeight: 0,
 		maxLeft: 0,
 		maxTop: 0
+	}
+
+	moreInfo = {
+		firstVisibleIndex: null,
+		lastVisibleIndex: null
 	}
 
 	primary = null
@@ -290,6 +293,8 @@ class VirtualListCore extends Component {
 	isHorizontal = () => !this.isPrimaryDirectionVertical
 
 	getScrollBounds = () => this.scrollBounds
+
+	getMoreInfo = () => this.moreInfo
 
 	getGridPosition (index) {
 		const
@@ -552,7 +557,7 @@ class VirtualListCore extends Component {
 	positionItems ({updateFrom, updateTo}) {
 		const
 			{positioningOption} = this.props,
-			{isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, scrollBounds, scrollPosition} = this;
+			{isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, scrollPosition, moreInfo} = this;
 
 		// we only calculate position of the first child
 		let
@@ -591,8 +596,8 @@ class VirtualListCore extends Component {
 
 		this.updateFrom = updateFrom;
 		this.updateTo = updateTo;
-		scrollBounds.firstVisibleIndex = firstVisibleIndex;
-		scrollBounds.lastVisibleIndex = lastVisibleIndex;
+		moreInfo.firstVisibleIndex = firstVisibleIndex;
+		moreInfo.lastVisibleIndex = lastVisibleIndex;
 	}
 
 	composeStyle (style, width, height, ...rest) {

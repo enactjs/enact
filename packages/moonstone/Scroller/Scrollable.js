@@ -448,15 +448,15 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		// call scroll callbacks
 
 		doScrollStart () {
-			this.props.onScrollStart({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop});
+			this.props.onScrollStart({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.moreInfo});
 		}
 
 		doScrolling () {
-			this.props.onScroll({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop});
+			this.props.onScroll({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.moreInfo});
 		}
 
 		doScrollStop () {
-			this.props.onScrollStop({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, firstVisibleIndex: this.bounds.firstVisibleIndex, lastVisibleIndex: this.bounds.lastVisibleIndex});
+			this.props.onScrollStop({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.moreInfo});
 		}
 
 		// update scroll position
@@ -664,6 +664,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		componentDidMount () {
 			this.bounds = this.childRef.getScrollBounds();
+			if (this.childRef.getMoreInfo) {
+				this.moreInfo = this.childRef.getMoreInfo();
+			}
+
 			this.horizontalScrollability = this.childRef.isHorizontal();
 			this.verticalScrollability = this.childRef.isVertical();
 
