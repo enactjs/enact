@@ -60,7 +60,7 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 
 			/**
 			 * When `true`, the [button]{@glossary button} is shown as disabled and does not
-			 * generate tap [events]{@glossary event}.
+			 * generate `onClick` [events]{@glossary event}.
 			 *
 			 * @type {Boolean}
 			 * @default false

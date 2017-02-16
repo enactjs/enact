@@ -6,6 +6,7 @@
  */
 
 import factory from '@enact/core/factory';
+import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
 import {Spottable} from '@enact/spotlight';
@@ -45,7 +46,7 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) => kind({
 
 		/**
 		 * When `true`, the [button]{@glossary button} is shown as disabled and does not
-		 * generate tap [events]{@glossary event}.
+		 * generate `onClick` [events]{@glossary event}.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -125,6 +126,13 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) => kind({
 		className: ({backgroundOpacity, minWidth, pressed, selected, small, styler}) => styler.append(
 			{pressed, small, minWidth, selected},
 			backgroundOpacity
+		)
+	},
+
+	handlers: {
+		onClick: handle(
+			forProp('disabled', false),
+			forward('onClick')
 		)
 	},
 
