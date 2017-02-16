@@ -96,6 +96,14 @@ const ExpandablePickerBase = kind({
 		onChange: React.PropTypes.func,
 
 		/**
+		 * Callback to be called when a condition occurs which should cause the expandable to close
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onClose: React.PropTypes.func,
+
+		/**
 		 * Callback to be called when an item is picked.
 		 *
 		 * @type {Function}

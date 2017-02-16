@@ -1,6 +1,8 @@
 import {forward} from '@enact/core/handle';
+import deprecate from '@enact/core/internal/deprecate';
 import hoc from '@enact/core/hoc';
 import React from 'react';
+
 
 const STATE = {
 	inactive: 0,	// Marquee is not necessary (render or focus not happened)
@@ -77,6 +79,19 @@ const defaultConfig = {
 	 * @default false
 	 * @memberof moonstone/Marquee.MarqueeController.defaultConfig
 	 */
+	marqueeOnFocus: false,
+
+	/**
+	 * Deprecated: When `true`, any `onFocus` events that bubble to the
+	 * controller will start the contained Marquee instances. This is useful
+	 * when a component contains Marquee instances that need to be started with
+	 * sibling components are focused.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @memberof moonstone/Marquee.MarqueeController.defaultConfig
+	 * @deprecated since 1.0.0-beta.3, replaced by `marqueeOnFocus`
+	 */
 	startOnFocus: false
 };
 
@@ -90,9 +105,13 @@ const defaultConfig = {
  * @public
  */
 const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
-	const {startOnFocus} = config;
+	const {marqueeOnFocus, startOnFocus} = config;
 	const forwardBlur = forward('onBlur');
 	const forwardFocus = forward('onFocus');
+
+	if (__DEV__ && typeof startOnFocus !== 'undefined') {
+		deprecate({name: 'startOnFocus', since: '1.0.0-beta.3', replacedBy: 'marqueeOnFocus', until: '1.0.0'});
+	}
 
 	return class extends React.Component {
 		static displayName = 'MarqueeController'
@@ -167,8 +186,10 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{undefined}
 		 */
 		handleStart = (component) => {
-			this.markAll(STATE.ready);
-			this.dispatch('start', component);
+			if (!this.anyRunning()) {
+				this.markAll(STATE.ready);
+				this.dispatch('start', component);
+			}
 		}
 
 		/*
@@ -234,7 +255,11 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 					// unnecessary and is therefore not awaiting a finish
 					if (action === 'start' && complete) {
 						controlled.state = STATE.ready;
+					} else {
+						controlled.state = STATE.active;
 					}
+				} else if (component === controlledComponent) {
+					controlled.state = STATE.active;
 				}
 			});
 		}
@@ -298,7 +323,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		render () {
 			let props = this.props;
 
-			if (startOnFocus) {
+			if (marqueeOnFocus || startOnFocus) {
 				props = {
 					...this.props,
 					onBlur: this.handleBlur,

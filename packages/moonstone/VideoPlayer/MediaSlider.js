@@ -67,6 +67,7 @@ const MediaSliderBase = kind({
 				min={0}
 				max={1}
 				step={0.00001}
+				knobStep={0.05}
 			/>
 		</div>
 	)

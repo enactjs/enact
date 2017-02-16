@@ -21,9 +21,14 @@ const HoldableIconButton = Holdable(IconButton);
 const IncrementSliderButtonBase = kind({
 	name: 'IncrementSliderButton',
 
+	propTypes: /** @lends moonstone/IncrementSlider.IncrementSliderButton.prototype */ {
+		disabled: React.PropTypes.bool,
+		onClick: React.PropTypes.func
+	},
+
 	handlers: {
 		onClick: (ev, {disabled, onClick}) => {
-			if (!disabled) {
+			if (!disabled && onClick) {
 				onClick(ev);
 			}
 		}
