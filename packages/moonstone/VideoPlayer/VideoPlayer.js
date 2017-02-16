@@ -892,6 +892,16 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.jumpBy;
 		delete rest.titleHideDelay;
 
+		let onPlayButtonClick = this.onPlay;
+
+		if (rest.onPlayButtonClick) {
+			onPlayButtonClick = () => {
+				rest.onPlayButtonClick();
+				this.onPlay();
+			}
+			delete rest.onPlayButtonClick;
+		}
+
 		// Handle some cases when the "more" button is pressed
 		const moreDisabled = !(this.state.more);
 
