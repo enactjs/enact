@@ -312,7 +312,6 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			return (
 				<div {...rest} disabled={disabled} onBlur={onBlur} onKeyDown={onKeyDown} onMouseUp={onMouseUp} ref={sliderRef}>
 					<SliderBar
-						onKnobMove={onKnobMove}
 						proportionBackgroundProgress={backgroundProgress}
 						proportionProgress={proportionProgress}
 						ref={sliderBarRef}

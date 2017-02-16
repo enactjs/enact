@@ -18,11 +18,11 @@ import css from './Feedback.less';
 const FeedbackIconBase = kind({
 	name: 'FeedbackIcon',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/VideoPlayer.FeedbackIcon.prototype */ {
 		/**
 		 * Refers to one of the following possible media playback states.
-		 * "play", "pause", "rewind", "slowRewind", "fastForward", "slowForward", "jumpBackward",
-		 * "jumpForward", "jumpToStart", "jumpToEnd", "stop".
+		 * `'play'`, `'pause'`, `'rewind'`, `'slowRewind'`, `'fastForward'`, `'slowForward'`,
+		 * `'jumpBackward'`, `'jumpForward'`, `'jumpToStart'`, `'jumpToEnd'`, `'stop'`.
 		 *
 		 * @type {String}
 		 * @public
