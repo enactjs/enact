@@ -766,7 +766,8 @@ const VideoPlayerBase = class extends React.Component {
 
 		if (rest.onPlayButtonClick) {
 			onPlayButtonClick = () => {
-				rest.onPlayButtonClick();
+				// had to use this.props since rest.onPlayButtonClick gets deleted
+				this.props.onPlayButtonClick();
 				this.onPlay();
 			}
 			delete rest.onPlayButtonClick;
