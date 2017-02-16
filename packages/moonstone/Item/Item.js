@@ -4,6 +4,7 @@
  * @module moonstone/Item
  */
 
+import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 import Slottable from '@enact/ui/Slottable';
@@ -79,6 +80,13 @@ const ItemBase = kind({
 
 	computed: {
 		className: ({inline, styler}) => styler.append({inline})
+	},
+
+	handlers: {
+		onClick: handle(
+			forProp('disabled', false),
+			forward('onClick')
+		)
 	},
 
 	render: ({component: Component, ...rest}) => {

@@ -18,6 +18,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Marquee` to allow disabled marquees to animate
 - `moonstone/Dialog` to marquee `title` and `titleBelow`
 - `moonstone/Marquee.MarqueeController` config option `startOnFocus` to `marqueeOnFocus`. `startOnFocus` is deprecated and will be removed in a future update.
+- `moonstone/Button`, `moonstone/IconButton`, `moonstone/Item` to not forward `onClick` when `disabled`
 
 ### Fixed
 
