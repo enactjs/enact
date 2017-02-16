@@ -142,7 +142,7 @@ const forKey = handle.forKey = curry((name, ev) => {
 });
 
 /**
- * Stops handling if the value of `prop` on the props does not equal `value`
+ * Allows handling to continue if the value of `prop` on the props strictly equals `value`.
  *
  * @example
  *  // submit() called only if props.checked === true
