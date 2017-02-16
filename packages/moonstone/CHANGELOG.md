@@ -11,6 +11,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Slider` now supports `children` which are added to the `Slider`'s knob, and follow it as it moves
 - `moonstone/ExpandableInput` properties `iconAfter` and `iconBefore` to display icons after and before the input, respectively
 - `moonstone/Dialog` property `preserveCase`, which affects `title` text
+- `moonstone/Panels.Viewport` as a stateful component, which manages the last-focused spottable component for each view
 
 ### Changed
 
@@ -18,6 +19,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Marquee` to allow disabled marquees to animate
 - `moonstone/Dialog` to marquee `title` and `titleBelow`
 - `moonstone/Marquee.MarqueeController` config option `startOnFocus` to `marqueeOnFocus`. `startOnFocus` is deprecated and will be removed in a future update.
+- `moonstone/Panels.Panel` sets focus on the last-focused spottable control (if available) after rendering
 
 ### Fixed
 

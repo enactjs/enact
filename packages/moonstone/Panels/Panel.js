@@ -1,18 +1,32 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import Slottable from '@enact/ui/Slottable';
-import {Spotlight, SpotlightContainerDecorator} from '@enact/spotlight';
+import {Spotlight, SpotlightContainerDecorator, spottableClass} from '@enact/spotlight';
 
 import css from './Panel.less';
 
 const spotPanel = (node) => {
-	if (node && !node.contains(document.activeElement)) {
-		const body = node.querySelector('section .spottable');
-		const header = node.querySelector('header .spottable');
-		const spottable = body || header;
+	if (node) {
+		const focusIndex = parseInt(node.getAttribute('data-focus-index'));
 
-		if (spottable) {
-			Spotlight.focus(spottable);
+		if (!isNaN(focusIndex)) {
+			let lastFocusedSpottable;
+
+			if (focusIndex >= 0) {
+				const spottables = node.querySelectorAll(`.${spottableClass}`);
+
+				if (focusIndex < spottables.length) {
+					lastFocusedSpottable = spottables[focusIndex];
+				}
+			}
+
+			const body = node.querySelector('section .spottable');
+			const header = node.querySelector('header .spottable');
+			const spottable = lastFocusedSpottable || body || header;
+
+			if (spottable) {
+				Spotlight.focus(spottable);
+			}
 		}
 	}
 };
