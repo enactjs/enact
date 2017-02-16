@@ -47,15 +47,15 @@ const ariaLabelForButton = {
 		inc: ' ' + $L('next item')
 	},
 	vertical: {
-		dec: ' ' + $L('previous item'), // Should be changed to `down item`
-		inc: ' ' + $L('next item') // Should be changed to `up item`
+		dec: ' ' + $L('previous item'),
+		inc: ' ' + $L('next item')
 	}
 };
 
 const ariaLableForValue = {
-	horizontal: ' ' + $L('change a value with left right button'), // Should be changed to `change a value with next and previous button` string,
+	horizontal: ' ' + $L('change a value with left right button'),
 	vertical: ' ' + $L('change a value with up down button')
-}
+};
 
 /**
  * The base component for {@link moonstone/internal/Picker.Picker}.
@@ -70,15 +70,6 @@ const Picker = class extends React.Component {
 	static displayName = 'Picker'
 
 	static propTypes = /** @lends moonstone/internal/Picker.Picker.prototype */ {
-		/**
-		 * When `false`, screen readers do not read the value in the picker even thought it is updated.
-		 *
-		 * @type {Boolean|null}
-		 * @default false
-		 * @public
-		 */
-		ariaEnable: React.PropTypes.bool,
-
 		/**
 		 * Index for internal ViewManager
 		 *
@@ -111,6 +102,15 @@ const Picker = class extends React.Component {
 		 * @public
 		 */
 		accessibilityHint: React.PropTypes.string,
+
+		/**
+		 * When `false`, screen readers do not read the value in the picker even thought it is updated.
+		 *
+		 * @type {Boolean|null}
+		 * @default false
+		 * @public
+		 */
+		ariaEnable: React.PropTypes.bool,
 
 		/**
 		 * Children from which to pick
@@ -563,11 +563,17 @@ const Picker = class extends React.Component {
 		const a11yProps = {
 			picker: {
 				onFocus: this.handleFocus,
-				onBlur: this.handleBlur
+				onBlur: this.handleBlur,
+				'aria-label': joined && ariaEnable === null ? valueText + accessibilityHint + ariaLabelForValue : null
 			},
 			dec: joined ? null : {'aria-label': valueText + incAriaLabelForButton},
 			inc: joined ? null : {'aria-label': valueText + decAriaLabelForButton},
-			valueText: {'aria-valuetext': (!joined || joined && ariaEnable === null || (this.state.focus && this.enableAriaValueText)) ? valueText + accessibilityHint + ariaLabelForValue : null}
+			valueText: {
+				'aria-valuetext':
+					(!joined || joined && ariaEnable === null) ?
+					valueText + accessibilityHint + ariaLabelForValue :
+					((this.state.focus && this.enableAriaValueText) ? valueText + accessibilityHint : null)
+			}
 		};
 
 		let arranger;
