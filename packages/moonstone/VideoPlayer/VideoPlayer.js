@@ -297,7 +297,6 @@ const VideoPlayerBase = class extends React.Component {
 		this.prevCommand = (props.noAutoPlay ? 'pause' : 'play');
 		this.speedIndex = 0;
 		this.selectPlaybackRates('fastForward');
-		this.startDelayedFeedbackHide();
 
 		this.initI18n();
 
@@ -362,6 +361,7 @@ const VideoPlayerBase = class extends React.Component {
 	componentDidMount () {
 		on('mousemove', this.activityDetected);
 		on('keypress', this.activityDetected);
+		this.startDelayedFeedbackHide();
 	}
 
 	componentWillUnmount () {
