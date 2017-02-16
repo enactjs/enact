@@ -155,10 +155,10 @@ const PopupBase = kind({
 				onHide={onHide}
 			>
 				<div {...rest}>
-					{closeButton}
 					<div className={css.body}>
 						{children}
 					</div>
+					{closeButton}
 				</div>
 			</TransitionContainer>
 		);

@@ -27,11 +27,11 @@ const formatMsg = ({message, name, until, replacedBy, since}) => {
 		}
 		msg += ` Replaced by ${replacedBy}`;
 	}
+	if (name || since || until || replacedBy) {
+		msg += '.';
+	}
 	if (message) {
-		if (name || since || until || replacedBy) {
-			msg += '.';
-		}
-		msg += ` ${message}`;
+		msg += ` ${message}.`;
 	}
 	return msg;
 };

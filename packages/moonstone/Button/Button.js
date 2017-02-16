@@ -5,6 +5,8 @@
  * @module moonstone/Button
  */
 
+import factory from '@enact/core/factory';
+import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
 import {Spottable} from '@enact/spotlight';
@@ -14,7 +16,7 @@ import React, {PropTypes} from 'react';
 import {MarqueeDecorator} from '../Marquee';
 import {TooltipDecorator} from '../TooltipDecorator';
 
-import css from './Button.less';
+import componentCss from './Button.less';
 
 /**
  * {@link moonstone/Button.ButtonBase} is a stateless Button with Moonstone styling
@@ -26,7 +28,7 @@ import css from './Button.less';
  * @ui
  * @public
  */
-const ButtonBase = kind({
+const ButtonBaseFactory = factory({css: componentCss}, ({css}) => kind({
 	name: 'Button',
 
 	propTypes: /** @lends moonstone/Button.ButtonBase.prototype */ {
@@ -44,7 +46,7 @@ const ButtonBase = kind({
 
 		/**
 		 * When `true`, the [button]{@glossary button} is shown as disabled and does not
-		 * generate tap [events]{@glossary event}.
+		 * generate `onClick` [events]{@glossary event}.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -106,7 +108,17 @@ const ButtonBase = kind({
 	},
 
 	styles: {
-		css,
+		css: {
+			...componentCss,
+			/*
+			 * Allowed CSS Class Overrides
+			 *
+			 * * .bg	The background of the button, used on a child of button.
+			 * * .selected	The selected state of the button, applied to the base element.
+			 */
+			bg: css.bg,
+			selected: css.selected
+		},
 		className: 'button'
 	},
 
@@ -114,6 +126,13 @@ const ButtonBase = kind({
 		className: ({backgroundOpacity, minWidth, pressed, selected, small, styler}) => styler.append(
 			{pressed, small, minWidth, selected},
 			backgroundOpacity
+		)
+	},
+
+	handlers: {
+		onClick: handle(
+			forProp('disabled', false),
+			forward('onClick')
 		)
 	},
 
@@ -131,7 +150,7 @@ const ButtonBase = kind({
 			</div>
 		);
 	}
-});
+}));
 
 /**
  * {@link moonstone/Button.Button} is a Button with Moonstone styling, Spottable and
@@ -152,18 +171,24 @@ const ButtonBase = kind({
  * @ui
  * @public
  */
-const Button = Uppercase(
-	TooltipDecorator(
-		MarqueeDecorator(
-			{className: css.marquee},
-			Pressable(
-				Spottable(
-					ButtonBase
+const ButtonFactory = factory(css => {
+	const Base = ButtonBaseFactory(css);
+	return Uppercase(
+		TooltipDecorator(
+			MarqueeDecorator(
+				{className: componentCss.marquee},
+				Pressable(
+					Spottable(
+						Base
+					)
 				)
 			)
 		)
-	)
-);
+	);
+});
+
+const ButtonBase = ButtonBaseFactory();
+const Button = ButtonFactory();
 
 export default Button;
-export {Button, ButtonBase};
+export {Button, ButtonBase, ButtonBaseFactory, ButtonFactory};
