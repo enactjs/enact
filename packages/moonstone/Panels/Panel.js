@@ -17,6 +17,8 @@ const spotPanel = (node) => {
 	}
 };
 
+let panelId = 0;
+
 /**
 * {@link moonstone/Panels.Panel} is the default kind for controls created inside a
 * [moonstone/Panels]{@link moonstone/Panels.Panels} container. A `moonstone/Panels`
@@ -42,8 +44,8 @@ const PanelBase = kind({
 		header: React.PropTypes.node,
 
 		/**
-		 * When `false`, only the `header` is rendered and the body components are not. Setting to
-		 * `true` will cause all components to be rendered and the body components will fade in.
+		 * When `true`, only the `header` is rendered and the body components are not. Setting to
+		 * `false` will cause all components to be rendered and the body components will fade in.
 		 *
 		 * When a Panel is used within {@link moonstone/Panels.Panels},
 		 * {@link moonstone/Panels.ActivityPanels}, or {@link moonstone/Panels.AlwaysViewingPanels},
@@ -54,11 +56,11 @@ const PanelBase = kind({
 		 * @default false
 		 * @public
 		 */
-		showChildren: React.PropTypes.bool
+		hideChildren: React.PropTypes.bool
 	},
 
 	defaultProps: {
-		showChildren: false
+		hideChildren: false
 	},
 
 	styles: {
@@ -67,23 +69,25 @@ const PanelBase = kind({
 	},
 
 	computed: {
-		// In order to spot the body components, we defer spotting until !showChildren. If the Panel
-		// opts out of showChildren support by explicitly setting it to false, it'll spot on first
+		// In order to spot the body components, we defer spotting until !hideChildren. If the Panel
+		// opts out of hideChildren support by explicitly setting it to false, it'll spot on first
 		// render.
-		spotOnRender: ({showChildren}) => showChildren ? null : spotPanel,
-		children: ({children, showChildren}) => showChildren ? null : children,
-		bodyClassName: ({showChildren, styler}) => styler.join({
+		spotOnRender: ({hideChildren}) => hideChildren ? null : spotPanel,
+		children: ({children, hideChildren}) => hideChildren ? null : children,
+		bodyClassName: ({hideChildren, styler}) => styler.join({
 			body: true,
-			visible: !showChildren
-		})
+			visible: !hideChildren
+		}),
+		headerId: () => `panel_${++panelId}_header`,
+		role: ({hideChildren}) => hideChildren ? 'alert' : 'region'
 	},
 
-	render: ({bodyClassName, children, header, spotOnRender, ...rest}) => {
-		delete rest.showChildren;
+	render: ({bodyClassName, children, header, headerId, spotOnRender, ...rest}) => {
+		delete rest.hideChildren;
 
 		return (
-			<article {...rest} ref={spotOnRender}>
-				<div className={css.header}>{header}</div>
+			<article {...rest} aria-live="off" aria-labelledby={headerId} ref={spotOnRender}>
+				<div className={css.header} id={headerId}>{header}</div>
 				<section className={bodyClassName}>{children}</section>
 			</article>
 		);
