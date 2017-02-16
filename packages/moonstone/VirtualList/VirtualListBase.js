@@ -699,26 +699,23 @@ class VirtualListCore extends Component {
 		}
 	}
 
-	updateClientSize = () => {
+	syncClientSize = () => {
 		const
-			{positioningOption} = this.props,
-			node = this.getContainerNode(positioningOption);
+			{props} = this,
+			node = this.getContainerNode(props.positioningOption);
 
 		if (!node) {
 			return;
 		}
 
 		const
-			{isPrimaryDirectionVertical, primary} = this,
-			{clientWidth, clientHeight} = this.getClientSize(node);
+			{clientWidth, clientHeight} = this.getClientSize(node),
+			{scrollBounds} = this;
 
-		if (isPrimaryDirectionVertical) {
-			primary.clientSize = clientHeight;
-		} else {
-			primary.clientSize = clientWidth;
+		if (clientWidth !== scrollBounds.clientWidth || clientHeight !== scrollBounds.clientHeight) {
+			this.calculateMetrics(props);
+			this.updateStatesAndBounds(props);
 		}
-
-		this.updateStatesAndBounds(this.props);
 	}
 
 	// render

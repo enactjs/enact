@@ -699,6 +699,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.horizontalScrollability = this.childRef.isHorizontal();
 			this.verticalScrollability = this.childRef.isVertical();
 
+			// Need to sync calculated client size if it is different from the real size
+			if (this.childRef.syncClientSize) {
+				this.childRef.syncClientSize();
+			}
+
 			if (!this.props.hideScrollbars) {
 				// NOTE: After rendering, we check scrollbar visibility using current bounds info.
 				// You don't need to set this.bounds with current bounds info again, because
@@ -712,10 +717,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						isVerticalScrollbarVisible: curVerticalScrollbarVisible
 					});
 				}
-			}
-
-			if (this.childRef.updateClientSize) {
-				this.childRef.updateClientSize();
 			}
 		}
 
