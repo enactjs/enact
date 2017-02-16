@@ -188,14 +188,14 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			incrementSliderClasses: ({vertical, styler}) => styler.append({vertical, horizontal: !vertical}),
 			decrementIcon: ({decrementIcon, vertical}) => (decrementIcon || (vertical ? 'arrowlargedown' : 'arrowlargeleft')),
 			incrementIcon: ({incrementIcon, vertical}) => (incrementIcon || (vertical ? 'arrowlargeup' : 'arrowlargeright')),
-			calcDecAriaLabel: ({value}) => (value + ' ' + $L('press ok button to decrease the value')),
-			calcIncAriaLabel: ({value}) => (value + ' ' + $L('press ok button to increase the value'))
+			decrementAriaLabel: ({value}) => (`${value} ${$L('press ok button to decrease the value')}`),
+			incrementAriaLabel: ({value}) => (`${value} ${$L('press ok button to increase the value')}`)
 		},
 
-		render: ({calcDecAriaLabel, calcIncAriaLabel, decrementDisabled, decrementIcon, incrementDisabled, incrementIcon, incrementSliderClasses, onIncrement, onDecrement, onSpotlightDisappear, spotlightDisabled, ...rest}) => (
+		render: ({decrementAriaLabel, decrementDisabled, decrementIcon, incrementAriaLabel, incrementDisabled, incrementIcon, incrementSliderClasses, onIncrement, onDecrement, onSpotlightDisappear, spotlightDisabled, ...rest}) => (
 			<div className={incrementSliderClasses}>
 				<IncrementSliderButton
-					aria-label={calcDecAriaLabel}
+					aria-label={decrementAriaLabel}
 					className={css.decrementButton}
 					disabled={decrementDisabled}
 					onClick={onDecrement}
@@ -213,7 +213,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 					spotlightDisabled={spotlightDisabled}
 				/>
 				<IncrementSliderButton
-					aria-label={calcIncAriaLabel}
+					aria-label={incrementAriaLabel}
 					className={css.incrementButton}
 					disabled={incrementDisabled}
 					onClick={onIncrement}

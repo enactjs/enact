@@ -356,6 +356,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					active: !this.state.active
 				});
 			}
+			this.isKnobMoving = false;
 		}
 
 		handleBlur = (ev) => {
@@ -371,6 +372,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleIncrement = () => {
 			if (this.props.disabled) return;
+			this.isKnobMoving = this.state.active;
 
 			const {detachedKnob, knobStep, step} = this.props;
 			const amount = typeof knobStep === 'number' ? knobStep : step;
@@ -379,11 +381,11 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			} else {
 				this.throttleUpdateValueByAmount(amount);
 			}
-			this.isKnobMoving = this.state.active;
 		}
 
 		handleDecrement = () => {
 			if (this.props.disabled) return;
+			this.isKnobMoving = this.state.active;
 
 			const {detachedKnob, knobStep, step} = this.props;
 			const amount = typeof knobStep === 'number' ? knobStep : step;
@@ -392,7 +394,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			} else {
 				this.throttleUpdateValueByAmount(-amount);
 			}
-			this.isKnobMoving = this.state.active;
 		}
 
 		calcAriaValueText = () => {
