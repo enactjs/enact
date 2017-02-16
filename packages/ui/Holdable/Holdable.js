@@ -31,8 +31,6 @@ const keyRelease = 'onKeyUp';
 const pointerDepress = 'onMouseDown';
 const pointerRelease = 'mouseup';
 const pointerEnter = 'onMouseEnter';
-const pointerLeave = 'onMouseLeave';
-const pointerMove = 'onMouseMove';
 
 const isEnter = is('enter');
 
@@ -137,8 +135,6 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 	const forwardKeyRelease = forward(keyRelease);
 	const forwardPointerDepress = forward(pointerDepress);
 	const forwardPointerEnter = forward(pointerEnter);
-	const forwardPointerLeave = forward(pointerLeave);
-	const forwardPointerMove = forward(pointerMove);
 
 	return class Holdable extends React.Component {
 		static propTypes = /** @lends ui/Holdable.Holdable.prototype */ {
@@ -184,15 +180,34 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentWillUnmount () {
 			this.suspendHold();
+			this.clearPointerRelease();
+			this.clearMouseLeave();
+		}
 
+		clearPointerRelease = () => {
 			if (this.onceOnPointerRelease) {
 				off(pointerRelease, this.onceOnPointerRelease);
+				this.onceOnPointerRelease = null;
 			}
 		}
 
-		onDocumentPointerMove = () => {
-			if (this.pointerOutOfBounds) {
-				this.endOrSuspendHold();
+		clearMouseLeave = () => {
+			if (this.onceMouseLeave) {
+				off('mouseleave', this.onceMouseLeave);
+				this.onceMouseLeave = null;
+			}
+		}
+
+		onDocumentPointerMove = (ev) => {
+			if (!this.props.disabled) {
+				if (endHold === 'onMove' && this.downEvent) {
+					const out = outOfRange(ev.clientY, this.downEvent.clientY, moveTolerance) || outOfRange(ev.clientX, this.downEvent.clientX, moveTolerance);
+					if (out && this.holdJob) {
+						this.endOrSuspendHold();
+					} else if (!out && resume && !this.holdJob) {
+						this.resumeHold();
+					}
+				}
 			}
 		}
 
@@ -227,8 +242,7 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		onPointerEnter = (ev) => {
-			this.pointerOutOfBounds = false;
-			once('mouseleave', this.onPointerLeave, this._reactInternalInstance._hostParent._hostNode.firstElementChild);
+			this.onceMouseLeave = once('mouseleave', this.onPointerLeave, ev.currentTarget);
 			if (!this.props.disabled) {
 				if (resume && endHold === 'onLeave' && this.downEvent) {
 					this.resumeHold();
@@ -237,29 +251,15 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			forwardPointerEnter(ev, this.props);
 		}
 
-		onPointerMove = (ev) => {
-			if (!this.props.disabled) {
-				if (endHold === 'onMove' && this.downEvent) {
-					if (outOfRange(ev.clientY, this.downEvent.clientY, moveTolerance) || outOfRange(ev.clientX, this.downEvent.clientX, moveTolerance)) {
-						this.endOrSuspendHold();
-					} else if (resume && !this.holdJob) {
-						this.resumeHold();
-					}
-				}
-			}
-			forwardPointerMove(ev, this.props);
-		}
-
 		onPointerLeave = (ev) => {
-			if (endHold === 'onLeave') {
-				if (resume) {
-					this.suspendHold();
-				} else {
-					this.endHold();
-				}
+			if (ev.fromElement.contains(ev.toElement)) {
+				this.onceMouseLeave = once('mouseleave', this.onPointerLeave, ev.target);
+				return;
 			}
-			this.pointerOutOfBounds = true;
-			forwardPointerLeave(ev, this.props);
+			this.onceMouseLeave = null;
+			if (endHold === 'onLeave') {
+				this.endOrSuspendHold();
+			}
 		}
 
 		beginHold = (ev) => {
@@ -284,6 +284,8 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			this.unsent = null;
 			this.next = null;
 			off('mousemove', this.onDocumentPointerMove);
+			this.clearPointerRelease();
+			this.clearMouseLeave();
 		}
 
 		endOrSuspendHold = () => {
@@ -301,7 +303,9 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 		resumeHold = () => {
 			this.handleHoldPulse();
-			this.holdJob = setInterval(this.handleHoldPulse, frequency);
+			if (!this.holdJob) {
+				this.holdJob = setInterval(this.handleHoldPulse, frequency);
+			}
 		}
 
 		handleHoldPulse = () => {
@@ -342,8 +346,6 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			props[keyRelease] = this.onKeyRelease;
 			props[pointerDepress] = this.onPointerDepress;
 			props[pointerEnter] = this.onPointerEnter;
-			props[pointerLeave] = this.onPointerLeave;
-			props[pointerMove] = this.onPointerMove;
 
 			delete props.onHold;
 			delete props.onHoldPulse;
