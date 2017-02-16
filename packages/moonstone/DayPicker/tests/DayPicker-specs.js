@@ -9,7 +9,7 @@ describe('DayPicker', () => {
 				<DayPicker title="Day Picker" selected={0} />
 			);
 
-			const expected = 'Day Picker Monday';
+			const expected = 'Day Picker Sunday';
 			const actual = subject.prop('aria-label');
 
 			expect(actual).to.equal(expected);
@@ -28,7 +28,7 @@ describe('DayPicker', () => {
 
 		it('should be null when day is not selected', function () {
 			const subject = shallow(
-				<DayPicker title="Day Picker"/>
+				<DayPicker title="Day Picker" />
 			);
 
 			const expected = null;
@@ -39,7 +39,7 @@ describe('DayPicker', () => {
 
 		it('should be null when every day is selected', function () {
 			const subject = shallow(
-				<DayPicker title="Day Picker" selected={[0, 1, 2, 3, 4, 5, 6]}/>
+				<DayPicker title="Day Picker" selected={[0, 1, 2, 3, 4, 5, 6]} />
 			);
 
 			const expected = null;
@@ -50,7 +50,7 @@ describe('DayPicker', () => {
 
 		it('should be null when every weekday is selected', function () {
 			const subject = shallow(
-				<DayPicker title="Day Picker" selected={[1, 2, 3, 4, 5]}/>
+				<DayPicker title="Day Picker" selected={[1, 2, 3, 4, 5]} />
 			);
 
 			const expected = null;
@@ -61,7 +61,7 @@ describe('DayPicker', () => {
 
 		it('should be null when every weekend is selected', function () {
 			const subject = shallow(
-				<DayPicker title="Day Picker" selected={[0, 6]}/>
+				<DayPicker title="Day Picker" selected={[0, 6]} />
 			);
 
 			const expected = null;
