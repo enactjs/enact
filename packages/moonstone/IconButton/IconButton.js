@@ -4,16 +4,18 @@
  * @module moonstone/IconButton
  */
 
+import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React, {PropTypes} from 'react';
 
-import Button from '../Button';
+import {ButtonFactory} from '../Button';
 import Icon from '../Icon';
 
-import css from './IconButton.less';
+import componentCss from './IconButton.less';
 
 const OptimizedIcon = onlyUpdateForKeys(['small', 'children'])(Icon);
+const Button = ButtonFactory({componentCss});
 
 /**
  * {@link moonstone/IconButton.IconButton} is a {@link moonstone/Icon.Icon} that acts like a button.
@@ -32,7 +34,7 @@ const OptimizedIcon = onlyUpdateForKeys(['small', 'children'])(Icon);
  * @ui
  * @public
  */
-const IconButtonBase = kind({
+const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => kind({
 	name: 'IconButton',
 
 	propTypes: /** @lends moonstone/IconButton.IconButton.prototype */ {
@@ -116,7 +118,14 @@ const IconButtonBase = kind({
 			</Button>
 		);
 	}
-});
+}));
+
+const IconButtonBase = IconButtonBaseFactory();
 
 export default IconButtonBase;
-export {IconButtonBase as IconButton, IconButtonBase};
+export {
+	IconButtonBase as IconButton,
+	IconButtonBase,
+	IconButtonBaseFactory as IconButtonFactory,
+	IconButtonBaseFactory
+};
