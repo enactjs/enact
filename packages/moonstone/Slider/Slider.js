@@ -83,7 +83,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 *
 			 * @type {Boolean}
 			 * @default false
-			 * @private
+			 * @public
 			 */
 			detachedKnob: PropTypes.bool,
 
@@ -160,7 +160,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 
 			/**
 			 * The handler to run when the knob moves. This method is only called when running
-			 * `Slider` with `detatchedKnob`. If you need to run a callback without a detached knob
+			 * `Slider` with `detachedKnob`. If you need to run a callback without a detached knob
 			 * use the more traditional `onChange` property.
 			 *
 			 * @type {Function}
@@ -191,7 +191,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			pressed: PropTypes.bool,
 
 			/**
-			 * `scrubbing` only has an effect with a datachedKnob, and is a performance optimization
+			 * `scrubbing` only has an effect with a detachedKnob, and is a performance optimization
 			 * to not allow re-assignment of the knob's value (and therefore position) during direct
 			 * user interaction.
 			 *
