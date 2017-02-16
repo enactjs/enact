@@ -1,5 +1,6 @@
-import kind from '@enact/core/kind';
+import {forProp, forward, handle} from '@enact/core/handle';
 import Holdable from '@enact/ui/Holdable';
+import kind from '@enact/core/kind';
 import IconButton from '../IconButton';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
@@ -27,11 +28,10 @@ const IncrementSliderButtonBase = kind({
 	},
 
 	handlers: {
-		onClick: (ev, {disabled, onClick}) => {
-			if (!disabled && onClick) {
-				onClick(ev);
-			}
-		}
+		onClick: handle(
+			forProp('disabled', false),
+			forward('onClick')
+		)
 	},
 
 	render: ({onClick, ...rest}) => {
