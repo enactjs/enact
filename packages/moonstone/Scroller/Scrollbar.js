@@ -52,11 +52,10 @@ const
 		icon = 'arrowsmall' + direction;
 
 		if (isPressed) {
-			a11yProps.role = 'alert';
+			a11yProps['aria-live'] = 'assertive';
 			a11yProps['aria-label'] = $L(direction.toUpperCase());
-			a11yProps['aria-live'] = 'off';
 		} else {
-			a11yProps.role = 'button';
+			a11yProps['aria-live'] = 'off';
 			a11yProps['aria-label'] = $L('scroll ' + direction);
 		}
 
