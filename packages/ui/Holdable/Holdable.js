@@ -185,7 +185,7 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentWillReceiveProps (nextProps) {
 			if (nextProps.disabled) {
-				this.endhold();
+				this.endHold();
 			}
 		}
 
