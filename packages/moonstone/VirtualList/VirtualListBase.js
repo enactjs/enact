@@ -259,6 +259,11 @@ class VirtualListCore extends Component {
 		maxTop: 0
 	}
 
+	moreInfo = {
+		firstVisibleIndex: null,
+		lastVisibleIndex: null
+	}
+
 	primary = null
 	secondary = null
 
@@ -288,6 +293,8 @@ class VirtualListCore extends Component {
 	isHorizontal = () => !this.isPrimaryDirectionVertical
 
 	getScrollBounds = () => this.scrollBounds
+
+	getMoreInfo = () => this.moreInfo
 
 	getGridPosition (index) {
 		const
@@ -550,11 +557,12 @@ class VirtualListCore extends Component {
 	positionItems ({updateFrom, updateTo}) {
 		const
 			{positioningOption} = this.props,
-			{isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, scrollPosition} = this;
+			{isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, scrollPosition, moreInfo} = this;
 
 		// we only calculate position of the first child
 		let
 			{primaryPosition, secondaryPosition} = this.getGridPosition(updateFrom),
+			firstVisibleIndex = null, lastVisibleIndex = null,
 			width, height;
 
 		primaryPosition -= (positioningOption === 'byItem') ? scrollPosition : 0;
@@ -564,6 +572,13 @@ class VirtualListCore extends Component {
 		// positioning items
 		for (let primaryIndex = updateFrom, secondaryIndex = updateFrom % dimensionToExtent; primaryIndex < updateTo; primaryIndex++) {
 
+			// determine the first and the last visible item
+			if (firstVisibleIndex === null && (primaryPosition + primary.itemSize) > 0) {
+				firstVisibleIndex = primaryIndex;
+			}
+			if (primaryPosition < primary.clientSize) {
+				lastVisibleIndex = primaryIndex;
+			}
 			if (this.updateFrom === null || this.updateTo === null || this.updateFrom > primaryIndex || this.updateTo <= primaryIndex) {
 				this.applyStyleToNewNode(primaryIndex, width, height, primaryPosition, secondaryPosition);
 			} else {
@@ -581,6 +596,8 @@ class VirtualListCore extends Component {
 
 		this.updateFrom = updateFrom;
 		this.updateTo = updateTo;
+		moreInfo.firstVisibleIndex = firstVisibleIndex;
+		moreInfo.lastVisibleIndex = lastVisibleIndex;
 	}
 
 	composeStyle (style, width, height, ...rest) {
