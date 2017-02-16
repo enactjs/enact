@@ -5,6 +5,7 @@
  * @module moonstone/Button
  */
 
+import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
 import {Spottable} from '@enact/spotlight';
@@ -118,11 +119,10 @@ const ButtonBase = kind({
 	},
 
 	handlers: {
-		onClick: (ev, {disabled, onClick}) => {
-			if (!disabled && onClick) {
-				onClick(ev);
-			}
-		}
+		onClick: handle(
+			forProp('disabled', false),
+			forward('onClick')
+		)
 	},
 
 	render: ({children, ...rest}) => {
