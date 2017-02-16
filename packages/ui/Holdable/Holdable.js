@@ -12,7 +12,7 @@ import pick from 'ramda/src/pick';
 import React, {PropTypes} from 'react';
 
 const eventProps = ['clientX', 'clientY', 'pageX', 'pageY', 'screenX', 'screenY',
-	'altKey', 'ctrlKey', 'metaKey', 'shiftKey', 'detail'];
+	'altKey', 'ctrlKey', 'metaKey', 'shiftKey', 'detail', 'type'];
 
 const makeEvent = (type, ev) => {
 	return {...ev, type};
@@ -175,13 +175,18 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			this.pulsing = false;
 			this.unsent = null;
 			this.next = null;
-			this.keyEvent = false;
 		}
 
 		componentWillUnmount () {
 			this.suspendHold();
 			this.clearPointerRelease();
 			this.clearMouseLeave();
+		}
+
+		componentWillReceiveProps (nextProps) {
+			if (nextProps.disabled) {
+				this.endhold();
+			}
 		}
 
 		clearPointerRelease = () => {
@@ -211,37 +216,46 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		onKeyDepress = (ev) => {
+		handleKeyDepress = (ev) => {
 			if (!this.props.disabled) {
-				if (isEnter(ev.keyCode) && !this.holdJob) {
-					this.keyEvent = true;
+				if (isEnter(ev.keyCode) && (!this.downEvent || this.downEvent.type !== 'keydown')) {
 					this.beginHold(pick(eventProps, ev));
+				} else if (!isEnter(ev.keyCode)) {
+					this.endHold();
 				}
 			}
 			forwardKeyDepress(ev, this.props);
 		}
 
-		onKeyRelease = (ev) => {
-			if (isEnter(ev.keyCode)) {
-				this.keyEvent = false;
+		handleKeyRelease = (ev) => {
+			if (isEnter(ev.keyCode) && this.downEvent && this.downEvent.type === 'keydown') {
 				this.endHold();
 			}
 			forwardKeyRelease(ev, this.props);
 		}
 
-		onPointerDepress = (ev) => {
-			if (!this.props.disabled && !this.keyEvent) {
+		// NOTE: While holding enter key you cannot get a mousedown event on Chrome, for whatever
+		// reason, so we can't switch back to a pointer-held hold.  This should not be an issue on
+		// TV, where the same button is used for enter/click
+		handlePointerDepress = (ev) => {
+			if (!this.props.disabled && ev.type === 'mousedown') {	// Spotlight forwards keydown as pointer
 				this.beginHold(pick(eventProps, ev));
+				// We are tracking document level because we need to allow for the 'slop' factor
+				// even if the pointer moves slightly off the element
+				on('mousemove', this.onDocumentPointerMove);
 			}
 			forwardPointerDepress(ev, this.props);
 		}
 
-		onPointerRelease = () => {
-			this.onceOnPointerRelease = null;
-			this.endHold();
+		handlePointerRelease = (ev) => {
+			if (this.downEvent && this.downEvent.type === 'mousedown' && ev.type === 'mousedown') {
+				this.onceOnPointerRelease = null;
+				this.endHold();
+			}
 		}
 
-		onPointerEnter = (ev) => {
+		handlePointerEnter = (ev) => {
+			// We track mouseleave here because the react `onMouseLeave` event does not fire
 			this.onceMouseLeave = once('mouseleave', this.onPointerLeave, ev.currentTarget);
 			if (!this.props.disabled) {
 				if (resume && endHold === 'onLeave' && this.downEvent) {
@@ -252,6 +266,7 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		onPointerLeave = (ev) => {
+			// Ensure we really moved out of the element as mouseleave fires even for
 			if (ev.fromElement.contains(ev.toElement)) {
 				this.onceMouseLeave = once('mouseleave', this.onPointerLeave, ev.target);
 				return;
@@ -273,8 +288,9 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.next) {
 				this.holdJob = setInterval(this.handleHoldPulse, frequency);
 			}
-			this.onceOnPointerRelease = once(pointerRelease, this.onPointerRelease);
-			on('mousemove', this.onDocumentPointerMove);
+			if (ev.type === 'mousedown') {
+				this.onceOnPointerRelease = once(pointerRelease, this.handlePointerRelease);
+			}
 		}
 
 		endHold = () => {
@@ -342,10 +358,10 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 		render () {
 			const props = Object.assign({}, this.props);
-			props[keyDepress] = this.onKeyDepress;
-			props[keyRelease] = this.onKeyRelease;
-			props[pointerDepress] = this.onPointerDepress;
-			props[pointerEnter] = this.onPointerEnter;
+			props[keyDepress] = this.handleKeyDepress;
+			props[keyRelease] = this.handleKeyRelease;
+			props[pointerDepress] = this.handlePointerDepress;
+			props[pointerEnter] = this.handlePointerEnter;
 
 			delete props.onHold;
 			delete props.onHoldPulse;
