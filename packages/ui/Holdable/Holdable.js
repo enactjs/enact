@@ -182,6 +182,12 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			this.keyEvent = false;
 		}
 
+		componentWillReceiveProps () {
+			if (this.props.disabled) {
+				this.endHold();
+			}
+		}
+
 		componentWillUnmount () {
 			if (this.holdJob) {
 				this.suspendHold();
