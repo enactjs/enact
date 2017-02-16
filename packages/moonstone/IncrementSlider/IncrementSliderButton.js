@@ -1,4 +1,3 @@
-import {forProp, forward, handle} from '@enact/core/handle';
 import Holdable from '@enact/ui/Holdable';
 import kind from '@enact/core/kind';
 import IconButton from '../IconButton';
@@ -23,15 +22,7 @@ const IncrementSliderButtonBase = kind({
 	name: 'IncrementSliderButton',
 
 	propTypes: /** @lends moonstone/IncrementSlider.IncrementSliderButton.prototype */ {
-		disabled: React.PropTypes.bool,
 		onClick: React.PropTypes.func
-	},
-
-	handlers: {
-		onClick: handle(
-			forProp('disabled', false),
-			forward('onClick')
-		)
 	},
 
 	render: ({onClick, ...rest}) => {
