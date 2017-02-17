@@ -1,18 +1,13 @@
-import {$L} from '@enact/i18n';
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
-import Holdable from '@enact/ui/Holdable';
 import {is} from '@enact/core/keymap';
 import React, {Component, PropTypes} from 'react';
 import ri from '@enact/ui/resolution';
 import Spotlight from '@enact/spotlight';
 import {startJob, stopJob} from '@enact/core/jobs';
 
-import IconButton from '../IconButton';
-
+import ScrollButton from './ScrollButton';
 import css from './Scrollbar.less';
-
-const HoldableIconButton = Holdable({endHold: 'onLeave'}, IconButton);
 
 const
 	verticalProperties = {
@@ -38,9 +33,8 @@ const
 	autoHideDelay = 200,
 	nop = () => {},
 	minThumbSize = ri.scale(4),
-	prepareButton = (isPrev) => (isPressed, isVertical, rtl) => {
-		let
-			a11yProps = {}, icon,
+	prepareButton = (isPrev) => (isVertical, rtl) => {
+		let icon,
 			direction;
 
 		if (isVertical) {
@@ -51,20 +45,11 @@ const
 
 		icon = 'arrowsmall' + direction;
 
-		if (isPressed) {
-			a11yProps['aria-live'] = 'assertive';
-			a11yProps['aria-label'] = $L(direction.toUpperCase());
-		} else {
-			a11yProps['aria-live'] = 'off';
-			a11yProps['aria-label'] = $L('scroll ' + direction);
-		}
-
-		return {a11yProps, icon};
+		return icon;
 	},
 	preparePrevButton = prepareButton(true),
 	prepareNextButton = prepareButton(false),
-	buttonCommonProps = {backgroundOpacity: "transparent", small: true},
-	isEnter = is('enter'),
+
 	// spotlight
 	doc = (typeof window === 'object') ? window.document : {},
 	perf = (typeof window === 'object') ? window.performance : {now: Date.now};
@@ -120,32 +105,15 @@ class Scrollbar extends Component {
 		super(props);
 
 		const
-			{vertical, onNextScroll, onPrevScroll} = props,
-			{onPrevButtonKeyDown, onPrevButtonKeyUp, onNextButtonKeyDown, onNextButtonKeyUp} = this,
-			{prevButtonClass, nextButtonClass, scrollbarClass, thumbClass, sizeProperty, matrix} = ((vertical) ? verticalProperties : horizontalProperties);
+			{vertical} = props,
+			{scrollbarClass, thumbClass, sizeProperty, matrix} = ((vertical) ? verticalProperties : horizontalProperties);
 
 		this.state = {
 			prevButtonDisabled: true,
-			nextButtonDisabled: false,
-			prevButtonPressed: false,
-			nextButtonPressed: false
+			nextButtonDisabled: false
 		};
 
 		this.scrollbarInfo = {scrollbarClass, thumbClass, sizeProperty, matrix};
-		this.prevButtonProps = {
-			className: prevButtonClass,
-			onClick: onPrevScroll,
-			onHoldPulse: onPrevScroll,
-			onKeyDown: onPrevButtonKeyDown,
-			onKeyUp: onPrevButtonKeyUp
-		};
-		this.nextButtonProps = {
-			className: nextButtonClass,
-			onClick: onNextScroll,
-			onHoldPulse: onNextScroll,
-			onKeyDown: onNextButtonKeyDown,
-			onKeyUp: onNextButtonKeyUp
-		}
 
 		this.jobName = perf.now();
 
@@ -180,21 +148,6 @@ class Scrollbar extends Component {
 	thumbRef = null
 	prevButtonNodeRef = null
 	nextButtonNodeRef = null
-
-	pressPrevButton = (isPressed) => (event) => {
-		if (isEnter(event.keyCode) && isPressed !== this.state.prevButtonPressed) {
-			this.setState({prevButtonPressed: isPressed});
-		}
-	}
-	onPrevButtonKeyDown = this.pressPrevButton(true)
-	onPrevButtonKeyUp = this.pressPrevButton(false)
-	pressNextButton = (isPressed) => (event) => {
-		if (isEnter(event.keyCode) && isPressed !== this.state.nextButtonPressed) {
-			this.setState({nextButtonPressed: isPressed});
-		}
-	}
-	onNextButtonKeyDown = this.pressNextButton(true)
-	onNextButtonKeyUp = this.pressNextButton(false)
 
 	updateButtons = (bounds) => {
 		const
@@ -288,23 +241,32 @@ class Scrollbar extends Component {
 
 	render () {
 		const
-			{className, vertical} = this.props,
-			{prevButtonDisabled, nextButtonDisabled, prevButtonPressed, nextButtonPressed} = this.state,
-			{prevButtonProps, nextButtonProps} = this,
+			{className, onNextScroll, onPrevScroll, vertical} = this.props,
+			{prevButtonDisabled, nextButtonDisabled} = this.state,
 			{rtl} = this.context,
 			{scrollbarClass, thumbClass} = this.scrollbarInfo,
 			scrollbarClassNames = classNames(className, scrollbarClass),
-			{a11yProps: prevA11yProps, icon: prevIcon} = preparePrevButton(prevButtonPressed, vertical, rtl),
-			{a11yProps: nextA11yProps, icon: nextIcon} = prepareNextButton(nextButtonPressed, vertical, rtl)
+			prevIcon = preparePrevButton(vertical, rtl),
+			nextIcon = prepareNextButton(vertical, rtl);
 
 		return (
 			<div ref={this.initContainerRef} className={scrollbarClassNames}>
-				<HoldableIconButton {...buttonCommonProps} {...prevButtonProps} {...prevA11yProps} disabled={prevButtonDisabled}>
+				<ScrollButton
+					className={vertical ? css.scrollbarUpButton : css.scrollbarLeftButton}
+					direction={vertical ? 'up' : 'left'}
+					disabled={prevButtonDisabled}
+					onScroll={onPrevScroll}
+				>
 					{prevIcon}
-				</HoldableIconButton>
-				<HoldableIconButton {...buttonCommonProps} {...nextButtonProps} {...nextA11yProps} disabled={nextButtonDisabled}>
+				</ScrollButton>
+				<ScrollButton
+					className={vertical ? css.scrollbarBottomButton : css.scrollbarRightButton}
+					direction={vertical ? 'down' : 'right'}
+					disabled={nextButtonDisabled}
+					onScroll={onNextScroll}
+				>
 					{nextIcon}
-				</HoldableIconButton>
+				</ScrollButton>
 				<div ref={this.initThumbRef} className={thumbClass} />
 			</div>
 		);
