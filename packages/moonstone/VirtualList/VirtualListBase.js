@@ -259,6 +259,11 @@ class VirtualListCore extends Component {
 		maxTop: 0
 	}
 
+	moreInfo = {
+		firstVisibleIndex: null,
+		lastVisibleIndex: null
+	}
+
 	primary = null
 	secondary = null
 
@@ -288,6 +293,8 @@ class VirtualListCore extends Component {
 	isHorizontal = () => !this.isPrimaryDirectionVertical
 
 	getScrollBounds = () => this.scrollBounds
+
+	getMoreInfo = () => this.moreInfo
 
 	getGridPosition (index) {
 		const
@@ -550,11 +557,12 @@ class VirtualListCore extends Component {
 	positionItems ({updateFrom, updateTo}) {
 		const
 			{positioningOption} = this.props,
-			{isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, scrollPosition} = this;
+			{isPrimaryDirectionVertical, dimensionToExtent, moreInfo, primary, secondary, scrollPosition} = this;
 
 		// we only calculate position of the first child
 		let
 			{primaryPosition, secondaryPosition} = this.getGridPosition(updateFrom),
+			firstVisibleIndex = null, lastVisibleIndex = null,
 			width, height;
 
 		primaryPosition -= (positioningOption === 'byItem') ? scrollPosition : 0;
@@ -564,6 +572,13 @@ class VirtualListCore extends Component {
 		// positioning items
 		for (let primaryIndex = updateFrom, secondaryIndex = updateFrom % dimensionToExtent; primaryIndex < updateTo; primaryIndex++) {
 
+			// determine the first and the last visible item
+			if (firstVisibleIndex === null && (primaryPosition + primary.itemSize) > 0) {
+				firstVisibleIndex = primaryIndex;
+			}
+			if (primaryPosition < primary.clientSize) {
+				lastVisibleIndex = primaryIndex;
+			}
 			if (this.updateFrom === null || this.updateTo === null || this.updateFrom > primaryIndex || this.updateTo <= primaryIndex) {
 				this.applyStyleToNewNode(primaryIndex, width, height, primaryPosition, secondaryPosition);
 			} else {
@@ -581,6 +596,8 @@ class VirtualListCore extends Component {
 
 		this.updateFrom = updateFrom;
 		this.updateTo = updateTo;
+		moreInfo.firstVisibleIndex = firstVisibleIndex;
+		moreInfo.lastVisibleIndex = lastVisibleIndex;
 	}
 
 	composeStyle (style, width, height, ...rest) {
@@ -699,26 +716,23 @@ class VirtualListCore extends Component {
 		}
 	}
 
-	updateClientSize = () => {
+	syncClientSize = () => {
 		const
-			{positioningOption} = this.props,
-			node = this.getContainerNode(positioningOption);
+			{props} = this,
+			node = this.getContainerNode(props.positioningOption);
 
 		if (!node) {
 			return;
 		}
 
 		const
-			{isPrimaryDirectionVertical, primary} = this,
-			{clientWidth, clientHeight} = this.getClientSize(node);
+			{clientWidth, clientHeight} = this.getClientSize(node),
+			{scrollBounds} = this;
 
-		if (isPrimaryDirectionVertical) {
-			primary.clientSize = clientHeight;
-		} else {
-			primary.clientSize = clientWidth;
+		if (clientWidth !== scrollBounds.clientWidth || clientHeight !== scrollBounds.clientHeight) {
+			this.calculateMetrics(props);
+			this.updateStatesAndBounds(props);
 		}
-
-		this.updateStatesAndBounds(this.props);
 	}
 
 	// render
