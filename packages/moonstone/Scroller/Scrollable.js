@@ -381,13 +381,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		onFocus = (e) => {
 			if (this.isKeyDown && !this.isDragging) {
-				const item = e.target,
-					positionFn = this.childRef.calculatePositionOnFocus;
-				let spotItem = null;
-
-				if (typeof window !== 'undefined') {
+				const
+					item = e.target,
+					positionFn = this.childRef.calculatePositionOnFocus,
 					spotItem = window.document.activeElement;
-				}
 
 				if (item && item !== this.lastFocusedItem && item === spotItem && positionFn) {
 					const pos = positionFn(item);
@@ -418,9 +415,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					isVertical = this.canScrollVertically(),
 					delta = this.wheel(e, isHorizontal, isVertical);
 
-				if (typeof window !== 'undefined') {
-					window.document.activeElement.blur();
-				}
+				window.document.activeElement.blur();
 				this.childRef.setContainerDisabled(true);
 				this.scrollToAccumulatedTarget(delta, isHorizontal, isVertical);
 			}

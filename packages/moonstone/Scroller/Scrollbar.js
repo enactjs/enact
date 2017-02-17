@@ -154,17 +154,13 @@ class Scrollbar extends Component {
 			currentPos = vertical ? bounds.scrollTop : bounds.scrollLeft,
 			maxPos = vertical ? bounds.maxTop : bounds.maxLeft,
 			shouldDisablePrevButton = currentPos <= 0,
-			shouldDisableNextButton = currentPos >= maxPos;
-		let spotItem = null;
+			shouldDisableNextButton = currentPos >= maxPos,
+			spotItem = window.document.activeElement;
 
 		if (prevButtonDisabled !== shouldDisablePrevButton) {
 			this.setState({prevButtonDisabled: shouldDisablePrevButton});
 		} else if (nextButtonDisabled !== shouldDisableNextButton) {
 			this.setState({nextButtonDisabled: shouldDisableNextButton});
-		}
-
-		if (typeof window !== 'undefined') {
-			spotItem = window.document.activeElement;
 		}
 
 		if (shouldDisablePrevButton && spotItem === prevButtonNodeRef) {
