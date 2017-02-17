@@ -59,7 +59,7 @@ describe('Picker Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should set the aria-valuetext attribute for screen readers to read a value when changing the value in <Picker>', function () {
+	it('should set the aria-valuetext attribute properly to read it when changing the value in <Picker>', function () {
 		const picker = mount(
 			<Picker value={1}>
 				{[1, 2, 3, 4]}
@@ -79,7 +79,7 @@ describe('Picker Specs', () => {
 			</Picker>
 		);
 
-		const expected = '2 next item';
+		const expected = '2 previous item';
 		const actual = picker.find(`.${css.incrementer}`).prop('aria-label');
 
 		expect(actual).to.equal(expected);
@@ -92,13 +92,13 @@ describe('Picker Specs', () => {
 			</Picker>
 		);
 
-		const expected = '2 previous item';
+		const expected = '2 next item';
 		const actual = picker.find(`.${css.decrementer}`).prop('aria-label');
 
 		expect(actual).to.equal(expected);
 	});
 
-	it('should set the aria-valuetext attribute for screen readers to read a value when \'vertical\' and changing the value in <Picker>', function () {
+	it('should set the aria-valuetext attribute to read it when \'vertical\' and changing the value in <Picker>', function () {
 		const picker = mount(
 			<Picker value={1} orientation="vertical">
 				{[1, 2, 3, 4]}
@@ -111,33 +111,33 @@ describe('Picker Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should be null of aria-valuetext when \'joined\'', function () {
+	it('should be undefined of aria-valuetext when \'joined\' before changing the value in <Picker>', function () {
 		const picker = mount(
 			<Picker value={1} joined>
 				{[1, 2, 3, 4]}
 			</Picker>
 		);
 
-		const expected = '2 change a value with left right button';
+		const expected = undefined;
 		const actual = picker.find(`.${css.valueWrapper}`).prop('aria-valuetext');
 
 		expect(actual).to.equal(expected);
 	});
 
-	it('should be null of aria-valuetext when \'joined\' and \'vertical\'', function () {
+	it('should be undefined of aria-valuetext when \'joined\' and \'vertical\' before changing the value in <Picker>', function () {
 		const picker = mount(
 			<Picker value={1} joined orientation="vertical">
 				{[1, 2, 3, 4]}
 			</Picker>
 		);
 
-		const expected = '2 change a value with up down button';
+		const expected = undefined;
 		const actual = picker.find(`.${css.valueWrapper}`).prop('aria-valuetext');
 
 		expect(actual).to.equal(expected);
 	});
 
-	it('should update the aria-label attribute properly in the next icon button of <Picker> after clicking', function () {
+	it('should update the aria-label attribute properly in the next icon button of <Picker> after clicking the next icon button', function () {
 		const picker = mount(
 			<StatefulPicker defaultValue={1}>
 				{[1, 2, 3, 4]}
@@ -153,7 +153,7 @@ describe('Picker Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should update the aria-label attribute properly in the previous icon button of <Picker> after clicking', function () {
+	it('should update the aria-label attribute properly in the previous icon button of <Picker> after clicking the next icon button', function () {
 		const picker = mount(
 			<StatefulPicker defaultValue={1}>
 				{[1, 2, 3, 4]}
@@ -170,7 +170,7 @@ describe('Picker Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should update aria-valuetext attribute properly for screen readers to read a value when changing the value in <Picker> after clicking', function () {
+	it('should update aria-valuetext attribute properly to read it when changing the value in <Picker> after clicking the next icon button', function () {
 		const picker = mount(
 			<StatefulPicker defaultValue={1}>
 				{[1, 2, 3, 4]}
@@ -187,7 +187,7 @@ describe('Picker Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should update the aria-label attribute properly in the up icon button of <Picker> after clicking when \'vertical\'', function () {
+	it('should update the aria-label attribute properly in the previous icon button of <Picker> after clicking the previous icon button when \'vertical\'', function () {
 		const picker = mount(
 			<StatefulPicker defaultValue={1} orientation="vertical">
 				{[1, 2, 3, 4]}
@@ -197,14 +197,13 @@ describe('Picker Specs', () => {
 
 		incrementer.simulate('click');
 
-		// Even though clicking the icon button with `css.incrementer` in a <Picker>, the value of the <Picker> decrease. So the expected value is not 3 but 1.
-		const expected = '1 next item';
+		const expected = '1 previous item';
 		const actual = incrementer.prop('aria-label');
 
 		expect(actual).to.equal(expected);
 	});
 
-	it('should update the aria-label attribute properly in the down icon button of <Picker> after clicking when \'vertical\'', function () {
+	it('should update the aria-label attribute properly in the next icon button of <Picker> after clicking the previous icon button when \'vertical\'', function () {
 		const picker = mount(
 			<StatefulPicker defaultValue={1} orientation="vertical">
 				{[1, 2, 3, 4]}
@@ -215,14 +214,13 @@ describe('Picker Specs', () => {
 
 		incrementer.simulate('click');
 
-		// Even though clicking the icon button with `css.incrementer` in a <Picker>, the value of the <Picker> decrease. So the expected value is not 3 but 1.
-		const expected = '1 previous item';
+		const expected = '1 next item';
 		const actual = decrementer.prop('aria-label');
 
 		expect(actual).to.equal(expected);
 	});
 
-	it('should update aria-valuetext attribute properly for screen readers to read a value when \'vertical\' and changing the value in <Picker> after clicking', function () {
+	it('should update aria-valuetext attribute properly to read it when \'vertical\' and changing the value in <Picker> after clicking the previous icon button', function () {
 		const picker = mount(
 			<StatefulPicker defaultValue={1} orientation="vertical">
 				{[1, 2, 3, 4]}
@@ -233,14 +231,13 @@ describe('Picker Specs', () => {
 
 		incrementer.simulate('click');
 
-		// Even though clicking the icon button with `css.incrementer` in a <Picker>, the value of the <Picker> decrease. So the expected value is not 3 but 1.
 		const expected = '1';
 		const actual = valueWrapper.prop('aria-valuetext');
 
 		expect(actual).to.equal(expected);
 	});
 
-	it('should update aria-valuetext attribute properly for screen readers to read a value when \'joined\' and changing the value in <Picker> after clicking', function () {
+	it('should update aria-valuetext attribute properly to read it when \'joined\' and changing the value in <Picker> after clicking the next icon button', function () {
 		const picker = mount(
 			<StatefulPicker defaultValue={1} joined>
 				{[1, 2, 3, 4]}
@@ -251,13 +248,13 @@ describe('Picker Specs', () => {
 
 		incrementer.simulate('click');
 
-		const expected = '3 change a value with left right button';
+		const expected = '3';
 		const actual = valueWrapper.prop('aria-valuetext');
 
 		expect(actual).to.equal(expected);
 	});
 
-	it('should update aria-valuetext attribute properly for screen readers to read a value when \'joined\', \'vertical\', and changing the value in <Picker> after clicking', function () {
+	it('should update aria-valuetext attribute properly to read it when \'joined\', \'vertical\', and changing the value in <Picker> after clicking the previous icon button', function () {
 		const picker = mount(
 			<StatefulPicker defaultValue={1} joined orientation="vertical">
 				{[1, 2, 3, 4]}
@@ -268,8 +265,7 @@ describe('Picker Specs', () => {
 
 		incrementer.simulate('click');
 
-		// Even though clicking the icon button with `css.incrementer` in a <Picker>, the value of the <Picker> decrease. So the expected value is not 3 but 1.
-		const expected = '1 change a value with up down button';
+		const expected = '1';
 		const actual = valueWrapper.prop('aria-valuetext');
 
 		expect(actual).to.equal(expected);
