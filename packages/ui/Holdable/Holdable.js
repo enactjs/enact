@@ -182,6 +182,12 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			this.keyEvent = false;
 		}
 
+		componentWillReceiveProps (nextProps) {
+			if (nextProps.disabled) {
+				this.endHold();
+			}
+		}
+
 		componentWillUnmount () {
 			if (this.holdJob) {
 				this.suspendHold();
@@ -197,6 +203,8 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 				if (isEnter(ev.keyCode) && !this.holdJob) {
 					this.keyEvent = true;
 					this.beginHold(pick(eventProps, ev));
+				} else if (this.holdJob) {
+					this.endHold();
 				}
 			}
 			forwardKeyDepress(ev, this.props);
