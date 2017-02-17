@@ -339,6 +339,28 @@ const VideoPlayerBase = class extends React.Component {
 		this.startDelayedFeedbackHide();
 	}
 
+	componentWillReceiveProps (nextProps) {
+		// Detect a change to the video source and reload if necessary.
+		if (nextProps.children) {
+			let prevSource, nextSource;
+
+			React.Children.forEach(this.props.children, (child) => {
+				if (child.type === 'source') {
+					prevSource = child.props.src;
+				}
+			});
+			React.Children.forEach(nextProps.children, (child) => {
+				if (child.type === 'source') {
+					nextSource = child.props.src;
+				}
+			});
+
+			if (prevSource !== nextSource) {
+				this.reloadVideo();
+			}
+		}
+	}
+
 	componentWillUpdate (nextProps, nextState) {
 		this.initI18n();
 
@@ -361,28 +383,6 @@ const VideoPlayerBase = class extends React.Component {
 			this.player.contains(Spotlight.getCurrent())
 		) {
 			this.focusDefaultMediaControl();
-		}
-	}
-
-	componentWillReceiveProps (nextProps) {
-		// Detect a change to the video source and reload if necessary.
-		if (nextProps.children) {
-			let prevSource, nextSource;
-
-			React.Children.forEach(this.props.children, (child) => {
-				if (child.type === 'source') {
-					prevSource = child.props.src;
-				}
-			});
-			React.Children.forEach(nextProps.children, (child) => {
-				if (child.type === 'source') {
-					nextSource = child.props.src;
-				}
-			});
-
-			if (prevSource !== nextSource) {
-				this.reloadVideo();
-			}
 		}
 	}
 
