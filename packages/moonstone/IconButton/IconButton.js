@@ -17,24 +17,34 @@ import componentCss from './IconButton.less';
 const OptimizedIcon = onlyUpdateForKeys(['small', 'children'])(Icon);
 
 /**
- * {@link moonstone/IconButton.IconButton} is a {@link moonstone/Icon.Icon} that acts like a button.
- * You may specify an image or a font-based icon by setting the children to either the path to the
- * image or a string from the [IconList]{@link moonstone/Icon.IconList}.
+ * {@link moonstone/IconButton.IconButtonFactory} is Factory wrapper around
+ * {@link moonstone/IconButton.IconButton} that allows overriding certain classes of the base
+ * `Button` component at design time. See {@link moonstone/Button.ButtonBaseFactory}.
  *
- * Usage:
- * ```
- * <IconButton onClick={handleClick} small>
- *     plus
- * </IconButton>
- * ```
- *
- * @class IconButton
+ * @class IconButtonFactory
  * @memberof moonstone/IconButton
- * @ui
+ * @factory
  * @public
  */
 const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 	const Button = ButtonFactory({css});
+	/**
+	 * {@link moonstone/IconButton.IconButton} is a {@link moonstone/Icon.Icon} that acts like a button.
+	 * You may specify an image or a font-based icon by setting the children to either the path to the
+	 * image or a string from the [IconList]{@link moonstone/Icon.IconList}.
+	 *
+	 * Usage:
+	 * ```
+	 * <IconButton onClick={handleClick} small>
+	 *     plus
+	 * </IconButton>
+	 * ```
+	 *
+	 * @class IconButton
+	 * @memberof moonstone/IconButton
+	 * @ui
+	 * @public
+	 */
 	return kind({
 		name: 'IconButton',
 
