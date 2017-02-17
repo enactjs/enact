@@ -41,22 +41,6 @@ const jobNames = {
 
 const emulateMouseEventsTimeout = 175;
 
-const ariaLabelForButton = {
-	horizontal: {
-		dec: ' ' + $L('previous item'),
-		inc: ' ' + $L('next item')
-	},
-	vertical: {
-		dec: ' ' + $L('previous item'),
-		inc: ' ' + $L('next item')
-	}
-};
-
-const ariaLableForValue = {
-	horizontal: ' ' + $L('change a value with left right button'),
-	vertical: ' ' + $L('change a value with up down button')
-};
-
 /**
  * The base component for {@link moonstone/internal/Picker.Picker}.
  *
@@ -102,15 +86,6 @@ const Picker = class extends React.Component {
 		 * @public
 		 */
 		accessibilityHint: React.PropTypes.string,
-
-		/**
-		 * When `false`, screen readers do not read the value in the picker even thought it is updated.
-		 *
-		 * @type {Boolean|null}
-		 * @default false
-		 * @public
-		 */
-		ariaEnable: React.PropTypes.bool,
 
 		/**
 		 * Children from which to pick
@@ -180,28 +155,12 @@ const Picker = class extends React.Component {
 		noAnimation: React.PropTypes.bool,
 
 		/**
-		 * Skip to read a value when blured to support a11y.
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onBlur: React.PropTypes.func,
-
-		/**
 		 * A function to run when the control should increment or decrement.
 		 *
 		 * @type {Function}
 		 * @public
 		 */
 		onChange: React.PropTypes.func,
-
-		/**
-		 * Read a value when focused to support a11y.
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onFocus: React.PropTypes.func,
 
 		/**
 		 * Initiate the pressed state
@@ -317,14 +276,13 @@ const Picker = class extends React.Component {
 
 	static defaultProps = {
 		accessibilityHint: '',
-		ariaEnable: null,
 		orientation: 'horizontal',
 		spotlightDisabled: false,
 		step: 1,
 		value: 0
 	}
 
-	enableAriaValueText = false
+	ariaValueText = false
 
 	constructor (props) {
 		super(props);
@@ -333,12 +291,6 @@ const Picker = class extends React.Component {
 			validateRange(props.value, props.min, props.max, Picker.displayName);
 			validateStepped(props.value, props.min, props.step, Picker.displayName);
 			validateStepped(props.max, props.min, props.step, Picker.displayName, '"max"');
-		}
-
-		this.state = {focus: false};
-
-		if (props.ariaEnable === null) {
-			this.enableAriaValueText = true;
 		}
 	}
 
@@ -361,14 +313,6 @@ const Picker = class extends React.Component {
 			this.reverseTransition = true;
 		} else {
 			this.reverseTransition = nextProps.value < this.props.value;
-		}
-
-		if (nextProps.joined) {
-			if (this.props.ariaEnable === false && nextProps.ariaEnable === true || nextProps.ariaEnable === false) {
-				this.enableAriaValueText = false;
-			} else {
-				this.enableAriaValueText = true;
-			}
 		}
 	}
 
@@ -394,6 +338,7 @@ const Picker = class extends React.Component {
 		const {disabled, onChange, step} = this.props;
 		if (!disabled && onChange) {
 			const value = this.computeNextValue(this.adjustDirection(dir) * step);
+			this.ariaValueText = true;
 			onChange({value});
 		}
 	}
@@ -475,24 +420,6 @@ const Picker = class extends React.Component {
 		}
 	}
 
-	handleFocus = (e) => {
-		const {onFocus} = this.props;
-
-		this.setState({focus: true});
-		if (onFocus) {
-			onFocus(e);
-		}
-	}
-
-	handleBlur = (e) => {
-		const {onBlur} = this.props;
-
-		this.setState({focus: false});
-		if (onBlur) {
-			onBlur(e);
-		}
-	}
-
 	determineClasses (decrementerDisabled, incrementerDisabled) {
 		const {joined, orientation, pressed, width} = this.props;
 		return [
@@ -506,10 +433,54 @@ const Picker = class extends React.Component {
 		].join(' ');
 	}
 
+	getA11yProps () {
+		const {accessibilityHint, children, index, joined, orientation, reverse, value} = this.props;
+		let
+			picker = null,
+			dec = null,
+			inc = null,
+			valueText;
+
+		// Sometimes this.props.value is not equal to node text content.
+		// For example, when `PM` is shown in AM/PM picker, its value is `1` and its node.textContent is `PM`.
+		// In this case, Screen readers should read `PM` instead of `1`.
+		if (children && Array.isArray(children)) {
+			valueText = (children[index]) ? children[index].props.children : value;
+		} else if (children && children.props && !children.props.children) {
+			valueText = children.props.children;
+		} else {
+			valueText = value;
+		}
+
+		if (joined) {
+			picker = {};
+
+			if (accessibilityHint) {
+				picker['aria-label'] = valueText + ' ' + accessibilityHint;
+			} else {
+				picker['aria-label'] = valueText + ' ' + (
+					orientation === 'horizontal' ?
+					$L('change a value with left right button') :
+					$L('change a value with up down button')
+				);
+			}
+
+			if (this.ariaValueText) {
+				valueText = {'aria-valuetext': valueText + accessibilityHint};
+			} else {
+				valueText = null;
+			}
+		} else {
+			dec = {'aria-label': valueText + ' ' + (reverse ? $L('previous item') : $L('next item'))};
+			inc = {'aria-label': valueText + ' ' + (reverse ? $L('next item') : $L('previous item'))};
+			valueText = {'aria-valuetext': valueText + accessibilityHint};
+		}
+
+		return {picker, dec, inc, valueText};
+	}
+
 	render () {
 		const {
-			accessibilityHint,
-			ariaEnable,
 			noAnimation,
 			children,
 			disabled,
@@ -520,21 +491,20 @@ const Picker = class extends React.Component {
 			orientation,
 			spotlightDisabled,
 			step,
-			value,
 			width,
 			...rest
 		} = this.props;
 
+		delete rest.accessibilityHint;
 		delete rest.decrementIcon;
 		delete rest.incrementIcon;
 		delete rest.max;
 		delete rest.min;
-		delete rest.onBlur;
 		delete rest.onChange;
-		delete rest.onFocus;
 		delete rest.onMouseDown;
 		delete rest.pressed;
 		delete rest.reverse;
+		delete rest.value;
 		delete rest.wrap;
 
 		const incrementIcon = selectIncIcon(this.props);
@@ -544,37 +514,7 @@ const Picker = class extends React.Component {
 		const incrementerDisabled = this.isButtonDisabled(step);
 		const classes = this.determineClasses(decrementerDisabled, incrementerDisabled);
 
-		const decAriaLabelForButton = ariaLabelForButton[orientation]['dec'];
-		const incAriaLabelForButton = ariaLabelForButton[orientation]['inc'];
-		const ariaLabelForValue = joined ? ariaLableForValue[orientation] : '';
-
-		// Sometimes this.props.value is not equal to node text content.
-		// For example, when `PM` is shown in AM/PM picker, its value is 1 and its node.textContent is `PM`.
-		// In this case, Screen readers should read `PM` instead of 1.
-		let valueText;
-		if (children && Array.isArray(children)) {
-			valueText = (children && children[index]) ? children[index].props.children : value;
-		} else if (children && children.props && !children.props.children) {
-			valueText = children.props.children;
-		} else {
-			valueText = value;
-		}
-
-		const a11yProps = {
-			picker: {
-				onFocus: this.handleFocus,
-				onBlur: this.handleBlur,
-				'aria-label': joined && ariaEnable === null ? valueText + accessibilityHint + ariaLabelForValue : null
-			},
-			dec: joined ? null : {'aria-label': valueText + incAriaLabelForButton},
-			inc: joined ? null : {'aria-label': valueText + decAriaLabelForButton},
-			valueText: {
-				'aria-valuetext':
-					(!joined || joined && ariaEnable === null) ?
-					valueText + accessibilityHint + ariaLabelForValue :
-					((this.state.focus && this.enableAriaValueText) ? valueText + accessibilityHint : null)
-			}
-		};
+		const a11yProps = this.getA11yProps();
 
 		let arranger;
 		if (width && !disabled) {

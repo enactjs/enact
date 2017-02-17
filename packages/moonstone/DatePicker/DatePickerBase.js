@@ -146,15 +146,6 @@ const DatePickerBase = kind({
 		onSpotlightDisappear: React.PropTypes.func,
 
 		/**
-		 * When `true`, the control is rendered in the expanded state, with the contents visible
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		open: React.PropTypes.bool,
-
-		/**
 		 * When `true`, the component cannot be navigated using spotlight.
 		 *
 		 * @type {Boolean}
@@ -185,7 +176,6 @@ const DatePickerBase = kind({
 							case 'd':
 								return (
 									<DateComponentRangePicker
-										ariaEnable={rest.open}
 										key="day-picker"
 										label={noLabels ? null : $L('day')}
 										max={maxDays}
@@ -201,7 +191,6 @@ const DatePickerBase = kind({
 							case 'm':
 								return (
 									<DateComponentRangePicker
-										ariaEnable={rest.open}
 										key="month-picker"
 										label={noLabels ? null : $L('month')}
 										max={maxMonths}
@@ -217,7 +206,6 @@ const DatePickerBase = kind({
 							case 'y':
 								return (
 									<DateComponentRangePicker
-										ariaEnable={rest.open}
 										className={css.year}
 										key="year-picker"
 										label={noLabels ? null : $L('year')}

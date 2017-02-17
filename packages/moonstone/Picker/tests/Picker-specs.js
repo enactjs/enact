@@ -163,7 +163,7 @@ describe('Picker Specs', () => {
 		const decrementer = picker.find(`.${css.decrementer}`);
 
 		incrementer.simulate('click');
-		
+
 		const expected = '3 previous item';
 		const actual = decrementer.prop('aria-label');
 
@@ -180,7 +180,7 @@ describe('Picker Specs', () => {
 		const valueWrapper = picker.find(`.${css.valueWrapper}`);
 
 		incrementer.simulate('click');
-		
+
 		const expected = '3';
 		const actual = valueWrapper.prop('aria-valuetext');
 
@@ -214,7 +214,7 @@ describe('Picker Specs', () => {
 		const decrementer = picker.find(`.${css.decrementer}`);
 
 		incrementer.simulate('click');
-		
+
 		// Even though clicking the icon button with `css.incrementer` in a <Picker>, the value of the <Picker> decrease. So the expected value is not 3 but 1.
 		const expected = '1 previous item';
 		const actual = decrementer.prop('aria-label');
@@ -232,7 +232,7 @@ describe('Picker Specs', () => {
 		const valueWrapper = picker.find(`.${css.valueWrapper}`);
 
 		incrementer.simulate('click');
-		
+
 		// Even though clicking the icon button with `css.incrementer` in a <Picker>, the value of the <Picker> decrease. So the expected value is not 3 but 1.
 		const expected = '1';
 		const actual = valueWrapper.prop('aria-valuetext');
@@ -250,7 +250,7 @@ describe('Picker Specs', () => {
 		const valueWrapper = picker.find(`.${css.valueWrapper}`);
 
 		incrementer.simulate('click');
-		
+
 		const expected = '3 change a value with left right button';
 		const actual = valueWrapper.prop('aria-valuetext');
 
@@ -267,7 +267,7 @@ describe('Picker Specs', () => {
 		const valueWrapper = picker.find(`.${css.valueWrapper}`);
 
 		incrementer.simulate('click');
-		
+
 		// Even though clicking the icon button with `css.incrementer` in a <Picker>, the value of the <Picker> decrease. So the expected value is not 3 but 1.
 		const expected = '1 change a value with up down button';
 		const actual = valueWrapper.prop('aria-valuetext');

@@ -168,15 +168,6 @@ const TimePickerBase = kind({
 		onSpotlightDisappear: React.PropTypes.func,
 
 		/**
-		 * When `true`, the control is rendered in the expanded state, with the contents visible
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		open: React.PropTypes.bool,
-
-		/**
 		 * When `true`, the component cannot be navigated using spotlight.
 		 *
 		 * @type {Boolean}
@@ -210,7 +201,6 @@ const TimePickerBase = kind({
 								case 'k':
 									return (
 										<HourPicker
-											ariaEnable={rest.open}
 											key="hour-picker"
 											label={noLabels ? null : $L('hour')}
 											onChange={onChangeHour}
@@ -226,7 +216,6 @@ const TimePickerBase = kind({
 								case 'm':
 									return (
 										<DateComponentRangePicker
-											ariaEnable={rest.open}
 											key="minute-picker"
 											label={noLabels ? null : $L('minute')}
 											max={59}
@@ -248,7 +237,6 @@ const TimePickerBase = kind({
 					{!hasMeridiem ? null : (
 						// eslint-disable-next-line react/jsx-indent
 						<DateComponentPicker
-							ariaEnable={rest.open}
 							key="meridiem-picker"
 							label={noLabels ? null : $L('meridiem')}
 							onChange={onChangeMeridiem}
