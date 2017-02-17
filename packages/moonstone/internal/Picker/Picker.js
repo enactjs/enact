@@ -451,15 +451,14 @@ const Picker = class extends React.Component {
 		} else {
 			valueText = value;
 		}
-		valueText += ' ';
 
 		if (joined) {
 			picker = {};
 
 			if (accessibilityHint) {
-				picker['aria-label'] = valueText + accessibilityHint;
+				picker['aria-label'] = valueText + ' ' + accessibilityHint;
 			} else {
-				picker['aria-label'] = valueText + (
+				picker['aria-label'] = valueText + ' ' + (
 					orientation === 'horizontal' ?
 					$L('change a value with left right button') :
 					$L('change a value with up down button')
@@ -467,14 +466,14 @@ const Picker = class extends React.Component {
 			}
 
 			if (this.ariaValueText) {
-				valueText = {'aria-valuetext': valueText + accessibilityHint};
+				valueText = {'aria-valuetext': valueText + ' ' + accessibilityHint};
 			} else {
 				valueText = null;
 			}
 		} else {
-			dec = {'aria-label': valueText + (reverse ? $L('previous item') : $L('next item'))};
-			inc = {'aria-label': valueText + (reverse ? $L('next item') : $L('previous item'))};
-			valueText = {'aria-valuetext': valueText + accessibilityHint};
+			dec = {'aria-label': valueText + ' ' + (reverse ? $L('previous item') : $L('next item'))};
+			inc = {'aria-label': valueText + ' ' + (reverse ? $L('next item') : $L('previous item'))};
+			valueText = {'aria-valuetext': valueText + (accessibilityHint ? ' ' + accessibilityHint : '')};
 		}
 
 		return {picker, dec, inc, valueText};
