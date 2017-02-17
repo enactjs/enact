@@ -12,7 +12,7 @@ import ilib from '@enact/i18n';
 import {startJob, stopJob} from '@enact/core/jobs';
 import {on, off} from '@enact/core/dispatcher';
 import Slottable from '@enact/ui/Slottable';
-import {Spotlight, Spottable, SpotlightContainerDecorator, getDirection, spotlightDefaultClass} from '@enact/spotlight';
+import {Spotlight, Spottable, SpotlightContainerDecorator, getDirection, spottableClass, spotlightDefaultClass} from '@enact/spotlight';
 import Video from 'react-html5video';
 
 import Spinner from '../Spinner';
@@ -27,7 +27,6 @@ import Times from './Times';
 
 import css from './VideoPlayer.less';
 
-const spottableClass = 'spottable';
 const SpottableDiv = Spottable('div');
 const Container = SpotlightContainerDecorator({enterTo: ''}, 'div');
 
