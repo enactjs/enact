@@ -5,6 +5,7 @@ import {
 	forEventProp,
 	forKeyCode,
 	forProp,
+	forward,
 	preventDefault,
 	stop
 } from '../handle';
@@ -151,8 +152,55 @@ describe('handle', () => {
 		callback({}, {checked: 1});
 		expect(handler.calledOnce).to.equal(false);
 
-		// // === should pass
+		// === should pass
 		callback({}, {checked: true});
 		expect(handler.calledOnce).to.equal(true);
+	});
+
+	it('should forward events to function specified in provided props', function () {
+		const fName = 'onMyClick';
+		const prop = 'index';
+		const propValue = 0;
+		const spy = sinon.spy();
+
+		const props = {
+			[fName]: spy
+		};
+		const payload = {
+			[prop]: propValue
+		};
+
+		handle(forward(fName))(payload, props);
+
+		const expected = true;
+		const actual = spy.args[0][0][prop] === propValue;
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should export identical internal method names', function () {
+		const methods = [
+			'callOnEvent',
+			'forEventProp',
+			'forKey',
+			'forKeyCode',
+			'forProp',
+			'forward',
+			'preventDefault',
+			'stop',
+			'stopImmediate'
+		];
+		let mismatch = false;
+
+		methods.map((m) => {
+			if (!handle[m]) {
+				mismatch = true;
+			}
+		});
+
+		const expected = false;
+		const actual = mismatch;
+
+		expect(actual).to.equal(expected);
 	});
 });
