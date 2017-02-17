@@ -476,8 +476,38 @@ const VideoPlayerBase = class extends React.Component {
 				updatedState.error
 			);
 
+			// If we're ff or rw and hit the end, just pause the media.
+			if ((el.currentTime === 0 && this.prevCommand === 'rewind') ||
+				(el.currentTime === el.duration && this.prevCommand === 'fastForward')) {
+				this.pause();
+			}
 			this.setState(updatedState);
+
 		}
+	}
+
+	/**
+	 * Programatically plays the current media.
+	 *
+	 * @private
+	 */
+	play = () => {
+		this.speedIndex = 0;
+		this.setPlaybackRate(1);
+		this.send('play');
+		this.prevCommand = 'play';
+	}
+
+	/**
+	 * Programatically plays the current media.
+	 *
+	 * @private
+	 */
+	pause = () => {
+		this.speedIndex = 0;
+		this.setPlaybackRate(1);
+		this.send('pause');
+		this.prevCommand = 'pause';
 	}
 
 	/**
@@ -816,14 +846,10 @@ const VideoPlayerBase = class extends React.Component {
 	onJumpBackward  = () => this.jump(-1 * this.props.jumpBy)
 	onBackward      = () => this.rewind()
 	onPlay          = () => {
-		this.speedIndex = 0;
-		this.setPlaybackRate(1);
 		if (this.state.paused) {
-			this.send('play');
-			this.prevCommand = 'play';
+			this.play();
 		} else {
-			this.send('pause');
-			this.prevCommand = 'pause';
+			this.pause();
 		}
 	}
 	onForward       = () => this.fastForward()
