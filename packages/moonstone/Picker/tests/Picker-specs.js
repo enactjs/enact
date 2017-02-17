@@ -118,6 +118,7 @@ describe('Picker Specs', () => {
 			</Picker>
 		);
 
+		// eslint-disable-next-line no-undefined
 		const expected = undefined;
 		const actual = picker.find(`.${css.valueWrapper}`).prop('aria-valuetext');
 
@@ -131,6 +132,7 @@ describe('Picker Specs', () => {
 			</Picker>
 		);
 
+		// eslint-disable-next-line no-undefined
 		const expected = undefined;
 		const actual = picker.find(`.${css.valueWrapper}`).prop('aria-valuetext');
 
