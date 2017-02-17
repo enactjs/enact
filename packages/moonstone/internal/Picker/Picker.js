@@ -466,7 +466,7 @@ const Picker = class extends React.Component {
 			}
 
 			if (this.ariaValueText) {
-				valueText = {'aria-valuetext': valueText + ' ' + accessibilityHint};
+				valueText = {'aria-valuetext': valueText + (accessibilityHint ? ' ' + accessibilityHint : '')};
 			} else {
 				valueText = null;
 			}
