@@ -333,15 +333,10 @@ const VideoPlayerBase = class extends React.Component {
 		};
 	}
 
-	// Added to set default focus on the media control (play) when controls become visible.
-	componentDidUpdate (prevProps, prevState) {
-		if (
-			this.state.bottomControlsVisible &&
-			!prevState.bottomControlsVisible &&
-			this.player.contains(Spotlight.getCurrent())
-		) {
-			this.focusDefaultMediaControl();
-		}
+	componentDidMount () {
+		on('mousemove', this.activityDetected);
+		on('keypress', this.activityDetected);
+		this.startDelayedFeedbackHide();
 	}
 
 	componentWillUpdate (nextProps, nextState) {
@@ -358,19 +353,15 @@ const VideoPlayerBase = class extends React.Component {
 		}
 	}
 
-	componentDidMount () {
-		on('mousemove', this.activityDetected);
-		on('keypress', this.activityDetected);
-		this.startDelayedFeedbackHide();
-	}
-
-	componentWillUnmount () {
-		off('mousemove', this.activityDetected);
-		off('keypress', this.activityDetected);
-		this.stopRewindJob();
-		this.stopAutoCloseTimeout();
-		this.stopDelayedTitleHide();
-		this.stopDelayedFeedbackHide();
+	// Added to set default focus on the media control (play) when controls become visible.
+	componentDidUpdate (prevProps, prevState) {
+		if (
+			this.state.bottomControlsVisible &&
+			!prevState.bottomControlsVisible &&
+			this.player.contains(Spotlight.getCurrent())
+		) {
+			this.focusDefaultMediaControl();
+		}
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -393,6 +384,15 @@ const VideoPlayerBase = class extends React.Component {
 				this.reloadVideo();
 			}
 		}
+	}
+
+	componentWillUnmount () {
+		off('mousemove', this.activityDetected);
+		off('keypress', this.activityDetected);
+		this.stopRewindJob();
+		this.stopAutoCloseTimeout();
+		this.stopDelayedTitleHide();
+		this.stopDelayedFeedbackHide();
 	}
 
 
