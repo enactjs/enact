@@ -28,6 +28,7 @@ storiesOf('Slider')
 				max={number('max', ChangeableSlider.defaultProps.max)}
 				min={number('min', ChangeableSlider.defaultProps.min)}
 				onChange={action('onChange')}
+				onKnobMove={action('onKnobMove')}
 				step={number('step', ChangeableSlider.defaultProps.step)}
 				vertical={boolean('vertical', ChangeableSlider.defaultProps.vertical)}
 				value={number('value', ChangeableSlider.defaultProps.value)}

@@ -1,3 +1,11 @@
+/**
+ * Exports the {@link moonstone/ExpandableInput.ExpandableInput} and
+ * {@link moonstone/ExpandableInput.ExpandableInputBase} components.
+ * The default export is {@link moonstone/ExpandableInput.ExpandableInput}.
+ *
+ * @module moonstone/ExpandableInput
+ */
+
 import Changeable from '@enact/ui/Changeable';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
@@ -8,15 +16,23 @@ import {Input} from '../Input';
 
 const forwardMouseDown = forward('onMouseDown');
 
+/**
+ * {@link moonstone/ExpandableInput.ExpandableInputBase} is a stateless component that
+ * expands to render a {@link moonstone/Input.Input}.
+ *
+ * @class ExpandableInputBase
+ * @memberof moonstone/ExpandableInput
+ * @ui
+ * @public
+ */
 class ExpandableInputBase extends React.Component {
 	static displayName = 'ExpandableInput'
 
-	static propTypes = {
+	static propTypes = /** @lends moonstone/ExpandableInput.ExpandableInputBase.prototype */ {
 		/**
 		 * When `true`, applies a disabled style and the control becomes non-interactive.
 		 *
 		 * @type {Boolean}
-		 * @default false
 		 * @public
 		 */
 		disabled: React.PropTypes.bool,
@@ -78,7 +94,6 @@ class ExpandableInputBase extends React.Component {
 		 * When `true`, the control is rendered in the expanded state, with the contents visible
 		 *
 		 * @type {Boolean}
-		 * @default false
 		 * @public
 		 */
 		open: React.PropTypes.bool,
@@ -87,7 +102,7 @@ class ExpandableInputBase extends React.Component {
 		 * The placeholder text to display.
 		 *
 		 * @type {String}
-		 * @default ''
+		 * @see moonstone/Input.Input#placeholder
 		 * @public
 		 */
 		placeholder: React.PropTypes.string,
@@ -105,7 +120,7 @@ class ExpandableInputBase extends React.Component {
 		 * The type of input. Accepted values correspond to the standard HTML5 input types.
 		 *
 		 * @type {String}
-		 * @default 'text'
+		 * @see moonstone/Input.Input#type
 		 * @public
 		 */
 		type: React.PropTypes.string,
@@ -114,7 +129,7 @@ class ExpandableInputBase extends React.Component {
 		 * The value of the input.
 		 *
 		 * @type {String|Number}
-		 * @default ''
+		 * @see moonstone/Input.Input#value
 		 * @public
 		 */
 		value: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number])
@@ -222,6 +237,17 @@ class ExpandableInputBase extends React.Component {
 	}
 }
 
+/**
+ * {@link moonstone/ExpandableInput.ExpandableInputBase} is a stateful component that
+ * expands to render a {@link moonstone/Input.Input}.
+ *
+ * @class ExpandableInput
+ * @memberof moonstone/ExpandableInput
+ * @ui
+ * @mixes moonstone/ExpandableItem.Expandable
+ * @mixes ui/Changeable.Changeable
+ * @public
+ */
 const ExpandableInput = Expandable(
 	Changeable(
 		{mutable: true, change: 'onInputChange'},
