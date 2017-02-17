@@ -12,6 +12,7 @@ import ilib from '@enact/i18n';
 import {startJob, stopJob} from '@enact/core/jobs';
 import {on, off} from '@enact/core/dispatcher';
 import Slottable from '@enact/ui/Slottable';
+import {Spotlight, Spottable, SpotlightContainerDecorator, getDirection, spottableClass, spotlightDefaultClass} from '@enact/spotlight';
 import Video from 'react-html5video';
 
 import Spinner from '../Spinner';
@@ -25,6 +26,9 @@ import Feedback from './Feedback';
 import Times from './Times';
 
 import css from './VideoPlayer.less';
+
+const SpottableDiv = Spottable('div');
+const Container = SpotlightContainerDecorator({enterTo: ''}, 'div');
 
 // Video ReadyStates
 // - Commented are currently unused.
@@ -292,7 +296,6 @@ const VideoPlayerBase = class extends React.Component {
 		this.prevCommand = (props.noAutoPlay ? 'pause' : 'play');
 		this.speedIndex = 0;
 		this.selectPlaybackRates('fastForward');
-		this.startDelayedFeedbackHide();
 
 		this.initI18n();
 
@@ -329,22 +332,10 @@ const VideoPlayerBase = class extends React.Component {
 		};
 	}
 
-	componentWillUpdate () {
-		this.initI18n();
-	}
-
 	componentDidMount () {
 		on('mousemove', this.activityDetected);
 		on('keypress', this.activityDetected);
-	}
-
-	componentWillUnmount () {
-		off('mousemove', this.activityDetected);
-		off('keypress', this.activityDetected);
-		this.stopRewindJob();
-		this.stopAutoCloseTimeout();
-		this.stopDelayedTitleHide();
-		this.stopDelayedFeedbackHide();
+		this.startDelayedFeedbackHide();
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -367,6 +358,40 @@ const VideoPlayerBase = class extends React.Component {
 				this.reloadVideo();
 			}
 		}
+	}
+
+	componentWillUpdate (nextProps, nextState) {
+		this.initI18n();
+
+		if (
+			this.state.bottomControlsVisible &&
+			!nextState.bottomControlsVisible &&
+			this.player.contains(Spotlight.getCurrent())
+		) {
+			// set focus to the hidden spottable control - maintaining focus on available spottable
+			// controls, which prevents an addiitional 5-way attempt in order to re-show media controls
+			Spotlight.focus(this.player.querySelector(`.${css.controlsHandleAbove}.${spottableClass}`));
+		}
+	}
+
+	// Added to set default focus on the media control (play) when controls become visible.
+	componentDidUpdate (prevProps, prevState) {
+		if (
+			this.state.bottomControlsVisible &&
+			!prevState.bottomControlsVisible &&
+			this.player.contains(Spotlight.getCurrent())
+		) {
+			this.focusDefaultMediaControl();
+		}
+	}
+
+	componentWillUnmount () {
+		off('mousemove', this.activityDetected);
+		off('keypress', this.activityDetected);
+		this.stopRewindJob();
+		this.stopAutoCloseTimeout();
+		this.stopDelayedTitleHide();
+		this.stopDelayedFeedbackHide();
 	}
 
 
@@ -450,8 +475,38 @@ const VideoPlayerBase = class extends React.Component {
 				updatedState.error
 			);
 
+			// If we're ff or rw and hit the end, just pause the media.
+			if ((el.currentTime === 0 && this.prevCommand === 'rewind') ||
+				(el.currentTime === el.duration && this.prevCommand === 'fastForward')) {
+				this.pause();
+			}
 			this.setState(updatedState);
+
 		}
+	}
+
+	/**
+	 * Programatically plays the current media.
+	 *
+	 * @private
+	 */
+	play = () => {
+		this.speedIndex = 0;
+		this.setPlaybackRate(1);
+		this.send('play');
+		this.prevCommand = 'play';
+	}
+
+	/**
+	 * Programatically plays the current media.
+	 *
+	 * @private
+	 */
+	pause = () => {
+		this.speedIndex = 0;
+		this.setPlaybackRate(1);
+		this.send('pause');
+		this.prevCommand = 'pause';
 	}
 
 	/**
@@ -682,7 +737,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	startAutoCloseTimeout = () => {
-		if (this.props.autoCloseTimeout) {
+		if (this.props.autoCloseTimeout && !this.state.more) {
 			startJob('autoClose' + this.instanceId, this.hideControls, this.props.autoCloseTimeout);
 		}
 	}
@@ -701,7 +756,7 @@ const VideoPlayerBase = class extends React.Component {
 
 	hideControls = () => {
 		this.stopDelayedTitleHide();
-		this.setState({bottomControlsVisible: false});
+		this.setState({bottomControlsVisible: false, more: false});
 	}
 
 	startDelayedTitleHide = () => {
@@ -748,6 +803,25 @@ const VideoPlayerBase = class extends React.Component {
 		}
 	}
 
+	handleKeyDownFromControls = (ev) => {
+		if (getDirection(ev.keyCode) === 'down') {
+			this.hideControls();
+		}
+	}
+
+	handleSpotlightDownFromSlider = (ev) => {
+		if (!this.state.mediaControlsDisabled && !this.state.more) {
+			ev.preventDefault();
+			ev.stopPropagation();
+			Spotlight.setPointerMode(false);
+			this.focusDefaultMediaControl();
+		}
+	}
+
+	focusDefaultMediaControl = () => {
+		return Spotlight.focus(this.player.querySelector(`.${css.bottom} .${spotlightDefaultClass}.${spottableClass}`));
+	};
+
 	//
 	// Player Interaction events
 	//
@@ -771,24 +845,21 @@ const VideoPlayerBase = class extends React.Component {
 	onJumpBackward  = () => this.jump(-1 * this.props.jumpBy)
 	onBackward      = () => this.rewind()
 	onPlay          = () => {
-		this.speedIndex = 0;
-		this.setPlaybackRate(1);
 		if (this.state.paused) {
-			this.send('play');
-			this.prevCommand = 'play';
+			this.play();
 		} else {
-			this.send('pause');
-			this.prevCommand = 'pause';
+			this.pause();
 		}
 	}
 	onForward       = () => this.fastForward()
 	onJumpForward   = () => this.jump(this.props.jumpBy)
 	onMoreClick     = () => {
-		this.startAutoCloseTimeout();	// Interupt and restart the timer since "more" button was clicked.
 		if (this.state.more) {
+			this.startAutoCloseTimeout();	// Restore the timer since we are leaving "more.
 			// Restore the title-hide now that we're finished with "more".
 			this.startDelayedTitleHide();
 		} else {
+			this.stopAutoCloseTimeout();	// Interupt the timer since controls should not hide while viewing "more".
 			// Interrupt the title-hide since we don't want it hiding autonomously in "more".
 			this.stopDelayedTitleHide();
 		}
@@ -796,6 +867,10 @@ const VideoPlayerBase = class extends React.Component {
 			more: !this.state.more,
 			titleVisible: true
 		});
+	}
+
+	setPlayerRef = (node) => {
+		this.player = node;
 	}
 
 	setVideoRef = (video) => {
@@ -821,7 +896,7 @@ const VideoPlayerBase = class extends React.Component {
 		const moreDisabled = !(this.state.more);
 
 		return (
-			<div className={css.videoPlayer + (className ? ' ' + className : '')} style={style}>
+			<div className={css.videoPlayer + (className ? ' ' + className : '')} style={style} onKeyDown={this.activityDetected} ref={this.setPlayerRef}>
 				{/* Video Section */}
 				<Video
 					{...rest}
@@ -834,12 +909,12 @@ const VideoPlayerBase = class extends React.Component {
 					{children}
 				</Video>
 
-				<Overlay onClick={this.onVideoClick} onMouseMove={this.onVideoMouseMove}>
+				<Overlay onClick={this.onVideoClick}>
 					{this.state.loading ? <Spinner centered /> : null}
 				</Overlay>
 
 				{this.state.bottomControlsVisible ? <div className={css.fullscreen + ' enyo-fit scrim'}>
-					<div className={css.bottom}>
+					<Container className={css.bottom}>
 						{/* Info Section: Title, Description, Times */}
 						<div className={css.infoFrame}>
 							<MediaTitle
@@ -857,6 +932,8 @@ const VideoPlayerBase = class extends React.Component {
 							value={this.state.percentagePlayed}
 							onChange={this.onSliderChange}
 							onKnobMove={this.handleKnobMove}
+							onSpotlightUp={this.hideControls}
+							onSpotlightDown={this.handleSpotlightDownFromSlider}
 						>
 							<div className={css.sliderTooltip}>
 								<Feedback playbackState={this.prevCommand} visible={this.state.feedbackVisible} >
@@ -882,11 +959,19 @@ const VideoPlayerBase = class extends React.Component {
 							playPauseIcon={this.state.playPauseIcon}
 							rightComponents={rightComponents}
 							showMoreComponents={this.state.more}
+							onKeyDown={this.handleKeyDownFromControls}
 						>
 							{children}
 						</MediaControls>
-					</div>
+					</Container>
 				</div> : null}
+				<SpottableDiv
+					// This captures spotlight focus for use with 5-way.
+					// It's non-visible but lives at the top of the VideoPlayer.
+					className={css.controlsHandleAbove}
+					onSpotlightDown={this.showControls}
+					onClick={this.showControls}
+				/>
 			</div>
 		);
 	}
