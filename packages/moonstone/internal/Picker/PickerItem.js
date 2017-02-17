@@ -13,11 +13,9 @@ const PickerItemBase = kind({
 		className: 'item'
 	},
 
-	render: (props) => {
-		return (
-			<MarqueeText {...props} marqueeCentered />
-		);
-	}
+	render: (props) => (
+		<MarqueeText {...props} marqueeCentered />
+	)
 });
 
 export default PickerItemBase;
