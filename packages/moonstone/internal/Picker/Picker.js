@@ -434,7 +434,9 @@ const Picker = class extends React.Component {
 	}
 
 	getA11yProps () {
-		const {accessibilityHint, children, index, joined, orientation, reverse, value} = this.props;
+		const
+			{accessibilityHint, children, index, joined, orientation, reverse, value} = this.props,
+			accessibilityHintText = accessibilityHint ? ' ' + accessibilityHint : '';
 		let
 			picker = null,
 			dec = null,
@@ -455,25 +457,21 @@ const Picker = class extends React.Component {
 		if (joined) {
 			picker = {};
 
-			if (accessibilityHint) {
-				picker['aria-label'] = valueText + ' ' + accessibilityHint;
-			} else {
-				picker['aria-label'] = valueText + ' ' + (
-					orientation === 'horizontal' ?
-					$L('change a value with left right button') :
-					$L('change a value with up down button')
-				);
-			}
+			picker['aria-label'] = valueText + accessibilityHintText + ' ' + (
+				orientation === 'horizontal' ?
+				$L('change a value with left right button') :
+				$L('change a value with up down button')
+			);
 
 			if (this.ariaValueText) {
-				valueText = {'aria-valuetext': valueText + (accessibilityHint ? ' ' + accessibilityHint : '')};
+				valueText = {'aria-valuetext': valueText + accessibilityHintText};
 			} else {
 				valueText = null;
 			}
 		} else {
 			dec = {'aria-label': valueText + ' ' + (reverse ? $L('previous item') : $L('next item'))};
 			inc = {'aria-label': valueText + ' ' + (reverse ? $L('next item') : $L('previous item'))};
-			valueText = {'aria-valuetext': valueText + (accessibilityHint ? ' ' + accessibilityHint : '')};
+			valueText = {'aria-valuetext': valueText + accessibilityHintText};
 		}
 
 		return {picker, dec, inc, valueText};
