@@ -24,8 +24,6 @@ const
 	pixelPerLine = ri.scale(39) * scrollWheelMultiplierForDeltaPixel,
 	paginationPageMultiplier = 0.8,
 	epsilon = 1,
-	// spotlight
-	doc = (typeof window === 'object') ? window.document : {},
 	animationDuration = 1000;
 
 /**
@@ -184,6 +182,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		// component info
 		childRef = null
+		containerRef = null
 
 		// scroll animator
 		animator = new ScrollAnimator()
@@ -197,23 +196,20 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			};
 
 			this.initChildRef = this.initRef('childRef');
+			this.initContainerRef = this.initRef('containerRef');
 
 			if (this.props.positioningOption === 'byBrowser') {
-				const {onFocus, onKeyDown, onScroll} = this;
+				const {onKeyDown} = this;
 				this.eventHandlers = {
-					onFocus,
-					onKeyDown,
-					onScroll
+					onKeyDown
 				};
 			} else {
-				const {onFocus, onKeyDown, onKeyUp, onWheel} = this;
+				const {onKeyDown, onKeyUp} = this;
 				// We have removed all mouse event handlers for now.
 				// Revisit later for touch usage.
 				this.eventHandlers = {
-					onFocus,
 					onKeyDown,
-					onKeyUp,
-					onWheel
+					onKeyUp
 				};
 			}
 
@@ -298,8 +294,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		wheel (e, isHorizontal, isVertical) {
 			const
 				bounds = this.getScrollBounds(),
-				deltaMode = e.deltaMode;
-			let delta = (-e.nativeEvent.wheelDeltaY || e.deltaY);
+				deltaMode = e.deltaMode,
+				wheelDeltaY = e.nativeEvent ? -e.nativeEvent.wheelDeltaY : -e.wheelDeltaY;
+			let delta = (wheelDeltaY || e.deltaY);
 
 			if (deltaMode === 0) {
 				delta = ri.scale(delta) * scrollWheelMultiplierForDeltaPixel;
@@ -354,7 +351,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 							calcVelocity(-d.dy, d.dt)
 						);
 
-					doc.activeElement.blur();
+					if (typeof window !== 'undefined') {
+						window.document.activeElement.blur();
+					}
 					this.childRef.setContainerDisabled(true);
 					this.isScrollAnimationTargetAccumulated = false;
 					this.start(target.targetX, target.targetY, true, true, target.duration);
@@ -382,10 +381,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		onFocus = (e) => {
 			if (this.isKeyDown && !this.isDragging) {
-				const item = e.target,
-					positionFn = this.childRef.calculatePositionOnFocus;
+				const
+					item = e.target,
+					positionFn = this.childRef.calculatePositionOnFocus,
+					spotItem = window.document.activeElement;
 
-				if (item && item !== this.lastFocusedItem && item === doc.activeElement && positionFn) {
+				if (item && item !== this.lastFocusedItem && item === spotItem && positionFn) {
 					const pos = positionFn(item);
 					if (pos) {
 						this.startScrollOnFocus(pos, item);
@@ -414,7 +415,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					isVertical = this.canScrollVertically(),
 					delta = this.wheel(e, isHorizontal, isVertical);
 
-				doc.activeElement.blur();
+				window.document.activeElement.blur();
 				this.childRef.setContainerDisabled(true);
 				this.scrollToAccumulatedTarget(delta, isHorizontal, isVertical);
 			}
@@ -525,7 +526,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		scrollAnimation = (animationInfo) => (curTime) => {
 			const {sourceX, sourceY, targetX, targetY, duration} = animationInfo;
-
 			if (curTime < duration) {
 				this.scroll(
 					this.horizontalScrollability ? this.animator.timingFunction(sourceX, targetX, duration, curTime) : sourceX,
@@ -695,6 +695,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			if (this.props.positioningOption !== 'byBrowser' && !this.props.hideScrollbars) {
 				const bounds = this.getScrollBounds();
 
+				// FIXME `onWheel` don't work on the v8 snapshot.
+				this.containerRef.addEventListener('wheel', this.onWheel);
 				// eslint-disable-next-line react/no-did-mount-set-state
 				this.setState({
 					isHorizontalScrollbarVisible: this.canScrollHorizontally(),
@@ -716,7 +718,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						scrollTop: this.scrollTop
 					});
 				}
+			} else {
+				// FIXME `onScroll` don't work on the v8 snapshot.
+				this.childRef.containerRef.addEventListener('scroll', this.onScroll);
 			}
+			// FIXME `onFocus` don't work on the v8 snapshot.
+			this.childRef.containerRef.addEventListener('focus', this.onFocus, true);
 		}
 
 		componentDidUpdate () {
@@ -782,7 +789,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				props = Object.assign({}, this.props),
 				{className, hideScrollbars, positioningOption, style} = this.props,
 				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
-				{onWheel, ...restEvents} = this.eventHandlers,
 				scrollableClasses = classNames(
 					css.scrollable,
 					hideScrollbars ? css.scrollableHiddenScrollbars : null,
@@ -801,7 +807,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			return (
 				(positioningOption !== 'byBrowser' && !hideScrollbars) ? (
-					<div ref={this.initContainerRef} className={scrollableClasses} style={style} onWheel={onWheel}>
+					<div ref={this.initContainerRef} className={scrollableClasses} style={style}>
 						<Scrollbar
 							className={verticalScrollbarClassnames}
 							{...this.verticalScrollbarProps}
@@ -810,7 +816,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 							className={horizontalScrollbarClassnames}
 							{...this.horizontalScrollbarProps}
 						/>
-						<Wrapped {...props} {...restEvents} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={css.container} />
+						<Wrapped {...props} {...this.eventHandlers} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={css.container} />
 					</div>
 				) : <Wrapped {...props} {...this.eventHandlers} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={scrollableClasses} style={style} />
 			);
