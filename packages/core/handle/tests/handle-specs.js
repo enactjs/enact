@@ -158,48 +158,22 @@ describe('handle', () => {
 	});
 
 	it('should forward events to function specified in provided props', function () {
-		const fName = 'onMyClick';
+		const event = 'onMyClick';
 		const prop = 'index';
 		const propValue = 0;
 		const spy = sinon.spy();
 
 		const props = {
-			[fName]: spy
+			[event]: spy
 		};
 		const payload = {
 			[prop]: propValue
 		};
 
-		handle(forward(fName))(payload, props);
+		handle(forward(event))(payload, props);
 
 		const expected = true;
 		const actual = spy.args[0][0][prop] === propValue;
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('should export identical internal method names', function () {
-		const methods = [
-			'callOnEvent',
-			'forEventProp',
-			'forKey',
-			'forKeyCode',
-			'forProp',
-			'forward',
-			'preventDefault',
-			'stop',
-			'stopImmediate'
-		];
-		let mismatch = false;
-
-		methods.map((m) => {
-			if (!handle[m]) {
-				mismatch = true;
-			}
-		});
-
-		const expected = false;
-		const actual = mismatch;
 
 		expect(actual).to.equal(expected);
 	});
