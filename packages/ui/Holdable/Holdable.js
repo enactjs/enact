@@ -248,7 +248,7 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handlePointerRelease = (ev) => {
-			if (this.downEvent && this.downEvent.type === 'mousedown' && ev.type === 'mousedown') {
+			if (this.downEvent && this.downEvent.type === 'mousedown' && ev.type === 'mouseup') {
 				this.onceOnPointerRelease = null;
 				this.endHold();
 			}
