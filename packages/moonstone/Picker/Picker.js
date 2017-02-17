@@ -156,8 +156,16 @@ const PickerBase = kind({
 	computed: {
 		max: ({children}) => children && children.length ? children.length - 1 : 0,
 		reverse: ({orientation}) => (orientation === 'vertical'),
-		children: ({children, marqueeDisabled}) => React.Children.map(children, (child) => {
-			return <PickerItem marqueeDisabled={marqueeDisabled}>{child}</PickerItem>;
+		children: ({children, disabled, joined, marqueeDisabled}) => React.Children.map(children, (child) => {
+			const focusOrHover = !disabled && joined ? 'focus' : 'hover';
+			return (
+				<PickerItem
+					marqueeDisabled={marqueeDisabled}
+					marqueeOn={focusOrHover}
+				>
+					{child}
+				</PickerItem>
+			);
 		}),
 		value: ({value, children}) => {
 			const max = children && children.length ? children.length - 1 : 0;
