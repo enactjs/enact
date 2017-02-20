@@ -545,11 +545,9 @@ class VirtualListCore extends Component {
 
 		this.composeStyle(style, ...rest);
 
-		this.cc[primaryIndex % numOfItems] = React.cloneElement(
-			itemElement, {
-				style: {...itemElement.props.style, ...style}
-			}
-		);
+		this.cc[primaryIndex % numOfItems] = React.cloneElement(itemElement, {
+			style: {...itemElement.props.style, ...style}
+		});
 	}
 
 	positionItems ({updateFrom, updateTo}) {
