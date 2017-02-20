@@ -10,6 +10,17 @@ const preventSpotlightNavigation = (ev) => {
 
 const isBubbling = (ev) => ev.currentTarget !== ev.target;
 
+// A regex to check for input types that allow selectionStart
+const SELECTABLE_TYPES = /text|password|search|tel|url/;
+
+const safeSelectionStart = (target) => {
+	if (SELECTABLE_TYPES.test(target.type)) {
+		return target.selectionStart;
+	} else {
+		return 0;
+	}
+};
+
 /**
  * {@link moonstone/Input.InputSpotlightDecorator} is a Higher-order Component that manages the
  * spotlight behavior for an {@link moonstone/Input.Input}
@@ -205,9 +216,9 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 					// on enter + dismissOnEnter
 					(isEnter && dismissOnEnter) ||
 					// on left + at beginning of selection
-					(isLeft && target.selectionStart === 0) ||
-					// on right + at end of selection
-					(isRight && target.selectionStart === target.value.length) ||
+					(isLeft && safeSelectionStart(target) === 0) ||
+					// on right + at end of selection (note: fails on non-selectable types usually)
+					(isRight && safeSelectionStart(target) === target.value.length) ||
 					// on up
 					isUp ||
 					// on down
@@ -216,6 +227,10 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 
 				if (shouldFocusDecorator) {
 					if (!noDecorator) {
+						// we really only support the number type properly, so only handling this case
+						if (ev.target.type === 'number') {
+							ev.preventDefault();
+						}
 						this.focusDecorator(currentTarget);
 
 						// prevent Enter onKeyPress which triggers an onClick via Spotlight
@@ -240,7 +255,6 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 					preventSpotlightNavigation(ev);
 				}
 			}
-
 			forwardKeyDown(ev, this.props);
 		}
 

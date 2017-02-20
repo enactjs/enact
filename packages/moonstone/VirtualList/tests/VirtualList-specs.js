@@ -96,10 +96,12 @@ describe('VirtualList Specs', () => {
 				data[0] = {name: 'Password 0'};
 				subject.setProps({data: data});
 
-				const expected = 'Password 0';
-				const actual = subject.find('VirtualListCore').children().at(0).text();
+				setTimeout(() => {
+					const expected = 'Password 0';
+					const actual = subject.find('VirtualListCore').children().at(0).text();
 
-				expect(actual).to.equal(expected);
+					expect(actual).to.equal(expected);
+				}, 0);
 			});
 
 			it('should change value of the prop \'direction\' to \'horizontal\'', function () {
