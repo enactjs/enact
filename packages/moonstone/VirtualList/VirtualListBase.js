@@ -523,8 +523,6 @@ class VirtualListCore extends Component {
 			node = this.containerRef.children[primaryIndex % numOfItems];
 
 		if (node) {
-			// spotlight
-			node.setAttribute(dataIndexAttribute, primaryIndex);
 			if ((primaryIndex % numOfItems) === this.nodeIndexToBeBlurred && primaryIndex !== this.lastFocusedIndex) {
 				node.blur();
 				this.nodeIndexToBeBlurred = null;
@@ -539,6 +537,7 @@ class VirtualListCore extends Component {
 			{numOfItems} = this.state,
 			itemElement = component({
 				data,
+				[dataIndexAttribute]: primaryIndex,
 				index: primaryIndex,
 				key: primaryIndex % numOfItems
 			}),
@@ -548,8 +547,7 @@ class VirtualListCore extends Component {
 
 		this.cc[primaryIndex % numOfItems] = React.cloneElement(
 			itemElement, {
-				style: {...itemElement.props.style, ...style},
-				[dataIndexAttribute]: primaryIndex
+				style: {...itemElement.props.style, ...style}
 			}
 		);
 	}
