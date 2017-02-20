@@ -12,8 +12,17 @@ import {Spottable} from '@enact/spotlight';
 
 import css from './VirtualListItemable.less';
 
+/**
+ * {@link moonstone/VirtualListItemable.SpottableDiv} is the Higher-order Component for a VirtualList item wrapper.
+ *
+ * @class SpottableDiv
+ * @memberof moonstone/VirtualListItemable
+ * @ui
+ * @private
+ */
 const SpottableDiv = Spottable(kind({
 	name: 'SpottableDiv',
+
 	render: ({...props}) => {
 		return (<div {...props} />);
 	}
