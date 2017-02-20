@@ -411,8 +411,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			e.preventDefault();
 			if (!this.isDragging) {
 				const
-					isHorizontal = this.canScrollHorizontally(),
-					isVertical = this.canScrollVertically(),
+					bounds = this.getScrollBounds(),
+					isHorizontal = this.canScrollHorizontally(bounds),
+					isVertical = this.canScrollVertically(bounds),
 					delta = this.wheel(e, isHorizontal, isVertical);
 
 				window.document.activeElement.blur();
@@ -424,8 +425,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		onScrollbarBtnHandler = (orientation, direction) => {
 			const
 				bounds = this.getScrollBounds(),
-				isHorizontal = this.canScrollHorizontally() && orientation === 'horizontal',
-				isVertical = this.canScrollVertically() && orientation === 'vertical',
+				isHorizontal = this.canScrollHorizontally(bounds) && orientation === 'horizontal',
+				isVertical = this.canScrollVertically(bounds) && orientation === 'vertical',
 				pageDistance = (isVertical ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
 
 			this.scrollToAccumulatedTarget(pageDistance * direction, isHorizontal, isVertical);
@@ -473,7 +474,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.dirHorizontal = Math.sign(v - this.scrollLeft);
 			this.scrollLeft = clamp(0, bounds.maxLeft, v);
 			if (this.state.isHorizontalScrollbarVisible) {
-				this.updateThumb(this.scrollbarHorizontalRef);
+				this.updateThumb(this.scrollbarHorizontalRef, bounds);
 			}
 		}
 
@@ -483,7 +484,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.dirVertical = Math.sign(v - this.scrollTop);
 			this.scrollTop = clamp(0, bounds.maxTop, v);
 			if (this.state.isVerticalScrollbarVisible) {
-				this.updateThumb(this.scrollbarVerticalRef);
+				this.updateThumb(this.scrollbarVerticalRef, bounds);
 			}
 		}
 
@@ -563,8 +564,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		getPositionForScrollTo = (opt) => {
 			const
 				bounds = this.getScrollBounds(),
-				canScrollHorizontally = this.canScrollHorizontally(),
-				canScrollVertically = this.canScrollVertically();
+				canScrollHorizontally = this.canScrollHorizontally(bounds),
+				canScrollVertically = this.canScrollVertically(bounds);
 			let
 				itemPos,
 				left = null,
@@ -631,13 +632,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		// scroll bar
 
-		canScrollHorizontally = () => {
-			const bounds = this.getScrollBounds();
+		canScrollHorizontally = (bounds) => {
 			return this.horizontalScrollability && (bounds.scrollWidth > bounds.clientWidth) && !isNaN(bounds.scrollWidth);
 		}
 
-		canScrollVertically = () => {
-			const bounds = this.getScrollBounds();
+		canScrollVertically = (bounds) => {
 			return this.verticalScrollability && (bounds.scrollHeight > bounds.clientHeight) && !isNaN(bounds.scrollHeight);
 		}
 
@@ -652,9 +651,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		updateThumb (scrollbarRef) {
+		updateThumb (scrollbarRef, bounds) {
 			if (this.props.positioningOption !== 'byBrowser' && !this.props.hideScrollbars) {
-				const bounds = this.getScrollBounds();
 				scrollbarRef.update({
 					...bounds,
 					scrollLeft: this.scrollLeft,
@@ -671,6 +669,37 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				if (this.state.isVerticalScrollbarVisible) {
 					this.scrollbarVerticalRef.startHidingThumb();
 				}
+			}
+		}
+
+		updateScrollbars = (isVisibilityChanged = true) => {
+			const
+				bounds = this.getScrollBounds(),
+				canScrollHorizontally = this.canScrollHorizontally(bounds),
+				canScrollVertically = this.canScrollVertically(bounds);
+
+			if (isVisibilityChanged) {
+				// eslint-disable-next-line react/no-did-mount-set-state
+				this.setState({
+					isHorizontalScrollbarVisible: canScrollHorizontally,
+					isVerticalScrollbarVisible: canScrollVertically
+				});
+			}
+
+			if (canScrollHorizontally) {
+				this.scrollbarHorizontalRef.update({
+					...bounds,
+					scrollLeft: this.scrollLeft,
+					scrollTop: this.scrollTop
+				});
+			}
+
+			if (canScrollVertically) {
+				this.scrollbarVerticalRef.update({
+					...bounds,
+					scrollLeft: this.scrollLeft,
+					scrollTop: this.scrollTop
+				});
 			}
 		}
 
@@ -693,31 +722,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.verticalScrollability = this.childRef.isVertical();
 
 			if (this.props.positioningOption !== 'byBrowser' && !this.props.hideScrollbars) {
-				const bounds = this.getScrollBounds();
 
 				// FIXME `onWheel` don't work on the v8 snapshot.
 				this.containerRef.addEventListener('wheel', this.onWheel);
-				// eslint-disable-next-line react/no-did-mount-set-state
-				this.setState({
-					isHorizontalScrollbarVisible: this.canScrollHorizontally(),
-					isVerticalScrollbarVisible: this.canScrollVertically()
-				});
+				this.updateScrollbars();
 
-				if (this.canScrollHorizontally()) {
-					this.scrollbarHorizontalRef.update({
-						...bounds,
-						scrollLeft: this.scrollLeft,
-						scrollTop: this.scrollTop
-					});
-				}
-
-				if (this.canScrollVertically()) {
-					this.scrollbarVerticalRef.update({
-						...bounds,
-						scrollLeft: this.scrollLeft,
-						scrollTop: this.scrollTop
-					});
-				}
 			} else {
 				// FIXME `onScroll` don't work on the v8 snapshot.
 				this.childRef.containerRef.addEventListener('scroll', this.onScroll);
@@ -727,9 +736,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		componentDidUpdate () {
-			const {isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state;
-			let curHorizontalScrollbarVisible, curVerticalScrollbarVisible;
-
 			this.horizontalScrollability = this.childRef.isHorizontal();
 			this.verticalScrollability = this.childRef.isVertical();
 
@@ -739,18 +745,15 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 
 			if (!this.props.hideScrollbars) {
-				// NOTE: After rendering, we check scrollbar visibility using current bounds info.
-				// You don't need to set bounds with current bounds info again, because bounds is
-				// being re-retrieved when necessary, to retrieve the current bounds info.
-				curHorizontalScrollbarVisible = this.canScrollHorizontally();
-				curVerticalScrollbarVisible = this.canScrollVertically();
-				if (isHorizontalScrollbarVisible !== curHorizontalScrollbarVisible || isVerticalScrollbarVisible !== curVerticalScrollbarVisible) {
-					// eslint-disable-next-line react/no-did-update-set-state
-					this.setState({
-						isHorizontalScrollbarVisible: curHorizontalScrollbarVisible,
-						isVerticalScrollbarVisible: curVerticalScrollbarVisible
-					});
-				}
+				const
+					{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
+					bounds = this.getScrollBounds();
+				let
+					curHorizontalScrollbarVisible = this.canScrollHorizontally(bounds),
+					curVerticalScrollbarVisible = this.canScrollVertically(bounds),
+					isVisibilityChanged = (isHorizontalScrollbarVisible !== curHorizontalScrollbarVisible || isVerticalScrollbarVisible !== curVerticalScrollbarVisible);
+
+				this.updateScrollbars(isVisibilityChanged);
 			}
 		}
 
