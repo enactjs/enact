@@ -32,6 +32,7 @@ const getDirection = function (keyCode) {
 			isRight(keyCode) && 'right' ||
 			isUp(keyCode) && 'up';
 };
+const isPointerEvent = (target) => ('x' in target && 'y' in target);
 const isPointerShow = is('pointerShow');
 const isPointerHide = is('pointerHide');
 
@@ -343,8 +344,8 @@ const Spotlight = (function () {
 		return destPriority.group;
 	}
 
-	function navigate (targetRect, direction, candidates, config) {
-		if (!targetRect || !direction || !candidates || !candidates.length) {
+	function navigate (target, direction, candidates, config) {
+		if (!target || !direction || !candidates || !candidates.length) {
 			return null;
 		}
 
@@ -356,6 +357,11 @@ const Spotlight = (function () {
 			}
 		}
 		if (!rects.length) {
+			return null;
+		}
+
+		const targetRect = isPointerEvent(target) ? getPointRect(target) : getRect(target);
+		if (!targetRect) {
 			return null;
 		}
 
@@ -496,7 +502,7 @@ const Spotlight = (function () {
 		let dest = null;
 		if (config.rememberSource &&
 				config.previous &&
-// TODO: This needs fixing!				config.previous.destination === target &&
+				config.previous.destination === target &&
 				config.previous.reverse === direction) {
 			for (let j = 0; j < destGroup.length; j++) {
 				if (destGroup[j].element === config.previous.target) {
@@ -829,19 +835,18 @@ const Spotlight = (function () {
 	function spotNextFromPoint (direction, position, containerId) {
 		const config = extend({}, GlobalConfig, _containers.get(containerId));
 		const {allNavigableElements, containerNavigableElements} = getNavigableElements();
-		const targetRect = getPointRect(position);
 		let next;
 
 		if (config.restrict === 'self-only' || config.restrict === 'self-first') {
 			next = navigate(
-				targetRect,
+				position,
 				direction,
 				containerNavigableElements[containerId],
 				config
 			);
 		} else {
 			next = navigate(
-				targetRect,
+				position,
 				direction,
 				allNavigableElements,
 				config
@@ -870,8 +875,6 @@ const Spotlight = (function () {
 		}
 
 		const {allNavigableElements, containerNavigableElements} = getNavigableElements();
-		const targetRect = getRect(currentFocusedElement);
-
 		const config = extend({}, GlobalConfig, _containers.get(currentContainerId));
 		let next;
 
@@ -879,7 +882,7 @@ const Spotlight = (function () {
 			let currentContainerNavigableElements = containerNavigableElements[currentContainerId];
 
 			next = navigate(
-				targetRect,
+				currentFocusedElement,
 				direction,
 				exclude(currentContainerNavigableElements, currentFocusedElement),
 				config
@@ -887,7 +890,7 @@ const Spotlight = (function () {
 
 			if (!next && config.restrict === 'self-first') {
 				next = navigate(
-					targetRect,
+					currentFocusedElement,
 					direction,
 					exclude(allNavigableElements, currentContainerNavigableElements),
 					config
@@ -895,7 +898,7 @@ const Spotlight = (function () {
 			}
 		} else {
 			next = navigate(
-				targetRect,
+				currentFocusedElement,
 				direction,
 				exclude(allNavigableElements, currentFocusedElement),
 				config
