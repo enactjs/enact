@@ -60,7 +60,7 @@ const handle = function (...handlers) {
  * @param	{String}	methodName	Name of the method to call on the event.
  * @returns {Function}				Event handler
  */
-const callOnEvent = handle.callOnEvent = (methodName) => (e) => {
+const callOnEvent = handle.callOnEvent = curry((methodName, e) => {
 	if (e[methodName]) {
 		e[methodName]();
 	} else if (e.nativeEvent && e.nativeEvent[methodName]) {
@@ -69,7 +69,7 @@ const callOnEvent = handle.callOnEvent = (methodName) => (e) => {
 		e.nativeEvent[methodName]();
 	}
 	return true;
-};
+});
 
 /**
  * Stops handling if the value of `prop` on the event does not equal `value`
@@ -83,8 +83,8 @@ const callOnEvent = handle.callOnEvent = (methodName) => (e) => {
  * @param	{*}			value	Value of property
  * @returns {Function}			Event handler
  */
-const forEventProp = handle.forEventProp = curry((prop, value) => {
-	return (e) => e[prop] === value;
+const forEventProp = handle.forEventProp = curry((prop, value, e) => {
+	return e[prop] === value;
 });
 
 /**
@@ -99,14 +99,14 @@ const forEventProp = handle.forEventProp = curry((prop, value) => {
  * @param	{String}	name	Name of method on the `props`
  * @returns	{Function}			Event handler
  */
-const forward = handle.forward = name => (e, props) => {
+const forward = handle.forward = curry((name, e, props) => {
 	const fn = props && props[name];
 	if (typeof fn === 'function') {
 		fn(e);
 	}
 
 	return true;
-};
+});
 
 /**
  * Calls event.preventDefault() and returns false.
@@ -165,8 +165,8 @@ const forKey = handle.forKey = curry((name, ev) => {
  * @param	{*}			value	Value of property
  * @returns {Function}			Event handler
  */
-const forProp = handle.forProp = curry((prop, value) => {
-	return (e, props) => props[prop] === value;
+const forProp = handle.forProp = curry((prop, value, e, props) => {
+	return props[prop] === value;
 });
 
 export default handle;
