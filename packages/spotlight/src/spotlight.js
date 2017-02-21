@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 /*
  * A javascript-based implementation of Spatial Navigation.
  *
@@ -19,6 +17,15 @@ const isEnter = is('enter');
 const isLeft = is('left');
 const isRight = is('right');
 const isUp = is('up');
+
+/**
+ * Translates keyCodes into 5-way direction descriptions (e.g. `'down'`)
+ *
+ * @function
+ * @param {Number} keyCode - Key code to analyze
+ * @returns {String|false} - One of `'up'`, `'down'`, `'left'`, `'right'` or false if not a direction key
+ * @memberof spotlight
+ */
 const getDirection = function (keyCode) {
 	return	isDown(keyCode) && 'down' ||
 			isLeft(keyCode) && 'left' ||
@@ -30,10 +37,18 @@ const isPointerHide = is('pointerHide');
 
 const spotlightRootContainerName = 'spotlightRootDecorator';
 const SpotlightAccelerator = new Accelerator();
-const Spotlight = (function() {
+
+/**
+ * Provides 5-way navigation and focus support
+ *
+ * @class Spotlight
+ * @memberof spotlight
+ * @public
+ */
+const Spotlight = (function () {
 	'use strict';
 
-	/**
+	/*
 	/* config
 	*/
 	// Note: an <extSelector> can be one of following types:
@@ -65,7 +80,7 @@ const Spotlight = (function() {
 
 	const _containerPrefix = 'container-';
 
-	/**
+	/*
 	/* private vars
 	*/
 	let _ids = 0;
@@ -78,7 +93,7 @@ const Spotlight = (function() {
 	let _pointerX = null;
 	let _pointerY = null;
 
-	/**
+	/*
 	 * Whether a 5-way directional key is being held.
 	 *
 	 * @type {Boolean}
@@ -86,15 +101,15 @@ const Spotlight = (function() {
 	 */
 	let _5WayKeyHold = false;
 
-	/**
+	/*
 	 * Whether a selection key is being held.
 	 *
 	 * @type {Boolean}
 	 * @default false
 	 */
-	let _selectionKeyHold = false;
+	// let _selectionKeyHold = false;
 
-	/**
+	/*
 	 * Whether Spotlight is in pointer mode (as opposed to 5-way mode).
 	 *
 	 * @type {Boolean}
@@ -102,22 +117,22 @@ const Spotlight = (function() {
 	 */
 	let _pointerMode = true;
 
-	/**
+	/*
 	 * Timestamp at the last point the pointer was hidden.
 	 *
 	 * @type {Number}
 	 * @default 0
 	 */
-	let _pointerHiddenTime = 0;
+	// let _pointerHiddenTime = 0;
 
-	/**
+	/*
 	 * Length of time in milliseconds required after hiding pointer before 5-way keys
 	 * are processed.
 	 *
 	 * @type {Number}
 	 * @default 300
 	 */
-	let _pointerHiddenToKeyTimeout = 300;
+	// let _pointerHiddenToKeyTimeout = 300;
 
 	/*
 	* polyfills
@@ -127,13 +142,13 @@ const Spotlight = (function() {
 		return [].slice.call(matchedNodes).indexOf(this) >= 0;
 	};
 	if (typeof window === 'object') {
-		elementMatchesSelector = window.Element.prototype.matches
-			|| window.Element.prototype.matchesSelector
-			|| window.Element.prototype.mozMatchesSelector
-			|| window.Element.prototype.webkitMatchesSelector
-			|| window.Element.prototype.msMatchesSelector
-			|| window.Element.prototype.oMatchesSelector
-			|| elementMatchesSelector;
+		elementMatchesSelector = window.Element.prototype.matches ||
+			window.Element.prototype.matchesSelector ||
+			window.Element.prototype.mozMatchesSelector ||
+			window.Element.prototype.webkitMatchesSelector ||
+			window.Element.prototype.msMatchesSelector ||
+			window.Element.prototype.oMatchesSelector ||
+			elementMatchesSelector;
 	}
 
 	/*
@@ -479,10 +494,10 @@ const Spotlight = (function() {
 		}
 
 		let dest = null;
-		if (config.rememberSource
-				&& config.previous
-				&& config.previous.destination === target
-				&& config.previous.reverse === direction) {
+		if (config.rememberSource &&
+				config.previous &&
+// TODO: This needs fixing!				config.previous.destination === target &&
+				config.previous.reverse === direction) {
 			for (let j = 0; j < destGroup.length; j++) {
 				if (destGroup[j].element === config.previous.target) {
 					dest = destGroup[j].element;
@@ -712,8 +727,8 @@ const Spotlight = (function() {
 		let range = [];
 		let addRange = function (id) {
 			const config = _containers.get(id);
-			if (id && range.indexOf(id) < 0
-					&& config && !config.selectorDisabled) {
+			if (id && range.indexOf(id) < 0 &&
+					config && !config.selectorDisabled) {
 				range.push(id);
 			}
 		};
@@ -731,13 +746,13 @@ const Spotlight = (function() {
 			let next;
 
 			if (_containers.get(id).enterTo === 'last-focused') {
-				next = getContainerLastFocusedElement(id)
-					|| getContainerDefaultElement(id)
-					|| getContainerNavigableElements(id)[0];
+				next = getContainerLastFocusedElement(id) ||
+					getContainerDefaultElement(id) ||
+					getContainerNavigableElements(id)[0];
 			} else {
-				next = getContainerDefaultElement(id)
-					|| getContainerLastFocusedElement(id)
-					|| getContainerNavigableElements(id)[0];
+				next = getContainerDefaultElement(id) ||
+					getContainerLastFocusedElement(id) ||
+					getContainerNavigableElements(id)[0];
 			}
 
 			if (next) {
@@ -927,7 +942,7 @@ const Spotlight = (function() {
 		}
 
 		if (direction && !spotNext(direction, currentFocusedElement, currentContainerId) && currentFocusedElement !== document.activeElement) {
-			focusElement(currentFocusedElement, currentContainerId)
+			focusElement(currentFocusedElement, currentContainerId);
 		}
 	}
 
@@ -1040,16 +1055,16 @@ const Spotlight = (function() {
 	}
 
 	function isFocusable (elem) {
-		for (const id of _containers.keys()){ // check *all* the containers to see if the specified element is a focusable element
+		for (const id of _containers.keys()) { // check *all* the containers to see if the specified element is a focusable element
 			if (isNavigable(elem, id, true)) return true;
 		}
 		return false;
 	}
 
-	/**
-	/* public methods
-	*/
-	const Spotlight = { // eslint-disable-line no-shadow
+	/*
+	 * public methods
+	 */
+	const exports = /** @lends spotlight.Spotlight.prototype */ { // eslint-disable-line no-shadow
 		initialize: function () {
 			if (!_initialized) {
 				window.addEventListener('keydown', onKeyDown);
@@ -1158,7 +1173,7 @@ const Spotlight = (function() {
 
 			if (config) {
 				config.selectorDisabled = true;
-				_containers.set(containerId, config)
+				_containers.set(containerId, config);
 				return true;
 			}
 			return false;
@@ -1169,7 +1184,7 @@ const Spotlight = (function() {
 
 			if (config) {
 				config.selectorDisabled = false;
-				_containers.set(containerId, config)
+				_containers.set(containerId, config);
 				return true;
 			}
 			return false;
@@ -1262,6 +1277,7 @@ const Spotlight = (function() {
 		 * @param {String} [containerId] The id of the currently active container. If this is not
 		 *	provided, the root container is set as the currently active container.
 		 * @public
+		 * @memberof spotlight.Spotlight.prototype
 		 */
 		setActiveContainer: function (containerId) {
 			_lastContainerId = containerId || spotlightRootContainerName;
@@ -1270,7 +1286,8 @@ const Spotlight = (function() {
 		/**
 		 * Gets the current pointer mode
 		 *
-		 * @return {Boolean} `true` if spotlight is in pointer mode
+		 * @returns {Boolean} `true` if spotlight is in pointer mode
+		 * @memberof spotlight.Spotlight.prototype
 		 */
 		getPointerMode: function () {
 			return _pointerMode;
@@ -1280,7 +1297,8 @@ const Spotlight = (function() {
 		 * Sets the current pointer mode
 		 *
 		 * @param {Boolean} pointerMode The value of the pointer mode. This determines how
-		 * spotlight manages focus change behaviors.
+		 *	spotlight manages focus change behaviors.
+		 * @memberof spotlight.Spotlight.prototype
 		 * @public
 		 */
 		setPointerMode: function (pointerMode) {
@@ -1290,11 +1308,12 @@ const Spotlight = (function() {
 		/**
 		 * Gets the muted mode value of a spottable element.
 		 *
-		 * @param {Object} [elem] The dom element used to determine the muted status.
-		 * @return {Boolean} `true` if the passed-in control is in muted mode.
+		 * @param {Object} elem The dom element used to determine the muted status.
+		 * @returns {Boolean} `true` if the passed-in control is in muted mode.
+		 * @memberof spotlight.Spotlight.prototype
 		 * @public
 		 */
-		isMuted: function(elem) {
+		isMuted: function (elem) {
 			if (!elem) {
 				return false;
 			}
@@ -1305,7 +1324,8 @@ const Spotlight = (function() {
 		/**
 		 * Determines whether Spotlight is currently paused.
 		 *
-		 * @return {Boolean} `true` if Spotlight is currently paused.
+		 * @returns {Boolean} `true` if Spotlight is currently paused.
+		 * @memberof spotlight.Spotlight.prototype
 		 * @public
 		 */
 		isPaused: function () {
@@ -1315,8 +1335,9 @@ const Spotlight = (function() {
 		/**
 		 * Determines whether an element is spottable.
 		 *
-		 * @param {Object} [elem] The dom element used to determine the spottable status.
-		 * @return {Boolean} `true` if the element being evaluated is currently spottable.
+		 * @param {Object} elem The dom element used to determine the spottable status.
+		 * @returns {Boolean} `true` if the element being evaluated is currently spottable.
+		 * @memberof spotlight.Spotlight.prototype
 		 * @public
 		 */
 		isSpottable: function (elem) {
@@ -1330,7 +1351,8 @@ const Spotlight = (function() {
 		/**
 		 * Returns the currently spotted control.
 		 *
-		 * @return {Object} The control that currently has focus, if available
+		 * @returns {Object} The control that currently has focus, if available
+		 * @memberof spotlight.Spotlight.prototype
 		 * @public
 		 */
 		getCurrent: function () {
@@ -1338,7 +1360,7 @@ const Spotlight = (function() {
 		}
 	};
 
-	return Spotlight;
+	return exports;
 
 })();
 

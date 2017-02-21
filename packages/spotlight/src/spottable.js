@@ -4,6 +4,12 @@ import {is} from '@enact/core/keymap';
 import React from 'react';
 import Spotlight from './spotlight';
 
+/**
+ * The class name for spottable components. In general, you do not need to directly access this class
+ *
+ * @memberof spotlight
+ * @public
+ */
 const spottableClass = 'spottable';
 const spottableDisabledClass = 'spottableDisabled';
 
@@ -47,6 +53,12 @@ const forwardEnter = (keyEvent, mouseEvent) => (props) => {
 	};
 };
 
+/**
+ * Default configuration for Spottable
+ *
+ * @hocconfig
+ * @memberof spotlight.Spottable
+ */
 const defaultConfig = {
 	/**
 	 * Whether or not the component should emulate mouse events as a response
@@ -55,6 +67,7 @@ const defaultConfig = {
 	 * @type {Boolean}
 	 * @default false
 	 * @public
+	 * @memberof spotlight.Spottable.defaultConfig
 	 */
 	emulateMouse: true
 };
@@ -65,10 +78,12 @@ const defaultConfig = {
  * @example
  *	const SpottableComponent = Spottable(Component);
  *
+ * @class Spottable
  * @memberof spotlight
  * @param  {Object} defaultConfig Set of default configuration parameters
- * @param  {Function} Higher-order component
+ * @param  {Function} Wrapped Component to wrap
  *
+ * @hoc
  * @returns {Function} Spottable
  */
 const Spottable = hoc(defaultConfig, (config, Wrapped) => {
@@ -83,7 +98,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'Spottable'
 
-		static propTypes = {
+		static propTypes = /** @lends spotlight.Spottable.prototype */ {
 			/**
 			 * Whether or not the component is in a disabled state.
 			 *

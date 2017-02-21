@@ -17,6 +17,8 @@ const defaultConfig = {};
  * @param  {Function} Higher-order component
  *
  * @returns {Function} SpotlightRootDecorator
+ * @hoc
+ * @memberof spotlight
  */
 const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
