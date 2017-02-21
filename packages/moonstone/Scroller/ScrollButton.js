@@ -1,8 +1,9 @@
 import {$L} from '@enact/i18n';
+import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import Holdable from '@enact/ui/Holdable';
 import IconButton from '@enact/moonstone/IconButton';
-import Pressable from '@enact/ui/Pressable';
+import Toggleable from '@enact/ui/Toggleable';
 import React from 'react';
 
 const HoldableIconButton = Holdable(IconButton);
@@ -11,20 +12,28 @@ const ScrollButtonBase = kind({
 	name: 'ScrollButtonBase',
 
 	propTypes: {
+		active: React.PropTypes.bool,
 		direction: React.PropTypes.string,
 		disabled: React.PropTypes.bool,
-		onScroll: React.PropTypes.func,
-		pressed: React.PropTypes.bool
+		onScroll: React.PropTypes.func
+	},
+
+	handlers: {
+		onMouseUp: handle(
+			forward('onMouseUp'),
+			forProp('active'),
+			(ev) => ev.currentTarget.removeAttribute('aria-label')
+		)
 	},
 
 	computed: {
-		'aria-live': ({pressed}) => pressed ? 'assertive' : 'off',
-		'aria-label': ({direction, pressed}) => $L(pressed ? direction.toUpperCase() : 'scroll ' + direction)
+		'aria-live': ({active}) => active ? 'assertive' : 'off',
+		'aria-label': ({direction, active}) => $L(active ? direction.toUpperCase() : 'scroll ' + direction)
 	},
 
 	render: ({onScroll, ...rest}) => {
 		delete rest.direction;
-		delete rest.pressed;
+		delete rest.active;
 
 		return (
 			<HoldableIconButton
@@ -38,7 +47,8 @@ const ScrollButtonBase = kind({
 	}
 });
 
-const ScrollButton = Pressable(
+const ScrollButton = Toggleable(
+	{activate: 'onMouseDown', deactivate: 'onBlur', toggle: null},
 	ScrollButtonBase
 );
 
