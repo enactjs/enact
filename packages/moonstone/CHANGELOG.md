@@ -20,6 +20,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Dialog` to marquee `title` and `titleBelow`
 - `moonstone/Marquee.MarqueeController` config option `startOnFocus` to `marqueeOnFocus`. `startOnFocus` is deprecated and will be removed in a future update.
 - `moonstone/Button`, `moonstone/IconButton`, `moonstone/Item` to not forward `onClick` when `disabled`
+- `moonstone/LabeledItem`, `moonstone/ExpandableItem`, `moonstone/ExpandableList` now each support the `node` type in their `label` property. Best used with `slottable`.
 
 ### Fixed
 
