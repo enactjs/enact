@@ -398,6 +398,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
+		onWheelByBrowser = (e) => {
+			if (!this.isDragging) {
+				window.document.activeElement.blur();
+				this.childRef.setContainerDisabled(true);
+			}
+		}
+
 		// event handler for browser native scroll
 
 		onScroll = (e) => {
@@ -744,7 +751,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				const bounds = this.getScrollBounds();
 
 				// FIXME `onWheel` don't work on the v8 snapshot.
-				this.containerRef.addEventListener('wheel', this.onWheel);
+				this.containerRef.addEventListener('wheel', (this.props.positioningOption === 'byBrowser') ? this.onWheelByBrowser : this.onWheel);
 				// eslint-disable-next-line react/no-did-mount-set-state
 				this.setState({
 					isHorizontalScrollbarVisible: this.canScrollHorizontally(),
