@@ -199,9 +199,12 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.jobName = `sliderChange${now()}`;
 			this.knobPosition = null;
 			this.normalizeBounds(props);
+
+			const value = this.clamp(props.value);
 			this.state = {
 				active: false,
-				value: this.clamp(props.value)
+				value: value,
+				valueText: value
 			};
 
 			if (__DEV__) {
@@ -220,8 +223,10 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			if ((min !== this.props.min) || (max !== this.props.max) || (value !== this.state.value)) {
 				this.normalizeBounds(nextProps);
+				const clampedValue = this.clamp(value);
 				this.setState({
-					value: this.clamp(value)
+					value: clampedValue,
+					valueText: clampedValue
 				});
 			}
 
@@ -360,7 +365,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				const horizontalHint = $L('change a value with left right button');
 				const active = !this.state.active;
 
-				let valueText = null;
+				let valueText = this.state.value;
 				if (active) {
 					valueText = vertical ? verticalHint : horizontalHint;
 				}
