@@ -4,7 +4,7 @@
  * @module ui/Changeable
  */
 
-import {forward, handle} from '@enact/core/handle';
+import {forProp, forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
 import React from 'react';
@@ -88,6 +88,10 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 			disabled: React.PropTypes.bool	// eslint-disable-line react/sort-prop-types
 		}
 
+		static defaultProps = {
+			disabled: false
+		}
+
 		constructor (props) {
 			super(props);
 			const key = (mutable && prop in props) ? prop : defaultPropKey;
@@ -105,7 +109,7 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 		handle = handle.bind(this)
 
 		handleChange = this.handle(
-			(ev, {disabled}) => !disabled,
+			forProp('disabled', false),
 			forward('onChange'),
 			(ev) => {
 				const value = ev[prop];

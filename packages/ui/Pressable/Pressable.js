@@ -4,7 +4,7 @@
  * @module ui/Pressable
  */
 
-import {forward, handle} from '@enact/core/handle';
+import {forProp, forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
 import React, {PropTypes} from 'react';
@@ -105,8 +105,9 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		handle = handle.bind(this)
 
 		handleDepress = this.handle(
+			forProp('disabled', false),
 			forward(depress),
-			(ev, {disabled}) => disabled || this.setState({pressed: ev.pressed || true})
+			(ev) => this.setState({pressed: ev.pressed || true})
 		)
 
 		handleRelease = this.handle(

@@ -76,11 +76,14 @@ const SwitchBase = kind({
 	},
 
 	handlers: {
-		onToggle: handle(forward('onClick'), (ev, {selected, onToggle}) => {
-			if (onToggle) {
-				onToggle({selected: !selected});
+		onToggle: handle(
+			forward('onClick'),
+			(ev, {selected, onToggle}) => {
+				if (onToggle) {
+					onToggle({selected: !selected});
+				}
 			}
-		})
+		)
 	},
 
 	computed: {
