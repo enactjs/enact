@@ -196,3 +196,4 @@ const VirtualGridList = kind({
 export default VirtualList;
 export {VirtualList, VirtualGridList};
 export * from './GridListImageItem';
+export * from './ListItemDecorator';

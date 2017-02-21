@@ -1,8 +1,9 @@
-import ri from '@enact/ui/resolution';
 import Item from '@enact/moonstone/Item';
-import VirtualList from '@enact/moonstone/VirtualList';
+import kind from '@enact/core/kind';
+import ri from '@enact/ui/resolution';
+import VirtualList, {ListItemDecorator} from '@enact/moonstone/VirtualList';
 import {VirtualListCore} from '@enact/moonstone/VirtualList/VirtualListBase';
-import React from 'react';
+import React, {PropTypes} from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, number} from '@kadira/storybook-addon-knobs';
 
@@ -10,25 +11,24 @@ VirtualList.propTypes = Object.assign({}, VirtualListCore.propTypes);
 VirtualList.defaultProps = Object.assign({}, VirtualListCore.defaultProps);
 
 const
-	style = {
-		item: {
-			position: 'absolute',
-			width: '100%',
-			borderBottom: ri.scale(2) + 'px solid #202328',
-			boxSizing: 'border-box'
-		},
-		list: {
-			height: ri.scale(550) + 'px'
-		}
-	},
+	listStyle = {height: ri.scale(550) + 'px'},
 	items = [],
+	VirtualListItemBase = kind({
+		name: 'VirtualListItemBase',
+		propTypes: {
+			data: PropTypes.any,
+			index: PropTypes.number
+		},
+		render: ({data, index, ...rest}) => {
+			return (<Item {...rest}>{data[index]}</Item>);
+		}
+	}),
+	VirtualListItem = ListItemDecorator({border: true}, VirtualListItemBase),
 	// eslint-disable-next-line enact/prop-types, enact/display-name
-	renderItem = (size) => ({data, index, key}) => {
-		const itemStyle = {height: size + 'px', ...style.item};
+	renderItem = (size) => (props) => {
+		const itemStyle = {height: size + 'px'};
 		return (
-			<Item key={key} style={itemStyle}>
-				{data[index]}
-			</Item>
+			<VirtualListItem {...props} style={itemStyle} />
 		);
 	};
 
@@ -52,7 +52,7 @@ storiesOf('VirtualList')
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
 					spacing={ri.scale(number('spacing', 0))}
-					style={style.list}
+					style={listStyle}
 				/>
 			);
 		}
