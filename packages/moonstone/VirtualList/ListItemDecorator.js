@@ -4,31 +4,12 @@
  * @module moonstone/ListItemDecorator
  */
 
-import classNames from 'classnames';
+import {dataIndexAttribute} from '../Scroller/Scrollable';
 import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
 import React from 'react';
-import {Spottable} from '@enact/spotlight';
 
 import css from './ListItemDecorator.less';
-
-/**
- * {@link moonstone/ListItemDecorator.SpottableDiv} is the Higher-order Component for a VirtualList item wrapper.
- *
- * @class SpottableDiv
- * @memberof moonstone/ListItemDecorator
- * @ui
- * @private
- */
-const SpottableDiv = Spottable(kind({
-	name: 'SpottableDiv',
-
-	render: ({...props}) => {
-		return (<div {...props} />);
-	}
-}));
-
-const dataIndexProp = 'data-index';
 
 /**
  * Default config for {@link moonstone/ListItemDecorator.ListItemDecorator}
@@ -44,16 +25,7 @@ const defaultConfig = {
 	 * @default false
 	 * @memberof ui/ListItemDecorator.ListItemDecorator.defaultConfig
 	 */
-	border: false,
-
-	/**
-	 * Determines whether an element is spottable.
-	 *
-	 * @type {Boolean}
-	 * @default false
-	 * @memberof ui/ListItemDecorator.ListItemDecorator.defaultConfig
-	 */
-	spottable: false
+	border: false
 };
 
 /**
@@ -64,9 +36,7 @@ const defaultConfig = {
  * @ui
  * @public
  */
-const ListItemDecorator = hoc(defaultConfig, ({border, spottable}, Wrapped) => {
-	const component = spottable ? SpottableDiv : 'div';
-
+const ListItemDecorator = hoc(defaultConfig, ({border}, Wrapped) => {
 	return kind({
 		name: 'VirtualListItem',
 
@@ -76,21 +46,14 @@ const ListItemDecorator = hoc(defaultConfig, ({border, spottable}, Wrapped) => {
 		},
 
 		computed: {
-			props: ({className, [dataIndexProp]: dataIndex, style, ...rest}) => ({
-				itemWrapperProps: {
-					className: classNames(className, border ? css.border : null),
-					[dataIndexProp]: dataIndex,
-					style
-				},
-				itemProps: {...rest, [dataIndexProp]: dataIndex}
-			})
+			className: ({styler}) => styler.append({border})
 		},
 
-		render: ({props}) => {
+		render: ({className, [dataIndexAttribute]: dataIndex, style, ...rest}) => {
 			return (
-				<component {...props.itemWrapperProps} >
-					<Wrapped {...props.itemProps} />
-				</component>
+				<div className={className} data-index={dataIndex} style={style}>
+					<Wrapped {...rest} data-index={dataIndex} />
+				</div>
 			);
 		}
 	});
