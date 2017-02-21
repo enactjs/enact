@@ -11,7 +11,7 @@ VirtualList.propTypes = Object.assign({}, VirtualListCore.propTypes);
 VirtualList.defaultProps = Object.assign({}, VirtualListCore.defaultProps);
 
 const
-	listHeight = {height: ri.scale(550) + 'px'},
+	listStyle = {height: ri.scale(550) + 'px'},
 	items = [],
 	VirtualListItemBase = kind({
 		name: 'VirtualListItemBase',
@@ -52,7 +52,7 @@ storiesOf('VirtualList')
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
 					spacing={ri.scale(number('spacing', 0))}
-					style={listHeight}
+					style={listStyle}
 				/>
 			);
 		}
