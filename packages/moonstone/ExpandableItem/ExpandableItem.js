@@ -21,7 +21,7 @@ const isUp = is('up');
 const isDown = is('down');
 
 /**
- * {@link moonstone/ExpandableItem.ExpandableItem} is a stateless component that
+ * {@link moonstone/ExpandableItem.ExpandableItemBase} is a stateless component that
  * renders a {@link moonstone/LabeledItem.LabeledItem} that can be expanded to show
  * additional contents.
  *
@@ -75,7 +75,6 @@ const ExpandableItemBase = kind({
 		 * The secondary, or supportive text. Typically under the `title`, a subtitle.
 		 *
 		 * @type {String}
-		 * @default null
 		 * @public
 		 */
 		label: PropTypes.string,
@@ -101,7 +100,6 @@ const ExpandableItemBase = kind({
 		 * Callback to be called when a condition occurs which should cause the expandable to close
 		 *
 		 * @type {Function}
-		 * @default null
 		 * @public
 		 */
 		onClose: PropTypes.func,
@@ -110,7 +108,6 @@ const ExpandableItemBase = kind({
 		 * Callback to be called when a condition occurs which should cause the expandable to open
 		 *
 		 * @type {Function}
-		 * @default null
 		 * @public
 		 */
 		onOpen: PropTypes.func,

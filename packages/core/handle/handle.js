@@ -76,14 +76,14 @@ const callOnEvent = handle.callOnEvent = (methodName) => (e) => {
  *
  * @example
  *  // submit() called only if event.x === 0
- *	handle(handle.forProp('x', 0), submit)
+ *	handle(handle.forEventProp('x', 0), submit)
  *
- * @method	forProp
+ * @method	forEventProp
  * @param	{String}	prop	Name of property on event
  * @param	{*}			value	Value of property
  * @returns {Function}			Event handler
  */
-const forProp = handle.forProp = curry((prop, value) => {
+const forEventProp = handle.forEventProp = curry((prop, value) => {
 	return (e) => e[prop] === value;
 });
 
@@ -99,9 +99,9 @@ const forProp = handle.forProp = curry((prop, value) => {
  * @param	{String}	name	Name of method on the `props`
  * @returns	{Function}			Event handler
  */
-const forward = handle.foward = name => (e, props) => {
+const forward = handle.forward = name => (e, props) => {
 	const fn = props && props[name];
-	if (typeof fn == 'function') {
+	if (typeof fn === 'function') {
 		fn(e);
 	}
 
@@ -139,7 +139,7 @@ const stopImmediate = handle.stopImmediate = callOnEvent('stopImmediatePropagati
  * @param	{Number}	value	`keyCode` to test
  * @returns	{Function}			Event handler
  */
-const forKeyCode = handle.forKeyCode = forProp('keyCode');
+const forKeyCode = handle.forKeyCode = forEventProp('keyCode');
 
 /**
  * Only allows event handling to continue if the event's keyCode is mapped to `name` within
@@ -149,15 +149,34 @@ const forKeyCode = handle.forKeyCode = forProp('keyCode');
  * @param	{String}	name	Name from {@link core/keymap}
  * @returns	{Function}			Event handler
  */
-const forKey = handle.forKey = (name) => (ev) => is(name, ev.keyCode);
+const forKey = handle.forKey = curry((name, ev) => {
+	return is(name, ev.keyCode);
+});
+
+/**
+ * Allows handling to continue if the value of `prop` on the props strictly equals `value`.
+ *
+ * @example
+ *  // submit() called only if props.checked === true
+ *	handle(handle.forProp('checked', true), submit)
+ *
+ * @method	forProp
+ * @param	{String}	prop	Name of property on props object
+ * @param	{*}			value	Value of property
+ * @returns {Function}			Event handler
+ */
+const forProp = handle.forProp = curry((prop, value) => {
+	return (e, props) => props[prop] === value;
+});
 
 export default handle;
 export {
 	callOnEvent,
 	forward,
-	forProp,
+	forEventProp,
 	forKey,
 	forKeyCode,
+	forProp,
 	handle,
 	preventDefault,
 	stop,

@@ -47,10 +47,7 @@ const
 		}
 	},
 	selectPrevIcon = selectIcon(true),
-	selectNextIcon = selectIcon(false),
-	// spotlight
-	doc = (typeof window === 'object') ? window.document : {},
-	perf = (typeof window === 'object') ? window.performance : {now: Date.now};
+	selectNextIcon = selectIcon(false);
 
 /**
  * {@link moonstone/Scroller.Scrollbar} is a Scrollbar with Moonstone styling.
@@ -99,18 +96,6 @@ class Scrollbar extends Component {
 		vertical: true
 	}
 
-	autoHide = true
-	thumbSize = 0
-	minThumbSizeRatio = 0
-	trackSize = 0
-	jobName = ''
-
-	// component refs
-	containerRef = null
-	thumbRef = null
-	prevButtonNodeRef = null
-	nextButtonNodeRef = null
-
 	constructor (props) {
 		super(props);
 
@@ -124,11 +109,42 @@ class Scrollbar extends Component {
 			clickPrevHandler: props.onPrevScroll,
 			clickNextHandler: props.onNextScroll
 		};
-		this.jobName = perf.now();
+
+		if (typeof window !== 'undefined') {
+			this.jobName = window.performance.now();
+		}
 
 		this.initContainerRef = this.initRef('containerRef');
 		this.initThumbRef = this.initRef('thumbRef');
 	}
+
+	componentDidMount () {
+		const {containerRef} = this;
+
+		this.calculateMetrics();
+		this.prevButtonNodeRef = containerRef.children[0];
+		this.nextButtonNodeRef = containerRef.children[1];
+	}
+
+	componentDidUpdate () {
+		this.calculateMetrics();
+	}
+
+	componentWillUnmount () {
+		stopJob(this.jobName);
+	}
+
+	autoHide = true
+	thumbSize = 0
+	minThumbSizeRatio = 0
+	trackSize = 0
+	jobName = ''
+
+	// component refs
+	containerRef = null
+	thumbRef = null
+	prevButtonNodeRef = null
+	nextButtonNodeRef = null
 
 	updateButtons = (bounds) => {
 		const
@@ -138,7 +154,8 @@ class Scrollbar extends Component {
 			currentPos = vertical ? bounds.scrollTop : bounds.scrollLeft,
 			maxPos = vertical ? bounds.maxTop : bounds.maxLeft,
 			shouldDisablePrevButton = currentPos <= 0,
-			shouldDisableNextButton = currentPos >= maxPos;
+			shouldDisableNextButton = currentPos >= maxPos,
+			spotItem = window.document.activeElement;
 
 		if (prevButtonDisabled !== shouldDisablePrevButton) {
 			this.setState({prevButtonDisabled: shouldDisablePrevButton});
@@ -146,9 +163,9 @@ class Scrollbar extends Component {
 			this.setState({nextButtonDisabled: shouldDisableNextButton});
 		}
 
-		if (shouldDisablePrevButton && doc.activeElement === prevButtonNodeRef) {
+		if (shouldDisablePrevButton && spotItem === prevButtonNodeRef) {
 			Spotlight.focus(nextButtonNodeRef);
-		} else if (shouldDisableNextButton && doc.activeElement === nextButtonNodeRef) {
+		} else if (shouldDisableNextButton && spotItem === nextButtonNodeRef) {
 			Spotlight.focus(prevButtonNodeRef);
 		}
 	}
@@ -212,22 +229,6 @@ class Scrollbar extends Component {
 		this.thumbSize = this.thumbRef[this.scrollbarInfo.sizeProperty];
 		this.trackSize = this.containerRef[this.scrollbarInfo.sizeProperty];
 		this.minThumbSizeRatio = minThumbSize / this.trackSize;
-	}
-
-	componentDidMount () {
-		const {containerRef} = this;
-
-		this.calculateMetrics();
-		this.prevButtonNodeRef = containerRef.children[0];
-		this.nextButtonNodeRef = containerRef.children[1];
-	}
-
-	componentDidUpdate () {
-		this.calculateMetrics();
-	}
-
-	componentWillUnmount () {
-		stopJob(this.jobName);
 	}
 
 	initRef (prop) {

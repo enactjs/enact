@@ -5,6 +5,7 @@
 // Using string refs from the source code of ReactTransitionGroup
 /* eslint-disable react/no-string-refs */
 
+import {childrenEquals} from '@enact/core/util';
 import compose from 'ramda/src/compose';
 import eqBy from 'ramda/src/eqBy';
 import findIndex from 'ramda/src/findIndex';
@@ -185,19 +186,22 @@ class TransitionGroup extends React.Component {
 	}
 
 	componentWillReceiveProps (nextProps) {
-		const nextChildMapping = mapChildren(nextProps.children);
-		const prevChildMapping = this.state.children;
-		let children = mergeChildren(nextChildMapping, prevChildMapping);
+		// Avoid an unnecessary setState and reconcileChildren if the children haven't changed
+		if (!childrenEquals(this.props.children, nextProps.children)) {
+			const nextChildMapping = mapChildren(nextProps.children);
+			const prevChildMapping = this.state.children;
+			let children = mergeChildren(nextChildMapping, prevChildMapping);
 
-		// drop children exceeding allowed size
-		const drop = children.length - nextProps.size;
-		const dropped = drop > 0 ? children.splice(drop) : null;
+			// drop children exceeding allowed size
+			const drop = children.length - nextProps.size;
+			const dropped = drop > 0 ? children.splice(drop) : null;
 
-		this.setState({
-			children
-		}, () => {
-			this.reconcileChildren(dropped, prevChildMapping, nextChildMapping);
-		});
+			this.setState({
+				children
+			}, () => {
+				this.reconcileChildren(dropped, prevChildMapping, nextChildMapping);
+			});
+		}
 	}
 
 	reconcileChildren (dropped, prevChildMapping, nextChildMapping) {

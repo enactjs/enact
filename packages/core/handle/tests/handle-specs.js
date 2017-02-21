@@ -2,6 +2,7 @@ import sinon from 'sinon';
 import {
 	handle,
 	callOnEvent,
+	forEventProp,
 	forKeyCode,
 	forProp,
 	forward,
@@ -119,11 +120,11 @@ describe('handle', () => {
 		expect(handler.calledOnce).to.equal(true);
 	});
 
-	it('should only call handler for specified prop', function () {
+	it('should only call handler for specified event prop', function () {
 		const prop = 'index';
 		const value = 0;
 		const handler = sinon.spy();
-		const callback = handle(forProp(prop, value), handler);
+		const callback = handle(forEventProp(prop, value), handler);
 
 		// undefined shouldn't pass
 		callback(makeEvent());
@@ -140,6 +141,44 @@ describe('handle', () => {
 			[prop]: value
 		}));
 		expect(handler.calledOnce).to.equal(true);
+	});
+
+	it('should only call handler for specified prop', function () {
+		const handler = sinon.spy();
+		const callback = handle(forProp('checked', true), handler);
+
+		// undefined shouldn't pass
+		callback({}, {});
+		expect(handler.calledOnce).to.equal(false);
+
+		// == check shouldn't pass
+		callback({}, {checked: 1});
+		expect(handler.calledOnce).to.equal(false);
+
+		// === should pass
+		callback({}, {checked: true});
+		expect(handler.calledOnce).to.equal(true);
+	});
+
+	it('should forward events to function specified in provided props', function () {
+		const event = 'onMyClick';
+		const prop = 'index';
+		const propValue = 0;
+		const spy = sinon.spy();
+
+		const props = {
+			[event]: spy
+		};
+		const payload = {
+			[prop]: propValue
+		};
+
+		handle(forward(event))(payload, props);
+
+		const expected = true;
+		const actual = spy.args[0][0][prop] === propValue;
+
+		expect(actual).to.equal(expected);
 	});
 
 	it('should include object props as second arg when bound', function () {

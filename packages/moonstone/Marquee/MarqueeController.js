@@ -1,6 +1,14 @@
 import {forward} from '@enact/core/handle';
+import deprecate from '@enact/core/internal/deprecate';
 import hoc from '@enact/core/hoc';
 import React from 'react';
+
+
+const STATE = {
+	inactive: 0,	// Marquee is not necessary (render or focus not happened)
+	active: 1,		// Marquee in progress, awaiting complete
+	ready: 2		// Marquee completed or not needed, but state is active
+};
 
 /**
  * Context propTypes for MarqueeController
@@ -71,6 +79,19 @@ const defaultConfig = {
 	 * @default false
 	 * @memberof moonstone/Marquee.MarqueeController.defaultConfig
 	 */
+	marqueeOnFocus: false,
+
+	/**
+	 * Deprecated: When `true`, any `onFocus` events that bubble to the
+	 * controller will start the contained Marquee instances. This is useful
+	 * when a component contains Marquee instances that need to be started with
+	 * sibling components are focused.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @memberof moonstone/Marquee.MarqueeController.defaultConfig
+	 * @deprecated since 1.0.0-beta.3, replaced by `marqueeOnFocus`
+	 */
 	startOnFocus: false
 };
 
@@ -84,9 +105,13 @@ const defaultConfig = {
  * @public
  */
 const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
-	const {startOnFocus} = config;
+	const {marqueeOnFocus, startOnFocus} = config;
 	const forwardBlur = forward('onBlur');
 	const forwardFocus = forward('onFocus');
+
+	if (__DEV__ && typeof startOnFocus !== 'undefined') {
+		deprecate({name: 'startOnFocus', since: '1.0.0-beta.3', replacedBy: 'marqueeOnFocus', until: '1.0.0'});
+	}
 
 	return class extends React.Component {
 		static displayName = 'MarqueeController'
@@ -109,8 +134,8 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 
-		/**
-		 * Registers `component` with a set of handlers for `start` and `stop`
+		/*
+		 * Registers `component` with a set of handlers for `start` and `stop`.
 		 *
 		 * @param	{Object}	component	A component, typically a React component instance, on
 		 *									which handlers will be dispatched.
@@ -119,14 +144,20 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {undefined}
 		 */
 		handleRegister = (component, handlers) => {
+			const needsStart = !this.allInactive();
+
 			this.controlled.push({
 				...handlers,
-				complete: false,
+				state: STATE.inactive,
 				component
 			});
+
+			if (needsStart) {
+				this.dispatch('start');
+			}
 		}
 
-		/**
+		/*
 		 * Unregisters `component` for synchronization
 		 *
 		 * @param	{Object}	component	A previously registered component
@@ -134,15 +165,20 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{undefined}
 		 */
 		handleUnregister = (component) => {
+			let wasRunning = false;
 			for (let i = 0; i < this.controlled.length; i++) {
 				if (this.controlled[i].component === component) {
+					wasRunning = this.controlled[i].state === STATE.active;
 					this.controlled.splice(i, 1);
 					break;
 				}
 			}
+			if (wasRunning && !this.anyRunning()) {
+				this.dispatch('start');
+			}
 		}
 
-		/**
+		/*
 		 * Handler for the `start` context function
 		 *
 		 * @param	{Object}	component	A previously registered component
@@ -150,11 +186,13 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{undefined}
 		 */
 		handleStart = (component) => {
-			this.markIncomplete();
-			this.dispatch('start', component);
+			if (!this.anyRunning()) {
+				this.markAll(STATE.ready);
+				this.dispatch('start', component);
+			}
 		}
 
-		/**
+		/*
 		 * Handler for the `cancel` context function
 		 *
 		 * @param	{Object}	component	A previously registered component
@@ -162,11 +200,11 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{undefined}
 		 */
 		handleCancel = (component) => {
-			this.markIncomplete();
+			this.markAll(STATE.inactive);
 			this.dispatch('stop', component);
 		}
 
-		/**
+		/*
 		 * Handler for the `complete` context function
 		 *
 		 * @param	{Object}	component	A previously registered component
@@ -174,9 +212,9 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{undefined}
 		 */
 		handleComplete = (component) => {
-			const complete = this.markComplete(component);
+			const complete = this.markReady(component);
 			if (complete) {
-				this.markIncomplete();
+				this.markAll(STATE.ready);
 				this.dispatch('start');
 			}
 		}
@@ -194,10 +232,11 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		handleBlur = (ev) => {
 			this.dispatch('stop');
+			this.markAll(STATE.inactive);
 			forwardBlur(ev, this.props);
 		}
 
-		/**
+		/*
 		 * Invokes the `action` handler for each synchronized component except the invoking
 		 * `component`.
 		 *
@@ -213,49 +252,78 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 					const complete = handler.call(controlledComponent);
 
 					// Returning `true` from a start request means that the marqueeing is
-					// unnecessary and is therefore complete
+					// unnecessary and is therefore not awaiting a finish
 					if (action === 'start' && complete) {
-						controlled.complete = true;
+						controlled.state = STATE.ready;
+					} else {
+						controlled.state = STATE.active;
 					}
+				} else if ((action === 'start') && (component === controlledComponent)) {
+					controlled.state = STATE.active;
 				}
 			});
 		}
 
-		/**
-		 * Marks all components incomplete
+		/*
+		 * Marks all components with the passed-in state
+		 *
+		 * @param	{Enum}	state	The state to set
 		 *
 		 * @returns	{undefined}
 		 */
-		markIncomplete () {
+		markAll (state) {
 			this.controlled.forEach(c => {
-				c.complete = false;
+				c.state = state;
 			});
 		}
 
-		/**
-		 * Marks `component` complete
+		/*
+		 * Marks `component` as ready for next marquee action
 		 *
 		 * @param	{Object}	component	A previously registered component
 		 *
-		 * @returns	{Boolean}				`true` if all components are complete
+		 * @returns	{Boolean}				`true` if no components are STATE.active
 		 */
-		markComplete (component) {
+		markReady (component) {
 			let complete = true;
 			this.controlled.forEach(c => {
 				if (c.component === component) {
-					c.complete = true;
+					c.state = STATE.ready;
 				}
 
-				complete = complete && c.complete;
+				complete = complete && (c.state !== STATE.active);
 			});
 
 			return complete;
 		}
 
+		/*
+		 * Checks that all components are inactive
+		 *
+		 * @returns {Boolean} `true` if any components should be running
+		 */
+		allInactive () {
+			const activeOrReady = this.controlled.reduce((res, component) => {
+				return res || !(component.state === STATE.inactive);
+			}, false);
+			return !activeOrReady;
+		}
+
+		/*
+		 * Checks for any components currently marqueeing
+		 *
+		 * @returns {Boolean} `true` if any component is marqueeing
+		 */
+		anyRunning () {
+			return this.controlled.reduce((res, component) => {
+				return res || (component.state === STATE.active);
+			}, false);
+		}
+
 		render () {
 			let props = this.props;
 
-			if (startOnFocus) {
+			if (marqueeOnFocus || startOnFocus) {
 				props = {
 					...this.props,
 					onBlur: this.handleBlur,

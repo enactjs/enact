@@ -36,7 +36,7 @@ class ContextualPopupWithActivator extends React.Component {
 					open={this.state.open}
 					showCloseButton
 					popupComponent={renderPopup}
-					spotlightRestrict="self-only"
+					spotlightRestrict={select('spotlightRestrict', ['none', 'self-first', 'self-only'], 'self-only')}
 				>
 					Hello Contextual Button
 				</ContextualButton>
