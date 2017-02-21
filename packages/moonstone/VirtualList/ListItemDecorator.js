@@ -29,7 +29,7 @@ const defaultConfig = {
 };
 
 /**
- * {@link moonstone/ListItemDecorator.ListItemDecorator} is the Higher-order Component for a VirtualList item wrapper.
+ * {@link moonstone/ListItemDecorator.ListItemDecorator} is the Higher-order Component for a list item wrapper.
  *
  * @class ListItemDecorator
  * @memberof moonstone/ListItemDecorator
@@ -38,7 +38,7 @@ const defaultConfig = {
  */
 const ListItemDecorator = hoc(defaultConfig, ({border}, Wrapped) => {
 	return kind({
-		name: 'VirtualListItem',
+		name: 'ListItemDecorator',
 
 		styles: {
 			css,
