@@ -11,7 +11,7 @@ import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 
 import VirtualListBase, {gridListItemSizeShape} from './VirtualListBase';
-import VirtualListItemable from './VirtualListItemable';
+import ListItemDecorator from './ListItemDecorator';
 
 /**
  * {@link moonstone/VirtualList.VirtualList} is a VirtualList with Moonstone styling.
@@ -195,5 +195,5 @@ const VirtualGridList = kind({
 });
 
 export default VirtualList;
-export {VirtualList, VirtualGridList, VirtualListItemable};
+export {VirtualList, VirtualGridList, ListItemDecorator};
 export * from './GridListImageItem';

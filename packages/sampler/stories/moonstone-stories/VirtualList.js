@@ -1,7 +1,7 @@
 import Item from '@enact/moonstone/Item';
 import kind from '@enact/core/kind';
 import ri from '@enact/ui/resolution';
-import VirtualList, {VirtualListItemable} from '@enact/moonstone/VirtualList';
+import VirtualList, {ListItemDecorator} from '@enact/moonstone/VirtualList';
 import {VirtualListCore} from '@enact/moonstone/VirtualList/VirtualListBase';
 import React, {PropTypes} from 'react';
 import {storiesOf, action} from '@kadira/storybook';
@@ -29,7 +29,7 @@ const VirtualListItemBase = kind({
 	}
 });
 
-const VirtualListItem = VirtualListItemable({border: true}, VirtualListItemBase);
+const VirtualListItem = ListItemDecorator({border: true}, VirtualListItemBase);
 
 for (let i = 0; i < 1000; i++) {
 	items.push('Item ' + ('00' + i).slice(-3));

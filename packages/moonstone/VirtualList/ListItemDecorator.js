@@ -1,7 +1,7 @@
 /**
- * Exports the {@link moonstone/VirtualListItemable.VirtualListItemable} Higher-order Component (HOC).
+ * Exports the {@link moonstone/ListItemDecorator.ListItemDecorator} Higher-order Component (HOC).
  *
- * @module moonstone/VirtualListItemable
+ * @module moonstone/ListItemDecorator
  */
 
 import classNames from 'classnames';
@@ -10,13 +10,13 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import {Spottable} from '@enact/spotlight';
 
-import css from './VirtualListItemable.less';
+import css from './ListItemDecorator.less';
 
 /**
- * {@link moonstone/VirtualListItemable.SpottableDiv} is the Higher-order Component for a VirtualList item wrapper.
+ * {@link moonstone/ListItemDecorator.SpottableDiv} is the Higher-order Component for a VirtualList item wrapper.
  *
  * @class SpottableDiv
- * @memberof moonstone/VirtualListItemable
+ * @memberof moonstone/ListItemDecorator
  * @ui
  * @private
  */
@@ -31,9 +31,9 @@ const SpottableDiv = Spottable(kind({
 const dataIndexProp = 'data-index';
 
 /**
- * Default config for {@link moonstone/VirtualListItemable.VirtualListItemable}
+ * Default config for {@link moonstone/ListItemDecorator.ListItemDecorator}
  *
- * @memberof moonstone/VirtualListItemable.VirtualListItemable
+ * @memberof moonstone/ListItemDecorator.ListItemDecorator
  * @hocconfig
  */
 const defaultConfig = {
@@ -42,7 +42,7 @@ const defaultConfig = {
 	 *
 	 * @type {Boolean}
 	 * @default false
-	 * @memberof ui/VirtualListItemable.VirtualListItemable.defaultConfig
+	 * @memberof ui/ListItemDecorator.ListItemDecorator.defaultConfig
 	 */
 	border: false,
 
@@ -51,20 +51,20 @@ const defaultConfig = {
 	 *
 	 * @type {Boolean}
 	 * @default false
-	 * @memberof ui/VirtualListItemable.VirtualListItemable.defaultConfig
+	 * @memberof ui/ListItemDecorator.ListItemDecorator.defaultConfig
 	 */
 	spottable: false
 };
 
 /**
- * {@link moonstone/VirtualListItemable.VirtualListItemable} is the Higher-order Component for a VirtualList item wrapper.
+ * {@link moonstone/ListItemDecorator.ListItemDecorator} is the Higher-order Component for a VirtualList item wrapper.
  *
- * @class VirtualListItemable
- * @memberof moonstone/VirtualListItemable
+ * @class ListItemDecorator
+ * @memberof moonstone/ListItemDecorator
  * @ui
  * @public
  */
-const VirtualListItemable = hoc(defaultConfig, ({border, spottable}, Wrapped) => {
+const ListItemDecorator = hoc(defaultConfig, ({border, spottable}, Wrapped) => {
 	const component = spottable ? SpottableDiv : 'div';
 
 	return kind({
@@ -72,7 +72,7 @@ const VirtualListItemable = hoc(defaultConfig, ({border, spottable}, Wrapped) =>
 
 		styles: {
 			css,
-			className: 'VirtualListItemable'
+			className: 'listItemDecorator'
 		},
 
 		computed: {
@@ -96,5 +96,5 @@ const VirtualListItemable = hoc(defaultConfig, ({border, spottable}, Wrapped) =>
 	});
 });
 
-export default VirtualListItemable;
-export {VirtualListItemable};
+export default ListItemDecorator;
+export {ListItemDecorator};
