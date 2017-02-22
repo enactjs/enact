@@ -258,7 +258,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 					} else {
 						controlled.state = STATE.active;
 					}
-				} else if (component === controlledComponent) {
+				} else if ((action === 'start') && (component === controlledComponent)) {
 					controlled.state = STATE.active;
 				}
 			});

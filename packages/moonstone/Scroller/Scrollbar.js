@@ -47,10 +47,7 @@ const
 		}
 	},
 	selectPrevIcon = selectIcon(true),
-	selectNextIcon = selectIcon(false),
-	// spotlight
-	doc = (typeof window === 'object') ? window.document : {},
-	perf = (typeof window === 'object') ? window.performance : {now: Date.now};
+	selectNextIcon = selectIcon(false);
 
 /**
  * {@link moonstone/Scroller.Scrollbar} is a Scrollbar with Moonstone styling.
@@ -112,7 +109,10 @@ class Scrollbar extends Component {
 			clickPrevHandler: props.onPrevScroll,
 			clickNextHandler: props.onNextScroll
 		};
-		this.jobName = perf.now();
+
+		if (typeof window !== 'undefined') {
+			this.jobName = window.performance.now();
+		}
 
 		this.initContainerRef = this.initRef('containerRef');
 		this.initThumbRef = this.initRef('thumbRef');
@@ -154,7 +154,8 @@ class Scrollbar extends Component {
 			currentPos = vertical ? bounds.scrollTop : bounds.scrollLeft,
 			maxPos = vertical ? bounds.maxTop : bounds.maxLeft,
 			shouldDisablePrevButton = currentPos <= 0,
-			shouldDisableNextButton = currentPos >= maxPos;
+			shouldDisableNextButton = currentPos >= maxPos,
+			spotItem = window.document.activeElement;
 
 		if (prevButtonDisabled !== shouldDisablePrevButton) {
 			this.setState({prevButtonDisabled: shouldDisablePrevButton});
@@ -162,9 +163,9 @@ class Scrollbar extends Component {
 			this.setState({nextButtonDisabled: shouldDisableNextButton});
 		}
 
-		if (shouldDisablePrevButton && doc.activeElement === prevButtonNodeRef) {
+		if (shouldDisablePrevButton && spotItem === prevButtonNodeRef) {
 			Spotlight.focus(nextButtonNodeRef);
-		} else if (shouldDisableNextButton && doc.activeElement === nextButtonNodeRef) {
+		} else if (shouldDisableNextButton && spotItem === nextButtonNodeRef) {
 			Spotlight.focus(prevButtonNodeRef);
 		}
 	}

@@ -12,18 +12,23 @@ import ilib from '@enact/i18n';
 import {startJob, stopJob} from '@enact/core/jobs';
 import {on, off} from '@enact/core/dispatcher';
 import Slottable from '@enact/ui/Slottable';
+import {Spotlight, Spottable, SpotlightContainerDecorator, getDirection, spottableClass, spotlightDefaultClass} from '@enact/spotlight';
 import Video from 'react-html5video';
 
 import Spinner from '../Spinner';
 
-import {calcNumberValueOfPlaybackRate, getNow} from './util';
+import {calcNumberValueOfPlaybackRate, getNow, secondsToTime} from './util';
 import Overlay from './Overlay';
 import MediaControls from './MediaControls';
 import MediaTitle from './MediaTitle';
 import MediaSlider from './MediaSlider';
+import Feedback from './Feedback';
 import Times from './Times';
 
 import css from './VideoPlayer.less';
+
+const SpottableDiv = Spottable('div');
+const Container = SpotlightContainerDecorator({enterTo: ''}, 'div');
 
 // Video ReadyStates
 // - Commented are currently unused.
@@ -104,14 +109,25 @@ const VideoPlayerBase = class extends React.Component {
 
 	static propTypes = /** @lends moonstone/VideoPlayer.VideoPlayerBase.prototype */ {
 		/**
-		* Amount of time (in milliseconds) after which control buttons are automatically hidden.
-		* Setting this to 0 or `null` disables autoClose, requiring user input to open and close.
-		*
-		* @type {Number}
-		* @default 7000
-		* @public
-		*/
+		 * Amount of time (in milliseconds) after which control buttons are automatically hidden.
+		 * Setting this to 0 or `null` disables autoClose, requiring user input to open and close.
+		 *
+		 * @type {Number}
+		 * @default 7000
+		 * @public
+		 */
 		autoCloseTimeout: React.PropTypes.number,
+
+		/**
+		 * Amount of time (in milliseconds) after which the feedback text/icon part of the slider's
+		 * tooltip will automatically hidden after the last action.
+		 * Setting this to 0 or `null` disables feedbackHideDelay; feedback will always be present.
+		 *
+		 * @type {Number}
+		 * @default 2000
+		 * @public
+		 */
+		feedbackHideDelay: React.PropTypes.number,
 
 		/**
 		 * These components are placed into the slot to the left of the media controls.
@@ -258,6 +274,7 @@ const VideoPlayerBase = class extends React.Component {
 
 	static defaultProps = {
 		autoCloseTimeout: 7000,
+		feedbackHideDelay: 2000,
 		jumpBy: 30,
 		muted: false,
 		noAutoPlay: false,
@@ -276,6 +293,9 @@ const VideoPlayerBase = class extends React.Component {
 		this.video = null;
 		this.handledMediaForwards = {};
 		this.handledMediaEvents = {};
+		this.prevCommand = (props.noAutoPlay ? 'pause' : 'play');
+		this.speedIndex = 0;
+		this.selectPlaybackRates('fastForward');
 
 		this.initI18n();
 
@@ -301,28 +321,21 @@ const VideoPlayerBase = class extends React.Component {
 
 			// Non-standard state computed from properties
 			bottomControlsVisible: false,
+			feedbackVisible: true,
 			more: false,
 			percentageLoaded: 0,
 			percentagePlayed: 0,
 			playPauseIcon: 'play',
+			sliderScrubbing: false,
+			sliderKnobProportion: 0,
 			titleVisible: true
 		};
 	}
 
-	componentWillUpdate () {
-		this.initI18n();
-	}
 	componentDidMount () {
 		on('mousemove', this.activityDetected);
 		on('keypress', this.activityDetected);
-	}
-
-	componentWillUnmount () {
-		off('mousemove', this.activityDetected);
-		off('keypress', this.activityDetected);
-		this.stopRewindJob();
-		this.stopAutoCloseTimeout();
-		this.stopDelayedTitleHide();
+		this.startDelayedFeedbackHide();
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -347,6 +360,40 @@ const VideoPlayerBase = class extends React.Component {
 		}
 	}
 
+	componentWillUpdate (nextProps, nextState) {
+		this.initI18n();
+
+		if (
+			this.state.bottomControlsVisible &&
+			!nextState.bottomControlsVisible &&
+			this.player.contains(Spotlight.getCurrent())
+		) {
+			// set focus to the hidden spottable control - maintaining focus on available spottable
+			// controls, which prevents an addiitional 5-way attempt in order to re-show media controls
+			Spotlight.focus(this.player.querySelector(`.${css.controlsHandleAbove}.${spottableClass}`));
+		}
+	}
+
+	// Added to set default focus on the media control (play) when controls become visible.
+	componentDidUpdate (prevProps, prevState) {
+		if (
+			this.state.bottomControlsVisible &&
+			!prevState.bottomControlsVisible &&
+			this.player.contains(Spotlight.getCurrent())
+		) {
+			this.focusDefaultMediaControl();
+		}
+	}
+
+	componentWillUnmount () {
+		off('mousemove', this.activityDetected);
+		off('keypress', this.activityDetected);
+		this.stopRewindJob();
+		this.stopAutoCloseTimeout();
+		this.stopDelayedTitleHide();
+		this.stopDelayedFeedbackHide();
+	}
+
 
 	//
 	// Media Interaction Methods
@@ -366,12 +413,16 @@ const VideoPlayerBase = class extends React.Component {
 	 * @private
 	 */
 	send = (action, props) => {
+		this.showFeedback();
+		this.startDelayedFeedbackHide();
 		if (this.video && this.videoReady) {
 			this.video[action](props);
 		}
 	}
 
 	jump = (distance) => {
+		this.showFeedback();
+		this.startDelayedFeedbackHide();
 		if (this.video && this.videoReady) {
 			this.video.seek(this.state.currentTime + distance);
 		}
@@ -381,6 +432,9 @@ const VideoPlayerBase = class extends React.Component {
 	//
 	// Internal Methods
 	//
+	forwardEvent = (name, ev) => {
+		forward(name)(ev, this.props);
+	}
 	initI18n = () => {
 		const locale = ilib.getLocale();
 
@@ -410,7 +464,8 @@ const VideoPlayerBase = class extends React.Component {
 				percentageLoaded: el.buffered.length && el.buffered.end(el.buffered.length - 1) / el.duration,
 				percentagePlayed: el.currentTime / el.duration,
 				error: el.networkState === el.NETWORK_NO_SOURCE,
-				loading: el.readyState < el.HAVE_ENOUGH_DATA
+				loading: el.readyState < el.HAVE_ENOUGH_DATA,
+				sliderTooltipTime: this.sliderScrubbing ? (this.sliderKnobProportion * el.duration) : el.currentTime
 			};
 
 			// If there's an error, we're obviously not loading, no matter what the readyState is.
@@ -423,8 +478,38 @@ const VideoPlayerBase = class extends React.Component {
 				updatedState.error
 			);
 
+			// If we're ff or rw and hit the end, just pause the media.
+			if ((el.currentTime === 0 && this.prevCommand === 'rewind') ||
+				(el.currentTime === el.duration && this.prevCommand === 'fastForward')) {
+				this.pause();
+			}
 			this.setState(updatedState);
+
 		}
+	}
+
+	/**
+	 * Programatically plays the current media.
+	 *
+	 * @private
+	 */
+	play = () => {
+		this.speedIndex = 0;
+		this.setPlaybackRate(1);
+		this.send('play');
+		this.prevCommand = 'play';
+	}
+
+	/**
+	 * Programatically plays the current media.
+	 *
+	 * @private
+	 */
+	pause = () => {
+		this.speedIndex = 0;
+		this.setPlaybackRate(1);
+		this.send('pause');
+		this.prevCommand = 'pause';
 	}
 
 	/**
@@ -479,6 +564,9 @@ const VideoPlayerBase = class extends React.Component {
 		this.setPlaybackRate(this.selectPlaybackRate(this.speedIndex));
 
 		if (shouldResumePlayback) this.send('play');
+		else this.stopDelayedFeedbackHide();
+
+		this.showFeedback();
 	}
 
 	/**
@@ -533,6 +621,9 @@ const VideoPlayerBase = class extends React.Component {
 		this.setPlaybackRate(this.selectPlaybackRate(this.speedIndex));
 
 		if (shouldResumePlayback) this.send('play');
+		else this.stopDelayedFeedbackHide();
+
+		this.showFeedback();
 	}
 
 	/**
@@ -649,7 +740,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	startAutoCloseTimeout = () => {
-		if (this.props.autoCloseTimeout) {
+		if (this.props.autoCloseTimeout && !this.state.more) {
 			startJob('autoClose' + this.instanceId, this.hideControls, this.props.autoCloseTimeout);
 		}
 	}
@@ -668,7 +759,7 @@ const VideoPlayerBase = class extends React.Component {
 
 	hideControls = () => {
 		this.stopDelayedTitleHide();
-		this.setState({bottomControlsVisible: false});
+		this.setState({bottomControlsVisible: false, more: false});
 	}
 
 	startDelayedTitleHide = () => {
@@ -685,6 +776,23 @@ const VideoPlayerBase = class extends React.Component {
 		this.setState({titleVisible: false});
 	}
 
+	startDelayedFeedbackHide = () => {
+		if (this.props.feedbackHideDelay) {
+			startJob('feedbackHideDelay' + this.instanceId, this.hideFeedback, this.props.feedbackHideDelay);
+		}
+	}
+
+	stopDelayedFeedbackHide = () => {
+		stopJob('feedbackHideDelay' + this.instanceId);
+	}
+
+	showFeedback = () => {
+		this.setState({feedbackVisible: true});
+	}
+
+	hideFeedback = () => {
+		this.setState({feedbackVisible: false});
+	}
 
 	//
 	// Handled Media events
@@ -698,13 +806,28 @@ const VideoPlayerBase = class extends React.Component {
 		}
 	}
 
+	handleKeyDownFromControls = (ev) => {
+		if (getDirection(ev.keyCode) === 'down') {
+			this.hideControls();
+		}
+	}
+
+	handleSpotlightDownFromSlider = (ev) => {
+		if (!this.state.mediaControlsDisabled && !this.state.more) {
+			ev.preventDefault();
+			ev.stopPropagation();
+			Spotlight.setPointerMode(false);
+			this.focusDefaultMediaControl();
+		}
+	}
+
+	focusDefaultMediaControl = () => {
+		return Spotlight.focus(this.player.querySelector(`.${css.bottom} .${spotlightDefaultClass}.${spottableClass}`));
+	};
 
 	//
 	// Player Interaction events
 	//
-	forwardEvent = (name, ev) => {
-		forward(name)(ev, this.props);
-	}
 	onVideoClick = () => {
 		if (this.state.bottomControlsVisible) {
 			this.hideControls();
@@ -718,6 +841,10 @@ const VideoPlayerBase = class extends React.Component {
 			this.send('seek', value * el.duration);
 		}
 	}
+	handleKnobMove = (ev) => {
+		this.sliderScrubbing = ev.detached;
+		this.sliderKnobProportion = ev.proportion;
+	}
 	onJumpBackward  = (ev) => {
 		this.forwardEvent('onJumpBackwardButtonClick', ev);
 		this.jump(-1 * this.props.jumpBy);
@@ -727,15 +854,11 @@ const VideoPlayerBase = class extends React.Component {
 		this.rewind();
 	}
 	onPlay          = (ev) => {
-		this.speedIndex = 0;
-		this.setPlaybackRate(1);
-		this.forwardEvent('onPlayButtonClick', ev);
+	this.forwardEvent('onPlayButtonClick', ev);
 		if (this.state.paused) {
-			this.send('play');
-			this.prevCommand = 'play';
+			this.play();
 		} else {
-			this.send('pause');
-			this.prevCommand = 'pause';
+			this.pause();
 		}
 	}
 	onForward       = (ev) => {
@@ -747,11 +870,12 @@ const VideoPlayerBase = class extends React.Component {
 		this.jump(this.props.jumpBy);
 	}
 	onMoreClick     = () => {
-		this.startAutoCloseTimeout();	// Interupt and restart the timer since "more" button was clicked.
 		if (this.state.more) {
+			this.startAutoCloseTimeout();	// Restore the timer since we are leaving "more.
 			// Restore the title-hide now that we're finished with "more".
 			this.startDelayedTitleHide();
 		} else {
+			this.stopAutoCloseTimeout();	// Interupt the timer since controls should not hide while viewing "more".
 			// Interrupt the title-hide since we don't want it hiding autonomously in "more".
 			this.stopDelayedTitleHide();
 		}
@@ -761,15 +885,19 @@ const VideoPlayerBase = class extends React.Component {
 		});
 	}
 
+	setPlayerRef = (node) => {
+		this.player = node;
+	}
+
 	setVideoRef = (video) => {
 		this.videoReady = !!video;
 		this.video = video;
 	}
 
 	render () {
-		const {children, className, infoComponents, leftComponents, noAutoPlay, noJumpButtons, noRateButtons, noSlider, rightComponents, title, style,
-			...rest} = this.props;
+		const {children, className, infoComponents, leftComponents, noAutoPlay, noJumpButtons, noRateButtons, noSlider, rightComponents, title, style, ...rest} = this.props;
 		delete rest.autoCloseTimeout;
+		delete rest.feedbackHideDelay;
 		delete rest.jumpBy;
 		delete rest.onBackwardButtonClick;
 		delete rest.onForwardButtonClick;
@@ -782,7 +910,7 @@ const VideoPlayerBase = class extends React.Component {
 		const moreDisabled = !(this.state.more);
 
 		return (
-			<div className={css.videoPlayer + (className ? ' ' + className : '')} style={style}>
+			<div className={css.videoPlayer + (className ? ' ' + className : '')} style={style} onKeyDown={this.activityDetected} ref={this.setPlayerRef}>
 				{/* Video Section */}
 				<Video
 					{...rest}
@@ -795,12 +923,12 @@ const VideoPlayerBase = class extends React.Component {
 					{children}
 				</Video>
 
-				<Overlay onClick={this.onVideoClick} onMouseMove={this.onVideoMouseMove}>
+				<Overlay onClick={this.onVideoClick}>
 					{this.state.loading ? <Spinner centered /> : null}
 				</Overlay>
 
 				{this.state.bottomControlsVisible ? <div className={css.fullscreen + ' enyo-fit scrim'}>
-					<div className={css.bottom}>
+					<Container className={css.bottom}>
 						{/* Info Section: Title, Description, Times */}
 						<div className={css.infoFrame}>
 							<MediaTitle
@@ -817,7 +945,17 @@ const VideoPlayerBase = class extends React.Component {
 							backgroundProgress={this.state.percentageLoaded}
 							value={this.state.percentagePlayed}
 							onChange={this.onSliderChange}
-						/>}
+							onKnobMove={this.handleKnobMove}
+							onSpotlightUp={this.hideControls}
+							onSpotlightDown={this.handleSpotlightDownFromSlider}
+						>
+							<div className={css.sliderTooltip}>
+								<Feedback playbackState={this.prevCommand} visible={this.state.feedbackVisible} >
+									{this.selectPlaybackRate(this.speedIndex)}
+								</Feedback>
+								{secondsToTime(this.state.sliderTooltipTime, this.durfmt)}
+							</div>
+						</MediaSlider>}
 
 						<MediaControls
 							leftComponents={leftComponents}
@@ -835,11 +973,19 @@ const VideoPlayerBase = class extends React.Component {
 							playPauseIcon={this.state.playPauseIcon}
 							rightComponents={rightComponents}
 							showMoreComponents={this.state.more}
+							onKeyDown={this.handleKeyDownFromControls}
 						>
 							{children}
 						</MediaControls>
-					</div>
+					</Container>
 				</div> : null}
+				<SpottableDiv
+					// This captures spotlight focus for use with 5-way.
+					// It's non-visible but lives at the top of the VideoPlayer.
+					className={css.controlsHandleAbove}
+					onSpotlightDown={this.showControls}
+					onClick={this.showControls}
+				/>
 			</div>
 		);
 	}

@@ -5,8 +5,11 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ## [unreleased]
 
 ### Added
+- `moonstone/VideoPlayer` support for 5-way show/hide of media playback controls
 
+- `moonstone/Slider` property `onKnobMove` to fire when the knob position changes, independently from the `moonstone/Slider` value
 - `moonstone/Slider` properties `active`, `disabled`, `knobStep`, `onActivate`, `onDecrement`, and `onIncrement` as part of enabling 5-way support to `moonstone/Slider`, `moonstone/IncrementSlider` and the media slider for `moonstone/VideoPlayer`
+- `moonstone/Slider` now supports `children` which are added to the `Slider`'s knob, and follow it as it moves
 - `moonstone/ExpandableInput` properties `iconAfter` and `iconBefore` to display icons after and before the input, respectively
 - `moonstone/Dialog` property `preserveCase`, which affects `title` text
 
@@ -16,6 +19,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Marquee` to allow disabled marquees to animate
 - `moonstone/Dialog` to marquee `title` and `titleBelow`
 - `moonstone/Marquee.MarqueeController` config option `startOnFocus` to `marqueeOnFocus`. `startOnFocus` is deprecated and will be removed in a future update.
+- `moonstone/Button`, `moonstone/IconButton`, `moonstone/Item` to not forward `onClick` when `disabled`
 
 ### Fixed
 
