@@ -68,6 +68,14 @@ const handledMediaEventsMap = {
 };
 
 
+// provide forwarding of events on media controls
+const forwardBackwardButtonClick = forward('onBackwardButtonClick');
+const forwardForwardButtonClick = forward('onForwardButtonClick');
+const forwardJumpBackwardButtonClick = forward('onJumpBackwardButtonClick');
+const forwardJumpForwardButtonClick = forward('onJumpForwardButtonClick');
+const forwardPlayButtonClick = forward('onPlayButtonClick');
+
+
 /**
  * Mapping of playback rate names to playback rate values that may be set.
  * ```
@@ -94,7 +102,6 @@ const playbackRateHash = {
 	slowForward: ['1/4', '1/2'],
 	slowRewind: ['-1/2', '-1']
 };
-
 
 /**
  * A player for video {@link moonstone/VideoPlayer.VideoPlayerBase}.
@@ -432,9 +439,6 @@ const VideoPlayerBase = class extends React.Component {
 	//
 	// Internal Methods
 	//
-	forwardEvent = (name, ev) => {
-		forward(name)(ev, this.props);
-	}
 	initI18n = () => {
 		const locale = ilib.getLocale();
 
@@ -846,15 +850,15 @@ const VideoPlayerBase = class extends React.Component {
 		this.sliderKnobProportion = ev.proportion;
 	}
 	onJumpBackward  = (ev) => {
-		this.forwardEvent('onJumpBackwardButtonClick', ev);
+		forwardJumpBackwardButtonClick(ev, this.props);
 		this.jump(-1 * this.props.jumpBy);
 	}
 	onBackward      = (ev) => {
-		this.forwardEvent('onBackwardButtonClick', ev);
+		forwardBackwardButtonClick(ev, this.props);
 		this.rewind();
 	}
 	onPlay          = (ev) => {
-		this.forwardEvent('onPlayButtonClick', ev);
+		forwardPlayButtonClick(ev, this.props);
 		if (this.state.paused) {
 			this.play();
 		} else {
@@ -862,11 +866,11 @@ const VideoPlayerBase = class extends React.Component {
 		}
 	}
 	onForward       = (ev) => {
-		this.forwardEvent('onForwardButtonClick', ev);
+		forwardForwardButtonClick(ev, this.props);
 		this.fastForward();
 	}
 	onJumpForward   = (ev) => {
-		this.forwardEvent('onJumpForwardButtonClick', ev);
+		forwardJumpForwardButtonClick(ev, this.props);
 		this.jump(this.props.jumpBy);
 	}
 	onMoreClick     = () => {
