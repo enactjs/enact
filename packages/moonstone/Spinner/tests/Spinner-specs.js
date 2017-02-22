@@ -1,5 +1,5 @@
 import React from 'react';
-import {shallow, mount} from 'enzyme';
+import {mount} from 'enzyme';
 import Spinner from '../Spinner';
 import css from '../Spinner.less';
 
@@ -29,7 +29,7 @@ describe('Spinner Specs', () => {
 	});
 
 	it('should have transparent class when transparent prop equals true', function () {
-		const spinner = shallow(
+		const spinner = mount(
 			<Spinner transparent>
 				Loading...
 			</Spinner>
@@ -42,7 +42,7 @@ describe('Spinner Specs', () => {
 	});
 
 	it('should have centered class when centered prop equals true', function () {
-		const spinner = shallow(
+		const spinner = mount(
 			<Spinner centered>
 				Loading...
 			</Spinner>
@@ -55,7 +55,7 @@ describe('Spinner Specs', () => {
 	});
 
 	it('should have content class when Spinner has children', function () {
-		const spinner = shallow(
+		const spinner = mount(
 			<Spinner>
 				Loading...
 			</Spinner>
@@ -68,7 +68,7 @@ describe('Spinner Specs', () => {
 	});
 
 	it('should not have content class when Spinner has no children', function () {
-		const spinner = shallow(
+		const spinner = mount(
 			<Spinner />
 		);
 

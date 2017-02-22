@@ -134,8 +134,8 @@ class Spinner extends React.Component {
 	}
 
 	static defaultProps = {
-		blockClick: 'screen',
-		scrimType: 'translucent'
+		blockClick: 'none',
+		scrimType: 'none'
 	}
 
 	constructor () {
