@@ -672,34 +672,37 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		updateScrollbars = (isVisibilityChanged = true) => {
+		updateScrollbars = () => {
 			const
-				bounds = this.getScrollBounds(),
+				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
+				bounds = this.getScrollBounds();
+
+			// determine if we should hide or show any scrollbars
+			const
 				canScrollHorizontally = this.canScrollHorizontally(bounds),
-				canScrollVertically = this.canScrollVertically(bounds);
+				canScrollVertically = this.canScrollVertically(bounds),
+				isVisibilityChanged = (
+					isHorizontalScrollbarVisible !== canScrollHorizontally ||
+					isVerticalScrollbarVisible !== canScrollVertically
+				);
 
 			if (isVisibilityChanged) {
-				// eslint-disable-next-line react/no-did-mount-set-state
+				// one or both scrollbars have changed visibility
 				this.setState({
 					isHorizontalScrollbarVisible: canScrollHorizontally,
 					isVerticalScrollbarVisible: canScrollVertically
 				});
-			}
-
-			if (canScrollHorizontally) {
-				this.scrollbarHorizontalRef.update({
+			} else if (canScrollVertically || canScrollHorizontally) {
+				// no visibility change but need to notify whichever scrollbars are visible of the
+				// updated bounds and scroll position
+				const updatedBounds = {
 					...bounds,
 					scrollLeft: this.scrollLeft,
 					scrollTop: this.scrollTop
-				});
-			}
+				};
 
-			if (canScrollVertically) {
-				this.scrollbarVerticalRef.update({
-					...bounds,
-					scrollLeft: this.scrollLeft,
-					scrollTop: this.scrollTop
-				});
+				if (canScrollHorizontally) this.scrollbarHorizontalRef.update(updatedBounds);
+				if (canScrollVertically) this.scrollbarVerticalRef.update(updatedBounds);
 			}
 		}
 
@@ -745,15 +748,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 
 			if (!this.props.hideScrollbars) {
-				const
-					{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
-					bounds = this.getScrollBounds();
-				let
-					curHorizontalScrollbarVisible = this.canScrollHorizontally(bounds),
-					curVerticalScrollbarVisible = this.canScrollVertically(bounds),
-					isVisibilityChanged = (isHorizontalScrollbarVisible !== curHorizontalScrollbarVisible || isVerticalScrollbarVisible !== curVerticalScrollbarVisible);
-
-				this.updateScrollbars(isVisibilityChanged);
+				this.updateScrollbars();
 			}
 		}
 
