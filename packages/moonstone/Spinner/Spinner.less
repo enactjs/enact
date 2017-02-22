@@ -210,12 +210,12 @@
 	position: absolute;
 	height: 100%;
 	width: 100%;
-	background-color: rgba(0, 0, 0, .7);
+	background-color: @moon-spinner-background-translucent;
 }
 
 .scrimTransparent {
 	&:extend(.scrimTranslucent);
-	background-color: rgba(0, 0, 0, 0);
+	background-color: @moon-spinner-background-transparent;
 }
 
 :global(.enact-locale-right-to-left) .spinner {
