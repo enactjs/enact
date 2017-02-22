@@ -10,6 +10,17 @@ const preventSpotlightNavigation = (ev) => {
 
 const isBubbling = (ev) => ev.currentTarget !== ev.target;
 
+// A regex to check for input types that allow selectionStart
+const SELECTABLE_TYPES = /text|password|search|tel|url/;
+
+const safeSelectionStart = (target) => {
+	if (SELECTABLE_TYPES.test(target.type)) {
+		return target.selectionStart;
+	} else {
+		return 0;
+	}
+};
+
 /**
  * {@link moonstone/Input.InputSpotlightDecorator} is a Higher-order Component that manages the
  * spotlight behavior for an {@link moonstone/Input.Input}
@@ -30,6 +41,15 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 		static displayName = 'InputSpotlightDecorator';
 
 		static propTypes = /** @lends moonstone/Input/InputSpotlightDecorator.InputSpotlightDecorator.prototype */ {
+			/**
+			 * When `true`, applies a disabled style and the control becomes non-interactive.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			disabled: React.PropTypes.bool,
+
 			/**
 			 * When `true`, blurs the input when the "enter" key is pressed.
 			 *
@@ -78,7 +98,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 		}
 
 		componentDidUpdate (_, prevState) {
-			if (this.state.node && (this.state.node !== prevState.node)) {
+			if (this.state.node) {
 				this.state.node.focus();
 			}
 
@@ -139,20 +159,30 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 						this.focusDecorator(ev.currentTarget);
 						ev.stopPropagation();
 					}
-				} if (!this.state.focused === 'input') {	// Blurring decorator but not focusing input
+				} else if (!ev.currentTarget.contains(ev.relatedTarget)) {
+					// Blurring decorator but not focusing input
+					forwardBlur(ev, this.props);
 					this.blur();
 				}
 			} else if (this.state.focused === 'input' && this.state.node === ev.target) {
-				// only blur when the input should be focused and is the target of the blur
-				this.blur();
-				forwardBlur(ev, this.props);
+				if (ev.currentTarget === ev.relatedTarget) {
+					// if the focused item (ev.relatedTarget) is the current target (the decorator),
+					// prevent the blur from propagating so the input will be re-focused on update.
+					ev.stopPropagation();
+				} else {
+					// only blur when the input should be focused and is the target of the blur
+					this.blur();
+					forwardBlur(ev, this.props);
+				}
 			}
 		}
 
 		onClick = (ev) => {
+			const {disabled, spotlightDisabled} = this.props;
+
 			// focus the <input> whenever clicking on any part of the component to ensure both that
 			// the <input> has focus and Spotlight is paused.
-			if (!this.props.spotlightDisabled) {
+			if (!disabled && !spotlightDisabled) {
 				this.focusInput(ev.currentTarget);
 			}
 
@@ -186,9 +216,9 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 					// on enter + dismissOnEnter
 					(isEnter && dismissOnEnter) ||
 					// on left + at beginning of selection
-					(isLeft && target.selectionStart === 0) ||
-					// on right + at end of selection
-					(isRight && target.selectionStart === target.value.length) ||
+					(isLeft && safeSelectionStart(target) === 0) ||
+					// on right + at end of selection (note: fails on non-selectable types usually)
+					(isRight && safeSelectionStart(target) === target.value.length) ||
 					// on up
 					isUp ||
 					// on down
@@ -197,6 +227,10 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 
 				if (shouldFocusDecorator) {
 					if (!noDecorator) {
+						// we really only support the number type properly, so only handling this case
+						if (ev.target.type === 'number') {
+							ev.preventDefault();
+						}
 						this.focusDecorator(currentTarget);
 
 						// prevent Enter onKeyPress which triggers an onClick via Spotlight
@@ -221,7 +255,6 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 					preventSpotlightNavigation(ev);
 				}
 			}
-
 			forwardKeyDown(ev, this.props);
 		}
 
