@@ -140,7 +140,7 @@ const MarqueeBase = kind({
 
 			// If the components content directionality doesn't match the context, we need to set it
 			// inline
-			let direction = 'inherit';
+			let direction = contextRtl ? 'rtl' : 'inherit';
 			if (overrideRtl) {
 				direction = rtl ? 'rtl' : 'ltr';
 			}
