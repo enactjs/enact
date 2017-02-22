@@ -1,6 +1,6 @@
+import {Announce} from '@enact/ui/AnnounceDecorator';
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
-import {is} from '@enact/core/keymap';
 import React, {Component, PropTypes} from 'react';
 import ri from '@enact/ui/resolution';
 import Spotlight from '@enact/spotlight';
@@ -63,8 +63,10 @@ const
  * @ui
  * @private
  */
-class Scrollbar extends Component {
+class ScrollbarBase extends Component {
 	static propTypes = /** @lends moonstone/Scroller.Scrollbar.prototype */ {
+		announce: PropTypes.func,
+
 		className: PropTypes.any,
 
 		/**
@@ -117,6 +119,7 @@ class Scrollbar extends Component {
 
 		this.jobName = perf.now();
 
+		this.initAnnounceRef = this.initRef('announceRef');
 		this.initContainerRef = this.initRef('containerRef');
 		this.initThumbRef = this.initRef('thumbRef');
 	}
@@ -134,6 +137,7 @@ class Scrollbar extends Component {
 	}
 
 	componentWillUnmount () {
+		clearTimeout(this.alertTimeout);
 		stopJob(this.jobName);
 	}
 
@@ -239,9 +243,21 @@ class Scrollbar extends Component {
 		};
 	}
 
+	handlePrevScroll = (ev) => {
+		const {onPrevScroll, vertical} = this.props;
+		onPrevScroll(ev);
+		if (this.announceRef) this.announceRef.announce(vertical ? 'UP' : 'LEFT');
+	}
+
+	handleNextScroll = (ev) => {
+		const {onNextScroll, vertical} = this.props;
+		onNextScroll(ev);
+		if (this.announceRef) this.announceRef.announce(vertical ? 'DOWN' : 'RIGHT');
+	}
+
 	render () {
 		const
-			{className, onNextScroll, onPrevScroll, vertical} = this.props,
+			{className, vertical} = this.props,
 			{prevButtonDisabled, nextButtonDisabled} = this.state,
 			{rtl} = this.context,
 			{scrollbarClass, thumbClass} = this.scrollbarInfo,
@@ -255,7 +271,7 @@ class Scrollbar extends Component {
 					className={vertical ? css.scrollbarUpButton : css.scrollbarLeftButton}
 					direction={vertical ? 'up' : 'left'}
 					disabled={prevButtonDisabled}
-					onScroll={onPrevScroll}
+					onScroll={this.handlePrevScroll}
 				>
 					{prevIcon}
 				</ScrollButton>
@@ -263,15 +279,21 @@ class Scrollbar extends Component {
 					className={vertical ? css.scrollbarBottomButton : css.scrollbarRightButton}
 					direction={vertical ? 'down' : 'right'}
 					disabled={nextButtonDisabled}
-					onScroll={onNextScroll}
+					onScroll={this.handleNextScroll}
 				>
 					{nextIcon}
 				</ScrollButton>
 				<div ref={this.initThumbRef} className={thumbClass} />
+				<Announce ref={this.initAnnounceRef} />
 			</div>
 		);
 	}
 }
 
+const Scrollbar = ScrollbarBase;
+
 export default Scrollbar;
-export {Scrollbar};
+export {
+	Scrollbar,
+	ScrollbarBase
+};
