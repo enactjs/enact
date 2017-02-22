@@ -1282,7 +1282,8 @@ const Spotlight = (function () {
 		// Note: "silent" is optional and default to false
 		/**
 		 * Focuses the specified element selector or container ID or the default container. Optionally,
-		 * this can be performed 'silently' (pausing, focusing, and then resuming Spotlight).
+		 * this can be performed 'silently' (pausing, focusing, and then resuming Spotlight). Has no
+		 * effect if Spotlight is paused.
 		 *
 		 * @memberof spotlight.Spotlight.prototype
 		 * @param {String|Object|Boolean} elem Element selector, container ID or the silent flag.
@@ -1334,8 +1335,7 @@ const Spotlight = (function () {
 		 * element selector may be supplied as the starting point.
 		 *
 		 * @memberof spotlight.Spotlight.prototype
-		 * @param {String} direction Element selector, container ID or the silent flag.
-		 *	If a boolean is supplied, the default container will be focused.
+		 * @param {String} direction Direction to move, one of `'left'`, `'right'`, `'up'` or `'down'`
 		 * @param {String|undefined} selector If supplied, the element to move from. If not supplied,
 		 *	the currently focused item will be used.
 		 * @returns {Boolean} `true` if focus successful, `false` if not.
