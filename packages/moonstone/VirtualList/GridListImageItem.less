@@ -5,7 +5,6 @@
 
 .gridListImageItem {
 	display: inline-block;
-	padding-bottom: 96px;
 	border: 6px solid transparent;
 	overflow: hidden;
 
@@ -55,6 +54,15 @@
 
 			color: @moon-accent;
 		}
+	}
+
+	&.useCaption,
+	&.useSubcaption {
+		padding-bottom: 42px;
+	}
+
+	&.useCaption.useSubcaption {
+		padding-bottom: 96px;
 	}
 
 	.caption {
