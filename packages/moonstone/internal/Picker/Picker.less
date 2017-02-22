@@ -122,11 +122,17 @@
 		}
 
 		:global(.enact-locale-right-to-left) & {
-			&.horizontal .incrementer, .decrementer{
-				transform: scaleX(-1);
+			&.horizontal {
+				.incrementer,
+				.decrementer {
+					transform: scaleX(-1);
+				}
 			}
-			&.joined &.horizontal .incrementer, .decrementer{
-				transform: scaleX(-1);
+			&.joined &.horizontal {
+				.incrementer,
+				.decrementer {
+					transform: scaleX(-1);
+				}
 			}
 		}
 	}
