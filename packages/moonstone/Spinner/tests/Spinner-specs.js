@@ -3,7 +3,7 @@ import {mount} from 'enzyme';
 import Spinner from '../Spinner';
 import css from '../Spinner.less';
 
-describe('Spinner Specs', () => {
+describe.only('Spinner Specs', () => {
 	it('should have not have MarqueeText as a child when Spinner has no children', function () {
 		const spinner = mount(
 			<Spinner />
@@ -74,6 +74,43 @@ describe('Spinner Specs', () => {
 
 		const expected = false;
 		const actual = spinner.find(`.${css.spinner}`).hasClass(css.content);
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should have scrimTranslucent class when blockClick prop equals container', function () {
+		const spinner = mount(
+			<Spinner blockClick="container" />
+		);
+
+		const expected = false;
+		const actual = spinner.find(`.${css.scrimTranslucent}`).isEmpty();
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should have scrimTransparent class when blockClick prop equals container and when scrimType prop equals transparent', function () {
+		const spinner = mount(
+			<Spinner blockClick="container" scrimType="transparent" />
+		);
+
+		const expected = false;
+		const actual = spinner.find(`.${css.scrimTransparent}`).isEmpty();
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should have FloatingLayer when blockClick prop equals screen', function () {
+		const div = document.createElement('div');
+		div.setAttribute('id', 'floatLayer');
+		document.body.appendChild(div);
+
+		const spinner = mount(
+			<Spinner blockClick="screen" />
+		);
+
+		const expected = false;
+		const actual = spinner.find('FloatingLayer').isEmpty();
 
 		expect(actual).to.equal(expected);
 	});

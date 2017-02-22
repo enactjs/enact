@@ -124,13 +124,13 @@ class Spinner extends React.Component {
 		blockClick: React.PropTypes.oneOf(['screen', 'container', 'none']),
 
 		/**
-		 * The scrim type. It can be either `'transparent'`, `'translucent'`.
+		 * The scrim type. It can be either `'transparent'`, `'translucent', 'none'`.
 		 *
 		 * @type {String}
 		 * @default 'translucent'
 		 * @public
 		 */
-		scrimType: React.PropTypes.oneOf(['transparent', 'translucent'])
+		scrimType: React.PropTypes.oneOf(['transparent', 'translucent', 'none'])
 	}
 
 	static defaultProps = {
