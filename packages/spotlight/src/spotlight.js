@@ -1068,6 +1068,12 @@ const Spotlight = (function () {
 	 * public methods
 	 */
 	const exports = /** @lends spotlight.Spotlight.prototype */ { // eslint-disable-line no-shadow
+		/**
+		 * Initializes Spotlight. This is generally handled by {@link spotlight.SpotlightRootDecorator}.
+		 *
+		 * @memberof spotlight.Spotlight.prototype
+		 * @public
+		 */
 		initialize: function () {
 			if (!_initialized) {
 				window.addEventListener('keydown', onKeyDown);
@@ -1079,6 +1085,12 @@ const Spotlight = (function () {
 			}
 		},
 
+		/**
+		 * Terminates Spotlight. This is generally handled by {@link spotlight.SpotlightRootDecorator}.
+		 *
+		 * @memberof spotlight.Spotlight.prototype
+		 * @public
+		 */
 		terminate: function () {
 			window.removeEventListener('keydown', onKeyDown);
 			window.removeEventListener('keyup', onKeyUp);
@@ -1089,6 +1101,12 @@ const Spotlight = (function () {
 			_initialized = false;
 		},
 
+		/**
+		 * Resets spotlight container information
+		 *
+		 * @memberof spotlight.Spotlight.prototype
+		 * @private
+		 */
 		clear: function () {
 			_containers.clear();
 			_defaultContainerId = '';
@@ -1098,6 +1116,15 @@ const Spotlight = (function () {
 
 		// set(<config>);
 		// set(<containerId>, <config>);
+		/**
+		 * Sets the config for spotlight or the specified containerID
+		 *
+		 * @memberof spotlight.Spotlight.prototype
+		 * @param {String|Object} param1 Configuration object or container ID
+		 * @param {Object|undefined} param2 Configuration object if container ID supplied in param1
+		 * @returns {undefined}
+		 * @public
+		 */
 		set: function () {
 			let containerId, config;
 
@@ -1131,6 +1158,16 @@ const Spotlight = (function () {
 
 		// add(<config>);
 		// add(<containerId>, <config>);
+		/**
+		 * Adds the config for a new container. The container ID may be passed in the configuration
+		 * object. If no container ID is supplied, a new container ID will be generated.
+		 *
+		 * @memberof spotlight.Spotlight.prototype
+		 * @param {String|Object} param1 Configuration object or container ID
+		 * @param {Object|undefined} param2 Configuration object if container ID supplied in param1
+		 * @returns {String} The container ID of the container
+		 * @public
+		 */
 		add: function () {
 			let containerId;
 			let config = {};
@@ -1157,6 +1194,14 @@ const Spotlight = (function () {
 			return containerId;
 		},
 
+		/**
+		 * Removed a container from Spotlight
+		 *
+		 * @memberof spotlight.Spotlight.prototype
+		 * @param {String} containerId Container ID to remove
+		 * @returns {Boolean} `true` if container removed, `false` if container does not exist
+		 * @public
+		 */
 		remove: function (containerId) {
 			if (!containerId || typeof containerId !== 'string') {
 				throw new Error('Please assign the "containerId"!');
@@ -1171,6 +1216,14 @@ const Spotlight = (function () {
 			return false;
 		},
 
+		/**
+		 * Marks a container as disabled for Spotlight
+		 *
+		 * @memberof spotlight.Spotlight.prototype
+		 * @param {String} containerId Container ID to disable
+		 * @returns {Boolean} `true` if container disabled, `false` if container does not exist
+		 * @public
+		 */
 		disableSelector: function (containerId) {
 			const config = _containers.get(containerId);
 
@@ -1182,6 +1235,14 @@ const Spotlight = (function () {
 			return false;
 		},
 
+		/**
+		 * Marks a container as enabled for Spotlight
+		 *
+		 * @memberof spotlight.Spotlight.prototype
+		 * @param {String} containerId Container ID to enable
+		 * @returns {Boolean} `true` if container enabled, `false` if container does not exist
+		 * @public
+		 */
 		enableSelector: function (containerId) {
 			const config = _containers.get(containerId);
 
@@ -1193,10 +1254,24 @@ const Spotlight = (function () {
 			return false;
 		},
 
+		/**
+		 * Pauses Spotlight
+		 *
+		 * @memberof spotlight.Spotlight.prototype
+		 * @returns {undefined}
+		 * @public
+		 */
 		pause: function () {
 			_pause = true;
 		},
 
+		/**
+		 * Resumes Spotlight
+		 *
+		 * @memberof spotlight.Spotlight.prototype
+		 * @returns {undefined}
+		 * @public
+		 */
 		resume: function () {
 			_pause = false;
 		},
@@ -1205,6 +1280,17 @@ const Spotlight = (function () {
 		// focus(<containerId>, [silent])
 		// focus(<extSelector>, [silent])
 		// Note: "silent" is optional and default to false
+		/**
+		 * Focuses the specified element selector or container ID or the default container. Optionally,
+		 * this can be performed 'silently' (pausing, focusing, and then resuming Spotlight).
+		 *
+		 * @memberof spotlight.Spotlight.prototype
+		 * @param {String|Object|Boolean} elem Element selector, container ID or the silent flag.
+		 *	If a boolean is supplied, the default container will be focused.
+		 * @param {Boolean|undefined} silent If `true`, Spotlight will pause before focus and resume after
+		 * @returns {Boolean} `true` if focus successful, `false` if not.
+		 * @public
+		 */
 		focus: function (elem, silent) {
 			let result = false;
 
@@ -1243,6 +1329,18 @@ const Spotlight = (function () {
 
 		// move(<direction>)
 		// move(<direction>, <selector>)
+		/**
+		 * Moves focus to the next spottable control in the direction specified. Optionally, a source
+		 * element selector may be supplied as the starting point.
+		 *
+		 * @memberof spotlight.Spotlight.prototype
+		 * @param {String} direction Element selector, container ID or the silent flag.
+		 *	If a boolean is supplied, the default container will be focused.
+		 * @param {String|undefined} selector If supplied, the element to move from. If not supplied,
+		 *	the currently focused item will be used.
+		 * @returns {Boolean} `true` if focus successful, `false` if not.
+		 * @public
+		 */
 		move: function (direction, selector) {
 			let elem, containerId;
 
@@ -1264,6 +1362,14 @@ const Spotlight = (function () {
 			return spotNext(direction, elem, containerId);
 		},
 
+		/**
+		 * Sets or clears the default container that will receive focus.
+		 *
+		 * @memberof spotlight.Spotlight.prototype
+		 * @param {String|undefined} containerId The container ID or a falsy value to clear default container
+		 * @returns {undefined}
+		 * @public
+		 */
 		setDefaultContainer: function (containerId) {
 			if (!containerId) {
 				_defaultContainerId = '';
