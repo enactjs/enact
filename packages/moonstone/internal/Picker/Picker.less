@@ -12,7 +12,7 @@
 	border-radius: @button-width;
 	vertical-align: bottom;
 	position: relative;
-	direction: ltr;
+	direction: inherit;
 	text-align: center;
 	margin-left: @moon-spotlight-outset;
 	margin-right: @moon-spotlight-outset;
@@ -119,6 +119,15 @@
 		&:global(.spottable):focus {
 			background-color: @moon-spotlight-border-color;
 			color: @moon-spotlight-text-color;
+		}
+
+		:global(.enact-locale-right-to-left) & {
+			&.horizontal .incrementer, .decrementer{
+				transform: scaleX(-1);
+			}
+			&.joined &.horizontal .incrementer, .decrementer{
+				transform: scaleX(-1);
+			}
 		}
 	}
 
