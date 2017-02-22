@@ -31,12 +31,12 @@ const
 	},
 	items = [],
 	// eslint-disable-next-line enact/prop-types
-	renderItem = ({data, index, key}) => {
+	renderItem = ({data, index, ...rest}) => {
 		const {text, subText, source} = data[index];
 		return (
 			<GridListImageItem
+				{...rest}
 				caption={text}
-				key={key}
 				source={source}
 				subCaption={subText}
 				style={style.item}
