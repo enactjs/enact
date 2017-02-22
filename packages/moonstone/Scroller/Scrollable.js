@@ -673,16 +673,18 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		updateScrollbars = () => {
-			const {isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state;
-			const bounds = this.getScrollBounds();
+			const
+				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
+				bounds = this.getScrollBounds();
 
 			// determine if we should hide or show any scrollbars
-			const canScrollHorizontally = this.canScrollHorizontally(bounds);
-			const canScrollVertically = this.canScrollVertically(bounds);
-			const isVisibilityChanged = (
-				isHorizontalScrollbarVisible !== canScrollHorizontally ||
-				isVerticalScrollbarVisible !== canScrollVertically
-			);
+			const
+				canScrollHorizontally = this.canScrollHorizontally(bounds),
+				canScrollVertically = this.canScrollVertically(bounds),
+				isVisibilityChanged = (
+					isHorizontalScrollbarVisible !== canScrollHorizontally ||
+					isVerticalScrollbarVisible !== canScrollVertically
+				);
 
 			if (isVisibilityChanged) {
 				// one or both scrollbars have changed visibility
