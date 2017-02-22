@@ -5,6 +5,7 @@
  */
 
 import kind from '@enact/core/kind';
+import Spotlight from '@enact/spotlight';
 import React, {PropTypes} from 'react';
 import FloatingLayer from '@enact/ui/FloatingLayer';
 
@@ -13,16 +14,16 @@ import {MarqueeText} from '../Marquee';
 import css from './Spinner.less';
 
 /**
- * {@link moonstone/Spinner.Spinner} is a component that shows a spinning animation
+ * {@link moonstone/Spinner.SpinnerBase} is a component that shows a spinning animation
  * to indicate that some activity is taking place.
  *
- * @class Spinner
+ * @class SpinnerBase
  * @memberof moonstone/Spinner
  * @ui
  * @public
  */
 const SpinnerBase = kind({
-	name: 'Spinner',
+	name: 'SpinnerBase',
 
 	propTypes: /** @lends moonstone/Spinner.Spinner.prototype */ {
 		/**
@@ -101,25 +102,35 @@ const SpinnerBase = kind({
 	}
 });
 
-class BlockingSpinner extends React.Component {
+/**
+ * {@link moonstone/Spinner.Spinner} is an extension of {@link moonstone/Spinner.SpinnerBase} that can block click/spot events.
+ * {@link ui/FloatingLayer.FloatingLayer} is used to block the whole screen.
+ *
+ * @class Spinner
+ * @memberof moonstone/Spinner
+ * @ui
+ * @public
+ */
+class Spinner extends React.Component {
 	static propTypes = {
 		/**
-		 * The block type. It can be either `'screen'`, `'container'`, or `'none'`.
+		 * Click event blocking type. It can be either `'screen'`, `'container'`, or `'none'`.
+		 * 'screen' blocks entire screen; 'container' blocks up to the nearest ancestor with absolute or relative positioning
 		 *
 		 * @type {String}
-		 * @default 'translucent'
+		 * @default 'screen'
 		 * @public
 		 */
 		blockClick: React.PropTypes.oneOf(['screen', 'container', 'none']),
 
 		/**
-		 * The scrim type. It can be either `'transparent'`, `'translucent'`, or `'none'`.
+		 * The scrim type. It can be either `'transparent'`, `'translucent'`.
 		 *
 		 * @type {String}
 		 * @default 'translucent'
 		 * @public
 		 */
-		scrimType: React.PropTypes.oneOf(['transparent', 'translucent', 'none'])
+		scrimType: React.PropTypes.oneOf(['transparent', 'translucent'])
 	}
 
 	static defaultProps = {
@@ -131,9 +142,14 @@ class BlockingSpinner extends React.Component {
 		super();
 	}
 
+	componentWillUnmount () {
+		Spotlight.resume();
+	}
+
 	render () {
 		const {blockClick, scrimType, ...rest} = this.props;
 		if (blockClick === 'screen') {
+			Spotlight.pause();
 			return (
 				<FloatingLayer
 					noAutoDismiss
@@ -144,7 +160,8 @@ class BlockingSpinner extends React.Component {
 				</FloatingLayer>
 			);
 		} else if (blockClick === 'container') {
-			const scrim = scrimType === 'translucent' ? css.scrimTranslucent : css.scrimTransparent;
+			const scrim = scrimType === 'transparent' ? css.scrimTransparent : css.scrimTranslucent;
+			Spotlight.pause();
 			return (
 				<div className={scrim}>
 					<SpinnerBase {...rest} />
@@ -158,5 +175,5 @@ class BlockingSpinner extends React.Component {
 	}
 }
 
-export default SpinnerBase;
-export {BlockingSpinner, SpinnerBase as Spinner, SpinnerBase};
+export default Spinner;
+export {Spinner, SpinnerBase};
