@@ -135,7 +135,7 @@ class Spinner extends React.Component {
 
 	static defaultProps = {
 		blockClick: 'none',
-		scrimType: 'none'
+		scrimType: 'translucent'
 	}
 
 	constructor () {
@@ -148,29 +148,38 @@ class Spinner extends React.Component {
 
 	render () {
 		const {blockClick, scrimType, ...rest} = this.props;
-		if (blockClick === 'screen') {
-			Spotlight.pause();
-			return (
-				<FloatingLayer
-					noAutoDismiss
-					open
-					scrimType={scrimType}
-				>
+		const scrimClasses = {
+			'transparent': css.scrimTransparent,
+			'translucent': css.scrimTranslucent,
+			'none': ''
+		};
+
+		switch (blockClick) {
+			case 'screen': {
+				Spotlight.pause();
+				return (
+					<FloatingLayer
+						noAutoDismiss
+						open
+						scrimType={scrimType}
+					>
+						<SpinnerBase {...rest} />
+					</FloatingLayer>
+				);
+			}
+			case 'container': {
+				// Splotlight.pause()
+				return (
+					<div className={scrimClasses[scrimType]}>
+						<SpinnerBase {...rest} />
+					</div>
+				);
+			}
+			default: {
+				return (
 					<SpinnerBase {...rest} />
-				</FloatingLayer>
-			);
-		} else if (blockClick === 'container') {
-			const scrim = scrimType === 'transparent' ? css.scrimTransparent : css.scrimTranslucent;
-			Spotlight.pause();
-			return (
-				<div className={scrim}>
-					<SpinnerBase {...rest} />
-				</div>
-			);
-		} else {
-			return (
-				<SpinnerBase {...rest} />
-			);
+				);
+			}
 		}
 	}
 }
