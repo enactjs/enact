@@ -21,6 +21,7 @@ storiesOf('Button')
 			<Button
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
+				color={select('color', [null, 'red', 'green', 'yellow', 'blue'])}
 				disabled={boolean('disabled', Button.defaultProps.disabled)}
 				minWidth={boolean('minWidth', Button.defaultProps.minWidth)}
 				preserveCase={boolean('preserveCase', Button.defaultProps.preserveCase)}

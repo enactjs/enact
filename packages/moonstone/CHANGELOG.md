@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 - `moonstone/VideoPlayer` support for 5-way show/hide of media playback controls
-
+- `moonstone/IconButton` and `moonstone/Button` now support a `color` property to add a remote control key color to the button
 - `moonstone/Slider` property `onKnobMove` to fire when the knob position changes, independently from the `moonstone/Slider` value
 - `moonstone/Slider` properties `active`, `disabled`, `knobStep`, `onActivate`, `onDecrement`, and `onIncrement` as part of enabling 5-way support to `moonstone/Slider`, `moonstone/IncrementSlider` and the media slider for `moonstone/VideoPlayer`
 - `moonstone/Slider` now supports `children` which are added to the `Slider`'s knob, and follow it as it moves
