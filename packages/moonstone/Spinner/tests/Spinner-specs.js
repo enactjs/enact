@@ -3,7 +3,7 @@ import {mount} from 'enzyme';
 import Spinner from '../Spinner';
 import css from '../Spinner.less';
 
-describe.only('Spinner Specs', () => {
+describe('Spinner Specs', () => {
 	it('should have not have MarqueeText as a child when Spinner has no children', function () {
 		const spinner = mount(
 			<Spinner />
