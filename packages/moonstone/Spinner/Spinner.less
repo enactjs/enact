@@ -202,6 +202,22 @@
 	}
 }
 
+// scrim will fill up to the first ancester element with absolute or relative position
+// parent needs to have absolute or relative position if for scrim to block as expected
+.scrimTranslucent {
+	top: 0;
+	left: 0;
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	background-color: rgba(0, 0, 0, .7);
+}
+
+.scrimTransparent {
+	&:extend(.scrimTranslucent);
+	background-color: rgba(0, 0, 0, 0);
+}
+
 :global(.enact-locale-right-to-left) .spinner {
 	// This allows for the spinner to spin in a counter-clockwise direction in RTL mode
 	// .-spinner-ball-decorator {

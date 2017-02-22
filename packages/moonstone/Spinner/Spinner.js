@@ -6,6 +6,7 @@
 
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
+import FloatingLayer from '@enact/ui/FloatingLayer';
 
 import {MarqueeText} from '../Marquee';
 
@@ -100,5 +101,62 @@ const SpinnerBase = kind({
 	}
 });
 
+class BlockingSpinner extends React.Component {
+	static propTypes = {
+		/**
+		 * The block type. It can be either `'screen'`, `'container'`, or `'none'`.
+		 *
+		 * @type {String}
+		 * @default 'translucent'
+		 * @public
+		 */
+		blockClick: React.PropTypes.oneOf(['screen', 'container', 'none']),
+
+		/**
+		 * The scrim type. It can be either `'transparent'`, `'translucent'`, or `'none'`.
+		 *
+		 * @type {String}
+		 * @default 'translucent'
+		 * @public
+		 */
+		scrimType: React.PropTypes.oneOf(['transparent', 'translucent', 'none'])
+	}
+
+	static defaultProps = {
+		blockClick: 'screen',
+		scrimType: 'translucent'
+	}
+
+	constructor () {
+		super();
+	}
+
+	render () {
+		const {blockClick, scrimType, ...rest} = this.props;
+		if (blockClick === 'screen') {
+			return (
+				<FloatingLayer
+					noAutoDismiss
+					open
+					scrimType={scrimType}
+				>
+					<SpinnerBase {...rest} />
+				</FloatingLayer>
+			);
+		} else if (blockClick === 'container') {
+			const scrim = scrimType === 'translucent' ? css.scrimTranslucent : css.scrimTransparent;
+			return (
+				<div className={scrim}>
+					<SpinnerBase {...rest} />
+				</div>
+			);
+		} else {
+			return (
+				<SpinnerBase {...rest} />
+			);
+		}
+	}
+}
+
 export default SpinnerBase;
-export {SpinnerBase as Spinner, SpinnerBase};
+export {BlockingSpinner, SpinnerBase as Spinner, SpinnerBase};
