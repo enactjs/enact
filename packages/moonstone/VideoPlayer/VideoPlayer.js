@@ -702,6 +702,9 @@ const VideoPlayerBase = class extends React.Component {
 	//
 	// Player Interaction events
 	//
+	forwardEvent = (name, ev) => {
+		forward(name)(ev, this.props);
+	}
 	onVideoClick = () => {
 		if (this.state.bottomControlsVisible) {
 			this.hideControls();
@@ -715,11 +718,18 @@ const VideoPlayerBase = class extends React.Component {
 			this.send('seek', value * el.duration);
 		}
 	}
-	onJumpBackward  = () => this.jump(-1 * this.props.jumpBy)
-	onBackward      = () => this.rewind()
-	onPlay          = () => {
+	onJumpBackward  = (ev) => {
+		this.forwardEvent('onJumpBackwardButtonClick', ev);
+		this.jump(-1 * this.props.jumpBy);
+	}
+	onBackward      = (ev) => {
+		this.forwardEvent('onBackwardButtonClick', ev);
+		this.rewind();
+	}
+	onPlay          = (ev) => {
 		this.speedIndex = 0;
 		this.setPlaybackRate(1);
+		this.forwardEvent('onPlayButtonClick', ev);
 		if (this.state.paused) {
 			this.send('play');
 			this.prevCommand = 'play';
@@ -728,8 +738,14 @@ const VideoPlayerBase = class extends React.Component {
 			this.prevCommand = 'pause';
 		}
 	}
-	onForward       = () => this.fastForward()
-	onJumpForward   = () => this.jump(this.props.jumpBy)
+	onForward       = (ev) => {
+		this.forwardEvent('onForwardButtonClick', ev);
+		this.fastForward();
+	}
+	onJumpForward   = (ev) => {
+		this.forwardEvent('onJumpForwardButtonClick', ev);
+		this.jump(this.props.jumpBy);
+	}
 	onMoreClick     = () => {
 		this.startAutoCloseTimeout();	// Interupt and restart the timer since "more" button was clicked.
 		if (this.state.more) {
@@ -752,26 +768,15 @@ const VideoPlayerBase = class extends React.Component {
 
 	render () {
 		const {children, className, infoComponents, leftComponents, noAutoPlay, noJumpButtons, noRateButtons, noSlider, rightComponents, title, style,
-			// Assign defaults during destructuring to internal methods (here, instead of defaultProps)
-			onBackwardButtonClick = this.onBackward,
-			onForwardButtonClick = this.onForward,
-			onJumpBackwardButtonClick = this.onJumpBackward,
-			onJumpForwardButtonClick = this.onJumpForward,
 			...rest} = this.props;
 		delete rest.autoCloseTimeout;
 		delete rest.jumpBy;
+		delete rest.onBackwardButtonClick;
+		delete rest.onForwardButtonClick;
+		delete rest.onJumpBackwardButtonClick;
+		delete rest.onJumpForwardButtonClick;
+		delete rest.onPlayButtonClick;
 		delete rest.titleHideDelay;
-
-		let onPlayButtonClick = this.onPlay;
-
-		if (rest.onPlayButtonClick) {
-			onPlayButtonClick = () => {
-				// had to use this.props since rest.onPlayButtonClick gets deleted
-				this.props.onPlayButtonClick();
-				this.onPlay();
-			}
-			delete rest.onPlayButtonClick;
-		}
 
 		// Handle some cases when the "more" button is pressed
 		const moreDisabled = !(this.state.more);
@@ -820,12 +825,12 @@ const VideoPlayerBase = class extends React.Component {
 							moreDisabled={moreDisabled}
 							noJumpButtons={noJumpButtons}
 							noRateButtons={noRateButtons}
-							onBackwardButtonClick={onBackwardButtonClick}
+							onBackwardButtonClick={this.onBackward}
 							onClick={this.resetAutoTimeout}
-							onForwardButtonClick={onForwardButtonClick}
-							onJumpBackwardButtonClick={onJumpBackwardButtonClick}
-							onJumpForwardButtonClick={onJumpForwardButtonClick}
-							onPlayButtonClick={onPlayButtonClick}
+							onForwardButtonClick={this.onForward}
+							onJumpBackwardButtonClick={this.onJumpBackward}
+							onJumpForwardButtonClick={this.onJumpForward}
+							onPlayButtonClick={this.onPlay}
 							onToggleMore={this.onMoreClick}
 							playPauseIcon={this.state.playPauseIcon}
 							rightComponents={rightComponents}
