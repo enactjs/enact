@@ -2,6 +2,34 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [1.0.0-beta.3] - 2017-02-21
+
+### Added
+
+- `ui/Resizable` Higher-order Component to facilitate notification of resized components
+- `core/handle` function `forProp` to test properties passed to a component
+- localStorage caching support for ilib resource files
+- Support for 5-way operation of `moonstone/Slider` and `moonstone/VideoPlayer.MediaSlider`
+- `moonstone/Slider` now supports `children` which are added to the `Slider`'s knob, and follow it as it moves
+- `moonstone/ExpandableInput` properties `iconAfter` and `iconBefore` to display icons after and before the input, respectively
+- `moonstone/Dialog` property `preserveCase`, which affects `title` text
+
+### Changed
+
+- `core/handle` function `forProp` to be called `forEventProp` to test for properties on an event
+- `moonstone/Marquee` to allow disabled marquees to animate
+- `moonstone/Dialog` to marquee `title` and `titleBelow`
+- `moonstone/Marquee.MarqueeController` config option `startOnFocus` to `marqueeOnFocus`. `startOnFocus` is deprecated and will be removed in a future update.
+- `moonstone/Button`, `moonstone/IconButton`, `moonstone/Item` to not forward `onClick` when `disabled`
+
+### Fixed
+
+- `moonstone/Scroller` to recalculate when an expandable child opens.
+- `spotlight.Spotlight` behavior to follow container config rules when navigating between containers
+- `spotlight.Spotlight` behavior to not set focus on spottable components animating past the pointer when not in pointer-mode
+- `spotlight.Spotlight` 5-way behavior where selecting a spottable component may require multiple attempts before performing actions
+- `spotlight.Spotlight` to not unfocus elements on scroll
+
 ## [1.0.0-beta.2] - 2017-01-30
 
 ### Added
@@ -43,6 +71,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 - `moonstone/IncrementSlider` so that the knob is spottable via pointer, and 5-way navigation between the knob and the increment/decrement buttons is functional
 - `moonstone/Slider` and `moonstone/IncrementSlider` to not fire `onChange` for value changes from props
+
 ## [1.0.0-beta.1] - 2016-12-30
 
 ### Added
