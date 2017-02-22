@@ -23,6 +23,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/VirtualList.GridListImageItem` to have proper padding size according to the existence of caption/subcaption.
 - `moonstone/Marquee.MarqueeController` to start marquee on newly registered components when controller has focus and to restart synced marquees after completion
 - `moonstone/Scroller` to recalculate when an expandable child opens.
 
