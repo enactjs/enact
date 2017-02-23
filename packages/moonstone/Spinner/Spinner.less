@@ -1,5 +1,6 @@
 // Spinner.less
 //
+@import '../../ui/styles/mixins.less';
 @import '../styles/variables.less';
 @import '../styles/colors.less';
 
@@ -202,23 +203,20 @@
 	}
 }
 
-// scrim will fill up to the first ancestor element with absolute or relative position
-// parent needs to have absolute or relative position if for scrim to block as expected
-.scrimTransparent,
-.scrimTranslucent {
-	top: 0;
-	left: 0;
+// Scrim will fill up to the first ancestor element with absolute or relative position.
+// Parent needs to have absolute or relative position for scrim to block as expected.
+.blockClick {
 	position: absolute;
-	height: 100%;
-	width: 100%;
-	background-color: @moon-spinner-background-translucent;
+	.position(0);
 }
 
-.scrimTransparent {
-	background-color: fade(@moon-black, 0%);
+// Visible scrim
+.scrimTranslucent {
+	background-color: @moon-scrim-color;
 }
 
-.scrimNone {
+
+.spinnerContainer {
 	display: inline-block;
 }
 

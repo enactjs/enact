@@ -5,7 +5,7 @@
  */
 import FloatingLayer from '@enact/ui/FloatingLayer';
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
+import React, {Component, PropTypes} from 'react';
 import Spotlight from '@enact/spotlight';
 import {MarqueeText} from '../Marquee';
 
@@ -21,7 +21,7 @@ import css from './Spinner.less';
  * @public
  */
 const SpinnerBase = kind({
-	name: 'SpinnerBase',
+	name: 'Spinner',
 
 	propTypes: /** @lends moonstone/Spinner.Spinner.prototype */ {
 		/**
@@ -109,36 +109,36 @@ const SpinnerBase = kind({
  * @ui
  * @public
  */
-class Spinner extends React.Component {
+class Spinner extends Component {
 	static propTypes = {
 		/**
 		 * Click event blocking type. It can be either `'screen'`, `'container'`, or `'none'`.
 		 * 'screen' blocks entire screen; 'container' blocks up to the nearest ancestor with absolute or relative positioning
 		 *
 		 * @type {String}
-		 * @default 'none'
+		 * @default null
 		 * @public
 		 */
-		blockClick: React.PropTypes.oneOf(['screen', 'container', 'none']),
+		blockClick: PropTypes.oneOf(['screen', 'container', null]),
 
 		/**
-		 * The scrim type. It can be either `'transparent'`, `'translucent', 'none'`.
+		 * When `true`, sets visible translucent scrim behind spinner.
 		 *
-		 * @type {String}
-		 * @default 'translucent'
+		 * @type {Boolean}
+		 * @default true
 		 * @public
 		 */
-		scrimType: React.PropTypes.oneOf(['transparent', 'translucent', 'none'])
+		scrim: PropTypes.bool
 	}
 
 	static defaultProps = {
-		blockClick: 'none',
-		scrimType: 'translucent'
+		blockClick: null,
+		scrim: true
 	}
 
 	componentWillMount () {
-		const {blockClick, scrimType} = this.props;
-		if (blockClick === 'screen' && scrimType !== 'none') {
+		const {blockClick} = this.props;
+		if (blockClick === 'screen') {
 			Spotlight.pause();
 		}
 	}
@@ -148,28 +148,22 @@ class Spinner extends React.Component {
 	}
 
 	render () {
-		const {blockClick, scrimType, ...rest} = this.props;
-		const scrimClasses = {
-			'transparent': css.scrimTransparent,
-			'translucent': css.scrimTranslucent,
-			'none': css.scrimNone
-		};
+		const {blockClick, scrim, ...rest} = this.props;
+		const scrimTranslucent = scrim ? css.scrimTranslucent : '';
+		const spinnerContainerPosition = rest.centered ? css.blockClick : '';
 
 		switch (blockClick) {
 			case 'screen': {
 				return (
-					<FloatingLayer
-						noAutoDismiss
-						open
-						scrimType={scrimType}
-					>
+					<FloatingLayer noAutoDismiss open scrimType={scrim ? 'translucent' : 'transparent'}>
 						<SpinnerBase {...rest} />
 					</FloatingLayer>
 				);
 			}
 			case 'container': {
 				return (
-					<div className={scrimClasses[scrimType]}>
+					<div className={`${css.spinnerContainer} ${spinnerContainerPosition}`}>
+						<div className={`${css.blockClick} ${scrimTranslucent}`} />
 						<SpinnerBase {...rest} />
 					</div>
 				);
