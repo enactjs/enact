@@ -103,37 +103,12 @@ const Spotlight = (function () {
 	let _5WayKeyHold = false;
 
 	/*
-	 * Whether a selection key is being held.
-	 *
-	 * @type {Boolean}
-	 * @default false
-	 */
-	// let _selectionKeyHold = false;
-
-	/*
 	 * Whether Spotlight is in pointer mode (as opposed to 5-way mode).
 	 *
 	 * @type {Boolean}
 	 * @default true
 	 */
 	let _pointerMode = true;
-
-	/*
-	 * Timestamp at the last point the pointer was hidden.
-	 *
-	 * @type {Number}
-	 * @default 0
-	 */
-	// let _pointerHiddenTime = 0;
-
-	/*
-	 * Length of time in milliseconds required after hiding pointer before 5-way keys
-	 * are processed.
-	 *
-	 * @type {Number}
-	 * @default 300
-	 */
-	// let _pointerHiddenToKeyTimeout = 300;
 
 	/*
 	* polyfills
