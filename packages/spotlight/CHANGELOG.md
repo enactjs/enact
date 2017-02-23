@@ -2,11 +2,13 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
-## [1.0.0-beta.3] - 2017-02-21
+## [unreleased]
 
 ### Changed
 
 - `spotlight.Spottable` to allow disabled components to be spottable
+
+## [1.0.0-beta.3] - 2017-02-21
 
 ### Fixed
 
