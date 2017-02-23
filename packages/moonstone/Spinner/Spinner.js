@@ -136,6 +136,13 @@ class Spinner extends React.Component {
 		scrimType: 'translucent'
 	}
 
+	componentWillMount () {
+		const {blockClick} = this.props;
+		if (blockClick !== 'none') {
+			Spotlight.pause();
+		}
+	}
+
 	componentWillUnmount () {
 		Spotlight.resume();
 	}
@@ -150,7 +157,6 @@ class Spinner extends React.Component {
 
 		switch (blockClick) {
 			case 'screen': {
-				Spotlight.pause();
 				return (
 					<FloatingLayer
 						noAutoDismiss
@@ -162,7 +168,6 @@ class Spinner extends React.Component {
 				);
 			}
 			case 'container': {
-				Spotlight.pause();
 				return (
 					<div className={scrimClasses[scrimType]}>
 						<SpinnerBase {...rest} />
