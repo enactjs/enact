@@ -11,8 +11,6 @@ import css from './Scrollbar.less';
 
 const
 	verticalProperties = {
-		prevButtonClass: css.scrollbarUpButton,
-		nextButtonClass: css.scrollbarBottomButton,
 		scrollbarClass: css.scrollbarContainerVColumn,
 		thumbClass: css.scrollbarVthumb,
 		sizeProperty: 'clientHeight',
@@ -21,8 +19,6 @@ const
 		)
 	},
 	horizontalProperties = {
-		prevButtonClass: css.scrollbarLeftButton,
-		nextButtonClass: css.scrollbarRightButton,
 		scrollbarClass: css.scrollbarContainerHColumn,
 		thumbClass: css.scrollerHthumb,
 		sizeProperty: 'clientWidth',
@@ -34,8 +30,7 @@ const
 	nop = () => {},
 	minThumbSize = ri.scale(4),
 	prepareButton = (isPrev) => (isVertical, rtl) => {
-		let icon,
-			direction;
+		let direction;
 
 		if (isVertical) {
 			direction = (isPrev) ? 'up' : 'down';
@@ -43,9 +38,7 @@ const
 			direction = (rtl === isPrev) ? 'right' : 'left';
 		}
 
-		icon = 'arrowsmall' + direction;
-
-		return icon;
+		return 'arrowsmall' + direction;
 	},
 	preparePrevButton = prepareButton(true),
 	prepareNextButton = prepareButton(false),
@@ -137,7 +130,6 @@ class ScrollbarBase extends Component {
 	}
 
 	componentWillUnmount () {
-		clearTimeout(this.alertTimeout);
 		stopJob(this.jobName);
 	}
 
@@ -288,10 +280,8 @@ class ScrollbarBase extends Component {
 	}
 }
 
-const Scrollbar = ScrollbarBase;
-
-export default Scrollbar;
+export default ScrollbarBase;
 export {
-	Scrollbar,
+	ScrollbarBase as Scrollbar,
 	ScrollbarBase
 };

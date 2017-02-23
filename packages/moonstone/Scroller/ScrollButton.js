@@ -7,7 +7,7 @@ import React from 'react';
 
 import css from './Scrollbar.less';
 
-const HoldableIconButton = Holdable(IconButton);
+const HoldableIconButton = Holdable({endHold: 'onLeave'}, IconButton);
 
 const classNameMap = {
 	up: css.scrollbarUpButton,
@@ -20,6 +20,7 @@ const ScrollButtonBase = kind({
 	name: 'ScrollButtonBase',
 
 	propTypes: {
+		children: React.PropTypes.node,
 		direction: React.PropTypes.string,
 		disabled: React.PropTypes.bool,
 		onScroll: React.PropTypes.func
@@ -30,7 +31,7 @@ const ScrollButtonBase = kind({
 		'aria-label': ({direction}) => $L('scroll ' + direction)
 	},
 
-	render: ({disabled, onScroll, ...rest}) => {
+	render: ({children, disabled, onScroll, ...rest}) => {
 		delete rest.direction;
 
 		return (
@@ -41,12 +42,14 @@ const ScrollButtonBase = kind({
 				onClick={onScroll}
 				onHoldPulse={onScroll}
 				small
-			/>
+			>
+				{children}
+			</HoldableIconButton>
 		);
 	}
 });
 
-const ScrollButton = onlyUpdateForKeys(['disabled'])(
+const ScrollButton = onlyUpdateForKeys(['children', 'disabled'])(
 	ScrollButtonBase
 );
 
