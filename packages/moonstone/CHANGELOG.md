@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Changed
+
+- `moonstone/VirtualList` and `moonstone/VirtualGridList` not to add `data-index` to their item DOM elements directly, but to pass `data-index` as the parameter of their `component` prop like the `key` parameter of their `component` prop
+
 ### Fixed
 
 - `moonstone/VirtualList.GridListImageItem` to have proper padding size according to the existence of caption/subcaption.
