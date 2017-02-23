@@ -255,7 +255,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 					// unnecessary and is therefore not awaiting a finish
 					if (action === 'start' && complete) {
 						controlled.state = STATE.ready;
-					} else {
+					} else if (action === 'start') {
 						controlled.state = STATE.active;
 					}
 				} else if ((action === 'start') && (component === controlledComponent)) {
