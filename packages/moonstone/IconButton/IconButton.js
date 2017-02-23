@@ -69,6 +69,15 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 			children: PropTypes.string,
 
 			/**
+			 * This property accepts one of the following color names, which correspond with the
+			 * colored buttons on a standard remote control: `'red'`, `'green'`, `'yellow'`, `'blue'`
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			color: PropTypes.oneOf([null, 'red', 'green', 'yellow', 'blue']),
+
+			/**
 			 * When `true`, the [button]{@glossary button} is shown as disabled and does not
 			 * generate `onClick` [events]{@glossary event}.
 			 *
@@ -119,7 +128,7 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 		},
 
 		computed: {
-			className: ({small, styler}) => styler.append({small})
+			className: ({color, small, styler}) => styler.append({small}, color)
 		},
 
 		render: ({children, small, ...rest}) => {
