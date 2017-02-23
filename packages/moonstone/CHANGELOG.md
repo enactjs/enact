@@ -7,6 +7,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 - `moonstone/IconButton` and `moonstone/Button` `color` property to add a remote control key color to the button
+- `moonstone/Scrollbar` property `disabled` to disable both paging controls when it is true
+- `moonstone/VirtualList` parameter `moreInfo` to pass `firstVisibleIndex` and `lastVisibleIndex` when scroll events are firing
 
 ### Changed
 
@@ -15,10 +17,13 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/VirtualList.GridListImageItem` to have proper padding size according to the existence of caption/subcaption.
+- `moonstone/Scrollable` to display scrollbars with proper size
+- `moonstone/VirtualGridList` to not be truncated
 
 ## [1.0.0-beta.3] - 2017-02-21
 
 ### Added
+
 - `moonstone/VideoPlayer` support for 5-way show/hide of media playback controls
 - `moonstone/VideoPlayer` property `feedbackHideDelay`
 - `moonstone/Slider` property `onKnobMove` to fire when the knob position changes, independently from the `moonstone/Slider` value
