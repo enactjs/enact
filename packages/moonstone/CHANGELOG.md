@@ -4,6 +4,11 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+- `moonstone/Scrollbar` property `disabled` to disable both paging controls when it is true
+- `moonstone/VirtualList` parameter `moreInfo` to pass `firstVisibleIndex` and `lastVisibleIndex` when scroll events are firing
+
 ### Changed
 
 - `moonstone/VirtualList` and `moonstone/VirtualGridList` not to add `data-index` to their item DOM elements directly, but to pass `data-index` as the parameter of their `component` prop like the `key` parameter of their `component` prop
@@ -11,12 +16,13 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/VirtualList.GridListImageItem` to have proper padding size according to the existence of caption/subcaption.
+- `moonstone/Scrollable` to display scrollbars with proper size
+- `moonstone/VirtualGridList` to not be truncated
 
 ## [1.0.0-beta.3] - 2017-02-21
 
 ### Added
-- `moonstone/Scrollbar` property `disabled` to disable both paging controls when it is true
-- `moonstone/VirtualList` parameter `moreInfo` to pass `firstVisibleIndex` and `lastVisibleIndex` when scroll events are firing
+
 - `moonstone/VideoPlayer` support for 5-way show/hide of media playback controls
 - `moonstone/VideoPlayer` property `feedbackHideDelay`
 - `moonstone/Slider` property `onKnobMove` to fire when the knob position changes, independently from the `moonstone/Slider` value
@@ -35,8 +41,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/Scrollable` to display scrollbars with proper size
-- `moonstone/VirtualGridList` to not be truncated
 - `moonstone/Marquee.MarqueeController` to start marquee on newly registered components when controller has focus and to restart synced marquees after completion
 - `moonstone/Scroller` to recalculate when an expandable child opens
 - `spotlightDisabled` property support for spottable moonstone components
