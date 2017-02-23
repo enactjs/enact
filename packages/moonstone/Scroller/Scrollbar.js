@@ -268,7 +268,6 @@ class ScrollbarBase extends Component {
 		return (
 			<div ref={this.initContainerRef} className={scrollbarClassNames}>
 				<ScrollButton
-					className={vertical ? css.scrollbarUpButton : css.scrollbarLeftButton}
 					direction={vertical ? 'up' : 'left'}
 					disabled={prevButtonDisabled}
 					onScroll={this.handlePrevScroll}
@@ -276,7 +275,6 @@ class ScrollbarBase extends Component {
 					{prevIcon}
 				</ScrollButton>
 				<ScrollButton
-					className={vertical ? css.scrollbarBottomButton : css.scrollbarRightButton}
 					direction={vertical ? 'down' : 'right'}
 					disabled={nextButtonDisabled}
 					onScroll={this.handleNextScroll}
