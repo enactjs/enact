@@ -3,12 +3,10 @@
  *
  * @module moonstone/Spinner
  */
-
-import kind from '@enact/core/kind';
 import FloatingLayer from '@enact/ui/FloatingLayer';
-import Spotlight from '@enact/spotlight';
+import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
-
+import Spotlight from '@enact/spotlight';
 import {MarqueeText} from '../Marquee';
 
 import css from './Spinner.less';
