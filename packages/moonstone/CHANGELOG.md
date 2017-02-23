@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/VirtualList.GridListImageItem` to have proper padding size according to the existence of caption/subcaption.
+
 ## [1.0.0-beta.3] - 2017-02-21
 
 ### Added
@@ -23,7 +29,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/VirtualList.GridListImageItem` to have proper padding size according to the existence of caption/subcaption.
 - `moonstone/Marquee.MarqueeController` to start marquee on newly registered components when controller has focus and to restart synced marquees after completion
 - `moonstone/Scroller` to recalculate when an expandable child opens
 - `spotlightDisabled` property support for spottable moonstone components
