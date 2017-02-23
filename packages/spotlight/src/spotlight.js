@@ -1195,7 +1195,7 @@ const Spotlight = (function () {
 		},
 
 		/**
-		 * Removed a container from Spotlight
+		 * Removes a container from Spotlight
 		 *
 		 * @memberof spotlight.Spotlight.prototype
 		 * @param {String} containerId Container ID to remove
@@ -1217,11 +1217,11 @@ const Spotlight = (function () {
 		},
 
 		/**
-		 * Marks a container as disabled for Spotlight
+		 * Disables the selector rules of the specified container
 		 *
 		 * @memberof spotlight.Spotlight.prototype
-		 * @param {String} containerId Container ID to disable
-		 * @returns {Boolean} `true` if container disabled, `false` if container does not exist
+		 * @param {String} containerId Container ID selector rules to disable
+		 * @returns {Boolean} `true` if container's selector rules are disabled, `false` if container does not exist
 		 * @public
 		 */
 		disableSelector: function (containerId) {
@@ -1236,11 +1236,11 @@ const Spotlight = (function () {
 		},
 
 		/**
-		 * Marks a container as enabled for Spotlight
+		 * Enables the selector rules of the specified container
 		 *
 		 * @memberof spotlight.Spotlight.prototype
-		 * @param {String} containerId Container ID to enable
-		 * @returns {Boolean} `true` if container enabled, `false` if container does not exist
+		 * @param {String} containerId Container ID selector rules to enable
+		 * @returns {Boolean} `true` if container's selector rules are enabled, `false` if container does not exist
 		 * @public
 		 */
 		enableSelector: function (containerId) {
@@ -1276,35 +1276,21 @@ const Spotlight = (function () {
 			_pause = false;
 		},
 
-		// focus([silent])
-		// focus(<containerId>, [silent])
-		// focus(<extSelector>, [silent])
-		// Note: "silent" is optional and default to false
+		// focus()
+		// focus(<containerId>)
+		// focus(<extSelector>)
 		/**
-		 * Focuses the specified element selector or container ID or the default container. Optionally,
-		 * this can be performed 'silently' (pausing, focusing, and then resuming Spotlight). Has no
+		 * Focuses the specified element selector or container ID or the default container. Has no
 		 * effect if Spotlight is paused.
 		 *
 		 * @memberof spotlight.Spotlight.prototype
-		 * @param {String|Object|Boolean} elem Element selector, container ID or the silent flag.
-		 *	If a boolean is supplied, the default container will be focused.
-		 * @param {Boolean|undefined} silent If `true`, Spotlight will pause before focus and resume after
+		 * @param {String|Object|undefined} elem Element selector or the container ID.
+		 *	If not supplied, the default container will be focused.
 		 * @returns {Boolean} `true` if focus successful, `false` if not.
 		 * @public
 		 */
-		focus: function (elem, silent) {
+		focus: function (elem) {
 			let result = false;
-
-			if (typeof silent === 'undefined' && typeof elem === 'boolean') {
-				silent = elem;
-				elem = void 0;
-			}
-
-			let autoPause = !_pause && silent;
-
-			if (autoPause) {
-				Spotlight.pause();
-			}
 
 			if (!elem) {
 				result = focusContainer();
@@ -1319,10 +1305,6 @@ const Spotlight = (function () {
 				if (isNavigable(elem, nextContainerId)) {
 					result = focusElement(elem, nextContainerId);
 				}
-			}
-
-			if (autoPause) {
-				Spotlight.resume();
 			}
 
 			return result;
