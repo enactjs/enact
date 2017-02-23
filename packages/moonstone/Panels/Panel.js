@@ -35,6 +35,16 @@ const PanelBase = kind({
 
 	propTypes: /** @lends moonstone/Panels.Panel.prototype */ {
 		/**
+		 * By default, the panel will be labeled by its [Header]{@link moonstone/Panels.Header}.
+		 * When `aria-label` is set, it will be used instead to provide an accessibility label for
+		 * the panel.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		'aria-label': React.PropTypes.string,
+
+		/**
 		 * Header for the panel. This is usually passed by the {@link ui/Slottable.Slottable} API by
 		 * using a [Header]{@link moonstone/Panels.Header} component as a child of the Panel.
 		 *
@@ -78,7 +88,10 @@ const PanelBase = kind({
 			body: true,
 			visible: !hideChildren
 		}),
-		headerId: () => `panel_${++panelId}_header`,
+		// nulling headerId prevents the aria-labelledby relationship which is necessary to allow
+		// aria-label to take precedence
+		// (see https://www.w3.org/TR/wai-aria/states_and_properties#aria-labelledby)
+		headerId: ({'aria-label': label}) => label ? null : `panel_${++panelId}_header`,
 		role: ({hideChildren}) => hideChildren ? 'alert' : 'region'
 	},
 
