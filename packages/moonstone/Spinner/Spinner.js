@@ -168,7 +168,7 @@ class Spinner extends React.Component {
 				);
 			}
 			case 'container': {
-				// Splotlight.pause();
+				Spotlight.pause();
 				return (
 					<div className={scrimClasses[scrimType]}>
 						<SpinnerBase {...rest} />
