@@ -151,7 +151,7 @@ class Spinner extends React.Component {
 		const scrimClasses = {
 			'transparent': css.scrimTransparent,
 			'translucent': css.scrimTranslucent,
-			'none': ''
+			'none': css.scrimNone
 		};
 
 		switch (blockClick) {
@@ -168,7 +168,7 @@ class Spinner extends React.Component {
 				);
 			}
 			case 'container': {
-				// Splotlight.pause()
+				// Splotlight.pause();
 				return (
 					<div className={scrimClasses[scrimType]}>
 						<SpinnerBase {...rest} />
