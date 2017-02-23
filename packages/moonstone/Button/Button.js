@@ -69,10 +69,10 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 			backgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'transparent']),
 
 			/**
-			 * This property accepts one of the following color names, which corrospond with the
+			 * This property accepts one of the following color names, which correspond with the
 			 * colored buttons on a standard remote control: `'red'`, `'green'`, `'yellow'`, `'blue'`
 			 *
-			 * @type {String|null}
+			 * @type {String}
 			 * @public
 			 */
 			color: PropTypes.oneOf([null, 'red', 'green', 'yellow', 'blue']),
