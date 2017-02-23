@@ -204,6 +204,7 @@
 
 // scrim will fill up to the first ancestor element with absolute or relative position
 // parent needs to have absolute or relative position if for scrim to block as expected
+.scrimTransparent,
 .scrimTranslucent {
 	top: 0;
 	left: 0;
@@ -214,8 +215,7 @@
 }
 
 .scrimTransparent {
-	&:extend(.scrimTranslucent);
-	background-color: @moon-spinner-background-transparent;
+	background-color: fade(@moon-black, 0%);
 }
 
 .scrimNone {
