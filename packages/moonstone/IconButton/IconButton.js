@@ -14,7 +14,7 @@ import Icon from '../Icon';
 
 import componentCss from './IconButton.less';
 
-const OptimizedIcon = onlyUpdateForKeys(['small', 'children', 'color'])(Icon);
+const OptimizedIcon = onlyUpdateForKeys(['small', 'children'])(Icon);
 
 /**
  * {@link moonstone/IconButton.IconButtonFactory} is Factory wrapper around
@@ -67,15 +67,6 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * @public
 			 */
 			children: PropTypes.string,
-
-			/**
-			 * This property accepts one of the following color names, which corrospond with the
-			 * colored buttons on a standard remote control: `'red'`, `'green'`, `'yellow'`, `'blue'`
-			 *
-			 * @type {String|null}
-			 * @public
-			 */
-			color: PropTypes.oneOf([null, 'red', 'green', 'yellow', 'blue']),
 
 			/**
 			 * When `true`, the [button]{@glossary button} is shown as disabled and does not
@@ -131,10 +122,10 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 			className: ({color, small, styler}) => styler.append({small}, color)
 		},
 
-		render: ({children, color, small, ...rest}) => {
+		render: ({children, small, ...rest}) => {
 			return (
-				<Button {...rest} small={small} color={color} minWidth={false} marqueeDisabled>
-					<OptimizedIcon small={small} color={color} className={css.icon}>{children}</OptimizedIcon>
+				<Button {...rest} small={small} minWidth={false} marqueeDisabled>
+					<OptimizedIcon small={small} className={css.icon}>{children}</OptimizedIcon>
 				</Button>
 			);
 		}

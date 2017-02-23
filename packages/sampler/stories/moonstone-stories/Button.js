@@ -1,4 +1,5 @@
 import Button, {ButtonBase} from '@enact/moonstone/Button';
+import IconButton from '@enact/moonstone/IconButton';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
@@ -17,7 +18,7 @@ storiesOf('Button')
 	.addWithInfo(
 		' ',
 		'The basic Button',
-		() => (
+		() => (<div>
 			<Button
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
@@ -30,5 +31,19 @@ storiesOf('Button')
 			>
 				{text('children', 'Click Me')}
 			</Button>
-		)
+			<div style={{marginTop: '1em'}}>
+				<Button>star</Button>
+				<Button color="red">denselist</Button>
+				<Button color="green" disabled>trash</Button>
+				<Button color="yellow" small>star</Button>
+				<Button color="blue" small disabled>lock</Button>
+			</div>
+			<div style={{marginTop: '1em'}}>
+				<IconButton>star</IconButton>
+				<IconButton color="red" small>denselist</IconButton>
+				<IconButton color="green" small disabled>trash</IconButton>
+				<IconButton color="yellow">star</IconButton>
+				<IconButton color="blue" disabled>lock</IconButton>
+			</div>
+		</div>)
 	);
