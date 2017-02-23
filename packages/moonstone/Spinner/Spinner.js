@@ -116,7 +116,7 @@ class Spinner extends React.Component {
 		 * 'screen' blocks entire screen; 'container' blocks up to the nearest ancestor with absolute or relative positioning
 		 *
 		 * @type {String}
-		 * @default 'screen'
+		 * @default 'none'
 		 * @public
 		 */
 		blockClick: React.PropTypes.oneOf(['screen', 'container', 'none']),
@@ -134,10 +134,6 @@ class Spinner extends React.Component {
 	static defaultProps = {
 		blockClick: 'none',
 		scrimType: 'translucent'
-	}
-
-	constructor () {
-		super();
 	}
 
 	componentWillUnmount () {
