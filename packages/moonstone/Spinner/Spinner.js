@@ -137,8 +137,8 @@ class Spinner extends React.Component {
 	}
 
 	componentWillMount () {
-		const {blockClick} = this.props;
-		if (blockClick !== 'none') {
+		const {blockClick, scrimType} = this.props;
+		if (blockClick === 'screen' && scrimType !== 'none') {
 			Spotlight.pause();
 		}
 	}
