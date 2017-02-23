@@ -6,10 +6,12 @@
 
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
+import {contextTypes as contextTypesResize} from '@enact/ui/Resizable';
+import {contextTypes as contextTypesRtl} from '@enact/i18n/I18nDecorator';
 import hoc from '@enact/core/hoc';
 import React, {Component, PropTypes} from 'react';
-import {contextTypes} from '@enact/ui/Resizable';
 import ri from '@enact/ui/resolution';
+import {startJob, stopJob} from '@enact/core/jobs';
 
 import css from './Scrollable.less';
 import ScrollAnimator from './ScrollAnimator';
@@ -24,7 +26,10 @@ const
 	pixelPerLine = ri.scale(39) * scrollWheelMultiplierForDeltaPixel,
 	paginationPageMultiplier = 0.8,
 	epsilon = 1,
-	animationDuration = 1000;
+	// spotlight
+	doc = (typeof window === 'object') ? window.document : {},
+	animationDuration = 1000,
+	scrollStopWaiting = 200;
 
 /**
  * {@link moonstone/Scroller.dataIndexAttribute} is the name of a custom attribute
@@ -46,7 +51,7 @@ const dataIndexAttribute = 'data-index';
  * and also catches `onMouseDown`, `onMouseLeave`, `onMouseMove`, `onMouseUp`, and `onWheel` events
  * from its wrapped component for scrolling behaviors.
  *
- * Scrollable calls `onScrollStart`, `onScrolling`, and `onScrollStop` callback functions during scroll.
+ * Scrollable calls `onScrollStart`, `onScroll`, and `onScrollStop` callback functions during scroll.
  *
  * @class Scrollable
  * @memberof moonstone/Scroller
@@ -138,7 +143,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			positioningOption: 'byItem'
 		}
 
-		static childContextTypes = contextTypes
+		static childContextTypes = {...contextTypesResize, ...contextTypesRtl}
 
 		// status
 		horizontalScrollability = false
@@ -187,8 +192,15 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		// scroll animator
 		animator = new ScrollAnimator()
 
-		constructor (props) {
-			super(props);
+		// Right-To-Left
+		isFirstRendered = true
+
+		// browser native scrolling
+		jobName = ''
+		scrolling = false
+
+		constructor (props, context) {
+			super(props, context);
 
 			this.state = {
 				isHorizontalScrollbarVisible: false,
@@ -198,11 +210,17 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.initChildRef = this.initRef('childRef');
 			this.initContainerRef = this.initRef('containerRef');
 
+			this.rtlDirection = context.rtl ? -1 : 1;
+
 			if (this.props.positioningOption === 'byBrowser') {
-				const {onKeyDown} = this;
+				const {onFocus, onKeyDown, onKeyUp, onScroll} = this;
 				this.eventHandlers = {
-					onKeyDown
+					onFocus,
+					onKeyDown,
+					onKeyUp,
+					onScroll
 				};
+				this.jobName = perf.now();
 			} else {
 				const {onKeyDown, onKeyUp} = this;
 				// We have removed all mouse event handlers for now.
@@ -254,7 +272,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			const d = this.dragInfo;
 
 			if (this.horizontalScrollability) {
-				d.dx = e.clientX - d.clientX;
+				d.dx = (e.clientX - d.clientX) * this.rtlDirection;
 				d.clientX = e.clientX;
 			} else {
 				d.dx = 0;
@@ -315,7 +333,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			return delta;
 		}
 
-		// mouse event handler for JS scroller
+		// event handlers for JavaScript-based scroll
 
 		onMouseDown = (e) => {
 			this.animator.stop();
@@ -366,9 +384,47 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.onMouseUp();
 		}
 
-		onScroll = (e) => {
-			this.scroll(e.target.scrollLeft, e.target.scrollTop, true);
+		onWheel = (e) => {
+			e.preventDefault();
+			if (!this.isDragging) {
+				const
+					isHorizontal = this.canScrollHorizontally(),
+					isVertical = this.canScrollVertically(),
+					delta = this.wheel(e, isHorizontal, isVertical);
+
+				window.document.activeElement.blur();
+				this.childRef.setContainerDisabled(true);
+				this.scrollToAccumulatedTarget(delta, isHorizontal, isVertical);
+			}
 		}
+
+		onWheelByBrowser = (e) => {
+			if (!this.isDragging) {
+				window.document.activeElement.blur();
+				this.childRef.setContainerDisabled(true);
+			}
+		}
+
+		// event handler for browser native scroll
+
+		onScroll = (e) => {
+			let {scrollLeft, scrollTop} = e.target;
+
+			if (!this.scrolling) {
+				this.scrollStartOnScroll();
+			}
+
+			if (this.context.rtl) {
+				/* NOTE: this calculation only works for Chrome */
+				scrollLeft = this.bounds.maxLeft - scrollLeft;
+			}
+			this.scroll(scrollLeft, scrollTop, true);
+
+			this.hideThumb();
+			startJob(this.jobName, this.scrollStopOnScroll, scrollStopWaiting);
+		}
+
+		// event handlers for Spotlight support
 
 		startScrollOnFocus = (pos, item) => {
 			if (pos) {
@@ -405,20 +461,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		onKeyUp = () => {
 			this.isKeyDown = false;
-		}
-
-		onWheel = (e) => {
-			e.preventDefault();
-			if (!this.isDragging) {
-				const
-					isHorizontal = this.canScrollHorizontally(),
-					isVertical = this.canScrollVertically(),
-					delta = this.wheel(e, isHorizontal, isVertical);
-
-				window.document.activeElement.blur();
-				this.childRef.setContainerDisabled(true);
-				this.scrollToAccumulatedTarget(delta, isHorizontal, isVertical);
-			}
 		}
 
 		onScrollbarBtnHandler = (orientation, direction) => {
@@ -463,6 +505,19 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		doScrollStop () {
 			this.props.onScrollStop({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()});
+		}
+
+		// call scroll callbacks and update scrollbars for native scroll
+
+		scrollStartOnScroll = () => {
+			this.scrolling = true;
+			this.doScrollStart();
+			this.showThumb();
+		}
+
+		scrollStopOnScroll = () => {
+			this.doScrollStop();
+			this.scrolling = false;
 		}
 
 		// update scroll position
@@ -642,7 +697,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		showThumb () {
-			if (this.props.positioningOption !== 'byBrowser' && !this.props.hideScrollbars) {
+			if (!this.props.hideScrollbars) {
 				if (this.state.isHorizontalScrollbarVisible) {
 					this.scrollbarHorizontalRef.showThumb();
 				}
@@ -653,7 +708,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		updateThumb (scrollbarRef) {
-			if (this.props.positioningOption !== 'byBrowser' && !this.props.hideScrollbars) {
+			if (!this.props.hideScrollbars) {
 				const bounds = this.getScrollBounds();
 				scrollbarRef.update({
 					...bounds,
@@ -664,7 +719,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		hideThumb () {
-			if (this.props.positioningOption !== 'byBrowser' && !this.props.hideScrollbars) {
+			if (!this.props.hideScrollbars) {
 				if (this.state.isHorizontalScrollbarVisible) {
 					this.scrollbarHorizontalRef.startHidingThumb();
 				}
@@ -692,11 +747,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.horizontalScrollability = this.childRef.isHorizontal();
 			this.verticalScrollability = this.childRef.isVertical();
 
-			if (this.props.positioningOption !== 'byBrowser' && !this.props.hideScrollbars) {
+			if (!this.props.hideScrollbars) {
 				const bounds = this.getScrollBounds();
 
 				// FIXME `onWheel` don't work on the v8 snapshot.
-				this.containerRef.addEventListener('wheel', this.onWheel);
+				this.containerRef.addEventListener('wheel', (this.props.positioningOption === 'byBrowser') ? this.onWheelByBrowser : this.onWheel);
 				// eslint-disable-next-line react/no-did-mount-set-state
 				this.setState({
 					isHorizontalScrollbarVisible: this.canScrollHorizontally(),
@@ -722,6 +777,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				// FIXME `onScroll` don't work on the v8 snapshot.
 				this.childRef.containerRef.addEventListener('scroll', this.onScroll);
 			}
+
+			this.isFirstRendered = true;
+
 			// FIXME `onFocus` don't work on the v8 snapshot.
 			this.childRef.containerRef.addEventListener('focus', this.onFocus, true);
 		}
@@ -750,6 +808,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						isHorizontalScrollbarVisible: curHorizontalScrollbarVisible,
 						isVerticalScrollbarVisible: curVerticalScrollbarVisible
 					});
+				}
+			}
+
+			if (this.isFirstRendered) {
+				this.isFirstRendered = false;
+				if (this.childRef.readyForRtl) {
+					this.childRef.readyForRtl();
 				}
 			}
 		}
@@ -787,7 +852,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		render () {
 			const
 				props = Object.assign({}, this.props),
-				{className, hideScrollbars, positioningOption, style} = this.props,
+				{className, hideScrollbars, style} = this.props,
 				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
 				scrollableClasses = classNames(
 					css.scrollable,
@@ -806,7 +871,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			delete props.hideScrollbars;
 
 			return (
-				(positioningOption !== 'byBrowser' && !hideScrollbars) ? (
+				(!hideScrollbars) ? (
 					<div ref={this.initContainerRef} className={scrollableClasses} style={style}>
 						<Scrollbar
 							className={verticalScrollbarClassnames}
