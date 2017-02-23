@@ -278,7 +278,7 @@ describe('Slider Specs', () => {
 			<Comp />
 		);
 
-		slider.setState({active: true});
+		slider.find('Slider').prop('onActivate')();
 
 		const expected = 'change a value with left right button';
 		const actual = slider.find('Slider').prop('aria-valuetext');
@@ -292,7 +292,7 @@ describe('Slider Specs', () => {
 			<Comp vertical />
 		);
 
-		slider.setState({active: true});
+		slider.find('Slider').prop('onActivate')();
 
 		const expected = 'change a value with up down button';
 		const actual = slider.find('Slider').prop('aria-valuetext');
