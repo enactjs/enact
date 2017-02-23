@@ -148,8 +148,7 @@ const MarqueeBase = kind({
 			const style = {
 				direction,
 				textAlign,
-				textOverflow: overflow,
-				transform: 'translateZ(0)'
+				textOverflow: overflow
 			};
 
 			if (animating) {
