@@ -111,6 +111,15 @@ const Spotlight = (function () {
 	let _pointerMode = true;
 
 	/*
+	 * Length of time in milliseconds required after hiding pointer before 5-way keys
+	 * are processed.
+	 *
+	 * @type {Number}
+	 * @default 30
+	 */
+	let _pointerHiddenToKeyTimeout = 30;
+
+	/*
 	* polyfills
 	*/
 	let elementMatchesSelector = function (selector) {
@@ -955,17 +964,17 @@ const Spotlight = (function () {
 		}
 
 		if (isPointerHide(keyCode)) {
-			// 30ms is semi-arbitrary, to account for the time it takes for the following
-			// directional key event to fire, and to prevent momentary spotting of the
-			// last focused item - needs to be a value large enough to account for the
-			// potentially-trailing event, but not too large that another unrelated
+			// 30ms (_pointerHiddenToKeyTimeout) is semi-arbitrary, to account for the time it
+			// takes for the following directional key event to fire, and to prevent momentary
+			// spotting of the last focused item - needs to be a value large enough to account
+			// for the potentially-trailing event, but not too large that another unrelated
 			// event can be fired inside the window
 			startJob('hidePointer', () => {
 				_pointerMode = false;
 				if (!getCurrent() && _lastContainerId) {
 					Spotlight.focus(getContainerLastFocusedElement(_lastContainerId));
 				}
-			}, 30);
+			}, _pointerHiddenToKeyTimeout);
 		} else if (isPointerShow(keyCode)) {
 			_pointerMode = true;
 		} else {
