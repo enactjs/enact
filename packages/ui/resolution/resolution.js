@@ -20,12 +20,13 @@ let baseScreen,
  * @public
  */
 const unitToPixelFactors = {
-		'rem': 12,
-		'in': 96
-	},
-	configDefaults = {
-		orientationHandling: 'normal'
-	};
+	'rem': 12,
+	'in': 96
+};
+
+const configDefaults = {
+	orientationHandling: 'normal'
+};
 
 /**
  * Fetch the screenType object
@@ -294,7 +295,7 @@ function scale (px) {
  * ```
  *
  * @memberof ui/resolution
- * @param {(String|Number)} pixels - The the pixels or math to convert to the unit.
+ * @param {(String|Number)} pixels - The pixels or math to convert to the unit.
  *	("px" suffix in String format is permitted. ex: `'20px'`)
  * @param {(String)} toUnit - The name of the unit to convert to.
  * @returns {(String|undefined)} Resulting conversion in CSS safe format, in case of malformed input, `undefined`
@@ -312,9 +313,9 @@ function unit (pixels, toUnit) {
  * Shorthand for when you know you need to scale some pixel value and have it converted to "rem" for
  * proper scaling. This runs {@link ui/resolution.scale} and {@link ui/resolution.unit} together.
  *
+ * @function
  * @memberof ui/resolution
- * @param {(String|Number)} pixels - The the pixels or math to convert to the unit.
- *	("px" suffix in String format is permitted. ex: `'20px'`)
+ * @param {Number} pixels - The quantity of standard-resolution pixels to scale to rems
  * @returns {(Number|undefined)} Resulting conversion, in case of malformed input, `undefined`
  * @public
  */

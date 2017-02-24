@@ -19,6 +19,7 @@ import {toUpperCase} from '../';
  *
  * @class Uppercase
  * @memberof i18n/Uppercase
+ * @hoc
  * @public
  */
 const Uppercase = hoc((config, Wrapped) => kind({
