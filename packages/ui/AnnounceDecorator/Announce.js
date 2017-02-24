@@ -37,24 +37,24 @@ const Announce = class extends React.Component {
 
 	static propTypes = /** @lends ui/AnnounceDecorator.Announce.prototype */ {
 		/**
-		 * Time, in milliseconds, to wait to remove the alert message
+		 * Time, in milliseconds, to wait to remove the alert message. Subsequent updates to the
+		 * message before the timeout are ignored.
 		 *
 		 * @type {Number}
-		 * @default 16
+		 * @default 500
 		 * @public
 		 */
 		timeout: React.PropTypes.number
 	}
 
 	static defaultProps = {
-		timeout: 16
+		// 500ms is somewhat arbitrary. Would like to do some further usability testing to determine
+		// how frequently we should allow alerting. Should also consider if this timeout should be
+		// "global" such that multiple instances of Announce respect each other.
+		timeout: 500
 	}
 
 	componentWillUnmount () {
-		this.clearTimeout();
-	}
-
-	clearTimeout () {
 		if (this.alertTimeout) {
 			clearTimeout(this.alertTimeout);
 		}
@@ -73,9 +73,8 @@ const Announce = class extends React.Component {
 	 * @public
 	 */
 	announce = (message) => {
-		if (this.alert) {
+		if (this.alert && !this.alertTimeout) {
 			this.alert.setAttribute('aria-label', message);
-			this.clearTimeout();
 			this.alertTimeout = setTimeout(this.resetAlert, this.props.timeout);
 		}
 	}

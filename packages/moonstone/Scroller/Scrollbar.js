@@ -1,3 +1,4 @@
+import {$L} from '@enact/i18n';
 import {Announce} from '@enact/ui/AnnounceDecorator';
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
@@ -238,18 +239,18 @@ class ScrollbarBase extends Component {
 	handlePrevScroll = (ev) => {
 		const {onPrevScroll, vertical} = this.props;
 		onPrevScroll(ev);
-		if (this.announceRef) this.announceRef.announce(vertical ? 'UP' : 'LEFT');
+		if (this.announceRef) this.announceRef.announce($L(vertical ? 'UP' : 'LEFT'));
 	}
 
 	handleNextScroll = (ev) => {
 		const {onNextScroll, vertical} = this.props;
 		onNextScroll(ev);
-		if (this.announceRef) this.announceRef.announce(vertical ? 'DOWN' : 'RIGHT');
+		if (this.announceRef) this.announceRef.announce($L(vertical ? 'DOWN' : 'RIGHT'));
 	}
 
 	render () {
 		const
-			{className, vertical} = this.props,
+			{className, onNextScroll, onPrevScroll, vertical} = this.props,
 			{prevButtonDisabled, nextButtonDisabled} = this.state,
 			{rtl} = this.context,
 			{scrollbarClass, thumbClass} = this.scrollbarInfo,
@@ -262,14 +263,16 @@ class ScrollbarBase extends Component {
 				<ScrollButton
 					direction={vertical ? 'up' : 'left'}
 					disabled={prevButtonDisabled}
-					onScroll={this.handlePrevScroll}
+					onClick={this.handlePrevScroll}
+					onHoldPulse={onPrevScroll}
 				>
 					{prevIcon}
 				</ScrollButton>
 				<ScrollButton
 					direction={vertical ? 'down' : 'right'}
 					disabled={nextButtonDisabled}
-					onScroll={this.handleNextScroll}
+					onClick={this.handleNextScroll}
+					onHoldPulse={onNextScroll}
 				>
 					{nextIcon}
 				</ScrollButton>

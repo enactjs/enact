@@ -22,8 +22,7 @@ const ScrollButtonBase = kind({
 	propTypes: {
 		children: React.PropTypes.node,
 		direction: React.PropTypes.string,
-		disabled: React.PropTypes.bool,
-		onScroll: React.PropTypes.func
+		disabled: React.PropTypes.bool
 	},
 
 	computed: {
@@ -31,7 +30,7 @@ const ScrollButtonBase = kind({
 		'aria-label': ({direction}) => $L('scroll ' + direction)
 	},
 
-	render: ({children, disabled, onScroll, ...rest}) => {
+	render: ({children, disabled, ...rest}) => {
 		delete rest.direction;
 
 		return (
@@ -39,8 +38,6 @@ const ScrollButtonBase = kind({
 				{...rest}
 				backgroundOpacity="transparent"
 				disabled={disabled}
-				onClick={onScroll}
-				onHoldPulse={onScroll}
 				small
 			>
 				{children}
