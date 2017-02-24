@@ -63,6 +63,15 @@ class Scrollbar extends Component {
 		className: PropTypes.any,
 
 		/**
+		 * Specifies to reflect scrollbar's disabled property to the paging controls.
+		 * When it is `true`, both prev/next buttons are going to be disabled.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		disabled: PropTypes.bool,
+
+		/**
 		 * Called when the scrollbar's down/right button is pressed.
 		 *
 		 * @type {Function}
@@ -101,7 +110,7 @@ class Scrollbar extends Component {
 
 		this.state = {
 			prevButtonDisabled: true,
-			nextButtonDisabled: false
+			nextButtonDisabled: true
 		};
 
 		this.scrollbarInfo = {
@@ -239,7 +248,7 @@ class Scrollbar extends Component {
 
 	render () {
 		const
-			{className, vertical} = this.props,
+			{className, disabled, vertical} = this.props,
 			{prevButtonDisabled, nextButtonDisabled} = this.state,
 			{rtl} = this.context,
 			{scrollbarClass, thumbClass,
@@ -250,10 +259,10 @@ class Scrollbar extends Component {
 
 		return (
 			<div ref={this.initContainerRef} className={scrollbarClassNames}>
-				<HoldableIconButton backgroundOpacity="transparent" small disabled={prevButtonDisabled} className={prevButtonClass} onClick={clickPrevHandler} onHoldPulse={clickPrevHandler}>
+				<HoldableIconButton backgroundOpacity="transparent" small disabled={disabled || prevButtonDisabled} className={prevButtonClass} onClick={clickPrevHandler} onHoldPulse={clickPrevHandler}>
 					{prevIcon}
 				</HoldableIconButton>
-				<HoldableIconButton backgroundOpacity="transparent" small disabled={nextButtonDisabled} className={nextButtonClass} onClick={clickNextHandler} onHoldPulse={clickNextHandler}>
+				<HoldableIconButton backgroundOpacity="transparent" small disabled={disabled || nextButtonDisabled} className={nextButtonClass} onClick={clickNextHandler} onHoldPulse={clickNextHandler}>
 					{nextIcon}
 				</HoldableIconButton>
 				<div ref={this.initThumbRef} className={thumbClass} />
