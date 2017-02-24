@@ -22,9 +22,10 @@ const isUp = is('up');
  * Translates keyCodes into 5-way direction descriptions (e.g. `'down'`)
  *
  * @function
+ * @memberof spotlight
  * @param {Number} keyCode - Key code to analyze
  * @returns {String|false} - One of `'up'`, `'down'`, `'left'`, `'right'` or false if not a direction key
- * @memberof spotlight
+ * @public
  */
 const getDirection = function (keyCode) {
 	return	isDown(keyCode) && 'down' ||
@@ -1349,10 +1350,10 @@ const Spotlight = (function () {
 		/**
 		 * Sets the currently active container.
 		 *
+		 * @memberof spotlight.Spotlight.prototype
 		 * @param {String} [containerId] The id of the currently active container. If this is not
 		 *	provided, the root container is set as the currently active container.
 		 * @public
-		 * @memberof spotlight.Spotlight.prototype
 		 */
 		setActiveContainer: function (containerId) {
 			_lastContainerId = containerId || spotlightRootContainerName;
@@ -1361,8 +1362,8 @@ const Spotlight = (function () {
 		/**
 		 * Gets the current pointer mode
 		 *
-		 * @returns {Boolean} `true` if spotlight is in pointer mode
 		 * @memberof spotlight.Spotlight.prototype
+		 * @returns {Boolean} `true` if spotlight is in pointer mode
 		 */
 		getPointerMode: function () {
 			return _pointerMode;
@@ -1371,9 +1372,9 @@ const Spotlight = (function () {
 		/**
 		 * Sets the current pointer mode
 		 *
+		 * @memberof spotlight.Spotlight.prototype
 		 * @param {Boolean} pointerMode The value of the pointer mode. This determines how
 		 *	spotlight manages focus change behaviors.
-		 * @memberof spotlight.Spotlight.prototype
 		 * @public
 		 */
 		setPointerMode: function (pointerMode) {
@@ -1383,9 +1384,9 @@ const Spotlight = (function () {
 		/**
 		 * Gets the muted mode value of a spottable element.
 		 *
+		 * @memberof spotlight.Spotlight.prototype
 		 * @param {Object} elem The dom element used to determine the muted status.
 		 * @returns {Boolean} `true` if the passed-in control is in muted mode.
-		 * @memberof spotlight.Spotlight.prototype
 		 * @public
 		 */
 		isMuted: function (elem) {
@@ -1399,8 +1400,8 @@ const Spotlight = (function () {
 		/**
 		 * Determines whether Spotlight is currently paused.
 		 *
-		 * @returns {Boolean} `true` if Spotlight is currently paused.
 		 * @memberof spotlight.Spotlight.prototype
+		 * @returns {Boolean} `true` if Spotlight is currently paused.
 		 * @public
 		 */
 		isPaused: function () {
@@ -1410,9 +1411,9 @@ const Spotlight = (function () {
 		/**
 		 * Determines whether an element is spottable.
 		 *
+		 * @memberof spotlight.Spotlight.prototype
 		 * @param {Object} elem The dom element used to determine the spottable status.
 		 * @returns {Boolean} `true` if the element being evaluated is currently spottable.
-		 * @memberof spotlight.Spotlight.prototype
 		 * @public
 		 */
 		isSpottable: function (elem) {
@@ -1426,8 +1427,8 @@ const Spotlight = (function () {
 		/**
 		 * Returns the currently spotted control.
 		 *
-		 * @returns {Object} The control that currently has focus, if available
 		 * @memberof spotlight.Spotlight.prototype
+		 * @returns {Object} The control that currently has focus, if available
 		 * @public
 		 */
 		getCurrent: function () {

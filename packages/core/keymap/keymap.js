@@ -30,6 +30,8 @@ const map = {};
 /**
  * Utility to safely convert keymap name to lower case
  *
+ * @function
+ * @memberof core/keymap
  * @param   {String} name  Name for keyCode
  *
  * @returns {String}       Name for keyCode in lower case
@@ -40,6 +42,8 @@ const toLowerCase = (name) => name ? name.toLowerCase() : '';
 /**
  * Iterates over `set` and invokes `fn` with the key and value of each item
  *
+ * @function
+ * @memberof core/keymap
  * @param   {Function}  fn   Function to invoke
  * @param   {Object}    set  A map of names to keyCodes
  *
@@ -53,6 +57,8 @@ const forEachObj = curry(function (fn, set) {
 /**
  * Invokes `fn` with `name` and `keyCode` for each key code provided
  *
+ * @function
+ * @memberof core/keymap
  * @param   {Function}        fn       Function to invoke
  * @param   {String}          name     Name for the key codes
  * @param   {Number|Number[]} keyCode  A key code or array of key codes
@@ -71,6 +77,8 @@ const oneOrArray = curry(function (fn, name, keyCode) {
 /**
  * Adds `keyCode` to `name`
  *
+ * @function
+ * @memberof core/keymap
  * @param   {String}    name     Name for the key code
  * @param   {Number}    keyCode  A key code
  *
@@ -92,6 +100,8 @@ const addOne = curry(function (name, keyCode) {
 /**
  * Removes `keyCode` from `name`.
  *
+ * @function
+ * @memberof core/keymap
  * @param   {String}    name     Name for the key code
  * @param   {Number}    keyCode  A key code
  *
@@ -114,12 +124,12 @@ const removeOne = curry(function (name, keyCode) {
 /**
  * Registers `keyCode` for `name`
  *
+ * @function add
  * @memberof core/keymap
  * @param   {String}          name     Name for the key code
  * @param   {Number|Number[]} keyCode  A key code or array of key codes
  *
  * @returns {undefined}
- * @method add
  * @public
  */
 const add = oneOrArray(addOne);
@@ -127,11 +137,11 @@ const add = oneOrArray(addOne);
 /**
  * Registers a set of key codes.
  *
+ * @function addAll
  * @memberof core/keymap
  * @param   {Object}    set  A map of names to keyCodes
  *
  * @returns {undefined}
- * @method addAll
  * @public
  */
 const addAll = forEachObj(add);
@@ -139,12 +149,12 @@ const addAll = forEachObj(add);
 /**
  * Deregisters `keyCode` from `name`.
  *
+ * @function remove
  * @memberof core/keymap
  * @param   {String}          name     Name for the key code
  * @param   {Number|Number[]} keyCode  A key code or array of key codes
  *
  * @returns {undefined}
- * @method remove
  * @public
  */
 const remove = oneOrArray(removeOne);
@@ -152,11 +162,11 @@ const remove = oneOrArray(removeOne);
 /**
  * Deregisters a set of key codes.
  *
+ * @function removeAll
  * @memberof core/keymap
  * @param   {Object}    set  A map of names to keyCodes
  *
  * @returns {undefined}
- * @method removeAll
  * @public
  */
 const removeAll = forEachObj(remove);
@@ -164,12 +174,12 @@ const removeAll = forEachObj(remove);
 /**
  * Determines if `keyCode` is mapped to `name`.
  *
+ * @function is
  * @memberof core/keymap
  * @param   {String}    name     Name for the key code
  * @param   {Number}    keyCode  A key code
  *
  * @returns {Boolean}            `true` if `keyCode` is mapped to `name`
- * @method is
  * @public
  */
 const is = curry(function (name, keyCode) {
