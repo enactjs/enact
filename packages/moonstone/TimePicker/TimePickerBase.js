@@ -241,6 +241,7 @@ const TimePickerBase = kind({
 							label={noLabels ? null : $L('meridiem')}
 							onChange={onChangeMeridiem}
 							onSpotlightDisappear={onSpotlightDisappear}
+							reverse
 							spotlightDisabled={spotlightDisabled}
 							value={meridiem}
 							width="small"

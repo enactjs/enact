@@ -6,11 +6,47 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/IconButton` and `moonstone/Button` `color` property to add a remote control key color to the button
+- `moonstone/Scrollbar` property `disabled` to disable both paging controls when it is true
+- `moonstone/VirtualList` parameter `moreInfo` to pass `firstVisibleIndex` and `lastVisibleIndex` when scroll events are firing
+
+### Changed
+
+- `moonstone/VirtualList` and `moonstone/VirtualGridList` not to add `data-index` to their item DOM elements directly, but to pass `data-index` as the parameter of their `component` prop like the `key` parameter of their `component` prop
+
+### Fixed
+
+- `moonstone/VirtualList.GridListImageItem` to have proper padding size according to the existence of caption/subcaption.
+- `moonstone/Scrollable` to display scrollbars with proper size
+- `moonstone/VirtualGridList` to not be truncated
+
+## [1.0.0-beta.3] - 2017-02-21
+
+### Added
+
+- `moonstone/VideoPlayer` support for 5-way show/hide of media playback controls
+- `moonstone/VideoPlayer` property `feedbackHideDelay`
+- `moonstone/Slider` property `onKnobMove` to fire when the knob position changes, independently from the `moonstone/Slider` value
+- `moonstone/Slider` properties `active`, `disabled`, `knobStep`, `onActivate`, `onDecrement`, and `onIncrement` as part of enabling 5-way support to `moonstone/Slider`, `moonstone/IncrementSlider` and the media slider for `moonstone/VideoPlayer`
+- `moonstone/Slider` now supports `children` which are added to the `Slider`'s knob, and follow it as it moves
 - `moonstone/ExpandableInput` properties `iconAfter` and `iconBefore` to display icons after and before the input, respectively
+- `moonstone/Dialog` property `preserveCase`, which affects `title` text
 
 ### Changed
 
 - `moonstone/IncrementSlider` to change when the buttons are held down
+- `moonstone/Marquee` to allow disabled marquees to animate
+- `moonstone/Dialog` to marquee `title` and `titleBelow`
+- `moonstone/Marquee.MarqueeController` config option `startOnFocus` to `marqueeOnFocus`. `startOnFocus` is deprecated and will be removed in a future update.
+- `moonstone/Button`, `moonstone/IconButton`, `moonstone/Item` to not forward `onClick` when `disabled`
+
+### Fixed
+
+- `moonstone/Marquee.MarqueeController` to start marquee on newly registered components when controller has focus and to restart synced marquees after completion
+- `moonstone/Scroller` to recalculate when an expandable child opens
+- `spotlightDisabled` property support for spottable moonstone components
+- `moonstone/Popup` and `moonstone/ContextualPopupDecorator` so that when the popup is closed, spotlight focus returns to the control that had focus prior to the popup opening
+- `moonstone/Input` to not get focus when disabled
 
 ## [1.0.0-beta.2] - 2017-01-30
 
@@ -44,7 +80,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/IncrementSlider` so that the knob is spottable via pointer, and 5-way navigation between the knob and the increment/decrement buttons is functional
 - `moonstone/Slider` and `moonstone/IncrementSlider` to not fire `onChange` for value changes from props
-- `spotlightDisabled` property support for spottable moonstone components
 
 ## [1.0.0-beta.1] - 2016-12-30
 

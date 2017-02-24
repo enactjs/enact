@@ -21,6 +21,7 @@ storiesOf('IncrementSlider')
 				incrementIcon={select('incrementIcon', ['', ...incrementIcons])}
 				decrementIcon={select('decrementIcon', ['', ...decrementIcons])}
 				disabled={boolean('disabled', ChangeableSlider.defaultProps.disabled)}
+				knobStep={number('knobStep')}
 				max={number('max', ChangeableSlider.defaultProps.max)}
 				min={number('min', ChangeableSlider.defaultProps.min)}
 				onChange={action('onChange')}

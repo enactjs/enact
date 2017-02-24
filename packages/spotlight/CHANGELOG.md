@@ -2,6 +2,15 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [1.0.0-beta.3] - 2017-02-21
+
+### Fixed
+
+- `spotlight.Spotlight` behavior to follow container config rules when navigating between containers
+- `spotlight.Spotlight` behavior to not set focus on spottable components animating past the pointer when not in pointer-mode
+- `spotlight.Spotlight` 5-way behavior where selecting a spottable component may require multiple attempts before performing actions
+- `spotlight.Spotlight` to not unfocus elements on scroll
+
 ## [1.0.0-beta.2] - 2017-01-30
 
 ### Added

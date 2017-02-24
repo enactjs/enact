@@ -6,7 +6,6 @@ import Spotlight from './spotlight';
 import {spottableClass} from './spottable';
 
 const spotlightDefaultClass = 'spottable-default';
-
 const enterEvent = 'onMouseEnter';
 const leaveEvent = 'onMouseLeave';
 
@@ -81,7 +80,7 @@ const defaultConfig = {
 const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const forwardMouseEnter = forward(enterEvent);
 	const forwardMouseLeave = forward(leaveEvent);
-	const {preserveId} = config;
+	const {preserveId, ...containerConfig} = config;
 
 	return class extends React.Component {
 		static displayName = 'SpotlightContainerDecorator';
@@ -174,7 +173,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentWillMount () {
 			const selector = '[data-container-id="' + this.state.id + '"]:not([data-container-disabled="true"]) .' + spottableClass,
-				cfg = Object.assign({}, config, {selector, navigableFilter: this.navigableFilter, restrict: this.props.spotlightRestrict});
+				cfg = Object.assign({}, containerConfig, {selector, navigableFilter: this.navigableFilter, restrict: this.props.spotlightRestrict});
 
 			Spotlight.set(this.state.id, cfg);
 		}
@@ -191,7 +190,9 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleMouseLeave = (ev) => {
-			Spotlight.setActiveContainer(null);
+			const parentContainer = ev.currentTarget.parentNode.closest('[data-container-id]');
+			const activeContainer = parentContainer ? parentContainer.dataset.containerId : null;
+			Spotlight.setActiveContainer(activeContainer);
 			forwardMouseLeave(ev, this.props);
 		}
 

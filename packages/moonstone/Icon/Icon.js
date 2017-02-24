@@ -83,6 +83,14 @@ const IconBase = kind({
 		children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 
 		/**
+		 * If `true`, apply a pressed styling
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		pressed: PropTypes.bool,
+
+		/**
 		 * If `true`, apply the 'small' class.
 		 *
 		 * @type {Boolean}
