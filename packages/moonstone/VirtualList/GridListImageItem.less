@@ -4,9 +4,14 @@
 @import '../styles/variables.less';
 
 .gridListImageItem {
-	display: inline-block;
-	border: 6px solid transparent;
+	position: absolute;
 	overflow: hidden;
+	box-sizing: border-box;
+	border: 6px solid transparent;
+
+	will-change: transform;
+
+	color : white;
 
 	.icon {
 		background-color: white;
