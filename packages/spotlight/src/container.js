@@ -1,3 +1,9 @@
+/*
+ * Exports the {@link spotlight.SpotlightContainerDecorator} Higher-order Component and
+ * {@link spotlight.spotlightDefaultClass} `className`. The default export is
+ * {@link spotlight.SpotlightContainerDecorator}.
+ */
+
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import React, {PropTypes} from 'react';
@@ -5,6 +11,12 @@ import React, {PropTypes} from 'react';
 import Spotlight from './spotlight';
 import {spottableClass} from './spottable';
 
+/**
+ * The class name to apply to the default component to focus in a container.
+ *
+ * @memberof spotlight
+ * @public
+ */
 const spotlightDefaultClass = 'spottable-default';
 const enterEvent = 'onMouseEnter';
 const leaveEvent = 'onMouseLeave';
@@ -85,7 +97,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'SpotlightContainerDecorator';
 
-		static propTypes = /** @lends spotlight.SpotlightContainerDecorator.protoype */ {
+		static propTypes = /** @lends spotlight.SpotlightContainerDecorator.prototype */ {
 			/**
 			 * Specifies the container id. If the value is `null`, an id will be generated.
 			 *
