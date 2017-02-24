@@ -1364,6 +1364,7 @@ const Spotlight = (function () {
 		 *
 		 * @memberof spotlight.Spotlight.prototype
 		 * @returns {Boolean} `true` if spotlight is in pointer mode
+		 * @public
 		 */
 		getPointerMode: function () {
 			return _pointerMode;
