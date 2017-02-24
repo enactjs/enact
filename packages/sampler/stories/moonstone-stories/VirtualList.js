@@ -1,6 +1,6 @@
 import ri from '@enact/ui/resolution';
 import Item from '@enact/moonstone/Item';
-import VirtualList from '@enact/moonstone/VirtualList';
+import VirtualList, {css} from '@enact/moonstone/VirtualList';
 import {VirtualListCore} from '@enact/moonstone/VirtualList/VirtualListBase';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
@@ -12,8 +12,6 @@ VirtualList.defaultProps = Object.assign({}, VirtualListCore.defaultProps);
 const
 	style = {
 		item: {
-			position: 'absolute',
-			width: '100%',
 			borderBottom: ri.scale(2) + 'px solid #202328',
 			boxSizing: 'border-box'
 		},
@@ -26,7 +24,7 @@ const
 	renderItem = (size) => ({data, index, ...rest}) => {
 		const itemStyle = {height: size + 'px', ...style.item};
 		return (
-			<Item {...rest} style={itemStyle}>
+			<Item {...rest} className={css.listItem} style={itemStyle}>
 				{data[index]}
 			</Item>
 		);
