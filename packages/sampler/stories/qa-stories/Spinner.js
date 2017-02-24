@@ -26,8 +26,7 @@ storiesOf('Spinner')
 			<div style={style.spinnerDiv}>
 				<Spinner
 					transparent={boolean('transparent', false)}
-					middle={boolean('middle', false)}
-					center={boolean('center', false)}
+					centered={boolean('centered', false)}
 				>
 					{text('content', prop.longText)}
 				</Spinner>
@@ -41,8 +40,7 @@ storiesOf('Spinner')
 			<div style={style.spinnerDiv}>
 				<Spinner
 					transparent={boolean('transparent', false)}
-					middle={boolean('middle', false)}
-					center={boolean('center', false)}
+					centered={boolean('centered', false)}
 				>
 					<Icon>hollowstar</Icon>
 					<Icon>star</Icon>
@@ -58,8 +56,7 @@ storiesOf('Spinner')
 			<div style={style.spinnerDiv}>
 				<Spinner
 					transparent={boolean('transparent', false)}
-					middle={boolean('middle', false)}
-					center={boolean('center', false)}
+					centered={boolean('centered', false)}
 				>
 					{text('content', prop.longText)}
 					<Icon>hollowstar</Icon>
@@ -75,8 +72,7 @@ storiesOf('Spinner')
 			<div style={style.spinnerDiv}>
 				<Spinner
 					transparent={boolean('transparent', false)}
-					middle={boolean('middle', false)}
-					center={boolean('center', false)}
+					centered={boolean('centered', false)}
 				>
 					<Icon>hollowstar</Icon>
 					<Icon>star</Icon>
