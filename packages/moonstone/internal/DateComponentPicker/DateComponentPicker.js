@@ -86,7 +86,7 @@ const DateComponentPickerBase = kind({
 		<DateComponentPickerChrome className={className} label={label}>
 			<Picker
 				{...rest}
-				accessibilityHint={label ? ' ' + label : null}
+				accessibilityHint={label}
 				index={value}
 				joined
 				max={max}
