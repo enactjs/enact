@@ -74,10 +74,10 @@ const ExpandableItemBase = kind({
 		/**
 		 * The secondary, or supportive text. Typically under the `title`, a subtitle.
 		 *
-		 * @type {String}
+		 * @type {Node}
 		 * @public
 		 */
-		label: PropTypes.string,
+		label: PropTypes.node,
 
 		/**
 		 * When `true`, the user is prevented from moving {@glossary Spotlight} past the bottom
