@@ -147,6 +147,19 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			onChange: PropTypes.func,
 
 			/**
+			 * The handler to run when the knob moves. This method is only called when running
+			 * `Slider` with `detachedKnob`. If you need to run a callback without a detached knob
+			 * use the more traditional `onChange` property.
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @param {Number} event.proportion The proportional position of the knob across the slider
+			 * @param {Boolean} event.detached `true` if the knob is currently detached, `false` otherwise
+			 * @public
+			 */
+			onKnobMove: PropTypes.func,
+
+			/**
 			 * When `true`, a pressed visual effect is applied
 			 *
 			 * @type {Boolean}
@@ -288,6 +301,8 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			barNode.style.transform = computeBarTransform(proportionProgress, vertical);
 			// If we know the knob should be in a custom place, use that place; otherwise, sync it with the progress.
 			knobNode.style.transform = computeKnobTransform(knobProgress, vertical, node);
+			knobNode.dataset.climax = knobProgress > 0.5 ? 'falling' : 'rising';
+			this.notifyKnobMove(knobProgress, knobProgress !== proportionProgress);
 		}
 
 		getInputNode = (node) => {
@@ -300,6 +315,16 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		getSliderBarNode = (node) => {
 			this.sliderBarNode = node;
+		}
+
+		notifyKnobMove = (proportion, detached) => {
+			const {disabled, detachedKnob, onKnobMove} = this.props;
+			if (!disabled && detachedKnob && onKnobMove) {
+				onKnobMove({
+					proportion,
+					detached
+				});
+			}
 		}
 
 		handleChange = (ev) => {

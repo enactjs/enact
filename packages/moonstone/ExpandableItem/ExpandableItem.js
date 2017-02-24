@@ -22,7 +22,7 @@ const isUp = is('up');
 const isDown = is('down');
 
 /**
- * {@link moonstone/ExpandableItem.ExpandableItem} is a stateless component that
+ * {@link moonstone/ExpandableItem.ExpandableItemBase} is a stateless component that
  * renders a {@link moonstone/LabeledItem.LabeledItem} that can be expanded to show
  * additional contents.
  *

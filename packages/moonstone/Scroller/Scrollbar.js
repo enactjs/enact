@@ -45,7 +45,6 @@ const
 	prepareNextButton = prepareButton(false),
 
 	// spotlight
-	doc = (typeof window === 'object') ? window.document : {},
 	perf = (typeof window === 'object') ? window.performance : {now: Date.now};
 
 /**
@@ -62,6 +61,15 @@ class ScrollbarBase extends Component {
 		announce: PropTypes.func,
 
 		className: PropTypes.any,
+
+		/**
+		 * Specifies to reflect scrollbar's disabled property to the paging controls.
+		 * When it is `true`, both prev/next buttons are going to be disabled.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		disabled: PropTypes.bool,
 
 		/**
 		 * Called when the scrollbar's down/right button is pressed.
@@ -106,7 +114,7 @@ class ScrollbarBase extends Component {
 
 		this.state = {
 			prevButtonDisabled: true,
-			nextButtonDisabled: false
+			nextButtonDisabled: true
 		};
 
 		this.scrollbarInfo = {scrollbarClass, thumbClass, sizeProperty, matrix};
@@ -154,7 +162,8 @@ class ScrollbarBase extends Component {
 			currentPos = vertical ? bounds.scrollTop : bounds.scrollLeft,
 			maxPos = vertical ? bounds.maxTop : bounds.maxLeft,
 			shouldDisablePrevButton = currentPos <= 0,
-			shouldDisableNextButton = currentPos >= maxPos;
+			shouldDisableNextButton = currentPos >= maxPos,
+			spotItem = window.document.activeElement;
 
 		if (prevButtonDisabled !== shouldDisablePrevButton) {
 			this.setState({prevButtonDisabled: shouldDisablePrevButton});
@@ -162,9 +171,9 @@ class ScrollbarBase extends Component {
 			this.setState({nextButtonDisabled: shouldDisableNextButton});
 		}
 
-		if (shouldDisablePrevButton && doc.activeElement === prevButtonNodeRef) {
+		if (shouldDisablePrevButton && spotItem === prevButtonNodeRef) {
 			Spotlight.focus(nextButtonNodeRef);
-		} else if (shouldDisableNextButton && doc.activeElement === nextButtonNodeRef) {
+		} else if (shouldDisableNextButton && spotItem === nextButtonNodeRef) {
 			Spotlight.focus(prevButtonNodeRef);
 		}
 	}
@@ -250,7 +259,7 @@ class ScrollbarBase extends Component {
 
 	render () {
 		const
-			{className, onNextScroll, onPrevScroll, vertical} = this.props,
+			{className, disabled, onNextScroll, onPrevScroll, vertical} = this.props,
 			{prevButtonDisabled, nextButtonDisabled} = this.state,
 			{rtl} = this.context,
 			{scrollbarClass, thumbClass} = this.scrollbarInfo,
@@ -262,7 +271,7 @@ class ScrollbarBase extends Component {
 			<div ref={this.initContainerRef} className={scrollbarClassNames}>
 				<ScrollButton
 					direction={vertical ? 'up' : 'left'}
-					disabled={prevButtonDisabled}
+					disabled={disabled || prevButtonDisabled}
 					onClick={this.handlePrevScroll}
 					onHoldPulse={onPrevScroll}
 				>
@@ -270,7 +279,7 @@ class ScrollbarBase extends Component {
 				</ScrollButton>
 				<ScrollButton
 					direction={vertical ? 'down' : 'right'}
-					disabled={nextButtonDisabled}
+					disabled={disabled || nextButtonDisabled}
 					onClick={this.handleNextScroll}
 					onHoldPulse={onNextScroll}
 				>
