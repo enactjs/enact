@@ -1,5 +1,5 @@
 import React from 'react';
-import {mount, shallow} from 'enzyme';
+import {mount} from 'enzyme';
 import sinon from 'sinon';
 import {Button, ButtonBase} from '../Button';
 
@@ -42,23 +42,23 @@ describe('Button', () => {
 	});
 
 	it('should not add "aria-pressed" when "selected" is omitted', function () {
-		const button = shallow(
-			<ButtonBase />
+		const button = mount(
+			<ButtonBase>Text</ButtonBase>
 		);
 
 		const expected = false;
-		const actual = 'aria-pressed' in button.props();
+		const actual = 'aria-pressed' in button.find({role: 'button'}).props();
 
 		expect(actual).to.equal(expected);
 	});
 
 	it('should set "aria-pressed" to the value of "selected"', function () {
-		const button = shallow(
-			<ButtonBase selected={false} />
+		const button = mount(
+			<ButtonBase selected={false}>Text</ButtonBase>
 		);
 
 		const expected = false;
-		const actual = button.prop('aria-pressed');
+		const actual = button.find({role: 'button'}).prop('aria-pressed');
 
 		expect(actual).to.equal(expected);
 	});

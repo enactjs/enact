@@ -9,7 +9,7 @@ describe('ExpandableInput', () => {
 				<ExpandableInputBase title="Item" value="value" />
 			);
 
-			const expected = 'Item value edit box';
+			const expected = 'Item value input field';
 			const actual = subject.prop('aria-label');
 
 			expect(actual).to.equal(expected);
@@ -20,7 +20,7 @@ describe('ExpandableInput', () => {
 				<ExpandableInputBase title="Item" noneText="noneText" />
 			);
 
-			const expected = 'Item noneText edit box';
+			const expected = 'Item noneText input field';
 			const actual = subject.prop('aria-label');
 
 			expect(actual).to.equal(expected);
@@ -31,7 +31,7 @@ describe('ExpandableInput', () => {
 				<ExpandableInputBase title="Item" />
 			);
 
-			const expected = 'Item  edit box'; // the extra space is intentional
+			const expected = 'Item  input field'; // the extra space is intentional
 			const actual = subject.prop('aria-label');
 
 			expect(actual).to.equal(expected);
@@ -42,7 +42,7 @@ describe('ExpandableInput', () => {
 				<ExpandableInputBase title="Item" type="password" value="long" />
 			);
 
-			const expected = 'Item 4 characters edit box';
+			const expected = 'Item 4 characters input field';
 			const actual = subject.prop('aria-label');
 
 			expect(actual).to.equal(expected);
@@ -53,7 +53,7 @@ describe('ExpandableInput', () => {
 				<ExpandableInputBase title="Item" type="password" value="1" />
 			);
 
-			const expected = 'Item 1 character edit box';
+			const expected = 'Item 1 character input field';
 			const actual = subject.prop('aria-label');
 
 			expect(actual).to.equal(expected);

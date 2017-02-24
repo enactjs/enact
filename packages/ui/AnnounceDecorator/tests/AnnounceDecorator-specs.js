@@ -2,7 +2,7 @@ import React from 'react';
 import {shallow} from 'enzyme';
 import AnnounceDecorator from '../AnnounceDecorator';
 
-describe.only('AnnounceDecorator', () => {
+describe('AnnounceDecorator', () => {
 
 	// no-op wrapper
 	const Div = () => <div />;

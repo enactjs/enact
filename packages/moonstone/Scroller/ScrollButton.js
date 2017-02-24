@@ -1,9 +1,10 @@
 import {$L} from '@enact/i18n';
 import kind from '@enact/core/kind';
 import Holdable from '@enact/ui/Holdable';
-import IconButton from '@enact/moonstone/IconButton';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
+
+import IconButton from '../IconButton';
 
 import css from './Scrollbar.less';
 
