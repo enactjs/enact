@@ -86,6 +86,12 @@ const SpinnerBase = kind({
 	},
 
 	computed: {
+		className: ({transparent, centered, children, styler}) => {
+			const content = children ? css.content : '';
+			return styler.append(
+				{transparent, centered, content}
+			);
+		},
 		marquee: ({children}) => {
 			if (children) {
 				return (
@@ -97,15 +103,38 @@ const SpinnerBase = kind({
 				return null;
 			}
 		},
-		className: ({transparent, centered, children, styler}) => {
-			const content = children ? css.content : '';
-			return styler.append(
-				{transparent, centered, content}
-			);
+		spinnerScrimDecorator: ({blockClick, centered, scrim}) => {
+			const scrimDecorator = (spinner) => {
+				switch (blockClick) {
+					case 'screen': {
+						return (
+							<FloatingLayer noAutoDismiss open scrimType={scrim ? 'translucent' : 'transparent'}>
+								{spinner}
+							</FloatingLayer>
+						);
+					}
+					case 'container': {
+						return (
+							<div className={`${centered ? css.blockClick : css.blockClickContainer}`}>
+								<div className={`${css.blockClick} ${scrim ? css.scrimTranslucent : null}`} />
+								{spinner}
+							</div>
+						);
+					}
+					default: {
+						return spinner;
+					}
+				}
+			};
+
+			return scrimDecorator;
 		}
 	},
 
-	render: ({blockClick, centered, marquee, scrim, ...rest}) =>  {
+	render: ({marquee, spinnerScrimDecorator, ...rest}) =>  {
+		delete rest.blockClick;
+		delete rest.centered;
+		delete rest.scrim;
 		delete rest.transparent;
 
 		const spinner = (
@@ -119,26 +148,7 @@ const SpinnerBase = kind({
 			</div>
 		);
 
-		switch (blockClick) {
-			case 'screen': {
-				return (
-					<FloatingLayer noAutoDismiss open scrimType={scrim ? 'translucent' : 'transparent'}>
-						{spinner}
-					</FloatingLayer>
-				);
-			}
-			case 'container': {
-				return (
-					<div className={`${centered ? css.blockClick : css.blockClickContainer}`}>
-						<div className={`${css.blockClick} ${scrim ? css.scrimTranslucent : null}`} />
-						{spinner}
-					</div>
-				);
-			}
-			default: {
-				return spinner;
-			}
-		}
+		return spinnerScrimDecorator(spinner);
 	}
 });
 
