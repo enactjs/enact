@@ -55,7 +55,8 @@ const SpinnerBase = kind({
 		children: PropTypes.string,
 
 		/**
-		 * When `true`, sets visible translucent scrim behind spinner.
+		 * When `true`, sets visible translucent scrim behind spinner when blockClick is either
+		 * `'screen'` or `'container'`. Scrim has no effect by default and when blockClick is `null`.
 		 *
 		 * @type {Boolean}
 		 * @default true
