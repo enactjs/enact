@@ -78,23 +78,23 @@ describe('Spinner Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should have scrimTranslucent class when blockClick prop equals container', function () {
+	it('should have no scrimTranslucent class when blockClick prop equals container', function () {
 		const spinner = mount(
 			<Spinner blockClick="container" />
 		);
 
-		const expected = false;
+		const expected = true;
 		const actual = spinner.find(`.${css.scrimTranslucent}`).isEmpty();
 
 		expect(actual).to.equal(expected);
 	});
 
-	it('should have no scrimTranslucent class when blockClick prop equals container and when scrim prop equals false', function () {
+	it('should have scrimTranslucent class when blockClick prop equals container and when scrim prop equals true', function () {
 		const spinner = mount(
-			<Spinner blockClick="container" scrim={false} />
+			<Spinner blockClick="container" scrim />
 		);
 
-		const expected = true;
+		const expected = false;
 		const actual = spinner.find(`.${css.scrimTranslucent}`).isEmpty();
 
 		expect(actual).to.equal(expected);

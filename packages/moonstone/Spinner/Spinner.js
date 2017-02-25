@@ -12,8 +12,9 @@ import {MarqueeText} from '../Marquee';
 import css from './Spinner.less';
 
 /**
- * {@link moonstone/Spinner.SpinnerBase} is a component that shows a spinning animation
- * to indicate that some activity is taking place.
+ * {@link moonstone/Spinner.SpinnerBase} is a component that shows a spinning
+ * animation to indicate that some activity is taking place.
+ * {@link ui/FloatingLayer.FloatingLayer} is used to block the whole screen.
  *
  * @class SpinnerBase
  * @memberof moonstone/Spinner
@@ -24,6 +25,17 @@ const SpinnerBase = kind({
 	name: 'Spinner',
 
 	propTypes: /** @lends moonstone/Spinner.Spinner.prototype */ {
+		/**
+		 * Click event blocking type. It can be either `'screen'`, `'container'`, or `null`.
+		 * 'screen' blocks entire screen; 'container' blocks up to the nearest ancestor with absolute
+		 * or relative positioning
+		 *
+		 * @type {String}
+		 * @default null
+		 * @public
+		 */
+		blockClick: PropTypes.oneOf(['screen', 'container', null]),
+
 		/**
 		 *  When `true`, the spinner is horizontally and vertically centered, relative to its
 		 *  containing component.
@@ -43,6 +55,15 @@ const SpinnerBase = kind({
 		children: PropTypes.string,
 
 		/**
+		 * When `true`, sets visible translucent scrim behind spinner.
+		 *
+		 * @type {Boolean}
+		 * @default true
+		 * @public
+		 */
+		scrim: PropTypes.bool,
+
+		/**
 		 * When `true`, the background-color is transparent.
 		 *
 		 *
@@ -55,6 +76,7 @@ const SpinnerBase = kind({
 
 	defaultProps: {
 		centered: false,
+		scrim: false,
 		transparent: false
 	},
 
@@ -83,11 +105,10 @@ const SpinnerBase = kind({
 		}
 	},
 
-	render: ({marquee, ...rest}) =>  {
-		delete rest.centered;
+	render: ({blockClick, centered, marquee, scrim, ...rest}) =>  {
 		delete rest.transparent;
 
-		return (
+		const spinner = (
 			<div {...rest}>
 				<div className={css.ballDecorator}>
 					<div className={`${css.ball} ${css.ball1}`} />
@@ -97,12 +118,34 @@ const SpinnerBase = kind({
 				{marquee}
 			</div>
 		);
+
+		switch (blockClick) {
+			case 'screen': {
+				return (
+					<FloatingLayer noAutoDismiss open scrimType={scrim ? 'translucent' : 'transparent'}>
+						{spinner}
+					</FloatingLayer>
+				);
+			}
+			case 'container': {
+				return (
+					<div className={`${centered ? css.blockClick : css.blockClickContainer}`}>
+						<div className={`${css.blockClick} ${scrim ? css.scrimTranslucent : null}`} />
+						{spinner}
+					</div>
+				);
+			}
+			default: {
+				return spinner;
+			}
+		}
 	}
 });
 
 /**
- * {@link moonstone/Spinner.Spinner} is an extension of {@link moonstone/Spinner.SpinnerBase} that can block click/spot events.
- * {@link ui/FloatingLayer.FloatingLayer} is used to block the whole screen.
+ * {@link moonstone/Spinner.Spinner} wraps {@link moonstone/Spinner.SpinnerBase}
+ * to make sure spotlight is paused when `blockClick` prop is `'screen'`,
+ * and resume spotlight when unmounted.
  *
  * @class Spinner
  * @memberof moonstone/Spinner
@@ -112,28 +155,14 @@ const SpinnerBase = kind({
 class Spinner extends Component {
 	static propTypes = {
 		/**
-		 * Click event blocking type. It can be either `'screen'`, `'container'`, or `'none'`.
-		 * 'screen' blocks entire screen; 'container' blocks up to the nearest ancestor with absolute or relative positioning
+		 * Click event blocking type. It can be either `'screen'`, `'container'`, or `null`.
+		 * 'screen' pauses spotlight.
 		 *
 		 * @type {String}
 		 * @default null
 		 * @public
 		 */
-		blockClick: PropTypes.oneOf(['screen', 'container', null]),
-
-		/**
-		 * When `true`, sets visible translucent scrim behind spinner.
-		 *
-		 * @type {Boolean}
-		 * @default true
-		 * @public
-		 */
-		scrim: PropTypes.bool
-	}
-
-	static defaultProps = {
-		blockClick: null,
-		scrim: true
+		blockClick: PropTypes.oneOf(['screen', 'container', null])
 	}
 
 	componentWillMount () {
@@ -148,32 +177,9 @@ class Spinner extends Component {
 	}
 
 	render () {
-		const {blockClick, scrim, ...rest} = this.props;
-		const scrimTranslucent = scrim ? css.scrimTranslucent : '';
-		const spinnerContainerPosition = rest.centered ? css.blockClick : '';
-
-		switch (blockClick) {
-			case 'screen': {
-				return (
-					<FloatingLayer noAutoDismiss open scrimType={scrim ? 'translucent' : 'transparent'}>
-						<SpinnerBase {...rest} />
-					</FloatingLayer>
-				);
-			}
-			case 'container': {
-				return (
-					<div className={`${css.spinnerContainer} ${spinnerContainerPosition}`}>
-						<div className={`${css.blockClick} ${scrimTranslucent}`} />
-						<SpinnerBase {...rest} />
-					</div>
-				);
-			}
-			default: {
-				return (
-					<SpinnerBase {...rest} />
-				);
-			}
-		}
+		return (
+			<SpinnerBase {...this.props} />
+		);
 	}
 }
 
