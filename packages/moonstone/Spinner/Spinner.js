@@ -28,7 +28,9 @@ const SpinnerBase = kind({
 		/**
 		 * Click event blocking type. It can be either `'screen'`, `'container'`, or `null`.
 		 * 'screen' blocks entire screen; 'container' blocks up to the nearest ancestor with absolute
-		 * or relative positioning
+		 * or relative positioning.
+		 * When blockClick is either `'screen'` or `'container'`, translucent scrim can be made visible
+		 * by setting scrim prop to `true`.
 		 *
 		 * @type {String}
 		 * @default null
@@ -55,11 +57,11 @@ const SpinnerBase = kind({
 		children: PropTypes.string,
 
 		/**
-		 * When `true`, sets visible translucent scrim behind spinner when blockClick is either
-		 * `'screen'` or `'container'`. Scrim has no effect by default and when blockClick is `null`.
+		 * When `true`, sets visible translucent scrim behind spinner only when blockClick is `'screen'`
+		 * or `'container'`. Scrim has no effect by default or when blockClick is `null`.
 		 *
 		 * @type {Boolean}
-		 * @default true
+		 * @default false
 		 * @public
 		 */
 		scrim: PropTypes.bool,
@@ -87,12 +89,9 @@ const SpinnerBase = kind({
 	},
 
 	computed: {
-		className: ({transparent, centered, children, styler}) => {
-			const content = children ? css.content : '';
-			return styler.append(
-				{transparent, centered, content}
-			);
-		},
+		className: ({transparent, centered, children, styler}) => styler.append(
+			{transparent, centered, content: children}
+		),
 		marquee: ({children}) => {
 			if (children) {
 				return (
@@ -103,42 +102,13 @@ const SpinnerBase = kind({
 			} else {
 				return null;
 			}
-		},
-		spinnerScrimDecorator: ({blockClick, centered, scrim}) => {
-			const scrimDecorator = (spinner) => {
-				switch (blockClick) {
-					case 'screen': {
-						return (
-							<FloatingLayer noAutoDismiss open scrimType={scrim ? 'translucent' : 'transparent'}>
-								{spinner}
-							</FloatingLayer>
-						);
-					}
-					case 'container': {
-						return (
-							<div className={`${centered ? css.blockClick : css.blockClickContainer}`}>
-								<div className={`${css.blockClick} ${scrim ? css.scrimTranslucent : null}`} />
-								{spinner}
-							</div>
-						);
-					}
-					default: {
-						return spinner;
-					}
-				}
-			};
-
-			return scrimDecorator;
 		}
 	},
 
-	render: ({marquee, spinnerScrimDecorator, ...rest}) =>  {
-		delete rest.blockClick;
-		delete rest.centered;
-		delete rest.scrim;
+	render: ({blockClick, centered, marquee, scrim, ...rest}) =>  {
 		delete rest.transparent;
 
-		const spinner = (
+		const SpinnerCore = () => (
 			<div {...rest}>
 				<div className={css.ballDecorator}>
 					<div className={`${css.ball} ${css.ball1}`} />
@@ -149,7 +119,26 @@ const SpinnerBase = kind({
 			</div>
 		);
 
-		return spinnerScrimDecorator(spinner);
+		switch (blockClick) {
+			case 'screen': {
+				return (
+					<FloatingLayer noAutoDismiss open scrimType={scrim ? 'translucent' : 'transparent'}>
+						<SpinnerCore />
+					</FloatingLayer>
+				);
+			}
+			case 'container': {
+				return (
+					<div className={`${css.spinnerContainer} ${centered ? css.centered : css.default}`}>
+						<div className={`${css.blockClick} ${scrim ? css.scrim : null}`} />
+						<SpinnerCore />
+					</div>
+				);
+			}
+			default: {
+				return <SpinnerCore />;
+			}
+		}
 	}
 });
 

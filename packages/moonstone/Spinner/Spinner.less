@@ -203,23 +203,25 @@
 	}
 }
 
-// When `blockClick='container'` && `centered={false}`, there is a container div that should have
-// `display: inline-block;` to match SpinnerBase's .spinner
-.blockClickContainer {
-	display: inline-block;
-}
+.spinnerContainer {
+	// When `blockClick='container'` && `centered={false}`, there is a container div that should have
+	// `display: inline-block;` to match SpinnerBase's .spinner
+	&.default {
+		display: inline-block;
+	}
 
-// When `blockClick='container'` && `centered`, the container div should have 'position: absolute;'
-// to be centered in the container correctly.
-// Scrim will fill up to the first ancestor element with absolute or relative position.
-// Parent needs to have absolute or relative position for scrim to block as expected.
-.blockClick {
-	position: absolute;
-	.position(0);
+	// When `blockClick='container'` && `centered`, the container div should have 'position: absolute;'
+	// to be centered in the container correctly.
+	// Scrim will fill up to the first ancestor element with absolute or relative position.
+	// Parent needs to have absolute or relative position for scrim to block as expected.
+	&.centered, .blockClick {
+		position: absolute;
+		.position(0);
 
-	// Visible scrim
-	&.scrimTranslucent {
-		background-color: @moon-scrim-color;
+		// Visible scrim
+		&.scrim {
+			background-color: @moon-scrim-color;
+		}
 	}
 }
 
