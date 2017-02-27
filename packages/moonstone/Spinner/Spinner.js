@@ -33,10 +33,9 @@ const SpinnerBase = kind({
 		 * by setting scrim prop to `true`.
 		 *
 		 * @type {String}
-		 * @default null
 		 * @public
 		 */
-		blockClick: PropTypes.oneOf(['screen', 'container', null]),
+		blockClick: PropTypes.oneOf(['screen', 'container']),
 
 		/**
 		 *  When `true`, the spinner is horizontally and vertically centered, relative to its
@@ -102,10 +101,19 @@ const SpinnerBase = kind({
 			} else {
 				return null;
 			}
-		}
+		},
+		scrimClassName: ({blockClick, scrim, styler}) => styler.join(
+			{blockClick, scrim}
+		),
+		scrimType: ({scrim}) => scrim ? 'translucent' : 'transparent',
+		spinnerContainerClassName: ({blockClick, centered, styler}) => styler.join(
+			{centered, spinnerContainer: blockClick}
+		)
 	},
 
-	render: ({blockClick, centered, marquee, scrim, ...rest}) =>  {
+	render: ({blockClick, marquee, scrimClassName, scrimType, spinnerContainerClassName, ...rest}) =>  {
+		delete rest.centered;
+		delete rest.scrim;
 		delete rest.transparent;
 
 		const SpinnerCore = () => (
@@ -122,15 +130,15 @@ const SpinnerBase = kind({
 		switch (blockClick) {
 			case 'screen': {
 				return (
-					<FloatingLayer noAutoDismiss open scrimType={scrim ? 'translucent' : 'transparent'}>
+					<FloatingLayer noAutoDismiss open scrimType={scrimType}>
 						<SpinnerCore />
 					</FloatingLayer>
 				);
 			}
 			case 'container': {
 				return (
-					<div className={`${css.spinnerContainer} ${centered ? css.centered : css.default}`}>
-						<div className={`${css.blockClick} ${scrim ? css.scrim : null}`} />
+					<div className={spinnerContainerClassName}>
+						<div className={scrimClassName} />
 						<SpinnerCore />
 					</div>
 				);
