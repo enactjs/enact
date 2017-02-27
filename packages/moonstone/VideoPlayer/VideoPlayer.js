@@ -295,7 +295,6 @@ const VideoPlayerBase = class extends React.Component {
 
 		// Internal State
 		this.instanceId = Math.random();
-		this.videoReady = false;
 		this.video = null;
 		this.handledMediaForwards = {};
 		this.handledMediaEvents = {};
