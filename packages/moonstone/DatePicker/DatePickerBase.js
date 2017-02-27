@@ -1,4 +1,5 @@
 import {$L} from '@enact/i18n';
+import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
 import React from 'react';
@@ -8,6 +9,10 @@ import {ExpandableItemBase} from '../ExpandableItem';
 
 import css from './DatePicker.less';
 import {dateComponentPickers} from '../internal/DateComponentPicker/DateComponentPicker.less';
+
+const isEnter = is('enter');
+
+const forwardKeyDown = forward('onKeyDown');
 
 /**
  * {@link moonstone/DatePicker.DatePickerBase} is the stateless functional date picker
@@ -168,10 +173,11 @@ const DatePickerBase = kind({
 	},
 
 	handlers: {
-		handleKeyDown: (ev, {open, onClose}) => {
-			const {keyCode} = ev;
-			const isEnter = is('enter', keyCode);
-			if (isEnter  && open &&  onClose ) {
+		handleKeyDown: (ev, props) => {
+			const {open, onClose} = props;
+			forwardKeyDown(ev, props);
+
+			if (isEnter(ev.keyCode) && open && onClose) {
 				onClose();
 				ev.preventDefault();
 			}
