@@ -78,8 +78,8 @@ const makeHandler = compose(allPass, map(makeSafeHandler));
  * handling flow. Any input function that returns `false` will stop the chain.
  *
  * @method   handle
- * @param	 {...Function}  handlers List of handlers to process the event
- * @returns	 {Function}	    A function that accepts an event which is dispatched to each of the
+ * @param    {...Function}  handlers List of handlers to process the event
+ * @returns  {Function}	    A function that accepts an event which is dispatched to each of the
  *                          provided handlers.
  * @memberof core/handle
  */
@@ -106,13 +106,13 @@ const handle = function (...handlers) {
  * import {callOnEvent, handle} from '@enact/core/handle';
  *
  * const callsCustomMethod = handle(
- *	callOnEvent('customMethod')
+ *	callOnEvent('customMethod'),
  *	(ev) => console.log('ev.customMethod() was called')
  * );
  * ```
  *
  * @method   callOnEvent
- * @param	 {String}     methodName  Name of the method to call on the event.
+ * @param    {String}     methodName  Name of the method to call on the event.
  * @param    {Object}     event       Event
  * @returns  {Boolean}                Always returns `true`
  * @private
@@ -142,8 +142,8 @@ const callOnEvent = handle.callOnEvent = curry((methodName, e) => {
  * ```
  *
  * @method   forEventProp
- * @param	 {String}	   prop   Name of property on event
- * @param	 {*}           value  Value of property
+ * @param    {String}	   prop   Name of property on event
+ * @param    {*}           value  Value of property
  * @param    {Object}      event  Event
  * @param    {Object}      props  Props object
  * @returns  {Boolean}            Returns `true` if `prop` on `event` strictly equals `value`
@@ -168,7 +168,7 @@ const forEventProp = handle.forEventProp = curry((prop, value, e) => {
  * ```
  *
  * @method   forward
- * @param	 {String}    name   Name of method on the `props`
+ * @param    {String}    name   Name of method on the `props`
  * @param    {Object}    event  Event
  * @param    {Object}    props  Props object
  * @returns	 {Boolean}          Always returns `true`
@@ -253,9 +253,9 @@ const stopImmediate = handle.stopImmediate = callOnEvent('stopImmediatePropagati
  * ```
  *
  * @method   forKeyCode
- * @param	 {Number}    value  `keyCode` to test
+ * @param    {Number}    value  `keyCode` to test
  * @param    {Object}    event  Event
- * @returns	 {Boolean}          Returns `true` if `event.keyCode` strictly equals `value`
+ * @returns  {Boolean}          Returns `true` if `event.keyCode` strictly equals `value`
  * @memberof core/handle
  */
 const forKeyCode = handle.forKeyCode = forEventProp('keyCode');
@@ -274,9 +274,9 @@ const forKeyCode = handle.forKeyCode = forEventProp('keyCode');
  * ```
  *
  * @method   forKey
- * @param	 {String}    name   Name from {@link core/keymap}
+ * @param    {String}    name   Name from {@link core/keymap}
  * @param    {Object}    event  Event
- * @returns	 {Boolean}          Returns `true` if `event.keyCode` is mapped to `name`
+ * @returns  {Boolean}          Returns `true` if `event.keyCode` is mapped to `name`
  * @memberof core/handle
  * @see      core/keymap
  */
@@ -297,8 +297,8 @@ const forKey = handle.forKey = curry((name, ev) => {
  * ```
  *
  * @method   forProp
- * @param	 {String}    prop   Name of property on props object
- * @param	 {*}         value  Value of property
+ * @param    {String}    prop   Name of property on props object
+ * @param    {*}         value  Value of property
  * @param    {Object}    event  Event
  * @param    {Object}    props  Props object
  * @returns  {Boolean}          Event handler
