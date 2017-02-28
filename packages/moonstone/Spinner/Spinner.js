@@ -26,11 +26,11 @@ const SpinnerBase = kind({
 
 	propTypes: /** @lends moonstone/Spinner.Spinner.prototype */ {
 		/**
-		 * Click event blocking type. It can be either `'screen'`, `'container'`, or `null`.
-		 * 'screen' blocks entire screen; 'container' blocks up to the nearest ancestor with absolute
-		 * or relative positioning.
-		 * When blockClick is either `'screen'` or `'container'`, translucent scrim can be made visible
-		 * by setting scrim prop to `true`.
+		 * Determines how far the click-blocking should extend. It can be `'screen'`, `'container'`,
+		 * or `null`. 'screen' blocks entire screen. 'container' blocks up to the nearest ancestor
+		 * with absolute or relative positioning. When blockClick is either `'screen'` or
+		 * `'container'`, a translucent scrim can be added by setting
+		 * [scrim]{@link moonstone/Spinner.Spinner#scrim} prop to `true`.
 		 *
 		 * @type {String}
 		 * @public
@@ -38,8 +38,8 @@ const SpinnerBase = kind({
 		blockClick: PropTypes.oneOf(['screen', 'container', null]),
 
 		/**
-		 *  When `true`, the spinner is horizontally and vertically centered, relative to its
-		 *  containing component.
+		 * When `true`, the spinner is horizontally and vertically centered, relative to its
+		 * containing component.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -56,8 +56,8 @@ const SpinnerBase = kind({
 		children: PropTypes.string,
 
 		/**
-		 * When `true`, sets visible translucent scrim behind spinner only when blockClick is `'screen'`
-		 * or `'container'`. Scrim has no effect by default or when blockClick is `null`.
+		 * When `true`, sets visible translucent scrim behind spinner only when blockClick is
+		 * `'screen'` or `'container'`. Scrim has no effect by default or when blockClick is `null`.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -66,7 +66,7 @@ const SpinnerBase = kind({
 		scrim: PropTypes.bool,
 
 		/**
-		 * When `true`, the background-color is transparent.
+		 * When `true`, the background-color  of the spinner is transparent.
 		 *
 		 *
 		 * @type {Boolean}
