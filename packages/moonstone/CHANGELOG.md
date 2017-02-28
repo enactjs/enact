@@ -6,7 +6,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
-- `moonstone/VirtualList.css` for `moonstone/VirtualList`'s item styling
 - `moonstone/IconButton` and `moonstone/Button` `color` property to add a remote control key color to the button
 - `moonstone/Scrollbar` property `disabled` to disable both paging controls when it is true
 - `moonstone/VirtualList` parameter `moreInfo` to pass `firstVisibleIndex` and `lastVisibleIndex` when scroll events are firing
@@ -14,6 +13,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonstone/VirtualGridImageItem` styles to reduce redundant style code app side
+- `moonstone/VirtualList` and `moonstone/VirtualGridList` to pass `className` with list item essential CSS styles as the parameter of their `component` prop
 - `moonstone/VirtualList` and `moonstone/VirtualGridList` not to add `data-index` to their item DOM elements directly, but to pass `data-index` as the parameter of their `component` prop like the `key` parameter of their `component` prop
 
 ### Fixed
