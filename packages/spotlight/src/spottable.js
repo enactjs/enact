@@ -1,5 +1,5 @@
-import {hoc} from '@enact/core';
 import {forward} from '@enact/core/handle';
+import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import React from 'react';
 import Spotlight from './spotlight';
