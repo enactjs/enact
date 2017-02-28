@@ -1,5 +1,7 @@
 /**
- * Exports the {@link moonstone/Spinner.Spinner} component.
+ * Exports the {@link moonstone/Spinner.Spinner} and {@link moonstone/Spinner.SpinnerBase} components.
+ * The default export is {@link moonstone/Spinner.Spinner}.
+ *
  *
  * @module moonstone/Spinner
  */
@@ -7,6 +9,7 @@ import FloatingLayer from '@enact/ui/FloatingLayer';
 import kind from '@enact/core/kind';
 import React, {Component, PropTypes} from 'react';
 import Spotlight from '@enact/spotlight';
+
 import {MarqueeText} from '../Marquee';
 
 import css from './Spinner.less';
@@ -14,7 +17,7 @@ import css from './Spinner.less';
 /**
  * {@link moonstone/Spinner.SpinnerBase} is a component that shows a spinning
  * animation to indicate that some activity is taking place.
- * {@link ui/FloatingLayer.FloatingLayer} is used to block the whole screen.
+ * Optionally, a scrim may be applied and clicks to underlying components may be blocked.
  *
  * @class SpinnerBase
  * @memberof moonstone/Spinner
@@ -24,7 +27,7 @@ import css from './Spinner.less';
 const SpinnerBase = kind({
 	name: 'Spinner',
 
-	propTypes: /** @lends moonstone/Spinner.Spinner.prototype */ {
+	propTypes: /** @lends moonstone/Spinner.SpinnerBase.prototype */ {
 		/**
 		 * Determines how far the click-blocking should extend. It can be `'screen'`, `'container'`,
 		 * or `null`. 'screen' blocks entire screen. 'container' blocks up to the nearest ancestor
@@ -161,7 +164,7 @@ const SpinnerBase = kind({
  * @public
  */
 class Spinner extends Component {
-	static propTypes = {
+	static propTypes = /** @lends moonstone/Spinner.Spinner.prototype */ {
 		/**
 		 * Click event blocking type. It can be either `'screen'`, `'container'`, or `null`.
 		 * 'screen' pauses spotlight.
