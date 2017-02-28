@@ -35,7 +35,7 @@ const SpinnerBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		blockClick: PropTypes.oneOf(['screen', 'container']),
+		blockClick: PropTypes.oneOf(['screen', 'container', null]),
 
 		/**
 		 *  When `true`, the spinner is horizontally and vertically centered, relative to its
