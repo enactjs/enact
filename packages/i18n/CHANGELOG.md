@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
+## [1.0.0-beta.3] - 2017-02-21
+
+### Added
+
+- localStorage caching support for ilib resource files
+
 ## [1.0.0-beta.2] - 2017-01-30
 
 No significant changes.

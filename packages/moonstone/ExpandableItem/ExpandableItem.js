@@ -7,6 +7,7 @@
  * @module moonstone/ExpandableItem
  */
 
+import {extractAriaProps} from '@enact/core/util';
 import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
@@ -21,7 +22,7 @@ const isUp = is('up');
 const isDown = is('down');
 
 /**
- * {@link moonstone/ExpandableItem.ExpandableItem} is a stateless component that
+ * {@link moonstone/ExpandableItem.ExpandableItemBase} is a stateless component that
  * renders a {@link moonstone/LabeledItem.LabeledItem} that can be expanded to show
  * additional contents.
  *
@@ -42,14 +43,6 @@ const ExpandableItemBase = kind({
 		 * @public
 		 */
 		title: PropTypes.string.isRequired,
-
-		/**
-		 * An ARIA label to be applied to the title component.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		'aria-label': PropTypes.string,
 
 		/**
 		 * When `true`, the expandable automatically closes when the user navigates to the `title`
@@ -212,19 +205,20 @@ const ExpandableItemBase = kind({
 		transitionSpotlightDisabled: ({open, spotlightDisabled}) => (spotlightDisabled || !open)
 	},
 
-	render: ({'aria-label': ariaLabel, children, disabled, handleKeyDown, handleOpen, label, open, onSpotlightDisappear, spotlightDisabled, title, titleIcon, transitionSpotlightDisabled, ...rest}) => {
+	render: ({children, disabled, handleKeyDown, handleOpen, label, open, onSpotlightDisappear, spotlightDisabled, title, titleIcon, transitionSpotlightDisabled, ...rest}) => {
 		delete rest.autoClose;
-		delete rest.label;
 		delete rest.lockBottom;
 		delete rest.noneText;
 		delete rest.onClose;
 		delete rest.onOpen;
 		delete rest.showLabel;
 
+		const ariaProps = extractAriaProps(rest);
+
 		return (
 			<ExpandableContainer {...rest} disabled={disabled} open={open} spotlightDisabled={spotlightDisabled}>
 				<LabeledItem
-					aria-label={ariaLabel}
+					{...ariaProps}
 					disabled={disabled}
 					label={label}
 					onClick={handleOpen}
