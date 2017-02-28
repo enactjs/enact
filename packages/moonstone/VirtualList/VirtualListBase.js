@@ -549,7 +549,7 @@ class VirtualListCore extends Component {
 		this.composeStyle(style, ...rest);
 
 		this.cc[primaryIndex % numOfItems] = React.cloneElement(itemElement, {
-			className: classNames(itemElement.props.className, css.listItem),
+			className: classNames(css.listItem, itemElement.props.className),
 			style: {...itemElement.props.style, ...style}
 		});
 	}
