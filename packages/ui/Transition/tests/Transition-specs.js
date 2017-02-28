@@ -44,11 +44,6 @@ describe('Transition Specs', () => {
 	});
 
 	// Tests for prop and className combinations
-	const visibleCombinations = [
-		[css.shown, true],
-		[css.hidden, false]
-	];
-
 	const directionCombination = [
 		[css.up, 'up'],
 		[css.right, 'right'],
