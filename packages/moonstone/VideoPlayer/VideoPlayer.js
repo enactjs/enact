@@ -505,7 +505,6 @@ const VideoPlayerBase = class extends React.Component {
 		if (updatedState.error) updatedState.loading = false;
 
 		updatedState.mediaControlsDisabled = (
-			updatedState.more ||
 			updatedState.readyState < HAVE_ENOUGH_DATA ||
 			!updatedState.duration ||
 			updatedState.error
