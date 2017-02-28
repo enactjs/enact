@@ -22,7 +22,8 @@ storiesOf('Spinner')
 						position: 'absolute',
 						height: '100%',
 						width: '100%',
-						margin: '-90px'
+						top: '0',
+						left: '0'
 					}}
 					onClick={action('Outside container events')}
 				/>
