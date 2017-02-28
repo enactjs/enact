@@ -86,8 +86,8 @@ const RangePickerBase = kind({
 		decrementIcon: React.PropTypes.string,
 
 		/**
-		 * When `true`, the [button]{@glossary button} is shown as disabled and does not
-		 * generate tap [events]{@glossary event}.
+		 * When `true`, the RangePicker is shown as disabled and does not generate `onChange`
+		 * [events]{@glossary event}.
 		 *
 		 * @type {Boolean}
 		 * @public

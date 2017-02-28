@@ -1,3 +1,5 @@
+@import '~@enact/ui/styles/mixins.less';
+
 @import '../styles/rules.less';
 @import '../styles/colors.less';
 @import '../styles/text.less';
@@ -5,6 +7,7 @@
 
 .dialog {
 	@dialog-spacing: 39px;
+	position: relative;
 
 	&.showDivider {
 		.titleWrapper {
@@ -23,6 +26,13 @@
 	}
 	.titleWrapper {
 		margin-bottom: @dialog-spacing;
+
+		// adds a layer to allow detecting mouseenter to start title marquees
+		&:before {
+			position: absolute;
+			content: '';
+			.position(0);
+		}
 	}
 	.body {
 		.moon-dialog-content();

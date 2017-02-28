@@ -18,7 +18,6 @@ const
 			position: 'absolute',
 			width: '100%',
 			height: '100%',
-			padding: '0 0 ' + ri.scale(96) + 'px 0',
 			margin: '0',
 			border: ri.scale(6) + 'px solid transparent',
 			boxSizing: 'border-box',
@@ -31,12 +30,12 @@ const
 	},
 	items = [],
 	// eslint-disable-next-line enact/prop-types
-	renderItem = ({data, index, key}) => {
+	renderItem = ({data, index, ...rest}) => {
 		const {text, subText, source} = data[index];
 		return (
 			<GridListImageItem
+				{...rest}
 				caption={text}
-				key={key}
 				source={source}
 				subCaption={subText}
 				style={style.item}

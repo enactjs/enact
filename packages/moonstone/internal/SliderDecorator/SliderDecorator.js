@@ -5,6 +5,7 @@
  * @private
  */
 
+import {$L} from '@enact/i18n';
 import hoc from '@enact/core/hoc';
 import {throttleJob} from '@enact/core/jobs';
 import Spotlight from '@enact/spotlight';
@@ -146,6 +147,19 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			onChange: PropTypes.func,
 
 			/**
+			 * The handler to run when the knob moves. This method is only called when running
+			 * `Slider` with `detachedKnob`. If you need to run a callback without a detached knob
+			 * use the more traditional `onChange` property.
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @param {Number} event.proportion The proportional position of the knob across the slider
+			 * @param {Boolean} event.detached `true` if the knob is currently detached, `false` otherwise
+			 * @public
+			 */
+			onKnobMove: PropTypes.func,
+
+			/**
 			 * When `true`, a pressed visual effect is applied
 			 *
 			 * @type {Boolean}
@@ -198,9 +212,12 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.jobName = `sliderChange${now()}`;
 			this.knobPosition = null;
 			this.normalizeBounds(props);
+
+			const value = this.clamp(props.value);
 			this.state = {
 				active: false,
-				value: this.clamp(props.value)
+				value: value,
+				valueText: value
 			};
 
 			if (__DEV__) {
@@ -219,8 +236,10 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			if ((min !== this.props.min) || (max !== this.props.max) || (value !== this.state.value)) {
 				this.normalizeBounds(nextProps);
+				const clampedValue = this.clamp(value);
 				this.setState({
-					value: this.clamp(value)
+					value: clampedValue,
+					valueText: clampedValue
 				});
 			}
 
@@ -247,7 +266,10 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		throttleUpdateValue = (value) => {
 			throttleJob(this.jobName, () => {
 				this.inputNode.value = value;
-				this.setState({value});
+				this.setState({
+					value,
+					valueText: value
+				});
 				forwardChange({value}, this.props);
 			}, config.changeDelay);
 		}
@@ -279,6 +301,8 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			barNode.style.transform = computeBarTransform(proportionProgress, vertical);
 			// If we know the knob should be in a custom place, use that place; otherwise, sync it with the progress.
 			knobNode.style.transform = computeKnobTransform(knobProgress, vertical, node);
+			knobNode.dataset.climax = knobProgress > 0.5 ? 'falling' : 'rising';
+			this.notifyKnobMove(knobProgress, knobProgress !== proportionProgress);
 		}
 
 		getInputNode = (node) => {
@@ -293,6 +317,16 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.sliderBarNode = node;
 		}
 
+		notifyKnobMove = (proportion, detached) => {
+			const {disabled, detachedKnob, onKnobMove} = this.props;
+			if (!disabled && detachedKnob && onKnobMove) {
+				onKnobMove({
+					proportion,
+					detached
+				});
+			}
+		}
+
 		handleChange = (ev) => {
 			if (this.props.disabled) return;
 
@@ -300,6 +334,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const parseFn = (ev.target.value % 1 !== 0) ? parseFloat : parseInt,
 				value = parseFn(ev.target.value);
 			this.throttleUpdateValue(value);
+
 		}
 
 		handleMouseMove = (ev) => {
@@ -341,17 +376,26 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleActivate = () => {
-			if (this.props.disabled) return;
+			const {detachedKnob, disabled, vertical} = this.props;
 
-			if (this.props.detachedKnob) {
+			if (disabled) return;
+
+			if (detachedKnob) {
 				if (this.current5WayValue !== null) {
 					this.throttleUpdateValue(this.clamp(this.current5WayValue));
 					this.current5WayValue = null;
 				}
 			} else {
-				this.setState({
-					active: !this.state.active
-				});
+				const verticalHint = $L('change a value with up down button');
+				const horizontalHint = $L('change a value with left right button');
+				const active = !this.state.active;
+
+				let valueText = this.state.value;
+				if (active) {
+					valueText = vertical ? verticalHint : horizontalHint;
+				}
+
+				this.setState({active, valueText});
 			}
 		}
 
@@ -397,6 +441,8 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				<Wrapped
 					{...props}
 					active={this.state.active}
+					aria-disabled={this.props.disabled}
+					aria-valuetext={this.state.valueText}
 					inputRef={this.getInputNode}
 					onActivate={this.handleActivate}
 					onBlur={this.handleBlur}
@@ -406,6 +452,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					onIncrement={this.handleIncrement}
 					onMouseLeave={this.props.detachedKnob ? this.handleMouseLeave : null}
 					onMouseMove={this.props.detachedKnob ? this.handleMouseMove : null}
+					role="slider"
 					scrubbing={(this.knobPosition != null)}
 					sliderBarRef={this.getSliderBarNode}
 					sliderRef={this.getSliderNode}
