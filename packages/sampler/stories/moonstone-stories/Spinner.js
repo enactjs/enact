@@ -25,7 +25,7 @@ storiesOf('Spinner')
 						width: '100%',
 						margin: '-90px'
 					}}
-					onClick={action('Outside Container Events')}
+					onClick={action('Outside container events')}
 				/>
 				<div
 					style={{
@@ -54,7 +54,7 @@ storiesOf('Spinner')
 							height: '100%',
 							width: '100%'
 						}}
-						onClick={action('Inside container Events')}
+						onClick={action('Inside container events')}
 					/>
 					<Spinner
 						blockClick={select('blockClick', [null, 'container', 'screen'])}
