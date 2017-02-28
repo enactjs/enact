@@ -9,7 +9,7 @@
 
 import Accelerator from '@enact/core/Accelerator';
 import {is} from '@enact/core/keymap';
-import {startJob} from '@enact/core/jobs';
+import {Job} from '@enact/core/util';
 import {spottableClass} from './spottable';
 
 const isDown = is('down');
@@ -110,15 +110,6 @@ const Spotlight = (function () {
 	 * @default true
 	 */
 	let _pointerMode = true;
-
-	/*
-	 * Length of time in milliseconds required after hiding pointer before 5-way keys
-	 * are processed.
-	 *
-	 * @type {Number}
-	 * @default 30
-	 */
-	let _pointerHiddenToKeyTimeout = 30;
 
 	/*
 	* polyfills
@@ -904,6 +895,17 @@ const Spotlight = (function () {
 		return false;
 	}
 
+	// 30ms (_pointerHiddenToKeyTimeout) is semi-arbitrary, to account for the time it takes for the
+	// following directional key event to fire, and to prevent momentary spotting of the last
+	// focused item - needs to be a value large enough to account for the potentially-trailing
+	// event, but not too large that another unrelated event can be fired inside the window
+	const hidePointerJob = new Job(function () {
+		_pointerMode = false;
+		if (!getCurrent() && _lastContainerId) {
+			Spotlight.focus(getContainerLastFocusedElement(_lastContainerId));
+		}
+	}, 30);
+
 	function preventDefault (evt) {
 		evt.preventDefault();
 		evt.stopPropagation();
@@ -965,17 +967,7 @@ const Spotlight = (function () {
 		}
 
 		if (isPointerHide(keyCode)) {
-			// 30ms (_pointerHiddenToKeyTimeout) is semi-arbitrary, to account for the time it
-			// takes for the following directional key event to fire, and to prevent momentary
-			// spotting of the last focused item - needs to be a value large enough to account
-			// for the potentially-trailing event, but not too large that another unrelated
-			// event can be fired inside the window
-			startJob('hidePointer', () => {
-				_pointerMode = false;
-				if (!getCurrent() && _lastContainerId) {
-					Spotlight.focus(getContainerLastFocusedElement(_lastContainerId));
-				}
-			}, _pointerHiddenToKeyTimeout);
+			hidePointerJob.start();
 		} else if (isPointerShow(keyCode)) {
 			_pointerMode = true;
 		} else {

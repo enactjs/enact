@@ -1,10 +1,10 @@
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import Holdable from '@enact/ui/Holdable';
+import {Job} from '@enact/core/util';
 import React, {Component, PropTypes} from 'react';
 import ri from '@enact/ui/resolution';
 import Spotlight from '@enact/spotlight';
-import {startJob, stopJob} from '@enact/core/jobs';
 
 import IconButton from '../IconButton';
 
@@ -33,7 +33,6 @@ const
 			'matrix3d(' + (scaledSize / natualSize) + ', 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + position + ', 0, 1, 1)'
 		)
 	},
-	autoHideDelay = 200,
 	nop = () => {},
 	minThumbSize = ri.scale(4),
 	selectIcon = (isPrev) => (isVertical, rtl) => {
@@ -119,10 +118,6 @@ class Scrollbar extends Component {
 			clickNextHandler: props.onNextScroll
 		};
 
-		if (typeof window !== 'undefined') {
-			this.jobName = window.performance.now();
-		}
-
 		this.initContainerRef = this.initRef('containerRef');
 		this.initThumbRef = this.initRef('thumbRef');
 	}
@@ -140,14 +135,13 @@ class Scrollbar extends Component {
 	}
 
 	componentWillUnmount () {
-		stopJob(this.jobName);
+		this.hideThumbJob.stop();
 	}
 
 	autoHide = true
 	thumbSize = 0
 	minThumbSizeRatio = 0
 	trackSize = 0
-	jobName = ''
 
 	// component refs
 	containerRef = null
@@ -214,25 +208,24 @@ class Scrollbar extends Component {
 	}
 
 	showThumb () {
-		stopJob(this.jobName);
+		this.hideThumbJob.stop();
 		this.thumbRef.classList.add(css.thumbShown);
 		this.thumbRef.classList.remove(css.thumbHidden);
 	}
 
 	startHidingThumb () {
-		stopJob(this.jobName);
-
+		this.hideThumbJob.stop();
 		if (this.autoHide) {
-			startJob(this.jobName, () => {
-				this.hideThumb();
-			}, autoHideDelay);
+			this.hideThumbJob.start();
 		}
 	}
 
-	hideThumb () {
+	hideThumb = () => {
 		this.thumbRef.classList.add(css.thumbHidden);
 		this.thumbRef.classList.remove(css.thumbShown);
 	}
+
+	hideThumbJob = new Job(this.hideThumb, 200);
 
 	calculateMetrics () {
 		this.thumbSize = this.thumbRef[this.scrollbarInfo.sizeProperty];

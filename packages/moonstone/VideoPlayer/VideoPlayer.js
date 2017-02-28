@@ -9,7 +9,7 @@ import React from 'react';
 import DurationFmt from '@enact/i18n/ilib/lib/DurationFmt';
 import {forward} from '@enact/core/handle';
 import ilib from '@enact/i18n';
-import {startJob, stopJob} from '@enact/core/jobs';
+import {Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
 import Slottable from '@enact/ui/Slottable';
 import {Spotlight, Spottable, SpotlightContainerDecorator, getDirection, spottableClass, spotlightDefaultClass} from '@enact/spotlight';
@@ -295,7 +295,6 @@ const VideoPlayerBase = class extends React.Component {
 		super(props);
 
 		// Internal State
-		this.instanceId = Math.random();
 		this.videoReady = false;
 		this.video = null;
 		this.handledMediaForwards = {};
@@ -709,6 +708,8 @@ const VideoPlayerBase = class extends React.Component {
 		this.startRewindJob();	// Issue another rewind tick
 	}
 
+	rewindJob = new Job(this.rewindManually, 100)
+
 	/**
 	 * Starts rewind job.
 	 *
@@ -716,7 +717,7 @@ const VideoPlayerBase = class extends React.Component {
 	 */
 	startRewindJob = () => {
 		this.rewindBeginTime = getNow();
-		startJob('rewind' + this.instanceId, this.rewindManually, 100);
+		this.rewindJob.start();
 	}
 
 	/**
@@ -725,7 +726,7 @@ const VideoPlayerBase = class extends React.Component {
 	 * @private
 	 */
 	stopRewindJob = () => {
-		stopJob('rewind' + this.instanceId);
+		this.rewindJob.stop();
 	}
 
 	/**
@@ -745,12 +746,12 @@ const VideoPlayerBase = class extends React.Component {
 
 	startAutoCloseTimeout = () => {
 		if (this.props.autoCloseTimeout && !this.state.more) {
-			startJob('autoClose' + this.instanceId, this.hideControls, this.props.autoCloseTimeout);
+			this.autoCloseJob.startAfter(this.props.autoCloseTimeout);
 		}
 	}
 
 	stopAutoCloseTimeout = () => {
-		stopJob('autoClose' + this.instanceId);
+		this.autoCloseJob.stop();
 	}
 
 	showControls = () => {
@@ -766,28 +767,32 @@ const VideoPlayerBase = class extends React.Component {
 		this.setState({bottomControlsVisible: false, more: false});
 	}
 
+	autoCloseJob = new Job(this.hideControls)
+
 	startDelayedTitleHide = () => {
 		if (this.props.titleHideDelay) {
-			startJob('titleHideDelay' + this.instanceId, this.hideTitle, this.props.titleHideDelay);
+			this.hideTitleJob.startAfter(this.props.titleHideDelay);
 		}
 	}
 
 	stopDelayedTitleHide = () => {
-		stopJob('titleHideDelay' + this.instanceId);
+		this.hideTitleJob.stop();
 	}
 
 	hideTitle = () => {
 		this.setState({titleVisible: false});
 	}
 
+	hideTitleJob = new Job(this.hideTitle)
+
 	startDelayedFeedbackHide = () => {
 		if (this.props.feedbackHideDelay) {
-			startJob('feedbackHideDelay' + this.instanceId, this.hideFeedback, this.props.feedbackHideDelay);
+			this.hideFeedbackJob.startAfter(this.props.feedbackHideDelay);
 		}
 	}
 
 	stopDelayedFeedbackHide = () => {
-		stopJob('feedbackHideDelay' + this.instanceId);
+		this.hideFeedbackJob.stop();
 	}
 
 	showFeedback = () => {
@@ -797,6 +802,8 @@ const VideoPlayerBase = class extends React.Component {
 	hideFeedback = () => {
 		this.setState({feedbackVisible: false});
 	}
+
+	hideFeedbackJob = new Job(this.hideFeedback)
 
 	//
 	// Handled Media events
