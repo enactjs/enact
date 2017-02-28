@@ -282,10 +282,14 @@ const Picker = class extends React.Component {
 		value: 0
 	}
 
-	ariaValueText = false
-
 	constructor (props) {
 		super(props);
+
+		this.state = {
+			// Set to `true` onFocus and `false` onBlur to prevent setting aria-valuetext (which
+			// will notify the user) when the component does not have focus
+			active: false
+		};
 
 		if (__DEV__) {
 			validateRange(props.value, props.min, props.max, Picker.displayName);
@@ -338,9 +342,20 @@ const Picker = class extends React.Component {
 		const {disabled, onChange, step} = this.props;
 		if (!disabled && onChange) {
 			const value = this.computeNextValue(this.adjustDirection(dir) * step);
-			this.ariaValueText = true;
 			onChange({value});
 		}
+	}
+
+	handleBlur = () => {
+		this.setState({
+			active: false
+		});
+	}
+
+	handleFocus = () => {
+		this.setState({
+			active: true
+		});
 	}
 
 	handleDecClick = () => {
@@ -433,51 +448,49 @@ const Picker = class extends React.Component {
 		].join(' ');
 	}
 
-	getA11yProps () {
-		const
-			{accessibilityHint, children, index, joined, orientation, reverse, value} = this.props,
-			accessibilityHintText = accessibilityHint ? ' ' + accessibilityHint : '';
-		let
-			picker = null,
-			dec = null,
-			inc = null,
-			valueText;
+	calcValueText () {
+		const {accessibilityHint, children, index, value} = this.props;
+		let valueText = value;
 
-		// Sometimes this.props.value is not equal to node text content.
-		// For example, when `PM` is shown in AM/PM picker, its value is `1` and its node.textContent is `PM`.
-		// In this case, Screen readers should read `PM` instead of `1`.
+		// Sometimes this.props.value is not equal to node text content. For example, when `PM`
+		// is shown in AM/PM picker, its value is `1` and its node.textContent is `PM`. In this
+		// case, Screen readers should read `PM` instead of `1`.
 		if (children && Array.isArray(children)) {
 			valueText = (children[index]) ? children[index].props.children : value;
 		} else if (children && children.props && !children.props.children) {
 			valueText = children.props.children;
-		} else {
-			valueText = value;
 		}
 
-		if (joined) {
-			picker = {};
-
-			picker['aria-label'] = valueText + accessibilityHintText + ' ' + (
-				orientation === 'horizontal' ?
-				$L('change a value with left right button') :
-				$L('change a value with up down button')
-			);
-
-			if (this.ariaValueText) {
-				valueText = {'aria-valuetext': valueText + accessibilityHintText};
-			} else {
-				valueText = null;
-			}
-		} else {
-			dec = {'aria-label': valueText + ' ' + (reverse ? $L('previous item') : $L('next item'))};
-			inc = {'aria-label': valueText + ' ' + (reverse ? $L('next item') : $L('previous item'))};
-			valueText = {'aria-valuetext': valueText + accessibilityHintText};
+		if (accessibilityHint) {
+			valueText = `${valueText} ${accessibilityHint}`;
 		}
 
-		return {picker, dec, inc, valueText};
+		return valueText;
+	}
+
+	calcButtonLabel (next, valueText) {
+		// no label is necessary when joined
+		if (!this.props.joined) {
+			return `${valueText} ${next ? $L('next item') : $L('previous item')}`;
+		}
+	}
+
+	calcDecrementLabel (valueText) {
+		return this.calcButtonLabel(this.props.reverse, valueText);
+	}
+
+	calcIncrementLabel (valueText) {
+		return this.calcButtonLabel(!this.props.reverse, valueText);
+	}
+
+	calcJoinedLabel (valueText) {
+		const {orientation} = this.props;
+		const hint = orientation === 'horizontal' ? $L('change a value with left right button') : $L('change a value with up down button');
+		return `${valueText} ${hint}`;
 	}
 
 	render () {
+		const {active} = this.state;
 		const {
 			noAnimation,
 			children,
@@ -512,8 +525,6 @@ const Picker = class extends React.Component {
 		const incrementerDisabled = this.isButtonDisabled(step);
 		const classes = this.determineClasses(decrementerDisabled, incrementerDisabled);
 
-		const a11yProps = this.getA11yProps();
-
 		let arranger;
 		if (width && !disabled) {
 			arranger = orientation === 'vertical' ? SlideTopArranger : SlideLeftArranger;
@@ -524,10 +535,21 @@ const Picker = class extends React.Component {
 			sizingPlaceholder = <div className={css.sizingPlaceholder} aria-hidden>{ '0'.repeat(width) }</div>;
 		}
 
+		const valueText = this.calcValueText();
+
 		return (
-			<div {...rest} {...a11yProps.picker} className={classes} disabled={disabled} onWheel={joined ? this.handleWheel : null} onKeyDown={joined ? this.handleKeyDown : null}>
+			<div
+				{...rest}
+				aria-label={joined ? this.calcJoinedLabel(valueText) : null}
+				className={classes}
+				disabled={disabled}
+				onBlur={this.handleBlur}
+				onFocus={this.handleFocus}
+				onKeyDown={joined ? this.handleKeyDown : null}
+				onWheel={joined ? this.handleWheel : null}
+			>
 				<PickerButton
-					{...a11yProps.dec}
+					aria-label={this.calcIncrementLabel(valueText)}
 					className={css.incrementer}
 					disabled={incrementerDisabled}
 					icon={incrementIcon}
@@ -540,7 +562,8 @@ const Picker = class extends React.Component {
 					spotlightDisabled={spotlightDisabled}
 				/>
 				<div
-					{...a11yProps.valueText}
+					aria-hidden={!active}
+					aria-valuetext={valueText}
 					className={css.valueWrapper}
 					role="spinbutton"
 				>
@@ -557,7 +580,7 @@ const Picker = class extends React.Component {
 					</PickerViewManager>
 				</div>
 				<PickerButton
-					{...a11yProps.inc}
+					aria-label={this.calcDecrementLabel(valueText)}
 					className={css.decrementer}
 					disabled={decrementerDisabled}
 					icon={decrementIcon}
