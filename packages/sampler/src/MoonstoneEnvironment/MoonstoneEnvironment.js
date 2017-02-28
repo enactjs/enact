@@ -4,7 +4,7 @@ import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 import MoonstoneDecorator from '@enact/moonstone/MoonstoneDecorator';
 import {Panels, Panel, Header} from '@enact/moonstone/Panels';
-import {select} from '@kadira/storybook-addon-knobs';
+import {select, boolean} from '@kadira/storybook-addon-knobs';
 
 import css from './MoonstoneEnvironment.less';
 
@@ -29,7 +29,7 @@ const PanelsBase = kind({
 	render: ({children, title, description, ...rest}) => (
 		<div {...rest}>
 			<Panels onApplicationClose={reloadPage}>
-				<Panel>
+				<Panel style={boolean('Scroll On', false) ? {overflow: 'auto'} : null}>
 					<Header type="compact" title={title} preserveCase />
 					<div className={css.description}>
 						<p>{description}</p>
