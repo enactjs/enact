@@ -69,7 +69,6 @@ describe('Transition Specs', () => {
 	];
 
 	const propStyleCombination = [
-		['visible', visibleCombinations],
 		['duration', durationCombination],
 		['direction', directionCombination],
 		['timingFunction', timingFunctionCombination]
@@ -82,7 +81,7 @@ describe('Transition Specs', () => {
 					[prop]: value
 				};
 				const wrapped = mount(
-					<Transition {...propValue}>Body</Transition>
+					<Transition {...propValue} visible>Body</Transition>
 				);
 
 				const expected = key;
