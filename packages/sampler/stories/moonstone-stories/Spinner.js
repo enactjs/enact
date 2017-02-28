@@ -1,5 +1,4 @@
 import Spinner from '@enact/moonstone/Spinner';
-import Button from '@enact/moonstone/Button';
 import React from 'react';
 import {action, storiesOf} from '@kadira/storybook';
 import {boolean, select, text, withKnobs} from '@kadira/storybook-addon-knobs';
@@ -15,7 +14,7 @@ storiesOf('Spinner')
 					outline: 'teal dashed 1px',
 					position: 'relative',
 					padding: '90px',
-					backgroundColor: '#0bb'
+					backgroundColor: 'rgba(0, 187, 187, 0.5)'
 				}}
 			>
 				<div
@@ -31,7 +30,7 @@ storiesOf('Spinner')
 					style={{
 						outline: 'teal dashed 1px',
 						position: 'relative',
-						height: '90px'
+						height: '180px'
 					}}
 				>
 					<label
