@@ -83,7 +83,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 *
 			 * @type {Boolean}
 			 * @default false
-			 * @public
+			 * @private
 			 */
 			detachedKnob: PropTypes.bool,
 
@@ -159,19 +159,6 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			onIncrement: PropTypes.func,
 
 			/**
-			 * The handler to run when the knob moves. This method is only called when running
-			 * `Slider` with `detachedKnob`. If you need to run a callback without a detached knob
-			 * use the more traditional `onChange` property.
-			 *
-			 * @type {Function}
-			 * @param {Object} event
-			 * @param {Number} event.proportion The proportional position of the knob across the slider
-			 * @param {Boolean} event.detached `true` if the knob is currently detached, `false` otherwise
-			 * @public
-			 */
-			onKnobMove: PropTypes.func,
-
-			/**
 			 * The handler to run when the mouse is moved across the slider.
 			 *
 			 * @type {Function}
@@ -191,7 +178,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			pressed: PropTypes.bool,
 
 			/**
-			 * `scrubbing` only has an effect with a detachedKnob, and is a performance optimization
+			 * `scrubbing` only has an effect with a datachedKnob, and is a performance optimization
 			 * to not allow re-assignment of the knob's value (and therefore position) during direct
 			 * user interaction.
 			 *
@@ -301,13 +288,12 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			proportionProgress: computeProportionProgress
 		},
 
-		render: ({backgroundProgress, children, disabled, inputRef, max, min, onBlur, onChange, onKeyDown, onMouseMove, onMouseUp, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, value, vertical, ...rest}) => {
+		render: ({backgroundProgress, disabled, inputRef, max, min, onBlur, onChange, onKeyDown, onMouseMove, onMouseUp, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, value, vertical, ...rest}) => {
 			delete rest.active;
 			delete rest.detachedKnob;
 			delete rest.onActivate;
 			delete rest.onDecrement;
 			delete rest.onIncrement;
-			delete rest.onKnobMove;
 			delete rest.pressed;
 
 			return (
@@ -318,13 +304,10 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						ref={sliderBarRef}
 						vertical={vertical}
 						scrubbing={scrubbing}
-					>
-						{children}
-					</SliderBar>
+					/>
 					<input
 						className={css.input}
 						disabled={disabled}
-						aria-disabled={disabled}
 						type="range"
 						ref={inputRef}
 						max={max}

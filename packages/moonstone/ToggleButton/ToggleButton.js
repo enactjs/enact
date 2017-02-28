@@ -46,7 +46,7 @@ const ToggleButtonBase = kind({
 
 		/**
 		 * When `true`, the [button]{@glossary button} is shown as disabled and does not
-		 * generate `onClick` [events]{@glossary event}.
+		 * generate tap [events]{@glossary event}.
 		 *
 		 * @type {Boolean}
 		 * @default false

@@ -29,10 +29,6 @@
 		line-height: inherit;
 		margin: 0;
 		vertical-align: top;	// The TV incorrectly positions the icon too low without this
-
-		:global(.spottable):focus & {
-			color: @moon-checkbox-toggle-switch-color;
-		}
 	}
 	&.selected {
 		background-color: @moon-checkbox-toggle-switch-selected-bg-color;
@@ -40,10 +36,6 @@
 		.icon {
 			left: (@moon-toggleswitch-width - @moon-toggleswitch-height);
 			color: @moon-checkbox-toggle-switch-selected-color;
-
-			:global(.spottable):focus & {
-				color: @moon-checkbox-toggle-switch-selected-color;
-			}
 		}
 	}
 	&[disabled] {

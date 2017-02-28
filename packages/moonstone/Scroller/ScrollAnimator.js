@@ -32,7 +32,13 @@ const
 	maxVelocity = 100,        // speed cap
 	stopVelocity = 0.04,      // velocity to stop
 	velocityFriction = 0.95,  // velocity decreasing factor
-	clampVelocity = clamp(-maxVelocity, maxVelocity);
+	clampVelocity = clamp(-maxVelocity, maxVelocity),
+
+	// These guards probably aren't necessary because there shouldn't be any scrolling occurring
+	// in isomorphic mode.
+	rAF = (typeof window === 'object') ? window.requestAnimationFrame : function () {},
+	cAF = (typeof window === 'object') ? window.cancelAnimationFrame : function () {},
+	perf = (typeof window === 'object') ? window.performance : {now: Date.now};
 
 /**
  * {@link moonstone/Scroller.ScrollAnimator} is the class to scroll a list or a scroller with
@@ -82,8 +88,6 @@ class ScrollAnimator {
 
 	animate (rAFCallbackFuntion) {
 		const
-			perf = window.performance,
-			rAF = window.requestAnimationFrame,
 			startTimeStamp = perf.now(),
 			fn = () => {
 				const
@@ -102,8 +106,6 @@ class ScrollAnimator {
 	}
 
 	stop () {
-		const cAF = window.cancelAnimationFrame;
-
 		if (this.rAFId !== null ) {
 			cAF(this.rAFId);
 			this.rAFId = null;

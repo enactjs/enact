@@ -1008,11 +1008,6 @@ const Spotlight = (function() {
 	}
 
 	function onMouseMove (evt) {
-		// Chrome emits mousemove on scroll, but client coordinates do not change.
-		if (!_pointerMode && (evt.clientX === _pointerX) && (evt.clientY === _pointerY)) {
-			return;
-		}
-
 		_pointerMode = true;
 
 		// cache last-known pointer coordinates

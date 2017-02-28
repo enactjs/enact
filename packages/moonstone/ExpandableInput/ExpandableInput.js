@@ -1,47 +1,22 @@
-/**
- * Exports the {@link moonstone/ExpandableInput.ExpandableInput} and
- * {@link moonstone/ExpandableInput.ExpandableInputBase} components.
- * The default export is {@link moonstone/ExpandableInput.ExpandableInput}.
- *
- * @module moonstone/ExpandableInput
- */
-
 import Changeable from '@enact/ui/Changeable';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import React from 'react';
 
-import {calcAriaLabel, Input} from '../Input';
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
+import {Input} from '../Input';
 
 const forwardMouseDown = forward('onMouseDown');
 
-/**
- * {@link moonstone/ExpandableInput.ExpandableInputBase} is a stateless component that
- * expands to render a {@link moonstone/Input.Input}.
- *
- * @class ExpandableInputBase
- * @memberof moonstone/ExpandableInput
- * @ui
- * @public
- */
 class ExpandableInputBase extends React.Component {
 	static displayName = 'ExpandableInput'
 
-	static propTypes = /** @lends moonstone/ExpandableInput.ExpandableInputBase.prototype */ {
-		/**
-		 * The primary text of the item.
-		 *
-		 * @type {String}
-		 * @required
-		 * @public
-		 */
-		title: React.PropTypes.string.isRequired,
-
+	static propTypes = {
 		/**
 		 * When `true`, applies a disabled style and the control becomes non-interactive.
 		 *
 		 * @type {Boolean}
+		 * @default false
 		 * @public
 		 */
 		disabled: React.PropTypes.bool,
@@ -63,14 +38,6 @@ class ExpandableInputBase extends React.Component {
 		 * @public
 		 */
 		iconBefore: React.PropTypes.string,
-
-		/**
-		 * Text to display when no `value` is set.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		noneText: React.PropTypes.string,
 
 		/**
 		 * The handler to run when the expandable value is changed.
@@ -111,6 +78,7 @@ class ExpandableInputBase extends React.Component {
 		 * When `true`, the control is rendered in the expanded state, with the contents visible
 		 *
 		 * @type {Boolean}
+		 * @default false
 		 * @public
 		 */
 		open: React.PropTypes.bool,
@@ -119,7 +87,7 @@ class ExpandableInputBase extends React.Component {
 		 * The placeholder text to display.
 		 *
 		 * @type {String}
-		 * @see moonstone/Input.Input#placeholder
+		 * @default ''
 		 * @public
 		 */
 		placeholder: React.PropTypes.string,
@@ -137,7 +105,7 @@ class ExpandableInputBase extends React.Component {
 		 * The type of input. Accepted values correspond to the standard HTML5 input types.
 		 *
 		 * @type {String}
-		 * @see moonstone/Input.Input#type
+		 * @default 'text'
 		 * @public
 		 */
 		type: React.PropTypes.string,
@@ -146,7 +114,7 @@ class ExpandableInputBase extends React.Component {
 		 * The value of the input.
 		 *
 		 * @type {String|Number}
-		 * @see moonstone/Input.Input#value
+		 * @default ''
 		 * @public
 		 */
 		value: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number])
@@ -154,21 +122,6 @@ class ExpandableInputBase extends React.Component {
 
 	static defaultProps = {
 		spotlightDisabled: false
-	}
-
-	calcAriaLabel () {
-		const {noneText, title, type, value} = this.props;
-		const returnVal = (type === 'password') ? value : (value || noneText);
-		return calcAriaLabel(title, type, returnVal);
-	}
-
-	calcLabel () {
-		const {noneText, type, value} = this.props;
-		if (type === 'password') {
-			return null;
-		} else {
-			return value || noneText;
-		}
 	}
 
 	fireChangeEvent = () => {
@@ -240,14 +193,12 @@ class ExpandableInputBase extends React.Component {
 		return (
 			<ExpandableItemBase
 				{...rest}
-				aria-label={this.calcAriaLabel()}
 				disabled={disabled}
-				label={this.calcLabel()}
+				label={value}
 				noPointerMode
 				onClose={this.handleClose}
 				onMouseDown={this.handleMouseDown}
 				onSpotlightDisappear={onSpotlightDisappear}
-				showLabel={type === 'password' ? 'never' : 'auto'}
 				spotlightDisabled={spotlightDisabled}
 			>
 				<Input
@@ -271,17 +222,6 @@ class ExpandableInputBase extends React.Component {
 	}
 }
 
-/**
- * {@link moonstone/ExpandableInput.ExpandableInputBase} is a stateful component that
- * expands to render a {@link moonstone/Input.Input}.
- *
- * @class ExpandableInput
- * @memberof moonstone/ExpandableInput
- * @ui
- * @mixes moonstone/ExpandableItem.Expandable
- * @mixes ui/Changeable.Changeable
- * @public
- */
 const ExpandableInput = Expandable(
 	Changeable(
 		{mutable: true, change: 'onInputChange'},

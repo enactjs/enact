@@ -94,15 +94,13 @@ const SliderBarFactory = factory(({css}) => {
 		}
 
 		render () {
-			const {children, detachedKnob, proportionBackgroundProgress, proportionProgress, scrubbing, vertical, ...rest} = this.props;
+			const {detachedKnob, proportionBackgroundProgress, proportionProgress, scrubbing, vertical, ...rest} = this.props;
 
 			return (
 				<div {...rest} className={css.sliderBar} ref={this.getNode}>
 					<div className={css.load} ref={this.getLoaderNode} style={{transform: computeBarTransform(proportionBackgroundProgress, vertical)}} />
 					<div className={css.fill} ref={this.getBarNode} style={{transform: computeBarTransform(proportionProgress, vertical)}} />
-					<div className={css.knob} ref={this.getKnobNode} style={(detachedKnob && !scrubbing) ? {transform: computeKnobTransform(proportionProgress, vertical, this.node)} : null}>
-						{children}
-					</div>
+					<div className={css.knob} ref={this.getKnobNode} style={(detachedKnob && !scrubbing) ? {transform: computeKnobTransform(proportionProgress, vertical, this.node)} : null} />
 				</div>
 			);
 		}

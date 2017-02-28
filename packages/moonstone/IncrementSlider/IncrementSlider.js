@@ -4,7 +4,6 @@
  * @module moonstone/IncrementSlider
  */
 
-import {$L} from '@enact/i18n';
 import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
 import Pressable from '@enact/ui/Pressable';
@@ -187,15 +186,12 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			incrementDisabled: ({disabled, max, value}) => disabled || value >= max,
 			incrementSliderClasses: ({vertical, styler}) => styler.append({vertical, horizontal: !vertical}),
 			decrementIcon: ({decrementIcon, vertical}) => (decrementIcon || (vertical ? 'arrowlargedown' : 'arrowlargeleft')),
-			incrementIcon: ({incrementIcon, vertical}) => (incrementIcon || (vertical ? 'arrowlargeup' : 'arrowlargeright')),
-			decrementAriaLabel: ({value}) => (`${value} ${$L('press ok button to decrease the value')}`),
-			incrementAriaLabel: ({value}) => (`${value} ${$L('press ok button to increase the value')}`)
+			incrementIcon: ({incrementIcon, vertical}) => (incrementIcon || (vertical ? 'arrowlargeup' : 'arrowlargeright'))
 		},
 
-		render: ({decrementAriaLabel, decrementDisabled, decrementIcon, incrementAriaLabel, incrementDisabled, incrementIcon, incrementSliderClasses, onIncrement, onDecrement, onSpotlightDisappear, spotlightDisabled, ...rest}) => (
+		render: ({decrementDisabled, decrementIcon, incrementDisabled, incrementIcon, incrementSliderClasses, onIncrement, onDecrement, onSpotlightDisappear, spotlightDisabled, ...rest}) => (
 			<div className={incrementSliderClasses}>
 				<IncrementSliderButton
-					aria-label={decrementAriaLabel}
 					className={css.decrementButton}
 					disabled={decrementDisabled}
 					onClick={onDecrement}
@@ -213,7 +209,6 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 					spotlightDisabled={spotlightDisabled}
 				/>
 				<IncrementSliderButton
-					aria-label={incrementAriaLabel}
 					className={css.incrementButton}
 					disabled={incrementDisabled}
 					onClick={onIncrement}

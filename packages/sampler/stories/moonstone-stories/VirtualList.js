@@ -23,10 +23,10 @@ const
 	},
 	items = [],
 	// eslint-disable-next-line enact/prop-types, enact/display-name
-	renderItem = (size) => ({data, index, ...rest}) => {
+	renderItem = (size) => ({data, index, key}) => {
 		const itemStyle = {height: size + 'px', ...style.item};
 		return (
-			<Item {...rest} style={itemStyle}>
+			<Item key={key} style={itemStyle}>
 				{data[index]}
 			</Item>
 		);

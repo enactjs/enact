@@ -21,7 +21,6 @@ storiesOf('Dialog')
 					noAutoDismiss={boolean('noAutoDismiss', false)}
 					onClose={action('onClose')}
 					open={boolean('open', false)}
-					preserveCase={boolean('preserveCase', false)}
 					showCloseButton={boolean('showCloseButton', false)}
 					showDivider={boolean('showDivider', false)}
 				>

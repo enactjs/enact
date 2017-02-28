@@ -46,8 +46,8 @@ const PickerBase = kind({
 		decrementIcon: React.PropTypes.string,
 
 		/**
-		 * When `true`, the Picker is shown as disabled and does not generate `onChange`
-		 * [events]{@glossary event}.
+		 * When `true`, the [button]{@glossary button} is shown as disabled and does not
+		 * generate tap [events]{@glossary event}.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -156,16 +156,8 @@ const PickerBase = kind({
 	computed: {
 		max: ({children}) => children && children.length ? children.length - 1 : 0,
 		reverse: ({orientation}) => (orientation === 'vertical'),
-		children: ({children, disabled, joined, marqueeDisabled}) => React.Children.map(children, (child) => {
-			const focusOrHover = !disabled && joined ? 'focus' : 'hover';
-			return (
-				<PickerItem
-					marqueeDisabled={marqueeDisabled}
-					marqueeOn={focusOrHover}
-				>
-					{child}
-				</PickerItem>
-			);
+		children: ({children, marqueeDisabled}) => React.Children.map(children, (child) => {
+			return <PickerItem marqueeDisabled={marqueeDisabled}>{child}</PickerItem>;
 		}),
 		value: ({value, children}) => {
 			const max = children && children.length ? children.length - 1 : 0;

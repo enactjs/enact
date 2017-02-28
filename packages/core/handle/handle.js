@@ -87,9 +87,9 @@ const forEventProp = handle.forEventProp = curry((prop, value) => {
  * @param	{String}	name	Name of method on the `props`
  * @returns	{Function}			Event handler
  */
-const forward = handle.forward = name => (e, props) => {
+const forward = handle.foward = name => (e, props) => {
 	const fn = props && props[name];
-	if (typeof fn === 'function') {
+	if (typeof fn == 'function') {
 		fn(e);
 	}
 
@@ -142,7 +142,7 @@ const forKey = handle.forKey = curry((name, ev) => {
 });
 
 /**
- * Allows handling to continue if the value of `prop` on the props strictly equals `value`.
+ * Stops handling if the value of `prop` on the props does not equal `value`
  *
  * @example
  *  // submit() called only if props.checked === true

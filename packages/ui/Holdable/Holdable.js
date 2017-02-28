@@ -4,7 +4,7 @@
  * @module ui/Holdable
  */
 
-import {off, on, once} from '@enact/core/dispatcher';
+import {off, once} from '@enact/core/dispatcher';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
@@ -12,7 +12,7 @@ import pick from 'ramda/src/pick';
 import React, {PropTypes} from 'react';
 
 const eventProps = ['clientX', 'clientY', 'pageX', 'pageY', 'screenX', 'screenY',
-	'altKey', 'ctrlKey', 'metaKey', 'shiftKey', 'detail', 'type'];
+	'altKey', 'ctrlKey', 'metaKey', 'shiftKey', 'detail'];
 
 const makeEvent = (type, ev) => {
 	return {...ev, type};
@@ -31,6 +31,8 @@ const keyRelease = 'onKeyUp';
 const pointerDepress = 'onMouseDown';
 const pointerRelease = 'mouseup';
 const pointerEnter = 'onMouseEnter';
+const pointerLeave = 'onMouseLeave';
+const pointerMove = 'onMouseMove';
 
 const isEnter = is('enter');
 
@@ -135,6 +137,8 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 	const forwardKeyRelease = forward(keyRelease);
 	const forwardPointerDepress = forward(pointerDepress);
 	const forwardPointerEnter = forward(pointerEnter);
+	const forwardPointerLeave = forward(pointerLeave);
+	const forwardPointerMove = forward(pointerMove);
 
 	return class Holdable extends React.Component {
 		static propTypes = /** @lends ui/Holdable.Holdable.prototype */ {
@@ -175,88 +179,50 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			this.pulsing = false;
 			this.unsent = null;
 			this.next = null;
+			this.keyEvent = false;
 		}
 
 		componentWillUnmount () {
-			this.suspendHold();
-			this.clearPointerRelease();
-			this.clearMouseLeave();
-		}
-
-		componentWillReceiveProps (nextProps) {
-			if (nextProps.disabled) {
-				this.endHold();
+			if (this.holdJob) {
+				this.suspendHold();
 			}
-		}
 
-		clearPointerRelease = () => {
 			if (this.onceOnPointerRelease) {
 				off(pointerRelease, this.onceOnPointerRelease);
-				this.onceOnPointerRelease = null;
 			}
 		}
 
-		clearMouseLeave = () => {
-			if (this.onceMouseLeave) {
-				off('mouseleave', this.onceMouseLeave);
-				this.onceMouseLeave = null;
-			}
-		}
-
-		onDocumentPointerMove = (ev) => {
+		onKeyDepress = (ev) => {
 			if (!this.props.disabled) {
-				if (endHold === 'onMove' && this.downEvent) {
-					const out = outOfRange(ev.clientY, this.downEvent.clientY, moveTolerance) || outOfRange(ev.clientX, this.downEvent.clientX, moveTolerance);
-					if (out && this.holdJob) {
-						this.endOrSuspendHold();
-					} else if (!out && resume && !this.holdJob) {
-						this.resumeHold();
-					}
-				}
-			}
-		}
-
-		handleKeyDepress = (ev) => {
-			if (!this.props.disabled) {
-				if (isEnter(ev.keyCode) && (!this.downEvent || this.downEvent.type !== 'keydown')) {
+				if (isEnter(ev.keyCode) && !this.holdJob) {
+					this.keyEvent = true;
 					this.beginHold(pick(eventProps, ev));
-				} else if (!isEnter(ev.keyCode)) {
-					this.endHold();
 				}
 			}
 			forwardKeyDepress(ev, this.props);
 		}
 
-		handleKeyRelease = (ev) => {
-			if (isEnter(ev.keyCode) && this.downEvent && this.downEvent.type === 'keydown') {
+		onKeyRelease = (ev) => {
+			if (isEnter(ev.keyCode)) {
+				this.keyEvent = false;
 				this.endHold();
 			}
 			forwardKeyRelease(ev, this.props);
 		}
 
-		// NOTE: While holding enter key you cannot get a mousedown event on Chrome, for whatever
-		// reason, so we can't switch back to a pointer-held hold.  This should not be an issue on
-		// TV, where the same button is used for enter/click
-		handlePointerDepress = (ev) => {
-			if (!this.props.disabled && ev.type === 'mousedown') {	// Spotlight forwards keydown as pointer
+		onPointerDepress = (ev) => {
+			if (!this.props.disabled && !this.keyEvent) {
 				this.beginHold(pick(eventProps, ev));
-				// We are tracking document level because we need to allow for the 'slop' factor
-				// even if the pointer moves slightly off the element
-				on('mousemove', this.onDocumentPointerMove);
 			}
 			forwardPointerDepress(ev, this.props);
 		}
 
-		handlePointerRelease = (ev) => {
-			if (this.downEvent && this.downEvent.type === 'mousedown' && ev.type === 'mouseup') {
-				this.onceOnPointerRelease = null;
-				this.endHold();
-			}
+		onPointerRelease = () => {
+			this.onceOnPointerRelease = null;
+			this.endHold();
 		}
 
-		handlePointerEnter = (ev) => {
-			// We track mouseleave here because the react `onMouseLeave` event does not fire
-			this.onceMouseLeave = once('mouseleave', this.onPointerLeave, ev.currentTarget);
+		onPointerEnter = (ev) => {
 			if (!this.props.disabled) {
 				if (resume && endHold === 'onLeave' && this.downEvent) {
 					this.resumeHold();
@@ -265,16 +231,34 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			forwardPointerEnter(ev, this.props);
 		}
 
+		onPointerMove = (ev) => {
+			if (!this.props.disabled) {
+				if (endHold === 'onMove' && this.downEvent) {
+					if (outOfRange(ev.clientY, this.downEvent.clientY, moveTolerance) || outOfRange(ev.clientX, this.downEvent.clientX, moveTolerance)) {
+						if (this.holdJob) {
+							if (resume) {
+								this.suspendHold();
+							} else {
+								this.endHold();
+							}
+						}
+					} else if (resume && !this.holdJob) {
+						this.resumeHold();
+					}
+				}
+			}
+			forwardPointerMove(ev, this.props);
+		}
+
 		onPointerLeave = (ev) => {
-			// Ensure we really moved out of the element as mouseleave fires even for
-			if (ev.fromElement.contains(ev.toElement)) {
-				this.onceMouseLeave = once('mouseleave', this.onPointerLeave, ev.target);
-				return;
-			}
-			this.onceMouseLeave = null;
 			if (endHold === 'onLeave') {
-				this.endOrSuspendHold();
+				if (resume) {
+					this.suspendHold();
+				} else {
+					this.endHold();
+				}
 			}
+			forwardPointerLeave(ev, this.props);
 		}
 
 		beginHold = (ev) => {
@@ -288,9 +272,7 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.next) {
 				this.holdJob = setInterval(this.handleHoldPulse, frequency);
 			}
-			if (ev.type === 'mousedown') {
-				this.onceOnPointerRelease = once(pointerRelease, this.handlePointerRelease);
-			}
+			this.onceOnPointerRelease = once(pointerRelease, this.onPointerRelease);
 		}
 
 		endHold = () => {
@@ -299,17 +281,6 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			this.pulsing = false;
 			this.unsent = null;
 			this.next = null;
-			off('mousemove', this.onDocumentPointerMove);
-			this.clearPointerRelease();
-			this.clearMouseLeave();
-		}
-
-		endOrSuspendHold = () => {
-			if (resume) {
-				this.suspendHold();
-			} else {
-				this.endHold();
-			}
 		}
 
 		suspendHold = () => {
@@ -319,9 +290,7 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 		resumeHold = () => {
 			this.handleHoldPulse();
-			if (!this.holdJob) {
-				this.holdJob = setInterval(this.handleHoldPulse, frequency);
-			}
+			this.holdJob = setInterval(this.handleHoldPulse, frequency);
 		}
 
 		handleHoldPulse = () => {
@@ -332,9 +301,7 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.pulsing) {
 				const ev = makeEvent('holdpulse', e);
 				ev.holdTime = holdTime;
-				if (onHoldPulse) {
-					onHoldPulse(ev);
-				}
+				if (onHoldPulse) onHoldPulse(ev);
 			}
 		}
 
@@ -358,10 +325,12 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 		render () {
 			const props = Object.assign({}, this.props);
-			props[keyDepress] = this.handleKeyDepress;
-			props[keyRelease] = this.handleKeyRelease;
-			props[pointerDepress] = this.handlePointerDepress;
-			props[pointerEnter] = this.handlePointerEnter;
+			props[keyDepress] = this.onKeyDepress;
+			props[keyRelease] = this.onKeyRelease;
+			props[pointerDepress] = this.onPointerDepress;
+			props[pointerEnter] = this.onPointerEnter;
+			props[pointerLeave] = this.onPointerLeave;
+			props[pointerMove] = this.onPointerMove;
 
 			delete props.onHold;
 			delete props.onHoldPulse;

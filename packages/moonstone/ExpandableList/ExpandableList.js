@@ -196,8 +196,6 @@ const ExpandableListBase = kind({
 	},
 
 	computed: {
-		'aria-multiselectable': ({select}) => select === 'multiple',
-
 		itemProps: ({onSpotlightDisappear, spotlightDisabled}) => ({onSpotlightDisappear, spotlightDisabled}),
 
 		// generate a label that concatenates the text of the selected items
@@ -226,11 +224,14 @@ const ExpandableListBase = kind({
 	},
 
 	render: ({children, itemProps, ListItem, noAutoClose, noLockBottom, onSelect, select, selected, ...rest}) => {
+		const multiSelected = (select === 'multiple');
 		delete rest.closeOnSelect;
+		delete rest.select;
 
 		return (
 			<ExpandableItemBase
 				{...rest}
+				aria-multiselectable={multiSelected}
 				role="listbox"
 				showLabel="auto"
 				autoClose={!noAutoClose}

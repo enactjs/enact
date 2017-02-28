@@ -128,7 +128,7 @@ const HeaderBase = kind({
 
 		switch (type) {
 			case 'compact': return (
-				<header aria-label={title} {...rest}>
+				<header {...rest}>
 					<MarqueeText className={css.headerCell} marqueeOn="hover" forceDirection={direction}>
 						<UppercaseH1 className={css.title} preserveCase={preserveCase}>{title}</UppercaseH1>
 						{titleBelowComponent}
@@ -147,7 +147,7 @@ const HeaderBase = kind({
 			// 	</header>
 			// );
 			case 'standard': return (
-				<header aria-label={title} {...rest}>
+				<header {...rest}>
 					<HeaderH1 className={css.title} preserveCase={preserveCase} marqueeOn="hover">
 						{title}
 					</HeaderH1>

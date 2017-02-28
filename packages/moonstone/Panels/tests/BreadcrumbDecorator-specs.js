@@ -20,8 +20,6 @@ describe('BreadcrumbDecorator', () => {
 		}
 	});
 
-	const Panel = () => <div />;
-
 	it('should wrap primitive breadcrumbs with Breadcrumb', function () {
 		const SingleBreadcrumbPanels = BreadcrumbDecorator({
 			max: 1
@@ -29,9 +27,9 @@ describe('BreadcrumbDecorator', () => {
 
 		const subject = mount(
 			<SingleBreadcrumbPanels index={2} breadcrumbs={['1st', '2nd', '3rd']}>
-				<Panel />
-				<Panel />
-				<Panel />
+				<div>Panel</div>
+				<div>Panel</div>
+				<div>Panel</div>
 			</SingleBreadcrumbPanels>
 		);
 
@@ -50,9 +48,9 @@ describe('BreadcrumbDecorator', () => {
 
 		const subject = mount(
 			<SingleBreadcrumbPanels index={2} breadcrumbs={breadcrumbs}>
-				<Panel />
-				<Panel />
-				<Panel />
+				<div>Panel</div>
+				<div>Panel</div>
+				<div>Panel</div>
 			</SingleBreadcrumbPanels>
 		);
 
@@ -69,10 +67,10 @@ describe('BreadcrumbDecorator', () => {
 
 		const subject = mount(
 			<ThreeBreadcrumbPanels index={3}>
-				<Panel />
-				<Panel />
-				<Panel />
-				<Panel />
+				<div>Panel</div>
+				<div>Panel</div>
+				<div>Panel</div>
+				<div>Panel</div>
 			</ThreeBreadcrumbPanels>
 		);
 
@@ -90,7 +88,7 @@ describe('BreadcrumbDecorator', () => {
 
 		const subject = mount(
 			<StyledBreadcrumbPanels>
-				<Panel />
+				<div>Panel</div>
 			</StyledBreadcrumbPanels>
 		);
 

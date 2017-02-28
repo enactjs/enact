@@ -88,7 +88,7 @@ class ScrollerBase extends Component {
 
 	setScrollPosition (valX, valY) {
 		const
-			node = this.containerRef,
+			node = this.node,
 			rtl = this.context.rtl;
 
 		if (this.isVertical()) {
@@ -111,7 +111,7 @@ class ScrollerBase extends Component {
 				height: node.offsetHeight
 			};
 
-		while (node && node.parentNode && node.id !== this.containerRef.id) {
+		while (node && node.parentNode && node.id !== this.node.id) {
 			bounds.left += node.offsetLeft;
 			bounds.top += node.offsetTop;
 			node = node.parentNode;
@@ -152,7 +152,7 @@ class ScrollerBase extends Component {
 	calculateMetrics () {
 		const
 			{scrollBounds} = this,
-			{scrollWidth, scrollHeight, clientWidth, clientHeight} = this.containerRef;
+			{scrollWidth, scrollHeight, clientWidth, clientHeight} = this.node;
 		scrollBounds.scrollWidth = scrollWidth;
 		scrollBounds.scrollHeight = scrollHeight;
 		scrollBounds.clientWidth = clientWidth;
@@ -162,13 +162,13 @@ class ScrollerBase extends Component {
 	}
 
 	setContainerDisabled = (bool) => {
-		if (this.containerRef) {
-			this.containerRef.setAttribute(dataContainerDisabledAttribute, bool);
+		if (this.node) {
+			this.node.setAttribute(dataContainerDisabledAttribute, bool);
 		}
 	}
 
 	initRef = (ref) => {
-		this.containerRef = ref;
+		this.node = ref;
 	}
 
 	render () {

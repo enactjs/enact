@@ -1,13 +1,13 @@
 import kind from '@enact/core/kind';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
-import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight';
+import {SpotlightContainerDecorator} from '@enact/spotlight';
 
 import IconButton from '../IconButton';
 
 import css from './VideoPlayer.less';
 
-const Container = SpotlightContainerDecorator({enterTo: ''}, 'div');
+const Container = SpotlightContainerDecorator('div');
 const MediaButton = onlyUpdateForKeys([
 	'children',
 	'disabled',
@@ -52,7 +52,6 @@ const MediaControls = kind({
 			centerComponents: true,
 			more: showMoreComponents
 		}),
-		mediaControlsDisabled: ({mediaDisabled, moreDisabled}) => (mediaDisabled || !moreDisabled),
 		moreIcon: ({showMoreComponents}) => showMoreComponents ? 'arrowhookleft' : 'ellipsis'
 	},
 
@@ -61,7 +60,7 @@ const MediaControls = kind({
 			centerClassName,
 			children,
 			leftComponents,
-			mediaControlsDisabled,
+			mediaDisabled,
 			moreDisabled,
 			moreIcon,
 			noJumpButtons,
@@ -77,7 +76,6 @@ const MediaControls = kind({
 			...rest
 		} = props;
 
-		delete rest.mediaDisabled;
 		delete rest.showMoreComponents;
 
 		return (
@@ -85,12 +83,12 @@ const MediaControls = kind({
 				<div className={css.leftComponents}>{leftComponents}</div>
 				<div className={css.centerComponentsContainer}>
 					<div className={centerClassName}>
-						<Container className={css.mediaControls} spotlightDisabled={mediaControlsDisabled}> {/* rtl={false} */}
-							{noJumpButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaControlsDisabled} onClick={onJumpBackwardButtonClick}>skipbackward</MediaButton>}
-							{noRateButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaControlsDisabled} onClick={onBackwardButtonClick}>backward</MediaButton>}
-							<MediaButton className={spotlightDefaultClass} backgroundOpacity="translucent" disabled={mediaControlsDisabled} onClick={onPlayButtonClick}>{playPauseIcon}</MediaButton>
-							{noRateButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaControlsDisabled} onClick={onForwardButtonClick}>forward</MediaButton>}
-							{noJumpButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaControlsDisabled} onClick={onJumpForwardButtonClick}>skipforward</MediaButton>}
+						<Container className={css.mediaControls} spotlightDisabled={mediaDisabled}> {/* rtl={false} */}
+							{noJumpButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaDisabled} onClick={onJumpBackwardButtonClick}>skipbackward</MediaButton>}
+							{noRateButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaDisabled} onClick={onBackwardButtonClick}>backward</MediaButton>}
+							<MediaButton backgroundOpacity="translucent" disabled={mediaDisabled} onClick={onPlayButtonClick}>{playPauseIcon}</MediaButton>
+							{noRateButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaDisabled} onClick={onForwardButtonClick}>forward</MediaButton>}
+							{noJumpButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaDisabled} onClick={onJumpForwardButtonClick}>skipforward</MediaButton>}
 						</Container>
 						<Container className={css.moreControls} spotlightDisabled={moreDisabled}>
 							{children}

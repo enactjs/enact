@@ -2,11 +2,15 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
-## [1.0.0-beta.3] - 2017-02-21
+## [unreleased]
 
 ### Addded
 
-- `core/handle` function `forEventProp` to test properties on an event
+- `core/handle` function `forProp` to test properties passed to a component
+
+### Changed
+
+- `core/handle` function `forProp` to be called `forEventProp` to test for properties on an event
 
 ## [1.0.0-beta.2] - 2017-01-30
 

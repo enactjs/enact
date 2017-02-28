@@ -14,7 +14,7 @@ const PickerItemBase = kind({
 	},
 
 	render: (props) => (
-		<MarqueeText {...props} marqueeCentered />
+		<MarqueeText {...props} marqueeCentered marqueeOn="hover" />
 	)
 });
 

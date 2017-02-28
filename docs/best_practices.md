@@ -18,10 +18,6 @@ to lock the versions of the application's dependencies (and all of those depende
 > <a href="http://javascript.tutorialhorizon.com/2015/03/21/what-is-npm-shrinkwrap-and-when-is-it-needed/">http://javascript.tutorialhorizon.com/2015/03/21/what-is-npm-shrinkwrap-and-when-is-it-needed/</a>
 presents a brief article explaining why and when to use `npm shrinkwrap`.
 
-## Code Conventions
-
-An `enact-dev`-created project also provides linting (`npm run lint`) to statically analyze your code.  Additionally, the Enact programming conventions are provided as a separate [module](https://github.com/enyojs/eslint-config-enact) (also included in `enact-dev`-created projects).  Developers are encouraged to enable in-editor analysis of their code to catch potential issues as early as possible.  The module documentation details how to set up various editors.
-
 ## Components
 
 Application components should be split into container and presentational components.  Presentational components should,

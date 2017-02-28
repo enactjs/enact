@@ -43,7 +43,7 @@ const forwardEnter = (keyEvent, mouseEvent) => (props) => {
 	const mouseHandler = props[mouseEvent];
 	return (ev) => {
 		if (keyHandler) keyHandler(ev);
-		if (mouseHandler && !ev.repeat && shouldEmulateMouse(ev)) mouseHandler(ev);
+		if (mouseHandler && shouldEmulateMouse(ev)) mouseHandler(ev);
 	};
 };
 

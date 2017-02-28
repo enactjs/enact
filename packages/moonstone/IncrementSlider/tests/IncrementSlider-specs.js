@@ -200,26 +200,4 @@ describe('IncrementSlider Specs', () => {
 
 		expect(actual).to.equal(expected);
 	});
-
-	it('should set decrementButton "aria-label" to value and hint string', function () {
-		const incrementSlider = mount(
-			<IncrementSlider value={0} />
-		);
-
-		const expected = '0 press ok button to decrease the value';
-		const actual = incrementSlider.find(`.${css.decrementButton}`).prop('aria-label');
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('should set incrementButton "aria-label" to value and hint string', function () {
-		const incrementSlider = mount(
-			<IncrementSlider value={0} />
-		);
-
-		const expected = '0 press ok button to increase the value';
-		const actual = incrementSlider.find(`.${css.incrementButton}`).prop('aria-label');
-
-		expect(actual).to.equal(expected);
-	});
 });

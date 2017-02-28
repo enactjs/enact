@@ -2,38 +2,6 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
-## [1.0.0-beta.3] - 2017-02-21
-
-> **NOTE** - The change to support caching of iLib locales requires an update to the `enact-dev` tool. This change is not backwards compatible with 1.0.0-beta.2.  Be sure to update both at the same time and reinstall/re-bootstrap the modules.
-
-### Added
-
-- `ui/Resizable` Higher-order Component to facilitate notification of resized components
-- `core/handle` function `forEventProp` to test properties on an event
-- localStorage caching support for ilib resource files
-- Support for 5-way operation of `moonstone/Slider` and `moonstone/VideoPlayer.MediaSlider`
-- `moonstone/Slider` now supports `children` which are added to the `Slider`'s knob, and follow it as it moves
-- `moonstone/ExpandableInput` properties `iconAfter` and `iconBefore` to display icons after and before the input, respectively
-- `moonstone/Dialog` property `preserveCase`, which affects `title` text
-
-### Changed
-
-- `moonstone/Marquee` to allow disabled marquees to animate
-- `moonstone/Dialog` to marquee `title` and `titleBelow`
-- `moonstone/Marquee.MarqueeController` config option `startOnFocus` to `marqueeOnFocus`. `startOnFocus` is deprecated and will be removed in a future update.
-- `moonstone/Button`, `moonstone/IconButton`, `moonstone/Item` to not forward `onClick` when `disabled`
-
-### Fixed
-
-- `moonstone/Scroller` to recalculate when an expandable child opens
-- `moonstone/Popup` and `moonstone/ContextualPopupDecorator` so that when the popup is closed, spotlight focus returns to the control that had focus prior to the popup opening
-- `moonstone/Input` to not get focus when disabled
-- `spotlight.Spotlight` behavior to follow container config rules when navigating between containers
-- `spotlight.Spotlight` behavior to not set focus on spottable components animating past the pointer when not in pointer-mode
-- `spotlight.Spotlight` 5-way behavior where selecting a spottable component may require multiple attempts before performing actions
-- `spotlight.Spotlight` to not unfocus elements on scroll
-- `spotlightDisabled` property support for spottable moonstone components
-
 ## [1.0.0-beta.2] - 2017-01-30
 
 ### Added
@@ -75,7 +43,6 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 - `moonstone/IncrementSlider` so that the knob is spottable via pointer, and 5-way navigation between the knob and the increment/decrement buttons is functional
 - `moonstone/Slider` and `moonstone/IncrementSlider` to not fire `onChange` for value changes from props
-
 ## [1.0.0-beta.1] - 2016-12-30
 
 ### Added

@@ -117,8 +117,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			children: React.PropTypes.node,
 
 			/**
-			 * Disables all marquee behavior except when `marqueeOn` is `'hover'` or `'focus'`. Will
-			 * be forwarded onto the wrapped component as well.
+			 * Disables all marquee behavior except when `marqueeOn` is 'hover'. Will be forwarded
+			 * onto the wrapped component as well.
 			 *
 			 * @type {Boolean}
 			 * @public
@@ -126,7 +126,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			disabled: React.PropTypes.bool,
 
 			/**
-			 * Forces the `direction` of the marquee. Valid values are `'rtl'` and `'ltr'`. This includes non-text elements as well.
+			 * Forces the `direction` of the marquee. Valid values are `rtl` and `ltr`. This includes non-text elements as well.
 			 *
 			 * @type {String}
 			 * @public
@@ -142,8 +142,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			marqueeCentered: React.PropTypes.bool,
 
 			/**
-			 * Number of milliseconds to wait before starting marquee when `marqueeOn` is `'hover'` or
-			 * `'focus'` or before restarting any marquee.
+			 * Number of milliseconds to wait before starting marquee when `marqueeOn` is 'hover' or
+			 * 'focus' or before restarting any marquee.
 			 *
 			 * @type {Number}
 			 * @default 1000
@@ -159,8 +159,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			marqueeDisabled: React.PropTypes.bool,
 
 			/**
-			 * Determines what triggers the marquee to start its animation. Valid values are
-			 * `'focus'`, `'hover'` and `'render'`. The default is `'focus'`.
+			 * Determines what trigger the marquee to start its animation
 			 *
 			 * @type {String}
 			 * @default 'focus'
@@ -170,7 +169,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			/**
 			 * Number of milliseconds to wait before starting marquee the first time. Has no effect
-			 * if `marqueeOn` is not `'render'`
+			 * if `marqueeOn` is not 'render'
 			 *
 			 * @type {Number}
 			 * @default 1000
@@ -179,8 +178,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			marqueeOnRenderDelay: React.PropTypes.number,
 
 			/**
-			 * Number of milliseconds to wait before resetting the marquee position after it
-			 * finishes. A minimum of 40 milliseconds is enforced.
+			 * Number of milliseconds to wait before resetting the marquee after it finishes. A
+			 * minimum of 40 milliseconds is enforced.
 			 *
 			 * @type {Number}
 			 * @default 1000
@@ -243,7 +242,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentDidUpdate () {
 			if (this.shouldStartMarquee()) {
-				this.startAnimation(this.props.marqueeOn === 'render' ? this.props.marqueeOnRenderDelay : this.props.marqueeDelay);
+				this.startAnimation(this.props.marqueeDelay);
 			}
 			this.forceRestartMarquee = false;
 		}
@@ -275,7 +274,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @param {Number}   time Delay in milliseconds
 		 * @returns {undefined}
 		 */
-		setTimeout (fn, time = 0) {
+		setTimeout (fn, time) {
 			this.clearTimeout();
 			if (window) {
 				this.timer = window.setTimeout(fn, time);
@@ -321,7 +320,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const node = this.node;
 
 			// TODO: absolute showing check (or assume that it won't be rendered if it isn't showing?)
-			if (node && this.distance == null && !this.props.marqueeDisabled) {
+			if (node && this.distance == null && !this.props.disabled && !this.props.marqueeDisabled) {
 				this.distance = this.calculateDistance(node);
 				this.contentFits = !this.shouldAnimate(this.distance);
 				this.setState({
@@ -372,7 +371,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{undefined}
 		 */
 		start = (delay = this.props.marqueeDelay) => {
-			if (this.props.marqueeDisabled || this.contentFits) {
+			if (this.props.disabled || this.props.marqueeDisabled || this.contentFits) {
 				// if marquee isn't necessary (contentFits), do not set `animating` but return
 				// `true` to mark it complete if its synchronized so it doesn't block other
 				// instances.
@@ -413,12 +412,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.state.animating) return;
 
 			if (this.sync) {
-				this.setTimeout(() => {
-					this.context.start();
-				}, delay);
-			} else {
-				this.start(delay);
+				this.context.start(this);
 			}
+
+			this.start(delay);
 		}
 
 		/**
@@ -456,9 +453,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		cancelAnimation = () => {
 			if (this.sync) {
 				this.forceRestartMarquee = true;
-				if (this.state.animating) {
-					this.context.cancel(this);
-				}
+				this.context.cancel(this);
 			}
 
 			this.stop();
