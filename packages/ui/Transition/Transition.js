@@ -282,7 +282,7 @@ class Transition extends React.Component {
 
 	componentDidMount () {
 		if (this.state.deferredChildren) {
-			startJob(this.jobName, this.addChildren, 300);
+			startJob(this.jobName, this.addChildren, 200 + Math.floor(Math.random() * 200));
 		}
 	}
 
