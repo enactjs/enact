@@ -8,10 +8,26 @@
 import {forward} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
+import {startJob, stopJob} from '@enact/core/jobs';
 
 import css from './Transition.less';
 
 const forwardTransitionEnd = forward('onTransitionEnd');
+
+/**
+ * Returns a timestamp for the current time using `window.performance.now()` if available and
+ * falling back to `Date.now()`.
+ *
+ * @returns	{Number}	Timestamp
+ * @private
+ */
+const now = function () {
+	if (typeof window === 'object') {
+		return window.performance.now();
+	} else {
+		return Date.now();
+	}
+};
 
 /**
  * {@link ui/Transition.TransitionBase} is a stateless component that allows for applying
@@ -135,7 +151,7 @@ const TransitionBase = kind({
 			height: visible ? clipHeight : null,
 			overflow: 'hidden'
 		} : style,
-		childRef: ({childRef, noAnimation}) => noAnimation ? null : childRef
+		childRef: ({childRef, noAnimation, children}) => (noAnimation || !children) ? null : childRef
 	},
 
 	render: ({childRef, children, noAnimation, type, visible, ...rest}) => {
@@ -177,16 +193,6 @@ const TransitionBase = kind({
 class Transition extends React.Component {
 	static propTypes = /** @lends ui/Transition.Transition.prototype */ {
 		children: PropTypes.node.isRequired,
-
-		/**
-		 * A callback function to get the reference to the child node (the one with the content) at
-		 * render time. Useful if you need to measure or interact with the node directly.
-		 *
-		 * @type {Function}
-		 * @default null
-		 * @private
-		 */
-		childRef: PropTypes.func,
 
 		/**
 		 * The height of the transition when `type` is set to `'clip'`.
@@ -263,18 +269,53 @@ class Transition extends React.Component {
 		visible: true
 	}
 
-	constructor () {
-		super();
+	constructor (props) {
+		super(props);
 
 		this.state = {
-			initialHeight: null
+			initialHeight: null,
+			deferredChildren: !props.visible
 		};
+		this.jobName = this.jobName = `sliderChange${now()}`;
+		this.wasDeferred = !props.visible;
 	}
 
-	componentDidUpdate (prevProps) {
-		if (this.props.visible === prevProps.visible) {
-			this.measureInner();
+	componentDidMount () {
+		if (this.state.deferredChildren) {
+			startJob(this.jobName, this.addChildren, 300);
 		}
+	}
+
+	componentWillReceiveProps (nextProps) {
+		if (nextProps.visible && this.state.deferredChildren) {
+			stopJob(this.jobName);
+			this.setState({deferredChildren: false});
+		}
+	}
+
+	shouldComponentUpdate (nextProps, nextState) {
+		// Don't update if only updating the height and we're not visible
+		return (this.state.initialHeight === nextState.initialHeight) || this.props.visible || nextProps.visible;
+	}
+
+	componentDidUpdate (prevProps, prevState) {
+		// Checking that something changed that wasn't the visibility or the initialHeight state
+		if ((this.props.visible === prevProps.visible) &&
+			(this.state.initialHeight === prevState.initialHeight)) {
+			this.measureInner();
+			// Check to see if we are toggling before our deferred measure is complete
+		}
+		if (prevState.deferredChildren && !this.state.deferredChildren && !this.props.visible) {
+			this.wasDeferred = false;
+		}
+	}
+
+	componentWillUnmount () {
+		stopJob(this.jobName);
+	}
+
+	addChildren = () => {
+		this.setState({deferredChildren: false});
 	}
 
 	hideDidFinish = (ev) => {
@@ -284,7 +325,7 @@ class Transition extends React.Component {
 		}
 	}
 
-	measureInner () {
+	measureInner = () => {
 		if (this.childNode) {
 			const initialHeight = this.childNode.scrollHeight;
 			if (initialHeight !== this.state.initialHeight) {
@@ -295,18 +336,34 @@ class Transition extends React.Component {
 
 	childRef = (node) => {
 		this.childNode = node;
-		if (this.state.initialHeight === null) {
+		if (this.state.initialHeight == null) {
 			this.measureInner();
 		}
 	}
 
 	render () {
-		const props = Object.assign({}, this.props);
+		let {visible, ...props} = this.props;
 		delete props.onHide;
 
-		const height = props.visible ? this.state.initialHeight : 0;
+		const height = visible ? this.state.initialHeight : 0;
+		// If we are deferring children, don't render any
+		if (this.state.deferredChildren) {
+			return null;
+		}
+		// If we're transitioning to visible but don't have a measurement yet, don't show so we can measure.
+		// Measuring will trigger a state change which will allow us to animate
+		if (!this.state.initialHeight && visible && this.wasDeferred) {
+			visible = false;
+			this.wasDeferred = false;
+		}
 		return (
-			<TransitionBase {...props} childRef={this.childRef} clipHeight={height} onTransitionEnd={this.hideDidFinish} />
+			<TransitionBase
+				{...props}
+				childRef={this.childRef}
+				visible={visible}
+				clipHeight={height}
+				onTransitionEnd={this.hideDidFinish}
+			/>
 		);
 	}
 }
