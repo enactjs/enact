@@ -6,7 +6,7 @@
  */
 
 import kind from '@enact/core/kind';
-import {isRtlText} from '@enact/i18n';
+import {isRtlText} from '@enact/i18n/util';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import React from 'react';
 
