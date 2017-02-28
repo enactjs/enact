@@ -3,6 +3,8 @@ import React from 'react';
 import {action, storiesOf} from '@kadira/storybook';
 import {boolean, select, text, withKnobs} from '@kadira/storybook-addon-knobs';
 
+const nullify = (v) => v === '<null>' ? null : v;
+
 storiesOf('Spinner')
 	.addDecorator(withKnobs)
 	.addWithInfo(
@@ -57,7 +59,7 @@ storiesOf('Spinner')
 						onClick={action('Inside container events')}
 					/>
 					<Spinner
-						blockClick={select('blockClick', [null, 'container', 'screen'])}
+						blockClick={nullify(select('blockClick', ['<null>', 'container', 'screen']))}
 						centered={boolean('centered', false)}
 						scrim={boolean('scrim', false)}
 						transparent={boolean('transparent', false)}
