@@ -8,7 +8,7 @@ import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 import Slottable from '@enact/ui/Slottable';
-import {Spottable} from '@enact/spotlight';
+import Spottable from '@enact/spotlight/Spottable';
 
 import {MarqueeDecorator} from '../Marquee';
 

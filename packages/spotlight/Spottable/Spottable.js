@@ -2,7 +2,8 @@ import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import React from 'react';
-import Spotlight from './spotlight';
+
+import Spotlight from '../src/spotlight';
 
 /**
  * The class name for spottable components. In general, you do not need to directly access this class

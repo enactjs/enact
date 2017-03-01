@@ -1,7 +1,8 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import Slottable from '@enact/ui/Slottable';
-import {Spotlight, SpotlightContainerDecorator} from '@enact/spotlight';
+import Spotlight from '@enact/spotlight';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import css from './Panel.less';
 

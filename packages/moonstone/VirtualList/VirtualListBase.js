@@ -8,7 +8,8 @@
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import {is} from '@enact/core/keymap';
 import React, {Component, PropTypes} from 'react';
-import {Spotlight, SpotlightContainerDecorator} from '@enact/spotlight';
+import Spotlight from '@enact/spotlight';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import {dataIndexAttribute, Scrollable} from '../Scroller/Scrollable';
 

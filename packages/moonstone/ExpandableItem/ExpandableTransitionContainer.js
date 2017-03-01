@@ -1,7 +1,7 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import Resizable from '@enact/ui/Resizable';
-import {SpotlightContainerDecorator} from '@enact/spotlight';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import Transition from '@enact/ui/Transition';
 
 /**

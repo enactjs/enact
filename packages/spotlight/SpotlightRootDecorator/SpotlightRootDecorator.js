@@ -1,10 +1,10 @@
 import hoc from '@enact/core/hoc';
 import React from 'react';
 
-import {Spotlight, spotlightRootContainerName} from './spotlight';
-import {spottableClass} from './spottable';
+import Spotlight from '../src/spotlight';
+import {spottableClass} from '../Spottable';
 
-const defaultConfig = {};
+const spotlightRootContainerName = 'spotlightRootDecorator';
 
 /**
  * Constructs a Higher-order Component that initializes and enables Spotlight
@@ -20,7 +20,7 @@ const defaultConfig = {};
  * @memberof spotlight
  * @hoc
  */
-const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
+const SpotlightRootDecorator = hoc((config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'SpotlightRootDecorator';
 
@@ -57,4 +57,7 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 });
 
 export default SpotlightRootDecorator;
-export {SpotlightRootDecorator};
+export {
+	spotlightRootContainerName,
+	SpotlightRootDecorator
+};

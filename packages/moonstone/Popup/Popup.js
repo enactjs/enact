@@ -5,11 +5,12 @@
  * @module moonstone/Popup
  */
 
+import FloatingLayer from '@enact/ui/FloatingLayer';
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
+import Spotlight, {getDirection} from '@enact/spotlight';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import Transition from '@enact/ui/Transition';
-import FloatingLayer from '@enact/ui/FloatingLayer';
-import Spotlight, {SpotlightContainerDecorator, getDirection} from '@enact/spotlight';
 
 import IconButton from '../IconButton';
 

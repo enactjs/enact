@@ -12,7 +12,9 @@ import ilib from '@enact/i18n';
 import {Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
 import Slottable from '@enact/ui/Slottable';
-import {Spotlight, Spottable, SpotlightContainerDecorator, getDirection, spottableClass, spotlightDefaultClass} from '@enact/spotlight';
+import {getDirection, Spotlight} from '@enact/spotlight';
+import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
+import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
 import Video from 'react-html5video';
 
 import Spinner from '../Spinner';
