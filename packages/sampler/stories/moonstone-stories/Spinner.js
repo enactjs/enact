@@ -2,8 +2,7 @@ import Spinner from '@enact/moonstone/Spinner';
 import React from 'react';
 import {action, storiesOf} from '@kadira/storybook';
 import {boolean, select, text, withKnobs} from '@kadira/storybook-addon-knobs';
-
-const nullify = (v) => v === '<null>' ? null : v;
+import nullify from '../../src/utils/nullify.js';
 
 storiesOf('Spinner')
 	.addDecorator(withKnobs)
@@ -59,7 +58,7 @@ storiesOf('Spinner')
 						onClick={action('Inside container events')}
 					/>
 					<Spinner
-						blockClick={nullify(select('blockClick', ['<null>', 'container', 'screen']))}
+						blockClickOn={nullify(select('blockClickOn', [null, 'container', 'screen']))}
 						centered={boolean('centered', false)}
 						scrim={boolean('scrim', false)}
 						transparent={boolean('transparent', false)}

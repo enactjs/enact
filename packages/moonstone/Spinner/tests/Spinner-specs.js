@@ -78,9 +78,9 @@ describe('Spinner Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should have no scrim class when blockClick prop equals container', function () {
+	it('should have no scrim class when blockClickOn prop equals container', function () {
 		const spinner = mount(
-			<Spinner blockClick="container" />
+			<Spinner blockClickOn="container" />
 		);
 
 		const expected = true;
@@ -89,9 +89,9 @@ describe('Spinner Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should have scrim class when blockClick prop equals container and when scrim prop equals true', function () {
+	it('should have scrim class when blockClickOn prop equals container and when scrim prop equals true', function () {
 		const spinner = mount(
-			<Spinner blockClick="container" scrim />
+			<Spinner blockClickOn="container" scrim />
 		);
 
 		const expected = false;
@@ -100,13 +100,13 @@ describe('Spinner Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should have FloatingLayer when blockClick prop equals screen', function () {
+	it('should have FloatingLayer when blockClickOn prop equals screen', function () {
 		const div = document.createElement('div');
 		div.setAttribute('id', 'floatLayer');
 		document.body.appendChild(div);
 
 		const spinner = mount(
-			<Spinner blockClick="screen" />
+			<Spinner blockClickOn="screen" />
 		);
 
 		const expected = false;

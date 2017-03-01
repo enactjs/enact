@@ -204,11 +204,11 @@
 }
 
 .spinnerContainer {
-	// When `blockClick='container'` && `centered={false}`, there is a container div that should have
+	// When `blockClickOn='container'` && `centered={false}`, there is a container div that should have
 	// `display: inline-block;` to match SpinnerBase's .spinner
 	display: inline-block;
 
-	// When `blockClick='container'` && `centered`, the container div should have 'display:block' for
+	// When `blockClickOn='container'` && `centered`, the container div should have 'display:block' for
 	// the spinner to be centered in the container correctly.
 	&.centered {
 		display: block;
@@ -216,7 +216,7 @@
 
 	// Scrim will fill up to the first ancestor element with absolute or relative position.
 	// Parent needs to have absolute or relative position for scrim to block as expected.
-	.blockClick {
+	.blockClickOn {
 		position: absolute;
 		.position(0);
 

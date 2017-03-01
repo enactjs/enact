@@ -90,7 +90,7 @@ storiesOf('Spinner')
 		'blocking click events',
 		() => (
 			<div>
-				<div style={Object.assign({}, style.spinnerDiv, {height: '280px', backgroundColor: '#222', overflow: 'hidden'})}>
+				<div style={Object.assign({}, style.spinnerDiv, {height: '420px', backgroundColor: '#222', overflow: 'hidden'})}>
 					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 					<Button>Button</Button>
 					<Button>Button</Button>
@@ -98,7 +98,7 @@ storiesOf('Spinner')
 					<Spinner
 						transparent={boolean('transparent', false)}
 						centered={boolean('centered', false)}
-						blockClick={nullify(select('blockClick', ['<null>', 'container', 'screen']))}
+						blockClickOn={nullify(select('blockClickOn', [null, 'container', 'screen']))}
 						scrim={boolean('scrim', true)}
 					>
 						{text('content')}
