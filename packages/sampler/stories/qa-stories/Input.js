@@ -132,8 +132,6 @@ storiesOf('Input')
 				disabled={boolean('disabled')}
 				iconAfter={select('iconAfter', iconNames)}
 				iconBefore={select('iconBefore', iconNames)}
-				min={number('min value', inputData.minValue)}
-				max={number('max value', inputData.maxValue)}
 				noDecorator={boolean('noDecorator')}
 				type={inputData.type[1]}
 				value={number('value', inputData.minValue)}
