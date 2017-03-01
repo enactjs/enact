@@ -165,6 +165,15 @@ const TimePickerBase = kind({
 		onChangeMinute: React.PropTypes.func,
 
 		/**
+		 * The handler to run when a key is pressed down.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onKeyDown: React.PropTypes.func,
+
+		/**
 		 * The handler to run when the component is removed while retaining focus.
 		 *
 		 * @type {Function}
@@ -193,7 +202,7 @@ const TimePickerBase = kind({
 	},
 
 	handlers: {
-		handleKeyDown: (ev, props) => {
+		onKeyDown: (ev, props) => {
 			const {open, onClose} = props;
 			forwardKeyDown(ev, props);
 
@@ -208,9 +217,9 @@ const TimePickerBase = kind({
 		hasMeridiem: ({order}) => order.indexOf('a') >= 0
 	},
 
-	render: ({hasMeridiem, handleKeyDown, hour, meridiem, meridiems, minute, noLabels, onChangeHour, onChangeMeridiem, onChangeMinute, onSpotlightDisappear, order, spotlightDisabled, ...rest}) => {
+	render: ({hasMeridiem, onKeyDown, hour, meridiem, meridiems, minute, noLabels, onChangeHour, onChangeMeridiem, onChangeMinute, onSpotlightDisappear, order, spotlightDisabled, ...rest}) => {
 		return (
-			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false} onKeyDown={handleKeyDown} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled}>
+			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false} onKeyDown={onKeyDown} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled}>
 				<div className={dateComponentPickers}>
 					<div className={css.timeComponents}>
 						{order.map(picker => {
