@@ -1,61 +1,20 @@
 import Changeable from '@enact/ui/Changeable';
-import {DatePicker, DatePickerBase} from '@enact/moonstone/DatePicker';
-import {decrementIcons, incrementIcons} from './icons';
+import DatePicker from '@enact/moonstone/DatePicker';
 import Divider from '@enact/moonstone/Divider';
 import ExpandablePicker from '@enact/moonstone/ExpandablePicker';
-import Picker, {PickerBase} from '@enact/moonstone/Picker';
-import RangePicker, {RangePickerBase} from '@enact/moonstone/RangePicker';
-import {TimePicker, TimePickerBase} from '@enact/moonstone/TimePicker';
+import Picker from '@enact/moonstone/Picker';
+import RangePicker from '@enact/moonstone/RangePicker';
+import TimePicker from '@enact/moonstone/TimePicker';
 import React from 'react';
-import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, number, select, text} from '@kadira/storybook-addon-knobs';
+import {storiesOf} from '@kadira/storybook';
 
 const StatefulPicker = Changeable(Picker);
-StatefulPicker.propTypes = Object.assign({}, PickerBase.propTypes, StatefulPicker.propTypes);
-StatefulPicker.defaultProps = Object.assign({}, PickerBase.defaultProps, StatefulPicker.defaultProps);
-StatefulPicker.displayName = 'Picker';
-
 const StatefulRangePicker = Changeable(RangePicker);
-StatefulRangePicker.propTypes = Object.assign({}, RangePickerBase.propTypes, RangePicker.propTypes);
-StatefulRangePicker.defaultProps = Object.assign({}, RangePickerBase.defaultProps, RangePicker.defaultProps);
-StatefulRangePicker.displayName = 'RangePicker';
-delete StatefulRangePicker.propTypes.value;
+const ChangeableExpandablePicker = Changeable(ExpandablePicker);
+const ChangeableDatePicker = Changeable(DatePicker);
+const ChangeableTimePicker = Changeable(TimePicker);
 
 const emoticons = ['💥 boom', '😩🖐 facepalm', '🍩 doughnut', '👻 ghost', '💍 ring', '🎮 videogame', '🍌🍌 bananas'];
-const ChangeableExpandablePicker = Changeable({value: 2}, ExpandablePicker);
-ChangeableExpandablePicker.displayName = 'ExpandablePicker';
-
-const ChangeableDatePicker = Changeable(DatePicker);
-ChangeableDatePicker.propTypes = Object.assign({}, DatePicker.propTypes, DatePickerBase.propTypes, {
-	onOpen: React.PropTypes.func,
-	onClose: React.PropTypes.func,
-	open: React.PropTypes.bool,
-	value: React.PropTypes.instanceOf(Date)
-});
-ChangeableDatePicker.defaultProps = Object.assign({}, DatePicker.defaultProps, DatePickerBase.defaultProps);
-ChangeableDatePicker.displayName = 'DatePicker';
-'year defaultOpen day maxDays maxMonths month onChangeDate onChangeMonth onChangeYear order'
-	.split(' ')
-	.forEach(prop => {
-		delete ChangeableDatePicker.propTypes[prop];
-		delete ChangeableDatePicker.defaultProps[prop];
-	});
-
-const ChangeableTimePicker = Changeable(TimePicker);
-ChangeableTimePicker.propTypes = Object.assign({}, TimePicker.propTypes, TimePickerBase.propTypes, {
-	onOpen: React.PropTypes.func,
-	onClose: React.PropTypes.func,
-	open: React.PropTypes.bool,
-	value: React.PropTypes.instanceOf(Date)
-});
-ChangeableTimePicker.defaultProps = Object.assign({}, TimePicker.defaultProps, TimePickerBase.defaultProps);
-ChangeableTimePicker.displayName = 'TimePicker';
-'onChangeHour defaultOpen onChangeMeridiem hour onChangeMinute minute meridiem meridiems order'
-	.split(' ')
-	.forEach(prop => {
-		delete ChangeableTimePicker.propTypes[prop];
-		delete ChangeableTimePicker.defaultProps[prop];
-	});
 
 const airports = [
 	'San Francisco Airport Terminal Gate 1',
@@ -64,11 +23,10 @@ const airports = [
 	'נמל התעופה בן גוריון טרמינל הבינלאומי'
 ];
 
-storiesOf('Pickers')
-	.addDecorator(withKnobs)
+storiesOf('Accessibility')
 	.addWithInfo(
-		' ',
-		'Basic usage of Picker',
+		'Pickers',
+		'DatePicker, ExpandablePicker, Picker, RangePicker, TimePicker',
 		() => (
 			<table>
 				<thead>
@@ -103,7 +61,7 @@ storiesOf('Pickers')
 									decrementIcon=""
 									disabled={false}
 									incrementIcon=""
-									joined={true}
+									joined
 									noAnimation={false}
 									orientation="horizontal"
 									width="small"
@@ -130,7 +88,7 @@ storiesOf('Pickers')
 								decrementIcon=""
 								disabled={false}
 								incrementIcon=""
-								joined={true}
+								joined
 								noAnimation={false}
 								orientation="vertical"
 								width="small"
@@ -166,7 +124,7 @@ storiesOf('Pickers')
 									defaultValue={0}
 									disabled={false}
 									incrementIcon=""
-									joined={true}
+									joined
 									max={100}
 									min={0}
 									noAnimation={false}
@@ -198,7 +156,7 @@ storiesOf('Pickers')
 									defaultValue={0}
 									disabled={false}
 									incrementIcon=""
-									joined={true}
+									joined
 									max={100}
 									min={0}
 									noAnimation={false}
