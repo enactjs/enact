@@ -19,8 +19,7 @@ const
 	isLeft = is('left'),
 	isRight = is('right'),
 	isUp = is('up'),
-	nop = () => {},
-	doc = (typeof window === 'object') ? window.document : {};
+	nop = () => {};
 
 /**
  * The shape for the grid list item size in a list for {@link moonstone/VirtualList.listItemSizeShape}.
@@ -653,7 +652,7 @@ class VirtualListCore extends Component {
 
 	focusOnItem = (index) => {
 		setTimeout(() => {
-			const item = doc.querySelector(`[data-index='${index}'].spottable`);
+			const item = this.getContainerNode(this.props.positioningOption).querySelector(`[data-index='${index}'].spottable`);
 
 			if (item) {
 				Spotlight.setPointerMode(false);
