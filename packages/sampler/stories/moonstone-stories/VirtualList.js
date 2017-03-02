@@ -16,7 +16,7 @@ const
 			boxSizing: 'border-box'
 		},
 		list: {
-			height: ri.scale(550) + 'px'
+			height: ri.scale(552) + 'px'
 		}
 	},
 	items = [],
