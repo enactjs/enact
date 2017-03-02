@@ -9,7 +9,6 @@ import {contextTypes} from '@enact/i18n/I18nDecorator';
 import {is} from '@enact/core/keymap';
 import React, {Component, PropTypes} from 'react';
 import {Spotlight, SpotlightContainerDecorator} from '@enact/spotlight';
-import {startJob} from '@enact/core/jobs';
 
 import {dataIndexAttribute, Scrollable} from '../Scroller/Scrollable';
 
@@ -653,7 +652,7 @@ class VirtualListCore extends Component {
 	}
 
 	focusOnItem = (index) => {
-		startJob('focusing', () => {
+		setTimeout(() => {
 			const item = doc.querySelector(`[data-index='${index}'].spottable`);
 
 			if (item) {
