@@ -86,8 +86,6 @@ const SpinnerBase = kind({
 	render: ({marquee, ...rest}) =>  {
 		delete rest.centered;
 		delete rest.transparent;
-		delete rest.center;
-		delete rest.middle;
 
 		return (
 			<div {...rest}>
