@@ -23,7 +23,7 @@ const parseIntOrNullify = (v) => {
 	if (!isNaN(parseInt(v))) {
 		return parseInt(v);
 	} else {
-		nullify(v);
+		return nullify(v);
 	}
 };
 
