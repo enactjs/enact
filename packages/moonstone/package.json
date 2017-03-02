@@ -37,7 +37,6 @@
     "invariant": "~2.2.1",
     "ramda": "~0.22.1",
     "react": "~15.4.0",
-    "react-html5video": "^1.4.0",
     "recompose": "~0.20.2",
     "warning": "~3.0.0"
   }
