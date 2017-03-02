@@ -1,5 +1,4 @@
 import {$L} from '@enact/i18n';
-import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
 import React from 'react';
@@ -11,8 +10,6 @@ import css from './DatePicker.less';
 import {dateComponentPickers} from '../internal/DateComponentPicker/DateComponentPicker.less';
 
 const isEnter = is('enter');
-
-const forwardKeyDown = forward('onKeyDown');
 
 /**
  * {@link moonstone/DatePicker.DatePickerBase} is the stateless functional date picker
@@ -143,6 +140,14 @@ const DatePickerBase = kind({
 		onChangeYear: React.PropTypes.func,
 
 		/**
+		 * Callback to be called when a condition occurs which should cause the expandable to close
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onClose: React.PropTypes.func,
+
+		/**
 		 * The handler to run when a key is pressed down.
 		 *
 		 * @type {Function}
@@ -182,11 +187,8 @@ const DatePickerBase = kind({
 	},
 
 	handlers: {
-		onKeyDown: (ev, props) => {
-			const {open, onClose} = props;
-			forwardKeyDown(ev, props);
-
-			if (isEnter(ev.keyCode) && open && onClose) {
+		onKeyDown: (ev, {onClose} ) => {
+			if (isEnter(ev.keyCode) && onClose) {
 				onClose();
 				ev.preventDefault();
 			}
@@ -196,8 +198,8 @@ const DatePickerBase = kind({
 	render: ({day, maxDays, maxMonths, maxYear, minYear, month, noLabels, onChangeDate, onChangeMonth, onChangeYear, onKeyDown, onSpotlightDisappear, order, spotlightDisabled, year, ...rest}) => {
 
 		return (
-			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false} onKeyDown={onKeyDown} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled}>
-				<div className={dateComponentPickers}>
+			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled}>
+				<div className={dateComponentPickers} onKeyDown={onKeyDown}>
 					{order.map(picker => {
 						switch (picker) {
 							case 'd':

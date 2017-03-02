@@ -1,5 +1,4 @@
 import {$L} from '@enact/i18n';
-import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
 import React from 'react';
@@ -11,8 +10,6 @@ import css from './TimePicker.less';
 import {dateComponentPickers} from '../internal/DateComponentPicker/DateComponentPicker.less';
 
 const isEnter = is('enter');
-
-const forwardKeyDown = forward('onKeyDown');
 
 // values to use in hour picker for 24 and 12 hour locales
 const hours24 = [
@@ -165,6 +162,14 @@ const TimePickerBase = kind({
 		onChangeMinute: React.PropTypes.func,
 
 		/**
+		 * Callback to be called when a condition occurs which should cause the expandable to close
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onClose: React.PropTypes.func,
+
+		/**
 		 * The handler to run when a key is pressed down.
 		 *
 		 * @type {Function}
@@ -202,11 +207,8 @@ const TimePickerBase = kind({
 	},
 
 	handlers: {
-		onKeyDown: (ev, props) => {
-			const {open, onClose} = props;
-			forwardKeyDown(ev, props);
-
-			if (isEnter(ev.keyCode) && open && onClose) {
+		onKeyDown: (ev, {onClose} ) => {
+			if (isEnter(ev.keyCode) && onClose) {
 				onClose();
 				ev.preventDefault();
 			}
@@ -219,8 +221,8 @@ const TimePickerBase = kind({
 
 	render: ({hasMeridiem, hour, meridiem, meridiems, minute, noLabels, onChangeHour, onChangeMeridiem, onChangeMinute, onKeyDown, onSpotlightDisappear, order, spotlightDisabled, ...rest}) => {
 		return (
-			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false} onKeyDown={onKeyDown} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled}>
-				<div className={dateComponentPickers}>
+			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled}>
+				<div className={dateComponentPickers} onKeyDown={onKeyDown}>
 					<div className={css.timeComponents}>
 						{order.map(picker => {
 							switch (picker) {
