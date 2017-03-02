@@ -18,11 +18,8 @@ const inputData = {
 	longText : 'Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text',
 	tallText : ['नरेंद्र मोदी', ' ฟิ้  ไั  ஒ  து', 'ÃÑÕÂÊÎÔÛÄËÏÖÜŸ'],
 	extraSpaceText : 'This                                              Text                         has                           extra                                           space',
-	defaultNumber : 10,
-	type: ['text', 'number', 'password'],
-	minValue: 0,
-	maxValue: 10,
-	normalText: 'Input field'
+	initialValue : 'Input field',
+	type: ['text', 'number', 'password']
 };
 
 
@@ -86,7 +83,7 @@ storiesOf('Input')
 						noDecorator={boolean('noDecorator')}
 						placeholder={text('placeholder')}
 						type={select('type', inputData.type, inputData.type[0])}
-						value={text('value1', inputData.normalText + ' one')}
+						value={text('value1', inputData.initialValue + ' one')}
 					/>
 					<StatefulInput
 						onChange={action('onChange')}
@@ -96,7 +93,7 @@ storiesOf('Input')
 						noDecorator={boolean('noDecorator')}
 						placeholder={text('placeholder')}
 						type={select('type', inputData.type, inputData.type[0])}
-						value={text('value2', inputData.normalText + ' two')}
+						value={text('value2', inputData.initialValue + ' two')}
 					/>
 				</div>
 				<div>
@@ -108,7 +105,7 @@ storiesOf('Input')
 						noDecorator={boolean('noDecorator')}
 						placeholder={text('placeholder')}
 						type={select('type', inputData.type, inputData.type[0])}
-						value={text('value3', inputData.normalText + ' three')}
+						value={text('value3', inputData.initialValue + ' three')}
 					/>
 					<StatefulInput
 						onChange={action('onChange')}
@@ -118,7 +115,7 @@ storiesOf('Input')
 						noDecorator={boolean('noDecorator')}
 						placeholder={text('placeholder')}
 						type={select('type', inputData.type, inputData.type[0])}
-						value={text('value4', inputData.normalText + ' four')}
+						value={text('value4', inputData.initialValue + ' four')}
 					/>
 				</div>
 			</div>
@@ -134,7 +131,7 @@ storiesOf('Input')
 				iconBefore={select('iconBefore', iconNames)}
 				noDecorator={boolean('noDecorator')}
 				type={inputData.type[1]}
-				value={number('value', inputData.minValue)}
+				value={number('value', inputData.initialValue)}
 			/>
 		)
 	);
