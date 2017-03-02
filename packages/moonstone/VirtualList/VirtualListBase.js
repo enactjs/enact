@@ -9,6 +9,7 @@ import {contextTypes} from '@enact/i18n/I18nDecorator';
 import {is} from '@enact/core/keymap';
 import React, {Component, PropTypes} from 'react';
 import {Spotlight, SpotlightContainerDecorator} from '@enact/spotlight';
+import {startJob} from '@enact/core/jobs';
 
 import {dataIndexAttribute, Scrollable} from '../Scroller/Scrollable';
 
@@ -19,7 +20,8 @@ const
 	isLeft = is('left'),
 	isRight = is('right'),
 	isUp = is('up'),
-	nop = () => {};
+	nop = () => {},
+	doc = (typeof window === 'object') ? window.document : {};
 
 /**
  * The shape for the grid list item size in a list for {@link moonstone/VirtualList.listItemSizeShape}.
@@ -235,7 +237,7 @@ class VirtualListCore extends Component {
 
 		if (hasMetricsChanged) {
 			this.calculateMetrics(nextProps);
-			this.updateStatesAndBounds(hasDataChanged ? nextProps : this.props);
+			this.updateStatesAndBounds(nextProps);
 		} else if (hasDataChanged) {
 			this.updateStatesAndBounds(nextProps);
 		}
@@ -650,6 +652,17 @@ class VirtualListCore extends Component {
 		return (Math.ceil(curDataSize / dimensionToExtent) * primary.gridSize) - spacing;
 	}
 
+	focusOnItem = (index) => {
+		startJob('focusing', () => {
+			const item = doc.querySelector(`[data-index='${index}'].spottable`);
+
+			if (item) {
+				Spotlight.setPointerMode(false);
+				Spotlight.focus(item);
+			}
+		}, 0);
+	}
+
 	calculatePositionOnFocus = (item) => {
 		const
 			{pageScroll} = this.props,
@@ -763,7 +776,6 @@ class VirtualListCore extends Component {
 		delete props.hideScrollbars;
 		delete props.itemSize;
 		delete props.onScroll;
-		delete props.onScrolling;
 		delete props.onScrollStart;
 		delete props.onScrollStop;
 		delete props.overhang;
