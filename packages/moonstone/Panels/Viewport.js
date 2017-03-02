@@ -66,7 +66,10 @@ const ViewportBase = kind({
 
 	computed: {
 		children: ({children}) => React.Children.map(children, (child, index) => {
-			return React.cloneElement(child, {'data-index': index});
+			return React.cloneElement(child, {
+				containerId: child.props.containerId || `panel-container-${index}`,
+				'data-index': index
+			});
 		}),
 		enteringProp: ({noAnimation}) => noAnimation ? null : 'hideChildren'
 	},
