@@ -1,6 +1,6 @@
 import hoc from '@enact/core/hoc';
 import {forward} from '@enact/core/handle';
-import {childrenEquals} from '@enact/core/util';
+import {childrenEquals, propEquals} from '@enact/core/util';
 import React from 'react';
 
 import Marquee from './Marquee';
@@ -239,6 +239,11 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			} else if (next.marqueeOn !== marqueeOn || next.marqueeDisabled !== marqueeDisabled || next.marqueeSpeed !== marqueeSpeed) {
 				this.cancelAnimation();
 			}
+
+			if (!propEquals(this.props, next)) {
+				this.invalidateMetrics();
+				this.cancelAnimation();
+			}
 		}
 
 		componentDidUpdate () {
@@ -471,12 +476,14 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleFocus = (ev) => {
 			this.isFocused = true;
+			this.invalidateMetrics();
 			this.startAnimation();
 			forwardFocus(ev, this.props);
 		}
 
 		handleBlur = (ev) => {
 			this.isFocused = false;
+			this.invalidateMetrics();
 			this.cancelAnimation();
 			forwardBlur(ev, this.props);
 		}
