@@ -274,22 +274,22 @@ class Transition extends React.Component {
 
 		this.state = {
 			initialHeight: null,
-			deferredChildren: !props.visible
+			deferChildren: !props.visible
 		};
-		this.jobName = this.jobName = `sliderChange${now()}`;
+		this.jobName = `TranstionTimer${now()}`;
 		this.wasDeferred = !props.visible;
 	}
 
 	componentDidMount () {
-		if (this.state.deferredChildren) {
+		if (this.state.deferChildren) {
 			startJob(this.jobName, this.addChildren, 200 + Math.floor(Math.random() * 200));
 		}
 	}
 
 	componentWillReceiveProps (nextProps) {
-		if (nextProps.visible && this.state.deferredChildren) {
+		if (nextProps.visible && this.state.deferChildren) {
 			stopJob(this.jobName);
-			this.setState({deferredChildren: false});
+			this.setState({deferChildren: false});
 		}
 	}
 
@@ -303,9 +303,8 @@ class Transition extends React.Component {
 		if ((this.props.visible === prevProps.visible) &&
 			(this.state.initialHeight === prevState.initialHeight)) {
 			this.measureInner();
-			// Check to see if we are toggling before our deferred measure is complete
 		}
-		if (prevState.deferredChildren && !this.state.deferredChildren && !this.props.visible) {
+		if (prevState.deferChildren && !this.state.deferChildren && !this.props.visible) {
 			this.wasDeferred = false;
 		}
 	}
@@ -315,7 +314,7 @@ class Transition extends React.Component {
 	}
 
 	addChildren = () => {
-		this.setState({deferredChildren: false});
+		this.setState({deferChildren: false});
 	}
 
 	hideDidFinish = (ev) => {
@@ -343,15 +342,15 @@ class Transition extends React.Component {
 
 	render () {
 		let {visible, ...props} = this.props;
-		delete props.onHide;
-
-		const height = visible ? this.state.initialHeight : 0;
 		// If we are deferring children, don't render any
-		if (this.state.deferredChildren) {
+		if (this.state.deferChildren) {
 			return null;
 		}
-		// If we're transitioning to visible but don't have a measurement yet, don't show so we can measure.
-		// Measuring will trigger a state change which will allow us to animate
+
+		delete props.onHide;
+		const height = visible ? this.state.initialHeight : 0;
+		// If we're transitioning to visible but don't have a measurement yet, don't show so we can
+		// measure.  Measuring will trigger a state change which will allow us to animate
 		if (!this.state.initialHeight && visible && this.wasDeferred) {
 			visible = false;
 			this.wasDeferred = false;
