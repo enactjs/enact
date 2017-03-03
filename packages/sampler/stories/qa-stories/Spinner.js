@@ -5,6 +5,7 @@ import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
 import {withKnobs, text, boolean, select} from '@kadira/storybook-addon-knobs';
+import nullify from '../../src/utils/nullify.js';
 
 // Set up some defaults for info and knobs
 const
@@ -18,8 +19,6 @@ const
 		}
 	};
 
-const nullify = (v) => v === '<null>' ? null : v;
-
 storiesOf('Spinner')
 	.addDecorator(withKnobs)
 	.addWithInfo(
@@ -29,6 +28,8 @@ storiesOf('Spinner')
 				<Spinner
 					transparent={boolean('transparent', false)}
 					centered={boolean('centered', false)}
+					blockClickOn={nullify(select('blockClickOn', [null, 'container', 'screen']))}
+					scrim={boolean('scrim', true)}
 				>
 					{text('content', prop.longText)}
 				</Spinner>
@@ -43,6 +44,8 @@ storiesOf('Spinner')
 				<Spinner
 					transparent={boolean('transparent', false)}
 					centered={boolean('centered', false)}
+					blockClickOn={nullify(select('blockClickOn', [null, 'container', 'screen']))}
+					scrim={boolean('scrim', true)}
 				>
 					<Icon>hollowstar</Icon>
 					<Icon>star</Icon>
@@ -59,6 +62,8 @@ storiesOf('Spinner')
 				<Spinner
 					transparent={boolean('transparent', false)}
 					centered={boolean('centered', false)}
+					blockClickOn={nullify(select('blockClickOn', [null, 'container', 'screen']))}
+					scrim={boolean('scrim', true)}
 				>
 					{text('content', prop.longText)}
 					<Icon>hollowstar</Icon>
@@ -75,6 +80,8 @@ storiesOf('Spinner')
 				<Spinner
 					transparent={boolean('transparent', false)}
 					centered={boolean('centered', false)}
+					blockClickOn={nullify(select('blockClickOn', [null, 'container', 'screen']))}
+					scrim={boolean('scrim', true)}
 				>
 					<Icon>hollowstar</Icon>
 					<Icon>star</Icon>
