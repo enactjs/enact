@@ -1,5 +1,4 @@
 import {forward} from '@enact/core/handle';
-import deprecate from '@enact/core/internal/deprecate';
 import hoc from '@enact/core/hoc';
 import React from 'react';
 
