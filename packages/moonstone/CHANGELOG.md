@@ -34,6 +34,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Slider` now supports `children` which are added to the `Slider`'s knob, and follow it as it moves
 - `moonstone/ExpandableInput` properties `iconAfter` and `iconBefore` to display icons after and before the input, respectively
 - `moonstone/Dialog` property `preserveCase`, which affects `title` text
+- `moonstone/Spinner` properties `blockClickOn` and `scrim` to block click events behind spinner
 
 ### Changed
 
