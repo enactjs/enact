@@ -1,4 +1,5 @@
 import computed from './computed';
+import contextTypes from './contextTypes';
 import defaultProps from './defaultProps';
 import handlers from './handlers';
 import name from './name';
@@ -19,6 +20,10 @@ import styles from './styles';
  *		defaultProps: {
  *			color: 'green'
  *		},
+ *		// expect backgroundColor via context
+ *		contextTypes: {
+ *			backgroundColor: React.PropTypes.string
+ *		},
  *		// configure styles with the static className to merge with user className
  *		styles: {
  *			// include the CSS modules map so 'button' can be resolved to the local name
@@ -28,7 +33,9 @@ import styles from './styles';
  *		// add some computed properties
  *		computed: {
  *			// border color will be the color prepended by 'light'
- *			borderColor: ({color}) => 'light' + color
+ *			borderColor: ({color}) => 'light' + color,
+ *			// background color will be the contextual background color if specified
+ *			color: ({color}, context) => context.backgroundColor || color
  *		},
  *		// Render the thing, already!
  *		render: ({color, borderColor, children, ...rest}) => (
@@ -57,10 +64,13 @@ const kind = (config) => {
 	// render() decorations
 	if (config.name) name(config.name, render);
 	if (config.handlers) {
-		render = handlers(config.handlers, render);
+		// need to set contextTypes on pre-wrapped Component
+		if (config.contextTypes) contextTypes(config.contextTypes, render);
+		render = handlers(config.handlers, render, config.contextTypes);
 	}
 	if (config.propTypes) propTypes(config.propTypes, render);
 	if (config.defaultProps) defaultProps(config.defaultProps, render);
+	if (config.contextTypes) contextTypes(config.contextTypes, render);
 
 	// Decorate the SFC with the computed property object in DEV for easier testability
 	if (__DEV__ && config.computed) render.computed = config.computed;
