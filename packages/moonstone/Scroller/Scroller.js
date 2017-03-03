@@ -179,11 +179,10 @@ class ScrollerBase extends Component {
 				overflowX: props.horizontal,
 				overflowY: props.vertical
 			}),
-			hideNativeScrollbar = !props.hideScrollbars ? css.hideNativeScrollbar : null;
+			hideNativeScrollbar = css.hideNativeScrollbar;
 
 		delete props.cbScrollTo;
 		delete props.className;
-		delete props.hideScrollbars;
 		delete props.horizontal;
 		delete props.onScrolling;
 		delete props.onScrollStart;
