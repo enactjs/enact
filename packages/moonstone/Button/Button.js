@@ -69,6 +69,15 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 			backgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'transparent']),
 
 			/**
+			 * This property accepts one of the following color names, which correspond with the
+			 * colored buttons on a standard remote control: `'red'`, `'green'`, `'yellow'`, `'blue'`
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			color: PropTypes.oneOf([null, 'red', 'green', 'yellow', 'blue']),
+
+			/**
 			 * When `true`, the [button]{@glossary button} is shown as disabled and does not
 			 * generate `onClick` [events]{@glossary event}.
 			 *
@@ -152,9 +161,9 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 		},
 
 		computed: {
-			className: ({backgroundOpacity, minWidth, pressed, selected, small, styler}) => styler.append(
+			className: ({backgroundOpacity, color, minWidth, pressed, selected, small, styler}) => styler.append(
 				{pressed, small, minWidth, selected},
-				backgroundOpacity
+				backgroundOpacity, color
 			)
 		},
 
@@ -167,6 +176,7 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 
 		render: ({children, ...rest}) => {
 			delete rest.backgroundOpacity;
+			delete rest.color;
 			delete rest.minWidth;
 			delete rest.pressed;
 			delete rest.selected;

@@ -73,6 +73,7 @@ class Accelerator {
 	 * Called with the current keydown event and callback, which will be called when the event is
 	 * allowed through.
 	 *
+	 * @function
 	 * @param  {Object} event - The current event to validate.
 	 * @param  {Function} callback - The callback to execute.
 	 * @returns {Boolean} `true` if the event was consumed by processKey and callback was not called
@@ -125,6 +126,7 @@ class Accelerator {
 	/**
 	 * Resets the Accelerator instance to the default values.
 	 *
+	 * @function
 	 * @returns {undefined}
 	 * @public
 	 * @memberof core/Accelerator.Accelerator
@@ -140,6 +142,7 @@ class Accelerator {
 	/**
 	 * Cancels the Accelerator.
 	 *
+	 * @function
 	 * @returns {undefined}
 	 * @public
 	 * @memberof core/Accelerator.Accelerator
@@ -151,6 +154,7 @@ class Accelerator {
 	/**
 	 * Verifies that the Accelerator is active.
 	 *
+	 * @function
 	 * @returns {Boolean} `true` if the Accelerator is active; otherwise, `false`.
 	 * @public
 	 * @memberof core/Accelerator.Accelerator

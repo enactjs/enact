@@ -5,12 +5,15 @@
  * export is {@link moonstone/VirtualList.VirtualListBase}.
  */
 
+import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import {is} from '@enact/core/keymap';
 import React, {Component, PropTypes} from 'react';
 import {Spotlight, SpotlightContainerDecorator} from '@enact/spotlight';
 
 import {dataIndexAttribute, Scrollable} from '../Scroller/Scrollable';
+
+import css from './ListItem.less';
 
 const
 	dataContainerMutedAttribute = 'data-container-muted',
@@ -523,8 +526,6 @@ class VirtualListCore extends Component {
 			node = this.containerRef.children[primaryIndex % numOfItems];
 
 		if (node) {
-			// spotlight
-			node.setAttribute(dataIndexAttribute, primaryIndex);
 			if ((primaryIndex % numOfItems) === this.nodeIndexToBeBlurred && primaryIndex !== this.lastFocusedIndex) {
 				node.blur();
 				this.nodeIndexToBeBlurred = null;
@@ -539,6 +540,7 @@ class VirtualListCore extends Component {
 			{numOfItems} = this.state,
 			itemElement = component({
 				data,
+				[dataIndexAttribute]: primaryIndex,
 				index: primaryIndex,
 				key: primaryIndex % numOfItems
 			}),
@@ -546,12 +548,10 @@ class VirtualListCore extends Component {
 
 		this.composeStyle(style, ...rest);
 
-		this.cc[primaryIndex % numOfItems] = React.cloneElement(
-			itemElement, {
-				style: {...itemElement.props.style, ...style},
-				[dataIndexAttribute]: primaryIndex
-			}
-		);
+		this.cc[primaryIndex % numOfItems] = React.cloneElement(itemElement, {
+			className: classNames(css.listItem, itemElement.props.className),
+			style: {...itemElement.props.style, ...style}
+		});
 	}
 
 	positionItems ({updateFrom, updateTo}) {

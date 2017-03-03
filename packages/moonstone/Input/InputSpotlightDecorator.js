@@ -4,6 +4,8 @@ import {is} from '@enact/core/keymap';
 import React from 'react';
 import {Spotlight, Spottable} from '@enact/spotlight';
 
+import css from './Input.less';
+
 const preventSpotlightNavigation = (ev) => {
 	ev.nativeEvent.stopImmediatePropagation();
 };
@@ -258,6 +260,15 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			forwardKeyDown(ev, this.props);
 		}
 
+		calcClassName () {
+			const {className, noDecorator} = this.props;
+			if (noDecorator) {
+				return className ? css.noDecorator + ' ' + className : css.noDecorator;
+			}
+
+			return className;
+		}
+
 		render () {
 			const props = Object.assign({}, this.props);
 			delete props.noDecorator;
@@ -265,6 +276,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			return (
 				<Component
 					{...props}
+					className={this.calcClassName()}
 					focused={this.state.focused === 'input'}
 					onBlur={this.onBlur}
 					onClick={this.onClick}

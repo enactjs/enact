@@ -67,11 +67,11 @@ const ExpandableListBase = kind({
 		 * The secondary, or supportive text. Typically under the `title`, a subtitle. If omitted,
 		 * the label will be generated as a comma-separated list of the selected items.
 		 *
-		 * @type {String}
+		 * @type {Node}
 		 * @default null
 		 * @public
 		 */
-		label: PropTypes.string,
+		label: PropTypes.node,
 
 		/**
 		 * When `true`, the expandable will not automatically close when the user navigates to the
