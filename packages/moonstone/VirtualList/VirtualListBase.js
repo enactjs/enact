@@ -5,12 +5,15 @@
  * export is {@link moonstone/VirtualList.VirtualListBase}.
  */
 
+import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import {is} from '@enact/core/keymap';
 import React, {Component, PropTypes} from 'react';
 import {Spotlight, SpotlightContainerDecorator} from '@enact/spotlight';
 
 import {dataIndexAttribute, Scrollable} from '../Scroller/Scrollable';
+
+import css from './ListItem.less';
 
 const
 	dataContainerMutedAttribute = 'data-container-muted',
@@ -394,7 +397,8 @@ class VirtualListCore extends Component {
 		const
 			{dataSize, overhang} = props,
 			{dimensionToExtent, primary} = this,
-			numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang));
+			numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
+			wasFirstIndexMax = (this.maxFirstIndex && (this.state.firstIndex === this.maxFirstIndex));
 
 		this.maxFirstIndex = dataSize - numOfItems;
 		this.curDataSize = dataSize;
@@ -404,7 +408,7 @@ class VirtualListCore extends Component {
 		// reset children
 		this.cc = [];
 
-		this.setState({firstIndex: Math.min(this.state.firstIndex, this.maxFirstIndex), numOfItems});
+		this.setState({firstIndex: wasFirstIndexMax ? this.maxFirstIndex : Math.min(this.state.firstIndex, this.maxFirstIndex), numOfItems});
 		this.calculateScrollBounds(props);
 	}
 
@@ -546,6 +550,7 @@ class VirtualListCore extends Component {
 		this.composeStyle(style, ...rest);
 
 		this.cc[primaryIndex % numOfItems] = React.cloneElement(itemElement, {
+			className: classNames(css.listItem, itemElement.props.className),
 			style: {...itemElement.props.style, ...style}
 		});
 	}

@@ -13,21 +13,7 @@ const
 	prop = {
 		direction: {'horizontal': 'horizontal', 'vertical': 'vertical'}
 	},
-	style = {
-		item: {
-			position: 'absolute',
-			width: '100%',
-			height: '100%',
-			margin: '0',
-			border: ri.scale(6) + 'px solid transparent',
-			boxSizing: 'border-box',
-
-			color: '#fff'
-		},
-		list: {
-			height: ri.scale(550) + 'px'
-		}
-	},
+	listStyle = {height: ri.scale(550) + 'px'},
 	items = [],
 	// eslint-disable-next-line enact/prop-types
 	renderItem = ({data, index, ...rest}) => {
@@ -38,7 +24,6 @@ const
 				caption={text}
 				source={source}
 				subCaption={subText}
-				style={style.item}
 			/>
 		);
 	};
@@ -67,7 +52,7 @@ storiesOf('VirtualList.VirtualGridList')
 				spacing={ri.scale(number('spacing', 20))}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
-				style={style.list}
+				style={listStyle}
 				component={renderItem}
 			/>
 		)
