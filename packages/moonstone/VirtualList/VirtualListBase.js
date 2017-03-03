@@ -402,6 +402,7 @@ class VirtualListCore extends Component {
 			wasFirstIndexMax = (this.maxFirstIndex && (newFirstIndex === this.maxFirstIndex));
 
 		this.maxFirstIndex = dataSize - numOfItems;
+		this.newFirstIndex = wasFirstIndexMax ? this.maxFirstIndex : Math.min(newFirstIndex, this.maxFirstIndex);
 		this.curDataSize = dataSize;
 		this.updateFrom = null;
 		this.updateTo = null;
@@ -409,7 +410,7 @@ class VirtualListCore extends Component {
 		// reset children
 		this.cc = [];
 
-		this.setState({firstIndex: wasFirstIndexMax ? this.maxFirstIndex : Math.min(newFirstIndex, this.maxFirstIndex), numOfItems});
+		this.setState({firstIndex: this.newFirstIndex, numOfItems});
 		this.calculateScrollBounds(props);
 	}
 
