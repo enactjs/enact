@@ -38,62 +38,6 @@ storiesOf('Spinner')
 	)
 
 	.addWithInfo(
-		'with components inside before text',
-		() => (
-			<div style={style.spinnerDiv}>
-				<Spinner
-					transparent={boolean('transparent', false)}
-					centered={boolean('centered', false)}
-					blockClickOn={nullify(select('blockClickOn', [null, 'container', 'screen']))}
-					scrim={boolean('scrim', true)}
-				>
-					<Icon>hollowstar</Icon>
-					<Icon>star</Icon>
-					{text('content', prop.longText)}
-				</Spinner>
-			</div>
-		)
-	)
-
-	.addWithInfo(
-		'with components inside after text ',
-		() => (
-			<div style={style.spinnerDiv}>
-				<Spinner
-					transparent={boolean('transparent', false)}
-					centered={boolean('centered', false)}
-					blockClickOn={nullify(select('blockClickOn', [null, 'container', 'screen']))}
-					scrim={boolean('scrim', true)}
-				>
-					{text('content', prop.longText)}
-					<Icon>hollowstar</Icon>
-					<Icon>star</Icon>
-				</Spinner>
-			</div>
-		)
-	)
-
-	.addWithInfo(
-		'with components inside before and after text ',
-		() => (
-			<div style={style.spinnerDiv}>
-				<Spinner
-					transparent={boolean('transparent', false)}
-					centered={boolean('centered', false)}
-					blockClickOn={nullify(select('blockClickOn', [null, 'container', 'screen']))}
-					scrim={boolean('scrim', true)}
-				>
-					<Icon>hollowstar</Icon>
-					<Icon>star</Icon>
-					{text('content', 'Spinner')}
-					<Icon>hollowstar</Icon>
-					<Icon>star</Icon>
-				</Spinner>
-			</div>
-		)
-	)
-
-	.addWithInfo(
 		'blocking click events',
 		() => (
 			<div>

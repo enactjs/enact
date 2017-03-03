@@ -2,7 +2,6 @@
  * Exports the {@link moonstone/Spinner.Spinner} and {@link moonstone/Spinner.SpinnerBase} components.
  * The default export is {@link moonstone/Spinner.Spinner}.
  *
- *
  * @module moonstone/Spinner
  */
 import FloatingLayer from '@enact/ui/FloatingLayer';
