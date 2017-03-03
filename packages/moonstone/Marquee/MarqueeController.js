@@ -79,20 +79,7 @@ const defaultConfig = {
 	 * @default false
 	 * @memberof moonstone/Marquee.MarqueeController.defaultConfig
 	 */
-	marqueeOnFocus: false,
-
-	/**
-	 * Deprecated: When `true`, any `onFocus` events that bubble to the
-	 * controller will start the contained Marquee instances. This is useful
-	 * when a component contains Marquee instances that need to be started with
-	 * sibling components are focused.
-	 *
-	 * @type {Boolean}
-	 * @default false
-	 * @memberof moonstone/Marquee.MarqueeController.defaultConfig
-	 * @deprecated since 1.0.0-beta.3, replaced by `marqueeOnFocus`
-	 */
-	startOnFocus: false
+	marqueeOnFocus: false
 };
 
 /**
@@ -105,13 +92,9 @@ const defaultConfig = {
  * @public
  */
 const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
-	const {marqueeOnFocus, startOnFocus} = config;
+	const {marqueeOnFocus} = config;
 	const forwardBlur = forward('onBlur');
 	const forwardFocus = forward('onFocus');
-
-	if (__DEV__ && typeof startOnFocus !== 'undefined') {
-		deprecate({name: 'startOnFocus', since: '1.0.0-beta.3', replacedBy: 'marqueeOnFocus', until: '1.0.0'});
-	}
 
 	return class extends React.Component {
 		static displayName = 'MarqueeController'
@@ -323,7 +306,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		render () {
 			let props = this.props;
 
-			if (marqueeOnFocus || startOnFocus) {
+			if (marqueeOnFocus) {
 				props = {
 					...this.props,
 					onBlur: this.handleBlur,
