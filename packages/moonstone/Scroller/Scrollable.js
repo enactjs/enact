@@ -203,15 +203,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			if (__DEV__ && typeof props.hideScrollbars !== 'undefined') {
 				deprecate({name: 'hideScrollbars', since: '1.0.0-beta.3', replacedBy: 'horizontalScrollbar=\'hidden\' and verticalScrollbar=\'hidden\'', until: '1.0.0'});
 			}
+
 			this.isScrollbarsVisible = !props.hideScrollbars && (props.horizontalScrollbar !== 'hidden' || props.verticalScrollbar !== 'hidden');
 
-			const
-				isHorizontalScrollbarVisible = (this.isScrollbarsVisible && props.horizontalScrollbar === 'visible') || false,
-				isVerticalScrollbarVisible = (this.isScrollbarsVisible && props.verticalScrollbar === 'visible') || false;
-
 			this.state = {
-				isHorizontalScrollbarVisible: isHorizontalScrollbarVisible,
-				isVerticalScrollbarVisible: isVerticalScrollbarVisible
+				isHorizontalScrollbarVisible: (this.isScrollbarsVisible && props.horizontalScrollbar === 'visible') || false,
+				isVerticalScrollbarVisible: (this.isScrollbarsVisible && props.verticalScrollbar === 'visible') || false
 			};
 
 			this.initChildRef = this.initRef('childRef');
@@ -807,11 +804,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			if (isVerticalScrollbarVisible) {
 				const verticalScrollbarClassnames = !isHorizontalScrollbarVisible ? css.onlyVerticalScrollbarNeeded : null;
-				return (<Scrollbar
-					className={verticalScrollbarClassnames}
-					disabled={!isVerticalScrollbarVisible}
-					{...this.verticalScrollbarProps}
-				/>);
+				return (
+					<Scrollbar
+						className={verticalScrollbarClassnames}
+						disabled={!isVerticalScrollbarVisible}
+						{...this.verticalScrollbarProps}
+					/>
+				);
 			}
 		}
 
@@ -820,11 +819,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			if (isHorizontalScrollbarVisible) {
 				const horizontalScrollbarClassnames = !isVerticalScrollbarVisible ? css.onlyHorizontalScrollbarNeeded : null;
-				return (<Scrollbar
-					className={horizontalScrollbarClassnames}
-					disabled={!isHorizontalScrollbarVisible}
-					{...this.horizontalScrollbarProps}
-				/>);
+				return (
+					<Scrollbar
+						className={horizontalScrollbarClassnames}
+						disabled={!isHorizontalScrollbarVisible}
+						{...this.horizontalScrollbarProps}
+					/>
+				);
 			}
 		}
 
