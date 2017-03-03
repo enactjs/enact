@@ -1,6 +1,5 @@
 import Spinner from '@enact/moonstone/Spinner';
 import Button from '@enact/moonstone/Button';
-import Icon from '@enact/moonstone/Icon';
 import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
