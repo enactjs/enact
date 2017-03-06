@@ -509,7 +509,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		// scroll start/stop
 
-		start ({targetX, targetY, animate = true, silent = false, duration = animationDuration, focusIndex}) {
+		start ({targetX, targetY, animate = true, silent = false, duration = animationDuration, focusingIndex}) {
 			const {scrollLeft, scrollTop} = this;
 			const bounds = this.getScrollBounds();
 
@@ -537,16 +537,16 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					targetX,
 					targetY,
 					duration,
-					focusIndex
+					focusingIndex
 				}));
 			} else {
 				this.scroll(targetX, targetY);
-				this.stop({focusIndex});
+				this.stop({focusingIndex});
 			}
 		}
 
 		scrollAnimation = (animationInfo) => (curTime) => {
-			const {sourceX, sourceY, targetX, targetY, duration, focusIndex} = animationInfo;
+			const {sourceX, sourceY, targetX, targetY, duration, focusingIndex} = animationInfo;
 			if (curTime < duration) {
 				this.scroll(
 					this.horizontalScrollability ? this.animator.timingFunction(sourceX, targetX, duration, curTime) : sourceX,
@@ -554,7 +554,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				);
 			} else {
 				this.scroll(targetX, targetY);
-				this.stop({focusIndex});
+				this.stop({focusingIndex});
 			}
 		}
 
@@ -569,14 +569,14 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.doScrolling();
 		}
 
-		stop ({focusIndex}) {
+		stop ({focusingIndex}) {
 			this.animator.stop();
 			this.isScrollAnimationTargetAccumulated = false;
 			this.childRef.setContainerDisabled(false);
 			this.lastFocusedItem = null;
 			this.hideThumb();
-			if (focusIndex !== null && typeof this.childRef.focusOnItem === 'function') {
-				this.childRef.focusOnItem(focusIndex);
+			if (focusingIndex !== null && typeof this.childRef.focusOnItem === 'function') {
+				this.childRef.focusOnItem(focusingIndex);
 			}
 			this.doScrollStop();
 		}
@@ -654,7 +654,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						targetX: (left !== null) ? left : this.scrollLeft,
 						targetY: (top !== null) ? top : this.scrollTop,
 						animate: opt.animate,
-						focusIndex: (typeof opt.index === 'number' && opt.focus) ? opt.index : null
+						focusingIndex: !isNaN(opt.focusingIndex) ? opt.focusingIndex : null
 					});
 				}
 			} else {
