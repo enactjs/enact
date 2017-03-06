@@ -753,10 +753,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			// FIXME `onWheel` don't work on the v8 snapshot.
 			if (isVerticalScrollbarVisible || isHorizontalScrollbarVisible) {
 				this.containerRef.addEventListener('wheel', this.onWheel);
-				this.updateScrollbars();
 			} else {
 				this.childRef.containerRef.addEventListener('wheel', this.onWheel);
 			}
+
+			this.updateScrollbars();
 		}
 
 		componentWillUnmount () {
