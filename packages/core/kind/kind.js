@@ -62,12 +62,13 @@ const kind = (config) => {
 	};
 
 	// render() decorations
-	if (config.name) name(config.name, render);
 	if (config.handlers) {
-		// need to set contextTypes on pre-wrapped Component
+		// need to set name and contextTypes on pre-wrapped Component
 		if (config.contextTypes) contextTypes(config.contextTypes, render);
 		render = handlers(config.handlers, render, config.contextTypes);
 	}
+
+	if (config.name) name(config.name, render);
 	if (config.propTypes) propTypes(config.propTypes, render);
 	if (config.defaultProps) defaultProps(config.defaultProps, render);
 	if (config.contextTypes) contextTypes(config.contextTypes, render);
