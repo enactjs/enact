@@ -183,9 +183,7 @@ class VirtualListCore extends Component {
 			this.calculateMetrics(props);
 			// eslint-disable-next-line react/no-direct-mutation-state
 			this.state.numOfItems = this.getNumOfItems(props);
-			this.maxFirstIndex = props.dataSize - this.state.numOfItems;
-			this.curDataSize = props.dataSize;
-			this.calculateScrollBounds(props);
+			this.updateStatesAndBounds(props);
 		}
 		this.initContainerRef = this.initRef('containerRef');
 	}
@@ -389,8 +387,9 @@ class VirtualListCore extends Component {
 
 		// reset children
 		this.cc = [];
-
-		this.setState({firstIndex: wasFirstIndexMax ? this.maxFirstIndex : Math.min(this.state.firstIndex, this.maxFirstIndex), numOfItems});
+		if (!props.clientSize) {
+			this.setState({firstIndex: wasFirstIndexMax ? this.maxFirstIndex : Math.min(this.state.firstIndex, this.maxFirstIndex), numOfItems});
+		}
 		this.calculateScrollBounds(props);
 	}
 
