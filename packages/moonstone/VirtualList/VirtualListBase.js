@@ -38,19 +38,6 @@ const gridListItemSizeShape = PropTypes.shape({
 });
 
 /**
- * The shape for the list client size for {@link moonstone/Scroller.Scrollable}.
- *
- * @typedef {Object} listClientSizeShape
- * @memberof moonstone/Scroller.Scrollable
- * @property {Number} clientWidth - The client width of the list.
- * @property {Number} clientHeight - The client height of the list.
- */
-const listClientSizeShape = PropTypes.shape({
-	clientWidth: PropTypes.number.isRequired,
-	clientHeight:  PropTypes.number.isRequired
-});
-
-/**
  * {@link moonstone/VirtualList.VirtualListBase} is a base component for
  * {@link moonstone/VirtualList.VirtualList} and
  * {@link moonstone/VirtualList.VirtualGridList} with Scrollable and SpotlightContainerDecorator applied.
@@ -97,13 +84,15 @@ class VirtualListCore extends Component {
 		/**
 		 * Client size of the list; valid values are an object that has `clientWidth` and `clientHeight`.
 		 *
-		 * @type {Number|moonstone/Scrollable.listClientSizeShape}
+		 * @type {Object}
+		 * @property {Number} clientWidth - The client width of the list.
+		 * @property {Number} clientHeight - The client height of the list.
 		 * @public
 		 */
-		clientSize: PropTypes.oneOfType([
-			PropTypes.number,
-			listClientSizeShape
-		]),
+		clientSize: PropTypes.shape({
+			clientWidth: PropTypes.number.isRequired,
+			clientHeight:  PropTypes.number.isRequired
+		}),
 
 		/**
 		 * Data for the list.
