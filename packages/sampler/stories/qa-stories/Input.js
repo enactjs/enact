@@ -18,6 +18,7 @@ const inputData = {
 	longText : 'Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text',
 	tallText : ['नरेंद्र मोदी', ' ฟิ้  ไั  ஒ  து', 'ÃÑÕÂÊÎÔÛÄËÏÖÜŸ'],
 	extraSpaceText : 'This                                              Text                         has                           extra                                           space',
+	initialNumericValue: 0,
 	initialValue : 'Input field',
 	type: ['text', 'number', 'password']
 };
@@ -131,7 +132,7 @@ storiesOf('Input')
 				iconBefore={select('iconBefore', iconNames)}
 				noDecorator={boolean('noDecorator')}
 				type={inputData.type[1]}
-				value={number('value', inputData.initialValue)}
+				value={number('value', inputData.initialNumericValue)}
 			/>
 		)
 	);
