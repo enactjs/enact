@@ -1,7 +1,12 @@
 import React from 'react';
+import ri from '@enact/ui/resolution';
+import Button from '@enact/moonstone/Button';
 import ExpandableList from '@enact/moonstone/ExpandableList';
 import Selectable from '@enact/ui/Selectable';
 import Scroller from '@enact/moonstone/Scroller';
+
+import {storiesOf, action} from '@kadira/storybook';
+import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
 
 const StatefullExpandableList = Selectable(ExpandableList);
 
@@ -10,8 +15,27 @@ for (let i = 0; i < 100; i++) {
 	itemData.push(`Item ${i}`);
 }
 
-import {storiesOf} from '@kadira/storybook';
-import {withKnobs} from '@kadira/storybook-addon-knobs';
+const
+	prop = {
+		horizontal: {'auto': 'auto', 'hidden': 'hidden', 'scroll': 'scroll'},
+		vertical: {'auto': 'auto', 'hidden': 'hidden', 'scroll': 'scroll'}
+	},
+	style = {
+		horizontalScroller: {
+			width: '100%'
+		},
+		horizontalContent: {
+			width: ri.scale(6000) + 'px'
+		},
+		scroller: {
+			height: ri.scale(550) + 'px',
+			width: '100%'
+		},
+		content: {
+			height: ri.scale(1000) + 'px',
+			width: ri.scale(2000) + 'px'
+		}
+	};
 
 storiesOf('Scroller')
 	.addDecorator(withKnobs)
@@ -27,6 +51,51 @@ storiesOf('Scroller')
 				>
 					{itemData}
 				</StatefullExpandableList>
+			</Scroller>
+		)
+	)
+	.addWithInfo(
+		'Horizontal scroll',
+		() => (
+			<Scroller
+				hideScrollbars={boolean('hideScrollbars', false)}
+				horizontal={select('horizontal', prop.horizontal, 'auto')}
+				vertical={select('vertical', prop.vertical, 'auto')}
+				onScrollStart={action('onScrollStart')}
+				onScrollStop={action('onScrollStop')}
+				style={style.horizontalScroller}
+			>
+				<div style={style.horizontalContent}>
+					<Button>Button</Button>
+					<Button>Button</Button>
+					<Button>Button</Button>
+					<Button>Button</Button>
+					<Button>Button</Button>
+					<Button>Button</Button>
+					<Button>Button</Button>
+					<Button>Button</Button>
+					<Button>Button</Button>
+					<Button>Button</Button>
+					<Button>Button</Button>
+					<Button>Button</Button>
+					<Button>Button</Button>
+					<Button>Button</Button>
+					<Button>Button</Button>
+					<Button>Button</Button>
+					<Button>Button</Button>
+					<Button>Button</Button>
+					<Button>Button</Button>
+					<Button>Button</Button>
+					<Button>Button</Button>
+					<Button>Button</Button>
+					<Button>Button</Button>
+					<Button>Button</Button>
+					<Button>Button</Button>
+					<Button>Button</Button>
+					<Button>Button</Button>
+					<Button>Button</Button>
+					<Button>Button</Button>
+				</div>
 			</Scroller>
 		)
 	);
