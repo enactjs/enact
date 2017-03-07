@@ -1,5 +1,5 @@
 import React from 'react';
-import {mount, shallow} from 'enzyme';
+import {mount} from 'enzyme';
 import Spinner from '../Spinner';
 import css from '../Spinner.less';
 
@@ -79,23 +79,23 @@ describe('Spinner Specs', () => {
 	});
 
 	it('should set role to alert by default', function () {
-		const spinner = shallow(
+		const spinner = mount(
 			<Spinner />
 		);
 
 		const expected = 'alert';
-		const actual = spinner.prop('role');
+		const actual = spinner.find(`div.${css.spinner}`).prop('role');
 
 		expect(actual).to.equal(expected);
 	});
 
 	it('should set aria-live to off by default', function () {
-		const spinner = shallow(
+		const spinner = mount(
 			<Spinner />
 		);
 
 		const expected = 'off';
-		const actual = spinner.prop('aria-live');
+		const actual = spinner.find(`div.${css.spinner}`).prop('aria-live');
 
 		expect(actual).to.equal(expected);
 	});
