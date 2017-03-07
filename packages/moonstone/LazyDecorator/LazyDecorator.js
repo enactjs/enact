@@ -42,14 +42,22 @@ const LazyDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 		componentDidMount () {
-			// eslint-disable-next-line react/no-did-mount-set-state
-			this.setState({didMount: true});
+			if (this.state.didMount === false) {
+				// eslint-disable-next-line react/no-did-mount-set-state
+				this.setState({didMount: true});
+			}
 		}
 		render () {
-			const props = Object.assign({}, this.props);
+			let props = this.props;
 
 			if (!this.state.didMount) {
-				props.children = props.children.slice(0, initialNumOfChildren);
+				if (props.children.length <= initialNumOfChildren) {
+					// eslint-disable-next-line react/no-direct-mutation-state
+					this.state.didMount = true;
+				} else {
+					props = Object.assign({}, this.props);
+					props.children = props.children.slice(0, initialNumOfChildren);
+				}
 			}
 
 			return <Wrapped {...props} />;
