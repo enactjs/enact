@@ -158,6 +158,7 @@ const MarqueeBase = kind({
 				style.transform = `translate3d(${adjustedDistance}px, 0, 0)`;
 				style.transition = `transform ${duration}s linear`;
 				style.WebkitTransition = `transform ${duration}s linear`;
+				style.willChange = 'transform';
 			}
 
 			return style;
