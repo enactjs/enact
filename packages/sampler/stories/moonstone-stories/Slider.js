@@ -2,7 +2,7 @@ import Changeable from '@enact/ui/Changeable';
 import React from 'react';
 import Slider, {SliderBase} from '@enact/moonstone/Slider';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, number} from '@kadira/storybook-addon-knobs';
+import {withKnobs, boolean, number, select} from '@kadira/storybook-addon-knobs';
 
 const ChangeableSlider = Changeable({mutable: true}, Slider);
 ChangeableSlider.propTypes = Object.assign({}, SliderBase.propTypes, Slider.propTypes);
@@ -30,6 +30,8 @@ storiesOf('Slider')
 				onChange={action('onChange')}
 				onKnobMove={action('onKnobMove')}
 				step={number('step', ChangeableSlider.defaultProps.step)}
+				tooltipAsPercent={boolean('tooltipAsPercent', ChangeableSlider.defaultProps.tooltipAsPercent)}
+				tooltipSide={select('tooltipSide', ['before', 'after'], 'after')}
 				vertical={boolean('vertical', ChangeableSlider.defaultProps.vertical)}
 				value={number('value', ChangeableSlider.defaultProps.value)}
 			/>

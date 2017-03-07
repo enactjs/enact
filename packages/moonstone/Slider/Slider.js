@@ -56,7 +56,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 	 * @ui
 	 * @public
 	 */
-	const IntlSlider = kind({
+	return kind({
 		name: 'Slider',
 
 		propTypes: /** @lends moonstone/Slider.SliderBase.prototype */{
@@ -126,10 +126,12 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			min: PropTypes.number,
 
 			/**
-			 * Disables the built-in tooltip. A custom tooltip may still be used  by supplying a
+			 * Disables the built-in tooltip. A custom tooltip may still be used by supplying a
 			 * component as a child of `Slider`, which follows the knob.
 			 *
-			 * @type {[type]}
+			 * @type {Boolean}
+			 * @default false
+			 * @public
 			 */
 			noTooltip: PropTypes.bool,
 
@@ -242,21 +244,33 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * The percentage respects the min and max value props.
 			 *
 			 * @type {Boolean}
+			 * @default false
 			 * @public
 			 */
 			tooltipAsPercent: PropTypes.bool,
 
 			/**
-			 * [tooltipSide description]
+			 * Setting to `true` overrides the natural LTR->RTL tooltip side-flipping for locale
+			 * changes. This may be useful if you have a static layout that does not automaticaally
+			 * reverse when in an RTL language.
 			 *
 			 * @type {Boolean}
+			 * @default false
+			 * @public
 			 */
 			tooltipForceSide: PropTypes.bool,
 
 			/**
-			 * [tooltipSide description]
+			 * Specify where the tooltip should appear in relation to the Slider bar. Options are
+			 * `'before'` and `'after'`. `before` renders above a `horizontal` slider and to the
+			 * left of a `vertical` Slider. `after` renders below a `horizontal` slider and to the
+			 * right of a `vertical` Slider. In the `vertical` case, the rendering position is
+			 * automatically reversed when rendering in an RTL locale. This can be overridden by
+			 * using the [tooltipForceSide]{@link moonstone/Slider.Slider#tooltipForceSide} prop.
 			 *
 			 * @type {String}
+			 * @default 'before'
+			 * @public
 			 */
 			tooltipSide: PropTypes.oneOf(['before', 'after']),
 
@@ -285,15 +299,18 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			detachedKnob: false,
 			max: 100,
 			min: 0,
+			noTooltip: false,
 			onChange: () => {}, // needed to ensure the base input element is mutable if no change handler is provided
 			pressed: false,
 			step: 1,
-			tooltip: false,
 			tooltipAsPercent: false,
-			tooltipSide: 'after',
+			tooltipForceSide: false,
+			tooltipSide: 'before',
 			value: 0,
 			vertical: false
 		},
+
+		contextTypes,
 
 		styles: {
 			css,
@@ -329,23 +346,27 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		},
 
 		computed: {
-			children: ({children, max, min, noTooltip, tooltipSide, tooltipAsPercent, value, vertical}, context) => {
+			children: ({children, max, min, noTooltip, tooltipAsPercent, tooltipForceSide, tooltipSide, value, vertical}, context) => {
 				if (noTooltip) return children;
 				const content = tooltipAsPercent ? Math.floor(proportion(value, min, max) * 100) + '%' : value;
 
-				let dir, dirClass, anchor;
+				let dir = 'right',
+					dirClass = tooltipSide,
+					anchor;
 				if (vertical) {
 					anchor = 'middle';
 					if (
-						(tooltipSide === 'left') ||
+						// LTR before (Both force and nonforce cases)
 						(!context.rtl && tooltipSide === 'before') ||
-						(context.rtl && tooltipSide === 'after')
-						) {
+						// RTL after
+						(context.rtl && !tooltipForceSide && tooltipSide === 'after') ||
+						// RTL before FORCE
+						(context.rtl && tooltipForceSide && tooltipSide === 'before')
+					) {
 						dir = 'left';
 					} else {
 						dir = 'right';
 					}
-					dirClass = tooltipSide || 'after';
 				} else {
 					anchor = proportion(value, min, max) < 0.5 ? 'right' : 'left';
 					dirClass = tooltipSide || 'before';
@@ -354,7 +375,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 
 				return (
 					<Tooltip
-						className={css.tooltip + ' ' + css[anchor] + ' ' + css[dirClass]}
+						className={css.tooltip + ' ' + css[anchor] + ' ' + css[dirClass] + (tooltipForceSide ? ' ' + css.ignoreLocale : '')}
 						arrowAnchor={anchor}
 						direction={dir}
 					>
@@ -381,6 +402,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			delete rest.onKnobMove;
 			delete rest.pressed;
 			delete rest.tooltipAsPercent;
+			delete rest.tooltipForceSide;
 			delete rest.tooltipSide;
 
 			return (
@@ -420,10 +442,6 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			);
 		}
 	});
-
-	IntlSlider.contextTypes = contextTypes;
-
-	return IntlSlider;
 });
 
 const SliderFactory = factory(css => {
