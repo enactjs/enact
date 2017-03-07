@@ -12,13 +12,11 @@ VirtualList.defaultProps = Object.assign({}, VirtualListCore.defaultProps);
 const
 	style = {
 		item: {
-			position: 'absolute',
-			width: '100%',
 			borderBottom: ri.scale(2) + 'px solid #202328',
 			boxSizing: 'border-box'
 		},
 		list: {
-			height: ri.scale(550) + 'px'
+			height: ri.scale(552) + 'px'
 		}
 	},
 	items = [],

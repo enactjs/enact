@@ -1,5 +1,5 @@
 import React from 'react';
-import {shallow, mount} from 'enzyme';
+import {mount, shallow} from 'enzyme';
 import Spinner from '../Spinner';
 import css from '../Spinner.less';
 
@@ -29,7 +29,7 @@ describe('Spinner Specs', () => {
 	});
 
 	it('should have transparent class when transparent prop equals true', function () {
-		const spinner = shallow(
+		const spinner = mount(
 			<Spinner transparent>
 				Loading...
 			</Spinner>
@@ -42,7 +42,7 @@ describe('Spinner Specs', () => {
 	});
 
 	it('should have centered class when centered prop equals true', function () {
-		const spinner = shallow(
+		const spinner = mount(
 			<Spinner centered>
 				Loading...
 			</Spinner>
@@ -55,7 +55,7 @@ describe('Spinner Specs', () => {
 	});
 
 	it('should have content class when Spinner has children', function () {
-		const spinner = shallow(
+		const spinner = mount(
 			<Spinner>
 				Loading...
 			</Spinner>
@@ -68,7 +68,7 @@ describe('Spinner Specs', () => {
 	});
 
 	it('should not have content class when Spinner has no children', function () {
-		const spinner = shallow(
+		const spinner = mount(
 			<Spinner />
 		);
 
@@ -96,6 +96,43 @@ describe('Spinner Specs', () => {
 
 		const expected = 'off';
 		const actual = spinner.prop('aria-live');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should have no scrim class when blockClickOn prop equals container', function () {
+		const spinner = mount(
+			<Spinner blockClickOn="container" />
+		);
+
+		const expected = true;
+		const actual = spinner.find(`.${css.scrim}`).isEmpty();
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should have scrim class when blockClickOn prop equals container and when scrim prop equals true', function () {
+		const spinner = mount(
+			<Spinner blockClickOn="container" scrim />
+		);
+
+		const expected = false;
+		const actual = spinner.find(`.${css.scrim}`).isEmpty();
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should have FloatingLayer when blockClickOn prop equals screen', function () {
+		const div = document.createElement('div');
+		div.setAttribute('id', 'floatLayer');
+		document.body.appendChild(div);
+
+		const spinner = mount(
+			<Spinner blockClickOn="screen" />
+		);
+
+		const expected = false;
+		const actual = spinner.find('FloatingLayer').isEmpty();
 
 		expect(actual).to.equal(expected);
 	});

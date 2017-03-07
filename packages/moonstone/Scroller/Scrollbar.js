@@ -163,11 +163,15 @@ class ScrollbarBase extends Component {
 			maxPos = vertical ? bounds.maxTop : bounds.maxLeft,
 			shouldDisablePrevButton = currentPos <= 0,
 			shouldDisableNextButton = currentPos >= maxPos,
+			updatePrevButton = prevButtonDisabled !== shouldDisablePrevButton,
+			updateNextButton = nextButtonDisabled !== shouldDisableNextButton,
 			spotItem = window.document.activeElement;
 
-		if (prevButtonDisabled !== shouldDisablePrevButton) {
+		if (updatePrevButton && updateNextButton) {
+			this.setState({prevButtonDisabled: shouldDisablePrevButton, nextButtonDisabled: shouldDisableNextButton});
+		} else if (updatePrevButton) {
 			this.setState({prevButtonDisabled: shouldDisablePrevButton});
-		} else if (nextButtonDisabled !== shouldDisableNextButton) {
+		} else if (updateNextButton) {
 			this.setState({nextButtonDisabled: shouldDisableNextButton});
 		}
 
