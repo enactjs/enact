@@ -8,26 +8,10 @@
 import {forward} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
-import {startJob, stopJob} from '@enact/core/jobs';
 
 import css from './Transition.less';
 
 const forwardTransitionEnd = forward('onTransitionEnd');
-
-/**
- * Returns a timestamp for the current time using `window.performance.now()` if available and
- * falling back to `Date.now()`.
- *
- * @returns	{Number}	Timestamp
- * @private
- */
-const now = function () {
-	if (typeof window === 'object') {
-		return window.performance.now();
-	} else {
-		return Date.now();
-	}
-};
 
 /**
  * {@link ui/Transition.TransitionBase} is a stateless component that allows for applying
@@ -276,19 +260,11 @@ class Transition extends React.Component {
 			initialHeight: null,
 			deferChildren: !props.visible
 		};
-		this.jobName = `TranstionTimer${now()}`;
 		this.wasDeferred = !props.visible;
-	}
-
-	componentDidMount () {
-		if (this.state.deferChildren) {
-			startJob(this.jobName, this.addChildren, 200 + Math.floor(Math.random() * 200));
-		}
 	}
 
 	componentWillReceiveProps (nextProps) {
 		if (nextProps.visible && this.state.deferChildren) {
-			stopJob(this.jobName);
 			this.setState({deferChildren: false});
 		}
 	}
@@ -307,14 +283,6 @@ class Transition extends React.Component {
 		if (prevState.deferChildren && !this.state.deferChildren && !this.props.visible) {
 			this.wasDeferred = false;
 		}
-	}
-
-	componentWillUnmount () {
-		stopJob(this.jobName);
-	}
-
-	addChildren = () => {
-		this.setState({deferChildren: false});
 	}
 
 	hideDidFinish = (ev) => {
