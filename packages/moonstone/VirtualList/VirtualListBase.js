@@ -595,7 +595,7 @@ class VirtualListCore extends Component {
 	focusOnItem = (index) => {
 		// We have to focus item async for now since list items are not yet ready when it reaches componentDid* lifecycle methods
 		setTimeout(() => {
-			const item = this.getContainerNode(this.props.positioningOption).querySelector(`[data-index='${index}'].spottable`);
+			const item = this.containerRef.querySelector(`[data-index='${index}'].spottable`);
 
 			if (item) {
 				// setPointerMode to false since Spotlight prevents programmatically changing focus while in pointer mode
