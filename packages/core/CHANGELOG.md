@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact core module, newest chan
 
 ### Added
 
-- `contextTypes` support to `core/kind`
+- `core/kind` support for `contextTypes`
 
 ## [1.0.0-beta.3] - 2017-02-21
 
