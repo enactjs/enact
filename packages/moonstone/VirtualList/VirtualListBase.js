@@ -178,14 +178,14 @@ class VirtualListCore extends Component {
 		super(props);
 
 		this.state = {firstIndex: 0, numOfItems: 0};
-
-		if (props.clientSize) {
-			this.calculateMetrics(props);
-			// eslint-disable-next-line react/no-direct-mutation-state
-			this.state.numOfItems = this.getNumOfItems(props);
-			this.updateStatesAndBounds(props);
-		}
 		this.initContainerRef = this.initRef('containerRef');
+	}
+
+	componentWillMount () {
+		if (this.props.clientSize) {
+			this.calculateMetrics(this.props);
+			this.updateStatesAndBounds(this.props);
+		}
 	}
 
 	// Calculate metrics for VirtualList after the 1st render to know client W/H.
@@ -367,17 +367,11 @@ class VirtualListCore extends Component {
 		this.state.numOfItems = 0;
 	}
 
-	getNumOfItems (props) {
-		const
-			{dataSize, overhang} = props,
-			{dimensionToExtent, primary} = this;
-		return Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang));
-	}
-
 	updateStatesAndBounds (props) {
 		const
-			{dataSize} = props,
-			numOfItems = this.getNumOfItems(props),
+			{dataSize, overhang} = props,
+			{dimensionToExtent, primary} = this,
+			numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
 			wasFirstIndexMax = (this.maxFirstIndex && (this.state.firstIndex === this.maxFirstIndex));
 
 		this.maxFirstIndex = dataSize - numOfItems;
@@ -387,9 +381,8 @@ class VirtualListCore extends Component {
 
 		// reset children
 		this.cc = [];
-		if (!props.clientSize) {
-			this.setState({firstIndex: wasFirstIndexMax ? this.maxFirstIndex : Math.min(this.state.firstIndex, this.maxFirstIndex), numOfItems});
-		}
+
+		this.setState({firstIndex: wasFirstIndexMax ? this.maxFirstIndex : Math.min(this.state.firstIndex, this.maxFirstIndex), numOfItems});
 		this.calculateScrollBounds(props);
 	}
 
