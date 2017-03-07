@@ -216,7 +216,13 @@ const ExpandableItemBase = kind({
 		const ariaProps = extractAriaProps(rest);
 
 		return (
-			<ExpandableContainer {...rest} disabled={disabled} open={open} spotlightDisabled={spotlightDisabled}>
+			<ExpandableContainer
+				{...rest}
+				aria-disabled={disabled}
+				disabled={disabled}
+				open={open}
+				spotlightDisabled={spotlightDisabled}
+			>
 				<LabeledItem
 					{...ariaProps}
 					disabled={disabled}

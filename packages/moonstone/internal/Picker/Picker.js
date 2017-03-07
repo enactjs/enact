@@ -590,6 +590,7 @@ const Picker = class extends React.Component {
 		return (
 			<div
 				{...rest}
+				aria-disabled={disabled}
 				aria-label={joined ? this.calcJoinedLabel(valueText) : null}
 				className={classes}
 				disabled={disabled}
@@ -612,6 +613,7 @@ const Picker = class extends React.Component {
 					spotlightDisabled={spotlightDisabled}
 				/>
 				<div
+					aria-disabled={disabled}
 					aria-hidden={!active}
 					aria-valuetext={valueText}
 					className={css.valueWrapper}

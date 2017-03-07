@@ -172,7 +172,7 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 			)
 		},
 
-		render: ({children, ...rest}) => {
+		render: ({children, disabled, ...rest}) => {
 			// Do not add the ARIA attribute if the selected prop is omitted to avoid the potentially
 			// confusing readout for the common case of a standalone Button or IconButton.
 			if ('selected' in rest) {
@@ -187,7 +187,7 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 			delete rest.small;
 
 			return (
-				<div role="button" {...rest}>
+				<div role="button" {...rest} aria-disabled={disabled} disabled={disabled}>
 					<div className={css.bg} />
 					<div className={css.client}>{children}</div>
 				</div>

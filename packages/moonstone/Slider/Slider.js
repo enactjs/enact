@@ -311,7 +311,15 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			delete rest.pressed;
 
 			return (
-				<div {...rest} disabled={disabled} onBlur={onBlur} onKeyDown={onKeyDown} onMouseUp={onMouseUp} ref={sliderRef}>
+				<div
+					{...rest}
+					aria-disabled={disabled}
+					disabled={disabled}
+					onBlur={onBlur}
+					onKeyDown={onKeyDown}
+					onMouseUp={onMouseUp}
+					ref={sliderRef}
+				>
 					<SliderBar
 						proportionBackgroundProgress={backgroundProgress}
 						proportionProgress={proportionProgress}
