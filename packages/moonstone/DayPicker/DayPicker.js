@@ -227,7 +227,7 @@ const DayPicker = class extends React.Component {
 		let ariaLabel = null;
 
 		if (type === SELECTED_DAY_TYPES.SELECTED_DAYS) {
-			ariaLabel = title + ' ' + this.getSelectedDayString(type, this.longDayNames);
+			ariaLabel = `${title} ${this.getSelectedDayString(type, this.longDayNames)}`;
 		}
 
 		return (

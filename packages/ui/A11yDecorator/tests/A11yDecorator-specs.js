@@ -45,7 +45,7 @@ describe('A11yDecorator', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should use the aria-label, accessibilityHint when set', function () {
+	it('should use only the aria-label when set and ignore accessibilityHint', function () {
 		const subject = shallow(
 			<Component aria-label="LABEL" accessibilityHint="HINT">
 				CONTENT
@@ -58,35 +58,9 @@ describe('A11yDecorator', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should use the accessibilityHint, aria-label when set', function () {
-		const subject = shallow(
-			<Component accessibilityHint="HINT" aria-label="LABEL">
-				CONTENT
-			</Component>
-		);
-
-		const expected = 'LABEL';
-		const actual = subject.prop('aria-label');
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('should use the aria-label, accessibilityPreHint when set', function () {
+	it('should use only the aria-label when set and ignore accessibilityPreHint', function () {
 		const subject = shallow(
 			<Component aria-label="LABEL" accessibilityPreHint="PREHINT">
-				CONTENT
-			</Component>
-		);
-
-		const expected = 'LABEL';
-		const actual = subject.prop('aria-label');
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('should use the accessibilityPreHint, aria-label when set', function () {
-		const subject = shallow(
-			<Component accessibilityPreHint="PREHINT" aria-label="LABEL">
 				CONTENT
 			</Component>
 		);

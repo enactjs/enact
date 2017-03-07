@@ -3,57 +3,58 @@ import {shallow} from 'enzyme';
 import {ExpandableInputBase} from '../ExpandableInput';
 
 describe('ExpandableInput', () => {
+	const inputHint = ' input field';
 	describe('#aria-label', () => {
-		it('should use title, value, and hint', function () {
+		it('should use title, value, and input hint', function () {
 			const subject = shallow(
 				<ExpandableInputBase title="Item" value="value" />
 			);
 
-			const expected = 'Item value input field';
+			const expected = 'Item value' + inputHint;
 			const actual = subject.prop('aria-label');
 
 			expect(actual).to.equal(expected);
 		});
 
-		it('should use title, noneText, and hint when value is not set', function () {
+		it('should use title, noneText, and input hint when value is not set', function () {
 			const subject = shallow(
 				<ExpandableInputBase title="Item" noneText="noneText" />
 			);
 
-			const expected = 'Item noneText input field';
+			const expected = 'Item noneText' + inputHint;
 			const actual = subject.prop('aria-label');
 
 			expect(actual).to.equal(expected);
 		});
 
-		it('should use title and hint when value and noneText are not set', function () {
+		it('should use title and input hint when value and noneText are not set', function () {
 			const subject = shallow(
 				<ExpandableInputBase title="Item" />
 			);
 
-			const expected = 'Item  input field'; // the extra space is intentional
+			const expected = 'Item ' + inputHint; // the extra space is intentional
 			const actual = subject.prop('aria-label');
 
 			expect(actual).to.equal(expected);
 		});
 
-		it('should use title, character count, and hint when type is "password"', function () {
+		it('should use title, character count, and input hint when type is "password"', function () {
 			const subject = shallow(
 				<ExpandableInputBase title="Item" type="password" value="long" />
 			);
 
-			const expected = 'Item 4 characters input field';
+			const expected = 'Item 4 characters' + inputHint;
 			const actual = subject.prop('aria-label');
 
 			expect(actual).to.equal(expected);
 		});
 
-		it('should use title, single character count, and hint when type is "password" and value length is 1', function () {
+		it('should use title, single character count, and input hint when type is "password" and value length is 1', function () {
 			const subject = shallow(
 				<ExpandableInputBase title="Item" type="password" value="1" />
 			);
 
-			const expected = 'Item 1 character input field';
+			const expected = 'Item 1 character' + inputHint;
 			const actual = subject.prop('aria-label');
 
 			expect(actual).to.equal(expected);
