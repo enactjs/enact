@@ -220,6 +220,8 @@ const ExpandableListBase = kind({
 					CheckboxItem; // for single or multiple
 		},
 
+		role: ({select}) => select === 'radio' ? 'radiogroup' : 'group',
+
 		selected: ({select, selected}) => {
 			return (select === 'single' && Array.isArray(selected)) ? selected[0] : selected;
 		}
@@ -231,7 +233,6 @@ const ExpandableListBase = kind({
 		return (
 			<ExpandableItemBase
 				{...rest}
-				role="listbox"
 				showLabel="auto"
 				autoClose={!noAutoClose}
 				lockBottom={!noLockBottom}
