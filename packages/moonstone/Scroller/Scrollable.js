@@ -509,7 +509,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		// scroll start/stop
 
-		start ({targetX, targetY, animate = true, silent = false, duration = animationDuration, focusingIndex}) {
+		start ({targetX, targetY, animate = true, silent = false, duration = animationDuration, indexToFocus}) {
 			const {scrollLeft, scrollTop} = this;
 			const bounds = this.getScrollBounds();
 
@@ -537,16 +537,16 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					targetX,
 					targetY,
 					duration,
-					focusingIndex
+					indexToFocus
 				}));
 			} else {
 				this.scroll(targetX, targetY);
-				this.stop({focusingIndex});
+				this.stop({indexToFocus});
 			}
 		}
 
 		scrollAnimation = (animationInfo) => (curTime) => {
-			const {sourceX, sourceY, targetX, targetY, duration, focusingIndex} = animationInfo;
+			const {sourceX, sourceY, targetX, targetY, duration, indexToFocus} = animationInfo;
 			if (curTime < duration) {
 				this.scroll(
 					this.horizontalScrollability ? this.animator.timingFunction(sourceX, targetX, duration, curTime) : sourceX,
@@ -554,7 +554,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				);
 			} else {
 				this.scroll(targetX, targetY);
-				this.stop({focusingIndex});
+				this.stop({indexToFocus});
 			}
 		}
 
@@ -569,14 +569,14 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.doScrolling();
 		}
 
-		stop ({focusingIndex}) {
+		stop ({indexToFocus}) {
 			this.animator.stop();
 			this.isScrollAnimationTargetAccumulated = false;
 			this.childRef.setContainerDisabled(false);
 			this.lastFocusedItem = null;
 			this.hideThumb();
-			if (focusingIndex !== null && typeof this.childRef.focusOnItem === 'function') {
-				this.childRef.focusOnItem(focusingIndex);
+			if (indexToFocus !== null && typeof this.childRef.focusOnItem === 'function') {
+				this.childRef.focusOnItem(indexToFocus);
 			}
 			this.doScrollStop();
 		}
@@ -654,7 +654,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						targetX: (left !== null) ? left : this.scrollLeft,
 						targetY: (top !== null) ? top : this.scrollTop,
 						animate: opt.animate,
-						focusingIndex: !isNaN(opt.focusingIndex) ? opt.focusingIndex : null
+						indexToFocus: !isNaN(opt.indexToFocus) ? opt.indexToFocus : null
 					});
 				}
 			} else {
