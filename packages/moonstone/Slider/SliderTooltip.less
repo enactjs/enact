@@ -1,0 +1,33 @@
+@import '../styles/colors.less';
+@import '../styles/variables.less';
+
+.tooltip {
+	&.horizontal {
+		&.before {
+			bottom: @moon-slider-tooltip-offset;
+		}
+		&.after {
+			top: @moon-slider-tooltip-offset;
+		}
+		[data-climax="falling"] & {
+			transform: translateX(-100%);
+		}
+	}
+
+	&.vertical {
+		// Left side
+		&.before,
+		:global(.enact-locale-right-to-left) &.before.ignoreLocale,
+		:global(.enact-locale-right-to-left) &.after {
+			right: 0;
+			transform: translate(-54px, -50%);
+		}
+		// Right side
+		&.after,
+		:global(.enact-locale-right-to-left) &.after.ignoreLocale,
+		:global(.enact-locale-right-to-left) &.before {
+			right: auto;
+			transform: translate(54px, -50%);
+		}
+	}
+}

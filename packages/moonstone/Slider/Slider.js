@@ -8,21 +8,19 @@ import factory from '@enact/core/factory';
 import {forKey, forward, handle, stopImmediate} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import Pressable from '@enact/ui/Pressable';
-import {contextTypes} from '@enact/i18n/I18nDecorator';
 import React, {PropTypes} from 'react';
 import {Spottable} from '@enact/spotlight';
-import Tooltip from '../TooltipDecorator/Tooltip';
 
 import SliderDecorator from '../internal/SliderDecorator';
 import {computeProportionProgress} from '../internal/SliderDecorator/util';
 
 import {SliderBarFactory} from './SliderBar';
+import SliderTooltip, {proportion} from './SliderTooltip';
 import componentCss from './Slider.less';
 
 const isActive = (ev, props) => props.active || props.detachedKnob;
 const isIncrement = (ev, props) => forKey(props.vertical ? 'up' : 'right', ev);
 const isDecrement = (ev, props) => forKey(props.vertical ? 'down' : 'left', ev);
-const proportion = (value, min = 0, max = 100) => ((value - min) / (max - min));
 
 const handleDecrement = handle(
 	isActive,
@@ -310,8 +308,6 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			vertical: false
 		},
 
-		contextTypes,
-
 		styles: {
 			css,
 			className: 'slider'
@@ -346,42 +342,10 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		},
 
 		computed: {
-			children: ({children, max, min, noTooltip, tooltipAsPercent, tooltipForceSide, tooltipSide, value, vertical}, context) => {
-				if (noTooltip) return children;
-				const content = tooltipAsPercent ? Math.floor(proportion(value, min, max) * 100) + '%' : value;
-
-				let dir = 'right',
-					dirClass = tooltipSide,
-					anchor;
-				if (vertical) {
-					anchor = 'middle';
-					if (
-						// LTR before (Both force and nonforce cases)
-						(!context.rtl && tooltipSide === 'before') ||
-						// RTL after
-						(context.rtl && !tooltipForceSide && tooltipSide === 'after') ||
-						// RTL before FORCE
-						(context.rtl && tooltipForceSide && tooltipSide === 'before')
-					) {
-						dir = 'left';
-					} else {
-						dir = 'right';
-					}
-				} else {
-					anchor = proportion(value, min, max) < 0.5 ? 'right' : 'left';
-					dirClass = tooltipSide || 'before';
-					dir = (tooltipSide === 'before' ? 'above' : 'below');
-				}
-
-				return (
-					<Tooltip
-						className={css.tooltip + ' ' + css[anchor] + ' ' + css[dirClass] + (tooltipForceSide ? ' ' + css.ignoreLocale : '')}
-						arrowAnchor={anchor}
-						direction={dir}
-					>
-						{children || content}
-					</Tooltip>
-				);
+			children: ({children, max, min, noTooltip, tooltipAsPercent, value}) => {
+				// If there's no tooltip, or custom children present, supply those.
+				if (noTooltip || children) return children;
+				return tooltipAsPercent ? Math.floor(proportion(value, min, max) * 100) + '%' : value;
 			},
 			className: ({active, pressed, vertical, styler}) => styler.append({
 				active,
@@ -392,18 +356,15 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			proportionProgress: computeProportionProgress
 		},
 
-		render: ({backgroundProgress, children, disabled, inputRef, max, min, onBlur, onChange, onKeyDown, onMouseMove, onMouseUp, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, value, vertical, ...rest}) => {
+		render: ({backgroundProgress, children, disabled, inputRef, max, min, noTooltip, onBlur, onChange, onKeyDown, onMouseMove, onMouseUp, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => {
 			delete rest.active;
 			delete rest.detachedKnob;
-			delete rest.noTooltip;
 			delete rest.onActivate;
 			delete rest.onDecrement;
 			delete rest.onIncrement;
 			delete rest.onKnobMove;
 			delete rest.pressed;
 			delete rest.tooltipAsPercent;
-			delete rest.tooltipForceSide;
-			delete rest.tooltipSide;
 
 			return (
 				<div
@@ -422,7 +383,17 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						vertical={vertical}
 						scrubbing={scrubbing}
 					>
-						{children}
+						{noTooltip ? children : <SliderTooltip
+							className={css.tooltip}
+							forceSide={tooltipForceSide}
+							max={max}
+							min={min}
+							side={tooltipSide}
+							value={value}
+							vertical={vertical}
+						>
+							{children}
+						</SliderTooltip>}
 					</SliderBar>
 					<input
 						aria-disabled={disabled}

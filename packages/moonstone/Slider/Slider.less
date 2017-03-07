@@ -93,17 +93,6 @@
 			top: 50%;
 			left: 0;
 		}
-		.tooltip {
-			&.before {
-				bottom: @moon-slider-tooltip-offset;
-			}
-			&.after {
-				top: @moon-slider-tooltip-offset;
-			}
-			&.left {
-				transform: translateX(-100%);
-			}
-		}
 		.input {
 			padding: 0 @h-gap;
 		}
@@ -130,23 +119,6 @@
 		.knob {
 			top: 0;
 			left: 50%;
-		}
-
-		.tooltip {
-			// Left side
-			&.before,
-			:global(.enact-locale-right-to-left) &.before.ignoreLocale,
-			:global(.enact-locale-right-to-left) &.after {
-				right: 0;
-				transform: translate(-54px, -50%);
-			}
-			// Right side
-			&.after,
-			:global(.enact-locale-right-to-left) &.after.ignoreLocale,
-			:global(.enact-locale-right-to-left) &.before {
-				right: auto;
-				transform: translate(54px, -50%);
-			}
 		}
 
 		.input {
