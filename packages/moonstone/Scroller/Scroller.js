@@ -186,7 +186,6 @@ class ScrollerBase extends Component {
 		delete props.onScrolling;
 		delete props.onScrollStart;
 		delete props.onScrollStop;
-		delete props.positioningOption;
 		delete props.style;
 		delete props.vertical;
 
