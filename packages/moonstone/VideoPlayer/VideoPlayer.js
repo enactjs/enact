@@ -66,6 +66,9 @@ const handledMediaEventsMap = {
 	waiting         : 'onWaiting'
 };
 
+const handledCustomMediaEvents = {
+	'umsmediainfo': forward('umsmediainfo')
+};
 
 // provide forwarding of events on media controls
 const forwardBackwardButtonClick = forward('onBackwardButtonClick');
@@ -341,6 +344,7 @@ const VideoPlayerBase = class extends React.Component {
 	componentDidMount () {
 		on('mousemove', this.activityDetected);
 		on('keypress', this.activityDetected);
+		this.attachCustomMediaEvents();
 		this.startDelayedFeedbackHide();
 	}
 
@@ -394,6 +398,7 @@ const VideoPlayerBase = class extends React.Component {
 	componentWillUnmount () {
 		off('mousemove', this.activityDetected);
 		off('keypress', this.activityDetected);
+		this.detachCustomMediaEvents();
 		this.stopRewindJob();
 		this.stopAutoCloseTimeout();
 		this.stopDelayedTitleHide();
@@ -411,6 +416,14 @@ const VideoPlayerBase = class extends React.Component {
 
 			this.durfmt = new DurationFmt({length: 'medium', style: 'clock', useNative: false});
 		}
+	}
+
+	attachCustomMediaEvents = () => {
+		Object.keys(handledCustomMediaEvents).map((ev, fn) => on(ev, fn, this.video));
+	}
+
+	detachCustomMediaEvents = () => {
+		Object.keys(handledCustomMediaEvents).map((ev, fn) => off(ev, fn, this.video));
 	}
 
 	activityDetected = () => {
