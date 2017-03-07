@@ -47,7 +47,7 @@ const dataIndexAttribute = 'data-index';
  * and also catches `onMouseDown`, `onMouseLeave`, `onMouseMove`, `onMouseUp`, and `onWheel` events
  * from its wrapped component for scrolling behaviors.
  *
- * Scrollable calls `onScrollStart`, `onScrolling`, and `onScrollStop` callback functions during scroll.
+ * Scrollable calls `onScrollStart`, `onScroll`, and `onScrollStop` callback functions during scroll.
  *
  * @class Scrollable
  * @memberof moonstone/Scroller
@@ -86,7 +86,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			 *
 			 * @type {Boolean}
 			 * @default false
-			 * @deprecated since 1.0.0-beta.3, replaced by `horizontalScrollbar` and `verticalScrollbar` as `'hidden'` value
+			 * @deprecated since 1.0.0-beta.4, replaced by `horizontalScrollbar` and `verticalScrollbar` as `'hidden'` value
 			 */
 			hideScrollbars: PropTypes.bool,
 
@@ -156,6 +156,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		isFirstDragging = false
 		isDragging = false
 		isKeyDown = false
+		isInitializing = true
 
 		// event handlers
 		eventHandlers = {}
@@ -185,6 +186,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		scrollTop = 0
 		dirHorizontal = 0
 		dirVertical = 0
+		scrollToInfo = null
 
 		// spotlight
 		lastFocusedItem = null
@@ -200,7 +202,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			super(props);
 
 			if (__DEV__ && typeof props.hideScrollbars !== 'undefined') {
-				deprecate({name: 'hideScrollbars', since: '1.0.0-beta.3', replacedBy: 'horizontalScrollbar=\'hidden\' and verticalScrollbar=\'hidden\'', until: '1.0.0'});
+				deprecate({name: 'hideScrollbars', since: '1.0.0-beta.4', replacedBy: 'horizontalScrollbar=\'hidden\' and verticalScrollbar=\'hidden\'', until: '1.0.0'});
 			}
 
 			this.state = {
@@ -362,7 +364,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					}
 					this.childRef.setContainerDisabled(true);
 					this.isScrollAnimationTargetAccumulated = false;
-					this.start(target.targetX, target.targetY, true, true, target.duration);
+					this.start({
+						targetX: target.targetX,
+						targetY: target.targetY,
+						animate: true,
+						silent: true,
+						duration: target.duration
+					});
 				}
 			}
 		}
@@ -375,7 +383,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		startScrollOnFocus = (pos, item) => {
 			if (pos) {
 				if (pos.left !== this.scrollLeft || pos.top !== this.scrollTop) {
-					this.start(pos.left, pos.top, (animationDuration > 0), false, animationDuration);
+					this.start({
+						targetX: pos.left,
+						targetY: pos.top,
+						animate: (animationDuration > 0),
+						silent: false,
+						duration: animationDuration
+					});
 				}
 				this.lastFocusedItem = item;
 			}
@@ -451,7 +465,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				this.accumulatedTargetX = clamp(0, bounds.maxLeft, this.accumulatedTargetX + delta);
 			}
 
-			this.start(this.accumulatedTargetX, this.accumulatedTargetY, true, silent);
+			this.start({
+				targetX: this.accumulatedTargetX,
+				targetY: this.accumulatedTargetY,
+				animate: true,
+				silent
+			});
 		}
 
 		// call scroll callbacks
@@ -492,7 +511,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		// scroll start/stop
 
-		start (targetX, targetY, animate = true, silent = false, duration = animationDuration) {
+		start ({targetX, targetY, animate = true, silent = false, duration = animationDuration, indexToFocus}) {
 			const {scrollLeft, scrollTop} = this;
 			const bounds = this.getScrollBounds();
 
@@ -519,16 +538,17 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					sourceY: scrollTop,
 					targetX,
 					targetY,
-					duration
+					duration,
+					indexToFocus
 				}));
 			} else {
 				this.scroll(targetX, targetY);
-				this.stop();
+				this.stop({indexToFocus});
 			}
 		}
 
 		scrollAnimation = (animationInfo) => (curTime) => {
-			const {sourceX, sourceY, targetX, targetY, duration} = animationInfo;
+			const {sourceX, sourceY, targetX, targetY, duration, indexToFocus} = animationInfo;
 			if (curTime < duration) {
 				this.scroll(
 					this.horizontalScrollability ? this.animator.timingFunction(sourceX, targetX, duration, curTime) : sourceX,
@@ -536,7 +556,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				);
 			} else {
 				this.scroll(targetX, targetY);
-				this.stop();
+				this.stop({indexToFocus});
 			}
 		}
 
@@ -552,12 +572,15 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.doScrolling();
 		}
 
-		stop () {
+		stop ({indexToFocus}) {
 			this.animator.stop();
 			this.isScrollAnimationTargetAccumulated = false;
 			this.childRef.setContainerDisabled(false);
 			this.lastFocusedItem = null;
 			this.hideThumb();
+			if (indexToFocus !== null && typeof this.childRef.focusOnItem === 'function') {
+				this.childRef.focusOnItem(indexToFocus);
+			}
 			this.doScrollStop();
 		}
 
@@ -625,10 +648,20 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		scrollTo = (opt) => {
-			let {left, top} = this.getPositionForScrollTo(opt);
+			if (!this.isInitializing) {
+				let {left, top} = this.getPositionForScrollTo(opt);
+				this.scrollToInfo = null;
 
-			if (left !== null || top !== null) {
-				this.start((left !== null) ? left : this.scrollLeft, (top !== null) ? top : this.scrollTop, opt.animate);
+				if (left !== null || top !== null) {
+					this.start({
+						targetX: (left !== null) ? left : this.scrollLeft,
+						targetY: (top !== null) ? top : this.scrollTop,
+						animate: opt.animate,
+						indexToFocus: !isNaN(opt.indexToFocus) ? opt.indexToFocus : null
+					});
+				}
+			} else {
+				this.scrollToInfo = opt;
 			}
 		}
 
@@ -744,6 +777,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			this.horizontalScrollability = this.childRef.isHorizontal();
 			this.verticalScrollability = this.childRef.isVertical();
+			this.isInitializing = false;
 
 			// Need to sync calculated client size if it is different from the real size
 			if (this.childRef.syncClientSize) {
@@ -756,8 +790,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			} else {
 				this.childRef.containerRef.addEventListener('wheel', this.onWheel);
 			}
-
 			this.updateScrollbars();
+
+			if (this.scrollToInfo !== null) {
+				this.scrollTo(this.scrollToInfo);
+			}
 		}
 
 		componentWillUnmount () {
