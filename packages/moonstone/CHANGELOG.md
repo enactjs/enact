@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/LazyDecorator` to render few children first, then the other children to reduce launch time
 - `moonstone/VirtualList` `indexToFocus` option to scrollTo method to focus on item with specified index
 - `moonstone/IconButton` and `moonstone/Button` `color` property to add a remote control key color to the button
 - `moonstone/Scrollbar` property `disabled` to disable both paging controls when it is true
