@@ -439,6 +439,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			return (
 				<Wrapped
+					role="slider"
 					{...props}
 					active={this.state.active}
 					aria-disabled={this.props.disabled}
@@ -452,7 +453,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					onIncrement={this.handleIncrement}
 					onMouseLeave={this.props.detachedKnob ? this.handleMouseLeave : null}
 					onMouseMove={this.props.detachedKnob ? this.handleMouseMove : null}
-					role="slider"
 					scrubbing={(this.knobPosition != null)}
 					sliderBarRef={this.getSliderBarNode}
 					sliderRef={this.getSliderNode}

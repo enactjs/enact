@@ -1,4 +1,4 @@
-	/**
+/**
  * Exports the {@link moonstone/Spinner.Spinner} and {@link moonstone/Spinner.SpinnerBase} components.
  * The default export is {@link moonstone/Spinner.Spinner}.
  *

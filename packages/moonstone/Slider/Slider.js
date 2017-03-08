@@ -330,9 +330,9 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						{children}
 					</SliderBar>
 					<input
+						aria-disabled={disabled}
 						className={css.input}
 						disabled={disabled}
-						aria-disabled={disabled}
 						type="range"
 						ref={inputRef}
 						max={max}

@@ -57,6 +57,8 @@ const
  * @private
  */
 class ScrollbarBase extends Component {
+	static displayName = 'Scrollbar'
+
 	static propTypes = /** @lends moonstone/Scroller.Scrollbar.prototype */ {
 		announce: PropTypes.func,
 

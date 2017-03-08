@@ -143,7 +143,7 @@ const GroupBase = kind({
 		delete props.selected;
 		delete props.selectedProp;
 
-		return <Repeater {...props} childComponent={GroupItem} role="listbox" />;
+		return <Repeater role="group" {...props} childComponent={GroupItem} />;
 	}
 });
 

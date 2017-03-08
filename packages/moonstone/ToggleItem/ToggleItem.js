@@ -170,10 +170,10 @@ const ToggleItemBase = kind({
 
 		return (
 			<ItemOverlay
+				role="checkbox"
 				{...rest}
 				aria-checked={selected}
 				onClick={onToggle}
-				role="checkbox"
 			>
 				{iconBefore}
 				{children}

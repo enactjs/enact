@@ -333,14 +333,14 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 					{children}
 					<FloatingLayer open={this.state.showing} scrimType="none">
 						<Tooltip
+							aria-live="off"
 							arrowAnchor={this.state.arrowAnchor}
 							direction={this.state.tooltipDirection}
 							position={this.state.position}
 							preserveCase={tooltipPreserveCase}
+							role="alert"
 							tooltipRef={this.getTooltipRef}
 							width={tooltipWidth}
-							aria-live="off"
-							role="alert"
 						>
 							{tooltipText}
 						</Tooltip>

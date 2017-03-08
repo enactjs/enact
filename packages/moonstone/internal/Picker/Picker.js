@@ -103,6 +103,7 @@ const Picker = class extends React.Component {
 		 * For example, `hour`, `year`, and `meridiem`
 		 *
 		 * @type {String}
+		 * @default ''
 		 * @public
 		 */
 		accessibilityHint: React.PropTypes.string,
@@ -582,7 +583,7 @@ const Picker = class extends React.Component {
 
 		let sizingPlaceholder = null;
 		if (typeof width === 'number' && width > 0) {
-			sizingPlaceholder = <div className={css.sizingPlaceholder} aria-hidden>{ '0'.repeat(width) }</div>;
+			sizingPlaceholder = <div aria-hidden className={css.sizingPlaceholder}>{ '0'.repeat(width) }</div>;
 		}
 
 		const valueText = this.calcValueText();
