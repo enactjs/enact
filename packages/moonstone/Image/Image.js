@@ -99,7 +99,7 @@ const ImageBase = kind({
 		delete rest.sizing;
 
 		return (
-			<div {...rest} style={{...style, backgroundImage: bgImage}} />
+			<div role="img" {...rest} style={{...style, backgroundImage: bgImage}} />
 		);
 	}
 });

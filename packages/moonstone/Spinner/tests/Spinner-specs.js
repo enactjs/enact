@@ -78,6 +78,28 @@ describe('Spinner Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
+	it('should set role to alert by default', function () {
+		const spinner = mount(
+			<Spinner />
+		);
+
+		const expected = 'alert';
+		const actual = spinner.find(`div.${css.spinner}`).prop('role');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should set aria-live to off by default', function () {
+		const spinner = mount(
+			<Spinner />
+		);
+
+		const expected = 'off';
+		const actual = spinner.find(`div.${css.spinner}`).prop('aria-live');
+
+		expect(actual).to.equal(expected);
+	});
+
 	it('should have no scrim class when blockClickOn prop equals container', function () {
 		const spinner = mount(
 			<Spinner blockClickOn="container" />
