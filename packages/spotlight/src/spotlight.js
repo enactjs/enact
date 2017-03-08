@@ -1011,8 +1011,10 @@ const Spotlight = (function () {
 	}
 
 	function onMouseMove (evt) {
+		const pointerMode = _pointerMode;
+
 		// Chrome emits mousemove on scroll, but client coordinates do not change.
-		if (!_pointerMode && (evt.clientX === _pointerX) && (evt.clientY === _pointerY)) {
+		if (!pointerMode && (evt.clientX === _pointerX) && (evt.clientY === _pointerY)) {
 			return;
 		}
 
@@ -1027,9 +1029,23 @@ const Spotlight = (function () {
 		}
 
 		const current = getCurrent();
+		const currentContainsTarget = current ? current.contains(evt.target) : false;
 
-		if (current && !getNavigableTarget(evt.target)) { // we are moving over a non-focusable element, so we force a blur to occur
+		// calling `getNavigableTarget()` is a heavy operation during `mousemove`, so we specifically guard
+		// against unnecessarily executing it
+		if (pointerMode && current && !currentContainsTarget) {
+			// we are moving over a non-focusable element, so we force a blur to occur
 			current.blur();
+		} else if (!pointerMode && !(current && currentContainsTarget)) {
+			const target = getNavigableTarget(evt.target);
+
+			if (!target && current) {
+				// we are moving over a non-focusable element, so we force a blur to occur
+				current.blur();
+			} else if (target && (!current || target !== current)) {
+				// we are moving over a focusable element, so we set focus to the target
+				focusElement(target, getContainerId(target), true);
+			}
 		}
 	}
 
