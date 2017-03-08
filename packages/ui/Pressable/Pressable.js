@@ -105,8 +105,8 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		handle = handle.bind(this)
 
 		handleDepress = this.handle(
-			forProp('disabled', false),
 			forward(depress),
+			forProp('disabled', false),
 			(ev) => this.setState({pressed: ev.pressed || true})
 		)
 
