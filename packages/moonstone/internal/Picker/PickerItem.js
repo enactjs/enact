@@ -17,7 +17,7 @@ const PickerItemBase = kind({
 		* @type {Node}
 		* @public
 		*/
-		children: React.PropTypes.node.isRequired
+		children: React.PropTypes.node
 	},
 
 	styles: {
@@ -26,19 +26,11 @@ const PickerItemBase = kind({
 	},
 
 	computed: {
-		clientStyle: ({children}) => {
-			let direction = isRtlText(children) ? 'rtl' : 'ltr';
-
-			const style = {
-				direction
-			};
-
-			return style;
-		}
+		forceDirection: ({children}) => isRtlText(children) ? 'rtl' : 'ltr'
 	},
 
-	render: ({clientStyle, ...props}) => (
-		<MarqueeText {...props} style={clientStyle} marqueeCentered />
+	render: (props) => (
+		<MarqueeText {...props} marqueeCentered />
 	)
 });
 
