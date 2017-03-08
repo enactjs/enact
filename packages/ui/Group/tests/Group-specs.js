@@ -131,14 +131,14 @@ describe('Group', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should set role to listbox', function () {
+	it('should set role to group', function () {
 		const subject = shallow(
 			<GroupBase childComponent="div" select="multiple">
 				{stringItems}
 			</GroupBase>
 		);
 
-		const expected = 'listbox';
+		const expected = 'group';
 		const actual = subject.prop('role');
 
 		expect(actual).to.equal(expected);
