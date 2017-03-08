@@ -10,6 +10,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/IconButton` and `moonstone/Button` `color` property to add a remote control key color to the button
 - `moonstone/Scrollbar` property `disabled` to disable both paging controls when it is true
 - `moonstone/VirtualList` parameter `moreInfo` to pass `firstVisibleIndex` and `lastVisibleIndex` when scroll events are firing
+- `moonstone/VideoPlayer` added support for the custom webOS event "umsmediainfo"
 
 ### Changed
 
