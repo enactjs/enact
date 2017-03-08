@@ -29,6 +29,7 @@ storiesOf('DatePicker')
 		'The basic DatePicker',
 		() => (
 			<Picker
+				disabled={boolean('disabled')}
 				title={text('title', 'Date')}
 				noLabels={boolean('noLabels', false)}
 				noneText={text('noneText', 'Nothing Selected')}

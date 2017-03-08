@@ -29,6 +29,7 @@ storiesOf('TimePicker')
 		'The basic TimePicker',
 		() => (
 			<Picker
+				disabled={boolean('disabled')}
 				title={text('title', 'Time')}
 				noLabels={boolean('noLabels', false)}
 				noneText={text('noneText', 'Nothing Selected')}
