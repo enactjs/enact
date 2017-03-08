@@ -283,10 +283,10 @@ class Transition extends React.Component {
 
 	componentDidUpdate (prevProps, prevState) {
 		const {visible} = this.props;
-		const {initialHeight} = this.state;
+		const {initialHeight, renderState} = this.state;
 
 		// Checking that something changed that wasn't the visibility or the initialHeight state
-		if (visible === prevProps.visible && initialHeight === prevState.initialHeight) {
+		if (visible === prevProps.visible && initialHeight === prevState.initialHeight && renderState !== TRANSITION_STATE.INIT) {
 			this.measureInner();
 		}
 	}
