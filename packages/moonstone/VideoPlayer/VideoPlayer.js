@@ -319,9 +319,11 @@ const VideoPlayerBase = class extends React.Component {
 			this.handledMediaEvents[eventName] = this.handleEvent;
 		}
 		// Generate event handling forwarders for the custom events too
-		handledCustomMediaEvents.map(eventName => {
-			this.handledCustomMediaForwards[eventName] = forward(eventName);
-		});
+		for (let i = 0; i < handledCustomMediaEvents.length; i++) {
+			const eventName = handledCustomMediaEvents[i];
+			const forwardEvent = forward(eventName);
+			this.handledCustomMediaForwards[eventName] = ev => forwardEvent(ev, this.props);
+		}
 
 		// Re-render-necessary State
 		this.state = {
@@ -427,17 +429,15 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	attachCustomMediaEvents = () => {
-		Object.keys(this.handledCustomMediaForwards).map((eventName) => {
-			on(eventName, ev =>
-				this.handledCustomMediaForwards[eventName](ev, this.props)
-			, this.video);
-		});
+		for (let eventName in this.handledCustomMediaForwards) {
+			on(eventName, this.handledCustomMediaForwards[eventName], this.video);
+		}
 	}
 
 	detachCustomMediaEvents = () => {
-		Object.keys(this.handledCustomMediaForwards).map((eventName) =>
-			off(eventName, this.handledCustomMediaForwards[eventName], this.video)
-		);
+		for (let eventName in this.handledCustomMediaForwards) {
+			off(eventName, this.handledCustomMediaForwards[eventName], this.video);
+		}
 	}
 
 	activityDetected = () => {
@@ -941,7 +941,9 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.titleHideDelay;
 
 		// Remove the events we manually added so they aren't added twice or fail.
-		handledCustomMediaEvents.map((ev) => delete rest[ev]);
+		for (let eventName in this.handledCustomMediaForwards) {
+			delete rest[eventName];
+		}
 
 		// Handle some cases when the "more" button is pressed
 		const moreDisabled = !(this.state.more);
