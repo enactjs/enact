@@ -26,14 +26,6 @@ const
 		},
 		horizontalContent: {
 			width: ri.scale(6000) + 'px'
-		},
-		scroller: {
-			height: ri.scale(550) + 'px',
-			width: '100%'
-		},
-		content: {
-			height: ri.scale(1000) + 'px',
-			width: ri.scale(2000) + 'px'
 		}
 	};
 
