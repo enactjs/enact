@@ -13,9 +13,50 @@ import React from 'react';
 import {addModal, removeModal} from './modalHandler';
 import {forCancel, addCancelHandler, removeCancelHandler} from './cancelHandler';
 
+/**
+ * Default config for {@link ui/Cancelable.Cancelable}
+ *
+ * @memberof ui/Cancelable.Cancelable
+ * @hocconfig
+ */
 const defaultConfig = {
+	/**
+	 * If it is a string, the cancel handler will attempt to invoke a function passed as a prop of
+	 * that name. If it is a function, that function will be called with the current props as the
+	 * only argument.
+	 *
+	 * If the function handles the cancel action, it should returning `true` to prevent container or
+	 * `modal` Cancelable instances from also handling the action.
+	 *
+	 * @type {String}
+	 * @default null
+	 * @required
+	 * @memberof ui/Cancelable.Cancelable.defaultConfig
+	 */
 	onCancel: null,
+
+	/**
+	 * When `true`, the Cancelable instance will handle cancel events globally the successfully
+	 * bubble up to the document regardless of which component is focused.
+	 *
+	 * `modal` cancel handlers are processed in reverse of the order they are created such that the
+	 * innermost instance (in terms of the component hierarchy) have the first opportunity to handle
+	 * the event before its container components.
+	 *
+	 * @type {String}
+	 * @default false
+	 * @memberof ui/Cancelable.Cancelable.defaultConfig
+	 */
 	modal: false,
+
+	/**
+	 * When set, the Wrapped component will contained within an instance of `component`. This may be
+	 * necessary if the props passed to Wrapped are not placed on the root element.
+	 *
+	 * @type {String|Function}
+	 * @default null
+	 * @memberof ui/Cancelable.Cancelable.defaultConfig
+	 */
 	component: null
 };
 
@@ -27,14 +68,7 @@ add('cancel', 27);
  * a cancel key event to existing event handler either directly or via a custom function which can
  * adapt the event payload.
  *
- * The `onCancel` config option is required. If it is a string, the cancel handler will attempt to
- * invoke a function passed as a prop of that name. If it is a function, that function will be
- * called with the current props as the only argument.
- *
- * If the `modal` config option is true, any valid key press will invoke the cancel handler
- * If the `component` config option is set, the Wrapped component will contained within an instance
- * of `component`. This may be necessary if the props passed to Wrapped are not placed on the root
- * element.
+ * The `onCancel` config option is required.
  *
  * @class Cancelable
  * @memberof ui/Cancelable
@@ -91,6 +125,8 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleKeyUp = this.handle(
 			forward('onKeyUp'),
+			// nesting handlers for DRYness. note that if any conditions return false in
+			// this.handleCancel(), this handler chain will stop too
 			this.handleCancel
 		)
 
