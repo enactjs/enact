@@ -2,12 +2,11 @@
 
 The following is a curated list of changes in the Enact webos module, newest changes on the top.
 
-## [1.0.0-beta.4] - 2017-03-08
+## [unreleased]
 
-### Changed
+### Fixed
 
-- `LS2Request` now does an additional existence check for the `window` object before performing a `send` to support pre-
-loading
+- `LS2Request` to return failure in isomorphic mode
 
 ## [1.0.0-beta.3] - 2017-02-21
 
