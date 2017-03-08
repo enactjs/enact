@@ -1,7 +1,8 @@
 import React from 'react';
 import sinon from 'sinon';
 import {mount} from 'enzyme';
-import {Slider} from '../Slider';
+import {Slider, SliderBase} from '../Slider';
+import {SliderDecorator} from '../../internal/SliderDecorator';
 import css from '../Slider.less';
 
 describe('Slider Specs', () => {
@@ -269,5 +270,45 @@ describe('Slider Specs', () => {
 
 		expect(actual).to.equal(expected);
 		expect(warningActual).to.equal(warningExpected);
+	});
+
+	it('should set "aria-valuetext" to hint string when knob is active and vertical is false', function () {
+		const Comp = SliderDecorator(SliderBase);
+		const slider = mount(
+			<Comp />
+		);
+
+		slider.find('Slider').prop('onActivate')();
+
+		const expected = 'change a value with left right button';
+		const actual = slider.find('Slider').prop('aria-valuetext');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should set "aria-valuetext" to hint string when knob is active and vertical is true', function () {
+		const Comp = SliderDecorator(SliderBase);
+		const slider = mount(
+			<Comp vertical />
+		);
+
+		slider.find('Slider').prop('onActivate')();
+
+		const expected = 'change a value with up down button';
+		const actual = slider.find('Slider').prop('aria-valuetext');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should set "aria-valuetext" to value when value is changed', function () {
+		const Comp = SliderDecorator(SliderBase);
+		const slider = mount(
+			<Comp value={10} />
+		);
+
+		const expected = 10;
+		const actual = slider.find('Slider').prop('aria-valuetext');
+
+		expect(actual).to.equal(expected);
 	});
 });
