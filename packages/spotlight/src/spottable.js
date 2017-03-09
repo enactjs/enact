@@ -202,7 +202,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentDidUpdate (prevProps, prevState) {
 			// if a blur occured during a enter-key press/hold, as a result of a programmatic focus change
-			if (emulateMouse && prevState.spotted && !this.state.spotted && this.enterKeyDownEvent) {
+			if (prevState.spotted && !this.state.spotted && this.enterKeyDownEvent) {
 				// Certain components require time to perform an action (animation via an applied class) due to
 				// forwarding a `keydown` event, while being selected. Immediately calling `forwardEnterKeyUp`
 				// will result in the components being updated too quickly for the animation to begin, providing
