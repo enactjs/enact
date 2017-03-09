@@ -15,7 +15,7 @@ import SliderDecorator from '../internal/SliderDecorator';
 import {computeProportionProgress} from '../internal/SliderDecorator/util';
 
 import {SliderBarFactory} from './SliderBar';
-import SliderTooltip, {proportion} from './SliderTooltip';
+import SliderTooltip from './SliderTooltip';
 import componentCss from './Slider.less';
 
 const isActive = (ev, props) => props.active || props.detachedKnob;
@@ -345,7 +345,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			children: ({children, max, min, noTooltip, tooltipAsPercent, value}) => {
 				// If there's no tooltip, or custom children present, supply those.
 				if (noTooltip || children) return children;
-				return tooltipAsPercent ? Math.floor(proportion(value, min, max) * 100) + '%' : value;
+				return tooltipAsPercent ? Math.floor(computeProportionProgress({value, max, min}) * 100) + '%' : value;
 			},
 			className: ({active, pressed, vertical, styler}) => styler.append({
 				active,
@@ -386,10 +386,8 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						{noTooltip ? children : <SliderTooltip
 							className={css.tooltip}
 							forceSide={tooltipForceSide}
-							max={max}
-							min={min}
+							proportion={proportionProgress}
 							side={tooltipSide}
-							value={value}
 							vertical={vertical}
 						>
 							{children}

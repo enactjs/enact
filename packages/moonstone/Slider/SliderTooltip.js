@@ -7,12 +7,10 @@ import Tooltip from '../TooltipDecorator/Tooltip';
 
 import css from './SliderTooltip.less';
 
-const proportion = (value, min = 0, max = 100) => ((value - min) / (max - min));
-
 /**
  * {@link moonstone/Slider.SliderTooltip} is a stateless Tooltip specifically for Slider.
  *
- * @class SliderTooltipBase
+ * @class SliderTooltip
  * @memberof moonstone/Slider
  * @ui
  * @public
@@ -33,22 +31,13 @@ const SliderTooltipBase = kind({
 		forceSide: PropTypes.bool,
 
 		/**
-		 * The maximum value of the slider.
-		 *
-		 * @type {Number}
-		 * @default 100
-		 * @public
-		 */
-		max: PropTypes.number,
-
-		/**
-		 * The minimum value of the slider.
+		 * The proportion of progress across the bar. Should be a number between 0 and 1.
 		 *
 		 * @type {Number}
 		 * @default 0
 		 * @public
 		 */
-		min: PropTypes.number,
+		proportion: PropTypes.number,
 
 		/**
 		 * Specify where the tooltip should appear in relation to the Slider bar. Options are
@@ -65,15 +54,6 @@ const SliderTooltipBase = kind({
 		side: PropTypes.oneOf(['before', 'after']),
 
 		/**
-		 * The value of the slider.
-		 *
-		 * @type {Number}
-		 * @default 0
-		 * @public
-		 */
-		value: PropTypes.number,
-
-		/**
 		 * If `true` the slider will be oriented vertically.
 		 *
 		 * @type {Boolean}
@@ -84,11 +64,9 @@ const SliderTooltipBase = kind({
 	},
 
 	defaultProps: {
-		max: 100,
-		min: 0,
 		forceSide: false,
+		proportion: 0,
 		side: 'before',
-		value: 0,
 		vertical: false
 	},
 
@@ -101,9 +79,9 @@ const SliderTooltipBase = kind({
 
 	computed: {
 		className: ({forceSide, side, vertical, styler}) => styler.append({ignoreLocale: forceSide, vertical, horizontal: !vertical}, side),
-		arrowAnchor: ({min, max, value, vertical}) => {
+		arrowAnchor: ({proportion, vertical}) => {
 			if (vertical) return 'middle';
-			return proportion(value, min, max) <= 0.5 ? 'right' : 'left';
+			return (proportion <= 0.5) ? 'right' : 'left';
 		},
 		direction: ({forceSide, side, vertical}, context) => {
 			let dir = 'right';
@@ -128,9 +106,8 @@ const SliderTooltipBase = kind({
 	},
 
 	render: ({children, ...rest}) => {
-		delete rest.max;
-		delete rest.min;
 		delete rest.forceSide;
+		delete rest.proportion;
 		delete rest.side;
 		delete rest.vertical;
 		return (
@@ -142,4 +119,4 @@ const SliderTooltipBase = kind({
 });
 
 export default SliderTooltipBase;
-export {SliderTooltipBase, SliderTooltipBase as SliderTooltip, proportion};
+export {SliderTooltipBase, SliderTooltipBase as SliderTooltip};
