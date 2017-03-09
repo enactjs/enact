@@ -11,7 +11,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Scrollbar` property `disabled` to disable both paging controls when it is true
 - `moonstone/VirtualList` parameter `moreInfo` to pass `firstVisibleIndex` and `lastVisibleIndex` when scroll events are firing
 - Accessibility support to UI components
-- `moonstone/VideoPlayer` support for the custom webOS "umsmediainfo" event. Use `onUMSMediaInfo` to assign its callback.
+- `moonstone/VideoPlayer` property `onUMSMediaInfo` to support the custom webOS “umsmediainfo” event
 
 ### Changed
 
