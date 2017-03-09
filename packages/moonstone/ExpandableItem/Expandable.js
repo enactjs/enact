@@ -18,8 +18,6 @@ import Toggleable from '@enact/ui/Toggleable';
 const handleCancel = function (props) {
 	if (props.open) {
 		props.onClose();
-	} else {
-		// Return `true` to allow event to propagate to containers for unhandled cancel
 		return true;
 	}
 };

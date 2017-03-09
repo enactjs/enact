@@ -64,17 +64,8 @@ const contextTypes = {
  */
 const Resizable = hoc(defaultConfig, (config, Wrapped) => {
 	const {filter, resize} = config;
-	const forwardResize = forward(resize);
 
 	invariant(resize, `resize is required by Resizable but was omitted when applied to ${Wrapped.displayName}`);
-
-	// Temporary 'adapter' function until handle() is updated to use `true` return values continue
-	let filterHandler = null;
-	if (filter) {
-		filterHandler = function (ev) {
-			return !filter(ev);
-		};
-	}
 
 	return class extends React.Component {
 		static displayName = 'Resizable'
@@ -89,6 +80,8 @@ const Resizable = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		invalidateBounds = () => this.context.invalidateBounds()
 
+		handle = handle.bind(this)
+
 		/*
 		 * Handles the event that indicates a resize is necessary
 		 *
@@ -97,15 +90,12 @@ const Resizable = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns {undefined}
 		 * @private
 		 */
-		handleResize = handle(
-			(ev) => {
-				forwardResize(ev, this.props);
-
-				// stop if there isn't a container to notify
-				return !this.context.invalidateBounds;
-			},
+		handleResize = this.handle(
+			forward(resize),
+			// stop if there isn't a container to notify
+			(ev, props, {invalidateBounds}) => !!invalidateBounds,
 			// optionally filter the event before notifying the container
-			filterHandler,
+			filter,
 			this.invalidateBounds
 		)
 
