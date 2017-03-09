@@ -166,6 +166,12 @@ const TransitionBase = kind({
 	}
 });
 
+const TRANSITION_STATE = {
+	INIT: 0,		// closed and unmeasured
+	MEASURE: 1,		// open but need to measure
+	READY: 2		// measured and ready
+};
+
 /**
  * {@link ui/Transition.Transition} is a stateful component that allows for applying transitions
  * to its child items via configurable properties and events.
@@ -258,14 +264,15 @@ class Transition extends React.Component {
 
 		this.state = {
 			initialHeight: null,
-			deferChildren: !props.visible
+			renderState: props.visible ? TRANSITION_STATE.READY : TRANSITION_STATE.INIT
 		};
-		this.wasDeferred = !props.visible;
 	}
 
 	componentWillReceiveProps (nextProps) {
-		if (nextProps.visible && this.state.deferChildren) {
-			this.setState({deferChildren: false});
+		if (nextProps.visible && this.state.renderState === TRANSITION_STATE.INIT) {
+			this.setState({
+				renderState: TRANSITION_STATE.MEASURE
+			});
 		}
 	}
 
@@ -275,13 +282,12 @@ class Transition extends React.Component {
 	}
 
 	componentDidUpdate (prevProps, prevState) {
+		const {visible} = this.props;
+		const {initialHeight, renderState} = this.state;
+
 		// Checking that something changed that wasn't the visibility or the initialHeight state
-		if ((this.props.visible === prevProps.visible) &&
-			(this.state.initialHeight === prevState.initialHeight)) {
+		if (visible === prevProps.visible && initialHeight === prevState.initialHeight && renderState !== TRANSITION_STATE.INIT) {
 			this.measureInner();
-		}
-		if (prevState.deferChildren && !this.state.deferChildren && !this.props.visible) {
-			this.wasDeferred = false;
 		}
 	}
 
@@ -296,13 +302,17 @@ class Transition extends React.Component {
 		if (this.childNode) {
 			const initialHeight = this.childNode.scrollHeight;
 			if (initialHeight !== this.state.initialHeight) {
-				this.setState({initialHeight});
+				this.setState({
+					initialHeight,
+					renderState: TRANSITION_STATE.READY
+				});
 			}
 		}
 	}
 
 	childRef = (node) => {
 		this.childNode = node;
+		// this accounts for open at construction or when we need to measure before opening
 		if (this.state.initialHeight == null) {
 			this.measureInner();
 		}
@@ -310,28 +320,29 @@ class Transition extends React.Component {
 
 	render () {
 		let {visible, ...props} = this.props;
-		// If we are deferring children, don't render any
-		if (this.state.deferChildren) {
-			return null;
-		}
-
 		delete props.onHide;
-		const height = visible ? this.state.initialHeight : 0;
-		// If we're transitioning to visible but don't have a measurement yet, don't show so we can
-		// measure.  Measuring will trigger a state change which will allow us to animate
-		if (!this.state.initialHeight && visible && this.wasDeferred) {
-			visible = false;
-			this.wasDeferred = false;
+
+		switch (this.state.renderState) {
+			// If we are deferring children, don't render any
+			case TRANSITION_STATE.INIT: return null;
+
+			// If we're transitioning to visible but don't have a measurement yet, create the
+			// transition container with its children so we can measure. Measuring will cause a
+			// state change to trigger the animation.
+			case TRANSITION_STATE.MEASURE: return (
+				<TransitionBase {...props} childRef={this.childRef} visible={false} />
+			);
+
+			case TRANSITION_STATE.READY: return (
+				<TransitionBase
+					{...props}
+					childRef={this.childRef}
+					visible={visible}
+					clipHeight={this.state.initialHeight}
+					onTransitionEnd={this.hideDidFinish}
+				/>
+			);
 		}
-		return (
-			<TransitionBase
-				{...props}
-				childRef={this.childRef}
-				visible={visible}
-				clipHeight={height}
-				onTransitionEnd={this.hideDidFinish}
-			/>
-		);
 	}
 }
 
