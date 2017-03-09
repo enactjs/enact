@@ -43,6 +43,7 @@ const RegionBase = kind({
 		/**
 		 * Sets the aria-label for the region. If unset, it defaults to the value of `title`
 		 *
+		 * @memberof moonstone/Region.Region.prototype
 		 * @type {String}
 		 * @public
 		 */
