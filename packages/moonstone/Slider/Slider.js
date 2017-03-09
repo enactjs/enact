@@ -444,5 +444,6 @@ export {
 	Slider,
 	SliderBase,
 	SliderBaseFactory,
-	SliderFactory
+	SliderFactory,
+	SliderTooltip
 };
