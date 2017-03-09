@@ -179,21 +179,32 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentDidUpdate (prevProps) {
 			if (this.props.spotlightRestrict !== prevProps.spotlightRestrict) {
-				Spotlight.set(this.state.id, {restrict: this.props.spotlightRestrict});
+				Spotlight.set(this.state.id, this.getContainerConfig({restrict: this.props.spotlightRestrict}));
 			}
 		}
 
 		componentWillMount () {
-			const selector = '[data-container-id="' + this.state.id + '"]:not([data-container-disabled="true"]) .' + spottableClass,
-				cfg = Object.assign({}, containerConfig, {selector, navigableFilter: this.navigableFilter, restrict: this.props.spotlightRestrict});
-
-			Spotlight.set(this.state.id, cfg);
+			Spotlight.set(this.state.id, this.getContainerConfig());
 		}
 
 		componentWillUnmount () {
 			if (!preserveId) {
 				Spotlight.remove(this.state.id);
 			}
+		}
+
+		getContainerConfig (cfg) {
+			const selector = '[data-container-id="' + this.state.id + '"]:not([data-container-disabled="true"]) .' + spottableClass;
+			return Object.assign(
+				{},
+				containerConfig,
+				{
+					selector,
+					navigableFilter: this.navigableFilter,
+					restrict: this.props.spotlightRestrict
+				},
+				cfg
+			);
 		}
 
 		handleMouseEnter = (ev) => {
