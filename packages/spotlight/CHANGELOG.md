@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ## [unreleased]
 
+### Fixed
+
+- `spotlight.Spottable` behavior for forwarding selection `onKeyUp` events
+
 ### Changed
 
 - `spotlight.Spottable` to prevent emulating mouse events for repeated key events
