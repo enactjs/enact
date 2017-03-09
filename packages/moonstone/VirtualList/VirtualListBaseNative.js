@@ -186,7 +186,7 @@ class VirtualListCore extends Component {
 
 		if (hasMetricsChanged) {
 			this.calculateMetrics(nextProps);
-			this.updateStatesAndBounds(hasDataChanged ? nextProps : this.props);
+			this.updateStatesAndBounds(nextProps);
 		} else if (hasDataChanged) {
 			this.updateStatesAndBounds(nextProps);
 		}
@@ -230,7 +230,6 @@ class VirtualListCore extends Component {
 	updateFrom = null
 	updateTo = null
 
-	containerStyle = null
 	wrapperStyle = {}
 	containerRef = null
 	wrapperRef = null
@@ -394,10 +393,8 @@ class VirtualListCore extends Component {
 			wrapperStyle.overflowY = 'hidden';
 		}
 
-		this.containerStyle = {
-			width: scrollBounds.scrollWidth,
-			height: scrollBounds.scrollHeight
-		}
+		this.containerRef.style.width = scrollBounds.scrollWidth + 'px';
+		this.containerRef.style.height = scrollBounds.scrollHeight + 'px';
 
 		wrapperStyle.willChange = 'left, top';
 	}
@@ -620,6 +617,19 @@ class VirtualListCore extends Component {
 		return (Math.ceil(curDataSize / dimensionToExtent) * primary.gridSize) - spacing;
 	}
 
+	focusOnItem = (index) => {
+		// We have to focus item async for now since list items are not yet ready when it reaches componentDid* lifecycle methods
+		setTimeout(() => {
+			const item = this.containerRef.querySelector(`[data-index='${index}'].spottable`);
+
+			if (item) {
+				// setPointerMode to false since Spotlight prevents programmatically changing focus while in pointer mode
+				Spotlight.setPointerMode(false);
+				Spotlight.focus(item);
+			}
+		}, 0);
+	}
+
 	calculatePositionOnFocus = (item) => {
 		const
 			{pageScroll} = this.props,
@@ -750,13 +760,13 @@ class VirtualListCore extends Component {
 
 		const
 			{className, style, ...rest} = props,
-			{containerStyle, wrapperStyle} = this,
+			{wrapperStyle} = this,
 			mergedStyle = {...style, ...wrapperStyle},
 			mergedClasses = classNames(css.list, className);
 
 		return (
 			<div ref={this.initWrapperRef} className={mergedClasses} style={mergedStyle}>
-				<div {...rest} ref={this.initContainerRef} style={containerStyle}>
+				<div {...rest} ref={this.initContainerRef}>
 					{cc}
 				</div>
 			</div>

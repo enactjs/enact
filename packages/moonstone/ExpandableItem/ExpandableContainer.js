@@ -58,29 +58,6 @@ const ExpandableContainerBase = class extends React.Component {
 		noPointerMode: false
 	}
 
-	componentDidUpdate (prevProps) {
-		if (this.props.open !== prevProps.open) {
-			const pointerMode = Spotlight.getPointerMode();
-			const changePointerMode = pointerMode && (this.props.noPointerMode || !this.props.open);
-
-			if (changePointerMode) {
-				// we temporarily set pointer mode to `false` to ensure that focus is forced away
-				// from the collapsing expandable.
-				Spotlight.setPointerMode(false);
-			}
-
-			if (this.props.open) {
-				this.highlightContents();
-			} else {
-				this.highlightLabeledItem();
-			}
-
-			if (changePointerMode) {
-				Spotlight.setPointerMode(pointerMode);
-			}
-		}
-	}
-
 	highlightContents = () => {
 		if (this.containerNode.contains(document.activeElement)) {
 			const contents = this.containerNode.querySelector('[data-expandable-container]');
@@ -96,6 +73,28 @@ const ExpandableContainerBase = class extends React.Component {
 		}
 	}
 
+	handleTransitionEnd = () => {
+		const {noPointerMode, open} = this.props;
+		const pointerMode = Spotlight.getPointerMode();
+		const changePointerMode = pointerMode && (noPointerMode || !open);
+
+		if (changePointerMode) {
+			// we temporarily set pointer mode to `false` to ensure that focus is forced away
+			// from the collapsing expandable.
+			Spotlight.setPointerMode(false);
+		}
+
+		if (open) {
+			this.highlightContents();
+		} else {
+			this.highlightLabeledItem();
+		}
+
+		if (changePointerMode) {
+			Spotlight.setPointerMode(pointerMode);
+		}
+	}
+
 	getContainerNode = (node) => {
 		this.containerNode = node;
 	}
@@ -106,7 +105,11 @@ const ExpandableContainerBase = class extends React.Component {
 		delete props.noPointerMode;
 
 		return (
-			<div {...props} ref={this.getContainerNode} />
+			<div
+				{...props}
+				onTransitionEnd={this.handleTransitionEnd}
+				ref={this.getContainerNode}
+			/>
 		);
 	}
 };

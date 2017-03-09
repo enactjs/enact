@@ -4,6 +4,7 @@ import OverlayDecorator from '@enact/moonstone/Item/OverlayDecorator';
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
 import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
+import nullify from '../../src/utils/nullify.js';
 
 // Use the HOC to get a component from which to pluck the propTypes and defaultProps
 const Overlay = OverlayDecorator('div');
@@ -13,9 +14,8 @@ ItemOverlay.defaultProps = Object.assign({}, Item.defaultProps, Overlay.defaultP
 ItemOverlay.displayName = 'ItemOverlay';
 
 const prop = {
-	autoHide: ['<null>', 'after', 'before', 'both']
+	autoHide: [null, 'after', 'before', 'both']
 };
-const nullify = (v) => v === '<null>' ? null : v;
 
 storiesOf('Item.ItemOverlay')
 	.addDecorator(withKnobs)

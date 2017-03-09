@@ -5,6 +5,7 @@ import PickerAddRemove from './components/PickerAddRemove';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
+import nullify from '../../src/utils/nullify.js';
 
 const StatefulPicker = Changeable(Picker);
 StatefulPicker.propTypes = Object.assign({}, PickerBase.propTypes, StatefulPicker.propTypes);
@@ -13,9 +14,8 @@ StatefulPicker.displayName = 'Picker';
 
 const prop = {
 	orientation: ['horizontal', 'vertical'],
-	width: ['<null>', 'small', 'medium', 'large']
+	width: [null, 'small', 'medium', 'large']
 };
-const nullify = (v) => v === '<null>' ? null : v;
 
 const iconNames = Object.keys(icons);
 

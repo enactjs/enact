@@ -63,6 +63,7 @@ const prop = {
 		'onStalled',
 		'onSuspend',
 		'onTimeUpdate',
+		'onUMSMediaInfo',	// Custom webOS media event
 		'onVolumeChange',
 		'onWaiting'
 	]

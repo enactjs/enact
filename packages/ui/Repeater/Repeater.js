@@ -86,7 +86,7 @@ const RepeaterBase = kind({
 		delete props.indexProp;
 		delete props.itemProps;
 
-		return <span {...props} />;
+		return <span role="list" {...props} />;
 	}
 });
 

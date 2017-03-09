@@ -1,9 +1,8 @@
-@import '../styles/mixins.less';
+@import '../../moonstone/styles/variables.less';
 
 .scrim {
 	&.translucent {
 		pointer-events: auto;
-		background-color: #000000;
-		.vendor-opacity(0.3)
+		background-color: @moon-scrim-color
 	}
 }

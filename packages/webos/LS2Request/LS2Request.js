@@ -26,7 +26,7 @@ export default class LS2Request {
 		onComplete = null,
 		subscribe = false
 	}) {
-		if (!window.PalmServiceBridge) {
+		if (typeof window !== 'object' || !window.PalmServiceBridge) {
 			/* eslint no-unused-expressions: ["error", { "allowShortCircuit": true }]*/
 			onFailure && onFailure({errorCode:-1, errorText:'PalmServiceBridge not found.', returnValue: false});
 			onComplete && onComplete({errorCode:-1, errorText:'PalmServiceBridge not found.', returnValue: false});

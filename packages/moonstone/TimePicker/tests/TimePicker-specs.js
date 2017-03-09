@@ -58,7 +58,7 @@ describe('TimePicker', () => {
 
 	it('should accept a JavaScript Date for its value prop', function () {
 		const subject = mount(
-			<TimePicker title="Date" value={new Date(2000, 0, 1, 12, 30)} />
+			<TimePicker title="Date" value={new Date(2000, 0, 1, 12, 30)} open />
 		);
 
 		const minutePicker = subject.find('DateComponentRangePicker').findWhere(p => {
@@ -73,7 +73,7 @@ describe('TimePicker', () => {
 
 	it('should accept an updated JavaScript Date for its value prop', function () {
 		const subject = mount(
-			<TimePicker title="Date" value={new Date(2000, 0, 1, 12, 30)} />
+			<TimePicker title="Date" value={new Date(2000, 0, 1, 12, 30)} open />
 		);
 
 		subject.setProps({
