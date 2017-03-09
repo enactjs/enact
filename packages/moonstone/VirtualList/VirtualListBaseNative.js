@@ -83,6 +83,19 @@ class VirtualListCore extends Component {
 		cbScrollTo: PropTypes.func,
 
 		/**
+		 * Client size of the list; valid values are an object that has `clientWidth` and `clientHeight`.
+		 *
+		 * @type {Object}
+		 * @property {Number} clientWidth - The client width of the list.
+		 * @property {Number} clientHeight - The client height of the list.
+		 * @public
+		 */
+		clientSize: PropTypes.shape({
+			clientWidth: PropTypes.number.isRequired,
+			clientHeight:  PropTypes.number.isRequired
+		}),
+
+		/**
 		 * Data for the list.
 		 * Check mutation of this and determine whether the list should update or not.
 		 *
@@ -164,11 +177,20 @@ class VirtualListCore extends Component {
 		this.composeContainerPosition = this.applyScrollLeftTopToWrapperNode;
 	}
 
+	componentWillMount () {
+		if (this.props.clientSize) {
+			this.calculateMetrics(this.props);
+			this.updateStatesAndBounds(this.props);
+		}
+	}
+
 	// Calculate metrics for VirtualList after the 1st render to know client W/H.
 	// We separate code related with data due to re use it when data changed.
 	componentDidMount () {
-		this.calculateMetrics(this.props);
-		this.updateStatesAndBounds(this.props);
+		if (!this.props.clientSize) {
+			this.calculateMetrics(this.props);
+			this.updateStatesAndBounds(this.props);
+		}
 	}
 
 	// Call updateStatesAndBounds here when dataSize has been changed to update nomOfItems state.
@@ -273,15 +295,15 @@ class VirtualListCore extends Component {
 
 	calculateMetrics (props) {
 		const
-			{direction, itemSize, spacing} = props,
+			{clientSize, direction, itemSize, spacing} = props,
 			node = this.getContainerNode();
 
-		if (!node) {
+		if (!clientSize && !node) {
 			return;
 		}
 
 		const
-			{clientWidth, clientHeight} = this.getClientSize(node),
+			{clientWidth, clientHeight} = (clientSize || this.getClientSize(node)),
 			heightInfo = {
 				clientSize: clientHeight,
 				minItemSize: itemSize.minHeight || null,
@@ -356,15 +378,17 @@ class VirtualListCore extends Component {
 	}
 
 	calculateScrollBounds (props) {
-		const node = this.getContainerNode();
+		const
+			{clientSize} = props,
+			node = this.getContainerNode();
 
-		if (!node) {
+		if (!clientSize && !node) {
 			return;
 		}
 
 		const
 			{scrollBounds, isPrimaryDirectionVertical} = this,
-			{clientWidth, clientHeight} = this.getClientSize(node);
+			{clientWidth, clientHeight} = clientSize || this.getClientSize(node);
 		let maxPos;
 
 		scrollBounds.clientWidth = clientWidth;
@@ -697,12 +721,12 @@ class VirtualListCore extends Component {
 			{props} = this,
 			node = this.getContainerNode();
 
-		if (!node) {
+		if (!props.clientSize && !node) {
 			return;
 		}
 
 		const
-			{clientWidth, clientHeight} = this.getClientSize(node),
+			{clientWidth, clientHeight} = props.clientSize || this.getClientSize(node),
 			{scrollBounds} = this;
 
 		if (clientWidth !== scrollBounds.clientWidth || clientHeight !== scrollBounds.clientHeight) {

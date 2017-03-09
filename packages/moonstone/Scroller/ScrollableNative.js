@@ -8,6 +8,7 @@ import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {contextTypes as contextTypesResize} from '@enact/ui/Resizable';
 import {contextTypes as contextTypesRtl} from '@enact/i18n/I18nDecorator';
+import deprecate from '@enact/core/internal/deprecate';
 import {getDirection} from '@enact/spotlight';
 import hoc from '@enact/core/hoc';
 import React, {Component, PropTypes} from 'react';
@@ -81,13 +82,23 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			className: PropTypes.string,
 
 			/**
-			 * Hides the scrollbars when `true`
+			 * Deprecated: When `true`, Hides the scrollbars.
 			 *
 			 * @type {Boolean}
 			 * @default false
-			 * @public
+			 * @deprecated since 1.0.0-beta.4, replaced by `horizontalScrollbar` and `verticalScrollbar` as `'hidden'` value
 			 */
 			hideScrollbars: PropTypes.bool,
+
+			/**
+			 * Specifies how to show horizontal scrollbar. Acceptable values are `'auto'`,
+			 * `'visible'`, and `'hidden'`.
+			 *
+			 * @type {String}
+			 * @default 'auto'
+			 * @public
+			 */
+			horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
 
 			/**
 			 * Called when scrolling
@@ -113,7 +124,17 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			 */
 			onScrollStop: PropTypes.func,
 
-			style: PropTypes.object
+			style: PropTypes.object,
+
+			/**
+			 * Specifies how to show vertical scrollbar. Acceptable values are `'auto'`,
+			 * `'visible'`, and `'hidden'`.
+			 *
+			 * @type {String}
+			 * @default 'auto'
+			 * @public
+			 */
+			verticalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden'])
 		}
 
 		static defaultProps = {
@@ -121,7 +142,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			hideScrollbars: false,
 			onScroll: nop,
 			onScrollStart: nop,
-			onScrollStop: nop
+			onScrollStop: nop,
+			horizontalScrollbar: 'auto',
+			verticalScrollbar: 'auto'
 		}
 
 		static childContextTypes = {...contextTypesResize, ...contextTypesRtl}
@@ -173,9 +196,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		constructor (props, context) {
 			super(props, context);
 
+			if (__DEV__ && typeof props.hideScrollbars !== 'undefined') {
+				deprecate({name: 'hideScrollbars', since: '1.0.0-beta.4', replacedBy: 'horizontalScrollbar=\'hidden\' and verticalScrollbar=\'hidden\'', until: '1.0.0'});
+			}
+
 			this.state = {
-				isHorizontalScrollbarVisible: false,
-				isVerticalScrollbarVisible: false
+				isHorizontalScrollbarVisible: this.isHorizontalScrollbarVisible(),
+				isVerticalScrollbarVisible: this.isVerticalScrollbarVisible()
 			};
 
 			this.initChildRef = this.initRef('childRef');
@@ -331,7 +358,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		scrollStartOnScroll = () => {
 			this.scrolling = true;
-			this.showThumb();
+			this.showThumb(this.getScrollBounds());
 			this.doScrollStart();
 		}
 
@@ -341,7 +368,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.childRef.setContainerDisabled(false);
 			this.lastFocusedItem = null;
 
-			this.hideThumb();
+			this.hideThumb(this.getScrollBounds());
 			this.scrolling = false;
 			this.doScrollStop();
 		}
@@ -396,7 +423,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					indexToFocus
 				}));
 			} else {
+				// TBD containerNode.style.scrollBehavior = null;
 				this.scroll(targetX, targetY);
+				// TBD containerNode.style.scrollBehavior = 'smooth';
 				this.focusOnItem({indexToFocus});
 			}
 		}
@@ -523,50 +552,51 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			return this.verticalScrollability && (bounds.scrollHeight > bounds.clientHeight) && !isNaN(bounds.scrollHeight);
 		}
 
-		showThumb () {
-			if (!this.props.hideScrollbars) {
-				if (this.state.isHorizontalScrollbarVisible) {
-					this.scrollbarHorizontalRef.showThumb();
-				}
-				if (this.state.isVerticalScrollbarVisible) {
-					this.scrollbarVerticalRef.showThumb();
-				}
+		isHorizontalScrollbarVisible = () => (!this.props.hideScrollbars && (this.props.horizontalScrollbar === 'visible'))
+
+		isVerticalScrollbarVisible = () => (!this.props.hideScrollbars && (this.props.verticalScrollbar === 'visible'))
+
+		showThumb (bounds) {
+			if (this.state.isHorizontalScrollbarVisible && this.canScrollHorizontally(bounds)) {
+				this.scrollbarHorizontalRef.showThumb();
+			}
+			if (this.state.isVerticalScrollbarVisible && this.canScrollVertically(bounds)) {
+				this.scrollbarVerticalRef.showThumb();
 			}
 		}
 
 		updateThumb (scrollbarRef, bounds) {
-			if (!this.props.hideScrollbars) {
-				scrollbarRef.update({
-					...bounds,
-					scrollLeft: this.scrollLeft,
-					scrollTop: this.scrollTop
-				});
-			}
+			scrollbarRef.update({
+				...bounds,
+				scrollLeft: this.scrollLeft,
+				scrollTop: this.scrollTop
+			});
 		}
 
-		hideThumb () {
-			if (!this.props.hideScrollbars) {
-				if (this.state.isHorizontalScrollbarVisible) {
-					this.scrollbarHorizontalRef.startHidingThumb();
-				}
-				if (this.state.isVerticalScrollbarVisible) {
-					this.scrollbarVerticalRef.startHidingThumb();
-				}
+		hideThumb (bounds) {
+			if (this.state.isHorizontalScrollbarVisible && this.canScrollHorizontally(bounds)) {
+				this.scrollbarHorizontalRef.startHidingThumb();
+			}
+			if (this.state.isVerticalScrollbarVisible && this.canScrollVertically(bounds)) {
+				this.scrollbarVerticalRef.startHidingThumb();
 			}
 		}
 
 		updateScrollbars = () => {
 			const
 				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
-				bounds = this.getScrollBounds();
+				{horizontalScrollbar, verticalScrollbar} = this.props,
+				bounds = this.getScrollBounds(),
+				canScrollHorizontally = this.canScrollHorizontally(bounds),
+				canScrollVertically = this.canScrollVertically(bounds),
+				curHorizontalScrollbarVisible = (horizontalScrollbar !== 'auto') ? this.isHorizontalScrollbarVisible() : canScrollHorizontally,
+				curVerticalScrollbarVisible = (verticalScrollbar !== 'auto') ? this.isVerticalScrollbarVisible() : canScrollVertically;
 
 			// determine if we should hide or show any scrollbars
 			const
-				canScrollHorizontally = this.canScrollHorizontally(bounds),
-				canScrollVertically = this.canScrollVertically(bounds),
 				isVisibilityChanged = (
-					isHorizontalScrollbarVisible !== canScrollHorizontally ||
-					isVerticalScrollbarVisible !== canScrollVertically
+					isHorizontalScrollbarVisible !== curHorizontalScrollbarVisible  ||
+					isVerticalScrollbarVisible !== curVerticalScrollbarVisible
 				);
 
 			if (isVisibilityChanged) {
@@ -575,7 +605,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					isHorizontalScrollbarVisible: canScrollHorizontally,
 					isVerticalScrollbarVisible: canScrollVertically
 				});
-			} else if (canScrollVertically || canScrollHorizontally) {
+			} else if (curHorizontalScrollbarVisible || curVerticalScrollbarVisible) {
 				// no visibility change but need to notify whichever scrollbars are visible of the
 				// updated bounds and scroll position
 				const updatedBounds = {
@@ -584,8 +614,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					scrollTop: this.scrollTop
 				};
 
-				if (canScrollHorizontally) this.scrollbarHorizontalRef.update(updatedBounds);
-				if (canScrollVertically) this.scrollbarVerticalRef.update(updatedBounds);
+				if (canScrollHorizontally && curHorizontalScrollbarVisible) this.scrollbarHorizontalRef.update(updatedBounds);
+				if (canScrollVertically && curVerticalScrollbarVisible) this.scrollbarVerticalRef.update(updatedBounds);
 			}
 		}
 
@@ -604,27 +634,34 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		// component life cycle
 
 		componentDidMount () {
-			const containerNode = this.childRef.getContainerNode();
+			const
+				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
+				containerNode = this.childRef.getContainerNode();
+
 			this.horizontalScrollability = this.childRef.isHorizontal();
 			this.verticalScrollability = this.childRef.isVertical();
 
 			// FIXME `onWheel` doesn't work on the v8 snapshot.
-			this.containerRef.addEventListener('wheel', this.onWheel);
-
+			if (isVerticalScrollbarVisible || isHorizontalScrollbarVisible) {
+				this.containerRef.addEventListener('wheel', this.onWheel);
+			} else {
+				containerNode.addEventListener('wheel', this.onWheel);
+			}
 			// FIXME `onScroll` doesn't work on the v8 snapshot.
 			containerNode.addEventListener('scroll', this.onScroll, true);
 			// FIXME `onFocus` doesn't work on the v8 snapshot.
 			containerNode.addEventListener('focus', this.onFocus, true);
 
-			if (!this.props.hideScrollbars) {
-				this.updateScrollbars();
-			}
+			// TBD containerNode.style.scrollBehavior = 'smooth';
 
+			this.updateScrollbars();
 			this.isFirstRendered = true;
 		}
 
 		componentDidUpdate () {
-			const containerNode = this.childRef.getContainerNode();
+			const
+				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
+				containerNode = this.childRef.getContainerNode();
 
 			this.horizontalScrollability = this.childRef.isHorizontal();
 			this.verticalScrollability = this.childRef.isVertical();
@@ -635,16 +672,21 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				this.childRef.syncClientSize();
 			}
 
-			// FIXME `onWheel` doesn't work on the v8 snapshot.
-			this.containerRef.addEventListener('wheel', this.onWheel);
-
+			// FIXME `onWheel` don't work on the v8 snapshot.
+			if (isVerticalScrollbarVisible || isHorizontalScrollbarVisible) {
+				this.containerRef.addEventListener('wheel', this.onWheel);
+			} else {
+				containerNode.addEventListener('wheel', this.onWheel);
+			}
 			// FIXME `onScroll` doesn't work on the v8 snapshot.
 			containerNode.addEventListener('scroll', this.onScroll, true);
 			// FIXME `onFocus` doesn't work on the v8 snapshot.
 			containerNode.addEventListener('focus', this.onFocus, true);
 
-			if (!this.props.hideScrollbars) {
-				this.updateScrollbars();
+			this.updateScrollbars();
+
+			if (this.scrollToInfo !== null) {
+				this.scrollTo(this.scrollToInfo);
 			}
 
 			if (this.isFirstRendered) {
@@ -685,43 +727,57 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			return this.onScrollbarBtnHandler(orientation, direction);
 		}
 
+		getHorizontalScrollbar = (isHorizontalScrollbarVisible, isVerticalScrollbarVisible) => (
+			isHorizontalScrollbarVisible ? (
+				<Scrollbar
+					className={!isVerticalScrollbarVisible ? css.onlyHorizontalScrollbarNeeded : null}
+					disabled={!isHorizontalScrollbarVisible}
+					{...this.horizontalScrollbarProps}
+				/>
+			) : null
+		)
+
+		getVerticalScrollbar = (isHorizontalScrollbarVisible, isVerticalScrollbarVisible) => (
+			isVerticalScrollbarVisible ? (
+				<Scrollbar
+					className={!isHorizontalScrollbarVisible ? css.onlyVerticalScrollbarNeeded : null}
+					disabled={!isVerticalScrollbarVisible}
+					{...this.verticalScrollbarProps}
+				/>
+			) : null
+		)
+
 		render () {
 			const
 				props = Object.assign({}, this.props),
-				{className, hideScrollbars, style} = this.props,
+				{className, style} = this.props,
 				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
+				vscrollbar = this.getVerticalScrollbar(isHorizontalScrollbarVisible, isVerticalScrollbarVisible),
+				hscrollbar = this.getHorizontalScrollbar(isHorizontalScrollbarVisible, isVerticalScrollbarVisible),
 				scrollableClasses = classNames(
 					css.scrollable,
-					hideScrollbars ? css.scrollableHiddenScrollbars : null,
+					!(isHorizontalScrollbarVisible || isVerticalScrollbarVisible) ? css.scrollableHiddenScrollbars : null,
 					isHorizontalScrollbarVisible ? null : css.takeAvailableSpaceForVertical,
 					isVerticalScrollbarVisible ? null : css.takeAvailableSpaceForHorizontal,
 					className
-				),
-				isBothScrollable = isHorizontalScrollbarVisible && isVerticalScrollbarVisible,
-				verticalScrollbarClassnames = isVerticalScrollbarVisible ? (!isBothScrollable && css.onlyVerticalScrollbarNeeded) : css.verticalScrollbarDisabled,
-				horizontalScrollbarClassnames = isHorizontalScrollbarVisible ? (!isBothScrollable && css.onlyHorizontalScrollbarNeeded) : css.horizontalScrollbarDisabled;
+				);
+
 
 			delete props.cbScrollTo;
 			delete props.className;
 			delete props.hideScrollbars;
+			delete props.verticalScrollbar;
+			delete props.horizontalScrollbar;
 			delete props.onScroll;
 			delete props.onScrollStart;
 			delete props.onScrollStop;
 			delete props.style;
 
 			return (
-				(!hideScrollbars) ? (
+				(isHorizontalScrollbarVisible || isVerticalScrollbarVisible) ? (
 					<div ref={this.initContainerRef} className={scrollableClasses} style={style}>
-						<Scrollbar
-							className={verticalScrollbarClassnames}
-							disabled={!isVerticalScrollbarVisible}
-							{...this.verticalScrollbarProps}
-						/>
-						<Scrollbar
-							className={horizontalScrollbarClassnames}
-							disabled={!isHorizontalScrollbarVisible}
-							{...this.horizontalScrollbarProps}
-						/>
+						{vscrollbar}
+						{hscrollbar}
 						<Wrapped {...props} {...this.eventHandlers} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={css.container} />
 					</div>
 				) : <Wrapped {...props} {...this.eventHandlers} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={scrollableClasses} style={style} />
