@@ -52,17 +52,17 @@ const LazyChildrenDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 
 			this.state = {
-				didMount: false
+				didRender: false
 			};
 		}
 
 		invalidateBounds = () => this.context.invalidateBounds()
 
 		componentDidMount () {
-			if (this.state.didMount === false) {
+			if (this.props.children.length > initialNumOfChildren) {
 				window.setTimeout(() => {
 					// eslint-disable-next-line react/no-did-mount-set-state
-					this.setState({didMount: true});
+					this.setState({didRender: true});
 					if (this.invalidateBounds) {
 						this.invalidateBounds();
 					}
@@ -73,11 +73,11 @@ const LazyChildrenDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		render () {
 			let props = this.props;
 
-			if (!this.state.didMount) {
+			if (!this.state.didRender) {
 				if (props.children.length <= initialNumOfChildren) {
 					window.setTimeout(() => {
 						// eslint-disable-next-line react/no-direct-mutation-state
-						this.state.didMount = true;
+						this.state.didRender = true;
 					}, 1);
 				} else {
 					props = Object.assign({}, this.props);
