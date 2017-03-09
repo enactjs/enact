@@ -88,7 +88,7 @@ const defaultConfig = {
 	 * @public
 	 * @memberof spotlight.Spottable.defaultConfig
 	 */
-	selectionAnimationDelay: 0
+	selectionAnimationDuration: 0
 };
 
 /**
@@ -106,7 +106,7 @@ const defaultConfig = {
  * @returns {Function} Spottable
  */
 const Spottable = hoc(defaultConfig, (config, Wrapped) => {
-	const {emulateMouse, selectionAnimationDelay} = config;
+	const {emulateMouse, selectionAnimationDuration} = config;
 	const forwardBlur = forward('onBlur');
 	const forwardFocus = forward('onFocus');
 	const forwardEnterKeyPress = forwardEnter('onKeyPress', 'onClick');
@@ -212,7 +212,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 				startJob('forwardEnterKeyUp', () => {
 					forwardEnterKeyUp(this.props)(makeEvent('onKeyUp', this.enterKeyDownEvent));
 					this.enterKeyDownEvent = null;
-				}, selectionAnimationDelay);
+				}, selectionAnimationDuration);
 			}
 		}
 
