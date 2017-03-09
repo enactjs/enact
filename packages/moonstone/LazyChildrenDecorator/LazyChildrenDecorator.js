@@ -2,9 +2,9 @@ import hoc from '@enact/core/hoc';
 import React, {Component} from 'react';
 
 /**
- * Default config for {@link moonstone/LazyDecorator.LazyDecorator}
+ * Default config for {@link moonstone/LazyChildrenDecorator.LazyChildrenDecorator}
  *
- * @memberof moonstone/LazyDecorator.LazyDecorator
+ * @memberof moonstone/LazyChildrenDecorator.LazyChildrenDecorator
  * @hocconfig
  */
 const defaultConfig = {
@@ -13,7 +13,7 @@ const defaultConfig = {
 	 *
 	 * @type {Number}
 	 * @default 5
-	 * @memberof moonstone/LazyDecorator.LazyDecorator.defaultConfig
+	 * @memberof moonstone/LazyChildrenDecorator.LazyChildrenDecorator.defaultConfig
 	 */
 	initialNumOfChildren: 5
 };
@@ -31,18 +31,18 @@ const contextTypes = {
 };
 
 /**
- * {@link moonstone/LazyDecorator.LazyDecorator} is a Higher-order Component so that its few wrapped children
+ * {@link moonstone/LazyChildrenDecorator.LazyChildrenDecorator} is a Higher-order Component so that its few wrapped children
  * are rendered first and the other wrapped children are rendered later. The number of the former children
  * can be configured when applied to a component.
  *
  * By default, the only 5 wrapped children are rendered first.
  *
- * @class LazyDecorator
- * @memberof moonstone/LazyDecorator
+ * @class LazyChildrenDecorator
+ * @memberof moonstone/LazyChildrenDecorator
  * @hoc
  * @public
  */
-const LazyDecorator = hoc(defaultConfig, (config, Wrapped) => {
+const LazyChildrenDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const initialNumOfChildren = config.initialNumOfChildren;
 
 	return class Lazy extends Component {
@@ -90,4 +90,4 @@ const LazyDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	};
 });
 
-export default LazyDecorator;
+export default LazyChildrenDecorator;
