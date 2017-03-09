@@ -66,6 +66,12 @@ const handledMediaEventsMap = {
 	waiting         : 'onWaiting'
 };
 
+// List custom events that aren't standard to React. These will be directly added to the video
+// element and props matching their name will be executed as callback functions when the event fires.
+// "umsmediainfo" prop function will execute when the "umsmediainfo" event happens.
+const handledCustomMediaEventsMap = {
+	'umsmediainfo'  : 'onUMSMediaInfo'
+};
 
 // provide forwarding of events on media controls
 const forwardBackwardButtonClick = forward('onBackwardButtonClick');
@@ -298,6 +304,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.video = null;
 		this.handledMediaForwards = {};
 		this.handledMediaEvents = {};
+		this.handledCustomMediaForwards = {};
 		this.moreInProgress = false;	// This only has meaning for the time between clicking "more" and the official state is updated. To get "more" state, only look at the state value.
 		this.prevCommand = (props.noAutoPlay ? 'pause' : 'play');
 		this.speedIndex = 0;
@@ -310,6 +317,12 @@ const VideoPlayerBase = class extends React.Component {
 			const eventName = handledMediaEventsMap[key];
 			this.handledMediaForwards[eventName] = forward(eventName);
 			this.handledMediaEvents[eventName] = this.handleEvent;
+		}
+		// Generate event handling forwarders for the custom events too
+		for (let eventName in handledCustomMediaEventsMap) {
+			const propName = handledCustomMediaEventsMap[eventName];
+			const forwardEvent = forward(propName);
+			this.handledCustomMediaForwards[eventName] = ev => forwardEvent(ev, this.props);
 		}
 
 		// Re-render-necessary State
@@ -341,6 +354,7 @@ const VideoPlayerBase = class extends React.Component {
 	componentDidMount () {
 		on('mousemove', this.activityDetected);
 		on('keypress', this.activityDetected);
+		this.attachCustomMediaEvents();
 		this.startDelayedFeedbackHide();
 	}
 
@@ -394,6 +408,7 @@ const VideoPlayerBase = class extends React.Component {
 	componentWillUnmount () {
 		off('mousemove', this.activityDetected);
 		off('keypress', this.activityDetected);
+		this.detachCustomMediaEvents();
 		this.stopRewindJob();
 		this.stopAutoCloseTimeout();
 		this.stopDelayedTitleHide();
@@ -410,6 +425,18 @@ const VideoPlayerBase = class extends React.Component {
 			this.locale = locale;
 
 			this.durfmt = new DurationFmt({length: 'medium', style: 'clock', useNative: false});
+		}
+	}
+
+	attachCustomMediaEvents = () => {
+		for (let eventName in this.handledCustomMediaForwards) {
+			on(eventName, this.handledCustomMediaForwards[eventName], this.video);
+		}
+	}
+
+	detachCustomMediaEvents = () => {
+		for (let eventName in this.handledCustomMediaForwards) {
+			off(eventName, this.handledCustomMediaForwards[eventName], this.video);
 		}
 	}
 
@@ -912,6 +939,11 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.onJumpForwardButtonClick;
 		delete rest.onPlayButtonClick;
 		delete rest.titleHideDelay;
+
+		// Remove the events we manually added so they aren't added twice or fail.
+		for (let eventName in handledCustomMediaEventsMap) {
+			delete rest[handledCustomMediaEventsMap[eventName]];
+		}
 
 		// Handle some cases when the "more" button is pressed
 		const moreDisabled = !(this.state.more);

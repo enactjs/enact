@@ -201,8 +201,6 @@ class FloatingLayerBase extends React.Component {
 const handleCancel = (props) => {
 	if (props.open && !props.noAutoDismiss && props.onDismiss) {
 		props.onDismiss();
-	} else {
-		// Return `true` to allow event to propagate to containers for unhandled cancel
 		return true;
 	}
 };
