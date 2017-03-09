@@ -18,8 +18,11 @@ describe('handle', () => {
 		...payload
 	});
 
+	const returnsTrue = () => true;
+	const returnsFalse = () => false;
+
 	it('should call only handler', function () {
-		const handler = sinon.spy();
+		const handler = sinon.spy(returnsTrue);
 		const callback = handle(handler);
 
 		callback(makeEvent());
@@ -31,8 +34,8 @@ describe('handle', () => {
 	});
 
 	it('should call multiple handlers', function () {
-		const handler1 = sinon.spy();
-		const handler2 = sinon.spy();
+		const handler1 = sinon.spy(returnsTrue);
+		const handler2 = sinon.spy(returnsTrue);
 
 		const callback = handle(handler1, handler2);
 
@@ -45,7 +48,7 @@ describe('handle', () => {
 	});
 
 	it('should skip non-function handlers', function () {
-		const handler = sinon.spy();
+		const handler = sinon.spy(returnsTrue);
 		const callback = handle(null, void 0, 0, 'purple', handler);
 
 		callback(makeEvent());
@@ -56,11 +59,11 @@ describe('handle', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should not call handlers after one that returns true', function () {
-		const handler1 = sinon.spy();
-		const handler2 = sinon.spy();
+	it('should not call handlers after one that returns false', function () {
+		const handler1 = sinon.spy(returnsTrue);
+		const handler2 = sinon.spy(returnsTrue);
 
-		const callback = handle(handler1, () => true, handler2);
+		const callback = handle(handler1, returnsFalse, handler2);
 
 		callback(makeEvent());
 
@@ -174,6 +177,40 @@ describe('handle', () => {
 
 		const expected = true;
 		const actual = spy.args[0][0][prop] === propValue;
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should include object props as second arg when bound', function () {
+		const componentInstance = {
+			props: {
+				value: 1
+			}
+		};
+		const handler = sinon.spy();
+		const h = handle.bind(componentInstance);
+		const callback = h(handler);
+		callback();
+
+		const expected = 1;
+		const actual = handler.firstCall.args[1].value;
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should include object context as third arg when bound', function () {
+		const componentInstance = {
+			context: {
+				value: 1
+			}
+		};
+		const handler = sinon.spy();
+		const h = handle.bind(componentInstance);
+		const callback = h(handler);
+		callback();
+
+		const expected = 1;
+		const actual = handler.firstCall.args[2].value;
 
 		expect(actual).to.equal(expected);
 	});

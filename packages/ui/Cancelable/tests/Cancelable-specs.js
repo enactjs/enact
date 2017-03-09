@@ -21,8 +21,10 @@ describe('Cancelable', () => {
 		};
 	};
 
+	const returnsTrue = () => true;
+
 	it('should call onCancel from prop for escape key', function () {
-		const handleCancel = sinon.spy();
+		const handleCancel = sinon.spy(returnsTrue);
 		const Comp = Cancelable(
 			{onCancel: 'onCustomEvent'},
 			Component
@@ -41,7 +43,7 @@ describe('Cancelable', () => {
 	});
 
 	it('should only call onCancel for escape key by default', function () {
-		const handleCancel = sinon.spy();
+		const handleCancel = sinon.spy(returnsTrue);
 		const Comp = Cancelable(
 			{onCancel: handleCancel},
 			Component
@@ -60,7 +62,7 @@ describe('Cancelable', () => {
 	});
 
 	it('should not call onCancel for non-escape key', function () {
-		const handleCancel = sinon.spy();
+		const handleCancel = sinon.spy(returnsTrue);
 		const Comp = Cancelable(
 			{onCancel: handleCancel},
 			Component
@@ -79,7 +81,7 @@ describe('Cancelable', () => {
 	});
 
 	it('should stop propagation for escape key', function () {
-		const handleCancel = sinon.spy();
+		const handleCancel = sinon.spy(returnsTrue);
 		const keyEvent = makeKeyEvent(27);
 		const Comp = Cancelable(
 			{onCancel: handleCancel},
@@ -99,7 +101,7 @@ describe('Cancelable', () => {
 	});
 
 	it('should not stop propagation for non-escape key', function () {
-		const handleCancel = sinon.spy();
+		const handleCancel = sinon.spy(returnsTrue);
 		const keyEvent = makeKeyEvent(42);
 		const Comp = Cancelable(
 			{onCancel: handleCancel},
@@ -122,7 +124,7 @@ describe('Cancelable', () => {
 		const handleKeyUp = sinon.spy();
 		const keyEvent = makeKeyEvent(42);
 		const Comp = Cancelable(
-			{onCancel: () => false},
+			{onCancel: () => true},
 			Component
 		);
 
@@ -139,9 +141,9 @@ describe('Cancelable', () => {
 	});
 
 	it('should call onCancel when additional cancel handlers pass', function () {
-		const customCancelHandler = (ev) => ev.keyCode !== 461;
+		const customCancelHandler = (ev) => ev.keyCode === 461;
 		addCancelHandler(customCancelHandler);
-		const handleCancel = sinon.spy();
+		const handleCancel = sinon.spy(returnsTrue);
 		const Comp = Cancelable(
 			{onCancel: handleCancel},
 			Component

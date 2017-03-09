@@ -5,6 +5,7 @@
  * @private
  */
 
+import {$L} from '@enact/i18n';
 import hoc from '@enact/core/hoc';
 import {throttleJob} from '@enact/core/jobs';
 import Spotlight from '@enact/spotlight';
@@ -211,9 +212,12 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.jobName = `sliderChange${now()}`;
 			this.knobPosition = null;
 			this.normalizeBounds(props);
+
+			const value = this.clamp(props.value);
 			this.state = {
 				active: false,
-				value: this.clamp(props.value)
+				value: value,
+				valueText: value
 			};
 
 			if (__DEV__) {
@@ -232,8 +236,10 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			if ((min !== this.props.min) || (max !== this.props.max) || (value !== this.state.value)) {
 				this.normalizeBounds(nextProps);
+				const clampedValue = this.clamp(value);
 				this.setState({
-					value: this.clamp(value)
+					value: clampedValue,
+					valueText: clampedValue
 				});
 			}
 
@@ -260,7 +266,10 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		throttleUpdateValue = (value) => {
 			throttleJob(this.jobName, () => {
 				this.inputNode.value = value;
-				this.setState({value});
+				this.setState({
+					value,
+					valueText: value
+				});
 				forwardChange({value}, this.props);
 			}, config.changeDelay);
 		}
@@ -325,6 +334,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const parseFn = (ev.target.value % 1 !== 0) ? parseFloat : parseInt,
 				value = parseFn(ev.target.value);
 			this.throttleUpdateValue(value);
+
 		}
 
 		handleMouseMove = (ev) => {
@@ -366,17 +376,26 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleActivate = () => {
-			if (this.props.disabled) return;
+			const {detachedKnob, disabled, vertical} = this.props;
 
-			if (this.props.detachedKnob) {
+			if (disabled) return;
+
+			if (detachedKnob) {
 				if (this.current5WayValue !== null) {
 					this.throttleUpdateValue(this.clamp(this.current5WayValue));
 					this.current5WayValue = null;
 				}
 			} else {
-				this.setState({
-					active: !this.state.active
-				});
+				const verticalHint = $L('change a value with up down button');
+				const horizontalHint = $L('change a value with left right button');
+				const active = !this.state.active;
+
+				let valueText = this.state.value;
+				if (active) {
+					valueText = vertical ? verticalHint : horizontalHint;
+				}
+
+				this.setState({active, valueText});
 			}
 		}
 
@@ -420,8 +439,11 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			return (
 				<Wrapped
+					role="slider"
 					{...props}
 					active={this.state.active}
+					aria-disabled={this.props.disabled}
+					aria-valuetext={this.state.valueText}
 					inputRef={this.getInputNode}
 					onActivate={this.handleActivate}
 					onBlur={this.handleBlur}

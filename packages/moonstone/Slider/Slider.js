@@ -17,7 +17,7 @@ import {computeProportionProgress} from '../internal/SliderDecorator/util';
 import {SliderBarFactory} from './SliderBar';
 import componentCss from './Slider.less';
 
-const isActive = (ev, props) => !(props.active || props.detachedKnob);
+const isActive = (ev, props) => props.active || props.detachedKnob;
 const isIncrement = (ev, props) => forKey(props.vertical ? 'up' : 'right', ev);
 const isDecrement = (ev, props) => forKey(props.vertical ? 'down' : 'left', ev);
 
@@ -272,8 +272,8 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			onKeyDown: handle(
 				forward('onKeyDown'),
 				(ev, props) => {
-					return	handleDecrement(ev, props) &&
-							handleIncrement(ev, props) &&
+					return	handleDecrement(ev, props) ||
+							handleIncrement(ev, props) ||
 							handleActivate(ev, props);
 				}
 			),
@@ -311,7 +311,15 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			delete rest.pressed;
 
 			return (
-				<div {...rest} disabled={disabled} onBlur={onBlur} onKeyDown={onKeyDown} onMouseUp={onMouseUp} ref={sliderRef}>
+				<div
+					{...rest}
+					aria-disabled={disabled}
+					disabled={disabled}
+					onBlur={onBlur}
+					onKeyDown={onKeyDown}
+					onMouseUp={onMouseUp}
+					ref={sliderRef}
+				>
 					<SliderBar
 						proportionBackgroundProgress={backgroundProgress}
 						proportionProgress={proportionProgress}
@@ -322,6 +330,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						{children}
 					</SliderBar>
 					<input
+						aria-disabled={disabled}
 						className={css.input}
 						disabled={disabled}
 						type="range"

@@ -6,6 +6,7 @@
 
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
+import {getDirection} from '@enact/spotlight';
 import hoc from '@enact/core/hoc';
 import React, {Component, PropTypes} from 'react';
 import {contextTypes} from '@enact/ui/Resizable';
@@ -409,16 +410,20 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		onKeyDown = (e) => {
-			if (this.childRef.setSpotlightContainerRestrict) {
-				const index = Number.parseInt(e.target.getAttribute(dataIndexAttribute));
-				this.childRef.setSpotlightContainerRestrict(e.keyCode, index);
+		onKeyDown = ({keyCode, target}) => {
+			if  (getDirection(keyCode)) {
+				if (this.childRef.setSpotlightContainerRestrict) {
+					const index = Number.parseInt(target.getAttribute(dataIndexAttribute));
+					this.childRef.setSpotlightContainerRestrict(keyCode, index);
+				}
+				this.isKeyDown = true;
 			}
-			this.isKeyDown = true;
 		}
 
-		onKeyUp = () => {
-			this.isKeyDown = false;
+		onKeyUp = ({keyCode}) => {
+			if  (getDirection(keyCode)) {
+				this.isKeyDown = false;
+			}
 		}
 
 		onWheel = (e) => {
