@@ -1,6 +1,8 @@
 import {hoc} from '@enact/core';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
+import {startJob} from '@enact/core/jobs';
+import pick from 'ramda/src/pick';
 import React from 'react';
 import Spotlight from './spotlight';
 
@@ -53,6 +55,13 @@ const forwardEnter = (keyEvent, mouseEvent) => (props) => {
 	};
 };
 
+const keyDownEventProps = ['altKey', 'ctrlKey', 'currentTarget', 'detail', 'key', 'keyCode',
+	'metaKey', 'shiftKey', 'target', 'type', 'which'];
+
+const makeEvent = (type, ev) => {
+	return {...ev, type};
+};
+
 /**
  * Default configuration for Spottable
  *
@@ -69,7 +78,17 @@ const defaultConfig = {
 	 * @public
 	 * @memberof spotlight.Spottable.defaultConfig
 	 */
-	emulateMouse: true
+	emulateMouse: true,
+
+	/**
+	 * Number of milliseconds it takes to complete a visible selection animation
+	 *
+	 * @type {Number}
+	 * @default 0
+	 * @public
+	 * @memberof spotlight.Spottable.defaultConfig
+	 */
+	selectionAnimationDelay: 0
 };
 
 /**
@@ -87,13 +106,14 @@ const defaultConfig = {
  * @returns {Function} Spottable
  */
 const Spottable = hoc(defaultConfig, (config, Wrapped) => {
-	const {emulateMouse} = config;
+	const {emulateMouse, selectionAnimationDelay} = config;
 	const forwardBlur = forward('onBlur');
 	const forwardFocus = forward('onFocus');
 	const forwardEnterKeyPress = forwardEnter('onKeyPress', 'onClick');
 	const forwardEnterKeyDown = forwardEnter('onKeyDown', 'onMouseDown');
 	const forwardEnterKeyUp = forwardEnter('onKeyUp', 'onMouseUp');
 	const forwardKeyDown = forward('onKeyDown');
+	const forwardKeyUp = forward('onKeyUp');
 
 	return class extends React.Component {
 		static displayName = 'Spottable'
@@ -174,9 +194,26 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
+			this.enterKeyDownEvent = null;
 			this.state = {
 				spotted: false
 			};
+		}
+
+		componentDidUpdate (prevProps, prevState) {
+			// if a blur occured during a enter-key press/hold, as a result of a programmatic focus change
+			if (prevState.spotted && !this.state.spotted && this.enterKeyDownEvent) {
+				// Certain components require time to perform an action (animation via an applied class) due to
+				// forwarding a `keydown` event, while being selected. Immediately calling `forwardEnterKeyUp`
+				// will result in the components being updated too quickly for the animation to begin, providing
+				// no visual feedback of the selection. We perform this behavior in the `componentDidUpdate`
+				// life-cycle instead of immediately within the `onBlur` event to ensure the component tree has
+				// been updated, giving us the full `selectionAnimationDelay` time to work with.
+				startJob('forwardEnterKeyUp', () => {
+					forwardEnterKeyUp(this.props)(makeEvent('onKeyUp', this.enterKeyDownEvent));
+					this.enterKeyDownEvent = null;
+				}, selectionAnimationDelay);
+			}
 		}
 
 		componentWillUnmount () {
@@ -226,9 +263,19 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			if (emulateMouse && !(this.state.spotted && disabled) && is('enter', keyCode)) {
+				this.enterKeyDownEvent = pick(keyDownEventProps, e);
 				forwardEnterKeyDown(this.props)(e);
 			} else {
 				forwardKeyDown(e, this.props);
+			}
+		}
+
+		onKeyUp = (e) => {
+			if (emulateMouse && !(this.state.spotted && this.props.disabled) && is('enter', e.keyCode)) {
+				this.enterKeyDownEvent = null;
+				forwardEnterKeyUp(this.props)(e);
+			} else {
+				forwardKeyUp(e, this.props);
 			}
 		}
 
@@ -254,10 +301,10 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 				rest['onBlur'] = this.onBlur;
 				rest['onFocus'] = this.onFocus;
 				rest['onKeyDown'] = this.onKeyDown;
+				rest['onKeyUp'] = this.onKeyUp;
 
 				if (emulateMouse && !spottableDisabled) {
 					rest['onKeyPress'] = forwardEnterKeyPress(this.props);
-					rest['onKeyUp'] = forwardEnterKeyUp(this.props);
 				}
 				if (rest.className) {
 					rest.className += ' ' + classes;
