@@ -19,11 +19,23 @@ const defaultConfig = {
 };
 
 /**
- * {@link moonstone/LazyDecorator.LazyDecorator} is a Higher-order Component for its wrapped component
- * to render few children first and to render the other children later.Its default event and property can be
- * configured when applied to a component.
+ * The context propTypes required by `Resizable`. This should be set as the `childContextTypes` of a
+ * container that needs to be notified of a resize.
  *
- * By default, the only 5 children of the its wrapped component are rendered.
+ * @type {Object}
+ * @memberof ui/Resizable
+ * @public
+ */
+const contextTypes = {
+	invalidateBounds: React.PropTypes.func
+};
+
+/**
+ * {@link moonstone/LazyDecorator.LazyDecorator} is a Higher-order Component so that its few wrapped children
+ * are rendered first and the other wrapped children are rendered later. The number of the former children
+ * can be configured when applied to a component.
+ *
+ * By default, the only 5 wrapped children are rendered first.
  *
  * @class LazyDecorator
  * @memberof moonstone/LazyDecorator
@@ -34,6 +46,8 @@ const LazyDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const initialNumOfChildren = config.initialNumOfChildren;
 
 	return class Lazy extends Component {
+		static contextTypes = contextTypes
+
 		constructor (props) {
 			super(props);
 
@@ -41,19 +55,30 @@ const LazyDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				didMount: false
 			};
 		}
+
+		invalidateBounds = () => this.context.invalidateBounds()
+
 		componentDidMount () {
 			if (this.state.didMount === false) {
-				// eslint-disable-next-line react/no-did-mount-set-state
-				this.setState({didMount: true});
+				window.setTimeout(() => {
+					// eslint-disable-next-line react/no-did-mount-set-state
+					this.setState({didMount: true});
+					if (this.invalidateBounds) {
+						this.invalidateBounds();
+					}
+				}, 1);
 			}
 		}
+
 		render () {
 			let props = this.props;
 
 			if (!this.state.didMount) {
 				if (props.children.length <= initialNumOfChildren) {
-					// eslint-disable-next-line react/no-direct-mutation-state
-					this.state.didMount = true;
+					window.setTimeout(() => {
+						// eslint-disable-next-line react/no-direct-mutation-state
+						this.state.didMount = true;
+					}, 1);
 				} else {
 					props = Object.assign({}, this.props);
 					props.children = props.children.slice(0, initialNumOfChildren);
