@@ -39,6 +39,7 @@ const PanelBase = kind({
 		 * When `aria-label` is set, it will be used instead to provide an accessibility label for
 		 * the panel.
 		 *
+		 * @memberof moonstone/Panels.Panel.prototype
 		 * @type {String}
 		 * @public
 		 */

@@ -29,7 +29,7 @@ const classNameMap = {
 const ScrollButtonBase = kind({
 	name: 'ScrollButton',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/Scroller.ScrollButtonBase.prototype */ {
 		/**
 		 * Name of icon
 		 *
