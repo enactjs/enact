@@ -69,9 +69,9 @@ const handledMediaEventsMap = {
 // List custom events that aren't standard to React. These will be directly added to the video
 // element and props matching their name will be executed as callback functions when the event fires.
 // "umsmediainfo" prop function will execute when the "umsmediainfo" event happens.
-const handledCustomMediaEvents = [
-	'umsmediainfo'
-];
+const handledCustomMediaEventsMap = {
+	'umsmediainfo'  : 'onUMSMediaInfo'
+};
 
 // provide forwarding of events on media controls
 const forwardBackwardButtonClick = forward('onBackwardButtonClick');
@@ -319,9 +319,9 @@ const VideoPlayerBase = class extends React.Component {
 			this.handledMediaEvents[eventName] = this.handleEvent;
 		}
 		// Generate event handling forwarders for the custom events too
-		for (let i = 0; i < handledCustomMediaEvents.length; i++) {
-			const eventName = handledCustomMediaEvents[i];
-			const forwardEvent = forward(eventName);
+		for (let eventName in handledCustomMediaEventsMap) {
+			const propName = handledCustomMediaEventsMap[eventName];
+			const forwardEvent = forward(propName);
 			this.handledCustomMediaForwards[eventName] = ev => forwardEvent(ev, this.props);
 		}
 
@@ -941,8 +941,8 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.titleHideDelay;
 
 		// Remove the events we manually added so they aren't added twice or fail.
-		for (let eventName in this.handledCustomMediaForwards) {
-			delete rest[eventName];
+		for (let eventName in handledCustomMediaEventsMap) {
+			delete rest[handledCustomMediaEventsMap[eventName]];
 		}
 
 		// Handle some cases when the "more" button is pressed
