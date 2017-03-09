@@ -28,8 +28,7 @@ const defaultConfig = {
 	 * If the function handles the cancel action, it should returning `true` to prevent container or
 	 * `modal` Cancelable instances from also handling the action.
 	 *
-	 * @type {String}
-	 * @default null
+	 * @type {String|Function}
 	 * @required
 	 * @memberof ui/Cancelable.Cancelable.defaultConfig
 	 */
@@ -50,8 +49,8 @@ const defaultConfig = {
 	modal: false,
 
 	/**
-	 * When set, the Wrapped component will contained within an instance of `component`. This may be
-	 * necessary if the props passed to Wrapped are not placed on the root element.
+	 * When set, the Wrapped component will be contained within an instance of `component`. This may
+	 * be necessary if the props passed to Wrapped are not placed on the root element.
 	 *
 	 * @type {String|Function}
 	 * @default null

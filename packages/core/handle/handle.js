@@ -183,7 +183,7 @@ const forward = handle.forward = curry((name, ev, props) => {
 });
 
 /**
- * Calls event.preventDefault() and returns `true`.
+ * Calls `event.preventDefault()` and returns `true`.
  *
  * ```
  * import {handle, preventDefault} from '@enact/core/handle';
@@ -202,7 +202,7 @@ const forward = handle.forward = curry((name, ev, props) => {
 const preventDefault = handle.preventDefault = callOnEvent('preventDefault');
 
 /**
- * Calls event.stopPropagation() and returns `true`
+ * Calls `event.stopPropagation()` and returns `true`
  *
  * ```
  * import {handle, stop} from '@enact/core/handle';
@@ -221,7 +221,7 @@ const preventDefault = handle.preventDefault = callOnEvent('preventDefault');
 const stop = handle.stop = callOnEvent('stopPropagation');
 
 /**
- * Calls event.stopImmediatePropagation() and returns `true`
+ * Calls `event.stopImmediatePropagation()` and returns `true`
  *
  * ```
  * import {handle, stopImmediate} from '@enact/core/handle';
