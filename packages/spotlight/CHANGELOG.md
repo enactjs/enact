@@ -4,6 +4,12 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ## [unreleased]
 
+### Changed
+
+- `spotlight.Spottable` to prevent emulating mouse events for repeated key events
+
+## [1.0.0-beta.3] - 2017-02-21
+
 ### Fixed
 
 - `spotlight.Spotlight` behavior to follow container config rules when navigating between containers

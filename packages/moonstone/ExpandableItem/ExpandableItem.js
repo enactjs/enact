@@ -7,6 +7,7 @@
  * @module moonstone/ExpandableItem
  */
 
+import {extractAriaProps} from '@enact/core/util';
 import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
@@ -74,10 +75,10 @@ const ExpandableItemBase = kind({
 		/**
 		 * The secondary, or supportive text. Typically under the `title`, a subtitle.
 		 *
-		 * @type {String}
+		 * @type {Node}
 		 * @public
 		 */
-		label: PropTypes.string,
+		label: PropTypes.node,
 
 		/**
 		 * When `true`, the user is prevented from moving {@glossary Spotlight} past the bottom
@@ -206,16 +207,24 @@ const ExpandableItemBase = kind({
 
 	render: ({children, disabled, handleKeyDown, handleOpen, label, open, onSpotlightDisappear, spotlightDisabled, title, titleIcon, transitionSpotlightDisabled, ...rest}) => {
 		delete rest.autoClose;
-		delete rest.label;
 		delete rest.lockBottom;
 		delete rest.noneText;
 		delete rest.onClose;
 		delete rest.onOpen;
 		delete rest.showLabel;
 
+		const ariaProps = extractAriaProps(rest);
+
 		return (
-			<ExpandableContainer {...rest} disabled={disabled} open={open} spotlightDisabled={spotlightDisabled}>
+			<ExpandableContainer
+				{...rest}
+				aria-disabled={disabled}
+				disabled={disabled}
+				open={open}
+				spotlightDisabled={spotlightDisabled}
+			>
 				<LabeledItem
+					{...ariaProps}
 					disabled={disabled}
 					label={label}
 					onClick={handleOpen}

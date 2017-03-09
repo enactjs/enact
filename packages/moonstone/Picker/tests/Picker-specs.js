@@ -28,4 +28,5 @@ describe('Picker Specs', () => {
 
 		expect(actual).to.equal(expected);
 	});
+
 });

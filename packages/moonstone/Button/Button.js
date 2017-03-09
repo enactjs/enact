@@ -69,6 +69,15 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 			backgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'transparent']),
 
 			/**
+			 * This property accepts one of the following color names, which correspond with the
+			 * colored buttons on a standard remote control: `'red'`, `'green'`, `'yellow'`, `'blue'`
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			color: PropTypes.oneOf([null, 'red', 'green', 'yellow', 'blue']),
+
+			/**
 			 * When `true`, the [button]{@glossary button} is shown as disabled and does not
 			 * generate `onClick` [events]{@glossary event}.
 			 *
@@ -104,7 +113,6 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 			 * When `true`, a selected visual effect is applied to the button
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			selected: PropTypes.bool,
@@ -127,7 +135,6 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 			disabled: false,
 			minWidth: true,
 			pressed: false,
-			selected: false,
 			small: false
 		},
 
@@ -152,9 +159,9 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 		},
 
 		computed: {
-			className: ({backgroundOpacity, minWidth, pressed, selected, small, styler}) => styler.append(
+			className: ({backgroundOpacity, color, minWidth, pressed, selected, small, styler}) => styler.append(
 				{pressed, small, minWidth, selected},
-				backgroundOpacity
+				backgroundOpacity, color
 			)
 		},
 
@@ -165,15 +172,22 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 			)
 		},
 
-		render: ({children, ...rest}) => {
+		render: ({children, disabled, ...rest}) => {
+			// Do not add the ARIA attribute if the selected prop is omitted to avoid the potentially
+			// confusing readout for the common case of a standalone Button or IconButton.
+			if ('selected' in rest) {
+				rest['aria-pressed'] = rest.selected;
+			}
+
 			delete rest.backgroundOpacity;
+			delete rest.color;
 			delete rest.minWidth;
 			delete rest.pressed;
 			delete rest.selected;
 			delete rest.small;
 
 			return (
-				<div role="button" {...rest}>
+				<div role="button" {...rest} aria-disabled={disabled} disabled={disabled}>
 					<div className={css.bg} />
 					<div className={css.client}>{children}</div>
 				</div>
