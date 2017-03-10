@@ -763,29 +763,32 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		// component life cycle
-
-		componentDidMount () {
-			const {isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state;
+		updateScrollabilityAndEventListeners = () => {
+			const
+				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
+				containerNode = this.childRef.containerRef;
 
 			this.horizontalScrollability = this.childRef.isHorizontal();
 			this.verticalScrollability = this.childRef.isVertical();
-			// FIXME `onWheel` don't work on the v8 snapshot.
+
+			// FIXME `onWheel` doesn't work on the v8 snapshot.
 			if (isVerticalScrollbarVisible || isHorizontalScrollbarVisible) {
 				this.containerRef.addEventListener('wheel', this.onWheel);
 			} else {
-				this.childRef.containerRef.addEventListener('wheel', this.onWheel);
+				containerNode.addEventListener('wheel', this.onWheel);
 			}
+			// FIXME `onFocus` doesn't work on the v8 snapshot.
+			containerNode.addEventListener('focus', this.onFocus, true);
 			this.updateScrollbars();
-			// FIXME `onFocus` don't work on the v8 snapshot.
-			this.childRef.containerRef.addEventListener('focus', this.onFocus, true);
+		}
+
+		// component life cycle
+
+		componentDidMount () {
+			this.updateScrollabilityAndEventListeners();
 		}
 
 		componentDidUpdate () {
-			const {isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state;
-
-			this.horizontalScrollability = this.childRef.isHorizontal();
-			this.verticalScrollability = this.childRef.isVertical();
 			this.isInitializing = false;
 
 			// Need to sync calculated client size if it is different from the real size
@@ -793,13 +796,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				this.childRef.syncClientSize();
 			}
 
-			// FIXME `onWheel` don't work on the v8 snapshot.
-			if (isVerticalScrollbarVisible || isHorizontalScrollbarVisible) {
-				this.containerRef.addEventListener('wheel', this.onWheel);
-			} else {
-				this.childRef.containerRef.addEventListener('wheel', this.onWheel);
-			}
-			this.updateScrollbars();
+			this.updateScrollabilityAndEventListeners();
 
 			if (this.scrollToInfo !== null) {
 				this.scrollTo(this.scrollToInfo);
