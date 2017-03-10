@@ -6,7 +6,7 @@ import {withKnobs, boolean, number, select} from '@kadira/storybook-addon-knobs'
 
 const ChangeableSlider = Changeable({mutable: true}, Slider);
 ChangeableSlider.propTypes = Object.assign({}, SliderBase.propTypes, Slider.propTypes);
-ChangeableSlider.defaultProps = Object.assign({}, SliderBase.defaultProps, Slider.defaultProps);
+ChangeableSlider.defaultProps = Object.assign({}, ChangeableSlider.defaultProps, SliderBase.defaultProps, Slider.defaultProps);
 ChangeableSlider.displayName = 'Slider';
 
 delete ChangeableSlider.propTypes.pressed;
