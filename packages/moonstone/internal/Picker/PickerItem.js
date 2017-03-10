@@ -17,16 +17,7 @@ const PickerItemBase = kind({
 		 * @type {Node|Node[]}
 		 * @public
 		 */
-		children: React.PropTypes.node,
-
-
-		/**
-		 * Forces the `direction` Picker list. Valid values are `rtl` and `ltr`. This includes non-text elements as well.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		forceDirection: React.PropTypes.oneOf(['rtl', 'ltr'])
+		children: React.PropTypes.node
 	},
 
 	styles: {
