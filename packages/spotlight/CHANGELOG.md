@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 ### Fixed
 
 - `spotlight.Spotlight` calling `set()` now properly updates the container config
+- `spotlight.Spotlight` behavior to properly save the last-focused element for nested containers
 
 ### Changed
 
