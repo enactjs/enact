@@ -110,7 +110,7 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleChange = this.handle(
 			forProp('disabled', false),
-			forward('onChange'),
+			forward(change),
 			(ev) => {
 				const value = ev[prop];
 				this.setState({value});
