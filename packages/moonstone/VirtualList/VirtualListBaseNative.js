@@ -14,7 +14,7 @@ import {Spotlight, SpotlightContainerDecorator} from '@enact/spotlight';
 import {dataIndexAttribute, Scrollable} from '../Scroller/ScrollableNative';
 
 import css from './VirtualListBaseNative.less';
-import cssItem from './ListItem.less';
+import cssItem from './ListItemNative.less';
 
 const
 	dataContainerMutedAttribute = 'data-container-muted',
@@ -593,8 +593,6 @@ class VirtualListCore extends Component {
 			style.width = width;
 			style.height = height;
 		}
-
-		style.willChange = 'left, top';
 
 		this.composeItemPosition(style, ...rest);
 	}

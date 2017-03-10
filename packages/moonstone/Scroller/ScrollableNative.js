@@ -14,8 +14,8 @@ import hoc from '@enact/core/hoc';
 import React, {Component, PropTypes} from 'react';
 import {startJob} from '@enact/core/jobs';
 
-import css from '../Scroller/Scrollable.less';
-import Scrollbar from '../Scroller/Scrollbar';
+import css from './Scrollable.less';
+import Scrollbar from './Scrollbar';
 
 const
 	nop = () => {},
