@@ -8,7 +8,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 - `core/kind` support for `contextTypes`
 - `core/utils` function `extractAriaProps()` for redirecting ARIA props when the root node of a component isn't focusable
-- `moonstone/VirtualList` `indexToFocus` option to scrollTo method to focus on item with specified index
+- `moonstone/VirtualList` `indexToFocus` option to `scrollTo` method to focus on item with specified index
 - `moonstone/IconButton` and `moonstone/Button` `color` property to add a remote control key color to the button
 - `moonstone/Scrollbar` property `disabled` to disable both paging controls when it is true
 - `moonstone/VirtualList` parameter `moreInfo` to pass `firstVisibleIndex` and `lastVisibleIndex` when scroll events are firing
@@ -26,7 +26,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 - `core/handle` to allow binding to components. This also introduces a breaking change in the return value of handle methods.
 - `moonstone/VirtualGridImageItem` styles to reduce redundant style code app side
 - `moonstone/VirtualList` and `moonstone/VirtualGridList` to add essential CSS for list items automatically
-- `moonstone/VirtualList` and `moonstone/VirtualGridList` not to add `data-index` to their item DOM elements directly, but to pass `data-index` as the parameter of their `component` prop like the `key` parameter of their `component` prop
+- `moonstone/VirtualList` and `moonstone/VirtualGridList` to not add `data-index` to their item DOM elements directly, but to pass `data-index` as the parameter of their `component` prop like the `key` parameter of their `component` prop
 - `moonstone/ExpandableItem` and derivatives to defer focusing the contents until animation completes
 - `moonstone/LabeledItem`, `moonstone/ExpandableItem`, `moonstone/ExpandableList` to each support the `node` type in their `label` property. Best used with `ui/Slottable`.
 - `spotlight.Spottable` to prevent emulating mouse events for repeated key events
@@ -36,7 +36,6 @@ The following is a curated list of changes in the Enact project, newest changes 
 - `moonstone/VirtualList.GridListImageItem` to have proper padding size according to the existence of caption/subcaption
 - `moonstone/Scrollable` to display scrollbars with proper size
 - `moonstone/VirtualGridList` to not be truncated
-- `spotlight.Spotlight` behavior to properly save the last-focused element for nested containers
 - `webos/LS2Request` to return failure in isomorphic mode
 
 ## [1.0.0-beta.3] - 2017-02-21
