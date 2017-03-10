@@ -2,7 +2,14 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
+## [1.0.0-beta.4] - 2017-03-10
+
+### Added
+
+- `ui/A11yDecorator` to facilitate adding pre/post hints to components
+- `ui/AnnounceDecorator` to facilitate announcing actions for accessibility
+
+## [1.0.0-beta.3] - 2017-02-21
 
 ### Added
 

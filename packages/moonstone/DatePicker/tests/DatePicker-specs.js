@@ -61,7 +61,7 @@ describe('DatePicker', () => {
 
 	it('should accept a JavaScript Date for its value prop', function () {
 		const subject = mount(
-			<DatePicker title="Date" value={new Date(2000, 0, 1)} />
+			<DatePicker title="Date" value={new Date(2000, 0, 1)} open />
 		);
 
 		const yearPicker = subject.find('DateComponentRangePicker').findWhere(p => {
@@ -76,7 +76,7 @@ describe('DatePicker', () => {
 
 	it('should accept an updated JavaScript Date for its value prop', function () {
 		const subject = mount(
-			<DatePicker title="Date" value={new Date(2000, 0, 1)} />
+			<DatePicker title="Date" value={new Date(2000, 0, 1)} open />
 		);
 
 		subject.setProps({

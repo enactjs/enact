@@ -1,5 +1,5 @@
 import React from 'react';
-import {mount} from 'enzyme';
+import {mount, shallow} from 'enzyme';
 
 import Popup from '../Popup';
 
@@ -33,6 +33,28 @@ describe('Popup specs', () => {
 
 		const expected = false;
 		const actual = popup.find('FloatingLayer').prop('open');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should set role to alert by default', function () {
+		const popup = shallow(
+			<Popup><div>popup</div></Popup>
+		);
+
+		const expected = 'alert';
+		const actual = popup.find('PopupBase').prop('role');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should allow role to be overridden', function () {
+		const popup = shallow(
+			<Popup role="dialog"><div>popup</div></Popup>
+		);
+
+		const expected = 'dialog';
+		const actual = popup.find('PopupBase').prop('role');
 
 		expect(actual).to.equal(expected);
 	});

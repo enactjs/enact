@@ -5,12 +5,15 @@
  * export is {@link moonstone/VirtualList.VirtualListBase}.
  */
 
+import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import {is} from '@enact/core/keymap';
 import React, {Component, PropTypes} from 'react';
 import {Spotlight, SpotlightContainerDecorator} from '@enact/spotlight';
 
 import {dataIndexAttribute, Scrollable} from '../Scroller/Scrollable';
+
+import css from './ListItem.less';
 
 const
 	dataContainerMutedAttribute = 'data-container-muted',
@@ -235,7 +238,7 @@ class VirtualListCore extends Component {
 
 		if (hasMetricsChanged) {
 			this.calculateMetrics(nextProps);
-			this.updateStatesAndBounds(hasDataChanged ? nextProps : this.props);
+			this.updateStatesAndBounds(nextProps);
 		} else if (hasDataChanged) {
 			this.updateStatesAndBounds(nextProps);
 		}
@@ -394,7 +397,8 @@ class VirtualListCore extends Component {
 		const
 			{dataSize, overhang} = props,
 			{dimensionToExtent, primary} = this,
-			numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang));
+			numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
+			wasFirstIndexMax = (this.maxFirstIndex && (this.state.firstIndex === this.maxFirstIndex));
 
 		this.maxFirstIndex = dataSize - numOfItems;
 		this.curDataSize = dataSize;
@@ -404,7 +408,7 @@ class VirtualListCore extends Component {
 		// reset children
 		this.cc = [];
 
-		this.setState({firstIndex: Math.min(this.state.firstIndex, this.maxFirstIndex), numOfItems});
+		this.setState({firstIndex: wasFirstIndexMax ? this.maxFirstIndex : Math.min(this.state.firstIndex, this.maxFirstIndex), numOfItems});
 		this.calculateScrollBounds(props);
 	}
 
@@ -523,8 +527,6 @@ class VirtualListCore extends Component {
 			node = this.containerRef.children[primaryIndex % numOfItems];
 
 		if (node) {
-			// spotlight
-			node.setAttribute(dataIndexAttribute, primaryIndex);
 			if ((primaryIndex % numOfItems) === this.nodeIndexToBeBlurred && primaryIndex !== this.lastFocusedIndex) {
 				node.blur();
 				this.nodeIndexToBeBlurred = null;
@@ -539,6 +541,7 @@ class VirtualListCore extends Component {
 			{numOfItems} = this.state,
 			itemElement = component({
 				data,
+				[dataIndexAttribute]: primaryIndex,
 				index: primaryIndex,
 				key: primaryIndex % numOfItems
 			}),
@@ -546,12 +549,10 @@ class VirtualListCore extends Component {
 
 		this.composeStyle(style, ...rest);
 
-		this.cc[primaryIndex % numOfItems] = React.cloneElement(
-			itemElement, {
-				style: {...itemElement.props.style, ...style},
-				[dataIndexAttribute]: primaryIndex
-			}
-		);
+		this.cc[primaryIndex % numOfItems] = React.cloneElement(itemElement, {
+			className: classNames(css.listItem, itemElement.props.className),
+			style: {...itemElement.props.style, ...style}
+		});
 	}
 
 	positionItems ({updateFrom, updateTo}) {
@@ -652,6 +653,19 @@ class VirtualListCore extends Component {
 			{spacing} = this.props;
 
 		return (Math.ceil(curDataSize / dimensionToExtent) * primary.gridSize) - spacing;
+	}
+
+	focusOnItem = (index) => {
+		// We have to focus item async for now since list items are not yet ready when it reaches componentDid* lifecycle methods
+		setTimeout(() => {
+			const item = this.getContainerNode(this.props.positioningOption).querySelector(`[data-index='${index}'].spottable`);
+
+			if (item) {
+				// setPointerMode to false since Spotlight prevents programmatically changing focus while in pointer mode
+				Spotlight.setPointerMode(false);
+				Spotlight.focus(item);
+			}
+		}, 0);
 	}
 
 	calculatePositionOnFocus = (item) => {
@@ -767,7 +781,6 @@ class VirtualListCore extends Component {
 		delete props.hideScrollbars;
 		delete props.itemSize;
 		delete props.onScroll;
-		delete props.onScrolling;
 		delete props.onScrollStart;
 		delete props.onScrollStop;
 		delete props.overhang;

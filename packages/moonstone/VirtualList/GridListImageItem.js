@@ -93,10 +93,19 @@ const GridListImageItemBase = kind({
 	},
 
 	computed: {
-		className: ({selected, styler}) => styler.append({selected})
+		className: ({caption, selected, styler, subCaption}) => styler.append(
+			{selected},
+			caption ? 'useCaption' : null,
+			subCaption ? 'useSubCaption' : null
+		)
 	},
 
 	render: ({caption, source, subCaption, selectionOverlayShowing, ...rest}) => {
+		if (selectionOverlayShowing) {
+			rest['role'] = 'checkbox';
+			rest['aria-checked'] = rest.selected;
+		}
+
 		delete rest.selected;
 
 		return (

@@ -1,7 +1,14 @@
-import {Spotlight, getDirection} from './src/spotlight';
-import {SpotlightRootDecorator} from './src/root';
-import {SpotlightContainerDecorator, spotlightDefaultClass} from './src/container';
-import {Spottable, spottableClass} from './src/spottable';
+/*
+ * Exports the {@link spotlight.Spottable}, {@link spotlight.SpotlightRootDecorator},
+ * and {@link spotlight.SpotlightContainerDecorator} Higher-order Components, the
+ * {@link spotlight.Spotlight} utility object, the {@link spotlight.spottableClass} and
+ * {@link spotlight.spotlightDefaultClass} `className`s and the {@link spotlight.getDirection}
+ * function. The default export is {@link spotlight.Spotlight}.
+ *
+ * re-exports `src/index.js`
+ */
+
+import Spotlight from './src/index';
 
 export default Spotlight;
-export {Spotlight, SpotlightRootDecorator, SpotlightContainerDecorator, Spottable, spottableClass, spotlightDefaultClass, getDirection};
+export * from './src/index';
