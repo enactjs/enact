@@ -2,7 +2,7 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [unreleased]
+## [1.0.0-beta.4] - 2017-03-10
 
 ### Added
 
@@ -14,18 +14,20 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` property `onUMSMediaInfo` to support the custom webOS “umsmediainfo” event
 - `moonstone/Region` component which encourages wrapping components for improved accessibility rather than only preceding the components with a `moonstone/Divider`
 - `moonstone/Slider` tooltip. It's enabled by default and comes with options like `noTooltip`, `tooltipAsPercent`, and `tooltipSide`. See the component docs for more details.
+- `moonstone/Panels.Panel` property `hideChildren` to defer rendering children
+- `moonstone/Spinner` properties `blockClickOn` and `scrim` to block click events behind spinner
 
 ### Changed
 
 - `moonstone/VirtualGridImageItem` styles to reduce redundant style code app side
-- `moonstone/VirtualList` and `moonstone/VirtualGridList` to add essential CSS for list items automatically.
+- `moonstone/VirtualList` and `moonstone/VirtualGridList` to add essential CSS for list items automatically
 - `moonstone/VirtualList` and `moonstone/VirtualGridList` not to add `data-index` to their item DOM elements directly, but to pass `data-index` as the parameter of their `component` prop like the `key` parameter of their `component` prop
 - `moonstone/ExpandableItem` and derivatives to defer focusing the contents until animation completes
 - `moonstone/LabeledItem`, `moonstone/ExpandableItem`, `moonstone/ExpandableList` to each support the `node` type in their `label` property. Best used with `ui/Slottable`.
 
 ### Fixed
 
-- `moonstone/VirtualList.GridListImageItem` to have proper padding size according to the existence of caption/subcaption.
+- `moonstone/VirtualList.GridListImageItem` to have proper padding size according to the existence of caption/subcaption
 - `moonstone/Scrollable` to display scrollbars with proper size
 - `moonstone/VirtualGridList` to not be truncated
 
@@ -40,7 +42,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Slider` now supports `children` which are added to the `Slider`'s knob, and follow it as it moves
 - `moonstone/ExpandableInput` properties `iconAfter` and `iconBefore` to display icons after and before the input, respectively
 - `moonstone/Dialog` property `preserveCase`, which affects `title` text
-- `moonstone/Spinner` properties `blockClickOn` and `scrim` to block click events behind spinner
 
 ### Changed
 

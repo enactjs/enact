@@ -2,6 +2,43 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [1.0.0-beta.4] - 2017-03-10
+
+### Added
+
+- `core/kind` support for `contextTypes`
+- `core/utils` function `extractAriaProps()` for redirecting ARIA props when the root node of a component isn't focusable
+- `moonstone/VirtualList` `indexToFocus` option to scrollTo method to focus on item with specified index
+- `moonstone/IconButton` and `moonstone/Button` `color` property to add a remote control key color to the button
+- `moonstone/Scrollbar` property `disabled` to disable both paging controls when it is true
+- `moonstone/VirtualList` parameter `moreInfo` to pass `firstVisibleIndex` and `lastVisibleIndex` when scroll events are firing
+- Accessibility support to UI components
+- `moonstone/VideoPlayer` property `onUMSMediaInfo` to support the custom webOS “umsmediainfo” event
+- `moonstone/Region` component which encourages wrapping components for improved accessibility rather than only preceding the components with a `moonstone/Divider`
+- `moonstone/Slider` tooltip. It's enabled by default and comes with options like `noTooltip`, `tooltipAsPercent`, and `tooltipSide`. See the component docs for more details.
+- `moonstone/Spinner` properties `blockClickOn` and `scrim` to block click events behind spinner
+- `ui/A11yDecorator` to facilitate adding pre/post hints to components
+- `ui/AnnounceDecorator` to facilitate announcing actions for accessibility
+- `webos/pmloglib` logging method `perfLog` which calls `PmLogInfoWithClock`
+
+### Changed
+
+- `core/handle` to allow binding to components. This also introduces a breaking change in the return value of handle methods.
+- `moonstone/VirtualGridImageItem` styles to reduce redundant style code app side
+- `moonstone/VirtualList` and `moonstone/VirtualGridList` to add essential CSS for list items automatically
+- `moonstone/VirtualList` and `moonstone/VirtualGridList` not to add `data-index` to their item DOM elements directly, but to pass `data-index` as the parameter of their `component` prop like the `key` parameter of their `component` prop
+- `moonstone/ExpandableItem` and derivatives to defer focusing the contents until animation completes
+- `moonstone/LabeledItem`, `moonstone/ExpandableItem`, `moonstone/ExpandableList` to each support the `node` type in their `label` property. Best used with `ui/Slottable`.
+- `spotlight.Spottable` to prevent emulating mouse events for repeated key events
+
+### Fixed
+
+- `moonstone/VirtualList.GridListImageItem` to have proper padding size according to the existence of caption/subcaption
+- `moonstone/Scrollable` to display scrollbars with proper size
+- `moonstone/VirtualGridList` to not be truncated
+- `spotlight.Spotlight` behavior to properly save the last-focused element for nested containers
+- `webos/LS2Request` to return failure in isomorphic mode
+
 ## [1.0.0-beta.3] - 2017-02-21
 
 > **NOTE** - The change to support caching of iLib locales requires an update to the `enact-dev` tool. This change is not backwards compatible with 1.0.0-beta.2.  Be sure to update both at the same time and reinstall/re-bootstrap the modules.
