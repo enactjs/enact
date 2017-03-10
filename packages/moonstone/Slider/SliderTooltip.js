@@ -21,7 +21,7 @@ const SliderTooltipBase = kind({
 	propTypes: /** @lends moonstone/Slider.SliderTooltip.prototype */{
 		/**
 		 * Setting to `true` overrides the natural LTR->RTL tooltip side-flipping for locale
-		 * changes. This may be useful if you have a static layout that does not automaticaally
+		 * changes. This may be useful if you have a static layout that does not automatically
 		 * reverse when in an RTL language.
 		 *
 		 * @type {Boolean}

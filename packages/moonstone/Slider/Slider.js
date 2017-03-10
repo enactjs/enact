@@ -264,7 +264,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * left of a `vertical` Slider. `after` renders below a `horizontal` slider and to the
 			 * right of a `vertical` Slider. In the `vertical` case, the rendering position is
 			 * automatically reversed when rendering in an RTL locale. This can be overridden by
-			 * using the [tooltipForceSide]{@link moonstone/Slider.Slider#tooltipForceSide} prop.
+			 * using the [tooltipForceSide]{@link moonstone/Slider.Slider.tooltipForceSide} prop.
 			 *
 			 * @type {String}
 			 * @default 'before'
