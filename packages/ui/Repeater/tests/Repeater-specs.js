@@ -108,4 +108,25 @@ describe('Repeater Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
+	it('should set role to list by default', function () {
+		const subject = shallow(
+			<Repeater childComponent="div">{stringItems}</Repeater>
+		);
+
+		const expected = 'list';
+		const actual = subject.prop('role');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should allow role to be overridden', function () {
+		const subject = shallow(
+			<Repeater childComponent="div" role="listbox">{stringItems}</Repeater>
+		);
+
+		const expected = 'listbox';
+		const actual = subject.prop('role');
+
+		expect(actual).to.equal(expected);
+	});
 });

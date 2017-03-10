@@ -196,6 +196,8 @@ const ExpandableListBase = kind({
 	},
 
 	computed: {
+		'aria-multiselectable': ({select}) => select === 'multiple',
+
 		itemProps: ({onSpotlightDisappear, spotlightDisabled}) => ({onSpotlightDisappear, spotlightDisabled}),
 
 		// generate a label that concatenates the text of the selected items
@@ -218,6 +220,8 @@ const ExpandableListBase = kind({
 					CheckboxItem; // for single or multiple
 		},
 
+		role: ({select}) => select === 'radio' ? 'radiogroup' : 'group',
+
 		selected: ({select, selected}) => {
 			return (select === 'single' && Array.isArray(selected)) ? selected[0] : selected;
 		}
@@ -225,7 +229,6 @@ const ExpandableListBase = kind({
 
 	render: ({children, itemProps, ListItem, noAutoClose, noLockBottom, onSelect, select, selected, ...rest}) => {
 		delete rest.closeOnSelect;
-		delete rest.select;
 
 		return (
 			<ExpandableItemBase

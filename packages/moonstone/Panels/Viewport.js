@@ -68,7 +68,7 @@ const ViewportBase = kind({
 		children: ({children}) => React.Children.map(children, (child, index) => {
 			return React.cloneElement(child, {'data-index': index});
 		}),
-		enteringProp: ({noAnimation}) => noAnimation ? null : 'showChildren'
+		enteringProp: ({noAnimation}) => noAnimation ? null : 'hideChildren'
 	},
 
 	render: ({arranger, children, enteringProp, index, noAnimation, ...rest}) => {

@@ -32,6 +32,8 @@ storiesOf('ExpandableInput')
 				onOpen={action('onOpen')}
 				open={boolean('open', false)}
 				title={text('title', 'title')}
+				placeholder={text('placeholder')}
+				type={text('type')}
 				value={text('value', '')}
 			/>
 		)
