@@ -115,6 +115,15 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			onScrollStop: PropTypes.func,
 
 			/**
+			 * Called when the component will unmount
+			 * This function will pass `lastScrollTop`, `lastScrollLeft`, and `lastFocusedIndex` as parameters
+			 *
+			 * @type {Function}
+			 * @public
+			 */
+			onWillUnmount: PropTypes.func,
+
+			/**
 			 * Options for positioning the items; valid values are `'byItem'`, `'byContainer'`,
 			 * and `'byBrowser'`.
 			 * If `'byItem'`, the list moves each item.
@@ -182,6 +191,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		// spotlight
 		lastFocusedItem = null
+		lastFocusedIndex = null
 
 		// component info
 		childRef = null
@@ -395,9 +405,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		onFocus = (e) => {
+			const item = e.target;
+			if (item.dataSet && typeof item.dataSet.index === 'number') {
+				this.lastFocusedIndex = item.dataSet.index;
+			}
+
 			if (this.isKeyDown && !this.isDragging) {
 				const
-					item = e.target,
 					positionFn = this.childRef.calculatePositionOnFocus,
 					spotItem = window.document.activeElement;
 
@@ -797,6 +811,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			// Before call cancelAnimationFrame, you must send scrollStop Event.
 			this.animator.stop();
 			if (this.timerForceUpdate) clearTimeout(this.timerForceUpdate);
+			if (typeof this.props.onWillUnmount === 'function') {
+				this.props.onWillUnmount({lastScrollLeft: this.scrollLeft, lastScrollTop: this.scrollTop, lastFocusedIndex: this.lastFocusedIndex});
+			}
 		}
 
 		enqueueForceUpdate = () => {
