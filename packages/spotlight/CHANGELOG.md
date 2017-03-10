@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Fixed
 
-- `spotlight.SpotlightContainerDecorator` changes to the `spotlightRestrict` prop now properly updates the container config
+- `spotlight.Spotlight` calling `set()` now properly updates the container config
 
 ### Changed
 
