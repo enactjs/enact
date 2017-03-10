@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ## [unreleased]
 
+### Fixed
+
+- `spotlight.Spotlight` behavior to properly save the last-focused element for nested containers
+
 ### Changed
 
 - `spotlight.Spottable` to prevent emulating mouse events for repeated key events
