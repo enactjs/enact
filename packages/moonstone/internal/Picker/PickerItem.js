@@ -9,15 +9,24 @@ import css from './Picker.less';
 const PickerItemBase = kind({
 	name: 'PickerItem',
 
-	propTypes: /* @lends moonstone/Picker.PickerBase.prototype */ {
+	propTypes: /** @lends moonstone/Picker.PickerBase.prototype */ {
 
 		/**
-		* Children from which to pick
-		*
-		* @type {Node}
-		* @public
-		*/
-		children: React.PropTypes.node.isRequired
+		 * Children from which to pick
+		 *
+		 * @type {Node|Node[]}
+		 * @public
+		 */
+		children: React.PropTypes.node,
+
+
+		/**
+		 * Forces the `direction` Picker list. Valid values are `rtl` and `ltr`. This includes non-text elements as well.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		forceDirection: React.PropTypes.oneOf(['rtl', 'ltr'])
 	},
 
 	styles: {
@@ -26,19 +35,11 @@ const PickerItemBase = kind({
 	},
 
 	computed: {
-		clientStyle: ({children}) => {
-			let direction = isRtlText(children) ? 'rtl' : 'ltr';
-
-			const style = {
-				direction
-			};
-
-			return style;
-		}
+		forceDirection: ({children}) => isRtlText(children) ? 'rtl' : 'ltr'
 	},
 
-	render: ({clientStyle, ...props}) => (
-		<MarqueeText {...props} style={clientStyle} marqueeCentered />
+	render: (props) => (
+		<MarqueeText {...props} marqueeCentered />
 	)
 });
 

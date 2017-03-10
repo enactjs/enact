@@ -12,7 +12,7 @@
 	border-radius: @button-width;
 	vertical-align: bottom;
 	position: relative;
-	direction: inherit;
+	direction: ltr;
 	text-align: center;
 	margin-left: @moon-spotlight-outset;
 	margin-right: @moon-spotlight-outset;
@@ -147,22 +147,6 @@
 
 		.item {
 			margin: 0 @moon-spotlight-outset;
-		}
-	}
-
-	:global(.enact-locale-right-to-left) & {
-		&.horizontal {
-			.incrementer,
-			.decrementer {
-				transform: scaleX(-1);
-			}
-		}
-
-		&.joined &.horizontal {
-			.incrementer,
-			.decrementer {
-				transform: scaleX(-1);
-			}
 		}
 	}
 }
