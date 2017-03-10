@@ -19,11 +19,9 @@ import Scrollbar from './Scrollbar';
 
 const
 	nop = () => {},
-	perf = (typeof window === 'object') ? window.performance : {now: Date.now},
 	paginationPageMultiplier = 0.8,
 	epsilon = 1,
 	// spotlight
-	doc = (typeof window === 'object') ? window.document : {},
 	animationDuration = 1000,
 	scrollStopWaiting = 200;
 
@@ -206,7 +204,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			this.rtlDirection = context.rtl ? -1 : 1;
 
-			const {onKeyDown, onKeyUp} = this;
+			const
+				{onKeyDown, onKeyUp} = this,
+				perf = (typeof window === 'object') ? window.performance : {now: Date.now};
 			// wheel, scroll, and focus event handlers will be added after mounting
 			this.eventHandlers = {
 				onKeyDown,
@@ -249,7 +249,41 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.isScrollAnimationTargetAccumulated = false;
 			this.childRef.setContainerDisabled(true);
 			this.lastFocusedItem = null;
-			doc.activeElement.blur();
+			if (typeof window !== 'undefined') {
+				window.document.activeElement.blur();
+			}
+
+			// FIXME This routine is a temporary support for horizontal wheel scroll.
+			// FIXME If web engine supports horizontal wheel, this routine should be refined or removed.
+			if (this.horizontalScrollability) {
+				const
+					bounds = this.getScrollBounds(),
+					deltaMode = e.deltaMode,
+					wheelDeltaY = e.nativeEvent ? -e.nativeEvent.wheelDeltaY : -e.wheelDeltaY,
+					scrollWheelMultiplierForDeltaPixel = 2,
+					pixelPerLine = scrollWheelMultiplierForDeltaPixel * 39;
+
+				let delta = (wheelDeltaY || e.deltaY);
+
+				if (deltaMode === 0) {
+					delta *= scrollWheelMultiplierForDeltaPixel;
+				} else if (deltaMode === 1) { // line; firefox
+					delta = delta * pixelPerLine;
+				} else if (deltaMode === 2) { // page
+					if (isVertical) {
+						delta = delta > 0 ? bounds.clientHeight : -bounds.clientHeight;
+					} else if (isHorizontal) {
+						delta = delta > 0 ? bounds.clientWidth : -bounds.clientWidth;
+					} else {
+						delta = 0;
+					}
+				}
+
+				/* prevent native scrolling feature for vertical direction */
+				e.preventDefault();
+
+				this.start(this.scrollLeft + delta, this.scrollTop);
+			}
 		}
 
 		onScroll = (e) => {
@@ -275,7 +309,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				const
 					item = e.target,
 					positionFn = this.childRef.calculatePositionOnFocus,
-					spotItem = doc.activeElement;
+					spotItem = (typeof window === 'object') ? window.document.activeElement : null;
 
 				if (item && item !== this.lastFocusedItem && item === spotItem && positionFn) {
 					const pos = positionFn(item);
@@ -604,9 +638,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		// component life cycle
-
-		componentDidMount () {
+		updateScrollabilityAndEventListeners = () => {
 			const
 				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
 				containerNode = this.childRef.getContainerNode();
@@ -628,16 +660,16 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			containerNode.style.scrollBehavior = 'smooth';
 
 			this.updateScrollbars();
+		}
+
+		// component life cycle
+
+		componentDidMount () {
 			this.isFirstRendered = true;
+			this.updateScrollabilityAndEventListeners();
 		}
 
 		componentDidUpdate () {
-			const
-				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
-				containerNode = this.childRef.getContainerNode();
-
-			this.horizontalScrollability = this.childRef.isHorizontal();
-			this.verticalScrollability = this.childRef.isVertical();
 			this.isInitializing = false;
 
 			// Need to sync calculated client size if it is different from the real size
@@ -645,18 +677,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				this.childRef.syncClientSize();
 			}
 
-			// FIXME `onWheel` don't work on the v8 snapshot.
-			if (isVerticalScrollbarVisible || isHorizontalScrollbarVisible) {
-				this.containerRef.addEventListener('wheel', this.onWheel);
-			} else {
-				containerNode.addEventListener('wheel', this.onWheel);
-			}
-			// FIXME `onScroll` doesn't work on the v8 snapshot.
-			containerNode.addEventListener('scroll', this.onScroll, true);
-			// FIXME `onFocus` doesn't work on the v8 snapshot.
-			containerNode.addEventListener('focus', this.onFocus, true);
-
-			this.updateScrollbars();
+			this.updateScrollabilityAndEventListeners();
 
 			if (this.scrollToInfo !== null) {
 				this.scrollTo(this.scrollToInfo);

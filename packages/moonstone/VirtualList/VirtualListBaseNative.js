@@ -480,15 +480,18 @@ class VirtualListCore extends Component {
 		if (firstIndex !== newFirstIndex) {
 			this.setState({firstIndex: newFirstIndex});
 		} else {
-			this.positionItems(this.determineUpdatedNeededIndices(firstIndex));
+			const indices = this.determineUpdatedNeededIndices(firstIndex);
+			if (indices.updateFrom !== indices.updateTo) {
+				this.positionItems();
+			}
 		}
 	}
 
 	determineUpdatedNeededIndices (oldFirstIndex) {
 		const
-			{firstIndex, numOfItems} = this.state;
+			{firstIndex, numOfItems} = this.state,
+			diff = firstIndex - oldFirstIndex;
 
-		const diff = firstIndex - oldFirstIndex;
 		return {
 			updateFrom: (0 < diff && diff < numOfItems ) ? oldFirstIndex + numOfItems : firstIndex,
 			updateTo: (-numOfItems < diff && diff <= 0 ) ? oldFirstIndex : firstIndex + numOfItems
@@ -531,7 +534,7 @@ class VirtualListCore extends Component {
 
 	positionItems ({updateFrom, updateTo}) {
 		const
-			{isPrimaryDirectionVertical, dimensionToExtent, moreInfo, primary, secondary} = this;
+			{isPrimaryDirectionVertical, dimensionToExtent, moreInfo, primary, secondary, scrollPosition} = this;
 
 		// we only calculate position of the first child
 		let
@@ -549,12 +552,13 @@ class VirtualListCore extends Component {
 
 		// positioning items
 		for (let primaryIndex = updateFrom, secondaryIndex = updateFrom % dimensionToExtent; primaryIndex < updateTo; primaryIndex++) {
+			const screenPosition = scrollPosition - primaryPosition;
 
 			// determine the first and the last visible item
-			if (firstVisibleIndex === null && (primaryPosition + primary.itemSize) > 0) {
+			if (firstVisibleIndex === null && (screenPosition + primary.itemSize > 0)) {
 				firstVisibleIndex = primaryIndex;
 			}
-			if (primaryPosition < primary.clientSize) {
+			if (screenPosition < primary.clientSize) {
 				lastVisibleIndex = primaryIndex;
 			}
 			if (this.updateFrom === null || this.updateTo === null || this.updateFrom > primaryIndex || this.updateTo <= primaryIndex) {
