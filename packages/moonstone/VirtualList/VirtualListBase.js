@@ -276,6 +276,7 @@ class VirtualListCore extends Component {
 	dimensionToExtent = 0
 	threshold = 0
 	maxFirstIndex = 0
+	newFirstIndex = 0
 	curDataSize = 0
 	cc = []
 	scrollPosition = 0
@@ -396,11 +397,12 @@ class VirtualListCore extends Component {
 	updateStatesAndBounds (props) {
 		const
 			{dataSize, overhang} = props,
-			{dimensionToExtent, primary} = this,
+			{dimensionToExtent, primary, moreInfo} = this,
 			numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
-			wasFirstIndexMax = (this.maxFirstIndex && (this.state.firstIndex === this.maxFirstIndex));
+			wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (this.newFirstIndex === this.maxFirstIndex));
 
 		this.maxFirstIndex = dataSize - numOfItems;
+		this.newFirstIndex = wasFirstIndexMax ? this.maxFirstIndex : Math.min(this.newFirstIndex, this.maxFirstIndex);
 		this.curDataSize = dataSize;
 		this.updateFrom = null;
 		this.updateTo = null;
@@ -408,7 +410,7 @@ class VirtualListCore extends Component {
 		// reset children
 		this.cc = [];
 
-		this.setState({firstIndex: wasFirstIndexMax ? this.maxFirstIndex : Math.min(this.state.firstIndex, this.maxFirstIndex), numOfItems});
+		this.setState({firstIndex: this.newFirstIndex, numOfItems});
 		this.calculateScrollBounds(props);
 	}
 
@@ -464,7 +466,9 @@ class VirtualListCore extends Component {
 			minOfMax = threshold.base,
 			maxOfMin = maxPos - minOfMax;
 		let
-			delta, numOfGridLines, newFirstIndex = firstIndex, pos, dir = 0;
+			delta, numOfGridLines, pos, dir = 0;
+
+		this.newFirstIndex = firstIndex;
 
 		if (isPrimaryDirectionVertical) {
 			pos = y;
@@ -479,13 +483,13 @@ class VirtualListCore extends Component {
 			numOfGridLines = Math.ceil(delta / gridSize); // how many lines should we add
 			threshold.max = Math.min(maxPos, threshold.max + numOfGridLines * gridSize);
 			threshold.min = Math.min(maxOfMin, threshold.max - gridSize);
-			newFirstIndex = Math.min(maxFirstIndex, (dimensionToExtent * Math.ceil(firstIndex / dimensionToExtent)) + (numOfGridLines * dimensionToExtent));
+			this.newFirstIndex = Math.min(maxFirstIndex, (dimensionToExtent * Math.ceil(firstIndex / dimensionToExtent)) + (numOfGridLines * dimensionToExtent));
 		} else if (dir === -1 && pos < threshold.min) {
 			delta = threshold.min - pos;
 			numOfGridLines = Math.ceil(delta / gridSize);
 			threshold.max = Math.max(minOfMax, threshold.min - (numOfGridLines * gridSize - gridSize));
 			threshold.min = (threshold.max > minOfMax) ? threshold.max - gridSize : -Infinity;
-			newFirstIndex = Math.max(0, (dimensionToExtent * Math.ceil(firstIndex / dimensionToExtent)) - (numOfGridLines * dimensionToExtent));
+			this.newFirstIndex = Math.max(0, (dimensionToExtent * Math.ceil(firstIndex / dimensionToExtent)) - (numOfGridLines * dimensionToExtent));
 		}
 
 		this.syncThreshold(maxPos);
@@ -495,8 +499,8 @@ class VirtualListCore extends Component {
 			this.positionContainer();
 		}
 
-		if (firstIndex !== newFirstIndex) {
-			this.setState({firstIndex: newFirstIndex});
+		if (firstIndex !== this.newFirstIndex) {
+			this.setState({firstIndex: this.newFirstIndex});
 		} else {
 			this.positionItems(this.determineUpdatedNeededIndices(firstIndex));
 		}

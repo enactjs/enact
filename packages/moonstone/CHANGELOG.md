@@ -25,6 +25,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/VirtualList` scrollTo to work in componentDidMount phase and work together with changing props.
 - `moonstone/VirtualList.GridListImageItem` to have proper padding size according to the existence of caption/subcaption.
 - `moonstone/Scrollable` to display scrollbars with proper size
 - `moonstone/VirtualGridList` to not be truncated
