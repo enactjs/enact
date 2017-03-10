@@ -11,6 +11,7 @@ import Accelerator from '@enact/core/Accelerator';
 import {is} from '@enact/core/keymap';
 import {startJob} from '@enact/core/jobs';
 import {spottableClass} from './spottable';
+import last from 'ramda/src/last';
 
 const isDown = is('down');
 const isEnter = is('enter');
@@ -39,13 +40,6 @@ const isPointerHide = is('pointerHide');
 
 const spotlightRootContainerName = 'spotlightRootDecorator';
 const SpotlightAccelerator = new Accelerator();
-
-const getLastArrayItem = (array) => {
-	if (!Array.isArray(array) || !array.length) {
-		return;
-	}
-	return array[array.length - 1];
-};
 
 /**
  * Provides 5-way navigation and focus support
@@ -619,19 +613,20 @@ const Spotlight = (function () {
 		}
 	}
 
+	// returns an array of ids for containers that wrap the element, in order of outer-to-inner, with
+	// the last array item being the immediate container id of the element.
 	function getContainerIds (elem) {
 		const containerIds = [..._containers.keys()];
-		let i = containerIds.length;
+		const matches = [];
 
-		while (i--) {
+		for (let i = 0, containers = containerIds.length; i < containers; ++i) {
 			const id = containerIds[i];
 			const config = _containers.get(id);
-			const match = matchSelector(elem, config.selector);
-			if (!match || match && config.selectorDisabled) {
-				containerIds.splice(i, 1);
+			if (!config.selectorDisabled && matchSelector(elem, config.selector)) {
+				matches.push(id);
 			}
 		}
-		return containerIds;
+		return matches;
 	}
 
 	function getContainerNavigableElements (containerId) {
@@ -717,7 +712,7 @@ const Spotlight = (function () {
 		if (!containerIds || !containerIds.length) {
 			containerIds = getContainerIds(elem);
 		}
-		const containerId = getLastArrayItem(containerIds);
+		const containerId = last(containerIds);
 		if (containerId) {
 			setContainerLastFocusedElement(elem, containerIds);
 			_lastContainerId = containerId;
@@ -736,7 +731,7 @@ const Spotlight = (function () {
 			let next = parseSelector(selector)[0];
 			if (next) {
 				const nextContainerIds = getContainerIds(next);
-				if (isNavigable(next, getLastArrayItem(nextContainerIds))) {
+				if (isNavigable(next, last(nextContainerIds))) {
 					return focusElement(next, nextContainerIds);
 				}
 			}
@@ -798,7 +793,7 @@ const Spotlight = (function () {
 			}
 
 			const nextContainerIds = getContainerIds(next);
-			if (isNavigable(next, getLastArrayItem(nextContainerIds))) {
+			if (isNavigable(next, last(nextContainerIds))) {
 				return focusElement(next, nextContainerIds);
 			}
 		}
@@ -818,7 +813,7 @@ const Spotlight = (function () {
 
 	function focusNext (next, direction, currentContainerId, currentFocusedElement) {
 		const nextContainerIds = getContainerIds(next);
-		const nextContainerId = getLastArrayItem(nextContainerIds);
+		const nextContainerId = last(nextContainerIds);
 
 		if (currentContainerId !== nextContainerId) {
 			if (_5WayKeyHold) {
@@ -958,7 +953,7 @@ const Spotlight = (function () {
 		}
 
 		const currentContainerIds = getContainerIds(currentFocusedElement);
-		const currentContainerId = getLastArrayItem(currentContainerIds);
+		const currentContainerId = last(currentContainerIds);
 		if (!currentContainerId) {
 			return;
 		}
@@ -1321,7 +1316,7 @@ const Spotlight = (function () {
 				}
 			} else {
 				const nextContainerIds = getContainerIds(elem);
-				const nextContainerId = getLastArrayItem(nextContainerIds);
+				const nextContainerId = last(nextContainerIds);
 				if (isNavigable(elem, nextContainerId)) {
 					result = focusElement(elem, nextContainerIds);
 				}
