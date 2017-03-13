@@ -1,3 +1,4 @@
+import {$L} from '@enact/i18n';
 import {forward} from '@enact/core/handle';
 import clamp from 'ramda/src/clamp';
 import equals from 'ramda/src/equals';
@@ -78,6 +79,16 @@ const Picker = class extends React.Component {
 		 * @public
 		 */
 		min: React.PropTypes.number.isRequired,
+
+		/**
+		 * Accessibility hint
+		 * For example, `hour`, `year`, and `meridiem`
+		 *
+		 * @type {String}
+		 * @default ''
+		 * @public
+		 */
+		accessibilityHint: React.PropTypes.string,
 
 		/**
 		 * Children from which to pick
@@ -267,6 +278,7 @@ const Picker = class extends React.Component {
 	}
 
 	static defaultProps = {
+		accessibilityHint: '',
 		orientation: 'horizontal',
 		spotlightDisabled: false,
 		step: 1,
@@ -275,6 +287,12 @@ const Picker = class extends React.Component {
 
 	constructor (props) {
 		super(props);
+
+		this.state = {
+			// Set to `true` onFocus and `false` onBlur to prevent setting aria-valuetext (which
+			// will notify the user) when the component does not have focus
+			active: false
+		};
 
 		if (__DEV__) {
 			validateRange(props.value, props.min, props.max, Picker.displayName);
@@ -319,6 +337,18 @@ const Picker = class extends React.Component {
 			const value = this.computeNextValue(dir * step);
 			onChange({value});
 		}
+	}
+
+	handleBlur = () => {
+		this.setState({
+			active: false
+		});
+	}
+
+	handleFocus = () => {
+		this.setState({
+			active: true
+		});
 	}
 
 	setTransitionDirection = (dir) => {
@@ -456,7 +486,49 @@ const Picker = class extends React.Component {
 		].join(' ');
 	}
 
+	calcValueText () {
+		const {accessibilityHint, children, index, value} = this.props;
+		let valueText = value;
+
+		// Sometimes this.props.value is not equal to node text content. For example, when `PM`
+		// is shown in AM/PM picker, its value is `1` and its node.textContent is `PM`. In this
+		// case, Screen readers should read `PM` instead of `1`.
+		if (children && Array.isArray(children)) {
+			valueText = (children[index]) ? children[index].props.children : value;
+		} else if (children && children.props && !children.props.children) {
+			valueText = children.props.children;
+		}
+
+		if (accessibilityHint) {
+			valueText = `${valueText} ${accessibilityHint}`;
+		}
+
+		return valueText;
+	}
+
+	calcButtonLabel (next, valueText) {
+		// no label is necessary when joined
+		if (!this.props.joined) {
+			return `${valueText} ${next ? $L('next item') : $L('previous item')}`;
+		}
+	}
+
+	calcDecrementLabel (valueText) {
+		return this.calcButtonLabel(this.props.reverse, valueText);
+	}
+
+	calcIncrementLabel (valueText) {
+		return this.calcButtonLabel(!this.props.reverse, valueText);
+	}
+
+	calcJoinedLabel (valueText) {
+		const {orientation} = this.props;
+		const hint = orientation === 'horizontal' ? $L('change a value with left right button') : $L('change a value with up down button');
+		return `${valueText} ${hint}`;
+	}
+
 	render () {
+		const {active} = this.state;
 		const {
 			noAnimation,
 			children,
@@ -471,6 +543,7 @@ const Picker = class extends React.Component {
 			...rest
 		} = this.props;
 
+		delete rest.accessibilityHint;
 		delete rest.decrementIcon;
 		delete rest.incrementIcon;
 		delete rest.max;
@@ -497,32 +570,46 @@ const Picker = class extends React.Component {
 
 		let sizingPlaceholder = null;
 		if (typeof width === 'number' && width > 0) {
-			sizingPlaceholder = <div className={css.sizingPlaceholder}>{ '0'.repeat(width) }</div>;
+			sizingPlaceholder = <div aria-hidden className={css.sizingPlaceholder}>{ '0'.repeat(width) }</div>;
 		}
+
+		const valueText = this.calcValueText();
 
 		return (
 			<div
 				{...rest}
+				aria-disabled={disabled}
+				aria-label={joined ? this.calcJoinedLabel(valueText) : null}
 				className={classes}
 				disabled={disabled}
-				onWheel={this.handleWheel}
-				onKeyDown={this.handleKeyDown}
+				onBlur={this.handleBlur}
+				onFocus={this.handleFocus}
+				onKeyDown={joined ? this.handleKeyDown : null}
+				onWheel={joined ? this.handleWheel : null}
 			>
 				<PickerButton
+					aria-label={this.calcIncrementLabel(valueText)}
 					className={css.incrementer}
 					disabled={incrementerDisabled}
+					icon={incrementIcon}
+					joined={joined}
 					onClick={this.handleIncClick}
+					onHoldPulse={this.handleIncPulse}
 					onMouseDown={this.handleIncDown}
 					onMouseUp={this.handleUp}
-					onHoldPulse={this.handleIncPulse}
 					onSpotlightDisappear={onSpotlightDisappear}
-					joined={joined}
-					icon={incrementIcon}
 					spotlightDisabled={spotlightDisabled}
 				/>
-				<div className={css.valueWrapper}>
+				<div
+					aria-disabled={disabled}
+					aria-hidden={!active}
+					aria-valuetext={valueText}
+					className={css.valueWrapper}
+					role="spinbutton"
+				>
 					{sizingPlaceholder}
 					<PickerViewManager
+						aria-hidden
 						arranger={arranger}
 						duration={100}
 						index={index}
@@ -533,15 +620,16 @@ const Picker = class extends React.Component {
 					</PickerViewManager>
 				</div>
 				<PickerButton
+					aria-label={this.calcDecrementLabel(valueText)}
 					className={css.decrementer}
 					disabled={decrementerDisabled}
+					icon={decrementIcon}
+					joined={joined}
 					onClick={this.handleDecClick}
+					onHoldPulse={this.handleDecPulse}
 					onMouseDown={this.handleDecDown}
 					onMouseUp={this.handleUp}
-					onHoldPulse={this.handleDecPulse}
 					onSpotlightDisappear={onSpotlightDisappear}
-					joined={joined}
-					icon={decrementIcon}
 					spotlightDisabled={spotlightDisabled}
 				/>
 			</div>

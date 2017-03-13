@@ -4,7 +4,7 @@
  * @module ui/Pressable
  */
 
-import {forward} from '@enact/core/handle';
+import {forProp, forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
 import React, {PropTypes} from 'react';
@@ -67,8 +67,6 @@ const defaultConfig = {
 const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 	const {depress, release, prop, leave} = config;
 	const defaultPropKey = 'default' + cap(prop);
-	const forwardDepress = forward(depress);
-	const forwardRelease = forward(release);
 
 	return class Pressable extends React.Component {
 		static propTypes = /** @lends ui/Pressable.Pressable.prototype */ {
@@ -104,27 +102,29 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 
-		onMouseDown = (ev) => {
-			if (!this.props.disabled) {
-				this.setState({pressed: ev.pressed || true});
-			}
-			forwardDepress(ev, this.props);
-		}
+		handle = handle.bind(this)
 
-		onMouseUp = (ev) => {
-			this.setState({pressed: false});
-			forwardRelease(ev, this.props);
-		}
+		handleDepress = this.handle(
+			forward(depress),
+			forProp('disabled', false),
+			(ev) => this.setState({pressed: ev.pressed || true})
+		)
 
-		onMouseLeave = () => {
-			this.setState({pressed: false});
-		}
+		handleRelease = this.handle(
+			forward(release),
+			() => this.setState({pressed: false})
+		)
+
+		handleLeave = this.handle(
+			forward(leave),
+			() => this.setState({pressed: false})
+		)
 
 		render () {
 			const props = Object.assign({}, this.props);
-			if (depress) props[depress] = this.onMouseDown;
-			if (release) props[release] = this.onMouseUp;
-			if (leave) props[leave] = this.onMouseLeave;
+			if (depress) props[depress] = this.handleDepress;
+			if (release) props[release] = this.handleRelease;
+			if (leave) props[leave] = this.handleLeave;
 			if (prop) props[prop] = this.state.pressed;
 			delete props[defaultPropKey];
 

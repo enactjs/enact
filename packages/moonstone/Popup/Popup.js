@@ -5,6 +5,7 @@
  * @module moonstone/Popup
  */
 
+import {$L} from '@enact/i18n';
 import FloatingLayer from '@enact/ui/FloatingLayer';
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
@@ -131,6 +132,7 @@ const PopupBase = kind({
 						backgroundOpacity="transparent"
 						small
 						onClick={onCloseButtonClick}
+						aria-label={$L('Close')}
 					>
 						closex
 					</IconButton>
@@ -385,6 +387,8 @@ class Popup extends React.Component {
 				scrimType={scrimType}
 			>
 				<PopupBase
+					aria-live="off"
+					role="alert"
 					{...rest}
 					containerId={this.state.containerId}
 					open={this.state.popupOpen}

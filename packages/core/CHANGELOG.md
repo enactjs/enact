@@ -2,6 +2,17 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [1.0.0-beta.4] - 2017-03-10
+
+### Added
+
+- `core/kind` support for `contextTypes`
+- `core/utils` function `extractAriaProps()` for redirecting ARIA props when the root node of a component isn't focusable
+
+### Changed
+
+- `core/handle` to allow binding to components. This also introduces a breaking change in the return value of handle methods.
+
 ## [1.0.0-beta.3] - 2017-02-21
 
 ### Addded

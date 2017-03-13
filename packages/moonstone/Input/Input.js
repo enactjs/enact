@@ -4,6 +4,7 @@
  * @module moonstone/Input
  */
 
+import {$L} from '@enact/i18n';
 import kind from '@enact/core/kind';
 import {isRtlText} from '@enact/i18n/util';
 import React, {PropTypes} from 'react';
@@ -11,6 +12,17 @@ import React, {PropTypes} from 'react';
 import css from './Input.less';
 import InputDecoratorIcon from './InputDecoratorIcon';
 import InputSpotlightDecorator from './InputSpotlightDecorator';
+
+const calcAriaLabel = function (title, type, value = '') {
+	const hint = $L('input field');
+
+	if (type === 'password' && value) {
+		const character = value.length > 1 ? $L('characters') : $L('character');
+		value = `${value.length} ${character}`;
+	}
+
+	return `${title} ${value} ${hint}`;
+};
 
 /**
  * {@link moonstone/Input.InputBase} is a Moonstone styled input component. It supports start and end
@@ -175,6 +187,7 @@ const InputBase = kind({
 	},
 
 	computed: {
+		'aria-label': ({placeholder, type, value}) => calcAriaLabel(placeholder, type, value),
 		className: ({focused, styler}) => styler.append({focused}),
 		dir: ({value, placeholder}) => isRtlText(value || placeholder) ? 'rtl' : 'ltr'
 	},
@@ -187,8 +200,9 @@ const InputBase = kind({
 			<div {...rest} disabled={disabled}>
 				<InputDecoratorIcon position="before">{iconBefore}</InputDecoratorIcon>
 				<input
-					dir={dir}
+					aria-disabled={disabled}
 					className={css.input}
+					dir={dir}
 					disabled={disabled}
 					onChange={onChange}
 					placeholder={placeholder}
@@ -214,4 +228,8 @@ const InputBase = kind({
 const Input = InputSpotlightDecorator(InputBase);
 
 export default Input;
-export {Input, InputBase};
+export {
+	calcAriaLabel,
+	Input,
+	InputBase
+};

@@ -1,5 +1,6 @@
 // Spinner.less
 //
+@import '../../ui/styles/mixins.less';
 @import '../styles/variables.less';
 @import '../styles/colors.less';
 
@@ -199,6 +200,30 @@
 		float: left;
 		line-height: @moon-spinner-size;
 		margin: 0 2.6ex 0 0;
+	}
+}
+
+.spinnerContainer {
+	// When `blockClickOn='container'` && `centered={false}`, there is a container div that should have
+	// `display: inline-block;` to match SpinnerBase's .spinner
+	display: inline-block;
+
+	// When `blockClickOn='container'` && `centered`, the container div should have 'display:block' for
+	// the spinner to be centered in the container correctly.
+	&.centered {
+		display: block;
+	}
+
+	// Scrim will fill up to the first ancestor element with absolute or relative position.
+	// Parent needs to have absolute or relative position for scrim to block as expected.
+	.blockClickOn {
+		position: absolute;
+		.position(0);
+
+		// Visible scrim
+		&.scrim {
+			background-color: @moon-scrim-color;
+		}
 	}
 }
 

@@ -100,7 +100,6 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * When `true`, a selected visual effect is applied to the icon button
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			selected: PropTypes.bool,
