@@ -4,7 +4,7 @@
  * @module moonstone/Input
  */
 
-import {$L} from '@enact/i18n';
+import $L from '@enact/i18n/$L';
 import kind from '@enact/core/kind';
 import {isRtlText} from '@enact/i18n/util';
 import React, {PropTypes} from 'react';

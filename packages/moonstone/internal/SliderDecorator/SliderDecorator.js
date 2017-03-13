@@ -5,7 +5,7 @@
  * @private
  */
 
-import {$L} from '@enact/i18n';
+import $L from '@enact/i18n/$L';
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
 import Spotlight from '@enact/spotlight';

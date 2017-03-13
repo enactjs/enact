@@ -5,7 +5,7 @@
  * @module moonstone/Popup
  */
 
-import {$L} from '@enact/i18n';
+import $L from '@enact/i18n/$L';
 import FloatingLayer from '@enact/ui/FloatingLayer';
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';

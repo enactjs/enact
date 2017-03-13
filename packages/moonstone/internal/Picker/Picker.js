@@ -1,4 +1,4 @@
-import {$L} from '@enact/i18n';
+import $L from '@enact/i18n/$L';
 import {forward} from '@enact/core/handle';
 import clamp from 'ramda/src/clamp';
 import equals from 'ramda/src/equals';

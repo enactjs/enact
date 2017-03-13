@@ -1,4 +1,4 @@
-import {$L} from '@enact/i18n';
+import $L from '@enact/i18n/$L';
 import {Announce} from '@enact/ui/AnnounceDecorator';
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
