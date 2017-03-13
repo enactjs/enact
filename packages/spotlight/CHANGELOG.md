@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ## [1.0.0-beta.4] - 2017-03-10
 
+### Fixed
+
+- `spotlight.Spotlight` pointer behavior where upon immediately entering pointer-mode, hovering over a spottable component may result in the component not receiving focus
+
 ### Changed
 
 - `spotlight.Spottable` to prevent emulating mouse events for repeated key events
