@@ -406,8 +406,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		onFocus = (e) => {
 			const item = e.target;
-			if (item.dataSet && typeof item.dataSet.index === 'number') {
-				this.lastFocusedIndex = item.dataSet.index;
+			if (item.dataset && !isNaN(item.dataset.index)) {
+				this.lastFocusedIndex = Number(item.dataset.index);
 			}
 
 			if (this.isKeyDown && !this.isDragging) {
@@ -860,6 +860,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			delete props.cbScrollTo;
 			delete props.style;
 			delete props.hideScrollbars;
+			delete props.onWillUnmount;
 
 			return (
 				(positioningOption !== 'byBrowser' && !hideScrollbars) ? (
