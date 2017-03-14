@@ -1073,7 +1073,7 @@ const Spotlight = (function () {
 				current.blur();
 			} else if (target && (!current || target !== current)) {
 				// we are moving over a focusable element, so we set focus to the target
-				focusElement(target, getContainerId(target), true);
+				focusElement(target, getContainerIds(target), true);
 			}
 		}
 	}
