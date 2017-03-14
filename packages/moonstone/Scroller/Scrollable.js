@@ -6,6 +6,7 @@
 
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
+import {forward} from '@enact/core/handle';
 import {getDirection} from '@enact/spotlight';
 import hoc from '@enact/core/hoc';
 import React, {Component, PropTypes} from 'react';
@@ -25,7 +26,8 @@ const
 	pixelPerLine = ri.scale(39) * scrollWheelMultiplierForDeltaPixel,
 	paginationPageMultiplier = 0.8,
 	epsilon = 1,
-	animationDuration = 1000;
+	animationDuration = 1000,
+	forwardOnWillMount = forward('onWillUnmount');
 
 /**
  * {@link moonstone/Scroller.dataIndexAttribute} is the name of a custom attribute
@@ -116,7 +118,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			/**
 			 * Called when the component will unmount
-			 * This function will pass `lastScrollTop`, `lastScrollLeft`, and `lastFocusedIndex` as parameters
+			 * This function will pass an object that contains `lastScrollTop`, `lastScrollLeft`, and `lastFocusedIndex` as the parameter
 			 *
 			 * @type {Function}
 			 * @public
@@ -811,9 +813,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			// Before call cancelAnimationFrame, you must send scrollStop Event.
 			this.animator.stop();
 			if (this.timerForceUpdate) clearTimeout(this.timerForceUpdate);
-			if (typeof this.props.onWillUnmount === 'function') {
-				this.props.onWillUnmount({lastScrollLeft: this.scrollLeft, lastScrollTop: this.scrollTop, lastFocusedIndex: this.lastFocusedIndex});
-			}
+			forwardOnWillMount({lastScrollLeft: this.scrollLeft, lastScrollTop: this.scrollTop, lastFocusedIndex: this.lastFocusedIndex}, this.props);
 		}
 
 		enqueueForceUpdate = () => {
