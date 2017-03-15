@@ -17,7 +17,7 @@ import {spottableClass} from '../Spottable';
 /**
  * The class name to apply to the default component to focus in a container.
  *
- * @memberof spotlight
+ * @memberof spotlight/SpotlightContainerDecorator
  * @public
  */
 const spotlightDefaultClass = 'spottable-default';
@@ -90,7 +90,7 @@ const defaultConfig = {
  *
  * @returns {Function} SpotlightContainerDecorator
  * @class SpotlightContainerDecorator
- * @memberof spotlight
+ * @memberof spotlight/SpotlightContainerDecorator
  * @hoc
  */
 const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {

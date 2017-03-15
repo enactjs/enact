@@ -1,3 +1,10 @@
+/**
+ * Exports the {@link spotlight/SpotlightRootDecorator.SpotlightRootDecorator}
+ * Higher-order Component.
+ *
+ * @module spotlight/SpotlightRootDecorator
+ */
+
 import hoc from '@enact/core/hoc';
 import React from 'react';
 
@@ -17,7 +24,7 @@ const spotlightRootContainerName = 'spotlightRootDecorator';
  * @param  {Function} Higher-order component
  *
  * @returns {Function} SpotlightRootDecorator
- * @memberof spotlight
+ * @memberof spotlight/SpotlightRootDecorator
  * @hoc
  */
 const SpotlightRootDecorator = hoc((config, Wrapped) => {

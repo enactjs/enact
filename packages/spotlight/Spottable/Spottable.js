@@ -1,3 +1,11 @@
+/**
+ * Exports the {@link spotlight/Spottable.Spottable} Higher-order Component and
+ * the {@link spotlight/Spottable.spottableClass} `className`. The default export is
+ * {@link spotlight/Spottable.Spottable}.
+ 
+ * @module spotlight/Spottable
+ */
+
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
@@ -8,7 +16,7 @@ import Spotlight from '../src/spotlight';
 /**
  * The class name for spottable components. In general, you do not need to directly access this class
  *
- * @memberof spotlight
+ * @memberof spotlight/Spottable
  * @public
  */
 const spottableClass = 'spottable';
@@ -58,7 +66,7 @@ const forwardEnter = (keyEvent, mouseEvent) => (props) => {
  * Default configuration for Spottable
  *
  * @hocconfig
- * @memberof spotlight.Spottable
+ * @memberof spotlight/Spottable.Spottable
  */
 const defaultConfig = {
 	/**
@@ -68,7 +76,7 @@ const defaultConfig = {
 	 * @type {Boolean}
 	 * @default false
 	 * @public
-	 * @memberof spotlight.Spottable.defaultConfig
+	 * @memberof spotlight/Spottable.Spottable.defaultConfig
 	 */
 	emulateMouse: true
 };
@@ -80,7 +88,7 @@ const defaultConfig = {
  *	const SpottableComponent = Spottable(Component);
  *
  * @class Spottable
- * @memberof spotlight
+ * @memberof spotlight/Spottable
  * @param  {Object} defaultConfig Set of default configuration parameters
  * @param  {Function} Wrapped Component to wrap
  *
@@ -99,7 +107,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'Spottable'
 
-		static propTypes = /** @lends spotlight.Spottable.prototype */ {
+		static propTypes = /** @lends spotlight/Spottable.Spottable.prototype */ {
 			/**
 			 * Whether or not the component is in a disabled state.
 			 *

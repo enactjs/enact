@@ -8,12 +8,12 @@
  */
 
 /**
- * Exports the {@link spotlight/Spotlight} object used for controlling spotlight behavior and the
- * {@link spotlight/Spotlight.getDirection} function for mapping a keycode to a spotlight direction.
+ * Exports the {@link spotlight.Spotlight} object used for controlling spotlight behavior and the
+ * {@link spotlight.Spotlight.getDirection} function for mapping a keycode to a spotlight direction.
  *
- * The default export is {@link spotlight/Spotlight}.
+ * The default export is {@link spotlight.Spotlight}.
  *
- * @module spotlight/Spotlight
+ * @module spotlight
  */
 
 import {is} from '@enact/core/keymap';
@@ -33,9 +33,9 @@ const isUp = is('up');
  * Translates keyCodes into 5-way direction descriptions (e.g. `'down'`)
  *
  * @function
- * @memberof spotlight/Spotlight
+ * @memberof spotlight.Spotlight
  * @param {Number} keyCode - Key code to analyze
- * @returns {String|false} - One of `'up'`, `'down'`, `'left'`, `'right'` or false if not a direction key
+ * @returns {String|false} - One of `'up'`, `'down'`, `'left'`, `'right'` or `false` if not a direction key
  * @public
  */
 const getDirection = function (keyCode) {
@@ -1054,11 +1054,12 @@ const Spotlight = (function () {
 	/*
 	 * public methods
 	 */
-	const exports = /** @lends spotlight/Spotlight.prototype */ { // eslint-disable-line no-shadow
+	const exports = /** @lends spotlight.Spotlight.prototype */ { // eslint-disable-line no-shadow
 		/**
-		 * Initializes Spotlight. This is generally handled by {@link spotlight/SpotlightRootDecorator}.
+		 * Initializes Spotlight. This is generally handled by
+		 * {@link spotlight/SpotlightRootDecorator.SpotlightRootDecorator}.
 		 *
-		 * @memberof spotlight/Spotlight.prototype
+		 * @memberof spotlight.Spotlight.prototype
 		 * @public
 		 */
 		initialize: function () {
@@ -1073,9 +1074,9 @@ const Spotlight = (function () {
 		},
 
 		/**
-		 * Terminates Spotlight. This is generally handled by {@link spotlight/SpotlightRootDecorator}.
+		 * Terminates Spotlight. This is generally handled by {@link spotlight.SpotlightRootDecorator}.
 		 *
-		 * @memberof spotlight/Spotlight.prototype
+		 * @memberof spotlight.Spotlight.prototype
 		 * @public
 		 */
 		terminate: function () {
@@ -1091,7 +1092,7 @@ const Spotlight = (function () {
 		/**
 		 * Resets spotlight container information
 		 *
-		 * @memberof spotlight/Spotlight.prototype
+		 * @memberof spotlight.Spotlight.prototype
 		 * @private
 		 */
 		clear: function () {
@@ -1106,7 +1107,7 @@ const Spotlight = (function () {
 		/**
 		 * Sets the config for spotlight or the specified containerID
 		 *
-		 * @memberof spotlight/Spotlight.prototype
+		 * @memberof spotlight.Spotlight.prototype
 		 * @param {String|Object} param1 Configuration object or container ID
 		 * @param {Object|undefined} param2 Configuration object if container ID supplied in param1
 		 * @returns {undefined}
@@ -1149,7 +1150,7 @@ const Spotlight = (function () {
 		 * Adds the config for a new container. The container ID may be passed in the configuration
 		 * object. If no container ID is supplied, a new container ID will be generated.
 		 *
-		 * @memberof spotlight/Spotlight.prototype
+		 * @memberof spotlight.Spotlight.prototype
 		 * @param {String|Object} param1 Configuration object or container ID
 		 * @param {Object|undefined} param2 Configuration object if container ID supplied in param1
 		 * @returns {String} The container ID of the container
@@ -1184,7 +1185,7 @@ const Spotlight = (function () {
 		/**
 		 * Removes a container from Spotlight
 		 *
-		 * @memberof spotlight/Spotlight.prototype
+		 * @memberof spotlight.Spotlight.prototype
 		 * @param {String} containerId Container ID to remove
 		 * @returns {Boolean} `true` if container removed, `false` if container does not exist
 		 * @public
@@ -1206,7 +1207,7 @@ const Spotlight = (function () {
 		/**
 		 * Disables the selector rules of the specified container
 		 *
-		 * @memberof spotlight/Spotlight.prototype
+		 * @memberof spotlight.Spotlight.prototype
 		 * @param {String} containerId Container ID selector rules to disable
 		 * @returns {Boolean} `true` if container's selector rules are disabled, `false` if container does not exist
 		 * @public
@@ -1225,7 +1226,7 @@ const Spotlight = (function () {
 		/**
 		 * Enables the selector rules of the specified container
 		 *
-		 * @memberof spotlight/Spotlight.prototype
+		 * @memberof spotlight.Spotlight.prototype
 		 * @param {String} containerId Container ID selector rules to enable
 		 * @returns {Boolean} `true` if container's selector rules are enabled, `false` if container does not exist
 		 * @public
@@ -1244,7 +1245,7 @@ const Spotlight = (function () {
 		/**
 		 * Pauses Spotlight
 		 *
-		 * @memberof spotlight/Spotlight.prototype
+		 * @memberof spotlight.Spotlight.prototype
 		 * @returns {undefined}
 		 * @public
 		 */
@@ -1255,7 +1256,7 @@ const Spotlight = (function () {
 		/**
 		 * Resumes Spotlight
 		 *
-		 * @memberof spotlight/Spotlight.prototype
+		 * @memberof spotlight.Spotlight.prototype
 		 * @returns {undefined}
 		 * @public
 		 */
@@ -1270,7 +1271,7 @@ const Spotlight = (function () {
 		 * Focuses the specified element selector or container ID or the default container. Has no
 		 * effect if Spotlight is paused.
 		 *
-		 * @memberof spotlight/Spotlight.prototype
+		 * @memberof spotlight.Spotlight.prototype
 		 * @param {String|Object|undefined} elem Element selector or the container ID.
 		 *	If not supplied, the default container will be focused.
 		 * @returns {Boolean} `true` if focus successful, `false` if not.
@@ -1303,7 +1304,7 @@ const Spotlight = (function () {
 		 * Moves focus to the next spottable control in the direction specified. Optionally, a source
 		 * element selector may be supplied as the starting point.
 		 *
-		 * @memberof spotlight/Spotlight.prototype
+		 * @memberof spotlight.Spotlight.prototype
 		 * @param {String} direction Direction to move, one of `'left'`, `'right'`, `'up'` or `'down'`
 		 * @param {String|undefined} selector If supplied, the element to move from. If not supplied,
 		 *	the currently focused item will be used.
@@ -1334,7 +1335,7 @@ const Spotlight = (function () {
 		/**
 		 * Sets or clears the default container that will receive focus.
 		 *
-		 * @memberof spotlight/Spotlight.prototype
+		 * @memberof spotlight.Spotlight.prototype
 		 * @param {String|undefined} containerId The container ID or a falsy value to clear default container
 		 * @returns {undefined}
 		 * @public
@@ -1352,7 +1353,7 @@ const Spotlight = (function () {
 		/**
 		 * Sets the currently active container.
 		 *
-		 * @memberof spotlight/Spotlight.prototype
+		 * @memberof spotlight.Spotlight.prototype
 		 * @param {String} [containerId] The id of the currently active container. If this is not
 		 *	provided, the root container is set as the currently active container.
 		 * @public
@@ -1364,7 +1365,7 @@ const Spotlight = (function () {
 		/**
 		 * Gets the current pointer mode
 		 *
-		 * @memberof spotlight/Spotlight.prototype
+		 * @memberof spotlight.Spotlight.prototype
 		 * @returns {Boolean} `true` if spotlight is in pointer mode
 		 * @public
 		 */
@@ -1375,7 +1376,7 @@ const Spotlight = (function () {
 		/**
 		 * Sets the current pointer mode
 		 *
-		 * @memberof spotlight/Spotlight.prototype
+		 * @memberof spotlight.Spotlight.prototype
 		 * @param {Boolean} pointerMode The value of the pointer mode. This determines how
 		 *	spotlight manages focus change behaviors.
 		 * @public
@@ -1387,7 +1388,7 @@ const Spotlight = (function () {
 		/**
 		 * Gets the muted mode value of a spottable element.
 		 *
-		 * @memberof spotlight/Spotlight.prototype
+		 * @memberof spotlight.Spotlight.prototype
 		 * @param {Object} elem The dom element used to determine the muted status.
 		 * @returns {Boolean} `true` if the passed-in control is in muted mode.
 		 * @public
@@ -1403,7 +1404,7 @@ const Spotlight = (function () {
 		/**
 		 * Determines whether Spotlight is currently paused.
 		 *
-		 * @memberof spotlight/Spotlight.prototype
+		 * @memberof spotlight.Spotlight.prototype
 		 * @returns {Boolean} `true` if Spotlight is currently paused.
 		 * @public
 		 */
@@ -1414,7 +1415,7 @@ const Spotlight = (function () {
 		/**
 		 * Determines whether an element is spottable.
 		 *
-		 * @memberof spotlight/Spotlight.prototype
+		 * @memberof spotlight.Spotlight.prototype
 		 * @param {Object} elem The dom element used to determine the spottable status.
 		 * @returns {Boolean} `true` if the element being evaluated is currently spottable.
 		 * @public
@@ -1430,7 +1431,7 @@ const Spotlight = (function () {
 		/**
 		 * Returns the currently spotted control.
 		 *
-		 * @memberof spotlight/Spotlight.prototype
+		 * @memberof spotlight.Spotlight.prototype
 		 * @returns {Object} The control that currently has focus, if available
 		 * @public
 		 */

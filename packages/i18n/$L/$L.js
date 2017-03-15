@@ -18,6 +18,7 @@ import IString from '../ilib/lib/IString';
 /**
  * Maps a string or key/value object to a translated string for the current locale
  *
+ * @memberof i18n/$L
  * @param  {String|Object} str Source string
  *
  * @returns {ilib.IString} The translated string
@@ -35,6 +36,7 @@ function toIString (str) {
 /**
  * Maps a string or key/value object to a translated string for the current locale
  *
+ * @memberof i18n/$L
  * @param  {String|Object} str Source string
  *
  * @returns {String} The translated string.
