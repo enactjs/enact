@@ -6,7 +6,7 @@ import {Spotlight, SpotlightContainerDecorator} from '@enact/spotlight';
 import css from './Panel.less';
 
 const spotPanel = (node) => {
-	if (node && !node.contains(document.activeElement)) {
+	if (node && !Spotlight.getCurrent()) {
 		const body = node.querySelector('section .spottable');
 		const header = node.querySelector('header .spottable');
 		const spottable = body || header;
