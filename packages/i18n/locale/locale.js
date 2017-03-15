@@ -3,6 +3,7 @@
  * {@link i18n/locale.updateLocale} functions.
  *
  * @module i18n/locale
+ * @private
  */
 
 import ilib from '../ilib/lib/ilib';
