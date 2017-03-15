@@ -15,7 +15,6 @@ import Slottable from '@enact/ui/Slottable';
 import {getDirection, Spotlight} from '@enact/spotlight';
 import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
 import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
-import Video from 'react-html5video';
 
 import Spinner from '../Spinner';
 
@@ -303,7 +302,6 @@ const VideoPlayerBase = class extends React.Component {
 		super(props);
 
 		// Internal State
-		this.videoReady = false;
 		this.video = null;
 		this.handledMediaForwards = {};
 		this.handledMediaEvents = {};
@@ -444,7 +442,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	activityDetected = () => {
-		// console.count('ActivityDetected');
+		// console.count('activityDetected');
 		this.startAutoCloseTimeout();
 	}
 
