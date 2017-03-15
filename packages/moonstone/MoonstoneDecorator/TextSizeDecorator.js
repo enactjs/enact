@@ -28,7 +28,7 @@ const defaultConfig = {};
 const TextSizeDecorator = hoc(defaultConfig, (config, Wrapped) => kind({
 	name: 'TextSizeDecorator',
 
-	propTypes: {
+	propTypes: /** @lends moonstone/MoonstoneDecorator.TextSizeDecorator.prototype */ {
 		/**
 		 * Set the goal size of the text. The UI library will be responsible for using this
 		 * information to adjust the components' text sizes to this preset.
