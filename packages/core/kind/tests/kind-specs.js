@@ -13,8 +13,14 @@ describe('kind', () => {
 		defaultProps: {
 			label: 'Label'
 		},
+		contextTypes: {
+			parentLabel: React.PropTypes.string
+		},
 		styles: {
 			className: 'kind'
+		},
+		handlers: {
+			onClick: () => {}
 		},
 		computed: {
 			value: ({prop}) => prop + 1
@@ -74,6 +80,13 @@ describe('kind', () => {
 
 		const expected = 2;
 		const actual = subject.find('div').prop('children');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should assign contextTypes when handlers are specified', function () {
+		const actual = Kind.contextTypes != null;
+		const expected = true;
 
 		expect(actual).to.equal(expected);
 	});

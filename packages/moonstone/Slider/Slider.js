@@ -15,6 +15,7 @@ import SliderDecorator from '../internal/SliderDecorator';
 import {computeProportionProgress} from '../internal/SliderDecorator/util';
 
 import {SliderBarFactory} from './SliderBar';
+import SliderTooltip from './SliderTooltip';
 import componentCss from './Slider.less';
 
 const isActive = (ev, props) => props.active || props.detachedKnob;
@@ -123,6 +124,16 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			min: PropTypes.number,
 
 			/**
+			 * Disables the built-in tooltip. A custom tooltip may still be used by supplying a
+			 * component as a child of `Slider`, which follows the knob.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			noTooltip: PropTypes.bool,
+
+			/**
 			 * The handler when the knob is activated or deactivated by selecting it via 5-way
 			 *
 			 * @type {Function}
@@ -227,6 +238,41 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			step: PropTypes.number,
 
 			/**
+			 * Converts the contents of the built-in tooltip to a percentage of the bar.
+			 * The percentage respects the min and max value props.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			tooltipAsPercent: PropTypes.bool,
+
+			/**
+			 * Setting to `true` overrides the natural LTR->RTL tooltip side-flipping for locale
+			 * changes. This may be useful if you have a static layout that does not automatically
+			 * reverse when in an RTL language.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			tooltipForceSide: PropTypes.bool,
+
+			/**
+			 * Specify where the tooltip should appear in relation to the Slider bar. Options are
+			 * `'before'` and `'after'`. `before` renders above a `horizontal` slider and to the
+			 * left of a `vertical` Slider. `after` renders below a `horizontal` slider and to the
+			 * right of a `vertical` Slider. In the `vertical` case, the rendering position is
+			 * automatically reversed when rendering in an RTL locale. This can be overridden by
+			 * using the [tooltipForceSide]{@link moonstone/Slider.Slider.tooltipForceSide} prop.
+			 *
+			 * @type {String}
+			 * @default 'before'
+			 * @public
+			 */
+			tooltipSide: PropTypes.oneOf(['before', 'after']),
+
+			/**
 			 * The value of the slider.
 			 *
 			 * @type {Number}
@@ -251,9 +297,13 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			detachedKnob: false,
 			max: 100,
 			min: 0,
+			noTooltip: false,
 			onChange: () => {}, // needed to ensure the base input element is mutable if no change handler is provided
 			pressed: false,
 			step: 1,
+			tooltipAsPercent: false,
+			tooltipForceSide: false,
+			tooltipSide: 'before',
 			value: 0,
 			vertical: false
 		},
@@ -292,6 +342,11 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		},
 
 		computed: {
+			children: ({children, max, min, noTooltip, tooltipAsPercent, value}) => {
+				// If there's no tooltip, or custom children present, supply those.
+				if (noTooltip || children) return children;
+				return tooltipAsPercent ? Math.floor(computeProportionProgress({value, max, min}) * 100) + '%' : value;
+			},
 			className: ({active, pressed, vertical, styler}) => styler.append({
 				active,
 				pressed,
@@ -301,7 +356,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			proportionProgress: computeProportionProgress
 		},
 
-		render: ({backgroundProgress, children, disabled, inputRef, max, min, onBlur, onChange, onKeyDown, onMouseMove, onMouseUp, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, value, vertical, ...rest}) => {
+		render: ({backgroundProgress, children, disabled, inputRef, max, min, noTooltip, onBlur, onChange, onKeyDown, onMouseMove, onMouseUp, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => {
 			delete rest.active;
 			delete rest.detachedKnob;
 			delete rest.onActivate;
@@ -309,6 +364,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			delete rest.onIncrement;
 			delete rest.onKnobMove;
 			delete rest.pressed;
+			delete rest.tooltipAsPercent;
 
 			return (
 				<div
@@ -327,7 +383,15 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						vertical={vertical}
 						scrubbing={scrubbing}
 					>
-						{children}
+						{noTooltip ? children : <SliderTooltip
+							className={css.tooltip}
+							forceSide={tooltipForceSide}
+							proportion={proportionProgress}
+							side={tooltipSide}
+							vertical={vertical}
+						>
+							{children}
+						</SliderTooltip>}
 					</SliderBar>
 					<input
 						aria-disabled={disabled}
@@ -380,5 +444,6 @@ export {
 	Slider,
 	SliderBase,
 	SliderBaseFactory,
-	SliderFactory
+	SliderFactory,
+	SliderTooltip
 };
