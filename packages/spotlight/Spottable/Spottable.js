@@ -2,7 +2,7 @@
  * Exports the {@link spotlight/Spottable.Spottable} Higher-order Component and
  * the {@link spotlight/Spottable.spottableClass} `className`. The default export is
  * {@link spotlight/Spottable.Spottable}.
- 
+ *
  * @module spotlight/Spottable
  */
 
