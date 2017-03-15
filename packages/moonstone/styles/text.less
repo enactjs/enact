@@ -45,6 +45,43 @@
 }
 
 //
+// Custom Text Size Mixins
+//
+// 1 arg: Shorthand for just setting the font size in custom-text mode
+.moon-custom-text-size(@latin-size) {
+	.moon-custom-text({
+		font-size: @latin-size;
+	});
+}
+// 2 args: Shorthand for just setting the font size of both latin and non-latin in custom-text mode
+.moon-custom-text-size(@latin-size; @non-latin-size) {
+	.moon-custom-text(
+		{
+			font-size: @latin-size;
+		};
+		{
+			font-size: @non-latin-size;
+		}
+	);
+}
+
+// 1 arg: Generic rule applicatior, accepts an entire rule-set to add for large text mode
+.moon-custom-text(@lrules) when (isruleset(@lrules)) {
+	:global(.enact-text-large) & {
+		@lrules();
+	}
+}
+// 2 args: Generic rule applicatior, accepts 2 entire rule-sets to add both latin and non-latin for large text mode
+.moon-custom-text(@lrules; @nlrules) when (isruleset(@lrules)) and (isruleset(@nlrules)) {
+	:global(.enact-text-large) & {
+		@lrules();
+	}
+	:global(.enact-text-large.enact-locale-non-latin) & {
+		@nlrules();
+	}
+}
+
+//
 // Text definitions
 //
 
