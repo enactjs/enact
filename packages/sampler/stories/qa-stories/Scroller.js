@@ -17,15 +17,14 @@ for (let i = 0; i < 100; i++) {
 
 const
 	prop = {
-		horizontal: {'auto': 'auto', 'hidden': 'hidden', 'scroll': 'scroll'},
-		vertical: {'auto': 'auto', 'hidden': 'hidden', 'scroll': 'scroll'}
+		horizontal: ['auto', 'hidden', 'scroll']
 	},
 	style = {
 		horizontalScroller: {
 			width: '100%'
 		},
 		horizontalContent: {
-			width: ri.scale(6000) + 'px'
+			width: ri.scale(4200) + 'px'
 		}
 	};
 
@@ -52,41 +51,17 @@ storiesOf('Scroller')
 			<Scroller
 				hideScrollbars={boolean('hideScrollbars', false)}
 				horizontal={select('horizontal', prop.horizontal, 'auto')}
-				vertical={select('vertical', prop.vertical, 'auto')}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
 				style={style.horizontalScroller}
 			>
 				<div style={style.horizontalContent}>
-					<Button>Button</Button>
-					<Button>Button</Button>
-					<Button>Button</Button>
-					<Button>Button</Button>
-					<Button>Button</Button>
-					<Button>Button</Button>
-					<Button>Button</Button>
-					<Button>Button</Button>
-					<Button>Button</Button>
-					<Button>Button</Button>
-					<Button>Button</Button>
-					<Button>Button</Button>
-					<Button>Button</Button>
-					<Button>Button</Button>
-					<Button>Button</Button>
-					<Button>Button</Button>
-					<Button>Button</Button>
-					<Button>Button</Button>
-					<Button>Button</Button>
-					<Button>Button</Button>
-					<Button>Button</Button>
-					<Button>Button</Button>
-					<Button>Button</Button>
-					<Button>Button</Button>
-					<Button>Button</Button>
-					<Button>Button</Button>
-					<Button>Button</Button>
-					<Button>Button</Button>
-					<Button>Button</Button>
+					{[...Array(20)].map((x, i) => (
+						<Button key={i + 1}>
+							Button {i + 1}
+						</Button>
+					)
+				)}
 				</div>
 			</Scroller>
 		)
