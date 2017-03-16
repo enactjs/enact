@@ -9,14 +9,6 @@ import kind from '@enact/core/kind';
 import React from 'react';
 
 /**
- * Default config for {@link moonstone/MoonstoneDecorator.TextSizeDecorator}.
- *
- * @memberof moonstone/MoonstoneDecorator
- * @hocconfig
- */
-const defaultConfig = {};
-
-/**
  * {@link moonstone/MoonstoneDecorator.TextSizeDecorator} is a Higher-order Component classifies an
  * application with a target set of font sizing rules
  *
@@ -25,7 +17,7 @@ const defaultConfig = {};
  * @hoc
  * @public
  */
-const TextSizeDecorator = hoc(defaultConfig, (config, Wrapped) => kind({
+const TextSizeDecorator = hoc((config, Wrapped) => kind({
 	name: 'TextSizeDecorator',
 
 	propTypes: /** @lends moonstone/MoonstoneDecorator.TextSizeDecorator.prototype */ {
@@ -45,7 +37,7 @@ const TextSizeDecorator = hoc(defaultConfig, (config, Wrapped) => kind({
 		textSize: 'normal'
 	},
 
-	styles: {},
+	styles: {},	// Empty `styles` tells `kind` that we want to use `styler` later and don't have a base className.
 
 	computed: {
 		className: ({textSize, styler}) => styler.append('enact-text-' + textSize)
