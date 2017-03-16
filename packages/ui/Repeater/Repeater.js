@@ -71,9 +71,13 @@ const RepeaterBase = kind({
 	computed: {
 		children: ({childComponent: Component, children, childProp, indexProp, itemProps}) => {
 			return children.map((data, index) => {
-				const props = {...itemProps};
+				let props;
+				if (typeof data === 'object') {
+					props = {...itemProps, ...data};
+				} else if (childProp) {
+					props = {...itemProps, [childProp]: data};
+				}
 				if (indexProp) props[indexProp] = index;
-				if (childProp) props[childProp] = data;
 
 				return <Component {...props} />;
 			});

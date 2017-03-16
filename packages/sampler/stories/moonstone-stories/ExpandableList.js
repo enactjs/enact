@@ -7,6 +7,35 @@ import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
 const List = Selectable(ExpandableList);
 List.displayName = 'ExpandableList';
 
+const myObjects2 = [
+	{
+		disabled: true,
+		children: 'off'
+		// visible: true
+	},
+	{
+		disabled: false,
+		children: 'smooth'
+		// visible: true
+	},
+	{
+		// disabled: false,
+		children: 'clear'
+		// visible: true
+	},
+	{
+		// disabled: false,
+		children: 'clearPlus'
+		// visible: true
+	},
+	{
+		disabled: true,
+		children: 'user'
+		// visible: false
+	}
+];
+
+
 storiesOf('ExpandableList')
 	.addDecorator(withKnobs)
 	.addWithInfo(
@@ -25,8 +54,8 @@ storiesOf('ExpandableList')
 				open={boolean('open', false)}
 				select={select('select', ['single', 'radio', 'multiple'], 'single')}
 				title={text('title', 'title')}
-			>
-				{['option1', 'option2', 'option3']}
-			</List>
+				kids={myObjects2}
+			/>
 		)
 	);
+				// {['option1', 'option2', 'option3']}
