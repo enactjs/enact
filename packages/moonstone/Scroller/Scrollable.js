@@ -775,6 +775,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		componentDidUpdate () {
+			const
+				positionFn = this.childRef.calculatePositionOnFocus,
+				lastFocusedItem = this.lastFocusedItem,
+				bounds = this.getScrollBounds(),
+				additionalHeight = bounds.scrollHeight - bounds.clientHeight;
+
 			this.horizontalScrollability = this.childRef.isHorizontal();
 			this.verticalScrollability = this.childRef.isVertical();
 			this.isInitializing = false;
@@ -790,6 +796,14 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			if (!this.props.hideScrollbars) {
 				this.updateScrollbars();
+			}
+
+			// make sure scroll position is in right place after update
+			if (lastFocusedItem) {
+				const pos = positionFn(lastFocusedItem, additionalHeight);
+				if (pos) {
+					this.startScrollOnFocus(pos, lastFocusedItem);
+				}
 			}
 		}
 
