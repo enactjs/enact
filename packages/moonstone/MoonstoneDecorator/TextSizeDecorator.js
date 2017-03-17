@@ -1,9 +1,3 @@
-/**
- * Exports the {@link moonstone/MoonstoneDecorator.TextSizeDecorator} HOC
- *
- * @module moonstone/MoonstoneDecorator
- */
-
 import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
 import React from 'react';
