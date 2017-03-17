@@ -1,1 +1,1 @@
-{"clock":"12","language.name":"Cherokee","numfmt":{"decimalChar":".","groupChar":",","exponential":"E","currencyFormats":{"commonNegative":"({s}{n})"}},"scripts":["Cher","Latn"],"locale":"chr"}
+{"clock":"12","language.name":"Cherokee","numfmt":{"currencyFormats":{"common":"{s}{n}","commonNegative":"-{s}{n}"}},"scripts":["Cher"],"locale":"chr"}
