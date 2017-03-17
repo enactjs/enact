@@ -65,13 +65,13 @@
 	);
 }
 
-// 1 arg: Generic rule applicatior, accepts an entire rule-set to add for large text mode
+// 1 arg: Generic rule applicator, accepts an entire rule-set to add for large text mode
 .moon-custom-text(@lrules) when (isruleset(@lrules)) {
 	:global(.enact-text-large) & {
 		@lrules();
 	}
 }
-// 2 args: Generic rule applicatior, accepts 2 entire rule-sets to add both latin and non-latin for large text mode
+// 2 args: Generic rule applicator, accepts 2 entire rule-sets to add both latin and non-latin for large text mode
 .moon-custom-text(@lrules; @nlrules) when (isruleset(@lrules)) and (isruleset(@nlrules)) {
 	:global(.enact-text-large) & {
 		@lrules();

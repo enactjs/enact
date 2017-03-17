@@ -9,8 +9,8 @@ import kind from '@enact/core/kind';
 import React from 'react';
 
 /**
- * {@link moonstone/MoonstoneDecorator.TextSizeDecorator} is a Higher-order Component classifies an
- * application with a target set of font sizing rules
+ * {@link moonstone/MoonstoneDecorator.TextSizeDecorator} is a Higher-order Component that
+ * classifies an application with a target set of font sizing rules
  *
  * @class TextSizeDecorator
  * @memberof moonstone/MoonstoneDecorator
