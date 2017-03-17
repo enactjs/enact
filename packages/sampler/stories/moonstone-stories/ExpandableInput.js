@@ -9,7 +9,7 @@ const iconNames = ['', ...Object.keys(icons)];
 const ExpandableInput = Changeable({mutable: true}, ExpInput);
 
 ExpandableInput.propTypes = Object.assign({}, ExpInput.propTypes, ExpandableInputBase.propTypes);
-ExpandableInput.defaultProps = Object.assign({}, ExpInput.defaultProps, ExpandableInputBase.defaultProps);
+ExpandableInput.defaultProps = Object.assign({}, ExpandableInput.defaultProps, ExpInput.defaultProps, ExpandableInputBase.defaultProps);
 
 delete ExpandableInput.propTypes.onInputChange;
 delete ExpandableInput.propTypes.defaultOpen;
