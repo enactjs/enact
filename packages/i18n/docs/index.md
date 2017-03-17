@@ -2,17 +2,17 @@
 title: i18n (Internationalization)
 ---
 
-This guide details how to use some of i18n library's features. For an overview of the modules supplied with the library please see [i18nDecorator](../../modules/i18n/I18nDecorator/) and [Uppercase](../../modules/i18n/Uppercase/). This library incorporates the [iLib](https://sourceforge.net/projects/i18nlib/) internationalization library.
+This guide details how to use some of i18n library's features. For an overview of the modules supplied with the library please see [I18nDecorator](../../modules/i18n/I18nDecorator/) and [Uppercase](../../modules/i18n/Uppercase/). This library incorporates the [iLib](https://sourceforge.net/projects/i18nlib/) internationalization library.
 
-## Using i18nDecorator
+## Using I18nDecorator
 
-`i18nDecorator` is a Higher-order Component (HOC) that provides easy access to locale information. Applications wishing to receive locale information can wrap the root component with the HOC. It is not necessary to use `i18nDecorator` directly for applications using `MoonstoneDecorator`.
+`I18nDecorator` is a Higher-order Component (HOC) that provides easy access to locale information. Applications wishing to receive locale information can wrap the root component with the HOC. It is not necessary to use `I18nDecorator` directly for applications using `MoonstoneDecorator`.
 
 The HOC works by passing locale information and a utility method through `context`.
 
-### Using i18nDecorator Context
+### Using I18nDecorator Context
 
-As mentioned, i18nDecorator uses `context` to pass locale information to child components. In order to access `context` within a component, that component must use the exported `contextTypes`. For more information, please read the [context documentation](https://facebook.github.io/react/docs/context.html).
+As mentioned, `I18nDecorator` uses `context` to pass locale information to child components. In order to access `context` within a component, that component must use the exported `contextTypes`. For more information, please read the [context documentation](https://facebook.github.io/react/docs/context.html).
 
 Two properties are supplied:
 
@@ -32,7 +32,7 @@ const SomeComponent = (props, context) => (
 	<div>Hello World</div>
 );
 
-// This works for Class, Stateless, and Kind components
+// This works for class-based, stateless, and Enact `kind` components
 SomeComponent.contextTypes = contextTypes;
 ```
 
@@ -58,7 +58,7 @@ const SomeComponent = (props, context) => (
 
 // Equivalent to the above.
 context.rtl
-context.updateLocale('en-US') 
+context.updateLocale('en-US')
 ```
 
 In a `kind` component, you can use context in `computed`, `handlers` or `render` the same way as a stateless component.
@@ -75,15 +75,15 @@ const SomeComponent = kind({
 });
 ```
 
-### Setting Locale
+### Setting locale
 
 Locale may be explicitly set by setting `props` on the decorator or by calling the `updateLocale` function on `context`. Apps should use only one of these methods to set locale or conflicts could arise (for example, if a re-render of the root component caused the locale to be reset).
 
-#### Using Context
+#### Using context
 
 Context is the easiest way to update the locale. Call the `updateLocale` function, passing the locale string (e.g. `context.updateLocale('en-US')`. Remember to use `contextTypes` as mentioned above.
 
-#### Updating Locale Via props
+#### Updating locale via props
 
 The other way to update locale is to send a prop down through the decorator (directly or through `moonstone/MoonstoneDecorator`).
 
@@ -118,7 +118,7 @@ const AppWrapped = (props) => (
 )
 ```
 
-In a deeply nested app, passing `props` back to the root element can get messy. State management libraries such as `redux` can assist with this.
+In a deeply nested app, passing `props` back to the root element can get messy. State management libraries such as Redux can assist with this.
 
 Using `redux`, a connected component can be used as shown below:
 
@@ -133,11 +133,11 @@ const mapStateToProps = (state) => (
 export default connect(mapStateToProps)(MoonstoneDecorator(App));
 ```
 
-This would allow you to control locale information through `redux`. However, there are some issues with this approach, explained below.
+This would allow you to control locale information through Redux. However, there are some issues with this approach, explained below.
 
-#### Issue With context and Redux
+#### Issue with context and Redux
 
-Using `context` and `redux` together has one major problem. When relying on using the `rtl` property from `context` to update a component, `react-redux` `connect` method will suppress updates caused by context changes..
+Using `context` and Redux together has one major problem. When relying on using the `rtl` property from `context` to update a component, the `react-redux` `connect` method will suppress updates caused by context changes.
 
 The reason is that `connect` only checks to see if `props` have changed, not `context`. If you only update `context` then the component will not re-render. To circumvent this you must use `connect` with the option `pure` set to `false` like this:
 
@@ -145,7 +145,7 @@ The reason is that `connect` only checks to see if `props` have changed, not `co
 export default connect(mapStateToProps, mapDispatchToProps, null, {pure: false})(LocaleSwitch);
 ```
 
-This will allow the context flow through to the component, but it will also cause performance issues because your component will be re-rendering on every change. If you must use context with `react-redux`, please make the component as small as possible to reduce re-renders or use `shouldComponentUpdate`.
+This will allow the `context` to flow through to the component, but it will also cause performance issues because your component will be re-rendering on every change. If you must use `context` with `react-redux`, please make the component as small as possible to reduce re-renders or use `shouldComponentUpdate`.
 
 ## Sample
 
