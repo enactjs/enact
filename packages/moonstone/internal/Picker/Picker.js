@@ -176,12 +176,28 @@ const Picker = class extends React.Component {
 		noAnimation: React.PropTypes.bool,
 
 		/**
-		 * A function to run when the control should increment or decrement.
+		 * A function to run when the control is blurred.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onBlur: React.PropTypes.func,
+
+		/**
+		 * A function to run when the `Picker` should increment or decrement.
 		 *
 		 * @type {Function}
 		 * @public
 		 */
 		onChange: React.PropTypes.func,
+
+		/**
+		 * A function to run when the `Picker` is focused.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onFocus: React.PropTypes.func,
 
 		/**
 		 * Initiate the pressed state
@@ -360,12 +376,20 @@ const Picker = class extends React.Component {
 	}
 
 	handleBlur = () => {
+		if (this.props.onBlur) {
+			this.props.onBlur();
+		}
+
 		this.setState({
 			active: false
 		});
 	}
 
 	handleFocus = () => {
+		if (this.props.onFocus) {
+			this.props.onFocus();
+		}
+
 		this.setState({
 			active: true
 		});
