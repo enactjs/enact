@@ -14,7 +14,6 @@ import React, {Component, PropTypes} from 'react';
 import {startJob} from '@enact/core/jobs';
 
 import css from './Scrollable.less';
-import ScrollAnimator from './ScrollAnimator';
 import Scrollbar from './Scrollbar';
 
 const
@@ -158,9 +157,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		childRef = null
 		containerRef = null
 
-		// scroll animator
-		animator = new ScrollAnimator()
-
 		// Right-To-Left
 		isFirstRendered = true
 
@@ -217,14 +213,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		// event handler for browser native scroll
 
 		onMouseDown = () => {
-			this.animator.stop();
 			this.isScrollAnimationTargetAccumulated = false;
 			this.lastFocusedItem = null;
 			this.childRef.setContainerDisabled(false);
 		}
 
 		onWheel = (e) => {
-			this.animator.stop();
 			this.isScrollAnimationTargetAccumulated = false;
 			this.childRef.setContainerDisabled(true);
 			this.lastFocusedItem = null;
@@ -370,7 +364,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		scrollStopOnScroll = () => {
-			this.animator.stop();
 			this.isScrollAnimationTargetAccumulated = false;
 			this.childRef.setContainerDisabled(false);
 			this.lastFocusedItem = null;
@@ -407,9 +400,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		start (targetX, targetY, animate = true, indexToFocus) {
 			const
 				{scrollLeft, scrollTop} = this,
-				bounds = this.getScrollBounds();
-
-			this.animator.stop();
+				bounds = this.getScrollBounds(),
+				containerNode = this.childRef.getContainerNode();
 
 			targetX = clamp(0, bounds.maxLeft, targetX);
 			targetY = clamp(0, bounds.maxTop, targetY);
@@ -422,29 +414,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 
 			if (animate) {
-				this.animator.animate(this.scrollAnimation({
-					sourceX: scrollLeft,
-					sourceY: scrollTop,
-					targetX,
-					targetY,
-					duration: animationDuration,
-					indexToFocus
-				}));
+				containerNode.scrollTo(targetX, targetY);
 			} else {
+				containerNode.style.scrollBehavior = null;
 				this.scroll(targetX, targetY, true);
-				this.focusOnItem({indexToFocus});
-			}
-		}
-
-		scrollAnimation = (animationInfo) => (curTime) => {
-			const {sourceX, sourceY, targetX, targetY, duration, indexToFocus} = animationInfo;
-			if (curTime < duration) {
-				this.scroll(
-					this.horizontalScrollability ? this.animator.timingFunction(sourceX, targetX, duration, curTime) : sourceX,
-					this.verticalScrollability ? this.animator.timingFunction(sourceY, targetY, duration, curTime) : sourceY
-				);
-			} else {
-				this.scroll(targetX, targetY, true);
+				containerNode.style.scrollBehavior = 'smooth';
 				this.focusOnItem({indexToFocus});
 			}
 		}
@@ -655,6 +629,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			// FIXME `onFocus` doesn't work on the v8 snapshot.
 			containerNode.addEventListener('focus', this.onFocus, true);
 
+			containerNode.style.scrollBehavior = 'smooth';
 			if (!this.props.hideScrollbars) {
 				this.updateScrollbars();
 			}
@@ -691,7 +666,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		componentWillUnmount () {
 			// Before call cancelAnimationFrame, you must send scrollStop Event.
-			this.animator.stop();
 			if (this.timerForceUpdate) clearTimeout(this.timerForceUpdate);
 		}
 
