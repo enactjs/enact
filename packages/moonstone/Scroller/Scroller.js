@@ -120,12 +120,12 @@ class ScrollerBase extends Component {
 		return bounds;
 	}
 
-	calculatePositionOnFocus = (focusedItem, additionalTopScroll) => {
+	calculatePositionOnFocus = (focusedItem, positionOffset) => {
 		const
 			rtlDirection = this.context.rtl ? -1 : 1,
 			currentLeft = this.scrollPos.left * rtlDirection,
 			currentTop = this.scrollPos.top,
-			topScrollOffset = additionalTopScroll ? additionalTopScroll : 0;
+			topScrollOffset = positionOffset ? positionOffset : 0;
 
 		if (this.isVertical()) {
 			if (focusedItem.offsetTop + focusedItem.offsetHeight + topScrollOffset > (this.scrollBounds.clientHeight + currentTop)) {
