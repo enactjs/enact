@@ -9,7 +9,7 @@ import classNames from 'classnames';
 import {getDirection} from '@enact/spotlight';
 import hoc from '@enact/core/hoc';
 import React, {Component, PropTypes} from 'react';
-import {contextTypes} from '@enact/ui/Resizable';
+import {contextTypes} from '@enact/moonstone/LazyChildDecorator';
 import ri from '@enact/ui/resolution';
 
 import css from './Scrollable.less';
