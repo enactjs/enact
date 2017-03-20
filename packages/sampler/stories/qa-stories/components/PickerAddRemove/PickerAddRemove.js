@@ -6,7 +6,7 @@ import Button from '@enact/moonstone/Button';
 import Changeable from '@enact/ui/Changeable';
 
 const StatefulPicker = Changeable(Picker);
-const StatefulInput = Changeable({mutable: true}, Input);
+const StatefulInput = Changeable(Input);
 
 class PickerAddRemove extends React.Component {
 	static displayName: 'PickerAddRemove'

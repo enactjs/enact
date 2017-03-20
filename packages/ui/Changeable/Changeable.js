@@ -1,3 +1,5 @@
+/* eslint-disable react/sort-prop-types */
+
 /**
  * Exports the {@link ui/Changeable.Changeable} Higher-order Component (HOC).
  *
@@ -16,21 +18,6 @@ import React from 'react';
  * @hocconfig
  */
 const defaultConfig = {
-	/**
-	 * If a Changeable component is used to maintain uncommitted state within another component,
-	 * `mutable` allows `prop` to be updated via incoming props in addition to the `change`
-	 * callback. When `true` and `prop` is specified, it will take precendence over the default
-	 * value.
-	 *
-	 * When using this property, it may be necessary to prevent unnecessary updates using
-	 * `shouldComponentUpdate()` to avoid resetting the value inadvertently.
-	 *
-	 * @type {Boolean}
-	 * @default false
-	 * @memberof ui/Changeable.Changeable.defaultConfig
-	 */
-	mutable: false,
-
 	/**
 	 * Configures the prop name to pass the callback to change the value
 	 *
@@ -53,11 +40,9 @@ const defaultConfig = {
 /**
  * {@link ui/Changeable.Changeable} is a Higher-order Component that applies a
  * 'Changeable' behavior to its wrapped component.  Its default event and value properties can be
- * configured when applied to a component. In addition, it supports `mutable` config setting that
- * allows the HOC to accept incoming settings for the `prop`.
+ * configured when applied to a component.
  *
- * By default, you can set the initial state of the Changeable item by passing `defaultValue`.  Once
- * rendered, the HOC manages the state of `value`.  If the `prop` is overridden, the names change
+ * If the `prop` is overridden, the property names to set the default value and current value change
  * correspondingly.
  *
  * @class Changeable
@@ -66,16 +51,30 @@ const defaultConfig = {
  * @public
  */
 const Changeable = hoc(defaultConfig, (config, Wrapped) => {
-	const {mutable, prop, change} = config;
+	const {prop, change} = config;
 	const defaultPropKey = 'default' + cap(prop);
 
 	return class extends React.Component {
 		static displayName = 'Changeable'
 
 		static propTypes = /** @lends ui/Changeable.Changeable.prototype */ {
-
+			/**
+			 * Default value applied at construction when the value prop is `undefined` or `null`.
+			 *
+			 * @type {*}
+			 * @public
+			 */
 			[defaultPropKey]: React.PropTypes.any,
 
+			/**
+			 * Current value. When set at construction, the component is considered "controlled" and
+			 * will only update its internal value when updated by new props. If `undefined`, the
+			 * component is "uncontrolled" and `Changeable` will manage the value using callbacks
+			 * defined by its configuration.
+			 *
+			 * @type {*}
+			 * @public
+			 */
 			[prop]: React.PropTypes.any,
 
 			/**
@@ -85,7 +84,7 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @default false
 			 * @public
 			 */
-			disabled: React.PropTypes.bool	// eslint-disable-line react/sort-prop-types
+			disabled: React.PropTypes.bool
 		}
 
 		static defaultProps = {
@@ -94,26 +93,42 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
-			const key = (mutable && prop in props) ? prop : defaultPropKey;
-			const value = props[key];
-			this.state = {value};
+			let value = props[defaultPropKey];
+			let controlled = false;
+
+			if (prop in props) {
+				if (props[prop] != null) {
+					value = props[prop];
+				}
+
+				controlled = true;
+			}
+
+			this.state = {
+				controlled,
+				value
+			};
 		}
 
 		componentWillReceiveProps (nextProps) {
-			if (mutable && prop in nextProps) {
+			if (this.state.controlled) {
 				const value = nextProps[prop];
 				this.setState({value});
+			} else if (prop in nextProps) {
+				// warning! uncontrolled => controlled
 			}
 		}
 
 		handle = handle.bind(this)
 
 		handleChange = this.handle(
+			handle.log,
 			forProp('disabled', false),
 			forward(change),
-			(ev) => {
-				const value = ev[prop];
-				this.setState({value});
+			({[prop]: value}) => {
+				if (!this.state.controlled) {
+					this.setState({value});
+				}
 			}
 		)
 

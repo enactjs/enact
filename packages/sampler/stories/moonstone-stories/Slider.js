@@ -4,9 +4,9 @@ import Slider, {SliderBase} from '@enact/moonstone/Slider';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, number, select} from '@kadira/storybook-addon-knobs';
 
-const ChangeableSlider = Changeable({mutable: true}, Slider);
+const ChangeableSlider = Changeable(Slider);
 ChangeableSlider.propTypes = Object.assign({}, SliderBase.propTypes, Slider.propTypes);
-ChangeableSlider.defaultProps = Object.assign({}, ChangeableSlider.defaultProps, SliderBase.defaultProps, Slider.defaultProps);
+ChangeableSlider.defaultProps = Object.assign({}, SliderBase.defaultProps, Slider.defaultProps, ChangeableSlider.defaultProps);
 ChangeableSlider.displayName = 'Slider';
 
 delete ChangeableSlider.propTypes.pressed;

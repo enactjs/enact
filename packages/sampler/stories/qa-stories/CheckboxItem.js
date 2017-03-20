@@ -1,21 +1,21 @@
 import {CheckboxItem, CheckboxItemBase} from '@enact/moonstone/CheckboxItem';
 import Group from '@enact/ui/Group';
-import Selectable from '@enact/ui/Selectable';
+import Changeable from '@enact/ui/Changeable';
 import {Toggleable} from '@enact/ui/Toggleable';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, text, select} from '@kadira/storybook-addon-knobs';
 
-const CheckboxItemToggle = Toggleable({prop: 'selected', mutable: true}, CheckboxItemBase);
+const CheckboxItemToggle = Toggleable({prop: 'selected'}, CheckboxItemBase);
 CheckboxItemToggle.displayName = 'CheckboxItem';
-CheckboxItemToggle.propTypes = Object.assign({}, CheckboxItemToggle.propTypes, CheckboxItemBase.propTypes);
-CheckboxItemToggle.defaultProps = Object.assign({}, CheckboxItemToggle.defaultProps, CheckboxItemBase.defaultProps);
+CheckboxItemToggle.propTypes = Object.assign({}, CheckboxItemBase.propTypes);
+CheckboxItemToggle.defaultProps = Object.assign({}, CheckboxItemBase.defaultProps, CheckboxItemToggle.defaultProps);
 
-const SelectableGroup = Selectable(Group);
+const ChangeableGroup = Changeable({change: 'onSelect', prop: 'selected'}, Group);
 
-SelectableGroup.displayName = 'SelectableGroup';
-SelectableGroup.propTypes = Object.assign({}, Group.propTypes, Selectable.propTypes);
-SelectableGroup.defaultProps = Object.assign({}, Group.defaultProps, Selectable.defaultProps);
+ChangeableGroup.displayName = 'ChangeableGroup';
+ChangeableGroup.propTypes = Object.assign({}, Group.propTypes);
+ChangeableGroup.defaultProps = Object.assign({}, Group.defaultProps, Changeable.defaultProps);
 
 const prop = {
 	longText : 'Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text',
@@ -81,7 +81,7 @@ storiesOf('CheckboxItem')
 	.addWithInfo(
 		'that is grouped',
 		() => (
-			<SelectableGroup
+			<ChangeableGroup
 				childComponent={CheckboxItem}
 				childSelect="onToggle"
 				itemProps={{
@@ -93,6 +93,6 @@ storiesOf('CheckboxItem')
 				onSelect={action('onSelect')}
 			>
 				{['Checkbox Item 1', 'Checkbox Item 2', 'Checkbox Item 3']}
-			</SelectableGroup>
+			</ChangeableGroup>
 		)
 	);

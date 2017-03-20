@@ -159,7 +159,6 @@ const InputBase = kind({
 		 * The value of the input.
 		 *
 		 * @type {String|Number}
-		 * @default ''
 		 * @public
 		 */
 		value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
@@ -169,8 +168,7 @@ const InputBase = kind({
 		disabled: false,
 		dismissOnEnter: false,
 		placeholder: '',
-		type: 'text',
-		value: ''
+		type: 'text'
 	},
 
 	styles: {

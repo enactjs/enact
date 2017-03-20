@@ -22,7 +22,6 @@ import ToggleButton from '@enact/moonstone/ToggleButton';
 import ToggleItem from '@enact/moonstone/ToggleItem';
 import Slider from '@enact/moonstone/Slider';
 import Changeable from '@enact/ui/Changeable';
-import Selectable from '@enact/ui/Selectable';
 import Toggleable from '@enact/ui/Toggleable';
 import Spotlight, {SpotlightContainerDecorator} from '@enact/spotlight';
 import React from 'react';
@@ -56,8 +55,8 @@ const style = {
 
 const Items = ['First', 'Second', 'Third'];
 const StatefulCheckboxItem = Toggleable({prop: 'selected'}, CheckboxItem);
-const StatefulDayPicker = Selectable(DayPicker);
-const StatefulExpandableList = Selectable(ExpandableList);
+const StatefulDayPicker = Changeable({change: 'onSelect', prop: 'selected'}, DayPicker);
+const StatefulExpandableList = Changeable({change: 'onSelect', prop: 'selected'}, ExpandableList);
 const StatefulIncrementSlider = Changeable(IncrementSlider);
 const StatefulInput = Changeable(Input);
 const StatefulPicker = Changeable(Picker);

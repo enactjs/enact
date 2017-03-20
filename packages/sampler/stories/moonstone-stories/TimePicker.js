@@ -12,7 +12,7 @@ Picker.propTypes = Object.assign({}, TimePicker.propTypes, TimePickerBase.propTy
 	open: React.PropTypes.bool,
 	value: React.PropTypes.instanceOf(Date)
 });
-Picker.defaultProps = Object.assign({}, Picker.defaultProps, TimePicker.defaultProps, TimePickerBase.defaultProps);
+Picker.defaultProps = Object.assign({}, TimePicker.defaultProps, TimePickerBase.defaultProps, Picker.defaultProps);
 Picker.displayName = 'TimePicker';
 
 'onChangeHour defaultOpen onChangeMeridiem hour onChangeMinute minute meridiem meridiems order'

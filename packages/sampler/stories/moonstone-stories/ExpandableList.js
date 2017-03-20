@@ -1,10 +1,10 @@
 import ExpandableList from '@enact/moonstone/ExpandableList';
-import Selectable from '@enact/ui/Selectable';
+import Changeable from '@enact/ui/Changeable';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
 
-const List = Selectable(ExpandableList);
+const List = Changeable({change: 'onSelect', prop: 'selected'}, ExpandableList);
 List.displayName = 'ExpandableList';
 
 storiesOf('ExpandableList')
@@ -22,7 +22,6 @@ storiesOf('ExpandableList')
 				onSelect={action('onSelect')}
 				onClose={action('onClose')}
 				onOpen={action('onOpen')}
-				open={boolean('open', false)}
 				select={select('select', ['single', 'radio', 'multiple'], 'single')}
 				title={text('title', 'title')}
 			>

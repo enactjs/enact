@@ -12,7 +12,7 @@ Picker.propTypes = Object.assign({}, DatePicker.propTypes, DatePickerBase.propTy
 	open: React.PropTypes.bool,
 	value: React.PropTypes.instanceOf(Date)
 });
-Picker.defaultProps = Object.assign({}, Picker.defaultProps, DatePicker.defaultProps, DatePickerBase.defaultProps);
+Picker.defaultProps = Object.assign({}, DatePicker.defaultProps, DatePickerBase.defaultProps, Picker.defaultProps);
 Picker.displayName = 'DatePicker';
 
 'year defaultOpen day maxDays maxMonths month onChangeDate onChangeMonth onChangeYear order'

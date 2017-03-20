@@ -8,7 +8,7 @@ import nullify from '../../src/utils/nullify.js';
 
 const StatefulRangePicker = Changeable(RangePicker);
 StatefulRangePicker.propTypes = Object.assign({}, RangePickerBase.propTypes, RangePicker.propTypes);
-StatefulRangePicker.defaultProps = Object.assign({}, StatefulRangePicker.defaultProps, RangePickerBase.defaultProps, RangePicker.defaultProps);
+StatefulRangePicker.defaultProps = Object.assign({}, RangePickerBase.defaultProps, RangePicker.defaultProps, StatefulRangePicker.defaultProps);
 StatefulRangePicker.displayName = 'RangePicker';
 
 // Don't want to show `value` and it throws a warning, too!

@@ -1,3 +1,5 @@
+/* eslint-disable react/sort-prop-types */
+
 /**
  * Exports the {@link ui/Pressable.Pressable} Higher-order Component (HOC).
  *
@@ -71,14 +73,25 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 	return class Pressable extends React.Component {
 		static propTypes = /** @lends ui/Pressable.Pressable.prototype */ {
 			/**
-			 * Whether or not the component is in a "pressed" state when first rendered.
-			 * *Note that this property name can be changed by the config. By default it is `defaultPressed`.
+			 * Default pressed state applied at construction when the pressed prop is `undefined` or
+			 * `null`.
 			 *
 			 * @type {Boolean}
 			 * @default false
 			 * @public
 			 */
 			[defaultPropKey]: React.PropTypes.bool,
+
+			/**
+			 * Current pressed state. When set at construction, the component is considered
+			 * "controlled" and will only update its internal pressed state when updated by new
+			 * props. If `undefined`, the component is "uncontrolled" and `Pressable` will manage
+			 * the pressed state using callbacks defined by its configuration.
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			[prop]: React.PropTypes.bool,
 
 			/**
 			 * Whether or not the component is in a disabled state.
@@ -97,27 +110,56 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
+			let pressed = props[defaultPropKey];
+			let controlled = false;
+
+			if (prop in props) {
+				if (props[prop] != null) {
+					pressed = props[prop];
+				}
+
+				controlled = true;
+			}
+
 			this.state = {
-				pressed: props[defaultPropKey]
+				controlled,
+				pressed
 			};
+		}
+
+		componentWillReceiveProps (nextProps) {
+			if (this.state.controlled) {
+				const pressed = nextProps[prop];
+				this.setState({pressed});
+			} else if (prop in nextProps) {
+				// warning! uncontrolled => controlled
+			}
 		}
 
 		handle = handle.bind(this)
 
+		updatePressed = (pressed) => {
+			if (!this.state.controlled) {
+				this.setState({pressed});
+			}
+		}
+
 		handleDepress = this.handle(
 			forward(depress),
 			forProp('disabled', false),
-			(ev) => this.setState({pressed: ev.pressed || true})
+			(ev) => this.updatePressed(ev && ev.pressed || true)
 		)
 
 		handleRelease = this.handle(
 			forward(release),
-			() => this.setState({pressed: false})
+			forProp('disabled', false),
+			() => this.updatePressed(false)
 		)
 
 		handleLeave = this.handle(
 			forward(leave),
-			() => this.setState({pressed: false})
+			forProp('disabled', false),
+			() => this.updatePressed(false)
 		)
 
 		render () {
