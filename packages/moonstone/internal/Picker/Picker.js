@@ -362,9 +362,7 @@ const Picker = class extends React.Component {
 	}
 
 	handleBlur = (ev) => {
-		if (ev) {
-			forwardBlur(ev, this.props);
-		}
+		forwardBlur(ev, this.props);
 
 		this.setState({
 			active: false
@@ -372,9 +370,7 @@ const Picker = class extends React.Component {
 	}
 
 	handleFocus = (ev) => {
-		if (ev) {
-			forwardFocus(ev, this.props);
-		}
+		forwardFocus(ev, this.props);
 
 		this.setState({
 			active: true
