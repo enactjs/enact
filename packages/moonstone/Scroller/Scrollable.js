@@ -812,7 +812,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						targetY: pos.top
 					});
 				}
-			} else {
+			} else if (focusedItem) {
 				const pos = positionFn(focusedItem, additionalHeight);
 				if (pos) {
 					this.start({
