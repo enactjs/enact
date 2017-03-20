@@ -196,7 +196,7 @@ const PickerBase = kind({
  * @public
  */
 const Picker = MarqueeController(
-	{startOnFocus: true},
+	{marqueeOnFocus: true},
 	SpottablePicker(
 		PickerBase
 	)
