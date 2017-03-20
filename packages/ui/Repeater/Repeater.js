@@ -30,7 +30,7 @@ const RepeaterBase = kind({
 
 		/**
 		 * An array of data to be mapped onto the `childComponent`.  For example, an array of strings.
-		 * This supports two data types. If an array ofstrings is provided, the strings will be used
+		 * This supports two data types. If an array of strings is provided, the strings will be used
 		 * in the generated `childComponent` as the readable text. If an array of objects is
 		 * provided, each object will be spread onto the generated `childComponent` with no
 		 * interpretation. You'll be responsible for setting properties like `disabled`,
