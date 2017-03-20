@@ -55,7 +55,9 @@ const now = function () {
 const emulateMouseEventsTimeout = 175;
 
 // Set-up event forwarding
-const forwardClick = forward('onClick'),
+const forwardBlur = forward('onBlur'),
+	forwardClick = forward('onClick'),
+	forwardFocus = forward('onFocus'),
 	forwardKeyDown = forward('onKeyDown'),
 	forwardMouseDown = forward('onMouseDown'),
 	forwardMouseUp = forward('onMouseUp'),
@@ -176,28 +178,12 @@ const Picker = class extends React.Component {
 		noAnimation: React.PropTypes.bool,
 
 		/**
-		 * A function to run when the control is blurred.
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onBlur: React.PropTypes.func,
-
-		/**
-		 * A function to run when the `Picker` should increment or decrement.
+		 * A function to run when the control should increment or decrement.
 		 *
 		 * @type {Function}
 		 * @public
 		 */
 		onChange: React.PropTypes.func,
-
-		/**
-		 * A function to run when the `Picker` is focused.
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onFocus: React.PropTypes.func,
 
 		/**
 		 * Initiate the pressed state
@@ -375,9 +361,9 @@ const Picker = class extends React.Component {
 		}
 	}
 
-	handleBlur = () => {
-		if (this.props.onBlur) {
-			this.props.onBlur();
+	handleBlur = (ev) => {
+		if (ev) {
+			forwardBlur(ev, this.props);
 		}
 
 		this.setState({
@@ -385,9 +371,9 @@ const Picker = class extends React.Component {
 		});
 	}
 
-	handleFocus = () => {
-		if (this.props.onFocus) {
-			this.props.onFocus();
+	handleFocus = (ev) => {
+		if (ev) {
+			forwardFocus(ev, this.props);
 		}
 
 		this.setState({
