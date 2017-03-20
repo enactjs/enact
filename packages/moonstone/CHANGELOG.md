@@ -7,13 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Panels.Panel` behavior for setting focus after render
-### Added
-
-### Changed
-
-### Fixed
-- `moonstone/Picker` to marquee on focus once again.
-
+- `moonstone/Picker` to marquee on focus once again
 
 ## [1.0.0-beta.4] - 2017-03-10
 
