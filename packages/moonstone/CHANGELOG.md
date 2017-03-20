@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Panels.Panel` behavior for setting focus after render
+- `moonstone/VirtualList.VirtualGridList` showing empty items when keep adding items dynamically
 
 ## [1.0.0-beta.4] - 2017-03-10
 
