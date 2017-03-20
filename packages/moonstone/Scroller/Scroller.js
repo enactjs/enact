@@ -128,7 +128,7 @@ class ScrollerBase extends Component {
 			topScrollOffset = positionOffset ? positionOffset : 0;
 
 		if (this.isVertical()) {
-			if (focusedItem.offsetTop + focusedItem.offsetHeight + topScrollOffset > (this.scrollBounds.clientHeight + currentTop)) {
+			if (focusedItem.offsetTop + focusedItem.offsetHeight >= (this.scrollBounds.clientHeight + currentTop)) {
 				this.scrollPos.top += ((focusedItem.offsetTop + focusedItem.offsetHeight + topScrollOffset) - (this.scrollBounds.clientHeight + currentTop));
 			} else if (focusedItem.offsetTop < currentTop) {
 				this.scrollPos.top += (focusedItem.offsetTop - currentTop);
