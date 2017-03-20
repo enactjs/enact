@@ -7,6 +7,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonstone/ExpandableList` and `moonstone/Repeater` to accept an array of objects as children, which are spread onto the generated components
+### Fixed
+
+- `moonstone/Panels.Panel` behavior for setting focus after render
 
 ## [1.0.0-beta.4] - 2017-03-10
 

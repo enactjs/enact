@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@enact/core": "^1.0.0-beta.4",
+    "ramda": "~0.22.1",
     "react": "~15.4.0"
   }
 }
