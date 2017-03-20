@@ -11,6 +11,7 @@ import hoc from '@enact/core/hoc';
 import React, {Component, PropTypes} from 'react';
 import {contextTypes} from '@enact/ui/Resizable';
 import ri from '@enact/ui/resolution';
+import Spotlight from '@enact/spotlight';
 
 import css from './Scrollable.less';
 import ScrollAnimator from './ScrollAnimator';
@@ -352,10 +353,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 							this.scrollTop,
 							calcVelocity(-d.dx, d.dt),
 							calcVelocity(-d.dy, d.dt)
-						);
+						),
+						focusedItem = Spotlight.getCurrent();
 
-					if (typeof window !== 'undefined') {
-						window.document.activeElement.blur();
+					if (focusedItem) {
+						focusedItem.blur();
 					}
 					this.childRef.setContainerDisabled(true);
 					this.isScrollAnimationTargetAccumulated = false;
@@ -399,7 +401,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				const
 					item = e.target,
 					positionFn = this.childRef.calculatePositionOnFocus,
-					spotItem = window.document.activeElement;
+					spotItem = Spotlight.getCurrent();
 
 				if (item && item !== this.lastFocusedItem && item === spotItem && positionFn) {
 					const pos = positionFn(item);
@@ -433,9 +435,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					bounds = this.getScrollBounds(),
 					isHorizontal = this.canScrollHorizontally(bounds),
 					isVertical = this.canScrollVertically(bounds),
-					delta = this.wheel(e, isHorizontal, isVertical);
+					delta = this.wheel(e, isHorizontal, isVertical),
+					focusedItem = Spotlight.getCurrent();
 
-				window.document.activeElement.blur();
+				if (focusedItem) {
+					focusedItem.blur();
+				}
 				this.childRef.setContainerDisabled(true);
 				this.scrollToAccumulatedTarget(delta, isHorizontal, isVertical);
 			}
@@ -779,7 +784,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				positionFn = this.childRef.calculatePositionOnFocus,
 				lastFocusedItem = this.lastFocusedItem,
 				bounds = this.getScrollBounds(),
-				additionalHeight = bounds.scrollHeight - bounds.clientHeight;
+				additionalHeight = bounds.scrollHeight - bounds.clientHeight,
+				focusedItem = Spotlight.getCurrent();
 
 			this.horizontalScrollability = this.childRef.isHorizontal();
 			this.verticalScrollability = this.childRef.isVertical();
@@ -802,7 +808,16 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			if (lastFocusedItem) {
 				const pos = positionFn(lastFocusedItem, additionalHeight);
 				if (pos) {
-					this.startScrollOnFocus(pos, lastFocusedItem);
+					this.start({
+						targetY: pos.top
+					});
+				}
+			} else {
+				const pos = positionFn(focusedItem, additionalHeight);
+				if (pos) {
+					this.start({
+						targetY: pos.top
+					});
 				}
 			}
 		}
