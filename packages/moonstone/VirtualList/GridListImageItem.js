@@ -144,7 +144,7 @@ const GridListImageItemBase = kind({
  * @public
  */
 const GridListImageItem = MarqueeController(
-	{startOnFocus: true},
+	{marqueeOnFocus: true},
 	Spottable(
 		GridListImageItemBase
 	)
