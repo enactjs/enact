@@ -512,8 +512,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		getScrollTop = () => this.scrollTop
-
 		// scroll start/stop
 
 		start ({targetX, targetY, animate = true, silent = false, duration = animationDuration, indexToFocus}) {
@@ -775,7 +773,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			// FIXME `onFocus` doesn't work on the v8 snapshot.
 			this.childRef.containerRef.addEventListener('focus', this.onFocus, true);
 
-			this.childRef.notifyLazyChild(this.scrollTop);
+			if (this.childRef.containerDidMount) {
+				this.childRef.containerDidMount(this.scrollTop);
+			}
 		}
 
 		componentDidUpdate () {

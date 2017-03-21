@@ -7,26 +7,53 @@
 import hoc from '@enact/core/hoc';
 import React from 'react';
 
+/**
+ * Default config for {@link moonstone/LazyChildDecorator.LazyChildDecorator}
+ *
+ * @memberof ui/LazyChildDecorator.LazyChildDecorator
+ * @hocconfig
+ */
 const defaultConfig = {
+	/**
+	 * Configures the initial height of the child element
+	 *
+	 * @type {Number}
+	 * @default 0
+	 * @memberof moonstone/LazyChildDecorator.LazyChildDecorator.defaultConfig
+	 */
 	initialHeight: 0
 };
 
+/**
+ * The context propTypes required by `LazyChildDecorator`. This should be set as the `childContextTypes` of a
+ * container so that the container could notify when scrolling
+ *
+ * @type {Object}
+ * @memberof moonstone/LazyChildDecorator
+ * @public
+ */
 const contextTypes = {
 	attachLazyChild: React.PropTypes.func,
 	detachLazyChild: React.PropTypes.func
 };
 
+/**
+ * {@link moonstone/LazyChildDecorator.LazyChildDecorator} is a Higher-order Component that can be used that
+ * a container notify the Wrapped component when scrolling.
+ *
+ * Containers must provide `attachLazyChild` and `detachLazyChild` methods via React's context in order for
+ * `LazyChildDecorator` instances.
+ *
+ * @class LazyChildDecorator
+ * @memberof moonstone/LazyChildDecorator
+ * @hoc
+ * @public
+ */
 const LazyChildDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {initialHeight} = config;
 
 	return class extends React.Component {
 		static displayName = 'LazyChildDecorator'
-
-		static propTypes = /** @lends ui/LazyChildDecorator.LazyChildDecorator.prototype */ {
-		}
-
-		static defaultProps = {
-		}
 
 		constructor (props) {
 			super(props);
@@ -38,7 +65,7 @@ const LazyChildDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static contextTypes = contextTypes
 
-		update ({containerBounds, containerScrollTopThreshold, index}) {
+		update ({containerScrollTopThreshold, index}) {
 			const offsetTop = this.childRef.offsetTop;
 
 			if (offsetTop < containerScrollTopThreshold) {

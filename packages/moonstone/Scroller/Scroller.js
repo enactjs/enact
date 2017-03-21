@@ -43,6 +43,17 @@ class ScrollerBase extends Component {
 		 */
 		horizontal: PropTypes.oneOf(['auto', 'hidden', 'scroll']),
 
+		/**
+		 * Options to pass the object containing `'containerScrollTopThreshold'` and `'index'` to children
+		 * so that the children could make a decision whether showing themself or not. If their `'offsetTop'` is
+		 * less than `'containerScrollTopThreshold'`, then they are shown. If not, they are hidden.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		lazyChild: PropTypes.bool,
+
 		style: PropTypes.object,
 
 		/**
@@ -53,9 +64,7 @@ class ScrollerBase extends Component {
 		 * @default 'auto'
 		 * @public
 		 */
-		vertical: PropTypes.oneOf(['auto', 'hidden', 'scroll']),
-
-		lazyChild: PropTypes.bool
+		vertical: PropTypes.oneOf(['auto', 'hidden', 'scroll'])
 	}
 
 	static contextTypes = i18nContextTypes
@@ -64,6 +73,7 @@ class ScrollerBase extends Component {
 
 	static defaultProps = {
 		horizontal: 'auto',
+		lazyChild: false,
 		vertical: 'auto'
 	}
 
@@ -82,6 +92,10 @@ class ScrollerBase extends Component {
 
 	componentDidUpdate () {
 		this.calculateMetrics();
+	}
+
+	containerDidMount (top) {
+		this.notifyLazyChild(top);
 	}
 
 	scrollBounds = {
@@ -211,7 +225,6 @@ class ScrollerBase extends Component {
 
 			for (let i = length - 1; i >= 0; i--) {
 				this.lazyChildObservers[i].update({
-					containerBounds,
 					containerScrollTopThreshold,
 					index: i
 				});
