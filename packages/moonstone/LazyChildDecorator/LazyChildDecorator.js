@@ -89,11 +89,11 @@ const LazyChildDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			if (visible) {
 				return (
-					<Wrapped {...props} key={props.index} ref={this.initChildRef} />
+					<Wrapped {...props} ref={this.initChildRef} />
 				);
 			} else {
 				return (
-					<div key={props.index} ref={this.initChildRef} style={{height: initialHeight + 'px'}} />
+					<div ref={this.initChildRef} style={{height: initialHeight + 'px'}} />
 				);
 			}
 		}
