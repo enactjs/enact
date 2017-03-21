@@ -7,7 +7,8 @@
  */
 
 import classNames from 'classnames';
-import {contextTypes} from '@enact/i18n/I18nDecorator';
+import {contextTypes as i18nContextTypes} from '@enact/i18n/I18nDecorator';
+import {contextTypes as lazyChildDecoratorContextTypes} from '@enact/moonstone/LazyChildDecorator';
 import React, {Component, PropTypes} from 'react';
 import {SpotlightContainerDecorator} from '@enact/spotlight';
 
@@ -52,14 +53,27 @@ class ScrollerBase extends Component {
 		 * @default 'auto'
 		 * @public
 		 */
-		vertical: PropTypes.oneOf(['auto', 'hidden', 'scroll'])
+		vertical: PropTypes.oneOf(['auto', 'hidden', 'scroll']),
+
+		lazyChild: PropTypes.bool
 	}
 
-	static contextTypes = contextTypes
+	static contextTypes = i18nContextTypes
+
+	static childContextTypes = lazyChildDecoratorContextTypes
 
 	static defaultProps = {
 		horizontal: 'auto',
 		vertical: 'auto'
+	}
+
+	lazyChildObservers = []
+
+	getChildContext () {
+		return {
+			attachLazyChild: this.attachLazyChild,
+			detachLazyChild: this.detachLazyChild
+		};
 	}
 
 	componentDidMount () {
@@ -99,6 +113,8 @@ class ScrollerBase extends Component {
 			node.scrollLeft = rtl ? (this.scrollBounds.maxLeft - valX) : valX;
 			this.scrollPos.left = valX;
 		}
+
+		this.notifyLazyChild(valY);
 	}
 
 	getScrollPos = (item) => {
@@ -167,6 +183,42 @@ class ScrollerBase extends Component {
 		}
 	}
 
+	// Lazy child decorator
+
+	attachLazyChild = (observer) => {
+		this.lazyChildObservers.push(observer);
+	}
+
+	detachLazyChild = ({index, observer}) => {
+		if (typeof index === 'number') {
+			this.lazyChildObservers.splice(index, 1);
+		} else {
+			for (let i in this.lazyChildObservers) {
+				if (this.lazyChildObservers[i] === observer) {
+					this.lazyChildObservers.splice(i, 1);
+				}
+			}
+		}
+	}
+
+	notifyLazyChild (top) {
+		const length = this.lazyChildObservers.length;
+
+		if (this.props.lazyChild && length > 0) {
+			const
+				containerBounds = this.getScrollBounds(),
+				containerScrollTopThreshold = (Math.floor(top / containerBounds.clientHeight) + 2) * containerBounds.clientHeight;
+
+			for (let i = length - 1; i >= 0; i--) {
+				this.lazyChildObservers[i].update({
+					containerBounds,
+					containerScrollTopThreshold,
+					index: i
+				});
+			}
+		}
+	}
+
 	initRef = (ref) => {
 		this.containerRef = ref;
 	}
@@ -185,6 +237,7 @@ class ScrollerBase extends Component {
 		delete props.className;
 		delete props.hideScrollbars;
 		delete props.horizontal;
+		delete props.lazyChild;
 		delete props.onScrolling;
 		delete props.onScrollStart;
 		delete props.onScrollStop;

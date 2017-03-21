@@ -6,8 +6,7 @@
 
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
-import {contextTypes as lazyChildDecoratorContextTypes} from '@enact/moonstone/LazyChildDecorator';
-import {contextTypes as resizableContextTypes} from '@enact/ui/Resizable';
+import {contextTypes} from '@enact/ui/Resizable';
 import {getDirection} from '@enact/spotlight';
 import hoc from '@enact/core/hoc';
 import React, {Component, PropTypes} from 'react';
@@ -140,10 +139,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			positioningOption: 'byItem'
 		}
 
-		static childContextTypes = {
-			...lazyChildDecoratorContextTypes,
-			...resizableContextTypes
-		}
+		static childContextTypes = contextTypes
 
 		// status
 		horizontalScrollability = false
@@ -239,9 +235,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		getChildContext () {
 			return {
-				invalidateBounds: this.enqueueForceUpdate,
-				attachLazyChild: this.attachLazyChild,
-				detachLazyChild: this.detachLazyChild
+				invalidateBounds: this.enqueueForceUpdate
 			};
 		}
 
@@ -580,8 +574,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 			this.childRef.setScrollPosition(this.scrollLeft, this.scrollTop, this.dirHorizontal, this.dirVertical, skipPositionContainer);
 			this.doScrolling();
-
-			this.notifyLazyChild(top);
 		}
 
 		stop ({indexToFocus}) {
@@ -765,44 +757,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		// Lazy child decorator
-
-		observers = []
-
-		attachLazyChild = (observer) => {
-			this.observers.push(observer);
-		}
-
-		detachLazyChild = ({index, observer}) => {
-			if (typeof index === 'number') {
-				this.observers.splice(index, 1);
-			} else {
-				for (let i in this.observers) {
-					if (this.observers[i] === observer) {
-						this.observers.splice(i, 1);
-					}
-				}
-			}
-		}
-
-		notifyLazyChild (top) {
-			const length = this.observers.length;
-
-			if (length > 0) {
-				const
-					containerBounds = this.getScrollBounds(),
-					containerScrollTopThreshold = (Math.floor(top / containerBounds.clientHeight) + 2) * containerBounds.clientHeight;
-
-				for (let i = length - 1; i >= 0; i--) {
-					this.observers[i].update({
-						containerBounds,
-						containerScrollTopThreshold,
-						index: i
-					});
-				}
-			}
-		}
-
 		// component life cycle
 
 		componentDidMount () {
@@ -821,7 +775,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			// FIXME `onFocus` doesn't work on the v8 snapshot.
 			this.childRef.containerRef.addEventListener('focus', this.onFocus, true);
 
-			this.notifyLazyChild(this.scrollTop);
+			this.childRef.notifyLazyChild(this.scrollTop);
 		}
 
 		componentDidUpdate () {
