@@ -1,1 +1,1 @@
-{"language.name":"Latvian","numfmt":{"groupChar":" ","exponential":"E","currencyFormats":{"commonNegative":"({s}{n})"}},"scripts":["Latn"],"locale":"lv"}
+{"language.name":"Latvian","numfmt":{"decimalChar":",","groupChar":" ","currencyFormats":{"common":"{n} {s}","commonNegative":"-{n} {s}"}},"scripts":["Latn"],"locale":"lv"}
