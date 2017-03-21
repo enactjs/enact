@@ -4,6 +4,11 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Changed
+
+- `moonstone/Slider` to use the property `tooltip` instead of `noTooltip`, so the built-in tooltip is not enabled by-default
+- `moonstone/IncrementSlider` to include tooltip documentation
+
 ### Fixed
 
 - `moonstone/Panels.Panel` behavior for setting focus after render
