@@ -1,1 +1,1 @@
-{"language.name":"Faroese","numfmt":{"exponential":"E","pctFmt":"{n} %"},"scripts":["Latn"],"locale":"fo"}
+{"delimiter":{"quotationStart":"”","alternateQuotationStart":"’"},"language.name":"Faroese","numfmt":{"decimalChar":",","groupChar":".","currencyFormats":{"common":"{n} {s}","commonNegative":"−{n} {s}"},"negativenumFmt":"−{n}","pctFmt":"{n} %","negativepctFmt":"−{n} %"},"scripts":["Latn"],"locale":"fo"}
