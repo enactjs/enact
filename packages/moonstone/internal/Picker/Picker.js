@@ -37,7 +37,9 @@ const selectIncIcon = selectIcon('incrementIcon', 'arrowlargeup', 'arrowlargerig
 const selectDecIcon = selectIcon('decrementIcon', 'arrowlargedown', 'arrowlargeleft');
 
 // Set-up event forwarding
-const forwardClick = forward('onClick'),
+const forwardBlur = forward('onBlur'),
+	forwardClick = forward('onClick'),
+	forwardFocus = forward('onFocus'),
 	forwardKeyDown = forward('onKeyDown'),
 	forwardMouseDown = forward('onMouseDown'),
 	forwardMouseUp = forward('onMouseUp'),
@@ -339,13 +341,17 @@ const Picker = class extends React.Component {
 		}
 	}
 
-	handleBlur = () => {
+	handleBlur = (ev) => {
+		forwardBlur(ev, this.props);
+
 		this.setState({
 			active: false
 		});
 	}
 
-	handleFocus = () => {
+	handleFocus = (ev) => {
+		forwardFocus(ev, this.props);
+
 		this.setState({
 			active: true
 		});

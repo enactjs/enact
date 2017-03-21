@@ -39,7 +39,7 @@ ilib._ver = function() {
  */
 ilib.getVersion = function () {
 	// TODO: need some way of getting the version number under dynamic load code
-    return ilib._ver() || "11.0"; 
+    return ilib._ver() || "12.0"; 
 };
 
 /**
@@ -58,6 +58,7 @@ ilib.data = {
         "Etc/UTC":{"o":"0:0","f":"UTC"},
         "local":{"f":"local"}
     },
+    /** @type {Object.<string,{to:Object.<string,string>,from:Object.<string,number>}>} */ charmaps: {},
     /** @type {null|Object.<string,Array.<Array.<number>>>} */ ctype: null,
     /** @type {null|Object.<string,Array.<Array.<number>>>} */ ctype_c: null,
     /** @type {null|Object.<string,Array.<Array.<number>>>} */ ctype_l: null,
@@ -131,7 +132,7 @@ ilib._getPlatform = function () {
         if (typeof(process) !== 'undefined' && typeof(window) === 'undefined' && typeof(module) !== 'undefined') {
             ilib._platform = "nodejs";
         } else if (typeof(Qt) !== 'undefined') {
-            ilib._platform = "qt";
+        	ilib._platform = "qt";
         } else if (typeof(window) !== 'undefined') {
             ilib._platform = (typeof(PalmSystem) !== 'undefined') ? "webos" : "browser";
         } else {
@@ -176,6 +177,39 @@ ilib._getBrowser = function () {
 };
 
 /**
+ * Return the value of a global variable given its name in a way that works 
+ * correctly for the current platform.
+ * @private
+ * @static
+ * @param {string} name the name of the variable to return
+ * @return {*} the global variable, or undefined if it does not exist
+ */
+ilib._global = function(name) {
+    switch (ilib._getPlatform()) {
+        case "rhino":
+            var top = (function() {
+              return (typeof global === 'object') ? global : this;
+            })();
+            break;
+        case "nodejs":
+        case "trireme":
+            top = typeof(global) !== 'undefined' ? global : this;
+            //console.log("ilib._global: top is " + (typeof(global) !== 'undefined' ? "global" : "this"));
+            break;
+        case "qt":
+        	return undefined;
+        default:
+        	top = window;
+        	break;
+    }
+    try {
+		return top[name];
+	} catch (e) {
+		return undefined;
+	}
+};
+
+/**
  * Return true if the global variable is defined on this platform.
  * @private
  * @static
@@ -183,25 +217,7 @@ ilib._getBrowser = function () {
  * @return {boolean} true if the global variable is defined on this platform, false otherwise
  */
 ilib._isGlobal = function(name) {
-    switch (ilib._getPlatform()) {
-        case "rhino":
-            var top = (function() {
-              return (typeof global === 'object') ? global : this;
-            })();
-            return typeof(top[name]) !== 'undefined';
-        case "nodejs":
-        case "trireme":
-            var root = typeof(global) !== 'undefined' ? global : this;
-            return root && typeof(root[name]) !== 'undefined';
-        case "qt":
-        	return false;
-        default:
-        	try {
-        		return window && typeof(window[name]) !== 'undefined';
-        	} catch (e) {
-        		return false;
-        	}
-    }
+	return typeof(ilib._global(name)) !== 'undefined';
 };
 
 /**
@@ -242,8 +258,8 @@ ilib.getLocale = function () {
     	switch (plat) {
     		case 'browser':
             	// running in a browser
-                if(typeof(navigator.language) !== 'undefined'){
-                    ilib.locale = navigator.language.substring(0,3) + navigator.language.substring(3,5).toUpperCase();  // FF/Opera/Chrome/Webkit
+                if(typeof(navigator.language) !== 'undefined') {
+                    ilib.locale = navigator.language.substring(0,3) + navigator.language.substring(3,5).toUpperCase();  // FF/Opera/Chrome/Webkit    
                 }
                 if (!ilib.locale) {
                     // IE on Windows
@@ -547,7 +563,7 @@ ilib.getLoader = function() {
 };
 
 /**
- * Test whether an object in an javascript array. 
+ * Test whether an object is an javascript array. 
  * 
  * @static
  * @param {*} object The object to test
@@ -555,10 +571,8 @@ ilib.getLoader = function() {
  * and false otherwise
  */
 ilib.isArray = function(object) {
-	var o;
 	if (typeof(object) === 'object') {
-		o = /** @type {Object|null|undefined} */ object;
-		return Object.prototype.toString.call(o) === '[object Array]';
+		return Object.prototype.toString.call(object) === '[object Array]';
 	}
 	return false; 
 };
@@ -578,7 +592,8 @@ ilib.extend = function (object1, object2) {
 	var prop = undefined;
 	if (object2) {
 		for (prop in object2) {
-			if (prop && typeof(object2[prop]) !== 'undefined') {
+			// don't extend object with undefined or functions
+			if (prop && typeof(object2[prop]) !== 'undefined' && typeof(object2[prop]) !== "function") {
 				if (ilib.isArray(object1[prop]) && ilib.isArray(object2[prop])) {
 					//console.log("Merging array prop " + prop);
 					object1[prop] = object1[prop].concat(object2[prop]);
@@ -586,6 +601,31 @@ ilib.extend = function (object1, object2) {
 					//console.log("Merging object prop " + prop);
 					if (prop !== "ilib") {
 						object1[prop] = ilib.extend(object1[prop], object2[prop]);
+					}
+				} else {
+					//console.log("Copying prop " + prop);
+					// for debugging. Used to determine whether or not json files are overriding their parents unnecessarily
+					object1[prop] = object2[prop];
+				}
+			}
+		}
+	}
+	return object1;
+};
+
+ilib.extend2 = function (object1, object2) {
+	var prop = undefined;
+	if (object2) {
+		for (prop in object2) {
+			// don't extend object with undefined or functions
+			if (prop && typeof(object2[prop]) !== 'undefined') {
+				if (ilib.isArray(object1[prop]) && ilib.isArray(object2[prop])) {
+					//console.log("Merging array prop " + prop);
+					object1[prop] = object1[prop].concat(object2[prop]);
+				} else if (typeof(object1[prop]) === 'object' && typeof(object2[prop]) === 'object') {
+					//console.log("Merging object prop " + prop);
+					if (prop !== "ilib") {
+						object1[prop] = ilib.extend2(object1[prop], object2[prop]);
 					}
 				} else {
 					//console.log("Copying prop " + prop);
