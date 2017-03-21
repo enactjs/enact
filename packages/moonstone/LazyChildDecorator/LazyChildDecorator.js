@@ -50,7 +50,7 @@ const contextTypes = {
  * @public
  */
 const LazyChildDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {initialHeight} = config;
+	const dummyStyle = {height: config.initialHeight + 'px'};
 
 	return class extends React.Component {
 		static displayName = 'LazyChildDecorator'
@@ -93,7 +93,7 @@ const LazyChildDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				);
 			} else {
 				return (
-					<div ref={this.initChildRef} style={{height: initialHeight + 'px'}} />
+					<div ref={this.initChildRef} style={dummyStyle} />
 				);
 			}
 		}
