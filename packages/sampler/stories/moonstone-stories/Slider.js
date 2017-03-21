@@ -41,7 +41,6 @@ storiesOf('Slider')
 				tooltipForceSide={boolean('tooltipForceSide', ChangeableSlider.defaultProps.tooltipForceSide)}
 				tooltipSide={select('tooltipSide', ['before', 'after'], 'after')}
 				vertical={boolean('vertical', ChangeableSlider.defaultProps.vertical)}
-				value={number('value', ChangeableSlider.defaultProps.value)}
 			/>
 		),
 		{propTables: [Config]}
