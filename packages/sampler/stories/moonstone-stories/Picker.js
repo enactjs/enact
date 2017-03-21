@@ -4,18 +4,18 @@ import {decrementIcons, incrementIcons} from './icons';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
+import nullify from '../../src/utils/nullify.js';
 
 const StatefulPicker = Changeable(Picker);
 StatefulPicker.propTypes = Object.assign({}, PickerBase.propTypes, StatefulPicker.propTypes);
-StatefulPicker.defaultProps = Object.assign({}, PickerBase.defaultProps, StatefulPicker.defaultProps);
+StatefulPicker.defaultProps = Object.assign({}, StatefulPicker.defaultProps, PickerBase.defaultProps, StatefulPicker.defaultProps);
 StatefulPicker.displayName = 'Picker';
 
 // Set up some defaults for info and knobs
 const prop = {
 	orientation: ['horizontal', 'vertical'],
-	width: ['<null>', 'small', 'medium', 'large']
+	width: [null, 'small', 'medium', 'large']
 };
-const nullify = (v) => v === '<null>' ? null : v;
 
 const airports = [
 	'San Francisco Airport Terminal Gate 1',

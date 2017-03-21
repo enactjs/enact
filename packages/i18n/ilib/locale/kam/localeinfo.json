@@ -1,1 +1,1 @@
-{"clock":"12","language.name":"Kamba","numfmt":{"decimalChar":".","groupChar":",","exponential":"E","currencyFormats":{"commonNegative":"({s}{n})"}},"scripts":["Latn"],"locale":"kam"}
+{"language.name":"Kamba","numfmt":{"currencyFormats":{"common":"{s}{n}","commonNegative":"-{s}{n}"}},"scripts":["Latn"],"locale":"kam"}

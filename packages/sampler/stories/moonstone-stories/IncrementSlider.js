@@ -7,7 +7,7 @@ import {withKnobs, boolean, number, select} from '@kadira/storybook-addon-knobs'
 
 const ChangeableSlider = Changeable({mutable: true}, IncrementSlider);
 ChangeableSlider.propTypes = Object.assign({}, IncrementSliderBase.propTypes, IncrementSlider.propTypes);
-ChangeableSlider.defaultProps = Object.assign({}, IncrementSliderBase.defaultProps, IncrementSlider.defaultProps);
+ChangeableSlider.defaultProps = Object.assign({}, ChangeableSlider.defaultProps, IncrementSliderBase.defaultProps, IncrementSlider.defaultProps);
 ChangeableSlider.displayName = 'IncrementSlider';
 
 storiesOf('IncrementSlider')

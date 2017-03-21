@@ -1,1 +1,1 @@
-{"delimiter":{"quotationStart":"„","alternateQuotationStart":"«","alternateQuotationEnd":"»"},"language.name":"Romanian","numfmt":{"exponential":"E","currencyFormats":{"common":"{n} {s}"},"pctFmt":"{n} %"},"scripts":["Latn","Cyrl"],"locale":"ro"}
+{"delimiter":{"quotationStart":"„","alternateQuotationStart":"«","alternateQuotationEnd":"»"},"language.name":"Romanian","numfmt":{"decimalChar":",","groupChar":".","currencyFormats":{"common":"{n} {s}","commonNegative":"-{n} {s}"},"pctFmt":"{n} %","negativepctFmt":"-{n} %"},"scripts":["Latn","Cyrl"],"locale":"ro"}

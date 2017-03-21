@@ -113,7 +113,6 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 			 * When `true`, a selected visual effect is applied to the button
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			selected: PropTypes.bool,
@@ -136,7 +135,6 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 			disabled: false,
 			minWidth: true,
 			pressed: false,
-			selected: false,
 			small: false
 		},
 
@@ -174,7 +172,13 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 			)
 		},
 
-		render: ({children, ...rest}) => {
+		render: ({children, disabled, ...rest}) => {
+			// Do not add the ARIA attribute if the selected prop is omitted to avoid the potentially
+			// confusing readout for the common case of a standalone Button or IconButton.
+			if ('selected' in rest) {
+				rest['aria-pressed'] = rest.selected;
+			}
+
 			delete rest.backgroundOpacity;
 			delete rest.color;
 			delete rest.minWidth;
@@ -183,7 +187,7 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 			delete rest.small;
 
 			return (
-				<div role="button" {...rest}>
+				<div role="button" {...rest} aria-disabled={disabled} disabled={disabled}>
 					<div className={css.bg} />
 					<div className={css.client}>{children}</div>
 				</div>

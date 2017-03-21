@@ -1,1 +1,1 @@
-{"clock":"12","language.name":"Machame","numfmt":{"decimalChar":".","groupChar":",","exponential":"E"},"scripts":["Latn"],"locale":"jmc"}
+{"language.name":"Machame","numfmt":{"currencyFormats":{"common":"{s}{n}","commonNegative":"-{s}{n}"}},"scripts":["Latn"],"locale":"jmc"}

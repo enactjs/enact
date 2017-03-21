@@ -11,8 +11,8 @@ import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import React from 'react';
 
+import {calcAriaLabel, Input} from '../Input';
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
-import {Input} from '../Input';
 
 const forwardMouseDown = forward('onMouseDown');
 
@@ -29,6 +29,15 @@ class ExpandableInputBase extends React.Component {
 	static displayName = 'ExpandableInput'
 
 	static propTypes = /** @lends moonstone/ExpandableInput.ExpandableInputBase.prototype */ {
+		/**
+		 * The primary text of the item.
+		 *
+		 * @type {String}
+		 * @required
+		 * @public
+		 */
+		title: React.PropTypes.string.isRequired,
+
 		/**
 		 * When `true`, applies a disabled style and the control becomes non-interactive.
 		 *
@@ -54,6 +63,14 @@ class ExpandableInputBase extends React.Component {
 		 * @public
 		 */
 		iconBefore: React.PropTypes.string,
+
+		/**
+		 * Text to display when no `value` is set.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		noneText: React.PropTypes.string,
 
 		/**
 		 * The handler to run when the expandable value is changed.
@@ -139,6 +156,21 @@ class ExpandableInputBase extends React.Component {
 		spotlightDisabled: false
 	}
 
+	calcAriaLabel () {
+		const {noneText, title, type, value} = this.props;
+		const returnVal = (type === 'password') ? value : (value || noneText);
+		return calcAriaLabel(title, type, returnVal);
+	}
+
+	calcLabel () {
+		const {noneText, type, value} = this.props;
+		if (type === 'password') {
+			return null;
+		} else {
+			return value || noneText;
+		}
+	}
+
 	fireChangeEvent = () => {
 		const {onChange, onClose, value} = this.props;
 
@@ -208,12 +240,14 @@ class ExpandableInputBase extends React.Component {
 		return (
 			<ExpandableItemBase
 				{...rest}
+				aria-label={this.calcAriaLabel()}
 				disabled={disabled}
-				label={value}
+				label={this.calcLabel()}
 				noPointerMode
 				onClose={this.handleClose}
 				onMouseDown={this.handleMouseDown}
 				onSpotlightDisappear={onSpotlightDisappear}
+				showLabel={type === 'password' ? 'never' : 'auto'}
 				spotlightDisabled={spotlightDisabled}
 			>
 				<Input
