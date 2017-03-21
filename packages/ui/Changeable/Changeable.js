@@ -59,6 +59,15 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 
 		static propTypes = /** @lends ui/Changeable.Changeable.prototype */ {
 			/**
+			 * Event callback to notify that the value has changed. The event object must contain a
+			 * property with the same name as the configured `prop`.
+			 *
+			 * @type {Function}
+			 * @public
+			 */
+			[change]: React.PropTypes.func,
+
+			/**
 			 * Default value applied at construction when the value prop is `undefined` or `null`.
 			 *
 			 * @type {*}

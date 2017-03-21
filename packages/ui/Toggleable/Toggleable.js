@@ -91,6 +91,16 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			[prop]: React.PropTypes.bool,
 
 			/**
+			 * Event callback to notify that state should be toggled. If the component is
+			 * "uncontrolled", the event payload is ignored and the currently stored state is
+			 * toggled.
+			 *
+			 * @type {Function}
+			 * @public
+			 */
+			[toggle]: React.PropTypes.func,
+
+			/**
 			 * Whether or not the component is in a disabled state.
 			 *
 			 * @type {Boolean}
