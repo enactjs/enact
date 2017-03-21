@@ -77,10 +77,6 @@ class ScrollerBase extends Component {
 		vertical: 'auto'
 	}
 
-	lazyChildObservers = []
-
-	scrollTopThreshold = 0
-
 	getChildContext () {
 		return {
 			attachLazyChild: this.attachLazyChild,
@@ -99,6 +95,10 @@ class ScrollerBase extends Component {
 	containerDidMount (top) {
 		this.notifyLazyChild(top);
 	}
+
+	lazyChildObservers = []
+
+	scrollTopThreshold = 0
 
 	scrollBounds = {
 		clientWidth: 0,
