@@ -7,9 +7,13 @@ import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
 import nullify from '../../src/utils/nullify.js';
 
 const StatefulPicker = Changeable(Picker);
-StatefulPicker.propTypes = Object.assign({}, PickerBase.propTypes);
-StatefulPicker.defaultProps = Object.assign({}, PickerBase.defaultProps, StatefulPicker.defaultProps);
-StatefulPicker.displayName = 'Picker';
+StatefulPicker.displayName = 'Changeable(Picker)';
+
+const Config = {
+	propTypes: Object.assign({}, PickerBase.propTypes),
+	defaultProps: Object.assign({}, PickerBase.defaultProps),
+	displayName: 'Picker'
+};
 
 // Set up some defaults for info and knobs
 const prop = {
@@ -43,5 +47,6 @@ storiesOf('Picker')
 			>
 				{airports}
 			</StatefulPicker>
-		)
+		),
+		{propTables: [Config]}
 	);

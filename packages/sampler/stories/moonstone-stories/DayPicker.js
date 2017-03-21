@@ -5,9 +5,7 @@ import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
 
 const ChangeableDayPicker = Changeable({change: 'onSelect', prop: 'selected'}, DayPicker);
-ChangeableDayPicker.propTypes = Object.assign({}, DayPicker.propTypes);
-ChangeableDayPicker.defaultProps = Object.assign({}, DayPicker.defaultProps, ChangeableDayPicker.defaultProps);
-ChangeableDayPicker.displayName = 'DayPicker';
+ChangeableDayPicker.displayName = 'Changeable(DayPicker)';
 
 storiesOf('DayPicker')
 	.addDecorator(withKnobs)
@@ -23,5 +21,6 @@ storiesOf('DayPicker')
 				onOpen={action('onOpen')}
 				onClose={action('onClose')}
 			/>
-		)
+		),
+		{propTables: [DayPicker]}
 	);

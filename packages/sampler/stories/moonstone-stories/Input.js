@@ -7,10 +7,13 @@ import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
 
 
 const StatefulInput = Changeable(Input);
+StatefulInput.displayName = 'Changeable(Input)';
 
-StatefulInput.propTypes = Object.assign({}, InputBase.propTypes, Input.propTypes);
-StatefulInput.defaultProps = Object.assign({}, InputBase.defaultProps, Input.defaultProps, StatefulInput.defaultProps);
-StatefulInput.displayName = 'Input';
+const Config = {
+	propTypes: Object.assign({}, InputBase.propTypes, Input.propTypes),
+	defaultProps: Object.assign({}, InputBase.defaultProps, Input.defaultProps),
+	displayName: 'Input'
+};
 
 const iconNames = ['', ...Object.keys(icons)];
 
@@ -29,5 +32,6 @@ storiesOf('Input')
 				placeholder={text('placeholder')}
 				type={text('type')}
 			/>
-		)
+		),
+		{propTables: [Config]}
 	);

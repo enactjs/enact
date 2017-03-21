@@ -7,12 +7,13 @@ import {withKnobs, boolean, number, select} from '@kadira/storybook-addon-knobs'
 import nullify from '../../src/utils/nullify.js';
 
 const StatefulRangePicker = Changeable(RangePicker);
-StatefulRangePicker.propTypes = Object.assign({}, RangePickerBase.propTypes, RangePicker.propTypes);
-StatefulRangePicker.defaultProps = Object.assign({}, RangePickerBase.defaultProps, RangePicker.defaultProps, StatefulRangePicker.defaultProps);
-StatefulRangePicker.displayName = 'RangePicker';
+StatefulRangePicker.displayName = 'Changeable(RangePicker)';
 
-// Don't want to show `value` and it throws a warning, too!
-delete StatefulRangePicker.propTypes.value;
+const Config = {
+	propTypes: Object.assign({}, RangePickerBase.propTypes, RangePicker.propTypes),
+	defaultProps: Object.assign({}, RangePickerBase.defaultProps, RangePicker.defaultProps),
+	displayName: 'RangePicker'
+};
 
 // Set up some defaults for info and knobs
 const prop = {
@@ -48,5 +49,6 @@ storiesOf('RangePicker')
 				incrementIcon={select('incrementIcon', ['', ...incrementIcons])}
 				decrementIcon={select('decrementIcon', ['', ...decrementIcons])}
 			/>
-		)
+		),
+		{propTables: [Config]}
 	);

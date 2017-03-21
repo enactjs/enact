@@ -8,15 +8,7 @@ import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, text, boolean} from '@kadira/storybook-addon-knobs';
 
 const ChangeableGroup = Changeable({change: 'onSelect', prop: 'selected'}, Group);
-
-ChangeableGroup.displayName = 'ChangeableGroup';
-ChangeableGroup.propTypes = Object.assign({}, Group.propTypes, Changeable.propTypes);
-ChangeableGroup.defaultProps = Object.assign({}, Group.defaultProps, Changeable.defaultProps);
-
 const SwitchItemToggle = Toggleable({prop: 'selected'}, SwitchItemBase);
-SwitchItemToggle.propTypes = Object.assign({}, SwitchItemToggle.propTypes, SwitchItemBase.propTypes);
-SwitchItemToggle.defaultProps = Object.assign({}, SwitchItemToggle.defaultProps, SwitchItemBase.defaultProps);
-SwitchItemToggle.displayName = 'SwitchItem';
 
 const inputData = {
 	longText : 'Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text',

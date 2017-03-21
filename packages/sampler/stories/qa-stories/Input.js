@@ -1,16 +1,11 @@
 import {icons} from '@enact/moonstone/Icon';
-import Input, {InputBase} from '@enact/moonstone/Input';
+import Input from '@enact/moonstone/Input';
 import Changeable from '@enact/ui/Changeable';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, number, select, text} from '@kadira/storybook-addon-knobs';
 
-
 const StatefulInput = Changeable(Input);
-
-StatefulInput.propTypes = Object.assign({}, InputBase.propTypes, Input.propTypes);
-StatefulInput.defaultProps = Object.assign({}, StatefulInput.defaultProps, InputBase.defaultProps, Input.defaultProps);
-StatefulInput.displayName = 'Input';
 
 const iconNames = ['', ...Object.keys(icons)];
 

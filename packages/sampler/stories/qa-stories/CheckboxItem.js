@@ -7,15 +7,7 @@ import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, text, select} from '@kadira/storybook-addon-knobs';
 
 const CheckboxItemToggle = Toggleable({prop: 'selected'}, CheckboxItemBase);
-CheckboxItemToggle.displayName = 'CheckboxItem';
-CheckboxItemToggle.propTypes = Object.assign({}, CheckboxItemBase.propTypes);
-CheckboxItemToggle.defaultProps = Object.assign({}, CheckboxItemBase.defaultProps, CheckboxItemToggle.defaultProps);
-
 const ChangeableGroup = Changeable({change: 'onSelect', prop: 'selected'}, Group);
-
-ChangeableGroup.displayName = 'ChangeableGroup';
-ChangeableGroup.propTypes = Object.assign({}, Group.propTypes);
-ChangeableGroup.defaultProps = Object.assign({}, Group.defaultProps, Changeable.defaultProps);
 
 const prop = {
 	longText : 'Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text',

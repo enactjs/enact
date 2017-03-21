@@ -6,20 +6,8 @@ import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, text, select} from '@kadira/storybook-addon-knobs';
 
-
 const ChangeableGroup = Changeable({change: 'onSelect', prop: 'selected'}, Group);
-
-ChangeableGroup.displayName = 'ChangeableGroup';
-ChangeableGroup.propTypes = Object.assign({}, Group.propTypes, Changeable.propTypes);
-ChangeableGroup.defaultProps = Object.assign({}, Group.defaultProps, Changeable.defaultProps);
-
 const SelectableItemToggle = Toggleable({prop: 'selected'}, SelectableItemBase);
-SelectableItemToggle.displayName = 'SelectableItem';
-SelectableItemToggle.propTypes = Object.assign({}, SelectableItemToggle.propTypes, SelectableItemBase.propTypes);
-SelectableItemToggle.defaultProps = Object.assign({}, SelectableItemToggle.defaultProps, SelectableItemBase.defaultProps);
-
-delete SelectableItemToggle.propTypes.selected;
-delete SelectableItemToggle.defaultProps.selected;
 
 const inputData = {
 	longText : 'Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text',

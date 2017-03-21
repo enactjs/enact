@@ -1,4 +1,4 @@
-import Button, {ButtonBase} from '@enact/moonstone/Button';
+import Button from '@enact/moonstone/Button';
 import CheckboxItem from '@enact/moonstone/CheckboxItem';
 import DatePicker from '@enact/moonstone/DatePicker';
 import DayPicker from '@enact/moonstone/DayPicker';
@@ -27,10 +27,6 @@ import Spotlight, {SpotlightContainerDecorator} from '@enact/spotlight';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
-
-Button.propTypes = Object.assign({}, ButtonBase.propTypes, Button.propTypes);
-Button.defaultProps = Object.assign({}, ButtonBase.defaultProps, Button.defaultProps);
-Button.displayName = 'Button';
 
 const Container = SpotlightContainerDecorator('div');
 const style = {

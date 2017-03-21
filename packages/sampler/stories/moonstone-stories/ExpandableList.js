@@ -1,11 +1,11 @@
-import ExpandableList from '@enact/moonstone/ExpandableList';
+import {ExpandableList, ExpandableListBase} from '@enact/moonstone/ExpandableList';
 import Changeable from '@enact/ui/Changeable';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
 
 const List = Changeable({change: 'onSelect', prop: 'selected'}, ExpandableList);
-List.displayName = 'ExpandableList';
+List.displayName = 'Changeable(ExpandableList)';
 
 storiesOf('ExpandableList')
 	.addDecorator(withKnobs)
@@ -27,5 +27,6 @@ storiesOf('ExpandableList')
 			>
 				{['option1', 'option2', 'option3']}
 			</List>
-		)
+		),
+		{propTables: [ExpandableListBase]}
 	);

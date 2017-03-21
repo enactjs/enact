@@ -6,9 +6,13 @@ import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, number, select} from '@kadira/storybook-addon-knobs';
 
 const ChangeableSlider = Changeable(IncrementSlider);
-ChangeableSlider.propTypes = Object.assign({}, IncrementSliderBase.propTypes, IncrementSlider.propTypes);
-ChangeableSlider.defaultProps = Object.assign({}, IncrementSliderBase.defaultProps, IncrementSlider.defaultProps, ChangeableSlider.defaultProps);
-ChangeableSlider.displayName = 'IncrementSlider';
+ChangeableSlider.displayName = 'Changeable(IncrementSlider)';
+
+const Config = {
+	propTypes: Object.assign({}, IncrementSliderBase.propTypes, IncrementSlider.propTypes),
+	defaultProps: Object.assign({}, IncrementSliderBase.defaultProps, IncrementSlider.defaultProps),
+	displayName: 'IncrementSlider'
+};
 
 storiesOf('IncrementSlider')
 	.addDecorator(withKnobs)
@@ -28,5 +32,6 @@ storiesOf('IncrementSlider')
 				step={number('step', ChangeableSlider.defaultProps.step)}
 				vertical={boolean('vertical', ChangeableSlider.defaultProps.vertical)}
 			/>
-		)
+		),
+		{propTables: [Config]}
 	);

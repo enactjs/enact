@@ -10,10 +10,13 @@ import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
 
 const ChangeableGroup = Changeable({change: 'onSelect', prop: 'selected'}, Group);
+ChangeableGroup.displayName = 'Changeable(Group)';
 
-ChangeableGroup.displayName = 'Group';
-ChangeableGroup.propTypes = Object.assign({}, Group.propTypes);
-ChangeableGroup.defaultProps = Object.assign({}, Group.defaultProps, ChangeableGroup.propTypes);
+const Config = {
+	displayName: 'Group',
+	propTypes: Object.assign({}, Group.propTypes),
+	defaultProps: Object.assign({}, Group.defaultProps, ChangeableGroup.defaultProps)
+};
 
 // Set up some defaults for info and knobs
 const prop = {
@@ -46,5 +49,6 @@ storiesOf('Group')
 			>
 				{['Item 1', 'Item 2', 'Item 3']}
 			</ChangeableGroup>
-		)
+		),
+		{propTables: [Config]}
 	);

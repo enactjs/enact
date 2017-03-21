@@ -5,9 +5,13 @@ import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, text, boolean, select} from '@kadira/storybook-addon-knobs';
 
 const StatefulToggleButton = Toggleable({toggle: 'onClick', prop: 'selected'}, ToggleButton);
-StatefulToggleButton.propTypes = Object.assign({}, ToggleButtonBase.propTypes, ToggleButton.propTypes);
-StatefulToggleButton.defaultProps = Object.assign({}, ToggleButtonBase.defaultProps, ToggleButton.defaultProps);
-StatefulToggleButton.displayName = 'ToggleButton';
+StatefulToggleButton.displayName = 'Toggleable(ToggleButton)';
+
+const Config = {
+	propTypes: Object.assign({}, ToggleButtonBase.propTypes, ToggleButton.propTypes),
+	defaultProps: Object.assign({}, ToggleButtonBase.defaultProps, ToggleButton.defaultProps),
+	displayName: 'ToggleButton'
+};
 
 // Set up some defaults for info and knobs
 const prop = {
@@ -32,5 +36,6 @@ storiesOf('ToggleButton')
 			>
 				Missing Toggle Label
 			</StatefulToggleButton>
-		)
+		),
+		{propTables: [Config]}
 	);

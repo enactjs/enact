@@ -7,14 +7,13 @@ import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
 
 const iconNames = ['', ...Object.keys(icons)];
 const ExpandableInput = Changeable(ExpInput);
+ExpandableInput.displayName = 'Changeable(ExpandableInput)';
 
-ExpandableInput.propTypes = Object.assign({}, ExpInput.propTypes, ExpandableInputBase.propTypes);
-ExpandableInput.defaultProps = Object.assign({}, ExpInput.defaultProps, ExpandableInputBase.defaultProps, ExpandableInput.defaultProps);
-
-delete ExpandableInput.propTypes.onInputChange;
-delete ExpandableInput.propTypes.defaultOpen;
-delete ExpandableInput.defaultProps.onInputChange;
-delete ExpandableInput.defaultProps.defaultOpen;
+const Config = {
+	propTypes: Object.assign({}, ExpInput.propTypes, ExpandableInputBase.propTypes),
+	defaultProps: Object.assign({}, ExpInput.defaultProps, ExpandableInputBase.defaultProps, ExpandableInput.defaultProps),
+	displayName: 'ExpandableInput'
+};
 
 storiesOf('ExpandableInput')
 	.addDecorator(withKnobs)
@@ -34,5 +33,6 @@ storiesOf('ExpandableInput')
 				placeholder={text('placeholder')}
 				type={text('type')}
 			/>
-		)
+		),
+		{propTables: [Config]}
 	);

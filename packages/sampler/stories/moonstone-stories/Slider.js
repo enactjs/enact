@@ -5,14 +5,20 @@ import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, number, select} from '@kadira/storybook-addon-knobs';
 
 const ChangeableSlider = Changeable(Slider);
-ChangeableSlider.propTypes = Object.assign({}, SliderBase.propTypes, Slider.propTypes);
-ChangeableSlider.defaultProps = Object.assign({}, SliderBase.defaultProps, Slider.defaultProps, ChangeableSlider.defaultProps);
-ChangeableSlider.displayName = 'Slider';
+ChangeableSlider.displayName = 'Changeable(Slider)';
 
-delete ChangeableSlider.propTypes.pressed;
-delete ChangeableSlider.defaultProps.pressed;
-delete ChangeableSlider.propTypes.defaultPressed;
-delete ChangeableSlider.defaultProps.defaultPressed;
+const Config = {
+	propTypes: Object.assign({}, SliderBase.propTypes, Slider.propTypes),
+	defaultProps: Object.assign({}, SliderBase.defaultProps, Slider.defaultProps),
+	displayName: 'Slider'
+};
+
+'defaultPressed pressed'
+	.split(' ')
+	.forEach(prop => {
+		delete Config.propTypes[prop];
+		delete Config.defaultProps[prop];
+	});
 
 storiesOf('Slider')
 	.addDecorator(withKnobs)
@@ -37,5 +43,6 @@ storiesOf('Slider')
 				vertical={boolean('vertical', ChangeableSlider.defaultProps.vertical)}
 				value={number('value', ChangeableSlider.defaultProps.value)}
 			/>
-		)
+		),
+		{propTables: [Config]}
 	);
