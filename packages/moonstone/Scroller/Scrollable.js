@@ -6,10 +6,11 @@
 
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
+import {contextTypes as lazyChildDecoratorContextTypes} from '@enact/moonstone/LazyChildDecorator';
+import {contextTypes as resizableContextTypes} from '@enact/ui/Resizable';
 import {getDirection} from '@enact/spotlight';
 import hoc from '@enact/core/hoc';
 import React, {Component, PropTypes} from 'react';
-import {contextTypes} from '@enact/moonstone/LazyChildDecorator';
 import ri from '@enact/ui/resolution';
 
 import css from './Scrollable.less';
@@ -139,7 +140,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			positioningOption: 'byItem'
 		}
 
-		static childContextTypes = contextTypes
+		static childContextTypes = {
+			...lazyChildDecoratorContextTypes,
+			...resizableContextTypes
+		}
 
 		// status
 		horizontalScrollability = false
@@ -235,7 +239,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		getChildContext () {
 			return {
-				invalidateBounds: this.enqueueForceUpdate
+				invalidateBounds: this.enqueueForceUpdate,
+				getScrollTop: this.getScrollTop
 			};
 		}
 
@@ -511,6 +516,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				this.updateThumb(this.scrollbarVerticalRef, bounds);
 			}
 		}
+
+		getScrollTop = () => this.scrollTop
 
 		// scroll start/stop
 
