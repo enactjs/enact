@@ -1,6 +1,6 @@
 import {MarqueeController, MarqueeText} from '@enact/moonstone/Marquee';
 import Item from '@enact/moonstone/Item';
-import {Spottable} from '@enact/spotlight';
+import Spottable from '@enact/spotlight/Spottable';
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
 import {withKnobs, boolean, number, select} from '@kadira/storybook-addon-knobs';

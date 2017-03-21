@@ -1,3 +1,1 @@
-export default {
-	version:'0.0.1'
-};
+// This space intentionally left blank

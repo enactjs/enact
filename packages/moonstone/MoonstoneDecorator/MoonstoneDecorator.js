@@ -10,7 +10,7 @@ import I18nDecorator from '@enact/i18n/I18nDecorator';
 import React from 'react';
 import {ResolutionDecorator} from '@enact/ui/resolution';
 import {FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
-import {SpotlightRootDecorator} from '@enact/spotlight';
+import SpotlightRootDecorator from '@enact/spotlight/SpotlightRootDecorator';
 
 import I18nFontDecorator from './I18nFontDecorator';
 import TextSizeDecorator from './TextSizeDecorator';

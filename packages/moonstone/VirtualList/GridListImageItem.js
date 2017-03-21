@@ -8,7 +8,7 @@
 
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
-import {Spottable} from '@enact/spotlight';
+import Spottable from '@enact/spotlight/Spottable';
 
 import Icon from '../Icon';
 import {Image} from '../Image';

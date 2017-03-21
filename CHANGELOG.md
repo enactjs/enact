@@ -2,6 +2,32 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [unreleased]
+
+> NOTE: This version includes a breaking change to the way modules are organized. This change was necessary to prevent further API breakage following the 1.0.0 release and to facilitate changes we want to make in the future. We understand that this will require some work on the part of developers to update their code. Below you will find details about the changes:
+>
+> #### Moved/renamed modules:
+> * `core/jobs` -> `core/util/Job`
+> * `core/Accelerator` -> `spotlight/Accelerator`
+> * `i18n.$L` -> `i18n/$L`
+> * `i18n.toIString` -> `i18n/$L.toIString`
+> * `spotlight.Spottable` -> `spotlight/Spottable`
+> * `spotlight.spottableClass` -> `spotlight/Spottable.spottableClass`
+> * `spotlight.SpotlightContainerDecorator` -> `spotlight/SpotlightContainerDecorator`
+> * `spotlight.spotlightDefaultClass` -> `spotlight/SpotlightContainerDecorator.spotlightDefaultClass`
+> * `spotlight.SpotlightRootDecorator` -> `spotlight/SpotlightRootDecorator`
+>
+> #### Removed modules:
+> * `core/selection`
+> * `core/fetch`
+> * `ui/validators`
+>
+> #### Removed aliases:
+> * `core.hoc` - Use `core/hoc`
+> * `core.kind` - Use `core/kind`
+>
+> Additionally, we no longer export a `version` with the root import. If you need a version number, import from `package.json` instead.
+
 ## [1.0.0-beta.4] - 2017-03-10
 
 ### Added

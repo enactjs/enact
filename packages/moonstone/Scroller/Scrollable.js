@@ -8,6 +8,7 @@ import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {getDirection} from '@enact/spotlight';
 import hoc from '@enact/core/hoc';
+import {Job} from '@enact/core/util';
 import React, {Component, PropTypes} from 'react';
 import {contextTypes} from '@enact/ui/Resizable';
 import ri from '@enact/ui/resolution';
@@ -796,20 +797,19 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		componentWillUnmount () {
 			// Before call cancelAnimationFrame, you must send scrollStop Event.
 			this.animator.stop();
-			if (this.timerForceUpdate) clearTimeout(this.timerForceUpdate);
+			this.forceUpdateJob.stop();
 		}
 
+		// forceUpdate is a bit jarring and may interrupt other actions like animation so we'll
+		// queue it up in case we get multiple calls (e.g. when grouped expandables toggle).
+		//
+		// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
+		// state member.
 		enqueueForceUpdate = () => {
-			// forceUpdate is a bit jarring and may interrupt other actions like animation so we'll
-			// queue it up in case we get multiple calls (e.g. when grouped expandables toggle).
-			//
-			// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
-			// state member.
-			this.timerForceUpdate = setTimeout(() => {
-				this.timerForceUpdate = null;
-				this.forceUpdate();
-			}, 32);
+			this.forceUpdateJob.start();
 		}
+
+		forceUpdateJob = new Job(this.forceUpdate, 32)
 
 		// render
 
