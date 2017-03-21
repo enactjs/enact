@@ -250,6 +250,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 												isUp && 'up' ||
 												isRight && 'right' ||
 												isDown && 'down';
+							Spotlight.setPointerMode(false);
 							this.leaveOnUpdate(direction);
 						}
 					}
