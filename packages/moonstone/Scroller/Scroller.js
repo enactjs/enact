@@ -79,6 +79,8 @@ class ScrollerBase extends Component {
 
 	lazyChildObservers = []
 
+	scrollTopThreshold = 0
+
 	getChildContext () {
 		return {
 			attachLazyChild: this.attachLazyChild,
@@ -223,11 +225,14 @@ class ScrollerBase extends Component {
 				containerBounds = this.getScrollBounds(),
 				containerScrollTopThreshold = (Math.floor(top / containerBounds.clientHeight) + 2) * containerBounds.clientHeight;
 
-			for (let i = length - 1; i >= 0; i--) {
-				this.lazyChildObservers[i].update({
-					containerScrollTopThreshold,
-					index: i
-				});
+			if (this.scrollTopThreshold < containerScrollTopThreshold) {
+				for (let i = length - 1; i >= 0; i--) {
+					this.lazyChildObservers[i].update({
+						containerScrollTopThreshold,
+						index: i
+					});
+				}
+				this.scrollTopThreshold = containerScrollTopThreshold;
 			}
 		}
 	}
