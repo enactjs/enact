@@ -6,17 +6,15 @@
 
 import hoc from '@enact/core/hoc';
 import React from 'react';
-import VisibilityObserver from '@enact/ui/VisibilityObserver';
 
 const defaultConfig = {
 	initialHeight: 0
 };
 
 const contextTypes = {
-	getScrollTop: React.PropTypes.func
+	attachLazyChild: React.PropTypes.func,
+	detachLazyChild: React.PropTypes.func
 };
-
-let num = 0;
 
 const LazyChildDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const {initialHeight} = config;
@@ -36,24 +34,25 @@ const LazyChildDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.state = {
 				visible: false
 			};
-
-			this.id = num++;
 		}
 
 		static contextTypes = contextTypes
 
-		componentWillLoad () {
-			this.setState({visible: true});
+		update ({containerBounds, containerScrollTopThreshold, index}) {
+			const offsetTop = this.childRef.offsetTop;
+
+			if (offsetTop < containerScrollTopThreshold) {
+				this.setState({visible: true});
+				this.context.detachLazyChild({index});
+			}
 		}
 
 		componentDidMount () {
-			const
-				self = this,
-				elm = document.querySelectorAll('div[data-lazy-index]')[this.id];
+			this.context.attachLazyChild(this);
+		}
 
-			new VisibilityObserver(elm, function() {
-				self.componentWillLoad();
-			});
+		initChildRef = (ref) => {
+			this.childRef = ref;
 		}
 
 		render () {
@@ -63,11 +62,11 @@ const LazyChildDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			if (visible) {
 				return (
-					<Wrapped {...props} data-lazy-index={this.id} key={props.index} />
+					<Wrapped {...props} key={props.index} ref={this.initChildRef} />
 				);
 			} else {
 				return (
-					<div data-lazy-index={this.id} key={props.index} style={{height: initialHeight + 'px'}} />
+					<div key={props.index} ref={this.initChildRef} style={{height: initialHeight + 'px'}} />
 				);
 			}
 		}
