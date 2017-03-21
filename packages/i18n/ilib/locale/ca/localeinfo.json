@@ -1,1 +1,1 @@
-{"delimiter":{"alternateQuotationStart":"«","alternateQuotationEnd":"»"},"language.name":"Catalan","numfmt":{"exponential":"E","currencyFormats":{"commonNegative":"({s}{n})"}},"scripts":["Latn"],"locale":"ca"}
+{"delimiter":{"quotationStart":"«","quotationEnd":"»","alternateQuotationStart":"“","alternateQuotationEnd":"”"},"language.name":"Catalan","numfmt":{"decimalChar":",","groupChar":".","currencyFormats":{"common":"{n} {s}","commonNegative":"-{n} {s}"}},"scripts":["Latn"],"locale":"ca"}

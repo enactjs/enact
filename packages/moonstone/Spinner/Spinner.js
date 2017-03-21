@@ -25,7 +25,7 @@ const SpinnerCore = kind({
 	name: 'SpinnerCore',
 
 	render: ({children, ...rest}) => (
-		<div {...rest}>
+		<div aria-live="off" role="alert" {...rest}>
 			<div className={css.ballDecorator}>
 				<div className={`${css.ball} ${css.ball1}`} />
 				<div className={`${css.ball} ${css.ball2}`} />
