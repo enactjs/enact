@@ -2,9 +2,12 @@ import Divider from '@enact/moonstone/Divider';
 import Item from '@enact/moonstone/Item';
 import React from 'react';
 import ri from '@enact/ui/resolution';
+import {SpotlightContainerDecorator} from '@enact/spotlight';
 import Scroller from '@enact/moonstone/Scroller';
 import {storiesOf} from '@kadira/storybook';
 import {withKnobs, text, select} from '@kadira/storybook-addon-knobs';
+
+const Container = SpotlightContainerDecorator('div');
 
 const
 	prop = {
@@ -122,7 +125,7 @@ storiesOf('Divider')
 				hideScrollbars={false}
 				style={style.scroller}
 			>
-				<div style={style.content}>
+				<Container style={style.content} spotlightRestrict="self-first">
 					<Divider>
 						First Divider
 					</Divider>
@@ -168,7 +171,7 @@ storiesOf('Divider')
 					<Item>
 						Item 42
 					</Item>
-				</div>
+				</Container>
 			</Scroller>
 		)
 	);
