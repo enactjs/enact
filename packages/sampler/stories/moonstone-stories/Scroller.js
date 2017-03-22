@@ -34,12 +34,11 @@ storiesOf('Scroller')
 		'Basic usage of Scroller',
 		() => (
 			<Scroller
-				hideScrollbars={boolean('hideScrollbars', false)}
 				horizontal={select('horizontal', prop.horizontal, 'auto')}
-				vertical={select('vertical', prop.vertical, 'auto')}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
 				style={style.scroller}
+				vertical={select('vertical', prop.vertical, 'auto')}
 			>
 				<div style={style.content}>
 					Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br />

@@ -6,7 +6,6 @@
 
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
-import deprecate from '@enact/core/internal/deprecate';
 import {getDirection} from '@enact/spotlight';
 import hoc from '@enact/core/hoc';
 import React, {Component, PropTypes} from 'react';
