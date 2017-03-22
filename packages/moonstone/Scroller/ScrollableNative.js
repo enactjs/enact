@@ -21,7 +21,6 @@ const
 	paginationPageMultiplier = 0.8,
 	epsilon = 1,
 	// spotlight
-	animationDuration = 1000,
 	scrollStopWaiting = 500;
 
 /**
@@ -121,7 +120,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			onScrollStop: nop
 		}
 
-		static childContextTypes = {...contextTypesResize, ...contextTypesRtl}
+		static childContextTypes = contextTypesResize
+		static contextTypes = contextTypesRtl
 
 		// status
 		horizontalScrollability = false
@@ -146,8 +146,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		// scroll info
 		scrollLeft = 0
 		scrollTop = 0
-		dirHorizontal = 0
-		dirVertical = 0
 		scrollToInfo = null
 
 		// spotlight
@@ -157,15 +155,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		childRef = null
 		containerRef = null
 
-		// Right-To-Left
-		isFirstRendered = true
-
 		// browser native scrolling
 		jobName = ''
 		scrolling = false
 
-		constructor (props, context) {
-			super(props, context);
+		constructor (props) {
+			super(props);
 
 			this.state = {
 				isHorizontalScrollbarVisible: false,
@@ -174,8 +169,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			this.initChildRef = this.initRef('childRef');
 			this.initContainerRef = this.initRef('containerRef');
-
-			this.rtlDirection = context.rtl ? -1 : 1;
 
 			const
 				{onKeyDown, onKeyUp} = this,
@@ -219,7 +212,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		onWheel = (e) => {
-			this.isScrollAnimationTargetAccumulated = false;
 			this.childRef.setContainerDisabled(true);
 			this.lastFocusedItem = null;
 			if (typeof window !== 'undefined') {
@@ -243,19 +235,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				} else if (deltaMode === 1) { // line; firefox
 					delta = delta * pixelPerLine;
 				} else if (deltaMode === 2) { // page
-					if (isVertical) {
-						delta = delta > 0 ? bounds.clientHeight : -bounds.clientHeight;
-					} else if (isHorizontal) {
-						delta = delta > 0 ? bounds.clientWidth : -bounds.clientWidth;
-					} else {
-						delta = 0;
-					}
+					delta = delta > 0 ? bounds.clientWidth : -bounds.clientWidth;
 				}
 
 				/* prevent native scrolling feature for vertical direction */
 				e.preventDefault();
 
-				this.start(this.scrollLeft + delta, this.scrollTop);
+				this.scrollToAccumulatedTarget(delta, true, false);
 			}
 		}
 
@@ -266,10 +252,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				this.scrollStartOnScroll();
 			}
 
-			if (this.context.rtl) {
-				/* NOTE: this calculation only works for Chrome */
-				scrollLeft = this.bounds.maxLeft - scrollLeft;
-			}
 			this.scroll(scrollLeft, scrollTop, false);
 
 			startJob(this.jobName, this.scrollStopOnScroll, scrollStopWaiting);
@@ -378,7 +360,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		setScrollLeft (v) {
 			const bounds = this.getScrollBounds();
 
-			this.dirHorizontal = Math.sign(v - this.scrollLeft);
 			this.scrollLeft = clamp(0, bounds.maxLeft, v);
 			if (this.state.isHorizontalScrollbarVisible) {
 				this.updateThumb(this.scrollbarHorizontalRef, bounds);
@@ -388,7 +369,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		setScrollTop (v) {
 			const bounds = this.getScrollBounds();
 
-			this.dirVertical = Math.sign(v - this.scrollTop);
 			this.scrollTop = clamp(0, bounds.maxTop, v);
 			if (this.state.isVerticalScrollbarVisible) {
 				this.updateThumb(this.scrollbarVerticalRef, bounds);
@@ -399,7 +379,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		start (targetX, targetY, animate = true, indexToFocus) {
 			const
-				{scrollLeft, scrollTop} = this,
 				bounds = this.getScrollBounds(),
 				containerNode = this.childRef.getContainerNode();
 
@@ -414,10 +393,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 
 			if (animate) {
-				containerNode.scrollTo(targetX, targetY);
+				this.childRef.scrollTo(targetX, targetY);
 			} else {
 				containerNode.style.scrollBehavior = null;
-				this.scroll(targetX, targetY, true);
+				this.childRef.scrollTo(targetX, targetY);
 				containerNode.style.scrollBehavior = 'smooth';
 				this.focusOnItem({indexToFocus});
 			}
@@ -429,7 +408,20 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		scroll = (left, top, positionContainer = true) => {
+		scroll = (left, top) => {
+			const
+				bounds = this.getScrollBounds(),
+				canScrollHorizontally = this.canScrollHorizontally(bounds);
+			let dirHorizontal, dirVertical;
+
+			if (this.context.rtl && canScrollHorizontally) {
+				/* FIXME: RTL / this calculation only works for Chrome */
+				left = bounds.maxLeft - left;
+			}
+
+			dirHorizontal = Math.sign(left - this.scrollLeft);
+			dirVertical = Math.sign(top - this.scrollTop);
+
 			if (left !== this.scrollLeft) {
 				this.setScrollLeft(left);
 			}
@@ -437,7 +429,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				this.setScrollTop(top);
 			}
 
-			this.childRef.setScrollPosition(this.scrollLeft, this.scrollTop, this.dirHorizontal, this.dirVertical, positionContainer);
+			this.childRef.setScrollPosition(this.scrollLeft, this.scrollTop, dirHorizontal, dirVertical);
 			this.doScrolling();
 		}
 
@@ -599,7 +591,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		getScrollBounds () {
-			if (typeof this.childRef.getScrollBounds === 'function')  {
+			if (typeof this.childRef.getScrollBounds === 'function') {
 				return this.childRef.getScrollBounds();
 			}
 		}
@@ -638,7 +630,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		// component life cycle
 
 		componentDidMount () {
-			this.isFirstRendered = true;
 			this.updateScrollabilityAndEventListeners();
 		}
 
@@ -654,13 +645,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			if (this.scrollToInfo !== null) {
 				this.scrollTo(this.scrollToInfo);
-			}
-
-			if (this.isFirstRendered) {
-				this.isFirstRendered = false;
-				if (this.childRef.readyForRtl) {
-					this.childRef.readyForRtl();
-				}
 			}
 		}
 

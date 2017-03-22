@@ -35,7 +35,7 @@ const
  */
 const gridListItemSizeShape = PropTypes.shape({
 	minWidth: PropTypes.number.isRequired,
-	minHeight:  PropTypes.number.isRequired
+	minHeight: PropTypes.number.isRequired
 });
 
 /**
@@ -153,15 +153,12 @@ class VirtualListCore extends Component {
 		style: {}
 	}
 
-	constructor (props, context) {
-		super(props, context);
+	constructor (props) {
+		super(props);
 
 		this.state = {firstIndex: 0, numOfItems: 0};
 		this.initContainerRef = this.initRef('containerRef');
 		this.initWrapperRef = this.initRef('wrapperRef');
-
-		this.composeItemPosition = this.composeLeftTop;
-		this.composeContainerPosition = this.applyScrollLeftTopToWrapperNode;
 	}
 
 	// Calculate metrics for VirtualList after the 1st render to know client W/H.
@@ -232,8 +229,9 @@ class VirtualListCore extends Component {
 	wrapperStyle = {}
 	containerRef = null
 	wrapperRef = null
-	composeItemPosition = null
-	composeContainerPosition = null
+
+	// RTL
+	compensationRTL = 0
 
 	// spotlight
 	nodeIndexToBeBlurred = null
@@ -333,6 +331,9 @@ class VirtualListCore extends Component {
 		this.state.firstIndex = 0;
 		// eslint-disable-next-line react/no-direct-mutation-state
 		this.state.numOfItems = 0;
+
+		/* FIXME: RTL / this calculation only works for Chrome */
+		this.compensationRTL = clientWidth - (this.isPrimaryDirectionVertical ? this.secondary.itemSize : this.primary.itemSize);
 	}
 
 	updateStatesAndBounds (props) {
@@ -350,11 +351,11 @@ class VirtualListCore extends Component {
 		this.cc = [];
 
 		this.setState({firstIndex: wasFirstIndexMax ? this.maxFirstIndex : Math.min(firstIndex, this.maxFirstIndex), numOfItems});
-		this.calculateScrollBounds(props);
+		this.calculateScrollBounds();
 		this.updateMoreInfo(scrollPosition);
 	}
 
-	calculateScrollBounds (props) {
+	calculateScrollBounds () {
 		const node = this.getContainerNode();
 
 		if (!node) {
@@ -412,7 +413,7 @@ class VirtualListCore extends Component {
 		}
 	}
 
-	setScrollPosition (x, y, dirX, dirY, positionContainer) {
+	setScrollPosition (x, y, dirX, dirY) {
 		const
 			{firstIndex} = this.state,
 			{isPrimaryDirectionVertical, threshold, dimensionToExtent, maxFirstIndex, scrollBounds} = this,
@@ -449,10 +450,6 @@ class VirtualListCore extends Component {
 		this.scrollPosition = pos;
 		this.updateMoreInfo(pos);
 
-		if (positionContainer) {
-			this.positionContainer();
-		}
-
 		if (firstIndex !== newFirstIndex) {
 			this.setState({firstIndex: newFirstIndex});
 		}
@@ -480,7 +477,6 @@ class VirtualListCore extends Component {
 
 	positionItems () {
 		const
-			{dataSize} = this.props,
 			{firstIndex, numOfItems} = this.state,
 			{isPrimaryDirectionVertical, dimensionToExtent, primary, secondary, cc} = this,
 			diff = firstIndex - this.lastFirstIndex,
@@ -495,11 +491,6 @@ class VirtualListCore extends Component {
 		let
 			{primaryPosition, secondaryPosition} = this.getGridPosition(updateFrom),
 			width, height;
-
-		if (this.context.rtl && !this.isPrimaryDirectionVertical) {
-			/* NOTE: this calculation only works for Chrome */
-			primaryPosition += this.primary.itemSize - this.scrollBounds.clientWidth;
-		}
 
 		width = (isPrimaryDirectionVertical ? secondary.itemSize : primary.itemSize) + 'px';
 		height = (isPrimaryDirectionVertical ? primary.itemSize : secondary.itemSize) + 'px';
@@ -520,53 +511,35 @@ class VirtualListCore extends Component {
 		this.lastFirstIndex = firstIndex;
 	}
 
-	positionContainer () {
-		let scrollPosition = this.scrollPosition;
-
-		/* NOTE: this calculation only works for Chrome */
-		if (this.context.rtl && !this.isPrimaryDirectionVertical) {
-			scrollPosition -= this.scrollBounds.maxLeft;
-		}
-		this.composeContainerPosition(scrollPosition);
+	scrollTo (x, y) {
+		const node = this.wrapperRef;
+		node.scrollTo((this.context.rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x, y);
 	}
 
-	composeStyle (style, width, height, ...rest) {
+	composeStyle (style, width, height, primaryPosition, secondaryPosition = 0) {
+		const
+			{x, y} = this.getXY(primaryPosition, secondaryPosition);
+
 		if (this.isItemSized) {
 			style.width = width;
 			style.height = height;
+			this.composeLeftTop(style, this.compensateRTL(x), y);
+		} else {
+			this.composeLeftTop(style, x, y);
 		}
-
-		this.composeItemPosition(style, ...rest);
 	}
 
 	getXY = (primaryPosition, secondaryPosition) => {
-		const rtlDirection = this.context.rtl ? -1 : 1;
-		return (this.isPrimaryDirectionVertical ? {x: (secondaryPosition * rtlDirection), y: primaryPosition} : {x: (primaryPosition * rtlDirection), y: secondaryPosition});
+		return (this.isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition});
 	}
 
-	composeTransform (style, primaryPosition, secondaryPosition = 0) {
-		const {x, y} = this.getXY(primaryPosition, secondaryPosition);
-
+	composeTransform (style, x, y) {
 		style.transform = 'translate3d(' + x + 'px,' + y + 'px,0)';
 	}
 
-	composeLeftTop (style, primaryPosition, secondaryPosition = 0) {
-		const {x, y} = this.getXY(primaryPosition, secondaryPosition);
-
+	composeLeftTop (style, x, y) {
 		style.left = x + 'px';
 		style.top = y + 'px';
-	}
-
-	applyTransformToContainerNode (scrollPosition) {
-		this.composeTransform(this.containerRef.style, scrollPosition, 0);
-	}
-
-	applyScrollLeftTopToWrapperNode (scrollPosition) {
-		const
-			node = this.wrapperRef,
-			{x, y} = this.getXY(scrollPosition, 0);
-		node.scrollLeft = x;
-		node.scrollTop = y;
 	}
 
 	updateMoreInfo (primaryPosition) {
@@ -685,12 +658,9 @@ class VirtualListCore extends Component {
 	}
 
 	// for RTL support
-	readyForRtl = () => {
-		if (this.context.rtl) {
-			/* NOTE: this calculation only works for Chrome */
-			const node = this.getContainerNode();
-			node.scrollLeft = this.scrollBounds.maxLeft;
-		}
+	compensateRTL = (x) => {
+		/* FIXME: RTL / this calculation only works for Chrome */
+		return this.context.rtl ? this.compensationRTL - x : x;
 	}
 
 	// render
