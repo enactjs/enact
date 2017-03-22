@@ -14,6 +14,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` property `onUMSMediaInfo` to support the custom webOS “umsmediainfo” event
 - `moonstone/Region` component which encourages wrapping components for improved accessibility rather than only preceding the components with a `moonstone/Divider`
 - `moonstone/Slider` tooltip. It's enabled by default and comes with options like `noTooltip`, `tooltipAsPercent`, and `tooltipSide`. See the component docs for more details.
+- `moonstone/VirtualList` property `clientSize` to specify item dimensions instead of measuring them
 
 ### Changed
 
@@ -28,6 +29,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualList.GridListImageItem` to have proper padding size according to the existence of caption/subcaption.
 - `moonstone/Scrollable` to display scrollbars with proper size
 - `moonstone/VirtualGridList` to not be truncated
+
+### Removed
+
+- `moonstone/Scrollable` property `hideScrollbars` and replaced it with `horizontalScrollbar` and `verticalScrollbar`
 
 ## [1.0.0-beta.3] - 2017-02-21
 
