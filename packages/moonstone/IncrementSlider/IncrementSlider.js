@@ -148,9 +148,10 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			step: PropTypes.number,
 
 			/**
-			 * Enables the built-in tooltip. Use the other tooltip properties to change its behavior.
-			 * A custom tooltip may still be used by supplying a component as a child of
-			 * `IncrementSlider`, which follows the knob.
+			 * Enables the built-in tooltip, whose behavior can be modified by the other tooltip
+			 * properties.  A custom tooltip, which follows the knob, may be used instead by
+			 * supplying a component as a child of `IncrementSlider`. This property has no effect if
+			 * a custom tooltip is provided.
 			 *
 			 * @type {Boolean}
 			 * @default false
