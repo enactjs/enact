@@ -1,1 +1,1 @@
-{"language.name":"Colognian","numfmt":{"decimalChar":".","groupChar":",","exponential":"E","currencyFormats":{"common":"{s} {n}"}},"scripts":["Latn"],"locale":"ksh"}
+{"delimiter":{"quotationStart":"„","quotationEnd":"“","alternateQuotationStart":"‚","alternateQuotationEnd":"‘"},"language.name":"Colognian","numfmt":{"decimalChar":",","groupChar":" ","exponential":"×10^","currencyFormats":{"common":"{n} {s}","commonNegative":"−{n} {s}"},"negativenumFmt":"−{n}","pctFmt":"{n} %","negativepctFmt":"−{n} %"},"scripts":["Latn"],"locale":"ksh"}

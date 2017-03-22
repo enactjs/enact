@@ -1,1 +1,1 @@
-{"language.name":"Kirghiz","numfmt":{"groupChar":" ","exponential":"E","currencyFormats":{"common":"{s} {n}"}},"scripts":["Arab","Cyrl","Latn"],"locale":"ky"}
+{"delimiter":{"quotationStart":"«","quotationEnd":"»","alternateQuotationStart":"„","alternateQuotationEnd":"“"},"language.name":"Kyrgyz","numfmt":{"decimalChar":",","groupChar":" ","currencyFormats":{"common":"{n} {s}","commonNegative":"-{n} {s}"}},"scripts":["Arab","Cyrl","Latn"],"locale":"ky"}

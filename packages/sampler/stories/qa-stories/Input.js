@@ -9,7 +9,7 @@ import {withKnobs, boolean, number, select, text} from '@kadira/storybook-addon-
 const StatefulInput = Changeable({mutable: true}, Input);
 
 StatefulInput.propTypes = Object.assign({}, InputBase.propTypes, Input.propTypes);
-StatefulInput.defaultProps = Object.assign({}, InputBase.defaultProps, Input.defaultProps);
+StatefulInput.defaultProps = Object.assign({}, StatefulInput.defaultProps, InputBase.defaultProps, Input.defaultProps);
 StatefulInput.displayName = 'Input';
 
 const iconNames = ['', ...Object.keys(icons)];

@@ -10,11 +10,11 @@ The `I18nDecorator` is usually applied at the root level of an application and p
 
 ### ilib Modules
 
-`ilib` modules can be accessed via different paths.
+`ilib` modules are supplied with the `i18n` library but can be imported using an `enact-dev` provided shortcut:
 
 **Previous:** `enyo-ilib/[MODULE_NAME]`
 
-**Current:** `@enact/i18n/ilib/lib/[MODULE_NAME]`
+**Current:** `ilib/[MODULE_NAME]`
 
 ### String translation
 
@@ -23,7 +23,7 @@ The `I18nDecorator` is usually applied at the root level of an application and p
 **Current:** `$L()`
 
 ```
-import {$L} from '@enact/i18n';
+import $L from '@enact/i18n/$L';
 
 const MyTranslatedString = $L('Hello World');
 ```
@@ -32,10 +32,10 @@ const MyTranslatedString = $L('Hello World');
 
 **Previous:** `$L.rb()`
 
-**Current:** `toIString()`.
+**Current:** `toIString()`
 
 ```
-import {toIString} from '@enact/i18n';
+import {toIString} from '@enact/i18n/$L';
 
 const MyIString = toIString('Hello IString');
 const MyIStringText = MyIString.toString();
@@ -103,10 +103,10 @@ class MyComponent extends React.Component {
 
 **Previous:** `isRtl()` provided by `enyo/utils`
 
-**Current:** `isRtlText()` provided by `@enact/i18n`
+**Current:** `isRtlText()` provided by `@enact/i18n/util`
 
 ```
-import {isRtlText} from '@enact/i18n';
+import {isRtlText} from '@enact/i18n/util';
 
 const isHebrewRtl = isRtlText('שועל החום');
 const isEnglishRtl = isRtlText('LTR Text');

@@ -1,8 +1,8 @@
-import {$L} from '@enact/i18n';
-import * as jobs from '@enact/core/jobs';
+import $L from '@enact/i18n/$L';
 import {forward} from '@enact/core/handle';
 import clamp from 'ramda/src/clamp';
 import equals from 'ramda/src/equals';
+import {Job} from '@enact/core/util';
 import React from 'react';
 import shouldUpdate from 'recompose/shouldUpdate';
 import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
@@ -36,26 +36,10 @@ const selectIncIcon = selectIcon('incrementIcon', 'arrowlargeup', 'arrowlargerig
 
 const selectDecIcon = selectIcon('decrementIcon', 'arrowlargedown', 'arrowlargeleft');
 
-/**
- * Returns a timestamp for the current time using `window.performance.now()` if available and
- * falling back to `Date.now()`.
- *
- * @returns	{Number}	Timestamp
- * @private
- */
-const now = function () {
-	if (typeof window === 'object') {
-		return window.performance.now();
-	} else {
-		return Date.now();
-	}
-};
-
-// Timeout for MouseUp
-const emulateMouseEventsTimeout = 175;
-
 // Set-up event forwarding
-const forwardClick = forward('onClick'),
+const forwardBlur = forward('onBlur'),
+	forwardClick = forward('onClick'),
+	forwardFocus = forward('onFocus'),
 	forwardKeyDown = forward('onKeyDown'),
 	forwardMouseDown = forward('onMouseDown'),
 	forwardMouseUp = forward('onMouseUp'),
@@ -317,8 +301,6 @@ const Picker = class extends React.Component {
 			validateStepped(props.value, props.min, props.step, Picker.displayName);
 			validateStepped(props.max, props.min, props.step, Picker.displayName, '"max"');
 		}
-
-		this.jobName = `mouseUpHandler${now()}`;
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -334,7 +316,7 @@ const Picker = class extends React.Component {
 	}
 
 	componentWillUnmount () {
-		jobs.stopJob(this.jobName);
+		this.emulateMouseUp.stop();
 	}
 
 	computeNextValue = (delta) => {
@@ -359,13 +341,17 @@ const Picker = class extends React.Component {
 		}
 	}
 
-	handleBlur = () => {
+	handleBlur = (ev) => {
+		forwardBlur(ev, this.props);
+
 		this.setState({
 			active: false
 		});
 	}
 
-	handleFocus = () => {
+	handleFocus = (ev) => {
+		forwardFocus(ev, this.props);
+
 		this.setState({
 			active: true
 		});
@@ -403,11 +389,18 @@ const Picker = class extends React.Component {
 		}
 	}
 
+	emulateMouseUp = new Job((ev) => {
+		const {onMouseUp} = this.props;
+		if (onMouseUp) {
+			onMouseUp(ev);
+		}
+	}, 175)
+
 	handleUp = (ev) => {
-		const {joined, onMouseUp} = this.props;
+		const {joined} = this.props;
 		forwardMouseUp(ev, this.props);
-		if (joined && onMouseUp) {
-			jobs.startJob(this.jobName, onMouseUp, emulateMouseEventsTimeout);
+		if (joined) {
+			this.emulateMouseUp.start();
 		}
 	}
 
@@ -426,7 +419,7 @@ const Picker = class extends React.Component {
 	}
 
 	handleWheel = (ev) => {
-		const {joined, onMouseUp, step} = this.props;
+		const {joined, step} = this.props;
 		forwardWheel(ev, this.props);
 
 		if (joined) {
@@ -440,7 +433,7 @@ const Picker = class extends React.Component {
 				// simulate mouse down
 				this.handleDown(dir);
 				// set a timer to simulate the mouse up
-				jobs.startJob(this.jobName, onMouseUp, emulateMouseEventsTimeout);
+				this.emulateMouseUp.start(ev);
 				// prevent the default scroll behavior to avoid bounce back
 				ev.preventDefault();
 			}
@@ -462,7 +455,7 @@ const Picker = class extends React.Component {
 	}
 
 	handleKeyDown = (ev) => {
-		const {joined, onMouseUp} = this.props;
+		const {joined} = this.props;
 		forwardKeyDown(ev, this.props);
 
 		if (joined) {
@@ -481,7 +474,7 @@ const Picker = class extends React.Component {
 			if (isVertical || isHorizontal) {
 				directions[direction]();
 				ev.stopPropagation();
-				jobs.startJob(this.jobName, onMouseUp, emulateMouseEventsTimeout);
+				this.emulateMouseUp.start(ev);
 			}
 		}
 	}

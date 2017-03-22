@@ -1,1 +1,1 @@
-{"language.name":"South Ndebele","numfmt":{"groupChar":" ","exponential":"E"},"scripts":["Latn"],"locale":"nr"}
+{"delimiter":{"quotationStart":"‘","quotationEnd":"’","alternateQuotationStart":"“","alternateQuotationEnd":"”"},"language.name":"South Ndebele","numfmt":{"decimalChar":",","groupChar":" ","currencyFormats":{"common":"{s}{n}"}},"scripts":["Latn"],"locale":"nr"}

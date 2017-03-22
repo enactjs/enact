@@ -2,6 +2,17 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
+## [unreleased]
+
+### Removed
+
+- `i18n.$L` and replaced by `i18n/$L`
+- `i18n.toIString` and replaced by `i18n/$L.toIString`
+
+## [1.0.0-beta.4] - 2017-03-10
+
+No significant changes.
+
 ## [1.0.0-beta.3] - 2017-02-21
 
 ### Added
