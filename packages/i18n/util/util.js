@@ -1,3 +1,6 @@
+import '../src/glue';
+import {toLowerCase, toUpperCase} from '../src/case';
+
 /**
 * This regex pattern is used by the [isRtlText()]{@link i18n/utils.isRtlText} function.
 *
@@ -23,6 +26,9 @@ const isRtlText = function (str) {
 	return false;
 };
 
+
 export {
-	isRtlText
+	isRtlText,
+	toLowerCase,
+	toUpperCase
 };

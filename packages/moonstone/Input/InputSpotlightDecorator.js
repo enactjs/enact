@@ -2,7 +2,8 @@ import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import React from 'react';
-import {Spotlight, Spottable} from '@enact/spotlight';
+import Spotlight from '@enact/spotlight';
+import Spottable from '@enact/spotlight/Spottable';
 
 import css from './Input.less';
 

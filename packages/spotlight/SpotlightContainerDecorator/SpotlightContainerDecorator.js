@@ -1,20 +1,23 @@
-/*
- * Exports the {@link spotlight.SpotlightContainerDecorator} Higher-order Component and
- * {@link spotlight.spotlightDefaultClass} `className`. The default export is
- * {@link spotlight.SpotlightContainerDecorator}.
+/**
+ * Exports the {@link spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator}
+ * Higher-order Component and {@link spotlight/SpotlightContainerDecorator.spotlightDefaultClass}
+ * `className`. The default export is
+ * {@link spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator}.
+ *
+ * @module spotlight/SpotlightContainerDecorator
  */
 
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import React, {PropTypes} from 'react';
 
-import Spotlight from './spotlight';
-import {spottableClass} from './spottable';
+import Spotlight from '../src/spotlight';
+import {spottableClass} from '../Spottable';
 
 /**
  * The class name to apply to the default component to focus in a container.
  *
- * @memberof spotlight
+ * @memberof spotlight/SpotlightContainerDecorator
  * @public
  */
 const spotlightDefaultClass = 'spottable-default';
@@ -22,9 +25,9 @@ const enterEvent = 'onMouseEnter';
 const leaveEvent = 'onMouseLeave';
 
 /**
- * Default config for {@link spotlight.SpotlightContainerDecorator}
+ * Default config for {@link spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator}
  *
- * @memberof spotlight.SpotlightContainerDecorator
+ * @memberof spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator
  * @hocconfig
  */
 const defaultConfig = {
@@ -33,7 +36,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default '.spottable-default'
-	 * @memberof spotlight.SpotlightContainerDecorator.defaultConfig
+	 * @memberof spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator.defaultConfig
 	 * @public
 	 */
 	defaultElement: `.${spotlightDefaultClass}`,
@@ -43,7 +46,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'last-focused'
-	 * @memberof spotlight.SpotlightContainerDecorator.defaultConfig
+	 * @memberof spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator.defaultConfig
 	 * @public
 	 */
 	enterTo: 'last-focused',
@@ -53,7 +56,7 @@ const defaultConfig = {
 	 *
 	 * @type {Boolean}
 	 * @default false
-	 * @memberof spotlight.SpotlightContainerDecorator.defaultConfig
+	 * @memberof spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator.defaultConfig
 	 * @public
 	 */
 	preserveId: false
@@ -70,7 +73,8 @@ const defaultConfig = {
  * To specify a default element to spot in a container, utilize the `spotlightDefaultClass`.
  *
  * @example
- *	import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight';
+ *	import Spotlight from '@enact/spotlight';
+ *	import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
  *	const ContainerComponent = SpotlightContainerDecorator(Component);
  *	const View = kind({
  *		render: () => {
@@ -86,7 +90,7 @@ const defaultConfig = {
  *
  * @returns {Function} SpotlightContainerDecorator
  * @class SpotlightContainerDecorator
- * @memberof spotlight
+ * @memberof spotlight/SpotlightContainerDecorator
  * @hoc
  */
 const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
@@ -97,7 +101,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'SpotlightContainerDecorator';
 
-		static propTypes = /** @lends spotlight.SpotlightContainerDecorator.prototype */ {
+		static propTypes = /** @lends spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator.prototype */ {
 			/**
 			 * Specifies the container id. If the value is `null`, an id will be generated.
 			 *
@@ -231,4 +235,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 });
 
 export default SpotlightContainerDecorator;
-export {SpotlightContainerDecorator, spotlightDefaultClass};
+export {
+	SpotlightContainerDecorator,
+	spotlightDefaultClass
+};

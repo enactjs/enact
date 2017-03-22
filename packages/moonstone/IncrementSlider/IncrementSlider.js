@@ -4,12 +4,12 @@
  * @module moonstone/IncrementSlider
  */
 
-import {$L} from '@enact/i18n';
+import $L from '@enact/i18n/$L';
 import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
 import Pressable from '@enact/ui/Pressable';
 import React, {PropTypes} from 'react';
-import {Spottable} from '@enact/spotlight';
+import Spottable from '@enact/spotlight/Spottable';
 
 import {SliderBaseFactory} from '../Slider';
 import SliderDecorator from '../internal/SliderDecorator';

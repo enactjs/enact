@@ -5,9 +5,9 @@
  * @private
  */
 
-import {$L} from '@enact/i18n';
+import $L from '@enact/i18n/$L';
 import hoc from '@enact/core/hoc';
-import {throttleJob} from '@enact/core/jobs';
+import {Job} from '@enact/core/util';
 import Spotlight from '@enact/spotlight';
 import clamp from 'ramda/src/clamp';
 import React, {PropTypes} from 'react';
@@ -20,21 +20,6 @@ import {
 	computeBarTransform,
 	computeKnobTransform
 } from './util';
-
-/**
- * Returns a timestamp for the current time using `window.performance.now()` if available and
- * falling back to `Date.now()`.
- *
- * @returns	{Number}	Timestamp
- * @private
- */
-const now = function () {
-	if (typeof window === 'object') {
-		return window.performance.now();
-	} else {
-		return Date.now();
-	}
-};
 
 /**
  * Default config for {@link moonstone/internal/SliderDecorator.SliderDecorator}.
@@ -209,7 +194,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 
 			this.current5WayValue = null;
-			this.jobName = `sliderChange${now()}`;
 			this.knobPosition = null;
 			this.normalizeBounds(props);
 
@@ -254,6 +238,10 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.updateUI();
 		}
 
+		componentWillUnmount () {
+			this.updateValueJob.stop();
+		}
+
 		normalizeBounds (props) {
 			this.normalizedMax = props.max != null ? props.max : Wrapped.defaultProps.max;
 			this.normalizedMin = props.min != null ? props.min : Wrapped.defaultProps.min;
@@ -263,15 +251,17 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			return clamp(this.normalizedMin, this.normalizedMax, value);
 		}
 
+		updateValueJob = new Job((value) => {
+			this.inputNode.value = value;
+			this.setState({
+				value,
+				valueText: value
+			});
+			forwardChange({value}, this.props);
+		}, config.changeDelay)
+
 		throttleUpdateValue = (value) => {
-			throttleJob(this.jobName, () => {
-				this.inputNode.value = value;
-				this.setState({
-					value,
-					valueText: value
-				});
-				forwardChange({value}, this.props);
-			}, config.changeDelay);
+			this.updateValueJob.throttle(value);
 		}
 
 		throttleUpdateValueByAmount = (amount) => {

@@ -1,6 +1,5 @@
 import React from 'react';
 import {IncrementSlider} from '@enact/moonstone/IncrementSlider';
-import {checkDefaultBounds} from '@enact/ui/validators/PropTypeValidators';
 
 class IncrementSliderDelayValue extends React.Component {
 	static displayName: 'IncrementSliderDelayValue'
@@ -13,7 +12,7 @@ class IncrementSliderDelayValue extends React.Component {
 		max: React.PropTypes.number,
 		min: React.PropTypes.number,
 		step: React.PropTypes.number,
-		value: checkDefaultBounds,
+		value: React.PropTypes.number,
 		vertical: React.PropTypes.bool
 	}
 
