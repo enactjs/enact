@@ -83,15 +83,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			className: PropTypes.string,
 
 			/**
-			 * Deprecated: When `true`, Hides the scrollbars.
-			 *
-			 * @type {Boolean}
-			 * @default false
-			 * @deprecated since 1.0.0-beta.4, replaced by `horizontalScrollbar` and `verticalScrollbar` as `'hidden'` value
-			 */
-			hideScrollbars: PropTypes.bool,
-
-			/**
 			 * Specifies how to show horizontal scrollbar. Acceptable values are `'auto'`,
 			 * `'visible'`, and `'hidden'`.
 			 *
@@ -140,7 +131,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		static defaultProps = {
 			cbScrollTo: nop,
-			hideScrollbars: false,
 			onScroll: nop,
 			onScrollStart: nop,
 			onScrollStop: nop,
@@ -201,10 +191,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
-
-			if (__DEV__ && typeof props.hideScrollbars !== 'undefined') {
-				deprecate({name: 'hideScrollbars', since: '1.0.0-beta.4', replacedBy: 'horizontalScrollbar=\'hidden\' and verticalScrollbar=\'hidden\'', until: '1.0.0'});
-			}
 
 			this.state = {
 				isHorizontalScrollbarVisible: this.isHorizontalScrollbarVisible(),
@@ -684,9 +670,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			return this.verticalScrollability && (bounds.scrollHeight > bounds.clientHeight) && !isNaN(bounds.scrollHeight);
 		}
 
-		isHorizontalScrollbarVisible = () => (!this.props.hideScrollbars && (this.props.horizontalScrollbar === 'visible'))
+		isHorizontalScrollbarVisible = () => (this.props.horizontalScrollbar === 'visible')
 
-		isVerticalScrollbarVisible = () => (!this.props.hideScrollbars && (this.props.verticalScrollbar === 'visible'))
+		isVerticalScrollbarVisible = () => (this.props.verticalScrollbar === 'visible')
 
 		showThumb (bounds) {
 			if (this.state.isHorizontalScrollbarVisible && this.canScrollHorizontally(bounds)) {
@@ -717,12 +703,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		updateScrollbars = () => {
 			const
 				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
-				{hideScrollbars, horizontalScrollbar, verticalScrollbar} = this.props,
+				{horizontalScrollbar, verticalScrollbar} = this.props,
 				bounds = this.getScrollBounds(),
 				canScrollHorizontally = this.canScrollHorizontally(bounds),
 				canScrollVertically = this.canScrollVertically(bounds),
-				curHorizontalScrollbarVisible = (horizontalScrollbar !== 'auto' || hideScrollbars) ? this.isHorizontalScrollbarVisible() : canScrollHorizontally,
-				curVerticalScrollbarVisible = (verticalScrollbar !== 'auto' || hideScrollbars) ? this.isVerticalScrollbarVisible() : canScrollVertically;
+				curHorizontalScrollbarVisible = (horizontalScrollbar !== 'auto') ? this.isHorizontalScrollbarVisible() : canScrollHorizontally,
+				curVerticalScrollbarVisible = (verticalScrollbar !== 'auto') ? this.isVerticalScrollbarVisible() : canScrollVertically;
 
 			// determine if we should hide or show any scrollbars
 			const
@@ -871,7 +857,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			delete props.className;
 			delete props.cbScrollTo;
 			delete props.style;
-			delete props.hideScrollbars;
 			delete props.verticalScrollbar;
 			delete props.horizontalScrollbar;
 
