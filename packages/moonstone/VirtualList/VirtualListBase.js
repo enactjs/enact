@@ -83,6 +83,19 @@ class VirtualListCore extends Component {
 		cbScrollTo: PropTypes.func,
 
 		/**
+		 * Client size of the list; valid values are an object that has `clientWidth` and `clientHeight`.
+		 *
+		 * @type {Object}
+		 * @property {Number} clientWidth - The client width of the list.
+		 * @property {Number} clientHeight - The client height of the list.
+		 * @public
+		 */
+		clientSize: PropTypes.shape({
+			clientWidth: PropTypes.number.isRequired,
+			clientHeight:  PropTypes.number.isRequired
+		}),
+
+		/**
 		 * Data for the list.
 		 * Check mutation of this and determine whether the list should update or not.
 		 *
@@ -139,19 +152,6 @@ class VirtualListCore extends Component {
 		pageScroll: PropTypes.bool,
 
 		/**
-		 * Option for positioning the items; valid values are `'byItem'`, `'byContainer'`,
-		 * and `'byBrowser'`.
-		 * If `'byItem'`, the list moves each item.
-		 * If `'byContainer'`, the list moves the container that contains rendered items.
-		 * If `'byBrowser'`, the list scrolls by browser.
-		 *
-		 * @type {String}
-		 * @default 'byItem'
-		 * @private
-		 */
-		positioningOption: PropTypes.oneOf(['byItem', 'byContainer', 'byBrowser']),
-
-		/**
 		 * Spacing between items.
 		 *
 		 * @type {Number}
@@ -171,56 +171,41 @@ class VirtualListCore extends Component {
 		onScroll: nop,
 		overhang: 3,
 		pageScroll: false,
-		positioningOption: 'byItem',
 		spacing: 0,
 		style: {}
 	}
 
 	constructor (props) {
-		const {positioningOption} = props;
-
 		super(props);
 
 		this.state = {firstIndex: 0, numOfItems: 0};
 		this.initContainerRef = this.initRef('containerRef');
-		this.initWrapperRef = this.initRef('wrapperRef');
+	}
 
-		switch (positioningOption) {
-			case 'byItem':
-				this.composeItemPosition = this.composeTransform;
-				this.positionContainer = nop;
-				break;
-			case 'byContainer':
-				this.composeItemPosition = this.composeLeftTop;
-				this.positionContainer = this.applyTransformToContainerNode;
-				break;
-			case 'byBrowser':
-				this.composeItemPosition = this.composeLeftTop;
-				this.positionContainer = this.applyScrollLeftTopToWrapperNode;
-				break;
+	componentWillMount () {
+		if (this.props.clientSize) {
+			this.calculateMetrics(this.props);
+			this.updateStatesAndBounds(this.props);
 		}
 	}
 
 	// Calculate metrics for VirtualList after the 1st render to know client W/H.
 	// We separate code related with data due to re use it when data changed.
 	componentDidMount () {
-		const {positioningOption} = this.props;
+		const containerNode = this.containerRef;
 
-		this.calculateMetrics(this.props);
-		this.updateStatesAndBounds(this.props);
+		if (!this.props.clientSize) {
+			this.calculateMetrics(this.props);
+			this.updateStatesAndBounds(this.props);
+		}
+		// prevent native scrolling by Spotlight
+		this.preventScroll = () => {
+			containerNode.scrollTop = 0;
+			containerNode.scrollLeft = this.context.rtl ? containerNode.scrollWidth : 0;
+		};
 
-		if (positioningOption !== 'byBrowser') {
-			const containerNode = this.getContainerNode(positioningOption);
-
-			// prevent native scrolling by Spotlight
-			this.preventScroll = () => {
-				containerNode.scrollTop = 0;
-				containerNode.scrollLeft = this.context.rtl ? containerNode.scrollWidth : 0;
-			};
-
-			if (containerNode && containerNode.addEventListener) {
-				containerNode.addEventListener('scroll', this.preventScroll);
-			}
+		if (containerNode && containerNode.addEventListener) {
+			containerNode.addEventListener('scroll', this.preventScroll);
 		}
 	}
 
@@ -246,7 +231,7 @@ class VirtualListCore extends Component {
 	}
 
 	componentWillUnmount () {
-		const containerNode = this.getContainerNode(this.props.positioningOption);
+		const containerNode = this.containerRef;
 
 		// remove a function for preventing native scrolling by Spotlight
 		if (containerNode && containerNode.removeEventListener) {
@@ -284,9 +269,6 @@ class VirtualListCore extends Component {
 	updateTo = null
 
 	containerRef = null
-	wrapperRef = null
-	composeItemPosition = null
-	positionContainer = null
 
 	// spotlight
 	nodeIndexToBeBlurred = null
@@ -314,14 +296,6 @@ class VirtualListCore extends Component {
 	gridPositionToItemPosition = ({primaryPosition, secondaryPosition}) =>
 		(this.isPrimaryDirectionVertical ? {left: secondaryPosition, top: primaryPosition} : {left: primaryPosition, top: secondaryPosition})
 
-	getContainerNode = (positioningOption) => {
-		if (positioningOption === 'byItem') {
-			return this.containerRef;
-		} else {
-			return this.wrapperRef;
-		}
-	}
-
 	getClientSize = (node) => {
 		return {
 			clientWidth: node.clientWidth,
@@ -331,15 +305,15 @@ class VirtualListCore extends Component {
 
 	calculateMetrics (props) {
 		const
-			{direction, itemSize, positioningOption, spacing} = props,
-			node = this.getContainerNode(positioningOption);
+			{clientSize, direction, itemSize, spacing} = props,
+			node = this.containerRef;
 
-		if (!node) {
+		if (!clientSize && !node) {
 			return;
 		}
 
 		const
-			{clientWidth, clientHeight} = this.getClientSize(node),
+			{clientWidth, clientHeight} = (clientSize || this.getClientSize(node)),
 			heightInfo = {
 				clientSize: clientHeight,
 				minItemSize: itemSize.minHeight || null,
@@ -414,14 +388,16 @@ class VirtualListCore extends Component {
 	}
 
 	calculateScrollBounds (props) {
-		const node = this.getContainerNode(props.positioningOption);
+		const
+			{clientSize} = props,
+			node = this.containerRef;
 
-		if (!node) {
+		if (!clientSize && !node) {
 			return;
 		}
 
 		const
-			{clientWidth, clientHeight} = this.getClientSize(node),
+			{clientWidth, clientHeight} = clientSize || this.getClientSize(node),
 			{scrollBounds, isPrimaryDirectionVertical} = this;
 		let maxPos;
 
@@ -456,7 +432,7 @@ class VirtualListCore extends Component {
 		}
 	}
 
-	setScrollPosition (x, y, dirX, dirY, skipPositionContainer = false) {
+	setScrollPosition (x, y, dirX, dirY) {
 		const
 			{firstIndex} = this.state,
 			{isPrimaryDirectionVertical, threshold, dimensionToExtent, maxFirstIndex, scrollBounds} = this,
@@ -492,34 +468,20 @@ class VirtualListCore extends Component {
 		this.syncThreshold(maxPos);
 		this.scrollPosition = pos;
 
-		if (!skipPositionContainer) {
-			this.positionContainer();
-		}
-
 		if (firstIndex !== newFirstIndex) {
 			this.setState({firstIndex: newFirstIndex});
 		} else {
-			this.positionItems(this.determineUpdatedNeededIndices(firstIndex));
+			this.positionItems(this.determineUpdatedNeededIndices());
 		}
 	}
 
-	determineUpdatedNeededIndices (oldFirstIndex) {
-		const
-			{positioningOption} = this.props,
-			{firstIndex, numOfItems} = this.state;
+	determineUpdatedNeededIndices () {
+		const {firstIndex, numOfItems} = this.state;
 
-		if (positioningOption === 'byItem') {
-			return {
-				updateFrom: firstIndex,
-				updateTo: firstIndex + numOfItems
-			};
-		} else {
-			const diff = firstIndex - oldFirstIndex;
-			return {
-				updateFrom: (0 < diff && diff < numOfItems ) ? oldFirstIndex + numOfItems : firstIndex,
-				updateTo: (-numOfItems < diff && diff <= 0 ) ? oldFirstIndex : firstIndex + numOfItems
-			};
-		}
+		return {
+			updateFrom: firstIndex,
+			updateTo: firstIndex + numOfItems
+		};
 	}
 
 	applyStyleToExistingNode = (primaryIndex, ...rest) => {
@@ -557,9 +519,7 @@ class VirtualListCore extends Component {
 	}
 
 	positionItems ({updateFrom, updateTo}) {
-		const
-			{positioningOption} = this.props,
-			{isPrimaryDirectionVertical, dimensionToExtent, moreInfo, primary, secondary, scrollPosition} = this;
+		const {isPrimaryDirectionVertical, dimensionToExtent, moreInfo, primary, secondary, scrollPosition} = this;
 
 		// we only calculate position of the first child
 		let
@@ -567,7 +527,7 @@ class VirtualListCore extends Component {
 			firstVisibleIndex = null, lastVisibleIndex = null,
 			width, height;
 
-		primaryPosition -= (positioningOption === 'byItem') ? scrollPosition : 0;
+		primaryPosition -= scrollPosition;
 		width = (isPrimaryDirectionVertical ? secondary.itemSize : primary.itemSize) + 'px';
 		height = (isPrimaryDirectionVertical ? primary.itemSize : secondary.itemSize) + 'px';
 
@@ -607,7 +567,7 @@ class VirtualListCore extends Component {
 			style.width = width;
 			style.height = height;
 		}
-		this.composeItemPosition(style, ...rest);
+		this.composeTransform(style, ...rest);
 	}
 
 	getXY = (primaryPosition, secondaryPosition) => {
@@ -619,29 +579,6 @@ class VirtualListCore extends Component {
 		const {x, y} = this.getXY(primaryPosition, secondaryPosition);
 
 		style.transform = 'translate3d(' + x + 'px,' + y + 'px,0)';
-	}
-
-	composeLeftTop (style, primaryPosition, secondaryPosition = 0) {
-		const {x, y} = this.getXY(primaryPosition, secondaryPosition);
-
-		style.left = x + 'px';
-		style.top = y + 'px';
-	}
-
-	applyTransformToContainerNode () {
-		this.composeTransform(this.containerRef.style, -this.scrollPosition, 0);
-	}
-
-	applyScrollLeftTopToWrapperNode () {
-		const
-			node = this.wrapperRef,
-			{x, y} = this.getXY(this.scrollPosition, 0);
-		node.scrollLeft = x;
-		node.scrollTop = y;
-	}
-
-	composeOverflow (style) {
-		style[this.isPrimaryDirectionVertical ? 'overflowY' : 'overflowX'] = 'scroll';
 	}
 
 	getScrollHeight = () => (this.isPrimaryDirectionVertical ? this.getVirtualScrollDimension() : this.scrollBounds.clientHeight)
@@ -659,7 +596,7 @@ class VirtualListCore extends Component {
 	focusOnItem = (index) => {
 		// We have to focus item async for now since list items are not yet ready when it reaches componentDid* lifecycle methods
 		setTimeout(() => {
-			const item = this.getContainerNode(this.props.positioningOption).querySelector(`[data-index='${index}'].spottable`);
+			const item = this.containerRef.querySelector(`[data-index='${index}'].spottable`);
 
 			if (item) {
 				// setPointerMode to false since Spotlight prevents programmatically changing focus while in pointer mode
@@ -677,8 +614,7 @@ class VirtualListCore extends Component {
 			focusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
 
 		if (!isNaN(focusedIndex)) {
-			let
-				gridPosition = this.getGridPosition(focusedIndex);
+			let gridPosition = this.getGridPosition(focusedIndex);
 
 			this.nodeIndexToBeBlurred = this.lastFocusedIndex % numOfItems;
 			this.lastFocusedIndex = focusedIndex;
@@ -724,7 +660,7 @@ class VirtualListCore extends Component {
 	}
 
 	setContainerDisabled = (bool) => {
-		const containerNode = this.getContainerNode(this.props.positioningOption);
+		const containerNode = this.containerRef;
 
 		if (containerNode) {
 			containerNode.setAttribute(dataContainerMutedAttribute, bool);
@@ -734,14 +670,14 @@ class VirtualListCore extends Component {
 	syncClientSize = () => {
 		const
 			{props} = this,
-			node = this.getContainerNode(props.positioningOption);
+			node = this.containerRef;
 
-		if (!node) {
+		if (!props.clientSize && !node) {
 			return;
 		}
 
 		const
-			{clientWidth, clientHeight} = this.getClientSize(node),
+			{clientWidth, clientHeight} = props.clientSize || this.getClientSize(node),
 			{scrollBounds} = this;
 
 		if (clientWidth !== scrollBounds.clientWidth || clientHeight !== scrollBounds.clientHeight) {
@@ -765,55 +701,36 @@ class VirtualListCore extends Component {
 			max = Math.min(dataSize, firstIndex + numOfItems);
 
 		this.positionItems({updateFrom: firstIndex, updateTo: max});
-		this.positionContainer();
 	}
 
 	render () {
 		const
 			props = Object.assign({}, this.props),
-			{positioningOption, onScroll} = this.props,
 			{primary, cc} = this;
 
 		delete props.cbScrollTo;
+		delete props.clientSize;
 		delete props.component;
 		delete props.data;
 		delete props.dataSize;
 		delete props.direction;
-		delete props.hideScrollbars;
 		delete props.itemSize;
 		delete props.onScroll;
 		delete props.onScrollStart;
 		delete props.onScrollStop;
 		delete props.overhang;
 		delete props.pageScroll;
-		delete props.positioningOption;
 		delete props.spacing;
 
 		if (primary) {
 			this.renderCalculate();
 		}
 
-		if (positioningOption === 'byItem') {
-			return (
-				<div {...props} ref={this.initContainerRef}>
-					{cc}
-				</div>
-			);
-		} else {
-			const {className, style, ...rest} = props;
-
-			if (positioningOption === 'byBrowser') {
-				this.composeOverflow(style);
-			}
-
-			return (
-				<div ref={this.initWrapperRef} className={className} style={style} onScroll={onScroll}>
-					<div {...rest} ref={this.initContainerRef}>
-						{cc}
-					</div>
-				</div>
-			);
-		}
+		return (
+			<div {...props} ref={this.initContainerRef}>
+				{cc}
+			</div>
+		);
 	}
 }
 
