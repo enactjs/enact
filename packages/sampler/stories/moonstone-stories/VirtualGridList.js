@@ -6,8 +6,8 @@ import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, number, select} from '@kadira/storybook-addon-knobs';
 
-VirtualGridList.propTypes = Object.assign({}, VirtualListCore.propTypes);
 VirtualGridList.defaultProps = Object.assign({}, VirtualListCore.defaultProps);
+VirtualGridList.propTypes = Object.assign({}, VirtualListCore.propTypes);
 
 const
 	prop = {
@@ -35,6 +35,7 @@ for (let i = 0; i < 1000; i++) {
 		subText = `SubItem ${count}`,
 		color = Math.floor((Math.random() * (0x1000000 - 0x101010)) + 0x101010).toString(16),
 		source = `http://placehold.it/300x300/${color}/ffffff&text=Image ${i}`;
+
 	items.push({text, subText, source});
 }
 
@@ -45,15 +46,15 @@ storiesOf('VirtualList.VirtualGridList')
 		'Basic usage of VirtualGridList',
 		() => (
 			<VirtualGridList
+				component={renderItem}
 				data={items}
 				dataSize={number('dataSize', items.length)}
 				direction={select('direction', prop.direction, 'vertical')}
 				itemSize={{minWidth: ri.scale(number('minWidth', 180)), minHeight: ri.scale(number('minHeight', 270))}}
-				spacing={ri.scale(number('spacing', 20))}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
+				spacing={ri.scale(number('spacing', 20))}
 				style={listStyle}
-				component={renderItem}
 			/>
 		)
 	);
