@@ -400,7 +400,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		onKeyDown = ({keyCode, target}) => {
-			if  (getDirection(keyCode)) {
+			if (getDirection(keyCode)) {
 				if (this.childRef.setSpotlightContainerRestrict) {
 					const index = Number.parseInt(target.getAttribute(dataIndexAttribute));
 					this.childRef.setSpotlightContainerRestrict(keyCode, index);
@@ -410,7 +410,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		onKeyUp = ({keyCode}) => {
-			if  (getDirection(keyCode)) {
+			if (getDirection(keyCode)) {
 				this.isKeyDown = false;
 			}
 		}
@@ -737,7 +737,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		getScrollBounds () {
-			if (typeof this.childRef.getScrollBounds === 'function')  {
+			if (typeof this.childRef.getScrollBounds === 'function') {
 				return this.childRef.getScrollBounds();
 			}
 		}
