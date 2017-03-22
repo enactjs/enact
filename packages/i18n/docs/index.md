@@ -6,8 +6,8 @@ title: i18n (Internationalization)
 * [Using I18nDecorator](#2)
 * [I18n Classes](#3)
 * [Translating Strings](#4)
-* [Updating Locale](./UpdateLocale/)
-* [iLib](./ilib/)
+* [Updating Locale](./UpdateLocale.md/)
+* [iLib](./ilib.md/)
 
 <a name="1"></a>
 ## Overview
