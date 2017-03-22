@@ -237,6 +237,8 @@ class ScrollerBase extends Component {
 		}
 	}
 
+	// render
+
 	initRef = (ref) => {
 		this.containerRef = ref;
 	}

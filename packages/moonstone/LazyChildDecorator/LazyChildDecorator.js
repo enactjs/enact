@@ -66,7 +66,7 @@ const LazyChildDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		static contextTypes = contextTypes
 
 		update ({containerScrollTopThreshold, index}) {
-			const offsetTop = this.childRef.offsetTop;
+			const {offsetTop} = this.childRef;
 
 			if (offsetTop < containerScrollTopThreshold) {
 				this.setState({visible: true});
@@ -76,6 +76,10 @@ const LazyChildDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentDidMount () {
 			this.context.attachLazyChild(this);
+		}
+
+		componentWillUnmount () {
+			this.context.detachLazyChild({observer: this});
 		}
 
 		initChildRef = (ref) => {
