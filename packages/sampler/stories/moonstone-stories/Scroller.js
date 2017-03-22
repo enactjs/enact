@@ -2,7 +2,7 @@ import ri from '@enact/ui/resolution';
 import {Scroller, ScrollerBase} from '@enact/moonstone/Scroller';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
+import {withKnobs, select} from '@kadira/storybook-addon-knobs';
 
 Scroller.displayName = 'Scroller';
 Scroller.propTypes = Object.assign({}, ScrollerBase.propTypes);
