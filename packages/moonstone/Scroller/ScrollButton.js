@@ -1,6 +1,6 @@
 import $L from '@enact/i18n/$L';
-import kind from '@enact/core/kind';
 import Holdable from '@enact/ui/Holdable';
+import kind from '@enact/core/kind';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
 

@@ -22,6 +22,8 @@ const
  */
 const Positionable = hoc((config, Wrapped) => {
 	return class extends Component {
+		static displayName = 'Positionable'
+
 		static propTypes = /** @lends moonstone/VirtualFlexList.Positionable.prototype */ {
 			/**
 			 * Position x.

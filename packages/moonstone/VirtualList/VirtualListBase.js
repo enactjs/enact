@@ -35,7 +35,7 @@ const
  */
 const gridListItemSizeShape = PropTypes.shape({
 	minWidth: PropTypes.number.isRequired,
-	minHeight:  PropTypes.number.isRequired
+	minHeight: PropTypes.number.isRequired
 });
 
 /**
@@ -49,6 +49,8 @@ const gridListItemSizeShape = PropTypes.shape({
  * @private
  */
 class VirtualListCore extends Component {
+	static displayName = 'VirtualListBase'
+
 	static propTypes = /** @lends moonstone/VirtualList.VirtualListCore.prototype */ {
 		/**
 		 * The render function for an item of the list.
@@ -172,8 +174,7 @@ class VirtualListCore extends Component {
 		overhang: 3,
 		pageScroll: false,
 		positioningOption: 'byItem',
-		spacing: 0,
-		style: {}
+		spacing: 0
 	}
 
 	constructor (props) {

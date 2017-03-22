@@ -7,25 +7,25 @@ import React, {Component, PropTypes} from 'react';
 import ri from '@enact/ui/resolution';
 import Spotlight from '@enact/spotlight';
 
-import ScrollButton from './ScrollButton';
 import css from './Scrollbar.less';
+import ScrollButton from './ScrollButton';
 
 const
 	verticalProperties = {
-		scrollbarClass: css.scrollbarContainerVColumn,
-		thumbClass: css.scrollbarVthumb,
-		sizeProperty: 'clientHeight',
 		matrix: (position, scaledSize, natualSize) => (
 			'matrix3d(1, 0, 0, 0, 0,' + (scaledSize / natualSize) + ', 0, 0, 0, 0, 1, 0, 0, ' + position + ', 1, 1)'
-		)
+		),
+		scrollbarClass: css.scrollbarContainerVColumn,
+		sizeProperty: 'clientHeight',
+		thumbClass: css.scrollbarVthumb
 	},
 	horizontalProperties = {
-		scrollbarClass: css.scrollbarContainerHColumn,
-		thumbClass: css.scrollerHthumb,
-		sizeProperty: 'clientWidth',
 		matrix: (position, scaledSize, natualSize) => (
 			'matrix3d(' + (scaledSize / natualSize) + ', 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + position + ', 0, 1, 1)'
-		)
+		),
+		scrollbarClass: css.scrollbarContainerHColumn,
+		sizeProperty: 'clientWidth',
+		thumbClass: css.scrollerHthumb
 	},
 	nop = () => {},
 	minThumbSize = ri.scale(4),
@@ -56,9 +56,13 @@ class ScrollbarBase extends Component {
 	static displayName = 'Scrollbar'
 
 	static propTypes = /** @lends moonstone/Scroller.Scrollbar.prototype */ {
+		/**
+		 * Can be called to alert the user for accessibility notifications.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
 		announce: PropTypes.func,
-
-		className: PropTypes.any,
 
 		/**
 		 * Specifies to reflect scrollbar's disabled property to the paging controls.
@@ -283,7 +287,7 @@ class ScrollbarBase extends Component {
 				>
 					{nextIcon}
 				</ScrollButton>
-				<div ref={this.initThumbRef} className={thumbClass} />
+				<div className={thumbClass} ref={this.initThumbRef} />
 				<Announce ref={this.initAnnounceRef} />
 			</div>
 		);

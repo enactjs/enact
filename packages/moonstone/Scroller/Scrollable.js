@@ -6,11 +6,11 @@
 
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
+import {contextTypes} from '@enact/ui/Resizable';
 import {getDirection} from '@enact/spotlight';
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
 import React, {Component, PropTypes} from 'react';
-import {contextTypes} from '@enact/ui/Resizable';
 import ri from '@enact/ui/resolution';
 
 import css from './Scrollable.less';
@@ -57,6 +57,8 @@ const dataIndexAttribute = 'data-index';
  */
 const ScrollableHoC = hoc((config, Wrapped) => {
 	return class Scrollable extends Component {
+		static displayName = 'Scrollable'
+
 		static propTypes = /** @lends moonstone/Scroller.Scrollable.prototype */ {
 			/**
 			 * The callback function which is called for linking scrollTo function.
@@ -79,8 +81,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			 * @public
 			 */
 			cbScrollTo: PropTypes.func,
-
-			className: PropTypes.string,
 
 			/**
 			 * Hides the scrollbars when `true`
@@ -126,9 +126,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			 * @default 'byItem'
 			 * @private
 			 */
-			positioningOption: PropTypes.oneOf(['byItem', 'byContainer', 'byBrowser']),
-
-			style: PropTypes.object
+			positioningOption: PropTypes.oneOf(['byItem', 'byContainer', 'byBrowser'])
 		}
 
 		static defaultProps = {
@@ -141,55 +139,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		static childContextTypes = contextTypes
-
-		// status
-		horizontalScrollability = false
-		verticalScrollability = false
-		isScrollAnimationTargetAccumulated = false
-		isFirstDragging = false
-		isDragging = false
-		isKeyDown = false
-		isInitializing = true
-
-		// event handlers
-		eventHandlers = {}
-
-		// drag info
-		dragInfo = {
-			t: 0,
-			clientX: 0,
-			clientY: 0,
-			dx: 0,
-			dy: 0,
-			dt: 0
-		}
-
-		// bounds info
-		bounds = {
-			clientWidth: 0,
-			clientHeight: 0,
-			scrollWidth: 0,
-			scrollHeight: 0,
-			maxTop: 0,
-			maxLeft: 0
-		}
-
-		// scroll info
-		scrollLeft = 0
-		scrollTop = 0
-		dirHorizontal = 0
-		dirVertical = 0
-		scrollToInfo = null
-
-		// spotlight
-		lastFocusedItem = null
-
-		// component info
-		childRef = null
-		containerRef = null
-
-		// scroll animator
-		animator = new ScrollAnimator()
 
 		constructor (props) {
 			super(props);
@@ -239,6 +188,110 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				invalidateBounds: this.enqueueForceUpdate
 			};
 		}
+
+		// component life cycle
+
+		componentDidMount () {
+			this.horizontalScrollability = this.childRef.isHorizontal();
+			this.verticalScrollability = this.childRef.isVertical();
+
+			if (this.props.positioningOption !== 'byBrowser' && !this.props.hideScrollbars) {
+				// FIXME `onWheel` doesn't work on the v8 snapshot.
+				this.containerRef.addEventListener('wheel', this.onWheel);
+				this.updateScrollbars();
+
+			} else {
+				// FIXME `onScroll` doesn't work on the v8 snapshot.
+				this.childRef.containerRef.addEventListener('scroll', this.onScroll);
+			}
+			// FIXME `onFocus` doesn't work on the v8 snapshot.
+			this.childRef.containerRef.addEventListener('focus', this.onFocus, true);
+		}
+
+		componentDidUpdate () {
+			this.horizontalScrollability = this.childRef.isHorizontal();
+			this.verticalScrollability = this.childRef.isVertical();
+			this.isInitializing = false;
+
+			// Need to sync calculated client size if it is different from the real size
+			if (this.childRef.syncClientSize) {
+				this.childRef.syncClientSize();
+			}
+
+			if (this.scrollToInfo !== null) {
+				this.scrollTo(this.scrollToInfo);
+			}
+
+			if (!this.props.hideScrollbars) {
+				this.updateScrollbars();
+			}
+		}
+
+		componentWillUnmount () {
+			// Before call cancelAnimationFrame, you must send scrollStop Event.
+			this.animator.stop();
+			this.forceUpdateJob.stop();
+		}
+
+		// forceUpdate is a bit jarring and may interrupt other actions like animation so we'll
+		// queue it up in case we get multiple calls (e.g. when grouped expandables toggle).
+		//
+		// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
+		// state member.
+		enqueueForceUpdate = () => {
+			this.forceUpdateJob.start();
+		}
+
+		forceUpdateJob = new Job(this.forceUpdate, 32)
+
+		// status
+		horizontalScrollability = false
+		verticalScrollability = false
+		isScrollAnimationTargetAccumulated = false
+		isFirstDragging = false
+		isDragging = false
+		isKeyDown = false
+		isInitializing = true
+
+		// event handlers
+		eventHandlers = {}
+
+		// drag info
+		dragInfo = {
+			t: 0,
+			clientX: 0,
+			clientY: 0,
+			dx: 0,
+			dy: 0,
+			dt: 0
+		}
+
+		// bounds info
+		bounds = {
+			clientWidth: 0,
+			clientHeight: 0,
+			scrollWidth: 0,
+			scrollHeight: 0,
+			maxTop: 0,
+			maxLeft: 0
+		}
+
+		// scroll info
+		scrollLeft = 0
+		scrollTop = 0
+		dirHorizontal = 0
+		dirVertical = 0
+		scrollToInfo = null
+
+		// spotlight
+		lastFocusedItem = null
+
+		// component info
+		childRef = null
+		containerRef = null
+
+		// scroll animator
+		animator = new ScrollAnimator()
 
 		// handle an input event
 
@@ -412,7 +465,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		onKeyDown = ({keyCode, target}) => {
-			if  (getDirection(keyCode)) {
+			if (getDirection(keyCode)) {
 				if (this.childRef.setSpotlightContainerRestrict) {
 					const index = Number.parseInt(target.getAttribute(dataIndexAttribute));
 					this.childRef.setSpotlightContainerRestrict(keyCode, index);
@@ -422,7 +475,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		onKeyUp = ({keyCode}) => {
-			if  (getDirection(keyCode)) {
+			if (getDirection(keyCode)) {
 				this.isKeyDown = false;
 			}
 		}
@@ -745,7 +798,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		getScrollBounds () {
-			if (typeof this.childRef.getScrollBounds === 'function')  {
+			if (typeof this.childRef.getScrollBounds === 'function') {
 				return this.childRef.getScrollBounds();
 			}
 		}
@@ -755,61 +808,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				return this.childRef.getMoreInfo();
 			}
 		}
-
-		// component life cycle
-
-		componentDidMount () {
-			this.horizontalScrollability = this.childRef.isHorizontal();
-			this.verticalScrollability = this.childRef.isVertical();
-
-			if (this.props.positioningOption !== 'byBrowser' && !this.props.hideScrollbars) {
-				// FIXME `onWheel` doesn't work on the v8 snapshot.
-				this.containerRef.addEventListener('wheel', this.onWheel);
-				this.updateScrollbars();
-
-			} else {
-				// FIXME `onScroll` doesn't work on the v8 snapshot.
-				this.childRef.containerRef.addEventListener('scroll', this.onScroll);
-			}
-			// FIXME `onFocus` doesn't work on the v8 snapshot.
-			this.childRef.containerRef.addEventListener('focus', this.onFocus, true);
-		}
-
-		componentDidUpdate () {
-			this.horizontalScrollability = this.childRef.isHorizontal();
-			this.verticalScrollability = this.childRef.isVertical();
-			this.isInitializing = false;
-
-			// Need to sync calculated client size if it is different from the real size
-			if (this.childRef.syncClientSize) {
-				this.childRef.syncClientSize();
-			}
-
-			if (this.scrollToInfo !== null) {
-				this.scrollTo(this.scrollToInfo);
-			}
-
-			if (!this.props.hideScrollbars) {
-				this.updateScrollbars();
-			}
-		}
-
-		componentWillUnmount () {
-			// Before call cancelAnimationFrame, you must send scrollStop Event.
-			this.animator.stop();
-			this.forceUpdateJob.stop();
-		}
-
-		// forceUpdate is a bit jarring and may interrupt other actions like animation so we'll
-		// queue it up in case we get multiple calls (e.g. when grouped expandables toggle).
-		//
-		// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
-		// state member.
-		enqueueForceUpdate = () => {
-			this.forceUpdateJob.start();
-		}
-
-		forceUpdateJob = new Job(this.forceUpdate, 32)
 
 		// render
 
@@ -846,7 +844,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			return (
 				(positioningOption !== 'byBrowser' && !hideScrollbars) ? (
-					<div ref={this.initContainerRef} className={scrollableClasses} style={style}>
+					<div className={scrollableClasses} ref={this.initContainerRef} style={style}>
 						<Scrollbar
 							className={verticalScrollbarClassnames}
 							disabled={!isVerticalScrollbarVisible}
@@ -857,9 +855,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 							disabled={!isHorizontalScrollbarVisible}
 							{...this.horizontalScrollbarProps}
 						/>
-						<Wrapped {...props} {...this.eventHandlers} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={css.container} />
+						<Wrapped {...props} {...this.eventHandlers} cbScrollTo={this.scrollTo} className={css.container} ref={this.initChildRef} />
 					</div>
-				) : <Wrapped {...props} {...this.eventHandlers} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={scrollableClasses} style={style} />
+				) : <Wrapped {...props} {...this.eventHandlers} cbScrollTo={this.scrollTo} className={scrollableClasses} ref={this.initChildRef} style={style} />
 			);
 		}
 	};
