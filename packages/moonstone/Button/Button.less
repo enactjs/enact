@@ -146,8 +146,7 @@
 
 	// Button-non-disabled rules
 	&:not([disabled]) {
-		&.pressed,
-		&:global(.spottable):active {
+		&.pressed {
 			.bg {
 				-webkit-animation-name: expand;
 				animation-name: expand;
@@ -155,6 +154,12 @@
 		}
 
 		&:global(.spottable):focus {
+			&:active {
+				.bg {
+					-webkit-animation-name: expand;
+					animation-name: expand;
+				}
+			}
 			background-color: transparent;
 
 			.bg {
