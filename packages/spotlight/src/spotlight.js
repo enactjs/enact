@@ -1427,7 +1427,8 @@ const Spotlight = (function () {
 				identifier = containerId;
 			}
 
-			const lastSpotlightModal = _containers.get(_lastContainerId).restrict === 'self-only';
+			const lastConfig = _containers.get(_lastContainerId);
+			const lastSpotlightModal = lastConfig && lastConfig.restrict === 'self-only';
 
 			// the current active container is requesting the change, or...
 			if (identifier === _lastContainerId ||

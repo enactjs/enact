@@ -323,11 +323,13 @@ class Popup extends React.Component {
 	}
 
 	componentWillUnmount () {
-		Spotlight.remove(this.state.containerId);
+		const {containerId} = this.state;
 		if (this.props.open) {
 			off('click', this.handleClick);
 			off('keydown', this.handleKeyDown);
+			Spotlight.setActiveContainer(null, containerId);
 		}
+		Spotlight.remove(this.state.containerId);
 	}
 
 	handleFloatingLayerOpen = () => {
