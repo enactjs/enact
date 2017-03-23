@@ -1,7 +1,7 @@
 /**
- * Contains the declaration for the {@link moonstone/Check.Check} component.
+ * Contains the declaration for the {@link moonstone/Checkbox.Checkbox} component.
  *
- * @module moonstone/Check
+ * @module moonstone/Checkbox
  */
 
 import kind from '@enact/core/kind';
@@ -13,17 +13,17 @@ import Icon from '../Icon';
 import css from './Checkbox.less';
 
 /**
- * {@link moonstone/Check.Check} represents a Boolean state, and looks like a check mark in a box.
+ * {@link moonstone/Checkbox.Checkbox} represents a Boolean state, and looks like a check mark in a box.
  *
- * @class Check
- * @memberof moonstone/Check
+ * @class Checkbox
+ * @memberof moonstone/Checkbox
  * @ui
  * @public
  */
 const CheckboxBase = kind({
 	name: 'Checkbox',
 
-	propTypes: /** @lends moonstone/Check.Check.prototype */ {
+	propTypes: /** @lends moonstone/Checkbox.Checkbox.prototype */ {
 		/**
 		 * Sets whether this control is disabled, and non-interactive
 		 *
@@ -91,4 +91,4 @@ const CheckboxBase = kind({
 });
 
 export default CheckboxBase;
-export {CheckboxBase as Check, CheckboxBase};
+export {CheckboxBase as Checkbox, CheckboxBase};

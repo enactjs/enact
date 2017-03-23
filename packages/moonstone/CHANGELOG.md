@@ -7,7 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonstone/ExpandableList` to accept an array of objects as children which are spread onto the generated components
-- `moonstone/CheckboxItem` style to match the latest designs
+- `moonstone/CheckboxItem` style to match the latest designs, with support for the `moonstone/Checkbox` to be on either the left or the right side by using the `iconPosition` property
 
 ### Fixed
 
