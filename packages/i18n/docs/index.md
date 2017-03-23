@@ -19,23 +19,23 @@ This guide details how to use some of i18n library's features. For an overview o
 
 `I18nDecorator` is a Higher-order Component (HOC) that provides easy access to locale information. Applications wishing to receive locale information can wrap the root component with the HOC. It is not necessary to use `I18nDecorator` directly for applications using `MoonstoneDecorator`.
 
-The HOC works by passing locale information like fonts and styling. It also has a function to update the locale through `context`.
+The HOC works by passing locale information to the app through `context` and CSS classes. It also has a function to update the locale through `context`.
 
 <a name="3"></a>
 ## I18n Classes
 
-`I18nDecorator` will apply CSS classes at the top of your app. For example, if your locale was `en-US` for "English - United States", your classes would contain `enact-locale-en enact-locale-en-US enact-locale-US`. This will make sure your CSS matches the locale your user is in.
+`I18nDecorator` will apply CSS classes at the root element of your app. For example, if your locale was `en-US` for "English - United States", your classes would contain `enact-locale-en enact-locale-en-US enact-locale-US`. Using these classes allows for adapting the app to use specific layout or fonts depending upon locale.
 
-If we updated the local to something like `ur-PK` the classes we previously had would be replaced with `enact-locale-non-latin enact-locale-non-italic enact-locale-right-to-left enact-locale-ur enact-locale-ur-PK enact-locale-PK`. This updates our app to have the correct look and feel.
+Additionally, a class is applied if a language is rendered right-to-left. For example, if the locale were `ur-PK`, the root element would have the following classes: `enact-locale-non-latin enact-locale-non-italic enact-locale-right-to-left enact-locale-ur enact-locale-ur-PK enact-locale-PK`.
 
 <a name="4"></a>
 ## Translating Strings
 
-Once you have `i18nDecorator` on your app you now have access to internationalization, inside your app. If you wish to translate your strings we provide you with `$L`. 
+Once you have `i18nDecorator` on your app you now have access to internationalization inside your app. Use the `$L` library to translate strings.
 
-`$L` is a very simple and powerful function that will translate your string or key/value object to the current locale.
+`$L` is a very simple and powerful function that, with the appopriate translation files, translate your string or key/value object to the current locale.
 
-It's just a javascript function so you can import it and use it anywhere inside your app.
+It can be used as follows:
 
 ```javascript
 import {$L} from '@enact/i18n';
@@ -48,3 +48,5 @@ const translatedString = $L('Some String');
     <div>{translatedString}</div>
 </Panel>
 ```
+
+In order for the translations to be successful, a locale-specific translation file must be available. If a suitable translation cannot be found, the original string will be returned.
