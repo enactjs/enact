@@ -343,8 +343,8 @@ const VideoPlayerBase = class extends React.Component {
 			bottomControlsVisible: false,
 			feedbackVisible: true,
 			more: false,
-			percentageLoaded: 0,
-			percentagePlayed: 0,
+			proportionLoaded: 0,
+			proportionPlayed: 0,
 			playPauseIcon: 'play',
 			sliderScrubbing: false,
 			sliderKnobProportion: 0,
@@ -536,8 +536,8 @@ const VideoPlayerBase = class extends React.Component {
 			readyState: el.readyState,
 
 			// Non-standard state computed from properties
-			percentageLoaded: el.buffered.length && el.buffered.end(el.buffered.length - 1) / el.duration,
-			percentagePlayed: el.currentTime / el.duration,
+			proportionLoaded: el.buffered.length && el.buffered.end(el.buffered.length - 1) / el.duration,
+			proportionPlayed: el.currentTime / el.duration,
 			error: el.networkState === el.NETWORK_NO_SOURCE,
 			loading: el.readyState < el.HAVE_ENOUGH_DATA,
 			sliderTooltipTime: this.sliderScrubbing ? (this.sliderKnobProportion * el.duration) : el.currentTime
@@ -850,11 +850,41 @@ const VideoPlayerBase = class extends React.Component {
 	//
 	// Handled Media events
 	//
+	/**
+	 * Every callback sent by [VideoPlayer]{@link moonstone/VideoPlayer} receives a status package,
+	 * which includes an object with the following key/value pars as the first argument:
+	 *
+	 * @typedef {Object} videoStatus
+	 * @memberof moonstone/VideoPlayer
+	 * @property {String} type - Type of event that triggered this callback
+	 * @property {Number} currentTime - Playback index of the media in seconds
+	 * @property {Number} duration - Media's entire duration in seconds
+	 * @property {Boolean} paused - Playing vs paused state. True means the media is paused
+	 * @property {Number} proportionLoaded - A value between 0 and 1 representing the proportion of the media that has loaded
+	 * @property {Number} proportionPlayed - A value between 0 and 1 representing the proportion of the media that has already been shown
+	 *
+	 * @public
+	 */
+	addStateToEvent = (ev) => {
+		return {
+			// More props from `ev` may be added here as needed, but a full copy via `...ev`
+			// overloads Storybook's Action Logger and likely has other perf fallout.
+			type              : ev.type,
+			// Specific state variables are included in the outgoing calback payload, not all of them
+			currentTime       : this.state.currentTime,
+			duration          : this.state.duration,
+			paused            : this.state.paused,
+			proportionLoaded  : this.state.proportionLoaded,
+			proportionPlayed  : this.state.proportionPlayed
+		};
+	}
+
 	handleEvent = (ev) => {
 		this.updateMainState();
 		// fetch the forward() we generated earlier, using the event type as a key to find the real event name.
 		const fwd = this.handledMediaForwards[handledMediaEventsMap[ev.type]];
 		if (fwd) {
+			ev = this.addStateToEvent(ev);
 			fwd(ev, this.props);
 		}
 	}
@@ -896,14 +926,17 @@ const VideoPlayerBase = class extends React.Component {
 		this.sliderKnobProportion = ev.proportion;
 	}
 	onJumpBackward = (ev) => {
+		ev = this.addStateToEvent(ev);
 		forwardJumpBackwardButtonClick(ev, this.props);
 		this.jump(-1 * this.props.jumpBy);
 	}
 	onBackward = (ev) => {
+		ev = this.addStateToEvent(ev);
 		forwardBackwardButtonClick(ev, this.props);
 		this.rewind();
 	}
 	onPlay = (ev) => {
+		ev = this.addStateToEvent(ev);
 		forwardPlayButtonClick(ev, this.props);
 		if (this.state.paused) {
 			this.play();
@@ -912,10 +945,12 @@ const VideoPlayerBase = class extends React.Component {
 		}
 	}
 	onForward = (ev) => {
+		ev = this.addStateToEvent(ev);
 		forwardForwardButtonClick(ev, this.props);
 		this.fastForward();
 	}
 	onJumpForward = (ev) => {
+		ev = this.addStateToEvent(ev);
 		forwardJumpForwardButtonClick(ev, this.props);
 		this.jump(this.props.jumpBy);
 	}
@@ -998,8 +1033,8 @@ const VideoPlayerBase = class extends React.Component {
 						</div>
 
 						{noSlider ? null : <MediaSlider
-							backgroundProgress={this.state.percentageLoaded}
-							value={this.state.percentagePlayed}
+							backgroundProgress={this.state.proportionLoaded}
+							value={this.state.proportionPlayed}
 							onChange={this.onSliderChange}
 							onKnobMove={this.handleKnobMove}
 							onSpotlightUp={this.hideControls}
