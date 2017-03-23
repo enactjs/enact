@@ -3,7 +3,7 @@ import React from 'react';
 import Uppercase from '@enact/i18n/Uppercase';
 import Slottable from '@enact/ui/Slottable';
 import {MarqueeDecorator, MarqueeText} from '../Marquee';
-import {isRtlText} from '@enact/i18n';
+import {isRtlText} from '@enact/i18n/util';
 import css from './Header.less';
 
 // Create a <h1> and Marquee component that support the uppercase attribute

@@ -9,7 +9,7 @@ import factory from '@enact/core/factory';
 import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
-import {Spottable} from '@enact/spotlight';
+import Spottable from '@enact/spotlight/Spottable';
 import Pressable from '@enact/ui/Pressable';
 import React, {PropTypes} from 'react';
 

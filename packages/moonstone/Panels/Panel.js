@@ -1,12 +1,13 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import Slottable from '@enact/ui/Slottable';
-import {Spotlight, SpotlightContainerDecorator} from '@enact/spotlight';
+import Spotlight from '@enact/spotlight';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import css from './Panel.less';
 
 const spotPanel = (node) => {
-	if (node && !node.contains(document.activeElement)) {
+	if (node && !Spotlight.getCurrent()) {
 		const body = node.querySelector('section .spottable');
 		const header = node.querySelector('header .spottable');
 		const spottable = body || header;
@@ -92,15 +93,14 @@ const PanelBase = kind({
 		// nulling headerId prevents the aria-labelledby relationship which is necessary to allow
 		// aria-label to take precedence
 		// (see https://www.w3.org/TR/wai-aria/states_and_properties#aria-labelledby)
-		headerId: ({'aria-label': label}) => label ? null : `panel_${++panelId}_header`,
-		role: ({hideChildren}) => hideChildren ? 'alert' : 'region'
+		headerId: ({'aria-label': label}) => label ? null : `panel_${++panelId}_header`
 	},
 
 	render: ({bodyClassName, children, header, headerId, spotOnRender, ...rest}) => {
 		delete rest.hideChildren;
 
 		return (
-			<article {...rest} aria-live="off" aria-labelledby={headerId} ref={spotOnRender}>
+			<article role="region" {...rest} aria-labelledby={headerId} ref={spotOnRender}>
 				<div className={css.header} id={headerId}>{header}</div>
 				<section className={bodyClassName}>{children}</section>
 			</article>

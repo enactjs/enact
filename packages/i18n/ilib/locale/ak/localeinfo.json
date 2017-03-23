@@ -1,1 +1,1 @@
-{"language.name":"Akan","numfmt":{"decimalChar":".","groupChar":",","exponential":"E"},"scripts":["Latn"],"locale":"ak"}
+{"clock":"12","language.name":"Akan","numfmt":{"currencyFormats":{"common":"{s}{n}","commonNegative":"-{s}{n}"}},"scripts":["Latn"],"locale":"ak"}

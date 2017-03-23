@@ -4,6 +4,16 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Changed
+
+- `ui/Repeater` to accept an array of objects as children which are spread onto the generated components
+
+### Removed
+
+- `ui/validators` which was no longer used elsewhere in Enact
+
+## [1.0.0-beta.4] - 2017-03-10
+
 ### Added
 
 - `ui/A11yDecorator` to facilitate adding pre/post hints to components
