@@ -47,7 +47,9 @@ describe('IndexedBreadcrumbs', () => {
 			</nav>
 		);
 
-		subject.find('Breadcrumb').simulate('click', {});
+		const breadcrumb = subject.find('Breadcrumb');
+		breadcrumb.simulate('focus');
+		breadcrumb.simulate('click', {});
 
 		const expected = true;
 		const actual = handleClick.calledOnce;

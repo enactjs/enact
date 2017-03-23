@@ -11,6 +11,7 @@ describe('Breadcrumb', () => {
 			<Breadcrumb index={3} onSelect={handleSelect} />
 		);
 
+		subject.simulate('focus');
 		subject.simulate('click', {});
 
 		const expected = 3;
@@ -26,6 +27,7 @@ describe('Breadcrumb', () => {
 			<Breadcrumb index={3} onClick={handleClick} onSelect={handleSelect} />
 		);
 
+		subject.simulate('focus');
 		subject.simulate('click', {});
 
 		const expected = true;

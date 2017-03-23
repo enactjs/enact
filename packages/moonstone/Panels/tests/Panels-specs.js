@@ -36,7 +36,9 @@ describe('Panels Specs', () => {
 			<Panels onApplicationClose={handleAppClose} />
 		);
 
-		subject.find('IconButton').simulate('click');
+		const button = subject.find('IconButton');
+		button.simulate('focus');
+		button.simulate('click');
 
 		const expected = true;
 		const actual = handleAppClose.calledOnce;
