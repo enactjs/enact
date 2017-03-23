@@ -6,6 +6,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+- `moonstone/Slider` to use the property `tooltip` instead of `noTooltip`, so the built-in tooltip is not enabled by default
+- `moonstone/IncrementSlider` to include tooltip documentation
 - `moonstone/ExpandableList` to accept an array of objects as children which are spread onto the generated components
 
 ### Fixed
