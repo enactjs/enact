@@ -20,8 +20,8 @@ import css from './Checkbox.less';
  * @ui
  * @public
  */
-const CheckBase = kind({
-	name: 'Check',
+const CheckboxBase = kind({
+	name: 'Checkbox',
 
 	propTypes: /** @lends moonstone/Check.Check.prototype */ {
 		/**
@@ -61,7 +61,7 @@ const CheckBase = kind({
 
 	styles: {
 		css,
-		className: 'check'
+		className: 'checkbox'
 	},
 
 	handlers: {
@@ -90,5 +90,5 @@ const CheckBase = kind({
 	}
 });
 
-export default CheckBase;
-export {CheckBase as Check, CheckBase};
+export default CheckboxBase;
+export {CheckboxBase as Check, CheckboxBase};
