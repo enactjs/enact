@@ -2,7 +2,7 @@ import Changeable from '@enact/ui/Changeable';
 import kind from '@enact/core/kind';
 import Pressable from '@enact/ui/Pressable';
 import React from 'react';
-import {Spottable} from '@enact/spotlight';
+import Spottable from '@enact/spotlight/Spottable';
 
 import PickerCore, {PickerItem} from '../Picker';
 

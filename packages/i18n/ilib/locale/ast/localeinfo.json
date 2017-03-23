@@ -1,1 +1,1 @@
-{"language.name":"Asturian","numfmt":{"decimalChar":".","groupChar":",","exponential":"E","currencyFormats":{"common":"{s} {n}"}},"scripts":["Latn"],"locale":"ast"}
+{"delimiter":{"quotationStart":"«","quotationEnd":"»","alternateQuotationStart":"“","alternateQuotationEnd":"”"},"language.name":"Asturian","numfmt":{"decimalChar":",","groupChar":".","currencyFormats":{"common":"{n} {s}","commonNegative":"-{n} {s}"}},"scripts":["Latn"],"locale":"ast"}
