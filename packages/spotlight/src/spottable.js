@@ -81,14 +81,15 @@ const defaultConfig = {
 	emulateMouse: true,
 
 	/**
-	 * Number of milliseconds it takes to complete a visible selection animation
+	 * Number of milliseconds to wait before forwarding a `keyup` event, due to
+	 * focus changing from an unreleased `keydown` event.
 	 *
 	 * @type {Number}
 	 * @default 0
 	 * @public
 	 * @memberof spotlight.Spottable.defaultConfig
 	 */
-	selectionAnimationDuration: 0
+	selectionKeyUpDelay: 0
 };
 
 /**
@@ -106,7 +107,7 @@ const defaultConfig = {
  * @returns {Function} Spottable
  */
 const Spottable = hoc(defaultConfig, (config, Wrapped) => {
-	const {emulateMouse, selectionAnimationDuration} = config;
+	const {emulateMouse, selectionKeyUpDelay} = config;
 	const forwardBlur = forward('onBlur');
 	const forwardFocus = forward('onFocus');
 	const forwardEnterKeyPress = forwardEnter('onKeyPress', 'onClick');
@@ -212,7 +213,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 				startJob('forwardEnterKeyUp', () => {
 					forwardEnterKeyUp(this.props)(makeEvent('onKeyUp', this.enterKeyDownEvent));
 					this.enterKeyDownEvent = null;
-				}, selectionAnimationDuration);
+				}, selectionKeyUpDelay);
 			}
 		}
 

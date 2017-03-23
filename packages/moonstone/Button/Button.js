@@ -232,7 +232,7 @@ const ButtonFactory = factory(css => {
 				{className: componentCss.marquee},
 				Pressable(
 					Spottable(
-						{selectionAnimationDuration: 200},
+						{selectionKeyUpDelay: 200},
 						Base
 					)
 				)
