@@ -6,7 +6,8 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Fixed
 
-`spotlight.Spotlight` behavior to properly save the last-focused element for nested containers
+- `spotlight/Spottable` behavior for forwarding selection `onKeyUp` events
+- `spotlight/Spotlight` behavior to properly save the last-focused element for nested containers
 
 ### Removed
 
