@@ -1,0 +1,27 @@
+// Checkbox
+//
+@import '../styles/colors.less';
+
+.check {
+	width: 18px;
+	height: 18px;
+	border: 1px solid @moon-check-box-frame-color;
+	border-radius: 3px;
+
+	&:not([disabled]) {
+		:global(.spottable):focus & {
+			border-color: @moon-check-box-frame-spotlight-color;
+		}
+	}
+
+	.icon {
+		visibility: hidden;
+		font-size: 72px;
+		margin: -24px 0 0 -12px;
+	}
+	&.selected {
+		.icon {
+			visibility: visible;
+		}
+	}
+}
