@@ -96,6 +96,15 @@
 		.input {
 			padding: 0 @h-gap;
 		}
+
+		:global(.enact-locale-right-to-left) & {
+			.sliderBar {
+				transform: rotate3d(0, 1, 0, -180deg);
+			}
+			.knob {
+				left: 0;
+			}
+		}
 	}
 
 	&.vertical {
