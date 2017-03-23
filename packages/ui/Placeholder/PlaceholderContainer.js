@@ -8,6 +8,8 @@ import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import React, {Component} from 'react';
 
+import {contextTypes} from './PlaceholderDecorator';
+
 /**
  * Default config for {@link ui/PlaceholderDecorator.PlaceholderDecorator}
  *
@@ -25,14 +27,11 @@ const defaultConfig = {
 	clientHeight: 0
 };
 
-import {contextTypes} from './PlaceholderDecorator';
-
 const forwardScroll = forward('onScroll');
 
 /**
- * {@link ui/PlaceholderContainer.PlaceholderContainer} is a Higher-order Component that can ...
- *
- * ...
+ * {@link ui/PlaceholderContainer.PlaceholderContainer} is a Higher-order Component that can make
+ * placeholders rendered or not rendered depending on `'scrollTop'` from the `'onScroll'`'s parameter.
  *
  * @class PlaceholderContainer
  * @memberof ui/PlaceholderContainer

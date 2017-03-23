@@ -15,7 +15,7 @@ import React from 'react';
  */
 const defaultConfig = {
 	/**
-	 * The property on each `childComponent` that receives the index of the item in the Repeater
+	 * The property which has an index.
 	 *
 	 * @type {String}
 	 * @default 'data-index'
@@ -51,7 +51,7 @@ const contextTypes = {
  * {@link ui/PlaceholderDecorator.PlaceholderDecorator} is a Higher-order Component that can be used that
  * a container notify the Wrapped component when scrolling.
  *
- * Containers must provide `register` and `unregister` methods via React's context in order for
+ * Containers must provide `registerPlaceholder` and `unregisterPlaceholder` methods via React's context in order for
  * `PlaceholderDecorator` instances.
  *
  * @class PlaceholderDecorator
@@ -96,7 +96,7 @@ const PlaceholderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			if (offsetTop < offsetTopThreshold) {
 				this.setState({visible: true});
-				this.context.unregisterPlaceholder({index: this});
+				this.context.unregisterPlaceholder({index});
 			}
 		}
 

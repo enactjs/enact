@@ -6,7 +6,8 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
-- `ui/PlaceholderDecorator`, `ui/PlaceholderContainer` to render the wrapped component when it comes into view
+- `ui/PlaceholderContainer`, `ui/PlaceholderDecorator` to render the wrapped component when it comes into view
+
 ### Changed
 
 - `ui/Repeater` to accept an array of objects as children which are spread onto the generated components
