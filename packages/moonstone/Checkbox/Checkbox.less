@@ -1,6 +1,7 @@
 // Checkbox
 //
 @import '../styles/colors.less';
+@import '../styles/text.less';
 
 .checkbox {
 	width: 18px;
@@ -18,6 +19,10 @@
 		visibility: hidden;
 		font-size: 72px;
 		margin: -24px -18px 0 -12px;
+
+		.moon-custom-text({
+			margin-top: -33px;
+		});
 	}
 	&.selected {
 		.icon {
