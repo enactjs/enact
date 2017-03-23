@@ -1,1 +1,1 @@
-{"clock":"12","language.name":"Nama","numfmt":{"decimalChar":".","groupChar":",","exponential":"E"},"scripts":["Latn"],"locale":"naq"}
+{"clock":"12","language.name":"Nama","numfmt":{"currencyFormats":{"common":"{s}{n}","commonNegative":"-{s}{n}"}},"scripts":["Latn"],"locale":"naq"}

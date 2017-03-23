@@ -1,8 +1,8 @@
 {
   "name": "@enact/spotlight",
-  "version": "1.0.0-beta.3",
+  "version": "1.0.0-beta.4",
   "description": "A focus management library",
-  "main": "index.js",
+  "main": "src/spotlight.js",
   "scripts": {
     "clean": "enact clean",
     "lint": "enact lint --framework",
@@ -19,7 +19,7 @@
     "extends": "enact/strict"
   },
   "dependencies": {
-    "@enact/core": "^1.0.0-beta.3",
+    "@enact/core": "^1.0.0-beta.4",
     "ramda": "~0.22.1",
     "react": "~15.4.0"
   }

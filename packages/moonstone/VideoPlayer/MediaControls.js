@@ -1,7 +1,7 @@
 import kind from '@enact/core/kind';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
-import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight';
+import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
 
 import IconButton from '../IconButton';
 

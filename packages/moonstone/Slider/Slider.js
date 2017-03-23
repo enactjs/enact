@@ -9,7 +9,7 @@ import {forKey, forward, handle, stopImmediate} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import Pressable from '@enact/ui/Pressable';
 import React, {PropTypes} from 'react';
-import {Spottable} from '@enact/spotlight';
+import Spottable from '@enact/spotlight/Spottable';
 
 import SliderDecorator from '../internal/SliderDecorator';
 import {computeProportionProgress} from '../internal/SliderDecorator/util';
