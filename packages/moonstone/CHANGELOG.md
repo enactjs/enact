@@ -2,6 +2,18 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `moonstone/ExpandableList` to accept an array of objects as children which are spread onto the generated components
+
+### Fixed
+
+- `moonstone/Panels.Panel` behavior for setting focus after render
+- `moonstone/VirtualList.VirtualGridList` showing empty items when items are continuously added dynamically
+- `moonstone/Picker` to marquee on focus once again
+
 ## [1.0.0-beta.4] - 2017-03-10
 
 ### Added
@@ -16,6 +28,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Slider` tooltip. It's enabled by default and comes with options like `noTooltip`, `tooltipAsPercent`, and `tooltipSide`. See the component docs for more details.
 - `moonstone/Panels.Panel` property `hideChildren` to defer rendering children
 - `moonstone/Spinner` properties `blockClickOn` and `scrim` to block click events behind spinner
+- `moonstone/VirtualList` property `clientSize` to specify item dimensions instead of measuring them
 
 ### Changed
 
@@ -30,6 +43,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualList.GridListImageItem` to have proper padding size according to the existence of caption/subcaption
 - `moonstone/Scrollable` to display scrollbars with proper size
 - `moonstone/VirtualGridList` to not be truncated
+
+### Removed
+
+- `moonstone/Scrollable` property `hideScrollbars` and replaced it with `horizontalScrollbar` and `verticalScrollbar`
 
 ## [1.0.0-beta.3] - 2017-02-21
 

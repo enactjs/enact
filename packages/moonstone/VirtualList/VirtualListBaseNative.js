@@ -9,7 +9,8 @@ import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import {is} from '@enact/core/keymap';
 import React, {Component, PropTypes} from 'react';
-import {Spotlight, SpotlightContainerDecorator} from '@enact/spotlight';
+import Spotlight from '@enact/spotlight';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import {dataIndexAttribute, Scrollable} from '../Scroller/ScrollableNative';
 
@@ -81,6 +82,19 @@ class VirtualListCore extends Component {
 		 * @private
 		 */
 		cbScrollTo: PropTypes.func,
+
+		/**
+		 * Client size of the list; valid values are an object that has `clientWidth` and `clientHeight`.
+		 *
+		 * @type {Object}
+		 * @property {Number} clientWidth - The client width of the list.
+		 * @property {Number} clientHeight - The client height of the list.
+		 * @public
+		 */
+		clientSize: PropTypes.shape({
+			clientWidth: PropTypes.number.isRequired,
+			clientHeight:  PropTypes.number.isRequired
+		}),
 
 		/**
 		 * Data for the list.
@@ -161,11 +175,20 @@ class VirtualListCore extends Component {
 		this.initWrapperRef = this.initRef('wrapperRef');
 	}
 
+	componentWillMount () {
+		if (this.props.clientSize) {
+			this.calculateMetrics(this.props);
+			this.updateStatesAndBounds(this.props);
+		}
+	}
+
 	// Calculate metrics for VirtualList after the 1st render to know client W/H.
 	// We separate code related with data due to re use it when data changed.
 	componentDidMount () {
-		this.calculateMetrics(this.props);
-		this.updateStatesAndBounds(this.props);
+		if (!this.props.clientSize) {
+			this.calculateMetrics(this.props);
+			this.updateStatesAndBounds(this.props);
+		}
 	}
 
 	// Call updateStatesAndBounds here when dataSize has been changed to update nomOfItems state.
@@ -186,15 +209,6 @@ class VirtualListCore extends Component {
 			this.updateStatesAndBounds(nextProps);
 		} else if (hasDataChanged) {
 			this.updateStatesAndBounds(nextProps);
-		}
-	}
-
-	componentWillUnmount () {
-		const containerNode = this.getContainerNode();
-
-		// remove a function for preventing native scrolling by Spotlight
-		if (containerNode && containerNode.removeEventListener) {
-			containerNode.removeEventListener('scroll', this.preventScroll);
 		}
 	}
 
@@ -270,15 +284,15 @@ class VirtualListCore extends Component {
 
 	calculateMetrics (props) {
 		const
-			{direction, itemSize, spacing} = props,
+			{clientSize, direction, itemSize, spacing} = props,
 			node = this.getContainerNode();
 
-		if (!node) {
+		if (!clientSize && !node) {
 			return;
 		}
 
 		const
-			{clientWidth, clientHeight} = this.getClientSize(node),
+			{clientWidth, clientHeight} = (clientSize || this.getClientSize(node)),
 			heightInfo = {
 				clientSize: clientHeight,
 				minItemSize: itemSize.minHeight || null,
@@ -351,20 +365,22 @@ class VirtualListCore extends Component {
 		this.cc = [];
 
 		this.setState({firstIndex: wasFirstIndexMax ? this.maxFirstIndex : Math.min(firstIndex, this.maxFirstIndex), numOfItems});
-		this.calculateScrollBounds();
+		this.calculateScrollBounds(props);
 		this.updateMoreInfo(scrollPosition);
 	}
 
-	calculateScrollBounds () {
-		const node = this.getContainerNode();
+	calculateScrollBounds (props) {
+		const
+			{clientSize} = props,
+			node = this.getContainerNode();
 
-		if (!node) {
+		if (!clientSize && !node) {
 			return;
 		}
 
 		const
 			{scrollBounds, isPrimaryDirectionVertical} = this,
-			{clientWidth, clientHeight} = this.getClientSize(node);
+			{clientWidth, clientHeight} = clientSize || this.getClientSize(node);
 		let maxPos;
 
 		scrollBounds.clientWidth = clientWidth;
@@ -643,12 +659,12 @@ class VirtualListCore extends Component {
 			{props} = this,
 			node = this.getContainerNode();
 
-		if (!node) {
+		if (!props.clientSize && !node) {
 			return;
 		}
 
 		const
-			{clientWidth, clientHeight} = this.getClientSize(node),
+			{clientWidth, clientHeight} = props.clientSize || this.getClientSize(node),
 			{scrollBounds} = this;
 
 		if (clientWidth !== scrollBounds.clientWidth || clientHeight !== scrollBounds.clientHeight) {
@@ -681,7 +697,6 @@ class VirtualListCore extends Component {
 		delete props.data;
 		delete props.dataSize;
 		delete props.direction;
-		delete props.hideScrollbars;
 		delete props.itemSize;
 		delete props.overhang;
 		delete props.pageScroll;

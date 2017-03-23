@@ -1,1 +1,1 @@
-{"language.name":"Maltese","numfmt":{"decimalChar":".","groupChar":",","exponential":"E"},"scripts":["Latn"],"locale":"mt"}
+{"language.name":"Maltese","numfmt":{"currencyFormats":{"common":"{s}{n}","commonNegative":"-{s}{n}"}},"scripts":["Latn"],"locale":"mt"}

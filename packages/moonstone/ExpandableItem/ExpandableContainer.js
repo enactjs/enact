@@ -1,4 +1,5 @@
-import {Spotlight, SpotlightContainerDecorator} from '@enact/spotlight';
+import Spotlight from '@enact/spotlight';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import React from 'react';
 
 /**

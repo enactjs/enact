@@ -1,1 +1,1 @@
-{"language.name":"Ossetic","numfmt":{"decimalChar":".","groupChar":",","exponential":"E","currencyFormats":{"common":"{s} {n}"}},"scripts":["Cyrl","Latn"],"locale":"os"}
+{"delimiter":{"quotationStart":"«","quotationEnd":"»","alternateQuotationStart":"„","alternateQuotationEnd":"“"},"language.name":"Ossetic","numfmt":{"decimalChar":",","groupChar":" "},"scripts":["Cyrl"],"locale":"os"}

@@ -1,1 +1,1 @@
-{"delimiter":{"quotationStart":"«","quotationEnd":"»"},"language.name":"Norwegian Bokmål","numfmt":{"groupChar":" ","exponential":"E","currencyFormats":{"common":"{s} {n}"},"pctFmt":"{n} %"},"scripts":["Latn"],"locale":"nb"}
+{"delimiter":{"quotationStart":"«","quotationEnd":"»"},"language.name":"Norwegian Bokmål","numfmt":{"decimalChar":",","groupChar":" ","currencyFormats":{"commonNegative":"−{s} {n}"},"negativenumFmt":"−{n}","pctFmt":"{n} %","negativepctFmt":"−{n} %"},"scripts":["Latn"],"locale":"nb"}

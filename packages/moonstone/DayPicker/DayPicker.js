@@ -4,11 +4,11 @@
  * @module moonstone/DayPicker
  */
 
-import {$L} from '@enact/i18n';
+import $L from '@enact/i18n/$L';
 import {coerceArray} from '@enact/core/util';
 import DateFmt from '@enact/i18n/ilib/lib/DateFmt';
 import {forward} from '@enact/core/handle';
-import ilib from '@enact/i18n/ilib/lib/ilib';
+import ilib from '@enact/i18n';
 import LocaleInfo from '@enact/i18n/ilib/lib/LocaleInfo';
 import React, {PropTypes} from 'react';
 

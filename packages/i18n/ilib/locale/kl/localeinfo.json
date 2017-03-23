@@ -1,1 +1,1 @@
-{"language.name":"Kalaallisut","numfmt":{"exponential":"E","pctFmt":"{n} %"},"scripts":["Latn"],"locale":"kl"}
+{"delimiter":{"quotationStart":"»","quotationEnd":"«","alternateQuotationStart":"›","alternateQuotationEnd":"‹"},"language.name":"Kalaallisut","numfmt":{"decimalChar":",","groupChar":".","currencyFormats":{"common":"{s}{n}","commonNegative":"{s}-{n}"},"pctFmt":"{n} %","negativepctFmt":"-{n} %"},"scripts":["Latn"],"locale":"kl"}
