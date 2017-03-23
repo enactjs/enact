@@ -8,6 +8,23 @@ import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import React from 'react';
 
+/**
+ * Default config for {@link ui/PlaceholderDecorator.PlaceholderDecorator}
+ *
+ * @memberof ui/PlaceholderDecorator.PlaceholderDecorator
+ * @hocconfig
+ */
+const defaultConfig = {
+	/**
+	 * The client height of the placeholder container.
+	 *
+	 * @type {Number}
+	 * @default 0
+	 * @public
+	 */
+	clientHeight: 0
+};
+
 import {contextTypes} from './PlaceholderDecorator';
 
 const forwardScroll = forward('onScroll');
@@ -22,7 +39,9 @@ const forwardScroll = forward('onScroll');
  * @hoc
  * @public
  */
-const PlaceholderContainer = hoc((config, Wrapped) => {
+const PlaceholderContainer = hoc(defaultConfig, (config, Wrapped) => {
+	const clientHeight = config.clientHeight;
+
 	return class extends React.Component {
 		static displayName = 'PlaceholderContainer'
 		static childContextTypes = contextTypes
@@ -74,9 +93,7 @@ const PlaceholderContainer = hoc((config, Wrapped) => {
 		getOffsetTopThreshold = () => this.offsetTopThreshold
 
 		setOffsetTopThreshold (scrollTop) {
-			const
-				{clientHeight} = this.props,
-				offsetTopThreshold = (Math.floor(scrollTop / clientHeight) + 2) * clientHeight;
+			const offsetTopThreshold = (Math.floor(scrollTop / clientHeight) + 2) * clientHeight;
 
 			if (this.offsetTopThreshold < offsetTopThreshold) {
 				const length = this.controlled.length;
@@ -96,11 +113,7 @@ const PlaceholderContainer = hoc((config, Wrapped) => {
 		}
 
 		render () {
-			const props = Object.assign({}, this.props);
-
-			delete props.clientHeight;
-
-			return (<Wrapped {...props} onScroll={this.onScroll} />);
+			return (<Wrapped {...this.props} onScroll={this.onScroll} />);
 		}
 	};
 });

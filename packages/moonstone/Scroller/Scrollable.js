@@ -6,10 +6,10 @@
 
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
-import {contextTypes} from '@enact/ui/Resizable';
 import {getDirection} from '@enact/spotlight';
 import hoc from '@enact/core/hoc';
 import React, {Component, PropTypes} from 'react';
+import {contextTypes} from '@enact/ui/Resizable';
 import ri from '@enact/ui/resolution';
 
 import css from './Scrollable.less';
@@ -772,10 +772,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 			// FIXME `onFocus` doesn't work on the v8 snapshot.
 			this.childRef.containerRef.addEventListener('focus', this.onFocus, true);
-
-			if (this.childRef.containerDidMount) {
-				this.childRef.containerDidMount(this.scrollTop);
-			}
 		}
 
 		componentDidUpdate () {

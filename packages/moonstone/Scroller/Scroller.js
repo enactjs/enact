@@ -8,7 +8,6 @@
 
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
-import {PlaceholderContainer} from '@enact/ui/Placeholder';
 import React, {Component, PropTypes} from 'react';
 import {SpotlightContainerDecorator} from '@enact/spotlight';
 
@@ -216,21 +215,7 @@ class ScrollerBase extends Component {
  * @ui
  * @public
  */
-const Scroller = SpotlightContainerDecorator(PlaceholderContainer(Scrollable(ScrollerBase)));
-
-/**
- * {@link moonstone/Scroller.PlaceholderScroller} is a Scroller with {@link ui/Placeholder.PlaceholderContainer}.
- *
- * @class PlaceholderScroller
- * @memberof moonstone/Scroller
- * @mixes moonstone/Scroller.Scrollable
- * @mixes ui/Placeholder.PlaceholderContainer
- * @mixes spotlight.SpotlightContainerDecorator
- * @see moonstone/Scroller.ScrollerBase
- * @ui
- * @public
- */
-const PlaceholderScroller = SpotlightContainerDecorator(PlaceholderContainer(Scrollable(ScrollerBase)));
+const Scroller = SpotlightContainerDecorator(Scrollable(ScrollerBase));
 
 export default Scroller;
-export {Scroller, PlaceholderScroller, ScrollerBase};
+export {Scroller, ScrollerBase};
