@@ -124,16 +124,6 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			min: PropTypes.number,
 
 			/**
-			 * Disables the built-in tooltip. A custom tooltip may still be used by supplying a
-			 * component as a child of `Slider`, which follows the knob.
-			 *
-			 * @type {Boolean}
-			 * @default false
-			 * @public
-			 */
-			noTooltip: PropTypes.bool,
-
-			/**
 			 * The handler when the knob is activated or deactivated by selecting it via 5-way
 			 *
 			 * @type {Function}
@@ -238,6 +228,17 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			step: PropTypes.number,
 
 			/**
+			 * Enables the built-in tooltip, whose behavior can be modified by the other tooltip
+			 * properties.  A custom tooltip, which follows the knob, may be used instead by
+			 * supplying a component as a child of `Slider`.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			tooltip: PropTypes.bool,
+
+			/**
 			 * Converts the contents of the built-in tooltip to a percentage of the bar.
 			 * The percentage respects the min and max value props.
 			 *
@@ -297,10 +298,10 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			detachedKnob: false,
 			max: 100,
 			min: 0,
-			noTooltip: false,
 			onChange: () => {}, // needed to ensure the base input element is mutable if no change handler is provided
 			pressed: false,
 			step: 1,
+			tooltip: false,
 			tooltipAsPercent: false,
 			tooltipForceSide: false,
 			tooltipSide: 'before',
@@ -342,9 +343,9 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		},
 
 		computed: {
-			children: ({children, max, min, noTooltip, tooltipAsPercent, value}) => {
+			children: ({children, max, min, tooltip, tooltipAsPercent, value}) => {
 				// If there's no tooltip, or custom children present, supply those.
-				if (noTooltip || children) return children;
+				if (!tooltip || children) return children;
 				return tooltipAsPercent ? Math.floor(computeProportionProgress({value, max, min}) * 100) + '%' : value;
 			},
 			className: ({active, pressed, vertical, styler}) => styler.append({
@@ -356,7 +357,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			proportionProgress: computeProportionProgress
 		},
 
-		render: ({backgroundProgress, children, disabled, inputRef, max, min, noTooltip, onBlur, onChange, onKeyDown, onMouseMove, onMouseUp, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => {
+		render: ({backgroundProgress, children, disabled, inputRef, max, min, onBlur, onChange, onKeyDown, onMouseMove, onMouseUp, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, tooltip, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => {
 			delete rest.active;
 			delete rest.detachedKnob;
 			delete rest.onActivate;
@@ -383,7 +384,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						vertical={vertical}
 						scrubbing={scrubbing}
 					>
-						{noTooltip ? children : <SliderTooltip
+						{tooltip ? <SliderTooltip
 							className={css.tooltip}
 							forceSide={tooltipForceSide}
 							proportion={proportionProgress}
@@ -391,7 +392,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 							vertical={vertical}
 						>
 							{children}
-						</SliderTooltip>}
+						</SliderTooltip> : children}
 					</SliderBar>
 					<input
 						aria-disabled={disabled}
