@@ -81,22 +81,22 @@ const PlaceholderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentDidMount () {
 			if (!this.state.visible) {
-				this.context.registerPlaceholder(this);
+				this.context.registerPlaceholder(this, this.update);
 			}
 		}
 
 		componentWillUnmount () {
 			if (!this.state.visible) {
-				this.context.unregisterPlaceholder({observer: this});
+				this.context.unregisterPlaceholder({key: this});
 			}
 		}
 
-		update ({index, offsetTopThreshold}) {
+		update = ({index, offsetTopThreshold}) => {
 			const {offsetTop} = this.placeholderRef;
 
 			if (offsetTop < offsetTopThreshold) {
 				this.setState({visible: true});
-				this.context.unregisterPlaceholder({index});
+				this.context.unregisterPlaceholder({index: this});
 			}
 		}
 
