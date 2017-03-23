@@ -15,6 +15,15 @@ import React from 'react';
  */
 const defaultConfig = {
 	/**
+	 * The property on each `childComponent` that receives the index of the item in the Repeater
+	 *
+	 * @type {String}
+	 * @default 'data-index'
+	 * @public
+	 */
+	indexProp: 'data-index',
+
+	/**
 	 * Configures the initial height of the child element
 	 *
 	 * @type {Number}
@@ -33,15 +42,16 @@ const defaultConfig = {
  * @public
  */
 const contextTypes = {
-	attachLazyChild: React.PropTypes.func,
-	detachLazyChild: React.PropTypes.func
+	getPlaceholderOffsetTopThreshold: React.PropTypes.func,
+	registerPlaceholder: React.PropTypes.func,
+	unregisterPlaceholder: React.PropTypes.func
 };
 
 /**
  * {@link ui/PlaceholderDecorator.PlaceholderDecorator} is a Higher-order Component that can be used that
  * a container notify the Wrapped component when scrolling.
  *
- * Containers must provide `attachLazyChild` and `detachLazyChild` methods via React's context in order for
+ * Containers must provide `register` and `unregister` methods via React's context in order for
  * `PlaceholderDecorator` instances.
  *
  * @class PlaceholderDecorator
@@ -50,54 +60,62 @@ const contextTypes = {
  * @public
  */
 const PlaceholderDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const dummyStyle = {height: config.initialHeight + 'px'};
+	const
+		dummyStyle = {height: config.initialHeight + 'px'},
+		indexProp = config.indexProp;
 
 	return class extends React.Component {
 		static displayName = 'PlaceholderDecorator'
 
-		constructor (props) {
+		constructor (props, context) {
+			const offsetTop = config.initialHeight * props[indexProp];
+
 			super(props);
 
 			this.state = {
-				visible: false
+				visible: (offsetTop < context.getPlaceholderOffsetTopThreshold())
 			};
 		}
 
 		static contextTypes = contextTypes
 
-		update ({containerScrollTopThreshold, index}) {
-			const {offsetTop} = this.childRef;
-
-			if (offsetTop < containerScrollTopThreshold) {
-				this.setState({visible: true});
-				this.context.detachLazyChild({index});
+		componentDidMount () {
+			if (!this.state.visible) {
+				this.context.registerPlaceholder(this);
 			}
 		}
 
-		componentDidMount () {
-			this.context.attachLazyChild(this);
-		}
-
 		componentWillUnmount () {
-			this.context.detachLazyChild({observer: this});
+			if (!this.state.visible) {
+				this.context.unregisterPlaceholder({observer: this});
+			}
 		}
 
-		initChildRef = (ref) => {
-			this.childRef = ref;
+		update ({index, offsetTopThreshold}) {
+			const {offsetTop} = this.placeholderRef;
+
+			if (offsetTop < offsetTopThreshold) {
+				this.setState({visible: true});
+				this.context.unregisterPlaceholder({index});
+			}
+		}
+
+		initPlaceholderRef = (ref) => {
+			this.placeholderRef = ref;
 		}
 
 		render () {
 			const
-				props = Object.assign({}, this.props),
+				key = this.props[indexProp],
 				{visible} = this.state;
 
 			if (visible) {
 				return (
-					<Wrapped {...props} ref={this.initChildRef} />
+					<Wrapped {...this.props} key={key} ref={this.initPlaceholderRef} />
 				);
 			} else {
 				return (
-					<div ref={this.initChildRef} style={dummyStyle} />
+					<div key={key} ref={this.initPlaceholderRef} style={dummyStyle} />
 				);
 			}
 		}

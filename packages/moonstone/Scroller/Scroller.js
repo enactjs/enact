@@ -7,8 +7,8 @@
  */
 
 import classNames from 'classnames';
-import {contextTypes as i18nContextTypes} from '@enact/i18n/I18nDecorator';
-import {contextTypes as placeholderDecoratorContextTypes} from '@enact/ui/PlaceholderDecorator';
+import {contextTypes} from '@enact/i18n/I18nDecorator';
+import {PlaceholderContainer} from '@enact/ui/Placeholder';
 import React, {Component, PropTypes} from 'react';
 import {SpotlightContainerDecorator} from '@enact/spotlight';
 
@@ -43,17 +43,6 @@ class ScrollerBase extends Component {
 		 */
 		horizontal: PropTypes.oneOf(['auto', 'hidden', 'scroll']),
 
-		/**
-		 * Options to pass the object containing `'containerScrollTopThreshold'` and `'index'` to children
-		 * so that the children could make a decision whether showing themself or not. If their `'offsetTop'` is
-		 * less than `'containerScrollTopThreshold'`, then they are shown. If not, they are hidden.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		lazyChild: PropTypes.bool,
-
 		style: PropTypes.object,
 
 		/**
@@ -67,21 +56,11 @@ class ScrollerBase extends Component {
 		vertical: PropTypes.oneOf(['auto', 'hidden', 'scroll'])
 	}
 
-	static contextTypes = i18nContextTypes
-
-	static childContextTypes = placeholderDecoratorContextTypes
+	static contextTypes = contextTypes
 
 	static defaultProps = {
 		horizontal: 'auto',
-		lazyChild: false,
 		vertical: 'auto'
-	}
-
-	getChildContext () {
-		return {
-			attachLazyChild: this.attachLazyChild,
-			detachLazyChild: this.detachLazyChild
-		};
 	}
 
 	componentDidMount () {
@@ -91,14 +70,6 @@ class ScrollerBase extends Component {
 	componentDidUpdate () {
 		this.calculateMetrics();
 	}
-
-	containerDidMount (top) {
-		this.notifyLazyChild(top);
-	}
-
-	lazyChildObservers = []
-
-	scrollTopThreshold = 0
 
 	scrollBounds = {
 		clientWidth: 0,
@@ -129,8 +100,6 @@ class ScrollerBase extends Component {
 			node.scrollLeft = rtl ? (this.scrollBounds.maxLeft - valX) : valX;
 			this.scrollPos.left = valX;
 		}
-
-		this.notifyLazyChild(valY);
 	}
 
 	getScrollPos = (item) => {
@@ -199,46 +168,6 @@ class ScrollerBase extends Component {
 		}
 	}
 
-	// Lazy child decorator
-
-	attachLazyChild = (observer) => {
-		this.lazyChildObservers.push(observer);
-	}
-
-	detachLazyChild = ({index, observer}) => {
-		if (typeof index === 'number') {
-			this.lazyChildObservers.splice(index, 1);
-		} else {
-			for (let i in this.lazyChildObservers) {
-				if (this.lazyChildObservers[i] === observer) {
-					this.lazyChildObservers.splice(i, 1);
-				}
-			}
-		}
-	}
-
-	notifyLazyChild (top) {
-		const length = this.lazyChildObservers.length;
-
-		if (this.props.lazyChild && length > 0) {
-			const
-				containerBounds = this.getScrollBounds(),
-				containerScrollTopThreshold = (Math.floor(top / containerBounds.clientHeight) + 2) * containerBounds.clientHeight;
-
-			if (this.scrollTopThreshold < containerScrollTopThreshold) {
-				for (let i = length - 1; i >= 0; i--) {
-					this.lazyChildObservers[i].update({
-						containerScrollTopThreshold,
-						index: i
-					});
-				}
-				this.scrollTopThreshold = containerScrollTopThreshold;
-			}
-		}
-	}
-
-	// render
-
 	initRef = (ref) => {
 		this.containerRef = ref;
 	}
@@ -257,7 +186,6 @@ class ScrollerBase extends Component {
 		delete props.className;
 		delete props.hideScrollbars;
 		delete props.horizontal;
-		delete props.lazyChild;
 		delete props.onScrolling;
 		delete props.onScrollStart;
 		delete props.onScrollStop;
@@ -288,7 +216,21 @@ class ScrollerBase extends Component {
  * @ui
  * @public
  */
-const Scroller = SpotlightContainerDecorator(Scrollable(ScrollerBase));
+const Scroller = SpotlightContainerDecorator(PlaceholderContainer(Scrollable(ScrollerBase)));
+
+/**
+ * {@link moonstone/Scroller.PlaceholderScroller} is a Scroller with {@link ui/Placeholder.PlaceholderContainer}.
+ *
+ * @class PlaceholderScroller
+ * @memberof moonstone/Scroller
+ * @mixes moonstone/Scroller.Scrollable
+ * @mixes ui/Placeholder.PlaceholderContainer
+ * @mixes spotlight.SpotlightContainerDecorator
+ * @see moonstone/Scroller.ScrollerBase
+ * @ui
+ * @public
+ */
+const PlaceholderScroller = SpotlightContainerDecorator(PlaceholderContainer(Scrollable(ScrollerBase)));
 
 export default Scroller;
-export {Scroller, ScrollerBase};
+export {Scroller, PlaceholderScroller, ScrollerBase};
