@@ -1,19 +1,19 @@
 /**
- * Exports the {@link ui/Placeholder.contextTypes},
- * {@link ui/Placeholder.PlaceholderContainer}, and
- * {@link ui/Placeholder.PlaceholderDecorator} components.
+ * Exports the {@link ui/Placeholder.contextTypes} object and the
+ * {@link ui/Placeholder.PlaceholderControllerDecorator} and
+ * {@link ui/Placeholder.PlaceholderDecorator} higher-order components.
  *
  * The default export is {@link ui/Placeholder.PlaceholderDecorator}.
  *
  * @module ui/Placeholder
  */
 
-import PlaceholderContainer from './PlaceholderContainer';
+import PlaceholderControllerDecorator from './PlaceholderControllerDecorator';
 import {PlaceholderDecorator, contextTypes} from './PlaceholderDecorator';
 
 export default PlaceholderDecorator;
 export {
 	contextTypes,
-	PlaceholderContainer,
+	PlaceholderControllerDecorator,
 	PlaceholderDecorator
 };

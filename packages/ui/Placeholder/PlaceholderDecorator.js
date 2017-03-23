@@ -30,7 +30,9 @@ const defaultConfig = {
 	 * @default 0
 	 * @memberof ui/PlaceholderDecorator.PlaceholderDecorator.defaultConfig
 	 */
-	initialHeight: 0
+	initialHeight: 0,
+
+	placeholderComponent: 'div'
 };
 
 /**
@@ -42,7 +44,6 @@ const defaultConfig = {
  * @public
  */
 const contextTypes = {
-	getPlaceholderOffsetTopThreshold: React.PropTypes.func,
 	registerPlaceholder: React.PropTypes.func,
 	unregisterPlaceholder: React.PropTypes.func
 };
@@ -60,24 +61,21 @@ const contextTypes = {
  * @public
  */
 const PlaceholderDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const
-		dummyStyle = {height: config.initialHeight + 'px'},
-		indexProp = config.indexProp;
+	const {placeholderComponent: PlaceholderComponent, indexProp, initialHeight} = config;
+	const placeholderBounds = {height: initialHeight + 'px'};
 
 	return class extends React.Component {
 		static displayName = 'PlaceholderDecorator'
 
-		constructor (props, context) {
-			const offsetTop = config.initialHeight * props[indexProp];
+		static contextTypes = contextTypes
 
-			super(props);
+		constructor () {
+			super();
 
 			this.state = {
-				visible: (offsetTop < context.getPlaceholderOffsetTopThreshold())
+				visible: false
 			};
 		}
-
-		static contextTypes = contextTypes
 
 		componentDidMount () {
 			if (!this.state.visible) {
@@ -111,11 +109,19 @@ const PlaceholderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			if (visible) {
 				return (
-					<Wrapped {...this.props} key={key} ref={this.initPlaceholderRef} />
+					<Wrapped
+						{...this.props}
+						key={key}
+						ref={this.initPlaceholderRef}
+					/>
 				);
 			} else {
 				return (
-					<div key={key} ref={this.initPlaceholderRef} style={dummyStyle} />
+					<PlaceholderComponent
+						key={key}
+						ref={this.initPlaceholderRef}
+						style={placeholderBounds}
+					/>
 				);
 			}
 		}
