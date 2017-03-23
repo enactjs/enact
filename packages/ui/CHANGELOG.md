@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `ui/PlaceholderDecorator` to render the wrapped component when it comes into view
+
 ## [1.0.0-beta.4] - 2017-03-10
 
 ### Added

@@ -1,16 +1,16 @@
 /**
- * Exports the {@link moonstone/LazyChildDecorator.LazyChildDecorator} Higher-order Component (HOC).
+ * Exports the {@link ui/PlaceholderDecorator.PlaceholderDecorator} Higher-order Component (HOC).
  *
- * @module moonstone/LazyChildDecorator
+ * @module ui/PlaceholderDecorator
  */
 
 import hoc from '@enact/core/hoc';
 import React from 'react';
 
 /**
- * Default config for {@link moonstone/LazyChildDecorator.LazyChildDecorator}
+ * Default config for {@link ui/PlaceholderDecorator.PlaceholderDecorator}
  *
- * @memberof ui/LazyChildDecorator.LazyChildDecorator
+ * @memberof ui/PlaceholderDecorator.PlaceholderDecorator
  * @hocconfig
  */
 const defaultConfig = {
@@ -19,17 +19,17 @@ const defaultConfig = {
 	 *
 	 * @type {Number}
 	 * @default 0
-	 * @memberof moonstone/LazyChildDecorator.LazyChildDecorator.defaultConfig
+	 * @memberof ui/PlaceholderDecorator.PlaceholderDecorator.defaultConfig
 	 */
 	initialHeight: 0
 };
 
 /**
- * The context propTypes required by `LazyChildDecorator`. This should be set as the `childContextTypes` of a
+ * The context propTypes required by `PlaceholderDecorator`. This should be set as the `childContextTypes` of a
  * container so that the container could notify when scrolling
  *
  * @type {Object}
- * @memberof moonstone/LazyChildDecorator
+ * @memberof ui/PlaceholderDecorator
  * @public
  */
 const contextTypes = {
@@ -38,22 +38,22 @@ const contextTypes = {
 };
 
 /**
- * {@link moonstone/LazyChildDecorator.LazyChildDecorator} is a Higher-order Component that can be used that
+ * {@link ui/PlaceholderDecorator.PlaceholderDecorator} is a Higher-order Component that can be used that
  * a container notify the Wrapped component when scrolling.
  *
  * Containers must provide `attachLazyChild` and `detachLazyChild` methods via React's context in order for
- * `LazyChildDecorator` instances.
+ * `PlaceholderDecorator` instances.
  *
- * @class LazyChildDecorator
- * @memberof moonstone/LazyChildDecorator
+ * @class PlaceholderDecorator
+ * @memberof ui/PlaceholderDecorator
  * @hoc
  * @public
  */
-const LazyChildDecorator = hoc(defaultConfig, (config, Wrapped) => {
+const PlaceholderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const dummyStyle = {height: config.initialHeight + 'px'};
 
 	return class extends React.Component {
-		static displayName = 'LazyChildDecorator'
+		static displayName = 'PlaceholderDecorator'
 
 		constructor (props) {
 			super(props);
@@ -104,8 +104,8 @@ const LazyChildDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	};
 });
 
-export default LazyChildDecorator;
+export default PlaceholderDecorator;
 export {
 	contextTypes,
-	LazyChildDecorator
+	PlaceholderDecorator
 };

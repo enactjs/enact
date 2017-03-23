@@ -4,10 +4,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
-### Added
-
-- `moonstone/LazyChildDecorator` to defer rendering of the wrapped component
-
 ### Fixed
 
 - `moonstone/Panels.Panel` behavior for setting focus after render

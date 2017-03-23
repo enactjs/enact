@@ -8,7 +8,7 @@
 
 import classNames from 'classnames';
 import {contextTypes as i18nContextTypes} from '@enact/i18n/I18nDecorator';
-import {contextTypes as lazyChildDecoratorContextTypes} from '@enact/moonstone/LazyChildDecorator';
+import {contextTypes as placeholderDecoratorContextTypes} from '@enact/ui/PlaceholderDecorator';
 import React, {Component, PropTypes} from 'react';
 import {SpotlightContainerDecorator} from '@enact/spotlight';
 
@@ -69,7 +69,7 @@ class ScrollerBase extends Component {
 
 	static contextTypes = i18nContextTypes
 
-	static childContextTypes = lazyChildDecoratorContextTypes
+	static childContextTypes = placeholderDecoratorContextTypes
 
 	static defaultProps = {
 		horizontal: 'auto',
