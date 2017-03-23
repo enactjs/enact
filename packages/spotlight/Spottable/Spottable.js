@@ -9,7 +9,6 @@
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
-import {startJob} from '@enact/core/jobs';
 import pick from 'ramda/src/pick';
 import React from 'react';
 
@@ -218,8 +217,8 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 				// will result in the components being updated too quickly for the animation to begin, providing
 				// no visual feedback of the selection. We perform this behavior in the `componentDidUpdate`
 				// life-cycle instead of immediately within the `onBlur` event to ensure the component tree has
-				// been updated, giving us the full `selectionAnimationDelay` time to work with.
-				startJob('forwardEnterKeyUp', () => {
+				// been updated, giving us the full `selectionKeyUpDelay` time to work with.
+				setTimeout(() => {
 					forwardEnterKeyUp(this.props)(makeEvent('onKeyUp', this.enterKeyDownEvent));
 					this.enterKeyDownEvent = null;
 				}, selectionKeyUpDelay);
