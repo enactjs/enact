@@ -4,27 +4,13 @@ import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
 
+import {mergeComponentMetadata, removeProps} from '../../src/utils/propTables';
+
 const Picker = Changeable(DatePicker);
 Picker.displayName = 'Changeable(DatePicker)';
 
-const Config = {
-	propTypes: Object.assign({}, DatePicker.propTypes, DatePickerBase.propTypes, {
-		onChange: React.PropTypes.func,
-		onOpen: React.PropTypes.func,
-		onClose: React.PropTypes.func,
-		open: React.PropTypes.bool,
-		value: React.PropTypes.instanceOf(Date)
-	}),
-	defaultProps: Object.assign({}, DatePicker.defaultProps, DatePickerBase.defaultProps, Picker.defaultProps),
-	displayName: 'DatePicker'
-};
-
-'year defaultOpen day maxDays maxMonths month onChangeDate onChangeMonth onChangeYear order'
-	.split(' ')
-	.forEach(prop => {
-		delete Config.propTypes[prop];
-		delete Config.defaultProps[prop];
-	});
+const Config = mergeComponentMetadata('DatePicker', DatePicker, DatePickerBase, Picker);
+removeProps(Config, 'year defaultOpen day maxDays maxMonths month onChangeDate onChangeMonth onChangeYear order');
 
 storiesOf('DatePicker')
 	.addDecorator(withKnobs)

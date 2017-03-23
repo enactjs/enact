@@ -5,15 +5,13 @@ import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
 
+import {mergeComponentMetadata} from '../../src/utils/propTables';
+
 const iconNames = ['', ...Object.keys(icons)];
 const ExpandableInput = Changeable(ExpInput);
 ExpandableInput.displayName = 'Changeable(ExpandableInput)';
 
-const Config = {
-	propTypes: Object.assign({}, ExpInput.propTypes, ExpandableInputBase.propTypes),
-	defaultProps: Object.assign({}, ExpInput.defaultProps, ExpandableInputBase.defaultProps, ExpandableInput.defaultProps),
-	displayName: 'ExpandableInput'
-};
+const Config = mergeComponentMetadata('ExpandableInput', ExpInput, ExpandableInputBase);
 
 storiesOf('ExpandableInput')
 	.addDecorator(withKnobs)

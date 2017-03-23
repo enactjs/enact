@@ -5,14 +5,12 @@ import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, number, select} from '@kadira/storybook-addon-knobs';
 
+import {mergeComponentMetadata} from '../../src/utils/propTables';
+
 const ChangeableSlider = Changeable(IncrementSlider);
 ChangeableSlider.displayName = 'Changeable(IncrementSlider)';
 
-const Config = {
-	propTypes: Object.assign({}, IncrementSliderBase.propTypes, IncrementSlider.propTypes),
-	defaultProps: Object.assign({}, IncrementSliderBase.defaultProps, IncrementSlider.defaultProps),
-	displayName: 'IncrementSlider'
-};
+const Config = mergeComponentMetadata('IncrementSlider', IncrementSliderBase, IncrementSlider);
 
 storiesOf('IncrementSlider')
 	.addDecorator(withKnobs)

@@ -6,14 +6,12 @@ import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, number, select} from '@kadira/storybook-addon-knobs';
 import nullify from '../../src/utils/nullify.js';
 
+import {mergeComponentMetadata} from '../../src/utils/propTables';
+
 const StatefulRangePicker = Changeable(RangePicker);
 StatefulRangePicker.displayName = 'Changeable(RangePicker)';
 
-const Config = {
-	propTypes: Object.assign({}, RangePickerBase.propTypes, RangePicker.propTypes),
-	defaultProps: Object.assign({}, RangePickerBase.defaultProps, RangePicker.defaultProps),
-	displayName: 'RangePicker'
-};
+const Config = mergeComponentMetadata('RangePicker', RangePickerBase, RangePicker);
 
 // Set up some defaults for info and knobs
 const prop = {

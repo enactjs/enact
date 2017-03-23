@@ -4,14 +4,12 @@ import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, text, boolean, select} from '@kadira/storybook-addon-knobs';
 
+import {mergeComponentMetadata} from '../../src/utils/propTables';
+
 const StatefulToggleButton = Toggleable({toggle: 'onClick', prop: 'selected'}, ToggleButton);
 StatefulToggleButton.displayName = 'Toggleable(ToggleButton)';
 
-const Config = {
-	propTypes: Object.assign({}, ToggleButtonBase.propTypes, ToggleButton.propTypes),
-	defaultProps: Object.assign({}, ToggleButtonBase.defaultProps, ToggleButton.defaultProps),
-	displayName: 'ToggleButton'
-};
+const Config = mergeComponentMetadata('ToggleButton', ToggleButtonBase, ToggleButton);
 
 // Set up some defaults for info and knobs
 const prop = {

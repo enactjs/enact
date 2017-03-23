@@ -12,12 +12,6 @@ import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
 const ChangeableGroup = Changeable({change: 'onSelect', prop: 'selected'}, Group);
 ChangeableGroup.displayName = 'Changeable(Group)';
 
-const Config = {
-	displayName: 'Group',
-	propTypes: Object.assign({}, Group.propTypes),
-	defaultProps: Object.assign({}, Group.defaultProps, ChangeableGroup.defaultProps)
-};
-
 // Set up some defaults for info and knobs
 const prop = {
 	children: {
@@ -50,5 +44,5 @@ storiesOf('Group')
 				{['Item 1', 'Item 2', 'Item 3']}
 			</ChangeableGroup>
 		),
-		{propTables: [Config]}
+		{propTables: [Group]}
 	);

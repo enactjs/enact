@@ -6,14 +6,12 @@ import ToggleItem from '@enact/moonstone/ToggleItem';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
 
+import {mergeComponentMetadata} from '../../src/utils/propTables';
+
 const Component = Toggleable({prop: 'selected'}, SwitchItem);
 Component.displayName = 'Toggleable(SwitchItem)';
 
-const Config = {
-	propTypes: Object.assign({}, ItemBase.propTypes, Item.propTypes, ToggleItem.propTypes, SwitchItem.propTypes),
-	defaultProps: Object.assign({}, ItemBase.defaultProps, Item.defaultProps, ToggleItem.defaultProps, SwitchItem.defaultProps),
-	displayName: 'SwitchItem'
-};
+const Config = mergeComponentMetadata('SwitchItem', ItemBase, Item, ToggleItem, SwitchItem);
 
 storiesOf('SwitchItem')
 	.addDecorator(withKnobs)

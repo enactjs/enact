@@ -6,14 +6,12 @@ import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
 import nullify from '../../src/utils/nullify.js';
 
+import {mergeComponentMetadata} from '../../src/utils/propTables';
+
 const StatefulPicker = Changeable(Picker);
 StatefulPicker.displayName = 'Changeable(Picker)';
 
-const Config = {
-	propTypes: Object.assign({}, PickerBase.propTypes),
-	defaultProps: Object.assign({}, PickerBase.defaultProps),
-	displayName: 'Picker'
-};
+const Config = mergeComponentMetadata('Picker', PickerBase, Picker);
 
 // Set up some defaults for info and knobs
 const prop = {

@@ -4,27 +4,21 @@ import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
 
+import {mergeComponentMetadata, removeProps} from '../../src/utils/propTables';
+
 const Picker = Changeable(TimePicker);
 Picker.displayName = 'Changeable(TimePicker)';
 
-const Config = {
-	propTypes: Object.assign({}, TimePicker.propTypes, TimePickerBase.propTypes, {
+const Config = mergeComponentMetadata('TimePicker', TimePicker.propTypes, TimePickerBase.propTypes, {
+	propTypes: {
 		onChange: React.PropTypes.func,
-		onOpen: React.PropTypes.func,
 		onClose: React.PropTypes.func,
+		onOpen: React.PropTypes.func,
 		open: React.PropTypes.bool,
 		value: React.PropTypes.instanceOf(Date)
-	}),
-	defaultProps: Object.assign({}, TimePicker.defaultProps, TimePickerBase.defaultProps),
-	displayName: 'TimePicker'
-};
-
-'onChangeHour defaultOpen onChangeMeridiem hour onChangeMinute minute meridiem meridiems order'
-	.split(' ')
-	.forEach(prop => {
-		delete Config.propTypes[prop];
-		delete Config.defaultProps[prop];
-	});
+	}}
+);
+removeProps(Config, 'onChangeHour defaultOpen onChangeMeridiem hour onChangeMinute minute meridiem meridiems order');
 
 storiesOf('TimePicker')
 	.addDecorator(withKnobs)

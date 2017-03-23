@@ -4,21 +4,13 @@ import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, select, text} from '@kadira/storybook-addon-knobs';
 
+import {mergeComponentMetadata, removeProps} from '../../src/utils/propTables';
+
 const ChangeableExpandablePicker = Changeable(ExpandablePicker);
 ChangeableExpandablePicker.displayName = 'Changeable(ExpandablePicker)';
 
-const Config = {
-	propTypes: Object.assign({}, ExpandablePicker.propTypes, ExpandablePickerBase.propTypes),
-	defaultProps: Object.assign({}, ExpandablePicker.defaultProps, ExpandablePickerBase.defaultProps),
-	displayName: 'ExpandablePicker'
-};
-
-'onPick'
-	.split(' ')
-	.forEach(prop => {
-		delete Config.propTypes[prop];
-		delete Config.defaultProps[prop];
-	});
+const Config = mergeComponentMetadata('ExpandablePicker', ExpandablePicker, ExpandablePickerBase);
+removeProps(Config, 'onPick');
 
 const emoticons = ['💥 boom', '😩🖐 facepalm', '🍩 doughnut', '👻 ghost', '💍 ring', '🎮 videogame', '🍌🍌 bananas'];
 
