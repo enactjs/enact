@@ -1,11 +1,7 @@
 import DayPicker from '@enact/moonstone/DayPicker';
 import React from 'react';
-import Changeable from '@enact/ui/Changeable';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
-
-const ChangeableDayPicker = Changeable({change: 'onSelect', prop: 'selected'}, DayPicker);
-ChangeableDayPicker.displayName = 'Changeable(DayPicker)';
 
 storiesOf('DayPicker')
 	.addDecorator(withKnobs)
@@ -13,7 +9,7 @@ storiesOf('DayPicker')
 		' ',
 		'Basic usage of DayPicker',
 		() => (
-			<ChangeableDayPicker
+			<DayPicker
 				title={text('title', 'Day Picker')}
 				noneText={text('none', 'none')}
 				disabled={boolean('disabled', false)}

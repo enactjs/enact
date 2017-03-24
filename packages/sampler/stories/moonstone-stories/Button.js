@@ -3,13 +3,14 @@ import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
 
-Button.propTypes = Object.assign({}, ButtonBase.propTypes, Button.propTypes);
-Button.defaultProps = Object.assign({}, ButtonBase.defaultProps, Button.defaultProps);
-Button.displayName = 'Button';
+import nullify from '../../src/utils/nullify.js';
+import {mergeComponentMetadata} from '../../src/utils/propTables';
+
+const Config = mergeComponentMetadata('Button', ButtonBase, Button);
 
 // Set up some defaults for info and knobs
 const prop = {
-	backgroundOpacity: ['opaque', 'translucent', 'transparent']
+	backgroundOpacity: ['', 'translucent', 'transparent']
 };
 
 storiesOf('Button')
@@ -20,14 +21,15 @@ storiesOf('Button')
 		() => (
 			<Button
 				onClick={action('onClick')}
-				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
-				disabled={boolean('disabled', Button.defaultProps.disabled)}
-				minWidth={boolean('minWidth', Button.defaultProps.minWidth)}
-				preserveCase={boolean('preserveCase', Button.defaultProps.preserveCase)}
-				selected={boolean('selected', Button.defaultProps.selected)}
-				small={boolean('small', Button.defaultProps.small)}
+				backgroundOpacity={nullify(select('backgroundOpacity', prop.backgroundOpacity))}
+				disabled={nullify(boolean('disabled', ButtonBase.defaultProps.disabled))}
+				minWidth={nullify(boolean('minWidth', ButtonBase.defaultProps.minWidth))}
+				preserveCase={boolean('preserveCase', false)}
+				selected={nullify(boolean('selected', false))}
+				small={nullify(boolean('small', ButtonBase.defaultProps.small))}
 			>
 				{text('children', 'Click Me')}
 			</Button>
-		)
+		),
+		{propTables: [Config]}
 	);
