@@ -133,6 +133,7 @@ class PopupFocusTest extends React.Component {
 		noAnimation: React.PropTypes.bool,
 		noAutoDismiss: React.PropTypes.bool,
 		scrimType: React.PropTypes.oneOf(['transparent', 'translucent', 'none']),
+		showCloseButton: React.PropTypes.bool,
 		spotlightRestrict: React.PropTypes.oneOf(['none', 'self-first', 'self-only'])
 	}
 
@@ -140,6 +141,7 @@ class PopupFocusTest extends React.Component {
 		noAnimation: false,
 		noAutoDismiss: false,
 		scrimType: 'translucent',
+		showCloseButton: false,
 		spotlightRestrict: 'self-only'
 	}
 
@@ -159,7 +161,7 @@ class PopupFocusTest extends React.Component {
 	}
 
 	render () {
-		const {noAnimation, noAutoDismiss, scrimType, spotlightRestrict} = this.props;
+		const {noAnimation, noAutoDismiss, scrimType, showCloseButton, spotlightRestrict} = this.props;
 
 		return (
 			<div>
@@ -169,6 +171,9 @@ class PopupFocusTest extends React.Component {
 					Focus should return to the button used to originally open the popup. Verify this
 					behavior for each of the buttons.
 				</p>
+				<p>
+					Use the knobs to verify 5-way behavior under different Popup configurations.
+				</p>
 				<Button onClick={this.handleOpenPopup}>Open Popup</Button>
 				<Button onClick={this.handleOpenPopup}>Open Popup</Button>
 				<Popup
@@ -177,7 +182,7 @@ class PopupFocusTest extends React.Component {
 					onClose={this.handleClosePopup}
 					open={this.state.popupOpen}
 					scrimType={scrimType}
-					showCloseButton
+					showCloseButton={showCloseButton}
 					spotlightRestrict={spotlightRestrict}
 				>
 					<div>This is a Popup</div>
@@ -306,12 +311,13 @@ storiesOf('Spotlight')
 		)
 	)
 	.addWithInfo(
-		'Popup Focus Targets',
+		'Popup',
 		() => (
 			<PopupFocusTest
 				noAnimation={boolean('noAnimation', false)}
 				noAutoDismiss={boolean('noAutoDismiss', false)}
 				scrimType={select('scrimType', ['none', 'transparent', 'translucent'], 'translucent')}
+				showCloseButton={boolean('showCloseButton', true)}
 				spotlightRestrict={select('spotlightRestrict', ['none', 'self-first', 'self-only'], 'self-only')}
 			/>
 		)
