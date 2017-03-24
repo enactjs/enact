@@ -94,7 +94,7 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 			 * of locale. Any string that is valid for the `Icon` component is valid here. `icon` is
 			 * outside the marqueeable content so it will not scroll along with the text content of
 			 * your button. This also supports a custom icon, in the form of a DOM node or a
-			 * Component, with the caviet that if you supply a custom icon, you are responsible for
+			 * Component, with the caveat that if you supply a custom icon, you are responsible for
 			 * sizing and locale positioning of the custom component.
 			 *
 			 * @type {Node}
