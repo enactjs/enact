@@ -62,6 +62,23 @@ It's worth noting that spottable controls may be found on different hierarchical
 levels of a component tree.  Spotlight facilitates seamless navigation
 among the topmost spottable components found in the tree.
 
+Spottable controls can receive `onSpotlight[Direction]` properties to handle custom
+navigation actions.  This is mainly a convenience function used for preventing natural
+5-way behavior and setting focus on specific spottable components that may not normally
+be in the next component to be spotted.
+
+```javascript
+handleSpotlightDown = (e) => {
+	e.preventDefault();
+	e.stopPropagation();
+	Spotlight.focus('[data-component-id="myButton"]');
+}
+```
+```jsx harmony
+<Button data-component-id='myButton'>Source Button</Button>
+<Button onSpotlightDown={this.handleSpotlightDown}>Target Button</Button>
+```
+
 <a name="4"></a>
 ## 4. Selectors
 
@@ -102,11 +119,11 @@ HOC around your application view:
 
 ```javascript
 import ApplicationView from './ApplicationView';
-import {SpotlightRootDecorator} from 'enact-spotlight';
+import SpotlightRootDecorator from '@enact/spotlight/SpotlightRootDecorator';
 const App = SpotlightRootDecorator(ApplicationView);
 ```
 
-It's worth noting that `enact-moonstone` applications include `SpotlightRootDecorator`
+It's worth noting that `@enact/moonstone` applications include `SpotlightRootDecorator`
 by default in its `MoonstoneDecorator` HOC.
 
 <a name="6"></a>
@@ -116,7 +133,7 @@ In order to make a control focus-enabled (or "spottable") with Spotlight, simply
 wrap your base control with the `Spottable` HOC, like so:
 
 ```javascript
-    import {Spottable} from 'enact-spotlight';
+    import Spottable from '@enact/spotlight/Spottable';
     import Component from './Component';
     const SpottableComponent = Spottable(Component);
 ```
@@ -139,8 +156,8 @@ To define a container, wrap your base control with the `SpotlightContainerDecora
 HOC:
 
 ```javascript
-import kind from 'enact-core/kind';
-import {SpotlightContainerDecorator} from 'enact-spotlight';
+import kind from '@enact/core/kind';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 const Container = SpotlightContainerDecorator(kind({
 	name: 'Container',
 	render: (props) => {
@@ -160,8 +177,8 @@ A `spotlightDisabled` property may be applied to the container to temporarily di
 spottable controls:
 
 ```javascript
-import kind from 'enact-core/kind';
-import {SpotlightContainerDecorator} from 'enact-spotlight';
+import kind from '@enact/core/kind';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 const Container = SpotlightContainerDecorator('div');
 const App = kind({
 	name: 'App',
@@ -194,7 +211,7 @@ any of its available methods to manipulate how your application responds to navi
 events.
 
 ```javascript
-import Spotlight from 'enact-spotlight';
+import Spotlight from '@enact/spotlight';
 ```
 
 #### `Spotlight.pause()` ####
@@ -226,7 +243,7 @@ Spotlight control. In these cases, the HOC parameter should remain static and un
 life-cycle of the control.
 
 ```javascript
-import {Spottable} from 'enact-spotlight';
+import Spottable from '@enact/spotlight/Spottable';
 // spottable control that doesn't emit `onClick` events when pressing the enter key
 const Control = Spottable({emulateMouse: false}, 'div');
 ```
@@ -237,8 +254,8 @@ Spotlight HOCs are able to use properties that are passed to them via parent con
 are passed like in any other Enact component.
 
 ```javascript
-import kind from 'enact-core/kind';
-import {Spottable} from 'enact-spotlight';
+import kind from '@enact/core/kind';
+import Spottable from '@enact/spotlight/Spottable';
 
 const SpottableComponent = Spottable('div');
 const App = kind({
@@ -262,6 +279,19 @@ Whether or not the component should emulate mouse events as a response to Spotli
 + Default: `false`
 
 May be added to temporarily make a control not spottable.
+
+`onSpotlightLeft`
+`onSpotlightRight`
+`onSpotlightUp`
+`onSpotlightDown`
++ Type: [function]
+
+A callback function to override default spotlight behavior when exiting the spottable control.
+
+`onSpotlightDisappear`
++ Type: [function]
+
+A callback function to be called when the component is removed while retaining focus.
 
 ### Container ###
 
@@ -318,7 +348,7 @@ happen if you disabled the container using `spotlightDisabled`.
 Restricts or prioritizes focus to the controls in the current container.
 
 ```javascript
-import {SpotlightContainerDecorator} from 'enact-spotlight';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import Component from './Component';
 const Container = SpotlightContainerDecorator({enterTo: 'last-focused', restrict: 'self-only'}, Component);
 ```
@@ -329,8 +359,9 @@ const Container = SpotlightContainerDecorator({enterTo: 'last-focused', restrict
 #### Basic usage
 
 ```javascript
-import kind from 'enact-core/kind';
-import {SpotlightRootDecorator, Spottable} from 'enact-spotlight';
+import kind from '@enact/core/kind';
+import SpotlightRootDecorator from '@enact/spotlight/SpotlightRootDecorator';
+import Spottable from '@enact/spotlight/Spottable';
 
 const SpottableComponent = Spottable(kind({
 	name: 'SpottableComponent',

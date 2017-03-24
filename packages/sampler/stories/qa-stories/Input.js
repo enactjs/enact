@@ -9,7 +9,7 @@ import {withKnobs, boolean, number, select, text} from '@kadira/storybook-addon-
 const StatefulInput = Changeable({mutable: true}, Input);
 
 StatefulInput.propTypes = Object.assign({}, InputBase.propTypes, Input.propTypes);
-StatefulInput.defaultProps = Object.assign({}, InputBase.defaultProps, Input.defaultProps);
+StatefulInput.defaultProps = Object.assign({}, StatefulInput.defaultProps, InputBase.defaultProps, Input.defaultProps);
 StatefulInput.displayName = 'Input';
 
 const iconNames = ['', ...Object.keys(icons)];
@@ -18,11 +18,9 @@ const inputData = {
 	longText : 'Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text',
 	tallText : ['नरेंद्र मोदी', ' ฟิ้  ไั  ஒ  து', 'ÃÑÕÂÊÎÔÛÄËÏÖÜŸ'],
 	extraSpaceText : 'This                                              Text                         has                           extra                                           space',
-	defaultNumber : 10,
-	type: ['text', 'number', 'password'],
-	minValue: 0,
-	maxValue: 10,
-	normalText: 'Input field'
+	initialNumericValue: 0,
+	initialValue : 'Input field',
+	type: ['text', 'number', 'password']
 };
 
 
@@ -36,6 +34,7 @@ storiesOf('Input')
 				disabled={boolean('disabled')}
 				iconAfter={select('iconAfter', iconNames)}
 				iconBefore={select('iconBefore', iconNames)}
+				noDecorator={boolean('noDecorator')}
 				placeholder={text('placeholder')}
 				type={select('type', inputData.type, inputData.type[0])}
 				value={text('value', inputData.longText)}
@@ -50,6 +49,7 @@ storiesOf('Input')
 				disabled={boolean('disabled')}
 				iconAfter={select('iconAfter', iconNames)}
 				iconBefore={select('iconBefore', iconNames)}
+				noDecorator={boolean('noDecorator')}
 				placeholder={text('placeholder', 'Input some tall characters')}
 				type={select('type', inputData.type, inputData.type[0])}
 				value={select('value', inputData.tallText,  inputData.tallText[2])}
@@ -64,6 +64,7 @@ storiesOf('Input')
 				disabled={boolean('disabled')}
 				iconAfter={select('iconAfter', iconNames)}
 				iconBefore={select('iconBefore', iconNames)}
+				noDecorator={boolean('noDecorator')}
 				placeholder={text('placeholder')}
 				type={select('type', inputData.type, inputData.type[0])}
 				value={text('value', inputData.extraSpaceText)}
@@ -80,18 +81,20 @@ storiesOf('Input')
 						disabled={boolean('disabled')}
 						iconAfter={select('iconAfter', iconNames)}
 						iconBefore={select('iconBefore', iconNames)}
+						noDecorator={boolean('noDecorator')}
 						placeholder={text('placeholder')}
 						type={select('type', inputData.type, inputData.type[0])}
-						value={text('value1', inputData.normalText + ' one')}
+						value={text('value1', inputData.initialValue + ' one')}
 					/>
 					<StatefulInput
 						onChange={action('onChange')}
 						disabled={boolean('disabled')}
 						iconAfter={select('iconAfter', iconNames)}
 						iconBefore={select('iconBefore', iconNames)}
+						noDecorator={boolean('noDecorator')}
 						placeholder={text('placeholder')}
 						type={select('type', inputData.type, inputData.type[0])}
-						value={text('value2', inputData.normalText + ' two')}
+						value={text('value2', inputData.initialValue + ' two')}
 					/>
 				</div>
 				<div>
@@ -100,18 +103,20 @@ storiesOf('Input')
 						disabled={boolean('disabled')}
 						iconAfter={select('iconAfter', iconNames)}
 						iconBefore={select('iconBefore', iconNames)}
+						noDecorator={boolean('noDecorator')}
 						placeholder={text('placeholder')}
 						type={select('type', inputData.type, inputData.type[0])}
-						value={text('value3', inputData.normalText + ' three')}
+						value={text('value3', inputData.initialValue + ' three')}
 					/>
 					<StatefulInput
 						onChange={action('onChange')}
 						disabled={boolean('disabled')}
 						iconAfter={select('iconAfter', iconNames)}
 						iconBefore={select('iconBefore', iconNames)}
+						noDecorator={boolean('noDecorator')}
 						placeholder={text('placeholder')}
 						type={select('type', inputData.type, inputData.type[0])}
-						value={text('value4', inputData.normalText + ' four')}
+						value={text('value4', inputData.initialValue + ' four')}
 					/>
 				</div>
 			</div>
@@ -125,10 +130,9 @@ storiesOf('Input')
 				disabled={boolean('disabled')}
 				iconAfter={select('iconAfter', iconNames)}
 				iconBefore={select('iconBefore', iconNames)}
+				noDecorator={boolean('noDecorator')}
 				type={inputData.type[1]}
-				min={number('min value', inputData.minValue)}
-				max={number('max value', inputData.maxValue)}
-				value={number('value', inputData.minValue)}
+				value={number('value', inputData.initialNumericValue)}
 			/>
 		)
 	);

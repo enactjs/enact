@@ -23,6 +23,10 @@
 		}
 		.icon {
 			margin-bottom: 0;
+
+			.moon-custom-text({
+				margin-top: 18px;
+			});
 		}
 
 		:global(.enact-locale-right-to-left) & {
@@ -48,6 +52,8 @@
 		margin-bottom: @text-vertical-offset;
 		// Force the label to fill the next line in the flexbox container
 		width: 100%;
+
+		.moon-custom-text-size(@moon-expandable-value-font-size-large);
 
 		:global(.enact-locale-right-to-left) & {
 			padding-left: 0;

@@ -4,10 +4,11 @@
  * @module i18n/Uppercase
  */
 
-import {kind, hoc} from '@enact/core';
+import hoc from '@enact/core/hoc';
+import kind from '@enact/core/kind';
 import React from 'react';
 
-import {toUpperCase} from '../';
+import {toUpperCase} from '../util';
 
 /**
  * {@link i18n/Uppercase.Uppercase} is a Higher Order Component that is used to wrap
@@ -19,6 +20,7 @@ import {toUpperCase} from '../';
  *
  * @class Uppercase
  * @memberof i18n/Uppercase
+ * @hoc
  * @public
  */
 const Uppercase = hoc((config, Wrapped) => kind({

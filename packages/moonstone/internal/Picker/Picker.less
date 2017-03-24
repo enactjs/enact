@@ -14,6 +14,8 @@
 	position: relative;
 	direction: ltr;
 	text-align: center;
+	margin-left: @moon-spotlight-outset;
+	margin-right: @moon-spotlight-outset;
 
 	&:before {
 		.position(0);
@@ -32,6 +34,8 @@
 		height: @moon-button-height;
 		line-height: @moon-button-height;
 		max-width: 300px;
+
+		.moon-custom-text-size(@moon-item-font-size-large);
 	}
 
 	.sizingPlaceholder {
@@ -64,9 +68,11 @@
 
 		.incrementer {
 			order: 3;
+			margin-left: @moon-spotlight-outset;
 		}
 		.decrementer {
 			order: 1;
+			margin-right: @moon-spotlight-outset;
 		}
 		.valueWrapper {
 			order: 2;
@@ -75,7 +81,6 @@
 
 	&.joined {
 		color: @moon-button-text-color;
-		margin: 0 @moon-spotlight-outset;
 
 		&.incrementing .incrementer,
 		&.decrementing .decrementer {
@@ -104,9 +109,6 @@
 			&.decrementing:before {
 				border-bottom-width: @moon-integer-picker-shadow-width;
 			}
-			.valueWrapper {
-				padding: 0 1ex;
-			}
 			.incrementer,
 			.decrementer {
 				display: block;
@@ -120,7 +122,7 @@
 	}
 
 	&.small .valueWrapper {
-		width: 60px;
+		width: (@moon-spotlight-outset + @moon-icon-size + @moon-spotlight-outset);
 	}
 	&.medium .valueWrapper {
 		width: 180px;
@@ -136,7 +138,7 @@
 			position: relative;
 
 			.item {
-				position: relative;
+				position: absolute;
 				.position(0);
 			}
 		}
@@ -144,6 +146,10 @@
 
 	&.vertical .valueWrapper {
 		display: block;
+
+		.item {
+			margin: 0 @moon-spotlight-outset;
+		}
 	}
 }
 

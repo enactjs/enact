@@ -5,11 +5,13 @@
  * @module moonstone/Popup
  */
 
+import $L from '@enact/i18n/$L';
+import FloatingLayer from '@enact/ui/FloatingLayer';
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
+import Spotlight, {getDirection} from '@enact/spotlight';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import Transition from '@enact/ui/Transition';
-import FloatingLayer from '@enact/ui/FloatingLayer';
-import Spotlight, {SpotlightContainerDecorator, getDirection} from '@enact/spotlight';
 
 import IconButton from '../IconButton';
 
@@ -130,6 +132,7 @@ const PopupBase = kind({
 						backgroundOpacity="transparent"
 						small
 						onClick={onCloseButtonClick}
+						aria-label={$L('Close')}
 					>
 						closex
 					</IconButton>
@@ -155,10 +158,10 @@ const PopupBase = kind({
 				onHide={onHide}
 			>
 				<div {...rest}>
-					{closeButton}
 					<div className={css.body}>
 						{children}
 					</div>
+					{closeButton}
 				</div>
 			</TransitionContainer>
 		);
@@ -384,6 +387,8 @@ class Popup extends React.Component {
 				scrimType={scrimType}
 			>
 				<PopupBase
+					aria-live="off"
+					role="alert"
 					{...rest}
 					containerId={this.state.containerId}
 					open={this.state.popupOpen}

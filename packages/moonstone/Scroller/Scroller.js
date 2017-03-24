@@ -9,7 +9,7 @@
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import React, {Component, PropTypes} from 'react';
-import {SpotlightContainerDecorator} from '@enact/spotlight';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import css from './Scroller.less';
 import Scrollable from './Scrollable';
@@ -62,6 +62,14 @@ class ScrollerBase extends Component {
 		vertical: 'auto'
 	}
 
+	componentDidMount () {
+		this.calculateMetrics();
+	}
+
+	componentDidUpdate () {
+		this.calculateMetrics();
+	}
+
 	scrollBounds = {
 		clientWidth: 0,
 		clientHeight: 0,
@@ -80,7 +88,7 @@ class ScrollerBase extends Component {
 
 	setScrollPosition (valX, valY) {
 		const
-			node = this.node,
+			node = this.containerRef,
 			rtl = this.context.rtl;
 
 		if (this.isVertical()) {
@@ -103,7 +111,7 @@ class ScrollerBase extends Component {
 				height: node.offsetHeight
 			};
 
-		while (node && node.parentNode && node.id !== this.node.id) {
+		while (node && node.parentNode && node.id !== this.containerRef.id) {
 			bounds.left += node.offsetLeft;
 			bounds.top += node.offsetTop;
 			node = node.parentNode;
@@ -144,7 +152,7 @@ class ScrollerBase extends Component {
 	calculateMetrics () {
 		const
 			{scrollBounds} = this,
-			{scrollWidth, scrollHeight, clientWidth, clientHeight} = this.node;
+			{scrollWidth, scrollHeight, clientWidth, clientHeight} = this.containerRef;
 		scrollBounds.scrollWidth = scrollWidth;
 		scrollBounds.scrollHeight = scrollHeight;
 		scrollBounds.clientWidth = clientWidth;
@@ -154,21 +162,13 @@ class ScrollerBase extends Component {
 	}
 
 	setContainerDisabled = (bool) => {
-		if (this.node) {
-			this.node.setAttribute(dataContainerDisabledAttribute, bool);
+		if (this.containerRef) {
+			this.containerRef.setAttribute(dataContainerDisabledAttribute, bool);
 		}
 	}
 
-	componentDidMount () {
-		this.calculateMetrics();
-	}
-
-	componentDidUpdate () {
-		this.calculateMetrics();
-	}
-
 	initRef = (ref) => {
-		this.node = ref;
+		this.containerRef = ref;
 	}
 
 	render () {
@@ -178,22 +178,19 @@ class ScrollerBase extends Component {
 			mergedStyle = Object.assign({}, style, {
 				overflowX: props.horizontal,
 				overflowY: props.vertical
-			}),
-			hideNativeScrollbar = !props.hideScrollbars ? css.hideNativeScrollbar : null;
+			});
 
 		delete props.cbScrollTo;
 		delete props.className;
-		delete props.hideScrollbars;
 		delete props.horizontal;
 		delete props.onScrolling;
 		delete props.onScrollStart;
 		delete props.onScrollStop;
-		delete props.positioningOption;
 		delete props.style;
 		delete props.vertical;
 
 		return (
-			<div {...props} ref={this.initRef} className={classNames(className, hideNativeScrollbar)} style={mergedStyle} />
+			<div {...props} ref={this.initRef} className={classNames(className, css.hideNativeScrollbar)} style={mergedStyle} />
 		);
 	}
 }

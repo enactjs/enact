@@ -8,7 +8,7 @@
 
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
-import {Spottable} from '@enact/spotlight';
+import Spottable from '@enact/spotlight/Spottable';
 
 import Icon from '../Icon';
 import {Image} from '../Image';
@@ -93,10 +93,19 @@ const GridListImageItemBase = kind({
 	},
 
 	computed: {
-		className: ({selected, styler}) => styler.append({selected})
+		className: ({caption, selected, styler, subCaption}) => styler.append(
+			{selected},
+			caption ? 'useCaption' : null,
+			subCaption ? 'useSubCaption' : null
+		)
 	},
 
 	render: ({caption, source, subCaption, selectionOverlayShowing, ...rest}) => {
+		if (selectionOverlayShowing) {
+			rest['role'] = 'checkbox';
+			rest['aria-checked'] = rest.selected;
+		}
+
 		delete rest.selected;
 
 		return (
@@ -135,7 +144,7 @@ const GridListImageItemBase = kind({
  * @public
  */
 const GridListImageItem = MarqueeController(
-	{startOnFocus: true},
+	{marqueeOnFocus: true},
 	Spottable(
 		GridListImageItemBase
 	)

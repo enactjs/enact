@@ -21,6 +21,7 @@ storiesOf('ToggleButton')
 		'The basic ToggleButton',
 		() => (
 			<StatefulToggleButton
+				aria-label="toggle button"
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
 				disabled={boolean('disabled')}

@@ -24,7 +24,8 @@ import Slider from '@enact/moonstone/Slider';
 import Changeable from '@enact/ui/Changeable';
 import Selectable from '@enact/ui/Selectable';
 import Toggleable from '@enact/ui/Toggleable';
-import Spotlight, {SpotlightContainerDecorator} from '@enact/spotlight';
+import Spotlight from '@enact/spotlight';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
@@ -38,6 +39,11 @@ const style = {
 	container: {
 		width: '300px',
 		border: '1px dashed red',
+		margin: '0 12px',
+		padding: '12px'
+	},
+	fittedContainer: {
+		border: '1px dashed blue',
 		margin: '0 12px',
 		padding: '12px'
 	},
@@ -246,6 +252,27 @@ storiesOf('Spotlight')
 						<Item onFocus={action('onFocus')} onBlur={action('onBlur')}>1</Item>
 						<Item onFocus={action('onFocus')} onBlur={action('onBlur')}>2</Item>
 						<Item onFocus={action('onFocus')} onBlur={action('onBlur')}>3</Item>
+					</Container>
+				</div>
+			</div>
+		)
+	)
+	.addWithInfo(
+		'Nested Containers',
+		() => (
+			<div>
+				<p>
+					The nested containers below both use a enterTo: &apos;last-focused&apos; configuration.
+					You should be able to naturally 5-way navigate between the items in the containers. Also,
+					attempting to 5-way navigate (left or down) from the application close button should
+					result in the last-focused item being spotted.
+				</p>
+				<div style={style.flexBox}>
+					<Container style={style.fittedContainer} >
+						<Item>Item in a container</Item>
+						<Container style={style.fittedContainer} >
+							<Item>Item in a nested container</Item>
+						</Container>
 					</Container>
 				</div>
 			</div>

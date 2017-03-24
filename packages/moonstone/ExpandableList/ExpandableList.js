@@ -29,13 +29,20 @@ const ExpandableListBase = kind({
 
 	propTypes: /** @lends moonstone/ExpandableList.ExpandableListBase.prototype */ {
 		/**
-		 * The items to be displayed in the list
+		 * The items to be displayed in the list. This supports two data types. If an array of
+		 * strings is provided, the strings will be used in the generated components as the readable
+		 * text. If an array of objects is provided, each object will be spread onto the generated
+		 * component with no interpretation. You'll be responsible for setting properties like
+		 * `disabled`, `className`, and setting the text content using the `children` key.
 		 *
-		 * @type {String[]}
+		 * @type {String[]|Object[]}
 		 * @required
 		 * @public
 		 */
-		children: PropTypes.arrayOf(PropTypes.string).isRequired,
+		children: PropTypes.oneOfType([
+			PropTypes.arrayOf(PropTypes.string),
+			PropTypes.arrayOf(PropTypes.object)
+		]).isRequired,
 
 		/**
 		 * The primary text of the item.
@@ -67,11 +74,11 @@ const ExpandableListBase = kind({
 		 * The secondary, or supportive text. Typically under the `title`, a subtitle. If omitted,
 		 * the label will be generated as a comma-separated list of the selected items.
 		 *
-		 * @type {String}
+		 * @type {Node}
 		 * @default null
 		 * @public
 		 */
-		label: PropTypes.string,
+		label: PropTypes.node,
 
 		/**
 		 * When `true`, the expandable will not automatically close when the user navigates to the
@@ -196,6 +203,8 @@ const ExpandableListBase = kind({
 	},
 
 	computed: {
+		'aria-multiselectable': ({select}) => select === 'multiple',
+
 		itemProps: ({onSpotlightDisappear, spotlightDisabled}) => ({onSpotlightDisappear, spotlightDisabled}),
 
 		// generate a label that concatenates the text of the selected items
@@ -218,6 +227,8 @@ const ExpandableListBase = kind({
 					CheckboxItem; // for single or multiple
 		},
 
+		role: ({select}) => select === 'radio' ? 'radiogroup' : 'group',
+
 		selected: ({select, selected}) => {
 			return (select === 'single' && Array.isArray(selected)) ? selected[0] : selected;
 		}
@@ -225,7 +236,6 @@ const ExpandableListBase = kind({
 
 	render: ({children, itemProps, ListItem, noAutoClose, noLockBottom, onSelect, select, selected, ...rest}) => {
 		delete rest.closeOnSelect;
-		delete rest.select;
 
 		return (
 			<ExpandableItemBase

@@ -29,9 +29,10 @@ storiesOf('IconButton')
 			<IconButton
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
-				disabled={boolean('disabled')}
-				selected={boolean('selected')}
-				small={boolean('small')}
+				color={select('color', [null, 'red', 'green', 'yellow', 'blue'])}
+				disabled={boolean('disabled', false)}
+				selected={boolean('selected', false)}
+				small={boolean('small', false)}
 			>
 				{select('src', ['', fwd, play, rew], '') + select('icon', ['', ...iconNames], 'plus') + text('custom icon', '')}
 			</IconButton>

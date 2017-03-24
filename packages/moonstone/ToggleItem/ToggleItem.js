@@ -82,6 +82,14 @@ const ToggleItemBase = kind({
 		inline: PropTypes.bool,
 
 		/**
+		 * The handler to run when the toggle item is toggled. Developers should
+		 * generally use `onToggle` instead.
+		 *
+		 * @type {Function}
+		 */
+		onClick: React.PropTypes.func,
+
+		/**
 		 * The handler to run when the toggle item is toggled.
 		 *
 		 * @type {Function}
@@ -154,15 +162,19 @@ const ToggleItemBase = kind({
 		}
 	},
 
-	render: ({children, iconAfter, iconBefore, onToggle, ...rest}) => {
+	render: ({children, iconAfter, iconBefore, onToggle, selected, ...rest}) => {
 		delete rest.icon;
 		delete rest.iconClasses;
 		delete rest.iconPosition;
-		delete rest.selected;
 		delete rest.value;
 
 		return (
-			<ItemOverlay {...rest} onClick={onToggle}>
+			<ItemOverlay
+				role="checkbox"
+				{...rest}
+				aria-checked={selected}
+				onClick={onToggle}
+			>
 				{iconBefore}
 				{children}
 				{iconAfter}

@@ -18,6 +18,14 @@
 
 	padding-bottom:  @moon-icon-button-small-size + @moon-spotlight-outset;
 	box-sizing: border-box;
+
+	.onlyVerticalScrollbarNeeded {
+		bottom: 0;
+	}
+
+	.onlyHorizontalScrollbarNeeded {
+		.position-start-end(0, 0);
+	}
 }
 
 .scrollableHiddenScrollbars {
@@ -32,20 +40,4 @@
 
 .takeAvailableSpaceForVertical {
 	padding-bottom: 0;
-}
-
-.onlyVerticalScrollbarNeeded {
-	bottom: 0;
-}
-
-.onlyHorizontalScrollbarNeeded {
-	.position-start-end(0, 0);
-}
-
-.verticalScrollbarDisabled {
-	display: none;
-}
-
-.horizontalScrollbarDisabled {
-	display: none;
 }

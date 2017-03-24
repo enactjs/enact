@@ -6,12 +6,6 @@
 	margin: 0 @moon-spotlight-outset;
 	height: 240px;	// Vertical sizing here. Being here instead of in .vertical requires less precedence when overriding the style from app-code.
 
-	&.pressed {
-		.knob::before {
-			border-width: 0; // Setting the border-width:0 removes the border and lets the background fill the entire size that was previously cropped off by the border.
-		}
-	}
-
 	.fill,
 	.load {
 		height: 100%;
@@ -56,8 +50,12 @@
 			border: @moon-button-border-width solid transparent;
 			box-sizing: border-box;
 			will-change: transform;
-			background-clip: padding-box;
+			transition: transform ease-out 100ms;
 		}
+	}
+
+	.tooltip {
+		display: none;
 	}
 
 	.input {
@@ -135,22 +133,39 @@
 	}
 
 	&:global(.spottable) {
+		&.active,
 		&.pressed {
 			.fill {
 				background-color: @moon-slider-spotlight-bar-color;
 			}
+		}
+
+		&.pressed,
+		&:focus {
 			.knob::before {
 				background-color: @moon-slider-spotlight-knob-color;
 			}
+			.tooltip {
+				display: block;
+			}
 		}
 
-	}
+		&.pressed,
+		&:focus.active {
+			.knob::before {
+				transform: @moon-translate-center scale(1.25);
+			}
+		}
 
-	&:global(.spottable):focus {
-		background-color: transparent;
+		&:focus {
+			background-color: transparent;
 
-		.knob::before {
-			background-color: @moon-slider-spotlight-knob-color;
+			&.active {
+				.knob::before {
+					background-color: @moon-slider-knob-bg-color;
+					border-color: @moon-slider-spotlight-knob-color;
+				}
+			}
 		}
 	}
 }

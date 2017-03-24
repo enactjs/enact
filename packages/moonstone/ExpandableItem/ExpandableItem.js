@@ -7,6 +7,7 @@
  * @module moonstone/ExpandableItem
  */
 
+import {extractAriaProps} from '@enact/core/util';
 import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
@@ -21,7 +22,7 @@ const isUp = is('up');
 const isDown = is('down');
 
 /**
- * {@link moonstone/ExpandableItem.ExpandableItem} is a stateless component that
+ * {@link moonstone/ExpandableItem.ExpandableItemBase} is a stateless component that
  * renders a {@link moonstone/LabeledItem.LabeledItem} that can be expanded to show
  * additional contents.
  *
@@ -74,11 +75,10 @@ const ExpandableItemBase = kind({
 		/**
 		 * The secondary, or supportive text. Typically under the `title`, a subtitle.
 		 *
-		 * @type {String}
-		 * @default null
+		 * @type {Node}
 		 * @public
 		 */
-		label: PropTypes.string,
+		label: PropTypes.node,
 
 		/**
 		 * When `true`, the user is prevented from moving {@glossary Spotlight} past the bottom
@@ -101,7 +101,6 @@ const ExpandableItemBase = kind({
 		 * Callback to be called when a condition occurs which should cause the expandable to close
 		 *
 		 * @type {Function}
-		 * @default null
 		 * @public
 		 */
 		onClose: PropTypes.func,
@@ -110,7 +109,6 @@ const ExpandableItemBase = kind({
 		 * Callback to be called when a condition occurs which should cause the expandable to open
 		 *
 		 * @type {Function}
-		 * @default null
 		 * @public
 		 */
 		onOpen: PropTypes.func,
@@ -209,16 +207,24 @@ const ExpandableItemBase = kind({
 
 	render: ({children, disabled, handleKeyDown, handleOpen, label, open, onSpotlightDisappear, spotlightDisabled, title, titleIcon, transitionSpotlightDisabled, ...rest}) => {
 		delete rest.autoClose;
-		delete rest.label;
 		delete rest.lockBottom;
 		delete rest.noneText;
 		delete rest.onClose;
 		delete rest.onOpen;
 		delete rest.showLabel;
 
+		const ariaProps = extractAriaProps(rest);
+
 		return (
-			<ExpandableContainer {...rest} disabled={disabled} open={open} spotlightDisabled={spotlightDisabled}>
+			<ExpandableContainer
+				{...rest}
+				aria-disabled={disabled}
+				disabled={disabled}
+				open={open}
+				spotlightDisabled={spotlightDisabled}
+			>
 				<LabeledItem
+					{...ariaProps}
 					disabled={disabled}
 					label={label}
 					onClick={handleOpen}

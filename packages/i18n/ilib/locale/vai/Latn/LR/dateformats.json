@@ -1,1 +1,1 @@
-{"gregorian":{"date":{"dmy":{"s":"M/d/yy","l":"MMM d yyyy"},"dmwy":{"m":"EE, M/d/yy"}},"range":{"c00":{"s":"{st} – {et} {sm}/{sd}/{sy}","l":"{st} – {et} {sm} {sd} {sy}"}}},"generated":true}
+{"gregorian":{"range":{"c00":{"s":"{st} – {et} {sm}/{sd}/{sy}","l":"{st} – {et} {sm} {sd} {sy}"}}}}

@@ -87,7 +87,7 @@ const ProgressBarBase = kind({
 		delete rest.vertical;
 
 		return (
-			<div {...rest}>
+			<div role="progressbar" {...rest}>
 				<div className={css.load} style={{[progressCssProp]: backgroundProgress}} />
 				<div className={css.fill} style={{[progressCssProp]: progress}} />
 			</div>

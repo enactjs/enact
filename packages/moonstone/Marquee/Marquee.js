@@ -6,7 +6,7 @@
  */
 
 import kind from '@enact/core/kind';
-import {isRtlText} from '@enact/i18n';
+import {isRtlText} from '@enact/i18n/util';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import React from 'react';
 
@@ -148,8 +148,7 @@ const MarqueeBase = kind({
 			const style = {
 				direction,
 				textAlign,
-				textOverflow: overflow,
-				transform: 'translateZ(0)'
+				textOverflow: overflow
 			};
 
 			if (animating) {
@@ -159,6 +158,7 @@ const MarqueeBase = kind({
 				style.transform = `translate3d(${adjustedDistance}px, 0, 0)`;
 				style.transition = `transform ${duration}s linear`;
 				style.WebkitTransition = `transform ${duration}s linear`;
+				style.willChange = 'transform';
 			}
 
 			return style;

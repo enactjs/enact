@@ -12,21 +12,19 @@ VirtualList.defaultProps = Object.assign({}, VirtualListCore.defaultProps);
 const
 	style = {
 		item: {
-			position: 'absolute',
-			width: '100%',
 			borderBottom: ri.scale(2) + 'px solid #202328',
 			boxSizing: 'border-box'
 		},
 		list: {
-			height: ri.scale(550) + 'px'
+			height: ri.scale(552) + 'px'
 		}
 	},
 	items = [],
 	// eslint-disable-next-line enact/prop-types, enact/display-name
-	renderItem = (size) => ({data, index, key}) => {
+	renderItem = (size) => ({data, index, ...rest}) => {
 		const itemStyle = {height: size + 'px', ...style.item};
 		return (
-			<Item key={key} style={itemStyle}>
+			<Item {...rest} style={itemStyle}>
 				{data[index]}
 			</Item>
 		);

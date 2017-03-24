@@ -2,6 +2,7 @@ import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import React from 'react';
 
+
 const STATE = {
 	inactive: 0,	// Marquee is not necessary (render or focus not happened)
 	active: 1,		// Marquee in progress, awaiting complete
@@ -77,7 +78,7 @@ const defaultConfig = {
 	 * @default false
 	 * @memberof moonstone/Marquee.MarqueeController.defaultConfig
 	 */
-	startOnFocus: false
+	marqueeOnFocus: false
 };
 
 /**
@@ -90,7 +91,7 @@ const defaultConfig = {
  * @public
  */
 const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
-	const {startOnFocus} = config;
+	const {marqueeOnFocus} = config;
 	const forwardBlur = forward('onBlur');
 	const forwardFocus = forward('onFocus');
 
@@ -167,8 +168,10 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		 * @returns	{undefined}
 		 */
 		handleStart = (component) => {
-			this.markAll(STATE.ready);
-			this.dispatch('start', component);
+			if (!this.anyRunning()) {
+				this.markAll(STATE.ready);
+				this.dispatch('start', component);
+			}
 		}
 
 		/*
@@ -234,7 +237,11 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 					// unnecessary and is therefore not awaiting a finish
 					if (action === 'start' && complete) {
 						controlled.state = STATE.ready;
+					} else if (action === 'start') {
+						controlled.state = STATE.active;
 					}
+				} else if ((action === 'start') && (component === controlledComponent)) {
+					controlled.state = STATE.active;
 				}
 			});
 		}
@@ -298,7 +305,7 @@ const MarqueeController = hoc(defaultConfig, (config, Wrapped) => {
 		render () {
 			let props = this.props;
 
-			if (startOnFocus) {
+			if (marqueeOnFocus) {
 				props = {
 					...this.props,
 					onBlur: this.handleBlur,

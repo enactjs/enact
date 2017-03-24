@@ -51,6 +51,7 @@
 	box-sizing: border-box;
 	z-index: 0;
 	text-align: center;
+	vertical-align: middle;
 	.moon-taparea(@moon-button-height);
 
 	.bg {
@@ -84,6 +85,31 @@
 		align-items: center;
 		box-sizing: border-box;
 		height: 100%;
+		position: relative;
+
+		// Colored under-bar
+		&::before {
+			content: '';
+			position: absolute;
+			min-width: 24px;
+			height: 6px;
+			bottom: 18px;
+			left: 24px;
+			right: 24px;
+			border-radius: 6px;
+		}
+	}
+	&.red .client::before {
+		background-color: @moon-remote-button-red-color;
+	}
+	&.green .client::before {
+		background-color: @moon-remote-button-green-color;
+	}
+	&.yellow .client::before {
+		background-color: @moon-remote-button-yellow-color;
+	}
+	&.blue .client::before {
+		background-color: @moon-remote-button-blue-color;
 	}
 
 	&.minWidth {
@@ -102,6 +128,12 @@
 		}
 
 		.moon-taparea(@moon-button-small-height);
+
+		.client::before {
+			bottom: 12px;
+			left: 18px;
+			right: 18px;
+		}
 	}
 
 	&.translucent .bg {
@@ -128,6 +160,17 @@
 			.bg {
 				background-color: @moon-spotlight-border-color;
 				color: @moon-spotlight-text-color;
+			}
+		}
+	}
+
+	// Disable animation for Picker button spottable and disabled.
+	&:global(.spottableDisabled) {
+		&.pressed,
+		&:global(.spottable):active {
+			.bg {
+				-webkit-animation-name: none;
+				animation-name: none;
 			}
 		}
 	}

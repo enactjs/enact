@@ -2,13 +2,27 @@ import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import React from 'react';
-import {Spotlight, Spottable} from '@enact/spotlight';
+import Spotlight from '@enact/spotlight';
+import Spottable from '@enact/spotlight/Spottable';
+
+import css from './Input.less';
 
 const preventSpotlightNavigation = (ev) => {
 	ev.nativeEvent.stopImmediatePropagation();
 };
 
 const isBubbling = (ev) => ev.currentTarget !== ev.target;
+
+// A regex to check for input types that allow selectionStart
+const SELECTABLE_TYPES = /text|password|search|tel|url/;
+
+const safeSelectionStart = (target) => {
+	if (SELECTABLE_TYPES.test(target.type)) {
+		return target.selectionStart;
+	} else {
+		return 0;
+	}
+};
 
 /**
  * {@link moonstone/Input.InputSpotlightDecorator} is a Higher-order Component that manages the
@@ -205,9 +219,9 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 					// on enter + dismissOnEnter
 					(isEnter && dismissOnEnter) ||
 					// on left + at beginning of selection
-					(isLeft && target.selectionStart === 0) ||
-					// on right + at end of selection
-					(isRight && target.selectionStart === target.value.length) ||
+					(isLeft && safeSelectionStart(target) === 0) ||
+					// on right + at end of selection (note: fails on non-selectable types usually)
+					(isRight && safeSelectionStart(target) === target.value.length) ||
 					// on up
 					isUp ||
 					// on down
@@ -216,6 +230,10 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 
 				if (shouldFocusDecorator) {
 					if (!noDecorator) {
+						// we really only support the number type properly, so only handling this case
+						if (ev.target.type === 'number') {
+							ev.preventDefault();
+						}
 						this.focusDecorator(currentTarget);
 
 						// prevent Enter onKeyPress which triggers an onClick via Spotlight
@@ -240,8 +258,16 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 					preventSpotlightNavigation(ev);
 				}
 			}
-
 			forwardKeyDown(ev, this.props);
+		}
+
+		calcClassName () {
+			const {className, noDecorator} = this.props;
+			if (noDecorator) {
+				return className ? css.noDecorator + ' ' + className : css.noDecorator;
+			}
+
+			return className;
 		}
 
 		render () {
@@ -251,6 +277,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			return (
 				<Component
 					{...props}
+					className={this.calcClassName()}
 					focused={this.state.focused === 'input'}
 					onBlur={this.onBlur}
 					onClick={this.onClick}

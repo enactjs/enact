@@ -1,8 +1,9 @@
 import React from 'react';
 import {mount} from 'enzyme';
-import Button from '../Button';
+import sinon from 'sinon';
+import {Button, ButtonBase} from '../Button';
 
-describe('Button Specs', () => {
+describe('Button', () => {
 
 	it('should render with button text upper-cased', function () {
 		let msg = 'Hello Button!';
@@ -38,5 +39,57 @@ describe('Button Specs', () => {
 		const actual = button.find({disabled: true}).length;
 
 		expect(actual).to.equal(expected);
+	});
+
+	it('should not add "aria-pressed" when "selected" is omitted', function () {
+		const button = mount(
+			<ButtonBase>Text</ButtonBase>
+		);
+
+		const expected = false;
+		const actual = 'aria-pressed' in button.find({role: 'button'}).props();
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should set "aria-pressed" to the value of "selected"', function () {
+		const button = mount(
+			<ButtonBase selected={false}>Text</ButtonBase>
+		);
+
+		const expected = false;
+		const actual = button.find({role: 'button'}).prop('aria-pressed');
+
+		expect(actual).to.equal(expected);
+	});
+
+	describe('events', () => {
+		it('should call onClick when not disabled', function () {
+			const handleClick = sinon.spy();
+			const subject = mount(
+				<Button onClick={handleClick}>I am a disabled Button</Button>
+			);
+
+			subject.simulate('click');
+
+			const expected = true;
+			const actual = handleClick.called;
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should not call onClick when disabled', function () {
+			const handleClick = sinon.spy();
+			const subject = mount(
+				<Button disabled onClick={handleClick}>I am a disabled Button</Button>
+			);
+
+			subject.simulate('click');
+
+			const expected = false;
+			const actual = handleClick.called;
+
+			expect(actual).to.equal(expected);
+		});
 	});
 });

@@ -6,13 +6,14 @@
  * @module moonstone/ContextualPopupDecorator
  */
 
+import {contextTypes} from '@enact/i18n/I18nDecorator';
+import FloatingLayer from '@enact/ui/FloatingLayer';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
-import ri from '@enact/ui/resolution';
-import FloatingLayer from '@enact/ui/FloatingLayer';
-import {contextTypes} from '@enact/i18n/I18nDecorator';
-import Spotlight, {SpotlightContainerDecorator, getDirection} from '@enact/spotlight';
 import React, {PropTypes} from 'react';
+import ri from '@enact/ui/resolution';
+import Spotlight, {getDirection} from '@enact/spotlight';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import {ContextualPopup} from './ContextualPopup';
 import css from './ContextualPopupDecorator.less';

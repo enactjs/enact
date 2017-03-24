@@ -38,6 +38,7 @@ const prop = {
 	],
 	events: [
 		'onAbort',
+		'onBackwardButtonClick',
 		'onCanPlay',
 		'onCanPlayThrough',
 		'onDurationChange',
@@ -45,11 +46,15 @@ const prop = {
 		'onEncrypted',
 		'onEnded',
 		'onError',
+		'onForwardButtonClick',
+		'onJumpBackwardButtonClick',
+		'onJumpForwardButtonClick',
 		'onLoadedData',
 		'onLoadedMetadata',
 		'onLoadStart',
 		'onPause',
 		'onPlay',
+		'onPlayButtonClick',
 		'onPlaying',
 		'onProgress',
 		'onRateChange',
@@ -58,6 +63,7 @@ const prop = {
 		'onStalled',
 		'onSuspend',
 		'onTimeUpdate',
+		'onUMSMediaInfo',	// Custom webOS media event
 		'onVolumeChange',
 		'onWaiting'
 	]
@@ -83,6 +89,8 @@ storiesOf('VideoPlayer')
 		() => (
 			<div
 				style={{
+					transformOrigin: 'top',
+					transform: 'scale(' + number('video scale', 1, {range: true, min: 0.05, max: 1, step: 0.01}) + ')',
 					outline: 'teal dashed 1px',
 					position: 'relative'
 				}}

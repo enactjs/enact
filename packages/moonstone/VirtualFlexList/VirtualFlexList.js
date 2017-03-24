@@ -9,7 +9,7 @@
 import classNames from 'classnames';
 import {forward} from '@enact/core/handle';
 import React, {Component, PropTypes} from 'react';
-import {SpotlightContainerDecorator} from '@enact/spotlight';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import {VirtualListCore} from '../VirtualList/VirtualListBase';
 
@@ -231,6 +231,25 @@ class VirtualFlexList extends Component {
 	}
 
 	/*
+	 * Life cycle methods
+	 */
+
+	componentWillReceiveProps (nextProps) {
+		const {headers, items, x, y} = this.props;
+
+		if (
+			items.colCount !== nextProps.items.colCount || items.height !== nextProps.items.height || items.rowCount !== nextProps.items.rowCount ||
+			headers && (headers.col.count !== nextProps.headers.col.count || headers.row.count !== nextProps.headers.row.count)
+		) {
+			this.componentProps = this.getComponentProps(nextProps);
+		}
+
+		if (x !== nextProps.x || y !== nextProps.y) {
+			this.setState({x: nextProps.x, y: nextProps.y});
+		}
+	}
+
+	/*
 	 * Calculate the position and the size of the header and the item lists.
 	 */
 
@@ -319,25 +338,6 @@ class VirtualFlexList extends Component {
 	onPositionChange = (position) => {
 		this.setState(position);
 		forwardPositionChange(position, this.props);
-	}
-
-	/*
-	 * Life cycle methods
-	 */
-
-	componentWillReceiveProps (nextProps) {
-		const {headers, items, x, y} = this.props;
-
-		if (
-			items.colCount !== nextProps.items.colCount || items.height !== nextProps.items.height || items.rowCount !== nextProps.items.rowCount ||
-			headers && (headers.col.count !== nextProps.headers.col.count || headers.row.count !== nextProps.headers.row.count)
-		) {
-			this.componentProps = this.getComponentProps(nextProps);
-		}
-
-		if (x !== nextProps.x || y !== nextProps.y) {
-			this.setState({x: nextProps.x, y: nextProps.y});
-		}
 	}
 
 	render () {

@@ -4,11 +4,12 @@
  * @module moonstone/IncrementSlider
  */
 
+import $L from '@enact/i18n/$L';
 import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
 import Pressable from '@enact/ui/Pressable';
 import React, {PropTypes} from 'react';
-import {Spottable} from '@enact/spotlight';
+import Spottable from '@enact/spotlight/Spottable';
 
 import {SliderBaseFactory} from '../Slider';
 import SliderDecorator from '../internal/SliderDecorator';
@@ -102,7 +103,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			onChange: PropTypes.func,
 
 			/**
-			 * The handler to run when the value is incremented.
+			 * The handler to run when the value is decremented.
 			 *
 			 * @type {Function}
 			 * @param {Object} event
@@ -111,7 +112,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			onDecrement: PropTypes.func,
 
 			/**
-			 * The handler to run when the value is decremented.
+			 * The handler to run when the value is incremented.
 			 *
 			 * @type {Function}
 			 * @param {Object} event
@@ -147,6 +148,54 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			step: PropTypes.number,
 
 			/**
+			 * Enables the built-in tooltip, whose behavior can be modified by the other tooltip
+			 * properties.  A custom tooltip, which follows the knob, may be used instead by
+			 * supplying a component as a child of `IncrementSlider`. This property has no effect if
+			 * a custom tooltip is provided.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			tooltip: PropTypes.bool,
+
+			/**
+			 * Converts the contents of the built-in tooltip to a percentage of the bar.
+			 * The percentage respects the min and max value props.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			tooltipAsPercent: PropTypes.bool,
+
+			/**
+			 * Setting to `true` overrides the natural LTR->RTL tooltip side-flipping for locale
+			 * changes. This may be useful if you have a static layout that does not automatically
+			 * reverse when in an RTL language.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			tooltipForceSide: PropTypes.bool,
+
+			/**
+			 * Specify where the tooltip should appear in relation to the Slider bar. Options are
+			 * `'before'` and `'after'`. `before` renders above a `horizontal` slider and to the
+			 * left of a `vertical` Slider. `after` renders below a `horizontal` slider and to the
+			 * right of a `vertical` Slider. In the `vertical` case, the rendering position is
+			 * automatically reversed when rendering in an RTL locale. This can be overridden by
+			 * using the[tooltipForceSide]{@link moonstone/IncrementSlider.IncrementSlider.tooltipForceSide}
+			 * prop.
+			 *
+			 * @type {String}
+			 * @default 'before'
+			 * @public
+			 */
+			tooltipSide: PropTypes.oneOf(['before', 'after']),
+
+			/**
 			* The value of the increment slider.
 			*
 			* @type {Number}
@@ -172,6 +221,10 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			pressed: false,
 			spotlightDisabled: false,
 			step: 1,
+			tooltip: false,
+			tooltipAsPercent: false,
+			tooltipForceSide: false,
+			tooltipSide: 'before',
 			value: 0,
 			vertical: false
 		},
@@ -186,12 +239,15 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			incrementDisabled: ({disabled, max, value}) => disabled || value >= max,
 			incrementSliderClasses: ({vertical, styler}) => styler.append({vertical, horizontal: !vertical}),
 			decrementIcon: ({decrementIcon, vertical}) => (decrementIcon || (vertical ? 'arrowlargedown' : 'arrowlargeleft')),
-			incrementIcon: ({incrementIcon, vertical}) => (incrementIcon || (vertical ? 'arrowlargeup' : 'arrowlargeright'))
+			incrementIcon: ({incrementIcon, vertical}) => (incrementIcon || (vertical ? 'arrowlargeup' : 'arrowlargeright')),
+			decrementAriaLabel: ({value}) => (`${value} ${$L('press ok button to decrease the value')}`),
+			incrementAriaLabel: ({value}) => (`${value} ${$L('press ok button to increase the value')}`)
 		},
 
-		render: ({decrementDisabled, decrementIcon, incrementDisabled, incrementIcon, incrementSliderClasses, onIncrement, onDecrement, onSpotlightDisappear, spotlightDisabled, ...rest}) => (
+		render: ({decrementAriaLabel, decrementDisabled, decrementIcon, incrementAriaLabel, incrementDisabled, incrementIcon, incrementSliderClasses, onIncrement, onDecrement, onSpotlightDisappear, spotlightDisabled, ...rest}) => (
 			<div className={incrementSliderClasses}>
 				<IncrementSliderButton
+					aria-label={decrementAriaLabel}
 					className={css.decrementButton}
 					disabled={decrementDisabled}
 					onClick={onDecrement}
@@ -200,8 +256,16 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 				>
 					{decrementIcon}
 				</IncrementSliderButton>
-				<Slider {...rest} className={css.slider} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled} />
+				<Slider
+					{...rest}
+					className={css.slider}
+					onDecrement={onDecrement}
+					onIncrement={onIncrement}
+					onSpotlightDisappear={onSpotlightDisappear}
+					spotlightDisabled={spotlightDisabled}
+				/>
 				<IncrementSliderButton
+					aria-label={incrementAriaLabel}
 					className={css.incrementButton}
 					disabled={incrementDisabled}
 					onClick={onIncrement}
@@ -232,7 +296,6 @@ const IncrementSliderFactory = factory((config) => {
 	 */
 	return Pressable(
 		SliderDecorator(
-			{handlesIncrements: true},
 			Base
 		)
 	);
