@@ -29,13 +29,20 @@ const ExpandableListBase = kind({
 
 	propTypes: /** @lends moonstone/ExpandableList.ExpandableListBase.prototype */ {
 		/**
-		 * The items to be displayed in the list
+		 * The items to be displayed in the list. This supports two data types. If an array of
+		 * strings is provided, the strings will be used in the generated components as the readable
+		 * text. If an array of objects is provided, each object will be spread onto the generated
+		 * component with no interpretation. You'll be responsible for setting properties like
+		 * `disabled`, `className`, and setting the text content using the `children` key.
 		 *
-		 * @type {String[]}
+		 * @type {String[]|Object[]}
 		 * @required
 		 * @public
 		 */
-		children: PropTypes.arrayOf(PropTypes.string).isRequired,
+		children: PropTypes.oneOfType([
+			PropTypes.arrayOf(PropTypes.string),
+			PropTypes.arrayOf(PropTypes.object)
+		]).isRequired,
 
 		/**
 		 * The primary text of the item.

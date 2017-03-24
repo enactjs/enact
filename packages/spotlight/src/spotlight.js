@@ -7,11 +7,22 @@
  * Licensed under the MPL license.
  */
 
-import Accelerator from '@enact/core/Accelerator';
+/**
+ * Exports the {@link spotlight.Spotlight} object used for controlling spotlight behavior and the
+ * {@link spotlight.Spotlight.getDirection} function for mapping a keycode to a spotlight direction.
+ *
+ * The default export is {@link spotlight.Spotlight}.
+ *
+ * @module spotlight
+ */
+
 import {is} from '@enact/core/keymap';
-import {startJob} from '@enact/core/jobs';
-import {spottableClass} from './spottable';
+import {Job} from '@enact/core/util';
 import last from 'ramda/src/last';
+
+import Accelerator from '../Accelerator';
+import {spotlightRootContainerName} from '../SpotlightRootDecorator';
+import {spottableClass} from '../Spottable';
 
 const isDown = is('down');
 const isEnter = is('enter');
@@ -23,9 +34,9 @@ const isUp = is('up');
  * Translates keyCodes into 5-way direction descriptions (e.g. `'down'`)
  *
  * @function
- * @memberof spotlight
+ * @memberof spotlight.Spotlight
  * @param {Number} keyCode - Key code to analyze
- * @returns {String|false} - One of `'up'`, `'down'`, `'left'`, `'right'` or false if not a direction key
+ * @returns {String|false} - One of `'up'`, `'down'`, `'left'`, `'right'` or `false` if not a direction key
  * @public
  */
 const getDirection = function (keyCode) {
@@ -38,7 +49,6 @@ const isPointerEvent = (target) => ('x' in target && 'y' in target);
 const isPointerShow = is('pointerShow');
 const isPointerHide = is('pointerHide');
 
-const spotlightRootContainerName = 'spotlightRootDecorator';
 const SpotlightAccelerator = new Accelerator();
 
 /**
@@ -111,15 +121,6 @@ const Spotlight = (function () {
 	 * @default true
 	 */
 	let _pointerMode = true;
-
-	/*
-	 * Length of time in milliseconds required after hiding pointer before 5-way keys
-	 * are processed.
-	 *
-	 * @type {Number}
-	 * @default 30
-	 */
-	let _pointerHiddenToKeyTimeout = 30;
 
 	/*
 	* polyfills
@@ -932,6 +933,17 @@ const Spotlight = (function () {
 		return false;
 	}
 
+	// 30ms (_pointerHiddenToKeyTimeout) is semi-arbitrary, to account for the time it takes for the
+	// following directional key event to fire, and to prevent momentary spotting of the last
+	// focused item - needs to be a value large enough to account for the potentially-trailing
+	// event, but not too large that another unrelated event can be fired inside the window
+	const hidePointerJob = new Job(function () {
+		_pointerMode = false;
+		if (!getCurrent() && _lastContainerId) {
+			Spotlight.focus(getContainerLastFocusedElement(_lastContainerId));
+		}
+	}, 30);
+
 	function preventDefault (evt) {
 		evt.preventDefault();
 		evt.stopPropagation();
@@ -994,17 +1006,7 @@ const Spotlight = (function () {
 		}
 
 		if (isPointerHide(keyCode)) {
-			// 30ms (_pointerHiddenToKeyTimeout) is semi-arbitrary, to account for the time it
-			// takes for the following directional key event to fire, and to prevent momentary
-			// spotting of the last focused item - needs to be a value large enough to account
-			// for the potentially-trailing event, but not too large that another unrelated
-			// event can be fired inside the window
-			startJob('hidePointer', () => {
-				_pointerMode = false;
-				if (!getCurrent() && _lastContainerId) {
-					Spotlight.focus(getContainerLastFocusedElement(_lastContainerId));
-				}
-			}, _pointerHiddenToKeyTimeout);
+			hidePointerJob.start();
 		} else if (isPointerShow(keyCode)) {
 			_pointerMode = true;
 		} else {
@@ -1099,7 +1101,8 @@ const Spotlight = (function () {
 	 */
 	const exports = /** @lends spotlight.Spotlight.prototype */ { // eslint-disable-line no-shadow
 		/**
-		 * Initializes Spotlight. This is generally handled by {@link spotlight.SpotlightRootDecorator}.
+		 * Initializes Spotlight. This is generally handled by
+		 * {@link spotlight/SpotlightRootDecorator.SpotlightRootDecorator}.
 		 *
 		 * @memberof spotlight.Spotlight.prototype
 		 * @public
@@ -1156,14 +1159,15 @@ const Spotlight = (function () {
 		 * @public
 		 */
 		set: function () {
-			let containerId, config;
+			let containerId, config, existingConfig;
 
 			if (typeof arguments[0] === 'object') {
 				config = arguments[0];
 			} else if (typeof arguments[0] === 'string' && typeof arguments[1] === 'object') {
 				containerId = arguments[0];
 				config = arguments[1];
-				if (!_containers.get(containerId)) {
+				existingConfig = _containers.get(containerId);
+				if (!existingConfig) {
 					throw new Error('Container "' + containerId + '" doesn\'t exist!');
 				}
 			} else {
@@ -1171,18 +1175,18 @@ const Spotlight = (function () {
 			}
 
 			for (let key in config) {
-				const validKey = typeof GlobalConfig[key] !== 'undefined';
-
-				if (!containerId && validKey && typeof config[key] !== 'undefined') {
-					GlobalConfig[key] = config[key];
-				} else if (containerId && !validKey) {
-					delete config[key];
+				if (typeof GlobalConfig[key] !== 'undefined') {
+					if (containerId) {
+						existingConfig[key] = config[key];
+					} else if (typeof config[key] !== 'undefined') {
+						GlobalConfig[key] = config[key];
+					}
 				}
 			}
 
 			if (containerId) {
 				// remove "undefined" items
-				_containers.set(containerId, extend({}, config));
+				_containers.set(containerId, extend({}, existingConfig));
 			}
 		},
 
@@ -1488,4 +1492,7 @@ const Spotlight = (function () {
 })();
 
 export default Spotlight;
-export {Spotlight, spotlightRootContainerName, getDirection};
+export {
+	getDirection,
+	Spotlight
+};

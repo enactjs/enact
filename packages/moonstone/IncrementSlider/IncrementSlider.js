@@ -4,12 +4,12 @@
  * @module moonstone/IncrementSlider
  */
 
-import {$L} from '@enact/i18n';
+import $L from '@enact/i18n/$L';
 import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
 import Pressable from '@enact/ui/Pressable';
 import React, {PropTypes} from 'react';
-import {Spottable} from '@enact/spotlight';
+import Spottable from '@enact/spotlight/Spottable';
 
 import {SliderBaseFactory} from '../Slider';
 import SliderDecorator from '../internal/SliderDecorator';
@@ -148,6 +148,54 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			step: PropTypes.number,
 
 			/**
+			 * Enables the built-in tooltip, whose behavior can be modified by the other tooltip
+			 * properties.  A custom tooltip, which follows the knob, may be used instead by
+			 * supplying a component as a child of `IncrementSlider`. This property has no effect if
+			 * a custom tooltip is provided.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			tooltip: PropTypes.bool,
+
+			/**
+			 * Converts the contents of the built-in tooltip to a percentage of the bar.
+			 * The percentage respects the min and max value props.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			tooltipAsPercent: PropTypes.bool,
+
+			/**
+			 * Setting to `true` overrides the natural LTR->RTL tooltip side-flipping for locale
+			 * changes. This may be useful if you have a static layout that does not automatically
+			 * reverse when in an RTL language.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			tooltipForceSide: PropTypes.bool,
+
+			/**
+			 * Specify where the tooltip should appear in relation to the Slider bar. Options are
+			 * `'before'` and `'after'`. `before` renders above a `horizontal` slider and to the
+			 * left of a `vertical` Slider. `after` renders below a `horizontal` slider and to the
+			 * right of a `vertical` Slider. In the `vertical` case, the rendering position is
+			 * automatically reversed when rendering in an RTL locale. This can be overridden by
+			 * using the[tooltipForceSide]{@link moonstone/IncrementSlider.IncrementSlider.tooltipForceSide}
+			 * prop.
+			 *
+			 * @type {String}
+			 * @default 'before'
+			 * @public
+			 */
+			tooltipSide: PropTypes.oneOf(['before', 'after']),
+
+			/**
 			* The value of the increment slider.
 			*
 			* @type {Number}
@@ -173,6 +221,10 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			pressed: false,
 			spotlightDisabled: false,
 			step: 1,
+			tooltip: false,
+			tooltipAsPercent: false,
+			tooltipForceSide: false,
+			tooltipSide: 'before',
 			value: 0,
 			vertical: false
 		},
