@@ -7,7 +7,7 @@
 
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
-import Toggleable from '@enact/ui/Toggleabe';
+import Toggleable from '@enact/ui/Toggleable';
 
 import {ItemOverlay} from '../Item';
 
