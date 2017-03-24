@@ -4,19 +4,13 @@ import Slider, {SliderBase} from '@enact/moonstone/Slider';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, number, select} from '@kadira/storybook-addon-knobs';
 
-import {mergeComponentMetadata} from '../../src/utils/propTables';
+import {mergeComponentMetadata, removeProps} from '../../src/utils/propTables';
 
 const ChangeableSlider = Changeable(Slider);
 ChangeableSlider.displayName = 'Changeable(Slider)';
 
 const Config = mergeComponentMetadata('Slider', SliderBase, Slider);
-
-'defaultPressed pressed'
-	.split(' ')
-	.forEach(prop => {
-		delete Config.propTypes[prop];
-		delete Config.defaultProps[prop];
-	});
+removeProps(Config, 'defaultPressed pressed');
 
 storiesOf('Slider')
 	.addDecorator(withKnobs)
