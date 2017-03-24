@@ -5,7 +5,7 @@ import {Input} from '@enact/moonstone/Input';
 import Button from '@enact/moonstone/Button';
 import Changeable from '@enact/ui/Changeable';
 
-const StatefulPicker = Changeable(Picker);
+const StatefulPicker = Changeable({mutable: true}, Picker);
 const StatefulInput = Changeable({mutable: true}, Input);
 
 class PickerAddRemove extends React.Component {
@@ -86,7 +86,9 @@ class PickerAddRemove extends React.Component {
 		return (
 			<div>
 				<div>
-					<StatefulPicker {...this.props}>
+					<StatefulPicker {...this.props}
+						value={0}
+					>
 						{pickerChildren}
 					</StatefulPicker>
 				</div>
