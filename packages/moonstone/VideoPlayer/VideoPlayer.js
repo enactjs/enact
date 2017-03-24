@@ -852,7 +852,7 @@ const VideoPlayerBase = class extends React.Component {
 	//
 	/**
 	 * Every callback sent by [VideoPlayer]{@link moonstone/VideoPlayer} receives a status package,
-	 * which includes an object with the following key/value pars as the first argument:
+	 * which includes an object with the following key/value pairs as the first argument:
 	 *
 	 * @typedef {Object} videoStatus
 	 * @memberof moonstone/VideoPlayer
