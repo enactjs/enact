@@ -306,9 +306,7 @@ class ExpandableInputBase extends React.Component {
  * @public
  */
 const ExpandableInput = Expandable(
-	Changeable(
-		ExpandableInputBase
-	)
+	ExpandableInputBase
 );
 
 export default ExpandableInput;
