@@ -2,7 +2,7 @@
 title: Enyo to Enact Component Map
 ---
 
-> **Enact version**: 1.0.0-beta.1
+> **Enact version**: 1.0.0
 
 ### Utilities
 |Enyo   |Enact  |Notes  |
@@ -11,7 +11,7 @@ title: Enyo to Enact Component Map
 | `dispatcher` | `@enact/core/dispatcher` | |
 | `dom` | | not required |
 | `hooks` | | not required |
-| `jobs` | `jobs` | provided in `@enact/core` module |
+| `jobs` | `Job` | provided in `@enact/core` module |
 | `json` | | not required |
 | `resolution` | `resolution` | provided in `@enact/ui` module |
 | `utils` | various | spread among `@enact/core` and `@enact/i18n` modules |

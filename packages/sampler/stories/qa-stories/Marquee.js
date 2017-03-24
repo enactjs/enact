@@ -1,13 +1,13 @@
 import {MarqueeController, MarqueeText} from '@enact/moonstone/Marquee';
 import Item from '@enact/moonstone/Item';
-import {Spottable} from '@enact/spotlight';
+import Spottable from '@enact/spotlight/Spottable';
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
 import {withKnobs, boolean, number, select} from '@kadira/storybook-addon-knobs';
 
 const SpottableMarquee = Spottable(MarqueeText);
 const Controller = MarqueeController('div');
-const SpottableDiv = MarqueeController({startOnFocus: true}, Spottable('div'));
+const SpottableDiv = MarqueeController({marqueeOnFocus: true}, Spottable('div'));
 
 const LTR = [
 	'The quick brown fox jumped over the lazy dog.  The bean bird flies at sundown.',

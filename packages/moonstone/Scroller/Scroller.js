@@ -9,7 +9,7 @@
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import React, {Component, PropTypes} from 'react';
-import {SpotlightContainerDecorator} from '@enact/spotlight';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import css from './Scroller.less';
 import Scrollable from './Scrollable';
@@ -128,7 +128,7 @@ class ScrollerBase extends Component {
 			topScrollOffset = positionOffset ? positionOffset : 0;
 
 		if (this.isVertical()) {
-			if (focusedItem.offsetTop + focusedItem.offsetHeight >= (this.scrollBounds.clientHeight + currentTop)) {
+			if (focusedItem.offsetTop + focusedItem.offsetHeight + topScrollOffset >= (this.scrollBounds.clientHeight + currentTop)) {
 				this.scrollPos.top += ((focusedItem.offsetTop + focusedItem.offsetHeight + topScrollOffset) - (this.scrollBounds.clientHeight + currentTop));
 			} else if (focusedItem.offsetTop < currentTop) {
 				this.scrollPos.top += (focusedItem.offsetTop - currentTop);
@@ -179,22 +179,19 @@ class ScrollerBase extends Component {
 			mergedStyle = Object.assign({}, style, {
 				overflowX: props.horizontal,
 				overflowY: props.vertical
-			}),
-			hideNativeScrollbar = !props.hideScrollbars ? css.hideNativeScrollbar : null;
+			});
 
 		delete props.cbScrollTo;
 		delete props.className;
-		delete props.hideScrollbars;
 		delete props.horizontal;
 		delete props.onScrolling;
 		delete props.onScrollStart;
 		delete props.onScrollStop;
-		delete props.positioningOption;
 		delete props.style;
 		delete props.vertical;
 
 		return (
-			<div {...props} ref={this.initRef} className={classNames(className, hideNativeScrollbar)} style={mergedStyle} />
+			<div {...props} ref={this.initRef} className={classNames(className, css.hideNativeScrollbar)} style={mergedStyle} />
 		);
 	}
 }

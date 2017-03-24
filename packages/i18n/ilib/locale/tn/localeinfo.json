@@ -1,1 +1,1 @@
-{"language.name":"Tswana","numfmt":{"groupChar":" ","exponential":"E"},"scripts":["Latn"],"locale":"tn"}
+{"delimiter":{"quotationStart":"‘","quotationEnd":"’","alternateQuotationStart":"“","alternateQuotationEnd":"”"},"language.name":"Tswana","numfmt":{"groupChar":" ","currencyFormats":{"common":"{s}{n}"}},"scripts":["Latn"],"locale":"tn"}

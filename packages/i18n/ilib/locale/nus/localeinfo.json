@@ -1,1 +1,1 @@
-{"clock":"12","language.name":"Nuer","numfmt":{"decimalChar":".","groupChar":",","exponential":"E","currencyFormats":{"commonNegative":"({s}{n})"}},"scripts":["Latn"],"locale":"nus"}
+{"clock":"12","language.name":"Nuer","numfmt":{"currencyFormats":{"common":"{s}{n}","commonNegative":"-{s}{n}"}},"scripts":["Latn"],"locale":"nus"}
