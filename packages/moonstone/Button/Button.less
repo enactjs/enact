@@ -54,6 +54,12 @@
 	vertical-align: middle;
 	.moon-taparea(@moon-button-height);
 
+	.moon-custom-text({
+		font-size: @moon-button-large-font-size-large;
+		height: @moon-button-height-large;
+		line-height: (@moon-button-height-large - (2 * @moon-button-border-width));
+	});
+
 	.bg {
 		.position(0);
 		position: absolute;
@@ -132,6 +138,12 @@
 		}
 
 		.moon-taparea(@moon-button-small-height);
+
+		.moon-custom-text({
+			font-size: @moon-button-small-font-size-large;
+			height: @moon-button-small-height-large;
+			line-height: (@moon-button-small-height-large - (2 * @moon-button-border-width));
+		});
 
 		.client::before {
 			bottom: 12px;

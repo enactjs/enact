@@ -1,5 +1,5 @@
 import {SwitchItem, SwitchItemBase} from '@enact/moonstone/SwitchItem';
-import Selectable from '@enact/ui/Selectable';
+import Changeable from '@enact/ui/Changeable';
 import Toggleable from '@enact/ui/Toggleable';
 import Group from '@enact/ui/Group';
 import Divider from '@enact/moonstone/Divider';
@@ -7,16 +7,8 @@ import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, text, boolean} from '@kadira/storybook-addon-knobs';
 
-const SelectableGroup = Selectable(Group);
-
-SelectableGroup.displayName = 'SelectableGroup';
-SelectableGroup.propTypes = Object.assign({}, Group.propTypes, Selectable.propTypes);
-SelectableGroup.defaultProps = Object.assign({}, Group.defaultProps, Selectable.defaultProps);
-
+const ChangeableGroup = Changeable({change: 'onSelect', prop: 'selected'}, Group);
 const SwitchItemToggle = Toggleable({prop: 'selected'}, SwitchItemBase);
-SwitchItemToggle.propTypes = Object.assign({}, SwitchItemToggle.propTypes, SwitchItemBase.propTypes);
-SwitchItemToggle.defaultProps = Object.assign({}, SwitchItemToggle.defaultProps, SwitchItemBase.defaultProps);
-SwitchItemToggle.displayName = 'SwitchItem';
 
 const inputData = {
 	longText : 'Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text',
@@ -54,7 +46,7 @@ storiesOf('SwitchItem')
 				<Divider>
 					{'Switch items with normal text in a group'}
 				</Divider>
-				<SelectableGroup
+				<ChangeableGroup
 					childComponent={SwitchItem}
 					itemProps={{
 						inline: boolean('ItemProps-Inline', false),
@@ -65,11 +57,11 @@ storiesOf('SwitchItem')
 					onSelect={action('onSelect')}
 				>
 					{[text('Normal Text 1', inputData.normalText + 1), text('Normal Text 2', inputData.normalText + 2), text('Normal Text 3', inputData.normalText + 3)]}
-				</SelectableGroup>
+				</ChangeableGroup>
 				<Divider>
 					{'Switch items with long text in a group'}
 				</Divider>
-				<SelectableGroup
+				<ChangeableGroup
 					childComponent={SwitchItem}
 					itemProps={{
 						inline: boolean('ItemProps-Inline', false),
@@ -80,7 +72,7 @@ storiesOf('SwitchItem')
 					onSelect={action('onSelect')}
 				>
 					{[text('Long Text 1', 'First ' + inputData.longText), text('Long Text 2', 'Second ' + inputData.longText), text('Long Text 3', 'Third ' + inputData.longText)]}
-				</SelectableGroup>
+				</ChangeableGroup>
 			</div>
 		)
 	);

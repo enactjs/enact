@@ -1,4 +1,4 @@
-import Picker, {PickerBase} from '@enact/moonstone/Picker';
+import Picker from '@enact/moonstone/Picker';
 import Changeable from '@enact/ui/Changeable';
 import {icons} from '@enact/moonstone/Icon';
 import PickerAddRemove from './components/PickerAddRemove';
@@ -8,9 +8,6 @@ import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
 import nullify from '../../src/utils/nullify.js';
 
 const StatefulPicker = Changeable(Picker);
-StatefulPicker.propTypes = Object.assign({}, PickerBase.propTypes, StatefulPicker.propTypes);
-StatefulPicker.defaultProps = Object.assign({}, StatefulPicker.defaultProps, PickerBase.defaultProps, StatefulPicker.defaultProps);
-StatefulPicker.displayName = 'Picker';
 
 const prop = {
 	orientation: ['horizontal', 'vertical'],

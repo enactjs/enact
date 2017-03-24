@@ -48,7 +48,9 @@
 @moon-divider-font-size:            24px;
 @moon-notification-font-size:       30px;
 @moon-button-large-font-size:       36px;
+@moon-button-large-font-size-large: 42px;
 @moon-button-small-font-size:       27px;
+@moon-button-small-font-size-large: 33px;
 @moon-clock-minute-font-size:       60px;
 @moon-clock-text-font-size:         54px;
 @moon-clock-meridiem-font-size:     24px;
@@ -161,7 +163,9 @@
 // Button
 // ---------------------------------------
 @moon-button-height: 84px;
+@moon-button-height-large: 96px;
 @moon-button-small-height: 60px;
+@moon-button-small-height-large: 72px;
 @moon-button-border-width: 6px;
 @moon-button-border-radius: 9999px;
 @moon-button-small-tap-area-height: 78px;
@@ -181,8 +185,10 @@
 // ---------------------------------------
 @moon-icon-size: 48px;
 @moon-icon-small-size: 36px;
-@moon-icon-button-size: 84px;
-@moon-icon-button-small-size: 60px;
+@moon-icon-button-size: @moon-button-height;
+@moon-icon-button-size-large: @moon-button-height-large;
+@moon-icon-button-small-size: @moon-button-small-height;
+@moon-icon-button-small-size-large: @moon-button-small-height-large;
 @moon-icon-sprite-size: (@moon-icon-button-size - (@moon-button-border-width * 2));
 @moon-icon-sprite-small-size: (@moon-icon-button-small-size - (@moon-button-border-width * 2));
 @moon-icon-tap-area-offset: -(@moon-button-border-width + (@moon-button-small-tap-area-height - @moon-button-small-height) / 2);
@@ -248,8 +254,10 @@
 // Slider
 // ---------------------------------------
 @moon-slider-bar-height: @moon-progress-bar-height;
-@moon-slider-knob-width:@moon-button-small-height;
-@moon-slider-knob-height:@moon-button-small-height;
+@moon-slider-knob-width: @moon-button-small-height;
+@moon-slider-knob-width-large: @moon-button-small-height-large;
+@moon-slider-knob-height: @moon-button-small-height;
+@moon-slider-knob-height-large: @moon-button-small-height-large;
 @moon-slider-knob-spotlight-width: 90px;
 @moon-slider-knob-spotlight-height: 90px;
 @moon-slider-tooltip-offset: 54px;

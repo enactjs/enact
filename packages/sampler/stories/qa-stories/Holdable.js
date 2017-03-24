@@ -14,18 +14,6 @@ const LongPressButton = Holdable({
 }, Button);
 const ResumeHoldButton = Holdable({resume: true, endHold: 'onLeave'}, Button);
 
-HoldableButton.propTypes = Object.assign({}, Button.propTypes, HoldableButton.propTypes);
-HoldableButton.defaultProps = Object.assign({}, Button.defaultProps, HoldableButton.defaultProps);
-HoldableButton.displayName = 'HoldableButton';
-
-LongPressButton.propTypes = Object.assign({}, Button.propTypes, LongPressButton.propTypes);
-LongPressButton.defaultProps = Object.assign({}, Button.defaultProps, LongPressButton.defaultProps);
-LongPressButton.displayName = 'LongPressButton';
-
-ResumeHoldButton.propTypes = Object.assign({}, Button.propTypes, ResumeHoldButton.propTypes);
-ResumeHoldButton.defaultProps = Object.assign({}, Button.defaultProps, ResumeHoldButton.defaultProps);
-ResumeHoldButton.displayName = 'ResumeHoldButton';
-
 // Set up some defaults for info and knobs
 const prop = {
 	backgroundOpacity: {'opaque': 'opaque', 'translucent': 'translucent', 'transparent': 'transparent'}

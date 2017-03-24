@@ -307,6 +307,37 @@ const forProp = handle.forProp = curry((prop, value, ev, props) => {
 	return props[prop] === value;
 });
 
+
+/**
+ * Logs the event, props, and context optionally preceded by a custom message. Will only log in
+ * development mode.
+ *
+ * ```
+ * import {forProp, handle, log} from '@enact/core/handle';
+ *
+ * const logWhenChecked = handle(
+ *   forProp('checked', true),
+ *   log('checked props is true')
+ * );
+ * ```
+ *
+ * @method   forProp
+ * @memberof core/handle
+ * @param    {String}    prop   Name of property on props object
+ * @param    {*}         value  Value of property
+ * @param    {Object}    ev     Event
+ * @param    {Object}    props  Props object
+ * @returns  {Boolean}          Event handler
+ */
+const log = handle.log = curry((message, ev, ...args) => {
+	if (__DEV__) {
+		// eslint-disable-next-line no-console
+		console.log(message, ev, ...args);
+	}
+
+	return true;
+});
+
 export default handle;
 export {
 	callOnEvent,
@@ -316,6 +347,7 @@ export {
 	forKeyCode,
 	forProp,
 	handle,
+	log,
 	preventDefault,
 	stop,
 	stopImmediate

@@ -98,7 +98,6 @@ const DateComponentRangePickerBase = kind({
 * @private
 */
 const DateComponentRangePicker = Changeable(
-	{mutable: true},
 	DateComponentRangePickerBase
 );
 

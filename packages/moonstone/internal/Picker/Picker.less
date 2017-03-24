@@ -35,7 +35,11 @@
 		line-height: @moon-button-height;
 		max-width: 300px;
 
-		.moon-custom-text-size(@moon-item-font-size-large);
+		.moon-custom-text({
+			font-size: @moon-item-font-size-large;
+			height: @moon-button-height-large;
+			line-height: @moon-button-height-large;
+		});
 	}
 
 	.sizingPlaceholder {

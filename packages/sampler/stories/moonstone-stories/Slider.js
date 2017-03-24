@@ -4,15 +4,13 @@ import Slider, {SliderBase} from '@enact/moonstone/Slider';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, number, select} from '@kadira/storybook-addon-knobs';
 
-const ChangeableSlider = Changeable({mutable: true}, Slider);
-ChangeableSlider.propTypes = Object.assign({}, SliderBase.propTypes, Slider.propTypes);
-ChangeableSlider.defaultProps = Object.assign({}, ChangeableSlider.defaultProps, SliderBase.defaultProps, Slider.defaultProps);
-ChangeableSlider.displayName = 'Slider';
+import {mergeComponentMetadata, removeProps} from '../../src/utils/propTables';
 
-delete ChangeableSlider.propTypes.pressed;
-delete ChangeableSlider.defaultProps.pressed;
-delete ChangeableSlider.propTypes.defaultPressed;
-delete ChangeableSlider.defaultProps.defaultPressed;
+const ChangeableSlider = Changeable(Slider);
+ChangeableSlider.displayName = 'Changeable(Slider)';
+
+const Config = mergeComponentMetadata('Slider', SliderBase, Slider);
+removeProps(Config, 'defaultPressed pressed');
 
 storiesOf('Slider')
 	.addDecorator(withKnobs)
@@ -35,7 +33,7 @@ storiesOf('Slider')
 				tooltipForceSide={boolean('tooltipForceSide', ChangeableSlider.defaultProps.tooltipForceSide)}
 				tooltipSide={select('tooltipSide', ['before', 'after'], 'after')}
 				vertical={boolean('vertical', ChangeableSlider.defaultProps.vertical)}
-				value={number('value', ChangeableSlider.defaultProps.value)}
 			/>
-		)
+		),
+		{propTables: [Config]}
 	);

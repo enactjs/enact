@@ -5,12 +5,12 @@ import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
 
+import {mergeComponentMetadata} from '../../src/utils/propTables';
 
-const StatefulInput = Changeable({mutable: true}, Input);
+const StatefulInput = Changeable(Input);
+StatefulInput.displayName = 'Changeable(Input)';
 
-StatefulInput.propTypes = Object.assign({}, InputBase.propTypes, Input.propTypes);
-StatefulInput.defaultProps = Object.assign({}, StatefulInput.defaultProps, InputBase.defaultProps, Input.defaultProps);
-StatefulInput.displayName = 'Input';
+const Config = mergeComponentMetadata('Input', InputBase, Input);
 
 const iconNames = ['', ...Object.keys(icons)];
 
@@ -28,7 +28,7 @@ storiesOf('Input')
 				iconBefore={select('iconBefore', iconNames)}
 				placeholder={text('placeholder')}
 				type={text('type')}
-				value={text('value', '')}
 			/>
-		)
+		),
+		{propTables: [Config]}
 	);
