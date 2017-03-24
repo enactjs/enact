@@ -104,27 +104,14 @@
 	}
 
 	.viewport {
-		-webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-		clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
-
-		// Using transition only so that we can delay it for non-zero indices. See comment below.
-		transition: clip-path linear 0ms, -webkit-clip-path linear 0ms;
+		&[data-clip] {
+			-webkit-clip-path: polygon(@moon-breadcrumb-width 0, 100% 0, 100% 100%, @moon-breadcrumb-width 100%);
+			clip-path: polygon(@moon-breadcrumb-width 0, 100% 0, 100% 100%, @moon-breadcrumb-width 100%);
+		}
 
 		> :not([data-index='0']) {
 			padding-left: 0;
 			width: calc(~"100% - " @moon-breadcrumb-width);
-		}
-	}
-
-	&:not([data-index='0']) {
-		.viewport {
-			-webkit-clip-path: polygon(@moon-breadcrumb-width 0, 100% 0, 100% 100%, @moon-breadcrumb-width 100%);
-			clip-path: polygon(@moon-breadcrumb-width 0, 100% 0, 100% 100%, @moon-breadcrumb-width 100%);
-
-			// This delay matches the duration on Viewport's ViewManager. The effect is to defer
-			// setting the clip-path until the panel animation completes but only when changing to
-			// a non-zero index so that it is removed immediately when changing to the first panel.
-			transition-delay: 250ms;
 		}
 	}
 
