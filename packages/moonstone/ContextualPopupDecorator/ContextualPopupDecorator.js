@@ -364,13 +364,17 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		spotActivator = (activator) => {
+			Spotlight.setActiveContainer(null, this.state.containerId);
 			if (!Spotlight.focus(activator)) {
 				Spotlight.focus();
 			}
 		}
 
 		spotPopupContent = () => {
-			Spotlight.focus(this.state.containerId);
+			const {containerId} = this.state;
+			if (!Spotlight.focus(containerId)) {
+				Spotlight.setActiveContainer(containerId);
+			}
 		}
 
 		render () {
