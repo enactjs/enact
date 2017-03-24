@@ -21,7 +21,6 @@ storiesOf('Popup')
 					onClose={action('onClose')}
 					showCloseButton={boolean('showCloseButton', false)}
 					spotlightRestrict={select('spotlightRestrict', ['none', 'self-first', 'self-only'], 'self-only')}
-					onHide={(action('onHide'))}
 				>
 					<div>{text('children', 'Hello Popup')}</div>
 				</Popup>
