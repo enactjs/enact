@@ -6,6 +6,7 @@
  * @module moonstone/ExpandableList
  */
 
+import Changeable from '@enact/ui/Changeable';
 import Group from '@enact/ui/Group';
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
@@ -271,7 +272,12 @@ const ExpandableListBase = kind({
  * @mixes moonstone/ExpandableItem.Expandable
  * @public
  */
-const ExpandableList = Expandable(ExpandableListBase);
+const ExpandableList = Expandable(
+	Changeable(
+		{change: 'onSelect', prop: 'selected'},
+		ExpandableListBase
+	)
+);
 
 export default ExpandableList;
 export {ExpandableList, ExpandableListBase};

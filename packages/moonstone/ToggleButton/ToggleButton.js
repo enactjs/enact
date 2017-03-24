@@ -6,20 +6,22 @@
 
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
+import Toggleable from '@enact/ui/Toggleable';
 
 import Button from '../Button';
 
 import css from './ToggleButton.less';
 
 /**
-* {@link moonstone/ToggleButton.ToggleButton} is a [Button]{@link moonstone/Button.Button} that is [Toggleable]{@link ui/Toggleable.Toggleable}.
-*
-* @class ToggleButton
-* @memberof moonstone/ToggleButton
-* @extends moonstone/Button.Button
-* @ui
-* @public
-*/
+ * {@link moonstone/ToggleButton.ToggleButton} is a stateless [Button]{@link moonstone/Button.Button}
+ * that can be toggled by changing its `selected` property
+ *
+ * @class ToggleButtonBase
+ * @memberof moonstone/ToggleButton
+ * @extends moonstone/Button.Button
+ * @ui
+ * @public
+ */
 const ToggleButtonBase = kind({
 	name: 'ToggleButton',
 
@@ -155,5 +157,23 @@ const ToggleButtonBase = kind({
 	}
 });
 
-export default ToggleButtonBase;
-export {ToggleButtonBase as ToggleButton, ToggleButtonBase};
+/**
+ * {@link moonstone/ToggleButton.ToggleButton} is a [Button]{@link moonstone/Button.Button} that is [Toggleable]{@link ui/Toggleable.Toggleable}.
+ *
+ * @class ToggleButton
+ * @memberof moonstone/ToggleButton
+ * @extends moonstone/ToggleButton.ToggleButtonBase
+ * @ui
+ * @mixes ui/Toggleable
+ * @public
+ */
+const ToggleButton = Toggleable(
+	{prop: 'selected'},
+	ToggleButtonBase
+);
+
+export default ToggleButton;
+export {
+	ToggleButton,
+	ToggleButtonBase
+};

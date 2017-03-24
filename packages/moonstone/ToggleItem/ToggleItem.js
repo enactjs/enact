@@ -7,6 +7,7 @@
 
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
+import Toggleable from '@enact/ui/Toggleabe';
 
 import {ItemOverlay} from '../Item';
 
@@ -183,5 +184,23 @@ const ToggleItemBase = kind({
 	}
 });
 
-export default ToggleItemBase;
-export {ToggleItemBase as ToggleItem, ToggleItemBase};
+
+/**
+ * {@link moonstone/ToggleItem.ToggleItemBase} is a component to make a Toggleable Item
+ * (e.g Checkbox, RadioItem). It has a customizable prop for icon, so any Moonstone Icon can be used
+ * to represent the selected state.
+ *
+ * @class ToggleItem
+ * @memberof moonstone/ToggleItem
+ * @extends moonstone/ToggleItem.ToggleItemBase
+ * @mixes ui/Toggleable.Toggleable
+ * @ui
+ * @public
+ */
+const ToggleItem = Toggleable(
+	{prop: 'selected'},
+	ToggleItemBase
+);
+
+export default ToggleItem;
+export {ToggleItem, ToggleItemBase};

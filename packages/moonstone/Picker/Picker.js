@@ -5,6 +5,7 @@
  * @module moonstone/Picker
  */
 
+import Changeable from '@enact/ui/Changeable';
 import clamp from 'ramda/src/clamp';
 import kind from '@enact/core/kind';
 import React from 'react';
@@ -195,10 +196,12 @@ const PickerBase = kind({
  * @ui
  * @public
  */
-const Picker = MarqueeController(
-	{marqueeOnFocus: true},
-	SpottablePicker(
-		PickerBase
+const Picker = Changeable(
+	MarqueeController(
+		{marqueeOnFocus: true},
+		SpottablePicker(
+			PickerBase
+		)
 	)
 );
 

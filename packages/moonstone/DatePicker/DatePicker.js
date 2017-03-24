@@ -4,6 +4,7 @@
  *
  * @module moonstone/DatePicker
  */
+
 import DateFmt from '@enact/i18n/ilib/lib/DateFmt';
 
 import DateTimeDecorator from '../internal/DateTimeDecorator';

@@ -5,6 +5,7 @@
  * @module moonstone/RangePicker
  */
 
+import Changeable from '@enact/ui/Changeable';
 import clamp from 'ramda/src/clamp';
 import kind from '@enact/core/kind';
 import React from 'react';
@@ -230,7 +231,11 @@ const RangePickerBase = kind({
  * @ui
  * @public
  */
-const RangePicker = SpottablePicker(RangePickerBase);
+const RangePicker = Changeable(
+	SpottablePicker(
+		RangePickerBase
+	)
+);
 
 export default RangePicker;
 export {RangePicker, RangePickerBase};

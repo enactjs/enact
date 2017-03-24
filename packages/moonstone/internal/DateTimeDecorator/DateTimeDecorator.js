@@ -6,6 +6,7 @@
  */
 
 import Cancelable from '@enact/ui/Cancelable';
+import Changeable from '@enact/ui/Changeable';
 import DateFactory from '@enact/i18n/ilib/lib/DateFactory';
 import hoc from '@enact/core/hoc';
 import ilib from '@enact/i18n';
@@ -240,7 +241,9 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 		{toggle: null, activate: 'onOpen', deactivate: 'onClose', prop: 'open'},
 		RadioDecorator(
 			{activate: 'onOpen', deactivate: 'onClose', prop: 'open'},
-			Decorator
+			Changeable(
+				Decorator
+			)
 		)
 	);
 });

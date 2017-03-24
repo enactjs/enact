@@ -5,6 +5,7 @@
  */
 
 import $L from '@enact/i18n/$L';
+import Changeable from '@enact/ui/Changeable';
 import kind from '@enact/core/kind';
 import {isRtlText} from '@enact/i18n/util';
 import React, {PropTypes} from 'react';
@@ -223,7 +224,11 @@ const InputBase = kind({
  * @mixes moonstone/Input/InputSpotlightDecorator
  * @public
  */
-const Input = InputSpotlightDecorator(InputBase);
+const Input = Changeable(
+	InputSpotlightDecorator(
+		InputBase
+	)
+);
 
 export default Input;
 export {

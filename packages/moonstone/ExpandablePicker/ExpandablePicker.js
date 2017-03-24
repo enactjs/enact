@@ -6,6 +6,7 @@
  * @module moonstone/ExpandablePicker
  */
 
+import Changeable from '@enact/ui/Changeable';
 import kind from '@enact/core/kind';
 import React from 'react';
 import pure from 'recompose/pure';
@@ -248,8 +249,10 @@ const ExpandablePickerBase = kind({
  */
 const ExpandablePicker = pure(
 	Expandable(
-		ExpandablePickerDecorator(
-			ExpandablePickerBase
+		Changeable(
+			ExpandablePickerDecorator(
+				ExpandablePickerBase
+			)
 		)
 	)
 );
