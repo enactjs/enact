@@ -301,9 +301,9 @@ class ExpandableInputBase extends React.Component {
  *
  * @class ExpandableInput
  * @memberof moonstone/ExpandableInput
- * @ui
  * @mixes moonstone/ExpandableItem.Expandable
  * @mixes ui/Changeable.Changeable
+ * @ui
  * @public
  */
 const ExpandableInput = Expandable(

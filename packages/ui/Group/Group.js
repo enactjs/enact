@@ -154,6 +154,7 @@ const GroupBase = kind({
  *
  * @class Group
  * @memberof ui/Group
+ * @mixes ui/Changeable.Changeable
  * @ui
  * @public
  */

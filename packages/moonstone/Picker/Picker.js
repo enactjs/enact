@@ -193,6 +193,8 @@ const PickerBase = kind({
  *
  * @class Picker
  * @memberof moonstone/Picker
+ * @mixes ui/Changeable.Changeable
+ * @mixes moonstone/Marquee.MarqueeController
  * @ui
  * @public
  */

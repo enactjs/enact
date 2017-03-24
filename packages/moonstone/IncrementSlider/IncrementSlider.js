@@ -289,8 +289,7 @@ const IncrementSliderFactory = factory((config) => {
 	 *
 	 * @class IncrementSlider
 	 * @memberof moonstone/IncrementSlider
-	 * @mixes spotlight/Spottable
-	 * @mixes ui/Pressable
+	 * @mixes ui/Pressable.Pressable
 	 * @ui
 	 * @public
 	 */

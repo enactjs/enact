@@ -268,8 +268,9 @@ const ExpandableListBase = kind({
  *
  * @class ExpandableList
  * @memberof moonstone/ExpandableList
- * @ui
  * @mixes moonstone/ExpandableItem.Expandable
+ * @mixes ui/Changeable.Changeable
+ * @ui
  * @public
  */
 const ExpandableList = Expandable(

@@ -220,8 +220,9 @@ const InputBase = kind({
  *
  * @class Input
  * @memberof moonstone/Input
- * @ui
+ * @mixes ui/Changeable.Changeable
  * @mixes moonstone/Input/InputSpotlightDecorator
+ * @ui
  * @public
  */
 const Input = Changeable(

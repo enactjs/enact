@@ -87,16 +87,17 @@ const DateComponentRangePickerBase = kind({
 	)
 });
 
-
 /**
-* {@link moonstone/internal/DateComponentPicker.DateComponentRangePicker} allows the selection of one
-* part of the date (date, month, or year). It is a stateful component but allows updates by
-* providing a new `value` via props.
-*
-* @class DateComponentRangePicker
-* @ui
-* @private
-*/
+ * {@link moonstone/internal/DateComponentPicker.DateComponentRangePicker} allows the selection of one
+ * part of the date (date, month, or year). It is a stateful component but allows updates by
+ * providing a new `value` via props.
+ *
+ * @class DateComponentRangePicker
+ * @memberof moonstone/internal/DateComponentPicker
+ * @mixes ui/Changeable.Changeable
+ * @ui
+ * @private
+ */
 const DateComponentRangePicker = Changeable(
 	DateComponentRangePickerBase
 );

@@ -73,6 +73,9 @@ const indexOfMeridiem = (time, meridiems) => {
  *
  * @class TimePicker
  * @memberof moonstone/TimePicker
+ * @mixes ui/Toggleable.Toggleable
+ * @mixes ui/RadioDecorator.RadioDecorator
+ * @mixes ui/Changeable.Changeable
  * @ui
  * @public
  */

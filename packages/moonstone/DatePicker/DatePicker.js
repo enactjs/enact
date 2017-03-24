@@ -20,6 +20,9 @@ import DatePickerBase from './DatePickerBase';
  *
  * @class DatePicker
  * @memberof moonstone/DatePicker
+ * @mixes ui/Toggleable.Toggleable
+ * @mixes ui/RadioDecorator.RadioDecorator
+ * @mixes ui/Changeable.Changeable
  * @ui
  * @public
  */

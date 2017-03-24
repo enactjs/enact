@@ -423,8 +423,8 @@ const SliderFactory = factory(css => {
 	 *
 	 * @class Slider
 	 * @memberof moonstone/Slider
-	 * @mixes spotlight/Spottable
-	 * @mixes ui/Pressable
+	 * @mixes ui/Pressable.Pressable
+	 * @mixes spotlight/Spottable.Spottable
 	 * @ui
 	 * @public
 	 */

@@ -228,6 +228,7 @@ const RangePickerBase = kind({
  *
  * @class RangePicker
  * @memberof moonstone/RangePicker
+ * @mixes ui/Changeable.Changeable
  * @ui
  * @public
  */

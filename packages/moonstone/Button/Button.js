@@ -221,8 +221,9 @@ const ButtonFactory = factory(css => {
 	 * @memberof moonstone/Button
 	 * @mixes i18n/Uppercase.Uppercase
 	 * @mixes moonstone/TooltipDecorator.TooltipDecorator
-	 * @mixes spotlight.Spottable
+	 * @mixes moonstone/Marquee.MarqueeDecorator
 	 * @mixes ui/Pressable.Pressable
+	 * @mixes spotlight/Spottable.Spottable
 	 * @ui
 	 * @public
 	 */
