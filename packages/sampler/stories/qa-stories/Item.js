@@ -1,14 +1,10 @@
-import Item, {ItemBase} from '@enact/moonstone/Item';
+import Item from '@enact/moonstone/Item';
 import {Icon, icons} from '@enact/moonstone/Icon';
 import React from 'react';
 import Button from '@enact/moonstone/Button';
 import Image from '@enact/moonstone/Image';
 import {storiesOf} from '@kadira/storybook';
 import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
-
-Item.propTypes = Object.assign({}, ItemBase.propTypes, Item.propTypes);
-Item.defaultProps = Object.assign({}, ItemBase.defaultProps, Item.defaultProps);
-Item.displayName = 'Item';
 
 const iconNames = ['', ...Object.keys(icons)];
 
