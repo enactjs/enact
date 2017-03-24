@@ -18,6 +18,7 @@ const
 	// eslint-disable-next-line enact/prop-types
 	renderItem = ({data, index, ...rest}) => {
 		const {text, subText, source} = data[index];
+
 		return (
 			<GridListImageItem
 				{...rest}

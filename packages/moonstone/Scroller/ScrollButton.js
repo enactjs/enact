@@ -57,8 +57,8 @@ const ScrollButtonBase = kind({
 	},
 
 	computed: {
-		className: ({direction}) => classNameMap[direction],
-		'aria-label': ({direction}) => $L(`scroll ${direction}`)
+		'aria-label': ({direction}) => $L(`scroll ${direction}`),
+		className: ({direction}) => classNameMap[direction]
 	},
 
 	render: ({children, disabled, ...rest}) => {

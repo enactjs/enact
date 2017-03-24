@@ -7,6 +7,7 @@
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {contextTypes} from '@enact/ui/Resizable';
+import {forward} from '@enact/core/handle';
 import {getDirection} from '@enact/spotlight';
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
@@ -16,6 +17,11 @@ import ri from '@enact/ui/resolution';
 import css from './Scrollable.less';
 import ScrollAnimator from './ScrollAnimator';
 import Scrollbar from './Scrollbar';
+
+const
+	forwardScroll = forward('onScroll'),
+	forwardScrollStart = forward('onScrollStart'),
+	forwardScrollStop = forward('onScrollStop');
 
 const
 	calcVelocity = (d, dt) => (d && dt) ? d / dt : 0,
@@ -245,8 +251,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		drag (e) {
-			let t = perf.now();
-			const d = this.dragInfo;
+			const
+				t = perf.now(),
+				d = this.dragInfo;
 
 			if (this.horizontalScrollability) {
 				d.dx = e.clientX - d.clientX;
@@ -469,15 +476,15 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		// call scroll callbacks
 
 		doScrollStart () {
-			this.props.onScrollStart({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()});
+			forwardScrollStart({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()}, this.props);
 		}
 
 		doScrolling () {
-			this.props.onScroll({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()});
+			forwardScroll({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()}, this.props);
 		}
 
 		doScrollStop () {
-			this.props.onScrollStop({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()});
+			forwardScrollStop({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()}, this.props);
 		}
 
 		// update scroll position
@@ -644,7 +651,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		scrollTo = (opt) => {
 			if (!this.isInitializing) {
-				let {left, top} = this.getPositionForScrollTo(opt);
+				const {left, top} = this.getPositionForScrollTo(opt);
 				this.scrollToInfo = null;
 
 				if (left !== null || top !== null) {
@@ -853,11 +860,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					className
 				);
 
-			delete props.className;
 			delete props.cbScrollTo;
+			delete props.className;
+			delete props.horizontalScrollbar;
 			delete props.style;
 			delete props.verticalScrollbar;
-			delete props.horizontalScrollbar;
 
 			return (
 				(isHorizontalScrollbarVisible || isVerticalScrollbarVisible) ? (

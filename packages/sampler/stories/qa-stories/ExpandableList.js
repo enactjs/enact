@@ -1,8 +1,8 @@
 import Button from '@enact/moonstone/Button';
 import ExpandableList from '@enact/moonstone/ExpandableList';
 import {RadioControllerDecorator} from '@enact/ui/RadioDecorator';
-import React from 'react';
 import Selectable from '@enact/ui/Selectable';
+import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, text, select} from '@kadira/storybook-addon-knobs';
 
