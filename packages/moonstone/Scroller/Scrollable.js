@@ -3,6 +3,7 @@
  * the {@link moonstone/Scroller.dataIndexAttribute} constant.
  * The default export is {@link moonstone/Scroller.Scrollable}.
  */
+
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {contextTypes} from '@enact/ui/Resizable';
@@ -417,7 +418,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		onKeyDownOfContainer = ({keyCode}) => {
 			if (isPageUp(keyCode) || isPageDown(keyCode)) {
 				const
-					{scrollToAccumulatedTarget, bounds} = this,
+					{scrollToAccumulatedTarget} = this,
+					bounds = this.getScrollBounds(),
 					isHorizontal = this.canScrollHorizontally(bounds),
 					isVertical = this.canScrollVertically(bounds),
 					pageDistance = isPageUp(keyCode) ? this.pageDistanceForUp : this.pageDistanceForDown;
@@ -768,17 +770,17 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		updateScrollabilityAndEventListeners = () => {
 			const
 				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
+				bounds = this.getScrollBounds(),
 				containerNode = this.childRef.containerRef;
 
 			this.horizontalScrollability = this.childRef.isHorizontal();
 			this.verticalScrollability = this.childRef.isVertical();
-			this.pageDistanceForDown = (isVerticalScrollbarVisible ? this.bounds.clientHeight : this.bounds.clientWidth) * paginationPageMultiplier;
+			this.pageDistanceForDown = (isVerticalScrollbarVisible ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
 			this.pageDistanceForUp = this.pageDistanceForDown * -1;
 
 			// FIXME `onWheel` doesn't work on the v8 snapshot.
 			if (isVerticalScrollbarVisible || isHorizontalScrollbarVisible) {
 				this.containerRef.addEventListener('wheel', this.onWheel);
-				this.containerRef.addEventListener('onKeyDown', this.onKeyDownOfContainer);
 			} else {
 				containerNode.addEventListener('wheel', this.onWheel);
 			}
@@ -880,7 +882,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			return (
 				(isHorizontalScrollbarVisible || isVerticalScrollbarVisible) ? (
-					<div ref={this.initContainerRef} className={scrollableClasses} style={style}>
+					<div ref={this.initContainerRef} className={scrollableClasses} style={style} onKeyDown={this.onKeyDownOfContainer}>
 						{vscrollbar}
 						{hscrollbar}
 						<Wrapped {...props} {...this.eventHandlers} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={css.container} />
