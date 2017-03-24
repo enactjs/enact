@@ -10,6 +10,7 @@ import {forProp, forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
 import React from 'react';
+import warning from 'warning';
 
 /**
  * Default config for {@link ui/Toggleable.Toggleable}
@@ -74,7 +75,8 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			 * Default toggled state applied at construction when the toggled prop is `undefined` or
 			 * `null`.
 			 *
-			 * @type {*}
+			 * @type {Boolean}
+			 * @default false
 			 * @public
 			 */
 			[defaultPropKey]: React.PropTypes.bool,
@@ -85,7 +87,7 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			 * undefined, the component is "uncontrolled" and `Toggleable` will manage the toggled
 			 * state using callbacks defined by its configuration.
 			 *
-			 * @type {*}
+			 * @type {Boolean}
 			 * @public
 			 */
 			[prop]: React.PropTypes.bool,
@@ -138,8 +140,13 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 				this.setState({
 					active: !!nextProps[prop]
 				});
-			} else if (prop in nextProps) {
-				// warning! uncontrolled => controlled
+			} else {
+				warning(
+					prop in nextProps,
+					`'${prop}' specified for an uncontrolled instance of Toggleable and will be
+					ignored. To make this instance of Toggleable controlled, '${prop}' should be
+					specified at creation.`
+				);
 			}
 		}
 

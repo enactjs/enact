@@ -10,6 +10,7 @@ import {forProp, forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
 import React from 'react';
+import warning from 'warning';
 
 /**
  * Default config for {@link ui/Changeable.Changeable}.
@@ -123,8 +124,13 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.state.controlled) {
 				const value = nextProps[prop];
 				this.setState({value});
-			} else if (prop in nextProps) {
-				// warning! uncontrolled => controlled
+			} else {
+				warning(
+					prop in nextProps,
+					`'${prop}' specified for an uncontrolled instance of Changeable and will be
+					ignored. To make this instance of Changeable controlled, '${prop}' should be
+					specified at creation.`
+				);
 			}
 		}
 
