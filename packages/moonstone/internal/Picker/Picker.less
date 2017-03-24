@@ -12,7 +12,6 @@
 	border-radius: @button-width;
 	vertical-align: bottom;
 	position: relative;
-	direction: ltr;
 	text-align: center;
 	margin-left: @moon-spotlight-outset;
 	margin-right: @moon-spotlight-outset;
@@ -49,9 +48,6 @@
 		margin-right: auto;
 		vertical-align: bottom;
 		color: inherit;
-		:global(.enact-locale-right-to-left) & {
-			direction: rtl;
-		}
 	}
 
 	.incrementer,
@@ -68,6 +64,10 @@
 
 	&.horizontal {
 		display: inline-flex;
+
+		:global(.enact-locale-right-to-left) & {
+			flex-direction: row-reverse;
+		}
 
 		.incrementer {
 			order: 3;
