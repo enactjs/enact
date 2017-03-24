@@ -6,6 +6,8 @@ Our `i18n` library is based on the wonderful [iLib](https://github.com/iLib-js/i
 
 We provide `iLib` for use through our `i18n` module.
 
+We will cover a good deal of how to use `iLib` inside your `Enact` app below, but we will not cover everything.
+
 If you wish to learn more about `ilib` checkout their [github](https://github.com/iLib-js/iLib) and [docs](https://github.com/iLib-js/iLib/blob/master/doc/index.md).
 
 ## Accessing iLib from Enact
