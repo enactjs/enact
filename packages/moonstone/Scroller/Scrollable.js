@@ -3,14 +3,14 @@
  * the {@link moonstone/Scroller.dataIndexAttribute} constant.
  * The default export is {@link moonstone/Scroller.Scrollable}.
  */
-
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
+import {contextTypes} from '@enact/ui/Resizable';
 import {getDirection} from '@enact/spotlight';
 import hoc from '@enact/core/hoc';
+import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';
 import React, {Component, PropTypes} from 'react';
-import {contextTypes} from '@enact/ui/Resizable';
 import ri from '@enact/ui/resolution';
 
 import css from './Scrollable.less';
@@ -26,7 +26,9 @@ const
 	pixelPerLine = ri.scale(39) * scrollWheelMultiplierForDeltaPixel,
 	paginationPageMultiplier = 0.8,
 	epsilon = 1,
-	animationDuration = 1000;
+	animationDuration = 1000,
+	isPageUp = is('pageUp'),
+	isPageDown = is('pageDown');
 
 /**
  * {@link moonstone/Scroller.dataIndexAttribute} is the name of a custom attribute
@@ -177,6 +179,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		scrollTop = 0
 		dirHorizontal = 0
 		dirVertical = 0
+		pageDistanceForUp = 0
+		pageDistanceForDown = 0
 		scrollToInfo = null
 
 		// spotlight
@@ -407,6 +411,18 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					this.childRef.setSpotlightContainerRestrict(keyCode, index);
 				}
 				this.isKeyDown = true;
+			}
+		}
+
+		onKeyDownOfContainer = ({keyCode}) => {
+			if (isPageUp(keyCode) || isPageDown(keyCode)) {
+				const
+					{scrollToAccumulatedTarget, bounds} = this,
+					isHorizontal = this.canScrollHorizontally(bounds),
+					isVertical = this.canScrollVertically(bounds),
+					pageDistance = isPageUp(keyCode) ? this.pageDistanceForUp : this.pageDistanceForDown;
+
+				scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
 			}
 		}
 
@@ -756,10 +772,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			this.horizontalScrollability = this.childRef.isHorizontal();
 			this.verticalScrollability = this.childRef.isVertical();
+			this.pageDistanceForDown = (isVerticalScrollbarVisible ? this.bounds.clientHeight : this.bounds.clientWidth) * paginationPageMultiplier;
+			this.pageDistanceForUp = this.pageDistanceForDown * -1;
 
 			// FIXME `onWheel` doesn't work on the v8 snapshot.
 			if (isVerticalScrollbarVisible || isHorizontalScrollbarVisible) {
 				this.containerRef.addEventListener('wheel', this.onWheel);
+				this.containerRef.addEventListener('onKeyDown', this.onKeyDownOfContainer);
 			} else {
 				containerNode.addEventListener('wheel', this.onWheel);
 			}
