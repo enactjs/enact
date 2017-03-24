@@ -12,6 +12,7 @@ import React, {PropTypes} from 'react';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import Transition from '@enact/ui/Transition';
+import {forward} from '@enact/core/handle';
 
 import IconButton from '../IconButton';
 
@@ -22,6 +23,8 @@ const TransitionContainer = SpotlightContainerDecorator({preserveId: true}, Tran
 const getContainerNode = (containerId) => {
 	return document.querySelector(`[data-container-id='${containerId}']`);
 };
+
+const forwardHide = forward('onHide');
 
 /**
  * {@link moonstone/Popup.PopupBase} is a modal component that appears at the bottom of
@@ -343,6 +346,8 @@ class Popup extends React.Component {
 	}
 
 	handlePopupHide = () => {
+		forwardHide(null, this.props);
+
 		this.setState({
 			floatLayerOpen: false,
 			activator: null
