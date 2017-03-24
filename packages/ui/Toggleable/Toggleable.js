@@ -36,7 +36,7 @@ const defaultConfig = {
 	deactivate: null,
 
 	/**
-	 * Configures the event name that toggles the component
+	 * Configures the event name that toggles the component.
 	 *
 	 * @type {String}
 	 * @default 'onToggle'
@@ -93,9 +93,7 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			[prop]: React.PropTypes.bool,
 
 			/**
-			 * Event callback to notify that state should be toggled. If the component is
-			 * "uncontrolled", the event payload is ignored and the currently stored state is
-			 * toggled.
+			 * Event callback to notify that state should be toggled.
 			 *
 			 * @type {Function}
 			 * @public
