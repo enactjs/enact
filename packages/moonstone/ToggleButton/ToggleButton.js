@@ -73,7 +73,6 @@ const ToggleButtonBase = kind({
 		 * When `true` a pressed visual effect is applied to the button
 		 *
 		 * @type {Boolean}
-		 * @default false
 		 * @public
 		 */
 		pressed: PropTypes.bool,
@@ -122,7 +121,6 @@ const ToggleButtonBase = kind({
 		backgroundOpacity: 'opaque',
 		disabled: false,
 		minWidth: true,
-		pressed: false,
 		selected: false,
 		small: false,
 		toggleOffLabel: '',
@@ -168,7 +166,7 @@ const ToggleButtonBase = kind({
  * @public
  */
 const ToggleButton = Toggleable(
-	{prop: 'selected'},
+	{prop: 'selected', toggle: 'onClick'},
 	ToggleButtonBase
 );
 
