@@ -2,6 +2,7 @@ import Button from '@enact/moonstone/Button';
 import CheckboxItem from '@enact/moonstone/CheckboxItem';
 import RadioItem from '@enact/moonstone/RadioItem';
 import SwitchItem from '@enact/moonstone/SwitchItem';
+
 import ToggleButton from '@enact/moonstone/ToggleButton';
 import Group from '@enact/ui/Group';
 import React from 'react';

@@ -6,7 +6,6 @@
  * @module moonstone/ExpandableInput
  */
 
-import Changeable from '@enact/ui/Changeable';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import React from 'react';
