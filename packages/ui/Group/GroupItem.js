@@ -6,8 +6,9 @@
  */
 
 import kind from '@enact/core/kind';
-import {isSelected, select as selectItem} from '@enact/core/selection';
 import React from 'react';
+
+import {isSelected, select as selectItem} from '../internal/selection';
 
 /**
  * Pick the GroupItem-specific props into a 'private' itemProps key to be extracted by GroupItem

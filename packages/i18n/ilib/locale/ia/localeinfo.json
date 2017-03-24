@@ -1,1 +1,1 @@
-{"language.name":"Interlingua","numfmt":{"decimalChar":".","groupChar":",","exponential":"E","currencyFormats":{"common":"{s} {n}"}},"scripts":["Latn"],"locale":"ia"}
+{"delimiter":{"quotationStart":"‘","quotationEnd":"’","alternateQuotationStart":"“","alternateQuotationEnd":"”"},"language.name":"Interlingua","numfmt":{"decimalChar":",","groupChar":"."},"scripts":["Latn"],"locale":"ia"}

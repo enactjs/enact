@@ -1,4 +1,4 @@
-import {$L} from '@enact/i18n';
+import $L from '@enact/i18n/$L';
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 
