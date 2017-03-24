@@ -284,7 +284,7 @@ class Popup extends React.Component {
 	}
 
 	componentDidMount () {
-		if (this.props.open) {
+		if (this.props.open && this.props.noAnimation) {
 			on('click', this.handleClick);
 			on('keydown', this.handleKeyDown);
 		}
