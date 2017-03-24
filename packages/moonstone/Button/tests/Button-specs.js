@@ -70,6 +70,7 @@ describe('Button', () => {
 				<Button onClick={handleClick}>I am a disabled Button</Button>
 			);
 
+			subject.simulate('focus');
 			subject.simulate('click');
 
 			const expected = true;
@@ -84,6 +85,7 @@ describe('Button', () => {
 				<Button disabled onClick={handleClick}>I am a disabled Button</Button>
 			);
 
+			subject.simulate('focus');
 			subject.simulate('click');
 
 			const expected = false;

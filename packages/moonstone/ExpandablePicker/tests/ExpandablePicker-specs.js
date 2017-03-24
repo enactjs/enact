@@ -13,7 +13,8 @@ describe('ExpandablePicker Specs', () => {
 			</ExpandablePicker>
 		);
 
-		const checkButton = expandablePicker.find('Icon').last();
+		const checkButton = expandablePicker.find('IconButton').last();
+		checkButton.simulate('focus');
 		checkButton.simulate('click');
 
 		const expected = false;
@@ -32,6 +33,7 @@ describe('ExpandablePicker Specs', () => {
 		);
 
 		const checkButton = expandablePicker.find('IconButton').last();
+		checkButton.simulate('focus');
 		checkButton.simulate('click');
 
 		const expected = value;
@@ -50,6 +52,7 @@ describe('ExpandablePicker Specs', () => {
 		);
 
 		const checkButton = expandablePicker.find('IconButton').last();
+		checkButton.simulate('focus');
 		checkButton.simulate('click');
 
 		const expected = value;

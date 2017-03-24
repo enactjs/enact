@@ -151,6 +151,7 @@ describe('Input Specs', () => {
 			<Input />
 		);
 
+		subject.simulate('focus');
 		subject.simulate('click');
 
 		const expected = true;
@@ -166,6 +167,7 @@ describe('Input Specs', () => {
 			<Input />
 		);
 
+		subject.simulate('focus');
 		subject.simulate('click');
 		subject.unmount();
 

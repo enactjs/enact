@@ -12,6 +12,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Popup.Popup` and `moonstone/ContextualPopupDecorator.ContextualPopupDecorator` navigation behavior
 - `moonstone/Panels.Panel` behavior for setting focus after render
 - `moonstone/VirtualList.VirtualGridList` showing empty items when items are continuously added dynamically
 - `moonstone/Picker` to marquee on focus once again

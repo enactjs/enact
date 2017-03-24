@@ -15,7 +15,9 @@ describe('IncrementSlider Specs', () => {
 			/>
 		);
 
-		incrementSlider.find(`.${css.decrementButton}`).simulate('click');
+		const decrementButton = incrementSlider.find(`.${css.decrementButton}`);
+		decrementButton.simulate('focus');
+		decrementButton.simulate('click');
 
 		const expected = value - 1;
 		const actual = handleChange.args[0][0].value;
@@ -33,7 +35,9 @@ describe('IncrementSlider Specs', () => {
 			/>
 		);
 
-		incrementSlider.find(`.${css.incrementButton}`).simulate('click');
+		const incrementButton = incrementSlider.find(`.${css.incrementButton}`);
+		incrementButton.simulate('focus');
+		incrementButton.simulate('click');
 
 		const expected = value + 1;
 		const actual = handleChange.args[0][0].value;
@@ -51,7 +55,9 @@ describe('IncrementSlider Specs', () => {
 			/>
 		);
 
-		incrementSlider.find(`.${css.incrementButton}`).simulate('click');
+		const incrementButton = incrementSlider.find(`.${css.incrementButton}`);
+		incrementButton.simulate('focus');
+		incrementButton.simulate('click');
 
 		const expected = true;
 		const actual = handleChange.calledOnce;
@@ -115,7 +121,9 @@ describe('IncrementSlider Specs', () => {
 			/>
 		);
 
-		incrementSlider.find(`.${css.incrementButton}`).simulate('click');
+		const incrementButton = incrementSlider.find(`.${css.incrementButton}`);
+		incrementButton.simulate('focus');
+		incrementButton.simulate('click');
 
 		const expected = true;
 		const actual = handleIncrement.calledOnce;
@@ -133,7 +141,9 @@ describe('IncrementSlider Specs', () => {
 			/>
 		);
 
-		incrementSlider.find(`.${css.incrementButton}`).simulate('click');
+		const incrementButton = incrementSlider.find(`.${css.incrementButton}`);
+		incrementButton.simulate('focus');
+		incrementButton.simulate('click');
 
 		const expected = false;
 		const actual = handleIncrement.called;
@@ -151,7 +161,9 @@ describe('IncrementSlider Specs', () => {
 			/>
 		);
 
-		incrementSlider.find(`.${css.decrementButton}`).simulate('click');
+		const decrementButton = incrementSlider.find(`.${css.decrementButton}`);
+		decrementButton.simulate('focus');
+		decrementButton.simulate('click');
 
 		const expected = true;
 		const actual = handleDecrement.calledOnce;
@@ -169,7 +181,9 @@ describe('IncrementSlider Specs', () => {
 			/>
 		);
 
-		incrementSlider.find(`.${css.decrementButton}`).simulate('click');
+		const decrementButton = incrementSlider.find(`.${css.decrementButton}`);
+		decrementButton.simulate('focus');
+		decrementButton.simulate('click');
 
 		const expected = false;
 		const actual = handleDecrement.called;

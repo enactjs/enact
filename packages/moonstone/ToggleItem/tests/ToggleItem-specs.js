@@ -15,6 +15,7 @@ describe('ToggleItem Specs', () => {
 			</ToggleItemBase>
 		);
 
+		subject.simulate('focus');
 		subject.simulate('click');
 
 		const expected = true;
@@ -31,6 +32,7 @@ describe('ToggleItem Specs', () => {
 			</ToggleItemBase>
 		);
 
+		subject.simulate('focus');
 		subject.simulate('click');
 
 		const expected = true;
@@ -47,6 +49,7 @@ describe('ToggleItem Specs', () => {
 			</ToggleItemBase>
 		);
 
+		subject.simulate('focus');
 		subject.simulate('click');
 
 		const expected = true;
