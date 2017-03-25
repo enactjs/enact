@@ -6,6 +6,7 @@
  * @module moonstone/ExpandableInput
  */
 
+import Changeable from '@enact/ui/Changeable';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import React from 'react';
@@ -306,7 +307,9 @@ class ExpandableInputBase extends React.Component {
  * @public
  */
 const ExpandableInput = Expandable(
-	ExpandableInputBase
+	Changeable(
+		ExpandableInputBase
+	)
 );
 
 export default ExpandableInput;

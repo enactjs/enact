@@ -206,7 +206,7 @@ const InputBase = kind({
 					onChange={onChange}
 					placeholder={placeholder}
 					type={type}
-					value={value}
+					value={value || ''}
 				/>
 				<InputDecoratorIcon position="after">{iconAfter}</InputDecoratorIcon>
 			</div>

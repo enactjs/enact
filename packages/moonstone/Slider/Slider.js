@@ -4,6 +4,7 @@
  * @module moonstone/Slider
  */
 
+import Changeable from '@enact/ui/Changeable';
 import factory from '@enact/core/factory';
 import {forKey, forward, handle, stopImmediate} from '@enact/core/handle';
 import kind from '@enact/core/kind';
@@ -418,20 +419,23 @@ const SliderFactory = factory(css => {
 	const Base = SliderBaseFactory(css);
 
 	/**
-	 * {@link moonstone/Slider.Slider} is a Slider with Moonstone styling, Spottable, Pressable and
-	 * SliderDecorator applied. It is a stateful Slider.
+	 * {@link moonstone/Slider.Slider} is a Slider with Moonstone styling, Spottable, Changeable,
+	 * Pressable and SliderDecorator applied.
 	 *
 	 * @class Slider
 	 * @memberof moonstone/Slider
+	 * @mixes ui/Changeable.Changeable
 	 * @mixes ui/Pressable.Pressable
 	 * @mixes spotlight/Spottable.Spottable
 	 * @ui
 	 * @public
 	 */
-	return Pressable(
-		Spottable(
-			SliderDecorator(
-				Base
+	return Changeable(
+		Pressable(
+			Spottable(
+				SliderDecorator(
+					Base
+				)
 			)
 		)
 	);

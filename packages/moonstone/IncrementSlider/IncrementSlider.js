@@ -5,6 +5,7 @@
  */
 
 import $L from '@enact/i18n/$L';
+import Changeable from '@enact/ui/Changeable';
 import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
 import Pressable from '@enact/ui/Pressable';
@@ -284,18 +285,21 @@ const IncrementSliderFactory = factory((config) => {
 
 	/**
 	 * {@link moonstone/IncrementSlider.IncrementSlider} is a IncrementSlider with
-	 * Moonstone styling, Spottable, Pressable and SliderDecorator applied. It is a
-	 * stateful Slider Slider with IconButtons to increment and decrement the value
+	 * Moonstone styling, Changeable, Pressable and SliderDecorator applied with IconButtons to
+	 * increment and decrement the value
 	 *
 	 * @class IncrementSlider
 	 * @memberof moonstone/IncrementSlider
+	 * @mixes ui/Changeable.Changeable
 	 * @mixes ui/Pressable.Pressable
 	 * @ui
 	 * @public
 	 */
-	return Pressable(
-		SliderDecorator(
-			Base
+	return Changeable(
+		Pressable(
+			SliderDecorator(
+				Base
+			)
 		)
 	);
 });

@@ -64,7 +64,6 @@ const CheckboxItemBase = kind({
 		 * When `true`, a check mark icon is applied to the button.
 		 *
 		 * @type {Boolean}
-		 * @default false
 		 * @public
 		 */
 		selected: PropTypes.bool,
@@ -82,7 +81,6 @@ const CheckboxItemBase = kind({
 	defaultProps: {
 		disabled: false,
 		inline: false,
-		selected: false,
 		value: ''
 	},
 
