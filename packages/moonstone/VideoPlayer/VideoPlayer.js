@@ -82,6 +82,22 @@ const forwardJumpBackwardButtonClick = forward('onJumpBackwardButtonClick');
 const forwardJumpForwardButtonClick = forward('onJumpForwardButtonClick');
 const forwardPlayButtonClick = forward('onPlayButtonClick');
 
+/**
+ * Every callback sent by [VideoPlayer]{@link moonstone/VideoPlayer} receives a status package,
+ * which includes an object with the following key/value pairs as the first argument:
+ *
+ * @typedef {Object} videoStatus
+ * @memberof moonstone/VideoPlayer
+ * @property {String} type - Type of event that triggered this callback
+ * @property {Number} currentTime - Playback index of the media in seconds
+ * @property {Number} duration - Media's entire duration in seconds
+ * @property {Boolean} paused - Playing vs paused state. `true` means the media is paused
+ * @property {Number} proportionLoaded - A value between `0` and `1` representing the proportion of the media that has loaded
+ * @property {Number} proportionPlayed - A value between `0` and `1` representing the proportion of the media that has already been shown
+ *
+ * @public
+ */
+
 
 /**
  * Mapping of playback rate names to playback rate values that may be set.
@@ -220,7 +236,8 @@ const VideoPlayerBase = class extends React.Component {
 		noSlider: React.PropTypes.bool,
 
 		/**
-		 * Run this function when the user clicks the Backward button.
+		 * Function executed when the user clicks the Backward button. Is passed
+		 * a {@link moonstone/VideoPlayer.videoStatus} as the first argument.
 		 *
 		 * @type {Function}
 		 * @public
@@ -228,7 +245,8 @@ const VideoPlayerBase = class extends React.Component {
 		onBackwardButtonClick: React.PropTypes.func,
 
 		/**
-		 * Run this function when the user clicks the Forward button.
+		 * Function executed when the user clicks the Forward button. Is passed
+		 * a {@link moonstone/VideoPlayer.videoStatus} as the first argument.
 		 *
 		 * @type {Function}
 		 * @public
@@ -236,7 +254,8 @@ const VideoPlayerBase = class extends React.Component {
 		onForwardButtonClick: React.PropTypes.func,
 
 		/**
-		 * Run this function when the user clicks the JumpBackward button.
+		 * Function executed when the user clicks the JumpBackward button. Is passed
+		 * a {@link moonstone/VideoPlayer.videoStatus} as the first argument.
 		 *
 		 * @type {Function}
 		 * @public
@@ -244,7 +263,8 @@ const VideoPlayerBase = class extends React.Component {
 		onJumpBackwardButtonClick: React.PropTypes.func,
 
 		/**
-		 * Run this function when the user clicks the JumpForward button.
+		 * Function executed when the user clicks the JumpForward button. Is passed
+		 * a {@link moonstone/VideoPlayer.videoStatus} as the first argument.
 		 *
 		 * @type {Function}
 		 * @public
@@ -252,7 +272,8 @@ const VideoPlayerBase = class extends React.Component {
 		onJumpForwardButtonClick: React.PropTypes.func,
 
 		/**
-		 * Run this function when the user clicks the Play button.
+		 * Function executed when the user clicks the Play button. Is passed
+		 * a {@link moonstone/VideoPlayer.videoStatus} as the first argument.
 		 *
 		 * @type {Function}
 		 * @public
@@ -850,21 +871,6 @@ const VideoPlayerBase = class extends React.Component {
 	//
 	// Handled Media events
 	//
-	/**
-	 * Every callback sent by [VideoPlayer]{@link moonstone/VideoPlayer} receives a status package,
-	 * which includes an object with the following key/value pairs as the first argument:
-	 *
-	 * @typedef {Object} videoStatus
-	 * @memberof moonstone/VideoPlayer
-	 * @property {String} type - Type of event that triggered this callback
-	 * @property {Number} currentTime - Playback index of the media in seconds
-	 * @property {Number} duration - Media's entire duration in seconds
-	 * @property {Boolean} paused - Playing vs paused state. True means the media is paused
-	 * @property {Number} proportionLoaded - A value between 0 and 1 representing the proportion of the media that has loaded
-	 * @property {Number} proportionPlayed - A value between 0 and 1 representing the proportion of the media that has already been shown
-	 *
-	 * @public
-	 */
 	addStateToEvent = (ev) => {
 		return {
 			// More props from `ev` may be added here as needed, but a full copy via `...ev`
