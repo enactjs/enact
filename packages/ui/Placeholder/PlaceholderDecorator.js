@@ -12,26 +12,25 @@ import React from 'react';
  *
  * @memberof ui/PlaceholderDecorator.PlaceholderDecorator
  * @hocconfig
+ * @public
  */
 const defaultConfig = {
 	/**
-	 * The property which has an index.
+	 * Configures the style of the placeholder element
 	 *
-	 * @type {String}
-	 * @default 'data-index'
-	 * @public
-	 */
-	indexProp: 'data-index',
-
-	/**
-	 * Configures the initial height of the child element
-	 *
-	 * @type {Number}
-	 * @default 0
+	 * @type {Object}
+	 * @default {height: 0, width: 'auto'}
 	 * @memberof ui/PlaceholderDecorator.PlaceholderDecorator.defaultConfig
 	 */
-	initialHeight: 0,
+	style: {height: 0, width: 'auto'},
 
+	/**
+	 * The component to use as a placeholder.
+	 *
+	 * @type {String}
+	 * @default 'div'
+	 * @memberof ui/PlaceholderDecorator.PlaceholderDecorator.defaultConfig
+	 */
 	placeholderComponent: 'div'
 };
 
@@ -39,7 +38,6 @@ const defaultConfig = {
  * The context propTypes required by `PlaceholderDecorator`. This should be set as the `childContextTypes` of a
  * container so that the container could notify when scrolling
  *
- * @type {Object}
  * @memberof ui/PlaceholderDecorator
  * @public
  */
@@ -61,8 +59,8 @@ const contextTypes = {
  * @public
  */
 const PlaceholderDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {placeholderComponent: PlaceholderComponent, indexProp, initialHeight} = config;
-	const placeholderBounds = {height: initialHeight + 'px'};
+	const {placeholderComponent: PlaceholderComponent, style} = config;
+	const placeholderStyle = Object.assign({}, defaultConfig.style, style);
 
 	return class extends React.Component {
 		static displayName = 'PlaceholderDecorator'
@@ -85,16 +83,16 @@ const PlaceholderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentWillUnmount () {
 			if (!this.state.visible) {
-				this.context.unregisterPlaceholder({key: this});
+				this.context.unregisterPlaceholder(this);
 			}
 		}
 
-		update = ({index, offsetTopThreshold}) => {
-			const {offsetTop} = this.placeholderRef;
+		update = ({leftThreshold, topThreshold}) => {
+			const {offsetLeft, offsetTop} = this.placeholderRef;
 
-			if (offsetTop < offsetTopThreshold) {
+			if (offsetTop < topThreshold && offsetLeft < leftThreshold) {
 				this.setState({visible: true});
-				this.context.unregisterPlaceholder({index});
+				this.context.unregisterPlaceholder(this);
 			}
 		}
 
@@ -103,24 +101,20 @@ const PlaceholderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const
-				key = this.props[indexProp],
-				{visible} = this.state;
+			const {visible} = this.state;
 
 			if (visible) {
 				return (
 					<Wrapped
 						{...this.props}
-						key={key}
 						ref={this.initPlaceholderRef}
 					/>
 				);
 			} else {
 				return (
 					<PlaceholderComponent
-						key={key}
 						ref={this.initPlaceholderRef}
-						style={placeholderBounds}
+						style={placeholderStyle}
 					/>
 				);
 			}

@@ -17,16 +17,28 @@ import {contextTypes} from './PlaceholderDecorator';
  *
  * @memberof ui/Placeholder.PlaceholderDecorator
  * @hocconfig
+ * @public
  */
 const defaultConfig = {
 	/**
-	 * The client height of the placeholder container.
+	 * The bounds of the container represented by an object with `height` and `width` members. If
+	 * the container is a static size, this can be specified at design-time to avoid calculating the
+	 * bounds at run-time (the default behavior).
 	 *
-	 * @type {Number}
+	 * @type {Object}
+	 * @default null
 	 * @public
 	 */
-	clientHeight: null,
+	bounds: null,
 
+	/**
+	 * Event callback which indicates that the viewport has scrolled and placeholders should be
+	 * notified.
+	 *
+	 * @type {String}
+	 * @default onScroll
+	 * @public
+	 */
 	notify: 'onScroll'
 };
 
@@ -40,17 +52,18 @@ const defaultConfig = {
  * @public
  */
 const PlaceholderControllerDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {clientHeight, notify} = config;
+	const {bounds, notify} = config;
 
 	return class extends React.Component {
 		static displayName = 'PlaceholderControllerDecorator'
 
 		static childContextTypes = contextTypes
 
-		clientHeight = 0
+		bounds = null
 		controlled = []
+		leftThreshold = -1
 		node = null
-		offsetTopThreshold = -1
+		topThreshold = -1
 
 		getChildContext () {
 			return {
@@ -60,59 +73,74 @@ const PlaceholderControllerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidMount () {
-			this.setClientHeight();
-			this.setOffsetTopThreshold(0);
+			this.setBounds();
+			this.setThresholds(0, 0);
 		}
 
-		setClientHeight () {
-			if (typeof clientHeight === 'number') {
-				this.clientHeight = clientHeight;
+		componentWillUnmount () {
+			this.notifyAllJob.stop();
+		}
+
+		setBounds () {
+			if (bounds != null) {
+				this.bounds = Object.assign({}, bounds);
 			} else {
+				// Allowing findDOMNode for HOCs versus adding extra ref props
+				// eslint-disable-next-line	react/no-find-dom-node
 				this.node = ReactDOM.findDOMNode(this);
-				this.clientHeight = this.node.offsetHeight;
+				this.bounds = {
+					height: this.node.offsetHeight,
+					width: this.node.offsetWidth
+				};
 			}
 		}
 
 		handleRegister = (key, callback) => {
 			this.controlled.push({callback, key});
-			this.notifyAllJob.start(this.offsetTopThreshold);
+
+			// do not notify until we've initialized the thresholds
+			if (this.topThreshold !== -1 && this.leftThreshold !== -1) {
+				this.notifyAllJob.start(this.topThreshold, this.leftThreshold);
+			}
 		}
 
-		handleUnregister = ({index, key}) => {
-			if (typeof index === 'number') {
-				this.controlled.splice(index, 1);
-			} else {
-				const length = this.controlled.length;
+		handleUnregister = (key) => {
+			const length = this.controlled.length;
 
-				for (let i = 0; i < length; i++) {
-					if (this.controlled[i].key === key) {
-						this.controlled.splice(i, 1);
-						break;
-					}
+			for (let i = 0; i < length; i++) {
+				if (this.controlled[i].key === key) {
+					this.controlled.splice(i, 1);
+					break;
 				}
 			}
 		}
 
-		notifyAll = (offsetTopThreshold) => {
+		notifyAll = (topThreshold, leftThreshold) => {
 			for (let index = this.controlled.length - 1; index >= 0; index--) {
 				const {callback} = this.controlled[index];
 
 				callback({
 					index,
-					offsetTopThreshold
+					leftThreshold,
+					topThreshold
 				});
 			}
 		}
 
+		// queue up notifications when placeholders are first created
 		notifyAllJob = new Job(this.notifyAll, 32)
 
-		setOffsetTopThreshold (scrollTop) {
-			const offsetTopThreshold = (Math.floor(scrollTop / this.clientHeight) + 2) * this.clientHeight;
-			const length = this.controlled.length;
+		setThresholds (top, left) {
+			if (this.controlled.length === 0) return;
 
-			if (this.offsetTopThreshold < offsetTopThreshold && length > 0) {
-				this.notifyAll(offsetTopThreshold);
-				this.offsetTopThreshold = offsetTopThreshold;
+			const {height, width} = this.bounds;
+			const topThreshold = (Math.floor(top / height) + 2) * height;
+			const leftThreshold = (Math.floor(left / width) + 2) * width;
+
+			if (this.topThreshold < topThreshold || this.leftThreshold < leftThreshold) {
+				this.notifyAll(topThreshold, leftThreshold);
+				this.topThreshold = topThreshold;
+				this.leftThreshold = leftThreshold;
 			}
 		}
 
@@ -120,8 +148,8 @@ const PlaceholderControllerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleNotify = this.handle(
 			forward(notify),
-			({scrollTop}) => {
-				this.setOffsetTopThreshold(scrollTop);
+			({scrollLeft, scrollTop}) => {
+				this.setThresholds(scrollTop, scrollLeft);
 			}
 		)
 
