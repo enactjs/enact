@@ -8,12 +8,12 @@ describe('ExpandablePicker Specs', () => {
 	it('should close onChange', function () {
 
 		const expandablePicker = mount(
-			<ExpandablePicker title="Options" open>
+			<ExpandablePicker title="Options" defaultOpen>
 				{['Option one', 'Option two', 'Option three']}
 			</ExpandablePicker>
 		);
 
-		const checkButton = expandablePicker.find('Icon').last();
+		const checkButton = expandablePicker.find('IconButton').last();
 		checkButton.simulate('click');
 
 		const expected = false;

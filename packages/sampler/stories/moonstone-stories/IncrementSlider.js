@@ -5,10 +5,12 @@ import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, number, select} from '@kadira/storybook-addon-knobs';
 
-const ChangeableSlider = Changeable({mutable: true}, IncrementSlider);
-ChangeableSlider.propTypes = Object.assign({}, IncrementSliderBase.propTypes, IncrementSlider.propTypes);
-ChangeableSlider.defaultProps = Object.assign({}, ChangeableSlider.defaultProps, IncrementSliderBase.defaultProps, IncrementSlider.defaultProps);
-ChangeableSlider.displayName = 'IncrementSlider';
+import {mergeComponentMetadata} from '../../src/utils/propTables';
+
+const ChangeableSlider = Changeable(IncrementSlider);
+ChangeableSlider.displayName = 'Changeable(IncrementSlider)';
+
+const Config = mergeComponentMetadata('IncrementSlider', IncrementSliderBase, IncrementSlider);
 
 storiesOf('IncrementSlider')
 	.addDecorator(withKnobs)
@@ -26,8 +28,12 @@ storiesOf('IncrementSlider')
 				min={number('min', ChangeableSlider.defaultProps.min)}
 				onChange={action('onChange')}
 				step={number('step', ChangeableSlider.defaultProps.step)}
+				tooltip={boolean('tooltip', ChangeableSlider.defaultProps.tooltip)}
+				tooltipAsPercent={boolean('tooltipAsPercent', ChangeableSlider.defaultProps.tooltipAsPercent)}
+				tooltipForceSide={boolean('tooltipForceSide', ChangeableSlider.defaultProps.tooltipForceSide)}
+				tooltipSide={select('tooltipSide', ['before', 'after'], 'after')}
 				vertical={boolean('vertical', ChangeableSlider.defaultProps.vertical)}
-				value={number('value', ChangeableSlider.defaultProps.value)}
 			/>
-		)
+		),
+		{propTables: [Config]}
 	);
