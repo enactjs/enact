@@ -1,13 +1,16 @@
+/* eslint-disable react/sort-prop-types */
+
 /**
  * Exports the {@link ui/Toggleable.Toggleable} Higher-order Component (HOC).
  *
  * @module ui/Toggleable
  */
 
-import {forward} from '@enact/core/handle';
+import {forProp, forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
 import React from 'react';
+import warning from 'warning';
 
 /**
  * Default config for {@link ui/Toggleable.Toggleable}
@@ -16,15 +19,6 @@ import React from 'react';
  * @hocconfig
  */
 const defaultConfig = {
-	/**
-	 * Allows a Toggleable component to update its state by incoming props
-	 *
-	 * @type {Boolean}
-	 * @default false
-	 * @memberof ui/Toggleable.Toggleable.defaultConfig
-	 */
-	mutable: false,
-
 	/**
 	 * Configures the event name that activates the component
 	 *
@@ -42,7 +36,7 @@ const defaultConfig = {
 	deactivate: null,
 
 	/**
-	 * Configures the event name that toggles the component
+	 * Configures the event name that toggles the component.
 	 *
 	 * @type {String}
 	 * @default 'onToggle'
@@ -72,23 +66,39 @@ const defaultConfig = {
  * @public
  */
 const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
-	const {activate, deactivate, mutable, prop, toggle} = config;
+	const {activate, deactivate, prop, toggle} = config;
 	const defaultPropKey = 'default' + cap(prop);
-	const forwardToggle = forward(toggle);
-	const forwardActivate = forward(activate);
-	const forwardDeactivate = forward(deactivate);
 
 	return class Toggleable extends React.Component {
 		static propTypes = /** @lends ui/Toggleable.Toggleable.prototype */ {
 			/**
-			 * Whether or not the component is in a "toggled" state when first rendered.
-			 * *Note that this property name can be changed by the config. By default it is `defaultActive`.
+			 * Default toggled state applied at construction when the toggled prop is `undefined` or
+			 * `null`.
 			 *
 			 * @type {Boolean}
 			 * @default false
 			 * @public
 			 */
 			[defaultPropKey]: React.PropTypes.bool,
+
+			/**
+			 * Current toggled state. When set at construction, the component is considered
+			 * "controlled" and will only update its internal value when updated by new props. If
+			 * undefined, the component is "uncontrolled" and `Toggleable` will manage the toggled
+			 * state using callbacks defined by its configuration.
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			[prop]: React.PropTypes.bool,
+
+			/**
+			 * Event callback to notify that state should be toggled.
+			 *
+			 * @type {Function}
+			 * @public
+			 */
+			[toggle]: React.PropTypes.func,
 
 			/**
 			 * Whether or not the component is in a disabled state.
@@ -100,45 +110,69 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		static defaultProps = {
-			[defaultPropKey]: false
+			[defaultPropKey]: false,
+			disabled: false
 		}
 
 		constructor (props) {
 			super(props);
-			const key = (mutable && prop in props) ? prop : defaultPropKey;
+			let active = props[defaultPropKey];
+			let controlled = false;
+
+			if (prop in props) {
+				if (props[prop] != null) {
+					active = props[prop];
+				}
+
+				controlled = true;
+			}
+
 			this.state = {
-				active: props[key]
+				active,
+				controlled
 			};
 		}
 
 		componentWillReceiveProps (nextProps) {
-			if (mutable && prop in nextProps) {
+			if (this.state.controlled) {
 				this.setState({
 					active: !!nextProps[prop]
 				});
+			} else {
+				warning(
+					prop in nextProps,
+					`'${prop}' specified for an uncontrolled instance of Toggleable and will be
+					ignored. To make this instance of Toggleable controlled, '${prop}' should be
+					specified at creation.`
+				);
 			}
 		}
 
-		handleActivate = (ev) => {
-			if (!this.props.disabled) {
-				this.setState({active: true});
-				forwardActivate(ev, this.props);
+		handle = handle.bind(this)
+
+		updateActive = (active) => {
+			if (!this.state.controlled) {
+				this.setState({active});
 			}
 		}
 
-		handleDeactivate = (ev) => {
-			if (!this.props.disabled) {
-				this.setState({active: false});
-				forwardDeactivate(ev, this.props);
-			}
-		}
+		handleActivate = this.handle(
+			forProp('disabled', false),
+			forward(activate),
+			() => this.updateActive(true)
+		)
 
-		handleToggle = (ev) => {
-			if (!this.props.disabled) {
-				this.setState({active: !this.state.active});
-				forwardToggle(ev, this.props);
-			}
-		}
+		handleDeactivate = this.handle(
+			forProp('disabled', false),
+			forward(deactivate),
+			() => this.updateActive(false)
+		)
+
+		handleToggle = this.handle(
+			forProp('disabled', false),
+			forward(toggle),
+			() => this.updateActive(!this.state.active)
+		)
 
 		render () {
 			const props = Object.assign({}, this.props);
