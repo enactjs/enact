@@ -4,7 +4,6 @@ import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, text, select} from '@kadira/storybook-addon-knobs';
 
-import nullify from '../../src/utils/nullify.js';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 
 const Config = mergeComponentMetadata('Popup', PopupBase, Popup);
