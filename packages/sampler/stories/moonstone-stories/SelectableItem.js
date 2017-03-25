@@ -17,7 +17,7 @@ storiesOf('SelectableItem')
 		'Basic usage of SelectableItem',
 		() => (
 			<SelectableItem
-				disabled={nullify(boolean('disabled', false))}
+				disabled={boolean('disabled', false)}
 				inline={nullify(boolean('inline', false))}
 				onToggle={action('onToggle')}
 			>
