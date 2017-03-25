@@ -5,6 +5,7 @@ import invariant from 'invariant';
 import React from 'react';
 import Spotlight from '@enact/spotlight';
 
+import IdProvider from './IdProvider';
 import css from './Panels.less';
 
 /**
@@ -17,6 +18,15 @@ const ViewportBase = kind({
 	name: 'Viewport',
 
 	propTypes: /** @lends Viewport.prototype */ {
+
+		/**
+		 * A function that generates a globally-unique identifier for a panel index
+		 *
+		 * @type {Function}
+		 * @required
+		 */
+		generateId: React.PropTypes.func.isRequired,
+
 		/**
 		 * Set of functions that control how the panels are transitioned into and out of the
 		 * viewport
@@ -65,9 +75,9 @@ const ViewportBase = kind({
 	},
 
 	computed: {
-		children: ({children}) => React.Children.map(children, (child, index) => {
+		children: ({children, generateId}) => React.Children.map(children, (child, index) => {
 			return React.cloneElement(child, {
-				containerId: child.props.containerId || `panel-container-${index}`,
+				containerId: child.props.containerId || generateId(index),
 				'data-index': index
 			});
 		}),
@@ -75,6 +85,8 @@ const ViewportBase = kind({
 	},
 
 	render: ({arranger, children, enteringProp, index, noAnimation, ...rest}) => {
+		delete rest.generateId;
+
 		const count = React.Children.count(children);
 		invariant(
 			index === 0 && count === 0 || index < count,
@@ -98,5 +110,10 @@ const ViewportBase = kind({
 	}
 });
 
-export default ViewportBase;
-export {ViewportBase as Viewport, ViewportBase};
+const Viewport = IdProvider(
+	{onUnmount: Spotlight.remove, prefix: 'panel-container-'},
+	ViewportBase
+);
+
+export default Viewport;
+export {Viewport, ViewportBase};
