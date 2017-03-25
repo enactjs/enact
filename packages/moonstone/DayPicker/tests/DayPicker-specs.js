@@ -1,12 +1,12 @@
 import React from 'react';
 import {shallow} from 'enzyme';
-import DayPicker from '../DayPicker';
+import {DayPickerBase} from '../DayPicker';
 
 describe('DayPicker', () => {
 	describe('#aria-label', () => {
 		it('should use title, selected long string when day is single selected', function () {
 			const subject = shallow(
-				<DayPicker title="Day Picker" selected={0} />
+				<DayPickerBase title="Day Picker" selected={0} />
 			);
 
 			const expected = 'Day Picker Sunday';
@@ -17,7 +17,7 @@ describe('DayPicker', () => {
 
 		it('should use title, selected long string when day is multi selected', function () {
 			const subject = shallow(
-				<DayPicker title="Day Picker" selected={[0, 1]} />
+				<DayPickerBase title="Day Picker" selected={[0, 1]} />
 			);
 
 			const expected = 'Day Picker Sunday, Monday';
@@ -28,7 +28,7 @@ describe('DayPicker', () => {
 
 		it('should be null when day is not selected', function () {
 			const subject = shallow(
-				<DayPicker title="Day Picker" />
+				<DayPickerBase title="Day Picker" />
 			);
 
 			const expected = null;
@@ -39,7 +39,7 @@ describe('DayPicker', () => {
 
 		it('should be null when every day is selected', function () {
 			const subject = shallow(
-				<DayPicker title="Day Picker" selected={[0, 1, 2, 3, 4, 5, 6]} />
+				<DayPickerBase title="Day Picker" selected={[0, 1, 2, 3, 4, 5, 6]} />
 			);
 
 			const expected = null;
@@ -50,7 +50,7 @@ describe('DayPicker', () => {
 
 		it('should be null when every weekday is selected', function () {
 			const subject = shallow(
-				<DayPicker title="Day Picker" selected={[1, 2, 3, 4, 5]} />
+				<DayPickerBase title="Day Picker" selected={[1, 2, 3, 4, 5]} />
 			);
 
 			const expected = null;
@@ -61,7 +61,7 @@ describe('DayPicker', () => {
 
 		it('should be null when every weekend is selected', function () {
 			const subject = shallow(
-				<DayPicker title="Day Picker" selected={[0, 6]} />
+				<DayPickerBase title="Day Picker" selected={[0, 6]} />
 			);
 
 			const expected = null;
