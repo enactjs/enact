@@ -1,10 +1,7 @@
-import {RadioItemBase} from '@enact/moonstone/RadioItem';
-import {Toggleable} from '@enact/ui/Toggleable';
+import RadioItem from '@enact/moonstone/RadioItem';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean} from '@kadira/storybook-addon-knobs';
-
-const RadioItem = Toggleable({prop: 'selected'}, RadioItemBase);
 
 const radioData = {
 	longTextWithSpace : ['FirstLongTextWithSpace FirstLongTextWithSpace FirstLongTextWithSpace FirstLongTextWithSpace', 'SecondLongTextWithSpace SecondLongTextWithSpace SecondLongTextWithSpace SecondLongTextWithSpace'],

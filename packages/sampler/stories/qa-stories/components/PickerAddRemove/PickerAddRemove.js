@@ -1,12 +1,8 @@
 import React from 'react';
 
-import {Picker} from '@enact/moonstone/Picker';
-import {Input} from '@enact/moonstone/Input';
+import Picker from '@enact/moonstone/Picker';
+import Input from '@enact/moonstone/Input';
 import Button from '@enact/moonstone/Button';
-import Changeable from '@enact/ui/Changeable';
-
-const StatefulPicker = Changeable(Picker);
-const StatefulInput = Changeable(Input);
 
 class PickerAddRemove extends React.Component {
 	static displayName: 'PickerAddRemove'
@@ -86,13 +82,13 @@ class PickerAddRemove extends React.Component {
 		return (
 			<div>
 				<div>
-					<StatefulPicker {...this.props}>
+					<Picker {...this.props}>
 						{pickerChildren}
-					</StatefulPicker>
+					</Picker>
 				</div>
 				<div>
 					Value:
-					<StatefulInput
+					<Input
 						onChange={this.handleValueChange}
 						placeholder="value"
 						value={this.value}
@@ -100,7 +96,7 @@ class PickerAddRemove extends React.Component {
 				</div>
 				<div>
 					Index:
-					<StatefulInput
+					<Input
 						onChange={this.handleIndexChange}
 						placeholder="index"
 						value={this.index}
