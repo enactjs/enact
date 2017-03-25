@@ -142,7 +142,13 @@
 	}
 
 	&.fullBleed {
-		padding: 0 @moon-header-indent-width @moon-spotlight-outset;
-		border: 0;
+		border-top-width: 0;
+		border-color: @moon-header-full-bleed-border-color;
+		color: @moon-header-full-bleed-text-color;
+
+		.titleBelow,
+		.subTitleBelow {
+			color: @moon-header-title-below-full-bleed-text-color;
+		}
 	}
 }
