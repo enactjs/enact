@@ -188,7 +188,9 @@ const InputBase = kind({
 	computed: {
 		'aria-label': ({placeholder, type, value}) => calcAriaLabel(placeholder, type, value),
 		className: ({focused, styler}) => styler.append({focused}),
-		dir: ({value, placeholder}) => isRtlText(value || placeholder) ? 'rtl' : 'ltr'
+		dir: ({value, placeholder}) => isRtlText(value || placeholder) ? 'rtl' : 'ltr',
+		// ensure we have a value so the internal <input> is always controlled
+		value: ({value}) => typeof value === 'number' ? value : (value || '')
 	},
 
 	render: ({dir, disabled, iconAfter, iconBefore, onChange, placeholder, type, value, ...rest}) => {
@@ -206,7 +208,7 @@ const InputBase = kind({
 					onChange={onChange}
 					placeholder={placeholder}
 					type={type}
-					value={value || ''}
+					value={value}
 				/>
 				<InputDecoratorIcon position="after">{iconAfter}</InputDecoratorIcon>
 			</div>
