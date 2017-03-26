@@ -804,7 +804,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.forceUpdateJob.start();
 		}
 
-		forceUpdateJob = new Job(this.forceUpdate, 32)
+		forceUpdateJob = new Job(this.forceUpdate.bind(this), 32)
 
 		// render
 
