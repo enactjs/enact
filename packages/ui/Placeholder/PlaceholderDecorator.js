@@ -1,16 +1,10 @@
-/**
- * Exports the {@link ui/PlaceholderDecorator.PlaceholderDecorator} Higher-order Component (HOC).
- *
- * @module ui/Placeholder.PlaceholderDecorator
- */
-
 import hoc from '@enact/core/hoc';
 import React from 'react';
 
 /**
- * Default config for {@link ui/PlaceholderDecorator.PlaceholderDecorator}
+ * Default config for {@link ui/Placeholder.PlaceholderDecorator}
  *
- * @memberof ui/PlaceholderDecorator.PlaceholderDecorator
+ * @memberof ui/Placeholder.PlaceholderDecorator
  * @hocconfig
  * @public
  */
@@ -20,7 +14,7 @@ const defaultConfig = {
 	 *
 	 * @type {Object}
 	 * @default {height: 0, width: 'auto'}
-	 * @memberof ui/PlaceholderDecorator.PlaceholderDecorator.defaultConfig
+	 * @memberof ui/Placeholder.PlaceholderDecorator.defaultConfig
 	 */
 	style: {height: 0, width: 'auto'},
 
@@ -29,7 +23,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'div'
-	 * @memberof ui/PlaceholderDecorator.PlaceholderDecorator.defaultConfig
+	 * @memberof ui/Placeholder.PlaceholderDecorator.defaultConfig
 	 */
 	placeholderComponent: 'div'
 };
@@ -38,7 +32,7 @@ const defaultConfig = {
  * The context propTypes required by `PlaceholderDecorator`. This should be set as the `childContextTypes` of a
  * container so that the container could notify when scrolling
  *
- * @memberof ui/PlaceholderDecorator
+ * @memberof ui/Placeholder.PlaceholderDecorator
  * @public
  */
 const contextTypes = {
@@ -47,14 +41,14 @@ const contextTypes = {
 };
 
 /**
- * {@link ui/PlaceholderDecorator.PlaceholderDecorator} is a Higher-order Component that can be used that
+ * {@link ui/Placeholder.PlaceholderDecorator} is a Higher-order Component that can be used that
  * a container notify the Wrapped component when scrolling.
  *
  * Containers must provide `registerPlaceholder` and `unregisterPlaceholder` methods via React's context in order for
  * `PlaceholderDecorator` instances.
  *
  * @class PlaceholderDecorator
- * @memberof ui/PlaceholderDecorator
+ * @memberof ui/Placeholder
  * @hoc
  * @public
  */

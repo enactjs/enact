@@ -1,9 +1,3 @@
-/**
- * Exports the {@link ui/Placeholder.PlaceholderControllerDecorator} Higher-order Component (HOC).
- *
- * @module ui/Placeholder.PlaceholderControllerDecorator
- */
-
 import {forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
@@ -13,9 +7,9 @@ import ReactDOM from 'react-dom';
 import {contextTypes} from './PlaceholderDecorator';
 
 /**
- * Default config for {@link ui/Placeholder.PlaceholderDecorator}
+ * Default config for {@link ui/Placeholder.PlaceholderControllerDecorator}
  *
- * @memberof ui/Placeholder.PlaceholderDecorator
+ * @memberof ui/Placeholder.PlaceholderControllerDecorator
  * @hocconfig
  * @public
  */
@@ -27,7 +21,7 @@ const defaultConfig = {
 	 *
 	 * @type {Object}
 	 * @default null
-	 * @public
+	 * @memberof ui/Placeholder.PlaceholderControllerDecorator.defaultConfig
 	 */
 	bounds: null,
 
@@ -37,7 +31,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default onScroll
-	 * @public
+	 * @memberof ui/Placeholder.PlaceholderControllerDecorator.defaultConfig
 	 */
 	notify: 'onScroll'
 };
