@@ -1,7 +1,7 @@
 /**
- * Contains the declaration for the {@link moonstone/Switch.Switch} component.
+ * Contains the declaration for the {@link moonstone/Checkbox.Checkbox} component.
  *
- * @module moonstone/Switch
+ * @module moonstone/Checkbox
  */
 
 import kind from '@enact/core/kind';
@@ -10,30 +10,20 @@ import React, {PropTypes} from 'react';
 
 import Icon from '../Icon';
 
-import css from './Switch.less';
+import css from './Checkbox.less';
 
 /**
- * {@link moonstone/Switch.Switch} represents a Boolean state, and looks like a switch in
- * either the 'on' or 'off' positions.
+ * {@link moonstone/Checkbox.Checkbox} represents a Boolean state, and looks like a check mark in a box.
  *
- * @class Switch
- * @memberof moonstone/Switch
+ * @class Checkbox
+ * @memberof moonstone/Checkbox
  * @ui
  * @public
  */
-const SwitchBase = kind({
-	name: 'Switch',
+const CheckboxBase = kind({
+	name: 'Checkbox',
 
-	propTypes: /** @lends moonstone/Switch.Switch.prototype */ {
-		/**
-		 * Sets whether this control is animated during change.
-		 *
-		 * @type {Boolean}
-		 * @default true
-		 * @public
-		 */
-		animated: PropTypes.bool,
-
+	propTypes: /** @lends moonstone/Checkbox.Checkbox.prototype */ {
 		/**
 		 * Sets whether this control is disabled, and non-interactive
 		 *
@@ -65,14 +55,13 @@ const SwitchBase = kind({
 	},
 
 	defaultProps: {
-		animated: true,
 		selected: false,
 		disabled: false
 	},
 
 	styles: {
 		css,
-		className: 'switch'
+		className: 'checkbox'
 	},
 
 	handlers: {
@@ -87,22 +76,19 @@ const SwitchBase = kind({
 	},
 
 	computed: {
-		className: ({animated, selected, styler}) => styler.append(
-			{animated, selected}
-		)
+		className: ({selected, styler}) => styler.append({selected})
 	},
 
 	render: ({onToggle, ...rest}) => {
-		delete rest.animated;
 		delete rest.selected;
 
 		return (
-			<span {...rest} onClick={onToggle}>
-				<Icon className={css.icon}>circle</Icon>
-			</span>
+			<div {...rest} onClick={onToggle}>
+				<Icon className={css.icon}>check</Icon>
+			</div>
 		);
 	}
 });
 
-export default SwitchBase;
-export {SwitchBase as Switch, SwitchBase};
+export default CheckboxBase;
+export {CheckboxBase as Checkbox, CheckboxBase};

@@ -4,7 +4,7 @@ import React from 'react';
 import Toggleable from '@enact/ui/Toggleable';
 import ToggleItem from '@enact/moonstone/ToggleItem';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
+import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
 
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 
@@ -21,6 +21,7 @@ storiesOf('CheckboxItem')
 		() => (
 			<Component
 				disabled={boolean('disabled', false)}
+				iconPosition={select('iconPosition', ['before', 'after'], 'before')}
 				inline={boolean('inline', false)}
 				onToggle={action('onToggle')}
 			>

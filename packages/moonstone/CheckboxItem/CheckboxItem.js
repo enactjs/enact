@@ -8,6 +8,7 @@ import React, {PropTypes} from 'react';
 import kind from '@enact/core/kind';
 
 import ToggleItem from '../ToggleItem';
+import Checkbox from '../Checkbox';
 
 /**
  * {@link moonstone/CheckboxItem.CheckboxItem} is a component that
@@ -39,6 +40,15 @@ const CheckboxItemBase = kind({
 		 * @public
 		 */
 		disabled: PropTypes.bool,
+
+		/**
+		 * Specifies on which side (`before` or `after`) of the text the icon appears.
+		 *
+		 * @type {String}
+		 * @default 'before'
+		 * @public
+		 */
+		iconPosition: PropTypes.oneOf(['before', 'after']),
 
 		/**
 		 * When `true`, an inline visual effect is applied to the button.
@@ -81,13 +91,20 @@ const CheckboxItemBase = kind({
 
 	defaultProps: {
 		disabled: false,
+		iconPosition: 'before',
 		inline: false,
 		selected: false,
 		value: ''
 	},
 
+	computed: {
+		icon: ({selected, disabled}) => (
+			<Checkbox selected={selected} disabled={disabled} />
+		)
+	},
+
 	render: (props) => (
-		<ToggleItem {...props} icon="check" />
+		<ToggleItem {...props} />
 	)
 });
 
