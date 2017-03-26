@@ -1159,14 +1159,15 @@ const Spotlight = (function () {
 		 * @public
 		 */
 		set: function () {
-			let containerId, config;
+			let containerId, config, existingConfig;
 
 			if (typeof arguments[0] === 'object') {
 				config = arguments[0];
 			} else if (typeof arguments[0] === 'string' && typeof arguments[1] === 'object') {
 				containerId = arguments[0];
 				config = arguments[1];
-				if (!_containers.get(containerId)) {
+				existingConfig = _containers.get(containerId);
+				if (!existingConfig) {
 					throw new Error('Container "' + containerId + '" doesn\'t exist!');
 				}
 			} else {
@@ -1174,18 +1175,18 @@ const Spotlight = (function () {
 			}
 
 			for (let key in config) {
-				const validKey = typeof GlobalConfig[key] !== 'undefined';
-
-				if (!containerId && validKey && typeof config[key] !== 'undefined') {
-					GlobalConfig[key] = config[key];
-				} else if (containerId && !validKey) {
-					delete config[key];
+				if (typeof GlobalConfig[key] !== 'undefined') {
+					if (containerId) {
+						existingConfig[key] = config[key];
+					} else if (typeof config[key] !== 'undefined') {
+						GlobalConfig[key] = config[key];
+					}
 				}
 			}
 
 			if (containerId) {
 				// remove "undefined" items
-				_containers.set(containerId, extend({}, config));
+				_containers.set(containerId, extend({}, existingConfig));
 			}
 		},
 

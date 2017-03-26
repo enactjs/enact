@@ -1,5 +1,6 @@
 @import '../styles/colors.less';
 @import '../styles/variables.less';
+@import '../styles/text.less';
 
 .slider {
 	position: relative;
@@ -51,6 +52,12 @@
 			box-sizing: border-box;
 			will-change: transform;
 			transition: transform ease-out 100ms;
+
+			.moon-custom-text({
+				height: @moon-slider-knob-height-large;
+				width: @moon-slider-knob-width-large;
+				border-radius: (@moon-slider-knob-height-large / 2);
+			})
 		}
 	}
 
@@ -76,6 +83,12 @@
 			border-radius: @moon-slider-knob-width;
 			box-sizing: border-box;
 			visibility: hidden;
+
+			.moon-custom-text({
+				height: @moon-slider-knob-height-large;
+				width: @moon-slider-knob-width-large;
+				border-radius: @moon-slider-knob-width-large;
+			})
 		}
 
 		:global(.enact-locale-right-to-left) & {
@@ -96,6 +109,15 @@
 		.input {
 			padding: 0 @h-gap;
 		}
+
+		.moon-custom-text({
+			@h-gap-large: (@moon-slider-knob-width-large / 2);
+			padding: ((@moon-slider-knob-height-large - @moon-slider-bar-height) / 2) @h-gap-large;
+
+			.input {
+				padding: 0 @h-gap-large;
+			}
+		})
 	}
 
 	&.vertical {
@@ -130,6 +152,15 @@
 			-webkit-appearance: slider-vertical; /* WebKit */
 			opacity: 0.0001;	// This needs to be still visible to remain interactive, so we can't simply set visibility:hidden or display:none or even -webkit-appearance:none. This becomes effectively invisible with 0.0001
 		}
+
+		.moon-custom-text({
+			@v-gap-large: (@moon-slider-knob-width / 2);
+			padding: @v-gap-large ((@moon-slider-knob-height-large - @moon-slider-bar-height) / 2);
+
+			.input {
+				padding: @v-gap-large 0;
+			}
+		})
 	}
 
 	&:global(.spottable) {
