@@ -1,7 +1,7 @@
 /**
  * Exports the {@link ui/PlaceholderDecorator.PlaceholderDecorator} Higher-order Component (HOC).
  *
- * @module ui/PlaceholderDecorator
+ * @module ui/Placeholder.PlaceholderDecorator
  */
 
 import hoc from '@enact/core/hoc';
