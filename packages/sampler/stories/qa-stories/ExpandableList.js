@@ -1,5 +1,4 @@
 import Button from '@enact/moonstone/Button';
-import Changeable from '@enact/ui/Changeable';
 import ExpandableList from '@enact/moonstone/ExpandableList';
 import {RadioControllerDecorator} from '@enact/ui/RadioDecorator';
 import React from 'react';
