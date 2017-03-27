@@ -191,6 +191,10 @@ const PickerBase = kind({
 /**
  * A Picker component that allows selecting values from a list of values.
  *
+ * By default, `Picker` maintains the state of its `value` property. Supply the `defaultValue`
+ * property to control its initial value. If you wish to directly control updates to the component,
+ * supply a value to `value` at creation time and update it in response to `onChange` events.
+ *
  * @class Picker
  * @memberof moonstone/Picker
  * @mixes ui/Changeable.Changeable

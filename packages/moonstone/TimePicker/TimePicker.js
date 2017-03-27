@@ -71,6 +71,16 @@ const indexOfMeridiem = (time, meridiems) => {
  * Set the [value]{@link moonstone/TimePicker.TimePicker#value} property to a standard JavaScript
  * {@glossary Date} object to initialize the picker.
  *
+ * By default, `TimePicker` maintains the state of its `value` property. Supply the
+ * `defaultValue` property to control its initial value. If you wish to directly control updates
+ * to the component, supply a value to `value` at creation time and update it in response to
+ * `onChange` events.
+ *
+ * `TimePicker` is an expandable component and it maintains its open/closed state by default. The
+ * initial state can be supplied using `defaultOpen`. In order to directly control the open/closed
+ * state, supply a value for `open` at creation time and update its value in response to
+ * `onClose`/`OnOpen` events.
+ *
  * @class TimePicker
  * @memberof moonstone/TimePicker
  * @mixes ui/Toggleable.Toggleable

@@ -14,6 +14,11 @@ import ToggleItem from '../ToggleItem';
  * is an Item that is Toggleable. It has two states: `true` (selected) & `false`
  * (unselected). It uses a check icon to represent its selected state.
  *
+ * By default, `CheckboxItem` maintains the state of its `selected` property. Supply the
+ * `defaultSelected` property to control its initial value. If you wish to directly control updates
+ * to the component, supply a value to `selected` at creation time and update it in response to
+ * `onToggle` events.
+ *
  * @class CheckboxItem
  * @memberof moonstone/CheckboxItem
  * @ui

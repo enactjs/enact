@@ -13,7 +13,7 @@ import {ToggleItemBase} from '../ToggleItem';
 import css from './RadioItem.less';
 
 /**
- * {@link moonstone/RadioItem.RadioItem} is a component that
+ * {@link moonstone/RadioItem.RadioItemBase} is a component that
  * combines a Toggleable radio selector and an Item. It has two selected states
  * `true` & `false`.
  *
@@ -112,6 +112,11 @@ const RadioItemBase = kind({
  * {@link moonstone/RadioItem.RadioItem} is a component that combines a
  * {@link ui/Toggleable.Toggleable} radio selector and an Item. It has two selected states `true` &
  * `false`.
+ *
+ * By default, `RadioItem` maintains the state of its `selected` property. Supply the
+ * `defaultSelected` property to control its initial value. If you wish to directly control updates
+ * to the component, supply a value to `selected` at creation time and update it in response to
+ * `onToggle` events.
  *
  * @class RadioItem
  * @memberof moonstone/RadioItem

@@ -284,9 +284,14 @@ const IncrementSliderFactory = factory((config) => {
 	const Base = IncrementSliderBaseFactory(config);
 
 	/**
-	 * {@link moonstone/IncrementSlider.IncrementSlider} is a IncrementSlider with
+	 * {@link moonstone/IncrementSlider.IncrementSlider} is an IncrementSlider with
 	 * Moonstone styling, Changeable, Pressable and SliderDecorator applied with IconButtons to
-	 * increment and decrement the value
+	 * increment and decrement the value.
+	 *
+	 * By default, `IncrementSlider` maintains the state of its `value` property. Supply the
+	 * `defaultValue` property to control its initial value. If you wish to directly control updates
+	 * to the component, supply a value to `value` at creation time and update it in response to
+	 * `onChange` events.
 	 *
 	 * @class IncrementSlider
 	 * @memberof moonstone/IncrementSlider

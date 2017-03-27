@@ -14,7 +14,7 @@ import Switch from '../Switch';
 import css from './SwitchItem.less';
 
 /**
- * {@link moonstone/SwitchItem.SwitchItem} represents a Boolean state. It displays a descriptive
+ * {@link moonstone/SwitchItem.SwitchItemBase} represents a Boolean state. It displays a descriptive
  * text and has a switch that represents the on/off state.
  *
  * @class SwitchItemBase
@@ -104,6 +104,11 @@ const SwitchItemBase = kind({
 /**
  * {@link moonstone/SwitchItem.SwitchItem} represents a Boolean state. It displays a descriptive
  * text and has a switch that represents the on/off state.
+ *
+ * By default, `SwitchItem` maintains the state of its `selected` property. Supply the
+ * `defaultSelected` property to control its initial value. If you wish to directly control updates
+ * to the component, supply a value to `selected` at creation time and update it in response to
+ * `onToggle` events.
  *
  * @class SwitchItem
  * @memberof moonstone/SwitchItem

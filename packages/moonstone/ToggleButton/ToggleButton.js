@@ -13,7 +13,7 @@ import Button from '../Button';
 import css from './ToggleButton.less';
 
 /**
- * {@link moonstone/ToggleButton.ToggleButton} is a stateless [Button]{@link moonstone/Button.Button}
+ * {@link moonstone/ToggleButton.ToggleButtonBase} is a stateless [Button]{@link moonstone/Button.Button}
  * that can be toggled by changing its `selected` property
  *
  * @class ToggleButtonBase
@@ -25,7 +25,7 @@ import css from './ToggleButton.less';
 const ToggleButtonBase = kind({
 	name: 'ToggleButton',
 
-	propTypes: /** @lends moonstone/ToggleButton.ToggleButton.prototype */ {
+	propTypes: /** @lends moonstone/ToggleButton.ToggleButtonBase.prototype */ {
 		/**
 		 * The background-color opacity of this button; valid values are `'opaque'`, `'translucent'`,
 		 * and `'transparent'`.
@@ -157,6 +157,11 @@ const ToggleButtonBase = kind({
 
 /**
  * {@link moonstone/ToggleButton.ToggleButton} is a [Button]{@link moonstone/Button.Button} that is [Toggleable]{@link ui/Toggleable.Toggleable}.
+ *
+ * By default, `ToggleButton` maintains the state of its `selected` property. Supply the
+ * `defaultSelected` property to control its initial value. If you wish to directly control updates
+ * to the component, supply a value to `selected` at creation time and update it in response to
+ * `onToggle` events.
  *
  * @class ToggleButton
  * @memberof moonstone/ToggleButton

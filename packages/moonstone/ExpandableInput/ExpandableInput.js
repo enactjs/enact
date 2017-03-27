@@ -299,6 +299,16 @@ class ExpandableInputBase extends React.Component {
  * {@link moonstone/ExpandableInput.ExpandableInputBase} is a stateful component that
  * expands to render a {@link moonstone/Input.Input}.
  *
+ * By default, `ExpandableInput` maintains the state of its `value` property. Supply the
+ * `defaultValue` property to control its initial value. If you wish to directly control updates
+ * to the component, supply a value to `value` at creation time and update it in response to
+ * `onChange` events.
+ *
+ * `ExpandableInput` is an expandable component and it maintains its open/closed state by default.
+ * The initial state can be supplied using `defaultOpen`. In order to directly control the
+ * open/closed state, supply a value for `open` at creation time and update its value in response to
+ * `onClose`/`OnOpen` events.
+ *
  * @class ExpandableInput
  * @memberof moonstone/ExpandableInput
  * @mixes moonstone/ExpandableItem.Expandable

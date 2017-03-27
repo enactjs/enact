@@ -422,6 +422,11 @@ const SliderFactory = factory(css => {
 	 * {@link moonstone/Slider.Slider} is a Slider with Moonstone styling, Spottable, Changeable,
 	 * Pressable and SliderDecorator applied.
 	 *
+	 * By default, `Slider` maintains the state of its `value` property. Supply the `defaultValue`
+	 * property to control its initial value. If you wish to directly control updates to the
+	 * component, supply a value to `value` at creation time and update it in response to `onChange`
+	 * events.
+	 *
 	 * @class Slider
 	 * @memberof moonstone/Slider
 	 * @mixes ui/Changeable.Changeable

@@ -266,6 +266,15 @@ const ExpandableListBase = kind({
  * {@link moonstone/LabeledItem.LabeledItem} that can be expanded to show a selectable
  * list of items.
  *
+ * By default, `ExpandableList` maintains the state of its `selected` property. Supply the
+ * `defaultSelected` property to control its initial value. If you wish to directly control updates
+ * to the component, supply a value to `selected` at creation time and update it in response to
+ * `onChange` events.
+ *
+ * `ExpandableList` maintains its open/closed state by default. The initial state can be supplied
+ * using `defaultOpen`. In order to directly control the open/closed state, supply a value for
+ * `open` at creation time and update its value in response to `onClose`/`OnOpen` events.
+ *
  * @class ExpandableList
  * @memberof moonstone/ExpandableList
  * @mixes moonstone/ExpandableItem.Expandable

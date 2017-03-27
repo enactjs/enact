@@ -104,6 +104,11 @@ const SelectableItemBase = kind({
  * {@link ui/Toggleable.Toggleable}. It has two selected states `true` & `false`. It uses a dot to
  * represent its selected state.
  *
+ * By default, `SelectableItem` maintains the state of its `selected` property. Supply the
+ * `defaultSelected` property to control its initial value. If you wish to directly control updates
+ * to the component, supply a value to `selected` at creation time and update it in response to
+ * `onToggle` events.
+ *
  * @class SelectableItem
  * @memberof moonstone/SelectableItem
  * @mixes ui/Toggleable.Toggleable
