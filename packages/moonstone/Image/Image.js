@@ -95,8 +95,8 @@ const ImageBase = kind({
 
 	render: ({bgImage, style, ...rest}) => {
 		delete rest.placeholder;
-		delete rest.src;
 		delete rest.sizing;
+		delete rest.src;
 
 		return (
 			<div role="img" {...rest} style={{...style, backgroundImage: bgImage}} />

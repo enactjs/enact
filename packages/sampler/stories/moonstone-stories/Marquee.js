@@ -22,7 +22,7 @@ storiesOf('Marquee')
 				marqueeResetDelay={number('marqueeResetDelay', 1000)}
 				marqueeSpeed={number('marqueeSpeed', 60)}
 			>
-				{text('children', 'The quick brown fox jumped over the lazy dog.  The bean bird flies at sundown.')}
+				{text('children', 'The quick brown fox jumped over the lazy dog. The bean bird flies at sundown.')}
 			</MarqueeText>
 		)
 	);

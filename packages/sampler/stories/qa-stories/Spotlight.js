@@ -357,7 +357,7 @@ storiesOf('Spotlight')
 							Item
 						</Item>
 						<LabeledItem
-							label={'Label'}
+							label="Label"
 							spotlightDisabled={boolean('spotlightDisabled', false)}
 						>
 							LabeledItem
@@ -369,7 +369,7 @@ storiesOf('Spotlight')
 						</Divider>
 						<ExpandableItem
 							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title={'Various Items in an ExpandableItem'}
+							title="Various Items in an ExpandableItem"
 						>
 							<CheckboxItem
 								spotlightDisabled={boolean('spotlightDisabled', false)}
@@ -392,7 +392,7 @@ storiesOf('Spotlight')
 								SwitchItem
 							</SwitchItem>
 							<ToggleItem
-								icon={'plus'}
+								icon="plus"
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 							>
 								ToggleItem
@@ -401,31 +401,31 @@ storiesOf('Spotlight')
 						<ExpandableList
 							noLockBottom
 							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title={'ExpandableList'}
+							title="ExpandableList"
 						>
 							{Items}
 						</ExpandableList>
 						<ExpandableInput
 							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title={'ExpandableInput'}
+							title="ExpandableInput"
 						/>
 						<ExpandablePicker
 							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title={'ExpandablePicker'}
+							title="ExpandablePicker"
 						>
 							{Items}
 						</ExpandablePicker>
 						<DatePicker
 							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title={'DatePicker'}
+							title="DatePicker"
 						/>
 						<DayPicker
 							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title={'DayPicker'}
+							title="DayPicker"
 						/>
 						<TimePicker
 							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title={'TimePicker'}
+							title="TimePicker"
 						/>
 					</div>
 				</div>

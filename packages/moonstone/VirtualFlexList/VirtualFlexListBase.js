@@ -49,6 +49,8 @@ const sizeShape = PropTypes.oneOfType([
  * @private
  */
 class VirtualFlexListCore extends Component {
+	static displayName = 'VirtualFlexListBase'
+
 	static propTypes = /** @lends moonstone/VirtualFlexList.VirtualFlexListCore.prototype */ {
 		/**
 		 * The render function for an item of the list.

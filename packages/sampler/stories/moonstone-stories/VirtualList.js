@@ -10,7 +10,6 @@ import {mergeComponentMetadata} from '../../src/utils/propTables';
 
 const Config = mergeComponentMetadata('VirtualList', VirtualListCore, VirtualList);
 
-
 const
 	style = {
 		item: {
@@ -25,6 +24,7 @@ const
 	// eslint-disable-next-line enact/prop-types, enact/display-name
 	renderItem = (size) => ({data, index, ...rest}) => {
 		const itemStyle = {height: size + 'px', ...style.item};
+
 		return (
 			<Item {...rest} style={itemStyle}>
 				{data[index]}
