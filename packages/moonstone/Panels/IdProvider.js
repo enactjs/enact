@@ -73,7 +73,7 @@ const IdProvider = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentWillUnmount () {
 			if (typeof onUnmount === 'function') {
-				// Call the onUnmoun handler for each generated id (note: not the key)
+				// Call the onUnmount handler for each generated id (note: not the key)
 				for (const id in this.ids) {
 					onUnmount(this.ids[id]);
 				}
