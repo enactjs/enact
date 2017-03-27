@@ -18,7 +18,6 @@ const inputData = {
 	type: ['text', 'number', 'password']
 };
 
-
 storiesOf('Input')
 	.addDecorator(withKnobs)
 	.addWithInfo(
@@ -32,7 +31,7 @@ storiesOf('Input')
 				noDecorator={boolean('noDecorator')}
 				placeholder={text('placeholder')}
 				type={select('type', inputData.type, inputData.type[0])}
-				value={text('value', inputData.longText)}
+				defaultValue={text('value', inputData.longText)}
 			/>
 		)
 	)
@@ -47,7 +46,7 @@ storiesOf('Input')
 				noDecorator={boolean('noDecorator')}
 				placeholder={text('placeholder', 'Input some tall characters')}
 				type={select('type', inputData.type, inputData.type[0])}
-				value={select('value', inputData.tallText,  inputData.tallText[2])}
+				defaultValue={select('value', inputData.tallText,  inputData.tallText[2])}
 			/>
 		)
 	)
@@ -62,7 +61,7 @@ storiesOf('Input')
 				noDecorator={boolean('noDecorator')}
 				placeholder={text('placeholder')}
 				type={select('type', inputData.type, inputData.type[0])}
-				value={text('value', inputData.extraSpaceText)}
+				defaultValue={text('value', inputData.extraSpaceText)}
 			/>
 		)
 	)
@@ -79,7 +78,7 @@ storiesOf('Input')
 						noDecorator={boolean('noDecorator')}
 						placeholder={text('placeholder')}
 						type={select('type', inputData.type, inputData.type[0])}
-						value={text('value1', inputData.initialValue + ' one')}
+						defaultValue={text('value1', inputData.initialValue + ' one')}
 					/>
 					<StatefulInput
 						onChange={action('onChange')}
@@ -89,7 +88,7 @@ storiesOf('Input')
 						noDecorator={boolean('noDecorator')}
 						placeholder={text('placeholder')}
 						type={select('type', inputData.type, inputData.type[0])}
-						value={text('value2', inputData.initialValue + ' two')}
+						defaultValue={text('value2', inputData.initialValue + ' two')}
 					/>
 				</div>
 				<div>
@@ -101,7 +100,7 @@ storiesOf('Input')
 						noDecorator={boolean('noDecorator')}
 						placeholder={text('placeholder')}
 						type={select('type', inputData.type, inputData.type[0])}
-						value={text('value3', inputData.initialValue + ' three')}
+						defaultValue={text('value3', inputData.initialValue + ' three')}
 					/>
 					<StatefulInput
 						onChange={action('onChange')}
@@ -111,7 +110,7 @@ storiesOf('Input')
 						noDecorator={boolean('noDecorator')}
 						placeholder={text('placeholder')}
 						type={select('type', inputData.type, inputData.type[0])}
-						value={text('value4', inputData.initialValue + ' four')}
+						defaultValue={text('value4', inputData.initialValue + ' four')}
 					/>
 				</div>
 			</div>
@@ -127,7 +126,7 @@ storiesOf('Input')
 				iconBefore={select('iconBefore', iconNames)}
 				noDecorator={boolean('noDecorator')}
 				type={inputData.type[1]}
-				value={number('value', inputData.initialNumericValue)}
+				defaultValue={number('value', inputData.initialNumericValue)}
 			/>
 		)
 	);

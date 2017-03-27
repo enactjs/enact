@@ -32,35 +32,36 @@ class PickerAddRemove extends React.Component {
 	constructor (props) {
 		super(props);
 
-		this.value = '';
-		this.index = 0;
 		this.state = {
-			children: {}
+			children: {
+				0 : ''
+			},
+			displayIndex: 0,
+			inputIndex: 0,
+			inputValue: ''
 		};
-	}
-
-	componentWillUpdate () {
-		this.value = '';
-		this.index = 0;
 	}
 
 	handleAddReplace = () => {
 		const children = this.state.children,
-			index = this.index,
-			value = this.value || 'sample' + index,
+			index = this.state.inputIndex,
+			value = this.state.inputValue || 'sample ' + index,
 			newChild = {};
 
 		newChild[index] = value;
 		const newChildren = Object.assign({}, children, newChild);
 
 		this.setState({
-			children: newChildren
+			children: newChildren,
+			displayIndex: this.state.inputIndex,
+			inputIndex: this.state.inputIndex + 1,
+			inputValue: ''
 		});
 	}
 
 	handleRemove = () => {
 		const children = Object.assign({}, this.state.children),
-			index = this.index;
+			index = this.state.inputIndex;
 		delete children[index];
 
 		this.setState({
@@ -73,11 +74,11 @@ class PickerAddRemove extends React.Component {
 		if (isNaN(index)) {
 			index = 0;
 		}
-		this.index = index;
+		this.setState({inputIndex: index});
 	}
 
 	handleValueChange = ({value}) => {
-		this.value = value;
+		this.setState({inputValue: value});
 	}
 
 	render () {
@@ -86,7 +87,9 @@ class PickerAddRemove extends React.Component {
 		return (
 			<div>
 				<div>
-					<StatefulPicker {...this.props}>
+					<StatefulPicker
+						{...this.props}
+					>
 						{pickerChildren}
 					</StatefulPicker>
 				</div>
@@ -95,7 +98,7 @@ class PickerAddRemove extends React.Component {
 					<StatefulInput
 						onChange={this.handleValueChange}
 						placeholder="value"
-						value={this.value}
+						value={this.state.inputValue}
 					/>
 				</div>
 				<div>
@@ -103,7 +106,7 @@ class PickerAddRemove extends React.Component {
 					<StatefulInput
 						onChange={this.handleIndexChange}
 						placeholder="index"
-						value={this.index}
+						value={this.state.inputIndex}
 					/>
 				</div>
 				<Button onClick={this.handleAddReplace}>
