@@ -3,7 +3,7 @@ import Input from '@enact/moonstone/Input';
 import Changeable from '@enact/ui/Changeable';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, number, select, text} from '@kadira/storybook-addon-knobs';
+import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
 
 const StatefulInput = Changeable(Input);
 
