@@ -16,10 +16,6 @@ import css from './Switch.less';
  * {@link moonstone/Switch.Switch} represents a Boolean state, and looks like a switch in
  * either the 'on' or 'off' positions.
  *
- * By default, `Switch` maintains the state of its `selected` property. Supply the `defaultSelected`
- * property to control its initial value. If you wish to directly control updates to the component,
- * supply a value to `selected` at creation time and update it in response to `onToggle` events.
- *
  * @class Switch
  * @memberof moonstone/Switch
  * @ui
