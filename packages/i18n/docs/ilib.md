@@ -19,7 +19,7 @@ library that wraps `iLib`'s functionality for easy access from Enact apps.
 You can use it like this:
 
 ```javascript 
-import DateFmt from '@enact/i18n/ilib/lib/DateFmt';
+import DateFmt from 'ilib/DateFmt';
 
 const formatter = new DateFmt({
 	date: 'dmwy',
@@ -32,14 +32,14 @@ const formatter = new DateFmt({
 
 ### ResBundle
 
-`@enact/i18n/ilib/lib/ResBundle`, the resource bundle class, represents a set of translated
+`ilib/ResBundle`, the resource bundle class, represents a set of translated
 strings.  Each app has its own resource bundle.  These bundles are loaded
 dynamically, with each one having a name and locale.
 
 The locale may be specified as an option in the constructor.
 
 ```javascript
-	import ResBundle from '@enact/i18n/ilib/lib/ResBundle';
+	import ResBundle from 'ilib/ResBundle';
 	...
 	const rb = new ResBundle({locale: "ko-KR"});
 ```
@@ -47,7 +47,7 @@ The locale may be specified as an option in the constructor.
 In practical terms, `ResBundle`'s most important method is `getString()`.
 
 ```javascript
-	const str = rb.getString("My Label");
+	const str = toIString("My Label");
 ```
 
 The actual data contained in the bundle is stored under the application's
@@ -80,127 +80,46 @@ locale-specific files will typically include values for "title", "keywords", and
 "description".  The other properties will keep the values inherited from the
 app's top-level `appinfo.json`.
 
-### Translating Strings using $L()
-
-`$L()` is a convenience function wrapping `ilib/ResBundle` that is exported by the
-main Enact library. When `i18n/ilib` is loaded, it will update this method to support
-`ResBundle`.
-
-It can be used as follows:
-
-```javascript
-import {$L} from '@enact/i18n';
-
-const translatedString = $L('Some String');
-
-// You can also use it inside jsx
-<Panel title={$L('Some Title')}>
-	<div>{$L('Some Children')}</div>
-	<div>{translatedString}</div>
-</Panel>
-```
-
-In order for the translations to be successful, a locale-specific translation file must be available. If a suitable translation cannot be found, the original string will be returned.
-
-Each translatable string in your application should be wrapped in a call to
-`$L()`.  For example:
-
-You will need to extract the strings inside the `$L()` calls in your source
-code and write them out to a `strings.json` file for each locale.  (Most likely
-you'll want to create a script to do this.)
-
-The `strings.json` files should contain the translations in JSON format, i.e.:
-
-```javascript
-	{
-		"source string1": "translated string1",
-		"source string2": "translated string2",
-		...
-	} 
-```
-
-Many localization houses are able to provide translations in this format.
-
-The string returned from a call to `$L()` will be the translated string for the
-current UI locale. If a different locale or a bundle with a different name is
-needed, use `ResBundle` directly instead of `$L()`.
-
-## Locale-Specific CSS
-
-When the `i18n/ilib` library is loaded into your app, it automatically applies
-some CSS classes to the root of your.  You can use these to write
-locale-specific CSS override classes using the `global` specifier.  These classes
-may indicate things such as whether the locale uses a right-to-left orientation
-or whether it uses non-Latin fonts.
-
-Classes added to the body are:
-
-* `enact-locale-non-latin`, if the locale uses a non-Latin font
-
-* `enact-locale-right-to-left`, if the locale is oriented right-to-left (in the
-	absence of this class, the default orientation is left-to-right)
-
-* `enact-locale-non-italic`, if the locale uses a script that is not typically
-	italicized, such as Chinese or Thai.  (You may also use this in your own
-	classes to enable or disable italicization.)
-
-The following classes allow you to switch functionality based on the language,
-script, or region of the current UI locale:
-
-* `enact-locale-<language>`
-* `enact-locale-<script>`
-* `enact-locale-<region>`
-* `enact-locale-<language>-<script>`
-* `enact-locale-<language>-<region>`
-* `enact-locale-<language>-<script>-<region>`
-
-So for the United States you would see this `enact-locale-en enact-locale-en-US enact-locale-US`.
-
-Here's an example from the Moonstone package in which locale-specific CSS is
-used to turn on right-to-left orientation for a widget:
-
-```css
-	:global(.enact-locale-right-to-left) & {
-		flex-direction: row-reverse;
-	}
-```
+`$L()` is a convience method for `ResBundle`, it is described in the main section of the `i18n` docs [here](../index.md)
 
 ## Using iLib for formatting
 
 #### String Formatting
 
-`i18n/ilib/IString` is used to format strings.  You will not generally need to require `IString`
+`ilib/IString` is used to format strings.  You will not generally need to require `IString`
 directly to use it. Its `format()` method allows for
 interpolation of named parameters into the string.  The following syntax is
 recommended:
 
 ```javascript
-	const template = $L.rb.getString("There are {n} objects.");
+	import {toIString} from 'i18n/$L'
+
+	const template = toIString("There are {n} objects.");
 	const str = template.format({n: 15});
 ```
 
 `str` now has the value `"There are 15 objects."`
 
-Note that we are populating `template` by calling `getString()` on the
+Note that we are populating `template` by calling `toIString()` on the
 localized resource bundle `$L.rb`.  This is because `format()` accepts an
-`i18n/ilib/IString` object, but not an intrinsic JavaScript string.  (A call to
-`getString()` on a resource bundle returns an instance of `i18n/ilib/IString`, while
+`ilib/IString` object, but not an intrinsic JavaScript string.  (A call to
+`toIString()` on a resource bundle returns an instance of `ilib/IString`, while
 a call to `$L()` returns an intrinsic JavaScript string.)
 
-`i18n/ilib/IString` has the same methods as an intrinsic string, and in many cases may
+`ilib/IString` has the same methods as an intrinsic string, and in many cases may
 be used as a substitute.  For those places that require an intrinsic string, you
-must call the `toString()` method to convert the `i18n/ilib/IString` to an intrinsic
+must call the `toString()` method to convert the `ilib/IString` to an intrinsic
 string.
 
 #### Handling Plurals
 
-`i18n/ilib/IString` uses the `formatChoice()` method to handle plurals.  This allows
+`ilib/IString` uses the `formatChoice()` method to handle plurals.  This allows
 translators to adjust strings to handle plurals properly for their respective
 languages.
 
 ```javascript
 	const number = 3;
-	const template = rb.getString( "0#There are no objects.|1#There is 1 object.|#There are {n} objects.");
+	const template = toIString( "0#There are no objects.|1#There is 1 object.|#There are {n} objects.");
 	const str = template.formatChoice(number, {n: number});
 ```
 
@@ -211,7 +130,7 @@ languages.
 Serbian.
 
 ```javascript
-	const template = rb.getString( "0#There are no objects.|few#There are a few ({n}) objects.|#There are many objects. ({n})");
+	const template = toIString( "0#There are no objects.|few#There are a few ({n}) objects.|#There are many objects. ({n})");
 ```
 
 ### Dates and Times
@@ -234,13 +153,13 @@ The formatting of dates and times can differ widely from one locale to the next:
 ------------------------------------
 ```
 
-In `iLib`, the `i18n/ilib/DateFmt` class is used to format dates and times.  The
+In `iLib`, the `ilib/DateFmt` class is used to format dates and times.  The
 constructor accepts various options, which control how the formatter behaves.
 Once you create a `DateFmt` instance, you may call its `format()` method as many
 times as you want to format dates according to the given set of options.
 
 ```javascript
-	import DateFmt from 'i18n/ilib/DateFmt';
+	import DateFmt from 'ilib/DateFmt';
 	...
 	const fmt = new DateFmt();
 	const d = fmt.format(date);
@@ -273,7 +192,7 @@ To create a date, you may call the factory method or use the calendar date
 directly, e.g.:
 
 ```javascript
-	import HebrewDate from 'i18n/ilib/HebrewDate';
+	import HebrewDate from 'ilib/HebrewDate';
 	...
 	const now = new HebrewDate();
 ```
@@ -281,7 +200,7 @@ directly, e.g.:
 This is equivalent to the following factory method call:
 
 ```javascript
-	import dateFactory from 'i18n/ilib/DateFactory';
+	import dateFactory from 'ilib/DateFactory';
 	...
 	const now = dateFactory({type: "hebrew"});
 ```
@@ -312,11 +231,11 @@ To format a date in a non-Gregorian Calendar, follow the pattern of creating a
 
 The value of `d` is `"Adar 27, 5773 11:47PM PDT"`.
 
-Use `i18n/ilib/CalendarFactory` as a factory method to
+Use `ilib/CalendarFactory` as a factory method to
 create the other calendar types.
 
 ```javascript
-	import calendarFactory from 'i18n/ilib/CalendarFactory';
+	import calendarFactory from 'ilib/CalendarFactory';
 	const cal = calendarFactory({
 		// looks up calendar for this locale
 		locale: "nl-NL"
@@ -328,12 +247,12 @@ create the other calendar types.
 
 #### Ranges and Durations
 
-`i18n/ilib/DateRngFmt` may be used to format a date/time range--a period of time with
+`ilib/DateRngFmt` may be used to format a date/time range--a period of time with
 a specific start point and end point.  As with the other formatter classes, the
 final output (e.g., `'Mar 11-14, 2013'`) will depend on the options supplied to
 the formatter.
 
-Similarly, `i18n/ilib/DurationFmt` lets you format durations--how long things take to
+Similarly, `ilib/DurationFmt` lets you format durations--how long things take to
 happen.  Again, you may customize the output (e.g., `'36 hours, 24 minutes, and
 37 seconds'`) by setting the formatter's options.
 
@@ -345,12 +264,12 @@ jurisdictions such as states/provinces, counties, towns, etc.  Time zones are
 specified using the IANA convention of "continent/city" (e.g.,
 `'America/Los_Angeles'` or `'Asia/Seoul'`).
 
-`i18n/ilib/TimeZone` represents information about a particular time zone.  Instances
-may be passed to other classes such as `i18n/ilib/DateFmt`, although the specifier
+`ilib/TimeZone` represents information about a particular time zone.  Instances
+may be passed to other classes such as `ilib/DateFmt`, although the specifier
 string itself is also accepted.
 
 ```javascript
-	import TimeZone from 'i18n/ilib/TimeZone';
+	import TimeZone from 'ilib/TimeZone';
 	...
 	const tz = new TimeZone({
 		id: "America/Los_Angeles"
@@ -380,12 +299,12 @@ another locale-sensitive process.
 ```
 
 As shown in the following examples, `iLib` handles each of these cases using
-`i18n/ilib/NumFmt`.
+`ilib/NumFmt`.
 
 #### Numbers
 
 ```javascript
-	import NumFmt from 'i18n/ilib/NumFmt';
+	import NumFmt from 'ilib/NumFmt';
 	...
 	const fmt = new NumFmt({
 		locale: "de-DE"
