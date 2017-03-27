@@ -7,11 +7,16 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 - `moonstone/Scroller` ability to page up and page down.
 
+- `moonstone/Button` property `icon` to support a built-in icon next to the text content. The Icon supports everything that `moonstone/Icon` supports, as well as a custom icon.
+- `moonstone/MoonstoneDecorator` property `textSize` to resize several components to requested CMR sizes. Simply add `textSize="large"` to your `App` and the new sizes will automatically take effect.
+
 ### Changed
 
 - `moonstone/Slider` to use the property `tooltip` instead of `noTooltip`, so the built-in tooltip is not enabled by default
 - `moonstone/IncrementSlider` to include tooltip documentation
 - `moonstone/ExpandableList` to accept an array of objects as children which are spread onto the generated components
+- `moonstone/CheckboxItem` style to match the latest designs, with support for the `moonstone/Checkbox` to be on either the left or the right side by using the `iconPosition` property
+- `moonstone/VideoPlayer` to supply every event callback-method with an object representing the VideoPlayer's current state, including: `currentTime`, `duration`, `paused`, `proportionLoaded`, and `proportionPlayed`
 
 ### Fixed
 

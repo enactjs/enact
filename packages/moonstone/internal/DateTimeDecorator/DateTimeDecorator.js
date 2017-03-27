@@ -237,7 +237,7 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 	};
 
 	return Toggleable(
-		{toggle: null, activate: 'onOpen', deactivate: 'onClose', mutable: true, prop: 'open'},
+		{toggle: null, activate: 'onOpen', deactivate: 'onClose', prop: 'open'},
 		RadioDecorator(
 			{activate: 'onOpen', deactivate: 'onClose', prop: 'open'},
 			Decorator

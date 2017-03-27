@@ -1,4 +1,4 @@
-import Button, {ButtonBase} from '@enact/moonstone/Button';
+import Button from '@enact/moonstone/Button';
 import CheckboxItem from '@enact/moonstone/CheckboxItem';
 import DatePicker from '@enact/moonstone/DatePicker';
 import DayPicker from '@enact/moonstone/DayPicker';
@@ -22,17 +22,12 @@ import ToggleButton from '@enact/moonstone/ToggleButton';
 import ToggleItem from '@enact/moonstone/ToggleItem';
 import Slider from '@enact/moonstone/Slider';
 import Changeable from '@enact/ui/Changeable';
-import Selectable from '@enact/ui/Selectable';
 import Toggleable from '@enact/ui/Toggleable';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
-
-Button.propTypes = Object.assign({}, ButtonBase.propTypes, Button.propTypes);
-Button.defaultProps = Object.assign({}, ButtonBase.defaultProps, Button.defaultProps);
-Button.displayName = 'Button';
 
 const Container = SpotlightContainerDecorator('div');
 const style = {
@@ -57,8 +52,8 @@ const style = {
 
 const Items = ['First', 'Second', 'Third'];
 const StatefulCheckboxItem = Toggleable({prop: 'selected'}, CheckboxItem);
-const StatefulDayPicker = Selectable(DayPicker);
-const StatefulExpandableList = Selectable(ExpandableList);
+const StatefulDayPicker = Changeable({change: 'onSelect', prop: 'selected'}, DayPicker);
+const StatefulExpandableList = Changeable({change: 'onSelect', prop: 'selected'}, ExpandableList);
 const StatefulIncrementSlider = Changeable(IncrementSlider);
 const StatefulInput = Changeable(Input);
 const StatefulPicker = Changeable(Picker);
@@ -376,7 +371,7 @@ storiesOf('Spotlight')
 							Item
 						</Item>
 						<LabeledItem
-							label={'Label'}
+							label="Label"
 							spotlightDisabled={boolean('spotlightDisabled', false)}
 						>
 							LabeledItem
@@ -388,7 +383,7 @@ storiesOf('Spotlight')
 						</Divider>
 						<ExpandableItem
 							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title={'Various Items in an ExpandableItem'}
+							title="Various Items in an ExpandableItem"
 						>
 							<StatefulCheckboxItem
 								spotlightDisabled={boolean('spotlightDisabled', false)}
@@ -411,7 +406,7 @@ storiesOf('Spotlight')
 								SwitchItem
 							</StatefulSwitchItem>
 							<StatefulToggleItem
-								icon={'plus'}
+								icon="plus"
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 							>
 								ToggleItem
@@ -420,31 +415,31 @@ storiesOf('Spotlight')
 						<StatefulExpandableList
 							noLockBottom
 							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title={'ExpandableList'}
+							title="ExpandableList"
 						>
 							{Items}
 						</StatefulExpandableList>
 						<ExpandableInput
 							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title={'ExpandableInput'}
+							title="ExpandableInput"
 						/>
 						<ExpandablePicker
 							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title={'ExpandablePicker'}
+							title="ExpandablePicker"
 						>
 							{Items}
 						</ExpandablePicker>
 						<DatePicker
 							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title={'DatePicker'}
+							title="DatePicker"
 						/>
 						<StatefulDayPicker
 							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title={'DayPicker'}
+							title="DayPicker"
 						/>
 						<TimePicker
 							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title={'TimePicker'}
+							title="TimePicker"
 						/>
 					</div>
 				</div>

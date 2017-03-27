@@ -5,13 +5,6 @@ import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean} from '@kadira/storybook-addon-knobs';
 
 const RadioItem = Toggleable({prop: 'selected'}, RadioItemBase);
-RadioItem.displayName = 'RadioItem';
-RadioItem.propTypes = Object.assign({}, RadioItem.propTypes, RadioItemBase.propTypes);
-RadioItem.defaultProps = Object.assign({}, RadioItem.defaultProps, RadioItemBase.defaultProps);
-
-delete RadioItem.propTypes.selected;
-delete RadioItem.propTypes.icon;
-delete RadioItem.propTypes.iconClasses;
 
 const radioData = {
 	longTextWithSpace : ['FirstLongTextWithSpace FirstLongTextWithSpace FirstLongTextWithSpace FirstLongTextWithSpace', 'SecondLongTextWithSpace SecondLongTextWithSpace SecondLongTextWithSpace SecondLongTextWithSpace'],

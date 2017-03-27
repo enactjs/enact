@@ -4,12 +4,14 @@ import React from 'react';
 import Toggleable from '@enact/ui/Toggleable';
 import ToggleItem from '@enact/moonstone/ToggleItem';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
+import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
+
+import {mergeComponentMetadata} from '../../src/utils/propTables';
 
 const Component = Toggleable({prop: 'selected'}, CheckboxItem);
-Component.propTypes = Object.assign({}, ItemBase.propTypes, Item.propTypes, ToggleItem.propTypes, CheckboxItem.propTypes);
-Component.defaultProps = Object.assign({}, ItemBase.defaultProps, Item.defaultProps, ToggleItem.defaultProps, CheckboxItem.defaultProps);
-Component.displayName = 'CheckboxItem';
+Component.displayName = 'Toggleable(CheckboxItem)';
+
+const Config = mergeComponentMetadata('CheckboxItem', ItemBase, Item, ToggleItem, CheckboxItem);
 
 storiesOf('CheckboxItem')
 	.addDecorator(withKnobs)
@@ -19,9 +21,12 @@ storiesOf('CheckboxItem')
 		() => (
 			<Component
 				disabled={boolean('disabled', false)}
+				iconPosition={select('iconPosition', ['before', 'after'], 'before')}
 				inline={boolean('inline', false)}
 				onToggle={action('onToggle')}
 			>
 				{text('children', 'Hello CheckboxItem')}
 			</Component>
-		));
+		),
+		{propTables: [Config]}
+	);

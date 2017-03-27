@@ -6,7 +6,6 @@
  * @module moonstone/ExpandableInput
  */
 
-import Changeable from '@enact/ui/Changeable';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import React from 'react';
@@ -156,6 +155,25 @@ class ExpandableInputBase extends React.Component {
 		spotlightDisabled: false
 	}
 
+	constructor (props) {
+		super();
+
+		this.state = {
+			initialValue: props.value
+		};
+	}
+
+	componentWillReceiveProps (nextProps) {
+		let {initialValue} = this.state;
+		if (!this.props.open && nextProps.open) {
+			initialValue = nextProps.value;
+		} else if (this.props.open && !nextProps.open) {
+			initialValue = null;
+		}
+
+		this.setState({initialValue});
+	}
+
 	calcAriaLabel () {
 		const {noneText, title, type, value} = this.props;
 		const returnVal = (type === 'password') ? value : (value || noneText);
@@ -186,6 +204,7 @@ class ExpandableInputBase extends React.Component {
 	handleInputKeyDown = (ev) => {
 		const keyCode = ev.keyCode;
 
+		const isCancel = is('cancel', keyCode);
 		const isEnter = is('enter', keyCode);
 		const isUpDown = is('up', keyCode) || is('down', keyCode);
 
@@ -198,7 +217,11 @@ class ExpandableInputBase extends React.Component {
 			ev.nativeEvent.stopImmediatePropagation();
 		}
 
-		if (isEnter || isUpDown) {
+		if (isCancel) {
+			forward('onChange', {
+				value: this.state.initialValue
+			}, this.props);
+		} else if (isEnter || isUpDown) {
 			this.fireChangeEvent();
 		}
 	}
@@ -234,7 +257,7 @@ class ExpandableInputBase extends React.Component {
 	}
 
 	render () {
-		const {disabled, iconAfter, iconBefore, onInputChange, onSpotlightDisappear, placeholder, spotlightDisabled, type, value, ...rest} = this.props;
+		const {disabled, iconAfter, iconBefore, onChange, onSpotlightDisappear, placeholder, spotlightDisabled, type, value, ...rest} = this.props;
 		delete rest.onChange;
 
 		return (
@@ -257,7 +280,7 @@ class ExpandableInputBase extends React.Component {
 					iconBefore={iconBefore}
 					noDecorator
 					onBlur={this.handleInputBlur}
-					onChange={onInputChange}
+					onChange={onChange}
 					onKeyDown={this.handleInputKeyDown}
 					onMouseDown={this.handleInputMouseDown}
 					onSpotlightDisappear={onSpotlightDisappear}
@@ -283,10 +306,7 @@ class ExpandableInputBase extends React.Component {
  * @public
  */
 const ExpandableInput = Expandable(
-	Changeable(
-		{mutable: true, change: 'onInputChange'},
-		ExpandableInputBase
-	)
+	ExpandableInputBase
 );
 
 export default ExpandableInput;
