@@ -52,7 +52,6 @@ class PickerAddRemove extends React.Component {
 
 		this.setState({
 			children: newChildren,
-			displayIndex: this.state.inputIndex,
 			inputIndex: this.state.inputIndex + 1,
 			inputValue: ''
 		});
