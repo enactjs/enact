@@ -38,16 +38,38 @@ storiesOf('Input')
 	.addWithInfo(
 		'with tall characters',
 		() => (
-			<StatefulInput
-				onChange={action('onChange')}
-				disabled={boolean('disabled')}
-				iconAfter={select('iconAfter', iconNames)}
-				iconBefore={select('iconBefore', iconNames)}
-				noDecorator={boolean('noDecorator')}
-				placeholder={text('placeholder', 'Input some tall characters')}
-				type={select('type', inputData.type, inputData.type[0])}
-				defaultValue={inputData.tallText}
-			/>
+			<div>
+				<StatefulInput
+					onChange={action('onChange')}
+					disabled={boolean('disabled')}
+					iconAfter={select('iconAfter', iconNames)}
+					iconBefore={select('iconBefore', iconNames)}
+					noDecorator={boolean('noDecorator')}
+					placeholder={text('placeholder', 'Input some tall characters')}
+					type={select('type', inputData.type, inputData.type[0])}
+					defaultValue={inputData.tallText[0]}
+				/>
+				<StatefulInput
+					onChange={action('onChange')}
+					disabled={boolean('disabled')}
+					iconAfter={select('iconAfter', iconNames)}
+					iconBefore={select('iconBefore', iconNames)}
+					noDecorator={boolean('noDecorator')}
+					placeholder={text('placeholder', 'Input some tall characters')}
+					type={select('type', inputData.type, inputData.type[0])}
+					defaultValue={inputData.tallText[1]}
+				/>
+				<StatefulInput
+					onChange={action('onChange')}
+					disabled={boolean('disabled')}
+					iconAfter={select('iconAfter', iconNames)}
+					iconBefore={select('iconBefore', iconNames)}
+					noDecorator={boolean('noDecorator')}
+					placeholder={text('placeholder', 'Input some tall characters')}
+					type={select('type', inputData.type, inputData.type[0])}
+					defaultValue={inputData.tallText[2]}
+				/>
+			</div>
 		)
 	)
 	.addWithInfo(
