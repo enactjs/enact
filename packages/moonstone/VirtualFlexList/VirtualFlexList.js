@@ -65,7 +65,7 @@ const cornerShape = PropTypes.shape({
 const headersShape = PropTypes.shape({
 	row: PropTypes.shape({
 		component: PropTypes.func.isRequired,
-		count:  PropTypes.number.isRequired,
+		count: PropTypes.number.isRequired,
 		data: PropTypes.any.isRequired,
 		height: PropTypes.number.isRequired,
 		width: PropTypes.number.isRequired,
@@ -73,7 +73,7 @@ const headersShape = PropTypes.shape({
 	}),
 	col: PropTypes.shape({
 		component: PropTypes.func.isRequired,
-		count:  PropTypes.number.isRequired,
+		count: PropTypes.number.isRequired,
 		data: PropTypes.any.isRequired,
 		height: PropTypes.number.isRequired,
 		width: PropTypes.number.isRequired,

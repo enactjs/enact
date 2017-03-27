@@ -155,8 +155,8 @@ const Router = class extends React.Component {
 		const {component: Component, ...rest} = this.props;
 		const children = this.createChildren();
 
-		delete rest.routes;
 		delete rest.path;
+		delete rest.routes;
 
 		return <Component {...rest}>{children}</Component>;
 	}

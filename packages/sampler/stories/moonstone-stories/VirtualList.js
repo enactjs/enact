@@ -6,8 +6,8 @@ import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, number} from '@kadira/storybook-addon-knobs';
 
-VirtualList.propTypes = Object.assign({}, VirtualListCore.propTypes);
 VirtualList.defaultProps = Object.assign({}, VirtualListCore.defaultProps);
+VirtualList.propTypes = Object.assign({}, VirtualListCore.propTypes);
 
 const
 	style = {
@@ -23,6 +23,7 @@ const
 	// eslint-disable-next-line enact/prop-types, enact/display-name
 	renderItem = (size) => ({data, index, ...rest}) => {
 		const itemStyle = {height: size + 'px', ...style.item};
+
 		return (
 			<Item {...rest} style={itemStyle}>
 				{data[index]}
