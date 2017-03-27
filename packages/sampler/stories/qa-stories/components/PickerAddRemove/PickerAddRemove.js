@@ -36,7 +36,6 @@ class PickerAddRemove extends React.Component {
 			children: {
 				0 : ''
 			},
-			displayIndex: 0,
 			inputIndex: 0,
 			inputValue: ''
 		};
