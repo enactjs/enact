@@ -1,4 +1,5 @@
 @import '../styles/colors.less';
+@import '../styles/mixins.less';
 @import '../styles/variables.less';
 @import '../styles/text.less';
 
@@ -6,11 +7,22 @@
 	position: relative;
 	margin: 0 @moon-spotlight-outset;
 	height: 240px;	// Vertical sizing here. Being here instead of in .vertical requires less precedence when overriding the style from app-code.
+	direction: ltr;
+
+	.bars {
+		position: absolute;
+
+		&:before {
+			content: '';
+			display: block;
+			height: 100%;
+			width: 100%;
+			background-color: @moon-progress-bg-color;
+		}
+	}
 
 	.fill,
 	.load {
-		height: 100%;
-		width: 100%;
 		position: absolute;
 		pointer-events: none;
 		transform-origin: 0 0;
@@ -25,16 +37,7 @@
 		background-color: @moon-progress-bar-bg-color;
 	}
 
-	.sliderBar {
-		position: relative;
-		height: 100%;
-		width: 100%;
-		background-color: @moon-progress-bg-color;
-		direction: ltr;	// Always arrange this according to LTR rules
-	}
-
 	.knob {
-		position: absolute;
 		will-change: transform;
 
 		&::before {
@@ -65,101 +68,58 @@
 		display: none;
 	}
 
-	.input {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		margin: 0;
-		background-color: transparent;
-		box-sizing: border-box;
-		-webkit-appearance: none;
-
-		&::-webkit-slider-thumb {
-			height: @moon-slider-knob-height;
-			width: @moon-slider-knob-width;
-			// -webkit-appearance:none;
-			border-radius: @moon-slider-knob-width;
-			box-sizing: border-box;
-			visibility: hidden;
-
-			.moon-custom-text({
-				height: @moon-slider-knob-height-large;
-				width: @moon-slider-knob-width-large;
-				border-radius: @moon-slider-knob-width-large;
-			})
-		}
-
-		:global(.enact-locale-right-to-left) & {
-			direction: ltr;
-		}
-	}
-
 	&.horizontal {
 		@h-gap: (@moon-slider-knob-width / 2);
-		padding: ((@moon-slider-knob-height - @moon-slider-bar-height) / 2) @h-gap;
+		@v-gap: (@moon-slider-knob-height - @moon-slider-bar-height) / 2;
+		padding: @v-gap @h-gap;
 		height: @moon-slider-bar-height;
 
-		// .sliderBar {}
-		.knob {
-			top: 50%;
-			left: 0;
+		.bars {
+			.position(@v-gap, @h-gap);
 		}
-		.input {
-			padding: 0 @h-gap;
+
+		.knob {
+			margin-top: @moon-slider-bar-height / 2;
+		}
+
+		.fill,
+		.load {
+			top: 0;
+			height: @moon-slider-bar-height;
 		}
 
 		.moon-custom-text({
 			@h-gap-large: (@moon-slider-knob-width-large / 2);
 			padding: ((@moon-slider-knob-height-large - @moon-slider-bar-height) / 2) @h-gap-large;
-
-			.input {
-				padding: 0 @h-gap-large;
-			}
 		})
 	}
 
 	&.vertical {
+		@h-gap: (@moon-slider-knob-height - @moon-slider-bar-height) / 2;
 		@v-gap: (@moon-slider-knob-width / 2);
-		padding: @v-gap ((@moon-slider-knob-height - @moon-slider-bar-height) / 2);
+		padding: @v-gap @h-gap;
 		width: @moon-slider-bar-height;
 		min-height: 120px;
 		display: inline-block;
 		vertical-align: top;
 
-		.fill,
-		.load {
-			bottom: 0;
-			transform-origin: 0 100%; // the origin should be the bottom when vertical
-		}
-
-		.sliderBar {
-			bottom: 0;
+		.bars {
+			.position(@v-gap, @h-gap);
 		}
 
 		.knob {
-			top: 0;
-			left: 50%;
+			margin-left: @moon-slider-bar-height / 2;
 		}
 
-		.input {
-			transition: transform 1s ease;
-			padding: @v-gap 0;
-
-			// Special trickery for true vertical slider in all browsers. uses attribute `orient="vertical"` for FF.
-			writing-mode: bt-lr; /* IE */
-			-webkit-appearance: slider-vertical; /* WebKit */
-			opacity: 0.0001;	// This needs to be still visible to remain interactive, so we can't simply set visibility:hidden or display:none or even -webkit-appearance:none. This becomes effectively invisible with 0.0001
+		.fill,
+		.load {
+			width: @moon-slider-bar-height;
+			bottom: 0;
 		}
 
 		.moon-custom-text({
 			@v-gap-large: (@moon-slider-knob-width / 2);
 			padding: @v-gap-large ((@moon-slider-knob-height-large - @moon-slider-bar-height) / 2);
-
-			.input {
-				padding: @v-gap-large 0;
-			}
 		})
 	}
 

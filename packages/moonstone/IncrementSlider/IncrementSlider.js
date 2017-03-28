@@ -8,18 +8,17 @@ import $L from '@enact/i18n/$L';
 import Changeable from '@enact/ui/Changeable';
 import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
-import Pressable from '@enact/ui/Pressable';
 import React, {PropTypes} from 'react';
-import Spottable from '@enact/spotlight/Spottable';
 
-import {SliderBaseFactory} from '../Slider';
-import SliderDecorator from '../internal/SliderDecorator';
+import {SliderFactory} from '../Slider';
+import {handleChange} from '../Slider/utils';
 
 import IncrementSliderButton from './IncrementSliderButton';
 import componentCss from './IncrementSlider.less';
 
+
 const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
-	const Slider = Spottable(SliderBaseFactory({css}));
+	const Slider = SliderFactory({css});
 
 	/**
 	 * {@link moonstone/IncrementSlider.IncrementSliderBase} is a stateless Slider
@@ -235,41 +234,75 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			className: 'incrementSlider'
 		},
 
+		handlers: {
+			handleDecrement: handleChange(-1),
+			handleIncrement: handleChange(1)
+		},
+
 		computed: {
+			className: ({vertical, styler}) => styler.append({vertical, horizontal: !vertical}),
 			decrementDisabled: ({disabled, min, value}) => disabled || value <= min,
 			incrementDisabled: ({disabled, max, value}) => disabled || value >= max,
-			incrementSliderClasses: ({vertical, styler}) => styler.append({vertical, horizontal: !vertical}),
 			decrementIcon: ({decrementIcon, vertical}) => (decrementIcon || (vertical ? 'arrowlargedown' : 'arrowlargeleft')),
 			incrementIcon: ({incrementIcon, vertical}) => (incrementIcon || (vertical ? 'arrowlargeup' : 'arrowlargeright')),
 			decrementAriaLabel: ({value}) => (`${value} ${$L('press ok button to decrease the value')}`),
 			incrementAriaLabel: ({value}) => (`${value} ${$L('press ok button to increase the value')}`)
 		},
 
-		render: ({decrementAriaLabel, decrementDisabled, decrementIcon, incrementAriaLabel, incrementDisabled, incrementIcon, incrementSliderClasses, onIncrement, onDecrement, onSpotlightDisappear, spotlightDisabled, ...rest}) => (
-			<div className={incrementSliderClasses}>
+		render: ({
+			// Slider props
+			backgroundPercent,
+			disabled,
+			knob,
+			knobStep,
+			max,
+			min,
+			onChange,
+			step,
+			value,
+
+			className,
+			decrementAriaLabel,
+			decrementDisabled,
+			decrementIcon,
+			handleIncrement,
+			handleDecrement,
+			incrementAriaLabel,
+			incrementDisabled,
+			incrementIcon,
+			onSpotlightDisappear,
+			spotlightDisabled,
+			...rest
+		}) => (
+			<div className={className}>
 				<IncrementSliderButton
 					aria-label={decrementAriaLabel}
 					className={css.decrementButton}
 					disabled={decrementDisabled}
-					onClick={onDecrement}
+					onClick={handleDecrement}
 					onSpotlightDisappear={onSpotlightDisappear}
 					spotlightDisabled={spotlightDisabled}
 				>
 					{decrementIcon}
 				</IncrementSliderButton>
 				<Slider
-					{...rest}
-					className={css.slider}
-					onDecrement={onDecrement}
-					onIncrement={onIncrement}
+					backgroundPercent={backgroundPercent}
+					disabled={disabled}
+					knob={knob}
+					knobStep={knobStep}
+					max={max}
+					min={min}
+					onChange={onChange}
 					onSpotlightDisappear={onSpotlightDisappear}
 					spotlightDisabled={spotlightDisabled}
+					step={step}
+					value={value}
 				/>
 				<IncrementSliderButton
 					aria-label={incrementAriaLabel}
 					className={css.incrementButton}
 					disabled={incrementDisabled}
-					onClick={onIncrement}
+					onClick={handleIncrement}
 					onSpotlightDisappear={onSpotlightDisappear}
 					spotlightDisabled={spotlightDisabled}
 				>
@@ -301,11 +334,7 @@ const IncrementSliderFactory = factory((config) => {
 	 * @public
 	 */
 	return Changeable(
-		Pressable(
-			SliderDecorator(
-				Base
-			)
-		)
+		Base
 	);
 });
 
