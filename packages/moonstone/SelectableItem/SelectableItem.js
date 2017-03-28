@@ -6,8 +6,9 @@
 
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
+import Toggleable from '@enact/ui/Toggleable';
 
-import ToggleItem from '../ToggleItem';
+import {ToggleItemBase} from '../ToggleItem';
 
 import css from './SelectableItem.less';
 
@@ -16,7 +17,7 @@ import css from './SelectableItem.less';
  * that is an Item that is Toggleable. It has two selected states `true` &
  * `false`. It uses a dot to represent its selected state.
  *
- * @class SelectableItem
+ * @class SelectableItemBase
  * @memberof moonstone/SelectableItem
  * @ui
  * @public
@@ -24,7 +25,7 @@ import css from './SelectableItem.less';
 const SelectableItemBase = kind({
 	name: 'SelectableItem',
 
-	propTypes: /** @lends moonstone/SelectableItem.SelectableItem.prototype */ {
+	propTypes: /** @lends moonstone/SelectableItem.SelectableItemBase.prototype */ {
 		/**
 		 * The string to be displayed as the main content of the selectable item.
 		 *
@@ -66,7 +67,6 @@ const SelectableItemBase = kind({
 		 * When `true`, a dot, indicating it is selected, is shown on the selectable item.
 		 *
 		 * @type {Boolean}
-		 * @default false
 		 * @public
 		 */
 		selected: PropTypes.bool,
@@ -79,10 +79,6 @@ const SelectableItemBase = kind({
 		 * @public
 		 */
 		value: PropTypes.any
-	},
-
-	defaultProps: {
-		selected: false
 	},
 
 	styles: {
@@ -98,9 +94,31 @@ const SelectableItemBase = kind({
 	},
 
 	render: (props) => (
-		<ToggleItem {...props} icon="circle" />
+		<ToggleItemBase {...props} icon="circle" />
 	)
 });
 
-export default SelectableItemBase;
-export {SelectableItemBase as SelectableItem, SelectableItemBase};
+
+/**
+ * {@link moonstone/SelectableItem.SelectableItem} is component that is an Item that is
+ * {@link ui/Toggleable.Toggleable}. It has two selected states `true` & `false`. It uses a dot to
+ * represent its selected state.
+ *
+ * By default, `SelectableItem` maintains the state of its `selected` property. Supply the
+ * `defaultSelected` property to control its initial value. If you wish to directly control updates
+ * to the component, supply a value to `selected` at creation time and update it in response to
+ * `onToggle` events.
+ *
+ * @class SelectableItem
+ * @memberof moonstone/SelectableItem
+ * @mixes ui/Toggleable.Toggleable
+ * @ui
+ * @public
+ */
+const SelectableItem = Toggleable(
+	{prop: 'selected'},
+	SelectableItemBase
+);
+
+export default SelectableItem;
+export {SelectableItem, SelectableItemBase};

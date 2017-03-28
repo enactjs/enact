@@ -29,6 +29,9 @@ const handleCancel = function (props) {
  *
  * @class Expandable
  * @memberof moonstone/ExpandableItem
+ * @mixes ui/Toggleable.Toggleable
+ * @mixes ui/RadioDecorator.RadioDecorator
+ * @mixes ui/Cancelable.Cancelable
  * @hoc
  * @public
  */

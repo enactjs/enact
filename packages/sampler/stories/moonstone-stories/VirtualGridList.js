@@ -1,13 +1,14 @@
-import ri from '@enact/ui/resolution';
 import {VirtualGridList} from '@enact/moonstone/VirtualList';
+import ri from '@enact/ui/resolution';
 import {VirtualListCore} from '@enact/moonstone/VirtualList/VirtualListBase';
 import GridListImageItem from '@enact/moonstone/VirtualList/GridListImageItem';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, number, select} from '@kadira/storybook-addon-knobs';
 
-VirtualGridList.defaultProps = Object.assign({}, VirtualListCore.defaultProps);
-VirtualGridList.propTypes = Object.assign({}, VirtualListCore.propTypes);
+import {mergeComponentMetadata} from '../../src/utils/propTables';
+
+const Config = mergeComponentMetadata('VirtualGridList', VirtualListCore, VirtualGridList);
 
 const
 	prop = {
@@ -57,5 +58,6 @@ storiesOf('VirtualList.VirtualGridList')
 				spacing={ri.scale(number('spacing', 20))}
 				style={listStyle}
 			/>
-		)
+		),
+		{propTables: [Config]}
 	);

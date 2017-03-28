@@ -5,6 +5,8 @@ import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
 
+import nullify from '../../src/utils/nullify.js';
+
 storiesOf('ExpandableItem')
 	.addDecorator(withKnobs)
 	.addWithInfo(
@@ -12,10 +14,10 @@ storiesOf('ExpandableItem')
 		'Basic usage of ExpandableItem',
 		() => (
 			<ExpandableItem
-				autoClose={boolean('autoClose', false)}
+				autoClose={nullify(boolean('autoClose', false))}
 				disabled={boolean('disabled', false)}
 				label={text('label', 'label')}
-				lockBottom={boolean('lockBottom', false)}
+				lockBottom={nullify(boolean('lockBottom', false))}
 				onClose={action('onClose')}
 				onOpen={action('onOpen')}
 				showLabel={select('showLabel', ['always', 'never', 'auto'], 'auto')}

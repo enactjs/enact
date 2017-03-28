@@ -6,6 +6,7 @@
  * @module moonstone/ExpandableList
  */
 
+import Changeable from '@enact/ui/Changeable';
 import Group from '@enact/ui/Group';
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
@@ -265,13 +266,28 @@ const ExpandableListBase = kind({
  * {@link moonstone/LabeledItem.LabeledItem} that can be expanded to show a selectable
  * list of items.
  *
+ * By default, `ExpandableList` maintains the state of its `selected` property. Supply the
+ * `defaultSelected` property to control its initial value. If you wish to directly control updates
+ * to the component, supply a value to `selected` at creation time and update it in response to
+ * `onChange` events.
+ *
+ * `ExpandableList` maintains its open/closed state by default. The initial state can be supplied
+ * using `defaultOpen`. In order to directly control the open/closed state, supply a value for
+ * `open` at creation time and update its value in response to `onClose`/`onOpen` events.
+ *
  * @class ExpandableList
  * @memberof moonstone/ExpandableList
- * @ui
  * @mixes moonstone/ExpandableItem.Expandable
+ * @mixes ui/Changeable.Changeable
+ * @ui
  * @public
  */
-const ExpandableList = Expandable(ExpandableListBase);
+const ExpandableList = Expandable(
+	Changeable(
+		{change: 'onSelect', prop: 'selected'},
+		ExpandableListBase
+	)
+);
 
 export default ExpandableList;
 export {ExpandableList, ExpandableListBase};

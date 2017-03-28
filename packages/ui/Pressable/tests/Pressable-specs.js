@@ -327,7 +327,7 @@ describe('Pressable', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should not update \'pressed\' with new props when not controlled', function () {
+	it.skip('should not update \'pressed\' with new props when not controlled', function () {
 		const Component = Pressable(DivComponent);
 		const subject = mount(
 			<Component defaultPressed />

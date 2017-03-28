@@ -140,7 +140,7 @@ const ToggleableHOC = hoc(defaultConfig, (config, Wrapped) => {
 				});
 			} else {
 				warning(
-					prop in nextProps,
+					!(prop in nextProps),
 					`'${prop}' specified for an uncontrolled instance of Toggleable and will be
 					ignored. To make this instance of Toggleable controlled, '${prop}' should be
 					specified at creation.`

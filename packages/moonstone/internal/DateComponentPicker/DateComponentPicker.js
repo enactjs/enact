@@ -104,7 +104,6 @@ const DateComponentPickerBase = kind({
 	)
 });
 
-
 /**
  * {@link moonstone/internal/DateComponentPickerBase.DateComponentPicker} allows the selection of one part of
  * the date (date, month, or year). It is a stateful component but allows updates by providing a new
@@ -112,6 +111,7 @@ const DateComponentPickerBase = kind({
  *
  * @class DateComponentPicker
  * @memberof moonstone/internal/DateComponentPicker
+ * @mixes ui/Changeable.Changeable
  * @ui
  * @private
  */
