@@ -2,7 +2,7 @@ import {icons} from '@enact/moonstone/Icon';
 import Input from '@enact/moonstone/Input';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, number, select, text} from '@kadira/storybook-addon-knobs';
+import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
 
 const iconNames = ['', ...Object.keys(icons)];
 
@@ -14,7 +14,6 @@ const inputData = {
 	initialValue : 'Input field',
 	type: ['text', 'number', 'password']
 };
-
 
 storiesOf('Input')
 	.addDecorator(withKnobs)
@@ -29,23 +28,45 @@ storiesOf('Input')
 				noDecorator={boolean('noDecorator')}
 				placeholder={text('placeholder')}
 				type={select('type', inputData.type, inputData.type[0])}
-				value={text('value', inputData.longText)}
+				defaultValue={inputData.longText}
 			/>
 		)
 	)
 	.addWithInfo(
 		'with tall characters',
 		() => (
-			<Input
-				onChange={action('onChange')}
-				disabled={boolean('disabled')}
-				iconAfter={select('iconAfter', iconNames)}
-				iconBefore={select('iconBefore', iconNames)}
-				noDecorator={boolean('noDecorator')}
-				placeholder={text('placeholder', 'Input some tall characters')}
-				type={select('type', inputData.type, inputData.type[0])}
-				value={select('value', inputData.tallText,  inputData.tallText[2])}
-			/>
+			<div>
+				<Input
+					onChange={action('onChange')}
+					disabled={boolean('disabled')}
+					iconAfter={select('iconAfter', iconNames)}
+					iconBefore={select('iconBefore', iconNames)}
+					noDecorator={boolean('noDecorator')}
+					placeholder={text('placeholder', 'Input some tall characters')}
+					type={select('type', inputData.type, inputData.type[0])}
+					defaultValue={inputData.tallText[0]}
+				/>
+				<Input
+					onChange={action('onChange')}
+					disabled={boolean('disabled')}
+					iconAfter={select('iconAfter', iconNames)}
+					iconBefore={select('iconBefore', iconNames)}
+					noDecorator={boolean('noDecorator')}
+					placeholder={text('placeholder', 'Input some tall characters')}
+					type={select('type', inputData.type, inputData.type[0])}
+					defaultValue={inputData.tallText[1]}
+				/>
+				<Input
+					onChange={action('onChange')}
+					disabled={boolean('disabled')}
+					iconAfter={select('iconAfter', iconNames)}
+					iconBefore={select('iconBefore', iconNames)}
+					noDecorator={boolean('noDecorator')}
+					placeholder={text('placeholder', 'Input some tall characters')}
+					type={select('type', inputData.type, inputData.type[0])}
+					defaultValue={inputData.tallText[2]}
+				/>
+			</div>
 		)
 	)
 	.addWithInfo(
@@ -59,7 +80,7 @@ storiesOf('Input')
 				noDecorator={boolean('noDecorator')}
 				placeholder={text('placeholder')}
 				type={select('type', inputData.type, inputData.type[0])}
-				value={text('value', inputData.extraSpaceText)}
+				defaultValue={inputData.extraSpaceText}
 			/>
 		)
 	)
@@ -76,7 +97,7 @@ storiesOf('Input')
 						noDecorator={boolean('noDecorator')}
 						placeholder={text('placeholder')}
 						type={select('type', inputData.type, inputData.type[0])}
-						value={text('value1', inputData.initialValue + ' one')}
+						defaultValue={inputData.initialValue + ' one'}
 					/>
 					<Input
 						onChange={action('onChange')}
@@ -86,7 +107,7 @@ storiesOf('Input')
 						noDecorator={boolean('noDecorator')}
 						placeholder={text('placeholder')}
 						type={select('type', inputData.type, inputData.type[0])}
-						value={text('value2', inputData.initialValue + ' two')}
+						defaultValue={inputData.initialValue + ' two'}
 					/>
 				</div>
 				<div>
@@ -98,7 +119,7 @@ storiesOf('Input')
 						noDecorator={boolean('noDecorator')}
 						placeholder={text('placeholder')}
 						type={select('type', inputData.type, inputData.type[0])}
-						value={text('value3', inputData.initialValue + ' three')}
+						defaultValue={inputData.initialValue + ' three'}
 					/>
 					<Input
 						onChange={action('onChange')}
@@ -108,7 +129,7 @@ storiesOf('Input')
 						noDecorator={boolean('noDecorator')}
 						placeholder={text('placeholder')}
 						type={select('type', inputData.type, inputData.type[0])}
-						value={text('value4', inputData.initialValue + ' four')}
+						defaultValue={inputData.initialValue + ' four'}
 					/>
 				</div>
 			</div>
@@ -124,7 +145,7 @@ storiesOf('Input')
 				iconBefore={select('iconBefore', iconNames)}
 				noDecorator={boolean('noDecorator')}
 				type={inputData.type[1]}
-				value={number('value', inputData.initialNumericValue)}
+				defaultValue={inputData.initialNumericValue}
 			/>
 		)
 	);
