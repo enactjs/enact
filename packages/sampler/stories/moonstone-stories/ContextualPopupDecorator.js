@@ -5,6 +5,8 @@ import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, text, select} from '@kadira/storybook-addon-knobs';
 
+import nullify from '../../src/utils/nullify.js';
+
 const ContextualButton = ContextualPopupDecorator(Button);
 ContextualButton.displayName = 'ContextualButton';
 
@@ -21,7 +23,7 @@ storiesOf('ContextualPopupDecorator')
 			<div style={{textAlign: 'center', marginTop: '100px'}}>
 				<ContextualButton
 					direction={select('direction', ['up', 'down', 'left', 'right'], 'down')}
-					noAutoDismiss={boolean('noAutoDismiss', false)}
+					noAutoDismiss={nullify(boolean('noAutoDismiss', false))}
 					onClose={action('onClose')}
 					open={boolean('open', false)}
 					popupComponent={renderPopup}

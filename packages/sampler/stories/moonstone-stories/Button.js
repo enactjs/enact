@@ -3,15 +3,15 @@ import {icons} from '@enact/moonstone/Icon';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
+
+import {mergeComponentMetadata} from '../../src/utils/propTables';
 import nullify from '../../src/utils/nullify.js';
 
-Button.propTypes = Object.assign({}, ButtonBase.propTypes, Button.propTypes);
-Button.defaultProps = Object.assign({}, ButtonBase.defaultProps, Button.defaultProps);
-Button.displayName = 'Button';
+const Config = mergeComponentMetadata('Button', ButtonBase, Button);
 
 // Set up some defaults for info and knobs
 const prop = {
-	backgroundOpacity: ['opaque', 'translucent', 'transparent'],
+	backgroundOpacity: ['', 'translucent', 'transparent'],
 	icons: ['', ...Object.keys(icons)]
 };
 
@@ -23,15 +23,16 @@ storiesOf('Button')
 		() => (
 			<Button
 				onClick={action('onClick')}
-				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
-				disabled={boolean('disabled', Button.defaultProps.disabled)}
+				backgroundOpacity={nullify(select('backgroundOpacity', prop.backgroundOpacity))}
+				disabled={nullify(boolean('disabled', ButtonBase.defaultProps.disabled))}
 				icon={nullify(select('icon', prop.icons))}
-				minWidth={boolean('minWidth', Button.defaultProps.minWidth)}
-				preserveCase={boolean('preserveCase', Button.defaultProps.preserveCase)}
-				selected={boolean('selected', Button.defaultProps.selected)}
-				small={boolean('small', Button.defaultProps.small)}
+				minWidth={nullify(boolean('minWidth', ButtonBase.defaultProps.minWidth))}
+				preserveCase={boolean('preserveCase', false)}
+				selected={nullify(boolean('selected', false))}
+				small={nullify(boolean('small', ButtonBase.defaultProps.small))}
 			>
 				{text('children', 'Click Me')}
 			</Button>
-		)
+		),
+		{propTables: [Config]}
 	);

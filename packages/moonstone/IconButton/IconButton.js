@@ -91,7 +91,6 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * When `true`, a pressed visual effect is applied to the icon button
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			pressed: PropTypes.bool,

@@ -1,11 +1,8 @@
 import {icons} from '@enact/moonstone/Icon';
 import Input from '@enact/moonstone/Input';
-import Changeable from '@enact/ui/Changeable';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
-
-const StatefulInput = Changeable(Input);
 
 const iconNames = ['', ...Object.keys(icons)];
 
@@ -23,7 +20,7 @@ storiesOf('Input')
 	.addWithInfo(
 		'with long text',
 		() => (
-			<StatefulInput
+			<Input
 				onChange={action('onChange')}
 				disabled={boolean('disabled')}
 				iconAfter={select('iconAfter', iconNames)}
@@ -39,7 +36,7 @@ storiesOf('Input')
 		'with tall characters',
 		() => (
 			<div>
-				<StatefulInput
+				<Input
 					onChange={action('onChange')}
 					disabled={boolean('disabled')}
 					iconAfter={select('iconAfter', iconNames)}
@@ -49,7 +46,7 @@ storiesOf('Input')
 					type={select('type', inputData.type, inputData.type[0])}
 					defaultValue={inputData.tallText[0]}
 				/>
-				<StatefulInput
+				<Input
 					onChange={action('onChange')}
 					disabled={boolean('disabled')}
 					iconAfter={select('iconAfter', iconNames)}
@@ -59,7 +56,7 @@ storiesOf('Input')
 					type={select('type', inputData.type, inputData.type[0])}
 					defaultValue={inputData.tallText[1]}
 				/>
-				<StatefulInput
+				<Input
 					onChange={action('onChange')}
 					disabled={boolean('disabled')}
 					iconAfter={select('iconAfter', iconNames)}
@@ -75,7 +72,7 @@ storiesOf('Input')
 	.addWithInfo(
 		'with extra spacing',
 		() => (
-			<StatefulInput
+			<Input
 				onChange={action('onChange')}
 				disabled={boolean('disabled')}
 				iconAfter={select('iconAfter', iconNames)}
@@ -92,7 +89,7 @@ storiesOf('Input')
 		() => (
 			<div>
 				<div>
-					<StatefulInput
+					<Input
 						onChange={action('onChange')}
 						disabled={boolean('disabled')}
 						iconAfter={select('iconAfter', iconNames)}
@@ -102,7 +99,7 @@ storiesOf('Input')
 						type={select('type', inputData.type, inputData.type[0])}
 						defaultValue={inputData.initialValue + ' one'}
 					/>
-					<StatefulInput
+					<Input
 						onChange={action('onChange')}
 						disabled={boolean('disabled')}
 						iconAfter={select('iconAfter', iconNames)}
@@ -114,7 +111,7 @@ storiesOf('Input')
 					/>
 				</div>
 				<div>
-					<StatefulInput
+					<Input
 						onChange={action('onChange')}
 						disabled={boolean('disabled')}
 						iconAfter={select('iconAfter', iconNames)}
@@ -124,7 +121,7 @@ storiesOf('Input')
 						type={select('type', inputData.type, inputData.type[0])}
 						defaultValue={inputData.initialValue + ' three'}
 					/>
-					<StatefulInput
+					<Input
 						onChange={action('onChange')}
 						disabled={boolean('disabled')}
 						iconAfter={select('iconAfter', iconNames)}
@@ -141,7 +138,7 @@ storiesOf('Input')
 	.addWithInfo(
 		'with a range',
 		() => (
-			<StatefulInput
+			<Input
 				onChange={action('onChange')}
 				disabled={boolean('disabled')}
 				iconAfter={select('iconAfter', iconNames)}

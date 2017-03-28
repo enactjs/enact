@@ -1,7 +1,6 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import RangePicker from '../RangePicker';
-import Changeable from '@enact/ui/Changeable';
 import css from '../../internal/Picker/Picker.less';
 
 describe('RangePicker Specs', () => {
@@ -17,10 +16,8 @@ describe('RangePicker Specs', () => {
 	});
 
 	it('should increase by step amount on increment press', function () {
-		const StatefulRangePicker = Changeable(RangePicker);
-
 		const picker = mount(
-			<StatefulRangePicker min={0} max={100} defaultValue={10} step={1} />
+			<RangePicker min={0} max={100} defaultValue={10} step={1} />
 		);
 
 		const button = picker.find(`.${css.incrementer}`);
@@ -32,10 +29,8 @@ describe('RangePicker Specs', () => {
 	});
 
 	it('should decrease by step amount on decrement press', function () {
-		const StatefulRangePicker = Changeable(RangePicker);
-
 		const picker = mount(
-			<StatefulRangePicker min={0} max={100} defaultValue={10} step={1} />
+			<RangePicker min={0} max={100} defaultValue={10} step={1} />
 		);
 
 		const button = picker.find(`.${css.decrementer}`);

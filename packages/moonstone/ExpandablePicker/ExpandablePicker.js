@@ -6,6 +6,7 @@
  * @module moonstone/ExpandablePicker
  */
 
+import Changeable from '@enact/ui/Changeable';
 import kind from '@enact/core/kind';
 import React from 'react';
 import pure from 'recompose/pure';
@@ -234,9 +235,18 @@ const ExpandablePickerBase = kind({
 });
 
 /**
- * {@link moonstone/ExpandablePicker.ExpandablePickerBase} is a stateful component that
+ * {@link moonstone/ExpandablePicker.ExpandablePicker} is a stateful component that
  * renders a list of items into a picker that allows the user to select only a single item at
  * a time. It supports increment/decrement buttons for selection.
+ *
+ * By default, `ExpandablePicker` maintains the state of its `value` property. Supply the
+ * `defaultValue` property to control its initial value. If you wish to directly control updates
+ * to the component, supply a value to `value` at creation time and update it in response to
+ * `onPick` events.
+ *
+ * `ExpandablePicker` maintains its open/closed state by default. The initial state can be supplied
+ * using `defaultOpen`. In order to directly control the open/closed state, supply a value for
+ * `open` at creation time and update its value in response to `onClose`/`onOpen` events.
  *
  * @class ExpandablePicker
  * @memberof moonstone/ExpandablePicker
@@ -248,8 +258,10 @@ const ExpandablePickerBase = kind({
  */
 const ExpandablePicker = pure(
 	Expandable(
-		ExpandablePickerDecorator(
-			ExpandablePickerBase
+		Changeable(
+			ExpandablePickerDecorator(
+				ExpandablePickerBase
+			)
 		)
 	)
 );

@@ -213,7 +213,7 @@ describe('Changeable', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should not update \'value\' with new props when is not controlled', function () {
+	it.skip('should not update \'value\' with new props when is not controlled', function () {
 		const Component = Changeable(DivComponent);
 		const subject = mount(
 			<Component defaultValue={0} />

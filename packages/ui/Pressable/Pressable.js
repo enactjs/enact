@@ -134,7 +134,7 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 				this.setState({pressed});
 			} else {
 				warning(
-					prop in nextProps,
+					!(prop in nextProps),
 					`'${prop}' specified for an uncontrolled instance of Pressable and will be
 					ignored. To make this instance of Pressable controlled, '${prop}' should be
 					specified at creation.`

@@ -1,13 +1,10 @@
-import Changeable from '@enact/ui/Changeable';
-import {TimePicker, TimePickerBase} from '@enact/moonstone/TimePicker';
+import TimePicker, {TimePickerBase} from '@enact/moonstone/TimePicker';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
 
+import nullify from '../../src/utils/nullify.js';
 import {mergeComponentMetadata, removeProps} from '../../src/utils/propTables';
-
-const Picker = Changeable(TimePicker);
-Picker.displayName = 'Changeable(TimePicker)';
 
 const Config = mergeComponentMetadata('TimePicker', TimePicker.propTypes, TimePickerBase.propTypes, {
 	propTypes: {
@@ -26,9 +23,9 @@ storiesOf('TimePicker')
 		' ',
 		'The basic TimePicker',
 		() => (
-			<Picker
+			<TimePicker
 				title={text('title', 'Time')}
-				noLabels={boolean('noLabels', false)}
+				noLabels={nullify(boolean('noLabels', false))}
 				noneText={text('noneText', 'Nothing Selected')}
 				onChange={action('onChange')}
 				onOpen={action('onOpen')}

@@ -126,7 +126,7 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 				this.setState({value});
 			} else {
 				warning(
-					prop in nextProps,
+					!(prop in nextProps),
 					`'${prop}' specified for an uncontrolled instance of Changeable and will be
 					ignored. To make this instance of Changeable controlled, '${prop}' should be
 					specified at creation.`
