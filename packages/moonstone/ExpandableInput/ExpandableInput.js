@@ -307,7 +307,7 @@ class ExpandableInputBase extends React.Component {
  * `ExpandableInput` is an expandable component and it maintains its open/closed state by default.
  * The initial state can be supplied using `defaultOpen`. In order to directly control the
  * open/closed state, supply a value for `open` at creation time and update its value in response to
- * `onClose`/`OnOpen` events.
+ * `onClose`/`onOpen` events.
  *
  * @class ExpandableInput
  * @memberof moonstone/ExpandableInput
