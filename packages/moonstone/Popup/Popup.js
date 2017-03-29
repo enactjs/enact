@@ -213,6 +213,14 @@ class Popup extends React.Component {
 		onClose: PropTypes.func,
 
 		/**
+		 * A function to be run after transition for hiding is finished.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onHide: PropTypes.func,
+
+		/**
 		 * A function to be run when a key-down action is invoked by the user.
 		 *
 		 * @type {Function}
