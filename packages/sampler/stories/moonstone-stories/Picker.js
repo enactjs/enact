@@ -1,15 +1,13 @@
 import Picker, {PickerBase} from '@enact/moonstone/Picker';
-import Changeable from '@enact/ui/Changeable';
 import {decrementIcons, incrementIcons} from './icons';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
-import nullify from '../../src/utils/nullify.js';
 
-const StatefulPicker = Changeable(Picker);
-StatefulPicker.propTypes = Object.assign({}, PickerBase.propTypes, StatefulPicker.propTypes);
-StatefulPicker.defaultProps = Object.assign({}, StatefulPicker.defaultProps, PickerBase.defaultProps, StatefulPicker.defaultProps);
-StatefulPicker.displayName = 'Picker';
+import nullify from '../../src/utils/nullify.js';
+import {mergeComponentMetadata} from '../../src/utils/propTables';
+
+const Config = mergeComponentMetadata('Picker', PickerBase, Picker);
 
 // Set up some defaults for info and knobs
 const prop = {
@@ -30,18 +28,19 @@ storiesOf('Picker')
 		' ',
 		'Basic usage of Picker',
 		() => (
-			<StatefulPicker
+			<Picker
 				onChange={action('onChange')}
 				width={nullify(select('width', prop.width, prop.width[3]))}
 				orientation={select('orientation', prop.orientation, prop.orientation[0])}
-				wrap={boolean('wrap', false)}
-				joined={boolean('joined', false)}
-				noAnimation={boolean('noAnimation', false)}
+				wrap={nullify(boolean('wrap', false))}
+				joined={nullify(boolean('joined', false))}
+				noAnimation={nullify(boolean('noAnimation', false))}
 				disabled={boolean('disabled', false)}
-				incrementIcon={select('incrementIcon', ['', ...incrementIcons])}
-				decrementIcon={select('decrementIcon', ['', ...decrementIcons])}
+				incrementIcon={nullify(select('incrementIcon', ['', ...incrementIcons]))}
+				decrementIcon={nullify(select('decrementIcon', ['', ...decrementIcons]))}
 			>
 				{airports}
-			</StatefulPicker>
-		)
+			</Picker>
+		),
+		{propTables: [Config]}
 	);

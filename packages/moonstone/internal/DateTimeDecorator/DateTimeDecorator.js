@@ -6,6 +6,7 @@
  */
 
 import Cancelable from '@enact/ui/Cancelable';
+import Changeable from '@enact/ui/Changeable';
 import DateFactory from '@enact/i18n/ilib/lib/DateFactory';
 import hoc from '@enact/core/hoc';
 import ilib from '@enact/i18n';
@@ -29,6 +30,9 @@ const CancelableDecorator = Cancelable({
  *
  * @class DateTimeDecorator
  * @memberof moonstone/internal/DateTimeDecorator
+ * @mixes ui/Toggleable.Toggleable
+ * @mixes ui/RadioDecorator.RadioDecorator
+ * @mixes ui/Changeable.Changeable
  * @hoc
  * @private
  */
@@ -237,10 +241,12 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 	};
 
 	return Toggleable(
-		{toggle: null, activate: 'onOpen', deactivate: 'onClose', mutable: true, prop: 'open'},
+		{toggle: null, activate: 'onOpen', deactivate: 'onClose', prop: 'open'},
 		RadioDecorator(
 			{activate: 'onOpen', deactivate: 'onClose', prop: 'open'},
-			Decorator
+			Changeable(
+				Decorator
+			)
 		)
 	);
 });

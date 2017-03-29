@@ -2,66 +2,49 @@
 title: i18n (Internationalization)
 ---
 
-This guide details how to use some of i18n library's features. For an overview of the modules supplied with the library please see [I18nDecorator](../../modules/i18n/I18nDecorator/) and [Uppercase](../../modules/i18n/Uppercase/). This library incorporates the [iLib](https://sourceforge.net/projects/i18nlib/) internationalization library.
+* [Overview](#1)
+* [Using I18nDecorator](#2)
+* [Locale-Specific CSS](#3)
+* [Translating Strings using $L()](#4)
+* [Updating Locale](#4)
+* [iLib](#6)
+* [Sample i18n App](#7)
 
+<a name="1"></a>
+## Overview
+
+This guide details how to use some of i18n library's features. For an overview of the modules supplied with the library please see [I18nDecorator](../../modules/i18n/I18nDecorator/) and [Uppercase](../../modules/i18n/Uppercase/). This library incorporates the [iLib](https://github.com/iLib-js/iLib) internationalization library.
+
+<a name="2"></a>
 ## Using I18nDecorator
 
 `I18nDecorator` is a Higher-order Component (HOC) that provides easy access to locale information. Applications wishing to receive locale information can wrap the root component with the HOC. It is not necessary to use `I18nDecorator` directly for applications using `MoonstoneDecorator`.
 
-The HOC works by passing locale information and a utility method through `context`.
+The HOC works by passing locale information to the app through `context` and CSS classes. It contains two properties inside its `context`:
 
-### Using I18nDecorator Context
+* `rtl` - if `true` then the locale is a right-to-left language.
+* `updateLocale` - a function to update the locale of the app.
 
-As mentioned, `I18nDecorator` uses `context` to pass locale information to child components. In order to access `context` within a component, that component must use the exported `contextTypes`. For more information, please read the [context documentation](https://facebook.github.io/react/docs/context.html).
+### Using I18nDecorator context
 
-Two properties are supplied:
-
-* `rtl` - a `boolean`, `true` if the locale is a right-to-left (RTL) language.
-
-* `updateLocale` - a `function` which allows for changing the locale.
-
-#### Setting up your component
-
-The following example demonstrates using `contextTypes` with a component:
+The following example demonstrates using `context` and `contextTypes` with a component:
 
 ```javascript
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 
-// Place them in your app like this.
 const SomeComponent = (props, context) => (
-	<div>Hello World</div>
+	<div>Hello from the {context.rlt ? 'right' : 'left'}</div>
 );
 
 // This works for class-based, stateless, and Enact `kind` components
 SomeComponent.contextTypes = contextTypes;
 ```
 
-Omitting `contextTypes` will prevent the component from receiving the passed `context`.
+> NOTE: Omitting `contextTypes` will prevent the component from receiving the passed `context`.
 
-#### Using contextTypes
+`context` is used very similarly to `props` in a component.
 
-`context` is used very similarly to `props` in a component:
-
-In a class component, access `this.context`
-
-```javascript
-this.context.rtl // true if locale is RTL
-this.context.updateLocale('en-US') // updates locale
-```
-
-In a stateless component, `context` is the second argument:
-
-```javascript
-const SomeComponent = (props, context) => (
-	<div>Hello World</div>
-);
-
-// Equivalent to the above.
-context.rtl
-context.updateLocale('en-US')
-```
-
-In a `kind` component, you can use context in `computed`, `handlers` or `render` the same way as a stateless component.
+In a stateless component, `context` is the second argument to the `render()` function. In a `kind` component, context is also passed as the second argument to `computed`, `handlers` and `render`:
 
 ```javascript
 const SomeComponent = kind({
@@ -69,84 +52,112 @@ const SomeComponent = kind({
 	computed: {
 		computedProp: (props, context) => context.rtl ? 'left' : 'right'
 	},
-	render: ({computedProp}, context) => (
+	render: ({computedProp}) => (
 		<div>{computedProp}</div>
 	)
 });
 ```
 
-### Setting locale
+<a name="3"></a>
+## Locale-Specific CSS
 
-Locale may be explicitly set by setting `props` on the decorator or by calling the `updateLocale` function on `context`. Apps should use only one of these methods to set locale or conflicts could arise (for example, if a re-render of the root component caused the locale to be reset).
+When the `I18nDecorator` wraps your app, it automatically applies some CSS
+classes to the root element.  You can use these to write locale-specific CSS
+override classes using the `global` specifier.  These classes may indicate
+things such as whether the locale uses a right-to-left orientation or whether
+it uses non-Latin fonts.
 
-#### Using context
+Classes added to the body include:
 
-Context is the easiest way to update the locale. Call the `updateLocale` function, passing the locale string (e.g. `context.updateLocale('en-US')`. Remember to use `contextTypes` as mentioned above.
+* `enact-locale-non-latin`, if the locale uses a non-Latin font
 
-#### Updating locale via props
+* `enact-locale-right-to-left`, if the locale is oriented right-to-left (in the
+	absence of this class, the default orientation is left-to-right)
 
-The other way to update locale is to send a prop down through the decorator (directly or through `moonstone/MoonstoneDecorator`).
+* `enact-locale-non-italic`, if the locale uses a script that is not typically
+	italicized, such as Chinese or Thai.  (You may also use this in your own
+	classes to enable or disable italicization.)
 
-A typical app looks like this:
+The following classes allow you to switch functionality based on the language,
+script, or region of the current UI locale:
 
-```javascript
-//Typically inside app.js
-export default MoonstoneDecorator(App);
+* `enact-locale-<language>`
+* `enact-locale-<script>`
+* `enact-locale-<region>`
+* `enact-locale-<language>-<script>`
+* `enact-locale-<language>-<region>`
+* `enact-locale-<language>-<script>-<region>`
 
-//Typically inside index.js
-import App from './App';
+So for United States English you would see this `enact-locale-en enact-locale-en-US enact-locale-US`.
 
-ReactDOM.render(<App />, document.getElementById('root'))
-// or if you're using redux
+Here's an example from the Moonstone package in which locale-specific CSS is
+used to turn on right-to-left orientation for a widget:
 
-ReactDOM.render(
-	<Provider store={store}>
-		<App />
-	</Provider>,
-	document.getElementById('root')
-);
-```
-
-The `<App />` component in `index.js` can receive props. The decorator accepts a `locale` prop, which accepts the desired locale string.
-
-An example usage may look like this:
-
-```javascript
-
-const AppWrapped = (props) => (
-	<App locale={props.locale}/>
-)
-```
-
-In a deeply nested app, passing `props` back to the root element can get messy. State management libraries such as Redux can assist with this.
-
-Using `redux`, a connected component can be used as shown below:
-
-```javascript
-// Inside app.js
-const mapStateToProps = (state) => (
-	{
-		locale: state.locale
+```css
+	:global(.enact-locale-right-to-left) & {
+		flex-direction: row-reverse;
 	}
-)
-
-export default connect(mapStateToProps)(MoonstoneDecorator(App));
 ```
 
-This would allow you to control locale information through Redux. However, there are some issues with this approach, explained below.
+> NOTE: We're using LESS and CSS modules, which are supported by the enact command line tool
 
-#### Issue with context and Redux
+<a name="4"></a>
+## Translating Strings using $L()
 
-Using `context` and Redux together has one major problem. When relying on using the `rtl` property from `context` to update a component, the `react-redux` `connect` method will suppress updates caused by context changes.
+`$L()` is a convenience function wrapping `ilib/ResBundle` that is exported by the
+main Enact library.
 
-The reason is that `connect` only checks to see if `props` have changed, not `context`. If you only update `context` then the component will not re-render. To circumvent this you must use `connect` with the option `pure` set to `false` like this:
+It can be used as follows:
 
 ```javascript
-export default connect(mapStateToProps, mapDispatchToProps, null, {pure: false})(LocaleSwitch);
+import $L from '@enact/i18n/$L';
+
+const translatedString = $L('Some String');
+
+// You can also use it inside jsx
+<Panel title={$L('Some Title')}>
+	<div>{$L('Some Children')}</div>
+	<div>{translatedString}</div>
+</Panel>
 ```
 
-This will allow the `context` to flow through to the component, but it will also cause performance issues because your component will be re-rendering on every change. If you must use `context` with `react-redux`, please make the component as small as possible to reduce re-renders or use `shouldComponentUpdate`.
+In order for the translations to be successful, a locale-specific translation file must be available. If a suitable translation cannot be found, the original string will be returned.
 
+Each translatable string in your application should be wrapped in a call to
+`$L()`.
+
+You will need to extract the strings inside the `$L()` calls in your source
+code and write them out to a `strings.json` file for each locale.  (Most likely
+you'll want to create a script to do this.)
+
+The `strings.json` files should contain the translations in JSON format, i.e.:
+
+```javascript
+	{
+		"source string1": "translated string1",
+		"source string2": "translated string2",
+		...
+	} 
+```
+
+Many localization companies are able to provide translations in this format.
+
+The string returned from a call to `$L()` will be the translated string for the
+current UI locale. If a different locale or a bundle with a different name is
+needed, use `ResBundle` directly instead of `$L()`.
+
+<a name="5"></a>
+## Updating Locale
+
+If you wish to learn how to programmatically change the locale, please see [Updating Locale](./updating-locale.md).
+
+<a name="6"></a>
+## iLib
+
+iLib provides the locale-specific features of i18n. If you wish to learn about some of the other things it can do, like string translation, string/number formatting, etc., please see [iLib Docs](./ilib.md).
+
+<a name="7"></a>
 ## Sample
 
 A sample i18n app is available [here](https://github.com/enyojs/enact-samples/tree/master/pattern-locale-switching).
+

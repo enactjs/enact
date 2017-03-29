@@ -10,6 +10,8 @@ import sort from 'ramda/src/sort';
 import unless from 'ramda/src/unless';
 import useWith from 'ramda/src/useWith';
 
+import Job from './Job';
+
 const orderedKeys = map(prop('key'));
 const unorderedKeys = compose(sort((a, b) => a - b), orderedKeys);
 const unorderedEquals = useWith(equals, [unorderedKeys, unorderedKeys]);
@@ -120,6 +122,7 @@ export {
 	childrenEquals,
 	coerceFunction,
 	coerceArray,
+	Job,
 	isRenderable,
 	extractAriaProps
 };

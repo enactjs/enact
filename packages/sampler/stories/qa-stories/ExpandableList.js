@@ -2,12 +2,10 @@ import Button from '@enact/moonstone/Button';
 import ExpandableList from '@enact/moonstone/ExpandableList';
 import {RadioControllerDecorator} from '@enact/ui/RadioDecorator';
 import React from 'react';
-import Selectable from '@enact/ui/Selectable';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, text, select} from '@kadira/storybook-addon-knobs';
 
 const ExpandableGroup = RadioControllerDecorator('div');
-const SelectableList = Selectable(ExpandableList);
 
 const prop = {
 	listArray: [['a', 'b', 'c'], ['c', 'd', 'e', 'f', 'g']]
@@ -31,9 +29,9 @@ class ExpandableListChildrenLengthUpdate extends React.Component {
 		return (
 			<div>
 				<Button onClick={this.updateValue}>update value</Button>
-				<SelectableList {...this.props}>
+				<ExpandableList {...this.props}>
 					{prop.listArray[this.state.index]}
-				</SelectableList>
+				</ExpandableList>
 			</div>
 		);
 	}
@@ -63,15 +61,15 @@ storiesOf('ExpandableList')
 		'grouped',
 		() => (
 			<ExpandableGroup>
-				<SelectableList title="First">
+				<ExpandableList title="First">
 					{['One', 'Two', 'Three']}
-				</SelectableList>
-				<SelectableList title="Second">
+				</ExpandableList>
+				<ExpandableList title="Second">
 					{['Fourth', 'Fifth', 'Sixth']}
-				</SelectableList>
-				<SelectableList title="Third">
+				</ExpandableList>
+				<ExpandableList title="Third">
 					{['Seventh', 'Eighth', 'Ninth']}
-				</SelectableList>
+				</ExpandableList>
 			</ExpandableGroup>
 		)
 	)
@@ -79,15 +77,15 @@ storiesOf('ExpandableList')
 		'with multiples (to test "lockBottom" prop)',
 		() => (
 			<div>
-				<SelectableList title="First">
+				<ExpandableList title="First">
 					{['One', 'Two', 'Three']}
-				</SelectableList>
-				<SelectableList title="Second">
+				</ExpandableList>
+				<ExpandableList title="Second">
 					{['Fourth', 'Fifth', 'Sixth']}
-				</SelectableList>
-				<SelectableList title="Third">
+				</ExpandableList>
+				<ExpandableList title="Third">
 					{['Seventh', 'Eighth', 'Ninth']}
-				</SelectableList>
+				</ExpandableList>
 			</div>
 		)
 	);

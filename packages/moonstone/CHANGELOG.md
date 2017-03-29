@@ -4,13 +4,22 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+- `moonstone/Button` property `icon` to support a built-in icon next to the text content. The Icon supports everything that `moonstone/Icon` supports, as well as a custom icon.
+- `moonstone/MoonstoneDecorator` property `textSize` to resize several components to requested CMR sizes. Simply add `textSize="large"` to your `App` and the new sizes will automatically take effect.
+
 ### Changed
 
+- `moonstone/Slider` to use the property `tooltip` instead of `noTooltip`, so the built-in tooltip is not enabled by default
+- `moonstone/IncrementSlider` to include tooltip documentation
 - `moonstone/ExpandableList` to accept an array of objects as children which are spread onto the generated components
+- `moonstone/CheckboxItem` style to match the latest designs, with support for the `moonstone/Checkbox` to be on either the left or the right side by using the `iconPosition` property
+- `moonstone/VideoPlayer` to supply every event callback-method with an object representing the VideoPlayer's current state, including: `currentTime`, `duration`, `paused`, `proportionLoaded`, and `proportionPlayed`
 
 ### Fixed
 
-- `moonstone/Panels.Panel` behavior for setting focus after render
+- `moonstone/Panels.Panel` behavior for remembering focus on unmount and setting focus after render
 - `moonstone/VirtualList.VirtualGridList` showing empty items when items are continuously added dynamically
 - `moonstone/Picker` to marquee on focus once again
 
@@ -28,6 +37,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Slider` tooltip. It's enabled by default and comes with options like `noTooltip`, `tooltipAsPercent`, and `tooltipSide`. See the component docs for more details.
 - `moonstone/Panels.Panel` property `hideChildren` to defer rendering children
 - `moonstone/Spinner` properties `blockClickOn` and `scrim` to block click events behind spinner
+- `moonstone/VirtualList` property `clientSize` to specify item dimensions instead of measuring them
 
 ### Changed
 
@@ -42,6 +52,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualList.GridListImageItem` to have proper padding size according to the existence of caption/subcaption
 - `moonstone/Scrollable` to display scrollbars with proper size
 - `moonstone/VirtualGridList` to not be truncated
+
+### Removed
+
+- `moonstone/Scrollable` property `hideScrollbars` and replaced it with `horizontalScrollbar` and `verticalScrollbar`
 
 ## [1.0.0-beta.3] - 2017-02-21
 

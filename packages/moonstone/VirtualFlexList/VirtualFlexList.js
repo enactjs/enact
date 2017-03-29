@@ -9,7 +9,7 @@
 import classNames from 'classnames';
 import {forward} from '@enact/core/handle';
 import React, {Component, PropTypes} from 'react';
-import {SpotlightContainerDecorator} from '@enact/spotlight';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import {VirtualListCore} from '../VirtualList/VirtualListBase';
 
@@ -65,7 +65,7 @@ const cornerShape = PropTypes.shape({
 const headersShape = PropTypes.shape({
 	row: PropTypes.shape({
 		component: PropTypes.func.isRequired,
-		count:  PropTypes.number.isRequired,
+		count: PropTypes.number.isRequired,
 		data: PropTypes.any.isRequired,
 		height: PropTypes.number.isRequired,
 		width: PropTypes.number.isRequired,
@@ -73,7 +73,7 @@ const headersShape = PropTypes.shape({
 	}),
 	col: PropTypes.shape({
 		component: PropTypes.func.isRequired,
-		count:  PropTypes.number.isRequired,
+		count: PropTypes.number.isRequired,
 		data: PropTypes.any.isRequired,
 		height: PropTypes.number.isRequired,
 		width: PropTypes.number.isRequired,

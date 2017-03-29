@@ -4,9 +4,17 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
-### Change
+### Added
+
+- `ui/Placeholder` module with `PlaceholderControllerDecorator` and `PlaceholderDecorator` HOCs which facilitate rendering placeholder components until the wrapped component would scroll into the viewport.
+
+### Changed
 
 - `ui/Repeater` to accept an array of objects as children which are spread onto the generated components
+
+### Removed
+
+- `ui/validators` which was no longer used elsewhere in Enact
 
 ## [1.0.0-beta.4] - 2017-03-10
 

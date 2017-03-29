@@ -2,6 +2,7 @@
  * Exports the {@link ui/ViewManager.View} component.
  */
 
+import {Job} from '@enact/core/util';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
@@ -102,7 +103,6 @@ class View extends React.Component {
 		super(props);
 		this.animation = null;
 		this._raf = null;
-		this._enteringTimeout = null;
 		this.state = {
 			entering: true
 		};
@@ -115,7 +115,7 @@ class View extends React.Component {
 
 	componentWillUnmount () {
 		this.cancelAnimationFrame();
-		this.cancelEntering();
+		this.enteringJob.stop();
 	}
 
 	cancelAnimationFrame () {
@@ -125,12 +125,11 @@ class View extends React.Component {
 		}
 	}
 
-	cancelEntering () {
-		if (this._enteringTimeout) {
-			clearTimeout(this._enteringTimeout);
-			this._enteringTimeout = null;
-		}
-	}
+	enteringJob = new Job(() => {
+		this.setState({
+			entering: false
+		});
+	})
 
 	componentWillAppear (callback) {
 		const {arranger} = this.props;
@@ -163,12 +162,7 @@ class View extends React.Component {
 		const {enteringDelay, enteringProp} = this.props;
 
 		if (enteringProp) {
-			this._enteringTimeout = setTimeout(() => {
-				this.setState({
-					entering: false
-				});
-				this._enteringTimeout = null;
-			}, enteringDelay);
+			this.enteringJob.startAfter(enteringDelay);
 		}
 	}
 
@@ -186,7 +180,7 @@ class View extends React.Component {
 	// called.
 	componentWillLeave (callback) {
 		const {arranger, reverseTransition} = this.props;
-		this.cancelEntering();
+		this.enteringJob.stop();
 		if (arranger) {
 			this.prepareTransition(reverseTransition ? arranger.enter : arranger.leave, callback);
 		} else {

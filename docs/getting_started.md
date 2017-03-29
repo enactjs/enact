@@ -26,7 +26,7 @@ npm run lerna -- exec -- npm link
 Then from your app, you can link everything in and then install dependencies:
 
 ```shell
-npm link @enact/core @enact/ui @enact/i18n @enact/spotlight @enact/moonstone
+npm link @enact/core @enact/ui @enact/i18n @enact/spotlight @enact/moonstone @enact/webos
 npm install
 ```
 

@@ -1,33 +1,32 @@
-import {$L} from '@enact/i18n';
+import $L from '@enact/i18n/$L';
 import {Announce} from '@enact/ui/AnnounceDecorator';
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
+import {Job} from '@enact/core/util';
 import React, {Component, PropTypes} from 'react';
 import ri from '@enact/ui/resolution';
 import Spotlight from '@enact/spotlight';
-import {startJob, stopJob} from '@enact/core/jobs';
 
-import ScrollButton from './ScrollButton';
 import css from './Scrollbar.less';
+import ScrollButton from './ScrollButton';
 
 const
 	verticalProperties = {
-		scrollbarClass: css.scrollbarContainerVColumn,
-		thumbClass: css.scrollbarVthumb,
-		sizeProperty: 'clientHeight',
 		matrix: (position, scaledSize, natualSize) => (
 			'matrix3d(1, 0, 0, 0, 0,' + (scaledSize / natualSize) + ', 0, 0, 0, 0, 1, 0, 0, ' + position + ', 1, 1)'
-		)
+		),
+		scrollbarClass: css.scrollbarContainerVColumn,
+		sizeProperty: 'clientHeight',
+		thumbClass: css.scrollbarVthumb
 	},
 	horizontalProperties = {
-		scrollbarClass: css.scrollbarContainerHColumn,
-		thumbClass: css.scrollerHthumb,
-		sizeProperty: 'clientWidth',
 		matrix: (position, scaledSize, natualSize) => (
 			'matrix3d(' + (scaledSize / natualSize) + ', 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + position + ', 0, 1, 1)'
-		)
+		),
+		scrollbarClass: css.scrollbarContainerHColumn,
+		sizeProperty: 'clientWidth',
+		thumbClass: css.scrollerHthumb
 	},
-	autoHideDelay = 200,
 	nop = () => {},
 	minThumbSize = ri.scale(4),
 	prepareButton = (isPrev) => (isVertical, rtl) => {
@@ -42,10 +41,7 @@ const
 		return 'arrowsmall' + direction;
 	},
 	preparePrevButton = prepareButton(true),
-	prepareNextButton = prepareButton(false),
-
-	// spotlight
-	perf = (typeof window === 'object') ? window.performance : {now: Date.now};
+	prepareNextButton = prepareButton(false);
 
 /**
  * {@link moonstone/Scroller.Scrollbar} is a Scrollbar with Moonstone styling.
@@ -60,9 +56,13 @@ class ScrollbarBase extends Component {
 	static displayName = 'Scrollbar'
 
 	static propTypes = /** @lends moonstone/Scroller.Scrollbar.prototype */ {
+		/**
+		 * Can be called to alert the user for accessibility notifications.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
 		announce: PropTypes.func,
-
-		className: PropTypes.any,
 
 		/**
 		 * Specifies to reflect scrollbar's disabled property to the paging controls.
@@ -121,8 +121,6 @@ class ScrollbarBase extends Component {
 
 		this.scrollbarInfo = {scrollbarClass, thumbClass, sizeProperty, matrix};
 
-		this.jobName = perf.now();
-
 		this.initAnnounceRef = this.initRef('announceRef');
 		this.initContainerRef = this.initRef('containerRef');
 		this.initThumbRef = this.initRef('thumbRef');
@@ -141,14 +139,13 @@ class ScrollbarBase extends Component {
 	}
 
 	componentWillUnmount () {
-		stopJob(this.jobName);
+		this.hideThumbJob.stop();
 	}
 
 	autoHide = true
 	thumbSize = 0
 	minThumbSizeRatio = 0
 	trackSize = 0
-	jobName = ''
 
 	// component refs
 	containerRef = null
@@ -219,25 +216,24 @@ class ScrollbarBase extends Component {
 	}
 
 	showThumb () {
-		stopJob(this.jobName);
+		this.hideThumbJob.stop();
 		this.thumbRef.classList.add(css.thumbShown);
 		this.thumbRef.classList.remove(css.thumbHidden);
 	}
 
 	startHidingThumb () {
-		stopJob(this.jobName);
-
+		this.hideThumbJob.stop();
 		if (this.autoHide) {
-			startJob(this.jobName, () => {
-				this.hideThumb();
-			}, autoHideDelay);
+			this.hideThumbJob.start();
 		}
 	}
 
-	hideThumb () {
+	hideThumb = () => {
 		this.thumbRef.classList.add(css.thumbHidden);
 		this.thumbRef.classList.remove(css.thumbShown);
 	}
+
+	hideThumbJob = new Job(this.hideThumb, 200);
 
 	calculateMetrics () {
 		this.thumbSize = this.thumbRef[this.scrollbarInfo.sizeProperty];
@@ -291,7 +287,7 @@ class ScrollbarBase extends Component {
 				>
 					{nextIcon}
 				</ScrollButton>
-				<div ref={this.initThumbRef} className={thumbClass} />
+				<div className={thumbClass} ref={this.initThumbRef} />
 				<Announce ref={this.initAnnounceRef} />
 			</div>
 		);

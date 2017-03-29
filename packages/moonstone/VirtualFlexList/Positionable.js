@@ -3,8 +3,11 @@
  */
 
 import clamp from 'ramda/src/clamp';
+import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import React, {Component, PropTypes} from 'react';
+
+const forwardPositionChange = forward('onPositionChange');
 
 const
 	dataIndexAttribute = 'data-index',
@@ -22,6 +25,8 @@ const
  */
 const Positionable = hoc((config, Wrapped) => {
 	return class extends Component {
+		static displayName = 'Positionable'
+
 		static propTypes = /** @lends moonstone/VirtualFlexList.Positionable.prototype */ {
 			/**
 			 * Position x.
@@ -102,10 +107,10 @@ const Positionable = hoc((config, Wrapped) => {
 
 			if (pos) {
 				if (pos.left !== this.props.x || pos.top !== this.props.y) {
-					this.props.onPositionChange({
+					forwardPositionChange({
 						x: clamp(0, this.bounds.maxLeft, pos.left),
 						y: clamp(0, this.bounds.maxTop, pos.top)
-					});
+					}, this.props);
 				}
 				this.lastFocusedItem = item;
 			}
@@ -121,7 +126,10 @@ const Positionable = hoc((config, Wrapped) => {
 		onWheel = (e) => {
 			if (e.deltaY) {
 				e.preventDefault();
-				this.props.onPositionChange({x: this.props.x, y: clamp(0, this.bounds.maxTop, this.props.y + this.bounds.clientHeight * Math.sign(e.deltaY))});
+				forwardPositionChange({
+					x: this.props.x,
+					y: clamp(0, this.bounds.maxTop, this.props.y + this.bounds.clientHeight * Math.sign(e.deltaY))
+				}, this.props);
 			}
 		}
 

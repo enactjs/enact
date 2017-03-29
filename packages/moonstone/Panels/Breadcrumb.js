@@ -1,6 +1,6 @@
-import {$L} from '@enact/i18n';
+import $L from '@enact/i18n/$L';
 import kind from '@enact/core/kind';
-import {Spottable} from '@enact/spotlight';
+import Spottable from '@enact/spotlight/Spottable';
 import React from 'react';
 
 import css from './Panels.less';

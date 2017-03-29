@@ -5,243 +5,339 @@ import sinon from 'sinon';
 import Toggleable from '../Toggleable';
 
 describe('Toggleable', () => {
-	it('should accept a default active prop', function () {
-		const DivComponent = () => <div>Toggle</div>;
+	const DivComponent = () => <div>Toggle</div>;
 
-		const ToggleableDiv = Toggleable(DivComponent);
-		const wrapped = shallow(
-			<ToggleableDiv defaultActive />
-		);
+	describe('#config', function () {
+		it('should pass \'active\' to the wrapped component', function () {
+			const Component = Toggleable(DivComponent);
+			const subject = shallow(
+				<Component />
+			);
+			const wrapped = subject.find(DivComponent);
 
-		const expected = true;
-		const actual = wrapped.find(DivComponent).prop('active');
+			const expected = true;
+			const actual = 'active' in wrapped.props();
 
-		expect(actual).to.equal(expected);
+			expect(actual).to.equal(expected);
+		});
+
+		it('should pass configured \'prop\' as the toggled state\'s key to the wrapped component', function () {
+			const prop = 'selected';
+			const Component = Toggleable({prop: prop}, DivComponent);
+			const subject = shallow(
+				<Component defaultSelected />
+			);
+			const wrapped = subject.find(DivComponent);
+
+			const expected = true;
+			const actual = wrapped.prop(prop);
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should pass \'onToggle\' handler to the wrapped component', function () {
+			const Component = Toggleable(DivComponent);
+			const subject = shallow(
+				<Component />
+			);
+			const wrapped = subject.find(DivComponent);
+
+			const expected = true;
+			const actual = (typeof wrapped.prop('onToggle') === 'function');
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should pass configured \'toggle\' handler to the wrapped component', function () {
+			const handle = 'onClick';
+			const Component = Toggleable({toggle: handle}, DivComponent);
+			const subject = shallow(
+				<Component />
+			);
+			const wrapped = subject.find(DivComponent);
+
+			const expected = true;
+			const actual = (typeof wrapped.prop(handle) === 'function');
+
+			expect(actual).to.equal(expected);
+		});
 	});
 
-	it('should not accept change to default active prop', function () {
-		const DivComponent = () => <div>Toggle</div>;
+	describe('#prop', function () {
+		it('should use defaultActive prop when active prop is omitted', function () {
+			const Component = Toggleable(DivComponent);
+			const subject = shallow(
+				<Component defaultActive />
+			);
 
-		const ToggleableDiv = Toggleable(DivComponent);
-		const wrapped = shallow(
-			<ToggleableDiv defaultActive />
-		);
+			const expected = true;
+			const actual = subject.find(DivComponent).prop('active');
 
-		wrapped.setProps({defaultActive: false});
+			expect(actual).to.equal(expected);
+		});
 
-		const expected = true;
-		const actual = wrapped.find(DivComponent).prop('active');
+		it('should use defaultActive prop when active prop is null', function () {
+			const Component = Toggleable(DivComponent);
+			const subject = shallow(
+				<Component defaultActive active={null} />
+			);
 
-		expect(actual).to.equal(expected);
+			const expected = true;
+			const actual = subject.find(DivComponent).prop('active');
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should use defaultActive prop when active prop is undefined', function () {
+			const Component = Toggleable(DivComponent);
+			const subject = shallow(
+				// eslint-disable-next-line no-undefined
+				<Component defaultActive active={undefined} />
+			);
+
+			const expected = true;
+			const actual = subject.find(DivComponent).prop('active');
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should use active prop when both active and defaultActive are defined', function () {
+			const Component = Toggleable(DivComponent);
+			const subject = shallow(
+				<Component defaultActive active={false} />
+			);
+
+			const expected = false;
+			const actual = subject.find(DivComponent).prop('active');
+
+			expect(actual).to.equal(expected);
+		});
 	});
 
-	it('should not accept active prop if not mutable', function () {
-		const DivComponent = () => <div>Toggle</div>;
+	// test forwarding events
 
-		const ToggleableDiv = Toggleable(DivComponent);
-		const wrapped = shallow(
-			<ToggleableDiv active />
-		);
-
-		const expected = false;
-		const actual = wrapped.find(DivComponent).prop('active');
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('should accept active prop if mutable', function () {
-		const DivComponent = () => <div>Toggle</div>;
-
-		const MutableToggleableDiv = Toggleable({mutable: true}, DivComponent);
-		const wrapped = shallow(
-			<MutableToggleableDiv active />
-		);
-
-		const expected = true;
-		const actual = wrapped.find(DivComponent).prop('active');
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('should accept change to active prop if mutable', function () {
-		const DivComponent = () => <div>Toggle</div>;
-
-		const MutableToggleableDiv = Toggleable({mutable: true}, DivComponent);
-		const wrapped = shallow(
-			<MutableToggleableDiv active />
-		);
-
-		wrapped.setProps({active: false});
-
-		const expected = false;
-		const actual = wrapped.find(DivComponent).prop('active');
-
-		expect(actual).to.equal(expected);
-	});
-
-	// Note: Active will be false, but should be passed in any case
-	it('should pass active to Wrapped', function () {
-		const DivComponent = () => <div>Toggle</div>;
-
-		const ToggleableDiv = Toggleable(DivComponent);
-		const wrapped = shallow(
-			<ToggleableDiv />
-		);
-
-		const expected = 'active';
-		const actual = wrapped.find(DivComponent).props();
-
-		expect(actual).to.have.property(expected);
-	});
-
-	it('should pass handler to Wrapped', function () {
-		const DivComponent = () => <div>Toggle</div>;
-
-		const ToggleableDiv = Toggleable(DivComponent);
-		const wrapped = shallow(
-			<ToggleableDiv />
-		);
-
-		const expected = 'onToggle';
-		const actual = wrapped.find(DivComponent).props();
-
-		expect(actual).to.have.property(expected);
-	});
-
-	it('should pass deactivate handler to Wrapped if configured', function () {
-		const DivComponent = () => <div>Toggle</div>;
-
-		const DeactivatableToggleableDiv = Toggleable({deactivate: 'onDone'}, DivComponent);
-		const wrapped = shallow(
-			<DeactivatableToggleableDiv />
-		);
-
-		const expected = 'onDone';
-		const actual = wrapped.find(DivComponent).props();
-
-		expect(actual).to.have.property(expected);
-	});
-
-	it('should deactivate Wrapped on deactivate event', function () {
-		const DivComponent = () => <div>Toggle</div>;
-
-		const DeactivatableToggleableDiv = Toggleable({deactivate: 'onDone'}, DivComponent);
-		const wrapped = shallow(
-			<DeactivatableToggleableDiv defaultActive />
-		);
-
-		wrapped.find(DivComponent).simulate('done');
-
-		const expected = false;
-		const actual = wrapped.find(DivComponent).prop('active');
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('should pass custom toggle prop to Wrapped Component in configured prop', function () {
-		const DivComponent = () => <div>Toggle</div>;
-
-		const defaultSelected = 'toggleMe';
-		const ToggleableDiv = Toggleable({toggle: defaultSelected}, DivComponent);
-		const wrapped = shallow(
-			<ToggleableDiv />
-		);
-
-		const expected = defaultSelected;
-		const actual = wrapped.find(DivComponent).props();
-
-		expect(actual).to.have.property(expected);
-	});
-
-	it('should pass custom active prop to Wrapped Component in configured prop', function () {
-		const DivComponent = () => <div>Toggle</div>;
-
-		const defaultSelected = 'isSelected';
-		const ToggleableDiv = Toggleable({prop: defaultSelected}, DivComponent);
-		const wrapped = shallow(
-			<ToggleableDiv />
-		);
-
-		const expected = defaultSelected;
-		const actual = wrapped.find(DivComponent).props();
-
-		expect(actual).to.have.property(expected);
-	});
-
-	it('should change active to true on click event', function () {
-		const DivComponent = ({onToggle}) => <div onClick={onToggle}>Toggle</div>;
-
-		const ToggleableDiv = Toggleable(DivComponent);
-		const wrapped = shallow(
-			<ToggleableDiv />
-		);
-
-		wrapped.find(DivComponent).simulate('toggle');
-
-		const expected = true;
-		const actual = wrapped.find(DivComponent).prop('active');
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('should change active to true on configured event event', function () {
-		const DivComponent = ({onMouseDown}) =>
-			<div onMouseDown={onMouseDown}>Toggle</div>;
-
-		const ToggleableDiv = Toggleable({toggle: 'onMouseDown'}, DivComponent);
-		const wrapped = shallow(
-			<ToggleableDiv />
-		);
-
-		wrapped.find(DivComponent).simulate('mousedown');
-
-		const expected = true;
-		const actual = wrapped.find(DivComponent).prop('active');
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('should call event handlers from props', function () {
-		const DivComponent = ({onToggle}) => <div onClick={onToggle}>Toggle</div>;
-		const Component = Toggleable({prop: 'data-selected'}, DivComponent);
-
-		const handleClick = sinon.spy();
-		const wrapped = shallow(<Component onClick={handleClick} />);
-
-		wrapped.find(DivComponent).simulate('click', {});
-
-		const expected = true;
-		const actual = handleClick.calledOnce;
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('should pass through configured event', function () {
-		const DivComponent = ({onToggle}) => <div onClick={onToggle}>Toggle</div>;
-		const Component = Toggleable({prop: 'data-selected'}, DivComponent);
-
+	it('should invoke passed \'onToggle\' handler', function () {
 		const handleToggle = sinon.spy();
-		const wrapped = mount(<Component onToggle={handleToggle} />);
-
-		wrapped.find(DivComponent).simulate('click', {});
+		const Component = Toggleable(DivComponent);
+		const subject = shallow(
+			<Component onToggle={handleToggle} />
+		);
+		subject.prop('onToggle')();
 
 		const expected = true;
-		const actual = handleToggle.calledOnce;
+		const actual = handleToggle.called;
 
 		expect(actual).to.equal(expected);
 	});
 
-	it('should not call event for props changes when mutable', function () {
-		const DivComponent = ({onToggle}) => <div onClick={onToggle}>Toggle</div>;
+	it('should invoke passed \'onActivate\' handler', function () {
+		const handleActivate = sinon.spy();
+		const Component = Toggleable({activate: 'onActivate'}, DivComponent);
+		const subject = shallow(
+			<Component onActivate={handleActivate} />
+		);
+		subject.prop('onActivate')();
+
+		const expected = true;
+		const actual = handleActivate.called;
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should invoke passed \'onDeactivate\' handler', function () {
+		const handleDeactivate = sinon.spy();
+		const Component = Toggleable({deactivate: 'onDeactivate'}, DivComponent);
+		const subject = shallow(
+			<Component onDeactivate={handleDeactivate} />
+		);
+		subject.prop('onDeactivate')();
+
+		const expected = true;
+		const actual = handleDeactivate.called;
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should not invoke passed \'onToggle\' handler when disabled', function () {
 		const handleToggle = sinon.spy();
-
-		const Component = Toggleable({prop: 'data-selected', mutable: true}, DivComponent);
-		const wrapped = shallow(<Component onToggle={handleToggle} />);
-
-		wrapped.setProps({active: true});
+		const Component = Toggleable(DivComponent);
+		const subject = shallow(
+			<Component onToggle={handleToggle} disabled />
+		);
+		subject.prop('onToggle')();
 
 		const expected = false;
 		const actual = handleToggle.called;
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should not invoke passed \'onActivate\' handler when disabled', function () {
+		const handleActivate = sinon.spy();
+		const Component = Toggleable({activate: 'onActivate'}, DivComponent);
+		const subject = shallow(
+			<Component onActivate={handleActivate} disabled />
+		);
+		subject.prop('onActivate')();
+
+		const expected = false;
+		const actual = handleActivate.called;
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should not invoke passed \'onDeactivate\' handler when \'disabled\'', function () {
+		const handleDeactivate = sinon.spy();
+		const Component = Toggleable({deactivate: 'onDeactivate'}, DivComponent);
+		const subject = shallow(
+			<Component onDeactivate={handleDeactivate} disabled />
+		);
+		subject.prop('onDeactivate')();
+
+		const expected = false;
+		const actual = handleDeactivate.called;
+
+		expect(actual).to.equal(expected);
+	});
+
+	// test updating state
+
+	it('should update \'active\' when \'onToggle\' invoked and is not controlled', function () {
+		const Component = Toggleable(DivComponent);
+		const subject = mount(
+			<Component defaultActive />
+		);
+
+		subject.find(DivComponent).prop('onToggle')();
+
+		const expected = false;
+		const actual = subject.find(DivComponent).prop('active');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should not update \'active\' when \'onToggle\' invoked and is not controlled but disabled', function () {
+		const Component = Toggleable(DivComponent);
+		const subject = mount(
+			<Component defaultActive disabled />
+		);
+
+		subject.find(DivComponent).prop('onToggle')();
+
+		const expected = true;
+		const actual = subject.find(DivComponent).prop('active');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should not update \'active\' when \'onActivate\' invoked and is not controlled but disabled', function () {
+		const Component = Toggleable({activate: 'onActivate'}, DivComponent);
+		const subject = mount(
+			<Component defaultActive={false} disabled />
+		);
+
+		subject.find(DivComponent).prop('onActivate')();
+
+		const expected = false;
+		const actual = subject.find(DivComponent).prop('active');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should not update \'active\' when \'onDeactivate\' invoked and is not controlled but disabled', function () {
+		const Component = Toggleable({deactivate: 'onDeactivate'}, DivComponent);
+		const subject = mount(
+			<Component defaultActive disabled />
+		);
+
+		subject.find(DivComponent).prop('onDeactivate')();
+
+		const expected = true;
+		const actual = subject.find(DivComponent).prop('active');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should not update \'active\' when \'onToggle\' invoked and is controlled', function () {
+		const Component = Toggleable(DivComponent);
+		const subject = mount(
+			<Component active />
+		);
+
+		subject.find(DivComponent).prop('onToggle')();
+
+		const expected = true;
+		const actual = subject.find(DivComponent).prop('active');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should not update \'active\' when \'onActivate\' invoked and is controlled', function () {
+		const Component = Toggleable({activate: 'onActivate'}, DivComponent);
+		const subject = mount(
+			<Component active={false} />
+		);
+
+		subject.find(DivComponent).prop('onActivate')();
+
+		const expected = false;
+		const actual = subject.find(DivComponent).prop('active');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should not update \'active\' when \'onDeactivate\' invoked and is controlled', function () {
+		const Component = Toggleable({deactivate: 'onDeactivate'}, DivComponent);
+		const subject = mount(
+			<Component active />
+		);
+
+		subject.find(DivComponent).prop('onDeactivate')();
+
+		const expected = true;
+		const actual = subject.find(DivComponent).prop('active');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should update \'active\' with new props when controlled', function () {
+		const Component = Toggleable(DivComponent);
+		const subject = mount(
+			<Component active />
+		);
+
+		subject.setProps({active: false});
+
+		const expected = false;
+		const actual = subject.find(DivComponent).prop('active');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it.skip('should not update \'active\' with new props when not controlled', function () {
+		const Component = Toggleable(DivComponent);
+		const subject = mount(
+			<Component defaultActive />
+		);
+
+		subject.setProps({active: false});
+
+		const expected = true;
+		const actual = subject.find(DivComponent).prop('active');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should not update \'active\' with new defaultProp when not controlled', function () {
+		const Component = Toggleable(DivComponent);
+		const subject = mount(
+			<Component defaultActive />
+		);
+
+		subject.setProps({defaultActive: false});
+
+		const expected = true;
+		const actual = subject.find(DivComponent).prop('active');
 
 		expect(actual).to.equal(expected);
 	});

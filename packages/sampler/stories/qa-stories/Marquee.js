@@ -1,6 +1,6 @@
 import {MarqueeController, MarqueeText} from '@enact/moonstone/Marquee';
 import Item from '@enact/moonstone/Item';
-import {Spottable} from '@enact/spotlight';
+import Spottable from '@enact/spotlight/Spottable';
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
 import {withKnobs, boolean, number, select} from '@kadira/storybook-addon-knobs';
@@ -10,7 +10,7 @@ const Controller = MarqueeController('div');
 const SpottableDiv = MarqueeController({marqueeOnFocus: true}, Spottable('div'));
 
 const LTR = [
-	'The quick brown fox jumped over the lazy dog.  The bean bird flies at sundown.',
+	'The quick brown fox jumped over the lazy dog. The bean bird flies at sundown.',
 	'Η γρήγορη καφέ αλεπού πήδηξε πάνω από το μεσημέρι. Το πουλί πετά σε φασολιών δύση του ηλίου.',
 	'ਤੁਰੰਤ ਭੂਰਾ Fox ਆਲਸੀ ਕੁੱਤੇ ਨੂੰ ਵੱਧ ਗਈ. ਬੀਨ ਪੰਛੀ ਸੂਰਜ ਡੁੱਬਣ \'ਤੇ ਉਡਾਣ ਭਰਦੀ ਹੈ.',
 	'速い茶色のキツネは、怠け者の犬を飛び越えた。豆の鳥は日没で飛ぶ。',
@@ -112,7 +112,7 @@ storiesOf('Marquee')
 					disabled={false}
 					marqueeDelay={1000}
 					marqueeDisabled={false}
-					marqueeOn={'focus'}
+					marqueeOn="focus"
 					marqueeOnRenderDelay={1000}
 					marqueeResetDelay={1000}
 					marqueeSpeed={60}
@@ -124,7 +124,7 @@ storiesOf('Marquee')
 					disabled={false}
 					marqueeDelay={1000}
 					marqueeDisabled={false}
-					marqueeOn={'focus'}
+					marqueeOn="focus"
 					marqueeOnRenderDelay={1000}
 					marqueeResetDelay={1000}
 					marqueeSpeed={60}

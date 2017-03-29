@@ -1,19 +1,24 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import Slottable from '@enact/ui/Slottable';
-import {Spotlight, SpotlightContainerDecorator} from '@enact/spotlight';
+import Spotlight from '@enact/spotlight';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
+import {spottableClass} from '@enact/spotlight/Spottable';
 
 import css from './Panel.less';
 
 const spotPanel = (node) => {
 	if (node && !Spotlight.getCurrent()) {
-		const body = node.querySelector('section .spottable');
-		const header = node.querySelector('header .spottable');
-		const spottable = body || header;
+		const {containerId} = node.dataset;
 
-		if (spottable) {
-			Spotlight.focus(spottable);
-		}
+		// set the default element so that we can try to spot the container and let it fall through
+		// to the default element if there isn't a lastFocusedElement/Index
+		const body = node.querySelector(`section .${spottableClass}`);
+		const header = node.querySelector(`header .${spottableClass}`);
+		const defaultElement = body || header;
+
+		Spotlight.set(containerId, {defaultElement});
+		Spotlight.focus(containerId);
 	}
 };
 
@@ -108,6 +113,7 @@ const PanelBase = kind({
 });
 
 const Panel = SpotlightContainerDecorator(
+	{enterTo: 'last-focused', preserveId: true},
 	Slottable(
 		{slots: ['header']},
 		PanelBase

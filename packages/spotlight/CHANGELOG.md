@@ -6,7 +6,16 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Fixed
 
-`spotlight.Spotlight` behavior to properly save the last-focused element for nested containers
+- `spotlight/Spotlight` calling `set()` now properly updates the container config
+- `spotlight/Spotlight` behavior to properly save the last-focused element for nested containers
+
+### Removed
+
+- `spotlight.Spottable` replaced by `spotlight/Spottable`
+- `spotlight.spottableClass` replaced by `spotlight/Spottable.spottableClass`
+- `spotlight.SpotlightContainerDecorator` replaced by `spotlight/SpotlightContainerDecorator`
+- `spotlight.spotlightDefaultClass` replaced by `spotlight/SpotlightContainerDecorator.spotlightDefaultClass`
+- `spotlight.SpotlightRootDecorator` replaced by `spotlight/SpotlightRootDecorator`
 
 ## [1.0.0-beta.4] - 2017-03-10
 
