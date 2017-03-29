@@ -570,7 +570,7 @@ const Picker = class extends React.Component {
 		const classes = this.determineClasses(decrementerDisabled, incrementerDisabled);
 
 		let arranger;
-		if (width && !disabled) {
+		if (!disabled) {
 			arranger = orientation === 'vertical' ? SlideTopArranger : SlideLeftArranger;
 		}
 
