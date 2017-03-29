@@ -50,6 +50,8 @@ const gridListItemSizeShape = PropTypes.shape({
  * @private
  */
 class VirtualListCore extends Component {
+	static displayName = 'VirtualListBase'
+
 	static propTypes = /** @lends moonstone/VirtualList.VirtualListCore.prototype */ {
 		/**
 		 * The render function for an item of the list.
@@ -163,8 +165,7 @@ class VirtualListCore extends Component {
 		direction: 'vertical',
 		overhang: 3,
 		pageScroll: false,
-		spacing: 0,
-		style: {}
+		spacing: 0
 	}
 
 	constructor (props) {
@@ -600,8 +601,7 @@ class VirtualListCore extends Component {
 			focusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
 
 		if (!isNaN(focusedIndex)) {
-			let
-				gridPosition = this.getGridPosition(focusedIndex);
+			let gridPosition = this.getGridPosition(focusedIndex);
 
 			this.nodeIndexToBeBlurred = this.lastFocusedIndex % numOfItems;
 			this.lastFocusedIndex = focusedIndex;
@@ -693,6 +693,7 @@ class VirtualListCore extends Component {
 			{primary, cc} = this;
 
 		delete props.cbScrollTo;
+		delete props.clientSize;
 		delete props.component;
 		delete props.data;
 		delete props.dataSize;

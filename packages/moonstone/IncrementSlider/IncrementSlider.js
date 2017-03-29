@@ -5,6 +5,7 @@
  */
 
 import $L from '@enact/i18n/$L';
+import Changeable from '@enact/ui/Changeable';
 import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
 import Pressable from '@enact/ui/Pressable';
@@ -148,6 +149,54 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			step: PropTypes.number,
 
 			/**
+			 * Enables the built-in tooltip, whose behavior can be modified by the other tooltip
+			 * properties.  A custom tooltip, which follows the knob, may be used instead by
+			 * supplying a component as a child of `IncrementSlider`. This property has no effect if
+			 * a custom tooltip is provided.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			tooltip: PropTypes.bool,
+
+			/**
+			 * Converts the contents of the built-in tooltip to a percentage of the bar.
+			 * The percentage respects the min and max value props.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			tooltipAsPercent: PropTypes.bool,
+
+			/**
+			 * Setting to `true` overrides the natural LTR->RTL tooltip side-flipping for locale
+			 * changes. This may be useful if you have a static layout that does not automatically
+			 * reverse when in an RTL language.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			tooltipForceSide: PropTypes.bool,
+
+			/**
+			 * Specify where the tooltip should appear in relation to the Slider bar. Options are
+			 * `'before'` and `'after'`. `before` renders above a `horizontal` slider and to the
+			 * left of a `vertical` Slider. `after` renders below a `horizontal` slider and to the
+			 * right of a `vertical` Slider. In the `vertical` case, the rendering position is
+			 * automatically reversed when rendering in an RTL locale. This can be overridden by
+			 * using the[tooltipForceSide]{@link moonstone/IncrementSlider.IncrementSlider.tooltipForceSide}
+			 * prop.
+			 *
+			 * @type {String}
+			 * @default 'before'
+			 * @public
+			 */
+			tooltipSide: PropTypes.oneOf(['before', 'after']),
+
+			/**
 			* The value of the increment slider.
 			*
 			* @type {Number}
@@ -173,6 +222,10 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			pressed: false,
 			spotlightDisabled: false,
 			step: 1,
+			tooltip: false,
+			tooltipAsPercent: false,
+			tooltipForceSide: false,
+			tooltipSide: 'before',
 			value: 0,
 			vertical: false
 		},
@@ -231,20 +284,27 @@ const IncrementSliderFactory = factory((config) => {
 	const Base = IncrementSliderBaseFactory(config);
 
 	/**
-	 * {@link moonstone/IncrementSlider.IncrementSlider} is a IncrementSlider with
-	 * Moonstone styling, Spottable, Pressable and SliderDecorator applied. It is a
-	 * stateful Slider Slider with IconButtons to increment and decrement the value
+	 * {@link moonstone/IncrementSlider.IncrementSlider} is an IncrementSlider with
+	 * Moonstone styling, Changeable, Pressable and SliderDecorator applied with IconButtons to
+	 * increment and decrement the value.
+	 *
+	 * By default, `IncrementSlider` maintains the state of its `value` property. Supply the
+	 * `defaultValue` property to control its initial value. If you wish to directly control updates
+	 * to the component, supply a value to `value` at creation time and update it in response to
+	 * `onChange` events.
 	 *
 	 * @class IncrementSlider
 	 * @memberof moonstone/IncrementSlider
-	 * @mixes spotlight/Spottable
-	 * @mixes ui/Pressable
+	 * @mixes ui/Changeable.Changeable
+	 * @mixes ui/Pressable.Pressable
 	 * @ui
 	 * @public
 	 */
-	return Pressable(
-		SliderDecorator(
-			Base
+	return Changeable(
+		Pressable(
+			SliderDecorator(
+				Base
+			)
 		)
 	);
 });

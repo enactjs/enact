@@ -4,9 +4,10 @@
  * example use:
  * `nullify(select('propName', [null, 'value', 'two']))`
  * `nullify(select('propName', ['', 'value', 'two']))`
+ * `nullify(boolean('propName', false))`
  *
 */
 
-const nullify = (v) => v === '' ? null : v;
+const nullify = (v) => !v ? null : v;
 
 export default nullify;

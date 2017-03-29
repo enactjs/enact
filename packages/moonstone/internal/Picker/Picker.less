@@ -12,7 +12,6 @@
 	border-radius: @button-width;
 	vertical-align: bottom;
 	position: relative;
-	direction: ltr;
 	text-align: center;
 	margin-left: @moon-spotlight-outset;
 	margin-right: @moon-spotlight-outset;
@@ -35,7 +34,11 @@
 		line-height: @moon-button-height;
 		max-width: 300px;
 
-		.moon-custom-text-size(@moon-item-font-size-large);
+		.moon-custom-text({
+			font-size: @moon-item-font-size-large;
+			height: @moon-button-height-large;
+			line-height: @moon-button-height-large;
+		});
 	}
 
 	.sizingPlaceholder {
@@ -65,6 +68,10 @@
 
 	&.horizontal {
 		display: inline-flex;
+
+		:global(.enact-locale-right-to-left) & {
+			flex-direction: row-reverse;
+		}
 
 		.incrementer {
 			order: 3;

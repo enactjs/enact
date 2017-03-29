@@ -1,18 +1,13 @@
-import Changeable from '@enact/ui/Changeable';
-import React from 'react';
 import Slider, {SliderBase} from '@enact/moonstone/Slider';
+import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, number, select} from '@kadira/storybook-addon-knobs';
 
-const ChangeableSlider = Changeable({mutable: true}, Slider);
-ChangeableSlider.propTypes = Object.assign({}, SliderBase.propTypes, Slider.propTypes);
-ChangeableSlider.defaultProps = Object.assign({}, ChangeableSlider.defaultProps, SliderBase.defaultProps, Slider.defaultProps);
-ChangeableSlider.displayName = 'Slider';
+import nullify from '../../src/utils/nullify.js';
+import {mergeComponentMetadata, removeProps} from '../../src/utils/propTables';
 
-delete ChangeableSlider.propTypes.pressed;
-delete ChangeableSlider.defaultProps.pressed;
-delete ChangeableSlider.propTypes.defaultPressed;
-delete ChangeableSlider.defaultProps.defaultPressed;
+const Config = mergeComponentMetadata('Slider', SliderBase, Slider);
+removeProps(Config, 'defaultPressed pressed');
 
 storiesOf('Slider')
 	.addDecorator(withKnobs)
@@ -20,22 +15,22 @@ storiesOf('Slider')
 		' ',
 		'Basic usage of Slider',
 		() => (
-			<ChangeableSlider
-				backgroundProgress={number('backgroundProgress', ChangeableSlider.defaultProps.backgroundProgress, {range: true, min: 0, max: 1, step: 0.01})}
-				detachedKnob={boolean('detachedKnob', ChangeableSlider.defaultProps.detachedKnob)}
-				disabled={boolean('disabled', ChangeableSlider.defaultProps.disabled)}
+			<Slider
+				backgroundProgress={number('backgroundProgress', SliderBase.defaultProps.backgroundProgress, {range: true, min: 0, max: 1, step: 0.01})}
+				detachedKnob={nullify(boolean('detachedKnob', false))}
+				disabled={boolean('disabled', false)}
 				knobStep={number('knobStep')}
-				max={number('max', ChangeableSlider.defaultProps.max)}
-				min={number('min', ChangeableSlider.defaultProps.min)}
+				max={number('max', SliderBase.defaultProps.max)}
+				min={number('min', SliderBase.defaultProps.min)}
 				onChange={action('onChange')}
 				onKnobMove={action('onKnobMove')}
-				noTooltip={boolean('noTooltip', ChangeableSlider.defaultProps.noTooltip)}
-				step={number('step', ChangeableSlider.defaultProps.step)}
-				tooltipAsPercent={boolean('tooltipAsPercent', ChangeableSlider.defaultProps.tooltipAsPercent)}
-				tooltipForceSide={boolean('tooltipForceSide', ChangeableSlider.defaultProps.tooltipForceSide)}
+				step={number('step', SliderBase.defaultProps.step)}
+				tooltip={nullify(boolean('tooltip', false))}
+				tooltipAsPercent={nullify(boolean('tooltipAsPercent', false))}
+				tooltipForceSide={nullify(boolean('tooltipForceSide', false))}
 				tooltipSide={select('tooltipSide', ['before', 'after'], 'after')}
-				vertical={boolean('vertical', ChangeableSlider.defaultProps.vertical)}
-				value={number('value', ChangeableSlider.defaultProps.value)}
+				vertical={nullify(boolean('vertical', false))}
 			/>
-		)
+		),
+		{propTables: [Config]}
 	);

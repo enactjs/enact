@@ -1,13 +1,7 @@
-import ToggleButton, {ToggleButtonBase} from '@enact/moonstone/ToggleButton';
-import Toggleable from '@enact/ui/Toggleable';
+import ToggleButton from '@enact/moonstone/ToggleButton';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, text, boolean, select} from '@kadira/storybook-addon-knobs';
-
-const StatefulToggleButton = Toggleable({toggle: 'onClick', prop: 'selected'}, ToggleButton);
-StatefulToggleButton.propTypes = Object.assign({}, ToggleButtonBase.propTypes, ToggleButton.propTypes);
-StatefulToggleButton.defaultProps = Object.assign({}, ToggleButtonBase.defaultProps, ToggleButton.defaultProps);
-StatefulToggleButton.displayName = 'ToggleButton';
 
 // Set up some defaults for info and knobs
 const prop = {
@@ -20,7 +14,7 @@ storiesOf('ToggleButton')
 	.addWithInfo(
 		'with long text',
 		() => (
-			<StatefulToggleButton
+			<ToggleButton
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
 				disabled={boolean('disabled')}
@@ -34,7 +28,7 @@ storiesOf('ToggleButton')
 	.addWithInfo(
 		'with tall characters',
 		() => (
-			<StatefulToggleButton
+			<ToggleButton
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
 				disabled={boolean('disabled')}

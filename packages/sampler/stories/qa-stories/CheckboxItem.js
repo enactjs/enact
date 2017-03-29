@@ -1,21 +1,8 @@
-import {CheckboxItem, CheckboxItemBase} from '@enact/moonstone/CheckboxItem';
+import CheckboxItem from '@enact/moonstone/CheckboxItem';
 import Group from '@enact/ui/Group';
-import Selectable from '@enact/ui/Selectable';
-import {Toggleable} from '@enact/ui/Toggleable';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, text, select} from '@kadira/storybook-addon-knobs';
-
-const CheckboxItemToggle = Toggleable({prop: 'selected', mutable: true}, CheckboxItemBase);
-CheckboxItemToggle.displayName = 'CheckboxItem';
-CheckboxItemToggle.propTypes = Object.assign({}, CheckboxItemToggle.propTypes, CheckboxItemBase.propTypes);
-CheckboxItemToggle.defaultProps = Object.assign({}, CheckboxItemToggle.defaultProps, CheckboxItemBase.defaultProps);
-
-const SelectableGroup = Selectable(Group);
-
-SelectableGroup.displayName = 'SelectableGroup';
-SelectableGroup.propTypes = Object.assign({}, Group.propTypes, Selectable.propTypes);
-SelectableGroup.defaultProps = Object.assign({}, Group.defaultProps, Selectable.defaultProps);
 
 const prop = {
 	longText : 'Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text',
@@ -29,59 +16,59 @@ storiesOf('CheckboxItem')
 	.addWithInfo(
 		'with long text',
 		() => (
-			<CheckboxItemToggle
+			<CheckboxItem
 				selected={boolean('selected', false)}
 				disabled={boolean('disabled', false)}
 				inline={boolean('inline', false)}
 				onToggle={action('onToggle')}
 			>
 				{text('children', prop.longText)}
-			</CheckboxItemToggle>
+			</CheckboxItem>
 		)
 	)
 	.addWithInfo(
 		'with tall characters',
 		() => (
-			<CheckboxItemToggle
+			<CheckboxItem
 				selected={boolean('selected', false)}
 				disabled={boolean('disabled', false)}
 				inline={boolean('inline', false)}
 				onToggle={action('onToggle')}
 			>
 				{select('children', prop.tallText, prop.tallText[0])}
-			</CheckboxItemToggle>
+			</CheckboxItem>
 		)
 	)
 	.addWithInfo(
 		'with extra spacing',
 		() => (
-			<CheckboxItemToggle
+			<CheckboxItem
 				selected={boolean('selected', false)}
 				disabled={boolean('disabled', false)}
 				inline={boolean('inline', false)}
 				onToggle={action('onToggle')}
 			>
 				{text('children', prop.extraSpaceText)}
-			</CheckboxItemToggle>
+			</CheckboxItem>
 		)
 	)
 	.addWithInfo(
 		'with right to left text',
 		() => (
-			<CheckboxItemToggle
+			<CheckboxItem
 				selected={boolean('selected', false)}
 				disabled={boolean('disabled', false)}
 				inline={boolean('inline', false)}
 				onToggle={action('onToggle')}
 			>
 				{text('children', prop.rtlText)}
-			</CheckboxItemToggle>
+			</CheckboxItem>
 		)
 	)
 	.addWithInfo(
 		'that is grouped',
 		() => (
-			<SelectableGroup
+			<Group
 				childComponent={CheckboxItem}
 				childSelect="onToggle"
 				itemProps={{
@@ -93,6 +80,6 @@ storiesOf('CheckboxItem')
 				onSelect={action('onSelect')}
 			>
 				{['Checkbox Item 1', 'Checkbox Item 2', 'Checkbox Item 3']}
-			</SelectableGroup>
+			</Group>
 		)
 	);

@@ -13,6 +13,7 @@ import Spottable from '@enact/spotlight/Spottable';
 import Pressable from '@enact/ui/Pressable';
 import React, {PropTypes} from 'react';
 
+import Icon from '../Icon';
 import {MarqueeDecorator} from '../Marquee';
 import {TooltipDecorator} from '../TooltipDecorator';
 
@@ -86,6 +87,20 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 			 * @public
 			 */
 			disabled: PropTypes.bool,
+
+			/**
+			 * Include an [icon]{@link moonstone/Icon.Icon} in your [button]{@link moonstone/Button.Button}.
+			 * The icon will be displayed before the natural reading order of the text, regardless
+			 * of locale. Any string that is valid for the `Icon` component is valid here. `icon` is
+			 * outside the marqueeable content so it will not scroll along with the text content of
+			 * your button. This also supports a custom icon, in the form of a DOM node or a
+			 * Component, with the caveat that if you supply a custom icon, you are responsible for
+			 * sizing and locale positioning of the custom component.
+			 *
+			 * @type {Node}
+			 * @public
+			 */
+			icon: PropTypes.node,
 
 			/**
 			 * A boolean parameter affecting the minimum width of the button. When `true`,
@@ -162,7 +177,9 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 			className: ({backgroundOpacity, color, minWidth, pressed, selected, small, styler}) => styler.append(
 				{pressed, small, minWidth, selected},
 				backgroundOpacity, color
-			)
+			),
+			icon: ({icon, small}) =>
+				(typeof icon === 'string' ? <Icon className={css.icon} small={small}>{icon}</Icon> : icon)
 		},
 
 		handlers: {
@@ -172,7 +189,7 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 			)
 		},
 
-		render: ({children, disabled, ...rest}) => {
+		render: ({children, disabled, icon, ...rest}) => {
 			// Do not add the ARIA attribute if the selected prop is omitted to avoid the potentially
 			// confusing readout for the common case of a standalone Button or IconButton.
 			if ('selected' in rest) {
@@ -189,7 +206,7 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 			return (
 				<div role="button" {...rest} aria-disabled={disabled} disabled={disabled}>
 					<div className={css.bg} />
-					<div className={css.client}>{children}</div>
+					<div className={css.client}>{icon}{children}</div>
 				</div>
 			);
 		}
@@ -221,8 +238,9 @@ const ButtonFactory = factory(css => {
 	 * @memberof moonstone/Button
 	 * @mixes i18n/Uppercase.Uppercase
 	 * @mixes moonstone/TooltipDecorator.TooltipDecorator
-	 * @mixes spotlight.Spottable
+	 * @mixes moonstone/Marquee.MarqueeDecorator
 	 * @mixes ui/Pressable.Pressable
+	 * @mixes spotlight/Spottable.Spottable
 	 * @ui
 	 * @public
 	 */

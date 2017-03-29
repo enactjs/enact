@@ -46,7 +46,18 @@ function setResBundleLocale (spec) {
 	}
 }
 
+/**
+ * Deletes the current bundle object of strings and clears the cache.
+ * @returns {undefined}
+ */
+function clearResBundle () {
+	delete ResBundle.strings;
+	delete ResBundle.sysres;
+	resBundle = null;
+}
+
 export {
 	getResBundle,
-	setResBundleLocale
+	setResBundleLocale,
+	clearResBundle
 };

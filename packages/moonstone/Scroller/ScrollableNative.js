@@ -8,6 +8,7 @@ import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {contextTypes as contextTypesResize} from '@enact/ui/Resizable';
 import {contextTypes as contextTypesRtl} from '@enact/i18n/I18nDecorator';
+import {forward} from '@enact/core/handle';
 import {getDirection} from '@enact/spotlight';
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
@@ -15,6 +16,11 @@ import React, {Component, PropTypes} from 'react';
 
 import css from './Scrollable.less';
 import Scrollbar from './Scrollbar';
+
+const
+	forwardScroll = forward('onScroll'),
+	forwardScrollStart = forward('onScrollStart'),
+	forwardScrollStop = forward('onScrollStop');
 
 const
 	nop = () => {},
@@ -51,6 +57,8 @@ const dataIndexAttribute = 'data-index';
  */
 const ScrollableHoC = hoc((config, Wrapped) => {
 	return class Scrollable extends Component {
+		static displayName = 'Scrollable'
+
 		static propTypes = /** @lends moonstone/Scroller.Scrollable.prototype */ {
 			/**
 			 * The callback function which is called for linking scrollTo function.
@@ -73,8 +81,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			 * @public
 			 */
 			cbScrollTo: PropTypes.func,
-
-			className: PropTypes.string,
 
 			/**
 			 * Specifies how to show horizontal scrollbar. Acceptable values are `'auto'`,
@@ -135,41 +141,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		static childContextTypes = contextTypesResize
 		static contextTypes = contextTypesRtl
 
-		// status
-		horizontalScrollability = false
-		verticalScrollability = false
-		isScrollAnimationTargetAccumulated = false
-		isKeyDown = false
-		isInitializing = true
-
-		// event handlers
-		eventHandlers = {}
-
-		// bounds info
-		bounds = {
-			clientWidth: 0,
-			clientHeight: 0,
-			scrollWidth: 0,
-			scrollHeight: 0,
-			maxTop: 0,
-			maxLeft: 0
-		}
-
-		// scroll info
-		scrollLeft = 0
-		scrollTop = 0
-		scrollToInfo = null
-
-		// spotlight
-		lastFocusedItem = null
-
-		// component info
-		childRef = null
-		containerRef = null
-
-		// browser native scrolling
-		scrolling = false
-
 		constructor (props) {
 			super(props);
 
@@ -209,6 +180,41 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				invalidateBounds: this.enqueueForceUpdate
 			};
 		}
+
+		// status
+		horizontalScrollability = false
+		verticalScrollability = false
+		isScrollAnimationTargetAccumulated = false
+		isKeyDown = false
+		isInitializing = true
+
+		// event handlers
+		eventHandlers = {}
+
+		// bounds info
+		bounds = {
+			clientWidth: 0,
+			clientHeight: 0,
+			scrollWidth: 0,
+			scrollHeight: 0,
+			maxTop: 0,
+			maxLeft: 0
+		}
+
+		// scroll info
+		scrollLeft = 0
+		scrollTop = 0
+		scrollToInfo = null
+
+		// spotlight
+		lastFocusedItem = null
+
+		// component info
+		childRef = null
+		containerRef = null
+
+		// browser native scrolling
+		scrolling = false
 
 		// event handler for browser native scroll
 
@@ -342,15 +348,15 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		// call scroll callbacks
 
 		doScrollStart () {
-			this.props.onScrollStart({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()});
+			forwardScrollStart({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()}, this.props);
 		}
 
 		doScrolling () {
-			this.props.onScroll({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()});
+			forwardScroll({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()}, this.props);
 		}
 
 		doScrollStop () {
-			this.props.onScrollStop({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()});
+			forwardScrollStop({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()}, this.props);
 		}
 
 		// call scroll callbacks and update scrollbars for native scroll
@@ -371,7 +377,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.doScrollStop();
 		}
 
-		scrollStopJob = new Job(this.scrollStopOnScroll, scrollStopWaiting);
+		scrollStopJob = new Job(this.scrollStopOnScroll.bind(this), scrollStopWaiting);
 
 		// update scroll position
 
@@ -507,7 +513,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		scrollTo = (opt) => {
 			if (!this.isInitializing) {
-				let {left, top} = this.getPositionForScrollTo(opt);
+				const {left, top} = this.getPositionForScrollTo(opt);
 				this.scrollToInfo = null;
 
 				if (left !== null || top !== null) {
@@ -671,7 +677,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.forceUpdateJob.start();
 		}
 
-		forceUpdateJob = new Job(this.forceUpdate, 32)
+		forceUpdateJob = new Job(this.forceUpdate.bind(this), 32)
 
 		// render
 
@@ -722,12 +728,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			delete props.cbScrollTo;
 			delete props.className;
-			delete props.verticalScrollbar;
 			delete props.horizontalScrollbar;
 			delete props.onScroll;
 			delete props.onScrollStart;
 			delete props.onScrollStop;
 			delete props.style;
+			delete props.verticalScrollbar;
 
 			return (
 				(isHorizontalScrollbarVisible || isVerticalScrollbarVisible) ? (
@@ -736,7 +742,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						{hscrollbar}
 						<Wrapped {...props} {...this.eventHandlers} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={css.container} />
 					</div>
-				) : <Wrapped {...props} {...this.eventHandlers} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={scrollableClasses} style={style} />
+				) : <Wrapped {...props} {...this.eventHandlers} cbScrollTo={this.scrollTo} className={scrollableClasses} ref={this.initChildRef} style={style} />
 			);
 		}
 	};
