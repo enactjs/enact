@@ -133,7 +133,7 @@
 	}
 
 	&.small .valueWrapper {
-		width: (@moon-spotlight-outset + @moon-icon-size + @moon-spotlight-outset);
+		width: (@moon-icon-size + @moon-spotlight-outset*3);
 	}
 	&.medium .valueWrapper {
 		width: 180px;
@@ -163,10 +163,10 @@
 		}
 
 		.item {
-			padding: 0 @moon-spotlight-outset;
+			margin: 0 @moon-spotlight-outset;
 
 			:global(.enact-text-large) & {
-				padding: 0;
+				margin: 0;
 			}
 		}
 	}
