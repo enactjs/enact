@@ -244,7 +244,7 @@ const TimePickerBase = kind({
 							reverse
 							spotlightDisabled={spotlightDisabled}
 							value={meridiem}
-							width="small"
+							width={4}
 							wrap
 						>
 							{meridiems}
