@@ -439,7 +439,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				dirVertical = 0;
 
 			if (left !== this.scrollLeft) {
-				dirHorizontal = Math.sign(left - this.scrollLeft),
+				dirHorizontal = Math.sign(left - this.scrollLeft);
 				this.setScrollLeft(left);
 			}
 			if (top !== this.scrollTop) {
