@@ -28,7 +28,7 @@ const
 		thumbClass: css.scrollerHthumb
 	},
 	nop = () => {},
-	minThumbSize = ri.scale(4),
+	minThumbSize = ri.scale(20),
 	prepareButton = (isPrev) => (isVertical, rtl) => {
 		let direction;
 
