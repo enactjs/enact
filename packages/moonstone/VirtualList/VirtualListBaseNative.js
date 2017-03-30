@@ -551,11 +551,17 @@ class VirtualListCore extends Component {
 
 	updateMoreInfo (primaryPosition) {
 		const
+			{dataSize} = this.props,
 			{dimensionToExtent, moreInfo} = this,
 			{itemSize, gridSize, clientSize} = this.primary;
 
-		moreInfo.firstVisibleIndex = (Math.floor((primaryPosition - itemSize) / gridSize) + 1) * dimensionToExtent;
-		moreInfo.lastVisibleIndex = Math.min(this.props.dataSize - 1, Math.ceil((primaryPosition + clientSize) / gridSize) * dimensionToExtent - 1);
+		if (dataSize <= 0) {
+			moreInfo.firstVisibleIndex = null;
+			moreInfo.lastVisibleIndex = null;
+		} else {
+			moreInfo.firstVisibleIndex = (Math.floor((primaryPosition - itemSize) / gridSize) + 1) * dimensionToExtent;
+			moreInfo.lastVisibleIndex = Math.min(dataSize - 1, Math.ceil((primaryPosition + clientSize) / gridSize) * dimensionToExtent - 1);
+		}
 	}
 
 	getScrollHeight = () => (this.isPrimaryDirectionVertical ? this.getVirtualScrollDimension() : this.scrollBounds.clientHeight)
