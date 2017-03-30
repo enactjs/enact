@@ -99,7 +99,6 @@
 				height: @moon-button-height-large;
 				line-height: @moon-button-height-large;
 			});
-
 			&.incrementing:before {
 				border-right-width: @moon-integer-picker-shadow-width;
 			}
@@ -159,8 +158,16 @@
 	&.vertical .valueWrapper {
 		display: block;
 
+		:global(.enact-text-large) & {
+			padding: 0 @moon-spotlight-outset;
+		}
+
 		.item {
 			padding: 0 @moon-spotlight-outset;
+
+			:global(.enact-text-large) & {
+				padding: 0;
+			}
 		}
 	}
 }

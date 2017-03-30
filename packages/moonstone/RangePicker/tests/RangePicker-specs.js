@@ -23,7 +23,7 @@ describe('RangePicker Specs', () => {
 		const button = picker.find(`.${css.incrementer}`);
 		button.simulate('click');
 		const expected = '11';
-		const actual = picker.find('PickerItem').first().text();
+		const actual = picker.find('PickerItem').text();
 
 		expect(actual).to.equal(expected);
 	});
@@ -36,7 +36,7 @@ describe('RangePicker Specs', () => {
 		const button = picker.find(`.${css.decrementer}`);
 		button.simulate('click');
 		const expected = '9';
-		const actual = picker.find('PickerItem').first().text();
+		const actual = picker.find('PickerItem').text();
 
 		expect(actual).to.equal(expected);
 	});
