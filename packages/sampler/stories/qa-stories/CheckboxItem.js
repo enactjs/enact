@@ -17,7 +17,6 @@ storiesOf('CheckboxItem')
 		'with long text',
 		() => (
 			<CheckboxItem
-				selected={boolean('selected', false)}
 				disabled={boolean('disabled', false)}
 				inline={boolean('inline', false)}
 				onToggle={action('onToggle')}
@@ -30,7 +29,6 @@ storiesOf('CheckboxItem')
 		'with tall characters',
 		() => (
 			<CheckboxItem
-				selected={boolean('selected', false)}
 				disabled={boolean('disabled', false)}
 				inline={boolean('inline', false)}
 				onToggle={action('onToggle')}
@@ -43,7 +41,6 @@ storiesOf('CheckboxItem')
 		'with extra spacing',
 		() => (
 			<CheckboxItem
-				selected={boolean('selected', false)}
 				disabled={boolean('disabled', false)}
 				inline={boolean('inline', false)}
 				onToggle={action('onToggle')}
@@ -56,7 +53,6 @@ storiesOf('CheckboxItem')
 		'with right to left text',
 		() => (
 			<CheckboxItem
-				selected={boolean('selected', false)}
 				disabled={boolean('disabled', false)}
 				inline={boolean('inline', false)}
 				onToggle={action('onToggle')}
