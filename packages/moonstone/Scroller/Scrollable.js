@@ -223,8 +223,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		// scroll info
 		scrollLeft = 0
 		scrollTop = 0
-		dirHorizontal = 0
-		dirVertical = 0
 		scrollToInfo = null
 
 		// spotlight
@@ -492,7 +490,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		setScrollLeft (v) {
 			const bounds = this.getScrollBounds();
 
-			this.dirHorizontal = Math.sign(v - this.scrollLeft);
 			this.scrollLeft = clamp(0, bounds.maxLeft, v);
 			if (this.state.isHorizontalScrollbarVisible && this.canScrollHorizontally(bounds)) {
 				this.updateThumb(this.scrollbarHorizontalRef, bounds);
@@ -502,7 +499,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		setScrollTop (v) {
 			const bounds = this.getScrollBounds();
 
-			this.dirVertical = Math.sign(v - this.scrollTop);
 			this.scrollTop = clamp(0, bounds.maxTop, v);
 			if (this.state.isVerticalScrollbarVisible && this.canScrollVertically(bounds)) {
 				this.updateThumb(this.scrollbarVerticalRef, bounds);
@@ -561,14 +557,20 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		scroll = (left, top) => {
+			let
+				dirHorizontal = 0,
+				dirVertical = 0;
+
 			if (left !== this.scrollLeft) {
+				dirHorizontal = Math.sign(left - this.scrollLeft),
 				this.setScrollLeft(left);
 			}
 			if (top !== this.scrollTop) {
+				dirVertical = Math.sign(top - this.scrollTop);
 				this.setScrollTop(top);
 			}
 
-			this.childRef.setScrollPosition(this.scrollLeft, this.scrollTop, this.dirHorizontal, this.dirVertical);
+			this.childRef.setScrollPosition(this.scrollLeft, this.scrollTop, dirHorizontal, dirVertical);
 			this.doScrolling();
 		}
 
@@ -863,6 +865,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			delete props.cbScrollTo;
 			delete props.className;
 			delete props.horizontalScrollbar;
+			delete props.onScroll;
+			delete props.onScrollStart;
+			delete props.onScrollStop;
 			delete props.style;
 			delete props.verticalScrollbar;
 

@@ -13,6 +13,7 @@ import {getDirection} from '@enact/spotlight';
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
 import React, {Component, PropTypes} from 'react';
+import ri from '@enact/ui/resolution';
 
 import css from './Scrollable.less';
 import Scrollbar from './Scrollbar';
@@ -239,14 +240,14 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					deltaMode = e.deltaMode,
 					wheelDeltaY = e.nativeEvent ? -e.nativeEvent.wheelDeltaY : -e.wheelDeltaY,
 					scrollWheelMultiplierForDeltaPixel = 2,
-					pixelPerLine = scrollWheelMultiplierForDeltaPixel * 39;
+					pixelPerLine = scrollWheelMultiplierForDeltaPixel * ri.scale(39);
 
 				let delta = (wheelDeltaY || e.deltaY);
 
 				if (deltaMode === 0) {
-					delta *= scrollWheelMultiplierForDeltaPixel;
+					delta = ri.scale(delta) * scrollWheelMultiplierForDeltaPixel;
 				} else if (deltaMode === 1) { // line; firefox
-					delta = delta * pixelPerLine;
+					delta = ri.scale(delta) * pixelPerLine;
 				} else if (deltaMode === 2) { // page
 					delta = delta > 0 ? bounds.clientWidth : -bounds.clientWidth;
 				}
@@ -433,14 +434,16 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		scroll = (left, top) => {
-			const
-				dirHorizontal = Math.sign(left - this.scrollLeft),
-				dirVertical = Math.sign(top - this.scrollTop);
+			let
+				dirHorizontal = 0,
+				dirVertical = 0;
 
 			if (left !== this.scrollLeft) {
+				dirHorizontal = Math.sign(left - this.scrollLeft),
 				this.setScrollLeft(left);
 			}
 			if (top !== this.scrollTop) {
+				dirVertical = Math.sign(top - this.scrollTop);
 				this.setScrollTop(top);
 			}
 

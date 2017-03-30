@@ -126,14 +126,6 @@ class VirtualListCore extends Component {
 		direction: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
-		 * Called when onScroll [events]{@glossary event} occurs.
-		 *
-		 * @type {Function}
-		 * @private
-		 */
-		onScroll: PropTypes.func,
-
-		/**
 		 * Number of spare DOM node.
 		 * `3` is good for the default value experimentally and
 		 * this value is highly recommended not to be changed by developers.
@@ -170,7 +162,6 @@ class VirtualListCore extends Component {
 		data: [],
 		dataSize: 0,
 		direction: 'vertical',
-		onScroll: nop,
 		overhang: 3,
 		pageScroll: false,
 		spacing: 0
@@ -716,9 +707,6 @@ class VirtualListCore extends Component {
 		delete props.dataSize;
 		delete props.direction;
 		delete props.itemSize;
-		delete props.onScroll;
-		delete props.onScrollStart;
-		delete props.onScrollStop;
 		delete props.overhang;
 		delete props.pageScroll;
 		delete props.spacing;

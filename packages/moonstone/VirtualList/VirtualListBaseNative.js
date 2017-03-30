@@ -534,29 +534,19 @@ class VirtualListCore extends Component {
 	}
 
 	composeStyle (style, width, height, primaryPosition, secondaryPosition = 0) {
-		const
-			{x, y} = this.getXY(primaryPosition, secondaryPosition);
+		const {x, y} = this.getXY(primaryPosition, secondaryPosition);
 
 		if (this.isItemSized) {
 			style.width = width;
 			style.height = height;
-			this.composeLeftTop(style, this.compensateRTL(x), y);
-		} else {
-			this.composeLeftTop(style, x, y);
 		}
+
+		style.left = this.compensateRTL(x) + 'px';
+		style.top = y + 'px';
 	}
 
 	getXY = (primaryPosition, secondaryPosition) => {
 		return (this.isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition});
-	}
-
-	composeTransform (style, x, y) {
-		style.transform = 'translate3d(' + x + 'px,' + y + 'px,0)';
-	}
-
-	composeLeftTop (style, x, y) {
-		style.left = x + 'px';
-		style.top = y + 'px';
 	}
 
 	updateMoreInfo (primaryPosition) {
