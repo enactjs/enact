@@ -1,17 +1,17 @@
 import ri from '@enact/ui/resolution';
-import {Scroller, ScrollerBase} from '@enact/moonstone/Scroller';
+import Scroller, {ScrollerBase} from '@enact/moonstone/Scroller';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, select} from '@kadira/storybook-addon-knobs';
 
-Scroller.displayName = 'Scroller';
-Scroller.propTypes = Object.assign({}, ScrollerBase.propTypes);
-Scroller.defaultProps = Object.assign({}, ScrollerBase.defaultProps);
+import {mergeComponentMetadata} from '../../src/utils/propTables';
+
+const Config = mergeComponentMetadata('Scroller', ScrollerBase, Scroller);
 
 const
 	prop = {
-		horizontal: {'auto': 'auto', 'hidden': 'hidden', 'scroll': 'scroll'},
-		vertical: {'auto': 'auto', 'hidden': 'hidden', 'scroll': 'scroll'}
+		horizontal: ['auto', 'hidden', 'scroll'],
+		vertical: ['auto', 'hidden', 'scroll']
 	},
 	style = {
 		scroller: {
@@ -48,5 +48,6 @@ storiesOf('Scroller')
 					</div>
 				</div>
 			</Scroller>
-		)
+		),
+		{propTables: [Config]}
 	);

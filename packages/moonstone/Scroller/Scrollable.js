@@ -6,17 +6,23 @@
 
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
+import {contextTypes} from '@enact/ui/Resizable';
+import {forward} from '@enact/core/handle';
 import {getDirection} from '@enact/spotlight';
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
 import React, {Component, PropTypes} from 'react';
-import {contextTypes} from '@enact/ui/Resizable';
 import ri from '@enact/ui/resolution';
 import Spotlight from '@enact/spotlight';
 
 import css from './Scrollable.less';
 import ScrollAnimator from './ScrollAnimator';
 import Scrollbar from './Scrollbar';
+
+const
+	forwardScroll = forward('onScroll'),
+	forwardScrollStart = forward('onScrollStart'),
+	forwardScrollStop = forward('onScrollStop');
 
 const
 	calcVelocity = (d, dt) => (d && dt) ? d / dt : 0,
@@ -58,6 +64,8 @@ const dataIndexAttribute = 'data-index';
  */
 const ScrollableHoC = hoc((config, Wrapped) => {
 	return class Scrollable extends Component {
+		static displayName = 'Scrollable'
+
 		static propTypes = /** @lends moonstone/Scroller.Scrollable.prototype */ {
 			/**
 			 * The callback function which is called for linking scrollTo function.
@@ -80,8 +88,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			 * @public
 			 */
 			cbScrollTo: PropTypes.func,
-
-			className: PropTypes.string,
 
 			/**
 			 * Specifies how to show horizontal scrollbar. Acceptable values are `'auto'`,
@@ -141,6 +147,48 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		static childContextTypes = contextTypes
 
+		constructor (props) {
+			super(props);
+
+			this.state = {
+				isHorizontalScrollbarVisible: this.isHorizontalScrollbarVisible(),
+				isVerticalScrollbarVisible: this.isVerticalScrollbarVisible()
+			};
+
+			this.initChildRef = this.initRef('childRef');
+			this.initContainerRef = this.initRef('containerRef');
+
+			const {onKeyDown, onKeyUp} = this;
+			// We have removed all mouse event handlers for now.
+			// Revisit later for touch usage.
+			this.eventHandlers = {
+				onKeyDown,
+				onKeyUp
+			};
+
+			this.verticalScrollbarProps = {
+				ref: this.initRef('scrollbarVerticalRef'),
+				vertical: true,
+				onPrevScroll: this.initScrollbarBtnHandler('vertical', -1),
+				onNextScroll: this.initScrollbarBtnHandler('vertical', 1)
+			};
+
+			this.horizontalScrollbarProps = {
+				ref: this.initRef('scrollbarHorizontalRef'),
+				vertical: false,
+				onPrevScroll: this.initScrollbarBtnHandler('horizontal', -1),
+				onNextScroll: this.initScrollbarBtnHandler('horizontal', 1)
+			};
+
+			props.cbScrollTo(this.scrollTo);
+		}
+
+		getChildContext () {
+			return {
+				invalidateBounds: this.enqueueForceUpdate
+			};
+		}
+
 		// status
 		horizontalScrollability = false
 		verticalScrollability = false
@@ -190,48 +238,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		// scroll animator
 		animator = new ScrollAnimator()
 
-		constructor (props) {
-			super(props);
-
-			this.state = {
-				isHorizontalScrollbarVisible: this.isHorizontalScrollbarVisible(),
-				isVerticalScrollbarVisible: this.isVerticalScrollbarVisible()
-			};
-
-			this.initChildRef = this.initRef('childRef');
-			this.initContainerRef = this.initRef('containerRef');
-
-			const {onKeyDown, onKeyUp} = this;
-			// We have removed all mouse event handlers for now.
-			// Revisit later for touch usage.
-			this.eventHandlers = {
-				onKeyDown,
-				onKeyUp
-			};
-
-			this.verticalScrollbarProps = {
-				ref: this.initRef('scrollbarVerticalRef'),
-				vertical: true,
-				onPrevScroll: this.initScrollbarBtnHandler('vertical', -1),
-				onNextScroll: this.initScrollbarBtnHandler('vertical', 1)
-			};
-
-			this.horizontalScrollbarProps = {
-				ref: this.initRef('scrollbarHorizontalRef'),
-				vertical: false,
-				onPrevScroll: this.initScrollbarBtnHandler('horizontal', -1),
-				onNextScroll: this.initScrollbarBtnHandler('horizontal', 1)
-			};
-
-			props.cbScrollTo(this.scrollTo);
-		}
-
-		getChildContext () {
-			return {
-				invalidateBounds: this.enqueueForceUpdate
-			};
-		}
-
 		// handle an input event
 
 		dragStart (e) {
@@ -246,8 +252,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		drag (e) {
-			let t = perf.now();
-			const d = this.dragInfo;
+			const
+				t = perf.now(),
+				d = this.dragInfo;
 
 			if (this.horizontalScrollability) {
 				d.dx = e.clientX - d.clientX;
@@ -474,15 +481,15 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		// call scroll callbacks
 
 		doScrollStart () {
-			this.props.onScrollStart({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()});
+			forwardScrollStart({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()}, this.props);
 		}
 
 		doScrolling () {
-			this.props.onScroll({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()});
+			forwardScroll({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()}, this.props);
 		}
 
 		doScrollStop () {
-			this.props.onScrollStop({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()});
+			forwardScrollStop({scrollLeft: this.scrollLeft, scrollTop: this.scrollTop, moreInfo: this.getMoreInfo()}, this.props);
 		}
 
 		// update scroll position
@@ -649,7 +656,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		scrollTo = (opt) => {
 			if (!this.isInitializing) {
-				let {left, top} = this.getPositionForScrollTo(opt);
+				const {left, top} = this.getPositionForScrollTo(opt);
 				this.scrollToInfo = null;
 
 				if (left !== null || top !== null) {
@@ -874,11 +881,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					className
 				);
 
-			delete props.className;
 			delete props.cbScrollTo;
+			delete props.className;
+			delete props.horizontalScrollbar;
 			delete props.style;
 			delete props.verticalScrollbar;
-			delete props.horizontalScrollbar;
 
 			return (
 				<div ref={this.initContainerRef} className={scrollableClasses} style={style}>

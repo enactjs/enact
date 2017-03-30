@@ -4,9 +4,9 @@ import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
 
-Notification.propTypes = Object.assign({}, NotificationBase.propTypes, Notification.propTypes);
-Notification.defaultProps = Object.assign({}, NotificationBase.defaultProps, Notification.defaultProps);
-Notification.displayName = 'Notification';
+import {mergeComponentMetadata} from '../../src/utils/propTables';
+
+const Config = mergeComponentMetadata('Notification', NotificationBase, Notification);
 
 storiesOf('Notification')
 	.addDecorator(withKnobs)
@@ -25,4 +25,6 @@ storiesOf('Notification')
 					<Button>Nevermind</Button>
 				</buttons>
 			</Notification>
-		));
+		),
+		{propTables: [Config]}
+	);

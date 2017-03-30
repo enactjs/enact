@@ -54,7 +54,7 @@ how to use it.
 | `Calendar` | | unused<sup>1</sup> |
 | `CaptionDecorator` | | unused<sup>1</sup> |
 | `ChannelInfo` | | deprecated |
-| `Checkbox` | use `@enact/ui/Toggleable` HOC or `@enact/moonstone/CheckboxItem` | |
+| `Checkbox` | `Checkbox` | |
 | `CheckboxItem` | `CheckboxItem` | |
 | `ClampedText` | | unused<sup>1</sup> |
 | `Clock` | * | under review |

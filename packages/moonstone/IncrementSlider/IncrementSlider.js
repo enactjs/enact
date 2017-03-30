@@ -5,6 +5,7 @@
  */
 
 import $L from '@enact/i18n/$L';
+import Changeable from '@enact/ui/Changeable';
 import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
 import Pressable from '@enact/ui/Pressable';
@@ -283,20 +284,27 @@ const IncrementSliderFactory = factory((config) => {
 	const Base = IncrementSliderBaseFactory(config);
 
 	/**
-	 * {@link moonstone/IncrementSlider.IncrementSlider} is a IncrementSlider with
-	 * Moonstone styling, Spottable, Pressable and SliderDecorator applied. It is a
-	 * stateful Slider Slider with IconButtons to increment and decrement the value
+	 * {@link moonstone/IncrementSlider.IncrementSlider} is an IncrementSlider with
+	 * Moonstone styling, Changeable, Pressable and SliderDecorator applied with IconButtons to
+	 * increment and decrement the value.
+	 *
+	 * By default, `IncrementSlider` maintains the state of its `value` property. Supply the
+	 * `defaultValue` property to control its initial value. If you wish to directly control updates
+	 * to the component, supply a value to `value` at creation time and update it in response to
+	 * `onChange` events.
 	 *
 	 * @class IncrementSlider
 	 * @memberof moonstone/IncrementSlider
-	 * @mixes spotlight/Spottable
-	 * @mixes ui/Pressable
+	 * @mixes ui/Changeable.Changeable
+	 * @mixes ui/Pressable.Pressable
 	 * @ui
 	 * @public
 	 */
-	return Pressable(
-		SliderDecorator(
-			Base
+	return Changeable(
+		Pressable(
+			SliderDecorator(
+				Base
+			)
 		)
 	);
 });
