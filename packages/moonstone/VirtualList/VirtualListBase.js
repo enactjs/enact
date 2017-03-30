@@ -231,6 +231,15 @@ class VirtualListCore extends Component {
 		}
 	}
 
+	shouldComponentUpdate (nextProps) {
+		if ((this.props.dataSize !== nextProps.dataSize) &&
+			(this.state.firstIndex + this.maxNumOfItems) < nextProps.dataSize) {
+			console.log('shouldNotUpdate');
+			return false;
+		}
+		return true;
+	}
+
 	componentWillUnmount () {
 		const containerNode = this.containerRef;
 
@@ -263,6 +272,7 @@ class VirtualListCore extends Component {
 	dimensionToExtent = 0
 	threshold = 0
 	maxFirstIndex = 0
+	maxNumOfIndex = 0
 	curDataSize = 0
 	cc = []
 	scrollPosition = 0
@@ -373,10 +383,12 @@ class VirtualListCore extends Component {
 		const
 			{dataSize, overhang} = props,
 			{dimensionToExtent, primary, moreInfo} = this,
-			numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
+			maxNumOfItems = dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang),
+			numOfItems = Math.min(dataSize, maxNumOfItems),
 			wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (this.state.firstIndex === this.maxFirstIndex));
 
 		this.maxFirstIndex = dataSize - numOfItems;
+		this.maxNumOfItems = numOfItems;
 		this.curDataSize = dataSize;
 		this.updateFrom = null;
 		this.updateTo = null;
