@@ -1,1 +1,1 @@
-{"language.name":"Uzbek","numfmt":{"decimalChar":".","groupChar":",","exponential":"E","currencyFormats":{"common":"{s} {n}"}},"scripts":["Arab","Cyrl","Latn"],"locale":"uz"}
+{"delimiter":{"alternateQuotationStart":"’","alternateQuotationEnd":"‘"},"language.name":"Uzbek","numfmt":{"decimalChar":",","groupChar":" ","currencyFormats":{"common":"{n} {s}","commonNegative":"-{n} {s}"}},"scripts":["Arab","Cyrl","Latn"],"locale":"uz"}

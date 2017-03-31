@@ -1,1 +1,1 @@
-{"language.name":"Upper Sorbian","scripts":["Latn"],"locale":"hsb"}
+{"delimiter":{"quotationStart":"„","quotationEnd":"“","alternateQuotationStart":"‚","alternateQuotationEnd":"‘"},"language.name":"Upper Sorbian","numfmt":{"decimalChar":",","groupChar":".","currencyFormats":{"common":"{n} {s}","commonNegative":"-{n} {s}"},"pctFmt":"{n} %","negativepctFmt":"-{n} %"},"scripts":["Latn"],"locale":"hsb"}

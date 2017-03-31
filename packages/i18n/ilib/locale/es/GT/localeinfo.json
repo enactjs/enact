@@ -1,1 +1,1 @@
-{"numfmt":{"decimalChar":".","groupChar":",","currencyFormats":{"common":"{s}{n}"}},"locale":"es-GT"}
+{"numfmt":{"decimalChar":".","groupChar":",","currencyFormats":{"common":"{s}{n}","commonNegative":"-{s}{n}"}},"locale":"es-GT"}

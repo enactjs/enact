@@ -1,13 +1,14 @@
+import VirtualList from '@enact/moonstone/VirtualList';
 import ri from '@enact/ui/resolution';
 import Item from '@enact/moonstone/Item';
-import VirtualList from '@enact/moonstone/VirtualList';
 import {VirtualListCore} from '@enact/moonstone/VirtualList/VirtualListBase';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, number} from '@kadira/storybook-addon-knobs';
 
-VirtualList.propTypes = Object.assign({}, VirtualListCore.propTypes);
-VirtualList.defaultProps = Object.assign({}, VirtualListCore.defaultProps);
+import {mergeComponentMetadata} from '../../src/utils/propTables';
+
+const Config = mergeComponentMetadata('VirtualList', VirtualListCore, VirtualList);
 
 const
 	style = {
@@ -23,6 +24,7 @@ const
 	// eslint-disable-next-line enact/prop-types, enact/display-name
 	renderItem = (size) => ({data, index, ...rest}) => {
 		const itemStyle = {height: size + 'px', ...style.item};
+
 		return (
 			<Item {...rest} style={itemStyle}>
 				{data[index]}
@@ -53,5 +55,6 @@ storiesOf('VirtualList')
 					style={style.list}
 				/>
 			);
-		}
+		},
+		{propTables: [Config]}
 	);

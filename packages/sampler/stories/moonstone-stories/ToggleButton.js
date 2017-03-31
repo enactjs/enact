@@ -1,17 +1,16 @@
 import ToggleButton, {ToggleButtonBase} from '@enact/moonstone/ToggleButton';
-import Toggleable from '@enact/ui/Toggleable';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, text, boolean, select} from '@kadira/storybook-addon-knobs';
 
-const StatefulToggleButton = Toggleable({toggle: 'onClick', prop: 'selected'}, ToggleButton);
-StatefulToggleButton.propTypes = Object.assign({}, ToggleButtonBase.propTypes, ToggleButton.propTypes);
-StatefulToggleButton.defaultProps = Object.assign({}, ToggleButtonBase.defaultProps, ToggleButton.defaultProps);
-StatefulToggleButton.displayName = 'ToggleButton';
+import nullify from '../../src/utils/nullify.js';
+import {mergeComponentMetadata} from '../../src/utils/propTables';
+
+const Config = mergeComponentMetadata('ToggleButton', ToggleButtonBase, ToggleButton);
 
 // Set up some defaults for info and knobs
 const prop = {
-	backgroundOpacity: {'opaque': 'opaque', 'translucent': 'translucent', 'transparent': 'transparent'}
+	backgroundOpacity: ['', 'translucent', 'transparent']
 };
 
 storiesOf('ToggleButton')
@@ -20,17 +19,18 @@ storiesOf('ToggleButton')
 		' ',
 		'The basic ToggleButton',
 		() => (
-			<StatefulToggleButton
+			<ToggleButton
 				aria-label="toggle button"
 				onClick={action('onClick')}
-				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
-				disabled={boolean('disabled')}
-				preserveCase={boolean('preserveCase')}
-				small={boolean('small')}
+				backgroundOpacity={nullify(select('backgroundOpacity', prop.backgroundOpacity))}
+				disabled={boolean('disabled', false)}
+				preserveCase={nullify(boolean('preserveCase', false))}
+				small={nullify(boolean('small', false))}
 				toggleOnLabel={text('toggleOnLabel', 'On')}
 				toggleOffLabel={text('toggleOffLabel', 'Off')}
 			>
 				Missing Toggle Label
-			</StatefulToggleButton>
-		)
+			</ToggleButton>
+		),
+		{propTables: [Config]}
 	);

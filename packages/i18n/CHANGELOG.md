@@ -2,6 +2,15 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
+## [1.0.0] - 2017-03-31
+
+Updated iLib to 20151019-build-12.0-002-04
+
+### Removed
+
+- `i18n.$L` and replaced by `i18n/$L`
+- `i18n.toIString` and replaced by `i18n/$L.toIString`
+
 ## [1.0.0-beta.4] - 2017-03-10
 
 No significant changes.

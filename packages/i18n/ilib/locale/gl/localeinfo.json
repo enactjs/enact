@@ -1,1 +1,1 @@
-{"language.name":"Galician","numfmt":{"exponential":"E","currencyFormats":{"commonNegative":"({s}{n})"}},"scripts":["Latn"],"locale":"gl"}
+{"language.name":"Galician","numfmt":{"decimalChar":",","groupChar":".","currencyFormats":{"common":"{n} {s}","commonNegative":"-{n} {s}"},"pctFmt":"{n} %","negativepctFmt":"-{n} %"},"scripts":["Latn"],"locale":"gl"}

@@ -1,4 +1,4 @@
-import {$L} from '@enact/i18n';
+import $L from '@enact/i18n/$L';
 import kind from '@enact/core/kind';
 import React from 'react';
 
@@ -244,7 +244,7 @@ const TimePickerBase = kind({
 							reverse
 							spotlightDisabled={spotlightDisabled}
 							value={meridiem}
-							width="small"
+							width={4}
 							wrap
 						>
 							{meridiems}

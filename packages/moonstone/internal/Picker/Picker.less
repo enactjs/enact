@@ -12,7 +12,6 @@
 	border-radius: @button-width;
 	vertical-align: bottom;
 	position: relative;
-	direction: ltr;
 	text-align: center;
 	margin-left: @moon-spotlight-outset;
 	margin-right: @moon-spotlight-outset;
@@ -34,6 +33,11 @@
 		height: @moon-button-height;
 		line-height: @moon-button-height;
 		max-width: 300px;
+
+		.moon-custom-text({
+			font-size: @moon-item-font-size-large;
+			line-height: @moon-button-height-large;
+		});
 	}
 
 	.sizingPlaceholder {
@@ -64,6 +68,10 @@
 	&.horizontal {
 		display: inline-flex;
 
+		:global(.enact-locale-right-to-left) & {
+			flex-direction: row-reverse;
+		}
+
 		.incrementer {
 			order: 3;
 			margin-left: @moon-spotlight-outset;
@@ -86,6 +94,11 @@
 		}
 
 		&.horizontal {
+			.moon-custom-text({
+				font-size: @moon-item-font-size-large;
+				height: @moon-button-height-large;
+				line-height: @moon-button-height-large;
+			});
 			&.incrementing:before {
 				border-right-width: @moon-integer-picker-shadow-width;
 			}
@@ -120,7 +133,7 @@
 	}
 
 	&.small .valueWrapper {
-		width: (@moon-spotlight-outset + @moon-icon-size + @moon-spotlight-outset);
+		width: (@moon-icon-size + @moon-spotlight-outset*3);
 	}
 	&.medium .valueWrapper {
 		width: 180px;
@@ -145,8 +158,16 @@
 	&.vertical .valueWrapper {
 		display: block;
 
+		:global(.enact-text-large) & {
+			padding: 0 @moon-spotlight-outset;
+		}
+
 		.item {
 			margin: 0 @moon-spotlight-outset;
+
+			:global(.enact-text-large) & {
+				margin: 0;
+			}
 		}
 	}
 }
