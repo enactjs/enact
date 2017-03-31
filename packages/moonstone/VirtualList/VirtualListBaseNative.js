@@ -355,9 +355,9 @@ class VirtualListCore extends Component {
 		const
 			{dataSize, overhang} = props,
 			{firstIndex} = this.state,
-			{dimensionToExtent, primary, scrollPosition} = this,
+			{dimensionToExtent, primary, moreInfo, scrollPosition} = this,
 			numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
-			wasFirstIndexMax = (this.maxFirstIndex && (firstIndex === this.maxFirstIndex));
+			wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (firstIndex === this.maxFirstIndex));
 
 		this.maxFirstIndex = dataSize - numOfItems;
 		this.curDataSize = dataSize;

@@ -363,9 +363,10 @@ class VirtualListCore extends Component {
 	updateStatesAndBounds (props) {
 		const
 			{dataSize, overhang} = props,
+			{firstIndex} = this.state,
 			{dimensionToExtent, primary, moreInfo} = this,
 			numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
-			wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (this.state.firstIndex === this.maxFirstIndex));
+			wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (firstIndex === this.maxFirstIndex));
 
 		this.maxFirstIndex = dataSize - numOfItems;
 		this.curDataSize = dataSize;
@@ -375,7 +376,7 @@ class VirtualListCore extends Component {
 		// reset children
 		this.cc = [];
 
-		this.setState({firstIndex: wasFirstIndexMax ? this.maxFirstIndex : Math.min(this.state.firstIndex, this.maxFirstIndex), numOfItems});
+		this.setState({firstIndex: wasFirstIndexMax ? this.maxFirstIndex : Math.min(firstIndex, this.maxFirstIndex), numOfItems});
 		this.calculateScrollBounds(props);
 	}
 
