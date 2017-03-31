@@ -51,7 +51,6 @@ storiesOf('ExpandableList')
 				onSelect={action('onSelect')}
 				onClose={action('onClose')}
 				onOpen={action('onOpen')}
-				open={boolean('open', false)}
 				select={select('select', ['single', 'radio', 'multiple'], 'single')}
 				title={text('title', 'title')}
 			/>

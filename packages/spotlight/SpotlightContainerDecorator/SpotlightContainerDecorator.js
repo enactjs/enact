@@ -152,8 +152,9 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
+
 			this.state = {
-				id: this.props.containerId || Spotlight.add()
+				id: Spotlight.add(this.props.containerId)
 			};
 		}
 
@@ -195,7 +196,9 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillUnmount () {
-			if (!preserveId) {
+			if (preserveId) {
+				Spotlight.unmount(this.state.id);
+			} else {
 				Spotlight.remove(this.state.id);
 			}
 		}
