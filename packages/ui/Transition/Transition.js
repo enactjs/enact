@@ -278,7 +278,7 @@ class Transition extends React.Component {
 
 	componentWillUpdate (nextProps, nextState) {
 		if (nextState.renderState === TRANSITION_STATE.MEASURE) {
-			window.cancelIdleCallback(this.idleRequest);
+			this.removeIdleCallback();
 		}
 	}
 
@@ -309,8 +309,12 @@ class Transition extends React.Component {
 		});
 	}
 
-	componentWillUnmount () {
+	removeIdleCallback = () => {
 		window.cancelIdleCallback(this.idleRequest);
+	}
+
+	componentWillUnmount () {
+		this.removeIdleCallback();
 	}
 
 	hideDidFinish = (ev) => {
