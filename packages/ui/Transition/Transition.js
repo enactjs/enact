@@ -276,10 +276,30 @@ class Transition extends React.Component {
 		}
 	}
 
-	shouldComponentUpdate (nextProps, nextState) {
+	componentWillUpdate (nextProps, nextState) {
+		if (this.context.measure) {
+			this.setIdleCallback();
+		}
+
+		if (nextState.renderState === TRANSITION_STATE.MEASURE) {
+			window.cancelIdleCallback(this.idleRequest);
+		}
+	}
+
+	shouldComponentUpdate (nextProps, nextState, nextContext) {
+		if (nextContext.measure !== this.context.measure) {
+			console.log(this.context);
+			return true;
+		}
 		// Don't update if only updating the height and we're not visible
 		return (this.state.initialHeight === nextState.initialHeight) || this.props.visible || nextProps.visible;
 	}
+
+	// componentWillUpdate (nextProps, nextState) {
+	// 	if (nextState.renderState === TRANSITION_STATE.MEASURE) {
+	// 		window.cancelIdleCallback(this.idleRequest);
+	// 	}
+	// }
 
 	componentDidUpdate (prevProps, prevState) {
 		const {visible} = this.props;
@@ -290,6 +310,23 @@ class Transition extends React.Component {
 			this.measureInner();
 		}
 	}
+
+	componentDidMount () {
+		if (typeof this.context.measure === 'undefined') {
+			this.setIdleCallback();
+		}
+	}
+
+	setIdleCallback = () => {
+		this.idleRequest = window.requestIdleCallback(() => {
+			this.setState({
+				renderState: TRANSITION_STATE.MEASURE
+			});
+		});
+	}
+	// componentWillUnmount () {
+	// 	window.cancelIdleCallback(this.idleRequest);
+	// }
 
 	hideDidFinish = (ev) => {
 		forwardTransitionEnd(ev, this.props);
@@ -345,6 +382,10 @@ class Transition extends React.Component {
 		}
 	}
 }
+
+Transition.contextTypes = {
+	measure: React.PropTypes.bool
+};
 
 export default Transition;
 export {Transition, TransitionBase};
