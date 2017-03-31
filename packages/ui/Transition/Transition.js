@@ -276,8 +276,8 @@ class Transition extends React.Component {
 		}
 	}
 
-	componentWillUpdate (nextProps, nextState) {
-		if (this.context.measure) {
+	componentWillUpdate (nextProps, nextState, nextContext) {
+		if (!this.context.measure && nextContext.measure) {
 			this.setIdleCallback();
 		}
 
@@ -288,18 +288,11 @@ class Transition extends React.Component {
 
 	shouldComponentUpdate (nextProps, nextState, nextContext) {
 		if (nextContext.measure !== this.context.measure) {
-			console.log(this.context);
 			return true;
 		}
 		// Don't update if only updating the height and we're not visible
 		return (this.state.initialHeight === nextState.initialHeight) || this.props.visible || nextProps.visible;
 	}
-
-	// componentWillUpdate (nextProps, nextState) {
-	// 	if (nextState.renderState === TRANSITION_STATE.MEASURE) {
-	// 		window.cancelIdleCallback(this.idleRequest);
-	// 	}
-	// }
 
 	componentDidUpdate (prevProps, prevState) {
 		const {visible} = this.props;
@@ -324,9 +317,10 @@ class Transition extends React.Component {
 			});
 		});
 	}
-	// componentWillUnmount () {
-	// 	window.cancelIdleCallback(this.idleRequest);
-	// }
+
+	componentWillUnmount () {
+		window.cancelIdleCallback(this.idleRequest);
+	}
 
 	hideDidFinish = (ev) => {
 		forwardTransitionEnd(ev, this.props);
