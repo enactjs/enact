@@ -2,7 +2,7 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
-## [unreleased]
+## [1.0.0] - 2017-03-31
 
 > NOTE: This version includes a breaking change to the way modules are organized. This change was necessary to prevent further API breakage following the 1.0.0 release and to facilitate changes we want to make in the future. We understand that this will require some work on the part of developers to update their code. Below you will find details about the changes:
 >
@@ -27,6 +27,30 @@ The following is a curated list of changes in the Enact project, newest changes 
 > * `core.kind` - Use `core/kind`
 >
 > Additionally, we no longer export a `version` with the root import. If you need a version number, import from `package.json` instead.
+
+### Added
+
+- `moonstone/Button` property `icon` to support a built-in icon next to the text content. The Icon supports everything that `moonstone/Icon` supports, as well as a custom icon.
+- `moonstone/MoonstoneDecorator` property `textSize` to resize several components to requested CMR sizes. Simply add `textSize="large"` to your `App` and the new sizes will automatically take effect.
+- `ui/Placeholder` module with `PlaceholderControllerDecorator` and `PlaceholderDecorator` HOCs which facilitate rendering placeholder components until the wrapped component would scroll into the viewport
+
+### Changed
+
+- `i18n` iLib dependency to 20151019-build-12.0-002-04
+- `moonstone/Slider` to use the property `tooltip` instead of `noTooltip`, so the built-in tooltip is not enabled by default
+- `moonstone/IncrementSlider` to include tooltip documentation
+- `moonstone/ExpandableList` to accept an array of objects as children which are spread onto the generated components
+- `moonstone/CheckboxItem` style to match the latest designs, with support for the `moonstone/Checkbox` to be on either the left or the right side by using the `iconPosition` property
+- `moonstone/VideoPlayer` to supply every event callback-method with an object representing the VideoPlayer's current state, including: `currentTime`, `duration`, `paused`, `proportionLoaded`, and `proportionPlayed`
+- `ui/Repeater` to accept an array of objects as children which are spread onto the generated components
+
+### Fixed
+
+- `moonstone/Panels.Panel` behavior for remembering focus on unmount and setting focus after render
+- `moonstone/VirtualList.VirtualGridList` showing empty items when items are continuously added dynamically
+- `moonstone/Picker` to marquee on focus once again
+- `spotlight/Spotlight` `set()` to properly update the container config
+- `spotlight/Spotlight` to properly save the last-focused element for nested containers
 
 ## [1.0.0-beta.4] - 2017-03-10
 
