@@ -302,15 +302,19 @@ class Transition extends React.Component {
 	}
 
 	setIdleCallback = () => {
-		this.idleRequest = window.requestIdleCallback(() => {
-			this.setState({
-				renderState: TRANSITION_STATE.MEASURE
+		if (typeof window !== 'undefined') {
+			this.idleRequest = window.requestIdleCallback(() => {
+				this.setState({
+					renderState: TRANSITION_STATE.MEASURE
+				});
 			});
-		});
+		}
 	}
 
 	removeIdleCallback = () => {
-		window.cancelIdleCallback(this.idleRequest);
+		if (typeof window !== 'undefined') {
+			window.cancelIdleCallback(this.idleRequest);
+		}
 	}
 
 	componentWillUnmount () {
