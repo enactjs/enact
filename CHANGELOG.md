@@ -26,6 +26,15 @@ The following is a curated list of changes in the Enact project, newest changes 
 > * `core.hoc` - Use `core/hoc`
 > * `core.kind` - Use `core/kind`
 >
+> We have also modified most form components to be usable in a controlled (app manages component
+> state) or uncontrolled (Enact manages component state) manner. To put a component into a
+> controlled state, pass in `value` (or other appropriate state property such as `selected` or
+> `open`) at component creation and then respond to events and update the value as needed. To put a
+> component into an uncontrolled state, do not set `value` (or equivalent), at creation. From this
+> point on, Enact will manage the state and events will be sent when the state is updated. To
+> specify an initial value, use the `defaultValue` (or, `defaultSelected, `defaultOpen, etc.)
+> property.  See the documentation for individual components for more information.
+>
 > Additionally, we no longer export a `version` with the root import. If you need a version number, import from `package.json` instead.
 
 ### Added
