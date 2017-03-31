@@ -276,20 +276,13 @@ class Transition extends React.Component {
 		}
 	}
 
-	componentWillUpdate (nextProps, nextState, nextContext) {
-		if (!this.context.measure && nextContext.measure) {
-			this.setIdleCallback();
-		}
-
+	componentWillUpdate (nextProps, nextState) {
 		if (nextState.renderState === TRANSITION_STATE.MEASURE) {
 			window.cancelIdleCallback(this.idleRequest);
 		}
 	}
 
-	shouldComponentUpdate (nextProps, nextState, nextContext) {
-		if (nextContext.measure !== this.context.measure) {
-			return true;
-		}
+	shouldComponentUpdate (nextProps, nextState) {
 		// Don't update if only updating the height and we're not visible
 		return (this.state.initialHeight === nextState.initialHeight) || this.props.visible || nextProps.visible;
 	}
@@ -305,9 +298,7 @@ class Transition extends React.Component {
 	}
 
 	componentDidMount () {
-		if (typeof this.context.measure === 'undefined') {
-			this.setIdleCallback();
-		}
+		this.setIdleCallback();
 	}
 
 	setIdleCallback = () => {
@@ -376,10 +367,6 @@ class Transition extends React.Component {
 		}
 	}
 }
-
-Transition.contextTypes = {
-	measure: React.PropTypes.bool
-};
 
 export default Transition;
 export {Transition, TransitionBase};
