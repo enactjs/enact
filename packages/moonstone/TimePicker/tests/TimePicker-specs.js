@@ -1,5 +1,5 @@
 import React from 'react';
-import {mount, shallow} from 'enzyme';
+import {mount} from 'enzyme';
 import sinon from 'sinon';
 import {TimePicker, TimePickerBase} from '../TimePicker';
 import css from '../TimePicker.less';
