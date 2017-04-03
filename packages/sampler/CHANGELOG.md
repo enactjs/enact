@@ -2,11 +2,15 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
-## [unreleased]
+## [1.0.0] - 2017-03-31
 
 ### Added
 
 - `moonstone/CheckboxItem` knob to change the checkbox position (left vs right aligned)
+
+### Changed
+
+- All samples to use the newly updated uncontrolled components
 
 ## [1.0.0-beta.4] - 2017-03-10
 
