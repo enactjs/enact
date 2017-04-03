@@ -246,6 +246,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.startAnimation(this.props.marqueeOn === 'render' ? this.props.marqueeOnRenderDelay : this.props.marqueeDelay);
 			}
 			this.forceRestartMarquee = false;
+			this.calculateMetrics();
 		}
 
 		componentWillUnmount () {

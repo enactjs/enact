@@ -9,13 +9,15 @@ import React from 'react';
 import sort from 'ramda/src/sort';
 import unless from 'ramda/src/unless';
 import useWith from 'ramda/src/useWith';
+import when from 'ramda/src/when';
 
 import Job from './Job';
 
-const orderedKeys = map(prop('key'));
+const orderedKeys = map(when(React.isValidElement, prop('key')));
 const unorderedKeys = compose(sort((a, b) => a - b), orderedKeys);
 const unorderedEquals = useWith(equals, [unorderedKeys, unorderedKeys]);
 const orderedEquals = useWith(equals, [orderedKeys, orderedKeys]);
+
 
 /**
  * Compares the keys of two sets of children and returns `true` if they are equal.
