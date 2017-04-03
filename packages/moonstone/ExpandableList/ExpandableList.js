@@ -14,7 +14,6 @@ import React, {PropTypes} from 'react';
 import CheckboxItem from '../CheckboxItem';
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 import RadioItem from '../RadioItem';
-import pure from 'recompose/pure';
 
 /**
  * {@link moonstone/ExpandableList.ExpandableListBase} is a stateless component that
@@ -283,12 +282,12 @@ const ExpandableListBase = kind({
  * @ui
  * @public
  */
-const ExpandableList = pure(Expandable(
+const ExpandableList = Expandable(
 	Changeable(
 		{change: 'onSelect', prop: 'selected'},
 		ExpandableListBase
 	)
-));
+);
 
 export default ExpandableList;
 export {ExpandableList, ExpandableListBase};

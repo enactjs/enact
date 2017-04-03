@@ -113,6 +113,10 @@ class View extends React.Component {
 		this.changeDirection = this.animation ? this.props.reverseTransition !== nextProps.reverseTransition : false;
 	}
 
+	shouldComponentUpdate (nextProps, nextState) {
+		return nextState.entering || this.state.entering;
+	}
+
 	componentWillUnmount () {
 		this.cancelAnimationFrame();
 		this.enteringJob.stop();
