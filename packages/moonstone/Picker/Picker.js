@@ -5,6 +5,7 @@
  * @module moonstone/Picker
  */
 
+import Changeable from '@enact/ui/Changeable';
 import clamp from 'ramda/src/clamp';
 import kind from '@enact/core/kind';
 import React from 'react';
@@ -46,8 +47,8 @@ const PickerBase = kind({
 		decrementIcon: React.PropTypes.string,
 
 		/**
-		 * When `true`, the [button]{@glossary button} is shown as disabled and does not
-		 * generate tap [events]{@glossary event}.
+		 * When `true`, the Picker is shown as disabled and does not generate `onChange`
+		 * [events]{@glossary event}.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -156,8 +157,16 @@ const PickerBase = kind({
 	computed: {
 		max: ({children}) => children && children.length ? children.length - 1 : 0,
 		reverse: ({orientation}) => (orientation === 'vertical'),
-		children: ({children, marqueeDisabled}) => React.Children.map(children, (child) => {
-			return <PickerItem marqueeDisabled={marqueeDisabled}>{child}</PickerItem>;
+		children: ({children, disabled, joined, marqueeDisabled}) => React.Children.map(children, (child) => {
+			const focusOrHover = !disabled && joined ? 'focus' : 'hover';
+			return (
+				<PickerItem
+					marqueeDisabled={marqueeDisabled}
+					marqueeOn={focusOrHover}
+				>
+					{child}
+				</PickerItem>
+			);
 		}),
 		value: ({value, children}) => {
 			const max = children && children.length ? children.length - 1 : 0;
@@ -182,15 +191,23 @@ const PickerBase = kind({
 /**
  * A Picker component that allows selecting values from a list of values.
  *
+ * By default, `Picker` maintains the state of its `value` property. Supply the `defaultValue`
+ * property to control its initial value. If you wish to directly control updates to the component,
+ * supply a value to `value` at creation time and update it in response to `onChange` events.
+ *
  * @class Picker
  * @memberof moonstone/Picker
+ * @mixes ui/Changeable.Changeable
+ * @mixes moonstone/Marquee.MarqueeController
  * @ui
  * @public
  */
-const Picker = MarqueeController(
-	{startOnFocus: true},
-	SpottablePicker(
-		PickerBase
+const Picker = Changeable(
+	MarqueeController(
+		{marqueeOnFocus: true},
+		SpottablePicker(
+			PickerBase
+		)
 	)
 );
 

@@ -4,20 +4,22 @@
  * @module moonstone/Slider
  */
 
+import Changeable from '@enact/ui/Changeable';
 import factory from '@enact/core/factory';
 import {forKey, forward, handle, stopImmediate} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import Pressable from '@enact/ui/Pressable';
 import React, {PropTypes} from 'react';
-import {Spottable} from '@enact/spotlight';
+import Spottable from '@enact/spotlight/Spottable';
 
 import SliderDecorator from '../internal/SliderDecorator';
 import {computeProportionProgress} from '../internal/SliderDecorator/util';
 
 import {SliderBarFactory} from './SliderBar';
+import SliderTooltip from './SliderTooltip';
 import componentCss from './Slider.less';
 
-const isActive = (ev, props) => !(props.active || props.detachedKnob);
+const isActive = (ev, props) => props.active || props.detachedKnob;
 const isIncrement = (ev, props) => forKey(props.vertical ? 'up' : 'right', ev);
 const isDecrement = (ev, props) => forKey(props.vertical ? 'down' : 'left', ev);
 
@@ -227,6 +229,52 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			step: PropTypes.number,
 
 			/**
+			 * Enables the built-in tooltip, whose behavior can be modified by the other tooltip
+			 * properties.  A custom tooltip, which follows the knob, may be used instead by
+			 * supplying a component as a child of `Slider`.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			tooltip: PropTypes.bool,
+
+			/**
+			 * Converts the contents of the built-in tooltip to a percentage of the bar.
+			 * The percentage respects the min and max value props.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			tooltipAsPercent: PropTypes.bool,
+
+			/**
+			 * Setting to `true` overrides the natural LTR->RTL tooltip side-flipping for locale
+			 * changes. This may be useful if you have a static layout that does not automatically
+			 * reverse when in an RTL language.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			tooltipForceSide: PropTypes.bool,
+
+			/**
+			 * Specify where the tooltip should appear in relation to the Slider bar. Options are
+			 * `'before'` and `'after'`. `before` renders above a `horizontal` slider and to the
+			 * left of a `vertical` Slider. `after` renders below a `horizontal` slider and to the
+			 * right of a `vertical` Slider. In the `vertical` case, the rendering position is
+			 * automatically reversed when rendering in an RTL locale. This can be overridden by
+			 * using the [tooltipForceSide]{@link moonstone/Slider.Slider.tooltipForceSide} prop.
+			 *
+			 * @type {String}
+			 * @default 'before'
+			 * @public
+			 */
+			tooltipSide: PropTypes.oneOf(['before', 'after']),
+
+			/**
 			 * The value of the slider.
 			 *
 			 * @type {Number}
@@ -254,6 +302,10 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			onChange: () => {}, // needed to ensure the base input element is mutable if no change handler is provided
 			pressed: false,
 			step: 1,
+			tooltip: false,
+			tooltipAsPercent: false,
+			tooltipForceSide: false,
+			tooltipSide: 'before',
 			value: 0,
 			vertical: false
 		},
@@ -272,8 +324,8 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			onKeyDown: handle(
 				forward('onKeyDown'),
 				(ev, props) => {
-					return	handleDecrement(ev, props) &&
-							handleIncrement(ev, props) &&
+					return	handleDecrement(ev, props) ||
+							handleIncrement(ev, props) ||
 							handleActivate(ev, props);
 				}
 			),
@@ -292,6 +344,11 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		},
 
 		computed: {
+			children: ({children, max, min, tooltip, tooltipAsPercent, value}) => {
+				// If there's no tooltip, or custom children present, supply those.
+				if (!tooltip || children) return children;
+				return tooltipAsPercent ? Math.floor(computeProportionProgress({value, max, min}) * 100) + '%' : value;
+			},
 			className: ({active, pressed, vertical, styler}) => styler.append({
 				active,
 				pressed,
@@ -301,7 +358,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			proportionProgress: computeProportionProgress
 		},
 
-		render: ({backgroundProgress, children, disabled, inputRef, max, min, onBlur, onChange, onKeyDown, onMouseMove, onMouseUp, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, value, vertical, ...rest}) => {
+		render: ({backgroundProgress, children, disabled, inputRef, max, min, onBlur, onChange, onKeyDown, onMouseMove, onMouseUp, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, tooltip, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => {
 			delete rest.active;
 			delete rest.detachedKnob;
 			delete rest.onActivate;
@@ -309,9 +366,18 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			delete rest.onIncrement;
 			delete rest.onKnobMove;
 			delete rest.pressed;
+			delete rest.tooltipAsPercent;
 
 			return (
-				<div {...rest} disabled={disabled} onBlur={onBlur} onKeyDown={onKeyDown} onMouseUp={onMouseUp} ref={sliderRef}>
+				<div
+					{...rest}
+					aria-disabled={disabled}
+					disabled={disabled}
+					onBlur={onBlur}
+					onKeyDown={onKeyDown}
+					onMouseUp={onMouseUp}
+					ref={sliderRef}
+				>
 					<SliderBar
 						proportionBackgroundProgress={backgroundProgress}
 						proportionProgress={proportionProgress}
@@ -319,9 +385,18 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						vertical={vertical}
 						scrubbing={scrubbing}
 					>
-						{children}
+						{tooltip ? <SliderTooltip
+							className={css.tooltip}
+							forceSide={tooltipForceSide}
+							proportion={proportionProgress}
+							side={tooltipSide}
+							vertical={vertical}
+						>
+							{children}
+						</SliderTooltip> : children}
 					</SliderBar>
 					<input
+						aria-disabled={disabled}
 						className={css.input}
 						disabled={disabled}
 						type="range"
@@ -344,20 +419,28 @@ const SliderFactory = factory(css => {
 	const Base = SliderBaseFactory(css);
 
 	/**
-	 * {@link moonstone/Slider.Slider} is a Slider with Moonstone styling, Spottable, Pressable and
-	 * SliderDecorator applied. It is a stateful Slider.
+	 * {@link moonstone/Slider.Slider} is a Slider with Moonstone styling, Spottable, Changeable,
+	 * Pressable and SliderDecorator applied.
+	 *
+	 * By default, `Slider` maintains the state of its `value` property. Supply the `defaultValue`
+	 * property to control its initial value. If you wish to directly control updates to the
+	 * component, supply a value to `value` at creation time and update it in response to `onChange`
+	 * events.
 	 *
 	 * @class Slider
 	 * @memberof moonstone/Slider
-	 * @mixes spotlight/Spottable
-	 * @mixes ui/Pressable
+	 * @mixes ui/Changeable.Changeable
+	 * @mixes ui/Pressable.Pressable
+	 * @mixes spotlight/Spottable.Spottable
 	 * @ui
 	 * @public
 	 */
-	return Pressable(
-		Spottable(
-			SliderDecorator(
-				Base
+	return Changeable(
+		Pressable(
+			Spottable(
+				SliderDecorator(
+					Base
+				)
 			)
 		)
 	);
@@ -371,5 +454,6 @@ export {
 	Slider,
 	SliderBase,
 	SliderBaseFactory,
-	SliderFactory
+	SliderFactory,
+	SliderTooltip
 };

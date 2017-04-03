@@ -10,11 +10,9 @@
 	position: relative;
 	overflow: hidden;
 
-	.videoFrame {
-		video {
-			width: 100%;
-			vertical-align: top;
-		}
+	.video {
+		width: 100%;
+		vertical-align: top;
 	}
 
 	.overlay {
@@ -319,5 +317,11 @@
 				}
 			}
 		}
+	}
+
+	.controlsHandleAbove {
+		pointer-events: none;
+		position: absolute;
+		.position(0, 0, auto, 0);
 	}
 }

@@ -1,26 +1,13 @@
-import Changeable from '@enact/ui/Changeable';
-import {DatePicker, DatePickerBase} from '@enact/moonstone/DatePicker';
+import DatePicker, {DatePickerBase} from '@enact/moonstone/DatePicker';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
 
-const Picker = Changeable(DatePicker);
-Picker.propTypes = Object.assign({}, DatePicker.propTypes, DatePickerBase.propTypes, {
-	onChange: React.PropTypes.func,
-	onOpen: React.PropTypes.func,
-	onClose: React.PropTypes.func,
-	open: React.PropTypes.bool,
-	value: React.PropTypes.instanceOf(Date)
-});
-Picker.defaultProps = Object.assign({}, DatePicker.defaultProps, DatePickerBase.defaultProps);
-Picker.displayName = 'DatePicker';
+import nullify from '../../src/utils/nullify.js';
+import {mergeComponentMetadata, removeProps} from '../../src/utils/propTables';
 
-'year defaultOpen day maxDays maxMonths month onChangeDate onChangeMonth onChangeYear order'
-	.split(' ')
-	.forEach(prop => {
-		delete Picker.propTypes[prop];
-		delete Picker.defaultProps[prop];
-	});
+const Config = mergeComponentMetadata('DatePicker', DatePickerBase, DatePicker);
+removeProps(Config, 'year defaultOpen day maxDays maxMonths month onChangeDate onChangeMonth onChangeYear order');
 
 storiesOf('DatePicker')
 	.addDecorator(withKnobs)
@@ -28,13 +15,14 @@ storiesOf('DatePicker')
 		' ',
 		'The basic DatePicker',
 		() => (
-			<Picker
+			<DatePicker
 				title={text('title', 'Date')}
-				noLabels={boolean('noLabels', false)}
+				noLabels={nullify(boolean('noLabels', false))}
 				noneText={text('noneText', 'Nothing Selected')}
 				onChange={action('onChange')}
 				onOpen={action('onOpen')}
 				onClose={action('onClose')}
 			/>
-		)
+		),
+		{propTables: [Config]}
 	);

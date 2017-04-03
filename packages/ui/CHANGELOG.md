@@ -2,7 +2,28 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
+## [1.0.0] - 2017-03-31
+
+### Added
+
+- `ui/Placeholder` module with `PlaceholderControllerDecorator` and `PlaceholderDecorator` HOCs which facilitate rendering placeholder components until the wrapped component would scroll into the viewport
+
+### Changed
+
+- `ui/Repeater` to accept an array of objects as children which are spread onto the generated components
+
+### Removed
+
+- `ui/validators` which was no longer used elsewhere in Enact
+
+## [1.0.0-beta.4] - 2017-03-10
+
+### Added
+
+- `ui/A11yDecorator` to facilitate adding pre/post hints to components
+- `ui/AnnounceDecorator` to facilitate announcing actions for accessibility
+
+## [1.0.0-beta.3] - 2017-02-21
 
 ### Added
 

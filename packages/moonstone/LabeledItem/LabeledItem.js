@@ -40,10 +40,10 @@ const LabeledItemBase = kind({
 		/**
 		 * The label to be displayed along with the text.
 		 *
-		 * @type {String|Number}
+		 * @type {Node}
 		 * @public
 		 */
-		label: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+		label: PropTypes.node,
 
 		/**
 		 * Icon to be displayed next to the title text.

@@ -1,14 +1,10 @@
-import Item, {ItemBase} from '@enact/moonstone/Item';
+import Item from '@enact/moonstone/Item';
 import {Icon, icons} from '@enact/moonstone/Icon';
 import React from 'react';
 import Button from '@enact/moonstone/Button';
 import Image from '@enact/moonstone/Image';
 import {storiesOf} from '@kadira/storybook';
 import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
-
-Item.propTypes = Object.assign({}, ItemBase.propTypes, Item.propTypes);
-Item.defaultProps = Object.assign({}, ItemBase.defaultProps, Item.defaultProps);
-Item.displayName = 'Item';
 
 const iconNames = ['', ...Object.keys(icons)];
 
@@ -38,7 +34,7 @@ storiesOf('Item')
 			<Item
 				disabled={boolean('disabled')}
 			>
-				{select('value', inputData.tallText,  inputData.tallText[2])}
+				{select('value', inputData.tallText, inputData.tallText[2])}
 			</Item>
 		)
 	)
@@ -61,7 +57,7 @@ storiesOf('Item')
 				<Button>Click here</Button>
 				{text('Children', 'Hello Item')}
 				<Button>Click here</Button>
-				<Image src={'http://lorempixel.com/512/512/city/1/'} sizing="fill" alt="lorempixel" />
+				<Image src="http://lorempixel.com/512/512/city/1/" sizing="fill" alt="lorempixel" />
 				<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.</p>
 				<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.</p>
 				<p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.</p>

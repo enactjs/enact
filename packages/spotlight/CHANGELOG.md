@@ -2,7 +2,32 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
-## [unreleased]
+## [1.0.0] - 2017-03-31
+
+### Removed
+
+- `spotlight.Spottable` replaced by `spotlight/Spottable`
+- `spotlight.spottableClass` replaced by `spotlight/Spottable.spottableClass`
+- `spotlight.SpotlightContainerDecorator` replaced by `spotlight/SpotlightContainerDecorator`
+- `spotlight.spotlightDefaultClass` replaced by `spotlight/SpotlightContainerDecorator.spotlightDefaultClass`
+- `spotlight.SpotlightRootDecorator` replaced by `spotlight/SpotlightRootDecorator`
+
+### Fixed
+
+- `spotlight/Spotlight` `set()` to properly update the container config
+- `spotlight/Spotlight` to properly save the last-focused element for nested containers
+
+## [1.0.0-beta.4] - 2017-03-10
+
+### Changed
+
+- `spotlight.Spottable` to prevent emulating mouse events for repeated key events
+
+### Fixed
+
+- `spotlight.Spotlight` pointer behavior where upon immediately entering pointer-mode, hovering over a spottable component may result in the component not receiving focus
+
+## [1.0.0-beta.3] - 2017-02-21
 
 ### Fixed
 

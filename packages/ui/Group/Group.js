@@ -8,15 +8,16 @@
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 
+import Changeable from '../Changeable';
 import Repeater from '../Repeater';
 
 import {GroupItem, pickGroupItemProps} from './GroupItem';
 
 /**
- * {@link ui/Group.Group} is a stateless component that supports single-select of
- * its child items via configurable properties and events.
+ * {@link ui/Group.GroupBase} is a stateless component that supports selection of its child items
+ * via configurable properties and events.
  *
- * @class Group
+ * @class GroupBase
  * @memberof ui/Group
  * @ui
  * @public
@@ -128,6 +129,8 @@ const GroupBase = kind({
 	},
 
 	computed: {
+		'aria-multiselectable': ({select}) => select === 'multiple',
+
 		itemProps: (props) => Object.assign({},
 			pickGroupItemProps(props),
 			props.itemProps
@@ -141,9 +144,24 @@ const GroupBase = kind({
 		delete props.selected;
 		delete props.selectedProp;
 
-		return <Repeater {...props} childComponent={GroupItem} />;
+		return <Repeater role="group" {...props} childComponent={GroupItem} />;
 	}
 });
 
-export default GroupBase;
-export {GroupBase as Group, GroupBase, GroupItem};
+/**
+ * {@link ui/Group.Group} supports selection of its child items via configurable properties and
+ * events.
+ *
+ * @class Group
+ * @memberof ui/Group
+ * @mixes ui/Changeable.Changeable
+ * @ui
+ * @public
+ */
+const Group = Changeable(
+	{change: 'onSelect', prop: 'selected'},
+	GroupBase
+);
+
+export default Group;
+export {Group, GroupBase, GroupItem};

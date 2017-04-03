@@ -1,1 +1,1 @@
-{"clock":"12","language.name":"Dzongkha","numfmt":{"script":"Tibt","decimalChar":".","groupChar":",","exponential":"E","secgroupSize":2,"pctFmt":"{n} %","useNative":true,"digits":"༠༡༢༣༤༥༦༧༨༩"},"scripts":["Tibt"],"locale":"dz"}
+{"clock":"12","language.name":"Dzongkha","numfmt":{"script":"Tibt","secgroupSize":2,"currencyFormats":{"common":"{s}{n}","commonNegative":"-{s}{n}"},"pctFmt":"{n} %","negativepctFmt":"-{n} %","digits":"༠༡༢༣༤༥༦༧༨༩","useNative":true},"scripts":["Tibt"],"locale":"dz"}

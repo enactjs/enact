@@ -2,7 +2,7 @@ import React from 'react';
 import {shallow, mount} from 'enzyme';
 
 import ilib from '../../ilib/lib/ilib.js';
-import {updateLocale} from '../../src/locale';
+import {updateLocale} from '../../locale';
 import {contextTypes, I18nDecorator} from '../I18nDecorator';
 
 describe('I18nDecorator', () => {

@@ -1,5 +1,6 @@
+import $L from '@enact/i18n/$L';
 import kind from '@enact/core/kind';
-import {Spottable} from '@enact/spotlight';
+import Spottable from '@enact/spotlight/Spottable';
 import React from 'react';
 
 import css from './Panels.less';
@@ -67,7 +68,12 @@ const BreadcrumbBase = kind({
 	},
 
 	render: ({children, index, onSelect, ...rest}) => (
-		<SpottableDiv {...rest} data-index={index} onClick={onSelect}>
+		<SpottableDiv
+			{...rest}
+			aria-label={$L('go to previous')}
+			data-index={index}
+			onClick={onSelect}
+		>
 			<div className={css.breadcrumbHeader}>
 				{children}
 			</div>

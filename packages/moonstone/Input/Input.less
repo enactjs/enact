@@ -17,6 +17,8 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 
+	.moon-custom-text-size(@moon-item-font-size-large);
+
 	&::selection {
 		color: @moon-spotlight-text-color;
 		background-color: @moon-spotlight-background-color;
@@ -86,8 +88,11 @@
 		border-radius: 12px;
 	}
 
-	// RIGBY NOTE: Complex focus scenarios are broken at the moment
+	// For ExpandableInput, the decorator will not receive focus but it can be activated by clicking
+	// which should highlight the border
+	&.noDecorator:active,
 	&:global(.spottable):focus {
+		color: @moon-input-font-color;
 		border-color: @moon-spotlight-border-color;
 		background-color: @moon-input-decorator-bg-color;
 	}

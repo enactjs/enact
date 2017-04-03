@@ -1,5 +1,5 @@
-import {$L} from '@enact/i18n';
 import {is} from '@enact/core/keymap';
+import $L from '@enact/i18n/$L';
 import kind from '@enact/core/kind';
 import React from 'react';
 

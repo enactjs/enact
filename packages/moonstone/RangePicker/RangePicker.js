@@ -5,6 +5,7 @@
  * @module moonstone/RangePicker
  */
 
+import Changeable from '@enact/ui/Changeable';
 import clamp from 'ramda/src/clamp';
 import kind from '@enact/core/kind';
 import React from 'react';
@@ -86,8 +87,8 @@ const RangePickerBase = kind({
 		decrementIcon: React.PropTypes.string,
 
 		/**
-		 * When `true`, the [button]{@glossary button} is shown as disabled and does not
-		 * generate tap [events]{@glossary event}.
+		 * When `true`, the RangePicker is shown as disabled and does not generate `onChange`
+		 * [events]{@glossary event}.
 		 *
 		 * @type {Boolean}
 		 * @public
@@ -225,12 +226,21 @@ const RangePickerBase = kind({
  * {@link moonstone/RangePicker.RangePicker} is a component that lets the user select a number from
  * a range of numbers.
  *
+ * By default, `RangePicker` maintains the state of its `value` property. Supply the `defaultValue`
+ * property to control its initial value. If you wish to directly control updates to the component,
+ * supply a value to `value` at creation time and update it in response to `onChange` events.
+ *
  * @class RangePicker
  * @memberof moonstone/RangePicker
+ * @mixes ui/Changeable.Changeable
  * @ui
  * @public
  */
-const RangePicker = SpottablePicker(RangePickerBase);
+const RangePicker = Changeable(
+	SpottablePicker(
+		RangePickerBase
+	)
+);
 
 export default RangePicker;
 export {RangePicker, RangePickerBase};

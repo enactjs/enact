@@ -2,6 +2,7 @@
 //
 @import '../styles/mixins.less';
 @import '../styles/variables.less';
+@import '../styles/text.less';
 
 .iconButton {
 	.border-box();
@@ -23,8 +24,31 @@
 		.moon-taparea(@moon-icon-button-small-size);
 	}
 
+	.moon-custom-text({
+		height: @moon-icon-button-size-large;
+		width: @moon-icon-button-size-large;
+
+		&.small {
+			height: @moon-icon-button-small-size-large;
+			width: @moon-icon-button-small-size-large;
+		}
+	});
+
 	.icon {
 		color: inherit;
 		margin: 0 auto;
+	}
+
+	&.red,
+	&.green,
+	&.yellow,
+	&.blue {
+		.icon {
+			line-height: 42px;
+		}
+
+		&.small .icon {
+			line-height: 30px;
+		}
 	}
 }
