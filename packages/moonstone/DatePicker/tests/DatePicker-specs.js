@@ -39,8 +39,6 @@ describe('DatePicker', () => {
 		);
 
 		const expected = 2;
-		// DateComponentRangePicker is wrapped by Changeable so in a shallow render, we have to
-		// check for that kind
 		const actual = subject.find('DateComponentRangePicker').filterWhere(c => !c.prop('label')).length;
 
 		expect(actual).to.equal(expected);
@@ -52,8 +50,6 @@ describe('DatePicker', () => {
 		);
 
 		const expected = ['month', 'day'];
-		// DateComponentRangePicker is wrapped by Changeable so in a shallow render, we have to
-		// check for that kind
 		const actual = subject.find('DateComponentRangePicker').map(c => c.prop('label'));
 
 		expect(actual).to.deep.equal(expected);
