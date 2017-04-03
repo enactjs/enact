@@ -20,29 +20,29 @@ const setPositionFromValue = (value) => ({maxX, maxY, minX, minY}) => {
 	};
 };
 
-const startDrag = () => () => {
+const startTrack = () => () => {
 	return {
-		dragging: true
+		tracking: true
 	};
 };
 
-const drag = (clientX, clientY) => ({maxX, maxY, minX, minY}) => {
+const updatePosition = (clientX, clientY) => ({maxX, maxY, minX, minY}) => {
 	return {
 		x: clamp(minX, maxX, clientX) - minX,
 		y: clamp(minY, maxY, clientY) - minY
 	};
 };
 
-const stopDrag = () => {
+const stopTrack = () => {
 	return {
-		dragging: false
+		tracking: false
 	};
 };
 
 export {
-	drag,
 	setContainerBounds,
 	setPositionFromValue,
-	startDrag,
-	stopDrag
+	startTrack,
+	stopTrack,
+	updatePosition
 };

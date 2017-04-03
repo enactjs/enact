@@ -70,14 +70,14 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 				isActive,
 				forward('onActivate')
 			),
-			onDrag: (ev, {min, max, onChange, vertical}) => {
+			onTrack: (ev, {min, max, onChange, vertical}) => {
 				if (onChange) {
 					const percent = vertical ? 1 - ev.percentY : ev.percentX;
 					const value = (max - min) * percent + min;
 					onChange({value});
 				}
 			},
-			onDragEnd: handle(
+			onTrackEnd: handle(
 				forward('onKeyUp'),
 				forward('onRelease'),
 				Spotlight.resume
@@ -106,7 +106,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 				vertical,
 				horizontal: !vertical
 			}),
-			knob: ({disabled, knob, knobStep, max, min, onDrag, onDragEnd, step, value, vertical}) => {
+			knob: ({disabled, knob, knobStep, max, min, onTrack, onTrackEnd, step, value, vertical}) => {
 				const dragStep = calcStep([knobStep, step]) / (max - min);
 				const percent = calcPercent(min, max, value);
 				const props = {
@@ -114,9 +114,9 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 					constrainBoxSizing: 'content-box',
 					disabled: disabled,
 					horizontal: !vertical,
-					onDrag: onDrag,
-					onDragEnd: onDragEnd,
-					onDragStart: Spotlight.pause,
+					onTrack: onTrack,
+					onTrackEnd: onTrackEnd,
+					onTrackStart: Spotlight.pause,
 					step: dragStep,
 					value: vertical ? 1 - percent : percent,
 					vertical: vertical
@@ -135,8 +135,8 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		render: ({backgroundPercent, disabled, knob, max, min, onRelease, value, vertical, ...rest}) => {
 			delete rest.active;
 			delete rest.onActivate;
-			delete rest.onDrag;
-			delete rest.onDragEnd;
+			delete rest.onTrack;
+			delete rest.onTrackEnd;
 			delete rest.pressed;
 
 			const percent = calcPercent(min, max, value);

@@ -4,9 +4,18 @@ import {on, off} from '@enact/core/dispatcher';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import {drag, setContainerBounds, setPositionFromValue, startDrag, stopDrag} from './state';
+import {updatePosition, setContainerBounds, setPositionFromValue, startTrack, stopTrack} from './state';
 
-const Draggable = hoc(null, (config, Wrapped) => {
+const defaultConfig = {
+	global: true,
+	track: 'mousemove',
+	trackEnd: 'mouseup',
+	trackStart: 'onMouseDown'
+};
+
+const Draggable = hoc(defaultConfig, (config, Wrapped) => {
+	const {global, track, trackEnd, trackStart} = config;
+
 	return class extends React.Component {
 		static displayName = 'Draggable';
 
@@ -15,10 +24,9 @@ const Draggable = hoc(null, (config, Wrapped) => {
 			constrainBoxSizing: React.PropTypes.oneOf(['border-box', 'content-box']),
 			disabled: React.PropTypes.bool,
 			horizontal: React.PropTypes.bool,
-			onDrag: React.PropTypes.func,
-			onDragEnd: React.PropTypes.func,
-			onDragStart: React.PropTypes.func,
-			preview: React.PropTypes.bool,
+			onTrack: React.PropTypes.func,
+			onTrackEnd: React.PropTypes.func,
+			onTrackStart: React.PropTypes.func,
 			value: React.PropTypes.number,
 			vertical: React.PropTypes.bool
 		}
@@ -31,7 +39,7 @@ const Draggable = hoc(null, (config, Wrapped) => {
 			super();
 
 			this.state = {
-				dragging: false,
+				tracking: false,
 				maxX: Infinity,
 				maxY: Infinity,
 				minX: 0,
@@ -50,49 +58,22 @@ const Draggable = hoc(null, (config, Wrapped) => {
 			this.node = ReactDOM.findDOMNode(this);
 
 			const constrainingNode = this.getConstrainingNode(constrain);
-			this.initConstraints(constrainingNode);
+			this.updateConstraints(constrainingNode);
 			this.setPositionFromValue(value);
 		}
 
 		componentWillReceiveProps (nextProps) {
-			const {constrain, preview, value} = this.props;
-			const {constrain: nextConstrain, preview: nextPreview, value: nextValue} = nextProps;
+			const {constrain, value} = this.props;
+			const {constrain: nextConstrain, value: nextValue} = nextProps;
 
 			if (constrain !== nextConstrain) {
-				let node = this.getConstrainingNode(constrain);
-				this.cleanupConstraints(node);
-
-				node = this.getConstrainingNode(nextConstrain);
-				this.initConstrains(node);
+				const node = this.getConstrainingNode(nextConstrain);
+				this.updateConstraints(node);
 			}
 
 			if (value !== nextValue) {
 				this.setPositionFromValue(nextValue);
 			}
-
-			if (preview || nextPreview) {
-				const node = this.getConstrainingNode(constrain);
-				if (!preview && nextPreview) {
-					this.startListening(node);
-				} else if (preview && !nextPreview) {
-					// this.
-					this.stopListening(node);
-				}
-			}
-		}
-
-		componentWillUnmount () {
-			const constrainingNode = this.getConstrainingNode(this.props.constrain);
-			this.cleanupConstraints(constrainingNode);
-		}
-
-		initConstraints (node) {
-			this.updateConstraints(node);
-			on('mousedown', this.handleConstrainingNodeMouseDown, node);
-		}
-
-		cleanupConstraints (node) {
-			off('mousedown', this.handleConstrainingNodeMouseDown, node);
 		}
 
 		getConstrainingNode (constrain) {
@@ -171,85 +152,63 @@ const Draggable = hoc(null, (config, Wrapped) => {
 			return this.props.vertical ? percentY : 0;
 		}
 
-		startListening (target) {
-			on('mousemove', this.handleMouseMove, target);
-			on('mouseup', this.handleMouseUp, target);
-		}
-
-		stopListening (target) {
-			off('mousemove', this.handleMouseMove, target);
-			off('mouseup', this.handleMouseUp, target);
-		}
-
-		startDrag (x, y) {
-			forward('onDragStart', {}, this.props);
-
-			this.setState(startDrag(x, y));
-			if (!this.props.preview) {
-				this.startListening();
+		startListening () {
+			if (global) {
+				on('mousemove', this.handleTrack);
+				on('mouseup', this.handleTrackEnd);
 			}
 		}
 
-		drag (x, y) {
+		stopListening () {
+			if (global) {
+				off('mousemove', this.handleTrack);
+				off('mouseup', this.handleTrackEnd);
+			}
+		}
+
+		startTrack (x, y) {
+			forward('onTrackStart', {}, this.props);
+
+			this.setState(startTrack(x, y));
+			this.startListening();
+		}
+
+		track (x, y) {
 			const {horizontal, vertical} = this.props;
-			const updateDragState = drag(x, y);
-			const position = updateDragState(this.state);
-			const dragEvent = this.calcPercentage(position);
+			const updateTrackState = updatePosition(x, y);
+			const position = updateTrackState(this.state);
+			const trackEvent = this.calcPercentage(position);
 
-			const horizontalChanged = horizontal && dragEvent.x !== this.state.x;
-			const verticalChanged = vertical && dragEvent.y !== this.state.y;
+			const horizontalChanged = horizontal && trackEvent.x !== this.state.x;
+			const verticalChanged = vertical && trackEvent.y !== this.state.y;
 			if (horizontalChanged || verticalChanged) {
-				if (this.props.preview) {
-					forward('onPreview', dragEvent, this.props);
-				} else {
-					forward('onDrag', dragEvent, this.props);
-				}
-				this.setState(updateDragState);
+				forward('onTrack', trackEvent, this.props);
+				this.setState(updateTrackState);
 			}
 		}
 
-		stopDrag () {
-			forward('onDragEnd', {}, this.props);
+		stopTrack () {
+			forward('onTrackEnd', {}, this.props);
 
 			this.stopListening();
-			this.setState(stopDrag);
+			this.setState(stopTrack);
 		}
 
-		handleConstrainingNodeMouseDown = (ev) => {
-			const {clientX, clientY} = ev;
+		handleTrackStart = () => {
 			if (!this.props.disabled) {
-				this.startDrag();
-				this.drag(clientX, clientY);
+				this.startTrack();
 			}
 		}
 
-		handleMouseDown = () => {
-			if (!this.props.disabled) {
-				this.startDrag();
-			}
-		}
-
-		handleMouseEnter = () => {
-			if (this.props.preview) {
-				this.startListening();
-			}
-		}
-
-		handleMouseLeave = () => {
-			if (this.props.preview) {
-				this.stopListening();
-			}
-		}
-
-		handleMouseMove = (ev) => {
+		handleTrack = (ev) => {
 			const {clientX, clientY} = ev;
-			if (this.state.dragging || this.props.preview) {
-				this.drag(clientX, clientY);
+			if (this.state.tracking) {
+				this.track(clientX, clientY);
 			}
 		}
 
-		handleMouseUp = () => {
-			this.stopDrag();
+		handleTrackEnd = () => {
+			this.stopTrack();
 		}
 
 		render () {
@@ -259,16 +218,26 @@ const Draggable = hoc(null, (config, Wrapped) => {
 			delete props.constrain;
 			delete props.constrainBoxSizing;
 			delete props.horizontal;
-			delete props.preview;
 			delete props.value;
 			delete props.vertical;
+
+			if (trackStart) {
+				props[trackStart] = this.handleTrackStart;
+			}
+
+			if (!global) {
+				if (track) {
+					props[track] = this.handleTrack;
+				}
+
+				if (trackEnd) {
+					props[trackEnd] = this.handleTrackEnd;
+				}
+			}
 
 			return (
 				<Wrapped
 					{...props}
-					onMouseEnter={this.handleMouseEnter}
-					onMouseDown={this.handleMouseDown}
-					onMouseLeave={this.handleMouseLeave}
 					percentX={this.getPercentX(position)}
 					percentY={this.getPercentY(position)}
 					x={this.getX(position)}
