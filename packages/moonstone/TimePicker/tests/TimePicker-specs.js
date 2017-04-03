@@ -35,8 +35,8 @@ describe('TimePicker', () => {
 	});
 
 	it('should omit labels when noLabels is true', function () {
-		const subject = shallow(
-			<TimePickerBase title="Time" hour={1} minute={1} meridiem={0} meridiems={['am', 'pm']} order={['h', 'm']} noLabels />
+		const subject = mount(
+			<TimePickerBase title="Time" hour={1} minute={1} meridiem={0} meridiems={['am', 'pm']} order={['h', 'm']} open noLabels />
 		);
 
 		const expected = 2;
@@ -46,8 +46,8 @@ describe('TimePicker', () => {
 	});
 
 	it('should create pickers arranged by order', function () {
-		const subject = shallow(
-			<TimePickerBase title="Time" hour={1} minute={1} meridiem={0} meridiems={['am', 'pm']} order={['h', 'm']} />
+		const subject = mount(
+			<TimePickerBase title="Time" hour={1} minute={1} meridiem={0} meridiems={['am', 'pm']} order={['h', 'm']} open />
 		);
 
 		const expected = ['hour', 'minute'];
