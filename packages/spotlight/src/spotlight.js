@@ -821,7 +821,14 @@ const Spotlight = (function () {
 		const nextContainerId = last(nextContainerIds);
 
 		if (currentContainerId !== nextContainerId) {
-			if (_5WayKeyHold) {
+			const dataIndexAttribute = 'data-index';
+			let focusedItemIndex = null;
+
+			if (currentFocusedElement) {
+				focusedItemIndex = currentFocusedElement.getAttribute(dataIndexAttribute);
+			}
+
+			if (_5WayKeyHold && focusedItemIndex) {
 				return false;
 			}
 			const result = gotoLeaveFor(currentContainerId, direction);
