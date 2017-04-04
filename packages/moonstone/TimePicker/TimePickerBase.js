@@ -229,27 +229,27 @@ const TimePickerBase = kind({
 											wrap
 										/>
 									);
+								case 'a':
+									return (
+										<DateComponentPicker
+											key="meridiem-picker"
+											label={noLabels ? null : $L('meridiem')}
+											onChange={onChangeMeridiem}
+											onSpotlightDisappear={onSpotlightDisappear}
+											reverse
+											spotlightDisabled={spotlightDisabled}
+											value={meridiem}
+											width={4}
+											wrap
+										>
+											{!hasMeridiem ? null : meridiems}
+										</DateComponentPicker>
+									);
 							}
 
 							return null;
 						})}
 					</div>
-					{!hasMeridiem ? null : (
-						// eslint-disable-next-line react/jsx-indent
-						<DateComponentPicker
-							key="meridiem-picker"
-							label={noLabels ? null : $L('meridiem')}
-							onChange={onChangeMeridiem}
-							onSpotlightDisappear={onSpotlightDisappear}
-							reverse
-							spotlightDisabled={spotlightDisabled}
-							value={meridiem}
-							width={4}
-							wrap
-						>
-							{meridiems}
-						</DateComponentPicker>
-					)}
 				</div>
 			</ExpandableItemBase>
 		);
