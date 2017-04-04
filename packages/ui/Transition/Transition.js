@@ -7,6 +7,7 @@
 
 import {forward} from '@enact/core/handle';
 import kind from '@enact/core/kind';
+import {Job} from '@enact/core/util';
 import React, {PropTypes} from 'react';
 
 import css from './Transition.less';
@@ -278,7 +279,7 @@ class Transition extends React.Component {
 
 	componentWillUpdate (nextProps, nextState) {
 		if (nextState.renderState === TRANSITION_STATE.MEASURE) {
-			this.removeIdleCallback();
+			this.measuringJob.cancelIdle();
 		}
 	}
 
@@ -298,28 +299,18 @@ class Transition extends React.Component {
 	}
 
 	componentDidMount () {
-		this.setIdleCallback();
-	}
-
-	setIdleCallback = () => {
-		if (typeof window !== 'undefined') {
-			this.idleRequest = window.requestIdleCallback(() => {
-				this.setState({
-					renderState: TRANSITION_STATE.MEASURE
-				});
-			});
-		}
-	}
-
-	removeIdleCallback = () => {
-		if (typeof window !== 'undefined') {
-			window.cancelIdleCallback(this.idleRequest);
-		}
+		this.measuringJob.startIdle();
 	}
 
 	componentWillUnmount () {
-		this.removeIdleCallback();
+		this.measuringJob.cancelIdle();
 	}
+
+	measuringJob = new Job(() => {
+		this.setState({
+			renderState: TRANSITION_STATE.MEASURE
+		});
+	})
 
 	hideDidFinish = (ev) => {
 		forwardTransitionEnd(ev, this.props);

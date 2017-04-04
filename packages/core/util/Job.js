@@ -88,6 +88,30 @@ class Job {
 			this.id = setTimeout(this.stop, timeout);
 		}
 	}
+
+	/**
+	 * Executes job when the CPU is idle.
+	 *
+	 * @returns {undefined}
+	 * @public
+	 */
+	startIdle = () => {
+		if (typeof window !== 'undefined' && window.requestIdleCallback) {
+			this.id = window.requestIdleCallback(this.fn);
+		}
+	}
+
+	/**
+	 * Cancels startIdle Job
+	 *
+	 * @returns {undefined}
+	 * @public
+	 */
+	cancelIdle = () => {
+		if (typeof window !== 'undefined' && window.cancelIdleCallback) {
+			window.cancelIdleCallback(this.id);
+		}
+	}
 }
 
 export default Job;

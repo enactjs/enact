@@ -113,8 +113,13 @@ class View extends React.Component {
 		this.changeDirection = this.animation ? this.props.reverseTransition !== nextProps.reverseTransition : false;
 	}
 
-	shouldComponentUpdate (nextProps, nextState) {
-		return nextState.entering || this.state.entering;
+	shouldComponentUpdate (nextProps) {
+		// If this panel becomes the previous panel, don't update it so we save time on reconciliation.
+		if (this.props.index === nextProps.previousIndex) {
+			return false;
+		}
+
+		return true;
 	}
 
 	componentWillUnmount () {
