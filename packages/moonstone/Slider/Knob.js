@@ -1,4 +1,4 @@
-import Draggable from '@enact/ui/Draggable';
+import Trackable from '@enact/ui/Trackable';
 import kind from '@enact/core/kind';
 import React from 'react';
 
@@ -38,7 +38,7 @@ const KnobBase = kind({
 	}
 });
 
-const Knob = Draggable(
+const Knob = Trackable(
 	KnobBase
 );
 

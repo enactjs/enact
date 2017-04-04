@@ -21,7 +21,7 @@ const defaultConfig = {
 // Unique ID for each instance used for node lookup
 let id = 0;
 
-const Draggable = hoc(defaultConfig, (config, Wrapped) => {
+const Trackable = hoc(defaultConfig, (config, Wrapped) => {
 	const {global, prop, trackStart} = config;
 	let {track, trackEnd} = config;
 
@@ -31,7 +31,7 @@ const Draggable = hoc(defaultConfig, (config, Wrapped) => {
 	}
 
 	return class extends React.Component {
-		static displayName = 'Draggable';
+		static displayName = 'Trackable';
 
 		static propTypes = {
 			constrain: React.PropTypes.oneOf(['body', 'container', 'window']),
@@ -270,7 +270,7 @@ const Draggable = hoc(defaultConfig, (config, Wrapped) => {
 	};
 });
 
-export default Draggable;
+export default Trackable;
 export {
-	Draggable
+	Trackable
 };
