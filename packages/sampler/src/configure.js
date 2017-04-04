@@ -9,8 +9,8 @@ function config (stories, mod) {
 	addDecorator(Moonstone);
 	addDecorator(withKnobs);
 	addDecorator(backgrounds([
-		{name: 'black', value: '#000000', default: true},
-		{name: 'white', value: '#ffffff'},
+		{name: 'dark', value: '#000000', default: true},
+		{name: 'light', value: '#e8e9e8'},
 		{name: 'dark image', value: 'darkgray url("http://lorempixel.com/720/480/abstract/2/") no-repeat center/cover'},
 		{name: 'light image', value: 'lightgray url("http://lorempixel.com/720/480/cats/9/") no-repeat center/cover'},
 		{name: 'random image', value: 'gray url("http://lorempixel.com/720/480/") no-repeat center/cover'}
