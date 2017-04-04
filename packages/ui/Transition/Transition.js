@@ -269,6 +269,10 @@ class Transition extends React.Component {
 		};
 	}
 
+	componentDidMount () {
+		this.measuringJob.startIdle();
+	}
+
 	componentWillReceiveProps (nextProps) {
 		if (nextProps.visible && this.state.renderState === TRANSITION_STATE.INIT) {
 			this.setState({
@@ -277,15 +281,15 @@ class Transition extends React.Component {
 		}
 	}
 
+	shouldComponentUpdate (nextProps, nextState) {
+		// Don't update if only updating the height and we're not visible
+		return (this.state.initialHeight === nextState.initialHeight) || this.props.visible || nextProps.visible;
+	}
+
 	componentWillUpdate (nextProps, nextState) {
 		if (nextState.renderState === TRANSITION_STATE.MEASURE) {
 			this.measuringJob.cancelIdle();
 		}
-	}
-
-	shouldComponentUpdate (nextProps, nextState) {
-		// Don't update if only updating the height and we're not visible
-		return (this.state.initialHeight === nextState.initialHeight) || this.props.visible || nextProps.visible;
 	}
 
 	componentDidUpdate (prevProps, prevState) {
@@ -296,10 +300,6 @@ class Transition extends React.Component {
 		if (visible === prevProps.visible && initialHeight === prevState.initialHeight && renderState !== TRANSITION_STATE.INIT) {
 			this.measureInner();
 		}
-	}
-
-	componentDidMount () {
-		this.measuringJob.startIdle();
 	}
 
 	componentWillUnmount () {

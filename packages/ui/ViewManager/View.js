@@ -7,7 +7,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import {shape} from './Arranger';
-import shallowEqual from 'recompose/shallowEqual';
+
 // Isomorphic guards
 const nop = function () {};
 const isBrowser = typeof window === 'object';
@@ -113,9 +113,9 @@ class View extends React.Component {
 		this.changeDirection = this.animation ? this.props.reverseTransition !== nextProps.reverseTransition : false;
 	}
 
-	shouldComponentUpdate (nextProps) {
+	shouldComponentUpdate (nextProps, nextState) {
 		// If this panel changes to a new panel, don't update it so we save time on reconciliation
-		if (this.props.index !== nextProps.index) {
+		if (this.props.index !== nextProps.index && (this.state.entering === false && nextState.entering === false)) {
 			return false;
 		}
 
