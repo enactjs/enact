@@ -2,6 +2,13 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [Unreleased]
+
+### Added
+
+- `core/util/Job` added `startIdle` and `cancelIdle` APIs to wrap `requestIdleCallback` and `cancelIdleCallback`.
+
+
 ## [1.0.0] - 2017-03-31
 
 ### Added
