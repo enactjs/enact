@@ -197,17 +197,12 @@ const Draggable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		track (x, y) {
-			const {horizontal, vertical} = this.props;
 			const updateTrackState = updatePosition(x, y);
 			const position = updateTrackState(this.state);
 			const trackEvent = this.calcPercentage(position);
 
-			const horizontalChanged = horizontal && trackEvent.x !== this.state.x;
-			const verticalChanged = vertical && trackEvent.y !== this.state.y;
-			if (horizontalChanged || verticalChanged) {
-				forward('onTrack', trackEvent, this.props);
-				this.setState(updateTrackState);
-			}
+			forward('onTrack', trackEvent, this.props);
+			this.setState(updateTrackState);
 		}
 
 		stopTrack () {
