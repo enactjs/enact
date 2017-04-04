@@ -6,15 +6,29 @@ import ReactDOM from 'react-dom';
 
 import {updatePosition, setContainerBounds, setPositionFromValue, startTrack, stopTrack} from './state';
 
+const toNativeEventName = (eventName) => {
+	return eventName && eventName.replace(/^on([A-Z])/, (match, c) => c.toLowerCase());
+};
+
 const defaultConfig = {
 	global: true,
-	track: 'mousemove',
-	trackEnd: 'mouseup',
+	prop: 'data-trackable',
+	track: 'onMouseMove',
+	trackEnd: 'onMouseUp',
 	trackStart: 'onMouseDown'
 };
 
+// Unique ID for each instance used for node lookup
+let id = 0;
+
 const Draggable = hoc(defaultConfig, (config, Wrapped) => {
-	const {global, track, trackEnd, trackStart} = config;
+	const {global, prop, trackStart} = config;
+	let {track, trackEnd} = config;
+
+	if (global) {
+		track = toNativeEventName(track);
+		trackEnd = toNativeEventName(trackEnd);
+	}
 
 	return class extends React.Component {
 		static displayName = 'Draggable';
@@ -38,6 +52,8 @@ const Draggable = hoc(defaultConfig, (config, Wrapped) => {
 		constructor () {
 			super();
 
+			this.id = String(++id);
+
 			this.state = {
 				tracking: false,
 				maxX: Infinity,
@@ -52,11 +68,7 @@ const Draggable = hoc(defaultConfig, (config, Wrapped) => {
 		componentDidMount () {
 			const {constrain, value} = this.props;
 
-			// findDOMNode() is currently preferrable to requiring an additional prop to pass a ref
-			// callback for HOCs
-			// eslint-disable-next-line react/no-find-dom-node
-			this.node = ReactDOM.findDOMNode(this);
-
+			this.node = this.getNode();
 			const constrainingNode = this.getConstrainingNode(constrain);
 			this.updateConstraints(constrainingNode);
 			this.setPositionFromValue(value);
@@ -76,14 +88,25 @@ const Draggable = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
+		getNode () {
+			// findDOMNode() is currently preferrable to requiring an additional prop to pass a ref
+			// callback for HOCs
+			// eslint-disable-next-line react/no-find-dom-node
+			const node = ReactDOM.findDOMNode(this);
+			if (!prop || node.getAttribute(prop) === this.id) {
+				return node;
+			}
+
+			return node.querySelector(`[${prop}="${this.id}"]`);
+		}
+
 		getConstrainingNode (constrain) {
 			if (this.node) {
-				if (constrain === 'window') {
-					return window;
-				} else if (constrain === 'container') {
-					return this.node.offsetParent;
-				} else if (constrain === 'body') {
-					return this.node.ownerDocument.body;
+				switch (constrain) {
+					case 'body':		return this.node.ownerDocument.body;
+					case 'container':	return this.node.offsetParent;
+					case 'self':		return this.node;
+					case 'window':		return window;
 				}
 			}
 		}
@@ -233,6 +256,10 @@ const Draggable = hoc(defaultConfig, (config, Wrapped) => {
 				if (trackEnd) {
 					props[trackEnd] = this.handleTrackEnd;
 				}
+			}
+
+			if (prop) {
+				props[prop] = this.id;
 			}
 
 			return (

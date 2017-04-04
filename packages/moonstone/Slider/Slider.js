@@ -109,6 +109,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			knob: ({disabled, knob, knobStep, max, min, onTrack, onTrackEnd, step, value, vertical}) => {
 				const dragStep = calcStep([knobStep, step]) / (max - min);
 				const percent = calcPercent(min, max, value);
+
 				const props = {
 					constrain: 'container',
 					constrainBoxSizing: 'content-box',
