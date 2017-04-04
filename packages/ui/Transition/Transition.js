@@ -270,7 +270,9 @@ class Transition extends React.Component {
 	}
 
 	componentDidMount () {
-		this.measuringJob.startIdle();
+		if (!this.props.visible) {
+			this.measuringJob.idle();
+		}
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -287,8 +289,8 @@ class Transition extends React.Component {
 	}
 
 	componentWillUpdate (nextProps, nextState) {
-		if (nextState.renderState === TRANSITION_STATE.MEASURE) {
-			this.measuringJob.cancelIdle();
+		if (nextState.renderState === TRANSITION_STATE.MEASURE && this.measuringJob.isIdle) {
+			this.measuringJob.stop();
 		}
 	}
 
@@ -303,7 +305,9 @@ class Transition extends React.Component {
 	}
 
 	componentWillUnmount () {
-		this.measuringJob.cancelIdle();
+		if (this.measuringJob.isIdle) {
+			this.measuringJob.stop();
+		}
 	}
 
 	measuringJob = new Job(() => {

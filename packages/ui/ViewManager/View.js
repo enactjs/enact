@@ -113,15 +113,6 @@ class View extends React.Component {
 		this.changeDirection = this.animation ? this.props.reverseTransition !== nextProps.reverseTransition : false;
 	}
 
-	shouldComponentUpdate (nextProps, nextState) {
-		// If this panel changes to a new panel, don't update it so we save time on reconciliation
-		if (this.props.index !== nextProps.index && (this.state.entering === false && nextState.entering === false)) {
-			return false;
-		}
-
-		return true;
-	}
-
 	componentWillUnmount () {
 		this.cancelAnimationFrame();
 		this.enteringJob.stop();
