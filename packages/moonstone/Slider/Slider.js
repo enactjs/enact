@@ -40,6 +40,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			disabled: React.PropTypes.bool,
 			knob: React.PropTypes.node,
 			knobStep: React.PropTypes.number,
+			knobValue: React.PropTypes.number,
 			max: React.PropTypes.number,
 			min: React.PropTypes.number,
 			onActivate: React.PropTypes.func,
@@ -106,9 +107,10 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 				vertical,
 				horizontal: !vertical
 			}),
-			knob: ({disabled, knob, knobStep, max, min, onTrack, onTrackEnd, step, value, vertical}) => {
+			knob: ({disabled, knob, knobStep, knobValue, max, min, onTrack, onTrackEnd, step, value, vertical}) => {
+				const v = typeof knobValue === 'number' ? knobValue : value;
 				const dragStep = calcStep([knobStep, step]) / (max - min);
-				const percent = calcPercent(min, max, value);
+				const percent = calcPercent(min, max, v);
 
 				const props = {
 					constrain: 'container',
