@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Changed
+
+- `moonstone/Slider` colors and sizing to match the latest designs
+
 ## [1.0.0] - 2017-03-31
 
 > NOTE: We have also modified most form components to be usable in a controlled (app manages component
