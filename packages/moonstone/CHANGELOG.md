@@ -6,7 +6,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 - `moonstone/Transition` now measures itself when the CPU is idle.
-- `moonstone/View` does not reconcile on Panel that is being removed.
 
 ## [1.0.0] - 2017-03-31
 
