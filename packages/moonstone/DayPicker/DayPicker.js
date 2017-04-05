@@ -133,8 +133,8 @@ const DayPickerBase = class extends React.Component {
 			const days = sdf.getDaysOfWeek();
 
 			this.firstDayOfWeek = li.getFirstDayOfWeek();
-			this.weekEndStart = li.getWeekEndStart ? li.getWeekEndStart() : this.weekEndStart;
-			this.weekEndEnd = li.getWeekEndEnd ? li.getWeekEndEnd() : this.weekEndEnd;
+			this.weekEndStart = li.getWeekEndStart ? this.adjustWeekends(li.getWeekEndStart()) : this.weekEndStart;
+			this.weekEndEnd = li.getWeekEndEnd ? this.adjustWeekends(li.getWeekEndEnd()) : this.weekEndEnd;
 
 			for (let i = 0; i < 7; i++) {
 				const index = (i + this.firstDayOfWeek) % 7;
@@ -207,25 +207,19 @@ const DayPickerBase = class extends React.Component {
 		}
 	}
 
-	adjustSelection (selected, amount) {
-		if (selected != null && amount !== 0) {
-			selected = selected.map(day => (day - amount + 7) % 7);
-		}
-
-		return selected;
+	adjustWeekends (day) {
+		return ((day - this.firstDayOfWeek + 7) % 7);
 	}
 
 	handleSelect = ({selected}) => {
-		const adjusted = this.adjustSelection(selected, -this.firstDayOfWeek);
-		forwardSelect({selected: adjusted}, this.props);
+		forwardSelect({selected: selected}, this.props);
 	}
 
 	render () {
 		const
 			{selected, title} = this.props,
 			type = this.calcSelectedDayType(this.props.selected),
-			label = this.getSelectedDayString(type, this.shortDayNames),
-			adjustSelected = this.adjustSelection(selected, this.firstDayOfWeek);
+			label = this.getSelectedDayString(type, this.shortDayNames);
 		let ariaLabel = null;
 
 		if (type === SELECTED_DAY_TYPES.SELECTED_DAYS) {
@@ -239,7 +233,7 @@ const DayPickerBase = class extends React.Component {
 				label={label}
 				onSelect={this.handleSelect}
 				select="multiple"
-				selected={adjustSelected}
+				selected={selected}
 			>
 				{this.longDayNames}
 			</ExpandableListBase>
