@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonstone/Slider` colors and sizing to match the latest designs
+- `moonstone/ProgressBar` now has a margin works in-line to position it correctly with other components nearby
 
 ## [1.0.0] - 2017-03-31
 
