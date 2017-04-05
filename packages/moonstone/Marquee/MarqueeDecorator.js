@@ -212,6 +212,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				overflow: 'ellipsis'
 			};
 			this.sync = false;
+			this.childrenChanged = false;
 			this.forceRestartMarquee = false;
 
 			this.invalidateMetrics();
@@ -236,6 +237,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if ((!childrenEquals(this.props.children, next.children)) || (invalidateProps && didPropChange(invalidateProps, this.props, next))) {
 				this.invalidateMetrics();
 				this.cancelAnimation();
+				this.childrenChanged = true;
 			} else if (next.marqueeOn !== marqueeOn || next.marqueeDisabled !== marqueeDisabled || next.marqueeSpeed !== marqueeSpeed) {
 				this.cancelAnimation();
 			}
@@ -246,7 +248,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.startAnimation(this.props.marqueeOn === 'render' ? this.props.marqueeOnRenderDelay : this.props.marqueeDelay);
 			}
 			this.forceRestartMarquee = false;
-			this.calculateMetrics();
+			if (this.childrenChanged) {
+				this.calculateMetrics();
+			}
+			this.childrenChanged = false;
 		}
 
 		componentWillUnmount () {
