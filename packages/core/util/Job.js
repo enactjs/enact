@@ -57,7 +57,7 @@ class Job {
 	stop = () => {
 		if (this.id) {
 			if (this.type === 'idle') {
-				this.cancelIdle();
+				window.cancelIdleCallback(this.id);
 			} else {
 				clearTimeout(this.id);
 				this.id = null;
@@ -110,18 +110,6 @@ class Job {
 				// If requestIdleCallback is not supported just run the function immediately
 				this.fn();
 			}
-		}
-	}
-
-	/**
-	 * Cancels idle Job
-	 *
-	 * @returns {undefined}
-	 * @public
-	 */
-	cancelIdle = () => {
-		if (typeof window !== 'undefined' && window.cancelIdleCallback) {
-			window.cancelIdleCallback(this.id);
 		}
 	}
 }

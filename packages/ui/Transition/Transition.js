@@ -272,6 +272,8 @@ class Transition extends React.Component {
 	componentDidMount () {
 		if (!this.props.visible) {
 			this.measuringJob.idle();
+		} else {
+			this.measureInner();
 		}
 	}
 
@@ -289,7 +291,7 @@ class Transition extends React.Component {
 	}
 
 	componentWillUpdate (nextProps, nextState) {
-		if (nextState.renderState === TRANSITION_STATE.MEASURE && this.measuringJob.type === 'idle') {
+		if (nextState.renderState === TRANSITION_STATE.MEASURE) {
 			this.measuringJob.stop();
 		}
 	}
@@ -305,9 +307,7 @@ class Transition extends React.Component {
 	}
 
 	componentWillUnmount () {
-		if (this.measuringJob.isIdle) {
-			this.measuringJob.stop();
-		}
+		this.measuringJob.stop();
 	}
 
 	measuringJob = new Job(() => {
@@ -337,10 +337,6 @@ class Transition extends React.Component {
 
 	childRef = (node) => {
 		this.childNode = node;
-		// this accounts for open at construction or when we need to measure before opening
-		if (this.state.initialHeight == null) {
-			this.measureInner();
-		}
 	}
 
 	render () {
