@@ -275,7 +275,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				scrollLeft = bounds.maxLeft - scrollLeft;
 			}
 
-			this.scroll(scrollLeft, scrollTop, false);
+			this.scroll(scrollLeft, scrollTop);
 
 			this.scrollStopJob.start();
 		}
