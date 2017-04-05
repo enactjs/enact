@@ -289,7 +289,7 @@ class Transition extends React.Component {
 	}
 
 	componentWillUpdate (nextProps, nextState) {
-		if (nextState.renderState === TRANSITION_STATE.MEASURE && this.measuringJob.isIdle) {
+		if (nextState.renderState === TRANSITION_STATE.MEASURE && this.measuringJob.type === 'idle') {
 			this.measuringJob.stop();
 		}
 	}

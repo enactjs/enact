@@ -7,7 +7,7 @@ class Job {
 	id = null
 	fn = null
 	timeout = null
-	isIdle = null
+	type = null
 
 	/**
 	 * @constructor
@@ -45,6 +45,7 @@ class Job {
 	 */
 	startAfter = (timeout, ...args) => {
 		this.stop();
+		this.type = 'timeout';
 		this.id = setTimeout(() => this.run(args), timeout);
 	}
 
@@ -55,7 +56,7 @@ class Job {
 	 */
 	stop = () => {
 		if (this.id) {
-			if (this.isIdle) {
+			if (this.type === 'idle') {
 				this.cancelIdle();
 			} else {
 				clearTimeout(this.id);
@@ -103,7 +104,7 @@ class Job {
 	idle = () => {
 		if (typeof window !== 'undefined') {
 			if (window.requestIdleCallback) {
-				this.isIdle = true;
+				this.type = 'idle';
 				this.id = window.requestIdleCallback(this.fn);
 			} else {
 				// If requestIdleCallback is not supported just run the function immediately
@@ -113,7 +114,7 @@ class Job {
 	}
 
 	/**
-	 * Cancels startIdle Job
+	 * Cancels idle Job
 	 *
 	 * @returns {undefined}
 	 * @public
