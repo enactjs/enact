@@ -98,17 +98,18 @@ class Job {
 	/**
 	 * Executes job when the CPU is idle.
 	 *
+	 * @param   {...*}       [args]   Any args passed are forwarded to the callback
 	 * @returns {undefined}
 	 * @public
 	 */
-	idle = () => {
+	idle = (...args) => {
 		if (typeof window !== 'undefined') {
 			if (window.requestIdleCallback) {
 				this.type = 'idle';
-				this.id = window.requestIdleCallback(this.fn);
+				this.id = window.requestIdleCallback(() => this.run(args));
 			} else {
 				// If requestIdleCallback is not supported just run the function immediately
-				this.fn();
+				this.fn(...args);
 			}
 		}
 	}
