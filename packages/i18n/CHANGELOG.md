@@ -2,7 +2,9 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
-## [unreleased]
+## [1.0.0] - 2017-03-31
+
+Updated iLib to 20151019-build-12.0-002-04
 
 ### Removed
 
