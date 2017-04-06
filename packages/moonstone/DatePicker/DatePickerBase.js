@@ -148,15 +148,6 @@ const DatePickerBase = kind({
 		onClose: React.PropTypes.func,
 
 		/**
-		 * The handler to run when a key is pressed down.
-		 *
-		 * @type {Function}
-		 * @param {Object} event
-		 * @public
-		 */
-		onKeyDown: React.PropTypes.func,
-
-		/**
 		 * The handler to run when the component is removed while retaining focus.
 		 *
 		 * @type {Function}
@@ -187,7 +178,7 @@ const DatePickerBase = kind({
 	},
 
 	handlers: {
-		onKeyDown: (ev, {onClose} ) => {
+		onPickerKeyDown: (ev, {onClose} ) => {
 			if (isEnter(ev.keyCode) && onClose) {
 				onClose();
 				ev.preventDefault();
@@ -195,11 +186,11 @@ const DatePickerBase = kind({
 		}
 	},
 
-	render: ({day, maxDays, maxMonths, maxYear, minYear, month, noLabels, onChangeDate, onChangeMonth, onChangeYear, onKeyDown, onSpotlightDisappear, order, spotlightDisabled, year, ...rest}) => {
+	render: ({day, maxDays, maxMonths, maxYear, minYear, month, noLabels, onChangeDate, onChangeMonth, onChangeYear, onPickerKeyDown, onSpotlightDisappear, order, spotlightDisabled, year, ...rest}) => {
 
 		return (
 			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled}>
-				<div className={dateComponentPickers} onKeyDown={onKeyDown}>
+				<div className={dateComponentPickers} onKeyDown={onPickerKeyDown}>
 					{order.map(picker => {
 						switch (picker) {
 							case 'd':
