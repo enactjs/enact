@@ -1,7 +1,7 @@
 /* global CustomEvent */
 
 import sinon from 'sinon';
-import {restoreErrorAndWarnings, watchErrorAndWarnings} from 'enyo-console-spy';
+import {restoreErrorAndWarnings, watchErrorAndWarnings} from 'console-snoop';
 
 import {off, on, once} from '../dispatcher';
 

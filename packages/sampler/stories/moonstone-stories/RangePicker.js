@@ -1,15 +1,11 @@
 import RangePicker, {RangePickerBase} from '@enact/moonstone/RangePicker';
-import Changeable from '@enact/ui/Changeable';
 import {decrementIcons, incrementIcons} from './icons';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, number, select} from '@kadira/storybook-addon-knobs';
+
 import nullify from '../../src/utils/nullify.js';
-
 import {mergeComponentMetadata} from '../../src/utils/propTables';
-
-const StatefulRangePicker = Changeable(RangePicker);
-StatefulRangePicker.displayName = 'Changeable(RangePicker)';
 
 const Config = mergeComponentMetadata('RangePicker', RangePickerBase, RangePicker);
 
@@ -32,7 +28,7 @@ storiesOf('RangePicker')
 		' ',
 		'Basic usage of RangePicker',
 		() => (
-			<StatefulRangePicker
+			<RangePicker
 				onChange={action('onChange')}
 				min={number('min', 0)}
 				max={number('max', 100)}
@@ -40,12 +36,12 @@ storiesOf('RangePicker')
 				defaultValue={0}
 				width={parseIntOrNullify(select('width', prop.width, 'small'))}
 				orientation={select('orientation', prop.orientation, 'horizontal')}
-				wrap={boolean('wrap', false)}
-				joined={boolean('joined', false)}
-				noAnimation={boolean('noAnimation', false)}
+				wrap={nullify(boolean('wrap', false))}
+				joined={nullify(boolean('joined', false))}
+				noAnimation={nullify(boolean('noAnimation', false))}
 				disabled={boolean('disabled', false)}
-				incrementIcon={select('incrementIcon', ['', ...incrementIcons])}
-				decrementIcon={select('decrementIcon', ['', ...decrementIcons])}
+				incrementIcon={nullify(select('incrementIcon', ['', ...incrementIcons]))}
+				decrementIcon={nullify(select('decrementIcon', ['', ...decrementIcons]))}
 			/>
 		),
 		{propTables: [Config]}

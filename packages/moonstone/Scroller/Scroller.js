@@ -27,10 +27,10 @@ const dataContainerDisabledAttribute = 'data-container-disabled';
  * @public
  */
 class ScrollerBase extends Component {
+	static displayName = 'Scroller'
+
 	static propTypes = /** @lends moonstone/Scroller.ScrollerBase.prototype */ {
 		children: PropTypes.node.isRequired,
-
-		className: PropTypes.string,
 
 		/**
 		 * Specifies how to horizontally scroll. Acceptable values are `'auto'`, `'default'` ,
@@ -41,8 +41,6 @@ class ScrollerBase extends Component {
 		 * @public
 		 */
 		horizontal: PropTypes.oneOf(['auto', 'hidden', 'scroll']),
-
-		style: PropTypes.object,
 
 		/**
 		 * Specifies how to vertically scroll. Acceptable values are `'auto'`, `'auto'` ,

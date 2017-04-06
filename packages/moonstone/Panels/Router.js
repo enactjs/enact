@@ -138,7 +138,8 @@ const Router = class extends React.Component {
 			if (route && route.$component) {
 				return React.createElement(route.$component, {
 					...route.$props,
-					key: 'view$/' + subPath
+					key: 'view$/' + subPath,
+					containerId: `panel-${subPath.replace(/\//g, '-')}`
 				});
 			}
 
@@ -155,8 +156,8 @@ const Router = class extends React.Component {
 		const {component: Component, ...rest} = this.props;
 		const children = this.createChildren();
 
-		delete rest.routes;
 		delete rest.path;
+		delete rest.routes;
 
 		return <Component {...rest}>{children}</Component>;
 	}

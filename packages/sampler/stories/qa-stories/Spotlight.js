@@ -21,8 +21,6 @@ import TimePicker from '@enact/moonstone/TimePicker';
 import ToggleButton from '@enact/moonstone/ToggleButton';
 import ToggleItem from '@enact/moonstone/ToggleItem';
 import Slider from '@enact/moonstone/Slider';
-import Changeable from '@enact/ui/Changeable';
-import Toggleable from '@enact/ui/Toggleable';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import React from 'react';
@@ -51,18 +49,6 @@ const style = {
 };
 
 const Items = ['First', 'Second', 'Third'];
-const StatefulCheckboxItem = Toggleable({prop: 'selected'}, CheckboxItem);
-const StatefulDayPicker = Changeable({change: 'onSelect', prop: 'selected'}, DayPicker);
-const StatefulExpandableList = Changeable({change: 'onSelect', prop: 'selected'}, ExpandableList);
-const StatefulIncrementSlider = Changeable(IncrementSlider);
-const StatefulInput = Changeable(Input);
-const StatefulPicker = Changeable(Picker);
-const StatefulRadioItem = Toggleable({prop: 'selected'}, RadioItem);
-const StatefulSelectableItem = Toggleable({prop: 'selected'}, SelectableItem);
-const StatefulSlider = Changeable(Slider);
-const StatefulSwitchItem = Toggleable({prop: 'selected'}, SwitchItem);
-const StatefulToggleButton = Toggleable({toggle: 'onClick', prop: 'selected'}, ToggleButton);
-const StatefulToggleItem = Toggleable({prop: 'selected'}, ToggleItem);
 
 class DisappearTest extends React.Component {
 	constructor (props) {
@@ -330,11 +316,11 @@ storiesOf('Spotlight')
 							>
 								Button
 							</Button>
-							<StatefulToggleButton
+							<ToggleButton
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 							>
 								ToggleButton
-							</StatefulToggleButton>
+							</ToggleButton>
 							<IconButton
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 							>
@@ -342,27 +328,27 @@ storiesOf('Spotlight')
 							</IconButton>
 						</div>
 						<div style={style.flexBox}>
-							<StatefulInput
+							<Input
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 							/>
 						</div>
 						<div style={style.flexBox}>
-							<StatefulPicker
+							<Picker
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 							>
 								{Items}
-							</StatefulPicker>
-							<StatefulPicker
+							</Picker>
+							<Picker
 								joined
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 							>
 								{Items}
-							</StatefulPicker>
+							</Picker>
 						</div>
-						<StatefulIncrementSlider
+						<IncrementSlider
 							spotlightDisabled={boolean('spotlightDisabled', false)}
 						/>
-						<StatefulSlider
+						<Slider
 							spotlightDisabled={boolean('spotlightDisabled', false)}
 						/>
 						<Item
@@ -371,7 +357,7 @@ storiesOf('Spotlight')
 							Item
 						</Item>
 						<LabeledItem
-							label={'Label'}
+							label="Label"
 							spotlightDisabled={boolean('spotlightDisabled', false)}
 						>
 							LabeledItem
@@ -383,63 +369,63 @@ storiesOf('Spotlight')
 						</Divider>
 						<ExpandableItem
 							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title={'Various Items in an ExpandableItem'}
+							title="Various Items in an ExpandableItem"
 						>
-							<StatefulCheckboxItem
+							<CheckboxItem
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 							>
 								CheckboxItem
-							</StatefulCheckboxItem>
-							<StatefulRadioItem
+							</CheckboxItem>
+							<RadioItem
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 							>
 								RadioItem
-							</StatefulRadioItem>
-							<StatefulSelectableItem
+							</RadioItem>
+							<SelectableItem
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 							>
 								SelectableItem
-							</StatefulSelectableItem>
-							<StatefulSwitchItem
+							</SelectableItem>
+							<SwitchItem
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 							>
 								SwitchItem
-							</StatefulSwitchItem>
-							<StatefulToggleItem
-								icon={'plus'}
+							</SwitchItem>
+							<ToggleItem
+								icon="plus"
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 							>
 								ToggleItem
-							</StatefulToggleItem>
+							</ToggleItem>
 						</ExpandableItem>
-						<StatefulExpandableList
+						<ExpandableList
 							noLockBottom
 							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title={'ExpandableList'}
+							title="ExpandableList"
 						>
 							{Items}
-						</StatefulExpandableList>
+						</ExpandableList>
 						<ExpandableInput
 							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title={'ExpandableInput'}
+							title="ExpandableInput"
 						/>
 						<ExpandablePicker
 							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title={'ExpandablePicker'}
+							title="ExpandablePicker"
 						>
 							{Items}
 						</ExpandablePicker>
 						<DatePicker
 							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title={'DatePicker'}
+							title="DatePicker"
 						/>
-						<StatefulDayPicker
+						<DayPicker
 							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title={'DayPicker'}
+							title="DayPicker"
 						/>
 						<TimePicker
 							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title={'TimePicker'}
+							title="TimePicker"
 						/>
 					</div>
 				</div>

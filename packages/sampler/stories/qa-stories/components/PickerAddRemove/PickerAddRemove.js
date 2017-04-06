@@ -1,12 +1,8 @@
 import React from 'react';
 
-import {Picker} from '@enact/moonstone/Picker';
-import {Input} from '@enact/moonstone/Input';
+import Picker from '@enact/moonstone/Picker';
+import Input from '@enact/moonstone/Input';
 import Button from '@enact/moonstone/Button';
-import Changeable from '@enact/ui/Changeable';
-
-const StatefulPicker = Changeable(Picker);
-const StatefulInput = Changeable(Input);
 
 class PickerAddRemove extends React.Component {
 	static displayName: 'PickerAddRemove'
@@ -32,35 +28,34 @@ class PickerAddRemove extends React.Component {
 	constructor (props) {
 		super(props);
 
-		this.value = '';
-		this.index = 0;
 		this.state = {
-			children: {}
+			children: {
+				0 : ''
+			},
+			inputIndex: 0,
+			inputValue: ''
 		};
-	}
-
-	componentWillUpdate () {
-		this.value = '';
-		this.index = 0;
 	}
 
 	handleAddReplace = () => {
 		const children = this.state.children,
-			index = this.index,
-			value = this.value || 'sample' + index,
+			index = this.state.inputIndex,
+			value = this.state.inputValue || 'sample ' + index,
 			newChild = {};
 
 		newChild[index] = value;
 		const newChildren = Object.assign({}, children, newChild);
 
 		this.setState({
-			children: newChildren
+			children: newChildren,
+			inputIndex: this.state.inputIndex + 1,
+			inputValue: ''
 		});
 	}
 
 	handleRemove = () => {
 		const children = Object.assign({}, this.state.children),
-			index = this.index;
+			index = this.state.inputIndex;
 		delete children[index];
 
 		this.setState({
@@ -73,11 +68,11 @@ class PickerAddRemove extends React.Component {
 		if (isNaN(index)) {
 			index = 0;
 		}
-		this.index = index;
+		this.setState({inputIndex: index});
 	}
 
 	handleValueChange = ({value}) => {
-		this.value = value;
+		this.setState({inputValue: value});
 	}
 
 	render () {
@@ -86,24 +81,26 @@ class PickerAddRemove extends React.Component {
 		return (
 			<div>
 				<div>
-					<StatefulPicker {...this.props}>
+					<Picker
+						{...this.props}
+					>
 						{pickerChildren}
-					</StatefulPicker>
+					</Picker>
 				</div>
 				<div>
 					Value:
-					<StatefulInput
+					<Input
 						onChange={this.handleValueChange}
 						placeholder="value"
-						value={this.value}
+						value={this.state.inputValue}
 					/>
 				</div>
 				<div>
 					Index:
-					<StatefulInput
+					<Input
 						onChange={this.handleIndexChange}
 						placeholder="index"
-						value={this.index}
+						value={this.state.inputIndex}
 					/>
 				</div>
 				<Button onClick={this.handleAddReplace}>

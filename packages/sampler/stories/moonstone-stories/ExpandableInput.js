@@ -1,5 +1,4 @@
-import {ExpandableInput as ExpInput, ExpandableInputBase} from '@enact/moonstone/ExpandableInput';
-import Changeable from '@enact/ui/Changeable';
+import ExpandableInput, {ExpandableInputBase} from '@enact/moonstone/ExpandableInput';
 import {icons} from '@enact/moonstone/Icon';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
@@ -8,10 +7,8 @@ import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 
 const iconNames = ['', ...Object.keys(icons)];
-const ExpandableInput = Changeable(ExpInput);
-ExpandableInput.displayName = 'Changeable(ExpandableInput)';
 
-const Config = mergeComponentMetadata('ExpandableInput', ExpInput, ExpandableInputBase);
+const Config = mergeComponentMetadata('ExpandableInput', ExpandableInputBase, ExpandableInput);
 
 storiesOf('ExpandableInput')
 	.addDecorator(withKnobs)

@@ -5,6 +5,7 @@
  */
 
 import $L from '@enact/i18n/$L';
+import Changeable from '@enact/ui/Changeable';
 import {coerceArray} from '@enact/core/util';
 import DateFmt from '@enact/i18n/ilib/lib/DateFmt';
 import {forward} from '@enact/core/handle';
@@ -12,7 +13,8 @@ import ilib from '@enact/i18n';
 import LocaleInfo from '@enact/i18n/ilib/lib/LocaleInfo';
 import React, {PropTypes} from 'react';
 
-import ExpandableList from '../ExpandableList';
+import {Expandable} from '../ExpandableItem';
+import {ExpandableListBase} from '../ExpandableList';
 
 const forwardSelect = forward('onSelect');
 const SELECTED_DAY_TYPES = {
@@ -27,16 +29,16 @@ const SELECTED_DAY_TYPES = {
  * {@link moonstone/DayPicker.DayPicker} is a component that
  * allows the user to choose day(s) of the week.
  *
- * @class DayPicker
+ * @class DayPickerBase
  * @memberof moonstone/DayPicker
  * @ui
  * @public
  */
-const DayPicker = class extends React.Component {
+const DayPickerBase = class extends React.Component {
 
 	static displayName = 'DayPicker'
 
-	static propTypes = /** @lends moonstone/DayPicker.DayPicker.prototype */ {
+	static propTypes = /** @lends moonstone/DayPicker.DayPickerBase.prototype */ {
 		/**
 		 * The primary text of the Picker.
 		 *
@@ -231,7 +233,7 @@ const DayPicker = class extends React.Component {
 		}
 
 		return (
-			<ExpandableList
+			<ExpandableListBase
 				{...this.props}
 				aria-label={ariaLabel}
 				label={label}
@@ -240,10 +242,39 @@ const DayPicker = class extends React.Component {
 				selected={adjustSelected}
 			>
 				{this.longDayNames}
-			</ExpandableList>
+			</ExpandableListBase>
 		);
 	}
 };
 
+
+/**
+ * {@link moonstone/DayPicker.DayPicker} is a component that
+ * allows the user to choose day(s) of the week.
+ *
+ * By default, `DayPicker` maintains the state of its `selected` property. Supply the
+ * `defaultSelected` property to control its initial value. If you wish to directly control updates
+ * to the component, supply a value to `selected` at creation time and update it in response to
+ * `onChange` events.
+ *
+ * `DayPicker` is an expandable component and it maintains its open/closed state by default. The
+ * initial state can be supplied using `defaultOpen`. In order to directly control the open/closed
+ * state, supply a value for `open` at creation time and update its value in response to
+ * `onClose`/`OnOpen` events.
+ *
+ * @class DayPicker
+ * @memberof moonstone/DayPicker
+ * @mixes moonstone/ExpandableItem.Expandable
+ * @mixes ui/Changeable.Changeable
+ * @ui
+ * @public
+ */
+const DayPicker = Expandable(
+	Changeable(
+		{prop: 'selected', change: 'onSelect'},
+		DayPickerBase
+	)
+);
+
 export default DayPicker;
-export {DayPicker, DayPicker as DayPickerBase};
+export {DayPicker, DayPickerBase};
