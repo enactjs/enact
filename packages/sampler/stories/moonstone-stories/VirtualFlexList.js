@@ -3,7 +3,7 @@ import Item from '@enact/moonstone/Item';
 import VirtualFlexList from '@enact/moonstone/VirtualFlexList';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, number} from '@kadira/storybook-addon-knobs';
+import {boolean, number, withKnobs} from '@kadira/storybook-addon-knobs';
 
 const
 	channelWidth = ri.scale(420),

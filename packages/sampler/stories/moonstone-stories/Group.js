@@ -30,13 +30,14 @@ storiesOf('Group')
 		() => (
 			<Group
 				childComponent={getComponent(select('childComponent', Object.keys(prop.children), 'CheckboxItem'))}
+				defaultSelected={0}
 				itemProps={{
+					disabled: boolean('itemProps-disabled', false),
 					inline: boolean('ItemProps-Inline', false)
 				}}
+				onSelect={action('onSelect')}
 				select={select('select', ['single', 'radio', 'multiple'], 'radio')}
 				selectedProp="selected"
-				defaultSelected={0}
-				onSelect={action('onSelect')}
 			>
 				{['Item 1', 'Item 2', 'Item 3']}
 			</Group>

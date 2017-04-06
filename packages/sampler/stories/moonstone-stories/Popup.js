@@ -2,7 +2,9 @@ import Popup, {PopupBase} from '@enact/moonstone/Popup';
 import BodyText from '@enact/moonstone/BodyText';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, text, select} from '@kadira/storybook-addon-knobs';
+import {boolean, select, text, withKnobs} from '@kadira/storybook-addon-knobs';
+
+import nullify from '../../src/utils/nullify.js';
 
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 
@@ -16,10 +18,11 @@ storiesOf('Popup')
 		() => (
 			<div>
 				<Popup
-					open={boolean('open', false)}
+					disabled={nullify(boolean('disabled', false))}
 					noAnimation={boolean('noAnimation', false)}
 					noAutoDismiss={boolean('noAutoDismiss', false)}
 					onClose={action('onClose')}
+					open={boolean('open', false)}
 					showCloseButton={boolean('showCloseButton', false)}
 					spotlightRestrict={select('spotlightRestrict', ['none', 'self-first', 'self-only'], 'self-only')}
 				>

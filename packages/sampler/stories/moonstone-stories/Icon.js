@@ -5,6 +5,8 @@ import React from 'react';
 import {storiesOf} from '@kadira/storybook';
 import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
 
+import nullify from '../../src/utils/nullify.js';
+
 // import icons
 import fwd from '../../images/icon-fwd-btn.png';
 import play from '../../images/icon-play-btn.png';
@@ -18,6 +20,7 @@ storiesOf('Icon')
 		() => (
 			<div>
 				<Icon
+					disabled={nullify(boolean('disabled', false))}
 					small={boolean('small', false)}
 				>
 					{select('src', ['', fwd, play, rew], '') + select('icon', ['', ...iconNames], 'plus') + text('custom icon', '')}
