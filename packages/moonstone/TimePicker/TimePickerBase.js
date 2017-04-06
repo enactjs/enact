@@ -210,7 +210,6 @@ const TimePickerBase = kind({
 		onKeyDown: (ev, {onClose} ) => {
 			if (isEnter(ev.keyCode) && onClose) {
 				onClose();
-				ev.preventDefault();
 			}
 		}
 	},
