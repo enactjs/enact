@@ -196,6 +196,8 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			} else if (onSpotlightUp && is('up', keyCode)) {
 				onSpotlightUp(ev);
 			}
+
+			return true;
 		}
 
 		handle = handle.bind(this)
