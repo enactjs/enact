@@ -176,7 +176,6 @@
 
 			.bg {
 				background-color: @moon-spotlight-border-color;
-				color: @moon-spotlight-text-color;
 			}
 		}
 	}
@@ -230,6 +229,12 @@
 
 		* {
 			color: inherit;
+		}
+
+		&:not([disabled]) {
+			&:global(.spottable):focus {
+				color: @moon-spotlight-text-color;
+			}
 		}
 
 		&[disabled],
