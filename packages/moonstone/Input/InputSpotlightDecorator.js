@@ -110,10 +110,6 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			} else if (prevState.focused === 'input') {
 				Spotlight.resume();
 			}
-
-			if (this.state.direction) {
-				Spotlight.move(this.state.direction);
-			}
 		}
 
 		componentWillUnmount () {
@@ -241,16 +237,11 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 							ev.preventDefault();
 						}
 
-						// prevent 5-way navigation onto other components when focusing the
-						// decorator explicitly
-						preventSpotlightNavigation(ev);
-
 						if (target.value.length === 0 && !isEnter) {
 							const direction =	isLeft && 'left' ||
 												isUp && 'up' ||
 												isRight && 'right' ||
 												isDown && 'down';
-							Spotlight.setPointerMode(false);
 							this.leaveOnUpdate(direction);
 						}
 					}
