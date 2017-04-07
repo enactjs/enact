@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Changed
+
+- `moonstone/Panels` breadcrumb to no longer have a horizontal line above it
+
 ### Fixed
 
 - `moonstone/Button` text color when used on a neutral (light) background in some cases
