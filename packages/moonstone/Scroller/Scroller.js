@@ -224,7 +224,6 @@ class ScrollerBase extends Component {
  * @class Scroller
  * @memberof moonstone/Scroller
  * @mixes moonstone/Scroller.Scrollable
- * @mixes spotlight.SpotlightContainerDecorator
  * @see moonstone/Scroller.ScrollerBase
  * @ui
  * @public
