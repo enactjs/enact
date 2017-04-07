@@ -1,5 +1,5 @@
-import {is} from '@enact/core/keymap';
 import $L from '@enact/i18n/$L';
+import {forKey, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
 
@@ -8,8 +8,6 @@ import {ExpandableItemBase} from '../ExpandableItem';
 
 import css from './TimePicker.less';
 import {dateComponentPickers} from '../internal/DateComponentPicker/DateComponentPicker.less';
-
-const isEnter = is('enter');
 
 // values to use in hour picker for 24 and 12 hour locales
 const hours24 = [
@@ -198,21 +196,20 @@ const TimePickerBase = kind({
 	},
 
 	handlers: {
-		onPickerKeyDown: (ev, {onClose} ) => {
-			if (isEnter(ev.keyCode) && onClose) {
-				onClose();
-			}
-		}
+		handlePickerKeyDown: handle(
+			forKey('enter'),
+			forward('onClose')
+		)
 	},
 
 	computed: {
 		hasMeridiem: ({order}) => order.indexOf('a') >= 0
 	},
 
-	render: ({hasMeridiem, hour, meridiem, meridiems, minute, noLabels, onChangeHour, onChangeMeridiem, onChangeMinute, onPickerKeyDown, onSpotlightDisappear, order, spotlightDisabled, ...rest}) => {
+	render: ({handlePickerKeyDown, hasMeridiem, hour, meridiem, meridiems, minute, noLabels, onChangeHour, onChangeMeridiem, onChangeMinute, onSpotlightDisappear, order, spotlightDisabled, ...rest}) => {
 		return (
 			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled}>
-				<div className={dateComponentPickers} onKeyDown={onPickerKeyDown}>
+				<div className={dateComponentPickers} onKeyDown={handlePickerKeyDown}>
 					<div className={css.timeComponents}>
 						{order.map(picker => {
 							switch (picker) {

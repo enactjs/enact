@@ -1,5 +1,5 @@
-import {is} from '@enact/core/keymap';
 import $L from '@enact/i18n/$L';
+import {forKey, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
 
@@ -8,8 +8,6 @@ import {ExpandableItemBase} from '../ExpandableItem';
 
 import css from './DatePicker.less';
 import {dateComponentPickers} from '../internal/DateComponentPicker/DateComponentPicker.less';
-
-const isEnter = is('enter');
 
 /**
  * {@link moonstone/DatePicker.DatePickerBase} is the stateless functional date picker
@@ -178,18 +176,17 @@ const DatePickerBase = kind({
 	},
 
 	handlers: {
-		onPickerKeyDown: (ev, {onClose} ) => {
-			if (isEnter(ev.keyCode) && onClose) {
-				onClose();
-			}
-		}
+		handlePickerKeyDown: handle(
+			forKey('enter'),
+			forward('onClose')
+		)
 	},
 
-	render: ({day, maxDays, maxMonths, maxYear, minYear, month, noLabels, onChangeDate, onChangeMonth, onChangeYear, onPickerKeyDown, onSpotlightDisappear, order, spotlightDisabled, year, ...rest}) => {
+	render: ({day, handlePickerKeyDown, maxDays, maxMonths, maxYear, minYear, month, noLabels, onChangeDate, onChangeMonth, onChangeYear, onSpotlightDisappear, order, spotlightDisabled, year, ...rest}) => {
 
 		return (
 			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled}>
-				<div className={dateComponentPickers} onKeyDown={onPickerKeyDown}>
+				<div className={dateComponentPickers} onKeyDown={handlePickerKeyDown}>
 					{order.map(picker => {
 						switch (picker) {
 							case 'd':
