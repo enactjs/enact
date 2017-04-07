@@ -18,6 +18,7 @@
 
 import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';
+import difference from 'ramda/src/difference';
 import last from 'ramda/src/last';
 
 import Accelerator from '../Accelerator';
@@ -602,18 +603,6 @@ const Spotlight = (function () {
 		return true;
 	}
 
-	function getContainerId (elem) {
-		const containers = [..._containers.keys()];
-
-		for (let i = containers.length; i-- > 0;) {
-			const id = containers[i];
-			const config = _containers.get(id);
-			if (!config.selectorDisabled && matchSelector(elem, config.selector)) {
-				return id;
-			}
-		}
-	}
-
 	// returns an array of ids for containers that wrap the element, in order of outer-to-inner, with
 	// the last array item being the immediate container id of the element.
 	function getContainerIds (elem) {
@@ -784,22 +773,24 @@ const Spotlight = (function () {
 		return false;
 	}
 
-	function gotoLeaveFor (containerId, direction) {
-		const config = _containers.get(containerId);
+	function gotoLeaveFor (containerIds, direction) {
+		for (let i = containerIds.length; i-- > 0;) {
+			const config = _containers.get(containerIds[i]);
 
-		if (config.leaveFor && typeof config.leaveFor[direction] !== 'undefined') {
-			const next = config.leaveFor[direction];
+			if (config.leaveFor && typeof config.leaveFor[direction] !== 'undefined') {
+				const next = config.leaveFor[direction];
 
-			if (typeof next === 'string') {
-				if (next === '') {
-					return null;
+				if (typeof next === 'string') {
+					if (next === '') {
+						return null;
+					}
+					return focusExtendedSelector(next);
 				}
-				return focusExtendedSelector(next);
-			}
 
-			const nextContainerIds = getContainerIds(next);
-			if (isNavigable(next, last(nextContainerIds))) {
-				return focusElement(next, nextContainerIds);
+				const nextContainerIds = getContainerIds(next);
+				if (isNavigable(next, last(nextContainerIds))) {
+					return focusElement(next, nextContainerIds);
+				}
 			}
 		}
 		return false;
@@ -816,9 +807,10 @@ const Spotlight = (function () {
 		return {allNavigableElements, containerNavigableElements};
 	}
 
-	function focusNext (next, direction, currentContainerId, currentFocusedElement) {
+	function focusNext (next, direction, currentContainerIds, currentFocusedElement) {
 		const nextContainerIds = getContainerIds(next);
 		const nextContainerId = last(nextContainerIds);
+		const currentContainerId = last(currentContainerIds);
 
 		if (currentContainerId !== nextContainerId) {
 			const dataIndexAttribute = 'data-index';
@@ -831,11 +823,15 @@ const Spotlight = (function () {
 			if (_5WayKeyHold && focusedItemIndex) {
 				return false;
 			}
-			const result = gotoLeaveFor(currentContainerId, direction);
-			if (result) {
-				return true;
-			} else if (result === null) {
-				return false;
+
+			if (nextContainerIds.indexOf(currentContainerId) < 0) {
+				const result = gotoLeaveFor(difference(currentContainerIds, nextContainerIds), direction);
+
+				if (result) {
+					return true;
+				} else if (result === null) {
+					return false;
+				}
 			}
 
 			let enterToElement;
@@ -884,13 +880,13 @@ const Spotlight = (function () {
 				destination: next,
 				reverse: _reverseDirections[direction]
 			};
-			return focusNext(next, direction, containerId);
+			return focusNext(next, direction, getContainerIds(next));
 		}
 
 		return false;
 	}
 
-	function spotNext (direction, currentFocusedElement, currentContainerId) {
+	function spotNext (direction, currentFocusedElement, currentContainerIds) {
 		const extSelector = currentFocusedElement.getAttribute('data-spot-' + direction);
 		if (typeof extSelector === 'string') {
 			if (extSelector === '' || !focusExtendedSelector(extSelector)) {
@@ -900,6 +896,7 @@ const Spotlight = (function () {
 		}
 
 		const {allNavigableElements, containerNavigableElements} = getNavigableElements();
+		const currentContainerId = last(currentContainerIds);
 		const config = extend({}, GlobalConfig, _containers.get(currentContainerId));
 		let next;
 
@@ -936,8 +933,8 @@ const Spotlight = (function () {
 				destination: next,
 				reverse: _reverseDirections[direction]
 			};
-			return focusNext(next, direction, currentContainerId, currentFocusedElement);
-		} else if (gotoLeaveFor(currentContainerId, direction)) {
+			return focusNext(next, direction, currentContainerIds, currentFocusedElement);
+		} else if (gotoLeaveFor(currentContainerIds, direction)) {
 			return true;
 		}
 
@@ -976,12 +973,11 @@ const Spotlight = (function () {
 		}
 
 		const currentContainerIds = getContainerIds(currentFocusedElement);
-		const currentContainerId = last(currentContainerIds);
-		if (!currentContainerId) {
+		if (!currentContainerIds.length) {
 			return;
 		}
 
-		if (direction && !spotNext(direction, currentFocusedElement, currentContainerId) && currentFocusedElement !== document.activeElement) {
+		if (direction && !spotNext(direction, currentFocusedElement, currentContainerIds) && currentFocusedElement !== document.activeElement) {
 			focusElement(currentFocusedElement, currentContainerIds);
 		}
 	}
@@ -1390,24 +1386,22 @@ const Spotlight = (function () {
 		 * @public
 		 */
 		move: function (direction, selector) {
-			let elem, containerId;
-
 			direction = direction.toLowerCase();
 			if (!_reverseDirections[direction]) {
 				return false;
 			}
 
-			elem = selector ? parseSelector(selector)[0] : getCurrent();
+			const elem = selector ? parseSelector(selector)[0] : getCurrent();
 			if (!elem) {
 				return false;
 			}
 
-			containerId = getContainerId(elem);
-			if (!containerId) {
+			const containerIds = getContainerIds(elem);
+			if (!containerIds.length) {
 				return false;
 			}
 
-			return spotNext(direction, elem, containerId);
+			return spotNext(direction, elem, containerIds);
 		},
 
 		/**
