@@ -289,6 +289,16 @@ const VideoPlayerBase = class extends React.Component {
 		rightComponents: React.PropTypes.node,
 
 		/**
+		 * Any children `<source>` tag elements of [VideoPlayer]{@link moonstone/VideoPlayer} will
+		 * be sent directly to the `<video>` element as video sources.
+		 * See: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/source
+		 *
+		 * @type {Node}
+		 * @public
+		 */
+		source: React.PropTypes.node,
+
+		/**
 		 * Set a title for the video being played.
 		 *
 		 * @type {String}
@@ -987,7 +997,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	render () {
-		const {children, className, infoComponents, leftComponents, noAutoPlay, noJumpButtons, noRateButtons, noSlider, rightComponents, style, title, ...rest} = this.props;
+		const {children, className, infoComponents, leftComponents, noAutoPlay, noJumpButtons, noRateButtons, noSlider, rightComponents, source, style, title, ...rest} = this.props;
 		delete rest.autoCloseTimeout;
 		delete rest.feedbackHideDelay;
 		delete rest.jumpBy;
@@ -1017,7 +1027,7 @@ const VideoPlayerBase = class extends React.Component {
 					ref={this.setVideoRef}
 					{...this.handledMediaEvents}
 				>
-					{children}
+					{source}
 				</video>
 
 				<Overlay onClick={this.onVideoClick}>
@@ -1113,7 +1123,7 @@ const VideoPlayerBase = class extends React.Component {
  * @ui
  * @public
  */
-const VideoPlayer = Slottable({slots: ['infoComponents', 'leftComponents', 'rightComponents']}, VideoPlayerBase);
+const VideoPlayer = Slottable({slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source']}, VideoPlayerBase);
 
 export default VideoPlayer;
 export {VideoPlayer, VideoPlayerBase};
