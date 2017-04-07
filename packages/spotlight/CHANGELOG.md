@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Fixed
 
-- `spotlight/Spotlight` to consider nested containers when adjusting focus due to container configs using the `leaveFor` prop
+- `spotlight/Spotlight` to consider nested containers when adjusting focus
 
 ## [1.0.0] - 2017-03-31
 
