@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+- `moonstone/VideoPlayer` props: `backwardIcon`, `forwardIcon`, `jumpBackwardIcon`, `jumpForwardIcon`, `pauseIcon`, and `playIcon` to support a greater degree of customization of the player
+
 ### Changed
 
 - `moonstone/Panels` breadcrumb to no longer have a horizontal line above it

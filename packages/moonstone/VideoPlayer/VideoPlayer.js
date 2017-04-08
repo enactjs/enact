@@ -149,6 +149,16 @@ const VideoPlayerBase = class extends React.Component {
 		autoCloseTimeout: React.PropTypes.number,
 
 		/**
+		 * A string which is sent to the `backward` icon of the player controls. This can be
+		 * anything that is accepted by {@link moonstone/Icon}.
+		 *
+		 * @type {String}
+		 * @default 'backward'
+		 * @public
+		 */
+		backwardIcon: React.PropTypes.string,
+
+		/**
 		 * Amount of time (in milliseconds) after which the feedback text/icon part of the slider's
 		 * tooltip will automatically hidden after the last action.
 		 * Setting this to 0 or `null` disables feedbackHideDelay; feedback will always be present.
@@ -160,12 +170,32 @@ const VideoPlayerBase = class extends React.Component {
 		feedbackHideDelay: React.PropTypes.number,
 
 		/**
+		 * A string which is sent to the `forward` icon of the player controls. This can be anything
+		 * that is accepted by {@link moonstone/Icon}.
+		 *
+		 * @type {String}
+		 * @default 'forward'
+		 * @public
+		 */
+		forwardIcon: React.PropTypes.string,
+
+		/**
 		 * These components are placed into the slot to the left of the media controls.
 		 *
 		 * @type {Node}
 		 * @public
 		 */
 		infoComponents: React.PropTypes.node,
+
+		/**
+		 * A string which is sent to the `jumpBackward` icon of the player controls. This can be
+		 * anything that is accepted by {@link moonstone/Icon}.
+		 *
+		 * @type {String}
+		 * @default 'skipbackward'
+		 * @public
+		 */
+		jumpBackwardIcon: React.PropTypes.string,
 
 		/**
 		 * The amount of seconds the player should skip forward or backward when a "jump" button is
@@ -176,6 +206,16 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		jumpBy: React.PropTypes.number,
+
+		/**
+		 * A string which is sent to the `jumpForward` icon of the play controls. This can be
+		 * anything that is accepted by {@link moonstone/Icon}.
+		 *
+		 * @type {String}
+		 * @default 'skipforward'
+		 * @public
+		 */
+		jumpForwardIcon: React.PropTypes.string,
 
 		/**
 		 * These components are placed below the title. Typically these will be media descriptor
@@ -281,6 +321,26 @@ const VideoPlayerBase = class extends React.Component {
 		onPlayButtonClick: React.PropTypes.func,
 
 		/**
+		 * A string which is sent to the `pause` icon of the player controls. This can be anything
+		 * that is accepted by {@link moonstone/Icon}.
+		 *
+		 * @type {String}
+		 * @default 'pause'
+		 * @public
+		 */
+		pauseIcon: React.PropTypes.string,
+
+		/**
+		 * A string which is sent to the `play` icon of the player controls. This can be anything
+		 * that is accepted by {@link moonstone/Icon}.
+		 *
+		 * @type {String}
+		 * @default 'play'
+		 * @public
+		 */
+		playIcon: React.PropTypes.string,
+
+		/**
 		 * These components are placed into the slot to the right of the media controls.
 		 *
 		 * @type {Node}
@@ -319,13 +379,19 @@ const VideoPlayerBase = class extends React.Component {
 
 	static defaultProps = {
 		autoCloseTimeout: 7000,
+		backwardIcon: 'backward',
 		feedbackHideDelay: 2000,
+		forwardIcon: 'forward',
+		jumpBackwardIcon: 'skipbackward',
 		jumpBy: 30,
+		jumpForwardIcon: 'skipforward',
 		muted: false,
 		noAutoPlay: false,
 		noJumpButtons: false,
 		noRateButtons: false,
 		noSlider: false,
+		pauseIcon: 'pause',
+		playIcon: 'play',
 		titleHideDelay: 4000
 	}
 
@@ -560,7 +626,6 @@ const VideoPlayerBase = class extends React.Component {
 			duration: el.duration,
 			buffered: el.buffered,
 			paused: el.paused,
-			playPauseIcon: (el.paused ? 'play' : 'pause'),
 			muted: el.muted,
 			volume: el.volume,
 			playbackRate: el.playbackRate,
@@ -997,7 +1062,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	render () {
-		const {children, className, infoComponents, leftComponents, noAutoPlay, noJumpButtons, noRateButtons, noSlider, rightComponents, source, style, title, ...rest} = this.props;
+		const {backwardIcon, children, className, forwardIcon, infoComponents, jumpBackwardIcon, jumpForwardIcon, leftComponents,  noAutoPlay, noJumpButtons, noRateButtons, noSlider, pauseIcon, playIcon, rightComponents, source, style, title, ...rest} = this.props;
 		delete rest.autoCloseTimeout;
 		delete rest.feedbackHideDelay;
 		delete rest.jumpBy;
@@ -1065,6 +1130,10 @@ const VideoPlayerBase = class extends React.Component {
 						</MediaSlider>}
 
 						<MediaControls
+							backwardIcon={backwardIcon}
+							forwardIcon={forwardIcon}
+							jumpBackwardIcon={jumpBackwardIcon}
+							jumpForwardIcon={jumpForwardIcon}
 							leftComponents={leftComponents}
 							mediaDisabled={this.state.mediaControlsDisabled}
 							moreDisabled={moreDisabled}
@@ -1075,12 +1144,14 @@ const VideoPlayerBase = class extends React.Component {
 							onForwardButtonClick={this.onForward}
 							onJumpBackwardButtonClick={this.onJumpBackward}
 							onJumpForwardButtonClick={this.onJumpForward}
+							onKeyDown={this.handleKeyDownFromControls}
 							onPlayButtonClick={this.onPlay}
 							onToggleMore={this.onMoreClick}
-							playPauseIcon={this.state.playPauseIcon}
+							paused={this.state.paused}
+							pauseIcon={pauseIcon}
+							playIcon={playIcon}
 							rightComponents={rightComponents}
 							showMoreComponents={this.state.more}
-							onKeyDown={this.handleKeyDownFromControls}
 						>
 							{children}
 						</MediaControls>
