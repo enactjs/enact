@@ -217,7 +217,7 @@ const DayPickerBase = class extends React.Component {
 
 	render () {
 		const
-			{selected, title} = this.props,
+			{title} = this.props,
 			type = this.calcSelectedDayType(this.props.selected),
 			label = this.getSelectedDayString(type, this.shortDayNames);
 		let ariaLabel = null;
@@ -233,7 +233,6 @@ const DayPickerBase = class extends React.Component {
 				label={label}
 				onSelect={this.handleSelect}
 				select="multiple"
-				selected={selected}
 			>
 				{this.longDayNames}
 			</ExpandableListBase>
