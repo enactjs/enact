@@ -245,11 +245,15 @@ const DayPickerBase = class extends React.Component {
  * {@link moonstone/DayPicker.DayPicker} is a component that
  * allows the user to choose day(s) of the week.
  *
- * As a form component, `DayPicker` can operate in either a controlled or uncontrolled manner. To
- * make the component controlled, you must supply `selected` at creation time and update the value
- * in response to `onChange` events.  If `selected` is not supplied, it will be uncontrolled and
- * Enact will maintain changes to the to component. For uncontrolled operation, you can control the
- * starting value using `defaultSelected`.
+ * By default, `DayPicker` maintains the state of its `selected` property. Supply the
+ * `defaultSelected` property to control its initial value. If you wish to directly control updates
+ * to the component, supply a value to `selected` at creation time and update it in response to
+ * `onChange` events.
+ *
+ * `DayPicker` is an expandable component and it maintains its open/closed state by default. The
+ * initial state can be supplied using `defaultOpen`. In order to directly control the open/closed
+ * state, supply a value for `open` at creation time and update its value in response to
+ * `onClose`/`OnOpen` events.
  *
  * @class DayPicker
  * @memberof moonstone/DayPicker

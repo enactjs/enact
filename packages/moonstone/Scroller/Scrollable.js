@@ -13,6 +13,7 @@ import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
 import React, {Component, PropTypes} from 'react';
 import ri from '@enact/ui/resolution';
+import Spotlight from '@enact/Spotlight';
 
 import css from './Scrollable.less';
 import ScrollAnimator from './ScrollAnimator';
@@ -432,6 +433,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					isVertical = this.canScrollVertically(bounds),
 					delta = this.wheel(e, isHorizontal, isVertical);
 
+				Spotlight.setPointerMode(false);
 				window.document.activeElement.blur();
 				this.childRef.setContainerDisabled(true);
 				this.scrollToAccumulatedTarget(delta, isHorizontal, isVertical);
