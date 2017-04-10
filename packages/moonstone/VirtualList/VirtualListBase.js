@@ -234,7 +234,6 @@ class VirtualListCore extends Component {
 	shouldComponentUpdate (nextProps) {
 		if ((this.props.dataSize !== nextProps.dataSize) &&
 			(this.state.firstIndex + this.maxNumOfItems) < nextProps.dataSize) {
-			console.log('shouldNotUpdate');
 			return false;
 		}
 		return true;
