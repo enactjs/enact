@@ -133,9 +133,17 @@ class ScrollerBase extends Component {
 		}
 
 		if (this.isHorizontal()) {
-			if (focusedItem.offsetLeft + focusedItem.offsetWidth > (this.scrollBounds.clientWidth + currentLeft)) {
+			if (this.context.rtl && focusedItem.offsetWidth > this.scrollBounds.clientWidth) {
+				// For RTL, and if the `focusedItem` is bigger than `this.scrollBounds.clientWidth`, keep
+				// the scroller to the right.
+				this.scrollPos.left -= focusedItem.offsetWidth;
+			} else if (focusedItem.offsetLeft + focusedItem.offsetWidth > (this.scrollBounds.clientWidth + currentLeft) && focusedItem.offsetWidth < this.scrollBounds.clientWidth) {
+				// If focus is moved to an element outside of view area (to the right), scroller will move
+				// to the right just enough to show the current `focusedItem`. This does not apply to
+				// `focusedItem` that has a width that is bigger than `this.scrollBounds.clientWidth`.
 				this.scrollPos.left += rtlDirection * ((focusedItem.offsetLeft + focusedItem.offsetWidth) - (this.scrollBounds.clientWidth + currentLeft));
 			} else if (focusedItem.offsetLeft < currentLeft) {
+				// If focus is outside of the view area to the left, move scroller to the left accordingly.
 				this.scrollPos.left += rtlDirection * (focusedItem.offsetLeft - currentLeft);
 			}
 		}
