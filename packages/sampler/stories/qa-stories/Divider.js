@@ -121,7 +121,7 @@ storiesOf('Divider')
 				style={style.scroller}
 				vertical="auto"
 			>
-				<div style={style.content} spotlightRestrict="self-first">
+				<div style={style.content}>
 					<Divider>
 						First Divider
 					</Divider>
