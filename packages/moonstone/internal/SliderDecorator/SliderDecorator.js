@@ -12,6 +12,7 @@ import Spotlight from '@enact/spotlight';
 import clamp from 'ramda/src/clamp';
 import React, {PropTypes} from 'react';
 import {forward} from '@enact/core/handle';
+import {hintComposer} from '@enact/ui/A11yDecorator';
 
 import {validateRange} from '../validators';
 
@@ -62,6 +63,32 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		static displayName = 'SliderDecorator';
 
 		static propTypes = /** @lends moonstone/internal/SliderDecorator.SliderDecorator.prototype */{
+			/**
+			 * By default, the slider will be labeled by its value.
+			 * When `aria-label` is set, it will be used instead to provide an accessibility value text for
+			 * the slider.
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			'aria-valuetext': React.PropTypes.string,
+
+			/**
+			 * Accessibility pre-hint
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			accessibilityHint: React.PropTypes.string,
+
+			/**
+			 * Accessibility hint
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			accessibilityPreHint: React.PropTypes.string,
+
 			/**
 			 * Background progress, as a proportion between `0` and `1`.
 			 *
@@ -198,10 +225,12 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.normalizeBounds(props);
 
 			const value = this.clamp(props.value);
+			const valueText = hintComposer(props['aria-valuetext'], props.accessibilityHint, props.accessibilityPreHint, value);
+
 			this.state = {
 				active: false,
 				value: value,
-				valueText: value
+				valueText: valueText
 			};
 
 			if (__DEV__) {
@@ -216,14 +245,16 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillReceiveProps (nextProps) {
-			const {backgroundProgress, max, min, value} = nextProps;
+			const {'aria-valuetext': ariaValueText, accessibilityHint, accessibilityPreHint, backgroundProgress, max, min, value} = nextProps;
 
 			if ((min !== this.props.min) || (max !== this.props.max) || (value !== this.state.value)) {
 				this.normalizeBounds(nextProps);
 				const clampedValue = this.clamp(value);
+				const valueText = hintComposer(ariaValueText, accessibilityHint, accessibilityPreHint, value);
+
 				this.setState({
 					value: clampedValue,
-					valueText: clampedValue
+					valueText: valueText
 				});
 			}
 
@@ -253,9 +284,10 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		updateValueJob = new Job((value) => {
 			this.inputNode.value = value;
+			const valueText = hintComposer(this.props['aria-valuetext'], this.props.accessibilityHint, this.props.accessibilityPreHint, value);
 			this.setState({
 				value,
-				valueText: value
+				valueText: valueText
 			});
 			forwardChange({value}, this.props);
 		}, config.changeDelay)
@@ -366,7 +398,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleActivate = () => {
-			const {detachedKnob, disabled, vertical} = this.props;
+			const {'aria-valuetext': ariaValueText, accessibilityHint, accessibilityPreHint, detachedKnob, disabled, vertical} = this.props;
 
 			if (disabled) return;
 
@@ -380,7 +412,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				const horizontalHint = $L('change a value with left right button');
 				const active = !this.state.active;
 
-				let valueText = this.state.value;
+				let valueText = hintComposer(ariaValueText, accessibilityHint, accessibilityPreHint, this.state.value);
 				if (active) {
 					valueText = vertical ? verticalHint : horizontalHint;
 				}

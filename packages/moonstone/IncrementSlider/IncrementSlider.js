@@ -7,6 +7,7 @@
 import $L from '@enact/i18n/$L';
 import Changeable from '@enact/ui/Changeable';
 import factory from '@enact/core/factory';
+import {hintComposer} from '@enact/ui/A11yDecorator';
 import kind from '@enact/core/kind';
 import Pressable from '@enact/ui/Pressable';
 import React, {PropTypes} from 'react';
@@ -37,6 +38,38 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		name: 'IncrementSlider',
 
 		propTypes: /** @lends moonstone/IncrementSlider.IncrementSliderBase.prototype */ {
+			/**
+			 * Accessibility label for decrease button
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			accessibilityDecLabel: React.PropTypes.string,
+
+			/**
+			 * Accessibility pre-hint
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			accessibilityHint: React.PropTypes.string,
+
+			/**
+			 * Accessibility label for increase button
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			accessibilityIncLabel: React.PropTypes.string,
+
+			/**
+			 * Accessibility hint
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			accessibilityPreHint: React.PropTypes.string,
+
 			/**
 			 * Background progress, as a proportion between `0` and `1`.
 			 *
@@ -241,8 +274,14 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			incrementSliderClasses: ({vertical, styler}) => styler.append({vertical, horizontal: !vertical}),
 			decrementIcon: ({decrementIcon, vertical}) => (decrementIcon || (vertical ? 'arrowlargedown' : 'arrowlargeleft')),
 			incrementIcon: ({incrementIcon, vertical}) => (incrementIcon || (vertical ? 'arrowlargeup' : 'arrowlargeright')),
-			decrementAriaLabel: ({value}) => (`${value} ${$L('press ok button to decrease the value')}`),
-			incrementAriaLabel: ({value}) => (`${value} ${$L('press ok button to increase the value')}`)
+			decrementAriaLabel: ({accessibilityDecLabel, accessibilityHint, accessibilityPreHint, value}) => {
+				const defaultContent = value + ' ' + $L('press ok button to decrease the value');
+				return hintComposer(accessibilityDecLabel, accessibilityHint, accessibilityPreHint, defaultContent);
+			},
+			incrementAriaLabel: ({accessibilityIncLabel, accessibilityHint, accessibilityPreHint, value}) => {
+				const defaultContent = value + ' ' + $L('press ok button to increase the value');
+				return hintComposer(accessibilityIncLabel, accessibilityHint, accessibilityPreHint, defaultContent);
+			}
 		},
 
 		render: ({decrementAriaLabel, decrementDisabled, decrementIcon, incrementAriaLabel, incrementDisabled, incrementIcon, incrementSliderClasses, onIncrement, onDecrement, onSpotlightDisappear, spotlightDisabled, ...rest}) => (
