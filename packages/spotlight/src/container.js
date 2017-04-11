@@ -25,6 +25,10 @@ const isContainer = (node) => {
 	return node && containerDatasetKey in node.dataset;
 };
 
+// const isContainerEnabled = (node) => {
+// 	return node && node.dataset['data-container-disabled'] === 'true';
+// };
+
 const getContainerId = (node) => node.dataset.containerId;
 
 const getContainerSelector = (node) => {
@@ -66,9 +70,14 @@ const getSpottableDescendants = (node) => {
 	];
 };
 
+const getContainer = (containerId) => {
+	return document.querySelector(`[${containerAttribute}="${containerId}"]`);
+};
+
 export {
 	containerAttribute,
 	containerSelector,
 	containerDatasetKey,
+	getContainer,
 	getSpottableDescendants
 };

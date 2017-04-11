@@ -58,7 +58,7 @@ const SpotlightRootDecorator = hoc((config, Wrapped) => {
 		}
 
 		render () {
-			return <Wrapped {...this.props} />;
+			return <Wrapped data-container-id={spotlightRootContainerName} {...this.props} />;
 		}
 	};
 });

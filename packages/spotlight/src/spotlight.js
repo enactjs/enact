@@ -25,6 +25,8 @@ import Accelerator from '../Accelerator';
 import {spotlightRootContainerName} from '../SpotlightRootDecorator';
 import {spottableClass} from '../Spottable';
 
+import * as TEST from './container';
+
 const isDown = is('down');
 const isEnter = is('enter');
 const isLeft = is('left');
@@ -620,9 +622,11 @@ const Spotlight = (function () {
 	}
 
 	function getContainerNavigableElements (containerId) {
-		return parseSelector(_containers.get(containerId).selector).filter(function (elem) {
-			return isNavigable(elem, containerId);
-		});
+		const container = TEST.getContainer(containerId);
+		return TEST.getSpottableDescendants(container);
+		// return parseSelector(_containers.get(containerId).selector).filter(function (elem) {
+		// 	return isNavigable(elem, containerId);
+		// });
 	}
 
 	function getContainerDefaultElement (containerId) {
