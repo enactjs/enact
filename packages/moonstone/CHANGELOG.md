@@ -2,11 +2,6 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [Unreleased]
-
-### Fixed
-
-- `moonstone/Input` to not spot its own input decorator when we 5way out.
 ## [unreleased]
 
 ### Changed
@@ -15,6 +10,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Input` to not spot its own input decorator when we 5way out.
 - `moonstone/Button` text color when used on a neutral (light) background in some cases
 
 ## [1.0.0] - 2017-03-31
