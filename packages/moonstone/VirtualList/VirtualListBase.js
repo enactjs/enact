@@ -272,7 +272,7 @@ class VirtualListCore extends Component {
 	threshold = 0
 	curFirstIndex = 0
 	maxFirstIndex = 0
-	maxNumOfIndex = 0
+	maxNumOfItems = 0
 	curDataSize = 0
 	cc = []
 	scrollPosition = 0
