@@ -231,9 +231,9 @@ class VirtualListCore extends Component {
 		}
 	}
 
-	shouldComponentUpdate (nextProps) {
+	shouldComponentUpdate (nextProps, nextState) {
 		if ((this.props.dataSize !== nextProps.dataSize) &&
-			(this.curFirstIndex + this.curNumOfItems) < nextProps.dataSize) {
+			(nextState.firstIndex + nextState.numOfItems) < nextProps.dataSize) {
 			return false;
 		}
 		return true;
@@ -270,9 +270,7 @@ class VirtualListCore extends Component {
 
 	dimensionToExtent = 0
 	threshold = 0
-	curFirstIndex = 0
 	maxFirstIndex = 0
-	curNumOfItems = 0
 	curDataSize = 0
 	cc = []
 	scrollPosition = 0
@@ -387,16 +385,14 @@ class VirtualListCore extends Component {
 			wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (this.state.firstIndex === this.maxFirstIndex));
 
 		this.maxFirstIndex = dataSize - numOfItems;
-		this.curNumOfItems = numOfItems;
 		this.curDataSize = dataSize;
-		this.curFirstIndex = wasFirstIndexMax ? this.maxFirstIndex : Math.min(this.state.firstIndex, this.maxFirstIndex);
 		this.updateFrom = null;
 		this.updateTo = null;
 
 		// reset children
 		this.cc = [];
 
-		this.setState({firstIndex: this.curFirstIndex, numOfItems});
+		this.setState({firstIndex: wasFirstIndexMax ? this.maxFirstIndex : Math.min(this.state.firstIndex, this.maxFirstIndex), numOfItems});
 		this.calculateScrollBounds(props);
 	}
 
@@ -482,7 +478,6 @@ class VirtualListCore extends Component {
 		this.scrollPosition = pos;
 
 		if (firstIndex !== newFirstIndex) {
-			this.curFirstIndex = newFirstIndex;
 			this.setState({firstIndex: newFirstIndex});
 		} else {
 			this.positionItems(this.determineUpdatedNeededIndices());
