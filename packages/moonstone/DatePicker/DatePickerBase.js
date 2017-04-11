@@ -1,4 +1,5 @@
-import {$L} from '@enact/i18n';
+import $L from '@enact/i18n/$L';
+import {forKey, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
 
@@ -137,6 +138,14 @@ const DatePickerBase = kind({
 		onChangeYear: React.PropTypes.func,
 
 		/**
+		 * Callback to be called when a condition occurs which should cause the expandable to close
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onClose: React.PropTypes.func,
+
+		/**
 		 * The handler to run when the component is removed while retaining focus.
 		 *
 		 * @type {Function}
@@ -166,11 +175,18 @@ const DatePickerBase = kind({
 		className: 'datePicker'
 	},
 
-	render: ({day, maxDays, maxMonths, maxYear, minYear, month, noLabels, onChangeDate, onChangeMonth, onChangeYear, onSpotlightDisappear, order, spotlightDisabled, year, ...rest}) => {
+	handlers: {
+		handlePickerKeyDown: handle(
+			forKey('enter'),
+			forward('onClose')
+		)
+	},
+
+	render: ({day, handlePickerKeyDown, maxDays, maxMonths, maxYear, minYear, month, noLabels, onChangeDate, onChangeMonth, onChangeYear, onSpotlightDisappear, order, spotlightDisabled, year, ...rest}) => {
 
 		return (
 			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled}>
-				<div className={dateComponentPickers}>
+				<div className={dateComponentPickers} onKeyDown={handlePickerKeyDown}>
 					{order.map(picker => {
 						switch (picker) {
 							case 'd':

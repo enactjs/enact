@@ -3,9 +3,10 @@ import React from 'react';
 import {storiesOf} from '@kadira/storybook';
 import {withKnobs, boolean, number} from '@kadira/storybook-addon-knobs';
 
-ProgressBar.propTypes = Object.assign({}, ProgressBarBase.propTypes, ProgressBar.propTypes);
-ProgressBar.defaultProps = Object.assign({}, ProgressBarBase.defaultProps, ProgressBar.defaultProps);
-ProgressBar.displayName = 'ProgressBar';
+import nullify from '../../src/utils/nullify.js';
+import {mergeComponentMetadata} from '../../src/utils/propTables';
+
+const Config = mergeComponentMetadata('ProgressBar', ProgressBarBase, ProgressBar);
 
 storiesOf('ProgressBar')
 	.addDecorator(withKnobs)
@@ -14,11 +15,11 @@ storiesOf('ProgressBar')
 		'The basic ProgressBar',
 		() => (
 			<ProgressBar
-				backgroundProgress={number('backgroundProgress', 0)}
-				progress={number('progress', 0)}
+				backgroundProgress={number('backgroundProgress', ProgressBar.defaultProps.backgroundProgress, {range: true, min: 0, max: 1, step: 0.01})}
+				progress={number('progress', ProgressBar.defaultProps.progress, {range: true, min: 0, max: 1, step: 0.1})}
 				vertical={boolean('vertical', false)}
-				disabled={boolean('disabled', false)}
+				disabled={nullify(boolean('disabled', false))}
 			/>
-		)
+		),
+		{propTables: [Config]}
 	);
-

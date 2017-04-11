@@ -6,7 +6,8 @@
 
 import {is} from '@enact/core/keymap';
 import React, {Component, PropTypes} from 'react';
-import {Spotlight, SpotlightContainerDecorator} from '@enact/spotlight';
+import Spotlight from '@enact/spotlight';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import Positionable from './Positionable';
 
@@ -48,6 +49,8 @@ const sizeShape = PropTypes.oneOfType([
  * @private
  */
 class VirtualFlexListCore extends Component {
+	static displayName = 'VirtualFlexListBase'
+
 	static propTypes = /** @lends moonstone/VirtualFlexList.VirtualFlexListCore.prototype */ {
 		/**
 		 * The render function for an item of the list.

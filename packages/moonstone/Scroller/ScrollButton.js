@@ -1,6 +1,6 @@
-import {$L} from '@enact/i18n';
-import kind from '@enact/core/kind';
+import $L from '@enact/i18n/$L';
 import Holdable from '@enact/ui/Holdable';
+import kind from '@enact/core/kind';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
 
@@ -57,8 +57,8 @@ const ScrollButtonBase = kind({
 	},
 
 	computed: {
-		className: ({direction}) => classNameMap[direction],
-		'aria-label': ({direction}) => $L(`scroll ${direction}`)
+		'aria-label': ({direction}) => $L(`scroll ${direction}`),
+		className: ({direction}) => classNameMap[direction]
 	},
 
 	render: ({children, disabled, ...rest}) => {

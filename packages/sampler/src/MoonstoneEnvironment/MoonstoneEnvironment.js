@@ -4,7 +4,7 @@ import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 import MoonstoneDecorator from '@enact/moonstone/MoonstoneDecorator';
 import {Panels, Panel, Header} from '@enact/moonstone/Panels';
-import {select} from '@kadira/storybook-addon-knobs';
+import {boolean, select} from '@kadira/storybook-addon-knobs';
 
 import css from './MoonstoneEnvironment.less';
 
@@ -98,6 +98,7 @@ const StorybookDecorator = (story, config) => {
 			title={`${config.kind} ${config.story}`.trim()}
 			description={config.description}
 			locale={select('locale', locales, getLocaleFromURL())}
+			textSize={boolean('large text size', false) ? 'large' : 'normal'}
 		>
 			{sample}
 		</Moonstone>
@@ -111,6 +112,7 @@ const FullscreenStorybookDecorator = (story, config) => {
 			title={`${config.kind} ${config.story}`.trim()}
 			description={config.description}
 			locale={select('locale', locales, getLocaleFromURL())}
+			textSize={boolean('large text size', false) ? 'large' : 'normal'}
 		>
 			{sample}
 		</MoonstoneFullscreen>

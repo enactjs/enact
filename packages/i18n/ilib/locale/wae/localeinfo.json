@@ -1,1 +1,1 @@
-{"language.name":"Walser","numfmt":{"decimalChar":".","groupChar":",","exponential":"E","currencyFormats":{"common":"{s} {n}"}},"scripts":["Latn"],"locale":"wae"}
+{"delimiter":{"quotationStart":"«","quotationEnd":"»","alternateQuotationStart":"‹","alternateQuotationEnd":"›"},"language.name":"Walser","numfmt":{"decimalChar":",","groupChar":"’"},"scripts":["Latn"],"locale":"wae"}

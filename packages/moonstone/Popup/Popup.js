@@ -5,12 +5,14 @@
  * @module moonstone/Popup
  */
 
-import {$L} from '@enact/i18n';
+import $L from '@enact/i18n/$L';
+import FloatingLayer from '@enact/ui/FloatingLayer';
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
+import Spotlight, {getDirection} from '@enact/spotlight';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import Transition from '@enact/ui/Transition';
-import FloatingLayer from '@enact/ui/FloatingLayer';
-import Spotlight, {SpotlightContainerDecorator, getDirection} from '@enact/spotlight';
+import {forward} from '@enact/core/handle';
 
 import IconButton from '../IconButton';
 
@@ -21,6 +23,8 @@ const TransitionContainer = SpotlightContainerDecorator({preserveId: true}, Tran
 const getContainerNode = (containerId) => {
 	return document.querySelector(`[data-container-id='${containerId}']`);
 };
+
+const forwardHide = forward('onHide');
 
 /**
  * {@link moonstone/Popup.PopupBase} is a modal component that appears at the bottom of
@@ -209,6 +213,14 @@ class Popup extends React.Component {
 		onClose: PropTypes.func,
 
 		/**
+		 * A function to be run after transition for hiding is finished.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onHide: PropTypes.func,
+
+		/**
 		 * A function to be run when a key-down action is invoked by the user.
 		 *
 		 * @type {Function}
@@ -342,6 +354,8 @@ class Popup extends React.Component {
 	}
 
 	handlePopupHide = () => {
+		forwardHide(null, this.props);
+
 		this.setState({
 			floatLayerOpen: false,
 			activator: null

@@ -253,6 +253,10 @@ const ExpandableItemBase = kind({
  * {@link moonstone/LabeledItem.LabeledItem} that can be expanded to show additional
  * contents.
  *
+ * `ExpandableItem` maintains its open/closed state by default. The initial state can be supplied
+ * using `defaultOpen`. In order to directly control the open/closed state, supply a value for
+ * `open` at creation time and update its value in response to `onClose`/`onOpen` events.
+ *
  * @class ExpandableItem
  * @memberof moonstone/ExpandableItem
  * @ui
