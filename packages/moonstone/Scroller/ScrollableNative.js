@@ -216,6 +216,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		// browser native scrolling
 		scrolling = false
+		resetPosition = null // prevent auto-scroll on focus by Spotlight
 
 		// event handler for browser native scroll
 
@@ -223,6 +224,20 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.isScrollAnimationTargetAccumulated = false;
 			this.lastFocusedItem = null;
 			this.childRef.setContainerDisabled(false);
+		}
+
+		onMouseOver = () => {
+			this.resetPosition = this.childRef.getContainerNode().scrollTop;
+		}
+
+		onMouseMove = () => {
+			if (this.resetPosition) {
+				const containerNode = this.childRef.getContainerNode();
+				containerNode.style.scrollBehavior = null;
+				containerNode.scrollTop = this.resetPosition;
+				containerNode.style.scrollBehavior = 'smooth';
+				this.resetPosition = null;
+			}
 		}
 
 		onWheel = (e) => {
@@ -636,9 +651,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				containerNode.addEventListener('wheel', this.onWheel);
 			}
 			// FIXME `onScroll` doesn't work on the v8 snapshot.
-			containerNode.addEventListener('scroll', this.onScroll, true);
+			containerNode.addEventListener('scroll', this.onScroll, {capture: true, passive: true});
 			// FIXME `onFocus` doesn't work on the v8 snapshot.
-			containerNode.addEventListener('focus', this.onFocus, true);
+			containerNode.addEventListener('focus', this.onFocus, {capture: true});
+			// FIXME `onMouseOver` doesn't work on the v8 snapshot.
+			containerNode.addEventListener('mouseover', this.onMouseOver, {capture: true});
+			// FIXME `onMouseMove` doesn't work on the v8 snapshot.
+			containerNode.addEventListener('mousemove', this.onMouseMove, {capture: true});
 
 			containerNode.style.scrollBehavior = 'smooth';
 

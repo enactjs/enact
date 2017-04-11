@@ -390,8 +390,8 @@ class VirtualListCore extends Component {
 		}
 
 		const
-			{clientWidth, clientHeight} = clientSize || this.getClientSize(node),
-			{scrollBounds, isPrimaryDirectionVertical} = this;
+			{scrollBounds, isPrimaryDirectionVertical} = this,
+			{clientWidth, clientHeight} = clientSize || this.getClientSize(node);
 		let maxPos;
 
 		scrollBounds.clientWidth = clientWidth;
@@ -427,7 +427,7 @@ class VirtualListCore extends Component {
 
 	setScrollPosition (x, y, dirX, dirY) {
 		const
-			{firstIndex} = this.state,
+			{firstIndex, numOfItems} = this.state,
 			{isPrimaryDirectionVertical, threshold, dimensionToExtent, maxFirstIndex, scrollBounds} = this,
 			{gridSize} = this.primary,
 			maxPos = isPrimaryDirectionVertical ? scrollBounds.maxTop : scrollBounds.maxLeft,
@@ -464,26 +464,17 @@ class VirtualListCore extends Component {
 		if (firstIndex !== newFirstIndex) {
 			this.setState({firstIndex: newFirstIndex});
 		} else {
-			this.positionItems(this.determineUpdatedNeededIndices());
+			this.positionItems({updateFrom: firstIndex, updateTo: firstIndex + numOfItems});
 		}
 	}
 
-	determineUpdatedNeededIndices () {
-		const {firstIndex, numOfItems} = this.state;
-
-		return {
-			updateFrom: firstIndex,
-			updateTo: firstIndex + numOfItems
-		};
-	}
-
-	applyStyleToExistingNode = (primaryIndex, ...rest) => {
+	applyStyleToExistingNode = (index, ...rest) => {
 		const
 			{numOfItems} = this.state,
-			node = this.containerRef.children[primaryIndex % numOfItems];
+			node = this.containerRef.children[index % numOfItems];
 
 		if (node) {
-			if ((primaryIndex % numOfItems) === this.nodeIndexToBeBlurred && primaryIndex !== this.lastFocusedIndex) {
+			if ((index % numOfItems) === this.nodeIndexToBeBlurred && index !== this.lastFocusedIndex) {
 				node.blur();
 				this.nodeIndexToBeBlurred = null;
 			}
@@ -491,21 +482,22 @@ class VirtualListCore extends Component {
 		}
 	}
 
-	applyStyleToNewNode = (primaryIndex, ...rest) => {
+	applyStyleToNewNode = (index, ...rest) => {
 		const
 			{component, data} = this.props,
 			{numOfItems} = this.state,
+			key = index % numOfItems,
 			itemElement = component({
 				data,
-				[dataIndexAttribute]: primaryIndex,
-				index: primaryIndex,
-				key: primaryIndex % numOfItems
+				[dataIndexAttribute]: index,
+				index,
+				key
 			}),
 			style = {};
 
 		this.composeStyle(style, ...rest);
 
-		this.cc[primaryIndex % numOfItems] = React.cloneElement(itemElement, {
+		this.cc[key] = React.cloneElement(itemElement, {
 			className: classNames(css.listItem, itemElement.props.className),
 			style: {...itemElement.props.style, ...style}
 		});
@@ -525,25 +517,25 @@ class VirtualListCore extends Component {
 		height = (isPrimaryDirectionVertical ? primary.itemSize : secondary.itemSize) + 'px';
 
 		// positioning items
-		for (let primaryIndex = updateFrom, secondaryIndex = updateFrom % dimensionToExtent; primaryIndex < updateTo; primaryIndex++) {
+		for (let index = updateFrom, indexInExtent = updateFrom % dimensionToExtent; index < updateTo; index++) {
 
 			// determine the first and the last visible item
 			if (firstVisibleIndex === null && (primaryPosition + primary.itemSize) > 0) {
-				firstVisibleIndex = primaryIndex;
+				firstVisibleIndex = index;
 			}
 			if (primaryPosition < primary.clientSize) {
-				lastVisibleIndex = primaryIndex;
+				lastVisibleIndex = index;
 			}
-			if (this.updateFrom === null || this.updateTo === null || this.updateFrom > primaryIndex || this.updateTo <= primaryIndex) {
-				this.applyStyleToNewNode(primaryIndex, width, height, primaryPosition, secondaryPosition);
+			if (this.updateFrom === null || this.updateTo === null || this.updateFrom > index || this.updateTo <= index) {
+				this.applyStyleToNewNode(index, width, height, primaryPosition, secondaryPosition);
 			} else {
-				this.applyStyleToExistingNode(primaryIndex, width, height, primaryPosition, secondaryPosition);
+				this.applyStyleToExistingNode(index, width, height, primaryPosition, secondaryPosition);
 			}
 
-			if (++secondaryIndex === dimensionToExtent) {
+			if (++indexInExtent === dimensionToExtent) {
 				secondaryPosition = 0;
 				primaryPosition += primary.gridSize;
-				secondaryIndex = 0;
+				indexInExtent = 0;
 			} else {
 				secondaryPosition += secondary.gridSize;
 			}

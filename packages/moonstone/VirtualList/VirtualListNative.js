@@ -18,7 +18,7 @@ import VirtualListBase, {gridListItemSizeShape} from './VirtualListBaseNative';
  * @class VirtualList
  * @memberof moonstone/VirtualList
  * @ui
- * @public
+ * @private
  */
 const VirtualList = kind({
 	name: 'VirtualList',
@@ -109,7 +109,7 @@ const VirtualList = kind({
  * @class VirtualGridList
  * @memberof moonstone/VirtualList
  * @ui
- * @public
+ * @private
  */
 const VirtualGridList = kind({
 	name: 'VirtualGridList',

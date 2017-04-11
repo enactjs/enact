@@ -472,21 +472,22 @@ class VirtualListCore extends Component {
 		}
 	}
 
-	applyStyleToNewNode = (primaryIndex, ...rest) => {
+	applyStyleToNewNode = (index, ...rest) => {
 		const
 			{component, data} = this.props,
 			{numOfItems} = this.state,
+			key = index % numOfItems,
 			itemElement = component({
 				data,
-				[dataIndexAttribute]: primaryIndex,
-				index: primaryIndex,
-				key: primaryIndex % numOfItems
+				[dataIndexAttribute]: index,
+				index,
+				key
 			}),
 			style = {};
 
 		this.composeStyle(style, ...rest);
 
-		this.cc[primaryIndex % numOfItems] = React.cloneElement(itemElement, {
+		this.cc[key] = React.cloneElement(itemElement, {
 			className: classNames(cssItem.listItem, itemElement.props.className),
 			style: {...itemElement.props.style, ...style}
 		});
@@ -513,13 +514,13 @@ class VirtualListCore extends Component {
 		height = (isPrimaryDirectionVertical ? primary.itemSize : secondary.itemSize) + 'px';
 
 		// positioning items
-		for (let primaryIndex = updateFrom, secondaryIndex = updateFrom % dimensionToExtent; primaryIndex < updateTo; primaryIndex++) {
-			this.applyStyleToNewNode(primaryIndex, width, height, primaryPosition, secondaryPosition);
+		for (let index = updateFrom, indexInExtent = updateFrom % dimensionToExtent; index < updateTo; index++) {
+			this.applyStyleToNewNode(index, width, height, primaryPosition, secondaryPosition);
 
-			if (++secondaryIndex === dimensionToExtent) {
+			if (++indexInExtent === dimensionToExtent) {
 				secondaryPosition = 0;
 				primaryPosition += primary.gridSize;
-				secondaryIndex = 0;
+				indexInExtent = 0;
 			} else {
 				secondaryPosition += secondary.gridSize;
 			}
@@ -533,7 +534,7 @@ class VirtualListCore extends Component {
 		node.scrollTo((this.context.rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x, y);
 	}
 
-	composeStyle (style, width, height, primaryPosition, secondaryPosition = 0) {
+	composeStyle (style, width, height, primaryPosition, secondaryPosition) {
 		const {x, y} = this.getXY(primaryPosition, secondaryPosition);
 
 		if (this.isItemSized) {
