@@ -17,6 +17,8 @@
 	overflow: hidden;
 	text-overflow: ellipsis;
 
+	.moon-custom-text-size(@moon-item-font-size-large);
+
 	&::selection {
 		color: @moon-spotlight-text-color;
 		background-color: @moon-spotlight-background-color;
@@ -90,6 +92,7 @@
 	// which should highlight the border
 	&.noDecorator:active,
 	&:global(.spottable):focus {
+		color: @moon-input-font-color;
 		border-color: @moon-spotlight-border-color;
 		background-color: @moon-input-decorator-bg-color;
 	}
