@@ -8,12 +8,11 @@ import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {contextTypes} from '@enact/ui/Resizable';
 import {forward} from '@enact/core/handle';
-import {getDirection} from '@enact/spotlight';
+import Spotlight, {getDirection} from '@enact/spotlight';
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
 import React, {Component, PropTypes} from 'react';
 import ri from '@enact/ui/resolution';
-import Spotlight from '@enact/spotlight';
 
 import css from './Scrollable.less';
 import ScrollAnimator from './ScrollAnimator';
@@ -435,9 +434,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					delta = this.wheel(e, isHorizontal, isVertical),
 					focusedItem = Spotlight.getCurrent();
 
+				Spotlight.setPointerMode(false);
 				if (focusedItem) {
 					focusedItem.blur();
 				}
+
 				this.childRef.setContainerDisabled(true);
 				this.scrollToAccumulatedTarget(delta, isHorizontal, isVertical);
 			}
