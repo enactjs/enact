@@ -1,32 +1,55 @@
-import {containerSelector, getSpottableDescendants} from '../container';
+import {containerAttribute, getSpottableDescendants} from '../container';
 
 import {
 	container,
 	findContainer,
+	join,
 	node,
 	someContainers,
 	someNodes,
 	someSpottables,
 	someSpottablesAndContainers,
 	spottable,
-	testScenario,
-	uniqueContainer
+	testScenario
 } from './utils';
+
+const nonSpottable = () => node({className: 'other'});
 
 const scenarios = {
 	onlySpottables: someSpottables(5),
 	onlyContainers: someContainers(5),
 	spottableAndContainers: someSpottablesAndContainers(5),
-	nonSpottableSiblings: someSpottables(5) + someNodes('class="other"'),
+	nonSpottableSiblings: join(
+		someSpottables(5),
+		someNodes(nonSpottable, 5)
+	),
 	nestedContainers: container(container(container())),
-	nestedContainersWithSpottables: someSpottables(5) + container(someSpottables(5)),
-	siblingContainers: container(someSpottables(5)) + container(someSpottables(5)),
-	complexTree: spottable(node('arbitrary content')) + uniqueContainer('first-container',
-		someSpottables(2) + uniqueContainer('second-container',
-			someSpottables(3) + uniqueContainer('third-container',
-				someSpottables(4)
-			)
-		)
+	disabledContainers: join(
+		someSpottables(5),
+		someContainers(5),
+		node({[containerAttribute]: 'disabled-container', 'data-container-disabled': true})
+	),
+	nestedContainersWithSpottables: join(
+		someSpottables(5),
+		container({children: someSpottables(5)})
+	),
+	siblingContainers: join(
+		container({[containerAttribute]: 'first', children: someSpottables(5)}),
+		container({[containerAttribute]: 'second', children: someSpottables(5)})
+	),
+	complexTree: join(
+		spottable(nonSpottable()),
+		container({[containerAttribute]: 'first-container', children: join(
+			someSpottables(2),
+			container({[containerAttribute]: 'second-container', children: join(
+				someSpottables(3),
+				container({
+					[containerAttribute]: 'third-container',
+					'data-container-disabled': true,
+					children: someSpottables(4)
+				})
+			)})
+		)})
 	)
 };
 
@@ -96,7 +119,7 @@ describe('container', () => {
 			scenarios.siblingContainers,
 			(root) => {
 				const expected = 5;
-				const actual = getSpottableDescendants(root.querySelector(containerSelector)).length;
+				const actual = getSpottableDescendants(findContainer(root, 'first')).length;
 
 				expect(actual).to.equal(expected);
 			}
@@ -105,8 +128,22 @@ describe('container', () => {
 		it('should not find spottables in descendant containers', testScenario(
 			scenarios.complexTree,
 			(root) => {
+				const first = findContainer(root, 'first-container');
+
 				const expected = 3;
-				const actual = getSpottableDescendants(findContainer(root, 'first-container')).length;
+				const actual = getSpottableDescendants(first).length;
+
+				expect(actual).to.equal(expected);
+			}
+		));
+
+		it('should not find containers that are disabled', testScenario(
+			scenarios.complexTree,
+			(root) => {
+				const second = findContainer(root, 'second-container');
+
+				const expected = 3;
+				const actual = getSpottableDescendants(second).length;
 
 				expect(actual).to.equal(expected);
 			}

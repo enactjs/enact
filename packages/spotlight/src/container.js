@@ -1,19 +1,24 @@
-const spottableSelector = '.spottable';
+const spottableClass = 'spottable';
 
 const containerAttribute = 'data-container-id';
 const containerSelector = `[${containerAttribute}]`;
 const containerDatasetKey = 'containerId';
 
-const querySelector = (node, selector, excludeSelector) => {
-	const all = Array.prototype.slice.call(node.querySelectorAll(selector));
+const querySelector = (node, includeSelector, excludeSelector) => {
+	const include = Array.prototype.slice.call(node.querySelectorAll(includeSelector));
 	const exclude = node.querySelectorAll(excludeSelector);
 
+	// console.log(includeSelector, include.length);
+	// console.log(excludeSelector, exclude.length);
+
 	for (let i = 0; i < exclude.length; i++) {
-		const index = all.indexOf(exclude.item(i));
-		all.splice(index, 1);
+		const index = include.indexOf(exclude.item(i));
+		if (index >= 0) {
+			include.splice(index, 1);
+		}
 	}
 
-	return all;
+	return include;
 };
 
 const isContainer = (node) => {
@@ -22,18 +27,38 @@ const isContainer = (node) => {
 
 const getContainerId = (node) => node.dataset.containerId;
 
+const getContainerSelector = (node) => {
+	if (isContainer(node)) {
+		return `[${containerAttribute}="${getContainerId(node)}"]`;
+	}
+
+	return '';
+};
+
 const getSubContainerSelector = (node) => {
 	if (isContainer(node)) {
-		return `${containerSelector}:not([${containerAttribute}="${getContainerId(node)}"])`;
+		return `${getContainerSelector(node)} ${containerSelector}`;
 	}
 
 	return containerSelector;
 };
 
 const getSpottableDescendants = (node) => {
+	const spottableSelector = `.${spottableClass}`;
 	const subContainerSelector = getSubContainerSelector(node);
-	const spottable = querySelector(node, spottableSelector, `${subContainerSelector} ${spottableSelector}`);
-	const containers = querySelector(node, containerSelector, `${subContainerSelector} ${containerSelector}`);
+	const spottable = querySelector(
+		node,
+		spottableSelector,
+		`${subContainerSelector} ${spottableSelector}`
+	);
+	const containers = querySelector(
+		node,
+		`${getContainerSelector(node)} ${containerSelector}:not([data-container-disabled="true"])`,
+		`${subContainerSelector} ${containerSelector}`
+	);
+
+	// console.log('spottable', spottable.length);
+	// console.log('containers', containers.length);
 
 	return [
 		...spottable,
