@@ -148,40 +148,4 @@ storiesOf('Input')
 				defaultValue={inputData.initialNumericValue}
 			/>
 		)
-	).addWithInfo(
-		'input navigation',
-		() => (
-			<div>
-				<Input
-					onChange={action('onChange')}
-					disabled={boolean('disabled')}
-					dismissOnEnter={boolean('dismissOnEnter', false)}
-					iconAfter={select('iconAfter', iconNames)}
-					iconBefore={select('iconBefore', iconNames)}
-					noDecorator={boolean('noDecorator')}
-					placeholder={text('placeholder', 'Left')}
-					type={select('type', inputData.type, inputData.type[0])}
-				/>
-				<Input
-					onChange={action('onChange')}
-					disabled={boolean('disabled')}
-					dismissOnEnter={boolean('dismissOnEnter', false)}
-					iconAfter={select('iconAfter', iconNames)}
-					iconBefore={select('iconBefore', iconNames)}
-					noDecorator={boolean('noDecorator')}
-					placeholder={text('placeholder', 'Middle')}
-					type={select('type', inputData.type, inputData.type[0])}
-				/>
-				<Input
-					onChange={action('onChange')}
-					disabled={boolean('disabled')}
-					dismissOnEnter={boolean('dismissOnEnter', false)}
-					iconAfter={select('iconAfter', iconNames)}
-					iconBefore={select('iconBefore', iconNames)}
-					noDecorator={boolean('noDecorator')}
-					placeholder={text('placeholder', 'Right')}
-					type={select('type', inputData.type, inputData.type[0])}
-				/>
-			</div>
-		)
 	);
