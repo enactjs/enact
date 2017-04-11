@@ -209,6 +209,7 @@ const TimePickerBase = kind({
 											value={hour}
 											width={2}
 											wrap
+											className={css.hourComponents}
 										>
 											{hasMeridiem ? hours12 : hours24}
 										</HourPicker>
@@ -227,6 +228,7 @@ const TimePickerBase = kind({
 											value={minute}
 											width={2}
 											wrap
+											className={css.minutesComponents}
 										/>
 									);
 								case 'a':
@@ -241,6 +243,7 @@ const TimePickerBase = kind({
 											value={meridiem}
 											width={4}
 											wrap
+											className={css.meridiamComponent}
 										>
 											{!hasMeridiem ? null : meridiems}
 										</DateComponentPicker>
