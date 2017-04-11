@@ -2,6 +2,7 @@
  * Exports the {@link ui/ViewManager.View} component.
  */
 
+import {Job} from '@enact/core/util';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
@@ -42,6 +43,27 @@ class View extends React.Component {
 		arranger: shape,
 
 		/**
+		 * Time, in milliseconds, to wait after a view has entered to inform it by passing the
+		 * `enteringProp` as false.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 */
+		enteringDelay: React.PropTypes.number,
+
+		/**
+		 * Name of the property to pass to the wrapped view to indicate when it is entering the
+		 * viewport. When `true`, the view has been created but has not transitioned into place.
+		 * When `false`, the view has finished its transition.
+		 *
+		 * The notification can be delayed by setting `enteringDelay`. If not set, the view will not
+		 * be notified of the change in transition.
+		 *
+		 * @type {String}
+		 */
+		enteringProp: React.PropTypes.string,
+
+		/**
 		 * Index of the currently 'active' view.
 		 *
 		 * @type {Number}
@@ -73,9 +95,17 @@ class View extends React.Component {
 		reverseTransition: React.PropTypes.bool
 	}
 
+	static defaultProps = {
+		enteringDelay: 0
+	}
+
 	constructor (props) {
 		super(props);
 		this.animation = null;
+		this._raf = null;
+		this.state = {
+			entering: true
+		};
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -85,6 +115,7 @@ class View extends React.Component {
 
 	componentWillUnmount () {
 		this.cancelAnimationFrame();
+		this.enteringJob.stop();
 	}
 
 	cancelAnimationFrame () {
@@ -94,6 +125,12 @@ class View extends React.Component {
 		}
 	}
 
+	enteringJob = new Job(() => {
+		this.setState({
+			entering: false
+		});
+	})
+
 	componentWillAppear (callback) {
 		const {arranger} = this.props;
 		if (arranger && arranger.stay) {
@@ -101,6 +138,12 @@ class View extends React.Component {
 		} else {
 			callback();
 		}
+	}
+
+	componentDidAppear () {
+		this.setState({
+			entering: false
+		});
 	}
 
 	// This is called at the same time as componentDidMount() for components added to an existing
@@ -112,6 +155,14 @@ class View extends React.Component {
 			this.prepareTransition(reverseTransition ? arranger.leave : arranger.enter, callback);
 		} else {
 			callback();
+		}
+	}
+
+	componentDidEnter () {
+		const {enteringDelay, enteringProp} = this.props;
+
+		if (enteringProp) {
+			this.enteringJob.startAfter(enteringDelay);
 		}
 	}
 
@@ -129,6 +180,7 @@ class View extends React.Component {
 	// called.
 	componentWillLeave (callback) {
 		const {arranger, reverseTransition} = this.props;
+		this.enteringJob.stop();
 		if (arranger) {
 			this.prepareTransition(reverseTransition ? arranger.enter : arranger.leave, callback);
 		} else {
@@ -229,7 +281,13 @@ class View extends React.Component {
 	}
 
 	render () {
-		return React.Children.only(this.props.children);
+		const {enteringProp, children} = this.props;
+
+		if (enteringProp) {
+			return React.cloneElement(children, {[enteringProp]: this.state.entering});
+		} else {
+			return React.Children.only(children);
+		}
 	}
 }
 

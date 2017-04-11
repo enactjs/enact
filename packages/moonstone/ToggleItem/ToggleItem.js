@@ -7,6 +7,7 @@
 
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
+import Toggleable from '@enact/ui/Toggleable';
 
 import {ItemOverlay} from '../Item';
 
@@ -82,6 +83,14 @@ const ToggleItemBase = kind({
 		inline: PropTypes.bool,
 
 		/**
+		 * The handler to run when the toggle item is toggled. Developers should
+		 * generally use `onToggle` instead.
+		 *
+		 * @type {Function}
+		 */
+		onClick: React.PropTypes.func,
+
+		/**
 		 * The handler to run when the toggle item is toggled.
 		 *
 		 * @type {Function}
@@ -124,6 +133,15 @@ const ToggleItemBase = kind({
 		className: 'toggleItem'
 	},
 
+	handlers: {
+		onToggle: (ev, {onToggle, onClick, selected, disabled, value}) => {
+			if (!disabled && (onToggle || onClick)) {
+				if (onToggle) onToggle({selected: !selected, value});
+				if (onClick) onClick(ev);
+			}
+		}
+	},
+
 	computed: {
 		iconBefore: ({iconClasses, selected, icon, iconPosition}) => {
 			if (iconPosition === 'before') {
@@ -142,26 +160,22 @@ const ToggleItemBase = kind({
 					</ToggleIcon>
 				);
 			}
-		},
-		onToggle: ({onToggle, onClick, selected, disabled, value}) => {
-			if (!disabled && (onToggle || onClick)) {
-				return (ev) => {
-					if (onToggle) onToggle({selected: !selected, value});
-					if (onClick) onClick(ev);
-				};
-			}
 		}
 	},
 
-	render: ({children, iconAfter, iconBefore, onToggle, ...rest}) => {
+	render: ({children, iconAfter, iconBefore, onToggle, selected, ...rest}) => {
 		delete rest.icon;
 		delete rest.iconClasses;
 		delete rest.iconPosition;
-		delete rest.selected;
 		delete rest.value;
 
 		return (
-			<ItemOverlay {...rest} onClick={onToggle}>
+			<ItemOverlay
+				role="checkbox"
+				{...rest}
+				aria-checked={selected}
+				onClick={onToggle}
+			>
 				{iconBefore}
 				{children}
 				{iconAfter}
@@ -170,5 +184,23 @@ const ToggleItemBase = kind({
 	}
 });
 
-export default ToggleItemBase;
-export {ToggleItemBase as ToggleItem, ToggleItemBase};
+
+/**
+ * {@link moonstone/ToggleItem.ToggleItemBase} is a component to make a Toggleable Item
+ * (e.g Checkbox, RadioItem). It has a customizable prop for icon, so any Moonstone Icon can be used
+ * to represent the selected state.
+ *
+ * @class ToggleItem
+ * @memberof moonstone/ToggleItem
+ * @extends moonstone/ToggleItem.ToggleItemBase
+ * @mixes ui/Toggleable.Toggleable
+ * @ui
+ * @public
+ */
+const ToggleItem = Toggleable(
+	{prop: 'selected'},
+	ToggleItemBase
+);
+
+export default ToggleItem;
+export {ToggleItem, ToggleItemBase};

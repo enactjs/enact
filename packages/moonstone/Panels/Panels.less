@@ -1,18 +1,15 @@
+@import '../styles/mixins.less';
 @import '../styles/colors.less';
 @import '../styles/variables.less';
 
 .viewport {
 	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	height: 100%;
+	.position(0);
 	overflow: hidden;
 }
 
 .breadcrumbs {
 	position: relative;
-	left: 0;
 	height: 100%;
 	z-index: 10;
 	overflow: hidden;
@@ -24,7 +21,6 @@
 		width: @moon-breadcrumb-width;
 
 		.breadcrumbHeader {
-			border-top: 0.25rem solid #ccc;
 			padding-top: 3px;
 			margin: @moon-app-keepout;
 			font-family: @moon-super-header-font-family;
@@ -56,7 +52,7 @@
 			direction: rtl;
 		}
 	}
-	
+
 	// TODO: Application Close Button Support
 	// &:not(.first) {
 	// 	.moon-application-close-button {
@@ -102,23 +98,31 @@
 }
 
 .activity {
-	.viewport {
-		left: 0;
-
-		> :not([data-index='0']) {
-			width: calc(~"100% - " @moon-breadcrumb-width);
-		}
-	}
-
 	.breadcrumbs {
 		width: @moon-breadcrumb-width;
 	}
 
-	// prevents breadcrumbs from capturing pointer events when the first panel is visible without
-	// any breadcrumbs
-	.breadcrumbs:empty {
-		pointer-events: none;
+	.viewport {
+		&[data-clip] {
+			-webkit-clip-path: polygon(@moon-breadcrumb-width 0, 100% 0, 100% 100%, @moon-breadcrumb-width 100%);
+			clip-path: polygon(@moon-breadcrumb-width 0, 100% 0, 100% 100%, @moon-breadcrumb-width 100%);
+		}
+
+		> :not([data-index='0']) {
+			padding-left: 0;
+			width: calc(~"100% - " @moon-breadcrumb-width);
+		}
 	}
+
+	&[data-index='0'] {
+		// prevents breadcrumbs from capturing pointer events when the first panel is visible
+		// without any breadcrumbs
+		.breadcrumbs {
+			z-index: -1;
+			pointer-events: none;
+		}
+	}
+
 }
 
 .alwaysViewing {

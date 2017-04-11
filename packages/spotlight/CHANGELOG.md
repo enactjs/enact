@@ -4,21 +4,63 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ## [unreleased]
 
-### Added
+### Fixed
 
-- `spotlightDisabled` prop support in `@enact/spotlight/container`
+- `spotlight/Spotlight` to consider nested containers when adjusting focus
+
+## [1.0.0] - 2017-03-31
 
 ### Removed
 
-- `@enact/spotlight.spotlightDirections` export and replaced it with `getDirection()` 
+- `spotlight.Spottable` replaced by `spotlight/Spottable`
+- `spotlight.spottableClass` replaced by `spotlight/Spottable.spottableClass`
+- `spotlight.SpotlightContainerDecorator` replaced by `spotlight/SpotlightContainerDecorator`
+- `spotlight.spotlightDefaultClass` replaced by `spotlight/SpotlightContainerDecorator.spotlightDefaultClass`
+- `spotlight.SpotlightRootDecorator` replaced by `spotlight/SpotlightRootDecorator`
+
+### Fixed
+
+- `spotlight/Spotlight` `set()` to properly update the container config
+- `spotlight/Spotlight` to properly save the last-focused element for nested containers
+
+## [1.0.0-beta.4] - 2017-03-10
+
+### Changed
+
+- `spotlight.Spottable` to prevent emulating mouse events for repeated key events
+
+### Fixed
+
+- `spotlight.Spotlight` pointer behavior where upon immediately entering pointer-mode, hovering over a spottable component may result in the component not receiving focus
+
+## [1.0.0-beta.3] - 2017-02-21
+
+### Fixed
+
+- `spotlight.Spotlight` behavior to follow container config rules when navigating between containers
+- `spotlight.Spotlight` behavior to not set focus on spottable components animating past the pointer when not in pointer-mode
+- `spotlight.Spotlight` 5-way behavior where selecting a spottable component may require multiple attempts before performing actions
+- `spotlight.Spotlight` to not unfocus elements on scroll
+
+## [1.0.0-beta.2] - 2017-01-30
+
+### Added
+
+- `spotlight.SpotlightContainerDecorator` support for `spotlightDisabled` prop
+- `spotlight.Spottable` support for `onSpotlightDown`, `onSpotlightLeft`, `onSpotlightRight`, and `onSpotlightUp` properties
+- `spotlight.Spotlight` method `getDirection()` to replace `spotlightDirections`
+
+### Removed
+
+- `spotlight.Spotlight` `spotlightDirections`
 
 ## [1.0.0-beta.1] - 2016-12-30
 
 ### Added
 
-- `@enact/spotlight.Spotlight` methods `isPaused()`, `isSpottable()`, `getCurrent()`, and `isMuted()`
-- `@enact/spotlight.SpotlightContainerDecorator` property `spotlightMuted`
-- `@enact/spotlight.spotlightDirections` export
+- `spotlight.Spotlight` methods `isPaused()`, `isSpottable()`, `getCurrent()`, and `isMuted()`
+- `spotlight.SpotlightContainerDecorator` property `spotlightMuted`
+- `spotlight.spotlightDirections` export
 
 ## [1.0.0-alpha.5] - 2016-12-16
 

@@ -3,6 +3,8 @@ import React from 'react';
 import {storiesOf} from '@kadira/storybook';
 import {withKnobs, boolean, number, select, text} from '@kadira/storybook-addon-knobs';
 
+import nullify from '../../src/utils/nullify.js';
+
 const prop = {
 	tooltipPosition: {
 		'above': 'above',
@@ -33,7 +35,7 @@ storiesOf('TooltipDecorator')
 					tooltipDelay={number('tooltipDelay', 500)}
 					tooltipText={text('tooltipText', 'tooltip!')}
 					tooltipPosition={select('tooltipPosition', prop.tooltipPosition, 'above')}
-					tooltipPreserveCase={boolean('tooltipPreserveCase', false)}
+					tooltipPreserveCase={nullify(boolean('tooltipPreserveCase', false))}
 					tooltipWidth={number('tooltipWidth')}
 				>
 					hello

@@ -18,8 +18,6 @@ import Toggleable from '@enact/ui/Toggleable';
 const handleCancel = function (props) {
 	if (props.open) {
 		props.onClose();
-	} else {
-		// Return `true` to allow event to propagate to containers for unhandled cancel
 		return true;
 	}
 };
@@ -31,11 +29,14 @@ const handleCancel = function (props) {
  *
  * @class Expandable
  * @memberof moonstone/ExpandableItem
+ * @mixes ui/Toggleable.Toggleable
+ * @mixes ui/RadioDecorator.RadioDecorator
+ * @mixes ui/Cancelable.Cancelable
  * @hoc
  * @public
  */
 const Expandable = compose(
-	Toggleable({toggle: null, activate: 'onOpen', deactivate: 'onClose', mutable: true, prop: 'open'}),
+	Toggleable({toggle: null, activate: 'onOpen', deactivate: 'onClose', prop: 'open'}),
 	RadioDecorator({activate: 'onOpen', deactivate: 'onClose', prop: 'open'}),
 	Cancelable({component: 'span', onCancel: handleCancel})
 );

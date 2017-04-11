@@ -2,6 +2,175 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [1.0.0] - 2017-03-31
+
+> NOTE: This version includes a breaking change to the way modules are organized. This change was necessary to prevent further API breakage following the 1.0.0 release and to facilitate changes we want to make in the future. We understand that this will require some work on the part of developers to update their code. Below you will find details about the changes:
+>
+> #### Moved/renamed modules:
+> * `core/jobs` -> `core/util/Job`
+> * `core/Accelerator` -> `spotlight/Accelerator`
+> * `i18n.$L` -> `i18n/$L`
+> * `i18n.toIString` -> `i18n/$L.toIString`
+> * `spotlight.Spottable` -> `spotlight/Spottable`
+> * `spotlight.spottableClass` -> `spotlight/Spottable.spottableClass`
+> * `spotlight.SpotlightContainerDecorator` -> `spotlight/SpotlightContainerDecorator`
+> * `spotlight.spotlightDefaultClass` -> `spotlight/SpotlightContainerDecorator.spotlightDefaultClass`
+> * `spotlight.SpotlightRootDecorator` -> `spotlight/SpotlightRootDecorator`
+>
+> #### Removed modules:
+> * `core/selection`
+> * `core/fetch`
+> * `ui/validators`
+>
+> #### Removed aliases:
+> * `core.hoc` - Use `core/hoc`
+> * `core.kind` - Use `core/kind`
+>
+> We have also modified most form components to be usable in a controlled (app manages component
+> state) or uncontrolled (Enact manages component state) manner. To put a component into a
+> controlled state, pass in `value` (or other appropriate state property such as `selected` or
+> `open`) at component creation and then respond to events and update the value as needed. To put a
+> component into an uncontrolled state, do not set `value` (or equivalent), at creation. From this
+> point on, Enact will manage the state and events will be sent when the state is updated. To
+> specify an initial value, use the `defaultValue` (or, `defaultSelected, `defaultOpen, etc.)
+> property.  See the documentation for individual components for more information.
+>
+> Additionally, we no longer export a `version` with the root import. If you need a version number, import from `package.json` instead.
+
+### Added
+
+- `moonstone/Button` property `icon` to support a built-in icon next to the text content. The Icon supports everything that `moonstone/Icon` supports, as well as a custom icon.
+- `moonstone/MoonstoneDecorator` property `textSize` to resize several components to requested CMR sizes. Simply add `textSize="large"` to your `App` and the new sizes will automatically take effect.
+- `ui/Placeholder` module with `PlaceholderControllerDecorator` and `PlaceholderDecorator` HOCs which facilitate rendering placeholder components until the wrapped component would scroll into the viewport
+
+### Changed
+
+- `i18n` iLib dependency to 20151019-build-12.0-002-04
+- `moonstone/Slider` to use the property `tooltip` instead of `noTooltip`, so the built-in tooltip is not enabled by default
+- `moonstone/IncrementSlider` to include tooltip documentation
+- `moonstone/ExpandableList` to accept an array of objects as children which are spread onto the generated components
+- `moonstone/CheckboxItem` style to match the latest designs, with support for the `moonstone/Checkbox` to be on either the left or the right side by using the `iconPosition` property
+- `moonstone/VideoPlayer` to supply every event callback-method with an object representing the VideoPlayer's current state, including: `currentTime`, `duration`, `paused`, `proportionLoaded`, and `proportionPlayed`
+- `ui/Repeater` to accept an array of objects as children which are spread onto the generated components
+
+### Fixed
+
+- `moonstone/Panels.Panel` behavior for remembering focus on unmount and setting focus after render
+- `moonstone/VirtualList.VirtualGridList` showing empty items when items are continuously added dynamically
+- `moonstone/Picker` to marquee on focus once again
+- `spotlight/Spotlight` `set()` to properly update the container config
+- `spotlight/Spotlight` to properly save the last-focused element for nested containers
+
+## [1.0.0-beta.4] - 2017-03-10
+
+### Added
+
+- `core/kind` support for `contextTypes`
+- `core/utils` function `extractAriaProps()` for redirecting ARIA props when the root node of a component isn't focusable
+- `moonstone/VirtualList` `indexToFocus` option to `scrollTo` method to focus on item with specified index
+- `moonstone/IconButton` and `moonstone/Button` `color` property to add a remote control key color to the button
+- `moonstone/Scrollbar` property `disabled` to disable both paging controls when it is true
+- `moonstone/VirtualList` parameter `moreInfo` to pass `firstVisibleIndex` and `lastVisibleIndex` when scroll events are firing
+- Accessibility support to UI components
+- `moonstone/VideoPlayer` property `onUMSMediaInfo` to support the custom webOS “umsmediainfo” event
+- `moonstone/Region` component which encourages wrapping components for improved accessibility rather than only preceding the components with a `moonstone/Divider`
+- `moonstone/Slider` tooltip. It's enabled by default and comes with options like `noTooltip`, `tooltipAsPercent`, and `tooltipSide`. See the component docs for more details.
+- `moonstone/Spinner` properties `blockClickOn` and `scrim` to block click events behind spinner
+- `ui/A11yDecorator` to facilitate adding pre/post hints to components
+- `ui/AnnounceDecorator` to facilitate announcing actions for accessibility
+- `webos/pmloglib` logging method `perfLog` which calls `PmLogInfoWithClock`
+
+### Changed
+
+- `core/handle` to allow binding to components. This also introduces a breaking change in the return value of handle methods.
+- `moonstone/VirtualGridImageItem` styles to reduce redundant style code app side
+- `moonstone/VirtualList` and `moonstone/VirtualGridList` to add essential CSS for list items automatically
+- `moonstone/VirtualList` and `moonstone/VirtualGridList` to not add `data-index` to their item DOM elements directly, but to pass `data-index` as the parameter of their `component` prop like the `key` parameter of their `component` prop
+- `moonstone/ExpandableItem` and derivatives to defer focusing the contents until animation completes
+- `moonstone/LabeledItem`, `moonstone/ExpandableItem`, `moonstone/ExpandableList` to each support the `node` type in their `label` property. Best used with `ui/Slottable`.
+- `spotlight.Spottable` to prevent emulating mouse events for repeated key events
+
+### Fixed
+
+- `moonstone/VirtualList.GridListImageItem` to have proper padding size according to the existence of caption/subcaption
+- `moonstone/Scrollable` to display scrollbars with proper size
+- `moonstone/VirtualGridList` to not be truncated
+- `webos/LS2Request` to return failure in isomorphic mode
+
+## [1.0.0-beta.3] - 2017-02-21
+
+> **NOTE** - The change to support caching of iLib locales requires an update to the `enact-dev` tool. This change is not backwards compatible with 1.0.0-beta.2.  Be sure to update both at the same time and reinstall/re-bootstrap the modules.
+
+### Added
+
+- `ui/Resizable` Higher-order Component to facilitate notification of resized components
+- `core/handle` function `forEventProp` to test properties on an event
+- localStorage caching support for ilib resource files
+- Support for 5-way operation of `moonstone/Slider` and `moonstone/VideoPlayer.MediaSlider`
+- `moonstone/Slider` now supports `children` which are added to the `Slider`'s knob, and follow it as it moves
+- `moonstone/ExpandableInput` properties `iconAfter` and `iconBefore` to display icons after and before the input, respectively
+- `moonstone/Dialog` property `preserveCase`, which affects `title` text
+
+### Changed
+
+- `moonstone/Marquee` to allow disabled marquees to animate
+- `moonstone/Dialog` to marquee `title` and `titleBelow`
+- `moonstone/Marquee.MarqueeController` config option `startOnFocus` to `marqueeOnFocus`. `startOnFocus` is deprecated and will be removed in a future update.
+- `moonstone/Button`, `moonstone/IconButton`, `moonstone/Item` to not forward `onClick` when `disabled`
+
+### Fixed
+
+- `moonstone/Scroller` to recalculate when an expandable child opens
+- `moonstone/Popup` and `moonstone/ContextualPopupDecorator` so that when the popup is closed, spotlight focus returns to the control that had focus prior to the popup opening
+- `moonstone/Input` to not get focus when disabled
+- `spotlight.Spotlight` behavior to follow container config rules when navigating between containers
+- `spotlight.Spotlight` behavior to not set focus on spottable components animating past the pointer when not in pointer-mode
+- `spotlight.Spotlight` 5-way behavior where selecting a spottable component may require multiple attempts before performing actions
+- `spotlight.Spotlight` to not unfocus elements on scroll
+- `spotlightDisabled` property support for spottable moonstone components
+
+## [1.0.0-beta.2] - 2017-01-30
+
+### Added
+
+- Support for a new `handlers` block for components created with `core/kind` to allow cached event handlers
+- `core/handle` handler `forKey`
+- `core/keymap` module to abstract keyboard key codes behind common names (e.g. 'up' and 'down')
+- `moonstone/Panels.Panel` property `showChildren` to support deferring rendering the panel body until animation completes
+- `moonstone/MarqueeDecorator` property `invalidateProps` that specifies which props cause the marquee distance to be invalidated
+- developer-mode warnings to several components to warn when values are out-of-range
+- `moonstone/Divider` property `spacing` which adjusts the amount of empty space above and below the `Divider`. `'normal'`, `'small'`, `'medium'`, `'large'`, and `'none'` are available.
+- `moonstone/Picker` when `joined` the ability to be incremented and decremented by arrow keys
+- `onSpotlightDisappear` event property support for spottable moonstone components
+- `spotlight.SpotlightContainerDecorator` support for `spotlightDisabled` prop
+- `spotlight.Spottable` support for `onSpotlightDown`, `onSpotlightLeft`, `onSpotlightRight`, and `onSpotlightUp` properties
+- `spotlight.Spotlight` method `getDirection` to replace `spotlightDirections`
+- `ui/ViewManager` properties `enteringDelay` and `enteringProp` to aid deferred rendering of views
+- `ui/resolution` function `scaleToRem` for those times when you have a size in pixels that you want to convert directly to `rem` to support automatic dynamic resizing
+
+### Changed
+
+- `moonstone/Panels.Panels` and variations to defer rendering the children of contained `Panel` instances until animation completes
+- `moonstone/ProgressBar` properties `progress` and `backgroundProgress` to accept a number between 0 and 1
+- `moonstone/Slider` and `moonstone/IncrementSlider` property `backgroundPercent` to `backgroundProgress` which now accepts a number between 0 and 1
+- `moonstone/Slider` to not ignore `value` prop when it is the same as the previous value
+- `moonstone/Picker` component's buttons to reverse their operation such that 'up' selects the previous item and 'down' the next
+- `moonstone/Picker` and derivatives may now use numeric width, which represents the amount of characters to use for sizing. `width={4}` represents four characters, `2` for two characters, etc. `width` still accepts the size-name strings.
+- `moonstone/Divider` to now behave as a simple horizontal line when no text content is provided
+- `moonstone/Scrollable` to not display scrollbar controls by default
+- `moonstone/DatePicker` and `moonstone/TimePicker` to emit `onChange` event whenever the value is changed, not just when the component is closed
+
+### Removed
+
+- `core/handle.withArgs` helper function which is no longer needed with the addition of the `handlers` support in `kind()`
+- `moonstone/ProgressBar` properties `min` and `max`
+- `spotlight` `spotlightDirections`
+
+### Fixed
+
+- `moonstone/IncrementSlider` so that the knob is spottable via pointer, and 5-way navigation between the knob and the increment/decrement buttons is functional
+- `moonstone/Slider` and `moonstone/IncrementSlider` to not fire `onChange` for value changes from props
+
 ## [1.0.0-beta.1] - 2016-12-30
 
 ### Added
@@ -15,9 +184,9 @@ The following is a curated list of changes in the Enact project, newest changes 
 - `moonstone/ContextualPopup` property `noAutoDismiss`
 - `moonstone/Dialog` property `scrimType`
 - `moonstone/Popup` property `spotlightRestrict`
-- `@enact/spotlight.Spotlight` methods `isPaused()`, `isSpottable()`, `getCurrent()`, and `isMuted()`
-- `@enact/spotlight.SpotlightContainerDecorator` property `spotlightMuted`
-- `@enact/spotlight.spotlightDirections` export
+- `spotlight.Spotlight` methods `isPaused()`, `isSpottable()`, `getCurrent()`, and `isMuted()`
+- `spotlight.SpotlightContainerDecorator` property `spotlightMuted`
+- `spotlight.spotlightDirections` export
 - `ui/RadioDecorator` and `ui/RadioControllerDecorator` to support radio group-style management of components
 - `ui/Holdable` Higher-order Component
 - `ui/ViewManager` events `onAppear`, `onEnter`, `onLeave`, `onStay`, `onTransition`, and `onWillTransition`

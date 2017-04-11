@@ -6,6 +6,7 @@
  * @module moonstone/ExpandableList
  */
 
+import Changeable from '@enact/ui/Changeable';
 import Group from '@enact/ui/Group';
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
@@ -29,13 +30,20 @@ const ExpandableListBase = kind({
 
 	propTypes: /** @lends moonstone/ExpandableList.ExpandableListBase.prototype */ {
 		/**
-		 * The items to be displayed in the list
+		 * The items to be displayed in the list. This supports two data types. If an array of
+		 * strings is provided, the strings will be used in the generated components as the readable
+		 * text. If an array of objects is provided, each object will be spread onto the generated
+		 * component with no interpretation. You'll be responsible for setting properties like
+		 * `disabled`, `className`, and setting the text content using the `children` key.
 		 *
-		 * @type {String[]}
+		 * @type {String[]|Object[]}
 		 * @required
 		 * @public
 		 */
-		children: PropTypes.arrayOf(PropTypes.string).isRequired,
+		children: PropTypes.oneOfType([
+			PropTypes.arrayOf(PropTypes.string),
+			PropTypes.arrayOf(PropTypes.object)
+		]).isRequired,
 
 		/**
 		 * The primary text of the item.
@@ -67,11 +75,11 @@ const ExpandableListBase = kind({
 		 * The secondary, or supportive text. Typically under the `title`, a subtitle. If omitted,
 		 * the label will be generated as a comma-separated list of the selected items.
 		 *
-		 * @type {String}
+		 * @type {Node}
 		 * @default null
 		 * @public
 		 */
-		label: PropTypes.string,
+		label: PropTypes.node,
 
 		/**
 		 * When `true`, the expandable will not automatically close when the user navigates to the
@@ -128,6 +136,15 @@ const ExpandableListBase = kind({
 		onSelect: PropTypes.func,
 
 		/**
+		 * The handler to run when the component is removed while retaining focus.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightDisappear: PropTypes.func,
+
+		/**
 		 * When `true`, the expandable is open with its contents visible
 		 *
 		 * @type {Boolean}
@@ -156,14 +173,41 @@ const ExpandableListBase = kind({
 		 * @type {Number|Number[]}
 		 * @public
 		 */
-		selected: PropTypes.oneOfType([PropTypes.number, PropTypes.arrayOf(PropTypes.number)])
+		selected: PropTypes.oneOfType([PropTypes.number, PropTypes.arrayOf(PropTypes.number)]),
+
+		/**
+		 * When `true`, the component cannot be navigated using spotlight.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		spotlightDisabled: PropTypes.bool
 	},
 
 	defaultProps: {
-		select: 'single'
+		select: 'single',
+		spotlightDisabled: false
+	},
+
+	handlers: {
+		onSelect: (ev, {closeOnSelect, onClose, onSelect, select}) => {
+			// Call onClose if closeOnSelect is enabled and not selecting multiple
+			if (closeOnSelect && onClose && select !== 'multiple') {
+				onClose();
+			}
+
+			if (onSelect) {
+				onSelect(ev);
+			}
+		}
 	},
 
 	computed: {
+		'aria-multiselectable': ({select}) => select === 'multiple',
+
+		itemProps: ({onSpotlightDisappear, spotlightDisabled}) => ({onSpotlightDisappear, spotlightDisabled}),
+
 		// generate a label that concatenates the text of the selected items
 		label: ({children, label, select, selected}) => {
 			if (label) {
@@ -184,25 +228,15 @@ const ExpandableListBase = kind({
 					CheckboxItem; // for single or multiple
 		},
 
-		onSelect: ({closeOnSelect, onClose, onSelect: handler, select}) => (ev) => {
-			// Call onClose if closeOnSelect is enabled and not selecting multiple
-			if (closeOnSelect && onClose && select !== 'multiple') {
-				onClose();
-			}
-
-			if (handler) {
-				handler(ev);
-			}
-		},
+		role: ({select}) => select === 'radio' ? 'radiogroup' : 'group',
 
 		selected: ({select, selected}) => {
 			return (select === 'single' && Array.isArray(selected)) ? selected[0] : selected;
 		}
 	},
 
-	render: ({children, ListItem, noAutoClose, noLockBottom, onSelect, select, selected, ...rest}) => {
+	render: ({children, itemProps, ListItem, noAutoClose, noLockBottom, onSelect, select, selected, ...rest}) => {
 		delete rest.closeOnSelect;
-		delete rest.select;
 
 		return (
 			<ExpandableItemBase
@@ -214,6 +248,7 @@ const ExpandableListBase = kind({
 				<Group
 					childComponent={ListItem}
 					childSelect="onToggle"
+					itemProps={itemProps}
 					onSelect={onSelect}
 					select={select}
 					selected={selected}
@@ -231,13 +266,28 @@ const ExpandableListBase = kind({
  * {@link moonstone/LabeledItem.LabeledItem} that can be expanded to show a selectable
  * list of items.
  *
+ * By default, `ExpandableList` maintains the state of its `selected` property. Supply the
+ * `defaultSelected` property to control its initial value. If you wish to directly control updates
+ * to the component, supply a value to `selected` at creation time and update it in response to
+ * `onChange` events.
+ *
+ * `ExpandableList` maintains its open/closed state by default. The initial state can be supplied
+ * using `defaultOpen`. In order to directly control the open/closed state, supply a value for
+ * `open` at creation time and update its value in response to `onClose`/`onOpen` events.
+ *
  * @class ExpandableList
  * @memberof moonstone/ExpandableList
- * @ui
  * @mixes moonstone/ExpandableItem.Expandable
+ * @mixes ui/Changeable.Changeable
+ * @ui
  * @public
  */
-const ExpandableList = Expandable(ExpandableListBase);
+const ExpandableList = Expandable(
+	Changeable(
+		{change: 'onSelect', prop: 'selected'},
+		ExpandableListBase
+	)
+);
 
 export default ExpandableList;
 export {ExpandableList, ExpandableListBase};

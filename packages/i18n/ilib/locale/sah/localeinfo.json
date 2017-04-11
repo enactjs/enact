@@ -1,1 +1,1 @@
-{"language.name":"Sakha","numfmt":{"decimalChar":".","groupChar":",","exponential":"E","currencyFormats":{"common":"{s} {n}"}},"scripts":["Cyrl"],"locale":"sah"}
+{"delimiter":{"quotationStart":"«","quotationEnd":"»","alternateQuotationStart":"„","alternateQuotationEnd":"“"},"language.name":"Sakha","numfmt":{"decimalChar":",","groupChar":" ","currencyFormats":{"common":"{n} {s}","commonNegative":"-{n} {s}"}},"scripts":["Cyrl"],"locale":"sah"}

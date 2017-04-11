@@ -4,17 +4,19 @@
  * @module moonstone/CheckboxItem
  */
 
-import React, {PropTypes} from 'react';
 import kind from '@enact/core/kind';
+import React, {PropTypes} from 'react';
+import Toggleable from '@enact/ui/Toggleable';
 
-import ToggleItem from '../ToggleItem';
+import {ToggleItemBase} from '../ToggleItem';
+import Checkbox from '../Checkbox';
 
 /**
- * {@link moonstone/CheckboxItem.CheckboxItem} is a component that
+ * {@link moonstone/CheckboxItem.CheckboxItemBase} is a component that
  * is an Item that is Toggleable. It has two states: `true` (selected) & `false`
  * (unselected). It uses a check icon to represent its selected state.
  *
- * @class CheckboxItem
+ * @class CheckboxItemBase
  * @memberof moonstone/CheckboxItem
  * @ui
  * @public
@@ -22,7 +24,7 @@ import ToggleItem from '../ToggleItem';
 const CheckboxItemBase = kind({
 	name: 'CheckboxItem',
 
-	propTypes: /** @lends moonstone/CheckboxItem.CheckboxItem.prototype */ {
+	propTypes: /** @lends moonstone/CheckboxItem.CheckboxItemBase.prototype */ {
 		/**
 		 * The string to be displayed as the main content of the checkbox item.
 		 *
@@ -39,6 +41,15 @@ const CheckboxItemBase = kind({
 		 * @public
 		 */
 		disabled: PropTypes.bool,
+
+		/**
+		 * Specifies on which side (`before` or `after`) of the text the icon appears.
+		 *
+		 * @type {String}
+		 * @default 'before'
+		 * @public
+		 */
+		iconPosition: PropTypes.oneOf(['before', 'after']),
 
 		/**
 		 * When `true`, an inline visual effect is applied to the button.
@@ -64,7 +75,6 @@ const CheckboxItemBase = kind({
 		 * When `true`, a check mark icon is applied to the button.
 		 *
 		 * @type {Boolean}
-		 * @default false
 		 * @public
 		 */
 		selected: PropTypes.bool,
@@ -81,15 +91,41 @@ const CheckboxItemBase = kind({
 
 	defaultProps: {
 		disabled: false,
+		iconPosition: 'before',
 		inline: false,
-		selected: false,
 		value: ''
 	},
 
+	computed: {
+		icon: ({selected, disabled}) => (
+			<Checkbox selected={selected} disabled={disabled} />
+		)
+	},
+
 	render: (props) => (
-		<ToggleItem {...props} icon="check" />
+		<ToggleItemBase {...props} />
 	)
 });
 
-export default CheckboxItemBase;
-export {CheckboxItemBase as CheckboxItem, CheckboxItemBase};
+/**
+ * {@link moonstone/CheckboxItem.CheckboxItem} is a component that is an Item that is Toggleable. It
+ * has two states: `true` (selected) & `false` (unselected). It uses a check icon to represent its
+ * selected state.
+ *
+ * By default, `CheckboxItem` maintains the state of its `selected` property. Supply the
+ * `defaultSelected` property to control its initial value. If you wish to directly control updates
+ * to the component, supply a value to `selected` at creation time and update it in response to
+ * `onToggle` events.
+ *
+ * @class CheckboxItem
+ * @memberof moonstone/CheckboxItem
+ * @ui
+ * @public
+ */
+const CheckboxItem = Toggleable(
+	{prop: 'selected'},
+	CheckboxItemBase
+);
+
+export default CheckboxItem;
+export {CheckboxItem, CheckboxItemBase};

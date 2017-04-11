@@ -1,5 +1,6 @@
+import $L from '@enact/i18n/$L';
 import kind from '@enact/core/kind';
-import {Spottable} from '@enact/spotlight';
+import Spottable from '@enact/spotlight/Spottable';
 import React from 'react';
 
 import css from './Panels.less';
@@ -41,6 +42,13 @@ const BreadcrumbBase = kind({
 		 *
 		 * @type {Function}
 		 */
+		onClick: React.PropTypes.func,
+
+		/**
+		 * Called when the breadcrumb is clicked
+		 *
+		 * @type {Function}
+		 */
 		onSelect: React.PropTypes.func
 	},
 
@@ -49,15 +57,23 @@ const BreadcrumbBase = kind({
 		className: 'breadcrumb'
 	},
 
-	computed: {
-		onSelect: ({index, onSelect: handler, onClick}) => (ev) => {
+	handlers: {
+		onSelect: (ev, {index, onSelect, onClick}) => {
+			// clear Spotlight focus
+			ev.target.blur();
+
 			if (onClick) onClick(ev);
-			if (handler) handler({index});
+			if (onSelect) onSelect({index});
 		}
 	},
 
 	render: ({children, index, onSelect, ...rest}) => (
-		<SpottableDiv {...rest} data-index={index} onClick={onSelect}>
+		<SpottableDiv
+			{...rest}
+			aria-label={$L('go to previous')}
+			data-index={index}
+			onClick={onSelect}
+		>
 			<div className={css.breadcrumbHeader}>
 				{children}
 			</div>

@@ -5,9 +5,9 @@ import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, number, select, text} from '@kadira/storybook-addon-knobs';
 
-VideoPlayerBase.propTypes = Object.assign({}, VideoPlayerBase.propTypes, VideoPlayer.propTypes);
-VideoPlayerBase.defaultProps = Object.assign({}, VideoPlayerBase.defaultProps, VideoPlayer.defaultProps);
-VideoPlayerBase.displayName = 'VideoPlayer';
+import {mergeComponentMetadata} from '../../src/utils/propTables';
+
+const Config = mergeComponentMetadata('VideoPlayer', VideoPlayerBase, VideoPlayer);
 
 // Set up some defaults for info and knobs
 const prop = {
@@ -38,6 +38,7 @@ const prop = {
 	],
 	events: [
 		'onAbort',
+		'onBackwardButtonClick',
 		'onCanPlay',
 		'onCanPlayThrough',
 		'onDurationChange',
@@ -45,11 +46,15 @@ const prop = {
 		'onEncrypted',
 		'onEnded',
 		'onError',
+		'onForwardButtonClick',
+		'onJumpBackwardButtonClick',
+		'onJumpForwardButtonClick',
 		'onLoadedData',
 		'onLoadedMetadata',
 		'onLoadStart',
 		'onPause',
 		'onPlay',
+		'onPlayButtonClick',
 		'onPlaying',
 		'onProgress',
 		'onRateChange',
@@ -58,6 +63,7 @@ const prop = {
 		'onStalled',
 		'onSuspend',
 		'onTimeUpdate',
+		'onUMSMediaInfo',	// Custom webOS media event
 		'onVolumeChange',
 		'onWaiting'
 	]
@@ -83,6 +89,8 @@ storiesOf('VideoPlayer')
 		() => (
 			<div
 				style={{
+					transformOrigin: 'top',
+					transform: 'scale(' + number('video scale', 1, {range: true, min: 0.05, max: 1, step: 0.01}) + ')',
 					outline: 'teal dashed 1px',
 					position: 'relative'
 				}}
@@ -123,5 +131,6 @@ storiesOf('VideoPlayer')
 					<IconButton backgroundOpacity="translucent">star</IconButton>
 				</VideoPlayer>
 			</div>
-		)
+		),
+		{propTables: [Config]}
 	);

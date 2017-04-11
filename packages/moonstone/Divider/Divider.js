@@ -27,12 +27,36 @@ const DividerBase = kind({
 
 	propTypes: /** @lends moonstone/Divider.Divider.prototype */ {
 		/**
-		 * The content of the divider.
+		 * The content of the divider. A divider with no children (text content) will render simply
+		 * as a horizontal line, with even spacing above and below.
 		 *
 		 * @type {String}
 		 * @public
 		 */
-		children: PropTypes.string
+		children: PropTypes.string,
+
+		/**
+		 * The size of the spacing around the divider.
+		 *
+		 * * `'normal'` (default) spacing is slightly larger than the standard spotlight spacing.
+		 * * `'small'` is the same size as spotlight spacing.
+		 * * `'medium'` is 2x spotlight.
+		 * * `'large'` is 3x spotlight.
+		 * * `'none'` has no spacing at all. Neighboring elements will directly touch the divider.
+		 *
+		 * _Note:_ Spacing is separate from margin with regard to `margin-top`. It ensures a
+		 * consistent distance from the bottom horizontal line. It's safe to use `margin-top` to add
+		 * additional spacing above your {@link moonstone/Divider.Divider}.
+		 *
+		 * @type {String}
+		 * @default 'normal'
+		 * @public
+		 */
+		spacing: PropTypes.oneOf(['normal', 'small', 'medium', 'large', 'none'])
+	},
+
+	defaultProps: {
+		spacing: 'normal'
 	},
 
 	styles: {
@@ -41,12 +65,17 @@ const DividerBase = kind({
 	},
 
 	computed: {
+		className: ({spacing, styler}) => styler.append(spacing),
 		content: ({children}) => children ? children.split(' ').map(cap).join(' ') : ''
 	},
 
-	render: ({content, ...rest}) => (
-		<MarqueeH3 {...rest} marqueeOn="hover">{content}</MarqueeH3>
-	)
+	render: ({content, ...rest}) => {
+		delete rest.spacing;
+
+		return (
+			<MarqueeH3 {...rest} marqueeOn="hover">{content}</MarqueeH3>
+		);
+	}
 });
 
 export default DividerBase;

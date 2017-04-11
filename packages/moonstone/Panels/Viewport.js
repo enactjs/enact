@@ -1,26 +1,12 @@
-import {findDOMNode} from 'react-dom';
-import {forward, withArgs as handle} from '@enact/core/handle';
+import {forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import ViewManager, {shape} from '@enact/ui/ViewManager';
 import invariant from 'invariant';
 import React from 'react';
 import Spotlight from '@enact/spotlight';
 
+import IdProvider from './IdProvider';
 import css from './Panels.less';
-
-const spotPanel = ({view}) => {
-	// eslint-disable-next-line react/no-find-dom-node
-	const node = findDOMNode(view);
-	if (node) {
-		const body = node.querySelector('section .spottable');
-		const header = node.querySelector('header .spottable');
-		const spottable = body || header;
-
-		if (spottable) {
-			Spotlight.focus(spottable);
-		}
-	}
-};
 
 /**
  * The container for a set of Panels
@@ -32,6 +18,15 @@ const ViewportBase = kind({
 	name: 'Viewport',
 
 	propTypes: /** @lends Viewport.prototype */ {
+
+		/**
+		 * A function that generates a globally-unique identifier for a panel index
+		 *
+		 * @type {Function}
+		 * @required
+		 */
+		generateId: React.PropTypes.func.isRequired,
+
 		/**
 		 * Set of functions that control how the panels are transitioned into and out of the
 		 * viewport
@@ -74,17 +69,24 @@ const ViewportBase = kind({
 		className: 'viewport'
 	},
 
-	computed: {
-		children: ({children}) => React.Children.map(children, (child, index) => {
-			return React.cloneElement(child, {'data-index': index});
-		}),
-		handleAppear: handle(forward('onAppear'), spotPanel),
-		handleEnter: handle(forward('onEnter'), spotPanel),
-		handleTransition: handle(forward('onTransition'), Spotlight.resume),
-		handleWillTransition: handle(forward('onWillTransition'), Spotlight.pause)
+	handlers: {
+		onTransition: handle(forward('onTransition'), Spotlight.resume),
+		onWillTransition: handle(forward('onWillTransition'), Spotlight.pause)
 	},
 
-	render: ({arranger, children, handleAppear, handleEnter, handleTransition, handleWillTransition, index, noAnimation, ...rest}) => {
+	computed: {
+		children: ({children, generateId}) => React.Children.map(children, (child, index) => {
+			return React.cloneElement(child, {
+				containerId: child.props.containerId || generateId(index),
+				'data-index': index
+			});
+		}),
+		enteringProp: ({noAnimation}) => noAnimation ? null : 'hideChildren'
+	},
+
+	render: ({arranger, children, enteringProp, index, noAnimation, ...rest}) => {
+		delete rest.generateId;
+
 		const count = React.Children.count(children);
 		invariant(
 			index === 0 && count === 0 || index < count,
@@ -94,15 +96,13 @@ const ViewportBase = kind({
 		return (
 			<ViewManager
 				{...rest}
-				noAnimation={noAnimation}
 				arranger={arranger}
-				duration={200}
-				index={index}
 				component="main"
-				onAppear={handleAppear}
-				onEnter={handleEnter}
-				onTransition={handleTransition}
-				onWillTransition={handleWillTransition}
+				duration={250}
+				enteringDelay={100}
+				enteringProp={enteringProp}
+				index={index}
+				noAnimation={noAnimation}
 			>
 				{children}
 			</ViewManager>
@@ -110,5 +110,10 @@ const ViewportBase = kind({
 	}
 });
 
-export default ViewportBase;
-export {ViewportBase as Viewport, ViewportBase};
+const Viewport = IdProvider(
+	{onUnmount: Spotlight.remove, prefix: 'panel-container-'},
+	ViewportBase
+);
+
+export default Viewport;
+export {Viewport, ViewportBase};

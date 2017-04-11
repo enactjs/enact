@@ -8,7 +8,7 @@
 
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
-import {Spottable} from '@enact/spotlight';
+import Spottable from '@enact/spotlight/Spottable';
 
 import Icon from '../Icon';
 import {Image} from '../Image';
@@ -93,15 +93,24 @@ const GridListImageItemBase = kind({
 	},
 
 	computed: {
-		className: ({selected, styler}) => styler.append({selected})
+		className: ({caption, selected, styler, subCaption}) => styler.append(
+			{selected},
+			caption ? 'useCaption' : null,
+			subCaption ? 'useSubCaption' : null
+		)
 	},
 
 	render: ({caption, source, subCaption, selectionOverlayShowing, ...rest}) => {
+		if (selectionOverlayShowing) {
+			rest['role'] = 'checkbox';
+			rest['aria-checked'] = rest.selected;
+		}
+
 		delete rest.selected;
 
 		return (
 			<div {...rest}>
-				<Image className={css.image} src={source} placeholder={defaultPlaceholder} />
+				<Image className={css.image} placeholder={defaultPlaceholder} src={source} />
 				{
 					selectionOverlayShowing ? (
 						<div className={css.overlayContainer}>
@@ -111,8 +120,8 @@ const GridListImageItemBase = kind({
 						</div>
 					) : null
 				}
-				{caption ? (<MarqueeText marqueeOn="hover" className={css.caption}>{caption}</MarqueeText>) : null}
-				{subCaption ? (<MarqueeText marqueeOn="hover" className={css.subCaption}>{subCaption}</MarqueeText>) : null}
+				{caption ? (<MarqueeText className={css.caption} marqueeOn="hover">{caption}</MarqueeText>) : null}
+				{subCaption ? (<MarqueeText className={css.subCaption} marqueeOn="hover">{subCaption}</MarqueeText>) : null}
 			</div>
 		);
 	}
@@ -135,7 +144,7 @@ const GridListImageItemBase = kind({
  * @public
  */
 const GridListImageItem = MarqueeController(
-	{startOnFocus: true},
+	{marqueeOnFocus: true},
 	Spottable(
 		GridListImageItemBase
 	)

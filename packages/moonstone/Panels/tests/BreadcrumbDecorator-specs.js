@@ -20,6 +20,8 @@ describe('BreadcrumbDecorator', () => {
 		}
 	});
 
+	const Panel = () => <div />;
+
 	it('should wrap primitive breadcrumbs with Breadcrumb', function () {
 		const SingleBreadcrumbPanels = BreadcrumbDecorator({
 			max: 1
@@ -27,9 +29,9 @@ describe('BreadcrumbDecorator', () => {
 
 		const subject = mount(
 			<SingleBreadcrumbPanels index={2} breadcrumbs={['1st', '2nd', '3rd']}>
-				<div>Panel</div>
-				<div>Panel</div>
-				<div>Panel</div>
+				<Panel />
+				<Panel />
+				<Panel />
 			</SingleBreadcrumbPanels>
 		);
 
@@ -48,9 +50,9 @@ describe('BreadcrumbDecorator', () => {
 
 		const subject = mount(
 			<SingleBreadcrumbPanels index={2} breadcrumbs={breadcrumbs}>
-				<div>Panel</div>
-				<div>Panel</div>
-				<div>Panel</div>
+				<Panel />
+				<Panel />
+				<Panel />
 			</SingleBreadcrumbPanels>
 		);
 
@@ -67,10 +69,10 @@ describe('BreadcrumbDecorator', () => {
 
 		const subject = mount(
 			<ThreeBreadcrumbPanels index={3}>
-				<div>Panel</div>
-				<div>Panel</div>
-				<div>Panel</div>
-				<div>Panel</div>
+				<Panel />
+				<Panel />
+				<Panel />
+				<Panel />
 			</ThreeBreadcrumbPanels>
 		);
 
@@ -88,7 +90,7 @@ describe('BreadcrumbDecorator', () => {
 
 		const subject = mount(
 			<StyledBreadcrumbPanels>
-				<div>Panel</div>
+				<Panel />
 			</StyledBreadcrumbPanels>
 		);
 
@@ -98,27 +100,4 @@ describe('BreadcrumbDecorator', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should override runtime props with {config.props}', function () {
-		// Noting that this is not an intended use case of this config option but it does test the
-		// expected behavior.
-		const props = {
-			index: 2
-		};
-		const FixedIndexPanels = BreadcrumbDecorator({
-			props
-		}, Panels);
-
-		const subject = mount(
-			<FixedIndexPanels index={1}>
-				<div>Panel</div>
-				<div>Panel</div>
-				<div>Panel</div>
-			</FixedIndexPanels>
-		);
-
-		const expected = 2;
-		const actual = subject.find('Panels').prop('index');
-
-		expect(actual).to.equal(expected);
-	});
 });

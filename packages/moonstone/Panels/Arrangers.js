@@ -73,6 +73,18 @@ const offsetForBreadcrumbs = ({node}) => {
 	}
 };
 
+// Adds the data-clip attribute to allow clipping when transitioning between non-zero panels
+// CSS is enforced by Panels.less
+const clipForBreadcrumbs = ({from, node, percent, to}) => {
+	const viewport = node.parentNode;
+	if (to === 0 || from === 0 || percent === 0 || percent === 1) {
+		// remove clip when moving to or from the first panel and when a transition is completing
+		delete viewport.dataset.clip;
+	} else {
+		viewport.dataset.clip = 'true';
+	}
+};
+
 /**
  * Arranger that slides panels in from the right and out to the left allowing space for the single
  * breadcrumb when `to` index is greater than zero.
@@ -81,6 +93,9 @@ const offsetForBreadcrumbs = ({node}) => {
  * @private
  */
 export const ActivityArranger = {
-	enter: compose(panelEnter, reverse(offsetForBreadcrumbs)),
-	leave: compose(panelLeave, offsetForBreadcrumbs)
+	enter: compose(panelEnter, reverse(offsetForBreadcrumbs), clipForBreadcrumbs),
+	leave: compose(panelLeave, offsetForBreadcrumbs),
+	// Need a stay arrangement in case the initial index for ActivityPanels is > 0 so the panel is
+	// correctly offset for the breadcrumbs.
+	stay: offsetForBreadcrumbs
 };

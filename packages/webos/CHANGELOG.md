@@ -2,6 +2,28 @@
 
 The following is a curated list of changes in the Enact webos module, newest changes on the top.
 
+## [1.0.0] - 2017-03-31
+
+No significant changes.
+
+## [1.0.0-beta.4] - 2017-03-10
+
+### Added
+
+- `webos/pmloglib` logging method `perfLog` which calls `PmLogInfoWithClock`
+
+### Fixed
+
+- `webos/LS2Request` to return failure in isomorphic mode
+
+## [1.0.0-beta.3] - 2017-02-21
+
+No significant changes.
+
+## [1.0.0-beta.2] - 2017-01-30
+
+No significant changes.
+
 ## [1.0.0-beta.1] - 2016-12-30
 
 ### Added

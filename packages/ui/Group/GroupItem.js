@@ -6,8 +6,9 @@
  */
 
 import kind from '@enact/core/kind';
-import {isSelected, select as selectItem} from '@enact/core/selection';
 import React from 'react';
+
+import {isSelected, select as selectItem} from '../internal/selection';
 
 /**
  * Pick the GroupItem-specific props into a 'private' itemProps key to be extracted by GroupItem
@@ -48,35 +49,50 @@ const GroupItemBase = kind({
 	// TODO: Add propTypes
 	/* eslint-disable enact/prop-types */
 
-	render: (props) => {
-		const {
-			$$GroupItem: {
-				childComponent: Component,
-				childProp,
-				childSelect,
-				indexProp,
-				onSelect,
-				select,
-				selected,
-				selectedProp
-			},
-			...rest
-		} = props;
+	handlers: {
+		handleSelect: (ev, props) => {
+			const {
+				$$GroupItem: {
+					childProp,
+					indexProp,
+					onSelect,
+					select,
+					selected
+				}
+			} = props;
 
-		const index = rest[indexProp];
-		const data = rest[childProp];
+			if (onSelect) {
+				const index = props[indexProp];
+				const data = props[childProp];
 
-		if (selectedProp) {
-			rest[selectedProp] = isSelected(index, selected);
-		}
-
-		if (childSelect && onSelect) {
-			rest[childSelect] = () => {
 				onSelect({
 					data,
 					selected: selectItem(select, index, selected)
 				});
-			};
+			}
+		}
+	},
+
+	render: (props) => {
+		const {
+			$$GroupItem: {
+				childComponent: Component,
+				childSelect,
+				indexProp,
+				selected,
+				selectedProp
+			},
+			handleSelect,
+			...rest
+		} = props;
+
+		if (selectedProp) {
+			const index = rest[indexProp];
+			rest[selectedProp] = isSelected(index, selected);
+		}
+
+		if (childSelect) {
+			rest[childSelect] = handleSelect;
 		}
 
 		return <Component {...rest} />;

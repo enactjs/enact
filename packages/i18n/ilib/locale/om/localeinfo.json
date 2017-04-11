@@ -1,1 +1,1 @@
-{"clock":"12","language.name":"Oromo","numfmt":{"decimalChar":".","groupChar":",","exponential":"E"},"scripts":["Latn","Ethi"],"locale":"om"}
+{"clock":"12","language.name":"Oromo","numfmt":{"currencyFormats":{"common":"{s}{n}","commonNegative":"-{s}{n}"}},"scripts":["Latn","Ethi"],"locale":"om"}

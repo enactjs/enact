@@ -1,15 +1,8 @@
-import Button, {ButtonBase} from '@enact/moonstone/Button';
-import Popup, {PopupBase} from '@enact/moonstone/Popup';
+import Button from '@enact/moonstone/Button';
+import Popup from '@enact/moonstone/Popup';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, text, select} from '@kadira/storybook-addon-knobs';
-
-Button.propTypes = Object.assign({}, ButtonBase.propTypes, Button.propTypes);
-Button.defaultProps = Object.assign({}, ButtonBase.defaultProps, Button.defaultProps);
-Button.displayName = 'Button';
-
-Popup.propTypes = Object.assign({}, PopupBase.propTypes, Popup.propTypes);
-Popup.defaultProps = Object.assign({}, PopupBase.defaultProps, Popup.defaultProps);
 
 storiesOf('Popup')
 	.addDecorator(withKnobs)

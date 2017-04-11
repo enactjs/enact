@@ -10,9 +10,9 @@ import {contextTypes} from '@enact/i18n/I18nDecorator';
 import hoc from '@enact/core/hoc';
 import FloatingLayer from '@enact/ui/FloatingLayer';
 import {forward} from '@enact/core/handle';
+import {Job} from '@enact/core/util';
 import React, {PropTypes} from 'react';
 import ri from '@enact/ui/resolution';
-import {startJob, stopJob} from '@enact/core/jobs';
 
 import {Tooltip, TooltipBase} from './Tooltip';
 
@@ -137,7 +137,7 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 		componentWillUnmount () {
 			if (currentTooltip === this) {
 				currentTooltip = null;
-				stopJob('showTooltip');
+				this.showTooltipJob.stop();
 			}
 		}
 
@@ -265,15 +265,19 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 			return position;
 		}
 
+		showTooltipJob = new Job(() => {
+			this.setState({
+				showing: true
+			});
+		})
+
 		showTooltip (client) {
-			const {tooltipText, tooltipDelay} = this.props;
+			const {tooltipDelay, tooltipText} = this.props;
 
 			if (tooltipText) {
 				this.clientRef = client;
 				currentTooltip = this;
-				startJob('showTooltip', () => {
-					this.setState({showing: true});
-				}, tooltipDelay);
+				this.showTooltipJob.startAfter(tooltipDelay);
 			}
 		}
 
@@ -281,7 +285,7 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 			if (this.props.tooltipText) {
 				this.clientRef = null;
 				currentTooltip = null;
-				stopJob('showTooltip');
+				this.showTooltipJob.stop();
 				this.setState({showing: false});
 			}
 		}
@@ -333,10 +337,12 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 					{children}
 					<FloatingLayer open={this.state.showing} scrimType="none">
 						<Tooltip
+							aria-live="off"
 							arrowAnchor={this.state.arrowAnchor}
 							direction={this.state.tooltipDirection}
 							position={this.state.position}
 							preserveCase={tooltipPreserveCase}
+							role="alert"
 							tooltipRef={this.getTooltipRef}
 							width={tooltipWidth}
 						>

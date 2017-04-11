@@ -1,5 +1,5 @@
 /**
- * Exports the {@link moonstone/Scroller.Scroller} and 
+ * Exports the {@link moonstone/Scroller.Scroller} and
  * {@link moonstone/Scroller.ScrollerBase} components.
  * The default export is {@link moonstone/Scroller.Scroller}.
  *
@@ -9,7 +9,7 @@
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import React, {Component, PropTypes} from 'react';
-import {SpotlightContainerDecorator} from '@enact/spotlight';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import css from './Scroller.less';
 import Scrollable from './Scrollable';
@@ -27,12 +27,12 @@ const dataContainerDisabledAttribute = 'data-container-disabled';
  * @public
  */
 class ScrollerBase extends Component {
+	static displayName = 'Scroller'
+
 	static propTypes = /** @lends moonstone/Scroller.ScrollerBase.prototype */ {
 		children: PropTypes.node.isRequired,
 
-		className: PropTypes.string,
-
-		/*
+		/**
 		 * Specifies how to horizontally scroll. Acceptable values are `'auto'`, `'default'` ,
 		 * `'hidden'`, and `'scroll'`.
 		 *
@@ -42,9 +42,7 @@ class ScrollerBase extends Component {
 		 */
 		horizontal: PropTypes.oneOf(['auto', 'hidden', 'scroll']),
 
-		style: PropTypes.object,
-
-		/*
+		/**
 		 * Specifies how to vertically scroll. Acceptable values are `'auto'`, `'auto'` ,
 		 * `'hidden'`, and `'scroll'`.
 		 *
@@ -62,6 +60,14 @@ class ScrollerBase extends Component {
 		vertical: 'auto'
 	}
 
+	componentDidMount () {
+		this.calculateMetrics();
+	}
+
+	componentDidUpdate () {
+		this.calculateMetrics();
+	}
+
 	scrollBounds = {
 		clientWidth: 0,
 		clientHeight: 0,
@@ -71,18 +77,25 @@ class ScrollerBase extends Component {
 		maxTop: 0
 	}
 
+	scrollPos = {
+		top: 0,
+		left: 0
+	}
+
 	getScrollBounds = () => this.scrollBounds
 
 	setScrollPosition (valX, valY) {
 		const
-			node = this.node,
+			node = this.containerRef,
 			rtl = this.context.rtl;
 
 		if (this.isVertical()) {
 			node.scrollTop = valY;
+			this.scrollPos.top = valY;
 		}
 		if (this.isHorizontal()) {
 			node.scrollLeft = rtl ? (this.scrollBounds.maxLeft - valX) : valX;
+			this.scrollPos.left = valX;
 		}
 	}
 
@@ -96,13 +109,46 @@ class ScrollerBase extends Component {
 				height: node.offsetHeight
 			};
 
-		while (node && node.parentNode && node.id !== this.node.id) {
+		while (node && node.parentNode && node.id !== this.containerRef.id) {
 			bounds.left += node.offsetLeft;
 			bounds.top += node.offsetTop;
 			node = node.parentNode;
 		}
 
 		return bounds;
+	}
+
+	calculatePositionOnFocus = (focusedItem) => {
+		const
+			rtlDirection = this.context.rtl ? -1 : 1,
+			currentLeft = this.scrollPos.left * rtlDirection,
+			currentTop = this.scrollPos.top;
+
+		if (this.isVertical()) {
+			if (focusedItem.offsetTop + focusedItem.offsetHeight > (this.scrollBounds.clientHeight + currentTop)) {
+				this.scrollPos.top += ((focusedItem.offsetTop + focusedItem.offsetHeight) - (this.scrollBounds.clientHeight + currentTop));
+			} else if (focusedItem.offsetTop < currentTop) {
+				this.scrollPos.top += (focusedItem.offsetTop - currentTop);
+			}
+		}
+
+		if (this.isHorizontal()) {
+			if (this.context.rtl && focusedItem.offsetWidth > this.scrollBounds.clientWidth) {
+				// For RTL, and if the `focusedItem` is bigger than `this.scrollBounds.clientWidth`, keep
+				// the scroller to the right.
+				this.scrollPos.left -= focusedItem.offsetWidth;
+			} else if (focusedItem.offsetLeft + focusedItem.offsetWidth > (this.scrollBounds.clientWidth + currentLeft) && focusedItem.offsetWidth < this.scrollBounds.clientWidth) {
+				// If focus is moved to an element outside of view area (to the right), scroller will move
+				// to the right just enough to show the current `focusedItem`. This does not apply to
+				// `focusedItem` that has a width that is bigger than `this.scrollBounds.clientWidth`.
+				this.scrollPos.left += rtlDirection * ((focusedItem.offsetLeft + focusedItem.offsetWidth) - (this.scrollBounds.clientWidth + currentLeft));
+			} else if (focusedItem.offsetLeft < currentLeft) {
+				// If focus is outside of the view area to the left, move scroller to the left accordingly.
+				this.scrollPos.left += rtlDirection * (focusedItem.offsetLeft - currentLeft);
+			}
+		}
+
+		return this.scrollPos;
 	}
 
 	isVertical = () => (this.props.vertical !== 'hidden')
@@ -112,7 +158,7 @@ class ScrollerBase extends Component {
 	calculateMetrics () {
 		const
 			{scrollBounds} = this,
-			{scrollWidth, scrollHeight, clientWidth, clientHeight} = this.node;
+			{scrollWidth, scrollHeight, clientWidth, clientHeight} = this.containerRef;
 		scrollBounds.scrollWidth = scrollWidth;
 		scrollBounds.scrollHeight = scrollHeight;
 		scrollBounds.clientWidth = clientWidth;
@@ -122,21 +168,13 @@ class ScrollerBase extends Component {
 	}
 
 	setContainerDisabled = (bool) => {
-		if (this.node) {
-			this.node.setAttribute(dataContainerDisabledAttribute, bool);
+		if (this.containerRef) {
+			this.containerRef.setAttribute(dataContainerDisabledAttribute, bool);
 		}
 	}
 
-	componentDidMount () {
-		this.calculateMetrics();
-	}
-
-	componentDidUpdate () {
-		this.calculateMetrics();
-	}
-
 	initRef = (ref) => {
-		this.node = ref;
+		this.containerRef = ref;
 	}
 
 	render () {
@@ -146,22 +184,19 @@ class ScrollerBase extends Component {
 			mergedStyle = Object.assign({}, style, {
 				overflowX: props.horizontal,
 				overflowY: props.vertical
-			}),
-			hideNativeScrollbar = !props.hideScrollbars ? css.hideNativeScrollbar : null;
+			});
 
 		delete props.cbScrollTo;
 		delete props.className;
-		delete props.hideScrollbars;
 		delete props.horizontal;
 		delete props.onScrolling;
 		delete props.onScrollStart;
 		delete props.onScrollStop;
-		delete props.positioningOption;
 		delete props.style;
 		delete props.vertical;
 
 		return (
-			<div {...props} ref={this.initRef} className={classNames(className, hideNativeScrollbar)} style={mergedStyle} />
+			<div {...props} ref={this.initRef} className={classNames(className, css.hideNativeScrollbar)} style={mergedStyle} />
 		);
 	}
 }

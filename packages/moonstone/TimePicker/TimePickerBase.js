@@ -1,4 +1,5 @@
-import {$L} from '@enact/i18n';
+import $L from '@enact/i18n/$L';
+import {forKey, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
 
@@ -17,6 +18,45 @@ const hours12 = [
 	'12', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11',
 	'12', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11'
 ];
+
+/**
+ * {@link moonstone/TimePicker/TimePickerBase.HourPicker} is a utility component to prevent the
+ * animation of the picker when the display text doesn't change for 12-hour locales.
+ *
+ * @class HourPicker
+ * @memberof moonstone/TimePicker/TimePickerBase
+ * @ui
+ * @private
+ */
+class HourPicker extends React.Component {
+	static propTypes = {
+		children: React.PropTypes.arrayOf(React.PropTypes.string),
+		value: React.PropTypes.number
+	}
+
+	constructor () {
+		super();
+
+		this.state = {
+			noAnimation: false
+		};
+	}
+
+	componentWillReceiveProps (nextProps) {
+		const {children, value} = this.props;
+		const {children: nextChildren, value: nextValue} = nextProps;
+
+		this.setState({
+			noAnimation: children[value] === nextChildren[nextValue]
+		});
+	}
+
+	render () {
+		return (
+			<DateComponentPicker {...this.props} {...this.state} />
+		);
+	}
+}
 
 /**
 * {@link moonstone/TimePicker.TimePickerBase} is the stateless functional time picker
@@ -79,13 +119,13 @@ const TimePickerBase = kind({
 		order: React.PropTypes.arrayOf(React.PropTypes.oneOf(['h', 'k', 'm', 'a'])).isRequired,
 
 		/**
-		 * When `true`, prevents the hour picker from animation. Useful when changing the meridiem
-		 * for locales that only have 2 meridiems.
+		 * The primary text of the item.
 		 *
-		 * @type {Boolean}
+		 * @type {String}
+		 * @required
 		 * @public
 		 */
-		noHourAnimation: React.PropTypes.bool,
+		title: React.PropTypes.string.isRequired,
 
 		/**
 		 * When `true`, omits the labels below the pickers
@@ -117,7 +157,37 @@ const TimePickerBase = kind({
 		 * @type {Function}
 		 * @public
 		 */
-		onChangeMinute: React.PropTypes.func
+		onChangeMinute: React.PropTypes.func,
+
+		/**
+		 * Callback to be called when a condition occurs which should cause the expandable to close
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onClose: React.PropTypes.func,
+
+		/**
+		 * The handler to run when the component is removed while retaining focus.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightDisappear: React.PropTypes.func,
+
+		/**
+		 * When `true`, the component cannot be navigated using spotlight.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		spotlightDisabled: React.PropTypes.bool
+	},
+
+	defaultProps: {
+		spotlightDisabled: false
 	},
 
 	styles: {
@@ -125,32 +195,39 @@ const TimePickerBase = kind({
 		className: 'timePicker'
 	},
 
+	handlers: {
+		handlePickerKeyDown: handle(
+			forKey('enter'),
+			forward('onClose')
+		)
+	},
+
 	computed: {
 		hasMeridiem: ({order}) => order.indexOf('a') >= 0
 	},
 
-	render: ({hasMeridiem, hour, meridiem, meridiems, minute, noHourAnimation, noLabels, onChangeHour, onChangeMeridiem, onChangeMinute, order, ...rest}) => {
+	render: ({handlePickerKeyDown, hasMeridiem, hour, meridiem, meridiems, minute, noLabels, onChangeHour, onChangeMeridiem, onChangeMinute, onSpotlightDisappear, order, spotlightDisabled, ...rest}) => {
 		return (
-			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false}>
-				<div className={dateComponentPickers}>
+			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled}>
+				<div className={dateComponentPickers} onKeyDown={handlePickerKeyDown}>
 					<div className={css.timeComponents}>
 						{order.map(picker => {
 							switch (picker) {
 								case 'h':
 								case 'k':
 									return (
-										<DateComponentPicker
+										<HourPicker
 											key="hour-picker"
 											label={noLabels ? null : $L('hour')}
-											noAnimation={noHourAnimation}
 											onChange={onChangeHour}
-											reverse
+											onSpotlightDisappear={onSpotlightDisappear}
+											spotlightDisabled={spotlightDisabled}
 											value={hour}
 											width={2}
 											wrap
 										>
 											{hasMeridiem ? hours12 : hours24}
-										</DateComponentPicker>
+										</HourPicker>
 									);
 								case 'm':
 									return (
@@ -160,6 +237,8 @@ const TimePickerBase = kind({
 											max={59}
 											min={0}
 											onChange={onChangeMinute}
+											onSpotlightDisappear={onSpotlightDisappear}
+											spotlightDisabled={spotlightDisabled}
 											padded
 											value={minute}
 											width={2}
@@ -177,8 +256,11 @@ const TimePickerBase = kind({
 							key="meridiem-picker"
 							label={noLabels ? null : $L('meridiem')}
 							onChange={onChangeMeridiem}
+							onSpotlightDisappear={onSpotlightDisappear}
+							reverse
+							spotlightDisabled={spotlightDisabled}
 							value={meridiem}
-							width="small"
+							width={4}
 							wrap
 						>
 							{meridiems}

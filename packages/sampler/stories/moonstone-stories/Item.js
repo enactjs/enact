@@ -3,9 +3,9 @@ import React from 'react';
 import {storiesOf} from '@kadira/storybook';
 import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
 
-Item.propTypes = Object.assign({}, ItemBase.propTypes, Item.propTypes);
-Item.defaultProps = Object.assign({}, ItemBase.defaultProps, Item.defaultProps);
-Item.displayName = 'Item';
+import {mergeComponentMetadata} from '../../src/utils/propTables';
+
+const Config = mergeComponentMetadata('Item', ItemBase, Item);
 
 storiesOf('Item')
 	.addDecorator(withKnobs)
@@ -18,4 +18,6 @@ storiesOf('Item')
 			>
 				{text('children', 'Hello Item')}
 			</Item>
-		));
+		),
+		{propTables: [Config]}
+	);

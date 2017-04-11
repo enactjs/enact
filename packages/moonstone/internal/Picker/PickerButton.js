@@ -6,9 +6,6 @@ import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import Icon from '../../Icon';
 import IconButton from '../../IconButton';
 
-// Components
-const TransparentIconButton = (props) => <IconButton {...props} backgroundOpacity="transparent" />;
-
 const PickerButtonBase = kind({
 	name: 'PickerButton',
 
@@ -18,27 +15,34 @@ const PickerButtonBase = kind({
 			React.PropTypes.string,
 			React.PropTypes.object
 		]),
-		joined: React.PropTypes.bool
+		joined: React.PropTypes.bool,
+		onSpotlightDisappear: React.PropTypes.func,
+		spotlightDisabled: React.PropTypes.bool
 	},
 
-	computed: {
-		ButtonType: ({joined}) => joined ? Icon : TransparentIconButton
-	},
+	render: ({disabled, icon, joined, ...rest}) => {
+		if (joined) {
+			delete rest.onSpotlightDisappear;
+			delete rest.spotlightDisabled;
 
-	render: ({ButtonType, disabled, icon, ...rest}) => {
-		delete rest.joined;
-
-		return (
-			<span {...rest} disabled={disabled}>
-				<ButtonType disabled={disabled}>{icon}</ButtonType>
-			</span>
-		);
+			return (
+				<span {...rest} disabled={disabled}>
+					<Icon disabled={disabled}>{icon}</Icon>
+				</span>
+			);
+		} else {
+			return (
+				<IconButton {...rest} backgroundOpacity="transparent" disabled={disabled}>
+					{icon}
+				</IconButton>
+			);
+		}
 	}
 });
 
 const PickerButton = Holdable(
 	{resume: true, endHold: 'onLeave'},
-	onlyUpdateForKeys(['disabled', 'icon', 'joined', 'onMouseUp'])(
+	onlyUpdateForKeys(['aria-label', 'disabled', 'icon', 'joined', 'onMouseUp', 'spotlightDisabled'])(
 		PickerButtonBase
 	)
 );

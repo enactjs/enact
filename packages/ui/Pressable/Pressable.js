@@ -1,13 +1,16 @@
+/* eslint-disable react/sort-prop-types */
+
 /**
  * Exports the {@link ui/Pressable.Pressable} Higher-order Component (HOC).
  *
  * @module ui/Pressable
  */
 
-import {forward} from '@enact/core/handle';
+import {forProp, forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
 import React, {PropTypes} from 'react';
+import warning from 'warning';
 
 /**
  * Default config for {@link ui/Pressable.Pressable}
@@ -67,20 +70,29 @@ const defaultConfig = {
 const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 	const {depress, release, prop, leave} = config;
 	const defaultPropKey = 'default' + cap(prop);
-	const forwardDepress = forward(depress);
-	const forwardRelease = forward(release);
 
 	return class Pressable extends React.Component {
 		static propTypes = /** @lends ui/Pressable.Pressable.prototype */ {
 			/**
-			 * Whether or not the component is in a "pressed" state when first rendered.
-			 * *Note that this property name can be changed by the config. By default it is `defaultPressed`.
+			 * Default pressed state applied at construction when the pressed prop is `undefined` or
+			 * `null`.
 			 *
 			 * @type {Boolean}
 			 * @default false
 			 * @public
 			 */
 			[defaultPropKey]: React.PropTypes.bool,
+
+			/**
+			 * Current pressed state. When set at construction, the component is considered
+			 * "controlled" and will only update its internal pressed state when updated by new
+			 * props. If `undefined`, the component is "uncontrolled" and `Pressable` will manage
+			 * the pressed state using callbacks defined by its configuration.
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			[prop]: React.PropTypes.bool,
 
 			/**
 			 * Whether or not the component is in a disabled state.
@@ -99,32 +111,68 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 		constructor (props) {
 			super(props);
+			let pressed = props[defaultPropKey];
+			let controlled = false;
+
+			if (prop in props) {
+				if (props[prop] != null) {
+					pressed = props[prop];
+				}
+
+				controlled = true;
+			}
+
 			this.state = {
-				pressed: props[defaultPropKey]
+				controlled,
+				pressed
 			};
 		}
 
-		onMouseDown = (ev) => {
-			if (!this.props.disabled) {
-				this.setState({pressed: ev.pressed || true});
+		componentWillReceiveProps (nextProps) {
+			if (this.state.controlled) {
+				const pressed = nextProps[prop];
+				this.setState({pressed});
+			} else {
+				warning(
+					!(prop in nextProps),
+					`'${prop}' specified for an uncontrolled instance of Pressable and will be
+					ignored. To make this instance of Pressable controlled, '${prop}' should be
+					specified at creation.`
+				);
 			}
-			forwardDepress(ev, this.props);
 		}
 
-		onMouseUp = (ev) => {
-			this.setState({pressed: false});
-			forwardRelease(ev, this.props);
+		handle = handle.bind(this)
+
+		updatePressed = (pressed) => {
+			if (!this.state.controlled) {
+				this.setState({pressed});
+			}
 		}
 
-		onMouseLeave = () => {
-			this.setState({pressed: false});
-		}
+		handleDepress = this.handle(
+			forward(depress),
+			forProp('disabled', false),
+			(ev) => this.updatePressed(ev && ev.pressed || true)
+		)
+
+		handleRelease = this.handle(
+			forward(release),
+			forProp('disabled', false),
+			() => this.updatePressed(false)
+		)
+
+		handleLeave = this.handle(
+			forward(leave),
+			forProp('disabled', false),
+			() => this.updatePressed(false)
+		)
 
 		render () {
 			const props = Object.assign({}, this.props);
-			if (depress) props[depress] = this.onMouseDown;
-			if (release) props[release] = this.onMouseUp;
-			if (leave) props[leave] = this.onMouseLeave;
+			if (depress) props[depress] = this.handleDepress;
+			if (release) props[release] = this.handleRelease;
+			if (leave) props[leave] = this.handleLeave;
 			if (prop) props[prop] = this.state.pressed;
 			delete props[defaultPropKey];
 

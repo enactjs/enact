@@ -9,7 +9,25 @@
 	.moon-divider-text();
 
 	margin: 0 @moon-spotlight-outset (1.5 * @moon-spotlight-outset) @moon-spotlight-outset;
+	min-height: (1.5 * @moon-spotlight-outset);
 	line-height: 1.6em;
+
+	&.none {
+		margin-bottom: 0;
+		min-height: 0;
+	}
+	&.small {
+		margin-bottom: @moon-spotlight-outset;
+		min-height: @moon-spotlight-outset;
+	}
+	&.medium {
+		margin-bottom: (@moon-spotlight-outset * 2);
+		min-height: (@moon-spotlight-outset * 2);
+	}
+	&.large {
+		margin-bottom: (@moon-spotlight-outset * 3);
+		min-height: (@moon-spotlight-outset * 3);
+	}
 
 	.moon-neutral & {
 		.moon-neutral-divider-border();

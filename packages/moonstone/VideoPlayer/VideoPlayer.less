@@ -10,11 +10,9 @@
 	position: relative;
 	overflow: hidden;
 
-	.videoFrame {
-		video {
-			width: 100%;
-			vertical-align: top;
-		}
+	.video {
+		width: 100%;
+		vertical-align: top;
 	}
 
 	.overlay {
@@ -42,6 +40,7 @@
 					flex-grow: 1;
 					color: @moon-video-player-title-color;
 					opacity: 1;
+					overflow: hidden;
 					.margin-start-end(0, @moon-spotlight-outset);
 
 					&.hidden {
@@ -138,9 +137,35 @@
 					margin: 0;
 
 					// Grow the knob when the Slider gets spotted
-					&:global(.spottable):focus .knob::before {
-						transform: @moon-translate-center scale(0.75);
-						opacity: 1;
+					&:global(.spottable):focus {
+						.knob::before {
+							transform: @moon-translate-center scale(0.5);
+							opacity: 1;
+						}
+						&.pressed .knob::before {
+							transform: @moon-translate-center scale(0.75);
+						}
+					}
+					.sliderTooltip {
+						.moon-text-base(@moon-video-slider-tooltip-font-size);
+						color: @moon-white;
+						text-shadow: @moon-video-player-title-text-shadow;
+						line-height: @moon-video-slider-tooltip-line-height;
+						white-space: nowrap;
+						position: absolute;
+						top: 6px;
+						transition: transform 100ms ease-in-out;
+						will-change: transform;
+					}
+					.knob[data-climax="rising"] {
+						.sliderTooltip {
+							transform: translateX(30px);
+						}
+					}
+					.knob[data-climax="falling"] {
+						.sliderTooltip {
+							transform: translateX(-100%) translateX(-30px);
+						}
 					}
 				}
 
@@ -260,6 +285,12 @@
 
 						&.more {
 							transform: translateX(-100%);
+							text-align: center;
+							pointer-events: none;
+
+							.moreControls {
+								pointer-events: auto;
+							}
 						}
 						.mediaControls,
 						.moreControls {
@@ -292,5 +323,11 @@
 				}
 			}
 		}
+	}
+
+	.controlsHandleAbove {
+		pointer-events: none;
+		position: absolute;
+		.position(0, 0, auto, 0);
 	}
 }
