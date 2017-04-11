@@ -1,12 +1,12 @@
 import R from 'ramda';
 
-import {containerAttribute, containerSelector, getSpottableDescendants} from '../container';
+import {containerAttribute} from '../container';
 
-const test = (src, callback) => () => {
+const testScenario = (scenario, callback) => () => {
 	const rootId = 'test-root';
-	const html = `<div id="${rootId}">${src}</div>`;
+	const html = `<div id="${rootId}">${scenario}</div>`;
 	document.body.innerHTML = html;
-	
+
 	const root = document.getElementById(rootId);
 	callback(root);
 };
@@ -23,9 +23,9 @@ const someSpottables = someNodes(spottable);
 const someContainers = someNodes(container);
 const someSpottablesAndContainers = R.converge(R.concat, [someSpottables, someContainers]);
 
-const findContainer = (node, containerId) => {
-	return node.querySelector(`[${containerAttribute}="${containerId}"]`);
-}
+const findContainer = (root, containerId) => {
+	return root.querySelector(`[${containerAttribute}="${containerId}"]`);
+};
 
 export {
 	container,
@@ -36,6 +36,6 @@ export {
 	someSpottables,
 	someSpottablesAndContainers,
 	spottable,
-	test,
+	testScenario,
 	uniqueContainer
 };

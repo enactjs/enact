@@ -14,13 +14,13 @@ const querySelector = (node, selector, excludeSelector) => {
 	}
 
 	return all;
-}
+};
 
 const isContainer = (node) => {
 	return node && containerDatasetKey in node.dataset;
-}
+};
 
-const getContainerId = (node) => node.dataset.containerId
+const getContainerId = (node) => node.dataset.containerId;
 
 const getSubContainerSelector = (node) => {
 	if (isContainer(node)) {
@@ -28,7 +28,7 @@ const getSubContainerSelector = (node) => {
 	}
 
 	return containerSelector;
-}
+};
 
 const getSpottableDescendants = (node) => {
 	const subContainerSelector = getSubContainerSelector(node);
