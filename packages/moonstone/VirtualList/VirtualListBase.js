@@ -233,7 +233,7 @@ class VirtualListCore extends Component {
 
 	shouldComponentUpdate (nextProps) {
 		if ((this.props.dataSize !== nextProps.dataSize) &&
-			(this.curFirstIndex + this.maxNumOfItems) < nextProps.dataSize) {
+			(this.curFirstIndex + this.curNumOfItems) < nextProps.dataSize) {
 			return false;
 		}
 		return true;
@@ -272,7 +272,7 @@ class VirtualListCore extends Component {
 	threshold = 0
 	curFirstIndex = 0
 	maxFirstIndex = 0
-	maxNumOfItems = 0
+	curNumOfItems = 0
 	curDataSize = 0
 	cc = []
 	scrollPosition = 0
@@ -387,7 +387,7 @@ class VirtualListCore extends Component {
 			wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (this.state.firstIndex === this.maxFirstIndex));
 
 		this.maxFirstIndex = dataSize - numOfItems;
-		this.maxNumOfItems = numOfItems;
+		this.curNumOfItems = numOfItems;
 		this.curDataSize = dataSize;
 		this.curFirstIndex = wasFirstIndexMax ? this.maxFirstIndex : Math.min(this.state.firstIndex, this.maxFirstIndex);
 		this.updateFrom = null;
