@@ -123,8 +123,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			 */
 			onScrollStop: PropTypes.func,
 
-			style: PropTypes.object,
-
 			/**
 			 * Called when the component will unmount
 			 * This function will pass an object that contains `lastScrollTop`, `lastScrollLeft`, and `lastFocusedIndex` as the parameter
@@ -133,8 +131,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			 * @public
 			 */
 			onWillUnmount: PropTypes.func,
-      
-      /**
+
+			style: PropTypes.object,
+
+			/**
 			 * Specifies how to show vertical scrollbar. Acceptable values are `'auto'`,
 			 * `'visible'`, and `'hidden'`.
 			 *
