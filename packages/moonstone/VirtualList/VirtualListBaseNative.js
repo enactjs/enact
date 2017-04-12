@@ -1,8 +1,8 @@
 /*
- * Exports the {@link moonstone/VirtualList.VirtualListBase} and
- * {@link moonstone/VirtualList.VirtualListCore} components and the
+ * Exports the {@link moonstone/VirtualList.VirtualListBaseNative} and
+ * {@link moonstone/VirtualList.VirtualListCoreNative} components and the
  * {@link moonstone/VirtualList.gridListItemSizeShape} validator. The default
- * export is {@link moonstone/VirtualList.VirtualListBase}.
+ * export is {@link moonstone/VirtualList.VirtualListBaseNative}.
  */
 
 import classNames from 'classnames';
@@ -12,7 +12,7 @@ import React, {Component, PropTypes} from 'react';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
-import {dataIndexAttribute, Scrollable} from '../Scroller/ScrollableNative';
+import {dataIndexAttribute, ScrollableNative} from '../Scroller/ScrollableNative';
 
 import css from './VirtualListBaseNative.less';
 import cssItem from './ListItemNative.less';
@@ -33,6 +33,7 @@ const
  * @memberof moonstone/VirtualList
  * @property {Number} minWidth - The minimum width of the grid list item.
  * @property {Number} minHeight - The minimum height of the grid list item.
+ * @private
  */
 const gridListItemSizeShape = PropTypes.shape({
 	minWidth: PropTypes.number.isRequired,
@@ -40,19 +41,19 @@ const gridListItemSizeShape = PropTypes.shape({
 });
 
 /**
- * {@link moonstone/VirtualList.VirtualListBase} is a base component for
+ * {@link moonstone/VirtualList.VirtualListBaseNative} is a base component for
  * {@link moonstone/VirtualList.VirtualList} and
  * {@link moonstone/VirtualList.VirtualGridList} with Scrollable and SpotlightContainerDecorator applied.
  *
- * @class VirtualListCore
+ * @class VirtualListCoreNative
  * @memberof moonstone/VirtualList
  * @ui
  * @private
  */
-class VirtualListCore extends Component {
-	static displayName = 'VirtualListBase'
+class VirtualListCoreNative extends Component {
+	static displayName = 'VirtualListBaseNative'
 
-	static propTypes = /** @lends moonstone/VirtualList.VirtualListCore.prototype */ {
+	static propTypes = /** @lends moonstone/VirtualList.VirtualListCoreNative.prototype */ {
 		/**
 		 * The render function for an item of the list.
 		 * `index` is for accessing the index of the item.
@@ -721,18 +722,18 @@ class VirtualListCore extends Component {
 }
 
 /**
- * {@link moonstone/VirtualList.VirtualListBase} is a base component for
+ * {@link moonstone/VirtualList.VirtualListBaseNative} is a base component for
  * {@link moonstone/VirtualList.VirtualList} and
  * {@link moonstone/VirtualList.VirtualGridList} with Scrollable and SpotlightContainerDecorator applied.
  *
- * @class VirtualListBase
+ * @class VirtualListBaseNative
  * @memberof moonstone/VirtualList
  * @mixes moonstone/Scrollable
  * @mixes spotlight/SpotlightContainerDecorator
  * @ui
  * @private
  */
-const VirtualListBase = SpotlightContainerDecorator({restrict: 'self-first'}, Scrollable(VirtualListCore));
+const VirtualListBaseNative = SpotlightContainerDecorator({restrict: 'self-first'}, ScrollableNative(VirtualListCoreNative));
 
-export default VirtualListBase;
-export {gridListItemSizeShape, VirtualListCore, VirtualListBase};
+export default VirtualListBaseNative;
+export {gridListItemSizeShape, VirtualListCoreNative, VirtualListBaseNative};

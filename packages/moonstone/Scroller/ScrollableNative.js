@@ -1,7 +1,7 @@
 /*
- * Exports the {@link moonstone/Scroller.Scrollable} Higher-order Component (HOC) and
+ * Exports the {@link moonstone/Scroller.ScrollableNative} Higher-order Component (HOC) and
  * the {@link moonstone/Scroller.dataIndexAttribute} constant.
- * The default export is {@link moonstone/Scroller.Scrollable}.
+ * The default export is {@link moonstone/Scroller.ScrollableNative}.
  */
 
 import clamp from 'ramda/src/clamp';
@@ -43,7 +43,7 @@ const
 const dataIndexAttribute = 'data-index';
 
 /**
- * {@link moonstone/Scroller.Scrollable} is a Higher-order Component
+ * {@link moonstone/Scroller.ScrollableNative} is a Higher-order Component
  * that applies a Scrollable behavior to its wrapped component.
  *
  * Scrollable catches `onFocus`, `onKeyUp`, and `onKeyDown` events from its wrapped component for spotlight features,
@@ -51,16 +51,16 @@ const dataIndexAttribute = 'data-index';
  *
  * Scrollable calls `onScrollStart`, `onScroll`, and `onScrollStop` callback functions during scroll.
  *
- * @class Scrollable
+ * @class ScrollableNative
  * @memberof moonstone/Scroller
  * @hoc
  * @private
  */
 const ScrollableHoC = hoc((config, Wrapped) => {
 	return class Scrollable extends Component {
-		static displayName = 'Scrollable'
+		static displayName = 'ScrollableNative'
 
-		static propTypes = /** @lends moonstone/Scroller.Scrollable.prototype */ {
+		static propTypes = /** @lends moonstone/Scroller.ScrollableNative.prototype */ {
 			/**
 			 * The callback function which is called for linking scrollTo function.
 			 * You should specify a callback function as the value of this prop
@@ -771,4 +771,4 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 });
 
 export default ScrollableHoC;
-export {dataIndexAttribute, ScrollableHoC as Scrollable};
+export {dataIndexAttribute, ScrollableHoC as ScrollableNative};
