@@ -514,13 +514,13 @@ class VirtualListCore extends Component {
 		height = (isPrimaryDirectionVertical ? primary.itemSize : secondary.itemSize) + 'px';
 
 		// positioning items
-		for (let index = updateFrom, indexInExtent = updateFrom % dimensionToExtent; index < updateTo; index++) {
-			this.applyStyleToNewNode(index, width, height, primaryPosition, secondaryPosition);
+		for (let i = updateFrom, j = updateFrom % dimensionToExtent; i < updateTo; i++) {
+			this.applyStyleToNewNode(i, width, height, primaryPosition, secondaryPosition);
 
-			if (++indexInExtent === dimensionToExtent) {
+			if (++j === dimensionToExtent) {
 				secondaryPosition = 0;
 				primaryPosition += primary.gridSize;
-				indexInExtent = 0;
+				j = 0;
 			} else {
 				secondaryPosition += secondary.gridSize;
 			}

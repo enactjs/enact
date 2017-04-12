@@ -517,25 +517,25 @@ class VirtualListCore extends Component {
 		height = (isPrimaryDirectionVertical ? primary.itemSize : secondary.itemSize) + 'px';
 
 		// positioning items
-		for (let index = updateFrom, indexInExtent = updateFrom % dimensionToExtent; index < updateTo; index++) {
+		for (let i = updateFrom, j = updateFrom % dimensionToExtent; i < updateTo; i++) {
 
 			// determine the first and the last visible item
 			if (firstVisibleIndex === null && (primaryPosition + primary.itemSize) > 0) {
-				firstVisibleIndex = index;
+				firstVisibleIndex = i;
 			}
 			if (primaryPosition < primary.clientSize) {
-				lastVisibleIndex = index;
+				lastVisibleIndex = i;
 			}
-			if (this.updateFrom === null || this.updateTo === null || this.updateFrom > index || this.updateTo <= index) {
-				this.applyStyleToNewNode(index, width, height, primaryPosition, secondaryPosition);
+			if (this.updateFrom === null || this.updateTo === null || this.updateFrom > i || this.updateTo <= i) {
+				this.applyStyleToNewNode(i, width, height, primaryPosition, secondaryPosition);
 			} else {
-				this.applyStyleToExistingNode(index, width, height, primaryPosition, secondaryPosition);
+				this.applyStyleToExistingNode(i, width, height, primaryPosition, secondaryPosition);
 			}
 
-			if (++indexInExtent === dimensionToExtent) {
+			if (++j === dimensionToExtent) {
 				secondaryPosition = 0;
 				primaryPosition += primary.gridSize;
-				indexInExtent = 0;
+				j = 0;
 			} else {
 				secondaryPosition += secondary.gridSize;
 			}
