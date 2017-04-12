@@ -64,29 +64,6 @@ const SpotlightAccelerator = new Accelerator();
 const Spotlight = (function () {
 	'use strict';
 
-	/*
-	/* config
-	*/
-	// Note: an <extSelector> can be one of following types:
-	// - a valid selector string for "querySelectorAll"
-	// - a NodeList or an array containing DOM elements
-	// - a single DOM element
-	// - a string "@<containerId>" to indicate the specified container
-	// - a string "@" to indicate the default container
-	const GlobalConfig = {
-		selector: '',           // can be a valid <extSelector> except "@" syntax.
-		straightOnly: false,
-		straightOverlapThreshold: 0.5,
-		rememberSource: false,
-		selectorDisabled: false,
-		defaultElement: '',     // <extSelector> except "@" syntax.
-		enterTo: '',            // '', 'last-focused', 'default-element'
-		leaveFor: null,         // {left: <extSelector>, right: <extSelector>, up: <extSelector>, down: <extSelector>}
-		restrict: 'self-first', // 'self-first', 'self-only', 'none'
-		tabIndexIgnoreList: 'a, input, select, textarea, button, iframe, [contentEditable=true]',
-		navigableFilter: null
-	};
-
 	const _reverseDirections = {
 		'left': 'right',
 		'up': 'down',
@@ -582,10 +559,6 @@ const Spotlight = (function () {
 			if (config.navigableFilter(elem, containerId) === false) {
 				return false;
 			}
-		} else if (typeof GlobalConfig.navigableFilter === 'function') {
-			if (GlobalConfig.navigableFilter(elem, containerId) === false) {
-				return false;
-			}
 		}
 		return true;
 	}
@@ -845,7 +818,7 @@ const Spotlight = (function () {
 	}
 
 	function spotNextFromPoint (direction, position, containerId) {
-		const config = extend({}, GlobalConfig, _containers.get(containerId));
+		const config = TEST.getContainerConfig(containerId);
 		const {allNavigableElements, containerNavigableElements} = getNavigableElements();
 		let next;
 
@@ -888,7 +861,7 @@ const Spotlight = (function () {
 
 		const {allNavigableElements, containerNavigableElements} = getNavigableElements();
 		const currentContainerId = last(currentContainerIds);
-		const config = extend({}, GlobalConfig, _containers.get(currentContainerId));
+		const config = TEST.getContainerConfig(currentContainerId);
 		let next;
 
 		if (config.restrict === 'self-only' || config.restrict === 'self-first') {
@@ -1156,35 +1129,18 @@ const Spotlight = (function () {
 		 * @public
 		 */
 		set: function () {
-			let containerId, config, existingConfig;
+			let containerId, config;
 
 			if (typeof arguments[0] === 'object') {
 				config = arguments[0];
 			} else if (typeof arguments[0] === 'string' && typeof arguments[1] === 'object') {
 				containerId = arguments[0];
 				config = arguments[1];
-				existingConfig = _containers.get(containerId);
-				if (!existingConfig) {
-					throw new Error('Container "' + containerId + '" doesn\'t exist!');
-				}
 			} else {
 				return;
 			}
 
-			for (let key in config) {
-				if (typeof GlobalConfig[key] !== 'undefined') {
-					if (containerId) {
-						existingConfig[key] = config[key];
-					} else if (typeof config[key] !== 'undefined') {
-						GlobalConfig[key] = config[key];
-					}
-				}
-			}
-
-			if (containerId) {
-				// remove "undefined" items
-				_containers.set(containerId, extend({}, existingConfig));
-			}
+			TEST.setContainerConfig(containerId, config);
 		},
 
 		// add(<config>);

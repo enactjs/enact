@@ -21,6 +21,30 @@ const querySelector = (node, includeSelector, excludeSelector) => {
 	return include;
 };
 
+
+/*
+ * config
+ */
+// Note: an <extSelector> can be one of following types:
+// - a valid selector string for "querySelectorAll"
+// - a NodeList or an array containing DOM elements
+// - a single DOM element
+// - a string "@<containerId>" to indicate the specified container
+// - a string "@" to indicate the default container
+const GlobalConfig = {
+	selector: '',           // can be a valid <extSelector> except "@" syntax.
+	straightOnly: false,
+	straightOverlapThreshold: 0.5,
+	rememberSource: false,
+	selectorDisabled: false,
+	defaultElement: '',     // <extSelector> except "@" syntax.
+	enterTo: '',            // '', 'last-focused', 'default-element'
+	leaveFor: null,         // {left: <extSelector>, right: <extSelector>, up: <extSelector>, down: <extSelector>}
+	restrict: 'self-first', // 'self-first', 'self-only', 'none'
+	tabIndexIgnoreList: 'a, input, select, textarea, button, iframe, [contentEditable=true]',
+	navigableFilter: null
+};
+
 const _containerPrefix = 'container-';
 const _containers = new Map();
 let _ids = 0;
@@ -36,6 +60,10 @@ function generateId () {
 	}
 	return id;
 }
+
+const getContainerConfig = (id) => {
+	return Object.assign({}, GlobalConfig, _containers.get(id));
+};
 
 const isContainer = (node) => {
 	return node && containerDatasetKey in node.dataset;
@@ -93,12 +121,40 @@ const getContainer = (containerId) => {
 	return document.querySelector(`[${containerAttribute}="${containerId}"]`);
 };
 
+const setContainerConfig = (containerId, config) => {
+	let existingConfig;
+
+	if (containerId && config) {
+		existingConfig = _containers.get(containerId);
+		if (!existingConfig) {
+			throw new Error('Container "' + containerId + '" doesn\'t exist!');
+		}
+	}
+
+	for (let key in config) {
+		if (typeof GlobalConfig[key] !== 'undefined') {
+			if (containerId) {
+				existingConfig[key] = config[key];
+			} else if (typeof config[key] !== 'undefined') {
+				GlobalConfig[key] = config[key];
+			}
+		}
+	}
+
+	if (containerId) {
+		// remove "undefined" items
+		_containers.set(containerId, Object.assign({}, existingConfig));
+	}
+};
+
 export {
 	containerAttribute,
 	containerSelector,
 	containerDatasetKey,
 	generateId,
 	getContainer,
+	getContainerConfig,
 	getSpottableDescendants,
-	isContainer
+	isContainer,
+	setContainerConfig
 };
