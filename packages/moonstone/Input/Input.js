@@ -186,7 +186,10 @@ const InputBase = kind({
 	},
 
 	computed: {
-		'aria-label': ({placeholder, type, value}) => calcAriaLabel(placeholder, type, value),
+		'aria-label': ({placeholder, type, value}) => {
+			const title = value == null ? placeholder : '';
+			return calcAriaLabel(title, type, value);
+		},
 		className: ({focused, styler}) => styler.append({focused}),
 		dir: ({value, placeholder}) => isRtlText(value || placeholder) ? 'rtl' : 'ltr',
 		// ensure we have a value so the internal <input> is always controlled
