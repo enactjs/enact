@@ -10,6 +10,7 @@ import {contextTypes} from '@enact/ui/Resizable';
 import {forward} from '@enact/core/handle';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import hoc from '@enact/core/hoc';
+import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';
 import React, {Component, PropTypes} from 'react';
 import ri from '@enact/ui/resolution';
@@ -32,7 +33,9 @@ const
 	pixelPerLine = ri.scale(39) * scrollWheelMultiplierForDeltaPixel,
 	paginationPageMultiplier = 0.8,
 	epsilon = 1,
-	animationDuration = 1000;
+	animationDuration = 1000,
+	isPageUp = is('pageUp'),
+	isPageDown = is('pageDown');
 
 /**
  * {@link moonstone/Scroller.dataIndexAttribute} is the name of a custom attribute
@@ -225,6 +228,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		scrollTop = 0
 		dirHorizontal = 0
 		dirVertical = 0
+		pageDistanceForUp = 0
+		pageDistanceForDown = 0
 		scrollToInfo = null
 
 		// spotlight
@@ -414,6 +419,19 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					this.childRef.setSpotlightContainerRestrict(keyCode, index);
 				}
 				this.isKeyDown = true;
+			}
+		}
+
+		onKeyDownOfContainer = ({keyCode}) => {
+			if (isPageUp(keyCode) || isPageDown(keyCode)) {
+				const
+					{scrollToAccumulatedTarget} = this,
+					bounds = this.getScrollBounds(),
+					isHorizontal = this.canScrollHorizontally(bounds),
+					isVertical = this.canScrollVertically(bounds),
+					pageDistance = isPageUp(keyCode) ? this.pageDistanceForUp : this.pageDistanceForDown;
+
+				scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
 			}
 		}
 
@@ -760,10 +778,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		updateScrollabilityAndEventListeners = () => {
 			const
 				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
+				bounds = this.getScrollBounds(),
 				containerNode = this.childRef.containerRef;
 
 			this.horizontalScrollability = this.childRef.isHorizontal();
 			this.verticalScrollability = this.childRef.isVertical();
+			this.pageDistanceForDown = (isVerticalScrollbarVisible ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
+			this.pageDistanceForUp = this.pageDistanceForDown * -1;
 
 			// FIXME `onWheel` doesn't work on the v8 snapshot.
 			if (isVerticalScrollbarVisible || isHorizontalScrollbarVisible) {
@@ -869,7 +890,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			return (
 				(isHorizontalScrollbarVisible || isVerticalScrollbarVisible) ? (
-					<div ref={this.initContainerRef} className={scrollableClasses} style={style}>
+					<div ref={this.initContainerRef} className={scrollableClasses} style={style} onKeyDown={this.onKeyDownOfContainer}>
 						{vscrollbar}
 						{hscrollbar}
 						<Wrapped {...props} {...this.eventHandlers} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={css.container} />
