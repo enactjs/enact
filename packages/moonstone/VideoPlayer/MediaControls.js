@@ -57,6 +57,14 @@ const MediaControls = kind({
 		jumpBackwardIcon: React.PropTypes.string,
 
 		/**
+		 * Sets the `disabled` state on the media "jump" buttons; the outer pair.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		jumpButtonsDisabled: React.PropTypes.bool,
+
+		/**
 		 * A string which is sent to the `jumpForward` icon of the player controls. This can be
 		 * anything that is accepted by {@link moonstone/Icon}.
 		 *
@@ -101,6 +109,14 @@ const MediaControls = kind({
 		 * @public
 		 */
 		playIcon: React.PropTypes.string,
+
+		/**
+		 * Sets the `disabled` state on the media playback-rate control buttons; the inner pair.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		rateButtonsDisabled: React.PropTypes.bool,
 		rightComponents: React.PropTypes.node,
 		showMoreComponents: React.PropTypes.bool
 	},
@@ -132,6 +148,8 @@ const MediaControls = kind({
 	render: (props) => {
 		const {
 			backwardIcon,
+			jumpButtonsDisabled,
+			rateButtonsDisabled,
 			centerClassName,
 			children,
 			forwardIcon,
@@ -166,11 +184,11 @@ const MediaControls = kind({
 				<div className={css.centerComponentsContainer}>
 					<div className={centerClassName}>
 						<Container className={css.mediaControls} spotlightDisabled={mediaControlsDisabled}> {/* rtl={false} */}
-							{noJumpButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaControlsDisabled} onClick={onJumpBackwardButtonClick}>{jumpBackwardIcon}</MediaButton>}
-							{noRateButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaControlsDisabled} onClick={onBackwardButtonClick}>{backwardIcon}</MediaButton>}
+							{noJumpButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaControlsDisabled || jumpButtonsDisabled} onClick={onJumpBackwardButtonClick}>{jumpBackwardIcon}</MediaButton>}
+							{noRateButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaControlsDisabled || rateButtonsDisabled} onClick={onBackwardButtonClick}>{backwardIcon}</MediaButton>}
 							<MediaButton className={spotlightDefaultClass} backgroundOpacity="translucent" disabled={mediaControlsDisabled} onClick={onPlayButtonClick}>{playPauseIcon}</MediaButton>
-							{noRateButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaControlsDisabled} onClick={onForwardButtonClick}>{forwardIcon}</MediaButton>}
-							{noJumpButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaControlsDisabled} onClick={onJumpForwardButtonClick}>{jumpForwardIcon}</MediaButton>}
+							{noRateButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaControlsDisabled || rateButtonsDisabled} onClick={onForwardButtonClick}>{forwardIcon}</MediaButton>}
+							{noJumpButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaControlsDisabled || jumpButtonsDisabled} onClick={onJumpForwardButtonClick}>{jumpForwardIcon}</MediaButton>}
 						</Container>
 						<Container className={css.moreControls} spotlightDisabled={moreDisabled}>
 							{children}
