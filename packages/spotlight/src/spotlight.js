@@ -622,7 +622,13 @@ const Spotlight = (function () {
 	}
 
 	function getContainerNavigableElements (containerId) {
-		const container = TEST.getContainer(containerId);
+		let container;
+		if (containerId === spotlightRootContainerName) {
+			container = document.querySelector('[data-reactroot]');
+		} else {
+			container = TEST.getContainer(containerId);
+		}
+
 		return TEST.getSpottableDescendants(container);
 		// return parseSelector(_containers.get(containerId).selector).filter(function (elem) {
 		// 	return isNavigable(elem, containerId);
