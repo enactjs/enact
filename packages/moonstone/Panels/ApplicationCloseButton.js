@@ -1,3 +1,4 @@
+import $L from '@enact/i18n/$L';
 import kind from '@enact/core/kind';
 import React from 'react';
 
@@ -37,6 +38,7 @@ const ApplicationCloseButton = kind({
 		return (
 			<IconButton
 				{...rest}
+				aria-label={$L('Exit app')}
 				small
 				backgroundOpacity="transparent"
 				onClick={onApplicationClose}

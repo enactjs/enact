@@ -1,6 +1,13 @@
+import Toggleable from '@enact/ui/Toggleable';
+
 import {ActivityArranger} from './Arrangers';
 import BreadcrumbDecorator from './BreadcrumbDecorator';
 import {PanelsBase} from './Panels';
+
+const Panels = Toggleable(
+	{activate: 'onWillTransition', deactivate: 'onTransition', prop: 'transitioning'},
+	PanelsBase
+);
 
 /**
  * An instance of Panels in which the Panel uses the entire viewable screen with a single breadcrumb
@@ -20,7 +27,7 @@ const ActivityPanels = BreadcrumbDecorator({
 	className: 'panels activity enact-fit',
 	max: 1,
 	panelArranger: ActivityArranger
-}, PanelsBase);
+}, Panels);
 
 export default ActivityPanels;
 export {ActivityPanels};

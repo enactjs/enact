@@ -1,6 +1,7 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import {shape} from '@enact/ui/ViewManager';
+import Toggleable from '@enact/ui/Toggleable';
 
 import ApplicationCloseButton from './ApplicationCloseButton';
 import CancelDecorator from './CancelDecorator';
@@ -86,8 +87,8 @@ const PanelsBase = kind({
 		className: ({noCloseButton, styler}) => styler.append({
 			hasCloseButton: !noCloseButton
 		}),
-		applicationCloseButton: ({noCloseButton, onApplicationClose}) => {
-			if (!noCloseButton) {
+		applicationCloseButton: ({noCloseButton, onApplicationClose, transitioning}) => {
+			if (!noCloseButton && !transitioning) {
 				return (
 					<ApplicationCloseButton onApplicationClose={onApplicationClose} />
 				);
@@ -95,15 +96,16 @@ const PanelsBase = kind({
 		}
 	},
 
-	render: ({noAnimation, arranger, children, index, applicationCloseButton, ...rest}) => {
+	render: ({noAnimation, arranger, children, index, applicationCloseButton, onTransition, onWillTransition, ...rest}) => {
 		delete rest.noCloseButton;
 		delete rest.onApplicationClose;
 		delete rest.onBack;
+		delete rest.transitioning;
 
 		return (
 			<div {...rest}>
 				{applicationCloseButton}
-				<Viewport noAnimation={noAnimation} arranger={arranger} index={index}>
+				<Viewport noAnimation={noAnimation} arranger={arranger} index={index} onTransition={onTransition} onWillTransition={onWillTransition}>
 					{children}
 				</Viewport>
 			</div>
@@ -111,7 +113,12 @@ const PanelsBase = kind({
 	}
 });
 
-const Panels = CancelDecorator({cancel: 'onBack'}, PanelsBase);
+const Panels = CancelDecorator({cancel: 'onBack'},
+	Toggleable(
+		{activate: 'onWillTransition', deactivate: 'onTransition', prop: 'transitioning'},
+		PanelsBase
+	)
+);
 
 export default Panels;
 export {Panels, PanelsBase};
