@@ -1061,7 +1061,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	render () {
-		const {backwardIcon, children, className, forwardIcon, infoComponents, jumpBackwardIcon, jumpForwardIcon, leftComponents,  noAutoPlay, noJumpButtons, noRateButtons, noSlider, pauseIcon, playIcon, rightComponents, source, style, title, ...rest} = this.props;
+		const {backwardIcon, children, className, forwardIcon, infoComponents, jumpBackwardIcon, jumpForwardIcon, leftComponents, noAutoPlay, noJumpButtons, noRateButtons, noSlider, pauseIcon, playIcon, rightComponents, source, style, title, ...rest} = this.props;
 		delete rest.autoCloseTimeout;
 		delete rest.feedbackHideDelay;
 		delete rest.jumpBy;

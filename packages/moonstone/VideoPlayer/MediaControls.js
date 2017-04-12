@@ -88,7 +88,7 @@ const MediaControls = kind({
 		 * @default 'pause'
 		 * @public
 		 */
-		pauseIcon:React.PropTypes.string,
+		pauseIcon: React.PropTypes.string,
 
 		/**
 		 * A string which is sent to the `play` icon of the player controls. This can be
@@ -100,7 +100,7 @@ const MediaControls = kind({
 		 * @default 'play'
 		 * @public
 		 */
-		playIcon:React.PropTypes.string,
+		playIcon: React.PropTypes.string,
 		rightComponents: React.PropTypes.node,
 		showMoreComponents: React.PropTypes.bool
 	},
@@ -109,7 +109,9 @@ const MediaControls = kind({
 		backwardIcon: 'backward',
 		forwardIcon: 'forward',
 		jumpBackwardIcon: 'skipbackward',
-		jumpForwardIcon: 'skipforward'
+		jumpForwardIcon: 'skipforward',
+		pauseIcon: 'pause',
+		playIcon: 'play'
 	},
 
 	styles: {
