@@ -201,6 +201,7 @@ const TimePickerBase = kind({
 								case 'k':
 									return (
 										<HourPicker
+											className={css.hourComponents}
 											key="hour-picker"
 											label={noLabels ? null : $L('hour')}
 											onChange={onChangeHour}
@@ -209,7 +210,6 @@ const TimePickerBase = kind({
 											value={hour}
 											width={2}
 											wrap
-											className={css.hourComponents}
 										>
 											{hasMeridiem ? hours12 : hours24}
 										</HourPicker>
@@ -217,6 +217,7 @@ const TimePickerBase = kind({
 								case 'm':
 									return (
 										<DateComponentRangePicker
+											className={css.minutesComponents}
 											key="minute-picker"
 											label={noLabels ? null : $L('minute')}
 											max={59}
@@ -228,12 +229,12 @@ const TimePickerBase = kind({
 											value={minute}
 											width={2}
 											wrap
-											className={css.minutesComponents}
 										/>
 									);
 								case 'a':
 									return (
 										<DateComponentPicker
+											className={css.meridiamComponent}
 											key="meridiem-picker"
 											label={noLabels ? null : $L('meridiem')}
 											onChange={onChangeMeridiem}
@@ -243,9 +244,8 @@ const TimePickerBase = kind({
 											value={meridiem}
 											width={4}
 											wrap
-											className={css.meridiamComponent}
 										>
-											{!hasMeridiem ? null : meridiems}
+											{meridiems}
 										</DateComponentPicker>
 									);
 							}
