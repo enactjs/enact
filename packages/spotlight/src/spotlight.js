@@ -94,12 +94,9 @@ const Spotlight = (function () {
 		'down': 'up'
 	};
 
-	const _containerPrefix = 'container-';
-
 	/*
 	/* private vars
 	*/
-	let _ids = 0;
 	let _initialized = false;
 	let _pause = false;
 	const _containers = new Map();
@@ -507,18 +504,6 @@ const Spotlight = (function () {
 		}
 
 		return dest;
-	}
-
-	function generateId () {
-		let id;
-		/* eslint no-constant-condition: ["error", { "checkLoops": false }]*/
-		while (true) {
-			id = _containerPrefix + String(++_ids);
-			if (!_containers.get(id)) {
-				break;
-			}
-		}
-		return id;
 	}
 
 	function parseSelector (selector) {
@@ -1143,7 +1128,6 @@ const Spotlight = (function () {
 			window.removeEventListener('mouseover', onMouseOver);
 			window.removeEventListener('mousemove', onMouseMove);
 			Spotlight.clear();
-			_ids = 0;
 			_initialized = false;
 		},
 
@@ -1229,7 +1213,7 @@ const Spotlight = (function () {
 			}
 
 			if (!containerId) {
-				containerId = (typeof config.id === 'string') ? config.id : generateId();
+				containerId = (typeof config.id === 'string') ? config.id : TEST.generateId();
 			}
 
 			// if a previous config does not exist, initialize a new one

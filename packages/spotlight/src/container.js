@@ -21,6 +21,22 @@ const querySelector = (node, includeSelector, excludeSelector) => {
 	return include;
 };
 
+const _containerPrefix = 'container-';
+const _containers = new Map();
+let _ids = 0;
+
+function generateId () {
+	let id;
+	/* eslint no-constant-condition: ["error", { "checkLoops": false }] */
+	while (true) {
+		id = _containerPrefix + String(++_ids);
+		if (!_containers.get(id)) {
+			break;
+		}
+	}
+	return id;
+}
+
 const isContainer = (node) => {
 	return node && containerDatasetKey in node.dataset;
 };
@@ -81,6 +97,7 @@ export {
 	containerAttribute,
 	containerSelector,
 	containerDatasetKey,
+	generateId,
 	getContainer,
 	getSpottableDescendants,
 	isContainer
