@@ -148,12 +148,11 @@ const MediaControls = kind({
 	render: (props) => {
 		const {
 			backwardIcon,
-			jumpButtonsDisabled,
-			rateButtonsDisabled,
 			centerClassName,
 			children,
 			forwardIcon,
 			jumpBackwardIcon,
+			jumpButtonsDisabled,
 			jumpForwardIcon,
 			leftComponents,
 			mediaControlsDisabled,
@@ -168,6 +167,7 @@ const MediaControls = kind({
 			onPlayButtonClick,
 			onToggleMore,
 			playPauseIcon,
+			rateButtonsDisabled,
 			rightComponents,
 			...rest
 		} = props;
