@@ -808,7 +808,10 @@ const Spotlight = (function () {
 			containerNavigableElements[id] = getContainerNavigableElements(id);
 			allNavigableElements = allNavigableElements.concat(containerNavigableElements[id]);
 		}
-		return {allNavigableElements, containerNavigableElements};
+		return {
+			allNavigableElements: allNavigableElements.filter(n => !TEST.isContainer(n)),
+			containerNavigableElements
+		};
 	}
 
 	function focusNext (next, direction, currentContainerIds, currentFocusedElement) {

@@ -25,9 +25,9 @@ const isContainer = (node) => {
 	return node && containerDatasetKey in node.dataset;
 };
 
-// const isContainerEnabled = (node) => {
-// 	return node && node.dataset['data-container-disabled'] === 'true';
-// };
+const isContainerEnabled = (node) => {
+	return isContainer(node) && node.dataset.containerDisabled !== 'true';
+};
 
 const getContainerId = (node) => node.dataset.containerId;
 
@@ -48,6 +48,9 @@ const getSubContainerSelector = (node) => {
 };
 
 const getSpottableDescendants = (node) => {
+	// if it's falsey or is a disabled container, return an empty set
+	if (!node || (isContainer(node) && !isContainerEnabled(node))) return [];
+
 	const spottableSelector = `.${spottableClass}`;
 	const subContainerSelector = getSubContainerSelector(node);
 	const spottable = querySelector(
@@ -79,5 +82,6 @@ export {
 	containerSelector,
 	containerDatasetKey,
 	getContainer,
-	getSpottableDescendants
+	getSpottableDescendants,
+	isContainer
 };

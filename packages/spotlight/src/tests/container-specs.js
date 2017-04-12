@@ -50,7 +50,12 @@ const scenarios = {
 				})
 			)})
 		)})
-	)
+	),
+	spottablesInDisabledContainer: container({
+		[containerAttribute]: 'container',
+		'data-container-disabled': true,
+		children: someSpottables(5)
+	})
 };
 
 describe('container', () => {
@@ -143,6 +148,18 @@ describe('container', () => {
 				const second = findContainer(root, 'second-container');
 
 				const expected = 3;
+				const actual = getSpottableDescendants(second).length;
+
+				expect(actual).to.equal(expected);
+			}
+		));
+
+		it('should not any spottables within a disabled container', testScenario(
+			scenarios.spottablesInDisabledContainer,
+			(root) => {
+				const second = findContainer(root, 'container');
+
+				const expected = 0;
 				const actual = getSpottableDescendants(second).length;
 
 				expect(actual).to.equal(expected);
