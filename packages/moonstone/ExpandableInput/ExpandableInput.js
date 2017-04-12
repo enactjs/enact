@@ -258,8 +258,7 @@ class ExpandableInputBase extends React.Component {
 	}
 
 	render () {
-		const {disabled, iconAfter, iconBefore, onChange, onSpotlightDisappear, placeholder, spotlightDisabled, type, value, ...rest} = this.props;
-		delete rest.onChange;
+		const {disabled, iconAfter, iconBefore, onInputChange, onSpotlightDisappear, placeholder, spotlightDisabled, type, value, ...rest} = this.props;
 
 		return (
 			<ExpandableItemBase
@@ -281,7 +280,7 @@ class ExpandableInputBase extends React.Component {
 					iconBefore={iconBefore}
 					noDecorator
 					onBlur={this.handleInputBlur}
-					onChange={onChange}
+					onChange={onInputChange}
 					onKeyDown={this.handleInputKeyDown}
 					onMouseDown={this.handleInputMouseDown}
 					onSpotlightDisappear={onSpotlightDisappear}
