@@ -1,12 +1,3 @@
-/**
- * Exports the {@link moonstone/VirtualList.VirtualList},
- * {@link moonstone/VirtualList.VirtualGridList}, and
- * {@link moonstone/VirtualList.GridListImageItem} components.
- * The default export is {@link moonstone/VirtualList.VirtualList}.
- *
- * @module moonstone/VirtualList
- */
-
 import kind from '@enact/core/kind';
 import React, {PropTypes} from 'react';
 
