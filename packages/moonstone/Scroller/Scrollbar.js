@@ -28,7 +28,7 @@ const
 		thumbClass: css.scrollerHthumb
 	},
 	nop = () => {},
-	minThumbSize = ri.scale(4),
+	minThumbSize = 20,
 	prepareButton = (isPrev) => (isVertical, rtl) => {
 		let direction;
 
@@ -238,7 +238,7 @@ class ScrollbarBase extends Component {
 	calculateMetrics () {
 		this.thumbSize = this.thumbRef[this.scrollbarInfo.sizeProperty];
 		this.trackSize = this.containerRef[this.scrollbarInfo.sizeProperty];
-		this.minThumbSizeRatio = minThumbSize / this.trackSize;
+		this.minThumbSizeRatio = ri.scale(minThumbSize) / this.trackSize;
 	}
 
 	initRef (prop) {
