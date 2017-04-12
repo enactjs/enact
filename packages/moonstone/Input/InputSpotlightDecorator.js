@@ -94,7 +94,6 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			super(props);
 
 			this.state = {
-				direction: null,
 				focused: null,
 				node: null
 			};
@@ -109,10 +108,6 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 				Spotlight.pause();
 			} else if (prevState.focused === 'input') {
 				Spotlight.resume();
-			}
-
-			if (this.state.direction) {
-				Spotlight.move(this.state.direction);
 			}
 		}
 
@@ -129,12 +124,11 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 		}
 
 		focus = (focused, node) => {
-			this.setState({focused, node, direction: null});
+			this.setState({focused, node});
 		}
 
 		blur = () => {
 			this.setState({
-				direction: null,
 				focused: null,
 				node: null
 			});
@@ -148,13 +142,9 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			this.focus('input', decorator.querySelector('input'));
 		}
 
-		leaveOnUpdate = (direction) => {
-			this.setState({direction});
-		}
-
 		onBlur = (ev) => {
 			if (!this.props.noDecorator) {
-				if (isBubbling(ev) && !this.state.direction) {
+				if (isBubbling(ev)) {
 					if (Spotlight.getPointerMode()) {
 						this.blur();
 						forwardBlur(ev, this.props);
@@ -239,18 +229,6 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 						// prevent Enter onKeyPress which triggers an onClick via Spotlight
 						if (isEnter) {
 							ev.preventDefault();
-						}
-
-						// prevent 5-way navigation onto other components when focusing the
-						// decorator explicitly
-						preventSpotlightNavigation(ev);
-
-						if (target.value.length === 0 && !isEnter) {
-							const direction =	isLeft && 'left' ||
-												isUp && 'up' ||
-												isRight && 'right' ||
-												isDown && 'down';
-							this.leaveOnUpdate(direction);
 						}
 					}
 				} else if (isLeft || isRight) {
