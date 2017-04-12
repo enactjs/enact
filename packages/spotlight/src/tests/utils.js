@@ -17,7 +17,7 @@ const testScenario = (scenario, callback) => () => {
 	try {
 		callback(root);
 	} catch (e) {
-		console.log(html);
+		console.log(html);	// eslint-disable-line no-console
 		throw e;
 	}
 };
