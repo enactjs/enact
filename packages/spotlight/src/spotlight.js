@@ -766,7 +766,7 @@ const Spotlight = (function () {
 			}
 
 			if (next) {
-				return focusElement(next, range);
+				return focusElement(next, getContainerIds(next));
 			}
 		}
 
@@ -868,12 +868,14 @@ const Spotlight = (function () {
 		}
 
 		if (next) {
+			const lastFocusedElement = getContainerLastFocusedElement(_lastContainerId);
+
 			_containers.get(containerId).previous = {
-				target: getContainerLastFocusedElement(_lastContainerId),
+				target: lastFocusedElement,
 				destination: next,
 				reverse: _reverseDirections[direction]
 			};
-			return focusNext(next, direction, getContainerIds(next));
+			return focusNext(next, direction, getContainerIds(lastFocusedElement), lastFocusedElement);
 		}
 
 		return false;
@@ -890,33 +892,36 @@ const Spotlight = (function () {
 
 		const {allNavigableElements, containerNavigableElements} = getNavigableElements();
 		const currentContainerId = last(currentContainerIds);
-		const config = extend({}, GlobalConfig, _containers.get(currentContainerId));
 		let next;
+		let preventFindNext;
 
-		if (config.restrict === 'self-only' || config.restrict === 'self-first') {
-			let currentContainerNavigableElements = containerNavigableElements[currentContainerId];
+		for (let i = currentContainerIds.length; i-- > 0;) {
+			const id = currentContainerIds[i];
+			const config = extend({}, GlobalConfig, _containers.get(id));
+			const spotlightModal = config.restrict === 'self-only';
 
-			next = navigate(
-				currentFocusedElement,
-				direction,
-				exclude(currentContainerNavigableElements, currentFocusedElement),
-				config
-			);
+			if (spotlightModal || config.restrict === 'self-first') {
 
-			if (!next && config.restrict === 'self-first') {
 				next = navigate(
 					currentFocusedElement,
 					direction,
-					exclude(allNavigableElements, currentContainerNavigableElements),
+					exclude(containerNavigableElements[id], currentFocusedElement),
 					config
 				);
+
+				if (next || spotlightModal) {
+					preventFindNext = true;
+					break;
+				}
 			}
-		} else {
+		}
+
+		if (!next && !preventFindNext) {
 			next = navigate(
 				currentFocusedElement,
 				direction,
 				exclude(allNavigableElements, currentFocusedElement),
-				config
+				extend({}, GlobalConfig, _containers.get(currentContainerId))
 			);
 		}
 
@@ -1356,8 +1361,7 @@ const Spotlight = (function () {
 				}
 			} else {
 				const nextContainerIds = getContainerIds(elem);
-				const nextContainerId = last(nextContainerIds);
-				if (isNavigable(elem, nextContainerId)) {
+				if (isNavigable(elem, last(nextContainerIds))) {
 					result = focusElement(elem, nextContainerIds);
 				}
 			}
@@ -1502,6 +1506,23 @@ const Spotlight = (function () {
 		 */
 		getCurrent: function () {
 			return getCurrent();
+		},
+
+		/**
+		 * Returns a list of spottable elements wrapped by the supplied container.
+		 *
+		 * @memberof spotlight.Spotlight.prototype
+		 * @param {String} [containerId] Container ID to query
+		 * @returns {NodeList} The spottable elements that are wrapped by the supplied container
+		 * @public
+		 */
+		getSpottableDescendants: function (containerId) {
+			if (!containerId || typeof containerId !== 'string') {
+				throw new Error('Please assign the "containerId"!');
+			}
+			if (_containers.get(containerId)) {
+				return getContainerNavigableElements(containerId);
+			}
 		}
 	};
 

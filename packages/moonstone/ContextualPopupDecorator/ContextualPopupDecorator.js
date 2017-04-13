@@ -8,19 +8,19 @@
 
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import FloatingLayer from '@enact/ui/FloatingLayer';
-import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
+import {on, off} from '@enact/core/dispatcher';
 import React, {PropTypes} from 'react';
 import ri from '@enact/ui/resolution';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
+import {spottableClass} from '@enact/spotlight/Spottable';
 
 import {ContextualPopup} from './ContextualPopup';
 import css from './ContextualPopupDecorator.less';
 
 const defaultConfig = {};
 const ContextualPopupContainer = SpotlightContainerDecorator({preserveId: true}, ContextualPopup);
-const depress = 'onKeyDown';
 
 /**
  * {@link moonstone/ContextualPopupDecorator.ContextualPopupDecorator} is a Higher-order Component
@@ -33,7 +33,6 @@ const depress = 'onKeyDown';
  * @public
  */
 const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const forwardDepress = forward(depress);
 
 	return class extends React.Component {
 		static displayName = 'ContextualPopupDecorator'
@@ -138,6 +137,12 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			spotlightRestrict: 'self-first'
 		}
 
+		componentDidMount () {
+			if (this.props.open) {
+				on('keydown', this.handleKeyDown);
+			}
+		}
+
 		componentWillReceiveProps (nextProps) {
 			if (this.props.direction !== nextProps.direction) {
 				this.adjustedDirection = nextProps.direction;
@@ -157,14 +162,21 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentDidUpdate (prevProps, prevState) {
 			if (this.props.open && !prevProps.open) {
+				on('keydown', this.handleKeyDown);
 				this.spotPopupContent();
 			} else if (!this.props.open && prevProps.open) {
+				off('keydown', this.handleKeyDown);
 				this.spotActivator(prevState.activator);
 			}
 		}
 
 		componentWillUnmount () {
-			Spotlight.remove(this.state.containerId);
+			const {containerId} = this.state;
+			Spotlight.remove(containerId);
+			if (this.props.open) {
+				off('keydown', this.handleKeyDown);
+				Spotlight.setActiveContainer();
+			}
 		}
 
 		getContainerPosition (containerNode, clientNode) {
@@ -324,17 +336,22 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleKeyDown = (ev) => {
-			const {onClose} = this.props;
+			const {onClose, spotlightRestrict} = this.props;
 			const direction = getDirection(ev.keyCode);
+			const hasInitialFocus = this.containerNode.contains(document.activeElement);
+			const spottables = Spotlight.getSpottableDescendants(this.state.containerId).length;
+			const spotlightModal = spotlightRestrict === 'self-only';
+			const spotlessSpotlightModal = spotlightModal && !spottables;
 
-			if (direction) {
+			if (direction && (hasInitialFocus || spotlessSpotlightModal)) {
 				// prevent default page scrolling
 				ev.preventDefault();
 				// stop propagation to prevent default spotlight behavior
 				ev.stopPropagation();
 
-				// if focus has changed
-				if (Spotlight.move(direction)) {
+				// we guard against attempting a focus change by verifying the case where a spotlightModal
+				// popup contains no spottable components
+				if (!spotlessSpotlightModal && Spotlight.move(direction)) {
 
 					// if current focus is not within the popup's container, issue the `onClose` event
 					if (!this.containerNode.contains(document.activeElement) && onClose) {
@@ -342,8 +359,6 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					}
 				}
 			}
-
-			forwardDepress(ev, this.props);
 		}
 
 		spotActivator = (activator) => {
@@ -353,7 +368,10 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		spotPopupContent = () => {
-			Spotlight.focus(this.state.containerId);
+			const {containerId} = this.state;
+			if (!Spotlight.focus(containerId)) {
+				Spotlight.setActiveContainer(containerId, containerId);
+			}
 		}
 
 		render () {
@@ -373,7 +391,6 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 							containerRef={this.getContainerNode}
 							containerId={this.state.containerId}
 							spotlightRestrict={spotlightRestrict}
-							onKeyDown={this.handleKeyDown}
 						>
 							<PopupComponent />
 						</ContextualPopupContainer>
