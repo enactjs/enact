@@ -889,33 +889,35 @@ const Spotlight = (function () {
 
 		const {allNavigableElements, containerNavigableElements} = getNavigableElements();
 		const currentContainerId = last(currentContainerIds);
-		const config = extend({}, GlobalConfig, _containers.get(currentContainerId));
 		let next;
+		let preventFindNext;
 
-		if (config.restrict === 'self-only' || config.restrict === 'self-first') {
-			let currentContainerNavigableElements = containerNavigableElements[currentContainerId];
+		for (let i = currentContainerIds.length; i-- > 0;) {
+			const id = currentContainerIds[i];
+			const config = extend({}, GlobalConfig, _containers.get(id));
+			const spotlightModal = config.restrict === 'self-only';
 
-			next = navigate(
-				currentFocusedElement,
-				direction,
-				exclude(currentContainerNavigableElements, currentFocusedElement),
-				config
-			);
-
-			if (!next && config.restrict === 'self-first') {
+			if (spotlightModal || config.restrict === 'self-first') {
 				next = navigate(
 					currentFocusedElement,
 					direction,
-					exclude(allNavigableElements, currentContainerNavigableElements),
+					exclude(containerNavigableElements[id], currentFocusedElement),
 					config
 				);
+
+				if (next || spotlightModal) {
+					preventFindNext = true;
+					break;
+				}
 			}
-		} else {
+		}
+
+		if (!next && !preventFindNext) {
 			next = navigate(
 				currentFocusedElement,
 				direction,
 				exclude(allNavigableElements, currentFocusedElement),
-				config
+				extend({}, GlobalConfig, _containers.get(currentContainerId))
 			);
 		}
 
