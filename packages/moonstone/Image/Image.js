@@ -51,6 +51,30 @@ const ImageBase = kind({
 		src: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
 
 		/**
+		 * String value for the alt attribute of the image.
+		 *
+		 * @type {string}
+		 * @public
+		 */
+		alt: PropTypes.string,
+
+		/**
+		 * Function that will run if the image has an error.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onError: PropTypes.func,
+
+		/**
+		 * Function that will run once the image is loaded.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onLoad: PropTypes.func,
+
+		/**
 		 * A placeholder image to be displayed before the image is loaded.
 		 * For performance purposes, it should be pre-loaded or be a data url.
 		 *
@@ -91,16 +115,19 @@ const ImageBase = kind({
 		},
 		className: ({className, sizing, styler}) => {
 			return sizing !== 'none' ? styler.append(sizing) : className;
-		}
+		},
+		imgSrc: ({src}) => selectSrc(src)
 	},
 
-	render: ({bgImage, style, ...rest}) => {
+	render: ({alt, bgImage, imgSrc, onError, onLoad, style, ...rest}) => {
 		delete rest.placeholder;
 		delete rest.sizing;
 		delete rest.src;
 
 		return (
-			<div role="img" {...rest} style={{...style, backgroundImage: bgImage}} />
+			<div role="img" {...rest} style={{...style, backgroundImage: bgImage}}>
+				<img className={css.img} src={imgSrc} alt={alt} onLoad={onLoad} onError={onError} />
+			</div>
 		);
 	}
 });
