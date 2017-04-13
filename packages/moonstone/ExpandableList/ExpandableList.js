@@ -217,7 +217,7 @@ const ExpandableListBase = kind({
 				if (select === 'multiple' && isArray) {
 					return selected.map(i => typeof children[i] === 'object' ? children[i].children : children[i]).filter(str => !!str).join(', ');
 				} else {
-					if(!isArray && typeof children[selected] === 'object') {
+					if(typeof children[selected] === 'object') {
 						return children[selected].children;
 					}
 					else{
