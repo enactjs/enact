@@ -11,7 +11,7 @@ import React from 'react';
 import Spotlight from '../src/spotlight';
 import {spottableClass} from '../Spottable';
 
-const spotlightRootContainerName = 'spotlightRootDecorator';
+import {rootContainerId} from '../src/container';
 
 /**
  * Constructs a Higher-order Component that initializes and enables Spotlight
@@ -40,10 +40,8 @@ const SpotlightRootDecorator = hoc((config, Wrapped) => {
 
 		componentWillMount () {
 			if (typeof window === 'object') {
-				Spotlight.initialize();
-				Spotlight.add(spotlightRootContainerName, {
+				Spotlight.initialize({
 					selector: '.' + spottableClass,
-					navigableFilter: this.navigableFilter,
 					restrict: 'none'
 				});
 			}
@@ -58,13 +56,13 @@ const SpotlightRootDecorator = hoc((config, Wrapped) => {
 		}
 
 		render () {
-			return <Wrapped data-container-id={spotlightRootContainerName} {...this.props} />;
+			return <Wrapped {...this.props} />;
 		}
 	};
 });
 
 export default SpotlightRootDecorator;
 export {
-	spotlightRootContainerName,
+	rootContainerId as spotlightRootContainerName, // DEPRECATED
 	SpotlightRootDecorator
 };
