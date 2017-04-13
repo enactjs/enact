@@ -62,7 +62,7 @@ const ExpandableContainerBase = class extends React.Component {
 	highlightContents = () => {
 		if (this.containerNode.contains(document.activeElement)) {
 			const contents = this.containerNode.querySelector('[data-expandable-container]');
-			if (contents && !this.props.noAutoFocus) {
+			if (contents && !contents.contains(document.activeElement) && !this.props.noAutoFocus) {
 				Spotlight.focus(contents.dataset.containerId);
 			}
 		}
