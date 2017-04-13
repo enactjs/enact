@@ -99,7 +99,7 @@ describe('ExpandableInputBase', () => {
 });
 
 describe('ExpandableInput', () => {
-	it('should pass onInputChange callback to input', () => {
+	it('should pass onChange callback to input', () => {
 		const handleChange = sinon.spy();
 		const value = 'input string';
 		const evt = {target: {value: value}};
