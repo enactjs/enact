@@ -87,10 +87,10 @@ const PanelsBase = kind({
 		className: ({noCloseButton, styler}) => styler.append({
 			hasCloseButton: !noCloseButton
 		}),
-		applicationCloseButton: ({noCloseButton, onApplicationClose, transitioning}) => {
+		applicationCloseButton: ({index, noCloseButton, onApplicationClose, transitioning}) => {
 			if (!noCloseButton && !transitioning) {
 				return (
-					<ApplicationCloseButton onApplicationClose={onApplicationClose} />
+					<ApplicationCloseButton onApplicationClose={onApplicationClose} data-index={index} />
 				);
 			}
 		}
