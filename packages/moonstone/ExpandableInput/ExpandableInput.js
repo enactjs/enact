@@ -91,14 +91,6 @@ class ExpandableInputBase extends React.Component {
 		onClose: React.PropTypes.func,
 
 		/**
-		 * The handler to run when the input value is changed.
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onInputChange: React.PropTypes.func,
-
-		/**
 		 * The handler to run when the component is removed while retaining focus.
 		 *
 		 * @type {Function}
@@ -258,7 +250,8 @@ class ExpandableInputBase extends React.Component {
 	}
 
 	render () {
-		const {disabled, iconAfter, iconBefore, onInputChange, onSpotlightDisappear, placeholder, spotlightDisabled, type, value, ...rest} = this.props;
+		const {disabled, iconAfter, iconBefore, onChange, onSpotlightDisappear, placeholder, spotlightDisabled, type, value, ...rest} = this.props;
+		delete rest.onChange;
 
 		return (
 			<ExpandableItemBase
@@ -280,7 +273,7 @@ class ExpandableInputBase extends React.Component {
 					iconBefore={iconBefore}
 					noDecorator
 					onBlur={this.handleInputBlur}
-					onChange={onInputChange}
+					onChange={onChange}
 					onKeyDown={this.handleInputKeyDown}
 					onMouseDown={this.handleInputMouseDown}
 					onSpotlightDisappear={onSpotlightDisappear}
