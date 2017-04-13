@@ -1,8 +1,15 @@
-import {containerAttribute, getSpottableDescendants} from '../container';
+import {
+	configureContainer,
+	containerAttribute,
+	getContainersForNode,
+	getSpottableDescendants,
+	isContainer,
+	removeContainer,
+	rootContainerId
+} from '../container';
 
 import {
 	container,
-	findContainer,
 	join,
 	node,
 	someContainers,
@@ -46,7 +53,10 @@ const scenarios = {
 				container({
 					[containerAttribute]: 'third-container',
 					'data-container-disabled': true,
-					children: someSpottables(4)
+					children: join(
+						someSpottables(4),
+						node({id: 'child-of-third'})
+					)
 				})
 			)})
 		)})
@@ -62,9 +72,9 @@ describe('container', () => {
 	describe('#getSpottableDescendants', () => {
 		it('should find spottables', testScenario(
 			scenarios.onlySpottables,
-			(root) => {
+			() => {
 				const expected = 5;
-				const actual = getSpottableDescendants(root).length;
+				const actual = getSpottableDescendants(rootContainerId).length;
 
 				expect(actual).to.equal(expected);
 			}
@@ -72,9 +82,9 @@ describe('container', () => {
 
 		it('should find containers', testScenario(
 			scenarios.onlyContainers,
-			(root) => {
+			() => {
 				const expected = 5;
-				const actual = getSpottableDescendants(root).length;
+				const actual = getSpottableDescendants(rootContainerId).length;
 
 				expect(actual).to.equal(expected);
 			}
@@ -82,9 +92,9 @@ describe('container', () => {
 
 		it('should find spottables and containers', testScenario(
 			scenarios.spottableAndContainers,
-			(root) => {
+			() => {
 				const expected = 10;
-				const actual = getSpottableDescendants(root).length;
+				const actual = getSpottableDescendants(rootContainerId).length;
 
 				expect(actual).to.equal(expected);
 			}
@@ -92,9 +102,9 @@ describe('container', () => {
 
 		it('should only find spottables with non-spottable siblings', testScenario(
 			scenarios.nonSpottableSiblings,
-			(root) => {
+			() => {
 				const expected = 5;
-				const actual = getSpottableDescendants(root).length;
+				const actual = getSpottableDescendants(rootContainerId).length;
 
 				expect(actual).to.equal(expected);
 			}
@@ -102,9 +112,9 @@ describe('container', () => {
 
 		it('should only find top-level containers', testScenario(
 			scenarios.nestedContainers,
-			(root) => {
+			() => {
 				const expected = 1;
-				const actual = getSpottableDescendants(root).length;
+				const actual = getSpottableDescendants(rootContainerId).length;
 
 				expect(actual).to.equal(expected);
 			}
@@ -112,9 +122,9 @@ describe('container', () => {
 
 		it('should only find top-level containers and spottables', testScenario(
 			scenarios.nestedContainersWithSpottables,
-			(root) => {
+			() => {
 				const expected = 6;
-				const actual = getSpottableDescendants(root).length;
+				const actual = getSpottableDescendants(rootContainerId).length;
 
 				expect(actual).to.equal(expected);
 			}
@@ -122,9 +132,9 @@ describe('container', () => {
 
 		it('should not find spottables in sibling containers', testScenario(
 			scenarios.siblingContainers,
-			(root) => {
+			() => {
 				const expected = 5;
-				const actual = getSpottableDescendants(findContainer(root, 'first')).length;
+				const actual = getSpottableDescendants('first').length;
 
 				expect(actual).to.equal(expected);
 			}
@@ -132,11 +142,9 @@ describe('container', () => {
 
 		it('should not find spottables in descendant containers', testScenario(
 			scenarios.complexTree,
-			(root) => {
-				const first = findContainer(root, 'first-container');
-
+			() => {
 				const expected = 3;
-				const actual = getSpottableDescendants(first).length;
+				const actual = getSpottableDescendants('first-container').length;
 
 				expect(actual).to.equal(expected);
 			}
@@ -144,11 +152,9 @@ describe('container', () => {
 
 		it('should not find containers that are disabled', testScenario(
 			scenarios.complexTree,
-			(root) => {
-				const second = findContainer(root, 'second-container');
-
+			() => {
 				const expected = 3;
-				const actual = getSpottableDescendants(second).length;
+				const actual = getSpottableDescendants('second-container').length;
 
 				expect(actual).to.equal(expected);
 			}
@@ -156,14 +162,94 @@ describe('container', () => {
 
 		it('should not any spottables within a disabled container', testScenario(
 			scenarios.spottablesInDisabledContainer,
-			(root) => {
-				const second = findContainer(root, 'container');
-
+			() => {
 				const expected = 0;
-				const actual = getSpottableDescendants(second).length;
+				const actual = getSpottableDescendants('container').length;
 
 				expect(actual).to.equal(expected);
 			}
 		));
+	});
+
+	describe('#getContainersForNode', () => {
+		it('should return the rootContainerId when no other containers exist', testScenario(
+			scenarios.onlySpottables,
+			(root) => {
+				const expected = [rootContainerId];
+				const actual = getContainersForNode(root.lastChild);
+
+				expect(actual).to.deep.equal(expected);
+			}
+		));
+
+		it('should return all ancestor container ids', testScenario(
+			scenarios.complexTree,
+			(root) => {
+				const childOfThird = root.querySelector('#child-of-third');
+				const expected = [
+					rootContainerId,
+					'first-container',
+					'second-container',
+					'third-container'
+				];
+				const actual = getContainersForNode(childOfThird);
+
+				expect(actual).to.deep.equal(expected);
+			}
+		));
+
+		it('should return immediate container id as last in list', testScenario(
+			scenarios.complexTree,
+			(root) => {
+				const childOfThird = root.querySelector('#child-of-third');
+				const expected = 'third-container';
+				const actual = getContainersForNode(childOfThird).pop();
+
+				expect(actual).to.deep.equal(expected);
+			}
+		));
+	});
+
+	describe('#isContainer', () => {
+		beforeEach(() => {
+			configureContainer('test-container');
+		});
+
+		afterEach(() => {
+			removeContainer('test-container');
+		});
+
+		it('should return true for nodes that have the container attribute', () => {
+			const div = document.createElement('div');
+			div.setAttribute(containerAttribute, 'my-container');
+
+			const expected = true;
+			const actual = isContainer(div);
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should return false for nodes that do not have the container attribute', () => {
+			const div = document.createElement('div');
+
+			const expected = false;
+			const actual = isContainer(div);
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should return true for a configured container id', () => {
+			const expected = true;
+			const actual = isContainer('test-container');
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should return false for a unconfigured container id', () => {
+			const expected = false;
+			const actual = isContainer('unconfigured-container');
+
+			expect(actual).to.equal(expected);
+		});
 	});
 });

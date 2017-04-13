@@ -65,13 +65,8 @@ const someSpottables = someNodes(spottable);
 const someContainers = someNodes(container);
 const someSpottablesAndContainers = R.converge(R.concat, [someSpottables, someContainers]);
 
-const findContainer = (root, containerId) => {
-	return root.querySelector(`[${containerAttribute}="${containerId}"]`);
-};
-
 export {
 	container,
-	findContainer,
 	generateContainerId,
 	join,
 	node,

@@ -137,20 +137,20 @@ function getContainersForNode (node) {
 
 	while (node && (node = node.parentNode) !== document) {
 		if (isContainerNode(node)) {
-			containers.push(getContainerId(node));
+			containers.splice(1, 0, getContainerId(node));
 		}
 	}
 
 	return containers;
 
 	// original code:
-	// const containerIds = [...TEST.GETKEYS()];
+	// const containerIds = [..._containers.keys()];
 	// const matches = [];
 
 	// for (let i = 0, containers = containerIds.length; i < containers; ++i) {
 	// 	const id = containerIds[i];
-	// 	const config = TEST.getContainerConfig(id);
-	// 	if (!config.selectorDisabled && matchSelector(elem, config.selector)) {
+	// 	const config = getContainerConfig(id);
+	// 	if (!config.selectorDisabled && matchSelector(node, config.selector)) {
 	// 		matches.push(id);
 	// 	}
 	// }
@@ -282,6 +282,7 @@ export {
 	setContainerLastFocusedElement,
 
 	// Keep
+	containerAttribute,
 	configureDefaults,
 	configureContainer,
 	getSpottableDescendants,
