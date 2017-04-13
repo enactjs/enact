@@ -5,7 +5,7 @@ import BreadcrumbDecorator from './BreadcrumbDecorator';
 import {PanelsBase} from './Panels';
 
 const Panels = Toggleable(
-	{activate: 'onWillTransition', deactivate: 'onTransition', prop: 'transitioning'},
+	{activate: 'onWillTransition', deactivate: 'onTransition', prop: 'transitioning', toggle: null},
 	PanelsBase
 );
 

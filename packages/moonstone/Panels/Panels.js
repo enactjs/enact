@@ -115,7 +115,7 @@ const PanelsBase = kind({
 
 const Panels = CancelDecorator({cancel: 'onBack'},
 	Toggleable(
-		{activate: 'onWillTransition', deactivate: 'onTransition', prop: 'transitioning'},
+		{activate: 'onWillTransition', deactivate: 'onTransition', prop: 'transitioning', toggle: null},
 		PanelsBase
 	)
 );
