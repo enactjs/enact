@@ -14,6 +14,7 @@ import pure from 'recompose/pure';
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 import IconButton from '../IconButton';
 import Picker from '../Picker';
+import css from './ExpandablePicker.less';
 
 import ExpandablePickerDecorator from './ExpandablePickerDecorator';
 
@@ -175,6 +176,11 @@ const ExpandablePickerBase = kind({
 		value: 0
 	},
 
+	styles: {
+		css,
+		className: 'ExpandablePicker'
+	},
+
 	handlers: {
 		onChange: (ev, {onChange, onClose, value}) => {
 			if (onClose) {
@@ -213,6 +219,7 @@ const ExpandablePickerBase = kind({
 		return (
 			<ExpandableItemBase {...rest} disabled={disabled} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled}>
 				<Picker
+					className={css.pickerContainer}
 					disabled={disabled}
 					onChange={onPick}
 					value={value}

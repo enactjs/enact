@@ -133,8 +133,7 @@ const TransitionBase = kind({
 		style: ({clipHeight, type, visible, style}) => type === 'clip' ? {
 			...style,
 			height: visible ? clipHeight : null,
-			overflow: 'hidden',
-			'padding-top': '0.05rem',
+			overflow: 'hidden'
 		} : style,
 		childRef: ({childRef, noAnimation, children}) => (noAnimation || !children) ? null : childRef
 	},
