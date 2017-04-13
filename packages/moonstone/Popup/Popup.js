@@ -386,7 +386,7 @@ class Popup extends React.Component {
 				ev.preventDefault();
 				// stop propagation to prevent default spotlight behavior
 				ev.stopPropagation();
-				// explicitly turn off pointer-mode so focus can be programmatically changed
+				// set the pointer mode to false on keydown
 				Spotlight.setPointerMode(false);
 				onClose(ev);
 			}

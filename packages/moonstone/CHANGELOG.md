@@ -11,6 +11,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Popup.Popup` and `moonstone/ContextualPopupDecorator.ContextualPopupDecorator` 5-way navigation behavior
+- `moonstone/Input` to not spot its own input decorator when we 5way out.
 - `moonstone/Button` text color when used on a neutral (light) background in some cases
 
 ## [1.0.0] - 2017-03-31
