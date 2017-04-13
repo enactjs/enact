@@ -215,9 +215,14 @@ const ExpandableListBase = kind({
 			} else if (children.length && (selected || selected === 0)) {
 				const isArray = Array.isArray(selected);
 				if (select === 'multiple' && isArray) {
-					return selected.map(i => children[i]).filter(str => !!str).join(', ');
+					return selected.map(i => typeof children[i] === 'object' ? children[i].children : children[i]).filter(str => !!str).join(', ');
 				} else {
-					return children[isArray ? selected[0] : selected];
+					if(!isArray && typeof children[selected] === 'object') {
+						return children[selected].children;
+					}
+					else{
+						return children[isArray ? selected[0] : selected];
+					}
 				}
 			}
 		},
