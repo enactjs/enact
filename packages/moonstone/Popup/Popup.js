@@ -330,11 +330,10 @@ class Popup extends React.Component {
 	}
 
 	componentWillUnmount () {
-		const {containerId} = this.state;
 		if (this.props.open) {
 			off('click', this.handleClick);
 			off('keydown', this.handleKeyDown);
-			Spotlight.setActiveContainer(containerId);
+			Spotlight.setActiveContainer();
 		}
 		Spotlight.remove(this.state.containerId);
 	}
@@ -424,8 +423,7 @@ class Popup extends React.Component {
 
 	spotActivator = (activator) => {
 		const current = Spotlight.getCurrent();
-		const {containerId} = this.state;
-		const containerNode = getContainerNode(containerId);
+		const containerNode = getContainerNode(this.state.containerId);
 
 		// if there is no currently-spotted control or it is wrapped by the popup's container, we
 		// know it's safe to change focus
@@ -454,7 +452,7 @@ class Popup extends React.Component {
 
 	render () {
 		const {noAutoDismiss, onClose, scrimType, ...rest} = this.props;
-		delete rest.spotlightRestrict;
+		//delete rest.spotlightRestrict;
 
 		return (
 			<FloatingLayer
@@ -473,7 +471,7 @@ class Popup extends React.Component {
 					open={this.state.popupOpen}
 					onCloseButtonClick={onClose}
 					onHide={this.handlePopupHide}
-					spotlightRestrict="self-only"
+					//spotlightRestrict="self-only"
 				/>
 			</FloatingLayer>
 		);

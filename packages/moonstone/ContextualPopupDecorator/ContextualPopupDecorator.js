@@ -170,12 +170,11 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillUnmount () {
-			const {containerId} = this.state;
-			Spotlight.remove(containerId);
 			if (this.props.open) {
 				off('keydown', this.handleKeyDown);
 				Spotlight.setActiveContainer();
 			}
+			Spotlight.remove(this.state.containerId);
 		}
 
 		getContainerPosition (containerNode, clientNode) {
@@ -337,12 +336,10 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		handleKeyDown = (ev) => {
 			const {onClose, spotlightRestrict} = this.props;
 			const direction = getDirection(ev.keyCode);
-			const hasInitialFocus = this.containerNode.contains(document.activeElement);
 			const spottables = Spotlight.getSpottableDescendants(this.state.containerId).length;
-			const spotlightModal = spotlightRestrict === 'self-only';
-			const spotlessSpotlightModal = spotlightModal && !spottables;
+			const spotlessSpotlightModal = spotlightRestrict === 'self-only' && !spottables;
 
-			if (direction && (hasInitialFocus || spotlessSpotlightModal)) {
+			if (direction && (this.containerNode.contains(document.activeElement) || spotlessSpotlightModal)) {
 				// prevent default page scrolling
 				ev.preventDefault();
 				// stop propagation to prevent default spotlight behavior
