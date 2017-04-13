@@ -14,7 +14,6 @@ import React, {PropTypes} from 'react';
 import ri from '@enact/ui/resolution';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
-import {spottableClass} from '@enact/spotlight/Spottable';
 
 import {ContextualPopup} from './ContextualPopup';
 import css from './ContextualPopupDecorator.less';
