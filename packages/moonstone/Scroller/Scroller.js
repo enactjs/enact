@@ -149,7 +149,7 @@ class ScrollerBase extends Component {
 			if (this.context.rtl && newItemLeft > clientWidth) {
 				// For RTL, and if the `focusedItem` is bigger than `this.scrollBounds.clientWidth`, keep
 				// the scroller to the right.
-				this.scrollPos.left -= newitemLeft;
+				this.scrollPos.left -= newItemLeft;
 			} else if (newItemLeft + itemWidth > (clientWidth + currentScrollLeft) && itemWidth < clientWidth) {
 				// If focus is moved to an element outside of view area (to the right), scroller will move
 				// to the right just enough to show the current `focusedItem`. This does not apply to
