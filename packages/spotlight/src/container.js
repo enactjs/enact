@@ -242,7 +242,7 @@ const isNavigable = (node, containerId, verify) => {
 	return navigableFilter(node, containerId);
 };
 
-const GETKEYS = () => _containers.keys();
+const getAllContainerIds = () => _containers.keys();
 
 function getContainerDefaultElement (containerId) {
 	let defaultElement = getContainerConfig(containerId).defaultElement;
@@ -278,7 +278,7 @@ function setContainerLastFocusedElement (elem, containerIds) {
 
 export {
 	// Remove
-	GETKEYS,
+	getAllContainerIds,
 
 	// Maybe
 	getContainersForNode,

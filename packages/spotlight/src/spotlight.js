@@ -584,7 +584,7 @@ const Spotlight = (function () {
 		} else {
 			addRange(_defaultContainerId);
 			addRange(_lastContainerId);
-			[...TEST.GETKEYS()].map(addRange);
+			[...TEST.getAllContainerIds()].map(addRange);
 		}
 
 		for (let i = 0; i < range.length; i++) {
@@ -636,7 +636,7 @@ const Spotlight = (function () {
 		let containerNavigableElements = {};
 		let allNavigableElements = [];
 
-		for (const id of TEST.GETKEYS()) {
+		for (const id of TEST.getAllContainerIds()) {
 			containerNavigableElements[id] = TEST.getSpottableDescendants(id);
 			allNavigableElements = allNavigableElements.concat(containerNavigableElements[id]);
 		}
@@ -815,7 +815,7 @@ const Spotlight = (function () {
 	}
 
 	function shouldPreventNavigation () {
-		return (!TEST.GETKEYS().next() || _pause);
+		return (!TEST.getAllContainerIds().next() || _pause);
 	}
 
 	function onKeyUp (evt) {
@@ -929,7 +929,7 @@ const Spotlight = (function () {
 	}
 
 	function isFocusable (elem) {
-		for (const id of TEST.GETKEYS()) { // check *all* the containers to see if the specified element is a focusable element
+		for (const id of TEST.getAllContainerIds()) { // check *all* the containers to see if the specified element is a focusable element
 			if (isNavigable(elem, id, true)) return true;
 		}
 		return false;
