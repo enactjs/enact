@@ -26,6 +26,45 @@ const MediaControls = kind({
 	name: 'MediaControls',
 
 	propTypes: /** @lends moonstone/VideoPlayer.MediaControls.prototype */ {
+		/**
+		 * A string which is sent to the `backward` icon of the player controls. This can be
+		 * anything that is accepted by {@link moonstone/Icon}.
+		 *
+		 * @type {String}
+		 * @default 'backward'
+		 * @public
+		 */
+		backwardIcon: React.PropTypes.string,
+
+		/**
+		 * A string which is sent to the `forward` icon of the player controls. This can be anything
+		 * that is accepted by {@link moonstone/Icon}.
+		 *
+		 * @type {String}
+		 * @default 'forward'
+		 * @public
+		 */
+		forwardIcon: React.PropTypes.string,
+
+		/**
+		 * A string which is sent to the `jumpBackward` icon of the player controls. This can be
+		 * anything that is accepted by {@link moonstone/Icon}.
+		 *
+		 * @type {String}
+		 * @default 'skipbackward'
+		 * @public
+		 */
+		jumpBackwardIcon: React.PropTypes.string,
+
+		/**
+		 * A string which is sent to the `jumpForward` icon of the player controls. This can be
+		 * anything that is accepted by {@link moonstone/Icon}.
+		 *
+		 * @type {String}
+		 * @default 'skipforward'
+		 * @public
+		 */
+		jumpForwardIcon: React.PropTypes.string,
 		leftComponents: React.PropTypes.node,
 		mediaDisabled: React.PropTypes.bool,
 		moreDisabled: React.PropTypes.bool,
@@ -37,9 +76,42 @@ const MediaControls = kind({
 		onJumpForwardButtonClick: React.PropTypes.func,
 		onPlayButtonClick: React.PropTypes.func,
 		onToggleMore: React.PropTypes.func,
-		playPauseIcon:React.PropTypes.node,
+		paused: React.PropTypes.bool,
+
+		/**
+		 * A string which is sent to the `pause` icon of the player controls. This can be
+		 * anything that is accepted by {@link moonstone/Icon}. This will be temporarily replaced by
+		 * the [playIcon]{@link moonstone/VideoPlayer.MediaControls.playIcon} when the
+		 * [paused]{@link moonstone/VideoPlayer.MediaControls.paused} boolean is `false`.
+		 *
+		 * @type {String}
+		 * @default 'pause'
+		 * @public
+		 */
+		pauseIcon: React.PropTypes.string,
+
+		/**
+		 * A string which is sent to the `play` icon of the player controls. This can be
+		 * anything that is accepted by {@link moonstone/Icon}. This will be temporarily replaced by
+		 * the [pauseIcon]{@link moonstone/VideoPlayer.MediaControls.pauseIcon} when the
+		 * [paused]{@link moonstone/VideoPlayer.MediaControls.paused} boolean is `true`.
+		 *
+		 * @type {String}
+		 * @default 'play'
+		 * @public
+		 */
+		playIcon: React.PropTypes.string,
 		rightComponents: React.PropTypes.node,
 		showMoreComponents: React.PropTypes.bool
+	},
+
+	defaultProps: {
+		backwardIcon: 'backward',
+		forwardIcon: 'forward',
+		jumpBackwardIcon: 'skipbackward',
+		jumpForwardIcon: 'skipforward',
+		pauseIcon: 'pause',
+		playIcon: 'play'
 	},
 
 	styles: {
@@ -53,13 +125,18 @@ const MediaControls = kind({
 			more: showMoreComponents
 		}),
 		mediaControlsDisabled: ({mediaDisabled, moreDisabled}) => (mediaDisabled || !moreDisabled),
-		moreIcon: ({showMoreComponents}) => showMoreComponents ? 'arrowhookleft' : 'ellipsis'
+		moreIcon: ({showMoreComponents}) => showMoreComponents ? 'arrowhookleft' : 'ellipsis',
+		playPauseIcon: ({paused, pauseIcon, playIcon}) => (paused ? playIcon : pauseIcon)
 	},
 
 	render: (props) => {
 		const {
+			backwardIcon,
 			centerClassName,
 			children,
+			forwardIcon,
+			jumpBackwardIcon,
+			jumpForwardIcon,
 			leftComponents,
 			mediaControlsDisabled,
 			moreDisabled,
@@ -77,6 +154,9 @@ const MediaControls = kind({
 			...rest
 		} = props;
 
+		delete rest.pauseIcon;
+		delete rest.paused;
+		delete rest.playIcon;
 		delete rest.mediaDisabled;
 		delete rest.showMoreComponents;
 
@@ -86,11 +166,11 @@ const MediaControls = kind({
 				<div className={css.centerComponentsContainer}>
 					<div className={centerClassName}>
 						<Container className={css.mediaControls} spotlightDisabled={mediaControlsDisabled}> {/* rtl={false} */}
-							{noJumpButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaControlsDisabled} onClick={onJumpBackwardButtonClick}>skipbackward</MediaButton>}
-							{noRateButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaControlsDisabled} onClick={onBackwardButtonClick}>backward</MediaButton>}
+							{noJumpButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaControlsDisabled} onClick={onJumpBackwardButtonClick}>{jumpBackwardIcon}</MediaButton>}
+							{noRateButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaControlsDisabled} onClick={onBackwardButtonClick}>{backwardIcon}</MediaButton>}
 							<MediaButton className={spotlightDefaultClass} backgroundOpacity="translucent" disabled={mediaControlsDisabled} onClick={onPlayButtonClick}>{playPauseIcon}</MediaButton>
-							{noRateButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaControlsDisabled} onClick={onForwardButtonClick}>forward</MediaButton>}
-							{noJumpButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaControlsDisabled} onClick={onJumpForwardButtonClick}>skipforward</MediaButton>}
+							{noRateButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaControlsDisabled} onClick={onForwardButtonClick}>{forwardIcon}</MediaButton>}
+							{noJumpButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaControlsDisabled} onClick={onJumpForwardButtonClick}>{jumpForwardIcon}</MediaButton>}
 						</Container>
 						<Container className={css.moreControls} spotlightDisabled={moreDisabled}>
 							{children}
