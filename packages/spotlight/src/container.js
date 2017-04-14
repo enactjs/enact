@@ -100,6 +100,17 @@ const getContainer = (containerId) => {
 	return document.querySelector(`[${containerAttribute}="${containerId}"]`);
 };
 
+const navigableFilter = (node, containerId) => {
+	const config = getContainerConfig(containerId);
+	if (typeof config.navigableFilter === 'function') {
+		if (config.navigableFilter(node, containerId) === false) {
+			return false;
+		}
+	}
+
+	return true;
+};
+
 const getSpottableDescendants = (containerId) => {
 	const node = containerId ? getContainer(containerId) : document;
 
@@ -124,10 +135,12 @@ const getSpottableDescendants = (containerId) => {
 	// console.log('spottable', spottable.length);
 	// console.log('containers', containers.length);
 
-	return [
+	const candidates = [
 		...spottable,
 		...containers
 	];
+
+	return candidates.filter(n => navigableFilter(n, containerId));
 };
 
 // returns an array of ids for containers that wrap the element, in order of outer-to-inner, with
@@ -222,18 +235,11 @@ const isNavigable = (node, containerId, verify) => {
 	}
 
 	const config = getContainerConfig(containerId);
-
 	if (verify && !matchSelector(node, config.selector)) {
 		return false;
 	}
 
-	if (typeof config.navigableFilter === 'function') {
-		if (config.navigableFilter(node, containerId) === false) {
-			return false;
-		}
-	}
-
-	return true;
+	return navigableFilter(node, containerId);
 };
 
 const GETKEYS = () => _containers.keys();
