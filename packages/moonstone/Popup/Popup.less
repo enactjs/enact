@@ -26,6 +26,10 @@
 		.padding-start-end(@padding-h, @moon-icon-button-small-size + @moon-spotlight-outset);
 	}
 
+	&:global(.moon-neutral) {
+		background-color: fade(@moon-neutral-bg-color, @moon-neutral-popup-background-opacity);
+	}
+
 	:global(.enact-locale-right-to-left) & {
 		.closeButton {
 			right: auto;

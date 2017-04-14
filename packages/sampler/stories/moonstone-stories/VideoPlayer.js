@@ -1,3 +1,4 @@
+import icons from './icons';
 import VideoPlayer, {VideoPlayerBase} from '@enact/moonstone/VideoPlayer';
 import IconButton from '@enact/moonstone/IconButton';
 import Button from '@enact/moonstone/Button';
@@ -111,12 +112,20 @@ storiesOf('VideoPlayer')
 				>VideoPlayer Edge</label>
 				<VideoPlayer
 					autoCloseTimeout={number('autoCloseTimeout', 7000)}
+					backwardIcon={select('backwardIcon', icons, 'backward')}
+					forwardIcon={select('forwardIcon', icons, 'forward')}
+					jumpBackwardIcon={select('jumpBackwardIcon', icons, 'skipbackward')}
+					jumpForwardIcon={select('jumpForwardIcon', icons, 'skipforward')}
+					jumpButtonsDisabled={boolean('jumpButtonsDisabled', false)}
+					rateButtonsDisabled={boolean('rateButtonsDisabled', false)}
 					loop={boolean('loop', true)}
 					muted={boolean('muted', true)}
 					noAutoPlay={boolean('noAutoPlay', false)}
 					noJumpButtons={boolean('noJumpButtons', false)}
 					noRateButtons={boolean('noRateButtons', false)}
 					noSlider={boolean('noSlider', false)}
+					pauseIcon={select('pauseIcon', icons, 'pause')}
+					playIcon={select('playIcon', icons, 'play')}
 					poster={prop.videos[0].poster}
 					title={text('title', 'Moonstone VideoPlayer Sample Video')}
 					titleHideDelay={number('titleHideDelay', 4000)}
