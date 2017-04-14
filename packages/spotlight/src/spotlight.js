@@ -813,11 +813,10 @@ const Spotlight = (function () {
 		const currentContainerId = last(currentContainerIds);
 
 		if (currentContainerId !== nextContainerId) {
-			if (_5WayKeyHold) {
-				return false;
-			}
-
 			if (nextContainerIds.indexOf(currentContainerId) < 0) {
+				if (_5WayKeyHold) {
+					return false;
+				}
 				const result = gotoLeaveFor(difference(currentContainerIds, nextContainerIds), direction);
 
 				if (result) {
