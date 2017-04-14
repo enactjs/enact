@@ -1,7 +1,7 @@
 import Button from '@enact/moonstone/Button';
 import Popup from '@enact/moonstone/Popup';
-import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import React from 'react';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, text, select} from '@kadira/storybook-addon-knobs';
 
