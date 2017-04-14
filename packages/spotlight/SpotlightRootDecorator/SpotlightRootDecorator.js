@@ -40,12 +40,18 @@ const SpotlightRootDecorator = hoc((config, Wrapped) => {
 
 		componentWillMount () {
 			if (typeof window === 'object') {
+				const palmSystem = window.PalmSystem;
+
 				Spotlight.initialize();
 				Spotlight.add(spotlightRootContainerName, {
 					selector: '.' + spottableClass,
 					navigableFilter: this.navigableFilter,
 					restrict: 'none'
 				});
+
+				if (palmSystem && palmSystem.cursor) {
+					Spotlight.setPointerMode(palmSystem.cursor.visibility);
+				}
 			}
 		}
 
