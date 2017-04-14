@@ -11,14 +11,15 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+- `moonstone/Slider` colors and sizing to match the latest designs
+- `moonstone/ProgressBar` to position correctly with other components nearby
 - `moonstone/Panels` breadcrumb to no longer have a horizontal line above it
 
 ### Fixed
 
+- `moonstone/Input` to not spot its own input decorator on 5way out
 - `moonstone/VideoPlayer` to no longer render its `children` in multiple places
-- `moonstone/Input` to not spot its own input decorator when we 5way out.
 - `moonstone/Button` text color when used on a neutral (light) background in some cases
-- `moonstone/VideoPlayer` to no longer render its `children` in multiple places
 - `moonstone/Popup` background opacity
 
 ## [1.0.0] - 2017-03-31
