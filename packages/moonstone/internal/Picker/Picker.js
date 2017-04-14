@@ -4,6 +4,7 @@ import clamp from 'ramda/src/clamp';
 import equals from 'ramda/src/equals';
 import {Job} from '@enact/core/util';
 import React from 'react';
+import PropTypes from 'prop-types';
 import shouldUpdate from 'recompose/shouldUpdate';
 import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
 import {getDirection} from '@enact/spotlight';
@@ -64,7 +65,7 @@ const Picker = class extends React.Component {
 		 * @type {Number}
 		 * @public
 		 */
-		index: React.PropTypes.number.isRequired,
+		index: PropTypes.number.isRequired,
 
 		/**
 		 * The maximum value selectable by the picker (inclusive).
@@ -72,7 +73,7 @@ const Picker = class extends React.Component {
 		 * @type {Number}
 		 * @public
 		 */
-		max: React.PropTypes.number.isRequired,
+		max: PropTypes.number.isRequired,
 
 		/**
 		 * The minimum value selectable by the picker (inclusive).
@@ -80,7 +81,7 @@ const Picker = class extends React.Component {
 		 * @type {Number}
 		 * @public
 		 */
-		min: React.PropTypes.number.isRequired,
+		min: PropTypes.number.isRequired,
 
 		/**
 		 * Accessibility hint
@@ -90,7 +91,7 @@ const Picker = class extends React.Component {
 		 * @default ''
 		 * @public
 		 */
-		accessibilityHint: React.PropTypes.string,
+		accessibilityHint: PropTypes.string,
 
 		/**
 		 * Children from which to pick
@@ -98,7 +99,7 @@ const Picker = class extends React.Component {
 		 * @type {Node}
 		 * @public
 		 */
-		children: React.PropTypes.node,
+		children: PropTypes.node,
 
 		/**
 		 * Class name for component
@@ -106,7 +107,7 @@ const Picker = class extends React.Component {
 		 * @type {String}
 		 * @public
 		 */
-		className: React.PropTypes.string,
+		className: PropTypes.string,
 
 		/**
 		 * Assign a custom icon for the decrementer. All strings supported by [Icon]{Icon} are
@@ -116,7 +117,7 @@ const Picker = class extends React.Component {
 		 * @type {String}
 		 * @public
 		 */
-		decrementIcon: React.PropTypes.string,
+		decrementIcon: PropTypes.string,
 
 		/**
 		 * When `true`, the Picker is shown as disabled and does not generate `onChange`
@@ -125,7 +126,7 @@ const Picker = class extends React.Component {
 		 * @type {Boolean}
 		 * @public
 		 */
-		disabled: React.PropTypes.bool,
+		disabled: PropTypes.bool,
 
 		/**
 		 * Assign a custom icon for the incrementer. All strings supported by [Icon]{Icon} are
@@ -135,7 +136,7 @@ const Picker = class extends React.Component {
 		 * @type {String}
 		 * @public
 		 */
-		incrementIcon: React.PropTypes.string,
+		incrementIcon: PropTypes.string,
 
 		/**
 		 * Determines the user interaction of the control. A joined picker allows the user to use
@@ -147,7 +148,7 @@ const Picker = class extends React.Component {
 		 * @type {Boolean}
 		 * @public
 		 */
-		joined: React.PropTypes.bool,
+		joined: PropTypes.bool,
 
 		/**
 		 * By default, the picker will animate transitions between items if it has a defined
@@ -157,7 +158,7 @@ const Picker = class extends React.Component {
 		 * @type {Boolean}
 		 * @public
 		 */
-		noAnimation: React.PropTypes.bool,
+		noAnimation: PropTypes.bool,
 
 		/**
 		 * A function to run when the control should increment or decrement.
@@ -165,7 +166,7 @@ const Picker = class extends React.Component {
 		 * @type {Function}
 		 * @public
 		 */
-		onChange: React.PropTypes.func,
+		onChange: PropTypes.func,
 
 		/**
 		 * Initiate the pressed state
@@ -173,7 +174,7 @@ const Picker = class extends React.Component {
 		 * @type {Function}
 		 * @public
 		 */
-		onMouseDown: React.PropTypes.func,
+		onMouseDown: PropTypes.func,
 
 		/**
 		 * End the pressed state
@@ -181,7 +182,7 @@ const Picker = class extends React.Component {
 		 * @type {Function}
 		 * @public
 		 */
-		onMouseUp: React.PropTypes.func,
+		onMouseUp: PropTypes.func,
 
 		/**
 		 * The handler to run when the component is removed while retaining focus.
@@ -190,7 +191,7 @@ const Picker = class extends React.Component {
 		 * @param {Object} event
 		 * @public
 		 */
-		onSpotlightDisappear: React.PropTypes.func,
+		onSpotlightDisappear: PropTypes.func,
 
 		/**
 		 * Sets the orientation of the picker, whether the buttons are above and below or on the
@@ -200,7 +201,7 @@ const Picker = class extends React.Component {
 		 * @default 'horizontal'
 		 * @public
 		 */
-		orientation: React.PropTypes.oneOf(['horizontal', 'vertical']),
+		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
 		 * Which button (increment, decrement, or neither) is pressed
@@ -208,9 +209,9 @@ const Picker = class extends React.Component {
 		 * @type {Number|null}
 		 * @public
 		 */
-		pressed: React.PropTypes.oneOfType([
-			React.PropTypes.number,
-			React.PropTypes.bool
+		pressed: PropTypes.oneOfType([
+			PropTypes.number,
+			PropTypes.bool
 		]),
 
 		/**
@@ -222,7 +223,7 @@ const Picker = class extends React.Component {
 		 * @type {Boolean}
 		 * @public
 		 */
-		reverse: React.PropTypes.bool,
+		reverse: PropTypes.bool,
 
 		/**
 		 * When `true`, the component cannot be navigated using spotlight.
@@ -231,7 +232,7 @@ const Picker = class extends React.Component {
 		 * @default false
 		 * @public
 		 */
-		spotlightDisabled: React.PropTypes.bool,
+		spotlightDisabled: PropTypes.bool,
 
 		/**
 		 * Allow the picker to only increment or decrement by a given value. A step of `2` would
@@ -241,7 +242,7 @@ const Picker = class extends React.Component {
 		 * @default 1
 		 * @public
 		 */
-		step: React.PropTypes.number,
+		step: PropTypes.number,
 
 		/**
 		 * Index of the selected child
@@ -250,7 +251,7 @@ const Picker = class extends React.Component {
 		 * @default 0
 		 * @public
 		 */
-		value: React.PropTypes.number,
+		value: PropTypes.number,
 
 		/**
 		 * Choose a specific size for your picker. `'small'`, `'medium'`, `'large'`, or set to `null` to
@@ -264,9 +265,9 @@ const Picker = class extends React.Component {
 		 * @type {String|Number}
 		 * @public
 		 */
-		width: React.PropTypes.oneOfType([
-			React.PropTypes.oneOf([null, 'small', 'medium', 'large']),
-			React.PropTypes.number
+		width: PropTypes.oneOfType([
+			PropTypes.oneOf([null, 'small', 'medium', 'large']),
+			PropTypes.number
 		]),
 
 		/**
@@ -276,7 +277,7 @@ const Picker = class extends React.Component {
 		 * @type {Boolean}
 		 * @public
 		 */
-		wrap: React.PropTypes.bool
+		wrap: PropTypes.bool
 	}
 
 	static defaultProps = {

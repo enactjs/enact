@@ -1,6 +1,7 @@
 import $L from '@enact/i18n/$L';
 import kind from '@enact/core/kind';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import IconButton from '../IconButton';
 
@@ -26,7 +27,7 @@ const ApplicationCloseButton = kind({
 		 *
 		 * @type {Function}
 		 */
-		onApplicationClose: React.PropTypes.func
+		onApplicationClose: PropTypes.func
 	},
 
 	styles: {

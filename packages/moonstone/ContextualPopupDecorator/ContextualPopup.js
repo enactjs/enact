@@ -1,6 +1,7 @@
 import $L from '@enact/i18n/$L';
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import IconButton from '../IconButton';
 
@@ -63,7 +64,7 @@ const ContextualPopupBase = kind({
 		 * @public
 		 */
 		children: PropTypes.oneOfType([
-			PropTypes.arrayOf(React.PropTypes.element),
+			PropTypes.arrayOf(PropTypes.element),
 			PropTypes.element
 		]).isRequired,
 
@@ -74,10 +75,10 @@ const ContextualPopupBase = kind({
 		 * @public
 		 */
 		arrowPosition: PropTypes.shape({
-			top: React.PropTypes.number,
-			bottom: React.PropTypes.number,
-			left: React.PropTypes.number,
-			right: React.PropTypes.number
+			top: PropTypes.number,
+			bottom: PropTypes.number,
+			left: PropTypes.number,
+			right: PropTypes.number
 		}),
 
 		/**
@@ -87,10 +88,10 @@ const ContextualPopupBase = kind({
 		 * @public
 		 */
 		containerPosition: PropTypes.shape({
-			top: React.PropTypes.number,
-			bottom: React.PropTypes.number,
-			left: React.PropTypes.number,
-			right: React.PropTypes.number
+			top: PropTypes.number,
+			bottom: PropTypes.number,
+			left: PropTypes.number,
+			right: PropTypes.number
 		}),
 
 		/**

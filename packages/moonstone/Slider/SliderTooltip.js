@@ -1,7 +1,8 @@
 import kind from '@enact/core/kind';
 
 import {contextTypes} from '@enact/i18n/I18nDecorator';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import Tooltip from '../TooltipDecorator/Tooltip';
 

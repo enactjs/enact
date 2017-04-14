@@ -1,5 +1,6 @@
 import kind from '@enact/core/kind';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import css from './Overlay.less';
 
@@ -23,7 +24,7 @@ const OverlayBase = kind({
 		 * @default false
 		 * @public
 		 */
-		hidden: React.PropTypes.bool
+		hidden: PropTypes.bool
 	},
 
 	defaultProps: {

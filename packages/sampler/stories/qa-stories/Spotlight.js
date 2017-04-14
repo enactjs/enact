@@ -111,10 +111,10 @@ class DisappearTest extends React.Component {
 
 class PopupFocusTest extends React.Component {
 	static propTypes = {
-		noAnimation: React.PropTypes.bool,
-		noAutoDismiss: React.PropTypes.bool,
-		scrimType: React.PropTypes.oneOf(['transparent', 'translucent', 'none']),
-		spotlightRestrict: React.PropTypes.oneOf(['none', 'self-first', 'self-only'])
+		noAnimation: PropTypes.bool,
+		noAutoDismiss: PropTypes.bool,
+		scrimType: PropTypes.oneOf(['transparent', 'translucent', 'none']),
+		spotlightRestrict: PropTypes.oneOf(['none', 'self-first', 'self-only'])
 	}
 
 	static defaultProps = {

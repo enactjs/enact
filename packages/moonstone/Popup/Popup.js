@@ -8,7 +8,8 @@
 import $L from '@enact/i18n/$L';
 import FloatingLayer from '@enact/ui/FloatingLayer';
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import Transition from '@enact/ui/Transition';
@@ -245,7 +246,7 @@ class Popup extends React.Component {
 		 * @default 'translucent'
 		 * @public
 		 */
-		scrimType: React.PropTypes.oneOf(['transparent', 'translucent', 'none']),
+		scrimType: PropTypes.oneOf(['transparent', 'translucent', 'none']),
 
 		/**
 		 * When `true`, the popup includes a close button; when `false`, none is included.

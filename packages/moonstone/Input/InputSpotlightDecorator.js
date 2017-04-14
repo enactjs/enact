@@ -2,6 +2,7 @@ import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import React from 'react';
+import PropTypes from 'prop-types';
 import Spotlight from '@enact/spotlight';
 import Spottable from '@enact/spotlight/Spottable';
 
@@ -51,7 +52,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			 * @default false
 			 * @public
 			 */
-			disabled: React.PropTypes.bool,
+			disabled: PropTypes.bool,
 
 			/**
 			 * When `true`, blurs the input when the "enter" key is pressed.
@@ -60,7 +61,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			 * @default false
 			 * @public
 			 */
-			dismissOnEnter: React.PropTypes.bool,
+			dismissOnEnter: PropTypes.bool,
 
 			/**
 			 * When `true`, prevents the decorator from receiving a visible focus state
@@ -69,7 +70,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			 * @default false
 			 * @public
 			 */
-			noDecorator: React.PropTypes.bool,
+			noDecorator: PropTypes.bool,
 
 			/**
 			 * The handler to run when the component is removed while retaining focus.
@@ -78,7 +79,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			 * @param {Object} event
 			 * @public
 			 */
-			onSpotlightDisappear: React.PropTypes.func,
+			onSpotlightDisappear: PropTypes.func,
 
 			/**
 			 * When `true`, prevents navigation of the component using spotlight
@@ -87,7 +88,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			 * @default false
 			 * @public
 			 */
-			spotlightDisabled: React.PropTypes.bool
+			spotlightDisabled: PropTypes.bool
 		}
 
 		constructor (props) {

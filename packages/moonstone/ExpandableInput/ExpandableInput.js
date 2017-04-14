@@ -10,6 +10,7 @@ import Changeable from '@enact/ui/Changeable';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import {calcAriaLabel, Input} from '../Input';
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
@@ -36,7 +37,7 @@ class ExpandableInputBase extends React.Component {
 		 * @required
 		 * @public
 		 */
-		title: React.PropTypes.string.isRequired,
+		title: PropTypes.string.isRequired,
 
 		/**
 		 * When `true`, applies a disabled style and the control becomes non-interactive.
@@ -44,7 +45,7 @@ class ExpandableInputBase extends React.Component {
 		 * @type {Boolean}
 		 * @public
 		 */
-		disabled: React.PropTypes.bool,
+		disabled: PropTypes.bool,
 
 		/**
 		 * The icon to be placed at the end of the input.
@@ -53,7 +54,7 @@ class ExpandableInputBase extends React.Component {
 		 * @type {String}
 		 * @public
 		 */
-		iconAfter: React.PropTypes.string,
+		iconAfter: PropTypes.string,
 
 		/**
 		 * The icon to be placed at the beginning of the input.
@@ -62,7 +63,7 @@ class ExpandableInputBase extends React.Component {
 		 * @type {String}
 		 * @public
 		 */
-		iconBefore: React.PropTypes.string,
+		iconBefore: PropTypes.string,
 
 		/**
 		 * Text to display when no `value` is set.
@@ -70,7 +71,7 @@ class ExpandableInputBase extends React.Component {
 		 * @type {String}
 		 * @public
 		 */
-		noneText: React.PropTypes.string,
+		noneText: PropTypes.string,
 
 		/**
 		 * The handler to run when the expandable value is changed.
@@ -79,7 +80,7 @@ class ExpandableInputBase extends React.Component {
 		 * @param {Object} event
 		 * @public
 		 */
-		onChange: React.PropTypes.func,
+		onChange: PropTypes.func,
 
 		/**
 		 * Callback to be called when a condition occurs which should cause the expandable to close
@@ -88,7 +89,7 @@ class ExpandableInputBase extends React.Component {
 		 * @param {Object} event
 		 * @public
 		 */
-		onClose: React.PropTypes.func,
+		onClose: PropTypes.func,
 
 		/**
 		 * The handler to run when the input value is changed.
@@ -96,7 +97,7 @@ class ExpandableInputBase extends React.Component {
 		 * @type {Function}
 		 * @public
 		 */
-		onInputChange: React.PropTypes.func,
+		onInputChange: PropTypes.func,
 
 		/**
 		 * The handler to run when the component is removed while retaining focus.
@@ -105,7 +106,7 @@ class ExpandableInputBase extends React.Component {
 		 * @param {Object} event
 		 * @public
 		 */
-		onSpotlightDisappear: React.PropTypes.func,
+		onSpotlightDisappear: PropTypes.func,
 
 		/**
 		 * When `true`, the control is rendered in the expanded state, with the contents visible
@@ -113,7 +114,7 @@ class ExpandableInputBase extends React.Component {
 		 * @type {Boolean}
 		 * @public
 		 */
-		open: React.PropTypes.bool,
+		open: PropTypes.bool,
 
 		/**
 		 * The placeholder text to display.
@@ -122,7 +123,7 @@ class ExpandableInputBase extends React.Component {
 		 * @see moonstone/Input.Input#placeholder
 		 * @public
 		 */
-		placeholder: React.PropTypes.string,
+		placeholder: PropTypes.string,
 
 		/**
 		 * When `true`, the component cannot be navigated using spotlight.
@@ -131,7 +132,7 @@ class ExpandableInputBase extends React.Component {
 		 * @default false
 		 * @public
 		 */
-		spotlightDisabled: React.PropTypes.bool,
+		spotlightDisabled: PropTypes.bool,
 
 		/**
 		 * The type of input. Accepted values correspond to the standard HTML5 input types.
@@ -140,7 +141,7 @@ class ExpandableInputBase extends React.Component {
 		 * @see moonstone/Input.Input#type
 		 * @public
 		 */
-		type: React.PropTypes.string,
+		type: PropTypes.string,
 
 		/**
 		 * The value of the input.
@@ -149,7 +150,7 @@ class ExpandableInputBase extends React.Component {
 		 * @see moonstone/Input.Input#value
 		 * @public
 		 */
-		value: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number])
+		value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 	}
 
 	static defaultProps = {

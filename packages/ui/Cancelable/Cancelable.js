@@ -9,6 +9,7 @@ import hoc from '@enact/core/hoc';
 import {add} from '@enact/core/keymap';
 import invariant from 'invariant';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import {addModal, removeModal} from './modalHandler';
 import {forCancel, addCancelHandler, removeCancelHandler} from './cancelHandler';
@@ -98,7 +99,7 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 		static displayName = 'Cancelable';
 
 		static propTypes = /** @lends ui/Cancelable.Cancelable.prototype */ {
-			onCancel: React.PropTypes.func
+			onCancel: PropTypes.func
 		}
 
 		componentDidMount () {
