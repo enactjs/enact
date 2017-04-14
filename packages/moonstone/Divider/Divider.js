@@ -36,6 +36,15 @@ const DividerBase = kind({
 		children: PropTypes.string,
 
 		/**
+		 * The children string will be capitalized, unless this is set to true.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		preserveCase: PropTypes.bool,
+
+		/**
 		 * The size of the spacing around the divider.
 		 *
 		 * * `'normal'` (default) spacing is slightly larger than the standard spotlight spacing.
@@ -56,6 +65,7 @@ const DividerBase = kind({
 	},
 
 	defaultProps: {
+		preserveCase: false,
 		spacing: 'normal'
 	},
 
@@ -66,10 +76,11 @@ const DividerBase = kind({
 
 	computed: {
 		className: ({spacing, styler}) => styler.append(spacing),
-		content: ({children}) => children ? children.split(' ').map(cap).join(' ') : ''
+		content: ({children = '', preserveCase}) => preserveCase ? children : children.split(' ').map(cap).join(' ')
 	},
 
 	render: ({content, ...rest}) => {
+		delete rest.preserveCase;
 		delete rest.spacing;
 
 		return (
