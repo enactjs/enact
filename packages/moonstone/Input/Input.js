@@ -187,7 +187,7 @@ const InputBase = kind({
 
 	computed: {
 		'aria-label': ({placeholder, type, value}) => {
-			const title = value == null ? placeholder : '';
+			const title = (value == null || value === '') ? placeholder : '';
 			return calcAriaLabel(title, type, value);
 		},
 		className: ({focused, styler}) => styler.append({focused}),
