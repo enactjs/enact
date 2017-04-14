@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `ui/Cancelable` to run modal handlers in the right order
+
 ## [1.0.0] - 2017-03-31
 
 ### Added
