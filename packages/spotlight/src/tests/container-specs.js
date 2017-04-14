@@ -65,6 +65,14 @@ const scenarios = {
 		[containerAttribute]: 'container',
 		'data-container-disabled': true,
 		children: someSpottables(5)
+	}),
+	spottablesInNestedDisabledContainer: container({
+		[containerAttribute]: 'container',
+		'data-container-disabled': true,
+		children: container({
+			[containerAttribute]: 'child',
+			children: someSpottables(5)
+		})
 	})
 };
 
@@ -165,6 +173,16 @@ describe('container', () => {
 			() => {
 				const expected = 0;
 				const actual = getSpottableDescendants('container').length;
+
+				expect(actual).to.equal(expected);
+			}
+		));
+
+		it('should not any spottables within a disabled ancestor container', testScenario(
+			scenarios.spottablesInNestedDisabledContainer,
+			() => {
+				const expected = 0;
+				const actual = getSpottableDescendants('child').length;
 
 				expect(actual).to.equal(expected);
 			}

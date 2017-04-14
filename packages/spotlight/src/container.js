@@ -3,32 +3,14 @@ import {matchSelector, parseSelector} from './utils';
 const spottableClass = 'spottable';
 
 const containerAttribute = 'data-container-id';
-const containerSelector = `[${containerAttribute}]`;
-const containerKey = 'containerId';
+const containerConfigs   = new Map();
+const containerKey       = 'containerId';
+const containerPrefix    = 'container-';
+const containerSelector  = `[${containerAttribute}]`;
+const rootContainerId    = 'spotlightRootDecorator';
 
-const rootContainerId = 'spotlightRootDecorator';
+let _ids = 0;
 
-const querySelector = (node, includeSelector, excludeSelector) => {
-	const include = Array.prototype.slice.call(node.querySelectorAll(includeSelector));
-	const exclude = node.querySelectorAll(excludeSelector);
-
-	// console.log(includeSelector, include.length);
-	// console.log(excludeSelector, exclude.length);
-
-	for (let i = 0; i < exclude.length; i++) {
-		const index = include.indexOf(exclude.item(i));
-		if (index >= 0) {
-			include.splice(index, 1);
-		}
-	}
-
-	return include;
-};
-
-
-/*
- * config
- */
 // Note: an <extSelector> can be one of following types:
 // - a valid selector string for "querySelectorAll"
 // - a NodeList or an array containing DOM elements
@@ -49,29 +31,92 @@ let GlobalConfig = {
 	navigableFilter: null
 };
 
-const _containerPrefix = 'container-';
-const _containers = new Map();
-let _ids = 0;
+const querySelector = (node, includeSelector, excludeSelector) => {
+	const include = Array.prototype.slice.call(node.querySelectorAll(includeSelector));
+	const exclude = node.querySelectorAll(excludeSelector);
 
+	for (let i = 0; i < exclude.length; i++) {
+		const index = include.indexOf(exclude.item(i));
+		if (index >= 0) {
+			include.splice(index, 1);
+		}
+	}
 
-const getContainerConfig = (id) => {
-	return _containers.get(id);
+	return include;
 };
 
+/**
+ * Determines if `node` is a spotlight container
+ *
+ * @param  {Node}     node   Node to check
+ *
+ * @return {Boolean}        `true` if `node` is a spotlight container
+ */
 const isContainerNode = (node) => {
 	return node && node.dataset && containerKey in node.dataset;
 };
 
+/**
+ * Walks up the node hierarchy calling `fn` on each node that is a container
+ *
+ * @param  {Node}     node  Node from which to start the search
+ * @param  {Function} fn    Called once for each container with the container node as the first
+ *                          argument. The return value is accumulated in the array returned by
+ *                          `mapContainers`
+ *
+ * @return {Array}          Array of values returned by `fn` in order of outermost container to
+ *                          innermost container
+ */
+const mapContainers = (node, fn) => {
+	const result = [];
+
+	while (node && node !== document) {
+		if (isContainerNode(node)) {
+			result.unshift(fn(node));
+		}
+		node = node.parentNode;
+	}
+
+	return result;
+};
+
+/**
+ * Returns the container config for `containerId`
+ *
+ * @param  {String}  id  Container ID
+ *
+ * @return {Object}      Container config
+ */
+const getContainerConfig = (id) => {
+	return containerConfigs.get(id);
+};
+
+/**
+ * Determines if node or a container id represents a spotlight container
+ *
+ * @param  {Node|String}  nodeOrId  Node or container ID
+ *
+ * @return {Boolean}                `true` if `nodeOrId` represents a spotlight container
+ */
 const isContainer = (nodeOrId) => {
 	if (typeof nodeOrId === 'string') {
-		return _containers.has(nodeOrId);
+		return containerConfigs.has(nodeOrId);
 	}
 
 	return isContainerNode(nodeOrId);
 };
 
+/**
+ * Determines if any of the containers at or above `node` are disabled and, if so, returns `false`.
+ *
+ * @param  {Node}     node  Spottable node or spotlight container
+ *
+ * @return {Boolean}        `true` if all container ancestors are enabled
+ */
 const isContainerEnabled = (node) => {
-	return isContainerNode(node) && node.dataset.containerDisabled !== 'true';
+	return mapContainers(node, container => {
+		return container.dataset.containerDisabled !== 'true';
+	}).reduce((acc, v) => acc && v, true);
 };
 
 const getContainerId = (node) => node.dataset[containerKey];
@@ -92,8 +137,10 @@ const getSubContainerSelector = (node) => {
 	return containerSelector;
 };
 
-const getContainer = (containerId) => {
-	if (containerId === rootContainerId) {
+const getContainerNode = (containerId) => {
+	if (!containerId) {
+		return null;
+	} else if (containerId === rootContainerId) {
 		return document;
 	}
 
@@ -102,7 +149,7 @@ const getContainer = (containerId) => {
 
 const navigableFilter = (node, containerId) => {
 	const config = getContainerConfig(containerId);
-	if (typeof config.navigableFilter === 'function') {
+	if (config && typeof config.navigableFilter === 'function') {
 		if (config.navigableFilter(node, containerId) === false) {
 			return false;
 		}
@@ -112,7 +159,7 @@ const navigableFilter = (node, containerId) => {
 };
 
 const getSpottableDescendants = (containerId) => {
-	const node = containerId ? getContainer(containerId) : document;
+	const node = getContainerNode(containerId);
 
 	// if it's falsey or is a disabled container, return an empty set
 	if (!node || (isContainerNode(node) && !isContainerEnabled(node))) {
@@ -132,9 +179,6 @@ const getSpottableDescendants = (containerId) => {
 		`${subContainerSelector} ${containerSelector}`
 	);
 
-	// console.log('spottable', spottable.length);
-	// console.log('containers', containers.length);
-
 	const candidates = [
 		...spottable,
 		...containers
@@ -143,31 +187,19 @@ const getSpottableDescendants = (containerId) => {
 	return candidates.filter(n => navigableFilter(n, containerId));
 };
 
-// returns an array of ids for containers that wrap the element, in order of outer-to-inner, with
-// the last array item being the immediate container id of the element.
+/**
+ * Returns an array of ids for containers that wrap the element, in order of outer-to-inner, with
+ * the last array item being the immediate container id of the element.
+ *
+ * @param  {Node}      node  Node from which to start the search
+ *
+ * @return {String[]}        Array on container IDs
+ */
 function getContainersForNode (node) {
-	const containers = [rootContainerId];
-
-	while (node && (node = node.parentNode) !== document) {
-		if (isContainerNode(node)) {
-			containers.splice(1, 0, getContainerId(node));
-		}
-	}
+	const containers = mapContainers(node, getContainerId);
+	containers.unshift(rootContainerId);
 
 	return containers;
-
-	// original code:
-	// const containerIds = [..._containers.keys()];
-	// const matches = [];
-
-	// for (let i = 0, containers = containerIds.length; i < containers; ++i) {
-	// 	const id = containerIds[i];
-	// 	const config = getContainerConfig(id);
-	// 	if (!config.selectorDisabled && matchSelector(node, config.selector)) {
-	// 		matches.push(id);
-	// 	}
-	// }
-	// return matches;
 }
 
 // CONTAINER CONFIG MGMT //
@@ -176,8 +208,8 @@ function generateId () {
 	let id;
 	/* eslint no-constant-condition: ["error", { "checkLoops": false }] */
 	while (true) {
-		id = _containerPrefix + String(++_ids);
-		if (!getContainer(id)) {
+		id = containerPrefix + String(++_ids);
+		if (!isContainer(id)) {
 			break;
 		}
 	}
@@ -215,14 +247,14 @@ const configureContainer = (...args) => {
 		containerId = generateId();
 	}
 
-	config = mergeConfig(_containers.get(containerId) || GlobalConfig, config);
-	_containers.set(containerId, config);
+	config = mergeConfig(containerConfigs.get(containerId) || GlobalConfig, config);
+	containerConfigs.set(containerId, config);
 
 	return containerId;
 };
 
 const removeContainer = (containerId) => {
-	_containers.delete(containerId);
+	containerConfigs.delete(containerId);
 };
 
 const configureDefaults = (config) => {
@@ -242,7 +274,7 @@ const isNavigable = (node, containerId, verify) => {
 	return navigableFilter(node, containerId);
 };
 
-const getAllContainerIds = () => _containers.keys();
+const getAllContainerIds = () => containerConfigs.keys();
 
 function getContainerDefaultElement (containerId) {
 	let defaultElement = getContainerConfig(containerId).defaultElement;
