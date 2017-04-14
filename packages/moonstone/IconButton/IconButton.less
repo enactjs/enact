@@ -4,6 +4,7 @@
 @import '../styles/variables.less';
 @import '../styles/text.less';
 
+:global(.moonstone) {
 .iconButton {
 	.border-box();
 	.moon-taparea(@moon-icon-button-size);
@@ -50,5 +51,39 @@
 		&.small .icon {
 			line-height: 30px;
 		}
+	}
+}
+}
+
+:global(.aqua) .iconButton {
+	.border-box();
+	.moon-taparea(@moon-icon-button-size);
+	padding: 0;
+
+	.bg {
+		box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(220, 220, 220, 0.25), 0 3px 10px rgba(0, 0, 0, 0.25);//, inset 0 6px 9px rgba(255, 255, 255, 0.36), inset 0 -6px 9px rgba(0, 0, 0, 0.36);
+	}
+
+	&:not([disabled]) {
+		&:focus {
+			.bg {
+				box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(85, 198, 214, 0.25), 0 6px 10px rgba(0, 0, 0, 0.25);//, inset 0 6px 9px rgba(255, 255, 255, 0.36), inset 0 -6px 9px rgba(0, 0, 0, 0.36);
+			}
+		}
+	}
+}
+
+:global(.car) .iconButton {
+	.client {
+		padding: 0;
+	}
+}
+
+:global(.material) .iconButton {
+	padding: 0;
+	text-align: center;
+
+	.client {
+		padding: 0;
 	}
 }

@@ -14,6 +14,7 @@ import SpotlightRootDecorator from '@enact/spotlight/SpotlightRootDecorator';
 
 import I18nFontDecorator from './I18nFontDecorator';
 import TextSizeDecorator from './TextSizeDecorator';
+import ThemeDecorator from './ThemeDecorator';
 import screenTypes from './screenTypes.json';
 import css from './MoonstoneDecorator.less';
 
@@ -31,7 +32,8 @@ const defaultConfig = {
 		screenTypes
 	},
 	spotlight: true,
-	textSize: true
+	textSize: true,
+	theme: true
 };
 
 /**
@@ -40,6 +42,7 @@ const defaultConfig = {
  * [floating layer]{@link ui/FloatingLayer.FloatingLayerDecorator},
  * [resolution independence]{@link ui/resolution.ResolutionDecorator},
  * [custom text sizing]{@link moonstone/MoonstoneDecorator.TextSizeDecorator},
+ * [theming]{@link moonstone/MoonstoneDecorator.ThemeDecorator},
  * [spotlight]{@link spotlight.SpotlightRootDecorator}, and
  * [internationalization support]{@link i18n/I18nDecorator.I18nDecorator}. It is meant to be applied to
  * the root element of an app.
@@ -50,7 +53,7 @@ const defaultConfig = {
  * @public
  */
 const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {ri, i18n, spotlight, float, overlay, textSize} = config;
+	const {ri, i18n, spotlight, float, overlay, textSize, theme} = config;
 
 	// Apply classes depending on screen type (overlay / fullscreen)
 	const bgClassName = 'enact-fit' + (overlay ? '' : ` ${css.bg}`);
@@ -69,6 +72,7 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	}
 	if (spotlight) App = SpotlightRootDecorator(App);
 	if (textSize) App = TextSizeDecorator(App);
+	if (theme) App = ThemeDecorator(App);
 
 	// add webOS-specific key maps
 	addAll({
@@ -81,7 +85,7 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		static displayName = 'MoonstoneDecorator';
 
 		render () {
-			let className = `${css.moon} enact-unselectable`;
+			let className = 'enact-unselectable';
 			if (!float) {
 				className += ' ' + bgClassName;
 			}

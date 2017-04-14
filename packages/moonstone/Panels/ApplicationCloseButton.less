@@ -1,10 +1,87 @@
 @import '../styles/mixins.less';
 @import '../styles/variables.less';
 
+:global(.moonstone) {
 .applicationCloseButton {
 	position: absolute;
 	top: (@moon-app-keepout + @moon-spotlight-outset);
 	.position-start-end(auto, @moon-spotlight-outset * 2);
 	z-index: 1;
 	margin: 0;
+}
+}
+
+:global(.aqua) {
+	.applicationCloseButton {
+		@button-size: 18px;
+
+		position: absolute;
+		top: (@moon-app-keepout + @moon-spotlight-outset);
+		.position-start-end(24px + 84px, auto);
+		z-index: 1;
+		margin: 0;
+		height: @button-size;
+		width: @button-size;
+		line-height: @button-size;
+		box-sizing: border-box;
+		text-align: center;
+
+		&[data-index='0'] {
+			.position-start-end(24px, auto);
+		}
+
+		& > div:first-child {
+			// Background
+			background-color: #f54645;
+			background-image: none;
+			border: 1px solid #d62e30;
+			height: @button-size;
+			width: @button-size;
+			box-shadow: none;
+		}
+		& > div:nth-child(2) {
+			margin-left: 1px;
+		}
+		& > div > div {
+			// Client
+			height: @button-size;
+			width: @button-size;
+			font-size: 30px;
+			line-height: @button-size;
+			color: transparent;
+		}
+		&:global(.spottable):focus > div:first-child {
+			background-image: none;
+			background-color: #f54645;
+			box-shadow: none;
+		}
+		&:global(.spottable):focus > div > div {
+			color: #333;
+			margin: 0;
+		}
+		&:not([disabled]).pressed,
+		&:not([disabled]):global(.spottable):active {
+			& > div:first-child {
+				background-image: none;
+				background-color: #af3535;
+				border-color: #992626;
+				transform: none;
+			}
+		}
+	}
+}
+
+:global(.car) {
+	.applicationCloseButton {
+		@button-size: 18px;
+
+		position: absolute;
+		top: 0;
+		.position-start-end(auto, 0);
+		z-index: 1;
+
+		& > div:first-child {
+			border-top-right-radius: 0;
+		}
+	}
 }

@@ -210,3 +210,130 @@
 		}
 	}
 }
+
+:global(.aqua) .slider {
+	.fill {
+		background-color: rgba(0, 128, 255, 0.4);
+		border-radius: 999px;
+	}
+
+	.sliderBar {
+		background-color: #b1b1b1;
+		box-shadow: inset 0 0 2px 2px rgba(0, 0, 0, 0.18), 0 0px 2px 0px rgba(0, 0, 0, 0.4);
+		border-radius: 999px;
+	}
+
+	.knob:before {
+		background-color: #e4e4e4;
+		box-shadow: inset 0rem -1px 4px 0px rgba(0, 0, 0, 0.3), 0px 1px 2px 1px rgba(0, 0, 0, 0.43);
+		border-width: 0;
+		height: 30px;
+		width: 30px;
+	}
+
+	&:global(.spottable) {
+		&.active,
+		&.pressed {
+			.fill {
+				background-color: rgba(0, 128, 255, 0.4);
+			}
+		}
+
+		&.pressed,
+		&:focus {
+			.knob::before {
+				background-color: rgb(210, 210, 210);
+			}
+		}
+	}
+}
+
+:global(.car) .slider {
+	.fill {
+		background-color: rgba(0, 128, 255, 0.4);
+		border-radius: 999px;
+	}
+
+	.sliderBar {
+		background-color: transparent;
+		box-shadow: inset 0 0 1px 2px rgba(230, 203, 119, 0.6);
+		border-radius: 999px;
+		height: 36px;
+	}
+
+	.knob:before {
+		background-color: #e4e4e4;
+		box-shadow: inset 0rem -1px 4px 0px rgba(0, 0, 0, 0.3), 0px 1px 2px 1px rgba(0, 0, 0, 0.43);
+		border-width: 0;
+		height: 30px;
+		width: 30px;
+	}
+
+	&:global(.spottable) {
+		&.active,
+		&.pressed {
+			.fill {
+				background-color: rgba(0, 128, 255, 0.4);
+			}
+		}
+
+		&.pressed,
+		&:focus {
+			.knob::before {
+				background-color: white;
+			}
+		}
+
+		&.pressed,
+		&:focus.active {
+			.knob::before {
+				transform: @moon-translate-center;
+				box-shadow: 0rem 0px 1.16667rem 1rem #03A9F4;
+			}
+		}
+	}
+}
+
+:global(.material) .slider {
+	.fill {
+		background-color: fade(black, 40%);
+	}
+
+	.sliderBar {
+		background-color: fade(black, 20%);
+		height: 3px;
+	}
+
+	.knob:before {
+		background-color: white;
+		box-shadow: 0 1px 1px 1px rgba(0, 0, 0, 0.2);
+		border-width: 0;
+		height: 30px;
+		width: 30px;
+	}
+
+	&:global(.spottable) {
+		&.active,
+		&.pressed {
+			.fill {
+				background-color: rgba(0, 128, 255, 0.4);
+			}
+		}
+
+		&.pressed,
+		&:focus {
+			.knob::before {
+				background-color: #3169f5;
+				box-shadow: 0 1px 1px 1px rgba(0, 0, 0, 0.4);
+			}
+		}
+
+		&.pressed,
+		&:focus.active {
+			.knob::before {
+				transform: @moon-translate-center scale(1.25);
+				box-shadow: 0 3px 6px 1px rgba(0, 0, 0, 0.3);
+			}
+		}
+	}
+}

@@ -8,6 +8,7 @@
 	overflow: hidden;
 }
 
+:global(.moonstone) {
 .breadcrumbs {
 	position: relative;
 	height: 100%;
@@ -36,6 +37,7 @@
 			}
 		}
 	}
+}
 }
 
 .panels {
@@ -212,3 +214,113 @@
 // 		display: none;
 // 	}
 // }
+
+:global(.aqua) {
+	.breadcrumbs {
+		position: relative;
+		height: 100%;
+		z-index: 10;
+		overflow: hidden;
+
+		.breadcrumb {
+			position: absolute;
+
+			.breadcrumbHeader {
+				position: absolute;
+				left: 0;
+				transform-origin: bottom left;
+				transform: rotate(90deg);
+				width: 96px;
+				top: 120px;
+				border: 1px solid #b4b4b4;
+				border-bottom-width: 0;
+				border-top-left-radius: 6px;
+				border-top-right-radius: 6px;
+				background-image: linear-gradient(to bottom, #f2f1f2 0%, #e2e0e2 4%, #c7c4c7 98%, #b4b1b4 100%);
+				text-align: center;
+				font-size: 21px;
+				font-family: "Helvetica Neue", "Lucida Grande", sans-serif;
+				font-weight: normal;
+				margin-top: 6px;
+				margin-bottom: 6px;
+				color: #525252;
+				box-shadow: 2px 2px 10px 4px rgba(0, 0, 0, 0.3);
+			}
+		}
+	}
+	.activity {
+		.viewport {
+			&[data-clip] {
+				-webkit-clip-path: none;
+				clip-path: none;
+			}
+		}
+	}
+}
+
+:global(.car) {
+	.breadcrumbs {
+		position: relative;
+		height: 100%;
+		z-index: 10;
+		overflow: hidden;
+
+		.breadcrumb {
+			position: absolute;
+			height: 96px;
+			width: 96px;
+
+			.breadcrumbHeader {
+				position: absolute;
+				left: 0;
+				top: 30px;
+				text-align: center;
+				width: 100%;
+			}
+
+			&:global(.spottable):focus {
+				@focus-glow: radial-gradient(ellipse at center, rgba(147, 169, 251, 0.5) 0%,rgba(252,232,181,0) 70%,rgba(252,234,187,0) 100%);
+
+				background-image: @focus-glow;
+				background-size: 100% 100%;
+			}
+		}
+	}
+}
+
+
+:global(.material) {
+	.breadcrumbs {
+		position: relative;
+		height: 100%;
+		z-index: 10;
+		overflow: hidden;
+
+		.breadcrumb {
+			position: absolute;
+			right: 0;
+			height: 100%;
+			width: @moon-breadcrumb-width;
+			background-color: darken(#3169f5, 0%);
+			color: white;
+
+			.breadcrumbHeader {
+				margin: @moon-app-keepout;
+				font-family: @moon-super-header-font-family;
+				font-size: 0;
+
+
+				&::after {
+					display: block;
+					position: absolute;
+					content: '◁';
+					font-size: 54px;
+				}
+			}
+
+			&:global(.spottable):focus {
+				background-color: darken(#3169f5, 2%);
+			}
+		}
+	}
+}

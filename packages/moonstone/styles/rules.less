@@ -10,7 +10,7 @@
 }
 
 /* Common classes applicable to multiple controls */
-.moon {
+:global(.moonstone) {
 	.moon-text-base(@moon-sub-header-font-size);
 	font-weight: normal;
 	font-style: normal;
@@ -40,9 +40,11 @@
 	border-bottom: @moon-divider-border-width solid @moon-neutral-border-color;
 }
 
+:global(.moonstone) {
 :global(.spottable):focus {
 	background-color: @moon-spotlight-bg-color;
 	color: @moon-spotlight-text-color;
+}
 }
 
 [data-container-muted='true'] {
@@ -79,5 +81,82 @@
 
 	:global(.spottable):focus * {
 		color: inherit;
+	}
+}
+
+:global(.aqua) {
+	font-family: 'Helvetica', sans-serif;
+
+	&:global(.theme),
+	&.bg,
+	& .bg {
+		background: #004080 url("http://lorempixel.com/720/480/abstract/2/") no-repeat center/cover;
+	}
+
+	:global(.spottable):focus {
+		background-color: #a3cdfe;
+	}
+
+	h3 {
+		color: black;
+		border-bottom: 3px solid rgba(0, 0, 0, 0.25);
+		padding: 0 12px;
+		font-size: 24px;
+	}
+}
+
+:global(.car) {
+	font-family: 'Futura', sans-serif;
+	color: white;
+	-webkit-font-smoothing: antialiased;
+
+	&:global(.theme),
+	&.bg,
+	& > .bg {
+		background-color: #222;
+	}
+
+	h3 {
+		text-align: center;
+		position: relative;
+
+		&::after {
+			content: '';
+			display: block;
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: 100%;
+			height: 3px;
+			background: linear-gradient(to right, rgba(200,0,0,0) 0%, rgba(200,0,0,1) 50%, rgba(200,0,0,0) 100%);
+		}
+	}
+}
+
+:global(.material) {
+	font-family: 'Roboto', sans-serif;
+	-webkit-font-smoothing: antialiased;
+
+	&:global(.theme),
+	&.bg,
+	& > .bg {
+		background-color: white;
+	}
+
+	h3 {
+		box-sizing: border-box;
+		-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+		background-color: rgb(232, 232, 232);
+		height: 56px;
+		padding: 0px 24px;
+		padding-right: 16px;
+		line-height: 56px;
+		font-size: 20px;
+		color: rgba(0, 0, 0, 0.4);
+	}
+
+	p {
+		margin-left: 1ex;
+		margin-right: 1ex;
 	}
 }

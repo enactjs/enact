@@ -29,3 +29,28 @@
 		opacity: 1;
 	}
 }
+
+:global(.aqua) .panel {
+	.body {
+		background-color: #e7e7e7;
+	}
+}
+
+:global(.material) .panel {
+	display: flex;
+	flex-direction: row;
+	padding: 0;
+	pointer-events: auto;
+
+	.header {
+		flex: 0 0 300px;
+		background-color: #3169f5;
+		box-shadow: 4px 0px 20px rgba(0, 0, 0, 0.35);
+	}
+
+	.body {
+		height: 100%;
+		flex: 1 1;
+		background-color: white;
+	}
+}

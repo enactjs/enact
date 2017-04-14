@@ -2,6 +2,7 @@
 @import '../styles/variables.less';
 @import '../styles/text.less';
 
+:global(.moonstone) {
 .header {
 	.border-box;
 	color: @moon-header-text-color;
@@ -26,6 +27,7 @@
 	.title {
 		.moon-header-text();
 		margin: 0;
+		text-transform: uppercase;
 	}
 
 	.titleBelow,
@@ -149,6 +151,68 @@
 		.titleBelow,
 		.subTitleBelow {
 			color: @moon-header-title-below-full-bleed-text-color;
+		}
+	}
+}
+}
+
+:global(.aqua) {
+	.header {
+		border: 1px solid #b4b4b4;
+		background-image: linear-gradient(to bottom, #f2f1f2 0%, #e2e0e2 4%, #c7c4c7 98%, #b4b1b4 100%);
+		border-top-left-radius: 12px;
+		border-top-right-radius: 12px;
+
+		.title {
+			text-align: center;
+			font-size: 18px;
+			font-family: "Helvetica Neue", "Lucida Grande", sans-serif;
+			font-weight: normal;
+			color: #525252;
+			-webkit-margin-before: 12px;
+			-webkit-margin-after: 12px;
+		}
+	}
+}
+
+:global(.car) {
+	.header {
+		text-align: center;
+
+		.title {
+			font-size: 72px;
+			font-weight: 900;
+			font-style: italic;
+			font-variant: small-caps;
+			margin: 0;
+			background: radial-gradient(ellipse at center, rgba(251,223,147,1) 0%,rgba(252,232,181,0) 70%,rgba(252,234,187,0) 100%);
+			background-size: 100% 6px;
+			background-repeat: no-repeat;
+			background-position: bottom;
+		}
+	}
+}
+
+:global(.material) {
+	.header {
+		color: white;
+		font-family: inherit;
+		font-weight: normal;
+
+		.title {
+			padding: 30px;
+			margin: 0;
+		}
+		.headerComponents {
+			display: flex;
+			flex-direction: column;
+		}
+	}
+
+	[data-index='0'] .header {
+		.title {
+			padding-top: 120px;
+			background: transparent url("http://lorempixel.com/360/240/abstract/7/") no-repeat center/cover;
 		}
 	}
 }
