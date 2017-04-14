@@ -10,8 +10,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/Button` text color when used on a neutral (light) background in some cases
 - `moonstone/VideoPlayer` to no longer render its `children` in multiple places
+- `moonstone/Input` to not spot its own input decorator when we 5way out.
+- `moonstone/Button` text color when used on a neutral (light) background in some cases
+- `moonstone/Popup` background opacity
 
 ## [1.0.0] - 2017-03-31
 
