@@ -198,6 +198,14 @@ const VideoPlayerBase = class extends React.Component {
 		jumpBackwardIcon: React.PropTypes.string,
 
 		/**
+		 * Sets the `disabled` state on the media "jump" buttons; the outer pair.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		jumpButtonsDisabled: React.PropTypes.bool,
+
+		/**
 		 * The amount of seconds the player should skip forward or backward when a "jump" button is
 		 * pressed.
 		 *
@@ -339,6 +347,14 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		playIcon: React.PropTypes.string,
+
+		/**
+		 * Sets the `disabled` state on the media playback-rate control buttons; the inner pair.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		rateButtonsDisabled: React.PropTypes.bool,
 
 		/**
 		 * These components are placed into the slot to the right of the media controls.
@@ -1061,7 +1077,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	render () {
-		const {backwardIcon, children, className, forwardIcon, infoComponents, jumpBackwardIcon, jumpForwardIcon, leftComponents, noAutoPlay, noJumpButtons, noRateButtons, noSlider, pauseIcon, playIcon, rightComponents, source, style, title, ...rest} = this.props;
+		const {backwardIcon, children, className, forwardIcon, infoComponents, jumpBackwardIcon, jumpButtonsDisabled, jumpForwardIcon, leftComponents, noAutoPlay, noJumpButtons, noRateButtons, noSlider, pauseIcon, playIcon, rateButtonsDisabled, rightComponents, source, style, title, ...rest} = this.props;
 		delete rest.autoCloseTimeout;
 		delete rest.feedbackHideDelay;
 		delete rest.jumpBy;
@@ -1132,6 +1148,7 @@ const VideoPlayerBase = class extends React.Component {
 							backwardIcon={backwardIcon}
 							forwardIcon={forwardIcon}
 							jumpBackwardIcon={jumpBackwardIcon}
+							jumpButtonsDisabled={jumpButtonsDisabled}
 							jumpForwardIcon={jumpForwardIcon}
 							leftComponents={leftComponents}
 							mediaDisabled={this.state.mediaControlsDisabled}
@@ -1149,6 +1166,7 @@ const VideoPlayerBase = class extends React.Component {
 							paused={this.state.paused}
 							pauseIcon={pauseIcon}
 							playIcon={playIcon}
+							rateButtonsDisabled={rateButtonsDisabled}
 							rightComponents={rightComponents}
 							showMoreComponents={this.state.more}
 						>
