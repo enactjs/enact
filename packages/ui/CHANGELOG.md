@@ -4,12 +4,13 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
-### Fixed
-
-- `ui/Cancelable` to run modal handlers in the right order
 ### Changed
 
 - `ui/Slottable` to support slot-candidate tags that have multiple props, which are now forwarded directly instead of just their children
+
+### Fixed
+
+- `ui/Cancelable` to run modal handlers in the right order
 
 ## [1.0.0] - 2017-03-31
 
