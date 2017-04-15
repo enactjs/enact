@@ -18,18 +18,20 @@
 	}
 
 	.fill {
-		background-color: @moon-progress-bar-bar-bg-color;
+		background-color: @moon-progress-bar-fill-bg-color;
+		transition: background-color ease-out 100ms;
+		will-change: background-color;
 	}
 
 	.load {
-		background-color: @moon-progress-bar-bg-color;
+		background-color: @moon-progress-bar-loaded-bg-color;
 	}
 
 	.sliderBar {
 		position: relative;
 		height: 100%;
 		width: 100%;
-		background-color: @moon-progress-bg-color;
+		background-color: @moon-progress-bar-bg-color;
 		direction: ltr;	// Always arrange this according to LTR rules
 	}
 
@@ -44,8 +46,8 @@
 			width: @moon-slider-knob-width;
 			// Vertically and horizontally center this knob.
 			// Using this method rather than -top -left so the knob is more intuitively customizable.
-			-webkit-transform: @moon-translate-center;
-			transform:         @moon-translate-center;
+			-webkit-transform: @moon-translate-center scale(0.8);
+			transform:         @moon-translate-center scale(0.8);
 			background-color: @moon-slider-knob-bg-color;
 			border-radius: (@moon-slider-knob-height / 2);
 			border: @moon-button-border-width solid transparent;
@@ -184,7 +186,7 @@
 		&.pressed,
 		&:focus.active {
 			.knob::before {
-				transform: @moon-translate-center scale(1.25);
+				transform: @moon-translate-center scale(1);
 			}
 		}
 
