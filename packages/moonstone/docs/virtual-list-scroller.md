@@ -109,7 +109,7 @@ This document describes VirtualList, VirtualGridList, and Scroller.
 
 ### Items for VirtualGridList
 
-*   `VirtualList.GridListImageItem` can be used as items of VirtualGridList. It has Moonstone styling applied and has a placeholder image as a background.
+*   `GridListImageItem` can be used as items of VirtualGridList. It has Moonstone styling applied and has a placeholder image as a background.
 
 *   `caption` and `subCaption` are supported.
 
@@ -157,7 +157,7 @@ This document describes VirtualList, VirtualGridList, and Scroller.
         className={css.scroller}
     >
         <div className={css.content}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br /> 
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br />
         </div>
     </Scroller>
     ```

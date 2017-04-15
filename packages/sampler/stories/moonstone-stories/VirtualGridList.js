@@ -1,7 +1,7 @@
 import {VirtualGridList} from '@enact/moonstone/VirtualList';
 import ri from '@enact/ui/resolution';
 import {VirtualListCore} from '@enact/moonstone/VirtualList/VirtualListBase';
-import GridListImageItem from '@enact/moonstone/VirtualList/GridListImageItem';
+import GridListImageItem from '@enact/moonstone/GridListImageItem';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, number, select} from '@kadira/storybook-addon-knobs';
