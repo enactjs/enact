@@ -244,13 +244,14 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidUpdate () {
+			if (this.childrenChanged) {
+				this.calculateMetrics();
+			}
 			if (this.shouldStartMarquee()) {
 				this.startAnimation(this.props.marqueeOn === 'render' ? this.props.marqueeOnRenderDelay : this.props.marqueeDelay);
 			}
 			this.forceRestartMarquee = false;
-			if (this.childrenChanged) {
-				this.calculateMetrics();
-			}
+
 			this.childrenChanged = false;
 		}
 
