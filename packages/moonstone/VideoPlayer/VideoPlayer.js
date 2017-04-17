@@ -99,34 +99,6 @@ const forwardPlayButtonClick = forward('onPlayButtonClick');
  * @public
  */
 
-
-/**
- * Mapping of playback rate names to playback rate values that may be set.
- * ```
- * {
- *	fastForward: ['2', '4', '8', '16'],
- *	rewind: ['-2', '-4', '-8', '-16'],
- *	slowForward: ['1/4', '1/2', '1'],
- *	slowRewind: ['-1/2', '-1']
- * }
- * ```
- *
- * @type {Object}
- * @default {
- *	fastForward: ['2', '4', '8', '16'],
- *	rewind: ['-2', '-4', '-8', '-16'],
- *	slowForward: ['1/4', '1/2'],
- *	slowRewind: ['-1/2', '-1']
- * }
- * @private
- */
-const playbackRateHash = {
-	fastForward: ['2', '4', '8', '16'],
-	rewind: ['-2', '-4', '-8', '-16'],
-	slowForward: ['1/4', '1/2'],
-	slowRewind: ['-1/2', '-1']
-};
-
 /**
  * A player for video {@link moonstone/VideoPlayer.VideoPlayerBase}.
  *
@@ -340,6 +312,20 @@ const VideoPlayerBase = class extends React.Component {
 		pauseIcon: PropTypes.string,
 
 		/**
+		 * Mapping of playback rate names to playback rate values that may be set.
+		 *
+		 * @type {Object}
+		 * @default {
+		 *	fastForward: ['2', '4', '8', '16'],
+		 *	rewind: ['-2', '-4', '-8', '-16'],
+		 *	slowForward: ['1/4', '1/2'],
+		 *	slowRewind: ['-1/2', '-1']
+		 * }
+		 * @public
+		 */
+		playbackRateHash: PropTypes.object,
+
+		/**
 		 * A string which is sent to the `play` icon of the player controls. This can be anything
 		 * that is accepted by {@link moonstone/Icon}.
 		 *
@@ -408,6 +394,12 @@ const VideoPlayerBase = class extends React.Component {
 		noRateButtons: false,
 		noSlider: false,
 		pauseIcon: 'pause',
+		playbackRateHash: {
+			fastForward: ['2', '4', '8', '16'],
+			rewind: ['-2', '-4', '-8', '-16'],
+			slowForward: ['1/4', '1/2'],
+			slowRewind: ['-1/2', '-1']
+		},
 		playIcon: 'play',
 		titleHideDelay: 4000
 	}
@@ -857,7 +849,7 @@ const VideoPlayerBase = class extends React.Component {
 	 * @private
 	 */
 	selectPlaybackRates = (cmd) => {
-		this.playbackRates = playbackRateHash[cmd];
+		this.playbackRates = this.props.playbackRateHash[cmd];
 	}
 
 	/**
@@ -1087,6 +1079,7 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.onJumpBackwardButtonClick;
 		delete rest.onJumpForwardButtonClick;
 		delete rest.onPlayButtonClick;
+		delete rest.playbackRateHash;
 		delete rest.titleHideDelay;
 
 		// Remove the events we manually added so they aren't added twice or fail.
