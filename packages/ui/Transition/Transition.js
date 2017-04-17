@@ -7,6 +7,7 @@
 
 import {forward} from '@enact/core/handle';
 import kind from '@enact/core/kind';
+import {Job} from '@enact/core/util';
 import React, {PropTypes} from 'react';
 
 import css from './Transition.less';
@@ -268,6 +269,14 @@ class Transition extends React.Component {
 		};
 	}
 
+	componentDidMount () {
+		if (!this.props.visible) {
+			this.measuringJob.idle();
+		} else {
+			this.measureInner();
+		}
+	}
+
 	componentWillReceiveProps (nextProps) {
 		if (nextProps.visible && this.state.renderState === TRANSITION_STATE.INIT) {
 			this.setState({
@@ -281,6 +290,12 @@ class Transition extends React.Component {
 		return (this.state.initialHeight === nextState.initialHeight) || this.props.visible || nextProps.visible;
 	}
 
+	componentWillUpdate (nextProps, nextState) {
+		if (nextState.renderState === TRANSITION_STATE.MEASURE) {
+			this.measuringJob.stop();
+		}
+	}
+
 	componentDidUpdate (prevProps, prevState) {
 		const {visible} = this.props;
 		const {initialHeight, renderState} = this.state;
@@ -290,6 +305,16 @@ class Transition extends React.Component {
 			this.measureInner();
 		}
 	}
+
+	componentWillUnmount () {
+		this.measuringJob.stop();
+	}
+
+	measuringJob = new Job(() => {
+		this.setState({
+			renderState: TRANSITION_STATE.MEASURE
+		});
+	})
 
 	hideDidFinish = (ev) => {
 		forwardTransitionEnd(ev, this.props);
@@ -312,10 +337,6 @@ class Transition extends React.Component {
 
 	childRef = (node) => {
 		this.childNode = node;
-		// this accounts for open at construction or when we need to measure before opening
-		if (this.state.initialHeight == null) {
-			this.measureInner();
-		}
 	}
 
 	render () {

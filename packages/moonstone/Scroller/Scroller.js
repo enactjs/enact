@@ -119,24 +119,45 @@ class ScrollerBase extends Component {
 	}
 
 	calculatePositionOnFocus = (focusedItem) => {
-		const
-			rtlDirection = this.context.rtl ? -1 : 1,
-			currentLeft = this.scrollPos.left * rtlDirection,
-			currentTop = this.scrollPos.top;
-
 		if (this.isVertical()) {
-			if (focusedItem.offsetTop + focusedItem.offsetHeight > (this.scrollBounds.clientHeight + currentTop)) {
-				this.scrollPos.top += ((focusedItem.offsetTop + focusedItem.offsetHeight) - (this.scrollBounds.clientHeight + currentTop));
-			} else if (focusedItem.offsetTop < currentTop) {
-				this.scrollPos.top += (focusedItem.offsetTop - currentTop);
+			const
+				{clientHeight} = this.scrollBounds,
+				{height: itemHeight, top: itemTop} = focusedItem.getBoundingClientRect(),
+				{top: containerTop} = this.containerRef.getBoundingClientRect(),
+				currentScrollTop = this.scrollPos.top,
+				// calculation based on client position
+				newItemTop = this.containerRef.scrollTop + (itemTop - containerTop);
+
+			if (newItemTop + itemHeight > (clientHeight + currentScrollTop)) {
+				this.scrollPos.top += (newItemTop + itemHeight) - (clientHeight + currentScrollTop);
+			} else if (newItemTop < currentScrollTop) {
+				this.scrollPos.top += newItemTop - currentScrollTop;
 			}
+
 		}
 
 		if (this.isHorizontal()) {
-			if (focusedItem.offsetLeft + focusedItem.offsetWidth > (this.scrollBounds.clientWidth + currentLeft)) {
-				this.scrollPos.left += rtlDirection * ((focusedItem.offsetLeft + focusedItem.offsetWidth) - (this.scrollBounds.clientWidth + currentLeft));
-			} else if (focusedItem.offsetLeft < currentLeft) {
-				this.scrollPos.left += rtlDirection * (focusedItem.offsetLeft - currentLeft);
+			const
+				{clientWidth} = this.scrollBounds,
+				rtlDirection = this.context.rtl ? -1 : 1,
+				{width: itemWidth, left: itemLeft} = focusedItem.getBoundingClientRect(),
+				{left: containerLeft} = this.containerRef.getBoundingClientRect(),
+				currentScrollLeft = this.scrollPos.left * rtlDirection,
+				// calculation based on client position
+				newItemLeft = this.containerRef.scrollLeft + (itemLeft - containerLeft);
+
+			if (this.context.rtl && newItemLeft > clientWidth) {
+				// For RTL, and if the `focusedItem` is bigger than `this.scrollBounds.clientWidth`, keep
+				// the scroller to the right.
+				this.scrollPos.left -= newItemLeft;
+			} else if (newItemLeft + itemWidth > (clientWidth + currentScrollLeft) && itemWidth < clientWidth) {
+				// If focus is moved to an element outside of view area (to the right), scroller will move
+				// to the right just enough to show the current `focusedItem`. This does not apply to
+				// `focusedItem` that has a width that is bigger than `this.scrollBounds.clientWidth`.
+				this.scrollPos.left += rtlDirection * ((newItemLeft + itemWidth) - (clientWidth + currentScrollLeft));
+			} else if (newItemLeft < currentScrollLeft) {
+				// If focus is outside of the view area to the left, move scroller to the left accordingly.
+				this.scrollPos.left += rtlDirection * (newItemLeft - currentScrollLeft);
 			}
 		}
 
@@ -181,9 +202,6 @@ class ScrollerBase extends Component {
 		delete props.cbScrollTo;
 		delete props.className;
 		delete props.horizontal;
-		delete props.onScrolling;
-		delete props.onScrollStart;
-		delete props.onScrollStop;
 		delete props.style;
 		delete props.vertical;
 
