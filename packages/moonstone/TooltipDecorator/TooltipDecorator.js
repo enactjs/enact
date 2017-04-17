@@ -266,9 +266,11 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 		}
 
 		showTooltipJob = new Job(() => {
-			this.setState({
-				showing: true
-			});
+			if (!this.state.showing) {
+				this.setState({
+					showing: true
+				});
+			}
 		})
 
 		showTooltip (client) {
