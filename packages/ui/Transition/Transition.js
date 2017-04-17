@@ -337,6 +337,10 @@ class Transition extends React.Component {
 
 	childRef = (node) => {
 		this.childNode = node;
+
+		if (this.state.initialHeight == null && this.props.visible) {
+			this.measureInner();
+		}
 	}
 
 	render () {
