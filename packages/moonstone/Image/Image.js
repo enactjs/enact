@@ -125,7 +125,7 @@ const ImageBase = kind({
 		delete rest.src;
 
 		return (
-			<div role="img" {...rest} style={{...style, backgroundImage: bgImage}}>
+			<div role="img" {...rest} title={alt} style={{...style, backgroundImage: bgImage}}>
 				<img className={css.img} src={imgSrc} alt={alt} onLoad={onLoad} onError={onError} />
 			</div>
 		);
