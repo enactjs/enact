@@ -46,6 +46,20 @@ const GridListImageItemBase = kind({
 		caption: PropTypes.string,
 
 		/**
+		 * Placeholder image used while [source]{@link moonstone/VirtualList.GridListImageItemBase#source} is loaded.
+		 *
+		 * @type {String}
+		 * @default 'data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC' +
+		 * '9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48cmVjdCB3aWR0aD0iMTAw' +
+		 * 'JSIgaGVpZ2h0PSIxMDAlIiBzdHlsZT0ic3Ryb2tlOiAjNDQ0OyBzdHJva2Utd2lkdGg6IDE7IGZpbGw6ICNhYW' +
+		 * 'E7IiAvPjxsaW5lIHgxPSIwIiB5MT0iMCIgeDI9IjEwMCUiIHkyPSIxMDAlIiBzdHlsZT0ic3Ryb2tlOiAjNDQ0' +
+		 * 'OyBzdHJva2Utd2lkdGg6IDE7IiAvPjxsaW5lIHgxPSIxMDAlIiB5MT0iMCIgeDI9IjAiIHkyPSIxMDAlIiBzdH' +
+		 * 'lsZT0ic3Ryb2tlOiAjNDQ0OyBzdHJva2Utd2lkdGg6IDE7IiAvPjwvc3ZnPg==';
+		 * @public
+		 */
+		placeholder: PropTypes.string,
+
+		/**
 		 * When `true`, applies a selected visual effect to the image, but only if `selectionOverlayShowing`
 		 * is also `true`.
 		 *
@@ -83,6 +97,7 @@ const GridListImageItemBase = kind({
 	},
 
 	defaultProps: {
+		placeholder: defaultPlaceholder,
 		selected: false,
 		selectionOverlayShowing: false
 	},
@@ -100,7 +115,7 @@ const GridListImageItemBase = kind({
 		)
 	},
 
-	render: ({caption, source, subCaption, selectionOverlayShowing, ...rest}) => {
+	render: ({caption, placeholder, source, subCaption, selectionOverlayShowing, ...rest}) => {
 		if (selectionOverlayShowing) {
 			rest['role'] = 'checkbox';
 			rest['aria-checked'] = rest.selected;
@@ -110,7 +125,7 @@ const GridListImageItemBase = kind({
 
 		return (
 			<div {...rest}>
-				<Image className={css.image} placeholder={defaultPlaceholder} src={source} />
+				<Image className={css.image} placeholder={placeholder} src={source} />
 				{
 					selectionOverlayShowing ? (
 						<div className={css.overlayContainer}>
