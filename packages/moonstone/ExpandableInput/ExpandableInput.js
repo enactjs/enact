@@ -190,15 +190,11 @@ class ExpandableInputBase extends React.Component {
 		}
 	}
 
-	fireChangeEvent = () => {
-		const {onChange, onClose, value} = this.props;
+	fireCloseEvent = () => {
+		const {onClose} = this.props;
 
 		if (onClose) {
 			onClose();
-		}
-
-		if (onChange) {
-			onChange({value});
 		}
 	}
 
@@ -223,16 +219,16 @@ class ExpandableInputBase extends React.Component {
 				value: this.state.initialValue
 			}, this.props);
 		} else if (isEnter || isUpDown) {
-			this.fireChangeEvent();
+			this.fireCloseEvent();
 		}
 	}
 
 	handleInputBlur = () => {
 		// if `open` is `false`, the contained <input> has lost focus due to 5-way navigation
-		// in `handleInputKeyDown`, where the `fireChangeEvent` method has already been called
+		// in `handleInputKeyDown`, where the `fireCloseEvent` method has already been called
 		// verify the expandable is open before calling that method again.
 		if (this.props.open) {
-			this.fireChangeEvent();
+			this.fireCloseEvent();
 		}
 	}
 
@@ -253,8 +249,8 @@ class ExpandableInputBase extends React.Component {
 	}
 
 	handleClose = () => {
-		this.fireChangeEvent();
-		// not forwarding event because this is being done in fireChangeEvent
+		this.fireCloseEvent();
+		// not forwarding event because this is being done in fireCloseEvent
 	}
 
 	render () {
