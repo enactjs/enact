@@ -1503,6 +1503,23 @@ const Spotlight = (function () {
 		 */
 		getCurrent: function () {
 			return getCurrent();
+		},
+
+		/**
+		 * Returns a list of spottable elements wrapped by the supplied container.
+		 *
+		 * @memberof spotlight.Spotlight.prototype
+		 * @param {String} [containerId] The id of the container used to determine the list of spottable elements
+		 * @returns {NodeList} The spottable elements that are wrapped by the supplied container
+		 * @public
+		 */
+		getSpottableDescendants: function (containerId) {
+			if (!containerId || typeof containerId !== 'string') {
+				throw new Error('Please assign the "containerId"!');
+			}
+			if (_containers.get(containerId)) {
+				return getContainerNavigableElements(containerId);
+			}
 		}
 	};
 
