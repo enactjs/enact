@@ -818,7 +818,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			// Before call cancelAnimationFrame, you must send scrollStop Event.
 			this.animator.stop();
 			this.forceUpdateJob.stop();
-      forwardOnWillMount({lastScrollLeft: this.scrollLeft, lastScrollTop: this.scrollTop, lastFocusedIndex: this.lastFocusedIndex}, this.props);
+			forwardOnWillMount({lastScrollLeft: this.scrollLeft, lastScrollTop: this.scrollTop, lastFocusedIndex: this.lastFocusedIndex}, this.props);
 		}
 
 		// forceUpdate is a bit jarring and may interrupt other actions like animation so we'll
