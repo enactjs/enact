@@ -189,7 +189,9 @@ class FloatingLayerBase extends React.Component {
 			}
 
 			if (scrimType === 'none') {
-				on('click', this.handleClick);
+				// Attach click event handler asynchronously to make sure the event responsible for opening
+				// won't be closed by other click event listeners attached to the dispatcher.
+				setTimeout(() => on('click', this.handleClick));
 			}
 		}
 	}

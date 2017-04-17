@@ -6,6 +6,8 @@
  */
 
 import $L from '@enact/i18n/$L';
+import {is} from '@enact/core/keymap';
+import {on, off} from '@enact/core/dispatcher';
 import FloatingLayer from '@enact/ui/FloatingLayer';
 import kind from '@enact/core/kind';
 import React from 'react';
@@ -19,6 +21,7 @@ import IconButton from '../IconButton';
 
 import css from './Popup.less';
 
+const isUp = is('up');
 const TransitionContainer = SpotlightContainerDecorator({preserveId: true}, Transition);
 
 const getContainerNode = (containerId) => {
@@ -287,6 +290,12 @@ class Popup extends React.Component {
 		};
 	}
 
+	componentDidMount () {
+		if (this.props.open && this.props.noAnimation) {
+			on('keydown', this.handleKeyDown);
+		}
+	}
+
 	componentWillReceiveProps (nextProps) {
 		if (!this.props.open && nextProps.open) {
 			this.setState({
@@ -308,14 +317,19 @@ class Popup extends React.Component {
 			if (!this.props.noAnimation) {
 				Spotlight.pause();
 			} else if (this.props.open) {
+				on('keydown', this.handleKeyDown);
 				this.spotPopupContent();
 			} else if (prevProps.open) {
+				off('keydown', this.handleKeyDown);
 				this.spotActivator(prevState.activator);
 			}
 		}
 	}
 
 	componentWillUnmount () {
+		if (this.props.open) {
+			off('keydown', this.handleKeyDown);
+		}
 		Spotlight.remove(this.state.containerId);
 	}
 
@@ -328,26 +342,26 @@ class Popup extends React.Component {
 	}
 
 	handleKeyDown = (ev) => {
-		const {onClose, onKeyDown} = this.props;
-		const direction = getDirection(ev.keyCode);
-		let containerNode;
+		const {onClose, onKeyDown, spotlightRestrict} = this.props;
+		const keyCode = ev.keyCode;
+		const direction = getDirection(keyCode);
+		const spottables = Spotlight.getSpottableDescendants(this.state.containerId).length;
 
-		if (direction) {
-			// prevent default page scrolling
-			ev.preventDefault();
-			// stop propagation to prevent default spotlight behavior
-			ev.stopPropagation();
-			// set the pointer mode to false on keydown.
-			Spotlight.setPointerMode(false);
+		if (direction && onClose) {
+			let focusChanged;
 
-			// if focus has changed
-			if (Spotlight.move(direction)) {
-				containerNode = getContainerNode(this.state.containerId);
+			if (spottables && Spotlight.getCurrent() && spotlightRestrict !== 'self-only') {
+				focusChanged = Spotlight.move(direction);
+			}
 
-				// if current focus is not within the popup's container, issue the `onClose` event
-				if (!containerNode.contains(document.activeElement) && onClose) {
-					onClose(ev);
-				}
+			if (!spottables || (focusChanged === false && isUp(keyCode))) {
+				// prevent default page scrolling
+				ev.preventDefault();
+				// stop propagation to prevent default spotlight behavior
+				ev.stopPropagation();
+				// set the pointer mode to false on keydown
+				Spotlight.setPointerMode(false);
+				onClose(ev);
 			}
 		}
 
@@ -370,28 +384,47 @@ class Popup extends React.Component {
 			Spotlight.resume();
 
 			if (this.props.open) {
+				on('keydown', this.handleKeyDown);
 				this.spotPopupContent();
 			} else {
+				off('keydown', this.handleKeyDown);
 				this.spotActivator(this.state.activator);
 			}
 		}
 	}
 
 	spotActivator = (activator) => {
-		const activeElement = document.activeElement;
+		const current = Spotlight.getCurrent();
 		const containerNode = getContainerNode(this.state.containerId);
 
-		if ((activeElement === document.body || (containerNode && containerNode.contains(activeElement))) && !Spotlight.focus(activator)) {
-			Spotlight.focus();
+		// if there is no currently-spotted control or it is wrapped by the popup's container, we
+		// know it's safe to change focus
+		if (!current || (containerNode && containerNode.contains(current))) {
+			// attempt to set focus to the activator, if available
+			if (!Spotlight.focus(activator)) {
+				Spotlight.focus();
+			}
 		}
 	}
 
 	spotPopupContent = () => {
-		Spotlight.focus(this.state.containerId);
+		const {containerId} = this.state;
+		if (!Spotlight.focus(containerId)) {
+			const current = Spotlight.getCurrent();
+
+			// In cases where the container contains no spottable controls or we're in pointer-mode, focus
+			// cannot inherently set the active container or blur the active control, so we must do that
+			// here.
+			if (current) {
+				current.blur();
+			}
+			Spotlight.setActiveContainer(containerId);
+		}
 	}
 
 	render () {
 		const {noAutoDismiss, onClose, scrimType, ...rest} = this.props;
+		delete rest.spotlightRestrict;
 
 		return (
 			<FloatingLayer
@@ -410,7 +443,7 @@ class Popup extends React.Component {
 					open={this.state.popupOpen}
 					onCloseButtonClick={onClose}
 					onHide={this.handlePopupHide}
-					onKeyDown={this.handleKeyDown}
+					spotlightRestrict="self-only"
 				/>
 			</FloatingLayer>
 		);

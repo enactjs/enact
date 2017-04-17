@@ -246,7 +246,6 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			const spottableDisabled = this.state.spotted && disabled;
 			const spottable = (spottableDisabled || !disabled) && !spotlightDisabled;
 			const classes = spottableDisabled ? spottableClass + ' ' + spottableDisabledClass : spottableClass;
-			const componentDisabled = !spottable && disabled;
 			let tabIndex = rest.tabIndex;
 
 			delete rest.onSpotlightDisappear;
@@ -278,7 +277,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			return (
 				<Wrapped
 					{...rest}
-					disabled={componentDisabled}
+					disabled={disabled}
 					tabIndex={tabIndex}
 				/>
 			);
