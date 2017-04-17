@@ -1,6 +1,7 @@
 import kind from '@enact/core/kind';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
+import PropTypes from 'prop-types';
 import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
 
 import IconButton from '../IconButton';
@@ -34,7 +35,7 @@ const MediaControls = kind({
 		 * @default 'backward'
 		 * @public
 		 */
-		backwardIcon: React.PropTypes.string,
+		backwardIcon: PropTypes.string,
 
 		/**
 		 * A string which is sent to the `forward` icon of the player controls. This can be anything
@@ -44,7 +45,7 @@ const MediaControls = kind({
 		 * @default 'forward'
 		 * @public
 		 */
-		forwardIcon: React.PropTypes.string,
+		forwardIcon: PropTypes.string,
 
 		/**
 		 * A string which is sent to the `jumpBackward` icon of the player controls. This can be
@@ -54,7 +55,7 @@ const MediaControls = kind({
 		 * @default 'skipbackward'
 		 * @public
 		 */
-		jumpBackwardIcon: React.PropTypes.string,
+		jumpBackwardIcon: PropTypes.string,
 
 		/**
 		 * Sets the `disabled` state on the media "jump" buttons; the outer pair.
@@ -62,7 +63,7 @@ const MediaControls = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		jumpButtonsDisabled: React.PropTypes.bool,
+		jumpButtonsDisabled: PropTypes.bool,
 
 		/**
 		 * A string which is sent to the `jumpForward` icon of the player controls. This can be
@@ -72,19 +73,19 @@ const MediaControls = kind({
 		 * @default 'skipforward'
 		 * @public
 		 */
-		jumpForwardIcon: React.PropTypes.string,
-		leftComponents: React.PropTypes.node,
-		mediaDisabled: React.PropTypes.bool,
-		moreDisabled: React.PropTypes.bool,
-		noJumpButtons: React.PropTypes.bool,
-		noRateButtons: React.PropTypes.bool,
-		onBackwardButtonClick: React.PropTypes.func,
-		onForwardButtonClick: React.PropTypes.func,
-		onJumpBackwardButtonClick: React.PropTypes.func,
-		onJumpForwardButtonClick: React.PropTypes.func,
-		onPlayButtonClick: React.PropTypes.func,
-		onToggleMore: React.PropTypes.func,
-		paused: React.PropTypes.bool,
+		jumpForwardIcon: PropTypes.string,
+		leftComponents: PropTypes.node,
+		mediaDisabled: PropTypes.bool,
+		moreDisabled: PropTypes.bool,
+		noJumpButtons: PropTypes.bool,
+		noRateButtons: PropTypes.bool,
+		onBackwardButtonClick: PropTypes.func,
+		onForwardButtonClick: PropTypes.func,
+		onJumpBackwardButtonClick: PropTypes.func,
+		onJumpForwardButtonClick: PropTypes.func,
+		onPlayButtonClick: PropTypes.func,
+		onToggleMore: PropTypes.func,
+		paused: PropTypes.bool,
 
 		/**
 		 * A string which is sent to the `pause` icon of the player controls. This can be
@@ -96,7 +97,7 @@ const MediaControls = kind({
 		 * @default 'pause'
 		 * @public
 		 */
-		pauseIcon: React.PropTypes.string,
+		pauseIcon: PropTypes.string,
 
 		/**
 		 * A string which is sent to the `play` icon of the player controls. This can be
@@ -108,7 +109,7 @@ const MediaControls = kind({
 		 * @default 'play'
 		 * @public
 		 */
-		playIcon: React.PropTypes.string,
+		playIcon: PropTypes.string,
 
 		/**
 		 * Sets the `disabled` state on the media playback-rate control buttons; the inner pair.
@@ -116,9 +117,9 @@ const MediaControls = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		rateButtonsDisabled: React.PropTypes.bool,
-		rightComponents: React.PropTypes.node,
-		showMoreComponents: React.PropTypes.bool
+		rateButtonsDisabled: PropTypes.bool,
+		rightComponents: PropTypes.node,
+		showMoreComponents: PropTypes.bool
 	},
 
 	defaultProps: {

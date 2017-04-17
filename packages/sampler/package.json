@@ -49,9 +49,10 @@
     "@kadira/storybook": "~2.34.0",
     "@kadira/storybook-addon-knobs": "~1.7.1",
     "@kadira/storybook-addon-options": "^1.0.1",
-    "react": "~15.4.0",
+    "prop-types": "~15.5.0",
+    "react": "~15.5.0",
     "react-addons-perf": "~15.4.0",
-    "react-dom": "~15.4.0",
+    "react-dom": "~15.5.0",
     "react-storybook-addon-backgrounds": "~0.0.4"
   }
 }

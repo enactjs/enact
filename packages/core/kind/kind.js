@@ -14,7 +14,7 @@ import styles from './styles';
  *	const Button = kind({
  *		// expect color and onClick properties but neither required
  *		propTypes: {
- *			color: React.PropTypes.string
+ *			color: PropTypes.string
  *		},
  *		// if no color is provided, it'll be green
  *		defaultProps: {
@@ -22,7 +22,7 @@ import styles from './styles';
  *		},
  *		// expect backgroundColor via context
  *		contextTypes: {
- *			backgroundColor: React.PropTypes.string
+ *			backgroundColor: PropTypes.string
  *		},
  *		// configure styles with the static className to merge with user className
  *		styles: {

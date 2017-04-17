@@ -24,6 +24,7 @@ import Slider from '@enact/moonstone/Slider';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import React from 'react';
+import PropTypes from 'prop-types';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
 
@@ -111,11 +112,11 @@ class DisappearTest extends React.Component {
 
 class PopupFocusTest extends React.Component {
 	static propTypes = {
-		noAnimation: React.PropTypes.bool,
-		noAutoDismiss: React.PropTypes.bool,
-		scrimType: React.PropTypes.oneOf(['transparent', 'translucent', 'none']),
-		showCloseButton: React.PropTypes.bool,
-		spotlightRestrict: React.PropTypes.oneOf(['none', 'self-first', 'self-only'])
+		noAnimation: PropTypes.bool,
+		noAutoDismiss: PropTypes.bool,
+		scrimType: PropTypes.oneOf(['transparent', 'translucent', 'none']),
+		showCloseButton: PropTypes.bool,
+		spotlightRestrict: PropTypes.oneOf(['none', 'self-first', 'self-only'])
 	}
 
 	static defaultProps = {

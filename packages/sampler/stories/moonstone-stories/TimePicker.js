@@ -1,5 +1,6 @@
 import TimePicker, {TimePickerBase} from '@enact/moonstone/TimePicker';
 import React from 'react';
+import PropTypes from 'prop-types';
 import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
 
@@ -8,11 +9,11 @@ import {mergeComponentMetadata, removeProps} from '../../src/utils/propTables';
 
 const Config = mergeComponentMetadata('TimePicker', TimePicker.propTypes, TimePickerBase.propTypes, {
 	propTypes: {
-		onChange: React.PropTypes.func,
-		onClose: React.PropTypes.func,
-		onOpen: React.PropTypes.func,
-		open: React.PropTypes.bool,
-		value: React.PropTypes.instanceOf(Date)
+		onChange: PropTypes.func,
+		onClose: PropTypes.func,
+		onOpen: PropTypes.func,
+		open: PropTypes.bool,
+		value: PropTypes.instanceOf(Date)
 	}}
 );
 removeProps(Config, 'onChangeHour defaultOpen onChangeMeridiem hour onChangeMinute minute meridiem meridiems order');

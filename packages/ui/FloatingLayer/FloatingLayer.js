@@ -1,5 +1,6 @@
 import {on, off} from '@enact/core/dispatcher';
 import React from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import Cancelable from '../Cancelable';
 
@@ -25,7 +26,7 @@ class FloatingLayerBase extends React.Component {
 		 * @default 'enact-fit enact-clip enact-untouchable'
 		 * @public
 		 */
-		floatLayerClassName: React.PropTypes.string,
+		floatLayerClassName: PropTypes.string,
 
 		/**
 		 * Element id for floating layer.
@@ -34,7 +35,7 @@ class FloatingLayerBase extends React.Component {
 		 * @default 'floatLayer'
 		 * @public
 		 */
-		floatLayerId: React.PropTypes.string,
+		floatLayerId: PropTypes.string,
 
 		/**
 		 * When `true`, FloatingLayer will not hide when the user presses `ESC` key.
@@ -43,7 +44,7 @@ class FloatingLayerBase extends React.Component {
 		 * @default false
 		 * @public
 		 */
-		noAutoDismiss: React.PropTypes.bool,
+		noAutoDismiss: PropTypes.bool,
 
 		/**
 		 * A function to be run when floating layer is closed.
@@ -51,7 +52,7 @@ class FloatingLayerBase extends React.Component {
 		 * @type {Function}
 		 * @public
 		 */
-		onClose: React.PropTypes.func,
+		onClose: PropTypes.func,
 
 		/**
 		 * A function to be run when `ESC` key is pressed. The function will only invoke if
@@ -60,7 +61,7 @@ class FloatingLayerBase extends React.Component {
 		 * @type {Function}
 		 * @public
 		 */
-		onDismiss: React.PropTypes.func,
+		onDismiss: PropTypes.func,
 
 		/**
 		 * A function to be run when floating layer is opened. It will only be invoked for the first render.
@@ -68,7 +69,7 @@ class FloatingLayerBase extends React.Component {
 		 * @type {Function}
 		 * @public
 		 */
-		onOpen: React.PropTypes.func,
+		onOpen: PropTypes.func,
 
 		/**
 		 * When `true`, the floating layer and its components will be rendered.
@@ -77,7 +78,7 @@ class FloatingLayerBase extends React.Component {
 		 * @default false
 		 * @public
 		 */
-		open: React.PropTypes.bool,
+		open: PropTypes.bool,
 
 		/**
 		 * The scrim type. It can be either `'transparent'`, `'translucent'`, or `'none'`.
@@ -86,7 +87,7 @@ class FloatingLayerBase extends React.Component {
 		 * @default 'translucent'
 		 * @public
 		 */
-		scrimType: React.PropTypes.oneOf(['transparent', 'translucent', 'none'])
+		scrimType: PropTypes.oneOf(['transparent', 'translucent', 'none'])
 	}
 
 	static defaultProps = {

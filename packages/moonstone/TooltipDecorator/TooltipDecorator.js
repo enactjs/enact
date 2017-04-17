@@ -11,7 +11,8 @@ import hoc from '@enact/core/hoc';
 import FloatingLayer from '@enact/ui/FloatingLayer';
 import {forward} from '@enact/core/handle';
 import {Job} from '@enact/core/util';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import ri from '@enact/ui/resolution';
 
 import {Tooltip, TooltipBase} from './Tooltip';

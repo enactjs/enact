@@ -7,7 +7,8 @@
 
 import kind from '@enact/core/kind';
 import ri from '@enact/ui/resolution';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import iconList from './IconList.js';
 

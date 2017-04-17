@@ -8,7 +8,8 @@
 import {forward} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import {Job} from '@enact/core/util';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import css from './Transition.less';
 

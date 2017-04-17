@@ -2,6 +2,7 @@ import Changeable from '@enact/ui/Changeable';
 import kind from '@enact/core/kind';
 import Pressable from '@enact/ui/Pressable';
 import React from 'react';
+import PropTypes from 'prop-types';
 import Spottable from '@enact/spotlight/Spottable';
 
 import PickerCore, {PickerItem} from '../Picker';
@@ -30,7 +31,7 @@ const DateComponentPickerBase = kind({
 		 * @required
 		 * @public
 		 */
-		children: React.PropTypes.arrayOf(React.PropTypes.string).isRequired,
+		children: PropTypes.arrayOf(PropTypes.string).isRequired,
 
 		/**
 		 * The value of the date component
@@ -39,14 +40,14 @@ const DateComponentPickerBase = kind({
 		 * @required
 		 * @public
 		 */
-		value: React.PropTypes.number.isRequired,
+		value: PropTypes.number.isRequired,
 
 		/**
 		 * The label to display below the picker
 		 *
 		 * @type {String}
 		 */
-		label: React.PropTypes.string,
+		label: PropTypes.string,
 
 		/**
 		 * By default, the picker will animate transitions between items if it has a defined
@@ -56,7 +57,7 @@ const DateComponentPickerBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		noAnimation: React.PropTypes.bool,
+		noAnimation: PropTypes.bool,
 
 		/**
 		 * When `true`, the picker buttons operate in the reverse direction.
@@ -64,7 +65,7 @@ const DateComponentPickerBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		reverse: React.PropTypes.bool,
+		reverse: PropTypes.bool,
 
 		/*
 		 * When `true`, allow the picker to continue from the opposite end of the list of options.
@@ -72,7 +73,7 @@ const DateComponentPickerBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		wrap: React.PropTypes.bool
+		wrap: PropTypes.bool
 	},
 
 	computed: {

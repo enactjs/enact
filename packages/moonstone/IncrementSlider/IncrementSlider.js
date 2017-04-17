@@ -9,7 +9,8 @@ import Changeable from '@enact/ui/Changeable';
 import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
 import Pressable from '@enact/ui/Pressable';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import Spottable from '@enact/spotlight/Spottable';
 
 import {SliderBaseFactory} from '../Slider';
@@ -54,7 +55,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * @type {String}
 			 * @public
 			 */
-			decrementIcon: React.PropTypes.string,
+			decrementIcon: PropTypes.string,
 
 			/**
 			 * When `true`, the component is shown as disabled and does not generate events
@@ -73,7 +74,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * @type {String}
 			 * @public
 			 */
-			incrementIcon: React.PropTypes.string,
+			incrementIcon: PropTypes.string,
 
 			/**
 			 * The maximum value of the increment slider.

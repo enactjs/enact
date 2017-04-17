@@ -11,7 +11,8 @@ import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
 import Spottable from '@enact/spotlight/Spottable';
 import Pressable from '@enact/ui/Pressable';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import Icon from '../Icon';
 import {MarqueeDecorator} from '../Marquee';

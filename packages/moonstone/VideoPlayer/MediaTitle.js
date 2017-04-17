@@ -1,6 +1,7 @@
 import kind from '@enact/core/kind';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import {MarqueeText} from '../Marquee';
 
@@ -25,7 +26,7 @@ const MediaTitleBase = kind({
 		 * @type {Node}
 		 * @public
 		 */
-		children: React.PropTypes.node,
+		children: PropTypes.node,
 
 		/**
 		 * Control whether the children (infoComponents) are displayed.
@@ -34,7 +35,7 @@ const MediaTitleBase = kind({
 		 * @default false
 		 * @public
 		 */
-		infoVisible: React.PropTypes.bool,
+		infoVisible: PropTypes.bool,
 
 		/**
 		 * A title string to identify the media's title.
@@ -42,7 +43,7 @@ const MediaTitleBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		title: React.PropTypes.string,
+		title: PropTypes.string,
 
 		/**
 		 * Setting this to false effectively hides the entire component. Setting it to `false` after
@@ -56,7 +57,7 @@ const MediaTitleBase = kind({
 		// This property uniquely defaults to true, because it doesn't make sense to have it false
 		// and have the control be initially invisible, and is named "visible" to match the other
 		// props (current and possible future). Having an `infoVisible` and a `hidden` prop seems weird.
-		visible: React.PropTypes.bool
+		visible: PropTypes.bool
 	},
 
 	defaultProps: {
