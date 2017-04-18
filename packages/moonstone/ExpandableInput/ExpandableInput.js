@@ -9,6 +9,7 @@
 import Changeable from '@enact/ui/Changeable';
 import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
+import deprecate from '@enact/core/internal/deprecate';
 import React from 'react';
 
 import {calcAriaLabel, Input} from '../Input';
@@ -91,6 +92,16 @@ class ExpandableInputBase extends React.Component {
 		onClose: React.PropTypes.func,
 
 		/**
+		 * This handler will be fired as `onChange`. `onInputChange` is deprecated and will be removed
+		 * in a future update.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onInputChange: React.PropTypes.func,
+
+		/**
 		 * The handler to run when the component is removed while retaining focus.
 		 *
 		 * @type {Function}
@@ -154,6 +165,12 @@ class ExpandableInputBase extends React.Component {
 		this.state = {
 			initialValue: props.value
 		};
+	}
+
+	componentWillMount () {
+		if (__DEV__ && typeof this.props.onInputChange !== 'undefined') {
+			deprecate({name: 'onInputChange', since: '1.0.0', message: 'Use `onChange` instead', until: '2.0.0'});
+		}
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -245,9 +262,23 @@ class ExpandableInputBase extends React.Component {
 		// not forwarding event because this is being done in fireCloseEvent
 	}
 
+	handleOnChange = (val) => {
+		const {onChange, onInputChange} = this.props;
+
+		// handler that fires `onChange` and `onInputChange` in `Input`'s' `onChange`.
+		if (onChange) {
+			onChange(val);
+		}
+
+		if (onInputChange) {
+			onInputChange(val);
+		}
+	}
+
 	render () {
-		const {disabled, iconAfter, iconBefore, onChange, onSpotlightDisappear, placeholder, spotlightDisabled, type, value, ...rest} = this.props;
+		const {disabled, iconAfter, iconBefore, onSpotlightDisappear, placeholder, spotlightDisabled, type, value, ...rest} = this.props;
 		delete rest.onChange;
+		delete rest.onInputChange;
 
 		return (
 			<ExpandableItemBase
@@ -269,7 +300,7 @@ class ExpandableInputBase extends React.Component {
 					iconBefore={iconBefore}
 					noDecorator
 					onBlur={this.handleInputBlur}
-					onChange={onChange}
+					onChange={this.handleOnChange}
 					onKeyDown={this.handleInputKeyDown}
 					onMouseDown={this.handleInputMouseDown}
 					onSpotlightDisappear={onSpotlightDisappear}

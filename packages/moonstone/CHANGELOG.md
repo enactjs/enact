@@ -7,15 +7,12 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonstone/Panels` breadcrumb to no longer have a horizontal line above it
+- `moonstone/ExpandableInput` property `onInputChange` is fired as `onChange`. `onInputChange` is deprecated and will be removed in a future update.
 
 ### Fixed
 
 - `moonstone/Input` to not spot its own input decorator when we 5way out.
 - `moonstone/Button` text color when used on a neutral (light) background in some cases
-
-### Removed
-
-- `moonstone/ExpandableInput` property `onInputChange`.
 
 ## [1.0.0] - 2017-03-31
 
