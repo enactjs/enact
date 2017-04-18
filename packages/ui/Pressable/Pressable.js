@@ -9,7 +9,8 @@
 import {forProp, forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import warning from 'warning';
 
 /**
@@ -81,7 +82,7 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			 * @default false
 			 * @public
 			 */
-			[defaultPropKey]: React.PropTypes.bool,
+			[defaultPropKey]: PropTypes.bool,
 
 			/**
 			 * Current pressed state. When set at construction, the component is considered
@@ -92,7 +93,7 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			 * @type {Boolean}
 			 * @public
 			 */
-			[prop]: React.PropTypes.bool,
+			[prop]: PropTypes.bool,
 
 			/**
 			 * Whether or not the component is in a disabled state.

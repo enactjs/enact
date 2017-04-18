@@ -1,6 +1,7 @@
 import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 /**
  * {@link moonstone/MoonstoneDecorator.TextSizeDecorator} is a Higher-order Component that
@@ -24,7 +25,7 @@ const TextSizeDecorator = hoc((config, Wrapped) => kind({
 		 * @default 'normal'
 		 * @public
 		 */
-		textSize: React.PropTypes.oneOf(['normal', 'large'])
+		textSize: PropTypes.oneOf(['normal', 'large'])
 	},
 
 	defaultProps: {

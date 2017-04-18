@@ -9,7 +9,8 @@
 
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import Spotlight from '../src/spotlight';
 import {spottableClass} from '../Spottable';

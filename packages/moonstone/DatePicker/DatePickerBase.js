@@ -1,6 +1,8 @@
 import $L from '@enact/i18n/$L';
+import {forKey, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import {DateComponentRangePicker} from '../internal/DateComponentPicker';
 import {ExpandableItemBase} from '../ExpandableItem';
@@ -29,7 +31,7 @@ const DatePickerBase = kind({
 		 * @required
 		 * @public
 		 */
-		day: React.PropTypes.number.isRequired,
+		day: PropTypes.number.isRequired,
 
 		/**
 		 * The number of days in the month
@@ -38,7 +40,7 @@ const DatePickerBase = kind({
 		 * @required
 		 * @public
 		 */
-		maxDays: React.PropTypes.number.isRequired,
+		maxDays: PropTypes.number.isRequired,
 
 		/**
 		 * The number of months in the year
@@ -47,7 +49,7 @@ const DatePickerBase = kind({
 		 * @required
 		 * @public
 		 */
-		maxMonths: React.PropTypes.number.isRequired,
+		maxMonths: PropTypes.number.isRequired,
 
 		/**
 		 * The `month` component of the Date
@@ -56,7 +58,7 @@ const DatePickerBase = kind({
 		 * @required
 		 * @public
 		 */
-		month: React.PropTypes.number.isRequired,
+		month: PropTypes.number.isRequired,
 
 		/**
 		 * The order in which the component pickers are displayed. Should be an array of 3 strings
@@ -66,7 +68,7 @@ const DatePickerBase = kind({
 		 * @required
 		 * @public
 		 */
-		order: React.PropTypes.arrayOf(React.PropTypes.oneOf(['m', 'd', 'y'])).isRequired,
+		order: PropTypes.arrayOf(PropTypes.oneOf(['m', 'd', 'y'])).isRequired,
 
 		/**
 		 * The primary text of the item.
@@ -75,7 +77,7 @@ const DatePickerBase = kind({
 		 * @required
 		 * @public
 		 */
-		title: React.PropTypes.string.isRequired,
+		title: PropTypes.string.isRequired,
 
 		/**
 		 * The `year` component of the Date
@@ -84,7 +86,7 @@ const DatePickerBase = kind({
 		 * @required
 		 * @public
 		 */
-		year: React.PropTypes.number.isRequired,
+		year: PropTypes.number.isRequired,
 
 		/**
 		 * The maximum selectable `year` value
@@ -93,7 +95,7 @@ const DatePickerBase = kind({
 		 * @default 2099
 		 * @public
 		 */
-		maxYear: React.PropTypes.number,
+		maxYear: PropTypes.number,
 
 		/**
 		 * The minimum selectable `year` value
@@ -102,7 +104,7 @@ const DatePickerBase = kind({
 		 * @default 1900
 		 * @public
 		 */
-		minYear: React.PropTypes.number,
+		minYear: PropTypes.number,
 
 		/**
 		 * When `true`, omits the labels below the pickers
@@ -110,7 +112,7 @@ const DatePickerBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		noLabels: React.PropTypes.bool,
+		noLabels: PropTypes.bool,
 
 		/**
 		 * Handler for changes in the `date` component of the Date
@@ -118,7 +120,7 @@ const DatePickerBase = kind({
 		 * @type {Function}
 		 * @public
 		 */
-		onChangeDate: React.PropTypes.func,
+		onChangeDate: PropTypes.func,
 
 		/**
 		 * Handler for changes in the `month` component of the Date
@@ -126,7 +128,7 @@ const DatePickerBase = kind({
 		 * @type {Function}
 		 * @public
 		 */
-		onChangeMonth: React.PropTypes.func,
+		onChangeMonth: PropTypes.func,
 
 		/**
 		 * Handler for changes in the `year` component of the Date
@@ -134,7 +136,15 @@ const DatePickerBase = kind({
 		 * @type {Function}
 		 * @public
 		 */
-		onChangeYear: React.PropTypes.func,
+		onChangeYear: PropTypes.func,
+
+		/**
+		 * Callback to be called when a condition occurs which should cause the expandable to close
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onClose: PropTypes.func,
 
 		/**
 		 * The handler to run when the component is removed while retaining focus.
@@ -143,7 +153,7 @@ const DatePickerBase = kind({
 		 * @param {Object} event
 		 * @public
 		 */
-		onSpotlightDisappear: React.PropTypes.func,
+		onSpotlightDisappear: PropTypes.func,
 
 		/**
 		 * When `true`, the component cannot be navigated using spotlight.
@@ -152,7 +162,7 @@ const DatePickerBase = kind({
 		 * @default false
 		 * @public
 		 */
-		spotlightDisabled: React.PropTypes.bool
+		spotlightDisabled: PropTypes.bool
 	},
 
 	defaultProps: {
@@ -166,11 +176,18 @@ const DatePickerBase = kind({
 		className: 'datePicker'
 	},
 
-	render: ({day, maxDays, maxMonths, maxYear, minYear, month, noLabels, onChangeDate, onChangeMonth, onChangeYear, onSpotlightDisappear, order, spotlightDisabled, year, ...rest}) => {
+	handlers: {
+		handlePickerKeyDown: handle(
+			forKey('enter'),
+			forward('onClose')
+		)
+	},
+
+	render: ({day, handlePickerKeyDown, maxDays, maxMonths, maxYear, minYear, month, noLabels, onChangeDate, onChangeMonth, onChangeYear, onSpotlightDisappear, order, spotlightDisabled, year, ...rest}) => {
 
 		return (
 			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled}>
-				<div className={dateComponentPickers}>
+				<div className={dateComponentPickers} onKeyDown={handlePickerKeyDown}>
 					{order.map(picker => {
 						switch (picker) {
 							case 'd':
