@@ -77,6 +77,7 @@ const handledCustomMediaEventsMap = {
 };
 
 // provide forwarding of events on media controls
+const forwardControlsAvailable = forward('onControlsAvailable');
 const forwardBackwardButtonClick = forward('onBackwardButtonClick');
 const forwardForwardButtonClick = forward('onForwardButtonClick');
 const forwardJumpBackwardButtonClick = forward('onJumpBackwardButtonClick');
@@ -292,6 +293,16 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		onBackwardButtonClick: PropTypes.func,
+
+		/**
+		 * Function executed when the player's controls change availability, whether they are shown
+		 * or hidden. The current status is sent as the first argument in an object with a key
+		 * `available` which will be either true or false. `onControlsAvailable({available: true})`
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onControlsAvailable: PropTypes.func,
 
 		/**
 		 * Function executed when the user clicks the Forward button. Is passed
@@ -574,6 +585,7 @@ const VideoPlayerBase = class extends React.Component {
 
 	showControls = () => {
 		this.startDelayedTitleHide();
+		forwardControlsAvailable({available: true}, this.props);
 		this.setState({
 			bottomControlsVisible: true,
 			titleVisible: true
@@ -582,6 +594,7 @@ const VideoPlayerBase = class extends React.Component {
 
 	hideControls = () => {
 		this.stopDelayedTitleHide();
+		forwardControlsAvailable({available: false}, this.props);
 		this.setState({bottomControlsVisible: false, more: false});
 	}
 
@@ -1082,6 +1095,7 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.autoCloseTimeout;
 		delete rest.feedbackHideDelay;
 		delete rest.jumpBy;
+		delete rest.onControlsAvailable;
 		delete rest.onBackwardButtonClick;
 		delete rest.onForwardButtonClick;
 		delete rest.onJumpBackwardButtonClick;

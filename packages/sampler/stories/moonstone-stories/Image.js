@@ -1,6 +1,6 @@
 import Image from '@enact/moonstone/Image';
 import React from 'react';
-import {storiesOf} from '@kadira/storybook';
+import {storiesOf, action} from '@kadira/storybook';
 import {withKnobs, select} from '@kadira/storybook-addon-knobs';
 
 const src = {
@@ -15,6 +15,11 @@ storiesOf('Image')
 		' ',
 		'The basic Image',
 		() => (
-			<Image src={src} sizing={select('sizing', ['fill', 'fit', 'none'], 'fill')} />
+			<Image
+				src={src}
+				sizing={select('sizing', ['fill', 'fit', 'none'], 'fill')}
+				onError={action('error')}
+				onLoad={action('loaded')}
+			/>
 		)
 	);

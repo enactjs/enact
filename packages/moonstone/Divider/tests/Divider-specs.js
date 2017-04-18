@@ -28,4 +28,17 @@ describe('Divider Specs', () => {
 
 		expect(actual).to.equal(expected);
 	});
+
+	it('should not capitalize content when preserveCase is true', function () {
+		const content = 'uncapped';
+
+		const divider = mount(
+			<Divider preserveCase>{content}</Divider>
+		);
+
+		const expected = content;
+		const actual = divider.text();
+
+		expect(actual).to.equal(expected);
+	});
 });
