@@ -228,7 +228,12 @@ class ScrollerBase extends Component {
  * @ui
  * @public
  */
-const Scroller = SpotlightContainerDecorator(Scrollable(ScrollerBase));
+const Scroller = SpotlightContainerDecorator(
+	{restrict: 'self-first'},
+	Scrollable(
+		ScrollerBase
+	)
+);
 
 export default Scroller;
 export {Scroller, ScrollerBase};
