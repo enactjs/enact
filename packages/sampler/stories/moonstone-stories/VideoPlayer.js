@@ -42,6 +42,7 @@ const prop = {
 		'onBackwardButtonClick',
 		'onCanPlay',
 		'onCanPlayThrough',
+		'onControlsAvailable',
 		'onDurationChange',
 		'onEmptied',
 		'onEncrypted',
