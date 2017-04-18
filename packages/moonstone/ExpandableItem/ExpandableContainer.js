@@ -60,16 +60,18 @@ const ExpandableContainerBase = class extends React.Component {
 	}
 
 	highlightContents = () => {
-		if (this.containerNode.contains(document.activeElement)) {
+		const current = Spotlight.getCurrent();
+		if (this.containerNode.contains(current)) {
 			const contents = this.containerNode.querySelector('[data-expandable-container]');
-			if (contents && !contents.contains(document.activeElement) && !this.props.noAutoFocus) {
+			if (contents && !this.props.noAutoFocus && !contents.contains(current)) {
 				Spotlight.focus(contents.dataset.containerId);
 			}
 		}
 	}
 
 	highlightLabeledItem = () => {
-		if (this.containerNode.contains(document.activeElement)) {
+		const current = Spotlight.getCurrent();
+		if (this.containerNode.contains(current)) {
 			Spotlight.focus(this.props['data-container-id']);
 		}
 	}
