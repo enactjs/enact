@@ -55,9 +55,18 @@ const ImageBase = kind({
 		src: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
 
 		/**
+		 * Sets the aria-label for the image. If unset, it defaults to the value of `alt`
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		// Quoting this (necessary) makes it alphabetically sort differently...
+		'aria-label': PropTypes.string,
+
+		/**
 		 * String value for the alt attribute of the image.
 		 *
-		 * @type {string}
+		 * @type {String}
 		 * @public
 		 */
 		alt: PropTypes.string,
@@ -123,13 +132,13 @@ const ImageBase = kind({
 		imgSrc: ({src}) => selectSrc(src)
 	},
 
-	render: ({alt, bgImage, imgSrc, onError, onLoad, style, ...rest}) => {
+	render: ({alt, 'aria-label': ariaLabel, bgImage, imgSrc, onError, onLoad, style, ...rest}) => {
 		delete rest.placeholder;
 		delete rest.sizing;
 		delete rest.src;
 
 		return (
-			<div role="img" {...rest} title={alt} style={{...style, backgroundImage: bgImage}}>
+			<div role="img" {...rest} aria-label={ariaLabel || alt} style={{...style, backgroundImage: bgImage}}>
 				<img className={css.img} src={imgSrc} alt={alt} onLoad={onLoad} onError={onError} />
 			</div>
 		);
