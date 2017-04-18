@@ -100,7 +100,7 @@ class ExpandableInputBase extends React.Component {
 		 * @param {Object} event
 		 * @public
 		 */
-		onInputChange: PropTypes.func,
+		onInputChange: deprecate(PropTypes.func, {name: 'onInputChange', since: '1.0.0', message: 'Use `onChange` instead', until: '2.0.0'}),
 
 		/**
 		 * The handler to run when the component is removed while retaining focus.
@@ -166,12 +166,6 @@ class ExpandableInputBase extends React.Component {
 		this.state = {
 			initialValue: props.value
 		};
-	}
-
-	componentWillMount () {
-		if (__DEV__ && typeof this.props.onInputChange !== 'undefined') {
-			deprecate({name: 'onInputChange', since: '1.0.0', message: 'Use `onChange` instead', until: '2.0.0'});
-		}
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -263,7 +257,7 @@ class ExpandableInputBase extends React.Component {
 		// not forwarding event because this is being done in fireCloseEvent
 	}
 
-	handleOnChange = (val) => {
+	handleChange = (val) => {
 		const {onChange, onInputChange} = this.props;
 
 		// handler that fires `onChange` and `onInputChange` in `Input`'s' `onChange`.
@@ -301,7 +295,7 @@ class ExpandableInputBase extends React.Component {
 					iconBefore={iconBefore}
 					noDecorator
 					onBlur={this.handleInputBlur}
-					onChange={this.handleOnChange}
+					onChange={this.handleChange}
 					onKeyDown={this.handleInputKeyDown}
 					onMouseDown={this.handleInputMouseDown}
 					onSpotlightDisappear={onSpotlightDisappear}
