@@ -8,9 +8,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/VideoPlayer` props: `backwardIcon`, `forwardIcon`, `jumpBackwardIcon`, `jumpForwardIcon`, `pauseIcon`, and `playIcon` to support icon customization of the player
 - `moonstone/VideoPlayer` props `jumpButtonsDisabled` and `rateButtonsDisabled` for disabling the pairs of buttons when it's inappropriate for the playing media
+- `moonstone/VideoPlayer` callback prop `onControlsAvailable` which fires when the players controls show or hide
 - `moonstone/Image` support for `onLoad` and `onError` events.
 - `moonstone/VirtualList.GridListImageItem` prop `placeholder`
-- `moonstone/VideoPlayer` callback prop `onControlsAvailable` which fires when the players controls show or hide
 - `moonstone/Divider` property `preserveCase` to display text without capitalizing it
 
 ### Changed
