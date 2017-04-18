@@ -3,6 +3,7 @@ import kind from '@enact/core/kind';
 import ViewManager, {shape} from '@enact/ui/ViewManager';
 import invariant from 'invariant';
 import React from 'react';
+import PropTypes from 'prop-types';
 import Spotlight from '@enact/spotlight';
 
 import IdProvider from './IdProvider';
@@ -25,7 +26,7 @@ const ViewportBase = kind({
 		 * @type {Function}
 		 * @required
 		 */
-		generateId: React.PropTypes.func.isRequired,
+		generateId: PropTypes.func.isRequired,
 
 		/**
 		 * Set of functions that control how the panels are transitioned into and out of the
@@ -40,7 +41,7 @@ const ViewportBase = kind({
 		 *
 		 * @type {Panel}
 		 */
-		children: React.PropTypes.node,
+		children: PropTypes.node,
 
 		/**
 		 * Index of the active panel
@@ -48,7 +49,7 @@ const ViewportBase = kind({
 		 * @type {Number}
 		 * @default 0
 		 */
-		index: React.PropTypes.number,
+		index: PropTypes.number,
 
 		/**
 		 * Disable panel transitions
@@ -56,7 +57,7 @@ const ViewportBase = kind({
 		 * @type {Boolean}
 		 * @default false
 		 */
-		noAnimation: React.PropTypes.bool
+		noAnimation: PropTypes.bool
 	},
 
 	defaultProps: {

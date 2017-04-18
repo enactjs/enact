@@ -1,6 +1,7 @@
 import kind from '@enact/core/kind';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import Icon from '../Icon';
 
@@ -23,7 +24,7 @@ const InputDecoratorIconBase = kind({
 		 *
 		 * @type {String}
 		 */
-		position: React.PropTypes.oneOf(['before', 'after']).isRequired,
+		position: PropTypes.oneOf(['before', 'after']).isRequired,
 
 		/**
 		 * The icon to be displayed.
@@ -31,7 +32,7 @@ const InputDecoratorIconBase = kind({
 		 * @see {@link moonstone/Icon.Icon#children}
 		 * @type {String|Object}
 		 */
-		children: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.object])
+		children: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
 	},
 
 	styles: {

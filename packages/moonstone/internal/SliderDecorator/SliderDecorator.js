@@ -10,7 +10,8 @@ import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
 import Spotlight from '@enact/spotlight';
 import clamp from 'ramda/src/clamp';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import {forward} from '@enact/core/handle';
 
 import {validateRange} from '../validators';

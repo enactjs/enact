@@ -2,6 +2,7 @@ import $L from '@enact/i18n/$L';
 import kind from '@enact/core/kind';
 import Spottable from '@enact/spotlight/Spottable';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import css from './Panels.less';
 
@@ -35,21 +36,21 @@ const BreadcrumbBase = kind({
 		 *
 		 * @type {Number}
 		 */
-		index: React.PropTypes.number.isRequired,
+		index: PropTypes.number.isRequired,
 
 		/**
 		 * Called when the breadcrumb is clicked
 		 *
 		 * @type {Function}
 		 */
-		onClick: React.PropTypes.func,
+		onClick: PropTypes.func,
 
 		/**
 		 * Called when the breadcrumb is clicked
 		 *
 		 * @type {Function}
 		 */
-		onSelect: React.PropTypes.func
+		onSelect: PropTypes.func
 	},
 
 	styles: {

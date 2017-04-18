@@ -1,19 +1,19 @@
-import React from 'react';
-
 import Picker from '@enact/moonstone/Picker';
 import Input from '@enact/moonstone/Input';
 import Button from '@enact/moonstone/Button';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 class PickerAddRemove extends React.Component {
 	static displayName: 'PickerAddRemove'
 
 	static propTypes = {
-		disabled: React.PropTypes.bool,
-		joined: React.PropTypes.bool,
-		noAnimation: React.PropTypes.bool,
-		orientation: React.PropTypes.string,
-		width: React.PropTypes.string,
-		wrap: React.PropTypes.bool
+		disabled: PropTypes.bool,
+		joined: PropTypes.bool,
+		noAnimation: PropTypes.bool,
+		orientation: PropTypes.string,
+		width: PropTypes.string,
+		wrap: PropTypes.bool
 	}
 
 	static defaultProps = {

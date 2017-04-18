@@ -9,6 +9,7 @@ import kind from '@enact/core/kind';
 import {isRtlText} from '@enact/i18n/util';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import css from './Marquee.less';
 
@@ -34,7 +35,7 @@ const MarqueeBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		animating: React.PropTypes.bool,
+		animating: PropTypes.bool,
 
 		/**
 		 * When `true`, the contents will be centered regardless of the text directionality.
@@ -42,7 +43,7 @@ const MarqueeBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		centered: React.PropTypes.bool,
+		centered: PropTypes.bool,
 
 		/**
 		 * `children` is the text or a set of components that should be scrolled by the
@@ -52,7 +53,7 @@ const MarqueeBase = kind({
 		 * @type {Node|Node[]}
 		 * @public
 		 */
-		children: React.PropTypes.node,
+		children: PropTypes.node,
 
 		/**
 		 * CSS class name for the root node
@@ -60,7 +61,7 @@ const MarqueeBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		className: React.PropTypes.string,
+		className: PropTypes.string,
 
 		/**
 		 * Function to capture a reference to the client node
@@ -68,7 +69,7 @@ const MarqueeBase = kind({
 		 * @type {Function}
 		 * @public
 		 */
-		clientRef: React.PropTypes.func,
+		clientRef: PropTypes.func,
 
 		/**
 		 * Distance to animate the marquee which is generally the width of the text minus the
@@ -77,7 +78,7 @@ const MarqueeBase = kind({
 		 * @type {Number}
 		 * @public
 		 */
-		distance: React.PropTypes.number,
+		distance: PropTypes.number,
 
 		/**
 		 * Forces the `direction` of the marquee. Valid values are `rtl` and `ltr`. This includes non-text elements as well.
@@ -85,7 +86,7 @@ const MarqueeBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		forceDirection: React.PropTypes.oneOf(['rtl', 'ltr']),
+		forceDirection: PropTypes.oneOf(['rtl', 'ltr']),
 
 		/**
 		 * Callback function for when the marquee completes its animation
@@ -93,7 +94,7 @@ const MarqueeBase = kind({
 		 * @type {Function}
 		 * @public
 		 */
-		onMarqueeComplete: React.PropTypes.func,
+		onMarqueeComplete: PropTypes.func,
 
 		/**
 		 * Text overflow setting. Either `'clip'` or `'ellipsis'`
@@ -101,7 +102,7 @@ const MarqueeBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		overflow: React.PropTypes.oneOf(['clip', 'ellipsis']),
+		overflow: PropTypes.oneOf(['clip', 'ellipsis']),
 
 		/**
 		 * Speed of marquee animation in pixels/second.
@@ -109,7 +110,7 @@ const MarqueeBase = kind({
 		 * @type {Number}
 		 * @public
 		 */
-		speed: React.PropTypes.number
+		speed: PropTypes.number
 	},
 
 	styles: {

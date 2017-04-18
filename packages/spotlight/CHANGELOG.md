@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `spotlight/Spotlight` method `getSpottableDescendants()`
+
+### Fixed
+
+- `spotlight/Spotlight` to consider nested containers when adjusting focus
+
 ## [1.0.0] - 2017-03-31
 
 ### Removed
