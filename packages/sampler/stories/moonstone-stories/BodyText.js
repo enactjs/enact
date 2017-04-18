@@ -13,6 +13,7 @@ storiesOf('BodyText')
 		() => (
 			<BodyText
 				centered={nullify(boolean('centered', false))}
+				disabled={nullify(boolean('disabled', false))}
 			>
 				{text('children', 'This is Body Text')}
 			</BodyText>

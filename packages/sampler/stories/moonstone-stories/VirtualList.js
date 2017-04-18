@@ -4,7 +4,7 @@ import Item from '@enact/moonstone/Item';
 import {VirtualListCore} from '@enact/moonstone/VirtualList/VirtualListBase';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, number} from '@kadira/storybook-addon-knobs';
+import {number, withKnobs} from '@kadira/storybook-addon-knobs';
 
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 

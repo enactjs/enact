@@ -24,7 +24,7 @@ storiesOf('Dialog')
 					<title>{text('title', 'Hello Dialog')}</title>
 					<titleBelow>{text('titleBelow', 'This is an organized dialog')}</titleBelow>
 					<span>This dialog has content in it and can be very useful for organizing information
-					for the user.</span>
+				for the user.</span>
 					<buttons>
 						<Button>Ok</Button>
 						<Button>Nevermind</Button>
