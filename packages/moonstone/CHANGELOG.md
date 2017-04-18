@@ -9,6 +9,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` props: `backwardIcon`, `forwardIcon`, `jumpBackwardIcon`, `jumpForwardIcon`, `pauseIcon`, and `playIcon` to support icon customization of the player
 - `moonstone/VideoPlayer` props `jumpButtonsDisabled` and `rateButtonsDisabled` for disabling the pairs of buttons when it's inappropriate for the playing media
 - `moonstone/Image` support for `onLoad` and `onError` events.
+- `moonstone/VirtualList.GridListImageItem` prop `placeholder`
+- `moonstone/VideoPlayer` callback prop `onControlsAvailable` which fires when the players controls show or hide
+- `moonstone/Divider` property `preserveCase` to display text without capitalizing it
 
 ### Changed
 
@@ -19,11 +22,12 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/Popup.Popup` and `moonstone/ContextualPopupDecorator.ContextualPopupDecorator` 5-way navigation behavior
+- `moonstone/Popup` and `moonstone/ContextualPopupDecorator` 5-way navigation behavior
 - `moonstone/Input` to not spot its own input decorator on 5-way out
 - `moonstone/VideoPlayer` to no longer render its `children` in multiple places
 - `moonstone/Button` text color when used on a neutral (light) background in some cases
 - `moonstone/Popup` background opacity
+- `moonstone/Marquee` to recalculate properly when its contents change
 
 ## [1.0.0] - 2017-03-31
 
