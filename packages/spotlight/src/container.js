@@ -1,3 +1,10 @@
+/**
+ * Exports methods and members for creating and maintaining spotlight containers.
+ *
+ * @module spotlight/container
+ * @private
+ */
+
 import {spottableClass} from '../Spottable';
 
 import {matchSelector, parseSelector} from './utils';
@@ -40,6 +47,7 @@ let GlobalConfig = {
  * @param   {String}  excludeSelector  CSS selector for nodes to exclude
  *
  * @returns {Node[]}                   Array of nodes
+ * @memberof spotlight/container
  * @private
  */
 const querySelector = (node, includeSelector, excludeSelector) => {
@@ -62,6 +70,7 @@ const querySelector = (node, includeSelector, excludeSelector) => {
  * @param   {Node}     node   Node to check
  *
  * @returns {Boolean}        `true` if `node` is a spotlight container
+ * @memberof spotlight/container
  * @private
  */
 const isContainerNode = (node) => {
@@ -78,6 +87,7 @@ const isContainerNode = (node) => {
  *
  * @returns {Array}          Array of values returned by `fn` in order of outermost container to
  *                           innermost container
+ * @memberof spotlight/container
  * @private
  */
 const mapContainers = (node, fn) => {
@@ -99,6 +109,7 @@ const mapContainers = (node, fn) => {
  * @param   {String}  id  Container ID
  *
  * @returns {Object}      Container config
+ * @memberof spotlight/container
  * @private
  */
 const getContainerConfig = (id) => {
@@ -111,6 +122,8 @@ const getContainerConfig = (id) => {
  * @param   {Node|String}  nodeOrId  Node or container ID
  *
  * @returns {Boolean}                `true` if `nodeOrId` represents a spotlight container
+ * @memberof spotlight/container
+ * @private
  */
 const isContainer = (nodeOrId) => {
 	if (typeof nodeOrId === 'string') {
@@ -126,6 +139,8 @@ const isContainer = (nodeOrId) => {
  * @param   {Node}     node  Spottable node or spotlight container
  *
  * @returns {Boolean}        `true` if all container ancestors are enabled
+ * @memberof spotlight/container
+ * @private
  */
 const isContainerEnabled = (node) => {
 	return mapContainers(node, container => {
@@ -139,6 +154,7 @@ const isContainerEnabled = (node) => {
  * @param   {Node}    node  Container Node
  *
  * @returns {String}        Container ID
+ * @memberof spotlight/container
  * @private
  */
 const getContainerId = (node) => node.dataset[containerKey];
@@ -149,6 +165,7 @@ const getContainerId = (node) => node.dataset[containerKey];
  * @param   {Node}    node  Container Node
  *
  * @returns {String}        CSS selector
+ * @memberof spotlight/container
  * @private
  */
 const getContainerSelector = (node) => {
@@ -165,6 +182,7 @@ const getContainerSelector = (node) => {
  * @param   {Node}    node  Container Node
  *
  * @returns {String}        CSS selector
+ * @memberof spotlight/container
  * @private
  */
 const getSubContainerSelector = (node) => {
@@ -181,6 +199,7 @@ const getSubContainerSelector = (node) => {
  * @param   {String}  containerId  ID of container
  *
  * @returns {Node}                 DOM node of the container
+ * @memberof spotlight/container
  * @private
  */
 const getContainerNode = (containerId) => {
@@ -201,6 +220,7 @@ const getContainerNode = (containerId) => {
  *
  * @returns {Boolean}              `true` if it passes the `navigableFilter` method or if that
  *                                  method is not defined for the container
+ * @memberof spotlight/container
  * @private
  */
 const navigableFilter = (node, containerId) => {
@@ -221,6 +241,7 @@ const navigableFilter = (node, containerId) => {
  * @param   {String}  containerId  ID of container
  *
  * @returns {Node[]}               Array of spottable elements and containers.
+ * @memberof spotlight/container
  * @public
  */
 const getSpottableDescendants = (containerId) => {
@@ -259,6 +280,8 @@ const getSpottableDescendants = (containerId) => {
  * @param   {Node}      node  Node from which to start the search
  *
  * @returns {String[]}        Array on container IDs
+ * @memberof spotlight/container
+ * @private
  */
 function getContainersForNode (node) {
 	const containers = mapContainers(node, getContainerId);
@@ -273,6 +296,7 @@ function getContainersForNode (node) {
  * Generates a new unique identifier for a container
  *
  * @returns {String} Container ID
+ * @memberof spotlight/container
  * @private
  */
 function generateId () {
@@ -295,6 +319,7 @@ function generateId () {
  * @param   {Object}  updated  Updated configuration which may only be a partial configuration
  *
  * @returns {Object}           Merged configuration
+ * @memberof spotlight/container
  * @private
  */
 const mergeConfig = (current, updated) => {
@@ -321,6 +346,7 @@ const mergeConfig = (current, updated) => {
  *                                                the default `GlobalConfig`.
  *
  * @returns {String}                              The container id
+ * @memberof spotlight/container
  * @public
  */
 const configureContainer = (...args) => {
@@ -352,6 +378,7 @@ const configureContainer = (...args) => {
  * @param   {String}     containerId  ID of the container to remove
  *
  * @returns {undefined}
+ * @memberof spotlight/container
  * @public
  */
 const removeContainer = (containerId) => {
@@ -364,6 +391,8 @@ const removeContainer = (containerId) => {
  * @param   {Object}  config  New global configuration. Cannot introduce new keys
  *
  * @returns {undefined}
+ * @memberof spotlight/container
+ * @public
  */
 const configureDefaults = (config) => {
 	GlobalConfig = mergeConfig(GlobalConfig, config);
@@ -377,6 +406,7 @@ const configureDefaults = (config) => {
  * @param   {Boolean}  verify       `true` to verify the node matches the container's `selector`
  *
  * @returns {Boolean}               `true` if `node` is navigable
+ * @memberof spotlight/container
  * @public
  */
 const isNavigable = (node, containerId, verify) => {
@@ -396,6 +426,7 @@ const isNavigable = (node, containerId, verify) => {
  * Returns the IDs of all containers
  *
  * @return {Iterator}  Iterator of key names
+ * @memberof spotlight/container
  * @private
  */
 const getAllContainerIds = () => containerConfigs.keys();
@@ -406,6 +437,7 @@ const getAllContainerIds = () => containerConfigs.keys();
  * @param   {String}  containerId  ID of container
  *
  * @returns {Node}                 Default focus element
+ * @memberof spotlight/container
  * @public
  */
 function getContainerDefaultElement (containerId) {
@@ -428,6 +460,7 @@ function getContainerDefaultElement (containerId) {
  * @param   {String}  containerId  ID of container
  *
  * @returns {Node}                 DOM Node last focused
+ * @memberof spotlight/container
  * @public
  */
 function getContainerLastFocusedElement (containerId) {
@@ -449,6 +482,7 @@ function getContainerLastFocusedElement (containerId) {
  * @param   {String[]}  containerId  ID of container
  *
  * @returns {undefined}
+ * @memberof spotlight/container
  * @public
  */
 function setContainerLastFocusedElement (node, containerIds) {
