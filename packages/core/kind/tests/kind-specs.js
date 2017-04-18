@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {mount} from 'enzyme';
 import kind from '../kind';
 
@@ -7,14 +8,14 @@ describe('kind', () => {
 	const Kind = kind({
 		name: 'Kind',
 		propTypes: {
-			prop: React.PropTypes.number.isRequired,
-			label: React.PropTypes.string
+			prop: PropTypes.number.isRequired,
+			label: PropTypes.string
 		},
 		defaultProps: {
 			label: 'Label'
 		},
 		contextTypes: {
-			parentLabel: React.PropTypes.string
+			parentLabel: PropTypes.string
 		},
 		styles: {
 			className: 'kind'

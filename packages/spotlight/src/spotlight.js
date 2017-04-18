@@ -666,11 +666,10 @@ const Spotlight = (function () {
 		const currentContainerId = last(currentContainerIds);
 
 		if (currentContainerId !== nextContainerId) {
-			if (_5WayKeyHold) {
-				return false;
-			}
-
 			if (nextContainerIds.indexOf(currentContainerId) < 0) {
+				if (_5WayKeyHold) {
+					return false;
+				}
 				const result = gotoLeaveFor(difference(currentContainerIds, nextContainerIds), direction);
 
 				if (result) {
@@ -743,33 +742,35 @@ const Spotlight = (function () {
 
 		const {allNavigableElements, containerNavigableElements} = getNavigableElements();
 		const currentContainerId = last(currentContainerIds);
-		const config = getContainerConfig(currentContainerId);
 		let next;
+		let preventFindNext;
 
-		if (config.restrict === 'self-only' || config.restrict === 'self-first') {
-			let currentContainerNavigableElements = containerNavigableElements[currentContainerId];
+		for (let i = currentContainerIds.length; i-- > 0;) {
+			const id = currentContainerIds[i];
+			const config = getContainerConfig(id);
+			const spotlightModal = config.restrict === 'self-only';
 
-			next = navigate(
-				currentFocusedElement,
-				direction,
-				exclude(currentContainerNavigableElements, currentFocusedElement),
-				config
-			);
-
-			if (!next && config.restrict === 'self-first') {
+			if (spotlightModal || config.restrict === 'self-first') {
 				next = navigate(
 					currentFocusedElement,
 					direction,
-					exclude(allNavigableElements, currentContainerNavigableElements),
+					exclude(containerNavigableElements[id], currentFocusedElement),
 					config
 				);
+
+				if (next || spotlightModal) {
+					preventFindNext = true;
+					break;
+				}
 			}
-		} else {
+		}
+
+		if (!next && !preventFindNext) {
 			next = navigate(
 				currentFocusedElement,
 				direction,
 				exclude(allNavigableElements, currentFocusedElement),
-				config
+				getContainerConfig(currentContainerId)
 			);
 		}
 
@@ -1300,6 +1301,22 @@ const Spotlight = (function () {
 		 */
 		getCurrent: function () {
 			return getCurrent();
+		},
+
+		/**
+		 * Returns a list of spottable elements wrapped by the supplied container.
+		 *
+		 * @memberof spotlight.Spotlight.prototype
+		 * @param {String} [containerId] The id of the container used to determine the list of spottable elements
+		 * @returns {NodeList} The spottable elements that are wrapped by the supplied container
+		 * @public
+		 */
+		getSpottableDescendants: function (containerId) {
+			if (!containerId || typeof containerId !== 'string') {
+				throw new Error('Please assign the "containerId"!');
+			}
+
+			return getSpottableDescendants(containerId);
 		}
 	};
 

@@ -41,13 +41,14 @@ with any passed-in `className`), it computes a new value for `children` and rend
 ```
 import kind from '@enact/core/kind';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const Badge = kind({
 	name: 'Badge',
 
 	propTypes: {
-		children: React.PropTypes.string.isRequired,
-		greeting: React.PropTypes.string,
+		children: PropTypes.string.isRequired,
+		greeting: PropTypes.string,
 	},
 
 	defaultProps: {
