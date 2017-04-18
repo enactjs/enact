@@ -300,8 +300,8 @@ class Transition extends React.Component {
 		const {visible} = this.props;
 		const {initialHeight, renderState} = this.state;
 
-		// Checking that something changed that wasn't the visibility or the initialHeight state
-		if (visible === prevProps.visible && initialHeight === prevState.initialHeight && renderState !== TRANSITION_STATE.INIT) {
+		// Checking that something changed that wasn't the visibility or the initialHeight state or checking if component should be visible but doesn't have a height
+		if ((visible === prevProps.visible && initialHeight === prevState.initialHeight && renderState !== TRANSITION_STATE.INIT) || (initialHeight == null && visible)) {
 			this.measureInner();
 		}
 	}
@@ -337,10 +337,6 @@ class Transition extends React.Component {
 
 	childRef = (node) => {
 		this.childNode = node;
-
-		if (this.state.initialHeight == null && this.props.visible) {
-			this.measureInner();
-		}
 	}
 
 	render () {
