@@ -1,3 +1,8 @@
+/**
+ * A collection of utility methods.
+ *
+ * @module core/util
+ */
 import always from 'ramda/src/always';
 import compose from 'ramda/src/compose';
 import equals from 'ramda/src/equals';
@@ -21,6 +26,8 @@ const orderedEquals = useWith(equals, [orderedKeys, orderedKeys]);
 /**
  * Compares the keys of two sets of children and returns `true` if they are equal.
  *
+ * @method
+ * @memberof core/util
  * @param  {Node[]}		prev		Array of children
  * @param  {Node[]}		next		Array of children
  * @param  {Boolean}	[ordered]	`true` to require the same order
@@ -46,12 +53,14 @@ const childrenEquals = (prev, next, ordered = false) => {
 };
 
 /**
-* Capitalizes a given string.
-*
-* @param {String} str - The string to capitalize.
-* @returns {String} The capitalized string.
-* @public
-*/
+ * Capitalizes a given string (not locale aware).
+ *
+ * @method
+ * @memberof core/util
+ * @param {String} str - The string to capitalize.
+ * @returns {String} The capitalized string.
+ * @public
+ */
 const cap = function (str) {
 	return str.slice(0, 1).toUpperCase() + str.slice(1);
 };
@@ -63,8 +72,9 @@ const cap = function (str) {
  *	const returnsZero = coerceFunction(0);
  *	const returnsArg = coerceFunction(() => 0);
  *
- * @param {*} arg Function or value
  * @method
+ * @memberof core/util
+ * @param {*} arg Function or value
  */
 const coerceFunction = unless(isType(Function), always);
 
@@ -77,9 +87,10 @@ const coerceFunction = unless(isType(Function), always);
  *	const returnsObjArg = coerceArray({0: 'zeroth', length: 1});
  *
  * @see http://ramdajs.com/docs/#isArrayLike
+ * @method
+ * @memberof core/util
  * @param {*} array Array or value
  * @returns {Array}	Either `array` or `[array]`
- * @method
  */
 const coerceArray = function (array) {
 	return isArrayLike(array) ? array : [array];
@@ -88,8 +99,9 @@ const coerceArray = function (array) {
 /**
  * Loosely determines if `tag` is a renderable component (either a string or a function)
  *
+ * @method
+ * @memberof core/util
  * @param  {*}  tag Component to tes
- *
  * @returns {Boolean} `true` if `tag` is renderable
  */
 const isRenderable = function (tag) {
@@ -102,8 +114,9 @@ const isRenderable = function (tag) {
  * Useful when redirecting ARIA-related props from a non-focusable root element to a focusable
  * child element.
  *
+ * @method
+ * @memberof core/util
  * @param   {Object} props  Props object
- *
  * @returns {Object}        ARIA-related props
  */
 const extractAriaProps = function (props) {
