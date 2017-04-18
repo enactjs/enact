@@ -234,7 +234,7 @@ const TimePickerBase = kind({
 								case 'a':
 									return (
 										<DateComponentPicker
-											className={css.meridiamComponent}
+											className={css.meridiemComponent}
 											key="meridiem-picker"
 											label={noLabels ? null : $L('meridiem')}
 											onChange={onChangeMeridiem}
