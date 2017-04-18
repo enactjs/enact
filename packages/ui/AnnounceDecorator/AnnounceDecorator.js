@@ -8,6 +8,7 @@
 import Announce from './Announce';
 import hoc from '@enact/core/hoc';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 /**
  * Default config for {@link ui/AnnounceDecorator.AnnounceDecorator}.
@@ -41,7 +42,7 @@ const defaultConfig = {
  * const Example = AnnounceDecorator(class extends React.Component {
  *   static propTypes = {
  *     // passed by AnnounceDecorator
- *     announce: React.PropTypes.func
+ *     announce: PropTypes.func
  *   }
  *
  *   notify = () => {
@@ -73,7 +74,7 @@ const AnnounceDecorator = hoc(defaultConfig, ({prop}, Wrapped) => {
 			 * @type {Node}
 			 * @public
 			 */
-			children: React.PropTypes.node
+			children: PropTypes.node
 		}
 
 		announce = (message) => {

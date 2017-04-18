@@ -1,6 +1,7 @@
 import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import TooltipLabel from './TooltipLabel';
 import css from './Tooltip.less';

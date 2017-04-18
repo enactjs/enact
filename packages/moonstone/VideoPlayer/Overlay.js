@@ -1,6 +1,7 @@
 import kind from '@enact/core/kind';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import css from './VideoPlayer.less';
 
@@ -18,7 +19,7 @@ const OverlayBase = kind({
 	name: 'Overlay',
 
 	propTypes: /** @lends moonstone/VideoPlayer.Overlay.prototype */ {
-		children: React.PropTypes.node
+		children: PropTypes.node
 	},
 
 	styles: {

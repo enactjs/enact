@@ -7,7 +7,8 @@
 import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import {ButtonFactory} from '../Button';
 import Icon from '../Icon';

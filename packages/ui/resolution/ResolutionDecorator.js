@@ -5,6 +5,7 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import hoc from '@enact/core/hoc';
 
 import {init, defineScreenTypes, getScreenTypeObject, getResolutionClasses} from './resolution';
@@ -68,7 +69,7 @@ const ResolutionDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		static displayName = 'ResolutionDecorator'
 
 		static propTypes = /** @lends ui/resolution.ResolutionDecorator.prototype */ {
-			className: React.PropTypes.string
+			className: PropTypes.string
 		}
 
 		componentDidMount () {

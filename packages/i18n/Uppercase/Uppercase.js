@@ -7,6 +7,7 @@
 import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import {toUpperCase} from '../util';
 
@@ -34,7 +35,7 @@ const Uppercase = hoc((config, Wrapped) => kind({
 		 * @default false
 		 * @public
 		 */
-		preserveCase: React.PropTypes.bool
+		preserveCase: PropTypes.bool
 	},
 
 	defaultProps: {

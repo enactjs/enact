@@ -6,6 +6,7 @@
  * @module moonstone/VideoPlayer
  */
 import React from 'react';
+import PropTypes from 'prop-types';
 import DurationFmt from '@enact/i18n/ilib/lib/DurationFmt';
 import {forward} from '@enact/core/handle';
 import ilib from '@enact/i18n';
@@ -76,6 +77,7 @@ const handledCustomMediaEventsMap = {
 };
 
 // provide forwarding of events on media controls
+const forwardControlsAvailable = forward('onControlsAvailable');
 const forwardBackwardButtonClick = forward('onBackwardButtonClick');
 const forwardForwardButtonClick = forward('onForwardButtonClick');
 const forwardJumpBackwardButtonClick = forward('onJumpBackwardButtonClick');
@@ -146,7 +148,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * @default 7000
 		 * @public
 		 */
-		autoCloseTimeout: React.PropTypes.number,
+		autoCloseTimeout: PropTypes.number,
 
 		/**
 		 * A string which is sent to the `backward` icon of the player controls. This can be
@@ -156,7 +158,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * @default 'backward'
 		 * @public
 		 */
-		backwardIcon: React.PropTypes.string,
+		backwardIcon: PropTypes.string,
 
 		/**
 		 * Amount of time (in milliseconds) after which the feedback text/icon part of the slider's
@@ -167,7 +169,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * @default 2000
 		 * @public
 		 */
-		feedbackHideDelay: React.PropTypes.number,
+		feedbackHideDelay: PropTypes.number,
 
 		/**
 		 * A string which is sent to the `forward` icon of the player controls. This can be anything
@@ -177,7 +179,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * @default 'forward'
 		 * @public
 		 */
-		forwardIcon: React.PropTypes.string,
+		forwardIcon: PropTypes.string,
 
 		/**
 		 * These components are placed into the slot to the left of the media controls.
@@ -185,7 +187,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * @type {Node}
 		 * @public
 		 */
-		infoComponents: React.PropTypes.node,
+		infoComponents: PropTypes.node,
 
 		/**
 		 * A string which is sent to the `jumpBackward` icon of the player controls. This can be
@@ -195,7 +197,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * @default 'skipbackward'
 		 * @public
 		 */
-		jumpBackwardIcon: React.PropTypes.string,
+		jumpBackwardIcon: PropTypes.string,
 
 		/**
 		 * Sets the `disabled` state on the media "jump" buttons; the outer pair.
@@ -203,7 +205,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * @type {Boolean}
 		 * @public
 		 */
-		jumpButtonsDisabled: React.PropTypes.bool,
+		jumpButtonsDisabled: PropTypes.bool,
 
 		/**
 		 * The amount of seconds the player should skip forward or backward when a "jump" button is
@@ -213,7 +215,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * @default 30
 		 * @public
 		 */
-		jumpBy: React.PropTypes.number,
+		jumpBy: PropTypes.number,
 
 		/**
 		 * A string which is sent to the `jumpForward` icon of the play controls. This can be
@@ -223,7 +225,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * @default 'skipforward'
 		 * @public
 		 */
-		jumpForwardIcon: React.PropTypes.string,
+		jumpForwardIcon: PropTypes.string,
 
 		/**
 		 * These components are placed below the title. Typically these will be media descriptor
@@ -234,7 +236,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * @type {Node}
 		 * @public
 		 */
-		leftComponents: React.PropTypes.node,
+		leftComponents: PropTypes.node,
 
 		/**
 		 * Disable audio for this video. In a TV context, this is handled by the remote control,
@@ -244,7 +246,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * @default false
 		 * @public
 		 */
-		muted: React.PropTypes.bool,
+		muted: PropTypes.bool,
 
 		/**
 		 * By default, the video will start playing immediately after it's loaded, unless this is set.
@@ -253,7 +255,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * @default false
 		 * @public
 		 */
-		noAutoPlay: React.PropTypes.bool,
+		noAutoPlay: PropTypes.bool,
 
 		/**
 		 * Removes the "jump" buttons. The buttons that skip forward or backward in the video.
@@ -262,7 +264,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * @default false
 		 * @public
 		 */
-		noJumpButtons: React.PropTypes.bool,
+		noJumpButtons: PropTypes.bool,
 
 		/**
 		 * Removes the "rate" buttons. The buttons that change the playback rate of the video.
@@ -272,7 +274,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * @default false
 		 * @public
 		 */
-		noRateButtons: React.PropTypes.bool,
+		noRateButtons: PropTypes.bool,
 
 		/**
 		 * Removes the media slider.
@@ -281,7 +283,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * @default false
 		 * @public
 		 */
-		noSlider: React.PropTypes.bool,
+		noSlider: PropTypes.bool,
 
 		/**
 		 * Function executed when the user clicks the Backward button. Is passed
@@ -290,7 +292,17 @@ const VideoPlayerBase = class extends React.Component {
 		 * @type {Function}
 		 * @public
 		 */
-		onBackwardButtonClick: React.PropTypes.func,
+		onBackwardButtonClick: PropTypes.func,
+
+		/**
+		 * Function executed when the player's controls change availability, whether they are shown
+		 * or hidden. The current status is sent as the first argument in an object with a key
+		 * `available` which will be either true or false. `onControlsAvailable({available: true})`
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onControlsAvailable: PropTypes.func,
 
 		/**
 		 * Function executed when the user clicks the Forward button. Is passed
@@ -299,7 +311,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * @type {Function}
 		 * @public
 		 */
-		onForwardButtonClick: React.PropTypes.func,
+		onForwardButtonClick: PropTypes.func,
 
 		/**
 		 * Function executed when the user clicks the JumpBackward button. Is passed
@@ -308,7 +320,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * @type {Function}
 		 * @public
 		 */
-		onJumpBackwardButtonClick: React.PropTypes.func,
+		onJumpBackwardButtonClick: PropTypes.func,
 
 		/**
 		 * Function executed when the user clicks the JumpForward button. Is passed
@@ -317,7 +329,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * @type {Function}
 		 * @public
 		 */
-		onJumpForwardButtonClick: React.PropTypes.func,
+		onJumpForwardButtonClick: PropTypes.func,
 
 		/**
 		 * Function executed when the user clicks the Play button. Is passed
@@ -326,7 +338,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * @type {Function}
 		 * @public
 		 */
-		onPlayButtonClick: React.PropTypes.func,
+		onPlayButtonClick: PropTypes.func,
 
 		/**
 		 * A string which is sent to the `pause` icon of the player controls. This can be anything
@@ -336,7 +348,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * @default 'pause'
 		 * @public
 		 */
-		pauseIcon: React.PropTypes.string,
+		pauseIcon: PropTypes.string,
 
 		/**
 		 * A string which is sent to the `play` icon of the player controls. This can be anything
@@ -346,7 +358,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * @default 'play'
 		 * @public
 		 */
-		playIcon: React.PropTypes.string,
+		playIcon: PropTypes.string,
 
 		/**
 		 * Sets the `disabled` state on the media playback-rate control buttons; the inner pair.
@@ -354,7 +366,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * @type {Boolean}
 		 * @public
 		 */
-		rateButtonsDisabled: React.PropTypes.bool,
+		rateButtonsDisabled: PropTypes.bool,
 
 		/**
 		 * These components are placed into the slot to the right of the media controls.
@@ -362,7 +374,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * @type {Node}
 		 * @public
 		 */
-		rightComponents: React.PropTypes.node,
+		rightComponents: PropTypes.node,
 
 		/**
 		 * Any children `<source>` tag elements of [VideoPlayer]{@link moonstone/VideoPlayer} will
@@ -372,7 +384,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * @type {Node}
 		 * @public
 		 */
-		source: React.PropTypes.node,
+		source: PropTypes.node,
 
 		/**
 		 * Set a title for the video being played.
@@ -380,7 +392,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * @type {String}
 		 * @public
 		 */
-		title: React.PropTypes.string,
+		title: PropTypes.string,
 
 		/**
 		 * The amount of time in miliseconds that should pass before the title disappears from the
@@ -390,7 +402,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * @default 4000
 		 * @public
 		 */
-		titleHideDelay: React.PropTypes.number
+		titleHideDelay: PropTypes.number
 	}
 
 	static defaultProps = {
@@ -573,6 +585,7 @@ const VideoPlayerBase = class extends React.Component {
 
 	showControls = () => {
 		this.startDelayedTitleHide();
+		forwardControlsAvailable({available: true}, this.props);
 		this.setState({
 			bottomControlsVisible: true,
 			titleVisible: true
@@ -581,6 +594,7 @@ const VideoPlayerBase = class extends React.Component {
 
 	hideControls = () => {
 		this.stopDelayedTitleHide();
+		forwardControlsAvailable({available: false}, this.props);
 		this.setState({bottomControlsVisible: false, more: false});
 	}
 
@@ -1081,6 +1095,7 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.autoCloseTimeout;
 		delete rest.feedbackHideDelay;
 		delete rest.jumpBy;
+		delete rest.onControlsAvailable;
 		delete rest.onBackwardButtonClick;
 		delete rest.onForwardButtonClick;
 		delete rest.onJumpBackwardButtonClick;
