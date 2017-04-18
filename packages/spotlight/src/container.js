@@ -1,6 +1,6 @@
-import {matchSelector, parseSelector} from './utils';
+import {spottableClass} from '../Spottable';
 
-const spottableClass = 'spottable';
+import {matchSelector, parseSelector} from './utils';
 
 const containerAttribute = 'data-container-id';
 const containerConfigs   = new Map();
@@ -9,6 +9,7 @@ const containerPrefix    = 'container-';
 const containerSelector  = `[${containerAttribute}]`;
 const rootContainerId    = 'spotlightRootDecorator';
 
+// Incrementer for container IDs
 let _ids = 0;
 
 // Note: an <extSelector> can be one of following types:
@@ -31,6 +32,16 @@ let GlobalConfig = {
 	navigableFilter: null
 };
 
+/**
+ * Calculates nodes within `node` that match `includeSelector` and do not match `excludeSelector`
+ *
+ * @param   {Node}    node             DOM Node to query
+ * @param   {String}  includeSelector  CSS selector of nodes to include
+ * @param   {String}  excludeSelector  CSS selector for nodes to exclude
+ *
+ * @returns {Node[]}                   Array of nodes
+ * @private
+ */
 const querySelector = (node, includeSelector, excludeSelector) => {
 	const include = Array.prototype.slice.call(node.querySelectorAll(includeSelector));
 	const exclude = node.querySelectorAll(excludeSelector);
@@ -48,9 +59,10 @@ const querySelector = (node, includeSelector, excludeSelector) => {
 /**
  * Determines if `node` is a spotlight container
  *
- * @param  {Node}     node   Node to check
+ * @param   {Node}     node   Node to check
  *
- * @return {Boolean}        `true` if `node` is a spotlight container
+ * @returns {Boolean}        `true` if `node` is a spotlight container
+ * @private
  */
 const isContainerNode = (node) => {
 	return node && node.dataset && containerKey in node.dataset;
@@ -59,13 +71,14 @@ const isContainerNode = (node) => {
 /**
  * Walks up the node hierarchy calling `fn` on each node that is a container
  *
- * @param  {Node}     node  Node from which to start the search
- * @param  {Function} fn    Called once for each container with the container node as the first
- *                          argument. The return value is accumulated in the array returned by
- *                          `mapContainers`
+ * @param   {Node}     node  Node from which to start the search
+ * @param   {Function} fn    Called once for each container with the container node as the first
+ *                           argument. The return value is accumulated in the array returned by
+ *                           `mapContainers`
  *
- * @return {Array}          Array of values returned by `fn` in order of outermost container to
- *                          innermost container
+ * @returns {Array}          Array of values returned by `fn` in order of outermost container to
+ *                           innermost container
+ * @private
  */
 const mapContainers = (node, fn) => {
 	const result = [];
@@ -83,9 +96,10 @@ const mapContainers = (node, fn) => {
 /**
  * Returns the container config for `containerId`
  *
- * @param  {String}  id  Container ID
+ * @param   {String}  id  Container ID
  *
- * @return {Object}      Container config
+ * @returns {Object}      Container config
+ * @private
  */
 const getContainerConfig = (id) => {
 	return containerConfigs.get(id);
@@ -94,9 +108,9 @@ const getContainerConfig = (id) => {
 /**
  * Determines if node or a container id represents a spotlight container
  *
- * @param  {Node|String}  nodeOrId  Node or container ID
+ * @param   {Node|String}  nodeOrId  Node or container ID
  *
- * @return {Boolean}                `true` if `nodeOrId` represents a spotlight container
+ * @returns {Boolean}                `true` if `nodeOrId` represents a spotlight container
  */
 const isContainer = (nodeOrId) => {
 	if (typeof nodeOrId === 'string') {
@@ -109,9 +123,9 @@ const isContainer = (nodeOrId) => {
 /**
  * Determines if any of the containers at or above `node` are disabled and, if so, returns `false`.
  *
- * @param  {Node}     node  Spottable node or spotlight container
+ * @param   {Node}     node  Spottable node or spotlight container
  *
- * @return {Boolean}        `true` if all container ancestors are enabled
+ * @returns {Boolean}        `true` if all container ancestors are enabled
  */
 const isContainerEnabled = (node) => {
 	return mapContainers(node, container => {
@@ -119,8 +133,24 @@ const isContainerEnabled = (node) => {
 	}).reduce((acc, v) => acc && v, true);
 };
 
+/**
+ * Returns the container ID for `node`
+ *
+ * @param   {Node}    node  Container Node
+ *
+ * @returns {String}        Container ID
+ * @private
+ */
 const getContainerId = (node) => node.dataset[containerKey];
 
+/**
+ * Generates a CSS selector string for a currrent container if `node` is a container
+ *
+ * @param   {Node}    node  Container Node
+ *
+ * @returns {String}        CSS selector
+ * @private
+ */
 const getContainerSelector = (node) => {
 	if (isContainerNode(node)) {
 		return `[${containerAttribute}="${getContainerId(node)}"]`;
@@ -129,6 +159,14 @@ const getContainerSelector = (node) => {
 	return '';
 };
 
+/**
+ * Generates a CSS selector string for containers within `node` if it is a container
+ *
+ * @param   {Node}    node  Container Node
+ *
+ * @returns {String}        CSS selector
+ * @private
+ */
 const getSubContainerSelector = (node) => {
 	if (isContainerNode(node)) {
 		return `${getContainerSelector(node)} ${containerSelector}`;
@@ -137,6 +175,14 @@ const getSubContainerSelector = (node) => {
 	return containerSelector;
 };
 
+/**
+ * Returns the node for a container
+ *
+ * @param   {String}  containerId  ID of container
+ *
+ * @returns {Node}                 DOM node of the container
+ * @private
+ */
 const getContainerNode = (containerId) => {
 	if (!containerId) {
 		return null;
@@ -147,6 +193,16 @@ const getContainerNode = (containerId) => {
 	return document.querySelector(`[${containerAttribute}="${containerId}"]`);
 };
 
+/**
+ * Calls the `navigableFilter` function for the container if defined.
+ *
+ * @param   {Node}    node         DOM node to check if it is navigable
+ * @param   {String}  containerId  ID of container
+ *
+ * @returns {Boolean}              `true` if it passes the `navigableFilter` method or if that
+ *                                  method is not defined for the container
+ * @private
+ */
 const navigableFilter = (node, containerId) => {
 	const config = getContainerConfig(containerId);
 	if (config && typeof config.navigableFilter === 'function') {
@@ -158,6 +214,15 @@ const navigableFilter = (node, containerId) => {
 	return true;
 };
 
+/**
+ * Determines all spottable elements and containers that are directly contained by the container
+ * identified by `containerId` and no other subcontainers.
+ *
+ * @param   {String}  containerId  ID of container
+ *
+ * @returns {Node[]}               Array of spottable elements and containers.
+ * @public
+ */
 const getSpottableDescendants = (containerId) => {
 	const node = getContainerNode(containerId);
 
@@ -191,9 +256,9 @@ const getSpottableDescendants = (containerId) => {
  * Returns an array of ids for containers that wrap the element, in order of outer-to-inner, with
  * the last array item being the immediate container id of the element.
  *
- * @param  {Node}      node  Node from which to start the search
+ * @param   {Node}      node  Node from which to start the search
  *
- * @return {String[]}        Array on container IDs
+ * @returns {String[]}        Array on container IDs
  */
 function getContainersForNode (node) {
 	const containers = mapContainers(node, getContainerId);
@@ -204,6 +269,12 @@ function getContainersForNode (node) {
 
 // CONTAINER CONFIG MGMT //
 
+/**
+ * Generates a new unique identifier for a container
+ *
+ * @returns {String} Container ID
+ * @private
+ */
 function generateId () {
 	let id;
 	/* eslint no-constant-condition: ["error", { "checkLoops": false }] */
@@ -216,6 +287,16 @@ function generateId () {
 	return id;
 }
 
+/**
+ * Merges two container configurations while only allowing keys from `updated` which are defined in
+ * `GlobalConfig`
+ *
+ * @param   {Object}  current  Current container configuration
+ * @param   {Object}  updated  Updated configuration which may only be a partial configuration
+ *
+ * @returns {Object}           Merged configuration
+ * @private
+ */
 const mergeConfig = (current, updated) => {
 	const cfg = Object.assign({}, current);
 
@@ -230,6 +311,18 @@ const mergeConfig = (current, updated) => {
 	return cfg;
 };
 
+/**
+ * Adds or updates a container. When a container id is not specified, it will be generated.
+ *
+ * @param   {String|Object}  containerIdOrConfig  Either a string container id or a configuration
+ *                                                object.
+ * @param   {Object}         [config]             Container configuration when `containerIdOrConfig`
+ *                                                is a string. When omitted, the container will have
+ *                                                the default `GlobalConfig`.
+ *
+ * @returns {String}                              The container id
+ * @public
+ */
 const configureContainer = (...args) => {
 	let containerId, config;
 
@@ -253,14 +346,39 @@ const configureContainer = (...args) => {
 	return containerId;
 };
 
+/**
+ * Removes a container
+ *
+ * @param   {String}     containerId  ID of the container to remove
+ *
+ * @returns {undefined}
+ * @public
+ */
 const removeContainer = (containerId) => {
 	containerConfigs.delete(containerId);
 };
 
+/**
+ * Configures the `GlobalConfig` for containers
+ *
+ * @param   {Object}  config  New global configuration. Cannot introduce new keys
+ *
+ * @returns {undefined}
+ */
 const configureDefaults = (config) => {
 	GlobalConfig = mergeConfig(GlobalConfig, config);
 };
 
+/**
+ * Determines if `node` is a navigable element within the container identified by `containerId`.
+ *
+ * @param   {Node}     node         DOM node to check if it is navigable
+ * @param   {String}   containerId  ID of the container containing `node`
+ * @param   {Boolean}  verify       `true` to verify the node matches the container's `selector`
+ *
+ * @returns {Boolean}               `true` if `node` is navigable
+ * @public
+ */
 const isNavigable = (node, containerId, verify) => {
 	if (!node) {
 		return false;
@@ -274,8 +392,22 @@ const isNavigable = (node, containerId, verify) => {
 	return navigableFilter(node, containerId);
 };
 
+/**
+ * Returns the IDs of all containers
+ *
+ * @return {Iterator}  Iterator of key names
+ * @private
+ */
 const getAllContainerIds = () => containerConfigs.keys();
 
+/**
+ * Returns the default focus element for a container
+ *
+ * @param   {String}  containerId  ID of container
+ *
+ * @returns {Node}                 Default focus element
+ * @public
+ */
 function getContainerDefaultElement (containerId) {
 	let defaultElement = getContainerConfig(containerId).defaultElement;
 	if (!defaultElement) {
@@ -290,6 +422,14 @@ function getContainerDefaultElement (containerId) {
 	return null;
 }
 
+/**
+ * Gets the element last focused within the container.
+ *
+ * @param   {String}  containerId  ID of container
+ *
+ * @returns {Node}                 DOM Node last focused
+ * @public
+ */
 function getContainerLastFocusedElement (containerId) {
 	const {lastFocusedElement, lastFocusedIndex} = getContainerConfig(containerId);
 
@@ -302,9 +442,18 @@ function getContainerLastFocusedElement (containerId) {
 	return isNavigable(element, containerId, true) ? element : null;
 }
 
-function setContainerLastFocusedElement (elem, containerIds) {
+/**
+ * Sets the element last focused within the container
+ *
+ * @param   {Node}      node         DOM node last focused
+ * @param   {String[]}  containerId  ID of container
+ *
+ * @returns {undefined}
+ * @public
+ */
+function setContainerLastFocusedElement (node, containerIds) {
 	for (let i = 0, containers = containerIds.length; i < containers; ++i) {
-		getContainerConfig(containerIds[i]).lastFocusedElement = elem;
+		getContainerConfig(containerIds[i]).lastFocusedElement = node;
 	}
 }
 
