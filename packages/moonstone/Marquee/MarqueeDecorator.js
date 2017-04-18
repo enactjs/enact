@@ -243,6 +243,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidUpdate () {
+			if (this.distance === null) {
+				this.calculateMetrics();
+			}
 			if (this.shouldStartMarquee()) {
 				this.startAnimation(this.props.marqueeOn === 'render' ? this.props.marqueeOnRenderDelay : this.props.marqueeDelay);
 			}
