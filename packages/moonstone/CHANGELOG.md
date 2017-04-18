@@ -28,6 +28,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Button` text color when used on a neutral (light) background in some cases
 - `moonstone/Popup` background opacity
 - `moonstone/Marquee` to recalculate properly when its contents change
+- `moonstone/TimePicker` to display time in correct order
 
 ## [1.0.0] - 2017-03-31
 

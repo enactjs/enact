@@ -3,3 +3,17 @@
 	direction: ltr;
 	display: inline-block;
 }
+
+:global(.enact-locale-right-to-left) .timeComponents {
+	display: flex;
+
+	.hourComponents {
+		order: 2;
+	}
+	.minutesComponents {
+		order: 3;
+	}
+	.meridiemComponent{
+		order: 1;
+	}
+}
