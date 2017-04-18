@@ -1,5 +1,6 @@
 import kind from '@enact/core/kind';
 import React from 'react';
+import PropTypes from 'prop-types';
 import Slottable from '@enact/ui/Slottable';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
@@ -48,7 +49,7 @@ const PanelBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		'aria-label': React.PropTypes.string,
+		'aria-label': PropTypes.string,
 
 		/**
 		 * Header for the panel. This is usually passed by the {@link ui/Slottable.Slottable} API by
@@ -57,7 +58,7 @@ const PanelBase = kind({
 		 * @type {Header}
 		 * @public
 		 */
-		header: React.PropTypes.node,
+		header: PropTypes.node,
 
 		/**
 		 * When `true`, only the `header` is rendered and the body components are not. Setting to
@@ -72,7 +73,7 @@ const PanelBase = kind({
 		 * @default false
 		 * @public
 		 */
-		hideChildren: React.PropTypes.bool
+		hideChildren: PropTypes.bool
 	},
 
 	defaultProps: {

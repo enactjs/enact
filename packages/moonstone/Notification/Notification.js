@@ -6,7 +6,8 @@
  */
 
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import Slottable from '@enact/ui/Slottable';
 
 import Popup from '../Popup';
@@ -84,7 +85,7 @@ const NotificationBase = kind({
 		 * @default 'transparent'
 		 * @public
 		 */
-		scrimType: React.PropTypes.oneOf(['transparent', 'translucent', 'none'])
+		scrimType: PropTypes.oneOf(['transparent', 'translucent', 'none'])
 	},
 
 	defaultProps: {

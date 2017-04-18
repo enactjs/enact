@@ -9,6 +9,7 @@ import Changeable from '@enact/ui/Changeable';
 import clamp from 'ramda/src/clamp';
 import kind from '@enact/core/kind';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import {MarqueeController} from '../Marquee';
 import {validateRange} from '../internal/validators';
@@ -34,7 +35,7 @@ const PickerBase = kind({
 		 * @type {Node}
 		 * @public
 		 */
-		children: React.PropTypes.node.isRequired,
+		children: PropTypes.node.isRequired,
 
 		/**
 		 * Assign a custom icon for the decrementer. All strings supported by [Icon]{Icon} are
@@ -44,7 +45,7 @@ const PickerBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		decrementIcon: React.PropTypes.string,
+		decrementIcon: PropTypes.string,
 
 		/**
 		 * When `true`, the Picker is shown as disabled and does not generate `onChange`
@@ -53,7 +54,7 @@ const PickerBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		disabled: React.PropTypes.bool,
+		disabled: PropTypes.bool,
 
 		/**
 		 * Assign a custom icon for the incrementer. All strings supported by [Icon]{Icon} are
@@ -63,7 +64,7 @@ const PickerBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		incrementIcon: React.PropTypes.string,
+		incrementIcon: PropTypes.string,
 
 		/**
 		 * Determines the user interaction of the control. A joined picker allows the user to use
@@ -75,7 +76,7 @@ const PickerBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		joined: React.PropTypes.bool,
+		joined: PropTypes.bool,
 
 		/**
 		 * By default, each picker item is wrapped by a
@@ -85,7 +86,7 @@ const PickerBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		marqueeDisabled: React.PropTypes.bool,
+		marqueeDisabled: PropTypes.bool,
 
 		/**
 		 * By default, the picker will animate transitions between items if it has a defined
@@ -95,7 +96,7 @@ const PickerBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		noAnimation: React.PropTypes.bool,
+		noAnimation: PropTypes.bool,
 
 		/**
 		 * A function to run when the control should increment or decrement.
@@ -103,7 +104,7 @@ const PickerBase = kind({
 		 * @type {Function}
 		 * @public
 		 */
-		onChange: React.PropTypes.func,
+		onChange: PropTypes.func,
 
 		/**
 		 * Sets the orientation of the picker, whether the buttons are above and below or on the
@@ -112,7 +113,7 @@ const PickerBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		orientation: React.PropTypes.oneOf(['horizontal', 'vertical']),
+		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
 		 * Index of the selected child
@@ -121,7 +122,7 @@ const PickerBase = kind({
 		 * @default 0
 		 * @public
 		 */
-		value: React.PropTypes.number,
+		value: PropTypes.number,
 
 		/**
 		 * Choose a specific size for your picker. `'small'`, `'medium'`, `'large'`, or set to `null` to
@@ -135,9 +136,9 @@ const PickerBase = kind({
 		 * @type {String|Number}
 		 * @public
 		 */
-		width: React.PropTypes.oneOfType([
-			React.PropTypes.oneOf([null, 'small', 'medium', 'large']),
-			React.PropTypes.number
+		width: PropTypes.oneOfType([
+			PropTypes.oneOf([null, 'small', 'medium', 'large']),
+			PropTypes.number
 		]),
 
 		/**
@@ -147,7 +148,7 @@ const PickerBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		wrap: React.PropTypes.bool
+		wrap: PropTypes.bool
 	},
 
 	defaultProps: {

@@ -10,6 +10,7 @@ import {forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import Spotlight from '../src/spotlight';
 
@@ -90,7 +91,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @default false
 			 * @public
 			 */
-			disabled: React.PropTypes.bool,
+			disabled: PropTypes.bool,
 
 			/**
 			 * The handler to run when the component is removed while retaining focus.
@@ -99,7 +100,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @param {Object} event
 			 * @public
 			 */
-			onSpotlightDisappear: React.PropTypes.func,
+			onSpotlightDisappear: PropTypes.func,
 
 			/**
 			 * The handler to run when the 5-way down key is pressed.
@@ -108,7 +109,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @param {Object} event
 			 * @public
 			 */
-			onSpotlightDown: React.PropTypes.func,
+			onSpotlightDown: PropTypes.func,
 
 			/**
 			 * The handler to run when the 5-way left key is pressed.
@@ -117,7 +118,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @param {Object} event
 			 * @public
 			 */
-			onSpotlightLeft: React.PropTypes.func,
+			onSpotlightLeft: PropTypes.func,
 
 			/**
 			 * The handler to run when the 5-way right key is pressed.
@@ -126,7 +127,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @param {Object} event
 			 * @public
 			 */
-			onSpotlightRight: React.PropTypes.func,
+			onSpotlightRight: PropTypes.func,
 
 			/**
 			 * The handler to run when the 5-way up key is pressed.
@@ -135,7 +136,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @param {Object} event
 			 * @public
 			 */
-			onSpotlightUp: React.PropTypes.func,
+			onSpotlightUp: PropTypes.func,
 
 			/**
 			 * When `true`, the component cannot be navigated using spotlight.
@@ -144,7 +145,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @default false
 			 * @public
 			 */
-			spotlightDisabled: React.PropTypes.bool,
+			spotlightDisabled: PropTypes.bool,
 
 			/**
 			 * The tabIndex of the component. This value will default to -1 if left
@@ -153,7 +154,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @type {Number}
 			 * @public
 			 */
-			tabIndex: React.PropTypes.number
+			tabIndex: PropTypes.number
 		}
 
 		constructor (props) {
@@ -245,7 +246,6 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			const spottableDisabled = this.state.spotted && disabled;
 			const spottable = (spottableDisabled || !disabled) && !spotlightDisabled;
 			const classes = spottableDisabled ? spottableClass + ' ' + spottableDisabledClass : spottableClass;
-			const componentDisabled = !spottable && disabled;
 			let tabIndex = rest.tabIndex;
 
 			delete rest.onSpotlightDisappear;
@@ -277,7 +277,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			return (
 				<Wrapped
 					{...rest}
-					disabled={componentDisabled}
+					disabled={disabled}
 					tabIndex={tabIndex}
 				/>
 			);

@@ -9,6 +9,7 @@
 import Changeable from '@enact/ui/Changeable';
 import kind from '@enact/core/kind';
 import React from 'react';
+import PropTypes from 'prop-types';
 import pure from 'recompose/pure';
 
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
@@ -37,7 +38,7 @@ const ExpandablePickerBase = kind({
 		 * @type {Node}
 		 * @public
 		 */
-		children: React.PropTypes.node.isRequired,
+		children: PropTypes.node.isRequired,
 
 		/**
 		 * A custom icon for the decrementer. All strings supported by [Icon]{Icon} are
@@ -47,7 +48,7 @@ const ExpandablePickerBase = kind({
 		 * @type {string}
 		 * @public
 		 */
-		decrementIcon: React.PropTypes.string,
+		decrementIcon: PropTypes.string,
 
 		/**
 		 * When `true`, applies a disabled style and the control becomes non-interactive.
@@ -55,7 +56,7 @@ const ExpandablePickerBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		disabled: React.PropTypes.bool,
+		disabled: PropTypes.bool,
 
 		/**
 		 * A custom icon for the incrementer. All strings supported by [Icon]{Icon} are
@@ -65,7 +66,7 @@ const ExpandablePickerBase = kind({
 		 * @type {string}
 		 * @public
 		 */
-		incrementIcon: React.PropTypes.string,
+		incrementIcon: PropTypes.string,
 
 		/**
 		 * The user interaction of the control. A joined picker allows the user to use
@@ -77,7 +78,7 @@ const ExpandablePickerBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		joined: React.PropTypes.bool,
+		joined: PropTypes.bool,
 
 		/**
 		 * By default, the picker will animate transitions between items if it has a defined
@@ -87,7 +88,7 @@ const ExpandablePickerBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		noAnimation: React.PropTypes.bool,
+		noAnimation: PropTypes.bool,
 
 		/**
 		 * Callback to be called when the control should increment or decrement.
@@ -95,7 +96,7 @@ const ExpandablePickerBase = kind({
 		 * @type {Function}
 		 * @public
 		 */
-		onChange: React.PropTypes.func,
+		onChange: PropTypes.func,
 
 		/**
 		 * Callback to be called when a condition occurs which should cause the expandable to close
@@ -103,7 +104,7 @@ const ExpandablePickerBase = kind({
 		 * @type {Function}
 		 * @public
 		 */
-		onClose: React.PropTypes.func,
+		onClose: PropTypes.func,
 
 		/**
 		 * Callback to be called when an item is picked.
@@ -111,7 +112,7 @@ const ExpandablePickerBase = kind({
 		 * @type {Function}
 		 * @public
 		 */
-		onPick: React.PropTypes.func,
+		onPick: PropTypes.func,
 
 		/**
 		 * The handler to run when the component is removed while retaining focus.
@@ -120,7 +121,7 @@ const ExpandablePickerBase = kind({
 		 * @param {Object} event
 		 * @public
 		 */
-		onSpotlightDisappear: React.PropTypes.func,
+		onSpotlightDisappear: PropTypes.func,
 
 		/**
 		 * The orientation of the picker, i.e. whether the buttons are above and below or on the
@@ -130,7 +131,7 @@ const ExpandablePickerBase = kind({
 		 * @default 'horizontal'
 		 * @public
 		 */
-		orientation: React.PropTypes.oneOf(['horizontal', 'vertical']),
+		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
 		 * When `true`, the component cannot be navigated using spotlight.
@@ -139,7 +140,7 @@ const ExpandablePickerBase = kind({
 		 * @default false
 		 * @public
 		 */
-		spotlightDisabled: React.PropTypes.bool,
+		spotlightDisabled: PropTypes.bool,
 
 		/**
 		 * Index of the selected child
@@ -148,7 +149,7 @@ const ExpandablePickerBase = kind({
 		 * @default 0
 		 * @public
 		 */
-		value: React.PropTypes.number,
+		value: PropTypes.number,
 
 		/*
 		 * The size of the picker: `'small'`, `'medium'`, `'large'`, or set to `null` to
@@ -158,7 +159,7 @@ const ExpandablePickerBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		width: React.PropTypes.oneOf([null, 'small', 'medium', 'large']),
+		width: PropTypes.oneOf([null, 'small', 'medium', 'large']),
 
 		/*
 		 * Whether the picker stops incrementing when it reaches the last element. Set `wrap`
@@ -167,7 +168,7 @@ const ExpandablePickerBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		wrap: React.PropTypes.bool
+		wrap: PropTypes.bool
 	},
 
 	defaultProps: {

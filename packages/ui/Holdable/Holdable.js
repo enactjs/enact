@@ -9,7 +9,8 @@ import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import pick from 'ramda/src/pick';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 const eventProps = ['clientX', 'clientY', 'pageX', 'pageY', 'screenX', 'screenY',
 	'altKey', 'ctrlKey', 'metaKey', 'shiftKey', 'detail', 'type'];

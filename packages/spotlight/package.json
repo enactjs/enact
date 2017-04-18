@@ -20,7 +20,8 @@
   },
   "dependencies": {
     "@enact/core": "^1.0.0",
+    "prop-types": "~15.5.0",
     "ramda": "~0.22.1",
-    "react": "~15.4.0"
+    "react": "~15.5.0"
   }
 }

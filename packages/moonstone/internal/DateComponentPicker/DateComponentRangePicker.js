@@ -1,6 +1,7 @@
 import Changeable from '@enact/ui/Changeable';
 import kind from '@enact/core/kind';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import RangePicker from '../../RangePicker';
 
@@ -26,7 +27,7 @@ const DateComponentRangePickerBase = kind({
 		 * @type {Number}
 		 * @required
 		 */
-		max: React.PropTypes.number.isRequired,
+		max: PropTypes.number.isRequired,
 
 		/**
 		 * The minimum value for the date component
@@ -34,7 +35,7 @@ const DateComponentRangePickerBase = kind({
 		 * @type {Number}
 		 * @required
 		 */
-		min: React.PropTypes.number.isRequired,
+		min: PropTypes.number.isRequired,
 
 		/**
 		 * The value of the date component
@@ -42,14 +43,14 @@ const DateComponentRangePickerBase = kind({
 		 * @type {Number}
 		 * @required
 		 */
-		value: React.PropTypes.number.isRequired,
+		value: PropTypes.number.isRequired,
 
 		/**
 		 * The label to display below the picker
 		 *
 		 * @type {String}
 		 */
-		label: React.PropTypes.string,
+		label: PropTypes.string,
 
 		/**
 		 * By default, the picker will animate transitions between items if it has a defined
@@ -59,7 +60,7 @@ const DateComponentRangePickerBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		noAnimation: React.PropTypes.bool,
+		noAnimation: PropTypes.bool,
 
 		/*
 		 * When `true`, allow the picker to continue from the opposite end of the list of options.
@@ -67,7 +68,7 @@ const DateComponentRangePickerBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		wrap: React.PropTypes.bool
+		wrap: PropTypes.bool
 	},
 
 	render: ({className, label, max, min, noAnimation, value, wrap, ...rest}) => (

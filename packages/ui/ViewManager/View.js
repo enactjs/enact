@@ -4,6 +4,7 @@
 
 import {Job} from '@enact/core/util';
 import React from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 
 import {shape} from './Arranger';
@@ -26,14 +27,14 @@ const now = isBrowser ? window.performance.now.bind(window.performance) : nop;
 class View extends React.Component {
 
 	static propTypes = /** @lends ui/ViewManager.View.prototype */ {
-		children: React.PropTypes.node.isRequired,
+		children: PropTypes.node.isRequired,
 
 		/**
 		 * Time in milliseconds to complete a transition
 		 *
 		 * @type {Number}
 		 */
-		duration: React.PropTypes.number.isRequired,
+		duration: PropTypes.number.isRequired,
 
 		/**
 		 * Arranger to control the animation
@@ -49,7 +50,7 @@ class View extends React.Component {
 		 * @type {Number}
 		 * @default 0
 		 */
-		enteringDelay: React.PropTypes.number,
+		enteringDelay: PropTypes.number,
 
 		/**
 		 * Name of the property to pass to the wrapped view to indicate when it is entering the
@@ -61,14 +62,14 @@ class View extends React.Component {
 		 *
 		 * @type {String}
 		 */
-		enteringProp: React.PropTypes.string,
+		enteringProp: PropTypes.string,
 
 		/**
 		 * Index of the currently 'active' view.
 		 *
 		 * @type {Number}
 		 */
-		index: React.PropTypes.number,
+		index: PropTypes.number,
 
 		/**
 		 * Indicates if the transition should be animated
@@ -76,14 +77,14 @@ class View extends React.Component {
 		 * @type {Boolean}
 		 * @default true
 		 */
-		noAnimation: React.PropTypes.bool,
+		noAnimation: PropTypes.bool,
 
 		/**
 		 * Index of the previously 'active' view.
 		 *
 		 * @type {Number}
 		 */
-		previousIndex: React.PropTypes.number,
+		previousIndex: PropTypes.number,
 
 		/**
 		 * Indicates if the transition should be reversed. The effect depends on how the provided
@@ -92,7 +93,7 @@ class View extends React.Component {
 		 * @type {Boolean}
 		 * @default false
 		 */
-		reverseTransition: React.PropTypes.bool
+		reverseTransition: PropTypes.bool
 	}
 
 	static defaultProps = {

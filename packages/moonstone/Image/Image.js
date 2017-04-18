@@ -5,7 +5,8 @@
  */
 
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import {selectSrc} from '@enact/ui/resolution';
 
 import css from './Image.less';
@@ -47,7 +48,7 @@ const ImageBase = kind({
 		 * @required
 		 * @public
 		 */
-		src: PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.object]).isRequired,
+		src: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
 
 		/**
 		 * A placeholder image to be displayed before the image is loaded.
