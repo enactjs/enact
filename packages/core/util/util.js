@@ -18,7 +18,6 @@ const unorderedKeys = compose(sort((a, b) => a - b), orderedKeys);
 const unorderedEquals = useWith(equals, [unorderedKeys, unorderedKeys]);
 const orderedEquals = useWith(equals, [orderedKeys, orderedKeys]);
 
-
 /**
  * Compares the keys of two sets of children and returns `true` if they are equal.
  *
