@@ -28,6 +28,10 @@ import css from './Image.less';
  * <Image className={css.myImage} src={src} sizing={'fill'} />
  * ```
  *
+ * Image is based on the `div` element, but it uses `img` to provide `onError`
+ * and `onLoad` events. The image that you see on screen is a `background-image`
+ * from the `div` element, not the `img` element.
+ *
  * > If you need a naturally sized image, you can use the native `<img>` element instead.
  *
  * @class Image
