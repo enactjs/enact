@@ -103,12 +103,13 @@ const forwardPlayButtonClick = forward('onPlayButtonClick');
 /**
  * A set of playback rates when media fast forwards, rewinds, slow-fowards, or slow-rewinds.
  *
- * A number used for each operation is proportional to the normal playing speed, 1.0. If the rate
- * is less than 1, it will play slower than normal speed, and if it's larger than 1, it will play
- * faster. If it's negative, it will play backward.
+ * The number used for each operation is proportional to the normal playing speed, 1. If the rate
+ * is less than 1, it will play slower than normal speed, and, if it is larger than 1, it will play
+ * faster. If it is negative, it will play backward.
  *
- * The order of numbers represents the incremental order of rates it will be used for each
- * operation.
+ * The order of numbers represents the incremental order of rates that will be used for each
+ * operation. Note that all rates are expressed as strings and fractions are used rather than decimals
+ * (e.g.: `'1/2'`, not `'0.5'`).
  *
  * @typedef {Object} playbackRateHash
  * @memberof moonstone/VideoPlayer
