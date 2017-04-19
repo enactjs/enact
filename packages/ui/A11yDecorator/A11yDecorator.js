@@ -68,15 +68,15 @@ const A11yDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		name: 'A11yDecorator',
 
 		propTypes: {
-			accessibilityHint: React.PropTypes.string,
-			accessibilityPreHint: React.PropTypes.string,
+			accessibilityHint: PropTypes.string,
+			accessibilityPreHint: PropTypes.string,
 			// TOOD: fix bug in react eslint rules with sorting of quoted keys
 			// eslint-disable-next-line react/sort-prop-types
 			'aria-label': PropTypes.string
 		},
 
 		computed: {
-			'aria-label': ({'aria-label': aria, accessibilityHint: hint, accessibilityPreHint: prehint, [prop]: content}) => {
+			'aria-label': ({'aria-label': aria, accessibilityPreHint: prehint, accessibilityHint: hint, [prop]: content}) => {
 				if (!aria) {
 					return hintComposer(hint, prehint, content);
 				}
