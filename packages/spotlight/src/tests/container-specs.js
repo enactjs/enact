@@ -44,6 +44,12 @@ const scenarios = {
 		container({[containerAttribute]: 'first', children: someSpottables(5)}),
 		container({[containerAttribute]: 'second', children: someSpottables(5)})
 	),
+	mixedOrder: join(
+		container({[containerAttribute]: 'first', name: 'c1'}),
+		spottable({name: 's1'}),
+		container({[containerAttribute]: 'second', name: 'c2'}),
+		spottable({name: 's2'})
+	),
 	complexTree: join(
 		spottable(nonSpottable()),
 		container({[containerAttribute]: 'first-container', children: join(
@@ -185,6 +191,16 @@ describe('container', () => {
 				const actual = getSpottableDescendants('child').length;
 
 				expect(actual).to.equal(expected);
+			}
+		));
+
+		it('should return spottables and containers in source order', testScenario(
+			scenarios.mixedOrder,
+			() => {
+				const expected = ['c1', 's1', 'c2', 's2'];
+				const actual = getSpottableDescendants(rootContainerId).map(n => n.getAttribute('name'));
+
+				expect(actual).to.deep.equal(expected);
 			}
 		));
 	});

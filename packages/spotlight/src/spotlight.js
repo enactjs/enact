@@ -30,6 +30,7 @@ import {
 	getAllContainerIds,
 	getContainerConfig,
 	getContainerDefaultElement,
+	getContainerFocusTarget,
 	getContainerLastFocusedElement,
 	getContainersForNode,
 	getSpottableDescendants,
@@ -603,20 +604,10 @@ const Spotlight = (function () {
 
 		for (let i = 0; i < range.length; i++) {
 			let id = range[i];
-			let next;
-
-			if (getContainerConfig(id).enterTo === 'last-focused') {
-				next = getContainerLastFocusedElement(id) ||
-					getContainerDefaultElement(id) ||
-					getSpottableDescendants(id)[0];
-			} else {
-				next = getContainerDefaultElement(id) ||
-					getContainerLastFocusedElement(id) ||
-					getSpottableDescendants(id)[0];
-			}
-
+			const next = getContainerFocusTarget(id);
 			if (next) {
-				return focusElement(next, range);
+				const ids = getContainersForNode(next);
+				return focusElement(next, ids);
 			}
 		}
 
@@ -646,16 +637,26 @@ const Spotlight = (function () {
 		return false;
 	}
 
-	function getNavigableElements () {
+	function getAllNavigableElements () {
+		return getNavigableElements(Array.from(getAllContainerIds()));
+	}
+
+	function getNavigableElements (containerIds) {
 		let containerNavigableElements = {};
 		let allNavigableElements = [];
 
-		for (const id of getAllContainerIds()) {
+		for (const id of containerIds) {
 			containerNavigableElements[id] = getSpottableDescendants(id);
 			allNavigableElements = allNavigableElements.concat(containerNavigableElements[id]);
 		}
 		return {
-			allNavigableElements: allNavigableElements.filter(n => !isContainer(n)),
+			allNavigableElements: allNavigableElements.filter(node => {
+				if (isContainer(node)) {
+					return containerIds.indexOf(node.dataset.containerId) === -1;
+				}
+
+				return true;
+			}),
 			containerNavigableElements
 		};
 	}
@@ -700,7 +701,7 @@ const Spotlight = (function () {
 
 	function spotNextFromPoint (direction, position, containerId) {
 		const config = getContainerConfig(containerId);
-		const {allNavigableElements, containerNavigableElements} = getNavigableElements();
+		const {allNavigableElements, containerNavigableElements} = getAllNavigableElements();
 		let next;
 
 		if (config.restrict === 'self-only' || config.restrict === 'self-first') {
@@ -740,7 +741,7 @@ const Spotlight = (function () {
 			return true;
 		}
 
-		const {allNavigableElements, containerNavigableElements} = getNavigableElements();
+		const {allNavigableElements, containerNavigableElements} = getNavigableElements(currentContainerIds);
 		const currentContainerId = last(currentContainerIds);
 		let next;
 		let preventFindNext;
@@ -780,7 +781,11 @@ const Spotlight = (function () {
 				destination: next,
 				reverse: _reverseDirections[direction]
 			};
-			return focusNext(next, direction, currentContainerIds, currentFocusedElement);
+			if (isContainer(next)) {
+				return focusContainer(next.dataset.containerId);
+			} else {
+				return focusNext(next, direction, currentContainerIds, currentFocusedElement);
+			}
 		} else if (gotoLeaveFor(currentContainerIds, direction)) {
 			return true;
 		}

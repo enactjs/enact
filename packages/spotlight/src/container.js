@@ -254,21 +254,11 @@ const getSpottableDescendants = (containerId) => {
 
 	const spottableSelector = `.${spottableClass}`;
 	const subContainerSelector = getSubContainerSelector(node);
-	const spottable = querySelector(
+	const candidates = querySelector(
 		node,
-		spottableSelector,
-		`${subContainerSelector} ${spottableSelector}`
+		`${spottableSelector}, ${getContainerSelector(node)} ${containerSelector}:not([data-container-disabled="true"])`,
+		`${subContainerSelector} ${spottableSelector}, ${subContainerSelector} ${containerSelector}`
 	);
-	const containers = querySelector(
-		node,
-		`${getContainerSelector(node)} ${containerSelector}:not([data-container-disabled="true"])`,
-		`${subContainerSelector} ${containerSelector}`
-	);
-
-	const candidates = [
-		...spottable,
-		...containers
-	];
 
 	return candidates.filter(n => navigableFilter(n, containerId));
 };
@@ -491,6 +481,29 @@ function setContainerLastFocusedElement (node, containerIds) {
 	}
 }
 
+function getContainerFocusTarget (containerId) {
+	const config = getContainerConfig(containerId);
+	let next;
+
+	if (config.enterTo === 'last-focused') {
+		next = getContainerLastFocusedElement(containerId) ||
+			getContainerDefaultElement(containerId) ||
+			getSpottableDescendants(containerId)[0];
+	} else {
+		next = getContainerDefaultElement(containerId) ||
+			getContainerLastFocusedElement(containerId) ||
+			getSpottableDescendants(containerId)[0];
+	}
+
+	if (isContainer(next)) {
+		return getContainerFocusTarget(getContainerId(next));
+	} else if (next) {
+		return next;
+	}
+
+	return false;
+}
+
 export {
 	// Remove
 	getAllContainerIds,
@@ -506,6 +519,7 @@ export {
 	containerAttribute,
 	configureDefaults,
 	configureContainer,
+	getContainerFocusTarget,
 	getSpottableDescendants,
 	isContainer,
 	isNavigable,
