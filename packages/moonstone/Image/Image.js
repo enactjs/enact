@@ -59,6 +59,7 @@ const ImageBase = kind({
 		 *
 		 * @type {String}
 		 * @public
+		 * @memberof moonstone/Image.Image.prototype
 		 */
 		// Quoting this (necessary) makes it alphabetically sort differently...
 		'aria-label': PropTypes.string,
