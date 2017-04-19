@@ -218,6 +218,7 @@ const TimePickerBase = kind({
 								case 'k':
 									return (
 										<HourPicker
+											className={css.hourComponents}
 											key="hour-picker"
 											label={noLabels ? null : $L('hour')}
 											onChange={onChangeHour}
@@ -233,6 +234,7 @@ const TimePickerBase = kind({
 								case 'm':
 									return (
 										<DateComponentRangePicker
+											className={css.minutesComponents}
 											key="minute-picker"
 											label={noLabels ? null : $L('minute')}
 											max={59}
@@ -246,27 +248,28 @@ const TimePickerBase = kind({
 											wrap
 										/>
 									);
+								case 'a':
+									return (
+										<DateComponentPicker
+											className={css.meridiemComponent}
+											key="meridiem-picker"
+											label={noLabels ? null : $L('meridiem')}
+											onChange={onChangeMeridiem}
+											onSpotlightDisappear={onSpotlightDisappear}
+											reverse
+											spotlightDisabled={spotlightDisabled}
+											value={meridiem}
+											width={4}
+											wrap
+										>
+											{meridiems}
+										</DateComponentPicker>
+									);
 							}
 
 							return null;
 						})}
 					</div>
-					{!hasMeridiem ? null : (
-						// eslint-disable-next-line react/jsx-indent
-						<DateComponentPicker
-							key="meridiem-picker"
-							label={noLabels ? null : $L('meridiem')}
-							onChange={onChangeMeridiem}
-							onSpotlightDisappear={onSpotlightDisappear}
-							reverse
-							spotlightDisabled={spotlightDisabled}
-							value={meridiem}
-							width={4}
-							wrap
-						>
-							{meridiems}
-						</DateComponentPicker>
-					)}
 				</div>
 			</ExpandableItemBase>
 		);
