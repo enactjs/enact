@@ -65,16 +65,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static propTypes = /** @lends moonstone/internal/SliderDecorator.SliderDecorator.prototype */{
 			/**
-			 * By default, the slider will be labeled by its value.
-			 * When `aria-valuetext` is set, it will be used instead to provide an accessibility value text for
-			 * the slider.
-			 *
-			 * @type {String}
-			 * @public
-			 */
-			'aria-valuetext': React.PropTypes.string,
-
-			/**
 			 * Accessibility pre-hint
 			 *
 			 * @type {String}
@@ -226,7 +216,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.normalizeBounds(props);
 
 			const value = this.clamp(props.value);
-			const valueText = hintComposer(props['aria-valuetext'], props.accessibilityHint, props.accessibilityPreHint, value);
+			const valueText = props['aria-valuetext'] || hintComposer(props.accessibilityHint, props.accessibilityPreHint, value);
 
 			this.state = {
 				active: false,
@@ -251,7 +241,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if ((min !== this.props.min) || (max !== this.props.max) || (value !== this.state.value)) {
 				this.normalizeBounds(nextProps);
 				const clampedValue = this.clamp(value);
-				const valueText = hintComposer(ariaValueText, accessibilityHint, accessibilityPreHint, value);
+				const valueText = ariaValueText || hintComposer(accessibilityHint, accessibilityPreHint, value);
 
 				this.setState({
 					value: clampedValue,
@@ -285,7 +275,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		updateValueJob = new Job((value) => {
 			this.inputNode.value = value;
-			const valueText = hintComposer(this.props['aria-valuetext'], this.props.accessibilityHint, this.props.accessibilityPreHint, value);
+			const valueText = this.props['aria-valuetext'] || hintComposer(this.props.accessibilityHint, this.props.accessibilityPreHint, value);
 			this.setState({
 				value,
 				valueText: valueText
@@ -413,7 +403,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				const horizontalHint = $L('change a value with left right button');
 				const active = !this.state.active;
 
-				let valueText = hintComposer(ariaValueText, accessibilityHint, accessibilityPreHint, this.state.value);
+				let valueText = ariaValueText || hintComposer(accessibilityHint, accessibilityPreHint, this.state.value);
 				if (active) {
 					valueText = vertical ? verticalHint : horizontalHint;
 				}
@@ -456,17 +446,13 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		handleFocus = () => {
-			this.setState({role: 'slider'});
-		}
-
 		render () {
 			const props = Object.assign({}, this.props);
 			delete props.knobStep;
 
 			return (
 				<Wrapped
-					role={this.state.role}
+					role='slider'
 					{...props}
 					active={this.state.active}
 					aria-disabled={this.props.disabled}
@@ -477,7 +463,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					onChange={this.handleChange}
 					onClick={this.handleClick}
 					onDecrement={this.handleDecrement}
-					onFocus={this.handleFocus}
 					onIncrement={this.handleIncrement}
 					onMouseLeave={this.props.detachedKnob ? this.handleMouseLeave : null}
 					onMouseMove={this.props.detachedKnob ? this.handleMouseMove : null}

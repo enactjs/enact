@@ -40,28 +40,12 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 
 		propTypes: /** @lends moonstone/IncrementSlider.IncrementSliderBase.prototype */ {
 			/**
-			 * Accessibility label for decrease button
-			 *
-			 * @type {String}
-			 * @public
-			 */
-			accessibilityDecLabel: React.PropTypes.string,
-
-			/**
 			 * Accessibility pre-hint
 			 *
 			 * @type {String}
 			 * @public
 			 */
 			accessibilityHint: React.PropTypes.string,
-
-			/**
-			 * Accessibility label for increase button
-			 *
-			 * @type {String}
-			 * @public
-			 */
-			accessibilityIncLabel: React.PropTypes.string,
 
 			/**
 			 * Accessibility hint
@@ -275,13 +259,13 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			incrementSliderClasses: ({vertical, styler}) => styler.append({vertical, horizontal: !vertical}),
 			decrementIcon: ({decrementIcon, vertical}) => (decrementIcon || (vertical ? 'arrowlargedown' : 'arrowlargeleft')),
 			incrementIcon: ({incrementIcon, vertical}) => (incrementIcon || (vertical ? 'arrowlargeup' : 'arrowlargeright')),
-			decrementAriaLabel: ({accessibilityDecLabel, accessibilityHint, accessibilityPreHint, value}) => {
+			decrementAriaLabel: ({accessibilityHint, accessibilityPreHint, value}) => {
 				const defaultContent = value + ' ' + $L('press ok button to decrease the value');
-				return hintComposer(accessibilityDecLabel, accessibilityHint, accessibilityPreHint, defaultContent);
+				return hintComposer(accessibilityHint, accessibilityPreHint, defaultContent);
 			},
-			incrementAriaLabel: ({accessibilityIncLabel, accessibilityHint, accessibilityPreHint, value}) => {
+			incrementAriaLabel: ({accessibilityHint, accessibilityPreHint, value}) => {
 				const defaultContent = value + ' ' + $L('press ok button to increase the value');
-				return hintComposer(accessibilityIncLabel, accessibilityHint, accessibilityPreHint, defaultContent);
+				return hintComposer(accessibilityHint, accessibilityPreHint, defaultContent);
 			}
 		},
 
