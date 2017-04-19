@@ -369,6 +369,15 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		spotPopupContent = () => {
 			const {containerId} = this.state;
 			if (!Spotlight.focus(containerId)) {
+				const current = Spotlight.getCurrent();
+
+				// In cases where the container contains no spottable controls or we're in pointer-mode, focus
+				// cannot inherently set the active container or blur the active control, so we must do that
+				// here.
+				if (current) {
+					current.blur();
+					Spotlight.setPointerMode(false);
+				}
 				Spotlight.setActiveContainer(containerId, containerId);
 			}
 		}

@@ -1047,6 +1047,7 @@ const Spotlight = (function () {
 
 		if (target && target !== getCurrent() && !isNavigable(target, _lastContainerId, true)) {
 			_clickTarget = target;
+			console.log('CLICK PREVENT');
 			preventDefault(evt);
 		}
 	}
@@ -1074,9 +1075,13 @@ const Spotlight = (function () {
 
 		const target = getNavigableTarget(evt.target); // account for child controls
 
-		if (target && target !== getCurrent() && isNavigable(target, _lastContainerId, true)) { // moving over a focusable element
-			focusElement(target, getContainerIds(target), true);
-			preventDefault(evt);
+		if (target && target !== getCurrent()) { // moving over a focusable element
+			const lastSelfOnly = _containers.get(_lastContainerId).restrict === 'self-only';
+
+			if (!lastSelfOnly || (lastSelfOnly && isNavigable(target, _lastContainerId, true))) {
+				focusElement(target, getContainerIds(target), true);
+				preventDefault(evt);
+			}
 		}
 	}
 
@@ -1112,9 +1117,13 @@ const Spotlight = (function () {
 			if (!target && current) {
 				// we are moving over a non-focusable element, so we force a blur to occur
 				current.blur();
-			} else if (target && (!current || target !== current) && isNavigable(target, _lastContainerId, true)) {
-				// we are moving over a focusable element, so we set focus to the target
-				focusElement(target, getContainerIds(target), true);
+			} else if (target && (!current || target !== current)) {
+				const lastSelfOnly = _containers.get(_lastContainerId).restrict === 'self-only';
+
+				if (!lastSelfOnly || (lastSelfOnly && isNavigable(target, _lastContainerId, true))) {
+					// we are moving over a focusable element, so we set focus to the target
+					focusElement(target, getContainerIds(target), true);
+				}
 			}
 		}
 	}
