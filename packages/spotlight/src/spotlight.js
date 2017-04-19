@@ -1047,7 +1047,6 @@ const Spotlight = (function () {
 
 		if (target && target !== getCurrent() && !isNavigable(target, _lastContainerId, true)) {
 			_clickTarget = target;
-			console.log('CLICK PREVENT');
 			preventDefault(evt);
 		}
 	}
