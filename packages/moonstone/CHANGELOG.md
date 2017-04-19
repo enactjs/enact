@@ -11,7 +11,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualList.GridListImageItem` prop `placeholder`
 - `moonstone/VideoPlayer` callback prop `onControlsAvailable` which fires when the players controls show or hide
 - `moonstone/Divider` property `preserveCase` to display text without capitalizing it
-- `moonstone/Icon` additional icons
 
 ### Changed
 
@@ -19,6 +18,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/ProgressBar` to position correctly with other components nearby
 - `moonstone/Panels` breadcrumb to no longer have a horizontal line above it
 - `moonstone/Transition` now measures itself when the CPU is idle.
+- `Moonstone.ttf` font to include new icons
+- `moonstone/Icon` to reference additional icons
 
 ### Fixed
 
