@@ -27,7 +27,7 @@ storiesOf('Icon')
 					<br />
 					<br />
 					<Divider>All Icons</Divider>
-					{iconNames.map((icon, index) => <Icon key={index} small={small}>{icon}</Icon>)}
+					{iconNames.map((icon, index) => <Icon key={index} small={small} title={icon}>{icon}</Icon>)}
 				</div>
 			);
 		}
