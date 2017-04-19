@@ -5,14 +5,14 @@
  */
 
 import kind from '@enact/core/kind';
-import {cap} from '@enact/core/util';
+import Uppercase from '@enact/i18n/Uppercase';
 import React from 'react';
 import PropTypes from 'prop-types';
 
 import css from './Divider.less';
 import {MarqueeDecorator} from '../Marquee';
 
-const MarqueeH3 = MarqueeDecorator('h3');
+const MarqueeH3 = Uppercase({wordCase: true}, MarqueeDecorator('h3'));
 
 /**
  * {@link moonstone/Divider.Divider} is a simply styled component that may be used as a separator
@@ -37,7 +37,7 @@ const DividerBase = kind({
 		children: PropTypes.string,
 
 		/**
-		 * The children string will be capitalized, unless this is set to true.
+		 * The children string will have each word capitalized, unless this is set to `true`.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -76,16 +76,14 @@ const DividerBase = kind({
 	},
 
 	computed: {
-		className: ({spacing, styler}) => styler.append(spacing),
-		content: ({children = '', preserveCase}) => preserveCase ? children : children.split(' ').map(cap).join(' ')
+		className: ({spacing, styler}) => styler.append(spacing)
 	},
 
-	render: ({content, ...rest}) => {
-		delete rest.preserveCase;
+	render: ({children, ...rest}) => {
 		delete rest.spacing;
 
 		return (
-			<MarqueeH3 {...rest} marqueeOn="hover">{content}</MarqueeH3>
+			<MarqueeH3 {...rest} marqueeOn="hover">{children}</MarqueeH3>
 		);
 	}
 });

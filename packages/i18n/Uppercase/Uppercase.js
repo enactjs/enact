@@ -9,7 +9,12 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {toUpperCase} from '../util';
+import {toCapitalized, toUpperCase, toWordCase} from '../util';
+
+const defaultConfig = {
+	sentenceCase: false,
+	wordCase: false
+};
 
 /**
  * {@link i18n/Uppercase.Uppercase} is a Higher Order Component that is used to wrap
@@ -24,7 +29,7 @@ import {toUpperCase} from '../util';
  * @hoc
  * @public
  */
-const Uppercase = hoc((config, Wrapped) => kind({
+const Uppercase = hoc(defaultConfig, (config, Wrapped) => kind({
 	name: 'Uppercase',
 
 	propTypes: /** @lends i18n/Uppercase.Uppercase.prototype */ {
@@ -47,7 +52,13 @@ const Uppercase = hoc((config, Wrapped) => kind({
 			if (!preserveCase && React.Children.count(children) === 1) {
 				const content = React.Children.toArray(children)[0];
 				if (typeof content == 'string') {
-					return toUpperCase(content);
+					if (config.wordCase) {
+						return toWordCase(content);
+					} else if (config.sentenceCase) {
+						return toCapitalized(content);
+					} else {
+						return toUpperCase(content);
+					}
 				}
 			}
 			return children;

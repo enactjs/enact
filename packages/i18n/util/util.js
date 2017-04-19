@@ -26,9 +26,37 @@ const isRtlText = function (str) {
 	return false;
 };
 
+/**
+ * Capitalizes the first letter of a given string (locale aware).
+ *
+ * @method
+ * @memberof i18n/util
+ * @param {String} str - The string to capitalize.
+ * @returns {String} The capitalized string.
+ * @public
+ */
+const toCapitalized = function (str) {
+	return toUpperCase(str.slice(0, 1)) + str.slice(1);
+};
+
+/**
+ * Capitalizes the every word in a string. Words are separated by spaces, not necessarily
+ * work-breaks (locale aware).
+ *
+ * @method
+ * @memberof i18n/util
+ * @param {String} str - The string to capitalize.
+ * @returns {String} The word-cased string.
+ * @public
+ */
+const toWordCase = (str) => {
+	return str.split(' ').map(toCapitalized).join(' ');
+};
 
 export {
+	toCapitalized,
 	isRtlText,
 	toLowerCase,
-	toUpperCase
+	toUpperCase,
+	toWordCase
 };
