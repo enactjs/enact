@@ -19,8 +19,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/ProgressBar` to position correctly with other components nearby
 - `moonstone/Panels` breadcrumb to no longer have a horizontal line above it
 - `moonstone/Transition` now measures itself when the CPU is idle.
-- `Moonstone.ttf` font to include new icons
 - `moonstone/ExpandableInput` property `onInputChange` is fired as `onChange`. `onInputChange` is deprecated and will be removed in a future update.
+- `Moonstone.ttf` font to include new icons
 - `moonstone/Icon` to reference additional icons
 
 ### Fixed
