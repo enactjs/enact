@@ -112,10 +112,10 @@ const forwardPlayButtonClick = forward('onPlayButtonClick');
  *
  * @typedef {Object} playbackRateHash
  * @memberof moonstone/VideoPlayer
- * @property {Number[]} fastForward - An array of playback rates when media fast forwards
- * @property {Number[]} rewind - An array of playback rates when media rewinds
- * @property {Number[]} slowForward - An array of playback rates when media slow-forwards
- * @property {Number[]} slowRewind - An array of playback rates when media slow-rewinds
+ * @property {String[]} fastForward - An array of playback rates when media fast forwards
+ * @property {String[]} rewind - An array of playback rates when media rewinds
+ * @property {String[]} slowForward - An array of playback rates when media slow-forwards
+ * @property {String[]} slowRewind - An array of playback rates when media slow-rewinds
  *
  * @public
  */
@@ -355,10 +355,10 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		playbackRateHash: PropTypes.shape({
-			fastForward: PropTypes.arrayOf(PropTypes.number),
-			rewind: PropTypes.arrayOf(PropTypes.number),
-			slowForward: PropTypes.arrayOf(PropTypes.number),
-			slowRewind: PropTypes.arrayOf(PropTypes.number)
+			fastForward: PropTypes.arrayOf(PropTypes.string),
+			rewind: PropTypes.arrayOf(PropTypes.string),
+			slowForward: PropTypes.arrayOf(PropTypes.string),
+			slowRewind: PropTypes.arrayOf(PropTypes.string)
 		}),
 
 		/**
