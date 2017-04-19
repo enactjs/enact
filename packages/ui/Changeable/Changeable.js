@@ -10,6 +10,7 @@ import {forProp, forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {cap} from '@enact/core/util';
 import React from 'react';
+import PropTypes from 'prop-types';
 import warning from 'warning';
 
 /**
@@ -66,7 +67,7 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @type {Function}
 			 * @public
 			 */
-			[change]: React.PropTypes.func,
+			[change]: PropTypes.func,
 
 			/**
 			 * Default value applied at construction when the value prop is `undefined` or `null`.
@@ -74,7 +75,7 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @type {*}
 			 * @public
 			 */
-			[defaultPropKey]: React.PropTypes.any,
+			[defaultPropKey]: PropTypes.any,
 
 			/**
 			 * Current value. When set at construction, the component is considered "controlled" and
@@ -85,7 +86,7 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @type {*}
 			 * @public
 			 */
-			[prop]: React.PropTypes.any,
+			[prop]: PropTypes.any,
 
 			/**
 			 * Controls whether the component is disabled.
@@ -94,7 +95,7 @@ const Changeable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @default false
 			 * @public
 			 */
-			disabled: React.PropTypes.bool
+			disabled: PropTypes.bool
 		}
 
 		static defaultProps = {

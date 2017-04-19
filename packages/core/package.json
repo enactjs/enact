@@ -28,10 +28,11 @@
     "extends": "enact/strict"
   },
   "dependencies": {
-    "react": "~15.4.0",
-    "react-addons-update": "~15.4.0",
-    "react-dom": "~15.4.0",
+    "classnames": "~2.2.5",
+    "prop-types": "~15.5.0",
     "ramda": "~0.22.1",
-    "classnames": "~2.2.5"
+    "react": "~15.5.0",
+    "react-addons-update": "~15.5.0",
+    "react-dom": "~15.5.0"
   }
 }

@@ -1,5 +1,6 @@
 import kind from '@enact/core/kind';
 import React from 'react';
+import PropTypes from 'prop-types';
 import Resizable from '@enact/ui/Resizable';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import Transition from '@enact/ui/Transition';
@@ -23,7 +24,7 @@ const ExpandableTransitionContainerBase = kind({
 		 * @default true
 		 * @private
 		 */
-		visible: React.PropTypes.bool
+		visible: PropTypes.bool
 	},
 
 	render (props) {

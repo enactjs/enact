@@ -1,6 +1,7 @@
 import kind from '@enact/core/kind';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import {SliderFactory} from '../Slider';
 
@@ -27,7 +28,7 @@ const MediaSliderBase = kind({
 		 * @default 0
 		 * @public
 		 */
-		backgroundProgress: React.PropTypes.number,
+		backgroundProgress: PropTypes.number,
 
 		/**
 		 * When `true`, the component is shown as disabled and does not generate events
@@ -36,7 +37,7 @@ const MediaSliderBase = kind({
 		 * @default false
 		 * @public
 		 */
-		disabled: React.PropTypes.bool,
+		disabled: PropTypes.bool,
 
 		/**
 		 * The handler to run when the value is changed.
@@ -46,7 +47,7 @@ const MediaSliderBase = kind({
 		 * @param {Number} event.value Value of the slider
 		 * @public
 		 */
-		onChange: React.PropTypes.func,
+		onChange: PropTypes.func,
 
 		/**
 		 * The value of the slider.
@@ -55,7 +56,7 @@ const MediaSliderBase = kind({
 		 * @default 0
 		 * @public
 		 */
-		value: React.PropTypes.number
+		value: PropTypes.number
 	},
 
 	render: (props) => (

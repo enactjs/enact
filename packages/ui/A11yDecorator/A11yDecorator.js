@@ -7,6 +7,7 @@
 import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 /**
  * Creates accessibility message for applying specific aria attribute.

@@ -1,6 +1,7 @@
 import kind from '@enact/core/kind';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import FeedbackIcon from './FeedbackIcon';
 import states from './FeedbackIcons.js';
@@ -20,7 +21,7 @@ const FeedbackBase = kind({
 	name: 'Feedback',
 
 	propTypes: /** @lends moonstone/VideoPlayer.Feedback.prototype */ {
-		children: React.PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.number]),
+		children: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 
 		/**
 		 * Refers to one of the following possible media playback states.
@@ -35,7 +36,7 @@ const FeedbackBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		playbackState: React.PropTypes.oneOf(Object.keys(states)),
+		playbackState: PropTypes.oneOf(Object.keys(states)),
 
 		/**
 		 * If the current `playbackState` allows this component's visibility to be changed,
@@ -47,7 +48,7 @@ const FeedbackBase = kind({
 		 * @default true
 		 * @public
 		 */
-		visible: React.PropTypes.bool
+		visible: PropTypes.bool
 	},
 
 	defaultProps: {

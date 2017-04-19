@@ -1,5 +1,6 @@
 import hoc from '@enact/core/hoc';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const ExpandablePickerDecorator = hoc((config, Wrapped) => {
 
@@ -7,8 +8,8 @@ const ExpandablePickerDecorator = hoc((config, Wrapped) => {
 		static displayName = 'ExpandablePickerDecorator'
 
 		static propTypes = {
-			open: React.PropTypes.bool,
-			value: React.PropTypes.number
+			open: PropTypes.bool,
+			value: PropTypes.number
 		}
 
 		constructor (props) {
