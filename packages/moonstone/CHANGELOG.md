@@ -33,6 +33,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Popup` background opacity
 - `moonstone/Marquee` to recalculate properly when its contents change
 - `moonstone/TimePicker` to display time in correct order
+- `moonstone/Scroller` to prefer spotlight navigation to its internal components
 
 ## [1.0.0] - 2017-03-31
 

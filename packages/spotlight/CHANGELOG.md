@@ -8,6 +8,10 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 - `spotlight/Spotlight` method `getSpottableDescendants()`
 
+### Changed
+
+- `spotlight/SpotlightContainerDecorator` to have no default for `spotlightRestrict`
+
 ### Fixed
 
 - `spotlight/Spotlight` to consider nested containers when adjusting focus

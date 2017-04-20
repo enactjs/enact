@@ -86,7 +86,8 @@ const defaultConfig = {
  *		}
  *	});
  *
- * @param  {Object} defaultConfig Set of default configuration parameters
+ * @param  {Object}    defaultConfig  Set of default configuration parameters. Additional parameters
+ *                                    are passed as configuration to {@link spotlight/Spotlight.set}
  * @param  {Function} Higher-order component
  *
  * @returns {Function} SpotlightContainerDecorator
@@ -139,7 +140,6 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * indicates there should be no restrictions when 5-way navigating the container.
 			 *
 			 * @type {String}
-			 * @default 'none'
 			 * @public
 			 */
 			spotlightRestrict: PropTypes.oneOf(['none', 'self-first', 'self-only'])
@@ -147,8 +147,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static defaultProps = {
 			spotlightDisabled: false,
-			spotlightMuted: false,
-			spotlightRestrict: 'none'
+			spotlightMuted: false
 		}
 
 		constructor (props) {
@@ -191,7 +190,11 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentWillMount () {
 			const selector = '[data-container-id="' + this.state.id + '"]:not([data-container-disabled="true"]) .' + spottableClass,
-				cfg = Object.assign({}, containerConfig, {selector, navigableFilter: this.navigableFilter, restrict: this.props.spotlightRestrict});
+				cfg = Object.assign({}, containerConfig, {selector, navigableFilter: this.navigableFilter});
+
+			if (this.props.spotlightRestrict) {
+				cfg.restrict = this.props.spotlightRestrict;
+			}
 
 			Spotlight.set(this.state.id, cfg);
 		}
