@@ -15,6 +15,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+- `moonstone/VirtualList.VirtualList and `moonstone/VirtualList.VirtualGridList` not to render when `dataSize` prop is changed beyond the visible area
 - `moonstone/Slider` colors and sizing to match the latest designs
 - `moonstone/ProgressBar` to position correctly with other components nearby
 - `moonstone/Panels` breadcrumb to no longer have a horizontal line above it
