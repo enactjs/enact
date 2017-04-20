@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
 import css from './Divider.less';
 import {MarqueeDecorator} from '../Marquee';
 
-const MarqueeH3 = Uppercase({case: 'word'}, MarqueeDecorator('h3'));
+const MarqueeH3 = Uppercase(MarqueeDecorator('h3'));
 
 /**
  * {@link moonstone/Divider.Divider} is a simply styled component that may be used as a separator
@@ -28,6 +28,15 @@ const DividerBase = kind({
 
 	propTypes: /** @lends moonstone/Divider.Divider.prototype */ {
 		/**
+		 * The children string will have each word capitalized.
+		 *
+		 * @type {Boolean}
+		 * @default 'word'
+		 * @public
+		 */
+		casing: PropTypes.string,
+
+		/**
 		 * The content of the divider. A divider with no children (text content) will render simply
 		 * as a horizontal line, with even spacing above and below.
 		 *
@@ -41,6 +50,7 @@ const DividerBase = kind({
 		 *
 		 * @type {Boolean}
 		 * @default false
+		 * @deprecated use `casing`
 		 * @public
 		 */
 		preserveCase: PropTypes.bool,
@@ -66,6 +76,7 @@ const DividerBase = kind({
 	},
 
 	defaultProps: {
+		casing: 'word',
 		preserveCase: false,
 		spacing: 'normal'
 	},

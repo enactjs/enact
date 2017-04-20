@@ -32,10 +32,10 @@ storiesOf('TooltipDecorator')
 		() => (
 			<div style={{textAlign: 'center'}}>
 				<Button
+					tooltipCasing={select('tooltipCasing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
 					tooltipDelay={number('tooltipDelay', 500)}
 					tooltipText={text('tooltipText', 'tooltip!')}
 					tooltipPosition={select('tooltipPosition', prop.tooltipPosition, 'above')}
-					tooltipPreserveCase={nullify(boolean('tooltipPreserveCase', false))}
 					tooltipWidth={number('tooltipWidth')}
 				>
 					hello

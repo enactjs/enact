@@ -228,7 +228,7 @@ const ButtonFactory = factory(css => {
 	/**
 	 * {@link moonstone/Button.Button} is a Button with Moonstone styling, Spottable and
 	 * Pressable applied.  If the Button's child component is text, it will be uppercased unless
-	 * `preserveCase` is set.
+	 * `casing` is set.
 	 *
 	 * Usage:
 	 * ```

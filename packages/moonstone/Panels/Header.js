@@ -26,6 +26,15 @@ const HeaderBase = kind({
 
 	propTypes: /** @lends moonstone/Panels.Header.prototype */ {
 		/**
+		 * Configures the mode of uppercasing for the [`title`]{@link moonstone/Panels.Header#title}
+		 *
+		 * @type {Boolean}
+		 * @default 'upper'
+		 * @public
+		 */
+		casing: PropTypes.string,
+
+		/**
 		 * Children provided are added to the header-components area. A space for controls which
 		 * live in the header, apart from the body of the panel view.
 		 *
@@ -53,6 +62,7 @@ const HeaderBase = kind({
 		 *
 		 * @type {Boolean}
 		 * @default false
+		 * @deprecated replaced by `casing`
 		 * @public
 		 */
 		preserveCase: PropTypes.bool,
@@ -95,6 +105,7 @@ const HeaderBase = kind({
 	},
 
 	defaultProps: {
+		casing: 'upper',
 		fullBleed: false,
 		preserveCase: false,
 		// titleAbove: '00',
@@ -122,7 +133,7 @@ const HeaderBase = kind({
 		}
 	},
 
-	render: ({children, direction, preserveCase, subTitleBelowComponent, title, /* titleAbove, */titleBelowComponent, type, ...rest}) => {
+	render: ({casing, children, direction, preserveCase, subTitleBelowComponent, title, /* titleAbove, */titleBelowComponent, type, ...rest}) => {
 		delete rest.fullBleed;
 		delete rest.subTitleBelow;
 		delete rest.titleBelow;
@@ -131,7 +142,7 @@ const HeaderBase = kind({
 			case 'compact': return (
 				<header aria-label={title} {...rest}>
 					<MarqueeText className={css.headerCell} marqueeOn="hover" forceDirection={direction}>
-						<UppercaseH1 className={css.title} preserveCase={preserveCase}>{title}</UppercaseH1>
+						<UppercaseH1 casing={casing} className={css.title} preserveCase={preserveCase}>{title}</UppercaseH1>
 						{titleBelowComponent}
 					</MarqueeText>
 					<nav className={css.headerComponents}>{children}</nav>
@@ -149,7 +160,7 @@ const HeaderBase = kind({
 			// );
 			case 'standard': return (
 				<header aria-label={title} {...rest}>
-					<HeaderH1 className={css.title} preserveCase={preserveCase} marqueeOn="hover">
+					<HeaderH1 casing={casing} className={css.title} preserveCase={preserveCase} marqueeOn="hover">
 						{title}
 					</HeaderH1>
 					<div className={css.headerRow}>

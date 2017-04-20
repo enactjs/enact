@@ -24,10 +24,10 @@ storiesOf('Button')
 			<Button
 				onClick={action('onClick')}
 				backgroundOpacity={nullify(select('backgroundOpacity', prop.backgroundOpacity))}
+				casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
 				disabled={boolean('disabled', ButtonBase.defaultProps.disabled)}
 				icon={nullify(select('icon', prop.icons))}
 				minWidth={nullify(boolean('minWidth', ButtonBase.defaultProps.minWidth))}
-				preserveCase={boolean('preserveCase', false)}
 				selected={nullify(boolean('selected', false))}
 				small={nullify(boolean('small', ButtonBase.defaultProps.small))}
 			>
