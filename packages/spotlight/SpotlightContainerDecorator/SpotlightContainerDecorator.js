@@ -86,7 +86,8 @@ const defaultConfig = {
  *		}
  *	});
  *
- * @param  {Object} defaultConfig Set of default configuration parameters
+ * @param  {Object}    defaultConfig  Set of default configuration parameters. Additional parameters
+ *                                    are passed as configuration to {@link spotlight/Spotlight.set}
  * @param  {Function} Higher-order component
  *
  * @returns {Function} SpotlightContainerDecorator
