@@ -9,7 +9,7 @@ storiesOf('Divider')
 		' ',
 		'Basic usage of divider',
 		() => (
-			<Divider casing={select('casing', ['preserve', 'sentence', 'word', 'upper'])}>
+			<Divider casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'word')}>
 				{text('children', 'divider text')}
 			</Divider>
 		)
