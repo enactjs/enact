@@ -6,6 +6,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Added
 
+- `spotlight/SpotlightRootDecorator` config option: `noAutoFocus` to support prevention of setting automatic focus after render
 - `spotlight/Spotlight` method `getSpottableDescendants()`
 
 ### Fixed
