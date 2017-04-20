@@ -40,8 +40,8 @@ const toCapitalized = function (str) {
 };
 
 /**
- * Capitalizes the every word in a string. Words are separated by spaces, not necessarily
- * work-breaks (locale aware).
+ * Capitalizes every word in a string. Words are separated by spaces, not necessarily
+ * word-breaks (locale aware).
  *
  * @method
  * @memberof i18n/util

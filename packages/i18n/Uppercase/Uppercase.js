@@ -20,7 +20,7 @@ import {toCapitalized, toUpperCase, toWordCase} from '../util';
  */
 const defaultConfig = {
 	/**
-	 * Configures the mode of uppercasing that should be preformed. Options are:
+	 * Configures the mode of uppercasing that should be performed. Options are:
 	 *   'all' to capitalize all characters.
 	 *   'word' to capitalize the first letter of each word.
 	 *   'sentence' to capitalize the first letter of the string.
