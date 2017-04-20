@@ -87,7 +87,7 @@ const PanelBase = kind({
 
 	defaultProps: {
 		hideChildren: false,
-		noDefaultFocus: false
+		noAutoFocus: false
 	},
 
 	styles: {
@@ -99,7 +99,7 @@ const PanelBase = kind({
 		// In order to spot the body components, we defer spotting until !hideChildren. If the Panel
 		// opts out of hideChildren support by explicitly setting it to false, it'll spot on first
 		// render.
-		spotOnRender: ({hideChildren, noAutoFocus}) => !hideChildren && !noAutoFocus ? spotPanel : null,
+		spotOnRender: ({hideChildren, noAutoFocus}) => hideChildren || noAutoFocus ? null : spotPanel,
 		children: ({children, hideChildren}) => hideChildren ? null : children,
 		bodyClassName: ({hideChildren, styler}) => styler.join({
 			body: true,
@@ -113,6 +113,7 @@ const PanelBase = kind({
 
 	render: ({bodyClassName, children, header, headerId, spotOnRender, ...rest}) => {
 		delete rest.hideChildren;
+		delete rest.noAutoFocus;
 
 		return (
 			<article role="region" {...rest} aria-labelledby={headerId} ref={spotOnRender}>
