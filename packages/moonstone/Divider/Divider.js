@@ -12,7 +12,7 @@ import PropTypes from 'prop-types';
 import css from './Divider.less';
 import {MarqueeDecorator} from '../Marquee';
 
-const MarqueeH3 = Uppercase({wordCase: true}, MarqueeDecorator('h3'));
+const MarqueeH3 = Uppercase({case: 'word'}, MarqueeDecorator('h3'));
 
 /**
  * {@link moonstone/Divider.Divider} is a simply styled component that may be used as a separator

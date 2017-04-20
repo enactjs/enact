@@ -11,9 +11,26 @@ import PropTypes from 'prop-types';
 
 import {toCapitalized, toUpperCase, toWordCase} from '../util';
 
+/**
+ * Default config for {@link i18n/Uppercase.Uppercase}.
+ *
+ * @memberof i18n/Uppercase
+ * @hocconfig
+ * @public
+ */
 const defaultConfig = {
-	sentenceCase: false,
-	wordCase: false
+	/**
+	 * Configures the mode of uppercasing that should be preformed. Options are:
+	 *   'all' to capitalize all characters.
+	 *   'word' to capitalize the first letter of each word.
+	 *   'sentence' to capitalize the first letter of the string.
+	 *
+	 * @type {String}
+	 * @default 'all'
+	 * @memberof i18n/Uppercase.defaultConfig
+	 * @public
+	 */
+	case: 'all'
 };
 
 /**
@@ -52,12 +69,13 @@ const Uppercase = hoc(defaultConfig, (config, Wrapped) => kind({
 			if (!preserveCase && React.Children.count(children) === 1) {
 				const content = React.Children.toArray(children)[0];
 				if (typeof content == 'string') {
-					if (config.wordCase) {
-						return toWordCase(content);
-					} else if (config.sentenceCase) {
-						return toCapitalized(content);
-					} else {
-						return toUpperCase(content);
+					switch (config.case) {
+						case 'word':
+							return toWordCase(content);
+						case 'sentence':
+							return toCapitalized(content);
+						default:
+							return toUpperCase(content);
 					}
 				}
 			}
