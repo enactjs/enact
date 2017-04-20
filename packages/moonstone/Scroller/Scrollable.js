@@ -848,6 +848,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			) : null
 		)
 
+		handleScroll = () => {
+			if (!this.animator.isAnimating() && this.childRef && this.childRef.containerRef) {
+				this.childRef.containerRef.scrollTop = this.scrollTop;
+				this.childRef.containerRef.scrollLeft = this.scrollLeft;
+			}
+		}
+
 		render () {
 			const
 				props = Object.assign({}, this.props),
@@ -876,7 +883,14 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				<div ref={this.initContainerRef} className={scrollableClasses} style={style}>
 					{vscrollbar}
 					{hscrollbar}
-					<Wrapped {...props} {...this.eventHandlers} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={css.container} />
+					<Wrapped
+						{...props}
+						{...this.eventHandlers}
+						cbScrollTo={this.scrollTo}
+						className={css.container}
+						onScroll={this.handleScroll}
+						ref={this.initChildRef}
+					/>
 				</div>
 			);
 		}
