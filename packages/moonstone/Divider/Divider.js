@@ -30,11 +30,12 @@ const DividerBase = kind({
 		/**
 		 * The children string will have each word capitalized.
 		 *
-		 * @type {Boolean}
+		 * @see i18n/Uppercase#casing
+		 * @type {String}
 		 * @default 'word'
 		 * @public
 		 */
-		casing: PropTypes.string,
+		casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence']),
 
 		/**
 		 * The content of the divider. A divider with no children (text content) will render simply

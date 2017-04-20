@@ -26,13 +26,14 @@ const HeaderBase = kind({
 
 	propTypes: /** @lends moonstone/Panels.Header.prototype */ {
 		/**
-		 * Configures the mode of uppercasing for the [`title`]{@link moonstone/Panels.Header#title}
+		 * Configures the mode of uppercasing for the [`title`]{@link moonstone/Panels.Header#title}.
 		 *
-		 * @type {Boolean}
+		 * @see i18n/Uppercase#casing
+		 * @type {String}
 		 * @default 'upper'
 		 * @public
 		 */
-		casing: PropTypes.string,
+		casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence']),
 
 		/**
 		 * Children provided are added to the header-components area. A space for controls which

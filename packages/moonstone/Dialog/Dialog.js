@@ -45,14 +45,14 @@ const DialogBase = kind({
 		]),
 
 		/**
-		 * Configures the mode of uppercasing of the `title` that should be performed
+		 * Configures the mode of uppercasing of the `title` that should be performed.
 		 *
 		 * @see i18n/Uppercase#casing
 		 * @type {String}
 		 * @default 'upper'
 		 * @public
 		 */
-		casing: PropTypes.string,
+		casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence']),
 
 		/**
 		 * The element(s) to be displayed in the body of the Dialog.

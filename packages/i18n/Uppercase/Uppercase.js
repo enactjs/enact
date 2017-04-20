@@ -32,7 +32,7 @@ const Uppercase = hoc((config, Wrapped) => kind({
 		/**
 		 * Configures the mode of uppercasing that should be performed. Options are:
 		 *   'upper' to capitalize all characters.
-		 *   'preserve' to maintain the original casing
+		 *   'preserve' to maintain the original casing.
 		 *   'word' to capitalize the first letter of each word.
 		 *   'sentence' to capitalize the first letter of the string.
 		 *
@@ -40,7 +40,7 @@ const Uppercase = hoc((config, Wrapped) => kind({
 		 * @default 'upper'
 		 * @public
 		 */
-		casing: PropTypes.string,
+		casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence']),
 
 		/**
 		 * The children string will be uppercased, unless this is set to true.
