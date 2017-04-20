@@ -73,11 +73,21 @@ const PanelBase = kind({
 		 * @default false
 		 * @public
 		 */
-		hideChildren: PropTypes.bool
+		hideChildren: PropTypes.bool,
+
+		/**
+		 * When `true`, the contents of the Panel will not receive spotlight focus after being rendered.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		noAutoFocus: PropTypes.bool
 	},
 
 	defaultProps: {
-		hideChildren: false
+		hideChildren: false,
+		noDefaultFocus: false
 	},
 
 	styles: {
@@ -89,7 +99,7 @@ const PanelBase = kind({
 		// In order to spot the body components, we defer spotting until !hideChildren. If the Panel
 		// opts out of hideChildren support by explicitly setting it to false, it'll spot on first
 		// render.
-		spotOnRender: ({hideChildren}) => hideChildren ? null : spotPanel,
+		spotOnRender: ({hideChildren, noAutoFocus}) => !hideChildren && !noAutoFocus ? spotPanel : null,
 		children: ({children, hideChildren}) => hideChildren ? null : children,
 		bodyClassName: ({hideChildren, styler}) => styler.join({
 			body: true,
