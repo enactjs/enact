@@ -13,6 +13,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Image` support for `onLoad` and `onError` events.
 - `moonstone/VirtualList.GridListImageItem` prop `placeholder`
 - `moonstone/Divider` property `preserveCase` to display text without capitalizing it
+- `moonstone/Marquee` property `rtl` to set directionality to right-to-left
 
 ### Changed
 

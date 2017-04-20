@@ -6,7 +6,6 @@
  */
 
 import kind from '@enact/core/kind';
-import {isRtlText} from '@enact/i18n/util';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -105,6 +104,14 @@ const MarqueeBase = kind({
 		overflow: PropTypes.oneOf(['clip', 'ellipsis']),
 
 		/**
+		 * `true` if the directionality of the content is right-to-left
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		rtl: PropTypes.bool,
+
+		/**
 		 * Speed of marquee animation in pixels/second.
 		 *
 		 * @type {Number}
@@ -120,9 +127,7 @@ const MarqueeBase = kind({
 
 	computed: {
 		clientClassName: ({animating}) => animating ? animated : css.text,
-		clientStyle: ({animating, centered, children, distance, forceDirection, overflow, speed}, {rtl: contextRtl}) => {
-			let rtl = forceDirection ? forceDirection === 'rtl' : isRtlText(children);
-
+		clientStyle: ({animating, centered, distance, forceDirection, overflow, rtl, speed}, {rtl: contextRtl}) => {
 			const overrideRtl = forceDirection ? true : contextRtl !== rtl;
 
 			// We only attempt to set the textAlign of this control if the locale's directionality
