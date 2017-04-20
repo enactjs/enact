@@ -46,16 +46,6 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 
 		static propTypes = /** @lends moonstone/TooltipDecorator.TooltipDecorator.prototype */ {
 			/**
-			 * Configures the mode of uppercasing of the `tooltipText` that should be performed.
-			 *
-			 * @see i18n/Uppercase#casing
-			 * @type {String}
-			 * @default 'upper'
-			 * @public
-			 */
-			casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence']),
-
-			/**
 			 * When `true`, the component is shown as disabled but will show a tooltip, if present.
 			 *
 			 * @type {Boolean}
@@ -63,6 +53,16 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 			 * @public
 			 */
 			disabled: PropTypes.bool,
+
+			/**
+			 * Configures the mode of uppercasing of the `tooltipText` that should be performed.
+			 *
+			 * @see i18n/Uppercase#casing
+			 * @type {String}
+			 * @default 'upper'
+			 * @public
+			 */
+			tooltipCasing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence']),
 
 			/**
 			 * Number of milliseconds to wait before showing tooltip when hover.
