@@ -23,6 +23,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` to no longer render its `children` in multiple places
 - `moonstone/Button` text color when used on a neutral (light) background in some cases
 - `moonstone/Popup` background opacity
+- `moonstone/Scroller` to prefer spotlight navigation to its internal components
 
 ## [1.0.0] - 2017-03-31
 
