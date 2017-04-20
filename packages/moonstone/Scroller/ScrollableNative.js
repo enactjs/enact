@@ -758,13 +758,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			delete props.verticalScrollbar;
 
 			return (
-				(isHorizontalScrollbarVisible || isVerticalScrollbarVisible) ? (
-					<div ref={this.initContainerRef} className={scrollableClasses} style={style}>
-						{vscrollbar}
-						{hscrollbar}
-						<Wrapped {...props} {...this.eventHandlers} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={css.container} />
-					</div>
-				) : <Wrapped {...props} {...this.eventHandlers} cbScrollTo={this.scrollTo} className={scrollableClasses} ref={this.initChildRef} style={style} />
+				<div ref={this.initContainerRef} className={scrollableClasses} style={style}>
+					{vscrollbar}
+					{hscrollbar}
+					<Wrapped {...props} {...this.eventHandlers} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={css.container} />
+				</div>
 			);
 		}
 	};
