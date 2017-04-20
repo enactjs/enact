@@ -77,6 +77,7 @@ const handledCustomMediaEventsMap = {
 };
 
 // provide forwarding of events on media controls
+const forwardControlsAvailable = forward('onControlsAvailable');
 const forwardBackwardButtonClick = forward('onBackwardButtonClick');
 const forwardForwardButtonClick = forward('onForwardButtonClick');
 const forwardJumpBackwardButtonClick = forward('onJumpBackwardButtonClick');
@@ -99,33 +100,26 @@ const forwardPlayButtonClick = forward('onPlayButtonClick');
  * @public
  */
 
-
 /**
- * Mapping of playback rate names to playback rate values that may be set.
- * ```
- * {
- *	fastForward: ['2', '4', '8', '16'],
- *	rewind: ['-2', '-4', '-8', '-16'],
- *	slowForward: ['1/4', '1/2', '1'],
- *	slowRewind: ['-1/2', '-1']
- * }
- * ```
+ * A set of playback rates when media fast forwards, rewinds, slow-fowards, or slow-rewinds.
  *
- * @type {Object}
- * @default {
- *	fastForward: ['2', '4', '8', '16'],
- *	rewind: ['-2', '-4', '-8', '-16'],
- *	slowForward: ['1/4', '1/2'],
- *	slowRewind: ['-1/2', '-1']
- * }
- * @private
+ * The number used for each operation is proportional to the normal playing speed, 1. If the rate
+ * is less than 1, it will play slower than normal speed, and, if it is larger than 1, it will play
+ * faster. If it is negative, it will play backward.
+ *
+ * The order of numbers represents the incremental order of rates that will be used for each
+ * operation. Note that all rates are expressed as strings and fractions are used rather than decimals
+ * (e.g.: `'1/2'`, not `'0.5'`).
+ *
+ * @typedef {Object} playbackRateHash
+ * @memberof moonstone/VideoPlayer
+ * @property {String[]} fastForward - An array of playback rates when media fast forwards
+ * @property {String[]} rewind - An array of playback rates when media rewinds
+ * @property {String[]} slowForward - An array of playback rates when media slow-forwards
+ * @property {String[]} slowRewind - An array of playback rates when media slow-rewinds
+ *
+ * @public
  */
-const playbackRateHash = {
-	fastForward: ['2', '4', '8', '16'],
-	rewind: ['-2', '-4', '-8', '-16'],
-	slowForward: ['1/4', '1/2'],
-	slowRewind: ['-1/2', '-1']
-};
 
 /**
  * A player for video {@link moonstone/VideoPlayer.VideoPlayerBase}.
@@ -294,6 +288,16 @@ const VideoPlayerBase = class extends React.Component {
 		onBackwardButtonClick: PropTypes.func,
 
 		/**
+		 * Function executed when the player's controls change availability, whether they are shown
+		 * or hidden. The current status is sent as the first argument in an object with a key
+		 * `available` which will be either true or false. `onControlsAvailable({available: true})`
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onControlsAvailable: PropTypes.func,
+
+		/**
 		 * Function executed when the user clicks the Forward button. Is passed
 		 * a {@link moonstone/VideoPlayer.videoStatus} as the first argument.
 		 *
@@ -338,6 +342,25 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		pauseIcon: PropTypes.string,
+
+		/**
+		 * Mapping of playback rate names to playback rate values that may be set.
+		 *
+		 * @type {moonstone/VideoPlayer.playbackRateHash}
+		 * @default {
+		 *	fastForward: ['2', '4', '8', '16'],
+		 *	rewind: ['-2', '-4', '-8', '-16'],
+		 *	slowForward: ['1/4', '1/2'],
+		 *	slowRewind: ['-1/2', '-1']
+		 * }
+		 * @public
+		 */
+		playbackRateHash: PropTypes.shape({
+			fastForward: PropTypes.arrayOf(PropTypes.string),
+			rewind: PropTypes.arrayOf(PropTypes.string),
+			slowForward: PropTypes.arrayOf(PropTypes.string),
+			slowRewind: PropTypes.arrayOf(PropTypes.string)
+		}),
 
 		/**
 		 * A string which is sent to the `play` icon of the player controls. This can be anything
@@ -408,6 +431,12 @@ const VideoPlayerBase = class extends React.Component {
 		noRateButtons: false,
 		noSlider: false,
 		pauseIcon: 'pause',
+		playbackRateHash: {
+			fastForward: ['2', '4', '8', '16'],
+			rewind: ['-2', '-4', '-8', '-16'],
+			slowForward: ['1/4', '1/2'],
+			slowRewind: ['-1/2', '-1']
+		},
 		playIcon: 'play',
 		titleHideDelay: 4000
 	}
@@ -574,6 +603,7 @@ const VideoPlayerBase = class extends React.Component {
 
 	showControls = () => {
 		this.startDelayedTitleHide();
+		forwardControlsAvailable({available: true}, this.props);
 		this.setState({
 			bottomControlsVisible: true,
 			titleVisible: true
@@ -582,6 +612,7 @@ const VideoPlayerBase = class extends React.Component {
 
 	hideControls = () => {
 		this.stopDelayedTitleHide();
+		forwardControlsAvailable({available: false}, this.props);
 		this.setState({bottomControlsVisible: false, more: false});
 	}
 
@@ -857,7 +888,7 @@ const VideoPlayerBase = class extends React.Component {
 	 * @private
 	 */
 	selectPlaybackRates = (cmd) => {
-		this.playbackRates = playbackRateHash[cmd];
+		this.playbackRates = this.props.playbackRateHash[cmd];
 	}
 
 	/**
@@ -1082,11 +1113,13 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.autoCloseTimeout;
 		delete rest.feedbackHideDelay;
 		delete rest.jumpBy;
+		delete rest.onControlsAvailable;
 		delete rest.onBackwardButtonClick;
 		delete rest.onForwardButtonClick;
 		delete rest.onJumpBackwardButtonClick;
 		delete rest.onJumpForwardButtonClick;
 		delete rest.onPlayButtonClick;
+		delete rest.playbackRateHash;
 		delete rest.titleHideDelay;
 
 		// Remove the events we manually added so they aren't added twice or fail.

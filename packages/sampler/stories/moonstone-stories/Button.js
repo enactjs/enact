@@ -24,7 +24,7 @@ storiesOf('Button')
 			<Button
 				onClick={action('onClick')}
 				backgroundOpacity={nullify(select('backgroundOpacity', prop.backgroundOpacity))}
-				disabled={nullify(boolean('disabled', ButtonBase.defaultProps.disabled))}
+				disabled={boolean('disabled', ButtonBase.defaultProps.disabled)}
 				icon={nullify(select('icon', prop.icons))}
 				minWidth={nullify(boolean('minWidth', ButtonBase.defaultProps.minWidth))}
 				preserveCase={boolean('preserveCase', false)}

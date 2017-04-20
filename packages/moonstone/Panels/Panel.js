@@ -1,3 +1,4 @@
+import {forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -83,6 +84,16 @@ const PanelBase = kind({
 	styles: {
 		css,
 		className: 'panel'
+	},
+
+	handlers: {
+		onScroll: handle(
+			forward('onScroll'),
+			({currentTarget}) => {
+				currentTarget.scrollTop = 0;
+				currentTarget.scrollLeft = 0;
+			}
+		)
 	},
 
 	computed: {
