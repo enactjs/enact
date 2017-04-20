@@ -499,9 +499,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		cacheNode = (node) => {
-			const {forceDirection} = this.props;
 			this.node = node;
-			this.rtl = forceDirection ? forceDirection === 'rtl' : isRtlText(node.textContent);
+			const {forceDirection} = this.props;
+			const textContent = node && node.textContent;
+			this.rtl = forceDirection ? forceDirection === 'rtl' : isRtlText(textContent);
 		}
 
 		renderMarquee () {
