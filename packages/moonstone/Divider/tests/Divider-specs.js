@@ -29,11 +29,11 @@ describe('Divider Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should not capitalize content when preserveCase is true', function () {
+	it('should not capitalize content when casing is "preserve"', function () {
 		const content = 'uncapped';
 
 		const divider = mount(
-			<Divider preserveCase>{content}</Divider>
+			<Divider casing="preserve">{content}</Divider>
 		);
 
 		const expected = content;
