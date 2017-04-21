@@ -6,8 +6,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/Panels.Panel` prop and `moonstone/MoonstoneDecorator` config option: `noAutoFocus` to support prevention of setting automatic focus after render
 - `moonstone/VideoPlayer` props: `backwardIcon`, `forwardIcon`, `jumpBackwardIcon`, `jumpForwardIcon`, `pauseIcon`, and `playIcon` to support icon customization of the player
 - `moonstone/VideoPlayer` props `jumpButtonsDisabled` and `rateButtonsDisabled` for disabling the pairs of buttons when it's inappropriate for the playing media
+- `moonstone/VideoPlayer` property `playbackRateHash` to support custom playback rates
 - `moonstone/VideoPlayer` callback prop `onControlsAvailable` which fires when the players controls show or hide
 - `moonstone/Image` support for `onLoad` and `onError` events.
 - `moonstone/VirtualList.GridListImageItem` prop `placeholder`
@@ -19,6 +21,11 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/ProgressBar` to position correctly with other components nearby
 - `moonstone/Panels` breadcrumb to no longer have a horizontal line above it
 - `moonstone/Transition` now measures itself when the CPU is idle.
+- style for disabled opacity from 0.4 to 0.3
+- `moonstone/Button` colors for transparent and translucent background opacity when disabled
+- `moonstone/ExpandableInput` property `onInputChange` is fired as `onChange`. `onInputChange` is deprecated and will be removed in a future update.
+- `Moonstone.ttf` font to include new icons
+- `moonstone/Icon` to reference additional icons
 
 ### Fixed
 
@@ -29,6 +36,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Popup` background opacity
 - `moonstone/Marquee` to recalculate properly when its contents change
 - `moonstone/TimePicker` to display time in correct order
+- `moonstone/Scroller` to prefer spotlight navigation to its internal components
 
 ## [1.0.0] - 2017-03-31
 
