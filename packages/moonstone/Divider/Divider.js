@@ -28,7 +28,7 @@ const DividerBase = kind({
 
 	propTypes: /** @lends moonstone/Divider.Divider.prototype */ {
 		/**
-		 * The children string will have each word capitalized.
+		 * Configures how the childen string will be capitalized. By default, each word is capitalized.
 		 *
 		 * @see i18n/Uppercase#casing
 		 * @type {String}
