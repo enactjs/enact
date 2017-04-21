@@ -10,30 +10,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 /**
- * Creates accessibility message for applying specific aria attribute.
- *
- * @function
- * @memberof ui/A11yDecorator
- * @param  {String}	hint		hint label
- * @param  {String}	prehint		pre-hint label
- * @param  {String}	content		base content for appending label
- * @returns {String} result of combined label.
- * @public
- */
-const hintComposer = function (hint, prehint, content) {
-	const
-		prefix = content || null,
-		label = prehint && prefix && hint && (prehint + ' ' + prefix + ' ' + hint) ||
-			prehint && prefix && (prehint + ' ' + prefix) ||
-			prehint && hint && (prehint + ' ' + hint) ||
-			hint && prefix && (prefix + ' ' + hint) ||
-			prehint ||
-			hint ||
-			prefix;
-	return label;
-};
-
-/**
  * Default config for {@link ui/A11yDecorator.A11yDecorator}.
  *
  * @memberof ui/A11yDecorator.A11yDecorator
@@ -78,7 +54,16 @@ const A11yDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		computed: {
 			'aria-label': ({'aria-label': aria, accessibilityPreHint: prehint, accessibilityHint: hint, [prop]: content}) => {
 				if (!aria) {
-					return hintComposer(hint, prehint, content);
+					const
+						prefix = content || null,
+						label = prehint && prefix && hint && (prehint + ' ' + prefix + ' ' + hint) ||
+							prehint && prefix && (prehint + ' ' + prefix) ||
+							prehint && hint && (prehint + ' ' + hint) ||
+							hint && prefix && (prefix + ' ' + hint) ||
+							prehint ||
+							hint ||
+							null;
+					return label;
 				}
 				return aria;
 			}
@@ -96,4 +81,4 @@ const A11yDecorator = hoc(defaultConfig, (config, Wrapped) => {
 });
 
 export default A11yDecorator;
-export {A11yDecorator, hintComposer};
+export {A11yDecorator};
