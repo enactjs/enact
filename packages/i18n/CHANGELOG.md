@@ -2,6 +2,13 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `i18n/Uppercase` prop `casing` to control how the component should be uppercased
+- `i18n/util` methods `toCapitalized` and `toWordCase` to locale-aware uppercase strings
+
 ## [1.0.0] - 2017-03-31
 
 Updated iLib to 20151019-build-12.0-002-04
