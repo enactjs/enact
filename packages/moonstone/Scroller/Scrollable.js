@@ -78,6 +78,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			 *   `'topleft'`, `'topright'`, `'bottomleft'`, and `'bottomright'`.
 			 * - {index} - You can set an index of specific item. (`0` or positive integer)
 			 *   This option is available for only VirtualList kind.
+			 * - {node} - You can set a node to scroll
+			 * - {animate} - When `true`, scroll occurs with animation.
+			 *   Set it to `false`, if you want scrolling without animation.
+			 * - {focus} - Set it `true`, if you want the item to be focused after scroll.
+			 *   This option is only valid when you scroll by `index` or `node`.
 			 *
 			 * @example
 			 *	// If you set cbScrollTo prop like below;
@@ -509,7 +514,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		// scroll start/stop
 
-		start ({targetX, targetY, animate = true, silent = false, duration = animationDuration, indexToFocus}) {
+		start ({targetX, targetY, animate = true, silent = false, duration = animationDuration, indexToFocus, nodeToFocus}) {
 			const {scrollLeft, scrollTop} = this;
 			const bounds = this.getScrollBounds();
 
@@ -537,16 +542,17 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					targetX,
 					targetY,
 					duration,
-					indexToFocus
+					indexToFocus,
+					nodeToFocus
 				}));
 			} else {
 				this.scroll(targetX, targetY);
-				this.stop({indexToFocus});
+				this.stop({indexToFocus, nodeToFocus});
 			}
 		}
 
 		scrollAnimation = (animationInfo) => (curTime) => {
-			const {sourceX, sourceY, targetX, targetY, duration, indexToFocus} = animationInfo;
+			const {sourceX, sourceY, targetX, targetY, duration, indexToFocus, nodeToFocus} = animationInfo;
 			if (curTime < duration) {
 				this.scroll(
 					this.horizontalScrollability ? this.animator.timingFunction(sourceX, targetX, duration, curTime) : sourceX,
@@ -554,7 +560,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				);
 			} else {
 				this.scroll(targetX, targetY);
-				this.stop({indexToFocus});
+				this.stop({indexToFocus, nodeToFocus});
 			}
 		}
 
@@ -576,7 +582,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.doScrolling();
 		}
 
-		stop ({indexToFocus}) {
+		stop ({indexToFocus, nodeToFocus}) {
 			const bounds = this.getScrollBounds();
 
 			this.animator.stop();
@@ -584,8 +590,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.childRef.setContainerDisabled(false);
 			this.lastFocusedItem = null;
 			this.hideThumb(bounds);
-			if (indexToFocus !== null && typeof this.childRef.focusOnItem === 'function') {
-				this.childRef.focusOnItem(indexToFocus);
+			if (indexToFocus !== null && typeof this.childRef.focusByIndex === 'function') {
+				this.childRef.focusByIndex(indexToFocus);
+			}
+			if (nodeToFocus !== null && typeof this.childRef.focusOnNode === 'function') {
+				this.childRef.focusOnNode(nodeToFocus);
 			}
 			this.doScrollStop();
 		}
@@ -663,7 +672,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						targetX: (left !== null) ? left : this.scrollLeft,
 						targetY: (top !== null) ? top : this.scrollTop,
 						animate: opt.animate,
-						indexToFocus: !isNaN(opt.indexToFocus) ? opt.indexToFocus : null
+						indexToFocus: (opt.focus && typeof opt.index === 'number') ? opt.index : null,
+						nodeToFocus:  (opt.focus && opt.node instanceof Object && opt.node.nodeType === 1) ? opt.node : null
 					});
 				}
 			} else {

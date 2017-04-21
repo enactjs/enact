@@ -17,6 +17,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+- `moonstone/Scroller.Scrollable` to add `focus` option and remove `indexToFocus` in `scrollTo` method
 - `moonstone/Slider` colors and sizing to match the latest designs
 - `moonstone/ProgressBar` to position correctly with other components nearby
 - `moonstone/Panels` breadcrumb to no longer have a horizontal line above it

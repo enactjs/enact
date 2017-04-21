@@ -9,6 +9,7 @@
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import React, {Component, PropTypes} from 'react';
+import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import css from './Scroller.less';
@@ -162,6 +163,14 @@ class ScrollerBase extends Component {
 		}
 
 		return this.scrollPos;
+	}
+
+	focusOnNode = (node) => {
+		if (node) {
+			// setPointerMode to false since Spotlight prevents programmatically changing focus while in pointer mode
+			Spotlight.setPointerMode(false);
+			Spotlight.focus(node);
+		}
 	}
 
 	isVertical = () => (this.props.vertical !== 'hidden')

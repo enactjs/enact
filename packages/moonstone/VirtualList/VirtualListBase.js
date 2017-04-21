@@ -586,17 +586,20 @@ class VirtualListCore extends Component {
 		return (Math.ceil(curDataSize / dimensionToExtent) * primary.gridSize) - spacing;
 	}
 
-	focusOnItem = (index) => {
-		// We have to focus item async for now since list items are not yet ready when it reaches componentDid* lifecycle methods
+	focusByIndex = (index) => {
+		// We have to focus node async for now since list items are not yet ready when it reaches componentDid* lifecycle methods
 		setTimeout(() => {
 			const item = this.containerRef.querySelector(`[data-index='${index}'].spottable`);
-
-			if (item) {
-				// setPointerMode to false since Spotlight prevents programmatically changing focus while in pointer mode
-				Spotlight.setPointerMode(false);
-				Spotlight.focus(item);
-			}
+			this.focusOnNode(item);
 		}, 0);
+	}
+
+	focusOnNode = (node) => {
+		if (node) {
+			// setPointerMode to false since Spotlight prevents programmatically changing focus while in pointer mode
+			Spotlight.setPointerMode(false);
+			Spotlight.focus(node);
+		}
 	}
 
 	calculatePositionOnFocus = (item) => {
