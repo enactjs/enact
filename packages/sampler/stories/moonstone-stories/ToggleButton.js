@@ -21,10 +21,10 @@ storiesOf('ToggleButton')
 		() => (
 			<ToggleButton
 				aria-label="toggle button"
+				casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
 				onClick={action('onClick')}
 				backgroundOpacity={nullify(select('backgroundOpacity', prop.backgroundOpacity))}
 				disabled={boolean('disabled', false)}
-				preserveCase={nullify(boolean('preserveCase', false))}
 				small={nullify(boolean('small', false))}
 				toggleOnLabel={text('toggleOnLabel', 'On')}
 				toggleOffLabel={text('toggleOffLabel', 'Off')}

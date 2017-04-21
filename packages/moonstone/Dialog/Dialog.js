@@ -45,6 +45,16 @@ const DialogBase = kind({
 		]),
 
 		/**
+		 * Configures the mode of uppercasing of the `title` that should be performed.
+		 *
+		 * @see i18n/Uppercase#casing
+		 * @type {String}
+		 * @default 'upper'
+		 * @public
+		 */
+		casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence']),
+
+		/**
 		 * The element(s) to be displayed in the body of the Dialog.
 		 *
 		 * @type {Node}
@@ -96,6 +106,7 @@ const DialogBase = kind({
 		 *
 		 * @type {Boolean}
 		 * @default false
+		 * @deprecated replaced by `casing`
 		 * @public
 		 */
 		preserveCase: PropTypes.bool,
@@ -159,13 +170,13 @@ const DialogBase = kind({
 		className: ({showDivider, styler}) => styler.append({showDivider})
 	},
 
-	render: ({buttons, children, preserveCase, title, titleBelow, ...rest}) => {
+	render: ({buttons, casing, children, preserveCase, title, titleBelow, ...rest}) => {
 		delete rest.showDivider;
 
 		return (
 			<Popup {...rest}>
 				<TitleWrapper>
-					<MarqueeH1 preserveCase={preserveCase} marqueeOn="render" marqueeOnRenderDelay={5000} className={css.title}>
+					<MarqueeH1 casing={casing} preserveCase={preserveCase} marqueeOn="render" marqueeOnRenderDelay={5000} className={css.title}>
 						{title}
 					</MarqueeH1>
 					<MarqueeH2 className={css.titleBelow} marqueeOn="render" marqueeOnRenderDelay={5000}>
