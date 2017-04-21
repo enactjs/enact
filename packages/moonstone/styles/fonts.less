@@ -1,7 +1,7 @@
 // ----- SYSTEM FONT NAMES ------
+@font-system-src-miso-300:         local("Miso"), url("../fonts/Miso/Miso-Light.ttf") format("truetype");
 @font-system-src-miso-400:         local("Miso"), url("../fonts/Miso/Miso-Regular.ttf") format("truetype");
-@font-system-src-miso-300:         local("Miso"), url("../fonts/Miso/Miso-Bold.ttf") format("truetype");
-@font-system-src-miso-700:         local("Miso"), url("../fonts/Miso/Miso-Light.ttf") format("truetype");
+@font-system-src-miso-700:         local("Miso"), url("../fonts/Miso/Miso-Bold.ttf") format("truetype");
 
 @font-system-src-museosans-100:    local("Museo Sans"), url("../fonts/MuseoSans/MuseoSans-Thin.ttf") format("truetype");
 @font-system-src-museosans-300:    local("Museo Sans"), url("../fonts/MuseoSans/MuseoSans-Light.ttf") format("truetype");
@@ -16,7 +16,7 @@
 @font-system-src-non-latin-light:  local("LG Display-Light");
 @font-system-src-non-latin-bold:   local("LG Display-Regular");
 
-@font-system-src-moonstone-icons:  local("Moonstone"), url("../fonts/Moonstone.ttf") format("truetype");
+@font-system-src-moonstone-icons:  url("../fonts/Moonstone.ttf") format("truetype");
 @font-system-src-lg-icons:         local("LG Display_Dingbat");
 
 
@@ -41,13 +41,13 @@
 @font-face {
 	font-family: "Moonstone Miso";
 	src: @font-system-src-non-latin-bold;
-	font-weight: 500;
+	font-weight: 700;
 	font-style: normal;
 }
 @font-face {
 	font-family: "Moonstone Miso";
-	src: @font-system-src-miso-400;
-	font-weight: 500;
+	src: @font-system-src-miso-700;
+	font-weight: 700;
 	font-style: normal;
 	unicode-range: @font-unicode-range-miso;
 }

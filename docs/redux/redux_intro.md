@@ -147,9 +147,10 @@ Live demo: [http://jsbin.com/keyahus/edit?html,js,output](http://jsbin.com/keyah
 #### React
 
 ```javascript
-import React, {PropTypes, Component} from 'react';
-import ReactDOM from 'react-dom';
 import {createStore} from 'redux';
+import PropTypes from 'prop-types';
+import React, {Component} from 'react';
+import ReactDOM from 'react-dom';
 // reducer
 function counter (state = 0, action) {
 	switch (action.type) {
@@ -214,10 +215,11 @@ Container components need access to the Redux store so they can subscribe to it.
 #### Example
 
 ```javascript
-import React, {PropTypes, Component} from 'react';
-import {render} from 'react-dom';
 import {createStore} from 'redux';
-import {Provider, connect} from 'react-redux';
+import {connect, Provider} from 'react-redux';
+import PropTypes from 'prop-types';
+import React, {Component} from 'react';
+import {render} from 'react-dom';
 // reducer
 function counter (state = 0, action) {
 	switch (action.type) {

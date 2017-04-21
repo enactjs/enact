@@ -14,6 +14,24 @@ import {spottableClass} from '../Spottable';
 const spotlightRootContainerName = 'spotlightRootDecorator';
 
 /**
+ * Default configuration for SpotlightRootDecorator
+ *
+ * @hocconfig
+ * @memberof spotlight/SpotlightRootDecorator.SpotlightRootDecorator
+ */
+const defaultConfig = {
+	/**
+	 * When `true`, the contents of the component will not receive spotlight focus after being rendered.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @public
+	 * @memberof spotlight/SpotlightRootDecorator.SpotlightRootDecorator.defaultConfig
+	 */
+	noAutoFocus: false
+};
+
+/**
  * Constructs a Higher-order Component that initializes and enables Spotlight
  * 5-way navigation within an application.
  *
@@ -27,7 +45,9 @@ const spotlightRootContainerName = 'spotlightRootDecorator';
  * @memberof spotlight/SpotlightRootDecorator
  * @hoc
  */
-const SpotlightRootDecorator = hoc((config, Wrapped) => {
+const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
+	const {noAutoFocus} = config;
+
 	return class extends React.Component {
 		static displayName = 'SpotlightRootDecorator';
 
@@ -40,17 +60,25 @@ const SpotlightRootDecorator = hoc((config, Wrapped) => {
 
 		componentWillMount () {
 			if (typeof window === 'object') {
+				const palmSystem = window.PalmSystem;
+
 				Spotlight.initialize();
 				Spotlight.add(spotlightRootContainerName, {
 					selector: '.' + spottableClass,
 					navigableFilter: this.navigableFilter,
 					restrict: 'none'
 				});
+
+				if (palmSystem && palmSystem.cursor) {
+					Spotlight.setPointerMode(palmSystem.cursor.visibility);
+				}
 			}
 		}
 
 		componentDidMount () {
-			Spotlight.focus();
+			if (!noAutoFocus) {
+				Spotlight.focus();
+			}
 		}
 
 		componentWillUnmount () {

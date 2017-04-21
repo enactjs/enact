@@ -2,6 +2,21 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [1.1.0] - 2017-04-21
+
+### Added
+
+- `spotlight/SpotlightRootDecorator` config option: `noAutoFocus` to support prevention of setting automatic focus after render
+- `spotlight/Spotlight` method `getSpottableDescendants()`
+
+### Changed
+
+- `spotlight/SpotlightContainerDecorator` to have no default for `spotlightRestrict`
+
+### Fixed
+
+- `spotlight/Spotlight` to consider nested containers when adjusting focus
+
 ## [1.0.0] - 2017-03-31
 
 ### Removed

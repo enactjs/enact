@@ -8,7 +8,8 @@ import $L from '@enact/i18n/$L';
 import Changeable from '@enact/ui/Changeable';
 import kind from '@enact/core/kind';
 import {isRtlText} from '@enact/i18n/util';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import css from './Input.less';
 import InputDecoratorIcon from './InputDecoratorIcon';
@@ -186,7 +187,10 @@ const InputBase = kind({
 	},
 
 	computed: {
-		'aria-label': ({placeholder, type, value}) => calcAriaLabel(placeholder, type, value),
+		'aria-label': ({placeholder, type, value}) => {
+			const title = (value == null || value === '') ? placeholder : '';
+			return calcAriaLabel(title, type, value);
+		},
 		className: ({focused, styler}) => styler.append({focused}),
 		dir: ({value, placeholder}) => isRtlText(value || placeholder) ? 'rtl' : 'ltr',
 		// ensure we have a value so the internal <input> is always controlled

@@ -171,22 +171,11 @@
 		}
 
 		&:global(.spottable):focus {
+			color: @moon-spotlight-text-color;
 			background-color: transparent;
 
 			.bg {
 				background-color: @moon-spotlight-border-color;
-				color: @moon-spotlight-text-color;
-			}
-		}
-	}
-
-	// Disable animation for Picker button spottable and disabled.
-	&:global(.spottableDisabled) {
-		&.pressed,
-		&:global(.spottable):active {
-			.bg {
-				-webkit-animation-name: none;
-				animation-name: none;
 			}
 		}
 	}
@@ -210,6 +199,11 @@
 
 	&[disabled] {
 		cursor: default;
+
+		&.translucent,
+		&.transparent {
+			opacity: @moon-disabled-translucent-opacity;
+		}
 	}
 
 	:global(.moon-neutral) & {
@@ -223,12 +217,22 @@
 			background-color: fade(@moon-neutral-button-bg-color, @moon-button-translucent-opacity);
 		}
 
-		&.transparent .bg {
-			background-color: transparent;
+		&.transparent {
+			color: @moon-neutral-button-bg-color;
+
+			.bg {
+				background-color: transparent;
+			}
 		}
 
 		* {
 			color: inherit;
+		}
+
+		&:not([disabled]) {
+			&:global(.spottable):focus {
+				color: @moon-spotlight-text-color;
+			}
 		}
 
 		&[disabled],
@@ -237,6 +241,14 @@
 
 			.bg {
 				background-color: @moon-neutral-button-disabled-bg-color;
+			}
+
+			&.translucent .bg {
+				background-color: fade(@moon-neutral-button-disabled-bg-color, @moon-button-translucent-opacity);
+			}
+
+			&.transparent .bg {
+				background-color: transparent;
 			}
 		}
 	}
