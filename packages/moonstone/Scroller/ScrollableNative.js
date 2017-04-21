@@ -72,6 +72,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			 *   `'left'`, `'right'`, `'top'`, `'bottom'`,
 			 *   `'topleft'`, `'topright'`, `'bottomleft'`, and `'bottomright'`.
 			 * - {index} - You can set an index of specific item. (`0` or positive integer)
+			 *   This option is available for only VirtualList kind.
+			 * - {node} - You can set a node to scroll
+			 * - {animate} - When `true`, scroll occurs with animation.
+			 *   Set it to `false`, if you want scrolling without animation.
+			 * - {focus} - Set it `true`, if you want the item to be focused after scroll.
+			 *   This option is only valid when you scroll by `index` or `node`.
 			 *
 			 * @example
 			 *	// If you set cbScrollTo prop like below;
@@ -417,7 +423,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		// scroll start
 
-		start (targetX, targetY, animate = true, indexToFocus) {
+		start (targetX, targetY, animate = true, indexToFocus, nodeToFocus) {
 			const
 				bounds = this.getScrollBounds(),
 				containerNode = this.childRef.getContainerNode();
@@ -438,13 +444,16 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				containerNode.style.scrollBehavior = null;
 				this.childRef.scrollTo(targetX, targetY);
 				containerNode.style.scrollBehavior = 'smooth';
-				this.focusOnItem({indexToFocus});
+				this.focusOnItem({indexToFocus, nodeToFocus});
 			}
 		}
 
-		focusOnItem ({indexToFocus}) {
-			if (indexToFocus !== null && typeof this.childRef.focusOnItem === 'function') {
-				this.childRef.focusOnItem(indexToFocus);
+		focusOnItem ({indexToFocus, nodeToFocus}) {
+			if (indexToFocus !== null && typeof this.childRef.focusByIndex === 'function') {
+				this.childRef.focusByIndex(indexToFocus);
+			}
+			if (nodeToFocus !== null && typeof this.childRef.focusOnNode === 'function') {
+				this.childRef.focusOnNode(nodeToFocus);
 			}
 		}
 
@@ -539,7 +548,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						(left !== null) ? left : this.scrollLeft,
 						(top !== null) ? top : this.scrollTop,
 						opt.animate,
-						!isNaN(opt.indexToFocus) ? opt.indexToFocus : null
+						indexToFocus: (opt.focus && typeof opt.index === 'number') ? opt.index : null,
+						nodeToFocus:  (opt.focus && opt.node instanceof Object && opt.node.nodeType === 1) ? opt.node : null
 					);
 				}
 			} else {
