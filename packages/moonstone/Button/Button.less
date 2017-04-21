@@ -199,6 +199,11 @@
 
 	&[disabled] {
 		cursor: default;
+
+		&.translucent,
+		&.transparent {
+			opacity: @moon-disabled-translucent-opacity;
+		}
 	}
 
 	:global(.moon-neutral) & {
@@ -236,6 +241,14 @@
 
 			.bg {
 				background-color: @moon-neutral-button-disabled-bg-color;
+			}
+
+			&.translucent .bg {
+				background-color: fade(@moon-neutral-button-disabled-bg-color, @moon-button-translucent-opacity);
+			}
+
+			&.transparent .bg {
+				background-color: transparent;
 			}
 		}
 	}
