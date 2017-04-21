@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact i18n module, newest chan
 
 ### Added
 
-- `i18n/Uppercase` config options to control how the component should be uppercased. Set `case` to `'word'`, `'sentence'`, or leave the default `'all'`.
+- `i18n/Uppercase` prop `casing` to control how the component should be uppercased
 - `i18n/util` methods `toCapitalized` and `toWordCase` to locale-aware uppercase strings
 
 ## [1.0.0] - 2017-03-31
