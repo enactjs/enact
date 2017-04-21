@@ -7,7 +7,6 @@
 import $L from '@enact/i18n/$L';
 import Changeable from '@enact/ui/Changeable';
 import factory from '@enact/core/factory';
-import {hintComposer} from '@enact/ui/A11yDecorator';
 import kind from '@enact/core/kind';
 import Pressable from '@enact/ui/Pressable';
 import React from 'react';
@@ -39,22 +38,6 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		name: 'IncrementSlider',
 
 		propTypes: /** @lends moonstone/IncrementSlider.IncrementSliderBase.prototype */ {
-			/**
-			 * Accessibility pre-hint
-			 *
-			 * @type {String}
-			 * @public
-			 */
-			accessibilityHint: React.PropTypes.string,
-
-			/**
-			 * Accessibility hint
-			 *
-			 * @type {String}
-			 * @public
-			 */
-			accessibilityPreHint: React.PropTypes.string,
-
 			/**
 			 * Background progress, as a proportion between `0` and `1`.
 			 *
@@ -259,48 +242,46 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			incrementSliderClasses: ({vertical, styler}) => styler.append({vertical, horizontal: !vertical}),
 			decrementIcon: ({decrementIcon, vertical}) => (decrementIcon || (vertical ? 'arrowlargedown' : 'arrowlargeleft')),
 			incrementIcon: ({incrementIcon, vertical}) => (incrementIcon || (vertical ? 'arrowlargeup' : 'arrowlargeright')),
-			decrementAriaLabel: ({accessibilityHint, accessibilityPreHint, value}) => {
-				const defaultContent = value + ' ' + $L('press ok button to decrease the value');
-				return hintComposer(accessibilityHint, accessibilityPreHint, defaultContent);
-			},
-			incrementAriaLabel: ({accessibilityHint, accessibilityPreHint, value}) => {
-				const defaultContent = value + ' ' + $L('press ok button to increase the value');
-				return hintComposer(accessibilityHint, accessibilityPreHint, defaultContent);
-			}
+			decrementAriaLabel: ({['aria-label']: label, value}) => (`${label} ${value} ${$L('press ok button to decrease the value')}`),
+			incrementAriaLabel: ({['aria-label']: label, value}) => (`${label} ${value} ${$L('press ok button to increase the value')}`)
 		},
 
-		render: ({decrementAriaLabel, decrementDisabled, decrementIcon, incrementAriaLabel, incrementDisabled, incrementIcon, incrementSliderClasses, onIncrement, onDecrement, onSpotlightDisappear, spotlightDisabled, ...rest}) => (
-			<div className={incrementSliderClasses}>
-				<IncrementSliderButton
-					aria-label={decrementAriaLabel}
-					className={css.decrementButton}
-					disabled={decrementDisabled}
-					onClick={onDecrement}
-					onSpotlightDisappear={onSpotlightDisappear}
-					spotlightDisabled={spotlightDisabled}
-				>
-					{decrementIcon}
-				</IncrementSliderButton>
-				<Slider
-					{...rest}
-					className={css.slider}
-					onDecrement={onDecrement}
-					onIncrement={onIncrement}
-					onSpotlightDisappear={onSpotlightDisappear}
-					spotlightDisabled={spotlightDisabled}
-				/>
-				<IncrementSliderButton
-					aria-label={incrementAriaLabel}
-					className={css.incrementButton}
-					disabled={incrementDisabled}
-					onClick={onIncrement}
-					onSpotlightDisappear={onSpotlightDisappear}
-					spotlightDisabled={spotlightDisabled}
-				>
-					{incrementIcon}
-				</IncrementSliderButton>
-			</div>
-		)
+		render: ({decrementAriaLabel, decrementDisabled, decrementIcon, incrementAriaLabel, incrementDisabled, incrementIcon, incrementSliderClasses, onIncrement, onDecrement, onSpotlightDisappear, spotlightDisabled, ...rest}) => {
+			delete rest['aria-label'];
+
+			return (
+				<div className={incrementSliderClasses}>
+					<IncrementSliderButton
+						aria-label={decrementAriaLabel}
+						className={css.decrementButton}
+						disabled={decrementDisabled}
+						onClick={onDecrement}
+						onSpotlightDisappear={onSpotlightDisappear}
+						spotlightDisabled={spotlightDisabled}
+					>
+						{decrementIcon}
+					</IncrementSliderButton>
+					<Slider
+						{...rest}
+						className={css.slider}
+						onDecrement={onDecrement}
+						onIncrement={onIncrement}
+						onSpotlightDisappear={onSpotlightDisappear}
+						spotlightDisabled={spotlightDisabled}
+					/>
+					<IncrementSliderButton
+						aria-label={incrementAriaLabel}
+						className={css.incrementButton}
+						disabled={incrementDisabled}
+						onClick={onIncrement}
+						onSpotlightDisappear={onSpotlightDisappear}
+						spotlightDisabled={spotlightDisabled}
+					>
+						{incrementIcon}
+					</IncrementSliderButton>
+				</div>
+			);
+		}
 	});
 });
 
