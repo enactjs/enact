@@ -77,6 +77,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			 *   `'left'`, `'right'`, `'top'`, `'bottom'`,
 			 *   `'topleft'`, `'topright'`, `'bottomleft'`, and `'bottomright'`.
 			 * - {index} - You can set an index of specific item. (`0` or positive integer)
+			 *   This option is available for only VirtualList kind.
 			 *
 			 * @example
 			 *	// If you set cbScrollTo prop like below;
@@ -631,10 +632,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						}
 					}
 				} else {
-					if (typeof opt.index === 'number') {
+					if (typeof opt.index === 'number' && typeof this.childRef.getItemPosition === 'function') {
 						itemPos = this.childRef.getItemPosition(opt.index);
 					} else if (opt.node instanceof Object) {
-						if (opt.node.nodeType === 1) {
+						if (opt.node.nodeType === 1 && typeof this.childRef.getScrollPos === 'function') {
 							itemPos = this.childRef.getScrollPos(opt.node);
 						}
 					}
