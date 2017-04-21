@@ -202,7 +202,8 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.state = {
 				active: false,
 				value: value,
-				valueText: value
+				valueText: value,
+				ariaHidden: true
 			};
 
 			if (__DEV__) {
@@ -401,7 +402,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleFocus = () => {
-			this.setState({role: 'slider'});
+			this.setState({ariaHidden: false});
 		}
 
 		handleIncrement = () => {
@@ -434,10 +435,11 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			return (
 				<Wrapped
-					role={this.state.role}
+					role="slider"
 					{...props}
 					active={this.state.active}
 					aria-disabled={this.props.disabled}
+					aria-hidden={this.state.ariaHidden}
 					aria-valuetext={this.state.valueText}
 					inputRef={this.getInputNode}
 					onActivate={this.handleActivate}
