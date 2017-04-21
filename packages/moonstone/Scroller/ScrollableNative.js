@@ -651,7 +651,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				containerNode.addEventListener('wheel', this.onWheel);
 			}
 			// FIXME `onScroll` doesn't work on the v8 snapshot.
-			containerNode.addEventListener('scroll', this.onScroll, {capture: true, passive: true});
+			containerNode.addEventListener('scroll', this.onScroll, {capture: true});
 			// FIXME `onFocus` doesn't work on the v8 snapshot.
 			containerNode.addEventListener('focus', this.onFocus, {capture: true});
 			// FIXME `onMouseOver` doesn't work on the v8 snapshot.
