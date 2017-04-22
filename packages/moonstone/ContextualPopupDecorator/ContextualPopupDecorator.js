@@ -273,12 +273,6 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				isOverLeft: client.left - containerWidth - this.ARROW_OFFSET - this.MARGIN < 0,
 				isOverRight: client.right + containerWidth + this.ARROW_OFFSET + this.MARGIN > window.innerWidth
 			};
-
-			if ((this.adjustedDirection === 'left' || this.adjustedDirection === 'right') && this.context.rtl) {
-				const tempOverflowLeft = this.overflow.isOverLeft;
-				this.overflow.isOverLeft = this.overflow.isOverRight;
-				this.overflow.isOverRight = tempOverflowLeft;
-			}
 		}
 
 		adjustDirection () {
@@ -286,9 +280,9 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.adjustedDirection = 'down';
 			} else if (this.overflow.isOverBottom && !this.overflow.isOverTop && this.adjustedDirection === 'down') {
 				this.adjustedDirection = 'up';
-			} else if (this.overflow.isOverLeft && !this.overflow.isOverRight && this.adjustedDirection === 'left') {
+			} else if (this.overflow.isOverLeft && !this.overflow.isOverRight && this.adjustedDirection === 'left' && !this.context.rtl) {
 				this.adjustedDirection = 'right';
-			} else if (this.overflow.isOverRight && !this.overflow.isOverLeft && this.adjustedDirection === 'right') {
+			} else if (this.overflow.isOverRight && !this.overflow.isOverLeft && this.adjustedDirection === 'right' && !this.context.rtl) {
 				this.adjustedDirection = 'left';
 			}
 		}
