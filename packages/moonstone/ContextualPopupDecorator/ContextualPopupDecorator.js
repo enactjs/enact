@@ -274,7 +274,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				isOverRight: client.right + containerWidth + this.ARROW_OFFSET + this.MARGIN > window.innerWidth
 			};
 
-			if (this.context.rtl) {
+			if ((this.adjustedDirection === 'left' || this.adjustedDirection === 'right') && this.context.rtl) {
 				const tempOverflowLeft = this.overflow.isOverLeft;
 				this.overflow.isOverLeft = this.overflow.isOverRight;
 				this.overflow.isOverRight = tempOverflowLeft;

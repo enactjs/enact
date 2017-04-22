@@ -28,7 +28,7 @@ const renderTallPopup = () => (
 );
 
 const renderSuperTallPopup = () => (
-	<div style={{height: '550px'}}>
+	<div style={{height: '570px'}}>
 		This is a super tall popup.
 		Note: this popup does not overflow in full screen mode.
 	</div>
@@ -80,7 +80,7 @@ storiesOf('ContextualPopupDecorator')
 		() => (
 			<div style={{position: 'relative', width: '100%', height: '100%'}}>
 				<Divider>direction Up</Divider>
-				<div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '20px'}}>
+				<div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '12px'}}>
 					<ContextualPopupWithActivator
 						direction="up"
 						popupComponent={renderWidePopup}
@@ -104,7 +104,7 @@ storiesOf('ContextualPopupDecorator')
 					<Divider style={{flexGrow: '1'}}>direction left </Divider>
 					<Divider style={{flexGrow: '1'}}>direction right</Divider>
 				</div>
-				<div style={{display: 'flex', marginBottom: '20px'}}>
+				<div style={{display: 'flex', marginBottom: '24px'}}>
 					<div style={{flexGrow: '1', display: 'flex', justifyContent: 'space-between'}}>
 						<ContextualPopupWithActivator
 							direction="left"
@@ -134,7 +134,7 @@ storiesOf('ContextualPopupDecorator')
 						</ContextualPopupWithActivator>
 					</div>
 				</div>
-				<div style={{display: 'flex', justifyContent: 'center', marginBottom: '20px'}}>
+				<div style={{display: 'flex', justifyContent: 'center', marginBottom: '24px'}}>
 					<ContextualPopupWithActivator
 						direction="left"
 						popupComponent={renderSuperTallPopup}
