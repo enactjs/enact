@@ -783,12 +783,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		componentDidUpdate () {
-			const
-				positionFn = this.childRef.calculatePositionOnFocus,
-				bounds = this.getScrollBounds(),
-				additionalHeight = bounds.scrollHeight - bounds.clientHeight,
-				focusedItem = Spotlight.getCurrent();
-
 			this.isInitializing = false;
 
 			// Need to sync calculated client size if it is different from the real size
@@ -800,17 +794,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			if (this.scrollToInfo !== null) {
 				this.scrollTo(this.scrollToInfo);
-			}
-
-			// make sure scroll position is in right place after update
-			if (focusedItem) {
-				const pos = positionFn(focusedItem, additionalHeight);
-				if (pos) {
-					this.start({
-						targetX: pos.left,
-						targetY: pos.top
-					});
-				}
 			}
 		}
 
