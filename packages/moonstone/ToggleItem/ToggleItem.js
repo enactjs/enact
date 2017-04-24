@@ -6,7 +6,8 @@
  */
 
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import Toggleable from '@enact/ui/Toggleable';
 
 import {ItemOverlay} from '../Item';
@@ -88,7 +89,7 @@ const ToggleItemBase = kind({
 		 *
 		 * @type {Function}
 		 */
-		onClick: React.PropTypes.func,
+		onClick: PropTypes.func,
 
 		/**
 		 * The handler to run when the toggle item is toggled.

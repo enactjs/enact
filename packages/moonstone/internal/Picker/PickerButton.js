@@ -1,6 +1,7 @@
 import Holdable from '@enact/ui/Holdable';
 import kind from '@enact/core/kind';
 import React from 'react';
+import PropTypes from 'prop-types';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 
 import Icon from '../../Icon';
@@ -10,14 +11,14 @@ const PickerButtonBase = kind({
 	name: 'PickerButton',
 
 	propTypes: {
-		disabled: React.PropTypes.bool,
-		icon: React.PropTypes.oneOfType([
-			React.PropTypes.string,
-			React.PropTypes.object
+		disabled: PropTypes.bool,
+		icon: PropTypes.oneOfType([
+			PropTypes.string,
+			PropTypes.object
 		]),
-		joined: React.PropTypes.bool,
-		onSpotlightDisappear: React.PropTypes.func,
-		spotlightDisabled: React.PropTypes.bool
+		joined: PropTypes.bool,
+		onSpotlightDisappear: PropTypes.func,
+		spotlightDisabled: PropTypes.bool
 	},
 
 	render: ({disabled, icon, joined, ...rest}) => {

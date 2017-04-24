@@ -6,7 +6,8 @@
  */
 import FloatingLayer from '@enact/ui/FloatingLayer';
 import kind from '@enact/core/kind';
-import React, {Component, PropTypes} from 'react';
+import PropTypes from 'prop-types';
+import React, {Component} from 'react';
 import Spotlight from '@enact/spotlight';
 
 import {MarqueeText} from '../Marquee';

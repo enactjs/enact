@@ -2,6 +2,7 @@ import hoc from '@enact/core/hoc';
 import Spottable from '@enact/spotlight/Spottable';
 import Pressable from '@enact/ui/Pressable';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const SpottablePicker = hoc(null, (config, Wrapped) => {
 	const Joined = Pressable(Spottable(Wrapped));
@@ -9,7 +10,7 @@ const SpottablePicker = hoc(null, (config, Wrapped) => {
 		static displayName = 'SpottablePicker'
 
 		static propTypes = {
-			joined: React.PropTypes.bool
+			joined: PropTypes.bool
 		}
 
 		render () {

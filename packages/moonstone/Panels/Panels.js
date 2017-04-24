@@ -1,5 +1,6 @@
 import kind from '@enact/core/kind';
 import React from 'react';
+import PropTypes from 'prop-types';
 import {shape} from '@enact/ui/ViewManager';
 
 import ApplicationCloseButton from './ApplicationCloseButton';
@@ -31,7 +32,7 @@ const PanelsBase = kind({
 		 *
 		 * @type {Panel}
 		 */
-		children: React.PropTypes.node,
+		children: PropTypes.node,
 
 		/**
 		 * Index of the active panel
@@ -39,7 +40,7 @@ const PanelsBase = kind({
 		 * @type {Number}
 		 * @default 0
 		 */
-		index: React.PropTypes.number,
+		index: PropTypes.number,
 
 		/**
 		 * When `false`, panel transitions are disabled
@@ -47,7 +48,7 @@ const PanelsBase = kind({
 		 * @type {Boolean}
 		 * @default false
 		 */
-		noAnimation: React.PropTypes.bool,
+		noAnimation: PropTypes.bool,
 
 		/**
 		 * When `true`, application close button does not show on the top right corner
@@ -55,20 +56,20 @@ const PanelsBase = kind({
 		 * @type {Boolean}
 		 * @default false
 		 */
-		noCloseButton: React.PropTypes.bool,
+		noCloseButton: PropTypes.bool,
 
 		/**
 		 * A function to run when app close button is clicked
 		 * @type {Function}
 		 */
-		onApplicationClose: React.PropTypes.func,
+		onApplicationClose: PropTypes.func,
 
 		/**
 		 * Callback to handle cancel/back key events
 		 *
 		 * @type {Function}
 		 */
-		onBack: React.PropTypes.func
+		onBack: PropTypes.func
 	},
 
 	defaultProps: {
