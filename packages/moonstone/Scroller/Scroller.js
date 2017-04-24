@@ -119,7 +119,6 @@ class ScrollerBase extends Component {
 		return bounds;
 	}
 
-
 	calculatePositionOnFocus = (focusedItem) => {
 		if (this.isVertical()) {
 			const
