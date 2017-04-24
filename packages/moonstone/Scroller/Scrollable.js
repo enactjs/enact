@@ -803,8 +803,30 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
 		// state member.
 		enqueueForceUpdate = () => {
-			this.childRef.calculateMetrics();
+			this.updateTopScrollPosition();
 			this.forceUpdateJob.start();
+		}
+
+		// updateTopScrollPosition checks if scroll is needed if scrollHeight changes.
+		updateTopScrollPosition () {
+			const {scrollHeight: previousScrollHeight} = this.childRef.scrollBounds,
+				{top: containerTop} = this.containerRef.getBoundingClientRect(),
+				focusedItem = Spotlight.getCurrent(),
+				{top: focusedItemTop} = focusedItem.getBoundingClientRect(),
+				itemTop = this.scrollTop + (focusedItemTop - containerTop);
+
+			this.childRef.calculateMetrics();
+
+			const {scrollHeight: currentScrollHeight, clientHeight} = this.childRef.scrollBounds,
+				heightDifference = Math.max(0, currentScrollHeight - previousScrollHeight);
+
+			// calculate scroll based on focusedItem and the scrollHeight difference.
+			if (previousScrollHeight !== currentScrollHeight && itemTop - this.scrollTop + heightDifference > clientHeight) {
+				const newScrollTop = this.scrollTop + heightDifference;
+
+				this.setScrollTop(newScrollTop);
+				this.scroll(this.scrollLeft, this.scrollTop);
+			}
 		}
 
 		forceUpdateJob = new Job(this.forceUpdate.bind(this), 32)
