@@ -2,7 +2,11 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [unreleased]
+## [1.1.0] - 2017-04-21
+
+### Deprecated
+
+- `moonstone/ExpandableInput` property `onInputChange`
 
 ### Added
 
@@ -11,7 +15,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` props `jumpButtonsDisabled` and `rateButtonsDisabled` for disabling the pairs of buttons when it's inappropriate for the playing media
 - `moonstone/VideoPlayer` property `playbackRateHash` to support custom playback rates
 - `moonstone/VideoPlayer` callback prop `onControlsAvailable` which fires when the players controls show or hide
-- `moonstone/Image` support for `onLoad` and `onError` events.
+- `moonstone/Image` support for `onLoad` and `onError` events
 - `moonstone/VirtualList.GridListImageItem` prop `placeholder`
 - `moonstone/Divider` property `preserveCase` to display text without capitalizing it
 
@@ -21,10 +25,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Slider` colors and sizing to match the latest designs
 - `moonstone/ProgressBar` to position correctly with other components nearby
 - `moonstone/Panels` breadcrumb to no longer have a horizontal line above it
-- `moonstone/Transition` now measures itself when the CPU is idle.
+- `moonstone/Transition` to measure itself when the CPU is idle
 - style for disabled opacity from 0.4 to 0.3
 - `moonstone/Button` colors for transparent and translucent background opacity when disabled
-- `moonstone/ExpandableInput` property `onInputChange` is fired as `onChange`. `onInputChange` is deprecated and will be removed in a future update.
+- `moonstone/ExpandableInput` property `onInputChange` to fire along with `onChange`. `onInputChange` is deprecated and will be removed in a future update.
 - `Moonstone.ttf` font to include new icons
 - `moonstone/Icon` to reference additional icons
 
