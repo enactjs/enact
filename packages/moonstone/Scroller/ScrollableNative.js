@@ -548,8 +548,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						(left !== null) ? left : this.scrollLeft,
 						(top !== null) ? top : this.scrollTop,
 						opt.animate,
-						indexToFocus: (opt.focus && typeof opt.index === 'number') ? opt.index : null,
-						nodeToFocus:  (opt.focus && opt.node instanceof Object && opt.node.nodeType === 1) ? opt.node : null
+						(opt.focus && typeof opt.index === 'number') ? opt.index : null,
+						(opt.focus && opt.node instanceof Object && opt.node.nodeType === 1) ? opt.node : null
 					);
 				}
 			} else {
