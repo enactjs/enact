@@ -827,7 +827,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				heightDifference = Math.max(0, currentScrollHeight - previousScrollHeight);
 
 			// calculate scroll based on focusedItem and the scrollHeight difference.
-			if (previousScrollHeight !== currentScrollHeight && itemTop - this.scrollTop + heightDifference > clientHeight) {
+			if (previousScrollHeight !== currentScrollHeight && itemTop - this.scrollTop + heightDifference > clientHeight && heightDifference < clientHeight) {
 				const newScrollTop = this.scrollTop + heightDifference;
 
 				this.setScrollTop(newScrollTop);
