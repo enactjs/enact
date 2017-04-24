@@ -8,11 +8,12 @@ import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {contextTypes} from '@enact/ui/Resizable';
 import {forward} from '@enact/core/handle';
-import Spotlight, {getDirection} from '@enact/spotlight';
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
-import React, {Component, PropTypes} from 'react';
+import PropTypes from 'prop-types';
+import React, {Component} from 'react';
 import ri from '@enact/ui/resolution';
+import Spotlight, {getDirection} from '@enact/spotlight';
 
 import css from './Scrollable.less';
 import ScrollAnimator from './ScrollAnimator';

@@ -12,7 +12,8 @@ import {forward} from '@enact/core/handle';
 import {getDirection} from '@enact/spotlight';
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
-import React, {Component, PropTypes} from 'react';
+import PropTypes from 'prop-types';
+import React, {Component} from 'react';
 import ri from '@enact/ui/resolution';
 
 import css from './Scrollable.less';
