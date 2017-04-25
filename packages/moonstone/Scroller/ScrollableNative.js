@@ -518,11 +518,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						}
 					}
 				} else {
-					if (typeof opt.index === 'number') {
+					if (typeof opt.index === 'number' && typeof this.childRef.getItemPosition === 'function') {
 						itemPos = this.childRef.getItemPosition(opt.index);
 					} else if (opt.node instanceof Object) {
-						if (opt.node.nodeType === 1) {
-							itemPos = this.childRef.getScrollPos(opt.node);
+						if (opt.node.nodeType === 1 && typeof this.childRef.getNodePosition === 'function') {
+							itemPos = this.childRef.getNodePosition(opt.node);
 						}
 					}
 					if (itemPos) {

@@ -645,8 +645,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					if (typeof opt.index === 'number' && typeof this.childRef.getItemPosition === 'function') {
 						itemPos = this.childRef.getItemPosition(opt.index);
 					} else if (opt.node instanceof Object) {
-						if (opt.node.nodeType === 1 && typeof this.childRef.getScrollPos === 'function') {
-							itemPos = this.childRef.getScrollPos(opt.node);
+						if (opt.node.nodeType === 1 && typeof this.childRef.getNodePosition === 'function') {
+							itemPos = this.childRef.getNodePosition(opt.node);
 						}
 					}
 					if (itemPos) {
