@@ -604,6 +604,7 @@ const VideoPlayerBase = class extends React.Component {
 	showControls = () => {
 		this.startDelayedTitleHide();
 		forwardControlsAvailable({available: true}, this.props);
+		this.bottomControlsRendered = true;
 		this.setState({
 			bottomControlsVisible: true,
 			titleVisible: true
@@ -1148,66 +1149,69 @@ const VideoPlayerBase = class extends React.Component {
 					{this.state.loading ? <Spinner centered /> : null}
 				</Overlay>
 
-				<div className={css.fullscreen + ' enyo-fit scrim'} style={{display: this.state.bottomControlsVisible ? 'block' : 'none'}}>
-					<Container className={css.bottom}>
-						{/* Info Section: Title, Description, Times */}
-						<div className={css.infoFrame}>
-							<MediaTitle
-								title={title}
-								visible={this.state.titleVisible}
-								infoVisible={this.state.more}
-							>
-								{infoComponents}
-							</MediaTitle>
-							<Times current={this.state.currentTime} total={this.state.duration} formatter={this.durfmt} />
-						</div>
-
-						{noSlider ? null : <MediaSlider
-							backgroundProgress={this.state.proportionLoaded}
-							value={this.state.proportionPlayed}
-							onChange={this.onSliderChange}
-							onKnobMove={this.handleKnobMove}
-							onSpotlightUp={this.hideControls}
-							onSpotlightDown={this.handleSpotlightDownFromSlider}
-						>
-							<div className={css.sliderTooltip}>
-								<Feedback playbackState={this.prevCommand} visible={this.state.feedbackVisible} >
-									{this.selectPlaybackRate(this.speedIndex)}
-								</Feedback>
-								{secondsToTime(this.state.sliderTooltipTime, this.durfmt)}
+				{this.bottomControlsRendered ?
+					<div className={css.fullscreen + ' enyo-fit scrim'} style={{display: this.state.bottomControlsVisible ? 'block' : 'none'}}>
+						<Container className={css.bottom}>
+							{/* Info Section: Title, Description, Times */}
+							<div className={css.infoFrame}>
+								<MediaTitle
+									title={title}
+									visible={this.state.titleVisible}
+									infoVisible={this.state.more}
+								>
+									{infoComponents}
+								</MediaTitle>
+								<Times current={this.state.currentTime} total={this.state.duration} formatter={this.durfmt} />
 							</div>
-						</MediaSlider>}
 
-						<MediaControls
-							backwardIcon={backwardIcon}
-							forwardIcon={forwardIcon}
-							jumpBackwardIcon={jumpBackwardIcon}
-							jumpButtonsDisabled={jumpButtonsDisabled}
-							jumpForwardIcon={jumpForwardIcon}
-							leftComponents={leftComponents}
-							mediaDisabled={this.state.mediaControlsDisabled}
-							moreDisabled={moreDisabled}
-							noJumpButtons={noJumpButtons}
-							noRateButtons={noRateButtons}
-							onBackwardButtonClick={this.onBackward}
-							onClick={this.resetAutoTimeout}
-							onForwardButtonClick={this.onForward}
-							onJumpBackwardButtonClick={this.onJumpBackward}
-							onJumpForwardButtonClick={this.onJumpForward}
-							onKeyDown={this.handleKeyDownFromControls}
-							onPlayButtonClick={this.onPlay}
-							onToggleMore={this.onMoreClick}
-							paused={this.state.paused}
-							pauseIcon={pauseIcon}
-							playIcon={playIcon}
-							rateButtonsDisabled={rateButtonsDisabled}
-							rightComponents={rightComponents}
-							showMoreComponents={this.state.more}
-						>
-							{children}
-						</MediaControls>
-					</Container>
-				</div>
+							{noSlider ? null : <MediaSlider
+								backgroundProgress={this.state.proportionLoaded}
+								value={this.state.proportionPlayed}
+								onChange={this.onSliderChange}
+								onKnobMove={this.handleKnobMove}
+								onSpotlightUp={this.hideControls}
+								onSpotlightDown={this.handleSpotlightDownFromSlider}
+							>
+								<div className={css.sliderTooltip}>
+									<Feedback playbackState={this.prevCommand} visible={this.state.feedbackVisible} >
+										{this.selectPlaybackRate(this.speedIndex)}
+									</Feedback>
+									{secondsToTime(this.state.sliderTooltipTime, this.durfmt)}
+								</div>
+							</MediaSlider>}
+
+							<MediaControls
+								backwardIcon={backwardIcon}
+								forwardIcon={forwardIcon}
+								jumpBackwardIcon={jumpBackwardIcon}
+								jumpButtonsDisabled={jumpButtonsDisabled}
+								jumpForwardIcon={jumpForwardIcon}
+								leftComponents={leftComponents}
+								mediaDisabled={this.state.mediaControlsDisabled}
+								moreDisabled={moreDisabled}
+								noJumpButtons={noJumpButtons}
+								noRateButtons={noRateButtons}
+								onBackwardButtonClick={this.onBackward}
+								onClick={this.resetAutoTimeout}
+								onForwardButtonClick={this.onForward}
+								onJumpBackwardButtonClick={this.onJumpBackward}
+								onJumpForwardButtonClick={this.onJumpForward}
+								onKeyDown={this.handleKeyDownFromControls}
+								onPlayButtonClick={this.onPlay}
+								onToggleMore={this.onMoreClick}
+								paused={this.state.paused}
+								pauseIcon={pauseIcon}
+								playIcon={playIcon}
+								rateButtonsDisabled={rateButtonsDisabled}
+								rightComponents={rightComponents}
+								showMoreComponents={this.state.more}
+							>
+								{children}
+							</MediaControls>
+						</Container>
+					</div> :
+					null
+				}
 				<SpottableDiv
 					// This captures spotlight focus for use with 5-way.
 					// It's non-visible but lives at the top of the VideoPlayer.
