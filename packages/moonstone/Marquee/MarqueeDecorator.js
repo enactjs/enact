@@ -211,7 +211,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 			this.state = {
-				overflow: 'ellipsis'
+				overflow: 'ellipsis',
+				rtl: false
 			};
 			this.sync = false;
 			this.forceRestartMarquee = false;
@@ -500,7 +501,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.node = node;
 			const {forceDirection} = this.props;
 			const textContent = node && node.textContent;
-			this.rtl = forceDirection ? forceDirection === 'rtl' : isRtlText(textContent);
+			this.setState({rtl: forceDirection ? forceDirection === 'rtl' : isRtlText(textContent)});
 		}
 
 		renderMarquee () {
@@ -545,7 +546,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						forceDirection={forceDirection}
 						onMarqueeComplete={this.handleMarqueeComplete}
 						overflow={this.state.overflow}
-						rtl={this.rtl}
+						rtl={this.state.rtl}
 						speed={marqueeSpeed}
 					>
 						{children}
