@@ -175,6 +175,14 @@ class VirtualListCoreNative extends Component {
 		this.state = {firstIndex: 0, numOfItems: 0};
 		this.initContainerRef = this.initRef('containerRef');
 		this.initWrapperRef = this.initRef('wrapperRef');
+
+		if (this.transformItems) {
+			this.wrapperStyle.willChange = 'transform';
+			this.composePosition = this.composeTransform;
+		} else {
+			this.wrapperStyle.willChange = 'left, top';
+			this.composePosition = this.composeLeftTop;
+		}
 	}
 
 	componentWillMount () {
@@ -245,6 +253,9 @@ class VirtualListCoreNative extends Component {
 	wrapperStyle = {}
 	containerRef = null
 	wrapperRef = null
+
+	transformItems = true // If true, use 'transform'. Otherwise use 'left' and 'top'
+	composePosition = null
 
 	// RTL
 	compensationRTL = 0
@@ -349,7 +360,9 @@ class VirtualListCoreNative extends Component {
 		this.state.numOfItems = 0;
 
 		/* FIXME: RTL / this calculation only works for Chrome */
-		this.compensationRTL = clientWidth - (this.isPrimaryDirectionVertical ? this.secondary.itemSize : this.primary.itemSize);
+		if (!this.transformItems) {
+			this.compensationRTL = clientWidth - (this.isPrimaryDirectionVertical ? this.secondary.itemSize : this.primary.itemSize);
+		}
 	}
 
 	updateStatesAndBounds (props) {
@@ -373,6 +386,7 @@ class VirtualListCoreNative extends Component {
 
 	calculateScrollBounds (props) {
 		const
+			{wrapperStyle} = this,
 			{clientSize} = props,
 			node = this.getContainerNode();
 
@@ -401,7 +415,6 @@ class VirtualListCoreNative extends Component {
 			this.props.cbScrollTo({position: (isPrimaryDirectionVertical) ? {y: maxPos} : {x: maxPos}});
 		}
 
-		const {wrapperStyle} = this;
 
 		if (isPrimaryDirectionVertical) {
 			wrapperStyle.overflowY = 'scroll';
@@ -413,8 +426,6 @@ class VirtualListCoreNative extends Component {
 
 		this.containerRef.style.width = scrollBounds.scrollWidth + 'px';
 		this.containerRef.style.height = scrollBounds.scrollHeight + 'px';
-
-		wrapperStyle.willChange = 'left, top';
 	}
 
 	syncThreshold (maxPos) {
@@ -543,7 +554,23 @@ class VirtualListCoreNative extends Component {
 			style.height = height;
 		}
 
-		style.left = this.compensateRTL(x) + 'px';
+		this.composePosition(style, x, y);
+	}
+
+	composeTransform = (style, x, y) => {
+		/* FIXME: RTL / this calculation only works for Chrome */
+		if (this.context.rtl) {
+			x = -x;
+		}
+		style.transform = 'translate(' + x + 'px,' + y + 'px)';
+	}
+
+	composeLeftTop = (style, x, y) => {
+		/* FIXME: RTL / this calculation only works for Chrome */
+		if (this.context.rtl) {
+			x = this.compensationRTL - x;
+		}
+		style.left = x + 'px';
 		style.top = y + 'px';
 	}
 
@@ -669,12 +696,6 @@ class VirtualListCoreNative extends Component {
 			this.calculateMetrics(props);
 			this.updateStatesAndBounds(props);
 		}
-	}
-
-	// for RTL support
-	compensateRTL = (x) => {
-		/* FIXME: RTL / this calculation only works for Chrome */
-		return this.context.rtl ? this.compensationRTL - x : x;
 	}
 
 	// render
