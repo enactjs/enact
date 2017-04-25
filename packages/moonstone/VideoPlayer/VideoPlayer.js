@@ -1148,7 +1148,7 @@ const VideoPlayerBase = class extends React.Component {
 					{this.state.loading ? <Spinner centered /> : null}
 				</Overlay>
 
-				{this.state.bottomControlsVisible ? <div className={css.fullscreen + ' enyo-fit scrim'}>
+				<div className={css.fullscreen + ' enyo-fit scrim'} style={{display: this.state.bottomControlsVisible ? 'block' : 'none'}}>
 					<Container className={css.bottom}>
 						{/* Info Section: Title, Description, Times */}
 						<div className={css.infoFrame}>
@@ -1207,7 +1207,7 @@ const VideoPlayerBase = class extends React.Component {
 							{children}
 						</MediaControls>
 					</Container>
-				</div> : null}
+				</div>
 				<SpottableDiv
 					// This captures spotlight focus for use with 5-way.
 					// It's non-visible but lives at the top of the VideoPlayer.
