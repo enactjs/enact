@@ -1,7 +1,6 @@
-
-
 /**
  * @class Job
+ * @memberof core/util
  */
 class Job {
 	id = null
@@ -11,6 +10,7 @@ class Job {
 
 	/**
 	 * @constructor
+	 * @memberof core/util.Job
 	 * @param {Function} fn       function to execute as the requested job.
 	 * @param {Number}   timeout  The number of milliseconds to wait before starting the job.
 	 */
@@ -27,6 +27,8 @@ class Job {
 	/**
 	 * Starts the job.
 	 *
+	 * @method
+	 * @memberof core/util.Job
 	 * @param   {...*}       [args]  Any args passed are forwarded to the callback
 	 * @returns {undefined}
 	 */
@@ -37,6 +39,8 @@ class Job {
 	/**
 	 * Starts the job in `timeout` milliseconds
 	 *
+	 * @method
+	 * @memberof core/util.Job
 	 * @param   {Number}     timeout  The number of milliseconds to wait before starting the job.
 	 *                                This supersedes the timeout set at construction or by
 	 *                                `setTimeout`.
@@ -52,6 +56,8 @@ class Job {
 	/**
 	 * Stops the job.
 	 *
+	 * @method
+	 * @memberof core/util.Job
 	 * @returns {undefined}
 	 */
 	stop = () => {
@@ -69,6 +75,8 @@ class Job {
 	 * Executes the job immediately, then prevents any other calls to `throttle()` from running
 	 * until the `timeout` configured at construction or via `setTimeout` passes.
 	 *
+	 * @method
+	 * @memberof core/util.Job
 	 * @param   {...*}       args  Any args passed are forwarded to the callback
 	 * @returns {undefined}
 	 * @public
@@ -81,6 +89,8 @@ class Job {
 	 * Executes the job immediately, then prevents any other calls to `throttle()` from running for
 	 * `timeout` milliseconds.
 	 *
+	 * @method
+	 * @memberof core/util.Job
 	 * @param   {Number}     timeout  The number of milliseconds to wait before allowing the job to
 	 *                                be ran again. This supersedes the timeout set at construction
 	 *                                or by `setTimeout`.
@@ -98,6 +108,8 @@ class Job {
 	/**
 	 * Executes job when the CPU is idle.
 	 *
+	 * @method
+	 * @memberof core/util.Job
 	 * @param   {...*}       [args]   Any args passed are forwarded to the callback
 	 * @returns {undefined}
 	 * @public

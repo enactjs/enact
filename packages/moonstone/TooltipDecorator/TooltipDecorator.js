@@ -55,6 +55,16 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 			disabled: PropTypes.bool,
 
 			/**
+			 * Configures the mode of uppercasing of the `tooltipText` that should be performed.
+			 *
+			 * @see i18n/Uppercase#casing
+			 * @type {String}
+			 * @default 'upper'
+			 * @public
+			 */
+			tooltipCasing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence']),
+
+			/**
 			 * Number of milliseconds to wait before showing tooltip when hover.
 			 *
 			 * @type {Number}
@@ -91,6 +101,7 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 			 *
 			 * @type {Boolean}
 			 * @default false
+			 * @deprecated replaced by `tooltipCasing`
 			 * @public
 			 */
 			tooltipPreserveCase: PropTypes.bool,
@@ -115,6 +126,7 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 
 		static defaultProps = {
 			disabled: false,
+			tooltipCasing: 'upper',
 			tooltipDelay: 500,
 			tooltipPosition: 'above',
 			tooltipPreserveCase: false
@@ -325,7 +337,7 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 		}
 
 		render () {
-			const {children, tooltipPreserveCase, tooltipText, tooltipWidth, ...rest} = this.props;
+			const {children, tooltipCasing, tooltipPreserveCase, tooltipText, tooltipWidth, ...rest} = this.props;
 			delete rest.tooltipDelay;
 			delete rest.tooltipPosition;
 
@@ -342,6 +354,7 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 						<Tooltip
 							aria-live="off"
 							arrowAnchor={this.state.arrowAnchor}
+							casing={tooltipCasing}
 							direction={this.state.tooltipDirection}
 							position={this.state.position}
 							preserveCase={tooltipPreserveCase}

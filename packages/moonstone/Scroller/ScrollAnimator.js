@@ -101,6 +101,10 @@ class ScrollAnimator {
 		this.rAFId = rAF(fn);
 	}
 
+	isAnimating () {
+		return this.rAFId !== null;
+	}
+
 	stop () {
 		const cAF = window.cancelAnimationFrame;
 

@@ -18,18 +18,6 @@ describe('Button', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should not convert text content when preserveCase=true', function () {
-		let msg = 'Hello Button!';
-		const button = mount(
-			<Button preserveCase>{msg}</Button>
-		);
-
-		const expected = msg;
-		const actual = button.text();
-
-		expect(actual).to.equal(expected);
-	});
-
 	it('should have \'disabled\' HTML attribute when \'disabled\' prop is provided', function () {
 		const button = mount(
 			<Button disabled>I am a disabled Button</Button>

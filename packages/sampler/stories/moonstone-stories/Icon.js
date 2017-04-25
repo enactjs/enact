@@ -15,17 +15,20 @@ storiesOf('Icon')
 	.addWithInfo(
 		' ',
 		'Basic usage of Icon',
-		() => (
-			<div>
-				<Icon
-					small={boolean('small', false)}
-				>
-					{select('src', ['', fwd, play, rew], '') + select('icon', ['', ...iconNames], 'plus') + text('custom icon', '')}
-				</Icon>
-				<br />
-				<br />
-				<Divider>All Icons</Divider>
-				{iconNames.map((icon, index) => <Icon key={index}>{icon}</Icon>)}
-			</div>
-		)
+		() => {
+			const small = boolean('small', false);
+			return (
+				<div>
+					<Icon
+						small={small}
+					>
+						{select('src', ['', fwd, play, rew], '') + select('icon', ['', ...iconNames], 'plus') + text('custom icon', '')}
+					</Icon>
+					<br />
+					<br />
+					<Divider>All Icons</Divider>
+					{iconNames.map((icon, index) => <Icon key={index} small={small} title={icon}>{icon}</Icon>)}
+				</div>
+			);
+		}
 	);

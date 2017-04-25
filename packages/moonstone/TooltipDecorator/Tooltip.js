@@ -125,7 +125,7 @@ const TooltipBase = kind({
 /**
  * {@link moonstone/TooltipDecorator.Tooltip} is a tooltip component with Moonstone styling
  * applied. If the Tooltip's child component is text, it will be uppercased unless
- * `preserveCase` is set.
+ * `casing` is set.
  *
  * @class Tooltip
  * @memberof moonstone/TooltipDecorator
