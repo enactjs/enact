@@ -460,7 +460,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		cancelAnimation = () => {
 			if (this.sync) {
 				this.forceRestartMarquee = true;
-					this.context.cancel(this);
+				this.context.cancel(this);
 			}
 
 			this.stop();
