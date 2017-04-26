@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `moonstone/VideoPlayer` space allotment on both sides of the playback controls to support 3 buttons; consequently the "more" controls area has shrunk by the same amount
+
 ## [1.1.0] - 2017-04-21
 
 ### Deprecated
@@ -15,7 +21,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` props `jumpButtonsDisabled` and `rateButtonsDisabled` for disabling the pairs of buttons when it's inappropriate for the playing media
 - `moonstone/VideoPlayer` property `playbackRateHash` to support custom playback rates
 - `moonstone/VideoPlayer` callback prop `onControlsAvailable` which fires when the players controls show or hide
-- `moonstone/VideoPlayer` has increased the space allotment on both sides of the playback controls to support 3 buttons; consequently the "more" controls area has shrunk by the same amount
 - `moonstone/Image` support for `onLoad` and `onError` events.
 - `moonstone/Image` support for `onLoad` and `onError` events
 - `moonstone/VirtualList.GridListImageItem` prop `placeholder`
