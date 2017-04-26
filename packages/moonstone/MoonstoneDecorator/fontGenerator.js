@@ -7,11 +7,29 @@
 import ilib from '@enact/i18n';
 import Locale from '@enact/i18n/ilib/lib/Locale';
 
-const debugFonts = true;
 // eslint-disable-next-line no-console
 const debugMessage = console.log;
+const debugFonts = true;
+const pendingFontsLoadedCallbacks = [];
 
-let previousLocale = null;
+let previousLocale = null,
+	fontsLoaded = false;
+
+/**
+ * The supplied callback method will fire when the generated fonts have loaded. If the callback is
+ * requested after the fonts have already been loaded, this will fire immediately. This should,
+ * however, only be written as an async function to avoid any issues.
+ *
+ * @param  {Function} fn Callback function to run when fonts have loaded
+ * @public
+ */
+const onFontsLoaded = (fn) => {
+	if (fontsLoaded) {
+		fn();
+	} else {
+		pendingFontsLoadedCallbacks.push(fn);
+	}
+};
 
 /**
 * `fontGenerator` is the locale-specific font generator, allowing any locale to have its own custom
@@ -212,6 +230,8 @@ function fontGenerator (locale = ilib.getLocale()) {
 					debugMessage('%cFont Ready:', 'color:goldenrod;' + debugStyle, font.family, font.weight);
 				});
 			}
+			fontsLoaded = true;
+			pendingFontsLoadedCallbacks.forEach(cb => cb());
 		})
 		.catch(function (err) {
 			// eslint-disable-next-line no-console
@@ -226,6 +246,7 @@ function fontGenerator (locale = ilib.getLocale()) {
  * @param  {Node}  node The element to check
  *
  * @return {Boolean}      True for loaded, False for not loaded.
+ * @public
  */
 function isFontReady (node) {
 	if (node) {
@@ -234,4 +255,4 @@ function isFontReady (node) {
 	return false;
 }
 export default fontGenerator;
-export {fontGenerator, isFontReady};
+export {fontGenerator, isFontReady, onFontsLoaded};

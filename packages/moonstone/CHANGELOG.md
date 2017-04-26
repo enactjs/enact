@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `moonstone/MoonstoneDecorator/fontGenerator` exports: `isFontReady`, `onFontsLoaded` which let you test for whether an element's font is finished loading, and a callback for when the fonts have all finished loading, respectively
+
+### Changed
+
+- `moonstone/MoonstoneDecorator/fontGenerator` was refactored to use the browser's FontFace API to dynamically load locale fonts
+
 ## [1.1.0] - 2017-04-21
 
 ### Deprecated
