@@ -483,6 +483,7 @@ const VideoPlayerBase = class extends React.Component {
 			volume: 1,
 
 			// Non-standard state computed from properties
+			bottomControlsRendered: false,
 			bottomControlsVisible: false,
 			feedbackVisible: true,
 			more: false,
@@ -499,6 +500,7 @@ const VideoPlayerBase = class extends React.Component {
 		on('keypress', this.activityDetected);
 		this.attachCustomMediaEvents();
 		this.startDelayedFeedbackHide();
+		this.renderBottomControl.idle();
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -556,6 +558,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.stopAutoCloseTimeout();
 		this.stopDelayedTitleHide();
 		this.stopDelayedFeedbackHide();
+		this.renderBottomControl.stop();
 	}
 
 	//
@@ -604,8 +607,8 @@ const VideoPlayerBase = class extends React.Component {
 	showControls = () => {
 		this.startDelayedTitleHide();
 		forwardControlsAvailable({available: true}, this.props);
-		this.bottomControlsRendered = true;
 		this.setState({
+			bottomControlsRendered: true,
 			bottomControlsVisible: true,
 			titleVisible: true
 		});
@@ -1109,6 +1112,10 @@ const VideoPlayerBase = class extends React.Component {
 		this.video = video;
 	}
 
+	renderBottomControl = new Job(() => {
+		this.setState({bottomControlsRendered: true});
+	});
+
 	render () {
 		const {backwardIcon, children, className, forwardIcon, infoComponents, jumpBackwardIcon, jumpButtonsDisabled, jumpForwardIcon, leftComponents, noAutoPlay, noJumpButtons, noRateButtons, noSlider, pauseIcon, playIcon, rateButtonsDisabled, rightComponents, source, style, title, ...rest} = this.props;
 		delete rest.autoCloseTimeout;
@@ -1149,7 +1156,7 @@ const VideoPlayerBase = class extends React.Component {
 					{this.state.loading ? <Spinner centered /> : null}
 				</Overlay>
 
-				{this.bottomControlsRendered ?
+				{this.state.bottomControlsRendered ?
 					<div className={css.fullscreen + ' enyo-fit scrim'} style={{display: this.state.bottomControlsVisible ? 'block' : 'none'}}>
 						<Container className={css.bottom}>
 							{/* Info Section: Title, Description, Times */}
