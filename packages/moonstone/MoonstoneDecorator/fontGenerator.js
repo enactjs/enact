@@ -7,6 +7,10 @@
 import ilib from '@enact/i18n';
 import Locale from '@enact/i18n/ilib/lib/Locale';
 
+const debugFonts = true;
+// eslint-disable-next-line no-console
+const debugMessage = console.log;
+
 let previousLocale = null;
 
 /**
@@ -62,30 +66,57 @@ function fontGenerator (locale = ilib.getLocale()) {
 		loc = new Locale(locale),
 		language = loc.getLanguage(),
 		region = loc.getRegion(),
-		styleId = 'enact-localization-font-override',
+		debugStyle = ' background-color: #444; padding: 0.25ex 0.5ex;',
 		// Locale Configuration Block
 		fonts = {
 			'NonLatin': {
 				regular: 'LG Display-Light',
 				bold:    'LG Display-Regular'
 			},
-			'ja': {
-				regular: 'LG Display_JP'
+			'am': {
+				regular: 'LG Display_Amharic'
 			},
+			// 'bn': {
+			// 	regular: 'LG Display_Bengali'
+			// },
 			'en-JP': {
 				regular: 'LG Display_JP'
 			},
+			// 'gu': {
+			// 	regular: 'LG Display_Gujarati'
+			// },
+			'ja': {
+				regular: 'LG Display_JP'
+			},
+			// 'kn': {
+			// 	regular: 'LG Display_Kannada'
+			// },
+			// 'ks': {
+			// 	regular: 'LG Display_Devanagari'
+			// },
+			'or': {
+				regular: 'LG Display_Oriya'
+			},
+			'ml': {
+				regular: 'LG Display_ML'
+			},
+			// 'ta': {
+			// 	regular: 'LG Display_Tamil'
+			// },
+			// 'te': {
+			// 	regular: 'LG Display_Telugu'
+			// },
 			'ur': {
 				regular: 'LG Display_Urdu',
-				unicodeRanges:
+				unicodeRange:
 					'U+600-6FF,' +
 					'U+FE70-FEFE,' +
 					'U+FB50-FDFF'
 			},
 			'zh-HK': {
-				regular: 'LG Display GP4_HK-Light',
-				bold:    'LG Display GP4_HK-Regular',
-				unicodeRanges:
+				regular: 'LG Display GP4_HK',
+				bold:    'LG Display GP4_HK',
+				unicodeRange:
 					'U+0-FF,' +
 					'U+2E80-2EFF,' +
 					'U+3000-303F,' +
@@ -97,90 +128,110 @@ function fontGenerator (locale = ilib.getLocale()) {
 			}
 		};
 
-	let styleElem = document.getElementById(styleId),
-		fontDefinitionCss = '';
+	const fontDefinitions = [];
+	const compiledLocalFontsList = [];
 
 	// Duplications and alternate locale names
 	fonts['zh-TW'] = fonts['zh-HK'];
 
 	// Generate a single font-face rule
-	const buildFont = function (inOptions) {
-		if (!inOptions && !inOptions.name) {
-			return '';
+	const buildFont = function ({localName, name, ...rest}) {
+		if (!name) {
+			return;
 		}
-		let strOut = '@font-face { \n' +
-			'  font-family: "' + inOptions.name + '";\n' +
-			'  font-weight: ' + ( inOptions.weight || 'normal' ) + ';\n';
-
-		if (inOptions.localName) {
-			strOut += '  src: local("' + inOptions.localName + '");\n';
+		const fontFace = new window.FontFace(name, 'local("' + localName + '")');
+		compiledLocalFontsList.push(localName);
+		if (debugFonts) debugMessage('%cnew FontFace:', 'color:cyan;' + debugStyle, name, rest.weight, '"' + localName + '"');
+		for (let prop in rest) {
+			if (rest[prop] != null) fontFace[prop] = rest[prop];
 		}
-		if (inOptions.unicodeRanges) {
-			strOut += '  unicode-range: ' + inOptions.unicodeRanges + ';\n';
-		}
-		strOut += '} \n';
-		return strOut;
+		return fontFace.load();
 	};
 
 	// Generate a collection of font-face rules, in multiple font-variants
 	const buildFontSet = function (strLang, bitDefault) {
-		let strOut = '',
+		const fontSet = [],
 			name = (bitDefault) ? '' : ' ' + strLang;
 
 		if (fonts[strLang].regular) {
 			// Build Regular
-			strOut += buildFont({
+			fontSet.push(buildFont({
 				name: 'Moonstone LG Display' + name,
 				localName: fonts[strLang].regular,
-				weight: 500,
-				unicodeRanges: fonts[strLang].unicodeRanges
-			});
+				weight: 400,
+				unicodeRange: fonts[strLang].unicodeRange
+			}));
 
 			// Build Bold
-			strOut += buildFont({
-				name: 'Moonstone LG Display' + name,
-				localName: fonts[strLang].bold || fonts[strLang].regular,
-				weight: 700,
-				unicodeRanges: fonts[strLang].unicodeRanges
-			});
+			if (fonts[strLang].bold) {
+				fontSet.push(buildFont({
+					name: 'Moonstone LG Display' + name,
+					localName: fonts[strLang].bold,
+					weight: 700,
+					unicodeRange: fonts[strLang].unicodeRange
+				}));
+			}
 
 			// Build Light
-			strOut += buildFont({
-				name: 'Moonstone LG Display' + name,
-				localName: fonts[strLang].light || fonts[strLang].regular,
-				weight: 300,
-				unicodeRanges: fonts[strLang].unicodeRanges
-			});
+			if (fonts[strLang].light) {
+				fontSet.push(buildFont({
+					name: 'Moonstone LG Display' + name,
+					localName: fonts[strLang].light,
+					weight: 300,
+					unicodeRange: fonts[strLang].unicodeRange
+				}));
+			}
 		}
-		return strOut;
+		return fontSet;
 	};
-
-	if (!styleElem) {
-		styleElem = document.createElement('style');
-		styleElem.setAttribute('id', styleId);
-		document.head.appendChild(styleElem);
-	}
 
 	// Build all the fonts so they could be explicitly called
 	for (let lang in fonts) {
-		fontDefinitionCss += buildFontSet(lang);
+		const fs = buildFontSet(lang);
+		fontDefinitions.push( ...fs );
+
+		// Set up the override so "Moonstone LG Display" becomes the local-specific font.
+		const [lo, re] = lang.split('-');
+		if (lo === language) {
+			if (!re || (re && re === region)) {
+				if (debugFonts) debugMessage('%cOverriding Font:', 'color:yellowgreen;' + debugStyle, lang);
+				fontDefinitions.push( ...buildFontSet(lang, true) );
+			}
+		}
 	}
 
-	// Set up the override so "Moonstone LG Display" becomes the local-specific font.
-	if (language === 'ja') {
-		fontDefinitionCss += buildFontSet('ja', true);
-	}	else if (language === 'en' && region === 'JP') {
-		fontDefinitionCss += buildFontSet('en-JP', true);
-	}	else if (language === 'ur') {
-		fontDefinitionCss += buildFontSet('ur', true);
-	}	else if (language === 'zh' && region === 'HK') {
-		fontDefinitionCss += buildFontSet('zh-HK', true);
-	}	else if (language === 'zh' && region === 'TW') {
-		fontDefinitionCss += buildFontSet('zh-TW', true);
-	}
-
-	styleElem.innerHTML = fontDefinitionCss;
+	if (debugFonts) debugMessage('%cLets make some fonts:', 'color:limegreen;' + debugStyle, fontDefinitions);
+	Promise
+		.all(fontDefinitions)
+		.then(results => {
+			results.forEach(loadedFontFace => {
+				document.fonts.add(loadedFontFace);
+			});
+			if (debugFonts) {
+				document.fonts.forEach( function (font) {
+					debugMessage('%cFont Ready:', 'color:goldenrod;' + debugStyle, font.family, font.weight);
+				});
+			}
+		})
+		.catch(function (err) {
+			// eslint-disable-next-line no-console
+			console.log('%cERROR:', 'color:red;' + debugStyle, err);
+			// NOTE: It would be very nice to be able to determine WHICH promise failed here...
+		});
 }
 
+/**
+ * Check to see if the supplied node is assigned to use a font which has loaded.
+ *
+ * @param  {Node}  node The element to check
+ *
+ * @return {Boolean}      True for loaded, False for not loaded.
+ */
+function isFontReady (node) {
+	if (node) {
+		return document.fonts.check( window.getComputedStyle(node).getPropertyValue('font') );
+	}
+	return false;
+}
 export default fontGenerator;
-export {fontGenerator};
+export {fontGenerator, isFontReady};
