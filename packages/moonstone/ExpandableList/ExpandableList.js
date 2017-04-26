@@ -9,7 +9,8 @@
 import Changeable from '@enact/ui/Changeable';
 import Group from '@enact/ui/Group';
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import CheckboxItem from '../CheckboxItem';
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';

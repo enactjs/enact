@@ -2,6 +2,7 @@ import hoc from '@enact/core/hoc';
 import {forward} from '@enact/core/handle';
 import {childrenEquals} from '@enact/core/util';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import Marquee from './Marquee';
 import {contextTypes} from './MarqueeController';
@@ -114,7 +115,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @type {Node}
 			 * @public
 			 */
-			children: React.PropTypes.node,
+			children: PropTypes.node,
 
 			/**
 			 * Disables all marquee behavior except when `marqueeOn` is `'hover'` or `'focus'`. Will
@@ -123,7 +124,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @type {Boolean}
 			 * @public
 			 */
-			disabled: React.PropTypes.bool,
+			disabled: PropTypes.bool,
 
 			/**
 			 * Forces the `direction` of the marquee. Valid values are `'rtl'` and `'ltr'`. This includes non-text elements as well.
@@ -131,7 +132,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @type {String}
 			 * @public
 			 */
-			forceDirection: React.PropTypes.oneOf(['rtl', 'ltr']),
+			forceDirection: PropTypes.oneOf(['rtl', 'ltr']),
 
 			/**
 			 * When `true`, the contents will be centered regardless of the text directionality.
@@ -139,7 +140,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @type {Boolean}
 			 * @public
 			 */
-			marqueeCentered: React.PropTypes.bool,
+			marqueeCentered: PropTypes.bool,
 
 			/**
 			 * Number of milliseconds to wait before starting marquee when `marqueeOn` is `'hover'` or
@@ -149,14 +150,14 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @default 1000
 			 * @public
 			 */
-			marqueeDelay: React.PropTypes.number,
+			marqueeDelay: PropTypes.number,
 
 			/**
 			 * Disables all marquee behavior and removes supporting markup.
 			 *
 			 * @type {Boolean}
 			 */
-			marqueeDisabled: React.PropTypes.bool,
+			marqueeDisabled: PropTypes.bool,
 
 			/**
 			 * Determines what triggers the marquee to start its animation. Valid values are
@@ -166,7 +167,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @default 'focus'
 			 * @public
 			 */
-			marqueeOn: React.PropTypes.oneOf(['focus', 'hover', 'render']),
+			marqueeOn: PropTypes.oneOf(['focus', 'hover', 'render']),
 
 			/**
 			 * Number of milliseconds to wait before starting marquee the first time. Has no effect
@@ -176,7 +177,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @default 1000
 			 * @public
 			 */
-			marqueeOnRenderDelay: React.PropTypes.number,
+			marqueeOnRenderDelay: PropTypes.number,
 
 			/**
 			 * Number of milliseconds to wait before resetting the marquee position after it
@@ -186,7 +187,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @default 1000
 			 * @public
 			 */
-			marqueeResetDelay: React.PropTypes.number,
+			marqueeResetDelay: PropTypes.number,
 
 			/**
 			 * Rate of marquee measured in pixels/second.
@@ -195,7 +196,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @default 60
 			 * @public
 			 */
-			marqueeSpeed: React.PropTypes.number
+			marqueeSpeed: PropTypes.number
 		}
 
 		static defaultProps = {
@@ -242,6 +243,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidUpdate () {
+			if (this.distance === null) {
+				this.calculateMetrics();
+			}
 			if (this.shouldStartMarquee()) {
 				this.startAnimation(this.props.marqueeOn === 'render' ? this.props.marqueeOnRenderDelay : this.props.marqueeDelay);
 			}
@@ -456,9 +460,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		cancelAnimation = () => {
 			if (this.sync) {
 				this.forceRestartMarquee = true;
-				if (this.state.animating) {
-					this.context.cancel(this);
-				}
+				this.context.cancel(this);
 			}
 
 			this.stop();

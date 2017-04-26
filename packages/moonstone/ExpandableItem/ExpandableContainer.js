@@ -1,6 +1,7 @@
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 /**
  * Restores spotlight focus to root container when closing the container if the previously focused
@@ -22,7 +23,7 @@ const ExpandableContainerBase = class extends React.Component {
 		 * @public
 		 * @memberof moonstone/ExpandableItem.ExpandableContainerBase.prototype
 		 */
-		'data-container-id': React.PropTypes.string,
+		'data-container-id': PropTypes.string,
 
 		/**
 		 * When `true`, the contents of the container will not receive spotlight focus when becoming
@@ -32,7 +33,7 @@ const ExpandableContainerBase = class extends React.Component {
 		 * @default false
 		 * @public
 		 */
-		noAutoFocus: React.PropTypes.bool,
+		noAutoFocus: PropTypes.bool,
 
 		/**
 		 * When `true` and used in conjunction with `noAutoFocus` when `false`, the contents of the
@@ -42,7 +43,7 @@ const ExpandableContainerBase = class extends React.Component {
 		 * @default false
 		 * @public
 		 */
-		noPointerMode: React.PropTypes.bool,
+		noPointerMode: PropTypes.bool,
 
 		/**
 		 * Set the open state of the component, which determines whether it's expanded or not.
@@ -51,7 +52,7 @@ const ExpandableContainerBase = class extends React.Component {
 		 * @default true
 		 * @public
 		 */
-		open: React.PropTypes.bool
+		open: PropTypes.bool
 	}
 
 	static defaultProps = {
@@ -60,16 +61,18 @@ const ExpandableContainerBase = class extends React.Component {
 	}
 
 	highlightContents = () => {
-		if (this.containerNode.contains(document.activeElement)) {
+		const current = Spotlight.getCurrent();
+		if (this.containerNode.contains(current)) {
 			const contents = this.containerNode.querySelector('[data-expandable-container]');
-			if (contents && !this.props.noAutoFocus) {
+			if (contents && !this.props.noAutoFocus && !contents.contains(current)) {
 				Spotlight.focus(contents.dataset.containerId);
 			}
 		}
 	}
 
 	highlightLabeledItem = () => {
-		if (this.containerNode.contains(document.activeElement)) {
+		const current = Spotlight.getCurrent();
+		if (this.containerNode.contains(current)) {
 			Spotlight.focus(this.props['data-container-id']);
 		}
 	}

@@ -29,7 +29,7 @@ storiesOf('IconButton')
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
 				color={nullify(select('color', [null, 'red', 'green', 'yellow', 'blue']))}
-				disabled={nullify(boolean('disabled', false))}
+				disabled={boolean('disabled', false)}
 				selected={nullify(boolean('selected', false))}
 				small={boolean('small', false)}
 			>

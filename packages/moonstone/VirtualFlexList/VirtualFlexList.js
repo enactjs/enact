@@ -8,7 +8,8 @@
 
 import classNames from 'classnames';
 import {forward} from '@enact/core/handle';
-import React, {Component, PropTypes} from 'react';
+import PropTypes from 'prop-types';
+import React, {Component} from 'react';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import {VirtualListCore} from '../VirtualList/VirtualListBase';

@@ -1,7 +1,8 @@
 // Moonstone Environment
 
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import MoonstoneDecorator from '@enact/moonstone/MoonstoneDecorator';
 import {Panels, Panel, Header} from '@enact/moonstone/Panels';
 import {boolean, select} from '@kadira/storybook-addon-knobs';
@@ -30,7 +31,7 @@ const PanelsBase = kind({
 		<div {...rest}>
 			<Panels onApplicationClose={reloadPage}>
 				<Panel>
-					<Header type="compact" title={title} preserveCase />
+					<Header type="compact" title={title} casing="preserve" />
 					<div className={css.description}>
 						<p>{description}</p>
 					</div>

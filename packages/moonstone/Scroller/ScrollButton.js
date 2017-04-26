@@ -3,6 +3,7 @@ import Holdable from '@enact/ui/Holdable';
 import kind from '@enact/core/kind';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import IconButton from '../IconButton';
 
@@ -36,7 +37,7 @@ const ScrollButtonBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		children: React.PropTypes.string.isRequired,
+		children: PropTypes.string.isRequired,
 
 		/**
 		 * Scroll direction for this button (down, left, right, or up)
@@ -44,7 +45,7 @@ const ScrollButtonBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		direction: React.PropTypes.oneOf(['down', 'left', 'right', 'up']).isRequired,
+		direction: PropTypes.oneOf(['down', 'left', 'right', 'up']).isRequired,
 
 		/**
 		 * When `true`, the component is shown as disabled and does not generate `onClick`
@@ -53,7 +54,7 @@ const ScrollButtonBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		disabled: React.PropTypes.bool
+		disabled: PropTypes.bool
 	},
 
 	computed: {
