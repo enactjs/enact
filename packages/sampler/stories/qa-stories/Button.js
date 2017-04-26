@@ -17,11 +17,11 @@ storiesOf('Button')
 		'with long text',
 		() => (
 			<Button
+				casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
 				disabled={boolean('disabled')}
 				minWidth={boolean('minWidth')}
-				preserveCase={boolean('preserveCase')}
 				selected={boolean('selected')}
 				small={boolean('small')}
 			>
@@ -33,11 +33,11 @@ storiesOf('Button')
 		'with tall characters',
 		() => (
 			<Button
+				casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
 				disabled={boolean('disabled')}
 				minWidth={boolean('minWidth')}
-				preserveCase={boolean('preserveCase')}
 				selected={boolean('selected')}
 				small={boolean('small')}
 			>
@@ -49,11 +49,11 @@ storiesOf('Button')
 		'to validate minWidth with a single character',
 		() => (
 			<Button
+				casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
 				disabled={boolean('disabled')}
 				minWidth={boolean('minWidth', false)}
-				preserveCase={boolean('preserveCase')}
 				selected={boolean('selected')}
 				small={boolean('small')}
 			>
@@ -79,23 +79,23 @@ storiesOf('Button')
 		() => (
 			<div>
 				<Button
+					casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
 					className={css.tapArea}
 					onClick={action('onClick')}
 					backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
 					disabled={boolean('disabled')}
 					minWidth={boolean('minWidth')}
-					preserveCase={boolean('preserveCase')}
 					selected={boolean('selected')}
 				>
 					Normal Button
 				</Button>
 				<Button
+					casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
 					className={css.tapArea}
 					onClick={action('onClick')}
 					backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
 					disabled={boolean('disabled')}
 					minWidth={boolean('minWidth')}
-					preserveCase={boolean('preserveCase')}
 					selected={boolean('selected')}
 					small
 				>

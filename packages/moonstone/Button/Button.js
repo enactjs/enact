@@ -71,6 +71,17 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 			backgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'transparent']),
 
 			/**
+			 * Transformation to apply to the text of the Button. By default, text is transformed
+			 * to uppercase.
+			 *
+			 * @see i18n/Uppercase#casing
+			 * @type {String}
+			 * @default 'upper'
+			 * @public
+			 */
+			casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence']),
+
+			/**
 			 * This property accepts one of the following color names, which correspond with the
 			 * colored buttons on a standard remote control: `'red'`, `'green'`, `'yellow'`, `'blue'`
 			 *
@@ -228,7 +239,7 @@ const ButtonFactory = factory(css => {
 	/**
 	 * {@link moonstone/Button.Button} is a Button with Moonstone styling, Spottable and
 	 * Pressable applied.  If the Button's child component is text, it will be uppercased unless
-	 * `preserveCase` is set.
+	 * `casing` is set.
 	 *
 	 * Usage:
 	 * ```

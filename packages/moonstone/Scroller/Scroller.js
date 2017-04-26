@@ -8,7 +8,8 @@
 
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
-import React, {Component, PropTypes} from 'react';
+import PropTypes from 'prop-types';
+import React, {Component} from 'react';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import css from './Scroller.less';
@@ -228,7 +229,12 @@ class ScrollerBase extends Component {
  * @ui
  * @public
  */
-const Scroller = SpotlightContainerDecorator(Scrollable(ScrollerBase));
+const Scroller = SpotlightContainerDecorator(
+	{restrict: 'self-first'},
+	Scrollable(
+		ScrollerBase
+	)
+);
 
 export default Scroller;
 export {Scroller, ScrollerBase};
