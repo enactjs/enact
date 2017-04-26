@@ -2,6 +2,13 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Fixed
+
+- `moonstone/MarqueeDecorator` to properly stop marquee on items with `'marqueeOnHover'`
+- `moonstone/ExpandableList` to work properly with object-based children
+
 ## [1.1.0] - 2017-04-21
 
 ### Deprecated
