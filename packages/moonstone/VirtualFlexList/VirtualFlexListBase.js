@@ -4,6 +4,7 @@
  * The default export is {@link moonstone/VirtualFlexList.VirtualFlexListBase}.
  */
 
+import {contextTypes} from '@enact/i18n/I18nDecorator';
 import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
@@ -120,6 +121,8 @@ class VirtualFlexListCore extends Component {
 		 */
 		overhang: PropTypes.number
 	}
+
+	static contextTypes = contextTypes
 
 	static defaultProps = {
 		component: null,
@@ -693,9 +696,11 @@ class VirtualFlexListCore extends Component {
 
 	gridPositionToItemPosition = ({primaryPosition, secondaryPosition}) => ( (this.props.flexAxis === 'row') ? {left: secondaryPosition, top: primaryPosition} : {left: primaryPosition, top: secondaryPosition})
 
-	calculateFlexPositionOnFocus = (focusedIndex, key) => {
+	calculateFlexPositionOnFocus = (item) => {
 		const
 			{primary, secondary} = this,
+			focusedIndex = item.getAttribute(dataIndexAttribute),
+			key = item.getAttribute('key'),
 			indices = focusedIndex.split('-'),
 			primaryIndex = Number.parseInt(indices[0]),
 			secondaryIndex = Number.parseInt(indices[1]),

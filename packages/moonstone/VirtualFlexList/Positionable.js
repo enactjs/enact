@@ -91,18 +91,15 @@ const Positionable = hoc((config, Wrapped) => {
 		onFocus = (e) => {
 			const
 				item = e.target,
-				index = item.getAttribute(dataIndexAttribute),
-				key = item.getAttribute('key');
+				{calculateFlexPositionOnFocus, calculatePositionOnFocus} = this.childRef;
 			let pos;
 
 			// For VirtualList
-			if (this.childRef.calculatePositionOnFocus) {
-				if (index && item !== this.lastFocusedItem && item === doc.activeElement) {
-					pos = this.childRef.calculatePositionOnFocus(index);
-				}
+			if (calculatePositionOnFocus && item !== this.lastFocusedItem && item === doc.activeElement) {
+				pos = calculatePositionOnFocus(item);
 			// For VirtualFlexList
-			} else if (this.childRef.calculateFlexPositionOnFocus && typeof index === 'string') {
-				pos = this.childRef.calculateFlexPositionOnFocus(index, key);
+			} else if (calculateFlexPositionOnFocus) {
+				pos = calculateFlexPositionOnFocus(item);
 			}
 
 			if (pos) {
