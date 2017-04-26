@@ -115,10 +115,13 @@ class View extends React.Component {
 	}
 
 	shouldComponentUpdate (nextProps, nextState) {
+			console.log('update');
 		if (this.props.index !== nextProps.index && (this.state.entering === false && nextState.entering === false)) {
+			console.log('update false');
 			return false;
 		}
-
+		console.log(this.props.index, nextProps.index, this.state.entering, nextState.entering);
+		console.log('update true');
 		return true;
 	}
 
