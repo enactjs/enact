@@ -7,6 +7,7 @@ import {
 	getContainerFocusTarget,
 	getSpottableDescendants,
 	isContainer,
+	isNavigable,
 	removeContainer,
 	rootContainerId,
 	setContainerLastFocusedElement
@@ -497,6 +498,73 @@ describe('container', () => {
 
 				const expected = 'lastChildFocused';
 				const actual = getContainerFocusTarget('container').id;
+
+				expect(actual).to.equal(expected);
+			}
+		));
+	});
+
+	describe('#isNavigable', () => {
+		beforeEach(setupContainers);
+		afterEach(teardownContainers);
+
+		it('should return false a null node', () => {
+			const expected = false;
+			const actual = isNavigable(null, rootContainerId);
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should return true for any node when not verifying selector and without a navigableFilter', testScenario(
+			scenarios.nonSpottableSiblings,
+			(root) => {
+				const expected = true;
+				const actual = isNavigable(root.querySelector('.other'), rootContainerId);
+
+				expect(actual).to.equal(expected);
+			}
+		));
+
+		it('should return true for spottable children when verifying selector', testScenario(
+			scenarios.onlySpottables,
+			(root) => {
+				const expected = true;
+				const actual = isNavigable(root.querySelector('.spottable'), rootContainerId, true);
+
+				expect(actual).to.equal(expected);
+			}
+		));
+
+		it('should return true for spottable children when verifying selector', testScenario(
+			scenarios.onlySpottables,
+			(root) => {
+				const expected = true;
+				const actual = isNavigable(root.querySelector('.spottable'), rootContainerId, true);
+
+				expect(actual).to.equal(expected);
+			}
+		));
+
+		it('should return true for containers', testScenario(
+			scenarios.onlyContainers,
+			(root) => {
+				const expected = true;
+				const actual = isNavigable(root.querySelector(`[${containerAttribute}]`), rootContainerId, true);
+
+				expect(actual).to.equal(expected);
+			}
+		));
+
+		it('should filter the node with navigableFilter', testScenario(
+			scenarios.spottableAndContainers,
+			(root) => {
+				configureContainer(rootContainerId, {
+					// test filter which makes containers non-navigable
+					navigableFilter: n => !isContainer(n)
+				});
+
+				const expected = false;
+				const actual = isNavigable(root.querySelector(`[${containerAttribute}]`), rootContainerId, true);
 
 				expect(actual).to.equal(expected);
 			}
