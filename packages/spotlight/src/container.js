@@ -7,7 +7,7 @@
 
 import {spottableClass} from '../Spottable';
 
-import {matchSelector, parseSelector} from './utils';
+import {matchSelector} from './utils';
 
 const containerAttribute = 'data-container-id';
 const containerConfigs   = new Map();
@@ -405,7 +405,7 @@ const isNavigable = (node, containerId, verify) => {
 	}
 
 	const config = getContainerConfig(containerId);
-	if (verify && !matchSelector(node, config.selector)) {
+	if (verify && config.selector && !matchSelector(config.selector, node)) {
 		return false;
 	}
 
@@ -436,7 +436,8 @@ function getContainerDefaultElement (containerId) {
 		return null;
 	}
 	if (typeof defaultElement === 'string') {
-		defaultElement = parseSelector(defaultElement)[0];
+		defaultElement = getSpottableDescendants(containerId)
+			.filter(matchSelector(defaultElement))[0];
 	}
 	if (isNavigable(defaultElement, containerId, true)) {
 		return defaultElement;
@@ -482,18 +483,26 @@ function setContainerLastFocusedElement (node, containerIds) {
 }
 
 function getContainerFocusTarget (containerId) {
+	if (!isContainer(containerId)) {
+		return false;
+	}
+
 	const config = getContainerConfig(containerId);
+	const enterLast = config.enterTo === 'last-focused';
+	const enterDefault = config.enterTo === 'defaultElement';
 	let next;
 
-	if (config.enterTo === 'last-focused') {
-		next = getContainerLastFocusedElement(containerId) ||
-			getContainerDefaultElement(containerId) ||
-			getSpottableDescendants(containerId)[0];
-	} else {
-		next = getContainerDefaultElement(containerId) ||
-			getContainerLastFocusedElement(containerId) ||
-			getSpottableDescendants(containerId)[0];
+	// if the container has a preferred entry point, try to find it first
+	if (enterLast) {
+		next = getContainerLastFocusedElement(containerId);
+	} else if (enterDefault) {
+		next = getContainerDefaultElement(containerId);
 	}
+
+	// if there isn't a preferred entry or it wasn't found, try to find something to spot
+	next = next ||
+			(!enterDefault && getContainerDefaultElement(containerId)) ||
+			getSpottableDescendants(containerId)[0];
 
 	if (isContainer(next)) {
 		return getContainerFocusTarget(getContainerId(next));

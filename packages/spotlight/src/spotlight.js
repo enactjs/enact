@@ -782,7 +782,14 @@ const Spotlight = (function () {
 				reverse: _reverseDirections[direction]
 			};
 			if (isContainer(next)) {
-				return focusContainer(next.dataset.containerId);
+				const nextContainerId = next.dataset.containerId;
+				const nextConfig = getContainerConfig(nextContainerId);
+
+				if (nextConfig.enterTo) {
+					return focusContainer(next);
+				} else {
+					// recurse ...
+				}
 			} else {
 				return focusNext(next, direction, currentContainerIds, currentFocusedElement);
 			}
@@ -1267,7 +1274,7 @@ const Spotlight = (function () {
 				return false;
 			}
 
-			return matchSelector(elem, '[data-container-muted="true"] .' + spottableClass);
+			return matchSelector('[data-container-muted="true"] .' + spottableClass, elem);
 		},
 
 		/**
@@ -1294,7 +1301,7 @@ const Spotlight = (function () {
 				return false;
 			}
 
-			return matchSelector(elem, '.' + spottableClass);
+			return matchSelector('.' + spottableClass, elem);
 		},
 
 		/**

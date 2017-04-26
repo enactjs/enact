@@ -1,3 +1,5 @@
+import curry from 'ramda/src/curry';
+
 let elementMatchesSelector = function (selector) {
 	const matchedNodes = (this.parentNode || this.document).querySelectorAll(selector);
 	return [].slice.call(matchedNodes).indexOf(this) >= 0;
@@ -12,7 +14,7 @@ if (typeof window === 'object') {
 		elementMatchesSelector;
 }
 
-function matchSelector (elem, selector) {
+const matchSelector = curry((selector, elem) => {
 	if (typeof selector === 'string') {
 		return elementMatchesSelector.call(elem, selector);
 	} else if (typeof selector === 'object' && selector.length) {
@@ -21,7 +23,7 @@ function matchSelector (elem, selector) {
 		return elem === selector;
 	}
 	return false;
-}
+});
 
 function parseSelector (selector) {
 	let result;

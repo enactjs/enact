@@ -2,10 +2,12 @@ import {
 	configureContainer,
 	containerAttribute,
 	getContainersForNode,
+	getContainerFocusTarget,
 	getSpottableDescendants,
 	isContainer,
 	removeContainer,
-	rootContainerId
+	rootContainerId,
+	setContainerLastFocusedElement
 } from '../container';
 
 import {
@@ -79,6 +81,33 @@ const scenarios = {
 			[containerAttribute]: 'child',
 			children: someSpottables(5)
 		})
+	}),
+	containerWithDefaultAndLastFocused: container({
+		[containerAttribute]: 'container',
+		children: join(
+			spottable({id: 'firstSpottable'}),
+			someSpottables(5),
+			node({id: 'spottableDefault', className: 'spottable spottable-default'}),
+			spottable({id: 'lastFocused'})
+		)
+	}),
+	nestedContainersWithDefaultAndLastFocused: container({
+		[containerAttribute]: 'container',
+		children: join(
+			spottable({id: 'firstSpottable'}),
+			someSpottables(5),
+			container({
+				[containerAttribute]: 'child',
+				id: 'spottableDefault',
+				className: 'spottable-default',
+				children: join(
+					spottable({id: 'firstChildSpottable'}),
+					someSpottables(5),
+					spottable({id: 'lastChildFocused'})
+				)
+			}),
+			spottable({id: 'lastFocused'})
+		)
 	})
 };
 
@@ -285,5 +314,166 @@ describe('container', () => {
 
 			expect(actual).to.equal(expected);
 		});
+	});
+
+	describe('#getContainerFocusTarget', () => {
+		afterEach(() => {
+			// clean up any containers we create for safe tests
+			removeContainer('container');
+			removeContainer('child');
+		});
+
+		it('should return the last focused element when enterTo is "last-focused"', testScenario(
+			scenarios.containerWithDefaultAndLastFocused,
+			(root) => {
+				configureContainer('container', {
+					enterTo: 'last-focused',
+					defaultElement: '.spottable-default'
+				});
+
+				setContainerLastFocusedElement(root.querySelector('#lastFocused'), ['container']);
+
+				const expected = 'lastFocused';
+				const actual = getContainerFocusTarget('container').id;
+
+				expect(actual).to.equal(expected);
+			}
+		));
+
+		it('should return the default spottable element when enterTo is "last-focused" but no element has been focused', testScenario(
+			scenarios.containerWithDefaultAndLastFocused,
+			() => {
+				configureContainer('container', {
+					enterTo: 'last-focused',
+					defaultElement: '.spottable-default'
+				});
+
+				const expected = 'spottableDefault';
+				const actual = getContainerFocusTarget('container').id;
+
+				expect(actual).to.equal(expected);
+			}
+		));
+
+		it('should return the first spottable element when enterTo is "last-focused" and defaultElement is not configured', testScenario(
+			scenarios.containerWithDefaultAndLastFocused,
+			() => {
+				configureContainer('container', {
+					enterTo: 'last-focused'
+				});
+
+				const expected = 'firstSpottable';
+				const actual = getContainerFocusTarget('container').id;
+
+				expect(actual).to.equal(expected);
+			}
+		));
+
+		it('should return the first spottable element when enterTo is "last-focused" and defaultElement is not found', testScenario(
+			scenarios.containerWithDefaultAndLastFocused,
+			() => {
+				configureContainer('container', {
+					enterTo: 'last-focused',
+					// configured, but not found
+					defaultElement: '[data-default-spottable]'
+				});
+
+				const expected = 'firstSpottable';
+				const actual = getContainerFocusTarget('container').id;
+
+				expect(actual).to.equal(expected);
+			}
+		));
+
+		it('should return the default spottable element when enterTo is "default-element"', testScenario(
+			scenarios.containerWithDefaultAndLastFocused,
+			() => {
+				configureContainer('container', {
+					enterTo: 'default-element',
+					defaultElement: '.spottable-default'
+				});
+
+				const expected = 'spottableDefault';
+				const actual = getContainerFocusTarget('container').id;
+
+				expect(actual).to.equal(expected);
+			}
+		));
+
+		it('should return the first spottable element when enterTo is "default-element" but defaultElement is not configured', testScenario(
+			scenarios.containerWithDefaultAndLastFocused,
+			() => {
+				configureContainer('container', {
+					enterTo: 'default-element'
+				});
+
+				const expected = 'firstSpottable';
+				const actual = getContainerFocusTarget('container').id;
+
+				expect(actual).to.equal(expected);
+			}
+		));
+
+		it('should return the first spottable element when enterTo is "default-element" but defaultElement is not found', testScenario(
+			scenarios.containerWithDefaultAndLastFocused,
+			() => {
+				configureContainer('container', {
+					enterTo: 'default-element',
+					defaultElement: '[data-default-spottable]'
+				});
+
+				const expected = 'firstSpottable';
+				const actual = getContainerFocusTarget('container').id;
+
+				expect(actual).to.equal(expected);
+			}
+		));
+
+		it('should return the first spottable element when enterTo is not configured', testScenario(
+			scenarios.containerWithDefaultAndLastFocused,
+			() => {
+				configureContainer('container');
+
+				const expected = 'firstSpottable';
+				const actual = getContainerFocusTarget('container').id;
+
+				expect(actual).to.equal(expected);
+			}
+		));
+
+		it('should return the default element when enterTo is not configured and defaultElement is configured', testScenario(
+			scenarios.containerWithDefaultAndLastFocused,
+			() => {
+				configureContainer('container', {
+					defaultElement: '.spottable-default'
+				});
+
+				const expected = 'spottableDefault';
+				const actual = getContainerFocusTarget('container').id;
+
+				expect(actual).to.equal(expected);
+			}
+		));
+
+		it('should cascade search into child containers', testScenario(
+			scenarios.nestedContainersWithDefaultAndLastFocused,
+			(root) => {
+				configureContainer('container', {
+					defaultElement: '.spottable-default'
+				});
+
+				configureContainer('child', {
+					enterTo: 'last-focused',
+					defaultElement: '.spottable-default'
+				});
+
+				setContainerLastFocusedElement(root.querySelector('#lastChildFocused'), ['child']);
+
+				const expected = 'lastChildFocused';
+				const actual = getContainerFocusTarget('container').id;
+
+				expect(actual).to.equal(expected);
+			}
+		));
 	});
 });
