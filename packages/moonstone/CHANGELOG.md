@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+
+- `moonstone/VideoPlayer` space allotment on both sides of the playback controls to support 3 buttons; consequently the "more" controls area has shrunk by the same amount
+
 ### Fixed
 
 - `moonstone/MarqueeDecorator` to properly stop marquee on items with `'marqueeOnHover'`
