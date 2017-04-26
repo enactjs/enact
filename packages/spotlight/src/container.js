@@ -252,7 +252,13 @@ const getSpottableDescendants = (containerId) => {
 		return [];
 	}
 
-	const spottableSelector = `.${spottableClass}`;
+	const {selector, selectorDisabled} = getContainerConfig(containerId) || {};
+
+	if (!selector || selectorDisabled) {
+		return [];
+	}
+
+	const spottableSelector = selector;
 	const subContainerSelector = getSubContainerSelector(node);
 	const candidates = querySelector(
 		node,
@@ -405,7 +411,7 @@ const isNavigable = (node, containerId, verify) => {
 	}
 
 	const config = getContainerConfig(containerId);
-	if (verify && config.selector && !matchSelector(config.selector, node)) {
+	if (verify && config.selector && !isContainer(node) && !matchSelector(config.selector, node)) {
 		return false;
 	}
 
@@ -415,11 +421,22 @@ const isNavigable = (node, containerId, verify) => {
 /**
  * Returns the IDs of all containers
  *
- * @return {Iterator}  Iterator of key names
+ * @return {String[]}  Array of container IDs
  * @memberof spotlight/container
  * @private
  */
-const getAllContainerIds = () => containerConfigs.keys();
+const getAllContainerIds = () => {
+	const ids = [];
+	const keys = containerConfigs.keys();
+
+	// PhantomJS-friendly iterator->array conversion
+	let id;
+	while ((id = keys.next()) && !id.done) {
+		ids.push(id.value);
+	}
+
+	return ids;
+};
 
 /**
  * Returns the default focus element for a container

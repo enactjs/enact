@@ -1,6 +1,8 @@
 import {
 	configureContainer,
+	configureDefaults,
 	containerAttribute,
+	getAllContainerIds,
 	getContainersForNode,
 	getContainerFocusTarget,
 	getSpottableDescendants,
@@ -111,8 +113,23 @@ const scenarios = {
 	})
 };
 
+const setupContainers = () => {
+	configureDefaults({
+		selector: '.spottable'
+	});
+	configureContainer(rootContainerId);
+};
+
+const teardownContainers = () => {
+	// clean up any containers we create for safe tests
+	getAllContainerIds().forEach(removeContainer);
+};
+
 describe('container', () => {
 	describe('#getSpottableDescendants', () => {
+		beforeEach(setupContainers);
+		afterEach(teardownContainers);
+
 		it('should find spottables', testScenario(
 			scenarios.onlySpottables,
 			() => {
@@ -176,6 +193,8 @@ describe('container', () => {
 		it('should not find spottables in sibling containers', testScenario(
 			scenarios.siblingContainers,
 			() => {
+				configureContainer('first');
+
 				const expected = 5;
 				const actual = getSpottableDescendants('first').length;
 
@@ -186,6 +205,8 @@ describe('container', () => {
 		it('should not find spottables in descendant containers', testScenario(
 			scenarios.complexTree,
 			() => {
+				configureContainer('first-container');
+
 				const expected = 3;
 				const actual = getSpottableDescendants('first-container').length;
 
@@ -196,6 +217,9 @@ describe('container', () => {
 		it('should not find containers that are disabled', testScenario(
 			scenarios.complexTree,
 			() => {
+				configureContainer('first-container');
+				configureContainer('second-container');
+
 				const expected = 3;
 				const actual = getSpottableDescendants('second-container').length;
 
@@ -206,6 +230,8 @@ describe('container', () => {
 		it('should not any spottables within a disabled container', testScenario(
 			scenarios.spottablesInDisabledContainer,
 			() => {
+				configureContainer('container');
+
 				const expected = 0;
 				const actual = getSpottableDescendants('container').length;
 
@@ -216,6 +242,9 @@ describe('container', () => {
 		it('should not any spottables within a disabled ancestor container', testScenario(
 			scenarios.spottablesInNestedDisabledContainer,
 			() => {
+				configureContainer('container');
+				configureContainer('child');
+
 				const expected = 0;
 				const actual = getSpottableDescendants('child').length;
 
@@ -317,11 +346,8 @@ describe('container', () => {
 	});
 
 	describe('#getContainerFocusTarget', () => {
-		afterEach(() => {
-			// clean up any containers we create for safe tests
-			removeContainer('container');
-			removeContainer('child');
-		});
+		beforeEach(setupContainers);
+		afterEach(teardownContainers);
 
 		it('should return the last focused element when enterTo is "last-focused"', testScenario(
 			scenarios.containerWithDefaultAndLastFocused,
