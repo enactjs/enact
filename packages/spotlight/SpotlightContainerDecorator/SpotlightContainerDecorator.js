@@ -49,7 +49,7 @@ const defaultConfig = {
 	 * @memberof spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator.defaultConfig
 	 * @public
 	 */
-	enterTo: 'last-focused',
+	enterTo: null,
 
 	/**
 	 * Whether the container will preserve the id when it unmounts.
