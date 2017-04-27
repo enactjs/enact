@@ -254,16 +254,15 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				const
 					bounds = this.getScrollBounds(),
 					deltaMode = e.deltaMode,
-					wheelDeltaY = e.nativeEvent ? -e.nativeEvent.wheelDeltaY : -e.wheelDeltaY,
+					pixelPerLine = 40,
 					scrollWheelMultiplierForDeltaPixel = 2,
-					pixelPerLine = scrollWheelMultiplierForDeltaPixel * ri.scale(39);
-
+					wheelDeltaY = e.nativeEvent ? -e.nativeEvent.wheelDeltaY : -e.wheelDeltaY;
 				let delta = (wheelDeltaY || e.deltaY);
 
 				if (deltaMode === 0) {
 					delta = ri.scale(delta) * scrollWheelMultiplierForDeltaPixel;
 				} else if (deltaMode === 1) { // line; firefox
-					delta = ri.scale(delta) * pixelPerLine;
+					delta = ri.scale(delta * pixelPerLine) * scrollWheelMultiplierForDeltaPixel;
 				} else if (deltaMode === 2) { // page
 					delta = delta > 0 ? bounds.clientWidth : -bounds.clientWidth;
 				}
