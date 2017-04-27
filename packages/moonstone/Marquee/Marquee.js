@@ -108,6 +108,7 @@ const MarqueeBase = kind({
 		 *
 		 * @type {Boolean}
 		 * @public
+		 * @default false
 		 */
 		rtl: PropTypes.bool,
 
@@ -120,6 +121,10 @@ const MarqueeBase = kind({
 		speed: PropTypes.number
 	},
 
+	defaultProps: {
+		rtl: false
+	},
+
 	styles: {
 		css,
 		className: 'marquee'
@@ -129,7 +134,9 @@ const MarqueeBase = kind({
 		clientClassName: ({animating}) => animating ? animated : css.text,
 		clientStyle: ({animating, centered, distance, forceDirection, overflow, rtl, speed}, {rtl: contextRtl}) => {
 			const overrideRtl = forceDirection ? true : contextRtl !== rtl;
-
+			if (forceDirection === 'rtl') {
+				rtl = true;
+			}
 			// We only attempt to set the textAlign of this control if the locale's directionality
 			// differs from the directionality of our current marqueeable control (as determined by
 			// the control's content) and it will marquee.

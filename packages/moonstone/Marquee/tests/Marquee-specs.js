@@ -51,7 +51,7 @@ describe('Marquee', () => {
 
 	it('should set RTL direction in LTR context when the text directionality is RTL', function () {
 		const subject = shallow(
-			<Marquee>
+			<Marquee rtl>
 				{rtlContent}
 			</Marquee>,
 			{context: {rtl: false}}
@@ -90,7 +90,7 @@ describe('Marquee', () => {
 
 	it('should have positive translate for RTL text', function () {
 		const subject = shallow(
-			<Marquee animating distance={100}>
+			<Marquee animating distance={100} rtl>
 				{rtlContent}
 			</Marquee>
 		);
@@ -156,7 +156,7 @@ describe('Marquee', () => {
 		expect(actual).to.have.property('direction').to.equal(expected);
 	});
 
-	it('should have direction of inherit when forceDirection is null, and content and context are LTR', function () {
+	it.only('should have direction of inherit when forceDirection is null, and content and context are LTR', function () {
 		const subject = shallow(
 			<Marquee>
 				{content}
@@ -172,7 +172,7 @@ describe('Marquee', () => {
 
 	it('should have direction of inherit when forceDirection is null, and content and context are RTL', function () {
 		const subject = shallow(
-			<Marquee>
+			<Marquee rtl>
 				{rtlContent}
 			</Marquee>,
 			{context: {rtl: true}}
