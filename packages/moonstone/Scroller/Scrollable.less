@@ -30,20 +30,12 @@
 		padding-right: 0;
 	}
 
-	.onlyVerticalScrollbarNeeded {
+	div.onlyVerticalScrollbarNeeded {
 		bottom: 0;
-
-		:global(.enact-text-large) & {
-			bottom: 0;
-		}
 	}
 
-	.onlyHorizontalScrollbarNeeded {
+	div.onlyHorizontalScrollbarNeeded {
 		.position-start-end(0, 0);
-
-		:global(.enact-text-large) & {
-			.position-start-end(0, 0);
-		}
 	}
 }
 
@@ -53,18 +45,10 @@
 	padding-bottom: 0;
 }
 
-.takeAvailableSpaceForHorizontal {
+.scrollable.takeAvailableSpaceForHorizontal {
 	.padding-start-end(0, 0);
-
-	:global(.enact-text-large) & {
-		.padding-start-end(0, 0);
-	}
 }
 
-.takeAvailableSpaceForVertical {
+.scrollable.takeAvailableSpaceForVertical {
 	padding-bottom: 0;
-
-	:global(.enact-text-large) & {
-		padding-bottom: 0;
-	}
 }
