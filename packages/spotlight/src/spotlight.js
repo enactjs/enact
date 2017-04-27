@@ -18,6 +18,7 @@
 
 import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';
+import concat from 'ramda/src/concat';
 import difference from 'ramda/src/difference';
 import last from 'ramda/src/last';
 
@@ -32,6 +33,7 @@ import {
 	getContainerDefaultElement,
 	getContainerFocusTarget,
 	getContainerLastFocusedElement,
+	getContainerNavigableElements,
 	getContainersForNode,
 	getSpottableDescendants,
 	isContainer,
@@ -638,27 +640,34 @@ const Spotlight = (function () {
 	}
 
 	function getAllNavigableElements () {
-		return getNavigableElements(Array.from(getAllContainerIds()));
+		return getAllContainerIds()
+			.map(getSpottableDescendants)
+			.reduce(concat, [])
+			.filter(n => !isContainer(n));
 	}
 
-	function getNavigableElements (containerIds) {
-		let containerNavigableElements = {};
-		let allNavigableElements = [];
+	function getAllNavigableElementsFromNode (node, containerIds = getContainersForNode(node)) {
+		return getAllContainerIds().map(containerId => {
+			if (containerIds.indexOf(containerId) > -1) {
+				// for containers that are ancestors of node, we ignore enterTo and use any
+				// spottable elements
+				return getSpottableDescendants(containerId);
+			} else {
+				// for other containers, we use only the navigable elements
+				return getContainerNavigableElements(containerId);
+			}
+		})
+		// flatten
+		.reduce(concat, [])
+		// filter out the current node and any containers (because we've already extracted the
+		// relevant target for each container above)
+		.filter(n => {
+			if (n === node || isContainer(n)) {
+				return false;
+			}
 
-		for (const id of containerIds) {
-			containerNavigableElements[id] = getSpottableDescendants(id);
-			allNavigableElements = allNavigableElements.concat(containerNavigableElements[id]);
-		}
-		return {
-			allNavigableElements: allNavigableElements.filter(node => {
-				if (isContainer(node)) {
-					return containerIds.indexOf(node.dataset.containerId) === -1;
-				}
-
-				return true;
-			}),
-			containerNavigableElements
-		};
+			return true;
+		});
 	}
 
 	function focusNext (next, direction, currentContainerIds, currentFocusedElement) {
@@ -701,21 +710,20 @@ const Spotlight = (function () {
 
 	function spotNextFromPoint (direction, position, containerId) {
 		const config = getContainerConfig(containerId);
-		const {allNavigableElements, containerNavigableElements} = getAllNavigableElements();
 		let next;
 
 		if (config.restrict === 'self-only' || config.restrict === 'self-first') {
 			next = navigate(
 				position,
 				direction,
-				containerNavigableElements[containerId],
+				getSpottableDescendants(containerId),
 				config
 			);
 		} else {
 			next = navigate(
 				position,
 				direction,
-				allNavigableElements,
+				getAllNavigableElements(),
 				config
 			);
 		}
@@ -741,7 +749,6 @@ const Spotlight = (function () {
 			return true;
 		}
 
-		const {allNavigableElements, containerNavigableElements} = getNavigableElements(currentContainerIds);
 		const currentContainerId = last(currentContainerIds);
 		let next;
 		let preventFindNext;
@@ -755,7 +762,7 @@ const Spotlight = (function () {
 				next = navigate(
 					currentFocusedElement,
 					direction,
-					exclude(containerNavigableElements[id], currentFocusedElement),
+					exclude(getSpottableDescendants(id), currentFocusedElement),
 					config
 				);
 
@@ -770,7 +777,7 @@ const Spotlight = (function () {
 			next = navigate(
 				currentFocusedElement,
 				direction,
-				exclude(allNavigableElements, currentFocusedElement),
+				getAllNavigableElementsFromNode(currentFocusedElement, currentContainerIds),
 				getContainerConfig(currentContainerId)
 			);
 		}
@@ -782,14 +789,7 @@ const Spotlight = (function () {
 				reverse: _reverseDirections[direction]
 			};
 			if (isContainer(next)) {
-				const nextContainerId = next.dataset.containerId;
-				const nextConfig = getContainerConfig(nextContainerId);
-
-				if (nextConfig.enterTo) {
-					return focusContainer(next);
-				} else {
-					// recurse ...
-				}
+				return focusContainer(next.dataset.containerId);
 			} else {
 				return focusNext(next, direction, currentContainerIds, currentFocusedElement);
 			}
@@ -842,7 +842,7 @@ const Spotlight = (function () {
 	}
 
 	function shouldPreventNavigation () {
-		return (!getAllContainerIds().next() || _pause);
+		return (!getAllContainerIds().length || _pause);
 	}
 
 	function onKeyUp (evt) {

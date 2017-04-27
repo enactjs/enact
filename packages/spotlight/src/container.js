@@ -5,7 +5,8 @@
  * @private
  */
 
-import {spottableClass} from '../Spottable';
+import and from 'ramda/src/and';
+import {coerceArray} from '@enact/core/util';
 
 import {matchSelector} from './utils';
 
@@ -145,7 +146,7 @@ const isContainer = (nodeOrId) => {
 const isContainerEnabled = (node) => {
 	return mapContainers(node, container => {
 		return container.dataset.containerDisabled !== 'true';
-	}).reduce((acc, v) => acc && v, true);
+	}).reduce(and, true);
 };
 
 /**
@@ -499,7 +500,15 @@ function setContainerLastFocusedElement (node, containerIds) {
 	}
 }
 
-function getContainerFocusTarget (containerId) {
+/**
+ * [getContainerNavigableElements description]
+ *
+ * @param   {String} containerId Container ID
+ *
+ * @returns {Node[]}             Navigable elements within container
+ * @public
+ */
+function getContainerNavigableElements (containerId) {
 	if (!isContainer(containerId)) {
 		return false;
 	}
@@ -517,9 +526,16 @@ function getContainerFocusTarget (containerId) {
 	}
 
 	// if there isn't a preferred entry or it wasn't found, try to find something to spot
-	next = next ||
-			(!enterDefault && getContainerDefaultElement(containerId)) ||
-			getSpottableDescendants(containerId)[0];
+	if (!next) {
+		next = (!enterDefault && getContainerDefaultElement(containerId)) ||
+				getSpottableDescendants(containerId);
+	}
+
+	return next ? coerceArray(next) : [];
+}
+
+function getContainerFocusTarget (containerId) {
+	const next = getContainerNavigableElements(containerId)[0];
 
 	if (isContainer(next)) {
 		return getContainerFocusTarget(getContainerId(next));
@@ -539,6 +555,7 @@ export {
 	getContainerConfig,
 	getContainerDefaultElement,
 	getContainerLastFocusedElement,
+	getContainerNavigableElements,
 	setContainerLastFocusedElement,
 
 	// Keep
