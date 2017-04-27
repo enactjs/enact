@@ -6,9 +6,6 @@ import css from '../Marquee.less';
 
 describe('Marquee', () => {
 
-	const rtlContent = 'שועל החום הזריז קפץ מעל הכלב העצלן.ציפור עפה השעועית עם שקיעה.';
-	const content = 'The bean bird flies at sundown.';
-
 	// Computed Property Tests
 
 	it('should not include the animate class when animating is false', function () {
@@ -51,9 +48,7 @@ describe('Marquee', () => {
 
 	it('should set RTL direction in LTR context when the text directionality is RTL', function () {
 		const subject = shallow(
-			<Marquee rtl>
-				{rtlContent}
-			</Marquee>,
+			<Marquee rtl />,
 			{context: {rtl: false}}
 		);
 
@@ -64,9 +59,7 @@ describe('Marquee', () => {
 
 	it('should set LTR direction in RTL when the text directionality is LTR', function () {
 		const subject = shallow(
-			<Marquee>
-				{content}
-			</Marquee>,
+			<Marquee />,
 			{context: {rtl: true}}
 		);
 
@@ -77,9 +70,7 @@ describe('Marquee', () => {
 
 	it('should have negative translate for LTR text', function () {
 		const subject = shallow(
-			<Marquee animating distance={100}>
-				{content}
-			</Marquee>
+			<Marquee animating distance={100} />
 		);
 
 		// Testing for a negative number after transform3d(
@@ -90,9 +81,7 @@ describe('Marquee', () => {
 
 	it('should have positive translate for RTL text', function () {
 		const subject = shallow(
-			<Marquee animating distance={100} rtl>
-				{rtlContent}
-			</Marquee>
+			<Marquee animating distance={100} rtl />
 		);
 
 		// Testing for a positive number after transform3d(
@@ -103,9 +92,7 @@ describe('Marquee', () => {
 
 	it('should override RTL when forceRtl is true', function () {
 		const subject = shallow(
-			<Marquee forceDirection="rtl">
-				{content}
-			</Marquee>
+			<Marquee forceDirection="rtl" />
 		);
 
 		const expected = 'rtl';
@@ -116,9 +103,7 @@ describe('Marquee', () => {
 
 	it('should override direction when forceDirection is ltr and locale is RTL', function () {
 		const subject = shallow(
-			<Marquee forceDirection="ltr">
-				{content}
-			</Marquee>,
+			<Marquee forceDirection="ltr" />,
 			{context: {rtl: true}}
 		);
 
@@ -130,9 +115,7 @@ describe('Marquee', () => {
 
 	it('should have direction of rtl when forceDirection is rtl and context.rtl is true', function () {
 		const subject = shallow(
-			<Marquee forceDirection="rtl">
-				{content}
-			</Marquee>,
+			<Marquee forceDirection="rtl" />,
 			{context: {rtl: true}}
 		);
 
@@ -144,9 +127,7 @@ describe('Marquee', () => {
 
 	it('should have direction of ltr when forceDirection is ltr and context.rtl is false', function () {
 		const subject = shallow(
-			<Marquee forceDirection="ltr">
-				{content}
-			</Marquee>,
+			<Marquee forceDirection="ltr" />,
 			{context: {rtl: false}}
 		);
 
@@ -158,9 +139,7 @@ describe('Marquee', () => {
 
 	it('should have direction of inherit when forceDirection is null, and content and context are LTR', function () {
 		const subject = shallow(
-			<Marquee>
-				{content}
-			</Marquee>,
+			<Marquee />,
 			{context: {rtl: false}}
 		);
 
@@ -172,9 +151,7 @@ describe('Marquee', () => {
 
 	it('should have direction of inherit when forceDirection is null, and content and context are RTL', function () {
 		const subject = shallow(
-			<Marquee rtl>
-				{rtlContent}
-			</Marquee>,
+			<Marquee rtl />,
 			{context: {rtl: true}}
 		);
 
