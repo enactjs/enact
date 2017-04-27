@@ -133,10 +133,9 @@ const MarqueeBase = kind({
 	computed: {
 		clientClassName: ({animating}) => animating ? animated : css.text,
 		clientStyle: ({animating, centered, distance, forceDirection, overflow, rtl, speed}, {rtl: contextRtl}) => {
-			const overrideRtl = forceDirection ? true : contextRtl !== rtl;
-			if (forceDirection === 'rtl') {
-				rtl = true;
-			}
+			const isTextRtl = forceDirection ? forceDirection === 'rtl' : rtl;
+			const overrideRtl = forceDirection ? true : contextRtl !== isTextRtl;
+
 			// We only attempt to set the textAlign of this control if the locale's directionality
 			// differs from the directionality of our current marqueeable control (as determined by
 			// the control's content) and it will marquee.
@@ -144,7 +143,7 @@ const MarqueeBase = kind({
 			if (centered) {
 				textAlign = 'center';
 			} else if (overrideRtl && distance > 0) {
-				if (rtl) {
+				if (isTextRtl) {
 					textAlign = 'right';
 				} else {
 					textAlign = 'left';
@@ -155,7 +154,7 @@ const MarqueeBase = kind({
 			// inline
 			let direction = 'inherit';
 			if (overrideRtl) {
-				direction = rtl ? 'rtl' : 'ltr';
+				direction = isTextRtl ? 'rtl' : 'ltr';
 			}
 
 			const style = {
