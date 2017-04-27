@@ -5,7 +5,8 @@
  */
 
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import {selectSrc} from '@enact/ui/resolution';
 
 import css from './Image.less';
@@ -27,6 +28,10 @@ import css from './Image.less';
  * <Image className={css.myImage} src={src} sizing={'fill'} />
  * ```
  *
+ * Image is based on the `div` element, but it uses `img` to provide `onError`
+ * and `onLoad` events. The image that you see on screen is a `background-image`
+ * from the `div` element, not the `img` element.
+ *
  * > If you need a naturally sized image, you can use the native `<img>` element instead.
  *
  * @class Image
@@ -47,7 +52,41 @@ const ImageBase = kind({
 		 * @required
 		 * @public
 		 */
-		src: PropTypes.oneOfType([React.PropTypes.string, React.PropTypes.object]).isRequired,
+		src: PropTypes.oneOfType([PropTypes.string, PropTypes.object]).isRequired,
+
+		/**
+		 * Sets the aria-label for the image. If unset, it defaults to the value of `alt`
+		 *
+		 * @type {String}
+		 * @public
+		 * @memberof moonstone/Image.Image.prototype
+		 */
+		// Quoting this (necessary) makes it alphabetically sort differently...
+		'aria-label': PropTypes.string,
+
+		/**
+		 * String value for the alt attribute of the image.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		alt: PropTypes.string,
+
+		/**
+		 * Function that will run if the image has an error.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onError: PropTypes.func,
+
+		/**
+		 * Function that will run once the image is loaded.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onLoad: PropTypes.func,
 
 		/**
 		 * A placeholder image to be displayed before the image is loaded.
@@ -90,16 +129,19 @@ const ImageBase = kind({
 		},
 		className: ({className, sizing, styler}) => {
 			return sizing !== 'none' ? styler.append(sizing) : className;
-		}
+		},
+		imgSrc: ({src}) => selectSrc(src)
 	},
 
-	render: ({bgImage, style, ...rest}) => {
+	render: ({alt, 'aria-label': ariaLabel, bgImage, imgSrc, onError, onLoad, style, ...rest}) => {
 		delete rest.placeholder;
 		delete rest.sizing;
 		delete rest.src;
 
 		return (
-			<div role="img" {...rest} style={{...style, backgroundImage: bgImage}} />
+			<div role="img" {...rest} aria-label={ariaLabel || alt} style={{...style, backgroundImage: bgImage}}>
+				<img className={css.img} src={imgSrc} alt={alt} onLoad={onLoad} onError={onError} />
+			</div>
 		);
 	}
 });

@@ -1,30 +1,21 @@
-/**
- * Exports the {@link moonstone/VirtualList.VirtualList},
- * {@link moonstone/VirtualList.VirtualGridList}, and
- * {@link moonstone/VirtualList.GridListImageItem} components.
- * The default export is {@link moonstone/VirtualList.VirtualList}.
- *
- * @module moonstone/VirtualList
- */
-
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import VirtualListBase, {gridListItemSizeShape} from './VirtualListBase';
+import VirtualListBase, {gridListItemSizeShape} from './VirtualListBaseNative';
 
 /**
- * {@link moonstone/VirtualList.VirtualList} is a VirtualList with Moonstone styling.
+ * {@link moonstone/VirtualList.VirtualListNative} is a VirtualList with Moonstone styling.
  *
- * @class VirtualList
+ * @class VirtualListNative
  * @memberof moonstone/VirtualList
  * @ui
- * @public
+ * @private
  */
-const VirtualList = kind({
-	name: 'VirtualList',
+const VirtualListNative = kind({
+	name: 'VirtualListNative',
 
-	propTypes: /** @lends moonstone/VirtualList.VirtualList.prototype */ {
+	propTypes: /** @lends moonstone/VirtualList.VirtualListNative.prototype */ {
 		/**
 		 * The render function for an item of the list.
 		 * `index` is for accessing the index of the item.
@@ -34,7 +25,7 @@ const VirtualList = kind({
 		 * @name component
 		 * @type {Function}
 		 * @required
-		 * @memberof moonstone/VirtualList.VirtualList
+		 * @memberof moonstone/VirtualList.VirtualListNative
 		 * @instance
 		 * @public
 		 */
@@ -62,7 +53,7 @@ const VirtualList = kind({
 		 * @name data
 		 * @type {Any}
 		 * @default []
-		 * @memberof moonstone/VirtualList.VirtualList
+		 * @memberof moonstone/VirtualList.VirtualListNative
 		 * @instance
 		 * @public
 		 */
@@ -73,7 +64,7 @@ const VirtualList = kind({
 		 * @name dataSize
 		 * @type {Number}
 		 * @default 0
-		 * @memberof moonstone/VirtualList.VirtualList
+		 * @memberof moonstone/VirtualList.VirtualListNative
 		 * @instance
 		 * @public
 		 */
@@ -84,7 +75,7 @@ const VirtualList = kind({
 		 * @name direction
 		 * @type {String}
 		 * @default 'vertical'
-		 * @memberof moonstone/VirtualList.VirtualList
+		 * @memberof moonstone/VirtualList.VirtualListNative
 		 * @instance
 		 * @public
 		 */
@@ -95,7 +86,7 @@ const VirtualList = kind({
 		 * @name spacing
 		 * @type {Number}
 		 * @default 0
-		 * @memberof moonstone/VirtualList.VirtualList
+		 * @memberof moonstone/VirtualList.VirtualListNative
 		 * @instance
 		 * @public
 		 */
@@ -105,17 +96,17 @@ const VirtualList = kind({
 });
 
 /**
- * {@link moonstone/VirtualList.VirtualGridList} is a VirtualGridList with Moonstone styling.
+ * {@link moonstone/VirtualList.VirtualGridListNative} is a VirtualGridList with Moonstone styling.
  *
- * @class VirtualGridList
+ * @class VirtualGridListNative
  * @memberof moonstone/VirtualList
  * @ui
- * @public
+ * @private
  */
-const VirtualGridList = kind({
-	name: 'VirtualGridList',
+const VirtualGridListNative = kind({
+	name: 'VirtualGridListNative',
 
-	propTypes: /** @lends moonstone/VirtualList.VirtualGridList.prototype */ {
+	propTypes: /** @lends moonstone/VirtualList.VirtualGridListNative.prototype */ {
 		/**
 		 * The render function for an item of the list.
 		 * `index` is for accessing the index of the item.
@@ -125,7 +116,7 @@ const VirtualGridList = kind({
 		 * @name component
 		 * @type {Function}
 		 * @required
-		 * @memberof moonstone/VirtualList.VirtualGridList
+		 * @memberof moonstone/VirtualList.VirtualGridListNative
 		 * @instance
 		 * @public
 		 */
@@ -152,7 +143,7 @@ const VirtualGridList = kind({
 		 * @name data
 		 * @type {Any}
 		 * @default []
-		 * @memberof moonstone/VirtualList.VirtualGridList
+		 * @memberof moonstone/VirtualList.VirtualGridListNative
 		 * @instance
 		 * @public
 		 */
@@ -163,7 +154,7 @@ const VirtualGridList = kind({
 		 * @name dataSize
 		 * @type {Number}
 		 * @default 0
-		 * @memberof moonstone/VirtualList.VirtualGridList
+		 * @memberof moonstone/VirtualList.VirtualGridListNative
 		 * @instance
 		 * @public
 		 */
@@ -174,7 +165,7 @@ const VirtualGridList = kind({
 		 * @name direction
 		 * @type {String}
 		 * @default 'vertical'
-		 * @memberof moonstone/VirtualList.VirtualGridList
+		 * @memberof moonstone/VirtualList.VirtualGridListNative
 		 * @instance
 		 * @public
 		 */
@@ -185,7 +176,7 @@ const VirtualGridList = kind({
 		 * @name spacing
 		 * @type {Number}
 		 * @default 0
-		 * @memberof moonstone/VirtualList.VirtualGridList
+		 * @memberof moonstone/VirtualList.VirtualGridListNative
 		 * @instance
 		 * @public
 		 */
@@ -194,6 +185,6 @@ const VirtualGridList = kind({
 	render: (props) => <VirtualListBase {...props} pageScroll />
 });
 
-export default VirtualList;
-export {VirtualList, VirtualGridList};
+export default VirtualListNative;
+export {VirtualListNative, VirtualGridListNative};
 export * from './GridListImageItem';

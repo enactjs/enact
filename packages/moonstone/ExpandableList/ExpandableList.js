@@ -9,7 +9,8 @@
 import Changeable from '@enact/ui/Changeable';
 import Group from '@enact/ui/Group';
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import CheckboxItem from '../CheckboxItem';
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
@@ -215,7 +216,9 @@ const ExpandableListBase = kind({
 			} else if (children.length && (selected || selected === 0)) {
 				const isArray = Array.isArray(selected);
 				if (select === 'multiple' && isArray) {
-					return selected.map(i => children[i]).filter(str => !!str).join(', ');
+					return selected.map(i => typeof children[i] === 'object' ? children[i].children : children[i]).filter(str => !!str).join(', ');
+				} else if (typeof children[selected] === 'object') {
+					return children[selected].children;
 				} else {
 					return children[isArray ? selected[0] : selected];
 				}

@@ -1,5 +1,6 @@
 import kind from '@enact/core/kind';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import Icon from '../Icon';
 import iconMap from './FeedbackIcons.js';
@@ -27,7 +28,7 @@ const FeedbackIconBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		children: React.PropTypes.oneOf(Object.keys(iconMap))
+		children: PropTypes.oneOf(Object.keys(iconMap))
 	},
 
 	styles: {

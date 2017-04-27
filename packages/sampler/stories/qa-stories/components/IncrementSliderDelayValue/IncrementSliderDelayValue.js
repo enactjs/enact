@@ -1,19 +1,20 @@
-import React from 'react';
 import {IncrementSlider} from '@enact/moonstone/IncrementSlider';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 class IncrementSliderDelayValue extends React.Component {
 	static displayName: 'IncrementSliderDelayValue'
 
 	static propTypes = {
-		backgroundPercent: React.PropTypes.number,
-		decrementIcon: React.PropTypes.string,
-		disabled: React.PropTypes.bool,
-		incrementIcon: React.PropTypes.string,
-		max: React.PropTypes.number,
-		min: React.PropTypes.number,
-		step: React.PropTypes.number,
-		value: React.PropTypes.number,
-		vertical: React.PropTypes.bool
+		backgroundPercent: PropTypes.number,
+		decrementIcon: PropTypes.string,
+		disabled: PropTypes.bool,
+		incrementIcon: PropTypes.string,
+		max: PropTypes.number,
+		min: PropTypes.number,
+		step: PropTypes.number,
+		value: PropTypes.number,
+		vertical: PropTypes.bool
 	}
 
 	static defaultProps = {

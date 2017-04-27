@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import kind from '@enact/core/kind';
 import {mount} from 'enzyme';
 import BreadcrumbDecorator from '../BreadcrumbDecorator';
@@ -10,8 +11,8 @@ describe('BreadcrumbDecorator', () => {
 		name: 'CustomBreadcrumb',
 
 		propsTypes: {
-			index: React.PropTypes.number,
-			onSelect: React.PropTypes.func
+			index: PropTypes.number,
+			onSelect: PropTypes.func
 		},
 
 		render: ({index, onSelect}) => {	// eslint-disable-line enact/prop-types
