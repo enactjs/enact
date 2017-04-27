@@ -156,7 +156,7 @@ describe('Marquee', () => {
 		expect(actual).to.have.property('direction').to.equal(expected);
 	});
 
-	it.only('should have direction of inherit when forceDirection is null, and content and context are LTR', function () {
+	it('should have direction of inherit when forceDirection is null, and content and context are LTR', function () {
 		const subject = shallow(
 			<Marquee>
 				{content}
