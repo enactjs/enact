@@ -176,13 +176,7 @@ class VirtualListCoreNative extends Component {
 		this.initContainerRef = this.initRef('containerRef');
 		this.initWrapperRef = this.initRef('wrapperRef');
 
-		if (this.transformItems) {
-			this.wrapperStyle.willChange = 'transform';
-			this.composePosition = this.composeTransform;
-		} else {
-			this.wrapperStyle.willChange = 'left, top';
-			this.composePosition = this.composeLeftTop;
-		}
+		this.wrapperStyle.willChange = 'transform';
 	}
 
 	componentWillMount () {
@@ -253,9 +247,6 @@ class VirtualListCoreNative extends Component {
 	wrapperStyle = {}
 	containerRef = null
 	wrapperRef = null
-
-	transformItems = true // If true, use 'transform'. Otherwise use 'left' and 'top'
-	composePosition = null
 
 	// RTL
 	compensationRTL = 0
@@ -358,11 +349,6 @@ class VirtualListCoreNative extends Component {
 		this.state.firstIndex = 0;
 		// eslint-disable-next-line react/no-direct-mutation-state
 		this.state.numOfItems = 0;
-
-		/* FIXME: RTL / this calculation only works for Chrome */
-		if (!this.transformItems) {
-			this.compensationRTL = clientWidth - (this.isPrimaryDirectionVertical ? this.secondary.itemSize : this.primary.itemSize);
-		}
 	}
 
 	updateStatesAndBounds (props) {
@@ -554,24 +540,8 @@ class VirtualListCoreNative extends Component {
 			style.height = height;
 		}
 
-		this.composePosition(style, x, y);
-	}
-
-	composeTransform = (style, x, y) => {
 		/* FIXME: RTL / this calculation only works for Chrome */
-		if (this.context.rtl) {
-			x = -x;
-		}
-		style.transform = 'translate(' + x + 'px,' + y + 'px)';
-	}
-
-	composeLeftTop = (style, x, y) => {
-		/* FIXME: RTL / this calculation only works for Chrome */
-		if (this.context.rtl) {
-			x = this.compensationRTL - x;
-		}
-		style.left = x + 'px';
-		style.top = y + 'px';
+		style.transform = 'translate(' + (this.context.rtl ? -x : x) + 'px,' + y + 'px)';
 	}
 
 	getXY = (primaryPosition, secondaryPosition) => {
