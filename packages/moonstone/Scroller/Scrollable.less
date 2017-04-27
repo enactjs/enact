@@ -37,18 +37,18 @@
 	div.onlyHorizontalScrollbarNeeded {
 		.position-start-end(0, 0);
 	}
+
+	&.takeAvailableSpaceForHorizontal {
+		.padding-start-end(0, 0);
+	}
+
+	&.takeAvailableSpaceForVertical {
+		padding-bottom: 0;
+	}
 }
 
 .scrollableHiddenScrollbars {
 	overflow: hidden;
 	.padding-start-end(0, 0);
-	padding-bottom: 0;
-}
-
-.scrollable.takeAvailableSpaceForHorizontal {
-	.padding-start-end(0, 0);
-}
-
-.scrollable.takeAvailableSpaceForVertical {
 	padding-bottom: 0;
 }
