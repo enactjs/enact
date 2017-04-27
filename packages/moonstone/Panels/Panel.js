@@ -1,3 +1,4 @@
+import {forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -73,11 +74,21 @@ const PanelBase = kind({
 		 * @default false
 		 * @public
 		 */
-		hideChildren: PropTypes.bool
+		hideChildren: PropTypes.bool,
+
+		/**
+		 * When `true`, the contents of the Panel will not receive spotlight focus after being rendered.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		noAutoFocus: PropTypes.bool
 	},
 
 	defaultProps: {
-		hideChildren: false
+		hideChildren: false,
+		noAutoFocus: false
 	},
 
 	styles: {
@@ -85,11 +96,21 @@ const PanelBase = kind({
 		className: 'panel'
 	},
 
+	handlers: {
+		onScroll: handle(
+			forward('onScroll'),
+			({currentTarget}) => {
+				currentTarget.scrollTop = 0;
+				currentTarget.scrollLeft = 0;
+			}
+		)
+	},
+
 	computed: {
 		// In order to spot the body components, we defer spotting until !hideChildren. If the Panel
 		// opts out of hideChildren support by explicitly setting it to false, it'll spot on first
 		// render.
-		spotOnRender: ({hideChildren}) => hideChildren ? null : spotPanel,
+		spotOnRender: ({hideChildren, noAutoFocus}) => hideChildren || noAutoFocus ? null : spotPanel,
 		children: ({children, hideChildren}) => hideChildren ? null : children,
 		bodyClassName: ({hideChildren, styler}) => styler.join({
 			body: true,
@@ -103,6 +124,7 @@ const PanelBase = kind({
 
 	render: ({bodyClassName, children, header, headerId, spotOnRender, ...rest}) => {
 		delete rest.hideChildren;
+		delete rest.noAutoFocus;
 
 		return (
 			<article role="region" {...rest} aria-labelledby={headerId} ref={spotOnRender}>

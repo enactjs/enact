@@ -1,7 +1,7 @@
 import Divider from '@enact/moonstone/Divider';
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
-import {boolean, text, withKnobs} from '@kadira/storybook-addon-knobs';
+import {select, text, withKnobs} from '@kadira/storybook-addon-knobs';
 
 storiesOf('Divider')
 	.addDecorator(withKnobs)
@@ -9,7 +9,7 @@ storiesOf('Divider')
 		' ',
 		'Basic usage of divider',
 		() => (
-			<Divider preserveCase={boolean('preserveCase', false)}>
+			<Divider casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'word')}>
 				{text('children', 'divider text')}
 			</Divider>
 		)
