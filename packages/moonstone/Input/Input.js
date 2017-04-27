@@ -13,6 +13,7 @@ import PropTypes from 'prop-types';
 
 import css from './Input.less';
 import InputDecoratorIcon from './InputDecoratorIcon';
+import InputInvalidDecorator from './InputInvalidDecorator';
 import InputSpotlightDecorator from './InputSpotlightDecorator';
 
 const calcAriaLabel = function (title, type, value = '') {
@@ -237,8 +238,10 @@ const InputBase = kind({
  * @public
  */
 const Input = Changeable(
-	InputSpotlightDecorator(
-		InputBase
+	InputInvalidDecorator(
+		InputSpotlightDecorator(
+			InputBase
+		)
 	)
 );
 

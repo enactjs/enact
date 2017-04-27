@@ -56,6 +56,10 @@
 	:global(.enact-locale-right-to-left) & {
 		text-align: right;
 	}
+
+	.invalidInput & {
+		color: @moon-red;
+	}
 }
 
 .decorator {
@@ -120,6 +124,21 @@
 	> * {
 		display: inline-block;
 		vertical-align: middle;
+	}
+}
+
+.tooltipDecorator {
+	> * {
+		display: inline-block;
+		vertical-align: middle;
+	}
+}
+
+.invalidTooltip {
+	position: relative;
+	transform: translate(18px, -50%);
+	:global(.enact-locale-right-to-left) & {
+		transform: translate(-18px, -50%)
 	}
 }
 
