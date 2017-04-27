@@ -15,7 +15,7 @@ import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDeco
 import {dataIndexAttribute, ScrollableNative} from '../Scroller/ScrollableNative';
 
 import css from './VirtualListBaseNative.less';
-import cssItem from './ListItemNative.less';
+import cssItem from './ListItem.less';
 
 const
 	dataContainerMutedAttribute = 'data-container-muted',
@@ -175,8 +175,6 @@ class VirtualListCoreNative extends Component {
 		this.state = {firstIndex: 0, numOfItems: 0};
 		this.initContainerRef = this.initRef('containerRef');
 		this.initWrapperRef = this.initRef('wrapperRef');
-
-		this.wrapperStyle.willChange = 'transform';
 	}
 
 	componentWillMount () {
@@ -244,7 +242,7 @@ class VirtualListCoreNative extends Component {
 	cc = []
 	scrollPosition = 0
 
-	wrapperStyle = {}
+	wrapperClass = null
 	containerRef = null
 	wrapperRef = null
 
@@ -372,7 +370,6 @@ class VirtualListCoreNative extends Component {
 
 	calculateScrollBounds (props) {
 		const
-			{wrapperStyle} = this,
 			{clientSize} = props,
 			node = this.getContainerNode();
 
@@ -401,14 +398,7 @@ class VirtualListCoreNative extends Component {
 			this.props.cbScrollTo({position: (isPrimaryDirectionVertical) ? {y: maxPos} : {x: maxPos}});
 		}
 
-
-		if (isPrimaryDirectionVertical) {
-			wrapperStyle.overflowY = 'scroll';
-			wrapperStyle.overflowX = 'hidden';
-		} else {
-			wrapperStyle.overflowX = 'scroll';
-			wrapperStyle.overflowY = 'hidden';
-		}
+		this.wrapperClass = (isPrimaryDirectionVertical) ? css.vertical : css.horizontal;
 
 		this.containerRef.style.width = scrollBounds.scrollWidth + 'px';
 		this.containerRef.style.height = scrollBounds.scrollHeight + 'px';
@@ -698,12 +688,10 @@ class VirtualListCoreNative extends Component {
 
 		const
 			{className, style, ...rest} = props,
-			{wrapperStyle} = this,
-			mergedStyle = {...style, ...wrapperStyle},
-			mergedClasses = classNames(css.list, className);
+			mergedClasses = classNames(css.list, this.wrapperClass, className);
 
 		return (
-			<div ref={this.initWrapperRef} className={mergedClasses} style={mergedStyle}>
+			<div ref={this.initWrapperRef} className={mergedClasses} style={style}>
 				<div {...rest} ref={this.initContainerRef}>
 					{cc}
 				</div>
