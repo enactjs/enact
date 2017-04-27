@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 - `moonstone/VideoPlayer` space allotment on both sides of the playback controls to support 3 buttons; consequently the "more" controls area has shrunk by the same amount
+- `moonstone/Marquee` property `rtl` to set directionality to right-to-left
 
 ### Fixed
 
@@ -29,7 +30,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Image` support for `onLoad` and `onError` events
 - `moonstone/VirtualList.GridListImageItem` prop `placeholder`
 - `moonstone/Divider` property `preserveCase` to display text without capitalizing it
-- `moonstone/Marquee` property `rtl` to set directionality to right-to-left
 
 ### Changed
 
