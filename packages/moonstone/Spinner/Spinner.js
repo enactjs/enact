@@ -4,6 +4,7 @@
  *
  * @module moonstone/Spinner
  */
+import $L from '@enact/i18n/$L';
 import FloatingLayer from '@enact/ui/FloatingLayer';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
@@ -24,6 +25,17 @@ import css from './Spinner.less';
  */
 const SpinnerCore = kind({
 	name: 'SpinnerCore',
+
+	computed: {
+		'aria-label': ({['aria-label']: aria, children}) => {
+			if (aria) return aria;
+			if (children) {
+				return;
+			} else {
+				return $L('Loading');
+			}
+		}
+	},
 
 	render: ({children, ...rest}) => (
 		<div aria-live="off" role="alert" {...rest}>
