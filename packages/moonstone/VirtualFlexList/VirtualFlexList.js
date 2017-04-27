@@ -244,7 +244,7 @@ class VirtualFlexList extends Component {
 			items.height !== nextProps.items.height ||
 			items.rowCount !== nextProps.items.rowCount ||
 			items.width !== nextProps.items.width ||
-			headers && (
+			headers && nextProps.headers && (
 				headers.col.count !== nextProps.headers.col.count ||
 				headers.row.count !== nextProps.headers.row.count
 			)
