@@ -25,11 +25,11 @@ const
 	forwardScrollStop = forward('onScrollStop');
 
 const
-	epsilon = 1,
 	nop = () => {},
 	paginationPageMultiplier = 0.8,
-	pixelPerLine = 40,
+	epsilon = 1,
 	scrollWheelMultiplierForDeltaPixel = 2,
+	pixelPerLine = 40,
 	// spotlight
 	scrollStopWaiting = 500;
 

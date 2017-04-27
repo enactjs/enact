@@ -25,15 +25,15 @@ const
 	forwardScrollStop = forward('onScrollStop');
 
 const
-	animationDuration = 1000,
 	calcVelocity = (d, dt) => (d && dt) ? d / dt : 0,
-	epsilon = 1,
-	holdTime = 50,
 	nop = () => {},
 	perf = (typeof window === 'object') ? window.performance : {now: Date.now},
+	holdTime = 50,
 	scrollWheelMultiplierForDeltaPixel = 2,
+	pixelPerLine = 40,
 	paginationPageMultiplier = 0.8,
-	pixelPerLine = 40;
+	epsilon = 1,
+	animationDuration = 1000;
 
 /**
  * {@link moonstone/Scroller.dataIndexAttribute} is the name of a custom attribute
