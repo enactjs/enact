@@ -25,9 +25,11 @@ const
 	forwardScrollStop = forward('onScrollStop');
 
 const
+	epsilon = 1,
 	nop = () => {},
 	paginationPageMultiplier = 0.8,
-	epsilon = 1,
+	pixelPerLine = 40,
+	scrollWheelMultiplierForDeltaPixel = 2,
 	// spotlight
 	scrollStopWaiting = 500;
 
@@ -254,8 +256,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				const
 					bounds = this.getScrollBounds(),
 					deltaMode = e.deltaMode,
-					pixelPerLine = 40,
-					scrollWheelMultiplierForDeltaPixel = 2,
 					wheelDeltaY = e.nativeEvent ? -e.nativeEvent.wheelDeltaY : -e.wheelDeltaY;
 				let delta = (wheelDeltaY || e.deltaY);
 
