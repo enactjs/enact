@@ -16,7 +16,6 @@ import Tooltip from '../TooltipDecorator/Tooltip';
 
 import css from './Input.less';
 import InputDecoratorIcon from './InputDecoratorIcon';
-import InputInvalidDecorator from './InputInvalidDecorator';
 import InputSpotlightDecorator from './InputSpotlightDecorator';
 
 const calcAriaLabel = function (title, type, value = '') {
