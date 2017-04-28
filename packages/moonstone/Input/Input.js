@@ -5,11 +5,14 @@
  */
 
 import $L from '@enact/i18n/$L';
+import {contextTypes} from '@enact/i18n/I18nDecorator';
 import Changeable from '@enact/ui/Changeable';
 import kind from '@enact/core/kind';
 import {isRtlText} from '@enact/i18n/util';
 import React from 'react';
 import PropTypes from 'prop-types';
+
+import Tooltip from '../TooltipDecorator/Tooltip';
 
 import css from './Input.less';
 import InputDecoratorIcon from './InputDecoratorIcon';
@@ -85,6 +88,25 @@ const InputBase = kind({
 		 * @public
 		 */
 		iconBefore: PropTypes.string,
+
+		/**
+		 * When `true`, the message tooltip is shown if it exists.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		invalid: PropTypes.bool,
+
+		/**
+		 * The tooltip text to be displayed when the contents of the input are invalid. If this value is
+		 * falsy, the tooltip will not be shown.
+		 *
+		 * @type {String}
+		 * @default ''
+		 * @public
+		 */
+		invalidMessage: PropTypes.string,
 
 		/**
 		 * The handler to run when blurred.
@@ -170,9 +192,13 @@ const InputBase = kind({
 	defaultProps: {
 		disabled: false,
 		dismissOnEnter: false,
+		invalid: false,
+		invalidMessage: '',
 		placeholder: '',
 		type: 'text'
 	},
+
+	contextTypes,
 
 	styles: {
 		css,
@@ -192,30 +218,45 @@ const InputBase = kind({
 			const title = (value == null || value === '') ? placeholder : '';
 			return calcAriaLabel(title, type, value);
 		},
-		className: ({focused, styler}) => styler.append({focused}),
+		className: ({focused, invalid, styler}) => styler.append({focused, invalid}),
 		dir: ({value, placeholder}) => isRtlText(value || placeholder) ? 'rtl' : 'ltr',
+		invalidTooltip: ({invalid, invalidMessage}, {rtl}) => {
+			if (invalid && invalidMessage) {
+				const direction = rtl ? 'left' : 'right';
+				return (
+					<Tooltip className={css.invalidTooltip} arrowAnchor="top" direction={direction}>
+						{invalidMessage}
+					</Tooltip>
+				);
+			}
+		},
 		// ensure we have a value so the internal <input> is always controlled
 		value: ({value}) => typeof value === 'number' ? value : (value || '')
 	},
 
-	render: ({dir, disabled, iconAfter, iconBefore, onChange, placeholder, type, value, ...rest}) => {
+	render: ({className, dir, disabled, iconAfter, iconBefore, invalidTooltip, onChange, placeholder, type, value, ...rest}) => {
 		delete rest.dismissOnEnter;
 		delete rest.focused;
+		delete rest.invalid;
+		delete rest.invalidMessage;
 
 		return (
-			<div {...rest} disabled={disabled}>
-				<InputDecoratorIcon position="before">{iconBefore}</InputDecoratorIcon>
-				<input
-					aria-disabled={disabled}
-					className={css.input}
-					dir={dir}
-					disabled={disabled}
-					onChange={onChange}
-					placeholder={placeholder}
-					type={type}
-					value={value}
-				/>
-				<InputDecoratorIcon position="after">{iconAfter}</InputDecoratorIcon>
+			<div {...rest} className={css.tooltipDecorator} disabled={disabled}>
+				<div className={className}>
+					<InputDecoratorIcon position="before">{iconBefore}</InputDecoratorIcon>
+					<input
+						aria-disabled={disabled}
+						className={css.input}
+						dir={dir}
+						disabled={disabled}
+						onChange={onChange}
+						placeholder={placeholder}
+						type={type}
+						value={value}
+					/>
+					<InputDecoratorIcon position="after">{iconAfter}</InputDecoratorIcon>
+				</div>
+				{invalidTooltip}
 			</div>
 		);
 	}
@@ -238,10 +279,8 @@ const InputBase = kind({
  * @public
  */
 const Input = Changeable(
-	InputInvalidDecorator(
-		InputSpotlightDecorator(
-			InputBase
-		)
+	InputSpotlightDecorator(
+		InputBase
 	)
 );
 

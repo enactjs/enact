@@ -57,13 +57,12 @@
 		text-align: right;
 	}
 
-	.invalidInput & {
+	.invalid & {
 		color: @moon-red;
 	}
 }
 
 .decorator {
-	display: inline-block;
 	padding: 12px 30px;
 	border-radius: 1008px;
 	margin: 6px;
@@ -128,17 +127,17 @@
 }
 
 .tooltipDecorator {
+	display: inline-block;
+
 	> * {
 		display: inline-block;
-		vertical-align: middle;
 	}
 }
 
 .invalidTooltip {
-	position: relative;
-	transform: translate(18px, -50%);
+	transform: translate(18px, -9px);
 	:global(.enact-locale-right-to-left) & {
-		transform: translate(-18px, -50%)
+		transform: translate(-18px, -9px);
 	}
 }
 
