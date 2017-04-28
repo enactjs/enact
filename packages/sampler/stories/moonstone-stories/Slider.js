@@ -29,6 +29,7 @@ storiesOf('Slider')
 				tooltipAsPercent={nullify(boolean('tooltipAsPercent', false))}
 				tooltipForceSide={nullify(boolean('tooltipForceSide', false))}
 				tooltipSide={select('tooltipSide', ['before', 'after'], 'after')}
+				noFill={boolean('noFill', false)}
 				vertical={nullify(boolean('vertical', false))}
 			/>
 		),
