@@ -20,7 +20,7 @@ import {ContextualPopup} from './ContextualPopup';
 import css from './ContextualPopupDecorator.less';
 
 const defaultConfig = {};
-const ContextualPopupContainer = SpotlightContainerDecorator({preserveId: true}, ContextualPopup);
+const ContextualPopupContainer = SpotlightContainerDecorator({enterTo: 'last-focused', preserveId: true}, ContextualPopup);
 
 /**
  * {@link moonstone/ContextualPopupDecorator.ContextualPopupDecorator} is a Higher-order Component
