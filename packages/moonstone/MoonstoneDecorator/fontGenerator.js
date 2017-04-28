@@ -9,7 +9,7 @@ import Locale from '@enact/i18n/ilib/lib/Locale';
 
 // eslint-disable-next-line no-console
 const debugMessage = console.log;
-const debugFonts = true;
+const debugFonts = false;
 const pendingFontsLoadedCallbacks = [];
 
 let previousLocale = null,
