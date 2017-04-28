@@ -25,6 +25,8 @@ storiesOf('Input')
 				disabled={boolean('disabled')}
 				iconAfter={select('iconAfter', iconNames)}
 				iconBefore={select('iconBefore', iconNames)}
+				invalid={boolean('invalid')}
+				invalidMessage={text('invalidMessage')}
 				noDecorator={boolean('noDecorator')}
 				placeholder={text('placeholder')}
 				type={select('type', inputData.type, inputData.type[0])}

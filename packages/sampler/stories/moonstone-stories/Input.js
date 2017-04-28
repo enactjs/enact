@@ -23,6 +23,8 @@ storiesOf('Input')
 				dismissOnEnter={nullify(boolean('dismissOnEnter', false))}
 				iconAfter={nullify(select('iconAfter', iconNames))}
 				iconBefore={nullify(select('iconBefore', iconNames))}
+				invalid={boolean('invalid')}
+				invalidMessage={text('invalidMessage')}
 				placeholder={text('placeholder')}
 				type={text('type')}
 			/>
