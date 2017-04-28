@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `moonstone/Input` props `invalid` and `invalidMessage` to display a tooltip when input value is invalid
+
 ## [1.1.0] - 2017-04-21
 
 ### Deprecated
