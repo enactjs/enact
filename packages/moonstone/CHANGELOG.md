@@ -7,6 +7,12 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 - `moonstone/Input` props `invalid` and `invalidMessage` to display a tooltip when input value is invalid
+- `moonstone/VideoPlayer` space allotment on both sides of the playback controls to support 3 buttons; consequently the "more" controls area has shrunk by the same amount
+
+### Fixed
+
+- `moonstone/MarqueeDecorator` to properly stop marquee on items with `'marqueeOnHover'`
+- `moonstone/ExpandableList` to work properly with object-based children
 
 ## [1.1.0] - 2017-04-21
 
