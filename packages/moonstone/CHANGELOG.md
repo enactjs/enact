@@ -12,8 +12,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/MarqueeDecorator` to properly stop marquee on items with `'marqueeOnHover'`
 - `moonstone/ExpandableList` to work properly with object-based children
+
 ### Changed
-- `moonstone/VideoPlayer` doesn't disable media button (play/pause)
+
+- `moonstone/VideoPlayer` to not disable media button (play/pause)
 
 ## [1.1.0] - 2017-04-21
 
