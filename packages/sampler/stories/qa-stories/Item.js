@@ -4,7 +4,7 @@ import React from 'react';
 import Button from '@enact/moonstone/Button';
 import Image from '@enact/moonstone/Image';
 import {storiesOf} from '@kadira/storybook';
-import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
+import {boolean, select, text} from '@kadira/storybook-addon-knobs';
 
 const iconNames = ['', ...Object.keys(icons)];
 
@@ -17,7 +17,6 @@ const inputData = {
 };
 
 storiesOf('Item')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		'with long text',
 		() => (

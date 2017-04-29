@@ -2,7 +2,7 @@ import {ContextualPopupDecorator} from '@enact/moonstone/ContextualPopupDecorato
 import Button from '@enact/moonstone/Button';
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
-import {withKnobs, select} from '@kadira/storybook-addon-knobs';
+import {select} from '@kadira/storybook-addon-knobs';
 
 const ContextualButton = ContextualPopupDecorator(Button);
 ContextualButton.displayName = 'ContextualButton';
@@ -46,7 +46,6 @@ class ContextualPopupWithActivator extends React.Component {
 }
 
 storiesOf('ContextualPopupDecorator')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		'with 5-way selectable activator',
 		() => (
