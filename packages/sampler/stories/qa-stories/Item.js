@@ -80,7 +80,7 @@ storiesOf('Item')
 					<Icon
 						small={boolean('small')}
 					>
-						{select('iconBefore', ['', ...iconNames], 'plus')}
+						{select('iconBefore', iconNames, 'plus')}
 					</Icon>
 
 					{text('Text with icon at start', 'Item with text that is spottable with an icon (at the start of the string)')}
@@ -90,7 +90,7 @@ storiesOf('Item')
 					<Icon
 						small={boolean('small')}
 					>
-						{select('iconAfter', ['', ...iconNames], 'pauseforward')}
+						{select('iconAfter', iconNames, 'pauseforward')}
 					</Icon>
 				</Item>
 				<Item>
