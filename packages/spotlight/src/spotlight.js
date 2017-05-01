@@ -948,7 +948,7 @@ const Spotlight = (function () {
 
 	function getNavigableTarget (target) {
 		let parent;
-		while (target && !isFocusable(target)) {
+		while (target && (isContainer(target) || !isFocusable(target))) {
 			parent = target.parentNode;
 			target = parent === document ? null : parent; // calling isNavigable on document is problematic
 		}
@@ -956,10 +956,9 @@ const Spotlight = (function () {
 	}
 
 	function isFocusable (elem) {
-		for (const id of getAllContainerIds()) { // check *all* the containers to see if the specified element is a focusable element
-			if (isNavigable(elem, id, true)) return true;
-		}
-		return false;
+		return getContainersForNode(elem).reduce((focusable, id) => {
+			return focusable || isNavigable(elem, id, true);
+		}, false);
 	}
 
 	/*
