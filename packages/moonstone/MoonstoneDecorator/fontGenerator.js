@@ -8,7 +8,7 @@ import ilib from '@enact/i18n';
 import Locale from '@enact/i18n/ilib/lib/Locale';
 
 // eslint-disable-next-line no-console
-const debugMessage = console.log;
+const dev = console;
 const debugFonts = false;
 const pendingFontsLoadedCallbacks = [];
 
@@ -159,7 +159,7 @@ function fontGenerator (locale = ilib.getLocale()) {
 		}
 		const fontFace = new window.FontFace(name, 'local("' + localName + '")');
 		compiledLocalFontsList.push(localName);
-		if (debugFonts) debugMessage('%cnew FontFace:', 'color:cyan;' + debugStyle, name, rest.weight, '"' + localName + '"');
+		if (debugFonts) dev.log('%cnew FontFace:', 'color:cyan;' + debugStyle, name, rest.weight, '"' + localName + '"');
 		for (let prop in rest) {
 			if (rest[prop] != null) fontFace[prop] = rest[prop];
 		}
@@ -212,31 +212,41 @@ function fontGenerator (locale = ilib.getLocale()) {
 		const [lo, re] = lang.split('-');
 		if (lo === language) {
 			if (!re || (re && re === region)) {
-				if (debugFonts) debugMessage('%cOverriding Font:', 'color:yellowgreen;' + debugStyle, lang);
+				if (debugFonts) dev.log('%cOverriding Font:', 'color:yellowgreen;' + debugStyle, lang);
 				fontDefinitions.push( ...buildFontSet(lang, true) );
 			}
 		}
 	}
 
-	if (debugFonts) debugMessage('%cLets make some fonts:', 'color:limegreen;' + debugStyle, fontDefinitions);
+	if (debugFonts) dev.log('%cLets make some fonts:', 'color:limegreen;' + debugStyle, fontDefinitions);
+	const loadingErrors = [];
 	Promise
-		.all(fontDefinitions)
+		.all(fontDefinitions.map(p => p.catch(e => e)))
 		.then(results => {
-			results.forEach(loadedFontFace => {
-				document.fonts.add(loadedFontFace);
+			results.forEach((loadedFontFace, i) => {
+				if (loadedFontFace.message) {
+					loadingErrors.push(i);
+				} else {
+					document.fonts.add(loadedFontFace);
+				}
 			});
 			if (debugFonts) {
 				document.fonts.forEach( function (font) {
-					debugMessage('%cFont Ready:', 'color:goldenrod;' + debugStyle, font.family, font.weight);
+					dev.log('%cFont Ready:', 'color:goldenrod;' + debugStyle, font.family, font.weight);
 				});
 			}
 			fontsLoaded = true;
+			if (loadingErrors.length) {
+				dev.groupCollapsed(loadingErrors.length + ' Font(s) Failed to Load. (Not installed locally)');
+				loadingErrors.forEach(fontIndex =>
+					dev.warn('Font Failed: "' + compiledLocalFontsList[fontIndex] + '"')
+				);
+				dev.groupEnd();
+			}
 			pendingFontsLoadedCallbacks.forEach(cb => cb());
 		})
 		.catch(function (err) {
-			// eslint-disable-next-line no-console
-			console.log('%cERROR:', 'color:red;' + debugStyle, err);
-			// NOTE: It would be very nice to be able to determine WHICH promise failed here...
+			dev.error('%cFont Loading Error:', err);
 		});
 }
 
