@@ -1,5 +1,4 @@
 /* eslint-disable no-console */
-/* global console */
 
 const refs = {};
 
@@ -59,9 +58,6 @@ export default class LS2Request {
 	}
 
 	callback (onSuccess, onFailure, onComplete, msg) {
-		if (this.cancelled) {
-			return;
-		}
 		let parsedMsg;
 		try {
 			parsedMsg = JSON.parse(msg);
@@ -90,7 +86,6 @@ export default class LS2Request {
 	}
 
 	cancel () {
-		this.cancelled = true;
 		if (this.bridge) {
 			this.bridge.cancel();
 			this.bridge = null;
