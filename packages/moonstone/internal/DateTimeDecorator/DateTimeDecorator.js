@@ -161,8 +161,6 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 		 * @returns {Number}			Updated internal value
 		 */
 		updateValue = (value) => {
-			if (!value) return;
-
 			const {day, month, year} = value;
 			const maxDays = value.cal.getMonLength(month, year);
 			value.day = (day <= maxDays) ? day : maxDays;
