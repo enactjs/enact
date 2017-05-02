@@ -2,7 +2,7 @@ import ri from '@enact/ui/resolution';
 import Scroller, {ScrollerBase} from '@enact/moonstone/Scroller';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, select} from '@kadira/storybook-addon-knobs';
+import {select} from '@kadira/storybook-addon-knobs';
 
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 
@@ -28,7 +28,6 @@ const
 	};
 
 storiesOf('Scroller')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'Basic usage of Scroller',
