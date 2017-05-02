@@ -170,11 +170,15 @@ class ScrollerBase extends Component {
 				scrollBottom = clientHeight + currentScrollTop;
 
 			if (itemHeight > clientHeight) {
-				const {top, height} = focusedItem.getBoundingClientRect(),
+				// scroller behavior for conntainers that are bigger than `clientHeight`
+				const {top, height: nestedItemHeight} = focusedItem.getBoundingClientRect(),
 					nestedItemTop = this.containerRef.scrollTop + (top - containerTop),
-					nestedItemBottom = nestedItemTop + height;
+					nestedItemBottom = nestedItemTop + nestedItemHeight;
 
-				if (nestedItemBottom > scrollBottom) {
+				if (newItemTop - nestedItemHeight > currentScrollTop) {
+					// scroll so that top of the container is on top
+					this.scrollPos.top += newItemTop - nestedItemHeight;
+				} else if (nestedItemBottom > scrollBottom) {
 					this.scrollPos.top += nestedItemBottom - scrollBottom;
 				} else if (nestedItemTop < currentScrollTop) {
 					this.scrollPos.top += nestedItemTop - currentScrollTop;
