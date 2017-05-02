@@ -119,34 +119,56 @@ class ScrollerBase extends Component {
 		return bounds;
 	}
 
-	hasExpandableContainer = (node) => {
-		if (node.id === 'root' || node.tagName === 'BODY') {
-			return false;
-		} else if (node.dataset.expandableContainer) {
-			return node;
-		} else {
-			return this.hasExpandableContainer(node.parentNode);
-		}
+	/**
+	 * Returns the first spotlight container between `node` and the scroller
+	 *
+	 * @param   {Node}      node  A DOM node
+	 *
+	 * @returns {Node|Null}       Spotlight container for `node`
+	 * @private
+	 */
+	getContainerForNode = (node) => {
+		do {
+			if (node.dataset.containerId) {
+				return node;
+			}
+		} while ((node = node.parentNode) && node !== this.containerRef);
+	}
+
+	/**
+	 * Calculates the "focus bounds" of a node. If the node is within a spotlight container, that
+	 * container is scrolled into view rather than just the element.
+	 *
+	 * @param   {Node}   node  Focused node
+	 *
+	 * @returns {Object}       Bounds as returned by `getBoundingClientRect`
+	 * @private
+	 */
+	getFocusedItemBounds = (node) => {
+		node = this.getContainerForNode(node) || node;
+		return node.getBoundingClientRect();
 	}
 
 	calculatePositionOnFocus = (focusedItem) => {
+		if (!this.isVertical() && !this.isHorizontal()) return;
+
+		const {
+			top: itemTop,
+			left: itemLeft,
+			height: itemHeight,
+			width: itemWidth
+		} = this.getFocusedItemBounds(focusedItem);
+
 		if (this.isVertical()) {
 			const
 				{clientHeight} = this.scrollBounds,
-				{height: itemHeight, top: itemTop} = focusedItem.getBoundingClientRect(),
 				{top: containerTop} = this.containerRef.getBoundingClientRect(),
 				currentScrollTop = this.scrollPos.top,
 				// calculation based on client position
-				newItemTop = this.containerRef.scrollTop + (itemTop - containerTop),
-				expandableContainer = this.hasExpandableContainer(focusedItem);
-			let expandableHeight = 0;
+				newItemTop = this.containerRef.scrollTop + (itemTop - containerTop);
 
-			if (expandableContainer) {
-				expandableHeight = expandableContainer.offsetHeight;
-			}
-
-			if (newItemTop + itemHeight + expandableHeight > (clientHeight + currentScrollTop)) {
-				this.scrollPos.top += (newItemTop + itemHeight) - (clientHeight + currentScrollTop) + expandableHeight;
+			if (newItemTop + itemHeight > (clientHeight + currentScrollTop)) {
+				this.scrollPos.top += (newItemTop + itemHeight) - (clientHeight + currentScrollTop);
 			} else if (newItemTop < currentScrollTop) {
 				this.scrollPos.top += newItemTop - currentScrollTop;
 			}
@@ -157,7 +179,6 @@ class ScrollerBase extends Component {
 			const
 				{clientWidth} = this.scrollBounds,
 				rtlDirection = this.context.rtl ? -1 : 1,
-				{width: itemWidth, left: itemLeft} = focusedItem.getBoundingClientRect(),
 				{left: containerLeft} = this.containerRef.getBoundingClientRect(),
 				currentScrollLeft = this.scrollPos.left * rtlDirection,
 				// calculation based on client position
