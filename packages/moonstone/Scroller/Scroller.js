@@ -177,7 +177,7 @@ class ScrollerBase extends Component {
 
 				if (newItemTop - nestedItemHeight > currentScrollTop) {
 					// set scroll position so that the top of the container is at least on the top
-					this.scrollPos.top += newItemTop - nestedItemHeight;
+					this.scrollPos.top = newItemTop - nestedItemHeight;
 				} else if (nestedItemBottom > scrollBottom) {
 					this.scrollPos.top += nestedItemBottom - scrollBottom;
 				} else if (nestedItemTop < currentScrollTop) {
