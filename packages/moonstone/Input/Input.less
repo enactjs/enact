@@ -63,6 +63,8 @@
 }
 
 .decorator {
+	display: inline-block;
+
 	padding: 12px 30px;
 	border-radius: 1008px;
 	margin: 6px;
@@ -126,18 +128,10 @@
 	}
 }
 
-.tooltipDecorator {
-	display: inline-block;
-
-	> * {
-		display: inline-block;
-	}
-}
-
 .invalidTooltip {
-	transform: translate(18px, -9px);
+	transform: translate(60px, -50%);
 	:global(.enact-locale-right-to-left) & {
-		transform: translate(-18px, -9px);
+		transform: translate(-60px, -50%);
 	}
 }
 

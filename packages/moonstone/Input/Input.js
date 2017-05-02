@@ -223,7 +223,7 @@ const InputBase = kind({
 			if (invalid && invalidMessage) {
 				const direction = rtl ? 'left' : 'right';
 				return (
-					<Tooltip className={css.invalidTooltip} arrowAnchor="top" direction={direction}>
+					<Tooltip arrowAnchor="top" className={css.invalidTooltip} direction={direction}>
 						{invalidMessage}
 					</Tooltip>
 				);
@@ -233,28 +233,26 @@ const InputBase = kind({
 		value: ({value}) => typeof value === 'number' ? value : (value || '')
 	},
 
-	render: ({className, dir, disabled, iconAfter, iconBefore, invalidTooltip, onChange, placeholder, type, value, ...rest}) => {
+	render: ({dir, disabled, iconAfter, iconBefore, invalidTooltip, onChange, placeholder, type, value, ...rest}) => {
 		delete rest.dismissOnEnter;
 		delete rest.focused;
 		delete rest.invalid;
 		delete rest.invalidMessage;
 
 		return (
-			<div {...rest} className={css.tooltipDecorator} disabled={disabled}>
-				<div className={className}>
-					<InputDecoratorIcon position="before">{iconBefore}</InputDecoratorIcon>
-					<input
-						aria-disabled={disabled}
-						className={css.input}
-						dir={dir}
-						disabled={disabled}
-						onChange={onChange}
-						placeholder={placeholder}
-						type={type}
-						value={value}
-					/>
-					<InputDecoratorIcon position="after">{iconAfter}</InputDecoratorIcon>
-				</div>
+			<div {...rest} disabled={disabled}>
+				<InputDecoratorIcon position="before">{iconBefore}</InputDecoratorIcon>
+				<input
+					aria-disabled={disabled}
+					className={css.input}
+					dir={dir}
+					disabled={disabled}
+					onChange={onChange}
+					placeholder={placeholder}
+					type={type}
+					value={value}
+				/>
+				<InputDecoratorIcon position="after">{iconAfter}</InputDecoratorIcon>
 				{invalidTooltip}
 			</div>
 		);
