@@ -36,9 +36,9 @@
   "dependencies": {
     "@enact/core": "^1.1.0",
     "prop-types": "~15.5.0",
-    "ramda": "~0.22.1",
+    "ramda": "~0.23.0",
     "react": "~15.5.0",
     "react-dom": "~15.5.0",
-    "xhr": "~2.2.2"
+    "xhr": "~2.4.0"
   }
 }

@@ -8,11 +8,16 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/VideoPlayer` space allotment on both sides of the playback controls to support 3 buttons; consequently the "more" controls area has shrunk by the same amount
 - `moonstone/Slider` prop `noFill` to support a style without the fill.
+- `moonstone/Marquee` property `rtl` to set directionality to right-to-left
 
 ### Fixed
 
 - `moonstone/MarqueeDecorator` to properly stop marquee on items with `'marqueeOnHover'`
 - `moonstone/ExpandableList` to work properly with object-based children
+
+### Changed
+
+- `moonstone/VideoPlayer` to not disable media button (play/pause)
 
 ## [1.1.0] - 2017-04-21
 
