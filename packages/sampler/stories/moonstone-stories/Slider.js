@@ -1,7 +1,7 @@
 import Slider, {SliderBase} from '@enact/moonstone/Slider';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, number, select} from '@kadira/storybook-addon-knobs';
+import {boolean, number, select} from '@kadira/storybook-addon-knobs';
 
 import nullify from '../../src/utils/nullify.js';
 import {mergeComponentMetadata, removeProps} from '../../src/utils/propTables';
@@ -10,7 +10,6 @@ const Config = mergeComponentMetadata('Slider', SliderBase, Slider);
 removeProps(Config, 'defaultPressed pressed');
 
 storiesOf('Slider')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'Basic usage of Slider',
