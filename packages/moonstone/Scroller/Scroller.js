@@ -119,6 +119,16 @@ class ScrollerBase extends Component {
 		return bounds;
 	}
 
+	hasExpandableContainer = (node) => {
+		if (node.id === 'root' || node.tagName === 'BODY') {
+			return false;
+		} else if (node.dataset.expandableContainer) {
+			return node;
+		} else {
+			return this.hasExpandableContainer(node.parentNode);
+		}
+	}
+
 	calculatePositionOnFocus = (focusedItem) => {
 		if (this.isVertical()) {
 			const
@@ -127,10 +137,16 @@ class ScrollerBase extends Component {
 				{top: containerTop} = this.containerRef.getBoundingClientRect(),
 				currentScrollTop = this.scrollPos.top,
 				// calculation based on client position
-				newItemTop = this.containerRef.scrollTop + (itemTop - containerTop);
+				newItemTop = this.containerRef.scrollTop + (itemTop - containerTop),
+				expandableContainer = this.hasExpandableContainer(focusedItem);
+			let expandableHeight = 0;
 
-			if (newItemTop + itemHeight > (clientHeight + currentScrollTop)) {
-				this.scrollPos.top += (newItemTop + itemHeight) - (clientHeight + currentScrollTop);
+			if (expandableContainer) {
+				expandableHeight = expandableContainer.offsetHeight;
+			}
+
+			if (newItemTop + itemHeight + expandableHeight > (clientHeight + currentScrollTop)) {
+				this.scrollPos.top += (newItemTop + itemHeight) - (clientHeight + currentScrollTop) + expandableHeight;
 			} else if (newItemTop < currentScrollTop) {
 				this.scrollPos.top += newItemTop - currentScrollTop;
 			}
