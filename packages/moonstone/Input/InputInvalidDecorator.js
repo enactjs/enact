@@ -81,11 +81,14 @@ const InputInvalidDecorator = hoc((config, Wrapped) => {
 
 		getClient = (node) => {
 			this.clientRef = node;
+			if (this.clientRef && this.tooltipRef) {
+				this.setTooltipLayout();
+			}
 		}
 
 		getTooltipRef = (node) => {
 			this.tooltipRef = node;
-			if (node) {
+			if (this.clientRef && this.tooltipRef) {
 				this.setTooltipLayout();
 			}
 		}
