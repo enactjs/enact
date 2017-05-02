@@ -373,6 +373,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		render: ({backgroundProgress, children, disabled, inputRef, max, min, onBlur, onChange, onKeyDown, onMouseMove, onMouseUp, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, tooltip, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => {
 			delete rest.active;
 			delete rest.detachedKnob;
+			delete rest.noFill;
 			delete rest.onActivate;
 			delete rest.onDecrement;
 			delete rest.onIncrement;
