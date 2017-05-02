@@ -151,7 +151,7 @@ describe('Input Specs', () => {
 			<Input />
 		);
 
-		subject.simulate('click');
+		subject.find('Input').simulate('click');
 
 		const expected = true;
 		const actual = pauseSpy.calledOnce;
@@ -166,7 +166,7 @@ describe('Input Specs', () => {
 			<Input />
 		);
 
-		subject.simulate('click');
+		subject.find('Input').simulate('click');
 		subject.unmount();
 
 		const expected = true;
@@ -174,21 +174,5 @@ describe('Input Specs', () => {
 
 		Spotlight.resume.restore();
 		expect(actual).to.equal(expected);
-	});
-
-	it('should display invalid message if it invalid and invalid message exists', () => {
-		const subject = mount(
-			<Input invalid invalidMessage="invalid message" />
-		);
-
-		expect(subject.find('Tooltip').prop('children')).to.equal('INVALID MESSAGE');
-	});
-
-	it('should not display invalid message if it is valid', () => {
-		const subject = mount(
-			<Input invalidMessage="invalid message" />
-		);
-
-		expect(subject.find('Tooltip')).to.have.length(0);
 	});
 });
