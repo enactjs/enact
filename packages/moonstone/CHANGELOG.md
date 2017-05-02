@@ -13,6 +13,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/MarqueeDecorator` to properly stop marquee on items with `'marqueeOnHover'`
 - `moonstone/ExpandableList` to work properly with object-based children
+- `moonstone/Picker` and `moonstone/RangePicker` now use the correct size from Enyo (60px v.s. 84px)
 
 ### Changed
 
