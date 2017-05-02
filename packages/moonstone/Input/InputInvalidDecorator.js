@@ -24,7 +24,7 @@ const InputInvalidDecorator = hoc((config, Wrapped) => {
 
 		static propTypes = {
 			/**
-			 * When `true`, the message tooltip is shown if it exists.
+			 * When `true`, the message tooltip is shown if it exists and highlights text color to red.
 			 *
 			 * @type {Boolean}
 			 * @default false
@@ -92,10 +92,11 @@ const InputInvalidDecorator = hoc((config, Wrapped) => {
 
 		render () {
 			const {invalid, invalidMessage, ...rest} = this.props;
+			const className = invalid ? css.invalid : null;
 
 			return (
 				<div className={css.invalidDecorator} ref={this.getClient}>
-					<Wrapped {...rest} invalid={invalid} />
+					<Wrapped {...rest} className={className} />
 					{invalidMessage ?
 						<FloatingLayer open={invalid} scrimType="none">
 							<Tooltip

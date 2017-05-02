@@ -87,15 +87,6 @@ const InputBase = kind({
 		iconBefore: PropTypes.string,
 
 		/**
-		 * When `true`, the message tooltip is shown if it exists and highlights text color to red.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		invalid: PropTypes.bool,
-
-		/**
 		 * The handler to run when blurred.
 		 *
 		 * @type {Function}
@@ -179,7 +170,6 @@ const InputBase = kind({
 	defaultProps: {
 		disabled: false,
 		dismissOnEnter: false,
-		invalid: false,
 		placeholder: '',
 		type: 'text'
 	},
@@ -202,7 +192,7 @@ const InputBase = kind({
 			const title = (value == null || value === '') ? placeholder : '';
 			return calcAriaLabel(title, type, value);
 		},
-		className: ({focused, invalid, styler}) => styler.append({focused, invalid}),
+		className: ({focused, styler}) => styler.append({focused}),
 		dir: ({value, placeholder}) => isRtlText(value || placeholder) ? 'rtl' : 'ltr',
 		// ensure we have a value so the internal <input> is always controlled
 		value: ({value}) => typeof value === 'number' ? value : (value || '')
@@ -211,7 +201,6 @@ const InputBase = kind({
 	render: ({dir, disabled, iconAfter, iconBefore, onChange, placeholder, type, value, ...rest}) => {
 		delete rest.dismissOnEnter;
 		delete rest.focused;
-		delete rest.invalid;
 
 		return (
 			<div {...rest} disabled={disabled}>
