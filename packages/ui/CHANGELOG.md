@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## Unreleased
+
+### Changed
+
+-`ui/View` to prevent re-renders on View's leaving the ViewManager
+
 ## [1.1.0] - 2017-04-21
 
 ### Changed
@@ -11,11 +17,6 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Fixed
 
 - `ui/Cancelable` to run modal handlers in the right order
-## Unreleased
-
-### Changed
-
--`ui/View` to prevent re-renders on View's leaving the ViewManager
 
 ## [1.0.0] - 2017-03-31
 
