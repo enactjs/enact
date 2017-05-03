@@ -106,6 +106,7 @@ class TransitionGroup extends React.Component {
 		 */
 		component: PropTypes.any,
 
+		index: React.PropTypes.number,
 		/**
 		 * Called when each view is rendered during initial construction.
 		 *
@@ -390,9 +391,11 @@ class TransitionGroup extends React.Component {
 		// support wrapping arbitrary children with a component that supports the necessary
 		// lifecycle methods to animate transitions
 		const childrenToRender = this.state.children.map(child => {
+			const isLeaving = child.props['data-index'] !== this.props.index && typeof child.props['data-index'] !== 'undefined';
+
 			return React.cloneElement(
 				this.props.childFactory(child),
-				{key: child.key, ref: child.key}
+				{key: child.key, ref: child.key, leaving: isLeaving}
 			);
 		});
 
@@ -401,6 +404,8 @@ class TransitionGroup extends React.Component {
 		delete props.size;
 		delete props.childFactory;
 		delete props.component;
+		delete props.index;
+		delete props.onAppear;
 		delete props.onAppear;
 		delete props.onEnter;
 		delete props.onLeave;
