@@ -106,7 +106,13 @@ class TransitionGroup extends React.Component {
 		 */
 		component: PropTypes.any,
 
-		index: React.PropTypes.number,
+		/**
+		 * Current Index the ViewManager is on
+		 *
+		 * @type {Number}
+		 */
+		currentIndex: PropTypes.number,
+
 		/**
 		 * Called when each view is rendered during initial construction.
 		 *
@@ -391,7 +397,7 @@ class TransitionGroup extends React.Component {
 		// support wrapping arbitrary children with a component that supports the necessary
 		// lifecycle methods to animate transitions
 		const childrenToRender = this.state.children.map(child => {
-			const isLeaving = child.props['data-index'] !== this.props.index && typeof child.props['data-index'] !== 'undefined';
+			const isLeaving = child.props['data-index'] !== this.props.currentIndex && typeof child.props['data-index'] !== 'undefined';
 
 			return React.cloneElement(
 				this.props.childFactory(child),
@@ -403,8 +409,8 @@ class TransitionGroup extends React.Component {
 		const props = Object.assign({}, this.props);
 		delete props.size;
 		delete props.childFactory;
+		delete props.currentIndex;
 		delete props.component;
-		delete props.index;
 		delete props.onAppear;
 		delete props.onAppear;
 		delete props.onEnter;

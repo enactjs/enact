@@ -216,7 +216,7 @@ class ViewManager extends React.Component {
 		delete rest.reverseTransition;
 
 		return (
-			<TransitionGroup {...rest} childFactory={childFactory} size={size + 1} index={index}>
+			<TransitionGroup {...rest} childFactory={childFactory} size={size + 1} currentIndex={index}>
 				{views}
 			</TransitionGroup>
 		);
