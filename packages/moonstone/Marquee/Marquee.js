@@ -6,9 +6,9 @@
  */
 
 import kind from '@enact/core/kind';
-import {isRtlText} from '@enact/i18n/util';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import css from './Marquee.less';
 
@@ -34,7 +34,7 @@ const MarqueeBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		animating: React.PropTypes.bool,
+		animating: PropTypes.bool,
 
 		/**
 		 * When `true`, the contents will be centered regardless of the text directionality.
@@ -42,7 +42,7 @@ const MarqueeBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		centered: React.PropTypes.bool,
+		centered: PropTypes.bool,
 
 		/**
 		 * `children` is the text or a set of components that should be scrolled by the
@@ -52,7 +52,7 @@ const MarqueeBase = kind({
 		 * @type {Node|Node[]}
 		 * @public
 		 */
-		children: React.PropTypes.node,
+		children: PropTypes.node,
 
 		/**
 		 * CSS class name for the root node
@@ -60,7 +60,7 @@ const MarqueeBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		className: React.PropTypes.string,
+		className: PropTypes.string,
 
 		/**
 		 * Function to capture a reference to the client node
@@ -68,7 +68,7 @@ const MarqueeBase = kind({
 		 * @type {Function}
 		 * @public
 		 */
-		clientRef: React.PropTypes.func,
+		clientRef: PropTypes.func,
 
 		/**
 		 * Distance to animate the marquee which is generally the width of the text minus the
@@ -77,7 +77,7 @@ const MarqueeBase = kind({
 		 * @type {Number}
 		 * @public
 		 */
-		distance: React.PropTypes.number,
+		distance: PropTypes.number,
 
 		/**
 		 * Forces the `direction` of the marquee. Valid values are `rtl` and `ltr`. This includes non-text elements as well.
@@ -85,7 +85,7 @@ const MarqueeBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		forceDirection: React.PropTypes.oneOf(['rtl', 'ltr']),
+		forceDirection: PropTypes.oneOf(['rtl', 'ltr']),
 
 		/**
 		 * Callback function for when the marquee completes its animation
@@ -93,7 +93,7 @@ const MarqueeBase = kind({
 		 * @type {Function}
 		 * @public
 		 */
-		onMarqueeComplete: React.PropTypes.func,
+		onMarqueeComplete: PropTypes.func,
 
 		/**
 		 * Text overflow setting. Either `'clip'` or `'ellipsis'`
@@ -101,7 +101,16 @@ const MarqueeBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		overflow: React.PropTypes.oneOf(['clip', 'ellipsis']),
+		overflow: PropTypes.oneOf(['clip', 'ellipsis']),
+
+		/**
+		 * `true` if the directionality of the content is right-to-left
+		 *
+		 * @type {Boolean}
+		 * @public
+		 * @default false
+		 */
+		rtl: PropTypes.bool,
 
 		/**
 		 * Speed of marquee animation in pixels/second.
@@ -109,7 +118,11 @@ const MarqueeBase = kind({
 		 * @type {Number}
 		 * @public
 		 */
-		speed: React.PropTypes.number
+		speed: PropTypes.number
+	},
+
+	defaultProps: {
+		rtl: false
 	},
 
 	styles: {
@@ -119,10 +132,9 @@ const MarqueeBase = kind({
 
 	computed: {
 		clientClassName: ({animating}) => animating ? animated : css.text,
-		clientStyle: ({animating, centered, children, distance, forceDirection, overflow, speed}, {rtl: contextRtl}) => {
-			let rtl = forceDirection ? forceDirection === 'rtl' : isRtlText(children);
-
-			const overrideRtl = forceDirection ? true : contextRtl !== rtl;
+		clientStyle: ({animating, centered, distance, forceDirection, overflow, rtl, speed}, {rtl: contextRtl}) => {
+			const isTextRtl = forceDirection ? forceDirection === 'rtl' : rtl;
+			const overrideRtl = forceDirection ? true : contextRtl !== isTextRtl;
 
 			// We only attempt to set the textAlign of this control if the locale's directionality
 			// differs from the directionality of our current marqueeable control (as determined by
@@ -131,7 +143,7 @@ const MarqueeBase = kind({
 			if (centered) {
 				textAlign = 'center';
 			} else if (overrideRtl && distance > 0) {
-				if (rtl) {
+				if (isTextRtl) {
 					textAlign = 'right';
 				} else {
 					textAlign = 'left';
@@ -142,7 +154,7 @@ const MarqueeBase = kind({
 			// inline
 			let direction = 'inherit';
 			if (overrideRtl) {
-				direction = rtl ? 'rtl' : 'ltr';
+				direction = isTextRtl ? 'rtl' : 'ltr';
 			}
 
 			const style = {

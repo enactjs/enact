@@ -17,8 +17,8 @@ storiesOf('ToggleButton')
 			<ToggleButton
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
+				casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
 				disabled={boolean('disabled')}
-				preserveCase={boolean('preserveCase')}
 				small={boolean('small')}
 				toggleOnLabel={text('toggleOnLabel', 'Loooooooooooooooooog On')}
 				toggleOffLabel={text('toggleOffLabel', 'Loooooooooooooooooog Off')}
@@ -31,8 +31,8 @@ storiesOf('ToggleButton')
 			<ToggleButton
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
+				casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
 				disabled={boolean('disabled')}
-				preserveCase={boolean('preserveCase')}
 				small={boolean('small')}
 				toggleOnLabel={select('toggleOnLabel', prop.tallText, 'ิ้  ไั  ஒ  து')}
 				toggleOffLabel={select('toggleOffLabel', prop.tallText, 'ิ้  ไั  ஒ  து')}

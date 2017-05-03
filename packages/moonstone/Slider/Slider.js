@@ -9,7 +9,8 @@ import factory from '@enact/core/factory';
 import {forKey, forward, handle, stopImmediate} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import Pressable from '@enact/ui/Pressable';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import Spottable from '@enact/spotlight/Spottable';
 
 import SliderDecorator from '../internal/SliderDecorator';

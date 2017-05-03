@@ -9,10 +9,10 @@ storiesOf('Header')
 		'with RTL text',
 		() => (
 			<Header
+				casing="preserve"
 				type="compact"
 				title={text('title', 'Title')}
 				titleBelow={text('titleBelow', 'כתוביות למט')}
-				preserveCase
 			/>
 		)
 	);

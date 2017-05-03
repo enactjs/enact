@@ -8,7 +8,8 @@
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import {is} from '@enact/core/keymap';
-import React, {Component, PropTypes} from 'react';
+import PropTypes from 'prop-types';
+import React, {Component} from 'react';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
@@ -220,6 +221,14 @@ class VirtualListCore extends Component {
 		} else if (hasDataChanged) {
 			this.updateStatesAndBounds(nextProps);
 		}
+	}
+
+	shouldComponentUpdate (nextProps, nextState) {
+		if ((this.props.dataSize !== nextProps.dataSize) &&
+			(nextState.firstIndex + nextState.numOfItems) < nextProps.dataSize) {
+			return false;
+		}
+		return true;
 	}
 
 	componentWillUnmount () {

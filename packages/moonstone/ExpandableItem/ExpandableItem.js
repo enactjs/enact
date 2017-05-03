@@ -10,7 +10,8 @@
 import {extractAriaProps} from '@enact/core/util';
 import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import LabeledItem from '../LabeledItem';
 

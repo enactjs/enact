@@ -27,6 +27,7 @@ import css from './MoonstoneDecorator.less';
 const defaultConfig = {
 	i18n: true,
 	float: true,
+	noAutoFocus: false,
 	overlay: false,
 	ri: {
 		screenTypes
@@ -53,7 +54,7 @@ const defaultConfig = {
  * @public
  */
 const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {ri, i18n, spotlight, float, overlay, textSize, theme} = config;
+	const {ri, i18n, spotlight, float, noAutoFocus, overlay, textSize, theme} = config;
 
 	// Apply classes depending on screen type (overlay / fullscreen)
 	const bgClassName = 'enact-fit' + (overlay ? '' : ` ${css.bg}`);
@@ -70,7 +71,7 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			)
 		);
 	}
-	if (spotlight) App = SpotlightRootDecorator(App);
+	if (spotlight) App = SpotlightRootDecorator({noAutoFocus}, App);
 	if (textSize) App = TextSizeDecorator(App);
 	if (theme) App = ThemeDecorator(App);
 

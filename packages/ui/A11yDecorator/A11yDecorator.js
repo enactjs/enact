@@ -7,6 +7,7 @@
 import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 /**
  * Default config for {@link ui/A11yDecorator.A11yDecorator}.
@@ -43,11 +44,11 @@ const A11yDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		name: 'A11yDecorator',
 
 		propTypes: {
-			accessibilityHint: React.PropTypes.string,
-			accessibilityPreHint: React.PropTypes.string,
+			accessibilityHint: PropTypes.string,
+			accessibilityPreHint: PropTypes.string,
 			// TOOD: fix bug in react eslint rules with sorting of quoted keys
 			// eslint-disable-next-line react/sort-prop-types
-			'aria-label': React.PropTypes.string
+			'aria-label': PropTypes.string
 		},
 
 		computed: {

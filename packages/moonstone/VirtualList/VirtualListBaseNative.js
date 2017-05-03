@@ -8,14 +8,15 @@
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import {is} from '@enact/core/keymap';
-import React, {Component, PropTypes} from 'react';
+import PropTypes from 'prop-types';
+import React, {Component} from 'react';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import {dataIndexAttribute, ScrollableNative} from '../Scroller/ScrollableNative';
 
 import css from './VirtualListBaseNative.less';
-import cssItem from './ListItemNative.less';
+import cssItem from './ListItem.less';
 
 const
 	dataContainerMutedAttribute = 'data-container-muted',
@@ -242,7 +243,7 @@ class VirtualListCoreNative extends Component {
 	cc = []
 	scrollPosition = 0
 
-	wrapperStyle = {}
+	wrapperClass = null
 	containerRef = null
 	wrapperRef = null
 
@@ -347,9 +348,6 @@ class VirtualListCoreNative extends Component {
 		this.state.firstIndex = 0;
 		// eslint-disable-next-line react/no-direct-mutation-state
 		this.state.numOfItems = 0;
-
-		/* FIXME: RTL / this calculation only works for Chrome */
-		this.compensationRTL = clientWidth - (this.isPrimaryDirectionVertical ? this.secondary.itemSize : this.primary.itemSize);
 	}
 
 	updateStatesAndBounds (props) {
@@ -401,20 +399,10 @@ class VirtualListCoreNative extends Component {
 			this.props.cbScrollTo({position: (isPrimaryDirectionVertical) ? {y: maxPos} : {x: maxPos}});
 		}
 
-		const {wrapperStyle} = this;
-
-		if (isPrimaryDirectionVertical) {
-			wrapperStyle.overflowY = 'scroll';
-			wrapperStyle.overflowX = 'hidden';
-		} else {
-			wrapperStyle.overflowX = 'scroll';
-			wrapperStyle.overflowY = 'hidden';
-		}
+		this.wrapperClass = (isPrimaryDirectionVertical) ? css.vertical : css.horizontal;
 
 		this.containerRef.style.width = scrollBounds.scrollWidth + 'px';
 		this.containerRef.style.height = scrollBounds.scrollHeight + 'px';
-
-		wrapperStyle.willChange = 'left, top';
 	}
 
 	syncThreshold (maxPos) {
@@ -543,8 +531,8 @@ class VirtualListCoreNative extends Component {
 			style.height = height;
 		}
 
-		style.left = this.compensateRTL(x) + 'px';
-		style.top = y + 'px';
+		/* FIXME: RTL / this calculation only works for Chrome */
+		style.transform = 'translate(' + (this.context.rtl ? -x : x) + 'px,' + y + 'px)';
 	}
 
 	getXY = (primaryPosition, secondaryPosition) => {
@@ -671,12 +659,6 @@ class VirtualListCoreNative extends Component {
 		}
 	}
 
-	// for RTL support
-	compensateRTL = (x) => {
-		/* FIXME: RTL / this calculation only works for Chrome */
-		return this.context.rtl ? this.compensationRTL - x : x;
-	}
-
 	// render
 
 	initRef (prop) {
@@ -707,12 +689,10 @@ class VirtualListCoreNative extends Component {
 
 		const
 			{className, style, ...rest} = props,
-			{wrapperStyle} = this,
-			mergedStyle = {...style, ...wrapperStyle},
-			mergedClasses = classNames(css.list, className);
+			mergedClasses = classNames(css.list, this.wrapperClass, className);
 
 		return (
-			<div ref={this.initWrapperRef} className={mergedClasses} style={mergedStyle}>
+			<div ref={this.initWrapperRef} className={mergedClasses} style={style}>
 				<div {...rest} ref={this.initContainerRef}>
 					{cc}
 				</div>

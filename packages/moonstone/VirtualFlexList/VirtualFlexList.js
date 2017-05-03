@@ -8,7 +8,8 @@
 
 import classNames from 'classnames';
 import {forward} from '@enact/core/handle';
-import React, {Component, PropTypes} from 'react';
+import PropTypes from 'prop-types';
+import React, {Component} from 'react';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import {VirtualListCore} from '../VirtualList/VirtualListBase';
@@ -238,8 +239,15 @@ class VirtualFlexList extends Component {
 		const {headers, items, x, y} = this.props;
 
 		if (
-			items.colCount !== nextProps.items.colCount || items.height !== nextProps.items.height || items.rowCount !== nextProps.items.rowCount ||
-			headers && (headers.col.count !== nextProps.headers.col.count || headers.row.count !== nextProps.headers.row.count)
+			items.colCount !== nextProps.items.colCount ||
+			items.data !== nextProps.items.data ||
+			items.height !== nextProps.items.height ||
+			items.rowCount !== nextProps.items.rowCount ||
+			items.width !== nextProps.items.width ||
+			headers && nextProps.headers && (
+				headers.col.count !== nextProps.headers.col.count ||
+				headers.row.count !== nextProps.headers.row.count
+			)
 		) {
 			this.componentProps = this.getComponentProps(nextProps);
 		}

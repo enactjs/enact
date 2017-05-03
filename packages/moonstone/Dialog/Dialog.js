@@ -6,7 +6,8 @@
  */
 
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import Slottable from '@enact/ui/Slottable';
 import Uppercase from '@enact/i18n/Uppercase';
 
@@ -42,6 +43,16 @@ const DialogBase = kind({
 			PropTypes.arrayOf(PropTypes.element),
 			PropTypes.element
 		]),
+
+		/**
+		 * Configures the mode of uppercasing of the `title` that should be performed.
+		 *
+		 * @see i18n/Uppercase#casing
+		 * @type {String}
+		 * @default 'upper'
+		 * @public
+		 */
+		casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence']),
 
 		/**
 		 * The element(s) to be displayed in the body of the Dialog.
@@ -95,6 +106,7 @@ const DialogBase = kind({
 		 *
 		 * @type {Boolean}
 		 * @default false
+		 * @deprecated replaced by `casing`
 		 * @public
 		 */
 		preserveCase: PropTypes.bool,
@@ -106,7 +118,7 @@ const DialogBase = kind({
 		 * @default 'translucent'
 		 * @public
 		 */
-		scrimType: React.PropTypes.oneOf(['transparent', 'translucent', 'none']),
+		scrimType: PropTypes.oneOf(['transparent', 'translucent', 'none']),
 
 		/**
 		 * When `true`, the close button is shown; when `false`, it is hidden.
@@ -158,13 +170,13 @@ const DialogBase = kind({
 		className: ({showDivider, styler}) => styler.append({showDivider})
 	},
 
-	render: ({buttons, children, preserveCase, title, titleBelow, ...rest}) => {
+	render: ({buttons, casing, children, preserveCase, title, titleBelow, ...rest}) => {
 		delete rest.showDivider;
 
 		return (
 			<Popup {...rest}>
 				<TitleWrapper>
-					<MarqueeH1 preserveCase={preserveCase} marqueeOn="render" marqueeOnRenderDelay={5000} className={css.title}>
+					<MarqueeH1 casing={casing} preserveCase={preserveCase} marqueeOn="render" marqueeOnRenderDelay={5000} className={css.title}>
 						{title}
 					</MarqueeH1>
 					<MarqueeH2 className={css.titleBelow} marqueeOn="render" marqueeOnRenderDelay={5000}>

@@ -4,6 +4,7 @@ import invariant from 'invariant';
 import kind from '@enact/core/kind';
 import ViewManager from '@enact/ui/ViewManager';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import Breadcrumb from './Breadcrumb';
 import BreadcrumbArranger from './BreadcrumbArranger';
@@ -73,9 +74,9 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @type {Function|node[]}
 			 * @default IndexedBreadcrumbs
 			 */
-			breadcrumbs: React.PropTypes.oneOfType([
-				React.PropTypes.func,							// generator
-				React.PropTypes.arrayOf(React.PropTypes.node)	// static array of breadcrumbs
+			breadcrumbs: PropTypes.oneOfType([
+				PropTypes.func,							// generator
+				PropTypes.arrayOf(PropTypes.node)	// static array of breadcrumbs
 			]),
 
 			/**
@@ -83,7 +84,7 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 *
 			 * @type {Node}
 			 */
-			children: React.PropTypes.node,
+			children: PropTypes.node,
 
 			/**
 			 * Index of the active panel
@@ -91,7 +92,7 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @type {Number}
 			 * @default 0
 			 */
-			index: React.PropTypes.number,
+			index: PropTypes.number,
 
 			/**
 			 * Disable breadcrumb transitions
@@ -99,7 +100,7 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @type {Boolean}
 			 * @default false
 			 */
-			noAnimation: React.PropTypes.bool,
+			noAnimation: PropTypes.bool,
 
 			/**
 			 * Handler called when a breadcrumb is clicked. The payload includes the `index` of the
@@ -107,7 +108,7 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 *
 			 * @type {Function}
 			 */
-			onSelectBreadcrumb: React.PropTypes.func
+			onSelectBreadcrumb: PropTypes.func
 		},
 
 		defaultProps: {
