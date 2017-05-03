@@ -72,6 +72,13 @@ class View extends React.Component {
 		index: PropTypes.number,
 
 		/**
+		 * Indicates if a view is currently leaving.
+		 *
+		 * @type {Boolean}
+		 */
+		leaving: PropTypes.bool,
+
+		/**
 		 * Indicates if the transition should be animated
 		 *
 		 * @type {Boolean}
