@@ -58,7 +58,7 @@
 		cursor: pointer;
 		margin: 0;
 		position: relative;
-		transition: transform 250ms;
+		transition: transform 100ms;
 
 		&[disabled] {
 			cursor: default;
@@ -92,9 +92,25 @@
 			vertical-align: top;
 		}
 
-		&.incrementing .incrementer,
-		&.decrementing .decrementer {
-			transform: scale(0.8);
+		.incrementer,
+		.decrementer {
+			transform: scale(0.7);
+
+			&[disabled] {
+				visibility: hidden;
+			}
+		}
+
+		&:global(.spottable):focus {
+			.incrementer,
+			.decrementer {
+				transform: scale(1);
+			}
+
+			&.incrementing .incrementer,
+			&.decrementing .decrementer {
+				transform: scale(0.7);
+			}
 		}
 
 		&.horizontal {
