@@ -1,7 +1,10 @@
 /*
-* This module loads Moonstone specific fonts. It only includes one function,
-* {@link moonstone/MoonstoneDecorator.fontGenerator} and is not intended to be directly
-* included by external developers.
+* This module loads Moonstone specific fonts. It exports a primary function,
+* [fontGenerator]{@link moonstone/MoonstoneDecorator.fontGenerator}, and several utility functions
+* to help with font loading scenarios of components:
+* [isFontReady]{@link moonstone/MoonstoneDecorator.fontGenerator.isFontReady} and
+* [onFontsLoaded]{@link moonstone/MoonstoneDecorator.fontGenerator.onFontsLoaded}
+* The default export, `fontGenerator`, is not intended to be used directly by external developers.
 */
 
 import ilib from '@enact/i18n';
