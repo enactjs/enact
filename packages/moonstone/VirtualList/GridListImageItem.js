@@ -68,6 +68,13 @@ const GridListImageItemBase = kind({
 		selected: PropTypes.bool,
 
 		/**
+		 * The selection overlay component to render.
+		 *
+		 * @type {Function}
+		 */
+		selectionOverlay: PropTypes.func,
+
+		/**
 		 * When `true`, a selection overlay with a centered icon is shown. When `selected` is true,
 		 * a check mark is shown.
 		 *
@@ -113,7 +120,7 @@ const GridListImageItemBase = kind({
 		)
 	},
 
-	render: ({caption, placeholder, source, subCaption, selectionOverlayShowing, ...rest}) => {
+	render: ({caption, placeholder, source, subCaption, selectionOverlay: SelectionOverlay, selectionOverlayShowing, ...rest}) => {
 		if (selectionOverlayShowing) {
 			rest['role'] = 'checkbox';
 			rest['aria-checked'] = rest.selected;
@@ -127,9 +134,12 @@ const GridListImageItemBase = kind({
 				{
 					selectionOverlayShowing ? (
 						<div className={css.overlayContainer}>
-							<div className={css.overlayComponent}>
-								<Icon className={css.icon}>check</Icon>
-							</div>
+							{
+								<SelectionOverlay /> ||
+								<div className={css.overlayComponent}>
+									<Icon className={css.icon}>check</Icon>
+								</div>
+							}
 						</div>
 					) : null
 				}
