@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Resizable from '@enact/ui/Resizable';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import Transition from '@enact/ui/Transition';
+import {contextTypes} from './ExpandableContainer';
 
 /**
  * Changes spotlight focus to transition container when opening the container if the previously focused
@@ -16,6 +17,8 @@ import Transition from '@enact/ui/Transition';
 const ExpandableTransitionContainerBase = kind({
 	name: 'ExpandableTransitionContainer',
 
+	contextTypes: contextTypes,
+
 	propTypes: {
 		/**
 		 * Set the visibility of the component, which determines whether it's on screen or off.
@@ -27,9 +30,13 @@ const ExpandableTransitionContainerBase = kind({
 		visible: PropTypes.bool
 	},
 
-	render (props) {
+	render (props, context) {
 		return (
-			<Transition {...props} />
+			<Transition
+				{...props}
+				onHide={context.onTransitionEnd}
+				onShow={context.onTransitionEnd}
+			/>
 		);
 	}
 });

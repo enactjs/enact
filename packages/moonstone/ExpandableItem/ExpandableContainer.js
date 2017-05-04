@@ -3,6 +3,10 @@ import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDeco
 import React from 'react';
 import PropTypes from 'prop-types';
 
+const contextTypes = {
+	onTransitionEnd: PropTypes.func
+};
+
 /**
  * Restores spotlight focus to root container when closing the container if the previously focused
  * component is contained.
@@ -12,6 +16,7 @@ import PropTypes from 'prop-types';
  * @private
  */
 const ExpandableContainerBase = class extends React.Component {
+	static childContextTypes = contextTypes
 	static displayName = 'ExpandableContainer'
 
 	static propTypes =  /** @lends moonstone/ExpandableItem.ExpandableContainerBase.prototype */ {
@@ -70,6 +75,12 @@ const ExpandableContainerBase = class extends React.Component {
 		}
 	}
 
+	getChildContext () {
+		return {
+			onTransitionEnd: this.handleTransitionEnd
+		};
+	}
+
 	highlightLabeledItem = () => {
 		const current = Spotlight.getCurrent();
 		if (this.containerNode.contains(current)) {
@@ -111,7 +122,6 @@ const ExpandableContainerBase = class extends React.Component {
 		return (
 			<div
 				{...props}
-				onTransitionEnd={this.handleTransitionEnd}
 				ref={this.getContainerNode}
 			/>
 		);
@@ -129,4 +139,4 @@ const ExpandableContainerBase = class extends React.Component {
 const ExpandableContainer = SpotlightContainerDecorator(ExpandableContainerBase);
 
 export default ExpandableContainer;
-export {ExpandableContainer, ExpandableContainerBase};
+export {ExpandableContainer, ExpandableContainerBase, contextTypes};
