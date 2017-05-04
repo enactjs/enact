@@ -21,6 +21,7 @@ storiesOf('Slider')
 				knobStep={number('knobStep')}
 				max={number('max', SliderBase.defaultProps.max)}
 				min={number('min', SliderBase.defaultProps.min)}
+				noFill={boolean('noFill', false)}
 				onChange={action('onChange')}
 				onKnobMove={action('onKnobMove')}
 				step={number('step', SliderBase.defaultProps.step)}
@@ -28,7 +29,6 @@ storiesOf('Slider')
 				tooltipAsPercent={nullify(boolean('tooltipAsPercent', false))}
 				tooltipForceSide={nullify(boolean('tooltipForceSide', false))}
 				tooltipSide={select('tooltipSide', ['before', 'after'], 'after')}
-				noFill={boolean('noFill', false)}
 				vertical={nullify(boolean('vertical', false))}
 			/>
 		),
