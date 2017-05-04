@@ -360,10 +360,10 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 				if (!tooltip || children) return children;
 				return tooltipAsPercent ? Math.floor(computeProportionProgress({value, max, min}) * 100) + '%' : value;
 			},
-			className: ({active, pressed, vertical, styler, noFill}) => styler.append({
+			className: ({active, noFill, pressed, vertical, styler}) => styler.append({
 				active,
-				pressed,
 				noFill,
+				pressed,
 				vertical,
 				horizontal: !vertical
 			}),
