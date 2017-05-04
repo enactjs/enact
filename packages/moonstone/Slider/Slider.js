@@ -128,7 +128,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			/**
 			 * When `true`, the slider bar doesn't show a fill and doesn't highlight when spotted
 			 *
-			 * @type {Booelan}
+			 * @type {Boolean}
 			 * @default false
 			 * @public
 			 */
