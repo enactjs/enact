@@ -61,12 +61,12 @@ class PickerAddRemove extends React.Component {
 
 		this.setState({
 			children: children,
-			value: this.state.value === 0 ? 0 : this.state.value - 1
+			value: Math.max(this.state.value - 1, 0)
 		});
 	}
 
 	handleValueUpdate = ({value}) => {
-		this.setState({value: value});
+		this.setState({value});
 	}
 
 	handleIndexChange = ({value}) => {
