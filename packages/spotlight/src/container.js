@@ -37,7 +37,20 @@ let GlobalConfig = {
 	leaveFor: null,         // {left: <extSelector>, right: <extSelector>, up: <extSelector>, down: <extSelector>}
 	restrict: 'self-first', // 'self-first', 'self-only', 'none'
 	tabIndexIgnoreList: 'a, input, select, textarea, button, iframe, [contentEditable=true]',
-	navigableFilter: null
+	navigableFilter: null,
+	lastFocusedElement: null,
+	lastFocusedKey: null,
+	lastFocusedPersist: (node, all) => {
+		const container = typeof node === 'string';
+		return {
+			container,
+			element: !container,
+			key: container ? node : all.indexOf(node)
+		};
+	},
+	lastFocusedRestore: ({key}, all) => {
+		return all[key];
+	}
 };
 
 /**
@@ -271,6 +284,32 @@ const getSpottableDescendants = (containerId) => {
 };
 
 /**
+ * Recursively get spottable descendants by including elements within sub-containers that do not
+ * have `enterTo` configured
+ *
+ * @param   {String}  containerId  ID of container
+ *
+ * @returns {Node[]}               Array of spottable elements and containers
+ * @memberof spotlight/container
+ * @private
+ */
+const getDeepSpottableDescendants = (containerId) => {
+	return getSpottableDescendants(containerId)
+		.map(n => {
+			if (isContainer(n)) {
+				const id = getContainerId(n);
+				const config = getContainerConfig(id);
+				if (!config.enterTo) {
+					return getDeepSpottableDescendants(id);
+				}
+			}
+
+			return n;
+		})
+		.reduce((acc, v) => acc.concat(coerceArray(v)), []);
+};
+
+/**
  * Returns an array of ids for containers that wrap the element, in order of outer-to-inner, with
  * the last array item being the immediate container id of the element.
  *
@@ -286,8 +325,6 @@ function getContainersForNode (node) {
 
 	return containers;
 }
-
-// CONTAINER CONFIG MGMT //
 
 /**
  * Generates a new unique identifier for a container
@@ -484,15 +521,9 @@ function getContainerDefaultElement (containerId) {
  * @public
  */
 function getContainerLastFocusedElement (containerId) {
-	const {lastFocusedElement, lastFocusedIndex} = getContainerConfig(containerId);
+	const {lastFocusedElement} = getContainerConfig(containerId);
 
-	let element = lastFocusedElement;
-	if (!element && lastFocusedIndex >= 0) {
-		const spottableChildren = getSpottableDescendants(containerId);
-		element = spottableChildren[lastFocusedIndex];
-	}
-
-	return isNavigable(element, containerId, true) ? element : null;
+	return isNavigable(lastFocusedElement, containerId, true) ? lastFocusedElement : null;
 }
 
 /**
@@ -506,8 +537,17 @@ function getContainerLastFocusedElement (containerId) {
  * @public
  */
 function setContainerLastFocusedElement (node, containerIds) {
-	for (let i = 0, containers = containerIds.length; i < containers; ++i) {
-		getContainerConfig(containerIds[i]).lastFocusedElement = node;
+	let lastFocusedElement = node;
+	for (let i = containerIds.length - 1; i > -1; i--) {
+		const id = containerIds[i];
+		configureContainer(id, {lastFocusedElement});
+
+		// If any container in the stack is controlling entering focus, use its container id as the
+		// lastFocusedElement instead of the node
+		const config = getContainerConfig(id);
+		if (config.enterTo) {
+			lastFocusedElement = id;
+		}
 	}
 }
 
@@ -517,6 +557,8 @@ function setContainerLastFocusedElement (node, containerIds) {
  * @param   {String} containerId Container ID
  *
  * @returns {Node[]}             Navigable elements within container
+ * @public
+ * @memberof spotlight/container
  * @public
  */
 function getContainerNavigableElements (containerId) {
@@ -545,16 +587,73 @@ function getContainerNavigableElements (containerId) {
 	return next ? coerceArray(next) : [];
 }
 
+/**
+ * Determines the preferred focus target, traversing any sub-containers as necessary, for the given
+ * container.
+ *
+ * @param   {String}  containerId  ID of container
+ *
+ * @returns {Node}                 Preferred target as either a DOM node or container-id
+ * @memberof spotlight/container
+ * @public
+ */
 function getContainerFocusTarget (containerId) {
-	const next = getContainerNavigableElements(containerId)[0];
+	// deferring restoration until it's requested to allow containers to prepare first
+	restoreLastFocusedElement(containerId);
 
+	const next = getContainerNavigableElements(containerId)[0];
 	if (isContainer(next)) {
 		return getContainerFocusTarget(getContainerId(next));
-	} else if (next) {
-		return next;
 	}
 
-	return false;
+	return next;
+}
+
+/**
+ * Saves the last focused element into `lastFocusedKey` using a container-defined serialization
+ * method configured in `lastFocusedPersist`.
+ *
+ * @param   {String}     containerId  ID of container
+ *
+ * @returns {undefined}
+ * @memberof spotlight/container
+ * @public
+ */
+function persistLastFocusedElement (containerId) {
+	const cfg = getContainerConfig(containerId);
+	if (cfg) {
+		const {lastFocusedElement} = cfg;
+		if (lastFocusedElement) {
+			const all = getDeepSpottableDescendants(containerId);
+			const lastFocusedKey = cfg.lastFocusedPersist(lastFocusedElement, all);
+
+			// store lastFocusedKey and release node reference to lastFocusedElement
+			cfg.lastFocusedKey = lastFocusedKey;
+			cfg.lastFocusedElement = null;
+		}
+	}
+}
+
+/**
+ * Restores the last focused element from `lastFocusedKey` using a container-defined deserialization
+ * method configured in `lastFocusedRestore`.
+ *
+ * @param   {String}     containerId  ID of container
+ *
+ * @returns {undefined}
+ * @memberof spotlight/container
+ * @public
+ */
+function restoreLastFocusedElement (containerId) {
+	const cfg = getContainerConfig(containerId);
+	if (cfg && cfg.lastFocusedKey) {
+		const all = getDeepSpottableDescendants(containerId);
+		const lastFocusedElement = cfg.lastFocusedRestore(cfg.lastFocusedKey, all);
+
+		// restore lastFocusedElement and release lastFocusedKey
+		cfg.lastFocusedKey = null;
+		cfg.lastFocusedElement = lastFocusedElement;
+	}
 }
 
 export {
@@ -577,6 +676,8 @@ export {
 	getSpottableDescendants,
 	isContainer,
 	isNavigable,
+	persistLastFocusedElement,
+	restoreLastFocusedElement,
 	removeAllConatiners,
 	removeContainer,
 	rootContainerId

@@ -38,6 +38,7 @@ import {
 	getSpottableDescendants,
 	isContainer,
 	isNavigable as isNavigableInContainer,
+	persistLastFocusedElement,
 	removeAllContainers,
 	removeContainer,
 	rootContainerId,
@@ -1049,18 +1050,7 @@ const Spotlight = (function () {
 			if (!containerId || typeof containerId !== 'string') {
 				throw new Error('Please assign the "containerId"!');
 			}
-			const cfg = getContainerConfig(containerId);
-			if (cfg) {
-				const {lastFocusedElement} = cfg;
-				if (lastFocusedElement) {
-					const spottableChildren = getSpottableDescendants(containerId);
-					const lastFocusedIndex = [].slice.call(spottableChildren).indexOf(lastFocusedElement);
-
-					// store last index and release node reference to lastFocusedElement
-					cfg.lastFocusedIndex = lastFocusedIndex;
-					cfg.lastFocusedElement = null;
-				}
-			}
+			persistLastFocusedElement(containerId);
 		},
 
 		/**
