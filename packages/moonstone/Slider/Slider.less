@@ -201,6 +201,21 @@
 			}
 		}
 	}
+
+	&.noFill {
+		.fill {
+			background-color: transparent;
+		}
+
+		&:global(.spottable) {
+			&.active,
+			&.pressed {
+				.fill {
+					background-color: transparent;
+				}
+			}
+		}
+	}
 }
 
 [data-container-muted='true'] {
