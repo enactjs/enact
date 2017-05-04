@@ -105,7 +105,7 @@ describe('ExpandableInput', () => {
 		const evt = {target: {value: value}};
 
 		const subject = mount(
-			<ExpandableInput open onChange={handleChange} />
+			<ExpandableInput title="ExpandableInput" open onChange={handleChange} />
 		);
 
 		subject.find('input').simulate('change', evt);

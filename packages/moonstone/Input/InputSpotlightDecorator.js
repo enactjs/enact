@@ -64,6 +64,15 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			dismissOnEnter: PropTypes.bool,
 
 			/**
+			 * When `true`, focus input directly instead of decorator
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			focusInput: PropTypes.bool,
+
+			/**
 			 * When `true`, prevents the decorator from receiving a visible focus state
 			 *
 			 * @type {Boolean}
@@ -152,6 +161,10 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 					} else {
 						this.focusDecorator(ev.currentTarget);
 						ev.stopPropagation();
+						if (this.props.focusInput) {
+							// blur from input
+							this.blur();
+						}
 					}
 				} else if (!ev.currentTarget.contains(ev.relatedTarget)) {
 					// Blurring decorator but not focusing input
@@ -186,9 +199,9 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 		onFocus = (ev) => {
 			forwardFocus(ev, this.props);
 
-			// when in noDecorator mode, focusing the decorator directly will cause it to
+			// when in noDecorator and focusInput mode, focusing the decorator directly will cause it to
 			// forward the focus onto the <input>
-			if (this.props.noDecorator && !isBubbling(ev)) {
+			if ((this.props.noDecorator && !isBubbling(ev)) || (this.props.focusInput && this.state.focused === null && !isBubbling(ev))) {
 				this.focusInput(ev.currentTarget);
 				ev.stopPropagation();
 			}
@@ -252,6 +265,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 		render () {
 			const props = Object.assign({}, this.props);
 			delete props.noDecorator;
+			delete props.focusInput;
 
 			return (
 				<Component

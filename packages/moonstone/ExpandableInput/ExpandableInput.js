@@ -208,13 +208,14 @@ class ExpandableInputBase extends React.Component {
 		const isCancel = is('cancel', keyCode);
 		const isEnter = is('enter', keyCode);
 		const isUpDown = is('up', keyCode) || is('down', keyCode);
+		const isLeftRight = is('left', keyCode) || is('right', keyCode);
 
 		if (isEnter) {
 			// prevent Enter onKeyPress which would re-open the expandable when the label
 			// receives focus
 			ev.preventDefault();
-		} else if (isUpDown) {
-			// prevent Spotlight handling up/down since closing the expandable will spot the label
+		} else if (isUpDown || isLeftRight) {
+			// prevent Spotlight handling 4-directions since closing the expandable will spot the label
 			ev.nativeEvent.stopImmediatePropagation();
 		}
 
@@ -222,8 +223,12 @@ class ExpandableInputBase extends React.Component {
 			forward('onChange', {
 				value: this.state.initialValue
 			}, this.props);
-		} else if (isEnter || isUpDown) {
+		} else if (isUpDown) {
 			this.fireCloseEvent();
+		} else if (isEnter) {
+			if (ev.target.tagName === 'INPUT') {
+				this.fireCloseEvent();
+			}
 		}
 	}
 
@@ -293,7 +298,7 @@ class ExpandableInputBase extends React.Component {
 					dismissOnEnter
 					iconAfter={iconAfter}
 					iconBefore={iconBefore}
-					noDecorator
+					focusInput
 					onBlur={this.handleInputBlur}
 					onChange={this.handleChange}
 					onKeyDown={this.handleInputKeyDown}
