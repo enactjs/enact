@@ -66,8 +66,8 @@ class PickerAddRemove extends React.Component {
 	}
 
 	handleValueUpdate = ({value}) => {
-  		this.setState({value: value});
- 	}
+		this.setState({value: value});
+	}
 
 	handleIndexChange = ({value}) => {
 		let index = parseInt(value);
