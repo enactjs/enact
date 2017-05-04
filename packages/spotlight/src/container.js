@@ -383,6 +383,17 @@ const removeContainer = (containerId) => {
 };
 
 /**
+ * Removes all containers
+ *
+ * @returns {undefined}
+ * @memberof spotlight/container
+ * @public
+ */
+const removeAllConatiners = () => {
+	containerConfigs.clear();
+};
+
+/**
  * Configures the `GlobalConfig` for containers
  *
  * @param   {Object}  config  New global configuration. Cannot introduce new keys
@@ -566,6 +577,7 @@ export {
 	getSpottableDescendants,
 	isContainer,
 	isNavigable,
+	removeAllConatiners,
 	removeContainer,
 	rootContainerId
 };

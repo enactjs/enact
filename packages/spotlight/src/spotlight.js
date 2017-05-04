@@ -38,6 +38,7 @@ import {
 	getSpottableDescendants,
 	isContainer,
 	isNavigable as isNavigableInContainer,
+	removeAllContainers,
 	removeContainer,
 	rootContainerId,
 	setContainerLastFocusedElement
@@ -1007,7 +1008,7 @@ const Spotlight = (function () {
 		 * @private
 		 */
 		clear: function () {
-			// _containers.clear();
+			removeAllContainers();
 			_defaultContainerId = '';
 			_lastContainerId = '';
 			_duringFocusChange = false;
