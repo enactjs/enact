@@ -1,9 +1,9 @@
 // Button.less
 //
 @import '../styles/mixins.less';
-@import '../styles/colors.less';
 @import '../styles/variables.less';
 @import '../styles/text.less';
+@import '../styles/colors.less';
 
 // Local scope for some math variables
 & {
@@ -32,7 +32,7 @@
 	}
 }
 
-.button {
+@allRules: {.button {
 	.moon-large-button-text();
 	position: relative;
 	overflow: visible;
@@ -252,7 +252,7 @@
 			}
 		}
 	}
-}
+}};
 
 [data-container-muted='true'] {
 	.button {
@@ -275,3 +275,5 @@
 		}
 	}
 }
+
+@import '../styles/skin.less';

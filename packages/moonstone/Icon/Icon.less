@@ -4,7 +4,7 @@
 @import '../styles/mixins.less';
 @import '../styles/variables.less';
 
-.icon {
+@allRules: {.icon {
 	width: @moon-icon-size;
 	height: @moon-icon-size;
 	background-position: center -((@moon-icon-sprite-size - @moon-icon-size) / 2);
@@ -54,7 +54,7 @@
 		cursor: default;
 	}
 
-	:global(.spottable):focus :local(&) {
+	:global(.spottable):focus & {
 		color: @moon-spotlight-text-color;
 		background-position: center -(@moon-icon-sprite-size + ((@moon-icon-sprite-size - @moon-icon-size) / 2));
 
@@ -62,7 +62,7 @@
 			background-position: center -(@moon-icon-sprite-small-size + ((@moon-icon-sprite-small-size - @moon-icon-small-size) / 2));
 		}
 	}
-}
+}};
 
 [data-container-muted='true'] {
 	:global(.spottable):focus {
@@ -71,3 +71,5 @@
 		}
 	}
 }
+
+@import '../styles/skin.less';

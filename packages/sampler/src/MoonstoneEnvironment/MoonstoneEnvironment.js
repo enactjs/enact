@@ -55,8 +55,8 @@ const FullscreenBase = kind({
 	)
 });
 
-const Moonstone = MoonstoneDecorator({overlay: true}, PanelsBase);
-const MoonstoneFullscreen = MoonstoneDecorator({overlay: true}, FullscreenBase);
+const Moonstone = MoonstoneDecorator({overlay: false}, PanelsBase);
+const MoonstoneFullscreen = MoonstoneDecorator({overlay: false}, FullscreenBase);
 
 // NOTE: Locales taken from strawman. Might need to add more in the future.
 const locales = {
@@ -70,6 +70,11 @@ const locales = {
 	'zh-Hant-HK': 'zh-Hant-HK - Traditional Chinese, custom Hant font',
 	'ja-JP': 'ja-JP - Japanese, custom Japanese font',
 	'en-JP': 'en-JP - English, custom Japanese font'
+};
+
+const themes = {
+	moonstone: 'Moonstone Dark',
+	'moonstone-light': 'Moonstone Light'
 };
 
 // NOTE: Knobs cannot set locale in fullscreen mode. This allows the locale to
@@ -100,6 +105,7 @@ const StorybookDecorator = (story, config) => {
 			description={config.description}
 			locale={select('locale', locales, getLocaleFromURL())}
 			textSize={boolean('large text size', false) ? 'large' : 'normal'}
+			theme={select('theme', themes, 'moonstone')}
 		>
 			{sample}
 		</Moonstone>

@@ -11,6 +11,7 @@ import React from 'react';
 import {ResolutionDecorator} from '@enact/ui/resolution';
 import {FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
 import SpotlightRootDecorator from '@enact/spotlight/SpotlightRootDecorator';
+import ThemeDecorator from '@enact/ui/ThemeDecorator';
 
 import I18nFontDecorator from './I18nFontDecorator';
 import TextSizeDecorator from './TextSizeDecorator';
@@ -32,7 +33,8 @@ const defaultConfig = {
 		screenTypes
 	},
 	spotlight: true,
-	textSize: true
+	textSize: true,
+	theme: true
 };
 
 /**
@@ -51,7 +53,7 @@ const defaultConfig = {
  * @public
  */
 const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {ri, i18n, spotlight, float, noAutoFocus, overlay, textSize} = config;
+	const {ri, i18n, spotlight, float, noAutoFocus, overlay, textSize, theme} = config;
 
 	// Apply classes depending on screen type (overlay / fullscreen)
 	const bgClassName = 'enact-fit' + (overlay ? '' : ` ${css.bg}`);
@@ -70,6 +72,7 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	}
 	if (spotlight) App = SpotlightRootDecorator({noAutoFocus}, App);
 	if (textSize) App = TextSizeDecorator(App);
+	if (theme) App = ThemeDecorator({themes: ['moonstone', 'moonstone-light'], defaultTheme: 'moonstone'}, App);
 
 	// add webOS-specific key maps
 	addAll({

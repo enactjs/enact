@@ -1,0 +1,13 @@
+// skin.less
+//
+
+// Depends on the globally-scoped `@allRules` variable which should be a LESS rule-set block.
+:global(.moonstone) {
+	@allRules();
+}
+
+:global(.moonstone-light) {
+	@import '../styles/colors-neutral.less';
+
+	@allRules();
+}
