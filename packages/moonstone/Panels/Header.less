@@ -1,8 +1,9 @@
 @import '../styles/mixins.less';
 @import '../styles/variables.less';
 @import '../styles/text.less';
+@import '../styles/colors.less';
 
-.header {
+@allRules: {.header {
 	.border-box;
 	color: @moon-header-text-color;
 	border-top: @moon-header-border-top-width solid @moon-header-border-color;
@@ -18,10 +19,6 @@
 	// .titleAbove {
 	// 	.moon-super-header-text();
 	// }
-
-	:global(.hasCloseButton) & {
-		.padding-start-end(0, @moon-spotlight-outset + @moon-icon-button-small-size + @moon-spotlight-outset);
-	}
 
 	.title {
 		.moon-header-text();
@@ -152,3 +149,9 @@
 		}
 	}
 }
+
+:global(.hasCloseButton) .header {
+	.padding-start-end(0, @moon-spotlight-outset + @moon-icon-button-small-size + @moon-spotlight-outset);
+}};
+
+@import '../styles/skin.less';

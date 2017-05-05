@@ -5,7 +5,7 @@
 @import '../../styles/text.less';
 @import '../../styles/mixins.less';
 
-.picker {
+@allRules: {.picker {
 	@button-width: (@moon-button-height - 12);
 
 	display: inline-block;
@@ -33,6 +33,7 @@
 		height: @moon-button-height;
 		line-height: @moon-button-height;
 		max-width: 300px;
+		color: @moon-picker-text-color;
 
 		.moon-custom-text({
 			font-size: @moon-item-font-size-large;
@@ -86,7 +87,8 @@
 	}
 
 	&.joined {
-		color: @moon-button-text-color;
+		color: @moon-picker-joined-text-color;
+		background-color: @moon-picker-joined-bg-color;
 
 		&.incrementing .incrementer,
 		&.decrementing .decrementer {
@@ -181,4 +183,6 @@
 			}
 		}
 	}
-}
+}};
+
+@import '../../styles/skin.less';

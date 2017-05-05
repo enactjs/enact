@@ -3,9 +3,11 @@
 @import '../styles/mixins.less';
 @import '../styles/variables.less';
 
-.switchItem {
+@allRules: {.switchItem {
 	.switch {
 		display: block;
 		.margin-start-end(@moon-toggle-item-icon-margin, 0);
 	}
-}
+}};
+
+@import '../styles/skin.less';

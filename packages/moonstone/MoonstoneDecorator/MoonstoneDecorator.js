@@ -11,7 +11,7 @@ import React from 'react';
 import {ResolutionDecorator} from '@enact/ui/resolution';
 import {FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
 import SpotlightRootDecorator from '@enact/spotlight/SpotlightRootDecorator';
-import ThemeDecorator from '@enact/ui/ThemeDecorator';
+import Skinnable from '@enact/ui/Skinnable';
 
 import I18nFontDecorator from './I18nFontDecorator';
 import TextSizeDecorator from './TextSizeDecorator';
@@ -34,7 +34,7 @@ const defaultConfig = {
 	},
 	spotlight: true,
 	textSize: true,
-	theme: true
+	skin: true
 };
 
 /**
@@ -53,7 +53,7 @@ const defaultConfig = {
  * @public
  */
 const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {ri, i18n, spotlight, float, noAutoFocus, overlay, textSize, theme} = config;
+	const {ri, i18n, spotlight, float, noAutoFocus, overlay, textSize, skin} = config;
 
 	// Apply classes depending on screen type (overlay / fullscreen)
 	const bgClassName = 'enact-fit' + (overlay ? '' : ` ${css.bg}`);
@@ -72,7 +72,7 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	}
 	if (spotlight) App = SpotlightRootDecorator({noAutoFocus}, App);
 	if (textSize) App = TextSizeDecorator(App);
-	if (theme) App = ThemeDecorator({themes: ['moonstone', 'moonstone-light'], defaultTheme: 'moonstone'}, App);
+	if (skin) App = Skinnable({skins: ['moonstone', 'moonstone-light'], defaultTheme: 'moonstone'}, App);
 
 	// add webOS-specific key maps
 	addAll({
@@ -85,7 +85,7 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		static displayName = 'MoonstoneDecorator';
 
 		render () {
-			let className = `${css.moon} enact-unselectable`;
+			let className = 'enact-unselectable';
 			if (!float) {
 				className += ' ' + bgClassName;
 			}

@@ -6,7 +6,7 @@
 @import '../styles/variables.less';
 
 /* Labeled Text Item */
-.labeleditem {
+@allRules: {.labeleditem {
 	//// Locally scoped LESS variables ////
 	// Vertically shift the text element to position it closer to the header than the line-height naturally allows
 	@text-vertical-offset: 6px;
@@ -29,7 +29,7 @@
 			});
 		}
 
-		:global(.enact-locale-right-to-left) & {
+		:global(.enact-locale-right-to-left)& {
 			direction: rtl;
 		}
 	}
@@ -55,12 +55,8 @@
 
 		.moon-custom-text-size(@moon-expandable-value-font-size-large);
 
-		:global(.enact-locale-right-to-left) & {
+		:global(.enact-locale-right-to-left)& {
 			padding-left: 0;
-		}
-
-		.moon-neutral & {
-			color: inherit;
 		}
 	}
 
@@ -76,4 +72,6 @@
 			color: inherit;
 		}
 	}
-}
+}};
+
+@import '../styles/skin.less';

@@ -3,19 +3,21 @@
 @import '../styles/colors.less';
 @import '../styles/variables.less';
 
-.popup {
+@allRules: {&.popup {
 	@padding-v: 24px;
 	@padding-h: @moon-spotlight-outset * 4;
 
 	.moon-text-base();
 	padding: @padding-v @padding-h;
 	box-sizing: border-box;
+	background-color: fade(@moon-popup-bg-color, @moon-popup-bg-opacity);
 
 	.closeButton {
 		position: absolute;
 		right: @moon-spotlight-outset;
 		top: @moon-spotlight-outset;
 		margin: 0;
+		color: @moon-popup-close-text-color;
 	}
 
 	.body {
@@ -26,9 +28,6 @@
 		.padding-start-end(@padding-h, @moon-icon-button-small-size + @moon-spotlight-outset);
 	}
 
-	&:global(.moon-neutral) {
-		background-color: fade(@moon-neutral-bg-color, @moon-neutral-popup-background-opacity);
-	}
 
 	:global(.enact-locale-right-to-left) & {
 		.closeButton {
@@ -42,4 +41,6 @@
 	position: absolute;
 	bottom: 0px;
 	width: 100%;
-}
+}};
+
+@import '../styles/skin.less';

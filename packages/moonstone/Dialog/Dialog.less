@@ -5,13 +5,13 @@
 @import '../styles/text.less';
 @import '../styles/variables.less';
 
-.dialog {
+@allRules: {.dialog {
 	@dialog-spacing: 39px;
 	position: relative;
 
 	&.showDivider {
 		.titleWrapper {
-			.moon-neutral-divider-border();
+			border-bottom: @moon-header-border-bottom-width solid @moon-header-border-color;
 			padding-bottom: 24px;
 			border-bottom-width: 1px;
 		}
@@ -45,4 +45,6 @@
 			text-align: left;
 		}
 	}
-}
+}};
+
+@import '../styles/skin.less';

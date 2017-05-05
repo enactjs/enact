@@ -4,6 +4,7 @@
 @import '../styles/mixins.less';
 @import '../styles/variables.less';
 @import '../styles/text.less';
+@import '../styles/colors.less';
 
 .input {
 	.moon-body-text();
@@ -12,7 +13,7 @@
 	border: 0;
 	cursor: pointer;
 	background: transparent;
-	color: @moon-input-font-color;
+	color: @moon-input-text-color;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
@@ -21,7 +22,7 @@
 
 	&::selection {
 		color: @moon-spotlight-text-color;
-		background-color: @moon-spotlight-background-color;
+		background-color: @moon-spotlight-bg-color;
 	}
 
 	&[type=number] {
@@ -40,17 +41,12 @@
 
 	&:global(.spottable):focus {
 		cursor: text;
-		color: @moon-input-font-color;
+		color: @moon-input-text-color;
 		background-color: inherit;
 	}
 
 	&[disabled] {
 		cursor: default;
-	}
-
-	// moon-neutral: to override the color set by .moon-neutral *
-	:global(.moon-neutral) & {
-		color: @moon-input-font-color;
 	}
 
 	:global(.enact-locale-right-to-left) & {
@@ -92,7 +88,7 @@
 	// which should highlight the border
 	&.noDecorator:active,
 	&:global(.spottable):focus {
-		color: @moon-input-font-color;
+		color: @moon-input-text-color;
 		border-color: @moon-spotlight-border-color;
 		background-color: @moon-input-decorator-bg-color;
 	}
@@ -110,7 +106,7 @@
 	&:global(.spottable):focus .decoratorIcon {
 		width: auto;
 		margin: 0;
-		color: @moon-input-font-color;
+		color: @moon-input-text-color;
 	}
 
 	.moon-expandable-input & {

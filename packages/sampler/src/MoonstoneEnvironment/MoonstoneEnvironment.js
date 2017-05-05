@@ -22,11 +22,6 @@ const PanelsBase = kind({
 		title: PropTypes.string
 	},
 
-	styles: {
-		css,
-		className: 'moonstone'
-	},
-
 	render: ({children, title, description, ...rest}) => (
 		<div {...rest}>
 			<Panels onApplicationClose={reloadPage}>
@@ -44,11 +39,6 @@ const PanelsBase = kind({
 
 const FullscreenBase = kind({
 	name: 'MoonstoneEnvironment',
-
-	styles: {
-		css,
-		className: 'moonstone'
-	},
 
 	render: (props) => (
 		<div {...props} />
@@ -72,9 +62,9 @@ const locales = {
 	'en-JP': 'en-JP - English, custom Japanese font'
 };
 
-const themes = {
-	moonstone: 'Moonstone Dark',
-	'moonstone-light': 'Moonstone Light'
+const skins = {
+	moonstone: 'Dark',
+	'moonstone-light': 'Light'
 };
 
 // NOTE: Knobs cannot set locale in fullscreen mode. This allows the locale to
@@ -104,8 +94,8 @@ const StorybookDecorator = (story, config) => {
 			title={`${config.kind} ${config.story}`.trim()}
 			description={config.description}
 			locale={select('locale', locales, getLocaleFromURL())}
-			textSize={boolean('large text size', false) ? 'large' : 'normal'}
-			theme={select('theme', themes, 'moonstone')}
+			textSize={boolean('large text', false) ? 'large' : 'normal'}
+			skin={select('skin', skins, 'moonstone')}
 		>
 			{sample}
 		</Moonstone>
@@ -119,7 +109,8 @@ const FullscreenStorybookDecorator = (story, config) => {
 			title={`${config.kind} ${config.story}`.trim()}
 			description={config.description}
 			locale={select('locale', locales, getLocaleFromURL())}
-			textSize={boolean('large text size', false) ? 'large' : 'normal'}
+			textSize={boolean('large text', false) ? 'large' : 'normal'}
+			skin={select('skin', skins, 'moonstone')}
 		>
 			{sample}
 		</MoonstoneFullscreen>

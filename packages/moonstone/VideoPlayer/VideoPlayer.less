@@ -6,7 +6,7 @@
 @import '../styles/text.less';
 @import '../styles/mixins.less';
 
-.videoPlayer {
+@allRules: {.videoPlayer {
 	position: relative;
 	overflow: hidden;
 
@@ -335,4 +335,6 @@
 		position: absolute;
 		.position(0, 0, auto, 0);
 	}
-}
+}};
+
+@import '../styles/skin.less';

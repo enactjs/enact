@@ -2,7 +2,7 @@
 @import '../styles/variables.less';
 @import '../styles/colors.less';
 
-.selectableItem {
+@allRules: {.selectableItem {
 	.dot {
 		@dot-size: @moon-selectable-item-indicator-size - 3px * 2;
 
@@ -13,4 +13,6 @@
 			display: none;
 		}
 	}
-}
+}};
+
+@import '../styles/skin.less';

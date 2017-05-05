@@ -19,7 +19,7 @@
 	line-height: @moon-icon-size;
 	text-align: center;
 	position: relative;
-	color: @moon-icon-text-color;
+	color: @moon-icon-color;
 
 	.font-kerning(none);
 	// .moon-taparea(@moon-icon-size);
@@ -46,30 +46,26 @@
 		}
 	}
 
-	.moon-neutral & {
-		color: inherit;
-	}
-
 	&[disabled] {
 		cursor: default;
 	}
+}
 
-	:global(.spottable):focus & {
-		color: @moon-spotlight-text-color;
-		background-position: center -(@moon-icon-sprite-size + ((@moon-icon-sprite-size - @moon-icon-size) / 2));
+:global(.spottable):focus .icon {
+	color: @moon-spotlight-text-color;
+	background-position: center -(@moon-icon-sprite-size + ((@moon-icon-sprite-size - @moon-icon-size) / 2));
 
-		&.small {
-			background-position: center -(@moon-icon-sprite-small-size + ((@moon-icon-sprite-small-size - @moon-icon-small-size) / 2));
-		}
+	&.small {
+		background-position: center -(@moon-icon-sprite-small-size + ((@moon-icon-sprite-small-size - @moon-icon-small-size) / 2));
 	}
-}};
+}
 
 [data-container-muted='true'] {
 	:global(.spottable):focus {
 		.icon {
-			color: @moon-icon-text-color;
+			color: @moon-spotlight-text-color;
 		}
 	}
-}
+}};
 
 @import '../styles/skin.less';

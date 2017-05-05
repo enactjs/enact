@@ -1,7 +1,8 @@
 @import '../styles/variables.less';
 @import '../styles/text.less';
+@import '../styles/colors.less';
 
-.notification {
+@allRules: {.notification {
 	position: absolute;
 	bottom: 0;
 	left: 50%;
@@ -24,7 +25,7 @@
 		content: '';
 		display: block;
 		position: absolute;
-		border: @moon-notification-border-width solid fade(@moon-black, @moon-notification-border-opacity);
+		border: @moon-notification-border-width solid @moon-notification-border-color;
 		border-radius: @moon-notification-out-border-radius;
 		top: -@moon-notification-border-width;
 		right: -@moon-notification-border-width;
@@ -62,4 +63,6 @@
 			}
 		}
 	}
-}
+}};
+
+@import '../styles/skin.less';

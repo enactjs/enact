@@ -100,14 +100,14 @@
 	/* Speed back up as the ball falls */
 }
 
-.spinner {
+@allRules: {.spinner {
 	min-height: @moon-spinner-size;
 	min-width: @moon-spinner-size;
 	line-height: @moon-spinner-size;
 	position: relative;
 	display: inline-block;
 	color: @moon-spinner-text-color;
-	background-color: @moon-spinner-background-color;
+	background-color: @moon-spinner-bg-color;
 	border-radius: (@moon-button-height / 2);
 	margin: 0 @moon-spotlight-outset;
 
@@ -249,4 +249,6 @@
 		-webkit-transform: translateX(50%) translateY(-50%);
 		transform: translateX(50%) translateY(-50%);
 	}
-}
+}};
+
+@import '../styles/skin.less';

@@ -4,7 +4,7 @@
 @import '../styles/variables.less';
 @import '../styles/colors.less';
 
-.switch {
+@allRules: {.switch {
 	border-radius: (@moon-toggleswitch-height / 2);
 	width: @moon-toggleswitch-width;
 	height: @moon-toggleswitch-height;
@@ -62,10 +62,6 @@
 			transition: left 0.2s, color 0.2s;
 		}
 	}
-}
+}};
 
-// RIGBY NOTE: This _may_ be deprecated? We'll see later on.
-.moon-toggle-item.spotlight .switch .icon {
-	// to override the ghost checkmark opacity rules, since this inherits its style from moon-checkbox
-	opacity: 1;
-}
+@import '../styles/skin.less';

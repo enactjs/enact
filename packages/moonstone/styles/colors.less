@@ -1,6 +1,9 @@
-// Colors
+// colors.less (dark skin)
 //
 
+// ---------------------------------------
+// Universal Color Definitions
+// ---------------------------------------
 @moon-darker-gray: #262626;
 @moon-dark-gray:   #4d4d4d;
 @moon-gray:        #a6a6a6;
@@ -14,73 +17,89 @@
 @moon-remote-button-yellow-color:  #ffc600; // #dac139; // #fddb24;
 @moon-remote-button-blue-color:    #0084ff; // #5677d0; // #4764b4;
 
-@moon-icon-text-color: @moon-light-gray;
-@moon-spotlight-text-color: @moon-white;
-@moon-spotlight-bg-color: @moon-accent;
 
-
-@moon-background-color:               @moon-black;
-@moon-text-color:                     @moon-gray;
-@moon-header-sub-title-color:         @moon-text-color;
-@moon-sub-header-text-color:          @moon-text-color;
-@moon-divider-text-color:             @moon-text-color;
-@moon-sup-header-text-color:          @moon-text-color;
-@moon-header-text-color:              #ccc;
-@moon-header-full-bleed-text-color:   #f5f5f5;
-@moon-header-title-below-full-bleed-text-color: @moon-light-gray;
-@moon-header-border-color:            #505050;
-@moon-header-bottom-border-color:     #404040;
-@moon-header-full-bleed-border-color: fade(@moon-white, 25%);
-@moon-body-text-color:                @moon-text-color;
-@moon-spotlight-text-color:           @moon-white;
-@moon-spotlight-background-color:     @moon-accent;
-@moon-spotlight-border-color:         @moon-accent;
-@moon-spotlight-color:                @moon-accent;
-@moon-button-text-color:              #ccc;
-@moon-button-background-color:        @moon-dark-gray;
-@moon-divider-border-color:           #595959;
-@moon-active-border-color:            @moon-gray;
-@moon-button-disabled-bg-color:       @moon-darker-gray;
-@moon-button-translucent-opacity:     30%;
-@moon-button-disabled-text-color:     @moon-dark-gray;
-@moon-icon-color:                     @moon-white;
-@moon-active-spotlight-border-color:  @moon-white;
-
-@moon-font-color-light:               @moon-gray;
-@moon-light-text-color:               @moon-dark-gray;
-@moon-shadow-color:                   rgba(0, 0, 0, 0.13);
-@moon-input-font-color:               @moon-dark-gray;
-@moon-input-border-color:             rgb(234, 234, 234);
-@moon-input-textarea-color:           @moon-dark-gray;
-@moon-tooltip-bg-color:               @moon-dark-gray;
-@moon-tooltip-text-color:             @moon-white;
-@moon-checkbox-toggle-text-color:     @moon-spotlight-color;
-
-// Icon
+// UI Conceptual Colors
 // ---------------------------------------
-@moon-icon-text-color: @moon-button-text-color;
-
-// IconButton
-// ---------------------------------------
-@moon-icon-button-text-color: @moon-button-text-color;
-@moon-icon-button-bg-color: @moon-button-background-color;
-@moon-icon-button-active-border-color: @moon-spotlight-color;
-@moon-icon-button-active-bg-color: @moon-button-background-color;
-@moon-icon-button-active-text-color: @moon-spotlight-text-color;
-@moon-icon-button-spotlight-bg-color: @moon-spotlight-color;
-@moon-highlight-text-color: @moon-spotlight-color;
-
-// Input
-// ---------------------------------------
-@moon-input-font-color:        @moon-dark-gray;
-@moon-input-placeholder-color: #868686;
-@moon-input-decorator-bg-color: @moon-white;
-@moon-input-decorator-border-color: @moon-light-gray;
+@moon-bg-color:      @moon-black;
+@moon-text-color:    @moon-gray;
+@moon-border-color:  #595959;
 
 // Disabled Opacity
 // ---------------------------------------
 @moon-disabled-opacity: 0.3;
 @moon-disabled-translucent-opacity: 0.4;
+
+// Spotlight and State
+// ---------------------------------------
+@moon-spotlight-text-color:           @moon-white;
+@moon-spotlight-text-color:           @moon-white;
+@moon-spotlight-bg-color:             @moon-accent;
+@moon-spotlight-border-color:         @moon-accent;
+@moon-spotlight-color:                @moon-accent;
+@moon-active-border-color:            @moon-gray;
+@moon-active-spotlight-border-color:  @moon-white;
+
+
+// ---------------------------------------
+// Component Colors
+// ---------------------------------------
+
+// Body Text
+// ---------------------------------------
+@moon-body-text-color:                @moon-text-color;
+
+// Header
+// ---------------------------------------
+@moon-header-text-color:              #ccc;
+@moon-header-sub-title-color:         @moon-text-color;
+@moon-sub-header-text-color:          @moon-text-color;
+@moon-sup-header-text-color:          @moon-text-color;
+@moon-header-border-color:            #505050;
+@moon-header-bottom-border-color:     #404040;
+@moon-header-full-bleed-text-color:   #f5f5f5;
+@moon-header-title-below-full-bleed-text-color: @moon-light-gray;
+@moon-header-full-bleed-border-color: fade(@moon-white, 25%);
+
+// Divider
+// ---------------------------------------
+@moon-divider-text-color:             @moon-text-color;
+@moon-divider-border-color:           @moon-border-color;
+
+// Button
+// ---------------------------------------
+@moon-button-text-color:              #ccc;
+@moon-button-bg-color:                @moon-dark-gray;
+@moon-button-disabled-bg-color:       @moon-darker-gray;
+@moon-button-translucent-opacity:     30%;
+@moon-button-disabled-text-color:     @moon-dark-gray;
+
+// Icon
+// ---------------------------------------
+@moon-icon-color:                     @moon-text-color;
+
+// IconButton
+// ---------------------------------------
+@moon-icon-button-text-color:           @moon-button-text-color;
+@moon-icon-button-bg-color:             @moon-button-bg-color;
+@moon-icon-button-active-border-color:  @moon-spotlight-color;
+@moon-icon-button-active-bg-color:      @moon-button-bg-color;
+@moon-icon-button-active-text-color:    @moon-spotlight-text-color;
+@moon-icon-button-spotlight-bg-color:   @moon-spotlight-color;
+
+// Tooltip
+// ---------------------------------------
+@moon-tooltip-bg-color:               @moon-dark-gray;
+@moon-tooltip-text-color:             @moon-white;
+
+// Input
+// ---------------------------------------
+@moon-input-text-color:               @moon-dark-gray;
+@moon-input-border-color:             rgb(234, 234, 234);
+@moon-input-textarea-color:           @moon-dark-gray;
+@moon-input-text-color:               @moon-dark-gray;
+@moon-input-placeholder-color:        #868686;
+@moon-input-decorator-bg-color:       @moon-white;
+@moon-input-decorator-border-color:   @moon-light-gray;
 
 // Toggle Colors
 // ---------------------------------------
@@ -109,9 +128,16 @@
 @moon-panels-spot-bg-color: @moon-dark-gray;
 @moon-panels-handle-bg-color: @moon-dark-gray;
 
+// Picker
+// ---------------------------------------
+@moon-picker-text-color: @moon-text-color;
+@moon-picker-joined-text-color: @moon-text-color;
+@moon-picker-joined-bg-color: transparent;
+
 // Popup
 // ---------------------------------------
 @moon-popup-bg-color: @moon-dark-gray;
+@moon-popup-bg-opacity: 95%;
 @moon-popup-close-text-color: @moon-white;
 
 // Progress Bar
@@ -131,7 +157,7 @@
 
 // Spinner
 // ---------------------------------------
-@moon-spinner-background-color: @moon-button-background-color;
+@moon-spinner-bg-color: @moon-button-bg-color;
 @moon-spinner-text-color: @moon-white;
 @moon-spinner-ball1-color: #69cdff;
 @moon-spinner-ball2-color: #ff4a4a;
@@ -139,14 +165,19 @@
 
 // Switch
 // ---------------------------------------
-@moon-checkbox-toggle-switch-color: @moon-font-color-light;
-@moon-checkbox-toggle-switch-bg-color: @moon-button-background-color;
+@moon-checkbox-toggle-switch-color: @moon-gray;
+@moon-checkbox-toggle-switch-bg-color: @moon-button-bg-color;
 @moon-checkbox-toggle-switch-selected-color: @moon-spotlight-color;
 @moon-checkbox-toggle-switch-selected-bg-color: @moon-spotlight-text-color;
 
 // ContextualPopup
 // ---------------------------------------
+@moon-contextual-popup-bg-color: @moon-dark-gray;
 @moon-contextual-popup-border-color: rgba(0,0,0, 0.5);
+
+// Notification
+// ---------------------------------------
+@moon-notification-border-color: fade(@moon-black, 30%);
 
 // VideoPlayer
 // ---------------------------------------

@@ -3,47 +3,47 @@ import kind from '@enact/core/kind';
 import React from 'react';
 
 /**
- * {@link ui/ThemeDecorator} is a Higher-order Component that assigns theming classes for the
+ * {@link ui/Skinnable} is a Higher-order Component that assigns skinning classes for the
  * purposes of styling children components.
  *
- * @class ThemeDecorator
- * @memberof ui/ThemeDecorator
+ * @class Skinnable
+ * @memberof ui/Skinnable
  * @hoc
  * @public
  */
-const ThemeDecorator = hoc((config, Wrapped) => kind({
-	name: 'ThemeDecorator',
+const Skinnable = hoc((config, Wrapped) => kind({
+	name: 'Skinnable',
 
-	propTypes: /** @lends ui/ThemeDecorator.prototype */ {
+	propTypes: /** @lends ui/Skinnable.prototype */ {
 		/**
 		 * Set the goal size of the text. The UI library will be responsible for using this
 		 * information to adjust the components' text sizes to this preset.
 		 * Current presets are `'normal'` (default), and `'large'`.
 		 *
 		 * @type {String}
-		 * @default 'normal'
+		 * @default [providedByConfig]
 		 * @public
 		 */
-		theme: React.PropTypes.oneOf(config.themes)
+		skin: React.PropTypes.oneOf(config.skins)
 	},
 
 	defaultProps: {
-		theme: config.defaultTheme
+		skin: config.defaultskin
 	},
 
 	styles: {},	// Empty `styles` tells `kind` that we want to use `styler` later and don't have a base className.
 
 	computed: {
-		className: ({theme, styler}) => styler.append(theme)
+		className: ({skin, styler}) => styler.append(skin)
 	},
 
 	render: (props) => {
-		delete props.theme;
+		delete props.skin;
 		return (
 			<Wrapped {...props} />
 		);
 	}
 }));
 
-export default ThemeDecorator;
-export {ThemeDecorator};
+export default Skinnable;
+export {Skinnable};

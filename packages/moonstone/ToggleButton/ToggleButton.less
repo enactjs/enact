@@ -5,12 +5,12 @@
 @import '../styles/variables.less';
 @import '../styles/text.less';
 
-.toggleButton {
+@allRules: {.toggleButton {
 	text-align: center;
 	position: relative;
 	padding-right: @moon-toggle-button-text-switch-gutter + @moon-button-h-padding + @moon-toggle-button-switch-width + 2*@moon-toggle-button-switch-border-width;
 
-	&:after {
+	&::after {
 		position: absolute;
 		content: '';
 		top: 50%;
@@ -33,7 +33,7 @@
 	&.selected {
 		border-color: @moon-accent;
 
-		&:after {
+		&::after {
 			background-color: @moon-toggle-button-switch-on-bg-color;
 			border-color: @moon-toggle-button-switch-on-border-color;
 		}
@@ -42,18 +42,20 @@
 	&.small {
 		padding-right: @moon-toggle-button-text-switch-gutter + @moon-button-small-h-padding + @moon-toggle-button-switch-width + 2*@moon-toggle-button-switch-border-width;
 
-		&:after {
+		&::after {
 			top: 50%;
 			transform: translateY(-50%);
 			right: @moon-button-small-h-padding;
 		}
 	}
+}
 
-	:global(.enact-locale-right-to-left) & {
+&:global(.enact-locale-right-to-left) {
+	.toggleButton {
 		padding-right: @moon-button-h-padding;
 		padding-left: @moon-toggle-button-text-switch-gutter + @moon-button-h-padding + @moon-toggle-button-switch-width + 2*@moon-toggle-button-switch-border-width;
 
-		&:after {
+		&::after {
 			left: @moon-button-h-padding;
 			right: auto;
 		}
@@ -68,4 +70,6 @@
 			}
 		}
 	}
-}
+}};
+
+@import '../styles/skin.less';
