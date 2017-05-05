@@ -600,6 +600,7 @@ const Picker = class extends React.Component {
 					aria-label={this.calcIncrementLabel(valueText)}
 					className={css.incrementer}
 					disabled={incrementerDisabled}
+					hidden={reachedEnd}
 					icon={incrementIcon}
 					joined={joined}
 					onClick={this.handleIncClick}
@@ -608,7 +609,6 @@ const Picker = class extends React.Component {
 					onMouseUp={this.handleUp}
 					onSpotlightDisappear={onSpotlightDisappear}
 					spotlightDisabled={spotlightDisabled}
-					visibility={!reachedEnd}
 				/>
 				<div
 					aria-disabled={disabled}
@@ -633,6 +633,7 @@ const Picker = class extends React.Component {
 					aria-label={this.calcDecrementLabel(valueText)}
 					className={css.decrementer}
 					disabled={decrementerDisabled}
+					hidden={reachedStart}
 					icon={decrementIcon}
 					joined={joined}
 					onClick={this.handleDecClick}
@@ -641,7 +642,6 @@ const Picker = class extends React.Component {
 					onMouseUp={this.handleUp}
 					onSpotlightDisappear={onSpotlightDisappear}
 					spotlightDisabled={spotlightDisabled}
-					visibility={!reachedStart}
 				/>
 			</div>
 		);
