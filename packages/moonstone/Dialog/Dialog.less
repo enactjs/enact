@@ -28,7 +28,7 @@
 		margin-bottom: @dialog-spacing;
 
 		// adds a layer to allow detecting mouseenter to start title marquees
-		&:before {
+		&::before {
 			position: absolute;
 			content: '';
 			.position(0);
@@ -41,7 +41,7 @@
 	.buttons {
 		text-align: right;
 
-		:global(.enact-locale-right-to-left) & {
+		:global(.enact-locale-right-to-left)& {
 			text-align: left;
 		}
 	}

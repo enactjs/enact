@@ -21,7 +21,7 @@
 		max-width: 1287px; // 4 button case
 	}
 
-	&:before {
+	&::before {
 		content: '';
 		display: block;
 		position: absolute;
@@ -50,7 +50,7 @@
 		& > :first-child {
 			margin-left: 0;
 
-			:global(.enact-locale-right-to-left) & {
+			:global(.enact-locale-right-to-left)& {
 				margin-right: 0;
 			}
 		}
@@ -58,7 +58,7 @@
 		& > :last-child {
 			margin-right: 0;
 
-			:global(.enact-locale-right-to-left) & {
+			:global(.enact-locale-right-to-left)& {
 				margin-right: @moon-notification-button-gap;
 			}
 		}

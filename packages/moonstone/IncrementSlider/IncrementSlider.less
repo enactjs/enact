@@ -2,7 +2,7 @@
 //
 @import '../styles/variables.less';
 
-.incrementSlider {
+@allRules: {.incrementSlider {
 	direction: ltr;	// Always arrange this according to LTR rules
 	&.horizontal {
 		display: flex;
@@ -33,4 +33,6 @@
 			order: 1;
 		}
 	}
-}
+}};
+
+@import '../styles/skin.less';

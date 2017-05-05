@@ -6,6 +6,7 @@
 @import '../styles/text.less';
 @import '../styles/colors.less';
 
+@allRules: {
 .input {
 	.moon-body-text();
 
@@ -132,8 +133,8 @@
 	}
 }
 
-:global .enact-locale-non-latin {
-	:local .decorator {
+:global(.enact-locale-non-latin) {
+	.decorator {
 		padding: 6px 30px 12px;
 	}
 
@@ -152,12 +153,15 @@
 	&.enact-locale-mr, // Marathi
 	&.enact-locale-bn, // Bengali
 	&.enact-locale-pa {// Panjabi
-		:local .input {
+		.input {
 			font-size: 24px;
 			line-height: 48px;
 		}
-		:local .decorator {
+		.decorator {
 			padding: 1px 30px;
 		}
 	}
 }
+};
+
+@import '../styles/skin.less';
