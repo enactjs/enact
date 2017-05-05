@@ -11,7 +11,7 @@ import React from 'react';
 /**
  * Default config for {@link ui/Skinnable.Skinnable}.
  *
- * @memberof ui/Skinnable
+ * @memberof ui/Skinnable.Skinnable
  * @hocconfig
  * @public
  */
