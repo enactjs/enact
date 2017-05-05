@@ -20,7 +20,18 @@ const PickerButtonBase = kind({
 		]),
 		joined: PropTypes.bool,
 		onSpotlightDisappear: PropTypes.func,
-		spotlightDisabled: PropTypes.bool
+		spotlightDisabled: PropTypes.bool,
+		visibility: PropTypes.bool
+	},
+
+	styles: {
+		css
+	},
+
+	computed: {
+		className: ({visibility, styler}) => styler.append({
+			hidden: !visibility
+		})
 	},
 
 	render: ({disabled, icon, joined, ...rest}) => {
