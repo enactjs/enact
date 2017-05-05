@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 - `moonstone/VideoPlayer` space allotment on both sides of the playback controls to support 3 buttons; consequently the "more" controls area has shrunk by the same amount
+- `moonstone/Slider` prop `noFill` to support a style without the fill
 - `moonstone/Marquee` property `rtl` to set directionality to right-to-left
 
 ### Fixed
@@ -14,11 +15,13 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/MarqueeDecorator` to properly stop marquee on items with `'marqueeOnHover'`
 - `moonstone/ExpandableList` to work properly with object-based children
 - `moonstone/Picker` and `moonstone/RangePicker` now use the correct size from Enyo (60px v.s. 84px)
+- `moonstone/Picker` and `moonstone/RangePicker` to now use the correct size from Enyo (60px v.s. 84px) for icon buttons
 
 ### Changed
 
 - `moonstone/VideoPlayer` to not disable media button (play/pause)
 - `moonstone/Picker` arrow icon for `joined` picker: small when not spotted, hidden when it reaches the end of the picker
+- `moonstone/Checkbox` and `moonstone/CheckboxItem` to reflect the latest design
 
 ## [1.1.0] - 2017-04-21
 
