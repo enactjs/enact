@@ -95,6 +95,15 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			min: PropTypes.number,
 
 			/**
+			 * The handler to run when blurred.
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @public
+			 */
+			onBlur: PropTypes.func,
+
+			/**
 			 * The handler to run when the value is changed.
 			 *
 			 * @type {Function}
@@ -112,6 +121,15 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * @public
 			 */
 			onDecrement: PropTypes.func,
+
+			/**
+			 * The handler to run when focused.
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @public
+			 */
+			onFocus: PropTypes.func,
 
 			/**
 			 * The handler to run when the value is incremented.
@@ -246,8 +264,8 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			incrementAriaLabel: ({value}) => (`${value} ${$L('press ok button to increase the value')}`)
 		},
 
-		render: ({decrementAriaLabel, decrementDisabled, decrementIcon, incrementAriaLabel, incrementDisabled, incrementIcon, incrementSliderClasses, onIncrement, onDecrement, onSpotlightDisappear, spotlightDisabled, ...rest}) => (
-			<div className={incrementSliderClasses}>
+		render: ({decrementAriaLabel, decrementDisabled, decrementIcon, incrementAriaLabel, incrementDisabled, incrementIcon, incrementSliderClasses, onBlur, onFocus, onIncrement, onDecrement, onSpotlightDisappear, spotlightDisabled, ...rest}) => (
+			<div className={incrementSliderClasses} onBlur={onBlur} onFocus={onFocus}>
 				<IncrementSliderButton
 					aria-label={decrementAriaLabel}
 					className={css.decrementButton}

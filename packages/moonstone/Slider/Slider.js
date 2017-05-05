@@ -100,6 +100,14 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			disabled: PropTypes.bool,
 
 			/**
+			 * When `true`, the tooltip is shown when present
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			focused: PropTypes.bool,
+
+			/**
 			 * The method to run when the input mounts, giving a reference to the DOM.
 			 *
 			 * @type {Function}
@@ -307,6 +315,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			active: false,
 			backgroundProgress: 0,
 			detachedKnob: false,
+			focused: false,
 			max: 100,
 			min: 0,
 			noFill: false,
@@ -355,9 +364,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		},
 
 		computed: {
-			children: ({children, max, min, tooltip, tooltipAsPercent, value}) => {
-				// If there's no tooltip, or custom children present, supply those.
-				if (!tooltip || children) return children;
+			tooltipValue: ({max, min, tooltipAsPercent, value}) => {
 				return tooltipAsPercent ? Math.floor(computeProportionProgress({value, max, min}) * 100) + '%' : value;
 			},
 			className: ({active, noFill, pressed, vertical, styler}) => styler.append({
@@ -370,7 +377,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			proportionProgress: computeProportionProgress
 		},
 
-		render: ({backgroundProgress, children, disabled, inputRef, max, min, onBlur, onChange, onKeyDown, onMouseMove, onMouseUp, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, tooltip, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => {
+		render: ({backgroundProgress, children, disabled, focused, inputRef, max, min, onBlur, onChange, onKeyDown, onMouseMove, onMouseUp, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, tooltip, tooltipForceSide, tooltipSide, tooltipValue, value, vertical, ...rest}) => {
 			delete rest.active;
 			delete rest.detachedKnob;
 			delete rest.noFill;
@@ -380,6 +387,21 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			delete rest.onKnobMove;
 			delete rest.pressed;
 			delete rest.tooltipAsPercent;
+
+			let tooltipComponent = null;
+
+			if (tooltip) {
+				tooltipComponent = <SliderTooltip
+					forceSide={tooltipForceSide}
+					proportion={proportionProgress}
+					side={tooltipSide}
+					vertical={vertical}
+				>
+					{tooltipValue}
+				</SliderTooltip>;
+			} else {
+				tooltipComponent = children;
+			}
 
 			return (
 				<div
@@ -398,15 +420,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						vertical={vertical}
 						scrubbing={scrubbing}
 					>
-						{tooltip ? <SliderTooltip
-							className={css.tooltip}
-							forceSide={tooltipForceSide}
-							proportion={proportionProgress}
-							side={tooltipSide}
-							vertical={vertical}
-						>
-							{children}
-						</SliderTooltip> : children}
+						{focused ? tooltipComponent : null}
 					</SliderBar>
 					<input
 						aria-disabled={disabled}
