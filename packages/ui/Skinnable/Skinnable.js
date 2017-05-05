@@ -3,6 +3,33 @@ import kind from '@enact/core/kind';
 import React from 'react';
 
 /**
+ * Default config for {@link ui/Skinnable}.
+ *
+ * @memberof ui/Skinnable
+ * @hocconfig
+ * @public
+ */
+const defaultConfig = {
+	/**
+	 * An array of the available skin names. These will be used as the class names for your skin,
+	 * and are accepted as the only valid values for the `skin` prop on the wrapped component.
+	 *
+	 * @type {Array}
+	 * @memberof ui/Skinnable.defaultConfig
+	 */
+	skins: null,
+
+	/**
+	 * Assign a default skin from the `skins` list. This will be used if the instantiator of the
+	 * wrapped component provides no value to the `skin` prop.
+	 *
+	 * @type {String}
+	 * @memberof ui/Skinnable.defaultConfig
+	 */
+	defaultSkin: null
+};
+
+/**
  * {@link ui/Skinnable} is a Higher-order Component that assigns skinning classes for the
  * purposes of styling children components.
  *
@@ -22,14 +49,15 @@ import React from 'react';
  * @hoc
  * @public
  */
-const Skinnable = hoc((config, Wrapped) => kind({
+const Skinnable = hoc(defaultConfig, (config, Wrapped) => kind({
 	name: 'Skinnable',
 
 	propTypes: /** @lends ui/Skinnable.prototype */ {
 		/**
-		 * Set the goal size of the text. The UI library will be responsible for using this
-		 * information to adjust the components' text sizes to this preset.
-		 * Current presets are `'normal'` (default), and `'large'`.
+		 * Select a skin by name. The list of available skins is established by the direct consumer
+		 * of this component via the config options. This will typically be done once by the theme
+		 * decorator, like [MoonstoneDecorator]{@link moonstone/MoonstoneDecorator} which will
+		 * supply the list of skins.
 		 *
 		 * @type {String}
 		 * @default [providedByConfig]
@@ -39,7 +67,7 @@ const Skinnable = hoc((config, Wrapped) => kind({
 	},
 
 	defaultProps: {
-		skin: config.defaultskin
+		skin: config.defaultSkin
 	},
 
 	styles: {},	// Empty `styles` tells `kind` that we want to use `styler` later and don't have a base className.

@@ -76,7 +76,7 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	}
 	if (spotlight) App = SpotlightRootDecorator({noAutoFocus}, App);
 	if (textSize) App = TextSizeDecorator(App);
-	if (skin) App = Skinnable({skins: ['moonstone', 'moonstone-light'], defaultTheme: 'moonstone'}, App);
+	if (skin) App = Skinnable({skins: ['moonstone', 'moonstone-light'], defaultSkin: 'moonstone'}, App);
 
 	// add webOS-specific key maps
 	addAll({
