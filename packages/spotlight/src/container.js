@@ -426,7 +426,7 @@ const removeContainer = (containerId) => {
  * @memberof spotlight/container
  * @public
  */
-const removeAllConatiners = () => {
+const removeAllContainers = () => {
 	containerConfigs.clear();
 };
 
@@ -678,7 +678,7 @@ export {
 	isNavigable,
 	persistLastFocusedElement,
 	restoreLastFocusedElement,
-	removeAllConatiners,
+	removeAllContainers,
 	removeContainer,
 	rootContainerId
 };
