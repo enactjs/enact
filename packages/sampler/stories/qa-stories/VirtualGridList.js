@@ -46,7 +46,7 @@ storiesOf('VirtualList.VirtualGridList')
 				component={renderItem}
 				data={items}
 				dataSize={number('dataSize', items.length)}
-				direction='horizontal'
+				direction="horizontal"
 				itemSize={{minWidth: ri.scale(number('minWidth', 180)), minHeight: ri.scale(number('minHeight', 270))}}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
