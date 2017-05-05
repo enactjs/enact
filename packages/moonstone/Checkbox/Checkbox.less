@@ -3,30 +3,52 @@
 @import '../styles/colors.less';
 @import '../styles/text.less';
 
-.checkbox {
-	width: 18px;
-	height: 18px;
-	border: 1px solid @moon-check-box-frame-color;
-	border-radius: 3px;
+@allRules: {.checkbox {
+	@size: @moon-checkbox-size;
 
-	&:not([disabled]) {
-		:global(.spottable):focus & {
-			border-color: @moon-check-box-frame-spotlight-color;
-		}
-	}
+	width: @size;
+	height: @size;
+	border-radius: @size;
+	color: @moon-checkbox-check-color;
+	background-color: @moon-checkbox-bg-color;
 
 	.icon {
 		visibility: hidden;
-		font-size: 72px;
-		margin: -24px -18px 0 -12px;
-
-		.moon-custom-text({
-			margin-top: -33px;
-		});
+		margin: 0;
+		vertical-align: top;
+		line-height: @size;
+		width: @size;
+		height: @size;
+		font-size: (@size * 2);
 	}
+
+	.moon-custom-text({
+		@size: @moon-checkbox-size-large;
+
+		width: @size;
+		height: @size;
+		border-radius: @size;
+
+		.icon {
+			line-height: @size;
+			width: @size;
+			height: @size;
+			font-size: (@size * 2);
+		}
+	});
+
 	&.selected {
 		.icon {
 			visibility: visible;
 		}
 	}
 }
+
+:global(.spottable):focus .checkbox {
+	&:not([disabled]) {
+		background-color: @moon-checkbox-bg-spotlight-color;
+		color: @moon-checkbox-check-color;
+	}
+}};
+
+@import '../styles/skin.less';

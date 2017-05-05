@@ -7,6 +7,8 @@ import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import Icon from '../../Icon';
 import IconButton from '../../IconButton';
 
+import css from './Picker.less';
+
 const PickerButtonBase = kind({
 	name: 'PickerButton',
 
@@ -28,12 +30,12 @@ const PickerButtonBase = kind({
 
 			return (
 				<span {...rest} disabled={disabled}>
-					<Icon disabled={disabled}>{icon}</Icon>
+					<Icon className={css.icon} disabled={disabled} small>{icon}</Icon>
 				</span>
 			);
 		} else {
 			return (
-				<IconButton {...rest} backgroundOpacity="transparent" disabled={disabled}>
+				<IconButton {...rest} backgroundOpacity="transparent" disabled={disabled} small>
 					{icon}
 				</IconButton>
 			);

@@ -6,7 +6,7 @@
 @import '../../styles/mixins.less';
 
 @allRules: {.picker {
-	@button-width: (@moon-button-height - 12);
+	@button-width: (@moon-button-small-height - 12);
 
 	display: inline-block;
 	border-radius: @button-width;
@@ -29,15 +29,15 @@
 	.sizingPlaceholder,
 	.valueWrapper {
 		.moon-text-base();
-		.moon-locale-non-latin({line-height: @moon-button-height;});
-		height: @moon-button-height;
-		line-height: @moon-button-height;
+		.moon-locale-non-latin({line-height: @moon-button-small-height;});
+		height: @moon-button-small-height;
+		line-height: @moon-button-small-height;
 		max-width: 300px;
 		color: @moon-picker-text-color;
 
 		.moon-custom-text({
 			font-size: @moon-item-font-size-large;
-			line-height: @moon-button-height-large;
+			line-height: @moon-button-small-height-large;
 		});
 	}
 
@@ -90,6 +90,10 @@
 		color: @moon-picker-joined-text-color;
 		background-color: @moon-picker-joined-bg-color;
 
+		.icon {
+			vertical-align: top;
+		}
+
 		&.incrementing .incrementer,
 		&.decrementing .decrementer {
 			transform: scale(0.8);
@@ -98,8 +102,8 @@
 		&.horizontal {
 			.moon-custom-text({
 				font-size: @moon-item-font-size-large;
-				height: @moon-button-height-large;
-				line-height: @moon-button-height-large;
+				height: @moon-button-small-height-large;
+				line-height: @moon-button-small-height-large;
 			});
 			&.incrementing:before {
 				border-right-width: @moon-integer-picker-shadow-width;
@@ -110,8 +114,14 @@
 			.incrementer,
 			.decrementer {
 				width: @button-width;
-				height: @moon-button-height;
-				line-height: @moon-button-height;
+				height: @moon-button-small-height;
+				line-height: @moon-button-small-height;
+			}
+			.incrementer .icon {
+				margin-left: 0;
+			}
+			.decrementer .icon {
+				margin-right: 0;
 			}
 		}
 
