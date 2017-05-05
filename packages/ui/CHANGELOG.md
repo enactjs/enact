@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `ui/Skinnable` to provide themes with a way to apply a base theme styling and skins on top of that
+
 ## [1.1.0] - 2017-04-21
 
 ### Changed

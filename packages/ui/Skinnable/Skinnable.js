@@ -6,6 +6,17 @@ import React from 'react';
  * {@link ui/Skinnable} is a Higher-order Component that assigns skinning classes for the
  * purposes of styling children components.
  *
+ * Use the config options to specify the skins your theme has. Set this up in your Theme's decorator
+ * component to establish your supported skins.
+ *
+ * Example:
+ * ```
+ * App = Skinnable({
+ * 	skins: ['moonstone', 'moonstone-light'],
+ * 	defaultTheme: 'moonstone'
+ * }, App);
+ * ```
+ *
  * @class Skinnable
  * @memberof ui/Skinnable
  * @hoc
