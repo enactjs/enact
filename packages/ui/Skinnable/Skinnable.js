@@ -1,9 +1,15 @@
+/**
+ * Exports the {@link ui/Skinnable.Skinnable} Higher-order Component (HOC).
+ *
+ * @module ui/Skinnable
+ */
+
 import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
 import React from 'react';
 
 /**
- * Default config for {@link ui/Skinnable}.
+ * Default config for {@link ui/Skinnable.Skinnable}.
  *
  * @memberof ui/Skinnable
  * @hocconfig
@@ -15,7 +21,7 @@ const defaultConfig = {
 	 * and are accepted as the only valid values for the `skin` prop on the wrapped component.
 	 *
 	 * @type {Array}
-	 * @memberof ui/Skinnable.defaultConfig
+	 * @memberof ui/Skinnable.Skinnable.defaultConfig
 	 */
 	skins: null,
 
@@ -24,13 +30,13 @@ const defaultConfig = {
 	 * wrapped component provides no value to the `skin` prop.
 	 *
 	 * @type {String}
-	 * @memberof ui/Skinnable.defaultConfig
+	 * @memberof ui/Skinnable.Skinnable.defaultConfig
 	 */
 	defaultSkin: null
 };
 
 /**
- * {@link ui/Skinnable} is a Higher-order Component that assigns skinning classes for the
+ * {@link ui/Skinnable.Skinnable} is a Higher-order Component that assigns skinning classes for the
  * purposes of styling children components.
  *
  * Use the config options to specify the skins your theme has. Set this up in your Theme's decorator
@@ -52,7 +58,7 @@ const defaultConfig = {
 const Skinnable = hoc(defaultConfig, (config, Wrapped) => kind({
 	name: 'Skinnable',
 
-	propTypes: /** @lends ui/Skinnable.prototype */ {
+	propTypes: /** @lends ui/Skinnable.Skinnable.prototype */ {
 		/**
 		 * Select a skin by name. The list of available skins is established by the direct consumer
 		 * of this component via the config options. This will typically be done once by the theme
