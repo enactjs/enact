@@ -40,7 +40,6 @@ for (let i = 0; i < 1000; i++) {
 
 storiesOf('VirtualList.VirtualGridList')
 	.addWithInfo(
-		' ',
 		'Horizontal VirtualGridList',
 		() => (
 			<VirtualGridList
