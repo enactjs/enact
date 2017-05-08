@@ -1,13 +1,18 @@
 // skin.less
 //
 
-// Depends on the globally-scoped `@allRules` variable which should be a LESS rule-set block.
-:global(.moonstone) {
-	@allRules();
-}
+.applySkins(@componentRules) when (isruleset(@componentRules)) {
+	// Load our base set of color rules
+	@import './colors.less';
 
-:global(.moonstone-light) {
-	@import './colors-light.less';
+	:global(.moonstone) {
+		@componentRules();
+	}
 
-	@allRules();
+	:global(.moonstone-light) {
+		// Override our base set of color rules, locally, with alternates
+		@import './colors-light.less';
+
+		@componentRules();
+	}
 }

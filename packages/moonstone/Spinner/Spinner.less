@@ -2,7 +2,7 @@
 //
 @import '../../ui/styles/mixins.less';
 @import '../styles/variables.less';
-@import '../styles/colors.less';
+@import '../styles/skin.less';
 
 @-webkit-keyframes spinBall {
 	0%        { -webkit-transform: rotateZ(@moon-spinner-ball-angle); }
@@ -100,7 +100,7 @@
 	/* Speed back up as the ball falls */
 }
 
-@allRules: {.spinner {
+.applySkins({.spinner {
 	min-height: @moon-spinner-size;
 	min-width: @moon-spinner-size;
 	line-height: @moon-spinner-size;
@@ -227,7 +227,7 @@
 	}
 }
 
-:global(.enact-locale-right-to-left) .spinner {
+:global(.enact-locale-right-to-left)& .spinner {
 	// This allows for the spinner to spin in a counter-clockwise direction in RTL mode
 	// .-spinner-ball-decorator {
 	// 	-webkit-transform: scaleX(-1);
@@ -249,6 +249,4 @@
 		-webkit-transform: translateX(50%) translateY(-50%);
 		transform: translateX(50%) translateY(-50%);
 	}
-}};
-
-@import '../styles/skin.less';
+}});

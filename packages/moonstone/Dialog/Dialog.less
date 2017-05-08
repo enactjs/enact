@@ -1,11 +1,12 @@
+// Dialog.less
+//
 @import '~@enact/ui/styles/mixins.less';
 
-@import '../styles/rules.less';
-@import '../styles/colors.less';
 @import '../styles/text.less';
 @import '../styles/variables.less';
+@import '../styles/skin.less';
 
-@allRules: {.dialog {
+.applySkins({.dialog {
 	@dialog-spacing: 39px;
 	position: relative;
 
@@ -45,6 +46,4 @@
 			text-align: left;
 		}
 	}
-}};
-
-@import '../styles/skin.less';
+}});

@@ -1,8 +1,10 @@
-@import '../styles/colors.less';
+// Slider.less
+//
 @import '../styles/variables.less';
 @import '../styles/text.less';
+@import '../styles/skin.less';
 
-.slider {
+.applySkins({.slider {
 	position: relative;
 	margin: 0 @moon-spotlight-outset;
 	height: 240px;	// Vertical sizing here. Being here instead of in .vertical requires less precedence when overriding the style from app-code.
@@ -226,4 +228,4 @@
 			}
 		}
 	}
-}
+}});

@@ -3,7 +3,7 @@
 @import '../styles/mixins.less';
 @import '../styles/variables.less';
 @import '../styles/text.less';
-@import '../styles/colors.less';
+@import '../styles/skin.less';
 
 // Local scope for some math variables
 & {
@@ -32,7 +32,7 @@
 	}
 }
 
-@allRules: {.button {
+.applySkins({.button {
 	.moon-large-button-text();
 	position: relative;
 	overflow: visible;
@@ -231,6 +231,4 @@
 			}
 		}
 	}
-}};
-
-@import '../styles/skin.less';
+}});

@@ -1,11 +1,11 @@
-// Picker
+// Picker.less
 //
-@import '../../styles/colors.less';
 @import '../../styles/variables.less';
 @import '../../styles/text.less';
 @import '../../styles/mixins.less';
+@import '../../styles/skin.less';
 
-@allRules: {.picker {
+.applySkins({.picker {
 	@button-width: (@moon-button-small-height - 12);
 
 	display: inline-block;
@@ -16,7 +16,7 @@
 	margin-left: @moon-spotlight-outset;
 	margin-right: @moon-spotlight-outset;
 
-	&:before {
+	&::before {
 		.position(0);
 
 		content: '';
@@ -170,14 +170,14 @@
 	&.vertical .valueWrapper {
 		display: block;
 
-		:global(.enact-text-large) & {
+		:global(.enact-text-large)& {
 			padding: 0 @moon-spotlight-outset;
 		}
 
 		.item {
 			margin: 0 @moon-spotlight-outset;
 
-			:global(.enact-text-large) & {
+			:global(.enact-text-large)& {
 				margin: 0;
 			}
 		}
@@ -193,6 +193,4 @@
 			}
 		}
 	}
-}};
-
-@import '../../styles/skin.less';
+}});

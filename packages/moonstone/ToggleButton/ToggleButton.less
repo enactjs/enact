@@ -1,11 +1,11 @@
 // ToggleButton.less
 //
 @import '../styles/mixins.less';
-@import '../styles/colors.less';
 @import '../styles/variables.less';
 @import '../styles/text.less';
+@import '../styles/skin.less';
 
-@allRules: {.toggleButton {
+.applySkins({.toggleButton {
 	text-align: center;
 	position: relative;
 	padding-right: @moon-toggle-button-text-switch-gutter + @moon-button-h-padding + @moon-toggle-button-switch-width + 2*@moon-toggle-button-switch-border-width;
@@ -70,6 +70,4 @@
 			}
 		}
 	}
-}};
-
-@import '../styles/skin.less';
+}});

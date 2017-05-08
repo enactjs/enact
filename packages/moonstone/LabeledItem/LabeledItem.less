@@ -1,12 +1,11 @@
-// LabeledItem
+// LabeledItem.less
 //
 @import '../styles/mixins.less';
-@import '../styles/colors.less';
 @import '../styles/text.less';
 @import '../styles/variables.less';
+@import '../styles/skin.less';
 
-/* Labeled Text Item */
-@allRules: {.labeleditem {
+.applySkins({.labeleditem {
 	//// Locally scoped LESS variables ////
 	// Vertically shift the text element to position it closer to the header than the line-height naturally allows
 	@text-vertical-offset: 6px;
@@ -72,6 +71,4 @@
 			color: inherit;
 		}
 	}
-}};
-
-@import '../styles/skin.less';
+}});

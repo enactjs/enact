@@ -1,8 +1,10 @@
+// Notification.less
+//
 @import '../styles/variables.less';
 @import '../styles/text.less';
-@import '../styles/colors.less';
+@import '../styles/skin.less';
 
-@allRules: {.notification {
+.applySkins({.notification {
 	position: absolute;
 	bottom: 0;
 	left: 50%;
@@ -63,6 +65,4 @@
 			}
 		}
 	}
-}};
-
-@import '../styles/skin.less';
+}});

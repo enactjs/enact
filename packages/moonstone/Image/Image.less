@@ -1,6 +1,9 @@
+// Image.less
+//
 @import '../styles/variables.less';
+@import '../styles/skin.less';
 
-@allRules: {.image {
+.applySkins({.image {
 	display: inline-block;
 	margin: 0 @moon-spotlight-outset;
 	background-position: center;
@@ -17,9 +20,7 @@
 	}
 
 	.img {
-		height: 0px;
-		width: 0px;
+		height: 0;
+		width: 0;
 	}
-}};
-
-@import '../styles/skin.less';
+}});

@@ -1,12 +1,12 @@
 // VideoPlayer.less
 //
 @import '~@enact/ui/styles/mixins.less';
-@import '../styles/colors.less';
 @import '../styles/variables.less';
 @import '../styles/text.less';
 @import '../styles/mixins.less';
+@import '../styles/skin.less';
 
-@allRules: {.videoPlayer {
+.applySkins({.videoPlayer {
 	position: relative;
 	overflow: hidden;
 
@@ -335,6 +335,4 @@
 		position: absolute;
 		.position(0, 0, auto, 0);
 	}
-}};
-
-@import '../styles/skin.less';
+}});

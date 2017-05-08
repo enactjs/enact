@@ -1,9 +1,9 @@
-// Checkbox
+// Checkbox.less
 //
-@import '../styles/colors.less';
 @import '../styles/text.less';
+@import '../styles/skin.less';
 
-@allRules: {.checkbox {
+.applySkins({.checkbox {
 	@size: @moon-checkbox-size;
 
 	width: @size;
@@ -49,6 +49,4 @@
 		background-color: @moon-checkbox-bg-spotlight-color;
 		color: @moon-checkbox-check-color;
 	}
-}};
-
-@import '../styles/skin.less';
+}});

@@ -1,15 +1,15 @@
 @import './text.less';
 @import './mixins.less';
-@import './colors.less';
 @import './variables.less';
 @import '~@enact/ui/styles/mixins.less';
+@import './skin.less';
 
 /* Prevent browser's default focus treatment (at least in Chrome) */
 :focus {
 	outline: none;
 }
 
-@allRules: {
+.applySkins({
 	.moon-text-base(@moon-sub-header-font-size);
 	font-weight: normal;
 	font-style: normal;
@@ -59,6 +59,4 @@
 			.vendor-opacity(1);
 		}
 	}
-};
-
-@import '../styles/skin.less';
+});

@@ -1,11 +1,13 @@
-@import '../styles/colors.less';
+// ContextualPopup.less
+//
 @import '../styles/variables.less';
 @import '../styles/mixins.less';
 @import '../styles/text.less';
+@import '../styles/skin.less';
 
-@allRules: {&.contextualPopup {
-	position: absolute;
+.applySkins({&.contextualPopup {
 	.moon-body-text();
+	position: absolute;
 
 	.container {
 		position: absolute;
@@ -29,14 +31,6 @@
 
 		&.reserveClose {
 			.padding-start-end(@moon-contextual-popup-padding, @moon-icon-button-small-size + @moon-spotlight-outset);
-		}
-
-		:global(.enact-locale-right-to-left) & {
-			direction: rtl;
-			.closeButton {
-				right: auto;
-				left: @moon-spotlight-outset;
-			}
 		}
 	}
 
@@ -63,6 +57,15 @@
 			transform: rotate(-90deg);
 		}
 	}
-}};
+}
 
-@import '../styles/skin.less';
+:global(.enact-locale-right-to-left) .contextualPopup {
+	.container {
+		direction: rtl;
+
+		.closeButton {
+			right: auto;
+			left: @moon-spotlight-outset;
+		}
+	}
+}});
