@@ -9,20 +9,30 @@ import PropTypes from 'prop-types';
 import {storiesOf} from '@kadira/storybook';
 import {withKnobs, number} from '@kadira/storybook-addon-knobs';
 
+const
+	style = {
+		item: {
+			borderBottom: ri.scale(2) + 'px solid #202328',
+			boxSizing: 'border-box'
+		},
+		list: {
+			height: ri.scale(552) + 'px'
+		}
+	};
+
 class SliderList extends React.Component {
 
 	static propTypes = {
-		itemSize: PropTypes.number,
-		style: PropTypes.object
+		itemSize: PropTypes.number
 	}
 
 	constructor (props) {
 		super(props);
 		this.state = {
-			items: [],
+			selectedItems: [],
 			value: 50
 		};
-		this.orginalItems = [
+		this.items = [
 			10, 5, 20, 60, 15, 92, 67, 70, 44, 55
 		];
 	}
@@ -32,14 +42,14 @@ class SliderList extends React.Component {
 	}
 
 	fillItems = (value) => {
-		let Items = [];
-		this.orginalItems.map((item) => {
+		let selected = [];
+		this.items.map((item) => {
 			if (item <= value) {
-				Items.push('Item count ' + item);
+				selected.push('Item count ' + item);
 			}
 		});
 		this.setState({
-			items: Items,
+			selectedItems: selected,
 			value: value
 		});
 	}
@@ -49,7 +59,7 @@ class SliderList extends React.Component {
 	}
 
 	renderItem = (size) => ({data, index, ...rest}) => {
-		const itemStyle = {height: size + 'px', ...this.props.style.item};
+		const itemStyle = {height: size + 'px', ...style.item};
 
 		return (
 			<Item {...rest} style={itemStyle}>
@@ -75,27 +85,16 @@ class SliderList extends React.Component {
 				/>
 				<VirtualList
 					component={this.renderItem(this.props.itemSize)}
-					data={this.state.items}
-					dataSize={this.state.items.length}
+					data={this.state.selectedItems}
+					dataSize={this.state.selectedItems.length}
 					itemSize={this.props.itemSize}
 					spacing={ri.scale(0)}
-					style={this.props.style.list}
+					style={style.list}
 				/>
 			</div>
 		);
 	}
 }
-
-const
-	style = {
-		item: {
-			borderBottom: ri.scale(2) + 'px solid #202328',
-			boxSizing: 'border-box'
-		},
-		list: {
-			height: ri.scale(552) + 'px'
-		}
-	};
 
 storiesOf('Slider')
 	.addDecorator(withKnobs)
@@ -104,7 +103,8 @@ storiesOf('Slider')
 		() => {
 			const itemSize = ri.scale(number('itemSize', 72));
 			return (
-				<SliderList itemSize={itemSize} style={style} />
+				<SliderList itemSize={itemSize} />
 			);
 		}
 	);
+
