@@ -7,11 +7,14 @@ import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import Icon from '../../Icon';
 import IconButton from '../../IconButton';
 
+import css from './Picker.less';
+
 const PickerButtonBase = kind({
 	name: 'PickerButton',
 
 	propTypes: {
 		disabled: PropTypes.bool,
+		hidden: PropTypes.bool,
 		icon: PropTypes.oneOfType([
 			PropTypes.string,
 			PropTypes.object
@@ -21,19 +24,30 @@ const PickerButtonBase = kind({
 		spotlightDisabled: PropTypes.bool
 	},
 
+	styles: {
+		css
+	},
+
+	computed: {
+		className: ({hidden, styler}) => styler.append({
+			hidden
+		})
+	},
+
 	render: ({disabled, icon, joined, ...rest}) => {
 		if (joined) {
+			delete rest.hidden;
 			delete rest.onSpotlightDisappear;
 			delete rest.spotlightDisabled;
 
 			return (
 				<span {...rest} disabled={disabled}>
-					<Icon disabled={disabled}>{icon}</Icon>
+					<Icon className={css.icon} disabled={disabled} small>{icon}</Icon>
 				</span>
 			);
 		} else {
 			return (
-				<IconButton {...rest} backgroundOpacity="transparent" disabled={disabled}>
+				<IconButton {...rest} backgroundOpacity="transparent" disabled={disabled} small>
 					{icon}
 				</IconButton>
 			);
