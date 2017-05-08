@@ -17,10 +17,10 @@ import Pressable from '@enact/ui/Pressable';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Icon from '../Icon';
-import {MarqueeDecorator} from '../Marquee';
-import {TooltipDecorator} from '../TooltipDecorator';
-import Skinnable from '../Skinnable';
+import Icon from '@enact/moonstone/Icon';
+import {MarqueeDecorator} from '@enact/moonstone/Marquee';
+import {TooltipDecorator} from '@enact/moonstone/TooltipDecorator';
+import Skinnable from '@enact/moonstone/Skinnable';
 
 import componentCss from './Button.less';
 
@@ -46,8 +46,9 @@ import componentCss from './Button.less';
  * @factory
  * @public
  */
-const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
+const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 
+	if (css.bg) console.log('UI   css.bg:', css.bg);
 	/**
 	 * {@link moonstone/Button.ButtonBase} is a stateless Button with Moonstone styling
 	 * applied. In most circumstances, you will want to use the Pressable and Spottable version:
@@ -58,7 +59,7 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 	 * @ui
 	 * @public
 	 */
-	kind({
+	return kind({
 		name: 'Button',
 
 		propTypes: /** @lends moonstone/Button.ButtonBase.prototype */ {
@@ -171,20 +172,21 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 
 		styles: {
 			css: /** @lends moonstone/Button.ButtonBaseFactory.prototype */ {
-				...componentCss,
+				...css
+				// ...componentCss
 				/**
 				 * Classes to apply to the background of the button, used on a child of button
 				 * @type {String}
 				 * @public
 				 */
-				bg: css.bg,
+				// bg: css.bg,
 
 				/**
 				 * Classes to apply to the selected state of the button, applied to the base element
 				 * @type {String}
 				 * @public
 				 */
-				selected: css.selected
+				// selected: css.selected
 			},
 			className: 'button'
 		},
@@ -220,8 +222,8 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 				</div>
 			);
 		}
-	})
-);
+	});
+});
 
 /**
  * {@link moonstone/Button.ButtonFactory} is Factory wrapper around {@link moonstone/Button.Button}
