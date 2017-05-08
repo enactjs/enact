@@ -1,4 +1,4 @@
-// colors.less (dark skin)
+// colors-light.less (light skin)
 //
 
 // ---------------------------------------
@@ -20,9 +20,9 @@
 
 // UI Conceptual Colors
 // ---------------------------------------
-@moon-bg-color:      @moon-black;
-@moon-text-color:    @moon-gray;
-@moon-border-color:  #595959;
+@moon-bg-color:      @moon-light-gray;
+@moon-text-color:    @moon-dark-gray;
+@moon-border-color:  @moon-dark-gray;
 
 // Disabled Opacity
 // ---------------------------------------
@@ -50,14 +50,14 @@
 
 // Header
 // ---------------------------------------
-@moon-header-text-color:              #ccc;
+@moon-header-text-color:              @moon-text-color;
 @moon-header-sub-title-color:         @moon-text-color;
 @moon-sub-header-text-color:          @moon-text-color;
 @moon-sup-header-text-color:          @moon-text-color;
-@moon-header-border-color:            #505050;
-@moon-header-bottom-border-color:     #404040;
+@moon-header-border-color:            @moon-border-color;
+@moon-header-bottom-border-color:     @moon-border-color;
 @moon-header-full-bleed-text-color:   #f5f5f5;
-@moon-header-title-below-full-bleed-text-color: @moon-light-gray;
+@moon-header-title-below-full-bleed-text-color: @moon-header-full-bleed-text-color;
 @moon-header-full-bleed-border-color: fade(@moon-white, 25%);
 
 // Divider
@@ -67,15 +67,15 @@
 
 // Button
 // ---------------------------------------
-@moon-button-text-color:              #ccc;
-@moon-button-bg-color:                @moon-dark-gray;
-@moon-button-disabled-bg-color:       @moon-darker-gray;
+@moon-button-text-color:              @moon-white;
+@moon-button-bg-color:                #686868;
+@moon-button-disabled-text-color:     #cdcdcd;
+@moon-button-disabled-bg-color:       @moon-button-bg-color;
 @moon-button-translucent-opacity:     30%;
-@moon-button-disabled-text-color:     @moon-dark-gray;
 
 // Icon
 // ---------------------------------------
-@moon-icon-color:                     @moon-text-color;
+@moon-icon-color:                     @moon-dark-gray;
 
 // IconButton
 // ---------------------------------------
@@ -114,7 +114,7 @@
 // Checkbox
 // ---------------------------------------
 @moon-checkbox-check-color: @moon-text-color;
-@moon-checkbox-bg-color: fade(@moon-white, 30%);
+@moon-checkbox-bg-color: @moon-white;
 @moon-checkbox-bg-spotlight-color: fade(@moon-white, 40%);
 
 // FormCheckbox
@@ -142,9 +142,9 @@
 
 // Popup
 // ---------------------------------------
-@moon-popup-bg-color: @moon-dark-gray;
+@moon-popup-bg-color: @moon-bg-color;
 @moon-popup-bg-opacity: 95%;
-@moon-popup-close-text-color: @moon-white;
+@moon-popup-close-text-color: @moon-text-color;
 
 // Progress Bar
 // ---------------------------------------
@@ -178,8 +178,8 @@
 
 // ContextualPopup
 // ---------------------------------------
-@moon-contextual-popup-bg-color: @moon-dark-gray;
-@moon-contextual-popup-border-color: rgba(0,0,0, 0.5);
+@moon-contextual-popup-bg-color:      @moon-bg-color;
+@moon-contextual-popup-border-color:  rgba(0,0,0, 0.5);
 
 // Notification
 // ---------------------------------------

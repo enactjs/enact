@@ -21,7 +21,7 @@ describe('MoonstoneDecorator', () => {
 		const appRoot = subject.find('app');
 
 		const expected = true;
-		const actual = appRoot.hasClass(css.moon) && appRoot.hasClass(css.bg);
+		const actual = appRoot.hasClass('moonstone') && appRoot.hasClass(css.bg);
 
 		expect(actual).to.equal(expected);
 	});
@@ -43,7 +43,7 @@ describe('MoonstoneDecorator', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should not add .moon class to wrapped component when float is enabled', function () {
+	it('should not add .moonstone class to wrapped component when float is enabled', function () {
 		const config = {ri: false, i18n: false, spotlight: false, float: true, overlay: false};
 		const App = MoonstoneDecorator(config, AppRoot);
 		const subject = mount(
@@ -55,7 +55,7 @@ describe('MoonstoneDecorator', () => {
 		const appRoot = subject.find('app');
 
 		const expected = false;
-		const actual = appRoot.hasClass(css.moon);
+		const actual = appRoot.hasClass('moonstone');
 
 		expect(actual).to.equal(expected);
 	});

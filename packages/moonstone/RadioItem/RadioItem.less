@@ -1,7 +1,9 @@
+// RadioItem.less
+//
 @import '../styles/variables.less';
-@import '../styles/colors.less';
+@import '../styles/skin.less';
 
-.radioItem {
+.applySkins({.radioItem {
 	.dot {
 		width: (@moon-radio-item-indicator-size - 2 * @moon-radio-item-indicator-border);
 		height: (@moon-radio-item-indicator-size - 2 * @moon-radio-item-indicator-border);
@@ -18,4 +20,4 @@
 			background-color: @moon-accent;
 		}
 	}
-}
+}});
