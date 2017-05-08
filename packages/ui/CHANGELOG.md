@@ -6,7 +6,7 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Changed
 
--`ui/View` to prevent re-renders on View's leaving the ViewManager
+-`ui/View` to prevent re-renders on views leaving the `ViewManager`
 
 ## [1.1.0] - 2017-04-21
 
