@@ -106,6 +106,7 @@ const Spotlight = (function () {
 	let _duringFocusChange = false;
 	let _pointerX = null;
 	let _pointerY = null;
+	let _clickTarget = null;
 
 	/*
 	 * Whether a 5-way directional key is being held.
@@ -1027,6 +1028,43 @@ const Spotlight = (function () {
 		}
 	}
 
+	function onPreventClick (evt) {
+		preventDefault(evt);
+		removePreventClick();
+	}
+
+	function removePreventClick () {
+		_clickTarget.removeEventListener('click', onPreventClick);
+		_clickTarget = null;
+	}
+
+	function onMouseDown (evt) {
+		if (shouldPreventNavigation()) {
+			return;
+		}
+
+		const target = getNavigableTarget(evt.target);
+
+		if (target && target !== getCurrent() && !isNavigable(target, _lastContainerId, true)) {
+			_clickTarget = target;
+			preventDefault(evt);
+		}
+	}
+
+	function onMouseUp (evt) {
+		if (shouldPreventNavigation()) {
+			return;
+		}
+
+		if (_clickTarget) {
+			const target = getNavigableTarget(evt.target);
+
+			if (target && target === _clickTarget) {
+				_clickTarget.addEventListener('click', onPreventClick);
+			}
+		}
+	}
+
 	function onMouseOver (evt) {
 		// a motionless pointer over animated spottable dom (such as list scrolling via 5-way) still emits
 		// an `onMouseOver` event even when `_pointerMode` is `false`, in which case we terminate early.
@@ -1037,8 +1075,12 @@ const Spotlight = (function () {
 		const target = getNavigableTarget(evt.target); // account for child controls
 
 		if (target && target !== getCurrent()) { // moving over a focusable element
-			focusElement(target, getContainerIds(target), true);
-			preventDefault(evt);
+			const lastSelfOnly = _containers.get(_lastContainerId).restrict === 'self-only';
+
+			if (!lastSelfOnly || (lastSelfOnly && isNavigable(target, _lastContainerId, true))) {
+				focusElement(target, getContainerIds(target), true);
+				preventDefault(evt);
+			}
 		}
 	}
 
@@ -1075,8 +1117,12 @@ const Spotlight = (function () {
 				// we are moving over a non-focusable element, so we force a blur to occur
 				current.blur();
 			} else if (target && (!current || target !== current)) {
-				// we are moving over a focusable element, so we set focus to the target
-				focusElement(target, getContainerIds(target), true);
+				const lastSelfOnly = _containers.get(_lastContainerId).restrict === 'self-only';
+
+				if (!lastSelfOnly || (lastSelfOnly && isNavigable(target, _lastContainerId, true))) {
+					// we are moving over a focusable element, so we set focus to the target
+					focusElement(target, getContainerIds(target), true);
+				}
 			}
 		}
 	}
@@ -1112,8 +1158,10 @@ const Spotlight = (function () {
 			if (!_initialized) {
 				window.addEventListener('keydown', onKeyDown);
 				window.addEventListener('keyup', onKeyUp);
+				window.addEventListener('mousedown', onMouseDown);
 				window.addEventListener('mouseover', onMouseOver);
 				window.addEventListener('mousemove', onMouseMove);
+				window.addEventListener('mouseup', onMouseUp);
 				_lastContainerId = spotlightRootContainerName;
 				_initialized = true;
 			}
@@ -1128,8 +1176,10 @@ const Spotlight = (function () {
 		terminate: function () {
 			window.removeEventListener('keydown', onKeyDown);
 			window.removeEventListener('keyup', onKeyUp);
+			window.removeEventListener('mousedown', onMouseDown);
 			window.removeEventListener('mouseover', onMouseOver);
 			window.removeEventListener('mousemove', onMouseMove);
+			window.removeEventListener('mouseup', onMouseUp);
 			Spotlight.clear();
 			_ids = 0;
 			_initialized = false;
@@ -1264,7 +1314,7 @@ const Spotlight = (function () {
 			if (_containers.get(containerId)) {
 				_containers.delete(containerId);
 				if (_lastContainerId === containerId) {
-					Spotlight.setActiveContainer(null);
+					Spotlight.setActiveContainer(containerId, null);
 				}
 				return true;
 			}
@@ -1420,12 +1470,36 @@ const Spotlight = (function () {
 		 * Sets the currently active container.
 		 *
 		 * @memberof spotlight.Spotlight.prototype
+		 * @param {String} [identifier] The id of the container requesting the change.
 		 * @param {String} [containerId] The id of the currently active container. If this is not
 		 *	provided, the root container is set as the currently active container.
 		 * @public
 		 */
-		setActiveContainer: function (containerId) {
-			_lastContainerId = containerId || spotlightRootContainerName;
+		setActiveContainer: function (identifier, containerId) {
+			if (!identifier || typeof identifier !== 'string') {
+				throw new Error('Please assign the "identifier"!');
+			}
+
+			const defaultContainer = spotlightRootContainerName;
+			const lastConfig = _containers.get(_lastContainerId);
+			const lastSelfOnly = lastConfig && lastConfig.restrict === 'self-only';
+
+			// the current active container is requesting the change
+			if (identifier === _lastContainerId ||
+					// there's a request to change to a another specified `containerId`
+					(containerId &&
+						// the requested container is not active
+						containerId !== _lastContainerId &&
+						// the active container uses a `restrict: 'self-only'` config rule
+						lastSelfOnly &&
+						// the requested container also uses a `restrict: 'self-only'` config rule
+						_containers.get(containerId).restrict === 'self-only' &&
+						// the active container also wraps/contains the requested container
+						(document.querySelector(`[data-container-id='${_lastContainerId}']`) || document).contains(document.querySelector(`[data-container-id='${containerId}']`))) ||
+					// the current active container's config rules allow focus to move elsewhere
+					!lastSelfOnly) {
+				_lastContainerId = containerId || defaultContainer;
+			}
 		},
 
 		/**

@@ -15,6 +15,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Fixed
 
+- `spotlight/Spotlight` pointer-based focus behavior
 - `spotlight/Spotlight` to consider nested containers when adjusting focus
 
 ## [1.0.0] - 2017-03-31

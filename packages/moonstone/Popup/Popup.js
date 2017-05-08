@@ -292,6 +292,7 @@ class Popup extends React.Component {
 
 	componentDidMount () {
 		if (this.props.open && this.props.noAnimation) {
+			on('click', this.handleClick);
 			on('keydown', this.handleKeyDown);
 		}
 	}
@@ -317,9 +318,11 @@ class Popup extends React.Component {
 			if (!this.props.noAnimation) {
 				Spotlight.pause();
 			} else if (this.props.open) {
+				on('click', this.handleClick);
 				on('keydown', this.handleKeyDown);
 				this.spotPopupContent();
 			} else if (prevProps.open) {
+				off('click', this.handleClick);
 				off('keydown', this.handleKeyDown);
 				this.spotActivator(prevState.activator);
 			}
@@ -328,6 +331,7 @@ class Popup extends React.Component {
 
 	componentWillUnmount () {
 		if (this.props.open) {
+			off('click', this.handleClick);
 			off('keydown', this.handleKeyDown);
 		}
 		Spotlight.remove(this.state.containerId);
@@ -338,6 +342,22 @@ class Popup extends React.Component {
 			this.setState({
 				popupOpen: true
 			});
+		}
+	}
+
+	handleClick = (ev) => {
+		const {noAutoDismiss, onClose, scrimType, spotlightRestrict} = this.props;
+		const {containerId} = this.state;
+
+		// to account for a specific edge-case in which all of the following conditions are met, we need a
+		// way to close the popup via the pointer - by clicking outside the bounds of the popup
+		if (onClose &&
+				noAutoDismiss &&
+				scrimType === 'none' &&
+				spotlightRestrict !== 'self-only' &&
+				!Spotlight.getSpottableDescendants(containerId).length &&
+				!getContainerNode(containerId).contains(ev.target)) {
+			onClose(ev);
 		}
 	}
 
@@ -384,9 +404,11 @@ class Popup extends React.Component {
 			Spotlight.resume();
 
 			if (this.props.open) {
+				on('click', this.handleClick);
 				on('keydown', this.handleKeyDown);
 				this.spotPopupContent();
 			} else {
+				off('click', this.handleClick);
 				off('keydown', this.handleKeyDown);
 				this.spotActivator(this.state.activator);
 			}
@@ -395,11 +417,13 @@ class Popup extends React.Component {
 
 	spotActivator = (activator) => {
 		const current = Spotlight.getCurrent();
-		const containerNode = getContainerNode(this.state.containerId);
+		const {containerId} = this.state;
+		const containerNode = getContainerNode(containerId);
 
 		// if there is no currently-spotted control or it is wrapped by the popup's container, we
 		// know it's safe to change focus
 		if (!current || (containerNode && containerNode.contains(current))) {
+			Spotlight.setActiveContainer(containerId);
 			// attempt to set focus to the activator, if available
 			if (!Spotlight.focus(activator)) {
 				Spotlight.focus();
@@ -418,7 +442,7 @@ class Popup extends React.Component {
 			if (current) {
 				current.blur();
 			}
-			Spotlight.setActiveContainer(containerId);
+			Spotlight.setActiveContainer(containerId, containerId);
 		}
 	}
 

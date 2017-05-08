@@ -208,14 +208,16 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleMouseEnter = (ev) => {
-			Spotlight.setActiveContainer(this.state.id);
+			Spotlight.setActiveContainer(this.state.id, this.state.id);
 			forwardMouseEnter(ev, this.props);
 		}
 
 		handleMouseLeave = (ev) => {
-			const parentContainer = ev.currentTarget.parentNode.closest('[data-container-id]');
-			const activeContainer = parentContainer ? parentContainer.dataset.containerId : null;
-			Spotlight.setActiveContainer(activeContainer);
+			if (this.props.spotlightRestrict !== 'self-only') {
+				const parentContainer = ev.currentTarget.parentNode.closest('[data-container-id]');
+				const activeContainer = parentContainer ? parentContainer.dataset.containerId : null;
+				Spotlight.setActiveContainer(this.state.id, activeContainer);
+			}
 			forwardMouseLeave(ev, this.props);
 		}
 
