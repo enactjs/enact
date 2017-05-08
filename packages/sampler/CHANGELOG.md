@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
+## [unreleased]
+
+## Fixed
+
+- `largeText` and `locale` knobs to not disappear after use
+
 ## [1.1.0] - 2017-04-21
 
 Updated with new properties for Moonstone controls.
