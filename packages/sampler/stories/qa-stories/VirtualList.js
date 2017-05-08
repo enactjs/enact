@@ -28,8 +28,8 @@ const
 
 		return (
 			<div {...rest} style={itemStyle}>
-				<ExpandableItem title={'click ' + data[index]} >
-					<Button onClick="">
+				<ExpandableItem title={'Expandable ' + data[index]} >
+					<Button>
 						{data[index]}
 					</Button>
 				</ExpandableItem>
