@@ -68,7 +68,7 @@ const GridListImageItemBase = kind({
 		selected: PropTypes.bool,
 
 		/**
-		 * The selection overlay component to render.
+		 * The custom selection overlay component to render.
 		 *
 		 * @type {Function}
 		 */
