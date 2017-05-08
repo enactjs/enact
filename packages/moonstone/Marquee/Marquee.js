@@ -6,7 +6,6 @@
  */
 
 import kind from '@enact/core/kind';
-import {isRtlText} from '@enact/i18n/util';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -105,12 +104,25 @@ const MarqueeBase = kind({
 		overflow: PropTypes.oneOf(['clip', 'ellipsis']),
 
 		/**
+		 * `true` if the directionality of the content is right-to-left
+		 *
+		 * @type {Boolean}
+		 * @public
+		 * @default false
+		 */
+		rtl: PropTypes.bool,
+
+		/**
 		 * Speed of marquee animation in pixels/second.
 		 *
 		 * @type {Number}
 		 * @public
 		 */
 		speed: PropTypes.number
+	},
+
+	defaultProps: {
+		rtl: false
 	},
 
 	styles: {
@@ -120,10 +132,9 @@ const MarqueeBase = kind({
 
 	computed: {
 		clientClassName: ({animating}) => animating ? animated : css.text,
-		clientStyle: ({animating, centered, children, distance, forceDirection, overflow, speed}, {rtl: contextRtl}) => {
-			let rtl = forceDirection ? forceDirection === 'rtl' : isRtlText(children);
-
-			const overrideRtl = forceDirection ? true : contextRtl !== rtl;
+		clientStyle: ({animating, centered, distance, forceDirection, overflow, rtl, speed}, {rtl: contextRtl}) => {
+			const isTextRtl = forceDirection ? forceDirection === 'rtl' : rtl;
+			const overrideRtl = forceDirection ? true : contextRtl !== isTextRtl;
 
 			// We only attempt to set the textAlign of this control if the locale's directionality
 			// differs from the directionality of our current marqueeable control (as determined by
@@ -132,7 +143,7 @@ const MarqueeBase = kind({
 			if (centered) {
 				textAlign = 'center';
 			} else if (overrideRtl && distance > 0) {
-				if (rtl) {
+				if (isTextRtl) {
 					textAlign = 'right';
 				} else {
 					textAlign = 'left';
@@ -143,7 +154,7 @@ const MarqueeBase = kind({
 			// inline
 			let direction = 'inherit';
 			if (overrideRtl) {
-				direction = rtl ? 'rtl' : 'ltr';
+				direction = isTextRtl ? 'rtl' : 'ltr';
 			}
 
 			const style = {

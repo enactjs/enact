@@ -3,7 +3,7 @@ import Item from '@enact/moonstone/Item';
 import Spottable from '@enact/spotlight/Spottable';
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
-import {withKnobs, boolean, number, select} from '@kadira/storybook-addon-knobs';
+import {boolean, number, select} from '@kadira/storybook-addon-knobs';
 
 const SpottableMarquee = Spottable(MarqueeText);
 const Controller = MarqueeController('div');
@@ -24,7 +24,6 @@ const RTL = [
 ];
 
 storiesOf('Marquee')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		'LTR',
 		() => (
