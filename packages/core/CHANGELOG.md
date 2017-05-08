@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [unreleased]
+
+### Added
+
+- `core/handle.oneOf` to support branching event handlers
+
 ## [1.1.0] - 2017-04-21
 
 ### Added
