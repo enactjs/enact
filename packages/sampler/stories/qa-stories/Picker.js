@@ -3,7 +3,7 @@ import {icons} from '@enact/moonstone/Icon';
 import PickerAddRemove from './components/PickerAddRemove';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
+import {boolean, select} from '@kadira/storybook-addon-knobs';
 import nullify from '../../src/utils/nullify.js';
 
 const prop = {
@@ -41,7 +41,6 @@ const pickerList = {
 };
 
 storiesOf('Picker')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		'with long text',
 		() => (
