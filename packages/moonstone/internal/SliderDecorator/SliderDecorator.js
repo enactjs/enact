@@ -202,6 +202,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const value = this.clamp(props.value);
 			this.state = {
 				active: false,
+				focused: false,
 				value: value,
 				valueText: value
 			};
