@@ -1,6 +1,7 @@
+import Button from '@enact/moonstone/Button';
+import ExpandableItem from '@enact/moonstone/ExpandableItem';
 import VirtualList from '@enact/moonstone/VirtualList';
 import ri from '@enact/ui/resolution';
-import Item from '@enact/moonstone/Item';
 import {VirtualListCore} from '@enact/moonstone/VirtualList/VirtualListBase';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
@@ -26,9 +27,13 @@ const
 		const itemStyle = {height: size + 'px', ...style.item};
 
 		return (
-			<Item {...rest} style={itemStyle}>
-				{data[index]}
-			</Item>
+			<div {...rest} style={itemStyle}>
+				<ExpandableItem title={'click ' + data[index]} >
+					<Button onClick="">
+						{data[index]}
+					</Button>
+				</ExpandableItem>
+			</div>
 		);
 	};
 
@@ -40,7 +45,7 @@ storiesOf('VirtualList')
 	.addWithInfo(
 		'VirtualList with more items',
 		() => {
-			const itemSize = ri.scale(number('itemSize', 72));
+			const itemSize = ri.scale(number('itemSize', 150));
 			return (
 				<VirtualList
 					component={renderItem(itemSize)}
