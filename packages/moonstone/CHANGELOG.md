@@ -19,6 +19,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonstone/VideoPlayer` to not disable media button (play/pause)
+- `moonstone/Picker` arrow icon for `joined` picker: small when not spotted, hidden when it reaches the end of the picker
 - `moonstone/Checkbox` and `moonstone/CheckboxItem` to reflect the latest design
 
 ## [1.1.0] - 2017-04-21
