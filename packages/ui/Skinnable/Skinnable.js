@@ -6,7 +6,12 @@
 
 import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
+import PropTypes from 'prop-types';
 import React from 'react';
+
+const contextTypes = {
+	skin: PropTypes.string
+};
 
 /**
  * Default config for {@link ui/Skinnable.Skinnable}.
@@ -55,40 +60,69 @@ const defaultConfig = {
  * @hoc
  * @public
  */
-const Skinnable = hoc(defaultConfig, (config, Wrapped) => kind({
-	name: 'Skinnable',
+const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
+	return class extends React.Component {
+		static displayName = 'Skinnable'
 
-	propTypes: /** @lends ui/Skinnable.Skinnable.prototype */ {
-		/**
-		 * Select a skin by name. The list of available skins is established by the direct consumer
-		 * of this component via the config options. This will typically be done once by the theme
-		 * decorator, like [MoonstoneDecorator]{@link moonstone/MoonstoneDecorator} which will
-		 * supply the list of skins.
-		 *
-		 * @type {String}
-		 * @default [providedByConfig]
-		 * @public
-		 */
-		skin: React.PropTypes.oneOf(config.skins)
-	},
+		static propTypes = /** @lends ui/Skinnable.Skinnable.prototype */ {
+			/**
+			 * Select a skin by name. The list of available skins is established by the direct consumer
+			 * of this component via the config options. This will typically be done once by the theme
+			 * decorator, like [MoonstoneDecorator]{@link moonstone/MoonstoneDecorator} which will
+			 * supply the list of skins.
+			 *
+			 * @type {String}
+			 * @default [providedByConfig]
+			 * @public
+			 */
+			skin: PropTypes.oneOf(config.skins)
+		}
 
-	defaultProps: {
-		skin: config.defaultSkin
-	},
+		static defaultProps = {
+			skin: config.defaultSkin
+		}
 
-	styles: {},	// Empty `styles` tells `kind` that we want to use `styler` later and don't have a base className.
+		static contextTypes = contextTypes;
 
-	computed: {
-		className: ({skin, styler}) => styler.append(skin)
-	},
+		static childContextTypes = contextTypes;
 
-	render: (props) => {
-		delete props.skin;
-		return (
-			<Wrapped {...props} />
-		);
-	}
-}));
+		getChildContext () {
+			return {
+				skin: this.getSkin()
+			};
+		}
+
+		getSkin () {
+			return this.props.skin || this.context.skin;
+		}
+
+		getClassName () {
+			const skin = this.getSkin();
+			let {className} = this.props;
+
+			// only apply the skin class if it's set and different from the "current" skin as
+			// defined by the value in context
+			if (skin) {
+				if (className) {
+					className = `${skin} ${className}`;
+				} else {
+					className = skin;
+				}
+			}
+
+			return className;
+		}
+
+		render () {
+			return (
+				<Wrapped
+					{...this.props}
+					className={this.getClassName()}
+				/>
+			);
+		}
+	};
+});
 
 export default Skinnable;
 export {Skinnable};

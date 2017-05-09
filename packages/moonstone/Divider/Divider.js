@@ -8,11 +8,14 @@ import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Skinnable from '@enact/ui/Skinnable';
 
 import css from './Divider.less';
 import {MarqueeDecorator} from '../Marquee';
 
 const MarqueeH3 = Uppercase(MarqueeDecorator('h3'));
+
+console.log(Object.keys(css));
 
 /**
  * {@link moonstone/Divider.Divider} is a simply styled component that may be used as a separator
@@ -100,5 +103,5 @@ const DividerBase = kind({
 	}
 });
 
-export default DividerBase;
+export default Skinnable({skins: ['moonstone', 'moonstone-light']}, DividerBase);
 export {DividerBase as Divider, DividerBase};
