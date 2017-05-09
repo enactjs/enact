@@ -1,14 +1,6 @@
 // skin.less
 //
 
-.skin(@skinName, @componentName, @componentRules) when (isruleset(@componentRules)) {
-	:global(.@{skinName}) .@{componentName},
-	// bump the specificity by doubling the skin selector
-	:global(.@{skinName}.@{skinName}).@{componentName} {
-		@componentRules();
-	}
-}
-
 .applySkins(@componentRules) when (isruleset(@componentRules)) {
 	// Load our base set of color rules
 	@import './colors.less';
@@ -23,33 +15,4 @@
 
 		@componentRules();
 	}
-}
-
-.dark() {
-	@import './colors.less';
-};
-
-.light() {
-	.dark();
-	@import './colors-light.less';
-};
-
-.applySkins(@componentName, @componentRules) when (isruleset(@componentRules)) {
-	.skin(
-		moonstone,
-		@componentName,
-		{
-			.dark();
-			@componentRules();
-		}
-	);
-
-	.skin(
-		moonstone-light,
-		@componentName,
-		{
-			.light();
-			@componentRules();
-		}
-	);
 }

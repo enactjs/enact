@@ -15,8 +15,6 @@ import {MarqueeDecorator} from '../Marquee';
 
 const MarqueeH3 = Uppercase(MarqueeDecorator('h3'));
 
-console.log(Object.keys(css));
-
 /**
  * {@link moonstone/Divider.Divider} is a simply styled component that may be used as a separator
  * between groups of components.
