@@ -3,6 +3,19 @@ import Spotlight from '@enact/spotlight';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+
+const defaultConfig = {
+	/**
+	 * When `true` and used in conjunction with `noAutoFocus` when `false`, the contents of the
+	 * container will receive spotlight focus expanded, even in pointer mode.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @public
+	 */
+	noPointerMode: false
+};
+
 /**
  * Restores spotlight focus to root container when closing the container if the previously focused
  * component is contained.
@@ -11,7 +24,9 @@ import PropTypes from 'prop-types';
  * @memberof moonstone/ExpandableItem
  * @private
  */
-const ExpandableSpotlightDecorator = hoc((config, Wrapped) => {
+const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
+	const {noPointerMode} = config;
+
 	return class extends React.Component {
 		static displayName = 'ExpandableSpotlightDecorator'
 
@@ -37,16 +52,6 @@ const ExpandableSpotlightDecorator = hoc((config, Wrapped) => {
 			noAutoFocus: PropTypes.bool,
 
 			/**
-			 * When `true` and used in conjunction with `noAutoFocus` when `false`, the contents of the
-			 * container will receive spotlight focus expanded, even in pointer mode.
-			 *
-			 * @type {Boolean}
-			 * @default false
-			 * @public
-			 */
-			noPointerMode: PropTypes.bool,
-
-			/**
 			 * Set the open state of the component, which determines whether it's expanded or not.
 			 *
 			 * @type {Boolean}
@@ -57,8 +62,7 @@ const ExpandableSpotlightDecorator = hoc((config, Wrapped) => {
 		}
 
 		static defaultProps = {
-			noAutoFocus: false,
-			noPointerMode: false
+			noAutoFocus: false
 		}
 
 		highlightContents = () => {
@@ -79,7 +83,7 @@ const ExpandableSpotlightDecorator = hoc((config, Wrapped) => {
 		}
 
 		highlight = (callback) => {
-			const {noPointerMode, open} = this.props;
+			const {open} = this.props;
 			const pointerMode = Spotlight.getPointerMode();
 			const changePointerMode = pointerMode && (noPointerMode || !open);
 
@@ -111,7 +115,6 @@ const ExpandableSpotlightDecorator = hoc((config, Wrapped) => {
 		render () {
 			const props = Object.assign({}, this.props);
 			delete props.noAutoFocus;
-			delete props.noPointerMode;
 
 			return (
 				<Wrapped

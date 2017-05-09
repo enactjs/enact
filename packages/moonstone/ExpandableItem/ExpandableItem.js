@@ -246,7 +246,6 @@ const ExpandableItemBase = kind({
 				disabled={disabled}
 				open={open}
 				ref={setContainerNode}
-				spotlightDisabled={spotlightDisabled}
 			>
 				<LabeledItem
 					{...ariaProps}
@@ -273,7 +272,6 @@ const ExpandableItemBase = kind({
 		);
 	}
 });
-
 
 /**
  * {@link moonstone/ExpandableItem.ExpandableItem} renders a
