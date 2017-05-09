@@ -80,6 +80,15 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			backgroundProgress: PropTypes.number,
 
 			/**
+			 * The custom value or component for the tooltip. If [tooltip]{@link moonstone/Slider.SliderBase#tooltip},
+			 * is `true`, then it will use built-in tooltip with given a string. If `false`, a custom tooltip
+			 * component, which follows the knob, may be used instead.
+			 *
+			 * @type {String|Node}
+			 */
+			children: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+
+			/**
 			 * The slider can change its behavior to have the knob follow the cursor as it moves
 			 * across the slider, without applying the position. A click or drag behaves the same.
 			 * This is primarily used by media playback. Setting this to `true` enables this behavior.
@@ -248,8 +257,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 
 			/**
 			 * Enables the built-in tooltip, whose behavior can be modified by the other tooltip
-			 * properties.  A custom tooltip, which follows the knob, may be used instead by
-			 * supplying a component as a child of `Slider`.
+			 * properties.
 			 *
 			 * @type {Boolean}
 			 * @default false
@@ -364,7 +372,8 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		},
 
 		computed: {
-			tooltipValue: ({max, min, tooltipAsPercent, value}) => {
+			children: ({children, max, min, tooltip, tooltipAsPercent, value}) => {
+				if (!tooltip || children) return children;
 				return tooltipAsPercent ? Math.floor(computeProportionProgress({value, max, min}) * 100) + '%' : value;
 			},
 			className: ({active, noFill, pressed, vertical, styler}) => styler.append({
@@ -377,7 +386,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			proportionProgress: computeProportionProgress
 		},
 
-		render: ({backgroundProgress, children, disabled, focused, inputRef, max, min, onBlur, onChange, onKeyDown, onMouseMove, onMouseUp, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, tooltip, tooltipForceSide, tooltipSide, tooltipValue, value, vertical, ...rest}) => {
+		render: ({backgroundProgress, children, disabled, focused, inputRef, max, min, onBlur, onChange, onKeyDown, onMouseMove, onMouseUp, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, tooltip, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => {
 			delete rest.active;
 			delete rest.detachedKnob;
 			delete rest.noFill;
@@ -390,17 +399,19 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 
 			let tooltipComponent = null;
 
-			if (tooltip) {
+			// when `tooltip` is `false`, use custom tooltip provided in `children`
+			if (!tooltip) {
+				tooltipComponent = children;
+			} else if (focused) {
+				// only display tooltip when `focused`
 				tooltipComponent = <SliderTooltip
 					forceSide={tooltipForceSide}
 					proportion={proportionProgress}
 					side={tooltipSide}
 					vertical={vertical}
 				>
-					{tooltipValue}
+					{children}
 				</SliderTooltip>;
-			} else {
-				tooltipComponent = children;
 			}
 
 			return (
@@ -420,7 +431,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						vertical={vertical}
 						scrubbing={scrubbing}
 					>
-						{focused ? tooltipComponent : null}
+						{tooltipComponent}
 					</SliderBar>
 					<input
 						aria-disabled={disabled}
