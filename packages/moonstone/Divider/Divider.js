@@ -103,5 +103,5 @@ const DividerBase = kind({
 	}
 });
 
-export default Skinnable({skins: ['moonstone', 'moonstone-light']}, DividerBase);
+export default Skinnable({skins: ['moonstone-dark', 'moonstone-light']}, DividerBase);
 export {DividerBase as Divider, DividerBase};
