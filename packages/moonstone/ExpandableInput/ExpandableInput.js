@@ -281,7 +281,6 @@ class ExpandableInputBase extends React.Component {
 				aria-label={this.calcAriaLabel()}
 				disabled={disabled}
 				label={this.calcLabel()}
-				noPointerMode
 				onClose={this.handleClose}
 				onMouseDown={this.handleMouseDown}
 				onSpotlightDisappear={onSpotlightDisappear}
@@ -331,6 +330,7 @@ class ExpandableInputBase extends React.Component {
  * @public
  */
 const ExpandableInput = Expandable(
+	{noPointerMode: true},
 	Changeable(
 		ExpandableInputBase
 	)
