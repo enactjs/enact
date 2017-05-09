@@ -89,7 +89,7 @@ const InputBase = kind({
 		iconBefore: PropTypes.string,
 
 		/**
-		 * When `true`, the message tooltip is shown if it exists.
+		 * When `true`, input text color is changed to red and the message tooltip is shown if it exists.
 		 *
 		 * @type {Boolean}
 		 * @default false
