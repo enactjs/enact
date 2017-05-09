@@ -68,7 +68,18 @@ const GridListImageItemBase = kind({
 		selected: PropTypes.bool,
 
 		/**
-		 * The custom selection overlay component to render.
+		 * The custom selection overlay component to render. A component can be a stateless functional
+		 * component, `kind()` or React component. The following is an example with custom selection
+		 * overlay kind.
+		 *
+		 * Example Usage:
+		 * ```
+		 * const SelectionOverlay = kind({
+		 * 	render: () => <div>custom overlay</div>
+		 * });
+		 *
+		 * <GridListImageItemBase selectionOverlay={SelectionOverlay} />
+		 * ```
 		 *
 		 * @type {Function}
 		 */
