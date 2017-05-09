@@ -187,7 +187,7 @@ const MediaControls = kind({
 						<Container className={css.mediaControls} spotlightDisabled={mediaControlsDisabled}> {/* rtl={false} */}
 							{noJumpButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaControlsDisabled || jumpButtonsDisabled} onClick={onJumpBackwardButtonClick}>{jumpBackwardIcon}</MediaButton>}
 							{noRateButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaControlsDisabled || rateButtonsDisabled} onClick={onBackwardButtonClick}>{backwardIcon}</MediaButton>}
-							<MediaButton className={spotlightDefaultClass} backgroundOpacity="translucent" disabled={mediaControlsDisabled} onClick={onPlayButtonClick}>{playPauseIcon}</MediaButton>
+							<MediaButton className={spotlightDefaultClass} backgroundOpacity="translucent" onClick={onPlayButtonClick}>{playPauseIcon}</MediaButton>
 							{noRateButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaControlsDisabled || rateButtonsDisabled} onClick={onForwardButtonClick}>{forwardIcon}</MediaButton>}
 							{noJumpButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaControlsDisabled || jumpButtonsDisabled} onClick={onJumpForwardButtonClick}>{jumpForwardIcon}</MediaButton>}
 						</Container>

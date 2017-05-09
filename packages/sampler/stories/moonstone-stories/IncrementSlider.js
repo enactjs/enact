@@ -2,7 +2,7 @@ import IncrementSlider, {IncrementSliderBase} from '@enact/moonstone/IncrementSl
 import {decrementIcons, incrementIcons} from './icons';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, number, select} from '@kadira/storybook-addon-knobs';
+import {boolean, number, select} from '@kadira/storybook-addon-knobs';
 
 import nullify from '../../src/utils/nullify.js';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
@@ -10,7 +10,6 @@ import {mergeComponentMetadata} from '../../src/utils/propTables';
 const Config = mergeComponentMetadata('IncrementSlider', IncrementSliderBase, IncrementSlider);
 
 storiesOf('IncrementSlider')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'Basic usage of IncrementSlider',

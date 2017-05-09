@@ -9,8 +9,8 @@ describe('Spinner Specs', () => {
 			<Spinner />
 		);
 
-		const expected = true;
-		const actual = spinner.find('MarqueeText').isEmpty();
+		const expected = false;
+		const actual = spinner.find('MarqueeText').exists();
 
 		expect(actual).to.equal(expected);
 	});
@@ -22,8 +22,8 @@ describe('Spinner Specs', () => {
 			</Spinner>
 		);
 
-		const expected = false;
-		const actual = spinner.find('MarqueeText').isEmpty();
+		const expected = true;
+		const actual = spinner.find('MarqueeText').exists();
 
 		expect(actual).to.equal(expected);
 	});
@@ -105,8 +105,8 @@ describe('Spinner Specs', () => {
 			<Spinner blockClickOn="container" />
 		);
 
-		const expected = true;
-		const actual = spinner.find(`.${css.scrim}`).isEmpty();
+		const expected = false;
+		const actual = spinner.find(`.${css.scrim}`).exists();
 
 		expect(actual).to.equal(expected);
 	});
@@ -116,8 +116,8 @@ describe('Spinner Specs', () => {
 			<Spinner blockClickOn="container" scrim />
 		);
 
-		const expected = false;
-		const actual = spinner.find(`.${css.scrim}`).isEmpty();
+		const expected = true;
+		const actual = spinner.find(`.${css.scrim}`).exists();
 
 		expect(actual).to.equal(expected);
 	});
@@ -131,8 +131,8 @@ describe('Spinner Specs', () => {
 			<Spinner blockClickOn="screen" />
 		);
 
-		const expected = false;
-		const actual = spinner.find('FloatingLayer').isEmpty();
+		const expected = true;
+		const actual = spinner.find('FloatingLayer').exists();
 
 		expect(actual).to.equal(expected);
 	});
