@@ -33,7 +33,16 @@ class SliderList extends React.Component {
 			value: 50
 		};
 		this.items = [
-			10, 5, 20, 60, 15, 92, 67, 70, 44, 55
+			{item: 'Apple', count: 10},
+			{item: 'Orange', count: 5},
+			{item: 'Banana', count: 20},
+			{item: 'Mango', count: 60},
+			{item: 'Apricot', count: 15},
+			{item: 'Peach', count: 92},
+			{item: 'Pineapple', count: 67},
+			{item: 'Strawberry', count: 70},
+			{item: 'Grapes', count: 44},
+			{item: 'Watermelon', count: 55}
 		];
 	}
 
@@ -42,12 +51,12 @@ class SliderList extends React.Component {
 	}
 
 	fillItems = (value) => {
-		let selected = [];
-		this.items.map((item) => {
-			if (item <= value) {
-				selected.push('Item count ' + item);
+		let selected = this.items.filter((item) => {
+			if (item.count <= value) {
+				return true;
 			}
 		});
+
 		this.setState({
 			selectedItems: selected,
 			value: value
@@ -63,7 +72,7 @@ class SliderList extends React.Component {
 
 		return (
 			<Item {...rest} style={itemStyle}>
-				{data[index]}
+				{data[index].item + ': ' + data[index].count}
 			</Item>
 		);
 	}
