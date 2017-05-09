@@ -795,6 +795,16 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			if (this.scrollToInfo !== null) {
 				this.scrollTo(this.scrollToInfo);
 			}
+
+			// update scrollTop when scrollHeight decreases
+			const bounds = this.childRef.getScrollBounds();
+			if (bounds.scrollHeight < this.bounds.scrollHeight) {
+				this.scrollTop -= this.bounds.scrollHeight - bounds.scrollHeight;
+				if (this.scrollTop < 0) {
+					this.scrollTop = 0;
+				}
+			}
+			this.bounds.scrollHeight = bounds.scrollHeight;
 		}
 
 		componentWillUnmount () {
