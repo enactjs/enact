@@ -6,6 +6,7 @@ import {
 	forKeyCode,
 	forProp,
 	forward,
+	oneOf,
 	preventDefault,
 	stop
 } from '../handle';
@@ -213,5 +214,100 @@ describe('handle', () => {
 		const actual = handler.firstCall.args[2].value;
 
 		expect(actual).to.equal(expected);
+	});
+
+	describe('#oneOf', () => {
+		it('should call each handler until one passes', () => {
+			const handler = sinon.spy(returnsTrue);
+			const h1 = [
+				returnsFalse,
+				handler
+			];
+			const h2 = [
+				returnsTrue,
+				handler
+			];
+			const callback = oneOf(h1, h1, h2);
+			callback();
+
+			const expected = 1;
+			const actual = handler.callCount;
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should stop if the first handler passes', () => {
+			const handler = sinon.spy(returnsTrue);
+			const callback = oneOf(
+				[returnsTrue, handler],
+				[returnsTrue, handler],
+				[returnsTrue, handler]
+			);
+			callback();
+
+			const expected = 1;
+			const actual = handler.callCount;
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should pass args to condition', () => {
+			const handler = sinon.spy(returnsTrue);
+			const callback = oneOf(
+				[handler, returnsTrue]
+			);
+			const ev = {value: 1};
+			callback(ev);
+
+			const expected = ev;
+			const actual = handler.firstCall.args[0];
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should pass args to handlers', () => {
+			const handler = sinon.spy(returnsTrue);
+			const callback = oneOf(
+				[returnsTrue, handler]
+			);
+			const ev = {value: 1};
+			callback(ev);
+
+			const expected = ev;
+			const actual = handler.firstCall.args[0];
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should return the value from the passed condition branch', () => {
+			const handler = sinon.spy(() => 'ok');
+			const callback = oneOf(
+				[returnsTrue, handler]
+			);
+
+			const expected = callback();
+			const actual = 'ok';
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should support bound handlers', () => {
+			const componentInstance = {
+				context: {
+					value: 1
+				}
+			};
+			const handler = sinon.spy();
+			const h = handle.bind(componentInstance);
+			const callback = oneOf(
+				[returnsTrue, h(handler)]
+			);
+			callback();
+
+			const expected = 1;
+			const actual = handler.firstCall.args[2].value;
+
+			expect(actual).to.equal(expected);
+		});
 	});
 });

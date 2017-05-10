@@ -126,6 +126,15 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			min: PropTypes.number,
 
 			/**
+			 * When `true`, the slider bar doesn't show a fill and doesn't highlight when spotted
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			noFill: PropTypes.bool,
+
+			/**
 			 * The handler when the knob is activated or deactivated by selecting it via 5-way
 			 *
 			 * @type {Function}
@@ -300,6 +309,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			detachedKnob: false,
 			max: 100,
 			min: 0,
+			noFill: false,
 			onChange: () => {}, // needed to ensure the base input element is mutable if no change handler is provided
 			pressed: false,
 			step: 1,
@@ -350,8 +360,9 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 				if (!tooltip || children) return children;
 				return tooltipAsPercent ? Math.floor(computeProportionProgress({value, max, min}) * 100) + '%' : value;
 			},
-			className: ({active, pressed, vertical, styler}) => styler.append({
+			className: ({active, noFill, pressed, vertical, styler}) => styler.append({
 				active,
+				noFill,
 				pressed,
 				vertical,
 				horizontal: !vertical
@@ -362,6 +373,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		render: ({backgroundProgress, children, disabled, inputRef, max, min, onBlur, onChange, onKeyDown, onMouseMove, onMouseUp, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, tooltip, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => {
 			delete rest.active;
 			delete rest.detachedKnob;
+			delete rest.noFill;
 			delete rest.onActivate;
 			delete rest.onDecrement;
 			delete rest.onIncrement;
