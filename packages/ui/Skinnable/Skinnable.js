@@ -93,7 +93,7 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		getSkin () {
-			return this.props.skin || this.context.skin || defaultSkin;
+			return this.props.skin || defaultSkin || this.context.skin;
 		}
 
 		getClassName () {

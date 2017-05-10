@@ -2,7 +2,6 @@ import hoc from '@enact/core/hoc';
 import SkinnableBase from '@enact/ui/Skinnable';
 
 const defaultConfig = {
-	defaultSkin: 'dark',
 	skins: {
 		dark: 'moonstone',
 		light: 'moonstone-light'
