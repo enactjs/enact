@@ -50,7 +50,7 @@ const defaultConfig = {
  *
  * [Skins]{@link ui/Skinnable} provide a way to change the coloration of your app. The currently
  * supported skins for Moonstone are "moonstone" (the default, dark skin) and "moonstone-light".
- * Use the `skin` property to assign a skin. Ex: `<DecoratedApp skin="moonstone-light" />`
+ * Use the `skin` property to assign a skin. Ex: `<DecoratedApp skin="light" />`
  *
  * @class MoonstoneDecorator
  * @memberof moonstone/MoonstoneDecorator
