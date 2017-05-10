@@ -110,7 +110,7 @@ const FullscreenStorybookDecorator = (story, config) => {
 			description={config.description}
 			locale={select('locale', locales, getLocaleFromURL())}
 			textSize={boolean('large text', false) ? 'large' : 'normal'}
-			skin={select('skin', skins, 'moonstone')}
+			skin={select('skin', skins, 'dark')}
 		>
 			{sample}
 		</MoonstoneFullscreen>
