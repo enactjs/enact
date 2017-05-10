@@ -63,8 +63,8 @@ const locales = {
 };
 
 const skins = {
-	moonstone: 'Dark',
-	'moonstone-light': 'Light'
+	dark: 'Dark',
+	light: 'Light'
 };
 
 // NOTE: Knobs cannot set locale in fullscreen mode. This allows the locale to
