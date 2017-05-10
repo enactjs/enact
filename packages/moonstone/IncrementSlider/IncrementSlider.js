@@ -147,16 +147,6 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 */
 			onActivate: PropTypes.func,
 
-
-			/**
-			 * The handler to run when blurred.
-			 *
-			 * @type {Function}
-			 * @param {Object} event
-			 * @public
-			 */
-			onBlur: PropTypes.func,
-
 			/**
 			 * The handler to run when the value is changed.
 			 *
@@ -175,15 +165,6 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * @public
 			 */
 			onDecrement: PropTypes.func,
-
-			/**
-			 * The handler to run when focused.
-			 *
-			 * @type {Function}
-			 * @param {Object} event
-			 * @public
-			 */
-			onFocus: PropTypes.func,
 
 			/**
 			 * The handler to run when the value is incremented.
@@ -354,8 +335,8 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			incrementAriaLabel: ({value}) => (`${value} ${$L('press ok button to increase the value')}`)
 		},
 
-		render: ({active, backgroundProgress, children, decrementAriaLabel, decrementDisabled, decrementIcon, detachedKnob, disabled, focused, incrementAriaLabel, incrementDisabled, incrementIcon, incrementSliderClasses, inputRef, max, min, onActivate, onBlur, onChange, onDecrement, onFocus, onIncrement, onSpotlightDisappear, pressed, scrubbing, sliderBarRef, sliderRef, spotlightDisabled, step, tooltip, tooltipAsPercent, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => (
-			<div {...rest} className={incrementSliderClasses} onBlur={onBlur} onFocus={onFocus}>
+		render: ({active, backgroundProgress, children, decrementAriaLabel, decrementDisabled, decrementIcon, detachedKnob, disabled, focused, incrementAriaLabel, incrementDisabled, incrementIcon, incrementSliderClasses, inputRef, max, min, onActivate, onChange, onDecrement, onIncrement, onSpotlightDisappear, pressed, scrubbing, sliderBarRef, sliderRef, spotlightDisabled, step, tooltip, tooltipAsPercent, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => (
+			<div {...rest} className={incrementSliderClasses}>
 				<IncrementSliderButton
 					aria-label={decrementAriaLabel}
 					className={css.decrementButton}
