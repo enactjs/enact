@@ -192,7 +192,7 @@ const InputBase = kind({
 		disabled: false,
 		dismissOnEnter: false,
 		invalid: false,
-		invalidMessage: '',
+		invalidMessage: $L('Input Invalid'),
 		placeholder: '',
 		type: 'text'
 	},
