@@ -5,7 +5,7 @@ import Input from '../Input';
 import Spotlight from '@enact/spotlight';
 
 describe('Input Specs', () => {
-	it('should have an input element', function () {
+	it('should have an input element', () => {
 		const subject = mount(
 			<Input />
 		);
@@ -13,7 +13,7 @@ describe('Input Specs', () => {
 		expect(subject.find('input')).to.have.length(1);
 	});
 
-	it('should include a placeholder if specified', function () {
+	it('should include a placeholder if specified', () => {
 		const subject = mount(
 			<Input placeholder="hello" />
 		);
@@ -21,7 +21,7 @@ describe('Input Specs', () => {
 		expect(subject.find('input').prop('placeholder')).to.equal('hello');
 	});
 
-	it('should callback onChange when the text changes', function () {
+	it('should callback onChange when the text changes', () => {
 		const handleChange = sinon.spy();
 		const value = 'blah';
 		const evt = {target: {value: value}};
@@ -37,7 +37,7 @@ describe('Input Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should blur input on enter if dismissOnEnter', function () {
+	it('should blur input on enter if dismissOnEnter', () => {
 		const node = document.body.appendChild(document.createElement('div'));
 		const handleChange = sinon.spy();
 
@@ -57,7 +57,7 @@ describe('Input Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should be able to be disabled', function () {
+	it('should be able to be disabled', () => {
 		const subject = mount(
 			<Input disabled />
 		);
@@ -65,7 +65,7 @@ describe('Input Specs', () => {
 		expect(subject.find('input').prop('disabled')).to.true();
 	});
 
-	it('should reflect the value if specified', function () {
+	it('should reflect the value if specified', () => {
 		const subject = mount(
 			<Input value="hello" />
 		);
@@ -73,7 +73,7 @@ describe('Input Specs', () => {
 		expect(subject.find('input').prop('value')).to.equal('hello');
 	});
 
-	it('should have dir equal to rtl when there is rtl text', function () {
+	it('should have dir equal to rtl when there is rtl text', () => {
 		const subject = mount(
 			<Input value="שועל החום הזריז קפץ מעל הכלב העצלן.ציפור עפה השעועית עם שקי" />
 		);
@@ -84,7 +84,7 @@ describe('Input Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should have dir equal to ltr when there is ltr text', function () {
+	it('should have dir equal to ltr when there is ltr text', () => {
 		const subject = mount(
 			<Input value="content" />
 		);
@@ -95,7 +95,7 @@ describe('Input Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should have dir equal to rtl when there is rtl text in the placeholder', function () {
+	it('should have dir equal to rtl when there is rtl text in the placeholder', () => {
 		const subject = mount(
 			<Input value="שועל החום הזריז קפץ מעל הכלב העצלן.ציפור עפה השעועית עם שקי" />
 		);
@@ -106,7 +106,7 @@ describe('Input Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should have dir equal to ltr when there is ltr text in the placeholder', function () {
+	it('should have dir equal to ltr when there is ltr text in the placeholder', () => {
 		const subject = mount(
 			<Input placeholder="content" />
 		);
@@ -117,7 +117,7 @@ describe('Input Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should have dir equal to rtl when there is ltr text in the placeholder, but rtl text in value', function () {
+	it('should have dir equal to rtl when there is ltr text in the placeholder, but rtl text in value', () => {
 		const subject = mount(
 			<Input
 				placeholder="content"
@@ -131,7 +131,7 @@ describe('Input Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should have dir equal to ltr when there is rtl text in the placeholder, but ltr text in value', function () {
+	it('should have dir equal to ltr when there is rtl text in the placeholder, but ltr text in value', () => {
 		const subject = mount(
 			<Input
 				placeholder="שועל החום הזריז קפץ מעל הכלב העצלן.ציפור עפה השעועית עם שקי"
@@ -145,13 +145,13 @@ describe('Input Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should pause spotlight when input has focus', function () {
+	it('Should pause spotlight when input has focus', () => {
 		const pauseSpy = sinon.spy(Spotlight, 'pause');
 		const subject = mount(
 			<Input />
 		);
 
-		subject.simulate('click');
+		subject.find('Input').simulate('click');
 
 		const expected = true;
 		const actual = pauseSpy.calledOnce;
@@ -160,13 +160,13 @@ describe('Input Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('Should resume spotlight on unmount', function () {
+	it('Should resume spotlight on unmount', () => {
 		const resumeSpy = sinon.spy(Spotlight, 'resume');
 		const subject = mount(
 			<Input />
 		);
 
-		subject.simulate('click');
+		subject.find('Input').simulate('click');
 		subject.unmount();
 
 		const expected = true;
