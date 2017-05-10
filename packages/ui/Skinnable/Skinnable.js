@@ -5,7 +5,6 @@
  */
 
 import hoc from '@enact/core/hoc';
-import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -79,7 +78,7 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @type {String}
 			 * @public
 			 */
-			skin: PropTypes.oneOf(skins)
+			skin: PropTypes.oneOf(Object.keys(skins))
 		}
 
 		static contextTypes = contextTypes;
@@ -114,9 +113,11 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
+			const {...props} = this.props;
+			delete props.skin;
 			return (
 				<Wrapped
-					{...this.props}
+					{...props}
 					className={this.getClassName()}
 				/>
 			);
