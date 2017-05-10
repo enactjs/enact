@@ -159,8 +159,6 @@ class ScrollerBase extends Component {
 
 	focusOnNode = (node) => {
 		if (node) {
-			// setPointerMode to false since Spotlight prevents programmatically changing focus while in pointer mode
-			Spotlight.setPointerMode(false);
 			Spotlight.focus(node);
 		}
 	}
