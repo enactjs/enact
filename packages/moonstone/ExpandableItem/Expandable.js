@@ -1,8 +1,9 @@
 import Cancelable from '@enact/ui/Cancelable';
 import hoc from '@enact/core/hoc';
 import RadioDecorator from '@enact/ui/RadioDecorator';
-import Toggleable from '@enact/ui/Toggleable';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
+import Toggleable from '@enact/ui/Toggleable';
+
 import ExpandableSpotlightDecorator from './ExpandableSpotlightDecorator';
 
 // TODO: This module may not doc correctly but we'll need to wait until our doc parsing script is
@@ -24,7 +25,22 @@ const handleCancel = function (props) {
 	}
 };
 
+/**
+ * Default config for {@link moonstone/ExpandableItem.Expandable}.
+ *
+ * @memberof moonstone/ExpandableItem
+ * @hocconfig
+ */
 const defaultConfig = {
+	/**
+	 * When `true` and used in conjunction with `noAutoFocus` when `false`, the contents of the
+	 * container will receive spotlight focus expanded, even in pointer mode.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @memberof moonstone/ExpandableItem.Expandable.defaultConfig
+	 * @public
+	 */
 	noPointerMode: false
 };
 

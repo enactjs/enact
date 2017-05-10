@@ -7,7 +7,6 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Added
 
 - `ui/Transition` prop `onShow` that fires when transitioning into view a component.
-## Unreleased
 
 ### Changed
 
