@@ -1,5 +1,5 @@
 import {icons} from '@enact/moonstone/Icon';
-import Input from '@enact/moonstone/Input';
+import {Input, InputBase} from '@enact/moonstone/Input';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {boolean, select, text} from '@kadira/storybook-addon-knobs';
@@ -25,7 +25,7 @@ storiesOf('Input')
 				iconAfter={select('iconAfter', iconNames)}
 				iconBefore={select('iconBefore', iconNames)}
 				invalid={boolean('invalid', false)}
-				invalidMessage={text('invalidMessage')}
+				invalidMessage={text('invalidMessage', InputBase.defaultProps.invalidMessage)}
 				noDecorator={boolean('noDecorator')}
 				placeholder={text('placeholder')}
 				type={select('type', inputData.type, inputData.type[0])}
