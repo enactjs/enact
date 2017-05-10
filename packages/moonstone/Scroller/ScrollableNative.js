@@ -662,7 +662,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				containerNode.addEventListener('wheel', this.onWheel);
 			}
 			// FIXME `onScroll` doesn't work on the v8 snapshot.
-			containerNode.addEventListener('scroll', this.onScroll, {capture: true, passive: true});
+			containerNode.addEventListener('scroll', this.onScroll, {capture: true});
 			// FIXME `onFocus` doesn't work on the v8 snapshot.
 			containerNode.addEventListener('focus', this.onFocus, {capture: true});
 			// FIXME `onMouseOver` doesn't work on the v8 snapshot.
@@ -769,13 +769,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			delete props.verticalScrollbar;
 
 			return (
-				(isHorizontalScrollbarVisible || isVerticalScrollbarVisible) ? (
-					<div ref={this.initContainerRef} className={scrollableClasses} style={style}>
-						{vscrollbar}
-						{hscrollbar}
-						<Wrapped {...props} {...this.eventHandlers} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={css.container} />
-					</div>
-				) : <Wrapped {...props} {...this.eventHandlers} cbScrollTo={this.scrollTo} className={scrollableClasses} ref={this.initChildRef} style={style} />
+				<div ref={this.initContainerRef} className={scrollableClasses} style={style}>
+					{vscrollbar}
+					{hscrollbar}
+					<Wrapped {...props} {...this.eventHandlers} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={css.container} />
+				</div>
 			);
 		}
 	};

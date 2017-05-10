@@ -33,7 +33,8 @@ class PickerAddRemove extends React.Component {
 				0 : ''
 			},
 			inputIndex: 0,
-			inputValue: ''
+			inputValue: '',
+			value: 0
 		};
 	}
 
@@ -59,8 +60,13 @@ class PickerAddRemove extends React.Component {
 		delete children[index];
 
 		this.setState({
-			children: children
+			children: children,
+			value: Math.max(this.state.value - 1, 0)
 		});
+	}
+
+	handleValueUpdate = ({value}) => {
+		this.setState({value});
 	}
 
 	handleIndexChange = ({value}) => {
@@ -82,6 +88,8 @@ class PickerAddRemove extends React.Component {
 			<div>
 				<div>
 					<Picker
+						onChange={this.handleValueUpdate}
+						value={this.state.value}
 						{...this.props}
 					>
 						{pickerChildren}

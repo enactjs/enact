@@ -2,7 +2,7 @@ import TimePicker, {TimePickerBase} from '@enact/moonstone/TimePicker';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
+import {boolean, text} from '@kadira/storybook-addon-knobs';
 
 import nullify from '../../src/utils/nullify.js';
 import {mergeComponentMetadata, removeProps} from '../../src/utils/propTables';
@@ -19,7 +19,6 @@ const Config = mergeComponentMetadata('TimePicker', TimePicker.propTypes, TimePi
 removeProps(Config, 'onChangeHour defaultOpen onChangeMeridiem hour onChangeMinute minute meridiem meridiems order');
 
 storiesOf('TimePicker')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'The basic TimePicker',

@@ -2,7 +2,7 @@ import Button, {ButtonBase} from '@enact/moonstone/Button';
 import {icons} from '@enact/moonstone/Icon';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
+import {boolean, select, text} from '@kadira/storybook-addon-knobs';
 
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 import nullify from '../../src/utils/nullify.js';
@@ -16,7 +16,6 @@ const prop = {
 };
 
 storiesOf('Button')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'The basic Button',
