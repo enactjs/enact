@@ -802,8 +802,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				{scrollHeight: currentScrollHeight, clientHeight} = this.childRef.getScrollBounds(),
 				{scrollHeight: previousScrollHeight} = this.bounds;
 
-			// Calculate position and scroll if there is a `focusedItem`
-			if (focusedItem) {
+			// Calculate position and scroll if there is a `focusedItem` when in PointerMode
+			if (focusedItem && Spotlight.getPointerMode()) {
 				const position = this.childRef.calculatePositionOnFocus(focusedItem);
 				this.startScrollOnFocus(position, focusedItem);
 			}
