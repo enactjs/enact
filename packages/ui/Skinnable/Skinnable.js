@@ -77,14 +77,9 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 			 * supply the list of skins.
 			 *
 			 * @type {String}
-			 * @default [providedByConfig]
 			 * @public
 			 */
 			skin: PropTypes.oneOf(skins)
-		}
-
-		static defaultProps = {
-			skin: defaultSkin
 		}
 
 		static contextTypes = contextTypes;
@@ -98,7 +93,7 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		getSkin () {
-			return this.props.skin || this.context.skin;
+			return this.props.skin || this.context.skin || defaultSkin;
 		}
 
 		getClassName () {
