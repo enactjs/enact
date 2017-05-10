@@ -28,10 +28,9 @@ const SpinnerCore = kind({
 
 	computed: {
 		'aria-label': ({['aria-label']: aria, children}) => {
-			if (aria) return aria;
-			if (children) {
-				return;
-			} else {
+			if (aria) {
+				return aria;
+			} else if (!children) {
 				return $L('Loading');
 			}
 		}
