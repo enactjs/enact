@@ -22,10 +22,10 @@ const contextTypes = {
  */
 const defaultConfig = {
 	/**
-	 * An array of the available skin names. These will be used as the class names for your skin,
-	 * and are accepted as the only valid values for the `skin` prop on the wrapped component.
+	 * An hash mapping the available skin names to their CSS class name. The keys are accepted as
+	 * the only valid values for the `skin` prop on the wrapped component.
 	 *
-	 * @type {Array}
+	 * @type {Object}
 	 * @memberof ui/Skinnable.Skinnable.defaultConfig
 	 */
 	skins: null,
@@ -50,8 +50,11 @@ const defaultConfig = {
  * Example:
  * ```
  * App = Skinnable({
- * 	skins: ['moonstone', 'moonstone-light'],
- * 	defaultTheme: 'moonstone'
+ * 	skins: {
+ * 		dark: 'moonstone',
+ * 		light: 'moonstone-light'
+ * 	},
+ * 	defaultTheme: 'dark'
  * }, App);
  * ```
  *
@@ -61,6 +64,8 @@ const defaultConfig = {
  * @public
  */
 const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
+	const {skins, defaultSkin} = config;
+
 	return class extends React.Component {
 		static displayName = 'Skinnable'
 
@@ -75,11 +80,11 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 			 * @default [providedByConfig]
 			 * @public
 			 */
-			skin: PropTypes.oneOf(config.skins)
+			skin: PropTypes.oneOf(skins)
 		}
 
 		static defaultProps = {
-			skin: config.defaultSkin
+			skin: defaultSkin
 		}
 
 		static contextTypes = contextTypes;
@@ -97,7 +102,7 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		getClassName () {
-			const skin = this.getSkin();
+			const skin = skins[this.getSkin()];
 			let {className} = this.props;
 
 			// only apply the skin class if it's set and different from the "current" skin as
