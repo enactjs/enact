@@ -21,6 +21,7 @@ storiesOf('Slider')
 				knobStep={number('knobStep')}
 				max={number('max', SliderBase.defaultProps.max)}
 				min={number('min', SliderBase.defaultProps.min)}
+				noFill={boolean('noFill', false)}
 				onChange={action('onChange')}
 				onKnobMove={action('onKnobMove')}
 				step={number('step', SliderBase.defaultProps.step)}
