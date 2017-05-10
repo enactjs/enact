@@ -2,7 +2,7 @@ import SelectableItem from '@enact/moonstone/SelectableItem';
 import Group from '@enact/ui/Group';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, text, select} from '@kadira/storybook-addon-knobs';
+import {boolean, text, select} from '@kadira/storybook-addon-knobs';
 
 const inputData = {
 	longText : 'Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text',
@@ -14,7 +14,6 @@ const inputData = {
 };
 
 storiesOf('SelectableItem')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		'with long text',
 		() => (

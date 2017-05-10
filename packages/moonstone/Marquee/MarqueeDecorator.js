@@ -1,6 +1,7 @@
 import hoc from '@enact/core/hoc';
 import {forward} from '@enact/core/handle';
 import {childrenEquals} from '@enact/core/util';
+import {isRtlText} from '@enact/i18n/util';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -210,7 +211,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		constructor (props) {
 			super(props);
 			this.state = {
-				overflow: 'ellipsis'
+				overflow: 'ellipsis',
+				rtl: false
 			};
 			this.sync = false;
 			this.forceRestartMarquee = false;
@@ -497,6 +499,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		cacheNode = (node) => {
 			this.node = node;
+			const {forceDirection} = this.props;
+			const textContent = node && node.textContent;
+			this.setState({rtl: forceDirection ? forceDirection === 'rtl' : isRtlText(textContent)});
 		}
 
 		renderMarquee () {
@@ -541,6 +546,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						forceDirection={forceDirection}
 						onMarqueeComplete={this.handleMarqueeComplete}
 						overflow={this.state.overflow}
+						rtl={this.state.rtl}
 						speed={marqueeSpeed}
 					>
 						{children}

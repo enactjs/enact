@@ -3,7 +3,7 @@ import Button from '@enact/moonstone/Button';
 import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
-import {withKnobs, text, boolean, select} from '@kadira/storybook-addon-knobs';
+import {text, boolean, select} from '@kadira/storybook-addon-knobs';
 import nullify from '../../src/utils/nullify.js';
 
 // Set up some defaults for info and knobs
@@ -19,7 +19,6 @@ const
 	};
 
 storiesOf('Spinner')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		'with long content',
 		() => (

@@ -1,7 +1,7 @@
 import Button from '@enact/moonstone/Button';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
+import {boolean, select, text} from '@kadira/storybook-addon-knobs';
 import css from './Button.less';
 
 // Set up some defaults for info and knobs
@@ -12,7 +12,6 @@ const prop = {
 };
 
 storiesOf('Button')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		'with long text',
 		() => (

@@ -3,7 +3,7 @@ import Group from '@enact/ui/Group';
 import Divider from '@enact/moonstone/Divider';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, text, boolean} from '@kadira/storybook-addon-knobs';
+import {text, boolean} from '@kadira/storybook-addon-knobs';
 
 const inputData = {
 	longText : 'Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text',
@@ -12,7 +12,6 @@ const inputData = {
 };
 
 storiesOf('SwitchItem')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		'with Long Text',
 		() => (

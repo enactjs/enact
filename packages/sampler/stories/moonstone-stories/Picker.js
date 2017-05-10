@@ -2,7 +2,7 @@ import Picker, {PickerBase} from '@enact/moonstone/Picker';
 import {decrementIcons, incrementIcons} from './icons';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
+import {boolean, select} from '@kadira/storybook-addon-knobs';
 
 import nullify from '../../src/utils/nullify.js';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
@@ -23,7 +23,6 @@ const airports = [
 ];
 
 storiesOf('Picker')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'Basic usage of Picker',

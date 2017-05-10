@@ -98,9 +98,10 @@ class ExpandableInputBase extends React.Component {
 		 *
 		 * @type {Function}
 		 * @param {Object} event
+		 * @deprecated replaced by `onChange`
 		 * @public
 		 */
-		onInputChange: deprecate(PropTypes.func, {name: 'onInputChange', since: '1.0.0', message: 'Use `onChange` instead', until: '2.0.0'}),
+		onInputChange: PropTypes.func,
 
 		/**
 		 * The handler to run when the component is removed while retaining focus.
@@ -166,6 +167,10 @@ class ExpandableInputBase extends React.Component {
 		this.state = {
 			initialValue: props.value
 		};
+
+		if (props.onInputChange) {
+			deprecate({name: 'onInputChange', since: '1.0.0', message: 'Use `onChange` instead', until: '2.0.0'});
+		}
 	}
 
 	componentWillReceiveProps (nextProps) {
