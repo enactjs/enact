@@ -8,10 +8,11 @@ import kind from '@enact/core/kind';
 import Uppercase from '@enact/i18n/Uppercase';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Skinnable from '@enact/ui/Skinnable';
+
+import {MarqueeDecorator} from '../Marquee';
+import Skinnable from '../Skinnable';
 
 import css from './Divider.less';
-import {MarqueeDecorator} from '../Marquee';
 
 const MarqueeH3 = Uppercase(MarqueeDecorator('h3'));
 
@@ -101,5 +102,5 @@ const DividerBase = kind({
 	}
 });
 
-export default Skinnable({skins: ['moonstone-dark', 'moonstone-light']}, DividerBase);
+export default Skinnable(DividerBase);
 export {DividerBase as Divider, DividerBase};
