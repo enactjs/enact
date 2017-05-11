@@ -40,6 +40,7 @@ export default {
 	rollbackward      : 0x0EFFF8, // undo
 	exitfullscreen    : 0x0EFFF9, // minimize
 	fullscreen        : 0x0EFFFA, // maximize
+	arrowshrinkleft   : 0x0EFFFB, // shrink_panel
 	arrowextend       : 0x0F0021, // arrow_left
 	arrowshrink       : 0x0F0022, // arrow_right
 	flag              : 0x0F0023, // flag

@@ -4,6 +4,12 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Added
+- `arrowshrinkleft` icon in `moonstone/Icon.IconList`
+
+### Changed
+- `moonstone/VideoPlayer`'s more/less button to use correct icon
+
 ### Deprecated
 
 - `moonstone/Scroller.Scrollable` option `indexToFocus` in `scrollTo` method to be removed in 2.0.0
