@@ -63,10 +63,6 @@
 		}
 	}
 
-	.tooltip {
-		display: none;
-	}
-
 	.input {
 		position: absolute;
 		top: 0;
@@ -178,9 +174,6 @@
 			.knob::before {
 				background-color: @moon-slider-spotlight-knob-color;
 			}
-			.tooltip {
-				display: block;
-			}
 		}
 
 		&.pressed,
@@ -197,6 +190,21 @@
 				.knob::before {
 					background-color: @moon-slider-knob-bg-color;
 					border-color: @moon-slider-spotlight-knob-color;
+				}
+			}
+		}
+	}
+
+	&.noFill {
+		.fill {
+			background-color: transparent;
+		}
+
+		&:global(.spottable) {
+			&.active,
+			&.pressed {
+				.fill {
+					background-color: transparent;
 				}
 			}
 		}

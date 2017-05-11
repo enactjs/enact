@@ -56,10 +56,15 @@
 	:global(.enact-locale-right-to-left) & {
 		text-align: right;
 	}
+
+	.invalid & {
+		color: @moon-red;
+	}
 }
 
 .decorator {
 	display: inline-block;
+
 	padding: 12px 30px;
 	border-radius: 1008px;
 	margin: 6px;
@@ -120,6 +125,13 @@
 	> * {
 		display: inline-block;
 		vertical-align: middle;
+	}
+}
+
+.invalidTooltip {
+	transform: translate(60px, -50%);
+	:global(.enact-locale-right-to-left) & {
+		transform: translate(-60px, -50%);
 	}
 }
 

@@ -8,6 +8,7 @@
 @moon-black:       #000;
 @moon-accent:      #cf0652;
 @moon-white:       #fff;
+@moon-red:         #ff0000;
 
 @moon-remote-button-red-color:     #ff6d78; // #da3c3c; // #e71b1c;
 @moon-remote-button-green-color:   #6ff467; // #21c171; // #339966;
@@ -94,8 +95,13 @@
 
 // Checkbox
 // ---------------------------------------
-@moon-check-box-frame-color: fade(@moon-white, 30%);
-@moon-check-box-frame-spotlight-color: lighten(@moon-accent, 32%);
+@moon-checkbox-background-color: fade(@moon-white, 30%);
+@moon-checkbox-background-spotlight-color: fade(@moon-white, 40%);
+
+// FormCheckbox
+// ---------------------------------------
+@moon-formcheckbox-background-color: @moon-button-background-color;
+@moon-formcheckbox-text-color: @moon-button-text-color;
 
 // LabeledItem
 // ---------------------------------------

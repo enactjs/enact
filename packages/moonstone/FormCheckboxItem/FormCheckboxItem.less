@@ -1,0 +1,12 @@
+// FormCheckboxItem.less
+//
+@import '../styles/colors.less';
+
+.formCheckboxItem {
+	&:not([disabled]) {
+		&:global(.spottable):focus {
+			background-color: transparent;
+			color: @moon-text-color;
+		}
+	}
+}

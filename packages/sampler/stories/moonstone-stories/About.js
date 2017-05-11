@@ -6,7 +6,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ri from '@enact/ui/resolution';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean} from '@kadira/storybook-addon-knobs';
+import {boolean} from '@kadira/storybook-addon-knobs';
 import css from './About.less';
 
 const riSafe = (style) => {
@@ -80,7 +80,6 @@ const Pointer = kind({
 });
 
 storiesOf('About Sampler')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'A Tour of Sampler',
