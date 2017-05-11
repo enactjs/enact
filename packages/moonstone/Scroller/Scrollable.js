@@ -776,6 +776,28 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.updateScrollbars();
 		}
 
+		updateScrollOnFocus () {
+			const
+				focusedItem = Spotlight.getCurrent(),
+				{calculatePositionOnFocus, getScrollBounds, calculateScrollTop} = this.childRef,
+				{scrollHeight: previousScrollHeight} = this.bounds,
+				{scrollHeight: currentScrollHeight} = getScrollBounds();
+
+			if (focusedItem) {
+				// Calculate position and scroll if there is a `focusedItem` when in `PointerMode`
+				if (Spotlight.getPointerMode()) {
+					const position = calculatePositionOnFocus(focusedItem);
+					this.startScrollOnFocus(position, focusedItem);
+				}
+
+				// When `scrollHeight` decreased
+				this.scrollTop = calculateScrollTop(focusedItem, this.scrollTop, previousScrollHeight);
+			}
+
+			// update `scrollHeight`
+			this.bounds.scrollHeight = currentScrollHeight;
+		}
+
 		// component life cycle
 
 		componentDidMount () {
@@ -796,48 +818,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				this.scrollTo(this.scrollToInfo);
 			}
 
-			// Update `scrollTop`
-			const
-				focusedItem = Spotlight.getCurrent(),
-				{scrollHeight: currentScrollHeight, clientHeight} = this.childRef.getScrollBounds(),
-				{scrollHeight: previousScrollHeight} = this.bounds;
-
-			// Calculate position and scroll if there is a `focusedItem` when in PointerMode
-			if (focusedItem && Spotlight.getPointerMode()) {
-				const position = this.childRef.calculatePositionOnFocus(focusedItem);
-				this.startScrollOnFocus(position, focusedItem);
-			}
-
-			// When `scrollHeight` decreased
-			this.updateScrollTop(previousScrollHeight, currentScrollHeight, clientHeight, focusedItem);
-		}
-
-		updateScrollTop (previousScrollHeight, currentScrollHeight, clientHeight, focusedItem) {
-			if (focusedItem && currentScrollHeight < previousScrollHeight) {
-				const
-					{top: containerTop} = this.childRef.containerRef.getBoundingClientRect(),
-					itemBounds = focusedItem.getBoundingClientRect(),
-					itemBottom = this.scrollTop + itemBounds.top + itemBounds.height - containerTop,
-					scrollBottom = clientHeight + this.scrollTop,
-					scrollHeightDecrease = previousScrollHeight - currentScrollHeight;
-
-				if (itemBottom < scrollBottom && scrollHeightDecrease + itemBottom > scrollBottom) {
-					// When `focusedItem` is not at the very bottom of the `Scroller` and
-					// `scrollHeightDecrease` caused a scroll.
-					// `bottomOffset` is the distance between `itemBottom` and `scrollBottom`.
-					const bottomOffset = scrollBottom - itemBottom;
-					this.scrollTop -= scrollHeightDecrease - bottomOffset;
-					if (this.scrollTop < 0) {
-						// No negative `scrollTop`
-						this.scrollTop = 0;
-					}
-				} else if (itemBottom === scrollBottom) {
-					// when `focusedItem` is at the very bottom of the `Scroller`
-					this.scrollTop -= scrollHeightDecrease;
-				}
-			}
-			// update `scrollHeight`
-			this.bounds.scrollHeight = currentScrollHeight;
+			this.updateScrollOnFocus();
 		}
 
 		componentWillUnmount () {

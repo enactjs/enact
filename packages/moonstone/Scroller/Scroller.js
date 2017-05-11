@@ -218,6 +218,37 @@ class ScrollerBase extends Component {
 		return this.scrollPos;
 	}
 
+	calculateScrollTop = (focusedItem, scrollTop, previousScrollHeight) => {
+		const
+			{clientHeight, scrollHeight} = this.scrollBounds,
+			scrollHeightDecrease = previousScrollHeight - scrollHeight;
+
+		// Update scrollTop for scrollHeight decrease
+		if (focusedItem && scrollHeightDecrease > 0) {
+			const
+				{top: containerTop} = this.containerRef.getBoundingClientRect(),
+				itemBounds = focusedItem.getBoundingClientRect(),
+				itemBottom = scrollTop + itemBounds.top + itemBounds.height - containerTop,
+				scrollBottom = clientHeight + scrollTop;
+
+			if (itemBottom < scrollBottom && scrollHeightDecrease + itemBottom > scrollBottom) {
+				// When `focusedItem` is not at the very bottom of the `Scroller` and
+				// `scrollHeightDecrease` caused a scroll.
+				// `bottomOffset` is the distance between `itemBottom` and `scrollBottom`.
+				const bottomOffset = scrollBottom - itemBottom;
+				scrollTop -= scrollHeightDecrease - bottomOffset;
+				if (scrollTop < 0) {
+					// No negative `scrollTop`
+					scrollTop = 0;
+				}
+			} else if (itemBottom === scrollBottom) {
+				// when `focusedItem` is at the very bottom of the `Scroller`
+				scrollTop -= scrollHeightDecrease;
+			}
+		}
+		return scrollTop;
+	}
+
 	isVertical = () => (this.props.vertical !== 'hidden')
 
 	isHorizontal = () => (this.props.horizontal !== 'hidden')
