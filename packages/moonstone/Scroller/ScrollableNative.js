@@ -29,7 +29,7 @@ const
 	paginationPageMultiplier = 0.8,
 	epsilon = 1,
 	scrollWheelMultiplierForDeltaPixel = 2,
-	pixelPerLine = 40,
+	pixelPerLine = 39,
 	// spotlight
 	scrollStopWaiting = 500;
 

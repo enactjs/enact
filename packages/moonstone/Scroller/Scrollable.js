@@ -30,7 +30,7 @@ const
 	perf = (typeof window === 'object') ? window.performance : {now: Date.now},
 	holdTime = 50,
 	scrollWheelMultiplierForDeltaPixel = 2,
-	pixelPerLine = 40,
+	pixelPerLine = 39,
 	paginationPageMultiplier = 0.8,
 	epsilon = 1,
 	animationDuration = 1000;
