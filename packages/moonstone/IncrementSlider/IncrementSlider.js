@@ -356,6 +356,8 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						backgroundProgress={backgroundProgress}
 						className={css.slider}
 						disabled={disabled}
+						detachedKnob={detachedKnob}
+						focused={focused}
 						inputRef={inputRef}
 						max={max}
 						min={min}
@@ -376,7 +378,9 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						tooltipSide={tooltipSide}
 						value={value}
 						vertical={vertical}
-					/>
+					>
+						{children}
+					</Slider>
 					<IncrementSliderButton
 						aria-label={incrementAriaLabel}
 						className={css.incrementButton}

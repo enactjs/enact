@@ -200,7 +200,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.normalizeBounds(props);
 
 			const value = this.clamp(props.value);
-
 			this.state = {
 				active: false,
 				focused: false,
@@ -225,7 +224,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if ((min !== this.props.min) || (max !== this.props.max) || (value !== this.state.value)) {
 				this.normalizeBounds(nextProps);
 				const clampedValue = this.clamp(value);
-
 				this.setState({
 					value: clampedValue,
 					valueText: clampedValue
@@ -384,8 +382,8 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				const verticalHint = $L('change a value with up down button');
 				const horizontalHint = $L('change a value with left right button');
 				const active = !this.state.active;
-				let valueText = this.state.value;
 
+				let valueText = this.state.value;
 				if (active) {
 					valueText = vertical ? verticalHint : horizontalHint;
 				}
