@@ -2,8 +2,9 @@
 //
 @import '../styles/variables.less';
 @import '../styles/text.less';
+@import '../styles/skin.less';
 
-.bodyText {
+.applySkins({.bodyText {
 	.moon-body-text();
 	font-size: @moon-body-font-size;
 	text-align: left;
@@ -12,11 +13,11 @@
 		text-align: center;
 	}
 
-	:global(.enact-locale-right-to-left) & {
+	:global(.enact-locale-right-to-left)& {
 		text-align: right;
 
 		&.centered {
 			text-align: center;
 		}
 	}
-}
+}});

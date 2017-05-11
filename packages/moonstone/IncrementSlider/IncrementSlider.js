@@ -140,6 +140,15 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			min: PropTypes.number,
 
 			/**
+			 * When `true`, the slider bar doesn't show a fill and doesn't highlight when spotted
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			noFill: PropTypes.bool,
+
+			/**
 			 * The handler when the knob is activated or deactivated by selecting it via 5-way
 			 *
 			 * @type {Function}
@@ -309,6 +318,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			backgroundProgress: 0,
 			max: 100,
 			min: 0,
+			noFill: false,
 			pressed: false,
 			spotlightDisabled: false,
 			step: 1,
@@ -335,7 +345,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			incrementAriaLabel: ({value}) => (`${value} ${$L('press ok button to increase the value')}`)
 		},
 
-		render: ({active, backgroundProgress, children, decrementAriaLabel, decrementDisabled, decrementIcon, detachedKnob, disabled, focused, incrementAriaLabel, incrementDisabled, incrementIcon, incrementSliderClasses, inputRef, max, min, onActivate, onChange, onDecrement, onIncrement, onSpotlightDisappear, pressed, scrubbing, sliderBarRef, sliderRef, spotlightDisabled, step, tooltip, tooltipAsPercent, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => (
+		render: ({active, backgroundProgress, children, decrementAriaLabel, decrementDisabled, decrementIcon, detachedKnob, disabled, focused, incrementAriaLabel, incrementDisabled, incrementIcon, incrementSliderClasses, inputRef, max, min, noFill, onActivate, onChange, onDecrement, onIncrement, onSpotlightDisappear, pressed, scrubbing, sliderBarRef, sliderRef, spotlightDisabled, step, tooltip, tooltipAsPercent, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => (
 			<div {...rest} className={incrementSliderClasses}>
 				<IncrementSliderButton
 					aria-label={decrementAriaLabel}
@@ -357,6 +367,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 					inputRef={inputRef}
 					max={max}
 					min={min}
+					noFill={noFill}
 					onActivate={onActivate}
 					onChange={onChange}
 					onDecrement={onDecrement}
