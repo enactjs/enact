@@ -809,6 +809,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 
 			// When `scrollHeight` decreased
+			this.updateScrollTop(previousScrollHeight, currentScrollHeight, clientHeight, focusedItem);
+		}
+
+		updateScrollTop (previousScrollHeight, currentScrollHeight, clientHeight, focusedItem) {
 			if (focusedItem && currentScrollHeight < previousScrollHeight) {
 				const
 					{top: containerTop} = this.childRef.containerRef.getBoundingClientRect(),

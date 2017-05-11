@@ -1,4 +1,3 @@
-import Changeable from '@enact/ui/Changeable';
 import $L from '@enact/i18n/$L';
 import {forKey, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
@@ -6,7 +5,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {DateComponentPicker, DateComponentRangePicker} from '../internal/DateComponentPicker';
-import {Expandable, ExpandableItemBase} from '../ExpandableItem';
+import {ExpandableItemBase} from '../ExpandableItem';
 
 import css from './TimePicker.less';
 import {dateComponentPickers} from '../internal/DateComponentPicker/DateComponentPicker.less';
@@ -277,12 +276,5 @@ const TimePickerBase = kind({
 	}
 });
 
-const TimePicker = Expandable(
-	{noPointerMode: true},
-	Changeable(
-		TimePickerBase
-	)
-);
-
-export default TimePicker;
-export {TimePicker};
+export default TimePickerBase;
+export {TimePickerBase};

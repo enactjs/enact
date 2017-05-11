@@ -1,4 +1,3 @@
-import Changeable from '@enact/ui/Changeable';
 import $L from '@enact/i18n/$L';
 import {forKey, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
@@ -6,7 +5,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {DateComponentRangePicker} from '../internal/DateComponentPicker';
-import {Expandable, ExpandableItemBase} from '../ExpandableItem';
+import {ExpandableItemBase} from '../ExpandableItem';
 
 import css from './DatePicker.less';
 import {dateComponentPickers} from '../internal/DateComponentPicker/DateComponentPicker.less';
@@ -246,12 +245,5 @@ const DatePickerBase = kind({
 	}
 });
 
-const DatePicker = Expandable(
-	{noPointerMode: true},
-	Changeable(
-		DatePickerBase
-	)
-);
-
-export default DatePicker;
-export {DatePicker};
+export default DatePickerBase;
+export {DatePickerBase};
