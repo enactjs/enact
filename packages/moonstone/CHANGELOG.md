@@ -10,7 +10,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
-- `moonstone/Slider` prop `noFill` to support a style without the fill
+- `moonstone/Slider` and `moonstone/IncrementSlider` prop `noFill` to support a style without the fill
 - `moonstone/Marquee` property `rtl` to set directionality to right-to-left
 - `moonstone/MoonstoneDecorator` property `skin` to let an app choose its skin: "moonstone" and "moonstone-light" are now available
 - `moonstone/FormCheckboxItem`
