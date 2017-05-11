@@ -22,7 +22,10 @@ import IconButton from '../IconButton';
 import css from './Popup.less';
 
 const isUp = is('up');
-const TransitionContainer = SpotlightContainerDecorator({preserveId: true}, Transition);
+const TransitionContainer = SpotlightContainerDecorator(
+	{enterTo: 'last-focused', preserveId: true},
+	Transition
+);
 
 const getContainerNode = (containerId) => {
 	return document.querySelector(`[data-container-id='${containerId}']`);

@@ -13,7 +13,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Spotlight from '../src/spotlight';
-import {spottableClass} from '../Spottable';
 
 /**
  * The class name to apply to the default component to focus in a container.
@@ -50,7 +49,7 @@ const defaultConfig = {
 	 * @memberof spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator.defaultConfig
 	 * @public
 	 */
-	enterTo: 'last-focused',
+	enterTo: null,
 
 	/**
 	 * Whether the container will preserve the id when it unmounts.
@@ -98,7 +97,7 @@ const defaultConfig = {
 const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const forwardMouseEnter = forward(enterEvent);
 	const forwardMouseLeave = forward(leaveEvent);
-	const {preserveId, ...containerConfig} = config;
+	const {navigableFilter, preserveId, ...containerConfig} = config;
 
 	return class extends React.Component {
 		static displayName = 'SpotlightContainerDecorator';
@@ -159,17 +158,14 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		navigableFilter = (elem) => {
-			let containerId;
-			while (elem && elem !== document && elem.nodeType === 1) {
-				containerId = elem.getAttribute('data-container-id');
-				if (containerId &&
-						containerId !== this.state.id &&
-						elem.getAttribute('data-container-disabled') === 'true') {
-
+			// If the component to which this was applied specified a navigableFilter, run it
+			if (typeof navigableFilter === 'function') {
+				if (navigableFilter(elem, this.props, this.context) === false) {
 					return false;
 				}
-				elem = elem.parentNode;
 			}
+
+			return true;
 		}
 
 		componentWillReceiveProps (nextProps) {
@@ -189,8 +185,10 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillMount () {
-			const selector = '[data-container-id="' + this.state.id + '"]:not([data-container-disabled="true"]) .' + spottableClass,
-				cfg = Object.assign({}, containerConfig, {selector, navigableFilter: this.navigableFilter});
+			const cfg = {
+				...containerConfig,
+				navigableFilter: this.navigableFilter
+			};
 
 			if (this.props.spotlightRestrict) {
 				cfg.restrict = this.props.spotlightRestrict;
