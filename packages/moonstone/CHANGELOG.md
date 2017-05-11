@@ -8,6 +8,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Slider` prop `noFill` to support a style without the fill
 - `moonstone/Marquee` property `rtl` to set directionality to right-to-left
+- `moonstone/MoonstoneDecorator` property `skin` to let an app choose its skin: "moonstone" and "moonstone-light" are now available
 - `moonstone/FormCheckboxItem`
 - `moonstone/FormCheckbox`, a standalone checkbox, to support `moonstone/FormCheckboxItem`
 - `moonstone/Input` props `invalid` and `invalidMessage` to display a tooltip when input value is invalid
@@ -27,6 +28,12 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/styles/fonts.less` to restore the Moonstone Icon font to request the local system font by default. Remember to update your webOS build to get the latest version of the font so you don't see empty boxes for your icons.
 - `moonstone/Picker` and `moonstone/RangePicker` to now use the correct size from Enyo (60px v.s. 84px) for icon buttons
 
+### Changed
+
+- Styling across components to improve support for light skin
+- `moonstone/VideoPlayer` to not disable media button (play/pause)
+- `moonstone/Picker` arrow icon for `joined` picker: small when not spotted, hidden when it reaches the end of the picker
+- `moonstone/Checkbox` and `moonstone/CheckboxItem` to reflect the latest design
 
 ## [1.1.0] - 2017-04-21
 

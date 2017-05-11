@@ -129,7 +129,7 @@ const PopupBase = kind({
 
 	styles: {
 		css,
-		className: 'popup moon-neutral'
+		className: 'popup moonstone-light'
 	},
 
 	computed: {
