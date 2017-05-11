@@ -57,6 +57,15 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			backgroundProgress: PropTypes.number,
 
 			/**
+			 * The custom value or component for the tooltip. If [tooltip]{@link moonstone/Slider.SliderBase#tooltip},
+			 * is `true`, then it will use built-in tooltip with given a string. If `false`, a custom tooltip
+			 * component, which follows the knob, may be used instead.
+			 *
+			 * @type {String|Node}
+			 */
+			children: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+
+			/**
 			 * Assign a custom icon for the decrementer. All strings supported by [Icon]{Icon} are
 			 * supported. Without a custom icon, the default is used, and is automatically changed when
 			 * [vertical]{moonstone/IncrementSlider#vertical} is changed.
@@ -67,6 +76,17 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			decrementIcon: PropTypes.string,
 
 			/**
+			 * The slider can change its behavior to have the knob follow the cursor as it moves
+			 * across the slider, without applying the position. A click or drag behaves the same.
+			 * This is primarily used by media playback. Setting this to `true` enables this behavior.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			detachedKnob: PropTypes.bool,
+
+			/**
 			 * When `true`, the component is shown as disabled and does not generate events
 			 *
 			 * @type {Boolean}
@@ -74,6 +94,14 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * @public
 			 */
 			disabled: PropTypes.bool,
+
+			/**
+			 * When `true`, the tooltip is shown when present
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			focused: PropTypes.bool,
 
 			/**
 			 * Assign a custom icon for the incrementer. All strings supported by [Icon]{Icon} are
@@ -307,7 +335,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			incrementAriaLabel: ({value}) => (`${value} ${$L('press ok button to increase the value')}`)
 		},
 
-		render: ({active, backgroundProgress, decrementAriaLabel, decrementDisabled, decrementIcon, disabled, incrementAriaLabel, incrementDisabled, incrementIcon, incrementSliderClasses, inputRef, max, min, onActivate, onChange, onDecrement, onIncrement, onSpotlightDisappear, pressed, scrubbing, sliderBarRef, sliderRef, spotlightDisabled, step, tooltip, tooltipAsPercent, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => (
+		render: ({active, backgroundProgress, children, decrementAriaLabel, decrementDisabled, decrementIcon, detachedKnob, disabled, focused, incrementAriaLabel, incrementDisabled, incrementIcon, incrementSliderClasses, inputRef, max, min, onActivate, onChange, onDecrement, onIncrement, onSpotlightDisappear, pressed, scrubbing, sliderBarRef, sliderRef, spotlightDisabled, step, tooltip, tooltipAsPercent, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => (
 			<div {...rest} className={incrementSliderClasses}>
 				<IncrementSliderButton
 					aria-label={decrementAriaLabel}
@@ -324,6 +352,8 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 					backgroundProgress={backgroundProgress}
 					className={css.slider}
 					disabled={disabled}
+					detachedKnob={detachedKnob}
+					focused={focused}
 					inputRef={inputRef}
 					max={max}
 					min={min}
@@ -344,7 +374,9 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 					tooltipSide={tooltipSide}
 					value={value}
 					vertical={vertical}
-				/>
+				>
+					{children}
+				</Slider>
 				<IncrementSliderButton
 					aria-label={incrementAriaLabel}
 					className={css.incrementButton}

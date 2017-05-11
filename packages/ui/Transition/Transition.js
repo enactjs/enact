@@ -224,6 +224,14 @@ class Transition extends React.Component {
 		onHide: PropTypes.func,
 
 		/**
+		 * A function to run after transition for showing is finished.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onShow: PropTypes.func,
+
+		/**
 		 * The transition timing function.
 		 * Supported functions are: `'linear'`, `'ease'` and `'ease-in-out'`
 		 *
@@ -321,10 +329,15 @@ class Transition extends React.Component {
 		});
 	})
 
-	hideDidFinish = (ev) => {
+	handleTransitionEnd = (ev) => {
 		forwardTransitionEnd(ev, this.props);
-		if (!this.props.visible && this.props.onHide) {
-			this.props.onHide();
+
+		if (ev.target === this.childNode) {
+			if (!this.props.visible && this.props.onHide) {
+				this.props.onHide();
+			} else if (this.props.visible && this.props.onShow) {
+				this.props.onShow();
+			}
 		}
 	}
 
@@ -347,6 +360,7 @@ class Transition extends React.Component {
 	render () {
 		let {visible, ...props} = this.props;
 		delete props.onHide;
+		delete props.onShow;
 
 		switch (this.state.renderState) {
 			// If we are deferring children, don't render any
@@ -365,7 +379,7 @@ class Transition extends React.Component {
 					childRef={this.childRef}
 					visible={visible}
 					clipHeight={this.state.initialHeight}
-					onTransitionEnd={this.hideDidFinish}
+					onTransitionEnd={this.handleTransitionEnd}
 				/>
 			);
 		}
