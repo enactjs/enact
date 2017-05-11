@@ -4,8 +4,14 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Deprecated
+
+- `spotlight/SpotlightRootDecorator.spotlightRootContainerName` to be removed in 2.0.0
+- `moonstone/Scroller.Scrollable` option `indexToFocus` in `scrollTo` method to be removed in 2.0.0
+
 ### Added
 
+- `moonstone/Scroller.Scrollable` option `focus` in `scrollTo` method
 - `moonstone/VideoPlayer` space allotment on both sides of the playback controls to support 3 buttons; consequently the "more" controls area has shrunk by the same amount
 - `moonstone/Slider` prop `noFill` to support a style without the fill
 - `moonstone/Marquee` property `rtl` to set directionality to right-to-left
@@ -21,7 +27,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
-- `moonstone/Scroller.Scrollable` to add `focus` option and remove `indexToFocus` in `scrollTo` method
 - `moonstone/VideoPlayer` to not disable media button (play/pause)
 - `moonstone/Picker` arrow icon for `joined` picker: small when not spotted, hidden when it reaches the end of the picker
 - `moonstone/Checkbox` and `moonstone/CheckboxItem` to reflect the latest design
