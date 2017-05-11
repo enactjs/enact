@@ -198,18 +198,18 @@ class ScrollerBase extends Component {
 				// calculation based on client position
 				newItemLeft = this.containerRef.scrollLeft + (itemLeft - containerLeft);
 
-			if (this.context.rtl && itemLeft > clientWidth) {
+			if (this.context.rtl && newItemLeft > clientWidth) {
 				// For RTL, and if the `focusedItem` is bigger than `this.scrollBounds.clientWidth`, keep
 				// the scroller to the right.
-				this.scrollPos.left -= itemLeft;
-			} else if (itemLeft + itemWidth > (clientWidth + currentScrollLeft) && itemWidth < clientWidth) {
+				this.scrollPos.left -= newItemLeft;
+			} else if (newItemLeft + itemWidth > (clientWidth + currentScrollLeft) && itemWidth < clientWidth) {
 				// If focus is moved to an element outside of view area (to the right), scroller will move
 				// to the right just enough to show the current `focusedItem`. This does not apply to
 				// `focusedItem` that has a width that is bigger than `this.scrollBounds.clientWidth`.
-				this.scrollPos.left += rtlDirection * ((itemLeft + itemWidth) - (clientWidth + currentScrollLeft));
-			} else if (itemLeft < currentScrollLeft) {
+				this.scrollPos.left += rtlDirection * ((newItemLeft + itemWidth) - (clientWidth + currentScrollLeft));
+			} else if (newItemLeft < currentScrollLeft) {
 				// If focus is outside of the view area to the left, move scroller to the left accordingly.
-				this.scrollPos.left += rtlDirection * (itemLeft - currentScrollLeft);
+				this.scrollPos.left += rtlDirection * (newItemLeft - currentScrollLeft);
 			}
 		}
 
