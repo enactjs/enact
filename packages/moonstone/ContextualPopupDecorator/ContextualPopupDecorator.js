@@ -39,7 +39,7 @@ const defaultConfig = {
 	noSkin: false
 };
 
-const ContextualPopupContainer = SpotlightContainerDecorator({preserveId: true}, ContextualPopup);
+const ContextualPopupContainer = SpotlightContainerDecorator({enterTo: 'last-focused', preserveId: true}, ContextualPopup);
 
 /**
  * {@link moonstone/ContextualPopupDecorator.ContextualPopupDecorator} is a Higher-order Component

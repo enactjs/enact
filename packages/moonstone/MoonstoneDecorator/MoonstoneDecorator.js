@@ -11,6 +11,7 @@ import React from 'react';
 import {ResolutionDecorator} from '@enact/ui/resolution';
 import {FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
 import SpotlightRootDecorator from '@enact/spotlight/SpotlightRootDecorator';
+import Skinnable from '@enact/ui/Skinnable';
 
 import Skinnable from '../Skinnable';
 

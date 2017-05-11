@@ -181,7 +181,4 @@ const ContextualPopupBase = kind({
 });
 
 export default ContextualPopupBase;
-export {
-	ContextualPopupBase as ContextualPopup,
-	ContextualPopupBase
-};
+export {ContextualPopupBase as ContextualPopup, ContextualPopupBase};
