@@ -51,14 +51,14 @@ const dataIndexAttribute = 'data-index';
 
 const ScrollableSpotlightContainer = SpotlightContainerDecorator(
 	{
-		navigableFilter: (elem, {noFocusScrollbar}) => {
-			if (noFocusScrollbar && elem.classList.contains(scrollbarCss.scrollButton)) {
+		navigableFilter: (elem, {focusableScrollbar}) => {
+			if (!focusableScrollbar && elem.classList.contains(scrollbarCss.scrollButton)) {
 				return false;
 			}
 		}
 	},
 	({containerRef, ...rest}) => {
-		delete rest.noFocusScrollbar;
+		delete rest.focusableScrollbar;
 
 		return (
 			<div ref={containerRef} {...rest} />
@@ -109,6 +109,15 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			cbScrollTo: PropTypes.func,
 
 			/**
+			 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
+			 * not move focus to the scrollbar controls.
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			focusableScrollbar: PropTypes.bool,
+
+			/**
 			 * Specifies how to show horizontal scrollbar. Acceptable values are `'auto'`,
 			 * `'visible'`, and `'hidden'`.
 			 *
@@ -117,14 +126,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			 * @public
 			 */
 			horizontalScrollbar: PropTypes.oneOf(['auto', 'visible', 'hidden']),
-
-			/**
-			 * Prevents navigating to scroll buttons via 5-way
-			 *
-			 * @type {Boolean}
-			 * @public
-			 */
-			noFocusScrollbar: PropTypes.bool,
 
 			/**
 			 * Called when scrolling
@@ -886,7 +887,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		render () {
 			const
 				props = Object.assign({}, this.props),
-				{className, noFocusScrollbar, style} = this.props,
+				{className, focusableScrollbar, style} = this.props,
 				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
 				vscrollbar = this.getVerticalScrollbar(isHorizontalScrollbarVisible, isVerticalScrollbarVisible),
 				hscrollbar = this.getHorizontalScrollbar(isHorizontalScrollbarVisible, isVerticalScrollbarVisible),
@@ -904,7 +905,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			delete props.onScroll;
 			delete props.onScrollStart;
 			delete props.onScrollStop;
-			delete props.noFocusScrollbar;
+			delete props.focusableScrollbar;
 			delete props.style;
 			delete props.verticalScrollbar;
 
@@ -912,7 +913,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				<ScrollableSpotlightContainer
 					className={scrollableClasses}
 					containerRef={this.initContainerRef}
-					noFocusScrollbar={noFocusScrollbar}
+					focusableScrollbar={focusableScrollbar}
 					style={style}
 				>
 					{vscrollbar}

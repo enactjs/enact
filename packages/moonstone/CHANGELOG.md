@@ -11,6 +11,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Marquee` property `rtl` to set directionality to right-to-left
 - `moonstone/FormCheckboxItem`
 - `moonstone/FormCheckbox`, a standalone checkbox, to support `moonstone/FormCheckboxItem`
+- `moonstone/Scroller.Scrollable` property `spottableScrollbar`
 
 ### Fixed
 
@@ -24,6 +25,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` to not disable media button (play/pause)
 - `moonstone/Picker` arrow icon for `joined` picker: small when not spotted, hidden when it reaches the end of the picker
 - `moonstone/Checkbox` and `moonstone/CheckboxItem` to reflect the latest design
+- `moonstone/Scroller.Scrollable` so that paging controls are not spottable by default with 5-way
 
 ## [1.1.0] - 2017-04-21
 
