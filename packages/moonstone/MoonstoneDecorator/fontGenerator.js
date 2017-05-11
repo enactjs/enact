@@ -1,11 +1,10 @@
 /*
-* This module loads Moonstone specific fonts. It exports a primary function,
-* [fontGenerator]{@link moonstone/MoonstoneDecorator.fontGenerator}, and several utility functions
-* to help with font loading scenarios of components:
-* [isFontReady]{@link moonstone/MoonstoneDecorator.fontGenerator.isFontReady} and
-* [onFontsLoaded]{@link moonstone/MoonstoneDecorator.fontGenerator.onFontsLoaded}
-* The default export, `fontGenerator`, is not intended to be used directly by external developers.
-*/
+ * This module loads Moonstone specific fonts. It exports a primary function,
+ * [fontGenerator]{@link moonstone/MoonstoneDecorator.fontGenerator}, and a utility function
+ * to help with font loading scenarios of components:
+ * [onFontsLoaded]{@link moonstone/MoonstoneDecorator.fontGenerator.onFontsLoaded}.
+ * The default export, `fontGenerator`, is not intended to be used directly by external developers.
+ */
 
 import ilib from '@enact/i18n';
 import Locale from '@enact/i18n/ilib/lib/Locale';
@@ -19,9 +18,10 @@ let previousLocale = null,
 	fontsLoaded = false;
 
 /**
- * The supplied callback method will fire when the generated fonts have loaded. If the callback is
- * requested after the fonts have already been loaded, this will fire immediately. This should,
- * however, only be written as an async function to avoid any issues.
+ * The supplied callback will fire after the loading process for generated fonts is complete. The
+ * font loading process is considered complete if a font either loads or is not available for
+ * loading. If the callback is requested after the fonts have already been loaded, this will fire
+ * immediately, so do not count on this to fire asynchronously.
  *
  * @param  {Function} fn Callback function to run when fonts have loaded
  * @public
@@ -35,46 +35,46 @@ const onFontsLoaded = (fn) => {
 };
 
 /**
-* `fontGenerator` is the locale-specific font generator, allowing any locale to have its own custom
-* font. Each locale-font from the configuration block (defined in this file) is generated at
-* run-time. If the locale you're currently in is in the locale-font list an additional
-* `@font-face` rule will be generated that will override the standard "Moonstone LG Display"
-* font.
-*
-* In addition to the standard override-font being generated, named region-specific fonts are also
-* generated. This lets you incorporate language specific fonts when you're outside of one of those
-* regions; useful in a language list context where you want the name of each language to be
-* represented by that language's designated font.
-*
-* Below is example genarated-output of the Urdu ("ur") locale-font.
-*
-* ```css
-* &#64;font-face {
-* 	font-family: 'Moonstone LG Display ur';
-* 	font-weight: 500;
-* 	src: local('LG Display_Urdu');
-* 	unicode-range: U+0600-U+06FF, U+FE70-U+FEFE, U+FB50-U+FDFF;
-* }
-* &#64;font-face {
-* 	font-family: 'Moonstone LG Display ur Bold';
-* 	font-weight: 700;
-* 	src: local('LG Display_Urdu');
-* 	unicode-range: U+0600-U+06FF, U+FE70-U+FEFE, U+FB50-U+FDFF;
-* }
-* &#64;font-face {
-* 	font-family: 'Moonstone LG Display ur Light';
-* 	font-weight: 300;
-* 	src: local('LG Display_Urdu');
-* 	unicode-range: U+0600-U+06FF, U+FE70-U+FEFE, U+FB50-U+FDFF;
-* }
-* ```
-*
-* @name fontGenerator
-* @memberof moonstone/MoonstoneDecorator
-* @param {String} [locale] Locale string defaulting to the current locale
-* @returns {undefined}
-* @private
-*/
+ * `fontGenerator` is the locale-specific font generator, allowing any locale to have its own custom
+ * font. Each locale-font from the configuration block (defined in this file) is generated at
+ * run-time. If the locale you're currently in is in the locale-font list an additional
+ * `@font-face` rule will be generated that will override the standard "Moonstone LG Display"
+ * font.
+ *
+ * In addition to the standard override-font being generated, named region-specific fonts are also
+ * generated. This lets you incorporate language specific fonts when you're outside of one of those
+ * regions; useful in a language list context where you want the name of each language to be
+ * represented by that language's designated font.
+ *
+ * Below is example genarated-output of the Urdu ("ur") locale-font.
+ *
+ * ```css
+ * &#64;font-face {
+ * 	font-family: 'Moonstone LG Display ur';
+ * 	font-weight: 500;
+ * 	src: local('LG Display_Urdu');
+ * 	unicode-range: U+0600-U+06FF, U+FE70-U+FEFE, U+FB50-U+FDFF;
+ * }
+ * &#64;font-face {
+ * 	font-family: 'Moonstone LG Display ur Bold';
+ * 	font-weight: 700;
+ * 	src: local('LG Display_Urdu');
+ * 	unicode-range: U+0600-U+06FF, U+FE70-U+FEFE, U+FB50-U+FDFF;
+ * }
+ * &#64;font-face {
+ * 	font-family: 'Moonstone LG Display ur Light';
+ * 	font-weight: 300;
+ * 	src: local('LG Display_Urdu');
+ * 	unicode-range: U+0600-U+06FF, U+FE70-U+FEFE, U+FB50-U+FDFF;
+ * }
+ * ```
+ *
+ * @name fontGenerator
+ * @memberof moonstone/MoonstoneDecorator
+ * @param {String} [locale] Locale string defaulting to the current locale
+ * @returns {undefined}
+ * @private
+ */
 function fontGenerator (locale = ilib.getLocale()) {
 	// If document object is unavailable, bail out.
 	if (typeof document === 'undefined') return;
@@ -254,14 +254,15 @@ function fontGenerator (locale = ilib.getLocale()) {
 }
 
 /**
- * Check to see if the supplied node is assigned to use a font which has loaded.
+ * Check to see if the supplied node is assigned to use a font which has been fully loaded by the
+ * browser.
  *
  * NOTE: This feature is under review as a work in progress. Use with caution as the API (inputs
  * outputs) may change in the future, as well as its capabilities.
  *
  * @param  {Node}  node The element to check
  *
- * @return {Boolean}      True for loaded, False for not loaded.
+ * @return {Boolean}      `true` for loaded, `false` for not loaded
  * @private
  */
 function isFontReady (node) {
