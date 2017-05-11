@@ -457,7 +457,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					onBlur={this.handleBlur}
 					onChange={this.handleChange}
 					onClick={this.handleClick}
-					onFocus={this.handleFocus}
 					onDecrement={this.handleDecrement}
 					onFocus={this.handleFocus}
 					onIncrement={this.handleIncrement}
