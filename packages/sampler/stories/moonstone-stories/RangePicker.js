@@ -2,7 +2,7 @@ import RangePicker, {RangePickerBase} from '@enact/moonstone/RangePicker';
 import {decrementIcons, incrementIcons} from './icons';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, number, select} from '@kadira/storybook-addon-knobs';
+import {boolean, number, select} from '@kadira/storybook-addon-knobs';
 
 import nullify from '../../src/utils/nullify.js';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
@@ -23,7 +23,6 @@ const parseIntOrNullify = (v) => {
 };
 
 storiesOf('RangePicker')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'Basic usage of RangePicker',

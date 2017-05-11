@@ -27,9 +27,13 @@ import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDeco
 import React from 'react';
 import PropTypes from 'prop-types';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
+import {boolean, select} from '@kadira/storybook-addon-knobs';
 
-const Container = SpotlightContainerDecorator('div');
+const Container = SpotlightContainerDecorator(
+	{enterTo: 'last-focused'},
+	'div'
+);
+
 const style = {
 	container: {
 		width: '300px',
@@ -176,7 +180,6 @@ class PopupFocusTest extends React.Component {
 }
 
 storiesOf('Spotlight')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		'Multiple Buttons',
 		() => (

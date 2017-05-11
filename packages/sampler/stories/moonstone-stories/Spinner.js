@@ -1,12 +1,11 @@
 import Spinner from '@enact/moonstone/Spinner';
 import React from 'react';
 import {action, storiesOf} from '@kadira/storybook';
-import {boolean, select, text, withKnobs} from '@kadira/storybook-addon-knobs';
+import {boolean, select, text} from '@kadira/storybook-addon-knobs';
 
 import nullify from '../../src/utils/nullify.js';
 
 storiesOf('Spinner')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'Basic usage of Spinner',
