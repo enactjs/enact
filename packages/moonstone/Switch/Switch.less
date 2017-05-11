@@ -1,10 +1,10 @@
-// Switch
+// Switch.less
 //
 @import '../styles/mixins.less';
 @import '../styles/variables.less';
-@import '../styles/colors.less';
+@import '../styles/skin.less';
 
-.switch {
+.applySkins({.switch {
 	border-radius: (@moon-toggleswitch-height / 2);
 	width: @moon-toggleswitch-width;
 	height: @moon-toggleswitch-height;
@@ -30,9 +30,6 @@
 		margin: 0;
 		vertical-align: top;	// The TV incorrectly positions the icon too low without this
 
-		:global(.spottable):focus & {
-			color: @moon-checkbox-toggle-switch-color;
-		}
 	}
 	&.selected {
 		background-color: @moon-checkbox-toggle-switch-selected-bg-color;
@@ -41,9 +38,9 @@
 			left: (@moon-toggleswitch-width - @moon-toggleswitch-height);
 			color: @moon-checkbox-toggle-switch-selected-color;
 
-			:global(.spottable):focus & {
-				color: @moon-checkbox-toggle-switch-selected-color;
-			}
+			// :global(.spottable):focus & {
+			// 	color: @moon-checkbox-toggle-switch-selected-color;
+			// }
 		}
 	}
 	&[disabled] {
@@ -64,8 +61,15 @@
 	}
 }
 
-// RIGBY NOTE: This _may_ be deprecated? We'll see later on.
-.moon-toggle-item.spotlight .switch .icon {
-	// to override the ghost checkmark opacity rules, since this inherits its style from moon-checkbox
-	opacity: 1;
+// Keep the switch handle (the icon) a constant color regardless of focus state.
+:global(.spottable):focus {
+	.switch {
+		.icon {
+			color: @moon-checkbox-toggle-switch-color;
+		}
+		&.selected .icon {
+			color: @moon-checkbox-toggle-switch-selected-color;
+		}
+	}
 }
+});

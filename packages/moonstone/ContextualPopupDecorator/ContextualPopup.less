@@ -1,11 +1,13 @@
-@import '../styles/colors.less';
+// ContextualPopup.less
+//
 @import '../styles/variables.less';
 @import '../styles/mixins.less';
 @import '../styles/text.less';
+@import '../styles/skin.less';
 
-.contextualPopup {
-	position: absolute;
+.applySkins({&.contextualPopup {
 	.moon-body-text();
+	position: absolute;
 
 	.container {
 		position: absolute;
@@ -18,7 +20,7 @@
 		-webkit-background-clip: padding-box;
 		-moz-background-clip: padding-box;
 
-		background-color: @moon-neutral-bg-color;
+		background-color: @moon-contextual-popup-bg-color;
 
 		.closeButton {
 			position: absolute;
@@ -29,14 +31,6 @@
 
 		&.reserveClose {
 			.padding-start-end(@moon-contextual-popup-padding, @moon-icon-button-small-size + @moon-spotlight-outset);
-		}
-
-		:global(.enact-locale-right-to-left) & {
-			direction: rtl;
-			.closeButton {
-				right: auto;
-				left: @moon-spotlight-outset;
-			}
 		}
 	}
 
@@ -50,7 +44,7 @@
 		}
 
 		.arrowFill {
-			fill: @moon-neutral-bg-color;
+			fill: @moon-contextual-popup-bg-color;
 		}
 
 		&.up {
@@ -64,3 +58,14 @@
 		}
 	}
 }
+
+:global(.enact-locale-right-to-left) .contextualPopup {
+	.container {
+		direction: rtl;
+
+		.closeButton {
+			right: auto;
+			left: @moon-spotlight-outset;
+		}
+	}
+}});
