@@ -1,13 +1,14 @@
-// Divider
+// Divider.less
 //
-@import '../styles/rules.less';
 @import '../styles/variables.less';
 @import '../styles/text.less';
+@import '../styles/skin.less';
 
-.divider {
-	.moon-divider-border();
+.applySkins({.divider {
 	.moon-divider-text();
 
+	color: @moon-divider-text-color;
+	border-bottom: @moon-divider-border-width solid @moon-divider-border-color;
 	margin: 0 @moon-spotlight-outset (1.5 * @moon-spotlight-outset) @moon-spotlight-outset;
 	min-height: (1.5 * @moon-spotlight-outset);
 	line-height: 1.6em;
@@ -28,8 +29,4 @@
 		margin-bottom: (@moon-spotlight-outset * 3);
 		min-height: (@moon-spotlight-outset * 3);
 	}
-
-	.moon-neutral & {
-		.moon-neutral-divider-border();
-	}
-}
+}});
