@@ -6,7 +6,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Deprecated
 
-- `spotlight/SpotlightRootDecorator.spotlightRootContainerName` to be removed in 2.0.0
 - `moonstone/Scroller.Scrollable` option `indexToFocus` in `scrollTo` method to be removed in 2.0.0
 
 ### Added
