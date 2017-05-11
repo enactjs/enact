@@ -2,6 +2,7 @@
  * Exports the {@link ui/Skinnable.Skinnable} Higher-order Component (HOC).
  *
  * @module ui/Skinnable
+ * @private
  */
 
 import hoc from '@enact/core/hoc';
@@ -13,7 +14,7 @@ import React from 'react';
  *
  * @memberof ui/Skinnable.Skinnable
  * @hocconfig
- * @public
+ * @private
  */
 const defaultConfig = {
 	/**
@@ -53,7 +54,7 @@ const defaultConfig = {
  * @class Skinnable
  * @memberof ui/Skinnable
  * @hoc
- * @public
+ * @private
  */
 const Skinnable = hoc(defaultConfig, (config, Wrapped) => kind({
 	name: 'Skinnable',
