@@ -1,8 +1,10 @@
-@import '../styles/colors.less';
+// Slider.less
+//
 @import '../styles/variables.less';
 @import '../styles/text.less';
+@import '../styles/skin.less';
 
-.slider {
+.applySkins({.slider {
 	position: relative;
 	margin: 0 @moon-spotlight-outset;
 	height: 240px;	// Vertical sizing here. Being here instead of in .vertical requires less precedence when overriding the style from app-code.
@@ -61,10 +63,6 @@
 				border-radius: (@moon-slider-knob-height-large / 2);
 			})
 		}
-	}
-
-	.tooltip {
-		display: none;
 	}
 
 	.input {
@@ -178,9 +176,6 @@
 			.knob::before {
 				background-color: @moon-slider-spotlight-knob-color;
 			}
-			.tooltip {
-				display: block;
-			}
 		}
 
 		&.pressed,
@@ -226,4 +221,4 @@
 			}
 		}
 	}
-}
+}});
