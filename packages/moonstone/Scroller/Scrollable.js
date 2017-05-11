@@ -83,8 +83,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			 * - {node} - You can set a node to scroll
 			 * - {animate} - When `true`, scroll occurs with animation.
 			 *   Set it to `false`, if you want scrolling without animation.
-			 * - {indexToFocus} - Set index to focus in VirtualList. It will be deprecated and removed in a future update.
-			 *   Use `focus` insead.
+			 * - {indexToFocus} - Deprecated: Use `focus` insead.
 			 * - {focus} - Set it `true`, if you want the item to be focused after scroll.
 			 *   This option is only valid when you scroll by `index` or `node`.
 			 *
@@ -674,7 +673,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 				if (typeof opt.indexToFocus === 'number') {
 					indexToFocus = opt.indexToFocus;
-					deprecate({name: 'indexToFocus', since: '1.0.0', message: 'Use `focus` instead', until: '2.0.0'});
+					deprecate({name: 'indexToFocus', since: '1.2.0', message: 'Use `focus` instead', until: '2.0.0'});
 				}
 
 				if (left !== null || top !== null) {
