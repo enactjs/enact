@@ -44,6 +44,7 @@ const defaultConfig = {
 const forwardBlur = forward('onBlur');
 const forwardChange = forward('onChange');
 const forwardClick = forward('onClick');
+const forwardFocus = forward('onFocus');
 const forwardMouseMove = forward('onMouseMove');
 const forwardMouseLeave  = forward('onMouseLeave');
 
@@ -211,7 +212,9 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			this.state = {
 				active: false,
-				value: value
+				focused: false,
+				value: value,
+				valueText: value
 			};
 
 			if (__DEV__) {
@@ -408,6 +411,10 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.knobPosition = null;
 				this.updateUI();
 			}
+
+			this.setState({
+				focused: false
+			});
 		}
 
 		handleIncrement = () => {
@@ -434,10 +441,12 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		handleFocus = () => {
-			const {['aria-label']: label} = this.props;
+		handleFocus = (ev) => {
+			forwardFocus(ev, this.props);
 
-			this.setState({'valueText': `${label} ${this.state.value}`});
+			this.setState({
+				focused: true
+			});
 		}
 
 		render () {
@@ -452,6 +461,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					active={this.state.active}
 					aria-disabled={this.props.disabled}
 					aria-valuetext={this.state.valueText}
+					focused={this.state.focused}
 					inputRef={this.getInputNode}
 					onActivate={this.handleActivate}
 					onBlur={this.handleBlur}
@@ -459,6 +469,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					onClick={this.handleClick}
 					onFocus={this.handleFocus}
 					onDecrement={this.handleDecrement}
+					onFocus={this.handleFocus}
 					onIncrement={this.handleIncrement}
 					onMouseLeave={this.props.detachedKnob ? this.handleMouseLeave : null}
 					onMouseMove={this.props.detachedKnob ? this.handleMouseMove : null}

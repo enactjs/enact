@@ -28,7 +28,11 @@ import PropTypes from 'prop-types';
 import {storiesOf, action} from '@kadira/storybook';
 import {boolean, select} from '@kadira/storybook-addon-knobs';
 
-const Container = SpotlightContainerDecorator('div');
+const Container = SpotlightContainerDecorator(
+	{enterTo: 'last-focused'},
+	'div'
+);
+
 const style = {
 	container: {
 		width: '300px',
