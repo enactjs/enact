@@ -5,6 +5,7 @@
  *
  * @module moonstone/TimePicker
  */
+import {Expandable} from '../ExpandableItem';
 import DateFactory from '@enact/i18n/ilib/lib/DateFactory';
 import DateFmt from '@enact/i18n/ilib/lib/DateFmt';
 import LocaleInfo from '@enact/i18n/ilib/lib/LocaleInfo';
@@ -202,7 +203,12 @@ const TimePicker = DateTimeDecorator({
 			order
 		};
 	}
-}, TimePickerBase);
+},
+	Expandable(
+		{noPointerMode: true},
+			TimePickerBase
+	)
+);
 
 
 export default TimePicker;
