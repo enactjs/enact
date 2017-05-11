@@ -1,10 +1,10 @@
 // Icon.less
 //
-@import '../styles/colors.less';
 @import '../styles/mixins.less';
 @import '../styles/variables.less';
+@import '../styles/skin.less';
 
-.icon {
+.applySkins({.icon {
 	width: @moon-icon-size;
 	height: @moon-icon-size;
 	background-position: center -((@moon-icon-sprite-size - @moon-icon-size) / 2);
@@ -13,13 +13,13 @@
 	display: inline-block;
 	vertical-align: middle;
 	margin: @moon-icon-margin;
-	font-family: "Moonstone", "Moonstone Icons";
+	font-family: "Moonstone Icons";
 	font-size: (@moon-icon-size * 2);
 	font-weight: normal;
 	line-height: @moon-icon-size;
 	text-align: center;
 	position: relative;
-	color: @moon-icon-text-color;
+	color: @moon-icon-color;
 
 	.font-kerning(none);
 	// .moon-taparea(@moon-icon-size);
@@ -46,28 +46,24 @@
 		}
 	}
 
-	.moon-neutral & {
-		color: inherit;
-	}
-
 	&[disabled] {
 		cursor: default;
 	}
+}
 
-	:global(.spottable):focus :local(&) {
-		color: @moon-spotlight-text-color;
-		background-position: center -(@moon-icon-sprite-size + ((@moon-icon-sprite-size - @moon-icon-size) / 2));
+:global(.spottable):focus .icon {
+	color: @moon-spotlight-text-color;
+	background-position: center -(@moon-icon-sprite-size + ((@moon-icon-sprite-size - @moon-icon-size) / 2));
 
-		&.small {
-			background-position: center -(@moon-icon-sprite-small-size + ((@moon-icon-sprite-small-size - @moon-icon-small-size) / 2));
-		}
+	&.small {
+		background-position: center -(@moon-icon-sprite-small-size + ((@moon-icon-sprite-small-size - @moon-icon-small-size) / 2));
 	}
 }
 
 [data-container-muted='true'] {
 	:global(.spottable):focus {
 		.icon {
-			color: @moon-icon-text-color;
+			color: @moon-spotlight-text-color;
 		}
 	}
-}
+}});

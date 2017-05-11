@@ -136,7 +136,7 @@ const ContextualPopupBase = kind({
 
 	styles: {
 		css,
-		className: 'contextualPopup container moon-neutral'
+		className: 'container'
 	},
 
 	computed: {
@@ -163,7 +163,7 @@ const ContextualPopupBase = kind({
 		delete rest.showCloseButton;
 
 		return (
-			<div aria-live="off" role="alert" {...rest} className={css.contextualPopup}>
+			<div aria-live="off" role="alert" {...rest} className={css.contextualPopup + ' moonstone-light'}>
 				<div className={className} style={containerPosition} ref={containerRef}>
 					{children}
 					{closeButton}
