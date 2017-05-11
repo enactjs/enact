@@ -1,6 +1,6 @@
 /*
- * This module loads Moonstone specific fonts. It exports a primary function,
- * [fontGenerator]{@link moonstone/MoonstoneDecorator.fontGenerator}, and a utility function
+ * This module loads Moonstone-specific fonts. It exports a primary function,
+ * [fontGenerator]{@link moonstone/MoonstoneDecorator.fontGenerator}, utility functions
  * to help with font loading scenarios of components:
  * [onFontsLoaded]{@link moonstone/MoonstoneDecorator.fontGenerator.onFontsLoaded}.
  * The default export, `fontGenerator`, is not intended to be used directly by external developers.
@@ -18,13 +18,13 @@ let previousLocale = null,
 	fontsLoaded = false;
 
 /**
- * The supplied callback will fire after the loading process for generated fonts is complete. The
- * font loading process is considered complete if a font either loads or is not available for
- * loading. If the callback is requested after the fonts have already been loaded, this will fire
+ * The supplied callback will fire after the loading process for all generated fonts is complete.
+ * This does not guarantee that each font has successfully loaded; some fonts may have failed to
+ * load.  If the callback is requested after the fonts have already been loaded, this will fire
  * immediately, so do not count on this to fire asynchronously.
  *
  * @param  {Function} fn Callback function to run when fonts have loaded
- * @public
+ * @private
  */
 const onFontsLoaded = (fn) => {
 	if (fontsLoaded) {

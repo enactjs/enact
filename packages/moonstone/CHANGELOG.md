@@ -11,7 +11,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/FormCheckboxItem`
 - `moonstone/FormCheckbox`, a standalone checkbox, to support `moonstone/FormCheckboxItem`
 - `moonstone/Input` props `invalid` and `invalidMessage` to display a tooltip when input value is invalid
-- `moonstone/MoonstoneDecorator/fontGenerator` export `onFontsLoaded`, which invokes a callback when fonts have loaded
 
 ### Changed
 
