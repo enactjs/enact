@@ -235,5 +235,41 @@ const Scroller = SpotlightContainerDecorator(
 	)
 );
 
+// Docs for Scroller
+/**
+ * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
+ * not move focus to the scrollbar controls.
+ *
+ * @name focusableScrollbar
+ * @type {Boolean}
+ * @memberof moonstone/Scroller.Scroller
+ * @instance
+ * @public
+ */
+
+/**
+ * Specifies how to horizontally scroll. Acceptable values are `'auto'`, `'default'` ,
+ * `'hidden'`, and `'scroll'`.
+ *
+ * @name horizontal
+ * @type {String}
+ * @default 'auto'
+ * @memberof moonstone/Scroller.Scroller
+ * @instance
+ * @public
+ */
+
+/**
+ * Specifies how to vertically scroll. Acceptable values are `'auto'`, `'auto'` ,
+ * `'hidden'`, and `'scroll'`.
+ *
+ * @name vertical
+ * @type {String}
+ * @default 'auto'
+ * @memberof moonstone/Scroller.Scroller
+ * @instance
+ * @public
+ */
+
 export default Scroller;
 export {Scroller, ScrollerBase};
