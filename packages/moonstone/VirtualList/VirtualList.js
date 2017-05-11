@@ -93,7 +93,10 @@ const VirtualList = kind({
 		 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
 		 * not move focus to the scrollbar controls.
 		 *
+		 * @name focusableScrollbar
 		 * @type {Boolean}
+		 * @memberof moonstone/VirtualList.VirtualList
+		 * @instance
 		 * @public
 		 */
 
@@ -191,7 +194,10 @@ const VirtualGridList = kind({
 		 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
 		 * not move focus to the scrollbar controls.
 		 *
+		 * @name focusableScrollbar
 		 * @type {Boolean}
+		 * @memberof moonstone/VirtualList.VirtualGridList
+		 * @instance
 		 * @public
 		 */
 
