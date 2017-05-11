@@ -256,10 +256,13 @@ function fontGenerator (locale = ilib.getLocale()) {
 /**
  * Check to see if the supplied node is assigned to use a font which has loaded.
  *
+ * NOTE: This feature is under review as a work in progress. Use with caution as the API (inputs
+ * outputs) may change in the future, as well as its capabilities.
+ *
  * @param  {Node}  node The element to check
  *
  * @return {Boolean}      True for loaded, False for not loaded.
- * @public
+ * @private
  */
 function isFontReady (node) {
 	if (node) {
@@ -267,5 +270,6 @@ function isFontReady (node) {
 	}
 	return false;
 }
+
 export default fontGenerator;
 export {fontGenerator, isFontReady, onFontsLoaded};
