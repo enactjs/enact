@@ -65,15 +65,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static propTypes = /** @lends moonstone/internal/SliderDecorator.SliderDecorator.prototype */{
 			/**
-			 * When `aria-label` is set, it will be used to provide an accessibility label for
-			 * the slider. This label will be used to read out additional hint message before slider.
-			 *
-			 * @type {String}
-			 * @public
-			 */
-			'aria-label': PropTypes.string,
-
-			/**
 			 * Background progress, as a proportion between `0` and `1`.
 			 *
 			 * @type {Number}
@@ -380,7 +371,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleActivate = () => {
-			const {['aria-label']: label, detachedKnob, disabled, vertical} = this.props;
+			const {detachedKnob, disabled, vertical} = this.props;
 
 			if (disabled) return;
 
@@ -393,7 +384,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				const verticalHint = $L('change a value with up down button');
 				const horizontalHint = $L('change a value with left right button');
 				const active = !this.state.active;
-				let valueText = `${label} ${this.state.value}`;
+				let valueText = this.state.value;
 
 				if (active) {
 					valueText = vertical ? verticalHint : horizontalHint;
@@ -457,7 +448,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				<Wrapped
 					role="slider"
 					{...props}
-					aria-label={this.props['aria-label']}
 					active={this.state.active}
 					aria-disabled={this.props.disabled}
 					aria-valuetext={this.state.valueText}
