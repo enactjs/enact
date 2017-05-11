@@ -20,7 +20,7 @@ import IncrementSliderButton from './IncrementSliderButton';
 import componentCss from './IncrementSlider.less';
 
 const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
-	const Slider = Spottable(SliderBaseFactory({css}));
+	const Slider = Pressable(Spottable(SliderBaseFactory({css})));
 
 	/**
 	 * {@link moonstone/IncrementSlider.IncrementSliderBase} is a stateless Slider
@@ -185,15 +185,6 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			onSpotlightDisappear: PropTypes.func,
 
 			/**
-			 * When `true`, a pressed visual effect is applied
-			 *
-			 * @type {Boolean}
-			 * @default false
-			 * @public
-			 */
-			pressed: PropTypes.bool,
-
-			/**
 			 * `scrubbing` only has an effect with a detachedKnob, and is a performance optimization
 			 * to not allow re-assignment of the knob's value (and therefore position) during direct
 			 * user interaction.
@@ -309,7 +300,6 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			backgroundProgress: 0,
 			max: 100,
 			min: 0,
-			pressed: false,
 			spotlightDisabled: false,
 			step: 1,
 			tooltip: false,
@@ -335,7 +325,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			incrementAriaLabel: ({value}) => (`${value} ${$L('press ok button to increase the value')}`)
 		},
 
-		render: ({active, backgroundProgress, children, decrementAriaLabel, decrementDisabled, decrementIcon, detachedKnob, disabled, focused, incrementAriaLabel, incrementDisabled, incrementIcon, incrementSliderClasses, inputRef, max, min, onActivate, onChange, onDecrement, onIncrement, onSpotlightDisappear, pressed, scrubbing, sliderBarRef, sliderRef, spotlightDisabled, step, tooltip, tooltipAsPercent, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => (
+		render: ({active, backgroundProgress, children, decrementAriaLabel, decrementDisabled, decrementIcon, detachedKnob, disabled, focused, incrementAriaLabel, incrementDisabled, incrementIcon, incrementSliderClasses, inputRef, max, min, onActivate, onChange, onDecrement, onIncrement, onSpotlightDisappear, scrubbing, sliderBarRef, sliderRef, spotlightDisabled, step, tooltip, tooltipAsPercent, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => (
 			<div {...rest} className={incrementSliderClasses}>
 				<IncrementSliderButton
 					aria-label={decrementAriaLabel}
@@ -362,7 +352,6 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 					onDecrement={onDecrement}
 					onIncrement={onIncrement}
 					onSpotlightDisappear={onSpotlightDisappear}
-					pressed={pressed}
 					scrubbing={scrubbing}
 					sliderBarRef={sliderBarRef}
 					sliderRef={sliderRef}
@@ -397,7 +386,7 @@ const IncrementSliderFactory = factory((config) => {
 
 	/**
 	 * {@link moonstone/IncrementSlider.IncrementSlider} is an IncrementSlider with
-	 * Moonstone styling, Changeable, Pressable and SliderDecorator applied with IconButtons to
+	 * Moonstone styling, Changeable and SliderDecorator applied with IconButtons to
 	 * increment and decrement the value.
 	 *
 	 * By default, `IncrementSlider` maintains the state of its `value` property. Supply the
@@ -408,15 +397,12 @@ const IncrementSliderFactory = factory((config) => {
 	 * @class IncrementSlider
 	 * @memberof moonstone/IncrementSlider
 	 * @mixes ui/Changeable.Changeable
-	 * @mixes ui/Pressable.Pressable
 	 * @ui
 	 * @public
 	 */
 	return Changeable(
-		Pressable(
-			SliderDecorator(
-				Base
-			)
+		SliderDecorator(
+			Base
 		)
 	);
 });
