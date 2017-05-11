@@ -11,7 +11,7 @@ import React from 'react';
 import Spotlight from '../src/spotlight';
 import {spottableClass} from '../Spottable';
 
-const spotlightRootContainerName = 'spotlightRootDecorator';
+import {rootContainerId} from '../src/container';
 
 /**
  * Default configuration for SpotlightRootDecorator
@@ -62,10 +62,8 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (typeof window === 'object') {
 				const palmSystem = window.PalmSystem;
 
-				Spotlight.initialize();
-				Spotlight.add(spotlightRootContainerName, {
+				Spotlight.initialize({
 					selector: '.' + spottableClass,
-					navigableFilter: this.navigableFilter,
 					restrict: 'none'
 				});
 
@@ -93,6 +91,6 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 export default SpotlightRootDecorator;
 export {
-	spotlightRootContainerName,
+	rootContainerId as spotlightRootContainerName, // DEPRECATED
 	SpotlightRootDecorator
 };
