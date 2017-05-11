@@ -4,6 +4,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ## [unreleased]
 
+### Deprecated
+
+- `moonstone/Scroller.Scrollable` option `indexToFocus` in `scrollTo` method to be removed in 2.0.0
+
 ### Added
 
 - `moonstone/Slider` prop `noFill` to support a style without the fill
@@ -12,6 +16,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/FormCheckboxItem`
 - `moonstone/FormCheckbox`, a standalone checkbox, to support `moonstone/FormCheckboxItem`
 - `moonstone/Input` props `invalid` and `invalidMessage` to display a tooltip when input value is invalid
+- `moonstone/Scroller.Scrollable` option `focus` in `scrollTo()` method
 
 ### Changed
 
