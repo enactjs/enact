@@ -81,6 +81,16 @@ const VirtualListNative = kind({
 		 */
 
 		/**
+		 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
+		 * not move focus to the scrollbar controls.
+		 *
+		 * @name focusableScrollbar
+		 * @type {Boolean}
+		 * @memberof moonstone/VirtualList.VirtualListNative
+		 * @instance
+		 */
+
+		/**
 		 * Spacing between items.
 		 *
 		 * @name spacing
@@ -165,6 +175,17 @@ const VirtualGridListNative = kind({
 		 * @name direction
 		 * @type {String}
 		 * @default 'vertical'
+		 * @memberof moonstone/VirtualList.VirtualGridListNative
+		 * @instance
+		 * @public
+		 */
+
+		/**
+		 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
+		 * not move focus to the scrollbar controls.
+		 *
+		 * @name focusableScrollbar
+		 * @type {Boolean}
 		 * @memberof moonstone/VirtualList.VirtualGridListNative
 		 * @instance
 		 * @public

@@ -1,7 +1,8 @@
 @import '../styles/mixins.less';
 @import '../styles/variables.less';
+@import '../styles/skin.less';
 
-.scrollbarContainerBase {
+.applySkins({.scrollbarContainerBase {
 	background: inherit;
 	position: absolute;
 	border-color: transparent;
@@ -36,7 +37,7 @@
 	}
 }
 
-.scrollbarButtonBase {
+.scrollButton {
 	.scrollbarButtonNoCompositeLayer;
 	background-color: transparent;
 	position: absolute;
@@ -68,7 +69,6 @@
 	}
 
 	.scrollbarUpButton {
-		.scrollbarButtonBase;
 		top: -@moon-icon-button-small-size;
 
 		:global(.enact-text-large) & {
@@ -77,7 +77,6 @@
 	}
 
 	.scrollbarBottomButton {
-		.scrollbarButtonBase;
 		bottom: -@moon-icon-button-small-size;
 
 		:global(.enact-text-large) & {
@@ -107,7 +106,6 @@
 	}
 
 	.scrollbarLeftButton {
-		.scrollbarButtonBase;
 		.position-start-end(-@moon-icon-button-small-size, auto);
 
 		:global(.enact-text-large) & {
@@ -122,7 +120,6 @@
 	}
 
 	.scrollbarRightButton {
-		.scrollbarButtonBase;
 		.position-start-end(auto, -@moon-icon-button-small-size);
 
 		:global(.enact-text-large) & {
@@ -182,3 +179,4 @@
 .thumbHidden {
 	opacity: 0;
 }
+});

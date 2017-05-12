@@ -2,7 +2,7 @@
 //
 @import '../../ui/styles/mixins.less';
 @import '../styles/variables.less';
-@import '../styles/colors.less';
+@import '../styles/skin.less';
 
 @-webkit-keyframes spinBall {
 	0%        { -webkit-transform: rotateZ(@moon-spinner-ball-angle); }
@@ -100,14 +100,14 @@
 	/* Speed back up as the ball falls */
 }
 
-.spinner {
+.applySkins({.spinner {
 	min-height: @moon-spinner-size;
 	min-width: @moon-spinner-size;
 	line-height: @moon-spinner-size;
 	position: relative;
 	display: inline-block;
 	color: @moon-spinner-text-color;
-	background-color: @moon-spinner-background-color;
+	background-color: @moon-spinner-bg-color;
 	border-radius: (@moon-button-height / 2);
 	margin: 0 @moon-spotlight-outset;
 
@@ -227,7 +227,7 @@
 	}
 }
 
-:global(.enact-locale-right-to-left) .spinner {
+:global(.enact-locale-right-to-left)& .spinner {
 	// This allows for the spinner to spin in a counter-clockwise direction in RTL mode
 	// .-spinner-ball-decorator {
 	// 	-webkit-transform: scaleX(-1);
@@ -249,4 +249,4 @@
 		-webkit-transform: translateX(50%) translateY(-50%);
 		transform: translateX(50%) translateY(-50%);
 	}
-}
+}});
