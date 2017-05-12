@@ -5,7 +5,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ## [unreleased]
 
 ### Added
-- `arrowshrinkleft` icon in `moonstone/Icon.IconList`
+- `arrowshrinkleft`, and `arrowshrinkright` icons in `moonstone/Icon.IconList`
 
 ### Changed
 - `moonstone/VideoPlayer`'s more/less button to use correct icon
