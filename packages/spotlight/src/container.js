@@ -656,6 +656,15 @@ function restoreLastFocusedElement (containerId) {
 	}
 }
 
+function unmountContainer (containerId) {
+	const config = getContainerConfig(containerId);
+	persistLastFocusedElement(containerId);
+
+	if (typeof config.defaultElement !== 'string') {
+		config.defaultElement = null;
+	}
+}
+
 export {
 	// Remove
 	getAllContainerIds,
@@ -676,9 +685,8 @@ export {
 	getSpottableDescendants,
 	isContainer,
 	isNavigable,
-	persistLastFocusedElement,
-	restoreLastFocusedElement,
 	removeAllContainers,
 	removeContainer,
-	rootContainerId
+	rootContainerId,
+	unmountContainer
 };

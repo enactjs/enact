@@ -38,7 +38,7 @@ import {
 	getSpottableDescendants,
 	isContainer,
 	isNavigable as isNavigableInContainer,
-	persistLastFocusedElement,
+	unmountContainer,
 	removeAllContainers,
 	removeContainer,
 	rootContainerId,
@@ -1050,7 +1050,7 @@ const Spotlight = (function () {
 			if (!containerId || typeof containerId !== 'string') {
 				throw new Error('Please assign the "containerId"!');
 			}
-			persistLastFocusedElement(containerId);
+			unmountContainer(containerId);
 		},
 
 		/**
