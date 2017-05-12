@@ -24,7 +24,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Picker` arrow icon for `joined` picker: small when not spotted, hidden when it reaches the end of the picker
 - `moonstone/Checkbox` and `moonstone/CheckboxItem` to reflect the latest design
 - `moonstone/MoonstoneDecorator/fontGenerator` was refactored to use the browser's FontFace API to dynamically load locale fonts
-- `moonstone/VideoPlayer` space allotment on both sides of the playback controls to support 3 buttons; consequently the "more" controls area has shrunk by the same amount
+- `moonstone/VideoPlayer` space allotment on both sides of the playback controls to support 4 buttons; consequently the "more" controls area has shrunk by the same amount
 - `moonstone/VideoPlayer` to not disable media button (play/pause)
 - `moonstone/Scroller.Scrollable` so that paging controls are not spottable by default with 5-way
 
