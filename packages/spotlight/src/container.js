@@ -38,6 +38,7 @@ let GlobalConfig = {
 	restrict: 'self-first', // 'self-first', 'self-only', 'none'
 	tabIndexIgnoreList: 'a, input, select, textarea, button, iframe, [contentEditable=true]',
 	navigableFilter: null,
+	overflow: false,
 	lastFocusedElement: null,
 	lastFocusedKey: null,
 	lastFocusedPersist: (node, all) => {
@@ -299,7 +300,7 @@ const getDeepSpottableDescendants = (containerId) => {
 			if (isContainer(n)) {
 				const id = getContainerId(n);
 				const config = getContainerConfig(id);
-				if (!config.enterTo) {
+				if (!config.enterTo && !config.overflow) {
 					return getDeepSpottableDescendants(id);
 				}
 			}
@@ -682,6 +683,7 @@ export {
 	configureDefaults,
 	configureContainer,
 	getContainerFocusTarget,
+	getDeepSpottableDescendants,
 	getSpottableDescendants,
 	isContainer,
 	isNavigable,

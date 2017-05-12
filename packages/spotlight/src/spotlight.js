@@ -35,6 +35,7 @@ import {
 	getContainerLastFocusedElement,
 	getContainerNavigableElements,
 	getContainersForNode,
+	getDeepSpottableDescendants,
 	getSpottableDescendants,
 	isContainer,
 	isNavigable as isNavigableInContainer,
@@ -649,27 +650,21 @@ const Spotlight = (function () {
 	}
 
 	function getAllNavigableElementsFromNode (node, containerIds = getContainersForNode(node)) {
-		return getAllContainerIds().map(containerId => {
-			if (containerIds.indexOf(containerId) > -1) {
-				// for containers that are ancestors of node, we ignore enterTo and use any
-				// spottable elements
-				return getSpottableDescendants(containerId);
-			} else {
-				// for other containers, we use only the navigable elements
-				return getContainerNavigableElements(containerId);
-			}
-		})
-		// flatten
-		.reduce(concat, [])
-		// filter out the current node and any containers (because we've already extracted the
-		// relevant target for each container above)
-		.filter(n => {
-			if (n === node || isContainer(n)) {
-				return false;
-			}
+		return containerIds
+			.map(getDeepSpottableDescendants)
+			// flatten
+			.reduce(concat, [])
+			// filter out the current node and any containers (because we've already extracted the
+			// relevant target for each container above)
+			.filter(n => {
+				if (n === node || (
+					isContainer(n) && containerIds.indexOf(n.dataset.containerId) >= 0
+				)) {
+					return false;
+				}
 
-			return true;
-		});
+				return true;
+			});
 	}
 
 	function focusNext (next, direction, currentContainerIds, currentFocusedElement) {
@@ -742,6 +737,36 @@ const Spotlight = (function () {
 		return false;
 	}
 
+	function spotNextContainer (direction, currentFocusedElement, containerId) {
+		let next = null;
+		const candidates = exclude(getSpottableDescendants(containerId), currentFocusedElement);
+
+		// when a 'self-first' or 'self-only' container has sub-containers and one of those
+		// containers includes the currentFocused, we want to recurse into that candidate to find
+		// the next target rather than basing the calculation on the bounds of the sub-container
+		candidates.forEach(candidate => {
+			if (!next && candidate.contains(currentFocusedElement)) {
+				next = candidate;
+			}
+		});
+
+		if (!next) {
+			const config = getContainerConfig(containerId);
+			next = navigate(
+				currentFocusedElement,
+				direction,
+				candidates,
+				config
+			);
+		}
+
+		if (isContainer(next)) {
+			return spotNextContainer(direction, currentFocusedElement, next.dataset.containerId);
+		}
+
+		return next;
+	}
+
 	function spotNext (direction, currentFocusedElement, currentContainerIds) {
 		const extSelector = currentFocusedElement.getAttribute('data-spot-' + direction);
 		if (typeof extSelector === 'string') {
@@ -761,12 +786,7 @@ const Spotlight = (function () {
 			const spotlightModal = config.restrict === 'self-only';
 
 			if (spotlightModal || config.restrict === 'self-first') {
-				next = navigate(
-					currentFocusedElement,
-					direction,
-					exclude(getSpottableDescendants(id), currentFocusedElement),
-					config
-				);
+				next = spotNextContainer(direction, currentFocusedElement, id);
 
 				if (next || spotlightModal) {
 					preventFindNext = true;
