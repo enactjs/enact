@@ -12,6 +12,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Slider` and `moonstone/IncrementSlider` prop `noFill` to support a style without the fill
 - `moonstone/Marquee` property `rtl` to set directionality to right-to-left
+- `moonstone/VirtualList.GridListImageItem` property `selectionOverlay` to add custom component for selection overlay
 - `moonstone/MoonstoneDecorator` property `skin` to let an app choose its skin: "moonstone" and "moonstone-light" are now available
 - `moonstone/FormCheckboxItem`
 - `moonstone/FormCheckbox`, a standalone checkbox, to support `moonstone/FormCheckboxItem`
