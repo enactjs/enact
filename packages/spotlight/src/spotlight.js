@@ -33,7 +33,6 @@ import {
 	getContainerDefaultElement,
 	getContainerFocusTarget,
 	getContainerLastFocusedElement,
-	getContainerNavigableElements,
 	getContainersForNode,
 	getDeepSpottableDescendants,
 	getSpottableDescendants,
@@ -649,24 +648,6 @@ const Spotlight = (function () {
 			.filter(n => !isContainer(n));
 	}
 
-	function getAllNavigableElementsFromNode (node, containerIds = getContainersForNode(node)) {
-		return containerIds
-			.map(getDeepSpottableDescendants)
-			// flatten
-			.reduce(concat, [])
-			// filter out the current node and any containers (because we've already extracted the
-			// relevant target for each container above)
-			.filter(n => {
-				if (n === node || (
-					isContainer(n) && containerIds.indexOf(n.dataset.containerId) >= 0
-				)) {
-					return false;
-				}
-
-				return true;
-			});
-	}
-
 	function focusNext (next, direction, currentContainerIds, currentFocusedElement) {
 		const nextContainerIds = getContainersForNode(next);
 		const nextContainerId = last(nextContainerIds);
@@ -737,34 +718,47 @@ const Spotlight = (function () {
 		return false;
 	}
 
-	function spotNextContainer (direction, currentFocusedElement, containerId) {
-		let next = null;
-		const candidates = exclude(getSpottableDescendants(containerId), currentFocusedElement);
+	function isRestrictedContainer (containerId) {
+		const config = getContainerConfig(containerId);
+		return (config.restrict === 'self-only' || config.restrict === 'self-first');
+	}
 
-		// when a 'self-first' or 'self-only' container has sub-containers and one of those
-		// containers includes the currentFocused, we want to recurse into that candidate to find
-		// the next target rather than basing the calculation on the bounds of the sub-container
-		candidates.forEach(candidate => {
-			if (!next && candidate.contains(currentFocusedElement)) {
-				next = candidate;
-			}
-		});
+	function navigateContainer (direction, currentFocusedElement, containerId) {
+		const nodes = getDeepSpottableDescendants(containerId);
+		const config = getContainerConfig(containerId);
 
-		if (!next) {
-			const config = getContainerConfig(containerId);
-			next = navigate(
-				currentFocusedElement,
-				direction,
-				candidates,
-				config
-			);
-		}
-
-		if (isContainer(next)) {
-			return spotNextContainer(direction, currentFocusedElement, next.dataset.containerId);
-		}
+		const next = navigate(
+			currentFocusedElement,
+			direction,
+			nodes,
+			config
+		);
 
 		return next;
+	}
+
+	function spotNextInRestrictedContainers (direction, currentFocusedElement, containerIds) {
+		return containerIds
+			.filter(isRestrictedContainer)
+			.reduce((next, containerId) => {
+				if (!next) {
+					next = navigateContainer(direction, currentFocusedElement, containerId);
+
+					if (!next && getContainerConfig(containerId).restrict === 'self-only') {
+						next = currentFocusedElement;
+					}
+				}
+
+				return next;
+			}, null);
+	}
+
+	function spotNextInUnrestrictedContainers (direction, currentFocusedElement, containerIds) {
+		return containerIds
+			.filter(id => !isRestrictedContainer(id))
+			.reduce((next, containerId) => {
+				return next || navigateContainer(direction, currentFocusedElement, containerId);
+			}, null);
 	}
 
 	function spotNext (direction, currentFocusedElement, currentContainerIds) {
@@ -777,32 +771,13 @@ const Spotlight = (function () {
 		}
 
 		const currentContainerId = last(currentContainerIds);
-		let next;
-		let preventFindNext;
 
-		for (let i = currentContainerIds.length; i-- > 0;) {
-			const id = currentContainerIds[i];
-			const config = getContainerConfig(id);
-			const spotlightModal = config.restrict === 'self-only';
+		// inside-out search
+		const insideOut = currentContainerIds.reverse();
 
-			if (spotlightModal || config.restrict === 'self-first') {
-				next = spotNextContainer(direction, currentFocusedElement, id);
-
-				if (next || spotlightModal) {
-					preventFindNext = true;
-					break;
-				}
-			}
-		}
-
-		if (!next && !preventFindNext) {
-			next = navigate(
-				currentFocusedElement,
-				direction,
-				getAllNavigableElementsFromNode(currentFocusedElement, currentContainerIds),
-				getContainerConfig(currentContainerId)
-			);
-		}
+		let next =
+			spotNextInRestrictedContainers(direction, currentFocusedElement, insideOut) ||
+			spotNextInUnrestrictedContainers(direction, currentFocusedElement, insideOut);
 
 		if (next) {
 			getContainerConfig(currentContainerId).previous = {
