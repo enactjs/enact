@@ -1,14 +1,14 @@
-// FormCheckbox
+// FormCheckbox.less
 //
-@import '../styles/colors.less';
 @import '../styles/variables.less';
 @import '../styles/text.less';
+@import '../styles/skin.less';
 
-.formCheckbox {
+.applySkins({.formCheckbox {
 	width: @moon-formcheckbox-size;
 	height: @moon-formcheckbox-size;
 	border-radius: (@moon-formcheckbox-size / 2);
-	background-color: @moon-formcheckbox-background-color;
+	background-color: @moon-formcheckbox-bg-color;
 
 	.moon-custom-text({
 		width: @moon-formcheckbox-size-large;
@@ -23,13 +23,8 @@
 		}
 	});
 
-	&:not([disabled]) {
-		:global(.spottable):focus & {
-			background-color: @moon-spotlight-color;
-		}
-	}
-
 	.icon {
+		color: @moon-formcheckbox-text-color;
 		width: @moon-formcheckbox-size;
 		height: @moon-formcheckbox-size;
 		line-height: @moon-formcheckbox-size;
@@ -43,3 +38,11 @@
 		}
 	}
 }
+
+:global(.spottable):focus {
+	.formCheckbox {
+		&:not([disabled]) {
+			background-color: @moon-spotlight-color;
+		}
+	}
+}});

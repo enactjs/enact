@@ -1,11 +1,11 @@
-// Picker
+// Picker.less
 //
-@import '../../styles/colors.less';
 @import '../../styles/variables.less';
 @import '../../styles/text.less';
 @import '../../styles/mixins.less';
+@import '../../styles/skin.less';
 
-.picker {
+.applySkins({.picker {
 	@button-width: (@moon-button-small-height - 12);
 
 	display: inline-block;
@@ -16,7 +16,7 @@
 	margin-left: @moon-spotlight-outset;
 	margin-right: @moon-spotlight-outset;
 
-	&:before {
+	&::before {
 		.position(0);
 
 		content: '';
@@ -33,6 +33,7 @@
 		height: @moon-button-small-height;
 		line-height: @moon-button-small-height;
 		max-width: 300px;
+		color: @moon-picker-text-color;
 
 		.moon-custom-text({
 			font-size: @moon-item-font-size-large;
@@ -68,7 +69,7 @@
 	&.horizontal {
 		display: inline-flex;
 
-		:global(.enact-locale-right-to-left) & {
+		:global(.enact-locale-right-to-left)& {
 			flex-direction: row-reverse;
 		}
 
@@ -86,7 +87,8 @@
 	}
 
 	&.joined {
-		color: @moon-button-text-color;
+		color: @moon-picker-joined-text-color;
+		background-color: @moon-picker-joined-bg-color;
 
 		.icon {
 			vertical-align: top;
@@ -119,10 +121,10 @@
 				height: @moon-button-small-height-large;
 				line-height: @moon-button-small-height-large;
 			});
-			&.incrementing:before {
+			&.incrementing::before {
 				border-right-width: @moon-integer-picker-shadow-width;
 			}
-			&.decrementing:before {
+			&.decrementing::before {
 				border-left-width: @moon-integer-picker-shadow-width;
 			}
 			.incrementer,
@@ -140,10 +142,10 @@
 		}
 
 		&.vertical {
-			&.incrementing:before {
+			&.incrementing::before {
 				border-top-width: @moon-integer-picker-shadow-width;
 			}
-			&.decrementing:before {
+			&.decrementing::before {
 				border-bottom-width: @moon-integer-picker-shadow-width;
 			}
 			.incrementer,
@@ -184,14 +186,14 @@
 	&.vertical .valueWrapper {
 		display: block;
 
-		:global(.enact-text-large) & {
+		:global(.enact-text-large)& {
 			padding: 0 @moon-spotlight-outset;
 		}
 
 		.item {
 			margin: 0 @moon-spotlight-outset;
 
-			:global(.enact-text-large) & {
+			:global(.enact-text-large)& {
 				margin: 0;
 			}
 		}
@@ -207,4 +209,4 @@
 			}
 		}
 	}
-}
+}});
