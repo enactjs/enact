@@ -8,6 +8,7 @@ import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {contextTypes as contextTypesResize} from '@enact/ui/Resizable';
 import {contextTypes as contextTypesRtl} from '@enact/i18n/I18nDecorator';
+import deprecate from '@enact/core/internal/deprecate';
 import {forward} from '@enact/core/handle';
 import {getDirection} from '@enact/spotlight';
 import hoc from '@enact/core/hoc';
@@ -15,9 +16,11 @@ import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ri from '@enact/ui/resolution';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import css from './Scrollable.less';
 import Scrollbar from './Scrollbar';
+import scrollbarCss from './Scrollbar.less';
 
 const
 	forwardScroll = forward('onScroll'),
@@ -42,6 +45,23 @@ const
  * @private
  */
 const dataIndexAttribute = 'data-index';
+
+const ScrollableSpotlightContainer = SpotlightContainerDecorator(
+	{
+		navigableFilter: (elem, {focusableScrollbar}) => {
+			if (!focusableScrollbar && elem.classList.contains(scrollbarCss.scrollButton)) {
+				return false;
+			}
+		}
+	},
+	({containerRef, ...rest}) => {
+		delete rest.focusableScrollbar;
+
+		return (
+			<div ref={containerRef} {...rest} />
+		);
+	}
+);
 
 /**
  * {@link moonstone/Scroller.ScrollableNative} is a Higher-order Component
@@ -73,6 +93,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			 *   `'left'`, `'right'`, `'top'`, `'bottom'`,
 			 *   `'topleft'`, `'topright'`, `'bottomleft'`, and `'bottomright'`.
 			 * - {index} - You can set an index of specific item. (`0` or positive integer)
+			 *   This option is available for only VirtualList kind.
+			 * - {node} - You can set a node to scroll
+			 * - {animate} - When `true`, scroll occurs with animation.
+			 *   Set it to `false`, if you want scrolling without animation.
+			 * - {indexToFocus} - Deprecated: Use `focus` insead.
+			 * - {focus} - Set it `true`, if you want the item to be focused after scroll.
+			 *   This option is only valid when you scroll by `index` or `node`.
 			 *
 			 * @example
 			 *	// If you set cbScrollTo prop like below;
@@ -83,6 +110,15 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			 * @public
 			 */
 			cbScrollTo: PropTypes.func,
+
+			/**
+			 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
+			 * not move focus to the scrollbar controls.
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			focusableScrollbar: PropTypes.bool,
 
 			/**
 			 * Specifies how to show horizontal scrollbar. Acceptable values are `'auto'`,
@@ -418,7 +454,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		// scroll start
 
-		start (targetX, targetY, animate = true, indexToFocus) {
+		start (targetX, targetY, animate = true, indexToFocus, nodeToFocus) {
 			const
 				bounds = this.getScrollBounds(),
 				containerNode = this.childRef.getContainerNode();
@@ -439,13 +475,16 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				containerNode.style.scrollBehavior = null;
 				this.childRef.scrollTo(targetX, targetY);
 				containerNode.style.scrollBehavior = 'smooth';
-				this.focusOnItem({indexToFocus});
+				this.focusOnItem({indexToFocus, nodeToFocus});
 			}
 		}
 
-		focusOnItem ({indexToFocus}) {
-			if (indexToFocus !== null && typeof this.childRef.focusOnItem === 'function') {
-				this.childRef.focusOnItem(indexToFocus);
+		focusOnItem ({indexToFocus, nodeToFocus}) {
+			if (indexToFocus !== null && typeof this.childRef.focusByIndex === 'function') {
+				this.childRef.focusByIndex(indexToFocus);
+			}
+			if (nodeToFocus !== null && typeof this.childRef.focusOnNode === 'function') {
+				this.childRef.focusOnNode(nodeToFocus);
 			}
 		}
 
@@ -509,11 +548,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						}
 					}
 				} else {
-					if (typeof opt.index === 'number') {
+					if (typeof opt.index === 'number' && typeof this.childRef.getItemPosition === 'function') {
 						itemPos = this.childRef.getItemPosition(opt.index);
 					} else if (opt.node instanceof Object) {
-						if (opt.node.nodeType === 1) {
-							itemPos = this.childRef.getScrollPos(opt.node);
+						if (opt.node.nodeType === 1 && typeof this.childRef.getNodePosition === 'function') {
+							itemPos = this.childRef.getNodePosition(opt.node);
 						}
 					}
 					if (itemPos) {
@@ -533,14 +572,21 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		scrollTo = (opt) => {
 			if (!this.isInitializing) {
 				const {left, top} = this.getPositionForScrollTo(opt);
+				let indexToFocus = null;
 				this.scrollToInfo = null;
+
+				if (typeof opt.indexToFocus === 'number') {
+					indexToFocus = opt.indexToFocus;
+					deprecate({name: 'indexToFocus', since: '1.2.0', message: 'Use `focus` instead', until: '2.0.0'});
+				}
 
 				if (left !== null || top !== null) {
 					this.start(
 						(left !== null) ? left : this.scrollLeft,
 						(top !== null) ? top : this.scrollTop,
 						opt.animate,
-						!isNaN(opt.indexToFocus) ? opt.indexToFocus : null
+						(opt.focus && typeof opt.index === 'number') ? opt.index : indexToFocus,
+						(opt.focus && opt.node instanceof Object && opt.node.nodeType === 1) ? opt.node : null
 					);
 				}
 			} else {
@@ -737,7 +783,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		render () {
 			const
 				props = Object.assign({}, this.props),
-				{className, style} = this.props,
+				{className, focusableScrollbar, style} = this.props,
 				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
 				vscrollbar = this.getVerticalScrollbar(isHorizontalScrollbarVisible, isVerticalScrollbarVisible),
 				hscrollbar = this.getHorizontalScrollbar(isHorizontalScrollbarVisible, isVerticalScrollbarVisible),
@@ -751,6 +797,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			delete props.cbScrollTo;
 			delete props.className;
+			delete props.focusableScrollbar;
 			delete props.horizontalScrollbar;
 			delete props.onScroll;
 			delete props.onScrollStart;
@@ -759,11 +806,16 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			delete props.verticalScrollbar;
 
 			return (
-				<div ref={this.initContainerRef} className={scrollableClasses} style={style}>
+				<ScrollableSpotlightContainer
+					className={scrollableClasses}
+					containerRef={this.initContainerRef}
+					focusableScrollbar={focusableScrollbar}
+					style={style}
+				>
 					{vscrollbar}
 					{hscrollbar}
 					<Wrapped {...props} {...this.eventHandlers} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={css.container} />
-				</div>
+				</ScrollableSpotlightContainer>
 			);
 		}
 	};

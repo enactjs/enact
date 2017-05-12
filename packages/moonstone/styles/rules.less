@@ -1,27 +1,21 @@
 @import './text.less';
 @import './mixins.less';
-@import './colors.less';
 @import './variables.less';
 @import '~@enact/ui/styles/mixins.less';
+@import './skin.less';
 
 /* Prevent browser's default focus treatment (at least in Chrome) */
 :focus {
 	outline: none;
 }
 
-/* Common classes applicable to multiple controls */
-.moon {
+.applySkins({
 	.moon-text-base(@moon-sub-header-font-size);
 	font-weight: normal;
 	font-style: normal;
 	letter-spacing: normal;
 	padding: @moon-app-keepout;
 	color: @moon-text-color;
-
-	&.bg,
-	& > .bg {
-		background-color: @moon-background-color;
-	}
 
 	::selection {
 		color: @moon-spotlight-text-color;
@@ -31,53 +25,38 @@
 	&:global(.enact-locale-right-to-left) {
 		direction: rtl;
 	}
-}
 
-.moon-divider-border() {
-	border-bottom: @moon-divider-border-width solid @moon-divider-border-color;
-}
-.moon-neutral-divider-border() {
-	border-bottom: @moon-divider-border-width solid @moon-neutral-border-color;
-}
-
-:global(.spottable):focus {
-	background-color: @moon-spotlight-bg-color;
-	color: @moon-spotlight-text-color;
-}
-
-[data-container-muted='true'] {
-	:global(.spottable):focus {
-		background-color: @moon-background-color;
-		color: @moon-text-color;
+	// For cases where we have a skin inside another skin, we actually do want to impose a BG color
+	// Followed by coloring the .bg class for the optional root element coloration
+	:global(.moonstone) &,
+	:global(.moonstone-light) &,
+	&.bg,
+	& > .bg {
+		background-color: @moon-bg-color;
 	}
-}
 
-// Disabled components
-[disabled],
-:global(.spottableDisabled):focus {
-	.vendor-opacity(@moon-disabled-opacity);
+	// Spotlight
+	:global(.spottable):focus {
+		background-color: @moon-spotlight-bg-color;
+		color: @moon-spotlight-text-color;
 
-	cursor: default;
+		[data-container-muted='true'] & {
+			background-color: @moon-bg-color;	// This probably shouldn't be assigning the background color
+			color: @moon-text-color;
+		}
+	}
 
-	// Disabled children of disabled components
+	// Disabled components
 	[disabled],
 	:global(.spottableDisabled):focus {
-		.vendor-opacity(1);
-	}
-}
+		.vendor-opacity(@moon-disabled-opacity);
 
-// This is not the perminent home for this code. This is effectively theming code, which doesn't
-// have a true home yet. It's effectively a placeholder that will match the end result of what a
-// themable scheme will look like. You've been warned.
-:global(.moon-neutral) {
-	background-color: @moon-neutral-bg-color;
-	color: @moon-neutral-text-color;
+		cursor: default;
 
-	* {
-		color: @moon-neutral-child-text-color;
+		// Disabled children of disabled components
+		[disabled],
+		:global(.spottableDisabled):focus {
+			.vendor-opacity(1);
+		}
 	}
-
-	:global(.spottable):focus * {
-		color: inherit;
-	}
-}
+});

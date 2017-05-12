@@ -1,7 +1,10 @@
+// Panels.less
+//
 @import '../styles/mixins.less';
-@import '../styles/colors.less';
 @import '../styles/variables.less';
+@import '../styles/skin.less';
 
+.applySkins({
 .viewport {
 	position: absolute;
 	.position(0);
@@ -45,7 +48,7 @@
 		pointer-events: auto;
 	}
 
-	:global(.enact-locale-right-to-left) & {
+	:global(.enact-locale-right-to-left)& {
 		direction: ltr;
 
 		.viewport {
@@ -212,3 +215,4 @@
 // 		display: none;
 // 	}
 // }
+});
