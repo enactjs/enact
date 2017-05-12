@@ -5,8 +5,6 @@
  * @module moonstone/DatePicker
  */
 
-import {Expandable} from '../ExpandableItem';
-
 import DateFmt from '@enact/i18n/ilib/lib/DateFmt';
 
 import DateTimeDecorator from '../internal/DateTimeDecorator';
@@ -90,12 +88,7 @@ const DatePicker = DateTimeDecorator({
 
 		return {formatter, order};
 	}
-},
-	Expandable(
-		{noPointerMode: true},
-			DatePickerBase
-	)
-);
+}, DatePickerBase);
 
 export default DatePicker;
 export {DatePicker, DatePickerBase};
