@@ -128,32 +128,37 @@ const GridListImageItemBase = kind({
 			{selected},
 			caption ? 'useCaption' : null,
 			subCaption ? 'useSubCaption' : null
-		)
+		),
+		selectionOverlay: ({selectionOverlay: SelectionOverlay, selectionOverlayShowing}) => {
+			if (selectionOverlayShowing) {
+				return (
+					<div className={css.overlayContainer}>
+						{
+							SelectionOverlay ?
+								<SelectionOverlay /> :
+								<div className={css.overlayComponent}>
+									<Icon className={css.icon}>check</Icon>
+								</div>
+						}
+					</div>
+				);
+			}
+		}
 	},
 
-	render: ({caption, placeholder, source, subCaption, selectionOverlay: SelectionOverlay, selectionOverlayShowing, ...rest}) => {
-		if (selectionOverlayShowing) {
+	render: ({caption, placeholder, source, subCaption, selectionOverlay, ...rest}) => {
+		if (selectionOverlay) {
 			rest['role'] = 'checkbox';
 			rest['aria-checked'] = rest.selected;
 		}
 
 		delete rest.selected;
+		delete rest.selectionOverlayShowing;
 
 		return (
 			<div {...rest}>
 				<Image className={css.image} placeholder={placeholder} src={source} />
-				{
-					selectionOverlayShowing ? (
-						<div className={css.overlayContainer}>
-							{
-								<SelectionOverlay /> ||
-								<div className={css.overlayComponent}>
-									<Icon className={css.icon}>check</Icon>
-								</div>
-							}
-						</div>
-					) : null
-				}
+				{selectionOverlay}
 				{caption ? (<MarqueeText className={css.caption} marqueeOn="hover">{caption}</MarqueeText>) : null}
 				{subCaption ? (<MarqueeText className={css.subCaption} marqueeOn="hover">{subCaption}</MarqueeText>) : null}
 			</div>
