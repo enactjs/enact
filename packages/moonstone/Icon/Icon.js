@@ -209,6 +209,7 @@ const IconBase = kind({
  * exitfullscreen
  * fullscreen
  * arrowshrinkleft
+ * arrowshrinkright
  * arrowextend
  * arrowshrink
  * flag
