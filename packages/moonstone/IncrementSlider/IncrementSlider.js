@@ -141,6 +141,15 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			min: PropTypes.number,
 
 			/**
+			 * When `true`, the slider bar doesn't show a fill and doesn't highlight when spotted
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			noFill: PropTypes.bool,
+
+			/**
 			 * The handler when the knob is activated or deactivated by selecting it via 5-way
 			 *
 			 * @type {Function}
@@ -310,6 +319,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			backgroundProgress: 0,
 			max: 100,
 			min: 0,
+			noFill: false,
 			pressed: false,
 			spotlightDisabled: false,
 			step: 1,
