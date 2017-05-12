@@ -100,7 +100,9 @@ class View extends React.Component {
 		 * @type {Boolean}
 		 * @default false
 		 */
-		reverseTransition: PropTypes.bool
+		reverseTransition: PropTypes.bool,
+
+		viewProps: PropTypes.object
 	}
 
 	static defaultProps = {
@@ -297,10 +299,15 @@ class View extends React.Component {
 	}
 
 	render () {
-		const {enteringProp, children} = this.props;
+		const {enteringProp, children, viewProps} = this.props;
 
-		if (enteringProp) {
-			return React.cloneElement(children, {[enteringProp]: this.state.entering});
+		if (enteringProp || viewProps) {
+			const props = Object.assign({}, viewProps);
+			if (enteringProp) {
+				props[enteringProp] = this.state.entering;
+			}
+
+			return React.cloneElement(children, props);
 		} else {
 			return React.Children.only(children);
 		}

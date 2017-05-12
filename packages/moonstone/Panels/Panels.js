@@ -5,6 +5,7 @@ import {shape} from '@enact/ui/ViewManager';
 
 import ApplicationCloseButton from './ApplicationCloseButton';
 import CancelDecorator from './CancelDecorator';
+import IdProvider from './IdProvider';
 import Viewport from './Viewport';
 
 import css from './Panels.less';
@@ -33,6 +34,16 @@ const PanelsBase = kind({
 		 * @type {Panel}
 		 */
 		children: PropTypes.node,
+
+		generateId: PropTypes.func,
+
+		/**
+		 * Unique identifier for the Panels instance
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		id: PropTypes.string,
 
 		/**
 		 * Index of the active panel
@@ -87,16 +98,29 @@ const PanelsBase = kind({
 		className: ({noCloseButton, styler}) => styler.append({
 			hasCloseButton: !noCloseButton
 		}),
-		applicationCloseButton: ({noCloseButton, onApplicationClose}) => {
+		applicationCloseButton: ({id, noCloseButton, onApplicationClose}) => {
 			if (!noCloseButton) {
+				const closeId = id ? `${id}_close` : null;
+
 				return (
-					<ApplicationCloseButton onApplicationClose={onApplicationClose} />
+					<ApplicationCloseButton id={closeId} onApplicationClose={onApplicationClose} />
 				);
+			}
+		},
+		viewProps: ({id, noCloseButton, viewProps}) => {
+			if (noCloseButton || !id) {
+				return viewProps;
+			} else {
+				const updatedViewProps = Object.assign({}, viewProps);
+				const owns = viewProps['aria-owns'];
+
+				updatedViewProps['aria-owns'] = `${owns || ''} ${id}_close`;
+				return updatedViewProps;
 			}
 		}
 	},
 
-	render: ({noAnimation, arranger, children, index, applicationCloseButton, ...rest}) => {
+	render: ({noAnimation, arranger, children, generateId, index, applicationCloseButton, viewProps, ...rest}) => {
 		delete rest.noCloseButton;
 		delete rest.onApplicationClose;
 		delete rest.onBack;
@@ -104,7 +128,13 @@ const PanelsBase = kind({
 		return (
 			<div {...rest}>
 				{applicationCloseButton}
-				<Viewport noAnimation={noAnimation} arranger={arranger} index={index}>
+				<Viewport
+					arranger={arranger}
+					generateId={generateId}
+					index={index}
+					noAnimation={noAnimation}
+					viewProps={viewProps}
+				>
 					{children}
 				</Viewport>
 			</div>
@@ -112,7 +142,12 @@ const PanelsBase = kind({
 	}
 });
 
-const Panels = CancelDecorator({cancel: 'onBack'}, PanelsBase);
+const Panels = CancelDecorator(
+	{cancel: 'onBack'},
+	IdProvider(
+		PanelsBase
+	)
+);
 
 export default Panels;
 export {Panels, PanelsBase};

@@ -159,7 +159,9 @@ class ViewManager extends React.Component {
 		 * @type {Number}
 		 * @default value of index
 		 */
-		start: PropTypes.number
+		start: PropTypes.number,
+
+		viewProps: PropTypes.object
 	}
 
 	static defaultProps = {
@@ -193,7 +195,7 @@ class ViewManager extends React.Component {
 	}
 
 	render () {
-		const {arranger, children, duration, end, index, noAnimation, start, enteringDelay, enteringProp, ...rest} = this.props;
+		const {arranger, children, duration, end, index, noAnimation, start, enteringDelay, enteringProp, viewProps, ...rest} = this.props;
 		const {previousIndex, reverseTransition} = this;
 		const childrenList = React.Children.toArray(children);
 
@@ -210,7 +212,8 @@ class ViewManager extends React.Component {
 			previousIndex,
 			reverseTransition,
 			enteringDelay,
-			enteringProp
+			enteringProp,
+			viewProps
 		});
 
 		delete rest.reverseTransition;

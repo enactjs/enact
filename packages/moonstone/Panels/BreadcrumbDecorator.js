@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import Breadcrumb from './Breadcrumb';
 import BreadcrumbArranger from './BreadcrumbArranger';
 import CancelDecorator from './CancelDecorator';
+import IdProvider from './IdProvider';
 import IndexedBreadcrumbs from './IndexedBreadcrumbs';
 
 import css from './Panels.less';
@@ -86,6 +87,10 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 */
 			children: PropTypes.node,
 
+			generateId: PropTypes.func,
+
+			id: PropTypes.string,
+
 			/**
 			 * Index of the active panel
 			 *
@@ -124,7 +129,7 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		computed: {
 			// Invokes the breadcrumb generator, if provided
-			breadcrumbs: ({breadcrumbs, index, onSelectBreadcrumb}) => {
+			breadcrumbs: ({breadcrumbs, id, index, onSelectBreadcrumb}) => {
 				const x = calcMax(index);
 				if (Array.isArray(breadcrumbs)) {
 					// limit the number of breadcrumbs based on the index and config.max
@@ -135,6 +140,7 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					// create a Breadcrumb if passed an array of renderable primitives
 					return React.Children.map(children, (child, i) => {
 						const props = {
+							id: `${id}_bc_${i}`,
 							index: i,
 							onSelect: onSelectBreadcrumb
 						};
@@ -146,12 +152,22 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						}
 					});
 				} else {
-					return breadcrumbs(index, x, onSelectBreadcrumb);
+					return breadcrumbs(id, index, x, onSelectBreadcrumb);
 				}
+			},
+			viewProps: ({id, index}) => {
+				const breadcrumbs = [];
+				for (let i = 0, x = calcMax(index); i < x; i++) {
+					breadcrumbs.push(`${id}_bc_${i}`);
+				}
+
+				return {
+					'aria-owns': breadcrumbs.join(' ')
+				};
 			}
 		},
 
-		render: ({noAnimation, breadcrumbs, children, className, index, ...rest}) => {
+		render: ({breadcrumbs, children, className, generateId, id, index, noAnimation, ...rest}) => {
 			delete rest.onSelectBreadcrumb;
 
 			const count = React.Children.count(children);
@@ -161,7 +177,7 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			);
 
 			return (
-				<div className={className} data-index={index}>
+				<div className={className} data-index={index} id={id}>
 					<ViewManager
 						arranger={BreadcrumbArranger}
 						className={css.breadcrumbs}
@@ -176,8 +192,11 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					<Wrapped
 						{...rest}
 						arranger={panelArranger}
+						generateId={generateId}
+						id={`${id}_panels`}
 						index={index}
 						noAnimation={noAnimation}
+
 					>
 						{children}
 					</Wrapped>
@@ -188,7 +207,9 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 	return CancelDecorator(
 		{cancel: 'onSelectBreadcrumb'},
-		Decorator
+		IdProvider(
+			Decorator
+		)
 	);
 });
 
