@@ -798,19 +798,14 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		updateScrollOnFocus () {
 			const
 				focusedItem = Spotlight.getCurrent(),
-				{calculatePositionOnFocus, getScrollBounds, calculateScrollTop} = this.childRef,
+				{calculatePositionOnFocus, getScrollBounds} = this.childRef,
 				{scrollHeight: previousScrollHeight} = this.bounds,
-				{scrollHeight: currentScrollHeight} = getScrollBounds();
+				{scrollHeight: currentScrollHeight} = getScrollBounds(),
+				scrollInfo = {previousScrollHeight, scrollTop: this.scrollTop};
 
 			if (focusedItem) {
-				// Calculate position and scroll if there is a `focusedItem` when in `PointerMode`
-				if (Spotlight.getPointerMode()) {
-					const position = calculatePositionOnFocus(focusedItem);
-					this.startScrollOnFocus(position, focusedItem);
-				}
-
-				// When `scrollHeight` decreased
-				this.scrollTop = calculateScrollTop(focusedItem, this.scrollTop, previousScrollHeight);
+				const position = calculatePositionOnFocus(focusedItem, scrollInfo);
+				this.startScrollOnFocus(position, focusedItem);
 			}
 
 			// update `scrollHeight`
