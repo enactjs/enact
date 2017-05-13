@@ -147,15 +147,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			onKnobMove: PropTypes.func,
 
 			/**
-			 * When `true`, a pressed visual effect is applied
-			 *
-			 * @type {Boolean}
-			 * @default false
-			 * @public
-			 */
-			pressed: PropTypes.bool,
-
-			/**
 			 * The amount to increment or decrement the value.
 			 *
 			 * @type {Number}
@@ -187,7 +178,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			max: 100,
 			min: 0,
 			step: 1,
-			pressed: false,
 			value: 0,
 			vertical: false
 		};

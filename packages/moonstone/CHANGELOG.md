@@ -12,19 +12,24 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Slider` and `moonstone/IncrementSlider` prop `noFill` to support a style without the fill
 - `moonstone/Marquee` property `rtl` to set directionality to right-to-left
+- `moonstone/VirtualList.GridListImageItem` property `selectionOverlay` to add custom component for selection overlay
 - `moonstone/MoonstoneDecorator` property `skin` to let an app choose its skin: "moonstone" and "moonstone-light" are now available
 - `moonstone/FormCheckboxItem`
 - `moonstone/FormCheckbox`, a standalone checkbox, to support `moonstone/FormCheckboxItem`
 - `moonstone/Input` props `invalid` and `invalidMessage` to display a tooltip when input value is invalid
 - `moonstone/Scroller.Scrollable` option `focus` in `scrollTo()` method
+- `moonstone/Scroller.Scrollable` property `spottableScrollbar`
+- `moonstone/Icon.IconList` icons: `arrowshrinkleft` and `arrowshrinkright`
 
 ### Changed
 
 - `moonstone/Picker` arrow icon for `joined` picker: small when not spotted, hidden when it reaches the end of the picker
 - `moonstone/Checkbox` and `moonstone/CheckboxItem` to reflect the latest design
 - `moonstone/MoonstoneDecorator/fontGenerator` was refactored to use the browser's FontFace API to dynamically load locale fonts
-- `moonstone/VideoPlayer` space allotment on both sides of the playback controls to support 3 buttons; consequently the "more" controls area has shrunk by the same amount
+- `moonstone/VideoPlayer` space allotment on both sides of the playback controls to support 4 buttons; consequently the "more" controls area has shrunk by the same amount
 - `moonstone/VideoPlayer` to not disable media button (play/pause)
+- `moonstone/Scroller.Scrollable` so that paging controls are not spottable by default with 5-way
+- `moonstone/VideoPlayer`'s more/less button to use updated arrow icon
 
 ### Fixed
 
