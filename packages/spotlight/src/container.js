@@ -754,7 +754,6 @@ export {
 	configureDefaults,
 	configureContainer,
 	getContainerFocusTarget,
-	getDeepSpottableDescendants,
 	getNavigableElementsForNode,
 	getSpottableDescendants,
 	isContainer,
