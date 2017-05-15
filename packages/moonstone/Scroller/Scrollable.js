@@ -33,7 +33,7 @@ const
 	perf = (typeof window === 'object') ? window.performance : {now: Date.now},
 	holdTime = 50,
 	scrollWheelMultiplierForDeltaPixel = 2,
-	pixelPerLine = ri.scale(39) * scrollWheelMultiplierForDeltaPixel,
+	pixelPerLine = 39,
 	paginationPageMultiplier = 0.8,
 	epsilon = 1,
 	animationDuration = 1000;
@@ -338,7 +338,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			if (deltaMode === 0) {
 				delta = ri.scale(delta) * scrollWheelMultiplierForDeltaPixel;
 			} else if (deltaMode === 1) { // line; firefox
-				delta = ri.scale(delta) * pixelPerLine;
+				delta = ri.scale(delta * pixelPerLine) * scrollWheelMultiplierForDeltaPixel;
 			} else if (deltaMode === 2) { // page
 				if (isVertical) {
 					delta = delta > 0 ? bounds.clientHeight : -bounds.clientHeight;
