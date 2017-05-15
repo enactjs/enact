@@ -36,7 +36,8 @@ const
 	pixelPerLine = 39,
 	paginationPageMultiplier = 0.8,
 	epsilon = 1,
-	animationDuration = 1000;
+	animationDuration = 1000,
+	forwardOnWillMount = forward('onWillUnmount');
 
 /**
  * {@link moonstone/Scroller.dataIndexAttribute} is the name of a custom attribute
@@ -159,6 +160,15 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			 */
 			onScrollStop: PropTypes.func,
 
+			/**
+			 * Called when the component will unmount
+			 * This function will pass an object that contains `lastScrollTop`, `lastScrollLeft`, and `lastFocusedIndex` as the parameter
+			 *
+			 * @type {Function}
+			 * @public
+			 */
+			onWillUnmount: PropTypes.func,
+
 			style: PropTypes.object,
 
 			/**
@@ -264,6 +274,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		// spotlight
 		lastFocusedItem = null
+		lastFocusedIndex = null
 
 		// component info
 		childRef = null
@@ -427,9 +438,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		onFocus = (e) => {
+			const item = e.target;
+			if (item.dataset && !isNaN(item.dataset.index)) {
+				this.lastFocusedIndex = Number(item.dataset.index);
+			}
+
 			if (this.isKeyDown && !this.isDragging) {
 				const
-					item = e.target,
 					positionFn = this.childRef.calculatePositionOnFocus,
 					spotItem = window.document.activeElement;
 
@@ -851,6 +866,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			// Before call cancelAnimationFrame, you must send scrollStop Event.
 			this.animator.stop();
 			this.forceUpdateJob.stop();
+			forwardOnWillMount({lastScrollLeft: this.scrollLeft, lastScrollTop: this.scrollTop, lastFocusedIndex: this.lastFocusedIndex}, this.props);
 		}
 
 		// forceUpdate is a bit jarring and may interrupt other actions like animation so we'll
@@ -926,6 +942,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			delete props.onScrollStop;
 			delete props.focusableScrollbar;
 			delete props.style;
+			delete props.onWillUnmount;
 			delete props.verticalScrollbar;
 
 			return (
