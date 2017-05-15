@@ -889,25 +889,6 @@ describe('container', () => {
 			}
 		));
 
-		it('should include all spottable descendants of overflow=true containers within the first restrict"self-first" container ancestor', testScenario(
-			scenarios.complexTree,
-			(root) => {
-				configureContainer('second-container', {
-					restrict: 'none',
-					overflow: true
-				});
-				configureContainer('first-container', {
-					restrict: 'self-first'
-				});
-				const element = root.querySelector(`[${containerAttribute}="second-container"] .spottable`);
-
-				const expected = 5;
-				const actual = getNavigableElementsForNode(element).preferred.length;
-
-				expect(actual).to.equal(expected);
-			}
-		));
-
 		it('should include all spottable descendants of root container when there are no restrict="self-first" container ancestors', testScenario(
 			scenarios.complexTree,
 			(root) => {
