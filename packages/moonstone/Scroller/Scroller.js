@@ -189,34 +189,41 @@ class ScrollerBase extends Component {
 	}
 
 	calculateScrollTop = (focusedItem, itemTop, itemHeight, scrollInfo) => {
+		const
+			{clientHeight} = this.scrollBounds,
+			{top: containerTop} = this.containerRef.getBoundingClientRect(),
+			currentScrollTop = this.scrollPos.top,
+			// calculation based on client position
+			newItemTop = this.containerRef.scrollTop + (itemTop - containerTop),
+			itemBottom = newItemTop + itemHeight,
+			scrollBottom = clientHeight + currentScrollTop;
+
 		let newScrollTop = this.scrollPos.top;
 
 		if (scrollInfo) {
 			const
 				{scrollTop, previousScrollHeight} = scrollInfo,
-				{clientHeight, scrollHeight} = this.scrollBounds,
+				{scrollHeight} = this.scrollBounds,
 				scrollHeightDecrease = previousScrollHeight - scrollHeight;
 
 			newScrollTop = scrollTop;
 
-			// Update scrollTop for scrollHeight decrease
-			if (focusedItem && scrollHeightDecrease > 0) {
+			if (scrollHeightDecrease > 0) {
+				// Update scrollTop for scrollHeight decrease
 				const
-					{top: containerTop} = this.containerRef.getBoundingClientRect(),
 					itemBounds = focusedItem.getBoundingClientRect(),
-					itemBottom = newScrollTop + itemBounds.top + itemBounds.height - containerTop,
-					scrollBottom = clientHeight + newScrollTop;
+					newItemBottom = newScrollTop + itemBounds.top + itemBounds.height - containerTop;
 
-				if (itemBottom < scrollBottom && scrollHeightDecrease + itemBottom > scrollBottom) {
+				if (newItemBottom < scrollBottom && scrollHeightDecrease + newItemBottom > scrollBottom) {
 					// When `focusedItem` is not at the very bottom of the `Scroller` and
 					// `scrollHeightDecrease` caused a scroll.
-					const distanceFromBottom = scrollBottom - itemBottom,
+					const distanceFromBottom = scrollBottom - newItemBottom,
 						bottomOffset = scrollHeightDecrease - distanceFromBottom;
 					if (bottomOffset < newScrollTop) {
 						// guard against negative `scrollTop`
 						newScrollTop -= bottomOffset;
 					}
-				} else if (itemBottom === scrollBottom) {
+				} else if (newItemBottom === scrollBottom) {
 					// when `focusedItem` is at the very bottom of the `Scroller`
 					if (scrollHeightDecrease < newScrollTop) {
 						// guard against negative `scrollTop`
@@ -224,35 +231,27 @@ class ScrollerBase extends Component {
 					}
 				}
 			}
-		} else {
+		}
+
+		if (itemHeight > clientHeight) {
+			// scroller behavior for containers that are bigger than `clientHeight`
 			const
-				{clientHeight} = this.scrollBounds,
-				{top: containerTop} = this.containerRef.getBoundingClientRect(),
-				currentScrollTop = this.scrollPos.top,
-				// calculation based on client position
-				newItemTop = this.containerRef.scrollTop + (itemTop - containerTop),
-				itemBottom = newItemTop + itemHeight,
-				scrollBottom = clientHeight + currentScrollTop;
+				{top, height: nestedItemHeight} = focusedItem.getBoundingClientRect(),
+				nestedItemTop = this.containerRef.scrollTop + (top - containerTop),
+				nestedItemBottom = nestedItemTop + nestedItemHeight;
 
-			if (itemHeight > clientHeight) {
-				// scroller behavior for containers that are bigger than `clientHeight`
-				const {top, height: nestedItemHeight} = focusedItem.getBoundingClientRect(),
-					nestedItemTop = this.containerRef.scrollTop + (top - containerTop),
-					nestedItemBottom = nestedItemTop + nestedItemHeight;
-
-				if (newItemTop - nestedItemHeight > currentScrollTop) {
-					// set scroll position so that the top of the container is at least on the top
-					newScrollTop = newItemTop - nestedItemHeight;
-				} else if (nestedItemBottom > scrollBottom) {
-					newScrollTop += nestedItemBottom - scrollBottom;
-				} else if (nestedItemTop < currentScrollTop) {
-					newScrollTop += nestedItemTop - currentScrollTop;
-				}
-			} else if (itemBottom > scrollBottom) {
-				newScrollTop += itemBottom - scrollBottom;
-			} else if (newItemTop < currentScrollTop) {
-				newScrollTop += newItemTop - currentScrollTop;
+			if (newItemTop - nestedItemHeight > currentScrollTop) {
+				// set scroll position so that the top of the container is at least on the top
+				newScrollTop = newItemTop - nestedItemHeight;
+			} else if (nestedItemBottom > scrollBottom) {
+				newScrollTop += nestedItemBottom - scrollBottom;
+			} else if (nestedItemTop < currentScrollTop) {
+				newScrollTop += nestedItemTop - currentScrollTop;
 			}
+		} else if (itemBottom > scrollBottom) {
+			newScrollTop += itemBottom - scrollBottom;
+		} else if (newItemTop < currentScrollTop) {
+			newScrollTop += newItemTop - currentScrollTop;
 		}
 		return newScrollTop;
 	}
