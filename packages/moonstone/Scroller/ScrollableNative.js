@@ -291,7 +291,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					bounds = this.getScrollBounds(),
 					deltaMode = e.deltaMode,
 					wheelDeltaY = e.nativeEvent ? -e.nativeEvent.wheelDeltaY : -e.wheelDeltaY,
-					scrollWheelMultiplierForDeltaPixel = 2,
+					scrollWheelMultiplierForDeltaPixel = 4,
 					pixelPerLine = scrollWheelMultiplierForDeltaPixel * ri.scale(39);
 
 				let delta = (wheelDeltaY || e.deltaY);
@@ -694,8 +694,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			// FIXME `onWheel` doesn't work on the v8 snapshot.
 			if (isVerticalScrollbarVisible || isHorizontalScrollbarVisible) {
 				this.containerRef.addEventListener('wheel', this.onWheel);
-			} else {
-				containerNode.addEventListener('wheel', this.onWheel);
 			}
 			// FIXME `onScroll` doesn't work on the v8 snapshot.
 			containerNode.addEventListener('scroll', this.onScroll, {capture: true});

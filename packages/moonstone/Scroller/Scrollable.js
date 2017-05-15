@@ -32,7 +32,7 @@ const
 	nop = () => {},
 	perf = (typeof window === 'object') ? window.performance : {now: Date.now},
 	holdTime = 50,
-	scrollWheelMultiplierForDeltaPixel = 2,
+	scrollWheelMultiplierForDeltaPixel = 4,
 	pixelPerLine = ri.scale(39) * scrollWheelMultiplierForDeltaPixel,
 	paginationPageMultiplier = 0.8,
 	epsilon = 1,
@@ -818,8 +818,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			// FIXME `onWheel` doesn't work on the v8 snapshot.
 			if (isVerticalScrollbarVisible || isHorizontalScrollbarVisible) {
 				this.containerRef.addEventListener('wheel', this.onWheel);
-			} else {
-				containerNode.addEventListener('wheel', this.onWheel);
 			}
 			// FIXME `onFocus` doesn't work on the v8 snapshot.
 			containerNode.addEventListener('focus', this.onFocus, true);
