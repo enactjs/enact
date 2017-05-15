@@ -12,6 +12,7 @@ import {forward} from '@enact/core/handle';
 import ilib from '@enact/i18n';
 import {Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
+import {platform} from '@enact/webos/platform';
 import Slottable from '@enact/ui/Slottable';
 import {getDirection, Spotlight} from '@enact/spotlight';
 import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
@@ -938,13 +939,12 @@ const VideoPlayerBase = class extends React.Component {
 		// Set native playback rate
 		this.video.playbackRate = pbNumber;
 
-		// NYI - Supporting plat detection means we can leverage native negative playback rate on webOS instead of simulating it
-		// if (!(platform.webos || global.PalmSystem)) {
-		//	// For supporting cross browser behavior
-		if (pbNumber < 0) {
-			this.beginRewind();
+		if (platform.unknown) {
+			// For supporting cross browser behavior
+			if (pbNumber < 0) {
+				this.beginRewind();
+			}
 		}
-		// }
 	}
 
 	/**
