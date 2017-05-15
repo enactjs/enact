@@ -6,6 +6,7 @@
  */
 
 import and from 'ramda/src/and';
+import concat from 'ramda/src/concat';
 import {coerceArray} from '@enact/core/util';
 
 import {matchSelector} from './utils';
@@ -294,20 +295,22 @@ const getSpottableDescendants = (containerId) => {
  * @memberof spotlight/container
  * @private
  */
-const getDeepSpottableDescendants = (containerId) => {
+const getDeepSpottableDescendants = (containerId, excludeContainers) => {
 	return getSpottableDescendants(containerId)
 		.map(n => {
 			if (isContainer(n)) {
 				const id = getContainerId(n);
 				const config = getContainerConfig(id);
-				if (!config.enterTo && !config.overflow) {
-					return getDeepSpottableDescendants(id);
+				if (excludeContainers && excludeContainers.indexOf(id) >= 0) {
+					return [];
+				} else if (!config.enterTo && !config.overflow) {
+					return getDeepSpottableDescendants(id, excludeContainers);
 				}
 			}
 
-			return n;
+			return [n];
 		})
-		.reduce((acc, v) => acc.concat(coerceArray(v)), []);
+		.reduce(concat, []);
 };
 
 /**
@@ -552,6 +555,72 @@ function setContainerLastFocusedElement (node, containerIds) {
 	}
 }
 
+function getNavigableElementsForNode (node) {
+	let selfOnly = false;
+	let selfFirst = false;
+
+	// Maps container IDs to an object with navigable elements a `preferred` key if the elements
+	// are within the first 'self-first' container
+	const mapRestrictedNavigableElements = (id, index, containerIds) => {
+		if (selfOnly === false) {
+			const {restrict} = getContainerConfig(id);
+
+			// get spottable descendants of container, removing any containers that are also
+			// containers of `node`
+			const result = {
+				preferred: !selfFirst,
+				elements: getDeepSpottableDescendants(id, containerIds)
+			};
+
+			if (restrict === 'self-only') {
+				// if we hit a self-only container, stop adding candidates after this container
+				selfOnly = id;
+			} else if (selfFirst === false && restrict === 'self-first') {
+				// if we hit a self-first container, all future containers are not "preferred."
+				// note that this has to be after we build the result object so the current
+				// container elements are still considered preferred.
+				selfFirst = id;
+			}
+
+			return result;
+		}
+
+		return null;
+	};
+
+	// Combines the container objects (created by mapRestrictedNavigableElements) into a single
+	// object with `all` navigable elements and `preferred` navigable elements
+	const reduceRestrictedNavigableElements = (acc, v) => {
+		if (selfFirst) {
+			// defer generating the preferred list if we never hit a selfFirst boundary
+			acc.preferred = acc.preferred || [];
+			if (v.preferred) {
+				acc.preferred = acc.preferred.concat(v.elements);
+			}
+		}
+
+		acc.all = acc.all.concat(v.elements);
+
+		return acc;
+	};
+
+	const navigable = getContainersForNode(node)
+		.reverse()
+		.map(mapRestrictedNavigableElements)
+		.filter(n => n != null)
+		.reduce(reduceRestrictedNavigableElements, {
+			all: [],
+			preferred: null
+		});
+
+	// append the container IDs of the "all" container (rootContainerId or the first self-only
+	// container) and the "preferred" container (either false or first self-first container)
+	navigable.allContainerId = selfOnly || rootContainerId;
+	navigable.preferredContainerId = selfFirst;
+
+	return navigable;
+}
+
 /**
  * [getContainerNavigableElements description]
  *
@@ -684,6 +753,7 @@ export {
 	configureContainer,
 	getContainerFocusTarget,
 	getDeepSpottableDescendants,
+	getNavigableElementsForNode,
 	getSpottableDescendants,
 	isContainer,
 	isNavigable,

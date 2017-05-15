@@ -34,7 +34,7 @@ import {
 	getContainerFocusTarget,
 	getContainerLastFocusedElement,
 	getContainersForNode,
-	getDeepSpottableDescendants,
+	getNavigableElementsForNode,
 	getSpottableDescendants,
 	isContainer,
 	isNavigable as isNavigableInContainer,
@@ -718,49 +718,6 @@ const Spotlight = (function () {
 		return false;
 	}
 
-	function isRestrictedContainer (containerId) {
-		const config = getContainerConfig(containerId);
-		return (config.restrict === 'self-only' || config.restrict === 'self-first');
-	}
-
-	function navigateContainer (direction, currentFocusedElement, containerId) {
-		const nodes = getDeepSpottableDescendants(containerId);
-		const config = getContainerConfig(containerId);
-
-		const next = navigate(
-			currentFocusedElement,
-			direction,
-			nodes,
-			config
-		);
-
-		return next;
-	}
-
-	function spotNextInRestrictedContainers (direction, currentFocusedElement, containerIds) {
-		return containerIds
-			.filter(isRestrictedContainer)
-			.reduce((next, containerId) => {
-				if (!next) {
-					next = navigateContainer(direction, currentFocusedElement, containerId);
-
-					if (!next && getContainerConfig(containerId).restrict === 'self-only') {
-						next = currentFocusedElement;
-					}
-				}
-
-				return next;
-			}, null);
-	}
-
-	function spotNextInUnrestrictedContainers (direction, currentFocusedElement, containerIds) {
-		return containerIds
-			.filter(id => !isRestrictedContainer(id))
-			.reduce((next, containerId) => {
-				return next || navigateContainer(direction, currentFocusedElement, containerId);
-			}, null);
-	}
-
 	function spotNext (direction, currentFocusedElement, currentContainerIds) {
 		const extSelector = currentFocusedElement.getAttribute('data-spot-' + direction);
 		if (typeof extSelector === 'string') {
@@ -770,14 +727,30 @@ const Spotlight = (function () {
 			return true;
 		}
 
+		let next = null;
+
 		const currentContainerId = last(currentContainerIds);
+		const candidates = getNavigableElementsForNode(currentFocusedElement);
 
-		// inside-out search
-		const insideOut = currentContainerIds.reverse();
+		// try to navigate to a preferred element
+		if (candidates.preferred) {
+			next = navigate(
+				currentFocusedElement,
+				direction,
+				candidates.preferred,
+				getContainerConfig(candidates.preferredContainerId)
+			);
+		}
 
-		let next =
-			spotNextInRestrictedContainers(direction, currentFocusedElement, insideOut) ||
-			spotNextInUnrestrictedContainers(direction, currentFocusedElement, insideOut);
+		// if preferred fails, try "all" (restricted by "self-only" containers) elements
+		if (!next) {
+			next = navigate(
+				currentFocusedElement,
+				direction,
+				candidates.all,
+				getContainerConfig(candidates.allContainerId)
+			);
+		}
 
 		if (next) {
 			getContainerConfig(currentContainerId).previous = {
