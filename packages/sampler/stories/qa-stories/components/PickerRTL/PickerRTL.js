@@ -29,16 +29,14 @@ const PickerRTL = kind({
 
 	computed: {
 		clientStyle: ({rtl}, {rtl: contextRtl}) => {
-			const options = {
-				incrementIcon: 'arrowlargeright',
-				decrementIcon: 'arrowlargeleft',
-				style: {
-					'flex-direction': 'unset'
-				}
-			};
+			const options = {};
+
 			if (contextRtl) {
 				options.incrementIcon = 'arrowlargeleft';
 				options.decrementIcon = 'arrowlargeright';
+			} else {
+				options.incrementIcon = 'arrowlargeright';
+				options.decrementIcon = 'arrowlargeleft';
 			}
 
 			return options;
@@ -46,13 +44,14 @@ const PickerRTL = kind({
 	},
 
 	render ({children, clientStyle, ...rest}) {
+		delete rest.rtl;
 		return (
 			<div>
 				<Picker
 					{...rest}
 					incrementIcon={clientStyle.incrementIcon}
 					decrementIcon={clientStyle.decrementIcon}
-					style={clientStyle.style}
+					style={{flexDirection:'unset'}}
 				>
 					{children}
 				</Picker>

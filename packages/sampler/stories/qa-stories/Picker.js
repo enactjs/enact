@@ -149,7 +149,7 @@ storiesOf('Picker')
 		)
 	)
 	.addWithInfo(
-		'RTL (PLAT-28123)',
+		'TV Guide RTL Layout (PLAT-28123)',
 		() => (
 			<PickerRTL
 				width={select('width', prop.width, 'medium')}
