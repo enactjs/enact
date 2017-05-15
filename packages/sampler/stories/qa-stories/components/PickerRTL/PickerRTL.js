@@ -29,14 +29,13 @@ const PickerRTL = kind({
 
 	computed: {
 		clientStyle: ({rtl}, {rtl: contextRtl}) => {
-			const options = {};
-
+			const options = {
+				incrementIcon: 'arrowlargeright',
+				decrementIcon: 'arrowlargeleft'
+			};
 			if (contextRtl) {
 				options.incrementIcon = 'arrowlargeleft';
 				options.decrementIcon = 'arrowlargeright';
-			} else {
-				options.incrementIcon = 'arrowlargeright';
-				options.decrementIcon = 'arrowlargeleft';
 			}
 
 			return options;
