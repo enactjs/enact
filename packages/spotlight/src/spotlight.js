@@ -491,19 +491,6 @@ const Spotlight = (function () {
 		}
 	}
 
-	function exclude (elemList, excludedElem) {
-		if (!Array.isArray(excludedElem)) {
-			excludedElem = [excludedElem];
-		}
-		for (let i = 0, index; i < excludedElem.length; i++) {
-			index = elemList.indexOf(excludedElem[i]);
-			if (index >= 0) {
-				elemList.splice(index, 1);
-			}
-		}
-		return elemList;
-	}
-
 	function isNavigable (elem, containerId, verifyContainerSelector) {
 		if (!elem || (elem.offsetWidth <= 0 && elem.offsetHeight <= 0)) {
 			return false;
