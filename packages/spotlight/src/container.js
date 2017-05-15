@@ -288,9 +288,10 @@ const getSpottableDescendants = (containerId) => {
  * Recursively get spottable descendants by including elements within sub-containers that do not
  * have `enterTo` configured
  *
- * @param   {String}  containerId  ID of container
+ * @param   {String}    containerId          ID of container
+ * @param   {String[]}  [excludeContainers]  IDs of containers to exclude from result set
  *
- * @returns {Node[]}               Array of spottable elements and containers
+ * @returns {Node[]}                         Array of spottable elements and containers
  * @memberof spotlight/container
  * @private
  */
