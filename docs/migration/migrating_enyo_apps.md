@@ -59,15 +59,19 @@ to see the exact APIs for each component.
 ##### `components` Block to `render()` Method
 
 With Enyo, a developer can declare which components are contained in a given kind or component.  This is done by specifying
-them in the `components` property of the kind.  The following example kind will render an outer `<div />` (MyControl) that
-contains another `<div />` with some text content.
+them in the `components` property of the kind.  The following example kind will render an outer `<div>` (MyControl) that
+contains another `<div>` with some text content.
 ```javascript
 ...
-kind: enyo.Control, // <div />
-name: 'MyControl',
+kind: enyo.Control, // <div>
+name: 'InnerComponent',
+content: 'This is just a &lt;div&gt; with some text',
+...
+kind: enyo.Control, // <div>
+name: 'OuterComponent',
 components: [
-	{content: 'This is another enyo.Control kind by default'} // <div />
-]
+	{kind: InnerComponent}
+],
 ...
 ```
 
@@ -77,7 +81,7 @@ In Enact, a kind can contain other kinds or components just as easily, but you u
 const InnerComponent = kind({
 	name: 'InnerComponent',
 	render: () => (
-		<div>This is just a &lt;div /&gt; with some text</div>
+		<div>This is just a &lt;div&gt; with some text</div>
 	)
 });
 
@@ -144,7 +148,7 @@ const MyComponent = kind({
 	)
 ```
 
-Due to the one-way nature of data-flow in Enact, 'get' functionality is unnecessary.  You will  know the value from either
+Due to the one-way nature of data-flow in Enact, 'get' functionality is unnecessary.  You will know the value from either
 the data state or store, depending on how you have implemented your component and application.
 
 ##### Computed Properties
