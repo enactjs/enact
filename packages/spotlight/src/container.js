@@ -728,10 +728,13 @@ function restoreLastFocusedElement (containerId) {
 
 function unmountContainer (containerId) {
 	const config = getContainerConfig(containerId);
-	persistLastFocusedElement(containerId);
 
-	if (typeof config.defaultElement !== 'string') {
-		config.defaultElement = null;
+	if (config) {
+		persistLastFocusedElement(containerId);
+
+		if (typeof config.defaultElement !== 'string') {
+			config.defaultElement = null;
+		}
 	}
 }
 
