@@ -1,6 +1,7 @@
 import Picker from '@enact/moonstone/Picker';
 import {icons} from '@enact/moonstone/Icon';
 import PickerAddRemove from './components/PickerAddRemove';
+import PickerRTL from './components/PickerRTL';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {boolean, select} from '@kadira/storybook-addon-knobs';
@@ -145,5 +146,19 @@ storiesOf('Picker')
 			>
 				{pickerList.emptyList}
 			</PickerAddRemove>
+		)
+	)
+	.addWithInfo(
+		'RTL (PLAT-28123)',
+		() => (
+			<PickerRTL
+				width={select('width', prop.width, 'medium')}
+				wrap={boolean('wrap')}
+				joined={boolean('joined')}
+				noAnimation={boolean('noAnimation')}
+				disabled={boolean('disabled')}
+			>
+				{pickerList.vegetables}
+			</PickerRTL>
 		)
 	);
