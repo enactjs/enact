@@ -1,0 +1,25 @@
+//
+// Spotlight Mixins
+//
+
+// Focused elements
+.focus(@rules) when (isruleset(@rules)) {
+	:global(.spottable):focus {
+		@rules();
+	}
+}
+
+// Disabled elements
+.disabled(@rules) when (isruleset(@rules)) {
+	[disabled],
+	:global(.spottableDisabled):focus {
+		@rules();
+	}
+}
+
+// Muted elements
+.muted(@rules) when (isruleset(@rules)) {
+	[data-container-muted="true"] {
+		@rules();
+	}
+}

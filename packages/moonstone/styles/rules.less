@@ -31,29 +31,28 @@
 	}
 
 	// Spotlight
-	:global(.spottable):focus {
+	.focus({
 		background-color: @moon-spotlight-bg-color;
 		color: @moon-spotlight-text-color;
-	}
+	});
 
-	[data-container-muted="true"] {
-		:global(.spottable):focus {
+	// Spotlight Muted Components
+	.muted({
+		.focus({
 			background-color: transparent;
 			color: @moon-text-color;
-		}
-	}
+		});
+	});
 
-	// Disabled components
-	[disabled],
-	:global(.spottableDisabled):focus {
+	// Disabled Components
+	.disabled({
 		.vendor-opacity(@moon-disabled-opacity);
 
 		cursor: default;
 
 		// Disabled children of disabled components
-		[disabled],
-		:global(.spottableDisabled):focus {
+		.disabled({
 			.vendor-opacity(1);
-		}
-	}
+		});
+	});
 });
