@@ -673,7 +673,8 @@ function getContainerFocusTarget (containerId) {
 
 	const next = getContainerNavigableElements(containerId)[0];
 	if (isContainer(next)) {
-		return getContainerFocusTarget(getContainerId(next));
+		const nextId = isContainerNode(next) ? getContainerId(next) : next;
+		return getContainerFocusTarget(nextId);
 	}
 
 	return next;
