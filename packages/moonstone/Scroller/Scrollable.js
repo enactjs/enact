@@ -194,12 +194,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.initChildRef = this.initRef('childRef');
 			this.initContainerRef = this.initRef('containerRef');
 
-			const {onKeyDown, onKeyUp} = this;
+			const {onKeyDown} = this;
 			// We have removed all mouse event handlers for now.
 			// Revisit later for touch usage.
 			this.eventHandlers = {
-				onKeyDown,
-				onKeyUp
+				onKeyDown
 			};
 
 			this.verticalScrollbarProps = {
@@ -388,10 +387,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 							this.scrollTop,
 							calcVelocity(-d.dx, d.dt),
 							calcVelocity(-d.dy, d.dt)
-						);
+						),
+						focusedItem = Spotlight.getCurrent();
 
-					if (typeof window !== 'undefined') {
-						window.document.activeElement.blur();
+					if (focusedItem) {
+						focusedItem.blur();
 					}
 					this.childRef.setContainerDisabled(true);
 					this.isScrollAnimationTargetAccumulated = false;
@@ -427,11 +427,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		onFocus = (e) => {
-			if (this.isKeyDown && !this.isDragging) {
+			if (!(Spotlight.getPointerMode() || this.isDragging)) {
 				const
 					item = e.target,
 					positionFn = this.childRef.calculatePositionOnFocus,
-					spotItem = window.document.activeElement;
+					spotItem = Spotlight.getCurrent();
 
 				if (item && item !== this.lastFocusedItem && item === spotItem && positionFn) {
 					const pos = positionFn(item);
@@ -448,13 +448,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					const index = Number.parseInt(target.getAttribute(dataIndexAttribute));
 					this.childRef.setSpotlightContainerRestrict(keyCode, index);
 				}
-				this.isKeyDown = true;
-			}
-		}
-
-		onKeyUp = ({keyCode}) => {
-			if (getDirection(keyCode)) {
-				this.isKeyDown = false;
 			}
 		}
 
@@ -465,10 +458,14 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					bounds = this.getScrollBounds(),
 					isHorizontal = this.canScrollHorizontally(bounds),
 					isVertical = this.canScrollVertically(bounds),
-					delta = this.wheel(e, isHorizontal, isVertical);
+					delta = this.wheel(e, isHorizontal, isVertical),
+					focusedItem = Spotlight.getCurrent();
 
 				Spotlight.setPointerMode(false);
-				window.document.activeElement.blur();
+				if (focusedItem) {
+					focusedItem.blur();
+				}
+
 				this.childRef.setContainerDisabled(true);
 				this.scrollToAccumulatedTarget(delta, isHorizontal, isVertical);
 			}
@@ -826,6 +823,23 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.updateScrollbars();
 		}
 
+		updateScrollOnFocus () {
+			const
+				focusedItem = Spotlight.getCurrent(),
+				{calculatePositionOnFocus, getScrollBounds} = this.childRef,
+				{scrollHeight: previousScrollHeight} = this.bounds,
+				{scrollHeight: currentScrollHeight} = getScrollBounds(),
+				scrollInfo = {previousScrollHeight, scrollTop: this.scrollTop};
+
+			if (focusedItem) {
+				const position = calculatePositionOnFocus(focusedItem, scrollInfo);
+				this.startScrollOnFocus(position, focusedItem);
+			}
+
+			// update `scrollHeight`
+			this.bounds.scrollHeight = currentScrollHeight;
+		}
+
 		// component life cycle
 
 		componentDidMount () {
@@ -845,6 +859,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			if (this.scrollToInfo !== null) {
 				this.scrollTo(this.scrollToInfo);
 			}
+
+			this.updateScrollOnFocus();
 		}
 
 		componentWillUnmount () {
@@ -859,6 +875,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
 		// state member.
 		enqueueForceUpdate = () => {
+			this.childRef.calculateMetrics();
 			this.forceUpdateJob.start();
 		}
 
