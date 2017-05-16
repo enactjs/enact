@@ -59,19 +59,23 @@ to see the exact APIs for each component.
 ##### `components` Block to `render()` Method
 
 With Enyo, a developer can declare which components are contained in a given kind or component.  This is done by specifying
-them in the `components` property of the kind.  The following example kind will render an outer `<div>` (MyControl) that
-contains another `<div>` with some text content.
+them in the `components` property of the kind.  The following example kind (OuterComponent) will render an outer `<div>`
+(MyControl) that contains another `<div>` with some text content.
 ```javascript
 ...
-kind: enyo.Control, // <div>
-name: 'InnerComponent',
-content: 'This is just a &lt;div&gt; with some text',
+var InnerComponent = kind({
+	name: 'InnerComponent',
+	kind: enyo.Control, // <div>
+	content: 'This is just a &lt;div&gt; with some text' 
+});
 ...
-kind: enyo.Control, // <div>
-name: 'OuterComponent',
-components: [
-	{kind: InnerComponent}
-],
+var OuterComponent = kind({
+	name: 'OuterComponent',
+	kind: enyo.Control, // <div>
+	components: [
+		{kind: InnerComponent}
+	]
+});
 ...
 ```
 
@@ -111,8 +115,8 @@ This is further enhanced by allowing you to specify 'published' (or 'public' in 
 individual `set[Property]()` and `get[Property]()` methods:
 ```javascript
 ...
-kind: enyo.Control,
 name: 'MyControl',
+kind: enyo.Control,
 published: {
 	foo: 'bar'
 }
@@ -239,13 +243,13 @@ operation.
 ```javascript
 // MyModel.js
 ...
-kind: enyo.Model,
 name: 'MyModel',
+kind: enyo.Model,
 ...
 // MyCollection.js
 ...
-kind: enyo.Collection,
 name: 'MyCollection',
+kind: enyo.Collection,
 model: MyModel,
 ...
 // App.js
