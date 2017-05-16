@@ -34,9 +34,11 @@
 	:global(.spottable):focus {
 		background-color: @moon-spotlight-bg-color;
 		color: @moon-spotlight-text-color;
+	}
 
-		[data-container-muted='true'] & {
-			background-color: @moon-bg-color;	// This probably shouldn't be assigning the background color
+	[data-container-muted="true"] {
+		:global(.spottable):focus {
+			background-color: transparent;
 			color: @moon-text-color;
 		}
 	}
