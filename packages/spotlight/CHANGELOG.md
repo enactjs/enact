@@ -8,6 +8,10 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 - `spotlight/SpotlightRootDecorator.spotlightRootContainerName` to be removed in 2.0.0
 
+### Added
+
+- `spotlight/styles/mixins.less` which includes several mixins (`.focus`, `.disabled`, `.muted`, and `.mutedFocus`) to make it a little easier to target specific spotlight states
+
 ### Changed
 
 - `spotlight/SpotlightContainerDecorator` config property, `enterTo`, default value to be `null` rather than `'last-focused'`
