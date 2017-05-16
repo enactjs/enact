@@ -14,16 +14,11 @@
 	font-weight: normal;
 	font-style: normal;
 	letter-spacing: normal;
-	padding: @moon-app-keepout;
 	color: @moon-text-color;
 
 	::selection {
 		color: @moon-spotlight-text-color;
 		background-color: lighten(@moon-spotlight-bg-color, 18%);
-	}
-
-	&:global(.enact-locale-right-to-left) {
-		direction: rtl;
 	}
 
 	// For cases where we have a skin inside another skin, we actually do want to impose a BG color

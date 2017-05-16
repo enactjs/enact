@@ -474,9 +474,9 @@ const SliderFactory = factory(css => {
 	 * @public
 	 */
 	return Changeable(
-		Pressable(
-			Spottable(
-				SliderDecorator(
+		Spottable(
+			SliderDecorator(
+				Pressable(
 					Base
 				)
 			)
