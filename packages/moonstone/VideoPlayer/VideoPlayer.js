@@ -12,7 +12,7 @@ import {forward} from '@enact/core/handle';
 import ilib from '@enact/i18n';
 import {Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
-import {platform} from '@enact/webos/platform';
+import {platform} from '@enact/core/platform';
 import Slottable from '@enact/ui/Slottable';
 import {getDirection, Spotlight} from '@enact/spotlight';
 import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
@@ -939,7 +939,7 @@ const VideoPlayerBase = class extends React.Component {
 		// Set native playback rate
 		this.video.playbackRate = pbNumber;
 
-		if (platform.unknown) {
+		if (!(platform.webos)) {
 			// For supporting cross browser behavior
 			if (pbNumber < 0) {
 				this.beginRewind();

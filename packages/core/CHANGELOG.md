@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact core module, newest chan
 ### Added
 
 - `core/handle.oneOf` to support branching event handlers
+- `core/platform` to support platform detection across multiple browsers
 
 ## [1.1.0] - 2017-04-21
 
