@@ -4,6 +4,7 @@
  * @module moonstone/IncrementSlider
  */
 
+import {extractAriaProps} from '@enact/core/util';
 import $L from '@enact/i18n/$L';
 import Changeable from '@enact/ui/Changeable';
 import factory from '@enact/core/factory';
@@ -335,60 +336,65 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			incrementAriaLabel: ({value}) => (`${value} ${$L('press ok button to increase the value')}`)
 		},
 
-		render: ({active, backgroundProgress, children, decrementAriaLabel, decrementDisabled, decrementIcon, detachedKnob, disabled, focused, incrementAriaLabel, incrementDisabled, incrementIcon, incrementSliderClasses, inputRef, max, min, noFill, onActivate, onChange, onDecrement, onIncrement, onSpotlightDisappear, scrubbing, sliderBarRef, sliderRef, spotlightDisabled, step, tooltip, tooltipAsPercent, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => (
-			<div {...rest} className={incrementSliderClasses}>
-				<IncrementSliderButton
-					aria-label={decrementAriaLabel}
-					className={css.decrementButton}
-					disabled={decrementDisabled}
-					onClick={onDecrement}
-					onSpotlightDisappear={onSpotlightDisappear}
-					spotlightDisabled={spotlightDisabled}
-				>
-					{decrementIcon}
-				</IncrementSliderButton>
-				<Slider
-					active={active}
-					backgroundProgress={backgroundProgress}
-					className={css.slider}
-					disabled={disabled}
-					detachedKnob={detachedKnob}
-					focused={focused}
-					inputRef={inputRef}
-					max={max}
-					min={min}
-					noFill={noFill}
-					onActivate={onActivate}
-					onChange={onChange}
-					onDecrement={onDecrement}
-					onIncrement={onIncrement}
-					onSpotlightDisappear={onSpotlightDisappear}
-					scrubbing={scrubbing}
-					sliderBarRef={sliderBarRef}
-					sliderRef={sliderRef}
-					spotlightDisabled={spotlightDisabled}
-					step={step}
-					tooltip={tooltip}
-					tooltipAsPercent={tooltipAsPercent}
-					tooltipForceSide={tooltipForceSide}
-					tooltipSide={tooltipSide}
-					value={value}
-					vertical={vertical}
-				>
-					{children}
-				</Slider>
-				<IncrementSliderButton
-					aria-label={incrementAriaLabel}
-					className={css.incrementButton}
-					disabled={incrementDisabled}
-					onClick={onIncrement}
-					onSpotlightDisappear={onSpotlightDisappear}
-					spotlightDisabled={spotlightDisabled}
-				>
-					{incrementIcon}
-				</IncrementSliderButton>
-			</div>
-		)
+		render: ({active, backgroundProgress, children, decrementAriaLabel, decrementDisabled, decrementIcon, detachedKnob, disabled, focused, incrementAriaLabel, incrementDisabled, incrementIcon, incrementSliderClasses, inputRef, max, min, noFill, onActivate, onChange, onDecrement, onIncrement, onSpotlightDisappear, scrubbing, sliderBarRef, sliderRef, spotlightDisabled, step, tooltip, tooltipAsPercent, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => {
+			const ariaProps = extractAriaProps(rest);
+
+			return (
+				<div {...rest} className={incrementSliderClasses}>
+					<IncrementSliderButton
+						aria-label={decrementAriaLabel}
+						className={css.decrementButton}
+						disabled={decrementDisabled}
+						onClick={onDecrement}
+						onSpotlightDisappear={onSpotlightDisappear}
+						spotlightDisabled={spotlightDisabled}
+					>
+						{decrementIcon}
+					</IncrementSliderButton>
+					<Slider
+						{...ariaProps}
+						active={active}
+						backgroundProgress={backgroundProgress}
+						className={css.slider}
+						disabled={disabled}
+						detachedKnob={detachedKnob}
+						focused={focused}
+						inputRef={inputRef}
+						max={max}
+						min={min}
+						noFill={noFill}
+						onActivate={onActivate}
+						onChange={onChange}
+						onDecrement={onDecrement}
+						onIncrement={onIncrement}
+						onSpotlightDisappear={onSpotlightDisappear}
+						scrubbing={scrubbing}
+						sliderBarRef={sliderBarRef}
+						sliderRef={sliderRef}
+						spotlightDisabled={spotlightDisabled}
+						step={step}
+						tooltip={tooltip}
+						tooltipAsPercent={tooltipAsPercent}
+						tooltipForceSide={tooltipForceSide}
+						tooltipSide={tooltipSide}
+						value={value}
+						vertical={vertical}
+					>
+						{children}
+					</Slider>
+					<IncrementSliderButton
+						aria-label={incrementAriaLabel}
+						className={css.incrementButton}
+						disabled={incrementDisabled}
+						onClick={onIncrement}
+						onSpotlightDisappear={onSpotlightDisappear}
+						spotlightDisabled={spotlightDisabled}
+					>
+						{incrementIcon}
+					</IncrementSliderButton>
+				</div>
+			);
+		}
 	});
 });
 
