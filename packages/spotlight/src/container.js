@@ -289,22 +289,22 @@ const getSpottableDescendants = (containerId) => {
  * have `enterTo` configured
  *
  * @param   {String}    containerId          ID of container
- * @param   {String[]}  [excludeContainers]  IDs of containers to exclude from result set
+ * @param   {String[]}  [excludedContainers] IDs of containers to exclude from result set
  *
  * @returns {Node[]}                         Array of spottable elements and containers
  * @memberof spotlight/container
  * @private
  */
-const getDeepSpottableDescendants = (containerId, excludeContainers) => {
+const getDeepSpottableDescendants = (containerId, excludedContainers) => {
 	return getSpottableDescendants(containerId)
 		.map(n => {
 			if (isContainer(n)) {
 				const id = getContainerId(n);
 				const config = getContainerConfig(id);
-				if (excludeContainers && excludeContainers.indexOf(id) >= 0) {
+				if (excludedContainers && excludedContainers.indexOf(id) >= 0) {
 					return [];
 				} else if (!config.enterTo) {
-					return getDeepSpottableDescendants(id, excludeContainers);
+					return getDeepSpottableDescendants(id, excludedContainers);
 				}
 			}
 
