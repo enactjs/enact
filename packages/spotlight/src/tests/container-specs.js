@@ -6,10 +6,11 @@ import {
 	getContainerConfig,
 	getContainerFocusTarget,
 	getContainersForNode,
+	getNavigableElementsForNode,
 	getSpottableDescendants,
 	isContainer,
 	isNavigable,
-	persistLastFocusedElement,
+	unmountContainer,
 	removeContainer,
 	rootContainerId,
 	setContainerLastFocusedElement
@@ -484,7 +485,7 @@ describe('container', () => {
 			}
 		));
 
-		it('should cascade search into child containers', testScenario(
+		it('should cascade search into child containers with', testScenario(
 			scenarios.nestedContainersWithDefaultAndLastFocused,
 			(root) => {
 				configureContainer('container', {
@@ -496,7 +497,29 @@ describe('container', () => {
 					defaultElement: '.spottable-default'
 				});
 
-				setContainerLastFocusedElement(root.querySelector('#lastChildFocused'), ['child']);
+				setContainerLastFocusedElement(root.querySelector('#lastChildFocused'), [rootContainerId, 'container', 'child']);
+
+				const expected = 'lastChildFocused';
+				const actual = getContainerFocusTarget('container').id;
+
+				expect(actual).to.equal(expected);
+			}
+		));
+
+		it('should cascade search into child containers when multiple containers have enterTo configured', testScenario(
+			scenarios.nestedContainersWithDefaultAndLastFocused,
+			(root) => {
+				configureContainer('container', {
+					enterTo: 'last-focused',
+					defaultElement: '.spottable-default'
+				});
+
+				configureContainer('child', {
+					enterTo: 'last-focused',
+					defaultElement: '.spottable-default'
+				});
+
+				setContainerLastFocusedElement(root.querySelector('#lastChildFocused'), [rootContainerId, 'container', 'child']);
 
 				const expected = 'lastChildFocused';
 				const actual = getContainerFocusTarget('container').id;
@@ -658,7 +681,7 @@ describe('container', () => {
 		));
 	});
 
-	describe('#persistLastFocusedElement', () => {
+	describe('#unmountContainer', () => {
 		beforeEach(setupContainers);
 		afterEach(teardownContainers);
 
@@ -672,7 +695,7 @@ describe('container', () => {
 					getContainersForNode(item)
 				);
 
-				persistLastFocusedElement(rootContainerId);
+				unmountContainer(rootContainerId);
 
 				const expected = true;
 				const actual = getContainerConfig(rootContainerId).lastFocusedKey.element;
@@ -695,7 +718,7 @@ describe('container', () => {
 					getContainersForNode(item)
 				);
 
-				persistLastFocusedElement(rootContainerId);
+				unmountContainer(rootContainerId);
 
 				const expected = true;
 				const actual = getContainerConfig(rootContainerId).lastFocusedKey.container;
@@ -714,7 +737,7 @@ describe('container', () => {
 					getContainersForNode(item)
 				);
 
-				persistLastFocusedElement(rootContainerId);
+				unmountContainer(rootContainerId);
 
 				const expected = index;
 				const actual = getContainerConfig(rootContainerId).lastFocusedKey.key;
@@ -739,7 +762,7 @@ describe('container', () => {
 					getContainersForNode(item)
 				);
 
-				persistLastFocusedElement(rootContainerId);
+				unmountContainer(rootContainerId);
 
 				const expected = `item-${index}`;
 				const actual = getContainerConfig(rootContainerId).lastFocusedKey.key;
@@ -762,7 +785,7 @@ describe('container', () => {
 					getContainersForNode(item)
 				);
 
-				persistLastFocusedElement(rootContainerId);
+				unmountContainer(rootContainerId);
 
 				const expected = 'first-container';
 				const actual = getContainerConfig(rootContainerId).lastFocusedKey.key;
@@ -782,10 +805,146 @@ describe('container', () => {
 					getContainersForNode(item)
 				);
 
-				persistLastFocusedElement(rootContainerId);
+				unmountContainer(rootContainerId);
 
 				const expected = 4;
 				const actual = getContainerConfig(rootContainerId).lastFocusedKey.key;
+
+				expect(actual).to.equal(expected);
+			}
+		));
+	});
+
+	describe('#getNavigableElementsForNode', () => {
+		beforeEach(setupContainers);
+		afterEach(teardownContainers);
+
+		it('should include all spottable descendants of the first restrict="self-first" container ancestor', testScenario(
+			scenarios.complexTree,
+			(root) => {
+				configureContainer('second-container', {
+					restrict: 'none'
+				});
+				configureContainer('first-container', {
+					restrict: 'self-first'
+				});
+				const element = root.querySelector(`[${containerAttribute}="second-container"] .spottable`);
+
+				const expected = 5;
+				const actual = getNavigableElementsForNode(element).preferred.length;
+
+				expect(actual).to.equal(expected);
+			}
+		));
+
+		it('should include all spottable descendants of the first restrict="self-only" container ancestor', testScenario(
+			scenarios.complexTree,
+			(root) => {
+				configureContainer('second-container', {
+					restrict: 'none'
+				});
+				configureContainer('first-container', {
+					restrict: 'self-only'
+				});
+				const element = root.querySelector(`[${containerAttribute}="second-container"] .spottable`);
+
+				const expected = 5;
+				const actual = getNavigableElementsForNode(element).all.length;
+
+				expect(actual).to.equal(expected);
+			}
+		));
+
+		it('should include all spottable descendants of the first restrict="self-only" container ancestor ignoring intermediate restrict="self-first" containers', testScenario(
+			scenarios.complexTree,
+			(root) => {
+				configureContainer('second-container', {
+					restrict: 'self-first'
+				});
+				configureContainer('first-container', {
+					restrict: 'self-only'
+				});
+				const element = root.querySelector(`[${containerAttribute}="second-container"] .spottable`);
+
+				const expected = 5;
+				const actual = getNavigableElementsForNode(element).all.length;
+
+				expect(actual).to.equal(expected);
+			}
+		));
+
+		it('should include all spottable descendants of enterTo"lastFocused" containers within the first restrict"self-first" container ancestor', testScenario(
+			scenarios.complexTree,
+			(root) => {
+				configureContainer('second-container', {
+					restrict: 'none',
+					enterTo: 'lastFocused'
+				});
+				configureContainer('first-container', {
+					restrict: 'self-first'
+				});
+				const element = root.querySelector(`[${containerAttribute}="second-container"] .spottable`);
+
+				const expected = 5;
+				const actual = getNavigableElementsForNode(element).preferred.length;
+
+				expect(actual).to.equal(expected);
+			}
+		));
+
+		it('should include all spottable descendants of enterTo"defaultElement" containers within the first restrict"self-first" container ancestor', testScenario(
+			scenarios.complexTree,
+			(root) => {
+				configureContainer('second-container', {
+					restrict: 'none',
+					enterTo: 'defaultElement'
+				});
+				configureContainer('first-container', {
+					restrict: 'self-first'
+				});
+				const element = root.querySelector(`[${containerAttribute}="second-container"] .spottable`);
+
+				const expected = 5;
+				const actual = getNavigableElementsForNode(element).preferred.length;
+
+				expect(actual).to.equal(expected);
+			}
+		));
+
+		it('should include all spottable descendants of root container when there are no restrict="self-first" container ancestors', testScenario(
+			scenarios.complexTree,
+			(root) => {
+				configureContainer('first-container', {
+					restrict: 'none'
+				});
+				configureContainer('second-container', {
+					restrict: 'none'
+				});
+				const element = root.querySelector(`[${containerAttribute}="second-container"] .spottable`);
+
+				const expected = 6;
+				const actual = getNavigableElementsForNode(element).all.length;
+
+				expect(actual).to.equal(expected);
+			}
+		));
+
+		it('should not return a preferred list when there are no containers with restrict="self-first"', testScenario(
+			scenarios.complexTree,
+			(root) => {
+				configureContainer(rootContainerId, {
+					restrict: 'none'
+				});
+				configureContainer('first-container', {
+					restrict: 'none'
+				});
+				configureContainer('second-container', {
+					restrict: 'none'
+				});
+				const element = root.querySelector(`[${containerAttribute}="second-container"] .spottable`);
+
+				const expected = null;
+				const actual = getNavigableElementsForNode(element).preferred;
 
 				expect(actual).to.equal(expected);
 			}

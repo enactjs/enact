@@ -33,12 +33,12 @@ import {
 	getContainerDefaultElement,
 	getContainerFocusTarget,
 	getContainerLastFocusedElement,
-	getContainerNavigableElements,
 	getContainersForNode,
+	getNavigableElementsForNode,
 	getSpottableDescendants,
 	isContainer,
 	isNavigable as isNavigableInContainer,
-	persistLastFocusedElement,
+	unmountContainer,
 	removeAllContainers,
 	removeContainer,
 	rootContainerId,
@@ -491,19 +491,6 @@ const Spotlight = (function () {
 		}
 	}
 
-	function exclude (elemList, excludedElem) {
-		if (!Array.isArray(excludedElem)) {
-			excludedElem = [excludedElem];
-		}
-		for (let i = 0, index; i < excludedElem.length; i++) {
-			index = elemList.indexOf(excludedElem[i]);
-			if (index >= 0) {
-				elemList.splice(index, 1);
-			}
-		}
-		return elemList;
-	}
-
 	function isNavigable (elem, containerId, verifyContainerSelector) {
 		if (!elem || (elem.offsetWidth <= 0 && elem.offsetHeight <= 0)) {
 			return false;
@@ -648,30 +635,6 @@ const Spotlight = (function () {
 			.filter(n => !isContainer(n));
 	}
 
-	function getAllNavigableElementsFromNode (node, containerIds = getContainersForNode(node)) {
-		return getAllContainerIds().map(containerId => {
-			if (containerIds.indexOf(containerId) > -1) {
-				// for containers that are ancestors of node, we ignore enterTo and use any
-				// spottable elements
-				return getSpottableDescendants(containerId);
-			} else {
-				// for other containers, we use only the navigable elements
-				return getContainerNavigableElements(containerId);
-			}
-		})
-		// flatten
-		.reduce(concat, [])
-		// filter out the current node and any containers (because we've already extracted the
-		// relevant target for each container above)
-		.filter(n => {
-			if (n === node || isContainer(n)) {
-				return false;
-			}
-
-			return true;
-		});
-	}
-
 	function focusNext (next, direction, currentContainerIds, currentFocusedElement) {
 		const nextContainerIds = getContainersForNode(next);
 		const nextContainerId = last(nextContainerIds);
@@ -751,36 +714,28 @@ const Spotlight = (function () {
 			return true;
 		}
 
+		let next = null;
+
 		const currentContainerId = last(currentContainerIds);
-		let next;
-		let preventFindNext;
+		const candidates = getNavigableElementsForNode(currentFocusedElement);
 
-		for (let i = currentContainerIds.length; i-- > 0;) {
-			const id = currentContainerIds[i];
-			const config = getContainerConfig(id);
-			const spotlightModal = config.restrict === 'self-only';
-
-			if (spotlightModal || config.restrict === 'self-first') {
-				next = navigate(
-					currentFocusedElement,
-					direction,
-					exclude(getSpottableDescendants(id), currentFocusedElement),
-					config
-				);
-
-				if (next || spotlightModal) {
-					preventFindNext = true;
-					break;
-				}
-			}
-		}
-
-		if (!next && !preventFindNext) {
+		// try to navigate to a preferred element
+		if (candidates.preferred) {
 			next = navigate(
 				currentFocusedElement,
 				direction,
-				getAllNavigableElementsFromNode(currentFocusedElement, currentContainerIds),
-				getContainerConfig(currentContainerId)
+				candidates.preferred,
+				getContainerConfig(candidates.preferredContainerId)
+			);
+		}
+
+		// if preferred fails, try "all" (restricted by "self-only" containers) elements
+		if (!next) {
+			next = navigate(
+				currentFocusedElement,
+				direction,
+				candidates.all,
+				getContainerConfig(candidates.allContainerId)
 			);
 		}
 
@@ -1050,7 +1005,7 @@ const Spotlight = (function () {
 			if (!containerId || typeof containerId !== 'string') {
 				throw new Error('Please assign the "containerId"!');
 			}
-			persistLastFocusedElement(containerId);
+			unmountContainer(containerId);
 		},
 
 		/**
