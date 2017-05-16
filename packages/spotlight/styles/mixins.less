@@ -23,3 +23,12 @@
 		@rules();
 	}
 }
+
+// Muted ancestor, focused component
+.mutedFocus(@rules) when (isruleset(@rules)) {
+	.muted({
+		.focus({
+			@rules();
+		});
+	});
+}

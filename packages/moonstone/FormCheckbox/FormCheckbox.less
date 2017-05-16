@@ -1,5 +1,6 @@
 // FormCheckbox.less
 //
+@import '../styles/mixins.less';
 @import '../styles/variables.less';
 @import '../styles/text.less';
 @import '../styles/skin.less';
@@ -39,10 +40,18 @@
 	}
 }
 
-:global(.spottable):focus {
+.focus({
 	.formCheckbox {
 		&:not([disabled]) {
 			background-color: @moon-spotlight-color;
 		}
 	}
-}});
+});
+.mutedFocus({
+	.formCheckbox {
+		&:not([disabled]) {
+			background-color: @moon-formcheckbox-bg-color;
+		}
+	}
+});
+});

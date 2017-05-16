@@ -51,19 +51,20 @@
 	}
 }
 
-:global(.spottable):focus .icon {
-	color: @moon-spotlight-text-color;
-	background-position: center -(@moon-icon-sprite-size + ((@moon-icon-sprite-size - @moon-icon-size) / 2));
+.focus({
+	.icon {
+		color: @moon-spotlight-text-color;
+		background-position: center -(@moon-icon-sprite-size + ((@moon-icon-sprite-size - @moon-icon-size) / 2));
 
-	&.small {
-		background-position: center -(@moon-icon-sprite-small-size + ((@moon-icon-sprite-small-size - @moon-icon-small-size) / 2));
-	}
-}
-
-[data-container-muted='true'] {
-	:global(.spottable):focus {
-		.icon {
-			color: @moon-spotlight-text-color;
+		&.small {
+			background-position: center -(@moon-icon-sprite-small-size + ((@moon-icon-sprite-small-size - @moon-icon-small-size) / 2));
 		}
 	}
-}});
+});
+
+.mutedFocus({
+	.icon {
+		color: inherit;
+	}
+});
+});
