@@ -485,7 +485,7 @@ describe('container', () => {
 			}
 		));
 
-		it('should cascade search into child containers', testScenario(
+		it('should cascade search into child containers with', testScenario(
 			scenarios.nestedContainersWithDefaultAndLastFocused,
 			(root) => {
 				configureContainer('container', {
@@ -497,7 +497,29 @@ describe('container', () => {
 					defaultElement: '.spottable-default'
 				});
 
-				setContainerLastFocusedElement(root.querySelector('#lastChildFocused'), ['child']);
+				setContainerLastFocusedElement(root.querySelector('#lastChildFocused'), [rootContainerId, 'container', 'child']);
+
+				const expected = 'lastChildFocused';
+				const actual = getContainerFocusTarget('container').id;
+
+				expect(actual).to.equal(expected);
+			}
+		));
+
+		it('should cascade search into child containers when multiple containers have enterTo configured', testScenario(
+			scenarios.nestedContainersWithDefaultAndLastFocused,
+			(root) => {
+				configureContainer('container', {
+					enterTo: 'last-focused',
+					defaultElement: '.spottable-default'
+				});
+
+				configureContainer('child', {
+					enterTo: 'last-focused',
+					defaultElement: '.spottable-default'
+				});
+
+				setContainerLastFocusedElement(root.querySelector('#lastChildFocused'), [rootContainerId, 'container', 'child']);
 
 				const expected = 'lastChildFocused';
 				const actual = getContainerFocusTarget('container').id;
