@@ -13,7 +13,7 @@ import ilib from '@enact/i18n';
 import RadioDecorator from '@enact/ui/RadioDecorator';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Toggleable from '@enact/ui/Toggleable';
+import {Expandable} from '../../ExpandableItem';
 
 const CancelableDecorator = Cancelable({
 	component: 'span',
@@ -245,8 +245,7 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 		}
 	};
 
-	return Toggleable(
-		{toggle: null, activate: 'onOpen', deactivate: 'onClose', prop: 'open'},
+	return Expandable(
 		RadioDecorator(
 			{activate: 'onOpen', deactivate: 'onClose', prop: 'open'},
 			Changeable(

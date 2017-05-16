@@ -7,6 +7,7 @@
 
 import hoc from '@enact/core/hoc';
 import kind from '@enact/core/kind';
+import PropTypes from 'prop-types';
 import React from 'react';
 
 /**
@@ -70,7 +71,7 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => kind({
 		 * @default [providedByConfig]
 		 * @public
 		 */
-		skin: React.PropTypes.oneOf(config.skins)
+		skin: PropTypes.oneOf(config.skins)
 	},
 
 	defaultProps: {
