@@ -241,7 +241,15 @@ storiesOf('Spotlight')
 				<div style={style.flexBox}>
 					<Container style={style.container} spotlightMuted>
 						<Item onFocus={action('onFocus')} onBlur={action('onBlur')}>1</Item>
-						<Item onFocus={action('onFocus')} onBlur={action('onBlur')}>2</Item>
+						<ExpandableList
+							noLockBottom
+							title="ExpandableList"
+						>
+							{Items}
+						</ExpandableList>
+						<CheckboxItem>
+							Hello
+						</CheckboxItem>
 						<Item onFocus={action('onFocus')} onBlur={action('onBlur')}>3</Item>
 					</Container>
 				</div>
