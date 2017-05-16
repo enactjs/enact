@@ -1,7 +1,10 @@
+// Panels.less
+//
 @import '../styles/mixins.less';
-@import '../styles/colors.less';
 @import '../styles/variables.less';
+@import '../styles/skin.less';
 
+.applySkins({
 .viewport {
 	position: absolute;
 	.position(0);
@@ -21,7 +24,6 @@
 		width: @moon-breadcrumb-width;
 
 		.breadcrumbHeader {
-			border-top: 6px solid #ccc;
 			padding-top: 3px;
 			margin: @moon-app-keepout;
 			font-family: @moon-super-header-font-family;
@@ -46,7 +48,7 @@
 		pointer-events: auto;
 	}
 
-	:global(.enact-locale-right-to-left) & {
+	:global(.enact-locale-right-to-left)& {
 		direction: ltr;
 
 		.viewport {
@@ -213,3 +215,4 @@
 // 		display: none;
 // 	}
 // }
+});

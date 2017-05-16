@@ -3,7 +3,8 @@ import {Announce} from '@enact/ui/AnnounceDecorator';
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import {Job} from '@enact/core/util';
-import React, {Component, PropTypes} from 'react';
+import PropTypes from 'prop-types';
+import React, {Component} from 'react';
 import ri from '@enact/ui/resolution';
 import Spotlight from '@enact/spotlight';
 
@@ -28,7 +29,7 @@ const
 		thumbClass: css.scrollerHthumb
 	},
 	nop = () => {},
-	minThumbSize = ri.scale(4),
+	minThumbSize = 20,
 	prepareButton = (isPrev) => (isVertical, rtl) => {
 		let direction;
 
@@ -238,7 +239,7 @@ class ScrollbarBase extends Component {
 	calculateMetrics () {
 		this.thumbSize = this.thumbRef[this.scrollbarInfo.sizeProperty];
 		this.trackSize = this.containerRef[this.scrollbarInfo.sizeProperty];
-		this.minThumbSizeRatio = minThumbSize / this.trackSize;
+		this.minThumbSizeRatio = ri.scale(minThumbSize) / this.trackSize;
 	}
 
 	initRef (prop) {

@@ -10,12 +10,12 @@
 import {extractAriaProps} from '@enact/core/util';
 import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import LabeledItem from '../LabeledItem';
 
 import Expandable from './Expandable';
-import ExpandableContainer from './ExpandableContainer';
 import ExpandableTransitionContainer from './ExpandableTransitionContainer';
 
 const isUp = is('up');
@@ -106,12 +106,28 @@ const ExpandableItemBase = kind({
 		onClose: PropTypes.func,
 
 		/**
+		 * Callback to be called when the expandable closes
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		onHide: PropTypes.func,
+
+		/**
 		 * Callback to be called when a condition occurs which should cause the expandable to open
 		 *
 		 * @type {Function}
 		 * @public
 		 */
 		onOpen: PropTypes.func,
+
+		/**
+		 * Callback to be called when the expandable opens
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		onShow: PropTypes.func,
 
 		/**
 		 * The handler to run when the component is removed while retaining focus.
@@ -130,6 +146,14 @@ const ExpandableItemBase = kind({
 		 * @public
 		 */
 		open: PropTypes.bool,
+
+		/**
+		 * Sets a reference to the root container node of the ExpandableItem
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		setContainerNode: PropTypes.func,
 
 		/**
 		 * Controls when `label` is shown.
@@ -205,7 +229,7 @@ const ExpandableItemBase = kind({
 		transitionSpotlightDisabled: ({open, spotlightDisabled}) => (spotlightDisabled || !open)
 	},
 
-	render: ({children, disabled, handleKeyDown, handleOpen, label, open, onSpotlightDisappear, spotlightDisabled, title, titleIcon, transitionSpotlightDisabled, ...rest}) => {
+	render: ({children, disabled, handleKeyDown, handleOpen, label, open, onHide, onShow, onSpotlightDisappear, setContainerNode, spotlightDisabled, title, titleIcon, transitionSpotlightDisabled, ...rest}) => {
 		delete rest.autoClose;
 		delete rest.lockBottom;
 		delete rest.noneText;
@@ -216,12 +240,12 @@ const ExpandableItemBase = kind({
 		const ariaProps = extractAriaProps(rest);
 
 		return (
-			<ExpandableContainer
+			<div
 				{...rest}
 				aria-disabled={disabled}
 				disabled={disabled}
 				open={open}
-				spotlightDisabled={spotlightDisabled}
+				ref={setContainerNode}
 			>
 				<LabeledItem
 					{...ariaProps}
@@ -235,18 +259,19 @@ const ExpandableItemBase = kind({
 				<ExpandableTransitionContainer
 					data-expandable-container
 					duration="short"
+					onHide={onHide}
 					onKeyDown={handleKeyDown}
+					onShow={onShow}
 					spotlightDisabled={transitionSpotlightDisabled}
 					type="clip"
 					visible={open}
 				>
 					{children}
 				</ExpandableTransitionContainer>
-			</ExpandableContainer>
+			</div>
 		);
 	}
 });
-
 
 /**
  * {@link moonstone/ExpandableItem.ExpandableItem} renders a
@@ -263,7 +288,9 @@ const ExpandableItemBase = kind({
  * @mixes moonstone/ExpandableItem.Expandable
  * @public
  */
-const ExpandableItem = Expandable(ExpandableItemBase);
+const ExpandableItem = Expandable(
+	ExpandableItemBase
+);
 
 export default ExpandableItem;
 export {

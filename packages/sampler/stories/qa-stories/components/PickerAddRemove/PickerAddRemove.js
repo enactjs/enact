@@ -1,19 +1,19 @@
-import React from 'react';
-
 import Picker from '@enact/moonstone/Picker';
 import Input from '@enact/moonstone/Input';
 import Button from '@enact/moonstone/Button';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 class PickerAddRemove extends React.Component {
 	static displayName: 'PickerAddRemove'
 
 	static propTypes = {
-		disabled: React.PropTypes.bool,
-		joined: React.PropTypes.bool,
-		noAnimation: React.PropTypes.bool,
-		orientation: React.PropTypes.string,
-		width: React.PropTypes.string,
-		wrap: React.PropTypes.bool
+		disabled: PropTypes.bool,
+		joined: PropTypes.bool,
+		noAnimation: PropTypes.bool,
+		orientation: PropTypes.string,
+		width: PropTypes.string,
+		wrap: PropTypes.bool
 	}
 
 	static defaultProps = {
@@ -33,7 +33,8 @@ class PickerAddRemove extends React.Component {
 				0 : ''
 			},
 			inputIndex: 0,
-			inputValue: ''
+			inputValue: '',
+			value: 0
 		};
 	}
 
@@ -59,8 +60,13 @@ class PickerAddRemove extends React.Component {
 		delete children[index];
 
 		this.setState({
-			children: children
+			children: children,
+			value: Math.max(this.state.value - 1, 0)
 		});
+	}
+
+	handleValueUpdate = ({value}) => {
+		this.setState({value});
 	}
 
 	handleIndexChange = ({value}) => {
@@ -82,6 +88,8 @@ class PickerAddRemove extends React.Component {
 			<div>
 				<div>
 					<Picker
+						onChange={this.handleValueUpdate}
+						value={this.state.value}
 						{...this.props}
 					>
 						{pickerChildren}

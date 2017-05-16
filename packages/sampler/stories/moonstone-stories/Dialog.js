@@ -3,21 +3,20 @@ import BodyText from '@enact/moonstone/BodyText';
 import Button from '@enact/moonstone/Button';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
+import {boolean, select, text} from '@kadira/storybook-addon-knobs';
 
 storiesOf('Dialog')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'Basic usage of Dialog',
 		() => (
 			<div>
 				<Dialog
+					casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
 					noAnimation={boolean('noAnimation', false)}
 					noAutoDismiss={boolean('noAutoDismiss', false)}
 					onClose={action('onClose')}
 					open={boolean('open', false)}
-					preserveCase={boolean('preserveCase', false)}
 					showCloseButton={boolean('showCloseButton', false)}
 					showDivider={boolean('showDivider', false)}
 				>

@@ -3,7 +3,7 @@ import Item from '@enact/moonstone/Item';
 import VirtualFlexList from '@enact/moonstone/VirtualFlexList';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, number} from '@kadira/storybook-addon-knobs';
+import {number} from '@kadira/storybook-addon-knobs';
 
 const
 	channelWidth = ri.scale(420),
@@ -25,23 +25,17 @@ const
 			height: (itemHeight + clientHeight) + 'px',
 			padding: ri.scale(33) + 'px 0'
 		},
-		// Programs
-		itemProgramWrapper: {
+		itemProgram: {
 			position: 'absolute',
 			padding: 0,
 			border: ri.scale(3) + 'px solid black',
 			boxSizing: 'border-box',
 			overflow: 'hidden'
-		},
-		itemProgram: {
-			height: '100%',
-			fontSize: ri.scale(33) + 'px'
 		}
 	};
 
 // Data
 const
-	// Programs
 	programName = [
 		'On Demand',
 		'To Be Announced',
@@ -95,18 +89,14 @@ const
 	},
 	// eslint-disable-next-line enact/prop-types
 	renderItem = ({data, index, key}) => {
-		// Programs
 		return (
-			<Item key={key} style={style.itemProgramWrapper}>
-				<div style={style.itemProgram}>
-					{data[index.row][index.col].programName}
-				</div>
+			<Item key={key} style={style.itemProgram}>
+				{data[index.row][index.col].programName}
 			</Item>
 		);
 	};
 
 storiesOf('VirtualFlexList')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'Basic usage of VirtualFlexList',

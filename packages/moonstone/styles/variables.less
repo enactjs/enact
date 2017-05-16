@@ -1,29 +1,9 @@
 // Variables
 //
-@import './colors.less';
 
 // App
 // ---------------------------------------
 @moon-app-keepout: 18px;
-
-// Neutral Theme
-// ---------------------------------------
-// RIGBY NOTE: TODO
-// The Neutral theme should be defined elsewhere. It's inappropriate for color to be assigned here.
-@moon-neutral-bg-color: @moon-light-gray;
-@moon-neutral-text-color: @moon-dark-gray;
-@moon-neutral-child-text-color: @moon-dark-gray;
-@moon-neutral-scroller-icon: url(../images/LightTheme_Icons/scroller_icon.png);
-@moon-neutral-border-color: @moon-dark-gray;
-@moon-neutral-icon-color: @moon-dark-gray;
-@moon-neutral-button-text-color: @moon-dark-gray;
-@moon-neutral-button-bg-color: @moon-white;
-@moon-neutral-button-disabled-text-color: @moon-dark-gray;
-@moon-neutral-button-disabled-bg-color: @moon-white;
-@moon-neutral-thumb-bg-color: rgba(50, 50, 50, 0.8);
-@moon-neutral-slider-knob-bg-color: @moon-white;
-@moon-neutral-slider-spotlight-bar-color: @moon-spotlight-color;
-@moon-neutral-slider-spotlight-knob-color: @moon-spotlight-color;
 
 // Font Sizes
 // ---------------------------------------
@@ -203,6 +183,18 @@
 @moon-item-line-height-large: @moon-item-height-large - (@moon-item-vertical-padding * 2);
 @moon-item-indent: 36px;
 
+// FormCheckbox
+// ---------------------------------------
+@moon-formcheckbox-size: (@moon-item-height * 0.8);	// Relative to `Item` height
+@moon-formcheckbox-size-large: (@moon-item-height-large * 0.8);	// Relative to `Item` height
+@moon-formcheckbox-check-icon-size: 72px;
+@moon-formcheckbox-check-icon-size-large: 84px;
+
+// Checkbox
+// ---------------------------------------
+@moon-checkbox-size: 30px;
+@moon-checkbox-size-large: 36px;
+
 // ToggleButton
 // ---------------------------------------
 @moon-toggle-button-switch-border-width: 3px;
@@ -242,14 +234,11 @@
 
 // Progress Bar
 // ---------------------------------------
-@moon-progress-bar-height: 12px;
-@moon-progress-bar-background: @moon-dark-gray;
-@moon-progress-bar-background-loaded: @moon-gray;
-@moon-progress-bar-background-fill: @moon-white;
+@moon-progress-bar-height: 6px;
 
 // Scrim
 // ---------------------------------------
-@moon-scrim-color: fade(@moon-black, 30%);
+@moon-scrim-color: fade(black, 30%);
 
 // Slider
 // ---------------------------------------
@@ -258,8 +247,6 @@
 @moon-slider-knob-width-large: @moon-button-small-height-large;
 @moon-slider-knob-height: @moon-button-small-height;
 @moon-slider-knob-height-large: @moon-button-small-height-large;
-@moon-slider-knob-spotlight-width: 90px;
-@moon-slider-knob-spotlight-height: 90px;
 @moon-slider-tooltip-offset: 54px;
 
 // IntegerPicker
@@ -270,7 +257,7 @@
 // ---------------------------------------
 @moon-icon-circle: "\0EFFDB";
 
-//Spinner
+// Spinner
 // ---------------------------------------
 @moon-spinner-size: 72px;
 @moon-spinner-time: 1.25s;		// Length of the spinner animation
@@ -278,11 +265,6 @@
 @moon-spinner-ball-width: @moon-spinner-ball-height;	// Height of the ball container
 @moon-spinner-ball-distance: 20%;	// Distance of the ball from the center
 @moon-spinner-ball-angle: 13deg;
-@moon-spinner-background-color: @moon-button-background-color;
-@moon-spinner-text-color: @moon-white;
-@moon-spinner-ball1-color: #69cdff;
-@moon-spinner-ball2-color: #ff4a4a;
-@moon-spinner-ball3-color: #ffb80d;
 @moon-spinner-icon: @moon-icon-circle;
 
 // Date/Time Pickers
@@ -301,8 +283,6 @@
 @moon-notification-font-family: "MuseoSans";
 @moon-notification-font-weight: 500;
 @moon-notification-font-style: normal;
-@moon-notification-background-opacity: 95%;
-@moon-notification-border-opacity: 30%;
 @moon-notification-border-width: 6px;
 @moon-notification-border-radius: 15px;
 @moon-notification-out-border-radius: 18px;

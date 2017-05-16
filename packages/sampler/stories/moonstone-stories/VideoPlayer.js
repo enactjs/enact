@@ -1,9 +1,10 @@
+import icons from './icons';
 import VideoPlayer, {VideoPlayerBase} from '@enact/moonstone/VideoPlayer';
 import IconButton from '@enact/moonstone/IconButton';
 import Button from '@enact/moonstone/Button';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, number, select, text} from '@kadira/storybook-addon-knobs';
+import {boolean, number, select, text} from '@kadira/storybook-addon-knobs';
 
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 
@@ -41,6 +42,7 @@ const prop = {
 		'onBackwardButtonClick',
 		'onCanPlay',
 		'onCanPlayThrough',
+		'onControlsAvailable',
 		'onDurationChange',
 		'onEmptied',
 		'onEncrypted',
@@ -82,7 +84,6 @@ prop.events.forEach( (ev) => {
 });
 
 storiesOf('VideoPlayer')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'The basic VideoPlayer',
@@ -111,12 +112,20 @@ storiesOf('VideoPlayer')
 				>VideoPlayer Edge</label>
 				<VideoPlayer
 					autoCloseTimeout={number('autoCloseTimeout', 7000)}
+					backwardIcon={select('backwardIcon', icons, 'backward')}
+					forwardIcon={select('forwardIcon', icons, 'forward')}
+					jumpBackwardIcon={select('jumpBackwardIcon', icons, 'skipbackward')}
+					jumpForwardIcon={select('jumpForwardIcon', icons, 'skipforward')}
+					jumpButtonsDisabled={boolean('jumpButtonsDisabled', false)}
+					rateButtonsDisabled={boolean('rateButtonsDisabled', false)}
 					loop={boolean('loop', true)}
 					muted={boolean('muted', true)}
 					noAutoPlay={boolean('noAutoPlay', false)}
 					noJumpButtons={boolean('noJumpButtons', false)}
 					noRateButtons={boolean('noRateButtons', false)}
 					noSlider={boolean('noSlider', false)}
+					pauseIcon={select('pauseIcon', icons, 'pause')}
+					playIcon={select('playIcon', icons, 'play')}
 					poster={prop.videos[0].poster}
 					title={text('title', 'Moonstone VideoPlayer Sample Video')}
 					titleHideDelay={number('titleHideDelay', 4000)}

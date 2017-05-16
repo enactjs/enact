@@ -8,9 +8,10 @@
 
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import FloatingLayer from '@enact/ui/FloatingLayer';
-import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
-import React, {PropTypes} from 'react';
+import {on, off} from '@enact/core/dispatcher';
+import React from 'react';
+import PropTypes from 'prop-types';
 import ri from '@enact/ui/resolution';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
@@ -19,8 +20,7 @@ import {ContextualPopup} from './ContextualPopup';
 import css from './ContextualPopupDecorator.less';
 
 const defaultConfig = {};
-const ContextualPopupContainer = SpotlightContainerDecorator({preserveId: true}, ContextualPopup);
-const depress = 'onKeyDown';
+const ContextualPopupContainer = SpotlightContainerDecorator({enterTo: 'last-focused', preserveId: true}, ContextualPopup);
 
 /**
  * {@link moonstone/ContextualPopupDecorator.ContextualPopupDecorator} is a Higher-order Component
@@ -33,7 +33,6 @@ const depress = 'onKeyDown';
  * @public
  */
 const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const forwardDepress = forward(depress);
 
 	return class extends React.Component {
 		static displayName = 'ContextualPopupDecorator'
@@ -138,6 +137,12 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			spotlightRestrict: 'self-first'
 		}
 
+		componentDidMount () {
+			if (this.props.open) {
+				on('keydown', this.handleKeyDown);
+			}
+		}
+
 		componentWillReceiveProps (nextProps) {
 			if (this.props.direction !== nextProps.direction) {
 				this.adjustedDirection = nextProps.direction;
@@ -157,13 +162,18 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentDidUpdate (prevProps, prevState) {
 			if (this.props.open && !prevProps.open) {
+				on('keydown', this.handleKeyDown);
 				this.spotPopupContent();
 			} else if (!this.props.open && prevProps.open) {
+				off('keydown', this.handleKeyDown);
 				this.spotActivator(prevState.activator);
 			}
 		}
 
 		componentWillUnmount () {
+			if (this.props.open) {
+				off('keydown', this.handleKeyDown);
+			}
 			Spotlight.remove(this.state.containerId);
 		}
 
@@ -263,12 +273,6 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				isOverLeft: client.left - containerWidth - this.ARROW_OFFSET - this.MARGIN < 0,
 				isOverRight: client.right + containerWidth + this.ARROW_OFFSET + this.MARGIN > window.innerWidth
 			};
-
-			if (this.context.rtl) {
-				const tempOverflowLeft = this.overflow.isOverLeft;
-				this.overflow.isOverLeft = this.overflow.isOverRight;
-				this.overflow.isOverRight = tempOverflowLeft;
-			}
 		}
 
 		adjustDirection () {
@@ -276,9 +280,9 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.adjustedDirection = 'down';
 			} else if (this.overflow.isOverBottom && !this.overflow.isOverTop && this.adjustedDirection === 'down') {
 				this.adjustedDirection = 'up';
-			} else if (this.overflow.isOverLeft && !this.overflow.isOverRight && this.adjustedDirection === 'left') {
+			} else if (this.overflow.isOverLeft && !this.overflow.isOverRight && this.adjustedDirection === 'left' && !this.context.rtl) {
 				this.adjustedDirection = 'right';
-			} else if (this.overflow.isOverRight && !this.overflow.isOverLeft && this.adjustedDirection === 'right') {
+			} else if (this.overflow.isOverRight && !this.overflow.isOverLeft && this.adjustedDirection === 'right' && !this.context.rtl) {
 				this.adjustedDirection = 'left';
 			}
 		}
@@ -324,17 +328,22 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleKeyDown = (ev) => {
-			const {onClose} = this.props;
+			const {onClose, spotlightRestrict} = this.props;
 			const direction = getDirection(ev.keyCode);
+			const spottables = Spotlight.getSpottableDescendants(this.state.containerId).length;
+			const spotlessSpotlightModal = spotlightRestrict === 'self-only' && !spottables;
 
-			if (direction) {
+			if (direction && (this.containerNode.contains(document.activeElement) || spotlessSpotlightModal)) {
 				// prevent default page scrolling
 				ev.preventDefault();
 				// stop propagation to prevent default spotlight behavior
 				ev.stopPropagation();
+				// set the pointer mode to false on keydown
+				Spotlight.setPointerMode(false);
 
-				// if focus has changed
-				if (Spotlight.move(direction)) {
+				// we guard against attempting a focus change by verifying the case where a spotlightModal
+				// popup contains no spottable components
+				if (!spotlessSpotlightModal && Spotlight.move(direction)) {
 
 					// if current focus is not within the popup's container, issue the `onClose` event
 					if (!this.containerNode.contains(document.activeElement) && onClose) {
@@ -342,8 +351,6 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					}
 				}
 			}
-
-			forwardDepress(ev, this.props);
 		}
 
 		spotActivator = (activator) => {
@@ -353,7 +360,10 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		spotPopupContent = () => {
-			Spotlight.focus(this.state.containerId);
+			const {containerId} = this.state;
+			if (!Spotlight.focus(containerId)) {
+				Spotlight.setActiveContainer(containerId);
+			}
 		}
 
 		render () {
@@ -373,7 +383,6 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 							containerRef={this.getContainerNode}
 							containerId={this.state.containerId}
 							spotlightRestrict={spotlightRestrict}
-							onKeyDown={this.handleKeyDown}
 						>
 							<PopupComponent />
 						</ContextualPopupContainer>

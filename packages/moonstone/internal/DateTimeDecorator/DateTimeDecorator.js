@@ -12,7 +12,8 @@ import hoc from '@enact/core/hoc';
 import ilib from '@enact/i18n';
 import RadioDecorator from '@enact/ui/RadioDecorator';
 import React from 'react';
-import Toggleable from '@enact/ui/Toggleable';
+import PropTypes from 'prop-types';
+import {Expandable} from '../../ExpandableItem';
 
 const CancelableDecorator = Cancelable({
 	component: 'span',
@@ -51,7 +52,7 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 			 * @type {Function}
 			 * @public
 			 */
-			onChange: React.PropTypes.func,
+			onChange: PropTypes.func,
 
 			/**
 			 * When `true`, the date picker is expanded to select a new date.
@@ -59,7 +60,7 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 			 * @type {Boolean}
 			 * @public
 			 */
-			open: React.PropTypes.bool,
+			open: PropTypes.bool,
 
 			/**
 			 * The selected date
@@ -67,7 +68,7 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 			 * @type {Date}
 			 * @public
 			 */
-			value: React.PropTypes.instanceOf(Date)
+			value: PropTypes.instanceOf(Date)
 		}
 
 		constructor (props) {
@@ -160,6 +161,10 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 		 * @returns {Number}			Updated internal value
 		 */
 		updateValue = (value) => {
+			const {day, month, year} = value;
+			const maxDays = value.cal.getMonLength(month, year);
+			value.day = (day <= maxDays) ? day : maxDays;
+
 			const date = DateFactory(value);
 			const newValue = date.getTimeExtended();
 			const changed =	this.props.value == null || this.props.value !== newValue;
@@ -240,8 +245,7 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 		}
 	};
 
-	return Toggleable(
-		{toggle: null, activate: 'onOpen', deactivate: 'onClose', prop: 'open'},
+	return Expandable(
 		RadioDecorator(
 			{activate: 'onOpen', deactivate: 'onClose', prop: 'open'},
 			Changeable(

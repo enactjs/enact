@@ -7,7 +7,9 @@
 
 import {forward} from '@enact/core/handle';
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
+import {Job} from '@enact/core/util';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import css from './Transition.less';
 
@@ -222,6 +224,14 @@ class Transition extends React.Component {
 		onHide: PropTypes.func,
 
 		/**
+		 * A function to run after transition for showing is finished.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onShow: PropTypes.func,
+
+		/**
 		 * The transition timing function.
 		 * Supported functions are: `'linear'`, `'ease'` and `'ease-in-out'`
 		 *
@@ -268,6 +278,14 @@ class Transition extends React.Component {
 		};
 	}
 
+	componentDidMount () {
+		if (!this.props.visible) {
+			this.measuringJob.idle();
+		} else {
+			this.measureInner();
+		}
+	}
+
 	componentWillReceiveProps (nextProps) {
 		if (nextProps.visible && this.state.renderState === TRANSITION_STATE.INIT) {
 			this.setState({
@@ -281,20 +299,45 @@ class Transition extends React.Component {
 		return (this.state.initialHeight === nextState.initialHeight) || this.props.visible || nextProps.visible;
 	}
 
+	componentWillUpdate (nextProps, nextState) {
+		if (nextState.renderState === TRANSITION_STATE.MEASURE) {
+			this.measuringJob.stop();
+		}
+	}
+
 	componentDidUpdate (prevProps, prevState) {
 		const {visible} = this.props;
 		const {initialHeight, renderState} = this.state;
 
-		// Checking that something changed that wasn't the visibility or the initialHeight state
-		if (visible === prevProps.visible && initialHeight === prevState.initialHeight && renderState !== TRANSITION_STATE.INIT) {
+		// Checking that something changed that wasn't the visibility
+		// or the initialHeight state or checking if component should be visible but doesn't have a height
+		if ((visible === prevProps.visible &&
+			initialHeight === prevState.initialHeight &&
+			renderState !== TRANSITION_STATE.INIT) ||
+			(initialHeight == null && visible)) {
 			this.measureInner();
 		}
 	}
 
-	hideDidFinish = (ev) => {
+	componentWillUnmount () {
+		this.measuringJob.stop();
+	}
+
+	measuringJob = new Job(() => {
+		this.setState({
+			renderState: TRANSITION_STATE.MEASURE
+		});
+	})
+
+	handleTransitionEnd = (ev) => {
 		forwardTransitionEnd(ev, this.props);
-		if (!this.props.visible && this.props.onHide) {
-			this.props.onHide();
+
+		if (ev.target === this.childNode) {
+			if (!this.props.visible && this.props.onHide) {
+				this.props.onHide();
+			} else if (this.props.visible && this.props.onShow) {
+				this.props.onShow();
+			}
 		}
 	}
 
@@ -312,15 +355,12 @@ class Transition extends React.Component {
 
 	childRef = (node) => {
 		this.childNode = node;
-		// this accounts for open at construction or when we need to measure before opening
-		if (this.state.initialHeight == null) {
-			this.measureInner();
-		}
 	}
 
 	render () {
 		let {visible, ...props} = this.props;
 		delete props.onHide;
+		delete props.onShow;
 
 		switch (this.state.renderState) {
 			// If we are deferring children, don't render any
@@ -339,7 +379,7 @@ class Transition extends React.Component {
 					childRef={this.childRef}
 					visible={visible}
 					clipHeight={this.state.initialHeight}
-					onTransitionEnd={this.hideDidFinish}
+					onTransitionEnd={this.handleTransitionEnd}
 				/>
 			);
 		}

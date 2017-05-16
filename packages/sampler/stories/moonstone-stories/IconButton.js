@@ -2,7 +2,7 @@ import IconButton, {IconButtonBase} from '@enact/moonstone/IconButton';
 import icons from './icons';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
+import {boolean, select, text} from '@kadira/storybook-addon-knobs';
 
 import nullify from '../../src/utils/nullify.js';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
@@ -20,7 +20,6 @@ const prop = {
 };
 
 storiesOf('IconButton')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'The basic IconButton',
@@ -29,7 +28,7 @@ storiesOf('IconButton')
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
 				color={nullify(select('color', [null, 'red', 'green', 'yellow', 'blue']))}
-				disabled={nullify(boolean('disabled', false))}
+				disabled={boolean('disabled', false)}
 				selected={nullify(boolean('selected', false))}
 				small={boolean('small', false)}
 			>

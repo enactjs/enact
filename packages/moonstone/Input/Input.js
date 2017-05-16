@@ -5,10 +5,14 @@
  */
 
 import $L from '@enact/i18n/$L';
+import {contextTypes} from '@enact/i18n/I18nDecorator';
 import Changeable from '@enact/ui/Changeable';
 import kind from '@enact/core/kind';
 import {isRtlText} from '@enact/i18n/util';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+
+import Tooltip from '../TooltipDecorator/Tooltip';
 
 import css from './Input.less';
 import InputDecoratorIcon from './InputDecoratorIcon';
@@ -83,6 +87,25 @@ const InputBase = kind({
 		 * @public
 		 */
 		iconBefore: PropTypes.string,
+
+		/**
+		 * When `true`, input text color is changed to red and the message tooltip is shown if it exists.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		invalid: PropTypes.bool,
+
+		/**
+		 * The tooltip text to be displayed when the contents of the input are invalid. If this value is
+		 * falsy, the tooltip will not be shown.
+		 *
+		 * @type {String}
+		 * @default ''
+		 * @public
+		 */
+		invalidMessage: PropTypes.string,
 
 		/**
 		 * The handler to run when blurred.
@@ -168,9 +191,13 @@ const InputBase = kind({
 	defaultProps: {
 		disabled: false,
 		dismissOnEnter: false,
+		invalid: false,
+		invalidMessage: $L('Please enter a valid value'),
 		placeholder: '',
 		type: 'text'
 	},
+
+	contextTypes,
 
 	styles: {
 		css,
@@ -186,16 +213,31 @@ const InputBase = kind({
 	},
 
 	computed: {
-		'aria-label': ({placeholder, type, value}) => calcAriaLabel(placeholder, type, value),
-		className: ({focused, styler}) => styler.append({focused}),
+		'aria-label': ({placeholder, type, value}) => {
+			const title = (value == null || value === '') ? placeholder : '';
+			return calcAriaLabel(title, type, value);
+		},
+		className: ({focused, invalid, styler}) => styler.append({focused, invalid}),
 		dir: ({value, placeholder}) => isRtlText(value || placeholder) ? 'rtl' : 'ltr',
+		invalidTooltip: ({invalid, invalidMessage}, {rtl}) => {
+			if (invalid && invalidMessage) {
+				const direction = rtl ? 'left' : 'right';
+				return (
+					<Tooltip arrowAnchor="top" className={css.invalidTooltip} direction={direction}>
+						{invalidMessage}
+					</Tooltip>
+				);
+			}
+		},
 		// ensure we have a value so the internal <input> is always controlled
 		value: ({value}) => typeof value === 'number' ? value : (value || '')
 	},
 
-	render: ({dir, disabled, iconAfter, iconBefore, onChange, placeholder, type, value, ...rest}) => {
+	render: ({dir, disabled, iconAfter, iconBefore, invalidTooltip, onChange, placeholder, type, value, ...rest}) => {
 		delete rest.dismissOnEnter;
 		delete rest.focused;
+		delete rest.invalid;
+		delete rest.invalidMessage;
 
 		return (
 			<div {...rest} disabled={disabled}>
@@ -211,6 +253,7 @@ const InputBase = kind({
 					value={value}
 				/>
 				<InputDecoratorIcon position="after">{iconAfter}</InputDecoratorIcon>
+				{invalidTooltip}
 			</div>
 		);
 	}

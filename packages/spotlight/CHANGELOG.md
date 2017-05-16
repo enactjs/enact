@@ -4,10 +4,35 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ## [unreleased]
 
+### Deprecated
+
+- `spotlight/SpotlightRootDecorator.spotlightRootContainerName` to be removed in 2.0.0
+
+### Added
+
+- `spotlight/styles/mixins.less` which includes several mixins (`.focus`, `.disabled`, `.muted`, and `.mutedFocus`) to make it a little easier to target specific spotlight states
+
+### Changed
+
+- `spotlight/SpotlightContainerDecorator` config property, `enterTo`, default value to be `null` rather than `'last-focused'`
+- `spotlight` container handling to address known issues and improve testability
+
+## [1.1.0] - 2017-04-21
+
+### Added
+
+- `spotlight/SpotlightRootDecorator` config option: `noAutoFocus` to support prevention of setting automatic focus after render
+- `spotlight/Spotlight` method `getSpottableDescendants()`
+
+### Changed
+
+- `spotlight/SpotlightContainerDecorator` to have no default for `spotlightRestrict`
+
 ### Fixed
 
-- `spotlight/Spotlight` calling `set()` now properly updates the container config
-- `spotlight/Spotlight` behavior to properly save the last-focused element for nested containers
+- `spotlight/Spotlight` to consider nested containers when adjusting focus
+
+## [1.0.0] - 2017-03-31
 
 ### Removed
 
@@ -17,15 +42,20 @@ The following is a curated list of changes in the Enact spotlight module, newest
 - `spotlight.spotlightDefaultClass` replaced by `spotlight/SpotlightContainerDecorator.spotlightDefaultClass`
 - `spotlight.SpotlightRootDecorator` replaced by `spotlight/SpotlightRootDecorator`
 
-## [1.0.0-beta.4] - 2017-03-10
-
 ### Fixed
 
-- `spotlight.Spotlight` pointer behavior where upon immediately entering pointer-mode, hovering over a spottable component may result in the component not receiving focus
+- `spotlight/Spotlight` `set()` to properly update the container config
+- `spotlight/Spotlight` to properly save the last-focused element for nested containers
+
+## [1.0.0-beta.4] - 2017-03-10
 
 ### Changed
 
 - `spotlight.Spottable` to prevent emulating mouse events for repeated key events
+
+### Fixed
+
+- `spotlight.Spotlight` pointer behavior where upon immediately entering pointer-mode, hovering over a spottable component may result in the component not receiving focus
 
 ## [1.0.0-beta.3] - 2017-02-21
 

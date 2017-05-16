@@ -8,6 +8,7 @@ import {forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import invariant from 'invariant';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 /**
  * Default config for {@link ui/Resizable.Resizable}
@@ -46,7 +47,7 @@ const defaultConfig = {
  * @public
  */
 const contextTypes = {
-	invalidateBounds: React.PropTypes.func
+	invalidateBounds: PropTypes.func
 };
 
 /**

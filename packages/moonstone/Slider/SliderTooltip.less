@@ -1,9 +1,11 @@
-@import '../styles/colors.less';
+// SliderTooltip.less
+//
 @import '../styles/variables.less';
 @import '../styles/text.less';
+@import '../styles/skin.less';
 
-.tooltip {
-	@offset-large: 6px;
+.applySkins({.tooltip {
+	@offset-large: 0px;
 
 	&.horizontal {
 		&.before {
@@ -49,4 +51,4 @@
 			});
 		}
 	}
-}
+}});

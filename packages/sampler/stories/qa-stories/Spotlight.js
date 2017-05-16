@@ -20,14 +20,20 @@ import SwitchItem from '@enact/moonstone/SwitchItem';
 import TimePicker from '@enact/moonstone/TimePicker';
 import ToggleButton from '@enact/moonstone/ToggleButton';
 import ToggleItem from '@enact/moonstone/ToggleItem';
+import Scroller from '@enact/moonstone/Scroller';
 import Slider from '@enact/moonstone/Slider';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import React from 'react';
+import PropTypes from 'prop-types';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
+import {boolean, select} from '@kadira/storybook-addon-knobs';
 
-const Container = SpotlightContainerDecorator('div');
+const Container = SpotlightContainerDecorator(
+	{enterTo: 'last-focused'},
+	'div'
+);
+
 const style = {
 	container: {
 		width: '300px',
@@ -111,16 +117,18 @@ class DisappearTest extends React.Component {
 
 class PopupFocusTest extends React.Component {
 	static propTypes = {
-		noAnimation: React.PropTypes.bool,
-		noAutoDismiss: React.PropTypes.bool,
-		scrimType: React.PropTypes.oneOf(['transparent', 'translucent', 'none']),
-		spotlightRestrict: React.PropTypes.oneOf(['none', 'self-first', 'self-only'])
+		noAnimation: PropTypes.bool,
+		noAutoDismiss: PropTypes.bool,
+		scrimType: PropTypes.oneOf(['transparent', 'translucent', 'none']),
+		showCloseButton: PropTypes.bool,
+		spotlightRestrict: PropTypes.oneOf(['none', 'self-first', 'self-only'])
 	}
 
 	static defaultProps = {
 		noAnimation: false,
 		noAutoDismiss: false,
 		scrimType: 'translucent',
+		showCloseButton: false,
 		spotlightRestrict: 'self-only'
 	}
 
@@ -140,7 +148,7 @@ class PopupFocusTest extends React.Component {
 	}
 
 	render () {
-		const {noAnimation, noAutoDismiss, scrimType, spotlightRestrict} = this.props;
+		const {noAnimation, noAutoDismiss, scrimType, showCloseButton, spotlightRestrict} = this.props;
 
 		return (
 			<div>
@@ -150,6 +158,9 @@ class PopupFocusTest extends React.Component {
 					Focus should return to the button used to originally open the popup. Verify this
 					behavior for each of the buttons.
 				</p>
+				<p>
+					Use the knobs to verify 5-way behavior under different Popup configurations.
+				</p>
 				<Button onClick={this.handleOpenPopup}>Open Popup</Button>
 				<Button onClick={this.handleOpenPopup}>Open Popup</Button>
 				<Popup
@@ -158,7 +169,7 @@ class PopupFocusTest extends React.Component {
 					onClose={this.handleClosePopup}
 					open={this.state.popupOpen}
 					scrimType={scrimType}
-					showCloseButton
+					showCloseButton={showCloseButton}
 					spotlightRestrict={spotlightRestrict}
 				>
 					<div>This is a Popup</div>
@@ -169,7 +180,6 @@ class PopupFocusTest extends React.Component {
 }
 
 storiesOf('Spotlight')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		'Multiple Buttons',
 		() => (
@@ -231,7 +241,15 @@ storiesOf('Spotlight')
 				<div style={style.flexBox}>
 					<Container style={style.container} spotlightMuted>
 						<Item onFocus={action('onFocus')} onBlur={action('onBlur')}>1</Item>
-						<Item onFocus={action('onFocus')} onBlur={action('onBlur')}>2</Item>
+						<ExpandableList
+							noLockBottom
+							title="ExpandableList"
+						>
+							{Items}
+						</ExpandableList>
+						<CheckboxItem>
+							Hello
+						</CheckboxItem>
 						<Item onFocus={action('onFocus')} onBlur={action('onBlur')}>3</Item>
 					</Container>
 				</div>
@@ -287,12 +305,13 @@ storiesOf('Spotlight')
 		)
 	)
 	.addWithInfo(
-		'Popup Focus Targets',
+		'Popup Navigation',
 		() => (
 			<PopupFocusTest
 				noAnimation={boolean('noAnimation', false)}
 				noAutoDismiss={boolean('noAutoDismiss', false)}
 				scrimType={select('scrimType', ['none', 'transparent', 'translucent'], 'translucent')}
+				showCloseButton={boolean('showCloseButton', true)}
 				spotlightRestrict={select('spotlightRestrict', ['none', 'self-first', 'self-only'], 'self-only')}
 			/>
 		)
@@ -367,66 +386,68 @@ storiesOf('Spotlight')
 						<Divider>
 							Expandables
 						</Divider>
-						<ExpandableItem
-							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title="Various Items in an ExpandableItem"
-						>
-							<CheckboxItem
+						<Scroller style={{height: '500px'}}>
+							<ExpandableItem
 								spotlightDisabled={boolean('spotlightDisabled', false)}
+								title="Various Items in an ExpandableItem"
 							>
-								CheckboxItem
-							</CheckboxItem>
-							<RadioItem
+								<CheckboxItem
+									spotlightDisabled={boolean('spotlightDisabled', false)}
+								>
+									CheckboxItem
+								</CheckboxItem>
+								<RadioItem
+									spotlightDisabled={boolean('spotlightDisabled', false)}
+								>
+									RadioItem
+								</RadioItem>
+								<SelectableItem
+									spotlightDisabled={boolean('spotlightDisabled', false)}
+								>
+									SelectableItem
+								</SelectableItem>
+								<SwitchItem
+									spotlightDisabled={boolean('spotlightDisabled', false)}
+								>
+									SwitchItem
+								</SwitchItem>
+								<ToggleItem
+									icon="plus"
+									spotlightDisabled={boolean('spotlightDisabled', false)}
+								>
+									ToggleItem
+								</ToggleItem>
+							</ExpandableItem>
+							<ExpandableList
+								noLockBottom
 								spotlightDisabled={boolean('spotlightDisabled', false)}
+								title="ExpandableList"
 							>
-								RadioItem
-							</RadioItem>
-							<SelectableItem
+								{Items}
+							</ExpandableList>
+							<ExpandableInput
 								spotlightDisabled={boolean('spotlightDisabled', false)}
-							>
-								SelectableItem
-							</SelectableItem>
-							<SwitchItem
+								title="ExpandableInput"
+							/>
+							<ExpandablePicker
 								spotlightDisabled={boolean('spotlightDisabled', false)}
+								title="ExpandablePicker"
 							>
-								SwitchItem
-							</SwitchItem>
-							<ToggleItem
-								icon="plus"
+								{Items}
+							</ExpandablePicker>
+							<DatePicker
 								spotlightDisabled={boolean('spotlightDisabled', false)}
-							>
-								ToggleItem
-							</ToggleItem>
-						</ExpandableItem>
-						<ExpandableList
-							noLockBottom
-							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title="ExpandableList"
-						>
-							{Items}
-						</ExpandableList>
-						<ExpandableInput
-							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title="ExpandableInput"
-						/>
-						<ExpandablePicker
-							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title="ExpandablePicker"
-						>
-							{Items}
-						</ExpandablePicker>
-						<DatePicker
-							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title="DatePicker"
-						/>
-						<DayPicker
-							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title="DayPicker"
-						/>
-						<TimePicker
-							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title="TimePicker"
-						/>
+								title="DatePicker"
+							/>
+							<DayPicker
+								spotlightDisabled={boolean('spotlightDisabled', false)}
+								title="DayPicker"
+							/>
+							<TimePicker
+								spotlightDisabled={boolean('spotlightDisabled', false)}
+								title="TimePicker"
+							/>
+						</Scroller>
 					</div>
 				</div>
 			</div>

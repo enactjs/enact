@@ -3,12 +3,11 @@ import Icon from '@enact/moonstone/Icon';
 import Item from '@enact/moonstone/Item';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
+import {boolean, select, text} from '@kadira/storybook-addon-knobs';
 
 import nullify from '../../src/utils/nullify.js';
 
 storiesOf('ExpandableItem')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'Basic usage of ExpandableItem',

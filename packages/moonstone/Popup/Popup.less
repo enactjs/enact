@@ -1,21 +1,25 @@
+// Popup.less
+//
 @import '../styles/mixins.less';
 @import '../styles/text.less';
-@import '../styles/colors.less';
 @import '../styles/variables.less';
+@import '../styles/skin.less';
 
-.popup {
+.applySkins({&.popup {
 	@padding-v: 24px;
 	@padding-h: @moon-spotlight-outset * 4;
 
 	.moon-text-base();
 	padding: @padding-v @padding-h;
 	box-sizing: border-box;
+	background-color: fade(@moon-popup-bg-color, @moon-popup-bg-opacity);
 
 	.closeButton {
 		position: absolute;
 		right: @moon-spotlight-outset;
 		top: @moon-spotlight-outset;
 		margin: 0;
+		color: @moon-popup-close-text-color;
 	}
 
 	.body {
@@ -25,17 +29,17 @@
 	&.reserveClose {
 		.padding-start-end(@padding-h, @moon-icon-button-small-size + @moon-spotlight-outset);
 	}
+}
 
-	:global(.enact-locale-right-to-left) & {
-		.closeButton {
-			right: auto;
-			left: @moon-spotlight-outset;
-		}
+:global(.enact-locale-right-to-left)& .popup {
+	.closeButton {
+		right: auto;
+		left: @moon-spotlight-outset;
 	}
 }
 
 .popupTransitionContainer {
 	position: absolute;
-	bottom: 0px;
+	bottom: 0;
 	width: 100%;
-}
+}});

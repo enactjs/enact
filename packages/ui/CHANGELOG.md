@@ -6,7 +6,27 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
-- `ui/Placeholder` module with `PlaceholderControllerDecorator` and `PlaceholderDecorator` HOCs which facilitate rendering placeholder components until the wrapped component would scroll into the viewport.
+- `ui/Transition` prop `onShow` that fires when transitioning into view a component.
+
+### Changed
+
+-`ui/View` to prevent re-renders on views leaving the `ViewManager`
+
+## [1.1.0] - 2017-04-21
+
+### Changed
+
+- `ui/Slottable` to support slot-candidate tags that have multiple props, which are now forwarded directly instead of just their children
+
+### Fixed
+
+- `ui/Cancelable` to run modal handlers in the right order
+
+## [1.0.0] - 2017-03-31
+
+### Added
+
+- `ui/Placeholder` module with `PlaceholderControllerDecorator` and `PlaceholderDecorator` HOCs which facilitate rendering placeholder components until the wrapped component would scroll into the viewport
 
 ### Changed
 

@@ -1,7 +1,8 @@
 // Moonstone Environment
 
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import MoonstoneDecorator from '@enact/moonstone/MoonstoneDecorator';
 import {Panels, Panel, Header} from '@enact/moonstone/Panels';
 import {boolean, select} from '@kadira/storybook-addon-knobs';
@@ -21,16 +22,11 @@ const PanelsBase = kind({
 		title: PropTypes.string
 	},
 
-	styles: {
-		css,
-		className: 'moonstone'
-	},
-
 	render: ({children, title, description, ...rest}) => (
 		<div {...rest}>
 			<Panels onApplicationClose={reloadPage}>
 				<Panel>
-					<Header type="compact" title={title} preserveCase />
+					<Header type="compact" title={title} casing="preserve" />
 					<div className={css.description}>
 						<p>{description}</p>
 					</div>
@@ -44,18 +40,13 @@ const PanelsBase = kind({
 const FullscreenBase = kind({
 	name: 'MoonstoneEnvironment',
 
-	styles: {
-		css,
-		className: 'moonstone'
-	},
-
 	render: (props) => (
 		<div {...props} />
 	)
 });
 
-const Moonstone = MoonstoneDecorator({overlay: true}, PanelsBase);
-const MoonstoneFullscreen = MoonstoneDecorator({overlay: true}, FullscreenBase);
+const Moonstone = MoonstoneDecorator({overlay: false}, PanelsBase);
+const MoonstoneFullscreen = MoonstoneDecorator({overlay: false}, FullscreenBase);
 
 // NOTE: Locales taken from strawman. Might need to add more in the future.
 const locales = {
@@ -69,6 +60,11 @@ const locales = {
 	'zh-Hant-HK': 'zh-Hant-HK - Traditional Chinese, custom Hant font',
 	'ja-JP': 'ja-JP - Japanese, custom Japanese font',
 	'en-JP': 'en-JP - English, custom Japanese font'
+};
+
+const skins = {
+	moonstone: 'Dark',
+	'moonstone-light': 'Light'
 };
 
 // NOTE: Knobs cannot set locale in fullscreen mode. This allows the locale to
@@ -98,7 +94,8 @@ const StorybookDecorator = (story, config) => {
 			title={`${config.kind} ${config.story}`.trim()}
 			description={config.description}
 			locale={select('locale', locales, getLocaleFromURL())}
-			textSize={boolean('large text size', false) ? 'large' : 'normal'}
+			textSize={boolean('large text', false) ? 'large' : 'normal'}
+			skin={select('skin', skins, 'moonstone')}
 		>
 			{sample}
 		</Moonstone>
@@ -112,7 +109,8 @@ const FullscreenStorybookDecorator = (story, config) => {
 			title={`${config.kind} ${config.story}`.trim()}
 			description={config.description}
 			locale={select('locale', locales, getLocaleFromURL())}
-			textSize={boolean('large text size', false) ? 'large' : 'normal'}
+			textSize={boolean('large text', false) ? 'large' : 'normal'}
+			skin={select('skin', skins, 'moonstone')}
 		>
 			{sample}
 		</MoonstoneFullscreen>

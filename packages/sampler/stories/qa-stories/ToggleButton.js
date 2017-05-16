@@ -1,7 +1,7 @@
 import ToggleButton from '@enact/moonstone/ToggleButton';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, text, boolean, select} from '@kadira/storybook-addon-knobs';
+import {text, boolean, select} from '@kadira/storybook-addon-knobs';
 
 // Set up some defaults for info and knobs
 const prop = {
@@ -10,15 +10,14 @@ const prop = {
 };
 
 storiesOf('ToggleButton')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		'with long text',
 		() => (
 			<ToggleButton
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
+				casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
 				disabled={boolean('disabled')}
-				preserveCase={boolean('preserveCase')}
 				small={boolean('small')}
 				toggleOnLabel={text('toggleOnLabel', 'Loooooooooooooooooog On')}
 				toggleOffLabel={text('toggleOffLabel', 'Loooooooooooooooooog Off')}
@@ -31,8 +30,8 @@ storiesOf('ToggleButton')
 			<ToggleButton
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
+				casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
 				disabled={boolean('disabled')}
-				preserveCase={boolean('preserveCase')}
 				small={boolean('small')}
 				toggleOnLabel={select('toggleOnLabel', prop.tallText, 'ิ้  ไั  ஒ  து')}
 				toggleOffLabel={select('toggleOffLabel', prop.tallText, 'ิ้  ไั  ஒ  து')}

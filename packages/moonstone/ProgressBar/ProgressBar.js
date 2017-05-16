@@ -6,7 +6,8 @@
 
 import kind from '@enact/core/kind';
 import clamp from 'ramda/src/clamp';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import {validateRange} from '../internal/validators';
 

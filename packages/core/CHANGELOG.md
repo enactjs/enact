@@ -6,14 +6,30 @@ The following is a curated list of changes in the Enact core module, newest chan
 
 ### Added
 
-- `core/util/Job` to replace `core/jobs` with an API that reduced the chance of job name collisions
+- `core/handle.oneOf` to support branching event handlers
+
+## [1.1.0] - 2017-04-21
+
+### Added
+
+- `core/util` documentation
+
+### Fixed
+
+- `core/util.childrenEquals` to work with mixed components and text
+
+## [1.0.0] - 2017-03-31
+
+### Added
+
+- `core/util.Job` to replace `core/jobs` with an API that reduced the chance of job name collisions
 
 ### Removed
 
-- `core/jobs` and replaced it with `core/util/Job`
-- `core/selection` which was only used internally by `ui/GroupItem`
+- `core/jobs` and replaced it with `core/util.Job`
+- `core/selection`, which was only used internally by `ui/GroupItem`
 - `kind` and `hoc` named exports from root module. Should be directly imported via `@enact/core/kind` and `@enact/core/hoc`, respectively.
-- `core/fetch` which was no longer used elsewhere by Enact.
+- `core/fetch` which was no longer used by Enact
 
 ## [1.0.0-beta.4] - 2017-03-10
 

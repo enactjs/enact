@@ -1,5 +1,6 @@
 import hoc from '@enact/core/hoc';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 /**
  * Default config for {@link ui/Placeholder.PlaceholderDecorator}
@@ -36,8 +37,8 @@ const defaultConfig = {
  * @public
  */
 const contextTypes = {
-	registerPlaceholder: React.PropTypes.func,
-	unregisterPlaceholder: React.PropTypes.func
+	registerPlaceholder: PropTypes.func,
+	unregisterPlaceholder: PropTypes.func
 };
 
 /**

@@ -9,10 +9,10 @@
 
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import Spotlight from '../src/spotlight';
-import {spottableClass} from '../Spottable';
 
 /**
  * The class name to apply to the default component to focus in a container.
@@ -42,14 +42,17 @@ const defaultConfig = {
 	defaultElement: `.${spotlightDefaultClass}`,
 
 	/**
-	 * Directs which component receives focus when gaining focus from another container.
+	 * Directs which element receives focus when gaining focus from another container. If
+	 * `'default-element'`, the default focused item will be selected. If `'last-focused'`, the
+	 * container will focus the last focused item; if the container has never had focus, the default
+	 * element will receive focus. If `null`, the default 5-way behavior will be applied.
 	 *
 	 * @type {String}
-	 * @default 'last-focused'
+	 * @default null
 	 * @memberof spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator.defaultConfig
 	 * @public
 	 */
-	enterTo: 'last-focused',
+	enterTo: null,
 
 	/**
 	 * Whether the container will preserve the id when it unmounts.
@@ -85,7 +88,8 @@ const defaultConfig = {
  *		}
  *	});
  *
- * @param  {Object} defaultConfig Set of default configuration parameters
+ * @param  {Object}    defaultConfig  Set of default configuration parameters. Additional parameters
+ *                                    are passed as configuration to {@link spotlight/Spotlight.set}
  * @param  {Function} Higher-order component
  *
  * @returns {Function} SpotlightContainerDecorator
@@ -96,7 +100,7 @@ const defaultConfig = {
 const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const forwardMouseEnter = forward(enterEvent);
 	const forwardMouseLeave = forward(leaveEvent);
-	const {preserveId, ...containerConfig} = config;
+	const {navigableFilter, preserveId, ...containerConfig} = config;
 
 	return class extends React.Component {
 		static displayName = 'SpotlightContainerDecorator';
@@ -138,7 +142,6 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * indicates there should be no restrictions when 5-way navigating the container.
 			 *
 			 * @type {String}
-			 * @default 'none'
 			 * @public
 			 */
 			spotlightRestrict: PropTypes.oneOf(['none', 'self-first', 'self-only'])
@@ -146,8 +149,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static defaultProps = {
 			spotlightDisabled: false,
-			spotlightMuted: false,
-			spotlightRestrict: 'none'
+			spotlightMuted: false
 		}
 
 		constructor (props) {
@@ -159,17 +161,14 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		navigableFilter = (elem) => {
-			let containerId;
-			while (elem && elem !== document && elem.nodeType === 1) {
-				containerId = elem.getAttribute('data-container-id');
-				if (containerId &&
-						containerId !== this.state.id &&
-						elem.getAttribute('data-container-disabled') === 'true') {
-
+			// If the component to which this was applied specified a navigableFilter, run it
+			if (typeof navigableFilter === 'function') {
+				if (navigableFilter(elem, this.props, this.context) === false) {
 					return false;
 				}
-				elem = elem.parentNode;
 			}
+
+			return true;
 		}
 
 		componentWillReceiveProps (nextProps) {
@@ -189,8 +188,14 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillMount () {
-			const selector = '[data-container-id="' + this.state.id + '"]:not([data-container-disabled="true"]) .' + spottableClass,
-				cfg = Object.assign({}, containerConfig, {selector, navigableFilter: this.navigableFilter, restrict: this.props.spotlightRestrict});
+			const cfg = {
+				...containerConfig,
+				navigableFilter: this.navigableFilter
+			};
+
+			if (this.props.spotlightRestrict) {
+				cfg.restrict = this.props.spotlightRestrict;
+			}
 
 			Spotlight.set(this.state.id, cfg);
 		}
@@ -209,9 +214,11 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleMouseLeave = (ev) => {
-			const parentContainer = ev.currentTarget.parentNode.closest('[data-container-id]');
-			const activeContainer = parentContainer ? parentContainer.dataset.containerId : null;
-			Spotlight.setActiveContainer(activeContainer);
+			if (this.props.spotlightRestrict !== 'self-only') {
+				const parentContainer = ev.currentTarget.parentNode.closest('[data-container-id]');
+				const activeContainer = parentContainer ? parentContainer.dataset.containerId : null;
+				Spotlight.setActiveContainer(activeContainer);
+			}
 			forwardMouseLeave(ev, this.props);
 		}
 

@@ -1,7 +1,7 @@
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import React from 'react';
-
+import PropTypes from 'prop-types';
 
 const STATE = {
 	inactive: 0,	// Marquee is not necessary (render or focus not happened)
@@ -23,7 +23,7 @@ const contextTypes = {
 	 * @type {Function}
 	 * @memberof moonstone/Marquee.Marquee.contextTypes
 	 */
-	cancel: React.PropTypes.func,
+	cancel: PropTypes.func,
 
 	/**
 	 * Called by Marquee instances when marqueeing has completed
@@ -31,7 +31,7 @@ const contextTypes = {
 	 * @type {Function}
 	 * @memberof moonstone/Marquee.Marquee.contextTypes
 	 */
-	complete: React.PropTypes.func,
+	complete: PropTypes.func,
 
 	/**
 	 * Called to register a Marquee instance to be synchronized
@@ -39,7 +39,7 @@ const contextTypes = {
 	 * @type {Function}
 	 * @memberof moonstone/Marquee.Marquee.contextTypes
 	 */
-	register: React.PropTypes.func,
+	register: PropTypes.func,
 
 	/**
 	 * Called by Marquee instances when marqueeing is started (e.g. when focusing a Marquee
@@ -49,7 +49,7 @@ const contextTypes = {
 	 * @type {Function}
 	 * @memberof moonstone/Marquee.Marquee.contextTypes
 	 */
-	start: React.PropTypes.func,
+	start: PropTypes.func,
 
 	/**
 	 * Called to unregister a synchronized Marquee instance
@@ -57,7 +57,7 @@ const contextTypes = {
 	 * @type {Function}
 	 * @memberof moonstone/Marquee.Marquee.contextTypes
 	 */
-	unregister: React.PropTypes.func
+	unregister: PropTypes.func
 };
 
 

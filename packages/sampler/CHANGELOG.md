@@ -6,7 +6,25 @@ The following is a curated list of changes in the Enact Sampler, newest changes 
 
 ### Added
 
+- `skin` knob to all samples to allow switching between dark and light skins
+
+## Fixed
+
+- `largeText` and `locale` knobs to not disappear after use
+
+## [1.1.0] - 2017-04-21
+
+Updated with new properties for Moonstone controls.
+
+## [1.0.0] - 2017-03-31
+
+### Added
+
 - `moonstone/CheckboxItem` knob to change the checkbox position (left vs right aligned)
+
+### Changed
+
+- All samples to use the newly updated uncontrolled components
 
 ## [1.0.0-beta.4] - 2017-03-10
 

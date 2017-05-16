@@ -1,9 +1,9 @@
 // Button.less
 //
 @import '../styles/mixins.less';
-@import '../styles/colors.less';
 @import '../styles/variables.less';
 @import '../styles/text.less';
+@import '../styles/skin.less';
 
 // Local scope for some math variables
 & {
@@ -32,7 +32,7 @@
 	}
 }
 
-.button {
+.applySkins({.button {
 	.moon-large-button-text();
 	position: relative;
 	overflow: visible;
@@ -66,7 +66,7 @@
 		content: '';
 		background-color: inherit;
 		z-index: -1;
-		background-color: @moon-button-background-color;
+		background-color: @moon-button-bg-color;
 		border: @moon-button-border-width solid transparent;
 		border-radius: @moon-button-border-radius;
 
@@ -153,11 +153,15 @@
 	}
 
 	&.translucent .bg {
-		background-color: fade(@moon-button-background-color, @moon-button-translucent-opacity);
+		background-color: fade(@moon-button-bg-color, @moon-button-translucent-opacity);
 	}
 
-	&.transparent .bg {
-		background-color: transparent;
+	&.transparent {
+		color: @moon-text-color;
+
+		.bg {
+			background-color: transparent;
+		}
 	}
 
 	// Button-non-disabled rules
@@ -171,22 +175,11 @@
 		}
 
 		&:global(.spottable):focus {
+			color: @moon-spotlight-text-color;
 			background-color: transparent;
 
 			.bg {
 				background-color: @moon-spotlight-border-color;
-				color: @moon-spotlight-text-color;
-			}
-		}
-	}
-
-	// Disable animation for Picker button spottable and disabled.
-	&:global(.spottableDisabled) {
-		&.pressed,
-		&:global(.spottable):active {
-			.bg {
-				-webkit-animation-name: none;
-				animation-name: none;
 			}
 		}
 	}
@@ -210,34 +203,10 @@
 
 	&[disabled] {
 		cursor: default;
-	}
 
-	:global(.moon-neutral) & {
-		color: @moon-neutral-button-text-color;
-
-		.bg {
-			background-color: @moon-neutral-button-bg-color;
-		}
-
-		&.translucent .bg {
-			background-color: fade(@moon-neutral-button-bg-color, @moon-button-translucent-opacity);
-		}
-
-		&.transparent .bg {
-			background-color: transparent;
-		}
-
-		* {
-			color: inherit;
-		}
-
-		&[disabled],
-		&:global(.disabled) {
-			color: @moon-neutral-button-disabled-text-color;
-
-			.bg {
-				background-color: @moon-neutral-button-disabled-bg-color;
-			}
+		&.translucent,
+		&.transparent {
+			opacity: @moon-disabled-translucent-opacity;
 		}
 	}
 }
@@ -249,7 +218,7 @@
 			color: @moon-button-text-color;
 
 			.bg {
-				background-color: @moon-button-background-color;
+				background-color: @moon-button-bg-color;
 			}
 		}
 
@@ -262,4 +231,4 @@
 			}
 		}
 	}
-}
+}});
