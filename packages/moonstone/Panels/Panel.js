@@ -112,8 +112,9 @@ const PanelBase = kind({
 		// render.
 		spotOnRender: ({hideChildren, noAutoFocus}) => hideChildren || noAutoFocus ? null : spotPanel,
 		children: ({children, hideChildren}) => hideChildren ? null : children,
-		bodyClassName: ({hideChildren, styler}) => styler.join({
+		bodyClassName: ({header, hideChildren, styler}) => styler.join({
 			body: true,
+			noHeader: !header,
 			visible: !hideChildren
 		}),
 		// nulling headerId prevents the aria-labelledby relationship which is necessary to allow
