@@ -15,9 +15,10 @@ import pure from 'recompose/pure';
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 import IconButton from '../IconButton';
 import Picker from '../Picker';
-import css from './ExpandablePicker.less';
 
 import ExpandablePickerDecorator from './ExpandablePickerDecorator';
+
+import css from './ExpandablePicker.less';
 
 /**
  * {@link moonstone/ExpandablePicker.ExpandablePickerBase} is a stateless component that
@@ -179,7 +180,7 @@ const ExpandablePickerBase = kind({
 
 	styles: {
 		css,
-		className: 'ExpandablePicker'
+		className: 'expandablePicker'
 	},
 
 	handlers: {
@@ -220,7 +221,7 @@ const ExpandablePickerBase = kind({
 		return (
 			<ExpandableItemBase {...rest} disabled={disabled} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled}>
 				<Picker
-					className={css.pickerContainer}
+					className={css.picker}
 					disabled={disabled}
 					onChange={onPick}
 					value={value}
@@ -236,7 +237,7 @@ const ExpandablePickerBase = kind({
 				>
 					{children}
 				</Picker>
-				<IconButton onClick={onChange} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled} small>check</IconButton>
+				<IconButton onClick={onChange} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled} className={css.button} small>check</IconButton>
 			</ExpandableItemBase>
 		);
 	}
