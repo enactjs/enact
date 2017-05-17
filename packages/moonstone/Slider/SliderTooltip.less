@@ -22,9 +22,6 @@
 				top: (@moon-slider-tooltip-offset + @offset-large);
 			});
 		}
-		[data-climax="falling"] & {
-			transform: translateX(-100%);
-		}
 	}
 
 	&.vertical {
@@ -51,4 +48,13 @@
 			});
 		}
 	}
-}});
+}
+
+// In order to reference a ancestor selector ([data-climax="falling"]) that is also a descendant of
+// the skin (.moonstone), we have to extract it from the main ruleset to inject the ancestor
+// selector while still prefixing it with the skin selector.
+[data-climax="falling"] .tooltip.horizontal {
+		transform: translateX(-100%);
+}
+
+});
