@@ -1,8 +1,8 @@
 @import '../styles/mixins.less';
 @import '../styles/variables.less';
-@import '../styles/colors.less';
+@import '../styles/skin.less';
 
-.selectableItem {
+.applySkins({.selectableItem {
 	.dot {
 		@dot-size: @moon-selectable-item-indicator-size - 3px * 2;
 
@@ -13,4 +13,4 @@
 			display: none;
 		}
 	}
-}
+}});

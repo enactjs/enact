@@ -17,7 +17,7 @@ describe('ExpandablePicker Specs', () => {
 		checkButton.simulate('click');
 
 		const expected = false;
-		const actual = expandablePicker.find('ExpandableContainer').props().open;
+		const actual = expandablePicker.find('ExpandableItem').props().open;
 
 		expect(actual).to.equal(expected);
 	});

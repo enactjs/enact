@@ -98,9 +98,10 @@ class ExpandableInputBase extends React.Component {
 		 *
 		 * @type {Function}
 		 * @param {Object} event
+		 * @deprecated replaced by `onChange`
 		 * @public
 		 */
-		onInputChange: deprecate(PropTypes.func, {name: 'onInputChange', since: '1.0.0', message: 'Use `onChange` instead', until: '2.0.0'}),
+		onInputChange: PropTypes.func,
 
 		/**
 		 * The handler to run when the component is removed while retaining focus.
@@ -166,6 +167,10 @@ class ExpandableInputBase extends React.Component {
 		this.state = {
 			initialValue: props.value
 		};
+
+		if (props.onInputChange) {
+			deprecate({name: 'onInputChange', since: '1.0.0', message: 'Use `onChange` instead', until: '2.0.0'});
+		}
 	}
 
 	componentWillReceiveProps (nextProps) {
@@ -286,7 +291,6 @@ class ExpandableInputBase extends React.Component {
 				aria-label={this.calcAriaLabel()}
 				disabled={disabled}
 				label={this.calcLabel()}
-				noPointerMode
 				onClose={this.handleClose}
 				onMouseDown={this.handleMouseDown}
 				onSpotlightDisappear={onSpotlightDisappear}
@@ -336,6 +340,7 @@ class ExpandableInputBase extends React.Component {
  * @public
  */
 const ExpandableInput = Expandable(
+	{noPointerMode: true},
 	Changeable(
 		ExpandableInputBase
 	)
