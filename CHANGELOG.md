@@ -45,6 +45,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 - `moonstone/styles/fonts.less` to restore the Moonstone Icon font to request the local system font by default. Remember to update your webOS build to get the latest version of the font so you don't see empty boxes for your icons.
 - `moonstone/Picker` and `moonstone/RangePicker` to now use the correct size from Enyo (60px v.s. 84px) for icon buttons
 - `moonstone/Scrollable` to apply ri.scale properly
+- `moonstone/Panel` to not cover a `Panels`'s `ApplicationCloseButton` when not using a `Header`
 
 ## [1.1.0] - 2017-04-21
 
