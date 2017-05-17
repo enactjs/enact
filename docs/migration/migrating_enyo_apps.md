@@ -21,8 +21,8 @@ regardless of platform.
 
 ### Application Structure
 
->***The framework team strongly encourages developers to use the [`enact-dev`](https://github.com/enyojs/enact-dev) tools to create, test, and deploy your Enact
-application.***
+>***The framework team strongly encourages the use of the [`enact-dev`](https://github.com/enyojs/enact-dev) tools to
+create, test, and deploy Enact applications.***
 
 Source files are generally arranged in the project like so:
 ```
@@ -58,20 +58,19 @@ to see the exact APIs for each component.
 
 ##### `components` Block to `render()` Method
 
-With Enyo, a developer can declare which components are contained in a given kind or component.  This is done by specifying
-them in the `components` property of the kind.  The following example kind (OuterComponent) will render an outer `<div>`
-(MyControl) that contains another `<div>` with some text content.
+With Enyo, you can declare which components are contained in a given kind or component.  This is done by specifying
+them in the `components` property of the kind.
 ```javascript
 ...
 var InnerComponent = kind({
 	name: 'InnerComponent',
-	kind: enyo.Control, // <div>
+	kind: enyo.Control,
 	content: 'This is just a &lt;div&gt; with some text' 
 });
 ...
 var OuterComponent = kind({
 	name: 'OuterComponent',
-	kind: enyo.Control, // <div>
+	kind: enyo.Control,
 	components: [
 		{kind: InnerComponent}
 	]
@@ -79,7 +78,7 @@ var OuterComponent = kind({
 ...
 ```
 
-In Enact, a kind can contain other kinds or components just as easily, but you use the `render()` method to declare them.
+In Enact, a component can contain other components just as easily, but you use the `render()` method to declare them.
 ```jsx harmony
 ...
 const InnerComponent = kind({
@@ -230,9 +229,9 @@ the [Spotlight event documentation](../../spotlight/).
 
 ### Data Management
 
-Enyo developers who make use of `enyo.Model` and `enyo.Collection` will need to adapt to some changes in Enact.  Notably,
-there are no framework-provided collections or models.  Enact relies on its underlying Flux architecture to provide state
-and property updates through its component hierarchy.  Therefore, it is necessary for developers to manage their application
+If an application makes use of `enyo.Model` or `enyo.Collection`, it will need to be adapted to some changes in Enact.
+Notably, there are no framework-provided collections or models.  Enact relies on its underlying Flux architecture to
+provide state and property updates through its component hierarchy.  Therefore, it is necessary to manage application
 and/or component state to affect logic or UI changes.
 
 A typical Enyo application pattern is to create a model and a collection to hold instances of the model.  So that every
@@ -271,7 +270,7 @@ bindings: [
 ```
 
 The above example is quite simplistic, so it can be re-implemented in Enact without using additional libraries.  For
-complex data management and application state management, developers should use [Redux](../../redux/).
+complex data management and application state management, third-party solutions (such as [Redux](../../redux/)) exist.
 
 ```jsx harmony
 // App.js
