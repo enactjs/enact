@@ -1,5 +1,6 @@
 // Slider.less
 //
+@import '../styles/mixins.less';
 @import '../styles/variables.less';
 @import '../styles/text.less';
 @import '../styles/skin.less';
@@ -89,6 +90,10 @@
 				width: @moon-slider-knob-width-large;
 				border-radius: @moon-slider-knob-width-large;
 			})
+		}
+
+		:global(.enact-locale-right-to-left)& {
+			direction: ltr;
 		}
 	}
 
@@ -207,18 +212,12 @@
 			}
 		}
 	}
-
-	:global(.enact-locale-right-to-left)& .input {
-		direction: ltr;
-	}
 }
 
-[data-container-muted='true'] {
-	.slider {
-		&:global(.spottable):focus {
-			.knob {
-				background-color: @moon-slider-knob-bg-color;
-			}
-		}
+.mutedFocus({
+	&.slider .knob::before {
+		background-color: @moon-slider-knob-bg-color;
 	}
-}});
+});
+
+});
