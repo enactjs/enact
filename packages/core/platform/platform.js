@@ -1,6 +1,22 @@
-const hasGesture = Boolean(('ongesturestart' in window) || ('onmsgesturestart' in window && (window.navigator.msMaxTouchPoints > 1 || window.navigator.maxTouchPoints > 1)));
+import uniq from 'ramda/src/uniq';
 
-const hasTouch = Boolean(('ontouchstart' in window) || window.navigator.msMaxTouchPoints || (window.navigator.msManipulationViewsEnabled && window.navigator.maxTouchPoints));
+const hasGesture = () => {
+	return Boolean(
+		('ongesturestart' in window) ||
+		('onmsgesturestart' in window && (
+			window.navigator.msMaxTouchPoints > 1 ||
+			window.navigator.maxTouchPoints > 1
+		))
+	);
+};
+
+const hasTouch = () => {
+	return Boolean(
+		('ontouchstart' in window) ||
+		window.navigator.msMaxTouchPoints ||
+		(window.navigator.msManipulationViewsEnabled && window.navigator.maxTouchPoints)
+	);
+};
 
 const platforms = [
 	// Windows Phone 7 - 10
@@ -49,41 +65,79 @@ const platforms = [
 	{platform: 'tizen', regex: /Tizen (\d+)/}
 ];
 
-const ua = navigator ? navigator.userAgent : '';
+const ua = () => {
+	return window.navigator ? window.navigator.userAgent : '';
+};
 
 /**
  * Platform identification by user agent
  * @readonly
  * @type {object}
- * @property {?boolean} touch - Set true if the platform has native double-finger [events]{@glossary event}
- * @property {?boolean} gesture - Set true if the platform has native double-finger [events]{@glossary event}
+ * @property {?boolean} touch - Set true if the platform has native single-finger events
+ * @property {?boolean} gesture - Set true if the platform has native double-finger events
  * @property {?boolean} unknown - Set true for any unknown system
  */
 
-let platform = {
-	gesture: hasGesture,
-	touch: hasTouch,
-	unknown: true
+let _platform;
+
+const detect = () => {
+	if (window === 'undefined') {
+		return {};
+	} else if (_platform) {
+		return _platform;
+	}
+
+	const userAgent = ua();
+
+	_platform = {
+		gesture: hasGesture(),
+		touch: hasTouch(),
+		unknown: true
+	};
+
+	for (let i = 0, p, m, v; (p = platforms[i]); i++) {
+		m = p.regex.exec(userAgent);
+		if (m) {
+			delete _platform.unknown;
+
+			if (p.forceVersion) {
+				v = p.forceVersion;
+			} else {
+				v = Number(m[1]);
+			}
+			_platform[p.platform] = v;
+			if (p.extra) {
+				_platform = {
+					..._platform,
+					...p.extra
+				};
+			}
+			_platform.platformName = p.platform;
+			break;
+		}
+	}
+
+	return _platform;
 };
 
-for (let i = 0, p, m, v; (p = platforms[i]); i++) {
-	m = p.regex.exec(ua);
-	if (m) {
-		delete platform.unknown;
 
-		if (p.forceVersion) {
-			v = p.forceVersion;
-		} else {
-			v = Number(m[1]);
+// Set up the exported platform object
+const platform = {};
+[
+	'gesture',
+	'platformName',
+	'touch',
+	'unknown',
+	...uniq(platforms.map(p => p.platform))
+].forEach(name => {
+	Object.defineProperty(platform, name, {
+		enumerable: true,
+		get: () => {
+			const p = detect();
+			return p[name];
 		}
-		platform[p.platform] = v;
-		if (p.extra) {
-			platform = Object.extend(platform, p.extra);
-		}
-		platform.platformName = p.platform;
-		break;
-	}
-}
+	});
+});
 
 export default platform;
-export {platform};
+export {detect, platform};

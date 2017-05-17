@@ -1,4 +1,6 @@
-import platform from '../../core/platform';
+import {detect} from '../../core/platform';
+
+const platform = detect();
 
 /**
  * Platform identification of webOS variants
