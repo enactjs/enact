@@ -151,7 +151,7 @@ const ExpandableItemBase = kind({
 		 * Sets a reference to the root container node of the ExpandableItem
 		 *
 		 * @type {Function}
-		 * @public
+		 * @private
 		 */
 		setContainerNode: PropTypes.func,
 
