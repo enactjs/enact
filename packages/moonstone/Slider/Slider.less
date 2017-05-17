@@ -90,10 +90,6 @@
 				border-radius: @moon-slider-knob-width-large;
 			})
 		}
-
-		:global(.enact-locale-right-to-left) & {
-			direction: ltr;
-		}
 	}
 
 	&.horizontal {
@@ -210,6 +206,10 @@
 				}
 			}
 		}
+	}
+
+	:global(.enact-locale-right-to-left)& .input {
+		direction: ltr;
 	}
 }
 
