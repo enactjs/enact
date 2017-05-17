@@ -1,4 +1,4 @@
-import {detect} from '../../core/platform';
+import {detect} from '@enact/core/platform';
 
 const platform = detect();
 
