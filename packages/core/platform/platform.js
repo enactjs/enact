@@ -69,54 +69,57 @@ const ua = () => {
 	return window.navigator ? window.navigator.userAgent : '';
 };
 
+let _platform;
+
 /**
  * Platform identification by user agent
  * @readonly
  * @type {object}
- * @property {?boolean} touch - Set true if the platform has native single-finger events
- * @property {?boolean} gesture - Set true if the platform has native double-finger events
- * @property {?boolean} unknown - Set true for any unknown system
+ * @property {boolean} touch - Set `true` if the platform has native single-finger events
+ * @property {boolean} gesture - Set `true` if the platform has native double-finger events
+ * @property {boolean} unknown - Set `true` for any unknown system
  */
 
-let _platform;
-
 const detect = () => {
-	if (window === 'undefined') {
-		return {};
-	} else if (_platform) {
-		return _platform;
-	}
+	if (typeof window === 'undefined') {
+		return {
+			gesture: false,
+			node: true,
+			touch: false,
+			unknown: true
+		};
+	} else if (!_platform) {
+		const userAgent = ua();
 
-	const userAgent = ua();
+		_platform = {
+			gesture: hasGesture(),
+			node: false,
+			touch: hasTouch(),
+			unknown: true
+		};
 
-	_platform = {
-		gesture: hasGesture(),
-		touch: hasTouch(),
-		unknown: true
-	};
+		for (let i = 0, p, m, v; (p = platforms[i]); i++) {
+			m = p.regex.exec(userAgent);
+			if (m) {
+				_platform.unknown = false;
 
-	for (let i = 0, p, m, v; (p = platforms[i]); i++) {
-		m = p.regex.exec(userAgent);
-		if (m) {
-			delete _platform.unknown;
-
-			if (p.forceVersion) {
-				v = p.forceVersion;
-			} else {
-				v = Number(m[1]);
+				if (p.forceVersion) {
+					v = p.forceVersion;
+				} else {
+					v = Number(m[1]);
+				}
+				_platform[p.platform] = v;
+				if (p.extra) {
+					_platform = {
+						..._platform,
+						...p.extra
+					};
+				}
+				_platform.platformName = p.platform;
+				break;
 			}
-			_platform[p.platform] = v;
-			if (p.extra) {
-				_platform = {
-					..._platform,
-					...p.extra
-				};
-			}
-			_platform.platformName = p.platform;
-			break;
 		}
 	}
-
 	return _platform;
 };
 
@@ -125,6 +128,7 @@ const detect = () => {
 const platform = {};
 [
 	'gesture',
+	'node',
 	'platformName',
 	'touch',
 	'unknown',

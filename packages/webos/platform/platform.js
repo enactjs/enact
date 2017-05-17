@@ -6,10 +6,10 @@ const platform = detect();
  * Platform identification of webOS variants
  * @readonly
  * @type {object}
- * @property {?boolean} tv - Set true for LG webOS SmartTV
- * @property {?boolean} watch - Set true for LG webOS SmartWatch
- * @property {?boolean} open - Set true for Open webOS
- * @property {?boolean} legacy - Set true for legacy webOS (Palm and HP hardware)
+ * @property {boolean} tv - Set `true` for LG webOS SmartTV
+ * @property {boolean} watch - Set `true` for LG webOS SmartWatch
+ * @property {boolean} open - Set `true` for Open webOS
+ * @property {boolean} legacy - Set `true` for legacy webOS (Palm and HP hardware)
 */
 
 if (platform.webos || (typeof window === 'object' && window.PalmSystem)) {
