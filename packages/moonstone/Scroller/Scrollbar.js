@@ -1,4 +1,3 @@
-import $L from '@enact/i18n/$L';
 import {Announce} from '@enact/ui/AnnounceDecorator';
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
@@ -8,6 +7,7 @@ import React, {Component} from 'react';
 import ri from '@enact/ui/resolution';
 import Spotlight from '@enact/spotlight';
 
+import $L from '../internal/$L';
 import css from './Scrollbar.less';
 import ScrollButton from './ScrollButton';
 

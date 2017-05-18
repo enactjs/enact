@@ -5,7 +5,6 @@
  * @module moonstone/Popup
  */
 
-import $L from '@enact/i18n/$L';
 import {is} from '@enact/core/keymap';
 import {on, off} from '@enact/core/dispatcher';
 import FloatingLayer from '@enact/ui/FloatingLayer';
@@ -17,6 +16,7 @@ import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDeco
 import Transition from '@enact/ui/Transition';
 import {forward} from '@enact/core/handle';
 
+import $L from '../internal/$L';
 import IconButton from '../IconButton';
 
 import css from './Popup.less';
