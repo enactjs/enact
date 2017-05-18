@@ -136,7 +136,9 @@ const GridListImageItemBase = kind({
 						{
 							SelectionOverlay ?
 								<SelectionOverlay /> :
-								<Icon className={css.icon}>check</Icon>
+								<div className={css.overlayComponent}>
+									<Icon className={css.icon}>check</Icon>
+								</div>
 						}
 					</div>
 				);
