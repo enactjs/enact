@@ -136,9 +136,7 @@ const GridListImageItemBase = kind({
 						{
 							SelectionOverlay ?
 								<SelectionOverlay /> :
-								<div className={css.overlayComponent}>
-									<Icon className={css.icon}>check</Icon>
-								</div>
+								<Icon className={css.icon}>check</Icon>
 						}
 					</div>
 				);
@@ -157,8 +155,9 @@ const GridListImageItemBase = kind({
 
 		return (
 			<div {...rest}>
-				<Image className={css.image} placeholder={placeholder} src={source} />
-				{selectionOverlay}
+				<Image className={css.image} placeholder={placeholder} src={source}>
+					{selectionOverlay}
+				</Image>
 				{caption ? (<MarqueeText className={css.caption} marqueeOn="hover">{caption}</MarqueeText>) : null}
 				{subCaption ? (<MarqueeText className={css.subCaption} marqueeOn="hover">{subCaption}</MarqueeText>) : null}
 			</div>
