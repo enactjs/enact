@@ -1,5 +1,6 @@
 import Spinner from '@enact/moonstone/Spinner';
 import Button from '@enact/moonstone/Button';
+import ri from '@enact/ui/resolution';
 import React from 'react';
 import {action, storiesOf} from '@kadira/storybook';
 import {text, boolean, select} from '@kadira/storybook-addon-knobs';
@@ -12,7 +13,7 @@ const
 	},
 	style = {
 		spinnerDiv: {
-			height: '420px',
+			height: ri.scale(420) + 'px',
 			border: '1px dotted red',
 			backgroundColor: '#222'
 		}
