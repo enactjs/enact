@@ -52,6 +52,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Scrollable` to apply ri.scale properly
 - `moonstone/Panel` to not cover a `Panels`'s `ApplicationCloseButton` when not using a `Header`
 - `moonstone/IncrementSlider` to show tooltip when buttons focused
+- `moonstone/Input` to have correct `Tooltip` position in `RTL`
 
 ## [1.1.0] - 2017-04-21
 
