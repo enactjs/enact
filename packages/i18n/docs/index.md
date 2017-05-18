@@ -94,7 +94,7 @@ Here's an example from the Moonstone package in which locale-specific CSS is
 used to turn on right-to-left orientation for a widget:
 
 ```css
-	:global(.enact-locale-right-to-left) & {
+	:global(.enact-locale-right-to-left)& {
 		flex-direction: row-reverse;
 	}
 ```
