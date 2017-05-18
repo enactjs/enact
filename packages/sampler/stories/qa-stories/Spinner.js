@@ -13,8 +13,9 @@ const
 	},
 	style = {
 		spinnerDiv: {
-			height: ri.scale(15) + 'em',
-			border: '1px dotted red'
+			height: '420px',
+			border: '1px dotted red',
+			backgroundColor: '#222'
 		}
 	};
 
@@ -23,7 +24,7 @@ storiesOf('Spinner')
 		'with long content',
 		() => (
 			<div>
-				<div style={Object.assign({}, style.spinnerDiv, {height: '420px', backgroundColor: '#222', overflow: 'hidden'})}>
+				<div style={style.spinnerDiv}>
 					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 					<Button onClick={action('Inside Button events')}>Button</Button>
 					<Spinner
@@ -44,7 +45,7 @@ storiesOf('Spinner')
 		'blocking click events',
 		() => (
 			<div>
-				<div style={Object.assign({}, style.spinnerDiv, {height: '420px', backgroundColor: '#222', overflow: 'hidden'})}>
+				<div style={style.spinnerDiv}>
 					<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
 					<Button onClick={action('Inside Button events')}>Button</Button>
 					<Spinner
