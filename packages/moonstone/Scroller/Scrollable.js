@@ -843,6 +843,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		// component life cycle
 
 		componentDidMount () {
+			const {isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state;
+			if (isVerticalScrollbarVisible || isHorizontalScrollbarVisible) {
+				this.isInitializing = false;
+			}
 			this.updateScrollabilityAndEventListeners();
 		}
 
