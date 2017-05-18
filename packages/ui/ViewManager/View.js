@@ -72,6 +72,13 @@ class View extends React.Component {
 		index: PropTypes.number,
 
 		/**
+		 * Indicates if a view is currently leaving.
+		 *
+		 * @type {Boolean}
+		 */
+		leaving: PropTypes.bool,
+
+		/**
 		 * Indicates if the transition should be animated
 		 *
 		 * @type {Boolean}
@@ -112,6 +119,14 @@ class View extends React.Component {
 	componentWillReceiveProps (nextProps) {
 		// changeDirection let's us know we need to switch mid-transition
 		this.changeDirection = this.animation ? this.props.reverseTransition !== nextProps.reverseTransition : false;
+	}
+
+	shouldComponentUpdate (nextProps) {
+		if (nextProps.leaving) {
+			return false;
+		}
+
+		return true;
 	}
 
 	componentWillUnmount () {

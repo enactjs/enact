@@ -1,7 +1,10 @@
+// Notification.less
+//
 @import '../styles/variables.less';
 @import '../styles/text.less';
+@import '../styles/skin.less';
 
-.notification {
+.applySkins({.notification {
 	position: absolute;
 	bottom: 0;
 	left: 50%;
@@ -20,11 +23,11 @@
 		max-width: 1287px; // 4 button case
 	}
 
-	&:before {
+	&::before {
 		content: '';
 		display: block;
 		position: absolute;
-		border: @moon-notification-border-width solid fade(@moon-black, @moon-notification-border-opacity);
+		border: @moon-notification-border-width solid @moon-notification-border-color;
 		border-radius: @moon-notification-out-border-radius;
 		top: -@moon-notification-border-width;
 		right: -@moon-notification-border-width;
@@ -49,7 +52,7 @@
 		& > :first-child {
 			margin-left: 0;
 
-			:global(.enact-locale-right-to-left) & {
+			:global(.enact-locale-right-to-left)& {
 				margin-right: 0;
 			}
 		}
@@ -57,9 +60,9 @@
 		& > :last-child {
 			margin-right: 0;
 
-			:global(.enact-locale-right-to-left) & {
+			:global(.enact-locale-right-to-left)& {
 				margin-right: @moon-notification-button-gap;
 			}
 		}
 	}
-}
+}});

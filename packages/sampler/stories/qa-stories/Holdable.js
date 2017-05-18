@@ -2,7 +2,7 @@ import Button from '@enact/moonstone/Button';
 import Holdable from '@enact/ui/Holdable';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
+import {boolean, select, text} from '@kadira/storybook-addon-knobs';
 
 const HoldableButton = Holdable(Button);
 const LongPressButton = Holdable({
@@ -20,7 +20,6 @@ const prop = {
 };
 
 storiesOf('Holdable')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		'with default hold events',
 		() => (
