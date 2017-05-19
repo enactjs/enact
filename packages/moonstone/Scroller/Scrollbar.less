@@ -1,7 +1,8 @@
 @import '../styles/mixins.less';
 @import '../styles/variables.less';
+@import '../styles/skin.less';
 
-.scrollbarContainerBase {
+.applySkins({.scrollbarContainerBase {
 	background: inherit;
 	position: absolute;
 	border-color: transparent;
@@ -36,19 +37,22 @@
 	}
 }
 
-.scrollbarButtonBase {
-	.scrollbarButtonNoCompositeLayer;
-	background-color: transparent;
-	position: absolute;
-	width: @moon-icon-button-small-size;
-	height: @moon-icon-button-small-size;
-	padding: 0;
-	border-color: transparent;
-	margin: 0;
+.scrollbarContainerVColumn,
+.scrollbarContainerHColumn {
+	.scrollButton {
+		.scrollbarButtonNoCompositeLayer;
+		background-color: transparent;
+		position: absolute;
+		width: @moon-icon-button-small-size;
+		height: @moon-icon-button-small-size;
+		padding: 0;
+		border-color: transparent;
+		margin: 0;
 
-	:global(.enact-text-large) & {
-		width: @moon-icon-button-small-size-large;
-		height: @moon-icon-button-small-size-large;
+		:global(.enact-text-large) & {
+			width: @moon-icon-button-small-size-large;
+			height: @moon-icon-button-small-size-large;
+		}
 	}
 }
 
@@ -68,7 +72,6 @@
 	}
 
 	.scrollbarUpButton {
-		.scrollbarButtonBase;
 		top: -@moon-icon-button-small-size;
 
 		:global(.enact-text-large) & {
@@ -77,7 +80,6 @@
 	}
 
 	.scrollbarBottomButton {
-		.scrollbarButtonBase;
 		bottom: -@moon-icon-button-small-size;
 
 		:global(.enact-text-large) & {
@@ -107,7 +109,6 @@
 	}
 
 	.scrollbarLeftButton {
-		.scrollbarButtonBase;
 		.position-start-end(-@moon-icon-button-small-size, auto);
 
 		:global(.enact-text-large) & {
@@ -122,7 +123,6 @@
 	}
 
 	.scrollbarRightButton {
-		.scrollbarButtonBase;
 		.position-start-end(auto, -@moon-icon-button-small-size);
 
 		:global(.enact-text-large) & {
@@ -182,3 +182,4 @@
 .thumbHidden {
 	opacity: 0;
 }
+});

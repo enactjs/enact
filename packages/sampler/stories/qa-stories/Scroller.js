@@ -21,7 +21,8 @@ const
 			width: '100%'
 		},
 		horizontalContent: {
-			width: ri.scale(4200) + 'px'
+			width: ri.scale(4200) + 'px',
+			padding: '1px'
 		}
 	};
 

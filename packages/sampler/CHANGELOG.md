@@ -2,7 +2,11 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
-## [unreleased]
+## [1.2.0] - 2017-05-17
+
+### Added
+
+- `skin` knob to all samples to allow switching between dark and light skins
 
 ## Fixed
 

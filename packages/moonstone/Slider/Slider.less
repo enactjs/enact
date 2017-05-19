@@ -1,8 +1,11 @@
-@import '../styles/colors.less';
+// Slider.less
+//
+@import '../styles/mixins.less';
 @import '../styles/variables.less';
 @import '../styles/text.less';
+@import '../styles/skin.less';
 
-.slider {
+.applySkins({.slider {
 	position: relative;
 	margin: 0 @moon-spotlight-outset;
 	height: 240px;	// Vertical sizing here. Being here instead of in .vertical requires less precedence when overriding the style from app-code.
@@ -63,10 +66,6 @@
 		}
 	}
 
-	.tooltip {
-		display: none;
-	}
-
 	.input {
 		position: absolute;
 		top: 0;
@@ -93,7 +92,7 @@
 			})
 		}
 
-		:global(.enact-locale-right-to-left) & {
+		:global(.enact-locale-right-to-left)& {
 			direction: ltr;
 		}
 	}
@@ -178,9 +177,6 @@
 			.knob::before {
 				background-color: @moon-slider-spotlight-knob-color;
 			}
-			.tooltip {
-				display: block;
-			}
 		}
 
 		&.pressed,
@@ -218,12 +214,10 @@
 	}
 }
 
-[data-container-muted='true'] {
-	.slider {
-		&:global(.spottable):focus {
-			.knob {
-				background-color: @moon-slider-knob-bg-color;
-			}
-		}
+.mutedFocus({
+	&.slider .knob::before {
+		background-color: @moon-slider-knob-bg-color;
 	}
-}
+});
+
+});

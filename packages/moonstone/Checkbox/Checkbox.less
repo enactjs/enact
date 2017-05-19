@@ -1,21 +1,16 @@
-// Checkbox
+// Checkbox.less
 //
-@import '../styles/colors.less';
 @import '../styles/text.less';
+@import '../styles/skin.less';
 
-.checkbox {
+.applySkins({.checkbox {
 	@size: @moon-checkbox-size;
 
 	width: @size;
 	height: @size;
 	border-radius: @size;
-	background-color: @moon-checkbox-background-color;
-
-	&:not([disabled]) {
-		:global(.spottable):focus & {
-			background-color: @moon-checkbox-background-spotlight-color;
-		}
-	}
+	color: @moon-checkbox-check-color;
+	background-color: @moon-checkbox-bg-color;
 
 	.icon {
 		visibility: hidden;
@@ -47,8 +42,21 @@
 			visibility: visible;
 		}
 	}
-
-	:global(.moon-neutral) & {
-		background-color: @moon-neutral-checkbox-bg-color;
-	}
 }
+
+.focus({
+	.checkbox {
+		&:not([disabled]) {
+			background-color: @moon-checkbox-bg-spotlight-color;
+			color: @moon-checkbox-check-color;
+		}
+	}
+});
+
+.mutedFocus({
+	.checkbox {
+		background-color: @moon-checkbox-bg-color;
+	}
+});
+
+});

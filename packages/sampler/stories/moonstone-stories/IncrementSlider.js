@@ -22,6 +22,7 @@ storiesOf('IncrementSlider')
 				knobStep={number('knobStep')}
 				max={number('max', IncrementSliderBase.defaultProps.max)}
 				min={number('min', IncrementSliderBase.defaultProps.min)}
+				noFill={boolean('noFill', false)}
 				onChange={action('onChange')}
 				step={number('step', IncrementSliderBase.defaultProps.step)}
 				tooltip={nullify(boolean('tooltip', false))}

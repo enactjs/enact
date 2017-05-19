@@ -1,5 +1,9 @@
+// Panel.less
+//
 @import '../styles/variables.less';
+@import '../styles/skin.less';
 
+.applySkins({
 .panel {
 	position: absolute;
 	height: 100%;
@@ -18,14 +22,18 @@
 .body {
 	position: relative;
 	padding-top: 12px;
-	z-index: 1;
 	flex: 1;
 	min-height: 0;
 	opacity: 0;
 	transition: opacity 200ms ease-out;
 	will-change: opacity;
 
+	&.noHeader {
+		padding-top: 0;
+	}
+
 	&.visible {
 		opacity: 1;
 	}
 }
+});

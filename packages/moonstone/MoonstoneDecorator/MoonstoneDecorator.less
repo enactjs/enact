@@ -5,5 +5,17 @@
 @import '~@enact/ui/styles/core.less';
 
 // Moonstone Rules
+@import '../styles/variables.less';
 @import '../styles/fonts.less';
 @import '../styles/rules.less';
+
+.root {
+	&.bg,
+	& > .bg {
+		padding: @moon-app-keepout;
+	}
+
+	&:global(.enact-locale-right-to-left) {
+		direction: rtl;
+	}
+}
