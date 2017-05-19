@@ -658,12 +658,12 @@ const VideoPlayerBase = class extends React.Component {
 
 	hideFeedbackJob = new Job(this.hideFeedback)
 
-	showFeedback = () => {
-		this.setState({feedbackVisible: true});
+	handleLeft = () => {
+		this.jump(-1 * this.props.jumpBy);
 	}
 
-	hideFeedback = () => {
-		this.setState({feedbackVisible: false});
+	handleRight = () => {
+		this.jump(this.props.jumpBy);
 	}
 
 	//
@@ -1222,6 +1222,8 @@ const VideoPlayerBase = class extends React.Component {
 					// It's non-visible but lives at the top of the VideoPlayer.
 					className={css.controlsHandleAbove}
 					onSpotlightDown={this.showControls}
+					onSpotlightLeft={this.handleLeft}
+					onSpotlightRight={this.handleRight}
 					onClick={this.showControls}
 				/>
 			</div>
