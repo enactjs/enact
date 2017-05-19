@@ -13,45 +13,85 @@ const Config = mergeComponentMetadata('VirtualList', VirtualListCore, VirtualLis
 const
 	style = {
 		item: {
-			borderBottom: ri.scale(2) + 'px solid #202328',
+			borderBottom: ri.unit(3, 'rem') + ' solid #202328',
 			boxSizing: 'border-box'
 		},
 		list: {
-			height: ri.scale(552) + 'px'
+			height: ri.unit(552, 'rem')
 		}
-	},
-	items = [],
-	// eslint-disable-next-line enact/prop-types, enact/display-name
+	};
+
+class StatefulVirtualList extends React.Component {
+	constructor (props) {
+		super(props);
+		this.state = {
+			itemList: []
+		};
+
+	}
+
+	componentDidMount () {
+		this.initializeItems();
+	}
+
+	initializeItems = () => {
+		const initailItems = [];
+		for (let i = 0; i < 100; i++) {
+			initailItems.push({item :'Item ' + ('00' + i).slice(-3), selected:false});
+		}
+
+		this.setState({
+			itemList: initailItems
+		});
+	}
+
+	handleClick = (ev) => {
+		const changedItems = [...this.state.itemList],
+			idx = ev.currentTarget.dataset.index,
+			sel = changedItems[idx].selected;
+		changedItems[idx] = {
+			...this.state.itemList[idx],
+			selected: !sel
+		};
+
+		this.setState({
+			itemList: changedItems
+		});
+	}
+
 	renderItem = (size) => ({data, index, ...rest}) => {
 		const itemStyle = {height: size + 'px', ...style.item};
-
 		return (
-			<SwitchItem {...rest} style={itemStyle}>
-				{data[index]}
+			<SwitchItem {...rest} style={itemStyle} selected={data[index].selected} onClick={this.handleClick} >
+				{data[index].item}
 			</SwitchItem>
 		);
 	};
 
-for (let i = 0; i < 1000; i++) {
-	items.push('Item ' + ('00' + i).slice(-3));
+	render () {
+		const itemSize = ri.scale(number('itemSize', 60));
+		return (
+			<VirtualList
+				{...this.props}
+				component={this.renderItem(itemSize)}
+				data={this.state.itemList}
+				dataSize={number('dataSize', this.state.itemList.length)}
+				itemSize={itemSize}
+				onScrollStart={action('onScrollStart')}
+				onScrollStop={action('onScrollStop')}
+				spacing={ri.scale(number('spacing', 0))}
+				style={style.list}
+			/>
+		);
+	}
 }
 
 storiesOf('VirtualList')
 	.addWithInfo(
-		'VirtualList with more items',
+		'with more items',
 		() => {
-			const itemSize = ri.scale(number('itemSize', 60));
 			return (
-				<VirtualList
-					component={renderItem(itemSize)}
-					data={items}
-					dataSize={number('dataSize', items.length)}
-					itemSize={itemSize}
-					onScrollStart={action('onScrollStart')}
-					onScrollStop={action('onScrollStop')}
-					spacing={ri.scale(number('spacing', 0))}
-					style={style.list}
-				/>
+				<StatefulVirtualList />
 			);
 		},
 		{propTables: [Config]}
