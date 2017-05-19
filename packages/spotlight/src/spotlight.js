@@ -17,7 +17,6 @@
  */
 
 import {is} from '@enact/core/keymap';
-import {Job} from '@enact/core/util';
 import concat from 'ramda/src/concat';
 import difference from 'ramda/src/difference';
 import last from 'ramda/src/last';
@@ -44,6 +43,13 @@ import {
 	rootContainerId,
 	setContainerLastFocusedElement
 } from './container';
+import {
+	getLastPointerPosition,
+	getPointerMode,
+	notifyKeyDown,
+	notifyPointerMove,
+	setPointerMode
+} from './pointer';
 import {matchSelector, parseSelector} from './utils';
 
 const isDown = is('down');
@@ -51,6 +57,7 @@ const isEnter = is('enter');
 const isLeft = is('left');
 const isRight = is('right');
 const isUp = is('up');
+const isPointerEvent = (target) => ('x' in target && 'y' in target);
 
 /**
  * Translates keyCodes into 5-way direction descriptions (e.g. `'down'`)
@@ -67,9 +74,7 @@ const getDirection = function (keyCode) {
 			isRight(keyCode) && 'right' ||
 			isUp(keyCode) && 'up';
 };
-const isPointerEvent = (target) => ('x' in target && 'y' in target);
-const isPointerShow = is('pointerShow');
-const isPointerHide = is('pointerHide');
+
 
 const SpotlightAccelerator = new Accelerator();
 
@@ -98,8 +103,6 @@ const Spotlight = (function () {
 	let _defaultContainerId = '';
 	let _lastContainerId = '';
 	let _duringFocusChange = false;
-	let _pointerX = null;
-	let _pointerY = null;
 
 	/*
 	 * Whether a 5-way directional key is being held.
@@ -108,14 +111,6 @@ const Spotlight = (function () {
 	 * @default false
 	 */
 	let _5WayKeyHold = false;
-
-	/*
-	 * Whether Spotlight is in pointer mode (as opposed to 5-way mode).
-	 *
-	 * @type {Boolean}
-	 * @default true
-	 */
-	let _pointerMode = true;
 
 	/*
 	* protected methods
@@ -504,7 +499,7 @@ const Spotlight = (function () {
 			return false;
 		}
 
-		if ((_pointerMode && !fromPointer)) {
+		if ((getPointerMode() && !fromPointer)) {
 			setContainerLastFocusedElement(elem, containerIds);
 			return false;
 		}
@@ -757,17 +752,6 @@ const Spotlight = (function () {
 		return false;
 	}
 
-	// 30ms (_pointerHiddenToKeyTimeout) is semi-arbitrary, to account for the time it takes for the
-	// following directional key event to fire, and to prevent momentary spotting of the last
-	// focused item - needs to be a value large enough to account for the potentially-trailing
-	// event, but not too large that another unrelated event can be fired inside the window
-	const hidePointerJob = new Job(function () {
-		_pointerMode = false;
-		if (!getCurrent() && _lastContainerId) {
-			Spotlight.focus(getContainerLastFocusedElement(_lastContainerId));
-		}
-	}, 30);
-
 	function preventDefault (evt) {
 		evt.preventDefault();
 		evt.stopPropagation();
@@ -811,6 +795,12 @@ const Spotlight = (function () {
 		}
 	}
 
+	function handlePointerHide () {
+		if (!getCurrent() && _lastContainerId) {
+			Spotlight.focus(getContainerLastFocusedElement(_lastContainerId));
+		}
+	}
+
 	function onKeyDown (evt) {
 		if (shouldPreventNavigation()) {
 			return;
@@ -818,49 +808,25 @@ const Spotlight = (function () {
 
 		const keyCode = evt.keyCode;
 		const direction = getDirection(keyCode);
+		const pointerHandled = notifyKeyDown(keyCode, handlePointerHide);
 
-		if (!direction && !(
-				isPointerHide(keyCode) ||
-				isPointerShow(keyCode) ||
-				isEnter(keyCode)
-			)
-		) {
+		if (pointerHandled || !(direction || isEnter(keyCode))) {
 			return;
 		}
 
-		if (isPointerHide(keyCode)) {
-			hidePointerJob.start();
-		} else if (isPointerShow(keyCode)) {
-			_pointerMode = true;
-		} else {
-			_pointerMode = false;
-			if (!_pause) {
-				if (getCurrent()) {
-					SpotlightAccelerator.processKey(evt, onAcceleratedKeyDown);
-				} else if (!spotNextFromPoint(direction, {x: _pointerX, y: _pointerY}, _lastContainerId)) {
-					Spotlight.focus(getContainerLastFocusedElement(_lastContainerId));
-				}
-				_5WayKeyHold = true;
+		if (!_pause) {
+			if (getCurrent()) {
+				SpotlightAccelerator.processKey(evt, onAcceleratedKeyDown);
+			} else if (!spotNextFromPoint(direction, getLastPointerPosition(), _lastContainerId)) {
+				Spotlight.focus(getContainerLastFocusedElement(_lastContainerId));
 			}
+			_5WayKeyHold = true;
 		}
 
 		if (direction) {
 			preventDefault(evt);
 		}
 	}
-
-	const updatePointerPosition = (x, y) => {
-		// Chrome emits mousemove on scroll, but client coordinates do not change.
-		if (x !== _pointerX || y !== _pointerY) {
-			_pointerMode = true;
-			_pointerX = x;
-			_pointerY = y;
-
-			return true;
-		}
-
-		return false;
-	};
 
 	function getNavigableTarget (target) {
 		let parent;
@@ -877,86 +843,42 @@ const Spotlight = (function () {
 		}, false);
 	}
 
-	/**
-	 * Finds the focusable ancestor of `element`.
-	 *
-	 * @param   {Node}  element           Target nodea
-	 * @param   {Node}  [current]         Currently focused node. Defaults to the spotlight-
-	 *                                    managed current node. Should be passed, if known, to
-	 *                                    optimize the search for the target.
-	 *
-	 * @returns {Node|Null}              Focusable target, if found
-	 */
-	const getFocusTarget = (element, current = getCurrent()) => {
-		if (!current || !current.contains(element)) {
-			// if we're entering pointer mode and the target element isn't within the currently
-			// focused element, find and return its navigable target
-			return getNavigableTarget(element);
-		}
-
-		return current;
-	};
-
-	/**
-	 * Notifies spotlight of a change in the pointer position
-	 *
-	 * @param   {Node} target Node under the pointer
-	 * @param   {Number} x      Horizontal position relative to the left side of the viewport
-	 * @param   {Number} y      Vertical position relative to the top side of the viewport
-	 *
-	 * @returns {Boolean}        `true` if the change in position results in a change in focus
-	 */
-	const notifyPointerMove = (target, x, y) => {
-		const priorPointerMode = _pointerMode;
-
-		if (!updatePointerPosition(x, y) || shouldPreventNavigation()) {
-			// if the pointer hasn't moved or we're preventing navigation, return early
-			return false;
-		}
+	function onMouseMove ({target, clientX, clientY}) {
+		if (shouldPreventNavigation()) return;
 
 		const current = getCurrent();
-		// if entering pointer mode (priorPointerMode === false), force finding the navigable target
-		const next = priorPointerMode ? getFocusTarget(target) : getNavigableTarget(target);
+		const update = notifyPointerMove(current, target, clientX, clientY);
 
-		// TODO: Consider encapsulating this work within focusElement
-		if (next !== current) {
-			if (next) {
-				focusElement(next, getContainersForNode(next), true);
+		if (update) {
+			const next = getNavigableTarget(target);
 
-				return true;
-			} else if (current) {
-				current.blur();
+			// TODO: Consider encapsulating this work within focusElement
+			if (next !== current) {
+				if (next) {
+					focusElement(next, getContainersForNode(next), true);
+
+					return true;
+				} else if (current) {
+					current.blur();
+				}
 			}
 		}
-
-		return false;
-	};
-
-	const notifyPointerOver = (target) => {
-		// a motionless pointer over animated spottable dom (such as list scrolling via 5-way) still
-		// emits an `onMouseOver` event even when `_pointerMode` is `false`, in which case we
-		// terminate early.
-		if (!_pointerMode || shouldPreventNavigation()) {
-			return false;
-		}
-
-		const next = getNavigableTarget(target); // account for child controls
-
-		if (next && next !== getCurrent()) {
-			focusElement(next, getContainersForNode(next), true);
-
-			return true;
-		}
-
-		return false;
-	};
-
-	function onMouseMove ({target, clientX, clientY}) {
-		notifyPointerMove(target, clientX, clientY);
 	}
 
 	function onMouseOver (evt) {
-		if (notifyPointerOver(evt.target)) {
+		if (shouldPreventNavigation()) return;
+
+		const {target} = evt;
+
+		if (getPointerMode()) {
+			const next = getNavigableTarget(target); // account for child controls
+
+			if (next && next !== getCurrent()) {
+				focusElement(next, getContainersForNode(next), true);
+
+				return true;
+			}
+
 			preventDefault(evt);
 		}
 	}
@@ -1233,9 +1155,7 @@ const Spotlight = (function () {
 		 * @returns {Boolean} `true` if spotlight is in pointer mode
 		 * @public
 		 */
-		getPointerMode: function () {
-			return _pointerMode;
-		},
+		getPointerMode,
 
 		/**
 		 * Sets the current pointer mode
@@ -1245,9 +1165,7 @@ const Spotlight = (function () {
 		 *	spotlight manages focus change behaviors.
 		 * @public
 		 */
-		setPointerMode: function (pointerMode) {
-			_pointerMode = pointerMode;
-		},
+		setPointerMode,
 
 		/**
 		 * Gets the muted mode value of a spottable element.
