@@ -1060,7 +1060,6 @@ const VideoPlayerBase = class extends React.Component {
 	onJumpBackward = (ev) => {
 		ev = this.addStateToEvent(ev);
 		forwardJumpBackwardButtonClick(ev, this.props);
-		this.jump(-1 * this.props.jumpBy);
 	}
 	onBackward = (ev) => {
 		ev = this.addStateToEvent(ev);
@@ -1084,7 +1083,6 @@ const VideoPlayerBase = class extends React.Component {
 	onJumpForward = (ev) => {
 		ev = this.addStateToEvent(ev);
 		forwardJumpForwardButtonClick(ev, this.props);
-		this.jump(this.props.jumpBy);
 	}
 	onMoreClick = () => {
 		if (this.state.more) {
