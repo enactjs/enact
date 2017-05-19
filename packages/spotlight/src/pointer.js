@@ -88,7 +88,7 @@ const hidePointerJob = new Job(function (callback) {
  * @returns {Boolean}           `true` if the change in position results in a change in focus
  */
 const notifyPointerMove = (current, target, x, y) => {
-	const priorPointerMode = _pointerMode;
+	const priorPointerMode = getPointerMode();
 
 	if (updatePointerPosition(x, y)) {
 		// if we're entering pointer mode and the target element isn't within the currently
@@ -130,5 +130,6 @@ export {
 	getPointerMode,
 	notifyKeyDown,
 	notifyPointerMove,
-	setPointerMode
+	setPointerMode,
+	updatePointerPosition
 };
