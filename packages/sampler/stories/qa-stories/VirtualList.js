@@ -30,7 +30,7 @@ class StatefulVirtualList extends React.Component {
 
 	}
 
-	componentDidMount () {
+	componentWillMount () {
 		this.initializeItems();
 	}
 
@@ -45,12 +45,11 @@ class StatefulVirtualList extends React.Component {
 		});
 	}
 
-	handleClick = (ev) => {
+	handleClick = (index) => {
 		const changedItems = [...this.state.itemList],
-			idx = ev.currentTarget.dataset.index,
-			sel = changedItems[idx].selected;
-		changedItems[idx] = {
-			...this.state.itemList[idx],
+			sel = changedItems[index].selected;
+		changedItems[index] = {
+			...this.state.itemList[index],
 			selected: !sel
 		};
 
@@ -62,7 +61,7 @@ class StatefulVirtualList extends React.Component {
 	renderItem = (size) => ({data, index, ...rest}) => {
 		const itemStyle = {height: size + 'px', ...style.item};
 		return (
-			<SwitchItem {...rest} style={itemStyle} selected={data[index].selected} onClick={this.handleClick} >
+			<SwitchItem {...rest} style={itemStyle} selected={data[index].selected} onClick={() => this.handleClick(index)}>
 				{data[index].item}
 			</SwitchItem>
 		);
