@@ -7,10 +7,12 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Deprecated
 
 ### Added
+- `moonstone/Image` support for `children` prop inside images
 
 ### Changed
 
 ### Fixed
+- `moonstone/GridListImageItem` to center its selection icon on the image instead of the item
 
 ### Removed
 
@@ -32,7 +34,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Scroller.Scrollable` option `focus` in `scrollTo()` method
 - `moonstone/Scroller.Scrollable` property `spottableScrollbar`
 - `moonstone/Icon.IconList` icons: `arrowshrinkleft` and `arrowshrinkright`
-- `moonstone/Image` support for `children` prop inside images.
 
 ### Changed
 
@@ -53,7 +54,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Scrollable` to apply ri.scale properly
 - `moonstone/Panel` to not cover a `Panels`'s `ApplicationCloseButton` when not using a `Header`
 - `moonstone/IncrementSlider` to show tooltip when buttons focused
-- `moonstone/GridListImageItem` - to center it's selection icon on the image not the item.
 
 ## [1.1.0] - 2017-04-21
 
