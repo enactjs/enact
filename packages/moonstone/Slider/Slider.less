@@ -1,5 +1,6 @@
 // Slider.less
 //
+@import '../styles/mixins.less';
 @import '../styles/variables.less';
 @import '../styles/text.less';
 @import '../styles/skin.less';
@@ -91,7 +92,7 @@
 			})
 		}
 
-		:global(.enact-locale-right-to-left) & {
+		:global(.enact-locale-right-to-left)& {
 			direction: ltr;
 		}
 	}
@@ -213,12 +214,10 @@
 	}
 }
 
-[data-container-muted='true'] {
-	.slider {
-		&:global(.spottable):focus {
-			.knob {
-				background-color: @moon-slider-knob-bg-color;
-			}
-		}
+.mutedFocus({
+	&.slider .knob::before {
+		background-color: @moon-slider-knob-bg-color;
 	}
-}});
+});
+
+});
