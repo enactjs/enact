@@ -844,10 +844,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		componentDidMount () {
 			const {horizontalScrollbar, verticalScrollbar} = this.props;
-			if (horizontalScrollbar !== 'auto' || verticalScrollbar !== 'auto') {
+			this.updateScrollabilityAndEventListeners();
+			if ((this.horizontalScrollability && horizontalScrollbar !== 'auto') || (this.verticalScrollability && verticalScrollbar !== 'auto')) {
 				this.isInitializing = false;
 			}
-			this.updateScrollabilityAndEventListeners();
 		}
 
 		componentDidUpdate () {
