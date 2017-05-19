@@ -27,7 +27,6 @@ class StatefulVirtualList extends React.Component {
 		this.state = {
 			itemList: []
 		};
-
 	}
 
 	componentWillMount () {
