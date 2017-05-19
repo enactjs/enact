@@ -849,59 +849,18 @@ const Spotlight = (function () {
 		}
 	}
 
-	function onMouseOver (evt) {
-		// a motionless pointer over animated spottable dom (such as list scrolling via 5-way) still emits
-		// an `onMouseOver` event even when `_pointerMode` is `false`, in which case we terminate early.
-		if (!_pointerMode || shouldPreventNavigation()) {
-			return;
-		}
-
-		const target = getNavigableTarget(evt.target); // account for child controls
-
-		if (target && target !== getCurrent()) { // moving over a focusable element
-			focusElement(target, getContainersForNode(target), true);
-			preventDefault(evt);
-		}
-	}
-
-	function onMouseMove (evt) {
-		const pointerMode = _pointerMode;
-
+	const updatePointerPosition = (x, y) => {
 		// Chrome emits mousemove on scroll, but client coordinates do not change.
-		if (!pointerMode && (evt.clientX === _pointerX) && (evt.clientY === _pointerY)) {
-			return;
+		if (x !== _pointerX || y !== _pointerY) {
+			_pointerMode = true;
+			_pointerX = x;
+			_pointerY = y;
+
+			return true;
 		}
 
-		_pointerMode = true;
-
-		// cache last-known pointer coordinates
-		_pointerX = evt.clientX;
-		_pointerY = evt.clientY;
-
-		if (shouldPreventNavigation()) {
-			return;
-		}
-
-		const current = getCurrent();
-		const currentContainsTarget = current ? current.contains(evt.target) : false;
-
-		// calling `getNavigableTarget()` is a heavy operation during `mousemove`, so we specifically guard
-		// against unnecessarily executing it
-		if (pointerMode && current && !currentContainsTarget) {
-			// we are moving over a non-focusable element, so we force a blur to occur
-			current.blur();
-		} else if (!pointerMode && !(current && currentContainsTarget)) {
-			const target = getNavigableTarget(evt.target);
-
-			if (!target && current) {
-				// we are moving over a non-focusable element, so we force a blur to occur
-				current.blur();
-			} else if (target && (!current || target !== current)) {
-				// we are moving over a focusable element, so we set focus to the target
-				focusElement(target, getContainersForNode(target), true);
-			}
-		}
-	}
+		return false;
+	};
 
 	function getNavigableTarget (target) {
 		let parent;
@@ -916,6 +875,90 @@ const Spotlight = (function () {
 		return getContainersForNode(elem).reduce((focusable, id) => {
 			return focusable || isNavigable(elem, id, true);
 		}, false);
+	}
+
+	/**
+	 * Finds the focusable ancestor of `element`.
+	 *
+	 * @param   {Node}  element           Target nodea
+	 * @param   {Node}  [current]         Currently focused node. Defaults to the spotlight-
+	 *                                    managed current node. Should be passed, if known, to
+	 *                                    optimize the search for the target.
+	 *
+	 * @returns {Node|Null}              Focusable target, if found
+	 */
+	const getFocusTarget = (element, current = getCurrent()) => {
+		if (!current || !current.contains(element)) {
+			// if we're entering pointer mode and the target element isn't within the currently
+			// focused element, find and return its navigable target
+			return getNavigableTarget(element);
+		}
+
+		return current;
+	};
+
+	/**
+	 * Notifies spotlight of a change in the pointer position
+	 *
+	 * @param   {Node} target Node under the pointer
+	 * @param   {Number} x      Horizontal position relative to the left side of the viewport
+	 * @param   {Number} y      Vertical position relative to the top side of the viewport
+	 *
+	 * @returns {Boolean}        `true` if the change in position results in a change in focus
+	 */
+	const notifyPointerMove = (target, x, y) => {
+		const priorPointerMode = _pointerMode;
+
+		if (!updatePointerPosition(x, y) || shouldPreventNavigation()) {
+			// if the pointer hasn't moved or we're preventing navigation, return early
+			return false;
+		}
+
+		const current = getCurrent();
+		// if entering pointer mode (priorPointerMode === false), force finding the navigable target
+		const next = priorPointerMode ? getFocusTarget(target) : getNavigableTarget(target);
+
+		// TODO: Consider encapsulating this work within focusElement
+		if (next !== current) {
+			if (next) {
+				focusElement(next, getContainersForNode(next), true);
+
+				return true;
+			} else if (current) {
+				current.blur();
+			}
+		}
+
+		return false;
+	};
+
+	const notifyPointerOver = (target) => {
+		// a motionless pointer over animated spottable dom (such as list scrolling via 5-way) still
+		// emits an `onMouseOver` event even when `_pointerMode` is `false`, in which case we
+		// terminate early.
+		if (!_pointerMode || shouldPreventNavigation()) {
+			return false;
+		}
+
+		const next = getNavigableTarget(target); // account for child controls
+
+		if (next && next !== getCurrent()) {
+			focusElement(next, getContainersForNode(next), true);
+
+			return true;
+		}
+
+		return false;
+	};
+
+	function onMouseMove ({target, clientX, clientY}) {
+		notifyPointerMove(target, clientX, clientY);
+	}
+
+	function onMouseOver (evt) {
+		if (notifyPointerOver(evt.target)) {
+			preventDefault(evt);
+		}
 	}
 
 	/*
