@@ -1,3 +1,10 @@
+/**
+ * Exports methods and members for managing pointer state
+ *
+ * @module spotlight/pointer
+ * @private
+ */
+
 import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';
 
@@ -13,6 +20,7 @@ let _pointerMode = true;
  * Sets the current pointer mode
  *
  * @param   {Boolean} pointerMode `true` to enable pointer mode; `false` to disable pointer mode
+ * @memberof spotlight/pointer
  * @private
  */
 const setPointerMode = (pointerMode) => {
@@ -23,6 +31,8 @@ const setPointerMode = (pointerMode) => {
  * Gets the current pointer mode
  *
  * @returns {Boolean} The current state of pointer mode
+ * @memberof spotlight/pointer
+ * @private
  */
 const getPointerMode = () => {
 	return _pointerMode;
@@ -40,6 +50,8 @@ let _pointerY = null;
  * @param   {Number} y Pointer position relative to the top side of the viewport
  *
  * @returns {Boolean}   `true` if the position was updated
+ * @memberof spotlight/pointer
+ * @private
  */
 const updatePointerPosition = (x, y) => {
 	// Chrome emits mousemove on scroll, but client coordinates do not change.
@@ -58,6 +70,8 @@ const updatePointerPosition = (x, y) => {
  * Returns the last known position of the pointer
  *
  * @returns {Object} Contains `x` and `y` coordinates for the pointer
+ * @memberof spotlight/pointer
+ * @private
  */
 const getLastPointerPosition = () => {
 	return {
@@ -86,6 +100,8 @@ const hidePointerJob = new Job(function (callback) {
  * @param   {Number}   y        Vertical position relative to the top side of the viewport
  *
  * @returns {Boolean}           `true` if the change in position results in a change in focus
+ * @memberof spotlight/pointer
+ * @private
  */
 const notifyPointerMove = (current, target, x, y) => {
 	const priorPointerMode = getPointerMode();
@@ -109,6 +125,8 @@ const notifyPointerMove = (current, target, x, y) => {
  * @param   {Function}  [callback]  Optional callback to invoke upon hiding the pointer.
  *
  * @returns {Boolean}               `true` for pointer hide or show key events
+ * @memberof spotlight/pointer
+ * @private
  */
 const notifyKeyDown = (keyCode, callback) => {
 	// for hide/show pointer events, handle them and return true
