@@ -939,7 +939,7 @@ const VideoPlayerBase = class extends React.Component {
 		// Set native playback rate
 		this.video.playbackRate = pbNumber;
 
-		if (!(platform.webos)) {
+		if (!platform.webos) {
 			// For supporting cross browser behavior
 			if (pbNumber < 0) {
 				this.beginRewind();
