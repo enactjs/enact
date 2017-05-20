@@ -109,7 +109,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			disabled: PropTypes.bool,
 
 			/**
-			 * When `true`, the tooltip is shown when present
+			 * When `true`, the tooltip, if present, is shown
 			 * @type {Boolean}
 			 * @default false
 			 * @public
@@ -474,9 +474,9 @@ const SliderFactory = factory(css => {
 	 * @public
 	 */
 	return Changeable(
-		Pressable(
-			Spottable(
-				SliderDecorator(
+		Spottable(
+			SliderDecorator(
+				Pressable(
 					Base
 				)
 			)

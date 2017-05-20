@@ -4,11 +4,24 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ## [unreleased]
 
+### Deprecated
+
+### Added
+
+### Changed
+
+### Fixed
+
+### Removed
+
+## [1.2.0] - 2017-05-17
+
 ### Added
 
 - `ui/Skinnable` to provide themes with a way to apply a base theme styling and skins on top of that
 ## Unreleased
 - `ui/Transition` prop `onShow` that fires when transitioning into view a component.
+- `ui/transition` callback prop `onShow` that fires when transitioning into view completes
 
 ### Changed
 

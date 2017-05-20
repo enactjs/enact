@@ -57,9 +57,14 @@ const ScrollButtonBase = kind({
 		disabled: PropTypes.bool
 	},
 
+	styles: {
+		css,
+		className: 'scrollButton'
+	},
+
 	computed: {
 		'aria-label': ({direction}) => $L(`scroll ${direction}`),
-		className: ({direction}) => classNameMap[direction]
+		className: ({direction, styler}) => styler.append(classNameMap[direction])
 	},
 
 	render: ({children, disabled, ...rest}) => {

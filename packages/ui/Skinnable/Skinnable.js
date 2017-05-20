@@ -2,9 +2,11 @@
  * Exports the {@link ui/Skinnable.Skinnable} Higher-order Component (HOC).
  *
  * @module ui/Skinnable
+ * @private
  */
 
 import hoc from '@enact/core/hoc';
+import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -17,7 +19,7 @@ const contextTypes = {
  *
  * @memberof ui/Skinnable.Skinnable
  * @hocconfig
- * @public
+ * @private
  */
 const defaultConfig = {
 	/**

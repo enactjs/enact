@@ -208,6 +208,8 @@ const IconBase = kind({
  * rollbackward
  * exitfullscreen
  * fullscreen
+ * arrowshrinkleft
+ * arrowshrinkright
  * arrowextend
  * arrowshrink
  * flag

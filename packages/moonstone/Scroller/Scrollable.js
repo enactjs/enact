@@ -15,10 +15,12 @@ import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ri from '@enact/ui/resolution';
 import Spotlight, {getDirection} from '@enact/spotlight';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import css from './Scrollable.less';
 import ScrollAnimator from './ScrollAnimator';
 import Scrollbar from './Scrollbar';
+import scrollbarCss from './Scrollbar.less';
 
 const
 	forwardScroll = forward('onScroll'),
@@ -31,7 +33,7 @@ const
 	perf = (typeof window === 'object') ? window.performance : {now: Date.now},
 	holdTime = 50,
 	scrollWheelMultiplierForDeltaPixel = 2,
-	pixelPerLine = ri.scale(39) * scrollWheelMultiplierForDeltaPixel,
+	pixelPerLine = 39,
 	paginationPageMultiplier = 0.8,
 	epsilon = 1,
 	animationDuration = 1000;
@@ -47,6 +49,23 @@ const
  * @private
  */
 const dataIndexAttribute = 'data-index';
+
+const ScrollableSpotlightContainer = SpotlightContainerDecorator(
+	{
+		navigableFilter: (elem, {focusableScrollbar}) => {
+			if (!focusableScrollbar && elem.classList.contains(scrollbarCss.scrollButton)) {
+				return false;
+			}
+		}
+	},
+	({containerRef, ...rest}) => {
+		delete rest.focusableScrollbar;
+
+		return (
+			<div ref={containerRef} {...rest} />
+		);
+	}
+);
 
 /**
  * {@link moonstone/Scroller.Scrollable} is a Higher-order Component
@@ -96,6 +115,15 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			 * @public
 			 */
 			cbScrollTo: PropTypes.func,
+
+			/**
+			 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
+			 * not move focus to the scrollbar controls.
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			focusableScrollbar: PropTypes.bool,
 
 			/**
 			 * Specifies how to show horizontal scrollbar. Acceptable values are `'auto'`,
@@ -166,12 +194,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.initChildRef = this.initRef('childRef');
 			this.initContainerRef = this.initRef('containerRef');
 
-			const {onKeyDown, onKeyUp} = this;
+			const {onKeyDown} = this;
 			// We have removed all mouse event handlers for now.
 			// Revisit later for touch usage.
 			this.eventHandlers = {
-				onKeyDown,
-				onKeyUp
+				onKeyDown
 			};
 
 			this.verticalScrollbarProps = {
@@ -310,7 +337,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			if (deltaMode === 0) {
 				delta = ri.scale(delta) * scrollWheelMultiplierForDeltaPixel;
 			} else if (deltaMode === 1) { // line; firefox
-				delta = ri.scale(delta) * pixelPerLine;
+				delta = ri.scale(delta * pixelPerLine) * scrollWheelMultiplierForDeltaPixel;
 			} else if (deltaMode === 2) { // page
 				if (isVertical) {
 					delta = delta > 0 ? bounds.clientHeight : -bounds.clientHeight;
@@ -360,10 +387,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 							this.scrollTop,
 							calcVelocity(-d.dx, d.dt),
 							calcVelocity(-d.dy, d.dt)
-						);
+						),
+						focusedItem = Spotlight.getCurrent();
 
-					if (typeof window !== 'undefined') {
-						window.document.activeElement.blur();
+					if (focusedItem) {
+						focusedItem.blur();
 					}
 					this.childRef.setContainerDisabled(true);
 					this.isScrollAnimationTargetAccumulated = false;
@@ -399,11 +427,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		onFocus = (e) => {
-			if (this.isKeyDown && !this.isDragging) {
+			if (!(Spotlight.getPointerMode() || this.isDragging)) {
 				const
 					item = e.target,
 					positionFn = this.childRef.calculatePositionOnFocus,
-					spotItem = window.document.activeElement;
+					spotItem = Spotlight.getCurrent();
 
 				if (item && item !== this.lastFocusedItem && item === spotItem && positionFn) {
 					const pos = positionFn(item);
@@ -420,13 +448,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					const index = Number.parseInt(target.getAttribute(dataIndexAttribute));
 					this.childRef.setSpotlightContainerRestrict(keyCode, index);
 				}
-				this.isKeyDown = true;
-			}
-		}
-
-		onKeyUp = ({keyCode}) => {
-			if (getDirection(keyCode)) {
-				this.isKeyDown = false;
 			}
 		}
 
@@ -437,10 +458,14 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					bounds = this.getScrollBounds(),
 					isHorizontal = this.canScrollHorizontally(bounds),
 					isVertical = this.canScrollVertically(bounds),
-					delta = this.wheel(e, isHorizontal, isVertical);
+					delta = this.wheel(e, isHorizontal, isVertical),
+					focusedItem = Spotlight.getCurrent();
 
 				Spotlight.setPointerMode(false);
-				window.document.activeElement.blur();
+				if (focusedItem) {
+					focusedItem.blur();
+				}
+
 				this.childRef.setContainerDisabled(true);
 				this.scrollToAccumulatedTarget(delta, isHorizontal, isVertical);
 			}
@@ -798,6 +823,23 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.updateScrollbars();
 		}
 
+		updateScrollOnFocus () {
+			const
+				focusedItem = Spotlight.getCurrent(),
+				{calculatePositionOnFocus, getScrollBounds} = this.childRef,
+				{scrollHeight: previousScrollHeight} = this.bounds,
+				{scrollHeight: currentScrollHeight} = getScrollBounds(),
+				scrollInfo = {previousScrollHeight, scrollTop: this.scrollTop};
+
+			if (focusedItem) {
+				const position = calculatePositionOnFocus(focusedItem, scrollInfo);
+				this.startScrollOnFocus(position, focusedItem);
+			}
+
+			// update `scrollHeight`
+			this.bounds.scrollHeight = currentScrollHeight;
+		}
+
 		// component life cycle
 
 		componentDidMount () {
@@ -817,6 +859,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			if (this.scrollToInfo !== null) {
 				this.scrollTo(this.scrollToInfo);
 			}
+
+			this.updateScrollOnFocus();
 		}
 
 		componentWillUnmount () {
@@ -831,6 +875,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		// TODO: consider replacing forceUpdate() by storing bounds in state rather than a non-
 		// state member.
 		enqueueForceUpdate = () => {
+			this.childRef.calculateMetrics();
 			this.forceUpdateJob.start();
 		}
 
@@ -878,7 +923,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		render () {
 			const
 				props = Object.assign({}, this.props),
-				{className, style} = this.props,
+				{className, focusableScrollbar, style} = this.props,
 				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
 				vscrollbar = this.getVerticalScrollbar(isHorizontalScrollbarVisible, isVerticalScrollbarVisible),
 				hscrollbar = this.getHorizontalScrollbar(isHorizontalScrollbarVisible, isVerticalScrollbarVisible),
@@ -896,11 +941,17 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			delete props.onScroll;
 			delete props.onScrollStart;
 			delete props.onScrollStop;
+			delete props.focusableScrollbar;
 			delete props.style;
 			delete props.verticalScrollbar;
 
 			return (
-				<div ref={this.initContainerRef} className={scrollableClasses} style={style}>
+				<ScrollableSpotlightContainer
+					className={scrollableClasses}
+					containerRef={this.initContainerRef}
+					focusableScrollbar={focusableScrollbar}
+					style={style}
+				>
 					{vscrollbar}
 					{hscrollbar}
 					<Wrapped
@@ -911,7 +962,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						onScroll={this.handleScroll}
 						ref={this.initChildRef}
 					/>
-				</div>
+				</ScrollableSpotlightContainer>
 			);
 		}
 	};

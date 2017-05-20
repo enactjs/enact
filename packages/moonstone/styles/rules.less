@@ -14,16 +14,11 @@
 	font-weight: normal;
 	font-style: normal;
 	letter-spacing: normal;
-	padding: @moon-app-keepout;
 	color: @moon-text-color;
 
 	::selection {
 		color: @moon-spotlight-text-color;
 		background-color: lighten(@moon-spotlight-bg-color, 18%);
-	}
-
-	&:global(.enact-locale-right-to-left) {
-		direction: rtl;
 	}
 
 	// For cases where we have a skin inside another skin, we actually do want to impose a BG color
@@ -36,27 +31,28 @@
 	}
 
 	// Spotlight
-	:global(.spottable):focus {
+	.focus({
 		background-color: @moon-spotlight-bg-color;
 		color: @moon-spotlight-text-color;
+	});
 
-		[data-container-muted='true'] & {
-			background-color: @moon-bg-color;	// This probably shouldn't be assigning the background color
+	// Spotlight Muted Components
+	.muted({
+		.focus({
+			background-color: transparent;
 			color: @moon-text-color;
-		}
-	}
+		});
+	});
 
-	// Disabled components
-	[disabled],
-	:global(.spottableDisabled):focus {
+	// Disabled Components
+	.disabled({
 		.vendor-opacity(@moon-disabled-opacity);
 
 		cursor: default;
 
 		// Disabled children of disabled components
-		[disabled],
-		:global(.spottableDisabled):focus {
+		.disabled({
 			.vendor-opacity(1);
-		}
-	}
+		});
+	});
 });

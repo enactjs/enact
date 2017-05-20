@@ -28,7 +28,7 @@ const handleCancel = function (props) {
 /**
  * Default config for {@link moonstone/ExpandableItem.Expandable}.
  *
- * @memberof moonstone/ExpandableItem
+ * @memberof moonstone/ExpandableItem.Expandable
  * @hocconfig
  */
 const defaultConfig = {
