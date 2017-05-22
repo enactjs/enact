@@ -31,6 +31,8 @@ const
 	nop = () => {},
 	paginationPageMultiplier = 0.8,
 	epsilon = 1,
+	scrollWheelMultiplierForDeltaPixel = 4,
+	pixelPerLine = 39,
 	// spotlight
 	scrollStopWaiting = 500;
 
@@ -290,16 +292,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				const
 					bounds = this.getScrollBounds(),
 					deltaMode = e.deltaMode,
-					wheelDeltaY = e.nativeEvent ? -e.nativeEvent.wheelDeltaY : -e.wheelDeltaY,
-					scrollWheelMultiplierForDeltaPixel = 4,
-					pixelPerLine = scrollWheelMultiplierForDeltaPixel * ri.scale(39);
-
+					wheelDeltaY = e.nativeEvent ? -e.nativeEvent.wheelDeltaY : -e.wheelDeltaY;
 				let delta = (wheelDeltaY || e.deltaY);
 
 				if (deltaMode === 0) {
 					delta = ri.scale(delta) * scrollWheelMultiplierForDeltaPixel;
 				} else if (deltaMode === 1) { // line; firefox
-					delta = ri.scale(delta) * pixelPerLine;
+					delta = ri.scale(delta * pixelPerLine) * scrollWheelMultiplierForDeltaPixel;
 				} else if (deltaMode === 2) { // page
 					delta = delta > 0 ? bounds.clientWidth : -bounds.clientWidth;
 				}
@@ -657,17 +656,20 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					isHorizontalScrollbarVisible: curHorizontalScrollbarVisible,
 					isVerticalScrollbarVisible: curVerticalScrollbarVisible
 				});
-			} else if (curHorizontalScrollbarVisible || curVerticalScrollbarVisible) {
-				// no visibility change but need to notify whichever scrollbars are visible of the
-				// updated bounds and scroll position
-				const updatedBounds = {
-					...bounds,
-					scrollLeft: this.scrollLeft,
-					scrollTop: this.scrollTop
-				};
+			} else {
+				this.isInitializing = false;
+				if (curHorizontalScrollbarVisible || curVerticalScrollbarVisible) {
+					// no visibility change but need to notify whichever scrollbars are visible of the
+					// updated bounds and scroll position
+					const updatedBounds = {
+						...bounds,
+						scrollLeft: this.scrollLeft,
+						scrollTop: this.scrollTop
+					};
 
-				if (canScrollHorizontally && curHorizontalScrollbarVisible) this.scrollbarHorizontalRef.update(updatedBounds);
-				if (canScrollVertically && curVerticalScrollbarVisible) this.scrollbarVerticalRef.update(updatedBounds);
+					if (canScrollHorizontally && curHorizontalScrollbarVisible) this.scrollbarHorizontalRef.update(updatedBounds);
+					if (canScrollVertically && curVerticalScrollbarVisible) this.scrollbarVerticalRef.update(updatedBounds);
+				}
 			}
 		}
 
