@@ -354,4 +354,38 @@ describe('Pressable', () => {
 
 		expect(actual).to.equal(expected);
 	});
+
+	it('should invoke passed \'onTouchStart\' handler when passed an array', function () {
+		const handleMouseDown = sinon.spy();
+		const Component = Pressable({
+			depress: ['onMouseDown', 'onTouchStart']
+		}, DivComponent);
+		const subject = shallow(
+			<Component onTouchStart={handleMouseDown} />
+		);
+
+		subject.prop('onTouchStart')();
+
+		const expected = true;
+		const actual = handleMouseDown.called;
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should invoke passed \'onTouchEnd\' handler when passed an array', function () {
+		const handleMouseDown = sinon.spy();
+		const Component = Pressable({
+			release: ['onMouseUp', 'onTouchEnd']
+		}, DivComponent);
+		const subject = shallow(
+			<Component onTouchEnd={handleMouseDown} />
+		);
+
+		subject.prop('onTouchEnd')();
+
+		const expected = true;
+		const actual = handleMouseDown.called;
+
+		expect(actual).to.equal(expected);
+	});
 });

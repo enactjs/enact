@@ -23,7 +23,7 @@ const defaultConfig = {
 	/**
 	 * Configures the event name that activates the Pressable
 	 *
-	 * @type {String}
+	 * @type {String|Array}
 	 * @default 'onMouseDown'
 	 * @memberof ui/Pressable.Pressable.defaultConfig
 	 */
@@ -32,7 +32,7 @@ const defaultConfig = {
 	/**
 	 * Configures the event name that deactivates the Pressable when onMouseLeave is triggered
 	 *
-	 * @type {String|Array}
+	 * @type {String}
 	 * @default 'onMouseLeave'
 	 * @memberof ui/Pressable.Pressable.defaultConfig
 	 */
