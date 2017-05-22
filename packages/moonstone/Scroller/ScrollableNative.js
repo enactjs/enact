@@ -685,24 +685,28 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		updateScrollabilityAndEventListeners = () => {
 			const
-				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
-				containerNode = this.childRef.getContainerNode();
+				{containerRef} = this,
+				childContainerRef = this.childRef.getContainerNode();
 
 			this.horizontalScrollability = this.childRef.isHorizontal();
 			this.verticalScrollability = this.childRef.isVertical();
 
-			// FIXME `onWheel` doesn't work on the v8 snapshot.
-			this.containerRef.addEventListener('wheel', this.onWheel);
-			// FIXME `onScroll` doesn't work on the v8 snapshot.
-			containerNode.addEventListener('scroll', this.onScroll, {capture: true});
-			// FIXME `onFocus` doesn't work on the v8 snapshot.
-			containerNode.addEventListener('focus', this.onFocus, {capture: true});
-			// FIXME `onMouseOver` doesn't work on the v8 snapshot.
-			containerNode.addEventListener('mouseover', this.onMouseOver, {capture: true});
-			// FIXME `onMouseMove` doesn't work on the v8 snapshot.
-			containerNode.addEventListener('mousemove', this.onMouseMove, {capture: true});
+			if (containerRef && containerRef.addEventListener) {
+				// FIXME `onWheel` doesn't work on the v8 snapshot.
+				containerRef.addEventListener('wheel', this.onWheel);
+			}
+			if (childContainerRef && childContainerRef.addEventListener) {
+				// FIXME `onScroll` doesn't work on the v8 snapshot.
+				childContainerRef.addEventListener('scroll', this.onScroll, {capture: true});
+				// FIXME `onFocus` doesn't work on the v8 snapshot.
+				childContainerRef.addEventListener('focus', this.onFocus, {capture: true});
+				// FIXME `onMouseOver` doesn't work on the v8 snapshot.
+				childContainerRef.addEventListener('mouseover', this.onMouseOver, {capture: true});
+				// FIXME `onMouseMove` doesn't work on the v8 snapshot.
+				childContainerRef.addEventListener('mousemove', this.onMouseMove, {capture: true});
+			}
 
-			containerNode.style.scrollBehavior = 'smooth';
+			childContainerRef.style.scrollBehavior = 'smooth';
 
 			this.updateScrollbars();
 		}
@@ -731,24 +735,24 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		componentWillUnmount () {
 			const
 				{containerRef} = this,
-				containerNode = this.childRef.getContainerNode();
+				childContainerRef = this.childRef.getContainerNode();
 
 			// Before call cancelAnimationFrame, you must send scrollStop Event.
 			this.forceUpdateJob.stop();
 
 			if (containerRef && containerRef.removeEventListener) {
 				// FIXME `onWheel` doesn't work on the v8 snapshot.
-				this.containerRef.removeEventListener('wheel', this.onWheel);
+				containerRef.removeEventListener('wheel', this.onWheel);
 			}
-			if (containerNode && containerNode.removeEventListener) {
+			if (childContainerRef && childContainerRef.removeEventListener) {
 				// FIXME `onScroll` doesn't work on the v8 snapshot.
-				containerNode.removeEventListener('scroll', this.onScroll, {capture: true});
+				childContainerRef.removeEventListener('scroll', this.onScroll, {capture: true});
 				// FIXME `onFocus` doesn't work on the v8 snapshot.
-				containerNode.removeEventListener('focus', this.onFocus, {capture: true});
+				childContainerRef.removeEventListener('focus', this.onFocus, {capture: true});
 				// FIXME `onMouseOver` doesn't work on the v8 snapshot.
-				containerNode.removeEventListener('mouseover', this.onMouseOver, {capture: true});
+				childContainerRef.removeEventListener('mouseover', this.onMouseOver, {capture: true});
 				// FIXME `onMouseMove` doesn't work on the v8 snapshot.
-				containerNode.removeEventListener('mousemove', this.onMouseMove, {capture: true});
+				childContainerRef.removeEventListener('mousemove', this.onMouseMove, {capture: true});
 			}
 		}
 
