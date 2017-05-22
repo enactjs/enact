@@ -844,9 +844,22 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		componentWillUnmount () {
+			const
+				{containerRef} = this,
+				containerNode = this.childRef.containerRef;
+
 			// Before call cancelAnimationFrame, you must send scrollStop Event.
 			this.animator.stop();
 			this.forceUpdateJob.stop();
+
+			if (containerRef && containerRef.removeEventListener) {
+				// FIXME `onWheel` doesn't work on the v8 snapshot.
+				this.containerRef.removeEventListener('wheel', this.onWheel);
+			}
+			if (containerNode && containerNode.removeEventListener) {
+				// FIXME `onFocus` doesn't work on the v8 snapshot.
+				containerNode.removeEventListener('focus', this.onFocus, true);
+			}
 		}
 
 		// forceUpdate is a bit jarring and may interrupt other actions like animation so we'll
