@@ -364,30 +364,19 @@ const Spotlight = (function () {
 			return true;
 		}
 
-		let next = null;
-
 		const currentContainerId = last(currentContainerIds);
-		const candidates = getNavigableElementsForNode(currentFocusedElement);
-
-		// try to navigate to a preferred element
-		if (candidates.preferred) {
-			next = navigate(
-				currentFocusedElement,
-				direction,
-				candidates.preferred,
-				getContainerConfig(candidates.preferredContainerId)
-			);
-		}
-
-		// if preferred fails, try "all" (restricted by "self-only" containers) elements
-		if (!next) {
-			next = navigate(
-				currentFocusedElement,
-				direction,
-				candidates.all,
-				getContainerConfig(candidates.allContainerId)
-			);
-		}
+		const currentRect = getRect(currentFocusedElement);
+		const next = getNavigableElementsForNode(
+			currentFocusedElement,
+			(containerId, container, elements) => {
+				return navigate(
+					currentRect,
+					direction,
+					getRects(elements),
+					getContainerConfig(containerId)
+				);
+			}
+		);
 
 		// if the next element is a container AND the current element is *visually* contained within
 		// the next element, we need to ignore container `enterTo` preferences and retreive its
