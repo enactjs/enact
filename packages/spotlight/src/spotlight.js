@@ -34,6 +34,7 @@ import {
 	getContainerDefaultElement,
 	getContainerFocusTarget,
 	getContainerLastFocusedElement,
+	getContainerPreviousTarget,
 	getContainersForNode,
 	getNavigableElementsForNode,
 	getSpottableDescendants,
@@ -43,7 +44,8 @@ import {
 	removeAllContainers,
 	removeContainer,
 	rootContainerId,
-	setContainerLastFocusedElement
+	setContainerLastFocusedElement,
+	setContainerPreviousTarget
 } from './container';
 import navigate from './navigate';
 import {
@@ -108,13 +110,6 @@ const SpotlightAccelerator = new Accelerator();
  */
 const Spotlight = (function () {
 	'use strict';
-
-	const _reverseDirections = {
-		'left': 'right',
-		'up': 'down',
-		'right': 'left',
-		'down': 'up'
-	};
 
 	/*
 	/* private vars
@@ -344,11 +339,12 @@ const Spotlight = (function () {
 		);
 
 		if (next) {
-			getContainerConfig(containerId).previous = {
-				target: getContainerLastFocusedElement(_lastContainerId),
-				destination: next,
-				reverse: _reverseDirections[direction]
-			};
+			setContainerPreviousTarget(
+				containerId,
+				direction,
+				next,
+				getContainerLastFocusedElement(_lastContainerId)
+			);
 			return focusNext(next, direction, getContainersForNode(next));
 		}
 
@@ -369,12 +365,17 @@ const Spotlight = (function () {
 		const next = getNavigableElementsForNode(
 			currentFocusedElement,
 			(containerId, container, elements) => {
-				return navigate(
-					currentRect,
-					direction,
-					getRects(elements),
-					getContainerConfig(containerId)
-				);
+				const previous = getContainerPreviousTarget(containerId, direction, currentFocusedElement);
+				if (previous && elements.indexOf(previous) !== -1) {
+					return previous;
+				} else {
+					return navigate(
+						currentRect,
+						direction,
+						getRects(elements),
+						getContainerConfig(containerId)
+					);
+				}
 			}
 		);
 
@@ -397,11 +398,12 @@ const Spotlight = (function () {
 		}
 
 		if (next) {
-			getContainerConfig(currentContainerId).previous = {
-				target: currentFocusedElement,
-				destination: next,
-				reverse: _reverseDirections[direction]
-			};
+			setContainerPreviousTarget(
+				currentContainerId,
+				direction,
+				next,
+				currentFocusedElement
+			);
 			if (isContainer(next)) {
 				return focusContainer(next.dataset.containerId);
 			} else {
@@ -752,8 +754,14 @@ const Spotlight = (function () {
 		 */
 		move: function (direction, selector) {
 			direction = direction.toLowerCase();
-			if (!_reverseDirections[direction]) {
-				return false;
+			switch (direction) {
+				case 'up':
+				case 'down':
+				case 'left':
+				case 'right':
+					break;
+				default:
+					return false;
 			}
 
 			const elem = selector ? parseSelector(selector)[0] : getCurrent();

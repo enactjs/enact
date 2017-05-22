@@ -287,24 +287,7 @@ function navigate (targetRect, direction, rects, config) {
 		return null;
 	}
 
-	let dest = null;
-	// if (config.rememberSource &&
-	// 		config.previous &&
-	// 		config.previous.destination === target &&
-	// 		config.previous.reverse === direction) {
-	// 	for (let j = 0; j < destGroup.length; j++) {
-	// 		if (destGroup[j].element === config.previous.target) {
-	// 			dest = destGroup[j].element;
-	// 			break;
-	// 		}
-	// 	}
-	// }
-
-	if (!dest) {
-		dest = destGroup[0].element;
-	}
-
-	return dest;
+	return destGroup[0].element;
 }
 
 export default navigate;

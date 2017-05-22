@@ -17,6 +17,12 @@ const containerKey       = 'containerId';
 const containerPrefix    = 'container-';
 const containerSelector  = `[${containerAttribute}]`;
 const rootContainerId    = 'spotlightRootDecorator';
+const reverseDirections = {
+	'left': 'right',
+	'up': 'down',
+	'right': 'left',
+	'down': 'up'
+};
 
 // Incrementer for container IDs
 let _ids = 0;
@@ -640,6 +646,33 @@ function getContainerFocusTarget (containerId) {
 	return next;
 }
 
+function getContainerPreviousTarget (containerId, direction, destination) {
+	const config = getContainerConfig(containerId);
+
+	if (config &&
+		config.rememberSource &&
+		config.previous &&
+		config.previous.reverse === direction &&
+		config.previous.destination === destination
+	) {
+		return config.previous.target;
+	}
+}
+
+function setContainerPreviousTarget (containerId, direction, destination, target) {
+	const config = getContainerConfig(containerId);
+
+	if (config && config.rememberSource) {
+		configureContainer(containerId, {
+			previous: {
+				target,
+				destination,
+				reverse: reverseDirections[direction]
+			}
+		});
+	}
+}
+
 /**
  * Saves the last focused element into `lastFocusedKey` using a container-defined serialization
  * method configured in `lastFocusedPersist`.
@@ -716,6 +749,7 @@ export {
 	configureDefaults,
 	configureContainer,
 	getContainerFocusTarget,
+	getContainerPreviousTarget,
 	getNavigableElementsForNode,
 	getSpottableDescendants,
 	isContainer,
@@ -723,5 +757,6 @@ export {
 	removeAllContainers,
 	removeContainer,
 	rootContainerId,
+	setContainerPreviousTarget,
 	unmountContainer
 };
