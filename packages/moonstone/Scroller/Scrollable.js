@@ -778,17 +778,20 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					isHorizontalScrollbarVisible: curHorizontalScrollbarVisible,
 					isVerticalScrollbarVisible: curVerticalScrollbarVisible
 				});
-			} else if (curHorizontalScrollbarVisible || curVerticalScrollbarVisible) {
-				// no visibility change but need to notify whichever scrollbars are visible of the
-				// updated bounds and scroll position
-				const updatedBounds = {
-					...bounds,
-					scrollLeft: this.scrollLeft,
-					scrollTop: this.scrollTop
-				};
+			} else {
+				this.isInitializing = false;
+				if (curHorizontalScrollbarVisible || curVerticalScrollbarVisible) {
+					// no visibility change but need to notify whichever scrollbars are visible of the
+					// updated bounds and scroll position
+					const updatedBounds = {
+						...bounds,
+						scrollLeft: this.scrollLeft,
+						scrollTop: this.scrollTop
+					};
 
-				if (canScrollHorizontally && curHorizontalScrollbarVisible) this.scrollbarHorizontalRef.update(updatedBounds);
-				if (canScrollVertically && curVerticalScrollbarVisible) this.scrollbarVerticalRef.update(updatedBounds);
+					if (canScrollHorizontally && curHorizontalScrollbarVisible) this.scrollbarHorizontalRef.update(updatedBounds);
+					if (canScrollVertically && curVerticalScrollbarVisible) this.scrollbarVerticalRef.update(updatedBounds);
+				}
 			}
 		}
 
@@ -858,6 +861,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			if (this.scrollToInfo !== null) {
 				this.scrollTo(this.scrollToInfo);
+			} else {
+				this.updateScrollOnFocus();
 			}
 
 			this.updateScrollOnFocus();

@@ -9,6 +9,7 @@ The following is a curated list of changes in the Enact webos module, newest cha
 
 ### Changed
 - `webos/platform` to not set `platform.unknown` to `true` (it is handled in `@enact/core/platform`)
+
 ### Deprecated
 
 ### Added
