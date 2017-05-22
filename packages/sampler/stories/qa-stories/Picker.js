@@ -38,7 +38,15 @@ const pickerList = {
 	oneAirport: [
 		'San Francisco Airport Terminal Gate 1'
 	],
-	emptyList: []
+	emptyList: [],
+	orderedList: [
+		'Broccoli',
+		'Carrot',
+		'Celery',
+		'Onion',
+		'Spinach',
+		'Tomato'
+	]
 };
 
 storiesOf('Picker')
@@ -149,7 +157,7 @@ storiesOf('Picker')
 		)
 	)
 	.addWithInfo(
-		'TV Guide RTL Layout (PLAT-28123)',
+		'RTL Layout (PLAT-28123)',
 		() => (
 			<PickerRTL
 				width={select('width', prop.width, 'medium')}
@@ -158,7 +166,7 @@ storiesOf('Picker')
 				noAnimation={boolean('noAnimation')}
 				disabled={boolean('disabled')}
 			>
-				{pickerList.vegetables}
+				{pickerList.orderedList}
 			</PickerRTL>
 		)
 	);
