@@ -1,7 +1,5 @@
 /**
- * Exports the {@link moonstone/TimePicker.TimePicker},
- * {@link moonstone/TimePicker.TimePickerBase}, and
- * {@link moonstone/TimePicker.TimePickerController} components.
+ * Exports the {@link moonstone/TimePicker.TimePicker} component
  *
  * @module moonstone/TimePicker
  */
@@ -32,6 +30,7 @@ const toMinutes = (time) => {
  * Converts the `start` and `end` string representations (e.g. '12:00') into a numerical
  * representation.
  *
+ * @param	{Object}	options			Time options
  * @param	{String}	options.start	Start time of meridiem
  * @param	{String}	options.end		End time of meridiem
  *
@@ -204,6 +203,46 @@ const TimePicker = DateTimeDecorator({
 	}
 }, TimePickerBase);
 
+/**
+ * The primary text of the item.
+ *
+ * @name title
+ * @memberof moonstone/TimePicker.TimePicker
+ * @static
+ * @type {String}
+ * @required
+ * @public
+ */
+
+/**
+ * When `true`, omits the labels below the pickers
+ *
+ * @name noLabels
+ * @memberof moonstone/TimePicker.TimePicker
+ * @static
+ * @type {Boolean}
+ * @public
+ */
+
+/**
+ * Callback to be called when a condition occurs which should cause the expandable to close
+ *
+ * @name onClose
+ * @memberof moonstone/TimePicker.TimePicker
+ * @static
+ * @type {Function}
+ * @public
+ */
+
+/**
+ * The selected date
+ *
+ * @name value
+ * @memberof moonstone/TimePicker.TimePicker
+ * @static
+ * @type {Date}
+ * @public
+ */
 
 export default TimePicker;
 export {TimePicker, TimePickerBase};
