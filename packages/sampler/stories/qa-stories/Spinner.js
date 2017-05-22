@@ -14,8 +14,7 @@ const
 	style = {
 		spinnerDiv: {
 			height: ri.scale(420) + 'px',
-			border: '1px dotted red',
-			backgroundColor: '#222'
+			border: '3px dotted red'
 		}
 	};
 
