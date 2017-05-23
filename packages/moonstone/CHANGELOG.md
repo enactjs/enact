@@ -14,6 +14,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 - `moonstone/GridListImageItem` to center its selection icon on the image instead of the item
 
+- `moonstone/Input` to have correct `Tooltip` position in `RTL`
+
 ### Removed
 
 ## [1.2.0] - 2017-05-17
