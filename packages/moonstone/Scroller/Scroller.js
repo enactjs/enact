@@ -8,6 +8,7 @@
 
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
+import deprecate from '@enact/core/internal/deprecate';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import Spotlight from '@enact/spotlight';
@@ -17,6 +18,8 @@ import css from './Scroller.less';
 import Scrollable from './Scrollable';
 
 const dataContainerDisabledAttribute = 'data-container-disabled';
+
+const directionPropType = PropTypes.oneOf(['horizontal', 'vertical']);
 
 /**
  * {@link moonstone/Scroller.ScrollerBase} is a base component for Scroller.
@@ -35,11 +38,21 @@ class ScrollerBase extends Component {
 		children: PropTypes.node.isRequired,
 
 		/**
+		 * Direction of the scroller; valid values are `'horizontal'`, `'vertical'`, and `['horizontal', 'vertical']`.
+		 *
+		 * @type {(String|String[])}
+		 * @default 'vertical'
+		 * @public
+		 */
+		direction: PropTypes.oneOfType([directionPropType, PropTypes.arrayOf(directionPropType)]),
+
+		/**
 		 * Specifies how to horizontally scroll. Acceptable values are `'auto'`, `'default'` ,
 		 * `'hidden'`, and `'scroll'`.
 		 *
 		 * @type {String}
 		 * @default 'auto'
+		 * @deprecated replaced by `direction`
 		 * @public
 		 */
 		horizontal: PropTypes.oneOf(['auto', 'hidden', 'scroll']),
@@ -50,6 +63,7 @@ class ScrollerBase extends Component {
 		 *
 		 * @type {String}
 		 * @default 'auto'
+		 * @deprecated replaced by `direction`
 		 * @public
 		 */
 		vertical: PropTypes.oneOf(['auto', 'hidden', 'scroll'])
@@ -58,8 +72,18 @@ class ScrollerBase extends Component {
 	static contextTypes = contextTypes
 
 	static defaultProps = {
-		horizontal: 'auto',
-		vertical: 'auto'
+		direction: 'vertical'
+	}
+
+	constructor (props) {
+		super();
+
+		if (props.horizontal) {
+			deprecate({name: 'horizontal', since: '1.3.0', message: 'Use `direction` instead', until: '2.0.0'});
+		}
+		if (props.vertical) {
+			deprecate({name: 'vertical', since: '1.3.0', message: 'Use `direction` instead', until: '2.0.0'});
+		}
 	}
 
 	componentDidMount () {
@@ -262,9 +286,27 @@ class ScrollerBase extends Component {
 		}
 	}
 
-	isVertical = () => (this.props.vertical !== 'hidden')
+	isVertical = () => {
+		const {horizontal, vertical, direction} = this.props;
+		if (vertical) {
+			return (vertical !== 'hidden');
+		} else if (horizontal) {
+			return true; /* only `horizontal` prop exists, assume `vertical` is 'auto' */
+		} else { /* if there is no `horizontal` or `vertical`, only consider `direction` */
+			return (direction !== 'horizontal');
+		}
+	}
 
-	isHorizontal = () => (this.props.horizontal !== 'hidden')
+	isHorizontal = () => {
+		const {horizontal, vertical, direction} = this.props;
+		if (horizontal) {
+			return (horizontal !== 'hidden');
+		} else if (vertical) {
+			return true; /* only `vertical` prop exists, assume `horizontal` is 'auto' */
+		} else { /* if there is no `horizontal` or `vertical`, only consider `direction` */
+			return (direction !== 'vertical');
+		}
+	}
 
 	calculateMetrics () {
 		const
@@ -293,12 +335,13 @@ class ScrollerBase extends Component {
 			{className, style} = this.props,
 			props = Object.assign({}, this.props),
 			mergedStyle = Object.assign({}, style, {
-				overflowX: props.horizontal,
-				overflowY: props.vertical
+				overflowX: this.isHorizontal() ? 'auto' : 'hidden',
+				overflowY: this.isVertical() ? 'auto' : 'hidden'
 			});
 
 		delete props.cbScrollTo;
 		delete props.className;
+		delete props.direction;
 		delete props.horizontal;
 		delete props.style;
 		delete props.vertical;
@@ -345,6 +388,17 @@ const Scroller = SpotlightContainerDecorator(
  */
 
 /**
+ * Direction of the scroller; valid values are `'horizontal'`, `'vertical'`, and `['horizontal', 'vertical']`.
+ *
+ * @name direction
+ * @type {(String|String[])}
+ * @default 'vertical'
+ * @memberof moonstone/Scroller.Scroller
+ * @instance
+ * @public
+ */
+
+/**
  * Specifies how to horizontally scroll. Acceptable values are `'auto'`, `'default'` ,
  * `'hidden'`, and `'scroll'`.
  *
@@ -353,6 +407,7 @@ const Scroller = SpotlightContainerDecorator(
  * @default 'auto'
  * @memberof moonstone/Scroller.Scroller
  * @instance
+ * @deprecated replaced by `direction`
  * @public
  */
 
@@ -365,6 +420,7 @@ const Scroller = SpotlightContainerDecorator(
  * @default 'auto'
  * @memberof moonstone/Scroller.Scroller
  * @instance
+ * @deprecated replaced by `direction`
  * @public
  */
 

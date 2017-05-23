@@ -2,7 +2,7 @@ import ri from '@enact/ui/resolution';
 import Scroller, {ScrollerBase} from '@enact/moonstone/Scroller';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {select} from '@kadira/storybook-addon-knobs';
+import {select, boolean} from '@kadira/storybook-addon-knobs';
 
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 
@@ -10,8 +10,8 @@ const Config = mergeComponentMetadata('Scroller', ScrollerBase, Scroller);
 
 const
 	prop = {
-		horizontal: ['auto', 'hidden', 'scroll'],
-		vertical: ['auto', 'hidden', 'scroll']
+		horizontalScrollbar: ['auto', 'hidden', 'visible'],
+		verticalScrollbar: ['auto', 'hidden', 'visible']
 	},
 	style = {
 		scroller: {
@@ -27,17 +27,41 @@ const
 		}
 	};
 
+const
+	selectDirection = () => {
+		const
+			vertical = boolean('direction (vertical)', true),
+			horizontal = boolean('direction (horizontal)', false);
+		let
+			directionValue, returnValue;
+
+		if (vertical && horizontal) {
+			directionValue = '[\'horizontal\', \'vertical\']';
+			returnValue = 	['horizontal', 'vertical'];
+		} else if (vertical) {
+			directionValue = returnValue = 'vertical';
+		} else if (horizontal) {
+			directionValue = returnValue = 'horizontal';
+		} else {
+			directionValue = '(default value)';
+			returnValue = undefined;
+		}
+		select('direction (actual value)', [directionValue], directionValue);
+		return returnValue;
+	};
+
 storiesOf('Scroller')
 	.addWithInfo(
 		' ',
 		'Basic usage of Scroller',
 		() => (
 			<Scroller
-				horizontal={select('horizontal', prop.horizontal, 'auto')}
+				direction={selectDirection()}
+				horizontalScrollbar={select('horizontalScrollbar', prop.horizontalScrollbar, 'auto')}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
 				style={style.scroller}
-				vertical={select('vertical', prop.vertical, 'auto')}
+				verticalScrollbar={select('verticalScrollbar', prop.verticalScrollbar, 'auto')}
 			>
 				<div style={style.content}>
 					Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br />

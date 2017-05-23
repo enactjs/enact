@@ -6,12 +6,17 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Deprecated
 
+- `moonstone/Scroller` props `horizontal` and `vertical` and replaced them with `direction` prop. `horizontal` and `vertical` will be removed in 2.0.0.
+
 ### Added
+
 - `moonstone/Image` support for `children` prop inside images
+- `moonstone/Scroller` prop `direction` and replaced `horizontal` and `vertical` with it.
 
 ### Changed
 
 ### Fixed
+
 - `moonstone/GridListImageItem` to center its selection icon on the image instead of the item
 
 - `moonstone/Input` to have correct `Tooltip` position in `RTL`
