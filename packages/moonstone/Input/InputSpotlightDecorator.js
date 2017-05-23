@@ -1,3 +1,4 @@
+import deprecate from '@enact/core/internal/deprecate';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
@@ -77,6 +78,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			 *
 			 * @type {Boolean}
 			 * @default false
+			 * @deprecated will not be publicly available
 			 * @public
 			 */
 			noDecorator: PropTypes.bool,
@@ -107,19 +109,17 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 				focused: null,
 				node: null
 			};
-			this.noFocusOnHover = false;
+		}
+
+		componentWillMount () {
+			if (this.props.noDecorator) {
+				deprecate({name: 'noDecorator', since: '1.3.0', replacedBy: 'N/A'});
+			}
 		}
 
 		componentDidUpdate (_, prevState) {
 			if (this.state.node) {
-				if (this.noFocusOnHover) {
-					Spotlight.getCurrent().blur();
-					this.blur();
-					this.noFocusOnHover = false;
-				}
-
 				this.state.node.focus();
-
 			}
 
 			if (this.state.focused === 'input') {
@@ -261,12 +261,6 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			forwardKeyDown(ev, this.props);
 		}
 
-		onMouseOver = () => {
-			if (this.props.noDecorator) {
-				this.noFocusOnHover = true;
-			}
-		}
-
 		calcClassName () {
 			const {className, noDecorator} = this.props;
 			if (noDecorator) {
@@ -290,7 +284,6 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 					onClick={this.onClick}
 					onFocus={this.onFocus}
 					onKeyDown={this.onKeyDown}
-					onMouseOver={this.onMouseOver}
 				/>
 			);
 		}
