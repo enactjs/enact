@@ -2,6 +2,106 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [1.2.0] - 2017-05-17
+
+### Deprecated
+
+- `moonstone/Scroller.Scrollable` option `indexToFocus` in `scrollTo` method to be removed in 2.0.0
+- `spotlight/SpotlightRootDecorator.spotlightRootContainerName` to be removed in 2.0.0
+
+### Added
+
+- `core/handle.oneOf` to support branching event handlers
+- `moonstone/Slider` and `moonstone/IncrementSlider` prop `noFill` to support a style without the fill
+- `moonstone/Marquee` property `rtl` to set directionality to right-to-left
+- `moonstone/VirtualList.GridListImageItem` property `selectionOverlay` to add custom component for selection overlay
+- `moonstone/MoonstoneDecorator` property `skin` to let an app choose its skin: "moonstone" and "moonstone-light" are now available
+- `moonstone/FormCheckboxItem`
+- `moonstone/FormCheckbox`, a standalone checkbox, to support `moonstone/FormCheckboxItem`
+- `moonstone/Input` props `invalid` and `invalidMessage` to display a tooltip when input value is invalid
+- `moonstone/Scroller.Scrollable` option `focus` in `scrollTo()` method
+- `moonstone/Scroller.Scrollable` property `spottableScrollbar`
+- `moonstone/Icon.IconList` icons: `arrowshrinkleft` and `arrowshrinkright`
+- `spotlight/styles/mixins.less` which includes several mixins (`.focus`, `.disabled`, `.muted`, and `.mutedFocus`) to make it a little easier to target specific spotlight states
+- `ui/transition` callback prop `onShow` that fires when transitioning into view completes
+
+### Changed
+
+- `moonstone/Picker` arrow icon for `joined` picker: small when not spotted, hidden when it reaches the end of the picker
+- `moonstone/Checkbox` and `moonstone/CheckboxItem` to reflect the latest design
+- `moonstone/MoonstoneDecorator/fontGenerator` was refactored to use the browser's FontFace API to dynamically load locale fonts
+- `moonstone/VideoPlayer` space allotment on both sides of the playback controls to support 4 buttons; consequently the "more" controls area has shrunk by the same amount
+- `moonstone/VideoPlayer` to not disable media button (play/pause)
+- `moonstone/Scroller.Scrollable` so that paging controls are not spottable by default with 5-way
+- `moonstone/VideoPlayer`'s more/less button to use updated arrow icon
+- `spotlight/SpotlightContainerDecorator` config property, `enterTo`, default value to be `null` rather than `'last-focused'`
+- `spotlight` container handling to address known issues and improve testability
+-`ui/View` to prevent re-renders on views leaving the `ViewManager`
+
+### Fixed
+
+- `moonstone/MarqueeDecorator` to properly stop marquee on items with `'marqueeOnHover'`
+- `moonstone/ExpandableList` to work properly with object-based children
+- `moonstone/styles/fonts.less` to restore the Moonstone Icon font to request the local system font by default. Remember to update your webOS build to get the latest version of the font so you don't see empty boxes for your icons.
+- `moonstone/Picker` and `moonstone/RangePicker` to now use the correct size from Enyo (60px v.s. 84px) for icon buttons
+- `moonstone/Scrollable` to apply ri.scale properly
+- `moonstone/Panel` to not cover a `Panels`'s `ApplicationCloseButton` when not using a `Header`
+- `moonstone/IncrementSlider` to show tooltip when buttons focused
+
+## [1.1.0] - 2017-04-21
+
+> Note: We have updated Enact to support React 15.5.  This version of React has deprecated accessing
+> PropTypes from the `react` import.  Existing apps should update to import from the `prop-types` module.
+> `enact-dev` has also been updated to the new release.
+
+### Deprecated
+
+- `moonstone/ExpandableInput` property `onInputChange`
+
+### Added
+
+- `core/util` documentation
+- `i18n/Uppercase` prop `casing` to control how the component should be uppercased
+- `i18n/util` methods `toCapitalized` and `toWordCase` to locale-aware uppercase strings
+- `moonstone/Panels.Panel` prop and `moonstone/MoonstoneDecorator` config option: `noAutoFocus` to support prevention of setting automatic focus after render
+- `moonstone/VideoPlayer` props: `backwardIcon`, `forwardIcon`, `jumpBackwardIcon`, `jumpForwardIcon`, `pauseIcon`, and `playIcon` to support icon customization of the player
+- `moonstone/VideoPlayer` props `jumpButtonsDisabled` and `rateButtonsDisabled` for disabling the pairs of buttons when it's inappropriate for the playing media
+- `moonstone/VideoPlayer` property `playbackRateHash` to support custom playback rates
+- `moonstone/VideoPlayer` callback prop `onControlsAvailable` which fires when the players controls show or hide
+- `moonstone/Image` support for `onLoad` and `onError` events
+- `moonstone/VirtualList.GridListImageItem` prop `placeholder`
+- `moonstone/Divider` property `preserveCase` to display text without capitalizing it
+- `spotlight/SpotlightRootDecorator` config option: `noAutoFocus` to support prevention of setting automatic focus after render
+- `spotlight/Spotlight` method `getSpottableDescendants()`
+
+### Changed
+
+- `moonstone/Slider` colors and sizing to match the latest designs
+- `moonstone/ProgressBar` to position correctly with other components nearby
+- `moonstone/Panels` breadcrumb to no longer have a horizontal line above it
+- `moonstone/Transition` to measure itself when the CPU is idle
+- style for disabled opacity from 0.4 to 0.3
+- `moonstone/Button` colors for transparent and translucent background opacity when disabled
+- `moonstone/ExpandableInput` property `onInputChange` to fire along with `onChange`. `onInputChange` is deprecated and will be removed in a future update.
+- `Moonstone.ttf` font to include new icons
+- `moonstone/Icon` to reference additional icons
+- `spotlight/SpotlightContainerDecorator` to have no default for `spotlightRestrict`
+- `ui/Slottable` to support slot-candidate tags that have multiple props, which are now forwarded directly instead of just their children
+
+### Fixed
+
+- `core/util.childrenEquals` to work with mixed components and text
+- `moonstone/Popup` and `moonstone/ContextualPopupDecorator` 5-way navigation behavior
+- `moonstone/Input` to not spot its own input decorator on 5-way out
+- `moonstone/VideoPlayer` to no longer render its `children` in multiple places
+- `moonstone/Button` text color when used on a neutral (light) background in some cases
+- `moonstone/Popup` background opacity
+- `moonstone/Marquee` to recalculate properly when its contents change
+- `moonstone/TimePicker` to display time in correct order
+- `moonstone/Scroller` to prefer spotlight navigation to its internal components
+- `spotlight/Spotlight` to consider nested containers when adjusting focus
+- `ui/Cancelable` to run modal handlers in the right order
+
 ## [1.0.0] - 2017-03-31
 
 > NOTE: This version includes a breaking change to the way modules are organized. This change was necessary to prevent further API breakage following the 1.0.0 release and to facilitate changes we want to make in the future. We understand that this will require some work on the part of developers to update their code. Below you will find details about the changes:

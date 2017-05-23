@@ -1,12 +1,11 @@
 import {MarqueeText} from '@enact/moonstone/Marquee';
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
-import {withKnobs, boolean, number, select, text} from '@kadira/storybook-addon-knobs';
+import {boolean, number, select, text} from '@kadira/storybook-addon-knobs';
 
 import nullify from '../../src/utils/nullify.js';
 
 storiesOf('Marquee')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'The basic MarqueeText',

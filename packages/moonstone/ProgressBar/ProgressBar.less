@@ -1,7 +1,9 @@
-@import '../styles/colors.less';
+// ProgressBar.less
+//
 @import '../styles/variables.less';
+@import '../styles/skin.less';
 
-.progressBar {
+.applySkins({.progressBar {
 	position: relative;
 	height: @moon-progress-bar-height;
 	background-color: @moon-progress-bar-bg-color;
@@ -33,4 +35,4 @@
 		position: absolute;
 		background-color: @moon-progress-bar-loaded-bg-color;
 	}
-}
+}});

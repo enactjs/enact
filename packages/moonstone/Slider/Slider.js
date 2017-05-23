@@ -80,6 +80,15 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			backgroundProgress: PropTypes.number,
 
 			/**
+			 * The custom value or component for the tooltip. If [tooltip]{@link moonstone/Slider.SliderBase#tooltip},
+			 * is `true`, then it will use built-in tooltip with given a string. If `false`, a custom tooltip
+			 * component, which follows the knob, may be used instead.
+			 *
+			 * @type {String|Node}
+			 */
+			children: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
+
+			/**
 			 * The slider can change its behavior to have the knob follow the cursor as it moves
 			 * across the slider, without applying the position. A click or drag behaves the same.
 			 * This is primarily used by media playback. Setting this to `true` enables this behavior.
@@ -98,6 +107,14 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * @public
 			 */
 			disabled: PropTypes.bool,
+
+			/**
+			 * When `true`, the tooltip, if present, is shown
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			focused: PropTypes.bool,
 
 			/**
 			 * The method to run when the input mounts, giving a reference to the DOM.
@@ -124,6 +141,15 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * @public
 			 */
 			min: PropTypes.number,
+
+			/**
+			 * When `true`, the slider bar doesn't show a fill and doesn't highlight when spotted
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			noFill: PropTypes.bool,
 
 			/**
 			 * The handler when the knob is activated or deactivated by selecting it via 5-way
@@ -231,8 +257,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 
 			/**
 			 * Enables the built-in tooltip, whose behavior can be modified by the other tooltip
-			 * properties.  A custom tooltip, which follows the knob, may be used instead by
-			 * supplying a component as a child of `Slider`.
+			 * properties.
 			 *
 			 * @type {Boolean}
 			 * @default false
@@ -298,8 +323,10 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			active: false,
 			backgroundProgress: 0,
 			detachedKnob: false,
+			focused: false,
 			max: 100,
 			min: 0,
+			noFill: false,
 			onChange: () => {}, // needed to ensure the base input element is mutable if no change handler is provided
 			pressed: false,
 			step: 1,
@@ -346,12 +373,12 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 
 		computed: {
 			children: ({children, max, min, tooltip, tooltipAsPercent, value}) => {
-				// If there's no tooltip, or custom children present, supply those.
 				if (!tooltip || children) return children;
 				return tooltipAsPercent ? Math.floor(computeProportionProgress({value, max, min}) * 100) + '%' : value;
 			},
-			className: ({active, pressed, vertical, styler}) => styler.append({
+			className: ({active, noFill, pressed, vertical, styler}) => styler.append({
 				active,
+				noFill,
 				pressed,
 				vertical,
 				horizontal: !vertical
@@ -359,15 +386,33 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			proportionProgress: computeProportionProgress
 		},
 
-		render: ({backgroundProgress, children, disabled, inputRef, max, min, onBlur, onChange, onKeyDown, onMouseMove, onMouseUp, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, tooltip, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => {
+		render: ({backgroundProgress, children, disabled, focused, inputRef, max, min, onBlur, onChange, onKeyDown, onMouseMove, onMouseUp, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, tooltip, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => {
 			delete rest.active;
 			delete rest.detachedKnob;
+			delete rest.noFill;
 			delete rest.onActivate;
 			delete rest.onDecrement;
 			delete rest.onIncrement;
 			delete rest.onKnobMove;
 			delete rest.pressed;
 			delete rest.tooltipAsPercent;
+
+			let tooltipComponent = null;
+
+			// when `tooltip` is `false`, use custom tooltip provided in `children`
+			if (!tooltip) {
+				tooltipComponent = children;
+			} else if (focused) {
+				// only display tooltip when `focused`
+				tooltipComponent = <SliderTooltip
+					forceSide={tooltipForceSide}
+					proportion={proportionProgress}
+					side={tooltipSide}
+					vertical={vertical}
+				>
+					{children}
+				</SliderTooltip>;
+			}
 
 			return (
 				<div
@@ -386,15 +431,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						vertical={vertical}
 						scrubbing={scrubbing}
 					>
-						{tooltip ? <SliderTooltip
-							className={css.tooltip}
-							forceSide={tooltipForceSide}
-							proportion={proportionProgress}
-							side={tooltipSide}
-							vertical={vertical}
-						>
-							{children}
-						</SliderTooltip> : children}
+						{tooltipComponent}
 					</SliderBar>
 					<input
 						aria-disabled={disabled}
@@ -437,9 +474,9 @@ const SliderFactory = factory(css => {
 	 * @public
 	 */
 	return Changeable(
-		Pressable(
-			Spottable(
-				SliderDecorator(
+		Spottable(
+			SliderDecorator(
+				Pressable(
 					Base
 				)
 			)

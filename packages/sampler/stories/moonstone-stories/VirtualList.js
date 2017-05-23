@@ -4,9 +4,10 @@ import Item from '@enact/moonstone/Item';
 import {VirtualListCore} from '@enact/moonstone/VirtualList/VirtualListBase';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, number} from '@kadira/storybook-addon-knobs';
+import {boolean, number} from '@kadira/storybook-addon-knobs';
 
 import {mergeComponentMetadata} from '../../src/utils/propTables';
+import nullify from '../../src/utils/nullify.js';
 
 const Config = mergeComponentMetadata('VirtualList', VirtualListCore, VirtualList);
 
@@ -37,7 +38,6 @@ for (let i = 0; i < 1000; i++) {
 }
 
 storiesOf('VirtualList')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'Basic usage of VirtualList',
@@ -49,6 +49,7 @@ storiesOf('VirtualList')
 					data={items}
 					dataSize={number('dataSize', items.length)}
 					itemSize={itemSize}
+					focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
 					spacing={ri.scale(number('spacing', 0))}

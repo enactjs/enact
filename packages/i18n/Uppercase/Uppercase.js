@@ -31,10 +31,10 @@ const Uppercase = hoc((config, Wrapped) => kind({
 	propTypes: /** @lends i18n/Uppercase.Uppercase.prototype */ {
 		/**
 		 * Configures the mode of uppercasing that should be performed. Options are:
-		 *   'upper' to capitalize all characters.
-		 *   'preserve' to maintain the original casing.
-		 *   'word' to capitalize the first letter of each word.
-		 *   'sentence' to capitalize the first letter of the string.
+		 *   `'upper'` to capitalize all characters.
+		 *   `'preserve'` to maintain the original casing.
+		 *   `'word'` to capitalize the first letter of each word.
+		 *   `'sentence'` to capitalize the first letter of the string.
 		 *
 		 * @type {String}
 		 * @default 'upper'

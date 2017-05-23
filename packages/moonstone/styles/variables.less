@@ -1,30 +1,9 @@
 // Variables
 //
-@import './colors.less';
 
 // App
 // ---------------------------------------
 @moon-app-keepout: 18px;
-
-// Neutral Theme
-// ---------------------------------------
-// RIGBY NOTE: TODO
-// The Neutral theme should be defined elsewhere. It's inappropriate for color to be assigned here.
-@moon-neutral-bg-color: @moon-light-gray;
-@moon-neutral-text-color: @moon-dark-gray;
-@moon-neutral-child-text-color: @moon-dark-gray;
-@moon-neutral-scroller-icon: url(../images/LightTheme_Icons/scroller_icon.png);
-@moon-neutral-border-color: @moon-dark-gray;
-@moon-neutral-icon-color: @moon-dark-gray;
-@moon-neutral-button-text-color: @moon-white;
-@moon-neutral-button-bg-color: #686868;
-@moon-neutral-button-disabled-text-color: #cdcdcd;
-@moon-neutral-button-disabled-bg-color: #686868;
-@moon-neutral-popup-background-opacity: 95%;
-@moon-neutral-thumb-bg-color: rgba(50, 50, 50, 0.8);
-@moon-neutral-slider-knob-bg-color: @moon-white;
-@moon-neutral-slider-spotlight-bar-color: @moon-spotlight-color;
-@moon-neutral-slider-spotlight-knob-color: @moon-spotlight-color;
 
 // Font Sizes
 // ---------------------------------------
@@ -204,6 +183,18 @@
 @moon-item-line-height-large: @moon-item-height-large - (@moon-item-vertical-padding * 2);
 @moon-item-indent: 36px;
 
+// FormCheckbox
+// ---------------------------------------
+@moon-formcheckbox-size: (@moon-item-height * 0.8);	// Relative to `Item` height
+@moon-formcheckbox-size-large: (@moon-item-height-large * 0.8);	// Relative to `Item` height
+@moon-formcheckbox-check-icon-size: 72px;
+@moon-formcheckbox-check-icon-size-large: 84px;
+
+// Checkbox
+// ---------------------------------------
+@moon-checkbox-size: 30px;
+@moon-checkbox-size-large: 36px;
+
 // ToggleButton
 // ---------------------------------------
 @moon-toggle-button-switch-border-width: 3px;
@@ -247,7 +238,7 @@
 
 // Scrim
 // ---------------------------------------
-@moon-scrim-color: fade(@moon-black, 30%);
+@moon-scrim-color: fade(black, 30%);
 
 // Slider
 // ---------------------------------------
@@ -292,7 +283,6 @@
 @moon-notification-font-family: "MuseoSans";
 @moon-notification-font-weight: 500;
 @moon-notification-font-style: normal;
-@moon-notification-border-opacity: 30%;
 @moon-notification-border-width: 6px;
 @moon-notification-border-radius: 15px;
 @moon-notification-out-border-radius: 18px;

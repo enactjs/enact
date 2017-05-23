@@ -71,7 +71,8 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 			backgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'transparent']),
 
 			/**
-			 * Transforms the text of the Button to be uppercased, or other supported variatnt.
+			 * Transformation to apply to the text of the Button. By default, text is transformed
+			 * to uppercase.
 			 *
 			 * @see i18n/Uppercase#casing
 			 * @type {String}

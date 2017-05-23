@@ -4,6 +4,33 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ## [unreleased]
 
+### Deprecated
+
+### Added
+
+### Changed
+
+### Fixed
+
+### Removed
+
+## [1.2.0] - 2017-05-17
+
+### Deprecated
+
+- `spotlight/SpotlightRootDecorator.spotlightRootContainerName` to be removed in 2.0.0
+
+### Added
+
+- `spotlight/styles/mixins.less` which includes several mixins (`.focus`, `.disabled`, `.muted`, and `.mutedFocus`) to make it a little easier to target specific spotlight states
+
+### Changed
+
+- `spotlight/SpotlightContainerDecorator` config property, `enterTo`, default value to be `null` rather than `'last-focused'`
+- `spotlight` container handling to address known issues and improve testability
+
+## [1.1.0] - 2017-04-21
+
 ### Added
 
 - `spotlight/SpotlightRootDecorator` config option: `noAutoFocus` to support prevention of setting automatic focus after render

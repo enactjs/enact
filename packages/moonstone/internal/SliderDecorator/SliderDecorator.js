@@ -44,6 +44,7 @@ const defaultConfig = {
 const forwardBlur = forward('onBlur');
 const forwardChange = forward('onChange');
 const forwardClick = forward('onClick');
+const forwardFocus = forward('onFocus');
 const forwardMouseMove = forward('onMouseMove');
 const forwardMouseLeave  = forward('onMouseLeave');
 
@@ -146,15 +147,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			onKnobMove: PropTypes.func,
 
 			/**
-			 * When `true`, a pressed visual effect is applied
-			 *
-			 * @type {Boolean}
-			 * @default false
-			 * @public
-			 */
-			pressed: PropTypes.bool,
-
-			/**
 			 * The amount to increment or decrement the value.
 			 *
 			 * @type {Number}
@@ -186,7 +178,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			max: 100,
 			min: 0,
 			step: 1,
-			pressed: false,
 			value: 0,
 			vertical: false
 		};
@@ -201,6 +192,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const value = this.clamp(props.value);
 			this.state = {
 				active: false,
+				focused: false,
 				value: value,
 				valueText: value,
 				ariaHidden: true
@@ -399,6 +391,10 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.knobPosition = null;
 				this.updateUI();
 			}
+
+			this.setState({
+				focused: false
+			});
 		}
 
 		handleFocus = () => {
@@ -429,6 +425,14 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
+		handleFocus = (ev) => {
+			forwardFocus(ev, this.props);
+
+			this.setState({
+				focused: true
+			});
+		}
+
 		render () {
 			const props = Object.assign({}, this.props);
 			delete props.knobStep;
@@ -441,6 +445,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					aria-disabled={this.props.disabled}
 					aria-hidden={this.state.ariaHidden}
 					aria-valuetext={this.state.valueText}
+					focused={this.state.focused}
 					inputRef={this.getInputNode}
 					onActivate={this.handleActivate}
 					onBlur={this.handleBlur}

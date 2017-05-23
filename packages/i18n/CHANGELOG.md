@@ -4,6 +4,22 @@ The following is a curated list of changes in the Enact i18n module, newest chan
 
 ## [unreleased]
 
+### Deprecated
+
+### Added
+
+### Changed
+
+### Fixed
+
+### Removed
+
+## [1.2.0] - 2017-05-17
+
+No significant changes.
+
+## [1.1.0] - 2017-04-21
+
 ### Added
 
 - `i18n/Uppercase` prop `casing` to control how the component should be uppercased

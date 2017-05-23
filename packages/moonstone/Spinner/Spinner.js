@@ -4,9 +4,11 @@
  *
  * @module moonstone/Spinner
  */
+import $L from '@enact/i18n/$L';
 import FloatingLayer from '@enact/ui/FloatingLayer';
 import kind from '@enact/core/kind';
-import React, {Component, PropTypes} from 'react';
+import PropTypes from 'prop-types';
+import React, {Component} from 'react';
 import Spotlight from '@enact/spotlight';
 
 import {MarqueeText} from '../Marquee';
@@ -23,6 +25,16 @@ import css from './Spinner.less';
  */
 const SpinnerCore = kind({
 	name: 'SpinnerCore',
+
+	computed: {
+		'aria-label': ({['aria-label']: aria, children}) => {
+			if (aria) {
+				return aria;
+			} else if (!children) {
+				return $L('Loading');
+			}
+		}
+	},
 
 	render: ({children, ...rest}) => (
 		<div aria-live="off" role="alert" {...rest}>
