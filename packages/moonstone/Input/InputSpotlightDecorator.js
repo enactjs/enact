@@ -1,3 +1,4 @@
+import deprecate from '@enact/core/internal/deprecate';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
@@ -77,6 +78,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			 *
 			 * @type {Boolean}
 			 * @default false
+			 * @deprecated will be replaced by `focusInput` in 2.0.0
 			 * @public
 			 */
 			noDecorator: PropTypes.bool,
@@ -107,6 +109,12 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 				focused: null,
 				node: null
 			};
+		}
+
+		componentWillMount () {
+			if (this.props.noDecorator) {
+				deprecate({name: 'noDecorator', since: '1.3.0', replacedBy: 'focusInput'});
+			}
 		}
 
 		componentDidUpdate (_, prevState) {
