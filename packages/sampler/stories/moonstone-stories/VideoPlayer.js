@@ -97,7 +97,7 @@ storiesOf('VideoPlayer')
 		' ',
 		'The basic VideoPlayer',
 		() => {
-			const video = select('test-source', videoSource, prop.videos[0].source);
+			const video = select('source', videoSource, prop.videos[0].source);
 			const poster = matchPoster(video);
 			return (
 				<div
