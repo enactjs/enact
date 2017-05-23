@@ -40,12 +40,12 @@ const pickerList = {
 	],
 	emptyList: [],
 	orderedList: [
-		'Broccoli',
-		'Carrot',
-		'Celery',
-		'Onion',
-		'Spinach',
-		'Tomato'
+		'A',
+		'B',
+		'C',
+		'D',
+		'E',
+		'F'
 	]
 };
 
