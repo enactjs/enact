@@ -7,7 +7,6 @@ import PropTypes from 'prop-types';
 import {storiesOf, action} from '@kadira/storybook';
 import {boolean, number} from '@kadira/storybook-addon-knobs';
 
-
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 import nullify from '../../src/utils/nullify.js';
 
