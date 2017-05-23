@@ -7,6 +7,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Deprecated
 
 - `moonstone/Scroller.Scrollable` option `indexToFocus` in `scrollTo` method to be removed in 2.0.0
+- `moonstone/Input` prop `noDecorator` is being replaced by `focusInput` in 2.0.0.
+
 
 ### Added
 
