@@ -107,11 +107,19 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 				focused: null,
 				node: null
 			};
+			this.noFocusOnHover = false;
 		}
 
 		componentDidUpdate (_, prevState) {
 			if (this.state.node) {
+				if (this.noFocusOnHover) {
+					Spotlight.getCurrent().blur();
+					this.blur();
+					this.noFocusOnHover = false;
+				}
+
 				this.state.node.focus();
+
 			}
 
 			if (this.state.focused === 'input') {
@@ -253,6 +261,12 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			forwardKeyDown(ev, this.props);
 		}
 
+		onMouseOver = () => {
+			if (this.props.noDecorator) {
+				this.noFocusOnHover = true;
+			}
+		}
+
 		calcClassName () {
 			const {className, noDecorator} = this.props;
 			if (noDecorator) {
@@ -276,6 +290,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 					onClick={this.onClick}
 					onFocus={this.onFocus}
 					onKeyDown={this.onKeyDown}
+					onMouseOver={this.onMouseOver}
 				/>
 			);
 		}
