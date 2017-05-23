@@ -2,6 +2,28 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Deprecated
+
+### Added
+
+### Changed
+
+### Fixed
+
+### Removed
+
+## [1.2.0] - 2017-05-17
+
+### Added
+
+- `ui/transition` callback prop `onShow` that fires when transitioning into view completes
+
+### Changed
+
+-`ui/View` to prevent re-renders on views leaving the `ViewManager`
+
 ## [1.1.0] - 2017-04-21
 
 ### Changed

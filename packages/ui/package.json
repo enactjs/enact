@@ -1,6 +1,6 @@
 {
   "name": "@enact/ui",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "A collection of simplified unstyled cross-platform UI components for Enact",
   "main": "index.js",
   "scripts": {
@@ -28,13 +28,13 @@
     "extends": "enact/strict"
   },
   "dependencies": {
-    "@enact/core": "^1.1.0",
+    "@enact/core": "^1.2.0",
     "invariant": "~2.2.1",
     "prop-types": "~15.5.0",
-    "ramda": "~0.22.1",
+    "ramda": "~0.23.0",
     "react": "~15.5.0",
     "react-dom": "~15.5.0",
-    "recompose": "~0.20.2",
+    "recompose": "~0.23.1",
     "warning": "~3.0.0"
   }
 }

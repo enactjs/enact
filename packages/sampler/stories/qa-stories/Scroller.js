@@ -5,7 +5,7 @@ import ExpandableList from '@enact/moonstone/ExpandableList';
 import Scroller from '@enact/moonstone/Scroller';
 
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
+import {boolean, select} from '@kadira/storybook-addon-knobs';
 
 const itemData = [];
 for (let i = 0; i < 100; i++) {
@@ -21,12 +21,12 @@ const
 			width: '100%'
 		},
 		horizontalContent: {
-			width: ri.scale(4200) + 'px'
+			width: ri.scale(4200) + 'px',
+			padding: '1px'
 		}
 	};
 
 storiesOf('Scroller')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		'With ExpandableList',
 		() => (

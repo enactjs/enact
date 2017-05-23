@@ -2,7 +2,7 @@ import CheckboxItem from '@enact/moonstone/CheckboxItem';
 import Group from '@enact/ui/Group';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, text, select} from '@kadira/storybook-addon-knobs';
+import {boolean, text, select} from '@kadira/storybook-addon-knobs';
 
 const prop = {
 	longText : 'Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text',
@@ -12,7 +12,6 @@ const prop = {
 };
 
 storiesOf('CheckboxItem')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		'with long text',
 		() => (

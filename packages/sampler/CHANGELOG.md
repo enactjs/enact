@@ -2,6 +2,28 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
+## [unreleased]
+
+### Deprecated
+
+### Added
+
+### Changed
+
+### Fixed
+
+### Removed
+
+## [1.2.0] - 2017-05-17
+
+### Added
+
+- `skin` knob to all samples to allow switching between dark and light skins
+
+## Fixed
+
+- `largeText` and `locale` knobs to not disappear after use
+
 ## [1.1.0] - 2017-04-21
 
 Updated with new properties for Moonstone controls.
