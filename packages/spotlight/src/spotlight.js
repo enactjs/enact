@@ -1058,8 +1058,9 @@ const Spotlight = (function () {
 		// focus(<containerId>)
 		// focus(<extSelector>)
 		/**
-		 * Focuses the specified element selector or container ID or the default container. Has no
-		 * effect if Spotlight is paused.
+		 * Focuses the specified element selector or container ID or the default container. If
+		 * Spotlight is in pointer mode, focus is not changed but `elem` will be set as the last
+		 * focused element of its spotlight containers.
 		 *
 		 * @param {String|Object|undefined} elem Element selector or the container ID.
 		 *	If not supplied, the default container will be focused.
