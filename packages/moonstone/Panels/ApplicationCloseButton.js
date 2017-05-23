@@ -43,6 +43,7 @@ const ApplicationCloseButton = kind({
 				small
 				backgroundOpacity="transparent"
 				onClick={onApplicationClose}
+				id="app_close_button"
 			>
 				closex
 			</IconButton>

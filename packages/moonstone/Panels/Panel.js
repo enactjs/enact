@@ -53,6 +53,17 @@ const PanelBase = kind({
 		'aria-label': PropTypes.string,
 
 		/**
+		 * Identifies an element (or elements) in order to define contextual parent/child relationship
+		 * between DOM elements where the DOM hierarchy cannot be used to represent the relationship.
+		 * When `aria-owns` is set, it will be considered as children.
+		 *
+		 * @memberof moonstone/Panels.Panel.prototype
+		 * @type {String}
+		 * @public
+		 */
+		'aria-owns': PropTypes.string,
+
+		/**
 		 * Header for the panel. This is usually passed by the {@link ui/Slottable.Slottable} API by
 		 * using a [Header]{@link moonstone/Panels.Header} component as a child of the Panel.
 		 *
@@ -120,15 +131,16 @@ const PanelBase = kind({
 		// nulling headerId prevents the aria-labelledby relationship which is necessary to allow
 		// aria-label to take precedence
 		// (see https://www.w3.org/TR/wai-aria/states_and_properties#aria-labelledby)
-		headerId: ({'aria-label': label}) => label ? null : `panel_${++panelId}_header`
+		headerId: ({'aria-label': label}) => label ? null : `panel_${++panelId}_header`,
+		'aria-owns': ({'aria-owns': owns}) => owns ? `breadcrumb app_close_button ${owns}` : 'breadcrumb app_close_button'
 	},
 
-	render: ({bodyClassName, children, header, headerId, spotOnRender, ...rest}) => {
+	render: ({'aria-owns': ariaOwns, bodyClassName, children, header, headerId, spotOnRender, ...rest}) => {
 		delete rest.hideChildren;
 		delete rest.noAutoFocus;
 
 		return (
-			<article role="region" {...rest} aria-labelledby={headerId} ref={spotOnRender}>
+			<article role="region" {...rest} aria-labelledby={headerId} aria-owns={ariaOwns} ref={spotOnRender}>
 				<div className={css.header} id={headerId}>{header}</div>
 				<section className={bodyClassName}>{children}</section>
 			</article>
