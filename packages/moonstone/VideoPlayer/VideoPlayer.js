@@ -505,19 +505,9 @@ const VideoPlayerBase = class extends React.Component {
 
 	componentWillReceiveProps (nextProps) {
 		// Detect a change to the video source and reload if necessary.
-		if (nextProps.children) {
-			let prevSource, nextSource;
-
-			React.Children.forEach(this.props.children, (child) => {
-				if (child.type === 'source') {
-					prevSource = child.props.src;
-				}
-			});
-			React.Children.forEach(nextProps.children, (child) => {
-				if (child.type === 'source') {
-					nextSource = child.props.src;
-				}
-			});
+		if (nextProps.source) {
+			const nextSource = nextProps.source.props.src;
+			const prevSource = this.props.source.props.src;
 
 			if (prevSource !== nextSource) {
 				this.reloadVideo();
@@ -710,7 +700,9 @@ const VideoPlayerBase = class extends React.Component {
 	reloadVideo = () => {
 		// When changing a HTML5 video, you have to reload it.
 		this.video.load();
-		this.video.play();
+		if (!this.props.noAutoPlay) {
+			this.video.play();
+		}
 	}
 
 	/**

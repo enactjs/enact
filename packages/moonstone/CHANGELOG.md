@@ -7,14 +7,18 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Deprecated
 
 ### Added
+
 - `moonstone/Image` support for `children` prop inside images
 
 ### Changed
 
-### Fixed
-- `moonstone/GridListImageItem` to center its selection icon on the image instead of the item
+- `moonstone/VideoPlayer` to not play video on reload when `noAutoPlay` is `true`
 
+### Fixed
+
+- `moonstone/GridListImageItem` to center its selection icon on the image instead of the item
 - `moonstone/Input` to have correct `Tooltip` position in `RTL`
+- `moonstone/VideoPlayer` to correctly change sources 
 
 ### Removed
 
