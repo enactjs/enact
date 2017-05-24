@@ -1,3 +1,4 @@
+/* global global */
 /*
  * glue.js - glue code to fit ilib into enyo
  *
@@ -34,7 +35,7 @@ if (typeof window === 'object' && typeof window.UILocale !== 'undefined') {
 // Temporary. In snapshot generation, do not run the locale initialization as it currently
 // causes V8 issues for some apps. for now, will execute only in browser or node environment.
 if (typeof window !== 'undefined' ||
-		(typeof process !== 'undefined' && process.versions && process.versions.node)) {
+		(global.process && global.process.versions && global.process.versions.node)) {
 	// we go ahead and run this once during loading of iLib settings are valid
 	// during the loads of later libraries.
 	updateLocale(null, true);
