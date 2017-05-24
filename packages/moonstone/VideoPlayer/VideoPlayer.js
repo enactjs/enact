@@ -677,7 +677,7 @@ const VideoPlayerBase = class extends React.Component {
 			currentTime: el.currentTime,
 			duration: el.duration,
 			buffered: el.buffered,
-			paused: el.paused,
+			paused: el.playbackRate !== 1 || el.paused,
 			muted: el.muted,
 			volume: el.volume,
 			playbackRate: el.playbackRate,
