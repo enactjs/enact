@@ -701,15 +701,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					deprecate({name: 'indexToFocus', since: '1.2.0', message: 'Use `focus` instead', until: '2.0.0'});
 				}
 
-				if (left !== null || top !== null) {
-					this.start({
-						targetX: (left !== null) ? left : this.scrollLeft,
-						targetY: (top !== null) ? top : this.scrollTop,
-						animate: opt.animate,
-						indexToFocus: (opt.focus && typeof opt.index === 'number') ? opt.index : indexToFocus,
-						nodeToFocus:  (opt.focus && opt.node instanceof Object && opt.node.nodeType === 1) ? opt.node : null
-					});
-				}
+				this.start({
+					targetX: (left !== null) ? left : this.scrollLeft,
+					targetY: (top !== null) ? top : this.scrollTop,
+					animate: opt.animate,
+					indexToFocus: (opt.focus && typeof opt.index === 'number') ? opt.index : indexToFocus,
+					nodeToFocus:  (opt.focus && opt.node instanceof Object && opt.node.nodeType === 1) ? opt.node : null
+				});
 			} else {
 				this.scrollToInfo = opt;
 			}
