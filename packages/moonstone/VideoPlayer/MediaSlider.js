@@ -63,6 +63,7 @@ const MediaSliderBase = kind({
 		<div className={css.sliderFrame}>
 			<Slider
 				{...props}
+				aria-hidden="true"
 				className={css.mediaSlider}
 				detachedKnob
 				min={0}

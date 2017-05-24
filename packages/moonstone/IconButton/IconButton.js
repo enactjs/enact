@@ -132,7 +132,7 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 
 		render: ({children, small, ...rest}) => {
 			return (
-				<Button {...rest} small={small} minWidth={false} marqueeDisabled>
+				<Button {...rest} aria-label={children} small={small} minWidth={false} marqueeDisabled>
 					<OptimizedIcon small={small} className={css.icon}>{children}</OptimizedIcon>
 				</Button>
 			);

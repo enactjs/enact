@@ -5,6 +5,7 @@
  *
  * @module moonstone/VideoPlayer
  */
+import AnnounceDecorator from '@enact/ui/AnnounceDecorator';
 import React from 'react';
 import PropTypes from 'prop-types';
 import DurationFmt from '@enact/i18n/ilib/lib/DurationFmt';
@@ -133,6 +134,16 @@ const VideoPlayerBase = class extends React.Component {
 	static displayName = 'VideoPlayerBase'
 
 	static propTypes = /** @lends moonstone/VideoPlayer.VideoPlayerBase.prototype */ {
+
+		/**
+		 * passed by AnnounceDecorator for accessibility
+		 *
+		 * @type {Number}
+		 * @default 7000
+		 * @private
+		 */
+		announce: PropTypes.func,
+
 		/**
 		 * Amount of time (in milliseconds) after which control buttons are automatically hidden.
 		 * Setting this to 0 or `null` disables autoClose, requiring user input to open and close.
@@ -1052,10 +1063,16 @@ const VideoPlayerBase = class extends React.Component {
 	}
 	onSliderChange = ({value}) => {
 		this.seek(value * this.state.duration);
+		this.sliderScrubbing = false;
 	}
 	handleKnobMove = (ev) => {
 		this.sliderScrubbing = ev.detached;
 		this.sliderKnobProportion = ev.proportion;
+
+		if (this.sliderScrubbing) {
+			const knobTime = Math.round(this.sliderKnobProportion * this.video.duration);
+			this.props.announce(`jump to ${secondsToTime(knobTime, this.durfmt)}`);
+		}
 	}
 	onJumpBackward = (ev) => {
 		ev = this.addStateToEvent(ev);
@@ -1072,8 +1089,10 @@ const VideoPlayerBase = class extends React.Component {
 		forwardPlayButtonClick(ev, this.props);
 		if (this.state.paused) {
 			this.play();
+			this.props.announce('video play');
 		} else {
 			this.pause();
+			this.props.announce('video paused');
 		}
 	}
 	onForward = (ev) => {
@@ -1097,6 +1116,7 @@ const VideoPlayerBase = class extends React.Component {
 			this.stopAutoCloseTimeout();	// Interupt the timer since controls should not hide while viewing "more".
 			// Interrupt the title-hide since we don't want it hiding autonomously in "more".
 			this.stopDelayedTitleHide();
+			this.props.announce(`${this.props.infoComponents}`);
 		}
 		this.setState({
 			more: !this.state.more,
@@ -1118,6 +1138,7 @@ const VideoPlayerBase = class extends React.Component {
 
 	render () {
 		const {backwardIcon, children, className, forwardIcon, infoComponents, jumpBackwardIcon, jumpButtonsDisabled, jumpForwardIcon, leftComponents, noAutoPlay, noJumpButtons, noRateButtons, noSlider, pauseIcon, playIcon, rateButtonsDisabled, rightComponents, source, style, title, ...rest} = this.props;
+		delete rest.announce;
 		delete rest.autoCloseTimeout;
 		delete rest.feedbackHideDelay;
 		delete rest.jumpBy;
@@ -1152,7 +1173,7 @@ const VideoPlayerBase = class extends React.Component {
 					{source}
 				</video>
 
-				<Overlay onClick={this.onVideoClick}>
+				<Overlay aria-live="assertive" aria-busy={this.state.loading} onClick={this.onVideoClick}>
 					{this.state.loading ? <Spinner centered /> : null}
 				</Overlay>
 
@@ -1256,7 +1277,9 @@ const VideoPlayerBase = class extends React.Component {
  * @ui
  * @public
  */
-const VideoPlayer = Slottable({slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source']}, VideoPlayerBase);
+const VideoPlayer = AnnounceDecorator(
+	Slottable({slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source']}, VideoPlayerBase)
+);
 
 export default VideoPlayer;
 export {VideoPlayer, VideoPlayerBase};
