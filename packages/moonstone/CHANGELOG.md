@@ -6,12 +6,12 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Deprecated
 
-- `moonstone/Scroller` props `horizontal` and `vertical` and replaced them with `direction` prop. `horizontal` and `vertical` will be removed in 2.0.0.
+- `moonstone/Scroller` props `horizontal` and `vertical`. Deprecated props are replaced with `direction` prop. `horizontal` and `vertical` will be removed in 2.0.0.
 
 ### Added
 
 - `moonstone/Image` support for `children` prop inside images
-- `moonstone/Scroller` prop `direction` and replaced `horizontal` and `vertical` with it.
+- `moonstone/Scroller` prop `direction` which replaces `horizontal` and `vertical` props.
 
 ### Changed
 

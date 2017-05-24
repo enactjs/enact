@@ -17,9 +17,9 @@ import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDeco
 import css from './Scroller.less';
 import Scrollable from './Scrollable';
 
-const dataContainerDisabledAttribute = 'data-container-disabled';
-
-const directionPropType = PropTypes.oneOf(['horizontal', 'vertical']);
+const
+	dataContainerDisabledAttribute = 'data-container-disabled',
+	directionPropType = PropTypes.oneOf(['horizontal', 'vertical']);
 
 /**
  * {@link moonstone/Scroller.ScrollerBase} is a base component for Scroller.
@@ -72,11 +72,11 @@ class ScrollerBase extends Component {
 	static contextTypes = contextTypes
 
 	static defaultProps = {
-		direction: 'vertical'
+		direction: ['horizontal', 'vertical']
 	}
 
 	constructor (props) {
-		super();
+		super(props);
 
 		if (props.horizontal) {
 			deprecate({name: 'horizontal', since: '1.3.0', message: 'Use `direction` instead', until: '2.0.0'});
@@ -287,22 +287,18 @@ class ScrollerBase extends Component {
 	}
 
 	isVertical = () => {
-		const {horizontal, vertical, direction} = this.props;
+		const {vertical, direction} = this.props;
 		if (vertical) {
 			return (vertical !== 'hidden');
-		} else if (horizontal) {
-			return true; /* only `horizontal` prop exists, assume `vertical` is 'auto' */
 		} else { /* if there is no `horizontal` or `vertical`, only consider `direction` */
 			return (direction !== 'horizontal');
 		}
 	}
 
 	isHorizontal = () => {
-		const {horizontal, vertical, direction} = this.props;
+		const {horizontal, direction} = this.props;
 		if (horizontal) {
 			return (horizontal !== 'hidden');
-		} else if (vertical) {
-			return true; /* only `vertical` prop exists, assume `horizontal` is 'auto' */
 		} else { /* if there is no `horizontal` or `vertical`, only consider `direction` */
 			return (direction !== 'vertical');
 		}
