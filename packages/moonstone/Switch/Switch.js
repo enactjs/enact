@@ -10,6 +10,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Icon from '../Icon';
+import Skinnable from '../Skinnable';
 
 import css from './Switch.less';
 
@@ -22,7 +23,7 @@ import css from './Switch.less';
  * @ui
  * @public
  */
-const SwitchBase = kind({
+const SwitchBare = kind({
 	name: 'Switch',
 
 	propTypes: /** @lends moonstone/Switch.Switch.prototype */ {
@@ -104,6 +105,8 @@ const SwitchBase = kind({
 		);
 	}
 });
+
+const SwitchBase = Skinnable(SwitchBare);
 
 export default SwitchBase;
 export {SwitchBase as Switch, SwitchBase};

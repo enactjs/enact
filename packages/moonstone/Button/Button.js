@@ -17,6 +17,7 @@ import PropTypes from 'prop-types';
 import Icon from '../Icon';
 import {MarqueeDecorator} from '../Marquee';
 import {TooltipDecorator} from '../TooltipDecorator';
+import Skinnable from '../Skinnable';
 
 import componentCss from './Button.less';
 
@@ -262,7 +263,9 @@ const ButtonFactory = factory(css => {
 				{className: componentCss.marquee},
 				Pressable(
 					Spottable(
-						Base
+						Skinnable(
+							Base
+						)
 					)
 				)
 			)

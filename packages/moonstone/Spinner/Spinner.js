@@ -12,6 +12,7 @@ import React, {Component} from 'react';
 import Spotlight from '@enact/spotlight';
 
 import {MarqueeText} from '../Marquee';
+import Skinnable from '../Skinnable';
 
 import css from './Spinner.less';
 
@@ -23,7 +24,7 @@ import css from './Spinner.less';
  * @ui
  * @private
  */
-const SpinnerCore = kind({
+const SpinnerCoreBare = kind({
 	name: 'SpinnerCore',
 
 	computed: {
@@ -47,6 +48,8 @@ const SpinnerCore = kind({
 		</div>
 	)
 });
+
+const SpinnerCore = Skinnable(SpinnerCoreBare);
 
 /**
  * {@link moonstone/Spinner.SpinnerBase} is a component that shows a spinning

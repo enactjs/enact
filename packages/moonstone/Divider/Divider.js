@@ -25,7 +25,7 @@ const MarqueeH3 = Uppercase(MarqueeDecorator('h3'));
  * @ui
  * @public
  */
-const DividerBase = kind({
+const DividerBare = kind({
 	name: 'Divider',
 
 	propTypes: /** @lends moonstone/Divider.Divider.prototype */ {
@@ -102,5 +102,7 @@ const DividerBase = kind({
 	}
 });
 
-export default Skinnable(DividerBase);
+const DividerBase = Skinnable(DividerBare);
+
+export default DividerBase;
 export {DividerBase as Divider, DividerBase};

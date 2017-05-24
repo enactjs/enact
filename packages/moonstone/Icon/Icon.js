@@ -9,6 +9,7 @@ import kind from '@enact/core/kind';
 import ri from '@enact/ui/resolution';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Skinnable from '../Skinnable';
 
 import iconList from './IconList.js';
 
@@ -66,7 +67,7 @@ const isSingleCharacter = function (c) {
  * @ui
  * @public
  */
-const IconBase = kind({
+const IconBare = kind({
 	name: 'Icon',
 
 	propTypes: /** @lends moonstone/Icon.Icon.prototype */ {
@@ -162,6 +163,8 @@ const IconBase = kind({
 		return <div {...rest} {...iconProps} />;
 	}
 });
+
+const IconBase = Skinnable(IconBare);
 
 // Let's find a way to import this list directly, and bonus feature, render our icons in the docs next to their names.
 /**

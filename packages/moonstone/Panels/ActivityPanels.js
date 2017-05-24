@@ -1,3 +1,5 @@
+import Skinnable from '../Skinnable';
+
 import {ActivityArranger} from './Arrangers';
 import BreadcrumbDecorator from './BreadcrumbDecorator';
 import {PanelsBase} from './Panels';
@@ -16,11 +18,11 @@ import {PanelsBase} from './Panels';
  * @ui
  * @public
  */
-const ActivityPanels = BreadcrumbDecorator({
-	className: 'panels activity enact-fit',
+const ActivityPanels = Skinnable(BreadcrumbDecorator({
+	className: 'panelsRoot activity enact-fit',
 	max: 1,
 	panelArranger: ActivityArranger
-}, PanelsBase);
+}, PanelsBase));
 
 export default ActivityPanels;
 export {ActivityPanels};

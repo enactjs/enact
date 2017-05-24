@@ -18,6 +18,7 @@ import Transition from '@enact/ui/Transition';
 import {forward} from '@enact/core/handle';
 
 import IconButton from '../IconButton';
+import Skinnable from '../Skinnable';
 
 import css from './Popup.less';
 
@@ -42,7 +43,7 @@ const forwardHide = forward('onHide');
  * @ui
  * @public
  */
-const PopupBase = kind({
+const PopupBare = kind({
 	name: 'PopupBase',
 
 	propTypes: /** @lends moonstone/Popup.PopupBase.prototype */ {
@@ -129,7 +130,7 @@ const PopupBase = kind({
 
 	styles: {
 		css,
-		className: 'popup moonstone-light'
+		className: 'popup'
 	},
 
 	computed: {
@@ -177,6 +178,11 @@ const PopupBase = kind({
 		);
 	}
 });
+
+const PopupBase = Skinnable(
+	{defaultSkin: 'light'},
+	PopupBare
+);
 
 /**
  * {@link moonstone/Popup.Popup} is a stateful component that help {@link moonstone/Popup.PopupBase}

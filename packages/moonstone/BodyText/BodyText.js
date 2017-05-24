@@ -8,6 +8,7 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Skinnable from '../Skinnable';
 
 import css from './BodyText.less';
 
@@ -20,7 +21,7 @@ import css from './BodyText.less';
  * @ui
  * @public
  */
-const BodyTextBase = kind({
+const BodyTextBare = kind({
 	name: 'BodyText',
 
 	propTypes: /** @lends moonstone/BodyText.BodyText.prototype */ {
@@ -55,6 +56,8 @@ const BodyTextBase = kind({
 		);
 	}
 });
+
+const BodyTextBase = Skinnable(BodyTextBare);
 
 export default BodyTextBase;
 export {BodyTextBase as BodyText, BodyTextBase};

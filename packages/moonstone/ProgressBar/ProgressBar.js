@@ -10,6 +10,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {validateRange} from '../internal/validators';
+import Skinnable from '../Skinnable';
 
 import css from './ProgressBar.less';
 
@@ -25,7 +26,7 @@ const progressToPercent = (value) => (clamp(0, 1, value) * 100) + '%';
  * @ui
  * @public
  */
-const ProgressBarBase = kind({
+const ProgressBarBare = kind({
 	name: 'ProgressBar',
 
 	propTypes: /** @lends moonstone/ProgressBar.ProgressBar.prototype */ {
@@ -95,6 +96,8 @@ const ProgressBarBase = kind({
 		);
 	}
 });
+
+const ProgressBarBase = Skinnable(ProgressBarBare);
 
 export default ProgressBarBase;
 export {ProgressBarBase as ProgressBar, ProgressBarBase};

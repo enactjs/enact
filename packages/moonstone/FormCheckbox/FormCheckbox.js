@@ -10,6 +10,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Icon from '../Icon';
+import Skinnable from '../Skinnable';
 
 import css from './FormCheckbox.less';
 
@@ -23,7 +24,7 @@ import css from './FormCheckbox.less';
  * @ui
  * @public
  */
-const FormCheckboxBase = kind({
+const FormCheckboxBare = kind({
 	name: 'FormCheckbox',
 
 	propTypes: /** @lends moonstone/FormCheckbox.FormCheckbox.prototype */ {
@@ -92,6 +93,8 @@ const FormCheckboxBase = kind({
 		);
 	}
 });
+
+const FormCheckboxBase = Skinnable(FormCheckboxBare);
 
 export default FormCheckboxBase;
 export {FormCheckboxBase as FormCheckbox, FormCheckboxBase};

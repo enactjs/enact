@@ -10,6 +10,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Icon from '../Icon';
+import Skinnable from '../Skinnable';
 
 import css from './Checkbox.less';
 
@@ -21,7 +22,7 @@ import css from './Checkbox.less';
  * @ui
  * @public
  */
-const CheckboxBase = kind({
+const CheckboxBare = kind({
 	name: 'Checkbox',
 
 	propTypes: /** @lends moonstone/Checkbox.Checkbox.prototype */ {
@@ -90,6 +91,8 @@ const CheckboxBase = kind({
 		);
 	}
 });
+
+const CheckboxBase = Skinnable(CheckboxBare);
 
 export default CheckboxBase;
 export {CheckboxBase as Checkbox, CheckboxBase};

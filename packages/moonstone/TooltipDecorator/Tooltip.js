@@ -3,6 +3,8 @@ import Uppercase from '@enact/i18n/Uppercase';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import Skinnable from '../Skinnable';
+
 import TooltipLabel from './TooltipLabel';
 import css from './Tooltip.less';
 
@@ -133,7 +135,7 @@ const TooltipBase = kind({
  * @ui
  * @public
  */
-const Tooltip = Uppercase(TooltipBase);
+const Tooltip = Skinnable(Uppercase(TooltipBase));
 
 export default Tooltip;
 export {Tooltip, TooltipBase};

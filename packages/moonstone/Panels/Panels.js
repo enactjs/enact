@@ -3,6 +3,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {shape} from '@enact/ui/ViewManager';
 
+import Skinnable from '../Skinnable';
+
 import ApplicationCloseButton from './ApplicationCloseButton';
 import CancelDecorator from './CancelDecorator';
 import Viewport from './Viewport';
@@ -15,7 +17,7 @@ import css from './Panels.less';
  * @class Panels
  * @memberof moonstone/Panels
  */
-const PanelsBase = kind({
+const PanelsBare = kind({
 	name: 'Panels',
 
 	propTypes: /** @lends moonstone/Panels.Panels.prototype */ {
@@ -102,7 +104,7 @@ const PanelsBase = kind({
 		delete rest.onBack;
 
 		return (
-			<div {...rest}>
+			<div {...rest} rel="what is this">
 				{applicationCloseButton}
 				<Viewport noAnimation={noAnimation} arranger={arranger} index={index}>
 					{children}
@@ -112,6 +114,7 @@ const PanelsBase = kind({
 	}
 });
 
+const PanelsBase = Skinnable(PanelsBare);
 const Panels = CancelDecorator({cancel: 'onBack'}, PanelsBase);
 
 export default Panels;

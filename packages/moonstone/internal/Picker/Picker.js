@@ -9,6 +9,7 @@ import shouldUpdate from 'recompose/shouldUpdate';
 import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
 import {getDirection} from '@enact/spotlight';
 import {validateRange, validateStepped} from '../validators';
+import Skinnable from '../../Skinnable';
 
 import PickerButton from './PickerButton';
 
@@ -648,6 +649,8 @@ const Picker = class extends React.Component {
 	}
 };
 
-export default Picker;
-export {Picker};
+const SkinnedPicker = Skinnable(Picker);
+
+export default SkinnedPicker;
+export {SkinnedPicker as Picker};
 export PickerItem from './PickerItem';

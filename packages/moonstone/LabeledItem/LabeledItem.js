@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 
 import Icon from '../Icon';
 import Item from '../Item';
+import Skinnable from '../Skinnable';
 import {MarqueeController, MarqueeText} from '../Marquee';
 
 const Controller = MarqueeController(Item);
@@ -25,7 +26,7 @@ import css from './LabeledItem.less';
  * @ui
  * @public
  */
-const LabeledItemBase = kind({
+const LabeledItemBare = kind({
 	name: 'LabeledItem',
 
 	propTypes: /** @lends moonstone/LabeledItem.LabeledItemBase.prototype */ {
@@ -70,6 +71,8 @@ const LabeledItemBase = kind({
 		</Controller>
 	)
 });
+
+const LabeledItemBase = Skinnable(LabeledItemBare);
 
 export default LabeledItemBase;
 export {LabeledItemBase as LabeledItem, LabeledItemBase};
