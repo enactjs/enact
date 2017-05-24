@@ -138,8 +138,7 @@ const VideoPlayerBase = class extends React.Component {
 		/**
 		 * passed by AnnounceDecorator for accessibility
 		 *
-		 * @type {Number}
-		 * @default 7000
+		 * @type {Function}
 		 * @private
 		 */
 		announce: PropTypes.func,
