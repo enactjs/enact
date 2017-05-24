@@ -11,6 +11,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 - `moonstone/VideoPlayer` to set play/pause icon to display "play" when rewinding or fast forwarding
+- `moonstone/Skinnable` to support context and allow it to be added to any component to be individually skinned. This includes a further optimization in skinning which consolidates all color assignments into a single block, so non-color rules aren't unnecessarily duplicated.
 
 ### Fixed
 - `moonstone/GridListImageItem` to center its selection icon on the image instead of the item
