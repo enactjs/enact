@@ -132,6 +132,16 @@ const Spotlight = (function () {
 	* protected methods
 	*/
 
+	function preventDefault (evt) {
+		evt.preventDefault();
+		evt.stopPropagation();
+		return false;
+	}
+
+	function shouldPreventNavigation () {
+		return (!getAllContainerIds().length || _pause);
+	}
+
 	function getCurrent () {
 		let activeElement = document.activeElement;
 		if (activeElement && activeElement !== document.body) {
@@ -145,6 +155,167 @@ const Spotlight = (function () {
 		}
 
 		return isNavigableInContainer(elem, containerId, verifyContainerSelector);
+	}
+
+	function isFocusable (elem) {
+		return getContainersForNode(elem).reduce((focusable, id) => {
+			return focusable || isNavigable(elem, id, true);
+		}, false);
+	}
+
+	function getContainersToSearch (containerId) {
+		let range = [];
+		let addRange = function (id) {
+			const config = getContainerConfig(id);
+			if (id && range.indexOf(id) < 0 &&
+					config && !config.selectorDisabled) {
+				range.push(id);
+			}
+		};
+
+		if (containerId) {
+			addRange(containerId);
+		} else {
+			addRange(_defaultContainerId);
+			addRange(_lastContainerId);
+			[...getAllContainerIds()].map(addRange);
+		}
+
+		return range;
+	}
+
+	function getTargetByContainer (containerId) {
+		return getContainersToSearch(containerId)
+			.reduce((next, id) => {
+				return next || getContainerFocusTarget(id);
+			}, null);
+	}
+
+	function getTargetBySelector (selector) {
+		if (!selector) return null;
+
+		if (selector.charAt(0) === '@') {
+			const containerId = selector.length === 1 ? null : selector.substr(1);
+
+			return getTargetByContainer(containerId);
+		}
+
+		const next = parseSelector(selector)[0];
+		if (next) {
+			const nextContainerIds = getContainersForNode(next);
+			if (isNavigable(next, last(nextContainerIds))) {
+				return next;
+			}
+		}
+	}
+
+	function getTargetByDirectionFromElement (direction, element) {
+		const extSelector = element.getAttribute('data-spot-' + direction);
+		if (typeof extSelector === 'string') {
+			const nextBySelector = getTargetBySelector(extSelector);
+
+			return focusElement(nextBySelector);
+		}
+
+		const currentRect = getRect(element);
+		let next = getNavigableElementsForNode(
+			element,
+			(containerId, container, elements) => {
+				const previous = getContainerPreviousTarget(containerId, direction, element);
+				if (previous && elements.indexOf(previous) !== -1) {
+					return previous;
+				} else {
+					return navigate(
+						currentRect,
+						direction,
+						getRects(elements),
+						getContainerConfig(containerId)
+					);
+				}
+			}
+		);
+
+		if (!next) {
+			next = getLeaveForTarget(getContainersForNode(element), direction);
+		}
+
+		if (next && isContainer(next)) {
+			const containerRect = getRect(next);
+
+			if (contains(containerRect, currentRect)) {
+				// if the next element is a container AND the current element is *visually*
+				// contained within the next element, we need to ignore container `enterTo`
+				// preferences and retrieve its spottable descendants and try to navigate to them.
+				const nextContainerId = next.dataset.containerId;
+				next = navigate(
+					currentRect,
+					direction,
+					getRects(getSpottableDescendants(nextContainerId)),
+					getContainerConfig(nextContainerId)
+				);
+			} else {
+				next = getTargetByContainer(next.dataset.containerId);
+			}
+		}
+
+		return next;
+	}
+
+	function getTargetByDirectionFromPosition (direction, position, containerId) {
+		const config = getContainerConfig(containerId);
+		let candidates;
+
+		if (config.restrict === 'self-only' || config.restrict === 'self-first') {
+			candidates = getSpottableDescendants(containerId);
+		} else {
+			candidates = getAllNavigableElements();
+		}
+
+		return navigate(
+			getPointRect(position),
+			direction,
+			getRects(candidates),
+			config
+		);
+	}
+
+	function getLeaveForTarget (containerIds, direction) {
+		return containerIds
+			.reverse()
+			.map(getContainerConfig)
+			.filter(config => config.leaveFor && typeof config.leaveFor[direction] !== 'undefined')
+			.reduce((next, config) => {
+				if (next) return next;
+
+				const target = config.leaveFor[direction];
+				if (typeof target === 'string') {
+					if (target === '') {
+						return null;
+					}
+					return getTargetBySelector(target);
+				}
+
+				const nextContainerIds = getContainersForNode(target);
+				if (isNavigable(target, last(nextContainerIds))) {
+					return target;
+				}
+			}, null);
+	}
+
+	function getNavigableTarget (target) {
+		let parent;
+		while (target && (isContainer(target) || !isFocusable(target))) {
+			parent = target.parentNode;
+			target = parent === document ? null : parent; // calling isNavigable on document is problematic
+		}
+		return target;
+	}
+
+	function getAllNavigableElements () {
+		return getAllContainerIds()
+			.map(getSpottableDescendants)
+			.reduce(concat, [])
+			.filter(n => !isContainer(n));
 	}
 
 	function focusElement (elem, containerIds, fromPointer) {
@@ -203,221 +374,37 @@ const Spotlight = (function () {
 		}
 	}
 
-	function focusExtendedSelector (selector) {
-		if (selector.charAt(0) === '@') {
-			if (selector.length === 1) {
-				return focusContainer();
-			} else {
-				let containerId = selector.substr(1);
-				return focusContainer(containerId);
-			}
-		} else {
-			let next = parseSelector(selector)[0];
-			if (next) {
-				const nextContainerIds = getContainersForNode(next);
-				if (isNavigable(next, last(nextContainerIds))) {
-					return focusElement(next, nextContainerIds);
-				}
-			}
-		}
-		return false;
-	}
-
-	function focusContainer (containerId) {
-		let range = [];
-		let addRange = function (id) {
-			const config = getContainerConfig(id);
-			if (id && range.indexOf(id) < 0 &&
-					config && !config.selectorDisabled) {
-				range.push(id);
-			}
-		};
-
-		if (containerId) {
-			addRange(containerId);
-		} else {
-			addRange(_defaultContainerId);
-			addRange(_lastContainerId);
-			[...getAllContainerIds()].map(addRange);
-		}
-
-		for (let i = 0; i < range.length; i++) {
-			let id = range[i];
-			const next = getContainerFocusTarget(id);
-			if (next) {
-				const ids = getContainersForNode(next);
-				return focusElement(next, ids);
-			}
-		}
-
-		return false;
-	}
-
-	function gotoLeaveFor (containerIds, direction) {
-		for (let i = containerIds.length; i-- > 0;) {
-			const config = getContainerConfig(containerIds[i]);
-
-			if (config.leaveFor && typeof config.leaveFor[direction] !== 'undefined') {
-				const next = config.leaveFor[direction];
-
-				if (typeof next === 'string') {
-					if (next === '') {
-						return null;
-					}
-					return focusExtendedSelector(next);
-				}
-
-				const nextContainerIds = getContainersForNode(next);
-				if (isNavigable(next, last(nextContainerIds))) {
-					return focusElement(next, nextContainerIds);
-				}
-			}
-		}
-		return false;
-	}
-
-	function getAllNavigableElements () {
-		return getAllContainerIds()
-			.map(getSpottableDescendants)
-			.reduce(concat, [])
-			.filter(n => !isContainer(n));
-	}
-
-	function focusNext (next, direction, currentContainerIds, currentFocusedElement) {
-		const nextContainerIds = getContainersForNode(next);
-		const nextContainerId = last(nextContainerIds);
-		const currentContainerId = last(currentContainerIds);
-
-		if (currentContainerId !== nextContainerId) {
-			if (nextContainerIds.indexOf(currentContainerId) < 0) {
-				if (_5WayKeyHold) {
-					return false;
-				}
-				const result = gotoLeaveFor(difference(currentContainerIds, nextContainerIds), direction);
-
-				if (result) {
-					return true;
-				} else if (result === null) {
-					return false;
-				}
-			}
-
-			let enterToElement;
-			if (!isNavigable(currentFocusedElement, nextContainerId, true)) {
-				switch (getContainerConfig(nextContainerId).enterTo) {
-					case 'last-focused':
-						enterToElement = getContainerLastFocusedElement(nextContainerId) || getContainerDefaultElement(nextContainerId);
-						break;
-					case 'default-element':
-						enterToElement = getContainerDefaultElement(nextContainerId);
-						break;
-				}
-			}
-			if (enterToElement) {
-				next = enterToElement;
-			}
-		}
-
-		return focusElement(next, nextContainerIds);
-	}
-
-	function spotNextFromPoint (direction, position, containerId) {
-		const config = getContainerConfig(containerId);
-		let candidates, next;
-
-		if (config.restrict === 'self-only' || config.restrict === 'self-first') {
-			candidates = getSpottableDescendants(containerId);
-		} else {
-			candidates = getAllNavigableElements();
-		}
-
-		next = navigate(
-			getPointRect(position),
-			direction,
-			getRects(candidates),
-			config
-		);
+	function spotNextFromPoint (direction, position) {
+		const next = getTargetByDirectionFromPosition(direction, position, _lastContainerId);
 
 		if (next) {
 			setContainerPreviousTarget(
-				containerId,
+				_lastContainerId,
 				direction,
 				next,
 				getContainerLastFocusedElement(_lastContainerId)
 			);
-			return focusNext(next, direction, getContainersForNode(next));
+
+			return focusElement(next, getContainersForNode(next));
 		}
 
 		return false;
 	}
 
 	function spotNext (direction, currentFocusedElement, currentContainerIds) {
-		const extSelector = currentFocusedElement.getAttribute('data-spot-' + direction);
-		if (typeof extSelector === 'string') {
-			if (extSelector === '' || !focusExtendedSelector(extSelector)) {
-				return false;
-			}
-			return true;
-		}
-
-		const currentContainerId = last(currentContainerIds);
-		const currentRect = getRect(currentFocusedElement);
-		let next = getNavigableElementsForNode(
-			currentFocusedElement,
-			(containerId, container, elements) => {
-				const previous = getContainerPreviousTarget(containerId, direction, currentFocusedElement);
-				if (previous && elements.indexOf(previous) !== -1) {
-					return previous;
-				} else {
-					return navigate(
-						currentRect,
-						direction,
-						getRects(elements),
-						getContainerConfig(containerId)
-					);
-				}
-			}
-		);
-
-		// if the next element is a container AND the current element is *visually* contained within
-		// the next element, we need to ignore container `enterTo` preferences and retreive its
-		// spottable descendants and try to navigate to them.
-		if (next && isContainer(next)) {
-			const containerRect = getRect(next);
-
-			if (contains(containerRect, currentRect)) {
-				const nextContainerId = next.dataset.containerId;
-				next = navigate(
-					currentRect,
-					direction,
-					getRects(getSpottableDescendants(nextContainerId)),
-					getContainerConfig(nextContainerId)
-				);
-			}
-		}
+		const next = getTargetByDirectionFromElement(direction, currentFocusedElement);
 
 		if (next) {
 			setContainerPreviousTarget(
-				currentContainerId,
+				last(currentContainerIds),
 				direction,
 				next,
 				currentFocusedElement
 			);
-			if (isContainer(next)) {
-				return focusContainer(next.dataset.containerId);
-			} else {
-				return focusNext(next, direction, currentContainerIds, currentFocusedElement);
-			}
-		} else if (gotoLeaveFor(currentContainerIds, direction)) {
-			return true;
+
+			return focusElement(next, getContainersForNode(next));
 		}
 
-		return false;
-	}
-
-	function preventDefault (evt) {
-		evt.preventDefault();
-		evt.stopPropagation();
 		return false;
 	}
 
@@ -430,24 +417,22 @@ const Spotlight = (function () {
 				currentFocusedElement = getContainerLastFocusedElement(_lastContainerId);
 			}
 			if (!currentFocusedElement) {
-				focusContainer();
+				focusElement(getTargetByContainer(), getContainersForNode(currentFocusedElement));
+
 				return preventDefault(evt);
 			}
 		}
 
 		const currentContainerIds = getContainersForNode(currentFocusedElement);
-		if (!currentContainerIds.length) {
-			return;
-		}
-
-		if (direction && !spotNext(direction, currentFocusedElement, currentContainerIds) && currentFocusedElement !== document.activeElement) {
+		if (
+			direction &&
+			!spotNext(direction, currentFocusedElement, currentContainerIds) &&
+			currentFocusedElement !== document.activeElement
+		) {
 			focusElement(currentFocusedElement, currentContainerIds);
 		}
 	}
 
-	function shouldPreventNavigation () {
-		return (!getAllContainerIds().length || _pause);
-	}
 
 	function onKeyUp (evt) {
 		const keyCode = evt.keyCode;
@@ -480,7 +465,7 @@ const Spotlight = (function () {
 		if (!_pause) {
 			if (getCurrent()) {
 				SpotlightAccelerator.processKey(evt, onAcceleratedKeyDown);
-			} else if (!spotNextFromPoint(direction, getLastPointerPosition(), _lastContainerId)) {
+			} else if (!spotNextFromPoint(direction, getLastPointerPosition())) {
 				Spotlight.focus(getContainerLastFocusedElement(_lastContainerId));
 			}
 			_5WayKeyHold = true;
@@ -489,21 +474,6 @@ const Spotlight = (function () {
 		if (direction) {
 			preventDefault(evt);
 		}
-	}
-
-	function getNavigableTarget (target) {
-		let parent;
-		while (target && (isContainer(target) || !isFocusable(target))) {
-			parent = target.parentNode;
-			target = parent === document ? null : parent; // calling isNavigable on document is problematic
-		}
-		return target;
-	}
-
-	function isFocusable (elem) {
-		return getContainersForNode(elem).reduce((focusable, id) => {
-			return focusable || isNavigable(elem, id, true);
-		}, false);
 	}
 
 	function onMouseMove ({target, clientX, clientY}) {
@@ -718,25 +688,25 @@ const Spotlight = (function () {
 		 * @public
 		 */
 		focus: function (elem) {
-			let result = false;
+			let target = elem;
 
 			if (!elem) {
-				result = focusContainer();
+				target = getTargetByContainer();
 			} else if (typeof elem === 'string') {
 				if (getContainerConfig(elem)) {
-					result = focusContainer(elem);
+					target = getTargetByContainer(elem);
 				} else {
-					result = focusExtendedSelector(elem);
-				}
-			} else {
-				const nextContainerIds = getContainersForNode(elem);
-				const nextContainerId = last(nextContainerIds);
-				if (isNavigable(elem, nextContainerId)) {
-					result = focusElement(elem, nextContainerIds);
+					target = getTargetBySelector(elem);
 				}
 			}
 
-			return result;
+			const nextContainerIds = getContainersForNode(target);
+			const nextContainerId = last(nextContainerIds);
+			if (isNavigable(target, nextContainerId)) {
+				return focusElement(target, nextContainerIds);
+			}
+
+			return false;
 		},
 
 		// move(<direction>)
