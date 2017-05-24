@@ -27,6 +27,9 @@ const reverseDirections = {
 // Incrementer for container IDs
 let _ids = 0;
 
+let _defaultContainerId = '';
+let _lastContainerId = '';
+
 // Note: an <extSelector> can be one of following types:
 // - a valid selector string for "querySelectorAll"
 // - a NodeList or an array containing DOM elements
@@ -465,7 +468,7 @@ const configureDefaults = (config) => {
  * @public
  */
 const isNavigable = (node, containerId, verify) => {
-	if (!node) {
+	if (!node || (node.offsetWidth <= 0 && node.offsetHeight <= 0)) {
 		return false;
 	}
 
@@ -732,6 +735,28 @@ function unmountContainer (containerId) {
 	}
 }
 
+function getDefaultContainer () {
+	return _defaultContainerId;
+}
+
+function setDefaultContainer (containerId) {
+	if (!containerId) {
+		_defaultContainerId = '';
+	} else if (!getContainerConfig(containerId)) {
+		throw new Error('Container "' + containerId + '" doesn\'t exist!');
+	} else {
+		_defaultContainerId = containerId;
+	}
+}
+
+function getLastContainer () {
+	return _lastContainerId;
+}
+
+function setLastContainer (containerId) {
+	_lastContainerId = containerId;
+}
+
 export {
 	// Remove
 	getAllContainerIds,
@@ -750,6 +775,8 @@ export {
 	configureContainer,
 	getContainerFocusTarget,
 	getContainerPreviousTarget,
+	getDefaultContainer,
+	getLastContainer,
 	getNavigableElementsForNode,
 	getSpottableDescendants,
 	isContainer,
@@ -758,5 +785,7 @@ export {
 	removeContainer,
 	rootContainerId,
 	setContainerPreviousTarget,
+	setDefaultContainer,
+	setLastContainer,
 	unmountContainer
 };

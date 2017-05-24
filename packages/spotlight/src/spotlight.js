@@ -17,11 +17,7 @@
  */
 
 import {is} from '@enact/core/keymap';
-import concat from 'ramda/src/concat';
-import difference from 'ramda/src/difference';
 import last from 'ramda/src/last';
-
-import {contains} from './utils';
 
 import Accelerator from '../Accelerator';
 import {spottableClass} from '../Spottable';
@@ -31,23 +27,22 @@ import {
 	configureDefaults,
 	getAllContainerIds,
 	getContainerConfig,
-	getContainerDefaultElement,
-	getContainerFocusTarget,
 	getContainerLastFocusedElement,
-	getContainerPreviousTarget,
 	getContainersForNode,
-	getNavigableElementsForNode,
+	getLastContainer,
 	getSpottableDescendants,
 	isContainer,
-	isNavigable as isNavigableInContainer,
+	isNavigable,
 	unmountContainer,
 	removeAllContainers,
 	removeContainer,
 	rootContainerId,
 	setContainerLastFocusedElement,
-	setContainerPreviousTarget
+	setContainerPreviousTarget,
+	setDefaultContainer,
+	setLastContainer
 } from './container';
-import navigate from './navigate';
+
 import {
 	getLastPointerPosition,
 	getPointerMode,
@@ -55,10 +50,16 @@ import {
 	notifyPointerMove,
 	setPointerMode
 } from './pointer';
+
 import {
-	getPointRect,
-	getRect,
-	getRects,
+	getNavigableTarget,
+	getTargetByContainer,
+	getTargetByDirectionFromElement,
+	getTargetByDirectionFromPosition,
+	getTargetBySelector
+} from './target';
+
+import {
 	matchSelector,
 	parseSelector
 } from './utils';
@@ -116,8 +117,6 @@ const Spotlight = (function () {
 	*/
 	let _initialized = false;
 	let _pause = false;
-	let _defaultContainerId = '';
-	let _lastContainerId = '';
 	let _duringFocusChange = false;
 
 	/*
@@ -147,175 +146,6 @@ const Spotlight = (function () {
 		if (activeElement && activeElement !== document.body) {
 			return activeElement;
 		}
-	}
-
-	function isNavigable (elem, containerId, verifyContainerSelector) {
-		if (!elem || (elem.offsetWidth <= 0 && elem.offsetHeight <= 0)) {
-			return false;
-		}
-
-		return isNavigableInContainer(elem, containerId, verifyContainerSelector);
-	}
-
-	function isFocusable (elem) {
-		return getContainersForNode(elem).reduce((focusable, id) => {
-			return focusable || isNavigable(elem, id, true);
-		}, false);
-	}
-
-	function getContainersToSearch (containerId) {
-		let range = [];
-		let addRange = function (id) {
-			const config = getContainerConfig(id);
-			if (id && range.indexOf(id) < 0 &&
-					config && !config.selectorDisabled) {
-				range.push(id);
-			}
-		};
-
-		if (containerId) {
-			addRange(containerId);
-		} else {
-			addRange(_defaultContainerId);
-			addRange(_lastContainerId);
-			[...getAllContainerIds()].map(addRange);
-		}
-
-		return range;
-	}
-
-	function getTargetByContainer (containerId) {
-		return getContainersToSearch(containerId)
-			.reduce((next, id) => {
-				return next || getContainerFocusTarget(id);
-			}, null);
-	}
-
-	function getTargetBySelector (selector) {
-		if (!selector) return null;
-
-		if (selector.charAt(0) === '@') {
-			const containerId = selector.length === 1 ? null : selector.substr(1);
-
-			return getTargetByContainer(containerId);
-		}
-
-		const next = parseSelector(selector)[0];
-		if (next) {
-			const nextContainerIds = getContainersForNode(next);
-			if (isNavigable(next, last(nextContainerIds))) {
-				return next;
-			}
-		}
-	}
-
-	function getTargetByDirectionFromElement (direction, element) {
-		const extSelector = element.getAttribute('data-spot-' + direction);
-		if (typeof extSelector === 'string') {
-			const nextBySelector = getTargetBySelector(extSelector);
-
-			return focusElement(nextBySelector);
-		}
-
-		const currentRect = getRect(element);
-		let next = getNavigableElementsForNode(
-			element,
-			(containerId, container, elements) => {
-				const previous = getContainerPreviousTarget(containerId, direction, element);
-				if (previous && elements.indexOf(previous) !== -1) {
-					return previous;
-				} else {
-					return navigate(
-						currentRect,
-						direction,
-						getRects(elements),
-						getContainerConfig(containerId)
-					);
-				}
-			}
-		);
-
-		if (!next) {
-			next = getLeaveForTarget(getContainersForNode(element), direction);
-		}
-
-		if (next && isContainer(next)) {
-			const containerRect = getRect(next);
-
-			if (contains(containerRect, currentRect)) {
-				// if the next element is a container AND the current element is *visually*
-				// contained within the next element, we need to ignore container `enterTo`
-				// preferences and retrieve its spottable descendants and try to navigate to them.
-				const nextContainerId = next.dataset.containerId;
-				next = navigate(
-					currentRect,
-					direction,
-					getRects(getSpottableDescendants(nextContainerId)),
-					getContainerConfig(nextContainerId)
-				);
-			} else {
-				next = getTargetByContainer(next.dataset.containerId);
-			}
-		}
-
-		return next;
-	}
-
-	function getTargetByDirectionFromPosition (direction, position, containerId) {
-		const config = getContainerConfig(containerId);
-		let candidates;
-
-		if (config.restrict === 'self-only' || config.restrict === 'self-first') {
-			candidates = getSpottableDescendants(containerId);
-		} else {
-			candidates = getAllNavigableElements();
-		}
-
-		return navigate(
-			getPointRect(position),
-			direction,
-			getRects(candidates),
-			config
-		);
-	}
-
-	function getLeaveForTarget (containerIds, direction) {
-		return containerIds
-			.reverse()
-			.map(getContainerConfig)
-			.filter(config => config.leaveFor && typeof config.leaveFor[direction] !== 'undefined')
-			.reduce((next, config) => {
-				if (next) return next;
-
-				const target = config.leaveFor[direction];
-				if (typeof target === 'string') {
-					if (target === '') {
-						return null;
-					}
-					return getTargetBySelector(target);
-				}
-
-				const nextContainerIds = getContainersForNode(target);
-				if (isNavigable(target, last(nextContainerIds))) {
-					return target;
-				}
-			}, null);
-	}
-
-	function getNavigableTarget (target) {
-		let parent;
-		while (target && (isContainer(target) || !isFocusable(target))) {
-			parent = target.parentNode;
-			target = parent === document ? null : parent; // calling isNavigable on document is problematic
-		}
-		return target;
-	}
-
-	function getAllNavigableElements () {
-		return getAllContainerIds()
-			.map(getSpottableDescendants)
-			.reduce(concat, [])
-			.filter(n => !isContainer(n));
 	}
 
 	function focusElement (elem, containerIds, fromPointer) {
@@ -370,19 +200,20 @@ const Spotlight = (function () {
 		const containerId = last(containerIds);
 		if (containerId) {
 			setContainerLastFocusedElement(elem, containerIds);
-			_lastContainerId = containerId;
+			setLastContainer(containerId);
 		}
 	}
 
 	function spotNextFromPoint (direction, position) {
-		const next = getTargetByDirectionFromPosition(direction, position, _lastContainerId);
+		const containerId = getLastContainer();
+		const next = getTargetByDirectionFromPosition(direction, position, containerId);
 
 		if (next) {
 			setContainerPreviousTarget(
-				_lastContainerId,
+				containerId,
 				direction,
 				next,
-				getContainerLastFocusedElement(_lastContainerId)
+				getContainerLastFocusedElement(containerId)
 			);
 
 			return focusElement(next, getContainersForNode(next));
@@ -413,8 +244,9 @@ const Spotlight = (function () {
 		const direction = getDirection(evt.keyCode);
 
 		if (!currentFocusedElement) {
-			if (_lastContainerId) {
-				currentFocusedElement = getContainerLastFocusedElement(_lastContainerId);
+			const lastContainerId = getLastContainer();
+			if (lastContainerId) {
+				currentFocusedElement = getContainerLastFocusedElement(lastContainerId);
 			}
 			if (!currentFocusedElement) {
 				focusElement(getTargetByContainer(), getContainersForNode(currentFocusedElement));
@@ -444,8 +276,9 @@ const Spotlight = (function () {
 	}
 
 	function handlePointerHide () {
-		if (!getCurrent() && _lastContainerId) {
-			Spotlight.focus(getContainerLastFocusedElement(_lastContainerId));
+		const lastContainerId = getLastContainer();
+		if (!getCurrent() && lastContainerId) {
+			Spotlight.focus(getContainerLastFocusedElement(lastContainerId));
 		}
 	}
 
@@ -466,7 +299,7 @@ const Spotlight = (function () {
 			if (getCurrent()) {
 				SpotlightAccelerator.processKey(evt, onAcceleratedKeyDown);
 			} else if (!spotNextFromPoint(direction, getLastPointerPosition())) {
-				Spotlight.focus(getContainerLastFocusedElement(_lastContainerId));
+				Spotlight.focus(getContainerLastFocusedElement(getLastContainer()));
 			}
 			_5WayKeyHold = true;
 		}
@@ -532,7 +365,7 @@ const Spotlight = (function () {
 				window.addEventListener('keyup', onKeyUp);
 				window.addEventListener('mouseover', onMouseOver);
 				window.addEventListener('mousemove', onMouseMove);
-				_lastContainerId = rootContainerId;
+				setLastContainer(rootContainerId);
 				configureDefaults(containerDefaults);
 				configureContainer(rootContainerId);
 				_initialized = true;
@@ -560,8 +393,8 @@ const Spotlight = (function () {
 		 */
 		clear: function () {
 			removeAllContainers();
-			_defaultContainerId = '';
-			_lastContainerId = '';
+			setDefaultContainer();
+			setLastContainer();
 			_duringFocusChange = false;
 		},
 
@@ -614,7 +447,7 @@ const Spotlight = (function () {
 			}
 			if (getContainerConfig(containerId)) {
 				removeContainer(containerId);
-				if (_lastContainerId === containerId) {
+				if (getLastContainer() === containerId) {
 					Spotlight.setActiveContainer(null);
 				}
 				return true;
@@ -747,15 +580,7 @@ const Spotlight = (function () {
 		 * @returns {undefined}
 		 * @public
 		 */
-		setDefaultContainer: function (containerId) {
-			if (!containerId) {
-				_defaultContainerId = '';
-			} else if (!getContainerConfig(containerId)) {
-				throw new Error('Container "' + containerId + '" doesn\'t exist!');
-			} else {
-				_defaultContainerId = containerId;
-			}
-		},
+		setDefaultContainer,
 
 		/**
 		 * Sets the currently active container.
@@ -765,7 +590,7 @@ const Spotlight = (function () {
 		 * @public
 		 */
 		setActiveContainer: function (containerId) {
-			_lastContainerId = containerId || rootContainerId;
+			setLastContainer(containerId || rootContainerId);
 		},
 
 		/**
