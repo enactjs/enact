@@ -12,13 +12,23 @@ import {is} from '@enact/core/keymap';
 import deprecate from '@enact/core/internal/deprecate';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Spotlight from '@enact/spotlight';
+import {Spotlight, getDirection} from '@enact/spotlight';
 
 import {calcAriaLabel, Input} from '../Input';
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 
 const forwardMouseDown = forward('onMouseDown');
-import css from '../Input/Input.less';
+
+// A regex to check for input types that allow selectionStart
+const SELECTABLE_TYPES = /text|password|search|tel|url/;
+
+const safeSelectionStart = (target) => {
+	if (SELECTABLE_TYPES.test(target.type)) {
+		return target.selectionStart;
+	} else {
+		return 0;
+	}
+};
 
 /**
  * {@link moonstone/ExpandableInput.ExpandableInputBase} is a stateless component that
@@ -213,40 +223,29 @@ class ExpandableInputBase extends React.Component {
 	handleInputKeyDown = (ev) => {
 		const
 			keyCode = ev.keyCode,
+			direction = getDirection(keyCode),
 			isCancel = is('cancel', keyCode),
 			isEnter = is('enter', keyCode),
-			isUpDown = is('up', keyCode) || is('down', keyCode),
-			isLeftRight = is('left', keyCode) || is('right', keyCode),
-			isLeft = is('left', keyCode),
-			isRight = is('right', keyCode),
-			focusedItem = Spotlight.getCurrent();
+			isUpDown = (direction === 'up') || (direction === 'down'),
+			isLeft = direction === 'left',
+			isRight = direction === 'right',
+			isLeftRight = isLeft || isRight,
+			target = ev.target,
+			inputSelection = safeSelectionStart(target),
+			shouldSpotlightMove = target.value ? (isLeft && inputSelection === 0) || (isRight && inputSelection === target.value.length) : null;
 
 		if (isEnter) {
 			// prevent Enter onKeyPress which would re-open the expandable when the label
 			// receives focus
 			ev.preventDefault();
-		} else if (isUpDown || isLeftRight) {
-			const isInputDecoratorFocused = focusedItem.className.includes(css.decorator);
+		} else if ((isUpDown || isLeftRight) && (isLeftRight && shouldSpotlightMove)) {
+			const expandableLabel = target.parentNode.parentNode.parentNode.firstChild;
 
-			// prevent Spotlight handling 4-directions since closing expandable will spot expandableLabel
-			ev.nativeEvent.stopImmediatePropagation();
-
-			if (isLeftRight && isInputDecoratorFocused) {
-				const expandableLabel = ev.target.parentNode.parentNode.firstChild;
-				let direction = '';
-
-				if (isLeft) {
-					direction = 'left';
-				} else if (isRight) {
-					direction = 'right';
-				}
-
-				// stay open while moving spot outside of `ExpandableInput`
-				this.setState({inputInProgress: true}, () => {
-					// move spotlight from `ExpandableInput` instead of the currently focused `input`
-					Spotlight.move(direction, expandableLabel);
-				});
-			}
+			// stay open while moving spot outside of `ExpandableInput`
+			this.setState({inputInProgress: true}, () => {
+				// move spotlight from `ExpandableInput` instead of the currently focused `input`
+				Spotlight.move(direction, expandableLabel);
+			});
 		}
 
 		if (isCancel) {
@@ -254,12 +253,14 @@ class ExpandableInputBase extends React.Component {
 				value: this.state.initialValue
 			}, this.props);
 			this.setState({inputInProgress: false});
-		} else if (isUpDown && !isLeftRight) {
+		} else if (isUpDown) {
 			this.setState({inputInProgress: false}, () => {
 				this.fireCloseEvent();
 			});
 		} else if (isEnter) {
-			if (ev.target.tagName === 'INPUT') {
+			const isInputField = target.parentNode.getAttribute('data-expandable-input');
+
+			if (isInputField) {
 				this.setState({inputInProgress: false}, () => {
 					this.fireCloseEvent();
 				});
@@ -328,6 +329,7 @@ class ExpandableInputBase extends React.Component {
 				spotlightDisabled={spotlightDisabled}
 			>
 				<Input
+					data-expandable-input
 					disabled={disabled}
 					dismissOnEnter
 					iconAfter={iconAfter}
