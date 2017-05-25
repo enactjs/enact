@@ -899,7 +899,7 @@ const Spotlight = (function () {
 	/*
 	 * public methods
 	 */
-	const exports = /** @lends spotlight.SpotlightAccelerator */ { // eslint-disable-line no-shadow
+	const exports = /** @lends spotlight.Spotlight */ { // eslint-disable-line no-shadow
 		/**
 		 * Initializes Spotlight. This is generally handled by
 		 * {@link spotlight/SpotlightRootDecorator.SpotlightRootDecorator}.

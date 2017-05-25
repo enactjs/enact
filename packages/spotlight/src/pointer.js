@@ -1,3 +1,10 @@
+/**
+ * Exports methods and members for working with pointer events in spotlight
+ *
+ * @module spotlight/pointer
+ * @private
+ */
+
 import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';
 
@@ -10,7 +17,7 @@ import {Job} from '@enact/core/util';
  */
 let _pointerMode = true;
 
-/*
+/**
  * Sets the current pointer mode
  *
  * @param   {Boolean} pointerMode `true` to enable pointer mode; `false` to disable pointer mode
@@ -21,7 +28,7 @@ const setPointerMode = (pointerMode) => {
 	_pointerMode = pointerMode;
 };
 
-/*
+/**
  * Gets the current pointer mode
  *
  * @returns {Boolean} The current state of pointer mode
@@ -36,7 +43,7 @@ const getPointerMode = () => {
 let _pointerX = null;
 let _pointerY = null;
 
-/*
+/**
  * Updates the cached pointer position, updating the current pointer mode when the position has
  * changed.
  *
@@ -60,7 +67,7 @@ const updatePointerPosition = (x, y) => {
 	return false;
 };
 
-/*
+/**
  * Returns the last known position of the pointer
  *
  * @returns {Object} Contains `x` and `y` coordinates for the pointer
@@ -86,7 +93,7 @@ const hidePointerJob = new Job(function (callback) {
 }, 30);
 
 
-/*
+/**
  * Notifies spotlight of a change in the pointer position
  *
  * @param   {Node}     target   Node under the pointer
@@ -110,7 +117,7 @@ const notifyPointerMove = (current, target, x, y) => {
 	return false;
 };
 
-/*
+/**
  * Notifies the pointer module of key events. If the pointer should be hidden, a timer is set and
  * `callback` is invoked after the timer has expired and pointer mode has been disabled. For any
  * other type of key event, pointer mode is disabled and `false` is returned.

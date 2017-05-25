@@ -1,3 +1,10 @@
+/**
+ * Exports methods and members for creating and maintaining spotlight containers.
+ *
+ * @module spotlight/container
+ * @private
+ */
+
 import and from 'ramda/src/and';
 import concat from 'ramda/src/concat';
 import {coerceArray} from '@enact/core/util';
@@ -47,7 +54,7 @@ let GlobalConfig = {
 	}
 };
 
-/*
+/**
  * Calculates nodes within `node` that match `includeSelector` and do not match `excludeSelector`
  *
  * @param   {Node}    node             DOM Node to query
@@ -72,7 +79,7 @@ const querySelector = (node, includeSelector, excludeSelector) => {
 	return include;
 };
 
-/*
+/**
  * Determines if `node` is a spotlight container
  *
  * @param   {Node}     node   Node to check
@@ -85,7 +92,7 @@ const isContainerNode = (node) => {
 	return node && node.dataset && containerKey in node.dataset;
 };
 
-/*
+/**
  * Walks up the node hierarchy calling `fn` on each node that is a container
  *
  * @param   {Node}     node  Node from which to start the search
@@ -111,7 +118,7 @@ const mapContainers = (node, fn) => {
 	return result;
 };
 
-/*
+/**
  * Returns the container config for `containerId`
  *
  * @param   {String}  id  Container ID
@@ -124,7 +131,7 @@ const getContainerConfig = (id) => {
 	return containerConfigs.get(id);
 };
 
-/*
+/**
  * Determines if node or a container id represents a spotlight container
  *
  * @param   {Node|String}  nodeOrId  Node or container ID
@@ -141,7 +148,7 @@ const isContainer = (nodeOrId) => {
 	return isContainerNode(nodeOrId);
 };
 
-/*
+/**
  * Determines if any of the containers at or above `node` are disabled and, if so, returns `false`.
  *
  * @param   {Node}     node  Spottable node or spotlight container
@@ -156,7 +163,7 @@ const isContainerEnabled = (node) => {
 	}).reduce(and, true);
 };
 
-/*
+/**
  * Returns the container ID for `node`
  *
  * @param   {Node}    node  Container Node
@@ -167,7 +174,7 @@ const isContainerEnabled = (node) => {
  */
 const getContainerId = (node) => node.dataset[containerKey];
 
-/*
+/**
  * Generates a CSS selector string for a currrent container if `node` is a container
  *
  * @param   {Node}    node  Container Node
@@ -184,7 +191,7 @@ const getContainerSelector = (node) => {
 	return '';
 };
 
-/*
+/**
  * Generates a CSS selector string for containers within `node` if it is a container
  *
  * @param   {Node}    node  Container Node
@@ -201,7 +208,7 @@ const getSubContainerSelector = (node) => {
 	return containerSelector;
 };
 
-/*
+/**
  * Returns the node for a container
  *
  * @param   {String}  containerId  ID of container
@@ -220,7 +227,7 @@ const getContainerNode = (containerId) => {
 	return document.querySelector(`[${containerAttribute}="${containerId}"]`);
 };
 
-/*
+/**
  * Calls the `navigableFilter` function for the container if defined.
  *
  * @param   {Node}    node         DOM node to check if it is navigable
@@ -242,7 +249,7 @@ const navigableFilter = (node, containerId) => {
 	return true;
 };
 
-/*
+/**
  * Determines all spottable elements and containers that are directly contained by the container
  * identified by `containerId` and no other subcontainers.
  *
@@ -277,7 +284,7 @@ const getSpottableDescendants = (containerId) => {
 	return candidates.filter(n => navigableFilter(n, containerId));
 };
 
-/*
+/**
  * Recursively get spottable descendants by including elements within sub-containers that do not
  * have `enterTo` configured
  *
@@ -306,7 +313,7 @@ const getDeepSpottableDescendants = (containerId, excludedContainers) => {
 		.reduce(concat, []);
 };
 
-/*
+/**
  * Returns an array of ids for containers that wrap the element, in order of outer-to-inner, with
  * the last array item being the immediate container id of the element.
  *
@@ -323,7 +330,7 @@ function getContainersForNode (node) {
 	return containers;
 }
 
-/*
+/**
  * Generates a new unique identifier for a container
  *
  * @returns {String} Container ID
@@ -342,7 +349,7 @@ function generateId () {
 	return id;
 }
 
-/*
+/**
  * Merges two container configurations while only allowing keys from `updated` which are defined in
  * `GlobalConfig`
  *
@@ -367,7 +374,7 @@ const mergeConfig = (current, updated) => {
 	return cfg;
 };
 
-/*
+/**
  * Adds or updates a container. When a container id is not specified, it will be generated.
  *
  * @param   {String|Object}  containerIdOrConfig  Either a string container id or a configuration
@@ -403,7 +410,7 @@ const configureContainer = (...args) => {
 	return containerId;
 };
 
-/*
+/**
  * Removes a container
  *
  * @param   {String}     containerId  ID of the container to remove
@@ -416,7 +423,7 @@ const removeContainer = (containerId) => {
 	containerConfigs.delete(containerId);
 };
 
-/*
+/**
  * Removes all containers
  *
  * @returns {undefined}
@@ -427,7 +434,7 @@ const removeAllContainers = () => {
 	containerConfigs.clear();
 };
 
-/*
+/**
  * Configures the `GlobalConfig` for containers
  *
  * @param   {Object}  config  New global configuration. Cannot introduce new keys
@@ -440,7 +447,7 @@ const configureDefaults = (config) => {
 	GlobalConfig = mergeConfig(GlobalConfig, config);
 };
 
-/*
+/**
  * Determines if `node` is a navigable element within the container identified by `containerId`.
  *
  * @param   {Node}     node         DOM node to check if it is navigable
@@ -464,7 +471,7 @@ const isNavigable = (node, containerId, verify) => {
 	return navigableFilter(node, containerId);
 };
 
-/*
+/**
  * Returns the IDs of all containers
  *
  * @return {String[]}  Array of container IDs
@@ -484,7 +491,7 @@ const getAllContainerIds = () => {
 	return ids;
 };
 
-/*
+/**
  * Returns the default focus element for a container
  *
  * @param   {String}  containerId  ID of container
@@ -508,7 +515,7 @@ function getContainerDefaultElement (containerId) {
 	return null;
 }
 
-/*
+/**
  * Gets the element last focused within the container.
  *
  * @param   {String}  containerId  ID of container
@@ -523,7 +530,7 @@ function getContainerLastFocusedElement (containerId) {
 	return isNavigable(lastFocusedElement, containerId, true) ? lastFocusedElement : null;
 }
 
-/*
+/**
  * Sets the element last focused within the container
  *
  * @param   {Node}      node         DOM node last focused
@@ -614,7 +621,7 @@ function getNavigableElementsForNode (node) {
 	return navigable;
 }
 
-/*
+/**
  * [getContainerNavigableElements description]
  *
  * @param   {String} containerId Container ID
@@ -650,7 +657,7 @@ function getContainerNavigableElements (containerId) {
 	return next ? coerceArray(next) : [];
 }
 
-/*
+/**
  * Determines the preferred focus target, traversing any sub-containers as necessary, for the given
  * container.
  *
@@ -673,7 +680,7 @@ function getContainerFocusTarget (containerId) {
 	return next;
 }
 
-/*
+/**
  * Saves the last focused element into `lastFocusedKey` using a container-defined serialization
  * method configured in `lastFocusedPersist`.
  *
@@ -698,7 +705,7 @@ function persistLastFocusedElement (containerId) {
 	}
 }
 
-/*
+/**
  * Restores the last focused element from `lastFocusedKey` using a container-defined deserialization
  * method configured in `lastFocusedRestore`.
  *
