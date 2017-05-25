@@ -1,7 +1,7 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import sinon from 'sinon';
-import {Button, ButtonBase} from '../Button';
+import Button from '../Button';
 
 describe('Button', () => {
 
