@@ -151,6 +151,13 @@
 .muted({
 	.decorator {
 		.applySkins({
+			// For ExpandableInput, the decorator will not receive focus but it can be activated by clicking
+			// which should highlight the border
+			&.noDecorator:active,
+			&:global(.spottable):focus {
+				border-color: transparent;
+			}
+
 			&.focused {
 				border-color: transparent;
 			}

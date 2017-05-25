@@ -141,13 +141,15 @@
 
 	// Button-non-disabled rules
 	&:not([disabled]) {
-		&.pressed,
-		&:global(.spottable):active {
-			.bg {
-				-webkit-animation-name: expand;
-				animation-name: expand;
+		.focus({
+			&.pressed,
+			&:active {
+				.bg {
+					-webkit-animation-name: expand;
+					animation-name: expand;
+				}
 			}
-		}
+		});
 	}
 
 	.disabled({
@@ -226,8 +228,21 @@
 }
 
 .muted({
-	// Skin colors
 	.button {
+		// Button-non-disabled rules
+		&:not([disabled]) {
+			.focus({
+				&.pressed,
+				&:active {
+					.bg {
+						-webkit-animation-name: none;
+						animation-name: none;
+					}
+				}
+			});
+		}
+
+		// Skin colors
 		.applySkins({
 			.focus({
 				background-color: transparent;
