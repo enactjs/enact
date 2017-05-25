@@ -90,7 +90,7 @@ const MediaTitleBase = kind({
 
 		return (
 			<div {...rest}>
-				<MarqueeText role="alert" aria-label={title} className={titleClassName} marqueeOn="render">
+				<MarqueeText aria-label={title} className={titleClassName} marqueeOn="render">
 					{title}
 				</MarqueeText>
 				<div className={childrenClassName}>  {/* tabIndex={-1} */}

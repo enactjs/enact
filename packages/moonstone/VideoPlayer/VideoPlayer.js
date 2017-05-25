@@ -615,6 +615,9 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	showControls = () => {
+		// Read the title
+		this.props.announce(this.props.title);
+
 		this.startDelayedTitleHide();
 		forwardControlsAvailable({available: true}, this.props);
 		this.setState({
@@ -1115,6 +1118,7 @@ const VideoPlayerBase = class extends React.Component {
 			this.stopAutoCloseTimeout();	// Interupt the timer since controls should not hide while viewing "more".
 			// Interrupt the title-hide since we don't want it hiding autonomously in "more".
 			this.stopDelayedTitleHide();
+			// Read video details
 			this.props.announce(`${this.props.infoComponents}`);
 		}
 		this.setState({
