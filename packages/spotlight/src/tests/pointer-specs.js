@@ -27,6 +27,10 @@ describe('pointer', () => {
 	});
 
 	describe('#notifyKeyDown', () => {
+		// notifyKeyDown() will start a job which will set pointer mode for `pointerHide` key
+		// events. If adding async tests, be sure to pass a callback to notifyKeyDown() to be
+		// notified when the job completes before continuing.
+
 		const keyMap = {
 			pointerHide: 999,
 			pointerShow: 888
@@ -55,7 +59,6 @@ describe('pointer', () => {
 		});
 
 		it('should enable pointer mode for pointer show key events', () => {
-			setPointerMode(false);
 			notifyKeyDown(keyMap.pointerShow);
 
 			const expected = true;
