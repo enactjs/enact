@@ -849,6 +849,7 @@ const VideoPlayerBase = class extends React.Component {
 				if (this.state.paused && this.state.duration > this.state.currentTime) {
 					shouldResumePlayback = true;
 				}
+				this.speedIndex = 0;
 				this.prevCommand = 'slowRewind';
 				break;
 			case 'rewind':
