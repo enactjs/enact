@@ -67,7 +67,7 @@ const isSingleCharacter = function (c) {
  * @ui
  * @public
  */
-const IconBare = kind({
+const IconBase = kind({
 	name: 'Icon',
 
 	propTypes: /** @lends moonstone/Icon.Icon.prototype */ {
@@ -164,8 +164,6 @@ const IconBare = kind({
 	}
 });
 
-const IconBase = Skinnable(IconBare);
-
 // Let's find a way to import this list directly, and bonus feature, render our icons in the docs next to their names.
 /**
  * {@link moonstone/Icon.iconList} is an object whose keys can be used as the child of an
@@ -257,5 +255,7 @@ const IconBase = Skinnable(IconBare);
  * @public
  */
 
-export default IconBase;
-export {IconBase as Icon, IconBase, iconList as icons};
+const Icon = Skinnable(IconBase);
+
+export default Icon;
+export {Icon, IconBase, iconList as icons};

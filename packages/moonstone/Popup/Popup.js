@@ -43,7 +43,7 @@ const forwardHide = forward('onHide');
  * @ui
  * @public
  */
-const PopupBare = kind({
+const PopupBase = kind({
 	name: 'PopupBase',
 
 	propTypes: /** @lends moonstone/Popup.PopupBase.prototype */ {
@@ -179,9 +179,9 @@ const PopupBare = kind({
 	}
 });
 
-const PopupBase = Skinnable(
-	{defaultSkin: 'light'},
-	PopupBare
+const SkinnedPopupBase = Skinnable(
+	{defaultSkin: 'light', displayName: 'Popup'},
+	PopupBase
 );
 
 /**
@@ -444,7 +444,7 @@ class Popup extends React.Component {
 				onTransitionEnd={this.handleTransitionEnd}
 				scrimType={scrimType}
 			>
-				<PopupBase
+				<SkinnedPopupBase
 					aria-live="off"
 					role="alert"
 					{...rest}

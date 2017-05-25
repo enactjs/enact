@@ -21,7 +21,7 @@ import css from './BodyText.less';
  * @ui
  * @public
  */
-const BodyTextBare = kind({
+const BodyTextBase = kind({
 	name: 'BodyText',
 
 	propTypes: /** @lends moonstone/BodyText.BodyText.prototype */ {
@@ -57,7 +57,7 @@ const BodyTextBare = kind({
 	}
 });
 
-const BodyTextBase = Skinnable(BodyTextBare);
+const BodyText = Skinnable(BodyTextBase);
 
-export default BodyTextBase;
-export {BodyTextBase as BodyText, BodyTextBase};
+export default BodyText;
+export {BodyText, BodyTextBase};
