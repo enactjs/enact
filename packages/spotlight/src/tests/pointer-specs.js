@@ -35,6 +35,11 @@ describe('pointer', () => {
 		before(() => addAll(keyMap));
 		after(() => removeAll(keyMap));
 
+		beforeEach(() => {
+			// establish a consistent pointer mode state for each test
+			setPointerMode(false);
+		});
+
 		it('should return true for pointer hide key events', () => {
 			const expected = true;
 			const actual = notifyKeyDown(keyMap.pointerHide);
