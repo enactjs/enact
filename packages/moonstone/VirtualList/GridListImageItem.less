@@ -3,7 +3,14 @@
 @import '../styles/variables.less';
 @import '../styles/skin.less';
 
-.applySkins({.gridListImageItem {
+.applySkins({
+.selectedIcon {
+	border-color: @moon-accent;
+	opacity: 1;
+
+	color: @moon-accent;
+}
+.gridListImageItem {
 	box-sizing: border-box;
 	border: 6px solid transparent;
 
@@ -50,10 +57,7 @@
 			color: @moon-spotlight-text-color;
 		}
 		.icon {
-			border-color: @moon-accent;
-			opacity: 1;
-
-			color: @moon-accent;
+			.selectedIcon;
 		}
 	}
 
@@ -81,6 +85,10 @@
 	&:global(.spottable):focus {
 		border: 6px solid @moon-spotlight-border-color;
 		background-color: @moon-spotlight-border-color;
+		&.selected {
+			border: 6px solid @moon-spotlight-border-color;
+			background-color: @moon-spotlight-border-color;
+		}
 		.caption,
 		.subCaption {
 			color: @moon-spotlight-text-color;
@@ -90,15 +98,22 @@
 
 [data-container-muted='true'] {
 	.gridListImageItem {
-		&:global(.spottable):focus {
-			border: 6px solid transparent;
-			background-color: transparent;
-			.caption,
-			.subCaption {
-				color: @moon-body-text-color;
+		&:global(.spottable):focus{
+			&:not(.selected) {
+				border: 6px solid transparent;
+				background-color: transparent;
+				.caption,
+				.subCaption {
+					color: @moon-body-text-color;
+				}
+				.icon {
+					color: transparent;
+				}
 			}
-			.icon {
-				color: transparent;
+			&.selected {
+				.icon {
+					.selectedIcon;
+				}
 			}
 		}
 	}
