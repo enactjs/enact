@@ -26,7 +26,7 @@ const defaultConfig = {
 	 * the only valid values for the `skin` prop on the wrapped component.
 	 *
 	 * @type {Object}
-	 * @memberof ui/Skinnable.Skinnable.defaultConfig
+	 * @memberof ui/Skinnable.Skinnable.skins
 	 */
 	skins: null,
 
@@ -35,7 +35,7 @@ const defaultConfig = {
 	 * wrapped component provides no value to the `skin` prop.
 	 *
 	 * @type {String}
-	 * @memberof ui/Skinnable.Skinnable.defaultConfig
+	 * @memberof ui/Skinnable.Skinnable.defaultSkin
 	 */
 	defaultSkin: null,
 
