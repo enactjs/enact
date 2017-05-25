@@ -143,13 +143,11 @@ const ToggleButtonBase = kind({
 				c = toggleOffLabel;
 			}
 			return c;
-		}
+		},
+		'aria-pressed': ({selected}) => selected
 	},
 
 	render: (props) => {
-		if ('selected' in props) {
-			props['aria-pressed'] = props.selected;
-		}
 		delete props.toggleOffLabel;
 		delete props.toggleOnLabel;
 
