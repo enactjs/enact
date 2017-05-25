@@ -13,7 +13,7 @@ let resBundle;
  * @returns {ilib.ResBundle} New ilib.ResBundle
  */
 function getResBundle () {
-	if (!resBundle) {
+	if (!resBundle && typeof ILIB_MOONSTONE_PATH === 'string') {
 		resBundle = new ResBundle({
 			loadParams: {
 				root: ILIB_MOONSTONE_PATH
