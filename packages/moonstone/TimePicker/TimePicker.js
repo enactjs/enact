@@ -208,7 +208,7 @@ const TimePicker = DateTimeDecorator({
  *
  * @name title
  * @memberof moonstone/TimePicker.TimePicker
- * @static
+ * @instance
  * @type {String}
  * @required
  * @public
@@ -219,7 +219,7 @@ const TimePicker = DateTimeDecorator({
  *
  * @name noLabels
  * @memberof moonstone/TimePicker.TimePicker
- * @static
+ * @instance
  * @type {Boolean}
  * @public
  */
@@ -229,7 +229,7 @@ const TimePicker = DateTimeDecorator({
  *
  * @name onClose
  * @memberof moonstone/TimePicker.TimePicker
- * @static
+ * @instance
  * @type {Function}
  * @public
  */
@@ -239,7 +239,7 @@ const TimePicker = DateTimeDecorator({
  *
  * @name value
  * @memberof moonstone/TimePicker.TimePicker
- * @static
+ * @instance
  * @type {Date}
  * @public
  */
