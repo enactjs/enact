@@ -29,6 +29,13 @@ function isFocusable (elem) {
 	}, false);
 }
 
+function getAllNavigableElements () {
+	return getAllContainerIds()
+		.map(getSpottableDescendants)
+		.reduce(concat, [])
+		.filter(n => !isContainer(n));
+}
+
 function getContainersToSearch (containerId) {
 	let range = [];
 	let addRange = function (id) {
@@ -73,6 +80,8 @@ function getTargetBySelector (selector) {
 			return next;
 		}
 	}
+
+	return null;
 }
 
 function getTargetByDirectionFromElement (direction, element) {
@@ -173,13 +182,6 @@ function getNavigableTarget (target) {
 		target = parent === document ? null : parent; // calling isNavigable on document is problematic
 	}
 	return target;
-}
-
-function getAllNavigableElements () {
-	return getAllContainerIds()
-		.map(getSpottableDescendants)
-		.reduce(concat, [])
-		.filter(n => !isContainer(n));
 }
 
 export {

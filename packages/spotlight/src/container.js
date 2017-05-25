@@ -640,7 +640,7 @@ function getContainerFocusTarget (containerId) {
 	// deferring restoration until it's requested to allow containers to prepare first
 	restoreLastFocusedElement(containerId);
 
-	const next = getContainerNavigableElements(containerId)[0];
+	const next = getContainerNavigableElements(containerId)[0] || null;
 	if (isContainer(next)) {
 		const nextId = isContainerNode(next) ? getContainerId(next) : next;
 		return getContainerFocusTarget(nextId);
@@ -754,7 +754,7 @@ function getLastContainer () {
 }
 
 function setLastContainer (containerId) {
-	_lastContainerId = containerId;
+	_lastContainerId = containerId || '';
 }
 
 export {
