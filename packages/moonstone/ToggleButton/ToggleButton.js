@@ -147,6 +147,9 @@ const ToggleButtonBase = kind({
 	},
 
 	render: (props) => {
+		if ('selected' in props) {
+			props['aria-pressed'] = props.selected;
+		}
 		delete props.toggleOffLabel;
 		delete props.toggleOnLabel;
 

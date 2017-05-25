@@ -29,28 +29,6 @@ describe('Button', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should not add "aria-pressed" when "selected" is omitted', function () {
-		const button = mount(
-			<ButtonBase>Text</ButtonBase>
-		);
-
-		const expected = false;
-		const actual = 'aria-pressed' in button.find({role: 'button'}).props();
-
-		expect(actual).to.equal(expected);
-	});
-
-	it('should set "aria-pressed" to the value of "selected"', function () {
-		const button = mount(
-			<ButtonBase selected={false}>Text</ButtonBase>
-		);
-
-		const expected = false;
-		const actual = button.find({role: 'button'}).prop('aria-pressed');
-
-		expect(actual).to.equal(expected);
-	});
-
 	describe('events', () => {
 		it('should call onClick when not disabled', function () {
 			const handleClick = sinon.spy();
