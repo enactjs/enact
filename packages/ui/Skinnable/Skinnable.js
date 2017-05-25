@@ -6,7 +6,6 @@
  */
 
 import hoc from '@enact/core/hoc';
-import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React from 'react';
 
