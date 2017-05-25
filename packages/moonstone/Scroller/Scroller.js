@@ -17,9 +17,7 @@ import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDeco
 import css from './Scroller.less';
 import Scrollable from './Scrollable';
 
-const
-	dataContainerDisabledAttribute = 'data-container-disabled',
-	directionPropType = PropTypes.oneOf(['horizontal', 'vertical']);
+const dataContainerDisabledAttribute = 'data-container-disabled';
 
 /**
  * {@link moonstone/Scroller.ScrollerBase} is a base component for Scroller.
@@ -38,13 +36,13 @@ class ScrollerBase extends Component {
 		children: PropTypes.node.isRequired,
 
 		/**
-		 * Direction of the scroller; valid values are `'horizontal'`, `'vertical'`, and `['horizontal', 'vertical']`.
+		 * Direction of the scroller; valid values are `'both'`, `'horizontal'`, and `'vertical'`.
 		 *
-		 * @type {(String|String[])}
-		 * @default 'vertical'
+		 * @type {String}
+		 * @default 'both'
 		 * @public
 		 */
-		direction: PropTypes.oneOfType([directionPropType, PropTypes.arrayOf(directionPropType)]),
+		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
 
 		/**
 		 * Specifies how to horizontally scroll. Acceptable values are `'auto'`, `'default'` ,
@@ -72,7 +70,7 @@ class ScrollerBase extends Component {
 	static contextTypes = contextTypes
 
 	static defaultProps = {
-		direction: ['horizontal', 'vertical']
+		direction: 'both'
 	}
 
 	constructor (props) {
@@ -288,20 +286,12 @@ class ScrollerBase extends Component {
 
 	isVertical = () => {
 		const {vertical, direction} = this.props;
-		if (vertical) {
-			return (vertical !== 'hidden');
-		} else { /* if there is no `horizontal` or `vertical`, only consider `direction` */
-			return (direction !== 'horizontal');
-		}
+		return vertical ? (vertical !== 'hidden') : (direction !== 'horizontal');
 	}
 
 	isHorizontal = () => {
 		const {horizontal, direction} = this.props;
-		if (horizontal) {
-			return (horizontal !== 'hidden');
-		} else { /* if there is no `horizontal` or `vertical`, only consider `direction` */
-			return (direction !== 'vertical');
-		}
+		return horizontal ? (horizontal !== 'hidden') : (direction !== 'vertical');
 	}
 
 	calculateMetrics () {
@@ -384,11 +374,11 @@ const Scroller = SpotlightContainerDecorator(
  */
 
 /**
- * Direction of the scroller; valid values are `'horizontal'`, `'vertical'`, and `['horizontal', 'vertical']`.
+ * Direction of the scroller; valid values are `'both'`, `'horizontal'`, and `'vertical'`.
  *
  * @name direction
- * @type {(String|String[])}
- * @default 'vertical'
+ * @type {String}
+ * @default 'both'
  * @memberof moonstone/Scroller.Scroller
  * @instance
  * @public
