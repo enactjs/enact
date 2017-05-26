@@ -1,7 +1,6 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
-import withState from 'recompose/withState';
 import {shape} from '@enact/ui/ViewManager';
 
 import ApplicationCloseButton from './ApplicationCloseButton';
@@ -70,21 +69,7 @@ const PanelsBase = kind({
 		 *
 		 * @type {Function}
 		 */
-		onBack: PropTypes.func,
-
-		/**
-		 * Function to set transitioning prop value.
-		 *
-		 * @type {Function}
-		 */
-		setTransition: PropTypes.func,
-
-		/**
-		 * Boolean that reflects if Panels are currently in transition
-		 *
-		 * @type {Boolean}
-		 */
-		transitioning: PropTypes.bool
+		onBack: PropTypes.func
 	},
 
 	defaultProps: {
@@ -109,17 +94,13 @@ const PanelsBase = kind({
 					<ApplicationCloseButton onApplicationClose={onApplicationClose} />
 				);
 			}
-		},
-		onLeave: ({setTransition}) => () => setTransition(false),
-		onWillTransition: ({setTransition}) => () => setTransition(true)
+		}
 	},
 
-	render: ({noAnimation, arranger, children, index, applicationCloseButton, onWillTransition, onLeave, ...rest}) => {
+	render: ({noAnimation, arranger, children, index, applicationCloseButton, ...rest}) => {
 		delete rest.noCloseButton;
 		delete rest.onApplicationClose;
 		delete rest.onBack;
-		delete rest.transitioning;
-		delete rest.setTransition;
 
 		return (
 			<div {...rest}>
@@ -128,8 +109,6 @@ const PanelsBase = kind({
 					noAnimation={noAnimation}
 					arranger={arranger}
 					index={index}
-					onWillTransition={onWillTransition}
-					onLeave={onLeave}
 				>
 					{children}
 				</Viewport>
@@ -138,9 +117,7 @@ const PanelsBase = kind({
 	}
 });
 
-const ScrimPanels = withState('transitioning', 'setTransition', false)(PanelsBase);
-
-const Panels = CancelDecorator({cancel: 'onBack'}, ScrimPanels);
+const Panels = CancelDecorator({cancel: 'onBack'}, PanelsBase);
 
 export default Panels;
-export {Panels, ScrimPanels as PanelsBase};
+export {Panels, PanelsBase};
