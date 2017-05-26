@@ -5,6 +5,21 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ## [unreleased]
 
 ### Deprecated
+- `moonstone/Input` prop `noDecorator` is being moved to a private API in 2.0.0.
+
+### Added
+- `moonstone/Image` support for `children` prop inside images
+
+### Changed
+
+### Fixed
+- `moonstone/GridListImageItem` to center its selection icon on the image instead of the item
+
+### Removed
+
+## [1.2.0] - 2017-05-17
+
+### Deprecated
 
 ### Added
 - `moonstone/Image` support for `children` prop inside images
