@@ -112,7 +112,7 @@ const PanelsBase = kind({
 				return viewProps;
 			} else {
 				const updatedViewProps = Object.assign({}, viewProps);
-				const owns = viewProps['aria-owns'];
+				const owns = updatedViewProps['aria-owns'];
 
 				updatedViewProps['aria-owns'] = `${owns || ''} ${id}_close`;
 				return updatedViewProps;
