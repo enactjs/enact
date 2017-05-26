@@ -676,7 +676,7 @@ const VideoPlayerBase = class extends React.Component {
 			currentTime: el.currentTime,
 			duration: el.duration,
 			buffered: el.buffered,
-			paused: el.paused,
+			paused: el.playbackRate !== 1 || el.paused,
 			muted: el.muted,
 			volume: el.volume,
 			playbackRate: el.playbackRate,
@@ -783,8 +783,10 @@ const VideoPlayerBase = class extends React.Component {
 		switch (this.prevCommand) {
 			case 'slowForward':
 				if (this.speedIndex === this.playbackRates.length - 1) {
-						// reached to the end of array => go to play
-					this.send('play');
+					// reached to the end of array => fastforward
+					this.selectPlaybackRates('fastForward');
+					this.speedIndex = 0;
+					this.prevCommand = 'fastForward';
 					return;
 				} else {
 					this.speedIndex = this.clampPlaybackRate(this.speedIndex + 1);
@@ -803,11 +805,6 @@ const VideoPlayerBase = class extends React.Component {
 				this.selectPlaybackRates('fastForward');
 				this.speedIndex = 0;
 				this.prevCommand = 'fastForward';
-				break;
-			case 'slowRewind':
-				this.selectPlaybackRates('slowForward');
-				this.speedIndex = 0;
-				this.prevCommand = 'slowForward';
 				break;
 			case 'fastForward':
 				this.speedIndex = this.clampPlaybackRate(this.speedIndex + 1);
@@ -846,16 +843,6 @@ const VideoPlayerBase = class extends React.Component {
 				} else {
 					this.speedIndex = this.clampPlaybackRate(this.speedIndex + 1);
 				}
-				break;
-			case 'fastForward':
-				this.selectPlaybackRates('rewind');
-				this.speedIndex = 0;
-				this.prevCommand = 'rewind';
-				break;
-			case 'slowForward':
-				this.selectPlaybackRates('slowRewind');
-				this.speedIndex = 0;
-				this.prevCommand = 'slowRewind';
 				break;
 			case 'pause':
 				this.selectPlaybackRates('slowRewind');

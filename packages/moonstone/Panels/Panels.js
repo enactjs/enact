@@ -15,6 +15,8 @@ import css from './Panels.less';
  *
  * @class Panels
  * @memberof moonstone/Panels
+ * @ui
+ * @public
  */
 const PanelsBase = kind({
 	name: 'Panels',

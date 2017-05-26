@@ -89,7 +89,7 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		static displayName = 'MoonstoneDecorator';
 
 		render () {
-			let className = 'enact-unselectable';
+			let className = css.root + ' enact-unselectable';
 			if (!float) {
 				className += ' ' + bgClassName;
 			}

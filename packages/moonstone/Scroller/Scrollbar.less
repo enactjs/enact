@@ -37,19 +37,22 @@
 	}
 }
 
-.scrollButton {
-	.scrollbarButtonNoCompositeLayer;
-	background-color: transparent;
-	position: absolute;
-	width: @moon-icon-button-small-size;
-	height: @moon-icon-button-small-size;
-	padding: 0;
-	border-color: transparent;
-	margin: 0;
+.scrollbarContainerVColumn,
+.scrollbarContainerHColumn {
+	.scrollButton {
+		.scrollbarButtonNoCompositeLayer;
+		background-color: transparent;
+		position: absolute;
+		width: @moon-icon-button-small-size;
+		height: @moon-icon-button-small-size;
+		padding: 0;
+		border-color: transparent;
+		margin: 0;
 
-	:global(.enact-text-large) & {
-		width: @moon-icon-button-small-size-large;
-		height: @moon-icon-button-small-size-large;
+		:global(.enact-text-large) & {
+			width: @moon-icon-button-small-size-large;
+			height: @moon-icon-button-small-size-large;
+		}
 	}
 }
 

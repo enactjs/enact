@@ -21,8 +21,8 @@ regardless of platform.
 
 ### Application Structure
 
->***The framework team strongly encourages developers to use the [`enact-dev`](https://github.com/enyojs/enact-dev) tools to create, test, and deploy your Enact
-application.***
+>***The framework team strongly encourages the use of the [`enact-dev`](https://github.com/enyojs/enact-dev) tools to
+create, test, and deploy Enact applications.***
 
 Source files are generally arranged in the project like so:
 ```
@@ -35,11 +35,11 @@ project_root/   (package.json lives here)
 
 #### Component Usage
 
-While many Moonstone components retained the same names they had in Enyo, some have changed. We have prepared
+While many Moonstone components retain the same names they have in Enyo, some have changed. We have prepared
 the [Enyo to Enact Component Map](./enyo_enact_component_map.md) to help with the transition.
 
 In general, the `content` property is now handled by the implicit `children` property of components. Boolean
-properties can be shorted to just the property name.  For example, `moonstone/Button` in Enyo was configured
+properties can be shortened to just the property name.  For example, `moonstone/Button` in Enyo was configured
 like this:
 
 ```
@@ -55,6 +55,143 @@ In Enact, the same effect is achieved like this:
 Enact declarations are similar yet simpler than their Enyo counterparts. Further, some options and components
 that were not used have been removed in Enact. Please refer to [module documentation](../../../modules/)
 to see the exact APIs for each component.
+
+##### `components` Block to `render()` Method
+
+With Enyo, you can declare which components are contained in a given kind or component.  This is done by specifying
+them in the `components` property of the kind.
+```javascript
+...
+var InnerComponent = kind({
+	name: 'InnerComponent',
+	kind: enyo.Control,
+	content: 'This is just a &lt;div&gt; with some text' 
+});
+...
+var OuterComponent = kind({
+	name: 'OuterComponent',
+	kind: enyo.Control,
+	components: [
+		{kind: InnerComponent}
+	]
+});
+...
+```
+
+In Enact, a component can contain other components just as easily, but you use the `render()` method to declare them.
+```jsx harmony
+...
+const InnerComponent = kind({
+	name: 'InnerComponent',
+	render: () => (
+		<div>This is just a &lt;div&gt; with some text</div>
+	)
+});
+
+const OuterComponent = kind({
+	name: 'OuterComponent',
+	render: () => {
+		<div>
+			<InnerComponent />
+		</div>
+	}
+});
+...
+```
+
+##### Getters/Setters
+
+Enyo provides the ability to `set` or `get` any arbitrary property on a component:
+```javascript
+...
+var bar = '';
+MyComponent.set('foo', 'bar');
+bar = MyComponent.get('foo');  // bar === "bar"
+...
+```
+
+This is further enhanced by allowing you to specify 'published' (or 'public' in later Enyo versions) properties and mapping
+individual `set[Property]()` and `get[Property]()` methods:
+```javascript
+...
+name: 'MyControl',
+kind: enyo.Control,
+published: {
+	foo: 'bar'
+}
+...
+var bar = '';
+MyControl.setFoo('nobar');
+bar = MyControl.getFoo();  // bar === "nobar"
+...
+```
+
+In Enact, you 'set' properties by providing them to the rendered component(s):
+```jsx harmony
+...
+import PropTypes from 'prop-types';
+...
+const MyComponent = kind({
+	name: 'MyComponent',
+	propTypes: {
+		foo: PropTypes.string
+	},
+	defaultProps: {
+		foo: 'bar'
+	},
+	render: ({foo}) => (
+		<div>{foo}</div>
+	)
+});
+...
+// (another component that renders an instance of MyComponent)
+...
+	render: () => (
+		<MyComponent foo="nobar" />
+	)
+```
+
+Due to the one-way nature of data-flow in Enact, 'get' functionality is unnecessary.  You will know the value from either
+the data state or store, depending on how you have implemented your component and application.
+
+##### Computed Properties
+
+Computed properties are almost identical in Enyo and Enact with one major difference.  In Enyo, any computed property of
+a kind can access any other computed property of that kind.  In Enact, computed properties are isolated from other computed
+properties.
+
+##### Event Handling
+
+Enyo has several different ways to handle events (`enyo.Signals`, the `handlers` property of a component, the `onClick`
+property of `UiComponents`, etc.).  In Enact, event handling is a bit different.
+
+To handle an event, use `@enact/core/handle` to create a handler.  It accepts one or more input functions that will process
+or filter the event.  The input functions will be processed in order until one returns `false` (or any falsey value).
+
+```jsx harmony
+...
+const myHandler = handle(
+	preventDefault, // imported from `@enact/core/handle`; convenience method for preventing default event; returns `true`
+	(ev, props) => { // custom handling
+		console.log('handling event');
+	}
+);
+```
+
+`handle` returns a function (MyHandler) that accepts an event, a properties object, and a context object.  To use it,
+specify it as the value for an event property, such as `onClick`.
+
+```jsx harmony
+...
+render: () => (
+	<div>
+		<Item onClick={myHandler} />
+	</div>
+)
+```
+
+The `@enact/core/handle` module exports some input methods designed to be used with `handle`, such as `forward` and
+`preventDefault`.  Please see the [module documentation](../../../modules/core/handle/) for a complete list.
 
 #### `enact-dev` vs. `enyo-dev`
 
@@ -92,11 +229,85 @@ the [Spotlight event documentation](../../spotlight/).
 
 ### Data Management
 
-Enyo's `Collection` and `Model` do not have analogs in Enact.  All applications utilizing these components will need a
-hefty refactoring of their usage and interactions.
+If an application makes use of `enyo.Model` or `enyo.Collection`, it will need to be adapted to some changes in Enact.
+Notably, there are no framework-provided collections or models.  Enact relies on its underlying Flux architecture to
+provide state and property updates through its component hierarchy.  Therefore, it is necessary to manage application
+and/or component state to affect logic or UI changes.
 
-Enact suggests the use of the [Flux application architecture](https://facebook.github.io/flux/docs/overview.html#content).  For complex data
-management and application state management, developers should use [Redux](../../redux/).
+A typical Enyo application pattern is to create a model and a collection to hold instances of the model.  So that every
+view can have access to the collection, it can be made 'public'.  Finally, using bindings, a view can map the collection
+based on its requirements.  All that remains is to add models to the collection, usually as the result of an asynchronous
+operation.
+
+```javascript
+// MyModel.js
+...
+name: 'MyModel',
+kind: enyo.Model,
+...
+// MyCollection.js
+...
+name: 'MyCollection',
+kind: enyo.Collection,
+model: MyModel,
+...
+// App.js
+...
+components: [
+	{name: 'allData', kind: MyCollection, public: true}
+],
+view: MainView
+...
+// MainView.js
+...
+components: [
+	{name: 'list', kind: enyo.DataList, ...}
+],
+bindings: [
+	{from: 'app.allData', to: '$.list.collection'}
+],
+...
+```
+
+The above example is quite simplistic, so it can be re-implemented in Enact without using additional libraries.  For
+complex data management and application state management, third-party solutions (such as [Redux](../../redux/)) exist.
+
+```jsx harmony
+// App.js
+...
+class App extends React.Component {
+	...
+	constructor (props) => {
+		super(props);
+		this.state = {
+			recentData: props.data || []
+		};
+	}
+	// response handler from some async request (not shown)
+	dataFetched = ({data}) => {
+		this.setState({recentData: (data && data.length) ? data : []});
+	}
+	render () {
+		<div>
+			<MainView data={this.state.recentData} />
+		</div>
+	}
+}
+// MainView.js
+...
+const MainView = kind({
+	name: 'MainView',
+	...
+	render: ({data}) => (
+		<VirtualList
+			...
+			data={data}
+			...
+		/>
+	) 
+});
+...
+```
 
 ### View Management
 

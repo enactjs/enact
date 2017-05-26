@@ -33,6 +33,7 @@ const propTypes = {
  *
  * @class Router
  * @memberof moonstone/Panels
+ * @ui
  * @public
  */
 const Router = class extends React.Component {
