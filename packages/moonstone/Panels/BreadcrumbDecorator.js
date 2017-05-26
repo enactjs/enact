@@ -81,6 +81,16 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			]),
 
 			/**
+			 * An object containing properties to be passed to each child. `aria-owns` will be added
+			 * or updated to this object to add the breadcrumbs to the accessibility tree of each
+			 * panel.
+			 *
+			 * @type {Object}
+			 * @public
+			 */
+			childProps: PropTypes.object,
+
+			/**
 			 * Panels to be rendered
 			 *
 			 * @type {Node}
@@ -182,7 +192,7 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				}
 
 				if (updatedChildProps['aria-owns']) {
-					ariaOwns.push(updatedChildProps['aria-owns']);
+					ariaOwns.unshift(updatedChildProps['aria-owns']);
 				}
 
 				updatedChildProps['aria-owns'] = ariaOwns.join(' ');
@@ -191,7 +201,7 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		},
 
-		render: ({breadcrumbs, children, className, generateId, id, index, noAnimation, ...rest}) => {
+		render: ({breadcrumbs, childProps, children, className, generateId, id, index, noAnimation, ...rest}) => {
 			delete rest.onSelectBreadcrumb;
 
 			const count = React.Children.count(children);
@@ -216,6 +226,7 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					<Wrapped
 						{...rest}
 						arranger={panelArranger}
+						childProps={childProps}
 						generateId={generateId}
 						id={`${id}_panels`}
 						index={index}

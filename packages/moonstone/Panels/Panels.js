@@ -41,6 +41,15 @@ const PanelsBase = kind({
 		arranger: shape,
 
 		/**
+		 * An object containing properties to be passed to each child. `aria-owns` will be added or
+		 * updated to this object to add the close button to the accessibility tree of each panel.
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		childProps: PropTypes.object,
+
+		/**
 		 * Panels to be rendered
 		 *
 		 * @type {Panel}
@@ -134,7 +143,7 @@ const PanelsBase = kind({
 			const owns = updatedChildProps['aria-owns'];
 
 			if (owns) {
-				updatedChildProps['aria-owns'] = `{$owns} ${closeId}`;
+				updatedChildProps['aria-owns'] = `${owns} ${closeId}`;
 			} else {
 				updatedChildProps['aria-owns'] = closeId;
 			}
@@ -153,10 +162,10 @@ const PanelsBase = kind({
 				{applicationCloseButton}
 				<Viewport
 					arranger={arranger}
+					childProps={childProps}
 					generateId={generateId}
 					index={index}
 					noAnimation={noAnimation}
-					childProps={childProps}
 				>
 					{children}
 				</Viewport>

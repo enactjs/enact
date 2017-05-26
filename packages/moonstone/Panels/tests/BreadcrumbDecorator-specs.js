@@ -101,4 +101,41 @@ describe('BreadcrumbDecorator', () => {
 		expect(actual).to.equal(expected);
 	});
 
+	it('should set aria-owns on each Panel for the breadcrumbs', function () {
+		const ThreeBreadcrumbPanels = BreadcrumbDecorator({
+			max: 3
+		}, Panels);
+
+		const subject = mount(
+			<ThreeBreadcrumbPanels id="test" noCloseButton>
+				<Panel />
+				<Panel />
+				<Panel />
+				<Panel />
+			</ThreeBreadcrumbPanels>
+		);
+
+		// tests for {config.max} aria-owns entries in the format ${id}_bc_{$index}
+		const expected = [0, 1, 2].map(n => `test_bc_${n}`).join(' ');
+		const actual = subject.find(Panel).first().prop('aria-owns');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should append breadcrumb aria-owns to set aria-owns value in childProps', function () {
+		const Component = BreadcrumbDecorator({
+			max: 1
+		}, Panels);
+
+		const subject = mount(
+			<Component id="test" noCloseButton childProps={{'aria-owns': ':allthethings:'}}>
+				<Panel />
+			</Component>
+		);
+
+		const expected = ':allthethings: test_bc_0';
+		const actual = subject.find(Panel).first().prop('aria-owns');
+
+		expect(actual).to.equal(expected);
+	});
 });
