@@ -26,6 +26,7 @@ const defaultConfig = {
  * @hoc
  * @public
  */
+const Skinnable = hoc(defaultConfig, SkinnableBase);
 
 /**
  * Select a skin by name by specifying this property. Available Moonstone skins are
@@ -38,13 +39,13 @@ const defaultConfig = {
  * <Button skin="light">
  * ```
  *
- * @interface skin
+ * @name skin
  * @type {String}
  * @default 'dark'
- * @memberof moonstone/Skinnable.Skinnable.prototype
+ * @memberof moonstone/Skinnable.Skinnable
+ * @instance
  * @public
  */
-const Skinnable = hoc(defaultConfig, SkinnableBase);
 
 export default Skinnable;
 export {
