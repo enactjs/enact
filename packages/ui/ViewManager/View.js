@@ -44,6 +44,14 @@ class View extends React.Component {
 		arranger: shape,
 
 		/**
+		 * An object containing properties to be passed to each child.
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		childProps: PropTypes.object,
+
+		/**
 		 * Time, in milliseconds, to wait after a view has entered to inform it by passing the
 		 * `enteringProp` as false.
 		 *
@@ -100,9 +108,7 @@ class View extends React.Component {
 		 * @type {Boolean}
 		 * @default false
 		 */
-		reverseTransition: PropTypes.bool,
-
-		viewProps: PropTypes.object
+		reverseTransition: PropTypes.bool
 	}
 
 	static defaultProps = {
@@ -299,10 +305,10 @@ class View extends React.Component {
 	}
 
 	render () {
-		const {enteringProp, children, viewProps} = this.props;
+		const {enteringProp, children, childProps} = this.props;
 
-		if (enteringProp || viewProps) {
-			const props = Object.assign({}, viewProps);
+		if (enteringProp || childProps) {
+			const props = Object.assign({}, childProps);
 			if (enteringProp) {
 				props[enteringProp] = this.state.entering;
 			}

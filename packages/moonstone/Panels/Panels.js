@@ -124,20 +124,26 @@ const PanelsBase = kind({
 				);
 			}
 		},
-		viewProps: ({id, noCloseButton, viewProps}) => {
+		childProps: ({childProps, id, noCloseButton}) => {
 			if (noCloseButton || !id) {
-				return viewProps;
-			} else {
-				const updatedViewProps = Object.assign({}, viewProps);
-				const owns = updatedViewProps['aria-owns'];
-
-				updatedViewProps['aria-owns'] = `${owns || ''} ${id}_close`;
-				return updatedViewProps;
+				return childProps;
 			}
+
+			const updatedChildProps = Object.assign({}, childProps);
+			const closeId = `${id}_close`;
+			const owns = updatedChildProps['aria-owns'];
+
+			if (owns) {
+				updatedChildProps['aria-owns'] = `{$owns} ${closeId}`;
+			} else {
+				updatedChildProps['aria-owns'] = closeId;
+			}
+
+			return updatedChildProps;
 		}
 	},
 
-	render: ({noAnimation, arranger, children, generateId, index, applicationCloseButton, viewProps, ...rest}) => {
+	render: ({noAnimation, arranger, childProps, children, generateId, index, applicationCloseButton, ...rest}) => {
 		delete rest.noCloseButton;
 		delete rest.onApplicationClose;
 		delete rest.onBack;
@@ -150,7 +156,7 @@ const PanelsBase = kind({
 					generateId={generateId}
 					index={index}
 					noAnimation={noAnimation}
-					viewProps={viewProps}
+					childProps={childProps}
 				>
 					{children}
 				</Viewport>

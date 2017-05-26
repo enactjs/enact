@@ -31,6 +31,14 @@ class ViewManager extends React.Component {
 		arranger: shape,
 
 		/**
+		 * An object containing properties to be passed to each child.
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		childProps: PropTypes.object,
+
+		/**
 		 * Views to be managed. May be any renderable component including custom React components or
 		 * primitive DOM nodes.
 		 *
@@ -159,9 +167,7 @@ class ViewManager extends React.Component {
 		 * @type {Number}
 		 * @default value of index
 		 */
-		start: PropTypes.number,
-
-		viewProps: PropTypes.object
+		start: PropTypes.number
 	}
 
 	static defaultProps = {
@@ -195,7 +201,7 @@ class ViewManager extends React.Component {
 	}
 
 	render () {
-		const {arranger, children, duration, end, index, noAnimation, start, enteringDelay, enteringProp, viewProps, ...rest} = this.props;
+		const {arranger, childProps, children, duration, end, index, noAnimation, start, enteringDelay, enteringProp, ...rest} = this.props;
 		const {previousIndex, reverseTransition} = this;
 		const childrenList = React.Children.toArray(children);
 
@@ -213,7 +219,7 @@ class ViewManager extends React.Component {
 			reverseTransition,
 			enteringDelay,
 			enteringProp,
-			viewProps
+			childProps
 		});
 
 		delete rest.reverseTransition;

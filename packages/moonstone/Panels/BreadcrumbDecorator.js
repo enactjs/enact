@@ -168,15 +168,26 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					return breadcrumbs(id, index, x, onSelectBreadcrumb);
 				}
 			},
-			viewProps: ({id, index}) => {
-				const breadcrumbs = [];
-				for (let i = 0, x = calcMax(index); i < x; i++) {
-					breadcrumbs.push(`${id}_bc_${i}`);
+			childProps: ({childProps, id, index}) => {
+				const x = calcMax(index);
+
+				if (!id || x === 0) {
+					return childProps;
 				}
 
-				return {
-					'aria-owns': breadcrumbs.join(' ')
-				};
+				const updatedChildProps = Object.assign({}, childProps);
+				const ariaOwns = [];
+				for (let i = 0; i < x; i++) {
+					ariaOwns.push(`${id}_bc_${i}`);
+				}
+
+				if (updatedChildProps['aria-owns']) {
+					ariaOwns.push(updatedChildProps['aria-owns']);
+				}
+
+				updatedChildProps['aria-owns'] = ariaOwns.join(' ');
+
+				return updatedChildProps;
 			}
 		},
 
