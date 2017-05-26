@@ -84,9 +84,8 @@ const PanelsBase = kind({
 	},
 
 	computed: {
-		className: ({noCloseButton, transitioning, styler}) => styler.append({
-			hasCloseButton: !noCloseButton,
-			transitioning
+		className: ({noCloseButton, styler}) => styler.append({
+			hasCloseButton: !noCloseButton
 		}),
 		applicationCloseButton: ({noCloseButton, onApplicationClose}) => {
 			if (!noCloseButton) {
@@ -105,11 +104,7 @@ const PanelsBase = kind({
 		return (
 			<div {...rest}>
 				{applicationCloseButton}
-				<Viewport
-					noAnimation={noAnimation}
-					arranger={arranger}
-					index={index}
-				>
+				<Viewport noAnimation={noAnimation} arranger={arranger} index={index}>
 					{children}
 				</Viewport>
 			</div>

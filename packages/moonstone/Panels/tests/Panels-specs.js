@@ -2,8 +2,7 @@ import React from 'react';
 import {mount} from 'enzyme';
 import sinon from 'sinon';
 
-import Panels, {PanelsBase} from '../Panels';
-import css from '../Panels.less';
+import Panels from '../Panels';
 
 describe('Panels Specs', () => {
 
