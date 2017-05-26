@@ -51,7 +51,7 @@
 
 					// Title
 					.title {
-						--translateY: 0;
+						--infoComponentsOffset: -36px;
 						position: absolute;
 						bottom: 0;
 						.moon-text-base(@moon-video-player-title-size);
@@ -60,7 +60,7 @@
 						.font-kerning;
 
 						&.infoVisible {
-							transform: translateY(var(--translateY)) translateZ(0);
+							transform: translateY(var(--infoComponentsOffset)) translateZ(0);
 						}
 
 						.enyo-locale-non-latin & {

@@ -452,6 +452,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.moreInProgress = false;	// This only has meaning for the time between clicking "more" and the official state is updated. To get "more" state, only look at the state value.
 		this.prevCommand = (props.noAutoPlay ? 'pause' : 'play');
 		this.speedIndex = 0;
+		this.titleOffsetCalculated = false;
 		this.selectPlaybackRates('fastForward');
 
 		this.initI18n();
@@ -491,8 +492,7 @@ const VideoPlayerBase = class extends React.Component {
 			proportionPlayed: 0,
 			sliderScrubbing: false,
 			sliderKnobProportion: 0,
-			titleVisible: true,
-			titleCalculated: false
+			titleVisible: true
 		};
 	}
 
@@ -549,8 +549,8 @@ const VideoPlayerBase = class extends React.Component {
 		) {
 			this.focusDefaultMediaControl();
 		}
-		if (!this.state.titleCalculated && this.state.bottomControlsVisible) {
-			this.updateTitle();
+		if (!this.titleOffsetCalculated && this.state.bottomControlsVisible) {
+			this.calculateTitleOffset();
 		}
 	}
 
@@ -568,15 +568,15 @@ const VideoPlayerBase = class extends React.Component {
 	//
 	// Internal Methods
 	//
-	updateTitle = () => {
+	calculateTitleOffset = () => {
 		// calculate how far the title should animate up when infoComponents appear.
 		const titleElement = this.player.querySelector(`.${css.title}`);
 		const infoComponents = this.player.querySelector(`.${css.infoComponents}`);
 
 		if (titleElement && infoComponents) {
 			const infoHeight = infoComponents.offsetHeight;
-			titleElement.setAttribute('style', `--translateY: -${infoHeight}px`);
-			this.setState({titleCalculated: true});
+			titleElement.setAttribute('style', `--infoComponentsOffset: -${infoHeight}px`);
+			this.titleOffsetCalculated = true;
 		}
 	}
 
