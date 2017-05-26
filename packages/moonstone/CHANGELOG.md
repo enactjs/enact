@@ -13,8 +13,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` to set play/pause icon to display "play" when rewinding or fast forwarding
 
 ### Fixed
+- `moonstone/ExpandableItem` to correct the arrow direction when using `open` and `disabled`
 - `moonstone/GridListImageItem` to center its selection icon on the image instead of the item
-
 - `moonstone/Input` to have correct `Tooltip` position in `RTL`
 
 ### Removed
