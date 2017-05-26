@@ -1118,8 +1118,6 @@ const VideoPlayerBase = class extends React.Component {
 			this.stopAutoCloseTimeout();	// Interupt the timer since controls should not hide while viewing "more".
 			// Interrupt the title-hide since we don't want it hiding autonomously in "more".
 			this.stopDelayedTitleHide();
-			// Read video details
-			this.props.announce(`${this.props.infoComponents}`);
 		}
 		this.setState({
 			more: !this.state.more,
@@ -1176,7 +1174,7 @@ const VideoPlayerBase = class extends React.Component {
 					{source}
 				</video>
 
-				<Overlay aria-live="assertive" aria-busy={this.state.loading} onClick={this.onVideoClick}>
+				<Overlay onClick={this.onVideoClick}>
 					{this.state.loading ? <Spinner centered /> : null}
 				</Overlay>
 
