@@ -16,12 +16,7 @@
 	will-change: opacity;
 
 	&.hidden {
-		@hiding-duration: 500ms;
-
-		transition: opacity @hiding-duration ease-in;
 		opacity: 0;
-		animation: 0ms linear @hiding-duration 1 forwards;
-		animation-name: displayNone;
 	}
 
 	> * {
