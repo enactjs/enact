@@ -27,7 +27,7 @@ const contextTypes = {
  */
 const defaultConfig = {
 	/**
-	 * An hash mapping the available skin names to their CSS class name. The keys are accepted as
+	 * A hash mapping the available skin names to their CSS class name. The keys are accepted as
 	 * the only valid values for the `skin` prop on the wrapped component.
 	 *
 	 * @type {Object}
