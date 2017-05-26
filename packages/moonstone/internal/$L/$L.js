@@ -1,6 +1,7 @@
 /* global ILIB_MOONSTONE_PATH */
 
 import ResBundle from '@enact/i18n/ilib/lib/ResBundle';
+import Locale from '@enact/i18n/ilib/lib/Locale';
 
 // The ilib.ResBundle for the active locale used by $L
 let resBundle;
@@ -8,12 +9,12 @@ let resBundle;
 /**
  * Creates a new ilib.ResBundle for string translation
  *
- * @param  {ilib.Locale} locale Locale for ResBundle
- *
  * @returns {ilib.ResBundle} New ilib.ResBundle
  */
 function getResBundle () {
-	if (!resBundle && typeof ILIB_MOONSTONE_PATH === 'string') {
+	let currLoc = new Locale();
+	if (typeof ILIB_MOONSTONE_PATH === 'string' && (!resBundle ||
+			currLoc.getSpec() !== resBundle.getLocale().getSpec())) {
 		resBundle = new ResBundle({
 			loadParams: {
 				root: ILIB_MOONSTONE_PATH
