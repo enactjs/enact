@@ -24,7 +24,7 @@ import css from './ContextualPopupDecorator.less';
  *
  * @type {Object}
  * @hocconfig
- * @memberof moonstone/ContextualPopupDecorator
+ * @memberof moonstone/ContextualPopupDecorator.ContextualPopupDecorator
  */
 const defaultConfig = {
 	/**

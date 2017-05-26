@@ -1,8 +1,13 @@
 /**
  * Exports the {@link ui/Skinnable.Skinnable} Higher-order Component (HOC).
  *
+ * This is the base-level implementation of this component. It will typically never be accessed
+ * directly, and only be instantiated with a configuration once inside a visual-library like
+ * {@link moonstone/Skinnable}. Interface libraries will supply a set of supported skins which will
+ * be accessible to their components.
+ *
  * @module ui/Skinnable
- * @private
+ * @public
  */
 
 import hoc from '@enact/core/hoc';
@@ -18,7 +23,7 @@ const contextTypes = {
  *
  * @memberof ui/Skinnable.Skinnable
  * @hocconfig
- * @private
+ * @public
  */
 const defaultConfig = {
 	/**
@@ -26,7 +31,7 @@ const defaultConfig = {
 	 * the only valid values for the `skin` prop on the wrapped component.
 	 *
 	 * @type {Object}
-	 * @memberof ui/Skinnable.Skinnable.skins
+	 * @memberof ui/Skinnable.Skinnable.defaultConfig
 	 */
 	skins: null,
 
@@ -35,7 +40,7 @@ const defaultConfig = {
 	 * wrapped component provides no value to the `skin` prop.
 	 *
 	 * @type {String}
-	 * @memberof ui/Skinnable.Skinnable.defaultSkin
+	 * @memberof ui/Skinnable.Skinnable.defaultConfig
 	 */
 	defaultSkin: null,
 
@@ -45,14 +50,14 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'Skinnable'
-	 * @memberof ui/Skinnable.Skinnable.displayName
+	 * @memberof ui/Skinnable.Skinnable.defaultConfig
 	 */
 	displayName: 'Skinnable'
 };
 
 /**
- * {@link ui/Skinnable.Skinnable} is a Higher-order Component that assigns skinning classes for the
- * purposes of styling children components.
+ * [Skinnable]{@link ui/Skinnable.Skinnable} is a Higher-order Component that assigns skinning
+ * classes for the purposes of styling children components.
  *
  * Use the config options to specify the skins your theme has. Set this up in your Theme's decorator
  * component to establish your supported skins.
