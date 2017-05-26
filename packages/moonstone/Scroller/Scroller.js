@@ -125,7 +125,7 @@ class ScrollerBase extends Component {
 	 * @returns {Node|Null}       Spotlight container for `node`
 	 * @private
 	 */
-	getContainerForNode = (node) => {
+	getSpotlightContainerForNode = (node) => {
 		do {
 			if (node.dataset.containerId) {
 				return node;
@@ -143,7 +143,7 @@ class ScrollerBase extends Component {
 	 * @private
 	 */
 	getFocusedItemBounds = (node) => {
-		node = this.getContainerForNode(node) || node;
+		node = this.getSpotlightContainerForNode(node) || node;
 		return node.getBoundingClientRect();
 	}
 
@@ -277,6 +277,8 @@ class ScrollerBase extends Component {
 		scrollBounds.maxLeft = Math.max(0, scrollWidth - clientWidth);
 		scrollBounds.maxTop = Math.max(0, scrollHeight - clientHeight);
 	}
+
+	getContainerNode = () => (this.containerRef)
 
 	setContainerDisabled = (bool) => {
 		if (this.containerRef) {

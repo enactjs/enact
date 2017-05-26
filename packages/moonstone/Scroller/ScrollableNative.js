@@ -469,10 +469,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 
 			if (animate) {
-				this.childRef.scrollTo(targetX, targetY);
+				this.childRef.setScrollPosition(targetX, targetY);
 			} else {
 				containerNode.style.scrollBehavior = null;
-				this.childRef.scrollTo(targetX, targetY);
+				this.childRef.setScrollPosition(targetX, targetY);
 				containerNode.style.scrollBehavior = 'smooth';
 				this.focusOnItem({indexToFocus, nodeToFocus});
 			}
@@ -488,6 +488,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		scroll = (left, top) => {
+			const {didScroll} = this.childRef;
 			let
 				dirHorizontal = 0,
 				dirVertical = 0;
@@ -501,7 +502,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				this.setScrollTop(top);
 			}
 
-			this.childRef.setScrollPosition(this.scrollLeft, this.scrollTop, dirHorizontal, dirVertical);
+			if (didScroll) {
+				didScroll(this.scrollLeft, this.scrollTop, dirHorizontal, dirVertical);
+			}
 			this.doScrolling();
 		}
 
