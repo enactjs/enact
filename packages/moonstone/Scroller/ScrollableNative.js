@@ -488,7 +488,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		scroll = (left, top) => {
-			const {didScroll} = this.childRef;
 			let
 				dirHorizontal = 0,
 				dirVertical = 0;
@@ -502,8 +501,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				this.setScrollTop(top);
 			}
 
-			if (didScroll) {
-				didScroll(this.scrollLeft, this.scrollTop, dirHorizontal, dirVertical);
+			if (this.childRef.didScroll) {
+				this.childRef.didScroll(this.scrollLeft, this.scrollTop, dirHorizontal, dirVertical);
 			}
 			this.doScrolling();
 		}

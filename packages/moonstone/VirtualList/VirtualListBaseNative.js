@@ -520,7 +520,7 @@ class VirtualListCoreNative extends Component {
 
 	setScrollPosition (x, y) {
 		const node = this.wrapperRef;
-		node.setScrollPosition((this.context.rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x, y);
+		node.scrollTo((this.context.rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x, y);
 	}
 
 	composeStyle (style, width, height, primaryPosition, secondaryPosition) {
