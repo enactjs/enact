@@ -491,7 +491,8 @@ const VideoPlayerBase = class extends React.Component {
 			proportionPlayed: 0,
 			sliderScrubbing: false,
 			sliderKnobProportion: 0,
-			titleVisible: true
+			titleVisible: true,
+			titleCalculated: false
 		};
 	}
 
@@ -548,6 +549,9 @@ const VideoPlayerBase = class extends React.Component {
 		) {
 			this.focusDefaultMediaControl();
 		}
+		if (!this.state.titleCalculated && this.state.bottomControlsVisible) {
+			this.updateTitle();
+		}
 	}
 
 	componentWillUnmount () {
@@ -564,6 +568,18 @@ const VideoPlayerBase = class extends React.Component {
 	//
 	// Internal Methods
 	//
+	updateTitle = () => {
+		// calculate how far the title should animate up when infoComponents appear.
+		const titleElement = this.player.querySelector(`.${css.title}`);
+		const infoComponents = this.player.querySelector(`.${css.infoComponents}`);
+
+		if (titleElement && infoComponents) {
+			const infoHeight = infoComponents.offsetHeight;
+			titleElement.setAttribute('style', `--translateY: -${infoHeight}px`);
+			this.setState({titleCalculated: true});
+		}
+	}
+
 	initI18n = () => {
 		const locale = ilib.getLocale();
 

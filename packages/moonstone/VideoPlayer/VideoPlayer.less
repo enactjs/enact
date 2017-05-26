@@ -29,6 +29,7 @@
 			background-color: @moon-video-player-bottom-bg-color;
 
 			.infoFrame {
+				position: relative;
 				display: flex;
 				text-shadow: @moon-video-player-title-text-shadow;
 				margin-bottom: @moon-spotlight-outset;
@@ -50,14 +51,16 @@
 
 					// Title
 					.title {
+						--translateY: 0;
+						position: absolute;
+						bottom: 0;
 						.moon-text-base(@moon-video-player-title-size);
 						line-height: @moon-header-line-height;
 						transition: @badges-present-transition;
-						transform: translateY(36px) translateZ(0);
 						.font-kerning;
 
 						&.infoVisible {
-							transform: translateY(0) translateZ(0);
+							transform: translateY(var(--translateY)) translateZ(0);
 						}
 
 						.enyo-locale-non-latin & {
