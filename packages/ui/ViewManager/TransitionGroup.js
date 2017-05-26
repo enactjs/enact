@@ -21,7 +21,6 @@ import unionWith from 'ramda/src/unionWith';
 import useWith from 'ramda/src/useWith';
 
 import css from './TransitionGroup.less';
-import ViewPortCSS from '../../moonstone/Panels/Panels.less';
 /**
  * Returns the index of a child in an array found by `key` matching
  *
@@ -326,9 +325,7 @@ class TransitionGroup extends React.Component {
 			this._handleDoneEntering(key);
 		}
 
-		this.setState({
-			transitioning: true
-		});
+		this.setState({transitioning: true});
 	}
 
 	_handleDoneEntering = (key) => {
@@ -341,6 +338,7 @@ class TransitionGroup extends React.Component {
 			view: component
 		}, this.props);
 
+		this.setState({transitioning: false});
 		this.completeTransition(key);
 	}
 
@@ -393,12 +391,10 @@ class TransitionGroup extends React.Component {
 		}, this.props);
 
 		this.completeTransition(key);
+
 		this.setState(function (state) {
 			const index = indexOfChild(key, state.children);
-			return {
-				transitioning: false,
-				children: remove(index, 1, state.children)
-			};
+			return {children: remove(index, 1, state.children)};
 		});
 	}
 
@@ -417,8 +413,7 @@ class TransitionGroup extends React.Component {
 		// Do not forward TransitionGroup props to primitive DOM nodes
 		const props = Object.assign({}, this.props);
 
-		// Only useful when using moonstone.
-		if (this.state.transitioning && props.className === ViewPortCSS.viewport) {
+		if (this.state.transitioning) {
 			props.className += ` ${css.transitioning}`;
 		}
 
