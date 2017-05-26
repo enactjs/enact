@@ -21,6 +21,13 @@ const defaultConfig = {
 	 */
 	generateProp: 'generateId',
 
+	/**
+	 * Prop to pass the identifier
+	 *
+	 * @type {String}
+	 * @default id
+	 * @memberof moonstone/Panels.IdProvider.defaultConfig
+	 */
 	idProp: 'id',
 
 	/**
@@ -86,7 +93,7 @@ const IdProvider = hoc(defaultConfig, (config, Wrapped) => {
 				props[generateProp] = this.generateId;
 			}
 
-			if (idProp) {
+			if (idProp && !props[idProp]) {
 				props[idProp] = this.generateId(ID_KEY);
 			}
 

@@ -21,10 +21,20 @@ const PanelsBase = kind({
 
 	propTypes: /** @lends moonstone/Panels.Panels.prototype */ {
 		/**
+		 * Function that generates unique identifiers for Panel instances
+		 *
+		 * @type {Function}
+		 * @required
+		 * @private
+		 */
+		generateId: PropTypes.func.isRequired,
+
+		/**
 		 * Set of functions that control how the panels are transitioned into and out of the
 		 * viewport
 		 *
 		 * @type {Arranger}
+		 * @public
 		 */
 		arranger: shape,
 
@@ -32,10 +42,9 @@ const PanelsBase = kind({
 		 * Panels to be rendered
 		 *
 		 * @type {Panel}
+		 * @public
 		 */
 		children: PropTypes.node,
-
-		generateId: PropTypes.func,
 
 		/**
 		 * Unique identifier for the Panels instance
@@ -50,6 +59,7 @@ const PanelsBase = kind({
 		 *
 		 * @type {Number}
 		 * @default 0
+		 * @public
 		 */
 		index: PropTypes.number,
 
@@ -58,6 +68,7 @@ const PanelsBase = kind({
 		 *
 		 * @type {Boolean}
 		 * @default false
+		 * @public
 		 */
 		noAnimation: PropTypes.bool,
 
@@ -66,12 +77,15 @@ const PanelsBase = kind({
 		 *
 		 * @type {Boolean}
 		 * @default false
+		 * @public
 		 */
 		noCloseButton: PropTypes.bool,
 
 		/**
 		 * A function to run when app close button is clicked
+		 *
 		 * @type {Function}
+		 * @public
 		 */
 		onApplicationClose: PropTypes.func,
 
@@ -79,6 +93,7 @@ const PanelsBase = kind({
 		 * Callback to handle cancel/back key events
 		 *
 		 * @type {Function}
+		 * @public
 		 */
 		onBack: PropTypes.func
 	},

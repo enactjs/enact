@@ -87,8 +87,21 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 */
 			children: PropTypes.node,
 
+			/**
+			 * Function that generates unique identifiers for Panel instances
+			 *
+			 * @type {Function}
+			 * @required
+			 * @private
+			 */
 			generateId: PropTypes.func,
 
+			/**
+			 * Unique identifier for the Panels instance
+			 *
+			 * @type {String}
+			 * @public
+			 */
 			id: PropTypes.string,
 
 			/**
