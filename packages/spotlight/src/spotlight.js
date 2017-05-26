@@ -754,14 +754,8 @@ const Spotlight = (function () {
 		 */
 		move: function (direction, selector) {
 			direction = direction.toLowerCase();
-			switch (direction) {
-				case 'up':
-				case 'down':
-				case 'left':
-				case 'right':
-					break;
-				default:
-					return false;
+			if (direction !== 'up' && direction !== 'down' && direction !== 'left' && direction !== 'right') {
+				return false;
 			}
 
 			const elem = selector ? parseSelector(selector)[0] : getCurrent();
