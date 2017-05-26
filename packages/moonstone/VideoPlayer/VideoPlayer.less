@@ -60,7 +60,7 @@
 						.font-kerning;
 
 						&.infoVisible {
-							transform: translateY(var(--infoComponentsOffset)) translateZ(0);
+							transform: translateY(~'calc(var(--infoComponentsOffset) * -1)') translateZ(0);
 						}
 
 						.enyo-locale-non-latin & {

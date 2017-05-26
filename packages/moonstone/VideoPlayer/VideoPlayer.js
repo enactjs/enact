@@ -575,7 +575,7 @@ const VideoPlayerBase = class extends React.Component {
 
 		if (titleElement && infoComponents) {
 			const infoHeight = infoComponents.offsetHeight;
-			titleElement.setAttribute('style', `--infoComponentsOffset: -${infoHeight}px`);
+			titleElement.setAttribute('style', `--infoComponentsOffset: ${infoHeight}px`);
 			this.titleOffsetCalculated = true;
 		}
 	}
