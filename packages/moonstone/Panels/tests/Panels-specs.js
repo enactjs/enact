@@ -45,35 +45,4 @@ describe('Panels Specs', () => {
 		expect(expected).to.equal(actual);
 	});
 
-	it('should have transitioning class when setTransition is set to true', function () {
-		const subject = mount(
-			<PanelsBase />
-		);
-
-		const PanelsSubject = subject.find('Panels');
-
-		PanelsSubject.prop('setTransition')(true);
-
-		const expected = true;
-		const actual = subject.find(`.${css.panels}`).hasClass(css.transitioning);
-
-		expect(expected).to.equal(actual);
-	});
-
-	it('should have not transitioning class when setTransition is set to false', function () {
-		const subject = mount(
-			<PanelsBase />
-		);
-
-		const PanelsSubject = subject.find('Panels');
-
-		PanelsSubject.prop('setTransition')(true);
-		PanelsSubject.prop('setTransition')(false);
-
-		const expected = false;
-		const actual = subject.find(`.${css.panels}`).hasClass(css.transitioning);
-
-		expect(expected).to.equal(actual);
-	});
-
 });

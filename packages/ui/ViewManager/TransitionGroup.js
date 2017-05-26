@@ -417,6 +417,7 @@ class TransitionGroup extends React.Component {
 		// Do not forward TransitionGroup props to primitive DOM nodes
 		const props = Object.assign({}, this.props);
 
+		// Only useful when using moonstone.
 		if (this.state.transitioning && props.className === ViewPortCSS.viewport) {
 			props.className += ` ${css.transitioning}`;
 		}
