@@ -1,9 +1,9 @@
 // Button.less
 //
 @import '../styles/mixins.less';
-@import '../styles/colors.less';
 @import '../styles/variables.less';
 @import '../styles/text.less';
+@import '../styles/skin.less';
 
 // Local scope for some math variables
 & {
@@ -32,7 +32,7 @@
 	}
 }
 
-.button {
+.applySkins({.button {
 	.moon-large-button-text();
 	position: relative;
 	overflow: visible;
@@ -51,7 +51,14 @@
 	box-sizing: border-box;
 	z-index: 0;
 	text-align: center;
+	vertical-align: middle;
 	.moon-taparea(@moon-button-height);
+
+	.moon-custom-text({
+		font-size: @moon-button-large-font-size-large;
+		height: @moon-button-height-large;
+		line-height: (@moon-button-height-large - (2 * @moon-button-border-width));
+	});
 
 	.bg {
 		.position(0);
@@ -59,7 +66,7 @@
 		content: '';
 		background-color: inherit;
 		z-index: -1;
-		background-color: @moon-button-background-color;
+		background-color: @moon-button-bg-color;
 		border: @moon-button-border-width solid transparent;
 		border-radius: @moon-button-border-radius;
 
@@ -84,6 +91,35 @@
 		align-items: center;
 		box-sizing: border-box;
 		height: 100%;
+		position: relative;
+
+		// Colored under-bar
+		&::before {
+			content: '';
+			position: absolute;
+			min-width: 24px;
+			height: 6px;
+			bottom: 18px;
+			left: 24px;
+			right: 24px;
+			border-radius: 6px;
+		}
+
+		.icon {
+			-webkit-margin-start: 0;
+		}
+	}
+	&.red .client::before {
+		background-color: @moon-remote-button-red-color;
+	}
+	&.green .client::before {
+		background-color: @moon-remote-button-green-color;
+	}
+	&.yellow .client::before {
+		background-color: @moon-remote-button-yellow-color;
+	}
+	&.blue .client::before {
+		background-color: @moon-remote-button-blue-color;
 	}
 
 	&.minWidth {
@@ -102,14 +138,30 @@
 		}
 
 		.moon-taparea(@moon-button-small-height);
+
+		.moon-custom-text({
+			font-size: @moon-button-small-font-size-large;
+			height: @moon-button-small-height-large;
+			line-height: (@moon-button-small-height-large - (2 * @moon-button-border-width));
+		});
+
+		.client::before {
+			bottom: 12px;
+			left: 18px;
+			right: 18px;
+		}
 	}
 
 	&.translucent .bg {
-		background-color: fade(@moon-button-background-color, @moon-button-translucent-opacity);
+		background-color: fade(@moon-button-bg-color, @moon-button-translucent-opacity);
 	}
 
-	&.transparent .bg {
-		background-color: transparent;
+	&.transparent {
+		color: @moon-text-color;
+
+		.bg {
+			background-color: transparent;
+		}
 	}
 
 	// Button-non-disabled rules
@@ -123,11 +175,11 @@
 		}
 
 		&:global(.spottable):focus {
+			color: @moon-spotlight-text-color;
 			background-color: transparent;
 
 			.bg {
 				background-color: @moon-spotlight-border-color;
-				color: @moon-spotlight-text-color;
 			}
 		}
 	}
@@ -151,34 +203,10 @@
 
 	&[disabled] {
 		cursor: default;
-	}
 
-	:global(.moon-neutral) & {
-		color: @moon-neutral-button-text-color;
-
-		.bg {
-			background-color: @moon-neutral-button-bg-color;
-		}
-
-		&.translucent .bg {
-			background-color: fade(@moon-neutral-button-bg-color, @moon-button-translucent-opacity);
-		}
-
-		&.transparent .bg {
-			background-color: transparent;
-		}
-
-		* {
-			color: inherit;
-		}
-
-		&[disabled],
-		&:global(.disabled) {
-			color: @moon-neutral-button-disabled-text-color;
-
-			.bg {
-				background-color: @moon-neutral-button-disabled-bg-color;
-			}
+		&.translucent,
+		&.transparent {
+			opacity: @moon-disabled-translucent-opacity;
 		}
 	}
 }
@@ -190,7 +218,7 @@
 			color: @moon-button-text-color;
 
 			.bg {
-				background-color: @moon-button-background-color;
+				background-color: @moon-button-bg-color;
 			}
 		}
 
@@ -203,4 +231,4 @@
 			}
 		}
 	}
-}
+}});

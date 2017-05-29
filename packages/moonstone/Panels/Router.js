@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import warning from 'warning';
 
 const toSegments = (path) => Array.isArray(path) ? path : path.split('/').slice(1);
@@ -21,9 +22,9 @@ const stringifyRoutes = (routes) => {
 };
 
 const propTypes = {
-	path: React.PropTypes.oneOfType([
-		React.PropTypes.arrayOf(React.PropTypes.string),	// array of path segments
-		React.PropTypes.string								// URI-style path
+	path: PropTypes.oneOfType([
+		PropTypes.arrayOf(PropTypes.string),	// array of path segments
+		PropTypes.string								// URI-style path
 	])
 };
 
@@ -57,9 +58,9 @@ const Router = class extends React.Component {
 		 * @default 'div'
 		 * @public
 		 */
-		component: React.PropTypes.oneOfType([
-			React.PropTypes.string,
-			React.PropTypes.func
+		component: PropTypes.oneOfType([
+			PropTypes.string,
+			PropTypes.func
 		]),
 
 		/**
@@ -69,7 +70,7 @@ const Router = class extends React.Component {
 		 * @type {Object}
 		 * @public
 		 */
-		routes: React.PropTypes.object
+		routes: PropTypes.object
 	}
 
 	static defaultProps = {
@@ -138,7 +139,8 @@ const Router = class extends React.Component {
 			if (route && route.$component) {
 				return React.createElement(route.$component, {
 					...route.$props,
-					key: 'view$/' + subPath
+					key: 'view$/' + subPath,
+					containerId: `panel-${subPath.replace(/\//g, '-')}`
 				});
 			}
 
@@ -155,8 +157,8 @@ const Router = class extends React.Component {
 		const {component: Component, ...rest} = this.props;
 		const children = this.createChildren();
 
-		delete rest.routes;
 		delete rest.path;
+		delete rest.routes;
 
 		return <Component {...rest}>{children}</Component>;
 	}
@@ -196,9 +198,9 @@ Route.propTypes = {
 	 * @public
 	 * @memberof moonstone/Panels.Route.prototype
 	 */
-	component: React.PropTypes.oneOfType([
-		React.PropTypes.string,
-		React.PropTypes.func
+	component: PropTypes.oneOfType([
+		PropTypes.string,
+		PropTypes.func
 	]).isRequired,
 
 	/**
@@ -208,7 +210,7 @@ Route.propTypes = {
 	 * @public
 	 * @memberof moonstone/Panels.Route.prototype
 	 */
-	path: React.PropTypes.string.isRequired
+	path: PropTypes.string.isRequired
 };
 
 export default Router;

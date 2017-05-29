@@ -1,6 +1,8 @@
+import $L from '@enact/i18n/$L';
 import kind from '@enact/core/kind';
-import {Spotlight, Spottable} from '@enact/spotlight';
+import Spottable from '@enact/spotlight/Spottable';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import css from './Panels.less';
 
@@ -34,14 +36,21 @@ const BreadcrumbBase = kind({
 		 *
 		 * @type {Number}
 		 */
-		index: React.PropTypes.number.isRequired,
+		index: PropTypes.number.isRequired,
 
 		/**
 		 * Called when the breadcrumb is clicked
 		 *
 		 * @type {Function}
 		 */
-		onSelect: React.PropTypes.func
+		onClick: PropTypes.func,
+
+		/**
+		 * Called when the breadcrumb is clicked
+		 *
+		 * @type {Function}
+		 */
+		onSelect: PropTypes.func
 	},
 
 	styles: {
@@ -60,7 +69,12 @@ const BreadcrumbBase = kind({
 	},
 
 	render: ({children, index, onSelect, ...rest}) => (
-		<SpottableDiv {...rest} data-index={index} onClick={onSelect}>
+		<SpottableDiv
+			{...rest}
+			aria-label={$L('go to previous')}
+			data-index={index}
+			onClick={onSelect}
+		>
 			<div className={css.breadcrumbHeader}>
 				{children}
 			</div>

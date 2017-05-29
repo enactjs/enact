@@ -1,13 +1,13 @@
-@import '../styles/colors.less';
 @import '../styles/mixins.less';
 @import '../styles/text.less';
 @import '../styles/variables.less';
+@import '../styles/skin.less';
 
-.gridListImageItem {
-	display: inline-block;
-	padding-bottom: 96px;
+.applySkins({.gridListImageItem {
+	box-sizing: border-box;
 	border: 6px solid transparent;
-	overflow: hidden;
+
+	color: @moon-white;
 
 	.icon {
 		background-color: white;
@@ -29,23 +29,16 @@
 	}
 
 	.overlayComponent {
-		position: absolute;
-		top: 50%;
-		left: 50%;
-		-webkit-transform: translateX(-50%) translateY(-50%);
-		transform: translateX(-50%) translateY(-50%);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		height: 100%;
 	}
 
 	.overlayContainer {
 		background-color: transparent;
-		position: absolute;
-		padding: 12px;
-		top: 0;
-		left: 0;
-		right: 0;
-		bottom: 0;
-
 		pointer-events: none;
+		height: 100%;
 	}
 
 	&.selected {
@@ -55,6 +48,15 @@
 
 			color: @moon-accent;
 		}
+	}
+
+	&.useCaption,
+	&.useSubCaption {
+		padding-bottom: 42px;
+	}
+
+	&.useCaption.useSubCaption {
+		padding-bottom: 96px;
 	}
 
 	.caption {
@@ -83,4 +85,4 @@
 			}
 		}
 	}
-}
+}});

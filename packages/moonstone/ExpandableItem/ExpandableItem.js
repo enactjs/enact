@@ -7,21 +7,22 @@
  * @module moonstone/ExpandableItem
  */
 
+import {extractAriaProps} from '@enact/core/util';
 import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import LabeledItem from '../LabeledItem';
 
 import Expandable from './Expandable';
-import ExpandableContainer from './ExpandableContainer';
 import ExpandableTransitionContainer from './ExpandableTransitionContainer';
 
 const isUp = is('up');
 const isDown = is('down');
 
 /**
- * {@link moonstone/ExpandableItem.ExpandableItem} is a stateless component that
+ * {@link moonstone/ExpandableItem.ExpandableItemBase} is a stateless component that
  * renders a {@link moonstone/LabeledItem.LabeledItem} that can be expanded to show
  * additional contents.
  *
@@ -74,11 +75,10 @@ const ExpandableItemBase = kind({
 		/**
 		 * The secondary, or supportive text. Typically under the `title`, a subtitle.
 		 *
-		 * @type {String}
-		 * @default null
+		 * @type {Node}
 		 * @public
 		 */
-		label: PropTypes.string,
+		label: PropTypes.node,
 
 		/**
 		 * When `true`, the user is prevented from moving {@glossary Spotlight} past the bottom
@@ -101,19 +101,33 @@ const ExpandableItemBase = kind({
 		 * Callback to be called when a condition occurs which should cause the expandable to close
 		 *
 		 * @type {Function}
-		 * @default null
 		 * @public
 		 */
 		onClose: PropTypes.func,
 
 		/**
+		 * Callback to be called when the expandable closes
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		onHide: PropTypes.func,
+
+		/**
 		 * Callback to be called when a condition occurs which should cause the expandable to open
 		 *
 		 * @type {Function}
-		 * @default null
 		 * @public
 		 */
 		onOpen: PropTypes.func,
+
+		/**
+		 * Callback to be called when the expandable opens
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		onShow: PropTypes.func,
 
 		/**
 		 * The handler to run when the component is removed while retaining focus.
@@ -132,6 +146,14 @@ const ExpandableItemBase = kind({
 		 * @public
 		 */
 		open: PropTypes.bool,
+
+		/**
+		 * Sets a reference to the root container node of the ExpandableItem
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		setContainerNode: PropTypes.func,
 
 		/**
 		 * Controls when `label` is shown.
@@ -207,18 +229,26 @@ const ExpandableItemBase = kind({
 		transitionSpotlightDisabled: ({open, spotlightDisabled}) => (spotlightDisabled || !open)
 	},
 
-	render: ({children, disabled, handleKeyDown, handleOpen, label, open, onSpotlightDisappear, spotlightDisabled, title, titleIcon, transitionSpotlightDisabled, ...rest}) => {
+	render: ({children, disabled, handleKeyDown, handleOpen, label, open, onHide, onShow, onSpotlightDisappear, setContainerNode, spotlightDisabled, title, titleIcon, transitionSpotlightDisabled, ...rest}) => {
 		delete rest.autoClose;
-		delete rest.label;
 		delete rest.lockBottom;
 		delete rest.noneText;
 		delete rest.onClose;
 		delete rest.onOpen;
 		delete rest.showLabel;
 
+		const ariaProps = extractAriaProps(rest);
+
 		return (
-			<ExpandableContainer {...rest} disabled={disabled} open={open} spotlightDisabled={spotlightDisabled}>
+			<div
+				{...rest}
+				aria-disabled={disabled}
+				disabled={disabled}
+				open={open}
+				ref={setContainerNode}
+			>
 				<LabeledItem
+					{...ariaProps}
 					disabled={disabled}
 					label={label}
 					onClick={handleOpen}
@@ -229,23 +259,28 @@ const ExpandableItemBase = kind({
 				<ExpandableTransitionContainer
 					data-expandable-container
 					duration="short"
+					onHide={onHide}
 					onKeyDown={handleKeyDown}
+					onShow={onShow}
 					spotlightDisabled={transitionSpotlightDisabled}
 					type="clip"
 					visible={open}
 				>
 					{children}
 				</ExpandableTransitionContainer>
-			</ExpandableContainer>
+			</div>
 		);
 	}
 });
-
 
 /**
  * {@link moonstone/ExpandableItem.ExpandableItem} renders a
  * {@link moonstone/LabeledItem.LabeledItem} that can be expanded to show additional
  * contents.
+ *
+ * `ExpandableItem` maintains its open/closed state by default. The initial state can be supplied
+ * using `defaultOpen`. In order to directly control the open/closed state, supply a value for
+ * `open` at creation time and update its value in response to `onClose`/`onOpen` events.
  *
  * @class ExpandableItem
  * @memberof moonstone/ExpandableItem
@@ -253,7 +288,9 @@ const ExpandableItemBase = kind({
  * @mixes moonstone/ExpandableItem.Expandable
  * @public
  */
-const ExpandableItem = Expandable(ExpandableItemBase);
+const ExpandableItem = Expandable(
+	ExpandableItemBase
+);
 
 export default ExpandableItem;
 export {

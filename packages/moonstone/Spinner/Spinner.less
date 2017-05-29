@@ -1,7 +1,8 @@
 // Spinner.less
 //
+@import '../../ui/styles/mixins.less';
 @import '../styles/variables.less';
-@import '../styles/colors.less';
+@import '../styles/skin.less';
 
 @-webkit-keyframes spinBall {
 	0%        { -webkit-transform: rotateZ(@moon-spinner-ball-angle); }
@@ -99,14 +100,14 @@
 	/* Speed back up as the ball falls */
 }
 
-.spinner {
+.applySkins({.spinner {
 	min-height: @moon-spinner-size;
 	min-width: @moon-spinner-size;
 	line-height: @moon-spinner-size;
 	position: relative;
 	display: inline-block;
 	color: @moon-spinner-text-color;
-	background-color: @moon-spinner-background-color;
+	background-color: @moon-spinner-bg-color;
 	border-radius: (@moon-button-height / 2);
 	margin: 0 @moon-spotlight-outset;
 
@@ -202,7 +203,31 @@
 	}
 }
 
-:global(.enact-locale-right-to-left) .spinner {
+.spinnerContainer {
+	// When `blockClickOn='container'` && `centered={false}`, there is a container div that should have
+	// `display: inline-block;` to match SpinnerBase's .spinner
+	display: inline-block;
+
+	// When `blockClickOn='container'` && `centered`, the container div should have 'display:block' for
+	// the spinner to be centered in the container correctly.
+	&.centered {
+		display: block;
+	}
+
+	// Scrim will fill up to the first ancestor element with absolute or relative position.
+	// Parent needs to have absolute or relative position for scrim to block as expected.
+	.blockClickOn {
+		position: absolute;
+		.position(0);
+
+		// Visible scrim
+		&.scrim {
+			background-color: @moon-scrim-color;
+		}
+	}
+}
+
+:global(.enact-locale-right-to-left)& .spinner {
 	// This allows for the spinner to spin in a counter-clockwise direction in RTL mode
 	// .-spinner-ball-decorator {
 	// 	-webkit-transform: scaleX(-1);
@@ -224,4 +249,4 @@
 		-webkit-transform: translateX(50%) translateY(-50%);
 		transform: translateX(50%) translateY(-50%);
 	}
-}
+}});

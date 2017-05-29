@@ -8,7 +8,8 @@
  */
 
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import VirtualListBase, {gridListItemSizeShape} from './VirtualListBase';
 
@@ -83,6 +84,17 @@ const VirtualList = kind({
 		 * @name direction
 		 * @type {String}
 		 * @default 'vertical'
+		 * @memberof moonstone/VirtualList.VirtualList
+		 * @instance
+		 * @public
+		 */
+
+		/**
+		 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
+		 * not move focus to the scrollbar controls.
+		 *
+		 * @name focusableScrollbar
+		 * @type {Boolean}
 		 * @memberof moonstone/VirtualList.VirtualList
 		 * @instance
 		 * @public
@@ -173,6 +185,17 @@ const VirtualGridList = kind({
 		 * @name direction
 		 * @type {String}
 		 * @default 'vertical'
+		 * @memberof moonstone/VirtualList.VirtualGridList
+		 * @instance
+		 * @public
+		 */
+
+		/**
+		 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
+		 * not move focus to the scrollbar controls.
+		 *
+		 * @name focusableScrollbar
+		 * @type {Boolean}
 		 * @memberof moonstone/VirtualList.VirtualGridList
 		 * @instance
 		 * @public

@@ -1,1 +1,1 @@
-{"language.name":"Lower Sorbian","scripts":["Latn"],"locale":"dsb"}
+{"delimiter":{"quotationStart":"„","quotationEnd":"“","alternateQuotationStart":"‚","alternateQuotationEnd":"‘"},"language.name":"Lower Sorbian","numfmt":{"decimalChar":",","groupChar":".","currencyFormats":{"common":"{n} {s}","commonNegative":"-{n} {s}"},"pctFmt":"{n} %","negativepctFmt":"-{n} %"},"scripts":["Latn"],"locale":"dsb"}

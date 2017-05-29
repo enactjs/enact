@@ -8,8 +8,9 @@
 
 import classNames from 'classnames';
 import {forward} from '@enact/core/handle';
-import React, {Component, PropTypes} from 'react';
-import {SpotlightContainerDecorator} from '@enact/spotlight';
+import PropTypes from 'prop-types';
+import React, {Component} from 'react';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import {VirtualListCore} from '../VirtualList/VirtualListBase';
 
@@ -65,7 +66,7 @@ const cornerShape = PropTypes.shape({
 const headersShape = PropTypes.shape({
 	row: PropTypes.shape({
 		component: PropTypes.func.isRequired,
-		count:  PropTypes.number.isRequired,
+		count: PropTypes.number.isRequired,
 		data: PropTypes.any.isRequired,
 		height: PropTypes.number.isRequired,
 		width: PropTypes.number.isRequired,
@@ -73,7 +74,7 @@ const headersShape = PropTypes.shape({
 	}),
 	col: PropTypes.shape({
 		component: PropTypes.func.isRequired,
-		count:  PropTypes.number.isRequired,
+		count: PropTypes.number.isRequired,
 		data: PropTypes.any.isRequired,
 		height: PropTypes.number.isRequired,
 		width: PropTypes.number.isRequired,
@@ -231,6 +232,32 @@ class VirtualFlexList extends Component {
 	}
 
 	/*
+	 * Life cycle methods
+	 */
+
+	componentWillReceiveProps (nextProps) {
+		const {headers, items, x, y} = this.props;
+
+		if (
+			items.colCount !== nextProps.items.colCount ||
+			items.data !== nextProps.items.data ||
+			items.height !== nextProps.items.height ||
+			items.rowCount !== nextProps.items.rowCount ||
+			items.width !== nextProps.items.width ||
+			headers && nextProps.headers && (
+				headers.col.count !== nextProps.headers.col.count ||
+				headers.row.count !== nextProps.headers.row.count
+			)
+		) {
+			this.componentProps = this.getComponentProps(nextProps);
+		}
+
+		if (x !== nextProps.x || y !== nextProps.y) {
+			this.setState({x: nextProps.x, y: nextProps.y});
+		}
+	}
+
+	/*
 	 * Calculate the position and the size of the header and the item lists.
 	 */
 
@@ -319,25 +346,6 @@ class VirtualFlexList extends Component {
 	onPositionChange = (position) => {
 		this.setState(position);
 		forwardPositionChange(position, this.props);
-	}
-
-	/*
-	 * Life cycle methods
-	 */
-
-	componentWillReceiveProps (nextProps) {
-		const {headers, items, x, y} = this.props;
-
-		if (
-			items.colCount !== nextProps.items.colCount || items.height !== nextProps.items.height || items.rowCount !== nextProps.items.rowCount ||
-			headers && (headers.col.count !== nextProps.headers.col.count || headers.row.count !== nextProps.headers.row.count)
-		) {
-			this.componentProps = this.getComponentProps(nextProps);
-		}
-
-		if (x !== nextProps.x || y !== nextProps.y) {
-			this.setState({x: nextProps.x, y: nextProps.y});
-		}
 	}
 
 	render () {

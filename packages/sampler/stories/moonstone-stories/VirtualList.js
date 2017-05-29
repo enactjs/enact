@@ -1,32 +1,33 @@
+import VirtualList from '@enact/moonstone/VirtualList';
 import ri from '@enact/ui/resolution';
 import Item from '@enact/moonstone/Item';
-import VirtualList from '@enact/moonstone/VirtualList';
 import {VirtualListCore} from '@enact/moonstone/VirtualList/VirtualListBase';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, number} from '@kadira/storybook-addon-knobs';
+import {boolean, number} from '@kadira/storybook-addon-knobs';
 
-VirtualList.propTypes = Object.assign({}, VirtualListCore.propTypes);
-VirtualList.defaultProps = Object.assign({}, VirtualListCore.defaultProps);
+import {mergeComponentMetadata} from '../../src/utils/propTables';
+import nullify from '../../src/utils/nullify.js';
+
+const Config = mergeComponentMetadata('VirtualList', VirtualListCore, VirtualList);
 
 const
 	style = {
 		item: {
-			position: 'absolute',
-			width: '100%',
 			borderBottom: ri.scale(2) + 'px solid #202328',
 			boxSizing: 'border-box'
 		},
 		list: {
-			height: ri.scale(550) + 'px'
+			height: ri.scale(552) + 'px'
 		}
 	},
 	items = [],
 	// eslint-disable-next-line enact/prop-types, enact/display-name
-	renderItem = (size) => ({data, index, key}) => {
+	renderItem = (size) => ({data, index, ...rest}) => {
 		const itemStyle = {height: size + 'px', ...style.item};
+
 		return (
-			<Item key={key} style={itemStyle}>
+			<Item {...rest} style={itemStyle}>
 				{data[index]}
 			</Item>
 		);
@@ -37,7 +38,6 @@ for (let i = 0; i < 1000; i++) {
 }
 
 storiesOf('VirtualList')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'Basic usage of VirtualList',
@@ -49,11 +49,13 @@ storiesOf('VirtualList')
 					data={items}
 					dataSize={number('dataSize', items.length)}
 					itemSize={itemSize}
+					focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
 					onScrollStart={action('onScrollStart')}
 					onScrollStop={action('onScrollStop')}
 					spacing={ri.scale(number('spacing', 0))}
 					style={style.list}
 				/>
 			);
-		}
+		},
+		{propTables: [Config]}
 	);

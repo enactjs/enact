@@ -2,6 +2,65 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Deprecated
+
+### Added
+
+### Changed
+
+### Fixed
+
+### Removed
+
+## [1.2.0] - 2017-05-17
+
+### Added
+
+- `ui/transition` callback prop `onShow` that fires when transitioning into view completes
+
+### Changed
+
+-`ui/View` to prevent re-renders on views leaving the `ViewManager`
+
+## [1.1.0] - 2017-04-21
+
+### Changed
+
+- `ui/Slottable` to support slot-candidate tags that have multiple props, which are now forwarded directly instead of just their children
+
+### Fixed
+
+- `ui/Cancelable` to run modal handlers in the right order
+
+## [1.0.0] - 2017-03-31
+
+### Added
+
+- `ui/Placeholder` module with `PlaceholderControllerDecorator` and `PlaceholderDecorator` HOCs which facilitate rendering placeholder components until the wrapped component would scroll into the viewport
+
+### Changed
+
+- `ui/Repeater` to accept an array of objects as children which are spread onto the generated components
+
+### Removed
+
+- `ui/validators` which was no longer used elsewhere in Enact
+
+## [1.0.0-beta.4] - 2017-03-10
+
+### Added
+
+- `ui/A11yDecorator` to facilitate adding pre/post hints to components
+- `ui/AnnounceDecorator` to facilitate announcing actions for accessibility
+
+## [1.0.0-beta.3] - 2017-02-21
+
+### Added
+
+- `ui/Resizable` Higher-order Component to facilitate notification of resized components
+
 ## [1.0.0-beta.2] - 2017-01-30
 
 ### Added

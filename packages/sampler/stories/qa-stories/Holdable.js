@@ -2,7 +2,7 @@ import Button from '@enact/moonstone/Button';
 import Holdable from '@enact/ui/Holdable';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
+import {boolean, select, text} from '@kadira/storybook-addon-knobs';
 
 const HoldableButton = Holdable(Button);
 const LongPressButton = Holdable({
@@ -14,25 +14,12 @@ const LongPressButton = Holdable({
 }, Button);
 const ResumeHoldButton = Holdable({resume: true, endHold: 'onLeave'}, Button);
 
-HoldableButton.propTypes = Object.assign({}, Button.propTypes, HoldableButton.propTypes);
-HoldableButton.defaultProps = Object.assign({}, Button.defaultProps, HoldableButton.defaultProps);
-HoldableButton.displayName = 'HoldableButton';
-
-LongPressButton.propTypes = Object.assign({}, Button.propTypes, LongPressButton.propTypes);
-LongPressButton.defaultProps = Object.assign({}, Button.defaultProps, LongPressButton.defaultProps);
-LongPressButton.displayName = 'LongPressButton';
-
-ResumeHoldButton.propTypes = Object.assign({}, Button.propTypes, ResumeHoldButton.propTypes);
-ResumeHoldButton.defaultProps = Object.assign({}, Button.defaultProps, ResumeHoldButton.defaultProps);
-ResumeHoldButton.displayName = 'ResumeHoldButton';
-
 // Set up some defaults for info and knobs
 const prop = {
 	backgroundOpacity: {'opaque': 'opaque', 'translucent': 'translucent', 'transparent': 'transparent'}
 };
 
 storiesOf('Holdable')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		'with default hold events',
 		() => (

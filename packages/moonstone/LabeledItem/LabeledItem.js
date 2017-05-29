@@ -5,7 +5,8 @@
  */
 
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import Icon from '../Icon';
 import Item from '../Item';
@@ -40,10 +41,10 @@ const LabeledItemBase = kind({
 		/**
 		 * The label to be displayed along with the text.
 		 *
-		 * @type {String|Number}
+		 * @type {Node}
 		 * @public
 		 */
-		label: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+		label: PropTypes.node,
 
 		/**
 		 * Icon to be displayed next to the title text.

@@ -1,9 +1,10 @@
 import kind from '@enact/core/kind';
 import React from 'react';
+import PropTypes from 'prop-types';
 import Uppercase from '@enact/i18n/Uppercase';
 import Slottable from '@enact/ui/Slottable';
 import {MarqueeDecorator, MarqueeText} from '../Marquee';
-import {isRtlText} from '@enact/i18n';
+import {isRtlText} from '@enact/i18n/util';
 import css from './Header.less';
 
 // Create a <h1> and Marquee component that support the uppercase attribute
@@ -25,14 +26,24 @@ const HeaderBase = kind({
 
 	propTypes: /** @lends moonstone/Panels.Header.prototype */ {
 		/**
+		 * Configures the mode of uppercasing for the [`title`]{@link moonstone/Panels.Header#title}.
+		 *
+		 * @see i18n/Uppercase#casing
+		 * @type {String}
+		 * @default 'upper'
+		 * @public
+		 */
+		casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence']),
+
+		/**
 		 * Children provided are added to the header-components area. A space for controls which
 		 * live in the header, apart from the body of the panel view.
 		 *
 		 * @type {String}
 		 */
-		children: React.PropTypes.oneOfType([
-			React.PropTypes.arrayOf(React.PropTypes.element),
-			React.PropTypes.element
+		children: PropTypes.oneOfType([
+			PropTypes.arrayOf(PropTypes.element),
+			PropTypes.element
 		]),
 
 		/**
@@ -42,7 +53,7 @@ const HeaderBase = kind({
 		 * @default false
 		 * @public
 		 */
-		fullBleed: React.PropTypes.bool,
+		fullBleed: PropTypes.bool,
 
 		/**
 		 * When true, the case of the [`title`]{@link moonstone/Panels.Header#title} will
@@ -52,37 +63,38 @@ const HeaderBase = kind({
 		 *
 		 * @type {Boolean}
 		 * @default false
+		 * @deprecated replaced by `casing`
 		 * @public
 		 */
-		preserveCase: React.PropTypes.bool,
+		preserveCase: PropTypes.bool,
 
 		/**
 		 * Sub-title displayed at the bottom of the panel
 		 *
 		 * @type {String}
 		 */
-		subTitleBelow: React.PropTypes.string,
+		subTitleBelow: PropTypes.string,
 
 		/**
 		 * Title of the header
 		 *
 		 * @type {String}
 		 */
-		title: React.PropTypes.string,
+		title: PropTypes.string,
 
 		// /**
 		//  * Text displayed above the title
 		//  *
 		//  * @type {String}
 		//  */
-		// titleAbove: React.PropTypes.string,
+		// titleAbove: PropTypes.string,
 
 		/**
 		 * Text displayed below the title
 		 *
 		 * @type {String}
 		 */
-		titleBelow: React.PropTypes.string,
+		titleBelow: PropTypes.string,
 
 		/**
 		 * Set the type of header to be used. `standard` or `compact`.
@@ -90,10 +102,11 @@ const HeaderBase = kind({
 		 * @type {String}
 		 * @default 'standard'
 		 */
-		type: React.PropTypes.oneOf(['compact', 'standard'])
+		type: PropTypes.oneOf(['compact', 'standard'])
 	},
 
 	defaultProps: {
+		casing: 'upper',
 		fullBleed: false,
 		preserveCase: false,
 		// titleAbove: '00',
@@ -121,16 +134,16 @@ const HeaderBase = kind({
 		}
 	},
 
-	render: ({children, direction, preserveCase, subTitleBelowComponent, title, /* titleAbove, */titleBelowComponent, type, ...rest}) => {
+	render: ({casing, children, direction, preserveCase, subTitleBelowComponent, title, /* titleAbove, */titleBelowComponent, type, ...rest}) => {
 		delete rest.fullBleed;
 		delete rest.subTitleBelow;
 		delete rest.titleBelow;
 
 		switch (type) {
 			case 'compact': return (
-				<header {...rest}>
+				<header aria-label={title} {...rest}>
 					<MarqueeText className={css.headerCell} marqueeOn="hover" forceDirection={direction}>
-						<UppercaseH1 className={css.title} preserveCase={preserveCase}>{title}</UppercaseH1>
+						<UppercaseH1 casing={casing} className={css.title} preserveCase={preserveCase}>{title}</UppercaseH1>
 						{titleBelowComponent}
 					</MarqueeText>
 					<nav className={css.headerComponents}>{children}</nav>
@@ -147,8 +160,8 @@ const HeaderBase = kind({
 			// 	</header>
 			// );
 			case 'standard': return (
-				<header {...rest}>
-					<HeaderH1 className={css.title} preserveCase={preserveCase} marqueeOn="hover">
+				<header aria-label={title} {...rest}>
+					<HeaderH1 casing={casing} className={css.title} preserveCase={preserveCase} marqueeOn="hover">
 						{title}
 					</HeaderH1>
 					<div className={css.headerRow}>

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import kind from '@enact/core/kind';
 import {mount} from 'enzyme';
 import BreadcrumbDecorator from '../BreadcrumbDecorator';
@@ -10,8 +11,8 @@ describe('BreadcrumbDecorator', () => {
 		name: 'CustomBreadcrumb',
 
 		propsTypes: {
-			index: React.PropTypes.number,
-			onSelect: React.PropTypes.func
+			index: PropTypes.number,
+			onSelect: PropTypes.func
 		},
 
 		render: ({index, onSelect}) => {	// eslint-disable-line enact/prop-types
@@ -20,6 +21,8 @@ describe('BreadcrumbDecorator', () => {
 		}
 	});
 
+	const Panel = () => <div />;
+
 	it('should wrap primitive breadcrumbs with Breadcrumb', function () {
 		const SingleBreadcrumbPanels = BreadcrumbDecorator({
 			max: 1
@@ -27,9 +30,9 @@ describe('BreadcrumbDecorator', () => {
 
 		const subject = mount(
 			<SingleBreadcrumbPanels index={2} breadcrumbs={['1st', '2nd', '3rd']}>
-				<div>Panel</div>
-				<div>Panel</div>
-				<div>Panel</div>
+				<Panel />
+				<Panel />
+				<Panel />
 			</SingleBreadcrumbPanels>
 		);
 
@@ -48,9 +51,9 @@ describe('BreadcrumbDecorator', () => {
 
 		const subject = mount(
 			<SingleBreadcrumbPanels index={2} breadcrumbs={breadcrumbs}>
-				<div>Panel</div>
-				<div>Panel</div>
-				<div>Panel</div>
+				<Panel />
+				<Panel />
+				<Panel />
 			</SingleBreadcrumbPanels>
 		);
 
@@ -67,10 +70,10 @@ describe('BreadcrumbDecorator', () => {
 
 		const subject = mount(
 			<ThreeBreadcrumbPanels index={3}>
-				<div>Panel</div>
-				<div>Panel</div>
-				<div>Panel</div>
-				<div>Panel</div>
+				<Panel />
+				<Panel />
+				<Panel />
+				<Panel />
 			</ThreeBreadcrumbPanels>
 		);
 
@@ -88,7 +91,7 @@ describe('BreadcrumbDecorator', () => {
 
 		const subject = mount(
 			<StyledBreadcrumbPanels>
-				<div>Panel</div>
+				<Panel />
 			</StyledBreadcrumbPanels>
 		);
 

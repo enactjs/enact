@@ -1,1 +1,1 @@
-{"language.name":"Welsh","numfmt":{"decimalChar":".","groupChar":",","exponential":"E","currencyFormats":{"common":"{s} {n}"}},"scripts":["Latn"],"locale":"cy"}
+{"delimiter":{"quotationStart":"‘","quotationEnd":"’","alternateQuotationStart":"“","alternateQuotationEnd":"”"},"language.name":"Welsh","numfmt":{"currencyFormats":{"common":"{s}{n}","commonNegative":"-{s}{n}"}},"scripts":["Latn"],"locale":"cy"}

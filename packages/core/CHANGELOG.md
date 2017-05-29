@@ -2,6 +2,64 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [unreleased]
+
+### Deprecated
+
+### Added
+
+### Changed
+
+### Fixed
+
+### Removed
+
+## [1.2.0] - 2017-05-17
+
+### Added
+
+- `core/handle.oneOf` to support branching event handlers
+
+## [1.1.0] - 2017-04-21
+
+### Added
+
+- `core/util` documentation
+
+### Fixed
+
+- `core/util.childrenEquals` to work with mixed components and text
+
+## [1.0.0] - 2017-03-31
+
+### Added
+
+- `core/util.Job` to replace `core/jobs` with an API that reduced the chance of job name collisions
+
+### Removed
+
+- `core/jobs` and replaced it with `core/util.Job`
+- `core/selection`, which was only used internally by `ui/GroupItem`
+- `kind` and `hoc` named exports from root module. Should be directly imported via `@enact/core/kind` and `@enact/core/hoc`, respectively.
+- `core/fetch` which was no longer used by Enact
+
+## [1.0.0-beta.4] - 2017-03-10
+
+### Added
+
+- `core/kind` support for `contextTypes`
+- `core/utils` function `extractAriaProps()` for redirecting ARIA props when the root node of a component isn't focusable
+
+### Changed
+
+- `core/handle` to allow binding to components. This also introduces a breaking change in the return value of handle methods.
+
+## [1.0.0-beta.3] - 2017-02-21
+
+### Addded
+
+- `core/handle` function `forEventProp` to test properties on an event
+
 ## [1.0.0-beta.2] - 2017-01-30
 
 ### Added

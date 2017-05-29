@@ -16,36 +16,39 @@
 	}
 	.padding-start-end(0, @moon-icon-button-small-size + @moon-spotlight-outset);
 
-	padding-bottom:  @moon-icon-button-small-size + @moon-spotlight-outset;
+	padding-bottom: @moon-icon-button-small-size + @moon-spotlight-outset;
 	box-sizing: border-box;
+
+	:global(.enact-text-large) & {
+		padding-bottom: @moon-icon-button-small-size-large + @moon-spotlight-outset;
+		padding-left: 0;
+		padding-right: @moon-icon-button-small-size-large + @moon-spotlight-outset;
+	}
+
+	:global(.enact-text-large.enact-locale-right-to-left) & {
+		padding-left: @moon-icon-button-small-size-large + @moon-spotlight-outset;
+		padding-right: 0;
+	}
+
+	div.onlyVerticalScrollbarNeeded {
+		bottom: 0;
+	}
+
+	div.onlyHorizontalScrollbarNeeded {
+		.position-start-end(0, 0);
+	}
+
+	&.takeAvailableSpaceForHorizontal {
+		.padding-start-end(0, 0);
+	}
+
+	&.takeAvailableSpaceForVertical {
+		padding-bottom: 0;
+	}
 }
 
 .scrollableHiddenScrollbars {
 	overflow: hidden;
 	.padding-start-end(0, 0);
 	padding-bottom: 0;
-}
-
-.takeAvailableSpaceForHorizontal {
-	.padding-start-end(0, 0);
-}
-
-.takeAvailableSpaceForVertical {
-	padding-bottom: 0;
-}
-
-.onlyVerticalScrollbarNeeded {
-	bottom: 0;
-}
-
-.onlyHorizontalScrollbarNeeded {
-	.position-start-end(0, 0);
-}
-
-.verticalScrollbarDisabled {
-	display: none;
-}
-
-.horizontalScrollbarDisabled {
-	display: none;
 }

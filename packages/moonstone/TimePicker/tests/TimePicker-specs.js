@@ -1,5 +1,5 @@
 import React from 'react';
-import {mount, shallow} from 'enzyme';
+import {mount} from 'enzyme';
 import sinon from 'sinon';
 import {TimePicker, TimePickerBase} from '../TimePicker';
 import css from '../TimePicker.less';
@@ -35,8 +35,8 @@ describe('TimePicker', () => {
 	});
 
 	it('should omit labels when noLabels is true', function () {
-		const subject = shallow(
-			<TimePickerBase title="Time" hour={1} minute={1} meridiem={0} meridiems={['am', 'pm']} order={['h', 'm']} noLabels />
+		const subject = mount(
+			<TimePickerBase title="Time" hour={1} minute={1} meridiem={0} meridiems={['am', 'pm']} order={['h', 'm']} open noLabels />
 		);
 
 		const expected = 2;
@@ -46,8 +46,8 @@ describe('TimePicker', () => {
 	});
 
 	it('should create pickers arranged by order', function () {
-		const subject = shallow(
-			<TimePickerBase title="Time" hour={1} minute={1} meridiem={0} meridiems={['am', 'pm']} order={['h', 'm']} />
+		const subject = mount(
+			<TimePickerBase title="Time" hour={1} minute={1} meridiem={0} meridiems={['am', 'pm']} order={['h', 'm']} open />
 		);
 
 		const expected = ['hour', 'minute'];
@@ -58,7 +58,7 @@ describe('TimePicker', () => {
 
 	it('should accept a JavaScript Date for its value prop', function () {
 		const subject = mount(
-			<TimePicker title="Date" value={new Date(2000, 0, 1, 12, 30)} />
+			<TimePicker title="Date" value={new Date(2000, 0, 1, 12, 30)} open />
 		);
 
 		const minutePicker = subject.find('DateComponentRangePicker').findWhere(p => {
@@ -73,7 +73,7 @@ describe('TimePicker', () => {
 
 	it('should accept an updated JavaScript Date for its value prop', function () {
 		const subject = mount(
-			<TimePicker title="Date" value={new Date(2000, 0, 1, 12, 30)} />
+			<TimePicker title="Date" value={new Date(2000, 0, 1, 12, 30)} open />
 		);
 
 		subject.setProps({

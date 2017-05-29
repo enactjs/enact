@@ -6,12 +6,19 @@
  */
 
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import Slottable from '@enact/ui/Slottable';
+import Uppercase from '@enact/i18n/Uppercase';
 
+import {MarqueeDecorator} from '../Marquee';
 import Popup from '../Popup';
 
 import css from './Dialog.less';
+import TitleWrapper from './TitleWrapper';
+
+const MarqueeH1 = Uppercase(MarqueeDecorator('h1'));
+const MarqueeH2 = MarqueeDecorator('h2');
 
 /**
  * {@link moonstone/Dialog.DialogBase} is a modal component with a title, a subtitle, a
@@ -36,6 +43,16 @@ const DialogBase = kind({
 			PropTypes.arrayOf(PropTypes.element),
 			PropTypes.element
 		]),
+
+		/**
+		 * Configures the mode of uppercasing of the `title` that should be performed.
+		 *
+		 * @see i18n/Uppercase#casing
+		 * @type {String}
+		 * @default 'upper'
+		 * @public
+		 */
+		casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence']),
 
 		/**
 		 * The element(s) to be displayed in the body of the Dialog.
@@ -85,13 +102,23 @@ const DialogBase = kind({
 		open: PropTypes.bool,
 
 		/**
+		 * When `true`, the case of `title` will be preserved
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @deprecated replaced by `casing`
+		 * @public
+		 */
+		preserveCase: PropTypes.bool,
+
+		/**
 		 * Types of scrim. It can be either `'transparent'`, `'translucent'`, or `'none'`.
 		 *
 		 * @type {String}
 		 * @default 'translucent'
 		 * @public
 		 */
-		scrimType: React.PropTypes.oneOf(['transparent', 'translucent', 'none']),
+		scrimType: PropTypes.oneOf(['transparent', 'translucent', 'none']),
 
 		/**
 		 * When `true`, the close button is shown; when `false`, it is hidden.
@@ -130,6 +157,7 @@ const DialogBase = kind({
 	defaultProps: {
 		noAnimation: false,
 		open: false,
+		preserveCase: false,
 		showCloseButton: false
 	},
 
@@ -142,19 +170,19 @@ const DialogBase = kind({
 		className: ({showDivider, styler}) => styler.append({showDivider})
 	},
 
-	render: ({buttons, children, title, titleBelow, ...rest}) => {
+	render: ({buttons, casing, children, preserveCase, title, titleBelow, ...rest}) => {
 		delete rest.showDivider;
 
 		return (
 			<Popup {...rest}>
-				<div className={css.titleWrapper}>
-					<h1 className={css.title}>
+				<TitleWrapper>
+					<MarqueeH1 casing={casing} preserveCase={preserveCase} marqueeOn="render" marqueeOnRenderDelay={5000} className={css.title}>
 						{title}
-					</h1>
-					<h2 className={css.titleBelow}>
+					</MarqueeH1>
+					<MarqueeH2 className={css.titleBelow} marqueeOn="render" marqueeOnRenderDelay={5000}>
 						{titleBelow}
-					</h2>
-				</div>
+					</MarqueeH2>
+				</TitleWrapper>
 				<div className={css.body}>
 					{children}
 				</div>
@@ -166,7 +194,6 @@ const DialogBase = kind({
 	}
 });
 
-
 /**
  * {@link moonstone/Dialog.Dialog} is modal component with a title, a subtitle, a
  * message, and an area for additional controls.
@@ -177,7 +204,10 @@ const DialogBase = kind({
  * @ui
  * @public
  */
-const Dialog = Slottable({slots: ['title', 'titleBelow', 'buttons']}, DialogBase);
+const Dialog = Slottable(
+	{slots: ['title', 'titleBelow', 'buttons']},
+	DialogBase
+);
 
 export default Dialog;
 export {Dialog, DialogBase};

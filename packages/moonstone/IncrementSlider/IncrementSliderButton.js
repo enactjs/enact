@@ -1,8 +1,9 @@
-import kind from '@enact/core/kind';
 import Holdable from '@enact/ui/Holdable';
+import kind from '@enact/core/kind';
 import IconButton from '../IconButton';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const HoldableIconButton = Holdable(IconButton);
 
@@ -21,12 +22,8 @@ const HoldableIconButton = Holdable(IconButton);
 const IncrementSliderButtonBase = kind({
 	name: 'IncrementSliderButton',
 
-	handlers: {
-		onClick: (ev, {disabled, onClick}) => {
-			if (!disabled) {
-				onClick(ev);
-			}
-		}
+	propTypes: /** @lends moonstone/IncrementSlider.IncrementSliderButton.prototype */ {
+		onClick: PropTypes.func
 	},
 
 	render: ({onClick, ...rest}) => {
@@ -43,7 +40,7 @@ const IncrementSliderButtonBase = kind({
 	}
 });
 
-const OnlyUpdate = onlyUpdateForKeys(['children', 'disabled', 'spotlightDisabled']);
+const OnlyUpdate = onlyUpdateForKeys(['children', 'disabled', 'spotlightDisabled', 'aria-label']);
 const IncrementSliderButton = OnlyUpdate(IncrementSliderButtonBase);
 
 export default IncrementSliderButton;

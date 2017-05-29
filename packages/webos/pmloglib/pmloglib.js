@@ -38,7 +38,7 @@ const log = (level, messageId, keyVals, freeText) => {
 				window.PalmSystem.PmLogString(level, messageId, keyVals, freeText);
 			}
 		} else {
-			console.error('Unable to send log; PmLogString not found in this version of PalmSystem');
+			console.error('Unable to send log: PmLogString not found in this version of PalmSystem');
 		}
 	}
 };
@@ -129,6 +129,28 @@ const debug = (freeText) => {
 	log(levelDebug, '', '', freeText);
 };
 
+/**
+ * Places a time-stamped performance log entry into the system log using the `PmLogInfoWithClock()`
+ * method
+ * @param {String} messageId - Short string that uniquely identifies the log message within a component.
+ * @param {String} perfType - A string that identifies the type of perf message
+ * @param {String} perfGroup - A string that identifies the group of the perf message
+ * @returns {undefined}
+ */
+const perfLog = (messageId, perfType, perfGroup) => {
+	if (window.PalmSystem) {
+		if (!messageId) {
+			console.warn('PmLogInfoWithClock called with invalid format: messageId was empty');
+		}
+		if (window.PalmSystem.PmLogInfoWithClock) {
+			window.PalmSystem.PmLogInfoWithClock(messageId, perfType ? perfType : '',
+				perfGroup ? perfGroup : '');
+		} else {
+			console.error('Unable to send log: PmLogInfoWithClock not found in this version of PalmSystem');
+		}
+	}
+};
+
 export {
 	emergency,
 	alert,
@@ -137,5 +159,6 @@ export {
 	warning,
 	notice,
 	info,
-	debug
+	debug,
+	perfLog
 };

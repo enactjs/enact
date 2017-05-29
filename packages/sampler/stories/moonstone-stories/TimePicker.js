@@ -1,40 +1,36 @@
-import Changeable from '@enact/ui/Changeable';
-import {TimePicker, TimePickerBase} from '@enact/moonstone/TimePicker';
+import TimePicker, {TimePickerBase} from '@enact/moonstone/TimePicker';
 import React from 'react';
+import PropTypes from 'prop-types';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, text} from '@kadira/storybook-addon-knobs';
+import {boolean, text} from '@kadira/storybook-addon-knobs';
 
-const Picker = Changeable(TimePicker);
-Picker.propTypes = Object.assign({}, TimePicker.propTypes, TimePickerBase.propTypes, {
-	onChange: React.PropTypes.func,
-	onOpen: React.PropTypes.func,
-	onClose: React.PropTypes.func,
-	open: React.PropTypes.bool,
-	value: React.PropTypes.instanceOf(Date)
-});
-Picker.defaultProps = Object.assign({}, TimePicker.defaultProps, TimePickerBase.defaultProps);
-Picker.displayName = 'TimePicker';
+import nullify from '../../src/utils/nullify.js';
+import {mergeComponentMetadata, removeProps} from '../../src/utils/propTables';
 
-'onChangeHour defaultOpen onChangeMeridiem hour onChangeMinute minute meridiem meridiems order'
-	.split(' ')
-	.forEach(prop => {
-		delete Picker.propTypes[prop];
-		delete Picker.defaultProps[prop];
-	});
+const Config = mergeComponentMetadata('TimePicker', TimePicker.propTypes, TimePickerBase.propTypes, {
+	propTypes: {
+		onChange: PropTypes.func,
+		onClose: PropTypes.func,
+		onOpen: PropTypes.func,
+		open: PropTypes.bool,
+		value: PropTypes.instanceOf(Date)
+	}}
+);
+removeProps(Config, 'onChangeHour defaultOpen onChangeMeridiem hour onChangeMinute minute meridiem meridiems order');
 
 storiesOf('TimePicker')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'The basic TimePicker',
 		() => (
-			<Picker
+			<TimePicker
 				title={text('title', 'Time')}
-				noLabels={boolean('noLabels', false)}
+				noLabels={nullify(boolean('noLabels', false))}
 				noneText={text('noneText', 'Nothing Selected')}
 				onChange={action('onChange')}
 				onOpen={action('onOpen')}
 				onClose={action('onClose')}
 			/>
-		)
+		),
+		{propTables: [Config]}
 	);

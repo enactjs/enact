@@ -1,1 +1,1 @@
-{"clock":"12","language.name":"Kikuyu","numfmt":{"decimalChar":".","groupChar":",","exponential":"E","currencyFormats":{"commonNegative":"({s}{n})"}},"scripts":["Latn"],"locale":"ki"}
+{"language.name":"Kikuyu","numfmt":{"currencyFormats":{"common":"{s}{n}","commonNegative":"-{s}{n}"}},"scripts":["Latn"],"locale":"ki"}

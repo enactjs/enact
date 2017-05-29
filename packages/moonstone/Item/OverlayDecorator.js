@@ -1,5 +1,7 @@
-import {kind, hoc} from '@enact/core';
-import React, {PropTypes} from 'react';
+import hoc from '@enact/core/hoc';
+import kind from '@enact/core/kind';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import Overlay from './Overlay';
 

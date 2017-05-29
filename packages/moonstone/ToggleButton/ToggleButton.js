@@ -5,25 +5,28 @@
  */
 
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import Toggleable from '@enact/ui/Toggleable';
 
 import Button from '../Button';
 
 import css from './ToggleButton.less';
 
 /**
-* {@link moonstone/ToggleButton.ToggleButton} is a [Button]{@link moonstone/Button.Button} that is [Toggleable]{@link ui/Toggleable.Toggleable}.
-*
-* @class ToggleButton
-* @memberof moonstone/ToggleButton
-* @extends moonstone/Button.Button
-* @ui
-* @public
-*/
+ * {@link moonstone/ToggleButton.ToggleButtonBase} is a stateless [Button]{@link moonstone/Button.Button}
+ * that can be toggled by changing its `selected` property
+ *
+ * @class ToggleButtonBase
+ * @memberof moonstone/ToggleButton
+ * @extends moonstone/Button.Button
+ * @ui
+ * @public
+ */
 const ToggleButtonBase = kind({
 	name: 'ToggleButton',
 
-	propTypes: /** @lends moonstone/ToggleButton.ToggleButton.prototype */ {
+	propTypes: /** @lends moonstone/ToggleButton.ToggleButtonBase.prototype */ {
 		/**
 		 * The background-color opacity of this button; valid values are `'opaque'`, `'translucent'`,
 		 * and `'transparent'`.
@@ -46,7 +49,7 @@ const ToggleButtonBase = kind({
 
 		/**
 		 * When `true`, the [button]{@glossary button} is shown as disabled and does not
-		 * generate tap [events]{@glossary event}.
+		 * generate `onClick` [events]{@glossary event}.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -71,7 +74,6 @@ const ToggleButtonBase = kind({
 		 * When `true` a pressed visual effect is applied to the button
 		 *
 		 * @type {Boolean}
-		 * @default false
 		 * @public
 		 */
 		pressed: PropTypes.bool,
@@ -120,7 +122,6 @@ const ToggleButtonBase = kind({
 		backgroundOpacity: 'opaque',
 		disabled: false,
 		minWidth: true,
-		pressed: false,
 		selected: false,
 		small: false,
 		toggleOffLabel: '',
@@ -145,15 +146,38 @@ const ToggleButtonBase = kind({
 		}
 	},
 
-	render: (props) => {
-		delete props.toggleOffLabel;
-		delete props.toggleOnLabel;
+	render: ({selected, ...rest}) => {
+		delete rest.toggleOffLabel;
+		delete rest.toggleOnLabel;
 
 		return (
-			<Button {...props} />
+			<Button {...rest} aria-pressed={selected} selected={selected} />
 		);
 	}
 });
 
-export default ToggleButtonBase;
-export {ToggleButtonBase as ToggleButton, ToggleButtonBase};
+/**
+ * {@link moonstone/ToggleButton.ToggleButton} is a [Button]{@link moonstone/Button.Button} that is [Toggleable]{@link ui/Toggleable.Toggleable}.
+ *
+ * By default, `ToggleButton` maintains the state of its `selected` property. Supply the
+ * `defaultSelected` property to control its initial value. If you wish to directly control updates
+ * to the component, supply a value to `selected` at creation time and update it in response to
+ * `onToggle` events.
+ *
+ * @class ToggleButton
+ * @memberof moonstone/ToggleButton
+ * @extends moonstone/ToggleButton.ToggleButtonBase
+ * @ui
+ * @mixes ui/Toggleable
+ * @public
+ */
+const ToggleButton = Toggleable(
+	{prop: 'selected', toggle: 'onClick'},
+	ToggleButtonBase
+);
+
+export default ToggleButton;
+export {
+	ToggleButton,
+	ToggleButtonBase
+};

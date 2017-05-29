@@ -1,5 +1,6 @@
 import hoc from '@enact/core/hoc';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 /**
  * The `contextTypes` published by {@link ui/RadioDecorator.RadioControllerDecorator} to interact
@@ -14,14 +15,14 @@ const contextTypes = {
 	 *
 	 * @type {Function}
 	 */
-	activateRadioItem: React.PropTypes.func,
+	activateRadioItem: PropTypes.func,
 
 	/**
 	 * Called by a {@link ui/RadioDecorator.RadioDecorator} when it is deactivated
 	 *
 	 * @type {Function}
 	 */
-	deactivateRadioItem: React.PropTypes.func,
+	deactivateRadioItem: PropTypes.func,
 
 	/**
 	 * Called by a {@link ui/RadioDecorator.RadioDecorator} when it is mounted to register it for
@@ -29,7 +30,7 @@ const contextTypes = {
 	 *
 	 * @type {Function}
 	 */
-	registerRadioItem: React.PropTypes.func,
+	registerRadioItem: PropTypes.func,
 
 	/**
 	 * Called by a {@link ui/RadioDecorator.RadioDecorator} when it will be unmounted to deregister
@@ -37,7 +38,7 @@ const contextTypes = {
 	 *
 	 * @type {Function}
 	 */
-	deregisterRadioItem: React.PropTypes.func
+	deregisterRadioItem: PropTypes.func
 };
 
 /**

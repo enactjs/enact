@@ -41,13 +41,14 @@ with any passed-in `className`), it computes a new value for `children` and rend
 ```
 import kind from '@enact/core/kind';
 import React from 'react';
+import PropTypes from 'prop-types';
 
 const Badge = kind({
 	name: 'Badge',
 
 	propTypes: {
-		children: React.PropTypes.string.isRequired,
-		greeting: React.PropTypes.string,
+		children: PropTypes.string.isRequired,
+		greeting: PropTypes.string,
 	},
 
 	defaultProps: {
@@ -109,18 +110,18 @@ behaviors across components. All of these HOCs were created using the `hoc()` fa
 * HOCs are flexible in their usage. They can:
   * Accept a configuration object and a component 
     ```
-    const MyButton = Toggleable({toggle: 'onClick', prop: 'selected'}, Button);
+    const ToggleableWidget = Toggleable({toggle: 'onClick', prop: 'selected'}, Widget);
     ```
   * Accept only a component and use the default configuration:
     ```
-    const MyButton = Toggleable(Button);
+    const ToggleableWidget = Toggleable(Widget);
     ```
   * Accept a configuration object in one invocation and a component in a second invocation. This
     allows you to reuse a pre-configured HOC on multiple components:
     ```
     const ToggleDecorator = Toggleable({toggle: 'onClick', prop: 'selected'});
-    const MyButton = ToggleDecorator(Button);
-    const MyCheckbox = ToggleDecorator(Checkbox);
+    const ToggleableWidget = ToggleDecorator(Widget);
+    const ToggleableFrob = ToggleDecorator(Frob);
     ```
 
 If you need to create your own HOCs, you can import the `hoc()` factory to take advantage of these

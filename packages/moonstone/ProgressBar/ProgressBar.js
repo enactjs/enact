@@ -6,7 +6,8 @@
 
 import kind from '@enact/core/kind';
 import clamp from 'ramda/src/clamp';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import {validateRange} from '../internal/validators';
 
@@ -87,7 +88,7 @@ const ProgressBarBase = kind({
 		delete rest.vertical;
 
 		return (
-			<div {...rest}>
+			<div role="progressbar" {...rest}>
 				<div className={css.load} style={{[progressCssProp]: backgroundProgress}} />
 				<div className={css.fill} style={{[progressCssProp]: progress}} />
 			</div>

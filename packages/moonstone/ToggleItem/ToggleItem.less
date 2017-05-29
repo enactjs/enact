@@ -3,8 +3,9 @@
 
 @import '../styles/mixins.less';
 @import '../styles/variables.less';
+@import '../styles/skin.less';
 
-.toggleItem {
+.applySkins({.toggleItem {
 	.icon {
 		margin-top: 0;
 		margin-bottom: 0;
@@ -14,17 +15,4 @@
 			visibility: hidden;
 		}
 	}
-
-	&:global(.spottable):focus .icon:not(.selected) {
-		visibility: visible;
-		opacity: 0.3;
-	}
-}
-
-[data-container-muted='true'] {
-	.toggleItem {
-		&:global(.spottable):focus .icon:not(.selected) {
-			visibility: hidden;
-		}
-	}
-}
+}});

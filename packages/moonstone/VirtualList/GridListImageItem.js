@@ -7,8 +7,9 @@
  */
 
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
-import {Spottable} from '@enact/spotlight';
+import React from 'react';
+import PropTypes from 'prop-types';
+import Spottable from '@enact/spotlight/Spottable';
 
 import Icon from '../Icon';
 import {Image} from '../Image';
@@ -18,11 +19,9 @@ import css from './GridListImageItem.less';
 
 const defaultPlaceholder =
 	'data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC' +
-	'9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj48cmVjdCB3aWR0aD0iMTAw' +
-	'JSIgaGVpZ2h0PSIxMDAlIiBzdHlsZT0ic3Ryb2tlOiAjNDQ0OyBzdHJva2Utd2lkdGg6IDE7IGZpbGw6ICNhYW' +
-	'E7IiAvPjxsaW5lIHgxPSIwIiB5MT0iMCIgeDI9IjEwMCUiIHkyPSIxMDAlIiBzdHlsZT0ic3Ryb2tlOiAjNDQ0' +
-	'OyBzdHJva2Utd2lkdGg6IDE7IiAvPjxsaW5lIHgxPSIxMDAlIiB5MT0iMCIgeDI9IjAiIHkyPSIxMDAlIiBzdH' +
-	'lsZT0ic3Ryb2tlOiAjNDQ0OyBzdHJva2Utd2lkdGg6IDE7IiAvPjwvc3ZnPg==';
+	'9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHN0cm9rZT0iIzU1NSIgZmlsbD0iI2FhYSIg' +
+	'ZmlsbC1vcGFjaXR5PSIwLjIiIHN0cm9rZS1vcGFjaXR5PSIwLjgiIHN0cm9rZS13aWR0aD0iNiIgLz48L3N2Zz' +
+	'4NCg==';
 
 /**
  * {@link moonstone/VirtualList.GridListImageItemBase} is a stateless
@@ -46,6 +45,19 @@ const GridListImageItemBase = kind({
 		caption: PropTypes.string,
 
 		/**
+		 * Placeholder image used while [source]{@link moonstone/VirtualList.GridListImageItemBase#source}
+		 * is loaded.
+		 *
+		 * @type {String}
+		 * @default 'data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC' +
+		 * '9zdmciPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHN0cm9rZT0iIzU1NSIgZmlsbD0iI2FhYSIg' +
+		 * 'ZmlsbC1vcGFjaXR5PSIwLjIiIHN0cm9rZS1vcGFjaXR5PSIwLjgiIHN0cm9rZS13aWR0aD0iNiIgLz48L3N2Zz' +
+		 * '4NCg==';
+		 * @public
+		 */
+		placeholder: PropTypes.string,
+
+		/**
 		 * When `true`, applies a selected visual effect to the image, but only if `selectionOverlayShowing`
 		 * is also `true`.
 		 *
@@ -54,6 +66,24 @@ const GridListImageItemBase = kind({
 		 * @public
 		 */
 		selected: PropTypes.bool,
+
+		/**
+		 * The custom selection overlay component to render. A component can be a stateless functional
+		 * component, `kind()` or React component. The following is an example with custom selection
+		 * overlay kind.
+		 *
+		 * Example Usage:
+		 * ```
+		 * const SelectionOverlay = kind({
+		 * 	render: () => <div>custom overlay</div>
+		 * });
+		 *
+		 * <GridListImageItemBase selectionOverlay={SelectionOverlay} />
+		 * ```
+		 *
+		 * @type {Function}
+		 */
+		selectionOverlay: PropTypes.func,
 
 		/**
 		 * When `true`, a selection overlay with a centered icon is shown. When `selected` is true,
@@ -83,6 +113,7 @@ const GridListImageItemBase = kind({
 	},
 
 	defaultProps: {
+		placeholder: defaultPlaceholder,
 		selected: false,
 		selectionOverlayShowing: false
 	},
@@ -93,26 +124,44 @@ const GridListImageItemBase = kind({
 	},
 
 	computed: {
-		className: ({selected, styler}) => styler.append({selected})
+		className: ({caption, selected, styler, subCaption}) => styler.append(
+			{selected},
+			caption ? 'useCaption' : null,
+			subCaption ? 'useSubCaption' : null
+		),
+		selectionOverlay: ({selectionOverlay: SelectionOverlay, selectionOverlayShowing}) => {
+			if (selectionOverlayShowing) {
+				return (
+					<div className={css.overlayContainer}>
+						{
+							SelectionOverlay ?
+								<SelectionOverlay /> :
+								<div className={css.overlayComponent}>
+									<Icon className={css.icon}>check</Icon>
+								</div>
+						}
+					</div>
+				);
+			}
+		}
 	},
 
-	render: ({caption, source, subCaption, selectionOverlayShowing, ...rest}) => {
+	render: ({caption, placeholder, source, subCaption, selectionOverlay, ...rest}) => {
+		if (selectionOverlay) {
+			rest['role'] = 'checkbox';
+			rest['aria-checked'] = rest.selected;
+		}
+
 		delete rest.selected;
+		delete rest.selectionOverlayShowing;
 
 		return (
 			<div {...rest}>
-				<Image className={css.image} src={source} placeholder={defaultPlaceholder} />
-				{
-					selectionOverlayShowing ? (
-						<div className={css.overlayContainer}>
-							<div className={css.overlayComponent}>
-								<Icon className={css.icon}>check</Icon>
-							</div>
-						</div>
-					) : null
-				}
-				{caption ? (<MarqueeText marqueeOn="hover" className={css.caption}>{caption}</MarqueeText>) : null}
-				{subCaption ? (<MarqueeText marqueeOn="hover" className={css.subCaption}>{subCaption}</MarqueeText>) : null}
+				<Image className={css.image} placeholder={placeholder} src={source}>
+					{selectionOverlay}
+				</Image>
+				{caption ? (<MarqueeText className={css.caption} marqueeOn="hover">{caption}</MarqueeText>) : null}
+				{subCaption ? (<MarqueeText className={css.subCaption} marqueeOn="hover">{subCaption}</MarqueeText>) : null}
 			</div>
 		);
 	}
@@ -135,7 +184,7 @@ const GridListImageItemBase = kind({
  * @public
  */
 const GridListImageItem = MarqueeController(
-	{startOnFocus: true},
+	{marqueeOnFocus: true},
 	Spottable(
 		GridListImageItemBase
 	)

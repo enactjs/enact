@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import css from './Scrim.less';
 
@@ -68,7 +69,7 @@ class Scrim extends React.Component {
 		 * @default `translucent`
 		 * @public
 		 */
-		type: React.PropTypes.oneOf(['transparent', 'translucent'])
+		type: PropTypes.oneOf(['transparent', 'translucent'])
 	}
 
 	static defaultProps = {
@@ -83,9 +84,11 @@ class Scrim extends React.Component {
 		};
 	}
 
-	show = () => this.setState({visible: true})
-
-	hide = () => this.setState({visible: false})
+	componentWillMount () {
+		if (this.props.type === 'translucent') {
+			pushTranslucentScrim(this);
+		}
+	}
 
 	componentWillReceiveProps (nextProps) {
 		if (this.props.type === 'translucent' && nextProps.type !== 'translucent') {
@@ -94,17 +97,15 @@ class Scrim extends React.Component {
 		}
 	}
 
-	componentWillMount () {
-		if (this.props.type === 'translucent') {
-			pushTranslucentScrim(this);
-		}
-	}
-
 	componentWillUnmount () {
 		if (this.props.type === 'translucent') {
 			removeTranslucentScrim(this);
 		}
 	}
+
+	show = () => this.setState({visible: true})
+
+	hide = () => this.setState({visible: false})
 
 	render () {
 		if (this.state.visible) {

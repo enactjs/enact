@@ -1,13 +1,7 @@
-import ToggleButton, {ToggleButtonBase} from '@enact/moonstone/ToggleButton';
-import Toggleable from '@enact/ui/Toggleable';
+import ToggleButton from '@enact/moonstone/ToggleButton';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, text, boolean, select} from '@kadira/storybook-addon-knobs';
-
-const StatefulToggleButton = Toggleable({toggle: 'onClick', prop: 'selected'}, ToggleButton);
-StatefulToggleButton.propTypes = Object.assign({}, ToggleButtonBase.propTypes, ToggleButton.propTypes);
-StatefulToggleButton.defaultProps = Object.assign({}, ToggleButtonBase.defaultProps, ToggleButton.defaultProps);
-StatefulToggleButton.displayName = 'ToggleButton';
+import {text, boolean, select} from '@kadira/storybook-addon-knobs';
 
 // Set up some defaults for info and knobs
 const prop = {
@@ -16,15 +10,14 @@ const prop = {
 };
 
 storiesOf('ToggleButton')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		'with long text',
 		() => (
-			<StatefulToggleButton
+			<ToggleButton
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
+				casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
 				disabled={boolean('disabled')}
-				preserveCase={boolean('preserveCase')}
 				small={boolean('small')}
 				toggleOnLabel={text('toggleOnLabel', 'Loooooooooooooooooog On')}
 				toggleOffLabel={text('toggleOffLabel', 'Loooooooooooooooooog Off')}
@@ -34,11 +27,11 @@ storiesOf('ToggleButton')
 	.addWithInfo(
 		'with tall characters',
 		() => (
-			<StatefulToggleButton
+			<ToggleButton
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
+				casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
 				disabled={boolean('disabled')}
-				preserveCase={boolean('preserveCase')}
 				small={boolean('small')}
 				toggleOnLabel={select('toggleOnLabel', prop.tallText, 'ิ้  ไั  ஒ  து')}
 				toggleOffLabel={select('toggleOffLabel', prop.tallText, 'ิ้  ไั  ஒ  து')}

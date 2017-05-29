@@ -40,6 +40,8 @@ export default {
 	rollbackward      : 0x0EFFF8, // undo
 	exitfullscreen    : 0x0EFFF9, // minimize
 	fullscreen        : 0x0EFFFA, // maximize
+	arrowshrinkleft   : 0x0EFFFB, // shrink_panel_left
+	arrowshrinkright  : 0x0EFFFC, // shrink_panel_right
 	arrowextend       : 0x0F0021, // arrow_left
 	arrowshrink       : 0x0F0022, // arrow_right
 	flag              : 0x0F0023, // flag
@@ -50,6 +52,29 @@ export default {
 	halfstar          : 0x0F002A, // star_half
 	gear              : 0x0F002B, // gear
 	plug              : 0x0F002C, // input
-	lock              : 0x0F002D  // lock
+	lock              : 0x0F002D,  // lock
+	forward15         : 0x0F0041,  // forward15
+	back15            : 0x0F0042,  // back15
+	continousplay     : 0x0F0043,  // continous_play
+	playlist          : 0x0F0044,  // playlist
+	resumeplay        : 0x0F0045,  // resume_play
+	image             : 0x0F0046,  // image
+	audio             : 0x0F0061,  // audio
+	music             : 0x0F0062,  // music
+	languages         : 0x0F0081,  // languages
+	cc                : 0x0F0082,  // cc
+	ccon              : 0x0F0083,  // cc_on
+	ccoff             : 0x0F0084,  // cc_off
+	sub               : 0x0F0085,  // sub
+	recordings        : 0x0F00A1,  // recordings
+	livezoom          : 0x0F00A2,  // live_zoom
+	liveplayback      : 0x0F00A3,  // live_playback
+	liveplaybackoff   : 0x0F00A4,  // live_playback_off
+	repeat            : 0x0F00A5,  // repeat
+	repeatoff         : 0x0F00A6,  // repeat_off
+	series            : 0x0F00A7,  // series
+	repeatdownload    : 0x0F00A8,  // repeat_download
+	view360           : 0x0F00A9,  // view_360
+	view360off        : 0x0F00AA,  // view_360_off
+	info              : 0x0F00AB  // info
 };
-

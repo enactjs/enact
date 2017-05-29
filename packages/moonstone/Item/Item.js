@@ -4,10 +4,12 @@
  * @module moonstone/Item
  */
 
+import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import Slottable from '@enact/ui/Slottable';
-import {Spottable} from '@enact/spotlight';
+import Spottable from '@enact/spotlight/Spottable';
 
 import {MarqueeDecorator} from '../Marquee';
 
@@ -81,11 +83,22 @@ const ItemBase = kind({
 		className: ({inline, styler}) => styler.append({inline})
 	},
 
-	render: ({component: Component, ...rest}) => {
+	handlers: {
+		onClick: handle(
+			forProp('disabled', false),
+			forward('onClick')
+		)
+	},
+
+	render: ({component: Component, disabled, ...rest}) => {
 		delete rest.inline;
 
 		return (
-			<Component {...rest} />
+			<Component
+				{...rest}
+				aria-disabled={disabled}
+				disabled={disabled}
+			/>
 		);
 	}
 });

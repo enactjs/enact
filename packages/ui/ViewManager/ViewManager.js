@@ -6,6 +6,7 @@
  */
 
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import {shape} from './Arranger';
 import TransitionGroup from './TransitionGroup';
@@ -35,7 +36,7 @@ class ViewManager extends React.Component {
 		 *
 		 * @type {Node}
 		 */
-		children: React.PropTypes.node,
+		children: PropTypes.node,
 
 		/**
 		 * Type of component wrapping the children. May be a DOM node or a custom React component.
@@ -43,9 +44,9 @@ class ViewManager extends React.Component {
 		 * @type {String|Component}
 		 * @default 'div'
 		 */
-		component: React.PropTypes.oneOfType([
-			React.PropTypes.func,
-			React.PropTypes.string
+		component: PropTypes.oneOfType([
+			PropTypes.func,
+			PropTypes.string
 		]),
 
 		/**
@@ -54,7 +55,7 @@ class ViewManager extends React.Component {
 		 * @type {Number}
 		 * @default 300
 		 */
-		duration: React.PropTypes.number,
+		duration: PropTypes.number,
 
 		/**
 		 * Index of last visible view. Defaults to the current value of `index`.
@@ -62,7 +63,7 @@ class ViewManager extends React.Component {
 		 * @type {Number}
 		 * @default value of index
 		 */
-		end: React.PropTypes.number,
+		end: PropTypes.number,
 
 		/**
 		 * Time, in milliseconds, to wait after a view has entered to inform it by pass the
@@ -71,7 +72,7 @@ class ViewManager extends React.Component {
 		 * @type {Number}
 		 * @default 0
 		 */
-		enteringDelay: React.PropTypes.number,
+		enteringDelay: PropTypes.number,
 
 		/**
 		 * Name of the property to pass to the wrapped view to indicate when it is entering the
@@ -83,7 +84,7 @@ class ViewManager extends React.Component {
 		 *
 		 * @type {String}
 		 */
-		enteringProp: React.PropTypes.string,
+		enteringProp: PropTypes.string,
 
 		/**
 		 * Index of active view
@@ -91,7 +92,7 @@ class ViewManager extends React.Component {
 		 * @type {Number}
 		 * @default 0
 		 */
-		index: React.PropTypes.number,
+		index: PropTypes.number,
 
 		/**
 		 * Indicates if the transition should be animated
@@ -99,49 +100,49 @@ class ViewManager extends React.Component {
 		 * @type {Boolean}
 		 * @default false
 		 */
-		noAnimation: React.PropTypes.bool,
+		noAnimation: PropTypes.bool,
 
 		/**
 		 * Called when each view is rendered during initial construction.
 		 *
 		 * @type {Function}
 		 */
-		onAppear: React.PropTypes.func,
+		onAppear: PropTypes.func,
 
 		/**
 		 * Called when each view completes its transition into the viewport.
 		 *
 		 * @type {Function}
 		 */
-		onEnter: React.PropTypes.func,
+		onEnter: PropTypes.func,
 
 		/**
 		 * Called when each view completes its transition out of the viewport.
 		 *
 		 * @type {Function}
 		 */
-		onLeave: React.PropTypes.func,
+		onLeave: PropTypes.func,
 
 		/**
 		 * Called when each view completes its transition within the viewport.
 		 *
 		 * @type {Function}
 		 */
-		onStay: React.PropTypes.func,
+		onStay: PropTypes.func,
 
 		/**
 		 * Called once when all views have completed their transition.
 		 *
 		 * @type {Function}
 		 */
-		onTransition: React.PropTypes.func,
+		onTransition: PropTypes.func,
 
 		/**
 		 * Called once before views begin their transition.
 		 *
 		 * @type {Function}
 		 */
-		onWillTransition: React.PropTypes.func,
+		onWillTransition: PropTypes.func,
 
 		/**
 		 * Explicitly sets the transition direction. If omitted, the direction is determined
@@ -150,7 +151,7 @@ class ViewManager extends React.Component {
 		 *
 		 * @type {Boolean}
 		 */
-		reverseTransition: React.PropTypes.bool,
+		reverseTransition: PropTypes.bool,
 
 		/**
 		 * Index of first visible view. Defaults to the current value of `index`.
@@ -158,7 +159,7 @@ class ViewManager extends React.Component {
 		 * @type {Number}
 		 * @default value of index
 		 */
-		start: React.PropTypes.number
+		start: PropTypes.number
 	}
 
 	static defaultProps = {
@@ -215,7 +216,7 @@ class ViewManager extends React.Component {
 		delete rest.reverseTransition;
 
 		return (
-			<TransitionGroup {...rest} childFactory={childFactory} size={size + 1}>
+			<TransitionGroup {...rest} childFactory={childFactory} size={size + 1} currentIndex={index}>
 				{views}
 			</TransitionGroup>
 		);

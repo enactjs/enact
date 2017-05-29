@@ -1,7 +1,7 @@
 import Button from '@enact/moonstone/Button';
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
-import {withKnobs, boolean, number, select, text} from '@kadira/storybook-addon-knobs';
+import {number, select, text} from '@kadira/storybook-addon-knobs';
 
 const prop = {
 	tooltipPosition: {
@@ -23,17 +23,16 @@ const prop = {
 };
 
 storiesOf('TooltipDecorator')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'The basic TooltipDecorator',
 		() => (
 			<div style={{textAlign: 'center'}}>
 				<Button
+					tooltipCasing={select('tooltipCasing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
 					tooltipDelay={number('tooltipDelay', 500)}
 					tooltipText={text('tooltipText', 'tooltip!')}
 					tooltipPosition={select('tooltipPosition', prop.tooltipPosition, 'above')}
-					tooltipPreserveCase={boolean('tooltipPreserveCase', false)}
 					tooltipWidth={number('tooltipWidth')}
 				>
 					hello

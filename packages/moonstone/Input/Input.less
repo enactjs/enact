@@ -4,7 +4,9 @@
 @import '../styles/mixins.less';
 @import '../styles/variables.less';
 @import '../styles/text.less';
+@import '../styles/skin.less';
 
+.applySkins({
 .input {
 	.moon-body-text();
 
@@ -12,14 +14,16 @@
 	border: 0;
 	cursor: pointer;
 	background: transparent;
-	color: @moon-input-font-color;
+	color: @moon-input-text-color;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
 
+	.moon-custom-text-size(@moon-item-font-size-large);
+
 	&::selection {
 		color: @moon-spotlight-text-color;
-		background-color: @moon-spotlight-background-color;
+		background-color: @moon-spotlight-bg-color;
 	}
 
 	&[type=number] {
@@ -38,7 +42,7 @@
 
 	&:global(.spottable):focus {
 		cursor: text;
-		color: @moon-input-font-color;
+		color: @moon-input-text-color;
 		background-color: inherit;
 	}
 
@@ -46,18 +50,18 @@
 		cursor: default;
 	}
 
-	// moon-neutral: to override the color set by .moon-neutral *
-	:global(.moon-neutral) & {
-		color: @moon-input-font-color;
+	:global(.enact-locale-right-to-left)& {
+		text-align: right;
 	}
 
-	:global(.enact-locale-right-to-left) & {
-		text-align: right;
+	.invalid & {
+		color: @moon-red;
 	}
 }
 
 .decorator {
 	display: inline-block;
+
 	padding: 12px 30px;
 	border-radius: 1008px;
 	margin: 6px;
@@ -86,8 +90,11 @@
 		border-radius: 12px;
 	}
 
-	// RIGBY NOTE: Complex focus scenarios are broken at the moment
+	// For ExpandableInput, the decorator will not receive focus but it can be activated by clicking
+	// which should highlight the border
+	&.noDecorator:active,
 	&:global(.spottable):focus {
+		color: @moon-input-text-color;
 		border-color: @moon-spotlight-border-color;
 		background-color: @moon-input-decorator-bg-color;
 	}
@@ -105,7 +112,7 @@
 	&:global(.spottable):focus .decoratorIcon {
 		width: auto;
 		margin: 0;
-		color: @moon-input-font-color;
+		color: @moon-input-text-color;
 	}
 
 	.moon-expandable-input & {
@@ -115,6 +122,13 @@
 	> * {
 		display: inline-block;
 		vertical-align: middle;
+	}
+}
+
+.invalidTooltip {
+	transform: translate(60px, -50%);
+	:global(.enact-locale-right-to-left)& {
+		transform: translate(-60px, -50%);
 	}
 }
 
@@ -131,8 +145,8 @@
 	}
 }
 
-:global .enact-locale-non-latin {
-	:local .decorator {
+:global(.enact-locale-non-latin) {
+	.decorator {
 		padding: 6px 30px 12px;
 	}
 
@@ -151,12 +165,14 @@
 	&.enact-locale-mr, // Marathi
 	&.enact-locale-bn, // Bengali
 	&.enact-locale-pa {// Panjabi
-		:local .input {
+		.input {
 			font-size: 24px;
 			line-height: 48px;
 		}
-		:local .decorator {
+		.decorator {
 			padding: 1px 30px;
 		}
 	}
 }
+});
+

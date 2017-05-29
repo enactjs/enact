@@ -22,7 +22,7 @@ import './dates';
 import ilib from '../ilib/lib/ilib';
 
 import Loader from './Loader';
-import {updateLocale} from './locale';
+import {updateLocale} from '../locale';
 
 ilib.setLoaderCallback(new Loader());
 

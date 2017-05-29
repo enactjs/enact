@@ -1,12 +1,8 @@
-import Button, {ButtonBase} from '@enact/moonstone/Button';
+import Button from '@enact/moonstone/Button';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, select, text} from '@kadira/storybook-addon-knobs';
+import {boolean, select, text} from '@kadira/storybook-addon-knobs';
 import css from './Button.less';
-
-Button.propTypes = Object.assign({}, ButtonBase.propTypes, Button.propTypes);
-Button.defaultProps = Object.assign({}, ButtonBase.defaultProps, Button.defaultProps);
-Button.displayName = 'Button';
 
 // Set up some defaults for info and knobs
 const prop = {
@@ -16,16 +12,15 @@ const prop = {
 };
 
 storiesOf('Button')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		'with long text',
 		() => (
 			<Button
+				casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
 				disabled={boolean('disabled')}
 				minWidth={boolean('minWidth')}
-				preserveCase={boolean('preserveCase')}
 				selected={boolean('selected')}
 				small={boolean('small')}
 			>
@@ -37,11 +32,11 @@ storiesOf('Button')
 		'with tall characters',
 		() => (
 			<Button
+				casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
 				disabled={boolean('disabled')}
 				minWidth={boolean('minWidth')}
-				preserveCase={boolean('preserveCase')}
 				selected={boolean('selected')}
 				small={boolean('small')}
 			>
@@ -53,11 +48,11 @@ storiesOf('Button')
 		'to validate minWidth with a single character',
 		() => (
 			<Button
+				casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
 				onClick={action('onClick')}
 				backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
 				disabled={boolean('disabled')}
 				minWidth={boolean('minWidth', false)}
-				preserveCase={boolean('preserveCase')}
 				selected={boolean('selected')}
 				small={boolean('small')}
 			>
@@ -83,23 +78,23 @@ storiesOf('Button')
 		() => (
 			<div>
 				<Button
+					casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
 					className={css.tapArea}
 					onClick={action('onClick')}
 					backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
 					disabled={boolean('disabled')}
 					minWidth={boolean('minWidth')}
-					preserveCase={boolean('preserveCase')}
 					selected={boolean('selected')}
 				>
 					Normal Button
 				</Button>
 				<Button
+					casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
 					className={css.tapArea}
 					onClick={action('onClick')}
 					backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
 					disabled={boolean('disabled')}
 					minWidth={boolean('minWidth')}
-					preserveCase={boolean('preserveCase')}
 					selected={boolean('selected')}
 					small
 				>

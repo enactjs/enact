@@ -1,4 +1,5 @@
 import computed from './computed';
+import contextTypes from './contextTypes';
 import defaultProps from './defaultProps';
 import handlers from './handlers';
 import name from './name';
@@ -13,11 +14,15 @@ import styles from './styles';
  *	const Button = kind({
  *		// expect color and onClick properties but neither required
  *		propTypes: {
- *			color: React.PropTypes.string
+ *			color: PropTypes.string
  *		},
  *		// if no color is provided, it'll be green
  *		defaultProps: {
  *			color: 'green'
+ *		},
+ *		// expect backgroundColor via context
+ *		contextTypes: {
+ *			backgroundColor: PropTypes.string
  *		},
  *		// configure styles with the static className to merge with user className
  *		styles: {
@@ -28,7 +33,9 @@ import styles from './styles';
  *		// add some computed properties
  *		computed: {
  *			// border color will be the color prepended by 'light'
- *			borderColor: ({color}) => 'light' + color
+ *			borderColor: ({color}) => 'light' + color,
+ *			// background color will be the contextual background color if specified
+ *			color: ({color}, context) => context.backgroundColor || color
  *		},
  *		// Render the thing, already!
  *		render: ({color, borderColor, children, ...rest}) => (
@@ -55,12 +62,16 @@ const kind = (config) => {
 	};
 
 	// render() decorations
-	if (config.name) name(config.name, render);
 	if (config.handlers) {
-		render = handlers(config.handlers, render);
+		// need to set name and contextTypes on pre-wrapped Component
+		if (config.contextTypes) contextTypes(config.contextTypes, render);
+		render = handlers(config.handlers, render, config.contextTypes);
 	}
+
+	if (config.name) name(config.name, render);
 	if (config.propTypes) propTypes(config.propTypes, render);
 	if (config.defaultProps) defaultProps(config.defaultProps, render);
+	if (config.contextTypes) contextTypes(config.contextTypes, render);
 
 	// Decorate the SFC with the computed property object in DEV for easier testability
 	if (__DEV__ && config.computed) render.computed = config.computed;

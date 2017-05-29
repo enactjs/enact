@@ -1,0 +1,59 @@
+// SliderTooltip.less
+//
+@import '../styles/variables.less';
+@import '../styles/text.less';
+@import '../styles/skin.less';
+
+.applySkins({
+	@offset-large: 0px;
+
+	.tooltip {
+		&.horizontal {
+			&.before {
+				bottom: @moon-slider-tooltip-offset;
+
+				.moon-custom-text({
+					bottom: (@moon-slider-tooltip-offset + @offset-large);
+				});
+			}
+			&.after {
+				top: @moon-slider-tooltip-offset;
+
+				.moon-custom-text({
+					top: (@moon-slider-tooltip-offset + @offset-large);
+				});
+			}
+		}
+	}
+
+	// Left side
+	.tooltip.vertical.before,
+	&:global(.enact-locale-right-to-left) .tooltip.vertical.before.ignoreLocale,
+	&:global(.enact-locale-right-to-left) .tooltip.vertical.after {
+		right: 0;
+		transform: translate(-54px, -50%);
+
+		.moon-custom-text({
+			transform: translate((-54px - @offset-large), -50%);
+		});
+	}
+
+	// Right side
+	.tooltip.vertical.after,
+	&:global(.enact-locale-right-to-left) .tooltip.vertical.after.ignoreLocale,
+	&:global(.enact-locale-right-to-left) .tooltip.vertical.before {
+		right: auto;
+		transform: translate(54px, -50%);
+
+		.moon-custom-text({
+			transform: translate((54px + @offset-large), -50%);
+		});
+	}
+
+	// In order to reference an ancestor selector ([data-climax="falling"]) that is also a descendant of
+	// the skin (.moonstone), we have to extract it from the main ruleset to inject the ancestor
+	// selector while still prefixing it with the skin selector.
+	[data-climax="falling"] .tooltip.horizontal {
+		transform: translateX(-100%);
+	}
+});

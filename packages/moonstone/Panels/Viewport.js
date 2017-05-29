@@ -3,8 +3,10 @@ import kind from '@enact/core/kind';
 import ViewManager, {shape} from '@enact/ui/ViewManager';
 import invariant from 'invariant';
 import React from 'react';
+import PropTypes from 'prop-types';
 import Spotlight from '@enact/spotlight';
 
+import IdProvider from './IdProvider';
 import css from './Panels.less';
 
 /**
@@ -17,6 +19,15 @@ const ViewportBase = kind({
 	name: 'Viewport',
 
 	propTypes: /** @lends Viewport.prototype */ {
+
+		/**
+		 * A function that generates a globally-unique identifier for a panel index
+		 *
+		 * @type {Function}
+		 * @required
+		 */
+		generateId: PropTypes.func.isRequired,
+
 		/**
 		 * Set of functions that control how the panels are transitioned into and out of the
 		 * viewport
@@ -30,7 +41,7 @@ const ViewportBase = kind({
 		 *
 		 * @type {Panel}
 		 */
-		children: React.PropTypes.node,
+		children: PropTypes.node,
 
 		/**
 		 * Index of the active panel
@@ -38,7 +49,7 @@ const ViewportBase = kind({
 		 * @type {Number}
 		 * @default 0
 		 */
-		index: React.PropTypes.number,
+		index: PropTypes.number,
 
 		/**
 		 * Disable panel transitions
@@ -46,7 +57,7 @@ const ViewportBase = kind({
 		 * @type {Boolean}
 		 * @default false
 		 */
-		noAnimation: React.PropTypes.bool
+		noAnimation: PropTypes.bool
 	},
 
 	defaultProps: {
@@ -65,13 +76,18 @@ const ViewportBase = kind({
 	},
 
 	computed: {
-		children: ({children}) => React.Children.map(children, (child, index) => {
-			return React.cloneElement(child, {'data-index': index});
+		children: ({children, generateId}) => React.Children.map(children, (child, index) => {
+			return React.cloneElement(child, {
+				containerId: child.props.containerId || generateId(index),
+				'data-index': index
+			});
 		}),
-		enteringProp: ({noAnimation}) => noAnimation ? null : 'showChildren'
+		enteringProp: ({noAnimation}) => noAnimation ? null : 'hideChildren'
 	},
 
 	render: ({arranger, children, enteringProp, index, noAnimation, ...rest}) => {
+		delete rest.generateId;
+
 		const count = React.Children.count(children);
 		invariant(
 			index === 0 && count === 0 || index < count,
@@ -95,5 +111,10 @@ const ViewportBase = kind({
 	}
 });
 
-export default ViewportBase;
-export {ViewportBase as Viewport, ViewportBase};
+const Viewport = IdProvider(
+	{onUnmount: Spotlight.remove, prefix: 'panel-container-'},
+	ViewportBase
+);
+
+export default Viewport;
+export {Viewport, ViewportBase};

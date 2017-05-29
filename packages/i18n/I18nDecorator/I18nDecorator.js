@@ -4,13 +4,16 @@
  *
  * @module i18n/I18nDecorator
  */
-import ilib from '../ilib/lib/ilib';
+
 import hoc from '@enact/core/hoc';
 import {on, off} from '@enact/core/dispatcher';
 import React from 'react';
+import PropTypes from 'prop-types';
 
-import '../src/glue';
-import {isRtlLocale, getI18nClasses, updateLocale} from '../src/locale';
+import ilib from '../src/index.js';
+import {isRtlLocale, updateLocale} from '../locale';
+
+import getI18nClasses from './getI18nClasses';
 
 /**
  * `contextTypes` is an object that exports the default context validation rules. These must be applied
@@ -26,8 +29,8 @@ import {isRtlLocale, getI18nClasses, updateLocale} from '../src/locale';
  * @public
  */
 const contextTypes = {
-	rtl: React.PropTypes.bool,
-	updateLocale: React.PropTypes.func
+	rtl: PropTypes.bool,
+	updateLocale: PropTypes.func
 };
 
 /**
@@ -47,8 +50,8 @@ const IntlHoc = hoc((config, Wrapped) => {
 	return class I18nDecorator extends React.Component {
 		static childContextTypes = contextTypes
 		static propTypes = /** @lends i18n/I18nDecorator.I18nDecorator.prototype */ {
-			className: React.PropTypes.string,
-			locale: React.PropTypes.string
+			className: PropTypes.string,
+			locale: PropTypes.string
 		}
 
 		getChildContext () {

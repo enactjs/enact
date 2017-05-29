@@ -1,16 +1,14 @@
-@import '../styles/colors.less';
+// Slider.less
+//
+@import '../styles/mixins.less';
 @import '../styles/variables.less';
+@import '../styles/text.less';
+@import '../styles/skin.less';
 
-.slider {
+.applySkins({.slider {
 	position: relative;
 	margin: 0 @moon-spotlight-outset;
 	height: 240px;	// Vertical sizing here. Being here instead of in .vertical requires less precedence when overriding the style from app-code.
-
-	&.pressed {
-		.knob::before {
-			border-width: 0; // Setting the border-width:0 removes the border and lets the background fill the entire size that was previously cropped off by the border.
-		}
-	}
 
 	.fill,
 	.load {
@@ -23,18 +21,20 @@
 	}
 
 	.fill {
-		background-color: @moon-progress-bar-bar-bg-color;
+		background-color: @moon-progress-bar-fill-bg-color;
+		transition: background-color ease-out 100ms;
+		will-change: background-color;
 	}
 
 	.load {
-		background-color: @moon-progress-bar-bg-color;
+		background-color: @moon-progress-bar-loaded-bg-color;
 	}
 
 	.sliderBar {
 		position: relative;
 		height: 100%;
 		width: 100%;
-		background-color: @moon-progress-bg-color;
+		background-color: @moon-progress-bar-bg-color;
 		direction: ltr;	// Always arrange this according to LTR rules
 	}
 
@@ -49,14 +49,20 @@
 			width: @moon-slider-knob-width;
 			// Vertically and horizontally center this knob.
 			// Using this method rather than -top -left so the knob is more intuitively customizable.
-			-webkit-transform: @moon-translate-center;
-			transform:         @moon-translate-center;
+			-webkit-transform: @moon-translate-center scale(0.8);
+			transform:         @moon-translate-center scale(0.8);
 			background-color: @moon-slider-knob-bg-color;
 			border-radius: (@moon-slider-knob-height / 2);
 			border: @moon-button-border-width solid transparent;
 			box-sizing: border-box;
 			will-change: transform;
-			background-clip: padding-box;
+			transition: transform ease-out 100ms;
+
+			.moon-custom-text({
+				height: @moon-slider-knob-height-large;
+				width: @moon-slider-knob-width-large;
+				border-radius: (@moon-slider-knob-height-large / 2);
+			})
 		}
 	}
 
@@ -78,9 +84,15 @@
 			border-radius: @moon-slider-knob-width;
 			box-sizing: border-box;
 			visibility: hidden;
+
+			.moon-custom-text({
+				height: @moon-slider-knob-height-large;
+				width: @moon-slider-knob-width-large;
+				border-radius: @moon-slider-knob-width-large;
+			})
 		}
 
-		:global(.enact-locale-right-to-left) & {
+		:global(.enact-locale-right-to-left)& {
 			direction: ltr;
 		}
 	}
@@ -98,6 +110,15 @@
 		.input {
 			padding: 0 @h-gap;
 		}
+
+		.moon-custom-text({
+			@h-gap-large: (@moon-slider-knob-width-large / 2);
+			padding: ((@moon-slider-knob-height-large - @moon-slider-bar-height) / 2) @h-gap-large;
+
+			.input {
+				padding: 0 @h-gap-large;
+			}
+		})
 	}
 
 	&.vertical {
@@ -132,35 +153,71 @@
 			-webkit-appearance: slider-vertical; /* WebKit */
 			opacity: 0.0001;	// This needs to be still visible to remain interactive, so we can't simply set visibility:hidden or display:none or even -webkit-appearance:none. This becomes effectively invisible with 0.0001
 		}
+
+		.moon-custom-text({
+			@v-gap-large: (@moon-slider-knob-width / 2);
+			padding: @v-gap-large ((@moon-slider-knob-height-large - @moon-slider-bar-height) / 2);
+
+			.input {
+				padding: @v-gap-large 0;
+			}
+		})
 	}
 
 	&:global(.spottable) {
+		&.active,
 		&.pressed {
 			.fill {
 				background-color: @moon-slider-spotlight-bar-color;
 			}
+		}
+
+		&.pressed,
+		&:focus {
 			.knob::before {
 				background-color: @moon-slider-spotlight-knob-color;
 			}
 		}
 
-	}
+		&.pressed,
+		&:focus.active {
+			.knob::before {
+				transform: @moon-translate-center scale(1);
+			}
+		}
 
-	&:global(.spottable):focus {
-		background-color: transparent;
+		&:focus {
+			background-color: transparent;
 
-		.knob::before {
-			background-color: @moon-slider-spotlight-knob-color;
+			&.active {
+				.knob::before {
+					background-color: @moon-slider-knob-bg-color;
+					border-color: @moon-slider-spotlight-knob-color;
+				}
+			}
 		}
 	}
-}
 
-[data-container-muted='true'] {
-	.slider {
-		&:global(.spottable):focus {
-			.knob {
-				background-color: @moon-slider-knob-bg-color;
+	&.noFill {
+		.fill {
+			background-color: transparent;
+		}
+
+		&:global(.spottable) {
+			&.active,
+			&.pressed {
+				.fill {
+					background-color: transparent;
+				}
 			}
 		}
 	}
 }
+
+.mutedFocus({
+	&.slider .knob::before {
+		background-color: @moon-slider-knob-bg-color;
+	}
+});
+
+});

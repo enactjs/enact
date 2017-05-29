@@ -6,14 +6,19 @@
  * @module moonstone/ExpandablePicker
  */
 
-import kind from '@enact/core/kind';
 import Changeable from '@enact/ui/Changeable';
+import kind from '@enact/core/kind';
 import React from 'react';
+import PropTypes from 'prop-types';
 import pure from 'recompose/pure';
 
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 import IconButton from '../IconButton';
 import Picker from '../Picker';
+
+import ExpandablePickerDecorator from './ExpandablePickerDecorator';
+
+import css from './ExpandablePicker.less';
 
 /**
  * {@link moonstone/ExpandablePicker.ExpandablePickerBase} is a stateless component that
@@ -35,7 +40,7 @@ const ExpandablePickerBase = kind({
 		 * @type {Node}
 		 * @public
 		 */
-		children: React.PropTypes.node.isRequired,
+		children: PropTypes.node.isRequired,
 
 		/**
 		 * A custom icon for the decrementer. All strings supported by [Icon]{Icon} are
@@ -45,7 +50,7 @@ const ExpandablePickerBase = kind({
 		 * @type {string}
 		 * @public
 		 */
-		decrementIcon: React.PropTypes.string,
+		decrementIcon: PropTypes.string,
 
 		/**
 		 * When `true`, applies a disabled style and the control becomes non-interactive.
@@ -53,7 +58,7 @@ const ExpandablePickerBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		disabled: React.PropTypes.bool,
+		disabled: PropTypes.bool,
 
 		/**
 		 * A custom icon for the incrementer. All strings supported by [Icon]{Icon} are
@@ -63,7 +68,7 @@ const ExpandablePickerBase = kind({
 		 * @type {string}
 		 * @public
 		 */
-		incrementIcon: React.PropTypes.string,
+		incrementIcon: PropTypes.string,
 
 		/**
 		 * The user interaction of the control. A joined picker allows the user to use
@@ -75,7 +80,7 @@ const ExpandablePickerBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		joined: React.PropTypes.bool,
+		joined: PropTypes.bool,
 
 		/**
 		 * By default, the picker will animate transitions between items if it has a defined
@@ -85,7 +90,7 @@ const ExpandablePickerBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		noAnimation: React.PropTypes.bool,
+		noAnimation: PropTypes.bool,
 
 		/**
 		 * Callback to be called when the control should increment or decrement.
@@ -93,7 +98,15 @@ const ExpandablePickerBase = kind({
 		 * @type {Function}
 		 * @public
 		 */
-		onChange: React.PropTypes.func,
+		onChange: PropTypes.func,
+
+		/**
+		 * Callback to be called when a condition occurs which should cause the expandable to close
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onClose: PropTypes.func,
 
 		/**
 		 * Callback to be called when an item is picked.
@@ -101,7 +114,7 @@ const ExpandablePickerBase = kind({
 		 * @type {Function}
 		 * @public
 		 */
-		onPick: React.PropTypes.func,
+		onPick: PropTypes.func,
 
 		/**
 		 * The handler to run when the component is removed while retaining focus.
@@ -110,7 +123,7 @@ const ExpandablePickerBase = kind({
 		 * @param {Object} event
 		 * @public
 		 */
-		onSpotlightDisappear: React.PropTypes.func,
+		onSpotlightDisappear: PropTypes.func,
 
 		/**
 		 * The orientation of the picker, i.e. whether the buttons are above and below or on the
@@ -120,7 +133,7 @@ const ExpandablePickerBase = kind({
 		 * @default 'horizontal'
 		 * @public
 		 */
-		orientation: React.PropTypes.oneOf(['horizontal', 'vertical']),
+		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
 		 * When `true`, the component cannot be navigated using spotlight.
@@ -129,7 +142,7 @@ const ExpandablePickerBase = kind({
 		 * @default false
 		 * @public
 		 */
-		spotlightDisabled: React.PropTypes.bool,
+		spotlightDisabled: PropTypes.bool,
 
 		/**
 		 * Index of the selected child
@@ -138,7 +151,7 @@ const ExpandablePickerBase = kind({
 		 * @default 0
 		 * @public
 		 */
-		value: React.PropTypes.number,
+		value: PropTypes.number,
 
 		/*
 		 * The size of the picker: `'small'`, `'medium'`, `'large'`, or set to `null` to
@@ -148,7 +161,7 @@ const ExpandablePickerBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		width: React.PropTypes.oneOf([null, 'small', 'medium', 'large']),
+		width: PropTypes.oneOf([null, 'small', 'medium', 'large']),
 
 		/*
 		 * Whether the picker stops incrementing when it reaches the last element. Set `wrap`
@@ -157,12 +170,17 @@ const ExpandablePickerBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		wrap: React.PropTypes.bool
+		wrap: PropTypes.bool
 	},
 
 	defaultProps: {
 		spotlightDisabled: false,
 		value: 0
+	},
+
+	styles: {
+		css,
+		className: 'expandablePicker'
 	},
 
 	handlers: {
@@ -203,6 +221,7 @@ const ExpandablePickerBase = kind({
 		return (
 			<ExpandableItemBase {...rest} disabled={disabled} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled}>
 				<Picker
+					className={css.picker}
 					disabled={disabled}
 					onChange={onPick}
 					value={value}
@@ -218,16 +237,25 @@ const ExpandablePickerBase = kind({
 				>
 					{children}
 				</Picker>
-				<IconButton onClick={onChange} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled}>check</IconButton>
+				<IconButton onClick={onChange} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled} className={css.button} small>check</IconButton>
 			</ExpandableItemBase>
 		);
 	}
 });
 
 /**
- * {@link moonstone/ExpandablePicker.ExpandablePickerBase} is a stateful component that
+ * {@link moonstone/ExpandablePicker.ExpandablePicker} is a stateful component that
  * renders a list of items into a picker that allows the user to select only a single item at
  * a time. It supports increment/decrement buttons for selection.
+ *
+ * By default, `ExpandablePicker` maintains the state of its `value` property. Supply the
+ * `defaultValue` property to control its initial value. If you wish to directly control updates
+ * to the component, supply a value to `value` at creation time and update it in response to
+ * `onPick` events.
+ *
+ * `ExpandablePicker` maintains its open/closed state by default. The initial state can be supplied
+ * using `defaultOpen`. In order to directly control the open/closed state, supply a value for
+ * `open` at creation time and update its value in response to `onClose`/`onOpen` events.
  *
  * @class ExpandablePicker
  * @memberof moonstone/ExpandablePicker
@@ -240,10 +268,9 @@ const ExpandablePickerBase = kind({
 const ExpandablePicker = pure(
 	Expandable(
 		Changeable(
-			// override `change` so we can separate handling onChange for the Picker and onChange for the
-			// ExpandablePicker
-			{mutable: true, change: 'onPick'},
-			ExpandablePickerBase
+			ExpandablePickerDecorator(
+				ExpandablePickerBase
+			)
 		)
 	)
 );

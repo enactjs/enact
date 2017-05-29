@@ -5,18 +5,20 @@
  */
 
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
+import Toggleable from '@enact/ui/Toggleable';
 
-import ToggleItem from '../ToggleItem';
+import {ToggleItemBase} from '../ToggleItem';
 import Switch from '../Switch';
 
 import css from './SwitchItem.less';
 
 /**
- * {@link moonstone/SwitchItem.SwitchItem} represents a Boolean state. It displays a descriptive
+ * {@link moonstone/SwitchItem.SwitchItemBase} represents a Boolean state. It displays a descriptive
  * text and has a switch that represents the on/off state.
  *
- * @class SwitchItem
+ * @class SwitchItemBase
  * @memberof moonstone/SwitchItem
  * @ui
  * @public
@@ -24,7 +26,7 @@ import css from './SwitchItem.less';
 const SwitchItemBase = kind({
 	name: 'SwitchItem',
 
-	propTypes: /** @lends moonstone/SwitchItem.SwitchItem.prototype */ {
+	propTypes: /** @lends moonstone/SwitchItem.SwitchItemBase.prototype */ {
 		/**
 		 * The string to be displayed as the main content of the switch item.
 		 *
@@ -66,7 +68,6 @@ const SwitchItemBase = kind({
 		 * When `true`, the dispalyed "switch" icon is set to the "on" position.
 		 *
 		 * @type {Boolean}
-		 * @default false
 		 * @public
 		 */
 		selected: PropTypes.bool,
@@ -82,8 +83,7 @@ const SwitchItemBase = kind({
 	},
 
 	defaultProps: {
-		disabled: false,
-		selected: false
+		disabled: false
 	},
 
 	styles: {
@@ -98,9 +98,29 @@ const SwitchItemBase = kind({
 	},
 
 	render: (props) => (
-		<ToggleItem {...props} iconPosition="after" />
+		<ToggleItemBase {...props} iconPosition="after" />
 	)
 });
 
-export default SwitchItemBase;
-export {SwitchItemBase as SwitchItem, SwitchItemBase};
+/**
+ * {@link moonstone/SwitchItem.SwitchItem} represents a Boolean state. It displays a descriptive
+ * text and has a switch that represents the on/off state.
+ *
+ * By default, `SwitchItem` maintains the state of its `selected` property. Supply the
+ * `defaultSelected` property to control its initial value. If you wish to directly control updates
+ * to the component, supply a value to `selected` at creation time and update it in response to
+ * `onToggle` events.
+ *
+ * @class SwitchItem
+ * @memberof moonstone/SwitchItem
+ * @mixes ui/Toggleable.Toggleable
+ * @ui
+ * @public
+ */
+const SwitchItem = Toggleable(
+	{prop: 'selected'},
+	SwitchItemBase
+);
+
+export default SwitchItem;
+export {SwitchItem, SwitchItemBase};

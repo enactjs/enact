@@ -1,5 +1,7 @@
+import $L from '@enact/i18n/$L';
 import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import IconButton from '../IconButton';
 
@@ -62,7 +64,7 @@ const ContextualPopupBase = kind({
 		 * @public
 		 */
 		children: PropTypes.oneOfType([
-			PropTypes.arrayOf(React.PropTypes.element),
+			PropTypes.arrayOf(PropTypes.element),
 			PropTypes.element
 		]).isRequired,
 
@@ -73,10 +75,10 @@ const ContextualPopupBase = kind({
 		 * @public
 		 */
 		arrowPosition: PropTypes.shape({
-			top: React.PropTypes.number,
-			bottom: React.PropTypes.number,
-			left: React.PropTypes.number,
-			right: React.PropTypes.number
+			top: PropTypes.number,
+			bottom: PropTypes.number,
+			left: PropTypes.number,
+			right: PropTypes.number
 		}),
 
 		/**
@@ -86,10 +88,10 @@ const ContextualPopupBase = kind({
 		 * @public
 		 */
 		containerPosition: PropTypes.shape({
-			top: React.PropTypes.number,
-			bottom: React.PropTypes.number,
-			left: React.PropTypes.number,
-			right: React.PropTypes.number
+			top: PropTypes.number,
+			bottom: PropTypes.number,
+			left: PropTypes.number,
+			right: PropTypes.number
 		}),
 
 		/**
@@ -134,7 +136,7 @@ const ContextualPopupBase = kind({
 
 	styles: {
 		css,
-		className: 'contextualPopup container moon-neutral'
+		className: 'container'
 	},
 
 	computed: {
@@ -147,6 +149,7 @@ const ContextualPopupBase = kind({
 						backgroundOpacity="transparent"
 						small
 						onClick={onCloseButtonClick}
+						aria-label={$L('Close')}
 					>
 						closex
 					</IconButton>
@@ -160,10 +163,10 @@ const ContextualPopupBase = kind({
 		delete rest.showCloseButton;
 
 		return (
-			<div {...rest} className={css.contextualPopup}>
+			<div aria-live="off" role="alert" {...rest} className={css.contextualPopup + ' moonstone-light'}>
 				<div className={className} style={containerPosition} ref={containerRef}>
-					{closeButton}
 					{children}
+					{closeButton}
 				</div>
 				<ContextualPopupArrow direction={direction} style={arrowPosition} />
 			</div>

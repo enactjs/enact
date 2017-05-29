@@ -7,7 +7,8 @@
 
 import kind from '@enact/core/kind';
 import ri from '@enact/ui/resolution';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import iconList from './IconList.js';
 
@@ -81,6 +82,14 @@ const IconBase = kind({
 		 * @public
 		 */
 		children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
+
+		/**
+		 * If `true`, apply a pressed styling
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		pressed: PropTypes.bool,
 
 		/**
 		 * If `true`, apply the 'small' class.
@@ -199,6 +208,8 @@ const IconBase = kind({
  * rollbackward
  * exitfullscreen
  * fullscreen
+ * arrowshrinkleft
+ * arrowshrinkright
  * arrowextend
  * arrowshrink
  * flag
@@ -210,12 +221,36 @@ const IconBase = kind({
  * gear
  * plug
  * lock
+ * forward15
+ * back15
+ * continousplay
+ * playlist
+ * resumeplay
+ * image
+ * audio
+ * music
+ * languages
+ * cc
+ * ccon
+ * ccoff
+ * sub
+ * recordings
+ * livezoom
+ * liveplayback
+ * liveplaybackoff
+ * repeat
+ * repeatoff
+ * series
+ * repeatdownload
+ * view360
+ * view360off
+ * info
  * ```
  *
  * @name iconList
  * @memberof moonstone/Icon
+ * @constant
  * @type Object
- * @ui
  * @public
  */
 

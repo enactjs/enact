@@ -5,10 +5,15 @@
  * @module ui/Transition
  */
 
-import React, {PropTypes} from 'react';
+import {forward} from '@enact/core/handle';
 import kind from '@enact/core/kind';
+import {Job} from '@enact/core/util';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import css from './Transition.less';
+
+const forwardTransitionEnd = forward('onTransitionEnd');
 
 /**
  * {@link ui/Transition.TransitionBase} is a stateless component that allows for applying
@@ -132,7 +137,7 @@ const TransitionBase = kind({
 			height: visible ? clipHeight : null,
 			overflow: 'hidden'
 		} : style,
-		childRef: ({childRef, noAnimation}) => noAnimation ? null : childRef
+		childRef: ({childRef, noAnimation, children}) => (noAnimation || !children) ? null : childRef
 	},
 
 	render: ({childRef, children, noAnimation, type, visible, ...rest}) => {
@@ -163,6 +168,12 @@ const TransitionBase = kind({
 	}
 });
 
+const TRANSITION_STATE = {
+	INIT: 0,		// closed and unmeasured
+	MEASURE: 1,		// open but need to measure
+	READY: 2		// measured and ready
+};
+
 /**
  * {@link ui/Transition.Transition} is a stateful component that allows for applying transitions
  * to its child items via configurable properties and events.
@@ -174,16 +185,6 @@ const TransitionBase = kind({
 class Transition extends React.Component {
 	static propTypes = /** @lends ui/Transition.Transition.prototype */ {
 		children: PropTypes.node.isRequired,
-
-		/**
-		 * A callback function to get the reference to the child node (the one with the content) at
-		 * render time. Useful if you need to measure or interact with the node directly.
-		 *
-		 * @type {Function}
-		 * @default null
-		 * @private
-		 */
-		childRef: PropTypes.func,
 
 		/**
 		 * The height of the transition when `type` is set to `'clip'`.
@@ -223,6 +224,14 @@ class Transition extends React.Component {
 		onHide: PropTypes.func,
 
 		/**
+		 * A function to run after transition for showing is finished.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onShow: PropTypes.func,
+
+		/**
 		 * The transition timing function.
 		 * Supported functions are: `'linear'`, `'ease'` and `'ease-in-out'`
 		 *
@@ -260,50 +269,120 @@ class Transition extends React.Component {
 		visible: true
 	}
 
-	constructor () {
-		super();
+	constructor (props) {
+		super(props);
 
 		this.state = {
-			initialHeight: null
+			initialHeight: null,
+			renderState: props.visible ? TRANSITION_STATE.READY : TRANSITION_STATE.INIT
 		};
 	}
 
-	componentDidUpdate (prevProps) {
-		if (this.props.visible === prevProps.visible) {
+	componentDidMount () {
+		if (!this.props.visible) {
+			this.measuringJob.idle();
+		} else {
 			this.measureInner();
 		}
 	}
 
-	hideDidFinish = () => {
-		if (!this.props.visible && this.props.onHide) {
-			this.props.onHide();
+	componentWillReceiveProps (nextProps) {
+		if (nextProps.visible && this.state.renderState === TRANSITION_STATE.INIT) {
+			this.setState({
+				renderState: TRANSITION_STATE.MEASURE
+			});
 		}
 	}
 
-	measureInner () {
+	shouldComponentUpdate (nextProps, nextState) {
+		// Don't update if only updating the height and we're not visible
+		return (this.state.initialHeight === nextState.initialHeight) || this.props.visible || nextProps.visible;
+	}
+
+	componentWillUpdate (nextProps, nextState) {
+		if (nextState.renderState === TRANSITION_STATE.MEASURE) {
+			this.measuringJob.stop();
+		}
+	}
+
+	componentDidUpdate (prevProps, prevState) {
+		const {visible} = this.props;
+		const {initialHeight, renderState} = this.state;
+
+		// Checking that something changed that wasn't the visibility
+		// or the initialHeight state or checking if component should be visible but doesn't have a height
+		if ((visible === prevProps.visible &&
+			initialHeight === prevState.initialHeight &&
+			renderState !== TRANSITION_STATE.INIT) ||
+			(initialHeight == null && visible)) {
+			this.measureInner();
+		}
+	}
+
+	componentWillUnmount () {
+		this.measuringJob.stop();
+	}
+
+	measuringJob = new Job(() => {
+		this.setState({
+			renderState: TRANSITION_STATE.MEASURE
+		});
+	})
+
+	handleTransitionEnd = (ev) => {
+		forwardTransitionEnd(ev, this.props);
+
+		if (ev.target === this.childNode) {
+			if (!this.props.visible && this.props.onHide) {
+				this.props.onHide();
+			} else if (this.props.visible && this.props.onShow) {
+				this.props.onShow();
+			}
+		}
+	}
+
+	measureInner = () => {
 		if (this.childNode) {
 			const initialHeight = this.childNode.scrollHeight;
 			if (initialHeight !== this.state.initialHeight) {
-				this.setState({initialHeight});
+				this.setState({
+					initialHeight,
+					renderState: TRANSITION_STATE.READY
+				});
 			}
 		}
 	}
 
 	childRef = (node) => {
 		this.childNode = node;
-		if (this.state.initialHeight === null) {
-			this.measureInner();
-		}
 	}
 
 	render () {
-		const props = Object.assign({}, this.props);
+		let {visible, ...props} = this.props;
 		delete props.onHide;
+		delete props.onShow;
 
-		const height = props.visible ? this.state.initialHeight : 0;
-		return (
-			<TransitionBase {...props} childRef={this.childRef} clipHeight={height} onTransitionEnd={this.hideDidFinish} />
-		);
+		switch (this.state.renderState) {
+			// If we are deferring children, don't render any
+			case TRANSITION_STATE.INIT: return null;
+
+			// If we're transitioning to visible but don't have a measurement yet, create the
+			// transition container with its children so we can measure. Measuring will cause a
+			// state change to trigger the animation.
+			case TRANSITION_STATE.MEASURE: return (
+				<TransitionBase {...props} childRef={this.childRef} visible={false} />
+			);
+
+			case TRANSITION_STATE.READY: return (
+				<TransitionBase
+					{...props}
+					childRef={this.childRef}
+					visible={visible}
+					clipHeight={this.state.initialHeight}
+					onTransitionEnd={this.handleTransitionEnd}
+				/>
+			);
+		}
 	}
 }
 

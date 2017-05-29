@@ -4,7 +4,8 @@
  * @module ui/Repeater
  */
 
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import kind from '@enact/core/kind';
 
 /**
@@ -30,6 +31,11 @@ const RepeaterBase = kind({
 
 		/**
 		 * An array of data to be mapped onto the `childComponent`.  For example, an array of strings.
+		 * This supports two data types. If an array of strings is provided, the strings will be used
+		 * in the generated `childComponent` as the readable text. If an array of objects is
+		 * provided, each object will be spread onto the generated `childComponent` with no
+		 * interpretation. You'll be responsible for setting properties like `disabled`,
+		 * `className`, and setting the text content using the `children` key.
 		 *
 		 * @type {Array}
 		 * @public
@@ -71,9 +77,13 @@ const RepeaterBase = kind({
 	computed: {
 		children: ({childComponent: Component, children, childProp, indexProp, itemProps}) => {
 			return children.map((data, index) => {
-				const props = {...itemProps};
+				let props;
+				if (typeof data === 'object') {
+					props = {...itemProps, ...data};
+				} else if (childProp) {
+					props = {...itemProps, [childProp]: data};
+				}
 				if (indexProp) props[indexProp] = index;
-				if (childProp) props[childProp] = data;
 
 				return <Component {...props} />;
 			});
@@ -86,7 +96,7 @@ const RepeaterBase = kind({
 		delete props.indexProp;
 		delete props.itemProps;
 
-		return <span {...props} />;
+		return <span role="list" {...props} />;
 	}
 });
 

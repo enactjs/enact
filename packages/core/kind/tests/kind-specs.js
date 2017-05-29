@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import {mount} from 'enzyme';
 import kind from '../kind';
 
@@ -7,14 +8,20 @@ describe('kind', () => {
 	const Kind = kind({
 		name: 'Kind',
 		propTypes: {
-			prop: React.PropTypes.number.isRequired,
-			label: React.PropTypes.string
+			prop: PropTypes.number.isRequired,
+			label: PropTypes.string
 		},
 		defaultProps: {
 			label: 'Label'
 		},
+		contextTypes: {
+			parentLabel: PropTypes.string
+		},
 		styles: {
 			className: 'kind'
+		},
+		handlers: {
+			onClick: () => {}
 		},
 		computed: {
 			value: ({prop}) => prop + 1
@@ -74,6 +81,13 @@ describe('kind', () => {
 
 		const expected = 2;
 		const actual = subject.find('div').prop('children');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should assign contextTypes when handlers are specified', function () {
+		const actual = Kind.contextTypes != null;
+		const expected = true;
 
 		expect(actual).to.equal(expected);
 	});

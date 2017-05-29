@@ -1,20 +1,18 @@
 // VideoPlayer.less
 //
 @import '~@enact/ui/styles/mixins.less';
-@import '../styles/colors.less';
 @import '../styles/variables.less';
 @import '../styles/text.less';
 @import '../styles/mixins.less';
+@import '../styles/skin.less';
 
-.videoPlayer {
+.applySkins({.videoPlayer {
 	position: relative;
 	overflow: hidden;
 
-	.videoFrame {
-		video {
-			width: 100%;
-			vertical-align: top;
-		}
+	.video {
+		width: 100%;
+		vertical-align: top;
 	}
 
 	.overlay {
@@ -42,6 +40,7 @@
 					flex-grow: 1;
 					color: @moon-video-player-title-color;
 					opacity: 1;
+					overflow: hidden;
 					.margin-start-end(0, @moon-spotlight-outset);
 
 					&.hidden {
@@ -138,9 +137,35 @@
 					margin: 0;
 
 					// Grow the knob when the Slider gets spotted
-					&:global(.spottable):focus .knob::before {
-						transform: @moon-translate-center scale(0.75);
-						opacity: 1;
+					&:global(.spottable):focus {
+						.knob::before {
+							transform: @moon-translate-center scale(0.5);
+							opacity: 1;
+						}
+						&.pressed .knob::before {
+							transform: @moon-translate-center scale(0.75);
+						}
+					}
+					.sliderTooltip {
+						.moon-text-base(@moon-video-slider-tooltip-font-size);
+						color: @moon-white;
+						text-shadow: @moon-video-player-title-text-shadow;
+						line-height: @moon-video-slider-tooltip-line-height;
+						white-space: nowrap;
+						position: absolute;
+						bottom: 6px;
+						transition: transform 100ms ease-in-out;
+						will-change: transform;
+					}
+					.knob[data-climax="rising"] {
+						.sliderTooltip {
+							transform: translateX(30px);
+						}
+					}
+					.knob[data-climax="falling"] {
+						.sliderTooltip {
+							transform: translateX(-100%) translateX(-30px);
+						}
 					}
 				}
 
@@ -176,10 +201,10 @@
 				// Knob
 				.knob {
 					@activate-transition-function: cubic-bezier(0.15, 0.85, 0.6, 1.65);
-					@slide-transition-function:    cubic-bezier(0.15, 0.85, 0.53, 1.09);
+					//@slide-transition-function:    cubic-bezier(0.15, 0.85, 0.53, 1.09);
 
-					-webkit-transition: -webkit-transform @slide-transition-function 0.2s;
-					transition:                 transform @slide-transition-function 0.2s;
+					//-webkit-transition: -webkit-transform @slide-transition-function 0.2s;
+					//transition:                 transform @slide-transition-function 0.2s;
 
 					&::before {
 						width: (@moon-video-player-slider-knob-size * 2);
@@ -228,23 +253,28 @@
 
 				.leftComponents,
 				.rightComponents {
-					// Pre-allocate enough space for 2 buttons, statically.
-					width: (@moon-icon-button-size * 2 + @moon-spotlight-outset * 3);
+					// Pre-allocate enough space for 4 buttons, statically.
+					flex: 0 1 (@moon-icon-button-size * 4 + @moon-spotlight-outset * 7);
 					white-space: nowrap;
 					padding: @expanding-button-clearance 0;
 				}
 				.leftComponents {
+					text-align: start;
+
 					> :first-child {
 						.margin-start-end(0, @moon-button-h-margin);
 					}
 				}
 				.rightComponents {
+					text-align: end;
+
 					> :last-child {
 						.margin-start-end(@moon-button-h-margin, 0);
 					}
 				}
 				.centerComponentsContainer {
-					flex-grow: 1;
+					flex: 3 1;
+					width: 0; // the width will be automatically pushed wider by flex. width:auto breaks this.
 					// Must get clever with the masking. This container must support horizontal
 					// clipping without inhibiting the ability for components to overflow out of
 					// their natural containers. overflow-x:hidden;overflow-y:visible; adds a clip
@@ -260,6 +290,12 @@
 
 						&.more {
 							transform: translateX(-100%);
+							text-align: center;
+							pointer-events: none;
+
+							.moreControls {
+								pointer-events: auto;
+							}
 						}
 						.mediaControls,
 						.moreControls {
@@ -276,7 +312,7 @@
 						}
 					}
 
-					:global(.enact-locale-right-to-left) & {
+					:global(.enact-locale-right-to-left)& {
 						-webkit-mask-image: -webkit-gradient(linear, right top, left top, color-stop(0.9,  rgba(0,0,0,1)), color-stop(1,  rgba(0,0,0,0)));
 
 						.centerComponents.more {
@@ -285,7 +321,7 @@
 					}
 				}
 
-				:global(.enact-locale-right-to-left) & {
+				:global(.enact-locale-right-to-left)& {
 					.moreButton {
 						transform: scaleX(-1);
 					}
@@ -293,4 +329,10 @@
 			}
 		}
 	}
-}
+
+	.controlsHandleAbove {
+		pointer-events: none;
+		position: absolute;
+		.position(0, 0, auto, 0);
+	}
+}});

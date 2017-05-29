@@ -1,4 +1,4 @@
-import Button, {ButtonBase} from '@enact/moonstone/Button';
+import Button from '@enact/moonstone/Button';
 import CheckboxItem from '@enact/moonstone/CheckboxItem';
 import DatePicker from '@enact/moonstone/DatePicker';
 import DayPicker from '@enact/moonstone/DayPicker';
@@ -13,30 +13,36 @@ import Input from '@enact/moonstone/Input';
 import Item from '@enact/moonstone/Item';
 import LabeledItem from '@enact/moonstone/LabeledItem';
 import Picker from '@enact/moonstone/Picker';
+import Popup from '@enact/moonstone/Popup';
 import RadioItem from '@enact/moonstone/RadioItem';
 import SelectableItem from '@enact/moonstone/SelectableItem';
 import SwitchItem from '@enact/moonstone/SwitchItem';
 import TimePicker from '@enact/moonstone/TimePicker';
 import ToggleButton from '@enact/moonstone/ToggleButton';
 import ToggleItem from '@enact/moonstone/ToggleItem';
+import Scroller from '@enact/moonstone/Scroller';
 import Slider from '@enact/moonstone/Slider';
-import Changeable from '@enact/ui/Changeable';
-import Selectable from '@enact/ui/Selectable';
-import Toggleable from '@enact/ui/Toggleable';
-import Spotlight, {SpotlightContainerDecorator} from '@enact/spotlight';
+import Spotlight from '@enact/spotlight';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import React from 'react';
+import PropTypes from 'prop-types';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean} from '@kadira/storybook-addon-knobs';
+import {boolean, select} from '@kadira/storybook-addon-knobs';
 
-Button.propTypes = Object.assign({}, ButtonBase.propTypes, Button.propTypes);
-Button.defaultProps = Object.assign({}, ButtonBase.defaultProps, Button.defaultProps);
-Button.displayName = 'Button';
+const Container = SpotlightContainerDecorator(
+	{enterTo: 'last-focused'},
+	'div'
+);
 
-const Container = SpotlightContainerDecorator('div');
 const style = {
 	container: {
 		width: '300px',
 		border: '1px dashed red',
+		margin: '0 12px',
+		padding: '12px'
+	},
+	fittedContainer: {
+		border: '1px dashed blue',
 		margin: '0 12px',
 		padding: '12px'
 	},
@@ -49,18 +55,6 @@ const style = {
 };
 
 const Items = ['First', 'Second', 'Third'];
-const StatefulCheckboxItem = Toggleable({prop: 'selected'}, CheckboxItem);
-const StatefulDayPicker = Selectable(DayPicker);
-const StatefulExpandableList = Selectable(ExpandableList);
-const StatefulIncrementSlider = Changeable(IncrementSlider);
-const StatefulInput = Changeable(Input);
-const StatefulPicker = Changeable(Picker);
-const StatefulRadioItem = Toggleable({prop: 'selected'}, RadioItem);
-const StatefulSelectableItem = Toggleable({prop: 'selected'}, SelectableItem);
-const StatefulSlider = Changeable(Slider);
-const StatefulSwitchItem = Toggleable({prop: 'selected'}, SwitchItem);
-const StatefulToggleButton = Toggleable({toggle: 'onClick', prop: 'selected'}, ToggleButton);
-const StatefulToggleItem = Toggleable({prop: 'selected'}, ToggleItem);
 
 class DisappearTest extends React.Component {
 	constructor (props) {
@@ -104,7 +98,6 @@ class DisappearTest extends React.Component {
 				button is removed and the remaining button gains focus.
 				{this.state.showButton ? (
 					<Button
-						onBlur={this.stopTimer}
 						onFocus={this.startTimer}
 						onSpotlightDisappear={this.resetFocus}
 					>
@@ -112,7 +105,7 @@ class DisappearTest extends React.Component {
 					</Button>
 				) : null}
 				<Button
-					data-component-id='restoreButton'
+					data-component-id="restoreButton"
 					onClick={this.restoreButton}
 				>
 					Restore Button
@@ -122,8 +115,71 @@ class DisappearTest extends React.Component {
 	}
 }
 
+class PopupFocusTest extends React.Component {
+	static propTypes = {
+		noAnimation: PropTypes.bool,
+		noAutoDismiss: PropTypes.bool,
+		scrimType: PropTypes.oneOf(['transparent', 'translucent', 'none']),
+		showCloseButton: PropTypes.bool,
+		spotlightRestrict: PropTypes.oneOf(['none', 'self-first', 'self-only'])
+	}
+
+	static defaultProps = {
+		noAnimation: false,
+		noAutoDismiss: false,
+		scrimType: 'translucent',
+		showCloseButton: false,
+		spotlightRestrict: 'self-only'
+	}
+
+	constructor (props) {
+		super(props);
+		this.state = {
+			popupOpen: false
+		};
+	}
+
+	handleClosePopup = () => {
+		this.setState({popupOpen: false});
+	}
+
+	handleOpenPopup = () => {
+		this.setState({popupOpen: true});
+	}
+
+	render () {
+		const {noAnimation, noAutoDismiss, scrimType, showCloseButton, spotlightRestrict} = this.props;
+
+		return (
+			<div>
+				<p>
+					Open the popup by using 5-way selection on the &quot;Open Popup&quot; buttons.
+					When the popup is visible, select the popup&apos;s close button to close the popup.
+					Focus should return to the button used to originally open the popup. Verify this
+					behavior for each of the buttons.
+				</p>
+				<p>
+					Use the knobs to verify 5-way behavior under different Popup configurations.
+				</p>
+				<Button onClick={this.handleOpenPopup}>Open Popup</Button>
+				<Button onClick={this.handleOpenPopup}>Open Popup</Button>
+				<Popup
+					noAnimation={noAnimation}
+					noAutoDismiss={noAutoDismiss}
+					onClose={this.handleClosePopup}
+					open={this.state.popupOpen}
+					scrimType={scrimType}
+					showCloseButton={showCloseButton}
+					spotlightRestrict={spotlightRestrict}
+				>
+					<div>This is a Popup</div>
+				</Popup>
+			</div>
+		);
+	}
+}
+
 storiesOf('Spotlight')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		'Multiple Buttons',
 		() => (
@@ -185,8 +241,37 @@ storiesOf('Spotlight')
 				<div style={style.flexBox}>
 					<Container style={style.container} spotlightMuted>
 						<Item onFocus={action('onFocus')} onBlur={action('onBlur')}>1</Item>
-						<Item onFocus={action('onFocus')} onBlur={action('onBlur')}>2</Item>
+						<ExpandableList
+							noLockBottom
+							title="ExpandableList"
+						>
+							{Items}
+						</ExpandableList>
+						<CheckboxItem>
+							Hello
+						</CheckboxItem>
 						<Item onFocus={action('onFocus')} onBlur={action('onBlur')}>3</Item>
+					</Container>
+				</div>
+			</div>
+		)
+	)
+	.addWithInfo(
+		'Nested Containers',
+		() => (
+			<div>
+				<p>
+					The nested containers below both use a enterTo: &apos;last-focused&apos; configuration.
+					You should be able to naturally 5-way navigate between the items in the containers. Also,
+					attempting to 5-way navigate (left or down) from the application close button should
+					result in the last-focused item being spotted.
+				</p>
+				<div style={style.flexBox}>
+					<Container style={style.fittedContainer} >
+						<Item>Item in a container</Item>
+						<Container style={style.fittedContainer} >
+							<Item>Item in a nested container</Item>
+						</Container>
 					</Container>
 				</div>
 			</div>
@@ -220,6 +305,18 @@ storiesOf('Spotlight')
 		)
 	)
 	.addWithInfo(
+		'Popup Navigation',
+		() => (
+			<PopupFocusTest
+				noAnimation={boolean('noAnimation', false)}
+				noAutoDismiss={boolean('noAutoDismiss', false)}
+				scrimType={select('scrimType', ['none', 'transparent', 'translucent'], 'translucent')}
+				showCloseButton={boolean('showCloseButton', true)}
+				spotlightRestrict={select('spotlightRestrict', ['none', 'self-first', 'self-only'], 'self-only')}
+			/>
+		)
+	)
+	.addWithInfo(
 		'Kitchen Sink',
 		() => (
 			<div>
@@ -238,11 +335,11 @@ storiesOf('Spotlight')
 							>
 								Button
 							</Button>
-							<StatefulToggleButton
+							<ToggleButton
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 							>
 								ToggleButton
-							</StatefulToggleButton>
+							</ToggleButton>
 							<IconButton
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 							>
@@ -250,27 +347,27 @@ storiesOf('Spotlight')
 							</IconButton>
 						</div>
 						<div style={style.flexBox}>
-							<StatefulInput
+							<Input
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 							/>
 						</div>
 						<div style={style.flexBox}>
-							<StatefulPicker
+							<Picker
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 							>
 								{Items}
-							</StatefulPicker>
-							<StatefulPicker
+							</Picker>
+							<Picker
 								joined
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 							>
 								{Items}
-							</StatefulPicker>
+							</Picker>
 						</div>
-						<StatefulIncrementSlider
+						<IncrementSlider
 							spotlightDisabled={boolean('spotlightDisabled', false)}
 						/>
-						<StatefulSlider
+						<Slider
 							spotlightDisabled={boolean('spotlightDisabled', false)}
 						/>
 						<Item
@@ -279,7 +376,7 @@ storiesOf('Spotlight')
 							Item
 						</Item>
 						<LabeledItem
-							label={'Label'}
+							label="Label"
 							spotlightDisabled={boolean('spotlightDisabled', false)}
 						>
 							LabeledItem
@@ -289,66 +386,68 @@ storiesOf('Spotlight')
 						<Divider>
 							Expandables
 						</Divider>
-						<ExpandableItem
-							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title={'Various Items in an ExpandableItem'}
-						>
-							<StatefulCheckboxItem
+						<Scroller style={{height: '500px'}}>
+							<ExpandableItem
 								spotlightDisabled={boolean('spotlightDisabled', false)}
+								title="Various Items in an ExpandableItem"
 							>
-								CheckboxItem
-							</StatefulCheckboxItem>
-							<StatefulRadioItem
+								<CheckboxItem
+									spotlightDisabled={boolean('spotlightDisabled', false)}
+								>
+									CheckboxItem
+								</CheckboxItem>
+								<RadioItem
+									spotlightDisabled={boolean('spotlightDisabled', false)}
+								>
+									RadioItem
+								</RadioItem>
+								<SelectableItem
+									spotlightDisabled={boolean('spotlightDisabled', false)}
+								>
+									SelectableItem
+								</SelectableItem>
+								<SwitchItem
+									spotlightDisabled={boolean('spotlightDisabled', false)}
+								>
+									SwitchItem
+								</SwitchItem>
+								<ToggleItem
+									icon="plus"
+									spotlightDisabled={boolean('spotlightDisabled', false)}
+								>
+									ToggleItem
+								</ToggleItem>
+							</ExpandableItem>
+							<ExpandableList
+								noLockBottom
 								spotlightDisabled={boolean('spotlightDisabled', false)}
+								title="ExpandableList"
 							>
-								RadioItem
-							</StatefulRadioItem>
-							<StatefulSelectableItem
+								{Items}
+							</ExpandableList>
+							<ExpandableInput
 								spotlightDisabled={boolean('spotlightDisabled', false)}
-							>
-								SelectableItem
-							</StatefulSelectableItem>
-							<StatefulSwitchItem
+								title="ExpandableInput"
+							/>
+							<ExpandablePicker
 								spotlightDisabled={boolean('spotlightDisabled', false)}
+								title="ExpandablePicker"
 							>
-								SwitchItem
-							</StatefulSwitchItem>
-							<StatefulToggleItem
-								icon={'plus'}
+								{Items}
+							</ExpandablePicker>
+							<DatePicker
 								spotlightDisabled={boolean('spotlightDisabled', false)}
-							>
-								ToggleItem
-							</StatefulToggleItem>
-						</ExpandableItem>
-						<StatefulExpandableList
-							noLockBottom
-							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title={'ExpandableList'}
-						>
-							{Items}
-						</StatefulExpandableList>
-						<ExpandableInput
-							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title={'ExpandableInput'}
-						/>
-						<ExpandablePicker
-							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title={'ExpandablePicker'}
-						>
-							{Items}
-						</ExpandablePicker>
-						<DatePicker
-							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title={'DatePicker'}
-						/>
-						<StatefulDayPicker
-							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title={'DayPicker'}
-						/>
-						<TimePicker
-							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title={'TimePicker'}
-						/>
+								title="DatePicker"
+							/>
+							<DayPicker
+								spotlightDisabled={boolean('spotlightDisabled', false)}
+								title="DayPicker"
+							/>
+							<TimePicker
+								spotlightDisabled={boolean('spotlightDisabled', false)}
+								title="TimePicker"
+							/>
+						</Scroller>
 					</div>
 				</div>
 			</div>

@@ -1,23 +1,19 @@
-import React from 'react';
-
-import {Picker} from '@enact/moonstone/Picker';
-import {Input} from '@enact/moonstone/Input';
+import Picker from '@enact/moonstone/Picker';
+import Input from '@enact/moonstone/Input';
 import Button from '@enact/moonstone/Button';
-import Changeable from '@enact/ui/Changeable';
-
-const StatefulPicker = Changeable(Picker);
-const StatefulInput = Changeable({mutable: true}, Input);
+import React from 'react';
+import PropTypes from 'prop-types';
 
 class PickerAddRemove extends React.Component {
 	static displayName: 'PickerAddRemove'
 
 	static propTypes = {
-		disabled: React.PropTypes.bool,
-		joined: React.PropTypes.bool,
-		noAnimation: React.PropTypes.bool,
-		orientation: React.PropTypes.string,
-		width: React.PropTypes.string,
-		wrap: React.PropTypes.bool
+		disabled: PropTypes.bool,
+		joined: PropTypes.bool,
+		noAnimation: PropTypes.bool,
+		orientation: PropTypes.string,
+		width: PropTypes.string,
+		wrap: PropTypes.bool
 	}
 
 	static defaultProps = {
@@ -32,39 +28,45 @@ class PickerAddRemove extends React.Component {
 	constructor (props) {
 		super(props);
 
-		this.value = '';
-		this.index = 0;
 		this.state = {
-			children: props.children
+			children: {
+				0 : ''
+			},
+			inputIndex: 0,
+			inputValue: '',
+			value: 0
 		};
 	}
 
-	componentWillUpdate () {
-		this.value = '';
-		this.index = 0;
-	}
-
-	handleAdd = () => {
+	handleAddReplace = () => {
 		const children = this.state.children,
-			index = this.index,
-			value = this.value || 'sample' + (children ? children.length : 0);
+			index = this.state.inputIndex,
+			value = this.state.inputValue || 'sample ' + index,
+			newChild = {};
 
-		children.splice(index, 0, value);
+		newChild[index] = value;
+		const newChildren = Object.assign({}, children, newChild);
 
 		this.setState({
-			children: children
+			children: newChildren,
+			inputIndex: this.state.inputIndex + 1,
+			inputValue: ''
 		});
 	}
 
 	handleRemove = () => {
-		const index = this.index;
+		const children = Object.assign({}, this.state.children),
+			index = this.state.inputIndex;
+		delete children[index];
 
 		this.setState({
-			children: [
-				...this.state.children.slice(0, index),
-				...this.state.children.slice(index + 1)
-			]
+			children: children,
+			value: Math.max(this.state.value - 1, 0)
 		});
+	}
+
+	handleValueUpdate = ({value}) => {
+		this.setState({value});
 	}
 
 	handleIndexChange = ({value}) => {
@@ -72,35 +74,45 @@ class PickerAddRemove extends React.Component {
 		if (isNaN(index)) {
 			index = 0;
 		}
-		this.index = index;
+		this.setState({inputIndex: index});
 	}
 
 	handleValueChange = ({value}) => {
-		this.value = value;
+		this.setState({inputValue: value});
 	}
 
 	render () {
+		const pickerChildren = Object.values(this.state.children);
+
 		return (
 			<div>
 				<div>
-					<StatefulPicker {...this.props}>
-						{this.state.children}
-					</StatefulPicker>
+					<Picker
+						onChange={this.handleValueUpdate}
+						value={this.state.value}
+						{...this.props}
+					>
+						{pickerChildren}
+					</Picker>
 				</div>
 				<div>
-					<StatefulInput
+					Value:
+					<Input
 						onChange={this.handleValueChange}
 						placeholder="value"
+						value={this.state.inputValue}
 					/>
 				</div>
 				<div>
-					<StatefulInput
+					Index:
+					<Input
 						onChange={this.handleIndexChange}
 						placeholder="index"
+						value={this.state.inputIndex}
 					/>
 				</div>
-				<Button onClick={this.handleAdd}>
-					Add
+				<Button onClick={this.handleAddReplace}>
+					Add/Replace
 				</Button>
 				<Button onClick={this.handleRemove}>
 					Remove

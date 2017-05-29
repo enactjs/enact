@@ -6,7 +6,8 @@
 
 import kind from '@enact/core/kind';
 import {handle, forward} from '@enact/core/handle';
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import Icon from '../Icon';
 
@@ -52,7 +53,7 @@ const SwitchBase = kind({
 		 * @param {*} event.value - Value passed from `value` prop.
 		 * @public
 		 */
-		onToggle: PropTypes.bool,
+		onToggle: PropTypes.func,
 
 		/**
 		 * Sets whether this control is in the "on" or "off" state. `true` for on, `false` for "off".
@@ -76,11 +77,14 @@ const SwitchBase = kind({
 	},
 
 	handlers: {
-		onToggle: handle(forward('onClick'), (ev, {selected, onToggle}) => () => {
-			if (onToggle) {
-				onToggle({selected: !selected});
+		onToggle: handle(
+			forward('onClick'),
+			(ev, {selected, onToggle}) => {
+				if (onToggle) {
+					onToggle({selected: !selected});
+				}
 			}
-		})
+		)
 	},
 
 	computed: {

@@ -1,17 +1,18 @@
 import ri from '@enact/ui/resolution';
-import {Scroller, ScrollerBase} from '@enact/moonstone/Scroller';
+import Scroller, {ScrollerBase} from '@enact/moonstone/Scroller';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
+import {select} from '@kadira/storybook-addon-knobs';
 
-Scroller.displayName = 'Scroller';
-Scroller.propTypes = Object.assign({}, ScrollerBase.propTypes);
-Scroller.defaultProps = Object.assign({}, ScrollerBase.defaultProps);
+import {mergeComponentMetadata} from '../../src/utils/propTables';
+
+const Config = mergeComponentMetadata('Scroller', ScrollerBase, Scroller);
 
 const
 	prop = {
-		horizontal: {'auto': 'auto', 'hidden': 'hidden', 'scroll': 'scroll'},
-		vertical: {'auto': 'auto', 'hidden': 'hidden', 'scroll': 'scroll'}
+		direction: ['both', 'horizontal', 'vertical'],
+		horizontalScrollbar: ['auto', 'hidden', 'visible'],
+		verticalScrollbar: ['auto', 'hidden', 'visible']
 	},
 	style = {
 		scroller: {
@@ -28,18 +29,17 @@ const
 	};
 
 storiesOf('Scroller')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'Basic usage of Scroller',
 		() => (
 			<Scroller
-				hideScrollbars={boolean('hideScrollbars', false)}
-				horizontal={select('horizontal', prop.horizontal, 'auto')}
-				vertical={select('vertical', prop.vertical, 'auto')}
+				direction={select('direction', prop.direction, 'both')}
+				horizontalScrollbar={select('horizontalScrollbar', prop.horizontalScrollbar, 'auto')}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
 				style={style.scroller}
+				verticalScrollbar={select('verticalScrollbar', prop.verticalScrollbar, 'auto')}
 			>
 				<div style={style.content}>
 					Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br />
@@ -49,5 +49,6 @@ storiesOf('Scroller')
 					</div>
 				</div>
 			</Scroller>
-		)
+		),
+		{propTables: [Config]}
 	);

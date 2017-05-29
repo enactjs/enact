@@ -10,9 +10,10 @@ import {contextTypes} from '@enact/i18n/I18nDecorator';
 import hoc from '@enact/core/hoc';
 import FloatingLayer from '@enact/ui/FloatingLayer';
 import {forward} from '@enact/core/handle';
-import React, {PropTypes} from 'react';
+import {Job} from '@enact/core/util';
+import React from 'react';
+import PropTypes from 'prop-types';
 import ri from '@enact/ui/resolution';
-import {startJob, stopJob} from '@enact/core/jobs';
 
 import {Tooltip, TooltipBase} from './Tooltip';
 
@@ -54,6 +55,16 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 			disabled: PropTypes.bool,
 
 			/**
+			 * Configures the mode of uppercasing of the `tooltipText` that should be performed.
+			 *
+			 * @see i18n/Uppercase#casing
+			 * @type {String}
+			 * @default 'upper'
+			 * @public
+			 */
+			tooltipCasing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence']),
+
+			/**
 			 * Number of milliseconds to wait before showing tooltip when hover.
 			 *
 			 * @type {Number}
@@ -90,6 +101,7 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 			 *
 			 * @type {Boolean}
 			 * @default false
+			 * @deprecated replaced by `tooltipCasing`
 			 * @public
 			 */
 			tooltipPreserveCase: PropTypes.bool,
@@ -114,6 +126,7 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 
 		static defaultProps = {
 			disabled: false,
+			tooltipCasing: 'upper',
 			tooltipDelay: 500,
 			tooltipPosition: 'above',
 			tooltipPreserveCase: false
@@ -137,7 +150,7 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 		componentWillUnmount () {
 			if (currentTooltip === this) {
 				currentTooltip = null;
-				stopJob('showTooltip');
+				this.showTooltipJob.stop();
 			}
 		}
 
@@ -265,15 +278,21 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 			return position;
 		}
 
+		showTooltipJob = new Job(() => {
+			if (!this.state.showing) {
+				this.setState({
+					showing: true
+				});
+			}
+		})
+
 		showTooltip (client) {
-			const {tooltipText, tooltipDelay} = this.props;
+			const {tooltipDelay, tooltipText} = this.props;
 
 			if (tooltipText) {
 				this.clientRef = client;
 				currentTooltip = this;
-				startJob('showTooltip', () => {
-					this.setState({showing: true});
-				}, tooltipDelay);
+				this.showTooltipJob.startAfter(tooltipDelay);
 			}
 		}
 
@@ -281,7 +300,7 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 			if (this.props.tooltipText) {
 				this.clientRef = null;
 				currentTooltip = null;
-				stopJob('showTooltip');
+				this.showTooltipJob.stop();
 				this.setState({showing: false});
 			}
 		}
@@ -318,7 +337,7 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 		}
 
 		render () {
-			const {children, tooltipPreserveCase, tooltipText, tooltipWidth, ...rest} = this.props;
+			const {children, tooltipCasing, tooltipPreserveCase, tooltipText, tooltipWidth, ...rest} = this.props;
 			delete rest.tooltipDelay;
 			delete rest.tooltipPosition;
 
@@ -333,10 +352,13 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 					{children}
 					<FloatingLayer open={this.state.showing} scrimType="none">
 						<Tooltip
+							aria-live="off"
 							arrowAnchor={this.state.arrowAnchor}
+							casing={tooltipCasing}
 							direction={this.state.tooltipDirection}
 							position={this.state.position}
 							preserveCase={tooltipPreserveCase}
+							role="alert"
 							tooltipRef={this.getTooltipRef}
 							width={tooltipWidth}
 						>

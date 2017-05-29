@@ -19,9 +19,9 @@ describe('Slottable Specs', () => {
 		));
 		const subject = mount(
 			<Component>
-				<div slot='a'>A</div>
-				<div slot='b'>B</div>
-				<div slot='c'>C</div>
+				<div slot="a">A</div>
+				<div slot="b">B</div>
+				<div slot="c">C</div>
 			</Component>
 		);
 
@@ -42,10 +42,10 @@ describe('Slottable Specs', () => {
 		));
 		const subject = mount(
 			<Component>
-				<div slot='a'>A</div>
-				<div slot='b'>B</div>
+				<div slot="a">A</div>
+				<div slot="b">B</div>
 				<custom>D</custom>
-				<div slot='c'>C</div>
+				<div slot="c">C</div>
 			</Component>
 		);
 
@@ -73,10 +73,10 @@ describe('Slottable Specs', () => {
 		));
 		const subject = mount(
 			<Component>
-				<div slot='a'>A</div>
-				<div slot='b'>B</div>
+				<div slot="a">A</div>
+				<div slot="b">B</div>
 				<Custom>D</Custom>
-				<div slot='c'>C</div>
+				<div slot="c">C</div>
 			</Component>
 		);
 
@@ -96,8 +96,8 @@ describe('Slottable Specs', () => {
 		));
 		const subject = mount(
 			<Component>
-				<div slot='a'>A</div>
-				<div slot='b'>B</div>
+				<div slot="a">A</div>
+				<div slot="b">B</div>
 				<div>C</div>
 			</Component>
 		);
@@ -123,9 +123,9 @@ describe('Slottable Specs', () => {
 
 		const subject = mount(
 			<Component>
-				<div slot='a'>A</div>
-				<div slot='b'>B</div>
-				<div slot='c'>C</div>
+				<div slot="a">A</div>
+				<div slot="b">B</div>
+				<div slot="c">C</div>
 			</Component>
 		);
 
@@ -144,5 +144,33 @@ describe('Slottable Specs', () => {
 		const expectedError = 'Warning: The slot "c" specified on div does not exist';
 
 		expect(actualError).to.equal(expectedError);
+	});
+
+	it('should distribute children with props other than simply \'children\', in entirety, to the matching destination slot', function () {
+		const Component = Slottable({slots: ['a', 'b', 'c', 'custom']}, ({a, b, c, custom}) => (
+			<div>
+				{c}
+				{b}
+				{a}
+				{custom}
+			</div>
+		));
+		const subject = mount(
+			<Component>
+				<div slot="a" title="Div A" />
+				<div slot="b">B</div>
+				<custom>D</custom>
+				<div slot="c">C</div>
+			</Component>
+		);
+
+		const expected = 'CBD';
+		const actual = subject.text();
+
+		expect(actual).to.equal(expected);
+
+		const expectedTitle = 'Div A';
+		const actualTitle = subject.childAt(2).prop('title');
+		expect(actualTitle).to.equal(expectedTitle);
 	});
 });

@@ -1,7 +1,7 @@
 import React from 'react';
 import {mount} from 'enzyme';
 import Uppercase from '../Uppercase';
-import {updateLocale} from '../../src';
+import {updateLocale} from '../../locale';
 
 describe('Uppercase', () => {
 
@@ -22,16 +22,46 @@ describe('Uppercase', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should not uppercase content when preserveCase is true', function () {
+	it('should not uppercase content when casing is "preserve"', function () {
 		const Component = (props) => (
 			<div>{props.children}</div>
 		);
 		const Wrapped = Uppercase(Component);
 		const subject = mount(
-			<Wrapped preserveCase>uppercase</Wrapped>
+			<Wrapped casing="preserve">uppercase</Wrapped>
 		);
 
 		const expected = 'uppercase';
+		const actual = subject.text();
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should uppercase the first letter of each word when casing is "word"', function () {
+		const Component = (props) => (
+			<div>{props.children}</div>
+		);
+		const Wrapped = Uppercase(Component);
+		const subject = mount(
+			<Wrapped casing="word">uppercase uppercase uppercase</Wrapped>
+		);
+
+		const expected = 'Uppercase Uppercase Uppercase';
+		const actual = subject.text();
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should uppercase the first letter of the first word when casing is "sentence"', function () {
+		const Component = (props) => (
+			<div>{props.children}</div>
+		);
+		const Wrapped = Uppercase(Component);
+		const subject = mount(
+			<Wrapped casing="sentence">uppercase uppercase uppercase</Wrapped>
+		);
+
+		const expected = 'Uppercase uppercase uppercase';
 		const actual = subject.text();
 
 		expect(actual).to.equal(expected);

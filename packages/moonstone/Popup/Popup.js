@@ -5,17 +5,33 @@
  * @module moonstone/Popup
  */
 
-import kind from '@enact/core/kind';
-import React, {PropTypes} from 'react';
-import Transition from '@enact/ui/Transition';
+import $L from '@enact/i18n/$L';
+import {is} from '@enact/core/keymap';
+import {on, off} from '@enact/core/dispatcher';
 import FloatingLayer from '@enact/ui/FloatingLayer';
-import Spotlight, {SpotlightContainerDecorator, getDirection} from '@enact/spotlight';
+import kind from '@enact/core/kind';
+import React from 'react';
+import PropTypes from 'prop-types';
+import Spotlight, {getDirection} from '@enact/spotlight';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
+import Transition from '@enact/ui/Transition';
+import {forward} from '@enact/core/handle';
 
 import IconButton from '../IconButton';
 
 import css from './Popup.less';
 
-const TransitionContainer = SpotlightContainerDecorator({preserveId: true}, Transition);
+const isUp = is('up');
+const TransitionContainer = SpotlightContainerDecorator(
+	{enterTo: 'last-focused', preserveId: true},
+	Transition
+);
+
+const getContainerNode = (containerId) => {
+	return document.querySelector(`[data-container-id='${containerId}']`);
+};
+
+const forwardHide = forward('onHide');
 
 /**
  * {@link moonstone/Popup.PopupBase} is a modal component that appears at the bottom of
@@ -113,7 +129,7 @@ const PopupBase = kind({
 
 	styles: {
 		css,
-		className: 'popup moon-neutral'
+		className: 'popup moonstone-light'
 	},
 
 	computed: {
@@ -126,6 +142,7 @@ const PopupBase = kind({
 						backgroundOpacity="transparent"
 						small
 						onClick={onCloseButtonClick}
+						aria-label={$L('Close')}
 					>
 						closex
 					</IconButton>
@@ -151,10 +168,10 @@ const PopupBase = kind({
 				onHide={onHide}
 			>
 				<div {...rest}>
-					{closeButton}
 					<div className={css.body}>
 						{children}
 					</div>
+					{closeButton}
 				</div>
 			</TransitionContainer>
 		);
@@ -203,6 +220,14 @@ class Popup extends React.Component {
 		onClose: PropTypes.func,
 
 		/**
+		 * A function to be run after transition for hiding is finished.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onHide: PropTypes.func,
+
+		/**
 		 * A function to be run when a key-down action is invoked by the user.
 		 *
 		 * @type {Function}
@@ -227,7 +252,7 @@ class Popup extends React.Component {
 		 * @default 'translucent'
 		 * @public
 		 */
-		scrimType: React.PropTypes.oneOf(['transparent', 'translucent', 'none']),
+		scrimType: PropTypes.oneOf(['transparent', 'translucent', 'none']),
 
 		/**
 		 * When `true`, the popup includes a close button; when `false`, none is included.
@@ -263,37 +288,51 @@ class Popup extends React.Component {
 		this.state = {
 			floatLayerOpen: this.props.open,
 			popupOpen: this.props.noAnimation,
-			containerId: Spotlight.add()
+			containerId: Spotlight.add(),
+			activator: null
 		};
+	}
+
+	componentDidMount () {
+		if (this.props.open && this.props.noAnimation) {
+			on('keydown', this.handleKeyDown);
+		}
 	}
 
 	componentWillReceiveProps (nextProps) {
 		if (!this.props.open && nextProps.open) {
 			this.setState({
 				popupOpen: nextProps.noAnimation,
-				floatLayerOpen: true
+				floatLayerOpen: true,
+				activator: Spotlight.getCurrent()
 			});
 		} else if (this.props.open && !nextProps.open) {
 			this.setState({
 				popupOpen: nextProps.noAnimation,
-				floatLayerOpen: !nextProps.noAnimation
+				floatLayerOpen: !nextProps.noAnimation,
+				activator: nextProps.noAnimation ? null : this.state.activator
 			});
 		}
 	}
 
-	componentDidUpdate (prevProps) {
+	componentDidUpdate (prevProps, prevState) {
 		if (this.props.open !== prevProps.open) {
 			if (!this.props.noAnimation) {
 				Spotlight.pause();
 			} else if (this.props.open) {
+				on('keydown', this.handleKeyDown);
 				this.spotPopupContent();
 			} else if (prevProps.open) {
-				Spotlight.focus();
+				off('keydown', this.handleKeyDown);
+				this.spotActivator(prevState.activator);
 			}
 		}
 	}
 
 	componentWillUnmount () {
+		if (this.props.open) {
+			off('keydown', this.handleKeyDown);
+		}
 		Spotlight.remove(this.state.containerId);
 	}
 
@@ -306,24 +345,26 @@ class Popup extends React.Component {
 	}
 
 	handleKeyDown = (ev) => {
-		const {onClose, onKeyDown} = this.props;
-		const direction = getDirection(ev.keyCode);
-		let containerNode;
+		const {onClose, onKeyDown, spotlightRestrict} = this.props;
+		const keyCode = ev.keyCode;
+		const direction = getDirection(keyCode);
+		const spottables = Spotlight.getSpottableDescendants(this.state.containerId).length;
 
-		if (direction) {
-			// prevent default page scrolling
-			ev.preventDefault();
-			// stop propagation to prevent default spotlight behavior
-			ev.stopPropagation();
+		if (direction && onClose) {
+			let focusChanged;
 
-			// if focus has changed
-			if (Spotlight.move(direction)) {
-				containerNode = document.querySelector('[data-container-id="' + this.state.containerId + '"]');
+			if (spottables && Spotlight.getCurrent() && spotlightRestrict !== 'self-only') {
+				focusChanged = Spotlight.move(direction);
+			}
 
-				// if current focus is not within the popup's container, issue the `onClose` event
-				if (!containerNode.contains(document.activeElement) && onClose) {
-					onClose(ev);
-				}
+			if (!spottables || (focusChanged === false && isUp(keyCode))) {
+				// prevent default page scrolling
+				ev.preventDefault();
+				// stop propagation to prevent default spotlight behavior
+				ev.stopPropagation();
+				// set the pointer mode to false on keydown
+				Spotlight.setPointerMode(false);
+				onClose(ev);
 			}
 		}
 
@@ -333,8 +374,11 @@ class Popup extends React.Component {
 	}
 
 	handlePopupHide = () => {
+		forwardHide(null, this.props);
+
 		this.setState({
-			floatLayerOpen: false
+			floatLayerOpen: false,
+			activator: null
 		});
 	}
 
@@ -343,19 +387,47 @@ class Popup extends React.Component {
 			Spotlight.resume();
 
 			if (this.props.open) {
+				on('keydown', this.handleKeyDown);
 				this.spotPopupContent();
 			} else {
+				off('keydown', this.handleKeyDown);
+				this.spotActivator(this.state.activator);
+			}
+		}
+	}
+
+	spotActivator = (activator) => {
+		const current = Spotlight.getCurrent();
+		const containerNode = getContainerNode(this.state.containerId);
+
+		// if there is no currently-spotted control or it is wrapped by the popup's container, we
+		// know it's safe to change focus
+		if (!current || (containerNode && containerNode.contains(current))) {
+			// attempt to set focus to the activator, if available
+			if (!Spotlight.focus(activator)) {
 				Spotlight.focus();
 			}
 		}
 	}
 
 	spotPopupContent = () => {
-		Spotlight.focus(this.state.containerId);
+		const {containerId} = this.state;
+		if (!Spotlight.focus(containerId)) {
+			const current = Spotlight.getCurrent();
+
+			// In cases where the container contains no spottable controls or we're in pointer-mode, focus
+			// cannot inherently set the active container or blur the active control, so we must do that
+			// here.
+			if (current) {
+				current.blur();
+			}
+			Spotlight.setActiveContainer(containerId);
+		}
 	}
 
 	render () {
 		const {noAutoDismiss, onClose, scrimType, ...rest} = this.props;
+		delete rest.spotlightRestrict;
 
 		return (
 			<FloatingLayer
@@ -367,12 +439,14 @@ class Popup extends React.Component {
 				scrimType={scrimType}
 			>
 				<PopupBase
+					aria-live="off"
+					role="alert"
 					{...rest}
 					containerId={this.state.containerId}
 					open={this.state.popupOpen}
 					onCloseButtonClick={onClose}
 					onHide={this.handlePopupHide}
-					onKeyDown={this.handleKeyDown}
+					spotlightRestrict="self-only"
 				/>
 			</FloatingLayer>
 		);

@@ -17,23 +17,26 @@ const cancelHandlers = [
  * extended adding additional handlers using
  * {@link ui/Cancelable/cancelHandler.addCancelHandler}.
  *
+ * @function
+ * @memberof ui/Cancelable
  * @param  {Object} ev Event object
  * @returns {Boolean} `true` to stop the handler chain
  * @private
  */
 const forCancel = function (ev) {
-	let stop = true;
+	let ok = false;
 	cancelHandlers.forEach(fn => {
-		// if any handler returns false, do not stop the handler chain
-		stop = stop && fn(ev);
+		// if any handler returns true, we don't need to call any more
+		ok = ok || fn(ev);
 	});
 
-	return stop;
+	return ok;
 };
 
 /**
  * Adds an event handler to filter cancel events.
  *
+ * @function
  * @memberof ui/Cancelable
  * @param {Function} handler	Function that will receive the event and should return `false` if
  *								the event is a cancel event.
@@ -49,6 +52,7 @@ const addCancelHandler = function (handler) {
 /**
  * Removes an event handler to filter cancel events
  *
+ * @function
  * @memberof ui/Cancelable
  * @param  {Function} handler A previously added filter function
  * @returns {undefined}

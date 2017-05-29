@@ -1,12 +1,11 @@
-// LabeledItem
+// LabeledItem.less
 //
 @import '../styles/mixins.less';
-@import '../styles/colors.less';
 @import '../styles/text.less';
 @import '../styles/variables.less';
+@import '../styles/skin.less';
 
-/* Labeled Text Item */
-.labeleditem {
+.applySkins({.labeleditem {
 	//// Locally scoped LESS variables ////
 	// Vertically shift the text element to position it closer to the header than the line-height naturally allows
 	@text-vertical-offset: 6px;
@@ -23,9 +22,13 @@
 		}
 		.icon {
 			margin-bottom: 0;
+
+			.moon-custom-text({
+				margin-top: 18px;
+			});
 		}
 
-		:global(.enact-locale-right-to-left) & {
+		:global(.enact-locale-right-to-left)& {
 			direction: rtl;
 		}
 	}
@@ -49,12 +52,10 @@
 		// Force the label to fill the next line in the flexbox container
 		width: 100%;
 
-		:global(.enact-locale-right-to-left) & {
-			padding-left: 0;
-		}
+		.moon-custom-text-size(@moon-expandable-value-font-size-large);
 
-		.moon-neutral & {
-			color: inherit;
+		:global(.enact-locale-right-to-left)& {
+			padding-left: 0;
 		}
 	}
 
@@ -70,4 +71,4 @@
 			color: inherit;
 		}
 	}
-}
+}});
