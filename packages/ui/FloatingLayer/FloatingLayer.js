@@ -128,6 +128,12 @@ class FloatingLayerBase extends React.Component {
 		}
 	}
 
+	handleScroll = (ev) => {
+		const {currentTarget} = ev;
+		currentTarget.scrollTop = 0;
+		currentTarget.scrollLeft = 0;
+	}
+
 	stopPropagation = (ev) => {
 		ev.nativeEvent.stopImmediatePropagation();
 
@@ -145,6 +151,7 @@ class FloatingLayerBase extends React.Component {
 				this.props.onClose();
 			}
 		}
+		off('scroll', this.handleScroll, this.node);
 		this.floatLayer = null;
 		this.node = null;
 
@@ -161,6 +168,7 @@ class FloatingLayerBase extends React.Component {
 
 		this.node.className = floatLayerClassName;
 		this.node.style.zIndex = 100;
+		on('scroll', this.handleScroll, this.node);
 
 		return this.node;
 	}
