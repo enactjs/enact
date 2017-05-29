@@ -47,24 +47,11 @@ const ScrollerNative = SpotlightContainerDecorator(
  */
 
 /**
- * Specifies how to horizontally scroll. Acceptable values are `'auto'`, `'default'` ,
- * `'hidden'`, and `'scroll'`.
+ * Direction of the scroller; valid values are `'both'`, `'horizontal'`, and `'vertical'`.
  *
- * @name horizontal
+ * @name direction
  * @type {String}
- * @default 'auto'
- * @memberof moonstone/Scroller.ScrollerNative
- * @instance
- * @public
- */
-
-/**
- * Specifies how to vertically scroll. Acceptable values are `'auto'`, `'auto'` ,
- * `'hidden'`, and `'scroll'`.
- *
- * @name vertical
- * @type {String}
- * @default 'auto'
+ * @default 'both'
  * @memberof moonstone/Scroller.ScrollerNative
  * @instance
  * @public
