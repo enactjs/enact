@@ -1,8 +1,8 @@
-import $L from '@enact/i18n/$L';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import $L from '../internal/$L';
 import IconButton from '../IconButton';
 
 import css from './ContextualPopup.less';
