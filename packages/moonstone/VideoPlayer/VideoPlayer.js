@@ -18,6 +18,7 @@ import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
 import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
 
 import Spinner from '../Spinner';
+import Skinnable from '../Skinnable';
 
 import {calcNumberValueOfPlaybackRate, getNow, secondsToTime} from './util';
 import Overlay from './Overlay';
@@ -1243,7 +1244,7 @@ const VideoPlayerBase = class extends React.Component {
  * @ui
  * @public
  */
-const VideoPlayer = Slottable({slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source']}, VideoPlayerBase);
+const VideoPlayer = Slottable({slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source']}, Skinnable(VideoPlayerBase));
 
 export default VideoPlayer;
 export {VideoPlayer, VideoPlayerBase};
