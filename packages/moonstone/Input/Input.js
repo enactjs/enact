@@ -241,19 +241,21 @@ const InputBase = kind({
 		delete rest.invalidMessage;
 
 		return (
-			<div {...rest} disabled={disabled}>
-				<InputDecoratorIcon position="before">{iconBefore}</InputDecoratorIcon>
-				<input
-					aria-disabled={disabled}
-					className={css.input}
-					dir={dir}
-					disabled={disabled}
-					onChange={onChange}
-					placeholder={placeholder}
-					type={type}
-					value={value}
-				/>
-				<InputDecoratorIcon position="after">{iconAfter}</InputDecoratorIcon>
+			<div>
+				<div {...rest} disabled={disabled}>
+					<InputDecoratorIcon position="before">{iconBefore}</InputDecoratorIcon>
+					<input
+						aria-disabled={disabled}
+						className={css.input}
+						dir={dir}
+						disabled={disabled}
+						onChange={onChange}
+						placeholder={placeholder}
+						type={type}
+						value={value}
+					/>
+					<InputDecoratorIcon position="after">{iconAfter}</InputDecoratorIcon>
+				</div>
 				{invalidTooltip}
 			</div>
 		);
