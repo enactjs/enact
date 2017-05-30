@@ -14,6 +14,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Scroller` prop `direction` which replaces `horizontal` and `vertical` props.
 
 ### Changed
+
+- `moonstone/Skinnable` to support context and allow it to be added to any component to be individually skinned. This includes a further optimization in skinning which consolidates all color assignments into a single block, so non-color rules aren't unnecessarily duplicated.
 - `moonstone/VideoPlayer` to set play/pause icon to display "play" when rewinding or fast forwarding
 - `moonstone/VideoPlayer` to rewind or fast forward when previous command is slow-forward or slow-rewind respectively
 - `moonstone/VideoPlayer` to fast forward when previous command is slow-forward and it reaches the last of its play rate
@@ -21,7 +23,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/GridListImageItem` to center its selection icon on the image instead of the item
-
 - `moonstone/Input` to have correct `Tooltip` position in `RTL`
 
 ### Removed

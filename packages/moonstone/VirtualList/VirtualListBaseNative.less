@@ -1,13 +1,13 @@
-@import '../styles/skin.less';
-
-.applySkins({.list {
+.list {
 	position: relative;
 	height: 100%;
 	width: 100%;
+
 	&.vertical {
 		overflow-x: hidden;
 		overflow-y: scroll;
 	}
+
 	&.horizontal {
 		overflow-x: scroll;
 		overflow-y: hidden;
@@ -16,4 +16,4 @@
 
 .list::-webkit-scrollbar {
 	display: none;
-}});
+}

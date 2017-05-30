@@ -12,6 +12,7 @@ import {isRtlText} from '@enact/i18n/util';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import Skinnable from '../Skinnable';
 import Tooltip from '../TooltipDecorator/Tooltip';
 
 import css from './Input.less';
@@ -277,7 +278,9 @@ const InputBase = kind({
  */
 const Input = Changeable(
 	InputSpotlightDecorator(
-		InputBase
+		Skinnable(
+			InputBase
+		)
 	)
 );
 

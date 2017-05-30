@@ -3,6 +3,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {shape} from '@enact/ui/ViewManager';
 
+import Skinnable from '../Skinnable';
+
 import ApplicationCloseButton from './ApplicationCloseButton';
 import CancelDecorator from './CancelDecorator';
 import IdProvider from './IdProvider';
@@ -18,7 +20,7 @@ import css from './Panels.less';
  * @ui
  * @public
  */
-const PanelsBase = kind({
+const PanelsBare = kind({
 	name: 'Panels',
 
 	propTypes: /** @lends moonstone/Panels.Panels.prototype */ {
@@ -173,6 +175,8 @@ const PanelsBase = kind({
 		);
 	}
 });
+
+const PanelsBase = Skinnable(PanelsBare);
 
 const Panels = CancelDecorator(
 	{cancel: 'onBack'},
