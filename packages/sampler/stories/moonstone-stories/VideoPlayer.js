@@ -133,11 +133,11 @@ storiesOf('VideoPlayer')
 				>
 					<source src={select('source', videoSource, prop.videos[0].source)} type="video/mp4" />
 					<infoComponents>A video about some things happening to and around some characters. Very exciting stuff.</infoComponents>
-					<leftComponents><IconButton backgroundOpacity="translucent">fullscreen</IconButton></leftComponents>
-					<rightComponents><IconButton backgroundOpacity="translucent">flag</IconButton></rightComponents>
+					<leftComponents><IconButton aria-label="fullscreen" backgroundOpacity="translucent">fullscreen</IconButton></leftComponents>
+					<rightComponents><IconButton aria-label="flag" backgroundOpacity="translucent">flag</IconButton></rightComponents>
 
 					<Button backgroundOpacity="translucent">Add To Favorites</Button>
-					<IconButton backgroundOpacity="translucent">star</IconButton>
+					<IconButton aria-label="star" backgroundOpacity="translucent">star</IconButton>
 				</VideoPlayer>
 			</div>
 		),
