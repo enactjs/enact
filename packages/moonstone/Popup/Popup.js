@@ -168,7 +168,11 @@ const PopupBase = kind({
 				className={css.popupTransitionContainer}
 				onHide={onHide}
 			>
-				<div {...rest}>
+				<div
+					aria-live="off"
+					role="alert"
+					{...rest}
+				>
 					<div className={css.body}>
 						{children}
 					</div>
@@ -180,7 +184,7 @@ const PopupBase = kind({
 });
 
 const SkinnedPopupBase = Skinnable(
-	{defaultSkin: 'light', displayName: 'Popup'},
+	{defaultSkin: 'light'},
 	PopupBase
 );
 
@@ -445,8 +449,6 @@ class Popup extends React.Component {
 				scrimType={scrimType}
 			>
 				<SkinnedPopupBase
-					aria-live="off"
-					role="alert"
 					{...rest}
 					containerId={this.state.containerId}
 					open={this.state.popupOpen}

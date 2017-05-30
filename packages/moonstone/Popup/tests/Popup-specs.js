@@ -1,7 +1,8 @@
 import React from 'react';
 import {mount, shallow} from 'enzyme';
 
-import Popup from '../Popup';
+import {Popup, PopupBase} from '../Popup';
+import css from '../Popup.less';
 
 describe('Popup specs', () => {
 	beforeEach(() => {
@@ -39,22 +40,22 @@ describe('Popup specs', () => {
 
 	it('should set role to alert by default', function () {
 		const popup = shallow(
-			<Popup><div>popup</div></Popup>
+			<PopupBase><div>popup</div></PopupBase>
 		);
 
 		const expected = 'alert';
-		const actual = popup.find('Popup').prop('role');
+		const actual = popup.find(`.${css.popup}`).prop('role');
 
 		expect(actual).to.equal(expected);
 	});
 
 	it('should allow role to be overridden', function () {
 		const popup = shallow(
-			<Popup role="dialog"><div>popup</div></Popup>
+			<PopupBase role="dialog"><div>popup</div></PopupBase>
 		);
 
 		const expected = 'dialog';
-		const actual = popup.find('Popup').prop('role');
+		const actual = popup.find(`.${css.popup}`).prop('role');
 
 		expect(actual).to.equal(expected);
 	});

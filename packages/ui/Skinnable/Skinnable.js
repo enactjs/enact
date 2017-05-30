@@ -42,17 +42,7 @@ const defaultConfig = {
 	 * @type {String}
 	 * @memberof ui/Skinnable.Skinnable.defaultConfig
 	 */
-	defaultSkin: null,
-
-	/**
-	 * Assign a standard "displayName" if you don't want the component to simply be recognized as
-	 * "Skinnable" in the inspector..
-	 *
-	 * @type {String}
-	 * @default 'Skinnable'
-	 * @memberof ui/Skinnable.Skinnable.defaultConfig
-	 */
-	displayName: 'Skinnable'
+	defaultSkin: null
 };
 
 /**
@@ -82,7 +72,7 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 	const {skins, defaultSkin} = config;
 
 	return class extends React.Component {
-		static displayName = config.displayName
+		static displayName = 'Skinnable'
 
 		static propTypes = /** @lends ui/Skinnable.Skinnable.prototype */ {
 			/**
