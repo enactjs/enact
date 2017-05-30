@@ -209,9 +209,17 @@
 				border-color: rgba(0, 0, 0, 0.2);
 			}
 
+			.icon {
+				color: @moon-picker-joined-text-color;
+			}
+
 			.focus({
 				background-color: @moon-spotlight-border-color;
 				color: @moon-spotlight-text-color;
+
+				.icon {
+					color: @moon-spotlight-text-color;
+				}
 			});
 		}
 	});
