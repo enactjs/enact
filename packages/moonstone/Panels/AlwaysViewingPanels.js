@@ -32,7 +32,7 @@ const calcMax = () => {
  * @public
  */
 const AlwaysViewingPanels = Skinnable(BreadcrumbDecorator({
-	className: 'panelsRoot alwaysViewing enact-fit',
+	className: 'panels alwaysViewing enact-fit',
 	max: calcMax,
 	panelArranger: AlwaysViewingArranger
 }, Viewport));

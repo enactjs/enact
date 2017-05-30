@@ -19,7 +19,7 @@ import {PanelsBase} from './Panels';
  * @public
  */
 const ActivityPanels = Skinnable(BreadcrumbDecorator({
-	className: 'panelsRoot activity enact-fit',
+	className: 'panels activity enact-fit',
 	max: 1,
 	panelArranger: ActivityArranger
 }, PanelsBase));

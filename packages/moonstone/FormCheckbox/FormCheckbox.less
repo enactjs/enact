@@ -53,6 +53,12 @@
 		.applySkins({
 			&:not([disabled]) {
 				background-color: @moon-spotlight-color;
+
+				&.selected {
+					.icon {
+						color: @moon-formcheckbox-text-color;
+					}
+				}
 			}
 		});
 	}

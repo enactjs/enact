@@ -4,7 +4,13 @@
 @import '../styles/variables.less';
 @import '../styles/skin.less';
 
-.panelsRoot {
+.panels {
+	pointer-events: none;
+
+	> * {
+		pointer-events: auto;
+	}
+
 	.breadcrumbs {
 		position: absolute;
 		.position(0, auto, auto, 0);
@@ -24,6 +30,20 @@
 				font-family: @moon-super-header-font-family;
 				font-size: @moon-breadcrumb-text-size;
 			}
+		}
+	}
+
+	.viewport {
+		position: absolute;
+		.position(0);
+		overflow: hidden;
+	}
+
+	:global(.enact-locale-right-to-left) & {
+		direction: ltr;
+
+		.viewport {
+			direction: rtl;
 		}
 	}
 
@@ -87,7 +107,7 @@
 	// }
 }
 
-.activity {
+.panels.activity {
 	.breadcrumbs {
 		width: @moon-breadcrumb-width;
 	}
@@ -115,7 +135,7 @@
 
 }
 
-.alwaysViewing {
+.panels.alwaysViewing {
 	.viewport {
 		left: 50%;
 	}
@@ -143,28 +163,6 @@
 			}
 		}
 	});
-}
-
-.panels {
-	pointer-events: none;
-
-	> * {
-		pointer-events: auto;
-	}
-
-	.viewport {
-		position: absolute;
-		.position(0);
-		overflow: hidden;
-	}
-
-	:global(.enact-locale-right-to-left) & {
-		direction: ltr;
-
-		.viewport {
-			direction: rtl;
-		}
-	}
 }
 
 // Base set of styling for scrim to prevent receiving user input while transitioning
