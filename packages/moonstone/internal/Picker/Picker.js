@@ -59,6 +59,11 @@ const forwardBlur = forward('onBlur'),
 const Picker = class extends React.Component {
 	static displayName = 'Picker'
 
+	static contextTypes = {
+		// import Skinnable's context to force skin changes to picker buttons
+		skin: PropTypes.string
+	}
+
 	static propTypes = /** @lends moonstone/internal/Picker.Picker.prototype */ {
 		/**
 		 * Index for internal ViewManager
@@ -609,6 +614,7 @@ const Picker = class extends React.Component {
 					onMouseDown={this.handleIncDown}
 					onMouseUp={this.handleUp}
 					onSpotlightDisappear={onSpotlightDisappear}
+					skin={this.context.skin}
 					spotlightDisabled={spotlightDisabled}
 				/>
 				<div
@@ -642,6 +648,7 @@ const Picker = class extends React.Component {
 					onMouseDown={this.handleDecDown}
 					onMouseUp={this.handleUp}
 					onSpotlightDisappear={onSpotlightDisappear}
+					skin={this.context.skin}
 					spotlightDisabled={spotlightDisabled}
 				/>
 			</div>
