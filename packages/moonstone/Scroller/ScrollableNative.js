@@ -292,7 +292,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				const
 					bounds = this.getScrollBounds(),
 					deltaMode = e.deltaMode,
-					wheelDeltaY = e.nativeEvent ? -e.nativeEvent.wheelDeltaY : -e.wheelDeltaY;
+					wheelDeltaY = -e.wheelDeltaY;
 				let delta = (wheelDeltaY || e.deltaY);
 
 				if (deltaMode === 0) {

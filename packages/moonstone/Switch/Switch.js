@@ -10,6 +10,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Icon from '../Icon';
+import Skinnable from '../Skinnable';
 
 import css from './Switch.less';
 
@@ -105,5 +106,7 @@ const SwitchBase = kind({
 	}
 });
 
-export default SwitchBase;
-export {SwitchBase as Switch, SwitchBase};
+const Switch = Skinnable(SwitchBase);
+
+export default Switch;
+export {Switch, SwitchBase};

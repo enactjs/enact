@@ -1,7 +1,8 @@
-@import './text.less';
-@import './mixins.less';
-@import './variables.less';
+// Common Moonstone Rules
+//
 @import '~@enact/ui/styles/mixins.less';
+@import './mixins.less';
+@import './fonts.less';
 @import './skin.less';
 
 /* Prevent browser's default focus treatment (at least in Chrome) */
@@ -10,24 +11,11 @@
 }
 
 .applySkins({
-	.moon-text-base(@moon-sub-header-font-size);
-	font-weight: normal;
-	font-style: normal;
-	letter-spacing: normal;
 	color: @moon-text-color;
 
 	::selection {
 		color: @moon-spotlight-text-color;
 		background-color: lighten(@moon-spotlight-bg-color, 18%);
-	}
-
-	// For cases where we have a skin inside another skin, we actually do want to impose a BG color
-	// Followed by coloring the .bg class for the optional root element coloration
-	:global(.moonstone) &,
-	:global(.moonstone-light) &,
-	&.bg,
-	& > .bg {
-		background-color: @moon-bg-color;
 	}
 
 	// Spotlight
@@ -41,8 +29,8 @@
 		.focus({
 			background-color: transparent;
 			color: @moon-text-color;
-		});
-	});
+		}, parent);
+	}, parent);
 
 	// Disabled Components
 	.disabled({
@@ -53,6 +41,6 @@
 		// Disabled children of disabled components
 		.disabled({
 			.vendor-opacity(1);
-		});
+		}, parent);
 	});
 });

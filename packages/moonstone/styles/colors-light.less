@@ -1,5 +1,7 @@
 // colors-light.less (light skin)
 //
+// Base our light skin off of the dark (default) skin
+@import (multiple) './colors.less';
 
 // ---------------------------------------
 // Universal Color Definitions
@@ -128,8 +130,8 @@
 
 // Panels
 // ---------------------------------------
-@moon-panels-scrim-always-viewing-bg-color: rgba(0, 0, 0, 0.75);
-@moon-panels-scrim-activity-bg-color: rgba(0, 0, 0, 1);
+@moon-panels-scrim-always-viewing-bg-color: fade(@moon-bg-color, 75%);
+@moon-panels-scrim-activity-bg-color: @moon-bg-color;
 @moon-panels-spot-fg-color: @moon-accent;
 @moon-panels-spot-bg-color: @moon-dark-gray;
 @moon-panels-handle-bg-color: @moon-dark-gray;
