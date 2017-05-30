@@ -801,12 +801,6 @@ const VideoPlayerBase = class extends React.Component {
 				this.speedIndex = 0;
 				this.prevCommand = 'slowForward';
 				break;
-			case 'rewind':
-				this.send('play');
-				this.selectPlaybackRates('fastForward');
-				this.speedIndex = 0;
-				this.prevCommand = 'fastForward';
-				break;
 			case 'fastForward':
 				this.speedIndex = this.clampPlaybackRate(this.speedIndex + 1);
 				this.prevCommand = 'fastForward';
@@ -815,6 +809,9 @@ const VideoPlayerBase = class extends React.Component {
 				this.selectPlaybackRates('fastForward');
 				this.speedIndex = 0;
 				this.prevCommand = 'fastForward';
+				if (this.state.paused) {
+					shouldResumePlayback = true;
+				}
 				break;
 		}
 
@@ -837,7 +834,7 @@ const VideoPlayerBase = class extends React.Component {
 		switch (this.prevCommand) {
 			case 'slowRewind':
 				if (this.speedIndex === this.playbackRates.length - 1) {
-						// reached to the end of array => go to rewind
+					// reached to the end of array => go to rewind
 					this.selectPlaybackRates('rewind');
 					this.speedIndex = 0;
 					this.prevCommand = 'rewind';
