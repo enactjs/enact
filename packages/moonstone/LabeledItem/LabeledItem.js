@@ -26,7 +26,7 @@ import css from './LabeledItem.less';
  * @ui
  * @public
  */
-const LabeledItemBare = kind({
+const LabeledItemBase = kind({
 	name: 'LabeledItem',
 
 	propTypes: /** @lends moonstone/LabeledItem.LabeledItemBase.prototype */ {
@@ -72,7 +72,7 @@ const LabeledItemBare = kind({
 	)
 });
 
-const LabeledItemBase = Skinnable(LabeledItemBare);
+const LabeledItem = Skinnable(LabeledItemBase);
 
-export default LabeledItemBase;
-export {LabeledItemBase as LabeledItem, LabeledItemBase};
+export default LabeledItem;
+export {LabeledItem, LabeledItemBase};

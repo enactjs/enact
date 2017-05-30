@@ -24,7 +24,7 @@ import css from './FormCheckbox.less';
  * @ui
  * @public
  */
-const FormCheckboxBare = kind({
+const FormCheckboxBase = kind({
 	name: 'FormCheckbox',
 
 	propTypes: /** @lends moonstone/FormCheckbox.FormCheckbox.prototype */ {
@@ -94,7 +94,7 @@ const FormCheckboxBare = kind({
 	}
 });
 
-const FormCheckboxBase = Skinnable(FormCheckboxBare);
+const FormCheckbox = Skinnable(FormCheckboxBase);
 
-export default FormCheckboxBase;
-export {FormCheckboxBase as FormCheckbox, FormCheckboxBase};
+export default FormCheckbox;
+export {FormCheckbox, FormCheckboxBase};

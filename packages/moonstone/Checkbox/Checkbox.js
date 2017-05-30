@@ -22,7 +22,7 @@ import css from './Checkbox.less';
  * @ui
  * @public
  */
-const CheckboxBare = kind({
+const CheckboxBase = kind({
 	name: 'Checkbox',
 
 	propTypes: /** @lends moonstone/Checkbox.Checkbox.prototype */ {
@@ -92,7 +92,7 @@ const CheckboxBare = kind({
 	}
 });
 
-const CheckboxBase = Skinnable(CheckboxBare);
+const Checkbox = Skinnable(CheckboxBase);
 
-export default CheckboxBase;
-export {CheckboxBase as Checkbox, CheckboxBase};
+export default Checkbox;
+export {Checkbox, CheckboxBase};

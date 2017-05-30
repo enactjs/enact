@@ -24,7 +24,7 @@ import css from './Spinner.less';
  * @ui
  * @private
  */
-const SpinnerCoreBare = kind({
+const SpinnerCoreBase = kind({
 	name: 'SpinnerCore',
 
 	computed: {
@@ -49,7 +49,7 @@ const SpinnerCoreBare = kind({
 	)
 });
 
-const SpinnerCore = Skinnable(SpinnerCoreBare);
+const SpinnerCore = Skinnable(SpinnerCoreBase);
 
 /**
  * {@link moonstone/Spinner.SpinnerBase} is a component that shows a spinning

@@ -26,7 +26,7 @@ const progressToPercent = (value) => (clamp(0, 1, value) * 100) + '%';
  * @ui
  * @public
  */
-const ProgressBarBare = kind({
+const ProgressBarBase = kind({
 	name: 'ProgressBar',
 
 	propTypes: /** @lends moonstone/ProgressBar.ProgressBar.prototype */ {
@@ -97,7 +97,7 @@ const ProgressBarBare = kind({
 	}
 });
 
-const ProgressBarBase = Skinnable(ProgressBarBare);
+const ProgressBar = Skinnable(ProgressBarBase);
 
-export default ProgressBarBase;
-export {ProgressBarBase as ProgressBar, ProgressBarBase};
+export default ProgressBar;
+export {ProgressBar, ProgressBarBase};

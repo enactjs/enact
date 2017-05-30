@@ -104,7 +104,7 @@ const PanelsBare = kind({
 		delete rest.onBack;
 
 		return (
-			<div {...rest} rel="what is this">
+			<div {...rest}>
 				{applicationCloseButton}
 				<Viewport noAnimation={noAnimation} arranger={arranger} index={index}>
 					{children}

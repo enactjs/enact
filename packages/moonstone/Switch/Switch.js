@@ -23,7 +23,7 @@ import css from './Switch.less';
  * @ui
  * @public
  */
-const SwitchBare = kind({
+const SwitchBase = kind({
 	name: 'Switch',
 
 	propTypes: /** @lends moonstone/Switch.Switch.prototype */ {
@@ -106,7 +106,7 @@ const SwitchBare = kind({
 	}
 });
 
-const SwitchBase = Skinnable(SwitchBare);
+const Switch = Skinnable(SwitchBase);
 
-export default SwitchBase;
-export {SwitchBase as Switch, SwitchBase};
+export default Switch;
+export {Switch, SwitchBase};
