@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import Toggleable from '@enact/ui/Toggleable';
 
 import Button from '../Button';
+import Skinnable from '../Skinnable';
 
 import css from './ToggleButton.less';
 
@@ -173,7 +174,9 @@ const ToggleButtonBase = kind({
  */
 const ToggleButton = Toggleable(
 	{prop: 'selected', toggle: 'onClick'},
-	ToggleButtonBase
+	Skinnable(
+		ToggleButtonBase
+	)
 );
 
 export default ToggleButton;

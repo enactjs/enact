@@ -1,15 +1,20 @@
 // Moonstone Base App styles
 //
 
-// Enyo Rules
+// Core Rules
 @import '~@enact/ui/styles/core.less';
 
 // Moonstone Rules
 @import '../styles/variables.less';
-@import '../styles/fonts.less';
+@import '../styles/text.less';
 @import '../styles/rules.less';
 
 .root {
+	.moon-text-base(@moon-sub-header-font-size);
+	font-weight: normal;
+	font-style: normal;
+	letter-spacing: normal;
+
 	&.bg,
 	& > .bg {
 		padding: @moon-app-keepout;
@@ -18,4 +23,12 @@
 	&:global(.enact-locale-right-to-left) {
 		direction: rtl;
 	}
+
+	// Skin colors
+	.applySkins({
+		&.bg,
+		> .bg {
+			background-color: @moon-bg-color;
+		}
+	});
 }
