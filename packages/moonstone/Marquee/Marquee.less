@@ -1,8 +1,7 @@
 // Marquee.less
 //
-@import '../styles/skin.less';
 
-.applySkins({.marquee {
+.marquee {
 	// NOTE: Keeping this around for now to validate if we want to use box layout instead of white-space
 	// This obscure set of code implements single-line ellipsis-clipped text that doesn't interfere with layout.
 	// white-space: nowrap; interferes with may pure-css layouts.
@@ -31,7 +30,7 @@
 		}
 	}
 
-	:global(.enact-locale-right-to-left)& {
+	:global(.enact-locale-right-to-left) & {
 		text-align: right;
 	}
-}});
+}

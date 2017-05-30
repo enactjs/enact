@@ -11,7 +11,8 @@ import React from 'react';
 import {ResolutionDecorator} from '@enact/ui/resolution';
 import {FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
 import SpotlightRootDecorator from '@enact/spotlight/SpotlightRootDecorator';
-import Skinnable from '@enact/ui/Skinnable';
+
+import Skinnable from '../Skinnable';
 
 import I18nFontDecorator from './I18nFontDecorator';
 import TextSizeDecorator from './TextSizeDecorator';
@@ -49,7 +50,7 @@ const defaultConfig = {
  *
  * [Skins]{@link ui/Skinnable} provide a way to change the coloration of your app. The currently
  * supported skins for Moonstone are "moonstone" (the default, dark skin) and "moonstone-light".
- * Use the `skin` property to assign a skin. Ex: `<DecoratedApp skin="moonstone-light" />`
+ * Use the `skin` property to assign a skin. Ex: `<DecoratedApp skin="light" />`
  *
  * @class MoonstoneDecorator
  * @memberof moonstone/MoonstoneDecorator
@@ -76,7 +77,7 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	}
 	if (spotlight) App = SpotlightRootDecorator({noAutoFocus}, App);
 	if (textSize) App = TextSizeDecorator(App);
-	if (skin) App = Skinnable({skins: ['moonstone', 'moonstone-light'], defaultSkin: 'moonstone'}, App);
+	if (skin) App = Skinnable({defaultSkin: 'dark'}, App);
 
 	// add webOS-specific key maps
 	addAll({

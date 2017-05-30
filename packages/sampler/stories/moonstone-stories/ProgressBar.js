@@ -14,8 +14,8 @@ storiesOf('ProgressBar')
 		'The basic ProgressBar',
 		() => (
 			<ProgressBar
-				backgroundProgress={number('backgroundProgress', ProgressBar.defaultProps.backgroundProgress, {range: true, min: 0, max: 1, step: 0.01})}
-				progress={number('progress', ProgressBar.defaultProps.progress, {range: true, min: 0, max: 1, step: 0.01})}
+				backgroundProgress={number('backgroundProgress', 0.5, {range: true, min: 0, max: 1, step: 0.01})}
+				progress={number('progress', 0.4, {range: true, min: 0, max: 1, step: 0.01})}
 				vertical={boolean('vertical', false)}
 				disabled={nullify(boolean('disabled', false))}
 			/>
