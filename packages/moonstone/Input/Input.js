@@ -4,7 +4,6 @@
  * @module moonstone/Input
  */
 
-import $L from '@enact/i18n/$L';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import Changeable from '@enact/ui/Changeable';
 import kind from '@enact/core/kind';
@@ -12,6 +11,7 @@ import {isRtlText} from '@enact/i18n/util';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import $L from '../internal/$L';
 import Skinnable from '../Skinnable';
 import Tooltip from '../TooltipDecorator/Tooltip';
 
