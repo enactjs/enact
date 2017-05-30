@@ -6,6 +6,8 @@ import ViewManager from '@enact/ui/ViewManager';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import Skinnable from '../Skinnable';
+
 import Breadcrumb from './Breadcrumb';
 import BreadcrumbArranger from './BreadcrumbArranger';
 import CancelDecorator from './CancelDecorator';
@@ -243,7 +245,9 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return CancelDecorator(
 		{cancel: 'onSelectBreadcrumb'},
 		IdProvider(
-			Decorator
+			Skinnable(
+				Decorator
+			)
 		)
 	);
 });

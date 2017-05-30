@@ -20,7 +20,7 @@ import css from './Panels.less';
  * @ui
  * @public
  */
-const PanelsBare = kind({
+const PanelsBase = kind({
 	name: 'Panels',
 
 	propTypes: /** @lends moonstone/Panels.Panels.prototype */ {
@@ -176,12 +176,12 @@ const PanelsBare = kind({
 	}
 });
 
-const PanelsBase = Skinnable(PanelsBare);
-
 const Panels = CancelDecorator(
 	{cancel: 'onBack'},
 	IdProvider(
-		PanelsBase
+		Skinnable(
+			PanelsBase
+		)
 	)
 );
 
