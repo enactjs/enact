@@ -19,17 +19,17 @@ This document describes VirtualList, VirtualGridList, and Scroller.
 
         ```
         <VirtualList
+        	component={this.renderItem}
         	data={data}
         	dataSize={data.length}
         	itemSize={ri.scale(72)}
-        	component={this.renderItem}
         />
 
         <VirtualGridList
+        	component={this.renderItem}
         	data={data}
         	dataSize={data.length}
         	itemSize={{minWidth: ri.scale(90), minHeight: ri.scale(135)}}
-        	component={this.renderItem}
         />
         ```
 
@@ -37,50 +37,44 @@ This document describes VirtualList, VirtualGridList, and Scroller.
 
     ```
     <VirtualList
+    	component={this.renderItem}
     	data={data}
     	dataSize={data.length} //<-- numeric property
     	itemSize={ri.scale(72)} //<-- numeric property
-    	component={this.renderItem}
-        spacing={ri.scale(10)} //<-- numeric property
+    	spacing={ri.scale(10)} //<-- numeric property
     />
     ```
 
 ### Common rules of Items for VirtualList/VirtualGridList
 
 *   A renderer for an item should be specified in `component` prop in VirtualList.
-*   VirtualList passes `data`, `index`, `key` to the `component` function.
-*   Be sure you are passing `key={key}` to the item component for reusing DOM.
-*   Items should have `position: absolute;` and `display: block` style for showing properly.
+*   VirtualList passes `data`, `index`, `data-index`, and `key` to the `component` function.
+*   Be sure you are passing `{...rest}` to the item component for reusing DOM.
+*   VirtualList will automatically give proper className for items.
+*   Be sure to compose `className` prop when you make customized item component.
 *   Make sure you are not using an inline function for `component`.
-*   If you are using an item component which has `@enact/spotlight.Spottable` hoc, Spotlight will enable items and you can navigate them with 5-way key.
+*   If you want to scroll the list via 5-way navigation on the certain component in an item, you should pass `data-index` prop.
 *   Example:
 
     ```
-    //.less
-    .listItem {
-        ...
-        position: absolute;
-        ...
-    }
-
     //.js
-    renderItem = ({data, index, key}) => {
+    renderItem = ({data, index, ...rest}) => {
     	return (
-    		<div key={key} className={css.listItem]>
+    		<div {...rest}>
     			{data[index].name}
     		</div>
     	);
     }
     ...
     render = () => {
-        return (
-            <VirtualList
+    	return (
+    		<VirtualList
+    			component={this.renderItem}
     			data={data}
     			dataSize={data.length}
     			itemSize={this.itemSize}
-    			component={this.renderItem}
     		/>
-        );
+    	);
     }
     ```
 
@@ -90,9 +84,9 @@ This document describes VirtualList, VirtualGridList, and Scroller.
     //MyListItem.js
     const MyListItem = kind({
     	.....
-    	render = ({...rest}) => { //<-- should pass props
+    	render = (props) => { //<-- should pass props
     		return (
-    			<div {...rest}>
+    			<div {...props}>
     				...
     			</div>
     		);
@@ -100,9 +94,9 @@ This document describes VirtualList, VirtualGridList, and Scroller.
     });
 
     //app.js
-    renderItem = ({data, index, key}) => {
+    renderItem = ({data, index, ...rest}) => {
     	return (
-    		<MyListItem data={data} index={index} key={key} />
+    		<MyListItem index={index} {...rest} />
     	);
     }
     ```
@@ -121,17 +115,17 @@ This document describes VirtualList, VirtualGridList, and Scroller.
 *   Example:
 
     ```
-    renderItem = ({data, index, key}) => {
-        const {text, subText, source} = data[index];
-        return (
-            <GridListImageItem
-                caption={text}
-                key={key}
-                source={source}
-                subCaption={subText}
-                className={css.item}
-            />
-        );
+    renderItem = ({data, index, ...rest}) => {
+    	const {text, subText, source} = data[index];
+    	return (
+    		<GridListImageItem
+    			{...rest}
+    			caption={text}
+    			className={css.item}
+    			source={source}
+    			subCaption={subText}
+    		/>
+    	);
     };
     ```
 
@@ -140,7 +134,7 @@ This document describes VirtualList, VirtualGridList, and Scroller.
 ### Basic usage of Scroller
 
 *   Make sure you specify width and height of Scroller.
-*   For now, `'auto'`, `'hidden'` values for `horizontal` and `vertical` are only valid in Scroller.
+*   You can specify the scrollable direction with `direction` props. Valid values are `both`, `horizontal`, and `vertical`.
 *   Example:
 
     ```
@@ -152,13 +146,12 @@ This document describes VirtualList, VirtualGridList, and Scroller.
 
     //.js
     <Scroller
-        horizontal="auto"
-        vertical="auto"
-        className={css.scroller}
+    	className={css.scroller}
+    	direction="both"
     >
-        <div className={css.content}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br /> 
-        </div>
+    	<div className={css.content}>
+    		Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br />
+    	</div>
     </Scroller>
     ```
 
@@ -193,15 +186,15 @@ This document describes VirtualList, VirtualGridList, and Scroller.
     	}
     	...
     	render = () => {
-    	    return (
+    		return (
     			<VirtualList
     				cbScrollTo={this.getScrollTo} // pass callback function
+    				component={this.renderItem}
     				data={data}
     				dataSize={data.length}
     				itemSize={this.itemSize}
-    				component={this.renderItem}
     			/>
-    	    );
+    		);
     	}
     }
     ```
@@ -213,15 +206,18 @@ This document describes VirtualList, VirtualGridList, and Scroller.
     this.scrollTo({position: {x: 100, y: 200}); // scroll to (100px, 200px) position; animation is enabled if omitted
     this.scrollTo({align: 'bottom'}); // scroll to the bottom
     this.scrollTo({align: 'lefttop'}); // scroll to the left top position; identical to {position: {x: 0, y:0}}
-    this.scrollTo({index: 20}); // VirtualList/VirtualGridList only; scroll to the 21th item; index is counting from 0
+    this.scrollTo({index: 20}); // VirtualList/VirtualGridList only; scroll to the 21st item; index is counting from 0
+    this.scrollTo({index: 20, focus: true}); // VirtualList/VirtualGridList only; scroll to the 21st item and focus on the item
     this.scrollTo({node: childNode}); // Scroller only; scroll to the child node.
+    this.scrollTo({node: childNode, focus: true}); // Scroller only; scroll to the child node and focus on the node.
     ```
 
 ## Event Callbacks for VirtualList/VirtualGridList and Scroller
 
 *   You can specify callback functions for scroll events.
 *   When you scroll on a list or a scroller, `onScrollStart`, `onScroll`, and `onScrollStop` events fire.
-*   Each event sends an object with `scrollLeft` and `scrollTop` properties in it.
+*   Each event sends an object with `scrollLeft`, `scrollTop`, and `moreInfo` properties in it.
+*   For VirtualList/VirtualGridList, `moreInfo` has `firstVisibleIndex` and `lastVisibleIndex`.
 *   It is recommended not to call `setState()` in `onScroll` event callback.
 *   Example:
 
@@ -231,11 +227,11 @@ This document describes VirtualList, VirtualGridList, and Scroller.
     handlerOnScrollStart = () => {
     	this.setState({message: 'startScroll'});
     }
-    handlerOnScroll = (e) => {
-    	this.y = e.scrollTop;
+    handlerOnScroll = ({scrollTop}) => {
+    	this.y = scrollTop;
     }
-    handlerOnScrollStop = (e) => {
-    	this.y = e.scrollTop;
+    handlerOnScrollStop = ({scrollTop}) => {
+    	this.y = scrollTop;
     	this.setState({message: 'scrollStopped'});
     }
     ...
