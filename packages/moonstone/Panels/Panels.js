@@ -160,8 +160,7 @@ const PanelsBase = kind({
 			return updatedChildProps;
 		}
 	},
-
-	render: ({applicationCloseButton, arranger, children, childProps, generateId, index, noAnimation, onTransition, ...rest}) => {
+	render: ({applicationCloseButton, arranger, children, childProps, generateId, index, noAnimation, onTransition, onWillTransition, ...rest}) => {
 		delete rest.noCloseButton;
 		delete rest.onApplicationClose;
 		delete rest.onBack;
@@ -176,6 +175,7 @@ const PanelsBase = kind({
 					index={index}
 					noAnimation={noAnimation}
 					onTransition={onTransition}
+					onWillTransition={onWillTransition}
 				>
 					{children}
 				</Viewport>
