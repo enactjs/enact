@@ -788,7 +788,6 @@ const VideoPlayerBase = class extends React.Component {
 					this.selectPlaybackRates('fastForward');
 					this.speedIndex = 0;
 					this.prevCommand = 'fastForward';
-					return;
 				} else {
 					this.speedIndex = this.clampPlaybackRate(this.speedIndex + 1);
 				}
