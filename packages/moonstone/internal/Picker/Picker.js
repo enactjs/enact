@@ -1,4 +1,3 @@
-import $L from '@enact/i18n/$L';
 import {forward} from '@enact/core/handle';
 import clamp from 'ramda/src/clamp';
 import equals from 'ramda/src/equals';
@@ -11,6 +10,7 @@ import {getDirection} from '@enact/spotlight';
 import {validateRange, validateStepped} from '../validators';
 import Skinnable from '../../Skinnable';
 
+import $L from '../$L';
 import PickerButton from './PickerButton';
 
 import css from './Picker.less';
