@@ -226,14 +226,22 @@ const Spotlight = (function () {
 		const next = getTargetByDirectionFromElement(direction, currentFocusedElement);
 
 		if (next) {
+			const currentContainerId = last(currentContainerIds);
+			const nextContainerIds = getContainersForNode(next);
+
+			// prevent focus if 5-way is being held and the next element would change containers
+			if (_5WayKeyHold && last(nextContainerIds) !== currentContainerId) {
+				return false;
+			}
+
 			setContainerPreviousTarget(
-				last(currentContainerIds),
+				currentContainerId,
 				direction,
 				next,
 				currentFocusedElement
 			);
 
-			return focusElement(next, getContainersForNode(next));
+			return focusElement(next, nextContainerIds);
 		}
 
 		return false;
