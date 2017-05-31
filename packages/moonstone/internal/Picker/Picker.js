@@ -1,4 +1,3 @@
-import $L from '@enact/i18n/$L';
 import {forward} from '@enact/core/handle';
 import clamp from 'ramda/src/clamp';
 import equals from 'ramda/src/equals';
@@ -9,7 +8,9 @@ import shouldUpdate from 'recompose/shouldUpdate';
 import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
 import {getDirection} from '@enact/spotlight';
 import {validateRange, validateStepped} from '../validators';
+import Skinnable from '../../Skinnable';
 
+import $L from '../$L';
 import PickerButton from './PickerButton';
 
 import css from './Picker.less';
@@ -57,6 +58,11 @@ const forwardBlur = forward('onBlur'),
 
 const Picker = class extends React.Component {
 	static displayName = 'Picker'
+
+	static contextTypes = {
+		// import Skinnable's context to force skin changes to picker buttons
+		skin: PropTypes.string
+	}
 
 	static propTypes = /** @lends moonstone/internal/Picker.Picker.prototype */ {
 		/**
@@ -608,6 +614,7 @@ const Picker = class extends React.Component {
 					onMouseDown={this.handleIncDown}
 					onMouseUp={this.handleUp}
 					onSpotlightDisappear={onSpotlightDisappear}
+					skin={this.context.skin}
 					spotlightDisabled={spotlightDisabled}
 				/>
 				<div
@@ -641,6 +648,7 @@ const Picker = class extends React.Component {
 					onMouseDown={this.handleDecDown}
 					onMouseUp={this.handleUp}
 					onSpotlightDisappear={onSpotlightDisappear}
+					skin={this.context.skin}
 					spotlightDisabled={spotlightDisabled}
 				/>
 			</div>
@@ -648,6 +656,8 @@ const Picker = class extends React.Component {
 	}
 };
 
-export default Picker;
-export {Picker};
+const SkinnedPicker = Skinnable(Picker);
+
+export default SkinnedPicker;
+export {SkinnedPicker as Picker};
 export PickerItem from './PickerItem';

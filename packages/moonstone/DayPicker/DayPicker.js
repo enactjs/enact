@@ -4,7 +4,6 @@
  * @module moonstone/DayPicker
  */
 
-import $L from '@enact/i18n/$L';
 import Changeable from '@enact/ui/Changeable';
 import {coerceArray} from '@enact/core/util';
 import DateFmt from '@enact/i18n/ilib/lib/DateFmt';
@@ -14,6 +13,7 @@ import LocaleInfo from '@enact/i18n/ilib/lib/LocaleInfo';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import $L from '../internal/$L';
 import {Expandable} from '../ExpandableItem';
 import {ExpandableListBase} from '../ExpandableList';
 
