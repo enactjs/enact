@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import DurationFmt from '@enact/i18n/ilib/lib/DurationFmt';
 import {forward} from '@enact/core/handle';
 import ilib from '@enact/i18n';
-import {Job} from '@enact/core/util';
+import {childrenEquals, Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
 import Slottable from '@enact/ui/Slottable';
 import {getDirection, Spotlight} from '@enact/spotlight';
@@ -453,7 +453,6 @@ const VideoPlayerBase = class extends React.Component {
 		this.moreInProgress = false;	// This only has meaning for the time between clicking "more" and the official state is updated. To get "more" state, only look at the state value.
 		this.prevCommand = (props.noAutoPlay ? 'pause' : 'play');
 		this.speedIndex = 0;
-		this.titleOffsetCalculated = false;
 		this.selectPlaybackRates('fastForward');
 
 		this.initI18n();
@@ -539,6 +538,10 @@ const VideoPlayerBase = class extends React.Component {
 			// controls, which prevents an addiitional 5-way attempt in order to re-show media controls
 			Spotlight.focus(this.player.querySelector(`.${css.controlsHandleAbove}.${spottableClass}`));
 		}
+
+		if (childrenEquals(this.props.infoComponents, nextProps.infoComponents) && this.state.bottomControlsVisible) {
+			this.calculateTitleOffset();
+		}
 	}
 
 	// Added to set default focus on the media control (play) when controls become visible.
@@ -549,9 +552,6 @@ const VideoPlayerBase = class extends React.Component {
 			this.player.contains(Spotlight.getCurrent())
 		) {
 			this.focusDefaultMediaControl();
-		}
-		if (!this.titleOffsetCalculated && this.state.bottomControlsVisible) {
-			this.calculateTitleOffset();
 		}
 	}
 
@@ -577,7 +577,6 @@ const VideoPlayerBase = class extends React.Component {
 		if (titleElement && infoComponents) {
 			const infoHeight = infoComponents.offsetHeight;
 			titleElement.setAttribute('style', `--infoComponentsOffset: ${infoHeight}px`);
-			this.titleOffsetCalculated = true;
 		}
 	}
 
