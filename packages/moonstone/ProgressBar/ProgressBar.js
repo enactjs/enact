@@ -10,6 +10,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {validateRange} from '../internal/validators';
+import Skinnable from '../Skinnable';
 
 import css from './ProgressBar.less';
 
@@ -96,5 +97,7 @@ const ProgressBarBase = kind({
 	}
 });
 
-export default ProgressBarBase;
-export {ProgressBarBase as ProgressBar, ProgressBarBase};
+const ProgressBar = Skinnable(ProgressBarBase);
+
+export default ProgressBar;
+export {ProgressBar, ProgressBarBase};

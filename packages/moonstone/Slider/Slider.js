@@ -15,6 +15,7 @@ import Spottable from '@enact/spotlight/Spottable';
 
 import SliderDecorator from '../internal/SliderDecorator';
 import {computeProportionProgress} from '../internal/SliderDecorator/util';
+import Skinnable from '../Skinnable';
 
 import {SliderBarFactory} from './SliderBar';
 import SliderTooltip from './SliderTooltip';
@@ -477,7 +478,9 @@ const SliderFactory = factory(css => {
 		Spottable(
 			SliderDecorator(
 				Pressable(
-					Base
+					Skinnable(
+						Base
+					)
 				)
 			)
 		)

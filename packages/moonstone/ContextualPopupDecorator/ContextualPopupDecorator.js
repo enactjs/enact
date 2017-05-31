@@ -19,7 +19,26 @@ import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDeco
 import {ContextualPopup} from './ContextualPopup';
 import css from './ContextualPopupDecorator.less';
 
-const defaultConfig = {};
+/**
+ * Default config for {@link moonstone/ContextualPopupDecorator.ContextualPopupDecorator}
+ *
+ * @type {Object}
+ * @hocconfig
+ * @memberof moonstone/ContextualPopupDecorator.ContextualPopupDecorator
+ */
+const defaultConfig = {
+	/**
+	 * If the wrapped component does not support skinning, set `noSkin` to `true` to disable passing
+	 * the `skin` prop to it.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @memberof moonstone/ContextualPopupDecorator.ContextualPopupDecorator.defaultConfig
+	 * @public
+	 */
+	noSkin: false
+};
+
 const ContextualPopupContainer = SpotlightContainerDecorator({enterTo: 'last-focused', preserveId: true}, ContextualPopup);
 
 /**
@@ -33,6 +52,7 @@ const ContextualPopupContainer = SpotlightContainerDecorator({enterTo: 'last-foc
  * @public
  */
 const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
+	const {noSkin} = config;
 
 	return class extends React.Component {
 		static displayName = 'ContextualPopupDecorator'
@@ -116,6 +136,17 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @default false
 			 */
 			showCloseButton : PropTypes.bool,
+
+			/**
+			 * Overrides the current skin for this component. When `noSkin` is set on the config
+			 * object, `skin` will only be applied to the
+			 * `moonstone/ContextualPopupDecorator.ContextualPopup` and not to the popup's activator
+			 * component.
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			skin: PropTypes.string,
 
 			/**
 			 * Restricts or prioritizes navigation when focus attempts to leave the popup. It
@@ -367,8 +398,12 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const {showCloseButton, popupComponent: PopupComponent, popupClassName, noAutoDismiss, open, onClose, spotlightRestrict, ...rest} = this.props;
+			const {showCloseButton, popupComponent: PopupComponent, popupClassName, noAutoDismiss, open, onClose, skin, spotlightRestrict, ...rest} = this.props;
 			const scrimType = spotlightRestrict === 'self-only' ? 'transparent' : 'none';
+
+			if (!noSkin) {
+				rest.skin = skin;
+			}
 
 			return (
 				<div className={css.contextualPopupDecorator}>
@@ -382,6 +417,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 							containerPosition={this.state.containerPosition}
 							containerRef={this.getContainerNode}
 							containerId={this.state.containerId}
+							skin={skin}
 							spotlightRestrict={spotlightRestrict}
 						>
 							<PopupComponent />
