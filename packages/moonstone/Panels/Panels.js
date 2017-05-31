@@ -71,7 +71,14 @@ const PanelsBare = kind({
 		 *
 		 * @type {Function}
 		 */
-		onBack: PropTypes.func
+		onBack: PropTypes.func,
+
+		/**
+		 * A function that runs when view transition is completed.
+		 *
+		 * @type {Function}
+		 */
+		onTransition: PropTypes.func
 	},
 
 	defaultProps: {
@@ -98,7 +105,7 @@ const PanelsBare = kind({
 		}
 	},
 
-	render: ({noAnimation, arranger, children, index, applicationCloseButton, ...rest}) => {
+	render: ({applicationCloseButton, arranger, children, index, noAnimation, onTransition, ...rest}) => {
 		delete rest.noCloseButton;
 		delete rest.onApplicationClose;
 		delete rest.onBack;
@@ -106,7 +113,7 @@ const PanelsBare = kind({
 		return (
 			<div {...rest}>
 				{applicationCloseButton}
-				<Viewport noAnimation={noAnimation} arranger={arranger} index={index}>
+				<Viewport arranger={arranger} index={index} noAnimation={noAnimation} onTransition={onTransition}>
 					{children}
 				</Viewport>
 			</div>
