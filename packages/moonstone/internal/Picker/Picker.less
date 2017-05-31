@@ -35,10 +35,12 @@
 		max-width: 300px;
 		color: @moon-picker-text-color;
 
-		.moon-custom-text({
-			font-size: @moon-item-font-size-large;
-			line-height: @moon-button-small-height-large;
-		});
+		:not(.vertical)& {
+			.moon-custom-text({
+				font-size: @moon-item-font-size-large;
+				line-height: @moon-button-small-height-large;
+			});
+		}
 	}
 
 	.sizingPlaceholder {
