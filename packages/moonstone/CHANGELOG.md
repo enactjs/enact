@@ -19,7 +19,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` to set play/pause icon to display "play" when rewinding or fast forwarding
 - `moonstone/VideoPlayer` to rewind or fast forward when previous command is slow-forward or slow-rewind respectively
 - `moonstone/VideoPlayer` to fast forward when previous command is slow-forward and it reaches the last of its play rate
-- `moonstone/Panels` to pass the `onTransition` prop to its underlying `<Viewport>`
+- `moonstone/Panels` to pass the `onTransition` and `onWillTransition` props to its underlying `<Viewport>`
 
 ### Fixed
 

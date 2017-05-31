@@ -105,7 +105,7 @@ const PanelsBare = kind({
 		}
 	},
 
-	render: ({applicationCloseButton, arranger, children, index, noAnimation, onTransition, ...rest}) => {
+	render: ({applicationCloseButton, arranger, children, index, noAnimation, onTransition, onWillTransition, ...rest}) => {
 		delete rest.noCloseButton;
 		delete rest.onApplicationClose;
 		delete rest.onBack;
@@ -113,7 +113,7 @@ const PanelsBare = kind({
 		return (
 			<div {...rest}>
 				{applicationCloseButton}
-				<Viewport arranger={arranger} index={index} noAnimation={noAnimation} onTransition={onTransition}>
+				<Viewport arranger={arranger} index={index} noAnimation={noAnimation} onTransition={onTransition} onWillTransition={onWillTransition}>
 					{children}
 				</Viewport>
 			</div>
