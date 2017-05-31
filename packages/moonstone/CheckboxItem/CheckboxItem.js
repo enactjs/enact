@@ -9,6 +9,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Toggleable from '@enact/ui/Toggleable';
 
+import Skinnable from '../Skinnable';
 import {ToggleItemBase} from '../ToggleItem';
 import Checkbox from '../Checkbox';
 
@@ -125,7 +126,9 @@ const CheckboxItemBase = kind({
  */
 const CheckboxItem = Toggleable(
 	{prop: 'selected'},
-	CheckboxItemBase
+	Skinnable(
+		CheckboxItemBase
+	)
 );
 
 export default CheckboxItem;

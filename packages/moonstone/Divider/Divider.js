@@ -9,8 +9,10 @@ import Uppercase from '@enact/i18n/Uppercase';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import css from './Divider.less';
 import {MarqueeDecorator} from '../Marquee';
+import Skinnable from '../Skinnable';
+
+import css from './Divider.less';
 
 const MarqueeH3 = Uppercase(MarqueeDecorator('h3'));
 
@@ -100,5 +102,7 @@ const DividerBase = kind({
 	}
 });
 
-export default DividerBase;
-export {DividerBase as Divider, DividerBase};
+const Divider = Skinnable(DividerBase);
+
+export default Divider;
+export {Divider, DividerBase};

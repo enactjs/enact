@@ -12,6 +12,7 @@ import Toggleable from '@enact/ui/Toggleable';
 
 import {ToggleItemBase} from '../ToggleItem';
 import FormCheckbox from '../FormCheckbox';
+import Skinnable from '../Skinnable';
 
 import css from './FormCheckboxItem.less';
 
@@ -139,7 +140,9 @@ const FormCheckboxItemBase = kind({
  */
 const FormCheckboxItem = Toggleable(
 	{prop: 'selected'},
-	FormCheckboxItemBase
+	Skinnable(
+		FormCheckboxItemBase
+	)
 );
 
 export default FormCheckboxItem;

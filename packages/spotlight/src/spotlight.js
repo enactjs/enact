@@ -21,6 +21,8 @@ import concat from 'ramda/src/concat';
 import difference from 'ramda/src/difference';
 import last from 'ramda/src/last';
 
+import {contains} from './utils';
+
 import Accelerator from '../Accelerator';
 import {spottableClass} from '../Spottable';
 
@@ -745,6 +747,24 @@ const Spotlight = (function () {
 				candidates.all,
 				getContainerConfig(candidates.allContainerId)
 			);
+		}
+
+		// if the next element is a container AND the current element is *visually* contained within
+		// the next element, we need to ignore container `enterTo` preferences and retreive its
+		// spottable descendants and try to navigate to them.
+		if (next && isContainer(next)) {
+			const containerRect = getRect(next);
+			const elementRect = getRect(currentFocusedElement);
+
+			if (contains(containerRect, elementRect)) {
+				const nextContainerId = next.dataset.containerId;
+				next = navigate(
+					currentFocusedElement,
+					direction,
+					getSpottableDescendants(nextContainerId),
+					getContainerConfig(nextContainerId)
+				);
+			}
 		}
 
 		if (next) {
