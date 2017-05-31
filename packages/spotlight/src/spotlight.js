@@ -362,7 +362,7 @@ const Spotlight = (function () {
 
 		const currentContainerId = last(currentContainerIds);
 		const currentRect = getRect(currentFocusedElement);
-		const next = getNavigableElementsForNode(
+		let next = getNavigableElementsForNode(
 			currentFocusedElement,
 			(containerId, container, elements) => {
 				const previous = getContainerPreviousTarget(containerId, direction, currentFocusedElement);
