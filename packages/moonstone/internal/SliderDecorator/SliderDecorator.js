@@ -5,7 +5,6 @@
  * @private
  */
 
-import $L from '@enact/i18n/$L';
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
 import Spotlight from '@enact/spotlight';
@@ -14,6 +13,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {forward} from '@enact/core/handle';
 
+import $L from '../$L';
 import {validateRange} from '../validators';
 
 import {
