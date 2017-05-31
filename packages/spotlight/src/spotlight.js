@@ -384,14 +384,13 @@ const Spotlight = (function () {
 		// spottable descendants and try to navigate to them.
 		if (next && isContainer(next)) {
 			const containerRect = getRect(next);
-			const elementRect = getRect(currentFocusedElement);
 
-			if (contains(containerRect, elementRect)) {
+			if (contains(containerRect, currentRect)) {
 				const nextContainerId = next.dataset.containerId;
 				next = navigate(
-					currentFocusedElement,
+					currentRect,
 					direction,
-					getSpottableDescendants(nextContainerId),
+					getRects(getSpottableDescendants(nextContainerId)),
 					getContainerConfig(nextContainerId)
 				);
 			}
