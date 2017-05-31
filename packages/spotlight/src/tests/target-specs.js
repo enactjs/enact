@@ -34,6 +34,22 @@ const positionedSpottable = (id, top, left) => {
 	});
 };
 
+const grid = () => container({
+	[containerAttribute]: 'grid',
+	style: 'position: relative; height: 30px; width: 30px;',
+	children: join(
+		positionedSpottable('top-left', 0, 0),
+		positionedSpottable('top-center', 0, 10),
+		positionedSpottable('top-right', 0, 20),
+		positionedSpottable('middle-left', 10, 0),
+		positionedSpottable('middle-center', 10, 10),
+		positionedSpottable('middle-right', 10, 20),
+		positionedSpottable('bottom-left', 20, 0),
+		positionedSpottable('bottom-center', 20, 10),
+		positionedSpottable('bottom-right', 20, 20)
+	)
+});
+
 const scenarios = {
 	complexTree: join(
 		spottable(nonSpottable()),
@@ -64,23 +80,19 @@ const scenarios = {
 	),
 	grid: join(
 		spottable({id: 'before-grid', style: 'height: 10px'}),
-		container({
-			[containerAttribute]: 'grid',
-			style: 'position: relative; height: 30px; width: 30px;',
-			children: join(
-				positionedSpottable('top-left', 0, 0),
-				positionedSpottable('top-center', 0, 10),
-				positionedSpottable('top-right', 0, 20),
-				positionedSpottable('middle-left', 10, 0),
-				positionedSpottable('middle-center', 10, 10),
-				positionedSpottable('middle-right', 10, 20),
-				positionedSpottable('bottom-left', 20, 0),
-				positionedSpottable('bottom-center', 20, 10),
-				positionedSpottable('bottom-right', 20, 20)
-			)
-		}),
+		grid(),
 		spottable({id: 'after-grid', style: 'height: 10px'}),
-	)
+	),
+	overlap: node({
+		style: 'position: relative',
+		children: join(
+			grid(),
+			spottable({
+				id: 'over-middle-center',
+				style: 'position: absolute; top: 12px; left: 15px; height: 1px; width: 1px;'
+			})
+		)
+	})
 };
 
 const safeTarget = (n, fn) => n ? fn(n) : 'NOT FOUND';
@@ -292,6 +304,23 @@ describe('target', () => {
 					getTargetByDirectionFromElement('right', center),
 					t => t.id
 				)).to.equal('middle-right');
+			}
+		));
+
+		it('should find target within container from floating element', testScenario(
+			scenarios.overlap,
+			(root) => {
+				configureContainer('grid', {
+					enterTo: 'defaultElement',
+					defaultElement: '#bottom-right'
+				});
+
+				const overlap = root.querySelector('#over-middle-center');
+
+				expect(safeTarget(
+					getTargetByDirectionFromElement('down', overlap),
+					t => t.id
+				)).to.equal('middle-center');
 			}
 		));
 	});
