@@ -1,8 +1,7 @@
 // Tooltip.less
-//
+@import '../styles/colors.less';
 @import '../styles/variables.less';
 @import '../styles/text.less';
-@import '../styles/skin.less';
 
 .tooltip {
 	position: absolute;
@@ -11,6 +10,7 @@
 		position: absolute;
 		width: @moon-tooltip-point-width;
 		height: @moon-tooltip-point-height;
+		fill: @moon-tooltip-bg-color;
 		transform-origin: top left;
 	}
 
@@ -19,6 +19,8 @@
 		line-height: @moon-tooltip-label-height;
 		white-space: nowrap;
 		padding: @moon-spotlight-outset @moon-tooltip-h-padding;
+		color: @moon-tooltip-text-color;
+		background-color: @moon-tooltip-bg-color;
 		border-radius: @moon-tooltip-border-radius;
 
 		:global(.enact-locale-right-to-left) & {
@@ -162,16 +164,4 @@
 			}
 		}
 	}
-
-	// Skin colors
-	.applySkins({
-		.tooltipArrow {
-			fill: @moon-tooltip-bg-color;
-		}
-
-		.tooltipLabel {
-			color: @moon-tooltip-text-color;
-			background-color: @moon-tooltip-bg-color;
-		}
-	});
 }

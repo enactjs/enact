@@ -3,12 +3,14 @@
 @import '../styles/text.less';
 @import '../styles/skin.less';
 
-.checkbox {
+.applySkins({.checkbox {
 	@size: @moon-checkbox-size;
 
 	width: @size;
 	height: @size;
 	border-radius: @size;
+	color: @moon-checkbox-check-color;
+	background-color: @moon-checkbox-bg-color;
 
 	.icon {
 		visibility: hidden;
@@ -40,33 +42,21 @@
 			visibility: visible;
 		}
 	}
-
-	// Skin colors
-	.applySkins({
-		color: @moon-checkbox-check-color;
-		background-color: @moon-checkbox-bg-color;
-	});
 }
 
 .focus({
 	.checkbox {
-		// Skin colors
-		.applySkins({
-			&:not([disabled]) {
-				background-color: @moon-checkbox-bg-spotlight-color;
-				color: @moon-checkbox-check-color;
-			}
-		});
-	}
-}, parent);
-
-.muted({
-	.focus({
-		.checkbox {
-			// Skin colors
-			.applySkins({
-				background-color: @moon-checkbox-bg-color;
-			});
+		&:not([disabled]) {
+			background-color: @moon-checkbox-bg-spotlight-color;
+			color: @moon-checkbox-check-color;
 		}
-	}, parent);
-}, parent);
+	}
+});
+
+.mutedFocus({
+	.checkbox {
+		background-color: @moon-checkbox-bg-color;
+	}
+});
+
+});

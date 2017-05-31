@@ -14,7 +14,6 @@ import Spottable from '@enact/spotlight/Spottable';
 import Icon from '../Icon';
 import {Image} from '../Image';
 import {MarqueeController, MarqueeText} from '../Marquee';
-import Skinnable from '../Skinnable';
 
 import css from './GridListImageItem.less';
 
@@ -158,9 +157,8 @@ const GridListImageItemBase = kind({
 
 		return (
 			<div {...rest}>
-				<Image className={css.image} placeholder={placeholder} src={source}>
-					{selectionOverlay}
-				</Image>
+				<Image className={css.image} placeholder={placeholder} src={source} />
+				{selectionOverlay}
 				{caption ? (<MarqueeText className={css.caption} marqueeOn="hover">{caption}</MarqueeText>) : null}
 				{subCaption ? (<MarqueeText className={css.subCaption} marqueeOn="hover">{subCaption}</MarqueeText>) : null}
 			</div>
@@ -187,9 +185,7 @@ const GridListImageItemBase = kind({
 const GridListImageItem = MarqueeController(
 	{marqueeOnFocus: true},
 	Spottable(
-		Skinnable(
-			GridListImageItemBase
-		)
+		GridListImageItemBase
 	)
 );
 

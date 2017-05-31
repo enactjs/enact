@@ -4,6 +4,44 @@
 @import '../styles/variables.less';
 @import '../styles/skin.less';
 
+.applySkins({
+.viewport {
+	position: absolute;
+	.position(0);
+	overflow: hidden;
+}
+
+.breadcrumbs {
+	position: absolute;
+	.position(0, auto, auto, 0);
+	height: 100%;
+	z-index: 10;
+	overflow: hidden;
+
+	.breadcrumb {
+		position: absolute;
+		right: 0;
+		height: 100%;
+		width: @moon-breadcrumb-width;
+
+		.breadcrumbHeader {
+			padding-top: 3px;
+			margin: @moon-app-keepout;
+			font-family: @moon-super-header-font-family;
+			font-size: @moon-breadcrumb-text-size;
+		}
+
+		&:global(.spottable):focus {
+			background: @moon-spotlight-color;
+			color: @moon-spotlight-text-color;
+
+			.breadcrumbHeader {
+				border-color: @moon-spotlight-text-color;
+			}
+		}
+	}
+}
+
 .panels {
 	pointer-events: none;
 
@@ -11,57 +49,13 @@
 		pointer-events: auto;
 	}
 
-	.breadcrumbs {
-		position: absolute;
-		.position(0, auto, auto, 0);
-		height: 100%;
-		z-index: 10;
-		overflow: hidden;
-
-		.breadcrumb {
-			position: absolute;
-			right: 0;
-			height: 100%;
-			width: @moon-breadcrumb-width;
-
-			.breadcrumbHeader {
-				padding-top: 3px;
-				margin: @moon-app-keepout;
-				font-family: @moon-super-header-font-family;
-				font-size: @moon-breadcrumb-text-size;
-			}
-		}
-	}
-
-	.viewport {
-		position: absolute;
-		.position(0);
-		overflow: hidden;
-	}
-
-	:global(.enact-locale-right-to-left) & {
+	:global(.enact-locale-right-to-left)& {
 		direction: ltr;
 
 		.viewport {
 			direction: rtl;
 		}
 	}
-
-	// Skin colors
-	.applySkins({
-		.breadcrumbs {
-			.breadcrumb {
-				.focus({
-					background: @moon-spotlight-color;
-					color: @moon-spotlight-text-color;
-
-					.breadcrumbHeader {
-						border-color: @moon-spotlight-text-color;
-					}
-				});
-			}
-		}
-	});
 
 	// TODO: Application Close Button Support
 	// &:not(.first) {
@@ -107,7 +101,7 @@
 	// }
 }
 
-.panels.activity {
+.activity {
 	.breadcrumbs {
 		width: @moon-breadcrumb-width;
 	}
@@ -135,34 +129,26 @@
 
 }
 
-.panels.alwaysViewing {
+.alwaysViewing {
 	.viewport {
 		left: 50%;
+		background-color: @moon-panels-scrim-always-viewing-bg-color;
 	}
 
 	.breadcrumbs {
 		width: 50%;
+
+		.breadcrumb {
+			.breadcrumbHeader {
+				color: white;
+				border-top: 6px solid white;
+			}
+		}
 	}
 
 	// .scrim {
 	// 	background-color: @moon-panels-scrim-always-viewing-bg-color;
 	// }
-
-	// Skin colors
-	.applySkins({
-		.viewport {
-			background-color: @moon-panels-scrim-always-viewing-bg-color;
-		}
-
-		.breadcrumbs {
-			.breadcrumb {
-				.breadcrumbHeader {
-					color: white;
-					border-top: 6px solid white;
-				}
-			}
-		}
-	});
 }
 
 // Base set of styling for scrim to prevent receiving user input while transitioning
@@ -230,3 +216,4 @@
 // 		display: none;
 // 	}
 // }
+});

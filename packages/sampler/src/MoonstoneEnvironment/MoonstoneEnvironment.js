@@ -63,8 +63,8 @@ const locales = {
 };
 
 const skins = {
-	dark: 'Dark',
-	light: 'Light'
+	moonstone: 'Dark',
+	'moonstone-light': 'Light'
 };
 
 // NOTE: Knobs cannot set locale in fullscreen mode. This allows the locale to
@@ -95,7 +95,7 @@ const StorybookDecorator = (story, config) => {
 			description={config.description}
 			locale={select('locale', locales, getLocaleFromURL())}
 			textSize={boolean('large text', false) ? 'large' : 'normal'}
-			skin={select('skin', skins, 'dark')}
+			skin={select('skin', skins, 'moonstone')}
 		>
 			{sample}
 		</Moonstone>
@@ -110,7 +110,7 @@ const FullscreenStorybookDecorator = (story, config) => {
 			description={config.description}
 			locale={select('locale', locales, getLocaleFromURL())}
 			textSize={boolean('large text', false) ? 'large' : 'normal'}
-			skin={select('skin', skins, 'dark')}
+			skin={select('skin', skins, 'moonstone')}
 		>
 			{sample}
 		</MoonstoneFullscreen>

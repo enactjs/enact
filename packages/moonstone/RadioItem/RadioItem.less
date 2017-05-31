@@ -3,29 +3,21 @@
 @import '../styles/variables.less';
 @import '../styles/skin.less';
 
-.radioItem {
+.applySkins({.radioItem {
 	.dot {
 		width: (@moon-radio-item-indicator-size - 2 * @moon-radio-item-indicator-border);
 		height: (@moon-radio-item-indicator-size - 2 * @moon-radio-item-indicator-border);
-		border-width: @moon-radio-item-indicator-border;
-		border-style: solid;
+		border: solid @moon-radio-item-indicator-border @moon-spotlight-text-color;
 		border-radius: (@moon-radio-item-indicator-size / 2);
+		background-color: @moon-button-disabled-text-color;
 		flex-shrink: 0;
 
 		&:not(.selected) {
 			visibility: visible;
 		}
-	}
 
-	// Skin colors
-	.applySkins({
-		.dot {
-			background-color: @moon-button-disabled-text-color;
-			border-color: @moon-spotlight-text-color;
-
-			&.selected {
-				background-color: @moon-accent;
-			}
+		&.selected {
+			background-color: @moon-accent;
 		}
-	});
-}
+	}
+}});

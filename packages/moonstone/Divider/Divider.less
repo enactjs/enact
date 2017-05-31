@@ -4,10 +4,11 @@
 @import '../styles/text.less';
 @import '../styles/skin.less';
 
-.divider {
+.applySkins({.divider {
 	.moon-divider-text();
 
-	border-bottom: @moon-divider-border-width solid transparent;
+	color: @moon-divider-text-color;
+	border-bottom: @moon-divider-border-width solid @moon-divider-border-color;
 	margin: 0 @moon-spotlight-outset (1.5 * @moon-spotlight-outset) @moon-spotlight-outset;
 	min-height: (1.5 * @moon-spotlight-outset);
 	line-height: 1.6em;
@@ -28,10 +29,4 @@
 		margin-bottom: (@moon-spotlight-outset * 3);
 		min-height: (@moon-spotlight-outset * 3);
 	}
-
-	// Skin colors
-	.applySkins({
-		color: @moon-divider-text-color;
-		border-bottom-color: @moon-divider-border-color;
-	});
-}
+}});

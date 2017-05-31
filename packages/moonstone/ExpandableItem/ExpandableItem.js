@@ -225,7 +225,7 @@ const ExpandableItemBase = kind({
 			}
 		},
 		open: ({disabled, open}) => (open && !disabled),
-		titleIcon: ({disabled, open}) => (open && !disabled ? 'arrowlargeup' : 'arrowlargedown'),
+		titleIcon: ({open}) => (open ? 'arrowlargeup' : 'arrowlargedown'),
 		transitionSpotlightDisabled: ({open, spotlightDisabled}) => (spotlightDisabled || !open)
 	},
 

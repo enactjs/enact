@@ -63,17 +63,4 @@ describe('ToggleButton', () => {
 
 		expect(actual).to.equal(expected);
 	});
-
-	it('should set "aria-pressed" to the value of "selected"', function () {
-		const toggleButton = mount(
-			<ToggleButton toggleOffLabel={toggleOffLabel} selected={false}>
-				{textChild}
-			</ToggleButton>
-		);
-
-		const expected = false;
-		const actual = toggleButton.find({role: 'button'}).prop('aria-pressed');
-
-		expect(actual).to.equal(expected);
-	});
 });

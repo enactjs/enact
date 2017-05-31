@@ -12,7 +12,6 @@ import Slottable from '@enact/ui/Slottable';
 import Spottable from '@enact/spotlight/Spottable';
 
 import {MarqueeDecorator} from '../Marquee';
-import Skinnable from '../Skinnable';
 
 import OverlayDecorator from './OverlayDecorator';
 
@@ -120,9 +119,7 @@ const ItemMarqueeDecorator = MarqueeDecorator({className: css.content, invalidat
  */
 const Item = Spottable(
 	ItemMarqueeDecorator(
-		Skinnable(
-			ItemBase
-		)
+		ItemBase
 	)
 );
 
@@ -153,9 +150,7 @@ const ItemOverlay = Spottable(
 		{slots: ['overlayAfter', 'overlayBefore']},
 		ItemMarqueeDecorator(
 			OverlayDecorator(
-				Skinnable(
-					ItemBase
-				)
+				ItemBase
 			)
 		)
 	)

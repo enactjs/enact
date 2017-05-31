@@ -13,7 +13,7 @@ describe('Picker Specs', function () {
 		);
 
 		const expected = 0;
-		const actual = picker.find('Picker').prop('value');
+		const actual = picker.prop('value');
 
 		expect(actual).to.equal(expected);
 	});

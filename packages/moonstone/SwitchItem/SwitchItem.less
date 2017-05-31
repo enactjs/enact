@@ -2,10 +2,11 @@
 //
 @import '../styles/mixins.less';
 @import '../styles/variables.less';
+@import '../styles/skin.less';
 
-.switchItem {
+.applySkins({.switchItem {
 	.switch {
 		display: block;
 		.margin-start-end(@moon-toggle-item-icon-margin, 0);
 	}
-}
+}});

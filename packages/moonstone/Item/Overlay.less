@@ -2,15 +2,9 @@
 //
 @import '../styles/mixins.less';
 @import '../styles/variables.less';
+@import '../styles/skin.less';
 
-// Defined so we don't repeat rules.
-@overlay-hidden: {
-	.overlay.hidden {
-		display: none;
-	}
-};
-
-.item {
+.applySkins({.item {
 	.overlay {
 		line-height: 1;
 
@@ -32,17 +26,10 @@
 		}
 	}
 
-	// Spottable but not focused
-	.spottable({
-		&:not(:focus) {
-			@overlay-hidden();
+	&:global(.spottable):not(:focus),
+	&[disabled] {
+		.overlay.hidden {
+			display: none;
 		}
-	});
-	.disabled(@overlay-hidden);
-}
-
-.muted({
-	.item {
-		.focus(@overlay-hidden);
 	}
-});
+}});

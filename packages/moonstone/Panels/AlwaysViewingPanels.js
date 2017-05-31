@@ -1,7 +1,5 @@
 import {scale} from '@enact/ui/resolution';
 
-import Skinnable from '../Skinnable';
-
 import {AlwaysViewingArranger} from './Arrangers';
 import {breadcrumbWidth} from './Breadcrumb';
 import BreadcrumbDecorator from './BreadcrumbDecorator';
@@ -31,11 +29,11 @@ const calcMax = () => {
  * @ui
  * @public
  */
-const AlwaysViewingPanels = Skinnable(BreadcrumbDecorator({
+const AlwaysViewingPanels = BreadcrumbDecorator({
 	className: 'panels alwaysViewing enact-fit',
 	max: calcMax,
 	panelArranger: AlwaysViewingArranger
-}, Viewport));
+}, Viewport);
 
 export default AlwaysViewingPanels;
 export {AlwaysViewingPanels};

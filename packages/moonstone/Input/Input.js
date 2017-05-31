@@ -12,7 +12,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import $L from '../internal/$L';
-import Skinnable from '../Skinnable';
 import Tooltip from '../TooltipDecorator/Tooltip';
 
 import css from './Input.less';
@@ -278,9 +277,7 @@ const InputBase = kind({
  */
 const Input = Changeable(
 	InputSpotlightDecorator(
-		Skinnable(
-			InputBase
-		)
+		InputBase
 	)
 );
 

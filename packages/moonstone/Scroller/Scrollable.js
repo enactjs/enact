@@ -331,7 +331,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			const
 				bounds = this.getScrollBounds(),
 				deltaMode = e.deltaMode,
-				wheelDeltaY = -e.wheelDeltaY;
+				wheelDeltaY = e.nativeEvent ? -e.nativeEvent.wheelDeltaY : -e.wheelDeltaY;
 			let delta = (wheelDeltaY || e.deltaY);
 
 			if (deltaMode === 0) {
@@ -701,13 +701,15 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					deprecate({name: 'indexToFocus', since: '1.2.0', message: 'Use `focus` instead', until: '2.0.0'});
 				}
 
-				this.start({
-					targetX: (left !== null) ? left : this.scrollLeft,
-					targetY: (top !== null) ? top : this.scrollTop,
-					animate: opt.animate,
-					indexToFocus: (opt.focus && typeof opt.index === 'number') ? opt.index : indexToFocus,
-					nodeToFocus:  (opt.focus && opt.node instanceof Object && opt.node.nodeType === 1) ? opt.node : null
-				});
+				if (left !== null || top !== null) {
+					this.start({
+						targetX: (left !== null) ? left : this.scrollLeft,
+						targetY: (top !== null) ? top : this.scrollTop,
+						animate: opt.animate,
+						indexToFocus: (opt.focus && typeof opt.index === 'number') ? opt.index : indexToFocus,
+						nodeToFocus:  (opt.focus && opt.node instanceof Object && opt.node.nodeType === 1) ? opt.node : null
+					});
+				}
 			} else {
 				this.scrollToInfo = opt;
 			}
@@ -776,20 +778,17 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					isHorizontalScrollbarVisible: curHorizontalScrollbarVisible,
 					isVerticalScrollbarVisible: curVerticalScrollbarVisible
 				});
-			} else {
-				this.isInitializing = false;
-				if (curHorizontalScrollbarVisible || curVerticalScrollbarVisible) {
-					// no visibility change but need to notify whichever scrollbars are visible of the
-					// updated bounds and scroll position
-					const updatedBounds = {
-						...bounds,
-						scrollLeft: this.scrollLeft,
-						scrollTop: this.scrollTop
-					};
+			} else if (curHorizontalScrollbarVisible || curVerticalScrollbarVisible) {
+				// no visibility change but need to notify whichever scrollbars are visible of the
+				// updated bounds and scroll position
+				const updatedBounds = {
+					...bounds,
+					scrollLeft: this.scrollLeft,
+					scrollTop: this.scrollTop
+				};
 
-					if (canScrollHorizontally && curHorizontalScrollbarVisible) this.scrollbarHorizontalRef.update(updatedBounds);
-					if (canScrollVertically && curVerticalScrollbarVisible) this.scrollbarVerticalRef.update(updatedBounds);
-				}
+				if (canScrollHorizontally && curHorizontalScrollbarVisible) this.scrollbarHorizontalRef.update(updatedBounds);
+				if (canScrollVertically && curVerticalScrollbarVisible) this.scrollbarVerticalRef.update(updatedBounds);
 			}
 		}
 
@@ -859,9 +858,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			if (this.scrollToInfo !== null) {
 				this.scrollTo(this.scrollToInfo);
-			} else {
-				this.updateScrollOnFocus();
 			}
+
+			this.updateScrollOnFocus();
 		}
 
 		componentWillUnmount () {

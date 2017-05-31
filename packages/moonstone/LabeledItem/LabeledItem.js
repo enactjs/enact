@@ -10,7 +10,6 @@ import PropTypes from 'prop-types';
 
 import Icon from '../Icon';
 import Item from '../Item';
-import Skinnable from '../Skinnable';
 import {MarqueeController, MarqueeText} from '../Marquee';
 
 const Controller = MarqueeController(Item);
@@ -72,7 +71,5 @@ const LabeledItemBase = kind({
 	)
 });
 
-const LabeledItem = Skinnable(LabeledItemBase);
-
-export default LabeledItem;
-export {LabeledItem, LabeledItemBase};
+export default LabeledItemBase;
+export {LabeledItemBase as LabeledItem, LabeledItemBase};

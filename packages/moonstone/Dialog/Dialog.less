@@ -6,14 +6,13 @@
 @import '../styles/variables.less';
 @import '../styles/skin.less';
 
-.dialog {
+.applySkins({.dialog {
 	@dialog-spacing: 39px;
 	position: relative;
 
 	&.showDivider {
 		.titleWrapper {
-			border-bottom-width: @moon-header-border-bottom-width;
-			border-bottom-style: solid;
+			border-bottom: @moon-header-border-bottom-width solid @moon-header-border-color;
 			padding-bottom: 24px;
 			border-bottom-width: 1px;
 		}
@@ -43,17 +42,8 @@
 	.buttons {
 		text-align: right;
 
-		:global(.enact-locale-right-to-left) & {
+		:global(.enact-locale-right-to-left)& {
 			text-align: left;
 		}
 	}
-
-	// Skin colors
-	.applySkins({
-		&.showDivider {
-			.titleWrapper {
-				border-bottom-color: @moon-header-border-color;
-			}
-		}
-	});
-}
+}});

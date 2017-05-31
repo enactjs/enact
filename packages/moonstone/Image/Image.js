@@ -73,14 +73,6 @@ const ImageBase = kind({
 		alt: PropTypes.string,
 
 		/**
-		 * Node for the children of an Image. Useful for overlays.
-		 *
-		 * @type {Node}
-		 * @public
-		 */
-		children: PropTypes.node,
-
-		/**
 		 * Function that will run if the image has an error.
 		 *
 		 * @type {Function}
@@ -141,14 +133,13 @@ const ImageBase = kind({
 		imgSrc: ({src}) => selectSrc(src)
 	},
 
-	render: ({alt, 'aria-label': ariaLabel, bgImage, children, imgSrc, onError, onLoad, style, ...rest}) => {
+	render: ({alt, 'aria-label': ariaLabel, bgImage, imgSrc, onError, onLoad, style, ...rest}) => {
 		delete rest.placeholder;
 		delete rest.sizing;
 		delete rest.src;
 
 		return (
 			<div role="img" {...rest} aria-label={ariaLabel || alt} style={{...style, backgroundImage: bgImage}}>
-				{children}
 				<img className={css.img} src={imgSrc} alt={alt} onLoad={onLoad} onError={onError} />
 			</div>
 		);

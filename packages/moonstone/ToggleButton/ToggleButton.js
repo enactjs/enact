@@ -10,7 +10,6 @@ import PropTypes from 'prop-types';
 import Toggleable from '@enact/ui/Toggleable';
 
 import Button from '../Button';
-import Skinnable from '../Skinnable';
 
 import css from './ToggleButton.less';
 
@@ -147,12 +146,12 @@ const ToggleButtonBase = kind({
 		}
 	},
 
-	render: ({selected, ...rest}) => {
-		delete rest.toggleOffLabel;
-		delete rest.toggleOnLabel;
+	render: (props) => {
+		delete props.toggleOffLabel;
+		delete props.toggleOnLabel;
 
 		return (
-			<Button {...rest} aria-pressed={selected} selected={selected} />
+			<Button {...props} />
 		);
 	}
 });
@@ -174,9 +173,7 @@ const ToggleButtonBase = kind({
  */
 const ToggleButton = Toggleable(
 	{prop: 'selected', toggle: 'onClick'},
-	Skinnable(
-		ToggleButtonBase
-	)
+	ToggleButtonBase
 );
 
 export default ToggleButton;

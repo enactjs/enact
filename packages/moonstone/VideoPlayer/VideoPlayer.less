@@ -1,11 +1,12 @@
 // VideoPlayer.less
 //
+@import '~@enact/ui/styles/mixins.less';
 @import '../styles/variables.less';
 @import '../styles/text.less';
 @import '../styles/mixins.less';
 @import '../styles/skin.less';
 
-.videoPlayer {
+.applySkins({.videoPlayer {
 	position: relative;
 	overflow: hidden;
 
@@ -25,9 +26,11 @@
 			bottom: @moon-video-player-padding-bottom;
 			left: @moon-video-player-padding-side;
 			right: @moon-video-player-padding-side;
+			background-color: @moon-video-player-bottom-bg-color;
 
 			.infoFrame {
 				display: flex;
+				text-shadow: @moon-video-player-title-text-shadow;
 				margin-bottom: @moon-spotlight-outset;
 
 				// Title Container
@@ -35,6 +38,7 @@
 					@badges-present-transition: transform 500ms ease-in-out;
 
 					flex-grow: 1;
+					color: @moon-video-player-title-color;
 					opacity: 1;
 					overflow: hidden;
 					.margin-start-end(0, @moon-spotlight-outset);
@@ -85,6 +89,11 @@
 							display: inline-block;
 						}
 
+						.redIcon {
+							background-color: @moon-video-player-redicon-bg-color;
+							color: @moon-video-player-redicon-text-color;
+						}
+
 						.fontLgIcons {
 							font-family: "LG Icons";
 						}
@@ -99,6 +108,7 @@
 					.moon-text-base(@moon-video-player-indicator-text-size);
 					align-self: flex-end;
 					white-space: nowrap;
+					color: @moon-video-player-subdued-text-color;
 
 					> * {
 						display: inline-block;
@@ -106,6 +116,10 @@
 
 					.separator {
 						padding: 0 1ex;
+					}
+
+					.currentTime {
+						color: @moon-video-player-indicator-text-color;
 					}
 
 					// .enyo-locale-right-to-left & {
@@ -123,7 +137,7 @@
 					margin: 0;
 
 					// Grow the knob when the Slider gets spotted
-					.focus({
+					&:global(.spottable):focus {
 						.knob::before {
 							transform: @moon-translate-center scale(0.5);
 							opacity: 1;
@@ -131,13 +145,15 @@
 						&.pressed .knob::before {
 							transform: @moon-translate-center scale(0.75);
 						}
-					});
+					}
 					.sliderTooltip {
 						.moon-text-base(@moon-video-slider-tooltip-font-size);
+						color: @moon-white;
+						text-shadow: @moon-video-player-title-text-shadow;
 						line-height: @moon-video-slider-tooltip-line-height;
 						white-space: nowrap;
 						position: absolute;
-						bottom: 6px;
+						top: 6px;
 						transition: transform 100ms ease-in-out;
 						will-change: transform;
 					}
@@ -164,24 +180,37 @@
 					}
 				}
 
+				.sliderBar {
+					background-color: @moon-video-player-slider-bg-color;
+				}
+
 				.fill,
 				.load {
 					border-top-right-radius: (@moon-video-player-slider-height / 2);
 					border-bottom-right-radius: (@moon-video-player-slider-height / 2);
 				}
 
+				.load {
+					background-color: @moon-video-player-slider-load-color;
+				}
+
+				.fill {
+					background-color: @moon-video-player-slider-fill-color;
+				}
+
 				// Knob
 				.knob {
 					@activate-transition-function: cubic-bezier(0.15, 0.85, 0.6, 1.65);
-					//@slide-transition-function:    cubic-bezier(0.15, 0.85, 0.53, 1.09);
+					@slide-transition-function:    cubic-bezier(0.15, 0.85, 0.53, 1.09);
 
-					//-webkit-transition: -webkit-transform @slide-transition-function 0.2s;
-					//transition:                 transform @slide-transition-function 0.2s;
+					-webkit-transition: -webkit-transform @slide-transition-function 0.2s;
+					transition:                 transform @slide-transition-function 0.2s;
 
 					&::before {
 						width: (@moon-video-player-slider-knob-size * 2);
 						height: (@moon-video-player-slider-knob-size * 2);
 						border-width: 0;
+						background-color: @moon-video-player-slider-knob-color;
 						border-radius: @moon-video-player-slider-knob-size;
 						-webkit-transform: @moon-translate-center scale(0.5);
 						transform:         @moon-translate-center scale(0.5);
@@ -203,9 +232,15 @@
 					.moon-slider-popup-center {
 						font-family: @moon-font-family;
 						font-size: @moon-video-player-indicator-text-size;
+						color: @moon-video-player-indicator-text-color;
+						text-shadow: @moon-video-player-title-text-shadow;
 						line-height: 36px;
 						position: absolute;	// Allows flip-h to work
 						margin: 0 30px;
+
+						.moon-icon {
+							color: inherit;
+						}
 					}
 				}
 			}
@@ -277,7 +312,7 @@
 						}
 					}
 
-					:global(.enact-locale-right-to-left) & {
+					:global(.enact-locale-right-to-left)& {
 						-webkit-mask-image: -webkit-gradient(linear, right top, left top, color-stop(0.9,  rgba(0,0,0,1)), color-stop(1,  rgba(0,0,0,0)));
 
 						.centerComponents.more {
@@ -286,7 +321,7 @@
 					}
 				}
 
-				:global(.enact-locale-right-to-left) & {
+				:global(.enact-locale-right-to-left)& {
 					.moreButton {
 						transform: scaleX(-1);
 					}
@@ -300,85 +335,4 @@
 		position: absolute;
 		.position(0, 0, auto, 0);
 	}
-
-	// Skin colors
-	.applySkins({
-		.fullscreen {
-			.bottom {
-				background-color: @moon-video-player-bottom-bg-color;
-
-				.infoFrame {
-					text-shadow: @moon-video-player-title-text-shadow;
-
-					// Title Container
-					.titleFrame {
-						color: @moon-video-player-title-color;
-
-						.redIcon {
-							background-color: @moon-video-player-redicon-bg-color;
-							color: @moon-video-player-redicon-text-color;
-						}
-					}
-					.times {
-						.moon-text-base(@moon-video-player-indicator-text-size);
-						align-self: flex-end;
-						white-space: nowrap;
-						color: @moon-video-player-subdued-text-color;
-
-						> * {
-							display: inline-block;
-						}
-
-						.separator {
-							padding: 0 1ex;
-						}
-
-						.currentTime {
-							color: @moon-video-player-indicator-text-color;
-						}
-					}
-				}
-
-				.sliderFrame {
-					.mediaSlider {
-						.sliderTooltip {
-							color: @moon-white;
-							text-shadow: @moon-video-player-title-text-shadow;
-						}
-					}
-
-					.sliderBar {
-						background-color: @moon-video-player-slider-bg-color;
-					}
-
-					.load {
-						background-color: @moon-video-player-slider-load-color;
-					}
-
-					.fill {
-						background-color: @moon-video-player-slider-fill-color;
-					}
-
-					// Knob
-					.knob {
-						&::before {
-							background-color: @moon-video-player-slider-knob-color;
-						}
-					}
-
-					// Status Indicator
-					.status-indicator {
-						.moon-slider-popup-center {
-							color: @moon-video-player-indicator-text-color;
-							text-shadow: @moon-video-player-title-text-shadow;
-
-							.moon-icon {
-								color: inherit;
-							}
-						}
-					}
-				}
-			}
-		}
-	});
-}
+}});

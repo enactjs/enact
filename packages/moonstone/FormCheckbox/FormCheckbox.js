@@ -10,7 +10,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import Icon from '../Icon';
-import Skinnable from '../Skinnable';
 
 import css from './FormCheckbox.less';
 
@@ -94,7 +93,5 @@ const FormCheckboxBase = kind({
 	}
 });
 
-const FormCheckbox = Skinnable(FormCheckboxBase);
-
-export default FormCheckbox;
-export {FormCheckbox, FormCheckboxBase};
+export default FormCheckboxBase;
+export {FormCheckboxBase as FormCheckbox, FormCheckboxBase};

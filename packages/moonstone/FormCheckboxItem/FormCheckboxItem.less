@@ -1,16 +1,12 @@
 // FormCheckboxItem.less
 //
-@import '../styles/mixins.less';
 @import '../styles/skin.less';
 
-.formCheckboxItem {
-	// Skin colors
-	.applySkins({
-		.focus({
-			&:not([disabled]) {
-				background-color: transparent;
-				color: @moon-text-color;
-			}
-		});
-	});
-}
+.applySkins({.formCheckboxItem {
+	&:not([disabled]) {
+		&:global(.spottable):focus {
+			background-color: transparent;
+			color: @moon-text-color;
+		}
+	}
+}});

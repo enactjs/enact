@@ -2,12 +2,9 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Uppercase from '@enact/i18n/Uppercase';
-import {isRtlText} from '@enact/i18n/util';
 import Slottable from '@enact/ui/Slottable';
-
 import {MarqueeDecorator, MarqueeText} from '../Marquee';
-import Skinnable from '../Skinnable';
-
+import {isRtlText} from '@enact/i18n/util';
 import css from './Header.less';
 
 // Create a <h1> and Marquee component that support the uppercase attribute
@@ -181,7 +178,7 @@ const HeaderBase = kind({
 });
 
 // Note that we only export this (even as HeaderBase).  HeaderBase is not useful on its own.
-const Header = Slottable({slots: ['subTitleBelow', /* 'titleAbove', */'title', 'titleBelow']}, Skinnable(HeaderBase));
+const Header = Slottable({slots: ['subTitleBelow', /* 'titleAbove', */'title', 'titleBelow']}, HeaderBase);
 
 // Set up Header so when it's used in a slottable layout (like Panel), it is automatically
 // recognized as this specific slot.

@@ -18,7 +18,6 @@ import {forward} from '@enact/core/handle';
 
 import $L from '../internal/$L';
 import IconButton from '../IconButton';
-import Skinnable from '../Skinnable';
 
 import css from './Popup.less';
 
@@ -130,7 +129,7 @@ const PopupBase = kind({
 
 	styles: {
 		css,
-		className: 'popup'
+		className: 'popup moonstone-light'
 	},
 
 	computed: {
@@ -168,11 +167,7 @@ const PopupBase = kind({
 				className={css.popupTransitionContainer}
 				onHide={onHide}
 			>
-				<div
-					aria-live="off"
-					role="alert"
-					{...rest}
-				>
+				<div {...rest}>
 					<div className={css.body}>
 						{children}
 					</div>
@@ -182,11 +177,6 @@ const PopupBase = kind({
 		);
 	}
 });
-
-const SkinnedPopupBase = Skinnable(
-	{defaultSkin: 'light'},
-	PopupBase
-);
 
 /**
  * {@link moonstone/Popup.Popup} is a stateful component that help {@link moonstone/Popup.PopupBase}
@@ -448,7 +438,9 @@ class Popup extends React.Component {
 				onTransitionEnd={this.handleTransitionEnd}
 				scrimType={scrimType}
 			>
-				<SkinnedPopupBase
+				<PopupBase
+					aria-live="off"
+					role="alert"
 					{...rest}
 					containerId={this.state.containerId}
 					open={this.state.popupOpen}

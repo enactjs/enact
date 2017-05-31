@@ -2,56 +2,33 @@
 // Spotlight Mixins
 //
 
-// Spottable elements
-.spottable(@rules; @target) when (isruleset(@rules)) and (@target = parent) {
-	:global(.spottable) {
-		@rules();
-	}
-}
-.spottable(@rules) when (isruleset(@rules)) {
-	&:global(.spottable) {
-		@rules();
-	}
-}
-
-// Focused Spottable elements
-.focus(@rules; @target) when (isruleset(@rules)) and (@target = parent) {
-	.spottable({
-		&:focus {
-			@rules();
-		}
-	}, @target);
-}
+// Focused elements
 .focus(@rules) when (isruleset(@rules)) {
-	.spottable({
-		&:focus {
-			@rules();
-		}
-	});
+	:global(.spottable):focus {
+		@rules();
+	}
 }
 
 // Disabled elements
-.disabled(@rules; @target) when (isruleset(@rules)) and (@target = parent) {
+.disabled(@rules) when (isruleset(@rules)) {
 	[disabled],
 	:global(.spottableDisabled):focus {
 		@rules();
 	}
 }
-.disabled(@rules) when (isruleset(@rules)) {
-	&[disabled],
-	&:global(.spottableDisabled):focus {
-		@rules();
-	}
-}
 
 // Muted elements
-.muted(@rules; @target) when (isruleset(@rules)) and (@target = parent) {
+.muted(@rules) when (isruleset(@rules)) {
 	[data-container-muted="true"] {
 		@rules();
 	}
 }
-.muted(@rules) when (isruleset(@rules)) {
-	&[data-container-muted="true"] {
-		@rules();
-	}
+
+// Muted ancestor, focused component
+.mutedFocus(@rules) when (isruleset(@rules)) {
+	.muted({
+		.focus({
+			@rules();
+		});
+	});
 }

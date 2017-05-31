@@ -30,7 +30,7 @@ storiesOf('Button')
 				selected={nullify(boolean('selected', false))}
 				small={nullify(boolean('small', ButtonBase.defaultProps.small))}
 			>
-				{text('children', 'click me')}
+				{text('children', 'Click Me')}
 			</Button>
 		),
 		{propTables: [Config]}

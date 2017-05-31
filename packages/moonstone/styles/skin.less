@@ -1,17 +1,16 @@
-
 // skin.less
 //
 
 .applySkins(@componentRules) when (isruleset(@componentRules)) {
-	&:global(.moonstone) {
-		// Load the moonstone (dark) rules into this scope
-		@import './colors.less';
+	// Load our base set of color rules
+	@import './colors.less';
 
+	:global(.moonstone) {
 		@componentRules();
 	}
 
-	&:global(.moonstone-light) {
-		// Load the moonstone-light rules into this scope
+	:global(.moonstone-light) {
+		// Override our base set of color rules, locally, with alternates
 		@import './colors-light.less';
 
 		@componentRules();

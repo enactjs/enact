@@ -10,7 +10,6 @@ import PropTypes from 'prop-types';
 import Toggleable from '@enact/ui/Toggleable';
 
 import {ToggleItemBase} from '../ToggleItem';
-import Skinnable from '../Skinnable';
 
 import css from './SelectableItem.less';
 
@@ -119,9 +118,7 @@ const SelectableItemBase = kind({
  */
 const SelectableItem = Toggleable(
 	{prop: 'selected'},
-	Skinnable(
-		SelectableItemBase
-	)
+	SelectableItemBase
 );
 
 export default SelectableItem;
