@@ -144,6 +144,7 @@ class FloatingLayerBase extends React.Component {
 
 	closeFloatingLayer () {
 		if (this.node) {
+			off('scroll', this.handleScroll, this.node);
 			ReactDOM.unmountComponentAtNode(this.node);
 			document.getElementById(this.props.floatLayerId).removeChild(this.node);
 
@@ -151,7 +152,6 @@ class FloatingLayerBase extends React.Component {
 				this.props.onClose();
 			}
 		}
-		off('scroll', this.handleScroll, this.node);
 		this.floatLayer = null;
 		this.node = null;
 
@@ -164,11 +164,11 @@ class FloatingLayerBase extends React.Component {
 		if (!this.node) {
 			this.node = document.createElement('div');
 			document.getElementById(floatLayerId).appendChild(this.node);
+			on('scroll', this.handleScroll, this.node);
 		}
 
 		this.node.className = floatLayerClassName;
 		this.node.style.zIndex = 100;
-		on('scroll', this.handleScroll, this.node);
 
 		return this.node;
 	}
