@@ -17,6 +17,12 @@ const containerKey       = 'containerId';
 const containerPrefix    = 'container-';
 const containerSelector  = `[${containerAttribute}]`;
 const rootContainerId    = 'spotlightRootDecorator';
+const reverseDirections = {
+	'left': 'right',
+	'up': 'down',
+	'right': 'left',
+	'down': 'up'
+};
 
 // Incrementer for container IDs
 let _ids = 0;
@@ -555,70 +561,30 @@ function setContainerLastFocusedElement (node, containerIds) {
 	}
 }
 
-function getNavigableElementsForNode (node) {
+function getNavigableElementsForNode (node, navigate) {
 	let selfOnly = false;
-	let selfFirst = false;
+	// accumulates navigable elements while the reduce works up the tree
+	let elements = [];
 
-	// Maps container IDs to an object with navigable elements a `preferred` key if the elements
-	// are within the first 'self-first' container
-	const mapRestrictedNavigableElements = (id, index, containerIds) => {
-		if (selfOnly === false) {
-			const {restrict} = getContainerConfig(id);
-
-			// get spottable descendants of container, removing any containers that are also
-			// containers of `node`
-			const result = {
-				preferred: !selfFirst,
-				elements: getDeepSpottableDescendants(id, containerIds)
-			};
-
-			if (restrict === 'self-only') {
-				// if we hit a self-only container, stop adding candidates after this container
-				selfOnly = id;
-			} else if (selfFirst === false && restrict === 'self-first') {
-				// if we hit a self-first container, all future containers are not "preferred."
-				// note that this has to be after we build the result object so the current
-				// container elements are still considered preferred.
-				selfFirst = id;
-			}
-
-			return result;
-		}
-
-		return null;
-	};
-
-	// Combines the container objects (created by mapRestrictedNavigableElements) into a single
-	// object with `all` navigable elements and `preferred` navigable elements
-	const reduceRestrictedNavigableElements = (acc, v) => {
-		if (selfFirst) {
-			// defer generating the preferred list if we never hit a selfFirst boundary
-			acc.preferred = acc.preferred || [];
-			if (v.preferred) {
-				acc.preferred = acc.preferred.concat(v.elements);
-			}
-		}
-
-		acc.all = acc.all.concat(v.elements);
-
-		return acc;
-	};
-
-	const navigable = getContainersForNode(node)
+	return getContainersForNode(node)
 		.reverse()
-		.map(mapRestrictedNavigableElements)
-		.filter(n => n != null)
-		.reduce(reduceRestrictedNavigableElements, {
-			all: [],
-			preferred: null
-		});
+		.reduce((next, id, index, containerIds) => {
+			if (next || selfOnly) return next;
 
-	// append the container IDs of the "all" container (rootContainerId or the first self-only
-	// container) and the "preferred" container (either false or first self-first container)
-	navigable.allContainerId = selfOnly || rootContainerId;
-	navigable.preferredContainerId = selfFirst;
+			const {restrict} = getContainerConfig(id);
+			selfOnly = restrict === 'self-only';
 
-	return navigable;
+			elements = elements.concat(getDeepSpottableDescendants(id, containerIds));
+			if (restrict === 'self-first' || selfOnly || id === rootContainerId) {
+				next = navigate(
+					id,
+					getContainerNode(id),
+					elements
+				);
+			}
+
+			return next;
+		}, null);
 }
 
 /**
@@ -678,6 +644,33 @@ function getContainerFocusTarget (containerId) {
 	}
 
 	return next;
+}
+
+function getContainerPreviousTarget (containerId, direction, destination) {
+	const config = getContainerConfig(containerId);
+
+	if (config &&
+		config.rememberSource &&
+		config.previous &&
+		config.previous.reverse === direction &&
+		config.previous.destination === destination
+	) {
+		return config.previous.target;
+	}
+}
+
+function setContainerPreviousTarget (containerId, direction, destination, target) {
+	const config = getContainerConfig(containerId);
+
+	if (config && config.rememberSource) {
+		configureContainer(containerId, {
+			previous: {
+				target,
+				destination,
+				reverse: reverseDirections[direction]
+			}
+		});
+	}
 }
 
 /**
@@ -756,6 +749,7 @@ export {
 	configureDefaults,
 	configureContainer,
 	getContainerFocusTarget,
+	getContainerPreviousTarget,
 	getNavigableElementsForNode,
 	getSpottableDescendants,
 	isContainer,
@@ -763,5 +757,6 @@ export {
 	removeAllContainers,
 	removeContainer,
 	rootContainerId,
+	setContainerPreviousTarget,
 	unmountContainer
 };
