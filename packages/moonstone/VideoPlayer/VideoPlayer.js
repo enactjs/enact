@@ -693,6 +693,10 @@ const VideoPlayerBase = class extends React.Component {
 		this.hideTooltipJob.stop();
 	}
 
+	showTooltip = () => {
+		this.setState({tooltipVisible: true});
+	}
+
 	hideTooltip = () => {
 		this.setState({tooltipVisible: false});
 	}
@@ -824,7 +828,7 @@ const VideoPlayerBase = class extends React.Component {
 	 * @private
 	 */
 	jump = (distance) => {
-		this.showFeedback();
+		this.showTooltip();
 		this.startDelayedFeedbackHide();
 		this.seek(this.state.currentTime + distance);
 	}
@@ -877,9 +881,12 @@ const VideoPlayerBase = class extends React.Component {
 		this.setPlaybackRate(this.selectPlaybackRate(this.speedIndex));
 
 		if (shouldResumePlayback) this.send('play');
-		else this.stopDelayedFeedbackHide();
+
+		this.stopDelayedFeedbackHide();
+		this.stopDelayedTooltipHide();
 
 		this.showFeedback();
+		this.showTooltip();
 	}
 
 	/**
@@ -923,9 +930,12 @@ const VideoPlayerBase = class extends React.Component {
 		this.setPlaybackRate(this.selectPlaybackRate(this.speedIndex));
 
 		if (shouldResumePlayback) this.send('play');
-		else this.stopDelayedFeedbackHide();
+
+		this.stopDelayedFeedbackHide();
+		this.stopDelayedTooltipHide();
 
 		this.showFeedback();
+		this.showTooltip();
 	}
 
 	/**
@@ -1101,15 +1111,19 @@ const VideoPlayerBase = class extends React.Component {
 		this.sliderScrubbing = ev.detached;
 		this.sliderKnobProportion = ev.proportion;
 	}
-	handleMouseMove = () => this.showTooltipJob.throttle()
-	showTooltipJob = new Job(() => {
+	handleMouseOver = () => {
 		this.setState({
-			feedbackVisible: false,
+			mouseOver:true,
 			tooltipVisible: true
 		});
 		this.stopDelayedFeedbackHide();
+		this.stopDelayedTooltipHide();
+	}
+	handleMouseOut = () => {
+		this.setState({mouseOver:false});
+		this.startDelayedFeedbackHide();
 		this.startDelayedTooltipHide();
-	}, 50)
+	}
 	onJumpBackward = (ev) => {
 		ev = this.addStateToEvent(ev);
 		forwardJumpBackwardButtonClick(ev, this.props);
@@ -1230,12 +1244,13 @@ const VideoPlayerBase = class extends React.Component {
 								value={this.state.proportionPlayed}
 								onChange={this.onSliderChange}
 								onKnobMove={this.handleKnobMove}
-								onMouseMove={this.handleMouseMove}
+								onMouseOver={this.handleMouseOver}
+								onMouseOut={this.handleMouseOut}
 								onSpotlightUp={this.hideControls}
 								onSpotlightDown={this.handleSpotlightDownFromSlider}
 							>
 								<div className={css.sliderTooltip} style={{display: this.state.tooltipVisible ? 'block' : 'none'}}>
-									<Feedback playbackState={this.prevCommand} visible={this.state.feedbackVisible} >
+									<Feedback playbackState={this.prevCommand} visible={!this.state.mouseOver && this.state.feedbackVisible} >
 										{this.selectPlaybackRate(this.speedIndex)}
 									</Feedback>
 									{secondsToTime(this.state.sliderTooltipTime, this.durfmt)}
