@@ -3,30 +3,19 @@
 @import '../styles/variables.less';
 @import '../styles/skin.less';
 
-.applySkins({
-.selectedIcon {
-	border-color: @moon-accent;
-	opacity: 1;
-
-	color: @moon-accent;
-}
 .gridListImageItem {
 	box-sizing: border-box;
-	border: 6px solid transparent;
+	border-width: 6px;
+	border-style: solid;
 
 	.icon {
-		width: 60px;
-		height: 60px;
-		line-height: 60px;
-		background-color: @moon-white;
 		position: relative;
 		display: block;
-		border: @moon-button-border-width solid black;
+		border-width: @moon-button-border-width;
+		border-style: solid;
 		border-radius: 50%;
 		margin: 0;
 		opacity: 0.5;
-
-		color: transparent;
 	}
 
 	.image {
@@ -50,14 +39,8 @@
 	}
 
 	&.selected {
-		border: 6px solid @moon-gridlist-item-selection-color;
-		background-color: @moon-gridlist-item-selection-color;
-		.caption,
-		.subCaption {
-			color: @moon-spotlight-text-color;
-		}
 		.icon {
-			.selectedIcon;
+			opacity: 1;
 		}
 	}
 
@@ -71,50 +54,51 @@
 	}
 
 	.caption {
-		padding-top: 10px;
 		.moon-sub-header-text();
 		text-align: center;
 	}
 
 	.subCaption {
-		padding-top: 10px;
 		.moon-body-text();
 		text-align: center;
 	}
 
-	&:global(.spottable):focus {
-		border: 6px solid @moon-spotlight-border-color;
-		background-color: @moon-spotlight-border-color;
+	// Skin colors
+	.applySkins({
+		border-color: transparent;
+		color: @moon-body-text-color;
+
+		.icon {
+			background-color: @moon-white;
+			border-color: @moon-black;
+			color: transparent;
+		}
+
 		&.selected {
-			border: 6px solid @moon-spotlight-border-color;
-			background-color: @moon-spotlight-border-color;
+			.icon {
+				border-color: @moon-accent;
+				color: @moon-accent;
+			}
 		}
-		.caption,
-		.subCaption {
-			color: @moon-spotlight-text-color;
-		}
-	}
+
+		.focus({
+			.caption,
+			.subCaption {
+				color: @moon-spotlight-text-color;
+			}
+		});
+	});
 }
 
-[data-container-muted='true'] {
+.muted({
 	.gridListImageItem {
-		&:global(.spottable):focus{
-			&:not(.selected) {
-				border: 6px solid transparent;
-				background-color: transparent;
-				.caption,
+		// Skin colors
+		.applySkins({
+			.focus({
 				.subCaption {
 					color: @moon-body-text-color;
 				}
-				.icon {
-					color: transparent;
-				}
-			}
-			&.selected {
-				.icon {
-					.selectedIcon;
-				}
-			}
-		}
+			});
+		});
 	}
-}});
+}, parent);
