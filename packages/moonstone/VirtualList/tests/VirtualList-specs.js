@@ -260,7 +260,7 @@ describe('VirtualList', () => {
 
 	describe('Adding an item', () => {
 		it('should render an added item named \'Password 0\' as the first item', (done) => {
-			let itemArray = [{name: 'A'}, {name: 'B'}, {name: 'C'}];
+			const itemArray = [{name: 'A'}, {name: 'B'}, {name: 'C'}];
 
 			const subject = mount(
 				<VirtualList

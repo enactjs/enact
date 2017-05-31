@@ -4,14 +4,15 @@ import React from 'react';
 import Scroller from '../Scroller';
 
 describe('Scroller', () => {
-	let
-		contents;
+	let contents;
 
 	beforeEach(() => {
-		contents = <div>
-			Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br />
-			Aenean id blandit nunc. Donec lacinia nisi vitae mi dictum, eget pulvinar nunc tincidunt. Integer vehicula tempus rutrum. Sed efficitur neque in arcu dignissim cursus.
-		</div>;
+		contents = (
+			<div>
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br />
+				Aenean id blandit nunc. Donec lacinia nisi vitae mi dictum, eget pulvinar nunc tincidunt. Integer vehicula tempus rutrum. Sed efficitur neque in arcu dignissim cursus.
+			</div>
+		);
 	});
 
 	afterEach(() => {
