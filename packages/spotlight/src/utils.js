@@ -39,7 +39,46 @@ function parseSelector (selector) {
 	return result;
 }
 
+const testIntersection = (type, containerRect, elementRect) => {
+	const {
+		left: L,
+		right: R,
+		top: T,
+		bottom: B
+	} = containerRect;
+
+	const {
+		left: l,
+		right: r,
+		top: t,
+		bottom: b
+	} = elementRect;
+
+	const right = r > L && r <= R;
+	const left = l >= L && l < R;
+	const top = t >= T && t < B;
+	const bottom = b > T && b <= B;
+
+	if (type === 'intersects') {
+		return (top || bottom) && (left || right);
+	} else if (type === 'contains') {
+		return top && bottom && left && right;
+	}
+
+	return true;
+};
+
+const intersects = curry((containerRect, elementRect) => {
+	return testIntersection('intersects', containerRect, elementRect);
+});
+
+const contains = curry((containerRect, elementRect) => {
+	return testIntersection('contains', containerRect, elementRect);
+});
+
 export {
+	contains,
+	intersects,
 	matchSelector,
 	parseSelector
 };

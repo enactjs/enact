@@ -4,7 +4,7 @@
 @import '../styles/text.less';
 @import '../styles/skin.less';
 
-.applySkins({.notification {
+.notification {
 	position: absolute;
 	bottom: 0;
 	left: 50%;
@@ -27,7 +27,8 @@
 		content: '';
 		display: block;
 		position: absolute;
-		border: @moon-notification-border-width solid @moon-notification-border-color;
+		border-width: @moon-notification-border-width;
+		border-style: solid;
 		border-radius: @moon-notification-out-border-radius;
 		top: -@moon-notification-border-width;
 		right: -@moon-notification-border-width;
@@ -52,7 +53,7 @@
 		& > :first-child {
 			margin-left: 0;
 
-			:global(.enact-locale-right-to-left)& {
+			:global(.enact-locale-right-to-left) & {
 				margin-right: 0;
 			}
 		}
@@ -60,9 +61,16 @@
 		& > :last-child {
 			margin-right: 0;
 
-			:global(.enact-locale-right-to-left)& {
+			:global(.enact-locale-right-to-left) & {
 				margin-right: @moon-notification-button-gap;
 			}
 		}
 	}
-}});
+
+	// Skin colors
+	.applySkins({
+		&::before {
+			border-color: @moon-notification-border-color;
+		}
+	});
+}
