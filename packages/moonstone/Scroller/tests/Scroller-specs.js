@@ -22,8 +22,8 @@ describe('Scroller Specs', () => {
 		it('should render scrollbar horizontal, vertical', () => {
 			const subject = mount(
 				<Scroller
-					horizontalScrollbar={'visible'}
-					verticalScrollbar={'visible'}
+					horizontalScrollbar="visible"
+					verticalScrollbar="visible"
 				>
 					{contents}
 				</Scroller>
@@ -38,8 +38,8 @@ describe('Scroller Specs', () => {
 		it('should render scrollbar vertical', () => {
 			const subject = mount(
 				<Scroller
-					horizontalScrollbar={'hidden'}
-					verticalScrollbar={'visible'}
+					horizontalScrollbar="hidden"
+					verticalScrollbar="visible"
 				>
 					{contents}
 				</Scroller>
@@ -54,8 +54,8 @@ describe('Scroller Specs', () => {
 		it('should not render scrollbar', () => {
 			const subject = mount(
 				<Scroller
-					horizontalScrollbar={'hidden'}
-					verticalScrollbar={'hidden'}
+					horizontalScrollbar="hidden"
+					verticalScrollbar="hidden"
 				>
 					{contents}
 				</Scroller>
@@ -72,8 +72,8 @@ describe('Scroller Specs', () => {
 		it('should not render scrollbar', () => {
 			const subject = mount(
 				<Scroller
-					horizontalScrollbar={'visible'}
-					verticalScrollbar={'visible'}
+					horizontalScrollbar="visible"
+					verticalScrollbar="visible"
 				>
 					{contents}
 				</Scroller>
@@ -90,8 +90,8 @@ describe('Scroller Specs', () => {
 		it('should render scrollbar horizontal, vertical', () => {
 			const subject = mount(
 				<Scroller
-					horizontalScrollbar={'hidden'}
-					verticalScrollbar={'hidden'}
+					horizontalScrollbar="hidden"
+					verticalScrollbar="hidden"
 				>
 					{contents}
 				</Scroller>

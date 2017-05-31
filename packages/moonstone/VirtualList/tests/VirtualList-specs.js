@@ -117,7 +117,7 @@ describe('VirtualList', () => {
 					component={renderItem}
 					data={items}
 					dataSize={dataSize}
-					direction={'horizontal'}
+					direction="horizontal"
 					itemSize={30}
 				/>
 			);
@@ -158,7 +158,7 @@ describe('VirtualList', () => {
 						component={renderItem}
 						data={items}
 						dataSize={dataSize}
-						direction={'horizontal'}
+						direction="horizontal"
 						itemSize={30}
 						onScrollStop={handlerOnScrollStop}
 					/>
@@ -262,45 +262,24 @@ describe('VirtualList', () => {
 
 	describe('Change props Specs', () => {
 		it('should change value of the prop \'data\' to \'Password 0\'', (done) => {
+			let itemArray = [{name: 'A'}, {name: 'B'}, {name: 'C'}];
+
 			const subject = mount(
 				<VirtualList
 					clientSize={clientSize}
 					component={renderItem}
-					data={items}
-					dataSize={dataSize}
+					data={itemArray}
+					dataSize={itemArray.length}
 					itemSize={30}
 				/>
 			);
 
-			items = [{name: 'Password 0'}];
-			subject.setProps({data: items, dataSize: items.length});
+			itemArray.unshift({name: 'Password 0'});
+			subject.setProps({data: itemArray, dataSize: itemArray.length});
 
 			setTimeout(() => {
-				const expected = items[0].name;
+				const expected = itemArray[0].name;
 				const actual = subject.find('VirtualListCore').children().at(0).text();
-
-				expect(actual).to.equal(expected);
-				done();
-			}, 1);
-		});
-
-		it('should change value of the prop \'dataSize\' to \'5\'', (done) => {
-			const subject = mount(
-				<VirtualList
-					clientSize={clientSize}
-					component={renderItem}
-					data={items}
-					dataSize={dataSize}
-					itemSize={30}
-				/>
-			);
-
-			dataSize = 10;
-			subject.setProps({dataSize: dataSize});
-
-			setTimeout(() => {
-				const expected = dataSize;
-				const actual = subject.find('VirtualListCore').children().length;
 
 				expect(actual).to.equal(expected);
 				done();
