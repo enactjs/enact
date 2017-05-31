@@ -3,7 +3,7 @@ import React from 'react';
 
 import Scroller from '../Scroller';
 
-describe('Scroller Specs', () => {
+describe('Scroller', () => {
 	let
 		contents;
 
@@ -18,8 +18,8 @@ describe('Scroller Specs', () => {
 		contents = null;
 	});
 
-	describe('Set props Specs', () => {
-		it('should render scrollbar horizontal, vertical', () => {
+	describe('Scrollbar visibility', () => {
+		it('should render both horizontal and vertical scrollbars when \'horizontalScrollbar\' and \'verticalScrollbar\' are "visible"', () => {
 			const subject = mount(
 				<Scroller
 					horizontalScrollbar="visible"
@@ -35,7 +35,7 @@ describe('Scroller Specs', () => {
 			expect(actual).to.equal(expected);
 		});
 
-		it('should render scrollbar vertical', () => {
+		it('should render only vertical scrollbar when \'verticalScrollbar\' is "visible" and \'horizontalScrollbar\' is "hidden"', () => {
 			const subject = mount(
 				<Scroller
 					horizontalScrollbar="hidden"
@@ -51,7 +51,7 @@ describe('Scroller Specs', () => {
 			expect(actual).to.equal(expected);
 		});
 
-		it('should not render scrollbar', () => {
+		it('should not render any scrollbar when when \'horizontalScrollbar\' and \'verticalScrollbar\' are "hidden"', () => {
 			const subject = mount(
 				<Scroller
 					horizontalScrollbar="hidden"
@@ -62,44 +62,6 @@ describe('Scroller Specs', () => {
 			);
 
 			const expected = 0;
-			const actual = subject.find('Scrollbar').length;
-
-			expect(actual).to.equal(expected);
-		});
-	});
-
-	describe('Change props Specs', () => {
-		it('should not render scrollbar', () => {
-			const subject = mount(
-				<Scroller
-					horizontalScrollbar="visible"
-					verticalScrollbar="visible"
-				>
-					{contents}
-				</Scroller>
-			);
-
-			subject.setProps({horizontalScrollbar: 'hidden', verticalScrollbar: 'hidden'});
-
-			const expected = 0;
-			const actual = subject.find('Scrollbar').length;
-
-			expect(actual).to.equal(expected);
-		});
-
-		it('should render scrollbar horizontal, vertical', () => {
-			const subject = mount(
-				<Scroller
-					horizontalScrollbar="hidden"
-					verticalScrollbar="hidden"
-				>
-					{contents}
-				</Scroller>
-			);
-
-			subject.setProps({horizontalScrollbar: 'visible', verticalScrollbar: 'visible'});
-
-			const expected = 2;
 			const actual = subject.find('Scrollbar').length;
 
 			expect(actual).to.equal(expected);
