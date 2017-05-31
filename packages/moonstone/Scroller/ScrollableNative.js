@@ -292,7 +292,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				const
 					bounds = this.getScrollBounds(),
 					deltaMode = e.deltaMode,
-					wheelDeltaY = e.nativeEvent ? -e.nativeEvent.wheelDeltaY : -e.wheelDeltaY;
+					wheelDeltaY = -e.wheelDeltaY;
 				let delta = (wheelDeltaY || e.deltaY);
 
 				if (deltaMode === 0) {
@@ -656,17 +656,20 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					isHorizontalScrollbarVisible: curHorizontalScrollbarVisible,
 					isVerticalScrollbarVisible: curVerticalScrollbarVisible
 				});
-			} else if (curHorizontalScrollbarVisible || curVerticalScrollbarVisible) {
-				// no visibility change but need to notify whichever scrollbars are visible of the
-				// updated bounds and scroll position
-				const updatedBounds = {
-					...bounds,
-					scrollLeft: this.scrollLeft,
-					scrollTop: this.scrollTop
-				};
+			} else {
+				this.isInitializing = false;
+				if (curHorizontalScrollbarVisible || curVerticalScrollbarVisible) {
+					// no visibility change but need to notify whichever scrollbars are visible of the
+					// updated bounds and scroll position
+					const updatedBounds = {
+						...bounds,
+						scrollLeft: this.scrollLeft,
+						scrollTop: this.scrollTop
+					};
 
-				if (canScrollHorizontally && curHorizontalScrollbarVisible) this.scrollbarHorizontalRef.update(updatedBounds);
-				if (canScrollVertically && curVerticalScrollbarVisible) this.scrollbarVerticalRef.update(updatedBounds);
+					if (canScrollHorizontally && curHorizontalScrollbarVisible) this.scrollbarHorizontalRef.update(updatedBounds);
+					if (canScrollVertically && curVerticalScrollbarVisible) this.scrollbarVerticalRef.update(updatedBounds);
+				}
 			}
 		}
 

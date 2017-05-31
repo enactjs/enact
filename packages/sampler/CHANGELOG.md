@@ -9,6 +9,17 @@ No significant changes.
 ## [1.2.1] - 2017-05-25
 
 No significant changes.
+## [unreleased]
+
+### Deprecated
+
+### Added
+
+### Changed
+
+### Fixed
+
+### Removed
 
 ## [1.2.0] - 2017-05-17
 
