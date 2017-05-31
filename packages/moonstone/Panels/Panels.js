@@ -78,7 +78,14 @@ const PanelsBare = kind({
 		 *
 		 * @type {Function}
 		 */
-		onTransition: PropTypes.func
+		onTransition: PropTypes.func,
+
+		/**
+		 * A function that runs when view transition is beginning.
+		 *
+		 * @type {Function}
+		 */
+		onWillTransition: PropTypes.func
 	},
 
 	defaultProps: {
