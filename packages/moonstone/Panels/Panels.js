@@ -108,7 +108,14 @@ const PanelsBase = kind({
 		 * @type {Function}
 		 * @public
 		 */
-		onBack: PropTypes.func
+		onBack: PropTypes.func,
+
+		/**
+		 * A function that runs when view transition is completed.
+		 *
+		 * @type {Function}
+		 */
+		onTransition: PropTypes.func
 	},
 
 	defaultProps: {
@@ -154,7 +161,7 @@ const PanelsBase = kind({
 		}
 	},
 
-	render: ({noAnimation, arranger, childProps, children, generateId, index, applicationCloseButton, ...rest}) => {
+	render: ({applicationCloseButton, arranger, children, childProps, generateId, index, noAnimation, onTransition, ...rest}) => {
 		delete rest.noCloseButton;
 		delete rest.onApplicationClose;
 		delete rest.onBack;
@@ -168,6 +175,7 @@ const PanelsBase = kind({
 					generateId={generateId}
 					index={index}
 					noAnimation={noAnimation}
+					onTransition={onTransition}
 				>
 					{children}
 				</Viewport>
