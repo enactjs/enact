@@ -14,6 +14,7 @@ import PropTypes from 'prop-types';
 import Spottable from '@enact/spotlight/Spottable';
 
 import $L from '../internal/$L';
+import Skinnable from '../Skinnable';
 import {SliderBaseFactory} from '../Slider';
 import SliderDecorator from '../internal/SliderDecorator';
 
@@ -21,7 +22,7 @@ import IncrementSliderButton from './IncrementSliderButton';
 import componentCss from './IncrementSlider.less';
 
 const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
-	const Slider = Pressable(Spottable(SliderBaseFactory({css})));
+	const Slider = Pressable(Spottable(Skinnable(SliderBaseFactory({css}))));
 
 	/**
 	 * {@link moonstone/IncrementSlider.IncrementSliderBase} is a stateless Slider

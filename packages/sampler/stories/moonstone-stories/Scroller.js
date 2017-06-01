@@ -10,8 +10,9 @@ const Config = mergeComponentMetadata('Scroller', ScrollerBase, Scroller);
 
 const
 	prop = {
-		horizontal: ['auto', 'hidden', 'scroll'],
-		vertical: ['auto', 'hidden', 'scroll']
+		direction: ['both', 'horizontal', 'vertical'],
+		horizontalScrollbar: ['auto', 'hidden', 'visible'],
+		verticalScrollbar: ['auto', 'hidden', 'visible']
 	},
 	style = {
 		scroller: {
@@ -33,11 +34,12 @@ storiesOf('Scroller')
 		'Basic usage of Scroller',
 		() => (
 			<Scroller
-				horizontal={select('horizontal', prop.horizontal, 'auto')}
+				direction={select('direction', prop.direction, 'both')}
+				horizontalScrollbar={select('horizontalScrollbar', prop.horizontalScrollbar, 'auto')}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
 				style={style.scroller}
-				vertical={select('vertical', prop.vertical, 'auto')}
+				verticalScrollbar={select('verticalScrollbar', prop.verticalScrollbar, 'auto')}
 			>
 				<div style={style.content}>
 					Lorem ipsum dolor sit amet, consectetur adipiscing elit.<br />

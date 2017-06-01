@@ -21,6 +21,7 @@ const PickerButtonBase = kind({
 		]),
 		joined: PropTypes.bool,
 		onSpotlightDisappear: PropTypes.func,
+		skin: PropTypes.string,
 		spotlightDisabled: PropTypes.bool
 	},
 
@@ -38,6 +39,7 @@ const PickerButtonBase = kind({
 		if (joined) {
 			delete rest.hidden;
 			delete rest.onSpotlightDisappear;
+			delete rest.skin;
 			delete rest.spotlightDisabled;
 
 			return (
@@ -57,7 +59,7 @@ const PickerButtonBase = kind({
 
 const PickerButton = Holdable(
 	{resume: true, endHold: 'onLeave'},
-	onlyUpdateForKeys(['aria-label', 'disabled', 'icon', 'joined', 'onMouseUp', 'spotlightDisabled'])(
+	onlyUpdateForKeys(['aria-label', 'disabled', 'icon', 'joined', 'onMouseUp', 'skin', 'spotlightDisabled'])(
 		PickerButtonBase
 	)
 );
