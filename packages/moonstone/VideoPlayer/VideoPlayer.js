@@ -504,18 +504,6 @@ const VideoPlayerBase = class extends React.Component {
 		this.renderBottomControl.idle();
 	}
 
-	componentWillReceiveProps (nextProps) {
-		// Detect a change to the video source and reload if necessary.
-		if (nextProps.source) {
-			const nextSource = nextProps.source.props.src;
-			const prevSource = this.props.source.props.src;
-
-			if (prevSource !== nextSource) {
-				this.reloadVideo();
-			}
-		}
-	}
-
 	componentWillUpdate (nextProps, nextState) {
 		this.initI18n();
 
@@ -530,8 +518,16 @@ const VideoPlayerBase = class extends React.Component {
 		}
 	}
 
-	// Added to set default focus on the media control (play) when controls become visible.
 	componentDidUpdate (prevProps, prevState) {
+		const {source} = this.props;
+		const {source: prevSource} = prevProps;
+
+		// Detect a change to the video source and reload if necessary.
+		if (prevSource && prevSource !== source) {
+			this.reloadVideo();
+		}
+
+		// Added to set default focus on the media control (play) when controls become visible.
 		if (
 			this.state.bottomControlsVisible &&
 			!prevState.bottomControlsVisible &&
