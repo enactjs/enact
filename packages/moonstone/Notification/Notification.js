@@ -107,7 +107,7 @@ const NotificationBase = kind({
 			}
 		},
 		buttons: ({buttons}) => React.Children.map(buttons, (button) => {
-			if (!button.props.small) {
+			if (button && button.props && !button.props.small) {
 				return React.cloneElement(button, {small: true});
 			} else {
 				return button;
