@@ -2,18 +2,18 @@
 .timeComponents {
 	direction: ltr;
 	display: inline-block;
-}
 
-:global(.enact-locale-right-to-left) .timeComponents {
-	display: flex;
+	:global(.enact-locale-right-to-left) & {
+		display: flex;
 
-	.hourComponents {
-		order: 2;
-	}
-	.minutesComponents {
-		order: 3;
-	}
-	.meridiemComponent{
-		order: 1;
+		.hourComponents {
+			order: 2;
+		}
+		.minutesComponents {
+			order: 3;
+		}
+		.meridiemComponent{
+			order: 1;
+		}
 	}
 }

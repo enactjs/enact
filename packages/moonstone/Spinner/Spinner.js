@@ -4,14 +4,15 @@
  *
  * @module moonstone/Spinner
  */
-import $L from '@enact/i18n/$L';
 import FloatingLayer from '@enact/ui/FloatingLayer';
 import kind from '@enact/core/kind';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import Spotlight from '@enact/spotlight';
 
+import $L from '../internal/$L';
 import {MarqueeText} from '../Marquee';
+import Skinnable from '../Skinnable';
 
 import css from './Spinner.less';
 
@@ -23,7 +24,7 @@ import css from './Spinner.less';
  * @ui
  * @private
  */
-const SpinnerCore = kind({
+const SpinnerCoreBase = kind({
 	name: 'SpinnerCore',
 
 	computed: {
@@ -47,6 +48,8 @@ const SpinnerCore = kind({
 		</div>
 	)
 });
+
+const SpinnerCore = Skinnable(SpinnerCoreBase);
 
 /**
  * {@link moonstone/Spinner.SpinnerBase} is a component that shows a spinning
