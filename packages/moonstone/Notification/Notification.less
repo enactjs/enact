@@ -39,6 +39,11 @@
 
 	.body {
 		.moon-notification-content();
+		:global(.enact-locale-ja) &,
+		:global(.enact-locale-zh) & {
+			word-wrap: normal;
+			word-break: normal;
+		}
 	}
 
 	.buttons {
