@@ -3,10 +3,10 @@ import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import FeedbackIcon from './FeedbackIcon';
+import Feedback from './Feedback';
 import states from './FeedbackIcons.js';
 
-import css from './Feedback.less';
+import css from './VideoPlayer.less';
 
 /**
  * Feedback {@link moonstone/VideoPlayer}. This displays the media's playback rate and other
@@ -17,11 +17,26 @@ import css from './Feedback.less';
  * @ui
  * @private
  */
-const FeedbackBase = kind({
-	name: 'Feedback',
+const FeedbackTooltipBase = kind({
+	name: 'FeedbackTooltip',
 
-	propTypes: /** @lends moonstone/VideoPlayer.Feedback.prototype */ {
-		children: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+	propTypes: /** @lends moonstone/VideoPlayer.FeedbackTooltip.prototype */ {
+		/**
+		 * When `true`, only time would appear in tooltip.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		noFeedback: PropTypes.bool,
+
+		/**
+		 * Value of the feedback playback rate
+		 *
+		 * @type {String|Number}
+		 * @public
+		 */
+		playbackRate: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 
 		/**
 		 * Refers to one of the following possible media playback states.
@@ -52,45 +67,41 @@ const FeedbackBase = kind({
 	},
 
 	defaultProps: {
+		noFeedback: false,
 		visible: true
 	},
 
 	styles: {
 		css,
-		className: 'feedback'
+		className: 'sliderTooltip'
 	},
 
 	computed: {
-		className: ({styler, visible}) => styler.append({hidden: !visible}),
-		children: ({children, playbackState: s}) => {
-			if (states[s]) {
-				// Working with a known state, treat `children` as playbackRate
-				if (states[s].message && children !== 1) {	// `1` represents a playback rate of 1:1
-					return children.toString().replace(/^\-/, '') + states[s].message;
-				}
-			} else {
-				// Custom Message
-				return children;
-			}
-		}
+		className: ({playbackState: s, styler, visible}) => styler.append({
+			hidden: !visible && states[s] && states[s].allowHide
+		})
 	},
 
-	render: ({children, playbackState, ...rest}) => {
+	render: ({children, noFeedback, playbackState, playbackRate, ...rest}) => {
 		delete rest.visible;
 		return (
 			<div {...rest}>
-				{states[playbackState].position === 'before' ? <FeedbackIcon>{playbackState}</FeedbackIcon> : null}
-				{children ? <div className={css.message}>{children}</div> : null}
-				{states[playbackState].position === 'after' ? <FeedbackIcon>{playbackState}</FeedbackIcon> : null}
+				<Feedback
+					playbackState={playbackState}
+					visible={!noFeedback}
+				>
+					{playbackRate}
+				</Feedback>
+				{children}
 			</div>
 		);
 	}
 });
 
-const Feedback = onlyUpdateForKeys(['children', 'playbackState', 'visible'])(FeedbackBase);
+const FeedbackTooltip = onlyUpdateForKeys(['children', 'noFeedback', 'playbackState', 'playbackRate', 'visible'])(FeedbackTooltipBase);
 
-export default Feedback;
+export default FeedbackTooltip;
 export {
-	Feedback,
-	FeedbackBase
+	FeedbackTooltip,
+	FeedbackTooltipBase
 };

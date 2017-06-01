@@ -26,6 +26,7 @@ import Overlay from './Overlay';
 import MediaControls from './MediaControls';
 import MediaTitle from './MediaTitle';
 import MediaSlider from './MediaSlider';
+import FeedbackTooltip from './FeedbackTooltip';
 import Feedback from './Feedback';
 import Times from './Times';
 
@@ -505,8 +506,7 @@ const VideoPlayerBase = class extends React.Component {
 			proportionPlayed: 0,
 			sliderScrubbing: false,
 			sliderKnobProportion: 0,
-			titleVisible: true,
-			tooltipVisible: true
+			titleVisible: true
 		};
 	}
 
@@ -646,21 +646,18 @@ const VideoPlayerBase = class extends React.Component {
 	showControls = () => {
 		this.startDelayedFeedbackHide();
 		this.startDelayedTitleHide();
-		this.startDelayedTooltipHide();
 		forwardControlsAvailable({available: true}, this.props);
 		this.setState({
 			bottomControlsRendered: true,
 			bottomControlsVisible: true,
 			feedbackVisible: true,
-			titleVisible: true,
-			tooltipVisible: true
+			titleVisible: true
 		});
 	}
 
 	hideControls = () => {
 		this.stopDelayedFeedbackHide();
 		this.stopDelayedTitleHide();
-		this.stopDelayedTooltipHide();
 		forwardControlsAvailable({available: false}, this.props);
 		this.setState({bottomControlsVisible: false, more: false});
 	}
@@ -682,26 +679,6 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	hideTitleJob = new Job(this.hideTitle)
-
-	startDelayedTooltipHide = () => {
-		if (this.props.tooltipHideDelay) {
-			this.hideTooltipJob.startAfter(this.props.tooltipHideDelay);
-		}
-	}
-
-	stopDelayedTooltipHide = () => {
-		this.hideTooltipJob.stop();
-	}
-
-	showTooltip = () => {
-		this.setState({tooltipVisible: true});
-	}
-
-	hideTooltip = () => {
-		this.setState({tooltipVisible: false});
-	}
-
-	hideTooltipJob = new Job(this.hideTooltip)
 
 	startDelayedFeedbackHide = () => {
 		if (this.props.feedbackHideDelay) {
@@ -780,11 +757,9 @@ const VideoPlayerBase = class extends React.Component {
 	 */
 	send = (action, props) => {
 		this.setState({
-			feedbackVisible: true,
-			tooltipVisible: true
+			feedbackVisible: true
 		});
 		this.startDelayedFeedbackHide();
-		this.startDelayedTooltipHide();
 		this.video[action](props);
 	}
 
@@ -828,7 +803,7 @@ const VideoPlayerBase = class extends React.Component {
 	 * @private
 	 */
 	jump = (distance) => {
-		this.showTooltip();
+		this.showFeedback();
 		this.startDelayedFeedbackHide();
 		this.seek(this.state.currentTime + distance);
 	}
@@ -883,10 +858,8 @@ const VideoPlayerBase = class extends React.Component {
 		if (shouldResumePlayback) this.send('play');
 
 		this.stopDelayedFeedbackHide();
-		this.stopDelayedTooltipHide();
 
 		this.showFeedback();
-		this.showTooltip();
 	}
 
 	/**
@@ -932,10 +905,8 @@ const VideoPlayerBase = class extends React.Component {
 		if (shouldResumePlayback) this.send('play');
 
 		this.stopDelayedFeedbackHide();
-		this.stopDelayedTooltipHide();
 
 		this.showFeedback();
-		this.showTooltip();
 	}
 
 	/**
@@ -1114,15 +1085,13 @@ const VideoPlayerBase = class extends React.Component {
 	handleMouseOver = () => {
 		this.setState({
 			mouseOver:true,
-			tooltipVisible: true
+			feedbackVisible: true
 		});
 		this.stopDelayedFeedbackHide();
-		this.stopDelayedTooltipHide();
 	}
 	handleMouseOut = () => {
 		this.setState({mouseOver:false});
 		this.startDelayedFeedbackHide();
-		this.startDelayedTooltipHide();
 	}
 	onJumpBackward = (ev) => {
 		ev = this.addStateToEvent(ev);
@@ -1249,12 +1218,14 @@ const VideoPlayerBase = class extends React.Component {
 								onSpotlightUp={this.hideControls}
 								onSpotlightDown={this.handleSpotlightDownFromSlider}
 							>
-								<div className={css.sliderTooltip} style={{display: this.state.tooltipVisible ? 'block' : 'none'}}>
-									<Feedback playbackState={this.prevCommand} visible={!this.state.mouseOver && this.state.feedbackVisible} >
-										{this.selectPlaybackRate(this.speedIndex)}
-									</Feedback>
+								<FeedbackTooltip
+									noFeedback={this.state.mouseOver}
+									playbackState={this.prevCommand}
+									playbackRate={this.selectPlaybackRate(this.speedIndex)}
+									visible={this.state.feedbackVisible}
+								>
 									{secondsToTime(this.state.sliderTooltipTime, this.durfmt)}
-								</div>
+								</FeedbackTooltip>
 							</MediaSlider>}
 
 							<MediaControls
