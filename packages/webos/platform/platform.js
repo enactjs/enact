@@ -33,7 +33,7 @@ if (platform.webos || (typeof window === 'object' && window.PalmSystem)) {
 			platform.open = true;
 		}
 		window.Mojo = window.Mojo || {relaunch: function () {}};
-		if (window.PalmSystem.stageReady) window.PalmSystem.stageReady();
+		if (window.PalmSystem && window.PalmSystem.stageReady) window.PalmSystem.stageReady();
 	}
 }
 export default platform;
