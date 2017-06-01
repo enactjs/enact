@@ -4,138 +4,284 @@ import React from 'react';
 import Item from '../../Item';
 import VirtualList from '../VirtualList';
 
-describe('VirtualList Specs', () => {
-	describe('Set and change props Specs', () => {
-		let
-			myScrollTo,
-			resultScrollLeft;
+describe('VirtualList', () => {
+	let
+		clientSize,
+		dataSize,
+		getScrollTo,
+		handlerOnScroll,
+		handlerOnScrollStart,
+		handlerOnScrollStop,
+		items,
+		myScrollTo,
+		onScrollCount,
+		onScrollStartCount,
+		onScrollStopCount,
+		renderItem,
+		resultScrollLeft,
+		resultScrollTop;
 
-		const
-			data = [],
-			dataSize = 100,
-			getScrollTo = (scrollTo) => {
-				myScrollTo = scrollTo;
-			},
-			handlerOnScrollStop = (e) => {
-				resultScrollLeft = e.scrollLeft;
-			};
+	beforeEach(() => {
+		clientSize = {clientWidth: 1280, clientHeight: 720};
+		dataSize = 100;
+		items = [];
+		onScrollCount = 0;
+		onScrollStartCount = 0;
+		onScrollStopCount = 0;
+		resultScrollLeft = 0;
+		resultScrollTop = 0;
+
+		getScrollTo = (scrollTo) => {
+			myScrollTo = scrollTo;
+		};
+		handlerOnScroll = () => {
+			onScrollCount++;
+		};
+		handlerOnScrollStart = () => {
+			onScrollStartCount++;
+		};
+		handlerOnScrollStop = (e) => {
+			onScrollStopCount++;
+			resultScrollLeft = e.scrollLeft;
+			resultScrollTop = e.scrollTop;
+		};
+		renderItem = ({data, index, ...rest}) => {	// eslint-disable-line enact/display-name, enact/prop-types
+			return (
+				<Item {...rest}>
+					{data[index].name}
+				</Item>
+			);
+		};
 
 		for (let i = 0; i < dataSize; i++) {
-			data.push({name: 'Account ' + i});
+			items.push({name: 'Account ' + i});
 		}
+	});
 
+	afterEach(() => {
+		clientSize = null;
+		dataSize = null;
+		getScrollTo = null;
+		handlerOnScroll = null;
+		handlerOnScrollStart = null;
+		handlerOnScrollStop = null;
+		items = null;
+		myScrollTo = null;
+		onScrollCount = null;
+		onScrollStartCount = null;
+		onScrollStopCount = null;
+		renderItem = null;
+		resultScrollLeft = null;
+		resultScrollTop = null;
+	});
+
+	it('should render a list of \'items\'', () => {
 		const subject = mount(
 			<VirtualList
-				cbScrollTo={getScrollTo}
-				data={data}
+				clientSize={clientSize}
+				component={renderItem}
+				data={items}
 				dataSize={dataSize}
-				direction={'horizontal'}
 				itemSize={30}
-				onScrollStop={handlerOnScrollStop}
-				style={{backgroundColor: 'red', width: '500px', height: '700px'}}
-				// eslint-disable-next-line react/jsx-no-bind
-				component={({index, key}) => (
-					<Item key={key}>
-						{data[index].name}
-					</Item>
-				)}
 			/>
 		);
 
-		describe('Set props Specs', () => {
-			it('should render a list item of \'data\'', function () {
-				const expected = 'Account 0';
-				const actual = subject.find('VirtualListCore').children().at(0).text();
+		const expected = 'Account 0';
+		const actual = subject.find('VirtualListCore').children().at(0).text();
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should render (clientHeight / itemHeight + overhang) items', () => {
+		const subject = mount(
+			<VirtualList
+				clientSize={clientSize}
+				component={renderItem}
+				data={items}
+				dataSize={dataSize}
+				itemSize={30}
+			/>
+		);
+
+		const expected = 27; // 720 / 30 + 3
+		const actual = subject.find('VirtualListCore').children().length;
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should render only one scrollbar', () => {
+		const subject = mount(
+			<VirtualList
+				clientSize={clientSize}
+				component={renderItem}
+				data={items}
+				dataSize={dataSize}
+				direction="horizontal"
+				itemSize={30}
+			/>
+		);
+
+		const expected = 1;
+		const actual = subject.find('Scrollbar').length;
+
+		expect(actual).to.equal(expected);
+	});
+
+	describe('ScrollTo', () => {
+		it('should scroll to the specific item of a given index with scrollTo', () => {
+			mount(
+				<VirtualList
+					cbScrollTo={getScrollTo}
+					clientSize={clientSize}
+					component={renderItem}
+					data={items}
+					dataSize={dataSize}
+					itemSize={30}
+					onScrollStop={handlerOnScrollStop}
+				/>
+			);
+
+			myScrollTo({index: 10, animate: false});
+
+			const expected = 300;
+			const actual = resultScrollTop;
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should scroll to the given \'x\' position with scrollTo', () => {
+			mount(
+				<VirtualList
+					cbScrollTo={getScrollTo}
+					clientSize={clientSize}
+					component={renderItem}
+					data={items}
+					dataSize={dataSize}
+					direction="horizontal"
+					itemSize={30}
+					onScrollStop={handlerOnScrollStop}
+				/>
+			);
+
+			myScrollTo({position: {x: 100}, animate: false});
+
+			const expected = 100;
+			const actual = resultScrollLeft;
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should scroll to the given \'y\' position with scrollTo', () => {
+			mount(
+				<VirtualList
+					cbScrollTo={getScrollTo}
+					clientSize={clientSize}
+					component={renderItem}
+					data={items}
+					dataSize={dataSize}
+					itemSize={30}
+					onScrollStop={handlerOnScrollStop}
+				/>
+			);
+
+			myScrollTo({position: {y: 100}, animate: false});
+
+			const expected = 100;
+			const actual = resultScrollTop;
+
+			expect(actual).to.equal(expected);
+		});
+
+		describe('scroll events', () => {
+			it('should call onScrollStart once', () => {
+				mount(
+					<VirtualList
+						cbScrollTo={getScrollTo}
+						clientSize={clientSize}
+						component={renderItem}
+						data={items}
+						dataSize={dataSize}
+						itemSize={30}
+						onScrollStart={handlerOnScrollStart}
+					/>
+				);
+
+				myScrollTo({position: {y: 100}, animate: false});
+
+				const expected = 1;
+				const actual = onScrollStartCount;
 
 				expect(actual).to.equal(expected);
 			});
 
-			it('should have the prop \'dataSize\' of 100', function () {
-				const expected = 100;
-				const actual = subject.find('VirtualListCore').prop('dataSize');
+			it('should call onScroll once', () => {
+				mount(
+					<VirtualList
+						cbScrollTo={getScrollTo}
+						clientSize={clientSize}
+						component={renderItem}
+						data={items}
+						dataSize={dataSize}
+						itemSize={30}
+						onScroll={handlerOnScroll}
+					/>
+				);
+
+				myScrollTo({position: {y: 100}, animate: false});
+
+				const expected = 1;
+				const actual = onScrollCount;
 
 				expect(actual).to.equal(expected);
 			});
 
-			it('should have the prop \'direction\' of \'horizontal\'', function () {
-				const expected = 'horizontal';
-				const actual = subject.find('VirtualListCore').prop('direction');
+			it('should call onScrollStop once', () => {
+				mount(
+					<VirtualList
+						cbScrollTo={getScrollTo}
+						clientSize={clientSize}
+						component={renderItem}
+						data={items}
+						dataSize={dataSize}
+						itemSize={30}
+						onScrollStop={handlerOnScrollStop}
+					/>
+				);
 
-				expect(actual).to.equal(expected);
-			});
+				myScrollTo({position: {y: 100}, animate: false});
 
-			it('should apply list size', function () {
-				const expectedWidth = '500px';
-				const expectedHeight = '700px';
-				const actualWidth = subject.prop('style').width;
-				const actualHeight = subject.prop('style').height;
-
-				expect(actualWidth).to.equal(expectedWidth);
-				expect(actualHeight).to.equal(expectedHeight);
-			});
-
-			it('should apply background color', function () {
-				const expected = 'red';
-				const actual = subject.prop('style').backgroundColor;
-
-				expect(actual).to.equal(expected);
-			});
-
-			it('should scroll with cbScrollTo prop', function () {
-				myScrollTo({position: {x: 10}, animate: false});
-
-				const expected = 10;
-				const actual = resultScrollLeft;
+				const expected = 1;
+				const actual = onScrollStopCount;
 
 				expect(actual).to.equal(expected);
 			});
 		});
+	});
 
-		describe('Change props Specs', () => {
-			it('should change value of the prop \'data\' to \'Password 0\'', function () {
-				data[0] = {name: 'Password 0'};
-				subject.setProps({data: data});
+	describe('Adding an item', () => {
+		it('should render an added item named \'Password 0\' as the first item', (done) => {
+			const itemArray = [{name: 'A'}, {name: 'B'}, {name: 'C'}];
 
-				setTimeout(() => {
-					const expected = 'Password 0';
-					const actual = subject.find('VirtualListCore').children().at(0).text();
+			const subject = mount(
+				<VirtualList
+					clientSize={clientSize}
+					component={renderItem}
+					data={itemArray}
+					dataSize={itemArray.length}
+					itemSize={30}
+				/>
+			);
 
-					expect(actual).to.equal(expected);
-				}, 0);
-			});
+			itemArray.unshift({name: 'Password 0'});
+			subject.setProps({data: itemArray, dataSize: itemArray.length});
 
-			it('should change value of the prop \'direction\' to \'horizontal\'', function () {
-				subject.setProps({direction: 'vertical'});
-
-				const expected = 'vertical';
-				const actual = subject.find('VirtualListCore').prop('direction');
-
-				expect(actual).to.equal(expected);
-			});
-
-			it('should change value of the prop \'spacing\' to 5', function () {
-				subject.setProps({spacing: 5});
-
-				const expected = 5;
-				const actual = subject.find('VirtualListCore').prop('spacing');
+			setTimeout(() => {
+				const expected = itemArray[0].name;
+				const actual = subject.find('VirtualListCore').children().at(0).text();
 
 				expect(actual).to.equal(expected);
-			});
-
-			it('should change value of the props \'style\' to \'backgroundColor\', \'width\', and \'height\'', function () {
-				subject.setProps({style: {backgroundColor: 'blue', width: '400px', height: '600px'}});
-
-				const expectedBackgroundColor = 'blue';
-				const expectedWidth = '400px';
-				const expectedHeight = '600px';
-				const actualBackgroundColor = subject.prop('style').backgroundColor;
-				const actualWidth = subject.prop('style').width;
-				const actualHeight = subject.prop('style').height;
-
-				expect(actualBackgroundColor).to.equal(expectedBackgroundColor);
-				expect(actualWidth).to.equal(expectedWidth);
-				expect(actualHeight).to.equal(expectedHeight);
-			});
+				done();
+			}, 0);
 		});
 	});
 });
