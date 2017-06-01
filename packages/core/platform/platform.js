@@ -1,3 +1,11 @@
+/**
+ * Exports the {@link core/platform.detect} method and the {@link core/platform.platform}
+ * object to get information about the current platform.  The default export is
+ * {@link core/platform.platform}.
+ *
+ * @module core/platform
+ */
+
 import uniq from 'ramda/src/uniq';
 
 const hasGesture = () => {
@@ -72,12 +80,14 @@ const ua = () => {
 let _platform;
 
 /**
- * Platform identification by user agent
- * @readonly
- * @type {object}
- * @property {boolean} touch - Set `true` if the platform has native single-finger events
- * @property {boolean} gesture - Set `true` if the platform has native double-finger events
- * @property {boolean} unknown - Set `true` for any unknown system
+ * {@link core/platform.detect} returns the {@link core/platform.platform} object.
+ *
+ * @type {Function}
+ * @returns {Object} the {@link core/platform.platform} object
+ *
+ * @method detect
+ * @memberof core/platform
+ * @public
  */
 
 const detect = () => {
@@ -123,8 +133,21 @@ const detect = () => {
 	return _platform;
 };
 
+/**
+ * {@link core/platform.platform} provides basic information about the running platform.
+ *
+ * @readonly
+ * @type {Object}
+ * @property {Boolean} gesture - Set `true` if the platform has native double-finger events
+ * @property {Boolean} node - Set `true` only if `window` is `undefined`
+ * @property {String} platformName - Set to the name of the platform
+ * @property {Boolean} touch - Set `true` if the platform has native single-finger events
+ * @property {Boolean} unknown - Set `true` for any unknown system
+ *
+ * @memberof core/platform
+ * @public
+ */
 
-// Set up the exported platform object
 const platform = {};
 [
 	'gesture',
