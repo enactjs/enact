@@ -8,9 +8,22 @@ import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDeco
 
 import css from './Panel.less';
 
-const spotPanel = (node) => {
+const spotPanel = (autoFocus) => (node) => {
 	if (node && !Spotlight.getCurrent()) {
 		const {containerId} = node.dataset;
+		const config = {
+			enterTo: 'last-focused'
+		};
+
+		if (autoFocus !== 'last-focused') {
+			config.enterTo = 'default-element';
+
+			if (autoFocus !== 'default-element') {
+				config.defaultElement = autoFocus;
+			}
+		}
+
+		Spotlight.set(containerId, config);
 		Spotlight.focus(containerId);
 	}
 };
@@ -44,6 +57,21 @@ const PanelBase = kind({
 		'aria-label': PropTypes.string,
 
 		/**
+		 * Sets the strategy used to automatically focus an element within the panel upon render.
+		 *
+		 * * "none" - Automatic focus is disabled
+		 * * "last-focused" - The element last focused in the panel with be restored
+		 * * "default-element" - The first spottable component within the body will be focused
+		 * * Custom Selector - A custom CSS selector may also be provided which will be used to find
+		 *   the target within the Panel
+		 *
+		 * @type {String}
+		 * @default 'last-focused'
+		 * @public
+		 */
+		autoFocus: PropTypes.string,
+
+		/**
 		 * Header for the panel. This is usually passed by the {@link ui/Slottable.Slottable} API by
 		 * using a [Header]{@link moonstone/Panels.Header} component as a child of the Panel.
 		 *
@@ -70,6 +98,7 @@ const PanelBase = kind({
 		/**
 		 * When `true`, the contents of the Panel will not receive spotlight focus after being rendered.
 		 *
+		 * @deprecated Replaced by `autoFocus="none"`
 		 * @type {Boolean}
 		 * @default false
 		 * @public
@@ -78,6 +107,7 @@ const PanelBase = kind({
 	},
 
 	defaultProps: {
+		autoFocus: 'last-focused',
 		hideChildren: false,
 		noAutoFocus: false
 	},
@@ -101,7 +131,13 @@ const PanelBase = kind({
 		// In order to spot the body components, we defer spotting until !hideChildren. If the Panel
 		// opts out of hideChildren support by explicitly setting it to false, it'll spot on first
 		// render.
-		spotOnRender: ({hideChildren, noAutoFocus}) => hideChildren || noAutoFocus ? null : spotPanel,
+		spotOnRender: ({autoFocus, hideChildren, noAutoFocus}) => {
+			if (hideChildren || noAutoFocus || autoFocus === 'none') {
+				return null;
+			}
+
+			return spotPanel(autoFocus);
+		},
 		children: ({children, hideChildren}) => hideChildren ? null : children,
 		bodyClassName: ({header, hideChildren, styler}) => styler.join({
 			body: true,
