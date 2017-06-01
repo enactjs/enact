@@ -16,6 +16,7 @@ import Slottable from '@enact/ui/Slottable';
 import {getDirection, Spotlight} from '@enact/spotlight';
 import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
 import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
+import equals from 'ramda/src/equals';
 
 import Spinner from '../Spinner';
 import Skinnable from '../Skinnable';
@@ -453,6 +454,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.moreInProgress = false;	// This only has meaning for the time between clicking "more" and the official state is updated. To get "more" state, only look at the state value.
 		this.prevCommand = (props.noAutoPlay ? 'pause' : 'play');
 		this.speedIndex = 0;
+		this.titleOffsetCalculated = false;
 		this.selectPlaybackRates('fastForward');
 
 		this.initI18n();
@@ -527,6 +529,13 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	componentWillUpdate (nextProps, nextState) {
+		const
+			isInfoComponentsEqual = equals(this.props.infoComponents, nextProps.infoComponents),
+			shouldCalculateTitleOffset = (
+			((!this.titleOffsetCalculated && isInfoComponentsEqual) || (this.titleOffsetCalculated && !isInfoComponentsEqual)) &&
+			this.state.bottomControlsVisible
+		);
+
 		this.initI18n();
 
 		if (
@@ -537,6 +546,10 @@ const VideoPlayerBase = class extends React.Component {
 			// set focus to the hidden spottable control - maintaining focus on available spottable
 			// controls, which prevents an addiitional 5-way attempt in order to re-show media controls
 			Spotlight.focus(this.player.querySelector(`.${css.controlsHandleAbove}.${spottableClass}`));
+		}
+
+		if (shouldCalculateTitleOffset) {
+			this.calculateTitleOffset();
 		}
 	}
 
@@ -565,6 +578,19 @@ const VideoPlayerBase = class extends React.Component {
 	//
 	// Internal Methods
 	//
+	calculateTitleOffset = () => {
+		// calculate how far the title should animate up when infoComponents appear.
+		const titleElement = this.player.querySelector(`.${css.title}`);
+		const infoComponents = this.player.querySelector(`.${css.infoComponents}`);
+
+		if (titleElement && infoComponents) {
+			const infoHeight = infoComponents.offsetHeight;
+
+			titleElement.setAttribute('style', `--infoComponentsOffset: ${infoHeight}px`);
+			this.titleOffsetCalculated = true;
+		}
+	}
+
 	initI18n = () => {
 		const locale = ilib.getLocale();
 
