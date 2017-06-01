@@ -9,10 +9,10 @@ import states from './FeedbackIcons.js';
 import css from './VideoPlayer.less';
 
 /**
- * Feedback {@link moonstone/VideoPlayer}. This displays the media's playback rate and other
- * information.
+ * FeedbackTooltip {@link moonstone/VideoPlayer}. This displays the media's playback rate and
+ * time infromation.
  *
- * @class Feedback
+ * @class FeedbackTooltip
  * @memberof moonstone/VideoPlayer
  * @ui
  * @private

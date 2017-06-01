@@ -755,9 +755,7 @@ const VideoPlayerBase = class extends React.Component {
 	 * @private
 	 */
 	send = (action, props) => {
-		this.setState({
-			feedbackVisible: true
-		});
+		this.showFeedback();
 		this.startDelayedFeedbackHide();
 		this.video[action](props);
 	}
