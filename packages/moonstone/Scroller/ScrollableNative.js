@@ -469,10 +469,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 
 			if (animate) {
-				this.childRef.setScrollPosition(targetX, targetY);
+				this.childRef.scrollToPosition(targetX, targetY);
 			} else {
 				containerNode.style.scrollBehavior = null;
-				this.childRef.setScrollPosition(targetX, targetY);
+				this.childRef.scrollToPosition(targetX, targetY);
 				containerNode.style.scrollBehavior = 'smooth';
 				this.focusOnItem({indexToFocus, nodeToFocus});
 			}
