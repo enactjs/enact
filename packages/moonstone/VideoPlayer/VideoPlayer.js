@@ -10,12 +10,13 @@ import PropTypes from 'prop-types';
 import DurationFmt from '@enact/i18n/ilib/lib/DurationFmt';
 import {forward} from '@enact/core/handle';
 import ilib from '@enact/i18n';
-import {childrenEquals, Job} from '@enact/core/util';
+import {Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
 import Slottable from '@enact/ui/Slottable';
 import {getDirection, Spotlight} from '@enact/spotlight';
 import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
 import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
+import equals from 'ramda/src/equals';
 
 import Spinner from '../Spinner';
 import Skinnable from '../Skinnable';
@@ -529,7 +530,7 @@ const VideoPlayerBase = class extends React.Component {
 
 	componentWillUpdate (nextProps, nextState) {
 		const
-			isInfoComponentsEqual = childrenEquals(this.props.infoComponents, nextProps.infoComponents),
+			isInfoComponentsEqual = equals(this.props.infoComponents, nextProps.infoComponents),
 			shouldCalculateTitleOffset = (
 			((!this.titleOffsetCalculated && isInfoComponentsEqual) || (this.titleOffsetCalculated && !isInfoComponentsEqual)) &&
 			this.state.bottomControlsVisible
