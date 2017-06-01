@@ -71,10 +71,10 @@ const prop = {
 	]
 };
 
-let videoSource = {};
+const videoSources = {};
 for (let index = 0; index < prop.videos.length; index++) {
 	if (index != null && prop.videos[index]) {
-		videoSource[prop.videos[index].source] = prop.videoTitles[index];
+		videoSources[prop.videos[index].source] = prop.videoTitles[index];
 	}
 }
 
@@ -97,8 +97,8 @@ storiesOf('VideoPlayer')
 		' ',
 		'The basic VideoPlayer',
 		() => {
-			const video = select('source', videoSource, prop.videos[0].source);
-			const poster = matchPoster(video);
+			const videoSource = select('source', videoSources, prop.videos[0].source);
+			const poster = matchPoster(videoSource);
 			return (
 				<div
 					style={{
@@ -143,7 +143,7 @@ storiesOf('VideoPlayer')
 						titleHideDelay={number('titleHideDelay', 4000)}
 						{...prop.eventActions}
 					>
-						<source src={video} type="video/mp4" />
+						<source src={videoSource} type="video/mp4" />
 						<infoComponents>A video about some things happening to and around some characters. Very exciting stuff.</infoComponents>
 						<leftComponents><IconButton backgroundOpacity="translucent">fullscreen</IconButton></leftComponents>
 						<rightComponents><IconButton backgroundOpacity="translucent">flag</IconButton></rightComponents>
