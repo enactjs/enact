@@ -27,7 +27,6 @@ import MediaControls from './MediaControls';
 import MediaTitle from './MediaTitle';
 import MediaSlider from './MediaSlider';
 import FeedbackTooltip from './FeedbackTooltip';
-import Feedback from './Feedback';
 import Times from './Times';
 
 import css from './VideoPlayer.less';
