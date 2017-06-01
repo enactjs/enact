@@ -5,10 +5,13 @@
 
 .gridListImageItem {
 	box-sizing: border-box;
-	border-width: 6px;
+	border-width: @moon-gridlist-item-border-width;
 	border-style: solid;
 
 	.icon {
+		width: @moon-gridlist-item-overlay-icon-size;
+		height: @moon-gridlist-item-overlay-icon-size;
+		line-height: @moon-gridlist-item-overlay-icon-size;
 		position: relative;
 		display: block;
 		border-width: @moon-button-border-width;
@@ -46,20 +49,22 @@
 
 	&.useCaption,
 	&.useSubCaption {
-		padding-bottom: 42px;
+		padding-bottom: @moon-gridlist-item-one-caption-padding-bottom;
 	}
 
 	&.useCaption.useSubCaption {
-		padding-bottom: 96px;
+		padding-bottom: @moon-gridlist-item-two-captions-padding-bottom;
 	}
 
 	.caption {
 		.moon-sub-header-text();
+		padding-top: @moon-gridlist-item-caption-padding-top;
 		text-align: center;
 	}
 
 	.subCaption {
 		.moon-body-text();
+		padding-top: @moon-gridlist-item-caption-padding-top;
 		text-align: center;
 	}
 
@@ -75,13 +80,23 @@
 		}
 
 		&.selected {
+			border-color: @moon-gridlist-item-selection-color;
+			background-color: @moon-gridlist-item-selection-color;
+
 			.icon {
 				border-color: @moon-accent;
 				color: @moon-accent;
 			}
+			.caption,
+			.subCaption {
+				color: @moon-spotlight-text-color;
+			}
 		}
 
 		.focus({
+			border-color: @moon-spotlight-border-color;
+			background-color: @moon-spotlight-border-color;
+
 			.caption,
 			.subCaption {
 				color: @moon-spotlight-text-color;
@@ -95,8 +110,23 @@
 		// Skin colors
 		.applySkins({
 			.focus({
-				.subCaption {
-					color: @moon-body-text-color;
+				&:not(.selected) {
+					border-color: transparent;
+					background-color: transparent;
+
+					.caption,
+					.subCaption {
+						color: @moon-body-text-color;
+					}
+					.icon {
+						color: transparent;
+					}
+				}
+				&.selected {
+					.icon {
+						border-color: @moon-accent;
+						color: @moon-accent;
+					}
 				}
 			});
 		});
