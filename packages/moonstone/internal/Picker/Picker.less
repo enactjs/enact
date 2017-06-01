@@ -177,16 +177,17 @@
 	&.vertical .valueWrapper {
 		display: block;
 
-		:global(.enact-text-large)& {
+		.moon-custom-text({
 			padding: 0 @moon-spotlight-outset;
-		}
+			line-height: @moon-button-small-height;
+		});
 
 		.item {
 			margin: 0 @moon-spotlight-outset;
 
-			:global(.enact-text-large)& {
+			.moon-custom-text({
 				margin: 0;
-			}
+			});
 		}
 	}
 
