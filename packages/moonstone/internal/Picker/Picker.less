@@ -35,12 +35,10 @@
 		max-width: 300px;
 		color: @moon-picker-text-color;
 
-		:not(.vertical)& {
-			.moon-custom-text({
-				font-size: @moon-item-font-size-large;
-				line-height: @moon-button-small-height-large;
-			});
-		}
+		.moon-custom-text({
+			font-size: @moon-item-font-size-large;
+			line-height: @moon-button-small-height-large;
+		});
 	}
 
 	.sizingPlaceholder {
@@ -190,6 +188,7 @@
 
 		:global(.enact-text-large)& {
 			padding: 0 @moon-spotlight-outset;
+			line-height: @moon-button-small-height;
 		}
 
 		.item {
