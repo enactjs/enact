@@ -5,6 +5,7 @@
  *
  * @module moonstone/VideoPlayer
  */
+import equals from 'ramda/src/equals';
 import React from 'react';
 import PropTypes from 'prop-types';
 import DurationFmt from '@enact/i18n/ilib/lib/DurationFmt';
@@ -523,7 +524,7 @@ const VideoPlayerBase = class extends React.Component {
 		const {source: prevSource} = prevProps;
 
 		// Detect a change to the video source and reload if necessary.
-		if (prevSource && prevSource !== source) {
+		if (prevSource !== source && !equals(source, prevSource)) {
 			this.reloadVideo();
 		}
 
@@ -697,9 +698,6 @@ const VideoPlayerBase = class extends React.Component {
 	reloadVideo = () => {
 		// When changing a HTML5 video, you have to reload it.
 		this.video.load();
-		if (!this.props.noAutoPlay) {
-			this.video.play();
-		}
 	}
 
 	/**
@@ -1088,6 +1086,13 @@ const VideoPlayerBase = class extends React.Component {
 		this.video = video;
 	}
 
+	handleLoadStart = (ev) => {
+		if (!this.props.noAutoPlay) {
+			this.video.play();
+		}
+		this.handledMediaForwards.onLoadStart(ev, this.props);
+	}
+
 	renderBottomControl = new Job(() => {
 		this.setState({bottomControlsRendered: true});
 	});
@@ -1124,6 +1129,7 @@ const VideoPlayerBase = class extends React.Component {
 					controls={false}
 					ref={this.setVideoRef}
 					{...this.handledMediaEvents}
+					onLoadStart={this.handleLoadStart}
 				>
 					{source}
 				</video>
