@@ -20,6 +20,7 @@ import remove from 'ramda/src/remove';
 import unionWith from 'ramda/src/unionWith';
 import useWith from 'ramda/src/useWith';
 
+import css from './TransitionGroup.less';
 /**
  * Returns the index of a child in an array found by `key` matching
  *
@@ -176,7 +177,8 @@ class TransitionGroup extends React.Component {
 	constructor (props) {
 		super(props);
 		this.state = {
-			children: mapChildren(this.props.children)
+			children: mapChildren(this.props.children),
+			transitioning: false
 		};
 	}
 
@@ -322,6 +324,8 @@ class TransitionGroup extends React.Component {
 		} else {
 			this._handleDoneEntering(key);
 		}
+
+		this.setState({transitioning: true});
 	}
 
 	_handleDoneEntering = (key) => {
@@ -334,6 +338,7 @@ class TransitionGroup extends React.Component {
 			view: component
 		}, this.props);
 
+		this.setState({transitioning: false});
 		this.completeTransition(key);
 	}
 
@@ -407,6 +412,11 @@ class TransitionGroup extends React.Component {
 
 		// Do not forward TransitionGroup props to primitive DOM nodes
 		const props = Object.assign({}, this.props);
+
+		if (this.state.transitioning) {
+			props.className += ` ${css.transitioning}`;
+		}
+
 		delete props.size;
 		delete props.childFactory;
 		delete props.currentIndex;
