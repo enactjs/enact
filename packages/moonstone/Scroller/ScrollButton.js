@@ -54,7 +54,16 @@ const ScrollButtonBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		disabled: PropTypes.bool
+		disabled: PropTypes.bool,
+
+		/**
+		 * When `true`, allows 5-way navigation to the IconButton. By default, 5-way will
+		 * not move focus to the IconButton.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		focusableScrollbar: PropTypes.bool
 	},
 
 	styles: {
@@ -63,7 +72,7 @@ const ScrollButtonBase = kind({
 	},
 
 	computed: {
-		'aria-label': ({direction}) => $L(`scroll ${direction}`),
+		'aria-label': ({disabled, direction, focusableScrollbar}) => ((focusableScrollbar && !disabled) ? $L(`scroll ${direction}`) : null),
 		className: ({direction, styler}) => styler.append(classNameMap[direction])
 	},
 
@@ -93,7 +102,7 @@ const ScrollButtonBase = kind({
  * @ui
  * @private
  */
-const ScrollButton = onlyUpdateForKeys(['children', 'disabled'])(
+const ScrollButton = onlyUpdateForKeys(['children', 'disabled', 'focusableScrollbar'])(
 	ScrollButtonBase
 );
 
