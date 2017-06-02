@@ -5,7 +5,6 @@
  */
 
 import {extractAriaProps} from '@enact/core/util';
-import $L from '@enact/i18n/$L';
 import Changeable from '@enact/ui/Changeable';
 import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
@@ -14,6 +13,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Spottable from '@enact/spotlight/Spottable';
 
+import $L from '../internal/$L';
 import Skinnable from '../Skinnable';
 import {SliderBaseFactory} from '../Slider';
 import SliderDecorator from '../internal/SliderDecorator';
