@@ -19,6 +19,7 @@ import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
 import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
 import equals from 'ramda/src/equals';
 
+import $L from '../internal/$L';
 import Spinner from '../Spinner';
 import Skinnable from '../Skinnable';
 
@@ -136,6 +137,14 @@ const VideoPlayerBase = class extends React.Component {
 	static displayName = 'VideoPlayerBase'
 
 	static propTypes = /** @lends moonstone/VideoPlayer.VideoPlayerBase.prototype */ {
+
+		/**
+		 * Set a title for the video being played.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		title: PropTypes.string.isRequired,
 
 		/**
 		 * passed by AnnounceDecorator for accessibility
@@ -409,14 +418,6 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		source: PropTypes.node,
-
-		/**
-		 * Set a title for the video being played.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		title: PropTypes.string,
 
 		/**
 		 * The amount of time in miliseconds that should pass before the title disappears from the
@@ -1082,8 +1083,11 @@ const VideoPlayerBase = class extends React.Component {
 		this.sliderKnobProportion = ev.proportion;
 
 		if (this.sliderScrubbing) {
-			const knobTime = Math.round(this.sliderKnobProportion * this.video.duration);
-			this.props.announce(`jump to ${secondsToTime(knobTime, this.durfmt)}`);
+			const
+				seconds = Math.round(this.sliderKnobProportion * this.video.duration),
+				knobTime = secondsToTime(seconds, this.durfmt);
+
+			this.props.announce(`${$L('jump to')} ${knobTime}`);
 		}
 	}
 	onJumpBackward = (ev) => {
@@ -1289,7 +1293,11 @@ const VideoPlayerBase = class extends React.Component {
  * @public
  */
 const VideoPlayer = AnnounceDecorator(
-	Slottable({slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source']}, Skinnable(VideoPlayerBase))
+	Slottable({slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source']},
+		Skinnable(
+			VideoPlayerBase
+		)
+	)
 );
 
 export default VideoPlayer;

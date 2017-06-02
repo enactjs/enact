@@ -1,10 +1,10 @@
-import $L from '@enact/i18n/$L';
 import kind from '@enact/core/kind';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
 
+import $L from '../internal/$L';
 import IconButton from '../IconButton';
 
 import css from './VideoPlayer.less';
@@ -144,7 +144,9 @@ const MediaControls = kind({
 		}),
 		mediaControlsDisabled: ({mediaDisabled, moreDisabled}) => (mediaDisabled || !moreDisabled),
 		moreIcon: ({showMoreComponents}) => showMoreComponents ? 'arrowshrinkleft' : 'ellipsis',
-		playPauseIcon: ({paused, pauseIcon, playIcon}) => (paused ? playIcon : pauseIcon)
+		moreIconLabel: ({showMoreComponents}) => showMoreComponents ? 'less' : 'more',
+		playPauseIcon: ({paused, pauseIcon, playIcon}) => (paused ? playIcon : pauseIcon),
+		playPauseLabel: ({paused}) => (paused ? 'play' : 'pause')
 	},
 
 	render: (props) => {
@@ -160,6 +162,7 @@ const MediaControls = kind({
 			mediaControlsDisabled,
 			moreDisabled,
 			moreIcon,
+			moreIconLabel,
 			noJumpButtons,
 			noRateButtons,
 			onBackwardButtonClick,
@@ -169,6 +172,7 @@ const MediaControls = kind({
 			onPlayButtonClick,
 			onToggleMore,
 			playPauseIcon,
+			playPauseLabel,
 			rateButtonsDisabled,
 			rightComponents,
 			...rest
@@ -186,11 +190,11 @@ const MediaControls = kind({
 				<div className={css.centerComponentsContainer}>
 					<div className={centerClassName}>
 						<Container className={css.mediaControls} spotlightDisabled={mediaControlsDisabled}> {/* rtl={false} */}
-							{noJumpButtons ? null : <MediaButton aria-label={$L(jumpBackwardIcon)} backgroundOpacity="translucent" disabled={mediaControlsDisabled || jumpButtonsDisabled} onClick={onJumpBackwardButtonClick}>{jumpBackwardIcon}</MediaButton>}
-							{noRateButtons ? null : <MediaButton aria-label={$L(backwardIcon)} backgroundOpacity="translucent" disabled={mediaControlsDisabled || rateButtonsDisabled} onClick={onBackwardButtonClick}>{backwardIcon}</MediaButton>}
-							<MediaButton aria-label={$L(playPauseIcon)} className={spotlightDefaultClass} backgroundOpacity="translucent" onClick={onPlayButtonClick}>{playPauseIcon}</MediaButton>
-							{noRateButtons ? null : <MediaButton aria-label={$L(forwardIcon)} backgroundOpacity="translucent" disabled={mediaControlsDisabled || rateButtonsDisabled} onClick={onForwardButtonClick}>{forwardIcon}</MediaButton>}
-							{noJumpButtons ? null : <MediaButton aria-label={$L(jumpForwardIcon)} backgroundOpacity="translucent" disabled={mediaControlsDisabled || jumpButtonsDisabled} onClick={onJumpForwardButtonClick}>{jumpForwardIcon}</MediaButton>}
+							{noJumpButtons ? null : <MediaButton aria-label={$L('jumpBack')} backgroundOpacity="translucent" disabled={mediaControlsDisabled || jumpButtonsDisabled} onClick={onJumpBackwardButtonClick}>{jumpBackwardIcon}</MediaButton>}
+							{noRateButtons ? null : <MediaButton aria-label={$L('rewind')} backgroundOpacity="translucent" disabled={mediaControlsDisabled || rateButtonsDisabled} onClick={onBackwardButtonClick}>{backwardIcon}</MediaButton>}
+							<MediaButton aria-label={$L(playPauseLabel)} className={spotlightDefaultClass} backgroundOpacity="translucent" onClick={onPlayButtonClick}>{playPauseIcon}</MediaButton>
+							{noRateButtons ? null : <MediaButton aria-label={$L('fastForward')} backgroundOpacity="translucent" disabled={mediaControlsDisabled || rateButtonsDisabled} onClick={onForwardButtonClick}>{forwardIcon}</MediaButton>}
+							{noJumpButtons ? null : <MediaButton aria-label={$L('jumpForward')} backgroundOpacity="translucent" disabled={mediaControlsDisabled || jumpButtonsDisabled} onClick={onJumpForwardButtonClick}>{jumpForwardIcon}</MediaButton>}
 						</Container>
 						<Container className={css.moreControls} spotlightDisabled={moreDisabled}>
 							{children}
@@ -199,7 +203,7 @@ const MediaControls = kind({
 				</div>
 				<div className={css.rightComponents}>
 					{rightComponents}
-					{children ? <MediaButton aria-label={$L(moreIcon)} backgroundOpacity="translucent" className={css.moreButton} onClick={onToggleMore}>{moreIcon}</MediaButton> : null}
+					{children ? <MediaButton aria-label={$L(moreIconLabel)} backgroundOpacity="translucent" className={css.moreButton} onClick={onToggleMore}>{moreIcon}</MediaButton> : null}
 				</div>
 			</div>
 		);
