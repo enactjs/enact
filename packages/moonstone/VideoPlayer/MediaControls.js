@@ -144,9 +144,9 @@ const MediaControls = kind({
 		}),
 		mediaControlsDisabled: ({mediaDisabled, moreDisabled}) => (mediaDisabled || !moreDisabled),
 		moreIcon: ({showMoreComponents}) => showMoreComponents ? 'arrowshrinkleft' : 'ellipsis',
-		moreIconLabel: ({showMoreComponents}) => showMoreComponents ? 'less' : 'more',
+		moreIconLabel: ({showMoreComponents}) => showMoreComponents ? 'Back' : 'More',
 		playPauseIcon: ({paused, pauseIcon, playIcon}) => (paused ? playIcon : pauseIcon),
-		playPauseLabel: ({paused}) => (paused ? 'play' : 'pause')
+		playPauseLabel: ({paused}) => (paused ? 'Play' : 'Paused')
 	},
 
 	render: (props) => {
