@@ -2,15 +2,31 @@ import kind from '@enact/core/kind';
 import React from 'react';
 
 import {MarqueeText} from '../../Marquee';
+import {isRtlText} from '@enact/i18n';
 
 import css from './Picker.less';
 
 const PickerItemBase = kind({
 	name: 'PickerItem',
 
+	propTypes: /** @lends moonstone/Picker.PickerBase.prototype */ {
+
+		/**
+		 * Children from which to pick
+		 *
+		 * @type {Node|Node[]}
+		 * @public
+		 */
+		children: React.PropTypes.node
+	},
+
 	styles: {
 		css,
 		className: 'item'
+	},
+
+	computed: {
+		forceDirection: ({children}) => isRtlText(children) ? 'rtl' : 'ltr'
 	},
 
 	render: (props) => (
