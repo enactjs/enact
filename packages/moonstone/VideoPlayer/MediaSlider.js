@@ -74,7 +74,7 @@ const MediaSliderBase = kind({
 	)
 });
 
-const MediaSlider = onlyUpdateForKeys(['backgroundProgress', 'value'])(MediaSliderBase);
+const MediaSlider = onlyUpdateForKeys(['backgroundProgress', 'children', 'value'])(MediaSliderBase);
 
 export default MediaSlider;
 export {
