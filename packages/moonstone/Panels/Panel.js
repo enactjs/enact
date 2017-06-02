@@ -1,3 +1,4 @@
+import deprecate from '@enact/core/internal/deprecate';
 import {forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
@@ -29,6 +30,14 @@ const spotPanel = (autoFocus) => (node) => {
 };
 
 let panelId = 0;
+
+// Called when `noAutoFocus` is true. Warns the first time and returns the new `autoFocus` value
+const adaptToAutoFocus = deprecate(() => 'none', {
+	name: 'noAutoFocus',
+	since: '1.3.0',
+	until: '2.0.0',
+	replacedBy: 'autoFocus'
+});
 
 /**
 * {@link moonstone/Panels.Panel} is the default kind for controls created inside a
@@ -96,7 +105,8 @@ const PanelBase = kind({
 		hideChildren: PropTypes.bool,
 
 		/**
-		 * When `true`, the contents of the Panel will not receive spotlight focus after being rendered.
+		 * When `true`, the contents of the Panel will not receive spotlight focus after being
+		 * rendered.
 		 *
 		 * @deprecated Replaced by `autoFocus="none"`
 		 * @type {Boolean}
@@ -132,7 +142,11 @@ const PanelBase = kind({
 		// opts out of hideChildren support by explicitly setting it to false, it'll spot on first
 		// render.
 		spotOnRender: ({autoFocus, hideChildren, noAutoFocus}) => {
-			if (hideChildren || noAutoFocus || autoFocus === 'none') {
+			if (noAutoFocus) {
+				autoFocus = adaptToAutoFocus();
+			}
+
+			if (hideChildren || autoFocus === 'none') {
 				return null;
 			}
 
@@ -151,6 +165,7 @@ const PanelBase = kind({
 	},
 
 	render: ({bodyClassName, children, header, headerId, spotOnRender, ...rest}) => {
+		delete rest.autoFocus;
 		delete rest.hideChildren;
 		delete rest.noAutoFocus;
 
