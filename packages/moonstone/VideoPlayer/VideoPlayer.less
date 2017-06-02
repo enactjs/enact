@@ -27,6 +27,7 @@
 			right: @moon-video-player-padding-side;
 
 			.infoFrame {
+				position: relative;
 				display: flex;
 				margin-bottom: @moon-spotlight-outset;
 
@@ -46,14 +47,16 @@
 
 					// Title
 					.title {
+						--infoComponentsOffset: 0;
+						position: absolute;
+						bottom: -5px;
 						.moon-text-base(@moon-video-player-title-size);
 						line-height: @moon-header-line-height;
 						transition: @badges-present-transition;
-						transform: translateY(36px) translateZ(0);
 						.font-kerning;
 
 						&.infoVisible {
-							transform: translateY(0) translateZ(0);
+							transform: translateY(~'calc(var(--infoComponentsOffset) * -1)') translateZ(0);
 						}
 
 						.enyo-locale-non-latin & {
@@ -140,6 +143,10 @@
 						bottom: 6px;
 						transition: transform 100ms ease-in-out;
 						will-change: transform;
+
+						&.hidden {
+							display: none;
+						}
 					}
 					.knob[data-climax="rising"] {
 						.sliderTooltip {

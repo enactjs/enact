@@ -17,6 +17,7 @@ import Slottable from '@enact/ui/Slottable';
 import {getDirection, Spotlight} from '@enact/spotlight';
 import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
 import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
+import equals from 'ramda/src/equals';
 
 import Spinner from '../Spinner';
 import Skinnable from '../Skinnable';
@@ -26,7 +27,7 @@ import Overlay from './Overlay';
 import MediaControls from './MediaControls';
 import MediaTitle from './MediaTitle';
 import MediaSlider from './MediaSlider';
-import Feedback from './Feedback';
+import FeedbackTooltip from './FeedbackTooltip';
 import Times from './Times';
 
 import css from './VideoPlayer.less';
@@ -416,13 +417,23 @@ const VideoPlayerBase = class extends React.Component {
 		 * @default 4000
 		 * @public
 		 */
-		titleHideDelay: PropTypes.number
+		titleHideDelay: PropTypes.number,
+
+		/**
+		 * The amount of time in miliseconds that should pass before the tooltip disappears from the
+		 * controls. Setting this to `0` disables the hiding.
+		 *
+		 * @type {Number}
+		 * @default 3000
+		 * @public
+		 */
+		tooltipHideDelay: PropTypes.number
 	}
 
 	static defaultProps = {
 		autoCloseTimeout: 7000,
 		backwardIcon: 'backward',
-		feedbackHideDelay: 2000,
+		feedbackHideDelay: 3000,
 		forwardIcon: 'forward',
 		jumpBackwardIcon: 'skipbackward',
 		jumpBy: 30,
@@ -440,7 +451,8 @@ const VideoPlayerBase = class extends React.Component {
 			slowRewind: ['-1/2', '-1']
 		},
 		playIcon: 'play',
-		titleHideDelay: 4000
+		titleHideDelay: 4000,
+		tooltipHideDelay: 3000
 	}
 
 	constructor (props) {
@@ -454,6 +466,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.moreInProgress = false;	// This only has meaning for the time between clicking "more" and the official state is updated. To get "more" state, only look at the state value.
 		this.prevCommand = (props.noAutoPlay ? 'pause' : 'play');
 		this.speedIndex = 0;
+		this.titleOffsetCalculated = false;
 		this.selectPlaybackRates('fastForward');
 
 		this.initI18n();
@@ -506,6 +519,13 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	componentWillUpdate (nextProps, nextState) {
+		const
+			isInfoComponentsEqual = equals(this.props.infoComponents, nextProps.infoComponents),
+			shouldCalculateTitleOffset = (
+			((!this.titleOffsetCalculated && isInfoComponentsEqual) || (this.titleOffsetCalculated && !isInfoComponentsEqual)) &&
+			this.state.bottomControlsVisible
+		);
+
 		this.initI18n();
 
 		if (
@@ -516,6 +536,10 @@ const VideoPlayerBase = class extends React.Component {
 			// set focus to the hidden spottable control - maintaining focus on available spottable
 			// controls, which prevents an addiitional 5-way attempt in order to re-show media controls
 			Spotlight.focus(this.player.querySelector(`.${css.controlsHandleAbove}.${spottableClass}`));
+		}
+
+		if (shouldCalculateTitleOffset) {
+			this.calculateTitleOffset();
 		}
 	}
 
@@ -552,6 +576,19 @@ const VideoPlayerBase = class extends React.Component {
 	//
 	// Internal Methods
 	//
+	calculateTitleOffset = () => {
+		// calculate how far the title should animate up when infoComponents appear.
+		const titleElement = this.player.querySelector(`.${css.title}`);
+		const infoComponents = this.player.querySelector(`.${css.infoComponents}`);
+
+		if (titleElement && infoComponents) {
+			const infoHeight = infoComponents.offsetHeight;
+
+			titleElement.setAttribute('style', `--infoComponentsOffset: ${infoHeight}px`);
+			this.titleOffsetCalculated = true;
+		}
+	}
+
 	initI18n = () => {
 		const locale = ilib.getLocale();
 
@@ -593,16 +630,19 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	showControls = () => {
+		this.startDelayedFeedbackHide();
 		this.startDelayedTitleHide();
 		forwardControlsAvailable({available: true}, this.props);
 		this.setState({
 			bottomControlsRendered: true,
 			bottomControlsVisible: true,
+			feedbackVisible: true,
 			titleVisible: true
 		});
 	}
 
 	hideControls = () => {
+		this.stopDelayedFeedbackHide();
 		this.stopDelayedTitleHide();
 		forwardControlsAvailable({available: false}, this.props);
 		this.setState({bottomControlsVisible: false, more: false});
@@ -645,14 +685,6 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	hideFeedbackJob = new Job(this.hideFeedback)
-
-	showFeedback = () => {
-		this.setState({feedbackVisible: true});
-	}
-
-	hideFeedback = () => {
-		this.setState({feedbackVisible: false});
-	}
 
 	//
 	// Media Interaction Methods
@@ -807,7 +839,8 @@ const VideoPlayerBase = class extends React.Component {
 		this.setPlaybackRate(this.selectPlaybackRate(this.speedIndex));
 
 		if (shouldResumePlayback) this.send('play');
-		else this.stopDelayedFeedbackHide();
+
+		this.stopDelayedFeedbackHide();
 
 		this.showFeedback();
 	}
@@ -853,7 +886,8 @@ const VideoPlayerBase = class extends React.Component {
 		this.setPlaybackRate(this.selectPlaybackRate(this.speedIndex));
 
 		if (shouldResumePlayback) this.send('play');
-		else this.stopDelayedFeedbackHide();
+
+		this.stopDelayedFeedbackHide();
 
 		this.showFeedback();
 	}
@@ -1035,6 +1069,17 @@ const VideoPlayerBase = class extends React.Component {
 		this.sliderScrubbing = ev.detached;
 		this.sliderKnobProportion = ev.proportion;
 	}
+	handleMouseOver = () => {
+		this.setState({
+			mouseOver:true,
+			feedbackVisible: true
+		});
+		this.stopDelayedFeedbackHide();
+	}
+	handleMouseOut = () => {
+		this.setState({mouseOver:false});
+		this.startDelayedFeedbackHide();
+	}
 	onJumpBackward = (ev) => {
 		ev = this.addStateToEvent(ev);
 		forwardJumpBackwardButtonClick(ev, this.props);
@@ -1113,6 +1158,7 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.onPlayButtonClick;
 		delete rest.playbackRateHash;
 		delete rest.titleHideDelay;
+		delete rest.tooltipHideDelay;
 
 		// Remove the events we manually added so they aren't added twice or fail.
 		for (let eventName in handledCustomMediaEventsMap) {
@@ -1160,15 +1206,19 @@ const VideoPlayerBase = class extends React.Component {
 								value={this.state.proportionPlayed}
 								onChange={this.onSliderChange}
 								onKnobMove={this.handleKnobMove}
+								onMouseOver={this.handleMouseOver}
+								onMouseOut={this.handleMouseOut}
 								onSpotlightUp={this.hideControls}
 								onSpotlightDown={this.handleSpotlightDownFromSlider}
 							>
-								<div className={css.sliderTooltip}>
-									<Feedback playbackState={this.prevCommand} visible={this.state.feedbackVisible} >
-										{this.selectPlaybackRate(this.speedIndex)}
-									</Feedback>
+								<FeedbackTooltip
+									noFeedback={this.state.mouseOver}
+									playbackState={this.prevCommand}
+									playbackRate={this.selectPlaybackRate(this.speedIndex)}
+									visible={this.state.feedbackVisible}
+								>
 									{secondsToTime(this.state.sliderTooltipTime, this.durfmt)}
-								</div>
+								</FeedbackTooltip>
 							</MediaSlider>}
 
 							<MediaControls
