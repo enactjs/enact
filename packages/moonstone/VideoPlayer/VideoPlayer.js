@@ -987,6 +987,10 @@ const VideoPlayerBase = class extends React.Component {
 
 	handleEvent = (ev) => {
 		this.updateMainState();
+		if (ev.type === 'onLoadStart') {
+			this.handleLoadStart(ev);
+		}
+
 		// fetch the forward() we generated earlier, using the event type as a key to find the real event name.
 		const fwd = this.handledMediaForwards[handledMediaEventsMap[ev.type]];
 		if (fwd) {
@@ -1090,7 +1094,6 @@ const VideoPlayerBase = class extends React.Component {
 		if (!this.props.noAutoPlay) {
 			this.video.play();
 		}
-		this.handledMediaForwards.onLoadStart(ev, this.props);
 	}
 
 	renderBottomControl = new Job(() => {
@@ -1129,7 +1132,6 @@ const VideoPlayerBase = class extends React.Component {
 					controls={false}
 					ref={this.setVideoRef}
 					{...this.handledMediaEvents}
-					onLoadStart={this.handleLoadStart}
 				>
 					{source}
 				</video>
