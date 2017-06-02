@@ -78,6 +78,7 @@ const ScrollButtonBase = kind({
 
 	render: ({children, disabled, ...rest}) => {
 		delete rest.direction;
+		delete rest.focusableScrollbar;
 
 		return (
 			<HoldableIconButton
