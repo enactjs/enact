@@ -192,8 +192,6 @@ const InputBase = kind({
 	defaultProps: {
 		disabled: false,
 		dismissOnEnter: false,
-		invalid: false,
-		invalidMessage: $L('Please enter a valid value'),
 		placeholder: '',
 		type: 'text'
 	},
@@ -220,50 +218,37 @@ const InputBase = kind({
 		},
 		className: ({focused, invalid, styler}) => styler.append({focused, invalid}),
 		dir: ({value, placeholder}) => isRtlText(value || placeholder) ? 'rtl' : 'ltr',
-		invalidTooltip: ({invalid, invalidMessage}, {rtl}) => {
-			if (invalid && invalidMessage) {
-				const direction = rtl ? 'left' : 'right';
-				return (
-					<Tooltip arrowAnchor="top" className={css.invalidTooltip} direction={direction}>
-						{invalidMessage}
-					</Tooltip>
-				);
-			}
-		},
 		// ensure we have a value so the internal <input> is always controlled
 		value: ({value}) => typeof value === 'number' ? value : (value || '')
 	},
 
-	render: ({dir, disabled, iconAfter, iconBefore, invalidTooltip, onChange, placeholder, type, value, ...rest}) => {
+	render: ({dir, disabled, iconAfter, iconBefore, onChange, placeholder, type, value, ...rest}) => {
 		delete rest.dismissOnEnter;
 		delete rest.focused;
 		delete rest.invalid;
 		delete rest.invalidMessage;
 
 		return (
-			<div>
-				<div {...rest} disabled={disabled}>
-					<InputDecoratorIcon position="before">{iconBefore}</InputDecoratorIcon>
-					<input
-						aria-disabled={disabled}
-						className={css.input}
-						dir={dir}
-						disabled={disabled}
-						onChange={onChange}
-						placeholder={placeholder}
-						type={type}
-						value={value}
-					/>
-					<InputDecoratorIcon position="after">{iconAfter}</InputDecoratorIcon>
-				</div>
-				{invalidTooltip}
+			<div {...rest} disabled={disabled}>
+				<InputDecoratorIcon position="before">{iconBefore}</InputDecoratorIcon>
+				<input
+					aria-disabled={disabled}
+					className={css.input}
+					dir={dir}
+					disabled={disabled}
+					onChange={onChange}
+					placeholder={placeholder}
+					type={type}
+					value={value}
+				/>
+				<InputDecoratorIcon position="after">{iconAfter}</InputDecoratorIcon>
 			</div>
 		);
 	}
 });
 
 /**
- * {@link moonstone/Input.Input} is a Spottable, Moonstone styled input component. It supports pre
+ * {@link moonstone/Input.SpottableInput} is a Spottable, Moonstone styled input component. It supports pre
  * and post icons.
  *
  * By default, `Input` maintains the state of its `value` property. Supply the
@@ -278,7 +263,7 @@ const InputBase = kind({
  * @ui
  * @public
  */
-const Input = Changeable(
+const SpottableInputBase = Changeable(
 	InputSpotlightDecorator(
 		Skinnable(
 			InputBase
@@ -286,9 +271,68 @@ const Input = Changeable(
 	)
 );
 
+/**
+ * {@link moonstone/Input.Input} is a {@link moonstone/Input.SpottableInputBase} that supports invalid Tooltip.
+ *
+ * @class Input
+ * @memberof moonstone/Input
+ * @ui
+ * @public
+ */
+const Input = kind({
+	name: 'Input',
+
+	propTypes: /** @lends moonstone/Input.InputBase.prototype */ {
+		/**
+		 * When `true`, input text color is changed to red and the message tooltip is shown if it exists.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		invalid: PropTypes.bool,
+
+		/**
+		 * The tooltip text to be displayed when the contents of the input are invalid. If this value is
+		 * falsy, the tooltip will not be shown.
+		 *
+		 * @type {String}
+		 * @default ''
+		 * @public
+		 */
+		invalidMessage: PropTypes.string
+	},
+
+	defaultProps: {
+		invalid: false,
+		invalidMessage: $L('Please enter a valid value')
+	},
+
+	computed: {
+		invalidTooltip: ({invalid, invalidMessage}, {rtl}) => {
+			if (invalid && invalidMessage) {
+				const direction = rtl ? 'left' : 'right';
+				return (
+					<Tooltip arrowAnchor="top" className={css.invalidTooltip} direction={direction}>
+						{invalidMessage}
+					</Tooltip>
+				);
+			}
+		}
+	},
+
+	render: ({invalidTooltip, className, style, ...rest}) => (
+		<div className={className} style={style}>
+			<SpottableInputBase {...rest} />
+			{invalidTooltip}
+		</div>
+	)
+});
+
 export default Input;
 export {
 	calcAriaLabel,
 	Input,
-	InputBase
+	InputBase,
+	SpottableInputBase
 };
