@@ -30,6 +30,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/GridListImageItem` to center its selection icon on the image instead of the item
 - `moonstone/Input` to have correct `Tooltip` position in `RTL`
 - `moonstone/VideoPlayer` to show or hide feedback tooltip properly
+- `moonstone/DateTimeDecorator` to work properly with `RadioControllerDecorator`
 
 ### Removed
 
