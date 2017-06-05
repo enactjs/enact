@@ -5,6 +5,7 @@
  *
  * @module moonstone/VideoPlayer
  */
+import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import equals from 'ramda/src/equals';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -391,6 +392,15 @@ const VideoPlayerBase = class extends React.Component {
 		rightComponents: PropTypes.node,
 
 		/**
+		 * Registers the VideoPlayer component with an
+		 * {@link core/internal/ApiDecorator.ApiDecorator}.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		setApiProvider: PropTypes.func,
+
+		/**
 		 * Any children `<source>` tag elements of [VideoPlayer]{@link moonstone/VideoPlayer} will
 		 * be sent directly to the `<video>` element as video sources.
 		 * See: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/source
@@ -507,6 +517,10 @@ const VideoPlayerBase = class extends React.Component {
 			sliderKnobProportion: 0,
 			titleVisible: true
 		};
+
+		if (props.setApiProvider) {
+			props.setApiProvider(this);
+		}
 	}
 
 	componentDidMount () {
@@ -1285,7 +1299,15 @@ const VideoPlayerBase = class extends React.Component {
  * @ui
  * @public
  */
-const VideoPlayer = Slottable({slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source']}, Skinnable(VideoPlayerBase));
+const VideoPlayer = ApiDecorator(
+	{api: ['play', 'pause', 'rewind', 'fastForward']},
+	Slottable(
+		{slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source']},
+		Skinnable(
+			VideoPlayerBase
+		)
+	)
+);
 
 export default VideoPlayer;
 export {VideoPlayer, VideoPlayerBase};
