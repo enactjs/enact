@@ -88,6 +88,10 @@ const forwardJumpBackwardButtonClick = forward('onJumpBackwardButtonClick');
 const forwardJumpForwardButtonClick = forward('onJumpForwardButtonClick');
 const forwardPlayButtonClick = forward('onPlayButtonClick');
 
+// localized strings
+const playLabel = 'Play';
+const pauseLabel = 'Pause';
+
 /**
  * Every callback sent by [VideoPlayer]{@link moonstone/VideoPlayer} receives a status package,
  * which includes an object with the following key/value pairs as the first argument:
@@ -137,15 +141,6 @@ const VideoPlayerBase = class extends React.Component {
 	static displayName = 'VideoPlayerBase'
 
 	static propTypes = /** @lends moonstone/VideoPlayer.VideoPlayerBase.prototype */ {
-
-		/**
-		 * Set a title for the video being played.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		title: PropTypes.string.isRequired,
-
 		/**
 		 * passed by AnnounceDecorator for accessibility
 		 *
@@ -420,6 +415,14 @@ const VideoPlayerBase = class extends React.Component {
 		source: PropTypes.node,
 
 		/**
+		 * Set a title for the video being played.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		title: PropTypes.string,
+
+		/**
 		 * The amount of time in miliseconds that should pass before the title disappears from the
 		 * controls. Setting this to `0` disables the hiding.
 		 *
@@ -586,6 +589,10 @@ const VideoPlayerBase = class extends React.Component {
 	//
 	// Internal Methods
 	//
+	announce = (msg) => {
+		forward('announce', msg, this.props);
+	}
+
 	calculateTitleOffset = () => {
 		// calculate how far the title should animate up when infoComponents appear.
 		const titleElement = this.player.querySelector(`.${css.title}`);
@@ -641,7 +648,7 @@ const VideoPlayerBase = class extends React.Component {
 
 	showControls = () => {
 		// Read the title
-		this.props.announce(this.props.title);
+		this.announce(this.props.title);
 
 		this.startDelayedFeedbackHide();
 		this.startDelayedTitleHide();
@@ -1084,7 +1091,7 @@ const VideoPlayerBase = class extends React.Component {
 				seconds = Math.round(this.sliderKnobProportion * this.video.duration),
 				knobTime = secondsToTime(seconds, this.durfmt);
 
-			this.props.announce(`${$L('jump to')} ${knobTime}`);
+			this.announce(`${$L('jump to')} ${knobTime}`);
 		}
 	}
 	handleMouseOver = () => {
@@ -1113,10 +1120,10 @@ const VideoPlayerBase = class extends React.Component {
 		forwardPlayButtonClick(ev, this.props);
 		if (this.state.paused) {
 			this.play();
-			this.props.announce('Play');
+			this.announce(playLabel);
 		} else {
 			this.pause();
-			this.props.announce('Paused');
+			this.announce(pauseLabel);
 		}
 	}
 	onForward = (ev) => {
@@ -1155,7 +1162,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.video = video;
 	}
 
-	handleLoadStart = (ev) => {
+	handleLoadStart = () => {
 		if (!this.props.noAutoPlay) {
 			this.video.play();
 		}
@@ -1263,7 +1270,9 @@ const VideoPlayerBase = class extends React.Component {
 								onToggleMore={this.onMoreClick}
 								paused={this.state.paused}
 								pauseIcon={pauseIcon}
+								pauseLabel={pauseLabel}
 								playIcon={playIcon}
+								playLabel={playLabel}
 								rateButtonsDisabled={rateButtonsDisabled}
 								rightComponents={rightComponents}
 								showMoreComponents={this.state.more}
