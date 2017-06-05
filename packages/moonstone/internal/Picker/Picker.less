@@ -27,6 +27,7 @@
 		.moon-custom-text({
 			font-size: @moon-item-font-size-large;
 			line-height: @moon-button-small-height-large;
+			height: @moon-button-small-height-large;
 		});
 	}
 
@@ -177,16 +178,16 @@
 	&.vertical .valueWrapper {
 		display: block;
 
-		:global(.enact-text-large)& {
+		.moon-custom-text({
 			padding: 0 @moon-spotlight-outset;
-		}
+		});
 
 		.item {
 			margin: 0 @moon-spotlight-outset;
 
-			:global(.enact-text-large)& {
+			.moon-custom-text({
 				margin: 0;
-			}
+			});
 		}
 	}
 
