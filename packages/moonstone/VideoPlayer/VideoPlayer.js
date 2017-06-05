@@ -740,6 +740,23 @@ const VideoPlayerBase = class extends React.Component {
 		this.setState(updatedState);
 	}
 
+	/**
+	 * Returns an object with the current state of the media including `currentTime`, `duration`,
+	 * `paused`, `proportionLoaded`, and `proportionPlayed`.
+	 *
+	 * @returns {Object}
+	 * @public
+	 */
+	getMediaState = () => {
+		return {
+			currentTime       : this.state.currentTime,
+			duration          : this.state.duration,
+			paused            : this.state.paused,
+			proportionLoaded  : this.state.proportionLoaded,
+			proportionPlayed  : this.state.proportionPlayed
+		};
+	}
+
 	reloadVideo = () => {
 		// When changing a HTML5 video, you have to reload it.
 		this.video.load();
@@ -762,7 +779,7 @@ const VideoPlayerBase = class extends React.Component {
 	/**
 	 * Programatically plays the current media.
 	 *
-	 * @private
+	 * @public
 	 */
 	play = () => {
 		this.speedIndex = 0;
@@ -774,7 +791,7 @@ const VideoPlayerBase = class extends React.Component {
 	/**
 	 * Programatically plays the current media.
 	 *
-	 * @private
+	 * @public
 	 */
 	pause = () => {
 		this.speedIndex = 0;
@@ -786,7 +803,7 @@ const VideoPlayerBase = class extends React.Component {
 	/**
 	 * Set the media playback time index
 	 *
-	 * @private
+	 * @public
 	 */
 	seek = (timeIndex) => {
 		this.video.currentTime = timeIndex;
@@ -796,7 +813,7 @@ const VideoPlayerBase = class extends React.Component {
 	 * Step a given amount of time away from the current playback position.
 	 * Like [seek]{@link moonstone/VideoPlayer.VideoPlayer#seek} but relative.
 	 *
-	 * @private
+	 * @public
 	 */
 	jump = (distance) => {
 		this.showFeedback();
@@ -807,7 +824,7 @@ const VideoPlayerBase = class extends React.Component {
 	/**
 	 * Changes the playback speed via [selectPlaybackRate()]{@link moonstone/VideoPlayer.VideoPlayer#selectPlaybackRate}.
 	 *
-	 * @private
+	 * @public
 	 */
 	fastForward = () => {
 		let shouldResumePlayback = false;
@@ -857,7 +874,7 @@ const VideoPlayerBase = class extends React.Component {
 	/**
 	 * Changes the playback speed via [selectPlaybackRate()]{@link moonstone/VideoPlayer.VideoPlayer#selectPlaybackRate}.
 	 *
-	 * @private
+	 * @public
 	 */
 	rewind = () => {
 		let shouldResumePlayback = false;
@@ -1018,13 +1035,9 @@ const VideoPlayerBase = class extends React.Component {
 		return {
 			// More props from `ev` may be added here as needed, but a full copy via `...ev`
 			// overloads Storybook's Action Logger and likely has other perf fallout.
-			type              : ev.type,
+			type: ev.type,
 			// Specific state variables are included in the outgoing calback payload, not all of them
-			currentTime       : this.state.currentTime,
-			duration          : this.state.duration,
-			paused            : this.state.paused,
-			proportionLoaded  : this.state.proportionLoaded,
-			proportionPlayed  : this.state.proportionPlayed
+			...this.getMediaState()
 		};
 	}
 
@@ -1144,7 +1157,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.video = video;
 	}
 
-	handleLoadStart = (ev) => {
+	handleLoadStart = () => {
 		if (!this.props.noAutoPlay) {
 			this.video.play();
 		}
@@ -1300,7 +1313,7 @@ const VideoPlayerBase = class extends React.Component {
  * @public
  */
 const VideoPlayer = ApiDecorator(
-	{api: ['play', 'pause', 'rewind', 'fastForward']},
+	{api: ['fastForward', 'getMediaState', 'jump', 'pause', 'play', 'rewind', 'seek']},
 	Slottable(
 		{slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source']},
 		Skinnable(
