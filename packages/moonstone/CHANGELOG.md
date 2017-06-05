@@ -33,6 +33,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` to fast forward properly when video is at paused state
 - `moonstone/VideoPlayer` to correctly change sources
 - `moonstone/VideoPlayer` to show or hide feedback tooltip properly
+- `moonstone/DateTimeDecorator` to work properly with `RadioControllerDecorator`
 
 ### Removed
 
