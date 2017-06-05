@@ -17,7 +17,6 @@ import Slottable from '@enact/ui/Slottable';
 import {getDirection, Spotlight} from '@enact/spotlight';
 import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
 import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
-import equals from 'ramda/src/equals';
 
 import Spinner from '../Spinner';
 import Skinnable from '../Skinnable';
