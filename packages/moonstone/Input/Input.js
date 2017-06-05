@@ -261,7 +261,7 @@ const InputBase = kind({
 });
 
 /**
- * {@link moonstone/Input.SpottableInput} is a Spottable, Moonstone styled input component. It supports pre
+ * {@link moonstone/Input.Input} is a Spottable, Moonstone styled input component. It supports pre
  * and post icons.
  *
  * By default, `Input` maintains the state of its `value` property. Supply the

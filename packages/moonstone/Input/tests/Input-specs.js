@@ -166,6 +166,7 @@ describe('Input Specs', () => {
 			<Input />
 		);
 
+		subject.simulate('click');
 		subject.unmount();
 
 		const expected = true;
