@@ -66,9 +66,10 @@ const defaultConfig = {
 /**
  * Constructs a Spotlight 5-way navigation-enabled Higher-order Component.
  *
- * @example
+ * Example:
+ * ```
  *	const SpottableComponent = Spottable(Component);
- *
+ * ```
  * @class Spottable
  * @memberof spotlight/Spottable
  * @param  {Object} defaultConfig Set of default configuration parameters
