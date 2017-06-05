@@ -108,19 +108,32 @@ class ScrollerBase extends Component {
 
 	getScrollBounds = () => this.scrollBounds
 
-	setScrollPosition (valX, valY) {
+	getRtlPositionX = (x) => (this.context.rtl ? this.scrollBounds.maxLeft - x : x)
+
+	// for Scrollable
+	setScrollPosition (x, y) {
 		const
-			node = this.containerRef,
-			rtl = this.context.rtl;
+			node = this.containerRef;
 
 		if (this.isVertical()) {
-			node.scrollTop = valY;
-			this.scrollPos.top = valY;
+			node.scrollTop = y;
+			this.scrollPos.top = y;
 		}
 		if (this.isHorizontal()) {
-			node.scrollLeft = rtl ? (this.scrollBounds.maxLeft - valX) : valX;
-			this.scrollPos.left = valX;
+			node.scrollLeft = this.getRtlPositionX(x);
+			this.scrollPos.left = x;
 		}
+	}
+
+	// for ScrollableNative
+	scrollToPosition (x, y) {
+		this.containerRef.scrollTo(this.getRtlPositionX(x), y);
+	}
+
+	// for ScrollableNative
+	didScroll (x, y) {
+		this.scrollPos.left = x;
+		this.scrollPos.top = y;
 	}
 
 	getNodePosition = (node) => {
@@ -147,7 +160,7 @@ class ScrollerBase extends Component {
 	 * @returns {Node|Null}       Spotlight container for `node`
 	 * @private
 	 */
-	getContainerForNode = (node) => {
+	getSpotlightContainerForNode = (node) => {
 		do {
 			if (node.dataset.containerId) {
 				return node;
@@ -165,7 +178,7 @@ class ScrollerBase extends Component {
 	 * @private
 	 */
 	getFocusedItemBounds = (node) => {
-		node = this.getContainerForNode(node) || node;
+		node = this.getSpotlightContainerForNode(node) || node;
 		return node.getBoundingClientRect();
 	}
 
@@ -305,6 +318,8 @@ class ScrollerBase extends Component {
 		scrollBounds.maxLeft = Math.max(0, scrollWidth - clientWidth);
 		scrollBounds.maxTop = Math.max(0, scrollHeight - clientHeight);
 	}
+
+	getContainerNode = () => (this.containerRef)
 
 	setContainerDisabled = (bool) => {
 		if (this.containerRef) {
