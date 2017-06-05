@@ -150,9 +150,8 @@ describe('Input Specs', () => {
 		const subject = mount(
 			<Input />
 		);
-		const input = subject.find('input');
 
-		input.simulate('click');
+		subject.simulate('click');
 
 		const expected = true;
 		const actual = pauseSpy.calledOnce;
@@ -166,9 +165,7 @@ describe('Input Specs', () => {
 		const subject = mount(
 			<Input />
 		);
-		const input = subject.find('input');
 
-		input.simulate('click');
 		subject.unmount();
 
 		const expected = true;
