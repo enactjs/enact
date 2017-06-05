@@ -282,18 +282,18 @@ class ScrollbarBase extends Component {
 		return (
 			<div ref={this.initContainerRef} className={scrollbarClassNames}>
 				<ScrollButton
-					focusableScrollbar={focusableScrollbar}
 					direction={vertical ? 'up' : 'left'}
 					disabled={disabled || prevButtonDisabled}
+					focusableScrollbar={focusableScrollbar}
 					onClick={this.handlePrevScroll}
 					onHoldPulse={onPrevScroll}
 				>
 					{prevIcon}
 				</ScrollButton>
 				<ScrollButton
-					focusableScrollbar={focusableScrollbar}
 					direction={vertical ? 'down' : 'right'}
 					disabled={disabled || nextButtonDisabled}
+					focusableScrollbar={focusableScrollbar}
 					onClick={this.handleNextScroll}
 					onHoldPulse={onNextScroll}
 				>
