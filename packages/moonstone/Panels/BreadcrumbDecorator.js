@@ -181,15 +181,14 @@ const BreadcrumbDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				}
 			},
 			childProps: ({childProps, id, index}) => {
-				const x = calcMax(index);
-
-				if (!id || x === 0) {
+				if (!id || index === 0) {
 					return childProps;
 				}
 
+				const start = Math.max(index - calcMax(index), 0);
 				const updatedChildProps = Object.assign({}, childProps);
 				const ariaOwns = [];
-				for (let i = 0; i < x; i++) {
+				for (let i = start; i < index; i++) {
 					ariaOwns.push(`${id}_bc_${i}`);
 				}
 
