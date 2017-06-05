@@ -5,6 +5,7 @@
  *
  * @module moonstone/VideoPlayer
  */
+import equals from 'ramda/src/equals';
 import React from 'react';
 import PropTypes from 'prop-types';
 import DurationFmt from '@enact/i18n/ilib/lib/DurationFmt';
@@ -517,28 +518,6 @@ const VideoPlayerBase = class extends React.Component {
 		this.renderBottomControl.idle();
 	}
 
-	componentWillReceiveProps (nextProps) {
-		// Detect a change to the video source and reload if necessary.
-		if (nextProps.children) {
-			let prevSource, nextSource;
-
-			React.Children.forEach(this.props.children, (child) => {
-				if (child.type === 'source') {
-					prevSource = child.props.src;
-				}
-			});
-			React.Children.forEach(nextProps.children, (child) => {
-				if (child.type === 'source') {
-					nextSource = child.props.src;
-				}
-			});
-
-			if (prevSource !== nextSource) {
-				this.reloadVideo();
-			}
-		}
-	}
-
 	componentWillUpdate (nextProps, nextState) {
 		const
 			isInfoComponentsEqual = equals(this.props.infoComponents, nextProps.infoComponents),
@@ -564,8 +543,16 @@ const VideoPlayerBase = class extends React.Component {
 		}
 	}
 
-	// Added to set default focus on the media control (play) when controls become visible.
 	componentDidUpdate (prevProps, prevState) {
+		const {source} = this.props;
+		const {source: prevSource} = prevProps;
+
+		// Detect a change to the video source and reload if necessary.
+		if (prevSource !== source && !equals(source, prevSource)) {
+			this.reloadVideo();
+		}
+
+		// Added to set default focus on the media control (play) when controls become visible.
 		if (
 			this.state.bottomControlsVisible &&
 			!prevState.bottomControlsVisible &&
@@ -743,7 +730,6 @@ const VideoPlayerBase = class extends React.Component {
 	reloadVideo = () => {
 		// When changing a HTML5 video, you have to reload it.
 		this.video.load();
-		this.video.play();
 	}
 
 	/**
@@ -1031,6 +1017,10 @@ const VideoPlayerBase = class extends React.Component {
 
 	handleEvent = (ev) => {
 		this.updateMainState();
+		if (ev.type === 'onLoadStart') {
+			this.handleLoadStart(ev);
+		}
+
 		// fetch the forward() we generated earlier, using the event type as a key to find the real event name.
 		const fwd = this.handledMediaForwards[handledMediaEventsMap[ev.type]];
 		if (fwd) {
@@ -1139,6 +1129,12 @@ const VideoPlayerBase = class extends React.Component {
 
 	setVideoRef = (video) => {
 		this.video = video;
+	}
+
+	handleLoadStart = (ev) => {
+		if (!this.props.noAutoPlay) {
+			this.video.play();
+		}
 	}
 
 	renderBottomControl = new Job(() => {
