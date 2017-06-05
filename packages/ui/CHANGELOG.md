@@ -19,7 +19,6 @@ The following is a curated list of changes in the Enact ui module, newest change
 ### Added
 
 - `ui/transition` callback prop `onShow` that fires when transitioning into view completes
-- `ui/Transition` prop `onShow` that fires when transitioning into view a component.
 - `ui/Pressable` config `depress` and `release` now support arrays. Useful for supporting both touch and click events.
 
 ### Changed
