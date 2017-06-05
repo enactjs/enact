@@ -8,8 +8,9 @@ import ri from '@enact/ui/resolution';
 import Spotlight from '@enact/spotlight';
 
 import $L from '../internal/$L';
-import css from './Scrollbar.less';
 import ScrollButton from './ScrollButton';
+
+import css from './Scrollbar.less';
 
 const
 	verticalProperties = {
