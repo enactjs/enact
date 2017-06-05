@@ -2,10 +2,17 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [1.2.2] - 2017-05-31
+
+### Added
+
+- Localization support to various `moonstone` components
+
 ## [1.2.1] - 2017-05-25
 
 ### Fixed
-- Invalid use of `console` in `fontGenerator`
+
+- `moonstone/MoonstoneDecorator` `fontGenerator` invalidly using `console`
 
 ## [1.2.0] - 2017-05-17
 
