@@ -109,8 +109,8 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 				// For containers, test intersection since they may be larger than the bounding rect
 				return intersects(boundingRect, rect);
 			} else {
-				// For elements, use contains so that partially visible elements are not focused
-				return contains(boundingRect, rect);
+				// For elements, use contains with the center to include mostly visible elements
+				return contains(boundingRect, rect.center);
 			}
 		});
 	}
