@@ -92,7 +92,63 @@ const scenarios = {
 				style: 'position: absolute; top: 12px; left: 15px; height: 1px; width: 1px;'
 			})
 		)
-	})
+	}),
+	overflow: join(
+		spottable({id: 'outside-overflow'}),
+		node({
+			// allocate some empty space so that overflow items would be otherwise navigable
+			style: 'height: 100px'
+		}),
+		container({
+			[containerAttribute]: 'overflow-container',
+			style: 'position: relative; height: 30px; width: 30px;',
+			children: join(
+				spottable({
+					id: 'overflow-above',
+					style: 'position: absolute; top: -10px; left: 0px; height: 10px; width: 10px;'
+				}),
+				spottable({
+					id: 'overflow-below',
+					style: 'position: absolute; top: 30px; left: 0px; height: 10px; width: 10px;'
+				}),
+				spottable({
+					id: 'overflow-within',
+					style: 'position: absolute; top: 0px; left: 0px; height: 10px; width: 10px;'
+				})
+			)
+		})
+	),
+	overflowLargeSubContainer: join(
+		spottable({id: 'outside-overflow'}),
+		node({
+			// allocate some empty space so that overflow items would be otherwise navigable
+			style: 'height: 100px'
+		}),
+		container({
+			[containerAttribute]: 'overflow-container',
+			style: 'position: relative; height: 30px; width: 30px;',
+			children: join(
+				container({
+					[containerAttribute]: 'inside',
+					// subcontainer is taller than overflow-container
+					style: 'position: absolute; top: -10px; left: 0px; height: 50px; width: 10px;',
+					children: join(
+						node({
+							// allocate space to push following spottable into view
+							style: 'height: 10px'
+						}),
+						spottable({
+							id: 'in-large-container'
+						})
+					)
+				}),
+				spottable({
+					id: 'below-large-container',
+					style: 'position: absolute; top: 40px; left: 0px; height: 10px; width: 10px;'
+				})
+			)
+		})
+	)
 };
 
 const safeTarget = (n, fn) => n ? fn(n) : 'NOT FOUND';
@@ -321,6 +377,62 @@ describe('target', () => {
 					getTargetByDirectionFromElement('down', overlap),
 					t => t.id
 				)).to.equal('middle-center');
+			}
+		));
+
+		it('should ignore targets outside the bounds of an overflow container', testScenario(
+			scenarios.overflow,
+			(root) => {
+				configureContainer('overflow-container', {
+					overflow: true
+				});
+
+				const element = root.querySelector('#outside-overflow');
+
+				expect(safeTarget(
+					getTargetByDirectionFromElement('down', element),
+					t => t.id
+				)).to.equal('overflow-within');
+			}
+		));
+
+		it('should find target within container larger than overflow container', testScenario(
+			scenarios.overflowLargeSubContainer,
+			(root) => {
+				configureContainer('overflow-container', {
+					overflow: true
+				});
+				configureContainer('inside', {
+					enterTo: null
+				});
+
+				const element = root.querySelector('#outside-overflow');
+
+				expect(safeTarget(
+					getTargetByDirectionFromElement('down', element),
+					t => t.id
+				)).to.equal('in-large-container');
+			}
+		));
+
+		it('should find target out of bounds of overflow container from within container', testScenario(
+			scenarios.overflow,
+			(root) => {
+				configureContainer('overflow-container', {
+					overflow: true
+				});
+
+				const element = root.querySelector('#overflow-within');
+
+				expect(safeTarget(
+					getTargetByDirectionFromElement('down', element),
+					t => t.id
+				)).to.equal('overflow-below');
+
+				expect(safeTarget(
+					getTargetByDirectionFromElement('up', element),
+					t => t.id
+				)).to.equal('overflow-above');
 			}
 		));
 	});

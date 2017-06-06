@@ -56,10 +56,10 @@ const testIntersection = (type, containerRect, elementRect) => {
 		bottom: b
 	} = elementRect;
 
-	const right = r > L && r <= R;
-	const left = l >= L && l < R;
-	const top = t >= T && t < B;
-	const bottom = b > T && b <= B;
+	const right = r >= L && r <= R;
+	const left = l >= L && l <= R;
+	const top = t >= T && t <= B;
+	const bottom = b >= T && b <= B;
 
 	if (type === 'intersects') {
 		const aroundV = t < T && b > B;
