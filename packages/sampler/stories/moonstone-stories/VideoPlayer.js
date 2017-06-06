@@ -136,6 +136,7 @@ storiesOf('VideoPlayer')
 						noJumpButtons={boolean('noJumpButtons', false)}
 						noRateButtons={boolean('noRateButtons', false)}
 						noSlider={boolean('noSlider', false)}
+						pauseAtEnd={boolean('pauseAtEnd', false)}
 						pauseIcon={select('pauseIcon', icons, 'pause')}
 						playIcon={select('playIcon', icons, 'play')}
 						poster={poster}

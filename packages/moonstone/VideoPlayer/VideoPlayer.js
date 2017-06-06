@@ -336,6 +336,16 @@ const VideoPlayerBase = class extends React.Component {
 		onPlayButtonClick: PropTypes.func,
 
 		/**
+		 * When `true`, it will pause the video when it reaches either the start of the end of the
+		 * video while rewinding, slow rewinding, fast fowarding, or slow forwarding.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		pauseAtEnd: PropTypes.bool,
+
+		/**
 		 * A string which is sent to the `pause` icon of the player controls. This can be anything
 		 * that is accepted by {@link moonstone/Icon}.
 		 *
@@ -440,6 +450,7 @@ const VideoPlayerBase = class extends React.Component {
 		muted: false,
 		noAutoPlay: false,
 		noJumpButtons: false,
+		pauseAtEnd: false,
 		noRateButtons: false,
 		noSlider: false,
 		pauseIcon: 'pause',
@@ -718,9 +729,9 @@ const VideoPlayerBase = class extends React.Component {
 			updatedState.error
 		);
 
-		// If we're ff or rw and hit the end, just pause the media.
-		if ((el.currentTime === 0 && this.prevCommand === 'rewind') ||
-				(el.currentTime === el.duration && this.prevCommand === 'fastForward')) {
+		if (this.props.pauseAtEnd && (
+				(el.currentTime === 0 && (this.prevCommand === 'rewind' || this.prevCommand === 'slowRewind')) ||
+				(el.currentTime === el.duration && (this.prevCommand === 'fastForward' || this.prevCommand === 'slowForward')))) {
 			this.pause();
 		}
 		this.setState(updatedState);
@@ -1130,7 +1141,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.video = video;
 	}
 
-	handleLoadStart = (ev) => {
+	handleLoadStart = () => {
 		if (!this.props.noAutoPlay) {
 			this.video.play();
 		}
