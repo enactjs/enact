@@ -7,13 +7,17 @@ storiesOf('Platform')
 		' ',
 		'Detection',
 		() => {
-			const {platformName: name} = platform;
+			const {gesture, platformName: name, touch} = platform;
 			const version = platform[name];
 			return (
 				<div>
 					Detected: {name}
 					<br />
 					Version: {version}
+					<br />
+					Gesture support: {gesture ? 'true' : 'false'}
+					<br />
+					Touch support: {touch ? 'true' : 'false'}
 				</div>
 			);
 		}
