@@ -2,24 +2,6 @@
 
 The following is a curated list of changes in the Enact webos module, newest changes on the top.
 
-## [unreleased]
-
-### Added
-- dependency on `@enact/core`
-
-### Changed
-- `webos/platform` to not set `platform.unknown` to `true` (it is handled in `@enact/core/platform`)
-
-### Deprecated
-
-### Added
-
-### Changed
-
-### Fixed
-
-### Removed
-
 ## [1.2.0] - 2017-05-17
 
 No significant changes.

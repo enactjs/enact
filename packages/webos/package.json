@@ -24,8 +24,5 @@
   },
   "eslintConfig": {
     "extends": "enact/strict"
-  },
-  "dependencies": {
-    "@enact/core": "^1.1.0"
   }
 }
