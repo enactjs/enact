@@ -565,32 +565,6 @@ function setContainerLastFocusedElement (node, containerIds) {
 	}
 }
 
-function getNavigableElementsForNode (node, navigate) {
-	let selfOnly = false;
-	// accumulates navigable elements while the reduce works up the tree
-	let elements = [];
-
-	return getContainersForNode(node)
-		.reverse()
-		.reduce((next, id, index, containerIds) => {
-			if (next || selfOnly) return next;
-
-			const {restrict} = getContainerConfig(id);
-			selfOnly = restrict === 'self-only';
-
-			elements = elements.concat(getDeepSpottableDescendants(id, containerIds));
-			if (restrict === 'self-first' || selfOnly || id === rootContainerId) {
-				next = navigate(
-					id,
-					getContainerNode(id),
-					elements
-				);
-			}
-
-			return next;
-		}, null);
-}
-
 /**
  * [getContainerNavigableElements description]
  *
@@ -779,7 +753,6 @@ export {
 	getContainerPreviousTarget,
 	getDefaultContainer,
 	getLastContainer,
-	getNavigableElementsForNode,
 	getSpottableDescendants,
 	isContainer,
 	isNavigable,
