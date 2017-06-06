@@ -45,6 +45,7 @@
     "@enact/moonstone": "^1.2.0",
     "@enact/spotlight": "^1.2.0",
     "@enact/ui": "^1.2.0",
+    "@enact/webos": "^1.2.0",
     "@kadira/react-storybook-addon-info": "~3.3.0",
     "@kadira/storybook": "~2.34.0",
     "@kadira/storybook-addon-knobs": "~1.7.1",
