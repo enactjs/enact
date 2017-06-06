@@ -84,6 +84,72 @@ function getTargetBySelector (selector) {
 	return null;
 }
 
+function isRestrictedContainer (containerId) {
+	const config = getContainerConfig(containerId);
+	return config.enterTo === 'last-focused' || config.enterTo === 'defaultElement';
+}
+
+function getTargetInContainerByDirectionFromElement (direction, containerId, element, elementRect, elementContainerIds) {
+	const elements = getSpottableDescendants(containerId).filter(n => {
+		return !isContainer(n) || elementContainerIds.indexOf(n.dataset.containerId) === -1;
+	});
+
+	// shortcut for previous target from element if it were saved
+	const previous = getContainerPreviousTarget(containerId, direction, element);
+	if (previous && elements.indexOf(previous) !== -1) {
+		return previous;
+	}
+
+	const elementRects = getRects(elements);
+
+	// find candidates that are containers and *visually* contain element
+	const overlapping = elementRects.filter(rect => {
+		return isContainer(rect.element) && contains(rect, elementRect);
+	});
+
+	// if the next element is a container AND the current element is *visually* contained within
+	// one of the candidate element, we need to ignore container `enterTo` preferences and
+	// retrieve its spottable descendants and try to navigate to them.
+	if (overlapping.length) {
+		return getTargetInContainerByDirectionFromElement(
+			direction,
+			overlapping[0].element.dataset.containerId,
+			element,
+			elementRect,
+			elementContainerIds
+		);
+	}
+
+	// try to navigate from element to one of the candidates in containerId
+	const next = navigate(
+		elementRect,
+		direction,
+		elementRects,
+		getContainerConfig(containerId)
+	);
+
+	// if we match a container,
+	if (next && isContainer(next)) {
+		const nextContainerId = next.dataset.containerId;
+
+		// and it is restricted, return its target
+		if (isRestrictedContainer(nextContainerId)) {
+			return getTargetByContainer(nextContainerId);
+		}
+
+		// otherwise, recurse into it
+		return getTargetInContainerByDirectionFromElement(
+			direction,
+			nextContainerId,
+			element,
+			elementRect,
+			elementContainerIds
+		);
+	}
+
+	return next;
+}
+
 function getTargetByDirectionFromElement (direction, element) {
 	const extSelector = element.getAttribute('data-spot-' + direction);
 	if (typeof extSelector === 'string') {
@@ -91,47 +157,13 @@ function getTargetByDirectionFromElement (direction, element) {
 	}
 
 	const currentRect = getRect(element);
-	let next = getNavigableElementsForNode(
-		element,
-		(containerId, container, elements) => {
-			const previous = getContainerPreviousTarget(containerId, direction, element);
-			if (previous && elements.indexOf(previous) !== -1) {
-				return previous;
-			} else {
-				return navigate(
-					currentRect,
-					direction,
-					getRects(elements),
-					getContainerConfig(containerId)
-				);
-			}
-		}
-	);
 
-	if (!next) {
-		next = getLeaveForTarget(getContainersForNode(element), direction);
-	}
-
-	if (next && isContainer(next)) {
-		const containerRect = getRect(next);
-
-		if (contains(containerRect, currentRect)) {
-			// if the next element is a container AND the current element is *visually*
-			// contained within the next element, we need to ignore container `enterTo`
-			// preferences and retrieve its spottable descendants and try to navigate to them.
-			const nextContainerId = next.dataset.containerId;
-			next = navigate(
-				currentRect,
-				direction,
-				getRects(getSpottableDescendants(nextContainerId)),
-				getContainerConfig(nextContainerId)
-			);
-		} else {
-			next = getTargetByContainer(next.dataset.containerId);
-		}
-	}
-
-	return next;
+	return getContainersForNode(element)
+		.reduceRight((result, containerId, index, containerIds) => {
+			return result ||
+				getTargetInContainerByDirectionFromElement(direction, containerId, element, currentRect, containerIds) ||
+				getLeaveForTarget(containerId, direction);
+		}, null);
 }
 
 function getTargetByDirectionFromPosition (direction, position, containerId) {
@@ -152,27 +184,23 @@ function getTargetByDirectionFromPosition (direction, position, containerId) {
 	);
 }
 
-function getLeaveForTarget (containerIds, direction) {
-	return containerIds
-		.reverse()
-		.map(getContainerConfig)
-		.filter(config => config.leaveFor && typeof config.leaveFor[direction] !== 'undefined')
-		.reduce((next, config) => {
-			if (next) return next;
+function getLeaveForTarget (containerId, direction) {
+	const config = getContainerConfig(containerId);
 
-			const target = config.leaveFor[direction];
-			if (typeof target === 'string') {
-				if (target === '') {
-					return null;
-				}
-				return getTargetBySelector(target);
-			}
+	const target = config.leaveFor && config.leaveFor[direction];
+	if (typeof target === 'string') {
+		if (target === '') {
+			return null;
+		}
+		return getTargetBySelector(target);
+	}
 
-			const nextContainerIds = getContainersForNode(target);
-			if (isNavigable(target, last(nextContainerIds))) {
-				return target;
-			}
-		}, null);
+	const nextContainerIds = getContainersForNode(target);
+	if (isNavigable(target, last(nextContainerIds))) {
+		return target;
+	}
+
+	return null;
 }
 
 function getNavigableTarget (target) {
