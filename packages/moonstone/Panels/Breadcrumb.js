@@ -74,6 +74,7 @@ const BreadcrumbBase = kind({
 			aria-label={$L('go to previous')}
 			data-index={index}
 			onClick={onSelect}
+			id="breadcrumb"
 		>
 			<div className={css.breadcrumbHeader}>
 				{children}
