@@ -1,5 +1,7 @@
 import curry from 'ramda/src/curry';
 
+import {getContainerNode} from './container';
+
 let elementMatchesSelector = function (selector) {
 	const matchedNodes = (this.parentNode || this.document).querySelectorAll(selector);
 	return [].slice.call(matchedNodes).indexOf(this) >= 0;
@@ -60,7 +62,10 @@ const testIntersection = (type, containerRect, elementRect) => {
 	const bottom = b > T && b <= B;
 
 	if (type === 'intersects') {
-		return (top || bottom) && (left || right);
+		const aroundV = t < T && b > B;
+		const aroundH = l < L && r > R;
+
+		return (top || bottom || aroundV) && (left || right || aroundH);
 	} else if (type === 'contains') {
 		return top && bottom && left && right;
 	}
@@ -124,8 +129,43 @@ function getRects (candidates) {
 	return [];
 }
 
+
+function getViewportRect () {
+	const {innerWidth: width, innerHeight: height} = window;
+	const x = width / 2;
+	const y = height / 2;
+
+	return {
+		left: 0,
+		top: 0,
+		width,
+		height,
+		right: width,
+		bottom: height,
+		center: {
+			x,
+			y,
+			left: x,
+			right: x,
+			top: y,
+			bottom: y
+		}
+	};
+}
+
+function getContainerRect (containerId) {
+	const containerNode = getContainerNode(containerId);
+
+	if (containerNode === document) {
+		return getViewportRect();
+	}
+
+	return getRect(containerNode);
+}
+
 export {
 	contains,
+	getContainerRect,
 	getPointRect,
 	getRect,
 	getRects,

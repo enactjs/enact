@@ -48,6 +48,7 @@ let GlobalConfig = {
 	restrict: 'self-first', // 'self-first', 'self-only', 'none'
 	tabIndexIgnoreList: 'a, input, select, textarea, button, iframe, [contentEditable=true]',
 	navigableFilter: null,
+	overflow: false,
 	lastFocusedElement: null,
 	lastFocusedKey: null,
 	lastFocusedPersist: (node, all) => {
@@ -760,6 +761,7 @@ function setLastContainer (containerId) {
 export {
 	// Remove
 	getAllContainerIds,
+	getContainerNode,
 
 	// Maybe
 	getContainersForNode,

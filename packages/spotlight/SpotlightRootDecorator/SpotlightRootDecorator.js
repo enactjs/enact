@@ -67,6 +67,10 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					restrict: 'none'
 				});
 
+				Spotlight.set(rootContainerId, {
+					overflow: true
+				});
+
 				if (palmSystem && palmSystem.cursor) {
 					Spotlight.setPointerMode(palmSystem.cursor.visibility);
 				}

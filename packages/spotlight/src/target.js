@@ -9,7 +9,6 @@ import {
 	getContainersForNode,
 	getDefaultContainer,
 	getLastContainer,
-	getNavigableElementsForNode,
 	getSpottableDescendants,
 	isContainer,
 	isNavigable
@@ -17,9 +16,11 @@ import {
 import navigate from './navigate';
 import {
 	contains,
+	getContainerRect,
 	getPointRect,
 	getRect,
 	getRects,
+	intersects,
 	parseSelector
 } from './utils';
 
@@ -89,7 +90,7 @@ function isRestrictedContainer (containerId) {
 	return config.enterTo === 'last-focused' || config.enterTo === 'defaultElement';
 }
 
-function getTargetInContainerByDirectionFromElement (direction, containerId, element, elementRect, elementContainerIds) {
+function getTargetInContainerByDirectionFromElement (direction, containerId, element, elementRect, elementContainerIds, boundingRect) {
 	const elements = getSpottableDescendants(containerId).filter(n => {
 		return !isContainer(n) || elementContainerIds.indexOf(n.dataset.containerId) === -1;
 	});
@@ -100,7 +101,19 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 		return previous;
 	}
 
-	const elementRects = getRects(elements);
+	let elementRects = getRects(elements);
+	if (boundingRect) {
+		// remove elements that are outside of boundingRect, if specified
+		elementRects = elementRects.filter(rect => {
+			if (isContainer(rect.element)) {
+				// For containers, test intersection since they may be larger than the bounding rect
+				return intersects(boundingRect, rect);
+			} else {
+				// For elements, use contains so that partially visible elements are not focused
+				return contains(boundingRect, rect);
+			}
+		});
+	}
 
 	// find candidates that are containers and *visually* contain element
 	const overlapping = elementRects.filter(rect => {
@@ -116,7 +129,8 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 			overlapping[0].element.dataset.containerId,
 			element,
 			elementRect,
-			elementContainerIds
+			elementContainerIds,
+			boundingRect
 		);
 	}
 
@@ -137,13 +151,23 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 			return getTargetByContainer(nextContainerId);
 		}
 
+		// if the target container has overflowing content, update the boundingRect to match its
+		// bounds to prevent finding elements within the container's hierarchy but not visible.
+		// This filter only applies when waterfalling to prevent filtering out elements that share
+		// a container tree with `element`
+		const nextConfig = getContainerConfig(nextContainerId);
+		if (nextConfig.overflow) {
+			boundingRect = getContainerRect(nextContainerId);
+		}
+
 		// otherwise, recurse into it
 		return getTargetInContainerByDirectionFromElement(
 			direction,
 			nextContainerId,
 			element,
 			elementRect,
-			elementContainerIds
+			elementContainerIds,
+			boundingRect
 		);
 	}
 
@@ -156,12 +180,18 @@ function getTargetByDirectionFromElement (direction, element) {
 		return getTargetBySelector(extSelector);
 	}
 
-	const currentRect = getRect(element);
+	const elementRect = getRect(element);
 
 	return getContainersForNode(element)
-		.reduceRight((result, containerId, index, containerIds) => {
+		.reduceRight((result, containerId, index, elementContainerIds) => {
 			return result ||
-				getTargetInContainerByDirectionFromElement(direction, containerId, element, currentRect, containerIds) ||
+				getTargetInContainerByDirectionFromElement(
+					direction,
+					containerId,
+					element,
+					elementRect,
+					elementContainerIds
+				) ||
 				getLeaveForTarget(containerId, direction);
 		}, null);
 }
