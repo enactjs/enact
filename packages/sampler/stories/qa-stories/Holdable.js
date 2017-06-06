@@ -3,6 +3,7 @@ import Holdable from '@enact/ui/Holdable';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {boolean, select, text} from '@kadira/storybook-addon-knobs';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 const HoldableButton = Holdable(Button);
 const LongPressButton = Holdable({
@@ -13,6 +14,8 @@ const LongPressButton = Holdable({
 	frequency: 1000
 }, Button);
 const ResumeHoldButton = Holdable({resume: true, endHold: 'onLeave'}, Button);
+const MultiKeyHoldButton = Holdable({resume: true, endHold: 'onLeave', keys: ['enter', 'left', 'right']}, Button);
+const Container = SpotlightContainerDecorator({enterTo: ''}, 'div');
 
 // Set up some defaults for info and knobs
 const prop = {
@@ -57,6 +60,24 @@ storiesOf('Holdable')
 			>
 				{text('value', 'Resumable')}
 			</ResumeHoldButton>
+		)
+	).addWithInfo(
+		'that can use multiple keys to fire mulitple events',
+		() => (
+			<Container spotlightRestrict={select('spotlightRestrict', ['none', 'self-first', 'self-only'], 'self-only')}>
+				<MultiKeyHoldButton
+					onHold={action('onHold')}
+					onHoldPulse={action('onHoldPulse')}
+					onHoldLeft={action('onHoldLeft')}
+					onHoldPulseLeft={action('onHoldPulseLeft')}
+					onHoldRight={action('onHoldRight')}
+					onHoldPulseRight={action('onHoldPulseRight')}
+					backgroundOpacity={select('backgroundOpacity', prop.backgroundOpacity)}
+					disabled={boolean('disabled')}
+				>
+					{text('value', 'Multiple Key')}
+				</MultiKeyHoldButton>
+			</Container>
 		)
 	);
 
