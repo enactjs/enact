@@ -37,6 +37,23 @@
 		bottom: @moon-spotlight-outset;
 	}
 
+
+	&.miniFeedback {
+		position: absolute;
+		top: 87px;
+		left: 12px;
+
+		.content {
+			background-color: rgba(0, 0, 0, 0.5);
+			border-radius: 24px;
+			padding: 3px 12px 0 3px;
+
+			& > div:first-child > div {
+				padding-bottom: 6px;
+			}
+		}
+	}
+
 	// .knob[data-climax="rising"] {
 	// 	.thumbnail,
 	// 	.content {

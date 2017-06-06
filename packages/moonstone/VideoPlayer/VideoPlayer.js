@@ -15,6 +15,7 @@ import {forKey, forward, forwardWithPrevent, handle, stopImmediate} from '@enact
 import ilib from '@enact/i18n';
 import {Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
+import {add,is} from '@enact/core/keymap';
 import {platform} from '@enact/core/platform';
 import Slottable from '@enact/ui/Slottable';
 import {getDirection, Spotlight} from '@enact/spotlight';
@@ -26,14 +27,15 @@ import Spinner from '../Spinner';
 import Skinnable from '../Skinnable';
 
 import {calcNumberValueOfPlaybackRate, getNow, secondsToTime} from './util';
+import FeedbackTooltip from './FeedbackTooltip';
 import Overlay from './Overlay';
 import MediaControls from './MediaControls';
 import MediaTitle from './MediaTitle';
 import MediaSlider from './MediaSlider';
-import FeedbackTooltip from './FeedbackTooltip';
 import Times from './Times';
 
 import css from './VideoPlayer.less';
+import feedbackCss from './FeedbackTooltip.less';
 
 const SpottableDiv = Spottable('div');
 const Container = SpotlightContainerDecorator({enterTo: ''}, 'div');
@@ -90,6 +92,16 @@ const forwardJumpBackwardButtonClick = forwardWithPrevent('onJumpBackwardButtonC
 const forwardJumpForwardButtonClick = forwardWithPrevent('onJumpForwardButtonClick');
 const forwardPlayButtonClick = forward('onPlayButtonClick');
 
+// MRCU keyCodes
+const keyCodes = {
+	fastForward: 417,
+	pause: 133,
+	play: 415,
+	rewind: 412
+};
+add('enter', 13); // checked in activityDetected() when keys are pressed on the remote
+const isEnter = is('enter');
+
 // localized strings
 const playLabel = 'Play';
 const pauseLabel = 'Pause';
@@ -111,7 +123,7 @@ const pauseLabel = 'Pause';
  */
 
 /**
- * A set of playback rates when media fast forwards, rewinds, slow-fowards, or slow-rewinds.
+ * A set of playback rates when media fast forwards, rewinds, slow-forwards, or slow-rewinds.
  *
  * The number used for each operation is proportional to the normal playing speed, 1. If the rate
  * is less than 1, it will play slower than normal speed, and, if it is larger than 1, it will play
@@ -388,6 +400,8 @@ const VideoPlayerBase = class extends React.Component {
 		 * @type {moonstone/VideoPlayer.playbackRateHash}
 		 * @default {
 		 *	fastForward: ['2', '4', '8', '16'],
+		 *	jumpBackward: ['15'],
+		 *	jumpForward: ['15'],
 		 *	rewind: ['-2', '-4', '-8', '-16'],
 		 *	slowForward: ['1/4', '1/2'],
 		 *	slowRewind: ['-1/2', '-1']
@@ -396,6 +410,8 @@ const VideoPlayerBase = class extends React.Component {
 		 */
 		playbackRateHash: PropTypes.shape({
 			fastForward: PropTypes.arrayOf(PropTypes.string),
+			jumpBackward: PropTypes.arrayOf(PropTypes.string),
+			jumpForward: PropTypes.arrayOf(PropTypes.string),
 			rewind: PropTypes.arrayOf(PropTypes.string),
 			slowForward: PropTypes.arrayOf(PropTypes.string),
 			slowRewind: PropTypes.arrayOf(PropTypes.string)
@@ -465,7 +481,7 @@ const VideoPlayerBase = class extends React.Component {
 		title: PropTypes.string,
 
 		/**
-		 * The amount of time in miliseconds that should pass before the title disappears from the
+		 * The amount of time in milliseconds that should pass before the title disappears from the
 		 * controls. Setting this to `0` disables the hiding.
 		 *
 		 * @type {Number}
@@ -475,7 +491,7 @@ const VideoPlayerBase = class extends React.Component {
 		titleHideDelay: PropTypes.number,
 
 		/**
-		 * The amount of time in miliseconds that should pass before the tooltip disappears from the
+		 * The amount of time in milliseconds that should pass before the tooltip disappears from the
 		 * controls. Setting this to `0` disables the hiding.
 		 *
 		 * @type {Number}
@@ -502,6 +518,8 @@ const VideoPlayerBase = class extends React.Component {
 		pauseIcon: 'pause',
 		playbackRateHash: {
 			fastForward: ['2', '4', '8', '16'],
+			jumpBackward: ['15'],
+			jumpForward: ['15'],
 			rewind: ['-2', '-4', '-8', '-16'],
 			slowForward: ['1/4', '1/2'],
 			slowRewind: ['-1/2', '-1']
@@ -558,6 +576,7 @@ const VideoPlayerBase = class extends React.Component {
 			bottomControlsVisible: false,
 			feedbackVisible: true,
 			more: false,
+			playbackControlsVisible: false,
 			proportionLoaded: 0,
 			proportionPlayed: 0,
 			sliderScrubbing: false,
@@ -706,17 +725,41 @@ const VideoPlayerBase = class extends React.Component {
 		}
 	}
 
-	activityDetected = () => {
+	activityDetected = (ev) => {
 		// console.count('activityDetected');
-		this.startAutoCloseTimeout();
+		let {autoCloseTimeout} = this.props;
+
+		if (ev.keyCode && !isEnter(ev.keyCode)) {
+			Object.keys(keyCodes).map((key) => {
+				if (keyCodes[key] === ev.keyCode) {
+					this[key]();
+					this.showControls({playbackControlsVisible: false});
+					// change autoCloseTimeout based on action
+					if (key === 'fastForward' || key === 'pause' || key === 'rewind') {
+						autoCloseTimeout = null;
+					} else if (key === 'play') {
+						autoCloseTimeout = 5000;
+					}
+				}
+			});
+		}
+		if (autoCloseTimeout !== null) {
+			this.startAutoCloseTimeout(autoCloseTimeout);
+		} else {
+			// make sure an existing timeout is stopped
+			this.stopAutoCloseTimeout();
+		}
 	}
 
-	startAutoCloseTimeout = () => {
+	startAutoCloseTimeout = (delay) => {
 		// If this.state.more is used as a reference for when this function should fire, timing for
 		// detection of when "more" is pressed vs when the state is updated is mismatched. Using an
 		// instance variable that's only set and used for this express purpose seems cleanest.
-		if (this.props.autoCloseTimeout && !this.moreInProgress) {
-			this.autoCloseJob.startAfter(this.props.autoCloseTimeout);
+		if (typeof delay !== 'number') {
+			delay = this.props.autoCloseTimeout;
+		}
+		if (delay && !this.moreInProgress) {
+			this.autoCloseJob.startAfter(delay);
 		}
 	}
 
@@ -724,17 +767,23 @@ const VideoPlayerBase = class extends React.Component {
 		this.autoCloseJob.stop();
 	}
 
-	showControls = () => {
+	showControls = (options) => {
 		// Read the title
 		this.announce(this.props.title);
 
 		this.startDelayedFeedbackHide();
 		this.startDelayedTitleHide();
 		forwardControlsAvailable({available: true}, this.props);
+		options = options || {};
+		let {playbackControlsVisible} = options;
+		if (typeof playbackControlsVisible === 'undefined') {
+			playbackControlsVisible = true;
+		}
 		this.setState({
 			bottomControlsRendered: true,
 			bottomControlsVisible: true,
 			feedbackVisible: true,
+			playbackControlsVisible: playbackControlsVisible,
 			titleVisible: true
 		});
 	}
@@ -743,7 +792,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.stopDelayedFeedbackHide();
 		this.stopDelayedTitleHide();
 		forwardControlsAvailable({available: false}, this.props);
-		this.setState({bottomControlsVisible: false, more: false});
+		this.setState({bottomControlsVisible: false, more: false, playbackControlsVisible: false});
 	}
 
 	autoCloseJob = new Job(this.hideControls)
@@ -940,6 +989,18 @@ const VideoPlayerBase = class extends React.Component {
 	 * @public
 	 */
 	jump = (distance) => {
+		if (distance < 0) {
+			// jumpBackward
+			this.selectPlaybackRates('jumpBackward');
+			this.prevCommand = 'jumpBackward';
+		} else {
+			// jumpForward
+			this.selectPlaybackRates('jumpForward');
+			this.prevCommand = 'jumpForward';
+		}
+		this.speedIndex = 0;
+		this.setPlaybackRate(this.selectPlaybackRate(this.speedIndex));
+
 		this.showFeedback();
 		this.startDelayedFeedbackHide();
 		this.seek(this.state.currentTime + distance);
@@ -1286,7 +1347,7 @@ const VideoPlayerBase = class extends React.Component {
 			this.startDelayedTitleHide();
 		} else {
 			this.moreInProgress = true;
-			this.stopAutoCloseTimeout();	// Interupt the timer since controls should not hide while viewing "more".
+			this.stopAutoCloseTimeout();	// Interrupt the timer since controls should not hide while viewing "more".
 			// Interrupt the title-hide since we don't want it hiding autonomously in "more".
 			this.stopDelayedTitleHide();
 		}
@@ -1365,6 +1426,15 @@ const VideoPlayerBase = class extends React.Component {
 
 				{this.state.bottomControlsRendered ?
 					<div className={css.fullscreen + ' enyo-fit scrim'} style={{display: this.state.bottomControlsVisible ? 'block' : 'none'}}>
+						{this.state.playbackControlsVisible ? null :
+							<FeedbackTooltip
+								className={feedbackCss.miniFeedback}
+								playbackState={this.prevCommand}
+								playbackRate={this.selectPlaybackRate(this.speedIndex)}
+							>
+								{secondsToTime(this.state.sliderTooltipTime, this.durfmt)}
+							</FeedbackTooltip>
+						}
 						<Container className={css.bottom} data-container-disabled={!this.state.bottomControlsVisible}>
 							{/* Info Section: Title, Description, Times */}
 							<div className={css.infoFrame}>
@@ -1426,6 +1496,7 @@ const VideoPlayerBase = class extends React.Component {
 								rateButtonsDisabled={rateButtonsDisabled}
 								rightComponents={rightComponents}
 								showMoreComponents={this.state.more}
+								style={{visibility: this.state.playbackControlsVisible ? 'visible' : 'hidden'}}
 							>
 								{children}
 							</MediaControls>
