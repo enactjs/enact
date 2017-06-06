@@ -837,9 +837,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					focusableScrollbar={focusableScrollbar}
 					style={style}
 				>
+					<Wrapped {...props} {...this.eventHandlers} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={css.container} />
 					{vscrollbar}
 					{hscrollbar}
-					<Wrapped {...props} {...this.eventHandlers} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={css.container} />
 				</ScrollableSpotlightContainer>
 			);
 		}
