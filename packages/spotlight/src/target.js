@@ -174,6 +174,34 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 	return next;
 }
 
+/**
+ * Limits the container ids to only those between `element` and the first restrict="self-only"
+ * container
+ *
+ * @private
+ */
+function get5WayContainersForNode (element) {
+	const containerIds = getContainersForNode(element);
+
+	// find first self-only container id
+	const selfOnlyIndex = containerIds
+		.map(getContainerConfig)
+		.reduceRight((index, config, i) => {
+			if (index === -1 && config.restrict === 'self-only') {
+				return i;
+			}
+
+			return index;
+		}, -1);
+
+	// if we found one (and it's not the root), slice those off and return
+	if (selfOnlyIndex > 0) {
+		return containerIds.slice(selfOnlyIndex);
+	}
+
+	return containerIds;
+}
+
 function getTargetByDirectionFromElement (direction, element) {
 	const extSelector = element.getAttribute('data-spot-' + direction);
 	if (typeof extSelector === 'string') {
@@ -182,7 +210,7 @@ function getTargetByDirectionFromElement (direction, element) {
 
 	const elementRect = getRect(element);
 
-	return getContainersForNode(element)
+	return get5WayContainersForNode(element)
 		.reduceRight((result, containerId, index, elementContainerIds) => {
 			return result ||
 				getTargetInContainerByDirectionFromElement(

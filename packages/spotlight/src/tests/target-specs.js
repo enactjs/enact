@@ -435,6 +435,25 @@ describe('target', () => {
 				)).to.equal('overflow-above');
 			}
 		));
+
+		it('should stop at restrict="self-only" boundaries', testScenario(
+			scenarios.complexTree,
+			(root) => {
+				configureContainer('first-container', {
+					restrict: 'none'
+				});
+				configureContainer('second-container', {
+					restrict: 'self-only'
+				});
+
+				const element = root.querySelector(`[${containerAttribute}="second-container"] .spottable`);
+
+				expect(safeTarget(
+					getTargetByDirectionFromElement('up', element),
+					t => t.id
+				)).to.equal('NOT FOUND');
+			}
+		));
 	});
 
 	describe('#getTargetByDirectionFromPosition', () => {
