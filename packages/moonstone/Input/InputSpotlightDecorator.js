@@ -1,3 +1,4 @@
+import deprecate from '@enact/core/internal/deprecate';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
@@ -46,6 +47,15 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 
 		static propTypes = /** @lends moonstone/Input/InputSpotlightDecorator.InputSpotlightDecorator.prototype */ {
 			/**
+			 * When `true`, focusing the decorator directly via 5-way will forward the focus onto the <input>
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			autoFocus: PropTypes.bool,
+
+			/**
 			 * When `true`, applies a disabled style and the control becomes non-interactive.
 			 *
 			 * @type {Boolean}
@@ -68,6 +78,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			 *
 			 * @type {Boolean}
 			 * @default false
+			 * @deprecated will be replaced by `autoFocus` in 2.0.0
 			 * @public
 			 */
 			noDecorator: PropTypes.bool,
@@ -98,6 +109,10 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 				focused: null,
 				node: null
 			};
+
+			if (props.noDecorator) {
+				deprecate({name: 'noDecorator', since: '1.3.0', replacedBy: 'autoFocus'});
+			}
 		}
 
 		componentDidUpdate (_, prevState) {
@@ -144,7 +159,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 		}
 
 		onBlur = (ev) => {
-			if (!this.props.noDecorator) {
+			if (!this.props.noDecorator && !this.props.autoFocus) {
 				if (isBubbling(ev)) {
 					if (Spotlight.getPointerMode()) {
 						this.blur();
@@ -157,6 +172,17 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 					// Blurring decorator but not focusing input
 					forwardBlur(ev, this.props);
 					this.blur();
+				}
+			} else if (this.props.autoFocus) {
+				if (isBubbling(ev)) {
+					if (this.state.focused === 'input' && this.state.node === ev.target && ev.currentTarget !== ev.relatedTarget) {
+						this.blur();
+						forwardBlur(ev, this.props);
+					} else {
+						this.focusDecorator(ev.currentTarget);
+						ev.stopPropagation();
+						this.blur();
+					}
 				}
 			} else if (this.state.focused === 'input' && this.state.node === ev.target) {
 				if (ev.currentTarget === ev.relatedTarget) {
@@ -186,9 +212,9 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 		onFocus = (ev) => {
 			forwardFocus(ev, this.props);
 
-			// when in noDecorator mode, focusing the decorator directly will cause it to
+			// when in noDecorator or autoFocus mode, focusing the decorator directly will cause it to
 			// forward the focus onto the <input>
-			if (this.props.noDecorator && !isBubbling(ev)) {
+			if (!isBubbling(ev) && (this.props.noDecorator || this.props.autoFocus && this.state.focused === null && !Spotlight.getPointerMode())) {
 				this.focusInput(ev.currentTarget);
 				ev.stopPropagation();
 			}
