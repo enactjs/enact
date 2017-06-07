@@ -13,6 +13,7 @@ The following is a curated list of changes in the Enact webos module, newest cha
 ### Fixed
 
 ### Removed
+
 ## [1.2.2] - 2017-05-31
 
 No significant changes.
