@@ -1130,7 +1130,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.video = video;
 	}
 
-	handleLoadStart = (ev) => {
+	handleLoadStart = () => {
 		if (!this.props.noAutoPlay) {
 			this.video.play();
 		}
