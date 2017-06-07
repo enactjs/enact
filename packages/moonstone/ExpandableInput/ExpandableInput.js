@@ -175,7 +175,6 @@ class ExpandableInputBase extends React.Component {
 
 	componentWillReceiveProps (nextProps) {
 		let {initialValue} = this.state;
-
 		if (!this.props.open && nextProps.open) {
 			initialValue = nextProps.value;
 		} else if (this.props.open && !nextProps.open) {
@@ -295,7 +294,6 @@ class ExpandableInputBase extends React.Component {
 			>
 				<Input
 					autoFocus
-					data-expandable-input
 					disabled={disabled}
 					dismissOnEnter
 					iconAfter={iconAfter}

@@ -277,6 +277,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 
 		render () {
 			const props = Object.assign({}, this.props);
+			delete props.autoFocus;
 			delete props.noDecorator;
 
 			return (
