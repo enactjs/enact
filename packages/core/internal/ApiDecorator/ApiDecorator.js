@@ -65,8 +65,8 @@ const defaultConfig = {
  * const MyComponent = class extends React.Component {
  * 	static displayName = 'MyComponent';
  *
- *  doSomething = () => {
- *  }
+ * 	doSomething = () => {
+ * 	}
  * }
  *
  * @class ApiDecorator

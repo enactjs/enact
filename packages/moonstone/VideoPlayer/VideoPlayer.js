@@ -1327,18 +1327,20 @@ const VideoPlayerBase = class extends React.Component {
  * the current state (`getMediaState()`), store a ref to the `VideoPlayer` within your component:
  *
  * ```
+ * 	...
+ *
  * 	setVideoPlayer = (node) => {
- * 	  this.videoPlayer = node;
+ * 		this.videoPlayer = node;
  * 	}
  *
  * 	play () {
- * 	  this.videoPlayer.play();
+ * 		this.videoPlayer.play();
  * 	}
  *
  * 	render () {
- * 	  return (
- * 	  	<VideoPlayer ref={this.setVideoPlayer} />
- * 	  );
+ * 		return (
+ * 			<VideoPlayer ref={this.setVideoPlayer} />
+ * 		);
  * 	}
  * ```
  *
