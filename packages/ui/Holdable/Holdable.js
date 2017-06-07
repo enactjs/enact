@@ -128,14 +128,16 @@ const defaultConfig = {
 	 * WARNING: If you choose to use this option be aware that you must provide
 	 * `enter` if you want the `enter` key to respond properly.
 	 *
-	 * WARNING: If you choose to use this option along with spotlight also be
-	 * aware that may have use spotlightRestrict to prevent the spotlight from
-	 * focusing on other elements. If it does the hold will not be released
-	 * properly.
+	 * WARNING: If you choose to use this option with Spotlight, you must also
+	 * be responsible for handling pausing and resuming of Spotlight if you are
+	 * holding using directions. For example, if you a key of `right`, but you
+	 * don't `Spotlight.pause()` when `onSpotlightRight` is called the Spotlight
+	 * could move and never release the pulse.
 	 *
 	 * @type {Array}
 	 * @default ['enter']
 	 * @memberof ui/Holdable.Holdable.defaultConfig
+	 * @private
 	 */
 	keys: ['enter']
 };
@@ -152,7 +154,7 @@ const defaultConfig = {
 const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 	const {frequency, events, endHold, moveTolerance, resume, keys} = config;
 
-	let holdProps = keys.reduce((holdObj, currentValue) => {
+	const holdProps = keys.reduce((holdObj, currentValue) => {
 		const value = currentValue.charAt(0).toUpperCase() + currentValue.slice(1).toLowerCase();
 		if (currentValue === 'enter') {
 			holdObj[currentValue] = {};
@@ -255,7 +257,6 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 
 		isKeyValid (keyCode) {
 			const currentKey = keys.reduce((previous, current) => is(current, keyCode) ? current : previous, null);
-
 			this.currentKey = currentKey;
 
 			return currentKey;
@@ -295,6 +296,8 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		// TV, where the same button is used for enter/click
 		handlePointerDepress = (ev) => {
 			if (!this.props.disabled && ev.type === 'mousedown') {	// Spotlight forwards keydown as pointer
+				this.currentKey = 'enter';
+				this.setOnHoldCallbacks();
 				this.beginHold(pick(eventProps, ev));
 				// We are tracking document level because we need to allow for the 'slop' factor
 				// even if the pointer moves slightly off the element
@@ -334,7 +337,7 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		beginHold = (ev) => {
-			this.endHold();
+			this.endHold(true);
 			this.holdStart = perfNow();
 			this.downEvent = ev;
 			this.pulsing = false;
@@ -349,18 +352,18 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		endHold = () => {
+		endHold = (persistHoldCallbacks) => {
 			this.suspendHold();
 			this.downEvent = null;
 			this.pulsing = false;
 			this.unsent = null;
 			this.next = null;
-			console.log('endhold');
-			// this.currentOnHold = null;
-			// this.currentOnHoldPulse = null;
 			off('mousemove', this.onDocumentPointerMove);
 			this.clearPointerRelease();
 			this.clearMouseLeave();
+			if (!persistHoldCallbacks) {
+				this.clearHoldCallbacks();
+			}
 		}
 
 		endOrSuspendHold = () => {
@@ -420,9 +423,12 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			props[pointerDepress] = this.handlePointerDepress;
 			props[pointerEnter] = this.handlePointerEnter;
 
-			delete props.onHold;
-			delete props.onHoldPulse;
 			delete props.keyCodes;
+
+			keys.forEach((value) => {
+				delete props[holdProps[value].hold];
+				delete props[holdProps[value].pulse];
+			});
 
 			return <Wrapped {...props} />;
 		}
