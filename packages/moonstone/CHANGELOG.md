@@ -66,7 +66,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` to not disable media button (play/pause)
 - `moonstone/Scroller.Scrollable` so that paging controls are not spottable by default with 5-way
 - `moonstone/VideoPlayer`'s more/less button to use updated arrow icon
-- `moonstone/VideoPlayer` to simulate rewind functionality on non-webOS platforms only
 
 ### Fixed
 

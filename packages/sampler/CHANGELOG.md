@@ -7,9 +7,6 @@ The following is a curated list of changes in the Enact Sampler, newest changes 
 ### Deprecated
 
 ### Added
-- `Platform` sample
-
-- `Platform` sample
 
 - `Platform` sample
 
@@ -20,6 +17,7 @@ The following is a curated list of changes in the Enact Sampler, newest changes 
 - `moonstone/VideoPlayer` sample to update poster images
 
 ### Removed
+
 ## [1.2.2] - 2017-05-31
 
 No significant changes.

@@ -866,8 +866,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			} else {
 				this.updateScrollOnFocus();
 			}
-
-			this.updateScrollOnFocus();
 		}
 
 		componentWillUnmount () {
