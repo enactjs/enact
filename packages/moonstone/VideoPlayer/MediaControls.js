@@ -10,8 +10,6 @@ import IconButton from '../IconButton';
 import css from './VideoPlayer.less';
 
 const buttonLabels = {
-	pauseLabel: 'Pause',
-	playLabel: 'Play',
 	previousLabel: 'Previous',
 	rewindLabel: 'Rewind',
 	fastForwardLabel: 'Fast Forward',
@@ -158,9 +156,7 @@ const MediaControls = kind({
 		jumpBackwardIcon: 'skipbackward',
 		jumpForwardIcon: 'skipforward',
 		pauseIcon: 'pause',
-		pauseLabel: buttonLabels.pauseLabel,
-		playIcon: 'play',
-		playLabel: buttonLabels.playLabel
+		playIcon: 'play'
 	},
 
 	styles: {

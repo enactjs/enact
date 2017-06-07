@@ -1120,10 +1120,10 @@ const VideoPlayerBase = class extends React.Component {
 		forwardPlayButtonClick(ev, this.props);
 		if (this.state.paused) {
 			this.play();
-			this.announce(playLabel);
+			this.announce($L(playLabel));
 		} else {
 			this.pause();
-			this.announce(pauseLabel);
+			this.announce($L(pauseLabel));
 		}
 	}
 	onForward = (ev) => {
