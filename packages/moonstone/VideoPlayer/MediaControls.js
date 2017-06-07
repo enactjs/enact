@@ -156,7 +156,9 @@ const MediaControls = kind({
 		jumpBackwardIcon: 'skipbackward',
 		jumpForwardIcon: 'skipforward',
 		pauseIcon: 'pause',
-		playIcon: 'play'
+		pauseLabel: 'pause',
+		playIcon: 'play',
+		playLabel: 'play'
 	},
 
 	styles: {
