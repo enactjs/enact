@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact Sampler, newest changes 
 ### Deprecated
 
 ### Added
+
 - `Platform` sample
 
 ### Changed
