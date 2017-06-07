@@ -589,8 +589,10 @@ const VideoPlayerBase = class extends React.Component {
 	//
 	// Internal Methods
 	//
+	announceJob = new Job(msg => forward('announce', msg, this.props), 200)
+
 	announce = (msg) => {
-		forward('announce', msg, this.props);
+		this.announceJob.start(msg);
 	}
 
 	calculateTitleOffset = () => {
