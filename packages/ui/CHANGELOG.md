@@ -2,10 +2,34 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Deprecated
+
+### Added
+
+### Changed
+
+### Fixed
+
+- `ui/ViewManager` to have a view count of 0 specifically for `noAnimation` cases. This helps things like `spotlight` restore `focus` properly.
+
+### Removed
+## [1.2.2] - 2017-05-31
+
+No significant changes.
+
+## [1.2.1] - 2017-05-25
+
+No significant changes.
+
 ## [1.2.0] - 2017-05-17
 
 ### Added
 
+- `ui/Skinnable` to provide themes with a way to apply a base theme styling and skins on top of that
+## Unreleased
+- `ui/Transition` prop `onShow` that fires when transitioning into view a component.
 - `ui/transition` callback prop `onShow` that fires when transitioning into view completes
 
 ### Changed

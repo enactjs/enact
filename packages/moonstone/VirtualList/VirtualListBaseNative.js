@@ -247,9 +247,6 @@ class VirtualListCoreNative extends Component {
 	containerRef = null
 	wrapperRef = null
 
-	// RTL
-	compensationRTL = 0
-
 	// spotlight
 	nodeIndexToBeBlurred = null
 	lastFocusedIndex = null
@@ -419,7 +416,7 @@ class VirtualListCoreNative extends Component {
 		}
 	}
 
-	setScrollPosition (x, y, dirX, dirY) {
+	didScroll (x, y, dirX, dirY) {
 		const
 			{firstIndex} = this.state,
 			{isPrimaryDirectionVertical, threshold, dimensionToExtent, maxFirstIndex, scrollBounds} = this,
@@ -518,7 +515,7 @@ class VirtualListCoreNative extends Component {
 		this.lastFirstIndex = firstIndex;
 	}
 
-	scrollTo (x, y) {
+	scrollToPosition (x, y) {
 		const node = this.wrapperRef;
 		node.scrollTo((this.context.rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x, y);
 	}

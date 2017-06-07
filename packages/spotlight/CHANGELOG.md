@@ -2,6 +2,27 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Deprecated
+
+### Added
+
+`spotlight/styles/mixins.less` mixins which allow state-selector-rules (muted, spottable, focus, disabled) to be applied to the parent instead of the component's self. This provides much more flexibility without extra mixins to memorize.
+
+### Changed
+
+### Fixed
+
+### Removed
+## [1.2.2] - 2017-05-31
+
+No significant changes.
+
+## [1.2.1] - 2017-05-25
+
+No significant changes.
+
 ## [1.2.0] - 2017-05-17
 
 ### Deprecated

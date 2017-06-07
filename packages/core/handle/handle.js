@@ -113,6 +113,8 @@ const handle = function (...handlers) {
  * 	[forKey('right'), handleRight]
  * );
  *
+ * @method   oneOf
+ * @memberof core/handle
  * @param    {...Function}  handlers List of handlers to process the event
  * @returns  {Function}	    A function that accepts an event which is dispatched to each of the
  *                          conditions and, if it passes, onto the provided handler.
