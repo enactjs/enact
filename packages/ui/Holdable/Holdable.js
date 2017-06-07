@@ -262,9 +262,9 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			return currentKey;
 		}
 
-		setOnHoldCallbacks () {
-			this.currentOnHold = this.props[holdProps[this.currentKey].hold];
-			this.currentOnHoldPulse = this.props[holdProps[this.currentKey].pulse];
+		setOnHoldCallbacks (onHold, onHoldPulse) {
+			this.currentOnHold = onHold ? this.props[onHold] : this.props[holdProps[this.currentKey].hold];
+			this.currentOnHoldPulse = onHoldPulse ? this.props[onHoldPulse] : this.props[holdProps[this.currentKey].pulse];
 		}
 
 		clearHoldCallbacks () {
@@ -296,8 +296,7 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		// TV, where the same button is used for enter/click
 		handlePointerDepress = (ev) => {
 			if (!this.props.disabled && ev.type === 'mousedown') {	// Spotlight forwards keydown as pointer
-				this.currentKey = 'enter';
-				this.setOnHoldCallbacks();
+				this.setOnHoldCallbacks('onHold', 'onHoldPulse');
 				this.beginHold(pick(eventProps, ev));
 				// We are tracking document level because we need to allow for the 'slop' factor
 				// even if the pointer moves slightly off the element
