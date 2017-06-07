@@ -337,7 +337,7 @@ const VideoPlayerBase = class extends React.Component {
 
 		/**
 		 * When `true`, the video will pause when it reaches either the start or the end of the
-		 * video during rewind, slow rewind, fast foward, or slow forward.
+		 * video during rewind, slow rewind, fast forward, or slow forward.
 		 *
 		 * @type {Boolean}
 		 * @default false
