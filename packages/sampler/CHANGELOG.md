@@ -8,6 +8,8 @@ The following is a curated list of changes in the Enact Sampler, newest changes 
 
 ### Added
 
+- `Platform` sample
+
 ### Changed
 
 ### Fixed
