@@ -211,6 +211,19 @@ describe('target', () => {
 				expect(actual).to.equal(expected);
 			}
 		));
+
+		it('should respect disabled containers', testScenario(
+			scenarios.complexTree,
+			(root) => {
+				configureContainer('third-container');
+				const other = root.querySelector(`[${containerAttribute}='third-container'] .spottable`);
+
+				const expected = null;
+				const actual = getNavigableTarget(other);
+
+				expect(actual).to.equal(expected);
+			}
+		));
 	});
 
 	describe('#getTargetByContainer', () => {

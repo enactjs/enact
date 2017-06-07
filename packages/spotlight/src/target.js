@@ -25,9 +25,20 @@ import {
 } from './utils';
 
 function isFocusable (elem) {
-	return getContainersForNode(elem).reduce((focusable, id) => {
-		return focusable || isNavigable(elem, id, true);
-	}, false);
+	const containers = getContainersForNode(elem);
+	let verifySelector = true;
+
+	for (let i = containers.length - 1; i >= 0; i--) {
+		const containerId = containers[i];
+		if (!isNavigable(elem, containerId, verifySelector)) {
+			return false;
+		}
+
+		// only verify selector for the first (immediate ancestor) container
+		verifySelector = false;
+	}
+
+	return true;
 }
 
 function getAllNavigableElements () {

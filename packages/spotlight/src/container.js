@@ -473,6 +473,11 @@ const isNavigable = (node, containerId, verify) => {
 		return false;
 	}
 
+	const containerNode = getContainerNode(containerId);
+	if (containerNode !== document && containerNode.dataset.containerDisabled) {
+		return false;
+	}
+
 	const config = getContainerConfig(containerId);
 	if (verify && config.selector && !isContainer(node) && !matchSelector(config.selector, node)) {
 		return false;
