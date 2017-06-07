@@ -24,6 +24,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` property `feedbackHideDelay`'s default value to 3000
 - `moonstone/Notification` to break line in characters in ja and zh locale
 - `moonstone/Notification` to align texts left in LTR locale and right in RTL locale
+- `moonstone/VideoPlayer` to simulate rewind functionality on non-webOS platforms only
 
 ### Fixed
 
