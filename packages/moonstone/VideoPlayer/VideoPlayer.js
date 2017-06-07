@@ -1086,14 +1086,19 @@ const VideoPlayerBase = class extends React.Component {
 	}
 	handleKnobMove = (ev) => {
 		this.sliderScrubbing = ev.detached;
-		this.sliderKnobProportion = ev.proportion;
 
-		if (this.sliderScrubbing) {
-			const
-				seconds = Math.round(this.sliderKnobProportion * this.video.duration),
-				knobTime = secondsToTime(seconds, this.durfmt);
+		// prevent announcing repeatedly when the knob is detached from the progress.
+		// TODO: fix Slider to not send onKnobMove when the knob hasn't, in fact, moved
+		if (this.sliderKnobProportion !== ev.proportion) {
+			this.sliderKnobProportion = ev.proportion;
 
-			this.announce(`${$L('jump to')} ${knobTime}`);
+			if (this.sliderScrubbing) {
+				const
+					seconds = Math.round(this.sliderKnobProportion * this.video.duration),
+					knobTime = secondsToTime(seconds, this.durfmt);
+
+				this.announce(`${$L('jump to')} ${knobTime}`);
+			}
 		}
 	}
 	handleMouseOver = () => {
