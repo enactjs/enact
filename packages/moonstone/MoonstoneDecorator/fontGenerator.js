@@ -9,8 +9,6 @@
 import ilib from '@enact/i18n';
 import Locale from '@enact/i18n/ilib/lib/Locale';
 
-// eslint-disable-next-line no-console
-const dev = console;
 const debugFonts = false;
 const pendingFontsLoadedCallbacks = [];
 
@@ -81,6 +79,9 @@ function fontGenerator (locale = ilib.getLocale()) {
 
 	// If the locale is the same as the last time this ran, bail out and don't bother to recompile this again.
 	if (locale === previousLocale) return;
+
+	// eslint-disable-next-line no-console
+	const dev = console;
 
 	previousLocale = locale;
 	const

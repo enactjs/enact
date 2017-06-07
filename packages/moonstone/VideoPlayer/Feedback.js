@@ -61,7 +61,7 @@ const FeedbackBase = kind({
 	},
 
 	computed: {
-		className: ({playbackState: s, styler, visible}) => styler.append({hidden: !visible && states[s] && states[s].allowHide}),
+		className: ({styler, visible}) => styler.append({hidden: !visible}),
 		children: ({children, playbackState: s}) => {
 			if (states[s]) {
 				// Working with a known state, treat `children` as playbackRate

@@ -8,6 +8,7 @@
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Skinnable from '../Skinnable';
 
 import css from './BodyText.less';
 
@@ -56,5 +57,7 @@ const BodyTextBase = kind({
 	}
 });
 
-export default BodyTextBase;
-export {BodyTextBase as BodyText, BodyTextBase};
+const BodyText = Skinnable(BodyTextBase);
+
+export default BodyText;
+export {BodyText, BodyTextBase};

@@ -6,6 +6,7 @@ import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 
 import Icon from '../../Icon';
 import IconButton from '../../IconButton';
+import {withSkinnableProps} from '../../Skinnable';
 
 import css from './Picker.less';
 
@@ -57,8 +58,10 @@ const PickerButtonBase = kind({
 
 const PickerButton = Holdable(
 	{resume: true, endHold: 'onLeave'},
-	onlyUpdateForKeys(['aria-label', 'disabled', 'icon', 'joined', 'onMouseUp', 'spotlightDisabled'])(
-		PickerButtonBase
+	withSkinnableProps(
+		onlyUpdateForKeys(['aria-label', 'disabled', 'icon', 'joined', 'onMouseUp', 'skin', 'spotlightDisabled'])(
+			PickerButtonBase
+		)
 	)
 );
 

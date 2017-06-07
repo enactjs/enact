@@ -8,6 +8,7 @@
 
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
+import deprecate from '@enact/core/internal/deprecate';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import Spotlight from '@enact/spotlight';
@@ -35,11 +36,21 @@ class ScrollerBase extends Component {
 		children: PropTypes.node.isRequired,
 
 		/**
+		 * Direction of the scroller; valid values are `'both'`, `'horizontal'`, and `'vertical'`.
+		 *
+		 * @type {String}
+		 * @default 'both'
+		 * @public
+		 */
+		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
+
+		/**
 		 * Specifies how to horizontally scroll. Acceptable values are `'auto'`, `'default'` ,
 		 * `'hidden'`, and `'scroll'`.
 		 *
 		 * @type {String}
 		 * @default 'auto'
+		 * @deprecated replaced by `direction`
 		 * @public
 		 */
 		horizontal: PropTypes.oneOf(['auto', 'hidden', 'scroll']),
@@ -50,6 +61,7 @@ class ScrollerBase extends Component {
 		 *
 		 * @type {String}
 		 * @default 'auto'
+		 * @deprecated replaced by `direction`
 		 * @public
 		 */
 		vertical: PropTypes.oneOf(['auto', 'hidden', 'scroll'])
@@ -58,8 +70,18 @@ class ScrollerBase extends Component {
 	static contextTypes = contextTypes
 
 	static defaultProps = {
-		horizontal: 'auto',
-		vertical: 'auto'
+		direction: 'both'
+	}
+
+	constructor (props) {
+		super(props);
+
+		if (props.horizontal) {
+			deprecate({name: 'horizontal', since: '1.3.0', message: 'Use `direction` instead', until: '2.0.0'});
+		}
+		if (props.vertical) {
+			deprecate({name: 'vertical', since: '1.3.0', message: 'Use `direction` instead', until: '2.0.0'});
+		}
 	}
 
 	componentDidMount () {
@@ -86,19 +108,32 @@ class ScrollerBase extends Component {
 
 	getScrollBounds = () => this.scrollBounds
 
-	setScrollPosition (valX, valY) {
+	getRtlPositionX = (x) => (this.context.rtl ? this.scrollBounds.maxLeft - x : x)
+
+	// for Scrollable
+	setScrollPosition (x, y) {
 		const
-			node = this.containerRef,
-			rtl = this.context.rtl;
+			node = this.containerRef;
 
 		if (this.isVertical()) {
-			node.scrollTop = valY;
-			this.scrollPos.top = valY;
+			node.scrollTop = y;
+			this.scrollPos.top = y;
 		}
 		if (this.isHorizontal()) {
-			node.scrollLeft = rtl ? (this.scrollBounds.maxLeft - valX) : valX;
-			this.scrollPos.left = valX;
+			node.scrollLeft = this.getRtlPositionX(x);
+			this.scrollPos.left = x;
 		}
+	}
+
+	// for ScrollableNative
+	scrollToPosition (x, y) {
+		this.containerRef.scrollTo(this.getRtlPositionX(x), y);
+	}
+
+	// for ScrollableNative
+	didScroll (x, y) {
+		this.scrollPos.left = x;
+		this.scrollPos.top = y;
 	}
 
 	getNodePosition = (node) => {
@@ -125,7 +160,7 @@ class ScrollerBase extends Component {
 	 * @returns {Node|Null}       Spotlight container for `node`
 	 * @private
 	 */
-	getContainerForNode = (node) => {
+	getSpotlightContainerForNode = (node) => {
 		do {
 			if (node.dataset.containerId) {
 				return node;
@@ -143,7 +178,7 @@ class ScrollerBase extends Component {
 	 * @private
 	 */
 	getFocusedItemBounds = (node) => {
-		node = this.getContainerForNode(node) || node;
+		node = this.getSpotlightContainerForNode(node) || node;
 		return node.getBoundingClientRect();
 	}
 
@@ -262,9 +297,15 @@ class ScrollerBase extends Component {
 		}
 	}
 
-	isVertical = () => (this.props.vertical !== 'hidden')
+	isVertical = () => {
+		const {vertical, direction} = this.props;
+		return vertical ? (vertical !== 'hidden') : (direction !== 'horizontal');
+	}
 
-	isHorizontal = () => (this.props.horizontal !== 'hidden')
+	isHorizontal = () => {
+		const {horizontal, direction} = this.props;
+		return horizontal ? (horizontal !== 'hidden') : (direction !== 'vertical');
+	}
 
 	calculateMetrics () {
 		const
@@ -277,6 +318,8 @@ class ScrollerBase extends Component {
 		scrollBounds.maxLeft = Math.max(0, scrollWidth - clientWidth);
 		scrollBounds.maxTop = Math.max(0, scrollHeight - clientHeight);
 	}
+
+	getContainerNode = () => (this.containerRef)
 
 	setContainerDisabled = (bool) => {
 		if (this.containerRef) {
@@ -293,12 +336,13 @@ class ScrollerBase extends Component {
 			{className, style} = this.props,
 			props = Object.assign({}, this.props),
 			mergedStyle = Object.assign({}, style, {
-				overflowX: props.horizontal,
-				overflowY: props.vertical
+				overflowX: this.isHorizontal() ? 'auto' : 'hidden',
+				overflowY: this.isVertical() ? 'auto' : 'hidden'
 			});
 
 		delete props.cbScrollTo;
 		delete props.className;
+		delete props.direction;
 		delete props.horizontal;
 		delete props.style;
 		delete props.vertical;
@@ -334,11 +378,56 @@ const Scroller = SpotlightContainerDecorator(
 
 // Docs for Scroller
 /**
+ * The callback function which is called for linking scrollTo function.
+ * You should specify a callback function as the value of this prop
+ * to use scrollTo feature.
+ *
+ * The scrollTo function passed to the parent component requires below as an argument.
+ * - {position: {x, y}} - You can set a pixel value for x and/or y position
+ * - {align} - You can set one of values below for align
+ *   `'left'`, `'right'`, `'top'`, `'bottom'`,
+ *   `'topleft'`, `'topright'`, `'bottomleft'`, and `'bottomright'`.
+ * - {index} - You can set an index of specific item. (`0` or positive integer)
+ *   This option is available only for `VirtualList` kind.
+ * - {node} - You can set a node to scroll
+ * - {animate} - When `true`, scroll occurs with animation.
+ *   Set it to `false` if you want scrolling without animation.
+ * - {indexToFocus} - Deprecated: Use `focus` instead.
+ * - {focus} - Set `true` if you want the item to be focused after scroll.
+ *   This option is only valid when you scroll by `index` or `node`.
+ *
+ * Example:
+ * ```
+ *	// If you set cbScrollTo prop like below;
+ *	cbScrollTo: (fn) => {this.scrollTo = fn;}
+ *	// You can simply call like below;
+ *	this.scrollTo({align: 'top'}); // scroll to the top
+ * ```
+ *
+ * @name cbScrollTo
+ * @type {Function}
+ * @memberof moonstone/Scroller.Scroller
+ * @instance
+ * @public
+ */
+
+/**
  * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
  * not move focus to the scrollbar controls.
  *
  * @name focusableScrollbar
  * @type {Boolean}
+ * @memberof moonstone/Scroller.Scroller
+ * @instance
+ * @public
+ */
+
+/**
+ * Direction of the scroller; valid values are `'both'`, `'horizontal'`, and `'vertical'`.
+ *
+ * @name direction
+ * @type {String}
+ * @default 'both'
  * @memberof moonstone/Scroller.Scroller
  * @instance
  * @public
@@ -353,6 +442,49 @@ const Scroller = SpotlightContainerDecorator(
  * @default 'auto'
  * @memberof moonstone/Scroller.Scroller
  * @instance
+ * @deprecated replaced by `direction`
+ * @public
+ */
+
+/**
+ * Specifies how to show horizontal scrollbar. Acceptable values are `'auto'`,
+ * `'visible'`, and `'hidden'`.
+ *
+ * @name horizontalScrollbar
+ * @type {String}
+ * @default 'auto'
+ * @memberof moonstone/Scroller.Scroller
+ * @instance
+ * @public
+ */
+
+/**
+ * Called when scrolling
+ *
+ * @name onScroll
+ * @type {Function}
+ * @memberof moonstone/Scroller.Scroller
+ * @instance
+ * @public
+ */
+
+/**
+ * Called when scroll starts
+ *
+ * @name onScrollStart
+ * @type {Function}
+ * @memberof moonstone/Scroller.Scroller
+ * @instance
+ * @public
+ */
+
+/**
+ * Called when scroll stops
+ *
+ * @name onScrollStop
+ * @type {Function}
+ * @memberof moonstone/Scroller.Scroller
+ * @instance
  * @public
  */
 
@@ -361,6 +493,19 @@ const Scroller = SpotlightContainerDecorator(
  * `'hidden'`, and `'scroll'`.
  *
  * @name vertical
+ * @type {String}
+ * @default 'auto'
+ * @memberof moonstone/Scroller.Scroller
+ * @instance
+ * @deprecated replaced by `direction`
+ * @public
+ */
+
+/**
+ * Specifies how to show vertical scrollbar. Acceptable values are `'auto'`,
+ * `'visible'`, and `'hidden'`.
+ *
+ * @name verticalScrollbar
  * @type {String}
  * @default 'auto'
  * @memberof moonstone/Scroller.Scroller

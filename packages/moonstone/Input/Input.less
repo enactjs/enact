@@ -1,30 +1,21 @@
 // Input.less
 //
-@import '~@enact/ui/styles/mixins.less';
 @import '../styles/mixins.less';
 @import '../styles/variables.less';
 @import '../styles/text.less';
 @import '../styles/skin.less';
 
-.applySkins({
 .input {
 	.moon-body-text();
 
 	padding: 0;
 	border: 0;
 	cursor: pointer;
-	background: transparent;
-	color: @moon-input-text-color;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
 
 	.moon-custom-text-size(@moon-item-font-size-large);
-
-	&::selection {
-		color: @moon-spotlight-text-color;
-		background-color: @moon-spotlight-bg-color;
-	}
 
 	&[type=number] {
 		-moz-appearance: textfield;
@@ -36,27 +27,43 @@
 
 	.input-placeholder({
 		.vendor-opacity(1);
-
-		color: @moon-input-placeholder-color;
 	});
 
-	&:global(.spottable):focus {
-		cursor: text;
-		color: @moon-input-text-color;
-		background-color: inherit;
-	}
+	.focus ({
+			cursor: text;
+	});
 
-	&[disabled] {
+	.disabled({
 		cursor: default;
-	}
+	});
 
 	:global(.enact-locale-right-to-left) & {
 		text-align: right;
 	}
 
-	.invalid & {
-		color: @moon-red;
-	}
+	// Skin colors
+	.applySkins({
+		background: transparent;
+		color: @moon-input-text-color;
+
+		&::selection {
+			color: @moon-spotlight-text-color;
+			background-color: @moon-spotlight-bg-color;
+		}
+
+		.input-placeholder({
+			color: @moon-input-placeholder-color;
+		});
+
+		.focus({
+			color: @moon-input-text-color;
+			background-color: inherit;
+		});
+
+		.invalid & {
+			color: @moon-red;
+		}
+	});
 }
 
 .decorator {
@@ -66,7 +73,6 @@
 	border-radius: 1008px;
 	margin: 6px;
 	border: @moon-input-border-width solid transparent;
-	background-color: @moon-input-decorator-bg-color;
 	box-sizing: border-box;
 
 	.iconBefore,
@@ -90,29 +96,15 @@
 		border-radius: 12px;
 	}
 
-	// For ExpandableInput, the decorator will not receive focus but it can be activated by clicking
-	// which should highlight the border
-	&.noDecorator:active,
-	&:global(.spottable):focus {
-		color: @moon-input-text-color;
-		border-color: @moon-spotlight-border-color;
-		background-color: @moon-input-decorator-bg-color;
-	}
-
 	// an Input that isn't spottable is behaviorly disabled but not visually
 	&:not(:global(.spottable)) .input {
 		pointer-events: none;
-	}
-
-	&.focused {
-		border-color: @moon-active-border-color;
 	}
 
 	.decoratorIcon,
 	&:global(.spottable):focus .decoratorIcon {
 		width: auto;
 		margin: 0;
-		color: @moon-input-text-color;
 	}
 
 	.moon-expandable-input & {
@@ -123,27 +115,61 @@
 		display: inline-block;
 		vertical-align: middle;
 	}
+
+	// Skin colors
+	.applySkins({
+		background-color: @moon-input-decorator-bg-color;
+
+		// For ExpandableInput, the decorator will not receive focus but it can be activated by clicking
+		// which should highlight the border
+		&.noDecorator:active,
+		&:global(.spottable):focus {
+			color: @moon-input-text-color;
+			border-color: @moon-spotlight-border-color;
+			background-color: @moon-input-decorator-bg-color;
+		}
+
+		&.focused {
+			border-color: @moon-active-border-color;
+		}
+
+		.decoratorIcon,
+		&:global(.spottable):focus .decoratorIcon {
+			color: @moon-input-text-color;
+		}
+	});
 }
 
 .invalidTooltip {
+	pointer-events: none;
 	transform: translate(60px, -50%);
+
 	:global(.enact-locale-right-to-left) & {
 		transform: translate(-60px, -50%);
 	}
 }
 
-[data-container-muted='true'] {
+.muted({
 	.decorator {
-		&.focused {
-			border-color: transparent;
-		}
+		.applySkins({
+			// For ExpandableInput, the decorator will not receive focus but it can be activated by clicking
+			// which should highlight the border
+			&.noDecorator:active,
+			&:global(.spottable):focus {
+				border-color: transparent;
+			}
 
-		&:global(.spottable):focus {
-			background-color: @moon-input-decorator-bg-color;
-			border-color: transparent;
-		}
+			&.focused {
+				border-color: transparent;
+			}
+
+			.focus({
+				background-color: @moon-input-decorator-bg-color;
+				border-color: transparent;
+			});
+		});
 	}
-}
+});
 
 :global(.enact-locale-non-latin) {
 	.decorator {
@@ -174,5 +200,3 @@
 		}
 	}
 }
-});
-
