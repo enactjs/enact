@@ -11,6 +11,8 @@ The following is a curated list of changes in the Enact Sampler, newest changes 
 
 - `Platform` sample
 
+- `Platform` sample
+
 ### Changed
 
 ### Fixed
