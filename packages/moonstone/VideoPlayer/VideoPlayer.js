@@ -336,8 +336,8 @@ const VideoPlayerBase = class extends React.Component {
 		onPlayButtonClick: PropTypes.func,
 
 		/**
-		 * When `true`, it will pause the video when it reaches either the start of the end of the
-		 * video while rewinding, slow rewinding, fast fowarding, or slow forwarding.
+		 * When `true`, the video will pause when it reaches either the start or the end of the
+		 * video during rewind, slow rewind, fast foward, or slow forward.
 		 *
 		 * @type {Boolean}
 		 * @default false
