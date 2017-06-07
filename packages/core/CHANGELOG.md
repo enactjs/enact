@@ -8,6 +8,8 @@ The following is a curated list of changes in the Enact core module, newest chan
 
 ### Added
 
+- `core/platform` to support platform detection across multiple browsers
+
 ### Changed
 
 ### Fixed
