@@ -591,6 +591,14 @@ const Spotlight = (function () {
 		setDefaultContainer,
 
 		/**
+		 * Gets the currently active container.
+		 *
+		 * @returns {String} The id of the currently active container
+		 * @public
+		 */
+		getActiveContainer: getLastContainer,
+
+		/**
 		 * Sets the currently active container.
 		 *
 		 * @param {String} [containerId] The id of the currently active container. If this is not

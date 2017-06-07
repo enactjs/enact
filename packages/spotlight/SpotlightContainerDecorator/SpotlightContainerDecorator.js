@@ -216,8 +216,14 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		handleMouseLeave = (ev) => {
 			if (this.props.spotlightRestrict !== 'self-only') {
 				const parentContainer = ev.currentTarget.parentNode.closest('[data-container-id]');
-				const activeContainer = parentContainer ? parentContainer.dataset.containerId : null;
-				Spotlight.setActiveContainer(activeContainer);
+				let activeContainer = Spotlight.getActiveContainer();
+
+				// if this container is wrapped by another and this is the currently active
+				// container, move the active container to the parent
+				if (parentContainer && activeContainer === this.state.id) {
+					activeContainer = parentContainer.dataset.containerId;
+					Spotlight.setActiveContainer(activeContainer);
+				}
 			}
 			forwardMouseLeave(ev, this.props);
 		}
