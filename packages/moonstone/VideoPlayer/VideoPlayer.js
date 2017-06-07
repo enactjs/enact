@@ -236,7 +236,7 @@ const VideoPlayerBase = class extends React.Component {
 
 		/**
 		 * Disable audio for this video. In a TV context, this is handled by the remote control,
-		 * not programatically in the VideoPlayer API.
+		 * not programmatically in the VideoPlayer API.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -744,6 +744,8 @@ const VideoPlayerBase = class extends React.Component {
 	 * Returns an object with the current state of the media including `currentTime`, `duration`,
 	 * `paused`, `proportionLoaded`, and `proportionPlayed`.
 	 *
+	 * @function
+	 * @memberof moonstone/VideoPlayer.VideoPlayerBase.prototype
 	 * @returns {Object}
 	 * @public
 	 */
@@ -777,8 +779,10 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	/**
-	 * Programatically plays the current media.
+	 * Programmatically plays the current media.
 	 *
+	 * @function
+	 * @memberof moonstone/VideoPlayer.VideoPlayerBase.prototype
 	 * @public
 	 */
 	play = () => {
@@ -789,8 +793,10 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	/**
-	 * Programatically plays the current media.
+	 * Programmatically plays the current media.
 	 *
+	 * @function
+	 * @memberof moonstone/VideoPlayer.VideoPlayerBase.prototype
 	 * @public
 	 */
 	pause = () => {
@@ -803,6 +809,9 @@ const VideoPlayerBase = class extends React.Component {
 	/**
 	 * Set the media playback time index
 	 *
+	 * @function
+	 * @memberof moonstone/VideoPlayer.VideoPlayerBase.prototype
+	 * @param {Number} timeIndex - Time index to seek
 	 * @public
 	 */
 	seek = (timeIndex) => {
@@ -813,6 +822,9 @@ const VideoPlayerBase = class extends React.Component {
 	 * Step a given amount of time away from the current playback position.
 	 * Like [seek]{@link moonstone/VideoPlayer.VideoPlayer#seek} but relative.
 	 *
+	 * @function
+	 * @memberof moonstone/VideoPlayer.VideoPlayerBase.prototype
+	 * @param {Number} distance - Time value to jump
 	 * @public
 	 */
 	jump = (distance) => {
@@ -824,6 +836,8 @@ const VideoPlayerBase = class extends React.Component {
 	/**
 	 * Changes the playback speed via [selectPlaybackRate()]{@link moonstone/VideoPlayer.VideoPlayer#selectPlaybackRate}.
 	 *
+	 * @function
+	 * @memberof moonstone/VideoPlayer.VideoPlayerBase.prototype
 	 * @public
 	 */
 	fastForward = () => {
@@ -874,6 +888,8 @@ const VideoPlayerBase = class extends React.Component {
 	/**
 	 * Changes the playback speed via [selectPlaybackRate()]{@link moonstone/VideoPlayer.VideoPlayer#selectPlaybackRate}.
 	 *
+	 * @function
+	 * @memberof moonstone/VideoPlayer.VideoPlayerBase.prototype
 	 * @public
 	 */
 	rewind = () => {
