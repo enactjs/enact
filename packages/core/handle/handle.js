@@ -205,6 +205,40 @@ const forward = handle.forward = curry((name, ev, props) => {
 });
 
 /**
+ * Forwards the event to a function at `name` on `props` with capability to prevent default
+ * behavior. If the specified prop is `undefined` or is not a function, it is ignored. Returns
+ * `false` when `event.preventDefault()` has been called in a handler.
+ *
+ * ```
+ * import {forwardWithPrevent, handle} from '@enact/core/handle';
+ *
+ * const forwardPreventDefault = handle(
+ *   forwardWithPrevent('onClick'),
+ *   (ev) => console.log('default action')
+ * );
+ * ```
+ *
+ * @method   forwardWithPrevent
+ * @private
+ * @memberof core/handle
+ * @param    {String}    name   Name of method on the `props`
+ * @param    {Object}    ev     Event
+ * @param    {Object}    props  Props object
+ * @returns  {Boolean}          Returns `true` if default action is prevented
+ */
+const forwardWithPrevent = handle.forwardWithPrevent = curry((name, ev, props) => {
+	let prevented = false;
+	const wrappedEvent = Object.assign({}, ev, {
+		preventDefault: () => {
+			prevented = true;
+		}
+	});
+	forward(name, wrappedEvent, props);
+
+	return !prevented;
+});
+
+/**
  * Calls `event.preventDefault()` and returns `true`.
  *
  * ```
@@ -364,6 +398,7 @@ export default handle;
 export {
 	callOnEvent,
 	forward,
+	forwardWithPrevent,
 	forEventProp,
 	forKey,
 	forKeyCode,

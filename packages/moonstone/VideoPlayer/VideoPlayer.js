@@ -8,7 +8,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import DurationFmt from '@enact/i18n/ilib/lib/DurationFmt';
-import {forward} from '@enact/core/handle';
+import {forward, forwardWithPrevent, handle} from '@enact/core/handle';
 import ilib from '@enact/i18n';
 import {Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
@@ -80,8 +80,8 @@ const handledCustomMediaEventsMap = {
 const forwardControlsAvailable = forward('onControlsAvailable');
 const forwardBackwardButtonClick = forward('onBackwardButtonClick');
 const forwardForwardButtonClick = forward('onForwardButtonClick');
-const forwardJumpBackwardButtonClick = forward('onJumpBackwardButtonClick');
-const forwardJumpForwardButtonClick = forward('onJumpForwardButtonClick');
+const forwardJumpBackwardButtonClick = forwardWithPrevent('onJumpBackwardButtonClick');
+const forwardJumpForwardButtonClick = forwardWithPrevent('onJumpForwardButtonClick');
 const forwardPlayButtonClick = forward('onPlayButtonClick');
 
 /**
@@ -1057,10 +1057,11 @@ const VideoPlayerBase = class extends React.Component {
 		this.sliderScrubbing = ev.detached;
 		this.sliderKnobProportion = ev.proportion;
 	}
-	onJumpBackward = (ev) => {
-		ev = this.addStateToEvent(ev);
-		forwardJumpBackwardButtonClick(ev, this.props);
-	}
+	handle = handle.bind(this)
+	onJumpBackward = this.handle(
+		(ev, props) => forwardJumpBackwardButtonClick(this.addStateToEvent(ev), props),
+		() => this.jump(-1 * this.props.jumpBy)
+	)
 	onBackward = (ev) => {
 		ev = this.addStateToEvent(ev);
 		forwardBackwardButtonClick(ev, this.props);
@@ -1080,10 +1081,10 @@ const VideoPlayerBase = class extends React.Component {
 		forwardForwardButtonClick(ev, this.props);
 		this.fastForward();
 	}
-	onJumpForward = (ev) => {
-		ev = this.addStateToEvent(ev);
-		forwardJumpForwardButtonClick(ev, this.props);
-	}
+	onJumpForward = this.handle(
+		(ev, props) => forwardJumpForwardButtonClick(this.addStateToEvent(ev), props),
+		() => this.jump(this.props.jumpBy)
+	)
 	onMoreClick = () => {
 		if (this.state.more) {
 			this.moreInProgress = false;
