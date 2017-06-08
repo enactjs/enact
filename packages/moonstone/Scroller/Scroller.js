@@ -8,8 +8,10 @@
 
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
+import deprecate from '@enact/core/internal/deprecate';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
+import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import css from './Scroller.less';
@@ -34,11 +36,21 @@ class ScrollerBase extends Component {
 		children: PropTypes.node.isRequired,
 
 		/**
+		 * Direction of the scroller; valid values are `'both'`, `'horizontal'`, and `'vertical'`.
+		 *
+		 * @type {String}
+		 * @default 'both'
+		 * @public
+		 */
+		direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
+
+		/**
 		 * Specifies how to horizontally scroll. Acceptable values are `'auto'`, `'default'` ,
 		 * `'hidden'`, and `'scroll'`.
 		 *
 		 * @type {String}
 		 * @default 'auto'
+		 * @deprecated replaced by `direction`
 		 * @public
 		 */
 		horizontal: PropTypes.oneOf(['auto', 'hidden', 'scroll']),
@@ -49,6 +61,7 @@ class ScrollerBase extends Component {
 		 *
 		 * @type {String}
 		 * @default 'auto'
+		 * @deprecated replaced by `direction`
 		 * @public
 		 */
 		vertical: PropTypes.oneOf(['auto', 'hidden', 'scroll'])
@@ -57,8 +70,18 @@ class ScrollerBase extends Component {
 	static contextTypes = contextTypes
 
 	static defaultProps = {
-		horizontal: 'auto',
-		vertical: 'auto'
+		direction: 'both'
+	}
+
+	constructor (props) {
+		super(props);
+
+		if (props.horizontal) {
+			deprecate({name: 'horizontal', since: '1.3.0', message: 'Use `direction` instead', until: '2.0.0'});
+		}
+		if (props.vertical) {
+			deprecate({name: 'vertical', since: '1.3.0', message: 'Use `direction` instead', until: '2.0.0'});
+		}
 	}
 
 	componentDidMount () {
@@ -85,63 +108,98 @@ class ScrollerBase extends Component {
 
 	getScrollBounds = () => this.scrollBounds
 
-	setScrollPosition (valX, valY) {
+	getRtlPositionX = (x) => (this.context.rtl ? this.scrollBounds.maxLeft - x : x)
+
+	// for Scrollable
+	setScrollPosition (x, y) {
 		const
-			node = this.containerRef,
-			rtl = this.context.rtl;
+			node = this.containerRef;
 
 		if (this.isVertical()) {
-			node.scrollTop = valY;
-			this.scrollPos.top = valY;
+			node.scrollTop = y;
+			this.scrollPos.top = y;
 		}
 		if (this.isHorizontal()) {
-			node.scrollLeft = rtl ? (this.scrollBounds.maxLeft - valX) : valX;
-			this.scrollPos.left = valX;
+			node.scrollLeft = this.getRtlPositionX(x);
+			this.scrollPos.left = x;
 		}
 	}
 
-	getScrollPos = (item) => {
-		let node = item;
+	// for ScrollableNative
+	scrollToPosition (x, y) {
+		this.containerRef.scrollTo(this.getRtlPositionX(x), y);
+	}
+
+	// for ScrollableNative
+	didScroll (x, y) {
+		this.scrollPos.left = x;
+		this.scrollPos.top = y;
+	}
+
+	getNodePosition = (node) => {
 		const
-			bounds = {
-				left: 0,
-				top: 0,
-				width: node.offsetWidth,
-				height: node.offsetHeight
-			};
+			{left: nodeLeft, top: nodeTop, height: nodeHeight, width: nodeWidth} = node.getBoundingClientRect(),
+			{left: containerLeft, top: containerTop} = this.containerRef.getBoundingClientRect(),
+			{scrollLeft, scrollTop} = this.containerRef,
+			left = this.isHorizontal() ? (scrollLeft + nodeLeft - containerLeft) : null,
+			top = this.isVertical() ? (scrollTop + nodeTop - containerTop) : null;
 
-		while (node && node.parentNode && node.id !== this.containerRef.id) {
-			bounds.left += node.offsetLeft;
-			bounds.top += node.offsetTop;
-			node = node.parentNode;
-		}
-
-		return bounds;
+		return {
+			left,
+			top,
+			width: nodeWidth,
+			height: nodeHeight
+		};
 	}
 
-	calculatePositionOnFocus = (focusedItem) => {
-		if (this.isVertical()) {
-			const
-				{clientHeight} = this.scrollBounds,
-				{height: itemHeight, top: itemTop} = focusedItem.getBoundingClientRect(),
-				{top: containerTop} = this.containerRef.getBoundingClientRect(),
-				currentScrollTop = this.scrollPos.top,
-				// calculation based on client position
-				newItemTop = this.containerRef.scrollTop + (itemTop - containerTop);
-
-			if (newItemTop + itemHeight > (clientHeight + currentScrollTop)) {
-				this.scrollPos.top += (newItemTop + itemHeight) - (clientHeight + currentScrollTop);
-			} else if (newItemTop < currentScrollTop) {
-				this.scrollPos.top += newItemTop - currentScrollTop;
+	/**
+	 * Returns the first spotlight container between `node` and the scroller
+	 *
+	 * @param   {Node}      node  A DOM node
+	 *
+	 * @returns {Node|Null}       Spotlight container for `node`
+	 * @private
+	 */
+	getSpotlightContainerForNode = (node) => {
+		do {
+			if (node.dataset.containerId) {
+				return node;
 			}
+		} while ((node = node.parentNode) && node !== this.containerRef);
+	}
 
+	/**
+	 * Calculates the "focus bounds" of a node. If the node is within a spotlight container, that
+	 * container is scrolled into view rather than just the element.
+	 *
+	 * @param   {Node}   node  Focused node
+	 *
+	 * @returns {Object}       Bounds as returned by `getBoundingClientRect`
+	 * @private
+	 */
+	getFocusedItemBounds = (node) => {
+		node = this.getSpotlightContainerForNode(node) || node;
+		return node.getBoundingClientRect();
+	}
+
+	calculatePositionOnFocus = (focusedItem, scrollInfo) => {
+		if (!this.isVertical() && !this.isHorizontal() || !focusedItem || !this.containerRef.contains(focusedItem)) return;
+
+		const {
+			top: itemTop,
+			left: itemLeft,
+			height: itemHeight,
+			width: itemWidth
+		} = this.getFocusedItemBounds(focusedItem);
+
+		if (this.isVertical()) {
+			this.scrollPos.top = this.calculateScrollTop(focusedItem, itemTop, itemHeight, scrollInfo);
 		}
 
 		if (this.isHorizontal()) {
 			const
 				{clientWidth} = this.scrollBounds,
 				rtlDirection = this.context.rtl ? -1 : 1,
-				{width: itemWidth, left: itemLeft} = focusedItem.getBoundingClientRect(),
 				{left: containerLeft} = this.containerRef.getBoundingClientRect(),
 				currentScrollLeft = this.scrollPos.left * rtlDirection,
 				// calculation based on client position
@@ -165,9 +223,89 @@ class ScrollerBase extends Component {
 		return this.scrollPos;
 	}
 
-	isVertical = () => (this.props.vertical !== 'hidden')
+	calculateScrollTop = (focusedItem, itemTop, itemHeight, scrollInfo) => {
+		const
+			{clientHeight} = this.scrollBounds,
+			{top: containerTop} = this.containerRef.getBoundingClientRect(),
+			currentScrollTop = this.scrollPos.top,
+			// calculation based on client position
+			newItemTop = this.containerRef.scrollTop + (itemTop - containerTop),
+			itemBottom = newItemTop + itemHeight,
+			scrollBottom = clientHeight + currentScrollTop;
 
-	isHorizontal = () => (this.props.horizontal !== 'hidden')
+		let newScrollTop = this.scrollPos.top;
+
+		if (scrollInfo) {
+			const
+				{scrollTop, previousScrollHeight} = scrollInfo,
+				{scrollHeight} = this.scrollBounds,
+				scrollHeightDecrease = previousScrollHeight - scrollHeight;
+
+			newScrollTop = scrollTop;
+
+			if (scrollHeightDecrease > 0) {
+				// Update scrollTop for scrollHeight decrease
+				const
+					itemBounds = focusedItem.getBoundingClientRect(),
+					newItemBottom = newScrollTop + itemBounds.top + itemBounds.height - containerTop;
+
+				if (newItemBottom < scrollBottom && scrollHeightDecrease + newItemBottom > scrollBottom) {
+					// When `focusedItem` is not at the very bottom of the `Scroller` and
+					// `scrollHeightDecrease` caused a scroll.
+					const distanceFromBottom = scrollBottom - newItemBottom,
+						bottomOffset = scrollHeightDecrease - distanceFromBottom;
+					if (bottomOffset < newScrollTop) {
+						// guard against negative `scrollTop`
+						newScrollTop -= bottomOffset;
+					}
+				} else if (newItemBottom === scrollBottom) {
+					// when `focusedItem` is at the very bottom of the `Scroller`
+					if (scrollHeightDecrease < newScrollTop) {
+						// guard against negative `scrollTop`
+						newScrollTop -= scrollHeightDecrease;
+					}
+				}
+			}
+		}
+
+		if (itemHeight > clientHeight) {
+			// scroller behavior for containers that are bigger than `clientHeight`
+			const
+				{top, height: nestedItemHeight} = focusedItem.getBoundingClientRect(),
+				nestedItemTop = this.containerRef.scrollTop + (top - containerTop),
+				nestedItemBottom = nestedItemTop + nestedItemHeight;
+
+			if (newItemTop - nestedItemHeight > currentScrollTop) {
+				// set scroll position so that the top of the container is at least on the top
+				newScrollTop = newItemTop - nestedItemHeight;
+			} else if (nestedItemBottom > scrollBottom) {
+				newScrollTop += nestedItemBottom - scrollBottom;
+			} else if (nestedItemTop < currentScrollTop) {
+				newScrollTop += nestedItemTop - currentScrollTop;
+			}
+		} else if (itemBottom > scrollBottom) {
+			newScrollTop += itemBottom - scrollBottom;
+		} else if (newItemTop < currentScrollTop) {
+			newScrollTop += newItemTop - currentScrollTop;
+		}
+		return newScrollTop;
+	}
+
+	focusOnNode = (node) => {
+		if (node) {
+			Spotlight.focus(node);
+		}
+	}
+
+	isVertical = () => {
+		const {vertical, direction} = this.props;
+		return vertical ? (vertical !== 'hidden') : (direction !== 'horizontal');
+	}
+
+	isHorizontal = () => {
+		const {horizontal, direction} = this.props;
+		return horizontal ? (horizontal !== 'hidden') : (direction !== 'vertical');
+	}
 
 	calculateMetrics () {
 		const
@@ -180,6 +318,8 @@ class ScrollerBase extends Component {
 		scrollBounds.maxLeft = Math.max(0, scrollWidth - clientWidth);
 		scrollBounds.maxTop = Math.max(0, scrollHeight - clientHeight);
 	}
+
+	getContainerNode = () => (this.containerRef)
 
 	setContainerDisabled = (bool) => {
 		if (this.containerRef) {
@@ -196,12 +336,13 @@ class ScrollerBase extends Component {
 			{className, style} = this.props,
 			props = Object.assign({}, this.props),
 			mergedStyle = Object.assign({}, style, {
-				overflowX: props.horizontal,
-				overflowY: props.vertical
+				overflowX: this.isHorizontal() ? 'auto' : 'hidden',
+				overflowY: this.isVertical() ? 'auto' : 'hidden'
 			});
 
 		delete props.cbScrollTo;
 		delete props.className;
+		delete props.direction;
 		delete props.horizontal;
 		delete props.style;
 		delete props.vertical;
@@ -224,7 +365,6 @@ class ScrollerBase extends Component {
  * @class Scroller
  * @memberof moonstone/Scroller
  * @mixes moonstone/Scroller.Scrollable
- * @mixes spotlight.SpotlightContainerDecorator
  * @see moonstone/Scroller.ScrollerBase
  * @ui
  * @public
@@ -235,6 +375,143 @@ const Scroller = SpotlightContainerDecorator(
 		ScrollerBase
 	)
 );
+
+// Docs for Scroller
+/**
+ * The callback function which is called for linking scrollTo function.
+ * You should specify a callback function as the value of this prop
+ * to use scrollTo feature.
+ *
+ * The scrollTo function passed to the parent component requires below as an argument.
+ * - {position: {x, y}} - You can set a pixel value for x and/or y position
+ * - {align} - You can set one of values below for align
+ *   `'left'`, `'right'`, `'top'`, `'bottom'`,
+ *   `'topleft'`, `'topright'`, `'bottomleft'`, and `'bottomright'`.
+ * - {index} - You can set an index of specific item. (`0` or positive integer)
+ *   This option is available only for `VirtualList` kind.
+ * - {node} - You can set a node to scroll
+ * - {animate} - When `true`, scroll occurs with animation.
+ *   Set it to `false` if you want scrolling without animation.
+ * - {indexToFocus} - Deprecated: Use `focus` instead.
+ * - {focus} - Set `true` if you want the item to be focused after scroll.
+ *   This option is only valid when you scroll by `index` or `node`.
+ *
+ * Example:
+ * ```
+ *	// If you set cbScrollTo prop like below;
+ *	cbScrollTo: (fn) => {this.scrollTo = fn;}
+ *	// You can simply call like below;
+ *	this.scrollTo({align: 'top'}); // scroll to the top
+ * ```
+ *
+ * @name cbScrollTo
+ * @type {Function}
+ * @memberof moonstone/Scroller.Scroller
+ * @instance
+ * @public
+ */
+
+/**
+ * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
+ * not move focus to the scrollbar controls.
+ *
+ * @name focusableScrollbar
+ * @type {Boolean}
+ * @memberof moonstone/Scroller.Scroller
+ * @instance
+ * @public
+ */
+
+/**
+ * Direction of the scroller; valid values are `'both'`, `'horizontal'`, and `'vertical'`.
+ *
+ * @name direction
+ * @type {String}
+ * @default 'both'
+ * @memberof moonstone/Scroller.Scroller
+ * @instance
+ * @public
+ */
+
+/**
+ * Specifies how to horizontally scroll. Acceptable values are `'auto'`, `'default'` ,
+ * `'hidden'`, and `'scroll'`.
+ *
+ * @name horizontal
+ * @type {String}
+ * @default 'auto'
+ * @memberof moonstone/Scroller.Scroller
+ * @instance
+ * @deprecated replaced by `direction`
+ * @public
+ */
+
+/**
+ * Specifies how to show horizontal scrollbar. Acceptable values are `'auto'`,
+ * `'visible'`, and `'hidden'`.
+ *
+ * @name horizontalScrollbar
+ * @type {String}
+ * @default 'auto'
+ * @memberof moonstone/Scroller.Scroller
+ * @instance
+ * @public
+ */
+
+/**
+ * Called when scrolling
+ *
+ * @name onScroll
+ * @type {Function}
+ * @memberof moonstone/Scroller.Scroller
+ * @instance
+ * @public
+ */
+
+/**
+ * Called when scroll starts
+ *
+ * @name onScrollStart
+ * @type {Function}
+ * @memberof moonstone/Scroller.Scroller
+ * @instance
+ * @public
+ */
+
+/**
+ * Called when scroll stops
+ *
+ * @name onScrollStop
+ * @type {Function}
+ * @memberof moonstone/Scroller.Scroller
+ * @instance
+ * @public
+ */
+
+/**
+ * Specifies how to vertically scroll. Acceptable values are `'auto'`, `'auto'` ,
+ * `'hidden'`, and `'scroll'`.
+ *
+ * @name vertical
+ * @type {String}
+ * @default 'auto'
+ * @memberof moonstone/Scroller.Scroller
+ * @instance
+ * @deprecated replaced by `direction`
+ * @public
+ */
+
+/**
+ * Specifies how to show vertical scrollbar. Acceptable values are `'auto'`,
+ * `'visible'`, and `'hidden'`.
+ *
+ * @name verticalScrollbar
+ * @type {String}
+ * @default 'auto'
+ * @memberof moonstone/Scroller.Scroller
+ * @instance
+ * @public
+ */
 
 export default Scroller;
 export {Scroller, ScrollerBase};

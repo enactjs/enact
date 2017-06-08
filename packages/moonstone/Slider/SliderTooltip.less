@@ -1,4 +1,5 @@
-@import '../styles/colors.less';
+// SliderTooltip.less
+//
 @import '../styles/variables.less';
 @import '../styles/text.less';
 
@@ -20,6 +21,7 @@
 				top: (@moon-slider-tooltip-offset + @offset-large);
 			});
 		}
+
 		[data-climax="falling"] & {
 			transform: translateX(-100%);
 		}
@@ -37,6 +39,7 @@
 				transform: translate((-54px - @offset-large), -50%);
 			});
 		}
+
 		// Right side
 		&.after,
 		:global(.enact-locale-right-to-left) &.after.ignoreLocale,

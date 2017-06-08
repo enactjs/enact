@@ -2,6 +2,40 @@
 
 The following is a curated list of changes in the Enact Sampler, newest changes on the top.
 
+## [unreleased]
+
+### Deprecated
+
+### Added
+
+- `Platform` sample
+
+### Changed
+
+### Fixed
+
+- `moonstone/VideoPlayer` sample to update poster images
+
+### Removed
+
+## [1.2.2] - 2017-05-31
+
+No significant changes.
+
+## [1.2.1] - 2017-05-25
+
+No significant changes.
+
+## [1.2.0] - 2017-05-17
+
+### Added
+
+- `skin` knob to all samples to allow switching between dark and light skins
+
+## Fixed
+
+- `largeText` and `locale` knobs to not disappear after use
+
 ## [1.1.0] - 2017-04-21
 
 Updated with new properties for Moonstone controls.

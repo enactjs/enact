@@ -5,7 +5,6 @@
  * @module moonstone/Popup
  */
 
-import $L from '@enact/i18n/$L';
 import {is} from '@enact/core/keymap';
 import {on, off} from '@enact/core/dispatcher';
 import FloatingLayer from '@enact/ui/FloatingLayer';
@@ -17,12 +16,17 @@ import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDeco
 import Transition from '@enact/ui/Transition';
 import {forward} from '@enact/core/handle';
 
+import $L from '../internal/$L';
 import IconButton from '../IconButton';
+import Skinnable from '../Skinnable';
 
 import css from './Popup.less';
 
 const isUp = is('up');
-const TransitionContainer = SpotlightContainerDecorator({preserveId: true}, Transition);
+const TransitionContainer = SpotlightContainerDecorator(
+	{enterTo: 'last-focused', preserveId: true},
+	Transition
+);
 
 const getContainerNode = (containerId) => {
 	return document.querySelector(`[data-container-id='${containerId}']`);
@@ -126,7 +130,7 @@ const PopupBase = kind({
 
 	styles: {
 		css,
-		className: 'popup moon-neutral'
+		className: 'popup'
 	},
 
 	computed: {
@@ -164,7 +168,11 @@ const PopupBase = kind({
 				className={css.popupTransitionContainer}
 				onHide={onHide}
 			>
-				<div {...rest}>
+				<div
+					aria-live="off"
+					role="alert"
+					{...rest}
+				>
 					<div className={css.body}>
 						{children}
 					</div>
@@ -174,6 +182,11 @@ const PopupBase = kind({
 		);
 	}
 });
+
+const SkinnedPopupBase = Skinnable(
+	{defaultSkin: 'light'},
+	PopupBase
+);
 
 /**
  * {@link moonstone/Popup.Popup} is a stateful component that help {@link moonstone/Popup.PopupBase}
@@ -435,9 +448,7 @@ class Popup extends React.Component {
 				onTransitionEnd={this.handleTransitionEnd}
 				scrimType={scrimType}
 			>
-				<PopupBase
-					aria-live="off"
-					role="alert"
+				<SkinnedPopupBase
 					{...rest}
 					containerId={this.state.containerId}
 					open={this.state.popupOpen}

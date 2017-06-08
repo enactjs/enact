@@ -171,4 +171,21 @@ describe('ViewManager', () => {
 		}, duration + 10);
 	});
 
+
+	it('should have size of 1 on TransitionGroup', function (done) {
+		const subject = mount(
+			<ViewManager noAnimation index={0} duration={0}>
+				<div className="view">View 1</div>
+				<div className="view">View 2</div>
+				<div className="view">View 3</div>
+				<div className="view">View 4</div>
+				<div className="view">View 5</div>
+			</ViewManager>
+		);
+
+		const expected = 1;
+		const actual = subject.find('TransitionGroup').prop('size');
+		expect(actual).to.equal(expected);
+		done();
+	});
 });

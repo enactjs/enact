@@ -1,5 +1,8 @@
+// Notification.less
+//
 @import '../styles/variables.less';
 @import '../styles/text.less';
+@import '../styles/skin.less';
 
 .notification {
 	position: absolute;
@@ -20,11 +23,12 @@
 		max-width: 1287px; // 4 button case
 	}
 
-	&:before {
+	&::before {
 		content: '';
 		display: block;
 		position: absolute;
-		border: @moon-notification-border-width solid fade(@moon-black, @moon-notification-border-opacity);
+		border-width: @moon-notification-border-width;
+		border-style: solid;
 		border-radius: @moon-notification-out-border-radius;
 		top: -@moon-notification-border-width;
 		right: -@moon-notification-border-width;
@@ -35,6 +39,12 @@
 
 	.body {
 		.moon-notification-content();
+
+		:global(.enact-locale-ja) &,
+		:global(.enact-locale-zh) & {
+			word-wrap: normal;
+			word-break: normal;
+		}
 	}
 
 	.buttons {
@@ -62,4 +72,11 @@
 			}
 		}
 	}
+
+	// Skin colors
+	.applySkins({
+		&::before {
+			border-color: @moon-notification-border-color;
+		}
+	});
 }

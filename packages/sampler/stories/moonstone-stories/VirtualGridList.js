@@ -4,9 +4,10 @@ import {VirtualListCore} from '@enact/moonstone/VirtualList/VirtualListBase';
 import GridListImageItem from '@enact/moonstone/VirtualList/GridListImageItem';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, number, select} from '@kadira/storybook-addon-knobs';
+import {boolean, number, select} from '@kadira/storybook-addon-knobs';
 
 import {mergeComponentMetadata} from '../../src/utils/propTables';
+import nullify from '../../src/utils/nullify.js';
 
 const Config = mergeComponentMetadata('VirtualGridList', VirtualListCore, VirtualGridList);
 
@@ -42,7 +43,6 @@ for (let i = 0; i < 1000; i++) {
 }
 
 storiesOf('VirtualList.VirtualGridList')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'Basic usage of VirtualGridList',
@@ -53,6 +53,7 @@ storiesOf('VirtualList.VirtualGridList')
 				dataSize={number('dataSize', items.length)}
 				direction={select('direction', prop.direction, 'vertical')}
 				itemSize={{minWidth: ri.scale(number('minWidth', 180)), minHeight: ri.scale(number('minHeight', 270))}}
+				focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
 				spacing={ri.scale(number('spacing', 20))}

@@ -1,7 +1,7 @@
 import Image from '@enact/moonstone/Image';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, select} from '@kadira/storybook-addon-knobs';
+import {select} from '@kadira/storybook-addon-knobs';
 
 const src = {
 	'hd': 'http://lorempixel.com/128/128/city/1/',
@@ -10,7 +10,6 @@ const src = {
 };
 
 storiesOf('Image')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		' ',
 		'The basic Image',

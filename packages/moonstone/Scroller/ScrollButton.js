@@ -1,11 +1,12 @@
-import $L from '@enact/i18n/$L';
 import Holdable from '@enact/ui/Holdable';
 import kind from '@enact/core/kind';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import $L from '../internal/$L';
 import IconButton from '../IconButton';
+import {withSkinnableProps} from '../Skinnable';
 
 import css from './Scrollbar.less';
 
@@ -57,9 +58,14 @@ const ScrollButtonBase = kind({
 		disabled: PropTypes.bool
 	},
 
+	styles: {
+		css,
+		className: 'scrollButton'
+	},
+
 	computed: {
 		'aria-label': ({direction}) => $L(`scroll ${direction}`),
-		className: ({direction}) => classNameMap[direction]
+		className: ({direction, styler}) => styler.append(classNameMap[direction])
 	},
 
 	render: ({children, disabled, ...rest}) => {
@@ -88,8 +94,10 @@ const ScrollButtonBase = kind({
  * @ui
  * @private
  */
-const ScrollButton = onlyUpdateForKeys(['children', 'disabled'])(
-	ScrollButtonBase
+const ScrollButton = withSkinnableProps(
+	onlyUpdateForKeys(['children', 'disabled', 'skin'])(
+		ScrollButtonBase
+	)
 );
 
 export default ScrollButton;

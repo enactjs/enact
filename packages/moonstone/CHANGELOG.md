@@ -2,6 +2,84 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Deprecated
+
+- `moonstone/Scroller` props `horizontal` and `vertical`. Deprecated props are replaced with `direction` prop. `horizontal` and `vertical` will be removed in 2.0.0.
+- `moonstone/Panel` prop `noAutoFocus` in favor of `autoFocus="none"`
+
+### Added
+
+- `moonstone/Image` support for `children` prop inside images
+- `moonstone/Scroller` prop `direction` which replaces `horizontal` and `vertical` props.
+- `moonstone/VideoPlayer` property `tooltipHideDelay` to hide tooltip with a given amount of time
+- `moonstone/VideoPlayer` methods `fastForward`, `getMediaState`, `jump`, `pause`, `play`, `rewind`, and `seek` to allow external interaction with the player. See docs for example usage.
+
+### Changed
+
+- `moonstone/Skinnable` to support context and allow it to be added to any component to be individually skinned. This includes a further optimization in skinning which consolidates all color assignments into a single block, so non-color rules aren't unnecessarily duplicated.
+- `moonstone/VideoPlayer` to set play/pause icon to display "play" when rewinding or fast forwarding
+- `moonstone/VideoPlayer` to rewind or fast forward when previous command is slow-forward or slow-rewind respectively
+- `moonstone/VideoPlayer` to fast forward when previous command is slow-forward and it reaches the last of its play rate
+- `moonstone/VideoPlayer` to not play video on reload when `noAutoPlay` is `true`
+- `moonstone/VideoPlayer` property `feedbackHideDelay`'s default value to 3000
+- `moonstone/Notification` to break line in characters in ja and zh locale
+- `moonstone/Notification` to align texts left in LTR locale and right in RTL locale
+- `moonstone/VideoPlayer` to simulate rewind functionality on non-webOS platforms only
+
+### Fixed
+
+- `moonstone/ExpandableItem` to correct the `titleIcon` when using `open` and `disabled`
+- `moonstone/GridListImageItem` to center its selection icon on the image instead of the item
+- `moonstone/Input` to have correct `Tooltip` position in `RTL`
+- `moonstone/SwitchItem` to not unintentionally overflow `Scroller` containers, causing them to jump to the side when focusing
+- `moonstone/VideoPlayer` to fast forward properly when video is at paused state
+- `moonstone/VideoPlayer` to correctly change sources
+- `moonstone/VideoPlayer` to show or hide feedback tooltip properly
+- `moonstone/DateTimeDecorator` to work properly with `RadioControllerDecorator`
+
+### Removed
+
+## [1.2.0] - 2017-05-17
+
+### Deprecated
+
+- `moonstone/Scroller.Scrollable` option `indexToFocus` in `scrollTo` method to be removed in 2.0.0
+
+### Added
+
+- `moonstone/Slider` and `moonstone/IncrementSlider` prop `noFill` to support a style without the fill
+- `moonstone/Marquee` property `rtl` to set directionality to right-to-left
+- `moonstone/VirtualList.GridListImageItem` property `selectionOverlay` to add custom component for selection overlay
+- `moonstone/MoonstoneDecorator` property `skin` to let an app choose its skin: "moonstone" and "moonstone-light" are now available
+- `moonstone/FormCheckboxItem`
+- `moonstone/FormCheckbox`, a standalone checkbox, to support `moonstone/FormCheckboxItem`
+- `moonstone/Input` props `invalid` and `invalidMessage` to display a tooltip when input value is invalid
+- `moonstone/Scroller.Scrollable` option `focus` in `scrollTo()` method
+- `moonstone/Scroller.Scrollable` property `spottableScrollbar`
+- `moonstone/Icon.IconList` icons: `arrowshrinkleft` and `arrowshrinkright`
+
+### Changed
+
+- `moonstone/Picker` arrow icon for `joined` picker: small when not spotted, hidden when it reaches the end of the picker
+- `moonstone/Checkbox` and `moonstone/CheckboxItem` to reflect the latest design
+- `moonstone/MoonstoneDecorator/fontGenerator` was refactored to use the browser's FontFace API to dynamically load locale fonts
+- `moonstone/VideoPlayer` space allotment on both sides of the playback controls to support 4 buttons; consequently the "more" controls area has shrunk by the same amount
+- `moonstone/VideoPlayer` to not disable media button (play/pause)
+- `moonstone/Scroller.Scrollable` so that paging controls are not spottable by default with 5-way
+- `moonstone/VideoPlayer`'s more/less button to use updated arrow icon
+
+### Fixed
+
+- `moonstone/MarqueeDecorator` to properly stop marquee on items with `'marqueeOnHover'`
+- `moonstone/ExpandableList` to work properly with object-based children
+- `moonstone/styles/fonts.less` to restore the Moonstone Icon font to request the local system font by default. Remember to update your webOS build to get the latest version of the font so you don't see empty boxes for your icons.
+- `moonstone/Picker` and `moonstone/RangePicker` to now use the correct size from Enyo (60px v.s. 84px) for icon buttons
+- `moonstone/Scrollable` to apply ri.scale properly
+- `moonstone/Panel` to not cover a `Panels`'s `ApplicationCloseButton` when not using a `Header`
+- `moonstone/IncrementSlider` to show tooltip when buttons focused
+
 ## [1.1.0] - 2017-04-21
 
 ### Deprecated

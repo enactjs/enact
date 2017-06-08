@@ -18,6 +18,8 @@ import Picker from '../Picker';
 
 import ExpandablePickerDecorator from './ExpandablePickerDecorator';
 
+import css from './ExpandablePicker.less';
+
 /**
  * {@link moonstone/ExpandablePicker.ExpandablePickerBase} is a stateless component that
  * renders a list of items into a picker that allows the user to select only a single item at
@@ -176,6 +178,11 @@ const ExpandablePickerBase = kind({
 		value: 0
 	},
 
+	styles: {
+		css,
+		className: 'expandablePicker'
+	},
+
 	handlers: {
 		onChange: (ev, {onChange, onClose, value}) => {
 			if (onClose) {
@@ -214,6 +221,7 @@ const ExpandablePickerBase = kind({
 		return (
 			<ExpandableItemBase {...rest} disabled={disabled} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled}>
 				<Picker
+					className={css.picker}
 					disabled={disabled}
 					onChange={onPick}
 					value={value}
@@ -229,7 +237,7 @@ const ExpandablePickerBase = kind({
 				>
 					{children}
 				</Picker>
-				<IconButton onClick={onChange} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled}>check</IconButton>
+				<IconButton onClick={onChange} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled} className={css.button} small>check</IconButton>
 			</ExpandableItemBase>
 		);
 	}

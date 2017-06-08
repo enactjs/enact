@@ -199,7 +199,7 @@ class ViewManager extends React.Component {
 
 		const from = (start || start === 0) ? start : index;
 		const to = (end || end === 0) && end >= index ? end : index;
-		const size = to - from + 1;
+		const size = to - from + (noAnimation ? 0 : 1);
 
 		const views = childrenList.slice(from, to + 1);
 		const childFactory = wrapWithView({
@@ -216,7 +216,7 @@ class ViewManager extends React.Component {
 		delete rest.reverseTransition;
 
 		return (
-			<TransitionGroup {...rest} childFactory={childFactory} size={size + 1}>
+			<TransitionGroup {...rest} childFactory={childFactory} size={size + 1} currentIndex={index}>
 				{views}
 			</TransitionGroup>
 		);

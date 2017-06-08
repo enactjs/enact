@@ -16,7 +16,7 @@
 @font-system-src-non-latin-light:  local("LG Display-Light");
 @font-system-src-non-latin-bold:   local("LG Display-Regular");
 
-@font-system-src-moonstone-icons:  url("../fonts/Moonstone.ttf") format("truetype");
+@font-system-src-moonstone-icons:  local("Moonstone"), url("../fonts/Moonstone.ttf") format("truetype");
 @font-system-src-lg-icons:         local("LG Display_Dingbat");
 
 
@@ -220,7 +220,7 @@
 	/* We want "LG Display" to map to the bold variant, since that was originally the only option */
 	font-family: "Moonstone LG Display";
 	src: @font-system-src-non-latin;
-	font-weight: 500;
+	font-weight: 400;
 	font-style: normal;
 }
 @font-face {

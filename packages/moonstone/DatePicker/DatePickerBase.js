@@ -1,9 +1,9 @@
-import $L from '@enact/i18n/$L';
 import {forKey, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import $L from '../internal/$L';
 import {DateComponentRangePicker} from '../internal/DateComponentPicker';
 import {ExpandableItemBase} from '../ExpandableItem';
 

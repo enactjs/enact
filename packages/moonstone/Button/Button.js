@@ -2,6 +2,9 @@
  * Exports the {@link moonstone/Button.Button} and {@link moonstone/Button.ButtonBase}
  * components.  The default export is {@link moonstone/Button.Button}.
  *
+ * @example
+ * <Button small>Click me</Button>
+ *
  * @module moonstone/Button
  */
 
@@ -17,6 +20,7 @@ import PropTypes from 'prop-types';
 import Icon from '../Icon';
 import {MarqueeDecorator} from '../Marquee';
 import {TooltipDecorator} from '../TooltipDecorator';
+import Skinnable from '../Skinnable';
 
 import componentCss from './Button.less';
 
@@ -202,12 +206,6 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 		},
 
 		render: ({children, disabled, icon, ...rest}) => {
-			// Do not add the ARIA attribute if the selected prop is omitted to avoid the potentially
-			// confusing readout for the common case of a standalone Button or IconButton.
-			if ('selected' in rest) {
-				rest['aria-pressed'] = rest.selected;
-			}
-
 			delete rest.backgroundOpacity;
 			delete rest.color;
 			delete rest.minWidth;
@@ -262,7 +260,9 @@ const ButtonFactory = factory(css => {
 				{className: componentCss.marquee},
 				Pressable(
 					Spottable(
-						Base
+						Skinnable(
+							Base
+						)
 					)
 				)
 			)

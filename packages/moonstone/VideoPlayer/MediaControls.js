@@ -4,9 +4,19 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
 
+import $L from '../internal/$L';
 import IconButton from '../IconButton';
 
 import css from './VideoPlayer.less';
+
+const buttonLabels = {
+	previousLabel: 'Previous',
+	rewindLabel: 'Rewind',
+	fastForwardLabel: 'Fast Forward',
+	nextLabel: 'Next',
+	backLabel: 'Back',
+	moreLabel: 'More'
+};
 
 const Container = SpotlightContainerDecorator({enterTo: ''}, 'div');
 const MediaButton = onlyUpdateForKeys([
@@ -100,6 +110,14 @@ const MediaControls = kind({
 		pauseIcon: PropTypes.string,
 
 		/**
+		 * A string thats sets the label for `pause`.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		pauseLabel: PropTypes.string,
+
+		/**
 		 * A string which is sent to the `play` icon of the player controls. This can be
 		 * anything that is accepted by {@link moonstone/Icon}. This will be temporarily replaced by
 		 * the [pauseIcon]{@link moonstone/VideoPlayer.MediaControls.pauseIcon} when the
@@ -110,6 +128,14 @@ const MediaControls = kind({
 		 * @public
 		 */
 		playIcon: PropTypes.string,
+
+		/**
+		 * A string thats sets the label for `play`.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		playLabel: PropTypes.string,
 
 		/**
 		 * Sets the `disabled` state on the media playback-rate control buttons; the inner pair.
@@ -142,8 +168,10 @@ const MediaControls = kind({
 			more: showMoreComponents
 		}),
 		mediaControlsDisabled: ({mediaDisabled, moreDisabled}) => (mediaDisabled || !moreDisabled),
-		moreIcon: ({showMoreComponents}) => showMoreComponents ? 'arrowhookleft' : 'ellipsis',
-		playPauseIcon: ({paused, pauseIcon, playIcon}) => (paused ? playIcon : pauseIcon)
+		moreIcon: ({showMoreComponents}) => showMoreComponents ? 'arrowshrinkleft' : 'ellipsis',
+		moreIconLabel: ({showMoreComponents}) => showMoreComponents ? buttonLabels.backLabel : buttonLabels.moreLabel,
+		playPauseIcon: ({paused, pauseIcon, playIcon}) => (paused ? playIcon : pauseIcon),
+		playPauseLabel: ({paused, pauseLabel, playLabel}) => (paused ? playLabel : pauseLabel)
 	},
 
 	render: (props) => {
@@ -159,6 +187,7 @@ const MediaControls = kind({
 			mediaControlsDisabled,
 			moreDisabled,
 			moreIcon,
+			moreIconLabel,
 			noJumpButtons,
 			noRateButtons,
 			onBackwardButtonClick,
@@ -168,14 +197,24 @@ const MediaControls = kind({
 			onPlayButtonClick,
 			onToggleMore,
 			playPauseIcon,
+			playPauseLabel,
 			rateButtonsDisabled,
 			rightComponents,
 			...rest
 		} = props;
 
+		const {
+			previousLabel,
+			rewindLabel,
+			fastForwardLabel,
+			nextLabel
+		} = buttonLabels;
+
 		delete rest.pauseIcon;
 		delete rest.paused;
+		delete rest.pauseLabel;
 		delete rest.playIcon;
+		delete rest.playLabel;
 		delete rest.mediaDisabled;
 		delete rest.showMoreComponents;
 
@@ -185,11 +224,11 @@ const MediaControls = kind({
 				<div className={css.centerComponentsContainer}>
 					<div className={centerClassName}>
 						<Container className={css.mediaControls} spotlightDisabled={mediaControlsDisabled}> {/* rtl={false} */}
-							{noJumpButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaControlsDisabled || jumpButtonsDisabled} onClick={onJumpBackwardButtonClick}>{jumpBackwardIcon}</MediaButton>}
-							{noRateButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaControlsDisabled || rateButtonsDisabled} onClick={onBackwardButtonClick}>{backwardIcon}</MediaButton>}
-							<MediaButton className={spotlightDefaultClass} backgroundOpacity="translucent" disabled={mediaControlsDisabled} onClick={onPlayButtonClick}>{playPauseIcon}</MediaButton>
-							{noRateButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaControlsDisabled || rateButtonsDisabled} onClick={onForwardButtonClick}>{forwardIcon}</MediaButton>}
-							{noJumpButtons ? null : <MediaButton backgroundOpacity="translucent" disabled={mediaControlsDisabled || jumpButtonsDisabled} onClick={onJumpForwardButtonClick}>{jumpForwardIcon}</MediaButton>}
+							{noJumpButtons ? null : <MediaButton aria-label={$L(previousLabel)} backgroundOpacity="translucent" disabled={mediaControlsDisabled || jumpButtonsDisabled} onClick={onJumpBackwardButtonClick}>{jumpBackwardIcon}</MediaButton>}
+							{noRateButtons ? null : <MediaButton aria-label={$L(rewindLabel)} backgroundOpacity="translucent" disabled={mediaControlsDisabled || rateButtonsDisabled} onClick={onBackwardButtonClick}>{backwardIcon}</MediaButton>}
+							<MediaButton aria-label={$L(playPauseLabel)} className={spotlightDefaultClass} backgroundOpacity="translucent" onClick={onPlayButtonClick}>{playPauseIcon}</MediaButton>
+							{noRateButtons ? null : <MediaButton aria-label={$L(fastForwardLabel)} backgroundOpacity="translucent" disabled={mediaControlsDisabled || rateButtonsDisabled} onClick={onForwardButtonClick}>{forwardIcon}</MediaButton>}
+							{noJumpButtons ? null : <MediaButton aria-label={$L(nextLabel)} backgroundOpacity="translucent" disabled={mediaControlsDisabled || jumpButtonsDisabled} onClick={onJumpForwardButtonClick}>{jumpForwardIcon}</MediaButton>}
 						</Container>
 						<Container className={css.moreControls} spotlightDisabled={moreDisabled}>
 							{children}
@@ -198,7 +237,7 @@ const MediaControls = kind({
 				</div>
 				<div className={css.rightComponents}>
 					{rightComponents}
-					{children ? <MediaButton backgroundOpacity="translucent" className={css.moreButton} onClick={onToggleMore}>{moreIcon}</MediaButton> : null}
+					{children ? <MediaButton aria-label={$L(moreIconLabel)} backgroundOpacity="translucent" className={css.moreButton} onClick={onToggleMore}>{moreIcon}</MediaButton> : null}
 				</div>
 			</div>
 		);

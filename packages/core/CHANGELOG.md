@@ -2,6 +2,33 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [unreleased]
+
+### Deprecated
+
+### Added
+
+- `core/platform` to support platform detection across multiple browsers
+
+### Changed
+
+### Fixed
+
+### Removed
+## [1.2.2] - 2017-05-31
+
+No significant changes.
+
+## [1.2.1] - 2017-05-25
+
+No significant changes.
+
+## [1.2.0] - 2017-05-17
+
+### Added
+
+- `core/handle.oneOf` to support branching event handlers
+
 ## [1.1.0] - 2017-04-21
 
 ### Added

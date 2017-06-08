@@ -7,6 +7,7 @@ import ExpandableInput from '@enact/moonstone/ExpandableInput';
 import ExpandableItem from '@enact/moonstone/ExpandableItem';
 import ExpandableList from '@enact/moonstone/ExpandableList';
 import ExpandablePicker from '@enact/moonstone/ExpandablePicker';
+import FormCheckboxItem from '@enact/moonstone/FormCheckboxItem';
 import IconButton from '@enact/moonstone/IconButton';
 import IncrementSlider from '@enact/moonstone/IncrementSlider';
 import Input from '@enact/moonstone/Input';
@@ -20,15 +21,20 @@ import SwitchItem from '@enact/moonstone/SwitchItem';
 import TimePicker from '@enact/moonstone/TimePicker';
 import ToggleButton from '@enact/moonstone/ToggleButton';
 import ToggleItem from '@enact/moonstone/ToggleItem';
+import Scroller from '@enact/moonstone/Scroller';
 import Slider from '@enact/moonstone/Slider';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, boolean, select} from '@kadira/storybook-addon-knobs';
+import {boolean, select} from '@kadira/storybook-addon-knobs';
 
-const Container = SpotlightContainerDecorator('div');
+const Container = SpotlightContainerDecorator(
+	{enterTo: 'last-focused'},
+	'div'
+);
+
 const style = {
 	container: {
 		width: '300px',
@@ -175,7 +181,6 @@ class PopupFocusTest extends React.Component {
 }
 
 storiesOf('Spotlight')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		'Multiple Buttons',
 		() => (
@@ -219,26 +224,6 @@ storiesOf('Spotlight')
 						<Item>A</Item>
 						<Item>B</Item>
 						<Item>C</Item>
-					</Container>
-				</div>
-			</div>
-		)
-	)
-	.addWithInfo(
-		'Muted Containers',
-		() => (
-			<div>
-				<p>
-					The container below will be muted. The items within the container can gain
-					focus, but they should not have a typical spotlight highlight. Instead, they
-					should appear as though they do not have focus and they should not generate
-					onFocus or onBlur events in the action logger.
-				</p>
-				<div style={style.flexBox}>
-					<Container style={style.container} spotlightMuted>
-						<Item onFocus={action('onFocus')} onBlur={action('onBlur')}>1</Item>
-						<Item onFocus={action('onFocus')} onBlur={action('onBlur')}>2</Item>
-						<Item onFocus={action('onFocus')} onBlur={action('onBlur')}>3</Item>
 					</Container>
 				</div>
 			</div>
@@ -312,7 +297,7 @@ storiesOf('Spotlight')
 					Use the knobs to test the available behaviors for the spottable components
 					below.
 				</p>
-				<div style={style.flexBox}>
+				<Container style={style.flexBox} spotlightMuted={boolean('spotlightMuted', false)}>
 					<div style={style.flexItem}>
 						<Divider>
 							Misc Components
@@ -323,18 +308,32 @@ storiesOf('Spotlight')
 							>
 								Button
 							</Button>
+							<Button
+								backgroundOpacity="translucent"
+								spotlightDisabled={boolean('spotlightDisabled', false)}
+							>
+								Translucent
+							</Button>
+						</div>
+						<div style={style.flexBox}>
+							<Button
+								backgroundOpacity="transparent"
+								spotlightDisabled={boolean('spotlightDisabled', false)}
+							>
+								Transparent
+							</Button>
 							<ToggleButton
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 							>
 								ToggleButton
 							</ToggleButton>
+						</div>
+						<div style={style.flexBox}>
 							<IconButton
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 							>
 								plus
 							</IconButton>
-						</div>
-						<div style={style.flexBox}>
 							<Input
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 							/>
@@ -374,68 +373,75 @@ storiesOf('Spotlight')
 						<Divider>
 							Expandables
 						</Divider>
-						<ExpandableItem
-							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title="Various Items in an ExpandableItem"
-						>
-							<CheckboxItem
+						<Scroller style={{height: '500px'}}>
+							<ExpandableItem
 								spotlightDisabled={boolean('spotlightDisabled', false)}
+								title="Various Items in an ExpandableItem"
 							>
-								CheckboxItem
-							</CheckboxItem>
-							<RadioItem
+								<CheckboxItem
+									spotlightDisabled={boolean('spotlightDisabled', false)}
+								>
+									CheckboxItem
+								</CheckboxItem>
+								<FormCheckboxItem
+									spotlightDisabled={boolean('spotlightDisabled', false)}
+								>
+									FormCheckboxItem
+								</FormCheckboxItem>
+								<RadioItem
+									spotlightDisabled={boolean('spotlightDisabled', false)}
+								>
+									RadioItem
+								</RadioItem>
+								<SelectableItem
+									spotlightDisabled={boolean('spotlightDisabled', false)}
+								>
+									SelectableItem
+								</SelectableItem>
+								<SwitchItem
+									spotlightDisabled={boolean('spotlightDisabled', false)}
+								>
+									SwitchItem
+								</SwitchItem>
+								<ToggleItem
+									icon="plus"
+									spotlightDisabled={boolean('spotlightDisabled', false)}
+								>
+									ToggleItem
+								</ToggleItem>
+							</ExpandableItem>
+							<ExpandableList
+								noLockBottom
 								spotlightDisabled={boolean('spotlightDisabled', false)}
+								title="ExpandableList"
 							>
-								RadioItem
-							</RadioItem>
-							<SelectableItem
+								{Items}
+							</ExpandableList>
+							<ExpandableInput
 								spotlightDisabled={boolean('spotlightDisabled', false)}
-							>
-								SelectableItem
-							</SelectableItem>
-							<SwitchItem
+								title="ExpandableInput"
+							/>
+							<ExpandablePicker
 								spotlightDisabled={boolean('spotlightDisabled', false)}
+								title="ExpandablePicker"
 							>
-								SwitchItem
-							</SwitchItem>
-							<ToggleItem
-								icon="plus"
+								{Items}
+							</ExpandablePicker>
+							<DatePicker
 								spotlightDisabled={boolean('spotlightDisabled', false)}
-							>
-								ToggleItem
-							</ToggleItem>
-						</ExpandableItem>
-						<ExpandableList
-							noLockBottom
-							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title="ExpandableList"
-						>
-							{Items}
-						</ExpandableList>
-						<ExpandableInput
-							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title="ExpandableInput"
-						/>
-						<ExpandablePicker
-							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title="ExpandablePicker"
-						>
-							{Items}
-						</ExpandablePicker>
-						<DatePicker
-							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title="DatePicker"
-						/>
-						<DayPicker
-							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title="DayPicker"
-						/>
-						<TimePicker
-							spotlightDisabled={boolean('spotlightDisabled', false)}
-							title="TimePicker"
-						/>
+								title="DatePicker"
+							/>
+							<DayPicker
+								spotlightDisabled={boolean('spotlightDisabled', false)}
+								title="DayPicker"
+							/>
+							<TimePicker
+								spotlightDisabled={boolean('spotlightDisabled', false)}
+								title="TimePicker"
+							/>
+						</Scroller>
 					</div>
-				</div>
+				</Container>
 			</div>
 		)
 	);

@@ -19,8 +19,27 @@ import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDeco
 import {ContextualPopup} from './ContextualPopup';
 import css from './ContextualPopupDecorator.less';
 
-const defaultConfig = {};
-const ContextualPopupContainer = SpotlightContainerDecorator({preserveId: true}, ContextualPopup);
+/**
+ * Default config for {@link moonstone/ContextualPopupDecorator.ContextualPopupDecorator}
+ *
+ * @type {Object}
+ * @hocconfig
+ * @memberof moonstone/ContextualPopupDecorator.ContextualPopupDecorator
+ */
+const defaultConfig = {
+	/**
+	 * If the wrapped component does not support skinning, set `noSkin` to `true` to disable passing
+	 * the `skin` prop to it.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @memberof moonstone/ContextualPopupDecorator.ContextualPopupDecorator.defaultConfig
+	 * @public
+	 */
+	noSkin: false
+};
+
+const ContextualPopupContainer = SpotlightContainerDecorator({enterTo: 'last-focused', preserveId: true}, ContextualPopup);
 
 /**
  * {@link moonstone/ContextualPopupDecorator.ContextualPopupDecorator} is a Higher-order Component
@@ -33,6 +52,7 @@ const ContextualPopupContainer = SpotlightContainerDecorator({preserveId: true},
  * @public
  */
 const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
+	const {noSkin} = config;
 
 	return class extends React.Component {
 		static displayName = 'ContextualPopupDecorator'
@@ -116,6 +136,17 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @default false
 			 */
 			showCloseButton : PropTypes.bool,
+
+			/**
+			 * Overrides the current skin for this component. When `noSkin` is set on the config
+			 * object, `skin` will only be applied to the
+			 * `moonstone/ContextualPopupDecorator.ContextualPopup` and not to the popup's activator
+			 * component.
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			skin: PropTypes.string,
 
 			/**
 			 * Restricts or prioritizes navigation when focus attempts to leave the popup. It
@@ -273,12 +304,6 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				isOverLeft: client.left - containerWidth - this.ARROW_OFFSET - this.MARGIN < 0,
 				isOverRight: client.right + containerWidth + this.ARROW_OFFSET + this.MARGIN > window.innerWidth
 			};
-
-			if (this.context.rtl) {
-				const tempOverflowLeft = this.overflow.isOverLeft;
-				this.overflow.isOverLeft = this.overflow.isOverRight;
-				this.overflow.isOverRight = tempOverflowLeft;
-			}
 		}
 
 		adjustDirection () {
@@ -286,9 +311,9 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.adjustedDirection = 'down';
 			} else if (this.overflow.isOverBottom && !this.overflow.isOverTop && this.adjustedDirection === 'down') {
 				this.adjustedDirection = 'up';
-			} else if (this.overflow.isOverLeft && !this.overflow.isOverRight && this.adjustedDirection === 'left') {
+			} else if (this.overflow.isOverLeft && !this.overflow.isOverRight && this.adjustedDirection === 'left' && !this.context.rtl) {
 				this.adjustedDirection = 'right';
-			} else if (this.overflow.isOverRight && !this.overflow.isOverLeft && this.adjustedDirection === 'right') {
+			} else if (this.overflow.isOverRight && !this.overflow.isOverLeft && this.adjustedDirection === 'right' && !this.context.rtl) {
 				this.adjustedDirection = 'left';
 			}
 		}
@@ -373,8 +398,12 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const {showCloseButton, popupComponent: PopupComponent, popupClassName, noAutoDismiss, open, onClose, spotlightRestrict, ...rest} = this.props;
+			const {showCloseButton, popupComponent: PopupComponent, popupClassName, noAutoDismiss, open, onClose, skin, spotlightRestrict, ...rest} = this.props;
 			const scrimType = spotlightRestrict === 'self-only' ? 'transparent' : 'none';
+
+			if (!noSkin) {
+				rest.skin = skin;
+			}
 
 			return (
 				<div className={css.contextualPopupDecorator}>
@@ -388,6 +417,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 							containerPosition={this.state.containerPosition}
 							containerRef={this.getContainerNode}
 							containerId={this.state.containerId}
+							skin={skin}
 							spotlightRestrict={spotlightRestrict}
 						>
 							<PopupComponent />

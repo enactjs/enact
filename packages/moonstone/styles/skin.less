@@ -1,0 +1,19 @@
+
+// skin.less
+//
+
+.applySkins(@componentRules) when (isruleset(@componentRules)) {
+	&:global(.moonstone) {
+		// Load the moonstone (dark) rules into this scope
+		@import './colors.less';
+
+		@componentRules();
+	}
+
+	&:global(.moonstone-light) {
+		// Load the moonstone-light rules into this scope
+		@import './colors-light.less';
+
+		@componentRules();
+	}
+}

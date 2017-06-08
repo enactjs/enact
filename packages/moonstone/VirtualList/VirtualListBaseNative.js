@@ -16,7 +16,7 @@ import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDeco
 import {dataIndexAttribute, ScrollableNative} from '../Scroller/ScrollableNative';
 
 import css from './VirtualListBaseNative.less';
-import cssItem from './ListItemNative.less';
+import cssItem from './ListItem.less';
 
 const
 	dataContainerMutedAttribute = 'data-container-muted',
@@ -243,12 +243,9 @@ class VirtualListCoreNative extends Component {
 	cc = []
 	scrollPosition = 0
 
-	wrapperStyle = {}
+	wrapperClass = null
 	containerRef = null
 	wrapperRef = null
-
-	// RTL
-	compensationRTL = 0
 
 	// spotlight
 	nodeIndexToBeBlurred = null
@@ -348,9 +345,6 @@ class VirtualListCoreNative extends Component {
 		this.state.firstIndex = 0;
 		// eslint-disable-next-line react/no-direct-mutation-state
 		this.state.numOfItems = 0;
-
-		/* FIXME: RTL / this calculation only works for Chrome */
-		this.compensationRTL = clientWidth - (this.isPrimaryDirectionVertical ? this.secondary.itemSize : this.primary.itemSize);
 	}
 
 	updateStatesAndBounds (props) {
@@ -402,20 +396,10 @@ class VirtualListCoreNative extends Component {
 			this.props.cbScrollTo({position: (isPrimaryDirectionVertical) ? {y: maxPos} : {x: maxPos}});
 		}
 
-		const {wrapperStyle} = this;
-
-		if (isPrimaryDirectionVertical) {
-			wrapperStyle.overflowY = 'scroll';
-			wrapperStyle.overflowX = 'hidden';
-		} else {
-			wrapperStyle.overflowX = 'scroll';
-			wrapperStyle.overflowY = 'hidden';
-		}
+		this.wrapperClass = (isPrimaryDirectionVertical) ? css.vertical : css.horizontal;
 
 		this.containerRef.style.width = scrollBounds.scrollWidth + 'px';
 		this.containerRef.style.height = scrollBounds.scrollHeight + 'px';
-
-		wrapperStyle.willChange = 'left, top';
 	}
 
 	syncThreshold (maxPos) {
@@ -432,7 +416,7 @@ class VirtualListCoreNative extends Component {
 		}
 	}
 
-	setScrollPosition (x, y, dirX, dirY) {
+	didScroll (x, y, dirX, dirY) {
 		const
 			{firstIndex} = this.state,
 			{isPrimaryDirectionVertical, threshold, dimensionToExtent, maxFirstIndex, scrollBounds} = this,
@@ -531,7 +515,7 @@ class VirtualListCoreNative extends Component {
 		this.lastFirstIndex = firstIndex;
 	}
 
-	scrollTo (x, y) {
+	scrollToPosition (x, y) {
 		const node = this.wrapperRef;
 		node.scrollTo((this.context.rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x, y);
 	}
@@ -544,8 +528,8 @@ class VirtualListCoreNative extends Component {
 			style.height = height;
 		}
 
-		style.left = this.compensateRTL(x) + 'px';
-		style.top = y + 'px';
+		/* FIXME: RTL / this calculation only works for Chrome */
+		style.transform = 'translate(' + (this.context.rtl ? -x : x) + 'px,' + y + 'px)';
 	}
 
 	getXY = (primaryPosition, secondaryPosition) => {
@@ -579,17 +563,18 @@ class VirtualListCoreNative extends Component {
 		return (Math.ceil(curDataSize / dimensionToExtent) * primary.gridSize) - spacing;
 	}
 
-	focusOnItem = (index) => {
-		// We have to focus item async for now since list items are not yet ready when it reaches componentDid* lifecycle methods
+	focusByIndex = (index) => {
+		// We have to focus node async for now since list items are not yet ready when it reaches componentDid* lifecycle methods
 		setTimeout(() => {
 			const item = this.containerRef.querySelector(`[data-index='${index}'].spottable`);
-
-			if (item) {
-				// setPointerMode to false since Spotlight prevents programmatically changing focus while in pointer mode
-				Spotlight.setPointerMode(false);
-				Spotlight.focus(item);
-			}
+			this.focusOnNode(item);
 		}, 0);
+	}
+
+	focusOnNode = (node) => {
+		if (node) {
+			Spotlight.focus(node);
+		}
 	}
 
 	calculatePositionOnFocus = (item) => {
@@ -672,12 +657,6 @@ class VirtualListCoreNative extends Component {
 		}
 	}
 
-	// for RTL support
-	compensateRTL = (x) => {
-		/* FIXME: RTL / this calculation only works for Chrome */
-		return this.context.rtl ? this.compensationRTL - x : x;
-	}
-
 	// render
 
 	initRef (prop) {
@@ -708,12 +687,10 @@ class VirtualListCoreNative extends Component {
 
 		const
 			{className, style, ...rest} = props,
-			{wrapperStyle} = this,
-			mergedStyle = {...style, ...wrapperStyle},
-			mergedClasses = classNames(css.list, className);
+			mergedClasses = classNames(css.list, this.wrapperClass, className);
 
 		return (
-			<div ref={this.initWrapperRef} className={mergedClasses} style={mergedStyle}>
+			<div ref={this.initWrapperRef} className={mergedClasses} style={style}>
 				<div {...rest} ref={this.initContainerRef}>
 					{cc}
 				</div>
