@@ -506,7 +506,9 @@ class VirtualListCore extends Component {
 				// After focusing the exising item from Spotlight (30ms, _pointerHiddenToKeyTimeout)),
 				// then we need to blur the item.
 				// So that's the reason why we use 50 ms.
-				setTimeout(() => {node.blur();}, 50);
+				setTimeout(() => {
+					node.blur();
+				}, 50);
 				this.nodeIndexToBeBlurred = null;
 			}
 			this.composeStyle(node.style, ...rest);
