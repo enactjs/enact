@@ -119,8 +119,8 @@ const defaultConfig = {
 	resume: false,
 
 	/**
-	 * Allows you to set the keys that the component can respond too.
-	 * Each key you add will have two corresponding prop. So if you have [`left`]
+	 * Allows you to set the keys that the component can respond to. Each key
+	 * you add will have two corresponding props. So if you have [`left`]
 	 * you will have `onHoldLeft` and `onHoldPulseLeft` props to define your
 	 * callbacks. The exception is the `enter` key which uses `onHold` and
 	 * `onHoldPulse`.
@@ -128,11 +128,14 @@ const defaultConfig = {
 	 * WARNING: If you choose to use this option be aware that you must provide
 	 * `enter` if you want the `enter` key to respond properly.
 	 *
-	 * WARNING: If you choose to use this option with Spotlight, you must also
-	 * be responsible for handling pausing and resuming of Spotlight if you are
-	 * holding using directions. For example, if you a key of `right`, but you
-	 * don't `Spotlight.pause()` when `onSpotlightRight` is called the Spotlight
-	 * could move and never release the pulse.
+	 * WARNING: If you choose to use this option with using keys other than
+	 * `enter`, this will not work properly by default with other `Spottable`
+	 * components around it. To fix that you must also be responsible for
+	 * handling pausing and resuming of Spotlight if you are holding using
+	 * directions. For example, if you a key of `['right']`, but you don't
+	 * include `Spotlight.pause()` when `onSpotlightRight` is called the
+	 * Spotlight will move to the next `Spottable` component and never release
+	 * the pulse.
 	 *
 	 * @type {Array}
 	 * @default ['enter']
@@ -155,12 +158,13 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 	const {frequency, events, endHold, moveTolerance, resume, keys} = config;
 
 	const holdProps = keys.reduce((holdObj, currentValue) => {
-		const value = currentValue.charAt(0).toUpperCase() + currentValue.slice(1).toLowerCase();
 		if (currentValue === 'enter') {
 			holdObj[currentValue] = {};
 			holdObj[currentValue]['hold'] = 'onHold';
 			holdObj[currentValue]['pulse'] = 'onHoldPulse';
 		} else {
+			const value = currentValue.charAt(0).toUpperCase() + currentValue.slice(1).toLowerCase();
+
 			holdObj[currentValue] = {};
 			holdObj[currentValue]['hold'] = `onHold${value}`;
 			holdObj[currentValue]['pulse'] = `onHoldPulse${value}`;
