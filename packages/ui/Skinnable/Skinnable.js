@@ -11,6 +11,7 @@
  */
 
 import hoc from '@enact/core/hoc';
+import getContext from 'recompose/getContext';
 import PropTypes from 'prop-types';
 import React from 'react';
 
@@ -131,5 +132,28 @@ const Skinnable = hoc(defaultConfig, (config, Wrapped) => {
 	};
 });
 
+const getSkin = getContext(/** @lends ui/Skinnable.withSkinnableProps.prototype */{
+	/**
+	 * Derived from the context from the parent, included as a prop.
+	 *
+	 * @type {String}
+	 * @public
+	 */
+	skin: PropTypes.string
+});
+
+/**
+ * Occasionally, there's a case where context isn't available or your component only updates on
+ * specific props changes. This HOC supplies the relevant context state values as props. In this
+ * case, `skin` is avaliable as a prop to the wrapped component.
+ *
+ * @class withSkinnableProps
+ * @memberof ui/Skinnable
+ * @hoc
+ * @public
+ */
+const withSkinnableProps = hoc((config, Wrapped) => getSkin(Wrapped));
+
+
 export default Skinnable;
-export {Skinnable};
+export {Skinnable, withSkinnableProps};

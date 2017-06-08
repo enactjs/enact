@@ -8,11 +8,16 @@ The following is a curated list of changes in the Enact Sampler, newest changes 
 
 ### Added
 
+- `Platform` sample
+
 ### Changed
 
 ### Fixed
 
+- `moonstone/VideoPlayer` sample to update poster images
+
 ### Removed
+
 ## [1.2.2] - 2017-05-31
 
 No significant changes.
