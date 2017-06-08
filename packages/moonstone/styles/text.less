@@ -39,7 +39,7 @@
 
 // Generic Non-Latin Font Rule generator
 .moon-locale-non-latin(@nlrules) when (isruleset(@nlrules)) {
-	:global(.enact-locale-non-latin)& {
+	:global(.enact-locale-non-latin) & {
 		@nlrules();
 	}
 }
@@ -67,16 +67,16 @@
 
 // 1 arg: Generic rule applicator, accepts an entire rule-set to add for large text mode
 .moon-custom-text(@lrules) when (isruleset(@lrules)) {
-	:global(.enact-text-large)& {
+	:global(.enact-text-large) & {
 		@lrules();
 	}
 }
 // 2 args: Generic rule applicator, accepts 2 entire rule-sets to add both latin and non-latin for large text mode
 .moon-custom-text(@lrules; @nlrules) when (isruleset(@lrules)) and (isruleset(@nlrules)) {
-	:global(.enact-text-large)& {
+	:global(.enact-text-large) & {
 		@lrules();
 	}
-	:global(.enact-text-large.enact-locale-non-latin)& {
+	:global(.enact-text-large.enact-locale-non-latin) & {
 		@nlrules();
 	}
 }
@@ -198,6 +198,7 @@
 	font-style: @moon-notification-font-style;
 	font-size: @moon-notification-font-size;
 	line-height: @moon-body-line-height;
+	text-align: initial;
 	.moon-word-break();
 }
 
@@ -268,10 +269,4 @@
 	font-weight: @moon-divider-font-weight;
 	font-style: @moon-divider-font-style;
 	letter-spacing: @moon-divider-letter-spacing;
-}
-
-.moon-icon-text() {
-	font-family: @moon-icon-font-family;
-	font-weight: normal;
-	font-size: @moon-icon-font-size;
 }

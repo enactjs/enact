@@ -17,9 +17,10 @@ import ri from '@enact/ui/resolution';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
-import css from './Scrollable.less';
 import ScrollAnimator from './ScrollAnimator';
 import Scrollbar from './Scrollbar';
+
+import css from './Scrollable.less';
 import scrollbarCss from './Scrollbar.less';
 
 const
@@ -32,7 +33,7 @@ const
 	nop = () => {},
 	perf = (typeof window === 'object') ? window.performance : {now: Date.now},
 	holdTime = 50,
-	scrollWheelMultiplierForDeltaPixel = 2,
+	scrollWheelMultiplierForDeltaPixel = 4,
 	pixelPerLine = 39,
 	paginationPageMultiplier = 0.8,
 	epsilon = 1,
@@ -56,7 +57,8 @@ const ScrollableSpotlightContainer = SpotlightContainerDecorator(
 			if (!focusableScrollbar && elem.classList.contains(scrollbarCss.scrollButton)) {
 				return false;
 			}
-		}
+		},
+		overflow: true
 	},
 	({containerRef, ...rest}) => {
 		delete rest.focusableScrollbar;
@@ -106,11 +108,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			 * - {focus} - Set it `true`, if you want the item to be focused after scroll.
 			 *   This option is only valid when you scroll by `index` or `node`.
 			 *
-			 * @example
+			 * Example:
+			 * ```
 			 *	// If you set cbScrollTo prop like below;
 			 *	cbScrollTo: (fn) => {this.scrollTo = fn;}
 			 *	// You can simply call like below;
 			 *	this.scrollTo({align: 'top'}); // scroll to the top
+			 * ```
 			 * @type {Function}
 			 * @public
 			 */
@@ -331,7 +335,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			const
 				bounds = this.getScrollBounds(),
 				deltaMode = e.deltaMode,
-				wheelDeltaY = e.nativeEvent ? -e.nativeEvent.wheelDeltaY : -e.wheelDeltaY;
+				wheelDeltaY = -e.wheelDeltaY;
 			let delta = (wheelDeltaY || e.deltaY);
 
 			if (deltaMode === 0) {
@@ -701,15 +705,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					deprecate({name: 'indexToFocus', since: '1.2.0', message: 'Use `focus` instead', until: '2.0.0'});
 				}
 
-				if (left !== null || top !== null) {
-					this.start({
-						targetX: (left !== null) ? left : this.scrollLeft,
-						targetY: (top !== null) ? top : this.scrollTop,
-						animate: opt.animate,
-						indexToFocus: (opt.focus && typeof opt.index === 'number') ? opt.index : indexToFocus,
-						nodeToFocus:  (opt.focus && opt.node instanceof Object && opt.node.nodeType === 1) ? opt.node : null
-					});
-				}
+				this.start({
+					targetX: (left !== null) ? left : this.scrollLeft,
+					targetY: (top !== null) ? top : this.scrollTop,
+					animate: opt.animate,
+					indexToFocus: (opt.focus && typeof opt.index === 'number') ? opt.index : indexToFocus,
+					nodeToFocus:  (opt.focus && opt.node instanceof Object && opt.node.nodeType === 1) ? opt.node : null
+				});
 			} else {
 				this.scrollToInfo = opt;
 			}
@@ -809,20 +811,21 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		updateScrollabilityAndEventListeners = () => {
 			const
-				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
-				containerNode = this.childRef.containerRef;
+				{containerRef} = this,
+				childContainerRef = this.childRef.containerRef;
 
 			this.horizontalScrollability = this.childRef.isHorizontal();
 			this.verticalScrollability = this.childRef.isVertical();
 
-			// FIXME `onWheel` doesn't work on the v8 snapshot.
-			if (isVerticalScrollbarVisible || isHorizontalScrollbarVisible) {
-				this.containerRef.addEventListener('wheel', this.onWheel);
-			} else {
-				containerNode.addEventListener('wheel', this.onWheel);
+			if (containerRef && containerRef.addEventListener) {
+				// FIXME `onWheel` doesn't work on the v8 snapshot.
+				containerRef.addEventListener('wheel', this.onWheel);
 			}
-			// FIXME `onFocus` doesn't work on the v8 snapshot.
-			containerNode.addEventListener('focus', this.onFocus, true);
+			if (childContainerRef && childContainerRef.addEventListener) {
+				// FIXME `onFocus` doesn't work on the v8 snapshot.
+				childContainerRef.addEventListener('focus', this.onFocus, true);
+			}
+
 			this.updateScrollbars();
 		}
 
@@ -867,9 +870,22 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		componentWillUnmount () {
+			const
+				{containerRef} = this,
+				childContainerRef = this.childRef.containerRef;
+
 			// Before call cancelAnimationFrame, you must send scrollStop Event.
 			this.animator.stop();
 			this.forceUpdateJob.stop();
+
+			if (containerRef && containerRef.removeEventListener) {
+				// FIXME `onWheel` doesn't work on the v8 snapshot.
+				containerRef.removeEventListener('wheel', this.onWheel);
+			}
+			if (childContainerRef && childContainerRef.removeEventListener) {
+				// FIXME `onFocus` doesn't work on the v8 snapshot.
+				childContainerRef.removeEventListener('focus', this.onFocus, true);
+			}
 		}
 
 		// forceUpdate is a bit jarring and may interrupt other actions like animation so we'll
@@ -955,8 +971,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					focusableScrollbar={focusableScrollbar}
 					style={style}
 				>
-					{vscrollbar}
-					{hscrollbar}
 					<Wrapped
 						{...props}
 						{...this.eventHandlers}
@@ -965,6 +979,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						onScroll={this.handleScroll}
 						ref={this.initChildRef}
 					/>
+					{vscrollbar}
+					{hscrollbar}
 				</ScrollableSpotlightContainer>
 			);
 		}

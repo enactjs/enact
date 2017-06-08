@@ -5,12 +5,11 @@
 @import '../styles/variables.less';
 @import '../styles/skin.less';
 
-.applySkins({.labeleditem {
+.labeleditem {
 	//// Locally scoped LESS variables ////
 	// Vertically shift the text element to position it closer to the header than the line-height naturally allows
 	@text-vertical-offset: 6px;
 
-	min-width: 336px;
 	flex-wrap: wrap;	// Allow the label to fall on the next line
 
 	// Header
@@ -28,7 +27,7 @@
 			});
 		}
 
-		:global(.enact-locale-right-to-left)& {
+		:global(.enact-locale-right-to-left) & {
 			direction: rtl;
 		}
 	}
@@ -45,7 +44,6 @@
 		font-style: @moon-expandable-value-font-style;
 		line-height: @moon-body-line-height;
 		text-transform: none;
-		color: @moon-labeled-item-label-color;
 		// The following two margin values must cancel each other out, so there is zero layout impact when `text` is empty.
 		margin-top: -@text-vertical-offset;
 		margin-bottom: @text-vertical-offset;
@@ -54,7 +52,7 @@
 
 		.moon-custom-text-size(@moon-expandable-value-font-size-large);
 
-		:global(.enact-locale-right-to-left)& {
+		:global(.enact-locale-right-to-left) & {
 			padding-left: 0;
 		}
 	}
@@ -65,10 +63,17 @@
 		}
 	}
 
-	&:focus {
-		.text,
+	// Skin colors
+	.applySkins({
 		.label {
-			color: inherit;
+			color: @moon-labeled-item-label-color;
 		}
-	}
-}});
+
+		.focus({
+			.text,
+			.label {
+				color: inherit;
+			}
+		});
+	});
+}

@@ -58,8 +58,7 @@ export const AlwaysViewingArranger = {
 /**
  * Appends a transform that accounts for a single breadcrumb
  *
- * @param  {Node} options.node      DOM Node
- * @param  {Number} options.percent Percentage complete between 0 and 1
+ * @param  {Node} node      DOM Node
  *
  * @returns {undefined}
  * @private

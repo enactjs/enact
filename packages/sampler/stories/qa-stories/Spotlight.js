@@ -7,6 +7,7 @@ import ExpandableInput from '@enact/moonstone/ExpandableInput';
 import ExpandableItem from '@enact/moonstone/ExpandableItem';
 import ExpandableList from '@enact/moonstone/ExpandableList';
 import ExpandablePicker from '@enact/moonstone/ExpandablePicker';
+import FormCheckboxItem from '@enact/moonstone/FormCheckboxItem';
 import IconButton from '@enact/moonstone/IconButton';
 import IncrementSlider from '@enact/moonstone/IncrementSlider';
 import Input from '@enact/moonstone/Input';
@@ -229,34 +230,6 @@ storiesOf('Spotlight')
 		)
 	)
 	.addWithInfo(
-		'Muted Containers',
-		() => (
-			<div>
-				<p>
-					The container below will be muted. The items within the container can gain
-					focus, but they should not have a typical spotlight highlight. Instead, they
-					should appear as though they do not have focus and they should not generate
-					onFocus or onBlur events in the action logger.
-				</p>
-				<div style={style.flexBox}>
-					<Container style={style.container} spotlightMuted>
-						<Item onFocus={action('onFocus')} onBlur={action('onBlur')}>1</Item>
-						<ExpandableList
-							noLockBottom
-							title="ExpandableList"
-						>
-							{Items}
-						</ExpandableList>
-						<CheckboxItem>
-							Hello
-						</CheckboxItem>
-						<Item onFocus={action('onFocus')} onBlur={action('onBlur')}>3</Item>
-					</Container>
-				</div>
-			</div>
-		)
-	)
-	.addWithInfo(
 		'Nested Containers',
 		() => (
 			<div>
@@ -324,7 +297,7 @@ storiesOf('Spotlight')
 					Use the knobs to test the available behaviors for the spottable components
 					below.
 				</p>
-				<div style={style.flexBox}>
+				<Container style={style.flexBox} spotlightMuted={boolean('spotlightMuted', false)}>
 					<div style={style.flexItem}>
 						<Divider>
 							Misc Components
@@ -335,18 +308,32 @@ storiesOf('Spotlight')
 							>
 								Button
 							</Button>
+							<Button
+								backgroundOpacity="translucent"
+								spotlightDisabled={boolean('spotlightDisabled', false)}
+							>
+								Translucent
+							</Button>
+						</div>
+						<div style={style.flexBox}>
+							<Button
+								backgroundOpacity="transparent"
+								spotlightDisabled={boolean('spotlightDisabled', false)}
+							>
+								Transparent
+							</Button>
 							<ToggleButton
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 							>
 								ToggleButton
 							</ToggleButton>
+						</div>
+						<div style={style.flexBox}>
 							<IconButton
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 							>
 								plus
 							</IconButton>
-						</div>
-						<div style={style.flexBox}>
 							<Input
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 							/>
@@ -396,6 +383,11 @@ storiesOf('Spotlight')
 								>
 									CheckboxItem
 								</CheckboxItem>
+								<FormCheckboxItem
+									spotlightDisabled={boolean('spotlightDisabled', false)}
+								>
+									FormCheckboxItem
+								</FormCheckboxItem>
 								<RadioItem
 									spotlightDisabled={boolean('spotlightDisabled', false)}
 								>
@@ -449,7 +441,7 @@ storiesOf('Spotlight')
 							/>
 						</Scroller>
 					</div>
-				</div>
+				</Container>
 			</div>
 		)
 	);
