@@ -189,6 +189,10 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		forwardSpotlightEvents = (ev, {onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp}) => {
 			const {keyCode} = ev;
 
+			if (Spotlight.isPaused()) {
+				return false;
+			}
+
 			if (onSpotlightDown && is('down', keyCode)) {
 				onSpotlightDown(ev);
 			} else if (onSpotlightLeft && is('left', keyCode)) {

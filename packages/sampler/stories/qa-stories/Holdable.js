@@ -74,8 +74,8 @@ storiesOf('Holdable')
 				onHoldPulseRight={action('onHoldPulseRight')}
 				onSpotlightRight={Spotlight.pause}
 				onSpotlightLeft={Spotlight.pause}
-				onSpotlightUp={Spotlight.resume}
-				onSpotlightDown={Spotlight.resume}
+				onHoldEndRight={Spotlight.resume}
+				onHoldEndLeft={Spotlight.resume}
 			>
 				{text('value', 'Multiple Keys')}
 			</MultiKeyHoldButton>
