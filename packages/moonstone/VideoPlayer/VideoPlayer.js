@@ -5,6 +5,7 @@
  *
  * @module moonstone/VideoPlayer
  */
+import AnnounceDecorator from '@enact/ui/AnnounceDecorator';
 import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import equals from 'ramda/src/equals';
 import React from 'react';
@@ -20,6 +21,7 @@ import {getDirection, Spotlight} from '@enact/spotlight';
 import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
 import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
 
+import $L from '../internal/$L';
 import Spinner from '../Spinner';
 import Skinnable from '../Skinnable';
 
@@ -88,6 +90,10 @@ const forwardJumpBackwardButtonClick = forward('onJumpBackwardButtonClick');
 const forwardJumpForwardButtonClick = forward('onJumpForwardButtonClick');
 const forwardPlayButtonClick = forward('onPlayButtonClick');
 
+// localized strings
+const playLabel = 'Play';
+const pauseLabel = 'Pause';
+
 /**
  * Every callback sent by [VideoPlayer]{@link moonstone/VideoPlayer} receives a status package,
  * which includes an object with the following key/value pairs as the first argument:
@@ -137,6 +143,14 @@ const VideoPlayerBase = class extends React.Component {
 	static displayName = 'VideoPlayerBase'
 
 	static propTypes = /** @lends moonstone/VideoPlayer.VideoPlayerBase.prototype */ {
+		/**
+		 * passed by AnnounceDecorator for accessibility
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		announce: PropTypes.func,
+
 		/**
 		 * Amount of time (in milliseconds) after which control buttons are automatically hidden.
 		 * Setting this to 0 or `null` disables autoClose, requiring user input to open and close.
@@ -590,6 +604,12 @@ const VideoPlayerBase = class extends React.Component {
 	//
 	// Internal Methods
 	//
+	announceJob = new Job(msg => forward('announce', msg, this.props), 200)
+
+	announce = (msg) => {
+		this.announceJob.start(msg);
+	}
+
 	calculateTitleOffset = () => {
 		// calculate how far the title should animate up when infoComponents appear.
 		const titleElement = this.player.querySelector(`.${css.title}`);
@@ -644,6 +664,9 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	showControls = () => {
+		// Read the title
+		this.announce(this.props.title);
+
 		this.startDelayedFeedbackHide();
 		this.startDelayedTitleHide();
 		forwardControlsAvailable({available: true}, this.props);
@@ -1102,10 +1125,24 @@ const VideoPlayerBase = class extends React.Component {
 	}
 	onSliderChange = ({value}) => {
 		this.seek(value * this.state.duration);
+		this.sliderScrubbing = false;
 	}
 	handleKnobMove = (ev) => {
 		this.sliderScrubbing = ev.detached;
-		this.sliderKnobProportion = ev.proportion;
+
+		// prevent announcing repeatedly when the knob is detached from the progress.
+		// TODO: fix Slider to not send onKnobMove when the knob hasn't, in fact, moved
+		if (this.sliderKnobProportion !== ev.proportion) {
+			this.sliderKnobProportion = ev.proportion;
+
+			if (this.sliderScrubbing) {
+				const
+					seconds = Math.round(this.sliderKnobProportion * this.video.duration),
+					knobTime = secondsToTime(seconds, this.durfmt);
+
+				this.announce(`${$L('jump to')} ${knobTime}`);
+			}
+		}
 	}
 	handleMouseOver = () => {
 		this.setState({
@@ -1133,8 +1170,10 @@ const VideoPlayerBase = class extends React.Component {
 		forwardPlayButtonClick(ev, this.props);
 		if (this.state.paused) {
 			this.play();
+			this.announce($L(playLabel));
 		} else {
 			this.pause();
+			this.announce($L(pauseLabel));
 		}
 	}
 	onForward = (ev) => {
@@ -1185,6 +1224,7 @@ const VideoPlayerBase = class extends React.Component {
 
 	render () {
 		const {backwardIcon, children, className, forwardIcon, infoComponents, jumpBackwardIcon, jumpButtonsDisabled, jumpForwardIcon, leftComponents, noAutoPlay, noJumpButtons, noRateButtons, noSlider, pauseIcon, playIcon, rateButtonsDisabled, rightComponents, source, style, title, ...rest} = this.props;
+		delete rest.announce;
 		delete rest.autoCloseTimeout;
 		delete rest.feedbackHideDelay;
 		delete rest.jumpBy;
@@ -1281,7 +1321,9 @@ const VideoPlayerBase = class extends React.Component {
 								onToggleMore={this.onMoreClick}
 								paused={this.state.paused}
 								pauseIcon={pauseIcon}
+								pauseLabel={pauseLabel}
 								playIcon={playIcon}
+								playLabel={playLabel}
 								rateButtonsDisabled={rateButtonsDisabled}
 								rightComponents={rightComponents}
 								showMoreComponents={this.state.more}
@@ -1350,12 +1392,14 @@ const VideoPlayerBase = class extends React.Component {
  * @ui
  * @public
  */
-const VideoPlayer = ApiDecorator(
-	{api: ['fastForward', 'getMediaState', 'jump', 'pause', 'play', 'rewind', 'seek']},
-	Slottable(
-		{slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source']},
-		Skinnable(
-			VideoPlayerBase
+const VideoPlayer = AnnounceDecorator(
+	ApiDecorator(
+		{api: ['fastForward', 'getMediaState', 'jump', 'pause', 'play', 'rewind', 'seek']},
+		Slottable(
+			{slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source']},
+			Skinnable(
+				VideoPlayerBase
+			)
 		)
 	)
 );

@@ -74,7 +74,7 @@ const Announce = class extends React.Component {
 	 * @public
 	 */
 	announce = (message) => {
-		if (this.alert && !this.alertTimeout) {
+		if (this.alert && !this.alertTimeout && message) {
 			this.alert.setAttribute('aria-label', message);
 			this.alertTimeout = setTimeout(this.resetAlert, this.props.timeout);
 		}
