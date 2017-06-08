@@ -26,6 +26,8 @@ export const breadcrumbWidth = 96;
  *
  * @class Breadcrumb
  * @memberof moonstone/Panels
+ * @ui
+ * @public
  */
 const BreadcrumbBase = kind({
 	name: 'Breadcrumb',
