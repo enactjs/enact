@@ -183,7 +183,17 @@ describe('handle', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it.only('should only forward events to function specified in provided props when preventDefault() hasn\'t been called', function () {
+	it('should forwardWithPrevent events to function specified in provided props when preventDefault() hasn\'t been called', function () {
+		const event = 'onMyClick';
+		const handler = sinon.spy();
+
+		const callback = handle(forwardWithPrevent(event), handler);
+
+		callback();
+		expect(handler.calledOnce).to.equal(true);
+	});
+
+	it('should not forwardWithPrevent events to function specified in provided props when preventDefault() has been called', function () {
 		const event = 'onMyClick';
 		const handler = sinon.spy();
 
@@ -194,10 +204,6 @@ describe('handle', () => {
 			'onMyClick': (ev) => ev.preventDefault()
 		});
 		expect(handler.calledOnce).to.equal(false);
-
-		// should pass
-		callback();
-		expect(handler.calledOnce).to.equal(true);
 	});
 
 	it('should include object props as second arg when bound', function () {
