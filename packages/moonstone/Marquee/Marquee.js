@@ -10,6 +10,8 @@ import {contextTypes} from '@enact/i18n/I18nDecorator';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import Skinnable from '../Skinnable';
+
 import css from './Marquee.less';
 
 const animated = css.text + ' ' + css.animate;
@@ -195,5 +197,7 @@ const MarqueeBase = kind({
 
 MarqueeBase.contextTypes = contextTypes;
 
-export default MarqueeBase;
-export {MarqueeBase as Marquee, MarqueeBase};
+const Marquee = Skinnable(MarqueeBase);
+
+export default Marquee;
+export {Marquee, MarqueeBase};

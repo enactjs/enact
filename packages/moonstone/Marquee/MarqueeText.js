@@ -1,3 +1,5 @@
+import Skinnable from '../Skinnable';
+
 import MarqueeDecorator from './MarqueeDecorator';
 
 /**
@@ -9,7 +11,7 @@ import MarqueeDecorator from './MarqueeDecorator';
  * @mixes moonstone/Marquee.MarqueeDecorator
  * @public
  */
-const MarqueeText = MarqueeDecorator('div');
+const MarqueeText = Skinnable(MarqueeDecorator('div'));
 MarqueeText.displayName = 'MarqueeText';
 
 export default MarqueeText;
