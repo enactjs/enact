@@ -127,6 +127,14 @@ class VirtualListCore extends Component {
 		direction: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
+		 * The function to check if an item is disabled with `index` parameter.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		isItemDisabled: PropTypes.func,
+
+		/**
 		 * Number of spare DOM node.
 		 * `3` is good for the default value experimentally and
 		 * this value is highly recommended not to be changed by developers.
@@ -273,6 +281,7 @@ class VirtualListCore extends Component {
 
 	// spotlight
 	nodeIndexToBeBlurred = null
+	nodeIndexToBeFocused = null
 	lastFocusedIndex = null
 
 	isVertical = () => this.isPrimaryDirectionVertical
@@ -292,7 +301,17 @@ class VirtualListCore extends Component {
 		return {primaryPosition, secondaryPosition};
 	}
 
-	getItemPosition = (index) => this.gridPositionToItemPosition(this.getGridPosition(index))
+	getItemPosition = (index, stickTo = 'floor') => {
+		const
+			{itemSize} = this.props,
+			{primary} = this,
+			position = this.getGridPosition(index, stickTo),
+			offset = ((itemSize instanceof Object) || stickTo === 'floor') ? 0 : primary.clientSize - primary.itemSize;
+
+		position.primaryPosition -= offset;
+
+		return this.gridPositionToItemPosition(position);
+	}
 
 	gridPositionToItemPosition = ({primaryPosition, secondaryPosition}) =>
 		(this.isPrimaryDirectionVertical ? {left: secondaryPosition, top: primaryPosition} : {left: primaryPosition, top: secondaryPosition})
@@ -484,7 +503,10 @@ class VirtualListCore extends Component {
 
 		if (node) {
 			if ((index % numOfItems) === this.nodeIndexToBeBlurred && index !== this.lastFocusedIndex) {
-				node.blur();
+				// After focusing the exising item from Spotlight (30ms, _pointerHiddenToKeyTimeout)),
+				// then we need to blur the item.
+				// So that's the reason why we use 50 ms.
+				setTimeout(() => {node.blur();}, 50);
 				this.nodeIndexToBeBlurred = null;
 			}
 			this.composeStyle(node.style, ...rest);
@@ -510,6 +532,10 @@ class VirtualListCore extends Component {
 			className: classNames(css.listItem, itemElement.props.className),
 			style: {...itemElement.props.style, ...style}
 		});
+
+		if (index === this.nodeIndexToBeFocused) {
+			this.focusByIndex(index);
+		}
 	}
 
 	positionItems ({updateFrom, updateTo}) {
@@ -591,7 +617,9 @@ class VirtualListCore extends Component {
 		// We have to focus node async for now since list items are not yet ready when it reaches componentDid* lifecycle methods
 		setTimeout(() => {
 			const item = this.containerRef.querySelector(`[data-index='${index}'].spottable`);
+			Spotlight.resume();
 			this.focusOnNode(item);
+			this.nodeIndexToBeFocused = null;
 		}, 0);
 	}
 
@@ -601,6 +629,10 @@ class VirtualListCore extends Component {
 		}
 	}
 
+	updateFocusedIndex = (item) => {
+		this.lastFocusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
+	}
+
 	calculatePositionOnFocus = (item) => {
 		const
 			{pageScroll} = this.props,
@@ -608,10 +640,11 @@ class VirtualListCore extends Component {
 			offsetToClientEnd = primary.clientSize - primary.itemSize,
 			focusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
 
-		if (!isNaN(focusedIndex)) {
+		if (!isNaN(focusedIndex) && focusedIndex !== this.lastFocusedIndex) {
 			let gridPosition = this.getGridPosition(focusedIndex);
 
 			this.nodeIndexToBeBlurred = this.lastFocusedIndex % numOfItems;
+			this.nodeIndexToBeFocused = null;
 			this.lastFocusedIndex = focusedIndex;
 
 			if (primary.clientSize >= primary.itemSize) {
@@ -629,6 +662,52 @@ class VirtualListCore extends Component {
 			gridPosition.secondaryPosition = 0;
 			return this.gridPositionToItemPosition(gridPosition);
 		}
+	}
+
+	jumpToSpottableItem = (keyCode, currentIndex) => {
+		const
+			{cbScrollTo, dataSize, isItemDisabled} = this.props,
+			{firstIndex, numOfItems} = this.state;
+
+		if (!isItemDisabled || isItemDisabled(currentIndex)) {
+			return false;
+		}
+
+		const isForward = (
+			this.isPrimaryDirectionVertical && isDown(keyCode) ||
+			!this.isPrimaryDirectionVertical && (!this.context.rtl && isRight(keyCode) || this.context.rtl && isLeft(keyCode))
+		);
+
+		let nextIndex = -1;
+
+		if (isForward) {
+			for (let i = currentIndex + 1; i < dataSize; i++) {
+				if (!isItemDisabled(i)) {
+					nextIndex = i;
+					break;
+				}
+			}
+		} else {
+			for (let i = currentIndex - 1; i >= 0; i--) {
+				if (!isItemDisabled(i)) {
+					nextIndex = i;
+					break;
+				}
+			}
+		}
+
+		if (nextIndex !== -1 && (firstIndex > nextIndex || nextIndex >= firstIndex + numOfItems)) {
+			this.nodeIndexToBeBlurred = currentIndex % numOfItems;
+			this.nodeIndexToBeFocused = this.lastFocusedIndex = nextIndex;
+			Spotlight.pause();
+			cbScrollTo({
+				index: nextIndex,
+				stickTo: isForward ? 'ceil' : 'floor'
+			});
+			return true;
+		}
+
+		return false;
 	}
 
 	setRestrict = (bool) => {
@@ -709,6 +788,7 @@ class VirtualListCore extends Component {
 		delete props.data;
 		delete props.dataSize;
 		delete props.direction;
+		delete props.isItemDisabled;
 		delete props.itemSize;
 		delete props.overhang;
 		delete props.pageScroll;

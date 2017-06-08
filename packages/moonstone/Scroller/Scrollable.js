@@ -162,8 +162,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			 */
 			onScrollStop: PropTypes.func,
 
-			style: PropTypes.object,
-
 			/**
 			 * Specifies how to show vertical scrollbar. Acceptable values are `'auto'`,
 			 * `'visible'`, and `'hidden'`.
@@ -233,7 +231,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		isScrollAnimationTargetAccumulated = false
 		isFirstDragging = false
 		isDragging = false
-		isKeyDown = false
+		isKeyHandled = false
 		isInitializing = true
 
 		// event handlers
@@ -430,7 +428,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		onFocus = (e) => {
-			if (!(Spotlight.getPointerMode() || this.isDragging)) {
+			if (!(this.isKeyHandled || Spotlight.getPointerMode() || this.isDragging)) {
 				const
 					item = e.target,
 					positionFn = this.childRef.calculatePositionOnFocus,
@@ -442,14 +440,23 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						this.startScrollOnFocus(pos, item);
 					}
 				}
+			} else if (this.childRef.updateFocusedIndex) {
+				this.childRef.updateFocusedIndex(e.target);
 			}
 		}
 
 		onKeyDown = ({keyCode, target}) => {
+			this.isKeyHandled = false;
+
 			if (getDirection(keyCode)) {
+				const index = Number.parseInt(target.getAttribute(dataIndexAttribute));
+
 				if (this.childRef.setSpotlightContainerRestrict) {
-					const index = Number.parseInt(target.getAttribute(dataIndexAttribute));
 					this.childRef.setSpotlightContainerRestrict(keyCode, index);
+				}
+
+				if (this.childRef.jumpToSpottableItem) {
+					this.isKeyHandled = this.childRef.jumpToSpottableItem(keyCode, index);
 				}
 			}
 		}
@@ -613,7 +620,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.doScrolling();
 		}
 
-		stop ({indexToFocus, nodeToFocus}) {
+		stop ({indexToFocus = null, nodeToFocus = null}) {
 			const bounds = this.getScrollBounds();
 
 			this.animator.stop();
@@ -673,7 +680,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					}
 				} else {
 					if (typeof opt.index === 'number' && typeof this.childRef.getItemPosition === 'function') {
-						itemPos = this.childRef.getItemPosition(opt.index);
+						itemPos = this.childRef.getItemPosition(opt.index, opt.stickTo);
 					} else if (opt.node instanceof Object) {
 						if (opt.node.nodeType === 1 && typeof this.childRef.getNodePosition === 'function') {
 							itemPos = this.childRef.getNodePosition(opt.node);
@@ -955,12 +962,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			delete props.cbScrollTo;
 			delete props.className;
+			delete props.focusableScrollbar;
 			delete props.horizontalScrollbar;
 			delete props.onScroll;
 			delete props.onScrollStart;
 			delete props.onScrollStop;
-			delete props.focusableScrollbar;
-			delete props.style;
 			delete props.verticalScrollbar;
 
 			return (
