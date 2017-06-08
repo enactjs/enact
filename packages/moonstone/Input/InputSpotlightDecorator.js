@@ -14,6 +14,12 @@ const preventSpotlightNavigation = (ev) => {
 
 const isBubbling = (ev) => ev.currentTarget !== ev.target;
 
+const isDown = is('down');
+const isEnter = is('enter');
+const isLeft = is('left');
+const isRight = is('right');
+const isUp = is('up');
+
 // A regex to check for input types that allow selectionStart
 const SELECTABLE_TYPES = /text|password|search|tel|url/;
 
@@ -199,24 +205,18 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			const {currentTarget, keyCode, target} = ev;
 
 			if (this.state.focused === 'input') {
-				const isDown = is('down', keyCode);
-				const isEnter = is('enter', keyCode);
-				const isLeft = is('left', keyCode);
-				const isRight = is('right', keyCode);
-				const isUp = is('up', keyCode);
-
 				// switch focus to the decorator ...
 				const shouldFocusDecorator = (
 					// on enter + dismissOnEnter
-					(isEnter && dismissOnEnter) ||
+					(isEnter(keyCode) && dismissOnEnter) ||
 					// on left + at beginning of selection
-					(isLeft && safeSelectionStart(target) === 0) ||
+					(isLeft(keyCode) && safeSelectionStart(target) === 0) ||
 					// on right + at end of selection (note: fails on non-selectable types usually)
-					(isRight && safeSelectionStart(target) === target.value.length) ||
+					(isRight(keyCode) && safeSelectionStart(target) === target.value.length) ||
 					// on up
-					isUp ||
+					isUp(keyCode) ||
 					// on down
-					isDown
+					isDown(keyCode)
 				);
 
 				if (shouldFocusDecorator) {
@@ -236,12 +236,8 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 					// prevent 5-way nav for left/right keys within the <input>
 					preventSpotlightNavigation(ev);
 				}
-			} else {
-				const isEnter = is('enter', keyCode);
-				if (isEnter) {
-					this.focusInput(currentTarget);
-				}
-
+			} else if (isEnter(keyCode)) {
+				this.focusInput(currentTarget);
 			}
 			forwardKeyDown(ev, this.props);
 		}
