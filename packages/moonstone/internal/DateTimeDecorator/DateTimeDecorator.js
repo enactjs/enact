@@ -5,25 +5,13 @@
  * @private
  */
 
-import Cancelable from '@enact/ui/Cancelable';
 import Changeable from '@enact/ui/Changeable';
 import DateFactory from '@enact/i18n/ilib/lib/DateFactory';
 import hoc from '@enact/core/hoc';
 import ilib from '@enact/i18n';
-import RadioDecorator from '@enact/ui/RadioDecorator';
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Expandable} from '../../ExpandableItem';
-
-const CancelableDecorator = Cancelable({
-	component: 'span',
-	onCancel: function (props) {
-		if (props.open) {
-			props.onClose();
-			return true;
-		}
-	}
-});
 
 /**
  * {@link moonstone/internal/DateTimeDecorator.DateTimeDecorator} provides common behavior for
@@ -39,8 +27,6 @@ const CancelableDecorator = Cancelable({
  */
 const DateTimeDecorator = hoc((config, Wrapped) => {
 	const {customProps, defaultOrder, handlers, i18n} = config;
-
-	const Component = CancelableDecorator(Wrapped);
 
 	const Decorator = class extends React.Component {
 		static displayName = 'DateTimeDecorator'
@@ -232,12 +218,11 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 			}
 
 			return (
-				<Component
+				<Wrapped
 					{...this.props}
 					{...props}
 					{...this.handlers}
 					label={label}
-					onCancel={this.handleCancel}
 					order={order}
 					value={value}
 				/>
@@ -246,11 +231,8 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 	};
 
 	return Expandable(
-		RadioDecorator(
-			{activate: 'onOpen', deactivate: 'onClose', prop: 'open'},
-			Changeable(
-				Decorator
-			)
+		Changeable(
+			Decorator
 		)
 	);
 });

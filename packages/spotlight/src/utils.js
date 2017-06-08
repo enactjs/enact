@@ -76,8 +76,59 @@ const contains = curry((containerRect, elementRect) => {
 	return testIntersection('contains', containerRect, elementRect);
 });
 
+function getRect (elem) {
+	const cr = elem.getBoundingClientRect();
+	const rect = {
+		left: cr.left,
+		top: cr.top,
+		width: cr.width,
+		height: cr.height
+	};
+	rect.element = elem;
+	rect.right = rect.left + rect.width;
+	rect.bottom = rect.top + rect.height;
+	rect.center = {
+		x: rect.left + Math.floor(rect.width / 2),
+		y: rect.top + Math.floor(rect.height / 2)
+	};
+	rect.center.left = rect.center.right = rect.center.x;
+	rect.center.top = rect.center.bottom = rect.center.y;
+	return rect;
+}
+
+function getPointRect (position) {
+	const {x, y} = position;
+	return {
+		left: x,
+		top: y,
+		width: 0,
+		height: 0,
+		right: x,
+		bottom: y,
+		center: {
+			x,
+			y,
+			left: x,
+			right: x,
+			top: y,
+			bottom: y
+		}
+	};
+}
+
+function getRects (candidates) {
+	if (candidates && candidates.length > 0) {
+		return candidates.map(getRect);
+	}
+
+	return [];
+}
+
 export {
 	contains,
+	getPointRect,
+	getRect,
+	getRects,
 	intersects,
 	matchSelector,
 	parseSelector

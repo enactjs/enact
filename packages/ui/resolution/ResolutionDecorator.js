@@ -46,7 +46,8 @@ const defaultConfig = {
  *	* dynamic: true - when true, updates the resolution classes when the window resizes
  *	* screenTypes: null - defines a set of screen types to support
  *
- * @example
+ * Example:
+ * ```
  *	// Will have the resolution classes and will be updated when the window resizes
  *	const AppWithResolution = ResolutionDecorator(App);
  *	// Will have the resolution classes for the screen at the time of render only
@@ -54,7 +55,7 @@ const defaultConfig = {
  *	const AppWithScreenTypes = ResolutionDecorator({screenTypes: [
  *		{name: 'hd', pxPerRem: 16, width: 1280, height: 720, aspectRatioName: 'hdtv', base: true}
  *	]}, App);
- *
+ * ```
  * @class ResolutionDecorator
  * @memberof ui/resolution
  * @hoc
