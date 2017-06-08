@@ -113,7 +113,6 @@ const MediaControls = kind({
 		 * A string thats sets the label for `pause`.
 		 *
 		 * @type {String}
-		 * @default 'pause'
 		 * @public
 		 */
 		pauseLabel: PropTypes.string,
@@ -134,7 +133,6 @@ const MediaControls = kind({
 		 * A string thats sets the label for `play`.
 		 *
 		 * @type {String}
-		 * @default 'play'
 		 * @public
 		 */
 		playLabel: PropTypes.string,
