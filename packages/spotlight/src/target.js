@@ -98,7 +98,7 @@ function getTargetBySelector (selector) {
 
 function isRestrictedContainer (containerId) {
 	const config = getContainerConfig(containerId);
-	return config.enterTo === 'last-focused' || config.enterTo === 'defaultElement';
+	return config.enterTo === 'last-focused' || config.enterTo === 'default-element';
 }
 
 function getTargetInContainerByDirectionFromElement (direction, containerId, element, elementRect, elementContainerIds, boundingRect) {

@@ -467,6 +467,46 @@ describe('target', () => {
 				)).to.equal('NOT FOUND');
 			}
 		));
+
+		it('should respect enterTo="default-element" containers', testScenario(
+			scenarios.grid,
+			(root) => {
+				configureContainer('grid', {
+					restrict: 'none',
+					enterTo: 'default-element',
+					defaultElement: '#bottom-right'
+				});
+
+				const element = root.querySelector('#before-grid');
+
+				expect(safeTarget(
+					getTargetByDirectionFromElement('down', element),
+					t => t.id
+				)).to.equal('bottom-right');
+			}
+		));
+
+		it('should respect enterTo="last-focused" containers', testScenario(
+			scenarios.grid,
+			(root) => {
+				configureContainer('grid', {
+					restrict: 'none',
+					enterTo: 'last-focused',
+					lastFocusedKey: {
+						container: false,
+						element: true,
+						key: 8
+					}
+				});
+
+				const element = root.querySelector('#before-grid');
+
+				expect(safeTarget(
+					getTargetByDirectionFromElement('down', element),
+					t => t.id
+				)).to.equal('bottom-right');
+			}
+		));
 	});
 
 	describe('#getTargetByDirectionFromPosition', () => {
