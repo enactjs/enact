@@ -174,7 +174,7 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		)
 
 		setHandlers () {
-			this.handlers = Object.assign({}, this.props);
+			this.handlers = {};
 
 			if (depress) {
 				if (Array.isArray(depress)) {
@@ -198,7 +198,7 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const props = Object.assign({}, this.props, this.handlers);
+			const props = Object.assign({}, this.handlers, this.props);
 
 			if (leave) props[leave] = this.handleLeave;
 			if (prop) props[prop] = this.state.pressed;
