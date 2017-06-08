@@ -183,7 +183,7 @@ describe('handle', () => {
 		expect(actual).to.equal(expected);
 	});
 
-	it.only('should forward events with preventDefault to function specified in provided props', function () {
+	it.only('should only forward events to function specified in provided props when preventDefault() hasn\'t been called', function () {
 		const event = 'onMyClick';
 		const handler = sinon.spy();
 
