@@ -135,7 +135,7 @@ const defaultConfig = {
 	 * directions. For example, if you a key of `['right']` but you don't
 	 * include `Spotlight.pause()` when `onSpotlightRight` is called the
 	 * Spotlight will move to the next `Spottable` component and never release
-	 * the pulse. To resume `Spotlight` use the `Spotlight.resume()` in 
+	 * the pulse. To resume `Spotlight` use the `Spotlight.resume()` in
 	 * `onHoldEndRight`.
 	 *
 	 * Usage:
