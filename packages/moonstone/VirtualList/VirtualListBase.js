@@ -503,9 +503,9 @@ class VirtualListCore extends Component {
 
 		if (node) {
 			if ((index % numOfItems) === this.nodeIndexToBeBlurred && index !== this.lastFocusedIndex) {
-				// After focusing the exising item from Spotlight (30ms, _pointerHiddenToKeyTimeout)),
-				// then we need to blur the item.
-				// So that's the reason why we use 50 ms.
+				// When changing from "pointer" mode to "5way key" mode,
+				// a pointer is hidden and a last focused item get focused after 30ms.
+				// To make sure the item to be blurred after that, we used 50ms.
 				setTimeout(() => {
 					node.blur();
 				}, 50);
