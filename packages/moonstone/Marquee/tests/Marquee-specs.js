@@ -1,6 +1,6 @@
 import React from 'react';
 import {shallow} from 'enzyme';
-import Marquee from '../Marquee';
+import {MarqueeBase as Marquee} from '../Marquee';
 
 import css from '../Marquee.less';
 
