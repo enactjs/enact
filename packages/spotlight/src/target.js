@@ -5,6 +5,7 @@ import {
 	getAllContainerIds,
 	getContainerConfig,
 	getContainerFocusTarget,
+	getContainerNode,
 	getContainerPreviousTarget,
 	getContainersForNode,
 	getDefaultContainer,
@@ -39,13 +40,6 @@ function isFocusable (elem) {
 	}
 
 	return true;
-}
-
-function getAllNavigableElements () {
-	return getAllContainerIds()
-		.map(getSpottableDescendants)
-		.reduce(concat, [])
-		.filter(n => !isContainer(n));
 }
 
 function getContainersToSearch (containerId) {
@@ -107,9 +101,11 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 	});
 
 	// shortcut for previous target from element if it were saved
-	const previous = getContainerPreviousTarget(containerId, direction, element);
-	if (previous && elements.indexOf(previous) !== -1) {
-		return previous;
+	if (element) {
+		const previous = getContainerPreviousTarget(containerId, direction, element);
+		if (previous && elements.indexOf(previous) !== -1) {
+			return previous;
+		}
 	}
 
 	let elementRects = getRects(elements);
@@ -236,21 +232,19 @@ function getTargetByDirectionFromElement (direction, element) {
 }
 
 function getTargetByDirectionFromPosition (direction, position, containerId) {
-	const config = getContainerConfig(containerId);
-	let candidates;
+	const pointerRect = getPointRect(position);
 
-	if (config.restrict === 'self-only' || config.restrict === 'self-first') {
-		candidates = getSpottableDescendants(containerId);
-	} else {
-		candidates = getAllNavigableElements();
-	}
-
-	return navigate(
-		getPointRect(position),
-		direction,
-		getRects(candidates),
-		config
-	);
+	return get5WayContainersForNode(getContainerNode(containerId))
+		.reduceRight((result, id, index, elementContainerIds) => {
+			return result ||
+				getTargetInContainerByDirectionFromElement(
+					direction,
+					id,
+					null,
+					pointerRect,
+					elementContainerIds
+				);
+		}, null);
 }
 
 function getLeaveForTarget (containerId, direction) {

@@ -579,5 +579,45 @@ describe('target', () => {
 				)).to.equal('before-grid');
 			}
 		));
+
+		it('should cascade into unrestricted subcontainers', testScenario(
+			scenarios.grid,
+			(root) => {
+				configureContainer('grid', {
+					restrict: 'none'
+				});
+				const rect = root.querySelector('#top-center').getBoundingClientRect();
+				const aboveCenterOfGrid = {
+					x: rect.left + rect.width / 2,
+					y: rect.top - 1
+				};
+
+				expect(safeTarget(
+					getTargetByDirectionFromPosition('down', aboveCenterOfGrid, rootContainerId),
+					t => t.id
+				)).to.equal('top-center');
+			}
+		));
+
+		it('should respect enterTo config of restricted subcontainers', testScenario(
+			scenarios.grid,
+			(root) => {
+				configureContainer('grid', {
+					restrict: 'none',
+					enterTo: 'default-element',
+					defaultElement: '#bottom-right'
+				});
+				const rect = root.querySelector('#top-center').getBoundingClientRect();
+				const aboveCenterOfGrid = {
+					x: rect.left + rect.width / 2,
+					y: rect.top - 1
+				};
+
+				expect(safeTarget(
+					getTargetByDirectionFromPosition('down', aboveCenterOfGrid, rootContainerId),
+					t => t.id
+				)).to.equal('bottom-right');
+			}
+		));
 	});
 });
