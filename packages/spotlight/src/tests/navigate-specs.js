@@ -100,4 +100,42 @@ describe('navigate', () => {
 
 		expect(actual).to.equal(expected);
 	});
+
+	it('should return the element "under" when its center is nearest in that direction', () => {
+		const targetRect = getRect(105, 100, 10, 10);
+		const rects = [
+			[100, 110, 10, 10, 'right'],
+			[100, 90, 10, 10, 'left'],
+			[90, 90, 30, 30, 'under'], // completely contains the targetRect
+			[110, 100, 10, 10, 'below']
+		].map(args => getRect(...args));
+
+		expect(navigate(
+			targetRect,
+			'up',
+			rects,
+			{}
+		)).to.equal('under');
+
+		expect(navigate(
+			targetRect,
+			'down',
+			rects,
+			{}
+		)).to.equal('below');
+
+		expect(navigate(
+			targetRect,
+			'left',
+			rects,
+			{}
+		)).to.equal('left');
+
+		expect(navigate(
+			targetRect,
+			'right',
+			rects,
+			{}
+		)).to.equal('right');
+	});
 });

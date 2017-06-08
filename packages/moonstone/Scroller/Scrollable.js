@@ -57,7 +57,8 @@ const ScrollableSpotlightContainer = SpotlightContainerDecorator(
 			if (!focusableScrollbar && elem.classList.contains(scrollbarCss.scrollButton)) {
 				return false;
 			}
-		}
+		},
+		overflow: true
 	},
 	({containerRef, ...rest}) => {
 		delete rest.focusableScrollbar;
