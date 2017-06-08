@@ -129,6 +129,10 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 
+		componentWillMount () {
+			this.setHandlers();
+		}
+
 		componentWillReceiveProps (nextProps) {
 			if (this.state.controlled) {
 				const pressed = nextProps[prop];
@@ -169,27 +173,32 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			() => this.updatePressed(false)
 		)
 
-		render () {
-			const props = Object.assign({}, this.props);
+		setHandlers () {
+			this.handlers = Object.assign({}, this.props);
+
 			if (depress) {
 				if (Array.isArray(depress)) {
 					depress.forEach((name) => {
-						props[name] = this.handleDepress(name);
+						this.handlers[name] = this.handleDepress(name);
 					});
 				} else {
-					props[depress] = this.handleDepress(depress);
+					this.handlers[depress] = this.handleDepress(depress);
 				}
 			}
 
 			if (release) {
 				if (Array.isArray(release)) {
 					release.forEach((name) => {
-						props[name] = this.handleRelease(name);
+						this.handlers[name] = this.handleRelease(name);
 					});
 				} else {
-					props[release] = this.handleRelease(release);
+					this.handlers[release] = this.handleRelease(release);
 				}
 			}
+		}
+
+		render () {
+			const props = Object.assign({}, this.props, this.handlers);
 
 			if (leave) props[leave] = this.handleLeave;
 			if (prop) props[prop] = this.state.pressed;
