@@ -1,5 +1,3 @@
-import sinon from 'sinon';
-
 import {
 	configureContainer,
 	configureDefaults,

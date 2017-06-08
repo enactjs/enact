@@ -1,6 +1,6 @@
 import {mount} from 'enzyme';
 import React from 'react';
-import Spotlight from '@enact/spotlight';
+import Spotlight from '../../src/spotlight';
 
 import SpotlightContainerDecorator from '../SpotlightContainerDecorator';
 
