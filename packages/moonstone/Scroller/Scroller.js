@@ -183,7 +183,7 @@ class ScrollerBase extends Component {
 	}
 
 	calculatePositionOnFocus = (focusedItem, scrollInfo) => {
-		if (!this.isVertical() && !this.isHorizontal()) return;
+		if (!this.isVertical() && !this.isHorizontal() || !focusedItem || !this.containerRef.contains(focusedItem)) return;
 
 		const {
 			top: itemTop,
