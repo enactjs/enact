@@ -10,12 +10,15 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Changed
 
+- `ui/Pressable` config `depress` and `release` now support arrays. Useful for supporting both touch and click events.
+
 ### Fixed
 
 - `ui/ViewManager` to have a view count of 0 specifically for `noAnimation` cases. This helps things like `spotlight` restore `focus` properly.
 - `ui/Cancelable` to run modal handlers on `window` object and correctly store handlers in LIFO order
 
 ### Removed
+
 ## [1.2.2] - 2017-05-31
 
 No significant changes.
@@ -32,7 +35,6 @@ No significant changes.
 ## Unreleased
 - `ui/Transition` prop `onShow` that fires when transitioning into view a component.
 - `ui/transition` callback prop `onShow` that fires when transitioning into view completes
-- `ui/Pressable` config `depress` and `release` now support arrays. Useful for supporting both touch and click events.
 
 ### Changed
 
