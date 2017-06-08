@@ -3,6 +3,7 @@ import React from 'react';
 
 let GlobalId = 0;
 
+const ID_KEY = '$$ID$$';
 
 /**
  * Default config for {@link moonstone/Panels.IdProvider}
@@ -12,30 +13,31 @@ let GlobalId = 0;
  */
 const defaultConfig = {
 	/**
-	 * Callback for each generated identifier when unmounting
-	 *
-	 * @type {Function}
-	 * @memberof moonstone/Panels.IdProvider.defaultConfig
-	 */
-	onUnmount: null,
-
-	/**
-	 * Optional prefix for the identifier
-	 *
-	 * @type {String}
-	 * @default ''
-	 * @memberof moonstone/Panels.IdProvider.defaultConfig
-	 */
-	prefix: '',
-
-	/**
 	 * Prop to pass the identifier generation function
 	 *
 	 * @type {String}
 	 * @default generateId
 	 * @memberof moonstone/Panels.IdProvider.defaultConfig
 	 */
-	prop: 'generateId'
+	generateProp: 'generateId',
+
+	/**
+	 * Prop to pass the identifier
+	 *
+	 * @type {String}
+	 * @default id
+	 * @memberof moonstone/Panels.IdProvider.defaultConfig
+	 */
+	idProp: 'id',
+
+	/**
+	 * Optional prefix for the identifier
+	 *
+	 * @type {String}
+	 * @default 'c_'
+	 * @memberof moonstone/Panels.IdProvider.defaultConfig
+	 */
+	prefix: 'c_'
 };
 
 /**
@@ -47,7 +49,7 @@ const defaultConfig = {
  * @memberof moonstone/Panels
  */
 const IdProvider = hoc(defaultConfig, (config, Wrapped) => {
-	const {onUnmount, prefix, prop} = config;
+	const {generateProp, idProp, prefix} = config;
 
 	return class extends React.Component {
 		static displayName = 'IdProvider'
@@ -58,36 +60,41 @@ const IdProvider = hoc(defaultConfig, (config, Wrapped) => {
 			this.ids = {};
 		}
 
-		generateId = (key) => {
+		generateId = (key, idPrefix = prefix, onUnmount) => {
 			// if an id has been generated for the key, return it
 			if (key in this.ids) {
-				return this.ids[key];
+				return this.ids[key].id;
 			}
 
 			// otherwise generate a new id (with an optional prefix), cache it, and return it
 			const id = `${prefix}${++GlobalId}`;
-			this.ids[typeof key === 'undefined' ? `generated-${id}` : key] = id;
+			this.ids[typeof key === 'undefined' ? `generated-${id}` : key] = {
+				id,
+				onUnmount
+			};
 
 			return id;
 		}
 
 		componentWillUnmount () {
-			if (typeof onUnmount === 'function') {
-				// Call the onUnmount handler for each generated id (note: not the key)
-				for (const id in this.ids) {
-					onUnmount(this.ids[id]);
+			// Call the onUnmount handler for each generated id (note: not the key)
+			for (const key in this.ids) {
+				const {id, onUnmount} = this.ids[key];
+				if (typeof onUnmount === 'function') {
+					onUnmount(id);
 				}
 			}
 		}
 
 		render () {
-			let props = this.props;
+			const props = Object.assign({}, this.props);
 
-			if (prop) {
-				props = {
-					...this.props,
-					[prop]: this.generateId
-				};
+			if (generateProp) {
+				props[generateProp] = this.generateId;
+			}
+
+			if (idProp && !props[idProp]) {
+				props[idProp] = this.generateId(ID_KEY);
 			}
 
 			return (
