@@ -33,7 +33,8 @@ const
 	nop = () => {},
 	perf = (typeof window === 'object') ? window.performance : {now: Date.now},
 	holdTime = 50,
-	scrollWheelMultiplierForDeltaPixel = 4,
+	scrollWheelMultiplierForDeltaPixel = 1.5, // The ratio of wheel 'delta' units to pixels scrolled.
+	scrollWheelPageMultiplierForMaxPixel = 0.2, // The ratio of the maximum distance scrolled by wheel to the size of the viewport.
 	pixelPerLine = 39,
 	paginationPageMultiplier = 0.8,
 	epsilon = 1,
@@ -334,21 +335,16 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			const
 				bounds = this.getScrollBounds(),
 				deltaMode = e.deltaMode,
-				wheelDeltaY = -e.wheelDeltaY;
+				wheelDeltaY = -e.wheelDeltaY,
+				maxPixel = (isVertical ? bounds.clientHeight : (isHorizontal ? bounds.clientWidth : 0)) * scrollWheelPageMultiplierForMaxPixel;
 			let delta = (wheelDeltaY || e.deltaY);
 
 			if (deltaMode === 0) {
-				delta = ri.scale(delta) * scrollWheelMultiplierForDeltaPixel;
+				delta = Math.min(maxPixel, ri.scale(delta) * scrollWheelMultiplierForDeltaPixel);
 			} else if (deltaMode === 1) { // line; firefox
-				delta = ri.scale(delta * pixelPerLine) * scrollWheelMultiplierForDeltaPixel;
+				delta = Math.min(maxPixel, ri.scale(delta * pixelPerLine) * scrollWheelMultiplierForDeltaPixel);
 			} else if (deltaMode === 2) { // page
-				if (isVertical) {
-					delta = delta > 0 ? bounds.clientHeight : -bounds.clientHeight;
-				} else if (isHorizontal) {
-					delta = delta > 0 ? bounds.clientWidth : -bounds.clientWidth;
-				} else {
-					delta = 0;
-				}
+				delta = delta < 0 ? -maxPixel : maxPixel;
 			}
 
 			return delta;

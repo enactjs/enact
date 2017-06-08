@@ -31,7 +31,8 @@ const
 	nop = () => {},
 	paginationPageMultiplier = 0.8,
 	epsilon = 1,
-	scrollWheelMultiplierForDeltaPixel = 4,
+	scrollWheelMultiplierForDeltaPixel = 1.5, // The ratio of wheel 'delta' units to pixels scrolled.
+	scrollWheelPageMultiplierForMaxPixel = 0.2, // The ratio of the maximum distance scrolled by wheel to the size of the viewport.
 	pixelPerLine = 39,
 	// spotlight
 	scrollStopWaiting = 500;
@@ -294,15 +295,16 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				const
 					bounds = this.getScrollBounds(),
 					deltaMode = e.deltaMode,
-					wheelDeltaY = -e.wheelDeltaY;
+					wheelDeltaY = -e.wheelDeltaY,
+					maxPixel = (isVertical ? bounds.clientHeight : (isHorizontal ? bounds.clientWidth : 0)) * scrollWheelPageMultiplierForMaxPixel;
 				let delta = (wheelDeltaY || e.deltaY);
 
 				if (deltaMode === 0) {
-					delta = ri.scale(delta) * scrollWheelMultiplierForDeltaPixel;
+					delta = Math.min(maxPixel, ri.scale(delta) * scrollWheelMultiplierForDeltaPixel);
 				} else if (deltaMode === 1) { // line; firefox
-					delta = ri.scale(delta * pixelPerLine) * scrollWheelMultiplierForDeltaPixel;
+					delta = Math.min(maxPixel, ri.scale(delta * pixelPerLine) * scrollWheelMultiplierForDeltaPixel);
 				} else if (deltaMode === 2) { // page
-					delta = delta > 0 ? bounds.clientWidth : -bounds.clientWidth;
+					delta = delta < 0 ? -maxPixel : maxPixel;
 				}
 
 				/* prevent native scrolling feature for vertical direction */
