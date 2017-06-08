@@ -29,7 +29,7 @@ const dispatchToModals = (ev) => {
  * @private
  */
 const addModal = (obj) => {
-	if (modals.push(obj) === 1 && typeof window === 'object') {
+	if (modals.push(obj) === 1 && typeof window !== 'undefined') {
 		on('keyup', dispatchToModals, window);
 	}
 };
@@ -48,7 +48,7 @@ const removeModal = (obj) => {
 		modals.splice(index, 1);
 	}
 
-	if (modals.length === 0 && typeof window === 'object') {
+	if (modals.length === 0 && typeof window !== 'undefined') {
 		off('keyup', dispatchToModals, window);
 	}
 };
