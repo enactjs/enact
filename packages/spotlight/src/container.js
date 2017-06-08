@@ -742,6 +742,7 @@ export {
 	getContainerDefaultElement,
 	getContainerLastFocusedElement,
 	getContainerNavigableElements,
+	getContainerNode,
 	setContainerLastFocusedElement,
 
 	// Keep

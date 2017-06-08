@@ -34,6 +34,7 @@ import {
 	getContainerDefaultElement,
 	getContainerFocusTarget,
 	getContainerLastFocusedElement,
+	getContainerNode,
 	getContainerPreviousTarget,
 	getContainersForNode,
 	getNavigableElementsForNode,
@@ -322,20 +323,23 @@ const Spotlight = (function () {
 	}
 
 	function spotNextFromPoint (direction, position, containerId) {
-		const config = getContainerConfig(containerId);
-		let candidates, next;
+		const containerNode = getContainerNode(containerId);
+		let lastFocused = getContainerLastFocusedElement(containerId);
 
-		if (config.restrict === 'self-only' || config.restrict === 'self-first') {
-			candidates = getSpottableDescendants(containerId);
-		} else {
-			candidates = getAllNavigableElements();
+		if (typeof lastFocused === 'string') {
+			lastFocused = getContainerLastFocusedElement(lastFocused);
 		}
 
-		next = navigate(
-			getPointRect(position),
-			direction,
-			getRects(candidates),
-			config
+		const next = getNavigableElementsForNode(
+			containerNode,
+			(currentContainerId, container, elements) => {
+				return navigate(
+					getPointRect(position),
+					direction,
+					getRects(elements),
+					getContainerConfig(currentContainerId)
+				);
+			}
 		);
 
 		if (next) {
@@ -343,9 +347,13 @@ const Spotlight = (function () {
 				containerId,
 				direction,
 				next,
-				getContainerLastFocusedElement(_lastContainerId)
+				lastFocused
 			);
-			return focusNext(next, direction, getContainersForNode(next));
+			if (isContainer(next)) {
+				return focusContainer(next.dataset.containerId);
+			} else {
+				focusNext(next, direction, getContainersForNode(next));
+			}
 		}
 
 		return false;
