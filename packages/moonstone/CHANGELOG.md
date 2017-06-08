@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Deprecated
 
 - `moonstone/Scroller` props `horizontal` and `vertical`. Deprecated props are replaced with `direction` prop. `horizontal` and `vertical` will be removed in 2.0.0.
+- `moonstone/Panel` prop `noAutoFocus` in favor of `autoFocus="none"`
 
 ### Added
 
