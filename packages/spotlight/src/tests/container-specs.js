@@ -1,5 +1,3 @@
-import sinon from 'sinon';
-
 import {
 	configureContainer,
 	configureDefaults,
@@ -8,7 +6,6 @@ import {
 	getContainerConfig,
 	getContainerFocusTarget,
 	getContainersForNode,
-	getNavigableElementsForNode,
 	getSpottableDescendants,
 	isContainer,
 	isNavigable,
@@ -813,137 +810,6 @@ describe('container', () => {
 				const actual = getContainerConfig(rootContainerId).lastFocusedKey.key;
 
 				expect(actual).to.equal(expected);
-			}
-		));
-	});
-
-	describe('#getNavigableElementsForNode', () => {
-		beforeEach(setupContainers);
-		afterEach(teardownContainers);
-
-		it('should invoke the navigation callback for once when node has no restricted container ancestors', testScenario(
-			scenarios.complexTree,
-			(root) => {
-				const navigate = sinon.spy();
-				configureContainer('second-container', {
-					restrict: 'none'
-				});
-				configureContainer('first-container', {
-					restrict: 'none'
-				});
-				const element = root.querySelector(`[${containerAttribute}="second-container"] .spottable`);
-
-				getNavigableElementsForNode(element, navigate);
-
-				const expected = 1;
-				const actual = navigate.callCount;
-
-				expect(actual).to.equal(expected);
-			}
-		));
-
-		it('should invoke the navigation callback for each restrict="self-first" container ancestors plus the root container', testScenario(
-			scenarios.complexTree,
-			(root) => {
-				const navigate = sinon.spy();
-				configureContainer('second-container', {
-					restrict: 'self-first'
-				});
-				configureContainer('first-container', {
-					restrict: 'self-first'
-				});
-				const element = root.querySelector(`[${containerAttribute}="second-container"] .spottable`);
-
-				getNavigableElementsForNode(element, navigate);
-
-				const expected = 3;
-				const actual = navigate.callCount;
-
-				expect(actual).to.equal(expected);
-			}
-		));
-
-		it('should invoke the navigation callback for each restrict="self-first" container ancestors and stop after the first restrict="self-only" container ancestor', testScenario(
-			scenarios.complexTree,
-			(root) => {
-				const navigate = sinon.spy();
-				configureContainer('second-container', {
-					restrict: 'self-first'
-				});
-				configureContainer('first-container', {
-					restrict: 'self-only'
-				});
-				const element = root.querySelector(`[${containerAttribute}="second-container"] .spottable`);
-
-				getNavigableElementsForNode(element, navigate);
-
-				const expected = 2;
-				const actual = navigate.callCount;
-
-				expect(actual).to.equal(expected);
-			}
-		));
-
-		it('should ignore enterTo for ancestor containers when passing navigable elements', testScenario(
-			scenarios.complexTree,
-			(root) => {
-				const navigate = sinon.spy();
-				configureContainer('second-container', {
-					enterTo: 'last-focused'
-				});
-				configureContainer('first-container', {
-					restrict: 'self-first'
-				});
-				const element = root.querySelector(`[${containerAttribute}="second-container"] .spottable`);
-
-				getNavigableElementsForNode(element, navigate);
-
-				const expected = [3, 5, 6];
-				const actual = navigate.args.map(args => args[2].length);
-
-				expect(actual).to.deep.equal(expected);
-			}
-		));
-
-		it('should respect enterTo for sibling containers when passing navigable elements', testScenario(
-			scenarios.siblingContainers,
-			(root) => {
-				const navigate = sinon.spy();
-				configureContainer('first', {
-					enterTo: 'last-focused'
-				});
-				configureContainer('second', {
-					restrict: 'self-first'
-				});
-				const element = root.querySelector(`[${containerAttribute}="second"] .spottable`);
-
-				getNavigableElementsForNode(element, navigate);
-
-				const expected = [5, 6];
-				const actual = navigate.args.map(args => args[2].length);
-
-				expect(actual).to.deep.equal(expected);
-			}
-		));
-
-		it('should include contents sibling containers without enterTo when passing navigable elements', testScenario(
-			scenarios.siblingContainers,
-			(root) => {
-				const navigate = sinon.spy();
-				configureContainer('first', {
-					restrict: 'none'
-				});
-				configureContainer('second', {
-					restrict: 'self-first'
-				});
-				const element = root.querySelector(`[${containerAttribute}="second"] .spottable`);
-
-				getNavigableElementsForNode(element, navigate);
-
-				const expected = [5, 10];
-				const actual = navigate.args.map(args => args[2].length);
-
-				expect(actual).to.deep.equal(expected);
 			}
 		));
 	});
