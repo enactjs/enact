@@ -17,9 +17,10 @@ import ri from '@enact/ui/resolution';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
-import css from './Scrollable.less';
 import ScrollAnimator from './ScrollAnimator';
 import Scrollbar from './Scrollbar';
+
+import css from './Scrollable.less';
 import scrollbarCss from './Scrollbar.less';
 
 const
@@ -969,8 +970,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					focusableScrollbar={focusableScrollbar}
 					style={style}
 				>
-					{vscrollbar}
-					{hscrollbar}
 					<Wrapped
 						{...props}
 						{...this.eventHandlers}
@@ -979,6 +978,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						onScroll={this.handleScroll}
 						ref={this.initChildRef}
 					/>
+					{vscrollbar}
+					{hscrollbar}
 				</ScrollableSpotlightContainer>
 			);
 		}
