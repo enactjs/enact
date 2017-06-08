@@ -333,15 +333,15 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			incrementSliderClasses: ({vertical, styler}) => styler.append({vertical, horizontal: !vertical}),
 			decrementIcon: ({decrementIcon, vertical}) => (decrementIcon || (vertical ? 'arrowlargedown' : 'arrowlargeleft')),
 			incrementIcon: ({incrementIcon, vertical}) => (incrementIcon || (vertical ? 'arrowlargeup' : 'arrowlargeright')),
-			decrementAriaLabel: ({value}) => (`${value} ${$L('press ok button to decrease the value')}`),
-			incrementAriaLabel: ({value}) => (`${value} ${$L('press ok button to increase the value')}`)
+			decrementAriaLabel: ({disabled, min, value}) => !(disabled || value <= min) ? (`${value} ${$L('press ok button to decrease the value')}`) : null,
+			incrementAriaLabel: ({disabled, max, value}) => !(disabled || value >= max) ? (`${value} ${$L('press ok button to increase the value')}`) : null
 		},
 
 		render: ({active, backgroundProgress, children, decrementAriaLabel, decrementDisabled, decrementIcon, detachedKnob, disabled, focused, incrementAriaLabel, incrementDisabled, incrementIcon, incrementSliderClasses, inputRef, max, min, noFill, onActivate, onChange, onDecrement, onIncrement, onSpotlightDisappear, scrubbing, sliderBarRef, sliderRef, spotlightDisabled, step, tooltip, tooltipAsPercent, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => {
-			const ariaProps = extractAriaProps(rest);
+			const {'aria-valuetext': valueText, role, ...ariaProps} = extractAriaProps(rest);
 
 			return (
-				<div {...rest} className={incrementSliderClasses}>
+				<div {...ariaProps} {...rest} className={incrementSliderClasses}>
 					<IncrementSliderButton
 						aria-label={decrementAriaLabel}
 						className={css.decrementButton}
@@ -353,7 +353,8 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						{decrementIcon}
 					</IncrementSliderButton>
 					<Slider
-						{...ariaProps}
+						role={role}
+						aria-valuetext={valueText}
 						active={active}
 						backgroundProgress={backgroundProgress}
 						className={css.slider}
