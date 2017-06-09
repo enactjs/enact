@@ -446,10 +446,16 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		onKeyDown = ({keyCode, target}) => {
-			if (getDirection(keyCode)) {
+			const direction = getDirection(keyCode);
+
+			if (direction) {
 				if (this.childRef.setSpotlightContainerRestrict) {
 					const index = Number.parseInt(target.getAttribute(dataIndexAttribute));
 					this.childRef.setSpotlightContainerRestrict(keyCode, index);
+				}
+
+				if (this.childRef.scrollToBoundaries && target.dataset.spottableBoundaries) {
+					this.childRef.scrollToBoundaries(direction, target.dataset.spottableBoundaries);
 				}
 			}
 		}

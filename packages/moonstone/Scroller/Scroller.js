@@ -36,6 +36,15 @@ class ScrollerBase extends Component {
 		children: PropTypes.node.isRequired,
 
 		/**
+		 * Callback method of scrollTo.
+		 * Normally, `Scrollable` should set this value.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		cbScrollTo: PropTypes.func,
+
+		/**
 		 * Direction of the scroller; valid values are `'both'`, `'horizontal'`, and `'vertical'`.
 		 *
 		 * @type {String}
@@ -295,6 +304,21 @@ class ScrollerBase extends Component {
 		if (node) {
 			Spotlight.focus(node);
 		}
+	}
+
+	scrollToBoundaries = (direction, boundaries) => {
+		let align = null;
+
+		if (direction === 'up' && boundaries.includes('top')) {
+			align = 'top';
+		} else if (direction === 'down' && boundaries.includes('bottom')) {
+			align = 'bottom';
+		} else if ((direction === 'right' && boundaries.includes('right')) ||
+			direction === 'left' && boundaries.includes('left')) {
+			align = direction;
+		}
+
+		this.props.cbScrollTo({align});
 	}
 
 	isVertical = () => {
