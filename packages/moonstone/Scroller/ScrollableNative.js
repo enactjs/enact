@@ -294,10 +294,21 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			if (this.horizontalScrollability && !this.verticalScrollability) {
 				const
 					bounds = this.getScrollBounds(),
+					isHorizontal = this.canScrollHorizontally(bounds),
+					isVertical = this.canScrollVertically(bounds),
 					deltaMode = e.deltaMode,
-					wheelDeltaY = -e.wheelDeltaY,
-					maxPixel = (isVertical ? bounds.clientHeight : (isHorizontal ? bounds.clientWidth : 0)) * scrollWheelPageMultiplierForMaxPixel;
-				let delta = (wheelDeltaY || e.deltaY);
+					wheelDeltaY = -e.wheelDeltaY;
+				let
+					delta = (wheelDeltaY || e.deltaY),
+					maxPixel;
+
+				if (isVertical) {
+					maxPixel = bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel;
+				} else if (isHorizontal) {
+					maxPixel = bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel;
+				} else {
+					return 0;
+				}
 
 				if (deltaMode === 0) {
 					delta = Math.min(maxPixel, ri.scale(delta) * scrollWheelMultiplierForDeltaPixel);
