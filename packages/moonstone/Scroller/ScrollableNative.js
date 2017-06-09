@@ -103,11 +103,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			 * - {focus} - Set it `true`, if you want the item to be focused after scroll.
 			 *   This option is only valid when you scroll by `index` or `node`.
 			 *
-			 * @example
+			 * Example:
+			 * ```
 			 *	// If you set cbScrollTo prop like below;
 			 *	cbScrollTo: (fn) => {this.scrollTo = fn;}
 			 *	// You can simply call like below;
 			 *	this.scrollTo({align: 'top'}); // scroll to the top
+			 * ```
 			 * @type {Function}
 			 * @public
 			 */
@@ -835,9 +837,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					focusableScrollbar={focusableScrollbar}
 					style={style}
 				>
+					<Wrapped {...props} {...this.eventHandlers} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={css.container} />
 					{vscrollbar}
 					{hscrollbar}
-					<Wrapped {...props} {...this.eventHandlers} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={css.container} />
 				</ScrollableSpotlightContainer>
 			);
 		}

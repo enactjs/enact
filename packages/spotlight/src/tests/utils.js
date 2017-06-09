@@ -11,6 +11,7 @@ const testScenario = (scenario, callback) => () => {
 			scenario,
 		'</div>'
 	);
+
 	document.body.innerHTML = html;
 
 	const root = document.getElementById(rootId);

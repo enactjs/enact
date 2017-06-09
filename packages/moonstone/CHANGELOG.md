@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Deprecated
 
 - `moonstone/Scroller` props `horizontal` and `vertical`. Deprecated props are replaced with `direction` prop. `horizontal` and `vertical` will be removed in 2.0.0.
+- `moonstone/Panel` prop `noAutoFocus` in favor of `autoFocus="none"`
 - `moonstone/Input` prop `noDecorator` is being replaced by `autoFocus` in 2.0.0.
 
 ### Added
@@ -14,6 +15,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Image` support for `children` prop inside images
 - `moonstone/Scroller` prop `direction` which replaces `horizontal` and `vertical` props.
 - `moonstone/VideoPlayer` property `tooltipHideDelay` to hide tooltip with a given amount of time
+- `moonstone/VideoPlayer` methods `fastForward`, `getMediaState`, `jump`, `pause`, `play`, `rewind`, and `seek` to allow external interaction with the player. See docs for example usage.
 
 ### Changed
 
@@ -25,15 +27,18 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` property `feedbackHideDelay`'s default value to 3000
 - `moonstone/Notification` to break line in characters in ja and zh locale
 - `moonstone/Notification` to align texts left in LTR locale and right in RTL locale
+- `moonstone/VideoPlayer` to simulate rewind functionality on non-webOS platforms only
 
 ### Fixed
 
 - `moonstone/ExpandableItem` to correct the `titleIcon` when using `open` and `disabled`
 - `moonstone/GridListImageItem` to center its selection icon on the image instead of the item
 - `moonstone/Input` to have correct `Tooltip` position in `RTL`
+- `moonstone/SwitchItem` to not unintentionally overflow `Scroller` containers, causing them to jump to the side when focusing
 - `moonstone/VideoPlayer` to fast forward properly when video is at paused state
 - `moonstone/VideoPlayer` to correctly change sources
 - `moonstone/VideoPlayer` to show or hide feedback tooltip properly
+- `moonstone/DateTimeDecorator` to work properly with `RadioControllerDecorator`
 
 ### Removed
 

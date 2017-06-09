@@ -17,9 +17,10 @@ import ri from '@enact/ui/resolution';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
-import css from './Scrollable.less';
 import ScrollAnimator from './ScrollAnimator';
 import Scrollbar from './Scrollbar';
+
+import css from './Scrollable.less';
 import scrollbarCss from './Scrollbar.less';
 
 const
@@ -56,7 +57,8 @@ const ScrollableSpotlightContainer = SpotlightContainerDecorator(
 			if (!focusableScrollbar && elem.classList.contains(scrollbarCss.scrollButton)) {
 				return false;
 			}
-		}
+		},
+		overflow: true
 	},
 	({containerRef, ...rest}) => {
 		delete rest.focusableScrollbar;
@@ -106,11 +108,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			 * - {focus} - Set it `true`, if you want the item to be focused after scroll.
 			 *   This option is only valid when you scroll by `index` or `node`.
 			 *
-			 * @example
+			 * Example:
+			 * ```
 			 *	// If you set cbScrollTo prop like below;
 			 *	cbScrollTo: (fn) => {this.scrollTo = fn;}
 			 *	// You can simply call like below;
 			 *	this.scrollTo({align: 'top'}); // scroll to the top
+			 * ```
 			 * @type {Function}
 			 * @public
 			 */
@@ -967,8 +971,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					focusableScrollbar={focusableScrollbar}
 					style={style}
 				>
-					{vscrollbar}
-					{hscrollbar}
 					<Wrapped
 						{...props}
 						{...this.eventHandlers}
@@ -977,6 +979,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						onScroll={this.handleScroll}
 						ref={this.initChildRef}
 					/>
+					{vscrollbar}
+					{hscrollbar}
 				</ScrollableSpotlightContainer>
 			);
 		}

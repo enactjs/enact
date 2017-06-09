@@ -120,6 +120,10 @@
 	.applySkins({
 		background-color: @moon-input-decorator-bg-color;
 
+		.input {
+			background: transparent;
+		}
+
 		&:global(.spottable):focus {
 			color: @moon-input-text-color;
 			border-color: @moon-spotlight-border-color;
@@ -138,6 +142,7 @@
 }
 
 .invalidTooltip {
+	pointer-events: none;
 	transform: translate(60px, -50%);
 
 	:global(.enact-locale-right-to-left) & {
