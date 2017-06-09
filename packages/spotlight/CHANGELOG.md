@@ -12,9 +12,14 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Changed
 
+* Signficant refactoring of spotlight submodules to improve testability
+
 ### Fixed
 
+* Navigating to elements that are hidden within an overflow container (e.g. a scroller)
+
 ### Removed
+
 ## [1.2.2] - 2017-05-31
 
 No significant changes.

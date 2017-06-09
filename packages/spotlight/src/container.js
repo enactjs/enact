@@ -27,6 +27,9 @@ const reverseDirections = {
 // Incrementer for container IDs
 let _ids = 0;
 
+let _defaultContainerId = '';
+let _lastContainerId = '';
+
 // Note: an <extSelector> can be one of following types:
 // - a valid selector string for "querySelectorAll"
 // - a NodeList or an array containing DOM elements
@@ -45,6 +48,7 @@ let GlobalConfig = {
 	restrict: 'self-first', // 'self-first', 'self-only', 'none'
 	tabIndexIgnoreList: 'a, input, select, textarea, button, iframe, [contentEditable=true]',
 	navigableFilter: null,
+	overflow: false,
 	lastFocusedElement: null,
 	lastFocusedKey: null,
 	lastFocusedPersist: (node, all) => {
@@ -465,7 +469,12 @@ const configureDefaults = (config) => {
  * @public
  */
 const isNavigable = (node, containerId, verify) => {
-	if (!node) {
+	if (!node || (node.offsetWidth <= 0 && node.offsetHeight <= 0)) {
+		return false;
+	}
+
+	const containerNode = getContainerNode(containerId);
+	if (containerNode !== document && containerNode.dataset.containerDisabled) {
 		return false;
 	}
 
@@ -561,32 +570,6 @@ function setContainerLastFocusedElement (node, containerIds) {
 	}
 }
 
-function getNavigableElementsForNode (node, navigate) {
-	let selfOnly = false;
-	// accumulates navigable elements while the reduce works up the tree
-	let elements = [];
-
-	return getContainersForNode(node)
-		.reverse()
-		.reduce((next, id, index, containerIds) => {
-			if (next || selfOnly) return next;
-
-			const {restrict} = getContainerConfig(id);
-			selfOnly = restrict === 'self-only';
-
-			elements = elements.concat(getDeepSpottableDescendants(id, containerIds));
-			if (restrict === 'self-first' || selfOnly || id === rootContainerId) {
-				next = navigate(
-					id,
-					getContainerNode(id),
-					elements
-				);
-			}
-
-			return next;
-		}, null);
-}
-
 /**
  * [getContainerNavigableElements description]
  *
@@ -637,7 +620,7 @@ function getContainerFocusTarget (containerId) {
 	// deferring restoration until it's requested to allow containers to prepare first
 	restoreLastFocusedElement(containerId);
 
-	const next = getContainerNavigableElements(containerId)[0];
+	const next = getContainerNavigableElements(containerId)[0] || null;
 	if (isContainer(next)) {
 		const nextId = isContainerNode(next) ? getContainerId(next) : next;
 		return getContainerFocusTarget(nextId);
@@ -732,9 +715,32 @@ function unmountContainer (containerId) {
 	}
 }
 
+function getDefaultContainer () {
+	return _defaultContainerId;
+}
+
+function setDefaultContainer (containerId) {
+	if (!containerId) {
+		_defaultContainerId = '';
+	} else if (!getContainerConfig(containerId)) {
+		throw new Error('Container "' + containerId + '" doesn\'t exist!');
+	} else {
+		_defaultContainerId = containerId;
+	}
+}
+
+function getLastContainer () {
+	return _lastContainerId;
+}
+
+function setLastContainer (containerId) {
+	_lastContainerId = containerId || '';
+}
+
 export {
 	// Remove
 	getAllContainerIds,
+	getContainerNode,
 
 	// Maybe
 	getContainersForNode,
@@ -750,7 +756,8 @@ export {
 	configureContainer,
 	getContainerFocusTarget,
 	getContainerPreviousTarget,
-	getNavigableElementsForNode,
+	getDefaultContainer,
+	getLastContainer,
 	getSpottableDescendants,
 	isContainer,
 	isNavigable,
@@ -758,5 +765,7 @@ export {
 	removeContainer,
 	rootContainerId,
 	setContainerPreviousTarget,
+	setDefaultContainer,
+	setLastContainer,
 	unmountContainer
 };
