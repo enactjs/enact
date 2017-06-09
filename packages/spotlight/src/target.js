@@ -1,4 +1,3 @@
-import concat from 'ramda/src/concat';
 import last from 'ramda/src/last';
 
 import {
@@ -95,33 +94,30 @@ function isRestrictedContainer (containerId) {
 	return config.enterTo === 'last-focused' || config.enterTo === 'default-element';
 }
 
-function getTargetInContainerByDirectionFromElement (direction, containerId, element, elementRect, elementContainerIds, boundingRect) {
-	const elements = getSpottableDescendants(containerId).filter(n => {
-		return !isContainer(n) || elementContainerIds.indexOf(n.dataset.containerId) === -1;
+function getSpottableDescendantsWithoutContainers(containerId, containerIds) {
+	return getSpottableDescendants(containerId).filter(n => {
+		return !isContainer(n) || containerIds.indexOf(n.dataset.containerId) === -1;
 	});
+}
 
-	// shortcut for previous target from element if it were saved
-	if (element) {
-		const previous = getContainerPreviousTarget(containerId, direction, element);
-		if (previous && elements.indexOf(previous) !== -1) {
-			return previous;
+function filterRects (elementRects, boundingRect) {
+	if (!boundingRect) {
+		return elementRects;
+	}
+
+	// remove elements that are outside of boundingRect, if specified
+	return elementRects.filter(rect => {
+		if (isContainer(rect.element)) {
+			// For containers, test intersection since they may be larger than the bounding rect
+			return intersects(boundingRect, rect);
+		} else {
+			// For elements, use contains with the center to include mostly visible elements
+			return contains(boundingRect, rect.center);
 		}
-	}
+	});
+}
 
-	let elementRects = getRects(elements);
-	if (boundingRect) {
-		// remove elements that are outside of boundingRect, if specified
-		elementRects = elementRects.filter(rect => {
-			if (isContainer(rect.element)) {
-				// For containers, test intersection since they may be larger than the bounding rect
-				return intersects(boundingRect, rect);
-			} else {
-				// For elements, use contains with the center to include mostly visible elements
-				return contains(boundingRect, rect.center);
-			}
-		});
-	}
-
+function getContainerContainingRect (elementRects, elementRect) {
 	// find candidates that are containers and *visually* contain element
 	const overlapping = elementRects.filter(rect => {
 		return isContainer(rect.element) && contains(rect, elementRect);
@@ -131,9 +127,84 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 	// one of the candidate element, we need to ignore container `enterTo` preferences and
 	// retrieve its spottable descendants and try to navigate to them.
 	if (overlapping.length) {
+		return overlapping[0].element.dataset.containerId;
+	}
+
+	return false;
+}
+
+function getOverflowContainerRect (containerId) {
+	// if the target container has overflowing content, update the boundingRect to match its
+	// bounds to prevent finding elements within the container's hierarchy but not visible.
+	// This filter only applies when waterfalling to prevent filtering out elements that share
+	// a container tree with `element`
+	const nextConfig = getContainerConfig(containerId);
+	if (nextConfig.overflow) {
+		return getContainerRect(containerId);
+	}
+}
+
+function getTargetInContainerByDirectionFromPosition (direction, containerId, positionRect, elementContainerIds, boundingRect) {
+	const elements = getSpottableDescendantsWithoutContainers(containerId, elementContainerIds);
+	const elementRects = filterRects(getRects(elements), boundingRect);
+	const overlappingContainerId = getContainerContainingRect(elementRects, positionRect);
+
+	// if the pointer is within a container that is a candidate element, we need to ignore container
+	// `enterTo` preferences and retrieve its spottable descendants and try to navigate to them.
+	if (overlappingContainerId) {
+		return getTargetInContainerByDirectionFromPosition(
+			direction,
+			overlappingContainerId,
+			positionRect,
+			elementContainerIds,
+			boundingRect
+		);
+	}
+
+	// try to navigate from position to one of the candidates in containerId
+	const next = navigate(
+		positionRect,
+		direction,
+		elementRects,
+		getContainerConfig(containerId)
+	);
+
+	// if we match a container, recurse into it
+	if (next && isContainer(next)) {
+		const nextContainerId = next.dataset.containerId;
+
+		return getTargetInContainerByDirectionFromPosition(
+			direction,
+			nextContainerId,
+			positionRect,
+			elementContainerIds,
+			getOverflowContainerRect(nextContainerId) || boundingRect
+		);
+	}
+
+	return next;
+}
+
+
+function getTargetInContainerByDirectionFromElement (direction, containerId, element, elementRect, elementContainerIds, boundingRect) {
+	const elements = getSpottableDescendantsWithoutContainers(containerId, elementContainerIds);
+
+	// shortcut for previous target from element if it were saved
+	const previous = getContainerPreviousTarget(containerId, direction, element);
+	if (previous && elements.indexOf(previous) !== -1) {
+		return previous;
+	}
+
+	const elementRects = filterRects(getRects(elements), boundingRect);
+	const overlappingContainerId = getContainerContainingRect(elementRects, elementRect);
+
+	// if the next element is a container AND the current element is *visually* contained within
+	// one of the candidate element, we need to ignore container `enterTo` preferences and
+	// retrieve its spottable descendants and try to navigate to them.
+	if (overlappingContainerId) {
 		return getTargetInContainerByDirectionFromElement(
 			direction,
-			overlapping[0].element.dataset.containerId,
+			overlappingContainerId,
 			element,
 			elementRect,
 			elementContainerIds,
@@ -158,15 +229,6 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 			return getTargetByContainer(nextContainerId);
 		}
 
-		// if the target container has overflowing content, update the boundingRect to match its
-		// bounds to prevent finding elements within the container's hierarchy but not visible.
-		// This filter only applies when waterfalling to prevent filtering out elements that share
-		// a container tree with `element`
-		const nextConfig = getContainerConfig(nextContainerId);
-		if (nextConfig.overflow) {
-			boundingRect = getContainerRect(nextContainerId);
-		}
-
 		// otherwise, recurse into it
 		return getTargetInContainerByDirectionFromElement(
 			direction,
@@ -174,7 +236,7 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 			element,
 			elementRect,
 			elementContainerIds,
-			boundingRect
+			getOverflowContainerRect(nextContainerId) || boundingRect
 		);
 	}
 
@@ -237,10 +299,9 @@ function getTargetByDirectionFromPosition (direction, position, containerId) {
 	return get5WayContainersForNode(getContainerNode(containerId))
 		.reduceRight((result, id, index, elementContainerIds) => {
 			return result ||
-				getTargetInContainerByDirectionFromElement(
+				getTargetInContainerByDirectionFromPosition(
 					direction,
 					id,
-					null,
 					pointerRect,
 					elementContainerIds
 				);
