@@ -334,6 +334,7 @@ const Spotlight = (function () {
 					return true;
 				} else if (current) {
 					current.blur();
+					setLastContainer(last(getContainersForNode(target)));
 				}
 			}
 		}
