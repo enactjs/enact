@@ -165,8 +165,12 @@
 			border-color: transparent;
 		}
 
-		&.translucent .bg {
-			background-color: fade(@moon-button-bg-color, @moon-button-translucent-opacity);
+		&.translucent {
+			color: @moon-button-translucent-text-color;
+
+			.bg {
+				background-color: fade(@moon-button-bg-color, @moon-button-translucent-opacity);
+			}
 		}
 
 		&.transparent {
@@ -252,8 +256,12 @@
 					background-color: @moon-button-bg-color;
 				}
 
-				&.translucent .bg {
-					background-color: fade(@moon-button-bg-color, @moon-button-translucent-opacity);
+				&.translucent {
+					color: @moon-button-translucent-text-color;
+
+					.bg {
+						background-color: fade(@moon-button-bg-color, @moon-button-translucent-opacity);
+					}
 				}
 
 				&.transparent {
