@@ -155,13 +155,13 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		handleDepress = (name) => this.handle(
+		createDepressHandler = (name) => this.handle(
 			forward(name),
 			forProp('disabled', false),
 			(ev) => this.updatePressed(ev && ev.pressed || true)
 		)
 
-		handleRelease = (name) => this.handle(
+		createReleaseHandler = (name) => this.handle(
 			forward(name),
 			forProp('disabled', false),
 			() => this.updatePressed(false)
@@ -179,26 +179,26 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			if (depress) {
 				if (Array.isArray(depress)) {
 					depress.forEach((name) => {
-						this.handlers[name] = this.handleDepress(name);
+						this.handlers[name] = this.createDepressHandler(name);
 					});
 				} else {
-					this.handlers[depress] = this.handleDepress(depress);
+					this.handlers[depress] = this.createDepressHandler(depress);
 				}
 			}
 
 			if (release) {
 				if (Array.isArray(release)) {
 					release.forEach((name) => {
-						this.handlers[name] = this.handleRelease(name);
+						this.handlers[name] = this.createReleaseHandler(name);
 					});
 				} else {
-					this.handlers[release] = this.handleRelease(release);
+					this.handlers[release] = this.createReleaseHandler(release);
 				}
 			}
 		}
 
 		render () {
-			const props = Object.assign({}, this.handlers, this.props);
+			const props = Object.assign({}, this.props, this.handlers);
 
 			if (leave) props[leave] = this.handleLeave;
 			if (prop) props[prop] = this.state.pressed;
