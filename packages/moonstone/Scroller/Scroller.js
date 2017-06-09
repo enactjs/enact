@@ -307,16 +307,11 @@ class ScrollerBase extends Component {
 	}
 
 	scrollToBoundaries = (direction, boundaries) => {
-		let align = null;
-
-		if (direction === 'up' && boundaries.includes('top')) {
-			align = 'top';
-		} else if (direction === 'down' && boundaries.includes('bottom')) {
-			align = 'bottom';
-		} else if ((direction === 'right' && boundaries.includes('right')) ||
-			direction === 'left' && boundaries.includes('left')) {
-			align = direction;
-		}
+		const align =
+			(direction === 'up' && boundaries.includes('top') && 'top') ||
+			(direction === 'down' && boundaries.includes('bottom') && 'bottom') ||
+			(direction === 'right' && boundaries.includes('right') && 'right') ||
+			(direction === 'left' && boundaries.includes('left') && 'left');
 
 		this.props.cbScrollTo({align});
 	}
