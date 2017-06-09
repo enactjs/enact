@@ -120,9 +120,6 @@
 	.applySkins({
 		background-color: @moon-input-decorator-bg-color;
 
-		// For ExpandableInput, the decorator will not receive focus but it can be activated by clicking
-		// which should highlight the border
-		&.noDecorator:active,
 		&:global(.spottable):focus {
 			color: @moon-input-text-color;
 			border-color: @moon-spotlight-border-color;
@@ -151,9 +148,6 @@
 .muted({
 	.decorator {
 		.applySkins({
-			// For ExpandableInput, the decorator will not receive focus but it can be activated by clicking
-			// which should highlight the border
-			&.noDecorator:active,
 			&:global(.spottable):focus {
 				border-color: transparent;
 			}
