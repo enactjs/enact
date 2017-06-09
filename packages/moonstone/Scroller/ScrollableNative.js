@@ -311,9 +311,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				}
 
 				if (deltaMode === 0) {
-					delta = Math.min(maxPixel, ri.scale(delta) * scrollWheelMultiplierForDeltaPixel);
+					delta = clamp(-maxPixel, maxPixel, ri.scale(delta * scrollWheelMultiplierForDeltaPixel));
 				} else if (deltaMode === 1) { // line; firefox
-					delta = Math.min(maxPixel, ri.scale(delta * pixelPerLine) * scrollWheelMultiplierForDeltaPixel);
+					delta = clamp(-maxPixel, maxPixel, ri.scale(delta * pixelPerLine * scrollWheelMultiplierForDeltaPixel));
 				} else if (deltaMode === 2) { // page
 					delta = delta < 0 ? -maxPixel : maxPixel;
 				}
