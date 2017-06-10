@@ -38,6 +38,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` to correctly change sources
 - `moonstone/VideoPlayer` to show or hide feedback tooltip properly
 - `moonstone/DateTimeDecorator` to work properly with `RadioControllerDecorator`
+- `moonstone/Picker` in joined, large text mode so the arrows are properly aligned and sized
+- `moonstone/Icon` to reflect the same proportion in relation to its size in large-text mode
 
 ### Removed
 
