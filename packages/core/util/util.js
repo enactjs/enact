@@ -68,10 +68,11 @@ const cap = function (str) {
 /**
  * If `arg` is a function, return it. Otherwise returns a function that returns `arg`
  *
- * @example
+ * Example:
+ * ```
  *	const returnsZero = coerceFunction(0);
  *	const returnsArg = coerceFunction(() => 0);
- *
+ * ```
  * @method
  * @memberof core/util
  * @param {*} arg Function or value
@@ -81,11 +82,12 @@ const coerceFunction = unless(isType(Function), always);
 /**
  * If `arg` is array-like, return it. Otherwise returns a single element array containing `arg`
  *
- * @example
+ * Example:
+ * ```
  *	const returnsArray = coerceArray(0); // [0]
  *	const returnsArg = coerceArray([0]); // [0]
  *	const returnsObjArg = coerceArray({0: 'zeroth', length: 1});
- *
+ * ```
  * @see http://ramdajs.com/docs/#isArrayLike
  * @method
  * @memberof core/util

@@ -8,6 +8,7 @@
 import DateFmt from '@enact/i18n/ilib/lib/DateFmt';
 
 import DateTimeDecorator from '../internal/DateTimeDecorator';
+import Skinnable from '../Skinnable';
 
 import DatePickerBase from './DatePickerBase';
 
@@ -36,7 +37,7 @@ import DatePickerBase from './DatePickerBase';
  * @ui
  * @public
  */
-const DatePicker = DateTimeDecorator({
+const DatePicker = Skinnable(DateTimeDecorator({
 	customProps: function (i18n, value) {
 		const values = {
 			maxMonths: 12,
@@ -88,7 +89,7 @@ const DatePicker = DateTimeDecorator({
 
 		return {formatter, order};
 	}
-}, DatePickerBase);
+}, DatePickerBase));
 
 export default DatePicker;
 export {DatePicker, DatePickerBase};

@@ -6,14 +6,16 @@ import {
 	getContainerConfig,
 	getContainerFocusTarget,
 	getContainersForNode,
-	getNavigableElementsForNode,
+	getLastContainer,
 	getSpottableDescendants,
 	isContainer,
 	isNavigable,
 	unmountContainer,
 	removeContainer,
 	rootContainerId,
-	setContainerLastFocusedElement
+	setContainerLastFocusedElement,
+	setLastContainer,
+	setLastContainerFromTarget
 } from '../container';
 
 import {
@@ -122,6 +124,7 @@ const setupContainers = () => {
 		selector: '.spottable'
 	});
 	configureContainer(rootContainerId);
+	setLastContainer(rootContainerId);
 };
 
 const teardownContainers = () => {
@@ -815,136 +818,65 @@ describe('container', () => {
 		));
 	});
 
-	describe('#getNavigableElementsForNode', () => {
+	describe('#setLastContainerFromTarget', () => {
 		beforeEach(setupContainers);
 		afterEach(teardownContainers);
 
-		it('should include all spottable descendants of the first restrict="self-first" container ancestor', testScenario(
+		it('should be nearest restrict="self-only" container to current if target is not within it', testScenario(
 			scenarios.complexTree,
 			(root) => {
-				configureContainer('second-container', {
-					restrict: 'none'
-				});
-				configureContainer('first-container', {
-					restrict: 'self-first'
-				});
-				const element = root.querySelector(`[${containerAttribute}="second-container"] .spottable`);
-
-				const expected = 5;
-				const actual = getNavigableElementsForNode(element).preferred.length;
-
-				expect(actual).to.equal(expected);
-			}
-		));
-
-		it('should include all spottable descendants of the first restrict="self-only" container ancestor', testScenario(
-			scenarios.complexTree,
-			(root) => {
-				configureContainer('second-container', {
-					restrict: 'none'
-				});
 				configureContainer('first-container', {
 					restrict: 'self-only'
 				});
-				const element = root.querySelector(`[${containerAttribute}="second-container"] .spottable`);
+				const current = root.querySelector('[data-container-id="first-container"] .spottable');
+				const target = root.querySelector('.spottable');
 
-				const expected = 5;
-				const actual = getNavigableElementsForNode(element).all.length;
+				setLastContainerFromTarget(current, target);
+
+				const expected = 'first-container';
+				const actual = getLastContainer();
 
 				expect(actual).to.equal(expected);
 			}
 		));
 
-		it('should include all spottable descendants of the first restrict="self-only" container ancestor ignoring intermediate restrict="self-first" containers', testScenario(
+		it('should be use nearest container to target if within current container', testScenario(
 			scenarios.complexTree,
 			(root) => {
-				configureContainer('second-container', {
-					restrict: 'self-first'
+				configureContainer('first-container', {
+					restrict: 'none'
 				});
+				configureContainer('second-container', {
+					restrict: 'none'
+				});
+				const current = root.querySelector('[data-container-id="first-container"] .spottable');
+				const target = root.querySelector('[data-container-id="second-container"] .spottable');
+
+				setLastContainerFromTarget(current, target);
+
+				const expected = 'second-container';
+				const actual = getLastContainer();
+
+				expect(actual).to.equal(expected);
+			}
+		));
+
+		it('should target container if it is restrict="self-only" and contains current container', testScenario(
+			scenarios.complexTree,
+			(root) => {
 				configureContainer('first-container', {
 					restrict: 'self-only'
 				});
-				const element = root.querySelector(`[${containerAttribute}="second-container"] .spottable`);
-
-				const expected = 5;
-				const actual = getNavigableElementsForNode(element).all.length;
-
-				expect(actual).to.equal(expected);
-			}
-		));
-
-		it('should include all spottable descendants of enterTo"lastFocused" containers within the first restrict"self-first" container ancestor', testScenario(
-			scenarios.complexTree,
-			(root) => {
-				configureContainer('second-container', {
-					restrict: 'none',
-					enterTo: 'lastFocused'
-				});
-				configureContainer('first-container', {
-					restrict: 'self-first'
-				});
-				const element = root.querySelector(`[${containerAttribute}="second-container"] .spottable`);
-
-				const expected = 5;
-				const actual = getNavigableElementsForNode(element).preferred.length;
-
-				expect(actual).to.equal(expected);
-			}
-		));
-
-		it('should include all spottable descendants of enterTo"defaultElement" containers within the first restrict"self-first" container ancestor', testScenario(
-			scenarios.complexTree,
-			(root) => {
-				configureContainer('second-container', {
-					restrict: 'none',
-					enterTo: 'defaultElement'
-				});
-				configureContainer('first-container', {
-					restrict: 'self-first'
-				});
-				const element = root.querySelector(`[${containerAttribute}="second-container"] .spottable`);
-
-				const expected = 5;
-				const actual = getNavigableElementsForNode(element).preferred.length;
-
-				expect(actual).to.equal(expected);
-			}
-		));
-
-		it('should include all spottable descendants of root container when there are no restrict="self-first" container ancestors', testScenario(
-			scenarios.complexTree,
-			(root) => {
-				configureContainer('first-container', {
-					restrict: 'none'
-				});
 				configureContainer('second-container', {
 					restrict: 'none'
 				});
-				const element = root.querySelector(`[${containerAttribute}="second-container"] .spottable`);
+				const current = root.querySelector('[data-container-id="second-container"] .spottable');
+				const target = root.querySelector('[data-container-id="first-container"]');
 
-				const expected = 6;
-				const actual = getNavigableElementsForNode(element).all.length;
+				setLastContainerFromTarget(current, target);
 
-				expect(actual).to.equal(expected);
-			}
-		));
-
-		it('should not return a preferred list when there are no containers with restrict="self-first"', testScenario(
-			scenarios.complexTree,
-			(root) => {
-				configureContainer(rootContainerId, {
-					restrict: 'none'
-				});
-				configureContainer('first-container', {
-					restrict: 'none'
-				});
-				configureContainer('second-container', {
-					restrict: 'none'
-				});
-				const element = root.querySelector(`[${containerAttribute}="second-container"] .spottable`);
-
-				const expected = null;
-				const actual = getNavigableElementsForNode(element).preferred;
+				const expected = 'first-container';
+				const actual = getLastContainer();
 
 				expect(actual).to.equal(expected);
 			}

@@ -2,6 +2,17 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [1.3.0] - 2017-06-12
+
+### Added
+
+- `ui/ViewManager` prop `childProps` to pass static props to each child
+
+### Fixed
+
+- `ui/ViewManager` to have a view count of 0 specifically for `noAnimation` cases. This helps things like `spotlight` restore `focus` properly.
+- `ui/Cancelable` to run modal handlers on `window` object and correctly store handlers in LIFO order
+
 ## [1.2.2] - 2017-05-31
 
 No significant changes.
@@ -14,6 +25,9 @@ No significant changes.
 
 ### Added
 
+- `ui/Skinnable` to provide themes with a way to apply a base theme styling and skins on top of that
+## Unreleased
+- `ui/Transition` prop `onShow` that fires when transitioning into view a component.
 - `ui/transition` callback prop `onShow` that fires when transitioning into view completes
 
 ### Changed

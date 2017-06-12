@@ -4,6 +4,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 
+/**
+ * Default config for {@link mooonstone/ExpandableItem.ExpandableSpotlightDecorator
+ *
+ * @memberof moonstone/ExpandableItem.ExpandableSpotlightDecorator
+ * @hocconfig
+ * @private
+ */
 const defaultConfig = {
 	/**
 	 * When `true` and used in conjunction with `noAutoFocus` when `false`, the contents of the
@@ -11,7 +18,8 @@ const defaultConfig = {
 	 *
 	 * @type {Boolean}
 	 * @default false
-	 * @public
+	 * @memberof moonstone/ExpandableItem.ExpandableSpotlightDecorator.defaultConfig
+	 * @private
 	 */
 	noPointerMode: false
 };

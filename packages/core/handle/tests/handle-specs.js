@@ -6,6 +6,7 @@ import {
 	forKeyCode,
 	forProp,
 	forward,
+	forwardWithPrevent,
 	oneOf,
 	preventDefault,
 	stop
@@ -180,6 +181,29 @@ describe('handle', () => {
 		const actual = spy.args[0][0][prop] === propValue;
 
 		expect(actual).to.equal(expected);
+	});
+
+	it('should forwardWithPrevent events to function specified in provided props when preventDefault() hasn\'t been called', function () {
+		const event = 'onMyClick';
+		const handler = sinon.spy();
+
+		const callback = handle(forwardWithPrevent(event), handler);
+
+		callback();
+		expect(handler.calledOnce).to.equal(true);
+	});
+
+	it('should not forwardWithPrevent events to function specified in provided props when preventDefault() has been called', function () {
+		const event = 'onMyClick';
+		const handler = sinon.spy();
+
+		const callback = handle(forwardWithPrevent(event), handler);
+
+		// should stop chain when `preventDefault()` has been called
+		callback({}, {
+			'onMyClick': (ev) => ev.preventDefault()
+		});
+		expect(handler.calledOnce).to.equal(false);
 	});
 
 	it('should include object props as second arg when bound', function () {

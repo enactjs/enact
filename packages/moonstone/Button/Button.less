@@ -32,7 +32,7 @@
 	}
 }
 
-.applySkins({.button {
+.button {
 	.moon-large-button-text();
 	position: relative;
 	overflow: visible;
@@ -47,7 +47,6 @@
 	max-width: 300px;
 	padding: 0 @moon-button-h-padding;
 	margin: 0 @moon-button-h-margin;
-	color: @moon-button-text-color;
 	box-sizing: border-box;
 	z-index: 0;
 	text-align: center;
@@ -66,8 +65,8 @@
 		content: '';
 		background-color: inherit;
 		z-index: -1;
-		background-color: @moon-button-bg-color;
-		border: @moon-button-border-width solid transparent;
+		border-width: @moon-button-border-width;
+		border-style: solid;
 		border-radius: @moon-button-border-radius;
 
 		transform: translateZ(0);
@@ -109,18 +108,6 @@
 			-webkit-margin-start: 0;
 		}
 	}
-	&.red .client::before {
-		background-color: @moon-remote-button-red-color;
-	}
-	&.green .client::before {
-		background-color: @moon-remote-button-green-color;
-	}
-	&.yellow .client::before {
-		background-color: @moon-remote-button-yellow-color;
-	}
-	&.blue .client::before {
-		background-color: @moon-remote-button-blue-color;
-	}
 
 	&.minWidth {
 		min-width: @moon-button-large-min-width;
@@ -152,83 +139,148 @@
 		}
 	}
 
-	&.translucent .bg {
-		background-color: fade(@moon-button-bg-color, @moon-button-translucent-opacity);
-	}
-
-	&.transparent {
-		color: @moon-text-color;
-
-		.bg {
-			background-color: transparent;
-		}
-	}
-
 	// Button-non-disabled rules
 	&:not([disabled]) {
-		&.pressed,
-		&:global(.spottable):active {
-			.bg {
-				-webkit-animation-name: expand;
-				animation-name: expand;
-			}
-		}
-
-		&:global(.spottable):focus {
-			color: @moon-spotlight-text-color;
-			background-color: transparent;
-
-			.bg {
-				background-color: @moon-spotlight-border-color;
-			}
-		}
-	}
-
-	// 'Selected' state
-	&.selected {
-		.bg {
-			border-color: @moon-spotlight-border-color;
-		}
-
-		// 'Selected+Focus' state, seen in grouped buttons
-		&:global(.spottable):focus {
-			color: @moon-spotlight-text-color;
-
-			.bg {
-				border-color: @moon-active-spotlight-border-color;
-				background-color: @moon-spotlight-border-color;
-			}
-		}
-	}
-
-	&[disabled] {
-		cursor: default;
-
-		&.translucent,
-		&.transparent {
-			opacity: @moon-disabled-translucent-opacity;
-		}
-	}
-}
-
-[data-container-muted='true'] {
-	.button {
-		&:global(.spottable):focus {
-			background-color: transparent;
-			color: @moon-button-text-color;
-
-			.bg {
-				background-color: @moon-button-bg-color;
-			}
-		}
-
-		&.selected {
-			// 'Selected+Focus' state, seen in grouped buttons
-			&:global(.spottable):focus {
+		.focus({
+			&.pressed,
+			&:active {
 				.bg {
-					border-color: @moon-spotlight-border-color;
+					-webkit-animation-name: expand;
+					animation-name: expand;
 				}
 			}
-		}
+		});
 	}
-}});
+
+	.disabled({
+		cursor: default;
+	});
+
+	// Skin colors
+	.applySkins({
+		color: @moon-button-text-color;
+
+		.bg {
+			background-color: @moon-button-bg-color;
+			border-color: transparent;
+		}
+
+		&.translucent {
+			color: @moon-button-translucent-text-color;
+
+			.bg {
+				background-color: fade(@moon-button-bg-color, @moon-button-translucent-opacity);
+			}
+		}
+
+		&.transparent {
+			color: @moon-text-color;
+
+			.bg {
+				background-color: transparent;
+			}
+		}
+
+		&.red .client::before {
+			background-color: @moon-remote-button-red-color;
+		}
+		&.green .client::before {
+			background-color: @moon-remote-button-green-color;
+		}
+		&.yellow .client::before {
+			background-color: @moon-remote-button-yellow-color;
+		}
+		&.blue .client::before {
+			background-color: @moon-remote-button-blue-color;
+		}
+
+		&:not([disabled]) {
+			.focus({
+				color: @moon-spotlight-text-color;
+				background-color: transparent;
+
+				.bg {
+					background-color: @moon-spotlight-border-color;
+				}
+			});
+		}
+
+		// 'Selected' state
+		&.selected {
+			.bg {
+				border-color: @moon-spotlight-border-color;
+			}
+
+			// 'Selected+Focus' state, seen in grouped buttons
+			.focus({
+				color: @moon-spotlight-text-color;
+
+				.bg {
+					border-color: @moon-active-spotlight-border-color;
+					background-color: @moon-spotlight-border-color;
+				}
+			});
+		}
+
+		.disabled({
+			&.translucent,
+			&.transparent {
+				opacity: @moon-disabled-translucent-opacity;
+			}
+		});
+	});
+}
+
+.muted({
+	.button {
+		// Button-non-disabled rules
+		&:not([disabled]) {
+			.focus({
+				&.pressed,
+				&:active {
+					.bg {
+						-webkit-animation-name: none;
+						animation-name: none;
+					}
+				}
+			});
+		}
+
+		// Skin colors
+		.applySkins({
+			.focus({
+				background-color: transparent;
+				color: @moon-button-text-color;
+
+				.bg {
+					background-color: @moon-button-bg-color;
+				}
+
+				&.translucent {
+					color: @moon-button-translucent-text-color;
+
+					.bg {
+						background-color: fade(@moon-button-bg-color, @moon-button-translucent-opacity);
+					}
+				}
+
+				&.transparent {
+					color: @moon-text-color;
+
+					.bg {
+						background-color: transparent;
+					}
+				}
+			});
+
+			&.selected {
+				// 'Selected+Focus' state, seen in grouped buttons
+				.focus({
+					.bg {
+						border-color: @moon-spotlight-border-color;
+					}
+				});
+			}
+		});
+	}
+});

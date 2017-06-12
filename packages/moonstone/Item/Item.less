@@ -1,17 +1,16 @@
 // Item.less
 //
-@import '../styles/mixins.less';
 @import '../styles/variables.less';
 @import '../styles/text.less';
-@import '../styles/skin.less';
 
-.applySkins({.item {
+.item {
 	.moon-text-base(@moon-item-font-size);
 	display: flex;
 	align-items: center;
 	line-height: @moon-item-line-height;
 	padding: @moon-item-vertical-padding @moon-spotlight-outset;
 	position: relative;
+	color: inherit;
 
 	&.inline {
 		display: inline-flex;
@@ -28,4 +27,4 @@
 	.content {
 		flex: 1 1 auto;
 	}
-}});
+}

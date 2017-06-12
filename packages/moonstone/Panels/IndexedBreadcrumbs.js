@@ -11,7 +11,7 @@ import Breadcrumb from './Breadcrumb';
  * @returns {React.element[]} Array of breadcrumbs
  * @private
  */
-const IndexedBreadcrumbs = (index, max, onSelect) => {
+const IndexedBreadcrumbs = (id, index, max, onSelect) => {
 	const breadcrumbs = new Array(index < max ? index : max);
 	const start = Math.max(index - max, 0);
 
@@ -19,7 +19,14 @@ const IndexedBreadcrumbs = (index, max, onSelect) => {
 		const label = (i < 9 ? '0' : '') + (i + 1);
 
 		breadcrumbs[index - i - 1] = (
-			<Breadcrumb onSelect={onSelect} index={i} key={i}>&lt; {label}</Breadcrumb>
+			<Breadcrumb
+				onSelect={onSelect}
+				id={`${id}_bc_${i}`}
+				index={i}
+				key={i}
+			>
+				&lt; {label}
+			</Breadcrumb>
 		);
 	}
 
