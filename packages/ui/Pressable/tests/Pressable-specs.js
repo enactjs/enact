@@ -354,4 +354,73 @@ describe('Pressable', () => {
 
 		expect(actual).to.equal(expected);
 	});
+
+	it('should invoke passed \'onTouchStart\' handler when passed an array', function () {
+		const onTouchStart = sinon.spy();
+		const Component = Pressable({
+			depress: ['onMouseDown', 'onTouchStart']
+		}, DivComponent);
+		const subject = shallow(
+			<Component onTouchStart={onTouchStart} />
+		);
+
+		subject.simulate('touchStart');
+
+		const expected = true;
+		const actual = onTouchStart.called;
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should invoke passed \'onTouchEnd\' handler when passed an array', function () {
+		const onTouchEnd = sinon.spy();
+		const Component = Pressable({
+			release: ['onMouseUp', 'onTouchEnd']
+		}, DivComponent);
+		const subject = shallow(
+			<Component onTouchEnd={onTouchEnd} />
+		);
+
+		subject.simulate('touchEnd');
+
+		const expected = true;
+		const actual = onTouchEnd.called;
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should set state pressed to \'true\' when \'touchStart\' is simulated', function () {
+		const Component = Pressable({
+			depress: ['onMouseDown', 'onTouchStart']
+		}, DivComponent);
+		const subject = shallow(
+			<Component />
+		);
+
+		subject.simulate('touchStart');
+
+		const expected = true;
+		const actual = subject.state('pressed');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should set state pressed to \'false\' when \'touchEnd\' is simulated', function () {
+		const Component = Pressable({
+			depress: ['onMouseDown', 'onTouchStart'],
+			release: ['onMouseUp', 'onTouchEnd']
+		}, DivComponent);
+
+		const subject = shallow(
+			<Component />
+		);
+
+		subject.simulate('touchStart');
+		subject.simulate('touchEnd');
+
+		const expected = false;
+		const actual = subject.state('pressed');
+
+		expect(actual).to.equal(expected);
+	});
 });

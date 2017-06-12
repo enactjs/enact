@@ -23,7 +23,7 @@ const defaultConfig = {
 	/**
 	 * Configures the event name that activates the Pressable
 	 *
-	 * @type {String}
+	 * @type {String|Array}
 	 * @default 'onMouseDown'
 	 * @memberof ui/Pressable.Pressable.defaultConfig
 	 */
@@ -41,7 +41,7 @@ const defaultConfig = {
 	/**
 	 * Configures the event name that deactivates the Pressable
 	 *
-	 * @type {String}
+	 * @type {String|Array}
 	 * @default 'onMouseUp'
 	 * @memberof ui/Pressable.Pressable.defaultConfig
 	 */
@@ -129,6 +129,10 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 
+		componentWillMount () {
+			this.setHandlers();
+		}
+
 		componentWillReceiveProps (nextProps) {
 			if (this.state.controlled) {
 				const pressed = nextProps[prop];
@@ -151,14 +155,14 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		handleDepress = this.handle(
-			forward(depress),
+		createDepressHandler = (name) => this.handle(
+			forward(name),
 			forProp('disabled', false),
 			(ev) => this.updatePressed(ev && ev.pressed || true)
 		)
 
-		handleRelease = this.handle(
-			forward(release),
+		createReleaseHandler = (name) => this.handle(
+			forward(name),
 			forProp('disabled', false),
 			() => this.updatePressed(false)
 		)
@@ -169,10 +173,33 @@ const PressableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			() => this.updatePressed(false)
 		)
 
+		setHandlers () {
+			this.handlers = {};
+
+			if (depress) {
+				if (Array.isArray(depress)) {
+					depress.forEach((name) => {
+						this.handlers[name] = this.createDepressHandler(name);
+					});
+				} else {
+					this.handlers[depress] = this.createDepressHandler(depress);
+				}
+			}
+
+			if (release) {
+				if (Array.isArray(release)) {
+					release.forEach((name) => {
+						this.handlers[name] = this.createReleaseHandler(name);
+					});
+				} else {
+					this.handlers[release] = this.createReleaseHandler(release);
+				}
+			}
+		}
+
 		render () {
-			const props = Object.assign({}, this.props);
-			if (depress) props[depress] = this.handleDepress;
-			if (release) props[release] = this.handleRelease;
+			const props = Object.assign({}, this.props, this.handlers);
+
 			if (leave) props[leave] = this.handleLeave;
 			if (prop) props[prop] = this.state.pressed;
 			delete props[defaultPropKey];
