@@ -8,6 +8,8 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Added
 
+- `ui/ViewManager` prop `childProps` to pass static props to each child
+
 ### Changed
 
 ### Fixed
