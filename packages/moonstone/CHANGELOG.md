@@ -2,7 +2,7 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [unreleased]
+## [1.3.0] - 2017-06-12
 
 ### Deprecated
 
@@ -42,8 +42,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/DateTimeDecorator` to work properly with `RadioControllerDecorator`
 - `moonstone/Picker` in joined, large text mode so the arrows are properly aligned and sized
 - `moonstone/Icon` to reflect the same proportion in relation to its size in large-text mode
-
-### Removed
 
 ## [1.2.0] - 2017-05-17
 
