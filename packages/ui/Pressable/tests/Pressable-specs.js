@@ -356,35 +356,70 @@ describe('Pressable', () => {
 	});
 
 	it('should invoke passed \'onTouchStart\' handler when passed an array', function () {
-		const handleMouseDown = sinon.spy();
+		const onTouchStart = sinon.spy();
 		const Component = Pressable({
 			depress: ['onMouseDown', 'onTouchStart']
 		}, DivComponent);
 		const subject = shallow(
-			<Component onTouchStart={handleMouseDown} />
+			<Component onTouchStart={onTouchStart} />
 		);
 
-		subject.prop('onTouchStart')();
+		subject.simulate('touchStart');
 
 		const expected = true;
-		const actual = handleMouseDown.called;
+		const actual = onTouchStart.called;
 
 		expect(actual).to.equal(expected);
 	});
 
 	it('should invoke passed \'onTouchEnd\' handler when passed an array', function () {
-		const handleMouseDown = sinon.spy();
+		const onTouchEnd = sinon.spy();
 		const Component = Pressable({
 			release: ['onMouseUp', 'onTouchEnd']
 		}, DivComponent);
 		const subject = shallow(
-			<Component onTouchEnd={handleMouseDown} />
+			<Component onTouchEnd={onTouchEnd} />
 		);
 
-		subject.prop('onTouchEnd')();
+		subject.simulate('touchEnd');
 
 		const expected = true;
-		const actual = handleMouseDown.called;
+		const actual = onTouchEnd.called;
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should set state pressed to \'true\' when \'touchStart\' is simulated', function () {
+		const Component = Pressable({
+			depress: ['onMouseDown', 'onTouchStart']
+		}, DivComponent);
+		const subject = shallow(
+			<Component />
+		);
+
+		subject.simulate('touchStart');
+
+		const expected = true;
+		const actual = subject.state('pressed');
+
+		expect(actual).to.equal(expected);
+	});
+
+	it('should set state pressed to \'false\' when \'touchEnd\' is simulated', function () {
+		const Component = Pressable({
+			depress: ['onMouseDown', 'onTouchStart'],
+			release: ['onMouseUp', 'onTouchEnd']
+		}, DivComponent);
+
+		const subject = shallow(
+			<Component />
+		);
+
+		subject.simulate('touchStart');
+		subject.simulate('touchEnd');
+
+		const expected = false;
+		const actual = subject.state('pressed');
 
 		expect(actual).to.equal(expected);
 	});
