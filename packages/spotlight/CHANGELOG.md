@@ -17,6 +17,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 ### Fixed
 
 * Navigating to elements that are hidden within an overflow container (e.g. a scroller)
+- Spotlight continues through container boundaries when 5-way key is held down, as long as the next spottable component is wrapped by the immediate container of the previous spottable component.
 
 ### Removed
 

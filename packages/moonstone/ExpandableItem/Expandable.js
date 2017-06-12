@@ -1,7 +1,6 @@
 import Cancelable from '@enact/ui/Cancelable';
 import hoc from '@enact/core/hoc';
 import RadioDecorator from '@enact/ui/RadioDecorator';
-import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 import Toggleable from '@enact/ui/Toggleable';
 
 import ExpandableSpotlightDecorator from './ExpandableSpotlightDecorator';
@@ -64,12 +63,10 @@ const Expandable = hoc(defaultConfig, (config, Wrapped) => {
 			{activate: 'onOpen', deactivate: 'onClose', prop: 'open'},
 			Cancelable(
 				{component: 'span', onCancel: handleCancel},
-				SpotlightContainerDecorator(
 					ExpandableSpotlightDecorator(
 						{noPointerMode: config.noPointerMode},
 						Wrapped
 					)
-				)
 			)
 		)
 	);

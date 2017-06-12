@@ -41,6 +41,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Removed
 
+- `moonstone/ExpandableItem.ExpandableSpotlightDecorator` property `'data-container-id'`
+
 ## [1.2.0] - 2017-05-17
 
 ### Deprecated
