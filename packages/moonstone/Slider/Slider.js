@@ -90,6 +90,15 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			children: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 
 			/**
+			 * Determines the side where tooltip will be.
+			 *
+			 * @type {String}
+			 * @default 'rising'
+			 * @public
+			 */
+			climax: PropTypes.string,
+
+			/**
 			 * The slider can change its behavior to have the knob follow the cursor as it moves
 			 * across the slider, without applying the position. A click or drag behaves the same.
 			 * This is primarily used by media playback. Setting this to `true` enables this behavior.
