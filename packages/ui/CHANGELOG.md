@@ -2,20 +2,17 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
-## [unreleased]
-
-### Deprecated
+## [1.3.0] - 2017-06-12
 
 ### Added
 
-### Changed
+- `ui/ViewManager` prop `childProps` to pass static props to each child
 
 ### Fixed
 
 - `ui/ViewManager` to have a view count of 0 specifically for `noAnimation` cases. This helps things like `spotlight` restore `focus` properly.
 - `ui/Cancelable` to run modal handlers on `window` object and correctly store handlers in LIFO order
 
-### Removed
 ## [1.2.2] - 2017-05-31
 
 No significant changes.
