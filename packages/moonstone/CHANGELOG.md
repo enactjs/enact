@@ -10,6 +10,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+- `moonstone/Panels/Header` to expose its `marqueeOn` prop
+
 ### Fixed
 
 ### Removed
@@ -35,7 +37,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` to set play/pause icon to display "play" when rewinding or fast forwarding
 - `moonstone/VideoPlayer` to rewind or fast forward when previous command is slow-forward or slow-rewind respectively
 - `moonstone/VideoPlayer` to fast forward when previous command is slow-forward and it reaches the last of its play rate
-- `moonstone/Panels/Header` to expose its `marqueeOn` prop
 - `moonstone/VideoPlayer` to not play video on reload when `noAutoPlay` is `true`
 - `moonstone/VideoPlayer` property `feedbackHideDelay`'s default value to `3000`
 - `moonstone/Notification` to break line in characters in ja and zh locale
