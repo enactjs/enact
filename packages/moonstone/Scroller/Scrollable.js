@@ -334,10 +334,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		wheel (e, isHorizontal, isVertical) {
 			const
 				bounds = this.getScrollBounds(),
-				deltaMode = e.deltaMode,
-				wheelDeltaY = -e.wheelDeltaY;
+				deltaMode = e.deltaMode;
 			let
-				delta = (wheelDeltaY || e.deltaY),
+				delta = (-e.wheelDeltaY || e.deltaY),
 				maxPixel;
 
 			if (isVertical) {
