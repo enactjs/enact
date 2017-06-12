@@ -21,6 +21,15 @@ const SliderTooltipBase = kind({
 
 	propTypes: /** @lends moonstone/Slider.SliderTooltip.prototype */{
 		/**
+		 * Determines the side where tooltip will be.
+		 *
+		 * @type {String}
+		 * @default 'rising'
+		 * @public
+		 */
+		climax: PropTypes.string,
+
+		/**
 		 * Setting to `true` overrides the natural LTR->RTL tooltip side-flipping for locale
 		 * changes. This may be useful if you have a static layout that does not automatically
 		 * reverse when in an RTL language.
@@ -80,9 +89,9 @@ const SliderTooltipBase = kind({
 
 	computed: {
 		className: ({forceSide, side, vertical, styler}) => styler.append({ignoreLocale: forceSide, vertical, horizontal: !vertical}, side),
-		arrowAnchor: ({proportion, vertical}) => {
+		arrowAnchor: ({climax, vertical}) => {
 			if (vertical) return 'middle';
-			return (proportion <= 0.5) ? 'right' : 'left';
+			return (climax === 'rising') ? 'right' : 'left';
 		},
 		direction: ({forceSide, side, vertical}, context) => {
 			let dir = 'right';
@@ -107,6 +116,7 @@ const SliderTooltipBase = kind({
 	},
 
 	render: ({children, ...rest}) => {
+		delete rest.climax;
 		delete rest.forceSide;
 		delete rest.proportion;
 		delete rest.side;

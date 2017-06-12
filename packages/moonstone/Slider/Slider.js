@@ -387,7 +387,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			proportionProgress: computeProportionProgress
 		},
 
-		render: ({backgroundProgress, children, disabled, focused, inputRef, max, min, onBlur, onChange, onKeyDown, onMouseMove, onMouseUp, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, tooltip, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => {
+		render: ({backgroundProgress, children, climax, disabled, focused, inputRef, max, min, onBlur, onChange, onKeyDown, onMouseMove, onMouseUp, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, tooltip, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => {
 			delete rest.active;
 			delete rest.detachedKnob;
 			delete rest.noFill;
@@ -406,6 +406,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			} else if (focused) {
 				// only display tooltip when `focused`
 				tooltipComponent = <SliderTooltip
+					climax={climax}
 					forceSide={tooltipForceSide}
 					proportion={proportionProgress}
 					side={tooltipSide}

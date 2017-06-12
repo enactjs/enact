@@ -175,6 +175,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		};
 
 		static defaultProps = {
+			climax: 'rising',
 			max: 100,
 			min: 0,
 			step: 1,
@@ -279,12 +280,18 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const {value} = this.state;
 			const proportionProgress = computeProportionProgress({value, max: this.normalizedMax, min: this.normalizedMin});
 			const knobProgress = this.knobPosition != null ? this.knobPosition : proportionProgress;
+			const currentClimax = knobProgress > 0.5 ? 'falling' : 'rising';
 
 			loaderNode.style.transform = computeBarTransform(backgroundProgress, vertical);
 			barNode.style.transform = computeBarTransform(proportionProgress, vertical);
 			// If we know the knob should be in a custom place, use that place; otherwise, sync it with the progress.
 			knobNode.style.transform = computeKnobTransform(knobProgress, vertical, node);
 			knobNode.dataset.climax = knobProgress > 0.5 ? 'falling' : 'rising';
+
+			if (currentClimax !== this.state.climax) {
+				this.setState({climax: currentClimax});
+			}
+
 			this.notifyKnobMove(knobProgress, knobProgress !== proportionProgress);
 		}
 
@@ -439,6 +446,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					active={this.state.active}
 					aria-disabled={this.props.disabled}
 					aria-valuetext={this.state.valueText}
+					climax={this.state.climax}
 					focused={this.state.focused}
 					inputRef={this.getInputNode}
 					onActivate={this.handleActivate}
