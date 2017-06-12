@@ -2,6 +2,18 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
+## [unreleased]
+
+### Deprecated
+
+### Added
+
+### Changed
+
+### Fixed
+
+### Removed
+
 ## [1.3.0] - 2017-06-12
 
 ### Added
