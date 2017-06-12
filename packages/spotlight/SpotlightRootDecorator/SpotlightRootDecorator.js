@@ -35,9 +35,10 @@ const defaultConfig = {
  * Constructs a Higher-order Component that initializes and enables Spotlight
  * 5-way navigation within an application.
  *
- * @example
+ * Example:
+ * ```
  *	const App = SpotlightRootDecorator(ApplicationView);
- *
+ * ```
  * @param  {Object} defaultConfig Set of default configuration parameters
  * @param  {Function} Higher-order component
  *
@@ -65,6 +66,10 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				Spotlight.initialize({
 					selector: '.' + spottableClass,
 					restrict: 'none'
+				});
+
+				Spotlight.set(rootContainerId, {
+					overflow: true
 				});
 
 				if (palmSystem && palmSystem.cursor) {

@@ -17,9 +17,10 @@ import ri from '@enact/ui/resolution';
 import Spotlight, {getDirection} from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
-import css from './Scrollable.less';
 import ScrollAnimator from './ScrollAnimator';
 import Scrollbar from './Scrollbar';
+
+import css from './Scrollable.less';
 import scrollbarCss from './Scrollbar.less';
 
 const
@@ -32,7 +33,7 @@ const
 	nop = () => {},
 	perf = (typeof window === 'object') ? window.performance : {now: Date.now},
 	holdTime = 50,
-	scrollWheelMultiplierForDeltaPixel = 2,
+	scrollWheelMultiplierForDeltaPixel = 4,
 	pixelPerLine = 39,
 	paginationPageMultiplier = 0.8,
 	epsilon = 1,
@@ -56,7 +57,8 @@ const ScrollableSpotlightContainer = SpotlightContainerDecorator(
 			if (!focusableScrollbar && elem.classList.contains(scrollbarCss.scrollButton)) {
 				return false;
 			}
-		}
+		},
+		overflow: true
 	},
 	({containerRef, ...rest}) => {
 		delete rest.focusableScrollbar;
@@ -106,11 +108,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			 * - {focus} - Set it `true`, if you want the item to be focused after scroll.
 			 *   This option is only valid when you scroll by `index` or `node`.
 			 *
-			 * @example
+			 * Example:
+			 * ```
 			 *	// If you set cbScrollTo prop like below;
 			 *	cbScrollTo: (fn) => {this.scrollTo = fn;}
 			 *	// You can simply call like below;
 			 *	this.scrollTo({align: 'top'}); // scroll to the top
+			 * ```
 			 * @type {Function}
 			 * @public
 			 */
@@ -807,20 +811,21 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		updateScrollabilityAndEventListeners = () => {
 			const
-				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
-				containerNode = this.childRef.containerRef;
+				{containerRef} = this,
+				childContainerRef = this.childRef.containerRef;
 
 			this.horizontalScrollability = this.childRef.isHorizontal();
 			this.verticalScrollability = this.childRef.isVertical();
 
-			// FIXME `onWheel` doesn't work on the v8 snapshot.
-			if (isVerticalScrollbarVisible || isHorizontalScrollbarVisible) {
-				this.containerRef.addEventListener('wheel', this.onWheel);
-			} else {
-				containerNode.addEventListener('wheel', this.onWheel);
+			if (containerRef && containerRef.addEventListener) {
+				// FIXME `onWheel` doesn't work on the v8 snapshot.
+				containerRef.addEventListener('wheel', this.onWheel);
 			}
-			// FIXME `onFocus` doesn't work on the v8 snapshot.
-			containerNode.addEventListener('focus', this.onFocus, true);
+			if (childContainerRef && childContainerRef.addEventListener) {
+				// FIXME `onFocus` doesn't work on the v8 snapshot.
+				childContainerRef.addEventListener('focus', this.onFocus, true);
+			}
+
 			this.updateScrollbars();
 		}
 
@@ -865,9 +870,22 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		componentWillUnmount () {
+			const
+				{containerRef} = this,
+				childContainerRef = this.childRef.containerRef;
+
 			// Before call cancelAnimationFrame, you must send scrollStop Event.
 			this.animator.stop();
 			this.forceUpdateJob.stop();
+
+			if (containerRef && containerRef.removeEventListener) {
+				// FIXME `onWheel` doesn't work on the v8 snapshot.
+				containerRef.removeEventListener('wheel', this.onWheel);
+			}
+			if (childContainerRef && childContainerRef.removeEventListener) {
+				// FIXME `onFocus` doesn't work on the v8 snapshot.
+				childContainerRef.removeEventListener('focus', this.onFocus, true);
+			}
 		}
 
 		// forceUpdate is a bit jarring and may interrupt other actions like animation so we'll
@@ -953,8 +971,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					focusableScrollbar={focusableScrollbar}
 					style={style}
 				>
-					{vscrollbar}
-					{hscrollbar}
 					<Wrapped
 						{...props}
 						{...this.eventHandlers}
@@ -963,6 +979,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						onScroll={this.handleScroll}
 						ref={this.initChildRef}
 					/>
+					{vscrollbar}
+					{hscrollbar}
 				</ScrollableSpotlightContainer>
 			);
 		}

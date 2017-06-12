@@ -2,6 +2,7 @@
 //
 @import '../styles/mixins.less';
 @import '../styles/variables.less';
+@import '../styles/text.less';
 @import '../styles/skin.less';
 
 .icon {
@@ -13,12 +14,19 @@
 	display: inline-block;
 	vertical-align: middle;
 	margin: @moon-icon-margin;
-	font-family: "Moonstone Icons";
-	font-size: (@moon-icon-size * 2);
+	font-family: @moon-icon-font-family;
+	font-size: @moon-icon-font-size;
 	font-weight: normal;
 	line-height: @moon-icon-size;
 	text-align: center;
 	position: relative;
+
+	.moon-custom-text({
+		font-size: @moon-icon-font-size-large;
+		width: @moon-icon-size-large;
+		height: @moon-icon-size-large;
+		line-height: @moon-icon-size-large;
+	});
 
 	.font-kerning(none);
 	// .moon-taparea(@moon-icon-size);
@@ -28,8 +36,15 @@
 		background-size: @moon-icon-sprite-small-size (@moon-icon-sprite-small-size * 2);
 		width: @moon-icon-small-size;
 		height: @moon-icon-small-size;
-		font-size: (@moon-icon-small-size * 2);
+		font-size: @moon-icon-small-font-size;
 		line-height: @moon-icon-small-size;
+
+		.moon-custom-text({
+			font-size: @moon-icon-small-font-size-large;
+			width: @moon-icon-small-size-large;
+			height: @moon-icon-small-size-large;
+			line-height: @moon-icon-small-size-large;
+		});
 
 		// .moon-taparea(@moon-icon-small-size);
 	}

@@ -120,6 +120,10 @@
 	.applySkins({
 		background-color: @moon-input-decorator-bg-color;
 
+		.input {
+			background: transparent;
+		}
+
 		// For ExpandableInput, the decorator will not receive focus but it can be activated by clicking
 		// which should highlight the border
 		&.noDecorator:active,
@@ -141,6 +145,7 @@
 }
 
 .invalidTooltip {
+	pointer-events: none;
 	transform: translate(60px, -50%);
 
 	:global(.enact-locale-right-to-left) & {
