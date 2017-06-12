@@ -17,15 +17,17 @@ The following is a curated list of changes in the Enact project, newest changes 
 - `moonstone/VideoPlayer` property `tooltipHideDelay` to hide tooltip with a given amount of time
 - `moonstone/VideoPlayer` methods `fastForward`, `getMediaState`, `jump`, `pause`, `play`, `rewind`, and `seek` to allow external interaction with the player. See docs for example usage.
 - `spotlight/styles/mixins.less` mixins which allow state-selector-rules (muted, spottable, focus, disabled) to be applied to the parent instead of the component's self. This provides much more flexibility without extra mixins to memorize.
+- `ui/ViewManager` prop `childProps` to pass static props to each child
 
 ### Changed
 
 - `moonstone/Skinnable` to support context and allow it to be added to any component to be individually skinned. This includes a further optimization in skinning which consolidates all color assignments into a single block, so non-color rules aren't unnecessarily duplicated.
+- `moonstone/Skinnable` light and dark skin names ("moonstone-light" and "moonstone") to "light" and "dark", respectively
 - `moonstone/VideoPlayer` to set play/pause icon to display "play" when rewinding or fast forwarding
 - `moonstone/VideoPlayer` to rewind or fast forward when previous command is slow-forward or slow-rewind respectively
 - `moonstone/VideoPlayer` to fast forward when previous command is slow-forward and it reaches the last of its play rate
 - `moonstone/VideoPlayer` to not play video on reload when `noAutoPlay` is `true`
-- `moonstone/VideoPlayer` property `feedbackHideDelay`'s default value to 3000
+- `moonstone/VideoPlayer` property `feedbackHideDelay`'s default value to `3000`
 - `moonstone/Notification` to break line in characters in ja and zh locale
 - `moonstone/Notification` to align texts left in LTR locale and right in RTL locale
 - `moonstone/VideoPlayer` to simulate rewind functionality on non-webOS platforms only
