@@ -509,7 +509,7 @@ const isNavigable = (node, containerId, verify) => {
 	}
 
 	const containerNode = getContainerNode(containerId);
-	if (containerNode !== document && containerNode.dataset.containerDisabled) {
+	if (containerNode !== document && containerNode.dataset.containerDisabled === 'true') {
 		return false;
 	}
 
