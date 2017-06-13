@@ -15,7 +15,7 @@ const modals = [];
  * @private
  */
 const dispatchToModals = (ev) => {
-	for (let i = 0, handled = false; !handled && i < modals.length; i++) {
+	for (let i = modals.length - 1, handled = false; !handled && i >= 0; i--) {
 		handled = modals[i].handleCancel(ev);
 	}
 };
@@ -29,8 +29,8 @@ const dispatchToModals = (ev) => {
  * @private
  */
 const addModal = (obj) => {
-	if (modals.push(obj) === 1) {
-		on('keyup', dispatchToModals);
+	if (modals.push(obj) === 1 && typeof window !== 'undefined') {
+		on('keyup', dispatchToModals, window);
 	}
 };
 
@@ -48,8 +48,8 @@ const removeModal = (obj) => {
 		modals.splice(index, 1);
 	}
 
-	if (modals.length === 0) {
-		off('keyup', dispatchToModals);
+	if (modals.length === 0 && typeof window !== 'undefined') {
+		off('keyup', dispatchToModals, window);
 	}
 };
 

@@ -3,6 +3,13 @@
 @import '../styles/mixins.less';
 @import '../styles/variables.less';
 
+// Defined so we don't repeat rules.
+@overlay-hidden: {
+	.overlay.hidden {
+		display: none;
+	}
+};
+
 .item {
 	.overlay {
 		line-height: 1;
@@ -25,10 +32,17 @@
 		}
 	}
 
-	&:global(.spottable):not(:focus),
-	&[disabled] {
-		.overlay.hidden {
-			display: none;
+	// Spottable but not focused
+	.spottable({
+		&:not(:focus) {
+			@overlay-hidden();
 		}
-	}
+	});
+	.disabled(@overlay-hidden);
 }
+
+.muted({
+	.item {
+		.focus(@overlay-hidden);
+	}
+});

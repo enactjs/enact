@@ -44,6 +44,14 @@ class View extends React.Component {
 		arranger: shape,
 
 		/**
+		 * An object containing properties to be passed to each child.
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		childProps: PropTypes.object,
+
+		/**
 		 * Time, in milliseconds, to wait after a view has entered to inform it by passing the
 		 * `enteringProp` as false.
 		 *
@@ -70,6 +78,13 @@ class View extends React.Component {
 		 * @type {Number}
 		 */
 		index: PropTypes.number,
+
+		/**
+		 * Indicates if a view is currently leaving.
+		 *
+		 * @type {Boolean}
+		 */
+		leaving: PropTypes.bool,
 
 		/**
 		 * Indicates if the transition should be animated
@@ -112,6 +127,14 @@ class View extends React.Component {
 	componentWillReceiveProps (nextProps) {
 		// changeDirection let's us know we need to switch mid-transition
 		this.changeDirection = this.animation ? this.props.reverseTransition !== nextProps.reverseTransition : false;
+	}
+
+	shouldComponentUpdate (nextProps) {
+		if (nextProps.leaving) {
+			return false;
+		}
+
+		return true;
 	}
 
 	componentWillUnmount () {
@@ -282,10 +305,15 @@ class View extends React.Component {
 	}
 
 	render () {
-		const {enteringProp, children} = this.props;
+		const {enteringProp, children, childProps} = this.props;
 
-		if (enteringProp) {
-			return React.cloneElement(children, {[enteringProp]: this.state.entering});
+		if (enteringProp || childProps) {
+			const props = Object.assign({}, childProps);
+			if (enteringProp) {
+				props[enteringProp] = this.state.entering;
+			}
+
+			return React.cloneElement(children, props);
 		} else {
 			return React.Children.only(children);
 		}

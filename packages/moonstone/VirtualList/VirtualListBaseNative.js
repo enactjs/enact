@@ -247,9 +247,6 @@ class VirtualListCoreNative extends Component {
 	containerRef = null
 	wrapperRef = null
 
-	// RTL
-	compensationRTL = 0
-
 	// spotlight
 	nodeIndexToBeBlurred = null
 	lastFocusedIndex = null
@@ -419,7 +416,7 @@ class VirtualListCoreNative extends Component {
 		}
 	}
 
-	setScrollPosition (x, y, dirX, dirY) {
+	didScroll (x, y, dirX, dirY) {
 		const
 			{firstIndex} = this.state,
 			{isPrimaryDirectionVertical, threshold, dimensionToExtent, maxFirstIndex, scrollBounds} = this,
@@ -518,7 +515,7 @@ class VirtualListCoreNative extends Component {
 		this.lastFirstIndex = firstIndex;
 	}
 
-	scrollTo (x, y) {
+	scrollToPosition (x, y) {
 		const node = this.wrapperRef;
 		node.scrollTo((this.context.rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x, y);
 	}
@@ -566,17 +563,18 @@ class VirtualListCoreNative extends Component {
 		return (Math.ceil(curDataSize / dimensionToExtent) * primary.gridSize) - spacing;
 	}
 
-	focusOnItem = (index) => {
-		// We have to focus item async for now since list items are not yet ready when it reaches componentDid* lifecycle methods
+	focusByIndex = (index) => {
+		// We have to focus node async for now since list items are not yet ready when it reaches componentDid* lifecycle methods
 		setTimeout(() => {
 			const item = this.containerRef.querySelector(`[data-index='${index}'].spottable`);
-
-			if (item) {
-				// setPointerMode to false since Spotlight prevents programmatically changing focus while in pointer mode
-				Spotlight.setPointerMode(false);
-				Spotlight.focus(item);
-			}
+			this.focusOnNode(item);
 		}, 0);
+	}
+
+	focusOnNode = (node) => {
+		if (node) {
+			Spotlight.focus(node);
+		}
 	}
 
 	calculatePositionOnFocus = (item) => {

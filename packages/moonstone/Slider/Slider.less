@@ -1,6 +1,11 @@
-@import '../styles/colors.less';
+// Slider.less
+//
+@import '../styles/mixins.less';
 @import '../styles/variables.less';
 @import '../styles/text.less';
+@import '../styles/skin.less';
+
+@slider-resting-state-scale: 0.8;
 
 .slider {
 	position: relative;
@@ -18,20 +23,14 @@
 	}
 
 	.fill {
-		background-color: @moon-progress-bar-fill-bg-color;
 		transition: background-color ease-out 100ms;
 		will-change: background-color;
-	}
-
-	.load {
-		background-color: @moon-progress-bar-loaded-bg-color;
 	}
 
 	.sliderBar {
 		position: relative;
 		height: 100%;
 		width: 100%;
-		background-color: @moon-progress-bar-bg-color;
 		direction: ltr;	// Always arrange this according to LTR rules
 	}
 
@@ -46,9 +45,8 @@
 			width: @moon-slider-knob-width;
 			// Vertically and horizontally center this knob.
 			// Using this method rather than -top -left so the knob is more intuitively customizable.
-			-webkit-transform: @moon-translate-center scale(0.8);
-			transform:         @moon-translate-center scale(0.8);
-			background-color: @moon-slider-knob-bg-color;
+			-webkit-transform: @moon-translate-center scale(@slider-resting-state-scale);
+			transform:         @moon-translate-center scale(@slider-resting-state-scale);
 			border-radius: (@moon-slider-knob-height / 2);
 			border: @moon-button-border-width solid transparent;
 			box-sizing: border-box;
@@ -61,10 +59,6 @@
 				border-radius: (@moon-slider-knob-height-large / 2);
 			})
 		}
-	}
-
-	.tooltip {
-		display: none;
 	}
 
 	.input {
@@ -165,53 +159,127 @@
 		})
 	}
 
-	&:global(.spottable) {
-		&.active,
-		&.pressed {
-			.fill {
-				background-color: @moon-slider-spotlight-bar-color;
-			}
-		}
-
-		&.pressed,
-		&:focus {
-			.knob::before {
-				background-color: @moon-slider-spotlight-knob-color;
-			}
-			.tooltip {
-				display: block;
-			}
-		}
-
+	.spottable({
 		&.pressed,
 		&:focus.active {
 			.knob::before {
 				transform: @moon-translate-center scale(1);
 			}
 		}
+	});
 
-		&:focus {
-			background-color: transparent;
+	// Skin colors
+	.applySkins({
+		.fill {
+			background-color: @moon-progress-bar-fill-bg-color;
+		}
 
-			&.active {
-				.knob::before {
-					background-color: @moon-slider-knob-bg-color;
-					border-color: @moon-slider-spotlight-knob-color;
+		.load {
+			background-color: @moon-progress-bar-loaded-bg-color;
+		}
+
+		.sliderBar {
+			background-color: @moon-progress-bar-bg-color;
+		}
+
+		.knob::before {
+			background-color: @moon-slider-knob-bg-color;
+		}
+
+		.spottable({
+			&.active,
+			&.pressed {
+				.fill {
+					background-color: @moon-slider-spotlight-bar-color;
 				}
 			}
+
+			&.pressed,
+			&:focus {
+				.knob::before {
+					background-color: @moon-slider-spotlight-knob-color;
+				}
+			}
+
+			&:focus {
+				background-color: transparent;
+
+				&.active {
+					.knob::before {
+						background-color: @moon-slider-knob-bg-color;
+						border-color: @moon-slider-spotlight-knob-color;
+					}
+				}
+			}
+		});
+
+		&.noFill {
+			.fill {
+				background-color: transparent;
+			}
+
+			.spottable({
+				&.active,
+				&.pressed {
+					.fill {
+						background-color: transparent;
+					}
+				}
+			});
 		}
-	}
+	});
 }
 
-[data-container-muted='true'] {
+.muted({
 	.slider {
-		&:global(.spottable):focus {
-			.knob {
-				background-color: @moon-slider-knob-bg-color;
+		.spottable({
+			&.pressed,
+			&:focus.active {
+				.knob::before {
+					transform: @moon-translate-center scale(@slider-resting-state-scale);
+				}
 			}
-		}
+		});
+
+		// Skin colors
+		.applySkins({
+			.focus({
+				.knob::before {
+					background-color: @moon-slider-knob-bg-color;
+				}
+			});
+
+			.spottable({
+				&.active,
+				&.pressed {
+					.fill {
+						background-color: @moon-progress-bar-fill-bg-color;
+					}
+				}
+
+				&.pressed,
+				&:focus {
+					.knob::before {
+						background-color: @moon-slider-knob-bg-color;
+					}
+				}
+
+				&:focus {
+					background-color: transparent;
+
+					&.active {
+						.knob::before {
+							background-color: @moon-slider-knob-bg-color;
+							border-color: @moon-slider-knob-bg-color;
+						}
+					}
+				}
+			});
+
+		});
 	}
-}
+}, parent);
+
 
 :global(.aqua) .slider {
 	.fill {

@@ -1,4 +1,3 @@
-import $L from '@enact/i18n/$L';
 import {forward} from '@enact/core/handle';
 import clamp from 'ramda/src/clamp';
 import equals from 'ramda/src/equals';
@@ -9,7 +8,9 @@ import shouldUpdate from 'recompose/shouldUpdate';
 import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
 import {getDirection} from '@enact/spotlight';
 import {validateRange, validateStepped} from '../validators';
+import Skinnable from '../../Skinnable';
 
+import $L from '../$L';
 import PickerButton from './PickerButton';
 
 import css from './Picker.less';
@@ -327,9 +328,9 @@ const Picker = class extends React.Component {
 
 	adjustDirection = (dir) => this.props.reverse ? -dir : dir
 
-	isButtonDisabled = (delta) => {
-		const {disabled, value} = this.props;
-		return disabled || this.computeNextValue(this.adjustDirection(delta)) === value;
+	hasReachedBound = (delta) => {
+		const {value} = this.props;
+		return this.computeNextValue(this.adjustDirection(delta)) === value;
 	}
 
 	updateValue = (dir) => {
@@ -367,7 +368,7 @@ const Picker = class extends React.Component {
 		if (ev) {
 			forwardClick(ev, this.props);
 		}
-		if (!this.isButtonDisabled(-this.props.step)) {
+		if (!this.hasReachedBound(-this.props.step)) {
 			this.updateValue(-1);
 			this.handleDown(-1);
 		}
@@ -377,7 +378,7 @@ const Picker = class extends React.Component {
 		if (ev) {
 			forwardClick(ev, this.props);
 		}
-		if (!this.isButtonDisabled(this.props.step)) {
+		if (!this.hasReachedBound(this.props.step)) {
 			this.updateValue(1);
 			this.handleDown(1);
 		}
@@ -428,7 +429,7 @@ const Picker = class extends React.Component {
 
 			// We'll sometimes get a 0/-0 wheel event we need to ignore or the wheel event has reached
 			// the bounds of the picker
-			if (dir && !this.isButtonDisabled(step * dir)) {
+			if (dir && !this.hasReachedBound(step * dir)) {
 				// fire the onChange event
 				this.updateValue(dir);
 				// simulate mouse down
@@ -442,14 +443,14 @@ const Picker = class extends React.Component {
 	}
 
 	handleDecPulse = () => {
-		if (!this.isButtonDisabled(this.props.step * -1)) {
+		if (!this.hasReachedBound(this.props.step * -1)) {
 			this.handleDecDown();
 			this.updateValue(-1);
 		}
 	}
 
 	handleIncPulse = () => {
-		if (!this.isButtonDisabled(this.props.step)) {
+		if (!this.hasReachedBound(this.props.step)) {
 			this.handleIncDown();
 			this.updateValue(1);
 		}
@@ -566,8 +567,10 @@ const Picker = class extends React.Component {
 		const incrementIcon = selectIncIcon(this.props);
 		const decrementIcon = selectDecIcon(this.props);
 
-		const decrementerDisabled = this.isButtonDisabled(step * -1);
-		const incrementerDisabled = this.isButtonDisabled(step);
+		const reachedStart = this.hasReachedBound(step * -1);
+		const decrementerDisabled = disabled || reachedStart;
+		const reachedEnd = this.hasReachedBound(step);
+		const incrementerDisabled = disabled || reachedEnd;
 		const classes = this.determineClasses(decrementerDisabled, incrementerDisabled);
 
 		let arranger;
@@ -598,6 +601,7 @@ const Picker = class extends React.Component {
 					aria-label={this.calcIncrementLabel(valueText)}
 					className={css.incrementer}
 					disabled={incrementerDisabled}
+					hidden={reachedEnd}
 					icon={incrementIcon}
 					joined={joined}
 					onClick={this.handleIncClick}
@@ -630,6 +634,7 @@ const Picker = class extends React.Component {
 					aria-label={this.calcDecrementLabel(valueText)}
 					className={css.decrementer}
 					disabled={decrementerDisabled}
+					hidden={reachedStart}
 					icon={decrementIcon}
 					joined={joined}
 					onClick={this.handleDecClick}
@@ -644,6 +649,8 @@ const Picker = class extends React.Component {
 	}
 };
 
-export default Picker;
-export {Picker};
+const SkinnedPicker = Skinnable(Picker);
+
+export default SkinnedPicker;
+export {SkinnedPicker as Picker};
 export PickerItem from './PickerItem';

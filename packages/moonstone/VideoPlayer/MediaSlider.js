@@ -63,6 +63,7 @@ const MediaSliderBase = kind({
 		<div className={css.sliderFrame}>
 			<Slider
 				{...props}
+				aria-hidden="true"
 				className={css.mediaSlider}
 				detachedKnob
 				min={0}
@@ -74,7 +75,7 @@ const MediaSliderBase = kind({
 	)
 });
 
-const MediaSlider = onlyUpdateForKeys(['backgroundProgress', 'value'])(MediaSliderBase);
+const MediaSlider = onlyUpdateForKeys(['backgroundProgress', 'children', 'value'])(MediaSliderBase);
 
 export default MediaSlider;
 export {

@@ -12,9 +12,10 @@ import {ResolutionDecorator} from '@enact/ui/resolution';
 import {FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
 import SpotlightRootDecorator from '@enact/spotlight/SpotlightRootDecorator';
 
+import Skinnable from '../Skinnable';
+
 import I18nFontDecorator from './I18nFontDecorator';
 import TextSizeDecorator from './TextSizeDecorator';
-import ThemeDecorator from './ThemeDecorator';
 import screenTypes from './screenTypes.json';
 import css from './MoonstoneDecorator.less';
 
@@ -34,7 +35,7 @@ const defaultConfig = {
 	},
 	spotlight: true,
 	textSize: true,
-	theme: true
+	skin: true
 };
 
 /**
@@ -43,10 +44,13 @@ const defaultConfig = {
  * [floating layer]{@link ui/FloatingLayer.FloatingLayerDecorator},
  * [resolution independence]{@link ui/resolution.ResolutionDecorator},
  * [custom text sizing]{@link moonstone/MoonstoneDecorator.TextSizeDecorator},
- * [theming]{@link moonstone/MoonstoneDecorator.ThemeDecorator},
- * [spotlight]{@link spotlight.SpotlightRootDecorator}, and
+ * [skin support]{@link ui/Skinnable}, [spotlight]{@link spotlight.SpotlightRootDecorator}, and
  * [internationalization support]{@link i18n/I18nDecorator.I18nDecorator}. It is meant to be applied to
  * the root element of an app.
+ *
+ * [Skins]{@link ui/Skinnable} provide a way to change the coloration of your app. The currently
+ * supported skins for Moonstone are "moonstone" (the default, dark skin) and "moonstone-light".
+ * Use the `skin` property to assign a skin. Ex: `<DecoratedApp skin="light" />`
  *
  * @class MoonstoneDecorator
  * @memberof moonstone/MoonstoneDecorator
@@ -54,7 +58,7 @@ const defaultConfig = {
  * @public
  */
 const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {ri, i18n, spotlight, float, noAutoFocus, overlay, textSize, theme} = config;
+	const {ri, i18n, spotlight, float, noAutoFocus, overlay, textSize, skin} = config;
 
 	// Apply classes depending on screen type (overlay / fullscreen)
 	const bgClassName = 'enact-fit' + (overlay ? '' : ` ${css.bg}`);
@@ -73,7 +77,7 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	}
 	if (spotlight) App = SpotlightRootDecorator({noAutoFocus}, App);
 	if (textSize) App = TextSizeDecorator(App);
-	if (theme) App = ThemeDecorator(App);
+	if (skin) App = Skinnable({defaultSkin: 'dark'}, App);
 
 	// add webOS-specific key maps
 	addAll({
@@ -86,7 +90,7 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		static displayName = 'MoonstoneDecorator';
 
 		render () {
-			let className = 'enact-unselectable';
+			let className = css.root + ' enact-unselectable';
 			if (!float) {
 				className += ' ' + bgClassName;
 			}

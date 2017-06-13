@@ -9,7 +9,8 @@ import styles from './styles';
 /**
  * Creates a stateless functional component with some helpful declarative sugar.
  *
- * @example
+ * Example:
+ * ```
  *	import css from './Button.less';
  *	const Button = kind({
  *		// expect color and onClick properties but neither required
@@ -47,7 +48,7 @@ import styles from './styles';
  *			</button>
  *		)
  *	});
- *
+ * ```
  * @param  {Object} config - Component configuration
  *
  * @returns {Function}        Component

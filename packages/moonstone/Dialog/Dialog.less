@@ -1,9 +1,10 @@
+// Dialog.less
+//
 @import '~@enact/ui/styles/mixins.less';
 
-@import '../styles/rules.less';
-@import '../styles/colors.less';
 @import '../styles/text.less';
 @import '../styles/variables.less';
+@import '../styles/skin.less';
 
 .dialog {
 	@dialog-spacing: 39px;
@@ -11,7 +12,8 @@
 
 	&.showDivider {
 		.titleWrapper {
-			.moon-neutral-divider-border();
+			border-bottom-width: @moon-header-border-bottom-width;
+			border-bottom-style: solid;
 			padding-bottom: 24px;
 			border-bottom-width: 1px;
 		}
@@ -28,7 +30,7 @@
 		margin-bottom: @dialog-spacing;
 
 		// adds a layer to allow detecting mouseenter to start title marquees
-		&:before {
+		&::before {
 			position: absolute;
 			content: '';
 			.position(0);
@@ -45,4 +47,13 @@
 			text-align: left;
 		}
 	}
+
+	// Skin colors
+	.applySkins({
+		&.showDivider {
+			.titleWrapper {
+				border-bottom-color: @moon-header-border-color;
+			}
+		}
+	});
 }

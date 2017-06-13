@@ -1,10 +1,11 @@
-@import '../styles/colors.less';
+// ProgressBar.less
+//
 @import '../styles/variables.less';
+@import '../styles/skin.less';
 
 .progressBar {
 	position: relative;
 	height: @moon-progress-bar-height;
-	background-color: @moon-progress-bar-bg-color;
 	margin: @moon-spotlight-outset;
 	direction: ltr;
 
@@ -26,11 +27,22 @@
 	.fill {
 		height: 100%;
 		position: absolute;
-		background-color: @moon-progress-bar-fill-bg-color;
 	}
 	.load {
 		height: 100%;
 		position: absolute;
-		background-color: @moon-progress-bar-loaded-bg-color;
 	}
+
+	// Skin colors
+	.applySkins({
+		background-color: @moon-progress-bar-bg-color;
+
+		.fill {
+			background-color: @moon-progress-bar-fill-bg-color;
+		}
+
+		.load {
+			background-color: @moon-progress-bar-loaded-bg-color;
+		}
+	});
 }

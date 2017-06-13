@@ -1,9 +1,10 @@
-import $L from '@enact/i18n/$L';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import $L from '../internal/$L';
 import IconButton from '../IconButton';
+import Skinnable from '../Skinnable';
 
 import css from './ContextualPopup.less';
 
@@ -43,6 +44,11 @@ const ContextualPopupArrow = kind({
 		</svg>
 	)
 });
+
+const ContextualPopupRoot = Skinnable(
+	{defaultSkin: 'light'},
+	'div'
+);
 
 /**
  * {@link moonstone/ContextualPopupDecorator.ContextualPopup} is a modal component that
@@ -136,7 +142,7 @@ const ContextualPopupBase = kind({
 
 	styles: {
 		css,
-		className: 'contextualPopup container moon-neutral'
+		className: 'container'
 	},
 
 	computed: {
@@ -158,18 +164,18 @@ const ContextualPopupBase = kind({
 		}
 	},
 
-	render: ({arrowPosition, containerPosition, containerRef, className, children, closeButton, direction, ...rest}) => {
+	render: ({arrowPosition, containerPosition, containerRef, children, className, closeButton, direction, ...rest}) => {
 		delete rest.onCloseButtonClick;
 		delete rest.showCloseButton;
 
 		return (
-			<div aria-live="off" role="alert" {...rest} className={css.contextualPopup}>
+			<ContextualPopupRoot aria-live="off" role="alert" {...rest} className={css.contextualPopup}>
 				<div className={className} style={containerPosition} ref={containerRef}>
 					{children}
 					{closeButton}
 				</div>
 				<ContextualPopupArrow direction={direction} style={arrowPosition} />
-			</div>
+			</ContextualPopupRoot>
 		);
 	}
 });

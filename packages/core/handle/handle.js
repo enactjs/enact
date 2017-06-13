@@ -57,6 +57,7 @@
 import allPass from 'ramda/src/allPass';
 import always from 'ramda/src/always';
 import compose from 'ramda/src/compose';
+import cond from 'ramda/src/cond';
 import curry from 'ramda/src/curry';
 import identity from 'ramda/src/identity';
 import ifElse from 'ramda/src/ifElse';
@@ -97,6 +98,29 @@ const handle = function (...handlers) {
 
 		return h(ev, props, context);
 	};
+};
+
+/**
+ * Calls the first handler whose condition passes. Each branch must be passed as an array with the
+ * first element being the condition function and the second being the handler function. The same
+ * arguments are passed to both the condition function and the handler function. The value returned
+ * from the handler is returned.
+ *
+ * ```
+ * const handler = oneOf(
+ * 	[forKey('enter'), handleEnter],
+ * 	[forKey('left'), handleLeft],
+ * 	[forKey('right'), handleRight]
+ * );
+ *
+ * @method   oneOf
+ * @memberof core/handle
+ * @param    {...Function}  handlers List of handlers to process the event
+ * @returns  {Function}	    A function that accepts an event which is dispatched to each of the
+ *                          conditions and, if it passes, onto the provided handler.
+ */
+const oneOf = handle.oneOf = function (...handlers) {
+	return cond(handlers);
 };
 
 /**
@@ -180,6 +204,40 @@ const forward = handle.forward = curry((name, ev, props) => {
 	}
 
 	return true;
+});
+
+/**
+ * Forwards the event to a function at `name` on `props` with capability to prevent default
+ * behavior. If the specified prop is `undefined` or is not a function, it is ignored. Returns
+ * `false` when `event.preventDefault()` has been called in a handler.
+ *
+ * ```
+ * import {forwardWithPrevent, handle} from '@enact/core/handle';
+ *
+ * const forwardPreventDefault = handle(
+ *   forwardWithPrevent('onClick'),
+ *   (ev) => console.log('default action')
+ * );
+ * ```
+ *
+ * @method   forwardWithPrevent
+ * @private
+ * @memberof core/handle
+ * @param    {String}    name   Name of method on the `props`
+ * @param    {Object}    ev     Event
+ * @param    {Object}    props  Props object
+ * @returns  {Boolean}          Returns `true` if default action is prevented
+ */
+const forwardWithPrevent = handle.forwardWithPrevent = curry((name, ev, props) => {
+	let prevented = false;
+	const wrappedEvent = Object.assign({}, ev, {
+		preventDefault: () => {
+			prevented = true;
+		}
+	});
+	forward(name, wrappedEvent, props);
+
+	return !prevented;
 });
 
 /**
@@ -342,12 +400,14 @@ export default handle;
 export {
 	callOnEvent,
 	forward,
+	forwardWithPrevent,
 	forEventProp,
 	forKey,
 	forKeyCode,
 	forProp,
 	handle,
 	log,
+	oneOf,
 	preventDefault,
 	stop,
 	stopImmediate

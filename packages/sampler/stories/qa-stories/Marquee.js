@@ -3,7 +3,8 @@ import Item from '@enact/moonstone/Item';
 import Spottable from '@enact/spotlight/Spottable';
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
-import {withKnobs, boolean, number, select} from '@kadira/storybook-addon-knobs';
+import {boolean, number, select} from '@kadira/storybook-addon-knobs';
+import nullify from '../../src/utils/nullify.js';
 
 const SpottableMarquee = Spottable(MarqueeText);
 const Controller = MarqueeController('div');
@@ -23,52 +24,18 @@ const RTL = [
 	'فوری بھوری لومڑی سست کتے پر چھلانگ لگا. بین پرندوں سوریاست میں پرواز.'
 ];
 
+const disabledDisclaimer = (disabled) => (disabled ? <p style={{fontSize: '70%', fontStyle: 'italic'}}><sup>*</sup>MarqueeText does not visually respond to <code>disabled</code> state.</p> : <p />);
+
 storiesOf('Marquee')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		'LTR',
-		() => (
-			<MarqueeText
-				style={{width: '400px'}}
-				disabled={boolean('disabled', false)}
-				marqueeDelay={number('marqueeDelay', 1000)}
-				marqueeDisabled={boolean('marqueeDisabled', false)}
-				marqueeOn={select('marqueeOn', ['hover', 'render'], 'render')}
-				marqueeOnRenderDelay={number('marqueeOnRenderDelay', 1000)}
-				marqueeResetDelay={number('marqueeResetDelay', 1000)}
-				marqueeSpeed={number('marqueeSpeed', 60)}
-			>
-				{select('children', LTR, LTR[0])}
-			</MarqueeText>
-		)
-	)
-
-	.addWithInfo(
-		'RTL',
-		() => (
-			<MarqueeText
-				style={{width: '400px'}}
-				disabled={boolean('disabled', false)}
-				marqueeDelay={number('marqueeDelay', 1000)}
-				marqueeDisabled={boolean('marqueeDisabled', false)}
-				marqueeOn={select('marqueeOn', ['hover', 'render'], 'render')}
-				marqueeOnRenderDelay={number('marqueeOnRenderDelay', 1000)}
-				marqueeResetDelay={number('marqueeResetDelay', 1000)}
-				marqueeSpeed={number('marqueeSpeed', 60)}
-			>
-				{select('children', RTL, RTL[0])}
-			</MarqueeText>
-		)
-	)
-
-	.addWithInfo(
-		'Synchronized',
-		() => (
-			<Controller style={{width: '400px'}}>
-				{LTR.map((children, index) => (
+		() => {
+			const disabled = nullify(boolean('disabled', false));
+			return (
+				<section>
 					<MarqueeText
-						disabled={boolean('disabled', false)}
-						key={index}
+						style={{width: '400px'}}
+						disabled={disabled}
 						marqueeDelay={number('marqueeDelay', 1000)}
 						marqueeDisabled={boolean('marqueeDisabled', false)}
 						marqueeOn={select('marqueeOn', ['hover', 'render'], 'render')}
@@ -76,11 +43,62 @@ storiesOf('Marquee')
 						marqueeResetDelay={number('marqueeResetDelay', 1000)}
 						marqueeSpeed={number('marqueeSpeed', 60)}
 					>
-						{children}
+						{select('children', LTR, LTR[0])}
 					</MarqueeText>
-				))}
-			</Controller>
-		)
+					{disabledDisclaimer(disabled)}
+				</section>
+			);
+		}
+	)
+
+	.addWithInfo(
+		'RTL',
+		() => {
+			const disabled = nullify(boolean('disabled', false));
+			return (
+				<section>
+					<MarqueeText
+						style={{width: '400px'}}
+						disabled={disabled}
+						marqueeDelay={number('marqueeDelay', 1000)}
+						marqueeDisabled={boolean('marqueeDisabled', false)}
+						marqueeOn={select('marqueeOn', ['hover', 'render'], 'render')}
+						marqueeOnRenderDelay={number('marqueeOnRenderDelay', 1000)}
+						marqueeResetDelay={number('marqueeResetDelay', 1000)}
+						marqueeSpeed={number('marqueeSpeed', 60)}
+					>
+						{select('children', RTL, RTL[0])}
+					</MarqueeText>
+					{disabledDisclaimer(disabled)}
+				</section>
+			);
+		}
+	)
+
+	.addWithInfo(
+		'Synchronized',
+		() => {
+			const disabled = nullify(boolean('disabled', false));
+			return (
+				<Controller style={{width: '400px'}}>
+					{LTR.map((children, index) => (
+						<MarqueeText
+							disabled={disabled}
+							key={index}
+							marqueeDelay={number('marqueeDelay', 1000)}
+							marqueeDisabled={boolean('marqueeDisabled', false)}
+							marqueeOn={select('marqueeOn', ['hover', 'render'], 'render')}
+							marqueeOnRenderDelay={number('marqueeOnRenderDelay', 1000)}
+							marqueeResetDelay={number('marqueeResetDelay', 1000)}
+							marqueeSpeed={number('marqueeSpeed', 60)}
+						>
+							{children}
+						</MarqueeText>
+					))}
+					{disabledDisclaimer(disabled)}
+				</Controller>
+			);
+		}
 	)
 
 	.addWithInfo(

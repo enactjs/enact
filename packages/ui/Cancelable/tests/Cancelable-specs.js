@@ -1,6 +1,7 @@
 import React from 'react';
-import {shallow} from 'enzyme';
+import {mount, shallow} from 'enzyme';
 import sinon from 'sinon';
+
 import {addCancelHandler, Cancelable, removeCancelHandler} from '../Cancelable';
 
 describe('Cancelable', () => {
@@ -161,5 +162,93 @@ describe('Cancelable', () => {
 		const actual = handleCancel.calledOnce;
 
 		expect(actual).to.equal(expected);
+	});
+
+	describe('modal instances', function () {
+		const customEventHandler = (ev) => {
+			return ev.keyIdentifier === '27';
+		};
+
+		// PhantomJS doesn't support KeyboardEvent so we're faking it ...
+		const makeKeyboardEvent = (keyCode) => {
+			const ev = document.createEvent('KeyboardEvent');
+			ev.initKeyboardEvent('keyup', true, true, window, keyCode);
+
+			return ev;
+		};
+
+		before(() => {
+			addCancelHandler(customEventHandler);
+		});
+
+		after(() => {
+			removeCancelHandler(customEventHandler);
+		});
+
+		it('should invoke handler for cancel events dispatche to the window', function () {
+			const handleCancel = sinon.spy(returnsTrue);
+			const Comp = Cancelable(
+				{modal: true, onCancel: handleCancel},
+				Component
+			);
+
+			mount(<Comp />);
+			document.dispatchEvent(makeKeyboardEvent(27));
+
+			const expected = true;
+			const actual = handleCancel.calledOnce;
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should invoke modal handlers in LIFO order', function () {
+			const results = [];
+			const append = str => () => {
+				results.push(str);
+				return false;
+			};
+
+			const First = Cancelable(
+				{modal: true, onCancel: append('first')},
+				Component
+			);
+			const Second = Cancelable(
+				{modal: true, onCancel: append('second')},
+				Component
+			);
+
+			mount(<First />);
+			mount(<Second />);
+
+			document.dispatchEvent(makeKeyboardEvent(27));
+
+			const expected = ['second', 'first'];
+			const actual = results;
+
+			expect(actual).to.deep.equal(expected);
+		});
+
+		it('should not invoke modal handlers after one returns true', function () {
+			const handleCancel = sinon.spy(returnsTrue);
+
+			const First = Cancelable(
+				{modal: true, onCancel: handleCancel},
+				Component
+			);
+			const Second = Cancelable(
+				{modal: true, onCancel: returnsTrue},
+				Component
+			);
+
+			mount(<First />);
+			mount(<Second />);
+
+			document.dispatchEvent(makeKeyboardEvent(27));
+
+			const expected = false;
+			const actual = handleCancel.called;
+
+			expect(actual).to.equal(expected);
+		});
 	});
 });

@@ -1,7 +1,7 @@
 import ToggleButton from '@enact/moonstone/ToggleButton';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {withKnobs, text, boolean, select} from '@kadira/storybook-addon-knobs';
+import {text, boolean, select} from '@kadira/storybook-addon-knobs';
 
 // Set up some defaults for info and knobs
 const prop = {
@@ -10,7 +10,6 @@ const prop = {
 };
 
 storiesOf('ToggleButton')
-	.addDecorator(withKnobs)
 	.addWithInfo(
 		'with long text',
 		() => (

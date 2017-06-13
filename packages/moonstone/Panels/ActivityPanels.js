@@ -1,13 +1,8 @@
-import Toggleable from '@enact/ui/Toggleable';
+import Skinnable from '../Skinnable';
 
 import {ActivityArranger} from './Arrangers';
 import BreadcrumbDecorator from './BreadcrumbDecorator';
 import {PanelsBase} from './Panels';
-
-const Panels = Toggleable(
-	{activate: 'onWillTransition', deactivate: 'onTransition', prop: 'transitioning', toggle: null},
-	PanelsBase
-);
 
 /**
  * An instance of Panels in which the Panel uses the entire viewable screen with a single breadcrumb
@@ -23,11 +18,11 @@ const Panels = Toggleable(
  * @ui
  * @public
  */
-const ActivityPanels = BreadcrumbDecorator({
+const ActivityPanels = Skinnable(BreadcrumbDecorator({
 	className: 'panels activity enact-fit',
 	max: 1,
 	panelArranger: ActivityArranger
-}, Panels);
+}, PanelsBase));
 
 export default ActivityPanels;
 export {ActivityPanels};

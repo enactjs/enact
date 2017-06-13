@@ -10,7 +10,9 @@ import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import Spotlight from '@enact/spotlight';
 
+import $L from '../internal/$L';
 import {MarqueeText} from '../Marquee';
+import Skinnable from '../Skinnable';
 
 import css from './Spinner.less';
 
@@ -22,8 +24,18 @@ import css from './Spinner.less';
  * @ui
  * @private
  */
-const SpinnerCore = kind({
+const SpinnerCoreBase = kind({
 	name: 'SpinnerCore',
+
+	computed: {
+		'aria-label': ({['aria-label']: aria, children}) => {
+			if (aria) {
+				return aria;
+			} else if (!children) {
+				return $L('Loading');
+			}
+		}
+	},
 
 	render: ({children, ...rest}) => (
 		<div aria-live="off" role="alert" {...rest}>
@@ -36,6 +48,8 @@ const SpinnerCore = kind({
 		</div>
 	)
 });
+
+const SpinnerCore = Skinnable(SpinnerCoreBase);
 
 /**
  * {@link moonstone/Spinner.SpinnerBase} is a component that shows a spinning

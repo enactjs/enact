@@ -1,19 +1,22 @@
+// Panels.less
+//
 @import '../styles/mixins.less';
-@import '../styles/colors.less';
 @import '../styles/variables.less';
+@import '../styles/skin.less';
 
-.viewport {
-	position: absolute;
-	.position(0);
-	overflow: hidden;
-}
+.panels {
+	pointer-events: none;
 
-:global(.moonstone) {
-.breadcrumbs {
-	position: relative;
-	height: 100%;
-	z-index: 10;
-	overflow: hidden;
+	> * {
+		pointer-events: auto;
+	}
+
+	.breadcrumbs {
+		position: absolute;
+		.position(0, auto, auto, 0);
+		height: 100%;
+		z-index: 10;
+		overflow: hidden;
 
 	.breadcrumb {
 		position: absolute;
@@ -21,30 +24,19 @@
 		height: 100%;
 		width: @moon-breadcrumb-width;
 
-		.breadcrumbHeader {
-			padding-top: 3px;
-			margin: @moon-app-keepout;
-			font-family: @moon-super-header-font-family;
-			font-size: @moon-breadcrumb-text-size;
-		}
-
-		&:global(.spottable):focus {
-			background: @moon-spotlight-color;
-			color: @moon-spotlight-text-color;
-
 			.breadcrumbHeader {
-				border-color: @moon-spotlight-text-color;
+				padding-top: 3px;
+				margin: @moon-app-keepout;
+				font-family: @moon-super-header-font-family;
+				font-size: @moon-breadcrumb-text-size;
 			}
 		}
 	}
-}
-}
 
-.panels {
-	pointer-events: none;
-
-	> * {
-		pointer-events: auto;
+	.viewport {
+		position: absolute;
+		.position(0);
+		overflow: hidden;
 	}
 
 	:global(.enact-locale-right-to-left) & {
@@ -54,6 +46,22 @@
 			direction: rtl;
 		}
 	}
+
+	// Skin colors
+	.applySkins({
+		.breadcrumbs {
+			.breadcrumb {
+				.focus({
+					background: @moon-spotlight-color;
+					color: @moon-spotlight-text-color;
+
+					.breadcrumbHeader {
+						border-color: @moon-spotlight-text-color;
+					}
+				});
+			}
+		}
+	});
 
 	// TODO: Application Close Button Support
 	// &:not(.first) {
@@ -99,7 +107,7 @@
 	// }
 }
 
-.activity {
+.panels.activity {
 	.breadcrumbs {
 		width: @moon-breadcrumb-width;
 	}
@@ -127,26 +135,34 @@
 
 }
 
-.alwaysViewing {
+.panels.alwaysViewing {
 	.viewport {
 		left: 50%;
-		background-color: @moon-panels-scrim-always-viewing-bg-color;
 	}
 
 	.breadcrumbs {
 		width: 50%;
-
-		.breadcrumb {
-			.breadcrumbHeader {
-				color: white;
-				border-top: 6px solid white;
-			}
-		}
 	}
 
 	// .scrim {
 	// 	background-color: @moon-panels-scrim-always-viewing-bg-color;
 	// }
+
+	// Skin colors
+	.applySkins({
+		.viewport {
+			background-color: @moon-panels-scrim-always-viewing-bg-color;
+		}
+
+		.breadcrumbs {
+			.breadcrumb {
+				.breadcrumbHeader {
+					color: white;
+					border-top: 6px solid white;
+				}
+			}
+		}
+	});
 }
 
 // Base set of styling for scrim to prevent receiving user input while transitioning

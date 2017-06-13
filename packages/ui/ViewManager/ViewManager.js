@@ -31,6 +31,14 @@ class ViewManager extends React.Component {
 		arranger: shape,
 
 		/**
+		 * An object containing properties to be passed to each child.
+		 *
+		 * @type {Object}
+		 * @public
+		 */
+		childProps: PropTypes.object,
+
+		/**
 		 * Views to be managed. May be any renderable component including custom React components or
 		 * primitive DOM nodes.
 		 *
@@ -193,13 +201,13 @@ class ViewManager extends React.Component {
 	}
 
 	render () {
-		const {arranger, children, duration, end, index, noAnimation, start, enteringDelay, enteringProp, ...rest} = this.props;
+		const {arranger, childProps, children, duration, end, index, noAnimation, start, enteringDelay, enteringProp, ...rest} = this.props;
 		const {previousIndex, reverseTransition} = this;
 		const childrenList = React.Children.toArray(children);
 
 		const from = (start || start === 0) ? start : index;
 		const to = (end || end === 0) && end >= index ? end : index;
-		const size = to - from + 1;
+		const size = to - from + (noAnimation ? 0 : 1);
 
 		const views = childrenList.slice(from, to + 1);
 		const childFactory = wrapWithView({
@@ -210,13 +218,14 @@ class ViewManager extends React.Component {
 			previousIndex,
 			reverseTransition,
 			enteringDelay,
-			enteringProp
+			enteringProp,
+			childProps
 		});
 
 		delete rest.reverseTransition;
 
 		return (
-			<TransitionGroup {...rest} childFactory={childFactory} size={size + 1}>
+			<TransitionGroup {...rest} childFactory={childFactory} size={size + 1} currentIndex={index}>
 				{views}
 			</TransitionGroup>
 		);
