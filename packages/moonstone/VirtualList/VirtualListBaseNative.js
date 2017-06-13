@@ -800,5 +800,6 @@ const VirtualListBaseNative = SpotlightContainerDecorator(
 		VirtualListCoreNative
 	)
 );
+
 export default VirtualListBaseNative;
 export {gridListItemSizeShape, VirtualListCoreNative, VirtualListBaseNative};
