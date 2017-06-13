@@ -331,33 +331,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		wheel (e, isHorizontal, isVertical) {
-			const
-				bounds = this.getScrollBounds(),
-				deltaMode = e.deltaMode;
-			let
-				delta = (-e.wheelDeltaY || e.deltaY),
-				maxPixel;
-
-			if (isVertical) {
-				maxPixel = bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel;
-			} else if (isHorizontal) {
-				maxPixel = bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel;
-			} else {
-				return 0;
-			}
-
-			if (deltaMode === 0) {
-				delta = clamp(-maxPixel, maxPixel, ri.scale(delta * scrollWheelMultiplierForDeltaPixel));
-			} else if (deltaMode === 1) { // line; firefox
-				delta = clamp(-maxPixel, maxPixel, ri.scale(delta * pixelPerLine * scrollWheelMultiplierForDeltaPixel));
-			} else if (deltaMode === 2) { // page
-				delta = delta < 0 ? -maxPixel : maxPixel;
-			}
-
-			return delta;
-		}
-
 		// mouse event handler for JS scroller
 
 		onMouseDown = (e) => {
@@ -458,6 +431,32 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
+		calculateDistanceByWheel = (e, maxDistance) => {
+			const
+				deltaMode = e.deltaMode,
+				delta = (-e.wheelDeltaY || e.deltaY);
+
+			if (deltaMode === 0) {
+				return clamp(-maxDistance, maxDistance, ri.scale(delta * scrollWheelMultiplierForDeltaPixel));
+			} else if (deltaMode === 1) { // line; firefox
+				return clamp(-maxDistance, maxDistance, ri.scale(delta * pixelPerLine * scrollWheelMultiplierForDeltaPixel));
+			} else if (deltaMode === 2) { // page
+				return delta < 0 ? -maxDistance : maxDistance;
+			}
+		}
+
+		calculateMaxDistance = (isHorizontal, isVertical) => {
+			const bounds = this.getScrollBounds();
+
+			if (isVertical) {
+				return bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel;
+			} else if (isHorizontal) {
+				return bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel;
+			} else {
+				return 0;
+			}
+		}
+
 		onWheel = (e) => {
 			e.preventDefault();
 			if (!this.isDragging) {
@@ -465,7 +464,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					bounds = this.getScrollBounds(),
 					isHorizontal = this.canScrollHorizontally(bounds),
 					isVertical = this.canScrollVertically(bounds),
-					delta = this.wheel(e, isHorizontal, isVertical),
+					delta = this.calculateDistanceByWheel(e, this.calculateMaxDistance(isHorizontal, isVertical)),
 					focusedItem = Spotlight.getCurrent();
 
 				Spotlight.setPointerMode(false);

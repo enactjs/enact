@@ -282,20 +282,25 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		calculateDistanceByWheel = (e, maxPixel) => {
-			const deltaMode = e.deltaMode;
-			let delta = (-e.wheelDeltaY || e.deltaY);
+		calculateDistanceByWheel = (e, maxDistance) => {
+			const
+				deltaMode = e.deltaMode,
+				delta = (-e.wheelDeltaY || e.deltaY);
 
 			if (deltaMode === 0) {
-				return clamp(-maxPixel, maxPixel, ri.scale(delta * scrollWheelMultiplierForDeltaPixel));
+				return clamp(-maxDistance, maxDistance, ri.scale(delta * scrollWheelMultiplierForDeltaPixel));
 			} else if (deltaMode === 1) { // line; firefox
-				return clamp(-maxPixel, maxPixel, ri.scale(delta * pixelPerLine * scrollWheelMultiplierForDeltaPixel));
+				return clamp(-maxDistance, maxDistance, ri.scale(delta * pixelPerLine * scrollWheelMultiplierForDeltaPixel));
 			} else if (deltaMode === 2) { // page
-				return delta < 0 ? -maxPixel : maxPixel;
+				return delta < 0 ? -maxDistance : maxDistance;
 			}
 		}
 
-		// Support wheel action for horizontal scroll
+		/*
+		 * wheel event handler;
+		 * - for horizontal scroll, supports wheel action on any children nodes since web engine cannot suppor this
+		 * - for vertical scroll, supports wheel action on scrollbars only
+		 */
 		onWheel = (e) => {
 			const
 				bounds = this.getScrollBounds(),
@@ -312,24 +317,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				if (e.target.parentElement === e.currentTarget) { // if e.target is Scrollbar node
 					const delta = this.calculateDistanceByWheel(e, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
 
-					/* prevent native scrolling feature for vertical direction */
-					e.preventDefault();
-
 					this.scrollToAccumulatedTarget(delta, false, true);
 				}
 			} else if (canScrollHorizontally) { // this routine handles wheel events on any children for horizontal scroll.
-				let
-					maxPixel;
-
-				if (canScrollVertically) {
-					maxPixel = bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel;
-				} else if (canScrollHorizontally) {
-					maxPixel = bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel;
-				} else {
-					return 0;
-				}
-
-				const delta = this.calculateDistanceByWheel(e, maxPixel);
+				const delta = this.calculateDistanceByWheel(e, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
 
 				/* prevent native scrolling feature for vertical direction */
 				e.preventDefault();
