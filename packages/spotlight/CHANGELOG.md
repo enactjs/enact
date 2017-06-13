@@ -8,11 +8,21 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Added
 
-`spotlight/styles/mixins.less` mixins which allow state-selector-rules (muted, spottable, focus, disabled) to be applied to the parent instead of the component's self. This provides much more flexibility without extra mixins to memorize.
+### Changed
+
+### Fixed
+
+### Removed
+
+## [1.3.0] - 2017-06-12
+
+### Added
+
+- `spotlight/styles/mixins.less` mixins which allow state-selector-rules (muted, spottable, focus, disabled) to be applied to the parent instead of the component's self. This provides much more flexibility without extra mixins to memorize.
 
 ### Changed
 
-* Signficant refactoring of spotlight submodules to improve testability
+- `spotlight` submodules to significantly improve testability
 
 ### Fixed
 
@@ -20,6 +30,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 - Spotlight continues through container boundaries when 5-way key is held down, as long as the next spottable component is wrapped by the immediate container of the previous spottable component.
 
 ### Removed
+- `spotlight` navigation to elements that are hidden within an overflow container (e.g. a `Scroller`)
 
 ## [1.2.2] - 2017-05-31
 
