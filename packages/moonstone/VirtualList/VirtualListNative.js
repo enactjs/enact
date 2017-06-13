@@ -2,7 +2,7 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import VirtualListBase, {gridListItemSizeShape} from './VirtualListBaseNative';
+import VirtualListBaseNative, {gridListItemSizeShape} from './VirtualListBaseNative';
 
 /**
  * {@link moonstone/VirtualList.VirtualListNative} is a VirtualList with Moonstone styling.
@@ -102,7 +102,7 @@ const VirtualListNative = kind({
 		 */
 	},
 
-	render: (props) => <VirtualListBase {...props} />
+	render: (props) => <VirtualListBaseNative {...props} />
 });
 
 /**
@@ -203,7 +203,7 @@ const VirtualGridListNative = kind({
 		 */
 	},
 
-	render: (props) => <VirtualListBase {...props} pageScroll />
+	render: (props) => <VirtualListBaseNative {...props} pageScroll />
 });
 
 export default VirtualListNative;

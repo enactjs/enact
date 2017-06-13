@@ -445,12 +445,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		calculateMaxDistance = (isHorizontal, isVertical) => {
+		calculateMaxDistance = (canScrollHorizontally, canScrollVertically) => {
 			const bounds = this.getScrollBounds();
 
-			if (isVertical) {
+			if (canScrollVertically) {
 				return bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel;
-			} else if (isHorizontal) {
+			} else if (canScrollHorizontally) {
 				return bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel;
 			} else {
 				return 0;
@@ -462,9 +462,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			if (!this.isDragging) {
 				const
 					bounds = this.getScrollBounds(),
-					isHorizontal = this.canScrollHorizontally(bounds),
-					isVertical = this.canScrollVertically(bounds),
-					delta = this.calculateDistanceByWheel(e, this.calculateMaxDistance(isHorizontal, isVertical)),
+					canScrollHorizontally = this.canScrollHorizontally(bounds),
+					canScrollVertically = this.canScrollVertically(bounds),
+					delta = this.calculateDistanceByWheel(e, this.calculateMaxDistance(canScrollHorizontally, canScrollVertically)),
 					focusedItem = Spotlight.getCurrent();
 
 				Spotlight.setPointerMode(false);
@@ -473,7 +473,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				}
 
 				this.childRef.setContainerDisabled(true);
-				this.scrollToAccumulatedTarget(delta, isHorizontal, isVertical);
+				this.scrollToAccumulatedTarget(delta, canScrollHorizontally, canScrollVertically);
 			}
 		}
 
