@@ -25,7 +25,8 @@ import scrollbarCss from './Scrollbar.less';
 const
 	forwardScroll = forward('onScroll'),
 	forwardScrollStart = forward('onScrollStart'),
-	forwardScrollStop = forward('onScrollStop');
+	forwardScrollStop = forward('onScrollStop'),
+	forwardOnWillUnmount = forward('onWillUnmount');
 
 const
 	nop = () => {},
@@ -157,6 +158,15 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			 * @public
 			 */
 			onScrollStop: PropTypes.func,
+
+			/**
+			 * Called when the component will unmount
+			 * This function will pass an object that contains `lastScrollTop` and `lastScrollLeft` as the parameter
+			 *
+			 * @type {Function}
+			 * @public
+			 */
+			onWillUnmount: PropTypes.func,
 
 			style: PropTypes.object,
 
@@ -760,6 +770,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				// FIXME `onMouseMove` doesn't work on the v8 snapshot.
 				childContainerRef.removeEventListener('mousemove', this.onMouseMove, {capture: true});
 			}
+
+			forwardOnWillUnmount({lastScrollLeft: this.scrollLeft, lastScrollTop: this.scrollTop}, this.props);
 		}
 
 		// forceUpdate is a bit jarring and may interrupt other actions like animation so we'll
@@ -827,6 +839,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			delete props.onScroll;
 			delete props.onScrollStart;
 			delete props.onScrollStop;
+			delete props.onWillUnmount;
 			delete props.style;
 			delete props.verticalScrollbar;
 
