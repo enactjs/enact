@@ -22,14 +22,10 @@
 	.valueWrapper {
 		.moon-text-base();
 		.moon-locale-non-latin({line-height: @moon-button-small-height;});
-		height: @moon-button-small-height;
-		line-height: @moon-button-small-height;
 		max-width: 300px;
 
 		.moon-custom-text({
 			font-size: @moon-item-font-size-large;
-			line-height: @moon-button-small-height-large;
-			height: @moon-button-small-height-large;
 		});
 	}
 
@@ -43,6 +39,14 @@
 		margin-left: auto;
 		margin-right: auto;
 		vertical-align: bottom;
+
+		line-height: @moon-button-small-height;
+		height: @moon-button-small-height;
+
+		.moon-custom-text({
+			line-height: @moon-button-small-height-large;
+			height: @moon-button-small-height-large;
+		});
 	}
 
 	.incrementer,
