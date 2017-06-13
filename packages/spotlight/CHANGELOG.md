@@ -28,9 +28,6 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Fixed
 
-* Navigating to elements that are hidden within an overflow container (e.g. a scroller)
-
-### Removed
 - `spotlight` navigation to elements that are hidden within an overflow container (e.g. a `Scroller`)
 
 ## [1.2.2] - 2017-05-31
