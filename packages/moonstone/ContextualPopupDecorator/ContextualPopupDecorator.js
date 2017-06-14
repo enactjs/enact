@@ -129,6 +129,14 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			popupClassName: PropTypes.string,
 
 			/**
+			 * An object containing properties to be passed to popup component.
+			 *
+			 * @type {Object}
+			 * @public
+			 */
+			popupProps: PropTypes.object,
+
+			/**
 			 * When `true`, it shows close button.
 			 *
 			 * @type {Boolean}
@@ -398,7 +406,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const {showCloseButton, popupComponent: PopupComponent, popupClassName, noAutoDismiss, open, onClose, skin, spotlightRestrict, ...rest} = this.props;
+			const {showCloseButton, popupComponent: PopupComponent, popupClassName, noAutoDismiss, open, onClose, popupProps, skin, spotlightRestrict, ...rest} = this.props;
 			const scrimType = spotlightRestrict === 'self-only' ? 'transparent' : 'none';
 
 			if (!noSkin) {
@@ -420,7 +428,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 							skin={skin}
 							spotlightRestrict={spotlightRestrict}
 						>
-							<PopupComponent />
+							<PopupComponent {...popupProps} />
 						</ContextualPopupContainer>
 					</FloatingLayer>
 					<div ref={this.getClientNode}>
