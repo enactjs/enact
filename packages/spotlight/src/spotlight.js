@@ -40,7 +40,8 @@ import {
 	setContainerLastFocusedElement,
 	setContainerPreviousTarget,
 	setDefaultContainer,
-	setLastContainer
+	setLastContainer,
+	setLastContainerFromTarget
 } from './container';
 
 import {
@@ -334,6 +335,7 @@ const Spotlight = (function () {
 					return true;
 				} else if (current) {
 					current.blur();
+					setLastContainerFromTarget(current, target);
 				}
 			}
 		}

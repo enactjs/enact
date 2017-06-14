@@ -8,6 +8,8 @@
 import and from 'ramda/src/and';
 import concat from 'ramda/src/concat';
 import {coerceArray} from '@enact/core/util';
+import intersection from 'ramda/src/intersection';
+import last from 'ramda/src/last';
 
 import {matchSelector} from './utils';
 
@@ -338,6 +340,39 @@ function getContainersForNode (node) {
 	containers.unshift(rootContainerId);
 
 	return containers;
+}
+
+/**
+ * Returns an array of ids for containers that wrap the element, in order of outer-to-inner, with
+ * the last array item being the immediate container id of the element. The container ids are
+ * limited to only those between `node` and the first restrict="self-only" container.
+ *
+ * @param   {Node}      node  Node from which to start the search
+ *
+ * @returns {String[]}        Array on container IDs
+ * @memberof spotlight/container
+ * @private
+ */
+function getNavigableContainersForNode (node) {
+	const containerIds = getContainersForNode(node);
+
+	// find first self-only container id
+	const selfOnlyIndex = containerIds
+		.map(getContainerConfig)
+		.reduceRight((index, config, i) => {
+			if (index === -1 && config.restrict === 'self-only') {
+				return i;
+			}
+
+			return index;
+		}, -1);
+
+	// if we found one (and it's not the root), slice those off and return
+	if (selfOnlyIndex > 0) {
+		return containerIds.slice(selfOnlyIndex);
+	}
+
+	return containerIds;
 }
 
 /**
@@ -737,6 +772,34 @@ function setLastContainer (containerId) {
 	_lastContainerId = containerId || '';
 }
 
+/**
+ * Updates the last container based on the current focus and target focus.
+ *
+ * @param {Node} current Currently focused node
+ * @param {Node} target  Target node. May or may not be focusable
+ * @memberof spotlight/container
+ * @public
+ */
+function setLastContainerFromTarget (current, target) {
+	const currentContainers = getNavigableContainersForNode(current);
+	const currentOuterContainerId = currentContainers[0];
+	const currentContainerConfig = getContainerConfig(currentOuterContainerId);
+	const targetContainers = getContainersForNode(target);
+	const targetInnerContainer = last(targetContainers);
+
+	const sharedContainer = last(intersection(currentContainers, targetContainers));
+
+	if (sharedContainer || currentContainerConfig.restrict !== 'self-only') {
+		// If the target shares a container with the current container stack or the current
+		// element isn't within a self-only container, use the target's nearest container
+		setLastContainer(targetInnerContainer);
+	} else {
+		// Otherwise, the target is not within the current container stack and the current
+		// element was within a 'self-only' container, use the current's outer container
+		setLastContainer(currentOuterContainerId);
+	}
+}
+
 export {
 	// Remove
 	getAllContainerIds,
@@ -758,6 +821,7 @@ export {
 	getContainerPreviousTarget,
 	getDefaultContainer,
 	getLastContainer,
+	getNavigableContainersForNode,
 	getSpottableDescendants,
 	isContainer,
 	isNavigable,
@@ -767,5 +831,6 @@ export {
 	setContainerPreviousTarget,
 	setDefaultContainer,
 	setLastContainer,
+	setLastContainerFromTarget,
 	unmountContainer
 };

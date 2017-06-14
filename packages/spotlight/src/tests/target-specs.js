@@ -579,5 +579,124 @@ describe('target', () => {
 				)).to.equal('before-grid');
 			}
 		));
+
+		it('should cascade into unrestricted subcontainers', testScenario(
+			scenarios.grid,
+			(root) => {
+				configureContainer('grid', {
+					restrict: 'none'
+				});
+				const rect = root.querySelector('#top-center').getBoundingClientRect();
+				const aboveCenterOfGrid = {
+					x: rect.left + rect.width / 2,
+					y: rect.top - 1
+				};
+
+				expect(safeTarget(
+					getTargetByDirectionFromPosition('down', aboveCenterOfGrid, rootContainerId),
+					t => t.id
+				)).to.equal('top-center');
+			}
+		));
+
+		it('should ignore enterTo config of restricted subcontainers', testScenario(
+			scenarios.grid,
+			(root) => {
+				configureContainer('grid', {
+					restrict: 'none',
+					enterTo: 'default-element',
+					defaultElement: '#bottom-right'
+				});
+				const rect = root.querySelector('#top-center').getBoundingClientRect();
+				const aboveCenterOfGrid = {
+					x: rect.left + rect.width / 2,
+					y: rect.top - 1
+				};
+
+				expect(safeTarget(
+					getTargetByDirectionFromPosition('down', aboveCenterOfGrid, rootContainerId),
+					t => t.id
+				)).to.equal('top-center');
+			}
+		));
+
+		it('should find target within container from floating element', testScenario(
+			scenarios.overlap,
+			(root) => {
+				configureContainer('grid', {
+					enterTo: 'defaultElement',
+					defaultElement: '#bottom-right'
+				});
+
+				const overlap = root.querySelector('#over-middle-center');
+				const {left: x, top: y} = overlap.getBoundingClientRect();
+
+				expect(safeTarget(
+					getTargetByDirectionFromPosition('down', {x, y}, rootContainerId),
+					t => t.id
+				)).to.equal('middle-center');
+			}
+		));
+
+		it('should ignore targets outside the bounds of an overflow container', testScenario(
+			scenarios.overflow,
+			(root) => {
+				configureContainer('overflow-container', {
+					overflow: true
+				});
+
+				const element = root.querySelector('#outside-overflow');
+				const {left: x, top: y} = element.getBoundingClientRect();
+
+				expect(safeTarget(
+					getTargetByDirectionFromPosition('down', {x, y}, rootContainerId),
+					t => t.id
+				)).to.equal('overflow-within');
+			}
+		));
+
+		it('should find target within container larger than overflow container', testScenario(
+			scenarios.overflowLargeSubContainer,
+			(root) => {
+				configureContainer('overflow-container', {
+					overflow: true
+				});
+				configureContainer('inside', {
+					enterTo: null
+				});
+
+				const element = root.querySelector('#outside-overflow');
+				const {left: x, top: y} = element.getBoundingClientRect();
+
+				expect(safeTarget(
+					getTargetByDirectionFromPosition('down', {x, y}, rootContainerId),
+					t => t.id
+				)).to.equal('in-large-container');
+			}
+		));
+
+		it('should find target out of bounds of overflow container from within container', testScenario(
+			scenarios.overflow,
+			(root) => {
+				configureContainer('overflow-container', {
+					overflow: true
+				});
+
+				const element = root.querySelector('#overflow-within');
+				const {left, width, top, height} = element.getBoundingClientRect();
+				const x = left + width / 2;
+				const y = top + height / 2;
+
+				expect(safeTarget(
+					getTargetByDirectionFromPosition('down', {x, y: y + 1}, rootContainerId),
+					t => t.id
+				)).to.equal('overflow-below');
+
+				expect(safeTarget(
+					getTargetByDirectionFromPosition('up', {x, y: y - 1}, rootContainerId),
+					t => t.id
+				)).to.equal('overflow-above');
+			}
+		));
 	});
 });
