@@ -380,7 +380,7 @@ describe('target', () => {
 			scenarios.overlap,
 			(root) => {
 				configureContainer('grid', {
-					enterTo: 'defaultElement',
+					enterTo: 'default-element',
 					defaultElement: '#bottom-right'
 				});
 
@@ -624,7 +624,7 @@ describe('target', () => {
 			scenarios.overlap,
 			(root) => {
 				configureContainer('grid', {
-					enterTo: 'defaultElement',
+					enterTo: 'default-element',
 					defaultElement: '#bottom-right'
 				});
 
