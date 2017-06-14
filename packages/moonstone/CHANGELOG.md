@@ -12,6 +12,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Dialog' to properly focus via pointer on child components
+
 ### Removed
 
 ## [1.3.0] - 2017-06-12
