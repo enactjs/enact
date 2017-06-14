@@ -204,7 +204,7 @@ class ExpandableInputBase extends React.Component {
 		const {onClose} = this.props;
 
 		if (onClose) {
-			//onClose();
+			onClose();
 		}
 	}
 
