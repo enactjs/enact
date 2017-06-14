@@ -40,6 +40,8 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		name: 'IncrementSlider',
 
 		propTypes: /** @lends moonstone/IncrementSlider.IncrementSliderBase.prototype */ {
+			'aria-hidden': PropTypes.bool,
+
 			/**
 			 * When `true`, the knob displays selected and can be moved using 5-way controls.
 			 *
@@ -337,12 +339,13 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			incrementAriaLabel: ({disabled, max, value}) => !(disabled || value >= max) ? (`${value} ${$L('press ok button to increase the value')}`) : null
 		},
 
-		render: ({active, backgroundProgress, children, decrementAriaLabel, decrementDisabled, decrementIcon, detachedKnob, disabled, focused, incrementAriaLabel, incrementDisabled, incrementIcon, incrementSliderClasses, inputRef, max, min, noFill, onActivate, onChange, onDecrement, onIncrement, onSpotlightDisappear, scrubbing, sliderBarRef, sliderRef, spotlightDisabled, step, tooltip, tooltipAsPercent, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => {
-			const {'aria-valuetext': valueText, role, ...ariaProps} = extractAriaProps(rest);
+		render: ({active, 'aria-hidden': ariaHidden, backgroundProgress, children, decrementAriaLabel, decrementDisabled, decrementIcon, detachedKnob, disabled, focused, incrementAriaLabel, incrementDisabled, incrementIcon, incrementSliderClasses, inputRef, max, min, noFill, onActivate, onChange, onDecrement, onIncrement, onSpotlightDisappear, scrubbing, sliderBarRef, sliderRef, spotlightDisabled, step, tooltip, tooltipAsPercent, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => {
+			const ariaProps = extractAriaProps(rest);
 
 			return (
-				<div {...ariaProps} {...rest} className={incrementSliderClasses}>
+				<div {...rest} className={incrementSliderClasses}>
 					<IncrementSliderButton
+						aria-hidden={ariaHidden}
 						aria-label={decrementAriaLabel}
 						className={css.decrementButton}
 						disabled={decrementDisabled}
@@ -353,9 +356,9 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						{decrementIcon}
 					</IncrementSliderButton>
 					<Slider
-						role={role}
-						aria-valuetext={valueText}
+						{...ariaProps}
 						active={active}
+						aria-hidden={ariaHidden}
 						backgroundProgress={backgroundProgress}
 						className={css.slider}
 						disabled={disabled}
@@ -385,6 +388,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						{children}
 					</Slider>
 					<IncrementSliderButton
+						aria-hidden={ariaHidden}
 						aria-label={incrementAriaLabel}
 						className={css.incrementButton}
 						disabled={incrementDisabled}
