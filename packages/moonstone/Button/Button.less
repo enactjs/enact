@@ -32,7 +32,7 @@
 	}
 }
 
-:global(.moonstone) .button {
+.button {.applySkins({
 	.moon-large-button-text();
 	position: relative;
 	overflow: visible;
@@ -157,7 +157,6 @@
 	});
 
 	// Skin colors
-	.applySkins({
 		color: @moon-button-text-color;
 
 		.bg {
@@ -205,11 +204,11 @@
 			});
 		}
 
-	// 'Selected' state
-	&.selected {
-		.bg {
-			border-color: @moon-spotlight-border-color;
-		}
+		// 'Selected' state
+		&.selected {
+			.bg {
+				border-color: @moon-spotlight-border-color;
+			}
 
 			// 'Selected+Focus' state, seen in grouped buttons
 			.focus({
@@ -286,7 +285,7 @@
 });
 
 
-:global(.aqua) .button {
+:global(.aqua).button {
 	position: relative;
 	display: inline-block;
 	color: black;
@@ -303,7 +302,8 @@
 		.position(0);
 		position: absolute;
 		border-radius: 999px;
-		background-image: radial-gradient(60% 120%, rgba(78, 115, 167, 0) 0%, rgba(81, 104, 148, 0) 70%, #949494 100%), linear-gradient(to bottom, rgba(204, 204, 204, 0.37) 2%, #dedede 4%, rgba(183, 183, 183, 0.6) 26%, rgba(169, 169, 169, 0.4)  28%, #cccccc 40%, #d8d8d8 53%, #fbfbfb 87%, #e6e6e6 100%);
+		// background-image: radial-gradient(60% 120%, rgba(78, 115, 167, 0) 0%, rgba(81, 104, 148, 0) 70%, #949494 100%), linear-gradient(to bottom, rgba(204, 204, 204, 0.37) 2%, #dedede 4%, rgba(183, 183, 183, 0.6) 26%, rgba(169, 169, 169, 0.4)  28%, #cccccc 40%, #d8d8d8 53%, #fbfbfb 87%, #e6e6e6 100%);
+		background-image: radial-gradient(60% 120%, rgba(78, 115, 167, 0) 0%, rgba(81, 104, 148, 0) 70%, #949494 100%), linear-gradient(to bottom, rgba(204, 204, 204, 0.5) 2%, #dedede 4%, rgb(191, 191, 191) 26%, rgb(195, 195, 195) 28%, #cccccc 40%, #d8d8d8 53%, #fbfbfb 87%, #e6e6e6 100%);
 		box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 6px 6px rgba(220, 220, 220, 0.25), 0 3px 10px rgba(0, 0, 0, 0.25);
 	}
 
@@ -331,7 +331,7 @@
 	}
 }
 
-:global(.car) .button {
+:global(.car).button {
 	display: inline-block;
 	border-radius: 9px;
 	padding: 3px;
@@ -372,7 +372,7 @@
 	}
 }
 
-:global(.material) .button {
+:global(.material).button {
 	display: inline-block;
 	padding: 0 2ex;
 	line-height: 48px;

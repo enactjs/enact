@@ -11,11 +11,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {ButtonFactory} from '../Button';
+import {withSkinnableProps} from '../Skinnable';
 import Icon from '../Icon';
 
 import componentCss from './IconButton.less';
 
-const OptimizedIcon = onlyUpdateForKeys(['small', 'children'])(Icon);
+const OptimizedIcon = withSkinnableProps(onlyUpdateForKeys(['small', 'children', 'skin'])(Icon));
 
 /**
  * {@link moonstone/IconButton.IconButtonFactory} is Factory wrapper around

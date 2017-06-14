@@ -3,8 +3,9 @@
 @import '../styles/mixins.less';
 @import '../styles/variables.less';
 @import '../styles/text.less';
+@import '../styles/skin.less';
 
-:global(.moonstone) {
+.applySkins({
 .iconButton {
 	.border-box();
 	.moon-taparea(@moon-icon-button-size);
@@ -52,10 +53,10 @@
 			line-height: 30px;
 		}
 	}
-}
-}
+}});
 
-:global(.aqua) .iconButton {
+
+:global(.aqua).iconButton {
 	.border-box();
 	.moon-taparea(@moon-icon-button-size);
 	padding: 0;
@@ -73,13 +74,13 @@
 	}
 }
 
-:global(.car) .iconButton {
+:global(.car).iconButton {
 	.client {
 		padding: 0;
 	}
 }
 
-:global(.material) .iconButton {
+:global(.material).iconButton {
 	padding: 0;
 	text-align: center;
 
