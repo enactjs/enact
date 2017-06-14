@@ -14,6 +14,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {calcAriaLabel, Input} from '../Input';
+import css from '../Input/Input.less';
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 
 const forwardMouseDown = forward('onMouseDown');
@@ -203,7 +204,7 @@ class ExpandableInputBase extends React.Component {
 		const {onClose} = this.props;
 
 		if (onClose) {
-			onClose();
+			//onClose();
 		}
 	}
 
@@ -275,6 +276,13 @@ class ExpandableInputBase extends React.Component {
 		}
 	}
 
+	calcClassName () {
+		const {className} = this.props;
+		const expandableInputClass = css['moon-expandable-input'];
+
+		return className ? `${expandableInputClass} ${className}` : expandableInputClass;
+	}
+
 	render () {
 		const {disabled, iconAfter, iconBefore, onSpotlightDisappear, placeholder, spotlightDisabled, type, value, ...rest} = this.props;
 		delete rest.onChange;
@@ -284,6 +292,7 @@ class ExpandableInputBase extends React.Component {
 			<ExpandableItemBase
 				{...rest}
 				aria-label={this.calcAriaLabel()}
+				className={this.calcClassName()}
 				disabled={disabled}
 				label={this.calcLabel()}
 				onClose={this.handleClose}

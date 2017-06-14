@@ -13,6 +13,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Dialog' to properly focus via pointer on child components
+- `moonstone/ExpandableInput` to expand the width of its contained `moonstone/Input`
 
 ### Removed
 
