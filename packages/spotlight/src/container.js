@@ -8,6 +8,8 @@
 import and from 'ramda/src/and';
 import concat from 'ramda/src/concat';
 import {coerceArray} from '@enact/core/util';
+import intersection from 'ramda/src/intersection';
+import last from 'ramda/src/last';
 
 import {matchSelector} from './utils';
 
@@ -27,6 +29,9 @@ const reverseDirections = {
 // Incrementer for container IDs
 let _ids = 0;
 
+let _defaultContainerId = '';
+let _lastContainerId = '';
+
 // Note: an <extSelector> can be one of following types:
 // - a valid selector string for "querySelectorAll"
 // - a NodeList or an array containing DOM elements
@@ -45,6 +50,7 @@ let GlobalConfig = {
 	restrict: 'self-first', // 'self-first', 'self-only', 'none'
 	tabIndexIgnoreList: 'a, input, select, textarea, button, iframe, [contentEditable=true]',
 	navigableFilter: null,
+	overflow: false,
 	lastFocusedElement: null,
 	lastFocusedKey: null,
 	lastFocusedPersist: (node, all) => {
@@ -337,6 +343,39 @@ function getContainersForNode (node) {
 }
 
 /**
+ * Returns an array of ids for containers that wrap the element, in order of outer-to-inner, with
+ * the last array item being the immediate container id of the element. The container ids are
+ * limited to only those between `node` and the first restrict="self-only" container.
+ *
+ * @param   {Node}      node  Node from which to start the search
+ *
+ * @returns {String[]}        Array on container IDs
+ * @memberof spotlight/container
+ * @private
+ */
+function getNavigableContainersForNode (node) {
+	const containerIds = getContainersForNode(node);
+
+	// find first self-only container id
+	const selfOnlyIndex = containerIds
+		.map(getContainerConfig)
+		.reduceRight((index, config, i) => {
+			if (index === -1 && config.restrict === 'self-only') {
+				return i;
+			}
+
+			return index;
+		}, -1);
+
+	// if we found one (and it's not the root), slice those off and return
+	if (selfOnlyIndex > 0) {
+		return containerIds.slice(selfOnlyIndex);
+	}
+
+	return containerIds;
+}
+
+/**
  * Generates a new unique identifier for a container
  *
  * @returns {String} Container ID
@@ -465,7 +504,12 @@ const configureDefaults = (config) => {
  * @public
  */
 const isNavigable = (node, containerId, verify) => {
-	if (!node) {
+	if (!node || (node.offsetWidth <= 0 && node.offsetHeight <= 0)) {
+		return false;
+	}
+
+	const containerNode = getContainerNode(containerId);
+	if (containerNode !== document && containerNode.dataset.containerDisabled) {
 		return false;
 	}
 
@@ -561,32 +605,6 @@ function setContainerLastFocusedElement (node, containerIds) {
 	}
 }
 
-function getNavigableElementsForNode (node, navigate) {
-	let selfOnly = false;
-	// accumulates navigable elements while the reduce works up the tree
-	let elements = [];
-
-	return getContainersForNode(node)
-		.reverse()
-		.reduce((next, id, index, containerIds) => {
-			if (next || selfOnly) return next;
-
-			const {restrict} = getContainerConfig(id);
-			selfOnly = restrict === 'self-only';
-
-			elements = elements.concat(getDeepSpottableDescendants(id, containerIds));
-			if (restrict === 'self-first' || selfOnly || id === rootContainerId) {
-				next = navigate(
-					id,
-					getContainerNode(id),
-					elements
-				);
-			}
-
-			return next;
-		}, null);
-}
-
 /**
  * [getContainerNavigableElements description]
  *
@@ -637,7 +655,7 @@ function getContainerFocusTarget (containerId) {
 	// deferring restoration until it's requested to allow containers to prepare first
 	restoreLastFocusedElement(containerId);
 
-	const next = getContainerNavigableElements(containerId)[0];
+	const next = getContainerNavigableElements(containerId)[0] || null;
 	if (isContainer(next)) {
 		const nextId = isContainerNode(next) ? getContainerId(next) : next;
 		return getContainerFocusTarget(nextId);
@@ -732,9 +750,60 @@ function unmountContainer (containerId) {
 	}
 }
 
+function getDefaultContainer () {
+	return _defaultContainerId;
+}
+
+function setDefaultContainer (containerId) {
+	if (!containerId) {
+		_defaultContainerId = '';
+	} else if (!getContainerConfig(containerId)) {
+		throw new Error('Container "' + containerId + '" doesn\'t exist!');
+	} else {
+		_defaultContainerId = containerId;
+	}
+}
+
+function getLastContainer () {
+	return _lastContainerId;
+}
+
+function setLastContainer (containerId) {
+	_lastContainerId = containerId || '';
+}
+
+/**
+ * Updates the last container based on the current focus and target focus.
+ *
+ * @param {Node} current Currently focused node
+ * @param {Node} target  Target node. May or may not be focusable
+ * @memberof spotlight/container
+ * @public
+ */
+function setLastContainerFromTarget (current, target) {
+	const currentContainers = getNavigableContainersForNode(current);
+	const currentOuterContainerId = currentContainers[0];
+	const currentContainerConfig = getContainerConfig(currentOuterContainerId);
+	const targetContainers = getContainersForNode(target);
+	const targetInnerContainer = last(targetContainers);
+
+	const sharedContainer = last(intersection(currentContainers, targetContainers));
+
+	if (sharedContainer || currentContainerConfig.restrict !== 'self-only') {
+		// If the target shares a container with the current container stack or the current
+		// element isn't within a self-only container, use the target's nearest container
+		setLastContainer(targetInnerContainer);
+	} else {
+		// Otherwise, the target is not within the current container stack and the current
+		// element was within a 'self-only' container, use the current's outer container
+		setLastContainer(currentOuterContainerId);
+	}
+}
+
 export {
 	// Remove
 	getAllContainerIds,
+	getContainerNode,
 
 	// Maybe
 	getContainersForNode,
@@ -750,7 +819,9 @@ export {
 	configureContainer,
 	getContainerFocusTarget,
 	getContainerPreviousTarget,
-	getNavigableElementsForNode,
+	getDefaultContainer,
+	getLastContainer,
+	getNavigableContainersForNode,
 	getSpottableDescendants,
 	isContainer,
 	isNavigable,
@@ -758,5 +829,8 @@ export {
 	removeContainer,
 	rootContainerId,
 	setContainerPreviousTarget,
+	setDefaultContainer,
+	setLastContainer,
+	setLastContainerFromTarget,
 	unmountContainer
 };

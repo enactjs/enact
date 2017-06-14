@@ -36,8 +36,8 @@ const defaultConfig = {
 	onCancel: null,
 
 	/**
-	 * When `true`, the Cancelable instance will handle cancel events globally the successfully
-	 * bubble up to the document regardless of which component is focused.
+	 * When `true`, the Cancelable instance will handle cancel events globally that successfully
+	 * bubble up to `window` regardless of which component is focused.
 	 *
 	 * `modal` cancel handlers are processed in reverse of the order they are created such that the
 	 * innermost instance (in terms of the component hierarchy) have the first opportunity to handle
@@ -102,7 +102,7 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 			onCancel: PropTypes.func
 		}
 
-		componentDidMount () {
+		componentWillMount () {
 			if (modal) {
 				addModal(this);
 			}

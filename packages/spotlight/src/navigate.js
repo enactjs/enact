@@ -29,7 +29,12 @@ function prioritize (priorities) {
 }
 
 function partition (rects, targetRect, straightOverlapThreshold) {
-	let groups = [[], [], [], [], [], [], [], [], []];
+	// a matrix of elements where the center of the element in relation to targetRect is:
+	let groups = [
+		[/* [0] => above/left */],  [/* [1] => above/within */],     [/* [2] => above/right */],
+		[/* [3] => within/left */], [/* [4] => within */],           [/* [5] => within/right */],
+		[/* [6] => below/left */],  [/* [7] => below and within */], [/* [8] => below/right */]
+	];
 
 	for (let i = 0; i < rects.length; i++) {
 		let rect = rects[i];
