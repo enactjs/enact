@@ -5,7 +5,7 @@
  *
  * @module moonstone/VideoPlayer
  */
-import AnnounceDecorator from '@enact/ui/AnnounceDecorator';
+import Announce from '@enact/ui/AnnounceDecorator/Announce';
 import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import equals from 'ramda/src/equals';
 import React from 'react';
@@ -544,6 +544,18 @@ const VideoPlayerBase = class extends React.Component {
 		this.attachCustomMediaEvents();
 		this.startDelayedFeedbackHide();
 		this.renderBottomControl.idle();
+		this.calculateMaxComponentCount();
+	}
+
+	componentWillReceiveProps (nextProps) {
+		// Detect if the components have changed
+		if (
+			React.Children.count(this.props.leftComponents) !== React.Children.count(nextProps.leftComponents) ||
+			React.Children.count(this.props.rightComponents) !== React.Children.count(nextProps.rightComponents) ||
+			React.Children.count(this.props.children) !== React.Children.count(nextProps.children)
+			) {
+			this.calculateMaxComponentCount();
+		}
 	}
 
 	componentWillUpdate (nextProps, nextState) {
@@ -604,7 +616,7 @@ const VideoPlayerBase = class extends React.Component {
 	//
 	// Internal Methods
 	//
-	announceJob = new Job(msg => forward('announce', msg, this.props), 200)
+	announceJob = new Job(msg => (this.announceRef && this.announceRef.announce(msg)), 200)
 
 	announce = (msg) => {
 		this.announceJob.start(msg);
@@ -621,6 +633,21 @@ const VideoPlayerBase = class extends React.Component {
 			titleElement.setAttribute('style', `--infoComponentsOffset: ${infoHeight}px`);
 			this.titleOffsetCalculated = true;
 		}
+	}
+
+	calculateMaxComponentCount = () => {
+		let leftCount = React.Children.count(this.props.leftComponents),
+			rightCount = React.Children.count(this.props.rightComponents),
+			childrenCount = React.Children.count(this.props.children);
+
+		// If the "more" button is present, automatically add it to the right's count.
+		if (childrenCount) {
+			rightCount += 1;
+		}
+
+		const max = Math.max(leftCount, rightCount);
+
+		this.player.style.setProperty('--moon-video-player-max-side-components', max);
 	}
 
 	initI18n = () => {
@@ -1219,6 +1246,10 @@ const VideoPlayerBase = class extends React.Component {
 		this.video = video;
 	}
 
+	setAnnounceRef = (node) => {
+		this.announceRef = node;
+	}
+
 	handleLoadStart = () => {
 		if (!this.props.noAutoPlay) {
 			this.video.play();
@@ -1350,6 +1381,7 @@ const VideoPlayerBase = class extends React.Component {
 					onSpotlightRight={this.handleRight}
 					onClick={this.showControls}
 				/>
+				<Announce ref={this.setAnnounceRef} />
 			</div>
 		);
 	}
@@ -1401,14 +1433,12 @@ const VideoPlayerBase = class extends React.Component {
  * @ui
  * @public
  */
-const VideoPlayer = AnnounceDecorator(
-	ApiDecorator(
-		{api: ['fastForward', 'getMediaState', 'jump', 'pause', 'play', 'rewind', 'seek']},
-		Slottable(
-			{slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source']},
-			Skinnable(
-				VideoPlayerBase
-			)
+const VideoPlayer = ApiDecorator(
+	{api: ['fastForward', 'getMediaState', 'jump', 'pause', 'play', 'rewind', 'seek']},
+	Slottable(
+		{slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source']},
+		Skinnable(
+			VideoPlayerBase
 		)
 	)
 );

@@ -10,6 +10,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+- `moonstone/VideoPlayer` now automatically adjusts the width of the allocated space for the side components so the media controls have more space to appear on smaller screens
+
 ### Fixed
 
 - `moonstone/Dialog' to properly focus via pointer on child components

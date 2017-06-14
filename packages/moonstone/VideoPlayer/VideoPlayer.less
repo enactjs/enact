@@ -6,6 +6,9 @@
 @import '../styles/skin.less';
 
 .videoPlayer {
+	// Set by counting the IconButtons inside the side components.
+	--moon-video-player-max-side-components: 0;
+
 	position: relative;
 	overflow: hidden;
 
@@ -225,8 +228,16 @@
 
 				.leftComponents,
 				.rightComponents {
-					// Pre-allocate enough space for 4 buttons, statically.
-					flex: 0 1 (@moon-icon-button-size * 4 + @moon-spotlight-outset * 7);
+					// Combine LESS and CSS variables and calculate the sizes we'll need later:
+					/// The width of the button's margins
+					--button-margins: (@moon-spotlight-outset * 2);
+					/// The width of an IconButton plus margins
+					--button-width: ~'calc(' @moon-icon-button-size ~' + var(--button-margins))';
+					/// The combination of buttons and remove one margin-pair-width because the first and last icon don't have a margin
+					--sides-width: ~'calc((var(--button-width) * var(--moon-video-player-max-side-components)) - var(--button-margins))';
+
+					flex: 0 1;
+					flex-basis: var(--sides-width);
 					white-space: nowrap;
 					padding: @expanding-button-clearance 0;
 				}
