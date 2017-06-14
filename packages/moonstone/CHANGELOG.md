@@ -8,7 +8,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Picker` support for large text
 - `moonstone/Scroller` support for focusing paging controls with the pointer
-- CSS rules for unskinned spottable components
+- `moonstone` CSS rules for unskinned spottable components
 
 ## [1.3.0] - 2017-06-12
 

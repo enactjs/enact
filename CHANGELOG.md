@@ -8,8 +8,9 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 - `moonstone/Picker` support for large text
 - `moonstone/Scroller` support for focusing paging controls with the pointer
-- CSS rules for unskinned spottable components
-- Focusing components within spotlight containers with `data-container-disabled` set to `false`
+- `moonstone` CSS rules for unskinned spottable components
+- `spotlight` incorrectly focusing components within spotlight containers with `data-container-disabled` set to `false`
+- `spotlight` failing to focus the default element configured for a container
 
 ## [1.3.0] - 2017-06-12
 
