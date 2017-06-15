@@ -9,7 +9,10 @@ import classNames from 'classnames';
 import {contextTypes} from '@enact/ui/Resizable';
 import deprecate from '@enact/core/internal/deprecate';
 import {forward} from '@enact/core/handle';
+import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
+import {getLastContainer} from '@enact/spotlight/src/container';
 import hoc from '@enact/core/hoc';
+import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
@@ -37,7 +40,9 @@ const
 	pixelPerLine = 39,
 	paginationPageMultiplier = 0.8,
 	epsilon = 1,
-	animationDuration = 1000;
+	animationDuration = 1000,
+	isPageUp = is('pageUp'),
+	isPageDown = is('pageDown');
 
 /**
  * {@link moonstone/Scroller.dataIndexAttribute} is the name of a custom attribute
@@ -198,11 +203,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.initChildRef = this.initRef('childRef');
 			this.initContainerRef = this.initRef('containerRef');
 
-			const {onKeyDown} = this;
+			const {onKeyDown, onKeyUp} = this;
 			// We have removed all mouse event handlers for now.
 			// Revisit later for touch usage.
 			this.eventHandlers = {
-				onKeyDown
+				onKeyDown,
+				onKeyUp
 			};
 
 			this.verticalScrollbarProps = {
@@ -236,6 +242,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		isDragging = false
 		isKeyDown = false
 		isInitializing = true
+		pageDistanceForUp = 0
+		pageDistanceForDown = 0
 
 		// event handlers
 		eventHandlers = {}
@@ -453,6 +461,99 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					this.childRef.setSpotlightContainerRestrict(keyCode, index);
 				}
 			}
+		}
+
+		onKeyUp = ({keyCode}) => {
+			if (isPageUp(keyCode) || isPageDown(keyCode)) {
+				const
+					{getEndPoint, scrollTo, scrollToAccumulatedTarget} = this,
+					bounds = this.getScrollBounds(),
+					isVertical = this.canScrollVertically(bounds),
+					isHorizontal = this.canScrollHorizontally(bounds),
+					KEY_POINTER_PAGE_UP = 33,
+					KEY_POINTER_PAGE_DOWN = 34,
+					pageDistance = isPageUp(keyCode) ? this.pageDistanceForUp : this.pageDistanceForDown,
+					spotItem = Spotlight.getCurrent(),
+					viewportBounds = this.containerRef.getBoundingClientRect();
+
+				let direction, rDirection;
+
+				switch (keyCode) {
+					case KEY_POINTER_PAGE_UP:
+						direction = isVertical ? 'up' : 'left';
+						rDirection = isVertical ? 'down' : 'right';
+						break;
+					case KEY_POINTER_PAGE_DOWN:
+						direction = isVertical ? 'down' : 'right';
+						rDirection = isVertical ? 'up' : 'left';
+						break;
+					default:
+						return;
+				}
+
+				if (!Spotlight.getPointerMode() && spotItem) {
+					const
+						spotItemBounds = spotItem.getBoundingClientRect(),
+						containerId = getLastContainer();
+
+					let
+						endPoint = getEndPoint(direction, spotItemBounds, viewportBounds),
+						next = getTargetByDirectionFromPosition(rDirection, endPoint, containerId);
+
+					if (spotItem === next) {
+						endPoint.x = (keyCode === KEY_POINTER_PAGE_DOWN) ? (this.scrollLeft + bounds.clientWidth) : (this.scrollLeft - bounds.clientWidth);
+						endPoint.y = (keyCode === KEY_POINTER_PAGE_DOWN) ? (this.scrollTop + bounds.clientHeight) : (this.scrollTop - bounds.clientHeight);
+
+						let
+							focusedPositionY = (keyCode === KEY_POINTER_PAGE_DOWN) ? (viewportBounds.top + viewportBounds.height) : viewportBounds.top,
+							focusedPositionX = (keyCode === KEY_POINTER_PAGE_DOWN) ? (viewportBounds.left + viewportBounds.width) : viewportBounds.left,
+							scrollPos = {position: {x: endPoint.x, y: endPoint.y}, animate: false};
+
+						scrollTo(scrollPos);
+						setTimeout(function () {
+							endPoint.y = focusedPositionY;
+							endPoint.x = focusedPositionX;
+							next = getTargetByDirectionFromPosition(rDirection, endPoint, containerId);
+							if (next !== null && next !== spotItem) {
+								next.focus();
+								return -1;
+							}
+						}, 0);
+					}
+					if (next) {
+						next.focus();
+					} else {
+						scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
+					}
+				} else {
+					scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
+				}
+			}
+		}
+
+		getEndPoint = (direction, oSpotBounds, viewportBounds) => {
+			const bounds = this.getScrollBounds();
+
+			let oPoint = {};
+			switch (direction) {
+				case 'up':
+					oPoint.x = oSpotBounds.left + oSpotBounds.width / 2;
+					oPoint.y = Math.max(0, viewportBounds.top);
+					break;
+				case 'left':
+					oPoint.x = viewportBounds.left;
+					oPoint.y = oSpotBounds.top + oSpotBounds.height / 2;
+					break;
+				case 'down':
+					oPoint.x = oSpotBounds.left + oSpotBounds.width / 2;
+					oPoint.y = Math.min(bounds.maxTop, viewportBounds.top) + viewportBounds.height;
+					break;
+				case 'right':
+					oPoint.x = viewportBounds.left + viewportBounds.width;
+					oPoint.y = oSpotBounds.top + oSpotBounds.height / 2;
+					break;
+			}
+			return oPoint;
 		}
 
 		onWheel = (e) => {
@@ -812,10 +913,14 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		updateScrollabilityAndEventListeners = () => {
 			const
 				{containerRef} = this,
+				{isVerticalScrollbarVisible} = this.state,
+				bounds = this.getScrollBounds(),
 				childContainerRef = this.childRef.containerRef;
 
 			this.horizontalScrollability = this.childRef.isHorizontal();
 			this.verticalScrollability = this.childRef.isVertical();
+			this.pageDistanceForDown = (isVerticalScrollbarVisible ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
+			this.pageDistanceForUp = this.pageDistanceForDown * -1;
 
 			if (containerRef && containerRef.addEventListener) {
 				// FIXME `onWheel` doesn't work on the v8 snapshot.
