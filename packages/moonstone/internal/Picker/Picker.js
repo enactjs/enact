@@ -10,6 +10,7 @@ import {getDirection} from '@enact/spotlight';
 import {validateRange, validateStepped} from '../validators';
 import Skinnable from '../../Skinnable';
 
+import IdProvider from '../IdProvider';
 import $L from '../$L';
 import PickerButton from './PickerButton';
 
@@ -128,6 +129,8 @@ const Picker = class extends React.Component {
 		 * @public
 		 */
 		disabled: PropTypes.bool,
+
+		id: PropTypes.string,
 
 		/**
 		 * Assign a custom icon for the incrementer. All strings supported by [Icon]{Icon} are
@@ -541,6 +544,7 @@ const Picker = class extends React.Component {
 			noAnimation,
 			children,
 			disabled,
+			id,
 			index,
 			joined,
 			onSpotlightDisappear,
@@ -598,6 +602,7 @@ const Picker = class extends React.Component {
 				onWheel={joined ? this.handleWheel : null}
 			>
 				<PickerButton
+					aria-controls={!joined ? id : null}
 					aria-label={this.calcIncrementLabel(valueText)}
 					className={css.incrementer}
 					disabled={incrementerDisabled}
@@ -612,6 +617,7 @@ const Picker = class extends React.Component {
 					spotlightDisabled={spotlightDisabled}
 				/>
 				<div
+					id={!joined ? id : null}
 					aria-disabled={disabled}
 					aria-hidden={!active}
 					aria-valuetext={valueText}
@@ -631,6 +637,7 @@ const Picker = class extends React.Component {
 					</PickerViewManager>
 				</div>
 				<PickerButton
+					aria-controls={!joined ? id : null}
 					aria-label={this.calcDecrementLabel(valueText)}
 					className={css.decrementer}
 					disabled={decrementerDisabled}
@@ -649,7 +656,7 @@ const Picker = class extends React.Component {
 	}
 };
 
-const SkinnedPicker = Skinnable(Picker);
+const SkinnedPicker = IdProvider({generateProp: null, prefix: 'p_'}, Skinnable(Picker));
 
 export default SkinnedPicker;
 export {SkinnedPicker as Picker};

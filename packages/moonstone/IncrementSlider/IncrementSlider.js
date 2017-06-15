@@ -13,6 +13,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Spottable from '@enact/spotlight/Spottable';
 
+import IdProvider from '../internal/IdProvider';
 import $L from '../internal/$L';
 import Skinnable from '../Skinnable';
 import {SliderBaseFactory} from '../Slider';
@@ -104,6 +105,8 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * @public
 			 */
 			focused: PropTypes.bool,
+
+			id: PropTypes.string,
 
 			/**
 			 * Assign a custom icon for the incrementer. All strings supported by [Icon]{Icon} are
@@ -337,12 +340,13 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			incrementAriaLabel: ({value}) => (`${value} ${$L('press ok button to increase the value')}`)
 		},
 
-		render: ({active, backgroundProgress, children, decrementAriaLabel, decrementDisabled, decrementIcon, detachedKnob, disabled, focused, incrementAriaLabel, incrementDisabled, incrementIcon, incrementSliderClasses, inputRef, max, min, noFill, onActivate, onChange, onDecrement, onIncrement, onSpotlightDisappear, scrubbing, sliderBarRef, sliderRef, spotlightDisabled, step, tooltip, tooltipAsPercent, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => {
+		render: ({active, backgroundProgress, children, decrementAriaLabel, decrementDisabled, decrementIcon, detachedKnob, disabled, focused, id, incrementAriaLabel, incrementDisabled, incrementIcon, incrementSliderClasses, inputRef, max, min, noFill, onActivate, onChange, onDecrement, onIncrement, onSpotlightDisappear, scrubbing, sliderBarRef, sliderRef, spotlightDisabled, step, tooltip, tooltipAsPercent, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => {
 			const ariaProps = extractAriaProps(rest);
 
 			return (
 				<div {...rest} className={incrementSliderClasses}>
 					<IncrementSliderButton
+						aria-controls={id}
 						aria-label={decrementAriaLabel}
 						className={css.decrementButton}
 						disabled={decrementDisabled}
@@ -361,6 +365,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						detachedKnob={detachedKnob}
 						focused={focused}
 						inputRef={inputRef}
+						id={id}
 						max={max}
 						min={min}
 						noFill={noFill}
@@ -384,6 +389,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						{children}
 					</Slider>
 					<IncrementSliderButton
+						aria-controls={id}
 						aria-label={incrementAriaLabel}
 						className={css.incrementButton}
 						disabled={incrementDisabled}
@@ -419,8 +425,11 @@ const IncrementSliderFactory = factory((config) => {
 	 * @public
 	 */
 	return Changeable(
-		SliderDecorator(
-			Base
+		IdProvider(
+			{generateProp: null, prefix: 's_'},
+			SliderDecorator(
+				Base
+			)
 		)
 	);
 });
