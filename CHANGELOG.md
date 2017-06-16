@@ -2,6 +2,16 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [1.3.1] - 2017-06-14
+
+### Fixed
+
+- `moonstone/Picker` support for large text
+- `moonstone/Scroller` support for focusing paging controls with the pointer
+- `moonstone` CSS rules for unskinned spottable components
+- `spotlight` incorrectly focusing components within spotlight containers with `data-container-disabled` set to `false`
+- `spotlight` failing to focus the default element configured for a container
+
 ## [1.3.0] - 2017-06-12
 
 ### Deprecated
