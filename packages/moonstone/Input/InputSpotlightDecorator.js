@@ -98,6 +98,8 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 				focused: null,
 				node: null
 			};
+
+			this.inputFocused = false;
 		}
 
 		componentDidUpdate (_, prevState) {
@@ -176,8 +178,11 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 
 			// focus the <input> whenever clicking on any part of the component to ensure both that
 			// the <input> has focus and Spotlight is paused.
-			if (!disabled && !spotlightDisabled) {
+			if (!disabled && !spotlightDisabled && !this.inputFocused) {
 				this.focusInput(ev.currentTarget);
+				this.inputFocused = true;
+			} else {
+				this.inputFocused = false;
 			}
 
 			forwardClick(ev, this.props);
@@ -227,10 +232,6 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 						}
 						this.focusDecorator(currentTarget);
 
-						// prevent Enter onKeyPress which triggers an onClick via Spotlight
-						if (isEnter) {
-							ev.preventDefault();
-						}
 					}
 				} else if (isLeft || isRight) {
 					// prevent 5-way nav for left/right keys within the <input>
