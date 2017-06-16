@@ -156,7 +156,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * Setting this to 0 or `null` disables autoClose, requiring user input to open and close.
 		 *
 		 * @type {Number}
-		 * @default 7000
+		 * @default 5000
 		 * @public
 		 */
 		autoCloseTimeout: PropTypes.number,
@@ -177,7 +177,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * Setting this to 0 or `null` disables feedbackHideDelay; feedback will always be present.
 		 *
 		 * @type {Number}
-		 * @default 2000
+		 * @default 3000
 		 * @public
 		 */
 		feedbackHideDelay: PropTypes.number,
@@ -438,7 +438,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * controls. Setting this to `0` disables the hiding.
 		 *
 		 * @type {Number}
-		 * @default 4000
+		 * @default 5000
 		 * @public
 		 */
 		titleHideDelay: PropTypes.number,
@@ -455,7 +455,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	static defaultProps = {
-		autoCloseTimeout: 7000,
+		autoCloseTimeout: 5000,
 		backwardIcon: 'backward',
 		feedbackHideDelay: 3000,
 		forwardIcon: 'forward',
@@ -475,7 +475,7 @@ const VideoPlayerBase = class extends React.Component {
 			slowRewind: ['-1/2', '-1']
 		},
 		playIcon: 'play',
-		titleHideDelay: 4000,
+		titleHideDelay: 5000,
 		tooltipHideDelay: 3000
 	}
 
