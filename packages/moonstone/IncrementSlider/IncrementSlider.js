@@ -106,6 +106,12 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 */
 			focused: PropTypes.bool,
 
+			/**
+			 * The slider id reference for setting aria-controls.
+			 *
+			 * @type {String}
+			 * @private
+			 */
 			id: PropTypes.string,
 
 			/**

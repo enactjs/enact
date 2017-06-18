@@ -130,6 +130,12 @@ const Picker = class extends React.Component {
 		 */
 		disabled: PropTypes.bool,
 
+		/**
+		 * The picker id reference for setting aria-controls.
+		 *
+		 * @type {String}
+		 * @private
+		 */
 		id: PropTypes.string,
 
 		/**
