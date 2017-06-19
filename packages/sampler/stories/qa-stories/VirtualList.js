@@ -1,11 +1,11 @@
+import {boolean, number} from '@kadira/storybook-addon-knobs';
+import PropTypes from 'prop-types';
+import React from 'react';
+import ri from '@enact/ui/resolution';
+import {storiesOf, action} from '@kadira/storybook';
 import SwitchItem from '@enact/moonstone/SwitchItem';
 import VirtualList from '@enact/moonstone/VirtualList';
 import {VirtualListCore} from '@enact/moonstone/VirtualList/VirtualListBase';
-import ri from '@enact/ui/resolution';
-import React from 'react';
-import PropTypes from 'prop-types';
-import {storiesOf, action} from '@kadira/storybook';
-import {boolean, number} from '@kadira/storybook-addon-knobs';
 
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 import nullify from '../../src/utils/nullify.js';
