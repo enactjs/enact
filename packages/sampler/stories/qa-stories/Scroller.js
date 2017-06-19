@@ -1,10 +1,10 @@
-import {boolean, select} from '@kadira/storybook-addon-knobs';
 import Button from '@enact/moonstone/Button';
 import ExpandableList from '@enact/moonstone/ExpandableList';
-import React from 'react';
-import ri from '@enact/ui/resolution';
 import Scroller from '@enact/moonstone/Scroller';
+import ri from '@enact/ui/resolution';
+import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
+import {boolean, select} from '@kadira/storybook-addon-knobs';
 
 import nullify from '../../src/utils/nullify.js';
 

@@ -1,11 +1,11 @@
-import {boolean, select} from '@kadira/storybook-addon-knobs';
-import React from 'react';
-import ri from '@enact/ui/resolution';
 import Scroller, {ScrollerBase} from '@enact/moonstone/Scroller';
+import ri from '@enact/ui/resolution';
+import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
+import {boolean, select} from '@kadira/storybook-addon-knobs';
 
-import {mergeComponentMetadata} from '../../src/utils/propTables';
 import nullify from '../../src/utils/nullify.js';
+import {mergeComponentMetadata} from '../../src/utils/propTables';
 
 const Config = mergeComponentMetadata('Scroller', ScrollerBase, Scroller);
 

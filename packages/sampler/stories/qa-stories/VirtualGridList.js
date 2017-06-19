@@ -1,13 +1,13 @@
-import {boolean, number} from '@kadira/storybook-addon-knobs';
-import GridListImageItem from '@enact/moonstone/VirtualList/GridListImageItem';
-import React from 'react';
-import ri from '@enact/ui/resolution';
-import {storiesOf, action} from '@kadira/storybook';
 import {VirtualGridList} from '@enact/moonstone/VirtualList';
+import GridListImageItem from '@enact/moonstone/VirtualList/GridListImageItem';
 import {VirtualListCore} from '@enact/moonstone/VirtualList/VirtualListBase';
+import ri from '@enact/ui/resolution';
+import React from 'react';
+import {storiesOf, action} from '@kadira/storybook';
+import {boolean, number} from '@kadira/storybook-addon-knobs';
 
-import {mergeComponentMetadata} from '../../src/utils/propTables';
 import nullify from '../../src/utils/nullify.js';
+import {mergeComponentMetadata} from '../../src/utils/propTables';
 
 const Config = mergeComponentMetadata('VirtualGridList', VirtualListCore, VirtualGridList);
 
