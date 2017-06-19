@@ -21,33 +21,61 @@
  * @public
  */
 const platform = {};
+let cache;
 
-if (typeof window === 'object' && window.PalmSystem) {
-	if (window.navigator.userAgent.indexOf('SmartWatch') > -1) {
-		platform.watch = true;
-	} else if ((window.navigator.userAgent.indexOf('SmartTV') > -1) || (window.navigator.userAgent.indexOf('Large Screen') > -1)) {
-		platform.tv = true;
+function detect () {
+	if (typeof window !== 'undefined' && cache) {
+		return cache;
 	} else {
-		try {
-			let legacyInfo = JSON.parse(window.PalmSystem.deviceInfo || '{}');
-			if (legacyInfo.platformVersionMajor && legacyInfo.platformVersionMinor) {
-				let major = parseInt(legacyInfo.platformVersionMajor);
-				let minor = parseInt(legacyInfo.platformVersionMinor);
-				if (major < 3 || (major === 3 && minor <= 0)) {
-					platform.legacy = true;
-				} else {
-					platform.open = true;
+		let device = {};
+		if (typeof window !== 'undefined' && window.PalmSystem) {
+			if (window.navigator.userAgent.indexOf('SmartWatch') > -1) {
+				device.watch = true;
+			} else if ((window.navigator.userAgent.indexOf('SmartTV') > -1) || (window.navigator.userAgent.indexOf('Large Screen') > -1)) {
+				device.tv = true;
+			} else {
+				try {
+					let legacyInfo = JSON.parse(window.PalmSystem.deviceInfo || '{}');
+					if (legacyInfo.platformVersionMajor && legacyInfo.platformVersionMinor) {
+						let major = parseInt(legacyInfo.platformVersionMajor);
+						let minor = parseInt(legacyInfo.platformVersionMinor);
+						if (major < 3 || (major === 3 && minor <= 0)) {
+							device.legacy = true;
+						} else {
+							device.open = true;
+						}
+					} else {
+						device.unknown = true;
+					}
+				} catch (e) {
+					device.open = true;
 				}
+				window.Mojo = window.Mojo || {relaunch: function () {}};
+				if (window.PalmSystem.stageReady) window.PalmSystem.stageReady();
 			}
-		} catch (e) {
-			platform.open = true;
+		} else {
+			device.unknown = true;
 		}
-		window.Mojo = window.Mojo || {relaunch: function () {}};
-		if (window.PalmSystem.stageReady) window.PalmSystem.stageReady();
+		if (typeof window !== 'undefined') cache = device;
+		return device;
 	}
-} else {
-	platform.unknown = true;
 }
 
+[
+	'tv',
+	'watch',
+	'open',
+	'legacy',
+	'unknown'
+].forEach(name => {
+	Object.defineProperty(platform, name, {
+		enumerable: true,
+		get: () => {
+			const p = detect();
+			return p[name];
+		}
+	});
+});
+
 export default platform;
-export {platform};
+export {detect, platform};
