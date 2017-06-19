@@ -1,5 +1,5 @@
 import hoc from '@enact/core/hoc';
-import HoldableUI from '@enact/ui/Holdable';
+import Holdable from '@enact/ui/Holdable';
 
 /**
  * Default config for {@link moonstone/internal/Holdable.Holdable}
@@ -44,9 +44,6 @@ const defaultConfig = {
  * @hoc
  * @private
  */
-const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
-	config.events = config.events || defaultConfig.events;
-	return HoldableUI(config, Wrapped);
-});
+const HoldableHOC = hoc(defaultConfig, Holdable);
 
 export default HoldableHOC;
