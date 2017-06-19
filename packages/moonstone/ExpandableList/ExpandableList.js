@@ -193,15 +193,16 @@ const ExpandableListBase = kind({
 
 	handlers: {
 		onSelect: (ev, {closeOnSelect, onClose, onSelect, select}) => {
-			const deselect = ev.selected !== null;
-			const allowDeselect = select === 'multiple' ? true : deselect;
+			// The same value is being deselected when `ev.selected === null`
+			const selected = ev.selected !== null;
+			const allowSelect = select === 'multiple' ? true : selected;
 
 			// Call onClose if closeOnSelect is enabled and not selecting multiple
-			if (closeOnSelect && onClose && select !== 'multiple' && deselect) {
+			if (closeOnSelect && onClose && select !== 'multiple' && selected) {
 				onClose();
 			}
 
-			if (onSelect && allowDeselect) {
+			if (onSelect && allowSelect) {
 				onSelect(ev);
 			}
 		}
