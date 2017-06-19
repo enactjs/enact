@@ -40,6 +40,13 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		name: 'IncrementSlider',
 
 		propTypes: /** @lends moonstone/IncrementSlider.IncrementSliderBase.prototype */ {
+			/**
+			 * When `true`, prevents read out of both the slider and the increment and decrement
+			 * buttons.
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
 			'aria-hidden': PropTypes.bool,
 
 			/**
