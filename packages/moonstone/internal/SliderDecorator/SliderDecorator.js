@@ -156,6 +156,15 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			step: PropTypes.number,
 
 			/**
+			 * Enables the built-in tooltip.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			tooltip: PropTypes.bool,
+
+			/**
 			 * The value of the slider.
 			 *
 			 * @type {Number}
@@ -288,7 +297,8 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			knobNode.style.transform = computeKnobTransform(knobProgress, vertical, node);
 			knobNode.dataset.climax = knobProgress > 0.5 ? 'falling' : 'rising';
 
-			if (currentClimax !== this.state.climax) {
+			if (currentClimax !== this.state.climax && this.props.tooltip) {
+				// This dictates tooltip's correct left/right positioning
 				this.setState({climax: currentClimax});
 			}
 
