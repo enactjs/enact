@@ -175,7 +175,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		};
 
 		static defaultProps = {
-			climax: 'rising',
 			max: 100,
 			min: 0,
 			step: 1,
@@ -193,6 +192,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const value = this.clamp(props.value);
 			this.state = {
 				active: false,
+				climax: 'rising',
 				focused: false,
 				value: value,
 				valueText: value
