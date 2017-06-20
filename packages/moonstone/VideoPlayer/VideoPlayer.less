@@ -228,16 +228,10 @@
 
 				.leftComponents,
 				.rightComponents {
-					// Combine LESS and CSS variables and calculate the sizes we'll need later:
-					/// The width of the button's margins
-					--button-margins: (@moon-spotlight-outset * 2);
-					/// The width of an IconButton plus margins
-					--button-width: ~'calc(' @moon-icon-button-size ~' + var(--button-margins))';
-					/// The combination of buttons and remove one margin-pair-width because the first and last icon don't have a margin
-					--sides-width: ~'calc((var(--button-width) * var(--moon-video-player-max-side-components)) - var(--button-margins))';
-
 					flex: 0 1;
-					flex-basis: var(--sides-width);
+					// Take the size of buttons, add margins for each button, multiply that by the amount of buttons, then remove the margins for the first and last button
+					// Due to a LESS parsing issue, this 'calc' must be applied to a full-property, not a short-hand property
+					flex-basis: ~'calc((' @moon-icon-button-size + (@moon-spotlight-outset * 2) ~' * var(--moon-video-player-max-side-components)) - ' (@moon-spotlight-outset * 2) ~')';
 					white-space: nowrap;
 					padding: @expanding-button-clearance 0;
 				}
