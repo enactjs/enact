@@ -12,6 +12,8 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Fixed
 
+- Navigating through spottable components while holding down a directional key
+
 ### Removed
 ## [1.3.1] - 2017-06-14
 
