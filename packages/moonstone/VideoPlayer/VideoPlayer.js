@@ -548,12 +548,12 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	componentWillReceiveProps (nextProps) {
-		// Detect if the components have changed
+		// Detect if the number of components has changed
 		if (
 			React.Children.count(this.props.leftComponents) !== React.Children.count(nextProps.leftComponents) ||
 			React.Children.count(this.props.rightComponents) !== React.Children.count(nextProps.rightComponents) ||
 			React.Children.count(this.props.children) !== React.Children.count(nextProps.children)
-			) {
+		) {
 			this.calculateMaxComponentCount();
 		}
 	}
