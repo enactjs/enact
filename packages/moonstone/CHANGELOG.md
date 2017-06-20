@@ -9,10 +9,20 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 ### Changed
+- `moonstone/VideoPlayer` properties `autoCloseTimeout` and `titleHideDelay` default value to `5000`
 
 ### Fixed
 
+- `moonstone/Dialog` to properly focus via pointer on child components
+
 ### Removed
+## [1.3.1] - 2017-06-14
+
+### Fixed
+
+- `moonstone/Picker` support for large text
+- `moonstone/Scroller` support for focusing paging controls with the pointer
+- `moonstone` CSS rules for unskinned spottable components
 
 ## [1.3.0] - 2017-06-12
 

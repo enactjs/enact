@@ -249,6 +249,7 @@ const ExpandableItemBase = kind({
 			>
 				<LabeledItem
 					{...ariaProps}
+					data-expandable-label
 					disabled={disabled}
 					label={label}
 					onClick={handleOpen}
