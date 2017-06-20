@@ -40,7 +40,8 @@ import {
 	setContainerLastFocusedElement,
 	setContainerPreviousTarget,
 	setDefaultContainer,
-	setLastContainer
+	setLastContainer,
+	setLastContainerFromTarget
 } from './container';
 
 import {
@@ -229,8 +230,9 @@ const Spotlight = (function () {
 			const currentContainerId = last(currentContainerIds);
 			const nextContainerIds = getContainersForNode(next);
 
-			// prevent focus if 5-way is being held and the next element would change containers
-			if (_5WayKeyHold && last(nextContainerIds) !== currentContainerId) {
+			// prevent focus if 5-way is being held and the next element isn't wrapped by
+			// the current element's immediate container
+			if (_5WayKeyHold && nextContainerIds.indexOf(currentContainerId) < 0) {
 				return false;
 			}
 
@@ -334,6 +336,7 @@ const Spotlight = (function () {
 					return true;
 				} else if (current) {
 					current.blur();
+					setLastContainerFromTarget(current, target);
 				}
 			}
 		}

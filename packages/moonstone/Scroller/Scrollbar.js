@@ -158,23 +158,26 @@ class ScrollbarBase extends Component {
 	updateButtons = (bounds) => {
 		const
 			{prevButtonNodeRef, nextButtonNodeRef} = this,
-			{prevButtonDisabled, nextButtonDisabled} = this.state,
 			{vertical} = this.props,
 			currentPos = vertical ? bounds.scrollTop : bounds.scrollLeft,
 			maxPos = vertical ? bounds.maxTop : bounds.maxLeft,
 			shouldDisablePrevButton = currentPos <= 0,
 			shouldDisableNextButton = currentPos >= maxPos,
-			updatePrevButton = prevButtonDisabled !== shouldDisablePrevButton,
-			updateNextButton = nextButtonDisabled !== shouldDisableNextButton,
 			spotItem = window.document.activeElement;
 
-		if (updatePrevButton && updateNextButton) {
-			this.setState({prevButtonDisabled: shouldDisablePrevButton, nextButtonDisabled: shouldDisableNextButton});
-		} else if (updatePrevButton) {
-			this.setState({prevButtonDisabled: shouldDisablePrevButton});
-		} else if (updateNextButton) {
-			this.setState({nextButtonDisabled: shouldDisableNextButton});
-		}
+		this.setState((prevState) => {
+			const
+				updatePrevButton = (prevState.prevButtonDisabled !== shouldDisablePrevButton),
+				updateNextButton = (prevState.nextButtonDisabled !== shouldDisableNextButton);
+
+			if (updatePrevButton && updateNextButton) {
+				return {prevButtonDisabled: shouldDisablePrevButton, nextButtonDisabled: shouldDisableNextButton};
+			} else if (updatePrevButton) {
+				return {prevButtonDisabled: shouldDisablePrevButton};
+			} else if (updateNextButton) {
+				return {nextButtonDisabled: shouldDisableNextButton};
+			}
+		});
 
 		if (shouldDisablePrevButton && spotItem === prevButtonNodeRef) {
 			Spotlight.focus(nextButtonNodeRef);
