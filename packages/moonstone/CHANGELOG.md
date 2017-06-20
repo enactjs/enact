@@ -8,6 +8,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/IncrementSlider` event properties `onSpotlightDown`, `onSpotlightLeft`, `onSpotlightRight`, and `onSpotlightUp`.
+
 ### Changed
 - `moonstone/VideoPlayer` properties `autoCloseTimeout` and `titleHideDelay` default value to `5000`
 

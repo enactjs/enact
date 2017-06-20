@@ -205,6 +205,42 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			onSpotlightDisappear: PropTypes.func,
 
 			/**
+			 * The handler to run when the 5-way down key is pressed.
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @public
+			 */
+			onSpotlightDown: PropTypes.func,
+
+			/**
+			 * The handler to run when the 5-way left key is pressed.
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @public
+			 */
+			onSpotlightLeft: PropTypes.func,
+
+			/**
+			 * The handler to run when the 5-way right key is pressed.
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @public
+			 */
+			onSpotlightRight: PropTypes.func,
+
+			/**
+			 * The handler to run when the 5-way up key is pressed.
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @public
+			 */
+			onSpotlightUp: PropTypes.func,
+
+			/**
 			 * `scrubbing` only has an effect with a detachedKnob, and is a performance optimization
 			 * to not allow re-assignment of the knob's value (and therefore position) during direct
 			 * user interaction.
@@ -346,7 +382,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			incrementAriaLabel: ({disabled, max, value}) => !(disabled || value >= max) ? (`${value} ${$L('press ok button to increase the value')}`) : null
 		},
 
-		render: ({active, 'aria-hidden': ariaHidden, backgroundProgress, children, decrementAriaLabel, decrementDisabled, decrementIcon, detachedKnob, disabled, focused, incrementAriaLabel, incrementDisabled, incrementIcon, incrementSliderClasses, inputRef, max, min, noFill, onActivate, onChange, onDecrement, onIncrement, onSpotlightDisappear, scrubbing, sliderBarRef, sliderRef, spotlightDisabled, step, tooltip, tooltipAsPercent, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => {
+		render: ({active, 'aria-hidden': ariaHidden, backgroundProgress, children, decrementAriaLabel, decrementDisabled, decrementIcon, detachedKnob, disabled, focused, incrementAriaLabel, incrementDisabled, incrementIcon, incrementSliderClasses, inputRef, max, min, noFill, onActivate, onChange, onDecrement, onIncrement, onSpotlightDisappear, onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp, scrubbing, sliderBarRef, sliderRef, spotlightDisabled, step, tooltip, tooltipAsPercent, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => {
 			const ariaProps = extractAriaProps(rest);
 
 			return (
@@ -358,6 +394,10 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						disabled={decrementDisabled}
 						onClick={onDecrement}
 						onSpotlightDisappear={onSpotlightDisappear}
+						onSpotlightDown={onSpotlightDown}
+						onSpotlightLeft={onSpotlightLeft}
+						onSpotlightRight={onSpotlightRight}
+						onSpotlightUp={onSpotlightUp}
 						spotlightDisabled={spotlightDisabled}
 					>
 						{decrementIcon}
@@ -380,6 +420,10 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						onDecrement={onDecrement}
 						onIncrement={onIncrement}
 						onSpotlightDisappear={onSpotlightDisappear}
+						onSpotlightDown={onSpotlightDown}
+						onSpotlightLeft={onSpotlightLeft}
+						onSpotlightRight={onSpotlightRight}
+						onSpotlightUp={onSpotlightUp}
 						scrubbing={scrubbing}
 						sliderBarRef={sliderBarRef}
 						sliderRef={sliderRef}
@@ -401,6 +445,10 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						disabled={incrementDisabled}
 						onClick={onIncrement}
 						onSpotlightDisappear={onSpotlightDisappear}
+						onSpotlightDown={onSpotlightDown}
+						onSpotlightLeft={onSpotlightLeft}
+						onSpotlightRight={onSpotlightRight}
+						onSpotlightUp={onSpotlightUp}
 						spotlightDisabled={spotlightDisabled}
 					>
 						{incrementIcon}
