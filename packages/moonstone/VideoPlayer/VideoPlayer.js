@@ -827,6 +827,12 @@ const VideoPlayerBase = class extends React.Component {
 	 * @public
 	 */
 	seek = (timeIndex) => {
+		if (timeIndex < 0) {
+			timeIndex = 0;
+		} else if (timeIndex > this.state.duration) {
+			timeIndex = this.state.duration;
+		}
+
 		this.video.currentTime = timeIndex;
 	}
 
@@ -1021,7 +1027,11 @@ const VideoPlayerBase = class extends React.Component {
 			adjustedDistance = (distance * pbRate) / 1000;
 
 		this.jump(adjustedDistance);
-		this.startRewindJob();	// Issue another rewind tick
+		if (this.state.currentTime + adjustedDistance <= 0) {
+			this.stopRewindJob();
+		} else {
+			this.startRewindJob();	// Issue another rewind tick
+		}
 	}
 
 	rewindJob = new Job(this.rewindManually, 100)
