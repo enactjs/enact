@@ -115,18 +115,7 @@ const PanelBase = kind({
 				currentTarget.scrollLeft = 0;
 			}
 		),
-		spotOnRender: (node, {autoFocus, hideChildren, noAutoFocus}) => {
-			if (noAutoFocus) {
-				autoFocus = adaptToAutoFocus();
-			}
-
-			// In order to spot the body components, we defer spotting until !hideChildren. If the
-			// Panel opts out of hideChildren support by explicitly setting it to false, it'll spot
-			// on first render.
-			if (hideChildren || autoFocus === 'none') {
-				return null;
-			}
-
+		spotOnRender: (node, {autoFocus}) => {
 			if (node && !Spotlight.getCurrent()) {
 				const {containerId} = node.dataset;
 				const config = {
@@ -148,6 +137,20 @@ const PanelBase = kind({
 	},
 
 	computed: {
+		spotOnRender: ({autoFocus, hideChildren, noAutoFocus, spotOnRender}) => {
+			if (noAutoFocus) {
+				autoFocus = adaptToAutoFocus();
+			}
+
+			// In order to spot the body components, we defer spotting until !hideChildren. If the
+			// Panel opts out of hideChildren support by explicitly setting it to false, it'll spot
+			// on first render.
+			if (hideChildren || autoFocus === 'none') {
+				return null;
+			}
+
+			return spotOnRender;
+		},
 		children: ({children, hideChildren}) => hideChildren ? null : children,
 		bodyClassName: ({header, hideChildren, styler}) => styler.join({
 			body: true,
