@@ -2,6 +2,26 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [unreleased]
+
+### Deprecated
+
+### Added
+
+### Changed
+
+### Fixed
+
+- Navigating through spottable components while holding down a directional key
+
+### Removed
+## [1.3.1] - 2017-06-14
+
+### Fixed
+
+- `spotlight` incorrectly focusing components within spotlight containers with `data-container-disabled` set to `false`
+- `spotlight` failing to focus the default element configured for a container
+
 ## [1.3.0] - 2017-06-12
 
 ### Added
