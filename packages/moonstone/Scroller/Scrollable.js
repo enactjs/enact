@@ -455,8 +455,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					this.childRef.setSpotlightContainerRestrict(keyCode, index);
 				}
 
-				if (this.childRef.scrollToBoundaries && target.dataset.spottableBoundaries) {
-					this.childRef.scrollToBoundaries(direction, target.dataset.spottableBoundaries);
+				if (this.childRef.scrollToBoundaries) {
+					this.childRef.scrollToBoundaries(direction, target);
 				}
 			}
 		}

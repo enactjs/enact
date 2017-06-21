@@ -9,6 +9,7 @@
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import deprecate from '@enact/core/internal/deprecate';
+import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target.js';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import Spotlight from '@enact/spotlight';
@@ -306,14 +307,18 @@ class ScrollerBase extends Component {
 		}
 	}
 
-	scrollToBoundaries = (direction, boundaries) => {
-		const align =
-			(direction === 'up' && boundaries.includes('top') && 'top') ||
-			(direction === 'down' && boundaries.includes('bottom') && 'bottom') ||
-			(direction === 'right' && boundaries.includes('right') && 'right') ||
-			(direction === 'left' && boundaries.includes('left') && 'left');
+	scrollToBoundaries = (direction, target) => {
+		const nextSpottable = getTargetByDirectionFromElement(direction, target);
 
-		this.props.cbScrollTo({align});
+		if (!nextSpottable || !this.containerRef.contains(nextSpottable)) {
+			let align = '';
+
+			if (direction === 'up') align = 'top';
+			else if (direction === 'down') align = 'bottom';
+			else align = direction;
+
+			this.props.cbScrollTo({align});
+		}
 	}
 
 	isVertical = () => {
