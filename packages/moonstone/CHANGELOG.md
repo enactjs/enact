@@ -12,7 +12,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` properties `autoCloseTimeout` and `titleHideDelay` default value to `5000`
 
 ### Fixed
-
+- `moonstone/Panel` to automatically spot panel once after transition has finished
 - `moonstone/Dialog` to properly focus via pointer on child components
 
 ### Removed
