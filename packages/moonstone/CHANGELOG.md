@@ -8,9 +8,12 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/Panels/Viewport` properties `onTransition` and `onWillTransition`
+
 ### Changed
 
 - `moonstone/VideoPlayer` properties `autoCloseTimeout` and `titleHideDelay` default value to `5000`
+- `moonstone/Panels` to pass the `onTransition` and `onWillTransition` props to its underlying `<Viewport>`
 
 ### Fixed
 
@@ -53,8 +56,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Notification` to break line in characters in ja and zh locale
 - `moonstone/Notification` to align texts left in LTR locale and right in RTL locale
 - `moonstone/VideoPlayer` to simulate rewind functionality on non-webOS platforms only
-- `moonstone/Panels` to pass the `onTransition` prop to its underlying `<Viewport>`
-- `moonstone/Panels` to pass the `onTransition` and `onWillTransition` props to its underlying `<Viewport>`
 
 ### Fixed
 
