@@ -284,6 +284,7 @@ class ScrollbarBase extends Component {
 				>
 					{prevIcon}
 				</ScrollButton>
+				<div className={thumbClass} ref={this.initThumbRef} style={{flex: 'auto'}} />
 				<ScrollButton
 					direction={vertical ? 'down' : 'right'}
 					disabled={disabled || nextButtonDisabled}
@@ -292,7 +293,6 @@ class ScrollbarBase extends Component {
 				>
 					{nextIcon}
 				</ScrollButton>
-				<div className={thumbClass} ref={this.initThumbRef} />
 				<Announce ref={this.initAnnounceRef} />
 			</div>
 		);

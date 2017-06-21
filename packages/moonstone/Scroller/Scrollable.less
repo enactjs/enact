@@ -10,45 +10,130 @@
 .scrollable {
 	.scrollableFill;
 	.container {
-		.scrollableFill;
 		background: inherit;
 		overflow: hidden;
 	}
-	.padding-start-end(0, @moon-icon-button-small-size + @moon-spotlight-outset);
-
-	padding-bottom: @moon-icon-button-small-size + @moon-spotlight-outset;
 	box-sizing: border-box;
-
-	:global(.enact-text-large) & {
-		padding-bottom: @moon-icon-button-small-size-large + @moon-spotlight-outset;
-		padding-left: 0;
-		padding-right: @moon-icon-button-small-size-large + @moon-spotlight-outset;
-	}
-
-	:global(.enact-text-large.enact-locale-right-to-left) & {
-		padding-left: @moon-icon-button-small-size-large + @moon-spotlight-outset;
-		padding-right: 0;
-	}
-
-	div.onlyVerticalScrollbarNeeded {
-		bottom: 0;
-	}
-
-	div.onlyHorizontalScrollbarNeeded {
-		.position-start-end(0, 0);
-	}
-
-	&.takeAvailableSpaceForHorizontal {
-		.padding-start-end(0, 0);
-	}
-
-	&.takeAvailableSpaceForVertical {
-		padding-bottom: 0;
-	}
 }
 
-.scrollableHiddenScrollbars {
+
+
+
+.newScrollable > .flexContainer {
+	border: 3px dashed blue;
+}
+.newScrollable > .flexContainer .content {
+	border: 3px dashed gray;
+}
+.newScrollable .newScrollbar {
+	border: 3px solid purple;
+}
+
+.rtl {
+	direction: rtl;
+}
+
+.flexContainer {
+	display: flex;
+}
+.flexItemsStretch {
+	-webkit-box-flex: auto;
+	-ms-flex: auto;
+	flex: auto;
+}
+.flexItemsShrink {
+	-webkit-box-flex: none;
+	-ms-flex: none;
+	flex: none;
+}
+
+/* newScrollable */
+.newScrollable {
+	/* Set these to reasonable default values */
+	--scrollbar-v-size: 100%;
+	--scrollbar-v-progress: 0;
+	--scrollbar-h-size: 100%;
+	--scrollbar-h-progress: 0;
+
+	width: 100%;
+	height: 100%;
+	border: 3px dashed orange;
+	box-sizing: border-box;
+	flex-direction: column;
+}
+
+/* scrollbar */
+.newScrollable .newScrollbar:global(.v) {
+	flex-direction: column;
+	-webkit-margin-start: @moon-spotlight-outset;
+}
+.newScrollable.h .newScrollbar:global(.v),
+.newScrollable.v .newScrollbar:global(.h) {
+	display: none;
+}
+.newScrollable:not(.v):not(.h) .newScrollbar:global(.h) {
+	-webkit-padding-end: 80px;
+}
+
+.newScrollable .newScrollbar .bar::before {
+	background-color: brown;
+	display: block;
+	position: relative;
+	content: '';
+
+	will-change: trasform, top, left;
+}
+.newScrollable .newScrollbar:global(.v) .bar::before {
+	--top-position: ~'calc((100% - var(--scrollbar-v-size)) * var(--scrollbar-v-progress))';
+
+	width: 12px;
+	height: var(--scrollbar-v-size);
+	top: var(--top-position);
+	transform-origin: top;
+}
+.newScrollable .newScrollbar:global(.h) .bar::before {
+	--left-position: ~'calc((100% - var(--scrollbar-h-size)) * var(--scrollbar-h-progress))';
+
+	width: var(--scrollbar-h-size);
+	height: 12px;
+	top: 50%;
+	left: var(--left-position);
+	transform: translateY(-50%);
+	transform-origin: left;
+}
+.rtl .newScrollable .newScrollbar:global(.h) .bar::before {
+	left: ~'calc(-1 * var(--left-position))';
+}
+
+.newScrollable .newScrollbar button {
+	height: 80px;
+	width: 80px;
+	font-family: "Moonstone Icons";
+	font-size: 60px;
+}
+.rtl .newScrollable .newScrollbar:global(.h) button.left,
+.rtl .newScrollable .newScrollbar:global(.h) button.right {
+	transform: scaleX(-1);
+}
+
+/* content */
+.content {
+	position: relative;
 	overflow: hidden;
-	.padding-start-end(0, 0);
-	padding-bottom: 0;
+}
+.newScrollable.h .content > .flexContainer {
+	flex-direction: column;
+}
+
+.row {
+	position: absolute;
+	width: 100%;
+	justify-content: space-between;
+}
+.row p {
+	height: 200px;
+	width: 150px;
+	border: 3px solid green;
+	overflow: hidden;
+	margin: 0;
 }

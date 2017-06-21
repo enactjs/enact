@@ -912,26 +912,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			return this.onScrollbarBtnHandler(orientation, direction);
 		}
 
-		getHorizontalScrollbar = (isHorizontalScrollbarVisible, isVerticalScrollbarVisible) => (
-			isHorizontalScrollbarVisible ? (
-				<Scrollbar
-					className={!isVerticalScrollbarVisible ? css.onlyHorizontalScrollbarNeeded : null}
-					disabled={!isHorizontalScrollbarVisible}
-					{...this.horizontalScrollbarProps}
-				/>
-			) : null
-		)
-
-		getVerticalScrollbar = (isHorizontalScrollbarVisible, isVerticalScrollbarVisible) => (
-			isVerticalScrollbarVisible ? (
-				<Scrollbar
-					className={!isHorizontalScrollbarVisible ? css.onlyVerticalScrollbarNeeded : null}
-					disabled={!isVerticalScrollbarVisible}
-					{...this.verticalScrollbarProps}
-				/>
-			) : null
-		)
-
 		handleScroll = () => {
 			if (!this.animator.isAnimating() && this.childRef && this.childRef.containerRef) {
 				this.childRef.containerRef.scrollTop = this.scrollTop;
@@ -944,13 +924,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				props = Object.assign({}, this.props),
 				{className, focusableScrollbar, style} = this.props,
 				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
-				vscrollbar = this.getVerticalScrollbar(isHorizontalScrollbarVisible, isVerticalScrollbarVisible),
-				hscrollbar = this.getHorizontalScrollbar(isHorizontalScrollbarVisible, isVerticalScrollbarVisible),
 				scrollableClasses = classNames(
 					css.scrollable,
-					!(isHorizontalScrollbarVisible || isVerticalScrollbarVisible) ? css.scrollableHiddenScrollbars : null,
-					isHorizontalScrollbarVisible ? null : css.takeAvailableSpaceForVertical,
-					isVerticalScrollbarVisible ? null : css.takeAvailableSpaceForHorizontal,
+					css.flexContainer,
+					css.newScrollable,
+					'v',
 					className
 				);
 
@@ -971,16 +949,34 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					focusableScrollbar={focusableScrollbar}
 					style={style}
 				>
-					<Wrapped
-						{...props}
-						{...this.eventHandlers}
-						cbScrollTo={this.scrollTo}
-						className={css.container}
-						onScroll={this.handleScroll}
-						ref={this.initChildRef}
-					/>
-					{vscrollbar}
-					{hscrollbar}
+					<div className={classNames(css.flexItemsStretch, css.flexContainer)}>
+						<Wrapped
+							{...props}
+							{...this.eventHandlers}
+							cbScrollTo={this.scrollTo}
+							className={classNames(css.flexItemsStretch, css.content, css.container)}
+							onScroll={this.handleScroll}
+							ref={this.initChildRef}
+						/>
+						{
+							isVerticalScrollbarVisible ? (
+								<Scrollbar
+									{...this.verticalScrollbarProps}
+									className={classNames(css.newScrollbar, 'v', css.flexContainer)}
+									disabled={!isVerticalScrollbarVisible}
+								/>
+							) : null
+						}
+					</div>
+					{
+						isHorizontalScrollbarVisible ? (
+							<Scrollbar
+								{...this.horizontalScrollbarProps}
+								className={classNames(css.flexItemsShrink, css.newScrollbar, 'h', css.flexContainer)}
+								disabled={!isHorizontalScrollbarVisible}
+							/>
+						) : null
+					}
 				</ScrollableSpotlightContainer>
 			);
 		}
