@@ -1,3 +1,4 @@
+import {off, on} from '@enact/core/dispatcher';
 import {Announce} from '@enact/ui/AnnounceDecorator';
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
@@ -142,18 +143,33 @@ class ScrollbarBase extends Component {
 
 	componentWillUnmount () {
 		this.hideThumbJob.stop();
+		this.setIgnoreMode(false); // To remove event handler
 	}
 
 	autoHide = true
 	thumbSize = 0
 	minThumbSizeRatio = 0
 	trackSize = 0
+	pressed = false
+	ignoreMode = false
 
 	// component refs
 	containerRef = null
 	thumbRef = null
 	prevButtonNodeRef = null
 	nextButtonNodeRef = null
+
+	setIgnoreMode = (shouldIgnore) => {
+		if (shouldIgnore !== this.ignoreMode) {
+			if (shouldIgnore) {
+				this.ignoreMode = true;
+				on('mousemove', this.handleMouseMove);
+			} else {
+				this.ignoreMode = false;
+				off('mousemove', this.handleMouseMove);
+			}
+		}
+	}
 
 	updateButtons = (bounds) => {
 		const
@@ -178,8 +194,14 @@ class ScrollbarBase extends Component {
 
 		if (shouldDisablePrevButton && spotItem === prevButtonNodeRef) {
 			Spotlight.focus(nextButtonNodeRef);
+			if (this.pressed) {
+				this.setIgnoreMode(true);
+			}
 		} else if (shouldDisableNextButton && spotItem === nextButtonNodeRef) {
 			Spotlight.focus(prevButtonNodeRef);
+			if (this.pressed) {
+				this.setIgnoreMode(true);
+			}
 		}
 	}
 
@@ -250,20 +272,51 @@ class ScrollbarBase extends Component {
 	}
 
 	handlePrevScroll = (ev) => {
-		const {onPrevScroll, vertical} = this.props;
-		onPrevScroll(ev);
-		if (this.announceRef) this.announceRef.announce($L(vertical ? 'UP' : 'LEFT'));
+		this.pressed = false;
+		if (this.ignoreMode) {
+			this.setIgnoreMode(false);
+		} else {
+			const {onPrevScroll, vertical} = this.props;
+			onPrevScroll(ev);
+			if (this.announceRef) this.announceRef.announce($L(vertical ? 'UP' : 'LEFT'));
+		}
 	}
 
 	handleNextScroll = (ev) => {
-		const {onNextScroll, vertical} = this.props;
-		onNextScroll(ev);
-		if (this.announceRef) this.announceRef.announce($L(vertical ? 'DOWN' : 'RIGHT'));
+		this.pressed = false;
+		if (this.ignoreMode) {
+			this.setIgnoreMode(false);
+		} else {
+			const {onNextScroll, vertical} = this.props;
+			onNextScroll(ev);
+			if (this.announceRef) this.announceRef.announce($L(vertical ? 'DOWN' : 'RIGHT'));
+		}
+	}
+
+	handlePrevHoldPulse = (ev) => {
+		if (!this.ignoreMode) {
+			this.props.onPrevScroll(ev);
+		}
+	}
+
+	handleNextHoldPulse = (ev) => {
+		if (!this.ignoreMode) {
+			this.props.onNextScroll(ev);
+		}
+	}
+
+	handleKeyMouseDown = () => {
+		this.pressed = true;
+	}
+
+	handleMouseMove = () => {
+		this.pressed = false;
+		this.setIgnoreMode(false);
 	}
 
 	render () {
 		const
-			{className, disabled, onNextScroll, onPrevScroll, vertical} = this.props,
+			{className, disabled, vertical} = this.props,
 			{prevButtonDisabled, nextButtonDisabled} = this.state,
 			{rtl} = this.context,
 			{scrollbarClass, thumbClass} = this.scrollbarInfo,
@@ -277,7 +330,9 @@ class ScrollbarBase extends Component {
 					direction={vertical ? 'up' : 'left'}
 					disabled={disabled || prevButtonDisabled}
 					onClick={this.handlePrevScroll}
-					onHoldPulse={onPrevScroll}
+					onHoldPulse={this.handlePrevHoldPulse}
+					onKeyDown={this.handleKeyMouseDown}
+					onMouseDown={this.handleKeyMouseDown}
 				>
 					{prevIcon}
 				</ScrollButton>
@@ -285,7 +340,9 @@ class ScrollbarBase extends Component {
 					direction={vertical ? 'down' : 'right'}
 					disabled={disabled || nextButtonDisabled}
 					onClick={this.handleNextScroll}
-					onHoldPulse={onNextScroll}
+					onHoldPulse={this.handleNextHoldPulse}
+					onKeyDown={this.handleKeyMouseDown}
+					onMouseDown={this.handleKeyMouseDown}
 				>
 					{nextIcon}
 				</ScrollButton>
