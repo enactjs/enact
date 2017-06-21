@@ -23,6 +23,11 @@
 		&:hover {
 			-moz-appearance: none;
 		}
+
+		&::-webkit-inner-spin-button,
+		&::-webkit-outer-spin-button {
+			-webkit-appearance: none;
+		}
 	}
 
 	.input-placeholder({
@@ -119,6 +124,10 @@
 	// Skin colors
 	.applySkins({
 		background-color: @moon-input-decorator-bg-color;
+
+		.input {
+			background: transparent;
+		}
 
 		// For ExpandableInput, the decorator will not receive focus but it can be activated by clicking
 		// which should highlight the border

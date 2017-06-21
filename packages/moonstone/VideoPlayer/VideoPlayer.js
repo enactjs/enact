@@ -11,7 +11,7 @@ import equals from 'ramda/src/equals';
 import React from 'react';
 import PropTypes from 'prop-types';
 import DurationFmt from '@enact/i18n/ilib/lib/DurationFmt';
-import {forward} from '@enact/core/handle';
+import {forward, forwardWithPrevent, handle} from '@enact/core/handle';
 import ilib from '@enact/i18n';
 import {Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
@@ -86,8 +86,8 @@ const handledCustomMediaEventsMap = {
 const forwardControlsAvailable = forward('onControlsAvailable');
 const forwardBackwardButtonClick = forward('onBackwardButtonClick');
 const forwardForwardButtonClick = forward('onForwardButtonClick');
-const forwardJumpBackwardButtonClick = forward('onJumpBackwardButtonClick');
-const forwardJumpForwardButtonClick = forward('onJumpForwardButtonClick');
+const forwardJumpBackwardButtonClick = forwardWithPrevent('onJumpBackwardButtonClick');
+const forwardJumpForwardButtonClick = forwardWithPrevent('onJumpForwardButtonClick');
 const forwardPlayButtonClick = forward('onPlayButtonClick');
 
 // localized strings
@@ -156,7 +156,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * Setting this to 0 or `null` disables autoClose, requiring user input to open and close.
 		 *
 		 * @type {Number}
-		 * @default 7000
+		 * @default 5000
 		 * @public
 		 */
 		autoCloseTimeout: PropTypes.number,
@@ -177,7 +177,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * Setting this to 0 or `null` disables feedbackHideDelay; feedback will always be present.
 		 *
 		 * @type {Number}
-		 * @default 2000
+		 * @default 3000
 		 * @public
 		 */
 		feedbackHideDelay: PropTypes.number,
@@ -438,7 +438,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * controls. Setting this to `0` disables the hiding.
 		 *
 		 * @type {Number}
-		 * @default 4000
+		 * @default 5000
 		 * @public
 		 */
 		titleHideDelay: PropTypes.number,
@@ -455,7 +455,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	static defaultProps = {
-		autoCloseTimeout: 7000,
+		autoCloseTimeout: 5000,
 		backwardIcon: 'backward',
 		feedbackHideDelay: 3000,
 		forwardIcon: 'forward',
@@ -475,7 +475,7 @@ const VideoPlayerBase = class extends React.Component {
 			slowRewind: ['-1/2', '-1']
 		},
 		playIcon: 'play',
-		titleHideDelay: 4000,
+		titleHideDelay: 5000,
 		tooltipHideDelay: 3000
 	}
 
@@ -722,6 +722,14 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	hideFeedbackJob = new Job(this.hideFeedback)
+
+	handleLeft = () => {
+		this.jump(-1 * this.props.jumpBy);
+	}
+
+	handleRight = () => {
+		this.jump(this.props.jumpBy);
+	}
 
 	//
 	// Media Interaction Methods
@@ -1155,11 +1163,11 @@ const VideoPlayerBase = class extends React.Component {
 		this.setState({mouseOver:false});
 		this.startDelayedFeedbackHide();
 	}
-	onJumpBackward = (ev) => {
-		ev = this.addStateToEvent(ev);
-		forwardJumpBackwardButtonClick(ev, this.props);
-		this.jump(-1 * this.props.jumpBy);
-	}
+	handle = handle.bind(this)
+	onJumpBackward = this.handle(
+		(ev, props) => forwardJumpBackwardButtonClick(this.addStateToEvent(ev), props),
+		() => this.jump(-1 * this.props.jumpBy)
+	)
 	onBackward = (ev) => {
 		ev = this.addStateToEvent(ev);
 		forwardBackwardButtonClick(ev, this.props);
@@ -1181,11 +1189,10 @@ const VideoPlayerBase = class extends React.Component {
 		forwardForwardButtonClick(ev, this.props);
 		this.fastForward();
 	}
-	onJumpForward = (ev) => {
-		ev = this.addStateToEvent(ev);
-		forwardJumpForwardButtonClick(ev, this.props);
-		this.jump(this.props.jumpBy);
-	}
+	onJumpForward = this.handle(
+		(ev, props) => forwardJumpForwardButtonClick(this.addStateToEvent(ev), props),
+		() => this.jump(this.props.jumpBy)
+	)
 	onMoreClick = () => {
 		if (this.state.more) {
 			this.moreInProgress = false;
@@ -1339,6 +1346,8 @@ const VideoPlayerBase = class extends React.Component {
 					// It's non-visible but lives at the top of the VideoPlayer.
 					className={css.controlsHandleAbove}
 					onSpotlightDown={this.showControls}
+					onSpotlightLeft={this.handleLeft}
+					onSpotlightRight={this.handleRight}
 					onClick={this.showControls}
 				/>
 			</div>
