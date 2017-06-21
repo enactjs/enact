@@ -2,6 +2,8 @@
 @import '../styles/variables.less';
 
 .scrollbarContainerBase {
+	border: 3px solid purple; // SHOULD BE REMOVED
+
 	background: inherit;
 	border-color: transparent;
 	border-style: solid;
@@ -13,6 +15,20 @@
 	transition: opacity 0.1s linear;
 	-moz-transition: opacity 0.1s linear;
 	-webkit-transition: opacity 0.1s linear;
+}
+
+.scrollbarContainerVColumn {
+	.scrollbarContainerBase;
+	width: @moon-icon-button-small-size;
+	border-width: @moon-icon-button-small-size 0;
+
+	.position-start-end(auto, @moon-spotlight-outset);
+}
+
+.scrollbarContainerHColumn {
+	.scrollbarContainerBase;
+	height: @moon-icon-button-small-size;
+	border-width: 0 @moon-icon-button-small-size;
 }
 
 .scrollbarButtonNoCompositeLayer {
@@ -44,20 +60,6 @@
 		height: @moon-icon-button-small-size;
 		border-color: transparent;
 	}
-}
-
-.scrollbarContainerVColumn {
-	.scrollbarContainerBase;
-	width: @moon-icon-button-small-size;
-	border-width: @moon-icon-button-small-size 0;
-
-	.position-start-end(auto, @moon-spotlight-outset);
-}
-
-.scrollbarContainerHColumn {
-	.scrollbarContainerBase;
-	height: @moon-icon-button-small-size;
-	border-width: 0 @moon-icon-button-small-size;
 }
 
 .scrollbarVthumb {
@@ -94,4 +96,58 @@
 
 .thumbHidden {
 	opacity: 0;
+}
+
+
+
+
+.newScrollbar {
+	.bar::before {
+		background-color: brown;
+		display: block;
+		position: relative;
+		content: '';
+
+		will-change: trasform, top, left;
+	}
+	&.scrollbarContainerVColumn {
+		flex-direction: column;
+		-webkit-margin-start: @moon-spotlight-outset;
+
+		.bar::before {
+			--top-position: ~'calc((100% - var(--scrollbar-v-size)) * var(--scrollbar-v-progress))';
+
+			width: 12px;
+			height: var(--scrollbar-v-size);
+			top: var(--top-position);
+			transform-origin: top;
+		}
+	}
+	&.scrollbarContainerHColumn .bar::before {
+		--left-position: ~'calc((100% - var(--scrollbar-h-size)) * var(--scrollbar-h-progress))';
+
+		width: var(--scrollbar-h-size);
+		height: 12px;
+		top: 50%;
+		left: var(--left-position);
+		transform: translateY(-50%);
+		transform-origin: left;
+	}
+
+	button {
+		height: 80px;
+		width: 80px;
+		font-family: "Moonstone Icons";
+		font-size: 60px;
+	}
+}
+
+:global(.rtl) .newScrollbar.scrollbarContainerHColumn {
+	.bar::before {
+		left: ~'calc(-1 * var(--left-position))';
+	}
+	button.left,
+	button.right {
+		transform: scaleX(-1);
+	}
 }

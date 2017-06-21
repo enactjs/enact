@@ -9,119 +9,40 @@
 
 .scrollable {
 	.scrollableFill;
-	.container {
+	.content {
+		border: 3px dashed gray; // SHOULD BE REMOVED
 		background: inherit;
+		position: relative;
 		overflow: hidden;
 	}
 	box-sizing: border-box;
-}
 
-
-
-
-.newScrollable > .flexContainer {
-	border: 3px dashed blue;
-}
-.newScrollable > .flexContainer .content {
-	border: 3px dashed gray;
-}
-.newScrollable .newScrollbar {
-	border: 3px solid purple;
-}
-
-.rtl {
-	direction: rtl;
-}
-
-.flexContainer {
-	display: flex;
-}
-.flexItemsStretch {
-	-webkit-box-flex: auto;
-	-ms-flex: auto;
-	flex: auto;
-}
-.flexItemsShrink {
-	-webkit-box-flex: none;
-	-ms-flex: none;
-	flex: none;
-}
-
-/* newScrollable */
-.newScrollable {
 	/* Set these to reasonable default values */
 	--scrollbar-v-size: 100%;
 	--scrollbar-v-progress: 0;
 	--scrollbar-h-size: 100%;
 	--scrollbar-h-progress: 0;
 
-	width: 100%;
-	height: 100%;
-	border: 3px dashed orange;
+	border: 3px dashed orange; // SHOULD BE REMOVED
 	box-sizing: border-box;
 	flex-direction: column;
 }
 
-/* scrollbar */
-.newScrollable .newScrollbar:global(.v) {
-	flex-direction: column;
-	-webkit-margin-start: @moon-spotlight-outset;
+:global(.rtl) {
+	direction: rtl;
 }
-.newScrollable.h .newScrollbar:global(.v),
-.newScrollable.v .newScrollbar:global(.h) {
+
+/* scrollbar */
+.scrollable:global(.h) .verticalScrollbar,
+.scrollable:global(.v) .horizontalScrollbar {
 	display: none;
 }
-.newScrollable:not(.v):not(.h) .newScrollbar:global(.h) {
+.scrollable:not(:global(.v)):not(:global(.h)) .horizontalScrollbar {
 	-webkit-padding-end: 80px;
 }
 
-.newScrollable .newScrollbar .bar::before {
-	background-color: brown;
-	display: block;
-	position: relative;
-	content: '';
-
-	will-change: trasform, top, left;
-}
-.newScrollable .newScrollbar:global(.v) .bar::before {
-	--top-position: ~'calc((100% - var(--scrollbar-v-size)) * var(--scrollbar-v-progress))';
-
-	width: 12px;
-	height: var(--scrollbar-v-size);
-	top: var(--top-position);
-	transform-origin: top;
-}
-.newScrollable .newScrollbar:global(.h) .bar::before {
-	--left-position: ~'calc((100% - var(--scrollbar-h-size)) * var(--scrollbar-h-progress))';
-
-	width: var(--scrollbar-h-size);
-	height: 12px;
-	top: 50%;
-	left: var(--left-position);
-	transform: translateY(-50%);
-	transform-origin: left;
-}
-.rtl .newScrollable .newScrollbar:global(.h) .bar::before {
-	left: ~'calc(-1 * var(--left-position))';
-}
-
-.newScrollable .newScrollbar button {
-	height: 80px;
-	width: 80px;
-	font-family: "Moonstone Icons";
-	font-size: 60px;
-}
-.rtl .newScrollable .newScrollbar:global(.h) button.left,
-.rtl .newScrollable .newScrollbar:global(.h) button.right {
-	transform: scaleX(-1);
-}
-
 /* content */
-.content {
-	position: relative;
-	overflow: hidden;
-}
-.newScrollable.h .content > .flexContainer {
+.scrollable:global(.h) .content > .flexContainer {
 	flex-direction: column;
 }
 

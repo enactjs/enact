@@ -11,13 +11,14 @@ import $L from '../internal/$L';
 import ScrollButton from './ScrollButton';
 
 import css from './Scrollbar.less';
+import flexboxCss from './Flexbox.less';
 
 const
 	verticalProperties = {
 		matrix: (position, scaledSize, natualSize) => (
 			'matrix3d(1, 0, 0, 0, 0,' + (scaledSize / natualSize) + ', 0, 0, 0, 0, 1, 0, 0, ' + position + ', 1, 1)'
 		),
-		scrollbarClass: css.scrollbarContainerVColumn,
+		scrollbarClass: classNames(css.newScrollbar, css.scrollbarContainerVColumn),
 		sizeProperty: 'clientHeight',
 		thumbClass: css.scrollbarVthumb
 	},
@@ -25,7 +26,7 @@ const
 		matrix: (position, scaledSize, natualSize) => (
 			'matrix3d(' + (scaledSize / natualSize) + ', 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + position + ', 0, 1, 1)'
 		),
-		scrollbarClass: css.scrollbarContainerHColumn,
+		scrollbarClass: classNames(css.newScrollbar, css.scrollbarContainerHColumn),
 		sizeProperty: 'clientWidth',
 		thumbClass: css.scrollerHthumb
 	},
@@ -270,7 +271,7 @@ class ScrollbarBase extends Component {
 			{prevButtonDisabled, nextButtonDisabled} = this.state,
 			{rtl} = this.context,
 			{scrollbarClass, thumbClass} = this.scrollbarInfo,
-			scrollbarClassNames = classNames(className, scrollbarClass),
+			scrollbarClassNames = classNames(className, scrollbarClass, flexboxCss.flexContainer),
 			prevIcon = preparePrevButton(vertical, rtl),
 			nextIcon = prepareNextButton(vertical, rtl);
 
@@ -284,7 +285,7 @@ class ScrollbarBase extends Component {
 				>
 					{prevIcon}
 				</ScrollButton>
-				<div className={thumbClass} ref={this.initThumbRef} style={{flex: 'auto'}} />
+				<div className={classNames(thumbClass, flexboxCss.flexItemsStretch)} ref={this.initThumbRef} />
 				<ScrollButton
 					direction={vertical ? 'down' : 'right'}
 					disabled={disabled || nextButtonDisabled}

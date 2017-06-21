@@ -1,0 +1,21 @@
+.flexContainer {
+	border: 3px dashed blue; // SHOULD BE REMOVED
+
+	display: flex;
+}
+.flexContainer .flexContainer {
+	border: 3px dashed teal; // SHOULD BE REMOVED
+}
+.flexContainer .flexContainer .flexContainer {
+	border: 3px dashed blue; // SHOULD BE REMOVED
+}
+.flexItemsStretch {
+	-webkit-box-flex: auto;
+	-ms-flex: auto;
+	flex: auto;
+}
+.flexItemsShrink {
+	-webkit-box-flex: none;
+	-ms-flex: none;
+	flex: none;
+}
