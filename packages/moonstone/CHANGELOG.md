@@ -9,13 +9,16 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 ### Changed
+
 - `moonstone/VideoPlayer` properties `autoCloseTimeout` and `titleHideDelay` default value to `5000`
 
 ### Fixed
 
 - `moonstone/Dialog` to properly focus via pointer on child components
+- `moonstone` component hold delay time
 
 ### Removed
+
 ## [1.3.1] - 2017-06-14
 
 ### Fixed
