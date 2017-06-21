@@ -8,7 +8,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/Panels/Viewport` properties `onTransition` and `onWillTransition`
+
 ### Changed
+
 - `moonstone/VideoPlayer` properties `autoCloseTimeout` and `titleHideDelay` default value to `5000`
 
 ### Fixed

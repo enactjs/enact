@@ -56,7 +56,21 @@ const ViewportBase = kind({
 		 * @type {Boolean}
 		 * @default false
 		 */
-		noAnimation: PropTypes.bool
+		noAnimation: PropTypes.bool,
+
+		/**
+		 * A function that runs when view transition is completed.
+		 *
+		 * @type {Function}
+		 */
+		onTransition: PropTypes.func,
+
+		/**
+		 * A function that runs when view transition is beginning.
+		 *
+		 * @type {Function}
+		 */
+		onWillTransition: PropTypes.func
 	},
 
 	defaultProps: {
