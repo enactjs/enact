@@ -20,7 +20,7 @@ const adaptToAutoFocus = deprecate(() => 'none', {
 });
 
 /**
-* {@link moonstone/Panels.Panel} is the default kind for controls created inside a
+* {@link moonstone/Panels.Panel} is the component for controls created inside a
 * [moonstone/Panels]{@link moonstone/Panels.Panels} container. A `moonstone/Panels`
 * will typically contain several instances of these.
 *
