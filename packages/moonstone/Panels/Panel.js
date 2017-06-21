@@ -9,26 +9,6 @@ import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDeco
 
 import css from './Panel.less';
 
-const spotPanel = (autoFocus) => (node) => {
-	if (node && !Spotlight.getCurrent()) {
-		const {containerId} = node.dataset;
-		const config = {
-			enterTo: 'last-focused'
-		};
-
-		if (autoFocus !== 'last-focused') {
-			config.enterTo = 'default-element';
-
-			if (autoFocus !== 'default-element') {
-				config.defaultElement = autoFocus;
-			}
-		}
-
-		Spotlight.set(containerId, config);
-		Spotlight.focus(containerId);
-	}
-};
-
 let panelId = 0;
 
 // Called when `noAutoFocus` is true. Warns the first time and returns the new `autoFocus` value
@@ -134,24 +114,40 @@ const PanelBase = kind({
 				currentTarget.scrollTop = 0;
 				currentTarget.scrollLeft = 0;
 			}
-		)
-	},
-
-	computed: {
-		// In order to spot the body components, we defer spotting until !hideChildren. If the Panel
-		// opts out of hideChildren support by explicitly setting it to false, it'll spot on first
-		// render.
-		spotOnRender: ({autoFocus, hideChildren, noAutoFocus}) => {
+		),
+		spotOnRender: (node, {autoFocus, hideChildren, noAutoFocus}) => {
 			if (noAutoFocus) {
 				autoFocus = adaptToAutoFocus();
 			}
 
+			// In order to spot the body components, we defer spotting until !hideChildren. If the
+			// Panel opts out of hideChildren support by explicitly setting it to false, it'll spot
+			// on first render.
 			if (hideChildren || autoFocus === 'none') {
 				return null;
 			}
 
-			return spotPanel(autoFocus);
-		},
+			if (node && !Spotlight.getCurrent()) {
+				const {containerId} = node.dataset;
+				const config = {
+					enterTo: 'last-focused'
+				};
+
+				if (autoFocus !== 'last-focused') {
+					config.enterTo = 'default-element';
+
+					if (autoFocus !== 'default-element') {
+						config.defaultElement = autoFocus;
+					}
+				}
+
+				Spotlight.set(containerId, config);
+				Spotlight.focus(containerId);
+			}
+		}
+	},
+
+	computed: {
 		children: ({children, hideChildren}) => hideChildren ? null : children,
 		bodyClassName: ({header, hideChildren, styler}) => styler.join({
 			body: true,
