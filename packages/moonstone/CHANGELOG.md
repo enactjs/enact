@@ -6,17 +6,22 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Deprecated
 
+- `moonstone/Input` prop `noDecorator` is being replaced by `autoFocus` in 2.0.0.
+
 ### Added
 
 ### Changed
 
 - `moonstone/VideoPlayer` to automatically adjust the width of the allocated space for the side components so the media controls have more space to appear on smaller screens
+- `moonstone/VideoPlayer` properties `autoCloseTimeout` and `titleHideDelay` default value to `5000`
 
 ### Fixed
 
-- `moonstone/Dialog' to properly focus via pointer on child components
+- `moonstone/Dialog` to properly focus via pointer on child components
+- `moonstone` component hold delay time
 
 ### Removed
+
 ## [1.3.1] - 2017-06-14
 
 ### Fixed

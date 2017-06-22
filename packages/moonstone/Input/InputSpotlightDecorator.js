@@ -1,3 +1,4 @@
+import deprecate from '@enact/core/internal/deprecate';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
@@ -46,6 +47,15 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 
 		static propTypes = /** @lends moonstone/Input/InputSpotlightDecorator.InputSpotlightDecorator.prototype */ {
 			/**
+			 * When `true`, focusing the decorator directly via 5-way will forward the focus onto the <input>
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			autoFocus: PropTypes.bool,
+
+			/**
 			 * When `true`, applies a disabled style and the control becomes non-interactive.
 			 *
 			 * @type {Boolean}
@@ -68,6 +78,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			 *
 			 * @type {Boolean}
 			 * @default false
+			 * @deprecated will be replaced by `autoFocus` in 2.0.0
 			 * @public
 			 */
 			noDecorator: PropTypes.bool,
@@ -98,6 +109,10 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 				focused: null,
 				node: null
 			};
+
+			if (props.noDecorator) {
+				deprecate({name: 'noDecorator', since: '1.3.0', replacedBy: 'autoFocus'});
+			}
 		}
 
 		componentDidUpdate (_, prevState) {
@@ -144,7 +159,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 		}
 
 		onBlur = (ev) => {
-			if (!this.props.noDecorator) {
+			if (!this.props.noDecorator && !this.props.autoFocus) {
 				if (isBubbling(ev)) {
 					if (Spotlight.getPointerMode()) {
 						this.blur();
@@ -158,15 +173,14 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 					forwardBlur(ev, this.props);
 					this.blur();
 				}
-			} else if (this.state.focused === 'input' && this.state.node === ev.target) {
-				if (ev.currentTarget === ev.relatedTarget) {
-					// if the focused item (ev.relatedTarget) is the current target (the decorator),
-					// prevent the blur from propagating so the input will be re-focused on update.
-					ev.stopPropagation();
-				} else {
-					// only blur when the input should be focused and is the target of the blur
+			} else if (isBubbling(ev)) {
+				if (this.state.focused === 'input' && this.state.node === ev.target && ev.currentTarget !== ev.relatedTarget) {
 					this.blur();
 					forwardBlur(ev, this.props);
+				} else {
+					this.focusDecorator(ev.currentTarget);
+					ev.stopPropagation();
+					this.blur();
 				}
 			}
 		}
@@ -186,16 +200,16 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 		onFocus = (ev) => {
 			forwardFocus(ev, this.props);
 
-			// when in noDecorator mode, focusing the decorator directly will cause it to
+			// when in noDecorator or autoFocus mode, focusing the decorator directly will cause it to
 			// forward the focus onto the <input>
-			if (this.props.noDecorator && !isBubbling(ev)) {
+			if (!isBubbling(ev) && (this.props.noDecorator || this.props.autoFocus && this.state.focused === null && !Spotlight.getPointerMode())) {
 				this.focusInput(ev.currentTarget);
 				ev.stopPropagation();
 			}
 		}
 
 		onKeyDown = (ev) => {
-			const {dismissOnEnter, noDecorator} = this.props;
+			const {dismissOnEnter} = this.props;
 			const {currentTarget, keyCode, target} = ev;
 
 			if (this.state.focused === 'input') {
@@ -220,17 +234,15 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 				);
 
 				if (shouldFocusDecorator) {
-					if (!noDecorator) {
-						// we really only support the number type properly, so only handling this case
-						if (ev.target.type === 'number') {
-							ev.preventDefault();
-						}
-						this.focusDecorator(currentTarget);
+					// we really only support the number type properly, so only handling this case
+					if (ev.target.type === 'number') {
+						ev.preventDefault();
+					}
+					this.focusDecorator(currentTarget);
 
-						// prevent Enter onKeyPress which triggers an onClick via Spotlight
-						if (isEnter) {
-							ev.preventDefault();
-						}
+					// prevent Enter onKeyPress which triggers an onClick via Spotlight
+					if (isEnter) {
+						ev.preventDefault();
 					}
 				} else if (isLeft || isRight) {
 					// prevent 5-way nav for left/right keys within the <input>
@@ -240,23 +252,14 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			forwardKeyDown(ev, this.props);
 		}
 
-		calcClassName () {
-			const {className, noDecorator} = this.props;
-			if (noDecorator) {
-				return className ? css.noDecorator + ' ' + className : css.noDecorator;
-			}
-
-			return className;
-		}
-
 		render () {
 			const props = Object.assign({}, this.props);
+			delete props.autoFocus;
 			delete props.noDecorator;
 
 			return (
 				<Component
 					{...props}
-					className={this.calcClassName()}
 					focused={this.state.focused === 'input'}
 					onBlur={this.onBlur}
 					onClick={this.onClick}
