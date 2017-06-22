@@ -41,6 +41,15 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 
 		propTypes: /** @lends moonstone/IncrementSlider.IncrementSliderBase.prototype */ {
 			/**
+			 * When `true`, prevents read out of both the slider and the increment and decrement
+			 * buttons.
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			'aria-hidden': PropTypes.bool,
+
+			/**
 			 * When `true`, the knob displays selected and can be moved using 5-way controls.
 			 *
 			 * @type {Boolean}
@@ -333,16 +342,17 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			incrementSliderClasses: ({vertical, styler}) => styler.append({vertical, horizontal: !vertical}),
 			decrementIcon: ({decrementIcon, vertical}) => (decrementIcon || (vertical ? 'arrowlargedown' : 'arrowlargeleft')),
 			incrementIcon: ({incrementIcon, vertical}) => (incrementIcon || (vertical ? 'arrowlargeup' : 'arrowlargeright')),
-			decrementAriaLabel: ({value}) => (`${value} ${$L('press ok button to decrease the value')}`),
-			incrementAriaLabel: ({value}) => (`${value} ${$L('press ok button to increase the value')}`)
+			decrementAriaLabel: ({disabled, min, value}) => !(disabled || value <= min) ? (`${value} ${$L('press ok button to decrease the value')}`) : null,
+			incrementAriaLabel: ({disabled, max, value}) => !(disabled || value >= max) ? (`${value} ${$L('press ok button to increase the value')}`) : null
 		},
 
-		render: ({active, backgroundProgress, children, decrementAriaLabel, decrementDisabled, decrementIcon, detachedKnob, disabled, focused, incrementAriaLabel, incrementDisabled, incrementIcon, incrementSliderClasses, inputRef, max, min, noFill, onActivate, onChange, onDecrement, onIncrement, onSpotlightDisappear, scrubbing, sliderBarRef, sliderRef, spotlightDisabled, step, tooltip, tooltipAsPercent, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => {
+		render: ({active, 'aria-hidden': ariaHidden, backgroundProgress, children, decrementAriaLabel, decrementDisabled, decrementIcon, detachedKnob, disabled, focused, incrementAriaLabel, incrementDisabled, incrementIcon, incrementSliderClasses, inputRef, max, min, noFill, onActivate, onChange, onDecrement, onIncrement, onSpotlightDisappear, scrubbing, sliderBarRef, sliderRef, spotlightDisabled, step, tooltip, tooltipAsPercent, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => {
 			const ariaProps = extractAriaProps(rest);
 
 			return (
 				<div {...rest} className={incrementSliderClasses}>
 					<IncrementSliderButton
+						aria-hidden={ariaHidden}
 						aria-label={decrementAriaLabel}
 						className={css.decrementButton}
 						disabled={decrementDisabled}
@@ -355,6 +365,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 					<Slider
 						{...ariaProps}
 						active={active}
+						aria-hidden={ariaHidden}
 						backgroundProgress={backgroundProgress}
 						className={css.slider}
 						disabled={disabled}
@@ -384,6 +395,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						{children}
 					</Slider>
 					<IncrementSliderButton
+						aria-hidden={ariaHidden}
 						aria-label={incrementAriaLabel}
 						className={css.incrementButton}
 						disabled={incrementDisabled}

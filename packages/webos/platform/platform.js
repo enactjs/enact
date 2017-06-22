@@ -1,5 +1,14 @@
 /**
- * Platform identification of webOS variants
+ * Exports the {@link webos/platform.platform} object that contains basic device
+ * type information for webOS platforms.  For detection of non-webOS platforms,
+ * use the {@link core/platform} module.
+ *
+ * @module webos/platform
+ */
+
+/**
+ * {@link webos/platform.platform} provides identification of webOS variants.
+ *
  * @readonly
  * @type {object}
  * @property {?boolean} tv - Set true for LG webOS SmartTV
@@ -7,7 +16,10 @@
  * @property {?boolean} open - Set true for Open webOS
  * @property {?boolean} legacy - Set true for legacy webOS (Palm and HP hardware)
  * @property {?boolean} unknown - Set true for any unknown system
-*/
+ *
+ * @memberof webos/platform
+ * @public
+ */
 const platform = {};
 
 if (typeof window === 'object' && window.PalmSystem) {

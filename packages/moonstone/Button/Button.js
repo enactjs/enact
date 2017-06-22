@@ -2,6 +2,9 @@
  * Exports the {@link moonstone/Button.Button} and {@link moonstone/Button.ButtonBase}
  * components.  The default export is {@link moonstone/Button.Button}.
  *
+ * @example
+ * <Button small>Click me</Button>
+ *
  * @module moonstone/Button
  */
 

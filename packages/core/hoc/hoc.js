@@ -2,14 +2,15 @@ import {isRenderable} from '../util';
 
 /**
  * Constructs a Higher-order Component using an optional set of default configuration parameters and
- * a factory method that acceps instance configuration paramters and a component to wrap. The
+ * a factory method that accepts instance configuration parameters and a component to wrap. The
  * returned function can accept:
  * 	* an instance config and a component constructor to wrap and return a renderable component, or
  * 	* an instance config only and return a decorator function expecting a component constructor
  * 	  (like the next bullet), or
  * 	* a component constructor and return a renderable component
  *
- * @example
+ * Example:
+ * ```
  *	const Countable = hoc({prop: 'data-count'}, (config, Wrapped) => {
  *		return class extends React.Component {
  *			constructor (props) {
@@ -32,7 +33,7 @@ import {isRenderable} from '../util';
  *	const CountableAsDataNumber({prop: 'data-number'});
  *	const CountableDiv('div');
  *	const CountableDivAsDataNumber = CountableAsDataNumber('div');
- *
+ * ```
  * @param  {Object} defaultConfig Set of default configuration parameters
  * @param  {Function} hawk        Higher-order component
  *

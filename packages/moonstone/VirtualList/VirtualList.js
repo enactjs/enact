@@ -66,22 +66,25 @@ const VirtualList = kind({
 		 *   `'left'`, `'right'`, `'top'`, `'bottom'`,
 		 *   `'topleft'`, `'topright'`, `'bottomleft'`, and `'bottomright'`.
 		 * - {index} - You can set an index of specific item. (`0` or positive integer)
-		 *   This option is available for only VirtualList kind.
+		 *   This option is available only for `VirtualList` kind.
 		 * - {node} - You can set a node to scroll
 		 * - {animate} - When `true`, scroll occurs with animation.
-		 *   Set it to `false`, if you want scrolling without animation.
-		 * - {indexToFocus} - Deprecated: Use `focus` insead.
-		 * - {focus} - Set it `true`, if you want the item to be focused after scroll.
+		 *   Set it to `false` if you want scrolling without animation.
+		 * - {indexToFocus} - Deprecated: Use `focus` instead.
+		 * - {focus} - Set `true` if you want the item to be focused after scroll.
 		 *   This option is only valid when you scroll by `index` or `node`.
 		 *
-		 * @name cbScrollTo
-		 * @type {Function}
-		 * @memberof moonstone/VirtualList.VirtualList
-		 * @example
+		 * Example:
+		 * ````
 		 *	// If you set cbScrollTo prop like below;
 		 *	cbScrollTo: (fn) => {this.scrollTo = fn;}
 		 *	// You can simply call like below;
 		 *	this.scrollTo({align: 'top'}); // scroll to the top
+		 * ```
+		 *
+		 * @name cbScrollTo
+		 * @type {Function}
+		 * @memberof moonstone/VirtualList.VirtualList
 		 * @instance
 		 * @public
 		 */
@@ -252,22 +255,24 @@ const VirtualGridList = kind({
 		 *   `'left'`, `'right'`, `'top'`, `'bottom'`,
 		 *   `'topleft'`, `'topright'`, `'bottomleft'`, and `'bottomright'`.
 		 * - {index} - You can set an index of specific item. (`0` or positive integer)
-		 *   This option is available for only VirtualList kind.
+		 *   This option is available only for `VirtualList` kind.
 		 * - {node} - You can set a node to scroll
 		 * - {animate} - When `true`, scroll occurs with animation.
-		 *   Set it to `false`, if you want scrolling without animation.
-		 * - {indexToFocus} - Deprecated: Use `focus` insead.
-		 * - {focus} - Set it `true`, if you want the item to be focused after scroll.
+		 *   Set it to `false` if you want scrolling without animation.
+		 * - {indexToFocus} - Deprecated: Use `focus` instead.
+		 * - {focus} - Set `true` if you want the item to be focused after scroll.
 		 *   This option is only valid when you scroll by `index` or `node`.
 		 *
-		 * @name cbScrollTo
-		 * @type {Function}
-		 * @memberof moonstone/VirtualList.VirtualGridList
-		 * @example
+		 * Example:
 		 *	// If you set cbScrollTo prop like below;
 		 *	cbScrollTo: (fn) => {this.scrollTo = fn;}
 		 *	// You can simply call like below;
 		 *	this.scrollTo({align: 'top'}); // scroll to the top
+		 * ```
+		 *
+		 * @name cbScrollTo
+		 * @type {Function}
+		 * @memberof moonstone/VirtualList.VirtualGridList
 		 * @instance
 		 * @public
 		 */

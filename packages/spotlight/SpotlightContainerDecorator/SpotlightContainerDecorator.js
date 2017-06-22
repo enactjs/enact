@@ -69,13 +69,16 @@ const defaultConfig = {
  * Constructs a Higher-order Component that allows Spotlight focus to be passed to
  * its own configurable hierarchy of spottable child controls.
  *
- * @example
+ * Example:
+ * ```
  *	const DefaultContainer = SpotlightContainerDecorator(Component);
  *	const FocusDefaultContainer = SpotlightContainerDecorator({enterTo: 'default-element'}, Component);
+ * ```
  *
  * To specify a default element to spot in a container, utilize the `spotlightDefaultClass`.
  *
- * @example
+ * Example:
+ * ```
  *	import Spotlight from '@enact/spotlight';
  *	import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
  *	const ContainerComponent = SpotlightContainerDecorator(Component);
@@ -87,7 +90,7 @@ const defaultConfig = {
  *			</ContainerComponent>
  *		}
  *	});
- *
+ * ```
  * @param  {Object}    defaultConfig  Set of default configuration parameters. Additional parameters
  *                                    are passed as configuration to {@link spotlight/Spotlight.set}
  * @param  {Function} Higher-order component
@@ -216,8 +219,14 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		handleMouseLeave = (ev) => {
 			if (this.props.spotlightRestrict !== 'self-only') {
 				const parentContainer = ev.currentTarget.parentNode.closest('[data-container-id]');
-				const activeContainer = parentContainer ? parentContainer.dataset.containerId : null;
-				Spotlight.setActiveContainer(activeContainer);
+				let activeContainer = Spotlight.getActiveContainer();
+
+				// if this container is wrapped by another and this is the currently active
+				// container, move the active container to the parent
+				if (parentContainer && activeContainer === this.state.id) {
+					activeContainer = parentContainer.dataset.containerId;
+					Spotlight.setActiveContainer(activeContainer);
+				}
 			}
 			forwardMouseLeave(ev, this.props);
 		}
