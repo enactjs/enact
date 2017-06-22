@@ -1,4 +1,4 @@
-import Holdable from '@enact/ui/Holdable';
+import Holdable from '../internal/Holdable';
 import kind from '@enact/core/kind';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';

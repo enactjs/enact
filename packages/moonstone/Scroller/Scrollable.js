@@ -54,7 +54,7 @@ const dataIndexAttribute = 'data-index';
 const ScrollableSpotlightContainer = SpotlightContainerDecorator(
 	{
 		navigableFilter: (elem, {focusableScrollbar}) => {
-			if (!focusableScrollbar && elem.classList.contains(scrollbarCss.scrollButton)) {
+			if (!focusableScrollbar && elem.classList.contains(scrollbarCss.scrollButton) && !Spotlight.getPointerMode()) {
 				return false;
 			}
 		},

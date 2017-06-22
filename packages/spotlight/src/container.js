@@ -509,7 +509,7 @@ const isNavigable = (node, containerId, verify) => {
 	}
 
 	const containerNode = getContainerNode(containerId);
-	if (containerNode !== document && containerNode.dataset.containerDisabled) {
+	if (containerNode !== document && containerNode.dataset.containerDisabled === 'true') {
 		return false;
 	}
 
@@ -622,7 +622,7 @@ function getContainerNavigableElements (containerId) {
 
 	const config = getContainerConfig(containerId);
 	const enterLast = config.enterTo === 'last-focused';
-	const enterDefault = config.enterTo === 'defaultElement';
+	const enterDefault = config.enterTo === 'default-element';
 	let next;
 
 	// if the container has a preferred entry point, try to find it first
