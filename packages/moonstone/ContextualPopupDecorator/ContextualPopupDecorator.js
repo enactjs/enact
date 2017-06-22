@@ -46,6 +46,26 @@ const ContextualPopupContainer = SpotlightContainerDecorator({enterTo: 'last-foc
  * which positions {@link moonstone/ContextualPopupDecorator.ContextualPopup} in
  * relation to the Wrapped component.
  *
+ * Example:
+ * ```
+ * const PopupComponent = ({props}) => (
+ * 	<Component {...props} />
+ * )
+ *
+ * const popupProps = {
+ * 	functionProp: () => {},
+ * 	stringProp: '',
+ * 	booleanProp: false
+ * };
+ *
+ * const ContextualPopupComponent = ContextualPopupDecorator(Component);
+ *
+ * <ContextualPopupComponent
+ * 	popupComponent={PopupComponent}
+ * 	popupProps={popupProps}
+ * />
+ * ```
+ *
  * @class ContextualPopupDecorator
  * @memberof moonstone/ContextualPopupDecorator
  * @hoc
