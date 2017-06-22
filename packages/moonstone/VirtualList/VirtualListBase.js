@@ -761,7 +761,7 @@ class VirtualListCore extends Component {
 		return (
 			<div {...props} ref={this.initContainerRef}>
 				{cc.length ? cc : (
-					<SpotlightPlaceholder data-vl-placeholder />
+					<SpotlightPlaceholder data-index={0} data-vl-placeholder />
 				)}
 			</div>
 		);

@@ -731,10 +731,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		isVerticalScrollbarVisible = () => (this.props.verticalScrollbar === 'visible')
 
 		showThumb (bounds) {
-			if (this.state.isHorizontalScrollbarVisible && this.canScrollHorizontally(bounds)) {
+			if (this.state.isHorizontalScrollbarVisible && this.scrollbarHorizontalRef && this.canScrollHorizontally(bounds)) {
 				this.scrollbarHorizontalRef.showThumb();
 			}
-			if (this.state.isVerticalScrollbarVisible && this.canScrollVertically(bounds)) {
+			if (this.state.isVerticalScrollbarVisible && this.scrollbarVerticalRef && this.canScrollVertically(bounds)) {
 				this.scrollbarVerticalRef.showThumb();
 			}
 		}
@@ -831,12 +831,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		updateScrollOnFocus () {
 			const
 				focusedItem = Spotlight.getCurrent(),
-				{calculatePositionOnFocus, getScrollBounds} = this.childRef,
+				{containerRef, calculatePositionOnFocus, getScrollBounds} = this.childRef,
 				{scrollHeight: previousScrollHeight} = this.bounds,
 				{scrollHeight: currentScrollHeight} = getScrollBounds(),
 				scrollInfo = {previousScrollHeight, scrollTop: this.scrollTop};
 
-			if (focusedItem) {
+			if (focusedItem && containerRef && containerRef.contains(focusedItem)) {
 				const position = calculatePositionOnFocus(focusedItem, scrollInfo);
 				this.startScrollOnFocus(position, focusedItem);
 			}
