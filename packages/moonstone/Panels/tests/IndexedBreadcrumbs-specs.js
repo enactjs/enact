@@ -10,7 +10,7 @@ describe('IndexedBreadcrumbs', () => {
 	it('should generate {index} breadcrumbs when {index} <= {max}', function () {
 		const index = 3;
 		const max = 5;
-		const breadcrumbs = IndexedBreadcrumbs(index, max);
+		const breadcrumbs = IndexedBreadcrumbs('id', index, max);
 
 		const expected = index;
 		const actual = breadcrumbs.length;
@@ -21,7 +21,7 @@ describe('IndexedBreadcrumbs', () => {
 	it('should generate {max} breadcrumbs when {index} > {max}', function () {
 		const index = 6;
 		const max = 1;
-		const breadcrumbs = IndexedBreadcrumbs(index, max);
+		const breadcrumbs = IndexedBreadcrumbs('id', index, max);
 
 		const expected = max;
 		const actual = breadcrumbs.length;
@@ -30,7 +30,7 @@ describe('IndexedBreadcrumbs', () => {
 	});
 
 	it('should pad indices less than 10 with 0', function () {
-		const breadcrumbs = IndexedBreadcrumbs(1, 5);
+		const breadcrumbs = IndexedBreadcrumbs('id', 1, 5);
 
 		const expected = '01';
 		// React creates two children, one for '<' and one for the index label
@@ -43,7 +43,7 @@ describe('IndexedBreadcrumbs', () => {
 		const handleClick = sinon.spy();
 		const subject = mount(
 			<nav>
-				{IndexedBreadcrumbs(1, 1, handleClick)}
+				{IndexedBreadcrumbs('id', 1, 1, handleClick)}
 			</nav>
 		);
 
