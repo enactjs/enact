@@ -159,12 +159,7 @@ const Spotlight = (function () {
 			return false;
 		}
 
-		let currentFocusedElement = getCurrent();
-
 		let silentFocus = function () {
-			if (currentFocusedElement) {
-				currentFocusedElement.blur();
-			}
 			elem.focus();
 			focusChanged(elem, containerIds);
 		};
@@ -180,10 +175,6 @@ const Spotlight = (function () {
 			silentFocus();
 			_duringFocusChange = false;
 			return true;
-		}
-
-		if (currentFocusedElement) {
-			currentFocusedElement.blur();
 		}
 
 		elem.focus();

@@ -1,33 +1,13 @@
 import deprecate from '@enact/core/internal/deprecate';
 import {forward, handle} from '@enact/core/handle';
-import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Slottable from '@enact/ui/Slottable';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
+import classnames from 'classnames';
 import css from './Panel.less';
-
-const spotPanel = (autoFocus) => (node) => {
-	if (node && !Spotlight.getCurrent()) {
-		const {containerId} = node.dataset;
-		const config = {
-			enterTo: 'last-focused'
-		};
-
-		if (autoFocus !== 'last-focused') {
-			config.enterTo = 'default-element';
-
-			if (autoFocus !== 'default-element') {
-				config.defaultElement = autoFocus;
-			}
-		}
-
-		Spotlight.set(containerId, config);
-		Spotlight.focus(containerId);
-	}
-};
 
 let panelId = 0;
 
@@ -40,7 +20,7 @@ const adaptToAutoFocus = deprecate(() => 'none', {
 });
 
 /**
-* {@link moonstone/Panels.Panel} is the default kind for controls created inside a
+* {@link moonstone/Panels.Panel} is the component for controls created inside a
 * [moonstone/Panels]{@link moonstone/Panels.Panels} container. A `moonstone/Panels`
 * will typically contain several instances of these.
 *
@@ -49,11 +29,9 @@ const adaptToAutoFocus = deprecate(() => 'none', {
 * @ui
 * @public
 */
-const PanelBase = kind({
+class PanelBase extends React.Component {
 
-	name: 'Panel',
-
-	propTypes: /** @lends moonstone/Panels.Panel.prototype */ {
+	static propTypes =  /** @lends moonstone/Panels.Panel.prototype */ {
 		/**
 		 * By default, the panel will be labeled by its [Header]{@link moonstone/Panels.Header}.
 		 * When `aria-label` is set, it will be used instead to provide an accessibility label for
@@ -114,69 +92,97 @@ const PanelBase = kind({
 		 * @public
 		 */
 		noAutoFocus: PropTypes.bool
-	},
+	}
 
-	defaultProps: {
+	static defaultProps = {
 		autoFocus: 'last-focused',
 		hideChildren: false,
 		noAutoFocus: false
-	},
+	}
 
-	styles: {
-		css,
-		className: 'panel'
-	},
+	componentDidMount () {
+		this.ariaLabelledBy = `panel_${++panelId}_header`;
+	}
 
-	handlers: {
-		onScroll: handle(
-			forward('onScroll'),
-			({currentTarget}) => {
-				currentTarget.scrollTop = 0;
-				currentTarget.scrollLeft = 0;
+	componentWillReceiveProps (nextProps) {
+		const {hideChildren} = this.props;
+
+		// In order to spot the header / body components, we defer spotting until !hideChildren.
+		if (hideChildren !== nextProps.hideChildren && !nextProps.hideChildren) {
+			this.spotPanel();
+		}
+	}
+
+	panelRef = (node) => {
+		this.panelNode = node;
+		if (node) {
+			// If the Panel opts out of hideChildren support by explicitly setting it to false,
+			// it'll spot on mount.
+			this.spotPanel();
+		}
+	}
+
+	spotPanel () {
+		let {autoFocus, noAutoFocus} = this.props;
+
+		if (noAutoFocus) {
+			autoFocus = adaptToAutoFocus();
+		}
+
+		if (autoFocus !== 'none' && this.panelNode && !Spotlight.getCurrent()) {
+			const {containerId} = this.panelNode.dataset;
+			const config = {
+				enterTo: 'last-focused'
+			};
+
+			if (autoFocus !== 'last-focused') {
+				config.enterTo = 'default-element';
+
+				if (autoFocus !== 'default-element') {
+					config.defaultElement = autoFocus;
+				}
 			}
-		)
-	},
 
-	computed: {
-		// In order to spot the body components, we defer spotting until !hideChildren. If the Panel
-		// opts out of hideChildren support by explicitly setting it to false, it'll spot on first
-		// render.
-		spotOnRender: ({autoFocus, hideChildren, noAutoFocus}) => {
-			if (noAutoFocus) {
-				autoFocus = adaptToAutoFocus();
-			}
+			Spotlight.set(containerId, config);
+			Spotlight.focus(containerId);
+		}
+	}
 
-			if (hideChildren || autoFocus === 'none') {
-				return null;
-			}
+	handle = handle.bind(this)
 
-			return spotPanel(autoFocus);
-		},
-		children: ({children, hideChildren}) => hideChildren ? null : children,
-		bodyClassName: ({header, hideChildren, styler}) => styler.join({
-			body: true,
-			noHeader: !header,
-			visible: !hideChildren
-		}),
+	handleScroll = this.handle(
+		forward('onScroll'),
+		({currentTarget}) => {
+			currentTarget.scrollTop = 0;
+			currentTarget.scrollLeft = 0;
+		}
+	)
+
+	render () {
+		const props = Object.assign({}, this.props);
+		const {children, label, header, hideChildren, ...rest} = props;
+
+		delete rest.autoFocus;
+		delete rest.noAutoFocus;
+
 		// nulling headerId prevents the aria-labelledby relationship which is necessary to allow
 		// aria-label to take precedence
 		// (see https://www.w3.org/TR/wai-aria/states_and_properties#aria-labelledby)
-		headerId: ({'aria-label': label}) => label ? null : `panel_${++panelId}_header`
-	},
-
-	render: ({bodyClassName, children, header, headerId, spotOnRender, ...rest}) => {
-		delete rest.autoFocus;
-		delete rest.hideChildren;
-		delete rest.noAutoFocus;
+		const headerId = label ? null : this.ariaLabelledBy;
+		const bodyClassName = classnames({
+			body: true,
+			noHeader: !header,
+			visible: !hideChildren
+		});
 
 		return (
-			<article role="region" {...rest} aria-labelledby={headerId} ref={spotOnRender}>
+			<article role="region" {...rest} aria-labelledby={headerId} className={css.panel} onScroll={this.handleScroll} ref={this.panelRef}>
 				<div className={css.header} id={headerId}>{header}</div>
 				<section className={bodyClassName}>{children}</section>
 			</article>
 		);
 	}
-});
+}
 
 const Panel = SpotlightContainerDecorator(
 	{
