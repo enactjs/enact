@@ -6,6 +6,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Deprecated
 
+- `moonstone/Input` prop `noDecorator` is being replaced by `autoFocus` in 2.0.0.
+
 ### Added
 
 ### Changed
