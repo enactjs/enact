@@ -14,8 +14,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {calcAriaLabel, Input} from '../Input';
-import css from '../Input/Input.less';
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
+
+import css from './ExpandableInput.less';
 
 const forwardMouseDown = forward('onMouseDown');
 
@@ -278,7 +279,7 @@ class ExpandableInputBase extends React.Component {
 
 	calcClassName () {
 		const {className} = this.props;
-		const expandableInputClass = css['moon-expandable-input'];
+		const expandableInputClass = css.expandableInput;
 
 		return className ? `${expandableInputClass} ${className}` : expandableInputClass;
 	}
@@ -303,6 +304,7 @@ class ExpandableInputBase extends React.Component {
 			>
 				<Input
 					autoFocus
+					className={css.decorator}
 					disabled={disabled}
 					dismissOnEnter
 					iconAfter={iconAfter}
