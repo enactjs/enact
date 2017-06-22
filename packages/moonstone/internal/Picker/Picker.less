@@ -6,28 +6,26 @@
 @import '../../styles/skin.less';
 
 .picker {
-	@button-width: (@moon-button-small-height - 12);
-
 	display: inline-block;
-	border-radius: @button-width;
+	border-radius: @moon-button-small-height;
 	vertical-align: bottom;
 	position: relative;
 	text-align: center;
 	margin-left: @moon-spotlight-outset;
 	margin-right: @moon-spotlight-outset;
 
+	.moon-custom-text({
+		border-radius: @moon-button-small-height-large;
+	});
+
 	.sizingPlaceholder,
 	.valueWrapper {
 		.moon-text-base();
 		.moon-locale-non-latin({line-height: @moon-button-small-height;});
-		height: @moon-button-small-height;
-		line-height: @moon-button-small-height;
 		max-width: 300px;
 
 		.moon-custom-text({
 			font-size: @moon-item-font-size-large;
-			line-height: @moon-button-small-height-large;
-			height: @moon-button-small-height-large;
 		});
 	}
 
@@ -41,6 +39,14 @@
 		margin-left: auto;
 		margin-right: auto;
 		vertical-align: bottom;
+
+		line-height: @moon-button-small-height;
+		height: @moon-button-small-height;
+
+		.moon-custom-text({
+			line-height: @moon-button-small-height-large;
+			height: @moon-button-small-height-large;
+		});
 	}
 
 	.incrementer,
@@ -89,6 +95,10 @@
 
 		.icon {
 			vertical-align: top;
+			margin: 0;
+			width: @moon-button-small-height;
+			height: @moon-button-small-height;
+			line-height: @moon-button-small-height;
 		}
 
 		.incrementer,
@@ -126,16 +136,20 @@
 			}
 			.incrementer,
 			.decrementer {
-				width: @button-width;
+				margin: 0;
 				height: @moon-button-small-height;
 				line-height: @moon-button-small-height;
 			}
-			.incrementer .icon {
-				margin-left: 0;
-			}
-			.decrementer .icon {
-				margin-right: 0;
-			}
+			.moon-custom-text({
+				.incrementer,
+				.decrementer {
+					&,
+					.icon {
+						height: @moon-button-small-height-large;
+						line-height: @moon-button-small-height-large;
+					}
+				}
+			});
 		}
 
 		&.vertical {

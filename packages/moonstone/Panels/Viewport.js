@@ -6,7 +6,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Spotlight from '@enact/spotlight';
 
-import IdProvider from './IdProvider';
 import css from './Panels.less';
 
 /**
@@ -78,7 +77,7 @@ const ViewportBase = kind({
 	computed: {
 		children: ({children, generateId}) => React.Children.map(children, (child, index) => {
 			return React.cloneElement(child, {
-				containerId: child.props.containerId || generateId(index),
+				containerId: child.props.containerId || generateId(index, 'panel-container', Spotlight.remove),
 				'data-index': index
 			});
 		}),
@@ -111,10 +110,8 @@ const ViewportBase = kind({
 	}
 });
 
-const Viewport = IdProvider(
-	{onUnmount: Spotlight.remove, prefix: 'panel-container-'},
+export default ViewportBase;
+export {
+	ViewportBase as Viewport,
 	ViewportBase
-);
-
-export default Viewport;
-export {Viewport, ViewportBase};
+};
