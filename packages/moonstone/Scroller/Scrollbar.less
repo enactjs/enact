@@ -46,7 +46,7 @@
 	--scrollbar-h-size: 100%;
 	--scrollbar-h-progress: 0;
 
-	.bar {
+	.scrollThumb {
 		position: relative;
 		width: 3px;
 		height: 3px;
@@ -60,7 +60,7 @@
 		transform-origin: 0 0 0;
 	}
 
-	.bar::before {
+	.scrollThumb::before {
 		background: #666;
 		display: block;
 		position: absolute;
@@ -72,7 +72,7 @@
 		flex-direction: column;
 		-webkit-margin-start: @moon-spotlight-outset;
 
-		.bar {
+		.scrollThumb {
 			&::before {
 				width: 100%;
 				height: var(--scrollbar-v-size);
@@ -82,7 +82,7 @@
 			}
 		}
 	}
-	&.horizontal .bar {
+	&.horizontal .scrollThumb {
 		&::before {
 			--left-position: ~'calc((100% - var(--scrollbar-h-size)) * var(--scrollbar-h-progress))';
 
@@ -98,7 +98,7 @@
 }
 
 :global(.rtl) .scrollbar.horizontal {
-	.bar::before {
+	.scrollThumb::before {
 		// left: ~'calc(-1 * var(--left-position))';
 		left: initial;
 		right: var(--left-position);

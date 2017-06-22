@@ -192,7 +192,7 @@ class ScrollbarBase extends PureComponent {
 		const
 			{className, disabled, onNextScroll, onPrevScroll, vertical} = this.props,
 			{prevButtonDisabled, nextButtonDisabled} = this.state,
-			scrollbarClassName = classNames(
+			containerClassName = classNames(
 				className,
 				css.scrollbar,
 				flexboxCss.flexContainer,
@@ -202,7 +202,7 @@ class ScrollbarBase extends PureComponent {
 			nextIcon = prepareNextButton(vertical);
 
 		return (
-			<div ref={this.initContainerRef} className={scrollbarClassName}>
+			<div ref={this.initContainerRef} className={containerClassName}>
 				<ScrollButton
 					className={css.left}
 					direction={vertical ? 'up' : 'left'}
@@ -213,7 +213,7 @@ class ScrollbarBase extends PureComponent {
 					{prevIcon}
 				</ScrollButton>
 				<ScrollThumb
-					className={classNames(css.bar, flexboxCss.flexItemsStretch)}
+					className={classNames(css.scrollThumb, flexboxCss.flexItemsStretch)}
 					getScrollThumbMovableRef={this.getScrollThumbMovableRef}
 					ref={this.getFadableRef}
 					vertical={vertical}

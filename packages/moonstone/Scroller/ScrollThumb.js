@@ -1,6 +1,6 @@
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
-import React, {PureComponent} from 'react';
+import React, {PureComponent, PropTypes} from 'react';
 
 import css from './ScrollThumb.less';
 
@@ -16,6 +16,10 @@ import css from './ScrollThumb.less';
 const ScrollThumbFadable = hoc((config, Wrapped) => {
 	return class extends PureComponent {
 		static displayName = 'ScrollThumbFadable'
+
+		static propTypes = /** @lends moonstone/ScrollThumb.ScrollThumbFadable.prototype */ {
+			getScrollThumbMovableRef: PropTypes.func.isRequired
+		}
 
 		constructor () {
 			super();
@@ -75,6 +79,11 @@ const ScrollThumbMovable = hoc((config, Wrapped) => {
 	return class extends PureComponent {
 		static displayName = 'ScrollThumbMovable'
 
+		static propTypes = /** @lends moonstone/ScrollThumb.ScrollThumbMovable.prototype */ {
+			getScrollThumbRef: PropTypes.func.isRequired,
+			vertical: PropTypes.bool.isRequired
+		}
+
 		update = (bounds, rtl) => {
 			const
 				{vertical} = this.props,
@@ -127,7 +136,11 @@ const ScrollThumbMovable = hoc((config, Wrapped) => {
 });
 
 class ScrollThumbBase extends PureComponent {
-	static displayName = 'ScrollScrollThumb'
+	static displayName = 'ScrollThumbBase'
+
+	static propTypes = /** @lends moonstone/ScrollThumb.ScrollThumbBase.prototype */ {
+		getScrollThumbRef: PropTypes.func.isRequired
+	}
 
 	render () {
 		const {getScrollThumbRef, ...rest} = this.props;

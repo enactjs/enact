@@ -915,6 +915,36 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			return this.onScrollbarBtnHandler(orientation, direction);
 		}
 
+		getHorizontalScrollbar = (isHorizontalScrollbarVisible) => (
+			isHorizontalScrollbarVisible ? (
+				<Scrollbar
+					{...this.horizontalScrollbarProps}
+					className={classNames(
+						flexboxCss.flexItemsShrink,
+						css.newScrollbar,
+						css.horizontalScrollbar,
+						'horizontal'
+					)}
+					disabled={!isHorizontalScrollbarVisible}
+				/>
+			) : null
+		)
+
+		getVerticalScrollbar = (isVerticalScrollbarVisible) => (
+			isVerticalScrollbarVisible ? (
+				<Scrollbar
+					{...this.verticalScrollbarProps}
+					className={classNames(
+						css.newScrollbar,
+						css.verticalScrollbar,
+						'vertical',
+						flexboxCss.flexItemsShrink
+					)}
+					disabled={!isVerticalScrollbarVisible}
+				/>
+			) : null
+		)
+
 		handleScroll = () => {
 			if (!this.animator.isAnimating() && this.childRef && this.childRef.containerRef) {
 				this.childRef.containerRef.scrollTop = this.scrollTop;
@@ -927,6 +957,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				props = Object.assign({}, this.props),
 				{className, focusableScrollbar, style} = this.props,
 				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
+				vscrollbar = this.getVerticalScrollbar(isVerticalScrollbarVisible),
+				hscrollbar = this.getHorizontalScrollbar(isHorizontalScrollbarVisible),
 				scrollableClasses = classNames(
 					className,
 					css.scrollable,
@@ -966,35 +998,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 							onScroll={this.handleScroll}
 							ref={this.initChildRef}
 						/>
-						{
-							isVerticalScrollbarVisible ? (
-								<Scrollbar
-									{...this.verticalScrollbarProps}
-									className={classNames(
-										css.newScrollbar,
-										css.verticalScrollbar,
-										'vertical',
-										flexboxCss.flexItemsShrink
-									)}
-									disabled={!isVerticalScrollbarVisible}
-								/>
-							) : null
-						}
+						{vscrollbar}
 					</div>
-					{
-						isHorizontalScrollbarVisible ? (
-							<Scrollbar
-								{...this.horizontalScrollbarProps}
-								className={classNames(
-									flexboxCss.flexItemsShrink,
-									css.newScrollbar,
-									css.horizontalScrollbar,
-									'horizontal'
-								)}
-								disabled={!isHorizontalScrollbarVisible}
-							/>
-						) : null
-					}
+					{hscrollbar}
 				</ScrollableSpotlightContainer>
 			);
 		}
