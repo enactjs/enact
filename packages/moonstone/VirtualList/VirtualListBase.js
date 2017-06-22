@@ -254,12 +254,7 @@ class VirtualListCore extends Component {
 	}
 
 	componentDidUpdate () {
-		if (this.restoreLastFocused && !this.getPlaceholder()) {
-			const containerId = this.props['data-container-id'];
-			this.restoreLastFocused = !Spotlight.focus(
-				`[data-container-id="${containerId}"] [data-index="${this.lastFocusedIndex}"]`
-			);
-		}
+		this.restoreFocus();
 	}
 
 	componentWillUnmount () {
@@ -317,6 +312,24 @@ class VirtualListCore extends Component {
 		}
 
 		return false;
+	}
+
+	restoreFocus () {
+		if (this.restoreLastFocused && !this.getPlaceholder()) {
+			this.restoreLastFocused = false;
+			const containerId = this.props['data-container-id'];
+
+			// try to focus the last focused item
+			const foundLastFocused = Spotlight.focus(
+				`[data-container-id="${containerId}"] [data-index="${this.lastFocusedIndex}"]`
+			);
+
+			// but if that fails (because it isn't found or is disabled), focus something in the
+			// list so spotlight isn't lost
+			if (!foundLastFocused) {
+				Spotlight.focus(containerId);
+			}
+		}
 	}
 
 	getScrollBounds = () => this.scrollBounds
