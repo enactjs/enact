@@ -9,12 +9,6 @@
 
 .scrollable {
 	.scrollableFill;
-	.content {
-		border: 3px dashed gray; // SHOULD BE REMOVED
-		background: inherit;
-		position: relative;
-		overflow: hidden;
-	}
 	box-sizing: border-box;
 
 	/* Set these to reasonable default values */
@@ -26,6 +20,17 @@
 	border: 3px dashed orange; // SHOULD BE REMOVED
 	box-sizing: border-box;
 	flex-direction: column;
+
+	.content {
+		border: 3px dashed gray; // SHOULD BE REMOVED
+		background: inherit;
+		position: relative;
+		overflow: hidden;
+	}
+
+	&:global(.h) .content > .flexContainer {
+		flex-direction: column;
+	}
 }
 
 :global(.rtl) {
@@ -39,22 +44,4 @@
 }
 .scrollable:not(:global(.v)):not(:global(.h)) .horizontalScrollbar {
 	-webkit-padding-end: 80px;
-}
-
-/* content */
-.scrollable:global(.h) .content > .flexContainer {
-	flex-direction: column;
-}
-
-.row {
-	position: absolute;
-	width: 100%;
-	justify-content: space-between;
-}
-.row p {
-	height: 200px;
-	width: 150px;
-	border: 3px solid green;
-	overflow: hidden;
-	margin: 0;
 }

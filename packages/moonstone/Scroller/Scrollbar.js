@@ -18,7 +18,7 @@ const
 		matrix: (position, scaledSize, natualSize) => (
 			'matrix3d(1, 0, 0, 0, 0,' + (scaledSize / natualSize) + ', 0, 0, 0, 0, 1, 0, 0, ' + position + ', 1, 1)'
 		),
-		scrollbarClass: classNames(css.newScrollbar, css.scrollbarContainerVColumn),
+		scrollbarClass: classNames(css.scrollbar, css.vertical),
 		sizeProperty: 'clientHeight',
 		thumbClass: css.scrollbarVthumb
 	},
@@ -26,7 +26,7 @@ const
 		matrix: (position, scaledSize, natualSize) => (
 			'matrix3d(' + (scaledSize / natualSize) + ', 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, ' + position + ', 0, 1, 1)'
 		),
-		scrollbarClass: classNames(css.newScrollbar, css.scrollbarContainerHColumn),
+		scrollbarClass: classNames(css.scrollbar, css.horizontal),
 		sizeProperty: 'clientWidth',
 		thumbClass: css.scrollerHthumb
 	},
@@ -223,8 +223,8 @@ class ScrollbarBase extends Component {
 
 	showThumb () {
 		this.hideThumbJob.stop();
-		this.thumbRef.classList.add(css.thumbShown);
-		this.thumbRef.classList.remove(css.thumbHidden);
+		this.thumbRef.classList.add(css.show);
+		this.thumbRef.classList.remove(css.hidden);
 	}
 
 	startHidingThumb () {
@@ -235,8 +235,8 @@ class ScrollbarBase extends Component {
 	}
 
 	hideThumb = () => {
-		this.thumbRef.classList.add(css.thumbHidden);
-		this.thumbRef.classList.remove(css.thumbShown);
+		this.thumbRef.classList.add(css.hidden);
+		this.thumbRef.classList.remove(css.show);
 	}
 
 	hideThumbJob = new Job(this.hideThumb, 200);
@@ -271,12 +271,12 @@ class ScrollbarBase extends Component {
 			{prevButtonDisabled, nextButtonDisabled} = this.state,
 			{rtl} = this.context,
 			{scrollbarClass, thumbClass} = this.scrollbarInfo,
-			scrollbarClassNames = classNames(className, scrollbarClass, flexboxCss.flexContainer),
+			scrollbarClassName = classNames(className, scrollbarClass, flexboxCss.flexContainer),
 			prevIcon = preparePrevButton(vertical, rtl),
 			nextIcon = prepareNextButton(vertical, rtl);
 
 		return (
-			<div ref={this.initContainerRef} className={scrollbarClassNames}>
+			<div ref={this.initContainerRef} className={scrollbarClassName}>
 				<ScrollButton
 					direction={vertical ? 'up' : 'left'}
 					disabled={disabled || prevButtonDisabled}
