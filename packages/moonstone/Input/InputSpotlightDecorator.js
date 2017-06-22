@@ -7,8 +7,6 @@ import PropTypes from 'prop-types';
 import Spotlight from '@enact/spotlight';
 import Spottable from '@enact/spotlight/Spottable';
 
-import css from './Input.less';
-
 const preventSpotlightNavigation = (ev) => {
 	ev.nativeEvent.stopImmediatePropagation();
 };
