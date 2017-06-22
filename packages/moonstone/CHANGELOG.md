@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Deprecated
 
 ### Added
+
 - `moonstone/ContextualPopupDecorator` property `popupProps` to attach props to popup component
 
 ### Changed

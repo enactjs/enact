@@ -48,22 +48,32 @@ const ContextualPopupContainer = SpotlightContainerDecorator({enterTo: 'last-foc
  *
  * Example:
  * ```
- * const PopupComponent = ({props}) => (
- * 	<Component {...props} />
- * )
+ * import PopupComponent from './PopupComponent';
  *
- * const popupProps = {
- * 	functionProp: () => {},
- * 	stringProp: '',
- * 	booleanProp: false
- * };
+ * const ContextualPopupComponent = ContextualPopupDecorator(Button);
  *
- * const ContextualPopupComponent = ContextualPopupDecorator(Component);
+ * const MyComponent = kind({
+ * 	name: 'MyComponent',
  *
- * <ContextualPopupComponent
- * 	popupComponent={PopupComponent}
- * 	popupProps={popupProps}
- * />
+ * 	render: (props) => {
+ * 		const popupProps = {
+ * 			functionProp: () => {},
+ * 			stringProp: '',
+ * 			booleanProp: false
+ * 		};
+ *
+ * 		return (
+ * 			<div {...props}>
+ * 				<ContextualPopupComponent
+ * 					popupComponent={PopupComponent}
+ * 					popupProps={popupProps}
+ * 				>
+ * 					Open Popup
+ * 				</ContextualPopupComponent>
+ * 			</div>
+ * 		);
+ * 	}
+ * });
  * ```
  *
  * @class ContextualPopupDecorator
