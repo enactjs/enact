@@ -1,8 +1,9 @@
 import Holdable from '../internal/Holdable';
 import kind from '@enact/core/kind';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
+import Toggleable from '@enact/ui/Toggleable';
 
 import $L from '../internal/$L';
 import IconButton from '../IconButton';
@@ -49,22 +50,22 @@ const ScrollButtonBase = kind({
 		direction: PropTypes.oneOf(['down', 'left', 'right', 'up']).isRequired,
 
 		/**
+		 * When `true`, the `aria-label` is set.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		active: PropTypes.bool,
+
+		/**
 		 * When `true`, the component is shown as disabled and does not generate `onClick`
 		 * [events]{@glossary event}.
 		 *
 		 * @type {Boolean}
 		 * @public
 		 */
-		disabled: PropTypes.bool,
-
-		/**
-		 * When `true`, allows 5-way navigation to the IconButton. By default, 5-way will
-		 * not move focus to the IconButton.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		focusableScrollbar: PropTypes.bool
+		disabled: PropTypes.bool
 	},
 
 	styles: {
@@ -73,13 +74,13 @@ const ScrollButtonBase = kind({
 	},
 
 	computed: {
-		'aria-label': ({disabled, direction, focusableScrollbar}) => ((focusableScrollbar && !disabled) ? $L(`scroll ${direction}`) : null),
+		'aria-label': ({active, direction}) => active ? $L(`scroll ${direction}`) : null,
 		className: ({direction, styler}) => styler.append(classNameMap[direction])
 	},
 
 	render: ({children, disabled, ...rest}) => {
+		delete rest.active;
 		delete rest.direction;
-		delete rest.focusableScrollbar;
 
 		return (
 			<HoldableIconButton
@@ -106,7 +107,10 @@ const ScrollButtonBase = kind({
  */
 const ScrollButton = withSkinnableProps(
 	onlyUpdateForKeys(['children', 'disabled', 'skin'])(
-		ScrollButtonBase
+		Toggleable(
+			{activate: 'onFocus', deactivate: 'onBlur', toggle: null},
+			ScrollButtonBase
+		)
 	)
 );
 

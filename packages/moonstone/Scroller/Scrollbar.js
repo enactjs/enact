@@ -76,15 +76,6 @@ class ScrollbarBase extends Component {
 		disabled: PropTypes.bool,
 
 		/**
-		 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
-		 * not move focus to the scrollbar controls.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		focusableScrollbar: PropTypes.bool,
-
-		/**
 		 * Called when the scrollbar's down/right button is pressed.
 		 *
 		 * @type {Function}
@@ -275,7 +266,7 @@ class ScrollbarBase extends Component {
 
 	render () {
 		const
-			{className, disabled, focusableScrollbar, onNextScroll, onPrevScroll, vertical} = this.props,
+			{className, disabled, onNextScroll, onPrevScroll, vertical} = this.props,
 			{prevButtonDisabled, nextButtonDisabled} = this.state,
 			{rtl} = this.context,
 			{scrollbarClass, thumbClass} = this.scrollbarInfo,
@@ -288,7 +279,6 @@ class ScrollbarBase extends Component {
 				<ScrollButton
 					direction={vertical ? 'up' : 'left'}
 					disabled={disabled || prevButtonDisabled}
-					focusableScrollbar={focusableScrollbar}
 					onClick={this.handlePrevScroll}
 					onHoldPulse={onPrevScroll}
 				>
@@ -297,7 +287,6 @@ class ScrollbarBase extends Component {
 				<ScrollButton
 					direction={vertical ? 'down' : 'right'}
 					disabled={disabled || nextButtonDisabled}
-					focusableScrollbar={focusableScrollbar}
 					onClick={this.handleNextScroll}
 					onHoldPulse={onNextScroll}
 				>
