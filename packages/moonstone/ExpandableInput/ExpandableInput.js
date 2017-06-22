@@ -228,7 +228,7 @@ class ExpandableInputBase extends React.Component {
 			forward('onChange', {
 				value: this.state.initialValue
 			}, this.props);
-		} else if (isEnter || isUpDown) {
+		} else if (isUpDown || isEnter && ev.currentTarget !== ev.target) {
 			this.fireCloseEvent();
 		}
 	}
@@ -302,11 +302,11 @@ class ExpandableInputBase extends React.Component {
 				spotlightDisabled={spotlightDisabled}
 			>
 				<Input
+					autoFocus
 					disabled={disabled}
 					dismissOnEnter
 					iconAfter={iconAfter}
 					iconBefore={iconBefore}
-					noDecorator
 					onBlur={this.handleInputBlur}
 					onChange={this.handleChange}
 					onKeyDown={this.handleInputKeyDown}
