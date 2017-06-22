@@ -12,7 +12,7 @@ import deprecate from '@enact/core/internal/deprecate';
 import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target.js';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
-import Spotlight from '@enact/spotlight';
+import {Spotlight, getDirection} from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import css from './Scroller.less';
@@ -307,18 +307,20 @@ class ScrollerBase extends Component {
 		}
 	}
 
-	scrollToBoundaries = (direction, target) => {
+	findInternalTarget = (direction, target) => {
 		const nextSpottable = getTargetByDirectionFromElement(direction, target);
 
-		if (!nextSpottable || !this.containerRef.contains(nextSpottable)) {
-			let align = '';
+		return nextSpottable && this.containerRef.contains(nextSpottable);
+	}
 
-			if (direction === 'up') align = 'top';
-			else if (direction === 'down') align = 'bottom';
-			else align = direction;
+	scrollToBoundary = (direction) => {
+		let align;
 
-			this.props.cbScrollTo({align});
-		}
+		if (direction === 'up') align = 'top';
+		else if (direction === 'down') align = 'bottom';
+		else align = direction;
+
+		this.props.cbScrollTo({align});
 	}
 
 	isVertical = () => {
@@ -344,6 +346,14 @@ class ScrollerBase extends Component {
 	}
 
 	getContainerNode = () => (this.containerRef)
+
+	onKeyDown = ({keyCode, target}) => {
+		const direction = getDirection(keyCode);
+
+		if (direction && !this.findInternalTarget(direction, target)) {
+			this.scrollToBoundary(direction);
+		}
+	}
 
 	setContainerDisabled = (bool) => {
 		if (this.containerRef) {
@@ -372,7 +382,13 @@ class ScrollerBase extends Component {
 		delete props.vertical;
 
 		return (
-			<div {...props} ref={this.initRef} className={classNames(className, css.hideNativeScrollbar)} style={mergedStyle} />
+			<div
+				{...props}
+				className={classNames(className, css.hideNativeScrollbar)}
+				onKeyDown={this.onKeyDown}
+				ref={this.initRef}
+				style={mergedStyle}
+			/>
 		);
 	}
 }

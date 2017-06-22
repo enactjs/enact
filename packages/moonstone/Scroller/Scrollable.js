@@ -14,7 +14,7 @@ import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ri from '@enact/ui/resolution';
-import Spotlight, {getDirection} from '@enact/spotlight';
+import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import ScrollAnimator from './ScrollAnimator';
@@ -73,7 +73,7 @@ const ScrollableSpotlightContainer = SpotlightContainerDecorator(
  * {@link moonstone/Scroller.Scrollable} is a Higher-order Component
  * that applies a Scrollable behavior to its wrapped component.
  *
- * Scrollable catches `onFocus` and `onKeyDown` events from its wrapped component for spotlight features,
+ * Scrollable catches `onFocus` event from its wrapped component for spotlight features,
  * and also catches `onMouseDown`, `onMouseLeave`, `onMouseMove`, `onMouseUp`, and `onWheel` events
  * from its wrapped component for scrolling behaviors.
  *
@@ -198,13 +198,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.initChildRef = this.initRef('childRef');
 			this.initContainerRef = this.initRef('containerRef');
 
-			const {onKeyDown} = this;
-			// We have removed all mouse event handlers for now.
-			// Revisit later for touch usage.
-			this.eventHandlers = {
-				onKeyDown
-			};
-
 			this.verticalScrollbarProps = {
 				ref: this.initRef('scrollbarVerticalRef'),
 				vertical: true,
@@ -236,9 +229,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		isDragging = false
 		isKeyDown = false
 		isInitializing = true
-
-		// event handlers
-		eventHandlers = {}
 
 		// drag info
 		dragInfo = {
@@ -439,24 +429,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 				if (item && item !== this.lastFocusedItem && item === spotItem && positionFn) {
 					const pos = positionFn(item);
-					if (pos) {
-						this.startScrollOnFocus(pos, item);
-					}
-				}
-			}
-		}
-
-		onKeyDown = ({keyCode, target}) => {
-			const direction = getDirection(keyCode);
-
-			if (direction) {
-				if (this.childRef.setSpotlightContainerRestrict) {
-					const index = Number.parseInt(target.getAttribute(dataIndexAttribute));
-					this.childRef.setSpotlightContainerRestrict(keyCode, index);
-				}
-
-				if (this.childRef.scrollToBoundaries) {
-					this.childRef.scrollToBoundaries(direction, target);
+					this.startScrollOnFocus(pos, item);
 				}
 			}
 		}
@@ -979,7 +952,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				>
 					<Wrapped
 						{...props}
-						{...this.eventHandlers}
 						cbScrollTo={this.scrollTo}
 						className={css.container}
 						onScroll={this.handleScroll}
