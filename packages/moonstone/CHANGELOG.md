@@ -10,11 +10,14 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/Panels/Viewport` properties `onTransition` and `onWillTransition`
+
 ### Changed
 
 - `moonstone/Panels/Header` to expose its `marqueeOn` prop
 - `moonstone/VideoPlayer` to automatically adjust the width of the allocated space for the side components so the media controls have more space to appear on smaller screens
 - `moonstone/VideoPlayer` properties `autoCloseTimeout` and `titleHideDelay` default value to `5000`
+- `moonstone/Panels` to pass the `onTransition` and `onWillTransition` props to its underlying `<Viewport>`
 
 ### Fixed
 
