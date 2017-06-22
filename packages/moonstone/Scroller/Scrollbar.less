@@ -2,8 +2,6 @@
 @import '../styles/variables.less';
 
 .scrollbar {
-	border: 3px solid purple; // SHOULD BE REMOVED
-
 	background: inherit;
 	border-color: transparent;
 	border-style: solid;
@@ -42,47 +40,30 @@
 		background-color: transparent;
 	}
 
-	/* thumb */
-	.scrollbarVthumb {
-		background: #666;
+	/* Set these to reasonable default values */
+	--scrollbar-v-size: 100%;
+	--scrollbar-v-progress: 0;
+	--scrollbar-h-size: 100%;
+	--scrollbar-h-progress: 0;
+
+	.bar {
+		position: relative;
 		width: 3px;
 		height: 3px;
-		right: @moon-icon-button-small-size / 2 - 2;
-		opacity: 0;
+		margin: auto;
+		// opacity: 0;
 
 		-webkit-transition: opacity 0.1s linear;
 		transition: opacity 0.1s linear;
 
 		-webkit-transform-origin: 0 0 0;
 		transform-origin: 0 0 0;
-	}
-
-	.scrollerHthumb {
-		background: #666;
-		width: 3px;
-		height: 3px;
-		bottom: @moon-icon-button-small-size / 2 - 2;
-		opacity: 0;
-
-		-webkit-transition: opacity 0.1s linear;
-		transition: opacity 0.1s linear;
-
-		-webkit-transform-origin: 0 0 0;
-		transform-origin: 0 0 0;
-	}
-
-	.thumbShown {
-		opacity: 0.75;
-	}
-
-	.thumbHidden {
-		opacity: 0;
 	}
 
 	.bar::before {
-		background-color: brown;
+		background: #666;
 		display: block;
-		position: relative;
+		position: absolute;
 		content: '';
 
 		will-change: trasform, top, left;
@@ -91,33 +72,39 @@
 		flex-direction: column;
 		-webkit-margin-start: @moon-spotlight-outset;
 
-		.bar::before {
-			--top-position: ~'calc((100% - var(--scrollbar-v-size)) * var(--scrollbar-v-progress))';
-
-			width: 12px;
-			height: var(--scrollbar-v-size);
-			top: var(--top-position);
-			transform-origin: top;
+		.bar {
+			&::before {
+				width: 100%;
+				height: var(--scrollbar-v-size);
+				min-height: 20px;
+				top: ~'calc((100% - var(--scrollbar-v-size)) * var(--scrollbar-v-progress))';
+				transform-origin: top;
+			}
 		}
 	}
-	&.horizontal .bar::before {
-		--left-position: ~'calc((100% - var(--scrollbar-h-size)) * var(--scrollbar-h-progress))';
+	&.horizontal .bar {
+		&::before {
+			--left-position: ~'calc((100% - var(--scrollbar-h-size)) * var(--scrollbar-h-progress))';
 
-		width: var(--scrollbar-h-size);
-		height: 12px;
-		top: 50%;
-		left: var(--left-position);
-		transform: translateY(-50%);
-		transform-origin: left;
+			width: var(--scrollbar-h-size);
+			min-width: 20px;
+			height: 100%;
+			top: 50%;
+			left: var(--left-position);
+			transform: translateY(-50%);
+			transform-origin: left;
+		}
 	}
 }
 
-:global(.rtl) .newScrollbar.horizontal {
+:global(.rtl) .scrollbar.horizontal {
 	.bar::before {
-		left: ~'calc(-1 * var(--left-position))';
+		// left: ~'calc(-1 * var(--left-position))';
+		left: initial;
+		right: var(--left-position);
 	}
-	button.left,
-	button.right {
+	.left,
+	.right {
 		transform: scaleX(-1);
 	}
 }

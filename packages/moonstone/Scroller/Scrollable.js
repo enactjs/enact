@@ -6,7 +6,8 @@
 
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
-import {contextTypes} from '@enact/ui/Resizable';
+import {contextTypes as contextTypesResize} from '@enact/ui/Resizable';
+import {contextTypes as contextTypesRtl} from '@enact/i18n/I18nDecorator';
 import deprecate from '@enact/core/internal/deprecate';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
@@ -186,7 +187,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			verticalScrollbar: 'auto'
 		}
 
-		static childContextTypes = contextTypes
+		static childContextTypes = contextTypesResize
+		static contextTypes = contextTypesRtl
 
 		constructor (props) {
 			super(props);
@@ -751,10 +753,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		hideThumb (bounds) {
 			if (this.state.isHorizontalScrollbarVisible && this.canScrollHorizontally(bounds)) {
-				this.scrollbarHorizontalRef.startHidingThumb();
+				this.scrollbarHorizontalRef.delayHidingThumb();
 			}
 			if (this.state.isVerticalScrollbarVisible && this.canScrollVertically(bounds)) {
-				this.scrollbarVerticalRef.startHidingThumb();
+				this.scrollbarVerticalRef.delayHidingThumb();
 			}
 		}
 
@@ -929,10 +931,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					className,
 					css.scrollable,
 					flexboxCss.flexContainer,
-					isHorizontalScrollbarVisible && isVerticalScrollbarVisible && null ||
-					isHorizontalScrollbarVisible && 'h' ||
-					isVerticalScrollbarVisible && 'v' ||
-					null
+					(
+						isHorizontalScrollbarVisible && isVerticalScrollbarVisible && null ||
+						isHorizontalScrollbarVisible && 'h' ||
+						isVerticalScrollbarVisible && 'v' ||
+						null
+					),
+					this.context.rtl && 'rtl'
 				);
 
 			delete props.cbScrollTo;

@@ -630,10 +630,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		hideThumb (bounds) {
 			if (this.state.isHorizontalScrollbarVisible && this.canScrollHorizontally(bounds)) {
-				this.scrollbarHorizontalRef.startHidingThumb();
+				this.scrollbarHorizontalRef.delayHidingThumb();
 			}
 			if (this.state.isVerticalScrollbarVisible && this.canScrollVertically(bounds)) {
-				this.scrollbarVerticalRef.startHidingThumb();
+				this.scrollbarVerticalRef.delayHidingThumb();
 			}
 		}
 
