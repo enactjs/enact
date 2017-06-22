@@ -17,7 +17,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/Dialog' to properly focus via pointer on child components
+- `moonstone/Dialog` to properly focus via pointer on child components
 - `moonstone` component hold delay time
 - `moonstone/ExpandableInput` to expand the width of its contained `moonstone/Input`
 
