@@ -1,15 +1,15 @@
 import hoc from '@enact/core/hoc';
-import {Job} from '@enact/core/util';
+import {Job, setCSSVariable, toPercentage} from '@enact/core/util';
 import React, {PureComponent, PropTypes} from 'react';
 
 import css from './ScrollThumb.less';
 
 /**
- * {@link moonstone/Scrollbar.ScrollThumbFadable} is a Higher-order Component
+ * {@link moonstone/ScrollThumb.ScrollThumbFadable} is a Higher-order Component
  * to hide a scrollThumb after 200ms
  *
  * @class ScrollThumbFadable
- * @memberof moonstone/Scrollbar
+ * @memberof moonstone/ScrollThumb
  * @hoc
  * @private
  */
@@ -18,6 +18,12 @@ const ScrollThumbFadable = hoc((config, Wrapped) => {
 		static displayName = 'ScrollThumbFadable'
 
 		static propTypes = /** @lends moonstone/ScrollThumb.ScrollThumbFadable.prototype */ {
+			/**
+			 * The function to pass a wrapped ref.
+			 *
+			 * @type {Function}
+			 * @public
+			 */
 			getScrollThumbMovableRef: PropTypes.func.isRequired
 		}
 
@@ -42,8 +48,10 @@ const ScrollThumbFadable = hoc((config, Wrapped) => {
 		}
 
 		hideThumb = () => {
-			this.scrollThumbNode.classList.remove(css.show);
-			this.scrollThumbNode.classList.add(css.hide);
+			if (this.scrollThumbNode) {
+				this.scrollThumbNode.classList.remove(css.show);
+				this.scrollThumbNode.classList.add(css.hide);
+			}
 		}
 
 		getScrollThumbNode = (node) => {
@@ -58,29 +66,34 @@ const ScrollThumbFadable = hoc((config, Wrapped) => {
 	};
 });
 
-const
-	setCssValueOn = (element, variable, value) => {
-		element.style.setProperty(variable, value);
-	},
-	updateVerticalProgress = (element, value) => {
-		setCssValueOn(element, '--scrollbar-v-progress', value);
-	},
-	updateVerticalSize = (element, value) => {
-		setCssValueOn(element, '--scrollbar-v-size', (value * 100) + '%');
-	},
-	updateHorizontalProgress = (element, value) => {
-		setCssValueOn(element, '--scrollbar-h-progress', value);
-	},
-	updateHorizontalSize = (element, value) => {
-		setCssValueOn(element, '--scrollbar-h-size', (value * 100) + '%');
-	};
-
+/**
+ * {@link moonstone/ScrollThumb.ScrollThumbMovable} is a Higher-order Component
+ * to move up and down or left and right a thumb while scrolling a list
+ *
+ * @class ScrollThumbMovable
+ * @memberof moonstone/ScrollThumb
+ * @hoc
+ * @private
+ */
 const ScrollThumbMovable = hoc((config, Wrapped) => {
 	return class extends PureComponent {
 		static displayName = 'ScrollThumbMovable'
 
 		static propTypes = /** @lends moonstone/ScrollThumb.ScrollThumbMovable.prototype */ {
+			/**
+			 * The function to pass a wrapped ref.
+			 *
+			 * @type {Function}
+			 * @public
+			 */
 			getScrollThumbRef: PropTypes.func.isRequired,
+
+			/**
+			 * If `true`, the scrollbar will be oriented vertically.
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
 			vertical: PropTypes.bool.isRequired
 		}
 
@@ -109,11 +122,11 @@ const ScrollThumbMovable = hoc((config, Wrapped) => {
 			scrollThumbPositionRatio = (vertical || !rtl) ? (scrollThumbPositionRatio * (1 - scrollThumbSizeRatio)) : (scrollThumbPositionRatio * (1 - scrollThumbSizeRatio) - 1);
 
 			if (vertical) {
-				updateVerticalSize(this.scrollThumbNode, scrollThumbSizeRatio);
-				updateVerticalProgress(this.scrollThumbNode, scrollThumbPositionRatio);
+				setCSSVariable(this.scrollThumbNode, '--scrollbar-v-size', toPercentage(scrollThumbSizeRatio));
+				setCSSVariable(this.scrollThumbNode, '--scrollbar-v-progress', scrollThumbPositionRatio);
 			} else {
-				updateHorizontalSize(this.scrollThumbNode, scrollThumbSizeRatio);
-				updateHorizontalProgress(this.scrollThumbNode, scrollThumbPositionRatio);
+				setCSSVariable(this.scrollThumbNode, '--scrollbar-h-size', toPercentage(scrollThumbSizeRatio));
+				setCSSVariable(this.scrollThumbNode, '--scrollbar-h-progress', scrollThumbPositionRatio);
 			}
 		}
 
@@ -139,6 +152,12 @@ class ScrollThumbBase extends PureComponent {
 	static displayName = 'ScrollThumbBase'
 
 	static propTypes = /** @lends moonstone/ScrollThumb.ScrollThumbBase.prototype */ {
+		/**
+		 * The function to pass a wrapped ref.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
 		getScrollThumbRef: PropTypes.func.isRequired
 	}
 
@@ -149,6 +168,15 @@ class ScrollThumbBase extends PureComponent {
 	}
 }
 
+/**
+ * {@link moonstone/ScrollThumb.ScrollThumb} is the thumb of a Scrollbar with Moonstone styling.
+ * It is used in {@link moonstone/Scrollbar.Scrollbar}.
+ *
+ * @class ScrollThumb
+ * @memberof moonstone/ScrollThumb
+ * @ui
+ * @private
+ */
 const ScrollThumb = ScrollThumbFadable(ScrollThumbMovable(ScrollThumbBase));
 
 export default ScrollThumb;
