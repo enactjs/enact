@@ -10,6 +10,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/ContextualPopupDecorator` property `popupProps` to attach props to popup component
+
 ### Changed
 
 - `moonstone/Panels/Header` to expose its `marqueeOn` prop
