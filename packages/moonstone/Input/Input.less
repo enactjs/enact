@@ -14,7 +14,7 @@
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	flex-grow: 1 !important;
+	flex-grow: 1;
 
 	.moon-custom-text-size(@moon-item-font-size-large);
 
@@ -84,6 +84,7 @@
 
 	.iconBefore,
 	.iconAfter {
+		flex: 0 0;
 		padding: 0;
 	}
 
@@ -117,7 +118,6 @@
 	> * {
 		display: inline-block;
 		vertical-align: middle;
-		flex: 0 0;
 	}
 
 	// Skin colors
