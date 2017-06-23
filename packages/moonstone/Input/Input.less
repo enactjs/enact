@@ -14,6 +14,7 @@
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	flex-grow: 1;
 
 	.moon-custom-text-size(@moon-item-font-size-large);
 
@@ -72,7 +73,8 @@
 }
 
 .decorator {
-	display: inline-block;
+	display: inline-flex;
+	position: relative;
 
 	padding: 12px 30px;
 	border-radius: 1008px;
@@ -82,6 +84,7 @@
 
 	.iconBefore,
 	.iconAfter {
+		flex: 0 0;
 		padding: 0;
 	}
 
@@ -143,11 +146,17 @@
 }
 
 .invalidTooltip {
+	@tooltip-tail-space: @moon-input-border-width + @moon-tooltip-point-width;
+
+	left: auto;
+	right: 0;
 	pointer-events: none;
-	transform: translate(60px, -50%);
+	transform: translate(calc(~'100% + ' @tooltip-tail-space), -50%);
 
 	:global(.enact-locale-right-to-left) & {
-		transform: translate(-60px, -50%);
+		left: 0;
+		right: auto;
+		transform: translate(calc(~'-100% - ' @tooltip-tail-space), -50%);
 	}
 }
 
