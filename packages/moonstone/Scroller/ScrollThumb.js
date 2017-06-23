@@ -1,5 +1,5 @@
 import hoc from '@enact/core/hoc';
-import {Job, setCSSVariable, toPercentage} from '@enact/core/util';
+import {Job, setCSSVariable} from '@enact/core/util';
 import React, {PureComponent, PropTypes} from 'react';
 
 import css from './ScrollThumb.less';
@@ -56,6 +56,9 @@ const ScrollThumbFadable = hoc((config, Wrapped) => {
 
 		getScrollThumbNode = (node) => {
 			this.scrollThumbNode = node;
+			if (this.props.getScrollThumbRef) {
+				this.props.getScrollThumbRef(node);
+			}
 		}
 
 		render () {
@@ -97,37 +100,20 @@ const ScrollThumbMovable = hoc((config, Wrapped) => {
 			vertical: PropTypes.bool.isRequired
 		}
 
-		update = (bounds, rtl) => {
+		update = (bounds, minThumbSizeRatio) => {
 			const
 				{vertical} = this.props,
 				{clientWidth, clientHeight, scrollWidth, scrollHeight, scrollLeft, scrollTop} = bounds,
-				scrollLeftRtl = rtl ? (scrollWidth - clientWidth - scrollLeft) : scrollLeft;
-			let
-				scrollThumbSizeRatio = vertical ?
-					Math.min(1, clientHeight / scrollHeight) :
-					Math.min(1, clientWidth / scrollWidth),
-				scrollThumbPositionRatio = vertical ?
-					scrollTop / (scrollHeight - clientHeight) :
-					scrollLeftRtl / (scrollWidth - clientWidth);
+				clientSize = vertical ? clientHeight : clientWidth,
+				scrollSize = vertical ? scrollHeight : scrollWidth,
+				scrollOrigin = vertical ? scrollTop : scrollLeft,
 
-			// overscroll cases
-			if (scrollThumbPositionRatio < 0) {
-				scrollThumbSizeRatio = scrollThumbSizeRatio + scrollThumbPositionRatio;
-				scrollThumbPositionRatio = 0;
-			} else if (scrollThumbPositionRatio > 1) {
-				scrollThumbSizeRatio = scrollThumbSizeRatio + (1 - scrollThumbPositionRatio);
-				scrollThumbPositionRatio = 1;
-			}
+				thumbSizeRatioBase = (clientSize / scrollSize),
+				scrollThumbPositionRatio = (scrollOrigin / (scrollSize - clientSize)),
+				scrollThumbSizeRatio = Math.max(minThumbSizeRatio, Math.min(1, thumbSizeRatioBase));
 
-			scrollThumbPositionRatio = (vertical || !rtl) ? (scrollThumbPositionRatio * (1 - scrollThumbSizeRatio)) : (scrollThumbPositionRatio * (1 - scrollThumbSizeRatio) - 1);
-
-			if (vertical) {
-				setCSSVariable(this.scrollThumbNode, '--scrollbar-v-size', toPercentage(scrollThumbSizeRatio));
-				setCSSVariable(this.scrollThumbNode, '--scrollbar-v-progress', scrollThumbPositionRatio);
-			} else {
-				setCSSVariable(this.scrollThumbNode, '--scrollbar-h-size', toPercentage(scrollThumbSizeRatio));
-				setCSSVariable(this.scrollThumbNode, '--scrollbar-h-progress', scrollThumbPositionRatio);
-			}
+			setCSSVariable(this.scrollThumbNode, '--scrollbar-size-ratio', scrollThumbSizeRatio);
+			setCSSVariable(this.scrollThumbNode, '--scrollbar-progress-ratio', scrollThumbPositionRatio);
 		}
 
 		getScrollThumbNode = (node) => {
@@ -141,9 +127,8 @@ const ScrollThumbMovable = hoc((config, Wrapped) => {
 			const props = Object.assign({}, this.props);
 
 			delete props.getScrollThumbNode;
-			delete props.vertical;
 
-			return (<Wrapped {...props} getScrollThumbRef={this.getScrollThumbNode} />);
+			return <Wrapped {...props} getScrollThumbRef={this.getScrollThumbNode} />;
 		}
 	};
 });
@@ -158,13 +143,22 @@ class ScrollThumbBase extends PureComponent {
 		 * @type {Function}
 		 * @public
 		 */
-		getScrollThumbRef: PropTypes.func.isRequired
+		getScrollThumbRef: PropTypes.func.isRequired,
+
+		/**
+		 * If `true`, the scrollbar will be oriented vertically.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		vertical: PropTypes.bool.isRequired
 	}
 
 	render () {
-		const {getScrollThumbRef, ...rest} = this.props;
+		const {className, getScrollThumbRef, vertical, ...rest} = this.props;
+		let classes = [className ? className : null, (vertical ? css.vertical : css.horizontal), css.scrollThumb].join(' ');
 
-		return (<div {...rest} ref={getScrollThumbRef} />);
+		return <div {...rest} className={classes} ref={getScrollThumbRef} />;
 	}
 }
 

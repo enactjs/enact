@@ -3,6 +3,7 @@ import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import React, {PureComponent} from 'react';
 import Spotlight from '@enact/spotlight';
+import ri from '@enact/ui/resolution';
 
 import $L from '../internal/$L';
 import ScrollButton from './ScrollButton';
@@ -24,6 +25,7 @@ const
 
 		return 'arrowsmall' + direction;
 	},
+	minThumbSize = 18, // Size in pixels
 	preparePrevButton = prepareButton(true),
 	prepareNextButton = prepareButton(false);
 
@@ -104,6 +106,7 @@ class ScrollbarBase extends PureComponent {
 	componentDidMount () {
 		const {containerRef} = this;
 
+		this.calculateMetrics();
 		this.prevButtonNodeRef = containerRef.children[0];
 		this.nextButtonNodeRef = containerRef.children[1];
 	}
@@ -146,7 +149,7 @@ class ScrollbarBase extends PureComponent {
 	}
 
 	update = (bounds) => {
-		this.thumbMovableRef.update(bounds);
+		this.thumbMovableRef.update(bounds, this.minThumbSizeRatio);
 		this.updateButtons(bounds);
 	}
 
@@ -160,6 +163,11 @@ class ScrollbarBase extends PureComponent {
 
 	hideThumb = () => {
 		this.fadableRef.hideThumb();
+	}
+
+	calculateMetrics = () => {
+		const trackSize = this.containerRef[this.props.vertical ? 'clientHeight' : 'clientWidth'];
+		this.minThumbSizeRatio = ri.scale(minThumbSize) / trackSize;
 	}
 
 	initRef (prop) {
@@ -182,6 +190,10 @@ class ScrollbarBase extends PureComponent {
 
 	getScrollThumbMovableRef = (node) => {
 		this.thumbMovableRef = node;
+	}
+
+	getScrollThumbRef = (node) => {
+		this.thumbRef = node;
 	}
 
 	getFadableRef = (node) => {
@@ -215,6 +227,7 @@ class ScrollbarBase extends PureComponent {
 				<ScrollThumb
 					className={classNames(css.scrollThumb, flexboxCss.flexItemsStretch)}
 					getScrollThumbMovableRef={this.getScrollThumbMovableRef}
+					getScrollThumbRef={this.getScrollThumbRef}
 					ref={this.getFadableRef}
 					vertical={vertical}
 				/>

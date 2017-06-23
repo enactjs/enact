@@ -39,71 +39,16 @@
 		background-color: transparent;
 	}
 
-	/* Set these to reasonable default values */
-	--scrollbar-v-size: 100%;
-	--scrollbar-v-progress: 0;
-	--scrollbar-h-size: 100%;
-	--scrollbar-h-progress: 0;
-
-	.scrollThumb {
-		position: relative;
-		width: 3px;
-		height: 3px;
-		margin: auto;
-		// opacity: 0;
-
-		-webkit-transition: opacity 0.1s linear;
-		transition: opacity 0.1s linear;
-
-		-webkit-transform-origin: 0 0 0;
-		transform-origin: 0 0 0;
-	}
-
-	.scrollThumb::before {
-		background: #666;
-		display: block;
-		position: absolute;
-		content: '';
-
-		will-change: trasform, top, left;
-	}
 	&.vertical {
 		flex-direction: column;
 		-webkit-margin-start: @moon-spotlight-outset;
+	}
 
-		.scrollThumb {
-			&::before {
-				width: 100%;
-				height: var(--scrollbar-v-size);
-				min-height: 20px;
-				top: ~'calc((100% - var(--scrollbar-v-size)) * var(--scrollbar-v-progress))';
-				transform-origin: top;
-			}
+	&.horizontal {
+		:global(.enact-locale-right-to-left) & {
+			// Flip the entire bar horizontally in RTL mode, and force it to remain in LTR.
+			direction: ltr;
+			transform: scaleX(-1);
 		}
-	}
-	&.horizontal .scrollThumb {
-		&::before {
-			--left-position: ~'calc((100% - var(--scrollbar-h-size)) * var(--scrollbar-h-progress))';
-
-			width: var(--scrollbar-h-size);
-			min-width: 20px;
-			height: 100%;
-			top: 50%;
-			left: var(--left-position);
-			transform: translateY(-50%);
-			transform-origin: left;
-		}
-	}
-}
-
-:global(.rtl) .scrollbar.horizontal {
-	.scrollThumb::before {
-		// left: ~'calc(-1 * var(--left-position))';
-		left: initial;
-		right: var(--left-position);
-	}
-	.left,
-	.right {
-		transform: scaleX(-1);
 	}
 }
