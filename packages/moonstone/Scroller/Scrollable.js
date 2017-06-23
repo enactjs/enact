@@ -753,10 +753,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		hideThumb (bounds) {
 			if (this.state.isHorizontalScrollbarVisible && this.canScrollHorizontally(bounds)) {
-				this.scrollbarHorizontalRef.delayHidingThumb();
+				this.scrollbarHorizontalRef.startHidingThumb();
 			}
 			if (this.state.isVerticalScrollbarVisible && this.canScrollVertically(bounds)) {
-				this.scrollbarVerticalRef.delayHidingThumb();
+				this.scrollbarVerticalRef.startHidingThumb();
 			}
 		}
 
@@ -920,9 +920,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				<Scrollbar
 					{...this.horizontalScrollbarProps}
 					className={classNames(
-						flexboxCss.flexItemsShrink,
-						css.newScrollbar,
 						css.horizontalScrollbar,
+						flexboxCss.flexItemsShrink,
 						'horizontal'
 					)}
 					disabled={!isHorizontalScrollbarVisible}
@@ -935,10 +934,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				<Scrollbar
 					{...this.verticalScrollbarProps}
 					className={classNames(
-						css.newScrollbar,
 						css.verticalScrollbar,
-						'vertical',
-						flexboxCss.flexItemsShrink
+						flexboxCss.flexItemsShrink,
+						'vertical'
 					)}
 					disabled={!isVerticalScrollbarVisible}
 				/>

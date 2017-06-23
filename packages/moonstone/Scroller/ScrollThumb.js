@@ -42,7 +42,7 @@ const ScrollThumbFadable = hoc((config, Wrapped) => {
 			}
 		}
 
-		delayHidingThumb () {
+		startHidingThumb () {
 			this.hideScrollThumbJob.stop();
 			this.hideScrollThumbJob.start();
 		}

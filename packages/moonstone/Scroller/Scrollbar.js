@@ -154,8 +154,8 @@ class ScrollbarBase extends PureComponent {
 		this.fadableRef.showThumb();
 	}
 
-	delayHidingThumb () {
-		this.fadableRef.delayHidingThumb();
+	startHidingThumb () {
+		this.fadableRef.startHidingThumb();
 	}
 
 	hideThumb = () => {
