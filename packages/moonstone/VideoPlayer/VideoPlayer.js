@@ -645,6 +645,13 @@ const VideoPlayerBase = class extends React.Component {
 		}
 	}
 
+	handleSpottableDivFocus = () => {
+		if (this.state.bottomControlsRendered) {
+			this.showControls();
+			this.activityDetected();
+		}
+	}
+
 	activityDetected = () => {
 		// console.count('activityDetected');
 		this.startAutoCloseTimeout();
@@ -1345,7 +1352,7 @@ const VideoPlayerBase = class extends React.Component {
 					// This captures spotlight focus for use with 5-way.
 					// It's non-visible but lives at the top of the VideoPlayer.
 					className={css.controlsHandleAbove}
-					onFocus={this.showControls}
+					onFocus={this.handleSpottableDivFocus}
 					onSpotlightDown={this.showControls}
 					onSpotlightLeft={this.handleLeft}
 					onSpotlightRight={this.handleRight}
