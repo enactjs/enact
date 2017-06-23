@@ -241,6 +241,9 @@ class VirtualListCore extends Component {
 			if (index) {
 				this.lastFocusedIndex = parseInt(index);
 				this.restoreLastFocused = true;
+				this.setState({
+					firstIndex: this.lastFocusedIndex
+				});
 			}
 		}
 	}
@@ -315,7 +318,15 @@ class VirtualListCore extends Component {
 	}
 
 	restoreFocus () {
-		if (this.restoreLastFocused && !this.getPlaceholder()) {
+		const {firstVisibleIndex, lastVisibleIndex} = this.moreInfo;
+		if (
+			this.restoreLastFocused &&
+			!this.getPlaceholder() &&
+			firstVisibleIndex != null &&
+			lastVisibleIndex != null
+		) {
+			// if we're supposed to restore focus and virtual list has positioned items
+			// (visible indices are non-null) based on initial scroll position, clear the indicator
 			this.restoreLastFocused = false;
 			const containerId = this.props['data-container-id'];
 
@@ -324,8 +335,8 @@ class VirtualListCore extends Component {
 				`[data-container-id="${containerId}"] [data-index="${this.lastFocusedIndex}"]`
 			);
 
-			// but if that fails (because it isn't found or is disabled), focus something in the
-			// list so spotlight isn't lost
+			// but if that fails (because it isn't found or is disabled), focus the container so
+			// spotlight isn't lost
 			if (!foundLastFocused) {
 				Spotlight.focus(containerId);
 			}
