@@ -10,6 +10,8 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Changed
 
+- `spotlight.Spotlight` to handle window focus events
+
 ### Fixed
 
 - Navigating through spottable components while holding down a directional key
