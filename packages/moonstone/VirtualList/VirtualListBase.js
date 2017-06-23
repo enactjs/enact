@@ -7,7 +7,6 @@
 
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
-import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import Spotlight from '@enact/spotlight';
@@ -22,11 +21,6 @@ const SpotlightPlaceholder = Spottable('div');
 
 const
 	dataContainerMutedAttribute = 'data-container-muted',
-	dataContainerIdAttribute = 'data-container-id',
-	isDown = is('down'),
-	isLeft = is('left'),
-	isRight = is('right'),
-	isUp = is('up'),
 	nop = () => {};
 
 /**
@@ -693,29 +687,6 @@ class VirtualListCore extends Component {
 			gridPosition.secondaryPosition = 0;
 			return this.gridPositionToItemPosition(gridPosition);
 		}
-	}
-
-	setRestrict = (bool) => {
-		Spotlight.set(this.props[dataContainerIdAttribute], {restrict: (bool) ? 'self-only' : 'self-first'});
-	}
-
-	setSpotlightContainerRestrict = (keyCode, index) => {
-		const
-			{dataSize} = this.props,
-			{isPrimaryDirectionVertical, dimensionToExtent} = this,
-			canMoveBackward = index >= dimensionToExtent,
-			canMoveForward = index < (dataSize - (((dataSize - 1) % dimensionToExtent) + 1));
-		let isSelfOnly = false;
-
-		if (isPrimaryDirectionVertical) {
-			if (isUp(keyCode) && canMoveBackward || isDown(keyCode) && canMoveForward) {
-				isSelfOnly = true;
-			}
-		} else if (isLeft(keyCode) && canMoveBackward || isRight(keyCode) && canMoveForward) {
-			isSelfOnly = true;
-		}
-
-		this.setRestrict(isSelfOnly);
 	}
 
 	setContainerDisabled = (bool) => {
