@@ -880,7 +880,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				childContainerRef = this.childRef.containerRef;
 
 			// Before call cancelAnimationFrame, you must send scrollStop Event.
-			this.animator.stop();
+			if (this.animator.isAnimating()) {
+				this.doScrollStop();
+				this.animator.stop();
+			}
 			this.forceUpdateJob.stop();
 
 			if (containerRef && containerRef.removeEventListener) {
