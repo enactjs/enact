@@ -16,6 +16,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Dialog` to properly focus via pointer on child components
 - `moonstone` component hold delay time
+- `moonstone/Panel` autoFocus logic to only focus on initial render
 
 ### Removed
 
