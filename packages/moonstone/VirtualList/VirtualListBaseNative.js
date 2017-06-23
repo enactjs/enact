@@ -233,6 +233,9 @@ class VirtualListCoreNative extends Component {
 			if (index) {
 				this.lastFocusedIndex = parseInt(index);
 				this.restoreLastFocused = true;
+				this.setState({
+					firstIndex: this.lastFocusedIndex
+				});
 			}
 		}
 	}
@@ -246,12 +249,7 @@ class VirtualListCoreNative extends Component {
 	}
 
 	componentDidUpdate () {
-		if (this.restoreLastFocused && !this.getPlaceholder()) {
-			const containerId = this.props['data-container-id'];
-			this.restoreLastFocused = !Spotlight.focus(
-				`[data-container-id="${containerId}"] [data-index="${this.lastFocusedIndex}"]`
-			);
-		}
+		this.restoreFocus();
 	}
 
 	scrollBounds = {
@@ -301,6 +299,32 @@ class VirtualListCoreNative extends Component {
 		}
 
 		return false;
+	}
+
+	restoreFocus () {
+		const {firstVisibleIndex, lastVisibleIndex} = this.moreInfo;
+		if (
+			this.restoreLastFocused &&
+			!this.getPlaceholder() &&
+			firstVisibleIndex != null &&
+			lastVisibleIndex != null
+		) {
+			// if we're supposed to restore focus and virtual list has positioned items
+			// (visible indices are non-null) based on initial scroll position, clear the indicator
+			this.restoreLastFocused = false;
+			const containerId = this.props['data-container-id'];
+
+			// try to focus the last focused item
+			const foundLastFocused = Spotlight.focus(
+				`[data-container-id="${containerId}"] [data-index="${this.lastFocusedIndex}"]`
+			);
+
+			// but if that fails (because it isn't found or is disabled), focus the container so
+			// spotlight isn't lost
+			if (!foundLastFocused) {
+				Spotlight.focus(containerId);
+			}
+		}
 	}
 
 	getScrollBounds = () => this.scrollBounds
@@ -741,7 +765,7 @@ class VirtualListCoreNative extends Component {
 			<div ref={this.initWrapperRef} className={mergedClasses} style={style}>
 				<div {...rest} ref={this.initContainerRef}>
 					{cc.length ? cc : (
-						<SpotlightPlaceholder data-vl-placeholder />
+						<SpotlightPlaceholder data-index={0} data-vl-placeholder />
 					)}
 				</div>
 			</div>
