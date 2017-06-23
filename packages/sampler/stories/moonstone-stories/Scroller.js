@@ -1,9 +1,10 @@
-import ri from '@enact/ui/resolution';
 import Scroller, {ScrollerBase} from '@enact/moonstone/Scroller';
+import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
-import {select} from '@kadira/storybook-addon-knobs';
+import {boolean, select} from '@kadira/storybook-addon-knobs';
 
+import nullify from '../../src/utils/nullify.js';
 import {mergeComponentMetadata} from '../../src/utils/propTables';
 
 const Config = mergeComponentMetadata('Scroller', ScrollerBase, Scroller);
@@ -16,15 +17,15 @@ const
 	},
 	style = {
 		scroller: {
-			height: ri.scale(550) + 'px',
+			height: ri.scale(552) + 'px',
 			width: '100%'
 		},
 		content: {
-			height: ri.scale(1000) + 'px',
-			width: ri.scale(2000) + 'px'
+			height: ri.scale(1002) + 'px',
+			width: ri.scale(2001) + 'px'
 		},
 		bottom: {
-			marginTop: ri.scale(800) + 'px'
+			marginTop: ri.scale(801) + 'px'
 		}
 	};
 
@@ -35,6 +36,7 @@ storiesOf('Scroller')
 		() => (
 			<Scroller
 				direction={select('direction', prop.direction, 'both')}
+				focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
 				horizontalScrollbar={select('horizontalScrollbar', prop.horizontalScrollbar, 'auto')}
 				onScrollStart={action('onScrollStart')}
 				onScrollStop={action('onScrollStop')}
