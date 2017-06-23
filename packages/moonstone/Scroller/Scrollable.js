@@ -6,11 +6,12 @@
 
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
-import {contextTypes} from '@enact/ui/Resizable';
+import {contextTypes as contextTypesResize} from '@enact/ui/Resizable';
+import {contextTypes as contextTypesRtl} from '@enact/i18n/I18nDecorator';
 import deprecate from '@enact/core/internal/deprecate';
 import {forward} from '@enact/core/handle';
-import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import {getLastContainer} from '@enact/spotlight/src/container';
+import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';
@@ -80,7 +81,7 @@ const ScrollableSpotlightContainer = SpotlightContainerDecorator(
  * that applies a Scrollable behavior to its wrapped component.
  *
  * Scrollable catches `onFocus` event from its wrapped component for spotlight features,
- * and also catches `onMouseDown`, `onMouseLeave`, `onMouseMove`, `onMouseUp`, and `onWheel` events
+ * and also catches `onMouseDown`, `onMouseLeave`, `onMouseMove`, `onMouseUp`, `onWheel` and `onKeyUp` events
  * from its wrapped component for scrolling behaviors.
  *
  * Scrollable calls `onScrollStart`, `onScroll`, and `onScrollStop` callback functions during scroll.
@@ -191,7 +192,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			verticalScrollbar: 'auto'
 		}
 
-		static childContextTypes = contextTypes
+		static childContextTypes = contextTypesResize
+
+		static contextTypes = contextTypesRtl
 
 		constructor (props) {
 			super(props);
@@ -474,36 +477,46 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						return;
 				}
 
+				if (this.context.rtl && isHorizontal) {
+					const temp = direction;
+					direction = rDirection;
+					rDirection = temp;
+				}
+
 				if (!Spotlight.getPointerMode() && spotItem) {
 					const
 						spotItemBounds = spotItem.getBoundingClientRect(),
-						containerId = getLastContainer();
-
-					let
+						containerId = getLastContainer(),
 						endPoint = getEndPoint(direction, spotItemBounds, viewportBounds),
 						next = getTargetByDirectionFromPosition(rDirection, endPoint, containerId);
 
-					if (spotItem === next) {
-						endPoint.x = (keyCode === KEY_POINTER_PAGE_DOWN) ? (this.scrollLeft + bounds.clientWidth) : (this.scrollLeft - bounds.clientWidth);
-						endPoint.y = (keyCode === KEY_POINTER_PAGE_DOWN) ? (this.scrollTop + bounds.clientHeight) : (this.scrollTop - bounds.clientHeight);
-
-						let
-							focusedPositionY = (keyCode === KEY_POINTER_PAGE_DOWN) ? (viewportBounds.top + viewportBounds.height) : viewportBounds.top,
-							focusedPositionX = (keyCode === KEY_POINTER_PAGE_DOWN) ? (viewportBounds.left + viewportBounds.width) : viewportBounds.left,
-							scrollPos = {position: {x: endPoint.x, y: endPoint.y}, animate: false};
-
-						scrollTo(scrollPos);
-						setTimeout(function () {
-							endPoint.y = focusedPositionY;
-							endPoint.x = focusedPositionX;
-							next = getTargetByDirectionFromPosition(rDirection, endPoint, containerId);
-							if (next !== null && next !== spotItem) {
-								next.focus();
-								return -1;
+					if (next && next === spotItem) {
+						// For Scroller
+						if (this.childRef.scrollPage) {
+							if (!this.childRef.scrollPage(direction, rDirection, spotItem)) {
+								scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
 							}
-						}, 0);
-					}
-					if (next) {
+						} else {
+							let nextScrollPos = {position: {}, animate: false};
+
+							if (isVertical) {
+								nextScrollPos.position.y = (keyCode === KEY_POINTER_PAGE_DOWN) ? (this.scrollTop + bounds.clientHeight) : (this.scrollTop - bounds.clientHeight);
+							} else {
+								nextScrollPos.position.x = (keyCode === KEY_POINTER_PAGE_DOWN) ? (this.scrollLeft + bounds.clientWidth) : (this.scrollLeft - bounds.clientWidth);
+							}
+							scrollTo(nextScrollPos);
+							setTimeout(function () {
+								const nextItem = getTargetByDirectionFromPosition(rDirection, endPoint, containerId);
+
+								if (nextItem && nextItem !== spotItem) {
+									nextItem.focus();
+								} else {
+									scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
+								}
+								return false;
+							}, 0);
+						}
+					} else if (next != null && next !== spotItem) {
 						next.focus();
 					} else {
 						scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
@@ -515,25 +528,24 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		getEndPoint = (direction, oSpotBounds, viewportBounds) => {
-			const bounds = this.getScrollBounds();
-
 			let oPoint = {};
+
 			switch (direction) {
 				case 'up':
 					oPoint.x = oSpotBounds.left + oSpotBounds.width / 2;
-					oPoint.y = Math.max(0, viewportBounds.top);
+					oPoint.y = viewportBounds.top;
 					break;
 				case 'left':
 					oPoint.x = viewportBounds.left;
-					oPoint.y = oSpotBounds.top + oSpotBounds.height / 2;
+					oPoint.y = oSpotBounds.top;
 					break;
 				case 'down':
 					oPoint.x = oSpotBounds.left + oSpotBounds.width / 2;
-					oPoint.y = Math.min(bounds.maxTop, viewportBounds.top) + viewportBounds.height;
+					oPoint.y = viewportBounds.top + viewportBounds.height;
 					break;
 				case 'right':
 					oPoint.x = viewportBounds.left + viewportBounds.width;
-					oPoint.y = oSpotBounds.top + oSpotBounds.height / 2;
+					oPoint.y = oSpotBounds.top;
 					break;
 			}
 			return oPoint;
@@ -896,13 +908,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		updateScrollabilityAndEventListeners = () => {
 			const
 				{containerRef} = this,
-				{isVerticalScrollbarVisible} = this.state,
 				bounds = this.getScrollBounds(),
-				childContainerRef = this.childRef.containerRef;
+				childContainerRef = this.childRef.containerRef,
+				isVertical = this.canScrollVertically(bounds);
 
 			this.horizontalScrollability = this.childRef.isHorizontal();
 			this.verticalScrollability = this.childRef.isVertical();
-			this.pageDistanceForDown = (isVerticalScrollbarVisible ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
+			this.pageDistanceForDown = (isVertical ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
 			this.pageDistanceForUp = this.pageDistanceForDown * -1;
 
 			if (containerRef && containerRef.addEventListener) {
@@ -1061,6 +1073,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				>
 					<Wrapped
 						{...props}
+						onKeyUp={this.onKeyUp}
 						cbScrollTo={this.scrollTo}
 						className={css.container}
 						onScroll={this.handleScroll}

@@ -1,6 +1,7 @@
 import {Announce} from '@enact/ui/AnnounceDecorator';
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
+import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
@@ -43,7 +44,9 @@ const
 		return 'arrowsmall' + direction;
 	},
 	preparePrevButton = prepareButton(true),
-	prepareNextButton = prepareButton(false);
+	prepareNextButton = prepareButton(false),
+	isPageUp = is('pageUp'),
+	isPageDown = is('pageDown');
 
 /**
  * {@link moonstone/Scroller.Scrollbar} is a Scrollbar with Moonstone styling.
@@ -264,6 +267,18 @@ class ScrollbarBase extends Component {
 		if (this.announceRef) this.announceRef.announce($L(vertical ? 'DOWN' : 'RIGHT'));
 	}
 
+	onPrevKeyUp = (ev) => {
+		if (isPageUp(ev.keyCode)) {
+			this.handlePrevScroll(ev);
+		}
+	}
+
+	onNextKeyUp = (ev) => {
+		if (isPageDown(ev.keyCode)) {
+			this.handleNextScroll(ev);
+		}
+	}
+
 	render () {
 		const
 			{className, disabled, onNextScroll, onPrevScroll, vertical} = this.props,
@@ -281,6 +296,7 @@ class ScrollbarBase extends Component {
 					disabled={disabled || prevButtonDisabled}
 					onClick={this.handlePrevScroll}
 					onHoldPulse={onPrevScroll}
+					onKeyUp={this.onPrevKeyUp}
 				>
 					{prevIcon}
 				</ScrollButton>
@@ -289,6 +305,7 @@ class ScrollbarBase extends Component {
 					disabled={disabled || nextButtonDisabled}
 					onClick={this.handleNextScroll}
 					onHoldPulse={onNextScroll}
+					onKeyUp={this.onNextKeyUp}
 				>
 					{nextIcon}
 				</ScrollButton>
