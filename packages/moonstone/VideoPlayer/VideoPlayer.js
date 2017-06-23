@@ -11,7 +11,7 @@ import equals from 'ramda/src/equals';
 import React from 'react';
 import PropTypes from 'prop-types';
 import DurationFmt from '@enact/i18n/ilib/lib/DurationFmt';
-import {forward, forwardWithPrevent, handle} from '@enact/core/handle';
+import {forward, forwardWithPrevent, handle, stopImmediate} from '@enact/core/handle';
 import ilib from '@enact/i18n';
 import {Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
@@ -1135,6 +1135,11 @@ const VideoPlayerBase = class extends React.Component {
 		}
 	}
 
+	handleSpotlightUpFromSlider = handle(
+		stopImmediate,
+		this.hideControls
+	);
+
 	handleSpotlightDownFromSlider = (ev) => {
 		if (!this.state.mediaControlsDisabled && !this.state.more) {
 			ev.preventDefault();
@@ -1325,7 +1330,7 @@ const VideoPlayerBase = class extends React.Component {
 								onKnobMove={this.handleKnobMove}
 								onMouseOver={this.handleMouseOver}
 								onMouseOut={this.handleMouseOut}
-								onSpotlightUp={this.hideControls}
+								onSpotlightUp={this.handleSpotlightUpFromSlider}
 								onSpotlightDown={this.handleSpotlightDownFromSlider}
 							>
 								<FeedbackTooltip
