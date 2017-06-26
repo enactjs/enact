@@ -254,15 +254,26 @@ function getTargetByDirectionFromElement (direction, element) {
 
 	return getNavigableContainersForNode(element)
 		.reduceRight((result, containerId, index, elementContainerIds) => {
-			return result ||
-				getTargetInContainerByDirectionFromElement(
-					direction,
-					containerId,
-					element,
-					elementRect,
-					elementContainerIds
-				) ||
-				getLeaveForTarget(containerId, direction);
+			result = result || getTargetInContainerByDirectionFromElement(
+				direction,
+				containerId,
+				element,
+				elementRect,
+				elementContainerIds
+			);
+
+			if (!result) {
+				result = getLeaveForTarget(containerId, direction);
+
+				// To support a `leaveFor` configuration with navigation disallowed in the current
+				// `direction`, we return the current element to prevent further searches for a
+				// target in this reduction.
+				if (result === false) {
+					result = element;
+				}
+			}
+
+			return result;
 		}, null);
 }
 
@@ -281,13 +292,24 @@ function getTargetByDirectionFromPosition (direction, position, containerId) {
 		}, null);
 }
 
+/**
+ * Returns the target identified by the selector configured for the container identified by
+ * `containerId` for the given `direction`. If the selector is an empty string, the method returns
+ * `false` indicating that navigation isn't allowed out of the container in that direction.
+ *
+ * @param   {String}        containerId  Identifier for a container
+ * @param   {String}        direction    Direction to navigate (up, down, left, right)
+ *
+ * @returns {Node|Boolean}               Target, if found, or `false` if navigation is disallowed
+ * @private
+ */
 function getLeaveForTarget (containerId, direction) {
 	const config = getContainerConfig(containerId);
 
 	const target = config.leaveFor && config.leaveFor[direction];
 	if (typeof target === 'string') {
 		if (target === '') {
-			return null;
+			return false;
 		}
 		return getTargetBySelector(target);
 	}

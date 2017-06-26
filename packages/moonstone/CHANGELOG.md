@@ -10,6 +10,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/styles/text.less` mixin `.locale-japanese-line-break()` to apply the correct  Japanese language line-break rules for the following multi-line components: `moonstone/BodyText`, `moonstone/Dialog`, `moonstone/Notification`, `moonstone/Popup`, and `moonstone/Tooltip`
 - `moonstone/ContextualPopupDecorator` property `popupProps` to attach props to popup component
 
 ### Changed
@@ -23,6 +24,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Dialog` to properly focus via pointer on child components
 - `moonstone` component hold delay time
 - `moonstone/VideoPlayer` to show its controls when pressing down the first time
+- `moonstone/Panel` autoFocus logic to only focus on initial render
+- `moonstone/Input` text colors
 
 ### Removed
 
