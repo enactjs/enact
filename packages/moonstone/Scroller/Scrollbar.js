@@ -10,7 +10,6 @@ import ScrollButton from './ScrollButton';
 import ScrollThumb from './ScrollThumb';
 
 import css from './Scrollbar.less';
-import flexboxCss from './Flexbox.less';
 
 const
 	nop = () => {},
@@ -207,7 +206,6 @@ class ScrollbarBase extends PureComponent {
 			containerClassName = classNames(
 				className,
 				css.scrollbar,
-				flexboxCss.flexContainer,
 				vertical ? css.vertical : css.horizontal
 			),
 			prevIcon = preparePrevButton(vertical),
@@ -225,7 +223,7 @@ class ScrollbarBase extends PureComponent {
 					{prevIcon}
 				</ScrollButton>
 				<ScrollThumb
-					className={classNames(css.scrollThumb, flexboxCss.flexItemsStretch)}
+					className={css.scrollThumb}
 					getScrollThumbMovableRef={this.getScrollThumbMovableRef}
 					getScrollThumbRef={this.getScrollThumbRef}
 					ref={this.getFadableRef}

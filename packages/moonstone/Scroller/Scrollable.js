@@ -23,7 +23,6 @@ import Scrollbar from './Scrollbar';
 
 import css from './Scrollable.less';
 import scrollbarCss from './Scrollbar.less';
-import flexboxCss from './Flexbox.less';
 
 const
 	forwardScroll = forward('onScroll'),
@@ -921,7 +920,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					{...this.horizontalScrollbarProps}
 					className={classNames(
 						css.horizontalScrollbar,
-						flexboxCss.flexItemsShrink,
 						'horizontal'
 					)}
 					disabled={!isHorizontalScrollbarVisible}
@@ -935,7 +933,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					{...this.verticalScrollbarProps}
 					className={classNames(
 						css.verticalScrollbar,
-						flexboxCss.flexItemsShrink,
 						'vertical'
 					)}
 					disabled={!isVerticalScrollbarVisible}
@@ -960,7 +957,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				scrollableClasses = classNames(
 					className,
 					css.scrollable,
-					flexboxCss.flexContainer,
 					(
 						isHorizontalScrollbarVisible && isVerticalScrollbarVisible && null ||
 						isHorizontalScrollbarVisible && 'h' ||
@@ -987,12 +983,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					focusableScrollbar={focusableScrollbar}
 					style={style}
 				>
-					<div className={classNames(flexboxCss.flexItemsStretch, flexboxCss.flexContainer)}>
+					<div className={css.container}>
 						<Wrapped
 							{...props}
 							{...this.eventHandlers}
 							cbScrollTo={this.scrollTo}
-							className={classNames(flexboxCss.flexItemsStretch, css.content)}
+							className={css.content}
 							onScroll={this.handleScroll}
 							ref={this.initChildRef}
 						/>

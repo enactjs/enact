@@ -133,30 +133,6 @@ const extractAriaProps = function (props) {
 	return aria;
 };
 
-/**
- * Set CSS Varaible value.
- *
- * @method
- * @memberof core/util
- * @param {Node} element - Node.
- * @param {String} variable - CSS Variable property.
- * @param {String} value - CSS Variable value.
- */
-const setCSSVariable = (element, variable, value) => {
-	element.style.setProperty(variable, value);
-};
-
-/**
- * Convert a value format from float (from 0 to 1) to persentage.
- *
- * @method
- * @memberof core/util
- * @param {Node} element - Node.
- * @param {String} variable - CSS Variable property.
- * @param {String} value - CSS Variable value.
- */
-const toPercentage = (value) => ((parseFloat(value) * 100) + '%');
-
 export {
 	cap,
 	childrenEquals,
@@ -164,7 +140,5 @@ export {
 	coerceArray,
 	Job,
 	isRenderable,
-	extractAriaProps,
-	setCSSVariable,
-	toPercentage
+	extractAriaProps
 };

@@ -9,13 +9,21 @@
 
 .scrollable {
 	.scrollableFill;
+
+	display: flex;
 	box-sizing: border-box;
 	flex-direction: column;
+
+	.container {
+		display: flex;
+		flex: auto;
+	}
 
 	.content {
 		background: inherit;
 		position: relative;
 		overflow: hidden;
+		flex: auto;
 	}
 
 	&:global(.h) .content > .flexContainer {
@@ -28,6 +36,10 @@
 }
 
 /* scrollbar */
+.scrollable .verticalScrollbar,
+.scrollable .horizontalScrollbar {
+	flex: none;
+}
 .scrollable:global(.h) .verticalScrollbar,
 .scrollable:global(.v) .horizontalScrollbar {
 	display: none;

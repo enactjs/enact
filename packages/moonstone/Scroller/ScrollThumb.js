@@ -1,8 +1,21 @@
 import hoc from '@enact/core/hoc';
-import {Job, setCSSVariable} from '@enact/core/util';
+import {Job} from '@enact/core/util';
 import React, {PureComponent, PropTypes} from 'react';
 
 import css from './ScrollThumb.less';
+
+/**
+ * Set CSS Varaible value.
+ *
+ * @method
+ * @memberof core/util
+ * @param {Node} element - Node.
+ * @param {String} variable - CSS Variable property.
+ * @param {String} value - CSS Variable value.
+ */
+const setCSSVariable = (element, variable, value) => {
+	element.style.setProperty(variable, value);
+};
 
 /**
  * {@link moonstone/ScrollThumb.ScrollThumbFadable} is a Higher-order Component
