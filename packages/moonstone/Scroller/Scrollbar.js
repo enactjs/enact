@@ -64,6 +64,14 @@ class ScrollbarBase extends PureComponent {
 		announce: PropTypes.func,
 
 		/**
+		 * If `true`, add the corner between vertical and horizontal scrollbars.
+		 *
+		 * @type {Booelan}
+		 * @public
+		 */
+		corner: PropTypes.bool,
+
+		/**
 		 * Specifies to reflect scrollbar's disabled property to the paging controls.
 		 * When it is `true`, both prev/next buttons are going to be disabled.
 		 *
@@ -101,7 +109,8 @@ class ScrollbarBase extends PureComponent {
 	static defaultProps = {
 		onNextScroll: nop,
 		onPrevScroll: nop,
-		vertical: true
+		vertical: true,
+		paddingEnd: false
 	}
 
 	constructor (props) {
@@ -114,6 +123,7 @@ class ScrollbarBase extends PureComponent {
 
 		this.initAnnounceRef = this.initRef('announceRef');
 		this.initContainerRef = this.initRef('containerRef');
+		this.initThumbRef = this.initRef('thumbRef');
 	}
 
 	componentDidMount () {
@@ -224,17 +234,14 @@ class ScrollbarBase extends PureComponent {
 		if (this.announceRef) this.announceRef.announce($L(vertical ? 'DOWN' : 'RIGHT'));
 	}
 
-	getScrollThumbRef = (node) => {
-		this.thumbRef = node;
-	}
-
 	render () {
 		const
-			{className, disabled, onNextScroll, onPrevScroll, vertical} = this.props,
+			{className, corner, disabled, onNextScroll, onPrevScroll, vertical} = this.props,
 			{prevButtonDisabled, nextButtonDisabled} = this.state,
 			containerClassName = classNames(
 				className,
 				css.scrollbar,
+				corner ? css.corner : null,
 				vertical ? css.vertical : css.horizontal
 			),
 			prevIcon = preparePrevButton(vertical),
@@ -243,7 +250,6 @@ class ScrollbarBase extends PureComponent {
 		return (
 			<div ref={this.initContainerRef} className={containerClassName}>
 				<ScrollButton
-					className={css.left}
 					direction={vertical ? 'up' : 'left'}
 					disabled={disabled || prevButtonDisabled}
 					onClick={this.handlePrevScroll}
@@ -253,11 +259,10 @@ class ScrollbarBase extends PureComponent {
 				</ScrollButton>
 				<ScrollThumb
 					className={css.scrollThumb}
-					getScrollThumbRef={this.getScrollThumbRef}
+					getScrollThumbRef={this.initThumbRef}
 					vertical={vertical}
 				/>
 				<ScrollButton
-					className={css.left}
 					direction={vertical ? 'down' : 'right'}
 					disabled={disabled || nextButtonDisabled}
 					onClick={this.handleNextScroll}

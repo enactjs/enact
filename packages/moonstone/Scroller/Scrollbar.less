@@ -15,7 +15,24 @@
 	-moz-transition: opacity 0.1s linear;
 	-webkit-transition: opacity 0.1s linear;
 
-	/* scrollbutton */
+	&.vertical {
+		flex-direction: column;
+		-webkit-margin-start: @moon-spotlight-outset;
+	}
+
+	&.horizontal {
+		:global(.enact-locale-right-to-left) & {
+			// Flip the entire bar horizontally in RTL mode, and force it to remain in LTR.
+			direction: ltr;
+			transform: scaleX(-1);
+		}
+	}
+
+	&.corner {
+		-webkit-padding-end: 80px;
+	}
+
+	/* ScrollButton */
 	.scrollbarButtonNoCompositeLayer {
 		&,
 		&:before,
@@ -41,20 +58,7 @@
 		background-color: transparent;
 	}
 
-	&.vertical {
-		flex-direction: column;
-		-webkit-margin-start: @moon-spotlight-outset;
-	}
-
-	&.horizontal {
-		:global(.enact-locale-right-to-left) & {
-			// Flip the entire bar horizontally in RTL mode, and force it to remain in LTR.
-			direction: ltr;
-			transform: scaleX(-1);
-		}
-	}
-
-	// ScrollThumb
+	/* ScrollThumb */
 	.show {
 		opacity: 1;
 	}

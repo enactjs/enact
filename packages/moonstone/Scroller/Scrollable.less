@@ -30,12 +30,3 @@
 		flex-direction: column;
 	}
 }
-
-/* scrollbar */
-.scrollable:global(.horizontal) .verticalScrollbar,
-.scrollable:global(.vertical) .horizontalScrollbar {
-	display: none;
-}
-.scrollable:not(:global(.vertical)):not(:global(.horizontal)) .horizontalScrollbar {
-	-webkit-padding-end: 80px;
-}
