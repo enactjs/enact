@@ -24,7 +24,14 @@ const ScrollThumbFadable = hoc((config, Wrapped) => {
 			 * @type {Function}
 			 * @public
 			 */
-			getScrollThumbMovableRef: PropTypes.func.isRequired
+			getScrollThumbMovableRef: PropTypes.func,
+			/**
+			 * The function to pass a wrapped ref.
+			 *
+			 * @type {Function}
+			 * @public
+			 */
+			getScrollThumbRef: PropTypes.func
 		}
 
 		constructor () {
