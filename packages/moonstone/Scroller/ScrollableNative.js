@@ -779,22 +779,21 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			return this.onScrollbarBtnHandler(orientation, direction);
 		}
 
-		getHorizontalScrollbar = (isHorizontalScrollbarVisible, isVerticalScrollbarVisible) => (
-			isHorizontalScrollbarVisible ? (
+		getHorizontalScrollbar = (isHorizontalScrollbarVisible, visibilityOfScrollbars) => (
+			isHorizontalScrollbarVisible && visibilityOfScrollbars !== 'vertical' ? (
 				<Scrollbar
-					className={!isVerticalScrollbarVisible ? css.onlyHorizontalScrollbarNeeded : null}
-					disabled={!isHorizontalScrollbarVisible}
 					{...this.horizontalScrollbarProps}
+					corner={visibilityOfScrollbars === 'both'}
+					disabled={!isHorizontalScrollbarVisible}
 				/>
 			) : null
 		)
 
-		getVerticalScrollbar = (isHorizontalScrollbarVisible, isVerticalScrollbarVisible) => (
-			isVerticalScrollbarVisible ? (
+		getVerticalScrollbar = (isVerticalScrollbarVisible, visibilityOfScrollbars) => (
+			isVerticalScrollbarVisible && visibilityOfScrollbars !== 'horizontal' ? (
 				<Scrollbar
-					className={!isHorizontalScrollbarVisible ? css.onlyVerticalScrollbarNeeded : null}
-					disabled={!isVerticalScrollbarVisible}
 					{...this.verticalScrollbarProps}
+					disabled={!isVerticalScrollbarVisible}
 				/>
 			) : null
 		)
@@ -804,14 +803,17 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				props = Object.assign({}, this.props),
 				{className, focusableScrollbar, style} = this.props,
 				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
-				vscrollbar = this.getVerticalScrollbar(isHorizontalScrollbarVisible, isVerticalScrollbarVisible),
-				hscrollbar = this.getHorizontalScrollbar(isHorizontalScrollbarVisible, isVerticalScrollbarVisible),
+				visibilityOfScrollbars = (
+					isHorizontalScrollbarVisible && !isVerticalScrollbarVisible && 'horizontal' ||
+					isVerticalScrollbarVisible && !isHorizontalScrollbarVisible && 'vertical' ||
+					'both'
+				),
+				vscrollbar = this.getVerticalScrollbar(isVerticalScrollbarVisible, visibilityOfScrollbars),
+				hscrollbar = this.getHorizontalScrollbar(isHorizontalScrollbarVisible, visibilityOfScrollbars),
 				scrollableClasses = classNames(
+					className,
 					css.scrollable,
-					!(isHorizontalScrollbarVisible || isVerticalScrollbarVisible) ? css.scrollableHiddenScrollbars : null,
-					isHorizontalScrollbarVisible ? null : css.takeAvailableSpaceForVertical,
-					isVerticalScrollbarVisible ? null : css.takeAvailableSpaceForHorizontal,
-					className
+					visibilityOfScrollbars
 				);
 
 			delete props.cbScrollTo;
@@ -831,8 +833,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					focusableScrollbar={focusableScrollbar}
 					style={style}
 				>
-					<Wrapped {...props} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={css.container} />
-					{vscrollbar}
+					<div className={css.container}>
+						<Wrapped {...props} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={css.content} />
+						{vscrollbar}
+					</div>
 					{hscrollbar}
 				</ScrollableSpotlightContainer>
 			);

@@ -107,10 +107,10 @@ class ScrollbarBase extends PureComponent {
 	}
 
 	static defaultProps = {
+		corner: false,
 		onNextScroll: nop,
 		onPrevScroll: nop,
-		vertical: true,
-		paddingEnd: false
+		vertical: true
 	}
 
 	constructor (props) {
