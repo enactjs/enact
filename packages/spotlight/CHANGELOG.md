@@ -8,6 +8,8 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Added
 
+- `spotlight` handlers for window focus events
+
 ### Changed
 
 ### Fixed
