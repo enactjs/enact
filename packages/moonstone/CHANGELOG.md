@@ -6,10 +6,17 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Deprecated
 
+- `moonstone/Input` prop `noDecorator` is being replaced by `autoFocus` in 2.0.0.
+
 ### Added
+
+- `moonstone/styles/text.less` mixin `.locale-japanese-line-break()` to apply the correct  Japanese language line-break rules for the following multi-line components: `moonstone/BodyText`, `moonstone/Dialog`, `moonstone/Notification`, `moonstone/Popup`, and `moonstone/Tooltip`
+- `moonstone/ContextualPopupDecorator` property `popupProps` to attach props to popup component
 
 ### Changed
 
+- `moonstone/Panels/Header` to expose its `marqueeOn` prop
+- `moonstone/VideoPlayer` to automatically adjust the width of the allocated space for the side components so the media controls have more space to appear on smaller screens
 - `moonstone/VideoPlayer` properties `autoCloseTimeout` and `titleHideDelay` default value to `5000`
 
 ### Fixed
@@ -17,6 +24,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Dialog` to properly focus via pointer on child components
 - `moonstone` component hold delay time
 - `moonstone/Panel` autoFocus logic to only focus on initial render
+- `moonstone/Input` text colors
 
 ### Removed
 

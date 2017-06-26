@@ -10,12 +10,12 @@ import {contextTypes as contextTypesResize} from '@enact/ui/Resizable';
 import {contextTypes as contextTypesRtl} from '@enact/i18n/I18nDecorator';
 import deprecate from '@enact/core/internal/deprecate';
 import {forward} from '@enact/core/handle';
-import {getDirection} from '@enact/spotlight';
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ri from '@enact/ui/resolution';
+import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import css from './Scrollable.less';
@@ -31,7 +31,8 @@ const
 	nop = () => {},
 	paginationPageMultiplier = 0.8,
 	epsilon = 1,
-	scrollWheelMultiplierForDeltaPixel = 4,
+	scrollWheelMultiplierForDeltaPixel = 1.5, // The ratio of wheel 'delta' units to pixels scrolled.
+	scrollWheelPageMultiplierForMaxPixel = 0.2, // The ratio of the maximum distance scrolled by wheel to the size of the viewport.
 	pixelPerLine = 39,
 	// spotlight
 	scrollStopWaiting = 500;
@@ -69,7 +70,7 @@ const ScrollableSpotlightContainer = SpotlightContainerDecorator(
  * {@link moonstone/Scroller.ScrollableNative} is a Higher-order Component
  * that applies a Scrollable behavior to its wrapped component.
  *
- * Scrollable catches `onFocus`, `onKeyUp`, and `onKeyDown` events from its wrapped component for spotlight features,
+ * Scrollable catches `onFocus` event from its wrapped component for spotlight features,
  * and also catches `onWheel` and `onScroll` events from its wrapped component for scrolling behaviors.
  *
  * Scrollable calls `onScrollStart`, `onScroll`, and `onScrollStop` callback functions during scroll.
@@ -194,12 +195,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.initChildRef = this.initRef('childRef');
 			this.initContainerRef = this.initRef('containerRef');
 
-			// wheel, scroll, and focus event handlers will be added after mounting
-			this.eventHandlers = {
-				onKeyDown: this.onKeyDown,
-				onKeyUp: this.onKeyUp
-			};
-
 			this.verticalScrollbarProps = {
 				ref: this.initRef('scrollbarVerticalRef'),
 				vertical: true,
@@ -227,7 +222,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		horizontalScrollability = false
 		verticalScrollability = false
 		isScrollAnimationTargetAccumulated = false
-		isKeyDown = false
 		isInitializing = true
 
 		// event handlers
@@ -293,16 +287,28 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			if (this.horizontalScrollability && !this.verticalScrollability) {
 				const
 					bounds = this.getScrollBounds(),
+					isHorizontal = this.canScrollHorizontally(bounds),
+					isVertical = this.canScrollVertically(bounds),
 					deltaMode = e.deltaMode,
 					wheelDeltaY = -e.wheelDeltaY;
-				let delta = (wheelDeltaY || e.deltaY);
+				let
+					delta = (wheelDeltaY || e.deltaY),
+					maxPixel;
+
+				if (isVertical) {
+					maxPixel = bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel;
+				} else if (isHorizontal) {
+					maxPixel = bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel;
+				} else {
+					return 0;
+				}
 
 				if (deltaMode === 0) {
-					delta = ri.scale(delta) * scrollWheelMultiplierForDeltaPixel;
+					delta = clamp(-maxPixel, maxPixel, ri.scale(delta * scrollWheelMultiplierForDeltaPixel));
 				} else if (deltaMode === 1) { // line; firefox
-					delta = ri.scale(delta * pixelPerLine) * scrollWheelMultiplierForDeltaPixel;
+					delta = clamp(-maxPixel, maxPixel, ri.scale(delta * pixelPerLine * scrollWheelMultiplierForDeltaPixel));
 				} else if (deltaMode === 2) { // page
-					delta = delta > 0 ? bounds.clientWidth : -bounds.clientWidth;
+					delta = delta < 0 ? -maxPixel : maxPixel;
 				}
 
 				/* prevent native scrolling feature for vertical direction */
@@ -335,38 +341,26 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		// event handlers for Spotlight support
 
+		startScrollOnFocus = (pos, item) => {
+			if (pos) {
+				if (pos.left !== this.scrollLeft || pos.top !== this.scrollTop) {
+					this.start(pos.left, pos.top);
+				}
+				this.lastFocusedItem = item;
+			}
+		}
+
 		onFocus = (e) => {
-			if (this.isKeyDown) {
+			if (!(Spotlight.getPointerMode() || this.isDragging)) {
 				const
 					item = e.target,
 					positionFn = this.childRef.calculatePositionOnFocus,
-					spotItem = (typeof window === 'object') ? window.document.activeElement : null;
+					spotItem = Spotlight.getCurrent();
 
 				if (item && item !== this.lastFocusedItem && item === spotItem && positionFn) {
 					const pos = positionFn(item);
-					if (pos) {
-						if (pos.left !== this.scrollLeft || pos.top !== this.scrollTop) {
-							this.start(pos.left, pos.top);
-						}
-						this.lastFocusedItem = item;
-					}
+					this.startScrollOnFocus(pos, item);
 				}
-			}
-		}
-
-		onKeyDown = ({keyCode, target}) => {
-			if (getDirection(keyCode)) {
-				if (this.childRef.setSpotlightContainerRestrict) {
-					const index = Number.parseInt(target.getAttribute(dataIndexAttribute));
-					this.childRef.setSpotlightContainerRestrict(keyCode, index);
-				}
-				this.isKeyDown = true;
-			}
-		}
-
-		onKeyUp = ({keyCode}) => {
-			if (getDirection(keyCode)) {
-				this.isKeyDown = false;
 			}
 		}
 
@@ -837,7 +831,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					focusableScrollbar={focusableScrollbar}
 					style={style}
 				>
-					<Wrapped {...props} {...this.eventHandlers} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={css.container} />
+					<Wrapped {...props} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={css.container} />
 					{vscrollbar}
 					{hscrollbar}
 				</ScrollableSpotlightContainer>

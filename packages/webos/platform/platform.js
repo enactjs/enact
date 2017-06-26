@@ -6,6 +6,68 @@
  * @module webos/platform
  */
 
+function is (type) {
+	return window.navigator.userAgent.indexOf(type) > -1;
+}
+
+let _platform;
+
+/**
+ * {@link webos/platform.detect} returns the {@link webos/platform.platform} object.
+ *
+ * @type {Function}
+ * @returns {Object} the {@link webos/platform.platform} object
+ *
+ * @method detect
+ * @memberof webos/platform
+ * @public
+ */
+
+function detect () {
+	if (_platform) {
+		// if we've already determined the platform, we'll use that determination
+		return _platform;
+	} else if (typeof window === 'undefined' || !window.PalmSystem) {
+		// if window isn't available (in prerendering or snapshot runs), bail out early
+		return {
+			unknown: true
+		};
+	}
+
+	// build out our cached platform determination for future usage
+	_platform = {};
+
+	if (is('SmartWatch')) {
+		_platform.watch = true;
+	} else if (is('SmartTV') || is('Large Screen')) {
+		_platform.tv = true;
+	} else {
+		try {
+			let legacyInfo = JSON.parse(window.PalmSystem.deviceInfo || '{}');
+			if (legacyInfo.platformVersionMajor && legacyInfo.platformVersionMinor) {
+				let major = parseInt(legacyInfo.platformVersionMajor);
+				let minor = parseInt(legacyInfo.platformVersionMinor);
+				if (major < 3 || (major === 3 && minor <= 0)) {
+					_platform.legacy = true;
+				} else {
+					_platform.open = true;
+				}
+			} else {
+				_platform.unknown = true;
+			}
+		} catch (e) {
+			_platform.open = true;
+		}
+
+		// TODO: clean these up. They shouldn't be here
+		window.Mojo = window.Mojo || {relaunch: function () {}};
+		if (window.PalmSystem.stageReady) window.PalmSystem.stageReady();
+	}
+
+	return _platform;
+}
+
+
 /**
  * {@link webos/platform.platform} provides identification of webOS variants.
  *
@@ -20,34 +82,23 @@
  * @memberof webos/platform
  * @public
  */
-const platform = {};
 
-if (typeof window === 'object' && window.PalmSystem) {
-	if (window.navigator.userAgent.indexOf('SmartWatch') > -1) {
-		platform.watch = true;
-	} else if ((window.navigator.userAgent.indexOf('SmartTV') > -1) || (window.navigator.userAgent.indexOf('Large Screen') > -1)) {
-		platform.tv = true;
-	} else {
-		try {
-			let legacyInfo = JSON.parse(window.PalmSystem.deviceInfo || '{}');
-			if (legacyInfo.platformVersionMajor && legacyInfo.platformVersionMinor) {
-				let major = parseInt(legacyInfo.platformVersionMajor);
-				let minor = parseInt(legacyInfo.platformVersionMinor);
-				if (major < 3 || (major === 3 && minor <= 0)) {
-					platform.legacy = true;
-				} else {
-					platform.open = true;
-				}
-			}
-		} catch (e) {
-			platform.open = true;
+const platform = {};
+[
+	'tv',
+	'watch',
+	'open',
+	'legacy',
+	'unknown'
+].forEach(name => {
+	Object.defineProperty(platform, name, {
+		enumerable: true,
+		get: () => {
+			const p = detect();
+			return p[name];
 		}
-		window.Mojo = window.Mojo || {relaunch: function () {}};
-		if (window.PalmSystem.stageReady) window.PalmSystem.stageReady();
-	}
-} else {
-	platform.unknown = true;
-}
+	});
+});
 
 export default platform;
-export {platform};
+export {detect, platform};
