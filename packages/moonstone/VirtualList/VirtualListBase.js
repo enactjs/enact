@@ -316,11 +316,11 @@ class VirtualListCore extends Component {
 		if (
 			this.restoreLastFocused &&
 			!this.getPlaceholder() &&
-			firstVisibleIndex != null &&
-			lastVisibleIndex != null
+			firstVisibleIndex <= this.lastFocusedIndex &&
+			lastVisibleIndex >= this.lastFocusedIndex
 		) {
-			// if we're supposed to restore focus and virtual list has positioned items
-			// (visible indices are non-null) based on initial scroll position, clear the indicator
+			// if we're supposed to restore focus and virtual list has positioned a set of items
+			// that includes lastFocusedIndex, clear the indicator
 			this.restoreLastFocused = false;
 			const containerId = this.props['data-container-id'];
 
