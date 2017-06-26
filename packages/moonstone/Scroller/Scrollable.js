@@ -452,7 +452,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		onKeyUp = ({keyCode}) => {
 			if (isPageUp(keyCode) || isPageDown(keyCode)) {
 				const
-					{getEndPoint, scrollTo, scrollToAccumulatedTarget} = this,
+					{context, getEndPoint, scrollToAccumulatedTarget} = this,
 					bounds = this.getScrollBounds(),
 					isVertical = this.canScrollVertically(bounds),
 					isHorizontal = this.canScrollHorizontally(bounds),
@@ -477,7 +477,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						return;
 				}
 
-				if (this.context.rtl && isHorizontal) {
+				if (context.rtl && isHorizontal) {
 					const temp = direction;
 					direction = rDirection;
 					rDirection = temp;
@@ -485,39 +485,19 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 				if (!Spotlight.getPointerMode() && spotItem) {
 					const
-						spotItemBounds = spotItem.getBoundingClientRect(),
 						containerId = getLastContainer(),
+						spotItemBounds = spotItem.getBoundingClientRect(),
 						endPoint = getEndPoint(direction, spotItemBounds, viewportBounds),
 						next = getTargetByDirectionFromPosition(rDirection, endPoint, containerId);
 
-					if (next && next === spotItem) {
-						// For Scroller
-						if (this.childRef.scrollPage) {
-							if (!this.childRef.scrollPage(direction, rDirection, spotItem)) {
+					if (next) {
+						if (next === spotItem) {
+							if (!this.childRef.scrollToNextPage(direction, rDirection, spotItem)) {
 								scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
 							}
 						} else {
-							let nextScrollPos = {position: {}, animate: false};
-
-							if (isVertical) {
-								nextScrollPos.position.y = (keyCode === KEY_POINTER_PAGE_DOWN) ? (this.scrollTop + bounds.clientHeight) : (this.scrollTop - bounds.clientHeight);
-							} else {
-								nextScrollPos.position.x = (keyCode === KEY_POINTER_PAGE_DOWN) ? (this.scrollLeft + bounds.clientWidth) : (this.scrollLeft - bounds.clientWidth);
-							}
-							scrollTo(nextScrollPos);
-							setTimeout(function () {
-								const nextItem = getTargetByDirectionFromPosition(rDirection, endPoint, containerId);
-
-								if (nextItem && nextItem !== spotItem) {
-									nextItem.focus();
-								} else {
-									scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
-								}
-								return false;
-							}, 0);
+							next.focus();
 						}
-					} else if (next != null && next !== spotItem) {
-						next.focus();
 					} else {
 						scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
 					}

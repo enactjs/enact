@@ -601,6 +601,37 @@ class VirtualListCoreNative extends Component {
 		}
 	}
 
+	scrollToNextPage = (direction, reverseDirection, focusedItem) => {
+		const
+			{dimensionToExtent, primary, props, secondary} = this,
+			clientWidth = primary.clientSize,
+			clientHeight = secondary.clientSize,
+			focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute)),
+			rtlDirection = this.context.rtl ? -1 : 1;
+
+		let nextFocusIndex, scrollToIndex;
+
+		if (this.isVertical()) {
+			nextFocusIndex = (direction === 'down') ?
+				Math.min(props.dataSize, focusedIndex + Math.floor(clientHeight / primary.gridSize) * dimensionToExtent) :
+				Math.max(0, focusedIndex - Math.floor(clientHeight / primary.gridSize) * dimensionToExtent);
+			scrollToIndex = (direction === 'down') ? (focusedIndex + dimensionToExtent) : nextFocusIndex;
+		} else {
+			nextFocusIndex = (direction === 'right') ?
+				Math.min(props.dataSize, focusedIndex + Math.floor(clientWidth / secondary.gridSize) * dimensionToExtent * rtlDirection) :
+				Math.max(0, focusedIndex - Math.floor(clientWidth / secondary.gridSize) * dimensionToExtent * rtlDirection);
+
+			if (this.context.rtl) {
+				scrollToIndex = (direction === 'right') ? nextFocusIndex : (focusedIndex + dimensionToExtent);
+			} else {
+				scrollToIndex = (direction === 'right') ? (focusedIndex + dimensionToExtent) : nextFocusIndex;
+			}
+		}
+		props.cbScrollTo({index: scrollToIndex, animate: false});
+		this.focusByIndex(nextFocusIndex);
+		return true;
+	}
+
 	setContainerDisabled = (bool) => {
 		const containerNode = this.getContainerNode();
 

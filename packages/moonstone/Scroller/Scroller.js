@@ -193,7 +193,7 @@ class ScrollerBase extends Component {
 		return node.getBoundingClientRect();
 	}
 
-	scrollPage = (direction, reverseDirection, focusedItem) => {
+	scrollToNextPage = (direction, reverseDirection, focusedItem) => {
 		const
 			containerId = getLastContainer(),
 			spotItemBounds = focusedItem.getBoundingClientRect(),
