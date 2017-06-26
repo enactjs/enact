@@ -190,6 +190,7 @@
 .moon-dialog-content() {
 	.moon-font();
 	font-size: @moon-popup-content-font-size;
+	.locale-japanese-line-break();
 }
 
 .moon-notification-content() {
@@ -200,6 +201,7 @@
 	line-height: @moon-body-line-height;
 	text-align: initial;
 	.moon-word-break();
+	.locale-japanese-line-break();
 }
 
 .moon-body-text() {
@@ -269,4 +271,10 @@
 	font-weight: @moon-divider-font-weight;
 	font-style: @moon-divider-font-style;
 	letter-spacing: @moon-divider-letter-spacing;
+}
+
+.locale-japanese-line-break() {
+	:global(.enact-locale-ja) & {
+		line-break: strict;
+	}
 }
