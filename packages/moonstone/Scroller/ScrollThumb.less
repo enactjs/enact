@@ -15,10 +15,6 @@
 	-webkit-transition: opacity 100ms linear;
 	transition: opacity 100ms linear;
 
-	&.show {
-		opacity: 1;
-	}
-
 	will-change: transform, top, left, right;
 
 	&::before {
@@ -43,6 +39,7 @@
 			width: var(--scrollbar-size);
 			left: var(--scrollbar-progress);
 			top: 50%;
+
 			transform: translateY(-50%);
 		}
 	}

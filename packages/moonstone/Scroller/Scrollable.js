@@ -6,8 +6,7 @@
 
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
-import {contextTypes as contextTypesResize} from '@enact/ui/Resizable';
-import {contextTypes as contextTypesRtl} from '@enact/i18n/I18nDecorator';
+import {contextTypes} from '@enact/ui/Resizable';
 import deprecate from '@enact/core/internal/deprecate';
 import {forward} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
@@ -186,8 +185,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			verticalScrollbar: 'auto'
 		}
 
-		static childContextTypes = contextTypesResize
-		static contextTypes = contextTypesRtl
+		static childContextTypes = contextTypes
 
 		constructor (props) {
 			super(props);
@@ -208,6 +206,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			};
 
 			this.verticalScrollbarProps = {
+				className: css.verticalScrollbar,
 				ref: this.initRef('scrollbarVerticalRef'),
 				vertical: true,
 				onPrevScroll: this.initScrollbarBtnHandler('vertical', -1),
@@ -215,6 +214,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			};
 
 			this.horizontalScrollbarProps = {
+				className: css.horizontalScrollbar,
 				ref: this.initRef('scrollbarHorizontalRef'),
 				vertical: false,
 				onPrevScroll: this.initScrollbarBtnHandler('horizontal', -1),
@@ -918,10 +918,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			isHorizontalScrollbarVisible ? (
 				<Scrollbar
 					{...this.horizontalScrollbarProps}
-					className={classNames(
-						css.horizontalScrollbar,
-						'horizontal'
-					)}
 					disabled={!isHorizontalScrollbarVisible}
 				/>
 			) : null
@@ -931,10 +927,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			isVerticalScrollbarVisible ? (
 				<Scrollbar
 					{...this.verticalScrollbarProps}
-					className={classNames(
-						css.verticalScrollbar,
-						'vertical'
-					)}
 					disabled={!isVerticalScrollbarVisible}
 				/>
 			) : null
@@ -958,12 +950,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					className,
 					css.scrollable,
 					(
-						isHorizontalScrollbarVisible && isVerticalScrollbarVisible && null ||
-						isHorizontalScrollbarVisible && 'h' ||
-						isVerticalScrollbarVisible && 'v' ||
+						isHorizontalScrollbarVisible && !isVerticalScrollbarVisible && 'horizontal' ||
+						isVerticalScrollbarVisible && !isHorizontalScrollbarVisible && 'vertical' ||
 						null
-					),
-					this.context.rtl && 'rtl'
+					)
 				);
 
 			delete props.cbScrollTo;

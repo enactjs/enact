@@ -26,24 +26,16 @@
 		flex: auto;
 	}
 
-	&:global(.h) .content > .flexContainer {
+	&:global(.horizontal) .content > .flexContainer {
 		flex-direction: column;
 	}
 }
 
-:global(.rtl) {
-	direction: rtl;
-}
-
 /* scrollbar */
-.scrollable .verticalScrollbar,
-.scrollable .horizontalScrollbar {
-	flex: none;
-}
-.scrollable:global(.h) .verticalScrollbar,
-.scrollable:global(.v) .horizontalScrollbar {
+.scrollable:global(.horizontal) .verticalScrollbar,
+.scrollable:global(.vertical) .horizontalScrollbar {
 	display: none;
 }
-.scrollable:not(:global(.v)):not(:global(.h)) .horizontalScrollbar {
+.scrollable:not(:global(.vertical)):not(:global(.horizontal)) .horizontalScrollbar {
 	-webkit-padding-end: 80px;
 }

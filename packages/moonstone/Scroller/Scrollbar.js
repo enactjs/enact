@@ -14,6 +14,7 @@ import css from './Scrollbar.less';
 
 const
 	nop = () => {},
+	minThumbSize = 18, // Size in pixels
 	prepareButton = (isPrev) => (isVertical) => {
 		let direction;
 
@@ -25,7 +26,6 @@ const
 
 		return 'arrowsmall' + direction;
 	},
-	minThumbSize = 18, // Size in pixels
 	preparePrevButton = prepareButton(true),
 	prepareNextButton = prepareButton(false);
 
@@ -124,11 +124,17 @@ class ScrollbarBase extends PureComponent {
 		this.nextButtonNodeRef = containerRef.children[1];
 	}
 
-	autoHide = true
+	componentDidUpdate () {
+		this.calculateMetrics();
+	}
+
+	componentWillUnmount () {
+		this.hideThumbJob.stop();
+	}
 
 	// component refs
-	thumbRef = null
 	containerRef = null
+	thumbRef = null
 	prevButtonNodeRef = null
 	nextButtonNodeRef = null
 
@@ -163,7 +169,7 @@ class ScrollbarBase extends PureComponent {
 		}
 	}
 
-	update = (bounds, minThumbSizeRatio) => {
+	update = (bounds) => {
 		const
 			{vertical} = this.props,
 			{clientWidth, clientHeight, scrollWidth, scrollHeight, scrollLeft, scrollTop} = bounds,
@@ -173,7 +179,7 @@ class ScrollbarBase extends PureComponent {
 
 			thumbSizeRatioBase = (clientSize / scrollSize),
 			scrollThumbPositionRatio = (scrollOrigin / (scrollSize - clientSize)),
-			scrollThumbSizeRatio = Math.max(minThumbSizeRatio, Math.min(1, thumbSizeRatioBase));
+			scrollThumbSizeRatio = Math.max(this.minThumbSizeRatio, Math.min(1, thumbSizeRatioBase));
 
 		setCSSVariable(this.thumbRef, '--scrollbar-size-ratio', scrollThumbSizeRatio);
 		setCSSVariable(this.thumbRef, '--scrollbar-progress-ratio', scrollThumbPositionRatio);
@@ -181,24 +187,19 @@ class ScrollbarBase extends PureComponent {
 	}
 
 	showThumb () {
-		this.hideScrollThumbJob.stop();
+		this.hideThumbJob.stop();
 		this.thumbRef.classList.add(css.show);
-		this.thumbRef.classList.remove(css.hide);
 	}
 
 	startHidingThumb () {
-		this.hideScrollThumbJob.stop();
-		if (this.autoHide) {
-			this.hideScrollThumbJob.start();
-		}
+		this.hideThumbJob.start();
 	}
 
 	hideThumb = () => {
 		this.thumbRef.classList.remove(css.show);
-		this.thumbRef.classList.add(css.hide);
 	}
 
-	hideScrollThumbJob = new Job(this.hideThumb, 200);
+	hideThumbJob = new Job(this.hideThumb, 200);
 
 	calculateMetrics = () => {
 		const trackSize = this.containerRef[this.props.vertical ? 'clientHeight' : 'clientWidth'];

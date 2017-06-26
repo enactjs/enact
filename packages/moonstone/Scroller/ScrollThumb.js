@@ -4,7 +4,7 @@ import React, {PropTypes} from 'react';
 import css from './ScrollThumb.less';
 
 /**
- * {@link moonstone/ScrollThumb.ScrollThumb}  is a stateless ScrollThumb with Moonstone styling appied.
+ * {@link moonstone/ScrollThumb.ScrollThumb} is a stateless ScrollThumb with Moonstone styling appied.
  *
  * @class ScrollThumb
  * @memberof moonstone/ScrollThumb
@@ -14,7 +14,7 @@ import css from './ScrollThumb.less';
 const ScrollThumb = kind({
 	name: 'ScrollThumb',
 
-	propTypes: /** @lends moonstone/ScrollThumb.ScrollThumbBase.prototype */ {
+	propTypes: /** @lends moonstone/ScrollThumb.ScrollThumb.prototype */ {
 		/**
 		 * The function to pass a wrapped ref.
 		 *
