@@ -1,5 +1,6 @@
 import {Announce} from '@enact/ui/AnnounceDecorator';
 import classNames from 'classnames';
+import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React, {PureComponent} from 'react';
 import Spotlight from '@enact/spotlight';
@@ -27,6 +28,19 @@ const
 	minThumbSize = 18, // Size in pixels
 	preparePrevButton = prepareButton(true),
 	prepareNextButton = prepareButton(false);
+
+/**
+ * Set CSS Varaible value.
+ *
+ * @method
+ * @memberof core/util
+ * @param {Node} element - Node.
+ * @param {String} variable - CSS Variable property.
+ * @param {String} value - CSS Variable value.
+ */
+const setCSSVariable = (element, variable, value) => {
+	element.style.setProperty(variable, value);
+};
 
 /**
  * {@link moonstone/Scroller.Scrollbar} is a Scrollbar with Moonstone styling.
@@ -110,9 +124,11 @@ class ScrollbarBase extends PureComponent {
 		this.nextButtonNodeRef = containerRef.children[1];
 	}
 
+	autoHide = true
+
 	// component refs
+	thumbRef = null
 	containerRef = null
-	fadableRef = null
 	prevButtonNodeRef = null
 	nextButtonNodeRef = null
 
@@ -147,22 +163,42 @@ class ScrollbarBase extends PureComponent {
 		}
 	}
 
-	update = (bounds) => {
-		this.thumbMovableRef.update(bounds, this.minThumbSizeRatio);
+	update = (bounds, minThumbSizeRatio) => {
+		const
+			{vertical} = this.props,
+			{clientWidth, clientHeight, scrollWidth, scrollHeight, scrollLeft, scrollTop} = bounds,
+			clientSize = vertical ? clientHeight : clientWidth,
+			scrollSize = vertical ? scrollHeight : scrollWidth,
+			scrollOrigin = vertical ? scrollTop : scrollLeft,
+
+			thumbSizeRatioBase = (clientSize / scrollSize),
+			scrollThumbPositionRatio = (scrollOrigin / (scrollSize - clientSize)),
+			scrollThumbSizeRatio = Math.max(minThumbSizeRatio, Math.min(1, thumbSizeRatioBase));
+
+		setCSSVariable(this.thumbRef, '--scrollbar-size-ratio', scrollThumbSizeRatio);
+		setCSSVariable(this.thumbRef, '--scrollbar-progress-ratio', scrollThumbPositionRatio);
 		this.updateButtons(bounds);
 	}
 
 	showThumb () {
-		this.fadableRef.showThumb();
+		this.hideScrollThumbJob.stop();
+		this.thumbRef.classList.add(css.show);
+		this.thumbRef.classList.remove(css.hide);
 	}
 
 	startHidingThumb () {
-		this.fadableRef.startHidingThumb();
+		this.hideScrollThumbJob.stop();
+		if (this.autoHide) {
+			this.hideScrollThumbJob.start();
+		}
 	}
 
 	hideThumb = () => {
-		this.fadableRef.hideThumb();
+		this.thumbRef.classList.remove(css.show);
+		this.thumbRef.classList.add(css.hide);
 	}
+
+	hideScrollThumbJob = new Job(this.hideThumb, 200);
 
 	calculateMetrics = () => {
 		const trackSize = this.containerRef[this.props.vertical ? 'clientHeight' : 'clientWidth'];
@@ -187,16 +223,8 @@ class ScrollbarBase extends PureComponent {
 		if (this.announceRef) this.announceRef.announce($L(vertical ? 'DOWN' : 'RIGHT'));
 	}
 
-	getScrollThumbMovableRef = (node) => {
-		this.thumbMovableRef = node;
-	}
-
 	getScrollThumbRef = (node) => {
 		this.thumbRef = node;
-	}
-
-	getFadableRef = (node) => {
-		this.fadableRef = node;
 	}
 
 	render () {
@@ -224,9 +252,7 @@ class ScrollbarBase extends PureComponent {
 				</ScrollButton>
 				<ScrollThumb
 					className={css.scrollThumb}
-					getScrollThumbMovableRef={this.getScrollThumbMovableRef}
 					getScrollThumbRef={this.getScrollThumbRef}
-					ref={this.getFadableRef}
 					vertical={vertical}
 				/>
 				<ScrollButton
