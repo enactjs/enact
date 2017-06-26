@@ -10,6 +10,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/Scrollbar` property `corner` to add the corner between vertical and horizontal scrollbars
+- `moonstone/ScrollThumb` for a thumb of `moonstone/Scrollbar`
 - `moonstone/ContextualPopupDecorator` property `popupProps` to attach props to popup component
 
 ### Changed

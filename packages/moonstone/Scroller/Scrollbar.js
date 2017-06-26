@@ -198,7 +198,7 @@ class ScrollbarBase extends PureComponent {
 
 	showThumb () {
 		this.hideThumbJob.stop();
-		this.thumbRef.classList.add(css.show);
+		this.thumbRef.classList.add(css.thumbShown);
 	}
 
 	startHidingThumb () {
@@ -206,7 +206,7 @@ class ScrollbarBase extends PureComponent {
 	}
 
 	hideThumb = () => {
-		this.thumbRef.classList.remove(css.show);
+		this.thumbRef.classList.remove(css.thumbShown);
 	}
 
 	hideThumbJob = new Job(this.hideThumb, 200);
