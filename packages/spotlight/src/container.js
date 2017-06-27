@@ -522,7 +522,7 @@ const isNavigable = (node, containerId, verify) => {
 };
 
 /**
- * Returns the IDs of all containers
+ * Returns the IDs of all containers in the order of innermost container to the outermost container
  *
  * @return {String[]}  Array of container IDs
  * @memberof spotlight/container
@@ -535,7 +535,7 @@ const getAllContainerIds = () => {
 	// PhantomJS-friendly iterator->array conversion
 	let id;
 	while ((id = keys.next()) && !id.done) {
-		ids.push(id.value);
+		ids.unshift(id.value);
 	}
 
 	return ids;
