@@ -5,6 +5,7 @@
  * export is {@link moonstone/VirtualList.VirtualListBase}.
  */
 
+import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import PropTypes from 'prop-types';
@@ -625,34 +626,41 @@ class VirtualListCore extends Component {
 		}
 	}
 
-	scrollToNextPage = (direction, reverseDirection, focusedItem) => {
+	getIndexInfoForPageScroll = (direction, currentIndex) => {
 		const
-			{dimensionToExtent, primary, props, secondary} = this,
+			{dimensionToExtent, isHorizontal, isVertical, primary, props} = this,
 			node = this.containerRef,
 			{clientWidth, clientHeight} = props.clientSize || this.getClientSize(node),
-			focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute)),
-			rtlDirection = this.context.rtl ? -1 : 1;
+			rtlDirection = this.context.rtl ? -1 : 1,
+			movedDistance = isVertical() ? (Math.floor(clientHeight / primary.gridSize) * dimensionToExtent) : (Math.floor(clientWidth / primary.gridSize) * dimensionToExtent * rtlDirection);
 
-		let nextFocusIndex, scrollToIndex;
+		let indexInfo = {};
 
-		if (this.isVertical()) {
-			nextFocusIndex = (direction === 'down') ?
-				Math.min(props.dataSize, focusedIndex + Math.floor(clientHeight / primary.gridSize) * dimensionToExtent) :
-				Math.max(0, focusedIndex - Math.floor(clientHeight / primary.gridSize) * dimensionToExtent);
-			scrollToIndex = (direction === 'down') ? (focusedIndex + dimensionToExtent) : nextFocusIndex;
+		if (direction === 'down' || direction === 'right') {
+			indexInfo.focusIndex = clamp(0, props.dataSize, currentIndex + movedDistance);
+			indexInfo.scrollIndex = currentIndex + dimensionToExtent;
+			if (this.context.rtl && isHorizontal()) {
+				indexInfo.scrollIndex = indexInfo.focusIndex;
+			}
 		} else {
-			nextFocusIndex = (direction === 'right') ?
-				Math.min(props.dataSize, focusedIndex + Math.floor(clientWidth / secondary.gridSize) * dimensionToExtent * rtlDirection) :
-				Math.max(0, focusedIndex - Math.floor(clientWidth / secondary.gridSize) * dimensionToExtent * rtlDirection);
-
-			if (this.context.rtl) {
-				scrollToIndex = (direction === 'right') ? nextFocusIndex : (focusedIndex + dimensionToExtent);
-			} else {
-				scrollToIndex = (direction === 'right') ? (focusedIndex + dimensionToExtent) : nextFocusIndex;
+			indexInfo.focusIndex = clamp(0, props.dataSize, currentIndex - movedDistance);
+			indexInfo.scrollIndex = indexInfo.focusIndex;
+			if (this.context.rtl && isHorizontal()) {
+				indexInfo.scrollIndex = currentIndex + dimensionToExtent;
 			}
 		}
-		props.cbScrollTo({index: scrollToIndex, animate: false});
-		this.focusByIndex(nextFocusIndex);
+
+		return indexInfo;
+	}
+
+	scrollToNextPage = (direction, reverseDirection, focusedItem) => {
+		const
+			{focusByIndex, props} = this,
+			currentFocusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute)),
+			{focusIndex, scrollIndex} = this.getIndexInfoForPageScroll(direction, currentFocusedIndex);
+
+		props.cbScrollTo({index: scrollIndex, animate: false});
+		focusByIndex(focusIndex);
 		return true;
 	}
 

@@ -40,7 +40,13 @@ const
 	// spotlight
 	scrollStopWaiting = 500,
 	isPageUp = is('pageUp'),
-	isPageDown = is('pageDown');
+	isPageDown = is('pageDown'),
+	reverseDirections = {
+		'left': 'right',
+		'up': 'down',
+		'right': 'left',
+		'down': 'up'
+	};
 
 /**
  * {@link moonstone/Scroller.dataIndexAttribute} is the name of a custom attribute
@@ -371,6 +377,20 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
+		getPageDirection = (keyCode) => {
+			const
+				bounds = this.getScrollBounds(),
+				isVertical = this.canScrollVertically(bounds),
+				isRtl = this.context.rtl;
+
+			return isPageUp(keyCode) && isVertical && 'up' ||
+				isPageUp(keyCode) && !isVertical && !isRtl && 'left' ||
+				isPageUp(keyCode) && !isVertical && isRtl && 'right' ||
+				isPageDown(keyCode) && isVertical && 'down' ||
+				isPageDown(keyCode) && !isVertical && !isRtl && 'right' ||
+				isPageDown(keyCode) && !isVertical && isRtl && 'left';
+		}
+
 		onKeyUp = ({keyCode}) => {
 			if (isPageUp(keyCode) || isPageDown(keyCode)) {
 				const
@@ -378,36 +398,15 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					bounds = this.getScrollBounds(),
 					isVertical = this.canScrollVertically(bounds),
 					isHorizontal = this.canScrollHorizontally(bounds),
-					KEY_POINTER_PAGE_UP = 33,
-					KEY_POINTER_PAGE_DOWN = 34,
 					pageDistance = isPageUp(keyCode) ? this.pageDistanceForUp : this.pageDistanceForDown,
-					spotItem = Spotlight.getCurrent(),
-					viewportBounds = this.containerRef.getBoundingClientRect();
+					spotItem = Spotlight.getCurrent();
 
-				let direction, rDirection;
-
-				switch (keyCode) {
-					case KEY_POINTER_PAGE_UP:
-						direction = isVertical ? 'up' : 'left';
-						rDirection = isVertical ? 'down' : 'right';
-						break;
-					case KEY_POINTER_PAGE_DOWN:
-						direction = isVertical ? 'down' : 'right';
-						rDirection = isVertical ? 'up' : 'left';
-						break;
-					default:
-						return;
-				}
-
-				if (this.context.rtl && isHorizontal) {
-					const temp = direction;
-					direction = rDirection;
-					rDirection = temp;
-				}
-
-				if (!Spotlight.getPointerMode() && spotItem) {
+				if (spotItem) {
 					const
 						containerId = getLastContainer(),
+						direction = this.getPageDirection(keyCode),
+						viewportBounds = this.containerRef.getBoundingClientRect(),
+						rDirection = reverseDirections[direction],
 						spotItemBounds = spotItem.getBoundingClientRect(),
 						endPoint = getEndPoint(direction, spotItemBounds, viewportBounds),
 						next = getTargetByDirectionFromPosition(rDirection, endPoint, containerId);

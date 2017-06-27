@@ -10,6 +10,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/Scroller` and `moonstone/VirtualList` ability to page up and page down.
 - `moonstone/ContextualPopupDecorator` property `popupProps` to attach props to popup component
 
 ### Changed
@@ -42,7 +43,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
-- `moonstone/Scroller` ability to page up and page down.
 - `moonstone/Image` support for `children` prop inside images
 - `moonstone/Scroller` prop `direction` which replaces `horizontal` and `vertical` props
 - `moonstone/VideoPlayer` property `tooltipHideDelay` to hide tooltip with a given amount of time
