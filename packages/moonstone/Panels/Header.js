@@ -59,6 +59,16 @@ const HeaderBase = kind({
 		fullBleed: PropTypes.bool,
 
 		/**
+		 * Determines what triggers the header content to start its animation. Valid values are
+		 * `'focus'`, `'hover'` and `'render'`. The default is `'hover'`.
+		 *
+		 * @type {String}
+		 * @default 'hover'
+		 * @public
+		 */
+		marqueeOn: PropTypes.oneOf(['focus', 'hover', 'render']),
+
+		/**
 		 * When true, the case of the [`title`]{@link moonstone/Panels.Header#title} will
 		 * remain unchanged.
 		 * Uses [Uppercase HOC]{@link i18n/Uppercase.Uppercase} and mirrors the
@@ -111,6 +121,7 @@ const HeaderBase = kind({
 	defaultProps: {
 		casing: 'upper',
 		fullBleed: false,
+		marqueeOn: 'hover',
 		preserveCase: false,
 		// titleAbove: '00',
 		type: 'standard'
@@ -137,7 +148,7 @@ const HeaderBase = kind({
 		}
 	},
 
-	render: ({casing, children, direction, preserveCase, subTitleBelowComponent, title, /* titleAbove, */titleBelowComponent, type, ...rest}) => {
+	render: ({casing, children, direction, marqueeOn, preserveCase, subTitleBelowComponent, title, /* titleAbove, */titleBelowComponent, type, ...rest}) => {
 		delete rest.fullBleed;
 		delete rest.subTitleBelow;
 		delete rest.titleBelow;
@@ -145,7 +156,7 @@ const HeaderBase = kind({
 		switch (type) {
 			case 'compact': return (
 				<header aria-label={title} {...rest}>
-					<MarqueeText className={css.headerCell} marqueeOn="hover" forceDirection={direction}>
+					<MarqueeText className={css.headerCell} marqueeOn={marqueeOn} forceDirection={direction}>
 						<UppercaseH1 casing={casing} className={css.title} preserveCase={preserveCase}>{title}</UppercaseH1>
 						{titleBelowComponent}
 					</MarqueeText>

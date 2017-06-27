@@ -91,45 +91,49 @@ let _platform;
  */
 
 const detect = () => {
-	if (typeof window === 'undefined') {
+	if (_platform) {
+		// if we've already determined the platform, we'll use that determination
+		return _platform;
+	} else if (typeof window === 'undefined') {
 		return {
 			gesture: false,
 			node: true,
 			touch: false,
 			unknown: true
 		};
-	} else if (!_platform) {
-		const userAgent = ua();
+	}
 
-		_platform = {
-			gesture: hasGesture(),
-			node: false,
-			touch: hasTouch(),
-			unknown: true
-		};
+	const userAgent = ua();
 
-		for (let i = 0, p, m, v; (p = platforms[i]); i++) {
-			m = p.regex.exec(userAgent);
-			if (m) {
-				_platform.unknown = false;
+	_platform = {
+		gesture: hasGesture(),
+		node: false,
+		touch: hasTouch(),
+		unknown: true
+	};
 
-				if (p.forceVersion) {
-					v = p.forceVersion;
-				} else {
-					v = Number(m[1]);
-				}
-				_platform[p.platform] = v;
-				if (p.extra) {
-					_platform = {
-						..._platform,
-						...p.extra
-					};
-				}
-				_platform.platformName = p.platform;
-				break;
+	for (let i = 0, p, m, v; (p = platforms[i]); i++) {
+		m = p.regex.exec(userAgent);
+		if (m) {
+			_platform.unknown = false;
+
+			if (p.forceVersion) {
+				v = p.forceVersion;
+			} else {
+				v = Number(m[1]);
 			}
+			_platform[p.platform] = v;
+			if (p.extra) {
+				_platform = {
+					..._platform,
+					...p.extra
+				};
+			}
+			_platform.platformName = p.platform;
+			break;
 		}
 	}
+
 	return _platform;
 };
 

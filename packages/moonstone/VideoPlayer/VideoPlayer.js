@@ -5,7 +5,7 @@
  *
  * @module moonstone/VideoPlayer
  */
-import AnnounceDecorator from '@enact/ui/AnnounceDecorator';
+import Announce from '@enact/ui/AnnounceDecorator/Announce';
 import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import equals from 'ramda/src/equals';
 import React from 'react';
@@ -352,6 +352,16 @@ const VideoPlayerBase = class extends React.Component {
 		onPlayButtonClick: PropTypes.func,
 
 		/**
+		 * When `true`, the video will pause when it reaches either the start or the end of the
+		 * video during rewind, slow rewind, fast forward, or slow forward.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		pauseAtEnd: PropTypes.bool,
+
+		/**
 		 * A string which is sent to the `pause` icon of the player controls. This can be anything
 		 * that is accepted by {@link moonstone/Icon}.
 		 *
@@ -465,6 +475,7 @@ const VideoPlayerBase = class extends React.Component {
 		muted: false,
 		noAutoPlay: false,
 		noJumpButtons: false,
+		pauseAtEnd: false,
 		noRateButtons: false,
 		noSlider: false,
 		pauseIcon: 'pause',
@@ -544,6 +555,18 @@ const VideoPlayerBase = class extends React.Component {
 		this.attachCustomMediaEvents();
 		this.startDelayedFeedbackHide();
 		this.renderBottomControl.idle();
+		this.calculateMaxComponentCount();
+	}
+
+	componentWillReceiveProps (nextProps) {
+		// Detect if the number of components has changed
+		if (
+			React.Children.count(this.props.leftComponents) !== React.Children.count(nextProps.leftComponents) ||
+			React.Children.count(this.props.rightComponents) !== React.Children.count(nextProps.rightComponents) ||
+			React.Children.count(this.props.children) !== React.Children.count(nextProps.children)
+		) {
+			this.calculateMaxComponentCount();
+		}
 	}
 
 	componentWillUpdate (nextProps, nextState) {
@@ -604,7 +627,7 @@ const VideoPlayerBase = class extends React.Component {
 	//
 	// Internal Methods
 	//
-	announceJob = new Job(msg => forward('announce', msg, this.props), 200)
+	announceJob = new Job(msg => (this.announceRef && this.announceRef.announce(msg)), 200)
 
 	announce = (msg) => {
 		this.announceJob.start(msg);
@@ -621,6 +644,21 @@ const VideoPlayerBase = class extends React.Component {
 			titleElement.setAttribute('style', `--infoComponentsOffset: ${infoHeight}px`);
 			this.titleOffsetCalculated = true;
 		}
+	}
+
+	calculateMaxComponentCount = () => {
+		let leftCount = React.Children.count(this.props.leftComponents),
+			rightCount = React.Children.count(this.props.rightComponents),
+			childrenCount = React.Children.count(this.props.children);
+
+		// If the "more" button is present, automatically add it to the right's count.
+		if (childrenCount) {
+			rightCount += 1;
+		}
+
+		const max = Math.max(leftCount, rightCount);
+
+		this.player.style.setProperty('--moon-video-player-max-side-components', max);
 	}
 
 	initI18n = () => {
@@ -764,9 +802,9 @@ const VideoPlayerBase = class extends React.Component {
 			updatedState.error
 		);
 
-		// If we're ff or rw and hit the end, just pause the media.
-		if ((el.currentTime === 0 && this.prevCommand === 'rewind') ||
-				(el.currentTime === el.duration && this.prevCommand === 'fastForward')) {
+		if (this.props.pauseAtEnd && (
+				(el.currentTime === 0 && (this.prevCommand === 'rewind' || this.prevCommand === 'slowRewind')) ||
+				(el.currentTime === el.duration && (this.prevCommand === 'fastForward' || this.prevCommand === 'slowForward')))) {
 			this.pause();
 		}
 		this.setState(updatedState);
@@ -1219,6 +1257,10 @@ const VideoPlayerBase = class extends React.Component {
 		this.video = video;
 	}
 
+	setAnnounceRef = (node) => {
+		this.announceRef = node;
+	}
+
 	handleLoadStart = () => {
 		if (!this.props.noAutoPlay) {
 			this.video.play();
@@ -1241,6 +1283,7 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.onJumpBackwardButtonClick;
 		delete rest.onJumpForwardButtonClick;
 		delete rest.onPlayButtonClick;
+		delete rest.pauseAtEnd;
 		delete rest.playbackRateHash;
 		delete rest.setApiProvider;
 		delete rest.titleHideDelay;
@@ -1350,6 +1393,7 @@ const VideoPlayerBase = class extends React.Component {
 					onSpotlightRight={this.handleRight}
 					onClick={this.showControls}
 				/>
+				<Announce ref={this.setAnnounceRef} />
 			</div>
 		);
 	}
@@ -1401,14 +1445,12 @@ const VideoPlayerBase = class extends React.Component {
  * @ui
  * @public
  */
-const VideoPlayer = AnnounceDecorator(
-	ApiDecorator(
-		{api: ['fastForward', 'getMediaState', 'jump', 'pause', 'play', 'rewind', 'seek']},
-		Slottable(
-			{slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source']},
-			Skinnable(
-				VideoPlayerBase
-			)
+const VideoPlayer = ApiDecorator(
+	{api: ['fastForward', 'getMediaState', 'jump', 'pause', 'play', 'rewind', 'seek']},
+	Slottable(
+		{slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source']},
+		Skinnable(
+			VideoPlayerBase
 		)
 	)
 );
