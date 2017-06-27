@@ -462,7 +462,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 						</ContextualPopupContainer>
 					</FloatingLayer>
 					<div ref={this.getClientNode}>
-						<Wrapped {...rest} />
+						<Wrapped {...rest} selected={this.props.open} />
 					</div>
 				</div>
 			);
