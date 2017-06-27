@@ -22,6 +22,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Dialog` to properly focus via pointer on child components
+- `moonstone/VirtualList`, `moonstone/VirtualGridList`, and `moonstone/Scroller` not to be slower when scrolled to the first or the last position by wheeling
 - `moonstone` component hold delay time
 - `moonstone/Panel` autoFocus logic to only focus on initial render
 - `moonstone/Input` text colors
