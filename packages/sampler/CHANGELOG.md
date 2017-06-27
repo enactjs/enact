@@ -10,8 +10,6 @@ The following is a curated list of changes in the Enact Sampler, newest changes 
 
 ### Changed
 
-- `moonstone/ProgressBar` sample to use `ProgressBarBase.defaultProps`
-
 ### Fixed
 
 ### Removed
