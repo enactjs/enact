@@ -930,11 +930,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				vscrollbar = this.getVerticalScrollbar(isHorizontalScrollbarVisible, isVerticalScrollbarVisible),
 				hscrollbar = this.getHorizontalScrollbar(isHorizontalScrollbarVisible, isVerticalScrollbarVisible),
 				scrollableClasses = classNames(
-					className,
 					css.scrollable,
 					isHorizontalScrollbarVisible && !isVerticalScrollbarVisible && 'horizontal' ||
 					isVerticalScrollbarVisible && !isHorizontalScrollbarVisible && 'vertical' ||
-					null
+					null,
+					className
 				);
 
 			delete props.cbScrollTo;

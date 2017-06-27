@@ -27,7 +27,11 @@
 	}
 
 	&.corner {
-		-webkit-padding-end: 80px;
+		-webkit-padding-end: @moon-icon-button-small-size;
+
+		:global(.enact-text-large) & {
+			-webkit-padding-end: @moon-icon-button-small-size-large;
+		}
 	}
 
 	/* ScrollButton */
