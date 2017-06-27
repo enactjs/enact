@@ -377,18 +377,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		getPageDirection = (keyCode) => {
-			const
-				bounds = this.getScrollBounds(),
-				isVertical = this.canScrollVertically(bounds),
-				isRtl = this.context.rtl;
+		getPageDirection = (keyCode, isVertical) => {
+			const isRtl = this.context.rtl;
 
-			return isPageUp(keyCode) && isVertical && 'up' ||
-				isPageUp(keyCode) && !isVertical && !isRtl && 'left' ||
-				isPageUp(keyCode) && !isVertical && isRtl && 'right' ||
-				isPageDown(keyCode) && isVertical && 'down' ||
-				isPageDown(keyCode) && !isVertical && !isRtl && 'right' ||
-				isPageDown(keyCode) && !isVertical && isRtl && 'left';
+			return isPageUp(keyCode) ?
+				(isVertical && 'up' || isRtl && 'right' || 'left') :
+				(isVertical && 'down' || isRtl && 'left' || 'right');
 		}
 
 		onKeyUp = ({keyCode}) => {
@@ -404,22 +398,18 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				if (spotItem) {
 					const
 						containerId = getLastContainer(),
-						direction = this.getPageDirection(keyCode),
+						direction = this.getPageDirection(keyCode, isVertical),
 						viewportBounds = this.containerRef.getBoundingClientRect(),
 						rDirection = reverseDirections[direction],
 						spotItemBounds = spotItem.getBoundingClientRect(),
 						endPoint = getEndPoint(direction, spotItemBounds, viewportBounds),
 						next = getTargetByDirectionFromPosition(rDirection, endPoint, containerId);
 
-					if (next) {
-						if (next === spotItem) {
-							if (!this.childRef.scrollToNextPage(direction, rDirection, spotItem)) {
-								scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
-							}
-						} else {
-							next.focus();
-						}
-					} else {
+					if (!next) {
+						scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
+					} else if (next !== spotItem) {
+						next.focus();
+					} else if (!this.childRef.scrollToNextPage(direction, rDirection, spotItem)) {
 						scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
 					}
 				} else {
@@ -774,14 +764,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		updateScrollabilityAndEventListeners = () => {
 			const
 				{containerRef} = this,
-				bounds = this.getScrollBounds(),
-				childContainerRef = this.childRef.getContainerNode(),
-				isVertical = this.canScrollVertically(bounds);
+				childContainerRef = this.childRef.getContainerNode();
 
 			this.horizontalScrollability = this.childRef.isHorizontal();
 			this.verticalScrollability = this.childRef.isVertical();
-			this.pageDistanceForDown = (isVertical ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
-			this.pageDistanceForUp = this.pageDistanceForDown * -1;
 
 			if (containerRef && containerRef.addEventListener) {
 				// FIXME `onWheel` doesn't work on the v8 snapshot.
@@ -806,6 +792,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		// component life cycle
 
 		componentDidMount () {
+			const
+				bounds = this.getScrollBounds(),
+				isVertical = this.canScrollVertically(bounds);
+
+			this.pageDistanceForDown = (isVertical ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
+			this.pageDistanceForUp = this.pageDistanceForDown * -1;
 			this.updateScrollabilityAndEventListeners();
 		}
 
