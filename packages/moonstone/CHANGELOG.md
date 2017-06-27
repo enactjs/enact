@@ -48,6 +48,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Image` support for `children` prop inside images
 - `moonstone/Scroller` prop `direction` which replaces `horizontal` and `vertical` props
 - `moonstone/VideoPlayer` property `tooltipHideDelay` to hide tooltip with a given amount of time
+- `moonstone/VideoPlayer` property `pauseAtEnd` to pause when it reaches either the start or the end of the video 
 - `moonstone/VideoPlayer` methods `fastForward`, `getMediaState`, `jump`, `pause`, `play`, `rewind`, and `seek` to allow external interaction with the player. See docs for example usage.
 
 ### Changed
