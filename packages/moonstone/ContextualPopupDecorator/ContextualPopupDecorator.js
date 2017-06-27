@@ -438,6 +438,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		render () {
 			const {showCloseButton, popupComponent: PopupComponent, popupClassName, noAutoDismiss, open, onClose, popupProps, skin, spotlightRestrict, ...rest} = this.props;
 			const scrimType = spotlightRestrict === 'self-only' ? 'transparent' : 'none';
+			const popupOpenClass = 'contextualPopupOpen';
 
 			if (!noSkin) {
 				rest.skin = skin;
@@ -461,8 +462,8 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 							<PopupComponent {...popupProps} />
 						</ContextualPopupContainer>
 					</FloatingLayer>
-					<div ref={this.getClientNode}>
-						<Wrapped {...rest} selected={this.props.open} />
+					<div ref={this.getClientNode} className={this.props.open ? popupOpenClass : null}>
+						<Wrapped {...rest} />
 					</div>
 				</div>
 			);
