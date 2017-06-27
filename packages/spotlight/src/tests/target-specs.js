@@ -334,6 +334,18 @@ describe('target', () => {
 			}
 		));
 
+		it('should return null when the node exists but does not match the container\'s selector', testScenario(
+			scenarios.nonSpottableInContainer,
+			() => {
+				configureContainer('first');
+
+				const expected = null;
+				const actual = getTargetBySelector(`[${containerAttribute}='first'] .other`);
+
+				expect(actual).to.equal(expected);
+			}
+		));
+
 		it('should return null for an empty selectors', testScenario(
 			scenarios.nonSpottableInContainer,
 			() => {

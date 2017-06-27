@@ -82,7 +82,7 @@ function getTargetBySelector (selector) {
 	const next = parseSelector(selector)[0];
 	if (next) {
 		const nextContainerIds = getContainersForNode(next);
-		if (isNavigable(next, last(nextContainerIds))) {
+		if (isNavigable(next, last(nextContainerIds), true)) {
 			return next;
 		}
 	}
