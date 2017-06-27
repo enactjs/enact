@@ -275,41 +275,45 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
+		calculateDistanceByWheel = (e, maxDistance) => {
+			const
+				deltaMode = e.deltaMode,
+				delta = (-e.wheelDeltaY || e.deltaY);
+
+			if (deltaMode === 0) {
+				return clamp(-maxDistance, maxDistance, ri.scale(delta * scrollWheelMultiplierForDeltaPixel));
+			} else if (deltaMode === 1) { // line; firefox
+				return clamp(-maxDistance, maxDistance, ri.scale(delta * pixelPerLine * scrollWheelMultiplierForDeltaPixel));
+			} else if (deltaMode === 2) { // page
+				return delta < 0 ? -maxDistance : maxDistance;
+			}
+		}
+
+		/*
+		 * wheel event handler;
+		 * - for horizontal scroll, supports wheel action on any children nodes since web engine cannot suppor this
+		 * - for vertical scroll, supports wheel action on scrollbars only
+		 */
 		onWheel = (e) => {
+			const
+				bounds = this.getScrollBounds(),
+				canScrollHorizontally = this.canScrollHorizontally(bounds),
+				canScrollVertically = this.canScrollVertically(bounds);
+
 			this.childRef.setContainerDisabled(true);
 			this.lastFocusedItem = null;
 			if (typeof window !== 'undefined') {
 				window.document.activeElement.blur();
 			}
 
-			// FIXME This routine is a temporary support for horizontal wheel scroll.
-			// FIXME If web engine supports horizontal wheel, this routine should be refined or removed.
-			if (this.horizontalScrollability && !this.verticalScrollability) {
-				const
-					bounds = this.getScrollBounds(),
-					isHorizontal = this.canScrollHorizontally(bounds),
-					isVertical = this.canScrollVertically(bounds),
-					deltaMode = e.deltaMode,
-					wheelDeltaY = -e.wheelDeltaY;
-				let
-					delta = (wheelDeltaY || e.deltaY),
-					maxPixel;
+			if (canScrollVertically) { // This routine handles wheel events on scrollbars for vertical scroll.
+				if (e.target.parentElement === e.currentTarget) { // if e.target is Scrollbar node
+					const delta = this.calculateDistanceByWheel(e, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
 
-				if (isVertical) {
-					maxPixel = bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel;
-				} else if (isHorizontal) {
-					maxPixel = bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel;
-				} else {
-					return 0;
+					this.scrollToAccumulatedTarget(delta, false, true);
 				}
-
-				if (deltaMode === 0) {
-					delta = clamp(-maxPixel, maxPixel, ri.scale(delta * scrollWheelMultiplierForDeltaPixel));
-				} else if (deltaMode === 1) { // line; firefox
-					delta = clamp(-maxPixel, maxPixel, ri.scale(delta * pixelPerLine * scrollWheelMultiplierForDeltaPixel));
-				} else if (deltaMode === 2) { // page
-					delta = delta < 0 ? -maxPixel : maxPixel;
-				}
+			} else if (canScrollHorizontally) { // this routine handles wheel events on any children for horizontal scroll.
+				const delta = this.calculateDistanceByWheel(e, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
 
 				/* prevent native scrolling feature for vertical direction */
 				e.preventDefault();

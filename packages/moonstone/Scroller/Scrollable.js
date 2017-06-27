@@ -322,34 +322,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		wheel (e, isHorizontal, isVertical) {
-			const
-				bounds = this.getScrollBounds(),
-				deltaMode = e.deltaMode,
-				wheelDeltaY = -e.wheelDeltaY;
-			let
-				delta = (wheelDeltaY || e.deltaY),
-				maxPixel;
-
-			if (isVertical) {
-				maxPixel = bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel;
-			} else if (isHorizontal) {
-				maxPixel = bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel;
-			} else {
-				return 0;
-			}
-
-			if (deltaMode === 0) {
-				delta = clamp(-maxPixel, maxPixel, ri.scale(delta * scrollWheelMultiplierForDeltaPixel));
-			} else if (deltaMode === 1) { // line; firefox
-				delta = clamp(-maxPixel, maxPixel, ri.scale(delta * pixelPerLine * scrollWheelMultiplierForDeltaPixel));
-			} else if (deltaMode === 2) { // page
-				delta = delta < 0 ? -maxPixel : maxPixel;
-			}
-
-			return delta;
-		}
-
 		// mouse event handler for JS scroller
 
 		onMouseDown = (e) => {
@@ -439,14 +411,40 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
+		calculateDistanceByWheel = (e, maxDistance) => {
+			const
+				deltaMode = e.deltaMode,
+				delta = (-e.wheelDeltaY || e.deltaY);
+
+			if (deltaMode === 0) {
+				return clamp(-maxDistance, maxDistance, ri.scale(delta * scrollWheelMultiplierForDeltaPixel));
+			} else if (deltaMode === 1) { // line; firefox
+				return clamp(-maxDistance, maxDistance, ri.scale(delta * pixelPerLine * scrollWheelMultiplierForDeltaPixel));
+			} else if (deltaMode === 2) { // page
+				return delta < 0 ? -maxDistance : maxDistance;
+			}
+		}
+
+		calculateMaxDistance = (canScrollHorizontally, canScrollVertically) => {
+			const bounds = this.getScrollBounds();
+
+			if (canScrollVertically) {
+				return bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel;
+			} else if (canScrollHorizontally) {
+				return bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel;
+			} else {
+				return 0;
+			}
+		}
+
 		onWheel = (e) => {
 			e.preventDefault();
 			if (!this.isDragging) {
 				const
 					bounds = this.getScrollBounds(),
-					isHorizontal = this.canScrollHorizontally(bounds),
-					isVertical = this.canScrollVertically(bounds),
-					delta = this.wheel(e, isHorizontal, isVertical),
+					canScrollHorizontally = this.canScrollHorizontally(bounds),
+					canScrollVertically = this.canScrollVertically(bounds),
+					delta = this.calculateDistanceByWheel(e, this.calculateMaxDistance(canScrollHorizontally, canScrollVertically)),
 					focusedItem = Spotlight.getCurrent();
 
 				Spotlight.setPointerMode(false);
@@ -455,7 +453,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				}
 
 				this.childRef.setContainerDisabled(true);
-				this.scrollToAccumulatedTarget(delta, isHorizontal, isVertical);
+				this.scrollToAccumulatedTarget(delta, canScrollHorizontally, canScrollVertically);
 			}
 		}
 
