@@ -226,6 +226,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		horizontalScrollability = false
 		verticalScrollability = false
 		isScrollAnimationTargetAccumulated = false
+		wheelDirection = 0
 		isFirstDragging = false
 		isDragging = false
 		isKeyDown = false
@@ -447,6 +448,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					isHorizontal = this.canScrollHorizontally(bounds),
 					isVertical = this.canScrollVertically(bounds),
 					delta = this.wheel(e, isHorizontal, isVertical),
+					direction = Math.sign(delta),
 					focusedItem = Spotlight.getCurrent();
 
 				Spotlight.setPointerMode(false);
@@ -455,6 +457,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				}
 
 				this.childRef.setContainerDisabled(true);
+
+				if (direction !== this.wheelDirection) {
+					this.isScrollAnimationTargetAccumulated = false;
+					this.wheelDirection = direction;
+				}
 				this.scrollToAccumulatedTarget(delta, isHorizontal, isVertical);
 			}
 		}
@@ -470,9 +477,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		scrollToAccumulatedTarget = (delta, isHorizontal, isVertical) => {
-			const
-				bounds = this.getScrollBounds(),
-				silent = this.isScrollAnimationTargetAccumulated;
+			const silent = this.isScrollAnimationTargetAccumulated;
 
 			if (!this.isScrollAnimationTargetAccumulated) {
 				this.accumulatedTargetX = this.scrollLeft;
@@ -481,9 +486,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 
 			if (isVertical) {
-				this.accumulatedTargetY = clamp(0, bounds.maxTop, this.accumulatedTargetY + delta);
+				this.accumulatedTargetY = this.accumulatedTargetY + delta;
 			} else if (isHorizontal) {
-				this.accumulatedTargetX = clamp(0, bounds.maxLeft, this.accumulatedTargetX + delta);
+				this.accumulatedTargetX = this.accumulatedTargetX + delta;
 			}
 
 			this.start({
@@ -539,13 +544,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				this.doScrollStart();
 			}
 
-			targetX = clamp(0, bounds.maxLeft, targetX);
-			targetY = clamp(0, bounds.maxTop, targetY);
-
-			if ((bounds.maxLeft - targetX) < epsilon) {
+			if (Math.abs(bounds.maxLeft - targetX) < epsilon) {
 				targetX = bounds.maxLeft;
 			}
-			if ((bounds.maxTop - targetY) < epsilon) {
+			if (Math.abs(bounds.maxTop - targetY) < epsilon) {
 				targetY = bounds.maxTop;
 			}
 
@@ -562,20 +564,29 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					nodeToFocus
 				}));
 			} else {
+				targetX = clamp(0, bounds.maxLeft, targetX);
+				targetY = clamp(0, bounds.maxTop, targetY);
+
 				this.scroll(targetX, targetY);
 				this.stop({indexToFocus, nodeToFocus});
 			}
 		}
 
 		scrollAnimation = (animationInfo) => (curTime) => {
-			const {sourceX, sourceY, targetX, targetY, duration, indexToFocus, nodeToFocus} = animationInfo;
+			const
+				{sourceX, sourceY, targetX, targetY, duration, indexToFocus, nodeToFocus} = animationInfo,
+				bounds = this.getScrollBounds();
+
 			if (curTime < duration) {
 				this.scroll(
-					this.horizontalScrollability ? this.animator.timingFunction(sourceX, targetX, duration, curTime) : sourceX,
-					this.verticalScrollability ? this.animator.timingFunction(sourceY, targetY, duration, curTime) : sourceY
+					this.horizontalScrollability ? clamp(0, bounds.maxLeft, this.animator.timingFunction(sourceX, targetX, duration, curTime)) : sourceX,
+					this.verticalScrollability ? clamp(0, bounds.maxTop, this.animator.timingFunction(sourceY, targetY, duration, curTime)) : sourceY
 				);
 			} else {
-				this.scroll(targetX, targetY);
+				this.scroll(
+					clamp(0, bounds.maxLeft, targetX),
+					clamp(0, bounds.maxTop, targetY)
+				);
 				this.stop({indexToFocus, nodeToFocus});
 			}
 		}
@@ -716,10 +727,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		isVerticalScrollbarVisible = () => (this.props.verticalScrollbar === 'visible')
 
 		showThumb (bounds) {
-			if (this.state.isHorizontalScrollbarVisible && this.canScrollHorizontally(bounds)) {
+			if (this.state.isHorizontalScrollbarVisible && this.scrollbarHorizontalRef && this.canScrollHorizontally(bounds)) {
 				this.scrollbarHorizontalRef.showThumb();
 			}
-			if (this.state.isVerticalScrollbarVisible && this.canScrollVertically(bounds)) {
+			if (this.state.isVerticalScrollbarVisible && this.scrollbarVerticalRef && this.canScrollVertically(bounds)) {
 				this.scrollbarVerticalRef.showThumb();
 			}
 		}
@@ -816,12 +827,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		updateScrollOnFocus () {
 			const
 				focusedItem = Spotlight.getCurrent(),
-				{calculatePositionOnFocus, getScrollBounds} = this.childRef,
+				{containerRef, calculatePositionOnFocus, getScrollBounds} = this.childRef,
 				{scrollHeight: previousScrollHeight} = this.bounds,
 				{scrollHeight: currentScrollHeight} = getScrollBounds(),
 				scrollInfo = {previousScrollHeight, scrollTop: this.scrollTop};
 
-			if (focusedItem) {
+			if (focusedItem && containerRef && containerRef.contains(focusedItem)) {
 				const position = calculatePositionOnFocus(focusedItem, scrollInfo);
 				this.startScrollOnFocus(position, focusedItem);
 			}
@@ -859,7 +870,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				childContainerRef = this.childRef.containerRef;
 
 			// Before call cancelAnimationFrame, you must send scrollStop Event.
-			this.animator.stop();
+			if (this.animator.isAnimating()) {
+				this.doScrollStop();
+				this.animator.stop();
+			}
 			this.forceUpdateJob.stop();
 
 			if (containerRef && containerRef.removeEventListener) {
@@ -939,11 +953,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			delete props.cbScrollTo;
 			delete props.className;
+			delete props.focusableScrollbar;
 			delete props.horizontalScrollbar;
 			delete props.onScroll;
 			delete props.onScrollStart;
 			delete props.onScrollStop;
-			delete props.focusableScrollbar;
 			delete props.style;
 			delete props.verticalScrollbar;
 

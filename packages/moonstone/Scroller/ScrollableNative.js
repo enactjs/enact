@@ -738,7 +738,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				childContainerRef = this.childRef.getContainerNode();
 
 			// Before call cancelAnimationFrame, you must send scrollStop Event.
+			this.doScrollStop();
 			this.forceUpdateJob.stop();
+			this.scrollStopJob.stop();
 
 			if (containerRef && containerRef.removeEventListener) {
 				// FIXME `onWheel` doesn't work on the v8 snapshot.
