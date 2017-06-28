@@ -199,7 +199,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		static childContextTypes = contextTypesResize
-
 		static contextTypes = contextTypesRtl
 
 		constructor (props) {
@@ -242,7 +241,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		isScrollAnimationTargetAccumulated = false
 		isFirstDragging = false
 		isDragging = false
-		isKeyDown = false
 		isInitializing = true
 		pageDistanceForUp = 0
 		pageDistanceForDown = 0

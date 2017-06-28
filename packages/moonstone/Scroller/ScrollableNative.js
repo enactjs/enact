@@ -18,7 +18,7 @@ import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ri from '@enact/ui/resolution';
-import Spotlight from '@enact/spotlight';
+import {Spotlight, getDirection} from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import css from './Scrollable.less';
@@ -82,7 +82,7 @@ const ScrollableSpotlightContainer = SpotlightContainerDecorator(
  * that applies a Scrollable behavior to its wrapped component.
  *
  * Scrollable catches `onFocus` event from its wrapped component for spotlight features,
- * and also catches `onWheel`, `onScroll` and `onKeyUp` events from its wrapped component for scrolling behaviors.
+ * and also catches `onWheel`, `onScroll` and `onKeyDown` events from its wrapped component for scrolling behaviors.
  *
  * Scrollable calls `onScrollStart`, `onScroll`, and `onScrollStop` callback functions during scroll.
  *
@@ -385,39 +385,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				(isVertical && 'down' || isRtl && 'left' || 'right');
 		}
 
-		onKeyUp = ({keyCode}) => {
-			if (isPageUp(keyCode) || isPageDown(keyCode)) {
-				const
-					{getEndPoint, scrollToAccumulatedTarget} = this,
-					bounds = this.getScrollBounds(),
-					isVertical = this.canScrollVertically(bounds),
-					isHorizontal = this.canScrollHorizontally(bounds),
-					pageDistance = isPageUp(keyCode) ? this.pageDistanceForUp : this.pageDistanceForDown,
-					spotItem = Spotlight.getCurrent();
-
-				if (spotItem) {
-					const
-						containerId = getLastContainer(),
-						direction = this.getPageDirection(keyCode, isVertical),
-						viewportBounds = this.containerRef.getBoundingClientRect(),
-						rDirection = reverseDirections[direction],
-						spotItemBounds = spotItem.getBoundingClientRect(),
-						endPoint = getEndPoint(direction, spotItemBounds, viewportBounds),
-						next = getTargetByDirectionFromPosition(rDirection, endPoint, containerId);
-
-					if (!next) {
-						scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
-					} else if (next !== spotItem) {
-						next.focus();
-					} else if (!this.childRef.scrollToNextPage(direction, rDirection, spotItem)) {
-						scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
-					}
-				} else {
-					scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
-				}
-			}
-		}
-
 		getEndPoint = (direction, oSpotBounds, viewportBounds) => {
 			let oPoint = {};
 
@@ -440,6 +407,47 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					break;
 			}
 			return oPoint;
+		}
+
+		scrollByPage = (keyCode) => {
+			const
+				{getEndPoint, scrollToAccumulatedTarget} = this,
+				bounds = this.getScrollBounds(),
+				isVertical = this.canScrollVertically(bounds),
+				isHorizontal = this.canScrollHorizontally(bounds),
+				pageDistance = isPageUp(keyCode) ? this.pageDistanceForUp : this.pageDistanceForDown,
+				spotItem = Spotlight.getCurrent();
+
+			if (!Spotlight.getPointerMode() && spotItem) {
+				const
+					containerId = getLastContainer(),
+					direction = this.getPageDirection(keyCode, isVertical),
+					rDirection = reverseDirections[direction],
+					viewportBounds = this.containerRef.getBoundingClientRect(),
+					spotItemBounds = spotItem.getBoundingClientRect(),
+					endPoint = getEndPoint(direction, spotItemBounds, viewportBounds),
+					next = getTargetByDirectionFromPosition(rDirection, endPoint, containerId);
+
+				if (!next) {
+					scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
+				} else if (next !== spotItem) {
+					next.focus();
+				} else if (!this.childRef.scrollToNextPage({direction, reverseDirection: rDirection, focusedItem: spotItem})) {
+					scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
+				}
+			} else {
+				scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
+			}
+		}
+
+		onKeyDown = ({keyCode, target}) => {
+			const direction = getDirection(keyCode);
+
+			if (isPageUp(keyCode) || isPageDown(keyCode)) {
+				this.scrollByPage(keyCode);
+			} else if (direction && this.childRef.scrollByDirection) {
+				this.childRef.scrollByDirection(direction, target);
+			}
 		}
 
 		onScrollbarBtnHandler = (orientation, direction) => {
