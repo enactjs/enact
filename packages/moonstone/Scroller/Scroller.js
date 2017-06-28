@@ -13,7 +13,7 @@ import {getLastContainer} from '@enact/spotlight/src/container';
 import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
-import {Spotlight, getDirection} from '@enact/spotlight';
+import {Spotlight} from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import css from './Scroller.less';
@@ -193,7 +193,7 @@ class ScrollerBase extends Component {
 		return node.getBoundingClientRect();
 	}
 
-	scrollToNextPage = (direction, reverseDirection, focusedItem) => {
+	scrollToNextPage = ({direction, reverseDirection, focusedItem}) => {
 		const
 			containerId = getLastContainer(),
 			spotItemBounds = focusedItem.getBoundingClientRect(),
@@ -384,10 +384,8 @@ class ScrollerBase extends Component {
 
 	getContainerNode = () => (this.containerRef)
 
-	onKeyDown = ({keyCode, target}) => {
-		const direction = getDirection(keyCode);
-
-		if (direction && !this.findInternalTarget(direction, target)) {
+	scrollByDirection = ({direction, target}) => {
+		if (!this.findInternalTarget(direction, target)) {
 			this.scrollToBoundary(direction);
 		}
 	}
@@ -422,7 +420,6 @@ class ScrollerBase extends Component {
 			<div
 				{...props}
 				className={classNames(className, css.hideNativeScrollbar)}
-				onKeyDown={this.onKeyDown}
 				ref={this.initRef}
 				style={mergedStyle}
 			/>
