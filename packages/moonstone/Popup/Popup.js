@@ -377,10 +377,6 @@ class Popup extends React.Component {
 				onClose(ev);
 			}
 		}
-
-		if (onKeyDown) {
-			onKeyDown(ev);
-		}
 	}
 
 	handlePopupHide = () => {
