@@ -90,13 +90,13 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			children: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 
 			/**
-			 * Determines the side where tooltip will be.
+			 * Determines the side where tooltip will be. This is handled and passed down from `SliderDecorator`. Expected values are `rising` and `falling`.
 			 *
 			 * @type {String}
 			 * @default 'rising'
 			 * @public
 			 */
-			climax: PropTypes.string,
+			climax: PropTypes.oneOf(['rising', 'falling']),
 
 			/**
 			 * The slider can change its behavior to have the knob follow the cursor as it moves
