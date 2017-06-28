@@ -36,7 +36,7 @@ const OverlayDecorator = hoc((config, Wrapped) => {
 			autoHide: PropTypes.oneOf(['before', 'after', 'both']),
 
 			/**
-			 * A node which will be displayed at the end of the item.  Typically this will be an
+			 * A node which will be displayed at the end of the item. Typically this will be an
 			 * icon or multiple icons.
 			 *
 			 * @type {Element}
@@ -45,7 +45,7 @@ const OverlayDecorator = hoc((config, Wrapped) => {
 			overlayAfter: PropTypes.node,
 
 			/**
-			 * A node which will be displayed at the beginning of the item.  Typically this will be
+			 * A node which will be displayed at the beginning of the item. Typically this will be
 			 * an icon or multiple icons.
 			 *
 			 * @type {Element}
