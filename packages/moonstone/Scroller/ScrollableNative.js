@@ -10,12 +10,12 @@ import {contextTypes as contextTypesResize} from '@enact/ui/Resizable';
 import {contextTypes as contextTypesRtl} from '@enact/i18n/I18nDecorator';
 import deprecate from '@enact/core/internal/deprecate';
 import {forward} from '@enact/core/handle';
-import {getDirection} from '@enact/spotlight';
 import hoc from '@enact/core/hoc';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ri from '@enact/ui/resolution';
+import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import css from './Scrollable.less';
@@ -70,7 +70,7 @@ const ScrollableSpotlightContainer = SpotlightContainerDecorator(
  * {@link moonstone/Scroller.ScrollableNative} is a Higher-order Component
  * that applies a Scrollable behavior to its wrapped component.
  *
- * Scrollable catches `onFocus`, `onKeyUp`, and `onKeyDown` events from its wrapped component for spotlight features,
+ * Scrollable catches `onFocus` event from its wrapped component for spotlight features,
  * and also catches `onWheel` and `onScroll` events from its wrapped component for scrolling behaviors.
  *
  * Scrollable calls `onScrollStart`, `onScroll`, and `onScrollStop` callback functions during scroll.
@@ -195,12 +195,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.initChildRef = this.initRef('childRef');
 			this.initContainerRef = this.initRef('containerRef');
 
-			// wheel, scroll, and focus event handlers will be added after mounting
-			this.eventHandlers = {
-				onKeyDown: this.onKeyDown,
-				onKeyUp: this.onKeyUp
-			};
-
 			this.verticalScrollbarProps = {
 				ref: this.initRef('scrollbarVerticalRef'),
 				vertical: true,
@@ -228,7 +222,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		horizontalScrollability = false
 		verticalScrollability = false
 		isScrollAnimationTargetAccumulated = false
-		isKeyDown = false
 		isInitializing = true
 
 		// event handlers
@@ -348,38 +341,26 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		// event handlers for Spotlight support
 
+		startScrollOnFocus = (pos, item) => {
+			if (pos) {
+				if (pos.left !== this.scrollLeft || pos.top !== this.scrollTop) {
+					this.start(pos.left, pos.top);
+				}
+				this.lastFocusedItem = item;
+			}
+		}
+
 		onFocus = (e) => {
-			if (this.isKeyDown) {
+			if (!(Spotlight.getPointerMode() || this.isDragging)) {
 				const
 					item = e.target,
 					positionFn = this.childRef.calculatePositionOnFocus,
-					spotItem = (typeof window === 'object') ? window.document.activeElement : null;
+					spotItem = Spotlight.getCurrent();
 
 				if (item && item !== this.lastFocusedItem && item === spotItem && positionFn) {
 					const pos = positionFn(item);
-					if (pos) {
-						if (pos.left !== this.scrollLeft || pos.top !== this.scrollTop) {
-							this.start(pos.left, pos.top);
-						}
-						this.lastFocusedItem = item;
-					}
+					this.startScrollOnFocus(pos, item);
 				}
-			}
-		}
-
-		onKeyDown = ({keyCode, target}) => {
-			if (getDirection(keyCode)) {
-				if (this.childRef.setSpotlightContainerRestrict) {
-					const index = Number.parseInt(target.getAttribute(dataIndexAttribute));
-					this.childRef.setSpotlightContainerRestrict(keyCode, index);
-				}
-				this.isKeyDown = true;
-			}
-		}
-
-		onKeyUp = ({keyCode}) => {
-			if (getDirection(keyCode)) {
-				this.isKeyDown = false;
 			}
 		}
 
@@ -757,7 +738,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				childContainerRef = this.childRef.getContainerNode();
 
 			// Before call cancelAnimationFrame, you must send scrollStop Event.
+			this.doScrollStop();
 			this.forceUpdateJob.stop();
+			this.scrollStopJob.stop();
 
 			if (containerRef && containerRef.removeEventListener) {
 				// FIXME `onWheel` doesn't work on the v8 snapshot.
@@ -850,7 +833,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					focusableScrollbar={focusableScrollbar}
 					style={style}
 				>
-					<Wrapped {...props} {...this.eventHandlers} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={css.container} />
+					<Wrapped {...props} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={css.container} />
 					{vscrollbar}
 					{hscrollbar}
 				</ScrollableSpotlightContainer>

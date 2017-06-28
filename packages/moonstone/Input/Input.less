@@ -46,30 +46,6 @@
 	:global(.enact-locale-right-to-left) & {
 		text-align: right;
 	}
-
-	// Skin colors
-	.applySkins({
-		background: transparent;
-		color: @moon-input-text-color;
-
-		&::selection {
-			color: @moon-spotlight-text-color;
-			background-color: @moon-spotlight-bg-color;
-		}
-
-		.input-placeholder({
-			color: @moon-input-placeholder-color;
-		});
-
-		.focus({
-			color: @moon-input-text-color;
-			background-color: inherit;
-		});
-
-		.invalid & {
-			color: @moon-red;
-		}
-	});
 }
 
 .decorator {
@@ -126,6 +102,25 @@
 
 		.input {
 			background: transparent;
+			color: @moon-input-text-color;
+
+			&::selection {
+				color: @moon-spotlight-text-color;
+				background-color: @moon-spotlight-bg-color;
+			}
+
+			.input-placeholder({
+				color: @moon-input-placeholder-color;
+			});
+
+			.focus({
+				color: @moon-input-text-color;
+				background-color: inherit;
+			});
+		}
+
+		&.invalid input {
+			color: @moon-red;
 		}
 
 		&:global(.spottable):focus {

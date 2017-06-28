@@ -9,9 +9,10 @@
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import deprecate from '@enact/core/internal/deprecate';
+import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target.js';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
-import Spotlight from '@enact/spotlight';
+import {Spotlight, getDirection} from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import css from './Scroller.less';
@@ -34,6 +35,15 @@ class ScrollerBase extends Component {
 
 	static propTypes = /** @lends moonstone/Scroller.ScrollerBase.prototype */ {
 		children: PropTypes.node.isRequired,
+
+		/**
+		 * Callback method of scrollTo.
+		 * Normally, `Scrollable` should set this value.
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		cbScrollTo: PropTypes.func,
 
 		/**
 		 * Direction of the scroller; valid values are `'both'`, `'horizontal'`, and `'vertical'`.
@@ -297,6 +307,22 @@ class ScrollerBase extends Component {
 		}
 	}
 
+	findInternalTarget = (direction, target) => {
+		const nextSpottable = getTargetByDirectionFromElement(direction, target);
+
+		return nextSpottable && this.containerRef.contains(nextSpottable);
+	}
+
+	scrollToBoundary = (direction) => {
+		let align;
+
+		if (direction === 'up') align = 'top';
+		else if (direction === 'down') align = 'bottom';
+		else align = direction;
+
+		this.props.cbScrollTo({align});
+	}
+
 	isVertical = () => {
 		const {vertical, direction} = this.props;
 		return vertical ? (vertical !== 'hidden') : (direction !== 'horizontal');
@@ -320,6 +346,14 @@ class ScrollerBase extends Component {
 	}
 
 	getContainerNode = () => (this.containerRef)
+
+	onKeyDown = ({keyCode, target}) => {
+		const direction = getDirection(keyCode);
+
+		if (direction && !this.findInternalTarget(direction, target)) {
+			this.scrollToBoundary(direction);
+		}
+	}
 
 	setContainerDisabled = (bool) => {
 		if (this.containerRef) {
@@ -348,7 +382,13 @@ class ScrollerBase extends Component {
 		delete props.vertical;
 
 		return (
-			<div {...props} ref={this.initRef} className={classNames(className, css.hideNativeScrollbar)} style={mergedStyle} />
+			<div
+				{...props}
+				className={classNames(className, css.hideNativeScrollbar)}
+				onKeyDown={this.onKeyDown}
+				ref={this.initRef}
+				style={mergedStyle}
+			/>
 		);
 	}
 }

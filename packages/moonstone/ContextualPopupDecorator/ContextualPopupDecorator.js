@@ -46,6 +46,36 @@ const ContextualPopupContainer = SpotlightContainerDecorator({enterTo: 'last-foc
  * which positions {@link moonstone/ContextualPopupDecorator.ContextualPopup} in
  * relation to the Wrapped component.
  *
+ * Example:
+ * ```
+ * import PopupComponent from './PopupComponent';
+ *
+ * const ContextualPopupComponent = ContextualPopupDecorator(Button);
+ *
+ * const MyComponent = kind({
+ * 	name: 'MyComponent',
+ *
+ * 	render: (props) => {
+ * 		const popupProps = {
+ * 			functionProp: () => {},
+ * 			stringProp: '',
+ * 			booleanProp: false
+ * 		};
+ *
+ * 		return (
+ * 			<div {...props}>
+ * 				<ContextualPopupComponent
+ * 					popupComponent={PopupComponent}
+ * 					popupProps={popupProps}
+ * 				>
+ * 					Open Popup
+ * 				</ContextualPopupComponent>
+ * 			</div>
+ * 		);
+ * 	}
+ * });
+ * ```
+ *
  * @class ContextualPopupDecorator
  * @memberof moonstone/ContextualPopupDecorator
  * @hoc
@@ -127,6 +157,14 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @public
 			 */
 			popupClassName: PropTypes.string,
+
+			/**
+			 * An object containing properties to be passed to popup component.
+			 *
+			 * @type {Object}
+			 * @public
+			 */
+			popupProps: PropTypes.object,
 
 			/**
 			 * When `true`, it shows close button.
@@ -398,7 +436,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const {showCloseButton, popupComponent: PopupComponent, popupClassName, noAutoDismiss, open, onClose, skin, spotlightRestrict, ...rest} = this.props;
+			const {showCloseButton, popupComponent: PopupComponent, popupClassName, noAutoDismiss, open, onClose, popupProps, skin, spotlightRestrict, ...rest} = this.props;
 			const scrimType = spotlightRestrict === 'self-only' ? 'transparent' : 'none';
 
 			if (!noSkin) {
@@ -420,7 +458,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 							skin={skin}
 							spotlightRestrict={spotlightRestrict}
 						>
-							<PopupComponent />
+							<PopupComponent {...popupProps} />
 						</ContextualPopupContainer>
 					</FloatingLayer>
 					<div ref={this.getClientNode}>
