@@ -355,7 +355,7 @@ class Popup extends React.Component {
 	}
 
 	handleKeyDown = (ev) => {
-		const {onClose, onKeyDown, spotlightRestrict} = this.props;
+		const {onClose, spotlightRestrict} = this.props;
 		const keyCode = ev.keyCode;
 		const direction = getDirection(keyCode);
 		const spottables = Spotlight.getSpottableDescendants(this.state.containerId).length;
