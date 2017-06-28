@@ -16,6 +16,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 - Navigating through spottable components while holding down a directional key
 - `spotlight` support for preventing 5-way navigation out of a container using an empty selector
+- `spotlight` container support for default elements within subcontainers
 
 ### Removed
 
