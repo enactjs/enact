@@ -18,7 +18,7 @@ import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ri from '@enact/ui/resolution';
-import {Spotlight, getDirection} from '@enact/spotlight';
+import {Spotlight} from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import ScrollAnimator from './ScrollAnimator';
@@ -87,7 +87,7 @@ const ScrollableSpotlightContainer = SpotlightContainerDecorator(
  * that applies a Scrollable behavior to its wrapped component.
  *
  * Scrollable catches `onFocus` event from its wrapped component for spotlight features,
- * and also catches `onMouseDown`, `onMouseLeave`, `onMouseMove`, `onMouseUp`, `onWheel` and `onKeyDown` events
+ * and also catches `onMouseDown`, `onMouseLeave`, `onMouseMove`, `onMouseUp`, `onWheel` and `onKeyUp` events
  * from its wrapped component for scrolling behaviors.
  *
  * Scrollable calls `onScrollStart`, `onScroll`, and `onScrollStop` callback functions during scroll.
@@ -516,13 +516,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		onKeyDown = ({keyCode, target}) => {
-			const direction = getDirection(keyCode);
-
+		onKeyUp = ({keyCode}) => {
 			if (isPageUp(keyCode) || isPageDown(keyCode)) {
 				this.scrollByPage(keyCode);
-			} else if (direction && this.childRef.scrollByDirection) {
-				this.childRef.scrollByDirection(direction, target);
 			}
 		}
 
@@ -1050,7 +1046,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				>
 					<Wrapped
 						{...props}
-						onKeyDown={this.onKeyDown}
+						onKeyUp={this.onKeyUp}
 						cbScrollTo={this.scrollTo}
 						className={css.container}
 						onScroll={this.handleScroll}
