@@ -75,7 +75,7 @@ const fetchAppRootPath = () => {
 			base = baseTags[0].href;
 		}
 	}
-	const match = base.match(new RegExp('.*:\/\/[^#]*\/'));
+	const match = base.match(new RegExp('.*://[^#]*/'));
 	if (match) {
 		return match[0];
 	}

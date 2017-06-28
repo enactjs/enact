@@ -67,7 +67,7 @@ const IdProvider = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			// otherwise generate a new id (with an optional prefix), cache it, and return it
-			const id = `${prefix}${++GlobalId}`;
+			const id = `${idPrefix}${++GlobalId}`;
 			this.ids[typeof key === 'undefined' ? `generated-${id}` : key] = {
 				id,
 				onUnmount
