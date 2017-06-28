@@ -1,9 +1,9 @@
 // Input.less
 //
-@import '../styles/mixins.less';
-@import '../styles/variables.less';
-@import '../styles/text.less';
-@import '../styles/skin.less';
+@import "../styles/mixins.less";
+@import "../styles/variables.less";
+@import "../styles/text.less";
+@import "../styles/skin.less";
 
 .input {
 	.moon-body-text();
@@ -21,13 +21,13 @@
 	&[type=number] {
 		-moz-appearance: textfield;
 
-		&:hover {
-			-moz-appearance: none;
-		}
-
 		&::-webkit-inner-spin-button,
 		&::-webkit-outer-spin-button {
 			-webkit-appearance: none;
+		}
+
+		&:hover {
+			-moz-appearance: none;
 		}
 	}
 
@@ -36,7 +36,7 @@
 	});
 
 	.focus ({
-			cursor: text;
+		cursor: text;
 	});
 
 	.disabled({
@@ -75,17 +75,22 @@
 .decorator {
 	display: inline-flex;
 	position: relative;
-
 	padding: 12px 30px;
 	border-radius: 1008px;
 	margin: 6px;
 	border: @moon-input-border-width solid transparent;
 	box-sizing: border-box;
 
+	.input,
+	.iconBefore,
+	.iconAfter {
+		line-height: 39px;
+		height: 39px;
+	}
+
 	.iconBefore,
 	.iconAfter {
 		flex: 0 0;
-		padding: 0;
 	}
 
 	.iconAfter {
@@ -113,11 +118,6 @@
 	&:global(.spottable):focus .decoratorIcon {
 		width: auto;
 		margin: 0;
-	}
-
-	> * {
-		display: inline-block;
-		vertical-align: middle;
 	}
 
 	// Skin colors
@@ -203,6 +203,7 @@
 			font-size: 24px;
 			line-height: 48px;
 		}
+
 		.decorator {
 			padding: 1px 30px;
 		}
