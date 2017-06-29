@@ -425,7 +425,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		onFocus = (e) => {
-			if (!(this.isKeyHandled || Spotlight.getPointerMode() || this.isDragging)) {
+			if (!(this.childRef.isFocusHandled() || Spotlight.getPointerMode() || this.isDragging)) {
 				const
 					item = e.target,
 					positionFn = this.childRef.calculatePositionOnFocus,

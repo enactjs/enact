@@ -303,6 +303,7 @@ class VirtualListCore extends Component {
 	scrollPosition = 0
 	updateFrom = null
 	updateTo = null
+	isKeyHandled = false
 
 	containerRef = null
 
@@ -682,6 +683,7 @@ class VirtualListCore extends Component {
 		setTimeout(() => {
 			const item = this.containerRef.querySelector(`[data-index='${index}'].spottable`);
 			Spotlight.resume();
+			Spotlight.setPointerMode(false);
 			this.focusOnNode(item);
 			this.nodeIndexToBeFocused = null;
 		}, 0);
@@ -726,6 +728,10 @@ class VirtualListCore extends Component {
 			gridPosition.secondaryPosition = 0;
 			return this.gridPositionToItemPosition(gridPosition);
 		}
+	}
+
+	isFocusHandled () {
+		return this.isKeyHandled;
 	}
 
 	jumpToSpottableItem = (keyCode, currentIndex) => {
