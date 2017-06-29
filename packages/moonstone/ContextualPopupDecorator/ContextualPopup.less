@@ -30,7 +30,11 @@
 		}
 
 		&.reserveClose {
-			.padding-start-end(@moon-contextual-popup-padding, @moon-icon-button-small-size + @moon-spotlight-outset);
+			.padding-start-end(@moon-contextual-popup-padding, @moon-icon-button-small-size + @moon-contextual-popup-padding);
+
+			.moon-custom-text({
+				.padding-start-end(@moon-contextual-popup-padding, @moon-icon-button-small-size-large + @moon-contextual-popup-padding);
+			});
 		}
 	}
 
@@ -79,4 +83,3 @@
 		}
 	});
 }
-
