@@ -6,7 +6,7 @@
  * @module spotlight/Spottable
  */
 
-import {forward, handle} from '@enact/core/handle';
+import {forward, forwardWithPrevent, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import React from 'react';
@@ -205,14 +205,14 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		handle = handle.bind(this)
 
 		handleKeyDown = this.handle(
-			forward('onKeyDown'),
+			forwardWithPrevent('onKeyDown'),
 			this.forwardSpotlightEvents,
 			this.shouldEmulateMouse,
 			forward('onMouseDown')
 		)
 
 		handleKeyUp = this.handle(
-			forward('onKeyUp'),
+			forwardWithPrevent('onKeyUp'),
 			this.shouldEmulateMouse,
 			forward('onMouseUp'),
 			forward('onClick')
