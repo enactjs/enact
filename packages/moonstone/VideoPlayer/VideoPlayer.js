@@ -11,7 +11,7 @@ import equals from 'ramda/src/equals';
 import React from 'react';
 import PropTypes from 'prop-types';
 import DurationFmt from '@enact/i18n/ilib/lib/DurationFmt';
-import {forward, forwardWithPrevent, handle} from '@enact/core/handle';
+import {forKey, forward, forwardWithPrevent, handle, stopImmediate} from '@enact/core/handle';
 import ilib from '@enact/i18n';
 import {Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
@@ -352,6 +352,16 @@ const VideoPlayerBase = class extends React.Component {
 		onPlayButtonClick: PropTypes.func,
 
 		/**
+		 * When `true`, the video will pause when it reaches either the start or the end of the
+		 * video during rewind, slow rewind, fast forward, or slow forward.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		pauseAtEnd: PropTypes.bool,
+
+		/**
 		 * A string which is sent to the `pause` icon of the player controls. This can be anything
 		 * that is accepted by {@link moonstone/Icon}.
 		 *
@@ -465,6 +475,7 @@ const VideoPlayerBase = class extends React.Component {
 		muted: false,
 		noAutoPlay: false,
 		noJumpButtons: false,
+		pauseAtEnd: false,
 		noRateButtons: false,
 		noSlider: false,
 		pauseIcon: 'pause',
@@ -541,6 +552,7 @@ const VideoPlayerBase = class extends React.Component {
 	componentDidMount () {
 		on('mousemove', this.activityDetected);
 		on('keypress', this.activityDetected);
+		on('keydown', this.handleGlobalKeyDown);
 		this.attachCustomMediaEvents();
 		this.startDelayedFeedbackHide();
 		this.renderBottomControl.idle();
@@ -571,11 +583,11 @@ const VideoPlayerBase = class extends React.Component {
 		if (
 			this.state.bottomControlsVisible &&
 			!nextState.bottomControlsVisible &&
-			this.player.contains(Spotlight.getCurrent())
+			(!Spotlight.getCurrent() || this.player.contains(Spotlight.getCurrent()))
 		) {
 			// set focus to the hidden spottable control - maintaining focus on available spottable
 			// controls, which prevents an addiitional 5-way attempt in order to re-show media controls
-			Spotlight.focus(this.player.querySelector(`.${css.controlsHandleAbove}.${spottableClass}`));
+			Spotlight.focus(`.${css.controlsHandleAbove}`);
 		}
 
 		if (shouldCalculateTitleOffset) {
@@ -596,7 +608,7 @@ const VideoPlayerBase = class extends React.Component {
 		if (
 			this.state.bottomControlsVisible &&
 			!prevState.bottomControlsVisible &&
-			this.player.contains(Spotlight.getCurrent())
+			(!Spotlight.getCurrent() || this.player.contains(Spotlight.getCurrent()))
 		) {
 			this.focusDefaultMediaControl();
 		}
@@ -605,6 +617,7 @@ const VideoPlayerBase = class extends React.Component {
 	componentWillUnmount () {
 		off('mousemove', this.activityDetected);
 		off('keypress', this.activityDetected);
+		off('keydown', this.handleGlobalKeyDown);
 		this.detachCustomMediaEvents();
 		this.stopRewindJob();
 		this.stopAutoCloseTimeout();
@@ -750,6 +763,8 @@ const VideoPlayerBase = class extends React.Component {
 
 	hideFeedbackJob = new Job(this.hideFeedback)
 
+	handle = handle.bind(this)
+
 	handleLeft = () => {
 		this.jump(-1 * this.props.jumpBy);
 	}
@@ -757,6 +772,22 @@ const VideoPlayerBase = class extends React.Component {
 	handleRight = () => {
 		this.jump(this.props.jumpBy);
 	}
+
+	showControlsFromPointer = () => {
+		Spotlight.setPointerMode(false);
+		this.showControls();
+	}
+
+	handleGlobalKeyDown = this.handle(
+		forKey('down'),
+		() => (
+			!this.state.bottomControlsVisible &&
+			!Spotlight.getCurrent() &&
+			Spotlight.getPointerMode()
+		),
+		stopImmediate,
+		this.showControlsFromPointer
+	)
 
 	//
 	// Media Interaction Methods
@@ -791,9 +822,9 @@ const VideoPlayerBase = class extends React.Component {
 			updatedState.error
 		);
 
-		// If we're ff or rw and hit the end, just pause the media.
-		if ((el.currentTime === 0 && this.prevCommand === 'rewind') ||
-				(el.currentTime === el.duration && this.prevCommand === 'fastForward')) {
+		if (this.props.pauseAtEnd && (
+				(el.currentTime === 0 && (this.prevCommand === 'rewind' || this.prevCommand === 'slowRewind')) ||
+				(el.currentTime === el.duration && (this.prevCommand === 'fastForward' || this.prevCommand === 'slowForward')))) {
 			this.pause();
 		}
 		this.setState(updatedState);
@@ -1135,6 +1166,11 @@ const VideoPlayerBase = class extends React.Component {
 		}
 	}
 
+	handleSpotlightUpFromSlider = handle(
+		stopImmediate,
+		this.hideControls
+	);
+
 	handleSpotlightDownFromSlider = (ev) => {
 		if (!this.state.mediaControlsDisabled && !this.state.more) {
 			ev.preventDefault();
@@ -1190,7 +1226,6 @@ const VideoPlayerBase = class extends React.Component {
 		this.setState({mouseOver:false});
 		this.startDelayedFeedbackHide();
 	}
-	handle = handle.bind(this)
 	onJumpBackward = this.handle(
 		(ev, props) => forwardJumpBackwardButtonClick(this.addStateToEvent(ev), props),
 		() => this.jump(-1 * this.props.jumpBy)
@@ -1272,6 +1307,7 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.onJumpBackwardButtonClick;
 		delete rest.onJumpForwardButtonClick;
 		delete rest.onPlayButtonClick;
+		delete rest.pauseAtEnd;
 		delete rest.playbackRateHash;
 		delete rest.setApiProvider;
 		delete rest.titleHideDelay;
@@ -1305,7 +1341,7 @@ const VideoPlayerBase = class extends React.Component {
 
 				{this.state.bottomControlsRendered ?
 					<div className={css.fullscreen + ' enyo-fit scrim'} style={{display: this.state.bottomControlsVisible ? 'block' : 'none'}}>
-						<Container className={css.bottom}>
+						<Container className={css.bottom} data-container-disabled={!this.state.bottomControlsVisible}>
 							{/* Info Section: Title, Description, Times */}
 							<div className={css.infoFrame}>
 								<MediaTitle
@@ -1325,7 +1361,7 @@ const VideoPlayerBase = class extends React.Component {
 								onKnobMove={this.handleKnobMove}
 								onMouseOver={this.handleMouseOver}
 								onMouseOut={this.handleMouseOut}
-								onSpotlightUp={this.hideControls}
+								onSpotlightUp={this.handleSpotlightUpFromSlider}
 								onSpotlightDown={this.handleSpotlightDownFromSlider}
 							>
 								<FeedbackTooltip

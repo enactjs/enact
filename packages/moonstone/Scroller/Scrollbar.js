@@ -1,3 +1,4 @@
+import {off, on} from '@enact/core/dispatcher';
 import {Announce} from '@enact/ui/AnnounceDecorator';
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
@@ -145,18 +146,44 @@ class ScrollbarBase extends Component {
 
 	componentWillUnmount () {
 		this.hideThumbJob.stop();
+		this.setIgnoreMode(false); // To remove event handler
 	}
 
 	autoHide = true
 	thumbSize = 0
 	minThumbSizeRatio = 0
 	trackSize = 0
+	pressed = false
+	ignoreMode = false
+	buttonToFocus = null
 
 	// component refs
 	containerRef = null
 	thumbRef = null
 	prevButtonNodeRef = null
 	nextButtonNodeRef = null
+
+	setPressStatus = (isPressed) => {
+		this.pressed = isPressed;
+		if (!isPressed && this.buttonToFocus) {
+			Spotlight.focus(this.buttonToFocus);
+			this.buttonToFocus = null;
+		}
+	}
+
+	setIgnoreMode = (shouldIgnore) => {
+		if (shouldIgnore !== this.ignoreMode) {
+			if (shouldIgnore) {
+				this.ignoreMode = true;
+				on('mousemove', this.releaseButton);
+				on('mouseup', this.releaseButton);
+			} else {
+				this.ignoreMode = false;
+				off('mousemove', this.releaseButton);
+				off('mouseup', this.releaseButton);
+			}
+		}
+	}
 
 	updateButtons = (bounds) => {
 		const
@@ -183,9 +210,19 @@ class ScrollbarBase extends Component {
 		});
 
 		if (shouldDisablePrevButton && spotItem === prevButtonNodeRef) {
-			Spotlight.focus(nextButtonNodeRef);
+			if (this.pressed) {
+				this.setIgnoreMode(true);
+				this.buttonToFocus = nextButtonNodeRef;
+			} else {
+				Spotlight.focus(nextButtonNodeRef);
+			}
 		} else if (shouldDisableNextButton && spotItem === nextButtonNodeRef) {
-			Spotlight.focus(prevButtonNodeRef);
+			if (this.pressed) {
+				this.setIgnoreMode(true);
+				this.buttonToFocus = prevButtonNodeRef;
+			} else {
+				Spotlight.focus(prevButtonNodeRef);
+			}
 		}
 	}
 
@@ -267,21 +304,35 @@ class ScrollbarBase extends Component {
 		if (this.announceRef) this.announceRef.announce($L(vertical ? 'DOWN' : 'RIGHT'));
 	}
 
-	onPrevKeyUp = (ev) => {
-		if (isPageUp(ev.keyCode)) {
-			this.handlePrevScroll(ev);
+	handlePrevHoldPulse = (ev) => {
+		if (!this.ignoreMode) {
+			this.props.onPrevScroll(ev);
 		}
 	}
 
-	onNextKeyUp = (ev) => {
-		if (isPageDown(ev.keyCode)) {
+	handleNextHoldPulse = (ev) => {
+		if (!this.ignoreMode) {
+			this.props.onNextScroll(ev);
+		}
+	}
+
+	depressButton = () => {
+		this.setPressStatus(true);
+	}
+
+	releaseButton = (ev) => {
+		this.setPressStatus(false);
+		this.setIgnoreMode(false);
+		if (isPageUp(ev.keyCode)) {
+			this.handlePrevScroll(ev);
+		} else if (isPageDown(ev.keyCode)) {
 			this.handleNextScroll(ev);
 		}
 	}
 
 	render () {
 		const
-			{className, disabled, onNextScroll, onPrevScroll, vertical} = this.props,
+			{className, disabled, vertical} = this.props,
 			{prevButtonDisabled, nextButtonDisabled} = this.state,
 			{rtl} = this.context,
 			{scrollbarClass, thumbClass} = this.scrollbarInfo,
@@ -295,8 +346,10 @@ class ScrollbarBase extends Component {
 					direction={vertical ? 'up' : 'left'}
 					disabled={disabled || prevButtonDisabled}
 					onClick={this.handlePrevScroll}
-					onHoldPulse={onPrevScroll}
-					onKeyUp={this.onPrevKeyUp}
+					onHoldPulse={this.handlePrevHoldPulse}
+					onKeyDown={this.depressButton}
+					onKeyUp={this.releaseButton}
+					onMouseDown={this.depressButton}
 				>
 					{prevIcon}
 				</ScrollButton>
@@ -304,8 +357,10 @@ class ScrollbarBase extends Component {
 					direction={vertical ? 'down' : 'right'}
 					disabled={disabled || nextButtonDisabled}
 					onClick={this.handleNextScroll}
-					onHoldPulse={onNextScroll}
-					onKeyUp={this.onNextKeyUp}
+					onHoldPulse={this.handleNextHoldPulse}
+					onKeyDown={this.depressButton}
+					onKeyUp={this.releaseButton}
+					onMouseDown={this.depressButton}
 				>
 					{nextIcon}
 				</ScrollButton>
