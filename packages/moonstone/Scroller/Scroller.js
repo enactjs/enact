@@ -195,17 +195,10 @@ class ScrollerBase extends Component {
 
 	scrollToNextPage = ({direction, reverseDirection, focusedItem}) => {
 		const
-			containerId = getLastContainer(),
-			spotItemBounds = focusedItem.getBoundingClientRect(),
-			endPoint = this.getNextEndPoint(direction, spotItemBounds),
-			next = getTargetByDirectionFromPosition(reverseDirection, endPoint, containerId);
+			endPoint = this.getNextEndPoint(direction, focusedItem.getBoundingClientRect()),
+			next = getTargetByDirectionFromPosition(reverseDirection, endPoint, getLastContainer());
 
-		if (next && next !== focusedItem) {
-			next.focus();
-			return true;
-		} else {
-			return false;
-		}
+		return (next !== focusedItem) && next;
 	}
 
 	getNextEndPoint = (direction, oSpotBounds) => {

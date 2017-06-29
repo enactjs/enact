@@ -245,6 +245,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		isInitializing = true
 		pageDistanceForUp = 0
 		pageDistanceForDown = 0
+		isAnimateOnFocus = true
 
 		// drag info
 		dragInfo = {
@@ -431,7 +432,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					this.start({
 						targetX: pos.left,
 						targetY: pos.top,
-						animate: (animationDuration > 0),
+						animate: (animationDuration > 0) && this.isAnimateOnFocus,
 						silent: false,
 						duration: animationDuration
 					});
@@ -508,9 +509,17 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				if (!next) {
 					scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
 				} else if (next !== spotItem) {
+					this.isAnimateOnFocus = false;
 					next.focus();
-				} else if (!this.childRef.scrollToNextPage({direction, reverseDirection: rDirection, focusedItem: spotItem})) {
-					scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
+				} else {
+					const nextPage = this.childRef.scrollToNextPage({direction, reverseDirection: rDirection, focusedItem: spotItem});
+
+					if (typeof nextPage === 'object') {
+						this.isAnimateOnFocus = false;
+						nextPage.focus();
+					} else if (!nextPage) {
+						scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
+					}
 				}
 			} else {
 				scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
@@ -520,6 +529,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		onKeyUp = ({keyCode}) => {
 			if (isPageUp(keyCode) || isPageDown(keyCode)) {
 				this.scrollByPage(keyCode);
+			} else {
+				this.isAnimateOnFocus = true;
 			}
 		}
 
