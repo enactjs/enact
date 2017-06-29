@@ -29,6 +29,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` to show its controls when pressing down the first time
 - `moonstone/Panel` autoFocus logic to only focus on initial render
 - `moonstone/Input` text colors
+- International fonts to always be used, even if unsupported font-weights or font-styles are requested
 
 ### Removed
 

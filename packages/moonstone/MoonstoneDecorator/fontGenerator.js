@@ -175,6 +175,10 @@ function fontGenerator (locale = ilib.getLocale()) {
 		const fontSet = [],
 			name = (bitDefault) ? '' : ' ' + strLang;
 
+		// If we don't have alternate variants of the font, assume regular will work in its place.
+		if (!fonts[strLang].light) fonts[strLang].light = fonts[strLang].regular;
+		if (!fonts[strLang].bold) fonts[strLang].bold = fonts[strLang].regular;
+
 		if (fonts[strLang].regular) {
 			// Build Regular
 			fontSet.push(buildFont({
@@ -185,24 +189,20 @@ function fontGenerator (locale = ilib.getLocale()) {
 			}));
 
 			// Build Bold
-			if (fonts[strLang].bold) {
-				fontSet.push(buildFont({
-					name: 'Moonstone LG Display' + name,
-					localName: fonts[strLang].bold,
-					weight: 700,
-					unicodeRange: fonts[strLang].unicodeRange
-				}));
-			}
+			fontSet.push(buildFont({
+				name: 'Moonstone LG Display' + name,
+				localName: fonts[strLang].bold,
+				weight: 700,
+				unicodeRange: fonts[strLang].unicodeRange
+			}));
 
 			// Build Light
-			if (fonts[strLang].light) {
-				fontSet.push(buildFont({
-					name: 'Moonstone LG Display' + name,
-					localName: fonts[strLang].light,
-					weight: 300,
-					unicodeRange: fonts[strLang].unicodeRange
-				}));
-			}
+			fontSet.push(buildFont({
+				name: 'Moonstone LG Display' + name,
+				localName: fonts[strLang].light,
+				weight: 300,
+				unicodeRange: fonts[strLang].unicodeRange
+			}));
 		}
 		return fontSet;
 	};
