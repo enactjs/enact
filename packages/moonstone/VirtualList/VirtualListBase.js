@@ -25,7 +25,8 @@ const
 	nop = () => {},
 	isDown = is('down'),
 	isLeft = is('left'),
-	isRight = is('right');
+	isRight = is('right'),
+	isUp = is('up');
 
 /**
  * The shape for the grid list item size in a list for {@link moonstone/VirtualList.listItemSizeShape}.
@@ -745,7 +746,12 @@ class VirtualListCore extends Component {
 
 		const isForward = (
 			this.isPrimaryDirectionVertical && isDown(keyCode) ||
-			!this.isPrimaryDirectionVertical && (!this.context.rtl && isRight(keyCode) || this.context.rtl && isLeft(keyCode))
+			!this.isPrimaryDirectionVertical && (!this.context.rtl && isRight(keyCode) || this.context.rtl && isLeft(keyCode)) ||
+			null
+		), isBackward = (
+			this.isPrimaryDirectionVertical && isUp(keyCode) ||
+			!this.isPrimaryDirectionVertical && (!this.context.rtl && isLeft(keyCode) || this.context.rtl && isRight(keyCode)) ||
+			null
 		);
 
 		let nextIndex = -1;
@@ -757,13 +763,15 @@ class VirtualListCore extends Component {
 					break;
 				}
 			}
-		} else {
+		} else if (isBackward) {
 			for (let i = currentIndex - 1; i >= 0; i--) {
 				if (!isItemDisabled(i)) {
 					nextIndex = i;
 					break;
 				}
 			}
+		} else {
+			return false;
 		}
 
 		if (nextIndex !== -1 && (firstIndex > nextIndex || nextIndex >= firstIndex + numOfItems)) {
