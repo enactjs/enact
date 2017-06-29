@@ -334,6 +334,18 @@ describe('target', () => {
 			}
 		));
 
+		it('should return null when the node exists but does not match the container\'s selector', testScenario(
+			scenarios.nonSpottableInContainer,
+			() => {
+				configureContainer('first');
+
+				const expected = null;
+				const actual = getTargetBySelector(`[${containerAttribute}='first'] .other`);
+
+				expect(actual).to.equal(expected);
+			}
+		));
+
 		it('should return null for an empty selectors', testScenario(
 			scenarios.nonSpottableInContainer,
 			() => {
@@ -505,6 +517,63 @@ describe('target', () => {
 					getTargetByDirectionFromElement('down', element),
 					t => t.id
 				)).to.equal('bottom-right');
+			}
+		));
+
+		it('should follow the leaveFor config when no target is found within the container in the given direction', testScenario(
+			scenarios.grid,
+			(root) => {
+				configureContainer('grid', {
+					restrict: 'none',
+					leaveFor: {
+						up: '#after-grid'
+					}
+				});
+
+				const element = root.querySelector('#top-center');
+
+				expect(safeTarget(
+					getTargetByDirectionFromElement('up', element),
+					t => t.id
+				)).to.equal('after-grid');
+			}
+		));
+
+		it('should not follow the leaveFor config when a target is found within the container in the given direction', testScenario(
+			scenarios.grid,
+			(root) => {
+				configureContainer('grid', {
+					restrict: 'none',
+					leaveFor: {
+						up: '#after-grid'
+					}
+				});
+
+				const element = root.querySelector('#middle-center');
+
+				expect(safeTarget(
+					getTargetByDirectionFromElement('up', element),
+					t => t.id
+				)).to.equal('top-center');
+			}
+		));
+
+		it('should not follow the leaveFor config when the selector does not match an element', testScenario(
+			scenarios.grid,
+			(root) => {
+				configureContainer('grid', {
+					restrict: 'none',
+					leaveFor: {
+						up: '#does-not-exist'
+					}
+				});
+
+				const element = root.querySelector('#top-center');
+
+				expect(safeTarget(
+					getTargetByDirectionFromElement('up', element),
+					t => t.id
+				)).to.equal('before-grid');
 			}
 		));
 	});

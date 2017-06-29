@@ -6,16 +6,32 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Deprecated
 
+- `moonstone/Input` prop `noDecorator` is being replaced by `autoFocus` in 2.0.0.
+
 ### Added
 
+- `moonstone/styles/text.less` mixin `.locale-japanese-line-break()` to apply the correct  Japanese language line-break rules for the following multi-line components: `moonstone/BodyText`, `moonstone/Dialog`, `moonstone/Notification`, `moonstone/Popup`, and `moonstone/Tooltip`
+- `moonstone/ContextualPopupDecorator` property `popupProps` to attach props to popup component
+
 ### Changed
+
+- `moonstone/Panels/Header` to expose its `marqueeOn` prop
+- `moonstone/VideoPlayer` to automatically adjust the width of the allocated space for the side components so the media controls have more space to appear on smaller screens
 - `moonstone/VideoPlayer` properties `autoCloseTimeout` and `titleHideDelay` default value to `5000`
+- `moonstone/VirtualList` to support restoring focus to the last focused item
+- `moonstone/Scrollable` to call `onScrollStop` before unmounting if a scroll is in progress
 
 ### Fixed
 
 - `moonstone/Dialog` to properly focus via pointer on child components
+- `moonstone/VirtualList`, `moonstone/VirtualGridList`, and `moonstone/Scroller` not to be slower when scrolled to the first or the last position by wheeling
+- `moonstone` component hold delay time
+- `moonstone/VideoPlayer` to show its controls when pressing down the first time
+- `moonstone/Panel` autoFocus logic to only focus on initial render
+- `moonstone/Input` text colors
 
 ### Removed
+
 ## [1.3.1] - 2017-06-14
 
 ### Fixed
@@ -36,6 +52,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Image` support for `children` prop inside images
 - `moonstone/Scroller` prop `direction` which replaces `horizontal` and `vertical` props
 - `moonstone/VideoPlayer` property `tooltipHideDelay` to hide tooltip with a given amount of time
+- `moonstone/VideoPlayer` property `pauseAtEnd` to pause when it reaches either the start or the end of the video 
 - `moonstone/VideoPlayer` methods `fastForward`, `getMediaState`, `jump`, `pause`, `play`, `rewind`, and `seek` to allow external interaction with the player. See docs for example usage.
 
 ### Changed

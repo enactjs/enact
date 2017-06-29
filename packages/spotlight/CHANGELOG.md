@@ -8,13 +8,17 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Added
 
+- `spotlight` handlers for window focus events
+
 ### Changed
 
 ### Fixed
 
 - Navigating through spottable components while holding down a directional key
+- `spotlight` support for preventing 5-way navigation out of a container using an empty selector
 
 ### Removed
+
 ## [1.3.1] - 2017-06-14
 
 ### Fixed
