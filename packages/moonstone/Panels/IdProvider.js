@@ -60,6 +60,16 @@ const IdProvider = hoc(defaultConfig, (config, Wrapped) => {
 			this.ids = {};
 		}
 
+		componentWillUnmount () {
+			// Call the onUnmount handler for each generated id (note: not the key)
+			for (const key in this.ids) {
+				const {id, onUnmount} = this.ids[key];
+				if (typeof onUnmount === 'function') {
+					onUnmount(id);
+				}
+			}
+		}
+
 		generateId = (key, idPrefix = prefix, onUnmount) => {
 			// if an id has been generated for the key, return it
 			if (key in this.ids) {
@@ -74,16 +84,6 @@ const IdProvider = hoc(defaultConfig, (config, Wrapped) => {
 			};
 
 			return id;
-		}
-
-		componentWillUnmount () {
-			// Call the onUnmount handler for each generated id (note: not the key)
-			for (const key in this.ids) {
-				const {id, onUnmount} = this.ids[key];
-				if (typeof onUnmount === 'function') {
-					onUnmount(id);
-				}
-			}
 		}
 
 		render () {
