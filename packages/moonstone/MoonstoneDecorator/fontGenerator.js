@@ -175,10 +175,6 @@ function fontGenerator (locale = ilib.getLocale()) {
 		const fontSet = [],
 			name = (bitDefault) ? '' : ' ' + strLang;
 
-		// If we don't have alternate variants of the font, assume regular will work in its place.
-		if (!fonts[strLang].light) fonts[strLang].light = fonts[strLang].regular;
-		if (!fonts[strLang].bold) fonts[strLang].bold = fonts[strLang].regular;
-
 		if (fonts[strLang].regular) {
 			// Build Regular
 			fontSet.push(buildFont({
@@ -191,7 +187,7 @@ function fontGenerator (locale = ilib.getLocale()) {
 			// Build Bold
 			fontSet.push(buildFont({
 				name: 'Moonstone LG Display' + name,
-				localName: fonts[strLang].bold,
+				localName: (fonts[strLang].bold || fonts[strLang].regular), // fallback to regular
 				weight: 700,
 				unicodeRange: fonts[strLang].unicodeRange
 			}));
@@ -199,7 +195,7 @@ function fontGenerator (locale = ilib.getLocale()) {
 			// Build Light
 			fontSet.push(buildFont({
 				name: 'Moonstone LG Display' + name,
-				localName: fonts[strLang].light,
+				localName: (fonts[strLang].light || fonts[strLang].regular), // fallback to regular
 				weight: 300,
 				unicodeRange: fonts[strLang].unicodeRange
 			}));
