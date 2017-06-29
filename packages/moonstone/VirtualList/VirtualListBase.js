@@ -304,7 +304,7 @@ class VirtualListCore extends Component {
 	scrollPosition = 0
 	updateFrom = null
 	updateTo = null
-	isKeyHandled = false
+	isScrolledBy5way = false
 
 	containerRef = null
 
@@ -684,7 +684,6 @@ class VirtualListCore extends Component {
 		setTimeout(() => {
 			const item = this.containerRef.querySelector(`[data-index='${index}'].spottable`);
 			Spotlight.resume();
-			Spotlight.setPointerMode(false);
 			this.focusOnNode(item);
 			this.nodeIndexToBeFocused = null;
 		}, 0);
@@ -696,7 +695,7 @@ class VirtualListCore extends Component {
 		}
 	}
 
-	updateFocusedIndex = (item) => {
+	setLastFocusedIndex = (item) => {
 		this.lastFocusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
 	}
 
@@ -731,9 +730,7 @@ class VirtualListCore extends Component {
 		}
 	}
 
-	isFocusHandled () {
-		return this.isKeyHandled;
-	}
+	shouldPreventScrollByFocus = () => this.isScrolledBy5way
 
 	jumpToSpottableItem = (keyCode, currentIndex) => {
 		const
@@ -789,12 +786,12 @@ class VirtualListCore extends Component {
 	}
 
 	onKeyDown = ({keyCode, target}) => {
-		this.isKeyHandled = false;
+		this.isScrolledBy5way = false;
 
 		if (getDirection(keyCode)) {
 			const index = Number.parseInt(target.getAttribute(dataIndexAttribute));
 
-			this.isKeyHandled = this.jumpToSpottableItem(keyCode, index);
+			this.isScrolledBy5way = this.jumpToSpottableItem(keyCode, index);
 		}
 	}
 

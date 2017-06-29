@@ -165,6 +165,15 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			onScrollStop: PropTypes.func,
 
 			/**
+			 * Scrollable CSS style.
+			 * Should be defined because we manuplate style prop in render().
+			 *
+			 * @type {Object}
+			 * @public
+			 */
+			style: PropTypes.object,
+
+			/**
 			 * Specifies how to show vertical scrollbar. Acceptable values are `'auto'`,
 			 * `'visible'`, and `'hidden'`.
 			 *
@@ -227,7 +236,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		wheelDirection = 0
 		isFirstDragging = false
 		isDragging = false
-		isKeyHandled = false
 		isInitializing = true
 
 		// drag info
@@ -425,7 +433,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		onFocus = (e) => {
-			if (!(this.childRef.isFocusHandled() || Spotlight.getPointerMode() || this.isDragging)) {
+			const shouldPreventScrollByFocus = this.childRef.shouldPreventScrollByFocus ?
+				this.childRef.shouldPreventScrollByFocus() :
+				false;
+
+			if (!(shouldPreventScrollByFocus || Spotlight.getPointerMode() || this.isDragging)) {
 				const
 					item = e.target,
 					positionFn = this.childRef.calculatePositionOnFocus,
@@ -437,8 +449,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						this.startScrollOnFocus(pos, item);
 					}
 				}
-			} else if (this.childRef.updateFocusedIndex) {
-				this.childRef.updateFocusedIndex(e.target);
+			} else if (this.childRef.setLastFocusedIndex) {
+				this.childRef.setLastFocusedIndex(e.target);
 			}
 		}
 
@@ -961,6 +973,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			delete props.onScroll;
 			delete props.onScrollStart;
 			delete props.onScrollStop;
+			delete props.style;
 			delete props.verticalScrollbar;
 
 			return (
