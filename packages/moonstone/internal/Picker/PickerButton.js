@@ -1,4 +1,4 @@
-import Holdable from '@enact/ui/Holdable';
+import Holdable from '../Holdable';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -22,6 +22,7 @@ const PickerButtonBase = kind({
 		]),
 		joined: PropTypes.bool,
 		onSpotlightDisappear: PropTypes.func,
+		skin: PropTypes.string,
 		spotlightDisabled: PropTypes.bool
 	},
 
@@ -39,6 +40,7 @@ const PickerButtonBase = kind({
 		if (joined) {
 			delete rest.hidden;
 			delete rest.onSpotlightDisappear;
+			delete rest.skin;
 			delete rest.spotlightDisabled;
 
 			return (

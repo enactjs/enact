@@ -6,23 +6,64 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Deprecated
 
+- `moonstone/Input` prop `noDecorator` is being replaced by `autoFocus` in 2.0.0.
+
+### Added
+
+- `moonstone/styles/text.less` mixin `.locale-japanese-line-break()` to apply the correct  Japanese language line-break rules for the following multi-line components: `moonstone/BodyText`, `moonstone/Dialog`, `moonstone/Notification`, `moonstone/Popup`, and `moonstone/Tooltip`
+- `moonstone/ContextualPopupDecorator` property `popupProps` to attach props to popup component
+
+### Changed
+
+- `moonstone/Panels/Header` to expose its `marqueeOn` prop
+- `moonstone/VideoPlayer` to automatically adjust the width of the allocated space for the side components so the media controls have more space to appear on smaller screens
+- `moonstone/VideoPlayer` properties `autoCloseTimeout` and `titleHideDelay` default value to `5000`
+- `moonstone/VirtualList` to support restoring focus to the last focused item
+- `moonstone/Scrollable` to call `onScrollStop` before unmounting if a scroll is in progress
+
+### Fixed
+
+- `moonstone/Dialog` to properly focus via pointer on child components
+- `moonstone/VirtualList`, `moonstone/VirtualGridList`, and `moonstone/Scroller` not to be slower when scrolled to the first or the last position by wheeling
+- `moonstone` component hold delay time
+- `moonstone/VideoPlayer` to show its controls when pressing down the first time
+- `moonstone/Panel` autoFocus logic to only focus on initial render
+- `moonstone/Input` text colors
+
+### Removed
+
+## [1.3.1] - 2017-06-14
+
+### Fixed
+
+- `moonstone/Picker` support for large text
+- `moonstone/Scroller` support for focusing paging controls with the pointer
+- `moonstone` CSS rules for unskinned spottable components
+
+## [1.3.0] - 2017-06-12
+
+### Deprecated
+
 - `moonstone/Scroller` props `horizontal` and `vertical`. Deprecated props are replaced with `direction` prop. `horizontal` and `vertical` will be removed in 2.0.0.
+- `moonstone/Panel` prop `noAutoFocus` in favor of `autoFocus="none"`
 
 ### Added
 
 - `moonstone/Image` support for `children` prop inside images
-- `moonstone/Scroller` prop `direction` which replaces `horizontal` and `vertical` props.
+- `moonstone/Scroller` prop `direction` which replaces `horizontal` and `vertical` props
 - `moonstone/VideoPlayer` property `tooltipHideDelay` to hide tooltip with a given amount of time
+- `moonstone/VideoPlayer` property `pauseAtEnd` to pause when it reaches either the start or the end of the video 
 - `moonstone/VideoPlayer` methods `fastForward`, `getMediaState`, `jump`, `pause`, `play`, `rewind`, and `seek` to allow external interaction with the player. See docs for example usage.
 
 ### Changed
 
 - `moonstone/Skinnable` to support context and allow it to be added to any component to be individually skinned. This includes a further optimization in skinning which consolidates all color assignments into a single block, so non-color rules aren't unnecessarily duplicated.
+- `moonstone/Skinnable` light and dark skin names ("moonstone-light" and "moonstone") to "light" and "dark", respectively
 - `moonstone/VideoPlayer` to set play/pause icon to display "play" when rewinding or fast forwarding
 - `moonstone/VideoPlayer` to rewind or fast forward when previous command is slow-forward or slow-rewind respectively
 - `moonstone/VideoPlayer` to fast forward when previous command is slow-forward and it reaches the last of its play rate
 - `moonstone/VideoPlayer` to not play video on reload when `noAutoPlay` is `true`
-- `moonstone/VideoPlayer` property `feedbackHideDelay`'s default value to 3000
+- `moonstone/VideoPlayer` property `feedbackHideDelay`'s default value to `3000`
 - `moonstone/Notification` to break line in characters in ja and zh locale
 - `moonstone/Notification` to align texts left in LTR locale and right in RTL locale
 - `moonstone/VideoPlayer` to simulate rewind functionality on non-webOS platforms only
@@ -37,8 +78,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` to correctly change sources
 - `moonstone/VideoPlayer` to show or hide feedback tooltip properly
 - `moonstone/DateTimeDecorator` to work properly with `RadioControllerDecorator`
-
-### Removed
+- `moonstone/Picker` in joined, large text mode so the arrows are properly aligned and sized
+- `moonstone/Icon` to reflect the same proportion in relation to its size in large-text mode
 
 ## [1.2.0] - 2017-05-17
 

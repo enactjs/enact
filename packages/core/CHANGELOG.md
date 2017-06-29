@@ -8,13 +8,21 @@ The following is a curated list of changes in the Enact core module, newest chan
 
 ### Added
 
-- `core/platform` to support platform detection across multiple browsers
-
 ### Changed
 
 ### Fixed
 
 ### Removed
+## [1.3.1] - 2017-06-14
+
+No significant changes.
+
+## [1.3.0] - 2017-06-12
+
+### Added
+
+- `core/platform` to support platform detection across multiple browsers
+
 ## [1.2.2] - 2017-05-31
 
 No significant changes.

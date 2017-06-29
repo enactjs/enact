@@ -14,7 +14,7 @@ import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import ri from '@enact/ui/resolution';
-import Spotlight, {getDirection} from '@enact/spotlight';
+import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import ScrollAnimator from './ScrollAnimator';
@@ -33,7 +33,8 @@ const
 	nop = () => {},
 	perf = (typeof window === 'object') ? window.performance : {now: Date.now},
 	holdTime = 50,
-	scrollWheelMultiplierForDeltaPixel = 4,
+	scrollWheelMultiplierForDeltaPixel = 1.5, // The ratio of wheel 'delta' units to pixels scrolled.
+	scrollWheelPageMultiplierForMaxPixel = 0.2, // The ratio of the maximum distance scrolled by wheel to the size of the viewport.
 	pixelPerLine = 39,
 	paginationPageMultiplier = 0.8,
 	epsilon = 1,
@@ -54,10 +55,11 @@ const dataIndexAttribute = 'data-index';
 const ScrollableSpotlightContainer = SpotlightContainerDecorator(
 	{
 		navigableFilter: (elem, {focusableScrollbar}) => {
-			if (!focusableScrollbar && elem.classList.contains(scrollbarCss.scrollButton)) {
+			if (!focusableScrollbar && elem.classList.contains(scrollbarCss.scrollButton) && !Spotlight.getPointerMode()) {
 				return false;
 			}
-		}
+		},
+		overflow: true
 	},
 	({containerRef, ...rest}) => {
 		delete rest.focusableScrollbar;
@@ -72,7 +74,7 @@ const ScrollableSpotlightContainer = SpotlightContainerDecorator(
  * {@link moonstone/Scroller.Scrollable} is a Higher-order Component
  * that applies a Scrollable behavior to its wrapped component.
  *
- * Scrollable catches `onFocus` and `onKeyDown` events from its wrapped component for spotlight features,
+ * Scrollable catches `onFocus` event from its wrapped component for spotlight features,
  * and also catches `onMouseDown`, `onMouseLeave`, `onMouseMove`, `onMouseUp`, and `onWheel` events
  * from its wrapped component for scrolling behaviors.
  *
@@ -195,13 +197,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.initChildRef = this.initRef('childRef');
 			this.initContainerRef = this.initRef('containerRef');
 
-			const {onKeyDown} = this;
-			// We have removed all mouse event handlers for now.
-			// Revisit later for touch usage.
-			this.eventHandlers = {
-				onKeyDown
-			};
-
 			this.verticalScrollbarProps = {
 				ref: this.initRef('scrollbarVerticalRef'),
 				vertical: true,
@@ -229,13 +224,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		horizontalScrollability = false
 		verticalScrollability = false
 		isScrollAnimationTargetAccumulated = false
+		wheelDirection = 0
 		isFirstDragging = false
 		isDragging = false
 		isKeyHandled = false
 		isInitializing = true
-
-		// event handlers
-		eventHandlers = {}
 
 		// drag info
 		dragInfo = {
@@ -333,20 +326,24 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				bounds = this.getScrollBounds(),
 				deltaMode = e.deltaMode,
 				wheelDeltaY = -e.wheelDeltaY;
-			let delta = (wheelDeltaY || e.deltaY);
+			let
+				delta = (wheelDeltaY || e.deltaY),
+				maxPixel;
+
+			if (isVertical) {
+				maxPixel = bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel;
+			} else if (isHorizontal) {
+				maxPixel = bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel;
+			} else {
+				return 0;
+			}
 
 			if (deltaMode === 0) {
-				delta = ri.scale(delta) * scrollWheelMultiplierForDeltaPixel;
+				delta = clamp(-maxPixel, maxPixel, ri.scale(delta * scrollWheelMultiplierForDeltaPixel));
 			} else if (deltaMode === 1) { // line; firefox
-				delta = ri.scale(delta * pixelPerLine) * scrollWheelMultiplierForDeltaPixel;
+				delta = clamp(-maxPixel, maxPixel, ri.scale(delta * pixelPerLine * scrollWheelMultiplierForDeltaPixel));
 			} else if (deltaMode === 2) { // page
-				if (isVertical) {
-					delta = delta > 0 ? bounds.clientHeight : -bounds.clientHeight;
-				} else if (isHorizontal) {
-					delta = delta > 0 ? bounds.clientWidth : -bounds.clientWidth;
-				} else {
-					delta = 0;
-				}
+				delta = delta < 0 ? -maxPixel : maxPixel;
 			}
 
 			return delta;
@@ -445,22 +442,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		onKeyDown = ({keyCode, target}) => {
-			this.isKeyHandled = false;
-
-			if (getDirection(keyCode)) {
-				const index = Number.parseInt(target.getAttribute(dataIndexAttribute));
-
-				if (this.childRef.setSpotlightContainerRestrict) {
-					this.childRef.setSpotlightContainerRestrict(keyCode, index);
-				}
-
-				if (this.childRef.jumpToSpottableItem) {
-					this.isKeyHandled = this.childRef.jumpToSpottableItem(keyCode, index);
-				}
-			}
-		}
-
 		onWheel = (e) => {
 			e.preventDefault();
 			if (!this.isDragging) {
@@ -469,6 +450,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					isHorizontal = this.canScrollHorizontally(bounds),
 					isVertical = this.canScrollVertically(bounds),
 					delta = this.wheel(e, isHorizontal, isVertical),
+					direction = Math.sign(delta),
 					focusedItem = Spotlight.getCurrent();
 
 				Spotlight.setPointerMode(false);
@@ -477,6 +459,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				}
 
 				this.childRef.setContainerDisabled(true);
+
+				if (direction !== this.wheelDirection) {
+					this.isScrollAnimationTargetAccumulated = false;
+					this.wheelDirection = direction;
+				}
 				this.scrollToAccumulatedTarget(delta, isHorizontal, isVertical);
 			}
 		}
@@ -492,9 +479,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		scrollToAccumulatedTarget = (delta, isHorizontal, isVertical) => {
-			const
-				bounds = this.getScrollBounds(),
-				silent = this.isScrollAnimationTargetAccumulated;
+			const silent = this.isScrollAnimationTargetAccumulated;
 
 			if (!this.isScrollAnimationTargetAccumulated) {
 				this.accumulatedTargetX = this.scrollLeft;
@@ -503,9 +488,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 
 			if (isVertical) {
-				this.accumulatedTargetY = clamp(0, bounds.maxTop, this.accumulatedTargetY + delta);
+				this.accumulatedTargetY = this.accumulatedTargetY + delta;
 			} else if (isHorizontal) {
-				this.accumulatedTargetX = clamp(0, bounds.maxLeft, this.accumulatedTargetX + delta);
+				this.accumulatedTargetX = this.accumulatedTargetX + delta;
 			}
 
 			this.start({
@@ -561,13 +546,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				this.doScrollStart();
 			}
 
-			targetX = clamp(0, bounds.maxLeft, targetX);
-			targetY = clamp(0, bounds.maxTop, targetY);
-
-			if ((bounds.maxLeft - targetX) < epsilon) {
+			if (Math.abs(bounds.maxLeft - targetX) < epsilon) {
 				targetX = bounds.maxLeft;
 			}
-			if ((bounds.maxTop - targetY) < epsilon) {
+			if (Math.abs(bounds.maxTop - targetY) < epsilon) {
 				targetY = bounds.maxTop;
 			}
 
@@ -584,20 +566,29 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					nodeToFocus
 				}));
 			} else {
+				targetX = clamp(0, bounds.maxLeft, targetX);
+				targetY = clamp(0, bounds.maxTop, targetY);
+
 				this.scroll(targetX, targetY);
 				this.stop({indexToFocus, nodeToFocus});
 			}
 		}
 
 		scrollAnimation = (animationInfo) => (curTime) => {
-			const {sourceX, sourceY, targetX, targetY, duration, indexToFocus, nodeToFocus} = animationInfo;
+			const
+				{sourceX, sourceY, targetX, targetY, duration, indexToFocus, nodeToFocus} = animationInfo,
+				bounds = this.getScrollBounds();
+
 			if (curTime < duration) {
 				this.scroll(
-					this.horizontalScrollability ? this.animator.timingFunction(sourceX, targetX, duration, curTime) : sourceX,
-					this.verticalScrollability ? this.animator.timingFunction(sourceY, targetY, duration, curTime) : sourceY
+					this.horizontalScrollability ? clamp(0, bounds.maxLeft, this.animator.timingFunction(sourceX, targetX, duration, curTime)) : sourceX,
+					this.verticalScrollability ? clamp(0, bounds.maxTop, this.animator.timingFunction(sourceY, targetY, duration, curTime)) : sourceY
 				);
 			} else {
-				this.scroll(targetX, targetY);
+				this.scroll(
+					clamp(0, bounds.maxLeft, targetX),
+					clamp(0, bounds.maxTop, targetY)
+				);
 				this.stop({indexToFocus, nodeToFocus});
 			}
 		}
@@ -738,10 +729,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		isVerticalScrollbarVisible = () => (this.props.verticalScrollbar === 'visible')
 
 		showThumb (bounds) {
-			if (this.state.isHorizontalScrollbarVisible && this.canScrollHorizontally(bounds)) {
+			if (this.state.isHorizontalScrollbarVisible && this.scrollbarHorizontalRef && this.canScrollHorizontally(bounds)) {
 				this.scrollbarHorizontalRef.showThumb();
 			}
-			if (this.state.isVerticalScrollbarVisible && this.canScrollVertically(bounds)) {
+			if (this.state.isVerticalScrollbarVisible && this.scrollbarVerticalRef && this.canScrollVertically(bounds)) {
 				this.scrollbarVerticalRef.showThumb();
 			}
 		}
@@ -838,12 +829,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		updateScrollOnFocus () {
 			const
 				focusedItem = Spotlight.getCurrent(),
-				{calculatePositionOnFocus, getScrollBounds} = this.childRef,
+				{containerRef, calculatePositionOnFocus, getScrollBounds} = this.childRef,
 				{scrollHeight: previousScrollHeight} = this.bounds,
 				{scrollHeight: currentScrollHeight} = getScrollBounds(),
 				scrollInfo = {previousScrollHeight, scrollTop: this.scrollTop};
 
-			if (focusedItem) {
+			if (focusedItem && containerRef && containerRef.contains(focusedItem)) {
 				const position = calculatePositionOnFocus(focusedItem, scrollInfo);
 				this.startScrollOnFocus(position, focusedItem);
 			}
@@ -881,7 +872,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				childContainerRef = this.childRef.containerRef;
 
 			// Before call cancelAnimationFrame, you must send scrollStop Event.
-			this.animator.stop();
+			if (this.animator.isAnimating()) {
+				this.doScrollStop();
+				this.animator.stop();
+			}
 			this.forceUpdateJob.stop();
 
 			if (containerRef && containerRef.removeEventListener) {
@@ -978,7 +972,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				>
 					<Wrapped
 						{...props}
-						{...this.eventHandlers}
 						cbScrollTo={this.scrollTo}
 						className={css.container}
 						onScroll={this.handleScroll}
