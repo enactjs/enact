@@ -1,0 +1,53 @@
+// Layout.less
+//
+@import '../styles/mixins.less';
+
+.layout {
+	display: flex;
+	margin: 0;
+	border: 1px dotted #666;
+	box-sizing: border-box;
+
+	// Children
+	.cell {
+		flex: 1 0;
+
+		@i: 1;
+		@colorsneeded: 13;
+
+		border: 1px dashed orange;
+
+		&.flexible {
+			flex: 1 1 100%;
+		}
+		&.fixed {
+			flex: 0 0 0;
+		}
+	}
+
+	// Modes
+	&.horizontal {
+		flex-direction: row;
+
+		> .cell {
+			&.flexible {
+				width: 0;
+			}
+		}
+	}
+
+	&.vertical {
+		flex-direction: column;
+		height: 100%;
+
+		> .cell {
+			&.flexible {
+				height: 0;
+			}
+		}
+	}
+
+	&.inline {
+		display: inline-flex;
+	}
+}
