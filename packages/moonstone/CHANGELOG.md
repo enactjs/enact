@@ -12,6 +12,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/styles/text.less` mixin `.locale-japanese-line-break()` to apply the correct  Japanese language line-break rules for the following multi-line components: `moonstone/BodyText`, `moonstone/Dialog`, `moonstone/Notification`, `moonstone/Popup`, and `moonstone/Tooltip`
 - `moonstone/ContextualPopupDecorator` property `popupProps` to attach props to popup component
+- `moonstone/ContextualPopupDecorator` config option `openPropMap` to support mapping the value of `open` property to the chosen property of wrapped component
 
 ### Changed
 
@@ -52,7 +53,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Image` support for `children` prop inside images
 - `moonstone/Scroller` prop `direction` which replaces `horizontal` and `vertical` props
 - `moonstone/VideoPlayer` property `tooltipHideDelay` to hide tooltip with a given amount of time
-- `moonstone/VideoPlayer` property `pauseAtEnd` to pause when it reaches either the start or the end of the video 
+- `moonstone/VideoPlayer` property `pauseAtEnd` to pause when it reaches either the start or the end of the video
 - `moonstone/VideoPlayer` methods `fastForward`, `getMediaState`, `jump`, `pause`, `play`, `rewind`, and `seek` to allow external interaction with the player. See docs for example usage.
 
 ### Changed
