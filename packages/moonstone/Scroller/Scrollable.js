@@ -527,10 +527,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		onKeyUp = ({keyCode}) => {
+			this.isAnimateOnFocus = true;
 			if (isPageUp(keyCode) || isPageDown(keyCode)) {
 				this.scrollByPage(keyCode);
-			} else {
-				this.isAnimateOnFocus = true;
 			}
 		}
 
