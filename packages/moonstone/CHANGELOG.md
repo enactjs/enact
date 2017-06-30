@@ -6,13 +6,31 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Deprecated
 
-- `moonstone/Input` prop `noDecorator` is being replaced by `autoFocus` in 2.0.0.
+### Added
+
+### Changed
+
+- `moonstone/Popup` to only call `onKeyDown` when there is a focused item in the `Popup`
+
+### Fixed
+
+- `moonstone/ContextualPopupDecorator` close button to account for large text size
+
+### Removed
+
+## [1.4.0] - 2017-06-29
+
+### Deprecated
+
+- `moonstone/Input` prop `noDecorator` is being replaced by `autoFocus` in 2.0.0
 
 ### Added
 
 - `moonstone/styles/text.less` mixin `.locale-japanese-line-break()` to apply the correct  Japanese language line-break rules for the following multi-line components: `moonstone/BodyText`, `moonstone/Dialog`, `moonstone/Notification`, `moonstone/Popup`, and `moonstone/Tooltip`
 - `moonstone/ContextualPopupDecorator` property `popupProps` to attach props to popup component
 - `moonstone/ContextualPopupDecorator` config option `openPropMap` to support mapping the value of `open` property to the chosen property of wrapped component
+- `moonstone/VideoPlayer` property `pauseAtEnd` to control forward/backward seeking
+- `moonstone/Panels/Header` prop `marqueeOn` to control marquee of header
 
 ### Changed
 
@@ -21,6 +39,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` properties `autoCloseTimeout` and `titleHideDelay` default value to `5000`
 - `moonstone/VirtualList` to support restoring focus to the last focused item
 - `moonstone/Scrollable` to call `onScrollStop` before unmounting if a scroll is in progress
+- `moonstone/Scroller` to reveal non-spottable content when navigating out of a scroller
 
 ### Fixed
 
@@ -30,8 +49,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` to show its controls when pressing down the first time
 - `moonstone/Panel` autoFocus logic to only focus on initial render
 - `moonstone/Input` text colors
-
-### Removed
+- `moonstone/ExpandableInput` to focus its decorator when leaving by 5-way left/right
 
 ## [1.3.1] - 2017-06-14
 
