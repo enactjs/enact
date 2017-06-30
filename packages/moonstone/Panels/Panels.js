@@ -25,6 +25,15 @@ const PanelsBase = kind({
 
 	propTypes: /** @lends moonstone/Panels.Panels.prototype */ {
 		/**
+		 * Function that generates unique identifiers for Panel instances
+		 *
+		 * @type {Function}
+		 * @required
+		 * @private
+		 */
+		generateId: PropTypes.func.isRequired,
+
+		/**
 		 * Set of functions that control how the panels are transitioned into and out of the
 		 * viewport
 		 *
@@ -59,15 +68,6 @@ const PanelsBase = kind({
 		 * @public
 		 */
 		closeButtonBackgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'transparent']),
-
-		/**
-		 * Function that generates unique identifiers for Panel instances
-		 *
-		 * @type {Function}
-		 * @required
-		 * @private
-		 */
-		generateId: PropTypes.func.isRequired,
 
 		/**
 		 * Unique identifier for the Panels instance
