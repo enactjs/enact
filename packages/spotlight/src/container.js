@@ -556,7 +556,7 @@ function getContainerDefaultElement (containerId) {
 		return null;
 	}
 	if (typeof defaultElement === 'string') {
-		defaultElement = getSpottableDescendants(containerId)
+		defaultElement = getDeepSpottableDescendants(containerId)
 			.filter(matchSelector(defaultElement))[0];
 	}
 	if (isNavigable(defaultElement, containerId, true)) {
