@@ -27,6 +27,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Panels` property `closeButtonBackgroundOpacity` to support `moonstone/Panels/ApplicationCloseButton`'s `backgroundOpacity` prop
 - `moonstone/VideoPlayer` property `pauseAtEnd` to control forward/backward seeking
 - `moonstone/Panels/Header` prop `marqueeOn` to control marquee of header
+- `moonstone/Panels` property `closeButtonBackgroundOpacity` to support `moonstone/Panels/ApplicationCloseButton`'s `backgroundOpacity` prop
 
 ### Changed
 
@@ -37,6 +38,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Scrollable` to call `onScrollStop` before unmounting if a scroll is in progress
 - `moonstone/Panels/ApplicationCloseButton` to expose its `backgroundOpacity` prop
 - `moonstone/Scroller` to reveal non-spottable content when navigating out of a scroller
+- `moonstone/Panels/ApplicationCloseButton` to expose its `backgroundOpacity` prop
 
 ### Fixed
 
