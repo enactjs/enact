@@ -8,6 +8,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/styles/mixins.less` mixins: `.moon-spotlight-margin()` and `.moon-spotlight-padding()`
+
 ### Changed
 
 ### Fixed
@@ -26,7 +28,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/styles/text.less` mixin `.locale-japanese-line-break()` to apply the correct  Japanese language line-break rules for the following multi-line components: `moonstone/BodyText`, `moonstone/Dialog`, `moonstone/Notification`, `moonstone/Popup`, and `moonstone/Tooltip`
 - `moonstone/ContextualPopupDecorator` property `popupProps` to attach props to popup component
-- `moonstone/styles/mixins.less` mixins: `.moon-spotlight-margin()` and `.moon-spotlight-padding()`
 - `moonstone/VideoPlayer` property `pauseAtEnd` to control forward/backward seeking
 - `moonstone/Panels/Header` prop `marqueeOn` to control marquee of header
 
