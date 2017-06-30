@@ -10,6 +10,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+- `moonstone/Popup` to only call `onKeyDown` when there is a focused item in the `Popup`
+
 ### Fixed
 
 - `moonstone/ContextualPopupDecorator` close button to account for large text size
@@ -36,7 +38,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` properties `autoCloseTimeout` and `titleHideDelay` default value to `5000`
 - `moonstone/VirtualList` to support restoring focus to the last focused item
 - `moonstone/Scrollable` to call `onScrollStop` before unmounting if a scroll is in progress
-- `moonstone/Popup` to only call `onKeyDown` when there is a focused item in the `Popup`
 - `moonstone/Scroller` to reveal non-spottable content when navigating out of a scroller
 
 ### Fixed
