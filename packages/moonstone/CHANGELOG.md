@@ -51,7 +51,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Input` text colors
 
 ### Removed
-=======
+
 - `moonstone/ExpandableInput` to focus its decorator when leaving by 5-way left/right
 
 ## [1.3.1] - 2017-06-14
