@@ -12,6 +12,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/ContextualPopupDecorator` close button to account for large text size
+
 ### Removed
 
 ## [1.4.0] - 2017-06-29
