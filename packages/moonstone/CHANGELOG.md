@@ -8,7 +8,11 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/Panels` property `closeButtonBackgroundOpacity` to support `moonstone/Panels/ApplicationCloseButton`'s `backgroundOpacity` prop
+
 ### Changed
+
+- `moonstone/Panels/ApplicationCloseButton` to expose its `backgroundOpacity` prop
 
 ### Fixed
 
