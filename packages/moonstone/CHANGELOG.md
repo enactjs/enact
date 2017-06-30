@@ -10,6 +10,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+- `moonstone/Popup` to only call `onKeyDown` when there is a focused item in the `Popup`
+
 ### Fixed
 
 - `moonstone/ContextualPopupDecorator` close button to account for large text size
