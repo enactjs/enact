@@ -15,6 +15,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/ContextualPopupDecorator` close button to account for large text size
+- `moonstone/Input` focus management to prevent stealing focus when programmatically moved elsewhere
 
 ### Removed
 
