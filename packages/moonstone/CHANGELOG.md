@@ -12,6 +12,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/styles/text.less` mixin `.locale-japanese-line-break()` to apply the correct  Japanese language line-break rules for the following multi-line components: `moonstone/BodyText`, `moonstone/Dialog`, `moonstone/Notification`, `moonstone/Popup`, and `moonstone/Tooltip`
 - `moonstone/ContextualPopupDecorator` property `popupProps` to attach props to popup component
+- `moonstone/Panels` property `closeButtonBackgroundOpacity` to support `moonstone/Panels/ApplicationCloseButton`'s `backgroundOpacity` prop
 
 ### Changed
 
@@ -20,6 +21,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` properties `autoCloseTimeout` and `titleHideDelay` default value to `5000`
 - `moonstone/VirtualList` to support restoring focus to the last focused item
 - `moonstone/Scrollable` to call `onScrollStop` before unmounting if a scroll is in progress
+- `moonstone/Panels/ApplicationCloseButton` to expose its `backgroundOpacity` prop
 
 ### Fixed
 

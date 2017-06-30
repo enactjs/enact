@@ -25,15 +25,6 @@ const PanelsBase = kind({
 
 	propTypes: /** @lends moonstone/Panels.Panels.prototype */ {
 		/**
-		 * Function that generates unique identifiers for Panel instances
-		 *
-		 * @type {Function}
-		 * @required
-		 * @private
-		 */
-		generateId: PropTypes.func.isRequired,
-
-		/**
 		 * Set of functions that control how the panels are transitioned into and out of the
 		 * viewport
 		 *
@@ -58,6 +49,25 @@ const PanelsBase = kind({
 		 * @public
 		 */
 		children: PropTypes.node,
+
+		/**
+		 * The background-color opacity of the application close button; valid values are `'opaque'`, `'translucent'`,
+		 * and `'transparent'`.
+		 *
+		 * @type {String}
+		 * @default 'transparent'
+		 * @public
+		 */
+		closeButtonBackgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'transparent']),
+
+		/**
+		 * Function that generates unique identifiers for Panel instances
+		 *
+		 * @type {Function}
+		 * @required
+		 * @private
+		 */
+		generateId: PropTypes.func.isRequired,
 
 		/**
 		 * Unique identifier for the Panels instance
@@ -112,6 +122,7 @@ const PanelsBase = kind({
 	},
 
 	defaultProps: {
+		closeButtonBackgroundOpacity: 'transparent',
 		index: 0,
 		noAnimation: false,
 		noCloseButton: false
@@ -126,12 +137,12 @@ const PanelsBase = kind({
 		className: ({noCloseButton, styler}) => styler.append({
 			hasCloseButton: !noCloseButton
 		}),
-		applicationCloseButton: ({id, noCloseButton, onApplicationClose}) => {
+		applicationCloseButton: ({closeButtonBackgroundOpacity, id, noCloseButton, onApplicationClose}) => {
 			if (!noCloseButton) {
 				const closeId = id ? `${id}_close` : null;
 
 				return (
-					<ApplicationCloseButton id={closeId} onApplicationClose={onApplicationClose} />
+					<ApplicationCloseButton backgroundOpacity={closeButtonBackgroundOpacity} id={closeId} onApplicationClose={onApplicationClose} />
 				);
 			}
 		},
