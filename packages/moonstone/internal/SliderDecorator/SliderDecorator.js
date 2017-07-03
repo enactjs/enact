@@ -65,6 +65,15 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static propTypes = /** @lends moonstone/internal/SliderDecorator.SliderDecorator.prototype */{
 			/**
+			 * By default, the slider accessibility value will be set by own's value.
+			 * When `accessibilityValueText` is set, it will be used instead value for the slider.
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			accessibilityValueText: PropTypes.string,
+
+			/**
 			 * Background progress, as a proportion between `0` and `1`.
 			 *
 			 * @type {Number}
@@ -189,12 +198,15 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.knobPosition = null;
 			this.normalizeBounds(props);
 
-			const value = this.clamp(props.value);
+			const
+				value = this.clamp(props.value),
+				valueText = props.accessibilityValueText;
+
 			this.state = {
 				active: false,
 				focused: false,
 				value: value,
-				valueText: value
+				valueText: valueText || value
 			};
 
 			if (__DEV__) {
@@ -209,14 +221,14 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillReceiveProps (nextProps) {
-			const {backgroundProgress, max, min, value} = nextProps;
+			const {accessibilityValueText, backgroundProgress, max, min, value} = nextProps;
 
-			if ((min !== this.props.min) || (max !== this.props.max) || (value !== this.state.value)) {
+			if ((min !== this.props.min) || (max !== this.props.max) || (value !== this.state.value) || (accessibilityValueText !== this.state.valueText)) {
 				this.normalizeBounds(nextProps);
 				const clampedValue = this.clamp(value);
 				this.setState({
 					value: clampedValue,
-					valueText: clampedValue
+					valueText: accessibilityValueText || clampedValue
 				});
 			}
 
@@ -245,10 +257,11 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		updateValueJob = new Job((value) => {
+			const {valueText} = this.state;
 			this.inputNode.value = value;
 			this.setState({
 				value,
-				valueText: value
+				valueText: valueText || value
 			});
 			forwardChange({value}, this.props);
 		}, config.changeDelay)
@@ -373,7 +386,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				const horizontalHint = $L('change a value with left right button');
 				const active = !this.state.active;
 
-				let valueText = this.state.value;
+				let valueText = this.state.valueText || this.state.value;
 				if (active) {
 					valueText = vertical ? verticalHint : horizontalHint;
 				}

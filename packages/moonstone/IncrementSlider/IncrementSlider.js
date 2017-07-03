@@ -50,6 +50,15 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			'aria-hidden': PropTypes.bool,
 
 			/**
+			 * By default, the slider accessibility value will be set by own's value.
+			 * When `accessibilityValueText` is set, it will be used instead value for the slider.
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			accessibilityValueText: PropTypes.string,
+
+			/**
 			 * When `true`, the knob displays selected and can be moved using 5-way controls.
 			 *
 			 * @type {Boolean}
@@ -342,11 +351,12 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			incrementSliderClasses: ({vertical, styler}) => styler.append({vertical, horizontal: !vertical}),
 			decrementIcon: ({decrementIcon, vertical}) => (decrementIcon || (vertical ? 'arrowlargedown' : 'arrowlargeleft')),
 			incrementIcon: ({incrementIcon, vertical}) => (incrementIcon || (vertical ? 'arrowlargeup' : 'arrowlargeright')),
-			decrementAriaLabel: ({disabled, min, value}) => !(disabled || value <= min) ? (`${value} ${$L('press ok button to decrease the value')}`) : null,
-			incrementAriaLabel: ({disabled, max, value}) => !(disabled || value >= max) ? (`${value} ${$L('press ok button to increase the value')}`) : null
+			decrementAriaLabel: ({accessibilityValueText, disabled, min, value}) => (accessibilityValueText || !(disabled || value <= min)) ? (`${accessibilityValueText || value} ${$L('press ok button to decrease the value')}`) : null,
+			incrementAriaLabel: ({accessibilityValueText, disabled, max, value}) => (accessibilityValueText || !(disabled || value >= max)) ? (`${accessibilityValueText || value} ${$L('press ok button to increase the value')}`) : null
 		},
 
 		render: ({active, 'aria-hidden': ariaHidden, backgroundProgress, children, decrementAriaLabel, decrementDisabled, decrementIcon, detachedKnob, disabled, focused, incrementAriaLabel, incrementDisabled, incrementIcon, incrementSliderClasses, inputRef, max, min, noFill, onActivate, onChange, onDecrement, onIncrement, onSpotlightDisappear, scrubbing, sliderBarRef, sliderRef, spotlightDisabled, step, tooltip, tooltipAsPercent, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => {
+			delete rest.accessibilityValueText;
 			const ariaProps = extractAriaProps(rest);
 
 			return (
