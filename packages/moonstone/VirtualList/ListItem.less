@@ -5,3 +5,23 @@
 
 	will-change: transform;
 }
+
+.virtualList {
+	--virtuallist-item-width: initial;
+	--virtuallist-item-height: initial;
+	--virtuallist-item-flex-box: 1 0 auto;
+
+	display: 'flex';
+
+	.listItemContainer {
+		display: flex;
+		position: absolute;
+	}
+
+	div.listItemContainer > * {
+		width: var(--virtuallist-item-width);
+		height: var(--virtuallist-item-height);
+		flex: var(--virtuallist-item-flex-box);
+		padding: 0;
+	}
+}
