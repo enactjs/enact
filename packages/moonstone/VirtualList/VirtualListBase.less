@@ -1,11 +1,3 @@
-.listItem {
-	position: absolute;
-	overflow: hidden;
-	width: 100%;
-
-	will-change: transform;
-}
-
 .virtualList {
 	--virtuallist-item-width: initial;
 	--virtuallist-item-height: initial;
@@ -16,6 +8,16 @@
 	.listItemContainer {
 		display: flex;
 		position: absolute;
+		overflow: hidden;
+
+		will-change: transform;
+
+		&.fitWidth {
+			width: 100%;
+		}
+		&.fitHeight {
+			height: 100%;
+		}
 	}
 
 	div.listItemContainer > * {
@@ -23,5 +25,6 @@
 		height: var(--virtuallist-item-height);
 		flex: var(--virtuallist-item-flex-box);
 		padding: 0;
+		overflow: hidden;
 	}
 }

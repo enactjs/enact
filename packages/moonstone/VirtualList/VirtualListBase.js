@@ -15,7 +15,7 @@ import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDeco
 
 import {dataIndexAttribute, Scrollable} from '../Scroller/Scrollable';
 
-import css from './ListItem.less';
+import css from './VirtualListBase.less';
 
 const SpotlightPlaceholder = Spottable('div');
 
@@ -427,13 +427,10 @@ class VirtualListCore extends Component {
 		this.state.numOfItems = 0;
 
 		if (this.isItemSized) {
-			if (this.isPrimaryDirectionVertical) {
-				node.style.setProperty('--virtuallist-item-width', 'initial');
-				node.style.setProperty('--virtuallist-item-height', primary.itemSize + 'px');
-			} else {
-				node.style.setProperty('--virtuallist-item-width', primary.itemSize + 'px');
-				node.style.setProperty('--virtuallist-item-height', 'initial');
-			}
+			const primaryItemSize = primary.itemSize + 'px';
+
+			node.style.setProperty('--virtuallist-item-width', this.isPrimaryDirectionVertical ? 'initial' : primaryItemSize);
+			node.style.setProperty('--virtuallist-item-height', this.isPrimaryDirectionVertical ? primaryItemSize : 'initial');
 			node.style.setProperty('--virtuallist-item-flex-box', '1 0 ' + secondary.itemSize + 'px');
 		}
 	}
@@ -546,43 +543,6 @@ class VirtualListCore extends Component {
 		}
 	}
 
-	/*
-	applyStyleToExistingNode = (index, ...rest) => {
-		const
-			{numOfItems} = this.state,
-			node = this.containerRef.children[index % numOfItems];
-
-		if (node) {
-			if ((index % numOfItems) === this.nodeIndexToBeBlurred && index !== this.lastFocusedIndex) {
-				node.blur();
-				this.nodeIndexToBeBlurred = null;
-			}
-			this.composeStyle(node.style, ...rest);
-		}
-	}
-
-	applyStyleToNewNode = (index, ...rest) => {
-		const
-			{component, data} = this.props,
-			{numOfItems} = this.state,
-			key = index % numOfItems,
-			itemElement = component({
-				data,
-				[dataIndexAttribute]: index,
-				index,
-				key
-			}),
-			style = {};
-
-		this.composeStyle(style, ...rest);
-
-		this.cc[key] = React.cloneElement(itemElement, {
-			className: classNames(css.listItem, itemElement.props.className),
-			style: {...itemElement.props.style, ...style}
-		});
-	}
-	*/
-
 	getItemContainerPosition (primaryPosition) {
 		const
 			rtlDirection = this.context.rtl ? -1 : 1,
@@ -610,27 +570,24 @@ class VirtualListCore extends Component {
 
 			node.style.transform = this.getItemContainerPosition(primaryPosition);
 		}
-	}
 
-	/*
-	composeStyle (style, width, height, ...rest) {
-		if (this.isItemSized) {
-			style.width = width;
-			style.height = height;
+		/*if (this.nodeIndexToBeBlurred !== null) {
+			const item = this.containerRef.querySelector(`[data-index='${index}'].spottable`);
 		}
-		this.composeTransform(style, ...rest);
-	}
 
-	getXY = (primaryPosition, secondaryPosition) => {
-		const rtlDirection = this.context.rtl ? -1 : 1;
-		return (this.isPrimaryDirectionVertical ? {x: (secondaryPosition * rtlDirection), y: primaryPosition} : {x: (primaryPosition * rtlDirection), y: secondaryPosition});
-	}
-	*/
+		if ((index % numOfItems) === this.nodeIndexToBeBlurred && index !== this.lastFocusedIndex) {
+			node.blur();
+			this.nodeIndexToBeBlurred = null;
+		}*/
 
-	composeTransform (style, primaryPosition, secondaryPosition = 0) {
-		const {x, y} = this.getXY(primaryPosition, secondaryPosition);
+		/*if (this.nodeIndexToBeBlurred !== null) {
+			const node = this.containerRef
+				.children[parseInt(this.nodeIndexToBeBlurred / dimensionToExtent)]
+				.children[this.nodeIndexToBeBlurred % dimensionToExtent];
 
-		style.transform = 'translate3d(' + x + 'px,' + y + 'px,0)';
+			// node.blur();
+			this.nodeIndexToBeBlurred = null;
+		}*/
 	}
 
 	getScrollHeight = () => (this.isPrimaryDirectionVertical ? this.getVirtualScrollDimension() : this.scrollBounds.clientHeight)
@@ -662,14 +619,14 @@ class VirtualListCore extends Component {
 	calculatePositionOnFocus = (item) => {
 		const
 			{pageScroll} = this.props,
-			{primary, numOfItems, scrollPosition} = this,
+			{primary, scrollPosition} = this,
 			offsetToClientEnd = primary.clientSize - primary.itemSize,
 			focusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
 
 		if (!isNaN(focusedIndex)) {
 			let gridPosition = this.getGridPosition(focusedIndex);
 
-			this.nodeIndexToBeBlurred = this.lastFocusedIndex % numOfItems;
+			this.nodeIndexToBeBlurred = this.lastFocusedIndex;
 			this.lastFocusedIndex = focusedIndex;
 
 			if (primary.clientSize >= primary.itemSize) {
@@ -755,13 +712,12 @@ class VirtualListCore extends Component {
 
 				this.cc[key] = (
 					<div
-						className={css.listItemContainer}
+						className={classNames(
+							css.listItemContainer,
+							isPrimaryDirectionVertical ? css.fitWidth : css.fitHeight
+						)}
 						key={key}
-						style={{
-							transform: this.getItemContainerPosition(primaryPosition),
-							width: !isVirtualGridItems && isPrimaryDirectionVertical ? '100%' : null,
-							height: !isVirtualGridItems && !isPrimaryDirectionVertical ? '100%' : null
-						}}
+						style={{transform: this.getItemContainerPosition(primaryPosition)}}
 					>{items}</div>
 				);
 			}
