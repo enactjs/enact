@@ -47,6 +47,8 @@ const isKeyboardAccessible = (node) => {
 };
 
 const SelectAccelerator = new Accelerator();
+// Last instance of spottable to be accelerating
+let lastFocusTarget = null;
 
 /**
  * Default configuration for Spottable
@@ -178,7 +180,11 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			// if the component is spotted and became disabled,
 			if (this.state.spotted && !prevProps.disabled && this.props.disabled) {
 				forward('onSpotlightDisappear', null, this.props);
-				SelectAccelerator.cancel();
+				if (SelectAccelerator.isAccelerating()) {
+					// Forward mouseUp before the focus target changes
+					forward('onMouseUp', null, this.props);
+					SelectAccelerator.cancel();
+				}
 
 				// if spotlight didn't move, find something else to spot starting from here
 				const current = Spotlight.getCurrent();
@@ -237,18 +243,20 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			return true;
 		}
 
+		setFocusTarget = () => {
+			lastFocusTarget = this;
+			return true;
+		}
+
 		resetAccelerator = () => {
-			// If we're accelerating, it's because the select key was down.  Don't let it propagate
-			// or we'll emulate a click. This also prevents mouseup, but not sure what to do about
-			// that.
-			const handled = !SelectAccelerator.isAccelerating();
 			SelectAccelerator.reset();
-			return handled;
+			return lastFocusTarget === this;
 		}
 
 		handle = handle.bind(this)
 
 		handleSelectCallback = this.handle(
+			this.setFocusTarget,
 			forward('onKeyDown'),
 			this.shouldEmulateMouse,
 			forward('onMouseDown')
