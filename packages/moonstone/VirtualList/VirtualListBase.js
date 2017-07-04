@@ -571,23 +571,11 @@ class VirtualListCore extends Component {
 			node.style.transform = this.getItemContainerPosition(primaryPosition);
 		}
 
-		/*if (this.nodeIndexToBeBlurred !== null) {
-			const item = this.containerRef.querySelector(`[data-index='${index}'].spottable`);
+		if (this.nodeIndexToBeBlurred !== null) {
+			this.nodeIndexToBeBlurred.blur();
+			this.nodeIndexToBeBlurred = null;
+			console.log('blur')
 		}
-
-		if ((index % numOfItems) === this.nodeIndexToBeBlurred && index !== this.lastFocusedIndex) {
-			node.blur();
-			this.nodeIndexToBeBlurred = null;
-		}*/
-
-		/*if (this.nodeIndexToBeBlurred !== null) {
-			const node = this.containerRef
-				.children[parseInt(this.nodeIndexToBeBlurred / dimensionToExtent)]
-				.children[this.nodeIndexToBeBlurred % dimensionToExtent];
-
-			// node.blur();
-			this.nodeIndexToBeBlurred = null;
-		}*/
 	}
 
 	getScrollHeight = () => (this.isPrimaryDirectionVertical ? this.getVirtualScrollDimension() : this.scrollBounds.clientHeight)
@@ -626,7 +614,7 @@ class VirtualListCore extends Component {
 		if (!isNaN(focusedIndex)) {
 			let gridPosition = this.getGridPosition(focusedIndex);
 
-			this.nodeIndexToBeBlurred = this.lastFocusedIndex;
+			this.nodeIndexToBeBlurred = item;
 			this.lastFocusedIndex = focusedIndex;
 
 			if (primary.clientSize >= primary.itemSize) {
@@ -677,13 +665,12 @@ class VirtualListCore extends Component {
 
 	renderItems ({updateFrom, updateTo}) {
 		const
-			{component: Item, data, itemSize} = this.props,
+			{component: Item, data} = this.props,
 			{numOfItems} = this.state,
 			{isPrimaryDirectionVertical, dimensionToExtent, moreInfo, primary, scrollPosition} = this,
 			rowFrom = parseInt(updateFrom / dimensionToExtent),
 			rowTo = parseInt(updateTo / dimensionToExtent),
-			numOfRows = parseInt(numOfItems / dimensionToExtent),
-			isVirtualGridItems = (itemSize instanceof Object);
+			numOfRows = parseInt(numOfItems / dimensionToExtent);
 
 		let
 			{primaryPosition} = this.getGridPosition(updateFrom),
