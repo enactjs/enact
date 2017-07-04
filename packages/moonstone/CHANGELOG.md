@@ -15,6 +15,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/ContextualPopupDecorator` close button to account for large text size
+- `moonstone/ContextualPopupDecorator` to not spot controls other than its activator when navigating out via 5-way
 
 ### Removed
 
@@ -48,7 +49,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` to show its controls when pressing down the first time
 - `moonstone/Panel` autoFocus logic to only focus on initial render
 - `moonstone/Input` text colors
-- `moonstone/ContextualPopupDecorator` to not spot controls other than its activator when navigating out via 5-way
 
 ### Removed
 - `moonstone/ExpandableInput` to focus its decorator when leaving by 5-way left/right
