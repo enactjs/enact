@@ -13,6 +13,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
+import Accelerator from '../Accelerator';
 import {getContainersForNode} from '../src/container';
 import Spotlight from '../src/spotlight';
 
@@ -44,6 +45,8 @@ const isKeyboardAccessible = (node) => {
 		)
 	);
 };
+
+const SelectAccelerator = new Accelerator();
 
 /**
  * Default configuration for Spottable
@@ -175,6 +178,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			// if the component is spotted and became disabled,
 			if (this.state.spotted && !prevProps.disabled && this.props.disabled) {
 				forward('onSpotlightDisappear', null, this.props);
+				SelectAccelerator.cancel();
 
 				// if spotlight didn't move, find something else to spot starting from here
 				const current = Spotlight.getCurrent();
@@ -224,17 +228,37 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			return true;
 		}
 
+		handleSelect = (ev) => {
+			if ((ev.which === REMOTE_OK_KEY) || (ev.which === ENTER_KEY)) {
+				SelectAccelerator.processKey(ev, this.handleSelectCallback);
+				return false;
+			}
+			return true;
+		}
+
+		resetAccelerator = (ev) => {
+			const handled = !((ev.which === REMOTE_OK_KEY) || (ev.which === ENTER_KEY)) && SelectAccelerator.isAccelerating();
+			SelectAccelerator.reset();
+			return handled;
+		}
+
 		handle = handle.bind(this)
 
-		handleKeyDown = this.handle(
+		handleSelectCallback = this.handle(
 			forward('onKeyDown'),
-			this.forwardSpotlightEvents,
 			this.shouldEmulateMouse,
 			forward('onMouseDown')
 		)
 
+		handleKeyDown = this.handle(
+			this.handleSelect,
+			forward('onKeyDown'),
+			this.forwardSpotlightEvents
+		)
+
 		handleKeyUp = this.handle(
 			forward('onKeyUp'),
+			this.resetAccelerator,
 			this.shouldEmulateMouse,
 			forward('onMouseUp'),
 			forward('onClick')

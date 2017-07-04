@@ -329,7 +329,7 @@ const Spotlight = (function () {
 		if (!_pause) {
 			if (getCurrent()) {
 				SpotlightAccelerator.processKey(evt, onAcceleratedKeyDown);
-			} else if (!spotNextFromPoint(direction, getLastPointerPosition())) {
+			} else if (direction && !spotNextFromPoint(direction, getLastPointerPosition())) {
 				Spotlight.focus(getContainerLastFocusedElement(getLastContainer()));
 			}
 			_5WayKeyHold = true;
