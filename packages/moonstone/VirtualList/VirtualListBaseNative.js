@@ -412,11 +412,15 @@ class VirtualListCoreNative extends Component {
 		this.state.numOfItems = 0;
 
 		if (this.isItemSized) {
-			const primaryItemSize = primary.itemSize + 'px';
+			const
+				primaryItemSize = primary.itemSize + 'px',
+				secondaryItemSize = secondary.itemSize + 'px';
 
-			node.style.setProperty('--virtuallist-item-width', this.isPrimaryDirectionVertical ? 'initial' : primaryItemSize);
-			node.style.setProperty('--virtuallist-item-height', this.isPrimaryDirectionVertical ? primaryItemSize : 'initial');
-			node.style.setProperty('--virtuallist-item-flex-box', '1 0 ' + secondary.itemSize + 'px');
+			node.style.setProperty('--virtuallist-item-width', this.isPrimaryDirectionVertical ? secondaryItemSize : primaryItemSize);
+			node.style.setProperty('--virtuallist-item-height', this.isPrimaryDirectionVertical ? primaryItemSize : secondaryItemSize);
+			if (this.isPrimaryDirectionVertical) {
+				node.style.setProperty('--virtuallist-item-flex-box', '1 0 ' + secondary.itemSize + 'px');
+			}
 		}
 	}
 
@@ -489,21 +493,6 @@ class VirtualListCoreNative extends Component {
 		}
 	}
 
-	updateMoreInfo (primaryPosition) {
-		const
-			{dataSize} = this.props,
-			{dimensionToExtent, moreInfo} = this,
-			{itemSize, gridSize, clientSize} = this.primary;
-
-		if (dataSize <= 0) {
-			moreInfo.firstVisibleIndex = null;
-			moreInfo.lastVisibleIndex = null;
-		} else {
-			moreInfo.firstVisibleIndex = (Math.floor((primaryPosition - itemSize) / gridSize) + 1) * dimensionToExtent;
-			moreInfo.lastVisibleIndex = Math.min(dataSize - 1, Math.ceil((primaryPosition + clientSize) / gridSize) * dimensionToExtent - 1);
-		}
-	}
-
 	didScroll (x, y, dirX, dirY) {
 		const
 			{firstIndex} = this.state,
@@ -548,6 +537,21 @@ class VirtualListCoreNative extends Component {
 
 		if (firstIndex !== newFirstIndex) {
 			this.setState({firstIndex: newFirstIndex});
+		}
+	}
+
+	updateMoreInfo (primaryPosition) {
+		const
+			{dataSize} = this.props,
+			{dimensionToExtent, moreInfo} = this,
+			{itemSize, gridSize, clientSize} = this.primary;
+
+		if (dataSize <= 0) {
+			moreInfo.firstVisibleIndex = null;
+			moreInfo.lastVisibleIndex = null;
+		} else {
+			moreInfo.firstVisibleIndex = (Math.floor((primaryPosition - itemSize) / gridSize) + 1) * dimensionToExtent;
+			moreInfo.lastVisibleIndex = Math.min(dataSize - 1, Math.ceil((primaryPosition + clientSize) / gridSize) * dimensionToExtent - 1);
 		}
 	}
 

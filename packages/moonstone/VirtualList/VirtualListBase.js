@@ -426,11 +426,15 @@ class VirtualListCore extends Component {
 		this.state.numOfItems = 0;
 
 		if (this.isItemSized) {
-			const primaryItemSize = primary.itemSize + 'px';
+			const
+				primaryItemSize = primary.itemSize + 'px',
+				secondaryItemSize = secondary.itemSize + 'px';
 
-			node.style.setProperty('--virtuallist-item-width', this.isPrimaryDirectionVertical ? 'initial' : primaryItemSize);
-			node.style.setProperty('--virtuallist-item-height', this.isPrimaryDirectionVertical ? primaryItemSize : 'initial');
-			node.style.setProperty('--virtuallist-item-flex-box', '1 0 ' + secondary.itemSize + 'px');
+			node.style.setProperty('--virtuallist-item-width', this.isPrimaryDirectionVertical ? secondaryItemSize : primaryItemSize);
+			node.style.setProperty('--virtuallist-item-height', this.isPrimaryDirectionVertical ? primaryItemSize : secondaryItemSize);
+			if (this.isPrimaryDirectionVertical) {
+				node.style.setProperty('--virtuallist-item-flex-box', '1 0 ' + secondary.itemSize + 'px');
+			}
 		}
 	}
 
