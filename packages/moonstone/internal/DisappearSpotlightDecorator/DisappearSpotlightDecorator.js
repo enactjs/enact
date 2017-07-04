@@ -23,10 +23,11 @@ import Spotlight from '@enact/spotlight';
  */
 const defaultConfig = {
 	/**
-	 * Events map event callback names (e.g. onButtonSpotlightDisapper) to a selector used to find
-	 * the next focus target when that callback is fired.
+	 * Maps event callback names (e.g. `onButtonSpotlightDisapper`) to a selector used to find the
+	 * next focus target when that callback is fired.
 	 *
 	 * @type {Object}
+	 * @memberof moonstone/internal/DisappearSpotlightDecorator.DisappearSpotlightDecorator.defaultConfig
 	 * @private
 	 */
 	events: null
