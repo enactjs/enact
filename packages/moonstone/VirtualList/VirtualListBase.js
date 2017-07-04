@@ -294,7 +294,6 @@ class VirtualListCore extends Component {
 	containerRef = null
 
 	// spotlight
-	nodeIndexToBeBlurred = null
 	lastFocusedIndex = null
 
 	isVertical = () => this.isPrimaryDirectionVertical
@@ -428,12 +427,13 @@ class VirtualListCore extends Component {
 		if (this.isItemSized) {
 			const
 				primaryItemSize = primary.itemSize + 'px',
-				secondaryItemSize = secondary.itemSize + 'px';
+				secondaryItemSize = secondary.itemSize + 'px',
+				style = node.style;
 
-			node.style.setProperty('--virtuallist-item-width', this.isPrimaryDirectionVertical ? secondaryItemSize : primaryItemSize);
-			node.style.setProperty('--virtuallist-item-height', this.isPrimaryDirectionVertical ? primaryItemSize : secondaryItemSize);
+			style.setProperty('--virtuallist-item-width', this.isPrimaryDirectionVertical ? secondaryItemSize : primaryItemSize);
+			style.setProperty('--virtuallist-item-height', this.isPrimaryDirectionVertical ? primaryItemSize : secondaryItemSize);
 			if (this.isPrimaryDirectionVertical) {
-				node.style.setProperty('--virtuallist-item-flex-box', '1 0 ' + secondary.itemSize + 'px');
+				style.setProperty('--virtuallist-item-flex-box', '1 0 ' + secondary.itemSize + 'px');
 			}
 		}
 	}
@@ -539,15 +539,10 @@ class VirtualListCore extends Component {
 		this.scrollPosition = pos;
 		this.updateMoreInfo(pos);
 
-		if (this.nodeIndexToBeBlurred !== null) {
-			this.nodeIndexToBeBlurred.blur();
-			this.nodeIndexToBeBlurred = null;
-		}
-
 		if (firstIndex !== newFirstIndex) {
 			this.setState({firstIndex: newFirstIndex});
 		} else {
-			setTimeout(() => this.positionItems({updateFrom: firstIndex, updateTo: firstIndex + numOfItems}), 1);
+			this.positionItems({updateFrom: firstIndex, updateTo: firstIndex + numOfItems});
 		}
 	}
 
@@ -556,6 +551,7 @@ class VirtualListCore extends Component {
 			{dataSize} = this.props,
 			{dimensionToExtent, moreInfo} = this,
 			{itemSize, gridSize, clientSize} = this.primary;
+
 		if (dataSize <= 0) {
 			moreInfo.firstVisibleIndex = null;
 			moreInfo.lastVisibleIndex = null;
@@ -622,7 +618,6 @@ class VirtualListCore extends Component {
 		if (!isNaN(focusedIndex)) {
 			let gridPosition = this.getGridPosition(focusedIndex);
 
-			this.nodeIndexToBeBlurred = item;
 			this.lastFocusedIndex = focusedIndex;
 
 			if (primary.clientSize >= primary.itemSize) {
@@ -676,7 +671,7 @@ class VirtualListCore extends Component {
 			rtlDirection = this.context.rtl ? -1 : 1,
 			{x, y} = (this.isPrimaryDirectionVertical ? {x: 0, y: primaryPosition} : {x: (primaryPosition * rtlDirection), y: 0});
 
-		return 'translate3d(' + x + 'px,' + y + 'px,0)';
+		return `translate3d(${x}px, ${y}px, 0)`;
 	}
 
 	renderItems () {
@@ -732,8 +727,8 @@ class VirtualListCore extends Component {
 	render () {
 		const
 			{className, direction} = this.props,
-			props = Object.assign({}, this.props),
 			{isItemSized, primary, cc} = this,
+			props = Object.assign({}, this.props),
 			flexDirection = (direction === 'vertical' && !isItemSized || direction === 'horizontal' && isItemSized) ? 'column' : null,
 			mergedClasses = classNames(css.virtualList, className);
 

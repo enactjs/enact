@@ -278,7 +278,6 @@ class VirtualListCoreNative extends Component {
 	wrapperRef = null
 
 	// spotlight
-	nodeIndexToBeBlurred = null
 	lastFocusedIndex = null
 
 	isVertical = () => this.isPrimaryDirectionVertical
@@ -414,12 +413,13 @@ class VirtualListCoreNative extends Component {
 		if (this.isItemSized) {
 			const
 				primaryItemSize = primary.itemSize + 'px',
-				secondaryItemSize = secondary.itemSize + 'px';
+				secondaryItemSize = secondary.itemSize + 'px',
+				style = node.style;
 
-			node.style.setProperty('--virtuallist-item-width', this.isPrimaryDirectionVertical ? secondaryItemSize : primaryItemSize);
-			node.style.setProperty('--virtuallist-item-height', this.isPrimaryDirectionVertical ? primaryItemSize : secondaryItemSize);
+			style.setProperty('--virtuallist-item-width', this.isPrimaryDirectionVertical ? secondaryItemSize : primaryItemSize);
+			style.setProperty('--virtuallist-item-height', this.isPrimaryDirectionVertical ? primaryItemSize : secondaryItemSize);
 			if (this.isPrimaryDirectionVertical) {
-				node.style.setProperty('--virtuallist-item-flex-box', '1 0 ' + secondary.itemSize + 'px');
+				style.setProperty('--virtuallist-item-flex-box', '1 0 ' + secondary.itemSize + 'px');
 			}
 		}
 	}
@@ -530,11 +530,6 @@ class VirtualListCoreNative extends Component {
 		this.scrollPosition = pos;
 		this.updateMoreInfo(pos);
 
-		if (this.nodeIndexToBeBlurred !== null) {
-			this.nodeIndexToBeBlurred.blur();
-			this.nodeIndexToBeBlurred = null;
-		}
-
 		if (firstIndex !== newFirstIndex) {
 			this.setState({firstIndex: newFirstIndex});
 		}
@@ -596,7 +591,6 @@ class VirtualListCoreNative extends Component {
 		if (!isNaN(focusedIndex)) {
 			let gridPosition = this.getGridPosition(focusedIndex);
 
-			this.nodeIndexToBeBlurred = item;
 			this.lastFocusedIndex = focusedIndex;
 
 			if (primary.clientSize >= primary.itemSize) {
@@ -650,7 +644,7 @@ class VirtualListCoreNative extends Component {
 			rtlDirection = this.context.rtl ? -1 : 1,
 			{x, y} = (this.isPrimaryDirectionVertical ? {x: 0, y: primaryPosition} : {x: (primaryPosition * rtlDirection), y: 0});
 
-		return 'translate3d(' + x + 'px,' + y + 'px,0)';
+		return `translate3d(${x}px, ${y}px, 0)`;
 	}
 
 	renderItems () {
@@ -667,7 +661,7 @@ class VirtualListCoreNative extends Component {
 
 		let {primaryPosition} = this.getGridPosition(updateFrom);
 
-		if (updateFrom >= updateTo) {
+		if (updateFrom > updateTo) {
 			return;
 		}
 
@@ -704,8 +698,8 @@ class VirtualListCoreNative extends Component {
 	render () {
 		const
 			{className, direction} = this.props,
-			props = Object.assign({}, this.props),
 			{isItemSized, primary, cc} = this,
+			props = Object.assign({}, this.props),
 			flexDirection = (direction === 'vertical' && !isItemSized || direction === 'horizontal' && isItemSized) ? 'column' : null,
 			mergedClasses = classNames(css.virtualList, this.wrapperClass, className);
 
