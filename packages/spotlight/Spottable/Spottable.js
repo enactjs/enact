@@ -229,6 +229,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleSelect = (ev) => {
+			// Only apply accelerator if handling select
 			if ((ev.which === REMOTE_OK_KEY) || (ev.which === ENTER_KEY)) {
 				SelectAccelerator.processKey(ev, this.handleSelectCallback);
 				return false;
@@ -236,8 +237,11 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			return true;
 		}
 
-		resetAccelerator = (ev) => {
-			const handled = !((ev.which === REMOTE_OK_KEY) || (ev.which === ENTER_KEY)) && SelectAccelerator.isAccelerating();
+		resetAccelerator = () => {
+			// If we're accelerating, it's because the select key was down.  Don't let it propagate
+			// or we'll emulate a click. This also prevents mouseup, but not sure what to do about
+			// that.
+			const handled = !SelectAccelerator.isAccelerating();
 			SelectAccelerator.reset();
 			return handled;
 		}
