@@ -8,6 +8,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/IncrementSlider` event properties `onSpotlightDown`, `onSpotlightLeft`, `onSpotlightRight`, and `onSpotlightUp`.
+
 ### Changed
 
 - `moonstone/Popup` to only call `onKeyDown` when there is a focused item in the `Popup`
