@@ -2,8 +2,10 @@ import {MarqueeText} from '@enact/moonstone/Marquee';
 import React from 'react';
 import {storiesOf} from '@kadira/storybook';
 import {boolean, number, select, text} from '@kadira/storybook-addon-knobs';
-
+import Spottable from '@enact/spotlight/Spottable';
 import nullify from '../../src/utils/nullify.js';
+
+const SpottableMarquee = Spottable(MarqueeText);
 
 storiesOf('Marquee')
 	.addWithInfo(
@@ -13,7 +15,7 @@ storiesOf('Marquee')
 			const disabled = nullify(boolean('disabled', false));
 			return (
 				<section>
-					<MarqueeText
+					<SpottableMarquee
 						style={{width: '400px'}}
 						disabled={disabled}
 						marqueeCentered={nullify(boolean('marqueeCentered', false))}
@@ -25,7 +27,7 @@ storiesOf('Marquee')
 						marqueeSpeed={number('marqueeSpeed', 60)}
 					>
 						{text('children', 'The quick brown fox jumped over the lazy dog. The bean bird flies at sundown.')}
-					</MarqueeText>
+					</SpottableMarquee>
 					{disabled ? <p style={{fontSize: '70%', fontStyle: 'italic'}}><sup>*</sup>MarqueeText does not visually respond to <code>disabled</code> state.</p> : <p />}
 				</section>
 			);
