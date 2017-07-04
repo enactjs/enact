@@ -3,8 +3,6 @@
 	--virtuallist-item-height: initial;
 	--virtuallist-item-flex-box: 1 0 auto;
 
-	display: 'flex';
-
 	.listItemContainer {
 		display: flex;
 		position: absolute;
@@ -26,5 +24,20 @@
 		flex: var(--virtuallist-item-flex-box);
 		padding: 0;
 		overflow: hidden;
+	}
+
+	// For VirtualListNative
+	&.vertical {
+		overflow-x: hidden;
+		overflow-y: scroll;
+	}
+
+	&.horizontal {
+		overflow-x: scroll;
+		overflow-y: hidden;
+	}
+
+	&::-webkit-scrollbar {
+		display: none;
 	}
 }
