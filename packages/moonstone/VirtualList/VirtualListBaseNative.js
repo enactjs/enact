@@ -489,6 +489,21 @@ class VirtualListCoreNative extends Component {
 		}
 	}
 
+	updateMoreInfo (primaryPosition) {
+		const
+			{dataSize} = this.props,
+			{dimensionToExtent, moreInfo} = this,
+			{itemSize, gridSize, clientSize} = this.primary;
+
+		if (dataSize <= 0) {
+			moreInfo.firstVisibleIndex = null;
+			moreInfo.lastVisibleIndex = null;
+		} else {
+			moreInfo.firstVisibleIndex = (Math.floor((primaryPosition - itemSize) / gridSize) + 1) * dimensionToExtent;
+			moreInfo.lastVisibleIndex = Math.min(dataSize - 1, Math.ceil((primaryPosition + clientSize) / gridSize) * dimensionToExtent - 1);
+		}
+	}
+
 	didScroll (x, y, dirX, dirY) {
 		const
 			{firstIndex} = this.state,
@@ -539,21 +554,6 @@ class VirtualListCoreNative extends Component {
 	scrollToPosition (x, y) {
 		const node = this.wrapperRef;
 		node.scrollTo((this.context.rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x, y);
-	}
-
-	updateMoreInfo (primaryPosition) {
-		const
-			{dataSize} = this.props,
-			{dimensionToExtent, moreInfo} = this,
-			{itemSize, gridSize, clientSize} = this.primary;
-
-		if (dataSize <= 0) {
-			moreInfo.firstVisibleIndex = null;
-			moreInfo.lastVisibleIndex = null;
-		} else {
-			moreInfo.firstVisibleIndex = (Math.floor((primaryPosition - itemSize) / gridSize) + 1) * dimensionToExtent;
-			moreInfo.lastVisibleIndex = Math.min(dataSize - 1, Math.ceil((primaryPosition + clientSize) / gridSize) * dimensionToExtent - 1);
-		}
 	}
 
 	getScrollHeight = () => (this.isPrimaryDirectionVertical ? this.getVirtualScrollDimension() : this.scrollBounds.clientHeight)
@@ -665,34 +665,27 @@ class VirtualListCoreNative extends Component {
 			return;
 		}
 
-		// we only calculate position of the first child
 		let {primaryPosition} = this.getGridPosition(updateFrom);
 
-		// positioning items
 		for (let i = rowFrom; i < rowTo; i++, primaryPosition += primary.gridSize) {
-			let index = i * dimensionToExtent;
+			const
+				items = [],
+				key = i % numOfRows;
 
-			// generate item containers and items if needed
-			// if (this.updateFrom === null || this.updateTo === null || this.updateFrom > index || this.updateTo <= index) {
-				const
-					items = [],
-					key = i % numOfRows;
+			for (let j = 0, index = i * dimensionToExtent; j < dimensionToExtent && index < updateTo; j++, index++) {
+				items[j] = <Item data={data} data-index={index} index={index} key={j} />;
+			}
 
-				for (let j = 0; j < dimensionToExtent && index < updateTo; j++, index++) {
-					items[j] = <Item data={data} data-index={index} index={index} key={j} />;
-				}
-
-				this.cc[key] = (
-					<div
-						className={classNames(
-							css.listItemContainer,
-							isPrimaryDirectionVertical ? css.fitWidth : css.fitHeight
-						)}
-						key={key}
-						style={{transform: this.getItemContainerPosition(primaryPosition)}}
-					>{items}</div>
-				);
-			// }
+			this.cc[key] = (
+				<div
+					className={classNames(
+						css.listItemContainer,
+						isPrimaryDirectionVertical ? css.fitWidth : css.fitHeight
+					)}
+					key={key}
+					style={{transform: this.getItemContainerPosition(primaryPosition)}}
+				>{items}</div>
+			);
 		}
 
 		this.lastFirstIndex = firstIndex;
@@ -706,8 +699,11 @@ class VirtualListCoreNative extends Component {
 
 	render () {
 		const
+			{className, direction} = this.props,
 			props = Object.assign({}, this.props),
-			{primary, cc} = this;
+			{isItemSized, primary, cc} = this,
+			flexDirection = (direction === 'vertical' && !isItemSized || direction === 'horizontal' && isItemSized) ? 'column' : null,
+			mergedClasses = classNames(css.virtualList, this.wrapperClass, className);
 
 		delete props.cbScrollTo;
 		delete props.clientSize;
@@ -724,13 +720,9 @@ class VirtualListCoreNative extends Component {
 			this.renderItems();
 		}
 
-		const
-			{className, ...rest} = props,
-			mergedClasses = classNames(css.virtualList, this.wrapperClass, className);
-
 		return (
 			<div ref={this.initWrapperRef} className={mergedClasses}>
-				<div {...rest} className={css.container} ref={this.initContainerRef}>
+				<div {...props} className={css.container} ref={this.initContainerRef} style={{flexDirection}}>
 					{cc.length ? cc : (
 						<SpotlightPlaceholder data-index={0} data-vl-placeholder />
 					)}

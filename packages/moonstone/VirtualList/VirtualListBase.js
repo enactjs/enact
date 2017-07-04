@@ -286,11 +286,10 @@ class VirtualListCore extends Component {
 	dimensionToExtent = 0
 	threshold = 0
 	maxFirstIndex = 0
+	lastFirstIndex = 0
 	curDataSize = 0
 	cc = []
 	scrollPosition = 0
-	updateFrom = null
-	updateTo = null
 
 	containerRef = null
 
@@ -439,20 +438,19 @@ class VirtualListCore extends Component {
 		const
 			{dataSize, overhang} = props,
 			{firstIndex} = this.state,
-			{dimensionToExtent, primary, moreInfo} = this,
+			{dimensionToExtent, primary, moreInfo, scrollPosition} = this,
 			numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
 			wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (firstIndex === this.maxFirstIndex));
 
 		this.maxFirstIndex = dataSize - numOfItems;
 		this.curDataSize = dataSize;
-		this.updateFrom = null;
-		this.updateTo = null;
 
 		// reset children
 		this.cc = [];
 
 		this.setState({firstIndex: wasFirstIndexMax ? this.maxFirstIndex : Math.min(firstIndex, this.maxFirstIndex), numOfItems});
 		this.calculateScrollBounds(props);
+		this.updateMoreInfo(scrollPosition);
 	}
 
 	calculateScrollBounds (props) {
@@ -535,6 +533,12 @@ class VirtualListCore extends Component {
 
 		this.syncThreshold(maxPos);
 		this.scrollPosition = pos;
+		this.updateMoreInfo(pos);
+
+		if (this.nodeIndexToBeBlurred !== null) {
+			this.nodeIndexToBeBlurred.blur();
+			this.nodeIndexToBeBlurred = null;
+		}
 
 		if (firstIndex !== newFirstIndex) {
 			this.setState({firstIndex: newFirstIndex});
@@ -543,12 +547,18 @@ class VirtualListCore extends Component {
 		}
 	}
 
-	getItemContainerPosition (primaryPosition) {
+	updateMoreInfo (primaryPosition) {
 		const
-			rtlDirection = this.context.rtl ? -1 : 1,
-			{x, y} = (this.isPrimaryDirectionVertical ? {x: 0, y: primaryPosition} : {x: (primaryPosition * rtlDirection), y: 0});
-
-		return 'translate3d(' + x + 'px,' + y + 'px,0)';
+			{dataSize} = this.props,
+			{dimensionToExtent, moreInfo} = this,
+			{itemSize, gridSize, clientSize} = this.primary;
+		if (dataSize <= 0) {
+			moreInfo.firstVisibleIndex = null;
+			moreInfo.lastVisibleIndex = null;
+		} else {
+			moreInfo.firstVisibleIndex = (Math.floor((primaryPosition - itemSize) / gridSize) + 1) * dimensionToExtent;
+			moreInfo.lastVisibleIndex = Math.min(dataSize - 1, Math.ceil((primaryPosition + clientSize) / gridSize) * dimensionToExtent - 1);
+		}
 	}
 
 	positionItems ({updateFrom, updateTo}) {
@@ -569,12 +579,6 @@ class VirtualListCore extends Component {
 				node = this.containerRef.children[key];
 
 			node.style.transform = this.getItemContainerPosition(primaryPosition);
-		}
-
-		if (this.nodeIndexToBeBlurred !== null) {
-			this.nodeIndexToBeBlurred.blur();
-			this.nodeIndexToBeBlurred = null;
-			console.log('blur')
 		}
 	}
 
@@ -663,62 +667,56 @@ class VirtualListCore extends Component {
 
 	// render
 
-	renderItems ({updateFrom, updateTo}) {
+	getItemContainerPosition (primaryPosition) {
 		const
-			{component: Item, data} = this.props,
-			{numOfItems} = this.state,
-			{isPrimaryDirectionVertical, dimensionToExtent, moreInfo, primary, scrollPosition} = this,
+			rtlDirection = this.context.rtl ? -1 : 1,
+			{x, y} = (this.isPrimaryDirectionVertical ? {x: 0, y: primaryPosition} : {x: (primaryPosition * rtlDirection), y: 0});
+
+		return 'translate3d(' + x + 'px,' + y + 'px,0)';
+	}
+
+	renderItems () {
+		const
+			{component: Item, data, dataSize} = this.props,
+			{firstIndex, numOfItems} = this.state,
+			{isPrimaryDirectionVertical, dimensionToExtent, primary, scrollPosition, cc} = this,
+			diff = firstIndex - this.lastFirstIndex,
+			updateFrom = (cc.length === 0 || diff <= 0 || diff >= numOfItems) ? firstIndex : Math.min(dataSize, this.lastFirstIndex + numOfItems),
+			updateTo = (cc.length === 0 || diff > 0 || diff >= numOfItems) ? Math.min(dataSize, firstIndex + numOfItems) : this.lastFirstIndex,
 			rowFrom = parseInt(updateFrom / dimensionToExtent),
 			rowTo = parseInt(updateTo / dimensionToExtent),
 			numOfRows = parseInt(numOfItems / dimensionToExtent);
 
-		let
-			{primaryPosition} = this.getGridPosition(updateFrom),
-			firstVisibleIndex = null,
-			lastVisibleIndex = null;
+		if (updateFrom >= updateTo) {
+			return;
+		}
+
+		let {primaryPosition} = this.getGridPosition(updateFrom);
 
 		primaryPosition -= scrollPosition;
 
 		for (let i = rowFrom; i < rowTo; i++, primaryPosition += primary.gridSize) {
-			let index = i * dimensionToExtent;
+			const
+				items = [],
+				key = i % numOfRows;
 
-			// determine the first visible item
-			if (firstVisibleIndex === null && (primaryPosition + primary.itemSize) > 0) {
-				firstVisibleIndex = index;
+			for (let j = 0, index = i * dimensionToExtent; j < dimensionToExtent && index < updateTo; j++, index++) {
+				items[j] = <Item data={data} data-index={index} index={index} key={j} />;
 			}
 
-			// generate item containers and items if needed
-			if (this.updateFrom === null || this.updateTo === null || this.updateFrom > index || this.updateTo <= index) {
-				const
-					items = [],
-					key = i % numOfRows;
-
-				for (let j = 0; j < dimensionToExtent && index < updateTo; j++, index++) {
-					items[j] = <Item data={data} data-index={index} index={index} key={j} />;
-				}
-
-				this.cc[key] = (
-					<div
-						className={classNames(
-							css.listItemContainer,
-							isPrimaryDirectionVertical ? css.fitWidth : css.fitHeight
-						)}
-						key={key}
-						style={{transform: this.getItemContainerPosition(primaryPosition)}}
-					>{items}</div>
-				);
-			}
-
-			// determine the last visible item
-			if (primaryPosition < primary.clientSize) {
-				lastVisibleIndex = index - 1;
-			}
+			this.cc[key] = (
+				<div
+					className={classNames(
+						css.listItemContainer,
+						isPrimaryDirectionVertical ? css.fitWidth : css.fitHeight
+					)}
+					key={key}
+					style={{transform: this.getItemContainerPosition(primaryPosition)}}
+				>{items}</div>
+			);
 		}
 
-		this.updateFrom = updateFrom;
-		this.updateTo = updateTo;
-		moreInfo.firstVisibleIndex = firstVisibleIndex;
-		moreInfo.lastVisibleIndex = lastVisibleIndex;
+		this.lastFirstIndex = firstIndex;
 	}
 
 	initRef (prop) {
@@ -729,12 +727,11 @@ class VirtualListCore extends Component {
 
 	render () {
 		const
-			{className, dataSize, direction} = this.props,
-			{firstIndex, numOfItems} = this.state,
-			max = Math.min(dataSize, firstIndex + numOfItems),
+			{className, direction} = this.props,
 			props = Object.assign({}, this.props),
 			{isItemSized, primary, cc} = this,
-			flexDirection = (direction === 'vertical' && !isItemSized || direction === 'horizontal' && isItemSized) ? 'column' : null;
+			flexDirection = (direction === 'vertical' && !isItemSized || direction === 'horizontal' && isItemSized) ? 'column' : null,
+			mergedClasses = classNames(css.virtualList, className);
 
 		delete props.cbScrollTo;
 		delete props.clientSize;
@@ -748,11 +745,11 @@ class VirtualListCore extends Component {
 		delete props.spacing;
 
 		if (primary) {
-			this.renderItems({updateFrom: firstIndex, updateTo: max});
+			this.renderItems();
 		}
 
 		return (
-			<div {...props} className={classNames(className, css.virtualList)} ref={this.initContainerRef} style={{flexDirection}}>
+			<div {...props} className={mergedClasses} ref={this.initContainerRef} style={{flexDirection}}>
 				{cc.length ? cc : (
 					<SpotlightPlaceholder data-index={0} data-vl-placeholder />
 				)}
