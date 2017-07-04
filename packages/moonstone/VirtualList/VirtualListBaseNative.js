@@ -659,19 +659,19 @@ class VirtualListCoreNative extends Component {
 			{firstIndex, numOfItems} = this.state,
 			{isPrimaryDirectionVertical, dimensionToExtent, primary, cc} = this,
 			diff = firstIndex - this.lastFirstIndex,
-			updateFrom = (cc.length === 0 || diff <= 0 || diff >= numOfItems) ? firstIndex : Math.min(dataSize, this.lastFirstIndex + numOfItems),
-			updateTo = (cc.length === 0 || diff > 0 || diff >= numOfItems) ? Math.min(dataSize, firstIndex + numOfItems) : this.lastFirstIndex,
+			updateFrom = (cc.length === 0 || diff <= 0 || diff >= numOfItems) ? firstIndex : this.lastFirstIndex + numOfItems,
+			updateTo = (cc.length === 0 || diff >= 0 || diff <= -numOfItems) ? Math.min(dataSize, firstIndex + numOfItems) : this.lastFirstIndex,
 			rowFrom = parseInt(updateFrom / dimensionToExtent),
-			rowTo = parseInt(updateTo / dimensionToExtent),
+			rowTo = parseInt((updateTo - 1) / dimensionToExtent),
 			numOfRows = parseInt(numOfItems / dimensionToExtent);
+
+		let {primaryPosition} = this.getGridPosition(updateFrom);
 
 		if (updateFrom >= updateTo) {
 			return;
 		}
 
-		let {primaryPosition} = this.getGridPosition(updateFrom);
-
-		for (let i = rowFrom; i < rowTo; i++, primaryPosition += primary.gridSize) {
+		for (let i = rowFrom; i <= rowTo; i++, primaryPosition += primary.gridSize) {
 			const
 				items = [],
 				key = i % numOfRows;

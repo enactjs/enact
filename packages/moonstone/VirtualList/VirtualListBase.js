@@ -547,7 +547,7 @@ class VirtualListCore extends Component {
 		if (firstIndex !== newFirstIndex) {
 			this.setState({firstIndex: newFirstIndex});
 		} else {
-			this.positionItems({updateFrom: firstIndex, updateTo: firstIndex + numOfItems});
+			setTimeout(() => this.positionItems({updateFrom: firstIndex, updateTo: firstIndex + numOfItems}), 1);
 		}
 	}
 
@@ -570,14 +570,14 @@ class VirtualListCore extends Component {
 			{numOfItems} = this.state,
 			{dimensionToExtent, primary, scrollPosition} = this,
 			rowFrom = parseInt(updateFrom / dimensionToExtent),
-			rowTo = parseInt(updateTo / dimensionToExtent),
+			rowTo = parseInt((updateTo - 1) / dimensionToExtent),
 			numOfRows = parseInt(numOfItems / dimensionToExtent);
 
 		let {primaryPosition} = this.getGridPosition(updateFrom);
 
 		primaryPosition -= scrollPosition;
 
-		for (let i = rowFrom; i < rowTo; i++, primaryPosition += primary.gridSize) {
+		for (let i = rowFrom; i <= rowTo; i++, primaryPosition += primary.gridSize) {
 			const
 				key = i % numOfRows,
 				node = this.containerRef.children[key];
@@ -685,21 +685,21 @@ class VirtualListCore extends Component {
 			{firstIndex, numOfItems} = this.state,
 			{isPrimaryDirectionVertical, dimensionToExtent, primary, scrollPosition, cc} = this,
 			diff = firstIndex - this.lastFirstIndex,
-			updateFrom = (cc.length === 0 || diff <= 0 || diff >= numOfItems) ? firstIndex : Math.min(dataSize, this.lastFirstIndex + numOfItems),
-			updateTo = (cc.length === 0 || diff > 0 || diff >= numOfItems) ? Math.min(dataSize, firstIndex + numOfItems) : this.lastFirstIndex,
+			updateFrom = (cc.length === 0 || diff <= 0 || diff >= numOfItems) ? firstIndex : this.lastFirstIndex + numOfItems,
+			updateTo = (cc.length === 0 || diff >= 0 || diff <= -numOfItems) ? Math.min(dataSize, firstIndex + numOfItems) : this.lastFirstIndex,
 			rowFrom = parseInt(updateFrom / dimensionToExtent),
-			rowTo = parseInt(updateTo / dimensionToExtent),
+			rowTo = parseInt((updateTo - 1) / dimensionToExtent),
 			numOfRows = parseInt(numOfItems / dimensionToExtent);
-
-		if (updateFrom >= updateTo) {
-			return;
-		}
 
 		let {primaryPosition} = this.getGridPosition(updateFrom);
 
+		if (updateFrom > updateTo) {
+			return;
+		}
+
 		primaryPosition -= scrollPosition;
 
-		for (let i = rowFrom; i < rowTo; i++, primaryPosition += primary.gridSize) {
+		for (let i = rowFrom; i <= rowTo; i++, primaryPosition += primary.gridSize) {
 			const
 				items = [],
 				key = i % numOfRows;
