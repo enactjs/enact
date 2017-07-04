@@ -49,8 +49,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` to show its controls when pressing down the first time
 - `moonstone/Panel` autoFocus logic to only focus on initial render
 - `moonstone/Input` text colors
-
-### Removed
 - `moonstone/ExpandableInput` to focus its decorator when leaving by 5-way left/right
 
 ## [1.3.1] - 2017-06-14
