@@ -13,7 +13,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
-import Accelerator from '../Accelerator';
 import {getContainersForNode} from '../src/container';
 import Spotlight from '../src/spotlight';
 
@@ -46,9 +45,10 @@ const isKeyboardAccessible = (node) => {
 	);
 };
 
-const SelectAccelerator = new Accelerator();
-// Last instance of spottable to be accelerating
-let lastFocusTarget = null;
+// Last instance of spottable to be focused
+let lastSelectTarget = null;
+// Should we prevent select being passed through
+let selectCancelled = false;
 
 /**
  * Default configuration for Spottable
@@ -180,10 +180,9 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			// if the component is spotted and became disabled,
 			if (this.state.spotted && !prevProps.disabled && this.props.disabled) {
 				forward('onSpotlightDisappear', null, this.props);
-				if (SelectAccelerator.isAccelerating()) {
-					// Forward mouseUp before the focus target changes
+				if (lastSelectTarget === this) {
+					selectCancelled = true;
 					forward('onMouseUp', null, this.props);
-					SelectAccelerator.cancel();
 				}
 
 				// if spotlight didn't move, find something else to spot starting from here
@@ -236,40 +235,39 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		handleSelect = (ev) => {
 			// Only apply accelerator if handling select
 			if ((ev.which === REMOTE_OK_KEY) || (ev.which === ENTER_KEY)) {
-				SelectAccelerator.processKey(ev, this.handleSelectCallback);
-				return false;
+				if (selectCancelled || (lastSelectTarget && lastSelectTarget !== this)) {
+					return false;
+				}
+				lastSelectTarget = this;
 			}
 			return true;
 		}
 
 		setFocusTarget = () => {
-			lastFocusTarget = this;
+			lastSelectTarget = this;
 			return true;
 		}
 
-		resetAccelerator = () => {
-			SelectAccelerator.reset();
-			return lastFocusTarget === this;
+		resetLastSelecTarget = () => {
+			const stop = lastSelectTarget === this;
+			selectCancelled = false;
+			lastSelectTarget = null;
+			return stop;
 		}
 
 		handle = handle.bind(this)
 
-		handleSelectCallback = this.handle(
-			this.setFocusTarget,
+		handleKeyDown = this.handle(
+			this.handleSelect,
 			forward('onKeyDown'),
+			this.forwardSpotlightEvents,
 			this.shouldEmulateMouse,
 			forward('onMouseDown')
 		)
 
-		handleKeyDown = this.handle(
-			this.handleSelect,
-			forward('onKeyDown'),
-			this.forwardSpotlightEvents
-		)
-
 		handleKeyUp = this.handle(
 			forward('onKeyUp'),
-			this.resetAccelerator,
+			this.resetLastSelecTarget,
 			this.shouldEmulateMouse,
 			forward('onMouseUp'),
 			forward('onClick')
