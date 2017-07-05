@@ -119,15 +119,14 @@ const isRenderable = function (tag) {
  * @method
  * @memberof core/util
  * @param   {Object} props  Props object
- * @param	{Boolean} [onlyExtract]	`true` to copy only from props
  * @returns {Object}        ARIA-related props
  */
-const extractAriaProps = function (props, onlyExtract = false) {
+const extractAriaProps = function (props) {
 	const aria = {};
 	Object.keys(props).forEach(key => {
 		if (key === 'role' || key.indexOf('aria-') === 0) {
 			aria[key] = props[key];
-			if (!onlyExtract) delete props[key];
+			delete props[key];
 		}
 	});
 
