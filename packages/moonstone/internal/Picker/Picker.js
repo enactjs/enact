@@ -204,15 +204,6 @@ const PickerBase = class extends React.Component {
 		onMouseUp: PropTypes.func,
 
 		/**
-		 * The handler to run when the component is removed while retaining focus.
-		 *
-		 * @type {Function}
-		 * @param {Object} event
-		 * @public
-		 */
-		onSpotlightDisappear: PropTypes.func,
-
-		/**
 		 * Sets the orientation of the picker, whether the buttons are above and below or on the
 		 * sides of the value. Must be either `'horizontal'` or `'vertical'`.
 		 *
