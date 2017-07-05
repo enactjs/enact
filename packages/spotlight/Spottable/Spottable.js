@@ -13,6 +13,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
+import Accelerator from '../Accelerator';
 import {getContainersForNode} from '../src/container';
 import Spotlight from '../src/spotlight';
 
@@ -44,6 +45,10 @@ const isKeyboardAccessible = (node) => {
 		)
 	);
 };
+
+const SelectAccelerator = new Accelerator();
+// Last instance of spottable to be accelerating
+let lastFocusTarget = null;
 
 /**
  * Default configuration for Spottable
@@ -175,6 +180,11 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			// if the component is spotted and became disabled,
 			if (this.state.spotted && !prevProps.disabled && this.props.disabled) {
 				forward('onSpotlightDisappear', null, this.props);
+				if (SelectAccelerator.isAccelerating()) {
+					// Forward mouseUp before the focus target changes
+					forward('onMouseUp', null, this.props);
+					SelectAccelerator.cancel();
+				}
 
 				// if spotlight didn't move, find something else to spot starting from here
 				const current = Spotlight.getCurrent();
@@ -224,17 +234,43 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			return true;
 		}
 
+		handleSelect = (ev) => {
+			// Only apply accelerator if handling select
+			if ((ev.which === REMOTE_OK_KEY) || (ev.which === ENTER_KEY)) {
+				SelectAccelerator.processKey(ev, this.handleSelectCallback);
+				return false;
+			}
+			return true;
+		}
+
+		setFocusTarget = () => {
+			lastFocusTarget = this;
+			return true;
+		}
+
+		resetAccelerator = () => {
+			SelectAccelerator.reset();
+			return lastFocusTarget === this;
+		}
+
 		handle = handle.bind(this)
 
-		handleKeyDown = this.handle(
+		handleSelectCallback = this.handle(
+			this.setFocusTarget,
 			forward('onKeyDown'),
-			this.forwardSpotlightEvents,
 			this.shouldEmulateMouse,
 			forward('onMouseDown')
 		)
 
+		handleKeyDown = this.handle(
+			this.handleSelect,
+			forward('onKeyDown'),
+			this.forwardSpotlightEvents
+		)
+
 		handleKeyUp = this.handle(
 			forward('onKeyUp'),
+			this.resetAccelerator,
 			this.shouldEmulateMouse,
 			forward('onMouseUp'),
 			forward('onClick')
