@@ -4,25 +4,19 @@
 	--virtuallist-item-flex-box: 1 0 auto;
 
 	.listItemContainer {
-		display: flex;
 		position: absolute;
+		display: flex;
+		width: var(--virtuallist-item-width);
+		height: var(--virtuallist-item-height);
 		overflow: hidden;
 
 		will-change: transform;
-
-		&.fitWidth {
-			width: 100%;
-		}
-		&.fitHeight {
-			height: 100%;
-		}
 	}
 
 	div.listItemContainer > * {
-		width: var(--virtuallist-item-width);
-		height: var(--virtuallist-item-height);
-		flex: var(--virtuallist-item-flex-box);
 		padding: 0;
+		margin: 0;
+		flex: var(--virtuallist-item-flex-box);
 		overflow: hidden;
 	}
 

@@ -416,11 +416,18 @@ class VirtualListCoreNative extends Component {
 				secondaryItemSize = secondary.itemSize + 'px',
 				style = node.style;
 
-			style.setProperty('--virtuallist-item-width', this.isPrimaryDirectionVertical ? secondaryItemSize : primaryItemSize);
-			style.setProperty('--virtuallist-item-height', this.isPrimaryDirectionVertical ? primaryItemSize : secondaryItemSize);
 			if (this.isPrimaryDirectionVertical) {
-				style.setProperty('--virtuallist-item-flex-box', '1 0 ' + secondary.itemSize + 'px');
+				style.setProperty('--virtuallist-item-flex-box', '1 0 ' + secondaryItemSize);
+				style.setProperty('--virtuallist-item-height', primaryItemSize);
+			} else {
+				style.setProperty('--virtuallist-item-width', primaryItemSize);
 			}
+		}
+
+		if (this.isPrimaryDirectionVertical) {
+			node.style.setProperty('--virtuallist-item-width', '100%');
+		} else {
+			node.style.setProperty('--virtuallist-item-height', '100%');
 		}
 	}
 
@@ -676,10 +683,7 @@ class VirtualListCoreNative extends Component {
 
 			this.cc[key] = (
 				<div
-					className={classNames(
-						css.listItemContainer,
-						isPrimaryDirectionVertical ? css.fitWidth : css.fitHeight
-					)}
+					className={css.listItemContainer}
 					key={key}
 					style={{transform: this.getItemContainerPosition(primaryPosition)}}
 				>{items}</div>
