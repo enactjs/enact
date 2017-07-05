@@ -516,8 +516,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			} = this.props;
 
 			const marqueeOnFocus = marqueeOn === 'focus';
-			const marqueeOnRender = marqueeOn === 'render';
 			const marqueeOnHover = marqueeOn === 'hover';
+			const marqueeOnRender = marqueeOn === 'render';
 
 			if (marqueeOnFocus && !disabled) {
 				rest[focus] = this.handleFocus;
