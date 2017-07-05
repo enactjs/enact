@@ -199,7 +199,6 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillUnmount () {
-			this.node = null;
 			if (this.state.spotted) {
 				forward('onSpotlightDisappear', null, this.props);
 			}
