@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact spotlight module, newest changes on the top.
 
+## [1.4.1] - 2017-07-05
+
+### Changed
+
+- `spotlight/Spottable` to remove focus from a component when it becomes disabled and move it to another component if not explicitly moved during the `onSpotlightDisappear` event callback
+
 ## [1.4.0] - 2017-06-29
 
 ### Added

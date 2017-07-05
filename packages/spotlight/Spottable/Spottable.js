@@ -10,8 +10,10 @@ import {forward, handle} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
 
+import {getContainersForNode} from '../src/container';
 import Spotlight from '../src/spotlight';
 
 /**
@@ -21,7 +23,6 @@ import Spotlight from '../src/spotlight';
  * @public
  */
 const spottableClass = 'spottable';
-const spottableDisabledClass = 'spottableDisabled';
 
 const ENTER_KEY = 13;
 const REMOTE_OK_KEY = 16777221;
@@ -43,6 +44,11 @@ const isKeyboardAccessible = (node) => {
 		)
 	);
 };
+
+// Last instance of spottable to be focused
+let lastSelectTarget = null;
+// Should we prevent select being passed through
+let selectCancelled = false;
 
 /**
  * Default configuration for Spottable
@@ -165,11 +171,35 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 
-		componentWillUnmount () {
-			const {onSpotlightDisappear} = this.props;
+		componentDidMount () {
+			// eslint-disable-next-line react/no-find-dom-node
+			this.node = ReactDOM.findDOMNode(this);
+		}
 
-			if (this.state.spotted && onSpotlightDisappear) {
-				onSpotlightDisappear();
+		componentDidUpdate (prevProps) {
+			// if the component is spotted and became disabled,
+			if (this.state.spotted && !prevProps.disabled && this.props.disabled) {
+				forward('onSpotlightDisappear', null, this.props);
+				if (lastSelectTarget === this) {
+					selectCancelled = true;
+					forward('onMouseUp', null, this.props);
+				}
+
+				// if spotlight didn't move, find something else to spot starting from here
+				const current = Spotlight.getCurrent();
+				if (!Spotlight.getPointerMode() && (!current || this.node === current)) {
+					this.node.blur();
+
+					getContainersForNode(this.node).reverse().reduce((found, id) => {
+						return found || Spotlight.focus(id);
+					}, false);
+				}
+			}
+		}
+
+		componentWillUnmount () {
+			if (this.state.spotted) {
+				forward('onSpotlightDisappear', null, this.props);
 			}
 		}
 
@@ -202,9 +232,33 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			return true;
 		}
 
+		handleSelect = (ev) => {
+			// Only apply accelerator if handling select
+			if ((ev.which === REMOTE_OK_KEY) || (ev.which === ENTER_KEY)) {
+				if (selectCancelled || (lastSelectTarget && lastSelectTarget !== this)) {
+					return false;
+				}
+				lastSelectTarget = this;
+			}
+			return true;
+		}
+
+		setFocusTarget = () => {
+			lastSelectTarget = this;
+			return true;
+		}
+
+		resetLastSelecTarget = () => {
+			const stop = lastSelectTarget === this;
+			selectCancelled = false;
+			lastSelectTarget = null;
+			return stop;
+		}
+
 		handle = handle.bind(this)
 
 		handleKeyDown = this.handle(
+			this.handleSelect,
 			forward('onKeyDown'),
 			this.forwardSpotlightEvents,
 			this.shouldEmulateMouse,
@@ -213,6 +267,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleKeyUp = this.handle(
 			forward('onKeyUp'),
+			this.resetLastSelecTarget,
 			this.shouldEmulateMouse,
 			forward('onMouseUp'),
 			forward('onClick')
@@ -244,9 +299,7 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 		render () {
 			const {disabled, spotlightDisabled, ...rest} = this.props;
-			const spottableDisabled = this.state.spotted && disabled;
-			const spottable = (spottableDisabled || !disabled) && !spotlightDisabled;
-			const classes = spottableDisabled ? spottableClass + ' ' + spottableDisabledClass : spottableClass;
+			const spottable = !disabled && !spotlightDisabled;
 			let tabIndex = rest.tabIndex;
 
 			delete rest.onSpotlightDisappear;
@@ -263,15 +316,12 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 				rest.onBlur = this.handleBlur;
 				rest.onFocus = this.handleFocus;
 				rest.onKeyDown = this.handleKeyDown;
-
-				if (!spottableDisabled) {
-					rest.onKeyUp = this.handleKeyUp;
-				}
+				rest.onKeyUp = this.handleKeyUp;
 
 				if (rest.className) {
-					rest.className += ' ' + classes;
+					rest.className += ' ' + spottableClass;
 				} else {
-					rest.className = classes;
+					rest.className = spottableClass;
 				}
 			}
 

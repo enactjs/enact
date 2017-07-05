@@ -219,10 +219,13 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			if (!this.props.open && nextProps.open) {
+				const activator = Spotlight.getCurrent();
+				this.updateLeaveFor(activator);
 				this.setState({
-					activator: Spotlight.getCurrent()
+					activator
 				});
 			} else if (this.props.open && !nextProps.open) {
+				this.updateLeaveFor(null);
 				this.setState({
 					activator: null
 				});
@@ -244,6 +247,17 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				off('keydown', this.handleKeyDown);
 			}
 			Spotlight.remove(this.state.containerId);
+		}
+
+		updateLeaveFor (activator) {
+			Spotlight.set(this.state.containerId, {
+				leaveFor: {
+					up: activator,
+					down: activator,
+					left: activator,
+					right: activator
+				}
+			});
 		}
 
 		getContainerPosition (containerNode, clientNode) {
@@ -423,7 +437,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		spotActivator = (activator) => {
-			if (!Spotlight.focus(activator)) {
+			if (Spotlight.getCurrent() !== activator && !Spotlight.focus(activator)) {
 				Spotlight.focus();
 			}
 		}

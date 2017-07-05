@@ -7,8 +7,10 @@ import PropTypes from 'prop-types';
 import shouldUpdate from 'recompose/shouldUpdate';
 import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
 import {getDirection} from '@enact/spotlight';
-import {validateRange, validateStepped} from '../validators';
+
 import Skinnable from '../../Skinnable';
+import {validateRange, validateStepped} from '../validators';
+import DisappearSpotlightDecorator from '../DisappearSpotlightDecorator';
 
 import $L from '../$L';
 import PickerButton from './PickerButton';
@@ -56,7 +58,7 @@ const forwardBlur = forward('onBlur'),
  * @private
  */
 
-const Picker = class extends React.Component {
+const PickerBase = class extends React.Component {
 	static displayName = 'Picker'
 
 	static propTypes = /** @lends moonstone/internal/Picker.Picker.prototype */ {
@@ -170,6 +172,22 @@ const Picker = class extends React.Component {
 		onChange: PropTypes.func,
 
 		/**
+		 * A function to run when the decrement button is disabled
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		onDecrementSpotlightDisappear: PropTypes.func,
+
+		/**
+		 * A function to run when the Increment button is disabled
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		onIncrementSpotlightDisappear: PropTypes.func,
+
+		/**
 		 * Initiate the pressed state
 		 *
 		 * @type {Function}
@@ -184,15 +202,6 @@ const Picker = class extends React.Component {
 		 * @public
 		 */
 		onMouseUp: PropTypes.func,
-
-		/**
-		 * The handler to run when the component is removed while retaining focus.
-		 *
-		 * @type {Function}
-		 * @param {Object} event
-		 * @public
-		 */
-		onSpotlightDisappear: PropTypes.func,
 
 		/**
 		 * Sets the orientation of the picker, whether the buttons are above and below or on the
@@ -299,9 +308,9 @@ const Picker = class extends React.Component {
 		};
 
 		if (__DEV__) {
-			validateRange(props.value, props.min, props.max, Picker.displayName);
-			validateStepped(props.value, props.min, props.step, Picker.displayName);
-			validateStepped(props.max, props.min, props.step, Picker.displayName, '"max"');
+			validateRange(props.value, props.min, props.max, PickerBase.displayName);
+			validateStepped(props.value, props.min, props.step, PickerBase.displayName);
+			validateStepped(props.max, props.min, props.step, PickerBase.displayName, '"max"');
 		}
 	}
 
@@ -311,9 +320,9 @@ const Picker = class extends React.Component {
 		const nextValue = nextProps.value;
 
 		if (__DEV__) {
-			validateRange(nextValue, first, last, Picker.displayName);
-			validateStepped(nextValue, first, nextProps.step, Picker.displayName);
-			validateStepped(last, first, nextProps.step, Picker.displayName, '"max"');
+			validateRange(nextValue, first, last, PickerBase.displayName);
+			validateStepped(nextValue, first, nextProps.step, PickerBase.displayName);
+			validateStepped(last, first, nextProps.step, PickerBase.displayName, '"max"');
 		}
 	}
 
@@ -543,7 +552,8 @@ const Picker = class extends React.Component {
 			disabled,
 			index,
 			joined,
-			onSpotlightDisappear,
+			onDecrementSpotlightDisappear,
+			onIncrementSpotlightDisappear,
 			orientation,
 			spotlightDisabled,
 			step,
@@ -608,7 +618,7 @@ const Picker = class extends React.Component {
 					onHoldPulse={this.handleIncPulse}
 					onMouseDown={this.handleIncDown}
 					onMouseUp={this.handleUp}
-					onSpotlightDisappear={onSpotlightDisappear}
+					onSpotlightDisappear={onIncrementSpotlightDisappear}
 					spotlightDisabled={spotlightDisabled}
 				/>
 				<div
@@ -641,7 +651,7 @@ const Picker = class extends React.Component {
 					onHoldPulse={this.handleDecPulse}
 					onMouseDown={this.handleDecDown}
 					onMouseUp={this.handleUp}
-					onSpotlightDisappear={onSpotlightDisappear}
+					onSpotlightDisappear={onDecrementSpotlightDisappear}
 					spotlightDisabled={spotlightDisabled}
 				/>
 			</div>
@@ -649,8 +659,16 @@ const Picker = class extends React.Component {
 	}
 };
 
-const SkinnedPicker = Skinnable(Picker);
+const Picker = Skinnable(
+	DisappearSpotlightDecorator(
+		{events: {
+			onDecrementSpotlightDisappear: `.${css.incrementer}`,
+			onIncrementSpotlightDisappear: `.${css.decrementer}`
+		}},
+		PickerBase
+	)
+);
 
-export default SkinnedPicker;
-export {SkinnedPicker as Picker};
+export default Picker;
+export {Picker};
 export PickerItem from './PickerItem';
