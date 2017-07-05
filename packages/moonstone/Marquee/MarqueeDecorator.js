@@ -519,7 +519,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const marqueeOnRender = marqueeOn === 'render';
 			const marqueeOnHover = marqueeOn === 'hover';
 
-			if ((marqueeOnFocus && !disabled)) {
+			if (marqueeOnFocus && !disabled) {
 				rest[focus] = this.handleFocus;
 				rest[blur] = this.handleBlur;
 			}
