@@ -25,11 +25,14 @@ const CellBase = kind({
 
 	propTypes: /** @lends ui/Layout.LayoutBase.prototype */ {
 		children: PropTypes.node,
+		component:  PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 		fixed: PropTypes.bool,
-		flexible: PropTypes.bool
+		flexible: PropTypes.bool,
+		size: PropTypes.string
 	},
 
 	defaultProps: {
+		component: 'div',
 		fixed: false,
 		flexible: false
 	},
@@ -47,11 +50,11 @@ const CellBase = kind({
 		}
 	},
 
-	render: ({children, ...rest}) => {
+	render: ({component: Component, ...rest}) => {
 		delete rest.fixed;
 		delete rest.flexible;
 
-		return <div {...rest}>{children}</div>;
+		return <Component {...rest} />;
 	}
 });
 
@@ -62,6 +65,10 @@ const CellBase = kind({
  * @module ui/Layout
  */
 
+const shorthandAliases = {
+	end: 'flex-end',
+	start: 'flex-start'
+};
 
 /**
  * {@link ui/Layout.LayoutBase} is a stateless component that allows for applying
@@ -76,12 +83,15 @@ const LayoutBase = kind({
 	name: 'LayoutBase',
 
 	propTypes: /** @lends ui/Layout.LayoutBase.prototype */ {
+		align: PropTypes.string,
 		children: PropTypes.node,
+		component:  PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 		inline: PropTypes.bool,
 		orientation: PropTypes.oneOf(['horizontal', 'vertical'])
 	},
 
 	defaultProps: {
+		component: 'div',
 		inline: false,
 		orientation: 'horizontal'
 	},
@@ -95,14 +105,19 @@ const LayoutBase = kind({
 		className: ({inline, orientation, styler}) => styler.append(
 			orientation,
 			{inline}
-		)
+		),
+		style: ({align, style = {}}) => {
+			style.alignItems = shorthandAliases[align] || align;
+			return  style;
+		}
 	},
 
-	render: ({children, ...rest}) => {
+	render: ({component: Component, ...rest}) => {
+		delete rest.align;
 		delete rest.inline;
 		delete rest.orientation;
 
-		return <div {...rest}>{children}</div>;
+		return <Component {...rest} />;
 	}
 });
 
