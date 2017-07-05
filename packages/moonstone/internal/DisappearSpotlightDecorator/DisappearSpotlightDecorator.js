@@ -99,8 +99,11 @@ const DisappearSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		)
 
 		render () {
+			const props = Object.assign({}, this.props);
+			delete props.onSpotlightDisappear;
+
 			return (
-				<Wrapped {...this.props} {...this.handlers} />
+				<Wrapped {...props} {...this.handlers} />
 			);
 		}
 	};
