@@ -10,6 +10,16 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+### Fixed
+
+- `moonstone/Marquee` to re-evaluate RTL orientation when its content changes
+
+### Removed
+
+## [1.4.1] - 2017-07-05
+
+### Changed
+
 - `moonstone/Popup` to only call `onKeyDown` when there is a focused item in the `Popup`
 - `moonstone/Scroller`, `moonstone/Picker`, and `moonstone/IncrementSlider` to automatically move focus when the currently focused `moonstone/IconButton` becomes disabled.
 
@@ -18,8 +28,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/ContextualPopupDecorator` close button to account for large text size
 - `moonstone/ContextualPopupDecorator` to not spot controls other than its activator when navigating out via 5-way
 - `moonstone/Header` to set the value of `marqueeOn` for all types of headers
-
-### Removed
 
 ## [1.4.0] - 2017-06-29
 

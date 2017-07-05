@@ -325,14 +325,20 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		*/
 		calculateMetrics () {
 			const node = this.node;
+			const rtl = this.checkRtl();
+			const newState = {};
 
 			// TODO: absolute showing check (or assume that it won't be rendered if it isn't showing?)
 			if (node && this.distance == null && !this.props.marqueeDisabled) {
 				this.distance = this.calculateDistance(node);
 				this.contentFits = !this.shouldAnimate(this.distance);
-				this.setState({
-					overflow: this.calculateTextOverflow(this.distance)
-				});
+				newState.overflow = this.calculateTextOverflow(this.distance);
+			}
+			if (this.state.rtl !== rtl) {
+				newState.rtl = rtl;
+			}
+			if (Object.keys(newState)) {
+				this.setState(newState);
 			}
 		}
 
@@ -499,9 +505,13 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		cacheNode = (node) => {
 			this.node = node;
+			this.setState({rtl: this.checkRtl()});
+		}
+
+		checkRtl = () => {
 			const {forceDirection} = this.props;
-			const textContent = node && node.textContent;
-			this.setState({rtl: forceDirection ? forceDirection === 'rtl' : isRtlText(textContent)});
+			const textContent = this.node && this.node.textContent;
+			return (forceDirection ? forceDirection === 'rtl' : isRtlText(textContent));
 		}
 
 		renderMarquee () {
