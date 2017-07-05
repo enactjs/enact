@@ -673,6 +673,12 @@ class VirtualListCore extends Component {
 
 	// render
 
+	initRef (prop) {
+		return (ref) => {
+			this[prop] = ref;
+		};
+	}
+
 	getItemContainerPosition (primaryPosition) {
 		const
 			rtlDirection = this.context.rtl ? -1 : 1,
@@ -685,7 +691,7 @@ class VirtualListCore extends Component {
 		const
 			{component: Item, data, dataSize} = this.props,
 			{firstIndex, numOfItems} = this.state,
-			{isPrimaryDirectionVertical, dimensionToExtent, primary, scrollPosition, cc} = this,
+			{dimensionToExtent, primary, scrollPosition, cc} = this,
 			diff = firstIndex - this.lastFirstIndex,
 			updateFrom = (cc.length === 0 || diff <= 0 || diff >= numOfItems) ? firstIndex : this.lastFirstIndex + numOfItems,
 			updateTo = (cc.length === 0 || diff >= 0 || diff <= -numOfItems) ? Math.min(dataSize, firstIndex + numOfItems) : this.lastFirstIndex,
@@ -720,12 +726,6 @@ class VirtualListCore extends Component {
 		}
 
 		this.lastFirstIndex = firstIndex;
-	}
-
-	initRef (prop) {
-		return (ref) => {
-			this[prop] = ref;
-		};
 	}
 
 	render () {
