@@ -5,17 +5,11 @@
 .layout {
 	display: flex;
 	margin: 0;
-	border: 1px dotted #666;
 	box-sizing: border-box;
 
 	// Children
 	.cell {
 		flex: 1 0;
-
-		@i: 1;
-		@colorsneeded: 13;
-
-		border: 1px dashed orange;
 
 		&.flexible {
 			flex: 1 1 100%;
@@ -49,5 +43,18 @@
 
 	&.inline {
 		display: inline-flex;
+	}
+
+	// Debug lines to help see what's going on
+	&:global(.debug),
+	:global(.debug) & {
+		outline: 1px dotted teal;
+	}
+
+	.cell {
+		&:global(.debug),
+		:global(.debug) & {
+			outline: 1px dashed orange;
+		}
 	}
 }
