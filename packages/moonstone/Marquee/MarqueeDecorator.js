@@ -417,7 +417,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		 */
 		startAnimation = (delay) => {
 			if (this.state.animating) return;
-			delay = _this.isFocused ? 0 : delay;
+
 			if (this.sync) {
 				this.setTimeout(() => {
 					this.context.start();
@@ -519,13 +519,13 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const marqueeOnRender = marqueeOn === 'render';
 			const marqueeOnHover = marqueeOn === 'hover';
 
-			if ((marqueeOnFocus && !disabled) || (marqueeOnRender && !disabled)) {
+			if ((marqueeOnFocus && !disabled)) {
 				rest[focus] = this.handleFocus;
 				rest[blur] = this.handleBlur;
 			}
 
 			// TODO: cancel others on hover
-			if (marqueeOnHover || (disabled && marqueeOnFocus)) {
+			if (marqueeOnHover || marqueeOnRender || (disabled && marqueeOnFocus)) {
 				rest[enter] = this.handleEnter;
 				rest[leave] = this.handleLeave;
 			}
