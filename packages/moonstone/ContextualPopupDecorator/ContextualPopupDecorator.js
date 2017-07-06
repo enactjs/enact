@@ -412,11 +412,13 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleKeyDown = (ev) => {
 			const {onClose, spotlightRestrict} = this.props;
+			const current = Spotlight.getCurrent();
 			const direction = getDirection(ev.keyCode);
 			const spottables = Spotlight.getSpottableDescendants(this.state.containerId).length;
 			const spotlessSpotlightModal = spotlightRestrict === 'self-only' && !spottables;
+			const shouldSpotPopup = spottables && current === this.state.activator && direction === this.adjustedDirection;
 
-			if (direction && (this.containerNode.contains(document.activeElement) || spotlessSpotlightModal)) {
+			if (direction && (shouldSpotPopup || (this.containerNode.contains(current) || spotlessSpotlightModal))) {
 				// prevent default page scrolling
 				ev.preventDefault();
 				// stop propagation to prevent default spotlight behavior
@@ -424,9 +426,12 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				// set the pointer mode to false on keydown
 				Spotlight.setPointerMode(false);
 
+				if (shouldSpotPopup) {
+					this.spotPopupContent();
+
 				// we guard against attempting a focus change by verifying the case where a spotlightModal
 				// popup contains no spottable components
-				if (!spotlessSpotlightModal && Spotlight.move(direction)) {
+				} else if (!spotlessSpotlightModal && Spotlight.move(direction)) {
 
 					// if current focus is not within the popup's container, issue the `onClose` event
 					if (!this.containerNode.contains(document.activeElement) && onClose) {
