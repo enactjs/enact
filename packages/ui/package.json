@@ -29,12 +29,12 @@
   },
   "dependencies": {
     "@enact/core": "^1.4.1",
-    "invariant": "~2.2.1",
-    "prop-types": "~15.5.0",
-    "ramda": "~0.23.0",
-    "react": "~15.5.0",
-    "react-dom": "~15.5.0",
-    "recompose": "~0.23.1",
+    "invariant": "~2.2.2",
+    "prop-types": "~15.5.10",
+    "ramda": "~0.24.1",
+    "react": "~15.6.1",
+    "react-dom": "~15.6.1",
+    "recompose": "~0.23.5",
     "warning": "~3.0.0"
   }
 }
