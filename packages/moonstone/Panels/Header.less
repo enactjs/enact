@@ -145,6 +145,10 @@
 		border-top-width: 0;
 	}
 
+	&.hasCloseButton {
+		.padding-start-end(0, @moon-spotlight-outset + @moon-icon-button-small-size + @moon-spotlight-outset);
+	}
+
 	// Skin colors
 	.applySkins({
 		color: @moon-header-text-color;
@@ -163,6 +167,7 @@
 	});
 }
 
+// TODO: remove this in 2.0
 :global(.hasCloseButton) .header {
 	.padding-start-end(0, @moon-spotlight-outset + @moon-icon-button-small-size + @moon-spotlight-outset);
 }
