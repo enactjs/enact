@@ -662,26 +662,27 @@ class VirtualListCoreNative extends Component {
 
 	renderItems () {
 		const
-			{component: Item, data, dataSize} = this.props,
+			{component: Item, data, dataSize, direction} = this.props,
 			{firstIndex, numOfItems} = this.state,
-			{dimensionToExtent, primary, cc} = this,
+			{dimensionToExtent, isItemSized, primary, scrollPosition, cc} = this,
 			diff = firstIndex - this.lastFirstIndex,
 			updateFrom = (cc.length === 0 || diff <= 0 || diff >= numOfItems) ? firstIndex : this.lastFirstIndex + numOfItems,
-			updateTo = (cc.length === 0 || diff >= 0 || diff <= -numOfItems) ? Math.min(dataSize, firstIndex + numOfItems) : this.lastFirstIndex,
-			rowFrom = parseInt(updateFrom / dimensionToExtent),
-			rowTo = parseInt((updateTo - 1) / dimensionToExtent),
-			numOfRows = parseInt(numOfItems / dimensionToExtent);
+			updateTo = (cc.length === 0 || diff > 0 || diff <= -numOfItems) ? Math.min(dataSize, firstIndex + numOfItems) : this.lastFirstIndex,
+			itemContainerFrom = Math.floor(updateFrom / dimensionToExtent),
+			itemContainerTo = Math.floor((updateTo - 1) / dimensionToExtent),
+			numOfRows = Math.floor(numOfItems / dimensionToExtent);
 
 		let {primaryPosition} = this.getGridPosition(updateFrom);
 
-		if (updateFrom > updateTo) {
+		if (updateFrom >= updateTo) {
 			return;
 		}
 
-		for (let i = rowFrom; i <= rowTo; i++, primaryPosition += primary.gridSize) {
+		for (let i = itemContainerFrom; i <= itemContainerTo; i++, primaryPosition += primary.gridSize) {
 			const
 				items = [],
-				key = i % numOfRows;
+				key = i % numOfRows,
+				flexDirection = isItemSized && direction === 'horizontal' ? 'column' : null;
 
 			for (let j = 0, index = i * dimensionToExtent; j < dimensionToExtent && index < updateTo; j++, index++) {
 				items[j] = <Item data={data} data-index={index} index={index} key={j} />;
@@ -691,8 +692,10 @@ class VirtualListCoreNative extends Component {
 				<div
 					className={css.listItemContainer}
 					key={key}
-					style={{transform: this.getItemContainerPosition(primaryPosition)}}
-				>{items}</div>
+					style={{flexDirection, transform: this.getItemContainerPosition(primaryPosition)}}
+				>
+					{items}
+				</div>
 			);
 		}
 
@@ -701,10 +704,9 @@ class VirtualListCoreNative extends Component {
 
 	render () {
 		const
-			{className, direction} = this.props,
-			{isItemSized, primary, cc} = this,
+			{className} = this.props,
+			{primary, cc} = this,
 			props = Object.assign({}, this.props),
-			flexDirection = (direction === 'vertical' && !isItemSized || direction === 'horizontal' && isItemSized) ? 'column' : null,
 			mergedClasses = classNames(css.virtualList, this.wrapperClass, className);
 
 		delete props.cbScrollTo;
@@ -724,7 +726,7 @@ class VirtualListCoreNative extends Component {
 
 		return (
 			<div ref={this.initWrapperRef} className={mergedClasses}>
-				<div {...props} className={css.container} ref={this.initContainerRef} style={{flexDirection}}>
+				<div {...props} className={css.container} ref={this.initContainerRef}>
 					{cc.length ? cc : (
 						<SpotlightPlaceholder data-index={0} data-vl-placeholder />
 					)}
