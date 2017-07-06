@@ -55,24 +55,24 @@ const secondsToPeriod = (seconds) => {
  * @param {DurationFmt} durfmt An instance of a {@link i18n/ilib/lib/DurationFmt.DurationFmt} object
  *                             from iLib confugured to display time used by the {@Link VideoPlayer}
  *                             component.
- * @param  {Boolean} HMS `true` to require format to be `hour:minute:seconds`
+ * @param  {Object} config Additional configuration object that includes `includeHour`.
  *
  * @return {String}      Formatted duration string
  * @private
  */
-const secondsToTime = (seconds, durfmt, HMS) => {
+const secondsToTime = (seconds, durfmt, config) => {
 	if (durfmt) {
 		const parsedTime = parseTime(seconds);
 		const timeString = durfmt.format(parsedTime).toString();
 
-		if (HMS) {
+		if (config.includeHour) {
 			return parsedTime.hour ? timeString : '00:' + timeString;
 		} else {
 			return timeString;
 		}
 	}
 
-	return HMS ? '00:00:00' : '00:00';
+	return config.includeHour ? '00:00:00' : '00:00';
 };
 
 /**
