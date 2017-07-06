@@ -10,16 +10,22 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+### Fixed
+
+- `moonstone/InputDecorator` from calling `onClick` for `enter` key presses
+
+## [1.4.1] - 2017-07-05
+
+### Changed
+
 - `moonstone/Popup` to only call `onKeyDown` when there is a focused item in the `Popup`
+- `moonstone/Scroller`, `moonstone/Picker`, and `moonstone/IncrementSlider` to automatically move focus when the currently focused `moonstone/IconButton` becomes disabled
 
 ### Fixed
 
 - `moonstone/ContextualPopupDecorator` close button to account for large text size
 - `moonstone/ContextualPopupDecorator` to not spot controls other than its activator when navigating out via 5-way
 - `moonstone/Header` to set the value of `marqueeOn` for all types of headers
-- `moonstone/InputDecorator` from calling `onClick` for `enter` key presses
-
-### Removed
 
 ## [1.4.0] - 2017-06-29
 
