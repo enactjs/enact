@@ -2,6 +2,56 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [1.4.1] - 2017-07-05
+
+### Changed
+
+- `moonstone/Popup` to only call `onKeyDown` when there is a focused item in the `Popup`
+- `moonstone/Scroller`, `moonstone/Picker`, and `moonstone/IncrementSlider` to automatically move focus when the currently focused `moonstone/IconButton` becomes disabled
+- `spotlight/Spottable` to remove focus from a component when it becomes disabled and move it to another component if not explicitly moved during the `onSpotlightDisappear` event callback
+
+### Fixed
+
+- `moonstone/ContextualPopupDecorator` close button to account for large text size
+- `moonstone/ContextualPopupDecorator` to not spot controls other than its activator when navigating out via 5-way
+- `moonstone/Header` to set the value of `marqueeOn` for all types of headers
+
+## [1.4.0] - 2017-06-29
+
+### Deprecated
+
+- `moonstone/Input` prop `noDecorator` is being replaced by `autoFocus` in 2.0.0
+
+### Added
+
+- `moonstone/styles/text.less` mixin `.locale-japanese-line-break()` to apply the correct  Japanese language line-break rules for the following multi-line components: `moonstone/BodyText`, `moonstone/Dialog`, `moonstone/Notification`, `moonstone/Popup`, and `moonstone/Tooltip`
+- `moonstone/ContextualPopupDecorator` property `popupProps` to attach props to popup component
+- `moonstone/VideoPlayer` property `pauseAtEnd` to control forward/backward seeking
+- `spotlight` handlers for window focus events
+- `moonstone/Panels/Header` prop `marqueeOn` to control marquee of header
+
+### Changed
+
+- `moonstone/Panels/Header` to expose its `marqueeOn` prop
+- `moonstone/VideoPlayer` to automatically adjust the width of the allocated space for the side components so the media controls have more space to appear on smaller screens
+- `moonstone/VideoPlayer` properties `autoCloseTimeout` and `titleHideDelay` default value to `5000`
+- `moonstone/VirtualList` to support restoring focus to the last focused item
+- `moonstone/Scrollable` to call `onScrollStop` before unmounting if a scroll is in progress
+- `moonstone/Scroller` to reveal non-spottable content when navigating out of a scroller
+
+### Fixed
+
+- `moonstone/Dialog` to properly focus via pointer on child components
+- `moonstone/VirtualList`, `moonstone/VirtualGridList`, and `moonstone/Scroller` not to be slower when scrolled to the first or the last position by wheeling
+- `moonstone` component hold delay time
+- `moonstone/VideoPlayer` to show its controls when pressing down the first time
+- `moonstone/Panel` autoFocus logic to only focus on initial render
+- `moonstone/Input` text colors
+- `moonstone/ExpandableInput` to focus its decorator when leaving by 5-way left/right
+- `spotlight` navigation through spottable components while holding down a directional key
+- `spotlight` support for preventing 5-way navigation out of a container using an empty selector
+- `spotlight` container support for default elements within subcontainers
+
 ## [1.3.1] - 2017-06-14
 
 ### Fixed

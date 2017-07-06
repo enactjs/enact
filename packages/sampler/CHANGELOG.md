@@ -12,9 +12,13 @@ The following is a curated list of changes in the Enact Sampler, newest changes 
 
 ### Fixed
 
-`sampler` dependency versions on webpack plugins to correctly copy resource files during builds
+## [1.4.1] - 2017-07-05
 
-### Removed
+No significant changes.
+
+## [1.4.0] - 2017-06-29
+
+No significant changes.
 
 ## [1.3.1] - 2017-06-14
 
