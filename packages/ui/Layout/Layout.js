@@ -127,6 +127,23 @@ const shorthandAliases = {
  * [orientation]{@link ui/Layout.Layout#orientation} property for laying-out its contents
  * (Cells) in an organized, readable way.
  *
+ * Additional Example:
+ * ```
+ * import Input from '@enact/moonstone/Input';
+ * import css from './LayoutExample.less';
+ * ...
+ * <fieldset>
+ * 	<Layout align="center">
+ * 		<Cell component="label" size="40%" className={css.label}>First Name</Cell>
+ * 		<Cell component={Input} placeholder="First" className={css.input} flexible />
+ * 	</Layout>
+ * 	<Layout align="center">
+ * 		<Cell component="label" size="40%" className={css.label}>Last Name</Cell>
+ * 		<Cell component={Input} placeholder="Last" className={css.input} flexible />
+ * 	</Layout>
+ * </fieldset>
+ * ```
+ *
  * @class Layout
  * @memberof ui/Layout
  * @public
@@ -137,8 +154,8 @@ const LayoutBase = kind({
 	propTypes: /** @lends ui/Layout.Layout.prototype */ {
 		/**
 		 * Aligns the children [Cells]{@link ui/Layout.Cell} vertically in the case of a horizontal
-		 * layout or horizontally in the case of a vertical layout. `"start"` and `"end"` are the
-		 * most commonly used, although all values of `align-items` are supported.
+		 * layout or horizontally in the case of a vertical layout. `"start"`, `"center"` and
+		 * `"end"` are the most commonly used, although all values of `align-items` are supported.
 		 * `"start"` refers to the top in a horizontal layout, and left in a vertical LTR layout
 		 * `"end"` refers to the bottom in a horizontal layout, and right in a vertical LTR layout
 		 * `"start"` and `"end"` reverse places when in a vertical layout in a RTL locale.
