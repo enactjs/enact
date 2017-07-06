@@ -43,6 +43,26 @@ describe('Layout Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
+	const layoutPropAlign = [
+		['baseline', 'baseline'],
+		['center', 'center'],
+		['end', 'flex-end'],
+		['start', 'flex-start']
+	];
+
+	layoutPropAlign.forEach(([value, resolved]) => {
+		it(`should apply '${resolved}' style value given an align prop value of "${value}"`, function () {
+			const wrapped = mount(
+				<Layout align={value}><Cell>Body</Cell></Layout>
+			);
+
+			const expected = resolved;
+			const actual = wrapped.find(`.${css.layout}`).node.style.alignItems;
+
+			expect(actual).to.contain(expected);
+		});
+	});
+
 	it('should apply a class for inline', function () {
 		const wrapped = mount(
 			<Layout inline><Cell>Body</Cell></Layout>
