@@ -6,7 +6,11 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Deprecated
 
+- `moonstone/Panels` properties `noCloseButton` and `onApplicationClose` are replacedBy `moonstone/ApplicationCloseDecorator`
+
 ### Added
+
+- `moonstone/ApplicationCloseDecorator` for adding `ApplicationCloseButton` to the app level
 
 ### Changed
 
