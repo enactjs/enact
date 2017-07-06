@@ -8,6 +8,8 @@
 		position: absolute;
 		overflow: hidden;
 
+		justify-content: space-between;
+
 		will-change: transform;
 
 		&.fitWidth {
@@ -20,7 +22,9 @@
 
 	div.listItemContainer > * {
 		width: var(--virtuallist-item-width);
+		max-width: var(--virtuallist-item-width);
 		height: var(--virtuallist-item-height);
+		max-height: var(--virtuallist-item-height);
 		flex: var(--virtuallist-item-flex-box);
 		padding: 0;
 		overflow: hidden;

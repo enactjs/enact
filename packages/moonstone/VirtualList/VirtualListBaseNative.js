@@ -657,13 +657,13 @@ class VirtualListCoreNative extends Component {
 		const
 			{component: Item, data, dataSize, direction} = this.props,
 			{firstIndex, numOfItems} = this.state,
-			{dimensionToExtent, isItemSized, primary, scrollPosition, cc} = this,
+			{cc, dimensionToExtent, isItemSized, isPrimaryDirectionVertical, primary, secondary} = this,
 			diff = firstIndex - this.lastFirstIndex,
 			updateFrom = (cc.length === 0 || diff <= 0 || diff >= numOfItems) ? firstIndex : this.lastFirstIndex + numOfItems,
 			updateTo = (cc.length === 0 || diff > 0 || diff <= -numOfItems) ? Math.min(dataSize, firstIndex + numOfItems) : this.lastFirstIndex,
 			itemContainerFrom = Math.floor(updateFrom / dimensionToExtent),
-			itemContainerTo = Math.floor((updateTo - 1) / dimensionToExtent),
-			numOfRows = Math.floor(numOfItems / dimensionToExtent);
+			itemContainerTo = Math.ceil(updateTo / dimensionToExtent),
+			numOfRows = Math.ceil(numOfItems / dimensionToExtent);
 
 		let {primaryPosition} = this.getGridPosition(updateFrom);
 
@@ -671,14 +671,21 @@ class VirtualListCoreNative extends Component {
 			return;
 		}
 
-		for (let i = itemContainerFrom; i <= itemContainerTo; i++, primaryPosition += primary.gridSize) {
+		for (let i = itemContainerFrom; i < itemContainerTo; i++, primaryPosition += primary.gridSize) {
 			const
 				items = [],
 				key = i % numOfRows,
-				flexDirection = isItemSized && direction === 'horizontal' ? 'column' : null;
+				flexDirection = isItemSized && direction === 'horizontal' ? 'column' : null,
+				extraNumOfItems = this.props.dataSize % dimensionToExtent;
+
+			let width = null;
 
 			for (let j = 0, index = i * dimensionToExtent; j < dimensionToExtent && index < updateTo; j++, index++) {
 				items[j] = <Item data={data} data-index={index} index={index} key={j} />;
+			}
+
+			if (i === Math.ceil(this.props.dataSize / dimensionToExtent) - 1 && extraNumOfItems > 0) {
+				width = (extraNumOfItems - 1) * secondary.gridSize + secondary.itemSize;
 			}
 
 			this.cc[key] = (
@@ -688,7 +695,7 @@ class VirtualListCoreNative extends Component {
 						isPrimaryDirectionVertical ? css.fitWidth : css.fitHeight
 					)}
 					key={key}
-					style={{flexDirection, transform: this.getItemContainerPosition(primaryPosition)}}
+					style={{flexDirection, transform: this.getItemContainerPosition(primaryPosition), width}}
 				>
 					{items}
 				</div>
