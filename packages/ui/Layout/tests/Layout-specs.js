@@ -1,19 +1,19 @@
 import React from 'react';
 import {mount} from 'enzyme';
-import Transition from '../Transition';
-import css from '../Transition.less';
+import Layout, {Cell} from '../Layout';
+import css from '../Layout.less';
 
-describe('Transition Specs', () => {
+describe('Layout Specs', () => {
 	// NOTE: Feature not yet implemented
 	it.skip('should apply author classes', function () {
 		const className = 'classA classB';
 
-		const ChildNode = (props) => <div {...props}>Body</div>;
+		const ChildNode = (props) => <Cell {...props}>Body</Cell>;
 
 		const wrapped = mount(
-			<Transition className={className}>
+			<Layout className={className}>
 				<ChildNode />
-			</Transition>
+			</Layout>
 		);
 
 		const expected = className;
@@ -29,12 +29,12 @@ describe('Transition Specs', () => {
 			backgroundColor: '#FFFFFF'
 		};
 
-		const ChildNode = (props) => <div {...props}>Body</div>;
+		const ChildNode = (props) => <Cell {...props}>Body</Cell>;
 
 		const wrapped = mount(
-			<Transition style={styles}>
+			<Layout style={styles}>
 				<ChildNode />
-			</Transition>
+			</Layout>
 		);
 
 		const expected = styles;
@@ -43,44 +43,77 @@ describe('Transition Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
+	it('should apply a class for inline', function () {
+		const wrapped = mount(
+			<Layout inline><Cell>Body</Cell></Layout>
+		);
+
+		const expected = css.inline;
+		const actual = wrapped.childAt(0).prop('className');
+
+		expect(actual).to.contain(expected);
+	});
+
 	// Tests for prop and className combinations
-	const directionCombination = [
-		[css.up, 'up'],
-		[css.right, 'right'],
-		[css.down, 'down'],
-		[css.left, 'left']
-	];
-
-	const durationCombination = [
-		[css.short, 'short'],
-		[css.medium, 'medium'],
-		[css.long, 'long']
-	];
-
-	const timingFunctionCombination = [
-		[css['ease-in-out'], 'ease-in-out'],
-		[css.ease, 'ease'],
-		[css.linear, 'linear']
-	];
-
 	const propStyleCombination = [
-		['duration', durationCombination],
-		['direction', directionCombination],
-		['timingFunction', timingFunctionCombination]
+		['orientation', [css.horizontal, css.vertical]]
 	];
 
+	// Test not ready yet
 	propStyleCombination.forEach(([prop, val]) => {
-		val.forEach(([key, value]) => {
-			it(`should apply classes for ${prop}={${value}}`, function () {
+		it.skip(`should apply classes for ${prop}`, function () {
+			const propValue = {
+				[prop]: true
+			};
+			const wrapped = mount(
+				<Layout {...propValue}><Cell>Body</Cell></Layout>
+			);
+
+			const expected = val;
+			const actual = wrapped.childAt(0).prop('className');
+
+			expect(actual).to.contain(expected);
+		});
+	});
+
+	// Test for boolean classes
+	const cellBooleanPropClasses = [
+		['fixed', css.fixed],
+		['flexible', css.flexible]
+	];
+
+	cellBooleanPropClasses.forEach(([prop, val]) => {
+		it(`should apply a class for ${prop}`, function () {
+			const props = {
+				[prop]: true
+			};
+			const wrapped = mount(
+				<Cell {...props}>Body</Cell>
+			);
+
+			const expected = val;
+			const actual = wrapped.childAt(0).prop('className');
+
+			expect(actual).to.contain(expected);
+		});
+	});
+
+	const cellPropSize  = [
+		['size', ['100px', '50%', '5em']]
+	];
+
+	cellPropSize.forEach(([prop, vals]) => {
+		vals.forEach(([value]) => {
+			it(`should apply flexBasis styles the size prop value ${value}`, function () {
 				const propValue = {
 					[prop]: value
 				};
 				const wrapped = mount(
-					<Transition {...propValue} visible>Body</Transition>
+					<Layout><Cell {...propValue}>Body</Cell></Layout>
 				);
 
-				const expected = key;
-				const actual = wrapped.childAt(0).prop('className');
+				const expected = value;
+				const actual = wrapped.childAt(0).style.flexBasis;
 
 				expect(actual).to.contain(expected);
 			});
