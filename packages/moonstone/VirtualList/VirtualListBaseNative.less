@@ -1,7 +1,10 @@
+@import '../styles/variables.less';
+
 .list {
 	position: relative;
-	height: 100%;
 	width: 100%;
+	height: 100%;
+	box-sizing: border-box;
 
 	&.vertical {
 		overflow-x: hidden;
@@ -11,6 +14,11 @@
 	&.horizontal {
 		overflow-x: scroll;
 		overflow-y: hidden;
+	}
+
+	.container {
+		height: 100%;
+		width: 100%;
 	}
 }
 

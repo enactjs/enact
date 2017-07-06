@@ -341,6 +341,8 @@ class VirtualListCoreNative extends Component {
 
 	getContainerNode = () => (this.wrapperRef)
 
+	getInternalContainerNode = () => (this.containerRef)
+
 	getClientSize = (node) => {
 		return {
 			clientWidth: node.clientWidth,
@@ -351,7 +353,7 @@ class VirtualListCoreNative extends Component {
 	calculateMetrics (props) {
 		const
 			{clientSize, direction, itemSize, spacing} = props,
-			node = this.getContainerNode();
+			node = this.getInternalContainerNode();
 
 		if (!clientSize && !node) {
 			return;
@@ -435,7 +437,7 @@ class VirtualListCoreNative extends Component {
 	calculateScrollBounds (props) {
 		const
 			{clientSize} = props,
-			node = this.getContainerNode();
+			node = this.getInternalContainerNode();
 
 		if (!clientSize && !node) {
 			return;
@@ -582,7 +584,7 @@ class VirtualListCoreNative extends Component {
 	}
 
 	scrollToPosition (x, y) {
-		const node = this.wrapperRef;
+		const node = this.getContainerNode();
 		node.scrollTo((this.context.rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x, y);
 	}
 
@@ -684,7 +686,7 @@ class VirtualListCoreNative extends Component {
 	syncClientSize = () => {
 		const
 			{props} = this,
-			node = this.getContainerNode();
+			node = this.getInternalContainerNode();
 
 		if (!props.clientSize && !node) {
 			return;
@@ -734,7 +736,7 @@ class VirtualListCoreNative extends Component {
 
 		return (
 			<div ref={this.initWrapperRef} className={mergedClasses} style={style}>
-				<div {...rest} ref={this.initContainerRef}>
+				<div {...rest} ref={this.initContainerRef} className={css.container}>
 					{cc.length ? cc : (
 						<SpotlightPlaceholder data-index={0} data-vl-placeholder />
 					)}

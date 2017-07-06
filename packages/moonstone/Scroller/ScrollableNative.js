@@ -18,7 +18,7 @@ import ri from '@enact/ui/resolution';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
-import css from './Scrollable.less';
+import css from './ScrollableNative.less';
 import Scrollbar from './Scrollbar';
 import scrollbarCss from './Scrollbar.less';
 
@@ -808,12 +808,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
 				vscrollbar = this.getVerticalScrollbar(isHorizontalScrollbarVisible, isVerticalScrollbarVisible),
 				hscrollbar = this.getHorizontalScrollbar(isHorizontalScrollbarVisible, isVerticalScrollbarVisible),
-				scrollableClasses = classNames(
-					css.scrollable,
-					!(isHorizontalScrollbarVisible || isVerticalScrollbarVisible) ? css.scrollableHiddenScrollbars : null,
-					isHorizontalScrollbarVisible ? null : css.takeAvailableSpaceForVertical,
-					isVerticalScrollbarVisible ? null : css.takeAvailableSpaceForHorizontal,
-					className
+				scrollableClasses = classNames(css.scrollable, className),
+				childClasses = classNames(
+					css.container,
+					isHorizontalScrollbarVisible ? css.takeSpaceForHorizontalScrollbar : null,
+					isVerticalScrollbarVisible ? css.takeSpaceForVerticalScrollbar : null
 				);
 
 			delete props.cbScrollTo;
@@ -833,7 +832,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					focusableScrollbar={focusableScrollbar}
 					style={style}
 				>
-					<Wrapped {...props} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={css.container} />
+					<Wrapped {...props} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={childClasses} />
 					{vscrollbar}
 					{hscrollbar}
 				</ScrollableSpotlightContainer>
