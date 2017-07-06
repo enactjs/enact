@@ -159,6 +159,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			 */
 			onScrollStop: PropTypes.func,
 
+			/**
+			 * Scrollable CSS style.
+			 * Should be defined because we manuplate style prop in render().
+			 *
+			 * @type {Object}
+			 * @public
+			 */
 			style: PropTypes.object,
 
 			/**
@@ -351,7 +358,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		onFocus = (e) => {
-			if (!(Spotlight.getPointerMode() || this.isDragging)) {
+			const shouldPreventScrollByFocus = this.childRef.shouldPreventScrollByFocus ?
+				this.childRef.shouldPreventScrollByFocus() :
+				false;
+
+			if (!(shouldPreventScrollByFocus || Spotlight.getPointerMode() || this.isDragging)) {
 				const
 					item = e.target,
 					positionFn = this.childRef.calculatePositionOnFocus,
@@ -361,7 +372,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					const pos = positionFn(item);
 					this.startScrollOnFocus(pos, item);
 				}
+			} else if (this.childRef.setLastFocusedIndex) {
+				this.childRef.setLastFocusedIndex(e.target);
 			}
+		}
+
+		onKeyDown = (e) => {
+			e.preventDefault();
 		}
 
 		onScrollbarBtnHandler = (orientation, direction) => {
@@ -411,12 +428,22 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		scrollStartOnScroll = () => {
 			this.scrolling = true;
+
+			// Add keydown event listener for ignoring it
+			if (typeof window !== 'undefined') {
+				window.document.addEventListener('keydown', this.onKeyDown, {capture: true});
+			}
 			this.showThumb(this.getScrollBounds());
 			this.doScrollStart();
 		}
 
 		scrollStopOnScroll = () => {
 			this.isScrollAnimationTargetAccumulated = false;
+
+			// Add keydown event listener for ignoring it
+			if (typeof window !== 'undefined') {
+				window.document.removeEventListener('keydown', this.onKeyDown, {capture: true});
+			}
 			this.childRef.setContainerDisabled(false);
 			this.lastFocusedItem = null;
 
@@ -546,7 +573,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					}
 				} else {
 					if (typeof opt.index === 'number' && typeof this.childRef.getItemPosition === 'function') {
-						itemPos = this.childRef.getItemPosition(opt.index);
+						itemPos = this.childRef.getItemPosition(opt.index, opt.stickTo);
 					} else if (opt.node instanceof Object) {
 						if (opt.node.nodeType === 1 && typeof this.childRef.getNodePosition === 'function') {
 							itemPos = this.childRef.getNodePosition(opt.node);

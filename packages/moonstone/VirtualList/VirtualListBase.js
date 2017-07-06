@@ -369,8 +369,8 @@ class VirtualListCore extends Component {
 		const
 			{itemSize} = this.props,
 			{primary} = this,
-			position = this.getGridPosition(index, stickTo),
-			offset = ((itemSize instanceof Object) || stickTo === 'floor') ? 0 : primary.clientSize - primary.itemSize;
+			position = this.getGridPosition(index),
+			offset = ((itemSize instanceof Object) || stickTo === 'ceil') ? 0 : primary.clientSize - primary.itemSize;
 
 		position.primaryPosition -= offset;
 
@@ -777,7 +777,7 @@ class VirtualListCore extends Component {
 			Spotlight.pause();
 			cbScrollTo({
 				index: nextIndex,
-				stickTo: isForward ? 'ceil' : 'floor'
+				stickTo: isForward ? 'floor' : 'ceil'
 			});
 			return true;
 		}
