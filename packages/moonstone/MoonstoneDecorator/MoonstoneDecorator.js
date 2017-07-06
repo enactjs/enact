@@ -12,6 +12,7 @@ import {ResolutionDecorator} from '@enact/ui/resolution';
 import {FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
 import SpotlightRootDecorator from '@enact/spotlight/SpotlightRootDecorator';
 
+import ApplicationCloseDecorator from '../ApplicationCloseDecorator';
 import Skinnable from '../Skinnable';
 
 import I18nFontDecorator from './I18nFontDecorator';
@@ -26,6 +27,7 @@ import css from './MoonstoneDecorator.less';
  * @hocconfig
  */
 const defaultConfig = {
+	closeButton: false,
 	i18n: true,
 	float: true,
 	noAutoFocus: false,
@@ -58,12 +60,13 @@ const defaultConfig = {
  * @public
  */
 const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {ri, i18n, spotlight, float, noAutoFocus, overlay, textSize, skin} = config;
+	const {closeButton, ri, i18n, spotlight, float, noAutoFocus, overlay, textSize, skin} = config;
 
 	// Apply classes depending on screen type (overlay / fullscreen)
 	const bgClassName = 'enact-fit' + (overlay ? '' : ` ${css.bg}`);
 
 	let App = Wrapped;
+	if (closeButton) App = ApplicationCloseDecorator(App);
 	if (float) App = FloatingLayerDecorator({wrappedClassName: bgClassName}, App);
 	if (ri) App = ResolutionDecorator(ri, App);
 	if (i18n) {
