@@ -137,14 +137,6 @@ class VirtualListCore extends Component {
 		direction: PropTypes.oneOf(['horizontal', 'vertical']),
 
 		/**
-		 * The function to check if an item is disabled with `index` parameter.
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		isItemDisabled: PropTypes.func,
-
-		/**
 		 * Number of spare DOM node.
 		 * `3` is good for the default value experimentally and
 		 * this value is highly recommended not to be changed by developers.
@@ -734,35 +726,37 @@ class VirtualListCore extends Component {
 
 	jumpToSpottableItem = (keyCode, currentIndex) => {
 		const
-			{cbScrollTo, dataSize, isItemDisabled} = this.props,
+			{cbScrollTo, dataSize} = this.props,
 			{firstIndex, numOfItems} = this.state;
 
-		if (!isItemDisabled || isItemDisabled(currentIndex)) {
+		if (!this.props.data || !Array.isArray(this.props.data) || this.props.data[currentIndex].disabled) {
 			return false;
 		}
 
-		const isForward = (
-			this.isPrimaryDirectionVertical && isDown(keyCode) ||
-			!this.isPrimaryDirectionVertical && (!this.context.rtl && isRight(keyCode) || this.context.rtl && isLeft(keyCode)) ||
-			null
-		), isBackward = (
-			this.isPrimaryDirectionVertical && isUp(keyCode) ||
-			!this.isPrimaryDirectionVertical && (!this.context.rtl && isLeft(keyCode) || this.context.rtl && isRight(keyCode)) ||
-			null
-		);
+		const
+			isForward = (
+				this.isPrimaryDirectionVertical && isDown(keyCode) ||
+				!this.isPrimaryDirectionVertical && (!this.context.rtl && isRight(keyCode) || this.context.rtl && isLeft(keyCode)) ||
+				null
+			),
+			isBackward = (
+				this.isPrimaryDirectionVertical && isUp(keyCode) ||
+				!this.isPrimaryDirectionVertical && (!this.context.rtl && isLeft(keyCode) || this.context.rtl && isRight(keyCode)) ||
+				null
+			);
 
 		let nextIndex = -1;
 
 		if (isForward) {
 			for (let i = currentIndex + 1; i < dataSize; i++) {
-				if (!isItemDisabled(i)) {
+				if (!this.props.data[i].disabled) {
 					nextIndex = i;
 					break;
 				}
 			}
 		} else if (isBackward) {
 			for (let i = currentIndex - 1; i >= 0; i--) {
-				if (!isItemDisabled(i)) {
+				if (!this.props.data[i].disabled) {
 					nextIndex = i;
 					break;
 				}
@@ -850,7 +844,6 @@ class VirtualListCore extends Component {
 		delete props.data;
 		delete props.dataSize;
 		delete props.direction;
-		delete props.isItemDisabled;
 		delete props.itemSize;
 		delete props.overhang;
 		delete props.pageScroll;
