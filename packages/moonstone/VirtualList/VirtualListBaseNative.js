@@ -680,7 +680,7 @@ class VirtualListCoreNative extends Component {
 	calculatePositionOnFocus = (item) => {
 		const
 			{pageScroll} = this.props,
-			{primary, numOfItems, scrollPosition} = this,
+			{primary, scrollPosition} = this,
 			offsetToClientEnd = primary.clientSize - primary.itemSize,
 			focusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
 
@@ -756,7 +756,7 @@ class VirtualListCoreNative extends Component {
 			Spotlight.pause();
 			cbScrollTo({
 				index: nextIndex,
-				stickTo: isForward ? 'floor': 'ceil'
+				stickTo: isForward ? 'floor' : 'ceil'
 			});
 			return true;
 		}
