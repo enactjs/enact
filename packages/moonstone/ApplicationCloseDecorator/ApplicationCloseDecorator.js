@@ -1,5 +1,5 @@
 /*
- * Exports the {@link ui/ApplicationCloseDecorator.ApplicationCloseDecorator} Higher-order Component (HOC).
+ * Exports the {@link moonstone/ApplicationCloseDecorator.ApplicationCloseDecorator} Higher-order Component (HOC).
  */
 
 import hoc from '@enact/core/hoc';
@@ -13,7 +13,7 @@ import ApplicationCloseButton from './ApplicationCloseButton';
  * Higher-order Component that adds a ApplicationCloseDecorator adjacent to wrapped component.
  *
  * @class ApplicationCloseDecorator
- * @memberof ui/ApplicationCloseDecorator
+ * @memberof moonstone/ApplicationCloseDecorator
  * @hoc
  * @public
  */
