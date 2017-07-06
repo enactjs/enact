@@ -1,3 +1,4 @@
+import deprecate from '@enact/core/internal/deprecate';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -91,6 +92,7 @@ const PanelsBase = kind({
 		 * @type {Boolean}
 		 * @default false
 		 * @public
+		 * @deprecated replaced by `@enact/moonstone/ApplicationCloseDecorator`
 		 */
 		noCloseButton: PropTypes.bool,
 
@@ -99,6 +101,7 @@ const PanelsBase = kind({
 		 *
 		 * @type {Function}
 		 * @public
+		 * @deprecated replaced by `@enact/moonstone/ApplicationCloseDecorator/onApplicationClose`
 		 */
 		onApplicationClose: PropTypes.func,
 
@@ -129,6 +132,9 @@ const PanelsBase = kind({
 		applicationCloseButton: ({id, noCloseButton, onApplicationClose}) => {
 			if (!noCloseButton) {
 				const closeId = id ? `${id}_close` : null;
+
+				deprecate({name: 'noCloseButton', since: '1.5.0', replacedBy: '@enact/moonstone/ApplicationCloseDecorator'});
+				deprecate({name: 'onApplicationClose', since: '1.5.0', replacedBy: '@enact/moonstone/ApplicationCloseDecorator'});
 
 				return (
 					<ApplicationCloseButton id={closeId} onApplicationClose={onApplicationClose} />
