@@ -12,6 +12,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/ExpandableInput` to expand the width of its contained `moonstone/Input`
+
 ## [1.4.1] - 2017-07-05
 
 ### Changed
@@ -52,7 +54,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Dialog` to properly focus via pointer on child components
 - `moonstone/VirtualList`, `moonstone/VirtualGridList`, and `moonstone/Scroller` not to be slower when scrolled to the first or the last position by wheeling
 - `moonstone` component hold delay time
-- `moonstone/ExpandableInput` to expand the width of its contained `moonstone/Input`
 - `moonstone/VideoPlayer` to show its controls when pressing down the first time
 - `moonstone/Panel` autoFocus logic to only focus on initial render
 - `moonstone/Input` text colors
