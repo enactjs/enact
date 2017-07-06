@@ -1209,7 +1209,7 @@ const VideoPlayerBase = class extends React.Component {
 			if (this.sliderScrubbing) {
 				const
 					seconds = Math.round(this.sliderKnobProportion * this.video.duration),
-					knobTime = secondsToTime(seconds, this.durfmt);
+					knobTime = secondsToTime(seconds, this.durfmt, true);
 
 				this.announce(`${$L('jump to')} ${knobTime}`);
 			}
