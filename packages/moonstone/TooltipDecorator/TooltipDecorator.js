@@ -107,6 +107,14 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 			tooltipPreserveCase: PropTypes.bool,
 
 			/**
+			 * An object containing properties to be passed to tooltip component.
+			 *
+			 * @type {Object}
+			 * @public
+			 */
+			tooltipProps: PropTypes.object,
+
+			/**
 			 * The text to be displayed as the main content of the tooltip.
 			 *
 			 * @type {String}
@@ -337,7 +345,7 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 		}
 
 		render () {
-			const {children, tooltipCasing, tooltipPreserveCase, tooltipText, tooltipWidth, ...rest} = this.props;
+			const {children, tooltipCasing, tooltipPreserveCase, tooltipText, tooltipWidth, tooltipProps, ...rest} = this.props;
 			delete rest.tooltipDelay;
 			delete rest.tooltipPosition;
 
@@ -361,6 +369,7 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 							role="alert"
 							tooltipRef={this.getTooltipRef}
 							width={tooltipWidth}
+							{...tooltipProps}
 						>
 							{tooltipText}
 						</Tooltip>
