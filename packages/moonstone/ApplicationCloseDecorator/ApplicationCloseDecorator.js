@@ -10,15 +10,6 @@ import React from 'react';
 import ApplicationCloseButton from './ApplicationCloseButton';
 
 /**
- * Default config for {@link ui/ApplicationCloseDecorator.ApplicationCloseDecorator}.
- *
- * @memberof ui/ApplicationCloseDecorator.ApplicationCloseDecorator
- * @hocconfig
- */
-const defaultConfig = {
-};
-
-/**
  * Higher-order Component that adds a ApplicationCloseDecorator adjacent to wrapped component.
  *
  * @class ApplicationCloseDecorator
@@ -26,7 +17,7 @@ const defaultConfig = {
  * @hoc
  * @public
  */
-const ApplicationCloseDecorator = hoc(defaultConfig, (config, Wrapped) => {
+const ApplicationCloseDecorator = hoc((config, Wrapped) => {
 
 	return kind({
 		name: 'ApplicationCloseDecorator',
