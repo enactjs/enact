@@ -1,5 +1,6 @@
 import {off, on} from '@enact/core/dispatcher';
 import {Announce} from '@enact/ui/AnnounceDecorator';
+import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import classNames from 'classnames';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
@@ -8,6 +9,8 @@ import Spotlight from '@enact/spotlight';
 import ri from '@enact/ui/resolution';
 
 import $L from '../internal/$L';
+import DisappearSpotlightDecorator from '../internal/DisappearSpotlightDecorator';
+
 import ScrollButton from './ScrollButton';
 import ScrollThumb from './ScrollThumb';
 
@@ -90,12 +93,36 @@ class ScrollbarBase extends PureComponent {
 		onNextScroll: PropTypes.func,
 
 		/**
+		 * Called when the next button is disabled
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		onNextSpotlightDisappear: PropTypes.func,
+
+		/**
 		 * Called when the scrollbar's up/left button is pressed.
 		 *
 		 * @type {Function}
 		 * @public
 		 */
 		onPrevScroll: PropTypes.func,
+
+		/**
+		 * Called when the previous button is disabled
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		onPrevSpotlightDisappear: PropTypes.func,
+
+		/**
+		 * Exposes this instance as the provider for its imperative API
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		setApiProvider: PropTypes.func,
 
 		/**
 		 * If `true`, the scrollbar will be oriented vertically.
@@ -125,6 +152,10 @@ class ScrollbarBase extends PureComponent {
 		this.initAnnounceRef = this.initRef('announceRef');
 		this.initContainerRef = this.initRef('containerRef');
 		this.initThumbRef = this.initRef('thumbRef');
+
+		if (props.setApiProvider) {
+			props.setApiProvider(this);
+		}
 	}
 
 	componentDidMount () {
@@ -204,15 +235,11 @@ class ScrollbarBase extends PureComponent {
 			if (this.pressed) {
 				this.setIgnoreMode(true);
 				this.buttonToFocus = nextButtonNodeRef;
-			} else {
-				Spotlight.focus(nextButtonNodeRef);
 			}
 		} else if (shouldDisableNextButton && spotItem === nextButtonNodeRef) {
 			if (this.pressed) {
 				this.setIgnoreMode(true);
 				this.buttonToFocus = prevButtonNodeRef;
-			} else {
-				Spotlight.focus(prevButtonNodeRef);
 			}
 		}
 	}
@@ -295,7 +322,7 @@ class ScrollbarBase extends PureComponent {
 
 	render () {
 		const
-			{className, corner, disabled, vertical} = this.props,
+			{className, corner, disabled, onNextSpotlightDisappear, onPrevSpotlightDisappear, vertical} = this.props,
 			{prevButtonDisabled, nextButtonDisabled} = this.state,
 			containerClassName = classNames(
 				className,
@@ -309,6 +336,7 @@ class ScrollbarBase extends PureComponent {
 		return (
 			<div ref={this.initContainerRef} className={containerClassName}>
 				<ScrollButton
+					data-scroll-button="previous"
 					direction={vertical ? 'up' : 'left'}
 					disabled={disabled || prevButtonDisabled}
 					onClick={this.handlePrevScroll}
@@ -316,6 +344,7 @@ class ScrollbarBase extends PureComponent {
 					onKeyDown={this.depressButton}
 					onKeyUp={this.releaseButton}
 					onMouseDown={this.depressButton}
+					onSpotlightDisappear={onPrevSpotlightDisappear}
 				>
 					{prevIcon}
 				</ScrollButton>
@@ -325,6 +354,7 @@ class ScrollbarBase extends PureComponent {
 					vertical={vertical}
 				/>
 				<ScrollButton
+					data-scroll-button="next"
 					direction={vertical ? 'down' : 'right'}
 					disabled={disabled || nextButtonDisabled}
 					onClick={this.handleNextScroll}
@@ -332,6 +362,7 @@ class ScrollbarBase extends PureComponent {
 					onKeyDown={this.depressButton}
 					onKeyUp={this.releaseButton}
 					onMouseDown={this.depressButton}
+					onSpotlightDisappear={onNextSpotlightDisappear}
 				>
 					{nextIcon}
 				</ScrollButton>
@@ -341,8 +372,19 @@ class ScrollbarBase extends PureComponent {
 	}
 }
 
-export default ScrollbarBase;
+const Scrollbar = ApiDecorator(
+	{api: ['hideThumb', 'showThumb', 'startHidingThumb', 'update']},
+	DisappearSpotlightDecorator(
+		{events: {
+			onNextSpotlightDisappear: '[data-scroll-button="previous"]',
+			onPrevSpotlightDisappear: '[data-scroll-button="next"]'
+		}},
+		ScrollbarBase
+	)
+);
+
+export default Scrollbar;
 export {
-	ScrollbarBase as Scrollbar,
+	Scrollbar,
 	ScrollbarBase
 };
