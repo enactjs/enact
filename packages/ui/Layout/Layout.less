@@ -1,6 +1,5 @@
 // Layout.less
 //
-@import '../styles/mixins.less';
 
 .layout {
 	display: flex;
@@ -14,6 +13,7 @@
 		&.flexible {
 			flex: 1 1 100%;
 		}
+
 		&.fixed {
 			flex: 0 0 0;
 		}
@@ -46,13 +46,13 @@
 	}
 
 	// Debug lines to help see what's going on
-	&:global(.debug),
+	:global(.debug)&,
 	:global(.debug) & {
 		outline: 1px dotted teal;
 	}
 
 	.cell {
-		&:global(.debug),
+		:global(.debug)&,
 		:global(.debug) & {
 			outline: 1px dashed orange;
 		}
