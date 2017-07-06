@@ -48,41 +48,42 @@ describe('Layout Specs', () => {
 			<Layout inline><Cell>Body</Cell></Layout>
 		);
 
-		const expected = css.inline;
-		const actual = wrapped.childAt(0).prop('className');
+		const expected = true;
+		const actual = wrapped.hasClass(css.inline);
 
-		expect(actual).to.contain(expected);
+		expect(actual).to.equal(expected);
 	});
 
 	// Tests for prop and className combinations
 	const propStyleCombination = [
-		['orientation', [css.horizontal, css.vertical]]
+		['orientation', ['horizontal', 'vertical']]
 	];
 
-	// Test not ready yet
-	propStyleCombination.forEach(([prop, val]) => {
-		it.skip(`should apply classes for ${prop}`, function () {
-			const propValue = {
-				[prop]: true
-			};
-			const wrapped = mount(
-				<Layout {...propValue}><Cell>Body</Cell></Layout>
-			);
+	propStyleCombination.forEach(([prop, vals]) => {
+		vals.forEach((value) => {
+			it(`should apply classes for ${prop}`, function () {
+				const propValue = {
+					[prop]: value
+				};
+				const wrapped = mount(
+					<Layout {...propValue}><Cell>Body</Cell></Layout>
+				);
 
-			const expected = val;
-			const actual = wrapped.childAt(0).prop('className');
+				const expected = true;
+				const actual = wrapped.hasClass(css[value]);
 
-			expect(actual).to.contain(expected);
+				expect(actual).to.equal(expected);
+			});
 		});
 	});
 
 	// Test for boolean classes
 	const cellBooleanPropClasses = [
-		['fixed', css.fixed],
-		['flexible', css.flexible]
+		'fixed',
+		'flexible'
 	];
 
-	cellBooleanPropClasses.forEach(([prop, val]) => {
+	cellBooleanPropClasses.forEach((prop) => {
 		it(`should apply a class for ${prop}`, function () {
 			const props = {
 				[prop]: true
@@ -91,19 +92,19 @@ describe('Layout Specs', () => {
 				<Cell {...props}>Body</Cell>
 			);
 
-			const expected = val;
-			const actual = wrapped.childAt(0).prop('className');
+			const expected = true;
+			const actual = wrapped.hasClass(css[prop]);
 
-			expect(actual).to.contain(expected);
+			expect(actual).to.equal(expected);
 		});
 	});
 
-	const cellPropSize  = [
+	const cellPropSize = [
 		['size', ['100px', '50%', '5em']]
 	];
 
 	cellPropSize.forEach(([prop, vals]) => {
-		vals.forEach(([value]) => {
+		vals.forEach((value) => {
 			it(`should apply flexBasis styles the size prop value ${value}`, function () {
 				const propValue = {
 					[prop]: value
@@ -113,7 +114,7 @@ describe('Layout Specs', () => {
 				);
 
 				const expected = value;
-				const actual = wrapped.childAt(0).style.flexBasis;
+				const actual = wrapped.find(`.${css.cell}`).node.style.flexBasis;
 
 				expect(actual).to.contain(expected);
 			});
