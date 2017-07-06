@@ -51,6 +51,9 @@ No significant changes.
 No significant changes.
 
 ## [1.6.0] - 2017-08-04
+- `ui/Layout` which provides a technique for laying-out components on the screen using `Cells`, in rows or columns
+
+### Changed
 
 ### Fixed
 
@@ -98,7 +101,6 @@ No significant changes.
 ### Added
 
 - `ui/Skinnable` to provide themes with a way to apply a base theme styling and skins on top of that
-## Unreleased
 - `ui/Transition` prop `onShow` that fires when transitioning into view a component.
 - `ui/transition` callback prop `onShow` that fires when transitioning into view completes
 
