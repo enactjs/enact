@@ -675,7 +675,11 @@ class VirtualListCore extends Component {
 		// We have to focus node async for now since list items are not yet ready when it reaches componentDid* lifecycle methods
 		setTimeout(() => {
 			const item = this.containerRef.querySelector(`[data-index='${index}'].spottable`);
-			Spotlight.resume();
+
+			if (Spotlight.isPaused()) {
+				Spotlight.resume();
+			}
+
 			this.focusOnNode(item);
 			this.nodeIndexToBeFocused = null;
 		}, 0);
