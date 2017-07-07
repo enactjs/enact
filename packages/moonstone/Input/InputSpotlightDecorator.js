@@ -206,7 +206,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			}
 		}
 
-		onKeyDown = (ev) => {
+		onKeyUp = (ev) => {
 			const {dismissOnEnter} = this.props;
 			const {currentTarget, keyCode, target} = ev;
 
@@ -262,7 +262,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 					onBlur={this.onBlur}
 					onClick={this.onClick}
 					onFocus={this.onFocus}
-					onKeyDown={this.onKeyDown}
+					onKeyUp={this.onKeyUp}
 				/>
 			);
 		}
