@@ -525,9 +525,13 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			// TODO: cancel others on hover
-			if (marqueeOnHover || marqueeOnRender || (disabled && marqueeOnFocus)) {
+			if (marqueeOnHover || (disabled && marqueeOnFocus)) {
 				rest[enter] = this.handleEnter;
 				rest[leave] = this.handleLeave;
+			}
+
+			if (marqueeOnRender) {
+				rest[enter] = this.handleEnter;
 			}
 
 			delete rest.marqueeDelay;
