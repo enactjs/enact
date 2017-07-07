@@ -97,6 +97,7 @@ const ViewportBase = kind({
 
 	render: ({arranger, children, enteringProp, index, noAnimation, ...rest}) => {
 		delete rest.generateId;
+		delete rest.noFadeIn;
 
 		const count = React.Children.count(children);
 		invariant(

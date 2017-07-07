@@ -177,6 +177,7 @@ const PanelBase = kind({
 		delete rest.autoFocus;
 		delete rest.hideChildren;
 		delete rest.noAutoFocus;
+		delete rest.fadeIn;
 
 		return (
 			<article role="region" {...rest} aria-labelledby={headerId} ref={spotOnRender}>

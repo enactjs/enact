@@ -2,9 +2,11 @@ import React from 'react';
 import {mount} from 'enzyme';
 import sinon from 'sinon';
 
-import {Panels, PanelsBase, Panel} from '../Panels';
+import {Panels, PanelsBase} from '../Panels';
 
-import css from '../Panel.less'
+import Panel from '../Panel';
+
+import css from '../Panel.less';
 
 describe('Panels Specs', () => {
 
@@ -46,17 +48,46 @@ describe('Panels Specs', () => {
 		expect(expected).to.equal(actual);
 	});
 
-	it.only('should have "fadeIn" class on Panel body if Panels has "noFadeIn" prop', function () {
+	it('should have \'fadeIn\' class on Panel body if Panels does not have \'noFadeIn\' prop', function () {
+		const MainPanel = (props) => (
+			<Panel {...props}>
+				<div>Hello</div>
+			</Panel>
+		);
+
 		const subject = mount(
-			<Panels noFadeIn>
-				<Panel />
+			<Panels>
+				<MainPanel />
 			</Panels>
 		);
 
 		const PanelBody = subject.find(`.${css.body}`);
-		
+
 		const expected = true;
-		const actual = PanelBody.hasClass(`.${css.fadeIn}`);
+
+		const actual = PanelBody.hasClass(css.fadeIn);
+
+		expect(expected).to.equal(actual);
+	});
+
+	it('should have \'fadeIn\' class on Panel body if Panels does have \'noFadeIn\' prop', function () {
+		const MainPanel = (props) => (
+			<Panel {...props}>
+				<div>Hello</div>
+			</Panel>
+		);
+
+		const subject = mount(
+			<Panels noFadeIn>
+				<MainPanel />
+			</Panels>
+		);
+
+		const PanelBody = subject.find(`.${css.body}`);
+
+		const expected = false;
+
+		const actual = PanelBody.hasClass(css.fadeIn);
 
 		expect(expected).to.equal(actual);
 	});
