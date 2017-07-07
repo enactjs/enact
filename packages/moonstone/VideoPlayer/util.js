@@ -65,14 +65,14 @@ const secondsToTime = (seconds, durfmt, config) => {
 		const parsedTime = parseTime(seconds);
 		const timeString = durfmt.format(parsedTime).toString();
 
-		if (config.includeHour) {
+		if (config && config.includeHour) {
 			return parsedTime.hour ? timeString : '00:' + timeString;
 		} else {
 			return timeString;
 		}
 	}
 
-	return config.includeHour ? '00:00:00' : '00:00';
+	return config && config.includeHour ? '00:00:00' : '00:00';
 };
 
 /**
