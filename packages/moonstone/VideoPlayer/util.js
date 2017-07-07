@@ -61,18 +61,20 @@ const secondsToPeriod = (seconds) => {
  * @private
  */
 const secondsToTime = (seconds, durfmt, config) => {
+	const includeHour = config && config.includeHour;
+
 	if (durfmt) {
 		const parsedTime = parseTime(seconds);
 		const timeString = durfmt.format(parsedTime).toString();
 
-		if (config && config.includeHour) {
+		if (includeHour) {
 			return parsedTime.hour ? timeString : '00:' + timeString;
 		} else {
 			return timeString;
 		}
 	}
 
-	return config && config.includeHour ? '00:00:00' : '00:00';
+	return includeHour ? '00:00:00' : '00:00';
 };
 
 /**
