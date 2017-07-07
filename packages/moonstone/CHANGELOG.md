@@ -12,6 +12,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/VirtualList` to restore focus on short lists
+
 ## [1.4.1] - 2017-07-05
 
 ### Changed
