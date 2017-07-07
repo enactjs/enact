@@ -9,6 +9,7 @@
 	// Children
 	.cell {
 		flex: 1 0;
+		position: relative;  // Allow content to treat cells as positionable spaces
 
 		&.flexible {
 			flex: 1 1 100%;
@@ -37,6 +38,7 @@
 		> .cell {
 			&.flexible {
 				height: 0;
+				align-self: normal;
 			}
 		}
 	}
