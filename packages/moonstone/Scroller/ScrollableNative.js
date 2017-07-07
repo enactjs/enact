@@ -266,7 +266,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		onMouseMove = () => {
-			if (this.resetPosition) {
+			if (this.resetPosition !== null) {
 				const containerNode = this.childRef.getContainerNode();
 				containerNode.style.scrollBehavior = null;
 				containerNode.scrollTop = this.resetPosition;
