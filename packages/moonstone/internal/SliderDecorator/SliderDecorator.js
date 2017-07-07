@@ -66,12 +66,12 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		static propTypes = /** @lends moonstone/internal/SliderDecorator.SliderDecorator.prototype */{
 			/**
 			 * By default, the slider accessibility value will be set by own's value.
-			 * When `accessibilityValueText` is set, it will be used instead value for the slider.
+			 * When `aria-valuetext` is set, it will be used instead value for the slider.
 			 *
-			 * @type {String}
+			 * @type {String|Number}
 			 * @public
 			 */
-			accessibilityValueText: PropTypes.string,
+			'aria-valuetext': PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 
 			/**
 			 * Background progress, as a proportion between `0` and `1`.
@@ -200,7 +200,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			const
 				value = this.clamp(props.value),
-				valueText = props.accessibilityValueText;
+				valueText = props['aria-valuetext'];
 
 			this.state = {
 				active: false,
@@ -221,14 +221,14 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillReceiveProps (nextProps) {
-			const {accessibilityValueText, backgroundProgress, max, min, value} = nextProps;
+			const {'aria-valuetext': valueText, backgroundProgress, max, min, value} = nextProps;
 
-			if ((min !== this.props.min) || (max !== this.props.max) || (value !== this.state.value) || (accessibilityValueText !== this.state.valueText)) {
+			if ((min !== this.props.min) || (max !== this.props.max) || (value !== this.state.value) || (valueText !== this.state.valueText)) {
 				this.normalizeBounds(nextProps);
 				const clampedValue = this.clamp(value);
 				this.setState({
 					value: clampedValue,
-					valueText: accessibilityValueText || clampedValue
+					valueText: valueText || clampedValue
 				});
 			}
 

@@ -52,12 +52,12 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 
 			/**
 			 * By default, the slider accessibility value will be set by own's value.
-			 * When `accessibilityValueText` is set, it will be used instead value for the slider.
+			 * When `aria-valuetext` is set, it will be used instead value for the slider.
 			 *
-			 * @type {String}
+			 * @type {String|Number}
 			 * @public
 			 */
-			accessibilityValueText: PropTypes.string,
+			'aria-valuetext': PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 
 			/**
 			 * When `true`, the knob displays selected and can be moved using 5-way controls.
@@ -369,8 +369,8 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			incrementSliderClasses: ({vertical, styler}) => styler.append({vertical, horizontal: !vertical}),
 			decrementIcon: ({decrementIcon, vertical}) => (decrementIcon || (vertical ? 'arrowlargedown' : 'arrowlargeleft')),
 			incrementIcon: ({incrementIcon, vertical}) => (incrementIcon || (vertical ? 'arrowlargeup' : 'arrowlargeright')),
-			decrementAriaLabel: ({accessibilityValueText, disabled, min, value}) => (accessibilityValueText || !(disabled || value <= min)) ? (`${accessibilityValueText || value} ${$L('press ok button to decrease the value')}`) : null,
-			incrementAriaLabel: ({accessibilityValueText, disabled, max, value}) => (accessibilityValueText || !(disabled || value >= max)) ? (`${accessibilityValueText || value} ${$L('press ok button to increase the value')}`) : null
+			decrementAriaLabel: ({'aria-valuetext': valueText, disabled, min, value}) => !(disabled || value <= min) ? (`${valueText || value} ${$L('press ok button to decrease the value')}`) : null,
+			incrementAriaLabel: ({'aria-valuetext': valueText, disabled, max, value}) => !(disabled || value >= max) ? (`${valueText || value} ${$L('press ok button to increase the value')}`) : null
 		},
 
 		render: ({active,
@@ -411,7 +411,6 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			vertical,
 			...rest
 		}) => {
-			delete rest.accessibilityValueText;
 			const ariaProps = extractAriaProps(rest);
 
 			return (

@@ -8,7 +8,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
-- `moonstone/Slider` and `moonstone/IncrementSlider` prop `accessibilityValueText` to support a read out custom text instead of value
+- `moonstone/Slider` and `moonstone/IncrementSlider` prop `aria-valuetext` to support a read out custom text instead of value
 
 ### Changed
 
