@@ -178,6 +178,7 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 				 * @public
 				 */
 				bg: css.bg,
+				client: css.client,
 
 				/**
 				 * Classes to apply to the selected state of the button, applied to the base element

@@ -11,7 +11,10 @@ import SkinnableBase, {withSkinnableProps} from '@enact/ui/Skinnable';
 const defaultConfig = {
 	skins: {
 		dark: 'moonstone',
-		light: 'moonstone-light'
+		light: 'moonstone-light',
+		aqua: 'aqua',
+		car: 'car',
+		material: 'material'
 	}
 };
 

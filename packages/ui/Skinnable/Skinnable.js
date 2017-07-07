@@ -60,7 +60,7 @@ const defaultConfig = {
  * 		dark: 'moonstone',
  * 		light: 'moonstone-light'
  * 	},
- * 	defaultTheme: 'dark'
+ * 	defaultSkin: 'dark'
  * }, App);
  * ```
  *
