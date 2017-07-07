@@ -141,17 +141,16 @@
 }
 
 .invalidTooltip {
-	@tooltip-tail-space: @moon-input-border-width + @moon-tooltip-point-width;
-
+	top: 50%;
 	left: auto;
 	right: 0;
 	pointer-events: none;
-	transform: translate(calc(~'100% + ' @tooltip-tail-space), -50%);
+	transform: translate(100%, -100%) translateX(@moon-input-tooltip-offset);
 
 	:global(.enact-locale-right-to-left) & {
 		left: 0;
 		right: auto;
-		transform: translate(calc(~'-100% - ' @tooltip-tail-space), -50%);
+		transform: translate(-100%, -100%) translateX(-@moon-input-tooltip-offset);
 	}
 }
 

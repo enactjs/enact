@@ -277,15 +277,10 @@ class ExpandableInputBase extends React.Component {
 		}
 	}
 
-	calcClassName () {
-		const {className} = this.props;
-		const expandableInputClass = css.expandableInput;
-
-		return className ? `${expandableInputClass} ${className}` : expandableInputClass;
-	}
+	calcClassName = (className) => (className ? `${css.expandableInput} ${className}` : css.expandableInput)
 
 	render () {
-		const {disabled, iconAfter, iconBefore, onSpotlightDisappear, placeholder, spotlightDisabled, type, value, ...rest} = this.props;
+		const {className, disabled, iconAfter, iconBefore, onSpotlightDisappear, placeholder, spotlightDisabled, type, value, ...rest} = this.props;
 		delete rest.onChange;
 		delete rest.onInputChange;
 
@@ -293,7 +288,7 @@ class ExpandableInputBase extends React.Component {
 			<ExpandableItemBase
 				{...rest}
 				aria-label={this.calcAriaLabel()}
-				className={this.calcClassName()}
+				className={this.calcClassName(className)}
 				disabled={disabled}
 				label={this.calcLabel()}
 				onClose={this.handleClose}
