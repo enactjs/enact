@@ -12,7 +12,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/InputDecorator` from calling `onClick` for `enter` key presses
+- `moonstone/InputDecorator` support for `dismissOnEnter`
 
 ## [1.4.1] - 2017-07-05
 
