@@ -38,6 +38,8 @@
 
 .scrollbarContainerVColumn,
 .scrollbarContainerHColumn {
+	pointer-events: none;
+
 	.scrollButton {
 		.scrollbarButtonNoCompositeLayer;
 		background-color: transparent;
@@ -47,6 +49,7 @@
 		padding: 0;
 		border-color: transparent;
 		margin: 0;
+		pointer-events: auto;
 
 		:global(.enact-text-large) & {
 			width: @moon-icon-button-small-size-large;
