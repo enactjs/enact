@@ -2,6 +2,19 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Deprecated
+
+### Added
+
+### Changed
+- `moonstone/VideoPlayer` utility method `secondsToTime` to support a config parameter with the property `includeHour`, when true, will output a string in `hour:minute:second` time format instead of the default `minute:second`
+
+### Fixed
+
+- `moonstone/InputDecorator` support for `dismissOnEnter`
+
 ## [1.4.1] - 2017-07-05
 
 ### Changed
