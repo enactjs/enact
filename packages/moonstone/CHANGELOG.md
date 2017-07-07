@@ -10,6 +10,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+- `moonstone/ExpandableList` to use 'radio' as the default, and adapt 'single' mode to render as a `moonstone/RadioItem` instead of a `moonstone/CheckboxItem`
+
 ### Fixed
 
 ## [1.4.1] - 2017-07-05
@@ -45,7 +47,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` properties `autoCloseTimeout` and `titleHideDelay` default value to `5000`
 - `moonstone/VirtualList` to support restoring focus to the last focused item
 - `moonstone/Scrollable` to call `onScrollStop` before unmounting if a scroll is in progress
-- `moonstone/ExpandableList` to use 'radio' as the default, and adapt 'single' mode to render as a `moonstone/RadioItem` instead of a `moonstone/CheckboxItem`
 - `moonstone/Scroller` to reveal non-spottable content when navigating out of a scroller
 
 ### Fixed
