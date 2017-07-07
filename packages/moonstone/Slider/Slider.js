@@ -63,6 +63,14 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		propTypes: /** @lends moonstone/Slider.SliderBase.prototype */{
 
 			/**
+			 * Overrides the aria-valuetext for the slider which defaults to the current value
+			 *
+			 * @type {String|Number}
+			 * @public
+			 */
+			'aria-valuetext': PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+
+			/**
 			 * When `true`, the knob displays selected and can be moved using 5-way controls.
 			 *
 			 * @type {Boolean}
