@@ -9,6 +9,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 ### Changed
+- `moonstone/ContextualPopupDecorator` to support accessibility role and aria properties using popupProps
 
 ### Fixed
 
