@@ -11,6 +11,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 ### Fixed
+- `moonstone/Input` ellipsis to show if placeholder is changed dynamically and is too long.
 
 ## [1.4.1] - 2017-07-05
 
