@@ -123,7 +123,8 @@ const PanelsBase = kind({
 	defaultProps: {
 		index: 0,
 		noAnimation: false,
-		noCloseButton: false
+		noCloseButton: false,
+		noFadeIn: false
 	},
 
 	styles: {

@@ -63,7 +63,7 @@ const PanelBase = kind({
 		 * When `true`, the Panels will fade-in. If false they will just appear.
 		 *
 		 * @type {Boolean}
-		 * @default false
+		 * @default true
 		 * @public
 		 */
 		fadeIn: PropTypes.bool,
@@ -107,7 +107,8 @@ const PanelBase = kind({
 	defaultProps: {
 		autoFocus: 'last-focused',
 		hideChildren: false,
-		noAutoFocus: false
+		noAutoFocus: false,
+		fadeIn: true
 	},
 
 	styles: {

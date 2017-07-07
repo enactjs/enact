@@ -2,7 +2,9 @@ import React from 'react';
 import {mount} from 'enzyme';
 import sinon from 'sinon';
 
-import {Panels, PanelsBase} from '../Panels';
+import {Panels, PanelsBase, Panel} from '../Panels';
+
+import css from '../Panel.less'
 
 describe('Panels Specs', () => {
 
@@ -40,6 +42,21 @@ describe('Panels Specs', () => {
 
 		const expected = true;
 		const actual = handleAppClose.calledOnce;
+
+		expect(expected).to.equal(actual);
+	});
+
+	it.only('should have "fadeIn" class on Panel body if Panels has "noFadeIn" prop', function () {
+		const subject = mount(
+			<Panels noFadeIn>
+				<Panel />
+			</Panels>
+		);
+
+		const PanelBody = subject.find(`.${css.body}`);
+		
+		const expected = true;
+		const actual = PanelBody.hasClass(`.${css.fadeIn}`);
 
 		expect(expected).to.equal(actual);
 	});

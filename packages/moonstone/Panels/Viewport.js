@@ -70,7 +70,8 @@ const ViewportBase = kind({
 
 	defaultProps: {
 		index: 0,
-		noAnimation: false
+		noAnimation: false,
+		noFadeIn: false
 	},
 
 	styles: {
