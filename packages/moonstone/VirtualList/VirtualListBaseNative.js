@@ -285,7 +285,6 @@ class VirtualListCoreNative extends Component {
 	wrapperRef = null
 
 	// spotlight
-	nodeIndexToBeFocused = null
 	lastFocusedIndex = null
 
 	isVertical = () => this.isPrimaryDirectionVertical
@@ -559,10 +558,6 @@ class VirtualListCoreNative extends Component {
 			className: classNames(cssItem.listItem, itemElement.props.className),
 			style: {...itemElement.props.style, ...style}
 		});
-
-		if (index === this.nodeIndexToBeFocused) {
-			this.focusByIndex(index);
-		}
 	}
 
 	positionItems () {
@@ -653,9 +648,11 @@ class VirtualListCoreNative extends Component {
 		// We have to focus node async for now since list items are not yet ready when it reaches componentDid* lifecycle methods
 		setTimeout(() => {
 			const item = this.containerRef.querySelector(`[data-index='${index}'].spottable`);
-			Spotlight.resume();
+
+			if (Spotlight.isPaused()) {
+				Spotlight.resume();
+			}
 			this.focusOnNode(item);
-			this.nodeIndexToBeFocused = null;
 		}, 0);
 	}
 
@@ -702,11 +699,11 @@ class VirtualListCoreNative extends Component {
 
 	jumpToSpottableItem = (keyCode, target) => {
 		const
-			{cbScrollTo, dataSize} = this.props,
+			{cbScrollTo, data, dataSize} = this.props,
 			{firstIndex, numOfItems} = this.state,
 			currentIndex = Number.parseInt(target.getAttribute(dataIndexAttribute));
 
-		if (!this.props.data || !Array.isArray(this.props.data) || this.props.data[currentIndex].disabled) {
+		if (!data || !Array.isArray(data) || data[currentIndex].disabled) {
 			return false;
 		}
 
@@ -724,15 +721,25 @@ class VirtualListCoreNative extends Component {
 		let nextIndex = -1;
 
 		if (isForward) {
-			for (let i = currentIndex + 1; i < dataSize; i++) {
-				if (!this.props.data[i].disabled) {
+			// See if the next item is spottable then delegate scroll to onFocus handler
+			if (currentIndex < dataSize - 1 && !data[currentIndex + 1].disabled) {
+				return false;
+			}
+
+			for (let i = currentIndex + 2; i < dataSize; i++) {
+				if (!data[i].disabled) {
 					nextIndex = i;
 					break;
 				}
 			}
 		} else if (isBackward) {
-			for (let i = currentIndex - 1; i >= 0; i--) {
-				if (!this.props.data[i].disabled) {
+			// See if the next item is spottable then delegate scroll to onFocus handler
+			if (currentIndex > 0 && !data[currentIndex - 1].disabled) {
+				return false;
+			}
+
+			for (let i = currentIndex - 2; i >= 0; i--) {
+				if (!data[i].disabled) {
 					nextIndex = i;
 					break;
 				}
@@ -745,10 +752,14 @@ class VirtualListCoreNative extends Component {
 			setTimeout(() => {
 				target.blur();
 			}, 50);
-			this.nodeIndexToBeFocused = this.lastFocusedIndex = nextIndex;
-			Spotlight.pause();
+
+			if (!Spotlight.isPaused()) {
+				Spotlight.pause();
+			}
+
 			cbScrollTo({
 				index: nextIndex,
+				focus: true,
 				stickTo: isForward ? 'floor' : 'ceil'
 			});
 			return true;

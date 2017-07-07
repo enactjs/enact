@@ -726,10 +726,10 @@ class VirtualListCore extends Component {
 
 	jumpToSpottableItem = (keyCode, currentIndex) => {
 		const
-			{cbScrollTo, dataSize} = this.props,
+			{cbScrollTo, data, dataSize} = this.props,
 			{firstIndex, numOfItems} = this.state;
 
-		if (!this.props.data || !Array.isArray(this.props.data) || this.props.data[currentIndex].disabled) {
+		if (!data || !Array.isArray(data) || data[currentIndex].disabled) {
 			return false;
 		}
 
@@ -748,15 +748,25 @@ class VirtualListCore extends Component {
 		let nextIndex = -1;
 
 		if (isForward) {
+			// See if the next item is spottable then delegate scroll to onFocus handler
+			if (currentIndex < dataSize - 1 && !data[currentIndex + 1].disabled) {
+				return false;
+			}
+
 			for (let i = currentIndex + 1; i < dataSize; i++) {
-				if (!this.props.data[i].disabled) {
+				if (!data[i].disabled) {
 					nextIndex = i;
 					break;
 				}
 			}
 		} else if (isBackward) {
+			// See if the next item is spottable then delegate scroll to onFocus handler
+			if (currentIndex > 0 && !data[currentIndex - 1].disabled) {
+				return false;
+			}
+
 			for (let i = currentIndex - 1; i >= 0; i--) {
-				if (!this.props.data[i].disabled) {
+				if (!data[i].disabled) {
 					nextIndex = i;
 					break;
 				}
@@ -768,7 +778,11 @@ class VirtualListCore extends Component {
 		if (nextIndex !== -1 && (firstIndex > nextIndex || nextIndex >= firstIndex + numOfItems)) {
 			this.nodeIndexToBeBlurred = currentIndex % numOfItems;
 			this.nodeIndexToBeFocused = this.lastFocusedIndex = nextIndex;
-			Spotlight.pause();
+
+			if (!Spotlight.isPaused()) {
+				Spotlight.pause();
+			}
+
 			cbScrollTo({
 				index: nextIndex,
 				stickTo: isForward ? 'floor' : 'ceil'
