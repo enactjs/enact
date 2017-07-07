@@ -12,6 +12,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Panels.Panel` support for selecting components with `.spottable-default` as the default focus target
+
 ## [1.4.1] - 2017-07-05
 
 ### Changed
