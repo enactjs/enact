@@ -10,9 +10,13 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+- `moonstone/ExpandableList` to use 'radio' as the default, and adapt 'single' mode to render as a `moonstone/RadioItem` instead of a `moonstone/CheckboxItem`
+
 ### Fixed
 
 - `moonstone/ExpandableInput` to expand the width of its contained `moonstone/Input`
+- `moonstone/InputDecorator` support for `dismissOnEnter`
+- `moonstone` international fonts to always be used, even when unsupported font-weights or font-styles are requested
 
 ## [1.4.1] - 2017-07-05
 
