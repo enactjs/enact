@@ -56,7 +56,16 @@ const ViewportBase = kind({
 		 * @type {Boolean}
 		 * @default false
 		 */
-		noAnimation: PropTypes.bool
+		noAnimation: PropTypes.bool,
+
+		/**
+		 * When `true`, the Panels will not fade-in. Instead, they will appear instantly.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		noFadeIn: PropTypes.bool
 	},
 
 	defaultProps: {
@@ -75,10 +84,11 @@ const ViewportBase = kind({
 	},
 
 	computed: {
-		children: ({children, generateId}) => React.Children.map(children, (child, index) => {
+		children: ({children, generateId, noFadeIn}) => React.Children.map(children, (child, index) => {
 			return React.cloneElement(child, {
 				containerId: child.props.containerId || generateId(index, 'panel-container', Spotlight.remove),
-				'data-index': index
+				'data-index': index,
+				fadeIn: !noFadeIn
 			});
 		}),
 		enteringProp: ({noAnimation}) => noAnimation ? null : 'hideChildren'

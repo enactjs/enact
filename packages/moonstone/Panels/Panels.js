@@ -95,6 +95,15 @@ const PanelsBase = kind({
 		noCloseButton: PropTypes.bool,
 
 		/**
+		 * When `true`, the Panels will not fade-in. Instead, they will appear instantly.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		noFadeIn: PropTypes.bool,
+
+		/**
 		 * A function to run when app close button is clicked
 		 *
 		 * @type {Function}
@@ -154,7 +163,7 @@ const PanelsBase = kind({
 		}
 	},
 
-	render: ({noAnimation, arranger, childProps, children, generateId, index, applicationCloseButton, ...rest}) => {
+	render: ({noAnimation, arranger, childProps, children, generateId, index, applicationCloseButton, noFadeIn, ...rest}) => {
 		delete rest.noCloseButton;
 		delete rest.onApplicationClose;
 		delete rest.onBack;
@@ -168,6 +177,7 @@ const PanelsBase = kind({
 					generateId={generateId}
 					index={index}
 					noAnimation={noAnimation}
+					noFadeIn={noFadeIn}
 				>
 					{children}
 				</Viewport>

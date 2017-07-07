@@ -59,6 +59,14 @@ const PanelBase = kind({
 		 * @public
 		 */
 		autoFocus: PropTypes.string,
+		/**
+		 * When `true`, the Panels will fade-in. If false they will just appear.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		fadeIn: PropTypes.bool,
 
 		/**
 		 * Header for the panel. This is usually passed by the {@link ui/Slottable.Slottable} API by
@@ -152,10 +160,11 @@ const PanelBase = kind({
 			return spotOnRender;
 		},
 		children: ({children, hideChildren}) => hideChildren ? null : children,
-		bodyClassName: ({header, hideChildren, styler}) => styler.join({
+		bodyClassName: ({header, hideChildren, fadeIn, styler}) => styler.join({
 			body: true,
 			noHeader: !header,
-			visible: !hideChildren
+			visible: !hideChildren,
+			fadeIn
 		}),
 		// nulling headerId prevents the aria-labelledby relationship which is necessary to allow
 		// aria-label to take precedence

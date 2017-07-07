@@ -23,8 +23,6 @@
 	flex: 1;
 	min-height: 0;
 	opacity: 0;
-	transition: opacity 200ms ease-out;
-	will-change: opacity;
 
 	&.noHeader {
 		padding-top: 0;
@@ -32,5 +30,10 @@
 
 	&.visible {
 		opacity: 1;
+	}
+
+	&.fadeIn{
+		transition: opacity 2000ms ease-out;
+		will-change: opacity;
 	}
 }
