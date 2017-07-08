@@ -89,7 +89,7 @@ const ViewportBase = kind({
 			return React.cloneElement(child, {
 				containerId: child.props.containerId || generateId(index, 'panel-container', Spotlight.remove),
 				'data-index': index,
-				fadeIn: !noFadeIn
+				noFadeIn: typeof child.props.noFadeIn === 'undefined' ? noFadeIn : child.props.noFadeIn
 			});
 		}),
 		enteringProp: ({noAnimation}) => noAnimation ? null : 'hideChildren'

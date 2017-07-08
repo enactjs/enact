@@ -8,6 +8,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 - `moonstone/Panels` prop `noFadeIn` to prevent fading in children on `Panel` transition.
+- `moonstone/Panel` prop `noFadeIn` to prevent fading in children.
 
 ### Changed
 

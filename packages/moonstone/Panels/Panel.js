@@ -59,14 +59,6 @@ const PanelBase = kind({
 		 * @public
 		 */
 		autoFocus: PropTypes.string,
-		/**
-		 * When `true`, the Panels will fade-in. If false they will just appear.
-		 *
-		 * @type {Boolean}
-		 * @default true
-		 * @public
-		 */
-		fadeIn: PropTypes.bool,
 
 		/**
 		 * Header for the panel. This is usually passed by the {@link ui/Slottable.Slottable} API by
@@ -101,14 +93,25 @@ const PanelBase = kind({
 		 * @default false
 		 * @public
 		 */
-		noAutoFocus: PropTypes.bool
+		noAutoFocus: PropTypes.bool,
+
+		/**
+		 * When `true`, the Panel will not fade-in.
+		 *
+		 * Typically one should set this at the parent `Panels` and have `Panels`
+		 * control everything. This is only if you would like to override for
+		 * each panel individually.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		noFadeIn: PropTypes.bool
 	},
 
 	defaultProps: {
 		autoFocus: 'last-focused',
 		hideChildren: false,
-		noAutoFocus: false,
-		fadeIn: true
+		noAutoFocus: false
 	},
 
 	styles: {
@@ -161,11 +164,11 @@ const PanelBase = kind({
 			return spotOnRender;
 		},
 		children: ({children, hideChildren}) => hideChildren ? null : children,
-		bodyClassName: ({header, hideChildren, fadeIn, styler}) => styler.join({
+		bodyClassName: ({header, hideChildren, noFadeIn, styler}) => styler.join({
 			body: true,
 			noHeader: !header,
 			visible: !hideChildren,
-			fadeIn
+			fadeIn: !noFadeIn
 		}),
 		// nulling headerId prevents the aria-labelledby relationship which is necessary to allow
 		// aria-label to take precedence
@@ -177,7 +180,7 @@ const PanelBase = kind({
 		delete rest.autoFocus;
 		delete rest.hideChildren;
 		delete rest.noAutoFocus;
-		delete rest.fadeIn;
+		delete rest.noFadeIn;
 
 		return (
 			<article role="region" {...rest} aria-labelledby={headerId} ref={spotOnRender}>

@@ -92,6 +92,50 @@ describe('Panels Specs', () => {
 		expect(expected).to.equal(actual);
 	});
 
+	it('should override \'Panels\' \'noFadeIn={false}\' with \'Panel\' \'noFadeIn\'', function () {
+		const MainPanel = (props) => (
+			<Panel {...props}>
+				<div>Hello</div>
+			</Panel>
+		);
+
+		const subject = mount(
+			<Panels>
+				<MainPanel noFadeIn />
+			</Panels>
+		);
+
+		const PanelBody = subject.find(`.${css.body}`);
+
+		const expected = false;
+
+		const actual = PanelBody.hasClass(css.fadeIn);
+
+		expect(expected).to.equal(actual);
+	});
+
+	it('should override \'Panels\' \'noFadeIn\' with \'Panel\' \'noFadeIn={false}\'', function () {
+		const MainPanel = (props) => (
+			<Panel {...props}>
+				<div>Hello</div>
+			</Panel>
+		);
+
+		const subject = mount(
+			<Panels noFadeIn>
+				<MainPanel noFadeIn={false} />
+			</Panels>
+		);
+
+		const PanelBody = subject.find(`.${css.body}`);
+
+		const expected = true;
+
+		const actual = PanelBody.hasClass(css.fadeIn);
+
+		expect(expected).to.equal(actual);
+	});
+
 	describe('computed', () => {
 		describe('childProps', () => {
 			it('should not add aria-owns when noCloseButton is true', () => {
