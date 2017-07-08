@@ -337,7 +337,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (this.state.rtl !== rtl) {
 				newState.rtl = rtl;
 			}
-			if (Object.keys(newState)) {
+			if (Object.keys(newState).length) {
 				this.setState(newState);
 			}
 		}
