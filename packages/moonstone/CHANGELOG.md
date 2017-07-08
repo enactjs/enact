@@ -15,13 +15,20 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Marquee` to re-evaluate RTL orientation when its content changes
 
 ### Removed
+- `moonstone/ExpandableList` to use 'radio' as the default, and adapt 'single' mode to render as a `moonstone/RadioItem` instead of a `moonstone/CheckboxItem`
+
+### Fixed
+
+- `moonstone/ExpandableInput` to expand the width of its contained `moonstone/Input`
+- `moonstone/InputDecorator` support for `dismissOnEnter`
+- `moonstone` international fonts to always be used, even when unsupported font-weights or font-styles are requested
 
 ## [1.4.1] - 2017-07-05
 
 ### Changed
 
 - `moonstone/Popup` to only call `onKeyDown` when there is a focused item in the `Popup`
-- `moonstone/Scroller`, `moonstone/Picker`, and `moonstone/IncrementSlider` to automatically move focus when the currently focused `moonstone/IconButton` becomes disabled.
+- `moonstone/Scroller`, `moonstone/Picker`, and `moonstone/IncrementSlider` to automatically move focus when the currently focused `moonstone/IconButton` becomes disabled
 
 ### Fixed
 
@@ -37,6 +44,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/Scrollbar` property `corner` to add the corner between vertical and horizontal scrollbars
+- `moonstone/ScrollThumb` for a thumb of `moonstone/Scrollbar`
 - `moonstone/styles/text.less` mixin `.locale-japanese-line-break()` to apply the correct  Japanese language line-break rules for the following multi-line components: `moonstone/BodyText`, `moonstone/Dialog`, `moonstone/Notification`, `moonstone/Popup`, and `moonstone/Tooltip`
 - `moonstone/ContextualPopupDecorator` property `popupProps` to attach props to popup component
 - `moonstone/VideoPlayer` property `pauseAtEnd` to control forward/backward seeking
