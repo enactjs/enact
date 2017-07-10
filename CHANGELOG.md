@@ -2,24 +2,6 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
-## [unreleased]
-
-### Deprecated
-
--
-
-### Added
-
-- `moonstone/TooltipDecorator` property `tooltipProps` to attach props to tooltip component
-
-### Changed
-
--
-
-### Fixed
-
--
-
 ## [1.4.1] - 2017-07-05
 
 ### Changed
