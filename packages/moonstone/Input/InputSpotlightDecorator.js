@@ -208,7 +208,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 		}
 
 		onKeyDown = (ev) => {
-			const {keyCode, target} = ev;
+			const {currentTarget, keyCode, target} = ev;
 
 			if (this.state.focused === 'input') {
 				const isDown = is('down', keyCode);
@@ -236,7 +236,9 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 						setPointerMode(false);
 					}
 
-					move(direction);
+					if (!move(direction)) {
+						this.focusDecorator(currentTarget);
+					}
 				} else if (isLeft || isRight) {
 					// prevent 5-way nav for left/right keys within the <input>
 					preventSpotlightNavigation(ev);
