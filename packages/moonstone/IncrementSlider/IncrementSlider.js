@@ -51,8 +51,9 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			'aria-hidden': PropTypes.bool,
 
 			/**
-			 * By default, the slider accessibility value will be set by own's value.
-			 * When `aria-valuetext` is set, it will be used instead value for the slider.
+			 * Overrides the `aria-valuetext` for the slider. By default, `aria-valuetext` is set
+			 * to the current value. This should only be used when the parent controls the value of
+			 * the slider directly through the props.
 			 *
 			 * @type {String|Number}
 			 * @public

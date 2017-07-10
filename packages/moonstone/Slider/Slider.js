@@ -63,7 +63,9 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		propTypes: /** @lends moonstone/Slider.SliderBase.prototype */{
 
 			/**
-			 * Overrides the aria-valuetext for the slider which defaults to the current value
+			 * Overrides the `aria-valuetext` for the slider. By default, `aria-valuetext` is set
+			 * to the current value. This should only be used when the parent controls the value of
+			 * the slider directly through the props.
 			 *
 			 * @type {String|Number}
 			 * @public
