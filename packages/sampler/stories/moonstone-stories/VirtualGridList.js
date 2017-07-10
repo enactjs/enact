@@ -1,4 +1,7 @@
-import {VirtualGridList} from '@enact/moonstone/VirtualList';
+
+import {VirtualListNative as VirtualList, VirtualGridListNative as VirtualGridList} from '@enact/moonstone/VirtualList/VirtualListNative.js';
+
+// import {VirtualGridList} from '@enact/moonstone/VirtualList';
 import GridListImageItem from '@enact/moonstone/VirtualList/GridListImageItem';
 import {VirtualListCore} from '@enact/moonstone/VirtualList/VirtualListBase';
 import ri from '@enact/ui/resolution';

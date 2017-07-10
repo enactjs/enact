@@ -272,6 +272,7 @@ class VirtualListCoreNative extends Component {
 	curDataSize = 0
 	cc = []
 	scrollPosition = 0
+	itemStyle = null
 
 	wrapperClass = null
 	containerRef = null
@@ -413,13 +414,19 @@ class VirtualListCoreNative extends Component {
 		if (this.isItemSized) {
 			const
 				primaryItemSize = primary.itemSize + 'px',
-				secondaryItemSize = secondary.itemSize + 'px',
-				style = node.style;
+				secondaryItemSize = secondary.itemSize + 'px';
 
-			style.setProperty('--virtuallist-item-width', this.isPrimaryDirectionVertical ? secondaryItemSize : primaryItemSize);
-			style.setProperty('--virtuallist-item-height', this.isPrimaryDirectionVertical ? primaryItemSize : secondaryItemSize);
 			if (this.isPrimaryDirectionVertical) {
-				style.setProperty('--virtuallist-item-flex-box', '1 0 ' + secondary.itemSize + 'px');
+				this.itemStyle = {
+					'--virtuallist-item-width': secondaryItemSize,
+					'--virtuallist-item-height': primaryItemSize,
+					'--virtuallist-item-flex-box': '1 0 ' + secondary.itemSize + 'px'
+				};
+			} else {
+				this.itemStyle = {
+					'--virtuallist-item-width': primaryItemSize,
+					'--virtuallist-item-height': secondaryItemSize
+				};
 			}
 		}
 	}
@@ -728,7 +735,7 @@ class VirtualListCoreNative extends Component {
 		}
 
 		return (
-			<div ref={this.initWrapperRef} className={mergedClasses}>
+			<div ref={this.initWrapperRef} className={mergedClasses} style={this.itemStyle}>
 				<div {...props} className={css.container} ref={this.initContainerRef}>
 					{cc.length ? cc : (
 						<SpotlightPlaceholder data-index={0} data-vl-placeholder />
