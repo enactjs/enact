@@ -246,6 +246,14 @@ class VirtualListCoreNative extends Component {
 		this.restoreFocus();
 	}
 
+	shouldComponentUpdate (nextProps, nextState) {
+		if ((this.props.dataSize !== nextProps.dataSize) &&
+			(nextState.firstIndex + nextState.numOfItems) < nextProps.dataSize) {
+			return false;
+		}
+		return true;
+	}
+
 	scrollBounds = {
 		clientWidth: 0,
 		clientHeight: 0,
