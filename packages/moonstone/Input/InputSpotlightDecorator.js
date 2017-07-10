@@ -217,7 +217,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 				const isUp = is('up', keyCode);
 
 				// move spotlight
-				const shouldMoveSpotlight = (
+				const shouldSpotlightMove = (
 					// on left + at beginning of selection
 					(isLeft && safeSelectionStart(target) === 0) ||
 					// on right + at end of selection (note: fails on non-selectable types usually)
@@ -228,7 +228,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 					isDown
 				);
 
-				if (shouldMoveSpotlight) {
+				if (shouldSpotlightMove) {
 					const direction = getDirection(keyCode);
 
 					Spotlight.move(direction);
