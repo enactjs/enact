@@ -16,6 +16,8 @@ import PropTypes from 'prop-types';
 import {calcAriaLabel, Input} from '../Input';
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 
+import css from './ExpandableInput.less';
+
 const forwardMouseDown = forward('onMouseDown');
 
 /**
@@ -275,8 +277,10 @@ class ExpandableInputBase extends React.Component {
 		}
 	}
 
+	calcClassName = (className) => (className ? `${css.expandableInput} ${className}` : css.expandableInput)
+
 	render () {
-		const {disabled, iconAfter, iconBefore, onSpotlightDisappear, placeholder, spotlightDisabled, type, value, ...rest} = this.props;
+		const {className, disabled, iconAfter, iconBefore, onSpotlightDisappear, placeholder, spotlightDisabled, type, value, ...rest} = this.props;
 		delete rest.onChange;
 		delete rest.onInputChange;
 
@@ -284,6 +288,7 @@ class ExpandableInputBase extends React.Component {
 			<ExpandableItemBase
 				{...rest}
 				aria-label={this.calcAriaLabel()}
+				className={this.calcClassName(className)}
 				disabled={disabled}
 				label={this.calcLabel()}
 				onClose={this.handleClose}
@@ -294,6 +299,7 @@ class ExpandableInputBase extends React.Component {
 			>
 				<Input
 					autoFocus
+					className={css.decorator}
 					disabled={disabled}
 					dismissOnEnter
 					iconAfter={iconAfter}
