@@ -289,13 +289,13 @@ class ScrollbarBase extends PureComponent {
 
 	handlePrevScroll = (ev) => {
 		const {onPrevScroll, vertical} = this.props;
-		onPrevScroll(ev);
+		onPrevScroll({...ev, scrollbar: {vertical}, scrollButton: {previous: true}});
 		if (this.announceRef) this.announceRef.announce($L(vertical ? 'UP' : 'LEFT'));
 	}
 
 	handleNextScroll = (ev) => {
 		const {onNextScroll, vertical} = this.props;
-		onNextScroll(ev);
+		onNextScroll({...ev, scrollbar: {vertical}, scrollButton: {previous: false}});
 		if (this.announceRef) this.announceRef.announce($L(vertical ? 'DOWN' : 'RIGHT'));
 	}
 
