@@ -247,7 +247,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 
 		onKeyUp = (ev) => {
 			const {dismissOnEnter} = this.props;
-			const {currentTarget, keyCode, target} = ev;
+			const {currentTarget, keyCode, preventDefault, target} = ev;
 
 			if (this.state.focused === 'input') {
 				const isEnter = is('enter', keyCode);
@@ -261,13 +261,13 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 				if (shouldFocusDecorator) {
 					// we really only support the number type properly, so only handling this case
 					if (target.type === 'number') {
-						ev.preventDefault();
+						preventDefault();
 					}
 					this.focusDecorator(currentTarget);
 
 					// prevent Enter onKeyPress which triggers an onClick via Spotlight
 					if (isEnter) {
-						ev.preventDefault();
+						preventDefault();
 					}
 				}
 			}
