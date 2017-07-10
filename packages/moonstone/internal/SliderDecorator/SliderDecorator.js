@@ -65,8 +65,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static propTypes = /** @lends moonstone/internal/SliderDecorator.SliderDecorator.prototype */{
 			/**
-			 * By default, the slider accessibility value will be set by own's value.
-			 * When `aria-valuetext` is set, it will be used instead value for the slider.
+			 * Overrides the aria-valuetext for the slider which defaults to the current value
 			 *
 			 * @type {String|Number}
 			 * @public
