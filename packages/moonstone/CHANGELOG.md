@@ -19,8 +19,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/InputDecorator` support for `dismissOnEnter`
 - `moonstone` international fonts to always be used, even when unsupported font-weights or font-styles are requested
 
-### Removed
-
 ## [1.4.1] - 2017-07-05
 
 ### Changed
