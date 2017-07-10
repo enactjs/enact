@@ -290,6 +290,7 @@ class VirtualListCore extends Component {
 	curDataSize = 0
 	cc = []
 	scrollPosition = 0
+	itemStyle = null
 
 	containerRef = null
 
@@ -427,13 +428,19 @@ class VirtualListCore extends Component {
 		if (this.isItemSized) {
 			const
 				primaryItemSize = primary.itemSize + 'px',
-				secondaryItemSize = secondary.itemSize + 'px',
-				style = node.style;
+				secondaryItemSize = secondary.itemSize + 'px';
 
-			style.setProperty('--virtuallist-item-width', this.isPrimaryDirectionVertical ? secondaryItemSize : primaryItemSize);
-			style.setProperty('--virtuallist-item-height', this.isPrimaryDirectionVertical ? primaryItemSize : secondaryItemSize);
 			if (this.isPrimaryDirectionVertical) {
-				style.setProperty('--virtuallist-item-flex-box', '1 0 ' + secondary.itemSize + 'px');
+				this.itemStyle = {
+					'--virtuallist-item-width': secondaryItemSize,
+					'--virtuallist-item-height': primaryItemSize,
+					'--virtuallist-item-flex-box': '1 0 ' + secondary.itemSize + 'px'
+				};
+			} else {
+				this.itemStyle = {
+					'--virtuallist-item-width': primaryItemSize,
+					'--virtuallist-item-height': secondaryItemSize
+				};
 			}
 		}
 	}
@@ -757,7 +764,7 @@ class VirtualListCore extends Component {
 		}
 
 		return (
-			<div {...props} className={mergedClasses} ref={this.initContainerRef}>
+			<div {...props} className={mergedClasses} ref={this.initContainerRef} style={this.itemStyle}>
 				{cc.length ? cc : (
 					<SpotlightPlaceholder data-index={0} data-vl-placeholder />
 				)}
