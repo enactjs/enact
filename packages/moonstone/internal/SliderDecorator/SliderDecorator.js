@@ -200,13 +200,13 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			const
 				value = this.clamp(props.value),
-				valueText = props['aria-valuetext'];
+				valueText = props['aria-valuetext'] != null ? props['aria-valuetext'] : value;
 
 			this.state = {
 				active: false,
 				focused: false,
 				value: value,
-				valueText: valueText || value
+				valueText: valueText
 			};
 
 			if (__DEV__) {
@@ -221,14 +221,15 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillReceiveProps (nextProps) {
-			const {'aria-valuetext': valueText, backgroundProgress, max, min, value} = nextProps;
+			const {'aria-valuetext': ariaValueText, backgroundProgress, max, min, value} = nextProps;
 
-			if ((min !== this.props.min) || (max !== this.props.max) || (value !== this.state.value) || (valueText !== this.state.valueText)) {
+			if ((min !== this.props.min) || (max !== this.props.max) || (value !== this.state.value) || (ariaValueText !== this.state.valueText)) {
 				this.normalizeBounds(nextProps);
 				const clampedValue = this.clamp(value);
+				const valueText = ariaValueText != null ? ariaValueText : clampedValue;
 				this.setState({
 					value: clampedValue,
-					valueText: valueText || clampedValue
+					valueText: valueText
 				});
 			}
 

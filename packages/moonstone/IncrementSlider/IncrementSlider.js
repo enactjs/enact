@@ -369,8 +369,8 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			incrementSliderClasses: ({vertical, styler}) => styler.append({vertical, horizontal: !vertical}),
 			decrementIcon: ({decrementIcon, vertical}) => (decrementIcon || (vertical ? 'arrowlargedown' : 'arrowlargeleft')),
 			incrementIcon: ({incrementIcon, vertical}) => (incrementIcon || (vertical ? 'arrowlargeup' : 'arrowlargeright')),
-			decrementAriaLabel: ({'aria-valuetext': valueText, disabled, min, value}) => !(disabled || value <= min) ? (`${valueText || value} ${$L('press ok button to decrease the value')}`) : null,
-			incrementAriaLabel: ({'aria-valuetext': valueText, disabled, max, value}) => !(disabled || value >= max) ? (`${valueText || value} ${$L('press ok button to increase the value')}`) : null
+			decrementAriaLabel: ({'aria-valuetext': valueText, disabled, min, value}) => !(disabled || value <= min) ? (`${valueText != null ? valueText : value} ${$L('press ok button to decrease the value')}`) : null,
+			incrementAriaLabel: ({'aria-valuetext': valueText, disabled, max, value}) => !(disabled || value >= max) ? (`${valueText != null ? valueText : value} ${$L('press ok button to increase the value')}`) : null
 		},
 
 		render: ({active,
