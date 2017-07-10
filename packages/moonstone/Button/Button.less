@@ -206,7 +206,7 @@
 		}
 
 		// 'Selected' state
-		&.selected {
+		&.selected, :global(.contextualPopupOpen) & {
 			.bg {
 				border-color: @moon-spotlight-border-color;
 			}
@@ -273,7 +273,7 @@
 				}
 			});
 
-			&.selected {
+			&.selected, :global(.contextualPopupOpen) & {
 				// 'Selected+Focus' state, seen in grouped buttons
 				.focus({
 					.bg {
