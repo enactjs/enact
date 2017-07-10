@@ -219,7 +219,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		componentDidMount () {
 			const bounds = this.getScrollBounds();
 
-			this.updateEventListeners(bounds);
+			this.updateScrollabilityAndEventListeners(bounds);
 		}
 
 		componentDidUpdate () {
@@ -232,7 +232,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			const bounds = this.getScrollBounds();
 
-			this.updateEventListeners(bounds);
+			this.updateScrollabilityAndEventListeners(bounds);
 
 			if (this.scrollToInfo !== null) {
 				this.scrollTo(this.scrollToInfo);
@@ -282,6 +282,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		// status
+		horizontalScrollability = false
+		verticalScrollability = false
 		isScrollAnimationTargetAccumulated = false
 		wheelDirection = 0
 		isFirstDragging = false
@@ -770,11 +772,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		isHorizontallyScrollable = (bounds) => {
-			return this.childRef.isHorizontal() && (bounds.scrollWidth > bounds.clientWidth) && !isNaN(bounds.scrollWidth);
+			return this.horizontalScrollability && (bounds.scrollWidth > bounds.clientWidth) && !isNaN(bounds.scrollWidth);
 		}
 
 		isVerticallyScrollable = (bounds) => {
-			return this.childRef.isVertical() && (bounds.scrollHeight > bounds.clientHeight) && !isNaN(bounds.scrollHeight);
+			return this.verticalScrollability && (bounds.scrollHeight > bounds.clientHeight) && !isNaN(bounds.scrollHeight);
 		}
 
 		// scroll bar
@@ -842,7 +844,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				});
 			} else {
 				this.isInitializing = false;
-				if (curHorizontalScrollbarVisible || curVerticalScrollbarVisible) {
+				if (isHorizontalScrollbarVisible || isVerticalScrollbarVisible) {
 					// no visibility change but need to notify whichever scrollbars are visible of the
 					// updated bounds and scroll position
 					const updatedBounds = {
@@ -873,10 +875,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		updateEventListeners = (bounds) => {
+		updateScrollabilityAndEventListeners = (bounds) => {
 			const
 				{containerRef} = this,
 				childContainerRef = this.childRef.containerRef;
+
+			this.horizontalScrollability = this.childRef.isHorizontal();
+			this.verticalScrollability = this.childRef.isVertical();
 
 			if (containerRef && containerRef.addEventListener) {
 				// FIXME `onWheel` doesn't work on the v8 snapshot.
