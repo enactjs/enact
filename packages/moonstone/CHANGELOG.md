@@ -11,6 +11,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonstone/ExpandableList` to use 'radio' as the default, and adapt 'single' mode to render as a `moonstone/RadioItem` instead of a `moonstone/CheckboxItem`
+- `moonstone/VideoPlayer` not to hide pause icon when it appears
 
 ### Fixed
 

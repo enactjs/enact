@@ -230,8 +230,13 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 
 				if (shouldSpotlightMove) {
 					const direction = getDirection(keyCode);
+					const {getPointerMode, move, setPointerMode} = Spotlight;
 
-					Spotlight.move(direction);
+					if (getPointerMode()) {
+						setPointerMode(false);
+					}
+
+					move(direction);
 				} else if (isLeft || isRight) {
 					// prevent 5-way nav for left/right keys within the <input>
 					preventSpotlightNavigation(ev);
