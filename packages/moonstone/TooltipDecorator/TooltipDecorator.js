@@ -345,7 +345,7 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 		}
 
 		render () {
-			const {children, tooltipCasing, tooltipPreserveCase, tooltipText, tooltipWidth, tooltipProps, ...rest} = this.props;
+			const {children, tooltipCasing, tooltipPreserveCase, tooltipProps, tooltipText, tooltipWidth, ...rest} = this.props;
 			delete rest.tooltipDelay;
 			delete rest.tooltipPosition;
 
