@@ -10,10 +10,8 @@ const
 
 describe('MarqueeText', () => {
 	it('should determine the correct directionality of latin text on initial render', function () {
-		const content = ltrText;
-
 		const subject = mount(
-			<MarqueeText>{content}</MarqueeText>
+			<MarqueeText>{ltrText}</MarqueeText>
 		);
 
 		const expected = 'ltr';
@@ -23,10 +21,8 @@ describe('MarqueeText', () => {
 	});
 
 	it('should determine the correct directionality of non-latin text on initial render', function () {
-		const content = rtlText;
-
 		const subject = mount(
-			<MarqueeText>{content}</MarqueeText>
+			<MarqueeText>{rtlText}</MarqueeText>
 		);
 
 		const expected = 'rtl';
@@ -36,10 +32,8 @@ describe('MarqueeText', () => {
 	});
 
 	it('should force the directionality text if forceDirection is specified', function () {
-		const content = rtlText;
-
 		const subject = mount(
-			<MarqueeText forceDirection="ltr">{content}</MarqueeText>
+			<MarqueeText forceDirection="ltr">{rtlText}</MarqueeText>
 		);
 
 		const expected = 'ltr';
@@ -49,14 +43,11 @@ describe('MarqueeText', () => {
 	});
 
 	it('should switch directionality when the text content changes after initial render', function () {
-		const contentBefore = ltrText;
-		const contentAfter = rtlText;
-
 		const subject = mount(
-			<MarqueeText>{contentBefore}</MarqueeText>
+			<MarqueeText>{ltrText}</MarqueeText>
 		);
 
-		subject.setProps({children: contentAfter});
+		subject.setProps({children: rtlText});
 
 		const expected = 'rtl';
 		const actual = subject.find(`.${css.text}`).prop('style');
@@ -65,14 +56,11 @@ describe('MarqueeText', () => {
 	});
 
 	it('should not switch directionality when the text content changes after initial render and the forceDirection property was already set', function () {
-		const contentBefore = ltrText;
-		const contentAfter = rtlText;
-
 		const subject = mount(
-			<MarqueeText forceDirection="ltr">{contentBefore}</MarqueeText>
+			<MarqueeText forceDirection="ltr">{ltrText}</MarqueeText>
 		);
 
-		subject.setProps({children: contentAfter});
+		subject.setProps({children: rtlText});
 
 		const expected = 'ltr';
 		const actual = subject.find(`.${css.text}`).prop('style');

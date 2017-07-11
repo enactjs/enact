@@ -237,7 +237,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillReceiveProps (next) {
-			const {marqueeOn, marqueeDisabled, marqueeSpeed} = this.props;
+			const {forceDirection, marqueeOn, marqueeDisabled, marqueeSpeed} = this.props;
+			if (forceDirection !== next.forceDirection) {
+				this.setState({rtl: next.forceDirection ? (next.forceDirection === 'rtl') : null});
+			}
 			if ((!childrenEquals(this.props.children, next.children)) || (invalidateProps && didPropChange(invalidateProps, this.props, next))) {
 				this.invalidateMetrics();
 				this.cancelAnimation();
