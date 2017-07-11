@@ -8,6 +8,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/TooltipDecorator` property `tooltipProps` to attach props to tooltip component
+
 ### Changed
 
 - `moonstone/ExpandableList` to use 'radio' as the default, and adapt 'single' mode to render as a `moonstone/RadioItem` instead of a `moonstone/CheckboxItem`
