@@ -247,8 +247,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		componentDidUpdate (prevProps, prevState) {
-			if (prevState.rtl == null || prevProps.forceDirection !== this.props.forceDirection) {
+		componentDidUpdate (prevProps) {
+			if (this.state.rtl == null || prevProps.forceDirection !== this.props.forceDirection) {
 				const rtl = this.checkRtl();
 				// eslint-disable-next-line react/no-did-update-set-state
 				this.setState({rtl});
