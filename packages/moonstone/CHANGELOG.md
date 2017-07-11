@@ -8,13 +8,17 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/TooltipDecorator` property `tooltipProps` to attach props to tooltip component
+
 ### Changed
 
 - `moonstone/ExpandableList` to use 'radio' as the default, and adapt 'single' mode to render as a `moonstone/RadioItem` instead of a `moonstone/CheckboxItem`
+- `moonstone/VideoPlayer` not to hide pause icon when it appears
 
 ### Fixed
 
 - `moonstone/Marquee` to re-evaluate RTL orientation when its content changes
+- `moonstone/VirtualList` to restore focus on short lists
 - `moonstone/ExpandableInput` to expand the width of its contained `moonstone/Input`
 - `moonstone/InputDecorator` support for `dismissOnEnter`
 - `moonstone` international fonts to always be used, even when unsupported font-weights or font-styles are requested

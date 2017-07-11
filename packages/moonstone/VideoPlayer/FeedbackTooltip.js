@@ -10,7 +10,7 @@ import css from './VideoPlayer.less';
 
 /**
  * FeedbackTooltip {@link moonstone/VideoPlayer}. This displays the media's playback rate and
- * time infromation.
+ * time information.
  *
  * @class FeedbackTooltip
  * @memberof moonstone/VideoPlayer
