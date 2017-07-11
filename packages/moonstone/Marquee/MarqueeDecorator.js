@@ -128,7 +128,9 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			disabled: PropTypes.bool,
 
 			/**
-			 * Forces the `direction` of the marquee. Valid values are `'rtl'` and `'ltr'`. This includes non-text elements as well.
+			 * Forces the `direction` of the marquee. Valid values are `'rtl'` and `'ltr'`. This
+			 * includes non-text elements as well. The default behavior, if this prop is unset, is
+			 * to evaluate the text content for directionality using {@link i18n/util.isRtlText}.
 			 *
 			 * @type {String}
 			 * @public
@@ -212,7 +214,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			super(props);
 			this.state = {
 				overflow: 'ellipsis',
-				rtl: false
+				rtl: null
 			};
 			this.sync = false;
 			this.forceRestartMarquee = false;
@@ -235,16 +237,25 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillReceiveProps (next) {
-			const {marqueeOn, marqueeDisabled, marqueeSpeed} = this.props;
+			const {forceDirection, marqueeOn, marqueeDisabled, marqueeSpeed} = this.props;
+			if (forceDirection !== next.forceDirection) {
+				this.setState({rtl: next.forceDirection ? (next.forceDirection === 'rtl') : null});
+			}
 			if ((!childrenEquals(this.props.children, next.children)) || (invalidateProps && didPropChange(invalidateProps, this.props, next))) {
 				this.invalidateMetrics();
 				this.cancelAnimation();
+				this.setState({rtl: null});
 			} else if (next.marqueeOn !== marqueeOn || next.marqueeDisabled !== marqueeDisabled || next.marqueeSpeed !== marqueeSpeed) {
 				this.cancelAnimation();
 			}
 		}
 
 		componentDidUpdate () {
+			if (this.state.rtl == null) {
+				const rtl = this.checkRtl();
+				// eslint-disable-next-line react/no-did-update-set-state
+				this.setState({rtl});
+			}
 			if (this.distance === null) {
 				this.calculateMetrics();
 			}
@@ -330,9 +341,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (node && this.distance == null && !this.props.marqueeDisabled) {
 				this.distance = this.calculateDistance(node);
 				this.contentFits = !this.shouldAnimate(this.distance);
-				this.setState({
-					overflow: this.calculateTextOverflow(this.distance)
-				});
+				this.setState({overflow: this.calculateTextOverflow(this.distance)});
 			}
 		}
 
@@ -499,9 +508,14 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		cacheNode = (node) => {
 			this.node = node;
+			this.setState({rtl: this.checkRtl()});
+		}
+
+		checkRtl = () => {
 			const {forceDirection} = this.props;
-			const textContent = node && node.textContent;
-			this.setState({rtl: forceDirection ? forceDirection === 'rtl' : isRtlText(textContent)});
+			const textContent = this.node && this.node.textContent;
+			// If forceDirection is set, check if it is RTL; otherwise, determine the directionality
+			return (forceDirection ? (forceDirection === 'rtl') : isRtlText(textContent));
 		}
 
 		renderMarquee () {
