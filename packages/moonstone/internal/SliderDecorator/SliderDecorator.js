@@ -284,6 +284,10 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			barNode.style.transform = computeBarTransform(proportionProgress, vertical);
 			// If we know the knob should be in a custom place, use that place; otherwise, sync it with the progress.
 			knobNode.style.transform = computeKnobTransform(knobProgress, vertical, node);
+			// Cannot upgrade `transform` to the newer, faster `setProperty` due to lack of support from PhantomJS
+			// const knobTransform = computeKnobTransform(knobProgress, vertical, node);
+			// knobNode.style.setProperty('transform', knobTransform);
+			knobNode.style.setProperty('--knob-progress', knobProgress);
 			knobNode.dataset.climax = knobProgress > 0.5 ? 'falling' : 'rising';
 			this.notifyKnobMove(knobProgress, knobProgress !== proportionProgress);
 		}

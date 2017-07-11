@@ -9,6 +9,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 - `moonstone/TooltipDecorator` property `tooltipProps` to attach props to tooltip component
+- `moonstone/VideoPlayer` tooltip-thumbnail support with the `thumbnailSrc` prop and the `onScrub` callback to fire when the knob moves and a new thumbnail is needed
 
 ### Changed
 
