@@ -37,6 +37,7 @@ const defaultConfig = {
  * @public
  */
 const contextTypes = {
+	invalidateBounds: PropTypes.func,
 	registerPlaceholder: PropTypes.func,
 	unregisterPlaceholder: PropTypes.func
 };
@@ -83,10 +84,11 @@ const PlaceholderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		update = ({leftThreshold, topThreshold}) => {
-			const {offsetLeft, offsetTop} = this.placeholderRef;
+			const {offsetLeft, offsetTop, offsetHeight, offsetWidth} = this.placeholderRef;
 
-			if (offsetTop < topThreshold && offsetLeft < leftThreshold) {
+			if (offsetTop < topThreshold + offsetHeight && offsetLeft < leftThreshold + offsetWidth) {
 				this.setState({visible: true});
+				this.invalidateBounds();
 				this.context.unregisterPlaceholder(this);
 			}
 		}
