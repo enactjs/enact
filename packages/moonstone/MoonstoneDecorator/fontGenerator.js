@@ -185,24 +185,20 @@ function fontGenerator (locale = ilib.getLocale()) {
 			}));
 
 			// Build Bold
-			if (fonts[strLang].bold) {
-				fontSet.push(buildFont({
-					name: 'Moonstone LG Display' + name,
-					localName: fonts[strLang].bold,
-					weight: 700,
-					unicodeRange: fonts[strLang].unicodeRange
-				}));
-			}
+			fontSet.push(buildFont({
+				name: 'Moonstone LG Display' + name,
+				localName: (fonts[strLang].bold || fonts[strLang].regular), // fallback to regular
+				weight: 700,
+				unicodeRange: fonts[strLang].unicodeRange
+			}));
 
 			// Build Light
-			if (fonts[strLang].light) {
-				fontSet.push(buildFont({
-					name: 'Moonstone LG Display' + name,
-					localName: fonts[strLang].light,
-					weight: 300,
-					unicodeRange: fonts[strLang].unicodeRange
-				}));
-			}
+			fontSet.push(buildFont({
+				name: 'Moonstone LG Display' + name,
+				localName: (fonts[strLang].light || fonts[strLang].regular), // fallback to regular
+				weight: 300,
+				unicodeRange: fonts[strLang].unicodeRange
+			}));
 		}
 		return fontSet;
 	};

@@ -913,9 +913,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		getHorizontalScrollbar = (isHorizontalScrollbarVisible, isVerticalScrollbarVisible) => (
 			isHorizontalScrollbarVisible ? (
 				<Scrollbar
-					className={!isVerticalScrollbarVisible ? css.onlyHorizontalScrollbarNeeded : null}
-					disabled={!isHorizontalScrollbarVisible}
 					{...this.horizontalScrollbarProps}
+					corner={isVerticalScrollbarVisible}
+					disabled={!isHorizontalScrollbarVisible}
 				/>
 			) : null
 		)
@@ -923,9 +923,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		getVerticalScrollbar = (isHorizontalScrollbarVisible, isVerticalScrollbarVisible) => (
 			isVerticalScrollbarVisible ? (
 				<Scrollbar
-					className={!isHorizontalScrollbarVisible ? css.onlyVerticalScrollbarNeeded : null}
-					disabled={!isVerticalScrollbarVisible}
 					{...this.verticalScrollbarProps}
+					disabled={!isVerticalScrollbarVisible}
 				/>
 			) : null
 		)
@@ -944,13 +943,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
 				vscrollbar = this.getVerticalScrollbar(isHorizontalScrollbarVisible, isVerticalScrollbarVisible),
 				hscrollbar = this.getHorizontalScrollbar(isHorizontalScrollbarVisible, isVerticalScrollbarVisible),
-				scrollableClasses = classNames(
-					css.scrollable,
-					!(isHorizontalScrollbarVisible || isVerticalScrollbarVisible) ? css.scrollableHiddenScrollbars : null,
-					isHorizontalScrollbarVisible ? null : css.takeAvailableSpaceForVertical,
-					isVerticalScrollbarVisible ? null : css.takeAvailableSpaceForHorizontal,
-					className
-				);
+				scrollableClasses = classNames(css.scrollable, className);
 
 			delete props.cbScrollTo;
 			delete props.className;
@@ -969,14 +962,16 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					focusableScrollbar={focusableScrollbar}
 					style={style}
 				>
-					<Wrapped
-						{...props}
-						cbScrollTo={this.scrollTo}
-						className={css.container}
-						onScroll={this.handleScroll}
-						ref={this.initChildRef}
-					/>
-					{vscrollbar}
+					<div className={css.container}>
+						<Wrapped
+							{...props}
+							cbScrollTo={this.scrollTo}
+							className={css.content}
+							onScroll={this.handleScroll}
+							ref={this.initChildRef}
+						/>
+						{vscrollbar}
+					</div>
 					{hscrollbar}
 				</ScrollableSpotlightContainer>
 			);
