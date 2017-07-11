@@ -250,8 +250,8 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		componentDidUpdate (prevProps) {
-			if (this.state.rtl == null || prevProps.forceDirection !== this.props.forceDirection) {
+		componentDidUpdate () {
+			if (this.state.rtl == null) {
 				const rtl = this.checkRtl();
 				// eslint-disable-next-line react/no-did-update-set-state
 				this.setState({rtl});
@@ -394,8 +394,6 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				return true;
 			} else if (!this.state.animating) {
 				this.setTimeout(() => {
-					const rtl = this.checkRtl();
-					this.setState({rtl});
 					this.calculateMetrics();
 					if (!this.contentFits) {
 						this.setState({
