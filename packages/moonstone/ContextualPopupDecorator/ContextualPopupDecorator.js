@@ -7,6 +7,7 @@
  */
 
 import {contextTypes} from '@enact/i18n/I18nDecorator';
+import {extractAriaProps} from '@enact/core/util';
 import FloatingLayer from '@enact/ui/FloatingLayer';
 import hoc from '@enact/core/hoc';
 import {on, off} from '@enact/core/dispatcher';
@@ -452,6 +453,8 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		render () {
 			const {showCloseButton, popupComponent: PopupComponent, popupClassName, noAutoDismiss, open, onClose, popupProps, skin, spotlightRestrict, ...rest} = this.props;
 			const scrimType = spotlightRestrict === 'self-only' ? 'transparent' : 'none';
+			const popupPropsRef = Object.assign({}, popupProps);
+			const ariaProps = extractAriaProps(popupPropsRef);
 
 			if (!noSkin) {
 				rest.skin = skin;
@@ -461,6 +464,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				<div className={css.contextualPopupDecorator}>
 					<FloatingLayer open={open} scrimType={scrimType} noAutoDismiss={noAutoDismiss} onDismiss={onClose}>
 						<ContextualPopupContainer
+							{...ariaProps}
 							className={popupClassName}
 							showCloseButton={showCloseButton}
 							onCloseButtonClick={onClose}
@@ -472,7 +476,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 							skin={skin}
 							spotlightRestrict={spotlightRestrict}
 						>
-							<PopupComponent {...popupProps} />
+							<PopupComponent {...popupPropsRef} />
 						</ContextualPopupContainer>
 					</FloatingLayer>
 					<div ref={this.getClientNode}>
