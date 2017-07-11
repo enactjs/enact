@@ -1,7 +1,4 @@
-import {ScrollerNative as Scroller} from '@enact/moonstone/Scroller/ScrollerNative.js';
-
-
-import {ScrollerBase} from '@enact/moonstone/Scroller';
+import Scroller, {ScrollerBase} from '@enact/moonstone/Scroller';
 import ri from '@enact/ui/resolution';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
