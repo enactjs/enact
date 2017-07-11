@@ -30,7 +30,6 @@
 			right: @moon-video-player-padding-side;
 
 			.infoFrame {
-				position: relative;
 				display: flex;
 				margin-bottom: @moon-spotlight-outset;
 
@@ -38,9 +37,9 @@
 				.titleFrame {
 					@badges-present-transition: transform 500ms ease-in-out;
 
+					position: relative;
 					flex-grow: 1;
 					opacity: 1;
-					overflow: hidden;
 					.margin-start-end(0, @moon-spotlight-outset);
 
 					&.hidden {
@@ -53,6 +52,7 @@
 						--infoComponentsOffset: 0;
 						position: absolute;
 						bottom: -5px;
+						width: 100%;
 						.moon-text-base(@moon-video-player-title-size);
 						line-height: @moon-header-line-height;
 						transition: @badges-present-transition;
