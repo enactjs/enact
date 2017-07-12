@@ -212,10 +212,57 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			props.cbScrollTo(this.scrollTo);
 		}
 
+		// component life cycle
+
 		getChildContext () {
 			return {
 				invalidateBounds: this.enqueueForceUpdate
 			};
+		}
+
+		componentDidMount () {
+			this.updateScrollabilityAndEventListeners();
+		}
+
+		componentDidUpdate () {
+			this.isInitializing = false;
+
+			// Need to sync calculated client size if it is different from the real size
+			if (this.childRef.syncClientSize) {
+				this.childRef.syncClientSize();
+			}
+
+			this.updateScrollabilityAndEventListeners();
+
+			if (this.scrollToInfo !== null) {
+				this.scrollTo(this.scrollToInfo);
+			}
+		}
+
+		componentWillUnmount () {
+			const
+				{containerRef} = this,
+				childContainerRef = this.childRef.getContainerNode();
+
+			// Before call cancelAnimationFrame, you must send scrollStop Event.
+			this.doScrollStop();
+			this.forceUpdateJob.stop();
+			this.scrollStopJob.stop();
+
+			if (containerRef && containerRef.removeEventListener) {
+				// FIXME `onWheel` doesn't work on the v8 snapshot.
+				containerRef.removeEventListener('wheel', this.onWheel);
+			}
+			if (childContainerRef && childContainerRef.removeEventListener) {
+				// FIXME `onScroll` doesn't work on the v8 snapshot.
+				childContainerRef.removeEventListener('scroll', this.onScroll, {capture: true});
+				// FIXME `onFocus` doesn't work on the v8 snapshot.
+				childContainerRef.removeEventListener('focus', this.onFocus, {capture: true});
+				// FIXME `onMouseOver` doesn't work on the v8 snapshot.
+				childContainerRef.removeEventListener('mouseover', this.onMouseOver, {capture: true});
+				// FIXME `onMouseMove` doesn't work on the v8 snapshot.
+				childContainerRef.removeEventListener('mousemove', this.onMouseMove, {capture: true});
+			}
 		}
 
 		// status
@@ -711,53 +758,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.updateScrollbars();
 		}
 
-		// component life cycle
-
-		componentDidMount () {
-			this.updateScrollabilityAndEventListeners();
-		}
-
-		componentDidUpdate () {
-			this.isInitializing = false;
-
-			// Need to sync calculated client size if it is different from the real size
-			if (this.childRef.syncClientSize) {
-				this.childRef.syncClientSize();
-			}
-
-			this.updateScrollabilityAndEventListeners();
-
-			if (this.scrollToInfo !== null) {
-				this.scrollTo(this.scrollToInfo);
-			}
-		}
-
-		componentWillUnmount () {
-			const
-				{containerRef} = this,
-				childContainerRef = this.childRef.getContainerNode();
-
-			// Before call cancelAnimationFrame, you must send scrollStop Event.
-			this.doScrollStop();
-			this.forceUpdateJob.stop();
-			this.scrollStopJob.stop();
-
-			if (containerRef && containerRef.removeEventListener) {
-				// FIXME `onWheel` doesn't work on the v8 snapshot.
-				containerRef.removeEventListener('wheel', this.onWheel);
-			}
-			if (childContainerRef && childContainerRef.removeEventListener) {
-				// FIXME `onScroll` doesn't work on the v8 snapshot.
-				childContainerRef.removeEventListener('scroll', this.onScroll, {capture: true});
-				// FIXME `onFocus` doesn't work on the v8 snapshot.
-				childContainerRef.removeEventListener('focus', this.onFocus, {capture: true});
-				// FIXME `onMouseOver` doesn't work on the v8 snapshot.
-				childContainerRef.removeEventListener('mouseover', this.onMouseOver, {capture: true});
-				// FIXME `onMouseMove` doesn't work on the v8 snapshot.
-				childContainerRef.removeEventListener('mousemove', this.onMouseMove, {capture: true});
-			}
-		}
-
 		// forceUpdate is a bit jarring and may interrupt other actions like animation so we'll
 		// queue it up in case we get multiple calls (e.g. when grouped expandables toggle).
 		//
@@ -784,9 +784,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		getHorizontalScrollbar = (isHorizontalScrollbarVisible, isVerticalScrollbarVisible) => (
 			isHorizontalScrollbarVisible ? (
 				<Scrollbar
-					className={!isVerticalScrollbarVisible ? css.onlyHorizontalScrollbarNeeded : null}
-					disabled={!isHorizontalScrollbarVisible}
 					{...this.horizontalScrollbarProps}
+					corner={isVerticalScrollbarVisible}
+					disabled={!isHorizontalScrollbarVisible}
 				/>
 			) : null
 		)
@@ -794,9 +794,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		getVerticalScrollbar = (isHorizontalScrollbarVisible, isVerticalScrollbarVisible) => (
 			isVerticalScrollbarVisible ? (
 				<Scrollbar
-					className={!isHorizontalScrollbarVisible ? css.onlyVerticalScrollbarNeeded : null}
-					disabled={!isVerticalScrollbarVisible}
 					{...this.verticalScrollbarProps}
+					disabled={!isVerticalScrollbarVisible}
 				/>
 			) : null
 		)
@@ -808,13 +807,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
 				vscrollbar = this.getVerticalScrollbar(isHorizontalScrollbarVisible, isVerticalScrollbarVisible),
 				hscrollbar = this.getHorizontalScrollbar(isHorizontalScrollbarVisible, isVerticalScrollbarVisible),
-				scrollableClasses = classNames(
-					css.scrollable,
-					!(isHorizontalScrollbarVisible || isVerticalScrollbarVisible) ? css.scrollableHiddenScrollbars : null,
-					isHorizontalScrollbarVisible ? null : css.takeAvailableSpaceForVertical,
-					isVerticalScrollbarVisible ? null : css.takeAvailableSpaceForHorizontal,
-					className
-				);
+				scrollableClasses = classNames(css.scrollable, className);
 
 			delete props.cbScrollTo;
 			delete props.className;
@@ -833,8 +826,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					focusableScrollbar={focusableScrollbar}
 					style={style}
 				>
-					<Wrapped {...props} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={css.container} />
-					{vscrollbar}
+					<div className={css.container}>
+						<Wrapped {...props} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={css.content} />
+						{vscrollbar}
+					</div>
 					{hscrollbar}
 				</ScrollableSpotlightContainer>
 			);

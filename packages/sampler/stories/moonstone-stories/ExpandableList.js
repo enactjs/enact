@@ -19,7 +19,7 @@ storiesOf('ExpandableList')
 				onSelect={action('onSelect')}
 				onClose={action('onClose')}
 				onOpen={action('onOpen')}
-				select={select('select', ['single', 'radio', 'multiple'], 'single')}
+				select={select('select', ['radio', 'multiple', 'single'], 'radio')}
 				title={text('title', 'title')}
 			>
 				{['option1', 'option2', 'option3']}
