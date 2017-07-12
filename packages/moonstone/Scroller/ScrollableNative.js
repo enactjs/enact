@@ -10,7 +10,6 @@ import {contextTypes as contextTypesResize} from '@enact/ui/Resizable';
 import {contextTypes as contextTypesRtl} from '@enact/i18n/I18nDecorator';
 import deprecate from '@enact/core/internal/deprecate';
 import {forward} from '@enact/core/handle';
-import {getLastContainer} from '@enact/spotlight/src/container';
 import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
@@ -26,6 +25,7 @@ import Scrollbar from './Scrollbar';
 import scrollbarCss from './Scrollbar.less';
 
 const
+	forwardKeyUp = forward('onKeyUp'),
 	forwardScroll = forward('onScroll'),
 	forwardScrollStart = forward('onScrollStart'),
 	forwardScrollStop = forward('onScrollStop');
@@ -234,8 +234,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		verticalScrollability = false
 		isScrollAnimationTargetAccumulated = false
 		isInitializing = true
-		pageDistanceForUp = 0
-		pageDistanceForDown = 0
+		pageDistance = 0
 		animateOnFocus = true
 
 		// event handlers
@@ -416,12 +415,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				bounds = this.getScrollBounds(),
 				isVertical = this.canScrollVertically(bounds),
 				isHorizontal = this.canScrollHorizontally(bounds),
-				pageDistance = isPageUp(keyCode) ? this.pageDistanceForUp : this.pageDistanceForDown,
+				pageDistance = isPageUp(keyCode) ? (this.pageDistance * -1) : this.pageDistance,
 				spotItem = Spotlight.getCurrent();
 
 			if (!Spotlight.getPointerMode() && spotItem) {
 				const
-					containerId = getLastContainer(),
+					containerId = Spotlight.getActiveContainer(),
 					direction = this.getPageDirection(keyCode, isVertical),
 					rDirection = reverseDirections[direction],
 					viewportBounds = this.containerRef.getBoundingClientRect(),
@@ -433,13 +432,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
 				} else if (next !== spotItem) {
 					this.animateOnFocus = false;
-					next.focus();
+					Spotlight.focus(next);
 				} else {
 					const nextPage = this.childRef.scrollToNextPage({direction, reverseDirection: rDirection, focusedItem: spotItem});
 
 					if (typeof nextPage === 'object') {
 						this.animateOnFocus = false;
-						nextPage.focus();
+						Spotlight.focus(nextPage);
 					} else if (!nextPage) {
 						scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
 					}
@@ -449,11 +448,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		onKeyUp = ({keyCode}) => {
+		onKeyUp = (e) => {
 			this.animateOnFocus = true;
-			if (isPageUp(keyCode) || isPageDown(keyCode)) {
-				this.scrollByPage(keyCode);
+			if (isPageUp(e.keyCode) || isPageDown(e.keyCode)) {
+				this.scrollByPage(e.keyCode);
 			}
+			forwardKeyUp(e, this.props);
 		}
 
 		onScrollbarBtnHandler = (orientation, direction) => {
@@ -810,8 +810,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				bounds = this.getScrollBounds(),
 				isVertical = this.canScrollVertically(bounds);
 
-			this.pageDistanceForDown = (isVertical ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
-			this.pageDistanceForUp = this.pageDistanceForDown * -1;
+			this.pageDistance = (isVertical ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
 			this.updateScrollabilityAndEventListeners();
 		}
 

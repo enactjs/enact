@@ -9,7 +9,6 @@
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import deprecate from '@enact/core/internal/deprecate';
-import {getLastContainer} from '@enact/spotlight/src/container';
 import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
@@ -196,7 +195,7 @@ class ScrollerBase extends Component {
 	scrollToNextPage = ({direction, reverseDirection, focusedItem}) => {
 		const
 			endPoint = this.getNextEndPoint(direction, focusedItem.getBoundingClientRect()),
-			next = getTargetByDirectionFromPosition(reverseDirection, endPoint, getLastContainer());
+			next = getTargetByDirectionFromPosition(reverseDirection, endPoint, Spotlight.getActiveContainer());
 
 		return (next !== focusedItem) && next;
 	}
