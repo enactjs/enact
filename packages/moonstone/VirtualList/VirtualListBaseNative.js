@@ -7,6 +7,7 @@
 
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
+import {forward} from '@enact/core/handle';
 import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
@@ -23,6 +24,7 @@ const SpotlightPlaceholder = Spottable('div');
 
 const
 	dataContainerMutedAttribute = 'data-container-muted',
+	forwardKeyDown = forward('onKeyDown'),
 	nop = () => {},
 	isDown = is('down'),
 	isLeft = is('left'),
@@ -339,12 +341,12 @@ class VirtualListCoreNative extends Component {
 		return {primaryPosition, secondaryPosition};
 	}
 
-	getItemPosition = (index, stickTo = 'floor') => {
+	getItemPosition = (index, stickTo = 'end') => {
 		const
 			{itemSize} = this.props,
 			{primary} = this,
 			position = this.getGridPosition(index),
-			offset = ((itemSize instanceof Object) || stickTo === 'ceil') ? 0 : primary.clientSize - primary.itemSize;
+			offset = ((itemSize instanceof Object) || stickTo === 'start') ? 0 : primary.clientSize - primary.itemSize;
 
 		position.primaryPosition -= offset;
 
@@ -703,7 +705,7 @@ class VirtualListCoreNative extends Component {
 			{firstIndex, numOfItems} = this.state,
 			currentIndex = Number.parseInt(target.getAttribute(dataIndexAttribute));
 
-		if (!data || !Array.isArray(data) || data[currentIndex].disabled) {
+		if (!data || !Array.isArray(data) || !data[currentIndex] || data[currentIndex].disabled) {
 			return false;
 		}
 
@@ -760,7 +762,7 @@ class VirtualListCoreNative extends Component {
 			cbScrollTo({
 				index: nextIndex,
 				focus: true,
-				stickTo: isForward ? 'floor' : 'ceil'
+				stickTo: isForward ? 'end' : 'start'
 			});
 			return true;
 		}
@@ -770,12 +772,13 @@ class VirtualListCoreNative extends Component {
 
 	onKeyDown = (e) => {
 		const {keyCode, target} = e;
-		this.isScrolledBy5way = false;
 
+		this.isScrolledBy5way = false;
 		if (getDirection(keyCode)) {
 			e.preventDefault();
 			this.isScrolledBy5way = this.jumpToSpottableItem(keyCode, target);
 		}
+		forwardKeyDown(e, this.props);
 	}
 
 	setContainerDisabled = (bool) => {
