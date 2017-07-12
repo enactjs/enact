@@ -19,7 +19,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/VirtualList` to restore focus on short lists
 - `moonstone/ExpandableInput` to expand the width of its contained `moonstone/Input`
-- `moonstone/InputDecorator` support for `dismissOnEnter`
+- `moonstone/Input` support for `dismissOnEnter`
+- `moonstone/Input` focus management to prevent stealing focus when programmatically moved elsewhere
 - `moonstone` international fonts to always be used, even when unsupported font-weights or font-styles are requested
 
 ## [1.4.1] - 2017-07-05
@@ -32,7 +33,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/ContextualPopupDecorator` close button to account for large text size
-- `moonstone/Input` focus management to prevent stealing focus when programmatically moved elsewhere
 
 ### Removed
 - `moonstone/ContextualPopupDecorator` to not spot controls other than its activator when navigating out via 5-way
