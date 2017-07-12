@@ -484,7 +484,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				vertical = this.canScrollVertically(bounds) && isVerticalScrollBar,
 				pageDistance = (vertical ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
 
-			if (vertical || horizontal) {
+			if (horizontal || vertical) {
 				this.scrollToAccumulatedTarget(isPreviousScrollButton ? -pageDistance : pageDistance, vertical);
 			}
 		}
@@ -581,7 +581,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				targetY = clamp(0, bounds.maxTop, targetY);
 
 				this.scroll(targetX, targetY);
-				this.stop({indexToFocus, nodeToFocus, bounds});
+				this.stop({indexToFocus, nodeToFocus});
 			}
 		}
 
@@ -600,7 +600,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					clamp(0, bounds.maxLeft, targetX),
 					clamp(0, bounds.maxTop, targetY)
 				);
-				this.stop({indexToFocus, nodeToFocus, bounds});
+				this.stop({indexToFocus, nodeToFocus});
 			}
 		}
 
