@@ -715,13 +715,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		canScrollHorizontally = (bounds) => {
 			const {direction} = this;
 
-			return (this.direction === 'horizontal' || this.direction === 'both') && (bounds.scrollWidth > bounds.clientWidth) && !isNaN(bounds.scrollWidth);
+			return (direction === 'horizontal' || direction === 'both') && (bounds.scrollWidth > bounds.clientWidth) && !isNaN(bounds.scrollWidth);
 		}
 
 		canScrollVertically = (bounds) => {
 			const {direction} = this;
 
-			return (this.direction === 'vertical' || this.direction === 'both') && (bounds.scrollHeight > bounds.clientHeight) && !isNaN(bounds.scrollHeight);
+			return (direction === 'vertical' || direction === 'both') && (bounds.scrollHeight > bounds.clientHeight) && !isNaN(bounds.scrollHeight);
 		}
 
 		// scroll bar
