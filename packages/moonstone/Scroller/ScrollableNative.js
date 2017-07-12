@@ -223,10 +223,62 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			props.cbScrollTo(this.scrollTo);
 		}
 
+		// component life cycle
+
 		getChildContext () {
 			return {
 				invalidateBounds: this.enqueueForceUpdate
 			};
+		}
+
+		componentDidMount () {
+			const
+				bounds = this.getScrollBounds(),
+				isVertical = this.canScrollVertically(bounds);
+
+			this.pageDistance = (isVertical ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
+			this.updateScrollabilityAndEventListeners();
+		}
+
+		componentDidUpdate () {
+			this.isInitializing = false;
+
+			// Need to sync calculated client size if it is different from the real size
+			if (this.childRef.syncClientSize) {
+				this.childRef.syncClientSize();
+			}
+
+			this.updateScrollabilityAndEventListeners();
+
+			if (this.scrollToInfo !== null) {
+				this.scrollTo(this.scrollToInfo);
+			}
+		}
+
+		componentWillUnmount () {
+			const
+				{containerRef} = this,
+				childContainerRef = this.childRef.getContainerNode();
+
+			// Before call cancelAnimationFrame, you must send scrollStop Event.
+			this.doScrollStop();
+			this.forceUpdateJob.stop();
+			this.scrollStopJob.stop();
+
+			if (containerRef && containerRef.removeEventListener) {
+				// FIXME `onWheel` doesn't work on the v8 snapshot.
+				containerRef.removeEventListener('wheel', this.onWheel);
+			}
+			if (childContainerRef && childContainerRef.removeEventListener) {
+				// FIXME `onScroll` doesn't work on the v8 snapshot.
+				childContainerRef.removeEventListener('scroll', this.onScroll, {capture: true});
+				// FIXME `onFocus` doesn't work on the v8 snapshot.
+				childContainerRef.removeEventListener('focus', this.onFocus, {capture: true});
+				// FIXME `onMouseOver` doesn't work on the v8 snapshot.
+				childContainerRef.removeEventListener('mouseover', this.onMouseOver, {capture: true});
+				// FIXME `onMouseMove` doesn't work on the v8 snapshot.
+				childContainerRef.removeEventListener('mousemove', this.onMouseMove, {capture: true});
+			}
 		}
 
 		// status
@@ -801,58 +853,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			childContainerRef.style.scrollBehavior = 'smooth';
 
 			this.updateScrollbars();
-		}
-
-		// component life cycle
-
-		componentDidMount () {
-			const
-				bounds = this.getScrollBounds(),
-				isVertical = this.canScrollVertically(bounds);
-
-			this.pageDistance = (isVertical ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
-			this.updateScrollabilityAndEventListeners();
-		}
-
-		componentDidUpdate () {
-			this.isInitializing = false;
-
-			// Need to sync calculated client size if it is different from the real size
-			if (this.childRef.syncClientSize) {
-				this.childRef.syncClientSize();
-			}
-
-			this.updateScrollabilityAndEventListeners();
-
-			if (this.scrollToInfo !== null) {
-				this.scrollTo(this.scrollToInfo);
-			}
-		}
-
-		componentWillUnmount () {
-			const
-				{containerRef} = this,
-				childContainerRef = this.childRef.getContainerNode();
-
-			// Before call cancelAnimationFrame, you must send scrollStop Event.
-			this.doScrollStop();
-			this.forceUpdateJob.stop();
-			this.scrollStopJob.stop();
-
-			if (containerRef && containerRef.removeEventListener) {
-				// FIXME `onWheel` doesn't work on the v8 snapshot.
-				containerRef.removeEventListener('wheel', this.onWheel);
-			}
-			if (childContainerRef && childContainerRef.removeEventListener) {
-				// FIXME `onScroll` doesn't work on the v8 snapshot.
-				childContainerRef.removeEventListener('scroll', this.onScroll, {capture: true});
-				// FIXME `onFocus` doesn't work on the v8 snapshot.
-				childContainerRef.removeEventListener('focus', this.onFocus, {capture: true});
-				// FIXME `onMouseOver` doesn't work on the v8 snapshot.
-				childContainerRef.removeEventListener('mouseover', this.onMouseOver, {capture: true});
-				// FIXME `onMouseMove` doesn't work on the v8 snapshot.
-				childContainerRef.removeEventListener('mousemove', this.onMouseMove, {capture: true});
-			}
 		}
 
 		// forceUpdate is a bit jarring and may interrupt other actions like animation so we'll

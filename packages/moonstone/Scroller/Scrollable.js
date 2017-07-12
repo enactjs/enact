@@ -229,10 +229,60 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			props.cbScrollTo(this.scrollTo);
 		}
 
+		// component life cycle
+
 		getChildContext () {
 			return {
 				invalidateBounds: this.enqueueForceUpdate
 			};
+		}
+
+		componentDidMount () {
+			const
+				bounds = this.getScrollBounds(),
+				isVertical = this.canScrollVertically(bounds);
+
+			this.pageDistance = (isVertical ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
+			this.updateScrollabilityAndEventListeners();
+		}
+
+		componentDidUpdate () {
+			this.isInitializing = false;
+
+			// Need to sync calculated client size if it is different from the real size
+			if (this.childRef.syncClientSize) {
+				this.childRef.syncClientSize();
+			}
+
+			this.updateScrollabilityAndEventListeners();
+
+			if (this.scrollToInfo !== null) {
+				this.scrollTo(this.scrollToInfo);
+			} else {
+				this.updateScrollOnFocus();
+			}
+		}
+
+		componentWillUnmount () {
+			const
+				{containerRef} = this,
+				childContainerRef = this.childRef.containerRef;
+
+			// Before call cancelAnimationFrame, you must send scrollStop Event.
+			if (this.animator.isAnimating()) {
+				this.doScrollStop();
+				this.animator.stop();
+			}
+			this.forceUpdateJob.stop();
+
+			if (containerRef && containerRef.removeEventListener) {
+				// FIXME `onWheel` doesn't work on the v8 snapshot.
+				containerRef.removeEventListener('wheel', this.onWheel);
+			}
+			if (childContainerRef && childContainerRef.removeEventListener) {
+				// FIXME `onFocus` doesn't work on the v8 snapshot.
+				childContainerRef.removeEventListener('focus', this.onFocus, true);
+			}
 		}
 
 		// status
@@ -932,56 +982,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			// update `scrollHeight`
 			this.bounds.scrollHeight = currentScrollHeight;
-		}
-
-		// component life cycle
-
-		componentDidMount () {
-			const
-				bounds = this.getScrollBounds(),
-				isVertical = this.canScrollVertically(bounds);
-
-			this.pageDistance = (isVertical ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
-			this.updateScrollabilityAndEventListeners();
-		}
-
-		componentDidUpdate () {
-			this.isInitializing = false;
-
-			// Need to sync calculated client size if it is different from the real size
-			if (this.childRef.syncClientSize) {
-				this.childRef.syncClientSize();
-			}
-
-			this.updateScrollabilityAndEventListeners();
-
-			if (this.scrollToInfo !== null) {
-				this.scrollTo(this.scrollToInfo);
-			} else {
-				this.updateScrollOnFocus();
-			}
-		}
-
-		componentWillUnmount () {
-			const
-				{containerRef} = this,
-				childContainerRef = this.childRef.containerRef;
-
-			// Before call cancelAnimationFrame, you must send scrollStop Event.
-			if (this.animator.isAnimating()) {
-				this.doScrollStop();
-				this.animator.stop();
-			}
-			this.forceUpdateJob.stop();
-
-			if (containerRef && containerRef.removeEventListener) {
-				// FIXME `onWheel` doesn't work on the v8 snapshot.
-				containerRef.removeEventListener('wheel', this.onWheel);
-			}
-			if (childContainerRef && childContainerRef.removeEventListener) {
-				// FIXME `onFocus` doesn't work on the v8 snapshot.
-				childContainerRef.removeEventListener('focus', this.onFocus, true);
-			}
 		}
 
 		// forceUpdate is a bit jarring and may interrupt other actions like animation so we'll
