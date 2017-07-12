@@ -75,7 +75,6 @@ const MediaTitleBase = kind({
 			'infoComponents',
 			infoVisible ? 'visible' : 'hidden'
 		),
-		childrenRole: ({infoVisible}) => infoVisible ? 'alert' : '',
 		className: ({visible, styler}) => styler.append(
 			visible ? 'visible' : 'hidden'
 		),
@@ -85,7 +84,7 @@ const MediaTitleBase = kind({
 		})
 	},
 
-	render: ({childrenRole, children, childrenClassName, title, titleClassName, ...rest}) => {
+	render: ({children, childrenClassName, title, titleClassName, ...rest}) => {
 		delete rest.infoVisible;
 		delete rest.visible;
 
@@ -94,7 +93,7 @@ const MediaTitleBase = kind({
 				<MarqueeText className={titleClassName} marqueeOn="render">
 					{title}
 				</MarqueeText>
-				<div role={childrenRole} className={childrenClassName}>  {/* tabIndex={-1} */}
+				<div className={childrenClassName}>  {/* tabIndex={-1} */}
 					{children}
 				</div>
 			</div>

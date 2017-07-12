@@ -503,6 +503,12 @@ const VideoPlayerBase = class extends React.Component {
 		this.speedIndex = 0;
 		this.titleOffsetCalculated = false;
 		this.selectPlaybackRates('fastForward');
+		this.firstTitleRead = {
+			role: "alert",
+			'aria-live': "off",
+			'aria-label': this.props.title
+		};
+		this.firstMoreInfoReaded = false;
 
 		this.initI18n();
 
@@ -704,9 +710,6 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	showControls = () => {
-		// Read the title
-		this.announce(this.props.title);
-
 		this.startDelayedFeedbackHide();
 		this.startDelayedTitleHide();
 		forwardControlsAvailable({available: true}, this.props);
@@ -719,6 +722,8 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	hideControls = () => {
+		this.firstTitleRead = null;
+
 		this.stopDelayedFeedbackHide();
 		this.stopDelayedTitleHide();
 		forwardControlsAvailable({available: false}, this.props);
@@ -851,6 +856,12 @@ const VideoPlayerBase = class extends React.Component {
 
 	reloadVideo = () => {
 		// When changing a HTML5 video, you have to reload it.
+		this.firstTitleRead = {
+			role: "alert",
+			'aria-live': "off",
+			'aria-label': this.props.title
+		};
+		this.firstMoreInfoReaded = false;
 		this.video.load();
 	}
 
@@ -1271,6 +1282,12 @@ const VideoPlayerBase = class extends React.Component {
 			more: !this.state.more,
 			titleVisible: true
 		});
+		if (this.firstMoreInfoReaded === false) {
+			this.announce(this.props.infoComponents + ' back button');
+			this.firstMoreInfoReaded = true;
+		} else {
+			this.announce(this.state.more ? 'more button' : 'back button');
+		}
 	}
 
 	setPlayerRef = (node) => {
@@ -1340,7 +1357,7 @@ const VideoPlayerBase = class extends React.Component {
 				</Overlay>
 
 				{this.state.bottomControlsRendered ?
-					<div className={css.fullscreen + ' enyo-fit scrim'} style={{display: this.state.bottomControlsVisible ? 'block' : 'none'}}>
+					<div className={css.fullscreen + ' enyo-fit scrim'} style={{display: this.state.bottomControlsVisible ? 'block' : 'none'}} {...this.firstTitleRead}>
 						<Container className={css.bottom} data-container-disabled={!this.state.bottomControlsVisible}>
 							{/* Info Section: Title, Description, Times */}
 							<div className={css.infoFrame}>
