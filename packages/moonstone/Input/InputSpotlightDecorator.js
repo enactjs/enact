@@ -114,6 +114,18 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 		}
 
 		componentDidUpdate (_, prevState) {
+			const current = Spotlight.getCurrent();
+			const {node: prev} = prevState;
+
+			// do not steal focus if has moved elsewhere by verifying:
+			// * Something has focus, and
+			// * Input had focus before (this.state.node is null until the input is focused), and
+			// * current is neither the previous nor current node
+			if (current && prev && current !== this.state.node && current !== prev) {
+				this.blur();
+				return;
+			}
+
 			if (this.state.node) {
 				this.state.node.focus();
 			}
