@@ -3,6 +3,7 @@ import Holdable from '@enact/ui/Holdable';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {boolean, select, text} from '@kadira/storybook-addon-knobs';
+import Spotlight from '@enact/spotlight';
 
 const HoldableButton = Holdable(Button);
 const LongPressButton = Holdable({
@@ -13,6 +14,9 @@ const LongPressButton = Holdable({
 	frequency: 1000
 }, Button);
 const ResumeHoldButton = Holdable({resume: true, endHold: 'onLeave'}, Button);
+const MultiKeyHoldButton = Holdable({
+	keys: ['enter', 'left', 'right']
+}, Button);
 
 // Set up some defaults for info and knobs
 const prop = {
@@ -57,6 +61,24 @@ storiesOf('Holdable')
 			>
 				{text('value', 'Resumable')}
 			</ResumeHoldButton>
+		)
+	).addWithInfo(
+		'that with multiple keys/events. Watch actions on left/right/enter',
+		() => (
+			<MultiKeyHoldButton
+				onHold={action('onHold')}
+				onHoldPulse={action('onHoldPulse')}
+				onHoldLeft={action('onHoldLeft')}
+				onHoldPulseLeft={action('onHoldPulseLeft')}
+				onHoldRight={action('onHoldRight')}
+				onHoldPulseRight={action('onHoldPulseRight')}
+				onSpotlightRight={Spotlight.pause}
+				onSpotlightLeft={Spotlight.pause}
+				onHoldEndRight={Spotlight.resume}
+				onHoldEndLeft={Spotlight.resume}
+			>
+				{text('value', 'Multiple Keys')}
+			</MultiKeyHoldButton>
 		)
 	);
 

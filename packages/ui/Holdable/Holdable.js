@@ -33,8 +33,6 @@ const pointerDepress = 'onMouseDown';
 const pointerRelease = 'mouseup';
 const pointerEnter = 'onMouseEnter';
 
-const isEnter = is('enter');
-
 /**
  * Default config for {@link ui/Holdable.Holdable}
  *
@@ -118,7 +116,57 @@ const defaultConfig = {
 	 * @default false
 	 * @memberof ui/Holdable.Holdable.defaultConfig
 	 */
-	resume: false
+	resume: false,
+
+	/**
+	 * Allows you to set the keys that the component can respond to. Each key
+	 * you add will have two corresponding props. So if you have [`left`]
+	 * you will have `onHoldLeft`, `onHoldPulseLeft`, `onHoldEndLeft` props to
+	 * define your callbacks. The exception is the `enter` key and mouse button
+	 * which both use the props `onHold`, `onHoldPulse` and `onHoldEnd`.
+	 *
+	 * WARNING: If you choose to use this option be aware that you must provide
+	 * `enter` if you want the `enter` key to respond properly.
+	 *
+	 * WARNING: If you choose to use this option with using keys other than
+	 * `enter`, this will not work properly by default with other `Spottable`
+	 * components around it. To fix that you must also be responsible for
+	 * handling pausing and resuming of Spotlight if you are holding using
+	 * directions. For example, if you a key of `['right']` but you don't
+	 * include `Spotlight.pause()` when `onSpotlightRight` is called the
+	 * Spotlight will move to the next `Spottable` component and never release
+	 * the pulse. To resume `Spotlight` use the `Spotlight.resume()` in
+	 * `onHoldEndRight`.
+	 *
+	 * Usage:
+	 * ```
+	 * import Holdable from '@enact/ui/Holdable';
+	 * const MultiKeyHoldButton = Holdable({
+	 * 	keys: ['left', 'right']
+	 * }, Button);
+	 *
+	 *	<MultiKeyHoldButton
+	 *		onHold={this.onHold}
+	 *		onHoldPulse={this.onHoldPulse}
+	 *		onHoldLeft={this.onHoldLeft}
+	 *		onHoldPulseLeft={this.onHoldPulseLeft}
+	 *		onHoldRight={this.onHoldRight}
+	 *		onHoldPulseRight={this.onHoldPulseRight}
+	 *		onSpotlightRight={Spotlight.pause}
+	 * 		onSpotlightLeft={Spotlight.pause}
+	 *		onHoldEndRight={Spotlight.resume}
+	 *		onHoldEndLeft={Spotlight.resume}
+	 *	>
+	 *		Button
+	 *	</MultiKeyHoldButton>
+	 * ```
+	 *
+	 * @type {Array}
+	 * @default ['enter']
+	 * @memberof ui/Holdable.Holdable.defaultConfig
+	 * @private
+	 */
+	keys: ['enter']
 };
 
 /**
@@ -131,7 +179,25 @@ const defaultConfig = {
  * @public
  */
 const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
-	const {frequency, events, endHold, moveTolerance, resume} = config;
+	const {frequency, events, endHold, moveTolerance, resume, keys} = config;
+
+	const holdProps = keys.reduce((holdObj, currentValue) => {
+		if (currentValue === 'enter') {
+			holdObj[currentValue] = {};
+			holdObj[currentValue]['hold'] = 'onHold';
+			holdObj[currentValue]['pulse'] = 'onHoldPulse';
+			holdObj[currentValue]['end'] = 'onHoldPulse';
+		} else {
+			const value = currentValue.charAt(0).toUpperCase() + currentValue.slice(1).toLowerCase();
+
+			holdObj[currentValue] = {};
+			holdObj[currentValue]['hold'] = `onHold${value}`;
+			holdObj[currentValue]['pulse'] = `onHoldPulse${value}`;
+			holdObj[currentValue]['end'] = `onHoldEnd${value}`;
+		}
+		return holdObj;
+	}, {});
+
 	const forwardKeyDepress = forward(keyDepress);
 	const forwardKeyRelease = forward(keyRelease);
 	const forwardPointerDepress = forward(pointerDepress);
@@ -176,6 +242,9 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			this.pulsing = false;
 			this.unsent = null;
 			this.next = null;
+			this.currentOnHold = null;
+			this.currentOnHoldPulse = null;
+			this.currentOnHoldEnd = null;
 		}
 
 		componentWillReceiveProps (nextProps) {
@@ -217,11 +286,31 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
+		isKeyValid (keyCode) {
+			const currentKey = keys.reduce((previous, current) => is(current, keyCode) ? current : previous, null);
+			this.currentKey = currentKey;
+
+			return currentKey;
+		}
+
+		setOnHoldCallbacks (onHold, onHoldPulse, onHoldEnd) {
+			this.currentOnHold = onHold ? this.props[onHold] : this.props[holdProps[this.currentKey].hold];
+			this.currentOnHoldPulse = onHoldPulse ? this.props[onHoldPulse] : this.props[holdProps[this.currentKey].pulse];
+			this.currentOnHoldEnd = onHoldEnd ? this.props[onHoldEnd] : this.props[holdProps[this.currentKey].end];
+		}
+
+		clearHoldCallbacks () {
+			this.currentOnHold = null;
+			this.currentOnHoldPulse = null;
+			this.currentOnHoldEnd = null;
+		}
+
 		handleKeyDepress = (ev) => {
 			if (!this.props.disabled) {
-				if (isEnter(ev.keyCode) && (!this.downEvent || this.downEvent.type !== 'keydown')) {
+				if (this.isKeyValid(ev.keyCode) && (!this.downEvent || this.downEvent.type !== 'keydown')) {
+					this.setOnHoldCallbacks();
 					this.beginHold(pick(eventProps, ev));
-				} else if (!isEnter(ev.keyCode)) {
+				} else if (!this.isKeyValid(ev.keyCode)) {
 					this.endHold();
 				}
 			}
@@ -229,7 +318,7 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleKeyRelease = (ev) => {
-			if (isEnter(ev.keyCode) && this.downEvent && this.downEvent.type === 'keydown') {
+			if (this.isKeyValid(ev.keyCode) && this.downEvent && this.downEvent.type === 'keydown') {
 				this.endHold();
 			}
 			forwardKeyRelease(ev, this.props);
@@ -240,6 +329,7 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		// TV, where the same button is used for enter/click
 		handlePointerDepress = (ev) => {
 			if (!this.props.disabled && ev.type === 'mousedown') {	// Spotlight forwards keydown as pointer
+				this.setOnHoldCallbacks('onHold', 'onHoldPulse', 'onHoldEnd');
 				this.beginHold(pick(eventProps, ev));
 				// We are tracking document level because we need to allow for the 'slop' factor
 				// even if the pointer moves slightly off the element
@@ -279,7 +369,7 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		beginHold = (ev) => {
-			this.endHold();
+			this.endHold(true);
 			this.holdStart = perfNow();
 			this.downEvent = ev;
 			this.pulsing = false;
@@ -294,7 +384,7 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		endHold = () => {
+		endHold = (persistHoldCallbacks) => {
 			this.suspendHold();
 			this.downEvent = null;
 			this.pulsing = false;
@@ -303,6 +393,12 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			off('mousemove', this.onDocumentPointerMove);
 			this.clearPointerRelease();
 			this.clearMouseLeave();
+			if (!persistHoldCallbacks) {
+				if (this.currentOnHoldEnd) {
+					this.currentOnHoldEnd();
+				}
+				this.clearHoldCallbacks();
+			}
 		}
 
 		endOrSuspendHold = () => {
@@ -326,27 +422,25 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleHoldPulse = () => {
-			const {onHoldPulse} = this.props;
 			const e = this.downEvent;
 			const holdTime = perfNow() - this.holdStart;
 			this.shouldSendHold(e, holdTime);
 			if (this.pulsing) {
 				const ev = makeEvent('holdpulse', e);
 				ev.holdTime = holdTime;
-				if (onHoldPulse) {
-					onHoldPulse(ev);
+				if (this.currentOnHoldPulse) {
+					this.currentOnHoldPulse(ev);
 				}
 			}
 		}
 
 		shouldSendHold = (ev, holdTime) => {
-			const {onHold} = this.props;
 			let n = this.next;
 			let e;
 			while (n && n.time <= holdTime) {
 				e = makeEvent(n.name, ev);
 				this.pulsing = true;
-				if (onHold) onHold(e);
+				if (this.currentOnHold) this.currentOnHold(e);
 				n = this.next = this.unsent && this.unsent.shift();
 			}
 		}
@@ -364,9 +458,13 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			props[pointerDepress] = this.handlePointerDepress;
 			props[pointerEnter] = this.handlePointerEnter;
 
-			delete props.onHold;
-			delete props.onHoldPulse;
 			delete props.keyCodes;
+
+			keys.forEach((value) => {
+				delete props[holdProps[value].hold];
+				delete props[holdProps[value].pulse];
+				delete props[holdProps[value].end];
+			});
 
 			return <Wrapped {...props} />;
 		}
