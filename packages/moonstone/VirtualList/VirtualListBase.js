@@ -5,6 +5,7 @@
  * export is {@link moonstone/VirtualList.VirtualListBase}.
  */
 
+import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import PropTypes from 'prop-types';
@@ -701,6 +702,46 @@ class VirtualListCore extends Component {
 			gridPosition.secondaryPosition = 0;
 			return this.gridPositionToItemPosition(gridPosition);
 		}
+	}
+
+	getIndicesForPageScroll = (direction, currentIndex) => {
+		const
+			{context, dimensionToExtent, isPrimaryDirectionVertical, primary} = this,
+			{dataSize} = this.props,
+			indices = {};
+
+		let	offsetIndex = Math.floor(primary.clientSize / primary.gridSize) * dimensionToExtent;
+		offsetIndex *= !isPrimaryDirectionVertical && context.rtl ? -1 : 1;
+
+		if (direction === 'down' || direction === 'right') {
+			indices.indexToFocus = clamp(0, dataSize - 1, currentIndex + offsetIndex);
+			indices.indexToScroll = currentIndex + dimensionToExtent;
+			if (context.rtl && !isPrimaryDirectionVertical) {
+				indices.indexToScroll = indices.indexToFocus;
+			}
+		} else {
+			indices.indexToFocus = clamp(0, dataSize - 1, currentIndex - offsetIndex);
+			indices.indexToScroll = indices.indexToFocus;
+			if (context.rtl && !isPrimaryDirectionVertical) {
+				indices.indexToScroll = currentIndex + dimensionToExtent;
+			}
+		}
+
+		return indices;
+	}
+
+	scrollToNextPage = ({direction, focusedItem}) => {
+		const
+			focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute)),
+			{indexToFocus, indexToScroll} = this.getIndicesForPageScroll(direction, focusedIndex);
+
+		if (focusedIndex !== indexToFocus) {
+			focusedItem.blur();
+			this.props.cbScrollTo({index: indexToScroll, animate: false});
+			this.focusByIndex(indexToFocus);
+		}
+
+		return true;
 	}
 
 	setContainerDisabled = (bool) => {

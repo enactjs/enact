@@ -2,6 +2,7 @@ import {off, on} from '@enact/core/dispatcher';
 import {Announce} from '@enact/ui/AnnounceDecorator';
 import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import classNames from 'classnames';
+import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React, {PureComponent} from 'react';
@@ -31,7 +32,9 @@ const
 		return 'arrowsmall' + direction;
 	},
 	preparePrevButton = prepareButton(true),
-	prepareNextButton = prepareButton(false);
+	prepareNextButton = prepareButton(false),
+	isPageUp = is('pageUp'),
+	isPageDown = is('pageDown');
 
 /**
  * Set CSS Varaible value.
@@ -315,9 +318,14 @@ class ScrollbarBase extends PureComponent {
 		this.setPressStatus(true);
 	}
 
-	releaseButton = () => {
+	releaseButton = (ev) => {
 		this.setPressStatus(false);
 		this.setIgnoreMode(false);
+		if (isPageUp(ev.keyCode)) {
+			this.handlePrevScroll(ev);
+		} else if (isPageDown(ev.keyCode)) {
+			this.handleNextScroll(ev);
+		}
 	}
 
 	render () {
