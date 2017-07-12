@@ -426,14 +426,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		scrollStartOnScroll = () => {
 			this.scrolling = true;
-
 			this.showThumb(this.getScrollBounds());
 			this.doScrollStart();
 		}
 
 		scrollStopOnScroll = () => {
 			this.isScrollAnimationTargetAccumulated = false;
-
 			this.childRef.setContainerDisabled(false);
 			this.focusOnItem();
 			this.lastFocusedItem = null;
