@@ -1,7 +1,6 @@
 /**
  * Exports the {@link moonstone/ApplicationCloseDecorator.ApplicationCloseDecorator} Higher-order
- * Component (HOC) and {@link moonstone/ApplicationCloseDecorator.contextTypes} validation rules.
- * The default export is {@link moonstone/ApplicationCloseDecorator.ApplicationCloseDecorator}.
+ * Component (HOC).
  *
  * @module moonstone/ApplicationCloseDecorator
  */
@@ -23,7 +22,7 @@ import ApplicationCloseButton from './ApplicationCloseButton';
  * ```
  *
  * @memberof moonstone/ApplicationCloseDecorator
- * @public
+ * @private
  */
 const contextTypes = {
 	hasCloseButton: PropTypes.bool
