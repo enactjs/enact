@@ -1,5 +1,9 @@
-/*
- * Exports the {@link moonstone/ApplicationCloseDecorator.ApplicationCloseDecorator} Higher-order Component (HOC).
+/**
+ * Exports the {@link moonstone/ApplicationCloseDecorator.ApplicationCloseDecorator} Higher-order
+ * Component (HOC) and {@link moonstone/ApplicationCloseDecorator.contextTypes} validation rules.
+ * The default export is {@link moonstone/ApplicationCloseDecorator.ApplicationCloseDecorator}.
+ *
+ * @module moonstone/ApplicationCloseDecorator
  */
 
 import hoc from '@enact/core/hoc';
