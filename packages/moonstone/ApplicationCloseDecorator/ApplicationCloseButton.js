@@ -15,6 +15,7 @@ import css from './ApplicationCloseButton.less';
  * like save user work or close database connections.
  *
  * @class ApplicationCloseButton
+ * @memberof moonstone/ApplicationCloseDecorator
  * @private
  */
 const ApplicationCloseButton = kind({
