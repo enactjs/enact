@@ -5,7 +5,7 @@ import css from '../BodyText.less';
 
 describe('BodyText Specs', () => {
 
-	it('should render a single \<p\> tag', function () {
+	it('should render a single <p> tag', function () {
 		const msg = 'Hello BodyText!';
 		const bodyText = mount(
 			<BodyText>{msg}</BodyText>

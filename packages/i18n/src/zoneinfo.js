@@ -87,7 +87,7 @@ let ZoneInfoFile = function (path) {
 			// see https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest/Sending_and_Receiving_Binary_Data
 			let req = new XMLHttpRequest();
 			req.open('GET', 'file:' + path, false);
-			req.overrideMimeType('text\/plain; charset=x-user-defined');
+			req.overrideMimeType('text/plain; charset=x-user-defined');
 			req.onload = function () {
 				let byteArray = new Uint8Array(req.response.length);
 				for (let i = 0; i < req.response.length; i++) {

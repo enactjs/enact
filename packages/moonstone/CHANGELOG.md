@@ -8,7 +8,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/Slider` and `moonstone/IncrementSlider` prop `aria-valuetext` to support reading custom text instead of value
 - `moonstone/TooltipDecorator` property `tooltipProps` to attach props to tooltip component
+- `moonstone/Scroller` and `moonstone/VirtualList` ability to scroll via page up and page down keys
 
 ### Changed
 
@@ -24,6 +26,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Input` support for `dismissOnEnter`
 - `moonstone/Input` focus management to prevent stealing focus when programmatically moved elsewhere
 - `moonstone` international fonts to always be used, even when unsupported font-weights or font-styles are requested
+- `moonstone/Panels` layout in RTL locales
 
 ## [1.4.1] - 2017-07-05
 
