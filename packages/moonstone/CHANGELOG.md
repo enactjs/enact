@@ -15,6 +15,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/ExpandableList` to use 'radio' as the default, and adapt 'single' mode to render as a `moonstone/RadioItem` instead of a `moonstone/CheckboxItem`
 - `moonstone/VideoPlayer` not to hide pause icon when it appears
 - `moonstone/ContextualPopupDecorator` to set accessibility-related props onto the container node rather than the popup node
+- `moonstone/Spinner` to position the text content under the spinner, rather than to the right side
 
 ### Fixed
 
