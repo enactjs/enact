@@ -8,7 +8,7 @@ const testScenario = (scenario, callback) => () => {
 	const rootId = 'test-root';
 	const html = join(
 		`<div id="${rootId}">`,
-			scenario,
+		scenario,
 		'</div>'
 	);
 

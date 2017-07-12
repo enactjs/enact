@@ -66,7 +66,7 @@ const FeedbackBase = kind({
 			if (states[s]) {
 				// Working with a known state, treat `children` as playbackRate
 				if (states[s].message && children !== 1) {	// `1` represents a playback rate of 1:1
-					return children.toString().replace(/^\-/, '') + states[s].message;
+					return children.toString().replace(/^-/, '') + states[s].message;
 				}
 			} else {
 				// Custom Message
