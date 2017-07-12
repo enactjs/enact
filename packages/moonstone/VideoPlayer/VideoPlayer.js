@@ -32,6 +32,7 @@ import MediaTitle from './MediaTitle';
 import MediaSlider from './MediaSlider';
 import FeedbackTooltip from './FeedbackTooltip';
 import Times from './Times';
+import Video from './Video';
 
 import css from './VideoPlayer.less';
 
@@ -1456,6 +1457,7 @@ const VideoPlayerBase = class extends React.Component {
 			children,
 			className,
 			forwardIcon,
+			index,
 			infoComponents,
 			jumpBackwardIcon,
 			jumpButtonsDisabled,
@@ -1470,6 +1472,7 @@ const VideoPlayerBase = class extends React.Component {
 			noSlider,
 			pauseIcon,
 			playIcon,
+			preloadSources,
 			rateButtonsDisabled,
 			rightComponents,
 			source,
@@ -1504,19 +1507,23 @@ const VideoPlayerBase = class extends React.Component {
 		const moreDisabled = !(this.state.more);
 		const controlsAriaProps = this.getControlsAriaProps();
 
+		const sources = [source];
+		if (preload) {
+			sources.push(preload);
+		}
+
 		return (
 			<div className={css.videoPlayer + (className ? ' ' + className : '')} style={style} onClick={this.activityDetected} onKeyDown={this.activityDetected} ref={this.setPlayerRef}>
 				{/* Video Section */}
-				<video
+				<Video
 					{...rest}
-					autoPlay={!noAutoPlay}
-					className={css.video}
-					controls={false}
-					ref={this.setVideoRef}
 					{...this.handledMediaEvents}
-				>
-					{source}
-				</video>
+					autoPlay={!noAutoPlay}
+					controls={false}
+					index={index}
+					setActiveVideo={this.setVideoRef}
+					sources={sources}
+				/>
 
 				<Overlay onClick={this.onVideoClick}>
 					{this.state.loading ? <Spinner centered /> : null}
@@ -1667,7 +1674,7 @@ const VideoPlayerBase = class extends React.Component {
 const VideoPlayer = ApiDecorator(
 	{api: ['fastForward', 'getMediaState', 'jump', 'pause', 'play', 'rewind', 'seek']},
 	Slottable(
-		{slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source']},
+		{slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source', 'preload']},
 		Skinnable(
 			VideoPlayerBase
 		)
