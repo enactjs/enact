@@ -131,7 +131,11 @@ const PanelsBase = kind({
 				const closeId = id ? `${id}_close` : null;
 
 				return (
-					<ApplicationCloseButton id={closeId} onApplicationClose={onApplicationClose} />
+					<ApplicationCloseButton
+						className={css.close}
+						id={closeId}
+						onApplicationClose={onApplicationClose}
+					/>
 				);
 			}
 		},
