@@ -46,6 +46,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * buttons.
 			 *
 			 * @type {Boolean}
+			 * @memberof moonstone/IncrementSlider.IncrementSliderBase.prototype
 			 * @public
 			 */
 			'aria-hidden': PropTypes.bool,
@@ -56,6 +57,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * the slider directly through the props.
 			 *
 			 * @type {String|Number}
+			 * @memberof moonstone/IncrementSlider.IncrementSliderBase.prototype
 			 * @public
 			 */
 			'aria-valuetext': PropTypes.oneOfType([PropTypes.string, PropTypes.number]),

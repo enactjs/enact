@@ -68,6 +68,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * the slider directly through the props.
 			 *
 			 * @type {String|Number}
+			 * @memberof moonstone/Slider.SliderBase.prototype
 			 * @public
 			 */
 			'aria-valuetext': PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
