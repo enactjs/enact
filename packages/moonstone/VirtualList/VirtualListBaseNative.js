@@ -219,20 +219,6 @@ class VirtualListCoreNative extends Component {
 		} else if (hasDataChanged) {
 			this.updateStatesAndBounds(nextProps);
 		}
-
-		const placeholder = this.getPlaceholder();
-
-		if (placeholder) {
-			const index = placeholder.dataset.index;
-
-			if (index) {
-				this.lastFocusedIndex = parseInt(index);
-				this.restoreLastFocused = true;
-				this.setState({
-					firstIndex: this.lastFocusedIndex
-				});
-			}
-		}
 	}
 
 	shouldComponentUpdate (nextProps, nextState) {
@@ -287,20 +273,47 @@ class VirtualListCoreNative extends Component {
 
 	isHorizontal = () => !this.isPrimaryDirectionVertical
 
-	getPlaceholder () {
+	isPlaceholderFocused () {
 		const current = Spotlight.getCurrent();
 		if (current && current.dataset.vlPlaceholder && this.containerRef.contains(current)) {
-			return current;
+			return true;
 		}
 
 		return false;
+	}
+
+	handlePlaceholderFocus = (ev) => {
+		const placeholder = ev.currentTarget;
+
+		if (placeholder) {
+			const index = placeholder.dataset.index;
+
+			if (index) {
+				this.lastFocusedIndex = parseInt(index);
+				this.restoreLastFocused = true;
+
+				// adjust the firstIndex to include the last focused index, if necessary
+				this.setState(nextState => {
+					let {firstIndex, numOfItems} = nextState;
+					const lastIndex = firstIndex + numOfItems;
+
+					if (this.lastFocusedIndex < firstIndex || this.lastFocusedIndex >= lastIndex) {
+						firstIndex = this.lastFocusedIndex;
+					}
+
+					return {
+						firstIndex
+					};
+				});
+			}
+		}
 	}
 
 	restoreFocus () {
 		const {firstVisibleIndex, lastVisibleIndex} = this.moreInfo;
 		if (
 			this.restoreLastFocused &&
-			!this.getPlaceholder() &&
+			!this.isPlaceholderFocused() &&
 			firstVisibleIndex <= this.lastFocusedIndex &&
 			lastVisibleIndex >= this.lastFocusedIndex
 		) {
@@ -777,7 +790,11 @@ class VirtualListCoreNative extends Component {
 			<div ref={this.initWrapperRef} className={mergedClasses} style={style}>
 				<div {...rest} ref={this.initContainerRef}>
 					{cc.length ? cc : (
-						<SpotlightPlaceholder data-index={0} data-vl-placeholder />
+						<SpotlightPlaceholder
+							data-index={0}
+							data-vl-placeholder
+							onFocus={this.handlePlaceholderFocus}
+						/>
 					)}
 				</div>
 			</div>

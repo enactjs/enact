@@ -8,15 +8,37 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/TooltipDecorator` property `tooltipProps` to attach props to tooltip component
+
+### Changed
+
+- `moonstone/ExpandableList` to use 'radio' as the default, and adapt 'single' mode to render as a `moonstone/RadioItem` instead of a `moonstone/CheckboxItem`
+- `moonstone/VideoPlayer` not to hide pause icon when it appears
+- `moonstone/ContextualPopupDecorator` to set accessibility-related props onto the container node rather than the popup node
+
+### Fixed
+
+- `moonstone/Marquee` to re-evaluate RTL orientation when its content changes
+- `moonstone/VirtualList` to restore focus on short lists
+- `moonstone/ExpandableInput` to expand the width of its contained `moonstone/Input`
+- `moonstone/Input` support for `dismissOnEnter`
+- `moonstone/Input` focus management to prevent stealing focus when programmatically moved elsewhere
+- `moonstone` international fonts to always be used, even when unsupported font-weights or font-styles are requested
+
+## [1.4.1] - 2017-07-05
+
 ### Changed
 
 - `moonstone/Popup` to only call `onKeyDown` when there is a focused item in the `Popup`
+- `moonstone/Scroller`, `moonstone/Picker`, and `moonstone/IncrementSlider` to automatically move focus when the currently focused `moonstone/IconButton` becomes disabled
 
 ### Fixed
 
 - `moonstone/ContextualPopupDecorator` close button to account for large text size
 
 ### Removed
+- `moonstone/ContextualPopupDecorator` to not spot controls other than its activator when navigating out via 5-way
+- `moonstone/Header` to set the value of `marqueeOn` for all types of headers
 
 ## [1.4.0] - 2017-06-29
 
@@ -27,6 +49,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 - `moonstone/Scroller` and `moonstone/VirtualList` ability to page up and page down.
+- `moonstone/Scrollbar` property `corner` to add the corner between vertical and horizontal scrollbars
+- `moonstone/ScrollThumb` for a thumb of `moonstone/Scrollbar`
 - `moonstone/styles/text.less` mixin `.locale-japanese-line-break()` to apply the correct  Japanese language line-break rules for the following multi-line components: `moonstone/BodyText`, `moonstone/Dialog`, `moonstone/Notification`, `moonstone/Popup`, and `moonstone/Tooltip`
 - `moonstone/ContextualPopupDecorator` property `popupProps` to attach props to popup component
 - `moonstone/VideoPlayer` property `pauseAtEnd` to control forward/backward seeking

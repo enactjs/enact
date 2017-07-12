@@ -187,7 +187,7 @@ const ExpandableListBase = kind({
 	},
 
 	defaultProps: {
-		select: 'single',
+		select: 'radio',
 		spotlightDisabled: false
 	},
 
@@ -227,7 +227,7 @@ const ExpandableListBase = kind({
 
 		// Selects the appropriate list item based on the selection mode
 		ListItem: ({select}) => {
-			return	select === 'radio' && RadioItem ||
+			return	(select === 'radio' || select === 'single') && RadioItem ||
 					CheckboxItem; // for single or multiple
 		},
 
