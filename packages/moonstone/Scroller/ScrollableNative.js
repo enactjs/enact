@@ -117,6 +117,15 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			cbScrollTo: PropTypes.func,
 
 			/**
+			 * Direction of the scroller; valid values are `'both'`, `'horizontal'`, and `'vertical'`.
+			 *
+			 * @type {String}
+			 * @default 'both'
+			 * @public
+			 */
+			direction: PropTypes.oneOf(['both', 'horizontal', 'vertical']),
+
+			/**
 			 * When `true`, allows 5-way navigation to the scrollbar controls. By default, 5-way will
 			 * not move focus to the scrollbar controls.
 			 *
@@ -174,6 +183,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		static defaultProps = {
 			cbScrollTo: nop,
+			direction: 'vertical',
 			onScroll: nop,
 			onScrollStart: nop,
 			onScrollStop: nop,
@@ -219,8 +229,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		// status
-		isScrollingDirectionHorizontal = false
-		isScrollingDirectionVertical = false
 		isScrollAnimationTargetAccumulated = false
 		isInitializing = true
 
@@ -276,6 +284,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		onWheel = (e) => {
+			const {direction} = this.props;
+
 			this.childRef.setContainerDisabled(true);
 			this.lastFocusedItem = null;
 			if (typeof window !== 'undefined') {
@@ -284,20 +294,20 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			// FIXME This routine is a temporary support for horizontal wheel scroll.
 			// FIXME If web engine supports horizontal wheel, this routine should be refined or removed.
-			if (this.isScrollingDirectionHorizontal && !this.isScrollingDirectionVertical) {
+			if (direction === 'horizontal') {
 				const
 					bounds = this.getScrollBounds(),
-					isHorizontallyScrollable = this.isHorizontallyScrollable(bounds),
-					isVerticallyScrollable = this.isVerticallyScrollable(bounds),
+					canScrollHorizontally = this.canScrollHorizontally(bounds),
+					canScrollVertically = this.canScrollVertically(bounds),
 					deltaMode = e.deltaMode,
 					wheelDeltaY = -e.wheelDeltaY;
 				let
 					delta = (wheelDeltaY || e.deltaY),
 					maxPixel;
 
-				if (isVerticallyScrollable) {
+				if (canScrollVertically) {
 					maxPixel = bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel;
-				} else if (isHorizontallyScrollable) {
+				} else if (canScrollHorizontally) {
 					maxPixel = bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel;
 				} else {
 					return 0;
@@ -314,14 +324,14 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				/* prevent native scrolling feature for vertical direction */
 				e.preventDefault();
 
-				this.scrollToAccumulatedTarget(bounds, delta, isVerticallyScrollable);
+				this.scrollToAccumulatedTarget(bounds, delta, canScrollVertically);
 			}
 		}
 
 		onScroll = (e) => {
 			const
 				bounds = this.getScrollBounds(),
-				isHorizontallyScrollable = this.isHorizontallyScrollable(bounds);
+				canScrollHorizontally = this.canScrollHorizontally(bounds);
 			let
 				{scrollLeft, scrollTop} = e.target;
 
@@ -329,7 +339,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				this.scrollStartOnScroll();
 			}
 
-			if (this.context.rtl && isHorizontallyScrollable) {
+			if (this.context.rtl && canScrollHorizontally) {
 				/* FIXME: RTL / this calculation only works for Chrome */
 				scrollLeft = bounds.maxLeft - scrollLeft;
 			}
@@ -369,25 +379,25 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				{vertical: isVerticalScrollBar} = ev.scrollbar,
 				{previous: isPreviousScrollButton} = ev.scrollButton,
 				bounds = this.getScrollBounds(),
-				isScrollingHorizontally = this.isHorizontallyScrollable(bounds) && !isVerticalScrollBar,
-				isScrollingVertically = this.isVerticallyScrollable(bounds) && isVerticalScrollBar,
-				pageDistance = (isScrollingVertically ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
+				horizontal = this.canScrollHorizontally(bounds) && !isVerticalScrollBar,
+				vertical = this.canScrollVertically(bounds) && isVerticalScrollBar,
+				pageDistance = (vertical ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
 
-			if (isScrollingHorizontally || isScrollingVertically) {
-				this.scrollToAccumulatedTarget(bounds, isPreviousScrollButton ? -pageDistance : pageDistance, isScrollingVertically);
+			if (horizontal || vertical) {
+				this.scrollToAccumulatedTarget(bounds, isPreviousScrollButton ? -pageDistance : pageDistance, vertical);
 			}
 		}
 
-		scrollToAccumulatedTarget = (bounds, delta, isScrollingVertically) => {
+		scrollToAccumulatedTarget = (bounds, delta, vertical) => {
 			if (!this.isScrollAnimationTargetAccumulated) {
 				this.accumulatedTargetX = this.scrollLeft;
 				this.accumulatedTargetY = this.scrollTop;
 				this.isScrollAnimationTargetAccumulated = true;
 			}
 
-			if (isScrollingVertically) {
+			if (vertical) {
 				this.accumulatedTargetY = clamp(0, bounds.maxTop, this.accumulatedTargetY + delta);
-			} else { // isScrollingHorizontally
+			} else {
 				this.accumulatedTargetX = clamp(0, bounds.maxLeft, this.accumulatedTargetX + delta);
 			}
 
@@ -430,20 +440,20 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		// update scroll position
 
-		setScrollLeft (scrollLeft) {
+		setScrollLeft (value) {
 			const bounds = this.getScrollBounds();
 
-			this.scrollLeft = clamp(0, bounds.maxLeft, scrollLeft);
-			if (this.isHorizontalScrollbarScrollable(bounds)) {
+			this.scrollLeft = clamp(0, bounds.maxLeft, value);
+			if (this.state.isHorizontalScrollbarVisible && this.canScrollHorizontally(bounds)) {
 				this.updateThumb(this.horizontalScrollbarRef, bounds);
 			}
 		}
 
-		setScrollTop (scrollTop) {
+		setScrollTop (value) {
 			const bounds = this.getScrollBounds();
 
-			this.scrollTop = clamp(0, bounds.maxTop, scrollTop);
-			if (this.isVerticalScrollbarScrollable(bounds)) {
+			this.scrollTop = clamp(0, bounds.maxTop, value);
+			if (this.state.isVerticalScrollbarVisible && this.canScrollVertically(bounds)) {
 				this.updateThumb(this.verticalScrollbarRef, bounds);
 			}
 		}
@@ -509,8 +519,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		getPositionForScrollTo = (opt) => {
 			const
 				bounds = this.getScrollBounds(),
-				isHorizontallyScrollable = this.isHorizontallyScrollable(bounds),
-				isVerticallyScrollable = this.isVerticallyScrollable(bounds);
+				canScrollHorizontally = this.canScrollHorizontally(bounds),
+				canScrollVertically = this.canScrollVertically(bounds);
 			let
 				itemPos,
 				left = null,
@@ -518,27 +528,27 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			if (opt instanceof Object) {
 				if (opt.position instanceof Object) {
-					if (isHorizontallyScrollable) {
+					if (canScrollHorizontally) {
 						// We need '!=' to check if opt.potision.x is null or undefined
 						left = opt.position.x != null ? opt.position.x : this.scrollLeft;
 					} else {
 						left = 0;
 					}
-					if (isVerticallyScrollable) {
+					if (canScrollVertically) {
 						// We need '!=' to check if opt.potision.y is null or undefined
 						top = opt.position.y != null ? opt.position.y : this.scrollTop;
 					} else {
 						top = 0;
 					}
 				} else if (typeof opt.align === 'string') {
-					if (isHorizontallyScrollable) {
+					if (canScrollHorizontally) {
 						if (opt.align.includes('left')) {
 							left = 0;
 						} else if (opt.align.includes('right')) {
 							left = bounds.maxLeft;
 						}
 					}
-					if (isVerticallyScrollable) {
+					if (canScrollVertically) {
 						if (opt.align.includes('top')) {
 							top = 0;
 						} else if (opt.align.includes('bottom')) {
@@ -554,10 +564,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						}
 					}
 					if (itemPos) {
-						if (isHorizontallyScrollable) {
+						if (canScrollHorizontally) {
 							left = itemPos.left;
 						}
-						if (isVerticallyScrollable) {
+						if (canScrollVertically) {
 							top = itemPos.top;
 						}
 					}
@@ -594,46 +604,29 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		// condition
 
-		updateScrollingDirection () {
-			this.isScrollingDirectionHorizontal = this.childRef.isHorizontal();
-			this.isScrollingDirectionVertical = this.childRef.isVertical();
+		canScrollHorizontally = (bounds) => {
+			const {direction} = this.props;
+
+			return (direction === 'horizontal' || direction === 'both') && (bounds.scrollWidth > bounds.clientWidth) && !isNaN(bounds.scrollWidth);
 		}
 
-		isHorizontallyScrollable = (bounds) => {
-			return this.isScrollingDirectionHorizontal && (bounds.scrollWidth > bounds.clientWidth) && !isNaN(bounds.scrollWidth);
-		}
+		canScrollVertically = (bounds) => {
+			const {direction} = this.props;
 
-		isVerticallyScrollable = (bounds) => {
-			return this.isScrollingDirectionVertical && (bounds.scrollHeight > bounds.clientHeight) && !isNaN(bounds.scrollHeight);
+			return (direction === 'vertical' || direction === 'both') && (bounds.scrollHeight > bounds.clientHeight) && !isNaN(bounds.scrollHeight);
 		}
 
 		// scroll bar
-
-		isHorizontalScrollbarScrollable = (bounds) => this.state.isHorizontalScrollbarVisible && this.isHorizontallyScrollable(bounds)
-
-		isVerticalScrollbarScrollable = (bounds) => this.state.isVerticalScrollbarVisible && this.isVerticallyScrollable(bounds)
-
-		getHorizontalScrollbarVisible (bounds) {
-			const {horizontalScrollbar} = this.props;
-
-			return (horizontalScrollbar === 'auto') ? this.isHorizontallyScrollable(bounds) : horizontalScrollbar === 'visible';
-		}
-
-		getVerticalScrollbarVisible (bounds) {
-			const {verticalScrollbar} = this.props;
-
-			return (verticalScrollbar === 'auto') ? this.isVerticallyScrollable(bounds) : verticalScrollbar === 'visible';
-		}
 
 		isHorizontalScrollbarVisible = () => (this.props.horizontalScrollbar === 'visible')
 
 		isVerticalScrollbarVisible = () => (this.props.verticalScrollbar === 'visible')
 
 		showThumb (bounds) {
-			if (this.isHorizontalScrollbarScrollable(bounds)) {
+			if (this.state.isHorizontalScrollbarVisible && this.canScrollHorizontally(bounds)) {
 				this.horizontalScrollbarRef.showThumb();
 			}
-			if (this.isVerticalScrollbarScrollable(bounds)) {
+			if (this.state.isVerticalScrollbarVisible && this.canScrollVertically(bounds)) {
 				this.verticalScrollbarRef.showThumb();
 			}
 		}
@@ -647,19 +640,20 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		hideThumb (bounds) {
-			if (this.isHorizontalScrollbarScrollable(bounds)) {
+			if (this.state.isHorizontalScrollbarVisible && this.canScrollHorizontally(bounds)) {
 				this.horizontalScrollbarRef.startHidingThumb();
 			}
-			if (this.isVerticalScrollbarScrollable(bounds)) {
+			if (this.state.isVerticalScrollbarVisible && this.canScrollVertically(bounds)) {
 				this.verticalScrollbarRef.startHidingThumb();
 			}
 		}
 
 		updateScrollbars = (bounds) => {
 			const
+				{horizontalScrollbar, verticalScrollbar} = this.props,
 				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
-				curHorizontalScrollbarVisible = this.getHorizontalScrollbarVisible(bounds),
-				curVerticalScrollbarVisible = this.getVerticalScrollbarVisible(bounds);
+				curHorizontalScrollbarVisible = (horizontalScrollbar === 'auto') ? this.canScrollHorizontally(bounds) : horizontalScrollbar === 'visible',
+				curVerticalScrollbarVisible = (verticalScrollbar === 'auto') ? this.canScrollVertically(bounds) : verticalScrollbar === 'visible';
 
 			// determine if we should hide or show any scrollbars
 			const
@@ -685,10 +679,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						scrollTop: this.scrollTop
 					};
 
-					if (this.isHorizontalScrollbarScrollable(bounds)) {
+					if (this.state.isHorizontalScrollbarVisible && this.canScrollHorizontally(bounds)) {
 						this.horizontalScrollbarRef.update(updatedBounds);
 					}
-					if (this.isVerticalScrollbarScrollable(bounds)) {
+					if (this.state.isVerticalScrollbarVisible && this.canScrollVertically(bounds)) {
 						this.verticalScrollbarRef.update(updatedBounds);
 					}
 				}
@@ -730,8 +724,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 
 			childContainerRef.style.scrollBehavior = 'smooth';
-
-			this.updateScrollbars(bounds);
 		}
 
 		// component life cycle
@@ -739,8 +731,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		componentDidMount () {
 			const bounds = this.getScrollBounds();
 
-			this.updateScrollingDirection();
 			this.updateEventListeners(bounds);
+			this.updateScrollbars(bounds);
 		}
 
 		componentDidUpdate () {
@@ -753,8 +745,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			const bounds = this.getScrollBounds();
 
-			this.updateScrollingDirection();
 			this.updateEventListeners(bounds);
+			this.updateScrollbars(bounds);
 
 			if (this.scrollToInfo !== null) {
 				this.scrollTo(this.scrollToInfo);
