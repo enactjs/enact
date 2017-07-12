@@ -138,7 +138,7 @@ const ImageBase = kind({
 		className: ({className, sizing, styler}) => {
 			return sizing !== 'none' ? styler.append(sizing) : className;
 		},
-		imgSrc: ({src}) => selectSrc(src)
+		imgSrc: ({src}) => selectSrc(src) || ''
 	},
 
 	render: ({alt, 'aria-label': ariaLabel, bgImage, children, imgSrc, onError, onLoad, style, ...rest}) => {

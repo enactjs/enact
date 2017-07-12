@@ -102,7 +102,7 @@ const GridListImageItemBase = kind({
 		 * @type {String}
 		 * @public
 		 */
-		source: PropTypes.string,
+		source: PropTypes.string.isRequired,
 
 		/**
 		 * The second caption line to be displayed with the image.
