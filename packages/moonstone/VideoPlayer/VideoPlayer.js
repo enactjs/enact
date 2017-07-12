@@ -93,6 +93,9 @@ const forwardPlayButtonClick = forward('onPlayButtonClick');
 // localized strings
 const playLabel = 'Play';
 const pauseLabel = 'Pause';
+const backLabel = 'Back';
+const moreLabel = 'More';
+const buttonLabel = 'Button';
 
 /**
  * Every callback sent by [VideoPlayer]{@link moonstone/VideoPlayer} receives a status package,
@@ -1283,10 +1286,10 @@ const VideoPlayerBase = class extends React.Component {
 			titleVisible: true
 		});
 		if (this.firstMoreInfoReaded === false) {
-			this.announce(this.props.infoComponents + ' back button');
+			this.announce(this.props.infoComponents + `${$L(backLabel)} ${$L(buttonLabel)}`);
 			this.firstMoreInfoReaded = true;
 		} else {
-			this.announce(this.state.more ? 'more button' : 'back button');
+			this.announce(this.state.more ? `${$L(moreLabel)} ${$L(buttonLabel)}` : `${$L(backLabel)} ${$L(buttonLabel)}`);
 		}
 	}
 
