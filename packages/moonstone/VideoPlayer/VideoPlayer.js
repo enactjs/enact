@@ -504,8 +504,8 @@ const VideoPlayerBase = class extends React.Component {
 		this.titleOffsetCalculated = false;
 		this.selectPlaybackRates('fastForward');
 		this.firstTitleRead = {
-			role: "alert",
-			'aria-live': "off",
+			role: 'alert',
+			'aria-live': 'off',
 			'aria-label': this.props.title
 		};
 		this.firstMoreInfoReaded = false;
@@ -857,8 +857,8 @@ const VideoPlayerBase = class extends React.Component {
 	reloadVideo = () => {
 		// When changing a HTML5 video, you have to reload it.
 		this.firstTitleRead = {
-			role: "alert",
-			'aria-live': "off",
+			role: 'alert',
+			'aria-live': 'off',
 			'aria-label': this.props.title
 		};
 		this.firstMoreInfoReaded = false;
