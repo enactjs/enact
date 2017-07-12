@@ -324,7 +324,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				/* prevent native scrolling feature for vertical direction */
 				e.preventDefault();
 
-				this.scrollToAccumulatedTarget(bounds, delta, canScrollVertically);
+				this.scrollToAccumulatedTarget(delta, canScrollVertically);
 			}
 		}
 
@@ -384,11 +384,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				pageDistance = (vertical ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
 
 			if (horizontal || vertical) {
-				this.scrollToAccumulatedTarget(bounds, isPreviousScrollButton ? -pageDistance : pageDistance, vertical);
+				this.scrollToAccumulatedTarget(isPreviousScrollButton ? -pageDistance : pageDistance, vertical);
 			}
 		}
 
-		scrollToAccumulatedTarget = (bounds, delta, vertical) => {
+		scrollToAccumulatedTarget = (delta, vertical) => {
+			const bounds = this.getScrollBounds();
+
 			if (!this.isScrollAnimationTargetAccumulated) {
 				this.accumulatedTargetX = this.scrollLeft;
 				this.accumulatedTargetY = this.scrollTop;
@@ -618,10 +620,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		// scroll bar
 
-		isHorizontalScrollbarVisible = () => (this.props.horizontalScrollbar === 'visible')
-
-		isVerticalScrollbarVisible = () => (this.props.verticalScrollbar === 'visible')
-
 		showThumb (bounds) {
 			if (this.state.isHorizontalScrollbarVisible && this.canScrollHorizontally(bounds)) {
 				this.horizontalScrollbarRef.showThumb();
@@ -648,10 +646,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		updateScrollbars = (bounds) => {
+		updateScrollbars = () => {
 			const
 				{horizontalScrollbar, verticalScrollbar} = this.props,
 				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
+				bounds = this.getScrollBounds(),
 				curHorizontalScrollbarVisible = (horizontalScrollbar === 'auto') ? this.canScrollHorizontally(bounds) : horizontalScrollbar === 'visible',
 				curVerticalScrollbarVisible = (verticalScrollbar === 'auto') ? this.canScrollVertically(bounds) : verticalScrollbar === 'visible';
 
@@ -703,7 +702,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		updateEventListeners = (bounds) => {
+		updateEventListeners = () => {
 			const
 				{containerRef} = this,
 				childContainerRef = this.childRef.getContainerNode();
@@ -729,10 +728,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		// component life cycle
 
 		componentDidMount () {
-			const bounds = this.getScrollBounds();
-
-			this.updateEventListeners(bounds);
-			this.updateScrollbars(bounds);
+			this.updateEventListeners();
+			this.updateScrollbars();
 		}
 
 		componentDidUpdate () {
@@ -743,10 +740,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				this.childRef.syncClientSize();
 			}
 
-			const bounds = this.getScrollBounds();
-
-			this.updateEventListeners(bounds);
-			this.updateScrollbars(bounds);
+			this.updateEventListeners();
+			this.updateScrollbars();
 
 			if (this.scrollToInfo !== null) {
 				this.scrollTo(this.scrollToInfo);
