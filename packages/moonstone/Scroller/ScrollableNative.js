@@ -370,11 +370,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				{vertical: isVerticalScrollBar} = ev.scrollbar,
 				{previous: isPreviousScrollButton} = ev.scrollButton,
 				bounds = this.getScrollBounds(),
-				horizontal = this.canScrollHorizontally(bounds) && !isVerticalScrollBar,
-				vertical = this.canScrollVertically(bounds) && isVerticalScrollBar,
-				pageDistance = (vertical ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
+				pageDistance = (isVerticalScrollBar ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
 
-			this.scrollToAccumulatedTarget(isPreviousScrollButton ? -pageDistance : pageDistance, vertical);
+			this.scrollToAccumulatedTarget(isPreviousScrollButton ? -pageDistance : pageDistance, isVerticalScrollBar);
 		}
 
 		scrollToAccumulatedTarget = (delta, vertical) => {
