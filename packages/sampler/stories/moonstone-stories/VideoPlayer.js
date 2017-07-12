@@ -129,6 +129,7 @@ storiesOf('VideoPlayer')
 						jumpBackwardIcon={select('jumpBackwardIcon', icons, 'skipbackward')}
 						jumpForwardIcon={select('jumpForwardIcon', icons, 'skipforward')}
 						jumpButtonsDisabled={boolean('jumpButtonsDisabled', false)}
+						jumpDelay={number('jumpDelay', 500)}
 						rateButtonsDisabled={boolean('rateButtonsDisabled', false)}
 						loop={boolean('loop', true)}
 						muted={boolean('muted', true)}

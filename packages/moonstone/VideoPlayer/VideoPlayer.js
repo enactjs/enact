@@ -255,6 +255,16 @@ const VideoPlayerBase = class extends React.Component {
 		jumpBy: PropTypes.number,
 
 		/**
+		 * The amount of milliseconds that the player will throttle before firing a
+		 * jump event on a right or left hold.
+		 *
+		 * @type {Number}
+		 * @default 200
+		 * @public
+		 */
+		jumpDelay: PropTypes.number,
+
+		/**
 		 * A string which is sent to the `jumpForward` icon of the play controls. This can be
 		 * anything that is accepted by {@link moonstone/Icon}.
 		 *
@@ -518,6 +528,7 @@ const VideoPlayerBase = class extends React.Component {
 		forwardIcon: 'forward',
 		jumpBackwardIcon: 'skipbackward',
 		jumpBy: 30,
+		jumpDelay: 200,
 		jumpForwardIcon: 'skipforward',
 		muted: false,
 		noAutoPlay: false,
@@ -841,12 +852,20 @@ const VideoPlayerBase = class extends React.Component {
 
 	handle = handle.bind(this)
 
-	handleLeft = () => {
+	jumpBackward = new Job(() => {
 		this.jump(-1 * this.props.jumpBy);
+	}, this.props.jumpDelay)
+
+	handleLeft = () => {
+		this.jumpBackward.throttle();
 	}
 
-	handleRight = () => {
+	jumpForward = new Job(() => {
 		this.jump(this.props.jumpBy);
+	}, this.props.jumpDelay)
+
+	handleRight = () => {
+		this.jumpForward.throttle();
 	}
 
 	showControlsFromPointer = () => {
@@ -1429,6 +1448,7 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.autoCloseTimeout;
 		delete rest.feedbackHideDelay;
 		delete rest.jumpBy;
+		delete rest.jumpDelay;
 		delete rest.onControlsAvailable;
 		delete rest.onBackwardButtonClick;
 		delete rest.onForwardButtonClick;
