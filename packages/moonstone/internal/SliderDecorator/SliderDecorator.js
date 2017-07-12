@@ -259,11 +259,11 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		updateValueJob = new Job((value) => {
-			const {valueText} = this.state;
+			const valueText = this.props['aria-valuetext'] != null ? this.props['aria-valuetext'] : value;
 			this.inputNode.value = value;
 			this.setState({
 				value,
-				valueText: valueText || value
+				valueText
 			});
 			forwardChange({value}, this.props);
 		}, config.changeDelay)
@@ -374,7 +374,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleActivate = () => {
-			const {detachedKnob, disabled, vertical} = this.props;
+			const {'aria-valuetext': ariaValueText, detachedKnob, disabled, vertical} = this.props;
 
 			if (disabled) return;
 
@@ -388,7 +388,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				const horizontalHint = $L('change a value with left right button');
 				const active = !this.state.active;
 
-				let valueText = this.state.valueText || this.state.value;
+				let valueText = ariaValueText != null ? ariaValueText : this.state.value;
 				if (active) {
 					valueText = vertical ? verticalHint : horizontalHint;
 				}
