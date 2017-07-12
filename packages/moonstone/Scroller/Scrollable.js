@@ -202,15 +202,15 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.verticalScrollbarProps = {
 				ref: this.initRef('verticalScrollbarRef'),
 				vertical: true,
-				onPrevScroll: this.onScrollbarBtnHandler,
-				onNextScroll: this.onScrollbarBtnHandler
+				onPrevScroll: this.onScrollbarButtonClick,
+				onNextScroll: this.onScrollbarButtonClick
 			};
 
 			this.horizontalScrollbarProps = {
 				ref: this.initRef('horizontalScrollbarRef'),
 				vertical: false,
-				onPrevScroll: this.onScrollbarBtnHandler,
-				onNextScroll: this.onScrollbarBtnHandler
+				onPrevScroll: this.onScrollbarButtonClick,
+				onNextScroll: this.onScrollbarButtonClick
 			};
 
 			props.cbScrollTo(this.scrollTo);
@@ -466,10 +466,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		onScrollbarBtnHandler = (ev) => {
+		onScrollbarButtonClick  = ({isPreviousScrollButton, isVerticalScrollBar}) => {
 			const
-				{vertical: isVerticalScrollBar} = ev.scrollbar,
-				{previous: isPreviousScrollButton} = ev.scrollButton,
 				bounds = this.getScrollBounds(),
 				pageDistance = (isVerticalScrollBar ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
 
