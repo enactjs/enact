@@ -43,6 +43,7 @@ const defaultConfig = {
 /**
  * {@link moonstone/MoonstoneDecorator.MoonstoneDecorator} is a Higher-order Component that applies
  * Moonstone theming to an application. It also applies
+ * [application close button]{@link moonstone/ApplicationCloseDecorator.ApplicationCloseDecorator},
  * [floating layer]{@link ui/FloatingLayer.FloatingLayerDecorator},
  * [resolution independence]{@link ui/resolution.ResolutionDecorator},
  * [custom text sizing]{@link moonstone/MoonstoneDecorator.TextSizeDecorator},
@@ -53,6 +54,15 @@ const defaultConfig = {
  * [Skins]{@link ui/Skinnable} provide a way to change the coloration of your app. The currently
  * supported skins for Moonstone are "moonstone" (the default, dark skin) and "moonstone-light".
  * Use the `skin` property to assign a skin. Ex: `<DecoratedApp skin="light" />`
+ *
+ * Note: [Application close button]{@link moonstone/ApplicationCloseDecorator.ApplicationCloseDecorator}
+ * by default is not applied. This will change in 2.0. Refer to following example for how to apply.
+ * ```
+ * const App = () => (<Panels noCloseButton />);
+ * const DecoratedApp = MoonstoneDecorator({closeButton: true}, App);
+ *
+ * <DecoratedApp onApplicationClose={handleClose} />
+ * ````
  *
  * @class MoonstoneDecorator
  * @memberof moonstone/MoonstoneDecorator

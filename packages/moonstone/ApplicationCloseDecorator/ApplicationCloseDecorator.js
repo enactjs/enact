@@ -31,6 +31,16 @@ const contextTypes = {
 /**
  * Higher-order Component that adds a ApplicationCloseDecorator adjacent to wrapped component.
  *
+ * Example:
+ * ```
+ * const AppWithCloseButton = ApplicationCloseDecorator(App);
+ *
+ * const handleClose = () => window.close();
+ *
+ * render(
+ *   <AppWithCloseButton onApplicationClose={handleClose} />
+ * )
+ * ```
  * @class ApplicationCloseDecorator
  * @memberof moonstone/ApplicationCloseDecorator
  * @hoc
