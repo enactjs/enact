@@ -379,10 +379,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		onKeyDown = (e) => {
-			e.preventDefault();
-		}
-
 		onScrollbarBtnHandler = (orientation, direction) => {
 			const
 				bounds = this.getScrollBounds(),
@@ -431,10 +427,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		scrollStartOnScroll = () => {
 			this.scrolling = true;
 
-			// Add keydown event listener for ignoring it
-			if (typeof window !== 'undefined') {
-				window.document.addEventListener('keydown', this.onKeyDown, {capture: true});
-			}
 			this.showThumb(this.getScrollBounds());
 			this.doScrollStart();
 		}
@@ -442,10 +434,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		scrollStopOnScroll = () => {
 			this.isScrollAnimationTargetAccumulated = false;
 
-			// Add keydown event listener for ignoring it
-			if (typeof window !== 'undefined') {
-				window.document.removeEventListener('keydown', this.onKeyDown, {capture: true});
-			}
 			this.childRef.setContainerDisabled(false);
 			this.focusOnItem();
 			this.lastFocusedItem = null;
