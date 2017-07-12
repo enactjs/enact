@@ -137,7 +137,11 @@ const PanelsBase = kind({
 				deprecate({name: 'onApplicationClose', since: '1.5.0', replacedBy: '@enact/moonstone/ApplicationCloseDecorator'});
 
 				return (
-					<ApplicationCloseButton id={closeId} onApplicationClose={onApplicationClose} />
+					<ApplicationCloseButton
+						className={css.close}
+						id={closeId}
+						onApplicationClose={onApplicationClose}
+					/>
 				);
 			}
 		},
