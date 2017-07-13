@@ -730,7 +730,7 @@ const VideoPlayerBase = class extends React.Component {
 
 	skipFirstRead = (isMore = false) => {
 		if (isMore) {
-			// Readout 'more' or 'back' button explictly.
+			// Readout 'more' or 'back' button explicitly.
 			Spotlight.focus(Spotlight.getCurrent());
 		}
 		this.firstRead = null;
