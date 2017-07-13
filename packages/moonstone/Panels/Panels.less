@@ -42,7 +42,7 @@
 	:global(.enact-locale-right-to-left) & {
 		direction: ltr;
 
-		.viewport {
+		.breadcrumbs {
 			direction: rtl;
 		}
 	}
@@ -133,6 +133,12 @@
 		}
 	}
 
+	&:not([data-index='0']) {
+		:global(.enact-locale-right-to-left) & .close {
+			// allocate space for breadcrumb + header margin
+			left: @moon-breadcrumb-width + @moon-spotlight-outset;
+		}
+	}
 }
 
 .panels.alwaysViewing {

@@ -8,21 +8,27 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/Slider` and `moonstone/IncrementSlider` prop `aria-valuetext` to support reading custom text instead of value
 - `moonstone/TooltipDecorator` property `tooltipProps` to attach props to tooltip component
+- `moonstone/Scroller` and `moonstone/VirtualList` ability to scroll via page up and page down keys
 - `moonstone/VideoPlayer` tooltip-thumbnail support with the `thumbnailSrc` prop and the `onScrub` callback to fire when the knob moves and a new thumbnail is needed
 
 ### Changed
 
 - `moonstone/ExpandableList` to use 'radio' as the default, and adapt 'single' mode to render as a `moonstone/RadioItem` instead of a `moonstone/CheckboxItem`
 - `moonstone/VideoPlayer` not to hide pause icon when it appears
+- `moonstone/ContextualPopupDecorator` to set accessibility-related props onto the container node rather than the popup node
+- `moonstone/Spinner` to position the text content under the spinner, rather than to the right side
 
 ### Fixed
 
 - `moonstone/Marquee` to re-evaluate RTL orientation when its content changes
 - `moonstone/VirtualList` to restore focus on short lists
 - `moonstone/ExpandableInput` to expand the width of its contained `moonstone/Input`
-- `moonstone/InputDecorator` support for `dismissOnEnter`
+- `moonstone/Input` support for `dismissOnEnter`
+- `moonstone/Input` focus management to prevent stealing focus when programmatically moved elsewhere
 - `moonstone` international fonts to always be used, even when unsupported font-weights or font-styles are requested
+- `moonstone/Panels` layout in RTL locales
 
 ## [1.4.1] - 2017-07-05
 
@@ -34,6 +40,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/ContextualPopupDecorator` close button to account for large text size
+
+### Removed
 - `moonstone/ContextualPopupDecorator` to not spot controls other than its activator when navigating out via 5-way
 - `moonstone/Header` to set the value of `marqueeOn` for all types of headers
 

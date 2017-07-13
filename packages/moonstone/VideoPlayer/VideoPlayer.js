@@ -595,9 +595,9 @@ const VideoPlayerBase = class extends React.Component {
 		const
 			isInfoComponentsEqual = equals(this.props.infoComponents, nextProps.infoComponents),
 			shouldCalculateTitleOffset = (
-			((!this.titleOffsetCalculated && isInfoComponentsEqual) || (this.titleOffsetCalculated && !isInfoComponentsEqual)) &&
-			this.state.bottomControlsVisible
-		);
+				((!this.titleOffsetCalculated && isInfoComponentsEqual) || (this.titleOffsetCalculated && !isInfoComponentsEqual)) &&
+				this.state.bottomControlsVisible
+			);
 
 		this.initI18n();
 
@@ -843,11 +843,12 @@ const VideoPlayerBase = class extends React.Component {
 			updatedState.error
 		);
 
-		if (this.props.pauseAtEnd && (
-				(el.currentTime === 0 && (this.prevCommand === 'rewind' || this.prevCommand === 'slowRewind')) ||
-				(el.currentTime === el.duration && (this.prevCommand === 'fastForward' || this.prevCommand === 'slowForward')))) {
+		const isRewind = this.prevCommand === 'rewind' || this.prevCommand === 'slowRewind';
+		const isForward = this.prevCommand === 'fastForward' || this.prevCommand === 'slowForward';
+		if (this.props.pauseAtEnd && (el.currentTime === 0 && isRewind || el.currentTime === el.duration && isForward)) {
 			this.pause();
 		}
+
 		this.setState(updatedState);
 	}
 
