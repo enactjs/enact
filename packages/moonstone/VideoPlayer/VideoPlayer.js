@@ -1230,7 +1230,9 @@ const VideoPlayerBase = class extends React.Component {
 			const seconds = Math.round(this.sliderKnobProportion * this.video.duration);
 
 			if (this.sliderScrubbing && !isNaN(seconds)) {
-				const knobTime = secondsToTime(seconds, this.durfmt);
+				const
+					seconds = Math.round(this.sliderKnobProportion * this.video.duration),
+					knobTime = secondsToTime(seconds, this.durfmt, {includeHour: true});
 
 				forward('onScrub', {...ev, seconds}, this.props);
 
