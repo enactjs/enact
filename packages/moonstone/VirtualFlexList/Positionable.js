@@ -75,6 +75,27 @@ const Positionable = hoc((config, Wrapped) => {
 		}
 
 		/*
+		 * Life cycle methods
+		 */
+
+		componentDidMount () {
+			this.bounds = this.childRef.getScrollBounds();
+		}
+
+		componentWillReceiveProps (nextProps) {
+			const {x, y} = this.props;
+
+			if (x !== nextProps.x || y !== nextProps.y) {
+				this.childRef.setScrollPosition(
+					clamp(0, this.bounds.maxLeft, nextProps.x),
+					clamp(0, this.bounds.maxTop, nextProps.y),
+					Math.sign(nextProps.x - x),
+					Math.sign(nextProps.y - y)
+				);
+			}
+		}
+
+		/*
 		 * Class private variables
 		 */
 
@@ -130,27 +151,6 @@ const Positionable = hoc((config, Wrapped) => {
 					x: this.props.x,
 					y: clamp(0, this.bounds.maxTop, this.props.y + this.bounds.clientHeight * Math.sign(e.deltaY))
 				}, this.props);
-			}
-		}
-
-		/*
-		 * Life cycle methods
-		 */
-
-		componentDidMount () {
-			this.bounds = this.childRef.getScrollBounds();
-		}
-
-		componentWillReceiveProps (nextProps) {
-			const {x, y} = this.props;
-
-			if (x !== nextProps.x || y !== nextProps.y) {
-				this.childRef.setScrollPosition(
-					clamp(0, this.bounds.maxLeft, nextProps.x),
-					clamp(0, this.bounds.maxTop, nextProps.y),
-					Math.sign(nextProps.x - x),
-					Math.sign(nextProps.y - y)
-				);
 			}
 		}
 
