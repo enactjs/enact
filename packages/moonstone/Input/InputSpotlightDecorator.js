@@ -133,7 +133,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 
 			if (this.state.focused === 'input') {
 				Spotlight.pause();
-			} else {
+			} else if (prevState.focused === 'input') {
 				Spotlight.resume();
 			}
 		}
@@ -254,6 +254,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 					}
 
 					preventSpotlightNavigation(ev);
+					Spotlight.resume();
 					if (!move(direction)) {
 						this.focusDecorator(currentTarget);
 					}
