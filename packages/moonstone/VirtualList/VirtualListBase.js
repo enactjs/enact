@@ -939,6 +939,7 @@ class VirtualListCore extends Component {
 						onFocus={this.handlePlaceholderFocus}
 					/>
 				)}
+				{cc.length ? <SpotlightPlaceholder /> : null}
 			</div>
 		);
 	}
