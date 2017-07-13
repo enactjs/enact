@@ -353,9 +353,9 @@ const VideoPlayerBase = class extends React.Component {
 
 		/**
 		 * Function executed when the user is moving the VideoPlayer's Slider knob independently of
-		 * the current playback position. If you are wanting to update the `thumbnailSrc` to the
-		 * current scrub position, this is what you should use. This callback receives an object
-		 * with a `seconds` key (float value) to indicate the current time index.
+		 * the current playback position. It is passed an object with a `seconds` key (float value) to
+		 * indicate the current time index. It can be used to update the `thumbnailSrc` to the reflect
+		 * the current scrub position.
 		 *
 		 * @type {Function}
 		 * @public
