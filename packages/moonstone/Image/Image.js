@@ -132,13 +132,13 @@ const ImageBase = kind({
 
 	computed: {
 		bgImage: ({src, placeholder}) => {
-			const imageSrc = selectSrc(src);
+			const imageSrc = selectSrc(src) || '';
 			return placeholder ? `url("${imageSrc}"), url("${placeholder}")` : `url("${imageSrc}")`;
 		},
 		className: ({className, sizing, styler}) => {
 			return sizing !== 'none' ? styler.append(sizing) : className;
 		},
-		imgSrc: ({src}) => selectSrc(src) || ''
+		imgSrc: ({src}) => selectSrc(src)
 	},
 
 	render: ({alt, 'aria-label': ariaLabel, bgImage, children, imgSrc, onError, onLoad, style, ...rest}) => {
@@ -149,7 +149,7 @@ const ImageBase = kind({
 		return (
 			<div role="img" {...rest} aria-label={ariaLabel || alt} style={{...style, backgroundImage: bgImage}}>
 				{children}
-				<img className={css.img} src={imgSrc} alt={alt} onLoad={onLoad} onError={onError} />
+				{imgSrc ? <img className={css.img} src={imgSrc} alt={alt} onLoad={onLoad} onError={onError} /> : null}
 			</div>
 		);
 	}
