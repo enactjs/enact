@@ -4,7 +4,7 @@ import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Spotlight from '@enact/spotlight';
+import {getDirection, Spotlight} from '@enact/spotlight';
 import Spottable from '@enact/spotlight/Spottable';
 
 const preventSpotlightNavigation = (ev) => {
@@ -39,6 +39,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 	const forwardClick = forward('onClick');
 	const forwardFocus = forward('onFocus');
 	const forwardKeyDown = forward('onKeyDown');
+	const forwardKeyUp = forward('onKeyUp');
 
 	return class extends React.Component {
 		static displayName = 'InputSpotlightDecorator';
@@ -218,21 +219,17 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			}
 		}
 
-		onKeyUp = (ev) => {
-			const {dismissOnEnter} = this.props;
+		onKeyDown = (ev) => {
 			const {currentTarget, keyCode, target} = ev;
 
 			if (this.state.focused === 'input') {
 				const isDown = is('down', keyCode);
-				const isEnter = is('enter', keyCode);
 				const isLeft = is('left', keyCode);
 				const isRight = is('right', keyCode);
 				const isUp = is('up', keyCode);
 
-				// switch focus to the decorator ...
-				const shouldFocusDecorator = (
-					// on enter + dismissOnEnter
-					(isEnter && dismissOnEnter) ||
+				// move spotlight
+				const shouldSpotlightMove = (
 					// on left + at beginning of selection
 					(isLeft && safeSelectionStart(target) === 0) ||
 					// on right + at end of selection (note: fails on non-selectable types usually)
@@ -243,16 +240,16 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 					isDown
 				);
 
-				if (shouldFocusDecorator) {
-					// we really only support the number type properly, so only handling this case
-					if (ev.target.type === 'number') {
-						ev.preventDefault();
-					}
-					this.focusDecorator(currentTarget);
+				if (shouldSpotlightMove) {
+					const direction = getDirection(keyCode);
+					const {getPointerMode, move, setPointerMode} = Spotlight;
 
-					// prevent Enter onKeyPress which triggers an onClick via Spotlight
-					if (isEnter) {
-						ev.preventDefault();
+					if (getPointerMode()) {
+						setPointerMode(false);
+					}
+
+					if (!move(direction)) {
+						this.focusDecorator(currentTarget);
 					}
 				} else if (isLeft || isRight) {
 					// prevent 5-way nav for left/right keys within the <input>
@@ -260,6 +257,35 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 				}
 			}
 			forwardKeyDown(ev, this.props);
+		}
+
+		onKeyUp = (ev) => {
+			const {dismissOnEnter} = this.props;
+			const {currentTarget, keyCode, preventDefault, target} = ev;
+
+			if (this.state.focused === 'input') {
+				const isEnter = is('enter', keyCode);
+
+				// switch focus to the decorator ...
+				const shouldFocusDecorator = (
+					// on enter + dismissOnEnter
+					(isEnter && dismissOnEnter)
+				);
+
+				if (shouldFocusDecorator) {
+					// we really only support the number type properly, so only handling this case
+					if (target.type === 'number') {
+						preventDefault();
+					}
+					this.focusDecorator(currentTarget);
+
+					// prevent Enter onKeyPress which triggers an onClick via Spotlight
+					if (isEnter) {
+						preventDefault();
+					}
+				}
+			}
+			forwardKeyUp(ev, this.props);
 		}
 
 		render () {
@@ -274,6 +300,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 					onBlur={this.onBlur}
 					onClick={this.onClick}
 					onFocus={this.onFocus}
+					onKeyDown={this.onKeyDown}
 					onKeyUp={this.onKeyUp}
 				/>
 			);
