@@ -1226,11 +1226,10 @@ const VideoPlayerBase = class extends React.Component {
 		// TODO: fix Slider to not send onKnobMove when the knob hasn't, in fact, moved
 		if (this.sliderKnobProportion !== ev.proportion) {
 			this.sliderKnobProportion = ev.proportion;
+			const seconds = Math.round(this.sliderKnobProportion * this.video.duration);
 
-			if (this.sliderScrubbing && !isNaN(this.sliderKnobProportion * this.video.duration)) {
-				const
-					seconds = Math.round(this.sliderKnobProportion * this.video.duration),
-					knobTime = secondsToTime(seconds, this.durfmt);
+			if (this.sliderScrubbing && !isNaN(seconds)) {
+				const knobTime = secondsToTime(seconds, this.durfmt);
 
 				forward('onScrub', {...ev, seconds}, this.props);
 
