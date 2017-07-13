@@ -751,6 +751,90 @@ class VirtualListCoreNative extends Component {
 		return true;
 	}
 
+	shouldPreventScrollByFocus = () => this.isScrolledBy5way
+
+	jumpToSpottableItem = (keyCode, target) => {
+		const
+			{cbScrollTo, data, dataSize} = this.props,
+			{firstIndex, numOfItems} = this.state,
+			currentIndex = Number.parseInt(target.getAttribute(dataIndexAttribute));
+
+		if (!data || !Array.isArray(data) || !data[currentIndex] || data[currentIndex].disabled) {
+			return false;
+		}
+
+		const
+			isForward = (
+				this.isPrimaryDirectionVertical && isDown(keyCode) ||
+				!this.isPrimaryDirectionVertical && (!this.context.rtl && isRight(keyCode) || this.context.rtl && isLeft(keyCode)) ||
+				null
+			), isBackward = (
+				this.isPrimaryDirectionVertical && isUp(keyCode) ||
+				!this.isPrimaryDirectionVertical && (!this.context.rtl && isLeft(keyCode) || this.context.rtl && isRight(keyCode)) ||
+				null
+			);
+
+		let nextIndex = -1;
+
+		if (isForward) {
+			// See if the next item is spottable then delegate scroll to onFocus handler
+			if (currentIndex < dataSize - 1 && !data[currentIndex + 1].disabled) {
+				return false;
+			}
+
+			for (let i = currentIndex + 2; i < dataSize; i++) {
+				if (!data[i].disabled) {
+					nextIndex = i;
+					break;
+				}
+			}
+		} else if (isBackward) {
+			// See if the next item is spottable then delegate scroll to onFocus handler
+			if (currentIndex > 0 && !data[currentIndex - 1].disabled) {
+				return false;
+			}
+
+			for (let i = currentIndex - 2; i >= 0; i--) {
+				if (!data[i].disabled) {
+					nextIndex = i;
+					break;
+				}
+			}
+		} else {
+			return false;
+		}
+
+		if (nextIndex !== -1 && (firstIndex > nextIndex || nextIndex >= firstIndex + numOfItems)) {
+			setTimeout(() => {
+				target.blur();
+			}, 50);
+
+			if (!Spotlight.isPaused()) {
+				Spotlight.pause();
+			}
+
+			cbScrollTo({
+				index: nextIndex,
+				focus: true,
+				stickTo: isForward ? 'end' : 'start'
+			});
+			return true;
+		}
+
+		return false;
+	}
+
+	onKeyDown = (e) => {
+		const {keyCode, target} = e;
+
+		this.isScrolledBy5way = false;
+		if (getDirection(keyCode)) {
+			e.preventDefault();
+			this.isScrolledBy5way = this.jumpToSpottableItem(keyCode, target);
+		}
+		forwardKeyDown(e, this.props);
+	}
+
 	setContainerDisabled = (bool) => {
 		const containerNode = this.getContainerNode();
 
