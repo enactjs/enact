@@ -16,11 +16,11 @@ const isBubbling = (ev) => ev.currentTarget !== ev.target;
 // A regex to check for input types that allow selectionStart
 const SELECTABLE_TYPES = /text|password|search|tel|url/;
 
-const safeSelectionStart = (target) => {
+const isSelectionAtLocation = (target, location) => {
 	if (SELECTABLE_TYPES.test(target.type)) {
-		return target.selectionStart;
+		return target.selectionStart === location;
 	} else {
-		return 0;
+		return true;
 	}
 };
 
@@ -133,7 +133,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 
 			if (this.state.focused === 'input') {
 				Spotlight.pause();
-			} else if (prevState.focused === 'input') {
+			} else {
 				Spotlight.resume();
 			}
 		}
@@ -220,7 +220,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 		}
 
 		onKeyDown = (ev) => {
-			const {currentTarget, keyCode, target} = ev;
+			const {currentTarget, keyCode, preventDefault, target} = ev;
 
 			if (this.state.focused === 'input') {
 				const isDown = is('down', keyCode);
@@ -231,14 +231,19 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 				// move spotlight
 				const shouldSpotlightMove = (
 					// on left + at beginning of selection
-					(isLeft && safeSelectionStart(target) === 0) ||
+					(isLeft && isSelectionAtLocation(target, 0)) ||
 					// on right + at end of selection (note: fails on non-selectable types usually)
-					(isRight && safeSelectionStart(target) === target.value.length) ||
+					(isRight && isSelectionAtLocation(target, target.value.length)) ||
 					// on up
 					isUp ||
 					// on down
 					isDown
 				);
+
+				// prevent modifying the value via 5-way for numeric fields
+				if ((isUp || isDown) && target.type === 'number') {
+					preventDefault();
+				}
 
 				if (shouldSpotlightMove) {
 					const direction = getDirection(keyCode);
@@ -248,6 +253,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 						setPointerMode(false);
 					}
 
+					preventSpotlightNavigation(ev);
 					if (!move(direction)) {
 						this.focusDecorator(currentTarget);
 					}
@@ -261,29 +267,12 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 
 		onKeyUp = (ev) => {
 			const {dismissOnEnter} = this.props;
-			const {currentTarget, keyCode, preventDefault, target} = ev;
+			const {currentTarget, keyCode, preventDefault} = ev;
 
-			if (this.state.focused === 'input') {
-				const isEnter = is('enter', keyCode);
-
-				// switch focus to the decorator ...
-				const shouldFocusDecorator = (
-					// on enter + dismissOnEnter
-					(isEnter && dismissOnEnter)
-				);
-
-				if (shouldFocusDecorator) {
-					// we really only support the number type properly, so only handling this case
-					if (target.type === 'number') {
-						preventDefault();
-					}
-					this.focusDecorator(currentTarget);
-
-					// prevent Enter onKeyPress which triggers an onClick via Spotlight
-					if (isEnter) {
-						preventDefault();
-					}
-				}
+			if (this.state.focused === 'input' && dismissOnEnter && is('enter', keyCode)) {
+				this.focusDecorator(currentTarget);
+				// prevent Enter onKeyPress which triggers an onClick via Spotlight
+				preventDefault();
 			}
 			forwardKeyUp(ev, this.props);
 		}
