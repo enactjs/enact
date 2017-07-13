@@ -32,14 +32,12 @@
 
 // Disabled elements
 .disabled(@rules; @target) when (isruleset(@rules)) and (@target = parent) {
-	[disabled],
-	:global(.spottableDisabled):focus {
+	[disabled] {
 		@rules();
 	}
 }
 .disabled(@rules) when (isruleset(@rules)) {
-	&[disabled],
-	&:global(.spottableDisabled):focus {
+	&[disabled] {
 		@rules();
 	}
 }

@@ -6,12 +6,57 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Deprecated
 
-- `moonstone/Input` prop `noDecorator` is being replaced by `autoFocus` in 2.0.0.
+### Added
+
+- `moonstone/Slider` and `moonstone/IncrementSlider` prop `aria-valuetext` to support reading custom text instead of value
+- `moonstone/TooltipDecorator` property `tooltipProps` to attach props to tooltip component
+- `moonstone/Scroller` and `moonstone/VirtualList` ability to scroll via page up and page down keys
+
+### Changed
+
+- `moonstone/ExpandableList` to use 'radio' as the default, and adapt 'single' mode to render as a `moonstone/RadioItem` instead of a `moonstone/CheckboxItem`
+- `moonstone/VideoPlayer` not to hide pause icon when it appears
+- `moonstone/ContextualPopupDecorator` to set accessibility-related props onto the container node rather than the popup node
+
+### Fixed
+
+- `moonstone/Marquee` to re-evaluate RTL orientation when its content changes
+- `moonstone/VirtualList` to restore focus on short lists
+- `moonstone/ExpandableInput` to expand the width of its contained `moonstone/Input`
+- `moonstone/Input` support for `dismissOnEnter`
+- `moonstone/Input` focus management to prevent stealing focus when programmatically moved elsewhere
+- `moonstone` international fonts to always be used, even when unsupported font-weights or font-styles are requested
+- `moonstone/Panels` layout in RTL locales
+
+## [1.4.1] - 2017-07-05
+
+### Changed
+
+- `moonstone/Popup` to only call `onKeyDown` when there is a focused item in the `Popup`
+- `moonstone/Scroller`, `moonstone/Picker`, and `moonstone/IncrementSlider` to automatically move focus when the currently focused `moonstone/IconButton` becomes disabled
+
+### Fixed
+
+- `moonstone/ContextualPopupDecorator` close button to account for large text size
+
+### Removed
+- `moonstone/ContextualPopupDecorator` to not spot controls other than its activator when navigating out via 5-way
+- `moonstone/Header` to set the value of `marqueeOn` for all types of headers
+
+## [1.4.0] - 2017-06-29
+
+### Deprecated
+
+- `moonstone/Input` prop `noDecorator` is being replaced by `autoFocus` in 2.0.0
 
 ### Added
 
+- `moonstone/Scrollbar` property `corner` to add the corner between vertical and horizontal scrollbars
+- `moonstone/ScrollThumb` for a thumb of `moonstone/Scrollbar`
 - `moonstone/styles/text.less` mixin `.locale-japanese-line-break()` to apply the correct  Japanese language line-break rules for the following multi-line components: `moonstone/BodyText`, `moonstone/Dialog`, `moonstone/Notification`, `moonstone/Popup`, and `moonstone/Tooltip`
 - `moonstone/ContextualPopupDecorator` property `popupProps` to attach props to popup component
+- `moonstone/VideoPlayer` property `pauseAtEnd` to control forward/backward seeking
+- `moonstone/Panels/Header` prop `marqueeOn` to control marquee of header
 
 ### Changed
 
@@ -20,6 +65,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` properties `autoCloseTimeout` and `titleHideDelay` default value to `5000`
 - `moonstone/VirtualList` to support restoring focus to the last focused item
 - `moonstone/Scrollable` to call `onScrollStop` before unmounting if a scroll is in progress
+- `moonstone/Scroller` to reveal non-spottable content when navigating out of a scroller
 
 ### Fixed
 
@@ -29,8 +75,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` to show its controls when pressing down the first time
 - `moonstone/Panel` autoFocus logic to only focus on initial render
 - `moonstone/Input` text colors
-
-### Removed
+- `moonstone/ExpandableInput` to focus its decorator when leaving by 5-way left/right
 
 ## [1.3.1] - 2017-06-14
 
@@ -52,7 +97,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Image` support for `children` prop inside images
 - `moonstone/Scroller` prop `direction` which replaces `horizontal` and `vertical` props
 - `moonstone/VideoPlayer` property `tooltipHideDelay` to hide tooltip with a given amount of time
-- `moonstone/VideoPlayer` property `pauseAtEnd` to pause when it reaches either the start or the end of the video 
+- `moonstone/VideoPlayer` property `pauseAtEnd` to pause when it reaches either the start or the end of the video
 - `moonstone/VideoPlayer` methods `fastForward`, `getMediaState`, `jump`, `pause`, `play`, `rewind`, and `seek` to allow external interaction with the player. See docs for example usage.
 
 ### Changed

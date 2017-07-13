@@ -5,6 +5,7 @@
  * export is {@link moonstone/VirtualList.VirtualListBase}.
  */
 
+import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import {forward} from '@enact/core/handle';
@@ -203,6 +204,7 @@ class VirtualListCore extends Component {
 			this.calculateMetrics(this.props);
 			this.updateStatesAndBounds(this.props);
 		}
+
 		// prevent native scrolling by Spotlight
 		this.preventScroll = () => {
 			containerNode.scrollTop = 0;
@@ -232,20 +234,6 @@ class VirtualListCore extends Component {
 			this.updateStatesAndBounds(nextProps);
 		} else if (hasDataChanged) {
 			this.updateStatesAndBounds(nextProps);
-		}
-
-		const placeholder = this.getPlaceholder();
-
-		if (placeholder) {
-			const index = placeholder.dataset.index;
-
-			if (index) {
-				this.lastFocusedIndex = parseInt(index);
-				this.restoreLastFocused = true;
-				this.setState({
-					firstIndex: this.lastFocusedIndex
-				});
-			}
 		}
 	}
 
@@ -311,20 +299,47 @@ class VirtualListCore extends Component {
 
 	isHorizontal = () => !this.isPrimaryDirectionVertical
 
-	getPlaceholder () {
+	isPlaceholderFocused () {
 		const current = Spotlight.getCurrent();
 		if (current && current.dataset.vlPlaceholder && this.containerRef.contains(current)) {
-			return current;
+			return true;
 		}
 
 		return false;
+	}
+
+	handlePlaceholderFocus = (ev) => {
+		const placeholder = ev.currentTarget;
+
+		if (placeholder) {
+			const index = placeholder.dataset.index;
+
+			if (index) {
+				this.lastFocusedIndex = parseInt(index);
+				this.restoreLastFocused = true;
+
+				// adjust the firstIndex to include the last focused index, if necessary
+				this.setState(nextState => {
+					let {firstIndex, numOfItems} = nextState;
+					const lastIndex = firstIndex + numOfItems;
+
+					if (this.lastFocusedIndex < firstIndex || this.lastFocusedIndex >= lastIndex) {
+						firstIndex = this.lastFocusedIndex;
+					}
+
+					return {
+						firstIndex
+					};
+				});
+			}
+		}
 	}
 
 	restoreFocus () {
 		const {firstVisibleIndex, lastVisibleIndex} = this.moreInfo;
 		if (
 			this.restoreLastFocused &&
-			!this.getPlaceholder() &&
+			!this.isPlaceholderFocused() &&
 			firstVisibleIndex <= this.lastFocusedIndex &&
 			lastVisibleIndex >= this.lastFocusedIndex
 		) {
@@ -728,6 +743,46 @@ class VirtualListCore extends Component {
 		}
 	}
 
+	getIndicesForPageScroll = (direction, currentIndex) => {
+		const
+			{context, dimensionToExtent, isPrimaryDirectionVertical, primary} = this,
+			{dataSize} = this.props,
+			indices = {};
+
+		let	offsetIndex = Math.floor(primary.clientSize / primary.gridSize) * dimensionToExtent;
+		offsetIndex *= !isPrimaryDirectionVertical && context.rtl ? -1 : 1;
+
+		if (direction === 'down' || direction === 'right') {
+			indices.indexToFocus = clamp(0, dataSize - 1, currentIndex + offsetIndex);
+			indices.indexToScroll = currentIndex + dimensionToExtent;
+			if (context.rtl && !isPrimaryDirectionVertical) {
+				indices.indexToScroll = indices.indexToFocus;
+			}
+		} else {
+			indices.indexToFocus = clamp(0, dataSize - 1, currentIndex - offsetIndex);
+			indices.indexToScroll = indices.indexToFocus;
+			if (context.rtl && !isPrimaryDirectionVertical) {
+				indices.indexToScroll = currentIndex + dimensionToExtent;
+			}
+		}
+
+		return indices;
+	}
+
+	scrollToNextPage = ({direction, focusedItem}) => {
+		const
+			focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute)),
+			{indexToFocus, indexToScroll} = this.getIndicesForPageScroll(direction, focusedIndex);
+
+		if (focusedIndex !== indexToFocus) {
+			focusedItem.blur();
+			this.props.cbScrollTo({index: indexToScroll, animate: false});
+			this.focusByIndex(indexToFocus);
+		}
+
+		return true;
+	}
+
 	setContainerDisabled = (bool) => {
 		const containerNode = this.containerRef;
 
@@ -795,7 +850,11 @@ class VirtualListCore extends Component {
 		return (
 			<div {...props} onKeyDown={this.onKeyDown} ref={this.initContainerRef}>
 				{cc.length ? cc : (
-					<SpotlightPlaceholder data-index={0} data-vl-placeholder />
+					<SpotlightPlaceholder
+						data-index={0}
+						data-vl-placeholder
+						onFocus={this.handlePlaceholderFocus}
+					/>
 				)}
 			</div>
 		);
