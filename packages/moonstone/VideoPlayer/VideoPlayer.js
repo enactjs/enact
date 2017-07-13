@@ -28,7 +28,7 @@ import Skinnable from '../Skinnable';
 import {calcNumberValueOfPlaybackRate, getNow, secondsToTime} from './util';
 import Overlay from './Overlay';
 import MediaControls from './MediaControls';
-import MediaTitle from './MediaTitle';
+import {MediaTitle, infoId, titleId} from './MediaTitle';
 import MediaSlider from './MediaSlider';
 import FeedbackTooltip from './FeedbackTooltip';
 import Times from './Times';
@@ -93,9 +93,6 @@ const forwardPlayButtonClick = forward('onPlayButtonClick');
 // localized strings
 const playLabel = 'Play';
 const pauseLabel = 'Pause';
-const backLabel = 'Back';
-const moreLabel = 'More';
-const buttonLabel = 'Button';
 
 /**
  * Every callback sent by [VideoPlayer]{@link moonstone/VideoPlayer} receives a status package,
@@ -506,11 +503,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.speedIndex = 0;
 		this.titleOffsetCalculated = false;
 		this.selectPlaybackRates('fastForward');
-		this.firstTitleRead = {
-			role: 'alert',
-			'aria-live': 'off',
-			'aria-label': this.props.title
-		};
+		this.setAccessibilityProp(titleId);
 		this.firstMoreInfoReaded = false;
 
 		this.initI18n();
@@ -633,6 +626,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.stopDelayedTitleHide();
 		this.stopDelayedFeedbackHide();
 		this.renderBottomControl.stop();
+		this.skipFirstReadJob.stop();
 	}
 
 	//
@@ -722,11 +716,10 @@ const VideoPlayerBase = class extends React.Component {
 			feedbackVisible: true,
 			titleVisible: true
 		});
+		this.skipFirstReadJob.start();
 	}
 
 	hideControls = () => {
-		this.firstTitleRead = null;
-
 		this.stopDelayedFeedbackHide();
 		this.stopDelayedTitleHide();
 		forwardControlsAvailable({available: false}, this.props);
@@ -734,6 +727,16 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	autoCloseJob = new Job(this.hideControls)
+
+	skipFirstRead = (isMore = false) => {
+		if (isMore) {
+			// Readout 'more' or 'back' button explictly.
+			Spotlight.focus(Spotlight.getCurrent());
+		}
+		this.firstRead = null;
+	}
+
+	skipFirstReadJob = new Job(this.skipFirstRead, 100)
 
 	startDelayedTitleHide = () => {
 		if (this.props.titleHideDelay) {
@@ -859,13 +862,17 @@ const VideoPlayerBase = class extends React.Component {
 
 	reloadVideo = () => {
 		// When changing a HTML5 video, you have to reload it.
-		this.firstTitleRead = {
+		this.video.load();
+		this.setAccessibilityProp(titleId);
+		this.firstMoreInfoReaded = false;
+	}
+
+	setAccessibilityProp = (id) => {
+		this.firstRead = {
 			role: 'alert',
 			'aria-live': 'off',
-			'aria-label': this.props.title
+			'aria-labelledby': id
 		};
-		this.firstMoreInfoReaded = false;
-		this.video.load();
 	}
 
 	/**
@@ -1281,16 +1288,18 @@ const VideoPlayerBase = class extends React.Component {
 			// Interrupt the title-hide since we don't want it hiding autonomously in "more".
 			this.stopDelayedTitleHide();
 		}
+
 		this.setState({
 			more: !this.state.more,
 			titleVisible: true
 		});
-		if (this.firstMoreInfoReaded === false) {
-			this.announce(this.props.infoComponents + `${$L(backLabel)} ${$L(buttonLabel)}`);
+
+		if (!this.firstMoreInfoReaded) {
+			this.setAccessibilityProp(infoId);
 			this.firstMoreInfoReaded = true;
-		} else {
-			this.announce(this.state.more ? `${$L(moreLabel)} ${$L(buttonLabel)}` : `${$L(backLabel)} ${$L(buttonLabel)}`);
 		}
+
+		this.skipFirstReadJob.start(true);
 	}
 
 	setPlayerRef = (node) => {
@@ -1360,7 +1369,7 @@ const VideoPlayerBase = class extends React.Component {
 				</Overlay>
 
 				{this.state.bottomControlsRendered ?
-					<div className={css.fullscreen + ' enyo-fit scrim'} style={{display: this.state.bottomControlsVisible ? 'block' : 'none'}} {...this.firstTitleRead}>
+					<div className={css.fullscreen + ' enyo-fit scrim'} style={{display: this.state.bottomControlsVisible ? 'block' : 'none'}} {...this.firstRead}>
 						<Container className={css.bottom} data-container-disabled={!this.state.bottomControlsVisible}>
 							{/* Info Section: Title, Description, Times */}
 							<div className={css.infoFrame}>

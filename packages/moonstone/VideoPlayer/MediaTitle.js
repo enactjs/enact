@@ -7,6 +7,13 @@ import {MarqueeText} from '../Marquee';
 
 import css from './VideoPlayer.less';
 
+const generateId = function (prefix) {
+	return prefix + Math.random().toString(36).substr(2, 8);
+};
+const
+	infoId = generateId('md_info_id-'),
+	titleId = generateId('md_title_id-');
+
 /**
  * MediaTitle {@link moonstone/VideoPlayer}.
  *
@@ -90,10 +97,10 @@ const MediaTitleBase = kind({
 
 		return (
 			<div {...rest}>
-				<MarqueeText className={titleClassName} marqueeOn="render">
+				<MarqueeText id={titleId} className={titleClassName} marqueeOn="render">
 					{title}
 				</MarqueeText>
-				<div className={childrenClassName}>  {/* tabIndex={-1} */}
+				<div id={infoId} className={childrenClassName}>  {/* tabIndex={-1} */}
 					{children}
 				</div>
 			</div>
@@ -106,5 +113,7 @@ const MediaTitle = onlyUpdateForKeys(['children', 'title', 'infoVisible', 'visib
 export default MediaTitle;
 export {
 	MediaTitle,
-	MediaTitleBase
+	MediaTitleBase,
+	infoId,
+	titleId
 };
