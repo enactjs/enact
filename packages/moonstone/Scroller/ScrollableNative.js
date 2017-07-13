@@ -427,7 +427,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				if (item && item !== this.lastFocusedItem && item === spotItem && positionFn) {
 					const lastPos = this.lastScrollPositionOnFocus;
 					let pos;
-					// If scroll animation is on going, we need to pass last target position to
+					// If scroll animation is ongoing, we need to pass last target position to
 					// determine correct scroll position.
 					if (this.scrolling && lastPos) {
 						pos = positionFn(item, this.verticalScrollability ? lastPos.top : lastPos.left);
