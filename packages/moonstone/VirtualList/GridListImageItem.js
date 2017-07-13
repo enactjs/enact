@@ -41,6 +41,7 @@ const GridListImageItemBase = kind({
 		 * The absolute URL path to the image.
 		 *
 		 * @type {String}
+		 * @required
 		 * @public
 		 */
 		source: PropTypes.string.isRequired,
