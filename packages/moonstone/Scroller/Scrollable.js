@@ -323,6 +323,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		// spotlight
 		lastFocusedItem = null
+		lastScrollPositionOnFocus = null
 
 		// component info
 		childRef = null
@@ -487,6 +488,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					});
 				}
 				this.lastFocusedItem = item;
+				this.lastScrollPositionOnFocus = pos;
 			}
 		}
 
@@ -498,7 +500,15 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					spotItem = Spotlight.getCurrent();
 
 				if (item && item !== this.lastFocusedItem && item === spotItem && positionFn) {
-					const pos = positionFn(item);
+					const lastPos = this.lastScrollPositionOnFocus;
+					let pos;
+					// If scroll animation is on going, we need to pass last target position to
+					// determine correct scroll position.
+					if (this.animator.isAnimating() && lastPos) {
+						pos = positionFn(item, this.verticalScrollability ? lastPos.top : lastPos.left);
+					} else {
+						pos = positionFn(item);
+					}
 					this.startScrollOnFocus(pos, item);
 				}
 			}
@@ -759,6 +769,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.isScrollAnimationTargetAccumulated = false;
 			this.childRef.setContainerDisabled(false);
 			this.lastFocusedItem = null;
+			this.lastScrollPositionOnFocus = null;
 			this.hideThumb(bounds);
 			if (indexToFocus !== null && typeof this.childRef.focusByIndex === 'function') {
 				this.childRef.focusByIndex(indexToFocus);

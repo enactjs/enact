@@ -657,10 +657,10 @@ class VirtualListCoreNative extends Component {
 		}
 	}
 
-	calculatePositionOnFocus = (item) => {
+	calculatePositionOnFocus = (item, scrollPosition = this.scrollPosition) => {
 		const
 			{pageScroll} = this.props,
-			{primary, numOfItems, scrollPosition} = this,
+			{primary, numOfItems} = this,
 			offsetToClientEnd = primary.clientSize - primary.itemSize,
 			focusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
 
