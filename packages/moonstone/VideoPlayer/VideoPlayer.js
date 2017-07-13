@@ -664,7 +664,6 @@ const VideoPlayerBase = class extends React.Component {
 		if (titleElement && infoComponents) {
 			const infoHeight = infoComponents.offsetHeight;
 
-			titleElement.setAttribute('style', `--infoComponentsOffset: ${infoHeight}px`);
 			titleElement.style.setProperty('--infoComponentsOffset', infoHeight + 'px');
 			this.titleOffsetCalculated = true;
 		}
@@ -1228,7 +1227,7 @@ const VideoPlayerBase = class extends React.Component {
 		if (this.sliderKnobProportion !== ev.proportion) {
 			this.sliderKnobProportion = ev.proportion;
 
-			if (this.sliderScrubbing) {
+			if (this.sliderScrubbing && !isNaN(this.sliderKnobProportion * this.video.duration)) {
 				const
 					seconds = Math.round(this.sliderKnobProportion * this.video.duration),
 					knobTime = secondsToTime(seconds, this.durfmt);
