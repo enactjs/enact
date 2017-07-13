@@ -9,7 +9,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 ### Changed
-- `moonstone/VideoPlayer` utility method `secondsToTime` to support a config parameter with the property `includeHour`, when true, will output a string in `hour:minute:second` time format instead of the default `minute:second`
+
+- `moonstone/VideoPlayer` to include hour when announcing the time while scrubbing
 
 ### Fixed
 
