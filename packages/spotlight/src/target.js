@@ -196,7 +196,7 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 		return previous;
 	}
 
-	const elementRects = filterRects(getRects(elements), boundingRect);
+	let elementRects = filterRects(getRects(elements), boundingRect);
 	const overlappingContainerId = getContainerContainingRect(elementRects, elementRect);
 
 	// if the next element is a container AND the current element is *visually* contained within
@@ -213,35 +213,46 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 		);
 	}
 
-	// try to navigate from element to one of the candidates in containerId
-	const next = navigate(
-		elementRect,
-		direction,
-		elementRects,
-		getContainerConfig(containerId)
-	);
+	let next = null;
 
-	// if we match a container,
-	if (next && isContainer(next)) {
-		const nextContainerId = next.dataset.containerId;
-
-		// and it is restricted, return its target
-		if (isRestrictedContainer(nextContainerId)) {
-			return getTargetByContainer(nextContainerId);
-		}
-
-		// otherwise, recurse into it
-		return getTargetInContainerByDirectionFromElement(
-			direction,
-			nextContainerId,
-			element,
+	while (elementRects.length > 0) {
+		// try to navigate from element to one of the candidates in containerId
+		next = navigate(
 			elementRect,
-			elementContainerIds,
-			getOverflowContainerRect(nextContainerId) || boundingRect
+			direction,
+			elementRects,
+			getContainerConfig(containerId)
 		);
-	}
 
-	return next;
+		// if we match a container,
+		if (next && isContainer(next)) {
+			let nextInContainer = null;
+			const nextContainerId = next.dataset.containerId;
+
+			// and it is restricted, return its target
+			if (isRestrictedContainer(nextContainerId)) {
+				nextInContainer = getTargetByContainer(nextContainerId);
+			} else {
+				// otherwise, recurse into it
+				nextInContainer = getTargetInContainerByDirectionFromElement(
+					direction,
+					nextContainerId,
+					element,
+					elementRect,
+					elementContainerIds,
+					getOverflowContainerRect(nextContainerId) || boundingRect
+				);
+			}
+
+			if (nextInContainer) {
+				return nextInContainer;
+			} else {
+				elementRects = elementRects.filter(rect => rect.element !== next);
+			}
+		} else {
+			return next;
+		}
+	}
 }
 
 function getTargetByDirectionFromElement (direction, element) {
