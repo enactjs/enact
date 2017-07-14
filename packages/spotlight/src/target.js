@@ -147,7 +147,7 @@ function getOverflowContainerRect (containerId) {
 
 function getTargetInContainerByDirectionFromPosition (direction, containerId, positionRect, elementContainerIds, boundingRect) {
 	const elements = getSpottableDescendantsWithoutContainers(containerId, elementContainerIds);
-	const elementRects = filterRects(getRects(elements), boundingRect);
+	let elementRects = filterRects(getRects(elements), boundingRect);
 	const overlappingContainerId = getContainerContainingRect(elementRects, positionRect);
 
 	// if the pointer is within a container that is a candidate element, we need to ignore container
@@ -162,28 +162,38 @@ function getTargetInContainerByDirectionFromPosition (direction, containerId, po
 		);
 	}
 
-	// try to navigate from position to one of the candidates in containerId
-	const next = navigate(
-		positionRect,
-		direction,
-		elementRects,
-		getContainerConfig(containerId)
-	);
+	let next = null;
 
-	// if we match a container, recurse into it
-	if (next && isContainer(next)) {
-		const nextContainerId = next.dataset.containerId;
-
-		return getTargetInContainerByDirectionFromPosition(
-			direction,
-			nextContainerId,
+	while (elementRects.length > 0) {
+		// try to navigate from position to one of the candidates in containerId
+		next = navigate(
 			positionRect,
-			elementContainerIds,
-			getOverflowContainerRect(nextContainerId) || boundingRect
+			direction,
+			elementRects,
+			getContainerConfig(containerId)
 		);
-	}
 
-	return next;
+		// if we match a container, recurse into it
+		if (next && isContainer(next)) {
+			const nextContainerId = next.dataset.containerId;
+
+			const nextInContainer = getTargetInContainerByDirectionFromPosition(
+				direction,
+				nextContainerId,
+				positionRect,
+				elementContainerIds,
+				getOverflowContainerRect(nextContainerId) || boundingRect
+			);
+
+			if (nextInContainer) {
+				return nextInContainer;
+			} else {
+				elementRects = elementRects.filter(rect => rect.element !== next);
+			}
+		} else {
+			return next;
+		}
+	}
 }
 
 
@@ -200,7 +210,7 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 	const overlappingContainerId = getContainerContainingRect(elementRects, elementRect);
 
 	// if the next element is a container AND the current element is *visually* contained within
-	// one of the candidate element, we need to ignore container `enterTo` preferences and
+	// one of the candidate elements, we need to ignore container `enterTo` preferences and
 	// retrieve its spottable descendants and try to navigate to them.
 	if (overlappingContainerId) {
 		return getTargetInContainerByDirectionFromElement(
