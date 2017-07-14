@@ -176,6 +176,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			 */
 			onScrollStop: PropTypes.func,
 
+			/**
+			 * Scrollable CSS style.
+			 * Should be defined because we manuplate style prop in render().
+			 *
+			 * @type {Object}
+			 * @public
+			 */
 			style: PropTypes.object,
 
 			/**
@@ -323,6 +330,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		// spotlight
 		lastFocusedItem = null
+		indexToFocus = null
+		nodeToFocus = null
 
 		// component info
 		childRef = null
@@ -491,7 +500,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		onFocus = (e) => {
-			if (!(Spotlight.getPointerMode() || this.isDragging)) {
+			const shouldPreventScrollByFocus = this.childRef.shouldPreventScrollByFocus ?
+				this.childRef.shouldPreventScrollByFocus() :
+				false;
+
+			if (!(shouldPreventScrollByFocus || Spotlight.getPointerMode() || this.isDragging)) {
 				const
 					item = e.target,
 					positionFn = this.childRef.calculatePositionOnFocus,
@@ -501,6 +514,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					const pos = positionFn(item);
 					this.startScrollOnFocus(pos, item);
 				}
+			} else if (this.childRef.setLastFocusedIndex) {
+				this.childRef.setLastFocusedIndex(e.target);
 			}
 		}
 
@@ -678,7 +693,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		// scroll start/stop
 
-		start ({targetX, targetY, animate = true, silent = false, duration = animationDuration, indexToFocus, nodeToFocus}) {
+		start ({targetX, targetY, animate = true, silent = false, duration = animationDuration}) {
 			const {scrollLeft, scrollTop} = this;
 			const bounds = this.getScrollBounds();
 
@@ -702,22 +717,20 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					sourceY: scrollTop,
 					targetX,
 					targetY,
-					duration,
-					indexToFocus,
-					nodeToFocus
+					duration
 				}));
 			} else {
 				targetX = clamp(0, bounds.maxLeft, targetX);
 				targetY = clamp(0, bounds.maxTop, targetY);
 
 				this.scroll(targetX, targetY);
-				this.stop({indexToFocus, nodeToFocus});
+				this.stop();
 			}
 		}
 
 		scrollAnimation = (animationInfo) => (curTime) => {
 			const
-				{sourceX, sourceY, targetX, targetY, duration, indexToFocus, nodeToFocus} = animationInfo,
+				{sourceX, sourceY, targetX, targetY, duration} = animationInfo,
 				bounds = this.getScrollBounds();
 
 			if (curTime < duration) {
@@ -730,7 +743,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					clamp(0, bounds.maxLeft, targetX),
 					clamp(0, bounds.maxTop, targetY)
 				);
-				this.stop({indexToFocus, nodeToFocus});
+				this.stop();
 			}
 		}
 
@@ -752,21 +765,27 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.doScrolling();
 		}
 
-		stop ({indexToFocus, nodeToFocus}) {
+		stop () {
 			const bounds = this.getScrollBounds();
 
 			this.animator.stop();
 			this.isScrollAnimationTargetAccumulated = false;
 			this.childRef.setContainerDisabled(false);
+			this.focusOnItem();
 			this.lastFocusedItem = null;
 			this.hideThumb(bounds);
-			if (indexToFocus !== null && typeof this.childRef.focusByIndex === 'function') {
-				this.childRef.focusByIndex(indexToFocus);
-			}
-			if (nodeToFocus !== null && typeof this.childRef.focusOnNode === 'function') {
-				this.childRef.focusOnNode(nodeToFocus);
-			}
 			this.doScrollStop();
+		}
+
+		focusOnItem () {
+			if (this.indexToFocus !== null && typeof this.childRef.focusByIndex === 'function') {
+				this.childRef.focusByIndex(this.indexToFocus);
+				this.indexToFocus = null;
+			}
+			if (this.nodeToFocus !== null && typeof this.childRef.focusOnNode === 'function') {
+				this.childRef.focusOnNode(this.nodeToFocus);
+				this.nodeToFocus = null;
+			}
 		}
 
 		// scrollTo API
@@ -812,7 +831,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					}
 				} else {
 					if (typeof opt.index === 'number' && typeof this.childRef.getItemPosition === 'function') {
-						itemPos = this.childRef.getItemPosition(opt.index);
+						itemPos = this.childRef.getItemPosition(opt.index, opt.stickTo);
 					} else if (opt.node instanceof Object) {
 						if (opt.node.nodeType === 1 && typeof this.childRef.getNodePosition === 'function') {
 							itemPos = this.childRef.getNodePosition(opt.node);
@@ -835,20 +854,22 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		scrollTo = (opt) => {
 			if (!this.isInitializing) {
 				const {left, top} = this.getPositionForScrollTo(opt);
-				let indexToFocus = null;
+				this.indexToFocus = null;
+				this.nodeToFocus = null;
 				this.scrollToInfo = null;
 
 				if (typeof opt.indexToFocus === 'number') {
-					indexToFocus = opt.indexToFocus;
+					this.indexToFocus = opt.indexToFocus;
 					deprecate({name: 'indexToFocus', since: '1.2.0', message: 'Use `focus` instead', until: '2.0.0'});
 				}
+
+				this.indexToFocus = (opt.focus && typeof opt.index === 'number') ? opt.index : this.indexToFocus;
+				this.nodeToFocus = (opt.focus && opt.node instanceof Object && opt.node.nodeType === 1) ? opt.node : null;
 
 				this.start({
 					targetX: (left !== null) ? left : this.scrollLeft,
 					targetY: (top !== null) ? top : this.scrollTop,
-					animate: opt.animate,
-					indexToFocus: (opt.focus && typeof opt.index === 'number') ? opt.index : indexToFocus,
-					nodeToFocus:  (opt.focus && opt.node instanceof Object && opt.node.nodeType === 1) ? opt.node : null
+					animate: opt.animate
 				});
 			} else {
 				this.scrollToInfo = opt;
