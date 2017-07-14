@@ -143,6 +143,14 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			popupClassName: PropTypes.string,
 
 			/**
+			 * A custom container ID to use with Spotlight.
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			popupContainerId: PropTypes.string,
+
+			/**
 			 * An object containing properties to be passed to popup component.
 			 *
 			 * @type {Object}
@@ -195,7 +203,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.state = {
 				arrowPosition: {top: 0, left: 0},
 				containerPosition: {top: 0, left: 0},
-				containerId: Spotlight.add(),
+				containerId: Spotlight.add(this.props.popupContainerId),
 				activator: null
 			};
 
@@ -459,6 +467,8 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (!noSkin) {
 				rest.skin = skin;
 			}
+
+			delete rest.popupContainerId;
 
 			return (
 				<div className={css.contextualPopupDecorator}>
