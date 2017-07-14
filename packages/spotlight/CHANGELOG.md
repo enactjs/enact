@@ -11,6 +11,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 ### Changed
 
 ### Fixed
+- `spotlight` to not focus elements that are already focused
 
 ## [1.4.1] - 2017-07-05
 
