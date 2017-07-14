@@ -36,11 +36,10 @@ const
 	isPageUp = is('pageUp'),
 	isPageDown = is('pageDown');
 
-/**
+/*
  * Set CSS Varaible value.
  *
  * @method
- * @memberof core/util
  * @param {Node} element - Node.
  * @param {String} variable - CSS Variable property.
  * @param {String} value - CSS Variable value.

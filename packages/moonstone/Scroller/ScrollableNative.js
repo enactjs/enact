@@ -170,6 +170,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			 */
 			onScrollStop: PropTypes.func,
 
+			/**
+			 * Scrollable CSS style.
+			 * Should be defined because we manuplate style prop in render().
+			 *
+			 * @type {Object}
+			 * @public
+			 */
 			style: PropTypes.object,
 
 			/**
@@ -309,6 +316,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		// spotlight
 		lastFocusedItem = null
+		lastScrollPositionOnFocus = null
+		indexToFocus = null
+		nodeToFocus = null
 
 		// component info
 		childRef = null
@@ -331,7 +341,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		onMouseMove = () => {
-			if (this.resetPosition) {
+			if (this.resetPosition !== null) {
 				const containerNode = this.childRef.getContainerNode();
 				containerNode.style.scrollBehavior = null;
 				containerNode.scrollTop = this.resetPosition;
@@ -412,20 +422,35 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					this.start(pos.left, pos.top, this.animateOnFocus);
 				}
 				this.lastFocusedItem = item;
+				this.lastScrollPositionOnFocus = pos;
 			}
 		}
 
 		onFocus = (e) => {
-			if (!(Spotlight.getPointerMode() || this.isDragging)) {
+			const shouldPreventScrollByFocus = this.childRef.shouldPreventScrollByFocus ?
+				this.childRef.shouldPreventScrollByFocus() :
+				false;
+
+			if (!(shouldPreventScrollByFocus || Spotlight.getPointerMode() || this.isDragging)) {
 				const
 					item = e.target,
 					positionFn = this.childRef.calculatePositionOnFocus,
 					spotItem = Spotlight.getCurrent();
 
 				if (item && item !== this.lastFocusedItem && item === spotItem && positionFn) {
-					const pos = positionFn(item);
+					const lastPos = this.lastScrollPositionOnFocus;
+					let pos;
+					// If scroll animation is ongoing, we need to pass last target position to
+					// determine correct scroll position.
+					if (this.scrolling && lastPos) {
+						pos = positionFn(item, this.verticalScrollability ? lastPos.top : lastPos.left);
+					} else {
+						pos = positionFn(item);
+					}
 					this.startScrollOnFocus(pos, item);
 				}
+			} else if (this.childRef.setLastFocusedIndex) {
+				this.childRef.setLastFocusedIndex(e.target);
 			}
 		}
 
@@ -562,7 +587,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		scrollStopOnScroll = () => {
 			this.isScrollAnimationTargetAccumulated = false;
 			this.childRef.setContainerDisabled(false);
+			this.focusOnItem();
 			this.lastFocusedItem = null;
+			this.lastScrollPositionOnFocus = null;
 
 			this.hideThumb(this.getScrollBounds());
 			this.scrolling = false;
@@ -593,7 +620,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		// scroll start
 
-		start (targetX, targetY, animate = true, indexToFocus, nodeToFocus) {
+		start (targetX, targetY, animate = true) {
 			const
 				bounds = this.getScrollBounds(),
 				containerNode = this.childRef.getContainerNode();
@@ -614,16 +641,18 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				containerNode.style.scrollBehavior = null;
 				this.childRef.scrollToPosition(targetX, targetY);
 				containerNode.style.scrollBehavior = 'smooth';
-				this.focusOnItem({indexToFocus, nodeToFocus});
+				this.focusOnItem();
 			}
 		}
 
-		focusOnItem ({indexToFocus, nodeToFocus}) {
-			if (indexToFocus !== null && typeof this.childRef.focusByIndex === 'function') {
-				this.childRef.focusByIndex(indexToFocus);
+		focusOnItem () {
+			if (this.indexToFocus !== null && typeof this.childRef.focusByIndex === 'function') {
+				this.childRef.focusByIndex(this.indexToFocus);
+				this.indexToFocus = null;
 			}
-			if (nodeToFocus !== null && typeof this.childRef.focusOnNode === 'function') {
-				this.childRef.focusOnNode(nodeToFocus);
+			if (this.nodeToFocus !== null && typeof this.childRef.focusOnNode === 'function') {
+				this.childRef.focusOnNode(this.nodeToFocus);
+				this.nodeToFocus = null;
 			}
 		}
 
@@ -690,7 +719,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					}
 				} else {
 					if (typeof opt.index === 'number' && typeof this.childRef.getItemPosition === 'function') {
-						itemPos = this.childRef.getItemPosition(opt.index);
+						itemPos = this.childRef.getItemPosition(opt.index, opt.stickTo);
 					} else if (opt.node instanceof Object) {
 						if (opt.node.nodeType === 1 && typeof this.childRef.getNodePosition === 'function') {
 							itemPos = this.childRef.getNodePosition(opt.node);
@@ -713,21 +742,23 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		scrollTo = (opt) => {
 			if (!this.isInitializing) {
 				const {left, top} = this.getPositionForScrollTo(opt);
-				let indexToFocus = null;
+				this.indexToFocus = null;
+				this.nodeToFocus = null;
 				this.scrollToInfo = null;
 
 				if (typeof opt.indexToFocus === 'number') {
-					indexToFocus = opt.indexToFocus;
+					this.indexToFocus = opt.indexToFocus;
 					deprecate({name: 'indexToFocus', since: '1.2.0', message: 'Use `focus` instead', until: '2.0.0'});
 				}
+
+				this.indexToFocus = (opt.focus && typeof opt.index === 'number') ? opt.index : this.indexToFocus;
+				this.nodeToFocus = (opt.focus && opt.node instanceof Object && opt.node.nodeType === 1) ? opt.node : null;
 
 				if (left !== null || top !== null) {
 					this.start(
 						(left !== null) ? left : this.scrollLeft,
 						(top !== null) ? top : this.scrollTop,
-						opt.animate,
-						(opt.focus && typeof opt.index === 'number') ? opt.index : indexToFocus,
-						(opt.focus && opt.node instanceof Object && opt.node.nodeType === 1) ? opt.node : null
+						opt.animate
 					);
 				}
 			} else {

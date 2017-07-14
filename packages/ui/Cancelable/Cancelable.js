@@ -153,6 +153,7 @@ const Cancelable = hoc(defaultConfig, (config, Wrapped) => {
 		render () {
 			const props = Object.assign({}, this.props);
 			delete props.onCancel;
+			delete props[onCancel];
 
 			return	modal && this.renderModal(props) ||
 					Component && this.renderWrapped(props) ||
