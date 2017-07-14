@@ -178,6 +178,24 @@ const TimePickerBase = kind({
 		onSpotlightDisappear: PropTypes.func,
 
 		/**
+		 * The handler to run prior to focus leaving the expandable when the 5-way left key is pressed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightLeft: PropTypes.func,
+
+		/**
+		 * The handler to run prior to focus leaving the expandable when the 5-way right key is pressed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightRight: PropTypes.func,
+
+		/**
 		 * When `true`, the component cannot be navigated using spotlight.
 		 *
 		 * @type {Boolean}
@@ -207,12 +225,38 @@ const TimePickerBase = kind({
 		hasMeridiem: ({order}) => order.indexOf('a') >= 0
 	},
 
-	render: ({handlePickerKeyDown, hasMeridiem, hour, meridiem, meridiems, minute, noLabels, onChangeHour, onChangeMeridiem, onChangeMinute, onSpotlightDisappear, order, spotlightDisabled, ...rest}) => {
+	render: ({
+		handlePickerKeyDown,
+		hasMeridiem,
+		hour,
+		meridiem,
+		meridiems,
+		minute,
+		noLabels,
+		onChangeHour,
+		onChangeMeridiem,
+		onChangeMinute,
+		onSpotlightDisappear,
+		onSpotlightLeft,
+		onSpotlightRight,
+		order,
+		spotlightDisabled,
+		...rest
+	}) => {
 		return (
-			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled}>
+			<ExpandableItemBase
+				{...rest}
+				showLabel="always"
+				autoClose={false}
+				lockBottom={false}
+				onSpotlightDisappear={onSpotlightDisappear}
+				onSpotlightLeft={onSpotlightLeft}
+				onSpotlightRight={onSpotlightRight}
+				spotlightDisabled={spotlightDisabled}
+			>
 				<div className={dateComponentPickers} onKeyDown={handlePickerKeyDown}>
 					<div className={css.timeComponents}>
-						{order.map(picker => {
+						{order.map((picker, index) => {
 							switch (picker) {
 								case 'h':
 								case 'k':
@@ -223,6 +267,8 @@ const TimePickerBase = kind({
 											label={noLabels ? null : $L('hour')}
 											onChange={onChangeHour}
 											onSpotlightDisappear={onSpotlightDisappear}
+											onSpotlightLeft={index === 0 ? onSpotlightLeft : null}
+											onSpotlightRight={index === 2 ? onSpotlightRight : null}
 											spotlightDisabled={spotlightDisabled}
 											value={hour}
 											width={2}
@@ -241,6 +287,8 @@ const TimePickerBase = kind({
 											min={0}
 											onChange={onChangeMinute}
 											onSpotlightDisappear={onSpotlightDisappear}
+											onSpotlightLeft={index === 0 ? onSpotlightLeft : null}
+											onSpotlightRight={index === 2 ? onSpotlightRight : null}
 											spotlightDisabled={spotlightDisabled}
 											padded
 											value={minute}
@@ -256,6 +304,8 @@ const TimePickerBase = kind({
 											label={noLabels ? null : $L('meridiem')}
 											onChange={onChangeMeridiem}
 											onSpotlightDisappear={onSpotlightDisappear}
+											onSpotlightLeft={index === 0 ? onSpotlightLeft : null}
+											onSpotlightRight={index === 2 ? onSpotlightRight : null}
 											reverse
 											spotlightDisabled={spotlightDisabled}
 											value={meridiem}

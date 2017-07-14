@@ -126,6 +126,33 @@ const ExpandablePickerBase = kind({
 		onSpotlightDisappear: PropTypes.func,
 
 		/**
+		 * The handler to run prior to focus leaving the expandable when the 5-way down key is pressed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightDown: PropTypes.func,
+
+		/**
+		 * The handler to run prior to focus leaving the expandable when the 5-way left key is pressed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightLeft: PropTypes.func,
+
+		/**
+		 * The handler to run prior to focus leaving the expandable when the 5-way right key is pressed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightRight: PropTypes.func,
+
+		/**
 		 * The orientation of the picker, i.e. whether the buttons are above and below or on the
 		 * sides of the value. Must be either `'horizontal'` or `'vertical'`.
 		 *
@@ -210,6 +237,9 @@ const ExpandablePickerBase = kind({
 			onChange,
 			onPick,
 			onSpotlightDisappear,
+			onSpotlightDown,
+			onSpotlightLeft,
+			onSpotlightRight,
 			orientation,
 			spotlightDisabled,
 			value,
@@ -219,7 +249,15 @@ const ExpandablePickerBase = kind({
 		} = props;
 
 		return (
-			<ExpandableItemBase {...rest} disabled={disabled} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled}>
+			<ExpandableItemBase
+				{...rest}
+				disabled={disabled}
+				onSpotlightDisappear={onSpotlightDisappear}
+				onSpotlightDown={onSpotlightDown}
+				onSpotlightLeft={onSpotlightLeft}
+				onSpotlightRight={onSpotlightRight}
+				spotlightDisabled={spotlightDisabled}
+			>
 				<Picker
 					className={css.picker}
 					disabled={disabled}
@@ -229,6 +267,8 @@ const ExpandablePickerBase = kind({
 					incrementIcon={incrementIcon}
 					joined={joined}
 					noAnimation={noAnimation}
+					onPickerSpotlightDown={onSpotlightDown}
+					onPickerSpotlightLeft={onSpotlightLeft}
 					onSpotlightDisappear={onSpotlightDisappear}
 					orientation={orientation}
 					spotlightDisabled={spotlightDisabled}
@@ -237,7 +277,15 @@ const ExpandablePickerBase = kind({
 				>
 					{children}
 				</Picker>
-				<IconButton onClick={onChange} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled} className={css.button} small>check</IconButton>
+				<IconButton
+					onClick={onChange}
+					onSpotlightDisappear={onSpotlightDisappear}
+					onSpotlightDown={onSpotlightDown}
+					onSpotlightRight={onSpotlightRight}
+					spotlightDisabled={spotlightDisabled}
+					className={css.button}
+					small
+				>check</IconButton>
 			</ExpandableItemBase>
 		);
 	}

@@ -156,6 +156,24 @@ const DatePickerBase = kind({
 		onSpotlightDisappear: PropTypes.func,
 
 		/**
+		 * The handler to run prior to focus leaving the expandable when the 5-way left key is pressed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightLeft: PropTypes.func,
+
+		/**
+		 * The handler to run prior to focus leaving the expandable when the 5-way right key is pressed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightRight: PropTypes.func,
+
+		/**
 		 * When `true`, the component cannot be navigated using spotlight.
 		 *
 		 * @type {Boolean}
@@ -183,12 +201,40 @@ const DatePickerBase = kind({
 		)
 	},
 
-	render: ({day, handlePickerKeyDown, maxDays, maxMonths, maxYear, minYear, month, noLabels, onChangeDate, onChangeMonth, onChangeYear, onSpotlightDisappear, order, spotlightDisabled, year, ...rest}) => {
+	render: ({
+		day,
+		handlePickerKeyDown,
+		maxDays,
+		maxMonths,
+		maxYear,
+		minYear,
+		month,
+		noLabels,
+		onChangeDate,
+		onChangeMonth,
+		onChangeYear,
+		onSpotlightDisappear,
+		onSpotlightLeft,
+		onSpotlightRight,
+		order,
+		spotlightDisabled,
+		year,
+		...rest
+	}) => {
 
 		return (
-			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled}>
+			<ExpandableItemBase
+				{...rest}
+				showLabel="always"
+				autoClose={false}
+				lockBottom={false}
+				onSpotlightDisappear={onSpotlightDisappear}
+				onSpotlightLeft={onSpotlightLeft}
+				onSpotlightRight={onSpotlightRight}
+				spotlightDisabled={spotlightDisabled}
+			>
 				<div className={dateComponentPickers} onKeyDown={handlePickerKeyDown}>
-					{order.map(picker => {
+					{order.map((picker, index) => {
 						switch (picker) {
 							case 'd':
 								return (
@@ -199,6 +245,8 @@ const DatePickerBase = kind({
 										min={1}
 										onChange={onChangeDate}
 										onSpotlightDisappear={onSpotlightDisappear}
+										onSpotlightLeft={index === 0 ? onSpotlightLeft : null}
+										onSpotlightRight={index === 2 ? onSpotlightRight : null}
 										spotlightDisabled={spotlightDisabled}
 										value={day}
 										width={2}
@@ -214,6 +262,8 @@ const DatePickerBase = kind({
 										min={1}
 										onChange={onChangeMonth}
 										onSpotlightDisappear={onSpotlightDisappear}
+										onSpotlightLeft={index === 0 ? onSpotlightLeft : null}
+										onSpotlightRight={index === 2 ? onSpotlightRight : null}
 										spotlightDisabled={spotlightDisabled}
 										value={month}
 										width={2}
@@ -230,6 +280,8 @@ const DatePickerBase = kind({
 										min={minYear}
 										onChange={onChangeYear}
 										onSpotlightDisappear={onSpotlightDisappear}
+										onSpotlightLeft={index === 0 ? onSpotlightLeft : null}
+										onSpotlightRight={index === 2 ? onSpotlightRight : null}
 										spotlightDisabled={spotlightDisabled}
 										value={year}
 										width={4}

@@ -7,6 +7,7 @@
 import {extractAriaProps} from '@enact/core/util';
 import Changeable from '@enact/ui/Changeable';
 import factory from '@enact/core/factory';
+import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
 import Pressable from '@enact/ui/Pressable';
 import React from 'react';
@@ -21,6 +22,9 @@ import SliderDecorator from '../internal/SliderDecorator';
 
 import IncrementSliderButton from './IncrementSliderButton';
 import componentCss from './IncrementSlider.less';
+
+const isLeft = is('left');
+const isRight = is('right');
 
 const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 	const Slider = Pressable(Spottable(Skinnable(SliderBaseFactory({css}))));
@@ -224,7 +228,6 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 */
 			onIncrementSpotlightDisappear: PropTypes.func,
 
-
 			/**
 			 * The handler to run when the component is removed while retaining focus.
 			 *
@@ -233,6 +236,42 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * @public
 			 */
 			onSpotlightDisappear: PropTypes.func,
+
+			/**
+			 * The handler to run when the 5-way down key is pressed.
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @public
+			 */
+			onSpotlightDown: PropTypes.func,
+
+			/**
+			 * The handler to run when the 5-way left key is pressed while the decrement button is focused.
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @public
+			 */
+			onSpotlightLeft: PropTypes.func,
+
+			/**
+			 * The handler to run when the 5-way right key is pressed while the increment button is focused.
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @public
+			 */
+			onSpotlightRight: PropTypes.func,
+
+			/**
+			 * The handler to run when the 5-way up key is pressed.
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @public
+			 */
+			onSpotlightUp: PropTypes.func,
 
 			/**
 			 * `scrubbing` only has an effect with a detachedKnob, and is a performance optimization
@@ -361,6 +400,18 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			vertical: false
 		},
 
+		handlers: {
+			handleKeyDown: (ev, {min, max, value, onSpotlightLeft, onSpotlightRight}) => {
+				const {keyCode} = ev;
+
+				if (isLeft(keyCode) && value <= min && onSpotlightLeft) {
+					onSpotlightLeft(ev);
+				} else if (isRight(keyCode) && value >= max && onSpotlightRight) {
+					onSpotlightRight(ev);
+				}
+			}
+		},
+
 		styles: {
 			css,
 			className: 'incrementSlider'
@@ -386,6 +437,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			detachedKnob,
 			disabled,
 			focused,
+			handleKeyDown,
 			incrementAriaLabel,
 			incrementDisabled,
 			incrementIcon,
@@ -401,6 +453,10 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			onIncrement,
 			onIncrementSpotlightDisappear,
 			onSpotlightDisappear,
+			onSpotlightDown,
+			onSpotlightLeft,
+			onSpotlightRight,
+			onSpotlightUp,
 			scrubbing,
 			sliderBarRef,
 			sliderRef,
@@ -425,6 +481,9 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						disabled={decrementDisabled}
 						onClick={onDecrement}
 						onSpotlightDisappear={onDecrementSpotlightDisappear}
+						onSpotlightDown={onSpotlightDown}
+						onSpotlightLeft={onSpotlightLeft}
+						onSpotlightUp={onSpotlightUp}
 						spotlightDisabled={spotlightDisabled}
 					>
 						{decrementIcon}
@@ -446,7 +505,10 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						onChange={onChange}
 						onDecrement={onDecrement}
 						onIncrement={onIncrement}
+						onKeyDown={handleKeyDown}
 						onSpotlightDisappear={onSpotlightDisappear}
+						onSpotlightDown={onSpotlightDown}
+						onSpotlightUp={onSpotlightUp}
 						scrubbing={scrubbing}
 						sliderBarRef={sliderBarRef}
 						sliderRef={sliderRef}
@@ -468,6 +530,9 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						disabled={incrementDisabled}
 						onClick={onIncrement}
 						onSpotlightDisappear={onIncrementSpotlightDisappear}
+						onSpotlightDown={onSpotlightDown}
+						onSpotlightRight={onSpotlightRight}
+						onSpotlightUp={onSpotlightUp}
 						spotlightDisabled={spotlightDisabled}
 					>
 						{incrementIcon}
