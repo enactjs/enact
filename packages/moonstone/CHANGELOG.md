@@ -33,6 +33,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Input` support for `dismissOnEnter`
 - `moonstone/Input` focus management to prevent stealing focus when programmatically moved elsewhere
 - `moonstone` international fonts to always be used, even when unsupported font-weights or font-styles are requested
+- `moonstone/Panels.Panel` support for selecting components with `.spottable-default` as the default focus target
 - `moonstone/InputDecorator` 5-way spot behavior
 - `moonstone/Panels` layout in RTL locales
 
