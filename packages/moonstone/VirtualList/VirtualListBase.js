@@ -374,7 +374,7 @@ class VirtualListCore extends Component {
 		return {primaryPosition, secondaryPosition};
 	}
 
-	getItemPosition = (index, stickTo = 'end') => {
+	getItemPosition = (index, stickTo = 'start') => {
 		const
 			{itemSize} = this.props,
 			{primary} = this,

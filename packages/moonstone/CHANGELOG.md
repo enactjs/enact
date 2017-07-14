@@ -11,6 +11,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Slider` and `moonstone/IncrementSlider` prop `aria-valuetext` to support reading custom text instead of value
 - `moonstone/TooltipDecorator` property `tooltipProps` to attach props to tooltip component
 - `moonstone/Scroller` and `moonstone/VirtualList` ability to scroll via page up and page down keys
+- `moonstone/VirtualList` ability to navigate via 5way when there are disabled items
 
 ### Changed
 
