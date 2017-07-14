@@ -38,6 +38,15 @@ import css from './VideoPlayer.less';
 const SpottableDiv = Spottable('div');
 const Container = SpotlightContainerDecorator({enterTo: ''}, 'div');
 
+// Keycode map for webOS TV
+const keyMap = {
+	'PLAY': 415,
+	'STOP': 413,
+	'PAUSE': 19,
+	'REWIND': 412,
+	'FASTFORWARD': 417
+};
+
 // Video ReadyStates
 // - Commented are currently unused.
 //
@@ -574,6 +583,7 @@ const VideoPlayerBase = class extends React.Component {
 		on('mousemove', this.activityDetected);
 		on('keypress', this.activityDetected);
 		on('keydown', this.handleGlobalKeyDown);
+		on('keyup', this.handleKeyUp);
 		this.attachCustomMediaEvents();
 		this.startDelayedFeedbackHide();
 		this.renderBottomControl.idle();
@@ -639,6 +649,7 @@ const VideoPlayerBase = class extends React.Component {
 		off('mousemove', this.activityDetected);
 		off('keypress', this.activityDetected);
 		off('keydown', this.handleGlobalKeyDown);
+		off('keyup', this.handleKeyUp);
 		this.detachCustomMediaEvents();
 		this.stopRewindJob();
 		this.stopAutoCloseTimeout();
@@ -798,6 +809,51 @@ const VideoPlayerBase = class extends React.Component {
 		Spotlight.setPointerMode(false);
 		this.showControls();
 	}
+
+	handleRemoteKeyUp = (ev) => {
+		const {PLAY, PAUSE, STOP, REWIND, FASTFORWARD} = keyMap;
+		let showControls = false;
+
+		switch (ev.keyCode) {
+			case PLAY:
+				showControls = true;
+				this.play();
+				this.announce($L(playLabel));
+				break;
+			case PAUSE:
+				showControls = true;
+				this.pause();
+				this.announce($L(pauseLabel));
+				break;
+			case REWIND:
+				if (!this.props.noRateButtons) {
+					showControls = true;
+					this.rewind();
+				}
+				break;
+			case FASTFORWARD:
+				if (!this.props.noRateButtons) {
+					showControls = true;
+					this.fastForward();
+				}
+				break;
+			case STOP:
+				showControls = true;
+				this.pause();
+				this.announce($L(pauseLabel));
+				this.seek(0);
+				break;
+		}
+
+		if (showControls && !this.state.bottomControlsVisible) {
+			this.showControls();
+		}
+	}
+
+	handleKeyUp = this.handle(
+		forward('onKeyUp'),
+		this.handleRemoteKeyUp
+	)
 
 	handleGlobalKeyDown = this.handle(
 		forKey('down'),
@@ -1411,7 +1467,6 @@ const VideoPlayerBase = class extends React.Component {
 								noJumpButtons={noJumpButtons}
 								noRateButtons={noRateButtons}
 								onBackwardButtonClick={this.onBackward}
-								onClick={this.resetAutoTimeout}
 								onForwardButtonClick={this.onForward}
 								onJumpBackwardButtonClick={this.onJumpBackward}
 								onJumpForwardButtonClick={this.onJumpForward}
