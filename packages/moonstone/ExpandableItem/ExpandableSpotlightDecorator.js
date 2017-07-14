@@ -75,11 +75,8 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		highlightLabeledItem = () => {
 			const current = Spotlight.getCurrent();
-			const expandableLabel = this.containerNode.querySelector('[data-expandable-label]');
-			const focusLabel = current !== expandableLabel && this.containerNode.contains(current);
-
-			if (focusLabel) {
-				Spotlight.focus(expandableLabel);
+			if (this.containerNode.contains(current)) {
+				Spotlight.focus(this.containerNode.querySelector('[data-expandable-label]'));
 			}
 		}
 
