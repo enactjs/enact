@@ -138,7 +138,7 @@ const ImageBase = kind({
 		className: ({className, sizing, styler}) => {
 			return sizing !== 'none' ? styler.append(sizing) : className;
 		},
-		imgSrc: ({src}) => selectSrc(src)
+		imgSrc: ({src}) => selectSrc(src) || null
 	},
 
 	render: ({alt, 'aria-label': ariaLabel, bgImage, children, imgSrc, onError, onLoad, style, ...rest}) => {
@@ -149,7 +149,7 @@ const ImageBase = kind({
 		return (
 			<div role="img" {...rest} aria-label={ariaLabel || alt} style={{...style, backgroundImage: bgImage}}>
 				{children}
-				{imgSrc ? <img className={css.img} src={imgSrc} alt={alt} onLoad={onLoad} onError={onError} /> : null}
+				<img className={css.img} src={imgSrc} alt={alt} onLoad={onLoad} onError={onError} />
 			</div>
 		);
 	}
