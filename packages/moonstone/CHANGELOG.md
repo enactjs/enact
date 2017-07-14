@@ -12,6 +12,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/TooltipDecorator` property `tooltipProps` to attach props to tooltip component
 - `moonstone/Scroller` and `moonstone/VirtualList` ability to scroll via page up and page down keys
 - `moonstone/VideoPlayer` tooltip-thumbnail support with the `thumbnailSrc` prop and the `onScrub` callback to fire when the knob moves and a new thumbnail is needed
+- `moonstone/VirtualList` ability to navigate via 5way when there are disabled items
 
 ### Changed
 
