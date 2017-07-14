@@ -13,6 +13,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Scroller` and `moonstone/VirtualList` ability to scroll via page up and page down keys
 - `moonstone/VideoPlayer` tooltip-thumbnail support with the `thumbnailSrc` prop and the `onScrub` callback to fire when the knob moves and a new thumbnail is needed
 - `moonstone/VirtualList` ability to navigate via 5way when there are disabled items
+- `moonstone/Picker` to support `onPickerSpotlightDown`, `onPickerSpotlightLeft`, `onPickerSpotlightRight`, and `onPickerSpotlightDown` event properties
 
 ### Changed
 
@@ -32,6 +33,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone` international fonts to always be used, even when unsupported font-weights or font-styles are requested
 - `moonstone/InputDecorator` 5-way spot behavior
 - `moonstone/Panels` layout in RTL locales
+- `onSpotlightDown`, `onSpotlightLeft`, `onSpotlightRight`, and `onSpotlightUp` event property support for spottable moonstone components
 
 ## [1.4.1] - 2017-07-05
 

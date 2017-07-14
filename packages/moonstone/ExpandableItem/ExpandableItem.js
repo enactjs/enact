@@ -225,10 +225,8 @@ const ExpandableItemBase = kind({
 
 	handlers: {
 		handleKeyDown: (ev, {autoClose, lockBottom, onClose, onSpotlightDown}) => {
-			const {keyCode} = ev;
-
 			if (autoClose || lockBottom || onSpotlightDown) {
-				const {target} = ev;
+				const {keyCode, target} = ev;
 				// Basing first/last child on the parent of the target to support both the use
 				// case here in which the children of the container are spottable and the
 				// ExpandableList use case which has an intermediate child (Group) between the

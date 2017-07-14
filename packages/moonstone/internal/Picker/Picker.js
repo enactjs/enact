@@ -509,10 +509,11 @@ const PickerBase = class extends React.Component {
 
 	handleKeyDown = (ev) => {
 		const {joined, onPickerSpotlightDown, onPickerSpotlightLeft, onPickerSpotlightRight, onPickerSpotlightUp, orientation} = this.props;
+		const {keyCode} = ev;
 		forwardKeyDown(ev, this.props);
 
 		if (joined) {
-			const direction = getDirection(ev.keyCode);
+			const direction = getDirection(keyCode);
 
 			const directions = {
 				up: this.handleIncClick,
@@ -521,20 +522,20 @@ const PickerBase = class extends React.Component {
 				left: this.handleDecClick
 			};
 
-			const isVertical = orientation === 'vertical' && (direction === 'up' || direction === 'down');
-			const isHorizontal = orientation === 'horizontal' && (direction === 'right' || direction === 'left');
+			const isVertical = orientation === 'vertical' && (isUp(keyCode) || isDown(keyCode));
+			const isHorizontal = orientation === 'horizontal' && (isRight(keyCode) || isLeft(keyCode));
 
 			if (isVertical || isHorizontal) {
 				directions[direction]();
 				ev.stopPropagation();
 				this.emulateMouseUp.start(ev);
-			} else if (orientation === 'horizontal' && direction === 'down' && onPickerSpotlightDown) {
+			} else if (orientation === 'horizontal' && isDown(keyCode) && onPickerSpotlightDown) {
 				onPickerSpotlightDown(ev);
-			} else if (orientation === 'horizontal' && direction === 'up' && onPickerSpotlightUp) {
+			} else if (orientation === 'horizontal' && isUp(keyCode) && onPickerSpotlightUp) {
 				onPickerSpotlightUp(ev);
-			} else if (orientation === 'vertical' && direction === 'left' && onPickerSpotlightLeft) {
+			} else if (orientation === 'vertical' && isLeft(keyCode) && onPickerSpotlightLeft) {
 				onPickerSpotlightLeft(ev);
-			} else if (orientation === 'vertical' && direction === 'right' && onPickerSpotlightRight) {
+			} else if (orientation === 'vertical' && isRight(keyCode) && onPickerSpotlightRight) {
 				onPickerSpotlightRight(ev);
 			}
 		}
