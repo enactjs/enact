@@ -126,6 +126,14 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			onClose: PropTypes.func,
 
 			/**
+			 * A function to be run when the popup is opened.
+			 *
+			 * @type {Function}
+			 * @public
+			 */
+			onOpen: PropTypes.func,
+
+			/**
 			 * When `true`, the contextual popup will be visible.
 			 *
 			 * @type {Boolean}
@@ -144,6 +152,10 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			/**
 			 * A custom container ID to use with Spotlight.
+			 *
+			 * The spotlight container for the popup isn't created until it is open. To configure
+			 * the container using `Spotlight.set()`, handle the `onOpen` event which is fired after
+			 * the popup has been created and opened.
 			 *
 			 * @type {String}
 			 * @public
@@ -459,7 +471,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const {showCloseButton, popupComponent: PopupComponent, popupClassName, noAutoDismiss, open, onClose, popupProps, skin, spotlightRestrict, ...rest} = this.props;
+			const {showCloseButton, popupComponent: PopupComponent, popupClassName, noAutoDismiss, open, onClose, onOpen, popupProps, skin, spotlightRestrict, ...rest} = this.props;
 			const scrimType = spotlightRestrict === 'self-only' ? 'transparent' : 'none';
 			const popupPropsRef = Object.assign({}, popupProps);
 			const ariaProps = extractAriaProps(popupPropsRef);
@@ -472,7 +484,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			return (
 				<div className={css.contextualPopupDecorator}>
-					<FloatingLayer open={open} scrimType={scrimType} noAutoDismiss={noAutoDismiss} onDismiss={onClose}>
+					<FloatingLayer open={open} scrimType={scrimType} noAutoDismiss={noAutoDismiss} onDismiss={onClose} onOpen={onOpen}>
 						<ContextualPopupContainer
 							{...ariaProps}
 							className={popupClassName}
