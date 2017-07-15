@@ -5,7 +5,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Slottable from '@enact/ui/Slottable';
 import Spotlight from '@enact/spotlight';
-import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
+import SpotlightContainerDecorator, {spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
 
 import css from './Panel.less';
 
@@ -180,7 +180,7 @@ const PanelBase = kind({
 const Panel = SpotlightContainerDecorator(
 	{
 		// prefer any spottable within the panel body for first render
-		defaultElement: `.${css.body} *`,
+		defaultElement: [`.${spotlightDefaultClass}`, `.${css.body} *`],
 		enterTo: 'last-focused',
 		preserveId: true
 	},

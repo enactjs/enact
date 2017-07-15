@@ -138,29 +138,6 @@
 							transform: @moon-translate-center scale(0.75);
 						}
 					});
-					.sliderTooltip {
-						.moon-text-base(@moon-video-slider-tooltip-font-size);
-						line-height: @moon-video-slider-tooltip-line-height;
-						white-space: nowrap;
-						position: absolute;
-						bottom: 6px;
-						transition: transform 100ms ease-in-out;
-						will-change: transform;
-
-						&.hidden {
-							display: none;
-						}
-					}
-					.knob[data-climax="rising"] {
-						.sliderTooltip {
-							transform: translateX(30px);
-						}
-					}
-					.knob[data-climax="falling"] {
-						.sliderTooltip {
-							transform: translateX(-100%) translateX(-30px);
-						}
-					}
 				}
 
 				.input {
@@ -352,13 +329,6 @@
 				}
 
 				.sliderFrame {
-					.mediaSlider {
-						.sliderTooltip {
-							color: @moon-white;
-							text-shadow: @moon-video-player-title-text-shadow;
-						}
-					}
-
 					.sliderBar {
 						background-color: @moon-video-player-slider-bg-color;
 					}
