@@ -933,13 +933,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					style={style}
 				>
 					<div className={css.container}>
-<<<<<<< HEAD
-						<Wrapped {...props} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={css.content} />
-						{isVerticalScrollbarVisible ? <Scrollbar {...this.verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
-=======
 						<Wrapped {...props} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={css.content} onKeyUp={this.onKeyUp} />
-						{vscrollbar}
->>>>>>> refs/remotes/origin/develop
+						{isVerticalScrollbarVisible ? <Scrollbar {...this.verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
 					</div>
 					{isHorizontalScrollbarVisible ? <Scrollbar {...this.horizontalScrollbarProps} corner={isVerticalScrollbarVisible} disabled={!isHorizontalScrollbarVisible} /> : null}
 				</ScrollableSpotlightContainer>
