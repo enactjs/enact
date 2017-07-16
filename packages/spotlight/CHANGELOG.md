@@ -10,6 +10,8 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Changed
 
+- `spotlight` containers to support an array of selectors for `defaultElement`
+
 ### Fixed
 
 ## [1.4.1] - 2017-07-05

@@ -298,10 +298,11 @@ A callback function to be called when the component is removed while retaining f
 ##### Parameters #####
 
 `defaultElement`
-+ Type: [string]
++ Type: [string|string[]]
 + Default: `'.spottable-default'`
 
-The selector for the default spottable element within the container.
+The selector for the default spottable element within the container. When an array of selectors is
+provided, the first selector that successfully matches a node is used.
 
 `enterTo`
 + Type: [string]

@@ -10,7 +10,9 @@ import {contextTypes as contextTypesResize} from '@enact/ui/Resizable';
 import {contextTypes as contextTypesRtl} from '@enact/i18n/I18nDecorator';
 import deprecate from '@enact/core/internal/deprecate';
 import {forward} from '@enact/core/handle';
+import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import hoc from '@enact/core/hoc';
+import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
@@ -23,6 +25,7 @@ import Scrollbar from './Scrollbar';
 import scrollbarCss from './Scrollbar.less';
 
 const
+	forwardKeyUp = forward('onKeyUp'),
 	forwardScroll = forward('onScroll'),
 	forwardScrollStart = forward('onScrollStart'),
 	forwardScrollStop = forward('onScrollStop');
@@ -35,7 +38,15 @@ const
 	scrollWheelPageMultiplierForMaxPixel = 0.2, // The ratio of the maximum distance scrolled by wheel to the size of the viewport.
 	pixelPerLine = 39,
 	// spotlight
-	scrollStopWaiting = 500;
+	scrollStopWaiting = 500,
+	isPageUp = is('pageUp'),
+	isPageDown = is('pageDown'),
+	reverseDirections = {
+		'left': 'right',
+		'up': 'down',
+		'right': 'left',
+		'down': 'up'
+	};
 
 /**
  * {@link moonstone/Scroller.dataIndexAttribute} is the name of a custom attribute
@@ -71,7 +82,7 @@ const ScrollableSpotlightContainer = SpotlightContainerDecorator(
  * that applies a Scrollable behavior to its wrapped component.
  *
  * Scrollable catches `onFocus` event from its wrapped component for spotlight features,
- * and also catches `onWheel` and `onScroll` events from its wrapped component for scrolling behaviors.
+ * and also catches `onWheel`, `onScroll` and `onKeyUp` events from its wrapped component for scrolling behaviors.
  *
  * Scrollable calls `onScrollStart`, `onScroll`, and `onScrollStop` callback functions during scroll.
  *
@@ -159,6 +170,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			 */
 			onScrollStop: PropTypes.func,
 
+			/**
+			 * Scrollable CSS style.
+			 * Should be defined because we manuplate style prop in render().
+			 *
+			 * @type {Object}
+			 * @public
+			 */
 			style: PropTypes.object,
 
 			/**
@@ -212,16 +230,74 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			props.cbScrollTo(this.scrollTo);
 		}
 
+		// component life cycle
+
 		getChildContext () {
 			return {
 				invalidateBounds: this.enqueueForceUpdate
 			};
 		}
 
+		componentDidMount () {
+			const
+				bounds = this.getScrollBounds(),
+				isVertical = this.canScrollVertically(bounds);
+
+			this.pageDistance = (isVertical ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
+			this.direction = this.childRef.props.direction;
+			this.updateEventListeners();
+			this.updateScrollbars();
+		}
+
+		componentDidUpdate () {
+			this.isInitializing = false;
+
+			// Need to sync calculated client size if it is different from the real size
+			if (this.childRef.syncClientSize) {
+				this.childRef.syncClientSize();
+			}
+
+			this.direction = this.childRef.props.direction;
+			this.updateEventListeners();
+			this.updateScrollbars();
+
+			if (this.scrollToInfo !== null) {
+				this.scrollTo(this.scrollToInfo);
+			}
+		}
+
+		componentWillUnmount () {
+			const
+				{containerRef} = this,
+				childContainerRef = this.childRef.getContainerNode();
+
+			// Before call cancelAnimationFrame, you must send scrollStop Event.
+			this.doScrollStop();
+			this.forceUpdateJob.stop();
+			this.scrollStopJob.stop();
+
+			if (containerRef && containerRef.removeEventListener) {
+				// FIXME `onWheel` doesn't work on the v8 snapshot.
+				containerRef.removeEventListener('wheel', this.onWheel);
+			}
+			if (childContainerRef && childContainerRef.removeEventListener) {
+				// FIXME `onScroll` doesn't work on the v8 snapshot.
+				childContainerRef.removeEventListener('scroll', this.onScroll, {capture: true});
+				// FIXME `onFocus` doesn't work on the v8 snapshot.
+				childContainerRef.removeEventListener('focus', this.onFocus, {capture: true});
+				// FIXME `onMouseOver` doesn't work on the v8 snapshot.
+				childContainerRef.removeEventListener('mouseover', this.onMouseOver, {capture: true});
+				// FIXME `onMouseMove` doesn't work on the v8 snapshot.
+				childContainerRef.removeEventListener('mousemove', this.onMouseMove, {capture: true});
+			}
+		}
+
 		// status
 		direction = 'vertical'
 		isScrollAnimationTargetAccumulated = false
 		isInitializing = true
+		pageDistance = 0
+		animateOnFocus = true
 
 		// event handlers
 		eventHandlers = {}
@@ -243,6 +319,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		// spotlight
 		lastFocusedItem = null
+		lastScrollPositionOnFocus = null
+		indexToFocus = null
+		nodeToFocus = null
 
 		// component info
 		childRef = null
@@ -265,7 +344,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		onMouseMove = () => {
-			if (this.resetPosition) {
+			if (this.resetPosition !== null) {
 				const containerNode = this.childRef.getContainerNode();
 				containerNode.style.scrollBehavior = null;
 				containerNode.scrollTop = this.resetPosition;
@@ -345,24 +424,118 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		startScrollOnFocus = (pos, item) => {
 			if (pos) {
 				if (pos.left !== this.scrollLeft || pos.top !== this.scrollTop) {
-					this.start(pos.left, pos.top);
+					this.start(pos.left, pos.top, this.animateOnFocus);
 				}
 				this.lastFocusedItem = item;
+				this.lastScrollPositionOnFocus = pos;
 			}
 		}
 
 		onFocus = (e) => {
-			if (!(Spotlight.getPointerMode() || this.isDragging)) {
+			const shouldPreventScrollByFocus = this.childRef.shouldPreventScrollByFocus ?
+				this.childRef.shouldPreventScrollByFocus() :
+				false;
+
+			if (!(shouldPreventScrollByFocus || Spotlight.getPointerMode() || this.isDragging)) {
 				const
 					item = e.target,
 					positionFn = this.childRef.calculatePositionOnFocus,
 					spotItem = Spotlight.getCurrent();
 
 				if (item && item !== this.lastFocusedItem && item === spotItem && positionFn) {
-					const pos = positionFn(item);
+					const lastPos = this.lastScrollPositionOnFocus;
+					let pos;
+					// If scroll animation is ongoing, we need to pass last target position to
+					// determine correct scroll position.
+					if (this.scrolling && lastPos) {
+						pos = positionFn(item, this.verticalScrollability ? lastPos.top : lastPos.left);
+					} else {
+						pos = positionFn(item);
+					}
 					this.startScrollOnFocus(pos, item);
 				}
+			} else if (this.childRef.setLastFocusedIndex) {
+				this.childRef.setLastFocusedIndex(e.target);
 			}
+		}
+
+		getPageDirection = (keyCode, isVertical) => {
+			const isRtl = this.context.rtl;
+
+			return isPageUp(keyCode) ?
+				(isVertical && 'up' || isRtl && 'right' || 'left') :
+				(isVertical && 'down' || isRtl && 'left' || 'right');
+		}
+
+		getEndPoint = (direction, oSpotBounds, viewportBounds) => {
+			let oPoint = {};
+
+			switch (direction) {
+				case 'up':
+					oPoint.x = oSpotBounds.left + oSpotBounds.width / 2;
+					oPoint.y = viewportBounds.top;
+					break;
+				case 'left':
+					oPoint.x = viewportBounds.left;
+					oPoint.y = oSpotBounds.top;
+					break;
+				case 'down':
+					oPoint.x = oSpotBounds.left + oSpotBounds.width / 2;
+					oPoint.y = viewportBounds.top + viewportBounds.height;
+					break;
+				case 'right':
+					oPoint.x = viewportBounds.left + viewportBounds.width;
+					oPoint.y = oSpotBounds.top;
+					break;
+			}
+			return oPoint;
+		}
+
+		scrollByPage = (keyCode) => {
+			const
+				{getEndPoint, scrollToAccumulatedTarget} = this,
+				bounds = this.getScrollBounds(),
+				isVertical = this.canScrollVertically(bounds),
+				isHorizontal = this.canScrollHorizontally(bounds),
+				pageDistance = isPageUp(keyCode) ? (this.pageDistance * -1) : this.pageDistance,
+				spotItem = Spotlight.getCurrent();
+
+			if (!Spotlight.getPointerMode() && spotItem) {
+				const
+					containerId = Spotlight.getActiveContainer(),
+					direction = this.getPageDirection(keyCode, isVertical),
+					rDirection = reverseDirections[direction],
+					viewportBounds = this.containerRef.getBoundingClientRect(),
+					spotItemBounds = spotItem.getBoundingClientRect(),
+					endPoint = getEndPoint(direction, spotItemBounds, viewportBounds),
+					next = getTargetByDirectionFromPosition(rDirection, endPoint, containerId);
+
+				if (!next) {
+					scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
+				} else if (next !== spotItem) {
+					this.animateOnFocus = false;
+					Spotlight.focus(next);
+				} else {
+					const nextPage = this.childRef.scrollToNextPage({direction, reverseDirection: rDirection, focusedItem: spotItem});
+
+					if (typeof nextPage === 'object') {
+						this.animateOnFocus = false;
+						Spotlight.focus(nextPage);
+					} else if (!nextPage) {
+						scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
+					}
+				}
+			} else {
+				scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
+			}
+		}
+
+		onKeyUp = (e) => {
+			this.animateOnFocus = true;
+			if (isPageUp(e.keyCode) || isPageDown(e.keyCode)) {
+				this.scrollByPage(e.keyCode);
+			}
+			forwardKeyUp(e, this.props);
 		}
 
 		onScrollbarButtonClick = ({isPreviousScrollButton, isVerticalScrollBar}) => {
@@ -416,7 +589,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		scrollStopOnScroll = () => {
 			this.isScrollAnimationTargetAccumulated = false;
 			this.childRef.setContainerDisabled(false);
+			this.focusOnItem();
 			this.lastFocusedItem = null;
+			this.lastScrollPositionOnFocus = null;
 
 			this.hideThumb(this.getScrollBounds());
 			this.scrolling = false;
@@ -447,7 +622,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		// scroll start
 
-		start (targetX, targetY, animate = true, indexToFocus, nodeToFocus) {
+		start (targetX, targetY, animate = true) {
 			const
 				bounds = this.getScrollBounds(),
 				containerNode = this.childRef.getContainerNode();
@@ -468,16 +643,18 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				containerNode.style.scrollBehavior = null;
 				this.childRef.scrollToPosition(targetX, targetY);
 				containerNode.style.scrollBehavior = 'smooth';
-				this.focusOnItem({indexToFocus, nodeToFocus});
+				this.focusOnItem();
 			}
 		}
 
-		focusOnItem ({indexToFocus, nodeToFocus}) {
-			if (indexToFocus !== null && typeof this.childRef.focusByIndex === 'function') {
-				this.childRef.focusByIndex(indexToFocus);
+		focusOnItem () {
+			if (this.indexToFocus !== null && typeof this.childRef.focusByIndex === 'function') {
+				this.childRef.focusByIndex(this.indexToFocus);
+				this.indexToFocus = null;
 			}
-			if (nodeToFocus !== null && typeof this.childRef.focusOnNode === 'function') {
-				this.childRef.focusOnNode(nodeToFocus);
+			if (this.nodeToFocus !== null && typeof this.childRef.focusOnNode === 'function') {
+				this.childRef.focusOnNode(this.nodeToFocus);
+				this.nodeToFocus = null;
 			}
 		}
 
@@ -544,7 +721,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					}
 				} else {
 					if (typeof opt.index === 'number' && typeof this.childRef.getItemPosition === 'function') {
-						itemPos = this.childRef.getItemPosition(opt.index);
+						itemPos = this.childRef.getItemPosition(opt.index, opt.stickTo);
 					} else if (opt.node instanceof Object) {
 						if (opt.node.nodeType === 1 && typeof this.childRef.getNodePosition === 'function') {
 							itemPos = this.childRef.getNodePosition(opt.node);
@@ -567,21 +744,23 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		scrollTo = (opt) => {
 			if (!this.isInitializing) {
 				const {left, top} = this.getPositionForScrollTo(opt);
-				let indexToFocus = null;
+				this.indexToFocus = null;
+				this.nodeToFocus = null;
 				this.scrollToInfo = null;
 
 				if (typeof opt.indexToFocus === 'number') {
-					indexToFocus = opt.indexToFocus;
+					this.indexToFocus = opt.indexToFocus;
 					deprecate({name: 'indexToFocus', since: '1.2.0', message: 'Use `focus` instead', until: '2.0.0'});
 				}
+
+				this.indexToFocus = (opt.focus && typeof opt.index === 'number') ? opt.index : this.indexToFocus;
+				this.nodeToFocus = (opt.focus && opt.node instanceof Object && opt.node.nodeType === 1) ? opt.node : null;
 
 				if (left !== null || top !== null) {
 					this.start(
 						(left !== null) ? left : this.scrollLeft,
 						(top !== null) ? top : this.scrollTop,
-						opt.animate,
-						(opt.focus && typeof opt.index === 'number') ? opt.index : indexToFocus,
-						(opt.focus && opt.node instanceof Object && opt.node.nodeType === 1) ? opt.node : null
+						opt.animate
 					);
 				}
 			} else {
@@ -710,57 +889,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			childContainerRef.style.scrollBehavior = 'smooth';
 		}
 
-		// component life cycle
-
-		componentDidMount () {
-			this.direction = this.childRef.props.direction;
-			this.updateEventListeners();
-			this.updateScrollbars();
-		}
-
-		componentDidUpdate () {
-			this.isInitializing = false;
-
-			// Need to sync calculated client size if it is different from the real size
-			if (this.childRef.syncClientSize) {
-				this.childRef.syncClientSize();
-			}
-
-			this.direction = this.childRef.props.direction;
-			this.updateEventListeners();
-			this.updateScrollbars();
-
-			if (this.scrollToInfo !== null) {
-				this.scrollTo(this.scrollToInfo);
-			}
-		}
-
-		componentWillUnmount () {
-			const
-				{containerRef} = this,
-				childContainerRef = this.childRef.getContainerNode();
-
-			// Before call cancelAnimationFrame, you must send scrollStop Event.
-			this.doScrollStop();
-			this.forceUpdateJob.stop();
-			this.scrollStopJob.stop();
-
-			if (containerRef && containerRef.removeEventListener) {
-				// FIXME `onWheel` doesn't work on the v8 snapshot.
-				containerRef.removeEventListener('wheel', this.onWheel);
-			}
-			if (childContainerRef && childContainerRef.removeEventListener) {
-				// FIXME `onScroll` doesn't work on the v8 snapshot.
-				childContainerRef.removeEventListener('scroll', this.onScroll, {capture: true});
-				// FIXME `onFocus` doesn't work on the v8 snapshot.
-				childContainerRef.removeEventListener('focus', this.onFocus, {capture: true});
-				// FIXME `onMouseOver` doesn't work on the v8 snapshot.
-				childContainerRef.removeEventListener('mouseover', this.onMouseOver, {capture: true});
-				// FIXME `onMouseMove` doesn't work on the v8 snapshot.
-				childContainerRef.removeEventListener('mousemove', this.onMouseMove, {capture: true});
-			}
-		}
-
 		// forceUpdate is a bit jarring and may interrupt other actions like animation so we'll
 		// queue it up in case we get multiple calls (e.g. when grouped expandables toggle).
 		//
@@ -805,8 +933,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					style={style}
 				>
 					<div className={css.container}>
+<<<<<<< HEAD
 						<Wrapped {...props} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={css.content} />
 						{isVerticalScrollbarVisible ? <Scrollbar {...this.verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
+=======
+						<Wrapped {...props} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={css.content} onKeyUp={this.onKeyUp} />
+						{vscrollbar}
+>>>>>>> refs/remotes/origin/develop
 					</div>
 					{isHorizontalScrollbarVisible ? <Scrollbar {...this.horizontalScrollbarProps} corner={isVerticalScrollbarVisible} disabled={!isHorizontalScrollbarVisible} /> : null}
 				</ScrollableSpotlightContainer>

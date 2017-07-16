@@ -8,7 +8,7 @@ describe('LabeledItem Specs', () => {
 
 	const labelClass = '.' + css.label;
 
-	it('should render a label (\<div\>) by default', function () {
+	it('should render a label (<div>) by default', function () {
 		const item = mount(
 			<LabeledItem label="The Label">I am a labeledItem</LabeledItem>
 		);

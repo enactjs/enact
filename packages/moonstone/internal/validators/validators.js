@@ -41,8 +41,7 @@ export const warn = (msg) => {
  * @memberof moonstone/internal/validators
  * @private
  */
-export const validateRange = (value, min, max, component,
-					valueName = '"value"', minName = '"min"', maxName = '"max"') => {
+export const validateRange = (value, min, max, component, valueName = '"value"', minName = '"min"', maxName = '"max"') => {
 	if (__DEV__) {
 		if (value < min) {
 			warn(`Warning: ${component} ${valueName} (${value}) less than ${minName} (${min})`);
@@ -65,15 +64,13 @@ export const validateRange = (value, min, max, component,
  * @param {Number} step  The step
  * @param {String} component The name of the invoker, used to decorate warning message
  * @param {String} [valueName='value'] The name of the value property
- * @param {String} [minName='min'] The name of the min property
  * @param {String} [stepName='step'] The name of the step property
  *
  * @returns {undefined}
  * @memberof moonstone/internal/validators
  * @private
  */
-export const validateStepped = (value, min, step, component,
-					valueName = '"value"', minName = '"min"', stepName = '"step"') => {
+export const validateStepped = (value, min, step, component, valueName = '"value"', stepName = '"step"') => {
 	if (__DEV__) {
 		if ((value - min) % step !== 0) {
 			warn(`Warning: ${component} ${valueName} (${value}) must be evenly divisible by ${stepName} (${step})`);
