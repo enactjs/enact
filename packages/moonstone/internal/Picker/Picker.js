@@ -508,7 +508,14 @@ const PickerBase = class extends React.Component {
 	}
 
 	handleKeyDown = (ev) => {
-		const {joined, onPickerSpotlightDown, onPickerSpotlightLeft, onPickerSpotlightRight, onPickerSpotlightUp, orientation} = this.props;
+		const {
+			joined,
+			onPickerSpotlightDown,
+			onPickerSpotlightLeft,
+			onPickerSpotlightRight,
+			onPickerSpotlightUp,
+			orientation
+		} = this.props;
 		const {keyCode} = ev;
 		forwardKeyDown(ev, this.props);
 
