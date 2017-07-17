@@ -638,7 +638,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		onScrollbarButtonClick  = ({isPreviousScrollButton, isVerticalScrollBar}) => {
+		onScrollbarButtonClick = ({isPreviousScrollButton, isVerticalScrollBar}) => {
 			const
 				bounds = this.getScrollBounds(),
 				pageDistance = (isVerticalScrollBar ? bounds.clientHeight : bounds.clientWidth) * paginationPageMultiplier;
