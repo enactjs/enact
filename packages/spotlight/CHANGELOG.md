@@ -10,7 +10,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Changed
 
-`spotlight` 5-way target selection to ignore empty containers
+- `spotlight` 5-way target selection to ignore empty containers
 - `spotlight` containers to support an array of selectors for `defaultElement`
 
 ### Fixed
