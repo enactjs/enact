@@ -28,7 +28,7 @@ import Skinnable from '../Skinnable';
 import {calcNumberValueOfPlaybackRate, getNow, secondsToTime} from './util';
 import Overlay from './Overlay';
 import MediaControls from './MediaControls';
-import {MediaTitle, infoId, titleId} from './MediaTitle';
+import MediaTitle from './MediaTitle';
 import MediaSlider from './MediaSlider';
 import FeedbackTooltip from './FeedbackTooltip';
 import Times from './Times';
@@ -93,6 +93,10 @@ const forwardPlayButtonClick = forward('onPlayButtonClick');
 // localized strings
 const playLabel = 'Play';
 const pauseLabel = 'Pause';
+
+// media title id
+let infoId;
+let titleId;
 
 /**
  * Every callback sent by [VideoPlayer]{@link moonstone/VideoPlayer} receives a status package,
@@ -503,6 +507,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.speedIndex = 0;
 		this.titleOffsetCalculated = false;
 		this.selectPlaybackRates('fastForward');
+		this.setMediaTitleId();
 		this.setAccessibilityProp(titleId);
 		this.firstMoreInfoReaded = false;
 
@@ -704,6 +709,12 @@ const VideoPlayerBase = class extends React.Component {
 
 	stopAutoCloseTimeout = () => {
 		this.autoCloseJob.stop();
+	}
+
+	setMediaTitleId = () => {
+		const generateId = Math.random().toString(36).substr(2, 8);
+		infoId = 'md_info_id-' + generateId;
+		titleId = 'md_title_id-' + generateId;
 	}
 
 	showControls = () => {
@@ -1374,9 +1385,11 @@ const VideoPlayerBase = class extends React.Component {
 							{/* Info Section: Title, Description, Times */}
 							<div className={css.infoFrame}>
 								<MediaTitle
-									title={title}
-									visible={this.state.titleVisible}
+									infoId={infoId}
 									infoVisible={this.state.more}
+									title={title}
+									titleId={titleId}
+									visible={this.state.titleVisible}
 								>
 									{infoComponents}
 								</MediaTitle>

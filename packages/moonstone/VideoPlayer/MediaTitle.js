@@ -7,13 +7,6 @@ import {MarqueeText} from '../Marquee';
 
 import css from './VideoPlayer.less';
 
-const generateId = function (prefix) {
-	return prefix + Math.random().toString(36).substr(2, 8);
-};
-const
-	infoId = generateId('md_info_id-'),
-	titleId = generateId('md_title_id-');
-
 /**
  * MediaTitle {@link moonstone/VideoPlayer}.
  *
@@ -36,6 +29,14 @@ const MediaTitleBase = kind({
 		children: PropTypes.node,
 
 		/**
+		 * infoID string to specify an id in the info div.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		infoId: PropTypes.string,
+
+		/**
 		 * Control whether the children (infoComponents) are displayed.
 		 *
 		 * @type {Boolean}
@@ -51,6 +52,14 @@ const MediaTitleBase = kind({
 		 * @public
 		 */
 		title: PropTypes.string,
+
+		/**
+		 * titleId string to specify an id in the title div.
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		titleId: PropTypes.string,
 
 		/**
 		 * Setting this to false effectively hides the entire component. Setting it to `false` after
@@ -91,7 +100,7 @@ const MediaTitleBase = kind({
 		})
 	},
 
-	render: ({children, childrenClassName, title, titleClassName, ...rest}) => {
+	render: ({children, childrenClassName, infoId, title, titleClassName, titleId, ...rest}) => {
 		delete rest.infoVisible;
 		delete rest.visible;
 
@@ -113,7 +122,5 @@ const MediaTitle = onlyUpdateForKeys(['children', 'title', 'infoVisible', 'visib
 export default MediaTitle;
 export {
 	MediaTitle,
-	MediaTitleBase,
-	infoId,
-	titleId
+	MediaTitleBase
 };
