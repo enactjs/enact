@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Deprecated
 
 ### Added
+- `moonstone/VideoPlayer` added throttling options `jumpDelay` and `initialJumpDelay` to for holding the right and left keys for seeking.
 
 ### Changed
 
@@ -31,7 +32,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/ContextualPopupDecorator` property `popupContainerId` to support configuration of the popup's spotlight container
 - `moonstone/ContextualPopupDecorator` property `onOpen` to notify containers when the popup has been opened
 - `moonstone/ContextualPopupDecorator` config option `openProp` to support mapping the value of `open` property to the chosen property of wrapped component
-- `moonstone/VideoPlayer` prop `jumpDelay` and the ability to throttle jumping forward and backward when holding left and right.
 
 ### Changed
 

@@ -126,10 +126,11 @@ storiesOf('VideoPlayer')
 						autoCloseTimeout={number('autoCloseTimeout', 7000)}
 						backwardIcon={select('backwardIcon', icons, 'backward')}
 						forwardIcon={select('forwardIcon', icons, 'forward')}
+						initialJumpDelay={number('jumpDelay', 400)}
 						jumpBackwardIcon={select('jumpBackwardIcon', icons, 'skipbackward')}
 						jumpForwardIcon={select('jumpForwardIcon', icons, 'skipforward')}
 						jumpButtonsDisabled={boolean('jumpButtonsDisabled', false)}
-						jumpDelay={number('jumpDelay', 500)}
+						jumpDelay={number('jumpDelay', 200)}
 						rateButtonsDisabled={boolean('rateButtonsDisabled', false)}
 						loop={boolean('loop', true)}
 						muted={boolean('muted', true)}

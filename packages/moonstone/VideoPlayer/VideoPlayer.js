@@ -16,6 +16,7 @@ import ilib from '@enact/i18n';
 import {Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
 import {platform} from '@enact/core/platform';
+import {is} from '@enact/core/keymap';
 import Slottable from '@enact/ui/Slottable';
 import {getDirection, Spotlight} from '@enact/spotlight';
 import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
@@ -225,6 +226,16 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		infoComponents: PropTypes.node,
+
+		/**
+		 * The amount of milliseconds that the player will pause before firing the
+		 * first jump event on a right or left hold.
+		 *
+		 * @type {Number}
+		 * @default 400
+		 * @public
+		 */
+		initialJumpDelay: PropTypes.number,
 
 		/**
 		 * A string which is sent to the `jumpBackward` icon of the player controls. This can be
@@ -526,6 +537,7 @@ const VideoPlayerBase = class extends React.Component {
 		backwardIcon: 'backward',
 		feedbackHideDelay: 3000,
 		forwardIcon: 'forward',
+		initialJumpDelay: 400,
 		jumpBackwardIcon: 'skipbackward',
 		jumpBy: 30,
 		jumpDelay: 200,
@@ -691,7 +703,13 @@ const VideoPlayerBase = class extends React.Component {
 		this.stopDelayedFeedbackHide();
 		this.announceJob.stop();
 		this.renderBottomControl.stop();
+<<<<<<< 654e548fb468b8ea040dd8669ad50c434e7efd14
 		this.refocusMoreButton.stop();
+=======
+		this.jumpForward.stop();
+		this.jumpBackward.stop();
+		this.cancelListenForKeyHolds();
+>>>>>>> Added initialJumpDelay prop
 	}
 
 	//
@@ -853,19 +871,59 @@ const VideoPlayerBase = class extends React.Component {
 	handle = handle.bind(this)
 
 	jumpBackward = new Job(() => {
-		this.jump(-1 * this.props.jumpBy);
+		this.jump(-1 * this.props.jumpBy, false);
 	}, this.props.jumpDelay)
-
-	handleLeft = () => {
-		this.jumpBackward.throttle();
-	}
 
 	jumpForward = new Job(() => {
 		this.jump(this.props.jumpBy);
 	}, this.props.jumpDelay)
 
+	listenForKeyHolds = () => {
+		if (this.hold && ((perfNow() - this.firstHold) > this.props.initialJumpDelay)) {
+			if (this.currentKey === 'right') {
+				this.jumpForward.throttle();
+			} else if (this.currentKey === 'left') {
+				this.jumpBackward.throttle();
+			}
+		}
+
+		this.keyLoop = setTimeout(this.listenForKeyHolds, 100);
+	}
+
+	cancelListenForKeyHolds () {
+		clearTimeout(this.keyLoop);
+	}
+
+	handleLeft = () => {
+		Spotlight.pause();
+		if (!this.hold) {
+			this.jumpBackward.throttle();
+			this.firstHold = perfNow();
+			this.listenForKeyHolds();
+			this.hold = true;
+			this.currentKey = 'left';
+		}
+	}
+
 	handleRight = () => {
-		this.jumpForward.throttle();
+		Spotlight.pause();
+		if (!this.hold) {
+			this.jumpForward.throttle();
+			this.firstHold = perfNow();
+			this.listenForKeyHolds();
+			this.hold = true;
+			this.currentKey = 'right';
+		}
+	}
+
+	handleKeyUp = (ev) => {
+		if (is('left', ev.keyCode) || is('right', ev.keyCode)) {
+			this.cancelListenForKeyHolds();
+			this.hold = false;
+			this.jumpForward.stop();
+			this.jumpBackward.stop();
+			Spotlight.resume();
+		}
 	}
 
 	showControlsFromPointer = () => {
@@ -1447,6 +1505,7 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.announce;
 		delete rest.autoCloseTimeout;
 		delete rest.feedbackHideDelay;
+		delete rest.initialJumpDelay;
 		delete rest.jumpBy;
 		delete rest.jumpDelay;
 		delete rest.onControlsAvailable;
@@ -1566,6 +1625,7 @@ const VideoPlayerBase = class extends React.Component {
 					onSpotlightDown={this.showControls}
 					onSpotlightLeft={this.handleLeft}
 					onSpotlightRight={this.handleRight}
+					onKeyUp={this.handleKeyUp}
 					onClick={this.showControls}
 				/>
 				<Announce ref={this.setAnnounceRef} />
