@@ -15,7 +15,7 @@ import {forKey, forward, forwardWithPrevent, handle, stopImmediate} from '@enact
 import ilib from '@enact/i18n';
 import {Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
-import {add,is} from '@enact/core/keymap';
+import {add, is} from '@enact/core/keymap';
 import {platform} from '@enact/core/platform';
 import Slottable from '@enact/ui/Slottable';
 import {getDirection, Spotlight} from '@enact/spotlight';
@@ -1427,13 +1427,13 @@ const VideoPlayerBase = class extends React.Component {
 				{this.state.bottomControlsRendered ?
 					<div className={css.fullscreen + ' enyo-fit scrim'} style={{display: this.state.bottomControlsVisible ? 'block' : 'none'}}>
 						{this.state.playbackControlsVisible ? null :
-							<FeedbackTooltip
-								className={feedbackCss.miniFeedback}
-								playbackState={this.prevCommand}
-								playbackRate={this.selectPlaybackRate(this.speedIndex)}
-							>
-								{secondsToTime(this.state.sliderTooltipTime, this.durfmt)}
-							</FeedbackTooltip>
+						<FeedbackTooltip
+							className={feedbackCss.miniFeedback}
+							playbackState={this.prevCommand}
+							playbackRate={this.selectPlaybackRate(this.speedIndex)}
+						>
+							{secondsToTime(this.state.sliderTooltipTime, this.durfmt)}
+						</FeedbackTooltip>
 						}
 						<Container className={css.bottom} data-container-disabled={!this.state.bottomControlsVisible}>
 							{/* Info Section: Title, Description, Times */}
