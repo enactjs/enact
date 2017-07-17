@@ -10,6 +10,8 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Changed
 
+`spotlight` 5-way target selection to ignore empty containers
+
 ### Fixed
 
 ## [1.4.1] - 2017-07-05
