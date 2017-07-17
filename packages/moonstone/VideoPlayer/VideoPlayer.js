@@ -522,7 +522,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.moreInProgress = false;	// This only has meaning for the time between clicking "more" and the official state is updated. To get "more" state, only look at the state value.
 		this.prevCommand = (props.noAutoPlay ? 'pause' : 'play');
 		this.speedIndex = 0;
-		this.titleOffsetCalculated = false;
+		this.titleOffsetCalculated = 0;
 		this.selectPlaybackRates('fastForward');
 
 		this.initI18n();
@@ -613,6 +613,11 @@ const VideoPlayerBase = class extends React.Component {
 
 		if (shouldCalculateTitleOffset) {
 			this.calculateTitleOffset();
+		} else {
+			const titleElement = this.player.querySelector(`.${css.title}`);
+			if (titleElement) {
+				titleElement.style.setProperty('--infoComponentsOffset', this.titleOffsetCalculated + 'px');
+			}
 		}
 	}
 
@@ -665,7 +670,7 @@ const VideoPlayerBase = class extends React.Component {
 			const infoHeight = infoComponents.offsetHeight;
 
 			titleElement.style.setProperty('--infoComponentsOffset', infoHeight + 'px');
-			this.titleOffsetCalculated = true;
+			this.titleOffsetCalculated = infoHeight;
 		}
 	}
 
