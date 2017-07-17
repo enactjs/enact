@@ -32,6 +32,7 @@
     "@enact/i18n": "^1.4.1",
     "@enact/spotlight": "^1.4.1",
     "@enact/ui": "^1.4.1",
+    "@enact/webos": "^1.4.1",
     "classnames": "~2.2.5",
     "eases": "~1.0.8",
     "invariant": "~2.2.2",

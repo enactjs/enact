@@ -20,6 +20,7 @@ import Slottable from '@enact/ui/Slottable';
 import {getDirection, Spotlight} from '@enact/spotlight';
 import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
 import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
+import readAlert from '@enact/webos/VoiceReadout';
 
 import $L from '../internal/$L';
 import Spinner from '../Spinner';
@@ -810,7 +811,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.showControls();
 	}
 
-	handleRemoteKeyUp = (ev) => {
+	handleKeyUp = (ev) => {
 		const {PLAY, PAUSE, STOP, REWIND, FASTFORWARD} = keyMap;
 		let showControls = false;
 
@@ -818,12 +819,10 @@ const VideoPlayerBase = class extends React.Component {
 			case PLAY:
 				showControls = true;
 				this.play();
-				this.announce($L(playLabel));
 				break;
 			case PAUSE:
 				showControls = true;
 				this.pause();
-				this.announce($L(pauseLabel));
 				break;
 			case REWIND:
 				if (!this.props.noRateButtons) {
@@ -840,7 +839,6 @@ const VideoPlayerBase = class extends React.Component {
 			case STOP:
 				showControls = true;
 				this.pause();
-				this.announce($L(pauseLabel));
 				this.seek(0);
 				break;
 		}
@@ -849,11 +847,6 @@ const VideoPlayerBase = class extends React.Component {
 			this.showControls();
 		}
 	}
-
-	handleKeyUp = this.handle(
-		forward('onKeyUp'),
-		this.handleRemoteKeyUp
-	)
 
 	handleGlobalKeyDown = this.handle(
 		forKey('down'),
@@ -946,6 +939,13 @@ const VideoPlayerBase = class extends React.Component {
 		this.video[action](props);
 	}
 
+	readAlertPlayPause = (msg) => {
+		const delay = this.state.bottomControlsVisible ? 0 : 500;
+		this.readAlertJob.startAfter(delay, msg, !delay);
+	}
+
+	readAlertJob = new Job(readAlert)
+
 	/**
 	 * Programmatically plays the current media.
 	 *
@@ -958,6 +958,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.setPlaybackRate(1);
 		this.send('play');
 		this.prevCommand = 'play';
+		this.readAlertPlayPause($L(playLabel));
 	}
 
 	/**
@@ -972,6 +973,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.setPlaybackRate(1);
 		this.send('pause');
 		this.prevCommand = 'pause';
+		this.readAlertPlayPause($L(pauseLabel));
 	}
 
 	/**
@@ -1319,10 +1321,8 @@ const VideoPlayerBase = class extends React.Component {
 		forwardPlayButtonClick(ev, this.props);
 		if (this.state.paused) {
 			this.play();
-			this.announce($L(playLabel));
 		} else {
 			this.pause();
-			this.announce($L(pauseLabel));
 		}
 	}
 	onForward = (ev) => {
