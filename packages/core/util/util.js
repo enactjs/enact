@@ -6,7 +6,6 @@
 import always from 'ramda/src/always';
 import compose from 'ramda/src/compose';
 import equals from 'ramda/src/equals';
-import isArrayLike from 'ramda/src/isArrayLike';
 import isType from 'ramda/src/is';
 import map from 'ramda/src/map';
 import prop from 'ramda/src/prop';
@@ -95,7 +94,7 @@ const coerceFunction = unless(isType(Function), always);
  * @returns {Array}	Either `array` or `[array]`
  */
 const coerceArray = function (array) {
-	return isArrayLike(array) ? array : [array];
+	return Array.isArray(array) ? array : [array];
 };
 
 /**
