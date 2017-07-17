@@ -1363,8 +1363,8 @@ const VideoPlayerBase = class extends React.Component {
 					{this.state.loading ? <Spinner centered /> : null}
 				</Overlay>
 
-				{this.state.bottomControlsRendered ?
-					<div className={css.fullscreen + ' enyo-fit scrim'} style={{opacity: this.state.bottomControlsVisible ? '0' : '1'}}>
+				{this.state.bottomControlsRendered && this.state.bottomControlsVisible ?
+					<div className={css.fullscreen + ' enyo-fit scrim'}>
 						<Container className={css.bottom} data-container-disabled={!this.state.bottomControlsVisible}>
 							{/* Info Section: Title, Description, Times */}
 							<div className={css.infoFrame}>
