@@ -32,10 +32,11 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/ExpandableInput` to expand the width of its contained `moonstone/Input`
 - `moonstone/Input` support for `dismissOnEnter`
 - `moonstone/Input` focus management to prevent stealing focus when programmatically moved elsewhere
+- `moonstone/Input` 5-way spot behavior
 - `moonstone` international fonts to always be used, even when unsupported font-weights or font-styles are requested
 - `moonstone/Panels.Panel` support for selecting components with `.spottable-default` as the default focus target
-- `moonstone/InputDecorator` 5-way spot behavior
 - `moonstone/Panels` layout in RTL locales
+- `moonstone/FormCheckbox` in focused state to have the correct "check" color
 
 ## [1.4.1] - 2017-07-05
 
