@@ -36,6 +36,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Panels.Panel` support for selecting components with `.spottable-default` as the default focus target
 - `moonstone/InputDecorator` 5-way spot behavior
 - `moonstone/Panels` layout in RTL locales
+- `moonstone/VirtualList` losing spotlight when the list is empty
 
 ## [1.4.1] - 2017-07-05
 
