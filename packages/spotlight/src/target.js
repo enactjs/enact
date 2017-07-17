@@ -148,23 +148,35 @@ function getOverflowContainerRect (containerId) {
 function getTargetInContainerByDirectionFromPosition (direction, containerId, positionRect, elementContainerIds, boundingRect) {
 	const elements = getSpottableDescendantsWithoutContainers(containerId, elementContainerIds);
 	let elementRects = filterRects(getRects(elements), boundingRect);
-	const overlappingContainerId = getContainerContainingRect(elementRects, positionRect);
-
-	// if the pointer is within a container that is a candidate element, we need to ignore container
-	// `enterTo` preferences and retrieve its spottable descendants and try to navigate to them.
-	if (overlappingContainerId) {
-		return getTargetInContainerByDirectionFromPosition(
-			direction,
-			overlappingContainerId,
-			positionRect,
-			elementContainerIds,
-			boundingRect
-		);
-	}
 
 	let next = null;
 
 	while (elementRects.length > 0) {
+		const overlappingContainerId = getContainerContainingRect(elementRects, positionRect);
+
+		// if the pointer is within a container that is a candidate element, we need to ignore container
+		// `enterTo` preferences and retrieve its spottable descendants and try to navigate to them.
+		if (overlappingContainerId) {
+			next = getTargetInContainerByDirectionFromPosition(
+				direction,
+				overlappingContainerId,
+				positionRect,
+				elementContainerIds,
+				boundingRect
+			);
+
+			if (!next) {
+				// filter out the container and try again
+				elementRects = elementRects.filter(rect => {
+					return rect.element.dataset.containerId !== overlappingContainerId;
+				});
+				continue;
+			}
+
+			// found a target so break out and return
+			break;
+		}
+
 		// try to navigate from position to one of the candidates in containerId
 		next = navigate(
 			positionRect,
@@ -185,15 +197,21 @@ function getTargetInContainerByDirectionFromPosition (direction, containerId, po
 				getOverflowContainerRect(nextContainerId) || boundingRect
 			);
 
-			if (nextInContainer) {
-				return nextInContainer;
-			} else {
+			if (!nextInContainer) {
+				// filter out the container and try again
 				elementRects = elementRects.filter(rect => rect.element !== next);
+				continue;
 			}
-		} else {
-			return next;
+
+			next = nextInContainer;
 		}
+
+		// If we've met every condition and haven't explicitly retried the search via `continue`,
+		// break out and return
+		break;
 	}
+
+	return next;
 }
 
 
@@ -207,25 +225,37 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 	}
 
 	let elementRects = filterRects(getRects(elements), boundingRect);
-	const overlappingContainerId = getContainerContainingRect(elementRects, elementRect);
-
-	// if the next element is a container AND the current element is *visually* contained within
-	// one of the candidate elements, we need to ignore container `enterTo` preferences and
-	// retrieve its spottable descendants and try to navigate to them.
-	if (overlappingContainerId) {
-		return getTargetInContainerByDirectionFromElement(
-			direction,
-			overlappingContainerId,
-			element,
-			elementRect,
-			elementContainerIds,
-			boundingRect
-		);
-	}
 
 	let next = null;
 
 	while (elementRects.length > 0) {
+		const overlappingContainerId = getContainerContainingRect(elementRects, elementRect);
+
+		// if the next element is a container AND the current element is *visually* contained within
+		// one of the candidate elements, we need to ignore container `enterTo` preferences and
+		// retrieve its spottable descendants and try to navigate to them.
+		if (overlappingContainerId) {
+			next = getTargetInContainerByDirectionFromElement(
+				direction,
+				overlappingContainerId,
+				element,
+				elementRect,
+				elementContainerIds,
+				boundingRect
+			);
+
+			if (!next) {
+				// filter out the container and try again
+				elementRects = elementRects.filter(rect => {
+					return rect.element.dataset.containerId !== overlappingContainerId;
+				});
+				continue;
+			}
+
+			// found a target so break out and return
+			break;
+		}
+
 		// try to navigate from element to one of the candidates in containerId
 		next = navigate(
 			elementRect,
@@ -254,15 +284,21 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 				);
 			}
 
-			if (nextInContainer) {
-				return nextInContainer;
-			} else {
+			if (!nextInContainer) {
 				elementRects = elementRects.filter(rect => rect.element !== next);
+				continue;
 			}
-		} else {
-			return next;
+
+			next = nextInContainer;
 		}
+
+
+		// If we've met every condition and haven't explicitly retried the search via `continue`,
+		// break out and return
+		break;
 	}
+
+	return next;
 }
 
 function getTargetByDirectionFromElement (direction, element) {
