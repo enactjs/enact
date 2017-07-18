@@ -27,14 +27,14 @@ const
 		const itemStyle = {height: size + 'px', ...style.item};
 
 		return (
-			<Item {...rest} disabled={data[index].disabled} style={itemStyle}>
-				{data[index].content}
+			<Item {...rest} style={itemStyle}>
+				{data[index]}
 			</Item>
 		);
 	};
 
 for (let i = 0; i < 1000; i++) {
-	items.push({content: 'Item ' + ('00' + i).slice(-3), disabled: i % 15 !== 0});
+	items.push('Item ' + ('00' + i).slice(-3));
 }
 
 storiesOf('VirtualList')
