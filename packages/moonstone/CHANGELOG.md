@@ -13,12 +13,15 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Scroller` and `moonstone/VirtualList` ability to scroll via page up and page down keys
 - `moonstone/VideoPlayer` tooltip-thumbnail support with the `thumbnailSrc` prop and the `onScrub` callback to fire when the knob moves and a new thumbnail is needed
 - `moonstone/VirtualList` ability to navigate via 5way when there are disabled items
+- `moonstone/ContextualPopupDecorator` property `popupContainerId` to support configuration of the popup's spotlight container
+- `moonstone/ContextualPopupDecorator` property `onOpen` to notify containers when the popup has been opened
 
 ### Changed
 
 - `moonstone/ExpandableList` to use 'radio' as the default, and adapt 'single' mode to render as a `moonstone/RadioItem` instead of a `moonstone/CheckboxItem`
 - `moonstone/VideoPlayer` not to hide pause icon when it appears
 - `moonstone/ContextualPopupDecorator` to set accessibility-related props onto the container node rather than the popup node
+- `moonstone/ExpandableItem`, `moonstone/ExpandableList`, `moonstone/ExpandablePicker`, `moonstone/DatePicker`, and `moonstone/TimePicker` to pause spotlight when animating in 5-way mode
 - `moonstone/Spinner` to position the text content under the spinner, rather than to the right side
 - `moonstone/VideoPlayer` to include hour when announcing the time while scrubbing
 
@@ -29,10 +32,12 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/ExpandableInput` to expand the width of its contained `moonstone/Input`
 - `moonstone/Input` support for `dismissOnEnter`
 - `moonstone/Input` focus management to prevent stealing focus when programmatically moved elsewhere
+- `moonstone/Input` 5-way spot behavior
 - `moonstone` international fonts to always be used, even when unsupported font-weights or font-styles are requested
-- `moonstone/InputDecorator` 5-way spot behavior
+- `moonstone/Panels.Panel` support for selecting components with `.spottable-default` as the default focus target
 - `moonstone/Panels` layout in RTL locales
 - `onSpotlightDown`, `onSpotlightLeft`, `onSpotlightRight`, and `onSpotlightUp` event property support for spottable moonstone components
+- `moonstone/FormCheckbox` in focused state to have the correct "check" color
 
 ## [1.4.1] - 2017-07-05
 
@@ -44,8 +49,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/ContextualPopupDecorator` close button to account for large text size
-
-### Removed
 - `moonstone/ContextualPopupDecorator` to not spot controls other than its activator when navigating out via 5-way
 - `moonstone/Header` to set the value of `marqueeOn` for all types of headers
 
