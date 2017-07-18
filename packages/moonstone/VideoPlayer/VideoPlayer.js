@@ -1362,21 +1362,28 @@ const VideoPlayerBase = class extends React.Component {
 					{this.state.loading ? <Spinner centered /> : null}
 				</Overlay>
 
-				{this.state.bottomControlsRendered && this.state.bottomControlsVisible ?
-					<div className={css.fullscreen + ' enyo-fit scrim'}>
+				{this.state.bottomControlsRendered ?
+					<div className={css.fullscreen + ' enyo-fit scrim'} style={{display: this.state.bottomControlsVisible ? 'block' : 'none'}}>
 						<Container className={css.bottom} data-container-disabled={!this.state.bottomControlsVisible}>
-							{/* Info Section: Title, Description, Times */}
-							<div className={css.infoFrame}>
-								<MediaTitle
-									title={title}
-									visible={this.state.titleVisible}
-									infoVisible={this.state.more}
-									style={{'--infoComponentsOffset': this.state.titleOffsetHeight + 'px'}}
-								>
-									{infoComponents}
-								</MediaTitle>
-								<Times current={this.state.currentTime} total={this.state.duration} formatter={this.durfmt} />
-							</div>
+							{/*
+								Info Section: Title, Description, Times
+								Only render when `this.state.bottomControlsVisible` is true in order for `Marquee`
+								to make calculations correctly in `MediaTitle`.
+							*/}
+							{this.state.bottomControlsVisible ?
+								<div className={css.infoFrame}>
+									<MediaTitle
+										title={title}
+										visible={this.state.titleVisible}
+										infoVisible={this.state.more}
+										style={{'--infoComponentsOffset': this.state.titleOffsetHeight + 'px'}}
+									>
+										{infoComponents}
+									</MediaTitle>
+									<Times current={this.state.currentTime} total={this.state.duration} formatter={this.durfmt} />
+								</div> :
+								null
+							}
 
 							{noSlider ? null : <MediaSlider
 								backgroundProgress={this.state.proportionLoaded}
