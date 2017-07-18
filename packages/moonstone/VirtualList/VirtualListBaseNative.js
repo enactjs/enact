@@ -664,10 +664,11 @@ class VirtualListCoreNative extends Component {
 		const
 			{component: Item, data, dataSize, direction} = this.props,
 			{firstIndex, numOfItems} = this.state,
-			{cc, dimensionToExtent, isItemSized, isPrimaryDirectionVertical, primary, secondary} = this,
+			{cc, dimensionToExtent, isPrimaryDirectionVertical, isItemSized, primary, secondary} = this,
 			diff = firstIndex - this.lastFirstIndex,
+			maxUpdateTo = Math.min(dataSize, firstIndex + numOfItems),
 			updateFrom = (cc.length === 0 || diff <= 0 || diff >= numOfItems) ? firstIndex : this.lastFirstIndex + numOfItems,
-			updateTo = (cc.length === 0 || diff > 0 || diff <= -numOfItems) ? Math.min(dataSize, firstIndex + numOfItems) : this.lastFirstIndex,
+			updateTo = (cc.length === 0 || diff > 0 || diff <= -numOfItems) ? maxUpdateTo : this.lastFirstIndex,
 			itemContainerFrom = Math.floor(updateFrom / dimensionToExtent),
 			itemContainerTo = Math.ceil(updateTo / dimensionToExtent),
 			numOfRows = Math.ceil(numOfItems / dimensionToExtent);
