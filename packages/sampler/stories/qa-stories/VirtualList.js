@@ -34,6 +34,7 @@ const
 			</StatefulSwitchItem>
 		);
 	},
+	// eslint-disable-next-line enact/prop-types, enact/display-name
 	renderDisabledItem = (size) => ({data, index, ...rest}) => {
 		const itemStyle = {height: size + 'px', ...style.item};
 		return (
