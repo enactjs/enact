@@ -99,8 +99,7 @@ describe('Layout Specs', () => {
 
 	// Test for boolean classes
 	const cellBooleanPropClasses = [
-		'fixed',
-		'flexible'
+		'shrink'
 	];
 
 	cellBooleanPropClasses.forEach((prop) => {
