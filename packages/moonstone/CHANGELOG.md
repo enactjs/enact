@@ -32,10 +32,11 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/ExpandableInput` to expand the width of its contained `moonstone/Input`
 - `moonstone/Input` support for `dismissOnEnter`
 - `moonstone/Input` focus management to prevent stealing focus when programmatically moved elsewhere
+- `moonstone/Input` 5-way spot behavior
 - `moonstone` international fonts to always be used, even when unsupported font-weights or font-styles are requested
 - `moonstone/Panels.Panel` support for selecting components with `.spottable-default` as the default focus target
-- `moonstone/InputDecorator` 5-way spot behavior
 - `moonstone/Panels` layout in RTL locales
+- `moonstone/FormCheckbox` in focused state to have the correct "check" color
 - `moonstone/Scrollable` bug in `navigableFilter` when passed a container id
 
 ## [1.4.1] - 2017-07-05
@@ -48,8 +49,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/ContextualPopupDecorator` close button to account for large text size
-
-### Removed
 - `moonstone/ContextualPopupDecorator` to not spot controls other than its activator when navigating out via 5-way
 - `moonstone/Header` to set the value of `marqueeOn` for all types of headers
 
