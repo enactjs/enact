@@ -656,6 +656,8 @@ const VideoPlayerBase = class extends React.Component {
 		this.stopAutoCloseTimeout();
 		this.stopDelayedTitleHide();
 		this.stopDelayedFeedbackHide();
+		this.readAlertJob.stop();
+		this.announceJob.stop();
 		this.renderBottomControl.stop();
 	}
 
