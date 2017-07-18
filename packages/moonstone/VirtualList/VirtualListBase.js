@@ -292,7 +292,7 @@ class VirtualListCore extends Component {
 	containerRef = null
 
 	// spotlight
-	nodeIndexToBeBlurred = null
+	nodeToBeBlurred = null
 	nodeIndexToBeFocused = null
 	lastFocusedIndex = null
 
@@ -618,8 +618,8 @@ class VirtualListCore extends Component {
 			return;
 		}
 
-		if (this.nodeIndexToBeBlurred !== null) {
-			this.blurByIndex(this.nodeIndexToBeBlurred);
+		if (this.nodeToBeBlurred !== null) {
+			this.blurOnNode(this.nodeToBeBlurred);
 		}
 
 		primaryPosition -= scrollPosition;
@@ -661,21 +661,21 @@ class VirtualListCore extends Component {
 		}, 0);
 	}
 
-	blurByIndex = (node) => {
+	focusOnNode = (node) => {
+		if (node) {
+			Spotlight.focus(node);
+		}
+	}
+
+	blurOnNode = (node) => {
 		// a pointer is hidden and a last focused item get focused after 30ms.
 		// To make sure the item to be blurred after that, we used 50ms.
 		setTimeout(() => {
 			if (node) {
 				node.blur();
 			}
-			this.nodeIndexToBeBlurred = null;
+			this.nodeToBeBlurred = null;
 		}, 50);
-	}
-
-	focusOnNode = (node) => {
-		if (node) {
-			Spotlight.focus(node);
-		}
 	}
 
 	setLastFocusedIndex = (item) => {
@@ -693,7 +693,7 @@ class VirtualListCore extends Component {
 			const lastFocusedItem = this.containerRef.querySelector(`[data-index='${this.lastFocusedIndex}'].spottable`);
 			let gridPosition = this.getGridPosition(focusedIndex);
 
-			this.nodeIndexToBeBlurred = lastFocusedItem || null;
+			this.nodeToBeBlurred = lastFocusedItem || null;
 			this.nodeIndexToBeFocused = null;
 			this.lastFocusedIndex = focusedIndex;
 
@@ -810,7 +810,7 @@ class VirtualListCore extends Component {
 		if (nextIndex !== -1 && (firstIndex > nextIndex || nextIndex >= firstIndex + numOfItems)) {
 			const currentFocusedItem = this.containerRef.querySelector(`[data-index='${this.lastFocusedIndex}'].spottable`);
 
-			this.nodeIndexToBeBlurred = currentFocusedItem || null;
+			this.nodeToBeBlurred = currentFocusedItem || null;
 			this.nodeIndexToBeFocused = this.lastFocusedIndex = nextIndex;
 
 			if (!Spotlight.isPaused()) {
