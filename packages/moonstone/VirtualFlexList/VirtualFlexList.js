@@ -270,11 +270,11 @@ class VirtualFlexList extends Component {
 		component: headers.col.component
 	})
 
-	getCornerProps = ({corner, headers}, {itemsOriginLeft, itemsOriginTop}) => ({
+	getCornerProps = ({corner}, {itemsOriginLeft, itemsOriginTop}) => ({
 		style: {background: corner.background, width: itemsOriginLeft, height: itemsOriginTop, overflow: 'hidden'}
 	})
 
-	getItemsProps = ({headers, items, maxFlexScrollSize}, {itemsOriginLeft, itemsOriginTop, itemsListWidth, itemsListHeight}, flexAxis) => ({
+	getItemsProps = ({items, maxFlexScrollSize}, {itemsOriginLeft, itemsOriginTop, itemsListWidth, itemsListHeight}, flexAxis) => ({
 		data: items.data,
 		dataSize: {
 			row: items.rowCount,

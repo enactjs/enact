@@ -175,7 +175,7 @@ const HeaderBase = kind({
 			// );
 			case 'standard': return (
 				<header aria-label={title} {...rest}>
-					<HeaderH1 casing={casing} className={css.title} preserveCase={preserveCase} marqueeOn="hover">
+					<HeaderH1 casing={casing} className={css.title} preserveCase={preserveCase} marqueeOn={marqueeOn}>
 						{title}
 					</HeaderH1>
 					<div className={css.headerRow}>
