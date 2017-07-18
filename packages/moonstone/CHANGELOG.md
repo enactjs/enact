@@ -37,6 +37,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Panels.Panel` support for selecting components with `.spottable-default` as the default focus target
 - `moonstone/Panels` layout in RTL locales
 - `moonstone/FormCheckbox` in focused state to have the correct "check" color
+- `moonstone/Scrollable` bug in `navigableFilter` when passed a container id
 
 ## [1.4.1] - 2017-07-05
 
