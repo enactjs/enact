@@ -27,6 +27,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Input` ellipsis to show if placeholder is changed dynamically and is too long.
 - `moonstone/Marquee` to re-evaluate RTL orientation when its content changes
 - `moonstone/VirtualList` to restore focus on short lists
 - `moonstone/ExpandableInput` to expand the width of its contained `moonstone/Input`
@@ -37,7 +38,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Panels.Panel` support for selecting components with `.spottable-default` as the default focus target
 - `moonstone/Panels` layout in RTL locales
 - `onSpotlightDown`, `onSpotlightLeft`, `onSpotlightRight`, and `onSpotlightUp` event property support for spottable moonstone components
+- `moonstone/VirtualList` losing spotlight when the list is empty
 - `moonstone/FormCheckbox` in focused state to have the correct "check" color
+- `moonstone/Scrollable` bug in `navigableFilter` when passed a container id
 
 ## [1.4.1] - 2017-07-05
 
