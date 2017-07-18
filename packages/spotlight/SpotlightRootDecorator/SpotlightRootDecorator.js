@@ -52,13 +52,6 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'SpotlightRootDecorator';
 
-		navigableFilter = (elem) => {
-			while (elem && elem !== document && elem.nodeType === 1) {
-				if (elem.getAttribute('data-container-disabled') === 'true') return false;
-				elem = elem.parentNode;
-			}
-		}
-
 		componentWillMount () {
 			if (typeof window === 'object') {
 				const palmSystem = window.PalmSystem;
@@ -86,6 +79,13 @@ const SpotlightRootDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentWillUnmount () {
 			Spotlight.terminate();
+		}
+
+		navigableFilter = (elem) => {
+			while (elem && elem !== document && elem.nodeType === 1) {
+				if (elem.getAttribute('data-container-disabled') === 'true') return false;
+				elem = elem.parentNode;
+			}
 		}
 
 		render () {

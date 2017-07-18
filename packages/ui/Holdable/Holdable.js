@@ -178,16 +178,16 @@ const HoldableHOC = hoc(defaultConfig, (config, Wrapped) => {
 			this.next = null;
 		}
 
-		componentWillUnmount () {
-			this.suspendHold();
-			this.clearPointerRelease();
-			this.clearMouseLeave();
-		}
-
 		componentWillReceiveProps (nextProps) {
 			if (nextProps.disabled) {
 				this.endHold();
 			}
+		}
+
+		componentWillUnmount () {
+			this.suspendHold();
+			this.clearPointerRelease();
+			this.clearMouseLeave();
 		}
 
 		clearPointerRelease = () => {

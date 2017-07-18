@@ -74,20 +74,6 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 			}
 		}
 
-		componentWillUpdate () {
-			// check for a new locale when updating
-			this.initI18n();
-		}
-
-		initI18n () {
-			const locale = ilib.getLocale();
-
-			if (i18n && this.locale !== locale && typeof window === 'object') {
-				this.locale = locale;
-				this.i18nContext = i18n();
-			}
-		}
-
 		componentWillReceiveProps (nextProps) {
 			const newValue = this.toTime(nextProps.value);
 
@@ -109,6 +95,20 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 				this.setState({
 					value: newValue
 				});
+			}
+		}
+
+		componentWillUpdate () {
+			// check for a new locale when updating
+			this.initI18n();
+		}
+
+		initI18n () {
+			const locale = ilib.getLocale();
+
+			if (i18n && this.locale !== locale && typeof window === 'object') {
+				this.locale = locale;
+				this.i18nContext = i18n();
 			}
 		}
 

@@ -4,7 +4,7 @@ import hoc from '@enact/core/hoc';
 import {is} from '@enact/core/keymap';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Spotlight from '@enact/spotlight';
+import {getDirection, Spotlight} from '@enact/spotlight';
 import Spottable from '@enact/spotlight/Spottable';
 
 const preventSpotlightNavigation = (ev) => {
@@ -16,11 +16,11 @@ const isBubbling = (ev) => ev.currentTarget !== ev.target;
 // A regex to check for input types that allow selectionStart
 const SELECTABLE_TYPES = /text|password|search|tel|url/;
 
-const safeSelectionStart = (target) => {
+const isSelectionAtLocation = (target, location) => {
 	if (SELECTABLE_TYPES.test(target.type)) {
-		return target.selectionStart;
+		return target.selectionStart === location;
 	} else {
-		return 0;
+		return true;
 	}
 };
 
@@ -39,6 +39,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 	const forwardClick = forward('onClick');
 	const forwardFocus = forward('onFocus');
 	const forwardKeyDown = forward('onKeyDown');
+	const forwardKeyUp = forward('onKeyUp');
 
 	return class extends React.Component {
 		static displayName = 'InputSpotlightDecorator';
@@ -114,6 +115,18 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 		}
 
 		componentDidUpdate (_, prevState) {
+			const current = Spotlight.getCurrent();
+			const {node: prev} = prevState;
+
+			// do not steal focus if has moved elsewhere by verifying:
+			// * Something has focus, and
+			// * Input had focus before (this.state.node is null until the input is focused), and
+			// * current is neither the previous nor current node
+			if (current && prev && current !== this.state.node && current !== prev) {
+				this.blur();
+				return;
+			}
+
 			if (this.state.node) {
 				this.state.node.focus();
 			}
@@ -206,41 +219,47 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 			}
 		}
 
-		onKeyUp = (ev) => {
-			const {dismissOnEnter} = this.props;
-			const {currentTarget, keyCode, target} = ev;
+		onKeyDown = (ev) => {
+			const {currentTarget, keyCode, preventDefault, target} = ev;
 
 			if (this.state.focused === 'input') {
 				const isDown = is('down', keyCode);
-				const isEnter = is('enter', keyCode);
 				const isLeft = is('left', keyCode);
 				const isRight = is('right', keyCode);
 				const isUp = is('up', keyCode);
 
-				// switch focus to the decorator ...
-				const shouldFocusDecorator = (
-					// on enter + dismissOnEnter
-					(isEnter && dismissOnEnter) ||
+				// move spotlight
+				const shouldSpotlightMove = (
 					// on left + at beginning of selection
-					(isLeft && safeSelectionStart(target) === 0) ||
+					(isLeft && isSelectionAtLocation(target, 0)) ||
 					// on right + at end of selection (note: fails on non-selectable types usually)
-					(isRight && safeSelectionStart(target) === target.value.length) ||
+					(isRight && isSelectionAtLocation(target, target.value.length)) ||
 					// on up
 					isUp ||
 					// on down
 					isDown
 				);
 
-				if (shouldFocusDecorator) {
-					// we really only support the number type properly, so only handling this case
-					if (ev.target.type === 'number') {
-						ev.preventDefault();
-					}
-					this.focusDecorator(currentTarget);
+				// prevent modifying the value via 5-way for numeric fields
+				if ((isUp || isDown) && target.type === 'number') {
+					preventDefault();
+				}
 
-					// prevent Enter onKeyPress which triggers an onClick via Spotlight
-					if (isEnter) {
-						ev.preventDefault();
+				if (shouldSpotlightMove) {
+					const direction = getDirection(keyCode);
+					const {getPointerMode, move, setPointerMode} = Spotlight;
+
+					if (getPointerMode()) {
+						setPointerMode(false);
+					}
+
+					preventSpotlightNavigation(ev);
+					Spotlight.resume();
+
+					// Move spotlight in the keypress direction, if there is no other spottable elements,
+					// focus `InputDecorator` instead
+					if (!move(direction)) {
+						this.focusDecorator(currentTarget);
 					}
 				} else if (isLeft || isRight) {
 					// prevent 5-way nav for left/right keys within the <input>
@@ -248,6 +267,18 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 				}
 			}
 			forwardKeyDown(ev, this.props);
+		}
+
+		onKeyUp = (ev) => {
+			const {dismissOnEnter} = this.props;
+			const {currentTarget, keyCode, preventDefault} = ev;
+
+			if (this.state.focused === 'input' && dismissOnEnter && is('enter', keyCode)) {
+				this.focusDecorator(currentTarget);
+				// prevent Enter onKeyPress which triggers an onClick via Spotlight
+				preventDefault();
+			}
+			forwardKeyUp(ev, this.props);
 		}
 
 		render () {
@@ -262,6 +293,7 @@ const InputSpotlightDecorator = hoc((config, Wrapped) => {
 					onBlur={this.onBlur}
 					onClick={this.onClick}
 					onFocus={this.onFocus}
+					onKeyDown={this.onKeyDown}
 					onKeyUp={this.onKeyUp}
 				/>
 			);

@@ -5,11 +5,14 @@
  * export is {@link moonstone/VirtualList.VirtualListBaseNative}.
  */
 
+import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
+import {forward} from '@enact/core/handle';
+import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
-import Spotlight from '@enact/spotlight';
+import Spotlight, {getDirection} from '@enact/spotlight';
 import Spottable from '@enact/spotlight/Spottable';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
@@ -21,7 +24,12 @@ const SpotlightPlaceholder = Spottable('div');
 
 const
 	dataContainerMutedAttribute = 'data-container-muted',
-	nop = () => {};
+	forwardKeyDown = forward('onKeyDown'),
+	nop = () => {},
+	isDown = is('down'),
+	isLeft = is('left'),
+	isRight = is('right'),
+	isUp = is('up');
 
 /**
  * The shape for the grid list item size in a list for {@link moonstone/VirtualList.listItemSizeShape}.
@@ -217,20 +225,6 @@ class VirtualListCoreNative extends Component {
 		} else if (hasDataChanged) {
 			this.updateStatesAndBounds(nextProps);
 		}
-
-		const placeholder = this.getPlaceholder();
-
-		if (placeholder) {
-			const index = placeholder.dataset.index;
-
-			if (index) {
-				this.lastFocusedIndex = parseInt(index);
-				this.restoreLastFocused = true;
-				this.setState({
-					firstIndex: this.lastFocusedIndex
-				});
-			}
-		}
 	}
 
 	shouldComponentUpdate (nextProps, nextState) {
@@ -264,6 +258,7 @@ class VirtualListCoreNative extends Component {
 
 	isPrimaryDirectionVertical = true
 	isItemSized = false
+	isScrolledBy5way = false
 
 	dimensionToExtent = 0
 	threshold = 0
@@ -285,20 +280,47 @@ class VirtualListCoreNative extends Component {
 
 	isHorizontal = () => !this.isPrimaryDirectionVertical
 
-	getPlaceholder () {
+	isPlaceholderFocused () {
 		const current = Spotlight.getCurrent();
 		if (current && current.dataset.vlPlaceholder && this.containerRef.contains(current)) {
-			return current;
+			return true;
 		}
 
 		return false;
+	}
+
+	handlePlaceholderFocus = (ev) => {
+		const placeholder = ev.currentTarget;
+
+		if (placeholder) {
+			const index = placeholder.dataset.index;
+
+			if (index) {
+				this.lastFocusedIndex = parseInt(index);
+				this.restoreLastFocused = true;
+
+				// adjust the firstIndex to include the last focused index, if necessary
+				this.setState(nextState => {
+					let {firstIndex, numOfItems} = nextState;
+					const lastIndex = firstIndex + numOfItems;
+
+					if (this.lastFocusedIndex < firstIndex || this.lastFocusedIndex >= lastIndex) {
+						firstIndex = this.lastFocusedIndex;
+					}
+
+					return {
+						firstIndex
+					};
+				});
+			}
+		}
 	}
 
 	restoreFocus () {
 		const {firstVisibleIndex, lastVisibleIndex} = this.moreInfo;
 		if (
 			this.restoreLastFocused &&
-			!this.getPlaceholder() &&
+			!this.isPlaceholderFocused() &&
 			firstVisibleIndex <= this.lastFocusedIndex &&
 			lastVisibleIndex >= this.lastFocusedIndex
 		) {
@@ -333,7 +355,17 @@ class VirtualListCoreNative extends Component {
 		return {primaryPosition, secondaryPosition};
 	}
 
-	getItemPosition = (index) => this.gridPositionToItemPosition(this.getGridPosition(index))
+	getItemPosition = (index, stickTo = 'start') => {
+		const
+			{itemSize} = this.props,
+			{primary} = this,
+			position = this.getGridPosition(index),
+			offset = ((itemSize instanceof Object) || stickTo === 'start') ? 0 : primary.clientSize - primary.itemSize;
+
+		position.primaryPosition -= offset;
+
+		return this.gridPositionToItemPosition(position);
+	}
 
 	gridPositionToItemPosition = ({primaryPosition, secondaryPosition}) =>
 		(this.isPrimaryDirectionVertical ? {left: secondaryPosition, top: primaryPosition} : {left: primaryPosition, top: secondaryPosition})
@@ -578,6 +610,11 @@ class VirtualListCoreNative extends Component {
 		// We have to focus node async for now since list items are not yet ready when it reaches componentDid* lifecycle methods
 		setTimeout(() => {
 			const item = this.containerRef.querySelector(`[data-index='${index}'].spottable`);
+
+			if (Spotlight.isPaused()) {
+				Spotlight.resume();
+			}
+
 			this.focusOnNode(item);
 		}, 0);
 	}
@@ -588,14 +625,18 @@ class VirtualListCoreNative extends Component {
 		}
 	}
 
-	calculatePositionOnFocus = (item) => {
+	setLastFocusedIndex = (item) => {
+		this.lastFocusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
+	}
+
+	calculatePositionOnFocus = (item, scrollPosition = this.scrollPosition) => {
 		const
 			{pageScroll} = this.props,
-			{primary, scrollPosition} = this,
+			{primary} = this,
 			offsetToClientEnd = primary.clientSize - primary.itemSize,
 			focusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
 
-		if (!isNaN(focusedIndex)) {
+		if (!isNaN(focusedIndex) && focusedIndex !== this.lastFocusedIndex) {
 			let gridPosition = this.getGridPosition(focusedIndex);
 
 			this.lastFocusedIndex = focusedIndex;
@@ -615,6 +656,131 @@ class VirtualListCoreNative extends Component {
 			gridPosition.secondaryPosition = 0;
 			return this.gridPositionToItemPosition(gridPosition);
 		}
+	}
+
+	getIndicesForPageScroll = (direction, currentIndex) => {
+		const
+			{context, dimensionToExtent, isPrimaryDirectionVertical, primary} = this,
+			{dataSize} = this.props,
+			indices = {};
+
+		let	offsetIndex = Math.floor(primary.clientSize / primary.gridSize) * dimensionToExtent;
+		offsetIndex *= !isPrimaryDirectionVertical && context.rtl ? -1 : 1;
+
+		if (direction === 'down' || direction === 'right') {
+			indices.indexToFocus = clamp(0, dataSize - 1, currentIndex + offsetIndex);
+			indices.indexToScroll = currentIndex + dimensionToExtent;
+			if (context.rtl && !isPrimaryDirectionVertical) {
+				indices.indexToScroll = indices.indexToFocus;
+			}
+		} else {
+			indices.indexToFocus = clamp(0, dataSize - 1, currentIndex - offsetIndex);
+			indices.indexToScroll = indices.indexToFocus;
+			if (context.rtl && !isPrimaryDirectionVertical) {
+				indices.indexToScroll = currentIndex + dimensionToExtent;
+			}
+		}
+
+		return indices;
+	}
+
+	scrollToNextPage = ({direction, focusedItem}) => {
+		const
+			focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute)),
+			{indexToFocus, indexToScroll} = this.getIndicesForPageScroll(direction, focusedIndex);
+
+		if (focusedIndex !== indexToFocus) {
+			focusedItem.blur();
+			this.props.cbScrollTo({index: indexToScroll, animate: false});
+			this.focusByIndex(indexToFocus);
+		}
+
+		return true;
+	}
+
+	shouldPreventScrollByFocus = () => this.isScrolledBy5way
+
+	jumpToSpottableItem = (keyCode, target) => {
+		const
+			{cbScrollTo, data, dataSize} = this.props,
+			{firstIndex, numOfItems} = this.state,
+			currentIndex = Number.parseInt(target.getAttribute(dataIndexAttribute));
+
+		if (!data || !Array.isArray(data) || !data[currentIndex] || data[currentIndex].disabled) {
+			return false;
+		}
+
+		const
+			isForward = (
+				this.isPrimaryDirectionVertical && isDown(keyCode) ||
+				!this.isPrimaryDirectionVertical && (!this.context.rtl && isRight(keyCode) || this.context.rtl && isLeft(keyCode)) ||
+				null
+			),
+			isBackward = (
+				this.isPrimaryDirectionVertical && isUp(keyCode) ||
+				!this.isPrimaryDirectionVertical && (!this.context.rtl && isLeft(keyCode) || this.context.rtl && isRight(keyCode)) ||
+				null
+			);
+
+		let nextIndex = -1;
+
+		if (isForward) {
+			// See if the next item is spottable then delegate scroll to onFocus handler
+			if (currentIndex < dataSize - 1 && !data[currentIndex + 1].disabled) {
+				return false;
+			}
+
+			for (let i = currentIndex + 2; i < dataSize; i++) {
+				if (!data[i].disabled) {
+					nextIndex = i;
+					break;
+				}
+			}
+		} else if (isBackward) {
+			// See if the next item is spottable then delegate scroll to onFocus handler
+			if (currentIndex > 0 && !data[currentIndex - 1].disabled) {
+				return false;
+			}
+
+			for (let i = currentIndex - 2; i >= 0; i--) {
+				if (!data[i].disabled) {
+					nextIndex = i;
+					break;
+				}
+			}
+		} else {
+			return false;
+		}
+
+		if (nextIndex !== -1 && (firstIndex > nextIndex || nextIndex >= firstIndex + numOfItems)) {
+			setTimeout(() => {
+				target.blur();
+			}, 50);
+
+			if (!Spotlight.isPaused()) {
+				Spotlight.pause();
+			}
+
+			cbScrollTo({
+				index: nextIndex,
+				focus: true,
+				stickTo: isForward ? 'end' : 'start'
+			});
+			return true;
+		}
+
+		return false;
+	}
+
+	onKeyDown = (e) => {
+		const {keyCode, target} = e;
+
+		this.isScrolledBy5way = false;
+		if (getDirection(keyCode)) {
+			e.preventDefault();
+			this.isScrolledBy5way = this.jumpToSpottableItem(keyCode, target);
+		}
+		forwardKeyDown(e, this.props);
 	}
 
 	setContainerDisabled = (bool) => {
@@ -737,9 +903,13 @@ class VirtualListCoreNative extends Component {
 
 		return (
 			<div ref={this.initWrapperRef} className={mergedClasses} style={this.itemStyle}>
-				<div {...props} className={css.container} ref={this.initContainerRef}>
+				<div {...props} className={css.container} onKeyDown={this.onKeyDown} ref={this.initContainerRef}>
 					{cc.length ? cc : (
-						<SpotlightPlaceholder data-index={0} data-vl-placeholder />
+						<SpotlightPlaceholder
+							data-index={0}
+							data-vl-placeholder
+							onFocus={this.handlePlaceholderFocus}
+						/>
 					)}
 				</div>
 			</div>

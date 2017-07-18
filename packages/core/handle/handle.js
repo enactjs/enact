@@ -207,6 +207,25 @@ const forward = handle.forward = curry((name, ev, props) => {
 });
 
 /**
+ * Calls `event.preventDefault()` and returns `true`.
+ *
+ * ```
+ * import {handle, preventDefault} from '@enact/core/handle';
+ *
+ * const preventAndLog = handle(
+ *   preventDefault,
+ *   (ev) => console.log('preventDefault called')
+ * );
+ * ```
+ *
+ * @method   preventDefault
+ * @memberof core/handle
+ * @param    {Object}        ev  Event
+ * @returns  {Boolean}           Always returns `true`
+ */
+const preventDefault = handle.preventDefault = callOnEvent('preventDefault');
+
+/**
  * Forwards the event to a function at `name` on `props` with capability to prevent default
  * behavior. If the specified prop is `undefined` or is not a function, it is ignored. Returns
  * `false` when `event.preventDefault()` has been called in a handler.
@@ -233,31 +252,13 @@ const forwardWithPrevent = handle.forwardWithPrevent = curry((name, ev, props) =
 	const wrappedEvent = Object.assign({}, ev, {
 		preventDefault: () => {
 			prevented = true;
+			preventDefault(ev);
 		}
 	});
 	forward(name, wrappedEvent, props);
 
 	return !prevented;
 });
-
-/**
- * Calls `event.preventDefault()` and returns `true`.
- *
- * ```
- * import {handle, preventDefault} from '@enact/core/handle';
- *
- * const preventAndLog = handle(
- *   preventDefault,
- *   (ev) => console.log('preventDefault called')
- * );
- * ```
- *
- * @method   preventDefault
- * @memberof core/handle
- * @param    {Object}        ev  Event
- * @returns  {Boolean}           Always returns `true`
- */
-const preventDefault = handle.preventDefault = callOnEvent('preventDefault');
 
 /**
  * Calls `event.stopPropagation()` and returns `true`

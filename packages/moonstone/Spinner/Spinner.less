@@ -1,8 +1,9 @@
 // Spinner.less
 //
-@import '../styles/mixins.less';
-@import '../styles/variables.less';
-@import '../styles/skin.less';
+@import "../styles/mixins.less";
+@import "../styles/text.less";
+@import "../styles/variables.less";
+@import "../styles/skin.less";
 
 @-webkit-keyframes spinBall {
 	0%        { -webkit-transform: rotateZ(@moon-spinner-ball-angle); }
@@ -18,7 +19,6 @@
 	72%       { -webkit-transform: rotateZ(360 + @moon-spinner-ball-angle + 10); }
 	79%, 100% { -webkit-transform: rotateZ(360 + @moon-spinner-ball-angle); }
 }
-
 @-webkit-keyframes spinBall2 {
 	/* Small bounce forward */
 	0%        { -webkit-transform: rotateZ(360 - @moon-spinner-ball-angle); }
@@ -35,7 +35,6 @@
 	67%       { -webkit-transform: rotateZ(360 - (@moon-spinner-ball-angle * 3)); }
 	72%, 100% { -webkit-transform: rotateZ(360 - @moon-spinner-ball-angle); }
 }
-
 @-webkit-keyframes spinBall3 {
 	/* Impact at last ball */
 	0%, 100%  { -webkit-transform: rotateZ(360 - (@moon-spinner-ball-angle * 3)); }
@@ -51,7 +50,6 @@
 	97%       { -webkit-transform: rotateZ(225deg); }
 	/* Speed back up as the ball falls */
 }
-
 @keyframes spinBall {
 	0%        { transform: rotateZ(@moon-spinner-ball-angle); }
 	/* Slow down toward the top */
@@ -66,7 +64,6 @@
 	72%       { transform: rotateZ(360 + @moon-spinner-ball-angle + 10); }
 	79%, 100% { transform: rotateZ(360 + @moon-spinner-ball-angle); }
 }
-
 @keyframes spinBall2 {
 	/* Small bounce forward */
 	0%        { transform: rotateZ(360 - @moon-spinner-ball-angle); }
@@ -83,7 +80,6 @@
 	67%       { transform: rotateZ(360 - (@moon-spinner-ball-angle * 3)); }
 	72%, 100% { transform: rotateZ(360 - @moon-spinner-ball-angle); }
 }
-
 @keyframes spinBall3 {
 	/* Impact at last ball */
 	0%, 100%  { transform: rotateZ(360 - (@moon-spinner-ball-angle * 3)); }
@@ -101,46 +97,16 @@
 }
 
 .spinner {
-	min-height: @moon-spinner-size;
-	min-width: @moon-spinner-size;
-	line-height: @moon-spinner-size;
+	line-height: @moon-body-line-height;
 	position: relative;
 	display: inline-block;
-	border-radius: (@moon-button-height / 2);
-	margin: 0 @moon-spotlight-outset;
-
-	> * {
-		display: inline-block;
-	}
-
-	// centered
-	&.centered {
-		margin: 0;
-		margin-left: 50%;
-		position: absolute;
-		top: 50%;
-		-webkit-transform: translateX(-50%) translateY(-50%);
-		transform: translateX(-50%) translateY(-50%);
-	}
-
-	&.content {
-		padding: ((@moon-button-height - @moon-spinner-size) / 2);
-
-		.client {
-			max-width: 399px;
-		}
-	}
-
-	&.running .ball {
-		-webkit-animation-play-state: running;
-		animation-play-state: running;
-	}
 
 	.ballDecorator {
+		border-radius: (@moon-spinner-size / 2);
 		position: relative;
 		width: @moon-spinner-size;
 		height: @moon-spinner-size;
-		float: left;
+		margin: 0 auto;
 	}
 
 	.ball {
@@ -160,7 +126,7 @@
 		-webkit-transform-origin: center ((@moon-spinner-ball-distance / @moon-spinner-ball-height) * -100);
 		transform-origin: center ((@moon-spinner-ball-distance / @moon-spinner-ball-height) * -100);
 
-		&:after {
+		&::after {
 			content: @moon-spinner-icon;
 			font-family: @moon-icon-font-family;
 		}
@@ -188,9 +154,29 @@
 	}
 
 	.client {
-		float: left;
-		line-height: @moon-spinner-size;
-		margin: 0 2.6ex 0 0;
+		.moon-body-text();
+		font-weight: @moon-spinner-font-weight;
+		margin-top: @moon-spotlight-outset;
+		max-width: 348px;
+	}
+
+	// centered
+	&.centered {
+		margin: 0;
+		margin-left: 50%;
+		position: absolute;
+		top: 50%;
+		-webkit-transform: translateX(-50%) translateY(-50%);
+		transform: translateX(-50%) translateY(-50%);
+	}
+
+	&.content {
+		padding: ((@moon-button-height - @moon-spinner-size) / 2);
+	}
+
+	&.running .ball {
+		-webkit-animation-play-state: running;
+		animation-play-state: running;
 	}
 
 	:global(.enact-locale-right-to-left) & {
@@ -198,15 +184,6 @@
 		// .-spinner-ball-decorator {
 		// 	-webkit-transform: scaleX(-1);
 		// }
-		.ballDecorator {
-			float: right;
-		}
-
-		.client {
-			float: right;
-			margin-left: 2.6ex;
-			margin-right: 0;
-		}
 
 		// centered
 		&.centered {
@@ -220,10 +197,15 @@
 	// Skin colors
 	.applySkins({
 		color: @moon-spinner-text-color;
-		background-color: @moon-spinner-bg-color;
+
+		.ballDecorator {
+			background-color: @moon-spinner-bg-color;
+		}
 
 		&.transparent {
-			background-color: transparent;
+			.ballDecorator {
+				background-color: transparent;
+			}
 		}
 
 		.ball1 {
@@ -236,6 +218,10 @@
 
 		.ball3 {
 			color: @moon-spinner-ball3-color;
+		}
+
+		.client {
+			text-shadow: 0 1px 1px @moon-spinner-text-shadow-color;
 		}
 	});
 }
