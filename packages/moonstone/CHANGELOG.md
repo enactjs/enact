@@ -15,6 +15,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualList` ability to navigate via 5way when there are disabled items
 - `moonstone/ContextualPopupDecorator` property `popupContainerId` to support configuration of the popup's spotlight container
 - `moonstone/ContextualPopupDecorator` property `onOpen` to notify containers when the popup has been opened
+- `moonstone/ContextualPopupDecorator` config option `openProp` to support mapping the value of `open` property to the chosen property of wrapped component
 
 ### Changed
 

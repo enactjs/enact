@@ -37,7 +37,17 @@ const defaultConfig = {
 	 * @memberof moonstone/ContextualPopupDecorator.ContextualPopupDecorator.defaultConfig
 	 * @public
 	 */
-	noSkin: false
+	noSkin: false,
+
+	/**
+	 * Configures the prop name to map value of `open` state of ContextualPopupDecorator
+	 *
+	 * @type {String}
+	 * @default 'selected'
+	 * @memberof moonstone/ContextualPopupDecorator.ContextualPopupDecorator.defaultConfig
+	 * @public
+	 */
+	openProp: 'selected'
 };
 
 const ContextualPopupContainer = SpotlightContainerDecorator({enterTo: 'last-focused', preserveId: true}, ContextualPopup);
@@ -83,7 +93,7 @@ const ContextualPopupContainer = SpotlightContainerDecorator({enterTo: 'last-foc
  * @public
  */
 const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {noSkin} = config;
+	const {noSkin, openProp} = config;
 
 	return class extends React.Component {
 		static displayName = 'ContextualPopupDecorator'
@@ -481,6 +491,8 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			delete rest.popupContainerId;
+
+			if (openProp) rest[openProp] = open;
 
 			return (
 				<div className={css.contextualPopupDecorator}>
