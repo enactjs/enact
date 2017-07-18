@@ -240,7 +240,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			onSpotlightDisappear: PropTypes.func,
 
 			/**
-			 * The handler to run when the 5-way down key is pressed.
+			 * The handler to run prior to focus leaving the component when the 5-way down key is pressed.
 			 *
 			 * @type {Function}
 			 * @param {Object} event
@@ -249,7 +249,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			onSpotlightDown: PropTypes.func,
 
 			/**
-			 * The handler to run when the 5-way left key is pressed while the decrement button is focused.
+			 * The handler to run prior to focus leaving the component when the 5-way left key is pressed.
 			 *
 			 * @type {Function}
 			 * @param {Object} event
@@ -258,7 +258,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			onSpotlightLeft: PropTypes.func,
 
 			/**
-			 * The handler to run when the 5-way right key is pressed while the increment button is focused.
+			 * The handler to run prior to focus leaving the component when the 5-way right key is pressed.
 			 *
 			 * @type {Function}
 			 * @param {Object} event
@@ -267,7 +267,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			onSpotlightRight: PropTypes.func,
 
 			/**
-			 * The handler to run when the 5-way up key is pressed.
+			 * The handler to run prior to focus leaving the component when the 5-way up key is pressed.
 			 *
 			 * @type {Function}
 			 * @param {Object} event
