@@ -282,6 +282,7 @@ class VirtualListCore extends Component {
 
 	isPrimaryDirectionVertical = true
 	isItemSized = false
+	isPlaceholderHidden = false
 
 	dimensionToExtent = 0
 	threshold = 0
@@ -578,6 +579,10 @@ class VirtualListCore extends Component {
 
 		let {primaryPosition} = this.getGridPosition(updateFrom);
 
+		if (!this.containerRef || !this.isPlaceholderHidden) {
+			return;
+		}
+
 		primaryPosition -= scrollPosition;
 
 		for (let i = itemContainerFrom; i < itemContainerTo; i++, primaryPosition += primary.gridSize) {
@@ -585,7 +590,9 @@ class VirtualListCore extends Component {
 				key = i % numOfRows,
 				node = this.containerRef.children[key];
 
-			node.style.transform = this.getItemContainerPosition(primaryPosition);
+			if (node && node.style) {
+				node.style.transform = this.getItemContainerPosition(primaryPosition);
+			}
 		}
 	}
 
@@ -693,8 +700,9 @@ class VirtualListCore extends Component {
 			{firstIndex, numOfItems} = this.state,
 			{cc, dimensionToExtent, isPrimaryDirectionVertical, isItemSized, primary, scrollPosition, secondary} = this,
 			diff = firstIndex - this.lastFirstIndex,
+			maxUpdateTo = Math.min(dataSize, firstIndex + numOfItems),
 			updateFrom = (cc.length === 0 || diff <= 0 || diff >= numOfItems) ? firstIndex : this.lastFirstIndex + numOfItems,
-			updateTo = (cc.length === 0 || diff > 0 || diff <= -numOfItems) ? Math.min(dataSize, firstIndex + numOfItems) : this.lastFirstIndex,
+			updateTo = (cc.length === 0 || diff > 0 || diff <= -numOfItems) ? maxUpdateTo : this.lastFirstIndex,
 			itemContainerFrom = Math.floor(updateFrom / dimensionToExtent),
 			itemContainerTo = Math.ceil(updateTo / dimensionToExtent),
 			numOfRows = Math.ceil(numOfItems / dimensionToExtent);
@@ -731,12 +739,14 @@ class VirtualListCore extends Component {
 						isPrimaryDirectionVertical ? css.fitWidth : css.fitHeight
 					)}
 					key={key}
-					style={{flexDirection, transform: this.getItemContainerPosition(primaryPosition), width}}
+					style={{flexDirection, width}}
 				>
 					{items}
 				</div>
 			);
 		}
+
+		this.positionItems({updateFrom: firstIndex, updateTo: maxUpdateTo});
 
 		this.lastFirstIndex = firstIndex;
 	}
@@ -763,9 +773,11 @@ class VirtualListCore extends Component {
 			this.renderItems();
 		}
 
+		this.isPlaceholderHidden = cc.length;
+
 		return (
 			<div {...props} className={mergedClasses} ref={this.initContainerRef} style={this.itemStyle}>
-				{cc.length ? cc : (
+				{this.isPlaceholderHidden ? cc : (
 					<SpotlightPlaceholder data-index={0} data-vl-placeholder />
 				)}
 			</div>
