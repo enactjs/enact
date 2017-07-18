@@ -1,3 +1,4 @@
+import {contextTypes} from '@enact/i18n/I18nDecorator';
 import {forKey, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
@@ -209,6 +210,8 @@ const TimePickerBase = kind({
 		spotlightDisabled: false
 	},
 
+	contextTypes: contextTypes,
+
 	styles: {
 		css,
 		className: 'timePicker'
@@ -242,6 +245,8 @@ const TimePickerBase = kind({
 		order,
 		spotlightDisabled,
 		...rest
+	}, {
+		rtl
 	}) => {
 		return (
 			<ExpandableItemBase
@@ -257,6 +262,12 @@ const TimePickerBase = kind({
 				<div className={dateComponentPickers} onKeyDown={handlePickerKeyDown}>
 					<div className={css.timeComponents}>
 						{order.map((picker, index) => {
+							// although we create a component array based on the provided
+							// order, we ultimately force order in CSS for RTL
+							const isFirst = index === 0;
+							const isLast = index === order.length - 1;
+							const isLeft = isFirst && !rtl || isLast && rtl;
+							const isRight = isFirst && rtl || isLast && !rtl;
 							switch (picker) {
 								case 'h':
 								case 'k':
@@ -267,8 +278,8 @@ const TimePickerBase = kind({
 											label={noLabels ? null : $L('hour')}
 											onChange={onChangeHour}
 											onSpotlightDisappear={onSpotlightDisappear}
-											onSpotlightLeft={index === 0 ? onSpotlightLeft : null}
-											onSpotlightRight={index === 2 ? onSpotlightRight : null}
+											onSpotlightLeft={isLeft ? onSpotlightLeft : null}
+											onSpotlightRight={isRight ? onSpotlightRight : null}
 											spotlightDisabled={spotlightDisabled}
 											value={hour}
 											width={2}
@@ -287,8 +298,8 @@ const TimePickerBase = kind({
 											min={0}
 											onChange={onChangeMinute}
 											onSpotlightDisappear={onSpotlightDisappear}
-											onSpotlightLeft={index === 0 ? onSpotlightLeft : null}
-											onSpotlightRight={index === 2 ? onSpotlightRight : null}
+											onSpotlightLeft={isLeft ? onSpotlightLeft : null}
+											onSpotlightRight={isRight ? onSpotlightRight : null}
 											spotlightDisabled={spotlightDisabled}
 											padded
 											value={minute}
@@ -304,8 +315,8 @@ const TimePickerBase = kind({
 											label={noLabels ? null : $L('meridiem')}
 											onChange={onChangeMeridiem}
 											onSpotlightDisappear={onSpotlightDisappear}
-											onSpotlightLeft={index === 0 ? onSpotlightLeft : null}
-											onSpotlightRight={index === 2 ? onSpotlightRight : null}
+											onSpotlightLeft={isLeft ? onSpotlightLeft : null}
+											onSpotlightRight={isRight ? onSpotlightRight : null}
 											reverse
 											spotlightDisabled={spotlightDisabled}
 											value={meridiem}

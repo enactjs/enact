@@ -6,6 +6,7 @@
  * @module moonstone/ExpandablePicker
  */
 
+import {contextTypes} from '@enact/i18n/I18nDecorator';
 import Changeable from '@enact/ui/Changeable';
 import kind from '@enact/core/kind';
 import React from 'react';
@@ -205,6 +206,8 @@ const ExpandablePickerBase = kind({
 		value: 0
 	},
 
+	contextTypes: contextTypes,
+
 	styles: {
 		css,
 		className: 'expandablePicker'
@@ -226,7 +229,7 @@ const ExpandablePickerBase = kind({
 		label: ({children, value}) => React.Children.toArray(children)[value]
 	},
 
-	render: (props) => {
+	render: (props, {rtl}) => {
 		const {
 			children,
 			decrementIcon,
@@ -269,7 +272,8 @@ const ExpandablePickerBase = kind({
 					noAnimation={noAnimation}
 					onSpotlightDisappear={onSpotlightDisappear}
 					onSpotlightDown={onSpotlightDown}
-					onSpotlightLeft={onSpotlightLeft}
+					onSpotlightLeft={!rtl ? onSpotlightLeft : null}
+					onSpotlightRight={rtl ? onSpotlightRight : null}
 					orientation={orientation}
 					spotlightDisabled={spotlightDisabled}
 					width={width}
@@ -281,7 +285,8 @@ const ExpandablePickerBase = kind({
 					onClick={onChange}
 					onSpotlightDisappear={onSpotlightDisappear}
 					onSpotlightDown={onSpotlightDown}
-					onSpotlightRight={onSpotlightRight}
+					onSpotlightLeft={rtl ? onSpotlightLeft : null}
+					onSpotlightRight={!rtl ? onSpotlightRight : null}
 					spotlightDisabled={spotlightDisabled}
 					className={css.button}
 					small

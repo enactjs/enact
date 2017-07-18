@@ -1,3 +1,4 @@
+import {contextTypes} from '@enact/i18n/I18nDecorator';
 import {forKey, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
@@ -189,6 +190,8 @@ const DatePickerBase = kind({
 		spotlightDisabled: false
 	},
 
+	contextTypes: contextTypes,
+
 	styles: {
 		css,
 		className: 'datePicker'
@@ -220,6 +223,8 @@ const DatePickerBase = kind({
 		spotlightDisabled,
 		year,
 		...rest
+	}, {
+		rtl
 	}) => {
 
 		return (
@@ -235,6 +240,10 @@ const DatePickerBase = kind({
 			>
 				<div className={dateComponentPickers} onKeyDown={handlePickerKeyDown}>
 					{order.map((picker, index) => {
+						const isFirst = index === 0;
+						const isLast = index === order.length - 1;
+						const isLeft = isFirst && !rtl || isLast && rtl;
+						const isRight = isFirst && rtl || isLast && !rtl;
 						switch (picker) {
 							case 'd':
 								return (
@@ -245,8 +254,8 @@ const DatePickerBase = kind({
 										min={1}
 										onChange={onChangeDate}
 										onSpotlightDisappear={onSpotlightDisappear}
-										onSpotlightLeft={index === 0 ? onSpotlightLeft : null}
-										onSpotlightRight={index === 2 ? onSpotlightRight : null}
+										onSpotlightLeft={isLeft ? onSpotlightLeft : null}
+										onSpotlightRight={isRight ? onSpotlightRight : null}
 										spotlightDisabled={spotlightDisabled}
 										value={day}
 										width={2}
@@ -262,8 +271,8 @@ const DatePickerBase = kind({
 										min={1}
 										onChange={onChangeMonth}
 										onSpotlightDisappear={onSpotlightDisappear}
-										onSpotlightLeft={index === 0 ? onSpotlightLeft : null}
-										onSpotlightRight={index === 2 ? onSpotlightRight : null}
+										onSpotlightLeft={isLeft ? onSpotlightLeft : null}
+										onSpotlightRight={isRight ? onSpotlightRight : null}
 										spotlightDisabled={spotlightDisabled}
 										value={month}
 										width={2}
@@ -280,8 +289,8 @@ const DatePickerBase = kind({
 										min={minYear}
 										onChange={onChangeYear}
 										onSpotlightDisappear={onSpotlightDisappear}
-										onSpotlightLeft={index === 0 ? onSpotlightLeft : null}
-										onSpotlightRight={index === 2 ? onSpotlightRight : null}
+										onSpotlightLeft={isLeft ? onSpotlightLeft : null}
+										onSpotlightRight={isRight ? onSpotlightRight : null}
 										spotlightDisabled={spotlightDisabled}
 										value={year}
 										width={4}
