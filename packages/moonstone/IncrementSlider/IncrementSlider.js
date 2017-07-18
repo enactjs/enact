@@ -23,8 +23,10 @@ import SliderDecorator from '../internal/SliderDecorator';
 import IncrementSliderButton from './IncrementSliderButton';
 import componentCss from './IncrementSlider.less';
 
+const isDown = is('down');
 const isLeft = is('left');
 const isRight = is('right');
+const isUp = is('up');
 
 const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 	const Slider = Pressable(Spottable(Skinnable(SliderBaseFactory({css}))));
@@ -401,13 +403,55 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		},
 
 		handlers: {
-			handleKeyDown: (ev, {min, max, value, onSpotlightLeft, onSpotlightRight}) => {
+			handleDecrementKeyDown: (ev, {onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp, vertical}) => {
 				const {keyCode} = ev;
 
-				if (isLeft(keyCode) && value <= min && onSpotlightLeft) {
+				if (isLeft(keyCode) && onSpotlightLeft) {
 					onSpotlightLeft(ev);
-				} else if (isRight(keyCode) && value >= max && onSpotlightRight) {
+				} else if (isDown(keyCode) && onSpotlightDown) {
+					onSpotlightDown(ev);
+				} else if (isRight(keyCode) && onSpotlightRight && vertical) {
 					onSpotlightRight(ev);
+				} else if (isUp(keyCode) && onSpotlightUp && !vertical) {
+					onSpotlightUp(ev);
+				}
+			},
+			handleIncrementKeyDown: (ev, {onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp, vertical}) => {
+				const {keyCode} = ev;
+
+				if (isRight(keyCode) && onSpotlightRight) {
+					onSpotlightRight(ev);
+				} else if (isUp(keyCode) && onSpotlightUp) {
+					onSpotlightUp(ev);
+				} else if (isLeft(keyCode) && onSpotlightLeft && vertical) {
+					onSpotlightLeft(ev);
+				} else if (isDown(keyCode) && onSpotlightDown && !vertical) {
+					onSpotlightDown(ev);
+				}
+			},
+			handleSliderKeyDown: (ev, {min, max, value, onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp, vertical}) => {
+				const {keyCode} = ev;
+				const isMin = value <= min;
+				const isMax = value >= max;
+
+				if (vertical) {
+					if (isLeft(keyCode) && onSpotlightLeft) {
+						onSpotlightLeft(ev);
+					} else if (isRight(keyCode) && onSpotlightRight) {
+						onSpotlightRight(ev);
+					} else if (isDown(keyCode) && isMin && onSpotlightDown) {
+						onSpotlightDown(ev);
+					} else if (isUp(keyCode) && isMax && onSpotlightUp) {
+						onSpotlightUp(ev);
+					}
+				} else if (isLeft(keyCode) && isMin && onSpotlightLeft) {
+					onSpotlightLeft(ev);
+				} else if (isRight(keyCode) && isMax && onSpotlightRight) {
+					onSpotlightRight(ev);
+				} else if (isDown(keyCode) && onSpotlightDown) {
+					onSpotlightDown(ev);
+				} else if (isUp(keyCode) && onSpotlightUp) {
+					onSpotlightUp(ev);
 				}
 			}
 		},
@@ -437,7 +481,9 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			detachedKnob,
 			disabled,
 			focused,
-			handleKeyDown,
+			handleDecrementKeyDown,
+			handleIncrementKeyDown,
+			handleSliderKeyDown,
 			incrementAriaLabel,
 			incrementDisabled,
 			incrementIcon,
@@ -453,10 +499,6 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			onIncrement,
 			onIncrementSpotlightDisappear,
 			onSpotlightDisappear,
-			onSpotlightDown,
-			onSpotlightLeft,
-			onSpotlightRight,
-			onSpotlightUp,
 			scrubbing,
 			sliderBarRef,
 			sliderRef,
@@ -471,6 +513,10 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			...rest
 		}) => {
 			const ariaProps = extractAriaProps(rest);
+			delete rest.onSpotlightDown;
+			delete rest.onSpotlightLeft;
+			delete rest.onSpotlightRight;
+			delete rest.onSpotlightUp;
 
 			return (
 				<div {...rest} className={incrementSliderClasses}>
@@ -480,10 +526,8 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						className={css.decrementButton}
 						disabled={decrementDisabled}
 						onClick={onDecrement}
+						onKeyDown={handleDecrementKeyDown}
 						onSpotlightDisappear={onDecrementSpotlightDisappear}
-						onSpotlightDown={onSpotlightDown}
-						onSpotlightLeft={onSpotlightLeft}
-						onSpotlightUp={onSpotlightUp}
 						spotlightDisabled={spotlightDisabled}
 					>
 						{decrementIcon}
@@ -505,10 +549,8 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						onChange={onChange}
 						onDecrement={onDecrement}
 						onIncrement={onIncrement}
-						onKeyDown={handleKeyDown}
+						onKeyDown={handleSliderKeyDown}
 						onSpotlightDisappear={onSpotlightDisappear}
-						onSpotlightDown={onSpotlightDown}
-						onSpotlightUp={onSpotlightUp}
 						scrubbing={scrubbing}
 						sliderBarRef={sliderBarRef}
 						sliderRef={sliderRef}
@@ -529,10 +571,8 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						className={css.incrementButton}
 						disabled={incrementDisabled}
 						onClick={onIncrement}
+						onKeyDown={handleIncrementKeyDown}
 						onSpotlightDisappear={onIncrementSpotlightDisappear}
-						onSpotlightDown={onSpotlightDown}
-						onSpotlightRight={onSpotlightRight}
-						onSpotlightUp={onSpotlightUp}
 						spotlightDisabled={spotlightDisabled}
 					>
 						{incrementIcon}
