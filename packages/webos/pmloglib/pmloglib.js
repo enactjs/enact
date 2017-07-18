@@ -17,7 +17,7 @@ const isObject = (obj) => !!obj && (typeof obj === 'object') && (Object.prototyp
 
 // Log function stringifies and escapes keyVals, and passes to PmLogString
 const log = (level, messageId, keyVals, freeText) => {
-	if (window.PalmSystem) {
+	if (typeof window !== 'undefined' && window.PalmSystem) {
 		if (keyVals && !isObject(keyVals)) {
 			level = levelError;
 			keyVals = {msgid: messageId};
@@ -138,7 +138,7 @@ const debug = (freeText) => {
  * @returns {undefined}
  */
 const perfLog = (messageId, perfType, perfGroup) => {
-	if (window.PalmSystem) {
+	if (typeof window !== 'undefined' && window.PalmSystem) {
 		if (!messageId) {
 			console.warn('PmLogInfoWithClock called with invalid format: messageId was empty');
 		}
