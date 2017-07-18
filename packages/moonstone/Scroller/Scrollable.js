@@ -261,9 +261,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.updateScrollbars();
 		}
 
-		componentDidUpdate () {
-			this.isInitializing = false;
+		componentWillUpdate () {
+			this.deferScrollTo = true;
+		}
 
+		componentDidUpdate () {
 			// Need to sync calculated client size if it is different from the real size
 			if (this.childRef.syncClientSize) {
 				this.childRef.syncClientSize();
@@ -274,7 +276,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.updateScrollbars();
 
 			if (this.scrollToInfo !== null) {
-				this.scrollTo(this.scrollToInfo);
+				if (!this.deferScrollTo) {
+					this.scrollTo(this.scrollToInfo);
+				}
 			} else {
 				this.updateScrollOnFocus();
 			}
@@ -308,7 +312,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		wheelDirection = 0
 		isFirstDragging = false
 		isDragging = false
-		isInitializing = true
+		deferScrollTo = true
 		pageDistance = 0
 		animateOnFocus = true
 
@@ -871,7 +875,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		scrollTo = (opt) => {
-			if (!this.isInitializing) {
+			if (!this.deferScrollTo) {
 				const {left, top} = this.getPositionForScrollTo(opt);
 				this.indexToFocus = null;
 				this.nodeToFocus = null;
@@ -959,7 +963,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					isVerticalScrollbarVisible: curVerticalScrollbarVisible
 				});
 			} else {
-				this.isInitializing = false;
+				this.deferScrollTo = false;
 				if (curHorizontalScrollbarVisible || curVerticalScrollbarVisible) {
 					// no visibility change but need to notify whichever scrollbars are visible of the
 					// updated bounds and scroll position
