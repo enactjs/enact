@@ -522,7 +522,6 @@ const VideoPlayerBase = class extends React.Component {
 		this.moreInProgress = false;	// This only has meaning for the time between clicking "more" and the official state is updated. To get "more" state, only look at the state value.
 		this.prevCommand = (props.noAutoPlay ? 'pause' : 'play');
 		this.speedIndex = 0;
-		this.titleOffsetCalculated = 0;
 		this.selectPlaybackRates('fastForward');
 
 		this.initI18n();
@@ -552,6 +551,7 @@ const VideoPlayerBase = class extends React.Component {
 			playbackRate: 1,
 			readyState: 0,
 			volume: 1,
+			titleOffsetHeight: 0,
 
 			// Non-standard state computed from properties
 			bottomControlsRendered: false,
@@ -594,8 +594,9 @@ const VideoPlayerBase = class extends React.Component {
 	componentWillUpdate (nextProps, nextState) {
 		const
 			isInfoComponentsEqual = equals(this.props.infoComponents, nextProps.infoComponents),
+			{titleOffsetHeight} = this.state,
 			shouldCalculateTitleOffset = (
-				((!this.titleOffsetCalculated && isInfoComponentsEqual) || (this.titleOffsetCalculated && !isInfoComponentsEqual)) &&
+				((!titleOffsetHeight && isInfoComponentsEqual) || (titleOffsetHeight && !isInfoComponentsEqual)) &&
 				this.state.bottomControlsVisible
 			);
 
@@ -613,11 +614,6 @@ const VideoPlayerBase = class extends React.Component {
 
 		if (shouldCalculateTitleOffset) {
 			this.calculateTitleOffset();
-		} else {
-			const titleElement = this.player.querySelector(`.${css.title}`);
-			if (titleElement) {
-				titleElement.style.setProperty('--infoComponentsOffset', this.titleOffsetCalculated + 'px');
-			}
 		}
 	}
 
@@ -663,14 +659,12 @@ const VideoPlayerBase = class extends React.Component {
 
 	calculateTitleOffset = () => {
 		// calculate how far the title should animate up when infoComponents appear.
-		const titleElement = this.player.querySelector(`.${css.title}`);
 		const infoComponents = this.player.querySelector(`.${css.infoComponents}`);
 
-		if (titleElement && infoComponents) {
+		if (infoComponents) {
 			const infoHeight = infoComponents.offsetHeight;
 
-			titleElement.style.setProperty('--infoComponentsOffset', infoHeight + 'px');
-			this.titleOffsetCalculated = infoHeight;
+			this.setState({titleOffsetHeight: infoHeight});
 		}
 	}
 
@@ -1377,6 +1371,7 @@ const VideoPlayerBase = class extends React.Component {
 									title={title}
 									visible={this.state.titleVisible}
 									infoVisible={this.state.more}
+									style={{'--infoComponentsOffset': this.state.titleOffsetHeight + 'px'}}
 								>
 									{infoComponents}
 								</MediaTitle>
