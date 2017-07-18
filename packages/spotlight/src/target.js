@@ -380,6 +380,8 @@ function getLeaveForTarget (containerId, direction) {
 }
 
 function getNavigableTarget (target) {
+	if (target === document) return null;
+
 	let parent;
 	while (target && (isContainer(target) || !isFocusable(target))) {
 		parent = target.parentNode;
