@@ -266,8 +266,10 @@ const TimePickerBase = kind({
 							// order, we ultimately force order in CSS for RTL
 							const isFirst = index === 0;
 							const isLast = index === order.length - 1;
-							const isLeft = isFirst && !rtl || isLast && rtl;
-							const isRight = isFirst && rtl || isLast && !rtl;
+							// meridiem will always be the left-most control in RTL, regardless of the provided order
+							const isLeft = rtl && picker === 'a' || isFirst && !rtl;
+							// minute will always be the right-most control in RTL, regardless of the provided order
+							const isRight = rtl && picker === 'm' || isLast && !rtl;
 							switch (picker) {
 								case 'h':
 								case 'k':

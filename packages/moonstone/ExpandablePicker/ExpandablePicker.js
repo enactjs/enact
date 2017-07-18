@@ -154,6 +154,14 @@ const ExpandablePickerBase = kind({
 		onSpotlightRight: PropTypes.func,
 
 		/**
+		 * When `true`, the control is rendered in the expanded state, with the contents visible
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		open: PropTypes.bool,
+
+		/**
 		 * The orientation of the picker, i.e. whether the buttons are above and below or on the
 		 * sides of the value. Must be either `'horizontal'` or `'vertical'`.
 		 *
@@ -243,6 +251,7 @@ const ExpandablePickerBase = kind({
 			onSpotlightDown,
 			onSpotlightLeft,
 			onSpotlightRight,
+			open,
 			orientation,
 			spotlightDisabled,
 			value,
@@ -256,9 +265,10 @@ const ExpandablePickerBase = kind({
 				{...rest}
 				disabled={disabled}
 				onSpotlightDisappear={onSpotlightDisappear}
-				onSpotlightDown={onSpotlightDown}
+				onSpotlightDown={!open ? onSpotlightDown : null}
 				onSpotlightLeft={onSpotlightLeft}
 				onSpotlightRight={onSpotlightRight}
+				open={open}
 				spotlightDisabled={spotlightDisabled}
 			>
 				<Picker
