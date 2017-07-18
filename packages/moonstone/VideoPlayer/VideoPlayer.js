@@ -94,10 +94,6 @@ const forwardPlayButtonClick = forward('onPlayButtonClick');
 const playLabel = 'Play';
 const pauseLabel = 'Pause';
 
-// media title id
-let infoId;
-let titleId;
-
 /**
  * Every callback sent by [VideoPlayer]{@link moonstone/VideoPlayer} receives a status package,
  * which includes an object with the following key/value pairs as the first argument:
@@ -505,10 +501,12 @@ const VideoPlayerBase = class extends React.Component {
 		this.moreInProgress = false;	// This only has meaning for the time between clicking "more" and the official state is updated. To get "more" state, only look at the state value.
 		this.prevCommand = (props.noAutoPlay ? 'pause' : 'play');
 		this.speedIndex = 0;
+		this.infoId = null;
+		this.titleId = null;
 		this.titleOffsetCalculated = false;
 		this.selectPlaybackRates('fastForward');
 		this.setMediaTitleId();
-		this.setAccessibilityProp(titleId);
+		this.setAccessibilityProp(this.titleId);
 		this.firstMoreInfoReaded = false;
 
 		this.initI18n();
@@ -713,8 +711,8 @@ const VideoPlayerBase = class extends React.Component {
 
 	setMediaTitleId = () => {
 		const generateId = Math.random().toString(36).substr(2, 8);
-		infoId = 'md_info_id-' + generateId;
-		titleId = 'md_title_id-' + generateId;
+		this.infoId = 'md_info_id-' + generateId;
+		this.titleId = 'md_title_id-' + generateId;
 	}
 
 	showControls = () => {
@@ -742,7 +740,9 @@ const VideoPlayerBase = class extends React.Component {
 	skipFirstRead = (isMore = false) => {
 		if (isMore) {
 			// Readout 'more' or 'back' button explicitly.
-			Spotlight.focus(Spotlight.getCurrent());
+			let selectedButton = Spotlight.getCurrent();
+			selectedButton.blur();
+			selectedButton.focus();
 		}
 		this.firstRead = null;
 	}
@@ -874,7 +874,7 @@ const VideoPlayerBase = class extends React.Component {
 	reloadVideo = () => {
 		// When changing a HTML5 video, you have to reload it.
 		this.video.load();
-		this.setAccessibilityProp(titleId);
+		this.setAccessibilityProp(this.titleId);
 		this.firstMoreInfoReaded = false;
 	}
 
@@ -1306,7 +1306,7 @@ const VideoPlayerBase = class extends React.Component {
 		});
 
 		if (!this.firstMoreInfoReaded) {
-			this.setAccessibilityProp(infoId);
+			this.setAccessibilityProp(this.infoId);
 			this.firstMoreInfoReaded = true;
 		}
 
@@ -1385,10 +1385,10 @@ const VideoPlayerBase = class extends React.Component {
 							{/* Info Section: Title, Description, Times */}
 							<div className={css.infoFrame}>
 								<MediaTitle
-									infoId={infoId}
+									infoId={this.infoId}
 									infoVisible={this.state.more}
 									title={title}
-									titleId={titleId}
+									titleId={this.titleId}
 									visible={this.state.titleVisible}
 								>
 									{infoComponents}
