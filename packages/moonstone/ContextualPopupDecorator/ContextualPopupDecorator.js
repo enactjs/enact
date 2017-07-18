@@ -458,6 +458,9 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		spotActivator = (activator) => {
+			if (activator && activator === Spotlight.getCurrent()) {
+				activator.blur();
+			}
 			if (!Spotlight.focus(activator)) {
 				Spotlight.focus();
 			}
