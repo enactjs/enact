@@ -36,6 +36,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone` international fonts to always be used, even when unsupported font-weights or font-styles are requested
 - `moonstone/Panels.Panel` support for selecting components with `.spottable-default` as the default focus target
 - `moonstone/Panels` layout in RTL locales
+- `moonstone/VirtualList` losing spotlight when the list is empty
 - `moonstone/FormCheckbox` in focused state to have the correct "check" color
 - `moonstone/Scrollable` bug in `navigableFilter` when passed a container id
 
