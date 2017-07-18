@@ -19,16 +19,16 @@ storiesOf('Layout')
 				align={select('align', ['start', 'center', 'stretch', 'end'], 'start')}
 				orientation={select('orientation', ['horizontal', 'vertical'], 'horizontal')}
 			>
-				<Cell size={number('cell size', 100, {range: true, min: 0, max: 300, step: 5}) + 'px'}>
+				<Cell size={number('cell size', 100, {range: true, min: 0, max: 300, step: 5}) + 'px'} shrink>
 					<Button small>First</Button>
 				</Cell>
-				<Cell flexible={nullify(boolean('flexible cell', false))}>
+				<Cell shrink={nullify(boolean('shrinkable cell', false))}>
 					<Button small>Second</Button>
 				</Cell>
-				<Cell flexible>
+				<Cell>
 					<Item>An auto-sizing Item that has a marquee so it will always show the full text string even if it&apos;s too long to fit</Item>
 				</Cell>
-				<Cell>
+				<Cell shrink>
 					<Button>Last</Button>
 				</Cell>
 			</Layout>

@@ -4,13 +4,13 @@
  *
  * @example
  * <Layout>
- * 	<Cell>
+ * 	<Cell shrink>
  * 		<Button small>First</Button>
  * 	</Cell>
- * 	<Cell flexible>
+ * 	<Cell>
  * 		<Item>An Item with some long text in it</Item>
  * 	</Cell>
- * 	<Cell>
+ * 	<Cell shrink>
  * 		<Button small>Last</Button>
  * 	</Cell>
  * </Layout>
@@ -55,32 +55,20 @@ const CellBase = kind({
 		component:  PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 
 		/**
-		 * Determines how this cell should be arranged in the layout. A fixed cell will not expand
-		 * or shrink beyond its initial size, determined either by the
-		 * [size]{@link ui/Layout.Cell#size} property or its contents' dimensions.
-		 * A Cell cannot be both `flexible` and `fixed`.
+		 * A `shrink`able cell will contract to its minimum size, according to the dimensions of its
+		 * contents. This has no effect when used with the [size]{@link ui/Layout.Cell#size}
+		 * property. There's no reason to use both of them on the same Cell.
 		 *
 		 * @type {Boolean}
 		 * @default false
 		 * @public
 		 */
-		fixed: PropTypes.bool,
+		shrink: PropTypes.bool,
 
 		/**
-		 * Determines how this cell should be arranged in the layout. A flexible cell will expand to
-		 * fill all available space. If multiple flexible cells are present, they will divide the
-		 * available space evenly between themselves.
-		 * A Cell cannot be both `flexible` and `fixed`.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		flexible: PropTypes.bool,
-
-		/**
-		 * Sets the initial requested size, if avaailable, given the space and other attributes.
-		 * This accepts any valid CSS measurement.
+		 * Sets the initial requested size, if available, given the available space and other
+		 * attributes. This accepts any valid CSS measurement and overrules the
+		 * [shrink]{@link ui/Layout.Cell#shrink} property.
 		 *
 		 * @type {String}
 		 * @public
@@ -90,8 +78,7 @@ const CellBase = kind({
 
 	defaultProps: {
 		component: 'div',
-		fixed: false,
-		flexible: false
+		shrink: false
 	},
 
 	styles: {
@@ -100,7 +87,7 @@ const CellBase = kind({
 	},
 
 	computed: {
-		className: ({fixed, flexible, styler}) => styler.append({fixed, flexible}),
+		className: ({shrink, size, styler}) => styler.append({shrink, grow: (!shrink && !size)}),
 		style: ({size, style = {}}) => {
 			style.flexBasis = size;
 			return  style;
@@ -108,8 +95,7 @@ const CellBase = kind({
 	},
 
 	render: ({component: Component, ...rest}) => {
-		delete rest.fixed;
-		delete rest.flexible;
+		delete rest.shrink;
 
 		return <Component {...rest} />;
 	}
@@ -134,12 +120,12 @@ const shorthandAliases = {
  * ...
  * <fieldset>
  * 	<Layout align="center">
- * 		<Cell component="label" size="40%" className={css.label}>First Name</Cell>
- * 		<Cell component={Input} placeholder="First" className={css.input} flexible />
+ * 		<Cell component="label" size="40%" className={css.label} shrink>First Name</Cell>
+ * 		<Cell component={Input} placeholder="First" className={css.input} />
  * 	</Layout>
  * 	<Layout align="center">
- * 		<Cell component="label" size="40%" className={css.label}>Last Name</Cell>
- * 		<Cell component={Input} placeholder="Last" className={css.input} flexible />
+ * 		<Cell component="label" size="40%" className={css.label} shrink>Last Name</Cell>
+ * 		<Cell component={Input} placeholder="Last" className={css.input} />
  * 	</Layout>
  * </fieldset>
  * ```
