@@ -88,7 +88,7 @@ const PlaceholderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			if (offsetTop < topThreshold + offsetHeight && offsetLeft < leftThreshold + offsetWidth) {
 				this.setState({visible: true});
-				this.invalidateBounds();
+				this.context.invalidateBounds();
 				this.context.unregisterPlaceholder(this);
 			}
 		}
