@@ -2,9 +2,7 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [unreleased]
-
-### Deprecated
+## [1.5.0] - 2017-07-19
 
 ### Added
 
@@ -28,7 +26,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/Input` ellipsis to show if placeholder is changed dynamically and is too long.
+- `moonstone/Input` ellipsis to show if placeholder is changed dynamically and is too long
 - `moonstone/Marquee` to re-evaluate RTL orientation when its content changes
 - `moonstone/VirtualList` to restore focus on short lists
 - `moonstone/ExpandableInput` to expand the width of its contained `moonstone/Input`
