@@ -3,7 +3,6 @@ import Spotlight from '@enact/spotlight';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-
 /**
  * Default config for {@link mooonstone/ExpandableItem.ExpandableSpotlightDecorator}
  *

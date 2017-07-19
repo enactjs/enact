@@ -8,6 +8,8 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Added
 
+- `spotlight/SpotlightContainerDecorator` property `spotlightContainerRef`
+
 ### Changed
 
 - `spotlight` 5-way target selection to ignore empty containers
