@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [1.5.0] - 2017-07-19
+
+### Fixed
+
+- `ui/Cancelable` warning for string type cancel handler
+
 ## [1.4.1] - 2017-07-05
 
 No significant changes.

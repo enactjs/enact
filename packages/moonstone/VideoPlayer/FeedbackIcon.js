@@ -2,6 +2,8 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 
+import Skinnable from '../Skinnable';
+
 import Icon from '../Icon';
 import iconMap from './FeedbackIcons.js';
 
@@ -54,8 +56,10 @@ const FeedbackIconBase = kind({
 	}
 });
 
-export default FeedbackIconBase;
+const FeedbackIcon = Skinnable(FeedbackIconBase);
+
+export default FeedbackIcon;
 export {
-	FeedbackIconBase as FeedbackIcon,
+	FeedbackIcon,
 	FeedbackIconBase
 };

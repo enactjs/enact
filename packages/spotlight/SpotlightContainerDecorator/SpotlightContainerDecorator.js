@@ -163,15 +163,17 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			};
 		}
 
-		navigableFilter = (elem) => {
-			// If the component to which this was applied specified a navigableFilter, run it
-			if (typeof navigableFilter === 'function') {
-				if (navigableFilter(elem, this.props, this.context) === false) {
-					return false;
-				}
+		componentWillMount () {
+			const cfg = {
+				...containerConfig,
+				navigableFilter: this.navigableFilter
+			};
+
+			if (this.props.spotlightRestrict) {
+				cfg.restrict = this.props.spotlightRestrict;
 			}
 
-			return true;
+			Spotlight.set(this.state.id, cfg);
 		}
 
 		componentWillReceiveProps (nextProps) {
@@ -190,25 +192,23 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			}
 		}
 
-		componentWillMount () {
-			const cfg = {
-				...containerConfig,
-				navigableFilter: this.navigableFilter
-			};
-
-			if (this.props.spotlightRestrict) {
-				cfg.restrict = this.props.spotlightRestrict;
-			}
-
-			Spotlight.set(this.state.id, cfg);
-		}
-
 		componentWillUnmount () {
 			if (preserveId) {
 				Spotlight.unmount(this.state.id);
 			} else {
 				Spotlight.remove(this.state.id);
 			}
+		}
+
+		navigableFilter = (elem) => {
+			// If the component to which this was applied specified a navigableFilter, run it
+			if (typeof navigableFilter === 'function') {
+				if (navigableFilter(elem, this.props, this.context) === false) {
+					return false;
+				}
+			}
+
+			return true;
 		}
 
 		handleMouseEnter = (ev) => {
