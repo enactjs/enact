@@ -2,15 +2,9 @@
 
 The following is a curated list of changes in the Enact i18n module, newest changes on the top.
 
-## [unreleased]
+## [1.5.0] - 2017-07-19
 
-### Deprecated
-
-### Added
-
-### Changed
-
-### Fixed
+No significant changes.
 
 ## [1.4.1] - 2017-07-05
 
