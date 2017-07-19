@@ -551,18 +551,30 @@ const getAllContainerIds = () => {
  * @public
  */
 function getContainerDefaultElement (containerId) {
-	let defaultElement = getContainerConfig(containerId).defaultElement;
-	if (!defaultElement) {
+	let defaultElementSelector = getContainerConfig(containerId).defaultElement;
+
+	if (!defaultElementSelector) {
 		return null;
 	}
-	if (typeof defaultElement === 'string') {
-		defaultElement = getDeepSpottableDescendants(containerId)
-			.filter(matchSelector(defaultElement))[0];
-	}
-	if (isNavigable(defaultElement, containerId, true)) {
-		return defaultElement;
-	}
-	return null;
+
+	defaultElementSelector = coerceArray(defaultElementSelector);
+	const spottables = getDeepSpottableDescendants(containerId);
+
+	return defaultElementSelector.reduce((result, selector) => {
+		if (result) {
+			return result;
+		}
+
+		if (typeof selector === 'string') {
+			return spottables.filter(elem => {
+				return matchSelector(selector, elem) && isNavigable(elem, containerId, true);
+			})[0];
+		}
+
+		// FIXME: There is some prior implicit support for `defaultElement` to be an element rather
+		// than a selector. This continues that support but should eventually be removed.
+		return selector;
+	}, null);
 }
 
 /**

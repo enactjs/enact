@@ -9,7 +9,7 @@
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
 import deprecate from '@enact/core/internal/deprecate';
-import {getTargetByDirectionFromElement} from '@enact/spotlight/src/target.js';
+import {getTargetByDirectionFromElement, getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
 import {Spotlight, getDirection} from '@enact/spotlight';
@@ -192,6 +192,39 @@ class ScrollerBase extends Component {
 		return node.getBoundingClientRect();
 	}
 
+	scrollToNextPage = ({direction, reverseDirection, focusedItem}) => {
+		const
+			endPoint = this.getNextEndPoint(direction, focusedItem.getBoundingClientRect()),
+			next = getTargetByDirectionFromPosition(reverseDirection, endPoint, Spotlight.getActiveContainer());
+
+		return (next !== focusedItem) && next;
+	}
+
+	getNextEndPoint = (direction, oSpotBounds) => {
+		const bounds = this.getScrollBounds();
+
+		let oPoint = {};
+		switch (direction) {
+			case 'up':
+				oPoint.x = oSpotBounds.left;
+				oPoint.y = oSpotBounds.top - bounds.clientHeight;
+				break;
+			case 'left':
+				oPoint.x = oSpotBounds.left - bounds.clientWidth;
+				oPoint.y = oSpotBounds.top;
+				break;
+			case 'down':
+				oPoint.x = oSpotBounds.left;
+				oPoint.y = oSpotBounds.top + oSpotBounds.height + bounds.clientHeight;
+				break;
+			case 'right':
+				oPoint.x = oSpotBounds.left + oSpotBounds.width + bounds.clientWidth;
+				oPoint.y = oSpotBounds.top;
+				break;
+		}
+		return oPoint;
+	}
+
 	calculatePositionOnFocus = (focusedItem, scrollInfo) => {
 		if (!this.isVertical() && !this.isHorizontal() || !focusedItem || !this.containerRef.contains(focusedItem)) return;
 
@@ -211,15 +244,11 @@ class ScrollerBase extends Component {
 				{clientWidth} = this.scrollBounds,
 				rtlDirection = this.context.rtl ? -1 : 1,
 				{left: containerLeft} = this.containerRef.getBoundingClientRect(),
-				currentScrollLeft = this.scrollPos.left * rtlDirection,
+				currentScrollLeft = this.context.rtl ? (this.scrollBounds.maxLeft - this.scrollPos.left) : this.scrollPos.left,
 				// calculation based on client position
 				newItemLeft = this.containerRef.scrollLeft + (itemLeft - containerLeft);
 
-			if (this.context.rtl && newItemLeft > clientWidth) {
-				// For RTL, and if the `focusedItem` is bigger than `this.scrollBounds.clientWidth`, keep
-				// the scroller to the right.
-				this.scrollPos.left -= newItemLeft;
-			} else if (newItemLeft + itemWidth > (clientWidth + currentScrollLeft) && itemWidth < clientWidth) {
+			if (newItemLeft + itemWidth > (clientWidth + currentScrollLeft) && itemWidth < clientWidth) {
 				// If focus is moved to an element outside of view area (to the right), scroller will move
 				// to the right just enough to show the current `focusedItem`. This does not apply to
 				// `focusedItem` that has a width that is bigger than `this.scrollBounds.clientWidth`.

@@ -61,8 +61,7 @@ storiesOf('Scroller')
 						<Button key={i + 1}>
 							Button {i + 1}
 						</Button>
-					)
-				)}
+					))}
 				</div>
 			</Scroller>
 		)

@@ -2,6 +2,7 @@ import {off, on} from '@enact/core/dispatcher';
 import {Announce} from '@enact/ui/AnnounceDecorator';
 import ApiDecorator from '@enact/core/internal/ApiDecorator';
 import classNames from 'classnames';
+import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
 import React, {PureComponent} from 'react';
@@ -31,13 +32,14 @@ const
 		return 'arrowsmall' + direction;
 	},
 	preparePrevButton = prepareButton(true),
-	prepareNextButton = prepareButton(false);
+	prepareNextButton = prepareButton(false),
+	isPageUp = is('pageUp'),
+	isPageDown = is('pageDown');
 
-/**
+/*
  * Set CSS Varaible value.
  *
  * @method
- * @memberof core/util
  * @param {Node} element - Node.
  * @param {String} variable - CSS Variable property.
  * @param {String} value - CSS Variable value.
@@ -289,25 +291,35 @@ class ScrollbarBase extends PureComponent {
 
 	handlePrevScroll = (ev) => {
 		const {onPrevScroll, vertical} = this.props;
-		onPrevScroll(ev);
-		if (this.announceRef) this.announceRef.announce($L(vertical ? 'UP' : 'LEFT'));
+
+		onPrevScroll({...ev, isPreviousScrollButton: true, isVerticalScrollBar: vertical});
+		if (this.announceRef) {
+			this.announceRef.announce($L(vertical ? 'UP' : 'LEFT'));
+		}
 	}
 
 	handleNextScroll = (ev) => {
 		const {onNextScroll, vertical} = this.props;
-		onNextScroll(ev);
-		if (this.announceRef) this.announceRef.announce($L(vertical ? 'DOWN' : 'RIGHT'));
+
+		onNextScroll({...ev, isPreviousScrollButton: false, isVerticalScrollBar: vertical});
+		if (this.announceRef) {
+			this.announceRef.announce($L(vertical ? 'DOWN' : 'RIGHT'));
+		}
 	}
 
 	handlePrevHoldPulse = (ev) => {
+		const {onPrevScroll, vertical} = this.props;
+
 		if (!this.ignoreMode) {
-			this.props.onPrevScroll(ev);
+			onPrevScroll({...ev, isPreviousScrollButton: true, isVerticalScrollBar: vertical});
 		}
 	}
 
 	handleNextHoldPulse = (ev) => {
+		const {onNextScroll, vertical} = this.props;
+
 		if (!this.ignoreMode) {
-			this.props.onNextScroll(ev);
+			onNextScroll({...ev, isPreviousScrollButton: false, isVerticalScrollBar: vertical});
 		}
 	}
 
@@ -315,9 +327,14 @@ class ScrollbarBase extends PureComponent {
 		this.setPressStatus(true);
 	}
 
-	releaseButton = () => {
+	releaseButton = (ev) => {
 		this.setPressStatus(false);
 		this.setIgnoreMode(false);
+		if (isPageUp(ev.keyCode)) {
+			this.handlePrevScroll(ev);
+		} else if (isPageDown(ev.keyCode)) {
+			this.handleNextScroll(ev);
+		}
 	}
 
 	render () {
