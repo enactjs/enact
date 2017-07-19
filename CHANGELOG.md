@@ -23,6 +23,8 @@ The following is a curated list of changes in the Enact project, newest changes 
 - `moonstone/ExpandableItem`, `moonstone/ExpandableList`, `moonstone/ExpandablePicker`, `moonstone/DatePicker`, and `moonstone/TimePicker` to pause spotlight when animating in 5-way mode
 - `moonstone/Spinner` to position the text content under the spinner, rather than to the right side
 - `moonstone/VideoPlayer` to include hour when announcing the time while scrubbing
+- `spotlight` 5-way target selection to ignore empty containers
+- `spotlight` containers to support an array of selectors for `defaultElement`
 
 ### Fixed
 
