@@ -326,6 +326,22 @@ const getDeepSpottableDescendants = (containerId, excludedContainers) => {
 };
 
 /**
+ * Determines if a container allows 5-way key hold to be preserved or not.
+ *
+ * @param {String} containerId Container Id
+ * @returns {Boolean} `true` if a container is 5 way holdable
+ * @memberof spotlight/container
+ * @private
+ */
+const isContainer5WayHoldable = (containerId) => {
+	const containerNode = getContainerNode(containerId);
+	if (containerNode && containerNode.getAttribute('data-container-preserve5WayHold') === 'true') {
+		return true;
+	}
+	return false;
+};
+
+/**
  * Returns an array of ids for containers that wrap the element, in order of outer-to-inner, with
  * the last array item being the immediate container id of the element.
  *
@@ -818,11 +834,12 @@ export {
 	getContainerNode,
 
 	// Maybe
-	getContainersForNode,
 	getContainerConfig,
 	getContainerDefaultElement,
 	getContainerLastFocusedElement,
 	getContainerNavigableElements,
+	getContainersForNode,
+	isContainer5WayHoldable,
 	setContainerLastFocusedElement,
 
 	// Keep

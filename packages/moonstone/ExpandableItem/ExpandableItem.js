@@ -24,7 +24,7 @@ import ExpandableTransitionContainer from './ExpandableTransitionContainer';
 const isUp = is('up');
 const isDown = is('down');
 
-const ContainerDiv = SpotlightContainerDecorator('div');
+const ContainerDiv = SpotlightContainerDecorator({preserve5WayHold: true}, 'div');
 
 /**
  * {@link moonstone/ExpandableItem.ExpandableItemBase} is a stateless component that
