@@ -8,6 +8,14 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+### Changed
+
+### Fixed
+
+## [1.5.0] - 2017-07-19
+
+### Added
+
 - `moonstone/Slider` and `moonstone/IncrementSlider` prop `aria-valuetext` to support reading custom text instead of value
 - `moonstone/TooltipDecorator` property `tooltipProps` to attach props to tooltip component
 - `moonstone/Scroller` and `moonstone/VirtualList` ability to scroll via page up and page down keys
@@ -28,7 +36,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/Input` ellipsis to show if placeholder is changed dynamically and is too long.
+- `moonstone/Input` ellipsis to show if placeholder is changed dynamically and is too long
 - `moonstone/Marquee` to re-evaluate RTL orientation when its content changes
 - `moonstone/VirtualList` to restore focus on short lists
 - `moonstone/ExpandableInput` to expand the width of its contained `moonstone/Input`

@@ -572,6 +572,7 @@ class VirtualListCoreNative extends Component {
 
 		this.cc[key] = React.cloneElement(itemElement, {
 			className: classNames(cssItem.listItem, itemElement.props.className),
+			['data-preventscrollonfocus']: true, // Added this attribute to prevent scroll on focus by browser
 			style: {...itemElement.props.style, ...style}
 		});
 	}
