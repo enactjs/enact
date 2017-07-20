@@ -8,9 +8,11 @@
 import clamp from 'ramda/src/clamp';
 import classNames from 'classnames';
 import {contextTypes} from '@enact/i18n/I18nDecorator';
+import {forward} from '@enact/core/handle';
+import {is} from '@enact/core/keymap';
 import PropTypes from 'prop-types';
 import React, {Component} from 'react';
-import Spotlight from '@enact/spotlight';
+import Spotlight, {getDirection} from '@enact/spotlight';
 import Spottable from '@enact/spotlight/Spottable';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
@@ -22,7 +24,12 @@ const SpotlightPlaceholder = Spottable('div');
 
 const
 	dataContainerMutedAttribute = 'data-container-muted',
-	nop = () => {};
+	forwardKeyDown = forward('onKeyDown'),
+	nop = () => {},
+	isDown = is('down'),
+	isLeft = is('left'),
+	isRight = is('right'),
+	isUp = is('up');
 
 /**
  * The shape for the grid list item size in a list for {@link moonstone/VirtualList.listItemSizeShape}.
@@ -279,11 +286,13 @@ class VirtualListCore extends Component {
 	scrollPosition = 0
 	updateFrom = null
 	updateTo = null
+	isScrolledBy5way = false
 
 	containerRef = null
 
 	// spotlight
 	nodeIndexToBeBlurred = null
+	nodeIndexToBeFocused = null
 	lastFocusedIndex = null
 
 	isVertical = () => this.isPrimaryDirectionVertical
@@ -365,7 +374,17 @@ class VirtualListCore extends Component {
 		return {primaryPosition, secondaryPosition};
 	}
 
-	getItemPosition = (index) => this.gridPositionToItemPosition(this.getGridPosition(index))
+	getItemPosition = (index, stickTo = 'start') => {
+		const
+			{itemSize} = this.props,
+			{primary} = this,
+			position = this.getGridPosition(index),
+			offset = ((itemSize instanceof Object) || stickTo === 'start') ? 0 : primary.clientSize - primary.itemSize;
+
+		position.primaryPosition -= offset;
+
+		return this.gridPositionToItemPosition(position);
+	}
 
 	gridPositionToItemPosition = ({primaryPosition, secondaryPosition}) =>
 		(this.isPrimaryDirectionVertical ? {left: secondaryPosition, top: primaryPosition} : {left: primaryPosition, top: secondaryPosition})
@@ -557,7 +576,12 @@ class VirtualListCore extends Component {
 
 		if (node) {
 			if ((index % numOfItems) === this.nodeIndexToBeBlurred && index !== this.lastFocusedIndex) {
-				node.blur();
+				// When changing from "pointer" mode to "5way key" mode,
+				// a pointer is hidden and a last focused item get focused after 30ms.
+				// To make sure the item to be blurred after that, we used 50ms.
+				setTimeout(() => {
+					node.blur();
+				}, 50);
 				this.nodeIndexToBeBlurred = null;
 			}
 			this.composeStyle(node.style, ...rest);
@@ -583,6 +607,10 @@ class VirtualListCore extends Component {
 			className: classNames(css.listItem, itemElement.props.className),
 			style: {...itemElement.props.style, ...style}
 		});
+
+		if (index === this.nodeIndexToBeFocused) {
+			this.focusByIndex(index);
+		}
 	}
 
 	positionItems ({updateFrom, updateTo}) {
@@ -664,7 +692,13 @@ class VirtualListCore extends Component {
 		// We have to focus node async for now since list items are not yet ready when it reaches componentDid* lifecycle methods
 		setTimeout(() => {
 			const item = this.containerRef.querySelector(`[data-index='${index}'].spottable`);
+
+			if (Spotlight.isPaused()) {
+				Spotlight.resume();
+			}
+
 			this.focusOnNode(item);
+			this.nodeIndexToBeFocused = null;
 		}, 0);
 	}
 
@@ -674,17 +708,22 @@ class VirtualListCore extends Component {
 		}
 	}
 
-	calculatePositionOnFocus = (item) => {
+	setLastFocusedIndex = (item) => {
+		this.lastFocusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
+	}
+
+	calculatePositionOnFocus = (item, scrollPosition = this.scrollPosition) => {
 		const
 			{pageScroll} = this.props,
-			{primary, numOfItems, scrollPosition} = this,
+			{primary, numOfItems} = this,
 			offsetToClientEnd = primary.clientSize - primary.itemSize,
 			focusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
 
-		if (!isNaN(focusedIndex)) {
+		if (!isNaN(focusedIndex) && focusedIndex !== this.lastFocusedIndex) {
 			let gridPosition = this.getGridPosition(focusedIndex);
 
 			this.nodeIndexToBeBlurred = this.lastFocusedIndex % numOfItems;
+			this.nodeIndexToBeFocused = null;
 			this.lastFocusedIndex = focusedIndex;
 
 			if (primary.clientSize >= primary.itemSize) {
@@ -742,6 +781,89 @@ class VirtualListCore extends Component {
 		}
 
 		return true;
+	}
+
+	shouldPreventScrollByFocus = () => this.isScrolledBy5way
+
+	jumpToSpottableItem = (keyCode, currentIndex) => {
+		const
+			{cbScrollTo, data, dataSize} = this.props,
+			{firstIndex, numOfItems} = this.state;
+
+		if (!data || !Array.isArray(data) || !data[currentIndex] || data[currentIndex].disabled) {
+			return false;
+		}
+
+		const
+			isForward = (
+				this.isPrimaryDirectionVertical && isDown(keyCode) ||
+				!this.isPrimaryDirectionVertical && (!this.context.rtl && isRight(keyCode) || this.context.rtl && isLeft(keyCode)) ||
+				null
+			),
+			isBackward = (
+				this.isPrimaryDirectionVertical && isUp(keyCode) ||
+				!this.isPrimaryDirectionVertical && (!this.context.rtl && isLeft(keyCode) || this.context.rtl && isRight(keyCode)) ||
+				null
+			);
+
+		let nextIndex = -1;
+
+		if (isForward) {
+			// See if the next item is spottable then delegate scroll to onFocus handler
+			if (currentIndex < dataSize - 1 && !data[currentIndex + 1].disabled) {
+				return false;
+			}
+
+			for (let i = currentIndex + 1; i < dataSize; i++) {
+				if (!data[i].disabled) {
+					nextIndex = i;
+					break;
+				}
+			}
+		} else if (isBackward) {
+			// See if the next item is spottable then delegate scroll to onFocus handler
+			if (currentIndex > 0 && !data[currentIndex - 1].disabled) {
+				return false;
+			}
+
+			for (let i = currentIndex - 1; i >= 0; i--) {
+				if (!data[i].disabled) {
+					nextIndex = i;
+					break;
+				}
+			}
+		} else {
+			return false;
+		}
+
+		if (nextIndex !== -1 && (firstIndex > nextIndex || nextIndex >= firstIndex + numOfItems)) {
+			this.nodeIndexToBeBlurred = currentIndex % numOfItems;
+			this.nodeIndexToBeFocused = this.lastFocusedIndex = nextIndex;
+
+			if (!Spotlight.isPaused()) {
+				Spotlight.pause();
+			}
+
+			cbScrollTo({
+				index: nextIndex,
+				stickTo: isForward ? 'end' : 'start'
+			});
+			return true;
+		}
+
+		return false;
+	}
+
+	onKeyDown = (e) => {
+		const {keyCode, target} = e;
+
+		this.isScrolledBy5way = false;
+		if (getDirection(keyCode)) {
+			const index = Number.parseInt(target.getAttribute(dataIndexAttribute));
+
+			this.isScrolledBy5way = this.jumpToSpottableItem(keyCode, index);
+		}
+		forwardKeyDown(e, this.props);
 	}
 
 	setContainerDisabled = (bool) => {
@@ -808,15 +930,21 @@ class VirtualListCore extends Component {
 			this.renderCalculate();
 		}
 
+		const needsScrollingPlaceholder = this.nodeIndexToBeFocused != null && Spotlight.isPaused();
+
 		return (
-			<div {...props} ref={this.initContainerRef}>
-				{cc.length ? cc : (
+			<div {...props} onKeyDown={this.onKeyDown} ref={this.initContainerRef}>
+				{cc.length ? cc : null}
+				{primary ? null : (
 					<SpotlightPlaceholder
 						data-index={0}
 						data-vl-placeholder
 						onFocus={this.handlePlaceholderFocus}
 					/>
 				)}
+				{needsScrollingPlaceholder ? (
+					<SpotlightPlaceholder />
+				) : null}
 			</div>
 		);
 	}
