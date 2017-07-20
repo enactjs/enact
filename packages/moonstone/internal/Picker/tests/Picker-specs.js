@@ -18,7 +18,7 @@ describe('Picker Specs', function () {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should return an object \{value: Number\} that represents the next value of the Picker component when clicking the increment \<span\>', function () {
+	it('should return an object {value: Number} that represents the next value of the Picker component when clicking the increment <span>', function () {
 		const handleChange = sinon.spy();
 		const picker = mount(
 			<Picker onChange={handleChange} min={-1} max={1} value={0} index={0} />
@@ -32,7 +32,7 @@ describe('Picker Specs', function () {
 		expect(actual).to.equal(expected);
 	});
 
-	it('should return an object \{value: Number\} that represents the next value of the Picker component when clicking the decrement \<span\>', function () {
+	it('should return an object {value: Number} that represents the next value of the Picker component when clicking the decrement <span>', function () {
 		const handleChange = sinon.spy();
 		const picker = mount(
 			<Picker onChange={handleChange} min={-1} max={1} value={0} index={0} />
