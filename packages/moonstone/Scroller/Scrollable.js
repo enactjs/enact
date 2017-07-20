@@ -449,14 +449,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		onMouseMove = (e) => {
 			if (this.isDragging) {
 				const
-					{dx, dy} = this.drag(e),
-					bounds = this.getScrollBounds();
+					{dx, dy} = this.drag(e);
 
 				if (this.isFirstDragging) {
 					this.doScrollStart();
 					this.isFirstDragging = false;
 				}
-				this.showThumb(bounds);
+				this.showThumb();
 				this.scroll(this.scrollLeft - dx, this.scrollTop - dy);
 			}
 		}
@@ -699,7 +698,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			const bounds = this.getScrollBounds();
 
 			this.scrollLeft = clamp(0, bounds.maxLeft, value);
-			if (this.state.isHorizontalScrollbarVisible && this.canScrollHorizontally(bounds)) {
+			if (this.state.isHorizontalScrollbarVisible) {
 				this.updateThumb(this.horizontalScrollbarRef, bounds);
 			}
 		}
@@ -708,7 +707,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			const bounds = this.getScrollBounds();
 
 			this.scrollTop = clamp(0, bounds.maxTop, value);
-			if (this.state.isVerticalScrollbarVisible && this.canScrollVertically(bounds)) {
+			if (this.state.isVerticalScrollbarVisible) {
 				this.updateThumb(this.verticalScrollbarRef, bounds);
 			}
 		}
@@ -731,7 +730,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				targetY = bounds.maxTop;
 			}
 
-			this.showThumb(bounds);
+			this.showThumb();
 
 			if (animate) {
 				this.animator.animate(this.scrollAnimation({
@@ -788,15 +787,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		stop () {
-			const bounds = this.getScrollBounds();
-
 			this.animator.stop();
 			this.isScrollAnimationTargetAccumulated = false;
 			this.childRef.setContainerDisabled(false);
 			this.focusOnItem();
 			this.lastFocusedItem = null;
 			this.lastScrollPositionOnFocus = null;
-			this.hideThumb(bounds);
+			this.hideThumb();
 			this.doScrollStop();
 		}
 
@@ -913,11 +910,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		// scroll bar
 
-		showThumb (bounds) {
-			if (this.state.isHorizontalScrollbarVisible && this.canScrollHorizontally(bounds)) {
+		showThumb () {
+			if (this.state.isHorizontalScrollbarVisible) {
 				this.horizontalScrollbarRef.showThumb();
 			}
-			if (this.state.isVerticalScrollbarVisible && this.canScrollVertically(bounds)) {
+			if (this.state.isVerticalScrollbarVisible) {
 				this.verticalScrollbarRef.showThumb();
 			}
 		}
@@ -930,11 +927,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			});
 		}
 
-		hideThumb (bounds) {
-			if (this.state.isHorizontalScrollbarVisible && this.canScrollHorizontally(bounds)) {
+		hideThumb () {
+			if (this.state.isHorizontalScrollbarVisible) {
 				this.horizontalScrollbarRef.startHidingThumb();
 			}
-			if (this.state.isVerticalScrollbarVisible && this.canScrollVertically(bounds)) {
+			if (this.state.isVerticalScrollbarVisible) {
 				this.verticalScrollbarRef.startHidingThumb();
 			}
 		}
