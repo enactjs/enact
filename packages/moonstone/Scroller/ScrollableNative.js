@@ -850,10 +850,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						scrollTop: this.scrollTop
 					};
 
-					if (canScrollHorizontally && curHorizontalScrollbarVisible) {
+					if (curHorizontalScrollbarVisible) {
 						this.horizontalScrollbarRef.update(updatedBounds);
 					}
-					if (canScrollVertically && curVerticalScrollbarVisible) {
+					if (curVerticalScrollbarVisible) {
 						this.verticalScrollbarRef.update(updatedBounds);
 					}
 				}
