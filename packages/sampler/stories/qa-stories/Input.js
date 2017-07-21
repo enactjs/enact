@@ -101,7 +101,7 @@ storiesOf('Input')
 				iconAfter={select('iconAfter', iconNames)}
 				iconBefore={select('iconBefore', iconNames)}
 				noDecorator={boolean('noDecorator')}
-				placeholder={text('placeholder','Input RTL and LTR text together')}
+				placeholder={text('placeholder', 'Input RTL and LTR text together')}
 				type={select('type', inputData.type, inputData.type[0])}
 				defaultValue={inputData.rtlAndLtr}
 			/>
