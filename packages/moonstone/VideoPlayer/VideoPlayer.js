@@ -520,6 +520,7 @@ const VideoPlayerBase = class extends React.Component {
 		jumpBackwardIcon: 'skipbackward',
 		jumpBy: 30,
 		jumpForwardIcon: 'skipforward',
+		moreButtonDisabled: false,
 		muted: false,
 		noAutoPlay: false,
 		noJumpButtons: false,
