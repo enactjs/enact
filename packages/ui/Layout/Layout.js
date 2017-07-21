@@ -19,10 +19,16 @@
  */
 
 import kind from '@enact/core/kind';
+import withContext from 'recompose/withContext';
 import React from 'react';
 import PropTypes from 'prop-types';
 
 import css from './Layout.less';
+
+const contextTypes = {
+	align: PropTypes.string,
+	orientation: PropTypes.string
+};
 
 /**
  * A stateless component that provides a space for your content in a
@@ -56,8 +62,10 @@ const CellBase = kind({
 
 		/**
 		 * A `shrink`able cell will contract to its minimum size, according to the dimensions of its
-		 * contents. This has no effect when used with the [size]{@link ui/Layout.Cell#size}
-		 * property. There's no reason to use both of them on the same Cell.
+		 * contents. This is used when you want the size of this Cell's content to influence the
+		 * dimensions of this cell. `shrink` will not allow the contents of the Layout to be pushed
+		 * beyond its boundaries (overflowing). See the [size]{@link ui/Layout.Cell#size} property
+		 * for more details.
 		 *
 		 * @type {Boolean}
 		 * @default false
@@ -66,8 +74,13 @@ const CellBase = kind({
 		shrink: PropTypes.bool,
 
 		/**
-		 * Sets the initial requested size, if available, given the available space and other
-		 * attributes. This accepts any valid CSS measurement and overrules the
+		 * Sets the requested size, possibly overflowing if the contents are too large for the space.
+		 * When used inconjunction with [shrink]{@link ui/Layout.Cell#shrink}, the size will be set
+		 * as close to the requested size as is possible, given the dimensions of the contents of
+		 * this cell. E.g. If your content is `40px` tall and you set `size` to "30px", the Cell will
+		 * render `30px` tall. If [shrink]{@link ui/Layout.Cell#shrink} was used also, the rendered
+		 * Cell would be `40px` tall.
+		 * This accepts any valid CSS measurement and overrules the
 		 * [shrink]{@link ui/Layout.Cell#shrink} property.
 		 *
 		 * @type {String}
@@ -81,6 +94,8 @@ const CellBase = kind({
 		shrink: false
 	},
 
+	contextTypes,
+
 	styles: {
 		css,
 		className: 'cell'
@@ -88,8 +103,9 @@ const CellBase = kind({
 
 	computed: {
 		className: ({shrink, size, styler}) => styler.append({shrink, grow: (!shrink && !size)}),
-		style: ({size, style = {}}) => {
+		style: ({shrink, size, style = {}}, {orientation}) => {
 			style.flexBasis = size;
+			if (!shrink) style[orientation === 'vertical' ? 'maxHeight' : 'maxWidth'] = size; // shrink and size uses just basis, size without shrink forcively sets the size, allowing overflow.
 			return  style;
 		}
 	},
@@ -187,13 +203,33 @@ const LayoutBase = kind({
 		 * @default 'horizontal'
 		 * @public
 		 */
-		orientation: PropTypes.oneOf(['horizontal', 'vertical'])
+		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
+
+		// {
+		// 	false: noWrap,
+		// 	nowrap: noWrap
+		// 	true: wrap
+		// 	wrap: wrap
+		// 	reverse: wrapReverse
+		// }
+		/**
+		 * Determine how a Layout handles its cells if there are more than fit in the available
+		 * space. This works like a normal Boolean prop, but also accepts strings for customization
+		 * beyond the basic on/off support. In addition to `true` and `false`, the following strings
+		 * are supported: 'wrap', 'nowrap', 'reverse'. 'reverse' preforms standard line wrapping but
+		 * additional lines are placed above/before the preceding line instead of below/after.
+		 *
+		 * @type {Boolean|String}
+		 * @public
+		 */
+		wrap: PropTypes.oneOfType([PropTypes.bool, PropTypes.oneOf(['reverse', 'nowrap', 'wrap'])])
 	},
 
 	defaultProps: {
 		component: 'div',
 		inline: false,
-		orientation: 'horizontal'
+		orientation: 'horizontal',
+		wrap: false
 	},
 
 	styles: {
@@ -202,10 +238,17 @@ const LayoutBase = kind({
 	},
 
 	computed: {
-		className: ({inline, orientation, styler}) => styler.append(
-			orientation,
-			{inline}
-		),
+		className: ({inline, orientation, wrap, styler}) => {
+			let wrapClass = 'nowrap';
+			if (wrap && wrap !== 'nowrap') {
+				wrapClass = (wrap === 'reverse' ? 'wrapReverse' : 'wrap');
+			}
+			return styler.append(
+				orientation,
+				wrapClass,
+				{inline}
+			);
+		},
 		style: ({align, style = {}}) => {
 			style.alignItems = shorthandAliases[align] || align;
 			return  style;
@@ -221,5 +264,32 @@ const LayoutBase = kind({
 	}
 });
 
-export default LayoutBase;
-export {LayoutBase as Layout, LayoutBase, CellBase as Cell};
+/**
+ * Accepts a `contextTypes` object and a component, then matches those contextTypes with incoming
+ * props on the component, and sends them to context on that component for children to to access.
+ *
+ * @param  {Object} propsList) a contextTypes object full of keys to be used as prop->context and their PropTypes as keys
+ * @param  {Component} Wrapped) a component to apply this to
+ *
+ * @return {Component}              The component, now with context on it
+ * @private
+ */
+const withContextFromProps = (propsList, Wrapped) => withContext(propsList, (props) => {
+	return Object.keys(propsList).reduce((obj, key) => {
+		obj[key] = props[key]; return obj;
+	}, {});
+})(Wrapped);
+
+// NOTE: Discuss which is a better format, the above code block or this below.
+// const withContextFromProps = (propsList) => withContext(propsList, (props) => {
+// 	return Object.keys(propsList).reduce((obj, key) => {
+// 		obj[key] = props[key]; return obj;
+// 	}, {});
+// });
+
+// Apply to Layout so children have access to a few relevant props applied to Layout
+const Layout = withContextFromProps(contextTypes, LayoutBase);
+// const Layout = withContextFromProps(contextTypes)(LayoutBase);
+
+export default Layout;
+export {Layout, LayoutBase, CellBase as Cell, CellBase};
