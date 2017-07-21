@@ -205,6 +205,7 @@ class VirtualListCoreNative extends Component {
 			this.calculateMetrics(this.props);
 			this.updateStatesAndBounds(this.props);
 		}
+		this.setContainerSize();
 	}
 
 	// Call updateStatesAndBounds here when dataSize has been changed to update nomOfItems state.
@@ -223,13 +224,15 @@ class VirtualListCoreNative extends Component {
 		if (hasMetricsChanged) {
 			this.calculateMetrics(nextProps);
 			this.updateStatesAndBounds(nextProps);
+			this.setContainerSize();
 		} else if (hasDataChanged) {
 			this.updateStatesAndBounds(nextProps);
+			this.setContainerSize();
 		}
 	}
 
 	shouldComponentUpdate (nextProps, nextState) {
-		if ((this.props.dataSize !== nextProps.dataSize) &&
+		if ((this.props.dataSize > 0 && this.props.dataSize !== nextProps.dataSize) &&
 			(nextState.firstIndex + nextState.numOfItems) < nextProps.dataSize) {
 			return false;
 		}
@@ -494,9 +497,13 @@ class VirtualListCoreNative extends Component {
 		}
 
 		this.wrapperClass = (isPrimaryDirectionVertical) ? css.vertical : css.horizontal;
+	}
 
-		this.containerRef.style.width = scrollBounds.scrollWidth + 'px';
-		this.containerRef.style.height = scrollBounds.scrollHeight + 'px';
+	setContainerSize = () => {
+		if (this.containerRef) {
+			this.containerRef.style.width = this.scrollBounds.scrollWidth + 'px';
+			this.containerRef.style.height = this.scrollBounds.scrollHeight + 'px';
+		}
 	}
 
 	syncThreshold (maxPos) {
@@ -860,6 +867,7 @@ class VirtualListCoreNative extends Component {
 		if (clientWidth !== scrollBounds.clientWidth || clientHeight !== scrollBounds.clientHeight) {
 			this.calculateMetrics(props);
 			this.updateStatesAndBounds(props);
+			this.setContainerSize();
 		}
 	}
 
@@ -899,7 +907,7 @@ class VirtualListCoreNative extends Component {
 			<div ref={this.initWrapperRef} className={mergedClasses} style={style}>
 				<div {...rest} onKeyDown={this.onKeyDown} ref={this.initContainerRef}>
 					{cc.length ? cc : null}
-					{primary ? null : (
+					{primary && cc.length ? null : (
 						<SpotlightPlaceholder
 							data-index={0}
 							data-vl-placeholder

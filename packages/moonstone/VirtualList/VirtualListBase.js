@@ -238,7 +238,7 @@ class VirtualListCore extends Component {
 	}
 
 	shouldComponentUpdate (nextProps, nextState) {
-		if ((this.props.dataSize !== nextProps.dataSize) &&
+		if ((this.props.dataSize > 0 && this.props.dataSize !== nextProps.dataSize) &&
 			(nextState.firstIndex + nextState.numOfItems) < nextProps.dataSize) {
 			return false;
 		}
@@ -935,7 +935,7 @@ class VirtualListCore extends Component {
 		return (
 			<div {...props} onKeyDown={this.onKeyDown} ref={this.initContainerRef}>
 				{cc.length ? cc : null}
-				{primary ? null : (
+				{primary && cc.length ? null : (
 					<SpotlightPlaceholder
 						data-index={0}
 						data-vl-placeholder
