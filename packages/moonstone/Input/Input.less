@@ -1,9 +1,9 @@
 // Input.less
 //
-@import '../styles/mixins.less';
-@import '../styles/variables.less';
-@import '../styles/text.less';
-@import '../styles/skin.less';
+@import "../styles/mixins.less";
+@import "../styles/variables.less";
+@import "../styles/text.less";
+@import "../styles/skin.less";
 
 .input {
 	.moon-body-text();
@@ -14,15 +14,25 @@
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
+	flex-grow: 1;
 
 	.moon-custom-text-size(@moon-item-font-size-large);
 
 	&[type=number] {
 		-moz-appearance: textfield;
 
+		&::-webkit-inner-spin-button,
+		&::-webkit-outer-spin-button {
+			-webkit-appearance: none;
+		}
+
 		&:hover {
 			-moz-appearance: none;
 		}
+	}
+
+	&[placeholder] { 
+		text-overflow: ellipsis; 
 	}
 
 	.input-placeholder({
@@ -30,7 +40,7 @@
 	});
 
 	.focus ({
-			cursor: text;
+		cursor: text;
 	});
 
 	.disabled({
@@ -40,44 +50,27 @@
 	:global(.enact-locale-right-to-left) & {
 		text-align: right;
 	}
-
-	// Skin colors
-	.applySkins({
-		background: transparent;
-		color: @moon-input-text-color;
-
-		&::selection {
-			color: @moon-spotlight-text-color;
-			background-color: @moon-spotlight-bg-color;
-		}
-
-		.input-placeholder({
-			color: @moon-input-placeholder-color;
-		});
-
-		.focus({
-			color: @moon-input-text-color;
-			background-color: inherit;
-		});
-
-		.invalid & {
-			color: @moon-red;
-		}
-	});
 }
 
 .decorator {
-	display: inline-block;
-
+	display: inline-flex;
+	position: relative;
 	padding: 12px 30px;
 	border-radius: 1008px;
 	margin: 6px;
 	border: @moon-input-border-width solid transparent;
 	box-sizing: border-box;
 
+	.input,
 	.iconBefore,
 	.iconAfter {
-		padding: 0;
+		line-height: 39px;
+		height: 39px;
+	}
+
+	.iconBefore,
+	.iconAfter {
+		flex: 0 0;
 	}
 
 	.iconAfter {
@@ -107,26 +100,33 @@
 		margin: 0;
 	}
 
-	.moon-expandable-input & {
-		margin: 6px 0;
-	}
-
-	> * {
-		display: inline-block;
-		vertical-align: middle;
-	}
-
 	// Skin colors
 	.applySkins({
 		background-color: @moon-input-decorator-bg-color;
 
 		.input {
 			background: transparent;
+			color: @moon-input-text-color;
+
+			&::selection {
+				color: @moon-spotlight-text-color;
+				background-color: @moon-spotlight-bg-color;
+			}
+
+			.input-placeholder({
+				color: @moon-input-placeholder-color;
+			});
+
+			.focus({
+				color: @moon-input-text-color;
+				background-color: inherit;
+			});
 		}
 
-		// For ExpandableInput, the decorator will not receive focus but it can be activated by clicking
-		// which should highlight the border
-		&.noDecorator:active,
+		&.invalid input {
+			color: @moon-red;
+		}
+
 		&:global(.spottable):focus {
 			color: @moon-input-text-color;
 			border-color: @moon-spotlight-border-color;
@@ -145,20 +145,22 @@
 }
 
 .invalidTooltip {
+	top: 50%;
+	left: auto;
+	right: 0;
 	pointer-events: none;
-	transform: translate(60px, -50%);
+	transform: translate(100%, -100%) translateX(@moon-input-tooltip-offset);
 
 	:global(.enact-locale-right-to-left) & {
-		transform: translate(-60px, -50%);
+		left: 0;
+		right: auto;
+		transform: translate(-100%, -100%) translateX(-@moon-input-tooltip-offset);
 	}
 }
 
 .muted({
 	.decorator {
 		.applySkins({
-			// For ExpandableInput, the decorator will not receive focus but it can be activated by clicking
-			// which should highlight the border
-			&.noDecorator:active,
 			&:global(.spottable):focus {
 				border-color: transparent;
 			}
@@ -199,6 +201,7 @@
 			font-size: 24px;
 			line-height: 48px;
 		}
+
 		.decorator {
 			padding: 1px 30px;
 		}

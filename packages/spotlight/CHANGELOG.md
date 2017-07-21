@@ -12,7 +12,33 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Fixed
 
-### Removed
+- `spotlight` to not blur and re-focus an element that is already focused
+
+## [1.5.0] - 2017-07-19
+
+### Changed
+
+- `spotlight` 5-way target selection to ignore empty containers
+- `spotlight` containers to support an array of selectors for `defaultElement`
+
+## [1.4.1] - 2017-07-05
+
+### Changed
+
+- `spotlight/Spottable` to remove focus from a component when it becomes disabled and move it to another component if not explicitly moved during the `onSpotlightDisappear` event callback
+
+## [1.4.0] - 2017-06-29
+
+### Added
+
+- `spotlight` handlers for window focus events
+
+### Fixed
+
+- `spotlight` navigation through spottable components while holding down a directional key
+- `spotlight` support for preventing 5-way navigation out of a container using an empty selector
+- `spotlight` container support for default elements within subcontainers
+
 ## [1.3.1] - 2017-06-14
 
 ### Fixed

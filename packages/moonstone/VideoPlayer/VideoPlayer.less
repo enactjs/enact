@@ -6,6 +6,9 @@
 @import '../styles/skin.less';
 
 .videoPlayer {
+	// Set by counting the IconButtons inside the side components.
+	--moon-video-player-max-side-components: 0;
+
 	position: relative;
 	overflow: hidden;
 
@@ -135,29 +138,6 @@
 							transform: @moon-translate-center scale(0.75);
 						}
 					});
-					.sliderTooltip {
-						.moon-text-base(@moon-video-slider-tooltip-font-size);
-						line-height: @moon-video-slider-tooltip-line-height;
-						white-space: nowrap;
-						position: absolute;
-						bottom: 6px;
-						transition: transform 100ms ease-in-out;
-						will-change: transform;
-
-						&.hidden {
-							display: none;
-						}
-					}
-					.knob[data-climax="rising"] {
-						.sliderTooltip {
-							transform: translateX(30px);
-						}
-					}
-					.knob[data-climax="falling"] {
-						.sliderTooltip {
-							transform: translateX(-100%) translateX(-30px);
-						}
-					}
 				}
 
 				.input {
@@ -225,8 +205,10 @@
 
 				.leftComponents,
 				.rightComponents {
-					// Pre-allocate enough space for 4 buttons, statically.
-					flex: 0 1 (@moon-icon-button-size * 4 + @moon-spotlight-outset * 7);
+					flex: 0 1;
+					// Take the size of buttons, add margins for each button, multiply that by the amount of buttons, then remove the margins for the first and last button
+					// Due to a LESS parsing issue, this 'calc' must be applied to a full-property, not a short-hand property
+					flex-basis: ~'calc((' @moon-icon-button-size + (@moon-spotlight-outset * 2) ~' * var(--moon-video-player-max-side-components)) - ' (@moon-spotlight-outset * 2) ~')';
 					white-space: nowrap;
 					padding: @expanding-button-clearance 0;
 				}
@@ -347,13 +329,6 @@
 				}
 
 				.sliderFrame {
-					.mediaSlider {
-						.sliderTooltip {
-							color: @moon-white;
-							text-shadow: @moon-video-player-title-text-shadow;
-						}
-					}
-
 					.sliderBar {
 						background-color: @moon-video-player-slider-bg-color;
 					}

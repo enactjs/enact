@@ -5,29 +5,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Slottable from '@enact/ui/Slottable';
 import Spotlight from '@enact/spotlight';
-import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
+import SpotlightContainerDecorator, {spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
 
 import css from './Panel.less';
-
-const spotPanel = (autoFocus) => (node) => {
-	if (node && !Spotlight.getCurrent()) {
-		const {containerId} = node.dataset;
-		const config = {
-			enterTo: 'last-focused'
-		};
-
-		if (autoFocus !== 'last-focused') {
-			config.enterTo = 'default-element';
-
-			if (autoFocus !== 'default-element') {
-				config.defaultElement = autoFocus;
-			}
-		}
-
-		Spotlight.set(containerId, config);
-		Spotlight.focus(containerId);
-	}
-};
 
 let panelId = 0;
 
@@ -134,23 +114,42 @@ const PanelBase = kind({
 				currentTarget.scrollTop = 0;
 				currentTarget.scrollLeft = 0;
 			}
-		)
+		),
+		spotOnRender: (node, {autoFocus}) => {
+			if (node && !Spotlight.getCurrent()) {
+				const {containerId} = node.dataset;
+				const config = {
+					enterTo: 'last-focused'
+				};
+
+				if (autoFocus !== 'last-focused') {
+					config.enterTo = 'default-element';
+
+					if (autoFocus !== 'default-element') {
+						config.defaultElement = autoFocus;
+					}
+				}
+
+				Spotlight.set(containerId, config);
+				Spotlight.focus(containerId);
+			}
+		}
 	},
 
 	computed: {
-		// In order to spot the body components, we defer spotting until !hideChildren. If the Panel
-		// opts out of hideChildren support by explicitly setting it to false, it'll spot on first
-		// render.
-		spotOnRender: ({autoFocus, hideChildren, noAutoFocus}) => {
+		spotOnRender: ({autoFocus, hideChildren, noAutoFocus, spotOnRender}) => {
 			if (noAutoFocus) {
 				autoFocus = adaptToAutoFocus();
 			}
 
+			// In order to spot the body components, we defer spotting until !hideChildren. If the
+			// Panel opts out of hideChildren support by explicitly setting it to false, it'll spot
+			// on first render.
 			if (hideChildren || autoFocus === 'none') {
 				return null;
 			}
 
-			return spotPanel(autoFocus);
+			return spotOnRender;
 		},
 		children: ({children, hideChildren}) => hideChildren ? null : children,
 		bodyClassName: ({header, hideChildren, styler}) => styler.join({
@@ -181,7 +180,7 @@ const PanelBase = kind({
 const Panel = SpotlightContainerDecorator(
 	{
 		// prefer any spottable within the panel body for first render
-		defaultElement: `.${css.body} *`,
+		defaultElement: [`.${spotlightDefaultClass}`, `.${css.body} *`],
 		enterTo: 'last-focused',
 		preserveId: true
 	},

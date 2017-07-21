@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 
 /**
- * Default config for {@link mooonstone/ExpandableItem.ExpandableSpotlightDecorator
+ * Default config for {@link mooonstone/ExpandableItem.ExpandableSpotlightDecorator}
  *
  * @memberof moonstone/ExpandableItem.ExpandableSpotlightDecorator
  * @hocconfig
@@ -39,16 +39,6 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		static displayName = 'ExpandableSpotlightDecorator'
 
 		static propTypes =  /** @lends moonstone/ExpandableItem.ExpandableSpotlightDecorator.prototype */ {
-			/**
-			 * Set the spotlight container id of the Expandable control.
-			 *
-			 * @type {String}
-			 * @default ''
-			 * @public
-			 * @memberof moonstone/ExpandableItem.ExpandableSpotlightDecorator.prototype
-			 */
-			'data-container-id': PropTypes.string,
-
 			/**
 			 * When `true`, the contents of the container will not receive spotlight focus when becoming
 			 * expanded.
@@ -86,7 +76,7 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		highlightLabeledItem = () => {
 			const current = Spotlight.getCurrent();
 			if (this.containerNode.contains(current)) {
-				Spotlight.focus(this.props['data-container-id']);
+				Spotlight.focus(this.containerNode.querySelector('[data-expandable-label]'));
 			}
 		}
 

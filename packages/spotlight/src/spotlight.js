@@ -161,6 +161,10 @@ const Spotlight = (function () {
 
 		let currentFocusedElement = getCurrent();
 
+		if (elem === currentFocusedElement) {
+			return true;
+		}
+
 		let silentFocus = function () {
 			if (currentFocusedElement) {
 				currentFocusedElement.blur();
@@ -230,8 +234,9 @@ const Spotlight = (function () {
 			const currentContainerId = last(currentContainerIds);
 			const nextContainerIds = getContainersForNode(next);
 
-			// prevent focus if 5-way is being held and the next element would change containers
-			if (_5WayKeyHold && last(nextContainerIds) !== currentContainerId) {
+			// prevent focus if 5-way is being held and the next element isn't wrapped by
+			// the current element's immediate container
+			if (_5WayKeyHold && nextContainerIds.indexOf(currentContainerId) < 0) {
 				return false;
 			}
 
@@ -274,6 +279,27 @@ const Spotlight = (function () {
 		}
 	}
 
+	function onBlur () {
+		const current = getCurrent();
+
+		if (current) {
+			current.blur();
+		}
+		Spotlight.setPointerMode(false);
+	}
+
+	function onFocus () {
+		const palmSystem = window.PalmSystem;
+
+		if (palmSystem && palmSystem.cursor) {
+			Spotlight.setPointerMode(palmSystem.cursor.visibility);
+		}
+
+		// If the window was previously blurred while in pointer mode, the last active containerId may
+		// not have yet set focus to its spottable elements. For this reason we can't rely on setting focus
+		// to the last focused element of the last active containerId, so we use rootContainerId instead
+		Spotlight.focus(getContainerLastFocusedElement(rootContainerId));
+	}
 
 	function onKeyUp (evt) {
 		const keyCode = evt.keyCode;
@@ -371,6 +397,8 @@ const Spotlight = (function () {
 		 */
 		initialize: function (containerDefaults) {
 			if (!_initialized) {
+				window.addEventListener('blur', onBlur);
+				window.addEventListener('focus', onFocus);
 				window.addEventListener('keydown', onKeyDown);
 				window.addEventListener('keyup', onKeyUp);
 				window.addEventListener('mouseover', onMouseOver);
@@ -388,6 +416,8 @@ const Spotlight = (function () {
 		 * @public
 		 */
 		terminate: function () {
+			window.removeEventListener('blur', onBlur);
+			window.removeEventListener('focus', onFocus);
 			window.removeEventListener('keydown', onKeyDown);
 			window.removeEventListener('keyup', onKeyUp);
 			window.removeEventListener('mouseover', onMouseOver);

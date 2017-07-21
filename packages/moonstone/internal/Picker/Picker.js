@@ -1,20 +1,28 @@
 import {forward} from '@enact/core/handle';
 import clamp from 'ramda/src/clamp';
 import equals from 'ramda/src/equals';
+import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';
 import React from 'react';
 import PropTypes from 'prop-types';
 import shouldUpdate from 'recompose/shouldUpdate';
 import {SlideLeftArranger, SlideTopArranger, ViewManager} from '@enact/ui/ViewManager';
 import {getDirection} from '@enact/spotlight';
-import {validateRange, validateStepped} from '../validators';
+
 import Skinnable from '../../Skinnable';
+import {validateRange, validateStepped} from '../validators';
+import DisappearSpotlightDecorator from '../DisappearSpotlightDecorator';
 
 import IdProvider from '../IdProvider';
 import $L from '../$L';
 import PickerButton from './PickerButton';
 
 import css from './Picker.less';
+
+const isDown = is('down');
+const isLeft = is('left');
+const isRight = is('right');
+const isUp = is('up');
 
 const PickerViewManager = shouldUpdate((props, nextProps) => {
 	return (
@@ -57,7 +65,7 @@ const forwardBlur = forward('onBlur'),
  * @private
  */
 
-const Picker = class extends React.Component {
+const PickerBase = class extends React.Component {
 	static displayName = 'Picker'
 
 	static propTypes = /** @lends moonstone/internal/Picker.Picker.prototype */ {
@@ -179,6 +187,22 @@ const Picker = class extends React.Component {
 		onChange: PropTypes.func,
 
 		/**
+		 * A function to run when the decrement button is disabled
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		onDecrementSpotlightDisappear: PropTypes.func,
+
+		/**
+		 * A function to run when the Increment button is disabled
+		 *
+		 * @type {Function}
+		 * @private
+		 */
+		onIncrementSpotlightDisappear: PropTypes.func,
+
+		/**
 		 * Initiate the pressed state
 		 *
 		 * @type {Function}
@@ -195,13 +219,40 @@ const Picker = class extends React.Component {
 		onMouseUp: PropTypes.func,
 
 		/**
-		 * The handler to run when the component is removed while retaining focus.
+		 * The handler to run prior to focus leaving the picker when the 5-way down key is pressed.
 		 *
 		 * @type {Function}
 		 * @param {Object} event
 		 * @public
 		 */
-		onSpotlightDisappear: PropTypes.func,
+		onPickerSpotlightDown: PropTypes.func,
+
+		/**
+		 * The handler to run prior to focus leaving the picker when the 5-way left key is pressed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onPickerSpotlightLeft: PropTypes.func,
+
+		/**
+		 * The handler to run prior to focus leaving the picker when the 5-way right key is pressed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onPickerSpotlightRight: PropTypes.func,
+
+		/**
+		 * The handler to run prior to focus leaving the picker when the 5-way up key is pressed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onPickerSpotlightUp: PropTypes.func,
 
 		/**
 		 * Sets the orientation of the picker, whether the buttons are above and below or on the
@@ -308,9 +359,9 @@ const Picker = class extends React.Component {
 		};
 
 		if (__DEV__) {
-			validateRange(props.value, props.min, props.max, Picker.displayName);
-			validateStepped(props.value, props.min, props.step, Picker.displayName);
-			validateStepped(props.max, props.min, props.step, Picker.displayName, '"max"');
+			validateRange(props.value, props.min, props.max, PickerBase.displayName);
+			validateStepped(props.value, props.min, props.step, PickerBase.displayName);
+			validateStepped(props.max, props.min, props.step, PickerBase.displayName, '"max"');
 		}
 	}
 
@@ -320,9 +371,9 @@ const Picker = class extends React.Component {
 		const nextValue = nextProps.value;
 
 		if (__DEV__) {
-			validateRange(nextValue, first, last, Picker.displayName);
-			validateStepped(nextValue, first, nextProps.step, Picker.displayName);
-			validateStepped(last, first, nextProps.step, Picker.displayName, '"max"');
+			validateRange(nextValue, first, last, PickerBase.displayName);
+			validateStepped(nextValue, first, nextProps.step, PickerBase.displayName);
+			validateStepped(last, first, nextProps.step, PickerBase.displayName, '"max"');
 		}
 	}
 
@@ -466,11 +517,19 @@ const Picker = class extends React.Component {
 	}
 
 	handleKeyDown = (ev) => {
-		const {joined} = this.props;
+		const {
+			joined,
+			onPickerSpotlightDown,
+			onPickerSpotlightLeft,
+			onPickerSpotlightRight,
+			onPickerSpotlightUp,
+			orientation
+		} = this.props;
+		const {keyCode} = ev;
 		forwardKeyDown(ev, this.props);
 
 		if (joined) {
-			const direction = getDirection(ev.keyCode);
+			const direction = getDirection(keyCode);
 
 			const directions = {
 				up: this.handleIncClick,
@@ -479,14 +538,66 @@ const Picker = class extends React.Component {
 				left: this.handleDecClick
 			};
 
-			const isVertical = this.props.orientation === 'vertical' && (direction === 'up' || direction === 'down');
-			const isHorizontal = this.props.orientation === 'horizontal' && (direction === 'right' || direction === 'left');
+			const isVertical = orientation === 'vertical' && (isUp(keyCode) || isDown(keyCode));
+			const isHorizontal = orientation === 'horizontal' && (isRight(keyCode) || isLeft(keyCode));
 
 			if (isVertical || isHorizontal) {
 				directions[direction]();
 				ev.stopPropagation();
 				this.emulateMouseUp.start(ev);
+			} else if (orientation === 'horizontal' && isDown(keyCode) && onPickerSpotlightDown) {
+				onPickerSpotlightDown(ev);
+			} else if (orientation === 'horizontal' && isUp(keyCode) && onPickerSpotlightUp) {
+				onPickerSpotlightUp(ev);
+			} else if (orientation === 'vertical' && isLeft(keyCode) && onPickerSpotlightLeft) {
+				onPickerSpotlightLeft(ev);
+			} else if (orientation === 'vertical' && isRight(keyCode) && onPickerSpotlightRight) {
+				onPickerSpotlightRight(ev);
 			}
+		}
+	}
+
+	handleDecKeyDown = (ev) => {
+		const {keyCode} = ev;
+		const {
+			onPickerSpotlightDown,
+			onPickerSpotlightLeft,
+			onPickerSpotlightRight,
+			onPickerSpotlightUp,
+			orientation,
+			step
+		} = this.props;
+
+		if (isDown(keyCode) && onPickerSpotlightDown) {
+			onPickerSpotlightDown(ev);
+		} else if (isLeft(keyCode) && onPickerSpotlightLeft) {
+			onPickerSpotlightLeft(ev);
+		} else if (isRight(keyCode) && onPickerSpotlightRight && (orientation === 'vertical' || this.hasReachedBound(step))) {
+			onPickerSpotlightRight(ev);
+		} else if (isUp(keyCode) && onPickerSpotlightUp && (orientation === 'horizontal' || this.hasReachedBound(step))) {
+			onPickerSpotlightUp(ev);
+		}
+	}
+
+	handleIncKeyDown = (ev) => {
+		const {keyCode} = ev;
+		const {
+			onPickerSpotlightDown,
+			onPickerSpotlightLeft,
+			onPickerSpotlightRight,
+			onPickerSpotlightUp,
+			orientation,
+			step
+		} = this.props;
+
+		if (isDown(keyCode) && onPickerSpotlightDown && (orientation === 'horizontal' || this.hasReachedBound(step * -1))) {
+			onPickerSpotlightDown(ev);
+		} else if (isLeft(keyCode) && onPickerSpotlightLeft && (orientation === 'vertical' || this.hasReachedBound(step * -1))) {
+			onPickerSpotlightLeft(ev);
+		} else if (isRight(keyCode) && onPickerSpotlightRight) {
+			onPickerSpotlightRight(ev);
+		} else if (isUp(keyCode) && onPickerSpotlightUp) {
+			onPickerSpotlightUp(ev);
 		}
 	}
 
@@ -553,7 +664,8 @@ const Picker = class extends React.Component {
 			id,
 			index,
 			joined,
-			onSpotlightDisappear,
+			onDecrementSpotlightDisappear,
+			onIncrementSpotlightDisappear,
 			orientation,
 			spotlightDisabled,
 			step,
@@ -569,6 +681,10 @@ const Picker = class extends React.Component {
 		delete rest.onChange;
 		delete rest.onMouseDown;
 		delete rest.onMouseUp;
+		delete rest.onPickerSpotlightDown;
+		delete rest.onPickerSpotlightLeft;
+		delete rest.onPickerSpotlightRight;
+		delete rest.onPickerSpotlightUp;
 		delete rest.pressed;
 		delete rest.reverse;
 		delete rest.value;
@@ -617,9 +733,10 @@ const Picker = class extends React.Component {
 					joined={joined}
 					onClick={this.handleIncClick}
 					onHoldPulse={this.handleIncPulse}
+					onKeyDown={this.handleIncKeyDown}
 					onMouseDown={this.handleIncDown}
 					onMouseUp={this.handleUp}
-					onSpotlightDisappear={onSpotlightDisappear}
+					onSpotlightDisappear={onIncrementSpotlightDisappear}
 					spotlightDisabled={spotlightDisabled}
 				/>
 				<div
@@ -652,9 +769,10 @@ const Picker = class extends React.Component {
 					joined={joined}
 					onClick={this.handleDecClick}
 					onHoldPulse={this.handleDecPulse}
+					onKeyDown={this.handleDecKeyDown}
 					onMouseDown={this.handleDecDown}
 					onMouseUp={this.handleUp}
-					onSpotlightDisappear={onSpotlightDisappear}
+					onSpotlightDisappear={onDecrementSpotlightDisappear}
 					spotlightDisabled={spotlightDisabled}
 				/>
 			</div>
@@ -662,8 +780,18 @@ const Picker = class extends React.Component {
 	}
 };
 
-const SkinnedPicker = IdProvider({generateProp: null, prefix: 'p_'}, Skinnable(Picker));
+const Picker = IdProvider({generateProp: null, prefix: 'p_'},
+	Skinnable(
+		DisappearSpotlightDecorator(
+			{events: {
+				onDecrementSpotlightDisappear: `.${css.incrementer}`,
+				onIncrementSpotlightDisappear: `.${css.decrementer}`
+			}},
+			PickerBase
+		)
+	)
+);
 
-export default SkinnedPicker;
-export {SkinnedPicker as Picker};
+export default Picker;
+export {Picker};
 export PickerItem from './PickerItem';
