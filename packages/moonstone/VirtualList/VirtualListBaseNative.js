@@ -918,7 +918,8 @@ class VirtualListCoreNative extends Component {
 		return (
 			<div ref={this.initWrapperRef} className={mergedClasses} style={this.itemStyle}>
 				<div {...props} className={css.container} onKeyDown={this.onKeyDown} ref={this.initContainerRef}>
-					{cc.length ? cc : (
+					{cc.length ? cc : null}
+					{primary ? null : (
 						<SpotlightPlaceholder
 							data-index={0}
 							data-vl-placeholder
