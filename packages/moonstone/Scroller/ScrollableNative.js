@@ -63,13 +63,7 @@ const dataIndexAttribute = 'data-index';
 const ScrollableSpotlightContainer = SpotlightContainerDecorator(
 	{
 		navigableFilter: (elem, {focusableScrollbar}) => {
-			if (
-				!focusableScrollbar &&
-				!Spotlight.getPointerMode() &&
-				// ignore containers passed as their id
-				typeof elem !== 'string' &&
-				elem.classList.contains(scrollbarCss.scrollButton)
-			) {
+			if (!focusableScrollbar && elem.classList.contains(scrollbarCss.scrollButton)) {
 				return false;
 			}
 		}
@@ -255,11 +249,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.updateScrollbars();
 		}
 
-		componentWillUpdate () {
-			this.deferScrollTo = true;
-		}
-
 		componentDidUpdate () {
+			this.isInitializing = false;
+
 			// Need to sync calculated client size if it is different from the real size
 			if (this.childRef.syncClientSize) {
 				this.childRef.syncClientSize();
@@ -269,7 +261,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.updateEventListeners();
 			this.updateScrollbars();
 
-			if (this.scrollToInfo !== null && !this.deferScrollTo) {
+			if (this.scrollToInfo !== null) {
 				this.scrollTo(this.scrollToInfo);
 			}
 		}
@@ -303,7 +295,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		// status
 		direction = 'vertical'
 		isScrollAnimationTargetAccumulated = false
-		deferScrollTo = true
+		isInitializing = true
 		pageDistance = 0
 		animateOnFocus = true
 
@@ -750,7 +742,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		scrollTo = (opt) => {
-			if (!this.deferScrollTo) {
+			if (!this.isInitializing) {
 				const {left, top} = this.getPositionForScrollTo(opt);
 				this.indexToFocus = null;
 				this.nodeToFocus = null;
@@ -840,7 +832,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					isVerticalScrollbarVisible: curVerticalScrollbarVisible
 				});
 			} else {
-				this.deferScrollTo = false;
+				this.isInitializing = false;
 				if (curHorizontalScrollbarVisible || curVerticalScrollbarVisible) {
 					// no visibility change but need to notify whichever scrollbars are visible of the
 					// updated bounds and scroll position

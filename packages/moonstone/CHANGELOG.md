@@ -8,14 +8,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
-### Changed
-
-### Fixed
-
-## [1.5.0] - 2017-07-19
-
-### Added
-
 - `moonstone/Slider` and `moonstone/IncrementSlider` prop `aria-valuetext` to support reading custom text instead of value
 - `moonstone/TooltipDecorator` property `tooltipProps` to attach props to tooltip component
 - `moonstone/Scroller` and `moonstone/VirtualList` ability to scroll via page up and page down keys
@@ -23,7 +15,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualList` ability to navigate via 5way when there are disabled items
 - `moonstone/ContextualPopupDecorator` property `popupContainerId` to support configuration of the popup's spotlight container
 - `moonstone/ContextualPopupDecorator` property `onOpen` to notify containers when the popup has been opened
-- `moonstone/ContextualPopupDecorator` config option `openProp` to support mapping the value of `open` property to the chosen property of wrapped component
 
 ### Changed
 
@@ -36,7 +27,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/Input` ellipsis to show if placeholder is changed dynamically and is too long
 - `moonstone/Marquee` to re-evaluate RTL orientation when its content changes
 - `moonstone/VirtualList` to restore focus on short lists
 - `moonstone/ExpandableInput` to expand the width of its contained `moonstone/Input`
@@ -46,10 +36,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone` international fonts to always be used, even when unsupported font-weights or font-styles are requested
 - `moonstone/Panels.Panel` support for selecting components with `.spottable-default` as the default focus target
 - `moonstone/Panels` layout in RTL locales
-- `moonstone` spottable components to support `onSpotlightDown`, `onSpotlightLeft`, `onSpotlightRight`, and `onSpotlightUp` event property
-- `moonstone/VirtualList` losing spotlight when the list is empty
 - `moonstone/FormCheckbox` in focused state to have the correct "check" color
-- `moonstone/Scrollable` bug in `navigableFilter` when passed a container id
 
 ## [1.4.1] - 2017-07-05
 

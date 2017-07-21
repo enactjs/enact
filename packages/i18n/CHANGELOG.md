@@ -12,10 +12,6 @@ The following is a curated list of changes in the Enact i18n module, newest chan
 
 ### Fixed
 
-## [1.5.0] - 2017-07-19
-
-No significant changes.
-
 ## [1.4.1] - 2017-07-05
 
 No significant changes.

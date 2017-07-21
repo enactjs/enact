@@ -161,10 +161,6 @@ const Spotlight = (function () {
 
 		let currentFocusedElement = getCurrent();
 
-		if (elem === currentFocusedElement) {
-			return true;
-		}
-
 		let silentFocus = function () {
 			if (currentFocusedElement) {
 				currentFocusedElement.blur();

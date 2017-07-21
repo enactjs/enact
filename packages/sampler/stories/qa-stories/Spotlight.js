@@ -304,20 +304,12 @@ storiesOf('Spotlight')
 						</Divider>
 						<div style={style.flexBox}>
 							<Button
-								onSpotlightDown={action('onSpotlightDown')}
-								onSpotlightLeft={action('onSpotlightLeft')}
-								onSpotlightRight={action('onSpotlightRight')}
-								onSpotlightUp={action('onSpotlightUp')}
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 							>
 								Button
 							</Button>
 							<Button
 								backgroundOpacity="translucent"
-								onSpotlightDown={action('onSpotlightDown')}
-								onSpotlightLeft={action('onSpotlightLeft')}
-								onSpotlightRight={action('onSpotlightRight')}
-								onSpotlightUp={action('onSpotlightUp')}
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 							>
 								Translucent
@@ -326,19 +318,11 @@ storiesOf('Spotlight')
 						<div style={style.flexBox}>
 							<Button
 								backgroundOpacity="transparent"
-								onSpotlightDown={action('onSpotlightDown')}
-								onSpotlightLeft={action('onSpotlightLeft')}
-								onSpotlightRight={action('onSpotlightRight')}
-								onSpotlightUp={action('onSpotlightUp')}
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 							>
 								Transparent
 							</Button>
 							<ToggleButton
-								onSpotlightDown={action('onSpotlightDown')}
-								onSpotlightLeft={action('onSpotlightLeft')}
-								onSpotlightRight={action('onSpotlightRight')}
-								onSpotlightUp={action('onSpotlightUp')}
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 							>
 								ToggleButton
@@ -346,72 +330,40 @@ storiesOf('Spotlight')
 						</div>
 						<div style={style.flexBox}>
 							<IconButton
-								onSpotlightDown={action('onSpotlightDown')}
-								onSpotlightLeft={action('onSpotlightLeft')}
-								onSpotlightRight={action('onSpotlightRight')}
-								onSpotlightUp={action('onSpotlightUp')}
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 							>
 								plus
 							</IconButton>
 							<Input
-								onSpotlightDown={action('onSpotlightDown')}
-								onSpotlightLeft={action('onSpotlightLeft')}
-								onSpotlightRight={action('onSpotlightRight')}
-								onSpotlightUp={action('onSpotlightUp')}
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 							/>
 						</div>
 						<div style={style.flexBox}>
 							<Picker
-								onSpotlightDown={action('onSpotlightDown')}
-								onSpotlightLeft={action('onSpotlightLeft')}
-								onSpotlightRight={action('onSpotlightRight')}
-								onSpotlightUp={action('onSpotlightUp')}
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 							>
 								{Items}
 							</Picker>
 							<Picker
 								joined
-								onSpotlightDown={action('onSpotlightDown')}
-								onSpotlightLeft={action('onSpotlightLeft')}
-								onSpotlightRight={action('onSpotlightRight')}
-								onSpotlightUp={action('onSpotlightUp')}
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 							>
 								{Items}
 							</Picker>
 						</div>
 						<IncrementSlider
-							onSpotlightDown={action('onSpotlightDown')}
-							onSpotlightLeft={action('onSpotlightLeft')}
-							onSpotlightRight={action('onSpotlightRight')}
-							onSpotlightUp={action('onSpotlightUp')}
 							spotlightDisabled={boolean('spotlightDisabled', false)}
 						/>
 						<Slider
-							onSpotlightDown={action('onSpotlightDown')}
-							onSpotlightLeft={action('onSpotlightLeft')}
-							onSpotlightRight={action('onSpotlightRight')}
-							onSpotlightUp={action('onSpotlightUp')}
 							spotlightDisabled={boolean('spotlightDisabled', false)}
 						/>
 						<Item
-							onSpotlightDown={action('onSpotlightDown')}
-							onSpotlightLeft={action('onSpotlightLeft')}
-							onSpotlightRight={action('onSpotlightRight')}
-							onSpotlightUp={action('onSpotlightUp')}
 							spotlightDisabled={boolean('spotlightDisabled', false)}
 						>
 							Item
 						</Item>
 						<LabeledItem
 							label="Label"
-							onSpotlightDown={action('onSpotlightDown')}
-							onSpotlightLeft={action('onSpotlightLeft')}
-							onSpotlightRight={action('onSpotlightRight')}
-							onSpotlightUp={action('onSpotlightUp')}
 							spotlightDisabled={boolean('spotlightDisabled', false)}
 						>
 							LabeledItem
@@ -423,64 +375,36 @@ storiesOf('Spotlight')
 						</Divider>
 						<Scroller style={{height: '500px'}}>
 							<ExpandableItem
-								onSpotlightDown={action('onSpotlightDown')}
-								onSpotlightLeft={action('onSpotlightLeft')}
-								onSpotlightRight={action('onSpotlightRight')}
-								onSpotlightUp={action('onSpotlightUp')}
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 								title="Various Items in an ExpandableItem"
 							>
 								<CheckboxItem
-									onSpotlightDown={action('onSpotlightDown')}
-									onSpotlightLeft={action('onSpotlightLeft')}
-									onSpotlightRight={action('onSpotlightRight')}
-									onSpotlightUp={action('onSpotlightUp')}
 									spotlightDisabled={boolean('spotlightDisabled', false)}
 								>
 									CheckboxItem
 								</CheckboxItem>
 								<FormCheckboxItem
-									onSpotlightDown={action('onSpotlightDown')}
-									onSpotlightLeft={action('onSpotlightLeft')}
-									onSpotlightRight={action('onSpotlightRight')}
-									onSpotlightUp={action('onSpotlightUp')}
 									spotlightDisabled={boolean('spotlightDisabled', false)}
 								>
 									FormCheckboxItem
 								</FormCheckboxItem>
 								<RadioItem
-									onSpotlightDown={action('onSpotlightDown')}
-									onSpotlightLeft={action('onSpotlightLeft')}
-									onSpotlightRight={action('onSpotlightRight')}
-									onSpotlightUp={action('onSpotlightUp')}
 									spotlightDisabled={boolean('spotlightDisabled', false)}
 								>
 									RadioItem
 								</RadioItem>
 								<SelectableItem
-									onSpotlightDown={action('onSpotlightDown')}
-									onSpotlightLeft={action('onSpotlightLeft')}
-									onSpotlightRight={action('onSpotlightRight')}
-									onSpotlightUp={action('onSpotlightUp')}
 									spotlightDisabled={boolean('spotlightDisabled', false)}
 								>
 									SelectableItem
 								</SelectableItem>
 								<SwitchItem
-									onSpotlightDown={action('onSpotlightDown')}
-									onSpotlightLeft={action('onSpotlightLeft')}
-									onSpotlightRight={action('onSpotlightRight')}
-									onSpotlightUp={action('onSpotlightUp')}
 									spotlightDisabled={boolean('spotlightDisabled', false)}
 								>
 									SwitchItem
 								</SwitchItem>
 								<ToggleItem
 									icon="plus"
-									onSpotlightDown={action('onSpotlightDown')}
-									onSpotlightLeft={action('onSpotlightLeft')}
-									onSpotlightRight={action('onSpotlightRight')}
-									onSpotlightUp={action('onSpotlightUp')}
 									spotlightDisabled={boolean('spotlightDisabled', false)}
 								>
 									ToggleItem
@@ -488,54 +412,30 @@ storiesOf('Spotlight')
 							</ExpandableItem>
 							<ExpandableList
 								noLockBottom
-								onSpotlightDown={action('onSpotlightDown')}
-								onSpotlightLeft={action('onSpotlightLeft')}
-								onSpotlightRight={action('onSpotlightRight')}
-								onSpotlightUp={action('onSpotlightUp')}
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 								title="ExpandableList"
 							>
 								{Items}
 							</ExpandableList>
 							<ExpandableInput
-								onSpotlightDown={action('onSpotlightDown')}
-								onSpotlightLeft={action('onSpotlightLeft')}
-								onSpotlightRight={action('onSpotlightRight')}
-								onSpotlightUp={action('onSpotlightUp')}
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 								title="ExpandableInput"
 							/>
 							<ExpandablePicker
-								onSpotlightDown={action('onSpotlightDown')}
-								onSpotlightLeft={action('onSpotlightLeft')}
-								onSpotlightRight={action('onSpotlightRight')}
-								onSpotlightUp={action('onSpotlightUp')}
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 								title="ExpandablePicker"
 							>
 								{Items}
 							</ExpandablePicker>
 							<DatePicker
-								onSpotlightDown={action('onSpotlightDown')}
-								onSpotlightLeft={action('onSpotlightLeft')}
-								onSpotlightRight={action('onSpotlightRight')}
-								onSpotlightUp={action('onSpotlightUp')}
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 								title="DatePicker"
 							/>
 							<DayPicker
-								onSpotlightDown={action('onSpotlightDown')}
-								onSpotlightLeft={action('onSpotlightLeft')}
-								onSpotlightRight={action('onSpotlightRight')}
-								onSpotlightUp={action('onSpotlightUp')}
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 								title="DayPicker"
 							/>
 							<TimePicker
-								onSpotlightDown={action('onSpotlightDown')}
-								onSpotlightLeft={action('onSpotlightLeft')}
-								onSpotlightRight={action('onSpotlightRight')}
-								onSpotlightUp={action('onSpotlightUp')}
 								spotlightDisabled={boolean('spotlightDisabled', false)}
 								title="TimePicker"
 							/>

@@ -10,25 +10,12 @@ const SpottablePicker = hoc(null, (config, Wrapped) => {
 		static displayName = 'SpottablePicker'
 
 		static propTypes = {
-			joined: PropTypes.bool,
-			onSpotlightDown: PropTypes.func,
-			onSpotlightLeft: PropTypes.func,
-			onSpotlightRight: PropTypes.func,
-			onSpotlightUp: PropTypes.func
+			joined: PropTypes.bool
 		}
 
 		render () {
-			const {onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp, ...rest} = this.props;
 			const Component = this.props.joined ? Joined : Wrapped;
-			return (
-				<Component
-					{...rest}
-					onPickerSpotlightDown={onSpotlightDown}
-					onPickerSpotlightLeft={onSpotlightLeft}
-					onPickerSpotlightRight={onSpotlightRight}
-					onPickerSpotlightUp={onSpotlightUp}
-				/>
-			);
+			return <Component {...this.props} />;
 		}
 	};
 });

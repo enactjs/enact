@@ -7,7 +7,6 @@
 import {extractAriaProps} from '@enact/core/util';
 import Changeable from '@enact/ui/Changeable';
 import factory from '@enact/core/factory';
-import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
 import Pressable from '@enact/ui/Pressable';
 import React from 'react';
@@ -22,11 +21,6 @@ import SliderDecorator from '../internal/SliderDecorator';
 
 import IncrementSliderButton from './IncrementSliderButton';
 import componentCss from './IncrementSlider.less';
-
-const isDown = is('down');
-const isLeft = is('left');
-const isRight = is('right');
-const isUp = is('up');
 
 const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 	const Slider = Pressable(Spottable(Skinnable(SliderBaseFactory({css}))));
@@ -230,6 +224,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 */
 			onIncrementSpotlightDisappear: PropTypes.func,
 
+
 			/**
 			 * The handler to run when the component is removed while retaining focus.
 			 *
@@ -238,42 +233,6 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * @public
 			 */
 			onSpotlightDisappear: PropTypes.func,
-
-			/**
-			 * The handler to run prior to focus leaving the component when the 5-way down key is pressed.
-			 *
-			 * @type {Function}
-			 * @param {Object} event
-			 * @public
-			 */
-			onSpotlightDown: PropTypes.func,
-
-			/**
-			 * The handler to run prior to focus leaving the component when the 5-way left key is pressed.
-			 *
-			 * @type {Function}
-			 * @param {Object} event
-			 * @public
-			 */
-			onSpotlightLeft: PropTypes.func,
-
-			/**
-			 * The handler to run prior to focus leaving the component when the 5-way right key is pressed.
-			 *
-			 * @type {Function}
-			 * @param {Object} event
-			 * @public
-			 */
-			onSpotlightRight: PropTypes.func,
-
-			/**
-			 * The handler to run prior to focus leaving the component when the 5-way up key is pressed.
-			 *
-			 * @type {Function}
-			 * @param {Object} event
-			 * @public
-			 */
-			onSpotlightUp: PropTypes.func,
 
 			/**
 			 * `scrubbing` only has an effect with a detachedKnob, and is a performance optimization
@@ -402,60 +361,6 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			vertical: false
 		},
 
-		handlers: {
-			handleDecrementKeyDown: (ev, {onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp, vertical}) => {
-				const {keyCode} = ev;
-
-				if (isLeft(keyCode) && onSpotlightLeft) {
-					onSpotlightLeft(ev);
-				} else if (isDown(keyCode) && onSpotlightDown) {
-					onSpotlightDown(ev);
-				} else if (isRight(keyCode) && onSpotlightRight && vertical) {
-					onSpotlightRight(ev);
-				} else if (isUp(keyCode) && onSpotlightUp && !vertical) {
-					onSpotlightUp(ev);
-				}
-			},
-			handleIncrementKeyDown: (ev, {onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp, vertical}) => {
-				const {keyCode} = ev;
-
-				if (isRight(keyCode) && onSpotlightRight) {
-					onSpotlightRight(ev);
-				} else if (isUp(keyCode) && onSpotlightUp) {
-					onSpotlightUp(ev);
-				} else if (isLeft(keyCode) && onSpotlightLeft && vertical) {
-					onSpotlightLeft(ev);
-				} else if (isDown(keyCode) && onSpotlightDown && !vertical) {
-					onSpotlightDown(ev);
-				}
-			},
-			handleSliderKeyDown: (ev, {min, max, value, onSpotlightDown, onSpotlightLeft, onSpotlightRight, onSpotlightUp, vertical}) => {
-				const {keyCode} = ev;
-				const isMin = value <= min;
-				const isMax = value >= max;
-
-				if (vertical) {
-					if (isLeft(keyCode) && onSpotlightLeft) {
-						onSpotlightLeft(ev);
-					} else if (isRight(keyCode) && onSpotlightRight) {
-						onSpotlightRight(ev);
-					} else if (isDown(keyCode) && isMin && onSpotlightDown) {
-						onSpotlightDown(ev);
-					} else if (isUp(keyCode) && isMax && onSpotlightUp) {
-						onSpotlightUp(ev);
-					}
-				} else if (isLeft(keyCode) && isMin && onSpotlightLeft) {
-					onSpotlightLeft(ev);
-				} else if (isRight(keyCode) && isMax && onSpotlightRight) {
-					onSpotlightRight(ev);
-				} else if (isDown(keyCode) && onSpotlightDown) {
-					onSpotlightDown(ev);
-				} else if (isUp(keyCode) && onSpotlightUp) {
-					onSpotlightUp(ev);
-				}
-			}
-		},
-
 		styles: {
 			css,
 			className: 'incrementSlider'
@@ -481,9 +386,6 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			detachedKnob,
 			disabled,
 			focused,
-			handleDecrementKeyDown,
-			handleIncrementKeyDown,
-			handleSliderKeyDown,
 			incrementAriaLabel,
 			incrementDisabled,
 			incrementIcon,
@@ -513,10 +415,6 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			...rest
 		}) => {
 			const ariaProps = extractAriaProps(rest);
-			delete rest.onSpotlightDown;
-			delete rest.onSpotlightLeft;
-			delete rest.onSpotlightRight;
-			delete rest.onSpotlightUp;
 
 			return (
 				<div {...rest} className={incrementSliderClasses}>
@@ -526,7 +424,6 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						className={css.decrementButton}
 						disabled={decrementDisabled}
 						onClick={onDecrement}
-						onKeyDown={handleDecrementKeyDown}
 						onSpotlightDisappear={onDecrementSpotlightDisappear}
 						spotlightDisabled={spotlightDisabled}
 					>
@@ -549,7 +446,6 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						onChange={onChange}
 						onDecrement={onDecrement}
 						onIncrement={onIncrement}
-						onKeyDown={handleSliderKeyDown}
 						onSpotlightDisappear={onSpotlightDisappear}
 						scrubbing={scrubbing}
 						sliderBarRef={sliderBarRef}
@@ -571,7 +467,6 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						className={css.incrementButton}
 						disabled={incrementDisabled}
 						onClick={onIncrement}
-						onKeyDown={handleIncrementKeyDown}
 						onSpotlightDisappear={onIncrementSpotlightDisappear}
 						spotlightDisabled={spotlightDisabled}
 					>

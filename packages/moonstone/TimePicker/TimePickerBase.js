@@ -1,4 +1,3 @@
-import {contextTypes} from '@enact/i18n/I18nDecorator';
 import {forKey, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
@@ -179,24 +178,6 @@ const TimePickerBase = kind({
 		onSpotlightDisappear: PropTypes.func,
 
 		/**
-		 * The handler to run prior to focus leaving the expandable when the 5-way left key is pressed.
-		 *
-		 * @type {Function}
-		 * @param {Object} event
-		 * @public
-		 */
-		onSpotlightLeft: PropTypes.func,
-
-		/**
-		 * The handler to run prior to focus leaving the expandable when the 5-way right key is pressed.
-		 *
-		 * @type {Function}
-		 * @param {Object} event
-		 * @public
-		 */
-		onSpotlightRight: PropTypes.func,
-
-		/**
 		 * When `true`, the component cannot be navigated using spotlight.
 		 *
 		 * @type {Boolean}
@@ -209,8 +190,6 @@ const TimePickerBase = kind({
 	defaultProps: {
 		spotlightDisabled: false
 	},
-
-	contextTypes: contextTypes,
 
 	styles: {
 		css,
@@ -228,48 +207,12 @@ const TimePickerBase = kind({
 		hasMeridiem: ({order}) => order.indexOf('a') >= 0
 	},
 
-	render: ({
-		handlePickerKeyDown,
-		hasMeridiem,
-		hour,
-		meridiem,
-		meridiems,
-		minute,
-		noLabels,
-		onChangeHour,
-		onChangeMeridiem,
-		onChangeMinute,
-		onSpotlightDisappear,
-		onSpotlightLeft,
-		onSpotlightRight,
-		order,
-		spotlightDisabled,
-		...rest
-	}, {
-		rtl
-	}) => {
+	render: ({handlePickerKeyDown, hasMeridiem, hour, meridiem, meridiems, minute, noLabels, onChangeHour, onChangeMeridiem, onChangeMinute, onSpotlightDisappear, order, spotlightDisabled, ...rest}) => {
 		return (
-			<ExpandableItemBase
-				{...rest}
-				showLabel="always"
-				autoClose={false}
-				lockBottom={false}
-				onSpotlightDisappear={onSpotlightDisappear}
-				onSpotlightLeft={onSpotlightLeft}
-				onSpotlightRight={onSpotlightRight}
-				spotlightDisabled={spotlightDisabled}
-			>
+			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled}>
 				<div className={dateComponentPickers} onKeyDown={handlePickerKeyDown}>
 					<div className={css.timeComponents}>
-						{order.map((picker, index) => {
-							// although we create a component array based on the provided
-							// order, we ultimately force order in CSS for RTL
-							const isFirst = index === 0;
-							const isLast = index === order.length - 1;
-							// meridiem will always be the left-most control in RTL, regardless of the provided order
-							const isLeft = rtl && picker === 'a' || isFirst && !rtl;
-							// minute will always be the right-most control in RTL, regardless of the provided order
-							const isRight = rtl && picker === 'm' || isLast && !rtl;
+						{order.map(picker => {
 							switch (picker) {
 								case 'h':
 								case 'k':
@@ -280,8 +223,6 @@ const TimePickerBase = kind({
 											label={noLabels ? null : $L('hour')}
 											onChange={onChangeHour}
 											onSpotlightDisappear={onSpotlightDisappear}
-											onSpotlightLeft={isLeft ? onSpotlightLeft : null}
-											onSpotlightRight={isRight ? onSpotlightRight : null}
 											spotlightDisabled={spotlightDisabled}
 											value={hour}
 											width={2}
@@ -300,8 +241,6 @@ const TimePickerBase = kind({
 											min={0}
 											onChange={onChangeMinute}
 											onSpotlightDisappear={onSpotlightDisappear}
-											onSpotlightLeft={isLeft ? onSpotlightLeft : null}
-											onSpotlightRight={isRight ? onSpotlightRight : null}
 											spotlightDisabled={spotlightDisabled}
 											padded
 											value={minute}
@@ -317,8 +256,6 @@ const TimePickerBase = kind({
 											label={noLabels ? null : $L('meridiem')}
 											onChange={onChangeMeridiem}
 											onSpotlightDisappear={onSpotlightDisappear}
-											onSpotlightLeft={isLeft ? onSpotlightLeft : null}
-											onSpotlightRight={isRight ? onSpotlightRight : null}
 											reverse
 											spotlightDisabled={spotlightDisabled}
 											value={meridiem}

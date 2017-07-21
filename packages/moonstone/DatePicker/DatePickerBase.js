@@ -1,4 +1,3 @@
-import {contextTypes} from '@enact/i18n/I18nDecorator';
 import {forKey, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import React from 'react';
@@ -157,24 +156,6 @@ const DatePickerBase = kind({
 		onSpotlightDisappear: PropTypes.func,
 
 		/**
-		 * The handler to run prior to focus leaving the expandable when the 5-way left key is pressed.
-		 *
-		 * @type {Function}
-		 * @param {Object} event
-		 * @public
-		 */
-		onSpotlightLeft: PropTypes.func,
-
-		/**
-		 * The handler to run prior to focus leaving the expandable when the 5-way right key is pressed.
-		 *
-		 * @type {Function}
-		 * @param {Object} event
-		 * @public
-		 */
-		onSpotlightRight: PropTypes.func,
-
-		/**
 		 * When `true`, the component cannot be navigated using spotlight.
 		 *
 		 * @type {Boolean}
@@ -190,8 +171,6 @@ const DatePickerBase = kind({
 		spotlightDisabled: false
 	},
 
-	contextTypes: contextTypes,
-
 	styles: {
 		css,
 		className: 'datePicker'
@@ -204,46 +183,12 @@ const DatePickerBase = kind({
 		)
 	},
 
-	render: ({
-		day,
-		handlePickerKeyDown,
-		maxDays,
-		maxMonths,
-		maxYear,
-		minYear,
-		month,
-		noLabels,
-		onChangeDate,
-		onChangeMonth,
-		onChangeYear,
-		onSpotlightDisappear,
-		onSpotlightLeft,
-		onSpotlightRight,
-		order,
-		spotlightDisabled,
-		year,
-		...rest
-	}, {
-		rtl
-	}) => {
+	render: ({day, handlePickerKeyDown, maxDays, maxMonths, maxYear, minYear, month, noLabels, onChangeDate, onChangeMonth, onChangeYear, onSpotlightDisappear, order, spotlightDisabled, year, ...rest}) => {
 
 		return (
-			<ExpandableItemBase
-				{...rest}
-				showLabel="always"
-				autoClose={false}
-				lockBottom={false}
-				onSpotlightDisappear={onSpotlightDisappear}
-				onSpotlightLeft={onSpotlightLeft}
-				onSpotlightRight={onSpotlightRight}
-				spotlightDisabled={spotlightDisabled}
-			>
+			<ExpandableItemBase {...rest} showLabel="always" autoClose={false} lockBottom={false} onSpotlightDisappear={onSpotlightDisappear} spotlightDisabled={spotlightDisabled}>
 				<div className={dateComponentPickers} onKeyDown={handlePickerKeyDown}>
-					{order.map((picker, index) => {
-						const isFirst = index === 0;
-						const isLast = index === order.length - 1;
-						const isLeft = isFirst && !rtl || isLast && rtl;
-						const isRight = isFirst && rtl || isLast && !rtl;
+					{order.map(picker => {
 						switch (picker) {
 							case 'd':
 								return (
@@ -254,8 +199,6 @@ const DatePickerBase = kind({
 										min={1}
 										onChange={onChangeDate}
 										onSpotlightDisappear={onSpotlightDisappear}
-										onSpotlightLeft={isLeft ? onSpotlightLeft : null}
-										onSpotlightRight={isRight ? onSpotlightRight : null}
 										spotlightDisabled={spotlightDisabled}
 										value={day}
 										width={2}
@@ -271,8 +214,6 @@ const DatePickerBase = kind({
 										min={1}
 										onChange={onChangeMonth}
 										onSpotlightDisappear={onSpotlightDisappear}
-										onSpotlightLeft={isLeft ? onSpotlightLeft : null}
-										onSpotlightRight={isRight ? onSpotlightRight : null}
 										spotlightDisabled={spotlightDisabled}
 										value={month}
 										width={2}
@@ -289,8 +230,6 @@ const DatePickerBase = kind({
 										min={minYear}
 										onChange={onChangeYear}
 										onSpotlightDisappear={onSpotlightDisappear}
-										onSpotlightLeft={isLeft ? onSpotlightLeft : null}
-										onSpotlightRight={isRight ? onSpotlightRight : null}
 										spotlightDisabled={spotlightDisabled}
 										value={year}
 										width={4}
