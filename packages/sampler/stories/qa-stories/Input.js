@@ -159,4 +159,21 @@ storiesOf('Input')
 				defaultValue={inputData.initialNumericValue}
 			/>
 		)
-	);
+	)
+	.addWithInfo(
+		'with long placeholder',
+		() => (
+			<Input
+				onChange={action('onChange')}
+				disabled={boolean('disabled')}
+				iconAfter={select('iconAfter', iconNames)}
+				iconBefore={select('iconBefore', iconNames)}
+				invalid={boolean('invalid', false)}
+				invalidMessage={text('invalidMessage', InputBase.defaultProps.invalidMessage)}
+				noDecorator={boolean('noDecorator')}
+				placeholder={text('placeholder', inputData.longText)}
+				type={select('type', inputData.type, inputData.type[0])}
+			/>
+		)
+	)
+;

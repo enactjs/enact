@@ -10,10 +10,16 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Changed
 
+### Fixed
+
+- `spotlight` to not blur and re-focus an element that is already focused
+
+## [1.5.0] - 2017-07-19
+
+### Changed
+
 - `spotlight` 5-way target selection to ignore empty containers
 - `spotlight` containers to support an array of selectors for `defaultElement`
-
-### Fixed
 
 ## [1.4.1] - 2017-07-05
 

@@ -189,7 +189,10 @@ function getTargetInContainerByDirectionFromPosition (direction, containerId, po
 		if (next && isContainer(next)) {
 			const nextContainerId = next.dataset.containerId;
 
-			const nextInContainer = getTargetInContainerByDirectionFromPosition(
+			// need to cache this reference so we can filter it out later if necessary
+			const lastNavigated = next;
+
+			next = getTargetInContainerByDirectionFromPosition(
 				direction,
 				nextContainerId,
 				positionRect,
@@ -197,13 +200,11 @@ function getTargetInContainerByDirectionFromPosition (direction, containerId, po
 				getOverflowContainerRect(nextContainerId) || boundingRect
 			);
 
-			if (!nextInContainer) {
+			if (!next) {
 				// filter out the container and try again
-				elementRects = elementRects.filter(rect => rect.element !== next);
+				elementRects = elementRects.filter(rect => rect.element !== lastNavigated);
 				continue;
 			}
-
-			next = nextInContainer;
 		}
 
 		// If we've met every condition and haven't explicitly retried the search via `continue`,
@@ -266,15 +267,17 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 
 		// if we match a container,
 		if (next && isContainer(next)) {
-			let nextInContainer = null;
 			const nextContainerId = next.dataset.containerId;
+
+			// need to cache this reference so we can filter it out later if necessary
+			const lastNavigated = next;
 
 			// and it is restricted, return its target
 			if (isRestrictedContainer(nextContainerId)) {
-				nextInContainer = getTargetByContainer(nextContainerId);
+				next = getTargetByContainer(nextContainerId);
 			} else {
 				// otherwise, recurse into it
-				nextInContainer = getTargetInContainerByDirectionFromElement(
+				next = getTargetInContainerByDirectionFromElement(
 					direction,
 					nextContainerId,
 					element,
@@ -284,14 +287,11 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 				);
 			}
 
-			if (!nextInContainer) {
-				elementRects = elementRects.filter(rect => rect.element !== next);
+			if (!next) {
+				elementRects = elementRects.filter(rect => rect.element !== lastNavigated);
 				continue;
 			}
-
-			next = nextInContainer;
 		}
-
 
 		// If we've met every condition and haven't explicitly retried the search via `continue`,
 		// break out and return
@@ -380,6 +380,8 @@ function getLeaveForTarget (containerId, direction) {
 }
 
 function getNavigableTarget (target) {
+	if (target === document) return null;
+
 	let parent;
 	while (target && (isContainer(target) || !isFocusable(target))) {
 		parent = target.parentNode;
