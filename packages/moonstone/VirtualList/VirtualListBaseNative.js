@@ -263,8 +263,8 @@ class VirtualListCoreNative extends Component {
 	dimensionToExtent = 0
 	threshold = 0
 	maxFirstIndex = 0
-	updateFrom = 0
-	updateTo = 0
+	renderFrom = 0
+	renderTo = 0
 	curDataSize = 0
 	cc = []
 	scrollPosition = 0
@@ -831,18 +831,18 @@ class VirtualListCoreNative extends Component {
 		return <div {...props} />;
 	}
 
-	renderItems ({updateFrom, updateTo, renderFrom, renderTo}) {
+	renderItems ({shouldUpdateFrom, shouldUpdateTo}) {
 		const
 			{component: renderItem, data, dataSize, direction} = this.props,
-			{numOfItems} = this.state,
+			{firstIndex, numOfItems} = this.state,
 			{cc, dimensionToExtent, isPrimaryDirectionVertical, isItemSized, primary, secondary} = this,
-			itemContainerFrom = Math.floor(renderFrom / dimensionToExtent),
-			itemContainerTo = Math.ceil(renderTo / dimensionToExtent),
+			itemContainerFrom = Math.floor(shouldUpdateFrom / dimensionToExtent),
+			itemContainerTo = Math.ceil(shouldUpdateTo / dimensionToExtent),
 			numOfRows = Math.ceil(numOfItems / dimensionToExtent);
 
-		let {primaryPosition} = this.getGridPosition(updateFrom);
+		let {primaryPosition} = this.getGridPosition(firstIndex);
 
-		primaryPosition = primaryPosition + (itemContainerFrom - updateFrom / dimensionToExtent) * primary.gridSize;
+		primaryPosition = primaryPosition + (itemContainerFrom - firstIndex / dimensionToExtent) * primary.gridSize;
 
 		for (let i = itemContainerFrom; i < itemContainerTo; i++, primaryPosition += primary.gridSize) {
 			const
@@ -853,7 +853,7 @@ class VirtualListCoreNative extends Component {
 
 			let width = null;
 
-			for (let j = 0, index = i * dimensionToExtent; j < dimensionToExtent && index < updateTo; j++, index++) {
+			for (let j = 0, index = i * dimensionToExtent; j < dimensionToExtent && index < shouldUpdateTo; j++, index++) {
 				items[j] = renderItem({data, 'data-index': index, index, key: j});
 			}
 
@@ -872,9 +872,6 @@ class VirtualListCoreNative extends Component {
 				style: {flexDirection, transform: this.getItemContainerPosition(primaryPosition), width}
 			});
 		}
-
-		this.lastUpdateTo = updateTo;
-		this.lastUpdateFrom = updateFrom;
 	}
 
 	renderCalculate () {
@@ -882,15 +879,18 @@ class VirtualListCoreNative extends Component {
 			{dataSize} = this.props,
 			{firstIndex, numOfItems} = this.state,
 			{cc} = this,
-			updateFrom = firstIndex,
-			updateTo = Math.min(dataSize, updateFrom + numOfItems),
-			diff = updateFrom - this.lastUpdateFrom,
-			renderFrom = (cc.length === 0 || diff <= 0 || diff >= numOfItems) ? updateFrom : this.lastUpdateTo,
-			renderTo = (cc.length === 0 || diff > 0 || diff <= -numOfItems) ? updateTo : this.lastUpdateFrom;
+			renderFrom = firstIndex,
+			renderTo = Math.min(dataSize, renderFrom + numOfItems),
+			diff = renderFrom - this.lastRenderFrom,
+			shouldUpdateFrom = (cc.length === 0 || diff <= 0 || diff >= numOfItems) ? renderFrom : this.lastRenderTo,
+			shouldUpdateTo = (cc.length === 0 || diff > 0 || diff <= -numOfItems) ? renderTo : this.lastRenderFrom;
 
-		if (renderFrom < renderTo) {
-			this.renderItems({updateFrom, updateTo, renderFrom, renderTo});
+		if (shouldUpdateFrom < shouldUpdateTo) {
+			this.renderItems({shouldUpdateFrom, shouldUpdateTo});
 		}
+
+		this.lastRenderFrom = renderFrom;
+		this.lastRenderTo = renderTo;
 	}
 
 	render () {
