@@ -590,7 +590,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		scrollStartOnScroll = () => {
 			this.scrolling = true;
-			this.showThumb();
+			this.showThumb(this.getScrollBounds());
 			this.doScrollStart();
 		}
 
@@ -790,11 +790,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		// scroll bar
 
-		showThumb () {
-			if (this.state.isHorizontalScrollbarVisible) {
+		showThumb (bounds) {
+			if (this.state.isHorizontalScrollbarVisible && this.canScrollHorizontally(bounds)) {
 				this.horizontalScrollbarRef.showThumb();
 			}
-			if (this.state.isVerticalScrollbarVisible) {
+			if (this.state.isVerticalScrollbarVisible && this.canScrollVertically(bounds)) {
 				this.verticalScrollbarRef.showThumb();
 			}
 		}

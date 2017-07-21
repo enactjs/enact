@@ -449,13 +449,14 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		onMouseMove = (e) => {
 			if (this.isDragging) {
 				const
-					{dx, dy} = this.drag(e);
+					{dx, dy} = this.drag(e),
+					bounds = this.getScrollBounds();
 
 				if (this.isFirstDragging) {
 					this.doScrollStart();
 					this.isFirstDragging = false;
 				}
-				this.showThumb();
+				this.showThumb(bounds);
 				this.scroll(this.scrollLeft - dx, this.scrollTop - dy);
 			}
 		}
@@ -730,7 +731,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				targetY = bounds.maxTop;
 			}
 
-			this.showThumb();
+			this.showThumb(bounds);
 
 			if (animate) {
 				this.animator.animate(this.scrollAnimation({
@@ -910,11 +911,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		// scroll bar
 
-		showThumb () {
-			if (this.state.isHorizontalScrollbarVisible) {
+		showThumb (bounds) {
+			if (this.state.isHorizontalScrollbarVisible && this.canScrollHorizontally(bounds)) {
 				this.horizontalScrollbarRef.showThumb();
 			}
-			if (this.state.isVerticalScrollbarVisible) {
+			if (this.state.isVerticalScrollbarVisible && this.canScrollVertically(bounds)) {
 				this.verticalScrollbarRef.showThumb();
 			}
 		}
