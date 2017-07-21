@@ -956,18 +956,22 @@ class VirtualListCore extends Component {
 			this.renderCalculate();
 		}
 
+		const needsScrollingPlaceholder = this.nodeIndexToBeFocused != null && Spotlight.isPaused();
 		this.isPlaceholderHidden = cc.length;
 
 		return (
 			<div {...props} className={mergedClasses} onKeyDown={this.onKeyDown} ref={this.initContainerRef} style={this.itemStyle}>
-				{this.isPlaceholderHidden ? cc : (
+				{cc.length ? cc : null}
+				{primary ? null : (
 					<SpotlightPlaceholder
 						data-index={0}
 						data-vl-placeholder
 						onFocus={this.handlePlaceholderFocus}
 					/>
 				)}
-				{Spotlight.isPaused() ? <SpotlightPlaceholder /> : null}
+				{needsScrollingPlaceholder ? (
+					<SpotlightPlaceholder />
+				) : null}
 			</div>
 		);
 	}
