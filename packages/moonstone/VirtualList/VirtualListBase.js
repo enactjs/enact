@@ -292,7 +292,6 @@ class VirtualListCore extends Component {
 	containerRef = null
 
 	// spotlight
-	nodeToBeBlurred = null
 	nodeIndexToBeFocused = null
 	lastFocusedIndex = null
 
@@ -618,10 +617,6 @@ class VirtualListCore extends Component {
 			return;
 		}
 
-		if (this.nodeToBeBlurred !== null) {
-			this.blurOnNode(this.nodeToBeBlurred);
-		}
-
 		primaryPosition -= scrollPosition;
 
 		for (let i = itemContainerFrom; i < itemContainerTo; i++, primaryPosition += primary.gridSize) {
@@ -667,17 +662,6 @@ class VirtualListCore extends Component {
 		}
 	}
 
-	blurOnNode = (node) => {
-		// a pointer is hidden and a last focused item get focused after 30ms.
-		// To make sure the item to be blurred after that, we used 50ms.
-		setTimeout(() => {
-			if (node) {
-				node.blur();
-			}
-			this.nodeToBeBlurred = null;
-		}, 50);
-	}
-
 	setLastFocusedIndex = (item) => {
 		this.lastFocusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
 	}
@@ -690,10 +674,8 @@ class VirtualListCore extends Component {
 			focusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
 
 		if (!isNaN(focusedIndex) && focusedIndex !== this.lastFocusedIndex) {
-			const lastFocusedItem = this.containerRef.querySelector(`[data-index='${this.lastFocusedIndex}'].spottable`);
 			let gridPosition = this.getGridPosition(focusedIndex);
 
-			this.nodeToBeBlurred = lastFocusedItem || null;
 			this.nodeIndexToBeFocused = null;
 			this.lastFocusedIndex = focusedIndex;
 
@@ -756,10 +738,11 @@ class VirtualListCore extends Component {
 
 	shouldPreventScrollByFocus = () => this.isScrolledBy5way
 
-	jumpToSpottableItem = (keyCode, currentIndex) => {
+	jumpToSpottableItem = (keyCode, target) => {
 		const
 			{cbScrollTo, data, dataSize} = this.props,
-			{firstIndex, numOfItems} = this.state;
+			{firstIndex, numOfItems} = this.state,
+			currentIndex = Number.parseInt(target.getAttribute(dataIndexAttribute));
 
 		if (!data || !Array.isArray(data) || !data[currentIndex] || data[currentIndex].disabled) {
 			return false;
@@ -785,8 +768,8 @@ class VirtualListCore extends Component {
 				return false;
 			}
 
-			for (let i = currentIndex + 1; i < dataSize; i++) {
-				if (!data[i].disabled) {
+			for (let i = currentIndex + 2; i < dataSize; i++) {
+				if (data[i] && !data[i].disabled) {
 					nextIndex = i;
 					break;
 				}
@@ -797,8 +780,8 @@ class VirtualListCore extends Component {
 				return false;
 			}
 
-			for (let i = currentIndex - 1; i >= 0; i--) {
-				if (!data[i].disabled) {
+			for (let i = currentIndex - 2; i >= 0; i--) {
+				if (data[i] && !data[i].disabled) {
 					nextIndex = i;
 					break;
 				}
@@ -808,10 +791,9 @@ class VirtualListCore extends Component {
 		}
 
 		if (nextIndex !== -1 && (firstIndex > nextIndex || nextIndex >= firstIndex + numOfItems)) {
-			const currentFocusedItem = this.containerRef.querySelector(`[data-index='${this.lastFocusedIndex}'].spottable`);
-
-			this.nodeToBeBlurred = currentFocusedItem || null;
-			this.nodeIndexToBeFocused = this.lastFocusedIndex = nextIndex;
+			setTimeout(() => {
+				target.blur();
+			}, 50);
 
 			if (!Spotlight.isPaused()) {
 				Spotlight.pause();
@@ -832,9 +814,7 @@ class VirtualListCore extends Component {
 
 		this.isScrolledBy5way = false;
 		if (getDirection(keyCode)) {
-			const index = Number.parseInt(target.getAttribute(dataIndexAttribute));
-
-			this.isScrolledBy5way = this.jumpToSpottableItem(keyCode, index);
+			this.isScrolledBy5way = this.jumpToSpottableItem(keyCode, target);
 		}
 		forwardKeyDown(e, this.props);
 	}
@@ -908,7 +888,7 @@ class VirtualListCore extends Component {
 				items = [],
 				key = i % numOfRows,
 				flexDirection = isItemSized && direction === 'horizontal' ? 'column' : null,
-				extraNumOfItems = this.props.dataSize % dimensionToExtent;
+				extraNumOfItems = dataSize % dimensionToExtent;
 
 			let width = null;
 
@@ -920,7 +900,7 @@ class VirtualListCore extends Component {
 				}
 			}
 
-			if (i === Math.ceil(this.props.dataSize / dimensionToExtent) - 1 && extraNumOfItems > 0) {
+			if (i === Math.ceil(dataSize / dimensionToExtent) - 1 && extraNumOfItems > 0) {
 				width = (extraNumOfItems - 1) * secondary.gridSize + secondary.itemSize;
 			}
 

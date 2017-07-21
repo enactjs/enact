@@ -731,7 +731,7 @@ class VirtualListCoreNative extends Component {
 			}
 
 			for (let i = currentIndex + 2; i < dataSize; i++) {
-				if (!data[i].disabled) {
+				if (data[i] && !data[i].disabled) {
 					nextIndex = i;
 					break;
 				}
@@ -743,7 +743,7 @@ class VirtualListCoreNative extends Component {
 			}
 
 			for (let i = currentIndex - 2; i >= 0; i--) {
-				if (!data[i].disabled) {
+				if (data[i] && !data[i].disabled) {
 					nextIndex = i;
 					break;
 				}
