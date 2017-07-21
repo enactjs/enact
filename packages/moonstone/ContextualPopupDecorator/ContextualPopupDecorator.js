@@ -443,7 +443,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleKeyDown = (ev) => {
 			const {onClose, spotlightRestrict} = this.props;
-			const current = document.activeElement;
+			const current = Spotlight.getCurrent();
 			const direction = getDirection(ev.keyCode);
 			const spottables = Spotlight.getSpottableDescendants(this.state.containerId).length;
 			const spotlessSpotlightModal = spotlightRestrict === 'self-only' && !spottables;
@@ -465,7 +465,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				} else if (!spotlessSpotlightModal && Spotlight.move(direction)) {
 
 					// if current focus is not within the popup's container, issue the `onClose` event
-					if (!this.containerNode.contains(document.activeElement) && onClose) {
+					if (!this.containerNode.contains(Spotlight.getCurrent()) && onClose) {
 						onClose(ev);
 					}
 				}
