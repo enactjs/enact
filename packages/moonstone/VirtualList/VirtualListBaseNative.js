@@ -842,7 +842,7 @@ class VirtualListCoreNative extends Component {
 
 		let {primaryPosition} = this.getGridPosition(updateFrom);
 
-		primaryPosition += primaryPosition + (itemContainerFrom - updateFrom / dimensionToExtent) * primary.gridSize;
+		primaryPosition = primaryPosition + (itemContainerFrom - updateFrom / dimensionToExtent) * primary.gridSize;
 
 		for (let i = itemContainerFrom; i < itemContainerTo; i++, primaryPosition += primary.gridSize) {
 			const
