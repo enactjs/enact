@@ -94,6 +94,23 @@ const forwardPlayButtonClick = forward('onPlayButtonClick');
 const playLabel = 'Play';
 const pauseLabel = 'Pause';
 
+const AnnounceState = {
+	// Video is loaded but additional announcements have not been made
+	READY: 0,
+
+	// The title should be announced
+	TITLE: 1,
+
+	// The title has been announce
+	TITLE_READ: 2,
+
+	// The infoComponents should be announce
+	INFO: 3,
+
+	// All announcements have been made
+	DONE: 4
+};
+
 /**
  * Every callback sent by [VideoPlayer]{@link moonstone/VideoPlayer} receives a status package,
  * which includes an object with the following key/value pairs as the first argument:
@@ -501,13 +518,9 @@ const VideoPlayerBase = class extends React.Component {
 		this.moreInProgress = false;	// This only has meaning for the time between clicking "more" and the official state is updated. To get "more" state, only look at the state value.
 		this.prevCommand = (props.noAutoPlay ? 'pause' : 'play');
 		this.speedIndex = 0;
-		this.infoId = null;
-		this.titleId = null;
+		this.id = this.generateId();
 		this.titleOffsetCalculated = false;
 		this.selectPlaybackRates('fastForward');
-		this.setMediaTitleId();
-		this.setAccessibilityProp(this.titleId);
-		this.firstMoreInfoReaded = false;
 
 		this.initI18n();
 
@@ -526,6 +539,7 @@ const VideoPlayerBase = class extends React.Component {
 
 		// Re-render-necessary State
 		this.state = {
+			announce: AnnounceState.READY,
 			buffered: 0,
 			currentTime: 0,
 			duration: 0,
@@ -617,6 +631,10 @@ const VideoPlayerBase = class extends React.Component {
 		) {
 			this.focusDefaultMediaControl();
 		}
+
+		if (this.state.more !== prevState.more) {
+			this.refocusMoreButton.start();
+		}
 	}
 
 	componentWillUnmount () {
@@ -629,7 +647,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.stopDelayedTitleHide();
 		this.stopDelayedFeedbackHide();
 		this.renderBottomControl.stop();
-		this.skipFirstReadJob.stop();
+		this.refocusMoreButton.stop();
 	}
 
 	//
@@ -709,23 +727,31 @@ const VideoPlayerBase = class extends React.Component {
 		this.autoCloseJob.stop();
 	}
 
-	setMediaTitleId = () => {
-		const generateId = Math.random().toString(36).substr(2, 8);
-		this.infoId = 'md_info_id-' + generateId;
-		this.titleId = 'md_title_id-' + generateId;
+	generateId = () => {
+		return Math.random().toString(36).substr(2, 8);
 	}
 
 	showControls = () => {
 		this.startDelayedFeedbackHide();
 		this.startDelayedTitleHide();
 		forwardControlsAvailable({available: true}, this.props);
+
+		let {announce} = this.state;
+		if (announce === AnnounceState.READY) {
+			// if we haven't read the title yet, do so this time
+			announce = AnnounceState.TITLE;
+		} else if (announce === AnnounceState.TITLE) {
+			// if we have read the title, advance to INFO so title isn't read again
+			announce = AnnounceState.TITLE_READ;
+		}
+
 		this.setState({
+			announce,
 			bottomControlsRendered: true,
 			bottomControlsVisible: true,
 			feedbackVisible: true,
 			titleVisible: true
 		});
-		this.skipFirstReadJob.start();
 	}
 
 	hideControls = () => {
@@ -737,17 +763,12 @@ const VideoPlayerBase = class extends React.Component {
 
 	autoCloseJob = new Job(this.hideControls)
 
-	skipFirstRead = (isMore = false) => {
-		if (isMore) {
-			// Readout 'more' or 'back' button explicitly.
-			let selectedButton = Spotlight.getCurrent();
-			selectedButton.blur();
-			selectedButton.focus();
-		}
-		this.firstRead = null;
-	}
-
-	skipFirstReadJob = new Job(this.skipFirstRead, 100)
+	refocusMoreButton = new Job(() => {
+		// Readout 'more' or 'back' button explicitly.
+		let selectedButton = Spotlight.getCurrent();
+		selectedButton.blur();
+		selectedButton.focus();
+	}, 100)
 
 	startDelayedTitleHide = () => {
 		if (this.props.titleHideDelay) {
@@ -874,16 +895,9 @@ const VideoPlayerBase = class extends React.Component {
 	reloadVideo = () => {
 		// When changing a HTML5 video, you have to reload it.
 		this.video.load();
-		this.setAccessibilityProp(this.titleId);
-		this.firstMoreInfoReaded = false;
-	}
-
-	setAccessibilityProp = (id) => {
-		this.firstRead = {
-			role: 'alert',
-			'aria-live': 'off',
-			'aria-labelledby': id
-		};
+		this.setState({
+			announce: AnnounceState.READY
+		});
 	}
 
 	/**
@@ -1302,15 +1316,9 @@ const VideoPlayerBase = class extends React.Component {
 
 		this.setState({
 			more: !this.state.more,
-			titleVisible: true
+			titleVisible: true,
+			announce: this.state.announce < AnnounceState.INFO ? AnnounceState.INFO : AnnounceState.DONE
 		});
-
-		if (!this.firstMoreInfoReaded) {
-			this.setAccessibilityProp(this.infoId);
-			this.firstMoreInfoReaded = true;
-		}
-
-		this.skipFirstReadJob.start(true);
 	}
 
 	setPlayerRef = (node) => {
@@ -1361,6 +1369,21 @@ const VideoPlayerBase = class extends React.Component {
 		// Handle some cases when the "more" button is pressed
 		const moreDisabled = !(this.state.more);
 
+		let controlsAriaProps = null;
+		if (this.state.announce === AnnounceState.TITLE) {
+			controlsAriaProps = {
+				role: 'alert',
+				'aria-live': 'off',
+				'aria-labelledby': `${this.id}_title`
+			};
+		} else if (this.state.announce === AnnounceState.INFO) {
+			controlsAriaProps = {
+				role: 'alert',
+				'aria-live': 'off',
+				'aria-labelledby': `${this.id}_info`
+			};
+		}
+
 		return (
 			<div className={css.videoPlayer + (className ? ' ' + className : '')} style={style} onClick={this.activityDetected} onKeyDown={this.activityDetected} ref={this.setPlayerRef}>
 				{/* Video Section */}
@@ -1380,15 +1403,14 @@ const VideoPlayerBase = class extends React.Component {
 				</Overlay>
 
 				{this.state.bottomControlsRendered ?
-					<div className={css.fullscreen + ' enyo-fit scrim'} style={{display: this.state.bottomControlsVisible ? 'block' : 'none'}} {...this.firstRead}>
+					<div className={css.fullscreen + ' enyo-fit scrim'} style={{display: this.state.bottomControlsVisible ? 'block' : 'none'}} {...controlsAriaProps}>
 						<Container className={css.bottom} data-container-disabled={!this.state.bottomControlsVisible}>
 							{/* Info Section: Title, Description, Times */}
 							<div className={css.infoFrame}>
 								<MediaTitle
-									infoId={this.infoId}
+									id={this.id}
 									infoVisible={this.state.more}
 									title={title}
-									titleId={this.titleId}
 									visible={this.state.titleVisible}
 								>
 									{infoComponents}
