@@ -1,4 +1,4 @@
-import IconButton, {IconButtonBase} from '@enact/moonstone/IconButton';
+import IconButton, {IconButtonBaseFactory} from '@enact/moonstone/IconButton';
 import icons from './icons';
 import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
@@ -12,7 +12,7 @@ import fwd from '../../images/icon-fwd-btn.png';
 import play from '../../images/icon-play-btn.png';
 import rew from '../../images/icon-rew-btn.png';
 
-const Config = mergeComponentMetadata('IconButton', IconButtonBase, IconButton);
+const Config = mergeComponentMetadata('IconButton', IconButtonBaseFactory(), IconButton);
 
 // Set up some defaults for info and knobs
 const prop = {

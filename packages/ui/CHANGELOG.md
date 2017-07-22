@@ -2,6 +2,18 @@
 
 The following is a curated list of changes in the Enact ui module, newest changes on the top.
 
+## [unreleased]
+
+### Deprecated
+
+### Added
+
+- `ui/ButtonFactory`, `ui/IconFactory` and `ui/IconButtonFactory` modules to support additional theme development
+
+### Changed
+
+### Fixed
+
 ## [2.0.0-alpha.1] - 2017-08-27
 
 ## Added

@@ -2,6 +2,18 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [unreleased]
+
+### Deprecated
+
+### Added
+
+### Changed
+
+- `moonstone/Button`, `moonstoneIcon`, and `moonstone/IconButton` to derive from their base `ui` package version
+
+### Fixed
+
 ## [2.0.0-alpha.1] - 2017-08-27
 
 ### Changed
