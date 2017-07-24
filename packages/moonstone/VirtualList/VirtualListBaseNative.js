@@ -896,7 +896,7 @@ class VirtualListCoreNative extends Component {
 			mergedClasses = classNames(css.list, this.wrapperClass, className);
 
 		return (
-			<div data-container-id={dataContainerId} ref={this.initWrapperRef} className={mergedClasses} style={style}>
+			<div ref={this.initWrapperRef} className={mergedClasses} data-container-id={dataContainerId} style={style}>
 				<div {...rest} onKeyDown={this.onKeyDown} ref={this.initContainerRef}>
 					{cc.length ? cc : null}
 					{primary ? null : (
