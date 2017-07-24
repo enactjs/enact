@@ -104,6 +104,7 @@ const forwardPlayButtonClick = forward('onPlayButtonClick');
 const playLabel = 'Play';
 const pauseLabel = 'Pause';
 
+<<<<<<< 78ca0cd2638e3d3f84c4c8715b220822e86fd39e
 const AnnounceState = {
 	// Video is loaded but additional announcements have not been made
 	READY: 0,
@@ -121,6 +122,8 @@ const AnnounceState = {
 	DONE: 4
 };
 
+=======
+>>>>>>> renamed variables and removed unneeded code
 /**
  * Every callback sent by [VideoPlayer]{@link moonstone/VideoPlayer} receives a status package,
  * which includes an object with the following key/value pairs as the first argument:
@@ -229,7 +232,7 @@ const VideoPlayerBase = class extends React.Component {
 
 		/**
 		 * The amount of milliseconds that the player will pause before firing the
-		 * first jump event on a right or left hold.
+		 * first jump event on a right or left pulse.
 		 *
 		 * @type {Number}
 		 * @default 400
@@ -267,7 +270,7 @@ const VideoPlayerBase = class extends React.Component {
 
 		/**
 		 * The amount of milliseconds that the player will throttle before firing a
-		 * jump event on a right or left hold.
+		 * jump event on a right or left pulse.
 		 *
 		 * @type {Number}
 		 * @default 200
@@ -708,8 +711,12 @@ const VideoPlayerBase = class extends React.Component {
 =======
 		this.jumpForward.stop();
 		this.jumpBackward.stop();
+<<<<<<< 78ca0cd2638e3d3f84c4c8715b220822e86fd39e
 		this.cancelListenForKeyHolds();
 >>>>>>> Added initialJumpDelay prop
+=======
+		this.stopListeningForPulses();
+>>>>>>> renamed variables and removed unneeded code
 	}
 
 	//
@@ -871,15 +878,15 @@ const VideoPlayerBase = class extends React.Component {
 	handle = handle.bind(this)
 
 	jumpBackward = new Job(() => {
-		this.jump(-1 * this.props.jumpBy, false);
+		this.jump(-1 * this.props.jumpBy);
 	}, this.props.jumpDelay)
 
 	jumpForward = new Job(() => {
 		this.jump(this.props.jumpBy);
 	}, this.props.jumpDelay)
 
-	listenForKeyHolds = () => {
-		if (this.hold && ((perfNow() - this.firstHold) > this.props.initialJumpDelay)) {
+	startListeningForPulses = () => {
+		if (this.pulsing && ((getNow() - this.holdStart) > this.props.initialJumpDelay)) {
 			if (this.currentKey === 'right') {
 				this.jumpForward.throttle();
 			} else if (this.currentKey === 'left') {
@@ -887,39 +894,35 @@ const VideoPlayerBase = class extends React.Component {
 			}
 		}
 
-		this.keyLoop = setTimeout(this.listenForKeyHolds, 100);
+		this.keyLoop = setTimeout(this.startListeningForPulses, 16.6);
 	}
 
-	cancelListenForKeyHolds () {
+	stopListeningForPulses () {
 		clearTimeout(this.keyLoop);
 	}
 
-	handleLeft = () => {
-		Spotlight.pause();
-		if (!this.hold) {
-			this.jumpBackward.throttle();
-			this.firstHold = perfNow();
-			this.listenForKeyHolds();
-			this.hold = true;
-			this.currentKey = 'left';
-		}
-	}
-
-	handleRight = () => {
-		Spotlight.pause();
-		if (!this.hold) {
-			this.jumpForward.throttle();
-			this.firstHold = perfNow();
-			this.listenForKeyHolds();
-			this.hold = true;
-			this.currentKey = 'right';
+	handleKeyDown = (ev) => {
+		if (is('left', ev.keyCode) || is('right', ev.keyCode)) {
+			Spotlight.pause();
+			if (!this.pulsing) {
+				if (is('left', ev.keyCode)) {
+					this.jumpBackward.throttle();
+					this.currentKey = 'left';
+				} else if (is('right', ev.keyCode)) {
+					this.jumpForward.throttle();
+					this.currentKey = 'right';
+				}
+				this.holdStart = getNow();
+				this.startListeningForPulses();
+				this.pulsing = true;
+			}
 		}
 	}
 
 	handleKeyUp = (ev) => {
 		if (is('left', ev.keyCode) || is('right', ev.keyCode)) {
-			this.cancelListenForKeyHolds();
-			this.hold = false;
+			this.stopListeningForPulses();
+			this.pulsing = false;
 			this.jumpForward.stop();
 			this.jumpBackward.stop();
 			Spotlight.resume();
@@ -1623,8 +1626,7 @@ const VideoPlayerBase = class extends React.Component {
 					// It's non-visible but lives at the top of the VideoPlayer.
 					className={css.controlsHandleAbove}
 					onSpotlightDown={this.showControls}
-					onSpotlightLeft={this.handleLeft}
-					onSpotlightRight={this.handleRight}
+					onKeyDown={this.handleKeyDown}
 					onKeyUp={this.handleKeyUp}
 					onClick={this.showControls}
 				/>
