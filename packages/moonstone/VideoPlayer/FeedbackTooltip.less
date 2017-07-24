@@ -1,8 +1,9 @@
 // FeedbackTooltip.less
 //
 @import "../styles/text.less";
-@import "../styles/variables.less";
+@import "../styles/colors.less";
 @import "../styles/skin.less";
+@import "../styles/variables.less";
 
 .feedbackTooltip {
 	&.hidden {
@@ -37,19 +38,18 @@
 		bottom: @moon-spotlight-outset;
 	}
 
-
 	&.miniFeedback {
 		position: absolute;
-		top: 87px;
-		left: 12px;
+		top: @moon-video-mini-feedback-position-top;
+		left: @moon-video-mini-feedback-padding;
 
 		.content {
-			background-color: rgba(0, 0, 0, 0.5);
-			border-radius: 24px;
-			padding: 3px 12px 0 3px;
+			background-color: @moon-video-mini-feedback-bg-color;
+			border-radius: @moon-video-mini-feedback-padding*2;
+			padding: @moon-video-mini-feedback-padding/4 @moon-video-mini-feedback-padding 0 @moon-video-mini-feedback-padding/4;
 
 			& > div:first-child > div {
-				padding-bottom: 6px;
+				padding-bottom: @moon-video-mini-feedback-padding/2;
 			}
 		}
 	}

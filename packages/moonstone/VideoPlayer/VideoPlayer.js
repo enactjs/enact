@@ -15,7 +15,6 @@ import {forKey, forward, forwardWithPrevent, handle, stopImmediate} from '@enact
 import ilib from '@enact/i18n';
 import {Job} from '@enact/core/util';
 import {on, off} from '@enact/core/dispatcher';
-import {add, is} from '@enact/core/keymap';
 import {platform} from '@enact/core/platform';
 import Slottable from '@enact/ui/Slottable';
 import {getDirection, Spotlight} from '@enact/spotlight';
@@ -92,15 +91,18 @@ const forwardJumpBackwardButtonClick = forwardWithPrevent('onJumpBackwardButtonC
 const forwardJumpForwardButtonClick = forwardWithPrevent('onJumpForwardButtonClick');
 const forwardPlayButtonClick = forward('onPlayButtonClick');
 
-// MRCU keyCodes
-const keyCodes = {
-	fastForward: 417,
-	pause: 133,
-	play: 415,
-	rewind: 412
+const mapKeys = (comp) => {
+	const {fastForward, handleLeft: jumpBackward, handleRight: jumpForward, pause, play, rewind} = comp;
+	// MRCU keyCodes
+	return {
+		44: jumpBackward,
+		46: jumpForward,
+		133: pause,
+		412: rewind,
+		415: play,
+		417: fastForward
+	};
 };
-add('enter', 13); // checked in activityDetected() when keys are pressed on the remote
-const isEnter = is('enter');
 
 // localized strings
 const playLabel = 'Play';
@@ -545,6 +547,9 @@ const VideoPlayerBase = class extends React.Component {
 
 		this.initI18n();
 
+		// build a keyboard/mrcu keymap to command methods
+		this.keyMap = mapKeys(this);
+
 		// Generate event handling forwarders and a smooth block to pass to <Video>
 		for (let key in handledMediaEventsMap) {
 			const eventName = handledMediaEventsMap[key];
@@ -727,28 +732,26 @@ const VideoPlayerBase = class extends React.Component {
 
 	activityDetected = (ev) => {
 		// console.count('activityDetected');
-		let {autoCloseTimeout} = this.props;
+		const {autoCloseTimeout} = this.props;
 
-		if (ev.keyCode && !isEnter(ev.keyCode)) {
-			Object.keys(keyCodes).map((key) => {
-				if (keyCodes[key] === ev.keyCode) {
-					this[key]();
-					this.showControls({playbackControlsVisible: false});
-					// change autoCloseTimeout based on action
-					if (key === 'fastForward' || key === 'pause' || key === 'rewind') {
-						autoCloseTimeout = null;
-					} else if (key === 'play') {
-						autoCloseTimeout = 5000;
-					}
-				}
-			});
+		if (this.keyMap[ev.keyCode]) {
+			this.processRemoteKeyPress(ev.keyCode);
 		}
+
 		if (autoCloseTimeout !== null) {
 			this.startAutoCloseTimeout(autoCloseTimeout);
 		} else {
 			// make sure an existing timeout is stopped
 			this.stopAutoCloseTimeout();
 		}
+	}
+
+	processRemoteKeyPress = (keyCode) => {
+		const handler = this.keyMap[keyCode];
+		if (handler !== this.handleLeft || handler !== this.handleRight) {
+			this.showControls({playbackControlsVisible: false});
+		}
+		handler();
 	}
 
 	startAutoCloseTimeout = (delay) => {
@@ -1469,7 +1472,7 @@ const VideoPlayerBase = class extends React.Component {
 								</FeedbackTooltip>
 							</MediaSlider>}
 
-							<MediaControls
+							{!this.state.playbackControlsVisible ? null : <MediaControls
 								backwardIcon={backwardIcon}
 								forwardIcon={forwardIcon}
 								jumpBackwardIcon={jumpBackwardIcon}
@@ -1496,10 +1499,9 @@ const VideoPlayerBase = class extends React.Component {
 								rateButtonsDisabled={rateButtonsDisabled}
 								rightComponents={rightComponents}
 								showMoreComponents={this.state.more}
-								style={{visibility: this.state.playbackControlsVisible ? 'visible' : 'hidden'}}
 							>
 								{children}
-							</MediaControls>
+							</MediaControls>}
 						</Container>
 					</div> :
 					null
