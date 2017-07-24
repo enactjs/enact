@@ -96,6 +96,16 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			children: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 
 			/**
+			 * Overrides the `aria-label` for the decrement button. By default, `aria-label` is set
+			 * to the 'press ok button to decrease the value'.
+			 *
+			 * @type {String}
+			 * @memberof moonstone/IncrementSlider.IncrementSliderBase.prototype
+			 * @public
+			 */
+			decrementAriaLabel: PropTypes.string,
+
+			/**
 			 * Assign a custom icon for the decrementer. All strings supported by [Icon]{Icon} are
 			 * supported. Without a custom icon, the default is used, and is automatically changed when
 			 * [vertical]{moonstone/IncrementSlider#vertical} is changed.
@@ -132,6 +142,16 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * @public
 			 */
 			focused: PropTypes.bool,
+
+			/**
+			 * Overrides the `aria-label` for the increment button. By default, `aria-label` is set
+			 * to the 'press ok button to increase the value'.
+			 *
+			 * @type {String}
+			 * @memberof moonstone/IncrementSlider.IncrementSliderBase.prototype
+			 * @public
+			 */
+			incrementAriaLabel: PropTypes.string,
 
 			/**
 			 * Assign a custom icon for the incrementer. All strings supported by [Icon]{Icon} are
@@ -389,6 +409,8 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 
 		defaultProps: {
 			backgroundProgress: 0,
+			decrementAriaLabel: '',
+			incrementAriaLabel: '',
 			max: 100,
 			min: 0,
 			noFill: false,
@@ -467,8 +489,8 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			incrementSliderClasses: ({vertical, styler}) => styler.append({vertical, horizontal: !vertical}),
 			decrementIcon: ({decrementIcon, vertical}) => (decrementIcon || (vertical ? 'arrowlargedown' : 'arrowlargeleft')),
 			incrementIcon: ({incrementIcon, vertical}) => (incrementIcon || (vertical ? 'arrowlargeup' : 'arrowlargeright')),
-			decrementAriaLabel: ({'aria-valuetext': valueText, disabled, min, value}) => !(disabled || value <= min) ? (`${valueText != null ? valueText : value} ${$L('press ok button to decrease the value')}`) : null,
-			incrementAriaLabel: ({'aria-valuetext': valueText, disabled, max, value}) => !(disabled || value >= max) ? (`${valueText != null ? valueText : value} ${$L('press ok button to increase the value')}`) : null
+			decrementAriaLabel: ({'aria-valuetext': valueText, decrementAriaLabel, disabled, min, value}) => !(disabled || value <= min) ? decrementAriaLabel || (`${valueText != null ? valueText : value} ${$L('press ok button to decrease the value')}`) : null,
+			incrementAriaLabel: ({'aria-valuetext': valueText, disabled, incrementAriaLabel, max, value}) => !(disabled || value >= max) ? incrementAriaLabel || (`${valueText != null ? valueText : value} ${$L('press ok button to increase the value')}`) : null
 		},
 
 		render: ({active,
