@@ -277,7 +277,6 @@ class VirtualListCore extends Component {
 
 	isPrimaryDirectionVertical = true
 	isItemSized = false
-	isPlaceholderHidden = false
 	isScrolledBy5way = false
 
 	dimensionToExtent = 0
@@ -614,10 +613,6 @@ class VirtualListCore extends Component {
 			numOfRows = Math.ceil(numOfItems / dimensionToExtent);
 
 		let {primaryPosition} = this.getGridPosition(firstIndex);
-
-		if (!this.containerRef || !this.isPlaceholderHidden) {
-			return;
-		}
 
 		primaryPosition -= scrollPosition;
 
@@ -957,7 +952,6 @@ class VirtualListCore extends Component {
 		}
 
 		const needsScrollingPlaceholder = this.nodeIndexToBeFocused != null && Spotlight.isPaused();
-		this.isPlaceholderHidden = cc.length;
 
 		return (
 			<div {...props} className={mergedClasses} onKeyDown={this.onKeyDown} ref={this.initContainerRef} style={this.itemStyle}>
