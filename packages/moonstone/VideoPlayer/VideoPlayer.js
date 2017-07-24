@@ -706,6 +706,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.stopDelayedFeedbackHide();
 		this.announceJob.stop();
 		this.renderBottomControl.stop();
+<<<<<<< 36058b7b5f89bd31afa69b62f4c28bb96dbd0d08
 <<<<<<< 654e548fb468b8ea040dd8669ad50c434e7efd14
 		this.refocusMoreButton.stop();
 =======
@@ -715,6 +716,8 @@ const VideoPlayerBase = class extends React.Component {
 		this.cancelListenForKeyHolds();
 >>>>>>> Added initialJumpDelay prop
 =======
+=======
+>>>>>>> removed throttling
 		this.stopListeningForPulses();
 >>>>>>> renamed variables and removed unneeded code
 	}
@@ -877,24 +880,16 @@ const VideoPlayerBase = class extends React.Component {
 
 	handle = handle.bind(this)
 
-	jumpBackward = new Job(() => {
-		this.jump(-1 * this.props.jumpBy);
-	}, this.props.jumpDelay)
-
-	jumpForward = new Job(() => {
-		this.jump(this.props.jumpBy);
-	}, this.props.jumpDelay)
-
 	startListeningForPulses = () => {
 		if (this.pulsing && ((getNow() - this.holdStart) > this.props.initialJumpDelay)) {
 			if (this.currentKey === 'right') {
-				this.jumpForward.throttle();
+				this.jump(this.props.jumpBy);
 			} else if (this.currentKey === 'left') {
-				this.jumpBackward.throttle();
+				this.jump(-1 * this.props.jumpBy);
 			}
 		}
 
-		this.keyLoop = setTimeout(this.startListeningForPulses, 16.6);
+		this.keyLoop = setTimeout(this.startListeningForPulses, this.props.jumpDelay);
 	}
 
 	stopListeningForPulses () {
@@ -906,10 +901,10 @@ const VideoPlayerBase = class extends React.Component {
 			Spotlight.pause();
 			if (!this.pulsing) {
 				if (is('left', ev.keyCode)) {
-					this.jumpBackward.throttle();
+					this.jump(-1 * this.props.jumpBy);
 					this.currentKey = 'left';
 				} else if (is('right', ev.keyCode)) {
-					this.jumpForward.throttle();
+					this.jump(this.props.jumpBy);
 					this.currentKey = 'right';
 				}
 				this.holdStart = getNow();
@@ -923,8 +918,6 @@ const VideoPlayerBase = class extends React.Component {
 		if (is('left', ev.keyCode) || is('right', ev.keyCode)) {
 			this.stopListeningForPulses();
 			this.pulsing = false;
-			this.jumpForward.stop();
-			this.jumpBackward.stop();
 			Spotlight.resume();
 		}
 	}
