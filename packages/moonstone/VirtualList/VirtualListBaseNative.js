@@ -480,7 +480,7 @@ class VirtualListCoreNative extends Component {
 
 		this.setState({firstIndex: wasFirstIndexMax ? this.maxFirstIndex : Math.min(firstIndex, this.maxFirstIndex), numOfItems});
 		this.calculateScrollBounds(props);
-		this.updateMoreInfo(scrollPosition);
+		this.updateMoreInfo(dataSize, scrollPosition);
 	}
 
 	calculateScrollBounds (props) {
@@ -535,6 +535,7 @@ class VirtualListCoreNative extends Component {
 
 	didScroll (x, y, dirX, dirY) {
 		const
+			{dataSize} = this.props,
 			{firstIndex} = this.state,
 			{isPrimaryDirectionVertical, threshold, dimensionToExtent, maxFirstIndex, scrollBounds} = this,
 			{gridSize} = this.primary,
@@ -568,16 +569,15 @@ class VirtualListCoreNative extends Component {
 
 		this.syncThreshold(maxPos);
 		this.scrollPosition = pos;
-		this.updateMoreInfo(pos);
+		this.updateMoreInfo(dataSize, pos);
 
 		if (firstIndex !== newFirstIndex) {
 			this.setState({firstIndex: newFirstIndex});
 		}
 	}
 
-	updateMoreInfo (primaryPosition) {
+	updateMoreInfo (dataSize, primaryPosition) {
 		const
-			{dataSize} = this.props,
 			{dimensionToExtent, moreInfo} = this,
 			{itemSize, gridSize, clientSize} = this.primary;
 
