@@ -581,11 +581,9 @@ class VirtualListCore extends Component {
 		this.scrollPosition = pos;
 		this.updateMoreInfo(pos);
 
+		this.positionItemContainers();
 		if (firstIndex !== newFirstIndex) {
-			this.positionItemContainers();
 			this.setState({firstIndex: newFirstIndex});
-		} else {
-			this.positionItemContainers();
 		}
 	}
 
@@ -791,6 +789,8 @@ class VirtualListCore extends Component {
 			setTimeout(() => {
 				target.blur();
 			}, 50);
+
+			this.nodeIndexToBeFocused = this.lastFocusedIndex = nextIndex;
 
 			if (!Spotlight.isPaused()) {
 				Spotlight.pause();
