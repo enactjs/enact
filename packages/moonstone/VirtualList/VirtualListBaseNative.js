@@ -275,6 +275,7 @@ class VirtualListCoreNative extends Component {
 
 	// spotlight
 	lastFocusedIndex = null
+	nodeIndexToBeFocused = null
 
 	isVertical = () => this.isPrimaryDirectionVertical
 
@@ -575,6 +576,10 @@ class VirtualListCoreNative extends Component {
 			['data-preventscrollonfocus']: true, // Added this attribute to prevent scroll on focus by browser
 			style: {...itemElement.props.style, ...style}
 		});
+
+		if (index === this.nodeIndexToBeFocused) {
+			this.focusByIndex(index);
+		}
 	}
 
 	positionItems () {
@@ -670,6 +675,7 @@ class VirtualListCoreNative extends Component {
 				Spotlight.resume();
 			}
 			this.focusOnNode(item);
+			this.nodeIndexToBeFocused = null;
 		}, 0);
 	}
 
@@ -810,13 +816,14 @@ class VirtualListCoreNative extends Component {
 				target.blur();
 			}, 50);
 
+			this.nodeIndexToBeFocused = this.lastFocusedIndex = nextIndex;
+
 			if (!Spotlight.isPaused()) {
 				Spotlight.pause();
 			}
 
 			cbScrollTo({
 				index: nextIndex,
-				focus: true,
 				stickTo: isForward ? 'end' : 'start'
 			});
 			return true;
