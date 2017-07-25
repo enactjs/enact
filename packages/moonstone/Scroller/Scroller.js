@@ -262,19 +262,19 @@ class ScrollerBase extends Component {
 		return this.scrollPos;
 	}
 
-	calculateScrollTop = (focusedItem, itemTop, itemHeight, scrollInfo) => {
+	calculateScrollTop = (focusedItem, itemTop, containerHeight, scrollInfo) => {
 		const
 			{clientHeight} = this.scrollBounds,
 			{top: containerTop} = this.containerRef.getBoundingClientRect(),
 			currentScrollTop = this.scrollPos.top,
 			// calculation based on client position
 			newItemTop = this.containerRef.scrollTop + (itemTop - containerTop),
-			itemBottom = newItemTop + itemHeight,
+			itemBottom = newItemTop + containerHeight,
 			scrollBottom = clientHeight + currentScrollTop;
 
 		let newScrollTop = this.scrollPos.top;
 
-		if (scrollInfo) {
+		if (scrollInfo && scrollInfo.previousScrollHeight) {
 			const
 				{scrollTop, previousScrollHeight} = scrollInfo,
 				{scrollHeight} = this.scrollBounds,
@@ -307,7 +307,7 @@ class ScrollerBase extends Component {
 			}
 		}
 
-		if (itemHeight > clientHeight) {
+		if (containerHeight > clientHeight) {
 			// scroller behavior for containers that are bigger than `clientHeight`
 			const
 				{top, height: nestedItemHeight} = focusedItem.getBoundingClientRect(),
