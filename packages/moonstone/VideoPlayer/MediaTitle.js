@@ -98,7 +98,7 @@ const MediaTitleBase = kind({
 		delete rest.visible;
 
 		return (
-			<div {...rest}>
+			<div {...rest} id={id}>
 				<MarqueeText id={id + '_title'} className={titleClassName} marqueeOn="render">
 					{title}
 				</MarqueeText>
