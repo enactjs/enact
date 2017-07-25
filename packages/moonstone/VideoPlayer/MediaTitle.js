@@ -55,14 +55,6 @@ const MediaTitleBase = kind({
 		title: PropTypes.string,
 
 		/**
-		 * titleId string to specify an id in the title div.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		titleId: PropTypes.string,
-
-		/**
 		 * Setting this to false effectively hides the entire component. Setting it to `false` after
 		 * the control has rendered causes a fade-out transition. Setting to `true` after or during
 		 * the transition makes the component immediately visible again, without delay or transition.
