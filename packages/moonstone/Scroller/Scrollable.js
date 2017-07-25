@@ -537,9 +537,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						pos = positionFn(item);
 					}
 
-					this.stop();
-
 					if (pos.top !== Math.round(this.scrollTop)) {
+						// Stop scroller before `startScrollOnFocus` for new position.
+						this.stop();
 						this.startScrollOnFocus(pos, item, spotItem);
 					}
 				}
