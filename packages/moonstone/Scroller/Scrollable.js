@@ -536,7 +536,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					} else {
 						pos = positionFn({item});
 					}
-
 					this.startScrollOnFocus(pos, item);
 				}
 			} else if (this.childRef.setLastFocusedIndex) {
