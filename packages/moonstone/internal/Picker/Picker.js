@@ -93,6 +93,14 @@ const PickerBase = class extends React.Component {
 		min: PropTypes.number.isRequired,
 
 		/**
+		 * Assign a custom accessibility value for the picker
+		 *
+		 * @type {String}
+		 * @public
+		 */
+		'aria-valuetext': PropTypes.string,
+
+		/**
 		 * Accessibility hint
 		 * For example, `hour`, `year`, and `meridiem`
 		 *
@@ -649,6 +657,7 @@ const PickerBase = class extends React.Component {
 	render () {
 		const {active} = this.state;
 		const {
+			'aria-valuetext': ariaValueText,
 			noAnimation,
 			children,
 			disabled,
@@ -731,7 +740,7 @@ const PickerBase = class extends React.Component {
 				<div
 					aria-disabled={disabled}
 					aria-hidden={!active}
-					aria-valuetext={valueText}
+					aria-valuetext={ariaValueText != null ? ariaValueText : valueText}
 					className={css.valueWrapper}
 					role="spinbutton"
 				>
