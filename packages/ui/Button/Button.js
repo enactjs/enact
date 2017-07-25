@@ -168,21 +168,21 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 			small: false
 		},
 
-		styles: /** @lends ui/Button.ButtonBaseFactory.prototype */ {
-			css: {
+		styles: {
+			css: /** @lends ui/Button.ButtonBaseFactory.prototype */ {
 				...css,
 				/**
 				 * Classes to apply to the background of the button, used on a child of button
 				 * @type {String}
-				 * @lends ui/Button.ButtonBaseFactory.prototype
 				 * @public
 				 */
 				bg: css.bg
 
 				/**
 				 * Classes to apply to the selected state of the button, applied to the base element
+				 *
+				 * @name selected
 				 * @type {String}
-				 * @lends ui/Button.ButtonBaseFactory.prototype
 				 * @public
 				 */
 			},
