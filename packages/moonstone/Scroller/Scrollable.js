@@ -501,18 +501,18 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		startScrollOnFocus = (pos, item) => {
 			if (pos) {
-				if (pos.left !== this.scrollLeft || pos.top !== this.scrollTop) {
-					this.start({
-						targetX: pos.left,
-						targetY: pos.top,
-						animate: (animationDuration > 0) && this.animateOnFocus,
-						silent: false,
-						duration: animationDuration
-					});
-				}
-				this.lastFocusedItem = item;
-				this.lastScrollPositionOnFocus = pos;
+				this.start({
+					targetX: pos.left,
+					targetY: pos.top,
+					animate: (animationDuration > 0) && this.animateOnFocus,
+					silent: false,
+					duration: animationDuration
+				});
+				this.setScrollLeft(pos.left);
+				this.setScrollTop(pos.top);
 			}
+			this.lastFocusedItem = item;
+			this.lastScrollPositionOnFocus = pos;
 		}
 
 		onFocus = (e) => {
@@ -537,9 +537,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						pos = positionFn(item);
 					}
 
-					if (pos.top !== Math.round(this.scrollTop)) {
-						// Stop scroller before `startScrollOnFocus` for new position.
-						this.stop();
+					if (pos.left !== this.scrollLeft || pos.top !== this.scrollTop) {
 						this.startScrollOnFocus(pos, item, spotItem);
 					}
 				}
@@ -719,7 +717,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		// scroll start/stop
-
 		start ({targetX, targetY, animate = true, silent = false, duration = animationDuration}) {
 			const {scrollLeft, scrollTop} = this;
 			const bounds = this.getScrollBounds();
