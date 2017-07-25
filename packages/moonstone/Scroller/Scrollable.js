@@ -501,15 +501,15 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		startScrollOnFocus = (pos, item) => {
 			if (pos) {
-				this.start({
-					targetX: pos.left,
-					targetY: pos.top,
-					animate: (animationDuration > 0) && this.animateOnFocus,
-					silent: false,
-					duration: animationDuration
-				});
-				this.setScrollLeft(pos.left);
-				this.setScrollTop(pos.top);
+				if (pos.left !== this.scrollLeft || pos.top !== this.scrollTop) {
+					this.start({
+						targetX: pos.left,
+						targetY: pos.top,
+						animate: (animationDuration > 0) && this.animateOnFocus,
+						silent: false,
+						duration: animationDuration
+					});
+				}
 				this.lastFocusedItem = item;
 				this.lastScrollPositionOnFocus = pos;
 			}
@@ -532,15 +532,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					// If scroll animation is ongoing, we need to pass last target position to
 					// determine correct scroll position.
 					if (this.animator.isAnimating() && lastPos) {
-						const scrollPosition = (this.direction !== 'horizontal') ? lastPos.top : lastPos.left;
-						pos = positionFn(item, {scrollPosition});
+						pos = positionFn({item, scrollPosition: (this.direction !== 'horizontal') ? lastPos.top : lastPos.left});
 					} else {
-						pos = positionFn(item);
+						pos = positionFn({item});
 					}
 
-					if (pos.left !== this.scrollLeft || pos.top !== this.scrollTop) {
-						this.startScrollOnFocus(pos, item, spotItem);
-					}
+					this.startScrollOnFocus(pos, item);
 				}
 			} else if (this.childRef.setLastFocusedIndex) {
 				this.childRef.setLastFocusedIndex(e.target);
@@ -1024,7 +1021,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				scrollInfo = {previousScrollHeight, scrollTop: this.scrollTop};
 
 			if (focusedItem && containerRef && containerRef.contains(focusedItem)) {
-				const position = calculatePositionOnFocus(focusedItem, scrollInfo);
+				const position = calculatePositionOnFocus({item: focusedItem, scrollInfo});
 				this.startScrollOnFocus(position, focusedItem);
 			}
 

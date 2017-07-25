@@ -271,6 +271,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			if (this.scrollToInfo !== null && !this.deferScrollTo) {
 				this.scrollTo(this.scrollToInfo);
+			} else {
+				this.updateScrollOnFocus();
 			}
 		}
 
@@ -456,10 +458,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					// If scroll animation is ongoing, we need to pass last target position to
 					// determine correct scroll position.
 					if (this.scrolling && lastPos) {
-						const scrollPosition = (this.direction !== 'horizontal') ? lastPos.top : lastPos.left;
-						pos = positionFn(item, {scrollPosition});
+						pos = positionFn({item, scrollPosition: (this.direction !== 'horizontal') ? lastPos.top : lastPos.left});
 					} else {
-						pos = positionFn(item);
+						pos = positionFn({item});
 					}
 					this.startScrollOnFocus(pos, item);
 				}
@@ -896,6 +897,23 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 
 			childContainerRef.style.scrollBehavior = 'smooth';
+		}
+
+		updateScrollOnFocus () {
+			const
+				focusedItem = Spotlight.getCurrent(),
+				{containerRef, calculatePositionOnFocus, getScrollBounds} = this.childRef,
+				{scrollHeight: previousScrollHeight} = this.bounds,
+				{scrollHeight: currentScrollHeight} = getScrollBounds(),
+				scrollInfo = {previousScrollHeight, scrollTop: this.scrollTop};
+
+			if (focusedItem && containerRef && containerRef.contains(focusedItem)) {
+				const position = calculatePositionOnFocus({item: focusedItem, scrollInfo});
+				this.startScrollOnFocus(position, focusedItem);
+			}
+
+			// update `scrollHeight`
+			this.bounds.scrollHeight = currentScrollHeight;
 		}
 
 		// forceUpdate is a bit jarring and may interrupt other actions like animation so we'll

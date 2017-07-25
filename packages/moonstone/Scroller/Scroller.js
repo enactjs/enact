@@ -165,9 +165,9 @@ class ScrollerBase extends Component {
 	/**
 	 * Returns the first spotlight container between `node` and the scroller
 	 *
-	 * @param   {Node}      node  A DOM node
+	 * @param {Node} A DOM node
 	 *
-	 * @returns {Node|Null}       Spotlight container for `node`
+	 * @returns {Node|Null} Spotlight container for `node`
 	 * @private
 	 */
 	getSpotlightContainerForNode = (node) => {
@@ -182,9 +182,9 @@ class ScrollerBase extends Component {
 	 * Calculates the "focus bounds" of a node. If the node is within a spotlight container, that
 	 * container is scrolled into view rather than just the element.
 	 *
-	 * @param   {Node}   node  Focused node
+	 * @param {Node} Focused node
 	 *
-	 * @returns {Object}       Bounds as returned by `getBoundingClientRect`
+	 * @returns {Object} Bounds as returned by `getBoundingClientRect`
 	 * @private
 	 */
 	getFocusedItemBounds = (node) => {
@@ -228,25 +228,25 @@ class ScrollerBase extends Component {
 	/**
 	 * Calculates the new top and left position for scroller based on focusedItem.
 	 *
-	 * @param   {Node}   focusedItem  Focused node
-	 * @param   {Object}   scrollInfo  Scroll position info. `calculateScrollTop` uses
+	 * @param {Node} Focused node
+	 * @param {Object} Scroll position info. `calculateScrollTop` uses
 	 * `scrollInfo.previousScrollHeight` and `scrollInfo.scrollTop`
 	 *
-	 * @returns {Object}       Bounds as returned by `getBoundingClientRect`
+	 * @returns {Object} Bounds as returned by `getBoundingClientRect`
 	 * @private
 	 */
-	calculatePositionOnFocus = (focusedItem, scrollInfo) => {
-		if (!this.isVertical() && !this.isHorizontal() || !focusedItem || !this.containerRef.contains(focusedItem)) return;
+	calculatePositionOnFocus = ({item, scrollInfo}) => {
+		if (!this.isVertical() && !this.isHorizontal() || !item || !this.containerRef.contains(item)) return;
 
 		const {
 			top: itemTop,
 			left: itemLeft,
 			height: itemHeight,
 			width: itemWidth
-		} = this.getFocusedItemBounds(focusedItem);
+		} = this.getFocusedItemBounds(item);
 
 		if (this.isVertical()) {
-			this.scrollPos.top = this.calculateScrollTop(focusedItem, itemTop, itemHeight, scrollInfo);
+			this.scrollPos.top = this.calculateScrollTop(item, itemTop, itemHeight, scrollInfo);
 		}
 
 		if (this.isHorizontal()) {
@@ -275,13 +275,13 @@ class ScrollerBase extends Component {
 	/**
 	 * Calculates the new `scrollTop`.
 	 *
-	 * @param   {Node}   focusedItem  Focused node
-	 * @param   {Number}   itemTop  Top of the focusedItem / focusedContainer
-	 * @param   {Number}   containerHeight  Height of the container
-	 * @param   {Object}   scrollInfo  Scroll position info. Uses `scrollInfo.previousScrollHeight`
+	 * @param {Node} Focused node
+	 * @param {Number} Top of the focusedItem / focusedContainer
+	 * @param {Number} Height of the container
+	 * @param {Object} Scroll position info. Uses `scrollInfo.previousScrollHeight`
 	 * and `scrollInfo.scrollTop`
 	 *
-	 * @returns {Object}       Bounds as returned by `getBoundingClientRect`
+	 * @returns {Object} Bounds as returned by `getBoundingClientRect`
 	 * @private
 	 */
 	calculateScrollTop = (focusedItem, itemTop, containerHeight, scrollInfo) => {
@@ -297,7 +297,7 @@ class ScrollerBase extends Component {
 		let newScrollTop = this.scrollPos.top;
 
 		// Caculations for when scrollHeight decrease.
-		if (scrollInfo && scrollInfo.previousScrollHeight) {
+		if (scrollInfo) {
 			const
 				{scrollTop, previousScrollHeight} = scrollInfo,
 				{scrollHeight} = this.scrollBounds,
