@@ -321,6 +321,7 @@ class VirtualListCoreNative extends Component {
 
 	restoreFocus () {
 		const {firstVisibleIndex, lastVisibleIndex} = this.moreInfo;
+
 		if (
 			this.restoreLastFocused &&
 			!this.isPlaceholderFocused() &&
@@ -340,6 +341,7 @@ class VirtualListCoreNative extends Component {
 			// but if that fails (because it isn't found or is disabled), focus the container so
 			// spotlight isn't lost
 			if (!foundLastFocused) {
+				this.restoreLastFocused = true;
 				Spotlight.focus(containerId);
 			}
 		}
@@ -907,7 +909,7 @@ class VirtualListCoreNative extends Component {
 			<div ref={this.initWrapperRef} className={mergedClasses} style={style}>
 				<div {...rest} onKeyDown={this.onKeyDown} ref={this.initContainerRef}>
 					{cc.length ? cc : null}
-					{primary && cc.length ? null : (
+					{primary ? null : (
 						<SpotlightPlaceholder
 							data-index={0}
 							data-vl-placeholder

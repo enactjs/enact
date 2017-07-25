@@ -356,6 +356,7 @@ class VirtualListCore extends Component {
 			// but if that fails (because it isn't found or is disabled), focus the container so
 			// spotlight isn't lost
 			if (!foundLastFocused) {
+				this.restoreLastFocused = true;
 				Spotlight.focus(containerId);
 			}
 		}
@@ -935,7 +936,7 @@ class VirtualListCore extends Component {
 		return (
 			<div {...props} onKeyDown={this.onKeyDown} ref={this.initContainerRef}>
 				{cc.length ? cc : null}
-				{primary && cc.length ? null : (
+				{primary ? null : (
 					<SpotlightPlaceholder
 						data-index={0}
 						data-vl-placeholder
