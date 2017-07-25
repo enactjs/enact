@@ -8,6 +8,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/VideoPlayer` methods `showControls` and `hideControls` to allow external interaction with the player
+
 ### Changed
 
 ### Fixed
