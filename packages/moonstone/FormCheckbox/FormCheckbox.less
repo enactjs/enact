@@ -1,9 +1,9 @@
 // FormCheckbox.less
 //
-@import '../styles/mixins.less';
-@import '../styles/variables.less';
-@import '../styles/text.less';
-@import '../styles/skin.less';
+@import "../styles/mixins.less";
+@import "../styles/variables.less";
+@import "../styles/text.less";
+@import "../styles/skin.less";
 
 .formCheckbox {
 	width: @moon-formcheckbox-size;
@@ -31,6 +31,7 @@
 		margin: 0;
 		visibility: hidden;
 	}
+
 	&.selected {
 		.icon {
 			visibility: visible;
@@ -54,10 +55,8 @@
 			&:not([disabled]) {
 				background-color: @moon-spotlight-color;
 
-				&.selected {
-					.icon {
-						color: @moon-formcheckbox-text-color;
-					}
+				.icon {
+					color: @moon-spotlight-text-color;
 				}
 			}
 		});

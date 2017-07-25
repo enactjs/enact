@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 
 /**
- * Default config for {@link mooonstone/ExpandableItem.ExpandableSpotlightDecorator
+ * Default config for {@link mooonstone/ExpandableItem.ExpandableSpotlightDecorator}
  *
  * @memberof moonstone/ExpandableItem.ExpandableSpotlightDecorator
  * @hocconfig

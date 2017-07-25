@@ -369,6 +369,17 @@ const VideoPlayerBase = class extends React.Component {
 		onPlayButtonClick: PropTypes.func,
 
 		/**
+		 * Function executed when the user is moving the VideoPlayer's Slider knob independently of
+		 * the current playback position. It is passed an object with a `seconds` key (float value) to
+		 * indicate the current time index. It can be used to update the `thumbnailSrc` to the reflect
+		 * the current scrub position.
+		 *
+		 * @type {Function}
+		 * @public
+		 */
+		onScrub: PropTypes.func,
+
+		/**
 		 * When `true`, the video will pause when it reaches either the start or the end of the
 		 * video during rewind, slow rewind, fast forward, or slow forward.
 		 *
@@ -451,6 +462,16 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		source: PropTypes.node,
+
+		/**
+		 * Set a thumbnail image source to show on VideoPlayer's Slider knob. This is a standard
+		 * {@link moonstone/Image} component so it supports all of the same options for the `src`
+		 * property. If no `thumbnailSrc` is set, no tooltip will display.
+		 *
+		 * @type {String|Object}
+		 * @public
+		 */
+		thumbnailSrc: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 
 		/**
 		 * Set a title for the video being played.
@@ -593,9 +614,9 @@ const VideoPlayerBase = class extends React.Component {
 		const
 			isInfoComponentsEqual = equals(this.props.infoComponents, nextProps.infoComponents),
 			shouldCalculateTitleOffset = (
-			((!this.titleOffsetCalculated && isInfoComponentsEqual) || (this.titleOffsetCalculated && !isInfoComponentsEqual)) &&
-			this.state.bottomControlsVisible
-		);
+				((!this.titleOffsetCalculated && isInfoComponentsEqual) || (this.titleOffsetCalculated && !isInfoComponentsEqual)) &&
+				this.state.bottomControlsVisible
+			);
 
 		this.initI18n();
 
@@ -667,7 +688,7 @@ const VideoPlayerBase = class extends React.Component {
 		if (titleElement && infoComponents) {
 			const infoHeight = infoComponents.offsetHeight;
 
-			titleElement.setAttribute('style', `--infoComponentsOffset: ${infoHeight}px`);
+			titleElement.style.setProperty('--infoComponentsOffset', infoHeight + 'px');
 			this.titleOffsetCalculated = true;
 		}
 	}
@@ -865,11 +886,12 @@ const VideoPlayerBase = class extends React.Component {
 			updatedState.error
 		);
 
-		if (this.props.pauseAtEnd && (
-				(el.currentTime === 0 && (this.prevCommand === 'rewind' || this.prevCommand === 'slowRewind')) ||
-				(el.currentTime === el.duration && (this.prevCommand === 'fastForward' || this.prevCommand === 'slowForward')))) {
+		const isRewind = this.prevCommand === 'rewind' || this.prevCommand === 'slowRewind';
+		const isForward = this.prevCommand === 'fastForward' || this.prevCommand === 'slowForward';
+		if (this.props.pauseAtEnd && (el.currentTime === 0 && isRewind || el.currentTime === el.duration && isForward)) {
 			this.pause();
 		}
+
 		this.setState(updatedState);
 	}
 
@@ -1251,11 +1273,12 @@ const VideoPlayerBase = class extends React.Component {
 		// TODO: fix Slider to not send onKnobMove when the knob hasn't, in fact, moved
 		if (this.sliderKnobProportion !== ev.proportion) {
 			this.sliderKnobProportion = ev.proportion;
+			const seconds = Math.round(this.sliderKnobProportion * this.video.duration);
 
-			if (this.sliderScrubbing) {
-				const
-					seconds = Math.round(this.sliderKnobProportion * this.video.duration),
-					knobTime = secondsToTime(seconds, this.durfmt);
+			if (this.sliderScrubbing && !isNaN(seconds)) {
+				const knobTime = secondsToTime(seconds, this.durfmt, {includeHour: true});
+
+				forward('onScrub', {...ev, seconds}, this.props);
 
 				this.announce(`${$L('jump to')} ${knobTime}`);
 			}
@@ -1263,13 +1286,13 @@ const VideoPlayerBase = class extends React.Component {
 	}
 	handleMouseOver = () => {
 		this.setState({
-			mouseOver:true,
+			mouseOver: true,
 			feedbackVisible: true
 		});
 		this.stopDelayedFeedbackHide();
 	}
 	handleMouseOut = () => {
-		this.setState({mouseOver:false});
+		this.setState({mouseOver: false});
 		this.startDelayedFeedbackHide();
 	}
 	onJumpBackward = this.handle(
@@ -1344,7 +1367,7 @@ const VideoPlayerBase = class extends React.Component {
 	});
 
 	render () {
-		const {backwardIcon, children, className, forwardIcon, infoComponents, jumpBackwardIcon, jumpButtonsDisabled, jumpForwardIcon, leftComponents, noAutoPlay, noJumpButtons, noRateButtons, noSlider, pauseIcon, playIcon, rateButtonsDisabled, rightComponents, source, style, title, ...rest} = this.props;
+		const {backwardIcon, children, className, forwardIcon, infoComponents, jumpBackwardIcon, jumpButtonsDisabled, jumpForwardIcon, leftComponents, noAutoPlay, noJumpButtons, noRateButtons, noSlider, pauseIcon, playIcon, rateButtonsDisabled, rightComponents, source, style, thumbnailSrc, title, ...rest} = this.props;
 		delete rest.announce;
 		delete rest.autoCloseTimeout;
 		delete rest.feedbackHideDelay;
@@ -1355,6 +1378,7 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.onJumpBackwardButtonClick;
 		delete rest.onJumpForwardButtonClick;
 		delete rest.onPlayButtonClick;
+		delete rest.onScrub;
 		delete rest.pauseAtEnd;
 		delete rest.playbackRateHash;
 		delete rest.setApiProvider;
@@ -1432,6 +1456,7 @@ const VideoPlayerBase = class extends React.Component {
 									noFeedback={this.state.mouseOver}
 									playbackState={this.prevCommand}
 									playbackRate={this.selectPlaybackRate(this.speedIndex)}
+									thumbnailSrc={thumbnailSrc}
 									visible={this.state.feedbackVisible}
 								>
 									{secondsToTime(this.state.sliderTooltipTime, this.durfmt)}

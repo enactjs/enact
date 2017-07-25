@@ -54,13 +54,6 @@ const IntlHoc = hoc((config, Wrapped) => {
 			locale: PropTypes.string
 		}
 
-		getChildContext () {
-			return {
-				rtl: isRtlLocale(),
-				updateLocale: this.updateLocale
-			};
-		}
-
 		constructor (props) {
 			super(props);
 			const ilibLocale = ilib.getLocale();
@@ -68,6 +61,13 @@ const IntlHoc = hoc((config, Wrapped) => {
 
 			this.state = {
 				locale: locale
+			};
+		}
+
+		getChildContext () {
+			return {
+				rtl: isRtlLocale(),
+				updateLocale: this.updateLocale
 			};
 		}
 
