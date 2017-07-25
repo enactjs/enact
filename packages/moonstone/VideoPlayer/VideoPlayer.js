@@ -1366,6 +1366,24 @@ const VideoPlayerBase = class extends React.Component {
 		this.setState({bottomControlsRendered: true});
 	});
 
+	getControlsAriaProps () {
+		if (this.state.announce === AnnounceState.TITLE) {
+			return {
+				role: 'alert',
+				'aria-live': 'off',
+				'aria-labelledby': `${this.id}_title`
+			};
+		} else if (this.state.announce === AnnounceState.INFO) {
+			return {
+				role: 'alert',
+				'aria-live': 'off',
+				'aria-labelledby': `${this.id}_info`
+			};
+		}
+
+		return null;
+	}
+
 	render () {
 		const {backwardIcon, children, className, forwardIcon, infoComponents, jumpBackwardIcon, jumpButtonsDisabled, jumpForwardIcon, leftComponents, noAutoPlay, noJumpButtons, noRateButtons, noSlider, pauseIcon, playIcon, rateButtonsDisabled, rightComponents, source, style, thumbnailSrc, title, ...rest} = this.props;
 		delete rest.announce;
@@ -1392,21 +1410,7 @@ const VideoPlayerBase = class extends React.Component {
 
 		// Handle some cases when the "more" button is pressed
 		const moreDisabled = !(this.state.more);
-
-		let controlsAriaProps = null;
-		if (this.state.announce === AnnounceState.TITLE) {
-			controlsAriaProps = {
-				role: 'alert',
-				'aria-live': 'off',
-				'aria-labelledby': `${this.id}_title`
-			};
-		} else if (this.state.announce === AnnounceState.INFO) {
-			controlsAriaProps = {
-				role: 'alert',
-				'aria-live': 'off',
-				'aria-labelledby': `${this.id}_info`
-			};
-		}
+		const controlsAriaProps = this.getControlsAriaProps();
 
 		return (
 			<div className={css.videoPlayer + (className ? ' ' + className : '')} style={style} onClick={this.activityDetected} onKeyDown={this.activityDetected} ref={this.setPlayerRef}>
