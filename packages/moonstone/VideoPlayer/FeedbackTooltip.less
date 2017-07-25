@@ -41,16 +41,17 @@
 	&.miniFeedback {
 		position: absolute;
 		top: @moon-video-mini-feedback-position-top;
-		left: @moon-video-mini-feedback-padding;
+		left: @moon-video-mini-feedback-position-left;
 
 		.content {
-			background-color: @moon-video-mini-feedback-bg-color;
-			border-radius: @moon-video-mini-feedback-padding*2;
-			padding: @moon-video-mini-feedback-padding/4 @moon-video-mini-feedback-padding 0 @moon-video-mini-feedback-padding/4;
-
-			& > div:first-child > div {
-				padding-bottom: @moon-video-mini-feedback-padding/2;
-			}
+			font-family: @moon-video-mini-feedback-font-family;
+			font-weight: @moon-video-mini-feedback-font-weight;
+			font-style: @moon-video-mini-feedback-font-style;
+			font-size: @moon-video-mini-feedback-font-size;
+			border-radius: 999px;
+			padding: 0 @moon-video-mini-feedback-padding-side;
+			bottom: auto;
+			transform: none;
 		}
 	}
 
@@ -76,6 +77,13 @@
 		.content {
 			color: @moon-white;
 			text-shadow: @moon-video-player-title-text-shadow;
+		}
+
+		&.miniFeedback {
+			.content {
+				background-color: @moon-video-mini-feedback-bg-color;
+				text-shadow: none;
+			}
 		}
 	});
 }

@@ -122,6 +122,10 @@
 @moon-button-font-style: normal;
 @moon-button-letter-spacing: normal;
 
+@moon-video-mini-feedback-font-family: @moon-alt-font-family;
+@moon-video-mini-feedback-font-weight: normal;
+@moon-video-mini-feedback-font-style: normal;
+
 @moon-icon-font-family: "Moonstone Icons";
 
 // Spotlight
@@ -316,15 +320,17 @@
 // ---------------------------------------
 @moon-video-slider-tooltip-font-size:              24px;
 @moon-video-slider-tooltip-line-height:            36px;
-@moon-video-slider-tooltip-gutter-width:           12px;
+@moon-video-slider-tooltip-gutter-width:           (@moon-spotlight-outset / 2);
 @moon-video-slider-tooltip-thumbnail-border-width: @moon-contextual-popup-border-width;
 @moon-video-slider-tooltip-thumbnail-border-radius: @moon-contextual-popup-border-radius;
 @moon-video-feedback-icon-width:                   36px;
 @moon-video-feedback-icon-font-size:               72px;	// For most icons
 @moon-video-feedback-icon-shrunken-size:           48px;	// For play and pause icons, since they're larger scale than the others
-@moon-video-feedback-icon-line-height:             30px;
-@moon-video-mini-feedback-padding:                 12px;
-@moon-video-mini-feedback-position-top:            90px;
+@moon-video-feedback-icon-line-height:             (@moon-video-feedback-icon-font-size / 2);
+@moon-video-mini-feedback-position-top:            24px;
+@moon-video-mini-feedback-position-left:           24px;
+@moon-video-mini-feedback-padding-side:            18px;
+@moon-video-mini-feedback-font-size:               27px;
 // @moon-video-feedback-icon-pausejumpbackward-width: 36px;	// May need this later
 // @moon-video-feedback-icon-pausejumpforward-width:  36px;	// May need this later
 @moon-video-player-badge-text-size:                24px;
