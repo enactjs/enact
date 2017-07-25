@@ -1,17 +1,16 @@
 /**
- * Exports the {@link moonstone/Button.Button} and {@link moonstone/Button.ButtonBase}
- * components.  The default export is {@link moonstone/Button.Button}.
+ * Exports the {@link ui/Button.Button} and {@link ui/Button.ButtonBase}
+ * components.  The default export is {@link ui/Button.Button}.
  *
  * @example
  * <Button small>Click me</Button>
  *
- * @module moonstone/Button
+ * @module ui/Button
  */
 
 import factory from '@enact/core/factory';
 import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
-import Uppercase from '@enact/i18n/Uppercase';
 import Spottable from '@enact/spotlight/Spottable';
 import Pressable from '@enact/ui/Pressable';
 import React from 'react';
@@ -25,14 +24,14 @@ import Skinnable from '@enact/moonstone/Skinnable';
 import componentCss from './Button.less';
 
 /**
- * {@link moonstone/Button.ButtonBaseFactory} is Factory wrapper around {@link moonstone/Button.ButtonBase}
+ * {@link ui/Button.ButtonBaseFactory} is Factory wrapper around {@link ui/Button.ButtonBase}
  * that allows overriding certain classes at design time. The following are properties of the `css`
  * member of the argument to the factory.
  *
  * Usage:
  * ```
  * import css from './CustomButton.less';
- * import {ButtonFactory} from '@enact/moonstone/Button';
+ * import {ButtonFactory} from '@enact/ui/Button';
  * const Button = ButtonFactory({
  *     css: {
  *         bg: css.bg,
@@ -42,27 +41,26 @@ import componentCss from './Button.less';
  * ```
  *
  * @class ButtonBaseFactory
- * @memberof moonstone/Button
+ * @memberof ui/Button
  * @factory
+ * @ui
  * @public
  */
 const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
-
-	if (css.bg) console.log('UI   css.bg:', css.bg);
 	/**
-	 * {@link moonstone/Button.ButtonBase} is a stateless Button with Moonstone styling
+	 * {@link ui/Button.ButtonBase} is a stateless Button with ui styling
 	 * applied. In most circumstances, you will want to use the Pressable and Spottable version:
-	 * {@link moonstone/Button.Button}
+	 * {@link ui/Button.Button}
 	 *
 	 * @class ButtonBase
-	 * @memberof moonstone/Button
+	 * @memberof ui/Button
 	 * @ui
 	 * @public
 	 */
 	return kind({
 		name: 'Button',
 
-		propTypes: /** @lends moonstone/Button.ButtonBase.prototype */ {
+		propTypes: /** @lends ui/Button.ButtonBase.prototype */ {
 			children: PropTypes.node.isRequired,
 
 			/**
@@ -106,7 +104,7 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 			disabled: PropTypes.bool,
 
 			/**
-			 * Include an [icon]{@link moonstone/Icon.Icon} in your [button]{@link moonstone/Button.Button}.
+			 * Include an [icon]{@link ui/Icon.Icon} in your [button]{@link ui/Button.Button}.
 			 * The icon will be displayed before the natural reading order of the text, regardless
 			 * of locale. Any string that is valid for the `Icon` component is valid here. `icon` is
 			 * outside the marqueeable content so it will not scroll along with the text content of
@@ -121,7 +119,7 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 
 			/**
 			 * A boolean parameter affecting the minimum width of the button. When `true`,
-			 * the minimum width will be set to 180px (or 130px if [small]{@link moonstone/Button.Button#small}
+			 * the minimum width will be set to 180px (or 130px if [small]{@link ui/Button.Button#small}
 			 * is `true`). If `false`, the minimum width will be set to the current value of
 			 * `@moon-button-height` (thus forcing the button to be no smaller than a circle with
 			 * diameter `@moon-button-height`).
@@ -170,23 +168,23 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 			small: false
 		},
 
-		styles: {
-			css: /** @lends moonstone/Button.ButtonBaseFactory.prototype */ {
-				...css
-				// ...componentCss
+		styles: /** @lends ui/Button.ButtonBaseFactory.prototype */ {
+			css: {
+				...css,
 				/**
 				 * Classes to apply to the background of the button, used on a child of button
 				 * @type {String}
+				 * @lends ui/Button.ButtonBaseFactory.prototype
 				 * @public
 				 */
-				// bg: css.bg,
+				bg: css.bg
 
 				/**
 				 * Classes to apply to the selected state of the button, applied to the base element
 				 * @type {String}
+				 * @lends ui/Button.ButtonBaseFactory.prototype
 				 * @public
 				 */
-				// selected: css.selected
 			},
 			className: 'button'
 		},
@@ -226,18 +224,18 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 });
 
 /**
- * {@link moonstone/Button.ButtonFactory} is Factory wrapper around {@link moonstone/Button.Button}
- * that allows overriding certain classes at design time. See {@link moonstone/Button.ButtonBaseFactory}.
+ * {@link ui/Button.ButtonFactory} is Factory wrapper around {@link ui/Button.Button}
+ * that allows overriding certain classes at design time. See {@link ui/Button.ButtonBaseFactory}.
  *
  * @class ButtonFactory
- * @memberof moonstone/Button
+ * @memberof ui/Button
  * @factory
  * @public
  */
-const ButtonFactory = factory(css => {
-	const Base = ButtonBaseFactory(css);
+const ButtonFactory = factory(props => {
+	const Base = ButtonBaseFactory(props);
 	/**
-	 * {@link moonstone/Button.Button} is a Button with Moonstone styling, Spottable and
+	 * {@link ui/Button.Button} is a Button with ui styling, Spottable and
 	 * Pressable applied.  If the Button's child component is text, it will be uppercased unless
 	 * `casing` is set.
 	 *
@@ -247,7 +245,7 @@ const ButtonFactory = factory(css => {
 	 * ```
 	 *
 	 * @class Button
-	 * @memberof moonstone/Button
+	 * @memberof ui/Button
 	 * @mixes i18n/Uppercase.Uppercase
 	 * @mixes moonstone/TooltipDecorator.TooltipDecorator
 	 * @mixes moonstone/Marquee.MarqueeDecorator
@@ -256,15 +254,13 @@ const ButtonFactory = factory(css => {
 	 * @ui
 	 * @public
 	 */
-	return Uppercase(
-		TooltipDecorator(
-			MarqueeDecorator(
-				{className: componentCss.marquee},
-				Pressable(
-					Spottable(
-						Skinnable(
-							Base
-						)
+	return TooltipDecorator(
+		MarqueeDecorator(
+			{className: componentCss.marquee},
+			Pressable(
+				Spottable(
+					Skinnable(
+						Base
 					)
 				)
 			)
@@ -276,4 +272,9 @@ const ButtonBase = ButtonBaseFactory();
 const Button = ButtonFactory();
 
 export default Button;
-export {Button, ButtonBase, ButtonBaseFactory, ButtonFactory};
+export {
+	Button,
+	ButtonBase,
+	ButtonFactory,
+	ButtonBaseFactory
+};

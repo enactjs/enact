@@ -5,10 +5,9 @@
  * @module moonstone/Button
  */
 
-// import React from 'react';
-// import kind from '@enact/core/kind';
 import factory from '@enact/core/factory';
 import {ButtonFactory as UiButtonFactory} from '@enact/ui/Button';
+import Uppercase from '@enact/i18n/Uppercase';
 
 import componentCss from './Button.less';
 
@@ -21,53 +20,41 @@ import componentCss from './Button.less';
  * @factory
  * @public
  */
-// const ButtonFactoryBASIC = factory(({css}) => UiButtonFactory({css: /** @lends moonstone/Button.ButtonBaseFactory.prototype */ {
-// 	...componentCss,
-// 	/**
-// 	 * Classes to apply to the background of the button, used on a child of button
-// 	 * @type {String}
-// 	 * @public
-// 	 */
-// 	// bg: css.bg,
-// 	// client: css.client,
-
-// 	/**
-// 	 * Classes to apply to the selected state of the button, applied to the base element
-// 	 * @type {String}
-// 	 * @public
-// 	 */
-// 	selected: css.selected
-// }}));
-
-const ButtonFactory = factory(({css}) => {
-
-	if (css.bg) console.log('Moon css.bg:', css.bg);
-
+const ButtonBaseFactory = factory({css: componentCss}, ({css}) => UiButtonFactory({
 	/* Replace classes in this step */
-	const Base = UiButtonFactory({
+	css: /** @lends moonstone/Button.ButtonBaseFactory.prototype */ {
+		...componentCss,
+		/**
+		 * Classes to apply to the background of the button, used on a child of button
+		 * @type {String}
+		 * @public
+		 */
+		bg: css.bg,
+		// client: css.client,
 
-		css: /** @lends moonstone/Button.ButtonBaseFactory.prototype */ {
-			...componentCss,
-			/**
-			 * Classes to apply to the background of the button, used on a child of button
-			 * @type {String}
-			 * @public
-			 */
-			bg: css.bg,
-			// client: css.client,
+		/**
+		 * Classes to apply to the selected state of the button, applied to the base element
+		 * @type {String}
+		 * @public
+		 */
+		selected: css.selected
+	}
+}));
 
-			/**
-			 * Classes to apply to the selected state of the button, applied to the base element
-			 * @type {String}
-			 * @public
-			 */
-			selected: css.selected
-		}});
+const ButtonBase = ButtonBaseFactory();
 
-	return Base;
-});
+const Button = Uppercase(
+	ButtonBase
+);
 
-const Button = ButtonFactory({css: componentCss});
+const ButtonFactory = (props) => Uppercase(
+	ButtonBaseFactory(props)
+);
 
 export default Button;
-export {Button, ButtonFactory};
+export {
+	Button,
+	// ButtonBase,
+	ButtonFactory,
+	ButtonBaseFactory
+};
