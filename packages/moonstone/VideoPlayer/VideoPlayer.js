@@ -34,7 +34,6 @@ import MediaSlider from './MediaSlider';
 import Times from './Times';
 
 import css from './VideoPlayer.less';
-import feedbackCss from './FeedbackTooltip.less';
 
 const SpottableDiv = Spottable('div');
 const Container = SpotlightContainerDecorator({enterTo: ''}, 'div');
@@ -402,8 +401,6 @@ const VideoPlayerBase = class extends React.Component {
 		 * @type {moonstone/VideoPlayer.playbackRateHash}
 		 * @default {
 		 *	fastForward: ['2', '4', '8', '16'],
-		 *	jumpBackward: ['15'],
-		 *	jumpForward: ['15'],
 		 *	rewind: ['-2', '-4', '-8', '-16'],
 		 *	slowForward: ['1/4', '1/2'],
 		 *	slowRewind: ['-1/2', '-1']
@@ -412,8 +409,6 @@ const VideoPlayerBase = class extends React.Component {
 		 */
 		playbackRateHash: PropTypes.shape({
 			fastForward: PropTypes.arrayOf(PropTypes.string),
-			jumpBackward: PropTypes.arrayOf(PropTypes.string),
-			jumpForward: PropTypes.arrayOf(PropTypes.string),
 			rewind: PropTypes.arrayOf(PropTypes.string),
 			slowForward: PropTypes.arrayOf(PropTypes.string),
 			slowRewind: PropTypes.arrayOf(PropTypes.string)
@@ -520,8 +515,6 @@ const VideoPlayerBase = class extends React.Component {
 		pauseIcon: 'pause',
 		playbackRateHash: {
 			fastForward: ['2', '4', '8', '16'],
-			jumpBackward: ['15'],
-			jumpForward: ['15'],
 			rewind: ['-2', '-4', '-8', '-16'],
 			slowForward: ['1/4', '1/2'],
 			slowRewind: ['-1/2', '-1']
@@ -992,21 +985,18 @@ const VideoPlayerBase = class extends React.Component {
 	 * @public
 	 */
 	jump = (distance) => {
-		if (distance < 0) {
-			// jumpBackward
-			this.selectPlaybackRates('jumpBackward');
-			this.prevCommand = 'jumpBackward';
-		} else {
-			// jumpForward
-			this.selectPlaybackRates('jumpForward');
-			this.prevCommand = 'jumpForward';
-		}
+		const commandBeforeJump = this.prevCommand;
+		this.prevCommand = distance < 0 ? 'jumpBackward' : 'jumpForward';
 		this.speedIndex = 0;
-		this.setPlaybackRate(this.selectPlaybackRate(this.speedIndex));
 
 		this.showFeedback();
 		this.startDelayedFeedbackHide();
 		this.seek(this.state.currentTime + distance);
+		// after jumping, reset playback rate and prevCommand
+		this.setPlaybackRate(1);
+		if (commandBeforeJump === 'play' || commandBeforeJump === 'pause') {
+			this.prevCommand = commandBeforeJump;
+		}
 	}
 
 	/**
@@ -1430,13 +1420,13 @@ const VideoPlayerBase = class extends React.Component {
 				{this.state.bottomControlsRendered ?
 					<div className={css.fullscreen + ' enyo-fit scrim'} style={{display: this.state.bottomControlsVisible ? 'block' : 'none'}}>
 						{this.state.playbackControlsVisible ? null :
-						<FeedbackTooltip
-							className={feedbackCss.miniFeedback}
-							playbackState={this.prevCommand}
-							playbackRate={this.selectPlaybackRate(this.speedIndex)}
-						>
-							{secondsToTime(this.state.sliderTooltipTime, this.durfmt)}
-						</FeedbackTooltip>
+							<FeedbackTooltip
+								playbackState={this.prevCommand}
+								playbackRate={this.props.jumpBy}
+								standalone
+							>
+								{secondsToTime(this.state.sliderTooltipTime, this.durfmt)}
+							</FeedbackTooltip>
 						}
 						<Container className={css.bottom} data-container-disabled={!this.state.bottomControlsVisible}>
 							{/* Info Section: Title, Description, Times */}
