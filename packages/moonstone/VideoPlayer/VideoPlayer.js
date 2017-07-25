@@ -724,7 +724,15 @@ const VideoPlayerBase = class extends React.Component {
 		this.autoCloseJob.stop();
 	}
 
-	showControls = () => {
+	/**
+	 * Shows media control. Optional callback function will be executed once controls have been rendered.
+	 *
+	 * @param {Function} callback function to execute once render is complete
+	 * @function
+	 * @memberof moonstone/VideoPlayer.VideoPlayerBase.prototype
+	 * @public
+	 */
+	showControls = (callback) => {
 		// Read the title
 		this.announce(this.props.title);
 
@@ -736,14 +744,22 @@ const VideoPlayerBase = class extends React.Component {
 			bottomControlsVisible: true,
 			feedbackVisible: true,
 			titleVisible: true
-		});
+		}, typeof callback === 'function' ? callback : void 0);
 	}
 
-	hideControls = () => {
+	/**
+	 * Hides media control. Optional callback function will be executed once controls have been rendered.
+	 *
+	 * @param {Function} callback function to execute once render is complete
+	 * @function
+	 * @memberof moonstone/VideoPlayer.VideoPlayerBase.prototype
+	 * @public
+	 */
+	hideControls = (callback) => {
 		this.stopDelayedFeedbackHide();
 		this.stopDelayedTitleHide();
 		forwardControlsAvailable({available: false}, this.props);
-		this.setState({bottomControlsVisible: false, more: false});
+		this.setState({bottomControlsVisible: false, more: false}, typeof callback === 'function' ? callback : void 0);
 	}
 
 	autoCloseJob = new Job(this.hideControls)
