@@ -510,9 +510,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				});
 				this.setScrollLeft(pos.left);
 				this.setScrollTop(pos.top);
+				this.lastFocusedItem = item;
+				this.lastScrollPositionOnFocus = pos;
 			}
-			this.lastFocusedItem = item;
-			this.lastScrollPositionOnFocus = pos;
 		}
 
 		onFocus = (e) => {
