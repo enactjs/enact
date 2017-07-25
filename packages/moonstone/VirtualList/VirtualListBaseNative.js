@@ -868,6 +868,7 @@ class VirtualListCoreNative extends Component {
 					isPrimaryDirectionVertical ? css.fitWidth : css.fitHeight
 				),
 				children: items,
+				['data-preventscrollonfocus']: true,
 				key,
 				style: {flexDirection, transform: this.getItemContainerPosition(primaryPosition), width}
 			});
