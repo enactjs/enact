@@ -1467,8 +1467,9 @@ const VideoPlayerBase = class extends React.Component {
  *	</VideoPlayer>
  * ```
  *
- * To invoke methods (`fastForward()`, `jump()`, `pause()`, `play()`, `rewind()`, `seek()`) or get
- * the current state (`getMediaState()`), store a ref to the `VideoPlayer` within your component:
+ * To invoke methods (`fastForward()`, `hideControls()`, `jump()`, `pause()`, `play()`, `rewind()`,
+ * `seek()`, 'showControls()') or get the current state (`getMediaState()`), store a ref to the
+ * `VideoPlayer` within your component:
  *
  * ```
  * 	...
