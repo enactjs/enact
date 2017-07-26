@@ -8,6 +8,7 @@ const iconNames = ['', ...Object.keys(icons)];
 
 const inputData = {
 	longText : 'Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text',
+	longPlaceHolder : 'Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Placeholder',
 	tallText : ['नरेंद्र मोदी', ' ฟิ้  ไั  ஒ  து', 'ÃÑÕÂÊÎÔÛÄËÏÖÜŸ'],
 	extraSpaceText : 'This                                              Text                         has                           extra                                           space',
 	initialNumericValue: 0,
@@ -31,6 +32,23 @@ storiesOf('Input')
 				placeholder={text('placeholder')}
 				type={select('type', inputData.type, inputData.type[0])}
 				defaultValue={inputData.longText}
+			/>
+		)
+	)
+	.addWithInfo(
+		'with long placeholder',
+		() => (
+			<Input
+				autoFocus={boolean('autoFocus')}
+				onChange={action('onChange')}
+				disabled={boolean('disabled')}
+				iconAfter={select('iconAfter', iconNames)}
+				iconBefore={select('iconBefore', iconNames)}
+				invalid={boolean('invalid', false)}
+				invalidMessage={text('invalidMessage', InputBase.defaultProps.invalidMessage)}
+				noDecorator={boolean('noDecorator')}
+				placeholder={text('placeholder', inputData.longPlaceHolder)}
+				type={select('type', inputData.type, inputData.type[0])}
 			/>
 		)
 	)
