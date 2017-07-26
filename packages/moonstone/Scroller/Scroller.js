@@ -232,7 +232,7 @@ class ScrollerBase extends Component {
 	 * @param {Object} scrollInfo position info. `calculateScrollTop` uses
 	 * `scrollInfo.previousScrollHeight` and `scrollInfo.scrollTop`
 	 *
-	 * @returns {Object} Caculated new for top and left positions for scroll.
+	 * @returns {Object} with keys {top, left} containing caculated top and left positions for scroll.
 	 * @private
 	 */
 	calculatePositionOnFocus = ({item, scrollInfo}) => {
