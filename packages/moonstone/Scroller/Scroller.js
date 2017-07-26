@@ -165,7 +165,7 @@ class ScrollerBase extends Component {
 	/**
 	 * Returns the first spotlight container between `node` and the scroller
 	 *
-	 * @param {Node} A DOM node
+	 * @param {Node} node A DOM node
 	 *
 	 * @returns {Node|Null} Spotlight container for `node`
 	 * @private
@@ -182,7 +182,7 @@ class ScrollerBase extends Component {
 	 * Calculates the "focus bounds" of a node. If the node is within a spotlight container, that
 	 * container is scrolled into view rather than just the element.
 	 *
-	 * @param {Node} Focused node
+	 * @param {Node} node Focused node
 	 *
 	 * @returns {Object} Bounds as returned by `getBoundingClientRect`
 	 * @private
@@ -228,11 +228,11 @@ class ScrollerBase extends Component {
 	/**
 	 * Calculates the new top and left position for scroller based on focusedItem.
 	 *
-	 * @param {Node} Focused node
-	 * @param {Object} Scroll position info. `calculateScrollTop` uses
+	 * @param {Node} item node
+	 * @param {Object} scrollInfo position info. `calculateScrollTop` uses
 	 * `scrollInfo.previousScrollHeight` and `scrollInfo.scrollTop`
 	 *
-	 * @returns {Object} Bounds as returned by `getBoundingClientRect`
+	 * @returns {Object} Caculated new for top and left positions for scroll.
 	 * @private
 	 */
 	calculatePositionOnFocus = ({item, scrollInfo}) => {
@@ -275,13 +275,13 @@ class ScrollerBase extends Component {
 	/**
 	 * Calculates the new `scrollTop`.
 	 *
-	 * @param {Node} Focused node
-	 * @param {Number} Top of the focusedItem / focusedContainer
-	 * @param {Number} Height of the container
-	 * @param {Object} Scroll position info. Uses `scrollInfo.previousScrollHeight`
+	 * @param {Node} focusedItem node
+	 * @param {Number} itemTop of the focusedItem / focusedContainer
+	 * @param {Number} containerHeight of the container
+	 * @param {Object} scrollInfo position info. Uses `scrollInfo.previousScrollHeight`
 	 * and `scrollInfo.scrollTop`
 	 *
-	 * @returns {Object} Bounds as returned by `getBoundingClientRect`
+	 * @returns {Number} Calculated `scrollTop`
 	 * @private
 	 */
 	calculateScrollTop = (focusedItem, itemTop, containerHeight, scrollInfo) => {
