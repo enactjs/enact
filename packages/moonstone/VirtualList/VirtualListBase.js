@@ -699,6 +699,9 @@ class VirtualListCore extends Component {
 
 			this.focusOnNode(item);
 			this.nodeIndexToBeFocused = null;
+			if (index === 0) {
+				this.forceUpdate();
+			}
 		}, 0);
 	}
 
