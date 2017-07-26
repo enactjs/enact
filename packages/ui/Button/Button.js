@@ -169,37 +169,7 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 		},
 
 		styles: {
-			css: /** @lends ui/Button.ButtonBaseFactory.prototype */ {
-				...componentCss,
-				button: css.button,
-				/**
-				 * Classes to apply to the background of the button, used on a child of button
-				 * @type {String}
-				 * @public
-				 */
-				bg: css.bg,
-
-				/**
-				 * Classes to apply to the selected state of the button, applied to the base element
-				 * @type {String}
-				 * @public
-				 */
-				selected: css.selected,
-
-				// DEV-NOTE: This is a ton of repitition
-				marquee: css.marquee,
-				client: css.client,
-				icon: css.icon,
-				minWidth: css.minWidth,
-				small: css.small,
-				pressed: css.pressed,
-				translucent: css.translucent,
-				transparent: css.transparent,
-				red: css.red,
-				green: css.green,
-				yellow: css.yellow,
-				blue: css.blue
-			},
+			css,
 			className: 'button'
 		},
 

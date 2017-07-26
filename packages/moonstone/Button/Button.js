@@ -20,26 +20,35 @@ import componentCss from './Button.less';
  * @factory
  * @public
  */
-const ButtonBaseFactory = factory({css: componentCss}, ({css}) => UiButtonFactory({
+const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
+	// console.group('Moon Button');
+	// for (const key in componentCss) {
+	// 	if (componentCss[key] !== css[key]) console.log(key, ':', componentCss[key], '   VS   ', css[key]);
+	// }
+	// console.groupEnd();
+	return UiButtonFactory({
 	/* Replace classes in this step */
-	css: /** @lends moonstone/Button.ButtonFactory.prototype */ {
-		...componentCss,
-		/**
-		 * Classes to apply to the background of the button, used on a child of button
-		 * @type {String}
-		 * @public
-		 */
-		bg: css.bg,
-		// client: css.client,
+		css: /** @lends moonstone/Button.ButtonFactory.prototype */ {
+			...componentCss,
+			// Include the component class name o it too may be overridden.
+			button: css.button,
 
-		/**
-		 * Classes to apply to the selected state of the button, applied to the base element
-		 * @type {String}
-		 * @public
-		 */
-		selected: css.selected
-	}
-}));
+			/**
+			 * Classes to apply to the background of the button, used on a child of button
+			 * @type {String}
+			 * @public
+			 */
+			bg: css.bg,
+
+			/**
+			 * Classes to apply to the selected state of the button, applied to the base element
+			 * @type {String}
+			 * @public
+			 */
+			selected: css.selected
+		}
+	});
+});
 
 const ButtonBase = ButtonBaseFactory();
 
