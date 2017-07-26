@@ -13,9 +13,16 @@ const feature = function (componentCss, authorCss) {
 		Object.keys(authorCss).forEach(className => {
 			if (componentCss[className]) {
 				css[className] = componentCss[className] + ' ' + authorCss[className];
-			} else {
-				css[className] = authorCss[className];
 			}
+			//
+			// DEV-NOTE: Removing this piece of the `if` statement requires that all classes used
+			// on the component be `declared` in the componentCss file, even if they are empty.
+			// Without them being defined ahead of time, the override (authorCSS) will not attach
+			// to those class slots (or global className strings).
+			//
+			// } else {
+			// 	css[className] = authorCss[className];
+			// }
 		});
 
 		return css;
