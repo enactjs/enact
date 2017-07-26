@@ -22,7 +22,7 @@ import componentCss from './Button.less';
  */
 const ButtonBaseFactory = factory({css: componentCss}, ({css}) => UiButtonFactory({
 	/* Replace classes in this step */
-	css: /** @lends moonstone/Button.ButtonBaseFactory.prototype */ {
+	css: /** @lends moonstone/Button.ButtonFactory.prototype */ {
 		...componentCss,
 		/**
 		 * Classes to apply to the background of the button, used on a child of button

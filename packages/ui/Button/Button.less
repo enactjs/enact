@@ -3,81 +3,22 @@
 @import "~@enact/moonstone/styles/mixins.less";
 // @import '../styles/variables.less';
 // @import '../styles/text.less';
-@import '~@enact/moonstone/styles/skin.less';
-
-// Local scope for some math variables
-// & {
-// 	@moon-button-pressed-scaled-up: (1 + @moon-button-pressed-scale);
-// 	@moon-button-pressed-scaled-down: (1 / @moon-button-pressed-scaled-up);
-
-// 	@-webkit-keyframes expand {
-// 		// Old Blink/Webkit doesn't support "@keyframes" so we must use both prefixed and non-prefixed in this section
-// 		60% {
-// 			-webkit-transform: translateZ(0) scale(@moon-button-pressed-scaled-up);
-// 			transform: translateZ(0) scale(@moon-button-pressed-scaled-up);
-// 		}
-// 	}
-// 	@-webkit-keyframes contract {
-// 		60% {
-// 			-webkit-transform: translateZ(0) scale(@moon-button-pressed-scaled-down);
-// 			transform: translateZ(0) scale(@moon-button-pressed-scaled-down);
-// 		}
-// 	}
-
-// 	@keyframes expand {
-// 		60% { transform: translateZ(0) scale(@moon-button-pressed-scaled-up); }
-// 	}
-// 	@keyframes contract {
-// 		60% { transform: translateZ(0) scale(@moon-button-pressed-scaled-down); }
-// 	}
-// }
+// @import '~@enact/moonstone/styles/skin.less';
 
 .button {
-	// .moon-large-button-text();
-	position: relative;
-	overflow: visible;
-	// height: @moon-button-height;
-	// line-height: (@moon-button-height - (2 * @moon-button-border-width));
-	// border-radius: @moon-button-border-radius;
-	cursor: pointer;
-	white-space: nowrap;
-	display: inline-block;
-	width: auto;
-	// min-width: @moon-button-height;
-	// max-width: 300px;
-	// padding: 0 @moon-button-h-padding;
-	// margin: 0 @moon-button-h-margin;
 	box-sizing: border-box;
-	// z-index: 0;
-	// text-align: center;
-	// vertical-align: middle;
-	// .moon-taparea(@moon-button-height);
-
-	// .moon-custom-text({
-	// 	// font-size: @moon-button-large-font-size-large;
-	// 	// height: @moon-button-height-large;
-	// 	// line-height: (@moon-button-height-large - (2 * @moon-button-border-width));
-	// });
+	cursor: pointer;
+	display: inline-block;
+	overflow: visible;
+	position: relative;
+	white-space: nowrap;
+	width: auto;
+	z-index: 0;
 
 	.bg {
-		border: 6px solid red;
 		.position(0);
 		position: absolute;
-		// content: '';
-		// background-color: inherit;
 		z-index: -1;
-		// border-width: @moon-button-border-width;
-		// border-style: solid;
-		// border-radius: @moon-button-border-radius;
-
-		// transform: translateZ(0);
-		// will-change: transform;
-		// -webkit-animation-duration: 0.2s;
-		// -webkit-animation-iteration-count: 1;
-		// -webkit-animation-timing-function: ease-out;
-		// animation-duration: 0.2s;
-		// animation-iteration-count: 1;
-		// animation-timing-function: ease-out;
 	}
 
 	.marquee {
@@ -86,7 +27,6 @@
 	}
 
 	.client {
-		// padding: @moon-button-border-width;	// We match the amount removed by the line-height above, so the text doesn't overlap the border
 		display: flex;
 		align-items: center;
 		box-sizing: border-box;
@@ -97,199 +37,288 @@
 		&::before {
 			content: '';
 			position: absolute;
-			// min-width: 24px;
-			// height: 6px;
-			// bottom: 18px;
-			// left: 24px;
-			// right: 24px;
-			// border-radius: 6px;
-		}
-
-		.icon {
-			/* FACTORY-EXPORT */
-			// -webkit-margin-start: 0;
 		}
 	}
 
-	&.minWidth {
+	.icon,
+	&.minWidth,
+	&.small,
+	&.pressed,
+	&.translucent,
+	&.transparent,
+	&.red,
+	&.green,
+	&.yellow,
+	&.blue {
 		/* FACTORY-EXPORT */
-		// min-width: @moon-button-large-min-width;
-	}
-
-	&.small {
-		/* FACTORY-EXPORT */
-		// .moon-small-button-text();
-		// height: @moon-button-small-height;
-		// min-width: @moon-button-small-height;
-		// line-height: (@moon-button-small-height - (2 * @moon-button-border-width));
-		// padding: 0 @moon-button-small-h-padding;
-
-		&.minWidth {
-			// min-width: @moon-button-small-min-width;
-		}
-
-		// .moon-taparea(@moon-button-small-height);
-
-		// .moon-custom-text({
-		// 	// font-size: @moon-button-small-font-size-large;
-		// 	// height: @moon-button-small-height-large;
-		// 	// line-height: (@moon-button-small-height-large - (2 * @moon-button-border-width));
-		// });
-
-		.client::before {
-			// bottom: 12px;
-			// left: 18px;
-			// right: 18px;
-		}
-	}
-
-	// Button-non-disabled rules
-	&:not([disabled]) {
-		.focus({
-			&.pressed,
-			&:active {
-				.bg {
-					// -webkit-animation-name: expand;
-					// animation-name: expand;
-				}
-			}
-		});
 	}
 
 	.disabled({
 		cursor: default;
 	});
-
-	// Skin colors
-	.applySkins({
-		// color: @moon-button-text-color;
-
-		.bg {
-			/* FACTORY-EXPORT */
-			// background-color: @moon-button-bg-color;
-			// border-color: transparent;
-		}
-
-		&.translucent {
-			/* FACTORY-EXPORT */
-			// color: @moon-button-translucent-text-color;
-
-			.bg {
-				// background-color: fade(@moon-button-bg-color, @moon-button-translucent-opacity);
-			}
-		}
-
-		&.transparent {
-			/* FACTORY-EXPORT */
-			// color: @moon-text-color;
-
-			.bg {
-				// background-color: transparent;
-			}
-		}
-
-		&.red .client::before {
-			/* FACTORY-EXPORT */
-			// background-color: @moon-remote-button-red-color;
-		}
-		&.green .client::before {
-			/* FACTORY-EXPORT */
-			// background-color: @moon-remote-button-green-color;
-		}
-		&.yellow .client::before {
-			// background-color: @moon-remote-button-yellow-color;
-		}
-		&.blue .client::before {
-			// background-color: @moon-remote-button-blue-color;
-		}
-
-		&:not([disabled]) {
-			.focus({
-				// color: @moon-spotlight-text-color;
-				// background-color: transparent;
-
-				.bg {
-					// background-color: @moon-spotlight-border-color;
-				}
-			});
-		}
-
-		// 'Selected' state
-		&.selected {
-			.bg {
-				// border-color: @moon-spotlight-border-color;
-			}
-
-			// 'Selected+Focus' state, seen in grouped buttons
-			.focus({
-				// color: @moon-spotlight-text-color;
-
-				.bg {
-					// border-color: @moon-active-spotlight-border-color;
-					// background-color: @moon-spotlight-border-color;
-				}
-			});
-		}
-
-		.disabled({
-			&.translucent,
-			&.transparent {
-				// opacity: @moon-disabled-translucent-opacity;
-			}
-		});
-	});
 }
 
-// .muted({
-// 	.button {
-// 		// Button-non-disabled rules
+
+// .button {
+// 	// .moon-large-button-text();
+// 	position: relative;
+// 	overflow: visible;
+// 	// height: @moon-button-height;
+// 	// line-height: (@moon-button-height - (2 * @moon-button-border-width));
+// 	// border-radius: @moon-button-border-radius;
+// 	cursor: pointer;
+// 	white-space: nowrap;
+// 	display: inline-block;
+// 	width: auto;
+// 	// min-width: @moon-button-height;
+// 	// max-width: 300px;
+// 	// padding: 0 @moon-button-h-padding;
+// 	// margin: 0 @moon-button-h-margin;
+// 	box-sizing: border-box;
+// 	z-index: 0;
+// 	// text-align: center;
+// 	// vertical-align: middle;
+// 	// .moon-taparea(@moon-button-height);
+
+// 	// .moon-custom-text({
+// 	// 	// font-size: @moon-button-large-font-size-large;
+// 	// 	// height: @moon-button-height-large;
+// 	// 	// line-height: (@moon-button-height-large - (2 * @moon-button-border-width));
+// 	// });
+
+// 	.bg {
+// 		border: 6px solid red;
+// 		.position(0);
+// 		position: absolute;
+// 		// content: '';
+// 		// background-color: inherit;
+// 		z-index: -1;
+// 		// border-width: @moon-button-border-width;
+// 		// border-style: solid;
+// 		// border-radius: @moon-button-border-radius;
+
+// 		// transform: translateZ(0);
+// 		// will-change: transform;
+// 		// -webkit-animation-duration: 0.2s;
+// 		// -webkit-animation-iteration-count: 1;
+// 		// -webkit-animation-timing-function: ease-out;
+// 		// animation-duration: 0.2s;
+// 		// animation-iteration-count: 1;
+// 		// animation-timing-function: ease-out;
+// 	}
+
+// 	.marquee {
+// 		flex-grow: 1;
+// 		text-align: center;
+// 	}
+
+// 	.client {
+// 		// padding: @moon-button-border-width;	// We match the amount removed by the line-height above, so the text doesn't overlap the border
+// 		display: flex;
+// 		align-items: center;
+// 		box-sizing: border-box;
+// 		height: 100%;
+// 		position: relative;
+
+// 		// Colored under-bar
+// 		&::before {
+// 			content: '';
+// 			position: absolute;
+// 			// min-width: 24px;
+// 			// height: 6px;
+// 			// bottom: 18px;
+// 			// left: 24px;
+// 			// right: 24px;
+// 			// border-radius: 6px;
+// 		}
+
+// 		.icon {
+// 			/* FACTORY-EXPORT */
+// 			// -webkit-margin-start: 0;
+// 		}
+// 	}
+
+// 	&.minWidth {
+// 		/* FACTORY-EXPORT */
+// 		// min-width: @moon-button-large-min-width;
+// 	}
+
+// 	&.small {
+// 		/* FACTORY-EXPORT */
+// 		// .moon-small-button-text();
+// 		// height: @moon-button-small-height;
+// 		// min-width: @moon-button-small-height;
+// 		// line-height: (@moon-button-small-height - (2 * @moon-button-border-width));
+// 		// padding: 0 @moon-button-small-h-padding;
+
+// 		&.minWidth {
+// 			// min-width: @moon-button-small-min-width;
+// 		}
+
+// 		// .moon-taparea(@moon-button-small-height);
+
+// 		// .moon-custom-text({
+// 		// 	// font-size: @moon-button-small-font-size-large;
+// 		// 	// height: @moon-button-small-height-large;
+// 		// 	// line-height: (@moon-button-small-height-large - (2 * @moon-button-border-width));
+// 		// });
+
+// 		.client::before {
+// 			// bottom: 12px;
+// 			// left: 18px;
+// 			// right: 18px;
+// 		}
+// 	}
+
+// 	// Button-non-disabled rules
+// 	&:not([disabled]) {
+// 		.focus({
+// 			&.pressed,
+// 			&:active {
+// 				.bg {
+// 					// -webkit-animation-name: expand;
+// 					// animation-name: expand;
+// 				}
+// 			}
+// 		});
+// 	}
+
+// 	.disabled({
+// 		cursor: default;
+// 	});
+
+// 	// Skin colors
+// 	.applySkins({
+// 		// color: @moon-button-text-color;
+
+// 		.bg {
+// 			/* FACTORY-EXPORT */
+// 			// background-color: @moon-button-bg-color;
+// 			// border-color: transparent;
+// 		}
+
+// 		&.translucent {
+// 			/* FACTORY-EXPORT */
+// 			// color: @moon-button-translucent-text-color;
+
+// 			.bg {
+// 				// background-color: fade(@moon-button-bg-color, @moon-button-translucent-opacity);
+// 			}
+// 		}
+
+// 		&.transparent {
+// 			/* FACTORY-EXPORT */
+// 			// color: @moon-text-color;
+
+// 			.bg {
+// 				// background-color: transparent;
+// 			}
+// 		}
+
+// 		&.red .client::before {
+// 			/* FACTORY-EXPORT */
+// 			// background-color: @moon-remote-button-red-color;
+// 		}
+// 		&.green .client::before {
+// 			/* FACTORY-EXPORT */
+// 			// background-color: @moon-remote-button-green-color;
+// 		}
+// 		&.yellow .client::before {
+// 			/* FACTORY-EXPORT */
+// 			// background-color: @moon-remote-button-yellow-color;
+// 		}
+// 		&.blue .client::before {
+// 			/* FACTORY-EXPORT */
+// 			// background-color: @moon-remote-button-blue-color;
+// 		}
+
 // 		&:not([disabled]) {
 // 			.focus({
-// 				&.pressed,
-// 				&:active {
-// 					.bg {
-// 						// -webkit-animation-name: none;
-// 						// animation-name: none;
-// 					}
+// 				// color: @moon-spotlight-text-color;
+// 				// background-color: transparent;
+
+// 				.bg {
+// 					// background-color: @moon-spotlight-border-color;
 // 				}
 // 			});
 // 		}
 
-// 		// Skin colors
-// 		.applySkins({
+// 		// 'Selected' state
+// 		&.selected {
+// 			.bg {
+// 				// border-color: @moon-spotlight-border-color;
+// 			}
+
+// 			// 'Selected+Focus' state, seen in grouped buttons
 // 			.focus({
-// 				// background-color: transparent;
-// 				// color: @moon-button-text-color;
+// 				// color: @moon-spotlight-text-color;
 
 // 				.bg {
-// 					// background-color: @moon-button-bg-color;
-// 				}
-
-// 				&.translucent {
-// 					// color: @moon-button-translucent-text-color;
-
-// 					.bg {
-// 						// background-color: fade(@moon-button-bg-color, @moon-button-translucent-opacity);
-// 					}
-// 				}
-
-// 				&.transparent {
-// 					// color: @moon-text-color;
-
-// 					.bg {
-// 						// background-color: transparent;
-// 					}
+// 					// border-color: @moon-active-spotlight-border-color;
+// 					// background-color: @moon-spotlight-border-color;
 // 				}
 // 			});
+// 		}
 
-// 			&.selected {
-// 				// 'Selected+Focus' state, seen in grouped buttons
-// 				.focus({
-// 					.bg {
-// 						// border-color: @moon-spotlight-border-color;
-// 					}
-// 				});
+// 		.disabled({
+// 			&.translucent,
+// 			&.transparent {
+// 				// opacity: @moon-disabled-translucent-opacity;
 // 			}
 // 		});
-// 	}
-// });
+// 	});
+// }
+
+// // .muted({
+// // 	.button {
+// // 		// Button-non-disabled rules
+// // 		&:not([disabled]) {
+// // 			.focus({
+// // 				&.pressed,
+// // 				&:active {
+// // 					.bg {
+// // 						// -webkit-animation-name: none;
+// // 						// animation-name: none;
+// // 					}
+// // 				}
+// // 			});
+// // 		}
+
+// // 		// Skin colors
+// // 		.applySkins({
+// // 			.focus({
+// // 				// background-color: transparent;
+// // 				// color: @moon-button-text-color;
+
+// // 				.bg {
+// // 					// background-color: @moon-button-bg-color;
+// // 				}
+
+// // 				&.translucent {
+// // 					// color: @moon-button-translucent-text-color;
+
+// // 					.bg {
+// // 						// background-color: fade(@moon-button-bg-color, @moon-button-translucent-opacity);
+// // 					}
+// // 				}
+
+// // 				&.transparent {
+// // 					// color: @moon-text-color;
+
+// // 					.bg {
+// // 						// background-color: transparent;
+// // 					}
+// // 				}
+// // 			});
+
+// // 			&.selected {
+// // 				// 'Selected+Focus' state, seen in grouped buttons
+// // 				.focus({
+// // 					.bg {
+// // 						// border-color: @moon-spotlight-border-color;
+// // 					}
+// // 				});
+// // 			}
+// // 		});
+// // 	}
+// // });
