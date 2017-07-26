@@ -20,6 +20,19 @@ const classNameMap = {
 	right: css.scrollbarRightButton
 };
 
+const selectLabel = function (direction) {
+	switch (direction) {
+		case 'up':
+			return $L('scroll up');
+		case 'down':
+			return $L('scroll down');
+		case 'left':
+			return $L('scroll left');
+		case 'right':
+			return $L('scroll right');
+	}
+};
+
 /**
  * {@link moonstone/Scroller.ScrollButtonBase} is the base implementation for
  * {@link moonstone/Scroller.ScrollButton}.
@@ -74,7 +87,7 @@ const ScrollButtonBase = kind({
 	},
 
 	computed: {
-		'aria-label': ({active, direction}) => active ? $L(`scroll ${direction}`) : null,
+		'aria-label': ({active, direction}) => active ? selectLabel(direction) : null,
 		className: ({direction, styler}) => styler.append(classNameMap[direction])
 	},
 
