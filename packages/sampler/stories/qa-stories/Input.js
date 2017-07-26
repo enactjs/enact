@@ -13,6 +13,7 @@ const inputData = {
 	extraSpaceText : 'This                                              Text                         has                           extra                                           space',
 	initialNumericValue: 0,
 	initialValue : 'Input field',
+	rtlAndLtr: 'abcdeشلاؤيث',
 	type: ['text', 'number', 'password']
 };
 
@@ -105,6 +106,22 @@ storiesOf('Input')
 				placeholder={text('placeholder')}
 				type={select('type', inputData.type, inputData.type[0])}
 				defaultValue={inputData.extraSpaceText}
+			/>
+		)
+	)
+	.addWithInfo(
+		'with RTL and LTR text together',
+		() => (
+			<Input
+				autoFocus={boolean('autoFocus')}
+				onChange={action('onChange')}
+				disabled={boolean('disabled')}
+				iconAfter={select('iconAfter', iconNames)}
+				iconBefore={select('iconBefore', iconNames)}
+				noDecorator={boolean('noDecorator')}
+				placeholder={text('placeholder', 'Input RTL and LTR text together')}
+				type={select('type', inputData.type, inputData.type[0])}
+				defaultValue={inputData.rtlAndLtr}
 			/>
 		)
 	)
