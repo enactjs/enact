@@ -7,6 +7,7 @@
 
 import factory from '@enact/core/factory';
 import {ButtonFactory as UiButtonFactory} from '@enact/ui/Button';
+import Skinnable from '@enact/moonstone/Skinnable';
 import Uppercase from '@enact/i18n/Uppercase';
 
 import componentCss from './Button.less';
@@ -30,7 +31,7 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 	/* Replace classes in this step */
 		css: /** @lends moonstone/Button.ButtonFactory.prototype */ {
 			...componentCss,
-			// Include the component class name o it too may be overridden.
+			// Include the component class name so it too may be overridden.
 			button: css.button,
 
 			/**
@@ -53,11 +54,15 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 const ButtonBase = ButtonBaseFactory();
 
 const Button = Uppercase(
-	ButtonBase
+	Skinnable(
+		ButtonBase
+	)
 );
 
 const ButtonFactory = (props) => Uppercase(
-	ButtonBaseFactory(props)
+	Skinnable(
+		ButtonBaseFactory(props)
+	)
 );
 
 export default Button;
