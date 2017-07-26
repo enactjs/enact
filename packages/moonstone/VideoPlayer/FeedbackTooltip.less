@@ -1,8 +1,9 @@
 // FeedbackTooltip.less
 //
 @import "../styles/text.less";
-@import "../styles/variables.less";
+@import "../styles/colors.less";
 @import "../styles/skin.less";
+@import "../styles/variables.less";
 
 .feedbackTooltip {
 	&.hidden {
@@ -37,6 +38,23 @@
 		bottom: @moon-spotlight-outset;
 	}
 
+	&.standalone {
+		position: absolute;
+		top: @moon-video-mini-feedback-position-top;
+		left: @moon-video-mini-feedback-position-left;
+
+		.content {
+			font-family: @moon-video-mini-feedback-font-family;
+			font-weight: @moon-video-mini-feedback-font-weight;
+			font-style: @moon-video-mini-feedback-font-style;
+			font-size: @moon-video-mini-feedback-font-size;
+			border-radius: 999px;
+			padding: 0 @moon-video-mini-feedback-padding-side;
+			bottom: auto;
+			transform: none;
+		}
+	}
+
 	// .knob[data-climax="rising"] {
 	// 	.thumbnail,
 	// 	.content {
@@ -59,6 +77,13 @@
 		.content {
 			color: @moon-white;
 			text-shadow: @moon-video-player-title-text-shadow;
+		}
+
+		&.standalone {
+			.content {
+				background-color: @moon-video-mini-feedback-bg-color;
+				text-shadow: none;
+			}
 		}
 	});
 }

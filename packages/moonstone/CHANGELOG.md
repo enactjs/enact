@@ -33,6 +33,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/ExpandableItem`, `moonstone/ExpandableList`, `moonstone/ExpandablePicker`, `moonstone/DatePicker`, and `moonstone/TimePicker` to pause spotlight when animating in 5-way mode
 - `moonstone/Spinner` to position the text content under the spinner, rather than to the right side
 - `moonstone/VideoPlayer` to include hour when announcing the time while scrubbing
+- `moonstone/VideoPlayer` to display 'mini' feedback when controlling playback from the remote control
 
 ### Fixed
 

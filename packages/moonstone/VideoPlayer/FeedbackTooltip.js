@@ -90,9 +90,9 @@ const FeedbackTooltipBase = kind({
 	},
 
 	computed: {
-		className: ({playbackState: s, styler, visible}) => styler.append({
+		className: ({playbackState: s, standalone, styler, visible}) => styler.append({
 			hidden: !visible && states[s] && states[s].allowHide
-		})
+		}, standalone ? css.standalone : '')
 	},
 
 	render: ({children, noFeedback, playbackState, playbackRate, thumbnailSrc, ...rest}) => {
