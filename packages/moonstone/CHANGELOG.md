@@ -14,6 +14,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Scrollable` to update disability of paging controls when the scrollbar is set to `visible` and the content becomes shorter.
+
 ## [1.5.0] - 2017-07-19
 
 ### Added
@@ -35,6 +37,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/ExpandableItem`, `moonstone/ExpandableList`, `moonstone/ExpandablePicker`, `moonstone/DatePicker`, and `moonstone/TimePicker` to pause spotlight when animating in 5-way mode
 - `moonstone/Spinner` to position the text content under the spinner, rather than to the right side
 - `moonstone/VideoPlayer` to include hour when announcing the time while scrubbing
+- `moonstone/GridListImageItem` to require a `source` prop and not have a default value
 
 ### Fixed
 
