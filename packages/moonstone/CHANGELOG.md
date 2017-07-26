@@ -12,6 +12,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/Scroller` not scrolled via 5 way when expandablielist is opened.
+
 ## [1.5.0] - 2017-07-19
 
 ### Added
