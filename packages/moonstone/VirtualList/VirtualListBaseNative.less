@@ -1,7 +1,7 @@
 .list {
 	position: relative;
-	height: 100%;
 	width: 100%;
+	height: 100%;
 
 	&.vertical {
 		overflow-x: hidden;
@@ -11,6 +11,10 @@
 	&.horizontal {
 		overflow-x: scroll;
 		overflow-y: hidden;
+	}
+
+	& .content {
+		position: relative;
 	}
 }
 
