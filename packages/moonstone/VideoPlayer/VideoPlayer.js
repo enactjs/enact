@@ -20,7 +20,6 @@ import Slottable from '@enact/ui/Slottable';
 import {getDirection, Spotlight} from '@enact/spotlight';
 import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
 import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
-import readAlert from '@enact/webos/VoiceReadout';
 
 import $L from '../internal/$L';
 import Spinner from '../Spinner';
@@ -679,7 +678,6 @@ const VideoPlayerBase = class extends React.Component {
 		this.stopAutoCloseTimeout();
 		this.stopDelayedTitleHide();
 		this.stopDelayedFeedbackHide();
-		this.readAlertJob.stop();
 		this.announceJob.stop();
 		this.renderBottomControl.stop();
 		this.refocusMoreButton.stop();
@@ -858,38 +856,28 @@ const VideoPlayerBase = class extends React.Component {
 
 	handleKeyUp = (ev) => {
 		const {PLAY, PAUSE, STOP, REWIND, FASTFORWARD} = keyMap;
-		let showControls = false;
 
 		switch (ev.keyCode) {
 			case PLAY:
-				showControls = true;
 				this.play();
 				break;
 			case PAUSE:
-				showControls = true;
 				this.pause();
 				break;
 			case REWIND:
 				if (!this.props.noRateButtons) {
-					showControls = true;
 					this.rewind();
 				}
 				break;
 			case FASTFORWARD:
 				if (!this.props.noRateButtons) {
-					showControls = true;
 					this.fastForward();
 				}
 				break;
 			case STOP:
-				showControls = true;
 				this.pause();
 				this.seek(0);
 				break;
-		}
-
-		if (showControls && !this.state.bottomControlsVisible) {
-			this.showControls();
 		}
 	}
 
@@ -987,13 +975,6 @@ const VideoPlayerBase = class extends React.Component {
 		this.video[action](props);
 	}
 
-	readAlertPlayPause = (msg) => {
-		const delay = this.state.bottomControlsVisible ? 0 : 500;
-		this.readAlertJob.startAfter(delay, msg, !delay);
-	}
-
-	readAlertJob = new Job(readAlert)
-
 	/**
 	 * Programmatically plays the current media.
 	 *
@@ -1006,7 +987,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.setPlaybackRate(1);
 		this.send('play');
 		this.prevCommand = 'play';
-		this.readAlertPlayPause($L(playLabel));
+		this.announce($L(playLabel));
 	}
 
 	/**
@@ -1021,7 +1002,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.setPlaybackRate(1);
 		this.send('pause');
 		this.prevCommand = 'pause';
-		this.readAlertPlayPause($L(pauseLabel));
+		this.announce($L(pauseLabel));
 	}
 
 	/**
