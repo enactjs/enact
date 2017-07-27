@@ -12,28 +12,47 @@ const makeEvent = (type, fn) => (ev, ...args) => {
 
 	return fn(payload, ...args);
 };
-const forwardDown = makeEvent('down', forward('onDown'));
+const forwardDown = makeEvent('down', forwardWithPrevent('onDown'));
 const forwardUp = makeEvent('up', forwardWithPrevent('onUp'));
 const forwardTap = makeEvent('tap', forward('onTap'));
 
-const Touchable = hoc((config, Wrapped) => {
+const activate = ({active}) => active ? null : {active: true};
+const deactivate = ({active}) => active ? {active: false} : null;
+
+const defaultConfig = {
+	activeProp: null
+};
+
+const Touchable = hoc(defaultConfig, (config, Wrapped) => {
+	const {activeProp} = config;
+
 	return class extends React.Component {
 		static displayName = 'Touchable'
 
 		static propTypes = {
 			cancelOnLeave: PropTypes.bool,
+			disabled: PropTypes.bool,
 			onDown: PropTypes.func,
 			onTap: PropTypes.func,
 			onUp: PropTypes.func
 		}
 
-		static defaultProps: {
-			cancelOnLeave: false
+		static defaultProps = {
+			cancelOnLeave: false,
+			disabled: false
 		}
 
 		target = null
 		node = null
 		handle = handle.bind(this);
+
+		constructor () {
+			super();
+
+			this.state = {
+				active: false
+			};
+		}
 
 		componentDidMount () {
 			// eslint-disable-next-line react/no-find-dom-node
@@ -55,15 +74,35 @@ const Touchable = hoc((config, Wrapped) => {
 			off('mouseup', this.handleGlobalUp, document);
 		}
 
-		setTarget = (ev) => {
-			this.target = ev.target;
-			this.targetBounds = this.target.getBoundingClientRect();
+		setTarget = (target) => {
+			this.target = target;
 
-			return true;
+			if (platform.touch && this.props.cancelOnLeave) {
+				this.targetBounds = this.target.getBoundingClientRect();
+			}
 		}
 
 		clearTarget = () => {
 			this.target = null;
+			this.targetBounds = null;
+		}
+
+		activate = (ev) => {
+			this.setTarget(ev.target);
+			if (activeProp) {
+				this.setState(activate);
+			}
+
+			return true;
+		}
+
+		deactivate = () => {
+			this.clearTarget();
+			if (activeProp) {
+				this.setState(deactivate);
+			}
+
+			return true;
 		}
 
 		shouldHandleUp = (ev) => {
@@ -71,27 +110,25 @@ const Touchable = hoc((config, Wrapped) => {
 			return this.target && this.node.contains(ev.target);
 		}
 
-		touchLeftTarget = (ev) => Array.from(ev.targetTouches).reduce((left, touch) => {
-			return left && (
-				this.targetBounds.left > touch.pageX ||
-				this.targetBounds.right < touch.pageX ||
-				this.targetBounds.top > touch.pageY ||
-				this.targetBounds.bottom < touch.pageY
-			);
+		touchLeftTarget = (ev) => Array.from(ev.targetTouches).reduce((hasLeft, {pageX, pageY}) => {
+			const {left, right, top, bottom} = this.targetBounds;
+			return hasLeft && left > pageX || right < pageX || top > pageY || bottom < pageY;
 		}, true);
 
 		handleDown = this.handle(
-			this.setTarget,
-			forwardDown
+			forProp('disabled', false),
+			forwardDown,
+			this.activate
 			// hold support
 			// drag support
 		)
 
 		handleUp = this.handle(
+			forProp('disabled', false),
 			this.shouldHandleUp,
 			forwardUp,
 			forwardTap
-		).finally(this.clearTarget)
+		).finally(this.deactivate)
 
 		handleMouseDown = this.handle(
 			forward('onMouseDown'),
@@ -100,8 +137,9 @@ const Touchable = hoc((config, Wrapped) => {
 
 		handleMouseLeave = this.handle(
 			forward('onMouseLeave'),
+			forProp('disabled', false),
 			forProp('cancelOnLeave', true),
-			this.clearTarget
+			this.deactivate
 		)
 
 		handleMouseUp = this.handle(
@@ -116,9 +154,10 @@ const Touchable = hoc((config, Wrapped) => {
 
 		handleTouchMove = this.handle(
 			forward('onTouchMove'),
+			forProp('disabled', false),
 			forProp('cancelOnLeave', true),
 			this.touchLeftTarget,
-			this.clearTarget
+			this.deactivate
 		)
 
 		handleTouchEnd = this.handle(
@@ -126,7 +165,7 @@ const Touchable = hoc((config, Wrapped) => {
 			this.handleUp
 		)
 
-		handleGlobalUp = this.clearTarget
+		handleGlobalUp = this.deactivate
 
 		addDownHandlers (props) {
 			if (this.props.onDown) {
@@ -154,9 +193,14 @@ const Touchable = hoc((config, Wrapped) => {
 			this.addDownHandlers(props);
 			this.addUpHandlers(props);
 
+			delete props.cancelOnLeave;
 			delete props.onDown;
 			delete props.onUp;
 			delete props.onTap;
+
+			if (activeProp) {
+				props[activeProp] = this.state.active;
+			}
 
 			return (
 				<Wrapped {...props} />
