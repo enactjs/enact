@@ -12,7 +12,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
-- `moonstone/Scroller` not scrolled via 5 way when `moonstone/ExpandableList` is opened.
 - `moonstone/Scrollable` to update disability of paging controls when the scrollbar is set to `visible` and the content becomes shorter.
 
 ## [1.5.0] - 2017-07-19
