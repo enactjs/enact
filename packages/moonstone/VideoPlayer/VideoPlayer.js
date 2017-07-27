@@ -90,10 +90,6 @@ const forwardJumpBackwardButtonClick = forwardWithPrevent('onJumpBackwardButtonC
 const forwardJumpForwardButtonClick = forwardWithPrevent('onJumpForwardButtonClick');
 const forwardPlayButtonClick = forward('onPlayButtonClick');
 
-// localized strings
-const playLabel = 'Play';
-const pauseLabel = 'Pause';
-
 /**
  * Every callback sent by [VideoPlayer]{@link moonstone/VideoPlayer} receives a status package,
  * which includes an object with the following key/value pairs as the first argument:
@@ -524,6 +520,10 @@ const VideoPlayerBase = class extends React.Component {
 		this.speedIndex = 0;
 		this.titleOffsetCalculated = false;
 		this.selectPlaybackRates('fastForward');
+
+		// localized strings
+		this.playLabel = $L('Play');
+		this.pauseLabel = $L('Pause');
 
 		this.initI18n();
 
@@ -1263,10 +1263,10 @@ const VideoPlayerBase = class extends React.Component {
 		forwardPlayButtonClick(ev, this.props);
 		if (this.state.paused) {
 			this.play();
-			this.announce($L(playLabel));
+			this.announce(this.playLabel);
 		} else {
 			this.pause();
-			this.announce($L(pauseLabel));
+			this.announce(this.pauseLabel);
 		}
 	}
 	onForward = (ev) => {
@@ -1420,9 +1420,9 @@ const VideoPlayerBase = class extends React.Component {
 								onToggleMore={this.onMoreClick}
 								paused={this.state.paused}
 								pauseIcon={pauseIcon}
-								pauseLabel={pauseLabel}
+								pauseLabel={this.pauseLabel}
 								playIcon={playIcon}
-								playLabel={playLabel}
+								playLabel={this.playLabel}
 								rateButtonsDisabled={rateButtonsDisabled}
 								rightComponents={rightComponents}
 								showMoreComponents={this.state.more}
