@@ -28,7 +28,7 @@ const BodyTextBaseFactory = factory({css: componentCss}, ({css}) => {
 	// }
 	// console.groupEnd();
 	return UiBodyTextFactory({
-	/* Replace classes in this step */
+		/* Replace classes in this step */
 		css: /** @lends moonstone/Button.BodyTextFactory.prototype */ {
 			...componentCss,
 			// Include the component class name so it too may be overridden.
