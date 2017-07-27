@@ -173,7 +173,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		handleGlobalUp = this.deactivate
 
 		addDownHandlers (props) {
-			if (this.props.onDown) {
+			if (activeProp || this.props.onDown) {
 				props.onMouseDown = this.handleMouseDown;
 				if (platform.touch) {
 					props.onTouchStart = this.handleTouchStart;
@@ -182,7 +182,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		addUpHandlers (props) {
-			if (this.props.onUp || this.props.onTap) {
+			if (activeProp || this.props.onUp || this.props.onTap) {
 				props.onMouseUp = this.handleMouseUp;
 				props.onMouseLeave = this.handleMouseLeave;
 				if (platform.touch) {
