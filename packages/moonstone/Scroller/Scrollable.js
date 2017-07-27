@@ -532,9 +532,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					// If scroll animation is ongoing, we need to pass last target position to
 					// determine correct scroll position.
 					if (this.animator.isAnimating() && lastPos) {
-						pos = positionFn(item, (this.direction !== 'horizontal') ? lastPos.top : lastPos.left);
+						pos = positionFn({item, scrollPosition: (this.direction !== 'horizontal') ? lastPos.top : lastPos.left});
 					} else {
-						pos = positionFn(item);
+						pos = positionFn({item});
 					}
 					this.startScrollOnFocus(pos, item);
 				}
@@ -714,7 +714,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		// scroll start/stop
-
 		start ({targetX, targetY, animate = true, silent = false, duration = animationDuration}) {
 			const {scrollLeft, scrollTop} = this;
 			const bounds = this.getScrollBounds();
@@ -1019,7 +1018,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				scrollInfo = {previousScrollHeight, scrollTop: this.scrollTop};
 
 			if (focusedItem && containerRef && containerRef.contains(focusedItem)) {
-				const position = calculatePositionOnFocus(focusedItem, scrollInfo);
+				const position = calculatePositionOnFocus({item: focusedItem, scrollInfo});
 				this.startScrollOnFocus(position, focusedItem);
 			}
 
