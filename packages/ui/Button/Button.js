@@ -19,7 +19,6 @@ import PropTypes from 'prop-types';
 import Icon from '@enact/moonstone/Icon';
 import {MarqueeDecorator} from '@enact/moonstone/Marquee';
 import {TooltipDecorator} from '@enact/moonstone/TooltipDecorator';
-import Skinnable from '@enact/moonstone/Skinnable';
 
 import componentCss from './Button.less';
 
@@ -243,9 +242,7 @@ const ButtonFactory = factory(props => {
 			{className: componentCss.marquee},
 			Pressable(
 				Spottable(
-					Skinnable(
-						Base
-					)
+					Base
 				)
 			)
 		)
