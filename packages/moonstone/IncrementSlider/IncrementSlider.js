@@ -9,7 +9,7 @@ import Changeable from '@enact/ui/Changeable';
 import factory from '@enact/core/factory';
 import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
-import Pressable from '@enact/ui/Pressable';
+import Touchable from '@enact/ui/Touchable';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Spottable from '@enact/spotlight/Spottable';
@@ -29,7 +29,7 @@ const isRight = is('right');
 const isUp = is('up');
 
 const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
-	const Slider = Pressable(Spottable(Skinnable(SliderBaseFactory({css}))));
+	const Slider = Touchable({activeProp: 'pressed'}, Spottable(Skinnable(SliderBaseFactory({css}))));
 
 	/**
 	 * {@link moonstone/IncrementSlider.IncrementSliderBase} is a stateless Slider
