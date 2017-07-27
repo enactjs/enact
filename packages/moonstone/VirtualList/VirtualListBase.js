@@ -691,6 +691,29 @@ class VirtualListCore extends Component {
 		}
 	}
 
+	setRestrict = (bool) => {
+		Spotlight.set(this.props['data-container-id'], {restrict: (bool) ? 'self-only' : 'self-first'});
+	}
+
+	setSpotlightContainerRestrict = (keyCode, index) => {
+		const
+			{dataSize} = this.props,
+			{isPrimaryDirectionVertical, dimensionToExtent} = this,
+			canMoveBackward = index >= dimensionToExtent,
+			canMoveForward = index < (dataSize - (((dataSize - 1) % dimensionToExtent) + 1));
+		let isSelfOnly = false;
+
+		if (isPrimaryDirectionVertical) {
+			if (isUp(keyCode) && canMoveBackward || isDown(keyCode) && canMoveForward) {
+				isSelfOnly = true;
+			}
+		} else if (isLeft(keyCode) && canMoveBackward || isRight(keyCode) && canMoveForward) {
+			isSelfOnly = true;
+		}
+
+		this.setRestrict(isSelfOnly);
+	}
+
 	getIndicesForPageScroll = (direction, currentIndex) => {
 		const
 			{context, dimensionToExtent, isPrimaryDirectionVertical, primary} = this,
@@ -811,6 +834,8 @@ class VirtualListCore extends Component {
 
 		this.isScrolledBy5way = false;
 		if (getDirection(keyCode)) {
+			const index = Number.parseInt(target.getAttribute(dataIndexAttribute));
+			this.setSpotlightContainerRestrict(keyCode, index);
 			this.isScrolledBy5way = this.jumpToSpottableItem(keyCode, target);
 		}
 		forwardKeyDown(e, this.props);
@@ -931,21 +956,20 @@ class VirtualListCore extends Component {
 
 	render () {
 		const
-			{className} = this.props,
+			{className, ...rest} = this.props,
 			{primary, cc} = this,
-			props = Object.assign({}, this.props),
 			mergedClasses = classNames(css.virtualList, className);
 
-		delete props.cbScrollTo;
-		delete props.clientSize;
-		delete props.component;
-		delete props.data;
-		delete props.dataSize;
-		delete props.direction;
-		delete props.itemSize;
-		delete props.overhang;
-		delete props.pageScroll;
-		delete props.spacing;
+		delete rest.cbScrollTo;
+		delete rest.clientSize;
+		delete rest.component;
+		delete rest.data;
+		delete rest.dataSize;
+		delete rest.direction;
+		delete rest.itemSize;
+		delete rest.overhang;
+		delete rest.pageScroll;
+		delete rest.spacing;
 
 		if (primary) {
 			this.renderCalculate();
@@ -954,7 +978,7 @@ class VirtualListCore extends Component {
 		const needsScrollingPlaceholder = this.nodeIndexToBeFocused != null && Spotlight.isPaused();
 
 		return (
-			<div {...props} className={mergedClasses} onKeyDown={this.onKeyDown} ref={this.initContainerRef} style={this.itemStyle}>
+			<div {...rest} className={mergedClasses} onKeyDown={this.onKeyDown} ref={this.initContainerRef} style={this.itemStyle}>
 				{cc.length ? cc : null}
 				{primary ? null : (
 					<SpotlightPlaceholder

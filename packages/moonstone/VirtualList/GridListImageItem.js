@@ -38,6 +38,15 @@ const GridListImageItemBase = kind({
 
 	propTypes: /** @lends moonstone/VirtualList.GridListImageItemBase.prototype */ {
 		/**
+		 * The absolute URL path to the image.
+		 *
+		 * @type {String}
+		 * @required
+		 * @public
+		 */
+		source: PropTypes.string.isRequired,
+
+		/**
 		 * The primary caption to be displayed with the image.
 		 *
 		 * @type {String}
@@ -95,14 +104,6 @@ const GridListImageItemBase = kind({
 		 * @public
 		 */
 		selectionOverlayShowing: PropTypes.bool,
-
-		/**
-		 * The absolute URL path to the image.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		source: PropTypes.string,
 
 		/**
 		 * The second caption line to be displayed with the image.
