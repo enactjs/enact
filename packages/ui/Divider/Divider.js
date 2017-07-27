@@ -1,7 +1,7 @@
 /**
- * Exports the {@link moonstone/Divider.Divider} component.
+ * Exports the {@link ui/Divider.Divider} component.
  *
- * @module moonstone/Divider
+ * @module ui/Divider
  */
 
 import factory from '@enact/core/factory';
@@ -10,7 +10,7 @@ import Uppercase from '@enact/i18n/Uppercase';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {MarqueeDecorator} from '@enact/moonstone/Marquee';
+import {MarqueeDecorator} from '@enact/ui/Marquee';
 
 import componentCss from './Divider.less';
 
@@ -29,18 +29,18 @@ const MarqueeH3 = Uppercase(MarqueeDecorator('h3'));
  */
 const DividerBaseFactory = factory({css: componentCss}, ({css}) => {
 	/**
-	 * {@link moonstone/Divider.Divider} is a simply styled component that may be used as a separator
+	 * {@link ui/Divider.Divider} is a simply styled component that may be used as a separator
 	 * between groups of components.
 	 *
 	 * @class Divider
-	 * @memberof moonstone/Divider
+	 * @memberof ui/Divider
 	 * @ui
 	 * @public
 	 */
 	return kind({
 		name: 'Divider',
 
-		propTypes: /** @lends moonstone/Divider.Divider.prototype */ {
+		propTypes: /** @lends ui/Divider.Divider.prototype */ {
 			/**
 			 * Configures how the `children` string will be capitalized. By default, each word is capitalized.
 			 *
@@ -81,7 +81,7 @@ const DividerBaseFactory = factory({css: componentCss}, ({css}) => {
 			 *
 			 * _Note:_ Spacing is separate from margin with regard to `margin-top`. It ensures a
 			 * consistent distance from the bottom horizontal line. It's safe to use `margin-top` to add
-			 * additional spacing above your {@link moonstone/Divider.Divider}.
+			 * additional spacing above your {@link ui/Divider.Divider}.
 			 *
 			 * @type {String}
 			 * @default 'normal'

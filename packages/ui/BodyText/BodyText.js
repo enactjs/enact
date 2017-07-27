@@ -1,8 +1,8 @@
 /**
- * Exports the {@link moonstone/BodyText.BodyText} and {@link moonstone/BodyText.BodyTextBase}
- * components.  The default export is {@link moonstone/BodyText.BodyTextBase}.
+ * Exports the {@link ui/BodyText.BodyText} and {@link ui/BodyText.BodyTextBase}
+ * components.  The default export is {@link ui/BodyText.BodyTextBase}.
  *
- * @module moonstone/BodyText
+ * @module ui/BodyText
  */
 
 import factory from '@enact/core/factory';
@@ -25,18 +25,17 @@ import componentCss from './BodyText.less';
  */
 const BodyTextBaseFactory = factory({css: componentCss}, ({css}) => {
 	/**
-	 * {@link moonstone/BodyText.BodyText} is a stateless BodyText with Moonstone styling
-	 * applied.
+	 * {@link ui/BodyText.BodyText} is a stateless component used to display a standard block of text.
 	 *
 	 * @class BodyText
-	 * @memberof moonstone/BodyText
+	 * @memberof ui/BodyText
 	 * @ui
 	 * @public
 	 */
 	return kind({
 		name: 'BodyText',
 
-		propTypes: /** @lends moonstone/BodyText.BodyText.prototype */ {
+		propTypes: /** @lends ui/BodyText.BodyText.prototype */ {
 			/**
 			 * If `true`, text content is centered; otherwise, it is left-aligned.
 			 *

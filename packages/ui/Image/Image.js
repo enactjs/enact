@@ -1,7 +1,7 @@
 /**
- * Exports the {@link moonstone/Image.Image} component.
+ * Exports the {@link ui/Image.Image} component.
  *
- * @module moonstone/Image
+ * @module ui/Image
  */
 
 import factory from '@enact/core/factory';
@@ -25,7 +25,7 @@ import componentCss from './Image.less';
  */
 const ImageBaseFactory = factory({css: componentCss}, ({css}) => {
 	/**
-	 * {@link moonstone/Image.Image} is a component designed to display images
+	 * {@link ui/Image.Image} is a component designed to display images
 	 * conditionally based on screen size. This component has a default size but should have a size
 	 * specified for its particular usage using a CSS `className` or inline `style`.
 	 *
@@ -48,14 +48,14 @@ const ImageBaseFactory = factory({css: componentCss}, ({css}) => {
 	 * > If you need a naturally sized image, you can use the native `<img>` element instead.
 	 *
 	 * @class Image
-	 * @memberof moonstone/Image
+	 * @memberof ui/Image
 	 * @ui
 	 * @public
 	 */
 	return kind({
 		name: 'Image',
 
-		propTypes: /** @lends moonstone/Image.Image.prototype */ {
+		propTypes: /** @lends ui/Image.Image.prototype */ {
 			/**
 			 * String value or Object of values used to determine which image will appear on
 			 * a specific screenSize.
@@ -71,7 +71,7 @@ const ImageBaseFactory = factory({css: componentCss}, ({css}) => {
 			 *
 			 * @type {String}
 			 * @public
-			 * @memberof moonstone/Image.Image.prototype
+			 * @memberof ui/Image.Image.prototype
 			 */
 			// Quoting this (necessary) makes it alphabetically sort differently...
 			'aria-label': PropTypes.string,
