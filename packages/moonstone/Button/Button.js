@@ -7,6 +7,7 @@
 
 import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
+// import {diffClasses} from '@enact/ui/MigrationAid';
 import {ButtonFactory as UiButtonFactory} from '@enact/ui/Button';
 import Skinnable from '@enact/moonstone/Skinnable';
 import Uppercase from '@enact/i18n/Uppercase';
@@ -25,13 +26,10 @@ import componentCss from './Button.less';
  * @public
  */
 const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
-	// console.group('Moon Button');
-	// for (const key in componentCss) {
-	// 	if (componentCss[key] !== css[key]) console.log(key, ':', componentCss[key], '   VS   ', css[key]);
-	// }
-	// console.groupEnd();
+	// diffClasses('Moon Button', componentCss, css);
+
 	const MoonstoneButton = UiButtonFactory({
-	/* Replace classes in this step */
+		/* Replace classes in this step */
 		css: /** @lends moonstone/Button.ButtonFactory.prototype */ {
 			...componentCss,
 			// Include the component class name so it too may be overridden.
@@ -55,7 +53,7 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 
 	return kind({
 		name: 'MoonstoneButton',
-		propTypes: {
+		propTypes: /** @lends moonstone/Button.ButtonFactory.prototype */ {
 			/**
 			 * Transformation to apply to the text of the Button. By default, text is transformed
 			 * to uppercase.
@@ -68,7 +66,9 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 			casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence'])
 		},
 
-		render: (props) => (<MoonstoneButton {...props} />)
+		render: (props) => (
+			<MoonstoneButton {...props} />
+		)
 	});
 });
 
@@ -89,7 +89,7 @@ const ButtonFactory = (props) => Uppercase(
 export default Button;
 export {
 	Button,
-	// ButtonBase,
+	ButtonBase,
 	ButtonFactory,
 	ButtonBaseFactory
 };

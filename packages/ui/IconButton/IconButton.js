@@ -1,38 +1,41 @@
 /**
- * Exports the {@link moonstone/IconButton.IconButton} component.
+ * Exports the {@link ui/IconButton.IconButton} component.
  *
- * @module moonstone/IconButton
+ * @module ui/IconButton
  */
 
 import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
+// import {diffClasses} from '@enact/ui/MigrationAid';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {ButtonFactory} from '../Button';
-import Icon from '../Icon';
+import {ButtonFactory as UiButtonFactory} from '../Button';
+import UiIcon from '../Icon';
 
 import componentCss from './IconButton.less';
 
-const OptimizedIcon = onlyUpdateForKeys(['small', 'children'])(Icon);
+const OptimizedIcon = onlyUpdateForKeys(['small', 'children'])(UiIcon);
 
 /**
- * {@link moonstone/IconButton.IconButtonFactory} is Factory wrapper around
- * {@link moonstone/IconButton.IconButton} that allows overriding certain classes of the base
- * `Button` component at design time. See {@link moonstone/Button.ButtonBaseFactory}.
+ * {@link ui/IconButton.IconButtonFactory} is Factory wrapper around
+ * {@link ui/IconButton.IconButton} that allows overriding certain classes of the base
+ * `Button` component at design time. See {@link ui/Button.ButtonBaseFactory}.
  *
  * @class IconButtonFactory
- * @memberof moonstone/IconButton
+ * @memberof ui/IconButton
  * @factory
  * @public
  */
 const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
-	const Button = ButtonFactory({css});
+	// diffClasses('UI IconButton', componentCss, css);
+
+	const UiButton = UiButtonFactory({css});
 	/**
-	 * {@link moonstone/IconButton.IconButton} is a {@link moonstone/Icon.Icon} that acts like a button.
+	 * {@link ui/IconButton.IconButton} is a {@link ui/Icon.Icon} that acts like a button.
 	 * You may specify an image or a font-based icon by setting the children to either the path to the
-	 * image or a string from the [IconList]{@link moonstone/Icon.IconList}.
+	 * image or a string from the [IconList]{@link ui/Icon.IconList}.
 	 *
 	 * Usage:
 	 * ```
@@ -42,14 +45,14 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 	 * ```
 	 *
 	 * @class IconButton
-	 * @memberof moonstone/IconButton
+	 * @memberof ui/IconButton
 	 * @ui
 	 * @public
 	 */
 	return kind({
 		name: 'IconButton',
 
-		propTypes: /** @lends moonstone/IconButton.IconButton.prototype */ {
+		propTypes: /** @lends ui/IconButton.IconButton.prototype */ {
 			/**
 			 * The background-color opacity of this icon button; valid values are `'opaque'`,
 			 * `'translucent'`, and `'transparent'`.
@@ -60,10 +63,12 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 			 */
 			backgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'transparent']),
 
+			Button: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
+
 			/**
 			 * The icon displayed within the button.
 			 *
-			 * @see {@link moonstone/Icon.Icon#children}
+			 * @see {@link ui/Icon.Icon#children}
 			 * @type {String|Object}
 			 * @public
 			 */
@@ -87,6 +92,8 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * @public
 			 */
 			disabled: PropTypes.bool,
+
+			Icon: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
 
 			/**
 			 * When `true`, a pressed visual effect is applied to the icon button
@@ -118,11 +125,13 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 		},
 
 		defaultProps: {
+			Button: UiButton,
+			Icon: OptimizedIcon,
 			small: false
 		},
 
 		styles: {
-			css: componentCss,
+			css,
 			className: 'iconButton'
 		},
 
@@ -130,10 +139,10 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 			className: ({color, small, styler}) => styler.append({small}, color)
 		},
 
-		render: ({children, small, ...rest}) => {
+		render: ({Button, children, Icon, small, ...rest}) => {
 			return (
 				<Button {...rest} small={small} minWidth={false} marqueeDisabled>
-					<OptimizedIcon small={small} className={css.icon}>{children}</OptimizedIcon>
+					<Icon small={small} className={css.icon}>{children}</Icon>
 				</Button>
 			);
 		}

@@ -5,6 +5,7 @@
  */
 
 import factory from '@enact/core/factory';
+// import {diffClasses} from '@enact/ui/MigrationAid';
 import {ImageFactory as UiImageFactory} from '@enact/ui/Image';
 
 import componentCss from './Image.less';
@@ -39,14 +40,11 @@ import componentCss from './Image.less';
  */
 
 const ImageBaseFactory = factory({css: componentCss}, ({css}) => {
-	// console.group('Moon Image');
-	// for (const key in componentCss) {
-	// 	if (componentCss[key] !== css[key]) console.log(key, ':', componentCss[key], '   VS   ', css[key]);
-	// }
-	// console.groupEnd();
+	// diffClasses('Moon Image', componentCss, css);
+
 	return UiImageFactory({
 		/* Replace classes in this step */
-		css: /** @lends moonstone/Button.ImageFactory.prototype */ {
+		css: /** @lends moonstone/Image.ImageFactory.prototype */ {
 			...componentCss,
 			// Include the component class name so it too may be overridden.
 			image: css.image
@@ -59,7 +57,7 @@ const ImageBase = ImageBaseFactory();
 export default ImageBase;
 export {
 	ImageBase as Image,
-	// ImageBase,
+	ImageBase,
 	ImageBaseFactory as ImageFactory,
 	ImageBaseFactory
 };

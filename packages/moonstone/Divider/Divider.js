@@ -5,7 +5,7 @@
  */
 
 import factory from '@enact/core/factory';
-
+// import {diffClasses} from '@enact/ui/MigrationAid';
 import {DividerFactory as UiDividerFactory} from '@enact/ui/Divider';
 
 import Skinnable from '../Skinnable';
@@ -22,14 +22,11 @@ import componentCss from './Divider.less';
  * @public
  */
 const DividerBaseFactory = factory({css: componentCss}, ({css}) => {
-	// console.group('Moon Divider');
-	// for (const key in componentCss) {
-	// 	if (componentCss[key] !== css[key]) console.log(key, ':', componentCss[key], '   VS   ', css[key]);
-	// }
-	// console.groupEnd();
+	// diffClasses('Moon Divider', componentCss, css);
+
 	return UiDividerFactory({
 		/* Replace classes in this step */
-		css: /** @lends moonstone/Button.DividerFactory.prototype */ {
+		css: /** @lends moonstone/Divider.DividerFactory.prototype */ {
 			...componentCss,
 			// Include the component class name so it too may be overridden.
 			divider: css.divider
@@ -51,7 +48,7 @@ const DividerFactory = (props) => Skinnable(
 export default Divider;
 export {
 	Divider,
-	// DividerBase,
+	DividerBase,
 	DividerFactory,
 	DividerBaseFactory
 };

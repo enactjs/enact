@@ -6,6 +6,7 @@
  */
 
 import factory from '@enact/core/factory';
+// import {diffClasses} from '@enact/ui/MigrationAid';
 import {BodyTextFactory as UiBodyTextFactory} from '@enact/ui/BodyText';
 
 import Skinnable from '../Skinnable';
@@ -22,14 +23,11 @@ import componentCss from './BodyText.less';
  * @public
  */
 const BodyTextBaseFactory = factory({css: componentCss}, ({css}) => {
-	// console.group('Moon BodyText');
-	// for (const key in componentCss) {
-	// 	if (componentCss[key] !== css[key]) console.log(key, ':', componentCss[key], '   VS   ', css[key]);
-	// }
-	// console.groupEnd();
+	// diffClasses('Moon IconButton', componentCss, css);
+
 	return UiBodyTextFactory({
 		/* Replace classes in this step */
-		css: /** @lends moonstone/Button.BodyTextFactory.prototype */ {
+		css: /** @lends moonstone/BodyText.BodyTextFactory.prototype */ {
 			...componentCss,
 			// Include the component class name so it too may be overridden.
 			bodyText: css.bodyText
@@ -51,7 +49,7 @@ const BodyTextFactory = (props) => Skinnable(
 export default BodyText;
 export {
 	BodyText,
-	// BodyTextBase,
+	BodyTextBase,
 	BodyTextFactory,
 	BodyTextBaseFactory
 };
