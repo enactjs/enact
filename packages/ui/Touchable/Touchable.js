@@ -6,16 +6,20 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-const makeEvent = (type, fn) => (ev, ...args) => {
+// Establish a standard payload for onDown/onUp/onTap events and pass it along to a handler
+const makeTouchableEvent = (type, fn) => (ev, ...args) => {
 	const {target, currentTarget} = ev;
 	const payload = {type, target, currentTarget};
 
 	return fn(payload, ...args);
 };
-const forwardDown = makeEvent('down', forwardWithPrevent('onDown'));
-const forwardUp = makeEvent('up', forwardWithPrevent('onUp'));
-const forwardTap = makeEvent('tap', forward('onTap'));
 
+// Cache handlers since they are consistent across instances
+const forwardDown = makeTouchableEvent('down', forwardWithPrevent('onDown'));
+const forwardUp = makeTouchableEvent('up', forwardWithPrevent('onUp'));
+const forwardTap = makeTouchableEvent('tap', forward('onTap'));
+
+// State management functions
 const activate = ({active}) => active ? null : {active: true};
 const deactivate = ({active}) => active ? {active: false} : null;
 
@@ -58,6 +62,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			// eslint-disable-next-line react/no-find-dom-node
 			this.node = ReactDOM.findDOMNode(this);
 
+			// ensure we clean up our internal state
 			if (platform.touch) {
 				on('touchend', this.handleGlobalUp, document);
 			}
