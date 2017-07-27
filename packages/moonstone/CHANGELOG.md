@@ -12,6 +12,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/VirtualList` not to let the focus move outside of container even if there are children left when navigating with 5way
 - `moonstone/Scrollable` to update disability of paging controls when the scrollbar is set to `visible` and the content becomes shorter.
 
 ## [1.5.0] - 2017-07-19
