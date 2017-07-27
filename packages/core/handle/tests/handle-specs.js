@@ -240,6 +240,50 @@ describe('handle', () => {
 		expect(actual).to.equal(expected);
 	});
 
+	describe('finally', function () {
+		it('should call the finally callback when handle returns true', function () {
+			const finallyCallback = sinon.spy();
+			const callback = handle(returnsTrue).finally(finallyCallback);
+
+			callback(makeEvent());
+
+			const expected = true;
+			const actual = finallyCallback.calledOnce;
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should call the finally callback when handle returns false', function () {
+			const finallyCallback = sinon.spy();
+			const callback = handle(returnsFalse).finally(finallyCallback);
+
+			callback(makeEvent());
+
+			const expected = true;
+			const actual = finallyCallback.calledOnce;
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should call the finally callback when handle throws an error', function () {
+			const finallyCallback = sinon.spy();
+			const callback = handle(() => {
+				throw new Error('Something has gone awry ...');
+			}).finally(finallyCallback);
+
+			try {
+				callback(makeEvent());
+			} catch (e) {
+				// we don't want the error to interrupt the test
+			}
+
+			const expected = true;
+			const actual = finallyCallback.calledOnce;
+
+			expect(actual).to.equal(expected);
+		});
+	});
+
 	describe('#oneOf', () => {
 		it('should call each handler until one passes', () => {
 			const handler = sinon.spy(returnsTrue);
@@ -303,14 +347,36 @@ describe('handle', () => {
 			expect(actual).to.equal(expected);
 		});
 
-		it('should return the value from the passed condition branch', () => {
-			const handler = sinon.spy(() => 'ok');
+		it('should return true when the passed condition branch returns a truthy value', () => {
 			const callback = oneOf(
-				[returnsTrue, handler]
+				[returnsTrue, () => 'ok']
 			);
 
-			const expected = callback();
-			const actual = 'ok';
+			const expected = true;
+			const actual = callback();
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should return false when the passed condition branch returns a falsey value', () => {
+			const callback = oneOf(
+				[returnsTrue, () => null]
+			);
+
+			const expected = false;
+			const actual = callback();
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should return false when no conditions pass', () => {
+			const callback = oneOf(
+				[returnsFalse, returnsTrue],
+				[returnsFalse, returnsTrue]
+			);
+
+			const expected = false;
+			const actual = callback();
 
 			expect(actual).to.equal(expected);
 		});
@@ -330,6 +396,59 @@ describe('handle', () => {
 
 			const expected = 1;
 			const actual = handler.firstCall.args[2].value;
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should include object props as second arg when bound', function () {
+			const componentInstance = {
+				props: {
+					value: 1
+				}
+			};
+			const handler = sinon.spy();
+			const o = oneOf.bind(componentInstance);
+			const callback = o(
+				[returnsTrue, handler]
+			);
+			callback();
+
+			const expected = 1;
+			const actual = handler.firstCall.args[1].value;
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should include object context as third arg when bound', function () {
+			const componentInstance = {
+				context: {
+					value: 1
+				}
+			};
+			const handler = sinon.spy();
+			const o = oneOf.bind(componentInstance);
+			const callback = o(
+				[returnsTrue, handler]
+			);
+			callback();
+
+			const expected = 1;
+			const actual = handler.firstCall.args[2].value;
+
+			expect(actual).to.equal(expected);
+		});
+
+		it('should support finally callback', () => {
+			const handler = sinon.spy();
+			const callback = oneOf(
+				[returnsFalse, returnsTrue],
+				[returnsFalse, returnsTrue]
+			).finally(handler);
+
+			callback();
+
+			const expected = true;
+			const actual = handler.calledOnce;
 
 			expect(actual).to.equal(expected);
 		});

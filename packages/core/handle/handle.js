@@ -88,7 +88,7 @@ const handle = function (...handlers) {
 	const h = makeHandler(handlers);
 	h.displayName = 'handle';
 
-	return (ev, props, context) => {
+	const fn = (ev, props, context) => {
 		// if handle() was bound to a class, use its props and context. otherwise, we accept
 		// incoming props/context as would be provided by computed/handlers from kind()
 		if (this) {
@@ -98,6 +98,16 @@ const handle = function (...handlers) {
 
 		return h(ev, props, context);
 	};
+
+	fn.finally = (cleanup) => (...args) => {
+		try {
+			fn(...args);
+		} finally {
+			cleanup(...args);
+		}
+	};
+
+	return fn;
 };
 
 /**
@@ -120,7 +130,7 @@ const handle = function (...handlers) {
  *                          conditions and, if it passes, onto the provided handler.
  */
 const oneOf = handle.oneOf = function (...handlers) {
-	return cond(handlers);
+	return handle.call(this, cond(handlers));
 };
 
 /**
