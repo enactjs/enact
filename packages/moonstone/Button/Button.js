@@ -6,9 +6,12 @@
  */
 
 import factory from '@enact/core/factory';
+import kind from '@enact/core/kind';
 import {ButtonFactory as UiButtonFactory} from '@enact/ui/Button';
 import Skinnable from '@enact/moonstone/Skinnable';
 import Uppercase from '@enact/i18n/Uppercase';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import componentCss from './Button.less';
 
@@ -27,7 +30,7 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 	// 	if (componentCss[key] !== css[key]) console.log(key, ':', componentCss[key], '   VS   ', css[key]);
 	// }
 	// console.groupEnd();
-	return UiButtonFactory({
+	const MoonstoneButton = UiButtonFactory({
 	/* Replace classes in this step */
 		css: /** @lends moonstone/Button.ButtonFactory.prototype */ {
 			...componentCss,
@@ -48,6 +51,24 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 			 */
 			selected: css.selected
 		}
+	});
+
+	return kind({
+		name: 'MoonstoneButton',
+		propTypes: {
+			/**
+			 * Transformation to apply to the text of the Button. By default, text is transformed
+			 * to uppercase.
+			 *
+			 * @see i18n/Uppercase#casing
+			 * @type {String}
+			 * @default 'upper'
+			 * @public
+			 */
+			casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence'])
+		},
+
+		render: (props) => (<MoonstoneButton {...props} />)
 	});
 });
 
