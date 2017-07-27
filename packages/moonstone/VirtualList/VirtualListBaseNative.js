@@ -955,6 +955,7 @@ class VirtualListCoreNative extends Component {
 			</div>
 		);
 	}
+}
 
 /**
  * {@link moonstone/VirtualList.VirtualListBaseNative} is a base component for
