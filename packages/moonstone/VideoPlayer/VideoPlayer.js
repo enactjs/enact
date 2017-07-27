@@ -684,6 +684,12 @@ const VideoPlayerBase = class extends React.Component {
 		) {
 			this.calculateMaxComponentCount();
 		}
+
+		if (this.props.index !== nextProps.index) {
+			this.video.pause();
+		}
+
+		console.log(this.props.index !== nextProps.index);
 	}
 
 	componentWillUpdate (nextProps, nextState) {
@@ -733,8 +739,13 @@ const VideoPlayerBase = class extends React.Component {
 			this.focusDefaultMediaControl();
 		}
 
+<<<<<<< ed3481f192f1f1b82f2028ab652310be018c74d3
 		if (this.state.more !== prevState.more) {
 			this.refocusMoreButton.start();
+=======
+		if (this.props.index !== prevProps.index) {
+			this.video.play();
+>>>>>>> Added play pause
 		}
 	}
 
@@ -1635,7 +1646,8 @@ const VideoPlayerBase = class extends React.Component {
 
 		const sources = [source];
 		if (preload) {
-			sources.push(preload);
+			const preloadSource = <source {...preload.props} />;
+			sources.push(preloadSource);
 		}
 
 		return (
