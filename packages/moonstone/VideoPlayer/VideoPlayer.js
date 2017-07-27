@@ -669,6 +669,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.stopDelayedFeedbackHide();
 		this.renderBottomControl.stop();
 		this.refocusMoreButton.stop();
+		this.sliderTooltipTimeJob.stop();
 	}
 
 	//
@@ -1266,14 +1267,19 @@ const VideoPlayerBase = class extends React.Component {
 		this.seek(value * this.state.duration);
 		this.sliderScrubbing = false;
 	}
+
+	sliderTooltipTimeJob = new Job((time) => this.setState({sliderTooltipTime: time}), 20)
+
 	handleKnobMove = (ev) => {
 		this.sliderScrubbing = ev.detached;
+		const seconds = Math.round(this.sliderKnobProportion * this.video.duration);
+
+		this.sliderTooltipTimeJob.throttle(seconds);
 
 		// prevent announcing repeatedly when the knob is detached from the progress.
 		// TODO: fix Slider to not send onKnobMove when the knob hasn't, in fact, moved
 		if (this.sliderKnobProportion !== ev.proportion) {
 			this.sliderKnobProportion = ev.proportion;
-			const seconds = Math.round(this.sliderKnobProportion * this.video.duration);
 
 			if (this.sliderScrubbing && !isNaN(seconds)) {
 				const knobTime = secondsToTime(seconds, this.durfmt, {includeHour: true});

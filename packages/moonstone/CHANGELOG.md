@@ -13,6 +13,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/Scrollable` to update disability of paging controls when the scrollbar is set to `visible` and the content becomes shorter.
+- `moonstone/VideoPlayer` to update and display proper time while moving knob when video is paused.
 
 ## [1.5.0] - 2017-07-19
 
