@@ -659,30 +659,6 @@ class VirtualListCoreNative extends Component {
 		}
 	}
 
-	setRestrict = (bool) => {
-		Spotlight.set(this.props['data-container-id'], {restrict: (bool) ? 'self-only' : 'self-first'});
-	}
-
-	setSpotlightContainerRestrict = (keyCode, target) => {
-		const
-			{dataSize} = this.props,
-			{isPrimaryDirectionVertical, dimensionToExtent} = this,
-			index = Number.parseInt(target.getAttribute(dataIndexAttribute)),
-			canMoveBackward = index >= dimensionToExtent,
-			canMoveForward = index < (dataSize - (((dataSize - 1) % dimensionToExtent) + 1));
-		let isSelfOnly = false;
-
-		if (isPrimaryDirectionVertical) {
-			if (isUp(keyCode) && canMoveBackward || isDown(keyCode) && canMoveForward) {
-				isSelfOnly = true;
-			}
-		} else if (isLeft(keyCode) && canMoveBackward || isRight(keyCode) && canMoveForward) {
-			isSelfOnly = true;
-		}
-
-		this.setRestrict(isSelfOnly);
-	}
-
 	getIndicesForPageScroll = (direction, currentIndex) => {
 		const
 			{context, dimensionToExtent, isPrimaryDirectionVertical, primary} = this,
@@ -803,7 +779,6 @@ class VirtualListCoreNative extends Component {
 		this.isScrolledBy5way = false;
 		if (getDirection(keyCode)) {
 			e.preventDefault();
-			this.setSpotlightContainerRestrict(keyCode, target);
 			this.isScrolledBy5way = this.jumpToSpottableItem(keyCode, target);
 		}
 		forwardKeyDown(e, this.props);
@@ -921,28 +896,29 @@ class VirtualListCoreNative extends Component {
 
 	render () {
 		const
-			{className, 'data-container-id': dataContainerId, ...rest} = this.props,
+			{className} = this.props,
 			{primary, cc} = this,
+			props = Object.assign({}, this.props),
 			mergedClasses = classNames(css.virtualList, this.wrapperClass, className);
 
-		delete rest.cbScrollTo;
-		delete rest.clientSize;
-		delete rest.component;
-		delete rest.data;
-		delete rest.dataSize;
-		delete rest.direction;
-		delete rest.itemSize;
-		delete rest.overhang;
-		delete rest.pageScroll;
-		delete rest.spacing;
+		delete props.cbScrollTo;
+		delete props.clientSize;
+		delete props.component;
+		delete props.data;
+		delete props.dataSize;
+		delete props.direction;
+		delete props.itemSize;
+		delete props.overhang;
+		delete props.pageScroll;
+		delete props.spacing;
 
 		if (primary) {
 			this.renderCalculate();
 		}
 
 		return (
-			<div className={mergedClasses} data-container-id={dataContainerId} ref={this.initWrapperRef} style={this.itemStyle}>
-				<div {...rest} className={css.container} onKeyDown={this.onKeyDown} ref={this.initContainerRef}>
+			<div ref={this.initWrapperRef} className={mergedClasses} style={this.itemStyle}>
+				<div {...props} className={css.container} onKeyDown={this.onKeyDown} ref={this.initContainerRef}>
 					{cc.length ? cc : null}
 					{primary ? null : (
 						<SpotlightPlaceholder

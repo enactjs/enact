@@ -12,8 +12,6 @@ The following is a curated list of changes in the Enact ui module, newest change
 
 ### Fixed
 
-- `ui/PlaceholderDecorator` to update bounds of `Scroller` when the `visible` state changed.
-
 ## [1.5.0] - 2017-07-19
 
 ### Fixed

@@ -20,15 +20,6 @@ const MediaTitleBase = kind({
 
 	propTypes: /** @lends moonstone/VideoPlayer.MediaTitle.prototype */ {
 		/**
-		 * DOM id for the component. Also define ids for the title and node wrapping the `children`
-		 * in the forms `${id}_title` and `${id}_info`, respectively.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		id: PropTypes.string.isRequired,
-
-		/**
 		 * Anything supplied to `children` will be rendered. Typically this will be informational
 		 * badges indicating aspect ratio, audio channels, etc., but it could also be a description.
 		 *
@@ -84,6 +75,7 @@ const MediaTitleBase = kind({
 			'infoComponents',
 			infoVisible ? 'visible' : 'hidden'
 		),
+		childrenRole: ({infoVisible}) => infoVisible ? 'alert' : '',
 		className: ({visible, styler}) => styler.append(
 			visible ? 'visible' : 'hidden'
 		),
@@ -93,16 +85,16 @@ const MediaTitleBase = kind({
 		})
 	},
 
-	render: ({children, childrenClassName, id, title, titleClassName, ...rest}) => {
+	render: ({childrenRole, children, childrenClassName, title, titleClassName, ...rest}) => {
 		delete rest.infoVisible;
 		delete rest.visible;
 
 		return (
-			<div {...rest} id={id}>
-				<MarqueeText id={id + '_title'} className={titleClassName} marqueeOn="render">
+			<div {...rest}>
+				<MarqueeText className={titleClassName} marqueeOn="render">
 					{title}
 				</MarqueeText>
-				<div id={id + '_info'} className={childrenClassName}>  {/* tabIndex={-1} */}
+				<div role={childrenRole} className={childrenClassName}>  {/* tabIndex={-1} */}
 					{children}
 				</div>
 			</div>

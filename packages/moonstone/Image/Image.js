@@ -132,13 +132,13 @@ const ImageBase = kind({
 
 	computed: {
 		bgImage: ({src, placeholder}) => {
-			const imageSrc = selectSrc(src) || '';
+			const imageSrc = selectSrc(src);
 			return placeholder ? `url("${imageSrc}"), url("${placeholder}")` : `url("${imageSrc}")`;
 		},
 		className: ({className, sizing, styler}) => {
 			return sizing !== 'none' ? styler.append(sizing) : className;
 		},
-		imgSrc: ({src}) => selectSrc(src) || null
+		imgSrc: ({src}) => selectSrc(src)
 	},
 
 	render: ({alt, 'aria-label': ariaLabel, bgImage, children, imgSrc, onError, onLoad, style, ...rest}) => {
