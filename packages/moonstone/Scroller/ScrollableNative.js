@@ -456,7 +456,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					// If scroll animation is ongoing, we need to pass last target position to
 					// determine correct scroll position.
 					if (this.scrolling && lastPos) {
-						pos = positionFn(item, this.verticalScrollability ? lastPos.top : lastPos.left);
+						pos = positionFn(item, (this.direction !== 'horizontal') ? lastPos.top : lastPos.left);
 					} else {
 						pos = positionFn(item);
 					}
@@ -601,7 +601,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.lastFocusedItem = null;
 			this.lastScrollPositionOnFocus = null;
 
-			this.hideThumb(this.getScrollBounds());
+			this.hideThumb();
 			this.scrolling = false;
 			this.doScrollStop();
 		}
@@ -614,7 +614,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			const bounds = this.getScrollBounds();
 
 			this.scrollLeft = clamp(0, bounds.maxLeft, value);
-			if (this.state.isHorizontalScrollbarVisible && this.canScrollHorizontally(bounds)) {
+			if (this.state.isHorizontalScrollbarVisible) {
 				this.updateThumb(this.horizontalScrollbarRef, bounds);
 			}
 		}
@@ -623,7 +623,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			const bounds = this.getScrollBounds();
 
 			this.scrollTop = clamp(0, bounds.maxTop, value);
-			if (this.state.isVerticalScrollbarVisible && this.canScrollVertically(bounds)) {
+			if (this.state.isVerticalScrollbarVisible) {
 				this.updateThumb(this.verticalScrollbarRef, bounds);
 			}
 		}
@@ -807,11 +807,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			});
 		}
 
-		hideThumb (bounds) {
-			if (this.state.isHorizontalScrollbarVisible && this.canScrollHorizontally(bounds)) {
+		hideThumb () {
+			if (this.state.isHorizontalScrollbarVisible) {
 				this.horizontalScrollbarRef.startHidingThumb();
 			}
-			if (this.state.isVerticalScrollbarVisible && this.canScrollVertically(bounds)) {
+			if (this.state.isVerticalScrollbarVisible) {
 				this.verticalScrollbarRef.startHidingThumb();
 			}
 		}
@@ -850,10 +850,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						scrollTop: this.scrollTop
 					};
 
-					if (canScrollHorizontally && curHorizontalScrollbarVisible) {
+					if (curHorizontalScrollbarVisible) {
 						this.horizontalScrollbarRef.update(updatedBounds);
 					}
-					if (canScrollVertically && curVerticalScrollbarVisible) {
+					if (curVerticalScrollbarVisible) {
 						this.verticalScrollbarRef.update(updatedBounds);
 					}
 				}
