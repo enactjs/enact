@@ -6,6 +6,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
+import {activate, deactivate} from './state';
+
 // Establish a standard payload for onDown/onUp/onTap events and pass it along to a handler
 const makeTouchableEvent = (type, fn) => (ev, ...args) => {
 	const {target, currentTarget} = ev;
@@ -18,10 +20,6 @@ const makeTouchableEvent = (type, fn) => (ev, ...args) => {
 const forwardDown = makeTouchableEvent('down', forwardWithPrevent('onDown'));
 const forwardUp = makeTouchableEvent('up', forwardWithPrevent('onUp'));
 const forwardTap = makeTouchableEvent('tap', forward('onTap'));
-
-// State management functions
-const activate = ({active}) => active ? null : {active: true};
-const deactivate = ({active}) => active ? {active: false} : null;
 
 const defaultConfig = {
 	activeProp: null
@@ -115,7 +113,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			return this.target && this.node.contains(ev.target);
 		}
 
-		touchLeftTarget = (ev) => Array.from(ev.targetTouches).reduce((hasLeft, {pageX, pageY}) => {
+		hasTouchLeftTarget = (ev) => Array.from(ev.targetTouches).reduce((hasLeft, {pageX, pageY}) => {
 			const {left, right, top, bottom} = this.targetBounds;
 			return hasLeft && left > pageX || right < pageX || top > pageY || bottom < pageY;
 		}, true);
@@ -135,6 +133,12 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			forwardTap
 		).finally(this.deactivate)
 
+		handleLeave = this.handle(
+			forProp('disabled', false),
+			forProp('cancelOnLeave', true),
+			this.deactivate
+		)
+
 		handleMouseDown = this.handle(
 			forward('onMouseDown'),
 			this.handleDown
@@ -142,9 +146,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleMouseLeave = this.handle(
 			forward('onMouseLeave'),
-			forProp('disabled', false),
-			forProp('cancelOnLeave', true),
-			this.deactivate
+			this.handleLeave
 		)
 
 		handleMouseUp = this.handle(
@@ -159,10 +161,8 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleTouchMove = this.handle(
 			forward('onTouchMove'),
-			forProp('disabled', false),
-			forProp('cancelOnLeave', true),
-			this.touchLeftTarget,
-			this.deactivate
+			this.hasTouchLeftTarget,
+			this.handleLeave
 		)
 
 		handleTouchEnd = this.handle(
@@ -172,20 +172,16 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleGlobalUp = this.deactivate
 
-		addDownHandlers (props) {
-			if (activeProp || this.props.onDown) {
+		addHandlers (props) {
+			const {onDown, onTap, onUp} = this.props;
+
+			if (activeProp || onDown || onTap || onUp) {
 				props.onMouseDown = this.handleMouseDown;
+				props.onMouseLeave = this.handleMouseLeave;
+				props.onMouseUp = this.handleMouseUp;
+
 				if (platform.touch) {
 					props.onTouchStart = this.handleTouchStart;
-				}
-			}
-		}
-
-		addUpHandlers (props) {
-			if (activeProp || this.props.onUp || this.props.onTap) {
-				props.onMouseUp = this.handleMouseUp;
-				props.onMouseLeave = this.handleMouseLeave;
-				if (platform.touch) {
 					props.onTouchMove = this.handleTouchMove;
 					props.onTouchEnd = this.handleTouchEnd;
 				}
@@ -195,8 +191,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		render () {
 			const props = Object.assign({}, this.props);
 
-			this.addDownHandlers(props);
-			this.addUpHandlers(props);
+			this.addHandlers(props);
 
 			delete props.cancelOnLeave;
 			delete props.onDown;
