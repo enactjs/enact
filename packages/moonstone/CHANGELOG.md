@@ -7,7 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Deprecated
 
 ### Added
-- `moonstone/VideoPlayer` added throttling options `jumpDelay` and `initialJumpDelay` to for holding the right and left keys for seeking.
+- `moonstone/VideoPlayer` added ability to seeking when holding down the right and left keys. Can also adjust sensitivity using throttling options `jumpDelay` and `initialJumpDelay`.
 
 ### Changed
 

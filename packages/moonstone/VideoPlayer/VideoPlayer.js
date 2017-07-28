@@ -880,19 +880,27 @@ const VideoPlayerBase = class extends React.Component {
 
 	handle = handle.bind(this)
 
-	startListeningForPulses = () => {
-		if (this.pulsing && ((getNow() - this.holdStart) > this.props.initialJumpDelay)) {
-			if (this.currentKey === 'right') {
-				this.jump(this.props.jumpBy);
-			} else if (this.currentKey === 'left') {
-				this.jump(-1 * this.props.jumpBy);
-			}
+	startListeningForPulses = (keyCode) => () => {
+		if (this.pulsing) {
+			this.handlePulse(keyCode);
+			this.keyLoop = setTimeout(this.startListeningForPulses(keyCode), this.props.jumpDelay);
+		} else {
+			this.handlePulse(keyCode);
+			this.keyLoop = setTimeout(this.startListeningForPulses(keyCode), this.props.initialJumpDelay);
+			this.pulsing = true;
 		}
+	}
 
-		this.keyLoop = setTimeout(this.startListeningForPulses, this.props.jumpDelay);
+	handlePulse (keyCode) {
+		if (is('left', keyCode)) {
+			this.jump(-1 * this.props.jumpBy);
+		} else if (is('right', keyCode)) {
+			this.jump(this.props.jumpBy);
+		}
 	}
 
 	stopListeningForPulses () {
+		this.pulsing = false;
 		clearTimeout(this.keyLoop);
 	}
 
@@ -900,16 +908,7 @@ const VideoPlayerBase = class extends React.Component {
 		if (is('left', ev.keyCode) || is('right', ev.keyCode)) {
 			Spotlight.pause();
 			if (!this.pulsing) {
-				if (is('left', ev.keyCode)) {
-					this.jump(-1 * this.props.jumpBy);
-					this.currentKey = 'left';
-				} else if (is('right', ev.keyCode)) {
-					this.jump(this.props.jumpBy);
-					this.currentKey = 'right';
-				}
-				this.holdStart = getNow();
-				this.startListeningForPulses();
-				this.pulsing = true;
+				this.startListeningForPulses(ev.keyCode)();
 			}
 		}
 	}
@@ -917,7 +916,6 @@ const VideoPlayerBase = class extends React.Component {
 	handleKeyUp = (ev) => {
 		if (is('left', ev.keyCode) || is('right', ev.keyCode)) {
 			this.stopListeningForPulses();
-			this.pulsing = false;
 			Spotlight.resume();
 		}
 	}
