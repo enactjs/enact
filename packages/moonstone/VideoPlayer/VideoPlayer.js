@@ -220,6 +220,15 @@ const VideoPlayerBase = class extends React.Component {
 		forwardIcon: PropTypes.string,
 
 		/**
+		 * The index of the video source that is currently playing. The `source` prop in `children` will always be `0`.
+		 *
+		 * @type {Number}
+		 * @default 0
+		 * @public
+		 */
+		index: PropTypes.number,
+
+		/**
 		 * These components are placed into the slot to the left of the media controls.
 		 *
 		 * @type {Node}
@@ -466,6 +475,15 @@ const VideoPlayerBase = class extends React.Component {
 		playIcon: PropTypes.string,
 
 		/**
+		 * An array of objects containing video information `src`, `type, and `preload`.
+		 * This is used for videos to load in the background.
+		 * @type {Array}
+		 * @default []
+		 * @public
+		 */
+		preloadSources: PropTypes.array,
+
+		/**
 		 * Sets the `disabled` state on the media playback-rate control buttons; the inner pair.
 		 *
 		 * @type {Boolean}
@@ -562,6 +580,7 @@ const VideoPlayerBase = class extends React.Component {
 			slowRewind: ['-1/2', '-1']
 		},
 		playIcon: 'play',
+		preloadSources: [],
 		titleHideDelay: 5000,
 		tooltipHideDelay: 3000
 	}
@@ -650,6 +669,7 @@ const VideoPlayerBase = class extends React.Component {
 
 		if (this.props.index !== nextProps.index) {
 			this.video.pause();
+			this.video.currentTime = 0;
 		}
 	}
 
@@ -697,13 +717,12 @@ const VideoPlayerBase = class extends React.Component {
 			this.focusDefaultMediaControl();
 		}
 
-<<<<<<< ed3481f192f1f1b82f2028ab652310be018c74d3
 		if (this.state.more !== prevState.more) {
 			this.refocusMoreButton.start();
-=======
+		}
+
 		if (this.props.index !== prevProps.index) {
 			this.video.play();
->>>>>>> Added play pause
 		}
 	}
 
@@ -1516,11 +1535,10 @@ const VideoPlayerBase = class extends React.Component {
 		const moreDisabled = !(this.state.more);
 		const controlsAriaProps = this.getControlsAriaProps();
 
-		// const sources = [source];
-		// if (preload) {
-		// 	const preloadSource = <source {...preload.props} />;
-		// 	sources.push(preloadSource);
-		// }
+		let videoSources = null;
+		if (source) {
+			videoSources = [source.props].concat(preloadSources);
+		}
 
 		return (
 			<div className={css.videoPlayer + (className ? ' ' + className : '')} style={style} onClick={this.activityDetected} onKeyDown={this.activityDetected} ref={this.setPlayerRef}>
@@ -1532,7 +1550,7 @@ const VideoPlayerBase = class extends React.Component {
 					controls={false}
 					index={index}
 					setActiveVideo={this.setVideoRef}
-					sources={this.props.sources}
+					sources={videoSources}
 				/>
 
 				<Overlay onClick={this.onVideoClick}>
@@ -1684,7 +1702,7 @@ const VideoPlayerBase = class extends React.Component {
 const VideoPlayer = ApiDecorator(
 	{api: ['fastForward', 'getMediaState', 'jump', 'pause', 'play', 'rewind', 'seek']},
 	Slottable(
-		{slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source', 'preload']},
+		{slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source']},
 		Skinnable(
 			VideoPlayerBase
 		)

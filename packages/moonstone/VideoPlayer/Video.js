@@ -12,7 +12,7 @@ const VideoBase = kind({
 		noAutoPlay: PropTypes.bool,
 		preload: PropTypes.string,
 		setActiveVideo: PropTypes.func,
-		sources: PropTypes.arrayOf(PropTypes.node)
+		sources: PropTypes.arrayOf(PropTypes.object)
 	},
 
 	defaultProps: {
@@ -54,7 +54,7 @@ const VideoBase = kind({
 					const props = index === i ? activeProps : preloadProps;
 
 					return (
-						<video {...props} key={i}>
+						<video {...props} preload={source.preload} key={i}>
 							<source {...source} />
 						</video>
 					);
