@@ -48,13 +48,13 @@ const VideoBase = kind({
 	render: ({activeProps, index, preloadProps, sources}) => {
 		return (
 			<div>
-				{sources.map((source, i) => {
+				{sources.map(({preload, ...source}, i) => {
 					if (!source) return null;
 
 					const props = index === i ? activeProps : preloadProps;
 
 					return (
-						<video {...props} preload={source.preload} key={i}>
+						<video {...props} preload={preload} key={i}>
 							<source {...source} />
 						</video>
 					);
