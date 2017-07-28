@@ -51,8 +51,6 @@ const forwardBlur = forward('onBlur'),
 	forwardClick = forward('onClick'),
 	forwardFocus = forward('onFocus'),
 	forwardKeyDown = forward('onKeyDown'),
-	forwardMouseDown = forward('onMouseDown'),
-	forwardMouseUp = forward('onMouseUp'),
 	forwardWheel = forward('onWheel');
 
 /**
@@ -194,22 +192,6 @@ const PickerBase = class extends React.Component {
 		onIncrementSpotlightDisappear: PropTypes.func,
 
 		/**
-		 * Initiate the pressed state
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onMouseDown: PropTypes.func,
-
-		/**
-		 * End the pressed state
-		 *
-		 * @type {Function}
-		 * @public
-		 */
-		onMouseUp: PropTypes.func,
-
-		/**
 		 * The handler to run prior to focus leaving the picker when the 5-way down key is pressed.
 		 *
 		 * @type {Function}
@@ -254,17 +236,6 @@ const PickerBase = class extends React.Component {
 		 * @public
 		 */
 		orientation: PropTypes.oneOf(['horizontal', 'vertical']),
-
-		/**
-		 * Which button (increment, decrement, or neither) is pressed
-		 *
-		 * @type {Number|null}
-		 * @public
-		 */
-		pressed: PropTypes.oneOfType([
-			PropTypes.number,
-			PropTypes.bool
-		]),
 
 		/**
 		 * When `true`, the picker buttons operate in the reverse direction such that pressing
@@ -663,8 +634,6 @@ const PickerBase = class extends React.Component {
 		delete rest.max;
 		delete rest.min;
 		delete rest.onChange;
-		delete rest.onMouseDown;
-		delete rest.onMouseUp;
 		delete rest.onPickerSpotlightDown;
 		delete rest.onPickerSpotlightLeft;
 		delete rest.onPickerSpotlightRight;
