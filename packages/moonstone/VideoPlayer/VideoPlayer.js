@@ -104,7 +104,6 @@ const forwardPlayButtonClick = forward('onPlayButtonClick');
 const playLabel = 'Play';
 const pauseLabel = 'Pause';
 
-<<<<<<< 78ca0cd2638e3d3f84c4c8715b220822e86fd39e
 const AnnounceState = {
 	// Video is loaded but additional announcements have not been made
 	READY: 0,
@@ -122,8 +121,6 @@ const AnnounceState = {
 	DONE: 4
 };
 
-=======
->>>>>>> renamed variables and removed unneeded code
 /**
  * Every callback sent by [VideoPlayer]{@link moonstone/VideoPlayer} receives a status package,
  * which includes an object with the following key/value pairs as the first argument:
@@ -706,20 +703,8 @@ const VideoPlayerBase = class extends React.Component {
 		this.stopDelayedFeedbackHide();
 		this.announceJob.stop();
 		this.renderBottomControl.stop();
-<<<<<<< 36058b7b5f89bd31afa69b62f4c28bb96dbd0d08
-<<<<<<< 654e548fb468b8ea040dd8669ad50c434e7efd14
 		this.refocusMoreButton.stop();
-=======
-		this.jumpForward.stop();
-		this.jumpBackward.stop();
-<<<<<<< 78ca0cd2638e3d3f84c4c8715b220822e86fd39e
-		this.cancelListenForKeyHolds();
->>>>>>> Added initialJumpDelay prop
-=======
-=======
->>>>>>> removed throttling
 		this.stopListeningForPulses();
->>>>>>> renamed variables and removed unneeded code
 	}
 
 	//
