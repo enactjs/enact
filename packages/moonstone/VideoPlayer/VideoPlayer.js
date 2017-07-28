@@ -1272,16 +1272,15 @@ const VideoPlayerBase = class extends React.Component {
 
 	handleKnobMove = (ev) => {
 		this.sliderScrubbing = ev.detached;
-		const seconds = Math.round(this.sliderKnobProportion * this.video.duration);
-
-		this.sliderTooltipTimeJob.throttle(seconds);
 
 		// prevent announcing repeatedly when the knob is detached from the progress.
 		// TODO: fix Slider to not send onKnobMove when the knob hasn't, in fact, moved
 		if (this.sliderKnobProportion !== ev.proportion) {
 			this.sliderKnobProportion = ev.proportion;
+			const seconds = Math.round(this.sliderKnobProportion * this.video.duration);
 
 			if (this.sliderScrubbing && !isNaN(seconds)) {
+				this.sliderTooltipTimeJob.throttle(seconds);
 				const knobTime = secondsToTime(seconds, this.durfmt, {includeHour: true});
 
 				forward('onScrub', {...ev, seconds}, this.props);
