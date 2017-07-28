@@ -688,8 +688,6 @@ const VideoPlayerBase = class extends React.Component {
 		if (this.props.index !== nextProps.index) {
 			this.video.pause();
 		}
-
-		console.log(this.props.index !== nextProps.index);
 	}
 
 	componentWillUpdate (nextProps, nextState) {
@@ -1644,11 +1642,11 @@ const VideoPlayerBase = class extends React.Component {
 		const moreDisabled = !(this.state.more);
 		const controlsAriaProps = this.getControlsAriaProps();
 
-		const sources = [source];
-		if (preload) {
-			const preloadSource = <source {...preload.props} />;
-			sources.push(preloadSource);
-		}
+		// const sources = [source];
+		// if (preload) {
+		// 	const preloadSource = <source {...preload.props} />;
+		// 	sources.push(preloadSource);
+		// }
 
 		return (
 			<div className={css.videoPlayer + (className ? ' ' + className : '')} style={style} onClick={this.activityDetected} onKeyDown={this.activityDetected} ref={this.setPlayerRef}>
@@ -1660,7 +1658,7 @@ const VideoPlayerBase = class extends React.Component {
 					controls={false}
 					index={index}
 					setActiveVideo={this.setVideoRef}
-					sources={sources}
+					sources={this.props.sources}
 				/>
 
 				<Overlay

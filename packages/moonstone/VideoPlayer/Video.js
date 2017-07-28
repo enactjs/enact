@@ -55,7 +55,7 @@ const VideoBase = kind({
 
 					return (
 						<video {...props} key={i}>
-							{source}
+							<source {...source} />
 						</video>
 					);
 				})}
