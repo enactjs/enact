@@ -10,10 +10,8 @@
  * @module moonstone/Marquee
  */
 
-import Marquee, {MarqueeFactory} from './Marquee';
-import {MarqueeController, contextTypes} from './MarqueeController';
-import MarqueeDecorator from './MarqueeDecorator';
-import MarqueeText from './MarqueeText';
+import {MarqueeController, MarqueeDecorator, MarqueeText, contextTypes} from '@enact/ui/Marquee';
+import Marquee from './Marquee';
 
 export default Marquee;
 export {
@@ -22,6 +20,5 @@ export {
 	Marquee as MarqueeBase,
 	MarqueeController,
 	MarqueeDecorator,
-	MarqueeText,
-	MarqueeFactory
+	MarqueeText
 };

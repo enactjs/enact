@@ -1,12 +1,12 @@
 import MarqueeDecorator from './MarqueeDecorator';
 
 /**
- * {@link moonstone/Marquee.MarqueeText} is a basic marqueeing text component.
+ * {@link ui/Marquee.MarqueeText} is a basic marqueeing text component.
  *
  * @class MarqueeText
- * @memberof moonstone/Marquee
+ * @memberof ui/Marquee
  * @ui
- * @mixes moonstone/Marquee.MarqueeDecorator
+ * @mixes ui/Marquee.MarqueeDecorator
  * @public
  */
 const MarqueeText = MarqueeDecorator('div');
