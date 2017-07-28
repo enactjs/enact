@@ -4,6 +4,13 @@ import React from 'react';
 
 import css from './VideoPlayer.less';
 
+const preloadProps = {
+	autoPlay: false,
+	style: {
+		display: 'none'
+	}
+};
+
 const VideoBase = kind({
 	name: 'Video',
 
@@ -35,17 +42,10 @@ const VideoBase = kind({
 				controls: false,
 				ref: setActiveVideo
 			};
-		},
-		preloadProps: ({preload}) => ({
-			autoPlay: false,
-			preload,
-			style: {
-				display: 'none'
-			}
-		})
+		}
 	},
 
-	render: ({activeProps, index, preloadProps, sources}) => {
+	render: ({activeProps, index, sources, ...rest}) => {
 		return (
 			<div>
 				{sources.map(({preload, ...source}, i) => {
@@ -54,7 +54,7 @@ const VideoBase = kind({
 					const props = index === i ? activeProps : preloadProps;
 
 					return (
-						<video {...props} preload={preload} key={i}>
+						<video {...rest} {...props} preload={preload} key={i}>
 							<source {...source} />
 						</video>
 					);
