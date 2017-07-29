@@ -8,6 +8,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 - `moonstone/VideoPlayer` added ability to seeking when holding down the right and left keys. Can also adjust sensitivity using throttling options `jumpDelay` and `initialJumpDelay`.
+- `moonstone/VideoPlayer` added `no5wayJump` to disable jumping and holding done by 5-way
 
 ### Changed
 

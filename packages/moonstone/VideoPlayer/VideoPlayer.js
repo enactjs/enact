@@ -309,6 +309,15 @@ const VideoPlayerBase = class extends React.Component {
 		muted: PropTypes.bool,
 
 		/**
+		 * Setting this to `true` will disable left and right keys for seeking.
+		 *
+		 * @type {Boolean}
+		 * @default false
+		 * @public
+		 */
+		no5wayJump: PropTypes.bool,
+
+		/**
 		 * By default, the video will start playing immediately after it's loaded, unless this is set.
 		 *
 		 * @type {Boolean}
@@ -545,6 +554,7 @@ const VideoPlayerBase = class extends React.Component {
 		jumpDelay: 200,
 		jumpForwardIcon: 'skipforward',
 		muted: false,
+		no5wayJump: false,
 		noAutoPlay: false,
 		noJumpButtons: false,
 		pauseAtEnd: false,
@@ -892,7 +902,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	handleKeyDown = (ev) => {
-		if (is('left', ev.keyCode) || is('right', ev.keyCode)) {
+		if ((is('left', ev.keyCode) || is('right', ev.keyCode)) && !this.props.no5wayJump) {
 			Spotlight.pause();
 			if (!this.pulsing) {
 				this.startListeningForPulses(ev.keyCode)();
@@ -931,8 +941,10 @@ const VideoPlayerBase = class extends React.Component {
 				break;
 			case LEFT:
 			case RIGHT:
-				this.stopListeningForPulses();
-				Spotlight.resume();
+				if (!this.props.no5wayJump) {
+					this.stopListeningForPulses();
+					Spotlight.resume();
+				}
 				break;
 		}
 	}
