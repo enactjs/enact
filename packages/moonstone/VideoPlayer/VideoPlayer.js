@@ -45,7 +45,9 @@ const keyMap = {
 	'STOP': 413,
 	'PAUSE': 19,
 	'REWIND': 412,
-	'FASTFORWARD': 417
+	'FASTFORWARD': 417,
+	'RIGHT': 39,
+	'LEFT': 37
 };
 
 // Video ReadyStates
@@ -898,20 +900,13 @@ const VideoPlayerBase = class extends React.Component {
 		}
 	}
 
-	handleKeyUp = (ev) => {
-		if (is('left', ev.keyCode) || is('right', ev.keyCode)) {
-			this.stopListeningForPulses();
-			Spotlight.resume();
-		}
-	}
-
 	showControlsFromPointer = () => {
 		Spotlight.setPointerMode(false);
 		this.showControls();
 	}
 
 	handleKeyUp = (ev) => {
-		const {PLAY, PAUSE, STOP, REWIND, FASTFORWARD} = keyMap;
+		const {PLAY, PAUSE, STOP, REWIND, FASTFORWARD, LEFT, RIGHT} = keyMap;
 
 		switch (ev.keyCode) {
 			case PLAY:
@@ -933,6 +928,11 @@ const VideoPlayerBase = class extends React.Component {
 			case STOP:
 				this.pause();
 				this.seek(0);
+				break;
+			case LEFT:
+			case RIGHT:
+				this.stopListeningForPulses();
+				Spotlight.resume();
 				break;
 		}
 	}
