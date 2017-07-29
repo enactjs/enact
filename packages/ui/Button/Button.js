@@ -12,13 +12,13 @@ import factory from '@enact/core/factory';
 import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import Spottable from '@enact/spotlight/Spottable';
-import {TooltipDecorator} from '@enact/moonstone/TooltipDecorator';
 import React from 'react';
 import PropTypes from 'prop-types';
 
 import {IconFactory} from '../Icon';
 import {MarqueeDecorator} from '../Marquee';
 import Pressable from '../Pressable';
+import {TooltipDecorator} from '../TooltipDecorator';
 
 import componentCss from './Button.less';
 

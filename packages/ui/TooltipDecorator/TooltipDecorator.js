@@ -1,27 +1,28 @@
 /**
- * Exports the {@link moonstone/TooltipDecorator.TooltipDecorator} Higher-order Component (HOC),
- * {@link moonstone/TooltipDecorator.Tooltip} and {@link moonstone/TooltipDecorator.TooltipBase}
- * components. The default export is {@link moonstone/TooltipDecorator.TooltipDecorator}.
+ * Exports the {@link ui/TooltipDecorator.TooltipDecorator} Higher-order Component (HOC),
+ * {@link ui/TooltipDecorator.Tooltip} and {@link ui/TooltipDecorator.TooltipBase}
+ * components. The default export is {@link ui/TooltipDecorator.TooltipDecorator}.
  *
- * @module moonstone/TooltipDecorator
+ * @module ui/TooltipDecorator
  */
 
-import {contextTypes} from '@enact/i18n/I18nDecorator';
 import hoc from '@enact/core/hoc';
-import FloatingLayer from '@enact/ui/FloatingLayer';
 import {forward} from '@enact/core/handle';
 import {Job} from '@enact/core/util';
+import {contextTypes} from '@enact/i18n/I18nDecorator';
 import React from 'react';
 import PropTypes from 'prop-types';
-import ri from '@enact/ui/resolution';
 
-import {Tooltip, TooltipBase} from './Tooltip';
+import ri from '../resolution';
+import FloatingLayer from '../FloatingLayer';
+
+import {Tooltip, TooltipBase, TooltipFactory} from './Tooltip';
 
 let currentTooltip; // needed to know whether or not we should stop a showing job when unmounting
 
 /**
- * {@link moonstone/TooltipDecorator.TooltipDecorator} is a Higher-order Component which
- * positions {@link moonstone/TooltipDecorator.Tooltip} in relation to the
+ * {@link ui/TooltipDecorator.TooltipDecorator} is a Higher-order Component which
+ * positions {@link ui/TooltipDecorator.Tooltip} in relation to the
  * Wrapped component.
  * The tooltip is automatically displayed when the user hovers over the decorator for
  * a given period of time. The tooltip is positioned around the decorator where there
@@ -30,7 +31,7 @@ let currentTooltip; // needed to know whether or not we should stop a showing jo
  * Note that the direction of tooltip will be flipped horizontally in RTL locales.
  *
  * @class TooltipDecorator
- * @memberof moonstone/TooltipDecorator
+ * @memberof ui/TooltipDecorator
  * @hoc
  * @public
  */
@@ -44,7 +45,7 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 	return class extends React.Component {
 		static displayName = 'TooltipDecorator'
 
-		static propTypes = /** @lends moonstone/TooltipDecorator.TooltipDecorator.prototype */ {
+		static propTypes = /** @lends ui/TooltipDecorator.TooltipDecorator.prototype */ {
 			/**
 			 * When `true`, the component is shown as disabled but will show a tooltip, if present.
 			 *
@@ -94,7 +95,7 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 				'right bottom', 'right middle', 'right top']),
 
 			/**
-			 * When true, the case of the [`tooltipText`]{@link moonstone/TooltipDecorator.TooltipDecorator#tooltipText}
+			 * When true, the case of the [`tooltipText`]{@link ui/TooltipDecorator.TooltipDecorator#tooltipText}
 			 * will remain unchanged.
 			 * Uses [Uppercase HOC]{@link i18n/Uppercase.Uppercase} and mirrors the
 			 * [preserveCase prop]{@link i18n/Uppercase.Uppercase#preserveCase}
@@ -381,4 +382,4 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 });
 
 export default TooltipDecorator;
-export {TooltipDecorator, Tooltip, TooltipBase};
+export {TooltipDecorator, Tooltip, TooltipBase, TooltipFactory};
