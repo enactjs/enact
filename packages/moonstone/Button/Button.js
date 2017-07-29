@@ -9,10 +9,12 @@ import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
 // import {diffClasses} from '@enact/ui/MigrationAid';
 import {ButtonFactory as UiButtonFactory} from '@enact/ui/Button';
-import Skinnable from '@enact/moonstone/Skinnable';
 import Uppercase from '@enact/i18n/Uppercase';
 import React from 'react';
 import PropTypes from 'prop-types';
+
+import Icon from '../Icon';
+import Skinnable from '../Skinnable';
 
 import componentCss from './Button.less';
 
@@ -67,7 +69,7 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 		},
 
 		render: (props) => (
-			<MoonstoneButton {...props} />
+			<MoonstoneButton {...props} Icon={Icon} />
 		)
 	});
 });

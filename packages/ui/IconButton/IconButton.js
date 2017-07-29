@@ -63,6 +63,13 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 			 */
 			backgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'transparent']),
 
+			/**
+			 * The Button component to use as the basis for this Button.
+			 *
+			 * @type {Component}
+			 * @default {@link ui/Button}
+			 * @public
+			 */
 			Button: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
 
 			/**
@@ -93,6 +100,13 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 			 */
 			disabled: PropTypes.bool,
 
+			/**
+			 * The Icon component to use in this IconButton.
+			 *
+			 * @type {Component}
+			 * @default {@link ui/Icon}
+			 * @public
+			 */
 			Icon: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
 
 			/**

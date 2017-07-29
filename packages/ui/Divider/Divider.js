@@ -10,7 +10,7 @@ import Uppercase from '@enact/i18n/Uppercase';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {MarqueeDecorator} from '@enact/moonstone/Marquee';
+import {MarqueeDecorator} from '../Marquee';
 
 import componentCss from './Divider.less';
 

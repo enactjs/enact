@@ -25,7 +25,7 @@ storiesOf('Button')
 				backgroundOpacity={nullify(select('backgroundOpacity', prop.backgroundOpacity))}
 				casing={select('casing', ['preserve', 'sentence', 'word', 'upper'], 'upper')}
 				disabled={boolean('disabled', Config.defaultProps.disabled)}
-				icon={nullify(select('icon', prop.icons))}
+				icon={nullify(select('icon', prop.icons, Config.defaultProps.icon))}
 				minWidth={nullify(boolean('minWidth', Config.defaultProps.minWidth))}
 				selected={nullify(boolean('selected', false))}
 				small={nullify(boolean('small', Config.defaultProps.small))}

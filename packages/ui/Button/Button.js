@@ -12,13 +12,13 @@ import factory from '@enact/core/factory';
 import {forProp, forward, handle} from '@enact/core/handle';
 import kind from '@enact/core/kind';
 import Spottable from '@enact/spotlight/Spottable';
-import Pressable from '@enact/ui/Pressable';
+import {TooltipDecorator} from '@enact/moonstone/TooltipDecorator';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Icon from '@enact/moonstone/Icon';
-import {MarqueeDecorator} from '@enact/moonstone/Marquee';
-import {TooltipDecorator} from '@enact/moonstone/TooltipDecorator';
+import {IconFactory} from '../Icon';
+import {MarqueeDecorator} from '../Marquee';
+import Pressable from '../Pressable';
 
 import componentCss from './Button.less';
 
@@ -46,6 +46,7 @@ import componentCss from './Button.less';
  * @public
  */
 const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
+	const CustomIcon = IconFactory({css});
 	/**
 	 * {@link ui/Button.ButtonBase} is a stateless Button with ui styling
 	 * applied. In most circumstances, you will want to use the Pressable and Spottable version:
@@ -106,6 +107,15 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 			icon: PropTypes.node,
 
 			/**
+			 * The Icon component to use in this Button.
+			 *
+			 * @type {Component}
+			 * @default {@link ui/Icon}
+			 * @public
+			 */
+			Icon: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
+
+			/**
 			 * A boolean parameter affecting the minimum width of the button. When `true`,
 			 * the minimum width will be set to 180px (or 130px if [small]{@link ui/Button.Button#small}
 			 * is `true`). If `false`, the minimum width will be set to the current value of
@@ -151,6 +161,7 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 		defaultProps: {
 			backgroundOpacity: 'opaque',
 			disabled: false,
+			Icon: CustomIcon,
 			minWidth: true,
 			pressed: false,
 			small: false
@@ -166,7 +177,7 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 				{pressed, small, minWidth, selected},
 				backgroundOpacity, color
 			),
-			icon: ({icon, small}) =>
+			icon: ({icon, Icon, small}) =>
 				(typeof icon === 'string' ? <Icon className={css.icon} small={small}>{icon}</Icon> : icon)
 		},
 
@@ -180,6 +191,7 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 		render: ({children, disabled, icon, ...rest}) => {
 			delete rest.backgroundOpacity;
 			delete rest.color;
+			delete rest.Icon;
 			delete rest.minWidth;
 			delete rest.pressed;
 			delete rest.selected;
