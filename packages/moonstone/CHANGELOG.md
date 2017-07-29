@@ -10,6 +10,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+- `moonstone/VideoPlayer` to handle play, pause, stop, fast forward and rewind on remote controller
+
 ### Fixed
 
 - `moonstone/Scroller` not scrolled via 5 way when `moonstone/ExpandableList` is opened.
@@ -38,7 +40,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/ExpandableItem`, `moonstone/ExpandableList`, `moonstone/ExpandablePicker`, `moonstone/DatePicker`, and `moonstone/TimePicker` to pause spotlight when animating in 5-way mode
 - `moonstone/Spinner` to position the text content under the spinner, rather than to the right side
 - `moonstone/VideoPlayer` to include hour when announcing the time while scrubbing
-- `moonstone/VideoPlayer` to handle play, pause, stop, fast forward and rewind on remote controller.
 - `moonstone/GridListImageItem` to require a `source` prop and not have a default value
 
 ### Fixed
