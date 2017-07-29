@@ -74,7 +74,7 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 		},
 
 		render: (props) => (
-			<MoonstoneButton {...props} Icon={Icon} />
+			<MoonstoneButtonBase {...props} Icon={Icon} />
 		)
 	});
 });
