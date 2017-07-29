@@ -38,6 +38,15 @@ import css from './VideoPlayer.less';
 const SpottableDiv = Spottable('div');
 const Container = SpotlightContainerDecorator({enterTo: ''}, 'div');
 
+// Keycode map for webOS TV
+const keyMap = {
+	'PLAY': 415,
+	'STOP': 413,
+	'PAUSE': 19,
+	'REWIND': 412,
+	'FASTFORWARD': 417
+};
+
 // Video ReadyStates
 // - Commented are currently unused.
 //
@@ -593,6 +602,7 @@ const VideoPlayerBase = class extends React.Component {
 		on('mousemove', this.activityDetected);
 		on('keypress', this.activityDetected);
 		on('keydown', this.handleGlobalKeyDown);
+		on('keyup', this.handleKeyUp);
 		this.attachCustomMediaEvents();
 		this.startDelayedFeedbackHide();
 		this.renderBottomControl.idle();
@@ -662,11 +672,13 @@ const VideoPlayerBase = class extends React.Component {
 		off('mousemove', this.activityDetected);
 		off('keypress', this.activityDetected);
 		off('keydown', this.handleGlobalKeyDown);
+		off('keyup', this.handleKeyUp);
 		this.detachCustomMediaEvents();
 		this.stopRewindJob();
 		this.stopAutoCloseTimeout();
 		this.stopDelayedTitleHide();
 		this.stopDelayedFeedbackHide();
+		this.announceJob.stop();
 		this.renderBottomControl.stop();
 		this.refocusMoreButton.stop();
 	}
@@ -842,6 +854,33 @@ const VideoPlayerBase = class extends React.Component {
 		this.showControls();
 	}
 
+	handleKeyUp = (ev) => {
+		const {PLAY, PAUSE, STOP, REWIND, FASTFORWARD} = keyMap;
+
+		switch (ev.keyCode) {
+			case PLAY:
+				this.play();
+				break;
+			case PAUSE:
+				this.pause();
+				break;
+			case REWIND:
+				if (!this.props.noRateButtons) {
+					this.rewind();
+				}
+				break;
+			case FASTFORWARD:
+				if (!this.props.noRateButtons) {
+					this.fastForward();
+				}
+				break;
+			case STOP:
+				this.pause();
+				this.seek(0);
+				break;
+		}
+	}
+
 	handleGlobalKeyDown = this.handle(
 		forKey('down'),
 		() => (
@@ -948,6 +987,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.setPlaybackRate(1);
 		this.send('play');
 		this.prevCommand = 'play';
+		this.announce($L(playLabel));
 	}
 
 	/**
@@ -962,6 +1002,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.setPlaybackRate(1);
 		this.send('pause');
 		this.prevCommand = 'pause';
+		this.announce($L(pauseLabel));
 	}
 
 	/**
@@ -1309,10 +1350,8 @@ const VideoPlayerBase = class extends React.Component {
 		forwardPlayButtonClick(ev, this.props);
 		if (this.state.paused) {
 			this.play();
-			this.announce($L(playLabel));
 		} else {
 			this.pause();
-			this.announce($L(pauseLabel));
 		}
 	}
 	onForward = (ev) => {
@@ -1479,7 +1518,6 @@ const VideoPlayerBase = class extends React.Component {
 								noJumpButtons={noJumpButtons}
 								noRateButtons={noRateButtons}
 								onBackwardButtonClick={this.onBackward}
-								onClick={this.resetAutoTimeout}
 								onForwardButtonClick={this.onForward}
 								onJumpBackwardButtonClick={this.onJumpBackward}
 								onJumpForwardButtonClick={this.onJumpForward}
