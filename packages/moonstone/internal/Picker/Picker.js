@@ -120,14 +120,6 @@ const PickerBase = class extends React.Component {
 		className: PropTypes.string,
 
 		/**
-		 * The picker id reference for setting aria-controls.
-		 *
-		 * @type {String}
-		 * @private
-		 */
-		controlId: PropTypes.string,
-
-		/**
 		 * Assign a custom icon for the decrementer. All strings supported by [Icon]{Icon} are
 		 * supported. Without a custom icon, the default is used, and is automatically changed when
 		 * the [orientation]{Icon#orientation} is changed.
@@ -145,6 +137,14 @@ const PickerBase = class extends React.Component {
 		 * @public
 		 */
 		disabled: PropTypes.bool,
+
+		/**
+		 * The picker id reference for setting aria-controls.
+		 *
+		 * @type {String}
+		 * @private
+		 */
+		id: PropTypes.string,
 
 		/**
 		 * Assign a custom icon for the incrementer. All strings supported by [Icon]{Icon} are
@@ -660,8 +660,8 @@ const PickerBase = class extends React.Component {
 		const {
 			noAnimation,
 			children,
-			controlId,
 			disabled,
+			id,
 			index,
 			joined,
 			onDecrementSpotlightDisappear,
@@ -714,7 +714,7 @@ const PickerBase = class extends React.Component {
 		return (
 			<div
 				{...rest}
-				aria-controls={joined ? controlId : null}
+				aria-controls={joined ? id : null}
 				aria-disabled={disabled}
 				aria-label={joined ? this.calcJoinedLabel(valueText) : null}
 				className={classes}
@@ -725,7 +725,7 @@ const PickerBase = class extends React.Component {
 				onWheel={joined ? this.handleWheel : null}
 			>
 				<PickerButton
-					aria-controls={!joined ? controlId : null}
+					aria-controls={!joined ? id : null}
 					aria-label={this.calcIncrementLabel(valueText)}
 					className={css.incrementer}
 					disabled={incrementerDisabled}
@@ -741,11 +741,11 @@ const PickerBase = class extends React.Component {
 					spotlightDisabled={spotlightDisabled}
 				/>
 				<div
-					id={controlId}
 					aria-disabled={disabled}
 					aria-hidden={!active}
 					aria-valuetext={valueText}
 					className={css.valueWrapper}
+					id={id}
 					role="spinbutton"
 				>
 					{sizingPlaceholder}
@@ -761,7 +761,7 @@ const PickerBase = class extends React.Component {
 					</PickerViewManager>
 				</div>
 				<PickerButton
-					aria-controls={!joined ? controlId : null}
+					aria-controls={!joined ? id : null}
 					aria-label={this.calcDecrementLabel(valueText)}
 					className={css.decrementer}
 					disabled={decrementerDisabled}
@@ -781,7 +781,7 @@ const PickerBase = class extends React.Component {
 	}
 };
 
-const Picker = IdProvider({generateProp: null, idProp: 'controlId', prefix: 'p_'},
+const Picker = IdProvider({generateProp: null, prefix: 'p_'},
 	Skinnable(
 		DisappearSpotlightDecorator(
 			{events: {

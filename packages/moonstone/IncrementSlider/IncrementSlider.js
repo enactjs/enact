@@ -97,14 +97,6 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			children: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 
 			/**
-			 * The slider id reference for setting aria-controls.
-			 *
-			 * @type {String}
-			 * @private
-			 */
-			controlId: PropTypes.string,
-
-			/**
 			 * Assign a custom icon for the decrementer. All strings supported by [Icon]{Icon} are
 			 * supported. Without a custom icon, the default is used, and is automatically changed when
 			 * [vertical]{moonstone/IncrementSlider#vertical} is changed.
@@ -141,6 +133,14 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * @public
 			 */
 			focused: PropTypes.bool,
+
+			/**
+			 * The slider id reference for setting aria-controls.
+			 *
+			 * @type {String}
+			 * @private
+			 */
+			id: PropTypes.string,
 
 			/**
 			 * Assign a custom icon for the incrementer. All strings supported by [Icon]{Icon} are
@@ -484,7 +484,6 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			'aria-hidden': ariaHidden,
 			backgroundProgress,
 			children,
-			controlId,
 			decrementAriaLabel,
 			decrementDisabled,
 			decrementIcon,
@@ -494,6 +493,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			handleDecrementKeyDown,
 			handleIncrementKeyDown,
 			handleSliderKeyDown,
+			id,
 			incrementAriaLabel,
 			incrementDisabled,
 			incrementIcon,
@@ -531,7 +531,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			return (
 				<div {...rest} className={incrementSliderClasses}>
 					<IncrementSliderButton
-						aria-controls={controlId}
+						aria-controls={id}
 						aria-hidden={ariaHidden}
 						aria-label={decrementAriaLabel}
 						className={css.decrementButton}
@@ -553,7 +553,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						detachedKnob={detachedKnob}
 						focused={focused}
 						inputRef={inputRef}
-						id={controlId}
+						id={id}
 						max={max}
 						min={min}
 						noFill={noFill}
@@ -578,7 +578,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						{children}
 					</Slider>
 					<IncrementSliderButton
-						aria-controls={controlId}
+						aria-controls={id}
 						aria-hidden={ariaHidden}
 						aria-label={incrementAriaLabel}
 						className={css.incrementButton}
@@ -616,7 +616,7 @@ const IncrementSliderFactory = factory((config) => {
 	 * @public
 	 */
 	return Changeable(
-		IdProvider({generateProp: null, idProp: 'controlId', prefix: 's_'},
+		IdProvider({generateProp: null, prefix: 's_'},
 			SliderDecorator(
 				DisappearSpotlightDecorator(
 					{events: {
