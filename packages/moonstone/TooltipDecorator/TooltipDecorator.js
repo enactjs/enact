@@ -6,7 +6,9 @@
  * @module moonstone/TooltipDecorator
  */
 
-import TooltipDecorator from '@enact/ui/TooltipDecorator';
+import hoc from '@enact/core/hoc';
+import UiTooltipDecorator from '@enact/ui/TooltipDecorator';
+import React from 'react';
 
 import {Tooltip, TooltipBase, TooltipFactory} from './Tooltip';
 
@@ -25,6 +27,19 @@ import {Tooltip, TooltipBase, TooltipFactory} from './Tooltip';
  * @hoc
  * @public
  */
+const TooltipDecoratorBase = hoc((config, Wrapped) => {
+	return class extends React.Component {
+		static displayName = 'MoonstoneTooltipDecorator'
+
+		render () {
+			return (
+				<Wrapped {...this.props} Tooltip={Tooltip} />
+			);
+		}
+	};
+});
+
+const TooltipDecorator = (props) => TooltipDecoratorBase(UiTooltipDecorator(props));
 
 export default TooltipDecorator;
 export {TooltipDecorator, Tooltip, TooltipBase, TooltipFactory};

@@ -7,7 +7,7 @@
 
 import factory from '@enact/core/factory';
 // import {diffClasses} from '@enact/ui/MigrationAid';
-import {TooltipLabelFactory as UiTooltipLabelFactory} from '@enact/ui/TooltipLabel';
+import {TooltipLabelFactory as UiTooltipLabelFactory} from '@enact/ui/TooltipDecorator';
 
 import componentCss from './Tooltip.less';
 

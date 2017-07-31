@@ -16,7 +16,8 @@ import PropTypes from 'prop-types';
 import ri from '../resolution';
 import FloatingLayer from '../FloatingLayer';
 
-import {Tooltip, TooltipBase, TooltipFactory} from './Tooltip';
+import {Tooltip as UiTooltip, TooltipBase, TooltipFactory} from './Tooltip';
+import {TooltipLabelFactory} from './TooltipLabel';
 
 let currentTooltip; // needed to know whether or not we should stop a showing job when unmounting
 
@@ -54,6 +55,15 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 			 * @public
 			 */
 			disabled: PropTypes.bool,
+
+			/**
+			 * The Tooltip component to use in this Decorator.
+			 *
+			 * @type {Component}
+			 * @default {@link ui/Tooltip}
+			 * @public
+			 */
+			Tooltip: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
 
 			/**
 			 * Configures the mode of uppercasing of the `tooltipText` that should be performed.
@@ -135,6 +145,7 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 
 		static defaultProps = {
 			disabled: false,
+			Tooltip: UiTooltip,
 			tooltipCasing: 'upper',
 			tooltipDelay: 500,
 			tooltipPosition: 'above',
@@ -346,7 +357,7 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 		}
 
 		render () {
-			const {children, tooltipCasing, tooltipPreserveCase, tooltipProps, tooltipText, tooltipWidth, ...rest} = this.props;
+			const {children, Tooltip, tooltipCasing, tooltipPreserveCase, tooltipProps, tooltipText, tooltipWidth, ...rest} = this.props;
 			delete rest.tooltipDelay;
 			delete rest.tooltipPosition;
 
@@ -382,4 +393,4 @@ const TooltipDecorator = hoc((config, Wrapped) => {
 });
 
 export default TooltipDecorator;
-export {TooltipDecorator, Tooltip, TooltipBase, TooltipFactory};
+export {TooltipDecorator, UiTooltip as Tooltip, TooltipBase, TooltipFactory, TooltipLabelFactory};

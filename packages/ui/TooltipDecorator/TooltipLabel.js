@@ -1,6 +1,7 @@
 import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
 import {isRtlText} from '@enact/i18n/util';
+// import {diffClasses} from '@enact/ui/MigrationAid';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -18,6 +19,8 @@ import componentCss from './Tooltip.less';
  * @public
  */
 const TooltipLabelBaseFactory = factory({css: componentCss}, ({css}) => {
+	// diffClasses('UI TooltipLabel', componentCss, css);
+
 	/**
 	 * {@link ui/TooltipDecorator.TooltipLabel} is a stateless tooltip component with no styling
 	 * applied.

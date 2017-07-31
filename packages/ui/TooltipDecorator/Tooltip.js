@@ -1,10 +1,10 @@
 import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
-import {diffClasses} from '@enact/ui/MigrationAid';
+// import {diffClasses} from '@enact/ui/MigrationAid';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import TooltipLabel from './TooltipLabel';
+import UiTooltipLabel from './TooltipLabel';
 
 import componentCss from './Tooltip.less';
 
@@ -20,11 +20,11 @@ import componentCss from './Tooltip.less';
  * @public
  */
 const TooltipBaseFactory = factory({css: componentCss}, ({css}) => {
-	diffClasses('UI Tooltip', componentCss, css);
+	// diffClasses('UI Tooltip', componentCss, css);
 
 	/**
-	 * {@link ui/TooltipDecorator.TooltipBase} is a stateless tooltip component with
-	 * Moonston styling applied.
+	 * {@link ui/TooltipDecorator.TooltipBase} is a stateless tooltip component with no styling
+	 * applied.
 	 *
 	 * @class TooltipBase
 	 * @memberof ui/TooltipDecorator
@@ -81,6 +81,15 @@ const TooltipBaseFactory = factory({css: componentCss}, ({css}) => {
 			}),
 
 			/**
+			 * The TooltipLabel component to use in this Tooltip.
+			 *
+			 * @type {Component}
+			 * @default {@link ui/TooltipLabel}
+			 * @public
+			 */
+			TooltipLabel: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
+
+			/**
 			 * The method to run when the tooltip mounts/unmounts, giving a reference to the DOM.
 			 *
 			 * @type {Function}
@@ -100,7 +109,8 @@ const TooltipBaseFactory = factory({css: componentCss}, ({css}) => {
 
 		defaultProps: {
 			arrowAnchor: 'right',
-			direction: 'above'
+			direction: 'above',
+			TooltipLabel: UiTooltipLabel
 		},
 
 		styles: {
@@ -120,7 +130,7 @@ const TooltipBaseFactory = factory({css: componentCss}, ({css}) => {
 			}
 		},
 
-		render: ({children, tooltipRef, arrowType, width, ...rest}) => {
+		render: ({children, TooltipLabel, tooltipRef, arrowType, width, ...rest}) => {
 			delete rest.arrowAnchor;
 			delete rest.direction;
 			delete rest.position;
