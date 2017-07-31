@@ -712,7 +712,7 @@ class VirtualListCore extends Component {
 		this.lastFocusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
 	}
 
-	calculatePositionOnFocus = (item, scrollPosition = this.scrollPosition) => {
+	calculatePositionOnFocus = ({item, scrollPosition = this.scrollPosition}) => {
 		const
 			{pageScroll} = this.props,
 			{primary, numOfItems} = this,
@@ -741,6 +741,29 @@ class VirtualListCore extends Component {
 			gridPosition.secondaryPosition = 0;
 			return this.gridPositionToItemPosition(gridPosition);
 		}
+	}
+
+	setRestrict = (bool) => {
+		Spotlight.set(this.props['data-container-id'], {restrict: (bool) ? 'self-only' : 'self-first'});
+	}
+
+	setSpotlightContainerRestrict = (keyCode, index) => {
+		const
+			{dataSize} = this.props,
+			{isPrimaryDirectionVertical, dimensionToExtent} = this,
+			canMoveBackward = index >= dimensionToExtent,
+			canMoveForward = index < (dataSize - (((dataSize - 1) % dimensionToExtent) + 1));
+		let isSelfOnly = false;
+
+		if (isPrimaryDirectionVertical) {
+			if (isUp(keyCode) && canMoveBackward || isDown(keyCode) && canMoveForward) {
+				isSelfOnly = true;
+			}
+		} else if (isLeft(keyCode) && canMoveBackward || isRight(keyCode) && canMoveForward) {
+			isSelfOnly = true;
+		}
+
+		this.setRestrict(isSelfOnly);
 	}
 
 	getIndicesForPageScroll = (direction, currentIndex) => {
@@ -860,7 +883,7 @@ class VirtualListCore extends Component {
 		this.isScrolledBy5way = false;
 		if (getDirection(keyCode)) {
 			const index = Number.parseInt(target.getAttribute(dataIndexAttribute));
-
+			this.setSpotlightContainerRestrict(keyCode, index);
 			this.isScrolledBy5way = this.jumpToSpottableItem(keyCode, index);
 		}
 		forwardKeyDown(e, this.props);
@@ -930,16 +953,21 @@ class VirtualListCore extends Component {
 			this.renderCalculate();
 		}
 
+		const needsScrollingPlaceholder = this.nodeIndexToBeFocused != null && Spotlight.isPaused();
+
 		return (
 			<div {...props} onKeyDown={this.onKeyDown} ref={this.initContainerRef}>
-				{cc.length ? cc : (
+				{cc.length ? cc : null}
+				{primary ? null : (
 					<SpotlightPlaceholder
 						data-index={0}
 						data-vl-placeholder
 						onFocus={this.handlePlaceholderFocus}
 					/>
 				)}
-				{Spotlight.isPaused() ? <SpotlightPlaceholder /> : null}
+				{needsScrollingPlaceholder ? (
+					<SpotlightPlaceholder />
+				) : null}
 			</div>
 		);
 	}

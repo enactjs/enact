@@ -572,6 +572,7 @@ class VirtualListCoreNative extends Component {
 
 		this.cc[key] = React.cloneElement(itemElement, {
 			className: classNames(cssItem.listItem, itemElement.props.className),
+			['data-preventscrollonfocus']: true, // Added this attribute to prevent scroll on focus by browser
 			style: {...itemElement.props.style, ...style}
 		});
 	}
@@ -682,7 +683,7 @@ class VirtualListCoreNative extends Component {
 		this.lastFocusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
 	}
 
-	calculatePositionOnFocus = (item, scrollPosition = this.scrollPosition) => {
+	calculatePositionOnFocus = ({item, scrollPosition = this.scrollPosition}) => {
 		const
 			{pageScroll} = this.props,
 			{primary} = this,
@@ -709,6 +710,30 @@ class VirtualListCoreNative extends Component {
 			gridPosition.secondaryPosition = 0;
 			return this.gridPositionToItemPosition(gridPosition);
 		}
+	}
+
+	setRestrict = (bool) => {
+		Spotlight.set(this.props['data-container-id'], {restrict: (bool) ? 'self-only' : 'self-first'});
+	}
+
+	setSpotlightContainerRestrict = (keyCode, target) => {
+		const
+			{dataSize} = this.props,
+			{isPrimaryDirectionVertical, dimensionToExtent} = this,
+			index = Number.parseInt(target.getAttribute(dataIndexAttribute)),
+			canMoveBackward = index >= dimensionToExtent,
+			canMoveForward = index < (dataSize - (((dataSize - 1) % dimensionToExtent) + 1));
+		let isSelfOnly = false;
+
+		if (isPrimaryDirectionVertical) {
+			if (isUp(keyCode) && canMoveBackward || isDown(keyCode) && canMoveForward) {
+				isSelfOnly = true;
+			}
+		} else if (isLeft(keyCode) && canMoveBackward || isRight(keyCode) && canMoveForward) {
+			isSelfOnly = true;
+		}
+
+		this.setRestrict(isSelfOnly);
 	}
 
 	getIndicesForPageScroll = (direction, currentIndex) => {
@@ -830,6 +855,7 @@ class VirtualListCoreNative extends Component {
 		this.isScrolledBy5way = false;
 		if (getDirection(keyCode)) {
 			e.preventDefault();
+			this.setSpotlightContainerRestrict(keyCode, target);
 			this.isScrolledBy5way = this.jumpToSpottableItem(keyCode, target);
 		}
 		forwardKeyDown(e, this.props);
@@ -891,13 +917,14 @@ class VirtualListCoreNative extends Component {
 		}
 
 		const
-			{className, style, ...rest} = props,
+			{className, style, 'data-container-id': dataContainerId, ...rest} = props,
 			mergedClasses = classNames(css.list, this.wrapperClass, className);
 
 		return (
-			<div ref={this.initWrapperRef} className={mergedClasses} style={style}>
+			<div className={mergedClasses} data-container-id={dataContainerId} ref={this.initWrapperRef} style={style}>
 				<div {...rest} onKeyDown={this.onKeyDown} ref={this.initContainerRef}>
-					{cc.length ? cc : (
+					{cc.length ? cc : null}
+					{primary ? null : (
 						<SpotlightPlaceholder
 							data-index={0}
 							data-vl-placeholder
