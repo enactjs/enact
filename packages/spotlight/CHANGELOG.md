@@ -10,6 +10,8 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Changed
 
+- `spotlight` containers using a `restrict` value of 'self-only' will ignore `leaveFor` directives when attempting to leave the container via 5-way
+
 ### Fixed
 
 - `spotlight` to not blur and re-focus an element that is already focused

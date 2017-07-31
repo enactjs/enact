@@ -683,7 +683,7 @@ class VirtualListCoreNative extends Component {
 		this.lastFocusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
 	}
 
-	calculatePositionOnFocus = (item, scrollPosition = this.scrollPosition) => {
+	calculatePositionOnFocus = ({item, scrollPosition = this.scrollPosition}) => {
 		const
 			{pageScroll} = this.props,
 			{primary} = this,
@@ -710,6 +710,30 @@ class VirtualListCoreNative extends Component {
 			gridPosition.secondaryPosition = 0;
 			return this.gridPositionToItemPosition(gridPosition);
 		}
+	}
+
+	setRestrict = (bool) => {
+		Spotlight.set(this.props['data-container-id'], {restrict: (bool) ? 'self-only' : 'self-first'});
+	}
+
+	setSpotlightContainerRestrict = (keyCode, target) => {
+		const
+			{dataSize} = this.props,
+			{isPrimaryDirectionVertical, dimensionToExtent} = this,
+			index = Number.parseInt(target.getAttribute(dataIndexAttribute)),
+			canMoveBackward = index >= dimensionToExtent,
+			canMoveForward = index < (dataSize - (((dataSize - 1) % dimensionToExtent) + 1));
+		let isSelfOnly = false;
+
+		if (isPrimaryDirectionVertical) {
+			if (isUp(keyCode) && canMoveBackward || isDown(keyCode) && canMoveForward) {
+				isSelfOnly = true;
+			}
+		} else if (isLeft(keyCode) && canMoveBackward || isRight(keyCode) && canMoveForward) {
+			isSelfOnly = true;
+		}
+
+		this.setRestrict(isSelfOnly);
 	}
 
 	getIndicesForPageScroll = (direction, currentIndex) => {
@@ -831,6 +855,7 @@ class VirtualListCoreNative extends Component {
 		this.isScrolledBy5way = false;
 		if (getDirection(keyCode)) {
 			e.preventDefault();
+			this.setSpotlightContainerRestrict(keyCode, target);
 			this.isScrolledBy5way = this.jumpToSpottableItem(keyCode, target);
 		}
 		forwardKeyDown(e, this.props);
