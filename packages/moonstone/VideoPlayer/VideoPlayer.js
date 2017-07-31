@@ -1273,6 +1273,8 @@ const VideoPlayerBase = class extends React.Component {
 		if (getDirection(ev.keyCode) === 'down') {
 			this.hideControls();
 		}
+		// For reading a more info, accessibility attributes should be reset to null.
+		this.setState({announce: this.state.announce < AnnounceState.INFO ? AnnounceState.TITLE_READ : AnnounceState.DONE});
 	}
 
 	handleSpotlightUpFromSlider = handle(
