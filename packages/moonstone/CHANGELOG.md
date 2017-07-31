@@ -8,6 +8,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/Scroller` to handle `Spotlight` after `ScrollBar`/`ScrollButton` updates.
+
 ### Changed
 
 - `moonstone/VideoPlayer` to handle play, pause, stop, fast forward and rewind on remote controller

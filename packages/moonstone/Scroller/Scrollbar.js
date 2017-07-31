@@ -186,6 +186,7 @@ class ScrollbarBase extends PureComponent {
 	thumbRef = null
 	prevButtonNodeRef = null
 	nextButtonNodeRef = null
+	wheelMode = false;
 
 	setPressStatus = (isPressed) => {
 		this.pressed = isPressed;
@@ -209,6 +210,12 @@ class ScrollbarBase extends PureComponent {
 		}
 	}
 
+	setWheelMode = (bool) => {
+		if (this.wheelMode !== bool) {
+			this.wheelMode = bool;
+		}
+	}
+
 	updateButtons = (bounds) => {
 		const
 			{prevButtonNodeRef, nextButtonNodeRef} = this,
@@ -218,6 +225,25 @@ class ScrollbarBase extends PureComponent {
 			shouldDisablePrevButton = currentPos <= 0,
 			shouldDisableNextButton = currentPos >= maxPos,
 			spotItem = window.document.activeElement;
+
+		const focusAfterUpdate = () => {
+			// Handle Spotlight after update when Spotlight is lost during 5-way. However, we also don't
+			// want to handle Spotlight during `wheelMode`.
+			if (!Spotlight.getCurrent() && !Spotlight.getPointerMode() && !this.wheelMode) {
+				const scrollableSpottableElements = this.containerRef.offsetParent.querySelectorAll('.spottable');
+
+				if (scrollableSpottableElements.length <= 2 ) {
+					// After update, `Scrollable` has one or two buttons that are focusable (vertical down or
+					// horizontal right buttons). Focus on the first `scrollButton` (if both are visible,
+					// priority goes to vertical down).
+					Spotlight.focus(scrollableSpottableElements[0]);
+				} else {
+					// If there are more focusable items inside of `Scrollable` container, focus on that
+					// instead.
+					Spotlight.focus(Spotlight.getActiveContainer());
+				}
+			}
+		};
 
 		this.setState((prevState) => {
 			const
@@ -231,7 +257,7 @@ class ScrollbarBase extends PureComponent {
 			} else if (updateNextButton) {
 				return {nextButtonDisabled: shouldDisableNextButton};
 			}
-		});
+		}, focusAfterUpdate);
 
 		if (shouldDisablePrevButton && spotItem === prevButtonNodeRef) {
 			if (this.pressed) {
@@ -390,7 +416,7 @@ class ScrollbarBase extends PureComponent {
 }
 
 const Scrollbar = ApiDecorator(
-	{api: ['hideThumb', 'showThumb', 'startHidingThumb', 'update']},
+	{api: ['hideThumb', 'setWheelMode', 'showThumb', 'startHidingThumb', 'update']},
 	DisappearSpotlightDecorator(
 		{events: {
 			onNextSpotlightDisappear: '[data-scroll-button="previous"]',
