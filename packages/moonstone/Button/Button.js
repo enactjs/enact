@@ -81,12 +81,12 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 
 const ButtonBase = ButtonBaseFactory();
 
-const Button = TooltipDecorator(
-	MarqueeDecorator(
-		{className: componentCss.marquee},
-		Pressable(
-			Spottable(
-				Uppercase(
+const Button = Uppercase(
+	TooltipDecorator(
+		MarqueeDecorator(
+			{className: componentCss.marquee},
+			Pressable(
+				Spottable(
 					Skinnable(
 						ButtonBase
 					)
@@ -96,12 +96,12 @@ const Button = TooltipDecorator(
 	)
 );
 
-const ButtonFactory = (props) => TooltipDecorator(
-	MarqueeDecorator(
-		{className: componentCss.marquee},
-		Pressable(
-			Spottable(
-				Uppercase(
+const ButtonFactory = (props) => Uppercase(
+	TooltipDecorator(
+		MarqueeDecorator(
+			{className: componentCss.marquee},
+			Pressable(
+				Spottable(
 					Skinnable(
 						ButtonBaseFactory(props)
 					)
@@ -110,6 +110,7 @@ const ButtonFactory = (props) => TooltipDecorator(
 		)
 	)
 );
+
 
 export default Button;
 export {
