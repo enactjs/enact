@@ -45,9 +45,7 @@ const keyMap = {
 	'STOP': 413,
 	'PAUSE': 19,
 	'REWIND': 412,
-	'FASTFORWARD': 417,
-	'RIGHT': 39,
-	'LEFT': 37
+	'FASTFORWARD': 417
 };
 
 // Video ReadyStates
@@ -916,7 +914,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	handleKeyUp = (ev) => {
-		const {PLAY, PAUSE, STOP, REWIND, FASTFORWARD, LEFT, RIGHT} = keyMap;
+		const {PLAY, PAUSE, STOP, REWIND, FASTFORWARD} = keyMap;
 
 		switch (ev.keyCode) {
 			case PLAY:
@@ -939,13 +937,11 @@ const VideoPlayerBase = class extends React.Component {
 				this.pause();
 				this.seek(0);
 				break;
-			case LEFT:
-			case RIGHT:
-				if (!this.props.no5wayJump) {
-					this.stopListeningForPulses();
-					Spotlight.resume();
-				}
-				break;
+		}
+
+		if ((is('left', ev.keyCode) || is('right', ev.keyCode)) && !this.props.no5wayJump) {
+			this.stopListeningForPulses();
+			Spotlight.resume();
 		}
 	}
 
@@ -1499,6 +1495,7 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.initialJumpDelay;
 		delete rest.jumpBy;
 		delete rest.jumpDelay;
+		delete rest.no5wayJump;
 		delete rest.onControlsAvailable;
 		delete rest.onBackwardButtonClick;
 		delete rest.onForwardButtonClick;
