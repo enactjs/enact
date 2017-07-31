@@ -1471,7 +1471,6 @@ const VideoPlayerBase = class extends React.Component {
 				{this.state.bottomControlsRendered ?
 					<div className={css.fullscreen + ' enyo-fit scrim'} style={{display: this.state.bottomControlsVisible ? 'block' : 'none'}} {...controlsAriaProps}>
 						<Container className={css.bottom} data-container-disabled={!this.state.bottomControlsVisible}>
-<<<<<<< HEAD
 							{/*
 								Info Section: Title, Description, Times
 								Only render when `this.state.bottomControlsVisible` is true in order for `Marquee`
@@ -1480,10 +1479,11 @@ const VideoPlayerBase = class extends React.Component {
 							{this.state.bottomControlsVisible ?
 								<div className={css.infoFrame}>
 									<MediaTitle
-										title={title}
-										visible={this.state.titleVisible}
+										id={this.id}
 										infoVisible={this.state.more}
 										style={{'--infoComponentsOffset': this.state.titleOffsetHeight + 'px'}}
+										title={title}
+										visible={this.state.titleVisible}
 									>
 										{infoComponents}
 									</MediaTitle>
@@ -1491,20 +1491,6 @@ const VideoPlayerBase = class extends React.Component {
 								</div> :
 								null
 							}
-=======
-							{/* Info Section: Title, Description, Times */}
-							<div className={css.infoFrame}>
-								<MediaTitle
-									id={this.id}
-									infoVisible={this.state.more}
-									title={title}
-									visible={this.state.titleVisible}
-								>
-									{infoComponents}
-								</MediaTitle>
-								<Times current={this.state.currentTime} total={this.state.duration} formatter={this.durfmt} />
-							</div>
->>>>>>> develop
 
 							{noSlider ? null : <MediaSlider
 								backgroundProgress={this.state.proportionLoaded}
