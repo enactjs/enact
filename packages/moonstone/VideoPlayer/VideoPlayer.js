@@ -753,7 +753,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	/**
-	 * Shows media control.
+	 * Shows media controls.
 	 *
 	 * @function
 	 * @memberof moonstone/VideoPlayer.VideoPlayerBase.prototype
@@ -782,7 +782,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	/**
-	 * Hides media control.
+	 * Hides media controls.
 	 *
 	 * @function
 	 * @memberof moonstone/VideoPlayer.VideoPlayerBase.prototype
