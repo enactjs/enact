@@ -158,7 +158,6 @@ const MediaControls = kind({
 			centerComponents: true,
 			more: showMoreComponents
 		}),
-		mediaControlsDisabled: ({mediaDisabled, moreDisabled}) => (mediaDisabled || !moreDisabled),
 		moreIcon: ({showMoreComponents}) => showMoreComponents ? 'arrowshrinkleft' : 'ellipsis',
 		moreIconLabel: ({showMoreComponents}) => showMoreComponents ? $L('Back') : $L('More'),
 		playPauseIcon: ({paused, pauseIcon, playIcon}) => (paused ? playIcon : pauseIcon),
@@ -175,7 +174,7 @@ const MediaControls = kind({
 			jumpButtonsDisabled,
 			jumpForwardIcon,
 			leftComponents,
-			mediaControlsDisabled,
+			mediaDisabled,
 			moreDisabled,
 			moreIcon,
 			moreIconLabel,
@@ -199,7 +198,6 @@ const MediaControls = kind({
 		delete rest.pauseLabel;
 		delete rest.playIcon;
 		delete rest.playLabel;
-		delete rest.mediaDisabled;
 		delete rest.showMoreComponents;
 
 		return (
