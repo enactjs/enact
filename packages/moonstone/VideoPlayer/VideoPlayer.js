@@ -549,7 +549,6 @@ const VideoPlayerBase = class extends React.Component {
 		this.prevCommand = (props.noAutoPlay ? 'pause' : 'play');
 		this.speedIndex = 0;
 		this.id = this.generateId();
-		this.titleOffsetCalculated = false;
 		this.selectPlaybackRates('fastForward');
 
 		this.initI18n();
@@ -580,6 +579,7 @@ const VideoPlayerBase = class extends React.Component {
 			playbackRate: 1,
 			readyState: 0,
 			volume: 1,
+			titleOffsetHeight: 0,
 
 			// Non-standard state computed from properties
 			bottomControlsRendered: false,
@@ -623,8 +623,9 @@ const VideoPlayerBase = class extends React.Component {
 	componentWillUpdate (nextProps, nextState) {
 		const
 			isInfoComponentsEqual = equals(this.props.infoComponents, nextProps.infoComponents),
+			{titleOffsetHeight} = this.state,
 			shouldCalculateTitleOffset = (
-				((!this.titleOffsetCalculated && isInfoComponentsEqual) || (this.titleOffsetCalculated && !isInfoComponentsEqual)) &&
+				((!titleOffsetHeight && isInfoComponentsEqual) || (titleOffsetHeight && !isInfoComponentsEqual)) &&
 				this.state.bottomControlsVisible
 			);
 
@@ -694,14 +695,12 @@ const VideoPlayerBase = class extends React.Component {
 
 	calculateTitleOffset = () => {
 		// calculate how far the title should animate up when infoComponents appear.
-		const titleElement = this.player.querySelector(`.${css.title}`);
 		const infoComponents = this.player.querySelector(`.${css.infoComponents}`);
 
-		if (titleElement && infoComponents) {
+		if (infoComponents) {
 			const infoHeight = infoComponents.offsetHeight;
 
-			titleElement.style.setProperty('--infoComponentsOffset', infoHeight + 'px');
-			this.titleOffsetCalculated = true;
+			this.setState({titleOffsetHeight: infoHeight});
 		}
 	}
 
@@ -1472,18 +1471,26 @@ const VideoPlayerBase = class extends React.Component {
 				{this.state.bottomControlsRendered ?
 					<div className={css.fullscreen + ' enyo-fit scrim'} style={{display: this.state.bottomControlsVisible ? 'block' : 'none'}} {...controlsAriaProps}>
 						<Container className={css.bottom} data-container-disabled={!this.state.bottomControlsVisible}>
-							{/* Info Section: Title, Description, Times */}
-							<div className={css.infoFrame}>
-								<MediaTitle
-									id={this.id}
-									infoVisible={this.state.more}
-									title={title}
-									visible={this.state.titleVisible}
-								>
-									{infoComponents}
-								</MediaTitle>
-								<Times current={this.state.currentTime} total={this.state.duration} formatter={this.durfmt} />
-							</div>
+							{/*
+								Info Section: Title, Description, Times
+								Only render when `this.state.bottomControlsVisible` is true in order for `Marquee`
+								to make calculations correctly in `MediaTitle`.
+							*/}
+							{this.state.bottomControlsVisible ?
+								<div className={css.infoFrame}>
+									<MediaTitle
+										id={this.id}
+										infoVisible={this.state.more}
+										style={{'--infoComponentsOffset': this.state.titleOffsetHeight + 'px'}}
+										title={title}
+										visible={this.state.titleVisible}
+									>
+										{infoComponents}
+									</MediaTitle>
+									<Times current={this.state.currentTime} total={this.state.duration} formatter={this.durfmt} />
+								</div> :
+								null
+							}
 
 							{noSlider ? null : <MediaSlider
 								backgroundProgress={this.state.proportionLoaded}
