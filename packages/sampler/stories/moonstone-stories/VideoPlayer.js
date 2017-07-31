@@ -131,6 +131,9 @@ storiesOf('VideoPlayer')
 						jumpButtonsDisabled={boolean('jumpButtonsDisabled', false)}
 						rateButtonsDisabled={boolean('rateButtonsDisabled', false)}
 						loop={boolean('loop', true)}
+						moreButtonCloseLabel={text('moreButtonCloseLabel')}
+						moreButtonDisabled={boolean('moreButtonDisabled', false)}
+						moreButtonLabel={text('moreButtonLabel')}
 						muted={boolean('muted', true)}
 						noAutoPlay={boolean('noAutoPlay', false)}
 						noJumpButtons={boolean('noJumpButtons', false)}
