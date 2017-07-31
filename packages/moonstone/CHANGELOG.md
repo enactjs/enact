@@ -14,6 +14,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Fixed
 
+- `moonstone/ContextualPopupDecorator` to prefer setting focus to the appropriate popup instead of other underlying controls when using 5-way from the activating control
 - `moonstone/Scroller` not scrolled via 5 way when `moonstone/ExpandableList` is opened
 - `moonstone/VirtualList` not to let the focus move outside of container even if there are children left when navigating with 5way
 - `moonstone/Scrollable` to update disability of paging controls when the scrollbar is set to `visible` and the content becomes shorter
