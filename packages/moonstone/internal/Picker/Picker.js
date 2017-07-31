@@ -93,8 +93,8 @@ const PickerBase = class extends React.Component {
 		min: PropTypes.number.isRequired,
 
 		/**
-		 * Assign a custom accessibility value for the picker.
-		 * If you don't use `aria-valuetext`, the default behavior is value + accessibilityHint.
+		 * Overrides the `aria-valuetext` for the picker. By default, `aria-valuetext` is set
+		 * to the current selected child and accessibilityHint text.
 		 *
 		 * @type {String}
 		 * @public
