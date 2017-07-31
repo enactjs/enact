@@ -363,7 +363,7 @@ function getTargetByDirectionFromPosition (direction, position, containerId) {
 function getLeaveForTarget (containerId, direction) {
 	const config = getContainerConfig(containerId);
 
-	const target = config.leaveFor && config.leaveFor[direction];
+	const target = config.restrict !== 'self-only' && config.leaveFor && config.leaveFor[direction];
 	if (typeof target === 'string') {
 		if (target === '') {
 			return false;
