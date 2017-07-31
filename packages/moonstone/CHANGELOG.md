@@ -8,7 +8,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
-- `moonstone/Picker` prop `aria-valuetext` to support reading custom text instead of value
+- `moonstone/Picker` and `moonstone/RangePicker` prop `aria-valuetext` to support reading custom text instead of value
 
 ### Changed
 
