@@ -1,4 +1,4 @@
-import {forward, forwardWithPrevent, forProp, handle} from '@enact/core/handle';
+import {forward, forwardWithPrevent, forProp, handle, preventDefault} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {on, off} from '@enact/core/dispatcher';
 import platform from '@enact/core/platform';
@@ -45,7 +45,6 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		target = null
-		node = null
 		handle = handle.bind(this);
 
 		constructor () {
@@ -76,12 +75,19 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		setTarget = (target) => {
 			this.target = target;
 
-			if (platform.touch && this.props.cancelOnLeave) {
-				this.targetBounds = this.target.getBoundingClientRect();
+			if (platform.touch) {
+				on('contextmenu', preventDefault, this.target);
+				if (this.props.cancelOnLeave) {
+					this.targetBounds = this.target.getBoundingClientRect();
+				}
 			}
 		}
 
 		clearTarget = () => {
+			if (platform.touch) {
+				off('contextmenu', preventDefault, this.target);
+			}
+
 			this.target = null;
 			this.targetBounds = null;
 		}
