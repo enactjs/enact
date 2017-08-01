@@ -968,6 +968,7 @@ const VirtualListBaseNative = SpotlightContainerDecorator(
 		 */
 		lastFocusedPersist: (node) => {
 			const indexed = node.dataset.index ? node : node.closest('[data-index]');
+
 			if (indexed) {
 				return {
 					container: false,
