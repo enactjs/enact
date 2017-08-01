@@ -17,14 +17,12 @@ const VideoBase = kind({
 	propTypes: {
 		index: PropTypes.number,
 		noAutoPlay: PropTypes.bool,
-		preload: PropTypes.string,
 		setActiveVideo: PropTypes.func,
 		sources: PropTypes.arrayOf(PropTypes.object)
 	},
 
 	defaultProps: {
-		index: 0,
-		preload: 'metadata'
+		index: 0
 	},
 
 	computed: {
