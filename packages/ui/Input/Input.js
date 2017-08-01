@@ -11,8 +11,6 @@ import {isRtlText} from '@enact/i18n/util';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import $L from '@enact/moonstone/internal/$L';
-
 import Changeable from '../Changeable';
 import {Tooltip as UiTooltip} from '../TooltipDecorator';
 
@@ -20,17 +18,6 @@ import UiInputDecoratorIcon, {InputDecoratorIconFactory} from './InputDecoratorI
 import InputSpotlightDecorator from './InputSpotlightDecorator';
 
 import componentCss from './Input.less';
-
-const calcAriaLabel = function (title, type, value = '') {
-	const hint = $L('input field');
-
-	if (type === 'password' && value) {
-		const character = value.length > 1 ? $L('characters') : $L('character');
-		value = `${value.length} ${character}`;
-	}
-
-	return `${title} ${value} ${hint}`;
-};
 
 /**
  * {@link ui/Input.InputBaseFactory} is Factory wrapper around {@link ui/Input.InputBase}
@@ -226,7 +213,7 @@ const InputBaseFactory = factory({css: componentCss}, ({css}) => {
 			dismissOnEnter: false,
 			InputDecoratorIcon: UiInputDecoratorIcon,
 			invalid: false,
-			invalidMessage: $L('Please enter a valid value.'),
+			invalidMessage: 'Please enter a valid value.',
 			placeholder: '',
 			Tooltip: UiTooltip,
 			type: 'text'
@@ -248,10 +235,6 @@ const InputBaseFactory = factory({css: componentCss}, ({css}) => {
 		},
 
 		computed: {
-			'aria-label': ({placeholder, type, value}) => {
-				const title = (value == null || value === '') ? placeholder : '';
-				return calcAriaLabel(title, type, value);
-			},
 			className: ({focused, invalid, styler}) => styler.append({focused, invalid}),
 			dir: ({value, placeholder}) => isRtlText(value || placeholder) ? 'rtl' : 'ltr',
 			invalidTooltip: ({invalid, invalidMessage, Tooltip}, {rtl}) => {
@@ -328,7 +311,6 @@ const InputFactory = (props) => Changeable(
 
 export default Input;
 export {
-	calcAriaLabel,
 	Input,
 	InputBase,
 	InputFactory,

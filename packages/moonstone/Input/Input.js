@@ -7,9 +7,11 @@
 import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
 import React from 'react';
-import {InputFactory as UiInputFactory, calcAriaLabel} from '@enact/ui/Input';
+import PropTypes from 'prop-types';
+import {InputFactory as UiInputFactory} from '@enact/ui/Input';
 
-// import $L from '../internal/$L';
+import $L from '../internal/$L';
+
 import Skinnable from '../Skinnable';
 import {Tooltip} from '../TooltipDecorator';
 
@@ -17,6 +19,18 @@ import {InputDecoratorIconFactory} from './InputDecoratorIcon';
 import InputSpotlightDecorator from './InputSpotlightDecorator';
 
 import componentCss from './Input.less';
+
+
+const calcAriaLabel = function (title, type, value = '') {
+	const hint = $L('input field');
+
+	if (type === 'password' && value) {
+		const character = value.length > 1 ? $L('characters') : $L('character');
+		value = `${value.length} ${character}`;
+	}
+
+	return `${title} ${value} ${hint}`;
+};
 
 /**
  * {@link moonstone/Input.Input} is a stateless Input with Moonstone styling
@@ -53,9 +67,58 @@ const InputBaseFactory = factory({css: componentCss}, ({css}) => {
 	return kind({
 		name: 'MoonstoneInput',
 
+		propTypes: {
+			/**
+			 * The tooltip text to be displayed when the contents of the input are invalid. If this value is
+			 * falsy, the tooltip will not be shown.
+			 *
+			 * @type {String}
+			 * @default ''
+			 * @public
+			 */
+			invalidMessage: PropTypes.string,
+
+			/**
+			 * The placeholder text to display.
+			 *
+			 * @type {String}
+			 * @default ''
+			 * @public
+			 */
+			placeholder: PropTypes.string,
+
+			/**
+			 * The type of input. Accepted values correspond to the standard HTML5 input types.
+			 *
+			 * @type {String}
+			 * @default 'text'
+			 * @public
+			 */
+			type: PropTypes.string,
+
+			/**
+			 * The value of the input.
+			 *
+			 * @type {String|Number}
+			 * @public
+			 */
+			value: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+		},
+
+		defaultProps: {
+			invalidMessage: $L('Please enter a valid value.')
+		},
+
 		styles: {
 			css: componentCss,
 			className: 'input'
+		},
+
+		computed: {
+			'aria-label': ({placeholder, type, value}) => {
+				const title = (value == null || value === '') ? placeholder : '';
+				return calcAriaLabel(title, type, value);
+			}
 		},
 
 		render: (props) => {
