@@ -190,7 +190,7 @@ describe('Touchable', () => {
 		describe('activate', () => {
 			it('should return null when active', () => {
 				const state = {
-					active: true
+					active: 2
 				};
 
 				const expected = null;
@@ -201,10 +201,10 @@ describe('Touchable', () => {
 
 			it('should return updated state when inactive', () => {
 				const state = {
-					active: false
+					active: 0
 				};
 
-				const expected = {active: true};
+				const expected = {active: 2};
 				const actual = activate(state);
 
 				expect(actual).to.deep.equal(expected);
@@ -237,7 +237,7 @@ describe('Touchable', () => {
 
 				subject.simulate('mousedown', {});
 
-				const expected = false;
+				const expected = 0;
 				const actual = subject.state('active');
 
 				expect(actual).to.equal(expected);
@@ -252,7 +252,7 @@ describe('Touchable', () => {
 
 				subject.simulate('mousedown', {});
 
-				const expected = false;
+				const expected = 0;
 				const actual = subject.state('active');
 
 				expect(actual).to.equal(expected);
@@ -262,7 +262,7 @@ describe('Touchable', () => {
 		describe('deactivate', () => {
 			it('should return null when inactive', () => {
 				const state = {
-					active: false
+					active: 0
 				};
 
 				const expected = null;
@@ -273,10 +273,10 @@ describe('Touchable', () => {
 
 			it('should return updated state when active', () => {
 				const state = {
-					active: true
+					active: 2
 				};
 
-				const expected = {active: false};
+				const expected = {active: 0};
 				const actual = deactivate(state);
 
 				expect(actual).to.deep.equal(expected);

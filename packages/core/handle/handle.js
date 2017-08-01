@@ -133,6 +133,18 @@ const oneOf = handle.oneOf = function (...handlers) {
 	return handle.call(this, cond(handlers));
 };
 
+const returnsTrue = handle.returnsTrue = function (handler) {
+	if (handler) {
+		return function (...args) {
+			handler(...args);
+
+			return true;
+		};
+	}
+
+	return true;
+};
+
 /**
  * Calls a named function on the event and returns `true`
  *
@@ -420,6 +432,7 @@ export {
 	log,
 	oneOf,
 	preventDefault,
+	returnsTrue,
 	stop,
 	stopImmediate
 };

@@ -1,12 +1,24 @@
-import {forward, forwardWithPrevent, forProp, handle, preventDefault} from '@enact/core/handle';
+import {forward, forwardWithPrevent, forProp, handle, oneOf, preventDefault, returnsTrue} from '@enact/core/handle';
 import hoc from '@enact/core/hoc';
 import {on, off} from '@enact/core/dispatcher';
+import complement from 'ramda/src/complement';
 import platform from '@enact/core/platform';
 import PropTypes from 'prop-types';
 import React from 'react';
 
-import {activate, deactivate} from './state';
+import {activate, deactivate, pause} from './state';
 import {block, unblock, isNotBlocked} from './block';
+import Hold from './Hold';
+
+const getEventCoordinates = (ev) => {
+	let {clientX: x, clientY: y, type} = ev;
+	if (type.indexOf('touch') === 0) {
+		x = ev.targetTouches[0].clientX;
+		y = ev.targetTouches[0].clientY;
+	}
+
+	return {x, y};
+};
 
 // Establish a standard payload for onDown/onUp/onTap events and pass it along to a handler
 const makeTouchableEvent = (type, fn) => (ev, ...args) => {
@@ -34,24 +46,29 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		static propTypes = {
 			cancelOnLeave: PropTypes.bool,
 			disabled: PropTypes.bool,
+			noResumeTouch: PropTypes.bool,
 			onDown: PropTypes.func,
+			onHold: PropTypes.func,
+			onHoldPulse: PropTypes.func,
 			onTap: PropTypes.func,
 			onUp: PropTypes.func
 		}
 
 		static defaultProps = {
 			cancelOnLeave: false,
-			disabled: false
+			disabled: false,
+			noResumeTouch: false
 		}
 
 		target = null
-		handle = handle.bind(this);
+		handle = handle.bind(this)
+		hold = new Hold()
 
 		constructor () {
 			super();
 
 			this.state = {
-				active: false
+				active: 0
 			};
 		}
 
@@ -77,19 +94,17 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 			if (platform.touch) {
 				on('contextmenu', preventDefault, this.target);
-				if (this.props.cancelOnLeave) {
-					this.targetBounds = this.target.getBoundingClientRect();
-				}
+				this.targetBounds = this.target.getBoundingClientRect();
 			}
 		}
 
 		clearTarget = () => {
 			if (platform.touch) {
 				off('contextmenu', preventDefault, this.target);
+				this.targetBounds = null;
 			}
 
 			this.target = null;
-			this.targetBounds = null;
 		}
 
 		activate = (ev) => {
@@ -110,12 +125,58 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			return true;
 		}
 
+		pause = () => {
+			if (activeProp) {
+				this.setState(pause);
+			}
+
+			return true;
+		}
+
+		startHold = (ev, {cancelOnLeave, noResumeTouch, onHold, onHoldPulse}) => {
+			if (onHold || onHoldPulse) {
+				this.hold.begin({
+					...getEventCoordinates(ev),
+					cancelOnLeave,
+					events: [
+						{name: 'hold', time: 200}
+					],
+					frequency: 200,
+					moveTolerance: 16,
+					// onEnd: this.handleHoldEnd,
+					onHold,
+					onHoldPulse,
+					resume: !noResumeTouch
+				});
+			}
+
+			return true;
+		}
+
+		moveHold = (ev) => {
+			const {x, y} = getEventCoordinates(ev);
+
+			this.hold.move(x, y);
+
+			return true;
+		}
+
+		enterHold = returnsTrue(this.hold.enter)
+
+		leaveHold = returnsTrue(this.hold.leave)
+
+		endHold = returnsTrue(this.hold.end)
+
 		isTracking = () => {
 			// verify we had a target and the up target is still within the current node
 			return this.target;
 		}
 
-		hasTouchLeftTarget = (ev) => this.isTracking() && Array.from(ev.targetTouches).reduce((hasLeft, {pageX, pageY}) => {
+		isPaused = () => {
+			return this.state.active === 1;
+		}
+
+		hasTouchLeftTarget = (ev) => Array.from(ev.changedTouches).reduce((hasLeft, {pageX, pageY}) => {
 			const {left, right, top, bottom} = this.targetBounds;
 			return hasLeft && left > pageX || right < pageX || top > pageY || bottom < pageY;
 		}, true);
@@ -123,22 +184,35 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		handleDown = this.handle(
 			forProp('disabled', false),
 			forwardDown,
-			this.activate
-			// hold support
+			this.activate,
+			this.startHold
 			// drag support
 		)
 
 		handleUp = this.handle(
 			forProp('disabled', false),
+			this.endHold,
 			this.isTracking,
 			forwardUp,
 			forwardTap
 		).finally(this.deactivate)
 
+		handleEnter = this.handle(
+			forProp('disabled', false),
+			forProp('noResumeTouch', false),
+			this.isPaused,
+			this.activate,
+			this.enterHold
+		)
+
 		handleLeave = this.handle(
 			forProp('disabled', false),
 			forProp('cancelOnLeave', true),
-			this.deactivate
+			oneOf(
+				[forProp('noResumeTouch', false), this.pause],
+				[returnsTrue, this.deactivate]
+			),
+			this.leaveHold
 		)
 
 		handleMouseDown = this.handle(
@@ -163,14 +237,26 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			this.handleDown
 		)
 
+		handleTouchEnter = this.handle(
+			forProp('disabled', false),
+			forProp('noResumeTouch', false),
+			this.activate,
+			this.enterHold
+		)
+
 		handleTouchMove = this.handle(
 			forward('onTouchMove'),
-			this.hasTouchLeftTarget,
-			this.handleLeave
+			this.isTracking,
+			this.moveHold,
+			oneOf(
+				[this.hasTouchLeftTarget, this.handleLeave],
+				[forProp('cancelOnLeave', true), this.handleEnter]
+			)
 		)
 
 		handleTouchEnd = this.handle(
 			forward('onTouchEnd'),
+			complement(this.hasTouchLeftTarget),
 			this.handleUp
 		)
 
@@ -199,11 +285,13 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 			delete props.cancelOnLeave;
 			delete props.onDown;
-			delete props.onUp;
+			delete props.onHold;
+			delete props.onHoldPulse;
 			delete props.onTap;
+			delete props.onUp;
 
 			if (activeProp) {
-				props[activeProp] = this.state.active;
+				props[activeProp] = this.state.active === 2;
 			}
 
 			return (
