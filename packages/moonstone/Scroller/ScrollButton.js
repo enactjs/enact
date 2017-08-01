@@ -1,4 +1,3 @@
-import Holdable from '../internal/Holdable';
 import kind from '@enact/core/kind';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import PropTypes from 'prop-types';
@@ -10,8 +9,6 @@ import IconButton from '../IconButton';
 import {withSkinnableProps} from '../Skinnable';
 
 import css from './Scrollbar.less';
-
-const HoldableIconButton = Holdable({endHold: 'onLeave'}, IconButton);
 
 const classNameMap = {
 	up: css.scrollbarUpButton,
@@ -83,14 +80,14 @@ const ScrollButtonBase = kind({
 		delete rest.direction;
 
 		return (
-			<HoldableIconButton
+			<IconButton
 				{...rest}
 				backgroundOpacity="transparent"
 				disabled={disabled}
 				small
 			>
 				{children}
-			</HoldableIconButton>
+			</IconButton>
 		);
 	}
 });

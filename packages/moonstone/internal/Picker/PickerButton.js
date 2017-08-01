@@ -1,4 +1,3 @@
-import Holdable from '../Holdable';
 import Touchable from '@enact/ui/Touchable';
 import kind from '@enact/core/kind';
 import React from 'react';
@@ -77,12 +76,9 @@ const PickerButtonBase = kind({
 	}
 });
 
-const PickerButton = Holdable(
-	{resume: true, endHold: 'onLeave'},
-	withSkinnableProps(
-		onlyUpdateForKeys(['aria-label', 'disabled', 'icon', 'joined', 'onMouseUp', 'skin', 'spotlightDisabled'])(
-			PickerButtonBase
-		)
+const PickerButton = withSkinnableProps(
+	onlyUpdateForKeys(['aria-label', 'disabled', 'icon', 'joined', 'onMouseUp', 'skin', 'spotlightDisabled'])(
+		PickerButtonBase
 	)
 );
 
