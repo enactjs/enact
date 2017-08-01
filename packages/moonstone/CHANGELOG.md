@@ -8,8 +8,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
-- `moonstone/Scroller` to handle `Spotlight` after `ScrollBar`/`ScrollButton` updates.
-
 ### Changed
 
 - `moonstone/VideoPlayer` to handle play, pause, stop, fast forward and rewind on remote controller
@@ -20,6 +18,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualList` not to let the focus move outside of container even if there are children left when navigating with 5way
 - `moonstone/Scrollable` to update disability of paging controls when the scrollbar is set to `visible` and the content becomes shorter.
 - `moonstone/VideoPlayer` to focus on hover over play/pause button when video is loading.
+- `moonstone/Scroller` to handle `Spotlight` after `ScrollBar`/`ScrollButton` updates.
 
 ## [1.5.0] - 2017-07-19
 

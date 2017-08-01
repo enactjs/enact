@@ -186,7 +186,6 @@ class ScrollbarBase extends PureComponent {
 	thumbRef = null
 	prevButtonNodeRef = null
 	nextButtonNodeRef = null
-	wheelMode = false;
 
 	setPressStatus = (isPressed) => {
 		this.pressed = isPressed;
@@ -210,12 +209,6 @@ class ScrollbarBase extends PureComponent {
 		}
 	}
 
-	setWheelMode = (bool) => {
-		if (this.wheelMode !== bool) {
-			this.wheelMode = bool;
-		}
-	}
-
 	updateButtons = (bounds) => {
 		const
 			{prevButtonNodeRef, nextButtonNodeRef} = this,
@@ -227,9 +220,8 @@ class ScrollbarBase extends PureComponent {
 			spotItem = window.document.activeElement;
 
 		const focusAfterUpdate = () => {
-			// Handle Spotlight after update when Spotlight is lost during 5-way. However, we also don't
-			// want to handle Spotlight during `wheelMode`.
-			if (!Spotlight.getCurrent() && !Spotlight.getPointerMode() && !this.wheelMode) {
+			// Handle Spotlight after update when Spotlight is lost during 5-way.
+			if (!Spotlight.getCurrent() && !Spotlight.getPointerMode()) {
 				const scrollableSpottableElements = this.containerRef.offsetParent.querySelectorAll('.spottable');
 
 				if (scrollableSpottableElements.length <= 2 ) {
@@ -416,7 +408,7 @@ class ScrollbarBase extends PureComponent {
 }
 
 const Scrollbar = ApiDecorator(
-	{api: ['hideThumb', 'setWheelMode', 'showThumb', 'startHidingThumb', 'update']},
+	{api: ['hideThumb', 'showThumb', 'startHidingThumb', 'update']},
 	DisappearSpotlightDecorator(
 		{events: {
 			onNextSpotlightDisappear: '[data-scroll-button="previous"]',

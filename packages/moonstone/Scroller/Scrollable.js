@@ -631,18 +631,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					canScrollVertically = this.canScrollVertically(bounds),
 					delta = this.wheel(e, canScrollHorizontally, canScrollVertically),
 					direction = Math.sign(delta),
-					focusedItem = Spotlight.getCurrent(),
-					scrollBarRef = this.verticalScrollbarRef || this.horizontalScrollbarRef;
+					focusedItem = Spotlight.getCurrent();
 
-				Spotlight.setPointerMode(false);
 				if (focusedItem) {
 					focusedItem.blur();
 				}
 
 				this.childRef.setContainerDisabled(true);
-				if (scrollBarRef) {
-					scrollBarRef.setWheelMode(true);
-				}
 
 				if (direction !== this.wheelDirection) {
 					this.isScrollAnimationTargetAccumulated = false;
@@ -792,8 +787,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		stop () {
-			const scrollBarRef = this.verticalScrollbarRef || this.horizontalScrollbarRef;
-
 			this.animator.stop();
 			this.isScrollAnimationTargetAccumulated = false;
 			this.childRef.setContainerDisabled(false);
@@ -802,10 +795,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.lastScrollPositionOnFocus = null;
 			this.hideThumb();
 			this.doScrollStop();
-
-			if (scrollBarRef) {
-				scrollBarRef.setWheelMode(false);
-			}
 		}
 
 		focusOnItem () {
