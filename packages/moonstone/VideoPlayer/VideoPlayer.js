@@ -910,6 +910,7 @@ const VideoPlayerBase = class extends React.Component {
 				this.startListeningForPulses(ev.keyCode)();
 			}
 		}
+		return true;
 	}
 
 	showControlsFromPointer = () => {
