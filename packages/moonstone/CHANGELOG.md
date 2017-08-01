@@ -23,6 +23,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VirtualList` not to let the focus move outside of container even if there are children left when navigating with 5way
 - `moonstone/Scrollable` to update disability of paging controls when the scrollbar is set to `visible` and the content becomes shorter
 - `moonstone/VideoPlayer` to focus on hover over play/pause button when video is loading
+- `moonstone/VideoPlayer` to update and display proper time while moving knob when video is paused
 - `moonstone/VideoPlayer` long title overlap issues
 - `moonstone/Header` to apply `marqueeOn` prop to `subTitleBelow` and `titleBelow`
 
