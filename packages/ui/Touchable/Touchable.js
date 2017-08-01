@@ -4,9 +4,9 @@ import {on, off} from '@enact/core/dispatcher';
 import platform from '@enact/core/platform';
 import PropTypes from 'prop-types';
 import React from 'react';
-import ReactDOM from 'react-dom';
 
 import {activate, deactivate} from './state';
+import {block, unblock, isNotBlocked} from './block';
 
 // Establish a standard payload for onDown/onUp/onTap events and pass it along to a handler
 const makeTouchableEvent = (type, fn) => (ev, ...args) => {
@@ -57,9 +57,6 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentDidMount () {
-			// eslint-disable-next-line react/no-find-dom-node
-			this.node = ReactDOM.findDOMNode(this);
-
 			// ensure we clean up our internal state
 			if (platform.touch) {
 				on('touchend', this.handleGlobalUp, document);
@@ -69,7 +66,6 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentWillUnmount () {
 			this.clearTarget();
-			this.node = null;
 
 			if (platform.touch) {
 				off('touchend', this.handleGlobalUp, document);
@@ -91,7 +87,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		activate = (ev) => {
-			this.setTarget(ev.target);
+			this.setTarget(ev.currentTarget);
 			if (activeProp) {
 				this.setState(activate);
 			}
@@ -108,12 +104,12 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			return true;
 		}
 
-		shouldHandleUp = (ev) => {
+		isTracking = () => {
 			// verify we had a target and the up target is still within the current node
-			return this.target && this.node.contains(ev.target);
+			return this.target;
 		}
 
-		hasTouchLeftTarget = (ev) => Array.from(ev.targetTouches).reduce((hasLeft, {pageX, pageY}) => {
+		hasTouchLeftTarget = (ev) => this.isTracking() && Array.from(ev.targetTouches).reduce((hasLeft, {pageX, pageY}) => {
 			const {left, right, top, bottom} = this.targetBounds;
 			return hasLeft && left > pageX || right < pageX || top > pageY || bottom < pageY;
 		}, true);
@@ -128,7 +124,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleUp = this.handle(
 			forProp('disabled', false),
-			this.shouldHandleUp,
+			this.isTracking,
 			forwardUp,
 			forwardTap
 		).finally(this.deactivate)
@@ -140,9 +136,10 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		)
 
 		handleMouseDown = this.handle(
+			isNotBlocked,
 			forward('onMouseDown'),
 			this.handleDown
-		)
+		).finally(unblock)
 
 		handleMouseLeave = this.handle(
 			forward('onMouseLeave'),
@@ -156,6 +153,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleTouchStart = this.handle(
 			forward('onTouchStart'),
+			block,
 			this.handleDown
 		)
 
