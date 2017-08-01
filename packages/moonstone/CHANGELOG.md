@@ -15,6 +15,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonstone/VideoPlayer` to handle play, pause, stop, fast forward and rewind on remote controller
+- `moonstone/Picker` to mount scroll event listener natively and stop event propagation
 
 ### Fixed
 
