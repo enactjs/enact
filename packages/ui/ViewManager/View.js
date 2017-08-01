@@ -11,10 +11,19 @@ import {shape} from './Arranger';
 
 // Isomorphic guards
 const nop = function () {};
-const isBrowser = typeof window === 'object';
-const cancelAnimationFrame = isBrowser ? window.cancelAnimationFrame.bind(window) : nop;
-const requestAnimationFrame = isBrowser ? window.requestAnimationFrame.bind(window) : nop;
-const now = isBrowser ? window.performance.now.bind(window.performance) : nop;
+let tOpts = null;
+const timer = function () {
+	if (!tOpts) {
+		const isBrowser = typeof window === 'object';
+		tOpts = {
+			cancelAnimationFrame: isBrowser ? window.cancelAnimationFrame.bind(window) : nop,
+			requestAnimationFrame: isBrowser ? window.requestAnimationFrame.bind(window) : nop,
+			now: isBrowser ? window.performance.now.bind(window.performance) : nop
+		};
+	}
+	return tOpts;
+};
+
 
 /**
  * A `View` wraps a set of children for {@link ui/ViewManager.ViewManager}.
@@ -144,7 +153,7 @@ class View extends React.Component {
 
 	cancelAnimationFrame () {
 		if (this._raf) {
-			cancelAnimationFrame(this._raf);
+			timer().cancelAnimationFrame(this._raf);
 			this._raf = null;
 		}
 	}
@@ -223,7 +232,7 @@ class View extends React.Component {
 	 */
 	prepareTransition = (arranger, callback, noAnimation) => {
 		const {duration, index, previousIndex, reverseTransition} = this.props;
-		const startTime = now();
+		const startTime = timer().now();
 		const endTime = startTime + duration;
 		/* eslint react/no-find-dom-node: "off" */
 		const node = ReactDOM.findDOMNode(this);
@@ -295,8 +304,8 @@ class View extends React.Component {
 		a.time = time;
 
 		if (callback(start, end, time)) {
-			this._raf = requestAnimationFrame(() => {
-				const current = now();
+			this._raf = timer().requestAnimationFrame(() => {
+				const current = timer().now();
 				this.transition(start, end, current, callback);
 			});
 		} else {
