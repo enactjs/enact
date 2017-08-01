@@ -502,6 +502,9 @@ const VideoPlayerBase = class extends React.Component {
 
 		/**
 		 * An array of objects containing video information `src`, `type, and `preload`.
+		 * `preload` will take in the values `auto`, `metadata`, and `none` like
+		 * just like the `preload` attribute.
+		 *
 		 * This is used for videos to load in the background.
 		 * @type {Array}
 		 * @default []
@@ -705,8 +708,8 @@ const VideoPlayerBase = class extends React.Component {
 		}
 
 		if (this.props.index !== nextProps.index) {
-			this.video.pause();
-			this.video.currentTime = 0;
+			this.pause();
+			this.seek(0);
 		}
 	}
 
@@ -762,7 +765,7 @@ const VideoPlayerBase = class extends React.Component {
 		}
 
 		if (this.props.index !== prevProps.index) {
-			this.video.play();
+			this.play();
 		}
 	}
 
@@ -1671,12 +1674,12 @@ const VideoPlayerBase = class extends React.Component {
 				{/* Video Section */}
 				<Video
 					{...rest}
-					{...this.handledMediaEvents}
 					autoPlay={!noAutoPlay}
 					controls={false}
 					index={index}
 					setActiveVideo={this.setVideoRef}
 					sources={videoSources}
+					{...this.handledMediaEvents}
 				/>
 
 				<Overlay

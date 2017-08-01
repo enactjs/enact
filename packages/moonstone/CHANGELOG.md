@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Deprecated
 
 ### Added
+- `moonstone/VideoPlayer` support for preloading videos in the background by using `preloadSources` and the ability to change to a preloaded source using `index`
 
 ### Changed
 
