@@ -531,6 +531,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			const marqueeOnFocus = marqueeOn === 'focus';
 			const marqueeOnHover = marqueeOn === 'hover';
+			const marqueeOnRender = marqueeOn === 'render';
 
 			if (marqueeOnFocus && !disabled) {
 				rest[focus] = this.handleFocus;
@@ -541,6 +542,10 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			if (marqueeOnHover || (disabled && marqueeOnFocus)) {
 				rest[enter] = this.handleEnter;
 				rest[leave] = this.handleLeave;
+			}
+
+			if (marqueeOnRender) {
+				rest[enter] = this.handleEnter;
 			}
 
 			delete rest.marqueeDelay;
