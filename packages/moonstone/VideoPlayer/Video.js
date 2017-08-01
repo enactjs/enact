@@ -28,15 +28,8 @@ const VideoBase = kind({
 	},
 
 	computed: {
-		activeProps: ({noAutoPlay, setActiveVideo, ...rest}) => {
-			delete rest.preload;
-			delete rest.index;
-			delete rest.noAutoPlay;
-			delete rest.setActiveVideo;
-			delete rest.sources;
-
+		activeProps: ({noAutoPlay, setActiveVideo}) => {
 			return {
-				...rest,
 				autoPlay: !noAutoPlay,
 				className: css.video,
 				controls: false,
@@ -46,6 +39,10 @@ const VideoBase = kind({
 	},
 
 	render: ({activeProps, index, sources, ...rest}) => {
+		delete rest.setActiveVideo;
+		delete rest.sources;
+		delete rest.noAutoPlay;
+
 		return (
 			<div>
 				{sources.map(({preload, ...source}, i) => {

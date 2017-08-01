@@ -7,6 +7,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Deprecated
 
 ### Added
+- `moonstone/VideoPlayer` support for preloading videos in the background by using `preloadSources` and the ability to change to a preloaded source using `index`
 
 - `moonstone/VideoPlayer` support for the "More" button to use tooltips
 - `moonstone/VideoPlayer` properties `moreButtonLabel` and `moreButtonCloseLabel` to allow customization of the "More" button's tooltip and Aria labels

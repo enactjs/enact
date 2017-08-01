@@ -4,7 +4,6 @@ import {storiesOf} from '@kadira/storybook';
 import VideoPlayer from '@enact/moonstone/VideoPlayer';
 import IconButton from '@enact/moonstone/IconButton';
 
-
 class VideoPlayerStory extends React.Component {
 	constructor (props) {
 		super(props);
@@ -12,7 +11,7 @@ class VideoPlayerStory extends React.Component {
 			index: 0,
 			preloadSources: [
 				{src: 'http://media.w3.org/2010/05/sintel/trailer.mp4', type: 'video/mp4', preload: 'auto'},
-				{src: 'http://media.w3.org/2010/05/video/movie_300.mp4', type: 'video/mp4', preload: 'none'}
+				{src: 'http://media.w3.org/2010/05/video/movie_300.mp4', type: 'video/mp4', preload: 'auto'}
 			]
 		};
 	}
@@ -68,4 +67,3 @@ storiesOf('VideoPlayer')
 			<VideoPlayerStory />
 		)
 	);
-
