@@ -896,11 +896,15 @@ const VideoPlayerBase = class extends React.Component {
 
 	stopListeningForPulses () {
 		this.pulsing = false;
-		clearTimeout(this.keyLoop);
+		if (this.keyLoop) {
+			clearTimeout(this.keyLoop);
+			this.keyLoop = null;
+		}
+
 	}
 
 	handleKeyDown = (ev) => {
-		if ((is('left', ev.keyCode) || is('right', ev.keyCode)) && !this.props.no5wayJump) {
+		if ((is('left', ev.keyCode) || is('right', ev.keyCode)) && !this.props.no5wayJump && !this.state.bottomControlsVisible) {
 			Spotlight.pause();
 			if (!this.pulsing) {
 				this.startListeningForPulses(ev.keyCode)();
@@ -946,6 +950,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	handleGlobalKeyDown = this.handle(
+		this.handleKeyDown,
 		forKey('down'),
 		() => (
 			!this.state.bottomControlsVisible &&
@@ -1611,8 +1616,6 @@ const VideoPlayerBase = class extends React.Component {
 					// It's non-visible but lives at the top of the VideoPlayer.
 					className={css.controlsHandleAbove}
 					onSpotlightDown={this.showControls}
-					onKeyDown={this.handleKeyDown}
-					onKeyUp={this.handleKeyUp}
 					onClick={this.showControls}
 				/>
 				<Announce ref={this.setAnnounceRef} />
