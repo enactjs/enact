@@ -232,7 +232,8 @@ class VirtualListCoreNative extends Component {
 	}
 
 	shouldComponentUpdate (nextProps, nextState) {
-		if ((this.props.dataSize > 0 && this.props.dataSize !== nextProps.dataSize) &&
+		if (!this.restoreLastFocused &&
+			(this.props.dataSize > 0 && this.props.dataSize !== nextProps.dataSize) &&
 			(nextState.firstIndex + nextState.numOfItems) < nextProps.dataSize) {
 			return false;
 		}
@@ -278,6 +279,7 @@ class VirtualListCoreNative extends Component {
 
 	// spotlight
 	lastFocusedIndex = null
+	preservedIndex = null
 
 	isVertical = () => this.isPrimaryDirectionVertical
 
@@ -299,34 +301,19 @@ class VirtualListCoreNative extends Component {
 			const index = placeholder.dataset.index;
 
 			if (index) {
-				this.lastFocusedIndex = parseInt(index);
+				this.preservedIndex = parseInt(index);
 				this.restoreLastFocused = true;
-
-				// adjust the firstIndex to include the last focused index, if necessary
-				this.setState(nextState => {
-					let {firstIndex, numOfItems} = nextState;
-					const lastIndex = firstIndex + numOfItems;
-
-					if (this.lastFocusedIndex < firstIndex || this.lastFocusedIndex >= lastIndex) {
-						firstIndex = this.lastFocusedIndex;
-					}
-
-					return {
-						firstIndex
-					};
-				});
 			}
 		}
 	}
 
 	restoreFocus () {
 		const {firstVisibleIndex, lastVisibleIndex} = this.moreInfo;
-
 		if (
 			this.restoreLastFocused &&
 			!this.isPlaceholderFocused() &&
-			firstVisibleIndex <= this.lastFocusedIndex &&
-			lastVisibleIndex >= this.lastFocusedIndex
+			firstVisibleIndex <= this.preservedIndex &&
+			lastVisibleIndex >= this.preservedIndex
 		) {
 			// if we're supposed to restore focus and virtual list has positioned a set of items
 			// that includes lastFocusedIndex, clear the indicator
@@ -335,7 +322,7 @@ class VirtualListCoreNative extends Component {
 
 			// try to focus the last focused item
 			const foundLastFocused = Spotlight.focus(
-				`[data-container-id="${containerId}"] [data-index="${this.lastFocusedIndex}"]`
+				`[data-container-id="${containerId}"] [data-index="${this.preservedIndex}"]`
 			);
 
 			// but if that fails (because it isn't found or is disabled), focus the container so
@@ -456,6 +443,7 @@ class VirtualListCoreNative extends Component {
 			{dimensionToExtent, primary, moreInfo, scrollPosition} = this,
 			numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
 			wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (firstIndex === this.maxFirstIndex));
+		let newFirstIndex = firstIndex;
 
 		this.maxFirstIndex = dataSize - numOfItems;
 		this.curDataSize = dataSize;
@@ -463,7 +451,20 @@ class VirtualListCoreNative extends Component {
 		// reset children
 		this.cc = [];
 
-		this.setState({firstIndex: wasFirstIndexMax ? this.maxFirstIndex : Math.min(firstIndex, this.maxFirstIndex), numOfItems});
+		// Adjust first index
+		if (this.restoreLastFocused &&
+			numOfItems > 0 &&
+			(this.preservedIndex < moreInfo.firstVisibleIndex || this.preservedIndex > moreInfo.lastVisibleIndex)) {
+			// If we need to restore last focus and the index is beyond the screen,
+			// we call `scrollTo` to create DOM for it.
+			this.props.cbScrollTo({index: this.preservedIndex, animate: false});
+		} else if (wasFirstIndexMax) {
+			newFirstIndex = this.maxFirstIndex;
+		} else {
+			newFirstIndex = Math.min(firstIndex, this.maxFirstIndex);
+		}
+
+		this.setState({firstIndex: newFirstIndex, numOfItems});
 		this.calculateScrollBounds(props);
 		this.updateMoreInfo(dataSize, scrollPosition);
 	}
@@ -699,7 +700,7 @@ class VirtualListCoreNative extends Component {
 			offsetToClientEnd = primary.clientSize - primary.itemSize,
 			focusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
 
-		if (!isNaN(focusedIndex) && focusedIndex !== this.lastFocusedIndex) {
+		if (!isNaN(focusedIndex) && (focusedIndex !== this.lastFocusedIndex || this.restoreLastFocused)) {
 			let gridPosition = this.getGridPosition(focusedIndex);
 
 			this.lastFocusedIndex = focusedIndex;
@@ -931,8 +932,8 @@ class VirtualListCoreNative extends Component {
 			mergedClasses = classNames(css.list, this.wrapperClass, className);
 
 		return (
-			<div className={mergedClasses} data-container-id={dataContainerId} ref={this.initWrapperRef} style={style}>
-				<div {...rest} onKeyDown={this.onKeyDown} ref={this.initContainerRef}>
+			<div className={mergedClasses} ref={this.initWrapperRef} style={style}>
+				<div {...rest} data-container-id={dataContainerId} onKeyDown={this.onKeyDown} ref={this.initContainerRef}>
 					{cc.length ? cc : null}
 					{primary ? null : (
 						<SpotlightPlaceholder
@@ -967,7 +968,6 @@ const VirtualListBaseNative = SpotlightContainerDecorator(
 		 */
 		lastFocusedPersist: (node) => {
 			const indexed = node.dataset.index ? node : node.closest('[data-index]');
-
 			if (indexed) {
 				return {
 					container: false,

@@ -501,7 +501,10 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 		startScrollOnFocus = (pos, item) => {
 			if (pos) {
-				if (pos.left !== this.scrollLeft || pos.top !== this.scrollTop) {
+				const bounds = this.getScrollBounds();
+
+				if ((bounds.maxTop > 0 || bounds.maxLeft > 0) &&
+					(pos.left !== this.scrollLeft || pos.top !== this.scrollTop)) {
 					this.start({
 						targetX: pos.left,
 						targetY: pos.top,
@@ -886,7 +889,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 				this.indexToFocus = (opt.focus && typeof opt.index === 'number') ? opt.index : this.indexToFocus;
 				this.nodeToFocus = (opt.focus && opt.node instanceof Object && opt.node.nodeType === 1) ? opt.node : null;
-
 				this.start({
 					targetX: (left !== null) ? left : this.scrollLeft,
 					targetY: (top !== null) ? top : this.scrollTop,
