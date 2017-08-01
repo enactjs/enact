@@ -7,70 +7,20 @@
 
 .input {
 	.moon-body-text();
-
-	padding: 0;
-	border: 0;
-	cursor: pointer;
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	flex-grow: 1;
-
 	.moon-custom-text-size(@moon-item-font-size-large);
-
-	&[type=number] {
-		-moz-appearance: textfield;
-
-		&::-webkit-inner-spin-button,
-		&::-webkit-outer-spin-button {
-			-webkit-appearance: none;
-		}
-
-		&:hover {
-			-moz-appearance: none;
-		}
-	}
-
-	&[placeholder] { 
-		text-overflow: ellipsis; 
-	}
-
-	.input-placeholder({
-		.vendor-opacity(1);
-	});
-
-	.focus ({
-		cursor: text;
-	});
-
-	.disabled({
-		cursor: default;
-	});
-
-	:global(.enact-locale-right-to-left) & {
-		text-align: right;
-	}
 }
 
 .decorator {
-	display: inline-flex;
-	position: relative;
 	padding: 12px 30px;
 	border-radius: 1008px;
 	margin: 6px;
 	border: @moon-input-border-width solid transparent;
-	box-sizing: border-box;
 
 	.input,
 	.iconBefore,
 	.iconAfter {
 		line-height: 39px;
 		height: 39px;
-	}
-
-	.iconBefore,
-	.iconAfter {
-		flex: 0 0;
 	}
 
 	.iconAfter {
@@ -84,7 +34,6 @@
 	// RIGBY NOTE: multiline is a NOT YET IMPLEMENTED feature that combines <input> and <textarea>
 	// into one control, to simplify input handling.
 	&.multiline {
-		display: block;
 		padding: 12px 18px;
 		border-radius: 12px;
 	}
@@ -148,7 +97,6 @@
 	top: 50%;
 	left: auto;
 	right: 0;
-	pointer-events: none;
 	transform: translate(100%, -100%) translateX(@moon-input-tooltip-offset);
 
 	:global(.enact-locale-right-to-left) & {

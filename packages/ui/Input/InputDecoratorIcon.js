@@ -1,59 +1,90 @@
+import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Icon from '../Icon';
+import UiIcon from '../Icon';
 
-import css from './Input.less';
+import componentCss from './Input.less';
+
 
 /**
- * The stateless functional base component for {@link moonstone/Input.InputDecoratorIcon}.
+ * {@link ui/InputDecoratorIcon.InputDecoratorIconBaseFactory} is Factory wrapper around
+ * {@link ui/InputDecoratorIcon.InputDecoratorIconBase} that allows overriding certain classes at
+ * design time. The following are properties of the `css` member of the argument to the factory.
  *
- * @class InputDecoratorIconBase
- * @memberof moonstone/Input
+ * @class InputDecoratorIconBaseFactory
+ * @memberof ui/InputDecoratorIcon
+ * @factory
  * @ui
- * @private
+ * @public
  */
-const InputDecoratorIconBase = kind({
-	name: 'InputDecoratorIcon',
+const InputDecoratorIconBaseFactory = factory({css: componentCss}, ({css}) => {
+	/**
+	 * The stateless functional base component for {@link moonstone/Input.InputDecoratorIcon}.
+	 *
+	 * @class InputDecoratorIconBase
+	 * @memberof moonstone/Input
+	 * @ui
+	 * @private
+	 */
+	return kind({
+		name: 'InputDecoratorIcon',
 
-	propTypes: /** @lends moonstone/Input.InputDecoratorIconBase.prototype */ {
-		/**
-		 * The position of the icon. Either `before` or `after`.
-		 *
-		 * @type {String}
-		 */
-		position: PropTypes.oneOf(['before', 'after']).isRequired,
+		propTypes: /** @lends moonstone/Input.InputDecoratorIconBase.prototype */ {
+			/**
+			 * The position of the icon. Either `before` or `after`.
+			 *
+			 * @type {String}
+			 */
+			position: PropTypes.oneOf(['before', 'after']).isRequired,
 
-		/**
-		 * The icon to be displayed.
-		 *
-		 * @see {@link moonstone/Icon.Icon#children}
-		 * @type {String|Object}
-		 */
-		children: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
-	},
+			/**
+			 * The icon to be displayed.
+			 *
+			 * @see {@link moonstone/Icon.Icon#children}
+			 * @type {String|Object}
+			 */
+			children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
 
-	styles: {
-		css,
-		className: 'decoratorIcon'
-	},
+			/**
+			 * The Icon component to use as the basis for this component.
+			 *
+			 * @type {Component}
+			 * @default {@link ui/Icon}
+			 * @public
+			 */
+			Icon: PropTypes.oneOfType([PropTypes.func, PropTypes.element])
+		},
 
-	computed: {
-		className: ({position, styler}) => {
-			return styler.append('icon' + (position === 'before' ? 'Before' : 'After'));
+		defaultProps: {
+			Icon: UiIcon
+		},
+
+		styles: {
+			css,
+			className: 'decoratorIcon'
+		},
+
+		computed: {
+			className: ({position, styler}) => {
+				return styler.append('icon' + (position === 'before' ? 'Before' : 'After'));
+			}
+		},
+
+		render: ({children, Icon, ...rest}) => {
+			delete rest.position;
+
+			return children ? (
+				<Icon {...rest}>{children}</Icon>
+			) : null;
 		}
-	},
-
-	render: ({children, ...rest}) => {
-		delete rest.position;
-
-		return children ? (
-			<Icon {...rest}>{children}</Icon>
-		) : null;
-	}
+	});
 });
+
+
+const InputDecoratorIconBase = InputDecoratorIconBaseFactory();
 
 /**
  * An icon displayed either before or after the input field of an {@link moonstone/Input.Input}.
@@ -65,8 +96,12 @@ const InputDecoratorIconBase = kind({
  */
 const InputDecoratorIcon = onlyUpdateForKeys(['children'])(InputDecoratorIconBase);
 
-export default InputDecoratorIcon;
+const InputDecoratorIconFactory = (props) => onlyUpdateForKeys(['children'])(InputDecoratorIconBaseFactory(props));
+
+export default InputDecoratorIconBase;
 export {
 	InputDecoratorIcon,
-	InputDecoratorIconBase
+	InputDecoratorIconBase,
+	InputDecoratorIconFactory,
+	InputDecoratorIconBaseFactory
 };
