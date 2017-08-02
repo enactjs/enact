@@ -313,7 +313,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * @default false
 		 * @public
 		 */
-		no5wayJump: PropTypes.bool,
+		no5WayJump: PropTypes.bool,
 
 		/**
 		 * By default, the video will start playing immediately after it's loaded, unless this is set.
@@ -552,7 +552,7 @@ const VideoPlayerBase = class extends React.Component {
 		jumpDelay: 200,
 		jumpForwardIcon: 'skipforward',
 		muted: false,
-		no5wayJump: false,
+		no5WayJump: false,
 		noAutoPlay: false,
 		noJumpButtons: false,
 		pauseAtEnd: false,
@@ -884,15 +884,20 @@ const VideoPlayerBase = class extends React.Component {
 			this.pulsingKeyCode = keyCode;
 			this.pulsing = true;
 			this.keyLoop = setTimeout(this.handlePulse, this.props.initialJumpDelay);
+			this.doPulseAction();
 		}
 	}
 
-	handlePulse = () => {
+	doPulseAction () {
 		if (is('left', this.pulsingKeyCode)) {
 			this.jump(-1 * this.props.jumpBy);
 		} else if (is('right', this.pulsingKeyCode)) {
 			this.jump(this.props.jumpBy);
 		}
+	}
+
+	handlePulse = () => {
+		this.doPulseAction();
 		this.keyLoop = setTimeout(this.handlePulse, this.props.jumpDelay);
 	}
 
@@ -905,7 +910,7 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	handleKeyDown = (ev) => {
-		if (!this.props.no5wayJump &&
+		if (!this.props.no5WayJump &&
 				!this.state.bottomControlsVisible &&
 				(is('left', ev.keyCode) || is('right', ev.keyCode))) {
 			Spotlight.pause();
@@ -945,7 +950,7 @@ const VideoPlayerBase = class extends React.Component {
 				break;
 		}
 
-		if (!this.props.no5wayJump && (is('left', ev.keyCode) || is('right', ev.keyCode))) {
+		if (!this.props.no5WayJump && (is('left', ev.keyCode) || is('right', ev.keyCode))) {
 			this.stopListeningForPulses();
 			Spotlight.resume();
 		}
@@ -1502,7 +1507,7 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.initialJumpDelay;
 		delete rest.jumpBy;
 		delete rest.jumpDelay;
-		delete rest.no5wayJump;
+		delete rest.no5WayJump;
 		delete rest.onControlsAvailable;
 		delete rest.onBackwardButtonClick;
 		delete rest.onForwardButtonClick;
