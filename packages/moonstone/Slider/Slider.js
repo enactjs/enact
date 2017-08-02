@@ -332,6 +332,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		defaultProps: {
 			active: false,
 			backgroundProgress: 0,
+			climax: 'rising',
 			detachedKnob: false,
 			focused: false,
 			max: 100,
