@@ -293,7 +293,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * The label for the "More" button. This will show on the tooltip.
 		 *
 		 * @type {String}
-		 * @default 'Back'
+		 * @default 'More'
 		 * @public
 		 */
 		moreButtonLabel: PropTypes.string,
