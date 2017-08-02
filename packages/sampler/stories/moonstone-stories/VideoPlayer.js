@@ -133,6 +133,9 @@ storiesOf('VideoPlayer')
 						jumpDelay={number('jumpDelay', 200)}
 						rateButtonsDisabled={boolean('rateButtonsDisabled', false)}
 						loop={boolean('loop', true)}
+						moreButtonCloseLabel={text('moreButtonCloseLabel')}
+						moreButtonDisabled={boolean('moreButtonDisabled', false)}
+						moreButtonLabel={text('moreButtonLabel')}
 						muted={boolean('muted', true)}
 						no5WayJump={boolean('no5WayJump', false)}
 						noAutoPlay={boolean('noAutoPlay', false)}

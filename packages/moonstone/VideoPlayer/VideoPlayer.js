@@ -297,6 +297,33 @@ const VideoPlayerBase = class extends React.Component {
 		leftComponents: PropTypes.node,
 
 		/**
+		 * The label for the "More" button for when the "More" tray is open.
+		 * This will show on the tooltip.
+		 *
+		 * @type {String}
+		 * @default 'Back'
+		 * @public
+		 */
+		moreButtonCloseLabel: PropTypes.string,
+
+		/**
+		 * This boolean sets the disabled state of the "More" button.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		moreButtonDisabled: PropTypes.bool,
+
+		/**
+		 * The label for the "More" button. This will show on the tooltip.
+		 *
+		 * @type {String}
+		 * @default 'Back'
+		 * @public
+		 */
+		moreButtonLabel: PropTypes.string,
+
+		/**
 		 * Disable audio for this video. In a TV context, this is handled by the remote control,
 		 * not programmatically in the VideoPlayer API.
 		 *
@@ -551,6 +578,7 @@ const VideoPlayerBase = class extends React.Component {
 		jumpBy: 30,
 		jumpDelay: 200,
 		jumpForwardIcon: 'skipforward',
+		moreButtonDisabled: false,
 		muted: false,
 		no5WayJump: false,
 		noAutoPlay: false,
@@ -582,7 +610,6 @@ const VideoPlayerBase = class extends React.Component {
 		this.prevCommand = (props.noAutoPlay ? 'pause' : 'play');
 		this.speedIndex = 0;
 		this.id = this.generateId();
-		this.titleOffsetCalculated = false;
 		this.selectPlaybackRates('fastForward');
 
 		this.initI18n();
@@ -613,6 +640,7 @@ const VideoPlayerBase = class extends React.Component {
 			playbackRate: 1,
 			readyState: 0,
 			volume: 1,
+			titleOffsetHeight: 0,
 
 			// Non-standard state computed from properties
 			bottomControlsRendered: false,
@@ -656,8 +684,9 @@ const VideoPlayerBase = class extends React.Component {
 	componentWillUpdate (nextProps, nextState) {
 		const
 			isInfoComponentsEqual = equals(this.props.infoComponents, nextProps.infoComponents),
+			{titleOffsetHeight} = this.state,
 			shouldCalculateTitleOffset = (
-				((!this.titleOffsetCalculated && isInfoComponentsEqual) || (this.titleOffsetCalculated && !isInfoComponentsEqual)) &&
+				((!titleOffsetHeight && isInfoComponentsEqual) || (titleOffsetHeight && !isInfoComponentsEqual)) &&
 				this.state.bottomControlsVisible
 			);
 
@@ -715,6 +744,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.renderBottomControl.stop();
 		this.refocusMoreButton.stop();
 		this.stopListeningForPulses();
+		this.sliderTooltipTimeJob.stop();
 	}
 
 	//
@@ -728,14 +758,12 @@ const VideoPlayerBase = class extends React.Component {
 
 	calculateTitleOffset = () => {
 		// calculate how far the title should animate up when infoComponents appear.
-		const titleElement = this.player.querySelector(`.${css.title}`);
 		const infoComponents = this.player.querySelector(`.${css.infoComponents}`);
 
-		if (titleElement && infoComponents) {
+		if (infoComponents) {
 			const infoHeight = infoComponents.offsetHeight;
 
-			titleElement.style.setProperty('--infoComponentsOffset', infoHeight + 'px');
-			this.titleOffsetCalculated = true;
+			this.setState({titleOffsetHeight: infoHeight});
 		}
 	}
 
@@ -1383,6 +1411,9 @@ const VideoPlayerBase = class extends React.Component {
 		this.seek(value * this.state.duration);
 		this.sliderScrubbing = false;
 	}
+
+	sliderTooltipTimeJob = new Job((time) => this.setState({sliderTooltipTime: time}), 20)
+
 	handleKnobMove = (ev) => {
 		this.sliderScrubbing = ev.detached;
 
@@ -1393,6 +1424,7 @@ const VideoPlayerBase = class extends React.Component {
 			const seconds = Math.round(this.sliderKnobProportion * this.video.duration);
 
 			if (this.sliderScrubbing && !isNaN(seconds)) {
+				this.sliderTooltipTimeJob.throttle(seconds);
 				const knobTime = secondsToTime(seconds, this.durfmt, {includeHour: true});
 
 				forward('onScrub', {...ev, seconds}, this.props);
@@ -1500,7 +1532,33 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	render () {
-		const {backwardIcon, children, className, forwardIcon, infoComponents, jumpBackwardIcon, jumpButtonsDisabled, jumpForwardIcon, leftComponents, noAutoPlay, noJumpButtons, noRateButtons, noSlider, pauseIcon, playIcon, rateButtonsDisabled, rightComponents, source, style, thumbnailSrc, title, ...rest} = this.props;
+		const {
+			backwardIcon,
+			children,
+			className,
+			forwardIcon,
+			infoComponents,
+			jumpBackwardIcon,
+			jumpButtonsDisabled,
+			jumpForwardIcon,
+			leftComponents,
+			moreButtonCloseLabel,
+			moreButtonDisabled,
+			moreButtonLabel,
+			noAutoPlay,
+			noJumpButtons,
+			noRateButtons,
+			noSlider,
+			pauseIcon,
+			playIcon,
+			rateButtonsDisabled,
+			rightComponents,
+			source,
+			style,
+			thumbnailSrc,
+			title,
+			...rest} = this.props;
+
 		delete rest.announce;
 		delete rest.autoCloseTimeout;
 		delete rest.feedbackHideDelay;
@@ -1551,18 +1609,26 @@ const VideoPlayerBase = class extends React.Component {
 				{this.state.bottomControlsRendered ?
 					<div className={css.fullscreen + ' enyo-fit scrim'} style={{display: this.state.bottomControlsVisible ? 'block' : 'none'}} {...controlsAriaProps}>
 						<Container className={css.bottom} data-container-disabled={!this.state.bottomControlsVisible}>
-							{/* Info Section: Title, Description, Times */}
-							<div className={css.infoFrame}>
-								<MediaTitle
-									id={this.id}
-									infoVisible={this.state.more}
-									title={title}
-									visible={this.state.titleVisible}
-								>
-									{infoComponents}
-								</MediaTitle>
-								<Times current={this.state.currentTime} total={this.state.duration} formatter={this.durfmt} />
-							</div>
+							{/*
+								Info Section: Title, Description, Times
+								Only render when `this.state.bottomControlsVisible` is true in order for `Marquee`
+								to make calculations correctly in `MediaTitle`.
+							*/}
+							{this.state.bottomControlsVisible ?
+								<div className={css.infoFrame}>
+									<MediaTitle
+										id={this.id}
+										infoVisible={this.state.more}
+										style={{'--infoComponentsOffset': this.state.titleOffsetHeight + 'px'}}
+										title={title}
+										visible={this.state.titleVisible}
+									>
+										{infoComponents}
+									</MediaTitle>
+									<Times current={this.state.currentTime} total={this.state.duration} formatter={this.durfmt} />
+								</div> :
+								null
+							}
 
 							{noSlider ? null : <MediaSlider
 								backgroundProgress={this.state.proportionLoaded}
@@ -1593,6 +1659,9 @@ const VideoPlayerBase = class extends React.Component {
 								jumpForwardIcon={jumpForwardIcon}
 								leftComponents={leftComponents}
 								mediaDisabled={this.state.mediaControlsDisabled}
+								moreButtonCloseLabel={moreButtonCloseLabel}
+								moreButtonDisabled={moreButtonDisabled}
+								moreButtonLabel={moreButtonLabel}
 								moreDisabled={moreDisabled}
 								noJumpButtons={noJumpButtons}
 								noRateButtons={noRateButtons}

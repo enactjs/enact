@@ -38,6 +38,16 @@ const PickerBase = kind({
 		children: PropTypes.node.isRequired,
 
 		/**
+		 * Overrides the `aria-valuetext` for the picker. By default, `aria-valuetext` is set
+		 * to the current selected child text.
+		 *
+		 * @type {String}
+		 * @memberof moonstone/Picker.PickerBase.prototype
+		 * @public
+		 */
+		'aria-valuetext': PropTypes.string,
+
+		/**
 		 * Assign a custom icon for the decrementer. All strings supported by [Icon]{Icon} are
 		 * supported. Without a custom icon, the default is used, and is automatically changed when
 		 * the [orientation]{Icon#orientation} is changed.
