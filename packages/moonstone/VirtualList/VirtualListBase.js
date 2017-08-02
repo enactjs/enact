@@ -846,7 +846,7 @@ class VirtualListCore extends Component {
 				return false;
 			}
 
-			for (let i = currentIndex + 1; i < dataSize; i++) {
+			for (let i = currentIndex + 2; i < dataSize; i++) {
 				if (!data[i].disabled) {
 					nextIndex = i;
 					break;
@@ -858,7 +858,7 @@ class VirtualListCore extends Component {
 				return false;
 			}
 
-			for (let i = currentIndex - 1; i >= 0; i--) {
+			for (let i = currentIndex - 2; i >= 0; i--) {
 				if (!data[i].disabled) {
 					nextIndex = i;
 					break;

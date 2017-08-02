@@ -72,7 +72,8 @@ const ScrollableSpotlightContainer = SpotlightContainerDecorator(
 			) {
 				return false;
 			}
-		}
+		},
+		overflow: true
 	},
 	({containerRef, ...rest}) => {
 		delete rest.focusableScrollbar;
@@ -916,11 +917,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					pos = calculatePositionOnFocus({item: focusedItem, scrollInfo});
 
 				if (pos && (pos.left !== this.scrollLeft || pos.top !== this.scrollTop)) {
-					this.start({
-						targetX: pos.left,
-						targetY: pos.top,
-						animate: false
-					});
+					this.start(pos.left, pos.top, false);
 				}
 			}
 
