@@ -349,10 +349,18 @@ const PickerBase = class extends React.Component {
 			active: false
 		};
 
+		this.initContainerRef = this.initRef('containerRef');
+
 		if (__DEV__) {
 			validateRange(props.value, props.min, props.max, PickerBase.displayName);
 			validateStepped(props.value, props.min, props.step, PickerBase.displayName);
 			validateStepped(props.max, props.min, props.step, PickerBase.displayName, '"max"');
+		}
+	}
+
+	componentDidMount () {
+		if (this.props.joined) {
+			this.containerRef.addEventListener('wheel', this.handleWheel);
 		}
 	}
 
@@ -368,8 +376,20 @@ const PickerBase = class extends React.Component {
 		}
 	}
 
+	componentDidUpdate () {
+		if (this.props.joined) {
+			this.containerRef.addEventListener('wheel', this.handleWheel);
+		} else {
+			this.containerRef.removeEventListener('wheel', this.handleWheel);
+		}
+	}
+
 	componentWillUnmount () {
 		this.emulateMouseUp.stop();
+
+		if (this.props.joined) {
+			this.containerRef.removeEventListener('wheel', this.handleWheel);
+		}
 	}
 
 	computeNextValue = (delta) => {
@@ -489,6 +509,7 @@ const PickerBase = class extends React.Component {
 				this.emulateMouseUp.start(ev);
 				// prevent the default scroll behavior to avoid bounce back
 				ev.preventDefault();
+				ev.stopPropagation();
 			}
 		}
 	}
@@ -646,6 +667,12 @@ const PickerBase = class extends React.Component {
 		return `${valueText} ${hint}`;
 	}
 
+	initRef (prop) {
+		return (ref) => {
+			this[prop] = ref;
+		};
+	}
+
 	render () {
 		const {active} = this.state;
 		const {
@@ -711,7 +738,7 @@ const PickerBase = class extends React.Component {
 				onBlur={this.handleBlur}
 				onFocus={this.handleFocus}
 				onKeyDown={joined ? this.handleKeyDown : null}
-				onWheel={joined ? this.handleWheel : null}
+				ref={this.initContainerRef}
 			>
 				<PickerButton
 					aria-label={this.calcIncrementLabel(valueText)}
