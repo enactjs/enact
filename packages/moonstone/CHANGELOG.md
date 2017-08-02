@@ -7,6 +7,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Deprecated
 
 ### Added
+- `moonstone/VideoPlayer` ability to seek when holding down the right and left keys. Sensitivity can be adjusted using throttling options `jumpDelay` and `initialJumpDelay`.
+- `moonstone/VideoPlayer` property `no5WayJump` to disable jumping done by 5-way
 
 - `moonstone/VideoPlayer` support for the "More" button to use tooltips
 - `moonstone/VideoPlayer` properties `moreButtonLabel` and `moreButtonCloseLabel` to allow customization of the "More" button's tooltip and Aria labels
