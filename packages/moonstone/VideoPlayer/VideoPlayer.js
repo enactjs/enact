@@ -881,6 +881,7 @@ const VideoPlayerBase = class extends React.Component {
 			this.stopListeningForPulses();
 		}
 		if (!this.pulsing) {
+			this.pulsingKeyCode = keyCode;
 			this.pulsing = true;
 			this.keyLoop = setTimeout(this.handlePulse, this.props.initialJumpDelay);
 		}
