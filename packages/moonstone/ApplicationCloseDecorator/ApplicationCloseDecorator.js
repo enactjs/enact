@@ -25,7 +25,8 @@ import ApplicationCloseButton from './ApplicationCloseButton';
  * @private
  */
 const contextTypes = {
-	hasCloseButton: PropTypes.bool
+	hasCloseButton: PropTypes.bool,
+	closeButtonId: PropTypes.string
 };
 
 /**
@@ -54,6 +55,16 @@ const ApplicationCloseDecorator = hoc((config, Wrapped) => {
 		static childContextTypes = contextTypes
 
 		static propTypes = /** @lends moonstone/ApplicationCloseDecorator.ApplicationCloseDecorator.prototype */ {
+
+			/**
+			 * Unique identifier for ApplicationCloseButton instance.
+			 *
+			 * @type {String}
+			 * @public
+			 * @default 'closeButton'
+			 */
+			closeButtonId: PropTypes.string,
+
 			/**
 			 * A function to run when app close button is clicked
 			 *
@@ -63,18 +74,23 @@ const ApplicationCloseDecorator = hoc((config, Wrapped) => {
 			onApplicationClose: PropTypes.func
 		}
 
+		static defaultProps = {
+			closeButtonId: 'closeButton'
+		}
+
 		getChildContext () {
 			return {
+				closeButtonId: this.props.closeButtonId,
 				hasCloseButton: true
 			};
 		}
 
 		render () {
-			const {onApplicationClose, ...rest} = this.props;
+			const {closeButtonId, onApplicationClose, ...rest} = this.props;
 			return (
 				<div>
 					<Wrapped {...rest} />
-					<ApplicationCloseButton onApplicationClose={onApplicationClose} />
+					<ApplicationCloseButton id={closeButtonId} onApplicationClose={onApplicationClose} />
 				</div>
 			);
 		}

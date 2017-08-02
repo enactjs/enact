@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import Slottable from '@enact/ui/Slottable';
 import Spotlight from '@enact/spotlight';
 import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
+import {contextTypes} from '../ApplicationCloseDecorator';
 
 import css from './Panel.less';
 
@@ -96,6 +97,8 @@ const PanelBase = kind({
 		noAutoFocus: PropTypes.bool
 	},
 
+	contextTypes,
+
 	defaultProps: {
 		autoFocus: 'last-focused',
 		hideChildren: false,
@@ -137,6 +140,17 @@ const PanelBase = kind({
 	},
 
 	computed: {
+		'aria-owns': ({'aria-owns': ariaOwns}, {hasCloseButton, closeButtonId}) => {
+			if (ariaOwns) {
+				if (hasCloseButton) {
+					return `${ariaOwns} ${closeButtonId}`;
+				} else {
+					return ariaOwns;
+				}
+			} else if (hasCloseButton) {
+				return closeButtonId;
+			}
+		},
 		spotOnRender: ({autoFocus, hideChildren, noAutoFocus, spotOnRender}) => {
 			if (noAutoFocus) {
 				autoFocus = adaptToAutoFocus();

@@ -4,6 +4,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {shape} from '@enact/ui/ViewManager';
 
+import {contextTypes} from '../ApplicationCloseDecorator';
 import ApplicationCloseButton from '../ApplicationCloseDecorator/ApplicationCloseButton';
 import Skinnable from '../Skinnable';
 
@@ -114,6 +115,8 @@ const PanelsBase = kind({
 		onBack: PropTypes.func
 	},
 
+	contextTypes,
+
 	defaultProps: {
 		index: 0,
 		noAnimation: false,
@@ -129,8 +132,8 @@ const PanelsBase = kind({
 		className: ({noCloseButton, styler}) => styler.append({
 			hasCloseButton: !noCloseButton
 		}),
-		applicationCloseButton: ({id, noCloseButton, onApplicationClose}) => {
-			if (!noCloseButton) {
+		applicationCloseButton: ({id, noCloseButton, onApplicationClose}, {hasCloseButton}) => {
+			if (!hasCloseButton && !noCloseButton) {
 				const closeId = id ? `${id}_close` : null;
 
 				deprecate({name: 'noCloseButton', since: '1.5.0', replacedBy: '@enact/moonstone/ApplicationCloseDecorator'});
@@ -145,8 +148,10 @@ const PanelsBase = kind({
 				);
 			}
 		},
-		childProps: ({childProps, id, noCloseButton}) => {
-			if (noCloseButton || !id) {
+		childProps: ({childProps, id, noCloseButton}, {hasCloseButton}) => {
+			// If a close button is added by `ApplicationCloseDecorator`, `aria-owns` will be added in
+			// `moonstone/Panel` directly.
+			if (hasCloseButton && noCloseButton || !id) {
 				return childProps;
 			}
 
