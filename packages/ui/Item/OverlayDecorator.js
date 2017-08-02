@@ -3,7 +3,7 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Overlay from './Overlay';
+import UiOverlay from './Overlay';
 
 import css from './Overlay.less';
 
@@ -36,6 +36,15 @@ const OverlayDecorator = hoc((config, Wrapped) => {
 			autoHide: PropTypes.oneOf(['before', 'after', 'both']),
 
 			/**
+			 * The Overlay component to use in this decorator.
+			 *
+			 * @type {Component}
+			 * @default {@link ui/Overlay}
+			 * @public
+			 */
+			Overlay: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
+
+			/**
 			 * A node which will be displayed at the end of the item.  Typically this will be an
 			 * icon or multiple icons.
 			 *
@@ -54,12 +63,16 @@ const OverlayDecorator = hoc((config, Wrapped) => {
 			overlayBefore: PropTypes.node
 		},
 
+		defaultProps: {
+			Overlay: UiOverlay
+		},
+
 		styles: {
 			css,
 			className: 'item'
 		},
 
-		render: ({overlayAfter, autoHide, overlayBefore, children, ...rest}) => {
+		render: ({autoHide, children, Overlay, overlayAfter, overlayBefore, ...rest}) => {
 			return (
 				<Wrapped {...rest}>
 					<Overlay className={css.before} hidden={autoHide === 'before' || autoHide === 'both'}>

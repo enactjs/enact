@@ -23,7 +23,7 @@ import componentCss from './BodyText.less';
  * @public
  */
 const BodyTextBaseFactory = factory({css: componentCss}, ({css}) => {
-	// diffClasses('Moon IconButton', componentCss, css);
+	// diffClasses('Moon BodyText', componentCss, css);
 
 	return UiBodyTextFactory({
 		/* Replace classes in this step */

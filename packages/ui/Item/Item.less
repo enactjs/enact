@@ -1,28 +1,18 @@
 // Item.less
 //
-@import '../styles/variables.less';
-@import '../styles/text.less';
+@import "../styles/text.less";
 
 .item {
-	.moon-text-base(@moon-item-font-size);
 	display: flex;
 	align-items: center;
-	line-height: @moon-item-line-height;
-	padding: @moon-item-vertical-padding @moon-spotlight-outset;
 	position: relative;
 	color: inherit;
 
 	&.inline {
 		display: inline-flex;
 		vertical-align: top;
-		max-width: 240px;
 		box-sizing: border-box;
 	}
-
-	.moon-custom-text({
-		font-size: @moon-item-font-size-large;
-		line-height: @moon-item-line-height-large;
-	});
 
 	// Apply to the content area to tell it to expand to the available width of the container
 	.content {
