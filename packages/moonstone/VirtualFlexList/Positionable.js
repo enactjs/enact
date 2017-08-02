@@ -69,9 +69,7 @@ const Positionable = hoc((config, Wrapped) => {
 
 		static defaultProps = {
 			handlesNavigation: false,
-			onPositionChange: nop,
-			x: 0,
-			y: 0
+			onPositionChange: nop
 		}
 
 		/*
