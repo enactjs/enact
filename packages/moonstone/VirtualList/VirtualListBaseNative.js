@@ -928,12 +928,12 @@ class VirtualListCoreNative extends Component {
 		}
 
 		const
-			{className, style, 'data-container-id': dataContainerId, ...rest} = props,
+			{className, style, ...rest} = props,
 			mergedClasses = classNames(css.list, this.wrapperClass, className);
 
 		return (
 			<div className={mergedClasses} ref={this.initWrapperRef} style={style}>
-				<div {...rest} data-container-id={dataContainerId} onKeyDown={this.onKeyDown} ref={this.initContainerRef}>
+				<div {...rest} onKeyDown={this.onKeyDown} ref={this.initContainerRef}>
 					{cc.length ? cc : null}
 					{primary ? null : (
 						<SpotlightPlaceholder
