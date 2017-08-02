@@ -1,7 +1,8 @@
 // Checkbox.less
 //
-@import '../styles/text.less';
-@import '../styles/skin.less';
+@import "../styles/variables.less";
+@import "../styles/text.less";
+@import "../styles/skin.less";
 
 .checkbox {
 	@size: @moon-checkbox-size;
@@ -11,9 +12,6 @@
 	border-radius: @size;
 
 	.icon {
-		visibility: hidden;
-		margin: 0;
-		vertical-align: top;
 		line-height: @size;
 		width: @size;
 		height: @size;
@@ -34,12 +32,6 @@
 			font-size: (@size * 2);
 		}
 	});
-
-	&.selected {
-		.icon {
-			visibility: visible;
-		}
-	}
 
 	// Skin colors
 	.applySkins({
