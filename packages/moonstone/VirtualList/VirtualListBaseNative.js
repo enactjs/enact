@@ -275,7 +275,6 @@ class VirtualListCoreNative extends Component {
 
 	// spotlight
 	lastFocusedIndex = null
-	nodeIndexToBeFocused = null
 
 	isVertical = () => this.isPrimaryDirectionVertical
 
