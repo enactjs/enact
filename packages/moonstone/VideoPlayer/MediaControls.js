@@ -164,9 +164,9 @@ const MediaControls = kind({
 		moreIcon: ({showMoreComponents}) => showMoreComponents ? 'arrowshrinkleft' : 'ellipsis',
 		moreIconLabel: ({moreButtonCloseLabel, moreButtonLabel, showMoreComponents}) => {
 			if (showMoreComponents) {
-				return moreButtonCloseLabel || $L('Back');
+				return moreButtonCloseLabel === '' ? moreButtonCloseLabel : $L('Back');
 			} else {
-				return moreButtonLabel || $L('More');
+				return moreButtonLabel === '' ? moreButtonLabel : $L('More');
 			}
 		},
 		playPauseIcon: ({paused, pauseIcon, playIcon}) => (paused ? playIcon : pauseIcon),
