@@ -15,17 +15,21 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonstone/VideoPlayer` to handle play, pause, stop, fast forward and rewind on remote controller
-- `moonstone/Picker` to mount scroll event listener natively and stop event propagation
+- `moonstone/Marquee` to also start when hovered if `marqueeOnRender` is set
 
 ### Fixed
 
+- `moonstone/IconButton` to fit image source within `IconButton`
+- `moonstone` icon font sizes for wide icons
 - `moonstone/ContextualPopupDecorator` to prefer setting focus to the appropriate popup instead of other underlying controls when using 5-way from the activating control
 - `moonstone/Scroller` not scrolled via 5 way when `moonstone/ExpandableList` is opened
 - `moonstone/VirtualList` not to let the focus move outside of container even if there are children left when navigating with 5way
 - `moonstone/Scrollable` to update disability of paging controls when the scrollbar is set to `visible` and the content becomes shorter
 - `moonstone/VideoPlayer` to focus on hover over play/pause button when video is loading
+- `moonstone/VideoPlayer` to update and display proper time while moving knob when video is paused
 - `moonstone/VideoPlayer` long title overlap issues
 - `moonstone/Header` to apply `marqueeOn` prop to `subTitleBelow` and `titleBelow`
+- `moonstone/Picker` wheeling in `moonstone/Scroller`
 
 ## [1.5.0] - 2017-07-19
 

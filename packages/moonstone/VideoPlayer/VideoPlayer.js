@@ -710,6 +710,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.announceJob.stop();
 		this.renderBottomControl.stop();
 		this.refocusMoreButton.stop();
+		this.sliderTooltipTimeJob.stop();
 	}
 
 	//
@@ -1334,6 +1335,9 @@ const VideoPlayerBase = class extends React.Component {
 		this.seek(value * this.state.duration);
 		this.sliderScrubbing = false;
 	}
+
+	sliderTooltipTimeJob = new Job((time) => this.setState({sliderTooltipTime: time}), 20)
+
 	handleKnobMove = (ev) => {
 		this.sliderScrubbing = ev.detached;
 
@@ -1344,6 +1348,7 @@ const VideoPlayerBase = class extends React.Component {
 			const seconds = Math.round(this.sliderKnobProportion * this.video.duration);
 
 			if (this.sliderScrubbing && !isNaN(seconds)) {
+				this.sliderTooltipTimeJob.throttle(seconds);
 				const knobTime = secondsToTime(seconds, this.durfmt, {includeHour: true});
 
 				forward('onScrub', {...ev, seconds}, this.props);
