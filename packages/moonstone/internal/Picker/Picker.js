@@ -781,7 +781,8 @@ const PickerBase = class extends React.Component {
 	}
 };
 
-const Picker = IdProvider({generateProp: null, prefix: 'p_'},
+const Picker = IdProvider(
+	{generateProp: null, prefix: 'p_'},
 	Skinnable(
 		DisappearSpotlightDecorator(
 			{events: {

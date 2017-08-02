@@ -616,7 +616,8 @@ const IncrementSliderFactory = factory((config) => {
 	 * @public
 	 */
 	return Changeable(
-		IdProvider({generateProp: null, prefix: 's_'},
+		IdProvider(
+			{generateProp: null, prefix: 's_'},
 			SliderDecorator(
 				DisappearSpotlightDecorator(
 					{events: {
