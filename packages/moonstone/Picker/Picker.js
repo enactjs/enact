@@ -42,6 +42,7 @@ const PickerBase = kind({
 		 * to the current selected child text.
 		 *
 		 * @type {String}
+		 * @memberof moonstone/Picker.PickerBase.prototype
 		 * @public
 		 */
 		'aria-valuetext': PropTypes.string,

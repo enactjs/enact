@@ -66,6 +66,7 @@ const RangePickerBase = kind({
 		 * to the current selected child value.
 		 *
 		 * @type {String}
+		 * @memberof moonstone/RangePicker.RangePickerBase.prototype
 		 * @public
 		 */
 		'aria-valuetext': PropTypes.string,

@@ -97,6 +97,7 @@ const PickerBase = class extends React.Component {
 		 * to the current selected child and accessibilityHint text.
 		 *
 		 * @type {String}
+		 * @memberof moonstone/internal/Picker.Picker.prototype
 		 * @public
 		 */
 		'aria-valuetext': PropTypes.string,
