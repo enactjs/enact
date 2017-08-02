@@ -77,6 +77,9 @@ const MediaControls = kind({
 		jumpForwardIcon: PropTypes.string,
 		leftComponents: PropTypes.node,
 		mediaDisabled: PropTypes.bool,
+		moreButtonCloseLabel: PropTypes.string,
+		moreButtonDisabled: PropTypes.bool,
+		moreButtonLabel: PropTypes.string,
 		moreDisabled: PropTypes.bool,
 		noJumpButtons: PropTypes.bool,
 		noRateButtons: PropTypes.bool,
@@ -159,7 +162,13 @@ const MediaControls = kind({
 			more: showMoreComponents
 		}),
 		moreIcon: ({showMoreComponents}) => showMoreComponents ? 'arrowshrinkleft' : 'ellipsis',
-		moreIconLabel: ({showMoreComponents}) => showMoreComponents ? $L('Back') : $L('More'),
+		moreIconLabel: ({moreButtonCloseLabel, moreButtonLabel, showMoreComponents}) => {
+			if (showMoreComponents) {
+				return moreButtonCloseLabel || $L('Back');
+			} else {
+				return moreButtonLabel || $L('More');
+			}
+		},
 		playPauseIcon: ({paused, pauseIcon, playIcon}) => (paused ? playIcon : pauseIcon),
 		playPauseLabel: ({paused, pauseLabel, playLabel}) => (paused ? playLabel : pauseLabel)
 	},
@@ -174,6 +183,7 @@ const MediaControls = kind({
 			jumpButtonsDisabled,
 			jumpForwardIcon,
 			leftComponents,
+			moreButtonDisabled,
 			mediaDisabled,
 			moreDisabled,
 			moreIcon,
@@ -193,6 +203,8 @@ const MediaControls = kind({
 			...rest
 		} = props;
 
+		delete rest.moreButtonCloseLabel;
+		delete rest.moreButtonLabel;
 		delete rest.pauseIcon;
 		delete rest.paused;
 		delete rest.pauseLabel;
@@ -219,7 +231,18 @@ const MediaControls = kind({
 				</div>
 				<div className={css.rightComponents}>
 					{rightComponents}
-					{React.Children.count(children) ? <MediaButton aria-label={moreIconLabel} backgroundOpacity="translucent" className={css.moreButton} onClick={onToggleMore}>{moreIcon}</MediaButton> : null}
+					{React.Children.count(children) ? (
+						<MediaButton
+							aria-label={moreIconLabel}
+							backgroundOpacity="translucent"
+							className={css.moreButton}
+							disabled={moreButtonDisabled}
+							onClick={onToggleMore}
+							tooltipText={moreIconLabel}
+						>
+							{moreIcon}
+						</MediaButton>
+					) : null}
 				</div>
 			</div>
 		);

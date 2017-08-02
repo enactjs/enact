@@ -30,17 +30,18 @@
 			right: @moon-video-player-padding-side;
 
 			.infoFrame {
-				position: relative;
 				display: flex;
 				margin-bottom: @moon-spotlight-outset;
 
 				// Title Container
 				.titleFrame {
+					--infoComponentsOffset: 0;
+
 					@badges-present-transition: transform 500ms ease-in-out;
 
+					position: relative;
 					flex-grow: 1;
 					opacity: 1;
-					overflow: hidden;
 					.margin-start-end(0, @moon-spotlight-outset);
 
 					&.hidden {
@@ -50,9 +51,9 @@
 
 					// Title
 					.title {
-						--infoComponentsOffset: 0;
 						position: absolute;
 						bottom: -5px;
+						width: 100%;
 						.moon-text-base(@moon-video-player-title-size);
 						line-height: @moon-header-line-height;
 						transition: @badges-present-transition;
