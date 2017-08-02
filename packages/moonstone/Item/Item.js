@@ -13,9 +13,10 @@ import Spottable from '@enact/spotlight/Spottable';
 // import {MarqueeDecorator} from '../Marquee';
 import Skinnable from '../Skinnable';
 
-import OverlayDecorator from './OverlayDecorator';
+import {OverlayDecoratorFactory} from './OverlayDecorator';
 
 import componentCss from './Item.less';
+import overlayCss from './Overlay.less';
 
 /**
  * {@link moonstone/Item.ItemBase} is a Moonstone-styled control that can display
@@ -76,6 +77,7 @@ const ItemFactory = (props) => Spottable(
 	)
 );
 
+const OverlayDecorator = OverlayDecoratorFactory({css: overlayCss});
 
 /**
  * {@link moonstone/Item.ItemOverlay} is a focusable Moonstone-styled control that can display

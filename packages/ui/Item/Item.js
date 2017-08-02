@@ -15,7 +15,7 @@ import Spottable from '@enact/spotlight/Spottable';
 import {MarqueeDecorator} from '../Marquee';
 import Slottable from '../Slottable';
 
-import OverlayDecorator from './OverlayDecorator';
+import OverlayDecorator, {OverlayDecoratorFactory} from './OverlayDecorator';
 import {OverlayFactory} from './Overlay';
 
 import componentCss from './Item.less';
@@ -205,5 +205,6 @@ export {
 	ItemOverlayFactory,
 	ItemMarqueeDecorator,
 	OverlayDecorator,
+	OverlayDecoratorFactory,
 	OverlayFactory
 };

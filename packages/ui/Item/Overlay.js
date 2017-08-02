@@ -1,5 +1,6 @@
 import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
+// import {diffClasses} from '@enact/ui/MigrationAid';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -17,6 +18,8 @@ import componentCss from './Overlay.less';
  * @public
  */
 const OverlayBaseFactory = factory({css: componentCss}, ({css}) => {
+	// diffClasses('UI Item.Overlay', componentCss, css);
+
 	/**
 	 * {@link ui/Item.Overlay} is the component inserted into each side of an
 	 * {@link ui/Item.ItemOverlay}.

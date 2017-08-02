@@ -1,6 +1,6 @@
 import hoc from '@enact/core/hoc';
 import React from 'react';
-import {OverlayDecorator as UiOverlayDecorator} from '@enact/ui/Item';
+import {OverlayDecoratorFactory as UiOverlayDecoratorFactory} from '@enact/ui/Item';
 
 import Overlay from './Overlay';
 
@@ -27,7 +27,15 @@ const OverlayDecoratorBase = hoc((config, Wrapped) => {
 	};
 });
 
-const OverlayDecorator = (props) => OverlayDecoratorBase(UiOverlayDecorator(props));
+// Generate a base Overlay hoc
+const UiOverlayDecorator = UiOverlayDecoratorFactory();
+// Use the base hoc from above as the basis for OverlayDecoratorBase
+const OverlayDecorator = (config, props) => OverlayDecoratorBase(UiOverlayDecorator(config, props));
+// Generates a factory of a hoc and applies the factory props to the inner hoc-factory and the incoming props to the generated hoc (sorry, it's sorta confusing)
+const OverlayDecoratorFactory = (factoryProps) => (props) => OverlayDecoratorBase(UiOverlayDecoratorFactory(factoryProps)(props));
 
 export default OverlayDecorator;
-export {OverlayDecorator};
+export {
+	OverlayDecorator,
+	OverlayDecoratorFactory
+};
