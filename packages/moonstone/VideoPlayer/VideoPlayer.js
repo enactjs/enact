@@ -764,6 +764,13 @@ const VideoPlayerBase = class extends React.Component {
 		return Math.random().toString(36).substr(2, 8);
 	}
 
+	/**
+	 * If the announce state is either ready to read the title or ready to read info, advance the
+	 * state to "read".
+	 *
+	 * @returns {Boolean} Returns true to be used in event handlers
+	 * @private
+	 */
 	markAnnounceRead = () => {
 		if (this.state.announce === AnnounceState.TITLE) {
 			this.setState({announce: AnnounceState.TITLE_READ});
