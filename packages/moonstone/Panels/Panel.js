@@ -48,6 +48,15 @@ const PanelBase = kind({
 		'aria-label': PropTypes.string,
 
 		/**
+		 * When `aria-owns` is set, it will add the given component(s) to the accessibility tree.
+		 *
+		 * @memberof moonstone/Panels.Panel.prototype
+		 * @type {String}
+		 * @public
+		 */
+		'aria-owns': PropTypes.string,
+
+		/**
 		 * Sets the strategy used to automatically focus an element within the panel upon render.
 		 *
 		 * * "none" - Automatic focus is disabled
@@ -143,6 +152,8 @@ const PanelBase = kind({
 	computed: {
 		'aria-owns': ({'aria-owns': ariaOwns}, {hasCloseButton, closeButtonId}) => {
 			if (ariaOwns) {
+				// Close button added by ApplicationCloseDecorator is added to the panel's accessibility tree.
+				// This prevents re-reading the title when focus is moved from close button to the panel.
 				if (hasCloseButton) {
 					return `${ariaOwns} ${closeButtonId}`;
 				} else {
