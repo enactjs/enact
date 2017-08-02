@@ -389,7 +389,8 @@ class VirtualListCore extends Component {
 	gridPositionToItemPosition = ({primaryPosition, secondaryPosition}) =>
 		(this.isPrimaryDirectionVertical ? {left: secondaryPosition, top: primaryPosition} : {left: primaryPosition, top: secondaryPosition})
 
-	getClientSize = (node) => {
+	getClientSize = () => {
+		const node = this.containerRef;
 		return {
 			clientWidth: node.clientWidth,
 			clientHeight: node.clientHeight
@@ -397,16 +398,14 @@ class VirtualListCore extends Component {
 	}
 
 	calculateMetrics (props) {
-		const
-			{clientSize, direction, itemSize, spacing} = props,
-			node = this.containerRef;
+		const {clientSize, direction, itemSize, spacing} = props;
 
-		if (!clientSize && !node) {
+		if (!clientSize && !this.containerRef) {
 			return;
 		}
 
 		const
-			{clientWidth, clientHeight} = (clientSize || this.getClientSize(node)),
+			{clientWidth, clientHeight} = (clientSize || this.getClientSize()),
 			heightInfo = {
 				clientSize: clientHeight,
 				minItemSize: itemSize.minHeight || null,
@@ -482,17 +481,15 @@ class VirtualListCore extends Component {
 	}
 
 	calculateScrollBounds (props) {
-		const
-			{clientSize} = props,
-			node = this.containerRef;
+		const {clientSize} = props;
 
-		if (!clientSize && !node) {
+		if (!clientSize && !this.containerRef) {
 			return;
 		}
 
 		const
 			{scrollBounds, isPrimaryDirectionVertical} = this,
-			{clientWidth, clientHeight} = clientSize || this.getClientSize(node);
+			{clientWidth, clientHeight} = clientSize || this.getClientSize();
 		let maxPos;
 
 		scrollBounds.clientWidth = clientWidth;
@@ -898,16 +895,14 @@ class VirtualListCore extends Component {
 	}
 
 	syncClientSize = () => {
-		const
-			{props} = this,
-			node = this.containerRef;
+		const {props} = this;
 
-		if (!props.clientSize && !node) {
+		if (!props.clientSize && !this.containerRef) {
 			return;
 		}
 
 		const
-			{clientWidth, clientHeight} = props.clientSize || this.getClientSize(node),
+			{clientWidth, clientHeight} = props.clientSize || this.getClientSize(),
 			{scrollBounds} = this;
 
 		if (clientWidth !== scrollBounds.clientWidth || clientHeight !== scrollBounds.clientHeight) {

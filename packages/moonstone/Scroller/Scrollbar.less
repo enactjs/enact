@@ -34,6 +34,27 @@
 		}
 	}
 
+	&.native {
+		position: fixed;
+		height: 100%;
+		box-sizing: border-box;
+		right: 0;
+		pointer-events: none;
+
+		:global(.enact-locale-right-to-left) & {
+			left: 0;
+			right: auto;
+		}
+
+		&.both {
+			padding-bottom:  @moon-icon-button-small-size;
+
+			:global(.enact-text-large) & {
+				padding-bottom: @moon-icon-button-small-size-large;
+			}
+		}
+	}
+
 	/* ScrollButton */
 	.scrollbarButtonNoCompositeLayer {
 		&,
@@ -59,6 +80,7 @@
 		.scrollbarButtonNoCompositeLayer;
 		background-color: transparent;
 		margin: 0;
+		pointer-events: auto;
 	}
 
 	/* ScrollThumb */

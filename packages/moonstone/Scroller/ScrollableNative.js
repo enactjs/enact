@@ -951,7 +951,15 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				props = Object.assign({}, this.props),
 				{className, focusableScrollbar, style} = this.props,
 				{isHorizontalScrollbarVisible, isVerticalScrollbarVisible} = this.state,
-				scrollableClasses = classNames(css.scrollable, className);
+				scrollableClasses = classNames(css.scrollable, className),
+				childClasses = classNames(
+					css.content,
+					isVerticalScrollbarVisible ? css.takeSpaceForVerticalScrollbar : null,
+				),
+				verticalScrollbarClasses = classNames(
+					scrollbarCss.native,
+					isHorizontalScrollbarVisible ? scrollbarCss.both : null
+				);
 
 			delete props.cbScrollTo;
 			delete props.className;
@@ -971,8 +979,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					style={style}
 				>
 					<div className={css.container}>
-						<Wrapped {...props} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={css.content} onKeyUp={this.onKeyUp} />
-						{isVerticalScrollbarVisible ? <Scrollbar {...this.verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
+						<Wrapped {...props} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={childClasses} onKeyUp={this.onKeyUp} />
+						{isVerticalScrollbarVisible ? <Scrollbar {...this.verticalScrollbarProps} className={verticalScrollbarClasses} disabled={!isVerticalScrollbarVisible} /> : null}
 					</div>
 					{isHorizontalScrollbarVisible ? <Scrollbar {...this.horizontalScrollbarProps} corner={isVerticalScrollbarVisible} disabled={!isHorizontalScrollbarVisible} /> : null}
 				</ScrollableSpotlightContainer>

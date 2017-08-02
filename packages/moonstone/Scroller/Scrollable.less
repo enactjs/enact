@@ -11,6 +11,7 @@
 	.scrollableFill;
 
 	display: flex;
+	padding: 0;
 	box-sizing: border-box;
 	flex-direction: column;
 
@@ -26,5 +27,13 @@
 		position: relative;
 		overflow: hidden;
 		flex: auto;
+	}
+
+	.takeSpaceForVerticalScrollbar {
+		.padding-start-end(0, @moon-icon-button-small-size);
+
+		:global(.enact-text-large) & {
+			.padding-start-end(0, @moon-icon-button-small-size-large);
+		}
 	}
 }
