@@ -94,6 +94,16 @@ const PickerBase = class extends React.Component {
 		min: PropTypes.number.isRequired,
 
 		/**
+		 * Overrides the `aria-valuetext` for the picker. By default, `aria-valuetext` is set
+		 * to the current selected child and accessibilityHint text.
+		 *
+		 * @type {String}
+		 * @memberof moonstone/internal/Picker.Picker.prototype
+		 * @public
+		 */
+		'aria-valuetext': PropTypes.string,
+
+		/**
 		 * Accessibility hint
 		 * For example, `hour`, `year`, and `meridiem`
 		 *
@@ -685,6 +695,7 @@ const PickerBase = class extends React.Component {
 	render () {
 		const {active} = this.state;
 		const {
+			'aria-valuetext': ariaValueText,
 			noAnimation,
 			children,
 			disabled,
@@ -770,7 +781,7 @@ const PickerBase = class extends React.Component {
 				<div
 					aria-disabled={disabled}
 					aria-hidden={!active}
-					aria-valuetext={valueText}
+					aria-valuetext={ariaValueText != null ? ariaValueText : valueText}
 					className={css.valueWrapper}
 					id={id}
 					role="spinbutton"

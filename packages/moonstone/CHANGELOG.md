@@ -11,6 +11,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` support for the "More" button to use tooltips
 - `moonstone/VideoPlayer` properties `moreButtonLabel` and `moreButtonCloseLabel` to allow customization of the "More" button's tooltip and Aria labels
 - `moonstone/VideoPlayer` property `moreButtonDisabled` to disable the "More" button
+- `moonstone/Picker` and `moonstone/RangePicker` prop `aria-valuetext` to support reading custom text instead of value
 
 ### Changed
 
