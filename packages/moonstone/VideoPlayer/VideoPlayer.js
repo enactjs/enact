@@ -228,7 +228,7 @@ const VideoPlayerBase = class extends React.Component {
 		infoComponents: PropTypes.node,
 
 		/**
-		 * The amount of milliseconds that the player will pause before firing the
+		 * The number of milliseconds that the player will pause before firing the
 		 * first jump event on a right or left pulse.
 		 *
 		 * @type {Number}
@@ -256,7 +256,7 @@ const VideoPlayerBase = class extends React.Component {
 		jumpButtonsDisabled: PropTypes.bool,
 
 		/**
-		 * The amount of seconds the player should skip forward or backward when a "jump" button is
+		 * The number of seconds the player should skip forward or backward when a "jump" button is
 		 * pressed.
 		 *
 		 * @type {Number}
@@ -266,7 +266,7 @@ const VideoPlayerBase = class extends React.Component {
 		jumpBy: PropTypes.number,
 
 		/**
-		 * The amount of milliseconds that the player will throttle before firing a
+		 * The number of milliseconds that the player will throttle before firing a
 		 * jump event on a right or left pulse.
 		 *
 		 * @type {Number}
@@ -521,7 +521,7 @@ const VideoPlayerBase = class extends React.Component {
 		title: PropTypes.string,
 
 		/**
-		 * The amount of time in miliseconds that should pass before the title disappears from the
+		 * The amount of time in milliseconds that should pass before the title disappears from the
 		 * controls. Setting this to `0` disables the hiding.
 		 *
 		 * @type {Number}
@@ -531,7 +531,7 @@ const VideoPlayerBase = class extends React.Component {
 		titleHideDelay: PropTypes.number,
 
 		/**
-		 * The amount of time in miliseconds that should pass before the tooltip disappears from the
+		 * The amount of time in milliseconds that should pass before the tooltip disappears from the
 		 * controls. Setting this to `0` disables the hiding.
 		 *
 		 * @type {Number}
@@ -876,22 +876,23 @@ const VideoPlayerBase = class extends React.Component {
 	handle = handle.bind(this)
 
 	startListeningForPulses = (keyCode) => () => {
-		if (this.pulsing) {
-			this.handlePulse(keyCode);
-			this.keyLoop = setTimeout(this.startListeningForPulses(keyCode), this.props.jumpDelay);
-		} else {
-			this.handlePulse(keyCode);
-			this.keyLoop = setTimeout(this.startListeningForPulses(keyCode), this.props.initialJumpDelay);
+		// Ignore new pulse calls if key code is same, otherwise start new series if we're pulsing
+		if (this.pulsing && keyCode !== this.pulsingKeyCode) {
+			this.stopListeningForPulses();
+		}
+		if (!this.pulsing) {
 			this.pulsing = true;
+			this.keyLoop = setTimeout(this.handlePulse, this.props.initialJumpDelay);
 		}
 	}
 
-	handlePulse (keyCode) {
-		if (is('left', keyCode)) {
+	handlePulse = () => {
+		if (is('left', this.pulsingKeyCode)) {
 			this.jump(-1 * this.props.jumpBy);
-		} else if (is('right', keyCode)) {
+		} else if (is('right', this.pulsingKeyCode)) {
 			this.jump(this.props.jumpBy);
 		}
+		this.keyLoop = setTimeout(this.handlePulse, this.props.jumpDelay);
 	}
 
 	stopListeningForPulses () {
@@ -900,15 +901,14 @@ const VideoPlayerBase = class extends React.Component {
 			clearTimeout(this.keyLoop);
 			this.keyLoop = null;
 		}
-
 	}
 
 	handleKeyDown = (ev) => {
-		if ((is('left', ev.keyCode) || is('right', ev.keyCode)) && !this.props.no5wayJump && !this.state.bottomControlsVisible) {
+		if (!this.props.no5wayJump &&
+				!this.state.bottomControlsVisible &&
+				(is('left', ev.keyCode) || is('right', ev.keyCode))) {
 			Spotlight.pause();
-			if (!this.pulsing) {
-				this.startListeningForPulses(ev.keyCode)();
-			}
+			this.startListeningForPulses(ev.keyCode)();
 		}
 		return true;
 	}
@@ -944,7 +944,7 @@ const VideoPlayerBase = class extends React.Component {
 				break;
 		}
 
-		if ((is('left', ev.keyCode) || is('right', ev.keyCode)) && !this.props.no5wayJump) {
+		if (!this.props.no5wayJump && (is('left', ev.keyCode) || is('right', ev.keyCode))) {
 			this.stopListeningForPulses();
 			Spotlight.resume();
 		}
