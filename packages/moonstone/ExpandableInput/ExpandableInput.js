@@ -16,6 +16,8 @@ import PropTypes from 'prop-types';
 import {calcAriaLabel, Input} from '../Input';
 import {Expandable, ExpandableItemBase} from '../ExpandableItem';
 
+import css from './ExpandableInput.less';
+
 const forwardMouseDown = forward('onMouseDown');
 
 /**
@@ -111,6 +113,24 @@ class ExpandableInputBase extends React.Component {
 		 * @public
 		 */
 		onSpotlightDisappear: PropTypes.func,
+
+		/**
+		 * The handler to run prior to focus leaving the expandable when the 5-way left key is pressed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightLeft: PropTypes.func,
+
+		/**
+		 * The handler to run prior to focus leaving the expandable when the 5-way right key is pressed.
+		 *
+		 * @type {Function}
+		 * @param {Object} event
+		 * @public
+		 */
+		onSpotlightRight: PropTypes.func,
 
 		/**
 		 * When `true`, the control is rendered in the expanded state, with the contents visible
@@ -213,6 +233,7 @@ class ExpandableInputBase extends React.Component {
 		const isCancel = is('cancel', keyCode);
 		const isEnter = is('enter', keyCode);
 		const isUpDown = is('up', keyCode) || is('down', keyCode);
+		const {onSpotlightLeft, onSpotlightRight} = this.props;
 
 		if (isEnter) {
 			// prevent Enter onKeyPress which would re-open the expandable when the label
@@ -221,13 +242,17 @@ class ExpandableInputBase extends React.Component {
 		} else if (isUpDown) {
 			// prevent Spotlight handling up/down since closing the expandable will spot the label
 			ev.nativeEvent.stopImmediatePropagation();
+		} else if (is('left', keyCode) && onSpotlightLeft) {
+			onSpotlightLeft(ev);
+		} else if (is('right', keyCode) && onSpotlightRight) {
+			onSpotlightRight(ev);
 		}
 
 		if (isCancel) {
 			forward('onChange', {
 				value: this.state.initialValue
 			}, this.props);
-		} else if (isEnter || isUpDown) {
+		} else if (isUpDown || isEnter && ev.currentTarget !== ev.target) {
 			this.fireCloseEvent();
 		}
 	}
@@ -275,8 +300,21 @@ class ExpandableInputBase extends React.Component {
 		}
 	}
 
+	calcClassName = (className) => (className ? `${css.expandableInput} ${className}` : css.expandableInput)
+
 	render () {
-		const {disabled, iconAfter, iconBefore, onSpotlightDisappear, placeholder, spotlightDisabled, type, value, ...rest} = this.props;
+		const {
+			className,
+			disabled,
+			iconAfter,
+			iconBefore,
+			onSpotlightDisappear,
+			placeholder,
+			spotlightDisabled,
+			type,
+			value,
+			...rest
+		} = this.props;
 		delete rest.onChange;
 		delete rest.onInputChange;
 
@@ -284,6 +322,7 @@ class ExpandableInputBase extends React.Component {
 			<ExpandableItemBase
 				{...rest}
 				aria-label={this.calcAriaLabel()}
+				className={this.calcClassName(className)}
 				disabled={disabled}
 				label={this.calcLabel()}
 				onClose={this.handleClose}
@@ -293,11 +332,12 @@ class ExpandableInputBase extends React.Component {
 				spotlightDisabled={spotlightDisabled}
 			>
 				<Input
+					autoFocus
+					className={css.decorator}
 					disabled={disabled}
 					dismissOnEnter
 					iconAfter={iconAfter}
 					iconBefore={iconBefore}
-					noDecorator
 					onBlur={this.handleInputBlur}
 					onChange={this.handleChange}
 					onKeyDown={this.handleInputKeyDown}

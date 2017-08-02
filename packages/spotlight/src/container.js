@@ -509,7 +509,7 @@ const isNavigable = (node, containerId, verify) => {
 	}
 
 	const containerNode = getContainerNode(containerId);
-	if (containerNode !== document && containerNode.dataset.containerDisabled) {
+	if (containerNode !== document && containerNode.dataset.containerDisabled === 'true') {
 		return false;
 	}
 
@@ -551,18 +551,30 @@ const getAllContainerIds = () => {
  * @public
  */
 function getContainerDefaultElement (containerId) {
-	let defaultElement = getContainerConfig(containerId).defaultElement;
-	if (!defaultElement) {
+	let defaultElementSelector = getContainerConfig(containerId).defaultElement;
+
+	if (!defaultElementSelector) {
 		return null;
 	}
-	if (typeof defaultElement === 'string') {
-		defaultElement = getSpottableDescendants(containerId)
-			.filter(matchSelector(defaultElement))[0];
-	}
-	if (isNavigable(defaultElement, containerId, true)) {
-		return defaultElement;
-	}
-	return null;
+
+	defaultElementSelector = coerceArray(defaultElementSelector);
+	const spottables = getDeepSpottableDescendants(containerId);
+
+	return defaultElementSelector.reduce((result, selector) => {
+		if (result) {
+			return result;
+		}
+
+		if (typeof selector === 'string') {
+			return spottables.filter(elem => {
+				return matchSelector(selector, elem) && isNavigable(elem, containerId, true);
+			})[0];
+		}
+
+		// FIXME: There is some prior implicit support for `defaultElement` to be an element rather
+		// than a selector. This continues that support but should eventually be removed.
+		return selector;
+	}, null);
 }
 
 /**
@@ -622,7 +634,7 @@ function getContainerNavigableElements (containerId) {
 
 	const config = getContainerConfig(containerId);
 	const enterLast = config.enterTo === 'last-focused';
-	const enterDefault = config.enterTo === 'defaultElement';
+	const enterDefault = config.enterTo === 'default-element';
 	let next;
 
 	// if the container has a preferred entry point, try to find it first

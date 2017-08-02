@@ -131,11 +131,15 @@ storiesOf('VideoPlayer')
 						jumpButtonsDisabled={boolean('jumpButtonsDisabled', false)}
 						rateButtonsDisabled={boolean('rateButtonsDisabled', false)}
 						loop={boolean('loop', true)}
+						moreButtonCloseLabel={text('moreButtonCloseLabel')}
+						moreButtonDisabled={boolean('moreButtonDisabled', false)}
+						moreButtonLabel={text('moreButtonLabel')}
 						muted={boolean('muted', true)}
 						noAutoPlay={boolean('noAutoPlay', false)}
 						noJumpButtons={boolean('noJumpButtons', false)}
 						noRateButtons={boolean('noRateButtons', false)}
 						noSlider={boolean('noSlider', false)}
+						pauseAtEnd={boolean('pauseAtEnd', false)}
 						pauseIcon={select('pauseIcon', icons, 'pause')}
 						playIcon={select('playIcon', icons, 'play')}
 						poster={poster}

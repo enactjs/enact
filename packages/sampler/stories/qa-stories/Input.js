@@ -8,10 +8,12 @@ const iconNames = ['', ...Object.keys(icons)];
 
 const inputData = {
 	longText : 'Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Text',
+	longPlaceHolder : 'Looooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooong Placeholder',
 	tallText : ['नरेंद्र मोदी', ' ฟิ้  ไั  ஒ  து', 'ÃÑÕÂÊÎÔÛÄËÏÖÜŸ'],
 	extraSpaceText : 'This                                              Text                         has                           extra                                           space',
 	initialNumericValue: 0,
 	initialValue : 'Input field',
+	rtlAndLtr: 'abcdeشلاؤيث',
 	type: ['text', 'number', 'password']
 };
 
@@ -20,6 +22,7 @@ storiesOf('Input')
 		'with long text',
 		() => (
 			<Input
+				autoFocus={boolean('autoFocus')}
 				onChange={action('onChange')}
 				disabled={boolean('disabled')}
 				iconAfter={select('iconAfter', iconNames)}
@@ -34,10 +37,28 @@ storiesOf('Input')
 		)
 	)
 	.addWithInfo(
+		'with long placeholder',
+		() => (
+			<Input
+				autoFocus={boolean('autoFocus')}
+				onChange={action('onChange')}
+				disabled={boolean('disabled')}
+				iconAfter={select('iconAfter', iconNames)}
+				iconBefore={select('iconBefore', iconNames)}
+				invalid={boolean('invalid', false)}
+				invalidMessage={text('invalidMessage', InputBase.defaultProps.invalidMessage)}
+				noDecorator={boolean('noDecorator')}
+				placeholder={text('placeholder', inputData.longPlaceHolder)}
+				type={select('type', inputData.type, inputData.type[0])}
+			/>
+		)
+	)
+	.addWithInfo(
 		'with tall characters',
 		() => (
 			<div>
 				<Input
+					autoFocus={boolean('autoFocus')}
 					onChange={action('onChange')}
 					disabled={boolean('disabled')}
 					iconAfter={select('iconAfter', iconNames)}
@@ -48,6 +69,7 @@ storiesOf('Input')
 					defaultValue={inputData.tallText[0]}
 				/>
 				<Input
+					autoFocus={boolean('autoFocus')}
 					onChange={action('onChange')}
 					disabled={boolean('disabled')}
 					iconAfter={select('iconAfter', iconNames)}
@@ -58,6 +80,7 @@ storiesOf('Input')
 					defaultValue={inputData.tallText[1]}
 				/>
 				<Input
+					autoFocus={boolean('autoFocus')}
 					onChange={action('onChange')}
 					disabled={boolean('disabled')}
 					iconAfter={select('iconAfter', iconNames)}
@@ -74,6 +97,7 @@ storiesOf('Input')
 		'with extra spacing',
 		() => (
 			<Input
+				autoFocus={boolean('autoFocus')}
 				onChange={action('onChange')}
 				disabled={boolean('disabled')}
 				iconAfter={select('iconAfter', iconNames)}
@@ -86,11 +110,28 @@ storiesOf('Input')
 		)
 	)
 	.addWithInfo(
+		'with RTL and LTR text together',
+		() => (
+			<Input
+				autoFocus={boolean('autoFocus')}
+				onChange={action('onChange')}
+				disabled={boolean('disabled')}
+				iconAfter={select('iconAfter', iconNames)}
+				iconBefore={select('iconBefore', iconNames)}
+				noDecorator={boolean('noDecorator')}
+				placeholder={text('placeholder', 'Input RTL and LTR text together')}
+				type={select('type', inputData.type, inputData.type[0])}
+				defaultValue={inputData.rtlAndLtr}
+			/>
+		)
+	)
+	.addWithInfo(
 		'5 way test',
 		() => (
 			<div>
 				<div>
 					<Input
+						autoFocus={boolean('autoFocus')}
 						onChange={action('onChange')}
 						disabled={boolean('disabled')}
 						iconAfter={select('iconAfter', iconNames)}
@@ -101,6 +142,7 @@ storiesOf('Input')
 						defaultValue={inputData.initialValue + ' one'}
 					/>
 					<Input
+						autoFocus={boolean('autoFocus')}
 						onChange={action('onChange')}
 						disabled={boolean('disabled')}
 						iconAfter={select('iconAfter', iconNames)}
@@ -113,6 +155,7 @@ storiesOf('Input')
 				</div>
 				<div>
 					<Input
+						autoFocus={boolean('autoFocus')}
 						onChange={action('onChange')}
 						disabled={boolean('disabled')}
 						iconAfter={select('iconAfter', iconNames)}
@@ -123,6 +166,7 @@ storiesOf('Input')
 						defaultValue={inputData.initialValue + ' three'}
 					/>
 					<Input
+						autoFocus={boolean('autoFocus')}
 						onChange={action('onChange')}
 						disabled={boolean('disabled')}
 						iconAfter={select('iconAfter', iconNames)}
@@ -140,6 +184,7 @@ storiesOf('Input')
 		'with a range',
 		() => (
 			<Input
+				autoFocus={boolean('autoFocus')}
 				onChange={action('onChange')}
 				disabled={boolean('disabled')}
 				iconAfter={select('iconAfter', iconNames)}
@@ -149,4 +194,21 @@ storiesOf('Input')
 				defaultValue={inputData.initialNumericValue}
 			/>
 		)
-	);
+	)
+	.addWithInfo(
+		'with long placeholder',
+		() => (
+			<Input
+				onChange={action('onChange')}
+				disabled={boolean('disabled')}
+				iconAfter={select('iconAfter', iconNames)}
+				iconBefore={select('iconBefore', iconNames)}
+				invalid={boolean('invalid', false)}
+				invalidMessage={text('invalidMessage', InputBase.defaultProps.invalidMessage)}
+				noDecorator={boolean('noDecorator')}
+				placeholder={text('placeholder', inputData.longText)}
+				type={select('type', inputData.type, inputData.type[0])}
+			/>
+		)
+	)
+;

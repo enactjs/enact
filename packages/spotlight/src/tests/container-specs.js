@@ -65,7 +65,8 @@ const scenarios = {
 		container({[containerAttribute]: 'first-container', children: join(
 			someSpottables(2),
 			container({[containerAttribute]: 'second-container', children: join(
-				someSpottables(3),
+				spottable({id: 'secondContainerFirstSpottable'}),
+				someSpottables(2),
 				container({
 					[containerAttribute]: 'third-container',
 					'data-container-disabled': true,
@@ -433,6 +434,38 @@ describe('container', () => {
 			}
 		));
 
+		it('should return the default spottable element when enterTo is "default-element" and defaultElement contains an array of selectors', testScenario(
+			scenarios.containerWithDefaultAndLastFocused,
+			() => {
+				configureContainer('container', {
+					enterTo: 'default-element',
+					defaultElement: ['.does-not-exist', '.spottable-default']
+				});
+
+				const expected = 'spottableDefault';
+				const actual = getContainerFocusTarget('container').id;
+
+				expect(actual).to.equal(expected);
+			}
+		));
+
+		// FIXME: This is testing a previously supported feature (setting a node as defaultElement)
+		// which was never documented and should be removed in a future release.
+		it('should return the default spottable element when enterTo is "default-element" and defaultElement contains an array of selectors wiht a node reference', testScenario(
+			scenarios.containerWithDefaultAndLastFocused,
+			(root) => {
+				configureContainer('container', {
+					enterTo: 'default-element',
+					defaultElement: [root.querySelector('#lastFocused'), '.spottable-default']
+				});
+
+				const expected = 'lastFocused';
+				const actual = getContainerFocusTarget('container').id;
+
+				expect(actual).to.equal(expected);
+			}
+		));
+
 		it('should return the first spottable element when enterTo is "default-element" but defaultElement is not configured', testScenario(
 			scenarios.containerWithDefaultAndLastFocused,
 			() => {
@@ -457,6 +490,38 @@ describe('container', () => {
 
 				const expected = 'firstSpottable';
 				const actual = getContainerFocusTarget('container').id;
+
+				expect(actual).to.equal(expected);
+			}
+		));
+
+		it('should return the default element when enterTo is "default-element" and defaultElement is within a subcontainer', testScenario(
+			scenarios.complexTree,
+			() => {
+				configureContainer('first-container', {
+					enterTo: 'default-element',
+					defaultElement: `[${containerAttribute}='second-container'] > .spottable`
+				});
+				configureContainer('second-container');
+
+				const expected = 'second-container';
+				const actual = getContainerFocusTarget('first-container').parentNode.dataset.containerId;
+
+				expect(actual).to.equal(expected);
+			}
+		));
+
+		it('should return the first spottable element when enterTo is "default-element" and defaultElement is within a disabled subcontainer', testScenario(
+			scenarios.complexTree,
+			() => {
+				configureContainer('second-container', {
+					enterTo: 'default-element',
+					defaultElement: `[${containerAttribute}='third-container'] > .spottable`
+				});
+				configureContainer('third-container');
+
+				const expected = 'secondContainerFirstSpottable';
+				const actual = getContainerFocusTarget('second-container').id;
 
 				expect(actual).to.equal(expected);
 			}

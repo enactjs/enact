@@ -82,7 +82,7 @@ function getTargetBySelector (selector) {
 	const next = parseSelector(selector)[0];
 	if (next) {
 		const nextContainerIds = getContainersForNode(next);
-		if (isNavigable(next, last(nextContainerIds))) {
+		if (isNavigable(next, last(nextContainerIds), true)) {
 			return next;
 		}
 	}
@@ -147,40 +147,69 @@ function getOverflowContainerRect (containerId) {
 
 function getTargetInContainerByDirectionFromPosition (direction, containerId, positionRect, elementContainerIds, boundingRect) {
 	const elements = getSpottableDescendantsWithoutContainers(containerId, elementContainerIds);
-	const elementRects = filterRects(getRects(elements), boundingRect);
-	const overlappingContainerId = getContainerContainingRect(elementRects, positionRect);
+	let elementRects = filterRects(getRects(elements), boundingRect);
 
-	// if the pointer is within a container that is a candidate element, we need to ignore container
-	// `enterTo` preferences and retrieve its spottable descendants and try to navigate to them.
-	if (overlappingContainerId) {
-		return getTargetInContainerByDirectionFromPosition(
-			direction,
-			overlappingContainerId,
+	let next = null;
+
+	while (elementRects.length > 0) {
+		const overlappingContainerId = getContainerContainingRect(elementRects, positionRect);
+
+		// if the pointer is within a container that is a candidate element, we need to ignore container
+		// `enterTo` preferences and retrieve its spottable descendants and try to navigate to them.
+		if (overlappingContainerId) {
+			next = getTargetInContainerByDirectionFromPosition(
+				direction,
+				overlappingContainerId,
+				positionRect,
+				elementContainerIds,
+				boundingRect
+			);
+
+			if (!next) {
+				// filter out the container and try again
+				elementRects = elementRects.filter(rect => {
+					return rect.element.dataset.containerId !== overlappingContainerId;
+				});
+				continue;
+			}
+
+			// found a target so break out and return
+			break;
+		}
+
+		// try to navigate from position to one of the candidates in containerId
+		next = navigate(
 			positionRect,
-			elementContainerIds,
-			boundingRect
-		);
-	}
-
-	// try to navigate from position to one of the candidates in containerId
-	const next = navigate(
-		positionRect,
-		direction,
-		elementRects,
-		getContainerConfig(containerId)
-	);
-
-	// if we match a container, recurse into it
-	if (next && isContainer(next)) {
-		const nextContainerId = next.dataset.containerId;
-
-		return getTargetInContainerByDirectionFromPosition(
 			direction,
-			nextContainerId,
-			positionRect,
-			elementContainerIds,
-			getOverflowContainerRect(nextContainerId) || boundingRect
+			elementRects,
+			getContainerConfig(containerId)
 		);
+
+		// if we match a container, recurse into it
+		if (next && isContainer(next)) {
+			const nextContainerId = next.dataset.containerId;
+
+			// need to cache this reference so we can filter it out later if necessary
+			const lastNavigated = next;
+
+			next = getTargetInContainerByDirectionFromPosition(
+				direction,
+				nextContainerId,
+				positionRect,
+				elementContainerIds,
+				getOverflowContainerRect(nextContainerId) || boundingRect
+			);
+
+			if (!next) {
+				// filter out the container and try again
+				elementRects = elementRects.filter(rect => rect.element !== lastNavigated);
+				continue;
+			}
+		}
+
+		// If we've met every condition and haven't explicitly retried the search via `continue`,
+		// break out and return
+		break;
 	}
 
 	return next;
@@ -196,49 +225,77 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 		return previous;
 	}
 
-	const elementRects = filterRects(getRects(elements), boundingRect);
-	const overlappingContainerId = getContainerContainingRect(elementRects, elementRect);
+	let elementRects = filterRects(getRects(elements), boundingRect);
 
-	// if the next element is a container AND the current element is *visually* contained within
-	// one of the candidate element, we need to ignore container `enterTo` preferences and
-	// retrieve its spottable descendants and try to navigate to them.
-	if (overlappingContainerId) {
-		return getTargetInContainerByDirectionFromElement(
-			direction,
-			overlappingContainerId,
-			element,
-			elementRect,
-			elementContainerIds,
-			boundingRect
-		);
-	}
+	let next = null;
 
-	// try to navigate from element to one of the candidates in containerId
-	const next = navigate(
-		elementRect,
-		direction,
-		elementRects,
-		getContainerConfig(containerId)
-	);
+	while (elementRects.length > 0) {
+		const overlappingContainerId = getContainerContainingRect(elementRects, elementRect);
 
-	// if we match a container,
-	if (next && isContainer(next)) {
-		const nextContainerId = next.dataset.containerId;
+		// if the next element is a container AND the current element is *visually* contained within
+		// one of the candidate elements, we need to ignore container `enterTo` preferences and
+		// retrieve its spottable descendants and try to navigate to them.
+		if (overlappingContainerId) {
+			next = getTargetInContainerByDirectionFromElement(
+				direction,
+				overlappingContainerId,
+				element,
+				elementRect,
+				elementContainerIds,
+				boundingRect
+			);
 
-		// and it is restricted, return its target
-		if (isRestrictedContainer(nextContainerId)) {
-			return getTargetByContainer(nextContainerId);
+			if (!next) {
+				// filter out the container and try again
+				elementRects = elementRects.filter(rect => {
+					return rect.element.dataset.containerId !== overlappingContainerId;
+				});
+				continue;
+			}
+
+			// found a target so break out and return
+			break;
 		}
 
-		// otherwise, recurse into it
-		return getTargetInContainerByDirectionFromElement(
-			direction,
-			nextContainerId,
-			element,
+		// try to navigate from element to one of the candidates in containerId
+		next = navigate(
 			elementRect,
-			elementContainerIds,
-			getOverflowContainerRect(nextContainerId) || boundingRect
+			direction,
+			elementRects,
+			getContainerConfig(containerId)
 		);
+
+		// if we match a container,
+		if (next && isContainer(next)) {
+			const nextContainerId = next.dataset.containerId;
+
+			// need to cache this reference so we can filter it out later if necessary
+			const lastNavigated = next;
+
+			// and it is restricted, return its target
+			if (isRestrictedContainer(nextContainerId)) {
+				next = getTargetByContainer(nextContainerId);
+			} else {
+				// otherwise, recurse into it
+				next = getTargetInContainerByDirectionFromElement(
+					direction,
+					nextContainerId,
+					element,
+					elementRect,
+					elementContainerIds,
+					getOverflowContainerRect(nextContainerId) || boundingRect
+				);
+			}
+
+			if (!next) {
+				elementRects = elementRects.filter(rect => rect.element !== lastNavigated);
+				continue;
+			}
+		}
+
+		// If we've met every condition and haven't explicitly retried the search via `continue`,
+		// break out and return
+		break;
 	}
 
 	return next;
@@ -254,15 +311,26 @@ function getTargetByDirectionFromElement (direction, element) {
 
 	return getNavigableContainersForNode(element)
 		.reduceRight((result, containerId, index, elementContainerIds) => {
-			return result ||
-				getTargetInContainerByDirectionFromElement(
-					direction,
-					containerId,
-					element,
-					elementRect,
-					elementContainerIds
-				) ||
-				getLeaveForTarget(containerId, direction);
+			result = result || getTargetInContainerByDirectionFromElement(
+				direction,
+				containerId,
+				element,
+				elementRect,
+				elementContainerIds
+			);
+
+			if (!result) {
+				result = getLeaveForTarget(containerId, direction);
+
+				// To support a `leaveFor` configuration with navigation disallowed in the current
+				// `direction`, we return the current element to prevent further searches for a
+				// target in this reduction.
+				if (result === false) {
+					result = element;
+				}
+			}
+
+			return result;
 		}, null);
 }
 
@@ -281,13 +349,24 @@ function getTargetByDirectionFromPosition (direction, position, containerId) {
 		}, null);
 }
 
+/**
+ * Returns the target identified by the selector configured for the container identified by
+ * `containerId` for the given `direction`. If the selector is an empty string, the method returns
+ * `false` indicating that navigation isn't allowed out of the container in that direction.
+ *
+ * @param   {String}        containerId  Identifier for a container
+ * @param   {String}        direction    Direction to navigate (up, down, left, right)
+ *
+ * @returns {Node|Boolean}               Target, if found, or `false` if navigation is disallowed
+ * @private
+ */
 function getLeaveForTarget (containerId, direction) {
 	const config = getContainerConfig(containerId);
 
-	const target = config.leaveFor && config.leaveFor[direction];
+	const target = config.restrict !== 'self-only' && config.leaveFor && config.leaveFor[direction];
 	if (typeof target === 'string') {
 		if (target === '') {
-			return null;
+			return false;
 		}
 		return getTargetBySelector(target);
 	}
@@ -301,6 +380,8 @@ function getLeaveForTarget (containerId, direction) {
 }
 
 function getNavigableTarget (target) {
+	if (target === document) return null;
+
 	let parent;
 	while (target && (isContainer(target) || !isFocusable(target))) {
 		parent = target.parentNode;

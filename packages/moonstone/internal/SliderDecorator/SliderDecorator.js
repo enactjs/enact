@@ -65,6 +65,17 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static propTypes = /** @lends moonstone/internal/SliderDecorator.SliderDecorator.prototype */{
 			/**
+			 * Overrides the `aria-valuetext` for the slider. By default, `aria-valuetext` is set
+			 * to the current value. This should only be used when the parent controls the value of
+			 * the slider directly through the props.
+			 *
+			 * @type {String|Number}
+			 * @memberof moonstone/internal/SliderDecorator.SliderDecorator.prototype
+			 * @public
+			 */
+			'aria-valuetext': PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+
+			/**
 			 * Background progress, as a proportion between `0` and `1`.
 			 *
 			 * @type {Number}
@@ -194,13 +205,16 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.knobPosition = null;
 			this.normalizeBounds(props);
 
-			const value = this.clamp(props.value);
+			const
+				value = this.clamp(props.value),
+				valueText = props['aria-valuetext'] != null ? props['aria-valuetext'] : value;
+
 			this.state = {
 				active: false,
 				climax: 'rising',
 				focused: false,
 				value: value,
-				valueText: value
+				valueText: valueText
 			};
 
 			if (__DEV__) {
@@ -215,14 +229,15 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		componentWillReceiveProps (nextProps) {
-			const {backgroundProgress, max, min, value} = nextProps;
+			const {'aria-valuetext': ariaValueText, backgroundProgress, max, min, value} = nextProps;
 
-			if ((min !== this.props.min) || (max !== this.props.max) || (value !== this.state.value)) {
+			if ((min !== this.props.min) || (max !== this.props.max) || (value !== this.state.value) || (ariaValueText !== this.state.valueText)) {
 				this.normalizeBounds(nextProps);
 				const clampedValue = this.clamp(value);
+				const valueText = ariaValueText != null ? ariaValueText : clampedValue;
 				this.setState({
 					value: clampedValue,
-					valueText: clampedValue
+					valueText: valueText
 				});
 			}
 
@@ -251,10 +266,11 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		updateValueJob = new Job((value) => {
+			const valueText = this.props['aria-valuetext'] != null ? this.props['aria-valuetext'] : value;
 			this.inputNode.value = value;
 			this.setState({
 				value,
-				valueText: value
+				valueText
 			});
 			forwardChange({value}, this.props);
 		}, config.changeDelay)
@@ -291,6 +307,10 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			barNode.style.transform = computeBarTransform(proportionProgress, vertical);
 			// If we know the knob should be in a custom place, use that place; otherwise, sync it with the progress.
 			knobNode.style.transform = computeKnobTransform(knobProgress, vertical, node);
+			// Cannot upgrade `transform` to the newer, faster `setProperty` due to lack of support from PhantomJS
+			// const knobTransform = computeKnobTransform(knobProgress, vertical, node);
+			// knobNode.style.setProperty('transform', knobTransform);
+			knobNode.style.setProperty('--knob-progress', knobProgress);
 			knobNode.dataset.climax = knobProgress > 0.5 ? 'falling' : 'rising';
 
 			if (currentClimax !== this.state.climax && this.props.tooltip) {
@@ -372,7 +392,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		handleActivate = () => {
-			const {detachedKnob, disabled, vertical} = this.props;
+			const {'aria-valuetext': ariaValueText, detachedKnob, disabled, vertical} = this.props;
 
 			if (disabled) return;
 
@@ -386,7 +406,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				const horizontalHint = $L('change a value with left right button');
 				const active = !this.state.active;
 
-				let valueText = this.state.value;
+				let valueText = ariaValueText != null ? ariaValueText : this.state.value;
 				if (active) {
 					valueText = vertical ? verticalHint : horizontalHint;
 				}

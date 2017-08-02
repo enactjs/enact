@@ -122,12 +122,8 @@ class VirtualFlexListCore extends Component {
 	}
 
 	static defaultProps = {
-		component: null,
-		data: [],
-		dataSize: 0,
 		flexAxis: 'row',
-		overhang: 3,
-		style: {}
+		overhang: 3
 	}
 
 	/*
