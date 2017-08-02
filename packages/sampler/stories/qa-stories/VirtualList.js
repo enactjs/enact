@@ -1,4 +1,3 @@
-import Item from '@enact/moonstone/Item';
 import SwitchItem from '@enact/moonstone/SwitchItem';
 import VirtualList from '@enact/moonstone/VirtualList';
 import {VirtualListCore} from '@enact/moonstone/VirtualList/VirtualListBase';
@@ -24,29 +23,18 @@ const
 		}
 	},
 	items = [],
-	disabledItems = [],
 	// eslint-disable-next-line enact/prop-types, enact/display-name
-	renderSelectedItem = (size) => ({data, index, ...rest}) => {
+	renderItem = (size) => ({data, index, ...rest}) => {
 		const itemStyle = {height: size + 'px', ...style.item};
 		return (
 			<StatefulSwitchItem  index={index} style={itemStyle} {...rest}>
 				{data[index].item}
 			</StatefulSwitchItem>
 		);
-	},
-	// eslint-disable-next-line enact/prop-types, enact/display-name
-	renderDisabledItem = (size) => ({data, index, ...rest}) => {
-		const itemStyle = {height: size + 'px', ...style.item};
-		return (
-			<Item disabled={data[index].disabled} index={index} style={itemStyle} {...rest}>
-				{data[index].item}
-			</Item>
-		);
 	};
 
 for (let i = 0; i < 1000; i++) {
 	items.push({item :'Item ' + ('00' + i).slice(-3), selected: false});
-	disabledItems.push({item :'Item ' + ('00' + i).slice(-3), disabled: i % 15 !== 0});
 }
 
 class StatefulSwitchItem extends React.Component {
@@ -91,28 +79,9 @@ storiesOf('VirtualList')
 			const itemSize = ri.scale(number('itemSize', 72));
 			return (
 				<VirtualList
-					component={renderSelectedItem(itemSize)}
+					component={renderItem(itemSize)}
 					data={items}
 					dataSize={number('dataSize', items.length)}
-					focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
-					itemSize={itemSize}
-					onScrollStart={action('onScrollStart')}
-					onScrollStop={action('onScrollStop')}
-					spacing={ri.scale(number('spacing', 0))}
-					style={style.list}
-				/>
-			);
-		},
-		{propTables: [Config]}
-	).addWithInfo(
-		'with disabled items',
-		() => {
-			const itemSize = ri.scale(number('itemSize', 72));
-			return (
-				<VirtualList
-					component={renderDisabledItem(itemSize)}
-					data={disabledItems}
-					dataSize={number('dataSize', disabledItems.length)}
 					focusableScrollbar={nullify(boolean('focusableScrollbar', false))}
 					itemSize={itemSize}
 					onScrollStart={action('onScrollStart')}
