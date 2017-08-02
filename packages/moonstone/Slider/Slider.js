@@ -66,7 +66,6 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * When `true`, the knob displays selected and can be moved using 5-way controls.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			active: PropTypes.bool,
@@ -104,7 +103,6 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * This is primarily used by media playback. Setting this to `true` enables this behavior.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			detachedKnob: PropTypes.bool,
@@ -113,7 +111,6 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * When `true`, the component is shown as disabled and does not generate events
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			disabled: PropTypes.bool,
@@ -121,7 +118,6 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			/**
 			 * When `true`, the tooltip, if present, is shown
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			focused: PropTypes.bool,
@@ -156,7 +152,6 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * When `true`, the slider bar doesn't show a fill and doesn't highlight when spotted
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			noFill: PropTypes.bool,
@@ -224,7 +219,6 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * When `true`, a pressed visual effect is applied
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			pressed: PropTypes.bool,
@@ -235,7 +229,6 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * user interaction.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			scrubbing: PropTypes.bool,
@@ -270,7 +263,6 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * properties.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			tooltip: PropTypes.bool,
@@ -280,7 +272,6 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * The percentage respects the min and max value props.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			tooltipAsPercent: PropTypes.bool,
@@ -291,7 +282,6 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * reverse when in an RTL language.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			tooltipForceSide: PropTypes.bool,
@@ -323,7 +313,6 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * If `true` the slider will be oriented vertically.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			vertical: PropTypes.bool

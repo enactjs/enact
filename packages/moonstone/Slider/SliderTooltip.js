@@ -35,7 +35,6 @@ const SliderTooltipBase = kind({
 		 * reverse when in an RTL language.
 		 *
 		 * @type {Boolean}
-		 * @default false
 		 * @public
 		 */
 		forceSide: PropTypes.bool,
@@ -67,7 +66,6 @@ const SliderTooltipBase = kind({
 		 * If `true` the slider will be oriented vertically.
 		 *
 		 * @type {Boolean}
-		 * @default false
 		 * @public
 		 */
 		vertical: PropTypes.bool

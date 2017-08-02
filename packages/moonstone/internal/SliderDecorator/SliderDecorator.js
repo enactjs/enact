@@ -79,7 +79,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * This is primarily used by media playback. Setting this to `true` enables this behavior.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @private
 			 */
 			detachedKnob: PropTypes.bool,
@@ -88,7 +87,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * When `true`, the component is shown as disabled and does not generate events
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			disabled: PropTypes.bool,
@@ -159,7 +157,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * Enables the built-in tooltip.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			tooltip: PropTypes.bool,
@@ -177,7 +174,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * If `true` the slider will be oriented vertically.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			vertical: PropTypes.bool
