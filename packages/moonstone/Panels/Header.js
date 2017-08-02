@@ -138,16 +138,16 @@ const HeaderBase = kind({
 	computed: {
 		className: ({fullBleed, type, styler}, {hasCloseButton}) => styler.append({fullBleed}, type, {hasCloseButton}),
 		direction: ({title, titleBelow}) => isRtlText(title) || isRtlText(titleBelow) ? 'rtl' : 'ltr',
-		titleBelowComponent: ({titleBelow, type}) => {
+		titleBelowComponent: ({marqueeOn, titleBelow, type}) => {
 			switch (type) {
 				case 'compact':
 					return titleBelow ? <h2 className={css.titleBelow}>{titleBelow}</h2> : null;
 				case 'standard':
-					return titleBelow ? <MarqueeH2 className={css.titleBelow} marqueeOn="hover">{titleBelow}</MarqueeH2> : null;
+					return titleBelow ? <MarqueeH2 className={css.titleBelow} marqueeOn={marqueeOn}>{titleBelow}</MarqueeH2> : null;
 			}
 		},
-		subTitleBelowComponent: ({subTitleBelow}) => {
-			return subTitleBelow ? <MarqueeH2 className={css.subTitleBelow} marqueeOn="hover">{subTitleBelow}</MarqueeH2> : null;
+		subTitleBelowComponent: ({marqueeOn, subTitleBelow}) => {
+			return subTitleBelow ? <MarqueeH2 className={css.subTitleBelow} marqueeOn={marqueeOn}>{subTitleBelow}</MarqueeH2> : null;
 		}
 	},
 

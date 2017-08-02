@@ -11,25 +11,68 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Added
 
 - `moonstone/ApplicationCloseDecorator` for adding `ApplicationCloseButton` to the app level
+- `moonstone/VideoPlayer` support for the "More" button to use tooltips
+- `moonstone/VideoPlayer` properties `moreButtonLabel` and `moreButtonCloseLabel` to allow customization of the "More" button's tooltip and Aria labels
+- `moonstone/VideoPlayer` property `moreButtonDisabled` to disable the "More" button
+
+### Changed
+
+- `moonstone/VideoPlayer` to handle play, pause, stop, fast forward and rewind on remote controller
+- `moonstone/Marquee` to also start when hovered if `marqueeOnRender` is set
+
+### Fixed
+
+- `moonstone/IconButton` to fit image source within `IconButton`
+- `moonstone` icon font sizes for wide icons
+- `moonstone/ContextualPopupDecorator` to prefer setting focus to the appropriate popup instead of other underlying controls when using 5-way from the activating control
+- `moonstone/Scroller` not scrolled via 5 way when `moonstone/ExpandableList` is opened
+- `moonstone/VirtualList` not to let the focus move outside of container even if there are children left when navigating with 5way
+- `moonstone/Scrollable` to update disability of paging controls when the scrollbar is set to `visible` and the content becomes shorter
+- `moonstone/VideoPlayer` to focus on hover over play/pause button when video is loading
+- `moonstone/VideoPlayer` to update and display proper time while moving knob when video is paused
+- `moonstone/VideoPlayer` long title overlap issues
+- `moonstone/Header` to apply `marqueeOn` prop to `subTitleBelow` and `titleBelow`
+- `moonstone/Picker` wheeling in `moonstone/Scroller`
+
+## [1.5.0] - 2017-07-19
+
+### Added
+
 - `moonstone/Slider` and `moonstone/IncrementSlider` prop `aria-valuetext` to support reading custom text instead of value
 - `moonstone/TooltipDecorator` property `tooltipProps` to attach props to tooltip component
 - `moonstone/Scroller` and `moonstone/VirtualList` ability to scroll via page up and page down keys
+- `moonstone/VideoPlayer` tooltip-thumbnail support with the `thumbnailSrc` prop and the `onScrub` callback to fire when the knob moves and a new thumbnail is needed
+- `moonstone/VirtualList` ability to navigate via 5way when there are disabled items
+- `moonstone/ContextualPopupDecorator` property `popupContainerId` to support configuration of the popup's spotlight container
+- `moonstone/ContextualPopupDecorator` property `onOpen` to notify containers when the popup has been opened
+- `moonstone/ContextualPopupDecorator` config option `openProp` to support mapping the value of `open` property to the chosen property of wrapped component
 
 ### Changed
 
 - `moonstone/ExpandableList` to use 'radio' as the default, and adapt 'single' mode to render as a `moonstone/RadioItem` instead of a `moonstone/CheckboxItem`
 - `moonstone/VideoPlayer` not to hide pause icon when it appears
 - `moonstone/ContextualPopupDecorator` to set accessibility-related props onto the container node rather than the popup node
+- `moonstone/ExpandableItem`, `moonstone/ExpandableList`, `moonstone/ExpandablePicker`, `moonstone/DatePicker`, and `moonstone/TimePicker` to pause spotlight when animating in 5-way mode
+- `moonstone/Spinner` to position the text content under the spinner, rather than to the right side
+- `moonstone/VideoPlayer` to include hour when announcing the time while scrubbing
+- `moonstone/GridListImageItem` to require a `source` prop and not have a default value
 
 ### Fixed
 
+- `moonstone/Input` ellipsis to show if placeholder is changed dynamically and is too long
 - `moonstone/Marquee` to re-evaluate RTL orientation when its content changes
 - `moonstone/VirtualList` to restore focus on short lists
 - `moonstone/ExpandableInput` to expand the width of its contained `moonstone/Input`
 - `moonstone/Input` support for `dismissOnEnter`
 - `moonstone/Input` focus management to prevent stealing focus when programmatically moved elsewhere
+- `moonstone/Input` 5-way spot behavior
 - `moonstone` international fonts to always be used, even when unsupported font-weights or font-styles are requested
+- `moonstone/Panels.Panel` support for selecting components with `.spottable-default` as the default focus target
 - `moonstone/Panels` layout in RTL locales
+- `moonstone` spottable components to support `onSpotlightDown`, `onSpotlightLeft`, `onSpotlightRight`, and `onSpotlightUp` event property
+- `moonstone/VirtualList` losing spotlight when the list is empty
+- `moonstone/FormCheckbox` in focused state to have the correct "check" color
+- `moonstone/Scrollable` bug in `navigableFilter` when passed a container id
 
 ## [1.4.1] - 2017-07-05
 
@@ -41,8 +84,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/ContextualPopupDecorator` close button to account for large text size
-
-### Removed
 - `moonstone/ContextualPopupDecorator` to not spot controls other than its activator when navigating out via 5-way
 - `moonstone/Header` to set the value of `marqueeOn` for all types of headers
 

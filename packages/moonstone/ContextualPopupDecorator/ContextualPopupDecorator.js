@@ -37,7 +37,17 @@ const defaultConfig = {
 	 * @memberof moonstone/ContextualPopupDecorator.ContextualPopupDecorator.defaultConfig
 	 * @public
 	 */
-	noSkin: false
+	noSkin: false,
+
+	/**
+	 * Configures the prop name to map value of `open` state of ContextualPopupDecorator
+	 *
+	 * @type {String}
+	 * @default 'selected'
+	 * @memberof moonstone/ContextualPopupDecorator.ContextualPopupDecorator.defaultConfig
+	 * @public
+	 */
+	openProp: 'selected'
 };
 
 const ContextualPopupContainer = SpotlightContainerDecorator({enterTo: 'last-focused', preserveId: true}, ContextualPopup);
@@ -83,7 +93,7 @@ const ContextualPopupContainer = SpotlightContainerDecorator({enterTo: 'last-foc
  * @public
  */
 const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {noSkin} = config;
+	const {noSkin, openProp} = config;
 
 	return class extends React.Component {
 		static displayName = 'ContextualPopupDecorator'
@@ -126,6 +136,14 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			onClose: PropTypes.func,
 
 			/**
+			 * A function to be run when the popup is opened.
+			 *
+			 * @type {Function}
+			 * @public
+			 */
+			onOpen: PropTypes.func,
+
+			/**
 			 * When `true`, the contextual popup will be visible.
 			 *
 			 * @type {Boolean}
@@ -141,6 +159,18 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * @public
 			 */
 			popupClassName: PropTypes.string,
+
+			/**
+			 * A custom container ID to use with Spotlight.
+			 *
+			 * The spotlight container for the popup isn't created until it is open. To configure
+			 * the container using `Spotlight.set()`, handle the `onOpen` event which is fired after
+			 * the popup has been created and opened.
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			popupContainerId: PropTypes.string,
 
 			/**
 			 * An object containing properties to be passed to popup component.
@@ -195,7 +225,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.state = {
 				arrowPosition: {top: 0, left: 0},
 				containerPosition: {top: 0, left: 0},
-				containerId: Spotlight.add(),
+				containerId: Spotlight.add(this.props.popupContainerId),
 				activator: null
 			};
 
@@ -413,11 +443,13 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleKeyDown = (ev) => {
 			const {onClose, spotlightRestrict} = this.props;
+			const current = Spotlight.getCurrent();
 			const direction = getDirection(ev.keyCode);
 			const spottables = Spotlight.getSpottableDescendants(this.state.containerId).length;
 			const spotlessSpotlightModal = spotlightRestrict === 'self-only' && !spottables;
+			const shouldSpotPopup = spottables && current === this.state.activator && direction === this.adjustedDirection;
 
-			if (direction && (this.containerNode.contains(document.activeElement) || spotlessSpotlightModal)) {
+			if (direction && (shouldSpotPopup || (this.containerNode.contains(current) || spotlessSpotlightModal))) {
 				// prevent default page scrolling
 				ev.preventDefault();
 				// stop propagation to prevent default spotlight behavior
@@ -425,12 +457,15 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				// set the pointer mode to false on keydown
 				Spotlight.setPointerMode(false);
 
+				if (shouldSpotPopup) {
+					this.spotPopupContent();
+
 				// we guard against attempting a focus change by verifying the case where a spotlightModal
 				// popup contains no spottable components
-				if (!spotlessSpotlightModal && Spotlight.move(direction)) {
+				} else if (!spotlessSpotlightModal && Spotlight.move(direction)) {
 
 					// if current focus is not within the popup's container, issue the `onClose` event
-					if (!this.containerNode.contains(document.activeElement) && onClose) {
+					if (!this.containerNode.contains(Spotlight.getCurrent()) && onClose) {
 						onClose(ev);
 					}
 				}
@@ -438,7 +473,10 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		spotActivator = (activator) => {
-			if (Spotlight.getCurrent() !== activator && !Spotlight.focus(activator)) {
+			if (activator && activator === Spotlight.getCurrent()) {
+				activator.blur();
+			}
+			if (!Spotlight.focus(activator)) {
 				Spotlight.focus();
 			}
 		}
@@ -451,7 +489,7 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const {showCloseButton, popupComponent: PopupComponent, popupClassName, noAutoDismiss, open, onClose, popupProps, skin, spotlightRestrict, ...rest} = this.props;
+			const {showCloseButton, popupComponent: PopupComponent, popupClassName, noAutoDismiss, open, onClose, onOpen, popupProps, skin, spotlightRestrict, ...rest} = this.props;
 			const scrimType = spotlightRestrict === 'self-only' ? 'transparent' : 'none';
 			const popupPropsRef = Object.assign({}, popupProps);
 			const ariaProps = extractAriaProps(popupPropsRef);
@@ -460,9 +498,13 @@ const ContextualPopupDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				rest.skin = skin;
 			}
 
+			delete rest.popupContainerId;
+
+			if (openProp) rest[openProp] = open;
+
 			return (
 				<div className={css.contextualPopupDecorator}>
-					<FloatingLayer open={open} scrimType={scrimType} noAutoDismiss={noAutoDismiss} onDismiss={onClose}>
+					<FloatingLayer open={open} scrimType={scrimType} noAutoDismiss={noAutoDismiss} onDismiss={onClose} onOpen={onOpen}>
 						<ContextualPopupContainer
 							{...ariaProps}
 							className={popupClassName}
