@@ -919,11 +919,31 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
+		focusAfterScrollbarUpdate = ({buttonToFocus}) => {
+			// Handle Spotlight after update when Spotlight is lost during 5-way.
+			if (!Spotlight.getCurrent() && !Spotlight.getPointerMode()) {
+				const
+					childContainerId = this.childRef.containerRef.getAttribute('data-container-id'),
+					spottableChildren = Spotlight.getSpottableDescendants(childContainerId);
+
+				if (spottableChildren.length > 0) {
+					Spotlight.focus(spottableChildren[0]);
+				} else if (buttonToFocus) {
+					Spotlight.focus(buttonToFocus);
+				} else {
+					// if there are no spottable content or `buttonToFocus`... focus on the last active
+					// container
+					Spotlight.focus(Spotlight.getActiveContainer());
+				}
+			}
+		};
+
 		updateThumb (scrollbarRef, bounds) {
 			scrollbarRef.update({
 				...bounds,
 				scrollLeft: this.scrollLeft,
-				scrollTop: this.scrollTop
+				scrollTop: this.scrollTop,
+				callback: this.focusAfterScrollbarUpdate
 			});
 		}
 
@@ -967,7 +987,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					const updatedBounds = {
 						...bounds,
 						scrollLeft: this.scrollLeft,
-						scrollTop: this.scrollTop
+						scrollTop: this.scrollTop,
+						callback: this.focusAfterScrollbarUpdate
 					};
 
 					if (curHorizontalScrollbarVisible) {

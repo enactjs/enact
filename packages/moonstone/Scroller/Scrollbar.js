@@ -165,7 +165,7 @@ class ScrollbarBase extends PureComponent {
 
 		this.calculateMetrics();
 		this.prevButtonNodeRef = containerRef.children[0];
-		this.nextButtonNodeRef = containerRef.children[1];
+		this.nextButtonNodeRef = containerRef.children[2];
 	}
 
 	componentDidUpdate () {
@@ -209,33 +209,15 @@ class ScrollbarBase extends PureComponent {
 		}
 	}
 
-	updateButtons = (bounds) => {
+	updateButtons = ({callback, maxLeft, maxTop, scrollLeft, scrollTop}) => {
 		const
 			{prevButtonNodeRef, nextButtonNodeRef} = this,
 			{vertical} = this.props,
-			currentPos = vertical ? bounds.scrollTop : bounds.scrollLeft,
-			maxPos = vertical ? bounds.maxTop : bounds.maxLeft,
+			currentPos = vertical ? scrollTop : scrollLeft,
+			maxPos = vertical ? maxTop : maxLeft,
 			shouldDisablePrevButton = currentPos <= 0,
 			shouldDisableNextButton = currentPos >= maxPos,
 			spotItem = window.document.activeElement;
-
-		const focusAfterUpdate = () => {
-			// Handle Spotlight after update when Spotlight is lost during 5-way.
-			if (!Spotlight.getCurrent() && !Spotlight.getPointerMode()) {
-				const scrollableSpottableElements = this.containerRef.offsetParent.querySelectorAll('.spottable');
-
-				if (scrollableSpottableElements.length <= 2 ) {
-					// After update, `Scrollable` has one or two buttons that are focusable (vertical down or
-					// horizontal right buttons). Focus on the first `scrollButton` (if both are visible,
-					// priority goes to vertical down).
-					Spotlight.focus(scrollableSpottableElements[0]);
-				} else {
-					// If there are more focusable items inside of `Scrollable` container, focus on that
-					// instead.
-					Spotlight.focus(Spotlight.getActiveContainer());
-				}
-			}
-		};
 
 		this.setState((prevState) => {
 			const
@@ -245,11 +227,13 @@ class ScrollbarBase extends PureComponent {
 			if (updatePrevButton && updateNextButton) {
 				return {prevButtonDisabled: shouldDisablePrevButton, nextButtonDisabled: shouldDisableNextButton};
 			} else if (updatePrevButton) {
+				this.buttonToFocus = this.prevButtonNodeRef;
 				return {prevButtonDisabled: shouldDisablePrevButton};
 			} else if (updateNextButton) {
+				this.buttonToFocus = this.nextButtonNodeRef;
 				return {nextButtonDisabled: shouldDisableNextButton};
 			}
-		}, focusAfterUpdate);
+		}, () => callback({buttonToFocus: this.buttonToFocus}));
 
 		if (shouldDisablePrevButton && spotItem === prevButtonNodeRef) {
 			if (this.pressed) {
