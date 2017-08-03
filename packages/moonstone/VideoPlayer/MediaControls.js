@@ -86,6 +86,9 @@ const MediaControls = kind({
 		jumpForwardIcon: PropTypes.string,
 		leftComponents: PropTypes.node,
 		mediaDisabled: PropTypes.bool,
+		moreButtonCloseLabel: PropTypes.string,
+		moreButtonDisabled: PropTypes.bool,
+		moreButtonLabel: PropTypes.string,
 		moreDisabled: PropTypes.bool,
 		noJumpButtons: PropTypes.bool,
 		noRateButtons: PropTypes.bool,
@@ -153,6 +156,8 @@ const MediaControls = kind({
 		forwardIcon: 'forward',
 		jumpBackwardIcon: 'skipbackward',
 		jumpForwardIcon: 'skipforward',
+		moreButtonCloseLabel: buttonLabels.backLabel,
+		moreButtonLabel: buttonLabels.moreLabel,
 		pauseIcon: 'pause',
 		playIcon: 'play'
 	},
@@ -168,7 +173,7 @@ const MediaControls = kind({
 			more: showMoreComponents
 		}),
 		moreIcon: ({showMoreComponents}) => showMoreComponents ? 'arrowshrinkleft' : 'ellipsis',
-		moreIconLabel: ({showMoreComponents}) => showMoreComponents ? buttonLabels.backLabel : buttonLabels.moreLabel,
+		moreIconLabel: ({moreButtonCloseLabel, moreButtonLabel, showMoreComponents}) => showMoreComponents ? moreButtonCloseLabel : moreButtonLabel,
 		playPauseIcon: ({paused, pauseIcon, playIcon}) => (paused ? playIcon : pauseIcon),
 		playPauseLabel: ({paused, pauseLabel, playLabel}) => (paused ? playLabel : pauseLabel)
 	},
@@ -183,6 +188,7 @@ const MediaControls = kind({
 			jumpButtonsDisabled,
 			jumpForwardIcon,
 			leftComponents,
+			moreButtonDisabled,
 			mediaDisabled,
 			moreDisabled,
 			moreIcon,
@@ -209,6 +215,8 @@ const MediaControls = kind({
 			nextLabel
 		} = buttonLabels;
 
+		delete rest.moreButtonCloseLabel;
+		delete rest.moreButtonLabel;
 		delete rest.pauseIcon;
 		delete rest.paused;
 		delete rest.pauseLabel;
@@ -235,7 +243,7 @@ const MediaControls = kind({
 				</div>
 				<div className={css.rightComponents}>
 					{rightComponents}
-					{React.Children.count(children) ? <MediaButton aria-label={$L(moreIconLabel)} backgroundOpacity="translucent" className={css.moreButton} onClick={onToggleMore}>{moreIcon}</MediaButton> : null}
+					{React.Children.count(children) ? <MediaButton aria-label={$L(moreIconLabel)} backgroundOpacity="translucent" className={css.moreButton} disabled={moreButtonDisabled} onClick={onToggleMore} tooltipText={$L(moreIconLabel)}>{moreIcon}</MediaButton> : null}
 				</div>
 			</div>
 		);
