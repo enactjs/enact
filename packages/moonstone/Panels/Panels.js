@@ -3,11 +3,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {shape} from '@enact/ui/ViewManager';
 
+import IdProvider from '../internal/IdProvider';
 import Skinnable from '../Skinnable';
 
 import ApplicationCloseButton from './ApplicationCloseButton';
 import CancelDecorator from './CancelDecorator';
-import IdProvider from './IdProvider';
 import Viewport from './Viewport';
 
 import css from './Panels.less';

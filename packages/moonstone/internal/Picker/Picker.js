@@ -13,6 +13,7 @@ import Skinnable from '../../Skinnable';
 import {validateRange, validateStepped} from '../validators';
 import DisappearSpotlightDecorator from '../DisappearSpotlightDecorator';
 
+import IdProvider from '../IdProvider';
 import $L from '../$L';
 import PickerButton from './PickerButton';
 
@@ -93,6 +94,16 @@ const PickerBase = class extends React.Component {
 		min: PropTypes.number.isRequired,
 
 		/**
+		 * Overrides the `aria-valuetext` for the picker. By default, `aria-valuetext` is set
+		 * to the current selected child and accessibilityHint text.
+		 *
+		 * @type {String}
+		 * @memberof moonstone/internal/Picker.Picker.prototype
+		 * @public
+		 */
+		'aria-valuetext': PropTypes.string,
+
+		/**
 		 * Accessibility hint
 		 * For example, `hour`, `year`, and `meridiem`
 		 *
@@ -136,6 +147,14 @@ const PickerBase = class extends React.Component {
 		 * @public
 		 */
 		disabled: PropTypes.bool,
+
+		/**
+		 * The picker id reference for setting aria-controls.
+		 *
+		 * @type {String}
+		 * @private
+		 */
+		id: PropTypes.string,
 
 		/**
 		 * Assign a custom icon for the incrementer. All strings supported by [Icon]{Icon} are
@@ -676,9 +695,11 @@ const PickerBase = class extends React.Component {
 	render () {
 		const {active} = this.state;
 		const {
+			'aria-valuetext': ariaValueText,
 			noAnimation,
 			children,
 			disabled,
+			id,
 			index,
 			joined,
 			onDecrementSpotlightDisappear,
@@ -731,6 +752,7 @@ const PickerBase = class extends React.Component {
 		return (
 			<div
 				{...rest}
+				aria-controls={joined ? id : null}
 				aria-disabled={disabled}
 				aria-label={joined ? this.calcJoinedLabel(valueText) : null}
 				className={classes}
@@ -741,6 +763,7 @@ const PickerBase = class extends React.Component {
 				ref={this.initContainerRef}
 			>
 				<PickerButton
+					aria-controls={!joined ? id : null}
 					aria-label={this.calcIncrementLabel(valueText)}
 					className={css.incrementer}
 					disabled={incrementerDisabled}
@@ -758,8 +781,9 @@ const PickerBase = class extends React.Component {
 				<div
 					aria-disabled={disabled}
 					aria-hidden={!active}
-					aria-valuetext={valueText}
+					aria-valuetext={ariaValueText != null ? ariaValueText : valueText}
 					className={css.valueWrapper}
+					id={id}
 					role="spinbutton"
 				>
 					{sizingPlaceholder}
@@ -775,6 +799,7 @@ const PickerBase = class extends React.Component {
 					</PickerViewManager>
 				</div>
 				<PickerButton
+					aria-controls={!joined ? id : null}
 					aria-label={this.calcDecrementLabel(valueText)}
 					className={css.decrementer}
 					disabled={decrementerDisabled}
@@ -794,13 +819,16 @@ const PickerBase = class extends React.Component {
 	}
 };
 
-const Picker = Skinnable(
-	DisappearSpotlightDecorator(
-		{events: {
-			onDecrementSpotlightDisappear: `.${css.incrementer}`,
-			onIncrementSpotlightDisappear: `.${css.decrementer}`
-		}},
-		PickerBase
+const Picker = IdProvider(
+	{generateProp: null, prefix: 'p_'},
+	Skinnable(
+		DisappearSpotlightDecorator(
+			{events: {
+				onDecrementSpotlightDisappear: `.${css.incrementer}`,
+				onIncrementSpotlightDisappear: `.${css.decrementer}`
+			}},
+			PickerBase
+		)
 	)
 );
 
