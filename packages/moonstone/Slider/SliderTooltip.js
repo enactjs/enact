@@ -72,6 +72,7 @@ const SliderTooltipBase = kind({
 	},
 
 	defaultProps: {
+		climax: 'rising',
 		forceSide: false,
 		proportion: 0,
 		side: 'before',
