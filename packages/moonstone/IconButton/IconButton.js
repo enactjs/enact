@@ -9,7 +9,6 @@ import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
 // import {diffClasses} from '@enact/ui/MigrationAid';
 import React from 'react';
-// import PropTypes from 'prop-types';
 import {IconButtonFactory as UiIconButtonFactory} from '@enact/ui/IconButton';
 import {ButtonFactory} from '../Button';
 import {IconFactory} from '../Icon';
@@ -60,11 +59,6 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 	 */
 	return kind({
 		name: 'IconButton',
-
-		styles: {
-			css: componentCss,
-			className: 'iconButton'
-		},
 
 		render: (props) => {
 			return (
