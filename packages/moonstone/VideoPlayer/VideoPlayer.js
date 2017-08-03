@@ -18,7 +18,7 @@ import {on, off} from '@enact/core/dispatcher';
 import {platform} from '@enact/core/platform';
 import {is} from '@enact/core/keymap';
 import Slottable from '@enact/ui/Slottable';
-import {getDirection, Spotlight} from '@enact/spotlight';
+import Spotlight from '@enact/spotlight';
 import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
 import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
 
@@ -823,6 +823,23 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	/**
+	 * If the announce state is either ready to read the title or ready to read info, advance the
+	 * state to "read".
+	 *
+	 * @returns {Boolean} Returns true to be used in event handlers
+	 * @private
+	 */
+	markAnnounceRead = () => {
+		if (this.state.announce === AnnounceState.TITLE) {
+			this.setState({announce: AnnounceState.TITLE_READ});
+		} else if (this.state.announce === AnnounceState.INFO) {
+			this.setState({announce: AnnounceState.DONE});
+		}
+
+		return true;
+	}
+
+	/**
 	 * Shows media controls.
 	 *
 	 * @function
@@ -865,6 +882,7 @@ const VideoPlayerBase = class extends React.Component {
 			bottomControlsVisible: false,
 			more: false
 		}, () => forwardControlsAvailable({available: false}, this.props));
+		this.markAnnounceRead();
 	}
 
 	autoCloseJob = new Job(this.hideControls)
@@ -1384,11 +1402,13 @@ const VideoPlayerBase = class extends React.Component {
 		}
 	}
 
-	handleKeyDownFromControls = (ev) => {
-		if (getDirection(ev.keyCode) === 'down') {
-			this.hideControls();
-		}
-	}
+	handleKeyDownFromControls = this.handle(
+		// onKeyDown is used as a proxy for when the title has been read because it can only occur
+		// after the controls have been shown.
+		this.markAnnounceRead,
+		forKey('down'),
+		this.hideControls
+	)
 
 	handleSpotlightUpFromSlider = handle(
 		stopImmediate,
