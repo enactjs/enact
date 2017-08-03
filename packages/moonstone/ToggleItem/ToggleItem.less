@@ -6,5 +6,9 @@
 .toggleItem {
 	.icon {
 		.margin-start-end(0, @moon-toggle-item-icon-margin);
+
+		&:not(.selected) {
+			visibility: hidden;
+		}
 	}
 }

@@ -46,11 +46,6 @@ const ToggleItemBaseFactory = factory({css: componentCss}, ({css}) => {
 	return kind({
 		name: 'MoonstoneToggleItem',
 
-		styles: {
-			css: componentCss,
-			className: 'toggleItem'
-		},
-
 		render: (props) => {
 			return (
 				<UiToggleItem {...props} ItemOverlay={ItemOverlay} ToggleIcon={ToggleIcon} />
