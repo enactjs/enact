@@ -1,68 +1,96 @@
+import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import Icon from '../Icon';
+import UiIcon from '../Icon';
 
-import css from './ToggleItem.less';
+import componentCss from './ToggleItem.less';
 
 /**
- * Utility component to render the {@link moonstone/Icon.Icon} for
- * {@link moonstone/ToggleItem.ToggleItem}.
+ * {@link ui/ToggleIcon.ToggleIconBaseFactory} is Factory wrapper around
+ * {@link ui/ToggleIcon.ToggleIconBase} that allows overriding certain classes at design time. The
+ * following are properties of the `css` member of the argument to the factory.
  *
- * @class ToggleIcon
- * @memberof moonstone/ToggleItem
+ * @class ToggleIconBaseFactory
+ * @memberof ui/ToggleIcon
+ * @factory
  * @ui
- * @private
+ * @public
  */
-const ToggleIconBase = kind({
-	name: 'ToggleIcon',
+const ToggleIconBaseFactory = factory({css: componentCss}, ({css}) => {
+	/**
+	 * Utility component to render the {@link moonstone/Icon.Icon} for
+	 * {@link moonstone/ToggleItem.ToggleItem}.
+	 *
+	 * @class ToggleIcon
+	 * @memberof moonstone/ToggleItem
+	 * @ui
+	 * @private
+	 */
+	return kind({
+		name: 'ToggleIcon',
 
-	propTypes: /** @lends moonstone/ToggleItem.ToggleIcon.prototype */ {
-		/**
-		 * Nothing, a string, or an {@link moonstone/Icon.Icon}
-		 *
-		 * @type {Node}
-		 */
-		children: PropTypes.node,
+		propTypes: /** @lends moonstone/ToggleItem.ToggleIcon.prototype */ {
+			/**
+			 * Nothing, a string, or an {@link moonstone/Icon.Icon}
+			 *
+			 * @type {Node}
+			 */
+			children: PropTypes.node,
 
-		/**
-		 * When `true`, the icon is displayed
-		 *
-		 * @type {Boolean}
-		 */
-		selected: PropTypes.bool
-	},
+			/**
+			 * The Icon component to use as the base of this component.
+			 *
+			 * @type {Component}
+			 * @default {@link ui/Icon}
+			 * @public
+			 */
+			Icon: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
 
-	defaultProps: {
-		selected: false
-	},
+			/**
+			 * When `true`, the icon is displayed
+			 *
+			 * @type {Boolean}
+			 */
+			selected: PropTypes.bool
+		},
 
-	styles: {
-		css,
-		className: 'icon'
-	},
+		defaultProps: {
+			Icon: UiIcon,
+			selected: false
+		},
 
-	computed: {
-		className: ({selected, styler}) => styler.append({selected})
-	},
+		styles: {
+			css,
+			className: 'icon'
+		},
 
-	render: ({children, ...rest}) => {
-		if (children) {
-			if (React.isValidElement(children)) {
-				return children;
+		computed: {
+			className: ({selected, styler}) => styler.append({selected})
+		},
+
+		render: ({children, Icon, ...rest}) => {
+			if (children) {
+				if (React.isValidElement(children)) {
+					return children;
+				}
+				return (
+					<Icon {...rest}>{children}</Icon>
+				);
 			}
-			return (
-				<Icon {...rest}>{children}</Icon>
-			);
-		}
 
-		return null;
-	}
+			return null;
+		}
+	});
 });
+
+const ToggleIconBase = ToggleIconBaseFactory();
 
 export default ToggleIconBase;
 export {
 	ToggleIconBase as ToggleIcon,
-	ToggleIconBase
+	ToggleIconBase,
+	ToggleIconBaseFactory as ToggleIconFactory,
+	ToggleIconBaseFactory
 };

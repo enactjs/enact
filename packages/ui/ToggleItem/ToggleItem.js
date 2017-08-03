@@ -1,207 +1,261 @@
 /**
- * Exports the {@link moonstone/ToggleItem.ToggleItem} and
- * {@link moonstone/ToggleItem.ToggleItemBase} components.
+ * Exports the {@link ui/ToggleItem.ToggleItem} and
+ * {@link ui/ToggleItem.ToggleItemBase} components.
  *
- * @module moonstone/ToggleItem
+ * @module ui/ToggleItem
  */
 
+import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Toggleable from '@enact/ui/Toggleable';
 
-import {ItemOverlay} from '../Item';
+import Toggleable from '../Toggleable';
+import {ItemOverlay as UiItemOverlay} from '../Item';
 
-import ToggleIcon from './ToggleIcon';
+import UiToggleIcon, {ToggleIconFactory} from './ToggleIcon';
 
-import css from './ToggleItem.less';
+import componentCss from './ToggleItem.less';
 
 /**
- * {@link moonstone/ToggleItem.ToggleItemBase} is a component to make a Toggleable Item
- * (e.g Checkbox, RadioItem). It has a customizable prop for icon, so any Moonstone Icon can be used
- * to represent the selected state.
+ * {@link ui/ToggleItem.ToggleItem} is a stateless ToggleItem with no styling applied.
  *
- * @class ToggleItemBase
- * @memberof moonstone/ToggleItem
+ * @class ToggleItem
+ * @memberof ui/ToggleItem
  * @ui
  * @public
  */
-const ToggleItemBase = kind({
-	name: 'ToggleItem',
+const ToggleItemBaseFactory = factory({css: componentCss}, ({css}) => {
+	// diffClasses('UI ToggleItem', componentCss, css);
 
-	propTypes: /** @lends moonstone/ToggleItem.ToggleItemBase.prototype */ {
-		/**
-		 * The string to be displayed as the main content of the toggle item.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		children: PropTypes.node.isRequired,
+	/**
+	 * {@link ui/ToggleItem.ToggleItemBase} is a component to make a Toggleable Item
+	 * (e.g Checkbox, RadioItem). It has a customizable prop for icon, so any ui Icon can be used
+	 * to represent the selected state.
+	 *
+	 * @class ToggleItemBase
+	 * @memberof ui/ToggleItem
+	 * @ui
+	 * @public
+	 */
+	return kind({
+		name: 'ToggleItem',
 
-		/**
-		 * Applies a disabled visual state to the toggle item.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		disabled: PropTypes.bool,
+		propTypes: /** @lends ui/ToggleItem.ToggleItemBase.prototype */ {
+			/**
+			 * The string to be displayed as the main content of the toggle item.
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			children: PropTypes.node.isRequired,
 
-		/**
-		 * Icon property accepts a string or an Icon Element.
-		 *
-		 * @type {String|moonstone/Icon.Icon}
-		 * @default null
-		 * @public
-		 */
-		icon: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+			/**
+			 * Applies a disabled visual state to the toggle item.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			disabled: PropTypes.bool,
 
-		/**
-		 * CSS classes for Icon
-		 *
-		 * @type {String}
-		 * @default ''
-		 * @public
-		 */
-		iconClasses: PropTypes.string,
+			/**
+			 * Icon property accepts a string or an Icon Element.
+			 *
+			 * @type {String|ui/Icon.Icon}
+			 * @default null
+			 * @public
+			 */
+			icon: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
 
-		/**
-		 * Specifies on which side (`before` or `after`) of the text the icon appears.
-		 *
-		 * @type {String}
-		 * @default 'before'
-		 * @public
-		 */
-		iconPosition: PropTypes.oneOf(['before', 'after']),
+			/**
+			 * CSS classes for Icon
+			 *
+			 * @type {String}
+			 * @default ''
+			 * @public
+			 */
+			iconClasses: PropTypes.string,
 
-		/**
-		 * Applies inline styling to the toggle item.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		inline: PropTypes.bool,
+			/**
+			 * Specifies on which side (`before` or `after`) of the text the icon appears.
+			 *
+			 * @type {String}
+			 * @default 'before'
+			 * @public
+			 */
+			iconPosition: PropTypes.oneOf(['before', 'after']),
 
-		/**
-		 * The handler to run when the toggle item is toggled. Developers should
-		 * generally use `onToggle` instead.
-		 *
-		 * @type {Function}
-		 */
-		onClick: PropTypes.func,
+			/**
+			 * Applies inline styling to the toggle item.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			inline: PropTypes.bool,
 
-		/**
-		 * The handler to run when the toggle item is toggled.
-		 *
-		 * @type {Function}
-		 * @param {Object} event
-		 * @param {String} event.selected - Selected value of item.
-		 * @param {*} event.value - Value passed from `value` prop.
-		 * @public
-		 */
-		onToggle: PropTypes.func,
+			/**
+			 * The ItemOverlay component to use in this ToggleItem for the base layout.
+			 *
+			 * @type {Component}
+			 * @default {@link ui/ItemOverlay}
+			 * @public
+			 */
+			ItemOverlay: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
 
-		/**
-		 * Applies the provided `icon` when the this is `true`.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		selected: PropTypes.bool,
+			/**
+			 * The handler to run when the toggle item is toggled. Developers should
+			 * generally use `onToggle` instead.
+			 *
+			 * @type {Function}
+			 */
+			onClick: PropTypes.func,
 
-		/**
-		 * The value that will be sent to the `onToggle` handler.
-		 * @type {*}
-		 * @default null
-		 * @public
-		 */
-		value: PropTypes.any
-	},
+			/**
+			 * The handler to run when the toggle item is toggled.
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @param {String} event.selected - Selected value of item.
+			 * @param {*} event.value - Value passed from `value` prop.
+			 * @public
+			 */
+			onToggle: PropTypes.func,
 
-	defaultProps: {
-		disabled: false,
-		iconClasses: '',
-		iconPosition: 'before',
-		inline: false,
-		selected: false,
-		value: null
-	},
+			/**
+			 * Applies the provided `icon` when the this is `true`.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			selected: PropTypes.bool,
 
-	styles: {
-		css,
-		className: 'toggleItem'
-	},
+			/**
+			 * The ToggleIcon component to use in this ToggleItem for both the before and after icons.
+			 *
+			 * @type {Component}
+			 * @default {@link ui/ToggleIcon}
+			 * @public
+			 */
+			ToggleIcon: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
 
-	handlers: {
-		onToggle: (ev, {onToggle, onClick, selected, disabled, value}) => {
-			if (!disabled && (onToggle || onClick)) {
-				if (onToggle) onToggle({selected: !selected, value});
-				if (onClick) onClick(ev);
-			}
-		}
-	},
+			/**
+			 * The value that will be sent to the `onToggle` handler.
+			 * @type {*}
+			 * @default null
+			 * @public
+			 */
+			value: PropTypes.any
+		},
 
-	computed: {
-		iconBefore: ({iconClasses, selected, icon, iconPosition}) => {
-			if (iconPosition === 'before') {
-				return (
-					<ToggleIcon slot="overlayBefore" className={iconClasses} selected={selected}>
-						{icon}
-					</ToggleIcon>
-				);
+		defaultProps: {
+			disabled: false,
+			iconClasses: '',
+			iconPosition: 'before',
+			inline: false,
+			ItemOverlay: UiItemOverlay,
+			selected: false,
+			ToggleIcon: UiToggleIcon,
+			value: null
+		},
+
+		styles: {
+			css,
+			className: 'toggleItem'
+		},
+
+		handlers: {
+			onToggle: (ev, {onToggle, onClick, selected, disabled, value}) => {
+				if (!disabled && (onToggle || onClick)) {
+					if (onToggle) onToggle({selected: !selected, value});
+					if (onClick) onClick(ev);
+				}
 			}
 		},
-		iconAfter: ({iconClasses, selected, icon, iconPosition}) => {
-			if (iconPosition === 'after') {
-				return (
-					<ToggleIcon slot="overlayAfter" className={iconClasses} selected={selected}>
-						{icon}
-					</ToggleIcon>
-				);
+
+		computed: {
+			iconBefore: ({iconClasses, selected, icon, iconPosition, ToggleIcon}) => {
+				if (iconPosition === 'before') {
+					return (
+						<ToggleIcon slot="overlayBefore" className={iconClasses} selected={selected}>
+							{icon}
+						</ToggleIcon>
+					);
+				}
+			},
+			iconAfter: ({iconClasses, selected, icon, iconPosition, ToggleIcon}) => {
+				if (iconPosition === 'after') {
+					return (
+						<ToggleIcon slot="overlayAfter" className={iconClasses} selected={selected}>
+							{icon}
+						</ToggleIcon>
+					);
+				}
 			}
+		},
+
+		render: ({children, iconAfter, iconBefore, ItemOverlay, onToggle, selected, ...rest}) => {
+			delete rest.icon;
+			delete rest.iconClasses;
+			delete rest.iconPosition;
+			delete rest.ToggleIcon;
+			delete rest.value;
+
+			return (
+				<ItemOverlay
+					role="checkbox"
+					{...rest}
+					aria-checked={selected}
+					onClick={onToggle}
+				>
+					{iconBefore}
+					{children}
+					{iconAfter}
+				</ItemOverlay>
+			);
 		}
-	},
-
-	render: ({children, iconAfter, iconBefore, onToggle, selected, ...rest}) => {
-		delete rest.icon;
-		delete rest.iconClasses;
-		delete rest.iconPosition;
-		delete rest.value;
-
-		return (
-			<ItemOverlay
-				role="checkbox"
-				{...rest}
-				aria-checked={selected}
-				onClick={onToggle}
-			>
-				{iconBefore}
-				{children}
-				{iconAfter}
-			</ItemOverlay>
-		);
-	}
+	});
 });
 
-
 /**
- * {@link moonstone/ToggleItem.ToggleItemBase} is a component to make a Toggleable Item
- * (e.g Checkbox, RadioItem). It has a customizable prop for icon, so any Moonstone Icon can be used
+ * {@link ui/ToggleItem.ToggleItemBase} is a component to make a Toggleable Item
+ * (e.g Checkbox, RadioItem). It has a customizable prop for icon, so any ui Icon can be used
  * to represent the selected state.
  *
  * @class ToggleItem
- * @memberof moonstone/ToggleItem
- * @extends moonstone/ToggleItem.ToggleItemBase
+ * @memberof ui/ToggleItem
+ * @extends ui/ToggleItem.ToggleItemBase
  * @mixes ui/Toggleable.Toggleable
  * @ui
  * @public
  */
-const ToggleItem = Toggleable(
+const ToggleItemBase = ToggleItemBaseFactory();
+
+
+/**
+ * {@link ui/ToggleItem.ToggleItemFactory} is Factory wrapper around {@link ui/ToggleItem.ToggleItem}
+ * that allows overriding certain classes at design time. See {@link ui/ToggleItem.ToggleItemBaseFactory}.
+ *
+ * @class ToggleItemFactory
+ * @memberof ui/ToggleItem
+ * @factory
+ * @public
+ */
+const ToggleItemFactory = (props) => Toggleable(
 	{prop: 'selected'},
-	ToggleItemBase
+	ToggleItemBaseFactory(props)
 );
 
+const ToggleItem = ToggleItemFactory();
+
+
 export default ToggleItem;
-export {ToggleItem, ToggleItemBase};
+export {
+	ToggleItem,
+	ToggleItemBase,
+	ToggleItemFactory,
+	ToggleItemBaseFactory,
+	ToggleIconFactory
+};
