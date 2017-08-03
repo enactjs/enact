@@ -227,13 +227,11 @@ class ScrollbarBase extends PureComponent {
 			if (updatePrevButton && updateNextButton) {
 				return {prevButtonDisabled: shouldDisablePrevButton, nextButtonDisabled: shouldDisableNextButton};
 			} else if (updatePrevButton) {
-				this.buttonToFocus = this.prevButtonNodeRef;
 				return {prevButtonDisabled: shouldDisablePrevButton};
 			} else if (updateNextButton) {
-				this.buttonToFocus = this.nextButtonNodeRef;
 				return {nextButtonDisabled: shouldDisableNextButton};
 			}
-		}, () => callback({buttonToFocus: this.buttonToFocus}));
+		}, () => callback({buttonToFocus:  this.state.prevButtonDisabled ? nextButtonNodeRef : prevButtonNodeRef}));
 
 		if (shouldDisablePrevButton && spotItem === prevButtonNodeRef) {
 			if (this.pressed) {
