@@ -667,13 +667,20 @@ function getContainerFocusTarget (containerId) {
 	// deferring restoration until it's requested to allow containers to prepare first
 	restoreLastFocusedElement(containerId);
 
-	const next = getContainerNavigableElements(containerId)[0] || null;
-	if (isContainer(next)) {
-		const nextId = isContainerNode(next) ? getContainerId(next) : next;
-		return getContainerFocusTarget(nextId);
-	}
+	let next = getContainerNavigableElements(containerId);
 
-	return next;
+	// If multiple candidates returned, we need to find the first viable target since some may
+	// be empty containers which should be skipped.
+	return next.reduce((result, element) => {
+		if (result) {
+			return result;
+		} else if (isContainer(element)) {
+			const nextId = isContainerNode(element) ? getContainerId(element) : element;
+			return getContainerFocusTarget(nextId);
+		}
+
+		return element;
+	}, null) || null;
 }
 
 function getContainerPreviousTarget (containerId, direction, destination) {
