@@ -100,10 +100,6 @@ const forwardJumpBackwardButtonClick = forwardWithPrevent('onJumpBackwardButtonC
 const forwardJumpForwardButtonClick = forwardWithPrevent('onJumpForwardButtonClick');
 const forwardPlayButtonClick = forward('onPlayButtonClick');
 
-// localized strings
-const playLabel = 'Play';
-const pauseLabel = 'Pause';
-
 const AnnounceState = {
 	// Video is loaded but additional announcements have not been made
 	READY: 0,
@@ -318,7 +314,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * The label for the "More" button. This will show on the tooltip.
 		 *
 		 * @type {String}
-		 * @default 'Back'
+		 * @default 'More'
 		 * @public
 		 */
 		moreButtonLabel: PropTypes.string,
@@ -1106,7 +1102,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.setPlaybackRate(1);
 		this.send('play');
 		this.prevCommand = 'play';
-		this.announce($L(playLabel));
+		this.announce($L('Play'));
 	}
 
 	/**
@@ -1121,7 +1117,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.setPlaybackRate(1);
 		this.send('pause');
 		this.prevCommand = 'pause';
-		this.announce($L(pauseLabel));
+		this.announce($L('Pause'));
 	}
 
 	/**
@@ -1689,9 +1685,9 @@ const VideoPlayerBase = class extends React.Component {
 								onToggleMore={this.onMoreClick}
 								paused={this.state.paused}
 								pauseIcon={pauseIcon}
-								pauseLabel={pauseLabel}
+								pauseLabel={$L('Pause')}
 								playIcon={playIcon}
-								playLabel={playLabel}
+								playLabel={$L('Play')}
 								rateButtonsDisabled={rateButtonsDisabled}
 								rightComponents={rightComponents}
 								showMoreComponents={this.state.more}
