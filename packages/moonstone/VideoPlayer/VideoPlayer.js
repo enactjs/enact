@@ -943,6 +943,7 @@ const VideoPlayerBase = class extends React.Component {
 				(is('left', ev.keyCode) || is('right', ev.keyCode))) {
 			Spotlight.pause();
 			this.startListeningForPulses(ev.keyCode)();
+			this.announceJob.startAfter(500, secondsToTime(this.video.currentTime, this.durfmt, {includeHour: true}));
 		}
 		return true;
 	}
