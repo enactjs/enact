@@ -919,8 +919,10 @@ const VideoPlayerBase = class extends React.Component {
 	doPulseAction () {
 		if (is('left', this.pulsingKeyCode)) {
 			this.jump(-1 * this.props.jumpBy);
+			this.announceJob.startAfter(500, secondsToTime(this.video.currentTime, this.durfmt, {includeHour: true}));
 		} else if (is('right', this.pulsingKeyCode)) {
 			this.jump(this.props.jumpBy);
+			this.announceJob.startAfter(500, secondsToTime(this.video.currentTime, this.durfmt, {includeHour: true}));
 		}
 	}
 
@@ -943,7 +945,6 @@ const VideoPlayerBase = class extends React.Component {
 				(is('left', ev.keyCode) || is('right', ev.keyCode))) {
 			Spotlight.pause();
 			this.startListeningForPulses(ev.keyCode)();
-			this.announceJob.startAfter(500, secondsToTime(this.video.currentTime, this.durfmt, {includeHour: true}));
 		}
 		return true;
 	}
