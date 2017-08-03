@@ -219,12 +219,14 @@ class ScrollbarBase extends PureComponent {
 			shouldDisableNextButton = currentPos >= maxPos,
 			spotItem = window.document.activeElement,
 			callbackFn = (prevButtonDisabled, nextButtonDisabled) => {
-				if (prevButtonDisabled) {
-					return callback({buttonToFocus: nextButtonNodeRef});
-				} else if (nextButtonDisabled) {
-					return callback({buttonToFocus: prevButtonNodeRef});
-				} else {
-					return callback;
+				if (callback) {
+					if (prevButtonDisabled) {
+						return callback({buttonToFocus: nextButtonNodeRef});
+					} else if (nextButtonDisabled) {
+						return callback({buttonToFocus: prevButtonNodeRef});
+					} else {
+						return callback;
+					}
 				}
 			};
 
