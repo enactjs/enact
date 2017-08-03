@@ -47,12 +47,15 @@ const VideoBase = kind({
 					if (!source) return null;
 
 					const props = index === i ? activeProps : preloadProps;
-
-					return (
-						<video {...rest} {...props} preload={preload} key={i}>
-							<source {...source} />
-						</video>
-					);
+					if (preload === 'auto' || preload === 'metadata' || index === i) {
+						return (
+							<video {...rest} {...props} preload={preload} key={i}>
+								<source {...source} />
+							</video>
+						);
+					} else {
+						return null;
+					}
 				})}
 			</div>
 		);
