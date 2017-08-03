@@ -21,18 +21,20 @@ const SliderTooltipBase = kind({
 
 	propTypes: /** @lends moonstone/Slider.SliderTooltip.prototype */{
 		/**
-		 * Determines the side where tooltip will be.
+		 * When not `vertical`, determines which side of the knob the tooltip appears on.
+		 * When `'rising'`, the tooltip will be on the left side, when `'falling'`, the tooltip will
+		 * be on the right.
 		 *
 		 * @type {String}
 		 * @default 'rising'
-		 * @public
+		 * @private
 		 */
 		climax: PropTypes.string,
 
 		/**
-		 * Setting to `true` overrides the natural LTR->RTL tooltip side-flipping for locale
-		 * changes. This may be useful if you have a static layout that does not automatically
-		 * reverse when in an RTL language.
+		 * Setting to `true` overrides the natural LTR->RTL tooltip side-flipping for locale changes
+		 * for `vertical` sliders. This may be useful if you have a static layout that does not
+		 * automatically reverse when in an RTL language.
 		 *
 		 * @type {Boolean}
 		 * @public

@@ -97,6 +97,17 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			children: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 
 			/**
+			 * When not `vertical`, determines which side of the knob the tooltip appears on.
+			 * When `'rising'`, the tooltip will be on the left side, when `'falling'`, the tooltip will
+			 * be on the right.
+			 *
+			 * @type {String}
+			 * @default 'rising'
+			 * @private
+			 */
+			climax: PropTypes.string,
+
+			/**
 			 * Assign a custom icon for the decrementer. All strings supported by [Icon]{Icon} are
 			 * supported. Without a custom icon, the default is used, and is automatically changed when
 			 * [vertical]{moonstone/IncrementSlider#vertical} is changed.
@@ -353,8 +364,8 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 
 			/**
 			 * Setting to `true` overrides the natural LTR->RTL tooltip side-flipping for locale
-			 * changes. This may be useful if you have a static layout that does not automatically
-			 * reverse when in an RTL language.
+			 * changes for `vertical` sliders. This may be useful if you have a static layout that
+			 * does not automatically reverse when in an RTL language.
 			 *
 			 * @type {Boolean}
 			 * @default false
@@ -484,6 +495,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			'aria-hidden': ariaHidden,
 			backgroundProgress,
 			children,
+			climax,
 			decrementAriaLabel,
 			decrementDisabled,
 			decrementIcon,
@@ -549,6 +561,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						aria-hidden={ariaHidden}
 						backgroundProgress={backgroundProgress}
 						className={css.slider}
+						climax={climax}
 						disabled={disabled}
 						detachedKnob={detachedKnob}
 						focused={focused}

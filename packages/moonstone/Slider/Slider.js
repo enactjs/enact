@@ -100,11 +100,13 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			children: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 
 			/**
-			 * Determines the side where tooltip will be. This is handled and passed down from `SliderDecorator`. Expected values are `rising` and `falling`.
+			 * When not `vertical`, determines which side of the knob the tooltip appears on.
+			 * When `'rising'`, the tooltip will be on the left side, when `'falling'`, the tooltip will
+			 * be on the right.
 			 *
 			 * @type {String}
 			 * @default 'rising'
-			 * @public
+			 * @private
 			 */
 			climax: PropTypes.oneOf(['rising', 'falling']),
 
@@ -289,8 +291,8 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 
 			/**
 			 * Setting to `true` overrides the natural LTR->RTL tooltip side-flipping for locale
-			 * changes. This may be useful if you have a static layout that does not automatically
-			 * reverse when in an RTL language.
+			 * changes for `vertical` sliders. This may be useful if you have a static layout that
+			 * does not automatically reverse when in an RTL language.
 			 *
 			 * @type {Boolean}
 			 * @public
