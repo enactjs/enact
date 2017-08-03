@@ -4,110 +4,138 @@
  * @module moonstone/CheckboxItem
  */
 
+import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Toggleable from '@enact/ui/Toggleable';
 
-import Skinnable from '../Skinnable';
-import {ToggleItemBase} from '../ToggleItem';
-import Checkbox from '../Checkbox';
+import UiCheckbox from '../Checkbox';
+import Toggleable from '../Toggleable';
+import {ToggleItemBase} from '@enact/moonstone/ToggleItem'; // UPDATE WHEN ToggleItem MOVES!
 
 /**
- * {@link moonstone/CheckboxItem.CheckboxItemBase} is a component that
- * is an Item that is Toggleable. It has two states: `true` (selected) & `false`
- * (unselected). It uses a check icon to represent its selected state.
+ * {@link ui/CheckboxItem.CheckboxItemBaseFactory} is Factory wrapper around
+ * {@link ui/CheckboxItem.CheckboxItemBase} that allows overriding certain classes at design time.
+ * The following are properties of the `css` member of the argument to the factory.
  *
- * @class CheckboxItemBase
- * @memberof moonstone/CheckboxItem
+ * @class CheckboxItemBaseFactory
+ * @memberof ui/CheckboxItem
+ * @factory
  * @ui
  * @public
  */
-const CheckboxItemBase = kind({
-	name: 'CheckboxItem',
+const CheckboxItemBaseFactory = factory({css: {}}, () => {
+	/**
+	 * {@link moonstone/CheckboxItem.CheckboxItemBase} is a component that
+	 * is an Item that is Toggleable. It has two states: `true` (selected) & `false`
+	 * (unselected). It uses a check icon to represent its selected state.
+	 *
+	 * @class CheckboxItemBase
+	 * @memberof moonstone/CheckboxItem
+	 * @ui
+	 * @public
+	 */
+	return kind({
+		name: 'CheckboxItem',
 
-	propTypes: /** @lends moonstone/CheckboxItem.CheckboxItemBase.prototype */ {
-		/**
-		 * The string to be displayed as the main content of the checkbox item.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		children: PropTypes.string.isRequired,
+		propTypes: /** @lends moonstone/CheckboxItem.CheckboxItemBase.prototype */ {
+			/**
+			 * The string to be displayed as the main content of the checkbox item.
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			children: PropTypes.string.isRequired,
 
-		/**
-		 * When `true`, applies a disabled style and the control becomes non-interactive.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		disabled: PropTypes.bool,
+			/**
+			 * The Checkbox component to use in this CheckboxItem.
+			 *
+			 * @type {Component}
+			 * @default {@link ui/Checkbox}
+			 * @public
+			 */
+			Checkbox: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
 
-		/**
-		 * Specifies on which side (`before` or `after`) of the text the icon appears.
-		 *
-		 * @type {String}
-		 * @default 'before'
-		 * @public
-		 */
-		iconPosition: PropTypes.oneOf(['before', 'after']),
+			/**
+			 * When `true`, applies a disabled style and the control becomes non-interactive.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			disabled: PropTypes.bool,
 
-		/**
-		 * When `true`, an inline visual effect is applied to the button.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		inline: PropTypes.bool,
+			/**
+			 * Specifies on which side (`before` or `after`) of the text the icon appears.
+			 *
+			 * @type {String}
+			 * @default 'before'
+			 * @public
+			 */
+			iconPosition: PropTypes.oneOf(['before', 'after']),
 
-		/**
-		 * The handler to run when the checkbox item is toggled.
-		 *
-		 * @type {Function}
-		 * @param {Object} event
-		 * @param {String} event.selected - Selected value of item.
-		 * @param {*} event.value - Value passed from `value` prop.
-		 * @public
-		 */
-		onToggle: PropTypes.func,
+			/**
+			 * When `true`, an inline visual effect is applied to the CheckboxItem.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			inline: PropTypes.bool,
 
-		/**
-		 * When `true`, a check mark icon is applied to the button.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		selected: PropTypes.bool,
+			/**
+			 * The handler to run when the checkbox item is toggled.
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @param {String} event.selected - Selected value of item.
+			 * @param {*} event.value - Value passed from `value` prop.
+			 * @public
+			 */
+			onToggle: PropTypes.func,
 
-		/**
-		 * The value that will be sent to the `onToggle` handler.
-		 *
-		 * @type {String|Number}
-		 * @default ''
-		 * @public
-		 */
-		value: PropTypes.any
-	},
+			/**
+			 * When `true`, a check mark icon is applied to the CheckboxItem.
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			selected: PropTypes.bool,
 
-	defaultProps: {
-		disabled: false,
-		iconPosition: 'before',
-		inline: false,
-		value: ''
-	},
+			/**
+			 * The value that will be sent to the `onToggle` handler.
+			 *
+			 * @type {String|Number}
+			 * @default ''
+			 * @public
+			 */
+			value: PropTypes.any
+		},
 
-	computed: {
-		icon: ({selected, disabled}) => (
-			<Checkbox selected={selected} disabled={disabled} />
-		)
-	},
+		defaultProps: {
+			Checkbox: UiCheckbox,
+			disabled: false,
+			iconPosition: 'before',
+			inline: false,
+			value: ''
+		},
 
-	render: (props) => (
-		<ToggleItemBase {...props} />
-	)
+		computed: {
+			icon: ({Checkbox, selected, disabled}) => (
+				<Checkbox selected={selected} disabled={disabled} />
+			)
+		},
+
+		render: (props) => {
+			delete props.Checkbox;
+			return (
+				<ToggleItemBase {...props} />
+			);
+		}
+	});
 });
+
+const CheckboxItemBase = CheckboxItemBaseFactory();
 
 /**
  * {@link moonstone/CheckboxItem.CheckboxItem} is a component that is an Item that is Toggleable. It
@@ -126,10 +154,40 @@ const CheckboxItemBase = kind({
  */
 const CheckboxItem = Toggleable(
 	{prop: 'selected'},
-	Skinnable(
-		CheckboxItemBase
-	)
+	CheckboxItemBase
 );
 
+/**
+ * {@link ui/CheckboxItem.CheckboxItemFactory} is Factory wrapper around
+ * {@link ui/CheckboxItem.CheckboxItem} that allows overriding certain classes at design time.
+ * See {@link ui/CheckboxItem.CheckboxItemBaseFactory}.
+ *
+ * @class CheckboxItemFactory
+ * @memberof ui/CheckboxItem
+ * @factory
+ * @public
+ */
+const CheckboxItemFactory = factory(props => {
+	const Base = CheckboxItemBaseFactory(props);
+	/**
+	 * {@link ui/CheckboxItem.CheckboxItem} is a CheckboxItem with no styling, Toggleable applied.
+	 *
+	 * @class CheckboxItem
+	 * @memberof ui/CheckboxItem
+	 * @mixes ui/Toggleable.Toggleable
+	 * @ui
+	 * @public
+	 */
+	return Toggleable(
+		{prop: 'selected'},
+		Base
+	);
+});
+
 export default CheckboxItem;
-export {CheckboxItem, CheckboxItemBase};
+export {
+	CheckboxItem,
+	CheckboxItemBase,
+	CheckboxItemFactory,
+	CheckboxItemBaseFactory
+};
