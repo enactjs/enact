@@ -217,7 +217,16 @@ class ScrollbarBase extends PureComponent {
 			maxPos = vertical ? maxTop : maxLeft,
 			shouldDisablePrevButton = currentPos <= 0,
 			shouldDisableNextButton = currentPos >= maxPos,
-			spotItem = window.document.activeElement;
+			spotItem = window.document.activeElement,
+			callbackFn = (prevButtonDisabled, nextButtonDisabled) => {
+				if (prevButtonDisabled) {
+					return callback({buttonToFocus: nextButtonNodeRef});
+				} else if (nextButtonDisabled) {
+					return callback({buttonToFocus: prevButtonNodeRef});
+				} else {
+					return callback;
+				}
+			};
 
 		this.setState((prevState) => {
 			const
@@ -231,7 +240,7 @@ class ScrollbarBase extends PureComponent {
 			} else if (updateNextButton) {
 				return {nextButtonDisabled: shouldDisableNextButton};
 			}
-		}, () => callback({buttonToFocus:  this.state.prevButtonDisabled ? nextButtonNodeRef : prevButtonNodeRef}));
+		}, () => callbackFn(this.state.prevButtonDisabled, this.state.nextButtonDisabled));
 
 		if (shouldDisablePrevButton && spotItem === prevButtonNodeRef) {
 			if (this.pressed) {
