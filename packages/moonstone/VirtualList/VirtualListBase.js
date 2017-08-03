@@ -972,7 +972,7 @@ class VirtualListCore extends Component {
 						data-index={0}
 						data-vl-placeholder
 						onFocus={this.handlePlaceholderFocus}
-						role="alert"
+						role="region"
 					/>
 				)}
 				{needsScrollingPlaceholder ? (
