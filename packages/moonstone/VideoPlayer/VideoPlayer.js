@@ -826,10 +826,16 @@ const VideoPlayerBase = class extends React.Component {
 		return Math.random().toString(36).substr(2, 8);
 	}
 
+	/**
+	 * Shows media controls.
+	 *
+	 * @function
+	 * @memberof moonstone/VideoPlayer.VideoPlayerBase.prototype
+	 * @public
+	 */
 	showControls = () => {
 		this.startDelayedFeedbackHide();
 		this.startDelayedTitleHide();
-		forwardControlsAvailable({available: true}, this.props);
 
 		let {announce} = this.state;
 		if (announce === AnnounceState.READY) {
@@ -846,14 +852,23 @@ const VideoPlayerBase = class extends React.Component {
 			bottomControlsVisible: true,
 			feedbackVisible: true,
 			titleVisible: true
-		});
+		}, () => forwardControlsAvailable({available: true}, this.props));
 	}
 
+	/**
+	 * Hides media controls.
+	 *
+	 * @function
+	 * @memberof moonstone/VideoPlayer.VideoPlayerBase.prototype
+	 * @public
+	 */
 	hideControls = () => {
 		this.stopDelayedFeedbackHide();
 		this.stopDelayedTitleHide();
-		forwardControlsAvailable({available: false}, this.props);
-		this.setState({bottomControlsVisible: false, more: false});
+		this.setState({
+			bottomControlsVisible: false,
+			more: false
+		}, () => forwardControlsAvailable({available: false}, this.props));
 	}
 
 	autoCloseJob = new Job(this.hideControls)
@@ -1719,8 +1734,9 @@ const VideoPlayerBase = class extends React.Component {
  *	</VideoPlayer>
  * ```
  *
- * To invoke methods (`fastForward()`, `jump()`, `pause()`, `play()`, `rewind()`, `seek()`) or get
- * the current state (`getMediaState()`), store a ref to the `VideoPlayer` within your component:
+ * To invoke methods (`fastForward()`, `hideControls()`, `jump()`, `pause()`, `play()`, `rewind()`,
+ * `seek()`, 'showControls()') or get the current state (`getMediaState()`), store a ref to the
+ * `VideoPlayer` within your component:
  *
  * ```
  * 	...
@@ -1747,7 +1763,7 @@ const VideoPlayerBase = class extends React.Component {
  * @public
  */
 const VideoPlayer = ApiDecorator(
-	{api: ['fastForward', 'getMediaState', 'jump', 'pause', 'play', 'rewind', 'seek']},
+	{api: ['fastForward', 'getMediaState', 'hideControls', 'jump', 'pause', 'play', 'rewind', 'seek', 'showControls']},
 	Slottable(
 		{slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source']},
 		Skinnable(

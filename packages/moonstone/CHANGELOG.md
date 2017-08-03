@@ -15,6 +15,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` property `moreButtonDisabled` to disable the "More" button
 - `moonstone/Picker` and `moonstone/RangePicker` prop `aria-valuetext` to support reading custom text instead of value
 
+- `moonstone/VideoPlayer` methods `showControls` and `hideControls` to allow external interaction with the player
+
 ### Changed
 
 - `moonstone/VideoPlayer` to handle play, pause, stop, fast forward and rewind on remote controller
