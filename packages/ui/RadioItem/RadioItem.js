@@ -1,117 +1,140 @@
 /**
- * Exports the {@link moonstone/RadioItem.RadioItem} component.
+ * Exports the {@link ui/RadioItem.RadioItem} component.
  *
- * @module moonstone/RadioItem
+ * @module ui/RadioItem
  */
 
+import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Toggleable from '@enact/ui/Toggleable';
 
-import {ToggleItemBase} from '../ToggleItem';
-import Skinnable from '../Skinnable';
+import UiToggleItem from '../ToggleItem';
 
-import css from './RadioItem.less';
+import componentCss from './RadioItem.less';
+
 
 /**
- * {@link moonstone/RadioItem.RadioItemBase} is a component that
- * combines a Toggleable radio selector and an Item. It has two selected states
- * `true` & `false`.
+ * {@link ui/RadioItem.RadioItemBaseFactory} is Factory wrapper around {@link ui/RadioItem.RadioItemBase}
+ * that allows overriding certain classes at design time. The following are properties of the `css`
+ * member of the argument to the factory.
  *
- * @class RadioItemBase
- * @memberof moonstone/RadioItem
+ * @class RadioItemBaseFactory
+ * @memberof ui/RadioItem
+ * @factory
  * @ui
  * @public
  */
-const RadioItemBase = kind({
-	name: 'RadioItem',
+const RadioItemBaseFactory = factory({css: componentCss}, ({css}) => {
+	/**
+	 * {@link ui/RadioItem.RadioItemBase} is a component that
+	 * combines a Toggleable radio selector and an Item. It has two selected states
+	 * `true` & `false`.
+	 *
+	 * @class RadioItemBase
+	 * @memberof ui/RadioItem
+	 * @ui
+	 * @public
+	 */
+	return kind({
+		name: 'RadioItem',
 
-	propTypes: /** @lends moonstone/RadioItem.RadioItemBase.prototype */ {
-		/**
-		 * The string to be displayed as the main content of the radio item.
-		 *
-		 * @type {String}
-		 * @public
-		 */
-		children: PropTypes.string.isRequired,
+		propTypes: /** @lends ui/RadioItem.RadioItemBase.prototype */ {
+			/**
+			 * The string to be displayed as the main content of the radio item.
+			 *
+			 * @type {String}
+			 * @public
+			 */
+			children: PropTypes.string.isRequired,
 
-		/**
-		 * Applies a disabled visual state to the radio item.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		disabled: PropTypes.bool,
+			/**
+			 * Applies a disabled visual state to the radio item.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			disabled: PropTypes.bool,
 
-		/**
-		 * Applies inline styling to the radio item.
-		 *
-		 * @type {Boolean}
-		 * @default false
-		 * @public
-		 */
-		inline: PropTypes.bool,
+			/**
+			 * Applies inline styling to the radio item.
+			 *
+			 * @type {Boolean}
+			 * @default false
+			 * @public
+			 */
+			inline: PropTypes.bool,
 
-		/**
-		 * The handler to run when the radio item is toggled.
-		 *
-		 * @type {Function}
-		 * @param {Object} event
-		 * @param {String} event.selected - Selected value of item.
-		 * @param {*} event.value - Value passed from `value` prop.
-		 * @public
-		 */
-		onToggle: PropTypes.func,
+			/**
+			 * The handler to run when the radio item is toggled.
+			 *
+			 * @type {Function}
+			 * @param {Object} event
+			 * @param {String} event.selected - Selected value of item.
+			 * @param {*} event.value - Value passed from `value` prop.
+			 * @public
+			 */
+			onToggle: PropTypes.func,
 
-		/**
-		 * Applies a filled circle icon to the radio item.
-		 *
-		 * @type {Boolean}
-		 * @public
-		 */
-		selected: PropTypes.bool,
+			/**
+			 * Applies a filled circle icon to the radio item.
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			selected: PropTypes.bool,
 
-		/**
-		 * The value that will be sent to the `onToggle` handler.
-		 *
-		 * @type {*}
-		 * @default ''
-		 * @public
-		 */
-		value: PropTypes.any
-	},
+			/**
+			 * The ToggleItem component to use as the basis for this component.
+			 *
+			 * @type {Component}
+			 * @default {@link ui/ToggleItem}
+			 * @public
+			 */
+			ToggleItem: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
 
-	defaultProps: {
-		disabled: false,
-		inline: false,
-		value: ''
-	},
+			/**
+			 * The value that will be sent to the `onToggle` handler.
+			 *
+			 * @type {*}
+			 * @default ''
+			 * @public
+			 */
+			value: PropTypes.any
+		},
 
-	styles: {
-		css,
-		className: 'radioItem'
-	},
+		defaultProps: {
+			disabled: false,
+			inline: false,
+			ToggleItem: UiToggleItem,
+			value: ''
+		},
 
-	computed: {
-		icon: ({selected, styler}) => {
-			const className = styler.join(css.dot, {selected});
+		styles: {
+			css,
+			className: 'radioItem'
+		},
 
-			return (
-				<div className={className} />
-			);
-		}
-	},
+		computed: {
+			icon: ({selected, styler}) => {
+				const className = styler.join(css.dot, {selected});
 
-	render: (props) => (
-		<ToggleItemBase {...props} />
-	)
+				return (
+					<div className={className} />
+				);
+			}
+		},
+
+		render: ({ToggleItem, ...rest}) => (
+			<ToggleItem {...rest} />
+		)
+	});
 });
 
 
 /**
- * {@link moonstone/RadioItem.RadioItem} is a component that combines a
+ * {@link ui/RadioItem.RadioItem} is a component that combines a
  * {@link ui/Toggleable.Toggleable} radio selector and an Item. It has two selected states `true` &
  * `false`.
  *
@@ -121,17 +144,17 @@ const RadioItemBase = kind({
  * `onToggle` events.
  *
  * @class RadioItem
- * @memberof moonstone/RadioItem
+ * @memberof ui/RadioItem
  * @mixes ui/Toggleable.Toggleable
  * @ui
  * @public
  */
-const RadioItem = Toggleable(
-	{prop: 'selected'},
-	Skinnable(
-		RadioItemBase
-	)
-);
+const RadioItemBase = RadioItemBaseFactory();
 
-export default RadioItem;
-export {RadioItem, RadioItemBase};
+export default RadioItemBase;
+export {
+	RadioItemBase as RadioItem,
+	RadioItemBase,
+	RadioItemBaseFactory as RadioItemFactory,
+	RadioItemBaseFactory
+};
