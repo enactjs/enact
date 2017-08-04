@@ -16,6 +16,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Picker` and `moonstone/RangePicker` prop `aria-valuetext` to support reading custom text instead of value
 
 - `moonstone/VideoPlayer` methods `showControls` and `hideControls` to allow external interaction with the player
+- `moonstone/Scroller` support for Page Up/Page Down keys in pointer mode when no item has focus
 
 ### Changed
 
