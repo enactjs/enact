@@ -151,7 +151,7 @@ const PanelsBase = kind({
 		childProps: ({childProps, id, noCloseButton}, {hasCloseButton}) => {
 			// If a close button is added by `ApplicationCloseDecorator`, `aria-owns` will be added in
 			// `moonstone/Panel` directly.
-			if (hasCloseButton && noCloseButton || !id) {
+			if (hasCloseButton || noCloseButton || !id) {
 				return childProps;
 			}
 
