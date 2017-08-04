@@ -282,10 +282,12 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		componentWillUnmount () {
 			const
 				{containerRef} = this,
-				childContainerRef = this.childRef.getContainerNode();
+				childContainerRef = this.childRef.containerRef;
 
 			// Before call cancelAnimationFrame, you must send scrollStop Event.
-			this.doScrollStop();
+			if (this.scrolling) {
+				this.doScrollStop();
+			}
 			this.forceUpdateJob.stop();
 			this.scrollStopJob.stop();
 
@@ -353,15 +355,15 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		onMouseOver = () => {
-			this.resetPosition = this.childRef.getContainerNode().scrollTop;
+			this.resetPosition = this.childRef.containerRef.scrollTop;
 		}
 
 		onMouseMove = () => {
 			if (this.resetPosition !== null) {
-				const containerNode = this.childRef.getContainerNode();
-				containerNode.style.scrollBehavior = null;
-				containerNode.scrollTop = this.resetPosition;
-				containerNode.style.scrollBehavior = 'smooth';
+				const childContainerRef = this.childRef.containerRef;
+				childContainerRef.style.scrollBehavior = null;
+				childContainerRef.scrollTop = this.resetPosition;
+				childContainerRef.style.scrollBehavior = 'smooth';
 				this.resetPosition = null;
 			}
 		}
@@ -563,8 +565,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		}
 
 		scrollToAccumulatedTarget = (delta, vertical) => {
-			const bounds = this.getScrollBounds();
-
 			if (!this.isScrollAnimationTargetAccumulated) {
 				this.accumulatedTargetX = this.scrollLeft;
 				this.accumulatedTargetY = this.scrollTop;
@@ -572,9 +572,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 
 			if (vertical) {
-				this.accumulatedTargetY = clamp(0, bounds.maxTop, this.accumulatedTargetY + delta);
+				this.accumulatedTargetY += delta;
 			} else {
-				this.accumulatedTargetX = clamp(0, bounds.maxLeft, this.accumulatedTargetX + delta);
+				this.accumulatedTargetX += delta;
 			}
 
 			this.start(this.accumulatedTargetX, this.accumulatedTargetY);
@@ -641,7 +641,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		start (targetX, targetY, animate = true) {
 			const
 				bounds = this.getScrollBounds(),
-				containerNode = this.childRef.getContainerNode();
+				childContainerRef = this.childRef.containerRef;
 
 			targetX = clamp(0, bounds.maxLeft, targetX);
 			targetY = clamp(0, bounds.maxTop, targetY);
@@ -656,9 +656,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			if (animate) {
 				this.childRef.scrollToPosition(targetX, targetY);
 			} else {
-				containerNode.style.scrollBehavior = null;
+				childContainerRef.style.scrollBehavior = null;
 				this.childRef.scrollToPosition(targetX, targetY);
-				containerNode.style.scrollBehavior = 'smooth';
+				childContainerRef.style.scrollBehavior = 'smooth';
 				this.focusOnItem();
 			}
 		}
@@ -883,7 +883,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		updateEventListeners = () => {
 			const
 				{containerRef} = this,
-				childContainerRef = this.childRef.getContainerNode();
+				childContainerRef = this.childRef.containerRef;
 
 			if (containerRef && containerRef.addEventListener) {
 				// FIXME `onWheel` doesn't work on the v8 snapshot.
@@ -969,7 +969,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					style={style}
 				>
 					<div className={css.container}>
-						<Wrapped {...props} ref={this.initChildRef} cbScrollTo={this.scrollTo} className={css.content} onKeyUp={this.onKeyUp} />
+						<Wrapped
+							{...props}
+							cbScrollTo={this.scrollTo}
+							className={css.content}
+							onKeyUp={this.onKeyUp}
+							ref={this.initChildRef}
+						/>
 						{isVerticalScrollbarVisible ? <Scrollbar {...this.verticalScrollbarProps} disabled={!isVerticalScrollbarVisible} /> : null}
 					</div>
 					{isHorizontalScrollbarVisible ? <Scrollbar {...this.horizontalScrollbarProps} corner={isVerticalScrollbarVisible} disabled={!isHorizontalScrollbarVisible} /> : null}
