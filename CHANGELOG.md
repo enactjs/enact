@@ -20,7 +20,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 
 - `moonstone/VideoPlayer` to handle play, pause, stop, fast forward and rewind on remote controller
 - `moonstone/Marquee` to also start when hovered if `marqueeOnRender` is set
-- `spotlight` containers using a `restrict` value of 'self-only' will ignore `leaveFor` directives when attempting to leave the container via 5-way
+- `spotlight` containers using a `restrict` value of `'self-only'` will ignore `leaveFor` directives when attempting to leave the container via 5-way
 
 ### Fixed
 
@@ -37,7 +37,7 @@ The following is a curated list of changes in the Enact project, newest changes 
 - `moonstone/Picker` wheeling in `moonstone/Scroller`
 - `moonstone/IncrementSlider` and `moonstone/Picker` to read value changes when selecting buttons
 - `spotlight` to not blur and re-focus an element that is already focused
-- `ui/PlaceholderDecorator` to update bounds of `Scroller` when the `visible` state changed.
+- `ui/PlaceholderDecorator` to update bounds of `Scroller` when the `visible` state changed
 
 ## [1.5.0] - 2017-07-19
 
