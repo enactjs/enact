@@ -187,8 +187,8 @@ class VirtualListCoreNative extends Component {
 		super(props);
 
 		this.state = {firstIndex: 0, numOfItems: 0};
+		this.initContentRef = this.initRef('contentRef');
 		this.initContainerRef = this.initRef('containerRef');
-		this.initWrapperRef = this.initRef('wrapperRef');
 	}
 
 	componentWillMount () {
@@ -273,9 +273,9 @@ class VirtualListCoreNative extends Component {
 	scrollPosition = 0
 	isScrolledBy5way = false
 
-	wrapperClass = null
+	containerClass = null
+	contentRef = null
 	containerRef = null
-	wrapperRef = null
 
 	// spotlight
 	lastFocusedIndex = null
@@ -288,7 +288,7 @@ class VirtualListCoreNative extends Component {
 
 	isPlaceholderFocused () {
 		const current = Spotlight.getCurrent();
-		if (current && current.dataset.vlPlaceholder && this.containerRef.contains(current)) {
+		if (current && current.dataset.vlPlaceholder && this.contentRef.contains(current)) {
 			return true;
 		}
 
@@ -363,8 +363,6 @@ class VirtualListCoreNative extends Component {
 	gridPositionToItemPosition = ({primaryPosition, secondaryPosition}) =>
 		(this.isPrimaryDirectionVertical ? {left: secondaryPosition, top: primaryPosition} : {left: primaryPosition, top: secondaryPosition})
 
-	getContainerNode = () => (this.wrapperRef)
-
 	getClientSize = (node) => {
 		return {
 			clientWidth: node.clientWidth,
@@ -375,7 +373,7 @@ class VirtualListCoreNative extends Component {
 	calculateMetrics (props) {
 		const
 			{clientSize, direction, itemSize, spacing} = props,
-			node = this.getContainerNode();
+			node = this.containerRef;
 
 		if (!clientSize && !node) {
 			return;
@@ -473,7 +471,7 @@ class VirtualListCoreNative extends Component {
 	calculateScrollBounds (props) {
 		const
 			{clientSize} = props,
-			node = this.getContainerNode();
+			node = this.containerRef;
 
 		if (!clientSize && !node) {
 			return;
@@ -500,13 +498,13 @@ class VirtualListCoreNative extends Component {
 			this.props.cbScrollTo({position: (isPrimaryDirectionVertical) ? {y: maxPos} : {x: maxPos}});
 		}
 
-		this.wrapperClass = (isPrimaryDirectionVertical) ? css.vertical : css.horizontal;
+		this.containerClass = (isPrimaryDirectionVertical) ? css.vertical : css.horizontal;
 	}
 
 	setContainerSize = () => {
-		if (this.containerRef) {
-			this.containerRef.style.width = this.scrollBounds.scrollWidth + 'px';
-			this.containerRef.style.height = this.scrollBounds.scrollHeight + 'px';
+		if (this.contentRef) {
+			this.contentRef.style.width = this.scrollBounds.scrollWidth + 'px';
+			this.contentRef.style.height = this.scrollBounds.scrollHeight + 'px';
 		}
 	}
 
@@ -630,7 +628,7 @@ class VirtualListCoreNative extends Component {
 	}
 
 	scrollToPosition (x, y) {
-		const node = this.wrapperRef;
+		const node = this.containerRef;
 		node.scrollTo((this.context.rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x, y);
 	}
 
@@ -679,7 +677,7 @@ class VirtualListCoreNative extends Component {
 	focusByIndex = (index) => {
 		// We have to focus node async for now since list items are not yet ready when it reaches componentDid* lifecycle methods
 		setTimeout(() => {
-			const item = this.containerRef.querySelector(`[data-index='${index}'].spottable`);
+			const item = this.contentRef.querySelector(`[data-index='${index}'].spottable`);
 
 			if (Spotlight.isPaused()) {
 				Spotlight.resume();
@@ -879,7 +877,7 @@ class VirtualListCoreNative extends Component {
 	}
 
 	setContainerDisabled = (bool) => {
-		const containerNode = this.getContainerNode();
+		const containerNode = this.containerRef;
 
 		if (containerNode) {
 			containerNode.setAttribute(dataContainerMutedAttribute, bool);
@@ -889,7 +887,7 @@ class VirtualListCoreNative extends Component {
 	syncClientSize = () => {
 		const
 			{props} = this,
-			node = this.getContainerNode();
+			node = this.containerRef;
 
 		if (!props.clientSize && !node) {
 			return;
@@ -936,11 +934,11 @@ class VirtualListCoreNative extends Component {
 
 		const
 			{className, style, ...rest} = props,
-			mergedClasses = classNames(css.list, this.wrapperClass, className);
+			mergedClasses = classNames(css.list, this.containerClass, className);
 
 		return (
-			<div className={mergedClasses} ref={this.initWrapperRef} style={style}>
-				<div {...rest} onKeyDown={this.onKeyDown} ref={this.initContainerRef}>
+			<div className={mergedClasses} ref={this.initContainerRef} style={style}>
+				<div {...rest} onKeyDown={this.onKeyDown} ref={this.initContentRef}>
 					{cc.length ? cc : null}
 					{primary ? null : (
 						<SpotlightPlaceholder
