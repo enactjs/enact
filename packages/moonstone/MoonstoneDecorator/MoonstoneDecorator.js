@@ -58,7 +58,7 @@ const defaultConfig = {
  * Note: [Application close button]{@link moonstone/ApplicationCloseDecorator.ApplicationCloseDecorator}
  * by default is not applied. This will change in 2.0. Refer to following example for how to apply.
  * ```
- * const App = () => (<Panels noCloseButton />);
+ * const App = () => (<Panels />);
  * const DecoratedApp = MoonstoneDecorator({closeButton: true}, App);
  *
  * <DecoratedApp onApplicationClose={handleClose} />

@@ -57,13 +57,21 @@ const ApplicationCloseDecorator = hoc((config, Wrapped) => {
 		static propTypes = /** @lends moonstone/ApplicationCloseDecorator.ApplicationCloseDecorator.prototype */ {
 
 			/**
-			 * Unique identifier for ApplicationCloseButton instance.
+			 * Unique identifier for ApplicationCloseButton instance
 			 *
 			 * @type {String}
 			 * @public
 			 * @default 'closeButton'
 			 */
 			closeButtonId: PropTypes.string,
+
+			/**
+			 * When `true`, app close button will not be rendered
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			noCloseButton: PropTypes.bool,
 
 			/**
 			 * A function to run when app close button is clicked
@@ -81,16 +89,19 @@ const ApplicationCloseDecorator = hoc((config, Wrapped) => {
 		getChildContext () {
 			return {
 				closeButtonId: this.props.closeButtonId,
-				hasCloseButton: true
+				hasCloseButton: !this.props.noCloseButton
 			};
 		}
 
 		render () {
-			const {closeButtonId, onApplicationClose, ...rest} = this.props;
+			const {closeButtonId, noCloseButton, onApplicationClose, ...rest} = this.props;
 			return (
 				<div>
 					<Wrapped {...rest} />
-					<ApplicationCloseButton id={closeButtonId} onApplicationClose={onApplicationClose} />
+					{noCloseButton ?
+						null :
+						<ApplicationCloseButton id={closeButtonId} onApplicationClose={onApplicationClose} />
+					}
 				</div>
 			);
 		}
