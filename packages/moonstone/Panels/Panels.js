@@ -4,12 +4,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {shape} from '@enact/ui/ViewManager';
 
-import {contextTypes} from '../ApplicationCloseDecorator';
 import ApplicationCloseButton from '../ApplicationCloseDecorator/ApplicationCloseButton';
+import {contextTypes} from '../ApplicationCloseDecorator';
+import IdProvider from '../internal/IdProvider';
 import Skinnable from '../Skinnable';
 
 import CancelDecorator from './CancelDecorator';
-import IdProvider from './IdProvider';
 import Viewport from './Viewport';
 
 import css from './Panels.less';
