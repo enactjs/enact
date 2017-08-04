@@ -1014,7 +1014,6 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	handleGlobalKeyDown = this.handle(
-		this.handleKeyDown,
 		forKey('down'),
 		() => (
 			!this.state.bottomControlsVisible &&
@@ -1724,6 +1723,7 @@ const VideoPlayerBase = class extends React.Component {
 					className={css.controlsHandleAbove}
 					onSpotlightDown={this.showControls}
 					onClick={this.showControls}
+					onKeyDown={this.handleKeyDown}
 				/>
 				<Announce ref={this.setAnnounceRef} />
 			</div>
