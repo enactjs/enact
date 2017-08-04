@@ -28,7 +28,6 @@ import css from './Scrollable.less';
 import scrollbarCss from './Scrollbar.less';
 
 const
-	forwardKeyUp = forward('onKeyUp'),
 	forwardScroll = forward('onScroll'),
 	forwardScrollStart = forward('onScrollStart'),
 	forwardScrollStop = forward('onScrollStop');
@@ -260,6 +259,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.direction = this.childRef.props.direction;
 			this.updateEventListeners();
 			this.updateScrollbars();
+
+			on('keyup', this.onKeyUp);
 		}
 
 		componentWillUpdate () {
@@ -618,20 +619,22 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		handleMouseEnter = () => {
-			on('keyup', this.onKeyUp);
-		}
+		hasFocus () {
+			let current = Spotlight.getCurrent();
 
-		handleMouseLeave = () => {
-			off('keyup', this.onKeyUp);
+			if (!current || Spotlight.getPointerMode()) {
+				const containerId = Spotlight.getActiveContainer();
+				current = document.querySelector(`[data-container-id="${containerId}"]`);
+			}
+
+			return current && this.containerRef.contains(current);
 		}
 
 		onKeyUp = (e) => {
 			this.animateOnFocus = true;
-			if (isPageUp(e.keyCode) || isPageDown(e.keyCode)) {
+			if ((isPageUp(e.keyCode) || isPageDown(e.keyCode)) && this.hasFocus()) {
 				this.scrollByPage(e.keyCode);
 			}
-			forwardKeyUp(e, this.props);
 		}
 
 		onWheel = (e) => {
@@ -1097,8 +1100,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					containerRef={this.initContainerRef}
 					focusableScrollbar={focusableScrollbar}
 					style={style}
-					onMouseEnter={this.handleMouseEnter}
-					onMouseLeave={this.handleMouseLeave}
 				>
 					<div className={css.container}>
 						<Wrapped
