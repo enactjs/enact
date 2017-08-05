@@ -12,6 +12,7 @@ import deprecate from '@enact/core/internal/deprecate';
 import {forward} from '@enact/core/handle';
 import {getTargetByDirectionFromPosition} from '@enact/spotlight/src/target';
 import hoc from '@enact/core/hoc';
+import {on, off} from '@enact/core/dispatcher';
 import {is} from '@enact/core/keymap';
 import {Job} from '@enact/core/util';
 import PropTypes from 'prop-types';
@@ -27,7 +28,6 @@ import css from './Scrollable.less';
 import scrollbarCss from './Scrollbar.less';
 
 const
-	forwardKeyUp = forward('onKeyUp'),
 	forwardScroll = forward('onScroll'),
 	forwardScrollStart = forward('onScrollStart'),
 	forwardScrollStop = forward('onScrollStop');
@@ -259,6 +259,8 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.direction = this.childRef.props.direction;
 			this.updateEventListeners();
 			this.updateScrollbars();
+
+			on('keyup', this.onKeyUp);
 		}
 
 		componentWillUpdate () {
@@ -304,6 +306,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				// FIXME `onFocus` doesn't work on the v8 snapshot.
 				childContainerRef.removeEventListener('focus', this.onFocus, true);
 			}
+			off('keyup', this.onKeyUp);
 		}
 
 		// status
@@ -583,7 +586,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				{getEndPoint, scrollToAccumulatedTarget} = this,
 				bounds = this.getScrollBounds(),
 				isVertical = this.canScrollVertically(bounds),
-				isHorizontal = this.canScrollHorizontally(bounds),
 				pageDistance = isPageUp(keyCode) ? (this.pageDistance * -1) : this.pageDistance,
 				spotItem = Spotlight.getCurrent();
 
@@ -598,7 +600,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					next = getTargetByDirectionFromPosition(rDirection, endPoint, containerId);
 
 				if (!next) {
-					scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
+					scrollToAccumulatedTarget(pageDistance, isVertical);
 				} else if (next !== spotItem) {
 					this.animateOnFocus = false;
 					Spotlight.focus(next);
@@ -609,20 +611,30 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						this.animateOnFocus = false;
 						Spotlight.focus(nextPage);
 					} else if (!nextPage) {
-						scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
+						scrollToAccumulatedTarget(pageDistance, isVertical);
 					}
 				}
 			} else {
-				scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
+				scrollToAccumulatedTarget(pageDistance, isVertical);
 			}
+		}
+
+		hasFocus () {
+			let current = Spotlight.getCurrent();
+
+			if (!current || Spotlight.getPointerMode()) {
+				const containerId = Spotlight.getActiveContainer();
+				current = document.querySelector(`[data-container-id="${containerId}"]`);
+			}
+
+			return current && this.containerRef.contains(current);
 		}
 
 		onKeyUp = (e) => {
 			this.animateOnFocus = true;
-			if (isPageUp(e.keyCode) || isPageDown(e.keyCode)) {
+			if ((isPageUp(e.keyCode) || isPageDown(e.keyCode)) && this.hasFocus()) {
 				this.scrollByPage(e.keyCode);
 			}
-			forwardKeyUp(e, this.props);
 		}
 
 		onWheel = (e) => {
@@ -1094,7 +1106,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 							{...props}
 							cbScrollTo={this.scrollTo}
 							className={css.content}
-							onKeyUp={this.onKeyUp}
 							onScroll={this.handleScroll}
 							ref={this.initChildRef}
 						/>

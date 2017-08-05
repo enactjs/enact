@@ -2,19 +2,15 @@
 
 The following is a curated list of changes in the Enact core module, newest changes on the top.
 
-## [unreleased]
+## [1.6.0] - 2017-08-04
 
-### Deprecated
-
-### Added
-
-### Changed
-
-### Fixed
+No significant changes.
 
 ## [1.5.0] - 2017-07-19
 
-No significant changes.
+### Changed
+
+- `@core/handle.preventDefault` (and, subsequently, `forwardWithPrevent`) to also call `preventDefault()` on the originating event
 
 ## [1.4.1] - 2017-07-05
 
