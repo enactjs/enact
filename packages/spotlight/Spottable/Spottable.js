@@ -195,6 +195,17 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 					}, false);
 				}
 			}
+
+			// if the component became enabled, notify spotlight to enable restoring "lost" focus
+			if (prevProps.disabled && !this.props.disabled) {
+				if (!Spotlight.getCurrent() && !Spotlight.getPointerMode() && !Spotlight.isPaused()) {
+					const containers = getContainersForNode(this.node);
+					const containerId = Spotlight.getActiveContainer();
+					if (containers.indexOf(containerId) >= 0) {
+						Spotlight.focus(containerId);
+					}
+				}
+			}
 		}
 
 		componentWillUnmount () {

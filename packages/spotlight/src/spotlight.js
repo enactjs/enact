@@ -562,12 +562,14 @@ const Spotlight = (function () {
 		 */
 		focus: function (elem) {
 			let target = elem;
+			let wasContainerId = false;
 
 			if (!elem) {
 				target = getTargetByContainer();
 			} else if (typeof elem === 'string') {
 				if (getContainerConfig(elem)) {
 					target = getTargetByContainer(elem);
+					wasContainerId = true;
 				} else {
 					target = getTargetBySelector(elem);
 				}
@@ -577,6 +579,10 @@ const Spotlight = (function () {
 			const nextContainerId = last(nextContainerIds);
 			if (isNavigable(target, nextContainerId)) {
 				return focusElement(target, nextContainerIds);
+			} else if (wasContainerId) {
+				// if we failed to find a spottable target within the provided container, we'll set
+				// it as the active container to allow it to focus itself if its contents change
+				this.setActiveContainer(elem);
 			}
 
 			return false;
