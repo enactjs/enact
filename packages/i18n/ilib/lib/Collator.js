@@ -24,7 +24,8 @@ INumber.js
 isPunct.js 
 NormString.js 
 MathUtils.js 
-Utils.js 
+Utils.js
+JSUtils.js
 LocaleInfo.js 
 CodePointSource.js
 ElementIterator.js
@@ -35,6 +36,7 @@ ElementIterator.js
 var ilib = require("./ilib.js");
 var MathUtils = require("./MathUtils.js");
 var Utils = require("./Utils.js");
+var JSUtils = require("./JSUtils.js");
 var Locale = require("./Locale.js");
 var LocaleInfo = require("./LocaleInfo.js");
 var INumber = require("./INumber.js");
@@ -395,7 +397,13 @@ var Collator = function(options) {
 		 * @private
 		 * @type {{compare:function(string,string)}} 
 		 */
-		this.collator = new Intl.Collator(this.locale.getSpec(), this);
+		this.collator = new Intl.Collator(this.locale.getSpec(), {
+			sensitivity: this.sensitivity,
+			caseFirst: this.caseFirst,
+			ignorePunctuation: this.ignorePunctuation,
+			numeric: this.numeric,
+			usage: this.usage
+		});
 		
 		if (options && typeof(options.onLoad) === 'function') {
 			options.onLoad(this);
@@ -680,7 +688,7 @@ Collator.prototype = {
 			return this.collator.compare;
 		}
 		
-		return /** @type function(string,string):number */ ilib.bind(this, this.compare);
+		return ilib.bind(this, this.compare);
 	},
 	
 	/**
@@ -711,7 +719,6 @@ Collator.prototype = {
 	 * @return {string} a sort key string for the given string
 	 */
 	sortKey: function (str) {
-		var ret = "";
 		if (!str) {
 			return "";
 		}
@@ -721,14 +728,10 @@ Collator.prototype = {
 			return str;
 		}
 		
-		function pad(str, limit) {
-			return "0000000000000000".substring(0, limit - str.length) + str;
-		}
-		
 		if (this.numeric) {
 			var v = new INumber(str, {locale: this.locale});
 			var s = isNaN(v.valueOf()) ? "" : v.valueOf().toString(16);
-			return pad(s, 16);	
+			return JSUtils.pad(s, 16);	
 		} else {
 			var n = (typeof(str) === "string") ? new NormString(str) : str,
 				ret = "",
@@ -741,7 +744,7 @@ Collator.prototype = {
 					// for reverse, take the bitwise inverse
 					element = (1 << this.keysize) - element;
 				}
-				ret += pad(element.toString(16), this.keysize/4);	
+				ret += JSUtils.pad(element.toString(16), this.keysize/4);	
 			}
 		}
 		return ret;
