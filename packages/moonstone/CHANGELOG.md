@@ -8,6 +8,10 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/Panels` properties `noCloseButton` and `onApplicationClose` will be replaced by `moonstone/ApplicationCloseDecorator` in 2.0.0
 
+### Added
+
+- `moonstone/ApplicationCloseDecorator` for adding `ApplicationCloseButton` to the app level
+
 ## [1.6.1] - 2017-08-07
 
 ### Changed
@@ -20,8 +24,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/VideoPlayer` ability to seek when holding down the right and left keys. Sensitivity can be adjusted using throttling options `jumpDelay` and `initialJumpDelay`.
 - `moonstone/VideoPlayer` property `no5WayJump` to disable jumping done by 5-way
-
-- `moonstone/ApplicationCloseDecorator` for adding `ApplicationCloseButton` to the app level
 - `moonstone/VideoPlayer` support for the "More" button to use tooltips
 - `moonstone/VideoPlayer` properties `moreButtonLabel` and `moreButtonCloseLabel` to allow customization of the "More" button's tooltip and Aria labels
 - `moonstone/VideoPlayer` property `moreButtonDisabled` to disable the "More" button
