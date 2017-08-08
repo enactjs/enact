@@ -9,9 +9,4 @@
 	.position-start-end(auto, @moon-spotlight-outset * 2);
 	z-index: 1;
 	margin: 0;
-
-	:global(.enact-locale-right-to-left) :not([data-index='0']) + & {
-		// allocate space for breadcrumb + header margin
-		left: @moon-breadcrumb-width + @moon-spotlight-outset;
-	}
 }

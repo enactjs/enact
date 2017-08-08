@@ -1,6 +1,7 @@
 import Skinnable from '../Skinnable';
 
 import {ActivityArranger} from './Arrangers';
+import ActivityPanelsCloseButtonDecorator from './ActivityPanelsCloseButtonDecorator';
 import BreadcrumbDecorator from './BreadcrumbDecorator';
 import {PanelsBase} from './Panels';
 
@@ -18,11 +19,15 @@ import {PanelsBase} from './Panels';
  * @ui
  * @public
  */
-const ActivityPanels = Skinnable(BreadcrumbDecorator({
-	className: 'panels activity enact-fit',
-	max: 1,
-	panelArranger: ActivityArranger
-}, PanelsBase));
+const ActivityPanels = Skinnable(
+	ActivityPanelsCloseButtonDecorator(
+		BreadcrumbDecorator({
+			className: 'panels activity enact-fit',
+			max: 1,
+			panelArranger: ActivityArranger
+		}, PanelsBase)
+	)
+);
 
 export default ActivityPanels;
 export {ActivityPanels};
