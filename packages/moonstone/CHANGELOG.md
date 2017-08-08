@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [Unreleased]
+
+### Deprecated
+
+- `moonstone/Panels` properties `noCloseButton` and `onApplicationClose` will be replaced by `moonstone/ApplicationCloseDecorator` in 2.0.0
+
 ## [1.6.1] - 2017-08-07
 
 ### Changed
@@ -9,8 +15,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Icon` and `moonstone/IconButton` to no longer fit image source to the icon's boundary
 
 ## [1.6.0] - 2017-08-04
-
-- `moonstone/Panels` properties `noCloseButton` and `onApplicationClose` are replacedBy `moonstone/ApplicationCloseDecorator`
 
 ### Added
 
