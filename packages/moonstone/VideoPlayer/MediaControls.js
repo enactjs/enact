@@ -238,6 +238,7 @@ const MediaControls = kind({
 							className={css.moreButton}
 							disabled={moreButtonDisabled}
 							onClick={onToggleMore}
+							tooltipProps={{role: 'dialog'}}
 							tooltipText={moreIconLabel}
 						>
 							{moreIcon}

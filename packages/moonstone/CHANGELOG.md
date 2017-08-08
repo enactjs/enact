@@ -2,9 +2,7 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [unreleased]
-
-### Deprecated
+## [1.6.0] - 2017-08-04
 
 - `moonstone/Panels` properties `noCloseButton` and `onApplicationClose` are replacedBy `moonstone/ApplicationCloseDecorator`
 
@@ -19,6 +17,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Picker` and `moonstone/RangePicker` prop `aria-valuetext` to support reading custom text instead of value
 
 - `moonstone/VideoPlayer` methods `showControls` and `hideControls` to allow external interaction with the player
+- `moonstone/Scroller` support for Page Up/Page Down keys in pointer mode when no item has focus
 
 ### Changed
 
