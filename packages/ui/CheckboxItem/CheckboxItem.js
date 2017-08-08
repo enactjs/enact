@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 
 import UiCheckbox from '../Checkbox';
 import Toggleable from '../Toggleable';
-import {ToggleItemBase} from '@enact/moonstone/ToggleItem'; // UPDATE WHEN ToggleItem MOVES!
+import {ToggleItemBase} from '../ToggleItem';
 
 /**
  * {@link ui/CheckboxItem.CheckboxItemBaseFactory} is Factory wrapper around

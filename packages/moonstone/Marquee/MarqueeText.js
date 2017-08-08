@@ -1,4 +1,4 @@
-import MarqueeText from '@enact/ui/MarqueeText';
+import {MarqueeText} from '@enact/ui/Marquee';
 
 /**
  * {@link moonstone/Marquee.MarqueeText} is a basic marqueeing text component.
