@@ -203,7 +203,7 @@ const VirtualGridListNative = kind({
 		 */
 	},
 
-	render: (props) => <VirtualListBase {...props} pageScroll />
+	render: (props) => <VirtualListBase {...props} />
 });
 
 export default VirtualListNative;
