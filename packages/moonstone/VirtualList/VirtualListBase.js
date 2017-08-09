@@ -704,6 +704,7 @@ class VirtualListCore extends Component {
 
 			if (Spotlight.isPaused()) {
 				Spotlight.resume();
+				this.forceUpdate();
 			}
 
 			this.focusOnNode(item);
