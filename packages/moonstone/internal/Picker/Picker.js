@@ -682,12 +682,12 @@ const PickerBase = class extends React.Component {
 					hidden={reachedEnd}
 					icon={incrementIcon}
 					joined={joined}
-					onTap={this.handleIncClick}
+					onDown={this.handleIncDown}
 					onHoldPulse={this.handleIncPulse}
 					onKeyDown={this.handleIncKeyDown}
-					onDown={this.handleIncDown}
-					onUp={this.handleUp}
 					onSpotlightDisappear={onIncrementSpotlightDisappear}
+					onTap={this.handleIncClick}
+					onUp={this.handleUp}
 					spotlightDisabled={spotlightDisabled}
 				/>
 				<div
@@ -716,12 +716,12 @@ const PickerBase = class extends React.Component {
 					hidden={reachedStart}
 					icon={decrementIcon}
 					joined={joined}
-					onTap={this.handleDecClick}
+					onDown={this.handleDecDown}
 					onHoldPulse={this.handleDecPulse}
 					onKeyDown={this.handleDecKeyDown}
-					onDown={this.handleDecDown}
-					onUp={this.handleUp}
 					onSpotlightDisappear={onDecrementSpotlightDisappear}
+					onTap={this.handleDecClick}
+					onUp={this.handleUp}
 					spotlightDisabled={spotlightDisabled}
 				/>
 			</div>

@@ -1,10 +1,19 @@
+const States = {
+	Inactive: 0,
+	Paused: 1,
+	Active: 2
+};
+
+const setActive = (state) => ({active}) => active !== state ? {active: state} : null;
+
 // State management functions
-const activate = ({active}) => active !== 2 ? {active: 2} : null;
-const deactivate = ({active}) => active !== 0 ? {active: 0} : null;
-const pause = ({active}) => active !== 1 ? {active: 1} : null;
+const activate = setActive(States.Active);
+const deactivate = setActive(States.Inactive);
+const pause = setActive(States.Paused);
 
 export {
 	activate,
 	deactivate,
-	pause
+	pause,
+	States
 };

@@ -1,10 +1,8 @@
 class Hold {
 	constructor () {
-		this.origin = null;
 		this.holdJob = null;
 		this.holdStart = null;
 		this.pulsing = false;
-		this.unsent = null;
 		this.next = null;
 	}
 
@@ -12,6 +10,8 @@ class Hold {
 
 	begin = (holdConfig) => {
 		this.holdConfig = Object.assign({}, holdConfig);
+
+		this.holdConfig.events = this.holdConfig.events.slice();
 		this.holdConfig.events.sort((a, b) => {
 			if (a.time < b.time) return -1;
 			if (a.time > b.time) return 1;
@@ -50,12 +50,6 @@ class Hold {
 
 	end = () => {
 		if (!this.isHolding()) return;
-
-		const {onEnd} = this.holdConfig;
-
-		if (onEnd) {
-			onEnd();
-		}
 
 		this.suspend();
 		this.pulsing = false;
@@ -115,7 +109,7 @@ class Hold {
 		while (n && n.time <= holdTime) {
 			this.pulsing = true;
 			if (onHold) onHold(n);
-			n = this.next = this.unsent && this.unsent.shift();
+			n = this.next = this.holdConfig.events && this.holdConfig.events.shift();
 		}
 
 		if (this.pulsing) {
