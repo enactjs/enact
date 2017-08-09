@@ -14,6 +14,7 @@ import {CheckboxItemFactory as UiCheckboxItemFactory} from '@enact/ui/CheckboxIt
 
 import {CheckboxFactory} from '../Checkbox';
 import Skinnable from '../Skinnable';
+import {ToggleItemBase} from '../ToggleItem';
 
 // import componentCss from './CheckboxItem.less';
 
@@ -55,7 +56,7 @@ const CheckboxItemBaseFactory = factory({css: {}}, ({css}) => {
 
 		render: (props) => {
 			return (
-				<UiCheckboxItem {...props} Checkbox={Checkbox} />
+				<UiCheckboxItem {...props} Checkbox={Checkbox} ToggleItem={ToggleItemBase} />
 			);
 		}
 	});

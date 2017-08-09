@@ -11,7 +11,7 @@ import PropTypes from 'prop-types';
 
 import UiCheckbox from '../Checkbox';
 import Toggleable from '../Toggleable';
-import {ToggleItemBase} from '../ToggleItem';
+import {ToggleItemBaseFactory as UiToggleItemFactory} from '../ToggleItem';
 
 /**
  * {@link ui/CheckboxItem.CheckboxItemBaseFactory} is Factory wrapper around
@@ -24,7 +24,9 @@ import {ToggleItemBase} from '../ToggleItem';
  * @ui
  * @public
  */
-const CheckboxItemBaseFactory = factory({css: {}}, () => {
+const CheckboxItemBaseFactory = factory({css: {}}, ({css}) => {
+	const UiToggleItem = UiToggleItemFactory({css});
+
 	/**
 	 * {@link moonstone/CheckboxItem.CheckboxItemBase} is a component that
 	 * is an Item that is Toggleable. It has two states: `true` (selected) & `false`
@@ -103,6 +105,15 @@ const CheckboxItemBaseFactory = factory({css: {}}, () => {
 			selected: PropTypes.bool,
 
 			/**
+			 * The ToggleItem component to use as the basis for this component.
+			 *
+			 * @type {Component}
+			 * @default {@link ui/ToggleItem}
+			 * @public
+			 */
+			ToggleItem: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
+
+			/**
 			 * The value that will be sent to the `onToggle` handler.
 			 *
 			 * @type {String|Number}
@@ -117,6 +128,7 @@ const CheckboxItemBaseFactory = factory({css: {}}, () => {
 			disabled: false,
 			iconPosition: 'before',
 			inline: false,
+			ToggleItem: UiToggleItem,
 			value: ''
 		},
 
@@ -126,10 +138,10 @@ const CheckboxItemBaseFactory = factory({css: {}}, () => {
 			)
 		},
 
-		render: (props) => {
-			delete props.Checkbox;
+		render: ({ToggleItem, ...rest}) => {
+			delete rest.Checkbox;
 			return (
-				<ToggleItemBase {...props} />
+				<ToggleItem {...rest} />
 			);
 		}
 	});
