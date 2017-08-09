@@ -2,6 +2,15 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
+## [Unreleased]
+
+### Added
+
+### Changed
+- `moonstone/VirtualGridList` to scroll by item via 5 way key
+
+### Fixed
+
 ## [1.6.0] - 2017-08-04
 
 ### Added
