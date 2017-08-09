@@ -9,6 +9,7 @@ import React, {PureComponent} from 'react';
 import Spotlight from '@enact/spotlight';
 import ri from '@enact/ui/resolution';
 
+import {withSkinnableProps} from '../Skinnable';
 import $L from '../internal/$L';
 import DisappearSpotlightDecorator from '../internal/DisappearSpotlightDecorator';
 
@@ -396,7 +397,9 @@ const Scrollbar = ApiDecorator(
 			onNextSpotlightDisappear: '[data-scroll-button="previous"]',
 			onPrevSpotlightDisappear: '[data-scroll-button="next"]'
 		}},
-		ScrollbarBase
+		withSkinnableProps(
+			ScrollbarBase
+		)
 	)
 );
 
