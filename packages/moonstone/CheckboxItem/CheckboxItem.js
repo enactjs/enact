@@ -1,9 +1,14 @@
 /**
- * Exports the {@link moonstone/CheckboxItem.CheckboxItem} and
- * {@link moonstone/CheckboxItem.CheckboxItemBase} components.
- * The default export is {@link moonstone/CheckboxItem.CheckboxItemBase}.
+ * An Item that is Toggleable.
+ *
+ * @example
+ * <CheckboxItem>Toggle me</CheckboxItem>
  *
  * @module moonstone/CheckboxItem
+ * @export CheckboxItem
+ * @export CheckboxItemBase
+ * @export CheckboxItemBaseFactory
+ * @export CheckboxItemFactory
  */
 
 import factory from '@enact/core/factory';
@@ -19,11 +24,10 @@ import {ToggleItemBase} from '../ToggleItem';
 // import componentCss from './CheckboxItem.less';
 
 /**
- * {@link moonstone/CheckboxItem.CheckboxItemFactory} is Factory wrapper around
- * {@link moonstone/CheckboxItem.CheckboxItem} that allows overriding certain classes of the base
- * `Checkbox` components at design time. See {@link moonstone/Checkbox.CheckboxBaseFactory}.
+ * A Factory wrapper around {@link moonstone/CheckboxItem.CheckboxItem} that allows overriding
+ * certain classes of the base `Checkbox` components at design time.
  *
- * @class CheckboxItemFactory
+ * @class CheckboxItemBaseFactory
  * @memberof moonstone/CheckboxItem
  * @factory
  * @public
@@ -33,7 +37,7 @@ const CheckboxItemBaseFactory = factory({css: {}}, ({css}) => {
 
 	const UiCheckboxItem = UiCheckboxItemFactory({
 		/* Replace classes in this step */
-		css: /** @lends moonstone/CheckboxItem.CheckboxItemFactory.prototype */ {
+		css: /** @lends moonstone/CheckboxItem.CheckboxItemBaseFactory.prototype */ {
 			// ...componentCss,
 			// Include the component class name so it too may be overridden.
 			checkboxItem: css.checkboxItem
@@ -41,16 +45,6 @@ const CheckboxItemBaseFactory = factory({css: {}}, ({css}) => {
 	});
 	const Checkbox = CheckboxFactory({css});
 
-	/**
-	 * {@link moonstone/CheckboxItem.CheckboxItemBase} is a component that is an Item that is
-	 * Toggleable. It has two states: `true` (selected) & `false` (unselected). It uses a check icon to
-	 * represent its selected state.
-	 *
-	 * @class CheckboxItemBase
-	 * @memberof moonstone/CheckboxItem
-	 * @ui
-	 * @public
-	 */
 	return kind({
 		name: 'CheckboxItem',
 
@@ -62,12 +56,34 @@ const CheckboxItemBaseFactory = factory({css: {}}, ({css}) => {
 	});
 });
 
+/**
+ * A stateless version of `CheckboxItem`, with no HOCs applied.
+ *
+ * @class CheckboxItemBase
+ * @memberof moonstone/CheckboxItem
+ * @extends ui/CheckboxItemBase
+ * @ui
+ * @public
+ */
 const CheckboxItemBase = CheckboxItemBaseFactory();
 
 /**
- * {@link moonstone/CheckboxItem.CheckboxItem} is a component that is an Item that is Toggleable. It
- * has two states: `true` (selected) & `false` (unselected). It uses a check icon to represent its
- * selected state.
+ * A Factory wrapper around {@link moonstone/CheckboxItem.CheckboxItem} that allows overriding
+ * certain classes of the base `Checkbox` components at design time. See
+ * {@link moonstone/Checkbox.CheckboxBaseFactory}.
+ *
+ * @class CheckboxItemFactory
+ * @memberof moonstone/CheckboxItem
+ * @factory
+ * @public
+ */
+const CheckboxItemFactory = (props) => Skinnable(
+	CheckboxItemBaseFactory(props)
+);
+
+/**
+ * An Item that is Toggleable. It has two states: `true` (selected) & `false` (unselected). It uses
+ * a check icon to represent its selected state.
  *
  * By default, `CheckboxItem` maintains the state of its `selected` property. Supply the
  * `defaultSelected` property to control its initial value. If you wish to directly control updates
@@ -76,16 +92,12 @@ const CheckboxItemBase = CheckboxItemBaseFactory();
  *
  * @class CheckboxItem
  * @memberof moonstone/CheckboxItem
+ * @extends moonstone/CheckboxItemBase
+ * @mixes moonstone/Skinnable
  * @ui
  * @public
  */
-const CheckboxItem = Skinnable(
-	CheckboxItemBase
-);
-
-const CheckboxItemFactory = (props) => Skinnable(
-	CheckboxItemBaseFactory(props)
-);
+const CheckboxItem = CheckboxItemFactory();
 
 
 export default CheckboxItem;
