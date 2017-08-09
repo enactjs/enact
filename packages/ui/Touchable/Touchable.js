@@ -15,7 +15,9 @@ import React from 'react';
 
 import {activate, deactivate, pause, States} from './state';
 import {block, unblock, isNotBlocked} from './block';
+
 import {Hold, holdConfigPropType} from './Hold';
+import Flick from './Flick';
 
 const getEventCoordinates = (ev) => {
 	let {clientX: x, clientY: y, type} = ev;
@@ -30,7 +32,24 @@ const getEventCoordinates = (ev) => {
 // Establish a standard payload for onDown/onUp/onTap events and pass it along to a handler
 const makeTouchableEvent = (type, fn) => (ev, ...args) => {
 	const {target, currentTarget} = ev;
-	const payload = {type, target, currentTarget};
+	let {clientX, clientY, pageX, pageY} = ev;
+
+	if (ev.changedTouches) {
+		clientX = ev.changedTouches[0].clientX;
+		clientY = ev.changedTouches[0].clientY;
+		pageX = ev.changedTouches[0].pageX;
+		pageY = ev.changedTouches[0].pageY;
+	}
+
+	const payload = {
+		type,
+		target,
+		currentTarget,
+		clientX,
+		clientY,
+		pageX,
+		pageY
+	};
 
 	return fn(payload, ...args);
 };
@@ -39,6 +58,7 @@ const makeTouchableEvent = (type, fn) => (ev, ...args) => {
 const forwardDown = makeTouchableEvent('down', forwardWithPrevent('onDown'));
 const forwardUp = makeTouchableEvent('up', forwardWithPrevent('onUp'));
 const forwardTap = makeTouchableEvent('tap', forward('onTap'));
+const forwardMove = makeTouchableEvent('move', forward('onMove'));
 
 /**
  * Default config for {@link ui/Touchable.Touchable}.
@@ -211,6 +231,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 		target = null
 		handle = handle.bind(this)
+		flick = new Flick()
 		hold = new Hold()
 
 		setTarget = (target) => {
@@ -271,6 +292,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			return true;
 		}
 
+		// Hold Support
 		startHold = (ev, {holdConfig, noResume, onHold, onHoldPulse}) => {
 			if (onHold || onHoldPulse) {
 				this.hold.begin({
@@ -299,6 +321,27 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 		endHold = returnsTrue(this.hold.end)
 
+		// Flick Support
+
+		startFlick = (ev, {onFlick}) => {
+			if (onFlick) {
+				const {x, y} = getEventCoordinates(ev);
+				this.flick.begin(x, y, onFlick);
+			}
+
+			return true;
+		}
+
+		moveFlick = (ev) => {
+			const {x, y} = getEventCoordinates(ev);
+
+			this.flick.move(x, y);
+
+			return true;
+		}
+
+		endFlick = returnsTrue(this.flick.end)
+
 		isTracking = () => {
 			// verify we had a target and the up target is still within the current node
 			return this.target;
@@ -317,12 +360,14 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			forProp('disabled', false),
 			forwardDown,
 			this.activate,
-			this.startHold
+			this.startHold,
+			this.startFlick
 		)
 
 		handleUp = this.handle(
 			forProp('disabled', false),
 			this.endHold,
+			this.endFlick,
 			this.isTracking,
 			forwardUp,
 			forwardTap
@@ -339,6 +384,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		handleLeave = this.handle(
 			forProp('disabled', false),
 			this.leaveHold,
+			this.endFlick,
 			oneOf(
 				[forProp('noResume', false), this.pause],
 				[returnsTrue, this.deactivate]
@@ -358,7 +404,8 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleMouseMove = this.handle(
 			forward('onMouseMove'),
-			this.moveHold
+			this.moveHold,
+			this.moveFlick
 		)
 
 		handleMouseLeave = this.handle(
@@ -385,10 +432,14 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			// detecting when the touch leaves the boundary. oneOf returns the value of whichever
 			// branch it follows so we append moveHold to either to handle moves that aren't
 			// entering or leaving
+			forwardMove,
 			oneOf(
 				[this.hasTouchLeftTarget, this.handleLeave],
 				[returnsTrue, this.handleEnter]
-			).finally(this.moveHold)
+			).finally((...args) => {
+				this.moveHold(...args);
+				this.moveFlick(...args);
+			})
 		)
 
 		handleTouchEnd = this.handle(
