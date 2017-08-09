@@ -645,7 +645,6 @@ const VideoPlayerBase = class extends React.Component {
 			more: false,
 			proportionLoaded: 0,
 			proportionPlayed: 0,
-			sliderScrubbing: false,
 			sliderKnobProportion: 0,
 			titleVisible: true
 		};
