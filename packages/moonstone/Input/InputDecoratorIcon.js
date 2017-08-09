@@ -1,11 +1,3 @@
-/**
- * Exports the {@link moonstone/InputDecoratorIcon.InputDecoratorIcon} and
- * {@link moonstone/InputDecoratorIcon.InputDecoratorIconBase} components.  The default export is
- * {@link moonstone/InputDecoratorIcon.InputDecoratorIconBase}.
- *
- * @module moonstone/InputDecoratorIcon
- */
-
 import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
 import React from 'react';
@@ -20,9 +12,9 @@ import componentCss from './Input.less';
 /**
  * The stateless functional base component for {@link moonstone/Input.InputDecoratorIcon}.
  *
- * @class InputDecoratorIconBase
+ * @class InputDecoratorIconBaseFactory
  * @memberof moonstone/Input
- * @ui
+ * @factory
  * @private
  */
 const InputDecoratorIconBaseFactory = factory({css: componentCss}, ({css}) => {
@@ -30,7 +22,7 @@ const InputDecoratorIconBaseFactory = factory({css: componentCss}, ({css}) => {
 
 	const UiInputDecoratorIcon = UiInputDecoratorIconFactory({
 		/* Replace classes in this step */
-		css: /** @lends moonstone/InputDecoratorIcon.InputDecoratorIconFactory.prototype */ {
+		css: /** @lends moonstone/InputDecoratorIcon.InputDecoratorIconBaseFactory.prototype */ {
 			...componentCss,
 			// Include the component class name so it too may be overridden.
 			InputDecoratorIcon: css.InputDecoratorIcon
@@ -54,6 +46,15 @@ const InputDecoratorIconBaseFactory = factory({css: componentCss}, ({css}) => {
 	});
 });
 
+/**
+ * An icon displayed either before or after the input field of an {@link moonstone/Input.Input},
+ * without HOCs applied.
+ *
+ * @class InputDecoratorIconBase
+ * @memberof moonstone/Input
+ * @ui
+ * @private
+ */
 const InputDecoratorIconBase = InputDecoratorIconBaseFactory();
 
 /**
@@ -68,6 +69,14 @@ const InputDecoratorIcon = Skinnable(
 	InputDecoratorIconBase
 );
 
+/**
+ * A factory for customizing {@link moonstone/Input.InputDecoratorIcon}.
+ *
+ * @class InputDecoratorIconFactory
+ * @memberof moonstone/Input
+ * @factory
+ * @private
+ */
 const InputDecoratorIconFactory = (props) => Skinnable(
 	InputDecoratorIconBaseFactory(props)
 );

@@ -33,12 +33,12 @@ const calcAriaLabel = function (title, type, value = '') {
 };
 
 /**
- * {@link moonstone/Input.Input} is a stateless Input with Moonstone styling
- * applied.
+ * {@link moonstone/Input.InputBaseFactory} is a factory for customizing the Moonstone InputBase
+ * component.
  *
- * @class Input
+ * @class InputBaseFactory
  * @memberof moonstone/Input
- * @ui
+ * @factory
  * @public
  */
 const InputBaseFactory = factory({css: componentCss}, ({css}) => {
@@ -46,7 +46,7 @@ const InputBaseFactory = factory({css: componentCss}, ({css}) => {
 
 	const UiInput = UiInputFactory({
 		/* Replace classes in this step */
-		css: /** @lends moonstone/Input.InputFactory.prototype */ {
+		css: /** @lends moonstone/Input.InputBaseFactory.prototype */ {
 			...componentCss,
 			// Include the component class name so it too may be overridden.
 			input: css.input
@@ -67,7 +67,7 @@ const InputBaseFactory = factory({css: componentCss}, ({css}) => {
 	return kind({
 		name: 'MoonstoneInput',
 
-		propTypes: {
+		propTypes: /** @lends moonstone/Input.InputBase.prototype */ {
 			/**
 			 * The tooltip text to be displayed when the contents of the input are invalid. If this value is
 			 * falsy, the tooltip will not be shown.
@@ -151,6 +151,14 @@ const Input = Skinnable(
 	InputBase
 );
 
+/**
+ * {@link moonstone/Input.InputFactory} is a factory for customizing the Moonstone Input component.
+ *
+ * @class InputFactory
+ * @memberof moonstone/Input
+ * @factory
+ * @public
+ */
 const InputFactory = (props) => Skinnable(
 	InputBaseFactory(props)
 );
