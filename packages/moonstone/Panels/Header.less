@@ -40,6 +40,11 @@
 		.moon-header-sub-title-below();
 	}
 
+	.headerCell {
+		max-width: 100%;
+		min-width: 0;
+	}
+
 	.headerComponents {
 		flex-wrap: nowrap;
 		display: flex;
@@ -73,8 +78,6 @@
 
 			.headerCell {
 				flex-grow: 1;
-				max-width: 100%;
-				min-width:0;
 			}
 		}
 
@@ -98,11 +101,6 @@
 			.enyo-locale-non-latin & {
 				line-height: @moon-non-latin-small-header-line-height;
 			}
-		}
-
-		.headerCell {
-			max-width: 100%;
-			min-width:0;
 		}
 
 		.titleBelow {
