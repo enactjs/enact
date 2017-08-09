@@ -24,10 +24,10 @@ import Skinnable from '../Skinnable';
 import componentCss from './Button.less';
 
 /**
- * {@link moonstone/Button.ButtonFactory} is Factory wrapper around {@link moonstone/Button.Button}
- * that allows overriding certain classes at design time. See {@link moonstone/Button.ButtonBaseFactory}.
+ * {@link moonstone/Button.ButtonBaseFactory} is Factory wrapper around {@link moonstone/Button.ButtonBase}
+ * that allows overriding certain classes at design time. See {@link moonstone/Button.ButtonFactory}.
  *
- * @class ButtonFactory
+ * @class ButtonBaseFactory
  * @memberof moonstone/Button
  * @factory
  * @public
@@ -37,7 +37,7 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 
 	const MoonstoneButtonBase = UiButtonBaseFactory({
 		/* Replace classes in this step */
-		css: /** @lends moonstone/Button.ButtonFactory.prototype */ {
+		css: /** @lends moonstone/Button.ButtonBaseFactory.prototype */ {
 			...componentCss,
 			// Include the component class name so it too may be overridden.
 			button: css.button,
@@ -60,7 +60,7 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 
 	return kind({
 		name: 'MoonstoneButton',
-		propTypes: /** @lends moonstone/Button.ButtonFactory.prototype */ {
+		propTypes: /** @lends moonstone/Button.ButtonBase.prototype */ {
 			/**
 			 * Transformation to apply to the text of the Button. By default, text is transformed
 			 * to uppercase.
@@ -73,29 +73,36 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 			casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence'])
 		},
 
+		defaultProps: {
+			casing: 'upper'
+		},
+
 		render: (props) => (
 			<MoonstoneButtonBase {...props} Icon={Icon} />
 		)
 	});
 });
 
+/**
+ * {@link moonstone/Button.Button} is button with Moonstone styling, without any HOCs applied.
+ *
+ * @class ButtonBase
+ * @extends ui/ButtonBase
+ * @memberof moonstone/Button
+ * @ui
+ * @public
+ */
 const ButtonBase = ButtonBaseFactory();
 
-const Button = Uppercase(
-	TooltipDecorator(
-		MarqueeDecorator(
-			{className: componentCss.marquee},
-			Pressable(
-				Spottable(
-					Skinnable(
-						ButtonBase
-					)
-				)
-			)
-		)
-	)
-);
-
+/**
+ * {@link moonstone/Button.ButtonFactory} is Factory wrapper around {@link moonstone/Button.Button}
+ * that allows overriding certain classes at design time. See {@link moonstone/Button.ButtonBaseFactory}.
+ *
+ * @class ButtonFactory
+ * @memberof moonstone/Button
+ * @factory
+ * @public
+ */
 const ButtonFactory = (props) => Uppercase(
 	TooltipDecorator(
 		MarqueeDecorator(
@@ -111,6 +118,21 @@ const ButtonFactory = (props) => Uppercase(
 	)
 );
 
+/**
+ * {@link moonstone/Button.Button} is button with Moonstone styling and HOCs applied.
+ *
+ * @class Button
+ * @memberof moonstone/Button
+ * @extends moonstone/ButtonBase
+ * @mixes i18n/Uppercase
+ * @mixes moonstone/TooltipDecorator
+ * @mixes ui/Pressable
+ * @mixes spotlight/Spottable
+ * @mixes moonstone/Skinnable
+ * @ui
+ * @public
+ */
+const Button = ButtonFactory();
 
 export default Button;
 export {

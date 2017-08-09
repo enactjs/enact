@@ -7,14 +7,15 @@
 
 import factory from '@enact/core/factory';
 // import {diffClasses} from '@enact/ui/MigrationAid';
-import {BodyTextFactory as UiBodyTextFactory} from '@enact/ui/BodyText';
+import {BodyTextBaseFactory as UiBodyTextFactory} from '@enact/ui/BodyText';
 
 import Skinnable from '../Skinnable';
 
 import componentCss from './BodyText.less';
 
 /**
- * {@link moonstone/BodyText.BodyTextBaseFactory} is a factory for customizing BodyTextBase.
+ * [BodyTextBaseFactory]{@link moonstone/BodyText.BodyTextBaseFactory} is a factory for customizing
+ * the visual style of the base version of [BodyText]{@link moonstone/BodyText} (without HOCs applied).
  *
  * @class BodyTextBaseFactory
  * @memberof moonstone/BodyText
@@ -39,24 +40,12 @@ const BodyTextBaseFactory = factory({css: componentCss}, ({css}) => {
  * applied, without HOCs applied.
  *
  * @class BodyTextBase
- * @memberof moonstone/BodyText
- * @factory
- * @public
- */
-const BodyTextBase = BodyTextBaseFactory();
-
-/**
- * {@link moonstone/BodyText.BodyText} is a stateless BodyText with Moonstone styling
- * applied.
- *
- * @class BodyText
+ * @extends ui/BodyTextBase
  * @memberof moonstone/BodyText
  * @ui
  * @public
  */
-const BodyText = Skinnable(
-	BodyTextBase
-);
+const BodyTextBase = BodyTextBaseFactory();
 
 /**
  * {@link moonstone/BodyText.BodyTextFactory} is a factory for customizing BodyText.
@@ -70,6 +59,18 @@ const BodyTextFactory = (props) => Skinnable(
 	BodyTextBaseFactory(props)
 );
 
+/**
+ * {@link moonstone/BodyText.BodyText} is a stateless BodyText with Moonstone styling
+ * applied.
+ *
+ * @class BodyText
+ * @memberof moonstone/BodyText
+ * @extends moonstone/BodyTextBase
+ * @mixes moonstone/Skinnable
+ * @ui
+ * @public
+ */
+const BodyText = BodyTextFactory();
 
 export default BodyText;
 export {
