@@ -8,7 +8,6 @@ import Changeable from '@enact/ui/Changeable';
 import factory from '@enact/core/factory';
 import {forKey, forward, handle, stopImmediate} from '@enact/core/handle';
 import kind from '@enact/core/kind';
-import Touchable from '@enact/ui/Touchable';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Spottable from '@enact/spotlight/Spottable';
@@ -16,6 +15,7 @@ import Spottable from '@enact/spotlight/Spottable';
 import SliderDecorator from '../internal/SliderDecorator';
 import {computeProportionProgress} from '../internal/SliderDecorator/util';
 import Skinnable from '../Skinnable';
+import Touchable from '../internal/Touchable';
 
 import {SliderBarFactory} from './SliderBar';
 import SliderTooltip from './SliderTooltip';

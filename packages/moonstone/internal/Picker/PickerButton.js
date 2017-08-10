@@ -1,4 +1,3 @@
-import Touchable from '@enact/ui/Touchable';
 import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -7,6 +6,8 @@ import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import Icon from '../../Icon';
 import IconButton from '../../IconButton';
 import {withSkinnableProps} from '../../Skinnable';
+
+import Touchable from '../Touchable';
 
 import css from './Picker.less';
 

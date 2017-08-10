@@ -1,10 +1,10 @@
 import hoc from '@enact/core/hoc';
-import Holdable from '@enact/ui/Holdable';
+import UiTouchable from '@enact/ui/Touchable';
 
 /**
- * Default config for {@link moonstone/internal/Holdable.Holdable}
+ * Default config for {@link moonstone/internal/Touchable.Touchable}
  *
- * @memberof moonstone/internal/Holdable.Holdable
+ * @memberof moonstone/internal/Touchable.Touchable
  * @hocconfig
  * @private
  */
@@ -27,7 +27,7 @@ const defaultConfig = {
 	 *
 	 * @type {Array}
 	 * @default [{name: 'hold', time: 400}]
-	 * @memberof moonstone/internal/Holdable.Holdable.defaultConfig
+	 * @memberof moonstone/internal/Touchable.Touchable.defaultConfig
 	 */
 	events: [
 		{name: 'hold', time: 400}
@@ -35,15 +35,15 @@ const defaultConfig = {
 };
 
 /**
- * {@link moonstone/internal/Holdable.Holdable} is a Higher-order Component that applies a
- * 'Holdable' behavior to its wrapped component, providing methods that fire when a hold
+ * {@link moonstone/internal/Touchable.Touchable} is a Higher-order Component that applies a
+ * 'Touchable' behavior to its wrapped component, providing methods that fire when a hold
  * behavior is detected.
  *
- * @class Holdable
- * @memberof moonstone/internal/Holdable
+ * @class Touchable
+ * @memberof moonstone/internal/Touchable
  * @hoc
  * @private
  */
-const HoldableHOC = hoc(defaultConfig, Holdable);
+const Touchable = hoc(defaultConfig, UiTouchable);
 
-export default HoldableHOC;
+export default Touchable;

@@ -49,7 +49,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		static displayName = 'Touchable'
 
 		static propTypes = {
-			cancelOnLeave: PropTypes.bool,
+			cancelTouchOnLeave: PropTypes.bool,
 			disabled: PropTypes.bool,
 			noResumeTouch: PropTypes.bool,
 			onDown: PropTypes.func,
@@ -60,7 +60,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		static defaultProps = {
-			cancelOnLeave: false,
+			cancelTouchOnLeave: false,
 			disabled: false,
 			noResumeTouch: false
 		}
@@ -147,11 +147,11 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			return true;
 		}
 
-		startHold = (ev, {cancelOnLeave, noResumeTouch, onHold, onHoldPulse}) => {
+		startHold = (ev, {cancelTouchOnLeave, noResumeTouch, onHold, onHoldPulse}) => {
 			if (onHold || onHoldPulse) {
 				this.hold.begin({
 					...getEventCoordinates(ev),
-					cancelOnLeave,
+					cancelOnLeave: cancelTouchOnLeave,
 					events,
 					frequency,
 					moveTolerance,
@@ -218,7 +218,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleLeave = this.handle(
 			forProp('disabled', false),
-			forProp('cancelOnLeave', true),
+			forProp('cancelTouchOnLeave', true),
 			oneOf(
 				[forProp('noResumeTouch', false), this.pause],
 				[returnsTrue, this.deactivate]
@@ -261,7 +261,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			this.moveHold,
 			oneOf(
 				[this.hasTouchLeftTarget, this.handleLeave],
-				[forProp('cancelOnLeave', true), this.handleEnter]
+				[forProp('cancelTouchOnLeave', true), this.handleEnter]
 			)
 		)
 
@@ -295,7 +295,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 			this.addHandlers(props);
 
-			delete props.cancelOnLeave;
+			delete props.cancelTouchOnLeave;
 			delete props.noResumeTouch;
 			delete props.onDown;
 			delete props.onHold;

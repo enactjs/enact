@@ -9,7 +9,6 @@ import Changeable from '@enact/ui/Changeable';
 import factory from '@enact/core/factory';
 import {is} from '@enact/core/keymap';
 import kind from '@enact/core/kind';
-import Touchable from '@enact/ui/Touchable';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Spottable from '@enact/spotlight/Spottable';
@@ -19,6 +18,7 @@ import DisappearSpotlightDecorator from '../internal/DisappearSpotlightDecorator
 import Skinnable from '../Skinnable';
 import {SliderBaseFactory} from '../Slider';
 import SliderDecorator from '../internal/SliderDecorator';
+import Touchable from '../internal/Touchable';
 
 import IncrementSliderButton from './IncrementSliderButton';
 import componentCss from './IncrementSlider.less';
