@@ -130,7 +130,7 @@ const ToggleItemBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * The ToggleIcon component to use in this ToggleItem for both the before and after icons.
 			 *
 			 * @type {Component}
-			 * @default {@link ui/ToggleIcon}
+			 * @default {@link ui/ToggleITem.ToggleIcon}
 			 * @public
 			 */
 			ToggleIcon: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
@@ -243,8 +243,8 @@ const ToggleItemFactory = (props) => Toggleable(
  * A ready-to-use {@link ui/ToggleItem}, with HOCs applied.
  *
  * @class ToggleItem
- * @memberof moonstone/ToggleItem
- * @extends moonstone/ToggleItem.ToggleItemBase
+ * @memberof ui/ToggleItem
+ * @extends ui/ToggleItem.ToggleItemBase
  * @mixes ui/Togglable
  * @ui
  * @public

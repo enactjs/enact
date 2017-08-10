@@ -8,10 +8,10 @@ import UiIcon from '../Icon';
 import componentCss from './ToggleItem.less';
 
 /**
- * A factory for customizing the visual style of [ToggleIconBase]{@link ui/ToggleIcon.ToggleIconBase}.
+ * A factory for customizing the visual style of [ToggleIconBase]{@link ui/ToggleItem.ToggleIconBase}.
  *
  * @class ToggleIconBaseFactory
- * @memberof ui/ToggleIcon
+ * @memberof ui/ToggleItem
  * @factory
  * @public
  */
@@ -19,7 +19,7 @@ const ToggleIconBaseFactory = factory({css: componentCss}, ({css}) => {
 	return kind({
 		name: 'ToggleIcon',
 
-		propTypes: /** @lends ui/ToggleIcon.ToggleIconBase.prototype */ {
+		propTypes: /** @lends ui/ToggleItem.ToggleIconBase.prototype */ {
 			/**
 			 * Nothing, a string, or an {@link ui/Icon.Icon}
 			 *
@@ -74,7 +74,7 @@ const ToggleIconBaseFactory = factory({css: componentCss}, ({css}) => {
 });
 
 /**
- * A stateless [ToggleIcon]{@link ui/ToggleIcon.ToggleIcon}, with no HOCs applied.
+ * A stateless [ToggleIcon]{@link ui/ToggleItem.ToggleIcon}, with no HOCs applied.
  *
  * @class ToggleIconBase
  * @memberof ui/ToggleItem
@@ -84,8 +84,8 @@ const ToggleIconBaseFactory = factory({css: componentCss}, ({css}) => {
 const ToggleIconBase = ToggleIconBaseFactory();
 
 /**
- * A factory for customizing the visual style of [ToggleIcon]{@link ui/ToggleIcon.ToggleIcon}.
- * @see {@link ui/ToggleIcon.ToggleIconBaseFactory}.
+ * A factory for customizing the visual style of [ToggleIcon]{@link ui/ToggleItem.ToggleIcon}.
+ * @see {@link ui/ToggleItem.ToggleIconBaseFactory}.
  *
  * @class ToggleIconFactory
  * @memberof ui/ToggleItem
