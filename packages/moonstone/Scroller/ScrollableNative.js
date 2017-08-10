@@ -350,6 +350,24 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		scrolling = false
 		resetPosition = null // prevent auto-scroll on focus by Spotlight
 
+		calculateDistanceByWheel (e, maxPixel) {
+			const
+				deltaMode = e.deltaMode,
+				wheelDeltaY = -e.wheelDeltaY;
+			let
+				delta = (wheelDeltaY || e.deltaY);
+
+			if (deltaMode === 0) {
+				delta = clamp(-maxPixel, maxPixel, ri.scale(delta * scrollWheelMultiplierForDeltaPixel));
+			} else if (deltaMode === 1) { // line; firefox
+				delta = clamp(-maxPixel, maxPixel, ri.scale(delta * pixelPerLine * scrollWheelMultiplierForDeltaPixel));
+			} else if (deltaMode === 2) { // page
+				delta = delta < 0 ? -maxPixel : maxPixel;
+			}
+
+			return delta;
+		}
+
 		// event handler for browser native scroll
 
 		onMouseDown = () => {
@@ -372,8 +390,17 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
+		/*
+		 * wheel event handler;
+		 * - for horizontal scroll, supports wheel action on any children nodes since web engine cannot suppor this
+		 * - for vertical scroll, supports wheel action on scrollbars only
+		 */
 		onWheel = (e) => {
-			const {direction} = this;
+			const
+				bounds = this.getScrollBounds(),
+				canScrollHorizontally = this.canScrollHorizontally(bounds),
+				canScrollVertically = this.canScrollVertically(bounds);
+			let delta = 0;
 
 			this.childRef.setContainerDisabled(true);
 			this.lastFocusedItem = null;
@@ -383,33 +410,18 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 
 			// FIXME This routine is a temporary support for horizontal wheel scroll.
 			// FIXME If web engine supports horizontal wheel, this routine should be refined or removed.
-			if (direction === 'horizontal') {
-				const
-					bounds = this.getScrollBounds(),
-					canScrollHorizontally = this.canScrollHorizontally(bounds),
-					canScrollVertically = this.canScrollVertically(bounds),
-					deltaMode = e.deltaMode,
-					wheelDeltaY = -e.wheelDeltaY;
-				let
-					delta = (wheelDeltaY || e.deltaY),
-					maxPixel;
-
-				if (canScrollVertically) {
-					maxPixel = bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel;
-				} else if (canScrollHorizontally) {
-					maxPixel = bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel;
-				} else {
-					return 0;
+			if (canScrollVertically) { // This routine handles wheel events on scrollbars for vertical scroll.
+				const {horizontalScrollbarRef, verticalScrollbarRef} = this;
+				// Not to check if e.target is a descendant of a wrapped component which may have a lot of nodes in it.
+				if ((horizontalScrollbarRef && horizontalScrollbarRef.containerRef.contains(e.target)) ||
+					(verticalScrollbarRef && verticalScrollbarRef.containerRef.contains(e.target))) {
+					delta = this.calculateDistanceByWheel(e, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
 				}
+			} else if (canScrollHorizontally) { // this routine handles wheel events on any children for horizontal scroll.
+				delta = this.calculateDistanceByWheel(e, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
+			}
 
-				if (deltaMode === 0) {
-					delta = clamp(-maxPixel, maxPixel, ri.scale(delta * scrollWheelMultiplierForDeltaPixel));
-				} else if (deltaMode === 1) { // line; firefox
-					delta = clamp(-maxPixel, maxPixel, ri.scale(delta * pixelPerLine * scrollWheelMultiplierForDeltaPixel));
-				} else if (deltaMode === 2) { // page
-					delta = delta < 0 ? -maxPixel : maxPixel;
-				}
-
+			if (delta !== 0) {
 				/* prevent native scrolling feature for vertical direction */
 				e.preventDefault();
 
