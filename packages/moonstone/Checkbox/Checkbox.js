@@ -2,6 +2,9 @@
  * This represents a Boolean state and looks like a check mark in a circle. It can be used
  * standalone but will typically be used as a child of {@link moonstone/CheckboxItem}.
  *
+ * @example
+ * <Checkbox selected />
+ *
  * @module moonstone/Checkbox
  * @exports Checkbox
  * @exports CheckboxBase
@@ -80,7 +83,8 @@ const CheckboxFactory = (props) => Skinnable(
 );
 
 /**
- * A ready-to-use {@link ui/Checkbox}, with HOCs applied.
+ * A ready-to-use {@link ui/Checkbox}, with HOCs applied. Note: Checkbox does not manage its
+ * `selected` state.
  *
  * @class Checkbox
  * @memberof moonstone/Checkbox

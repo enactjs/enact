@@ -1,6 +1,11 @@
 /**
  * Displays multi-line text in a block with a medium font weight.
  *
+ * @example
+ * <BodyText>
+ *   Lots of room here. Put whatever you like.
+ * </BodyText>
+ *
  * @module moonstone/BodyText
  * @exports BodyText
  * @exports BodyTextBase
