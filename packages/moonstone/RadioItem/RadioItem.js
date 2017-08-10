@@ -1,7 +1,18 @@
 /**
- * Exports the {@link moonstone/RadioItem.RadioItem} component.
+ * This [Item]{@link moonstone/Item} derives from {@link moonstone/ToggleItem} but with the visual
+ * styling of a standard radio-style item. This will typically be used inside of a
+ * [Group]{@link ui/Group} component to facilitate the only-one-at-a-time nature of radio buttons.
+ *
+ * By default, `RadioItem` maintains the state of its `selected` property. Supply the
+ * `defaultSelected` property to control its initial value. If you wish to directly control updates
+ * to the component, supply a value to `selected` at creation time and update it in response to
+ * `onToggle` events.
  *
  * @module moonstone/RadioItem
+ * @exports RadioItem
+ * @exports RadioItemBase
+ * @exports RadioItemBaseFactory
+ * @exports RadioItemFactory
  */
 
 import factory from '@enact/core/factory';
@@ -17,11 +28,11 @@ import Skinnable from '../Skinnable';
 import componentCss from './RadioItem.less';
 
 /**
- * {@link moonstone/RadioItem.RadioItem} is a stateless RadioItem with Moonstone styling applied.
+ * A factory for customizing the visual style of [RadioItemBase]{@link moonstone/RadioItem.RadioItemBase}.
  *
- * @class RadioItem
+ * @class RadioItemBaseFactory
  * @memberof moonstone/RadioItem
- * @ui
+ * @factory
  * @public
  */
 const RadioItemBaseFactory = factory({css: componentCss}, ({css}) => {
@@ -48,31 +59,26 @@ const RadioItemBaseFactory = factory({css: componentCss}, ({css}) => {
 	});
 });
 
-const RadioItemBase = RadioItemBaseFactory();
-
 /**
- * {@link moonstone/RadioItem.RadioItem} is a component that combines a
- * {@link ui/Toggleable.Toggleable} radio selector and an Item. It has two selected states `true` &
- * `false`.
+ * A stateless [RadioItem]{@link moonstone/RadioItem.RadioItem}, with no HOCs applied.
  *
- * By default, `RadioItem` maintains the state of its `selected` property. Supply the
- * `defaultSelected` property to control its initial value. If you wish to directly control updates
- * to the component, supply a value to `selected` at creation time and update it in response to
- * `onToggle` events.
- *
- * @class RadioItem
+ * @class RadioItemBase
+ * @extends ui/RadioItem.RadioItemBase
  * @memberof moonstone/RadioItem
- * @mixes moonstone/Skinnable.Skinnable
  * @ui
  * @public
  */
-const RadioItem = Skinnable(
-	Toggleable(
-		{prop: 'selected'},
-		RadioItemBase
-	)
-);
+const RadioItemBase = RadioItemBaseFactory();
 
+/**
+ * A factory for customizing the visual style of [RadioItem]{@link moonstone/RadioItem.RadioItem}.
+ * @see {@link moonstone/RadioItem.RadioItemBaseFactory}.
+ *
+ * @class RadioItemFactory
+ * @memberof moonstone/RadioItem
+ * @factory
+ * @public
+ */
 const RadioItemFactory = (props) => Skinnable(
 	Toggleable(
 		{prop: 'selected'},
@@ -80,6 +86,19 @@ const RadioItemFactory = (props) => Skinnable(
 	)
 );
 
+/**
+ * A ready-to-use {@link ui/RadioItem}, with HOCs applied.
+ *
+ *
+ * @class RadioItem
+ * @memberof moonstone/RadioItem
+ * @extends moonstone/RadioItem.RadioItemBase
+ * @mixes moonstone/Skinnable.Skinnable
+ * @mixes ui/Toggleable.Toggleable
+ * @ui
+ * @public
+ */
+const RadioItem = RadioItemFactory();
 
 export default RadioItem;
 export {
