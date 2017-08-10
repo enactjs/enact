@@ -29,6 +29,11 @@
 			left: @moon-video-player-padding-side;
 			right: @moon-video-player-padding-side;
 
+			&.hidden {
+				// shift up bottom controls while hidden
+				transform: translateY(100%);
+			}
+
 			.infoFrame {
 				display: flex;
 				margin-bottom: @moon-spotlight-outset;

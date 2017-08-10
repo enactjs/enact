@@ -607,6 +607,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.speedIndex = 0;
 		this.id = this.generateId();
 		this.selectPlaybackRates('fastForward');
+		this.sliderKnobProportion = 0;
 
 		this.initI18n();
 
@@ -641,11 +642,11 @@ const VideoPlayerBase = class extends React.Component {
 			// Non-standard state computed from properties
 			bottomControlsRendered: false,
 			bottomControlsVisible: false,
+			feedbackIconVisible: true,
 			feedbackVisible: true,
 			more: false,
 			proportionLoaded: 0,
 			proportionPlayed: 0,
-			sliderKnobProportion: 0,
 			titleVisible: true
 		};
 
@@ -880,7 +881,10 @@ const VideoPlayerBase = class extends React.Component {
 		this.setState({
 			bottomControlsVisible: false,
 			more: false
-		}, () => forwardControlsAvailable({available: false}, this.props));
+		}, () => {
+			Spotlight.focus(`.${css.controlsHandleAbove}`);
+			return forwardControlsAvailable({available: false}, this.props);
+		});
 		this.markAnnounceRead();
 	}
 
@@ -1462,15 +1466,31 @@ const VideoPlayerBase = class extends React.Component {
 			}
 		}
 	}
+
+	handleSliderFocus = () => {
+		this.setState({
+			feedbackIconVisible: false,
+			feedbackVisible: true
+		});
+		this.stopDelayedFeedbackHide();
+	}
+
+	handleSliderBlur = () => {
+		this.startDelayedFeedbackHide();
+		this.setState({
+			feedbackIconVisible: true
+		});
+	}
+
 	handleMouseOver = () => {
 		this.setState({
-			mouseOver: true,
+			feedbackIconVisible: false,
 			feedbackVisible: true
 		});
 		this.stopDelayedFeedbackHide();
 	}
 	handleMouseOut = () => {
-		this.setState({mouseOver: false});
+		this.setState({feedbackIconVisible: true});
 		this.startDelayedFeedbackHide();
 	}
 	onJumpBackward = this.handle(
@@ -1636,8 +1656,11 @@ const VideoPlayerBase = class extends React.Component {
 				</Overlay>
 
 				{this.state.bottomControlsRendered ?
-					<div className={css.fullscreen + ' enyo-fit scrim'} style={{display: this.state.bottomControlsVisible ? 'block' : 'none'}} {...controlsAriaProps}>
-						<Container className={css.bottom} data-container-disabled={!this.state.bottomControlsVisible}>
+					<div className={css.fullscreen + ' enyo-fit scrim'} {...controlsAriaProps}>
+						<Container
+							className={css.bottom + (this.state.bottomControlsVisible ? '' : ' ' + css.hidden)}
+							spotlightDisabled={!this.state.bottomControlsVisible}
+						>
 							{/*
 								Info Section: Title, Description, Times
 								Only render when `this.state.bottomControlsVisible` is true in order for `Marquee`
@@ -1662,7 +1685,9 @@ const VideoPlayerBase = class extends React.Component {
 							{noSlider ? null : <MediaSlider
 								backgroundProgress={this.state.proportionLoaded}
 								value={this.state.proportionPlayed}
+								onBlur={this.handleSliderBlur}
 								onChange={this.onSliderChange}
+								onFocus={this.handleSliderFocus}
 								onKnobMove={this.handleKnobMove}
 								onMouseOver={this.handleMouseOver}
 								onMouseOut={this.handleMouseOut}
@@ -1670,7 +1695,7 @@ const VideoPlayerBase = class extends React.Component {
 								onSpotlightDown={this.handleSpotlightDownFromSlider}
 							>
 								<FeedbackTooltip
-									noFeedback={this.state.mouseOver}
+									noFeedback={!this.state.feedbackIconVisible}
 									playbackState={this.prevCommand}
 									playbackRate={this.selectPlaybackRate(this.speedIndex)}
 									thumbnailSrc={thumbnailSrc}
