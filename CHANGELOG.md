@@ -2,6 +2,12 @@
 
 The following is a curated list of changes in the Enact project, newest changes on the top.
 
+## [1.6.1] - 2017-08-07
+
+### Changed
+
+- `moonstone/Icon` and `moonstone/IconButton` to no longer fit image source to the icon's boundary
+
 ## [1.6.0] - 2017-08-04
 
 ### Added
