@@ -8,6 +8,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 - `moonstone/VirtualGridList` to scroll by item via 5 way key
+- `moonstone/VideoPlayer` to read target time when jump by left/right key
 
 ### Fixed
 
@@ -28,7 +29,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` properties `moreButtonLabel` and `moreButtonCloseLabel` to allow customization of the "More" button's tooltip and Aria labels
 - `moonstone/VideoPlayer` property `moreButtonDisabled` to disable the "More" button
 - `moonstone/Picker` and `moonstone/RangePicker` prop `aria-valuetext` to support reading custom text instead of value
-- `moonstone/VideoPlayer` to read target time when jump by left/right key
 - `moonstone/VideoPlayer` methods `showControls` and `hideControls` to allow external interaction with the player
 - `moonstone/Scroller` support for Page Up/Page Down keys in pointer mode when no item has focus
 
