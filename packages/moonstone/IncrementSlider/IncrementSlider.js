@@ -531,7 +531,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			return (
 				<div {...rest} className={incrementSliderClasses}>
 					<IncrementSliderButton
-						aria-controls={id}
+						aria-controls={!incrementDisabled ? id : null}
 						aria-hidden={ariaHidden}
 						aria-label={decrementAriaLabel}
 						className={css.decrementButton}
@@ -578,7 +578,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 						{children}
 					</Slider>
 					<IncrementSliderButton
-						aria-controls={id}
+						aria-controls={!decrementDisabled ? id : null}
 						aria-hidden={ariaHidden}
 						aria-label={incrementAriaLabel}
 						className={css.incrementButton}
