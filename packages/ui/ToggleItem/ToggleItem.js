@@ -224,7 +224,7 @@ const ToggleItemBaseFactory = factory({css: componentCss}, ({css}) => {
  * (e.g Checkbox, RadioItem). It has a customizable prop for icon, so any ui Icon can be used
  * to represent the selected state.
  *
- * @class ToggleItem
+ * @class ToggleItemBase
  * @memberof ui/ToggleItem
  * @extends ui/ToggleItem.ToggleItemBase
  * @mixes ui/Toggleable.Toggleable
