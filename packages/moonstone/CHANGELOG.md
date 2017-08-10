@@ -15,6 +15,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Fixed
 
 - `moonstone/VirtualList` not to lose focus when moving out from the first item via 5way when it has disabled items
+- `moonstone/Header` to not have its contents extend beyond its bounds
 
 ## [1.6.1] - 2017-08-07
 
