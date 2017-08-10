@@ -1,7 +1,12 @@
 /**
- * Contains the declaration for the {@link moonstone/Checkbox.Checkbox} component.
+ * This represents a Boolean state and looks like a check mark in a circle. It can be used
+ * standalone but will typically be used as a child of {@link moonstone/CheckboxItem}.
  *
  * @module moonstone/Checkbox
+ * @exports Checkbox
+ * @exports CheckboxBase
+ * @exports CheckboxBaseFactory
+ * @exports CheckboxFactory
  */
 
 import factory from '@enact/core/factory';
@@ -15,9 +20,7 @@ import Skinnable from '../Skinnable';
 import componentCss from './Checkbox.less';
 
 /**
-* {@link moonstone/Checkbox.CheckboxBaseFactory} is Factory wrapper around
-* {@link moonstone/Checkbox.CheckboxBase} that allows overriding certain classes of the base
-* `Checkbox` component at design time. See {@link moonstone/Checkbox.CheckboxFactory}.
+* A factory for customizing the visual style of [CheckboxBase]{@link moonstone/Checkbox.CheckboxBase}.
 *
 * @class CheckboxBaseFactory
 * @memberof moonstone/Checkbox
@@ -37,16 +40,6 @@ const CheckboxBaseFactory = factory({css: componentCss}, ({css}) => {
 	});
 	const Icon = IconFactory({css});
 
-	/**
-	 * {@link moonstone/Checkbox.CheckboxBase} represents a Boolean state, and looks like a check
-	 * mark in a box.
-	 *
-	 * @class CheckboxBase
-	 * @extends ui/CheckboxBase
-	 * @memberof moonstone/Checkbox
-	 * @ui
-	 * @public
-	 */
 	return kind({
 		name: 'Checkbox',
 
@@ -63,12 +56,19 @@ const CheckboxBaseFactory = factory({css: componentCss}, ({css}) => {
 	});
 });
 
+/**
+ * A stateless [Checkbox]{@link moonstone/Checkbox.Checkbox}, with no HOCs applied.
+ *
+ * @class CheckboxBase
+ * @extends ui/CheckboxBase
+ * @memberof moonstone/Checkbox
+ * @ui
+ * @public
+ */
 const CheckboxBase = CheckboxBaseFactory();
 
 /**
-* {@link moonstone/Checkbox.CheckboxFactory} is Factory wrapper around
-* {@link moonstone/Checkbox.Checkbox} that allows overriding certain classes of the base
-* `Checkbox` component at design time. See {@link moonstone/Checkbox.CheckboxBaseFactory}.
+* A factory for customizing the visual style of [Checkbox]{@link moonstone/Checkbox.Checkbox}.
 *
 * @class CheckboxFactory
 * @memberof moonstone/Checkbox
@@ -80,8 +80,7 @@ const CheckboxFactory = (props) => Skinnable(
 );
 
 /**
- * {@link moonstone/Checkbox.Checkbox} represents a Boolean state, and looks like a check
- * mark in a box.
+ * A ready-to-use {@link ui/Checkbox}, with HOCs applied.
  *
  * @class Checkbox
  * @memberof moonstone/Checkbox

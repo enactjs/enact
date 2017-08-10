@@ -1,8 +1,15 @@
 /**
- * Exports the {@link moonstone/Button.Button} and {@link moonstone/Button.ButtonBase}
- * components.  The default export is {@link moonstone/Button.Button}.
+ * Provides the usual complement of button-like features: pressing fires callbacks, visual state
+ * changes for actuation, marqueeing of text that's too long and some basic customizability.
+ *
+ * @example
+ * <Button small>Click me</Button>
  *
  * @module moonstone/Button
+ * @exports Button
+ * @exports ButtonBase
+ * @exports ButtonBaseFactory
+ * @exports ButtonFactory
  */
 
 import factory from '@enact/core/factory';
@@ -24,8 +31,7 @@ import Skinnable from '../Skinnable';
 import componentCss from './Button.less';
 
 /**
- * {@link moonstone/Button.ButtonBaseFactory} is Factory wrapper around {@link moonstone/Button.ButtonBase}
- * that allows overriding certain classes at design time. See {@link moonstone/Button.ButtonFactory}.
+ * A factory for customizing the visual style of [ButtonBase]{@link moonstone/Button.ButtonBase}.
  *
  * @class ButtonBaseFactory
  * @memberof moonstone/Button
@@ -84,7 +90,7 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 });
 
 /**
- * {@link moonstone/Button.Button} is button with Moonstone styling, without any HOCs applied.
+ * A stateless [Button]{@link moonstone/Button.Button}, with no HOCs applied.
  *
  * @class ButtonBase
  * @extends ui/ButtonBase
@@ -95,8 +101,8 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 const ButtonBase = ButtonBaseFactory();
 
 /**
- * {@link moonstone/Button.ButtonFactory} is Factory wrapper around {@link moonstone/Button.Button}
- * that allows overriding certain classes at design time. See {@link moonstone/Button.ButtonBaseFactory}.
+ * A factory for customizing the visual style of [Button]{@link moonstone/Button.Button}.
+ * @see {@link moonstone/Button.ButtonBaseFactory}.
  *
  * @class ButtonFactory
  * @memberof moonstone/Button
@@ -119,7 +125,7 @@ const ButtonFactory = (props) => Uppercase(
 );
 
 /**
- * {@link moonstone/Button.Button} is button with Moonstone styling and HOCs applied.
+ * A ready-to-use {@link ui/Button}, with HOCs applied.
  *
  * @class Button
  * @memberof moonstone/Button

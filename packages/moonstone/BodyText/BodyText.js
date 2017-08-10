@@ -1,8 +1,11 @@
 /**
- * Exports the {@link moonstone/BodyText.BodyText} and {@link moonstone/BodyText.BodyTextBase}
- * components.  The default export is {@link moonstone/BodyText.BodyTextBase}.
+ * Displays multi-line text in a block with a medium font weight.
  *
  * @module moonstone/BodyText
+ * @exports BodyText
+ * @exports BodyTextBase
+ * @exports BodyTextBaseFactory
+ * @exports BodyTextFactory
  */
 
 import factory from '@enact/core/factory';
@@ -14,8 +17,7 @@ import Skinnable from '../Skinnable';
 import componentCss from './BodyText.less';
 
 /**
- * [BodyTextBaseFactory]{@link moonstone/BodyText.BodyTextBaseFactory} is a factory for customizing
- * the visual style of the base version of [BodyText]{@link moonstone/BodyText} (without HOCs applied).
+ * A factory for customizing the visual style of [BodyTextBase]{@link moonstone/BodyText.BodyTextBase}.
  *
  * @class BodyTextBaseFactory
  * @memberof moonstone/BodyText
@@ -36,8 +38,7 @@ const BodyTextBaseFactory = factory({css: componentCss}, ({css}) => {
 });
 
 /**
- * {@link moonstone/BodyText.BodyTextBase} is a stateless BodyText with Moonstone styling
- * applied, without HOCs applied.
+ * A stateless [BodyText]{@link moonstone/BodyText.BodyText}, with no HOCs applied.
  *
  * @class BodyTextBase
  * @extends ui/BodyTextBase
@@ -48,7 +49,7 @@ const BodyTextBaseFactory = factory({css: componentCss}, ({css}) => {
 const BodyTextBase = BodyTextBaseFactory();
 
 /**
- * {@link moonstone/BodyText.BodyTextFactory} is a factory for customizing BodyText.
+ * A factory for customizing the visual style of [BodyText]{@link moonstone/BodyText.BodyText}.
  *
  * @class BodyTextFactory
  * @memberof moonstone/BodyText
@@ -60,8 +61,7 @@ const BodyTextFactory = (props) => Skinnable(
 );
 
 /**
- * {@link moonstone/BodyText.BodyText} is a stateless BodyText with Moonstone styling
- * applied.
+ * A ready-to-use {@link ui/BodyText}, with HOCs applied.
  *
  * @class BodyText
  * @memberof moonstone/BodyText

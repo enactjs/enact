@@ -1,11 +1,12 @@
 /**
  * Exports the {@link ui/Button.Button} and {@link ui/Button.ButtonBase}
- * components.  The default export is {@link ui/Button.Button}.
- *
- * @example
- * <Button small>Click me</Button>
+ * components. The default export is {@link ui/Button.Button}.
  *
  * @module ui/Button
+ * @exports Button
+ * @exports ButtonBase
+ * @exports ButtonBaseFactory
+ * @exports ButtonFactory
  */
 
 import factory from '@enact/core/factory';

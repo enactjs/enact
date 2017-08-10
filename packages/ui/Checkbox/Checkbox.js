@@ -2,6 +2,10 @@
  * Contains the declaration for the {@link ui/Checkbox.Checkbox} component.
  *
  * @module ui/Checkbox
+ * @exports Checkbox
+ * @exports CheckboxBase
+ * @exports CheckboxBaseFactory
+ * @exports CheckboxFactory
  */
 
 import factory from '@enact/core/factory';
