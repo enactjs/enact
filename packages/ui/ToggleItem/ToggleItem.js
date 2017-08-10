@@ -1,8 +1,12 @@
 /**
- * Exports the {@link ui/ToggleItem.ToggleItem} and
- * {@link ui/ToggleItem.ToggleItemBase} components.
+ * An [Item]{@link ui/Item} with a togglable [Icon]{@link ui/Icon} which can be customized. This is
+ * used as the basis for many other components: {@link ui/CheckboxItem}, {@link ui/RadioItem}, etc.
  *
  * @module ui/ToggleItem
+ * @exports ToggleItem
+ * @exports ToggleItemBase
+ * @exports ToggleItemBaseFactory
+ * @exports ToggleItemFactory
  */
 
 import factory from '@enact/core/factory';
@@ -18,26 +22,16 @@ import UiToggleIcon, {ToggleIconFactory} from './ToggleIcon';
 import componentCss from './ToggleItem.less';
 
 /**
- * {@link ui/ToggleItem.ToggleItem} is a stateless ToggleItem with no styling applied.
+ * A factory for customizing the visual style of [ToggleItemBase]{@link ui/ToggleItem.ToggleItemBase}.
  *
- * @class ToggleItem
+ * @class ToggleItemBaseFactory
  * @memberof ui/ToggleItem
- * @ui
+ * @factory
  * @public
  */
 const ToggleItemBaseFactory = factory({css: componentCss}, ({css}) => {
 	// diffClasses('UI ToggleItem', componentCss, css);
 
-	/**
-	 * {@link ui/ToggleItem.ToggleItemBase} is a component to make a Toggleable Item
-	 * (e.g Checkbox, RadioItem). It has a customizable prop for icon, so any ui Icon can be used
-	 * to represent the selected state.
-	 *
-	 * @class ToggleItemBase
-	 * @memberof ui/ToggleItem
-	 * @ui
-	 * @public
-	 */
 	return kind({
 		name: 'ToggleItem',
 
@@ -136,7 +130,7 @@ const ToggleItemBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * The ToggleIcon component to use in this ToggleItem for both the before and after icons.
 			 *
 			 * @type {Component}
-			 * @default {@link ui/ToggleIcon}
+			 * @default {@link ui/ToggleITem.ToggleIcon}
 			 * @public
 			 */
 			ToggleIcon: PropTypes.oneOfType([PropTypes.func, PropTypes.element]),
@@ -220,14 +214,11 @@ const ToggleItemBaseFactory = factory({css: componentCss}, ({css}) => {
 });
 
 /**
- * {@link ui/ToggleItem.ToggleItemBase} is a component to make a Toggleable Item
- * (e.g Checkbox, RadioItem). It has a customizable prop for icon, so any ui Icon can be used
- * to represent the selected state.
+ * A stateless [ToggleItem]{@link ui/ToggleItem.ToggleItem}, with no HOCs applied.
  *
- * @class ToggleItem
+ * @class ToggleItemBase
  * @memberof ui/ToggleItem
  * @extends ui/ToggleItem.ToggleItemBase
- * @mixes ui/Toggleable.Toggleable
  * @ui
  * @public
  */
@@ -235,8 +226,8 @@ const ToggleItemBase = ToggleItemBaseFactory();
 
 
 /**
- * {@link ui/ToggleItem.ToggleItemFactory} is Factory wrapper around {@link ui/ToggleItem.ToggleItem}
- * that allows overriding certain classes at design time. See {@link ui/ToggleItem.ToggleItemBaseFactory}.
+ * A factory for customizing the visual style of [ToggleItem]{@link ui/ToggleItem.ToggleItem}.
+ * @see {@link ui/ToggleItem.ToggleItemBaseFactory}.
  *
  * @class ToggleItemFactory
  * @memberof ui/ToggleItem
@@ -248,6 +239,16 @@ const ToggleItemFactory = (props) => Toggleable(
 	ToggleItemBaseFactory(props)
 );
 
+/**
+ * A ready-to-use {@link ui/ToggleItem}, with HOCs applied.
+ *
+ * @class ToggleItem
+ * @memberof ui/ToggleItem
+ * @extends ui/ToggleItem.ToggleItemBase
+ * @mixes ui/Togglable
+ * @ui
+ * @public
+ */
 const ToggleItem = ToggleItemFactory();
 
 

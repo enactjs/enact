@@ -8,32 +8,20 @@ import UiIcon from '../Icon';
 import componentCss from './ToggleItem.less';
 
 /**
- * {@link ui/ToggleIcon.ToggleIconBaseFactory} is Factory wrapper around
- * {@link ui/ToggleIcon.ToggleIconBase} that allows overriding certain classes at design time. The
- * following are properties of the `css` member of the argument to the factory.
+ * A factory for customizing the visual style of [ToggleIconBase]{@link ui/ToggleItem.ToggleIconBase}.
  *
  * @class ToggleIconBaseFactory
- * @memberof ui/ToggleIcon
+ * @memberof ui/ToggleItem
  * @factory
- * @ui
  * @public
  */
 const ToggleIconBaseFactory = factory({css: componentCss}, ({css}) => {
-	/**
-	 * Utility component to render the {@link moonstone/Icon.Icon} for
-	 * {@link moonstone/ToggleItem.ToggleItem}.
-	 *
-	 * @class ToggleIcon
-	 * @memberof moonstone/ToggleItem
-	 * @ui
-	 * @private
-	 */
 	return kind({
 		name: 'ToggleIcon',
 
-		propTypes: /** @lends moonstone/ToggleItem.ToggleIcon.prototype */ {
+		propTypes: /** @lends ui/ToggleItem.ToggleIconBase.prototype */ {
 			/**
-			 * Nothing, a string, or an {@link moonstone/Icon.Icon}
+			 * Nothing, a string, or an {@link ui/Icon.Icon}
 			 *
 			 * @type {Node}
 			 */
@@ -85,7 +73,35 @@ const ToggleIconBaseFactory = factory({css: componentCss}, ({css}) => {
 	});
 });
 
+/**
+ * A stateless [ToggleIcon]{@link ui/ToggleItem.ToggleIcon}, with no HOCs applied.
+ *
+ * @class ToggleIconBase
+ * @memberof ui/ToggleItem
+ * @ui
+ * @public
+ */
 const ToggleIconBase = ToggleIconBaseFactory();
+
+/**
+ * A factory for customizing the visual style of [ToggleIcon]{@link ui/ToggleItem.ToggleIcon}.
+ * @see {@link ui/ToggleItem.ToggleIconBaseFactory}.
+ *
+ * @class ToggleIconFactory
+ * @memberof ui/ToggleItem
+ * @factory
+ * @public
+ */
+
+/**
+ * An empty icon for use specifically with [ToggleItem]{@link ui/ToggleItem}.
+ *
+ * @class ToggleIcon
+ * @memberof ui/ToggleItem
+ * @extends ui/ToggleItem.ToggleIconBase
+ * @ui
+ * @public
+ */
 
 export default ToggleIconBase;
 export {
