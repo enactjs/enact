@@ -18,7 +18,7 @@ import {on, off} from '@enact/core/dispatcher';
 import {platform} from '@enact/core/platform';
 import {is} from '@enact/core/keymap';
 import Slottable from '@enact/ui/Slottable';
-import {getDirection, Spotlight} from '@enact/spotlight';
+import Spotlight from '@enact/spotlight';
 import {Spottable, spottableClass} from '@enact/spotlight/Spottable';
 import {SpotlightContainerDecorator, spotlightDefaultClass} from '@enact/spotlight/SpotlightContainerDecorator';
 
@@ -99,10 +99,6 @@ const forwardForwardButtonClick = forward('onForwardButtonClick');
 const forwardJumpBackwardButtonClick = forwardWithPrevent('onJumpBackwardButtonClick');
 const forwardJumpForwardButtonClick = forwardWithPrevent('onJumpForwardButtonClick');
 const forwardPlayButtonClick = forward('onPlayButtonClick');
-
-// localized strings
-const playLabel = 'Play';
-const pauseLabel = 'Pause';
 
 const AnnounceState = {
 	// Video is loaded but additional announcements have not been made
@@ -318,7 +314,7 @@ const VideoPlayerBase = class extends React.Component {
 		 * The label for the "More" button. This will show on the tooltip.
 		 *
 		 * @type {String}
-		 * @default 'Back'
+		 * @default 'More'
 		 * @public
 		 */
 		moreButtonLabel: PropTypes.string,
@@ -826,10 +822,33 @@ const VideoPlayerBase = class extends React.Component {
 		return Math.random().toString(36).substr(2, 8);
 	}
 
+	/**
+	 * If the announce state is either ready to read the title or ready to read info, advance the
+	 * state to "read".
+	 *
+	 * @returns {Boolean} Returns true to be used in event handlers
+	 * @private
+	 */
+	markAnnounceRead = () => {
+		if (this.state.announce === AnnounceState.TITLE) {
+			this.setState({announce: AnnounceState.TITLE_READ});
+		} else if (this.state.announce === AnnounceState.INFO) {
+			this.setState({announce: AnnounceState.DONE});
+		}
+
+		return true;
+	}
+
+	/**
+	 * Shows media controls.
+	 *
+	 * @function
+	 * @memberof moonstone/VideoPlayer.VideoPlayerBase.prototype
+	 * @public
+	 */
 	showControls = () => {
 		this.startDelayedFeedbackHide();
 		this.startDelayedTitleHide();
-		forwardControlsAvailable({available: true}, this.props);
 
 		let {announce} = this.state;
 		if (announce === AnnounceState.READY) {
@@ -846,14 +865,24 @@ const VideoPlayerBase = class extends React.Component {
 			bottomControlsVisible: true,
 			feedbackVisible: true,
 			titleVisible: true
-		});
+		}, () => forwardControlsAvailable({available: true}, this.props));
 	}
 
+	/**
+	 * Hides media controls.
+	 *
+	 * @function
+	 * @memberof moonstone/VideoPlayer.VideoPlayerBase.prototype
+	 * @public
+	 */
 	hideControls = () => {
 		this.stopDelayedFeedbackHide();
 		this.stopDelayedTitleHide();
-		forwardControlsAvailable({available: false}, this.props);
-		this.setState({bottomControlsVisible: false, more: false});
+		this.setState({
+			bottomControlsVisible: false,
+			more: false
+		}, () => forwardControlsAvailable({available: false}, this.props));
+		this.markAnnounceRead();
 	}
 
 	autoCloseJob = new Job(this.hideControls)
@@ -987,7 +1016,6 @@ const VideoPlayerBase = class extends React.Component {
 	}
 
 	handleGlobalKeyDown = this.handle(
-		this.handleKeyDown,
 		forKey('down'),
 		() => (
 			!this.state.bottomControlsVisible &&
@@ -1093,7 +1121,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.setPlaybackRate(1);
 		this.send('play');
 		this.prevCommand = 'play';
-		this.announce($L(playLabel));
+		this.announce($L('Play'));
 	}
 
 	/**
@@ -1108,7 +1136,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.setPlaybackRate(1);
 		this.send('pause');
 		this.prevCommand = 'pause';
-		this.announce($L(pauseLabel));
+		this.announce($L('Pause'));
 	}
 
 	/**
@@ -1375,11 +1403,13 @@ const VideoPlayerBase = class extends React.Component {
 		}
 	}
 
-	handleKeyDownFromControls = (ev) => {
-		if (getDirection(ev.keyCode) === 'down') {
-			this.hideControls();
-		}
-	}
+	handleKeyDownFromControls = this.handle(
+		// onKeyDown is used as a proxy for when the title has been read because it can only occur
+		// after the controls have been shown.
+		this.markAnnounceRead,
+		forKey('down'),
+		this.hideControls
+	)
 
 	handleSpotlightUpFromSlider = handle(
 		stopImmediate,
@@ -1676,9 +1706,9 @@ const VideoPlayerBase = class extends React.Component {
 								onToggleMore={this.onMoreClick}
 								paused={this.state.paused}
 								pauseIcon={pauseIcon}
-								pauseLabel={pauseLabel}
+								pauseLabel={$L('Pause')}
 								playIcon={playIcon}
-								playLabel={playLabel}
+								playLabel={$L('Play')}
 								rateButtonsDisabled={rateButtonsDisabled}
 								rightComponents={rightComponents}
 								showMoreComponents={this.state.more}
@@ -1695,6 +1725,7 @@ const VideoPlayerBase = class extends React.Component {
 					className={css.controlsHandleAbove}
 					onSpotlightDown={this.showControls}
 					onClick={this.showControls}
+					onKeyDown={this.handleKeyDown}
 				/>
 				<Announce ref={this.setAnnounceRef} />
 			</div>
@@ -1721,8 +1752,9 @@ const VideoPlayerBase = class extends React.Component {
  *	</VideoPlayer>
  * ```
  *
- * To invoke methods (`fastForward()`, `jump()`, `pause()`, `play()`, `rewind()`, `seek()`) or get
- * the current state (`getMediaState()`), store a ref to the `VideoPlayer` within your component:
+ * To invoke methods (`fastForward()`, `hideControls()`, `jump()`, `pause()`, `play()`, `rewind()`,
+ * `seek()`, 'showControls()') or get the current state (`getMediaState()`), store a ref to the
+ * `VideoPlayer` within your component:
  *
  * ```
  * 	...
@@ -1749,7 +1781,7 @@ const VideoPlayerBase = class extends React.Component {
  * @public
  */
 const VideoPlayer = ApiDecorator(
-	{api: ['fastForward', 'getMediaState', 'jump', 'pause', 'play', 'rewind', 'seek']},
+	{api: ['fastForward', 'getMediaState', 'hideControls', 'jump', 'pause', 'play', 'rewind', 'seek', 'showControls']},
 	Slottable(
 		{slots: ['infoComponents', 'leftComponents', 'rightComponents', 'source']},
 		Skinnable(

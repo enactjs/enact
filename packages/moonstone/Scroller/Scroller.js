@@ -404,8 +404,6 @@ class ScrollerBase extends Component {
 		scrollBounds.maxTop = Math.max(0, scrollHeight - clientHeight);
 	}
 
-	getContainerNode = () => (this.containerRef)
-
 	onKeyDown = ({keyCode, target}) => {
 		const direction = getDirection(keyCode);
 

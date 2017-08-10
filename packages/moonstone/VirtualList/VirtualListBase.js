@@ -704,6 +704,7 @@ class VirtualListCore extends Component {
 
 			if (Spotlight.isPaused()) {
 				Spotlight.resume();
+				this.forceUpdate();
 			}
 
 			this.focusOnNode(item);
@@ -972,6 +973,7 @@ class VirtualListCore extends Component {
 						data-index={0}
 						data-vl-placeholder
 						onFocus={this.handlePlaceholderFocus}
+						role="region"
 					/>
 				)}
 				{needsScrollingPlaceholder ? (
