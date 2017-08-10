@@ -1,10 +1,3 @@
-/**
-* Exports the {@link moonstone/ToggleIcon.ToggleIcon} and {@link moonstone/ToggleIcon.ToggleIconBase}
-* components.  The default export is {@link moonstone/ToggleIcon.ToggleIconBase}.
-*
-* @module moonstone/ToggleIcon
-*/
-
 import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
 // import {diffClasses} from '@enact/ui/MigrationAid';
@@ -15,21 +8,19 @@ import {IconFactory} from '../Icon';
 import componentCss from './ToggleItem.less';
 
 /**
-* {@link moonstone/ToggleIcon.ToggleIconFactory} is Factory wrapper around
-* {@link moonstone/ToggleIcon.ToggleIcon} that allows overriding certain classes of the base
-* `Button` component at design time. See {@link moonstone/Button.ButtonBaseFactory}.
-*
-* @class ToggleIconFactory
-* @memberof moonstone/ToggleIcon
-* @factory
-* @private
-*/
+ * A factory for customizing the visual style of [ToggleIconBase]{@link moonstone/ToggleItem.ToggleIconBase}.
+ *
+ * @class ToggleIconBaseFactory
+ * @memberof moonstone/ToggleItem
+ * @factory
+ * @public
+ */
 const ToggleIconBaseFactory = factory({css: componentCss}, ({css}) => {
 	// diffClasses('Moon ToggleIcon', componentCss, css);
 
 	const UiToggleIcon = UiToggleIconFactory({
 		/* Replace classes in this step */
-		css: /** @lends moonstone/ToggleIcon.ToggleIconFactory.prototype */ {
+		css: /** @lends moonstone/ToggleItem.ToggleIconFactory.prototype */ {
 			...componentCss,
 			// Include the component class name so it too may be overridden.
 			ToggleIcon: css.ToggleIcon
@@ -62,7 +53,36 @@ const ToggleIconBaseFactory = factory({css: componentCss}, ({css}) => {
 	});
 });
 
+/**
+ * A stateless [ToggleIcon]{@link moonstone/ToggleItem.ToggleIcon}, with no HOCs applied.
+ *
+ * @class ToggleIconBase
+ * @extends ui/ToggleIcon.ToggleIconBase
+ * @memberof moonstone/ToggleItem
+ * @ui
+ * @public
+ */
 const ToggleIconBase = ToggleIconBaseFactory();
+
+/**
+ * A factory for customizing the visual style of [ToggleIcon]{@link moonstone/ToggleItem.ToggleIcon}.
+ * @see {@link moonstone/ToggleItem.ToggleIconBaseFactory}.
+ *
+ * @class ToggleIconFactory
+ * @memberof moonstone/ToggleItem
+ * @factory
+ * @public
+ */
+
+/**
+ * A ready-to-use {@link ui/ToggleIcon}.
+ *
+ * @class ToggleIcon
+ * @memberof moonstone/ToggleItem
+ * @extends moonstone/ToggleItem.ToggleIconBase
+ * @ui
+ * @public
+ */
 
 export default ToggleIconBase;
 export {
