@@ -1,7 +1,7 @@
 /**
- * Exports the {@link moonstone/CheckboxItem.CheckboxItem} component.
+ * Exports the {@link ui/CheckboxItem.CheckboxItem} component.
  *
- * @module moonstone/CheckboxItem
+ * @module ui/CheckboxItem
  */
 
 import factory from '@enact/core/factory';
@@ -14,9 +14,9 @@ import Toggleable from '../Toggleable';
 import {ToggleItemBaseFactory as UiToggleItemFactory} from '../ToggleItem';
 
 /**
- * {@link ui/CheckboxItem.CheckboxItemBaseFactory} is Factory wrapper around
- * {@link ui/CheckboxItem.CheckboxItemBase} that allows overriding certain classes at design time.
- * The following are properties of the `css` member of the argument to the factory.
+ * A Factory wrapper around {@link ui/CheckboxItem.CheckboxItemBase} that allows overriding certain
+ * classes at design time.  The following are properties of the `css` member of the argument to the
+ * factory.
  *
  * @class CheckboxItemBaseFactory
  * @memberof ui/CheckboxItem
@@ -27,20 +27,10 @@ import {ToggleItemBaseFactory as UiToggleItemFactory} from '../ToggleItem';
 const CheckboxItemBaseFactory = factory({css: {}}, ({css}) => {
 	const UiToggleItem = UiToggleItemFactory({css});
 
-	/**
-	 * {@link moonstone/CheckboxItem.CheckboxItemBase} is a component that
-	 * is an Item that is Toggleable. It has two states: `true` (selected) & `false`
-	 * (unselected). It uses a check icon to represent its selected state.
-	 *
-	 * @class CheckboxItemBase
-	 * @memberof moonstone/CheckboxItem
-	 * @ui
-	 * @public
-	 */
 	return kind({
 		name: 'CheckboxItem',
 
-		propTypes: /** @lends moonstone/CheckboxItem.CheckboxItemBase.prototype */ {
+		propTypes: /** @lends ui/CheckboxItem.CheckboxItemBase.prototype */ {
 			/**
 			 * The string to be displayed as the main content of the checkbox item.
 			 *
@@ -147,32 +137,20 @@ const CheckboxItemBaseFactory = factory({css: {}}, ({css}) => {
 	});
 });
 
-const CheckboxItemBase = CheckboxItemBaseFactory();
-
 /**
- * {@link moonstone/CheckboxItem.CheckboxItem} is a component that is an Item that is Toggleable. It
- * has two states: `true` (selected) & `false` (unselected). It uses a check icon to represent its
- * selected state.
+ * A component that is an Item that is Toggleable. It has two states: `true` (selected) &
+ * `false` (unselected). It uses a check icon to represent its selected state.
  *
- * By default, `CheckboxItem` maintains the state of its `selected` property. Supply the
- * `defaultSelected` property to control its initial value. If you wish to directly control updates
- * to the component, supply a value to `selected` at creation time and update it in response to
- * `onToggle` events.
- *
- * @class CheckboxItem
- * @memberof moonstone/CheckboxItem
+ * @class CheckboxItemBase
+ * @memberof ui/CheckboxItem
  * @ui
  * @public
  */
-const CheckboxItem = Toggleable(
-	{prop: 'selected'},
-	CheckboxItemBase
-);
+const CheckboxItemBase = CheckboxItemBaseFactory();
 
 /**
- * {@link ui/CheckboxItem.CheckboxItemFactory} is Factory wrapper around
- * {@link ui/CheckboxItem.CheckboxItem} that allows overriding certain classes at design time.
- * See {@link ui/CheckboxItem.CheckboxItemBaseFactory}.
+ * A Factory wrapper around {@link ui/CheckboxItem.CheckboxItem} that allows overriding certain
+ * classes at design time.  See {@link ui/CheckboxItem.CheckboxItemBaseFactory}.
  *
  * @class CheckboxItemFactory
  * @memberof ui/CheckboxItem
@@ -195,6 +173,24 @@ const CheckboxItemFactory = factory(props => {
 		Base
 	);
 });
+
+/**
+ * A component that is an Item that is Toggleable. It has two states: `true` (selected) & `false`
+ * (unselected). It uses a check icon to represent its selected state.
+ *
+ * By default, `CheckboxItem` maintains the state of its `selected` property. Supply the
+ * `defaultSelected` property to control its initial value. If you wish to directly control updates
+ * to the component, supply a value to `selected` at creation time and update it in response to
+ * `onToggle` events.
+ *
+ * @class CheckboxItem
+ * @memberof ui/CheckboxItem
+ * @extends ui/CheckboxItem.CheckboxItemBase
+ * @mixes ui/Toggleable
+ * @ui
+ * @public
+ */
+const CheckboxItem = CheckboxItemFactory();
 
 export default CheckboxItem;
 export {
