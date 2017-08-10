@@ -232,7 +232,7 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
  * @factory
  * @public
  */
-const ButtonFactory = factory(css => {
+const ButtonFactory = factory((css, disableMarquee)  => {
 	const Base = ButtonBaseFactory(css);
 	/**
 	 * {@link moonstone/Button.Button} is a Button with Moonstone styling, Spottable and
@@ -254,20 +254,37 @@ const ButtonFactory = factory(css => {
 	 * @ui
 	 * @public
 	 */
-	return Uppercase(
-		TooltipDecorator(
-			MarqueeDecorator(
-				{className: componentCss.marquee},
-				Pressable(
-					Spottable(
-						Skinnable(
-							Base
+	if (disableMarquee) {
+		return Uppercase(
+			TooltipDecorator(
+				MarqueeDecorator(
+					{className: componentCss.marquee},
+					Pressable(
+						Spottable(
+							Skinnable(
+								Base
+							)
 						)
 					)
 				)
 			)
-		)
-	);
+		);
+	} else {
+		return Uppercase(
+			TooltipDecorator(
+				MarqueeDecorator(
+					{className: componentCss.marquee},
+					Pressable(
+						Spottable(
+							Skinnable(
+								Base
+							)
+						)
+					)
+				)
+			)
+		);
+	}
 });
 
 const ButtonBase = ButtonBaseFactory();

@@ -28,7 +28,7 @@ const OptimizedIcon = onlyUpdateForKeys(['small', 'children'])(Icon);
  * @public
  */
 const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
-	const Button = ButtonFactory({css});
+	const Button = ButtonFactory({css}, true);
 	/**
 	 * {@link moonstone/IconButton.IconButton} is a {@link moonstone/Icon.Icon} that acts like a button.
 	 * You may specify an image or a font-based icon by setting the children to either the path to the
@@ -132,7 +132,7 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 
 		render: ({children, small, ...rest}) => {
 			return (
-				<Button {...rest} small={small} minWidth={false} marqueeDisabled>
+				<Button {...rest} small={small} minWidth={false}>
 					<OptimizedIcon small={small} className={css.icon}>{children}</OptimizedIcon>
 				</Button>
 			);
