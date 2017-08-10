@@ -1,9 +1,12 @@
 /**
- * Exports the {@link moonstone/TooltipDecorator.TooltipDecorator} Higher-order Component (HOC),
- * {@link moonstone/TooltipDecorator.Tooltip} and {@link moonstone/TooltipDecorator.TooltipBase}
- * components. The default export is {@link moonstone/TooltipDecorator.TooltipDecorator}.
+ * A Higher-order Component which positions a `Tooltip` relative to a wrapped component and the
+ * `Tooltip` component.
  *
  * @module moonstone/TooltipDecorator
+ * @exports TooltipDecorator
+ * @exports Tooltip
+ * @exports TooltipBase
+ * @exports TooltipFactory
  */
 
 import hoc from '@enact/core/hoc';
@@ -24,6 +27,7 @@ import {Tooltip, TooltipBase, TooltipFactory} from './Tooltip';
  *
  * @class TooltipDecorator
  * @memberof moonstone/TooltipDecorator
+ * @extends ui/TooltipDecorator.TooltipDecorator
  * @hoc
  * @public
  */

@@ -1,10 +1,3 @@
-/**
- * Exports the {@link moonstone/Tooltip.Tooltip} and {@link moonstone/Tooltip.TooltipBase}
- * components.  The default export is {@link moonstone/Tooltip.TooltipBase}.
- *
- * @module moonstone/Tooltip
- */
-
 import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
 import React from 'react';
@@ -18,12 +11,12 @@ import Skinnable from '../Skinnable';
 import componentCss from './Tooltip.less';
 
 /**
- * {@link moonstone/TooltipDecorator.TooltipBase} is a stateless tooltip component with
- * Moonston styling applied.
+ * A factory for customizing the visual style of
+ * [TooltipBase]{@link moonstone/TooltipDecorator.TooltipBase}.
  *
- * @class TooltipBase
+ * @class TooltipBaseFactory
  * @memberof moonstone/TooltipDecorator
- * @ui
+ * @factory
  * @public
  */
 const TooltipBaseFactory = factory({css: componentCss}, ({css}) => {
@@ -31,7 +24,7 @@ const TooltipBaseFactory = factory({css: componentCss}, ({css}) => {
 
 	const UiTooltip = UiTooltipFactory({
 		/* Replace classes in this step */
-		css: /** @lends moonstone/TooltipBase.TooltipFactory.prototype */ {
+		css: /** @lends moonstone/TooltipDecorator.TooltipBaseFactory.prototype */ {
 			...componentCss,
 			// Include the component class name so it too may be overridden.
 			tooltip: css.tooltip
@@ -39,15 +32,6 @@ const TooltipBaseFactory = factory({css: componentCss}, ({css}) => {
 	});
 	const TooltipLabel = TooltipLabelFactory({css});
 
-	/**
-	 * {@link moonstone/TooltipDecorator.TooltipBase} is a stateless tooltip component with
-	 * Moonstone styling applied.
-	 *
-	 * @class TooltipBase
-	 * @memberof moonstone/TooltipDecorator
-	 * @ui
-	 * @public
-	 */
 	return kind({
 		name: 'Tooltip',
 
@@ -64,30 +48,45 @@ const TooltipBaseFactory = factory({css: componentCss}, ({css}) => {
 	});
 });
 
-const TooltipBase = TooltipBaseFactory();
-
 /**
- * {@link moonstone/TooltipDecorator.Tooltip} is a tooltip component with Moonstone styling
- * applied. If the Tooltip's child component is text, it will be uppercased unless
- * `casing` is set.
+ * A stateless tooltip component.
  *
- * @class Tooltip
+ * @class TooltipBase
  * @memberof moonstone/TooltipDecorator
- * @mixes i18n/Uppercase.Uppercase
+ * @extends ui/TooltipDecorator.Tooltip
  * @ui
  * @public
  */
-const Tooltip = Skinnable(
-	Uppercase(
-		TooltipBase
-	)
-);
+const TooltipBase = TooltipBaseFactory();
 
+/**
+ * A factory for customizing the visual style of
+ * [Tooltip]{@link moonstone/TooltipDecorator.Tooltip}.
+ *
+ * @class TooltipFactory
+ * @memberof moonstone/TooltipDecorator
+ * @factory
+ * @public
+ */
 const TooltipFactory = (props) => Skinnable(
 	Uppercase(
 		TooltipBaseFactory(props)
 	)
 );
+
+/**
+ * A tooltip component. If the Tooltip's child component is text, it will be uppercased unless
+ * `casing` is set.
+ *
+ * @class Tooltip
+ * @memberof moonstone/TooltipDecorator
+ * @extends moonstone/TooltipDecorator.Tooltip
+ * @mixes moonstone/Skinnable.Skinnable
+ * @mixes i18n/Uppercase.Uppercase
+ * @ui
+ * @public
+ */
+const Tooltip = TooltipFactory();
 
 export default Tooltip;
 export {
