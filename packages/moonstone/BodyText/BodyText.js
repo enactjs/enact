@@ -41,7 +41,7 @@ const BodyTextBaseFactory = factory({css: componentCss}, ({css}) => {
  * A stateless [BodyText]{@link moonstone/BodyText.BodyText}, with no HOCs applied.
  *
  * @class BodyTextBase
- * @extends ui/BodyTextBase
+ * @extends ui/BodyText.BodyTextBase
  * @memberof moonstone/BodyText
  * @ui
  * @public
@@ -65,7 +65,7 @@ const BodyTextFactory = (props) => Skinnable(
  *
  * @class BodyText
  * @memberof moonstone/BodyText
- * @extends moonstone/BodyTextBase
+ * @extends moonstone/BodyText.BodyTextBase
  * @mixes moonstone/Skinnable
  * @ui
  * @public

@@ -1,9 +1,9 @@
 /**
- * Exports the {@link ui/FloatingLayer.FloatingLayer} component and
- * {@link ui/FloatingLayer.FloatingLayerDecorator} Higher-order Component (HOC).
- * The default export is {@link ui/FloatingLayer.FloatingLayer}.
+ * Components and a Higher-Order Component used to create an entry point to a new render tree.
  *
  * @module ui/FloatingLayer
+ * @exports FloatingLayer
+ * @exports FloatingLayerBase
  */
 
 import FloatingLayer from './FloatingLayer';

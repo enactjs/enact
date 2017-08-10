@@ -93,7 +93,7 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
  * A stateless [Button]{@link moonstone/Button.Button}, with no HOCs applied.
  *
  * @class ButtonBase
- * @extends ui/ButtonBase
+ * @extends ui/Button.ButtonBase
  * @memberof moonstone/Button
  * @ui
  * @public
@@ -129,7 +129,7 @@ const ButtonFactory = (props) => Uppercase(
  *
  * @class Button
  * @memberof moonstone/Button
- * @extends moonstone/ButtonBase
+ * @extends moonstone/Button.ButtonBase
  * @mixes i18n/Uppercase
  * @mixes moonstone/TooltipDecorator
  * @mixes ui/Pressable

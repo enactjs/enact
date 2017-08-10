@@ -60,7 +60,7 @@ const CheckboxBaseFactory = factory({css: componentCss}, ({css}) => {
  * A stateless [Checkbox]{@link moonstone/Checkbox.Checkbox}, with no HOCs applied.
  *
  * @class CheckboxBase
- * @extends ui/CheckboxBase
+ * @extends ui/Checkbox.CheckboxBase
  * @memberof moonstone/Checkbox
  * @ui
  * @public
@@ -84,7 +84,7 @@ const CheckboxFactory = (props) => Skinnable(
  *
  * @class Checkbox
  * @memberof moonstone/Checkbox
- * @extends moonstone/Checkbox
+ * @extends moonstone/Checkbox.CheckboxBase
  * @mixes moonstone/Skinnable
  * @ui
  * @public

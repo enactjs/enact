@@ -1,8 +1,11 @@
 /**
- * Exports the {@link moonstone/DatePicker.DatePicker} and {@link moonstone/DatePicker.DatePickerBase}
- * components.
+ * A picker for selecting or displaying dates.
+ *
+ * @example
+ * <DatePicker title="Choose a date..." />
  *
  * @module moonstone/DatePicker
+ * @exports DatePicker
  */
 
 import DateFmt from '@enact/i18n/ilib/lib/DateFmt';
@@ -13,8 +16,7 @@ import Skinnable from '../Skinnable';
 import DatePickerBase from './DatePickerBase';
 
 /**
- * {@link moonstone/DatePicker.DatePicker} allows the selection (or simply display) of
- * a day, month, and year.
+ * Allows the selection (or simply display) of a day, month, and year.
  *
  * Set the [value]{@link moonstone/DatePicker.DatePicker#value} property to a standard
  * JavaScript {@glossary Date} object to initialize the picker.
@@ -31,8 +33,9 @@ import DatePickerBase from './DatePickerBase';
  *
  * @class DatePicker
  * @memberof moonstone/DatePicker
- * @mixes ui/Toggleable.Toggleable
- * @mixes ui/RadioDecorator.RadioDecorator
+ * @extends moonstone/DatePicker.DatePickerBase
+ * @mixes moonstone/Skinnable
+ * @mixes moonstone/ExpandableItem.Expandable
  * @mixes ui/Changeable.Changeable
  * @ui
  * @public

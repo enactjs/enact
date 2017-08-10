@@ -1,8 +1,12 @@
 /**
- * Exports the {@link moonstone/Dialog.Dialog} and {@link moonstone/Dialog.DialogBase} components.
- * The default export is {@link moonstone/Dialog.Dialog}.
+ * A modal component with a title, a subtitle, a message, and an area for additional controls.
+ *
+ * @example
+ * <Dialog buttons={<Button>Click me</Button>} open >This is a dialog</Dialog>
  *
  * @module moonstone/Dialog
+ * @exports Dialog
+ * @exports DialogBase
  */
 
 import kind from '@enact/core/kind';
@@ -21,8 +25,8 @@ const MarqueeH1 = Uppercase(MarqueeDecorator('h1'));
 const MarqueeH2 = MarqueeDecorator('h2');
 
 /**
- * {@link moonstone/Dialog.DialogBase} is a modal component with a title, a subtitle, a
- * message, and an area for additional controls.
+ * A modal component with a title, a subtitle, a message, and an area for additional controls,
+ * with no HOCs applied.
  *
  * @class DialogBase
  * @memberof moonstone/Dialog
@@ -195,11 +199,11 @@ const DialogBase = kind({
 });
 
 /**
- * {@link moonstone/Dialog.Dialog} is modal component with a title, a subtitle, a
- * message, and an area for additional controls.
+ * A modal component with a title, a subtitle, a message, and an area for additional controls.
  *
  * @class Dialog
  * @memberof moonstone/Dialog
+ * @extends moonstone/Dialog.DialogBase
  * @mixes ui/Slottable.Slottable
  * @ui
  * @public

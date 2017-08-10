@@ -1,7 +1,12 @@
 /**
- * Exports the {@link moonstone/DayPicker.DayPicker} component.
+ * A component that allows the user to choose day(s) of the week.
+ *
+ * @example
+ * <DayPicker title="Pick a day or two" />
  *
  * @module moonstone/DayPicker
+ * @exports DayPicker
+ * @exports DayPickerBase
  */
 
 import Changeable from '@enact/ui/Changeable';
@@ -27,8 +32,7 @@ const SELECTED_DAY_TYPES = {
 };
 
 /**
- * {@link moonstone/DayPicker.DayPicker} is a component that
- * allows the user to choose day(s) of the week.
+ * A component that allows the user to choose day(s) of the week, with no HOCs applied.
  *
  * @class DayPickerBase
  * @memberof moonstone/DayPicker
@@ -243,8 +247,7 @@ const DayPickerBase = class extends React.Component {
 
 
 /**
- * {@link moonstone/DayPicker.DayPicker} is a component that
- * allows the user to choose day(s) of the week.
+ * A component that allows the user to choose day(s) of the week.
  *
  * By default, `DayPicker` maintains the state of its `selected` property. Supply the
  * `defaultSelected` property to control its initial value. If you wish to directly control updates
@@ -258,6 +261,7 @@ const DayPickerBase = class extends React.Component {
  *
  * @class DayPicker
  * @memberof moonstone/DayPicker
+ * @extends moonstone/DayPicker.DayPickerBase
  * @mixes moonstone/ExpandableItem.Expandable
  * @mixes ui/Changeable.Changeable
  * @ui

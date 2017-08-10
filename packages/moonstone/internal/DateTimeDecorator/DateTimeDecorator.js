@@ -19,8 +19,7 @@ import {Expandable} from '../../ExpandableItem';
  *
  * @class DateTimeDecorator
  * @memberof moonstone/internal/DateTimeDecorator
- * @mixes ui/Toggleable.Toggleable
- * @mixes ui/RadioDecorator.RadioDecorator
+ * @mixes moonstone/ExpandableItem.Expandable
  * @mixes ui/Changeable.Changeable
  * @hoc
  * @private

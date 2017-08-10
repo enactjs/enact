@@ -61,7 +61,7 @@ const CheckboxItemBaseFactory = factory({css: {}}, ({css}) => {
  *
  * @class CheckboxItemBase
  * @memberof moonstone/CheckboxItem
- * @extends ui/CheckboxItemBase
+ * @extends ui/CheckboxItem.CheckboxItemBase
  * @ui
  * @public
  */
@@ -92,7 +92,7 @@ const CheckboxItemFactory = (props) => Skinnable(
  *
  * @class CheckboxItem
  * @memberof moonstone/CheckboxItem
- * @extends moonstone/CheckboxItemBase
+ * @extends moonstone/CheckboxItem.CheckboxItemBase
  * @mixes moonstone/Skinnable
  * @ui
  * @public
