@@ -12,8 +12,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 - `moonstone/ApplicationCloseDecorator` for adding `ApplicationCloseButton` to the app level
 
-### Added
-
 ### Changed
 - `moonstone/VirtualGridList` to scroll by item via 5 way key
 
