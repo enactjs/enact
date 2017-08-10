@@ -2,21 +2,24 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [1.6.1] - 2017-08-07
-
-### Changed
-
-- `moonstone/Icon` and `moonstone/IconButton` to no longer fit image source to the icon's boundary
 ## [Unreleased]
 
 ### Added
 
 ### Changed
+
 - `moonstone/VirtualGridList` to scroll by item via 5 way key
 
 ### Fixed
 
 - `moonstone/VirtualList` not to lose focus when moving out from the first item via 5way when it has disabled items
+- `moonstone/VideoPlayer` to display feedback tooltip correctly when navigating in 5-way
+
+## [1.6.1] - 2017-08-07
+
+### Changed
+
+- `moonstone/Icon` and `moonstone/IconButton` to no longer fit image source to the icon's boundary
 
 ## [1.6.0] - 2017-08-04
 
