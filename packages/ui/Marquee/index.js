@@ -1,13 +1,13 @@
 /**
- * Exports the {@link moonstone/Marquee.Marquee},
- * {@link moonstone/Marquee.MarqueeBase},
- * {@link moonstone/Marquee.MarqueeController},
- * {@link moonstone/Marquee.MarqueeDecorator}, and
- * {@link moonstone/Marquee.MarqueeText} components.
+ * Components for creating regions of text that allow content that is wider than its container to
+ * be revealed through a 'marquee' (horizontal scrolling) effect.
  *
- * The default export is {@link moonstone/Marquee.Marquee}.
- *
- * @module moonstone/Marquee
+ * @module ui/Marquee
+ * @exports Marquee
+ * @exports MarqueeController
+ * @exports MarqueeDecorator
+ * @exports MarqueeFactory
+ * @exports MarqueeText
  */
 
 import Marquee, {MarqueeFactory} from './Marquee';

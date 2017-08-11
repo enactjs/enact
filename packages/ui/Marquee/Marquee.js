@@ -1,6 +1,5 @@
 /*
- * Exports the {@link ui/Marquee.Marquee} and {@link ui/Marquee.MarqueeBase}
- * components. The default export is {@link ui/Marquee.Marquee}.
+ * Exports the Marquee component and the MarqueeFactory factory. The default export is Marquee.
  *
  * note: not jsdoc on purpose, exports in index.js
  */
@@ -16,26 +15,15 @@ import componentCss from './Marquee.less';
 const animated = componentCss.text + ' ' + componentCss.animate;
 
 /**
- * {@link ui/Marquee.MarqueeBaseFactory} is Factory wrapper around {@link ui/Marquee.MarqueeBase}
- * that allows overriding certain classes at design time. The following are properties of the `css`
- * member of the argument to the factory.
+ * A Factory wrapper around {@link ui/Marquee.MarqueeBase} that allows overriding certain classes at
+ * design time. The following are properties of the `css` member of the argument to the factory.
  *
- * @class MarqueeBaseFactory
+ * @class MarqueeFactory
  * @memberof ui/Marquee
  * @factory
- * @ui
  * @public
  */
 const MarqueeBaseFactory = factory({css: componentCss}, ({css}) => {
-	/**
-	 * {@link ui/Marquee.Marquee} is a stateless text container element which
-	 * implements a text cut-off followed by an ellipsis character.
-	 *
-	 * @class Marquee
-	 * @memberof ui/Marquee
-	 * @ui
-	 * @public
-	 */
 	return kind({
 		name: 'Marquee',
 
@@ -209,6 +197,15 @@ const MarqueeBaseFactory = factory({css: componentCss}, ({css}) => {
 	});
 });
 
+/**
+ * A stateless text container element which implements a text cut-off followed by an ellipsis
+ * character.
+ *
+ * @class Marquee
+ * @memberof ui/Marquee
+ * @ui
+ * @public
+ */
 const MarqueeBase = MarqueeBaseFactory();
 
 export default MarqueeBase;

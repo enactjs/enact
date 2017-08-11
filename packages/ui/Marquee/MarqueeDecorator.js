@@ -9,10 +9,10 @@ import Marquee from './Marquee';
 import {contextTypes} from './MarqueeController';
 
 /**
- * Default configuration parameters for {@link moonstone/Marquee.MarqueeDecorator}
+ * Default configuration parameters for {@link ui/Marquee.MarqueeDecorator}
  *
  * @type {Object}
- * @memberof moonstone/Marquee.MarqueeDecorator
+ * @memberof ui/Marquee.MarqueeDecorator
  * @hocconfig
  */
 const defaultConfig = {
@@ -21,7 +21,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'onBlur'
-	 * @memberof moonstone/Marquee.MarqueeDecorator.defaultConfig
+	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
 	 */
 	blur: 'onBlur',
 
@@ -30,7 +30,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default null
-	 * @memberof moonstone/Marquee.MarqueeDecorator.defaultConfig
+	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
 	 */
 	className: null,
 
@@ -39,7 +39,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'onMouseEnter'
-	 * @memberof moonstone/Marquee.MarqueeDecorator.defaultConfig
+	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
 	 */
 	enter: 'onMouseEnter',
 
@@ -48,7 +48,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'onFocus'
-	 * @memberof moonstone/Marquee.MarqueeDecorator.defaultConfig
+	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
 	 */
 	focus: 'onFocus',
 
@@ -58,7 +58,7 @@ const defaultConfig = {
 	*
 	* @type {Array}
 	* @default null
-	* @memberof moonstone/Marquee.MarqueeDecorator.defaultConfig
+	* @memberof ui/Marquee.MarqueeDecorator.defaultConfig
 	*/
 	invalidateProps: null,
 
@@ -67,7 +67,7 @@ const defaultConfig = {
 	 *
 	 * @type {String}
 	 * @default 'onMouseLeave'
-	 * @memberof moonstone/Marquee.MarqueeDecorator.defaultConfig
+	 * @memberof ui/Marquee.MarqueeDecorator.defaultConfig
 	 */
 	leave: 'onMouseLeave'
 };
@@ -87,11 +87,10 @@ const didPropChange = (propList, prev, next) => {
 };
 
 /**
- * {@link moonstone/Marquee.MarqueeDecorator} is a Higher-order Component which makes
- * the Wrapped component's children marquee.
+ * A Higher-order Component which makes the Wrapped component's children marquee.
  *
  * @class MarqueeDecorator
- * @memberof moonstone/Marquee
+ * @memberof ui/Marquee
  * @hoc
  * @public
  */
@@ -109,7 +108,7 @@ const MarqueeDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 		static contextTypes = contextTypes
 
-		static propTypes = /** @lends moonstone/Marquee.MarqueeDecorator.prototype */ {
+		static propTypes = /** @lends ui/Marquee.MarqueeDecorator.prototype */ {
 			/**
 			 * Children to be marqueed
 			 *

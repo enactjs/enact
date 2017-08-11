@@ -1,7 +1,7 @@
 import MarqueeDecorator from './MarqueeDecorator';
 
 /**
- * {@link ui/Marquee.MarqueeText} is a basic marqueeing text component.
+ * A basic marqueeing text component.
  *
  * @class MarqueeText
  * @memberof ui/Marquee
