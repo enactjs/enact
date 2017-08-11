@@ -93,20 +93,40 @@ const ButtonBase = ButtonBaseFactory();
  * @factory
  * @public
  */
-const ButtonFactory = (props) => Uppercase(
-	TooltipDecorator(
-		MarqueeDecorator(
-			{className: componentCss.marquee},
-			Pressable(
-				Spottable(
-					Skinnable(
-						ButtonBaseFactory(props)
+const ButtonFactory = (props) => {
+	const NewButton = Uppercase(
+		TooltipDecorator(
+			MarqueeDecorator(
+				{className: componentCss.marquee},
+				Pressable(
+					Spottable(
+						Skinnable(
+							ButtonBaseFactory(props)
+						)
 					)
 				)
 			)
 		)
-	)
-);
+	);
+
+	NewButton.propTypes = /** @lends moonstone/Button.Button.prototype */ {
+		/**
+		 * Transformation to apply to the text of the Button. By default, text is transformed
+		 * to uppercase.
+		 *
+		 * @see i18n/Uppercase#casing
+		 * @type {String}
+		 * @default 'upper'
+		 * @public
+		 */
+		casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence'])
+	};
+
+	NewButton.defaultProps = {
+		casing: 'upper'
+	};
+	return NewButton;
+};
 
 /**
  * A ready-to-use {@link ui/Button}, with HOCs applied.
@@ -123,23 +143,6 @@ const ButtonFactory = (props) => Uppercase(
  * @public
  */
 const Button = ButtonFactory();
-
-Button.propTypes = /** @lends moonstone/Button.Button.prototype */ {
-	/**
-	 * Transformation to apply to the text of the Button. By default, text is transformed
-	 * to uppercase.
-	 *
-	 * @see i18n/Uppercase#casing
-	 * @type {String}
-	 * @default 'upper'
-	 * @public
-	 */
-	casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence'])
-};
-
-Button.defaultProps = {
-	casing: 'upper'
-};
 
 export default Button;
 export {
