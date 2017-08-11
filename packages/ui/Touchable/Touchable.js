@@ -218,8 +218,6 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			this.enterHold
 		)
 
-		// if resume, pause
-		// 
 		handleLeave = this.handle(
 			forProp('disabled', false),
 			this.leaveHold,
@@ -234,6 +232,16 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			forward('onMouseDown'),
 			this.handleDown
 		).finally(unblock)
+
+		handleMouseEnter = this.handle(
+			forward('onMouseEnter'),
+			this.handleEnter
+		)
+
+		handleMouseMove = this.handle(
+			forward('onMouseMove'),
+			this.moveHold
+		)
 
 		handleMouseLeave = this.handle(
 			forward('onMouseLeave'),
@@ -280,6 +288,8 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			if (activeProp || onDown || onTap || onUp) {
 				props.onMouseDown = this.handleMouseDown;
 				props.onMouseLeave = this.handleMouseLeave;
+				props.onMouseMove = this.handleMouseMove;
+				props.onMouseEnter = this.handleMouseEnter;
 				props.onMouseUp = this.handleMouseUp;
 
 				if (platform.touch) {
