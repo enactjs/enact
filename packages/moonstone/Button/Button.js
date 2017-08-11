@@ -255,27 +255,27 @@ const ButtonFactory = factory((css)  => {
 	 * @public
 	 */
 	return Uppercase(
-			TooltipDecorator(
-				MarqueeDecorator(
-					{className: componentCss.marquee},
-					Pressable(
-						Spottable(
-							Skinnable(
-								Base
-							)
+		TooltipDecorator(
+			MarqueeDecorator(
+				{className: componentCss.marquee},
+				Pressable(
+					Spottable(
+						Skinnable(
+							Base
 						)
 					)
 				)
 			)
-		);
+		)
+	);
 });
 
-const NoMarqueeButtonFactory = factory((css)  => {
+const NoTextButtonFactory = factory((css)  => {
 	const Base = ButtonBaseFactory(css);
 	/**
-	 * {@link moonstone/Button.Button} is a Button with Moonstone styling, Spottable and
-	 * Pressable applied.  If the Button's child component is text, it will be uppercased unless
-	 * `casing` is set.
+	 * {@link moonstone/Button.NoMarqueeButton} is a Button with Moonstone
+	 * styling, Spottable and Pressable applied. This Button does not have
+	 * Marquee or Uppercase like Button, because it should not contain text.
 	 *
 	 * Usage:
 	 * ```
@@ -284,26 +284,25 @@ const NoMarqueeButtonFactory = factory((css)  => {
 	 *
 	 * @class Button
 	 * @memberof moonstone/Button
-	 * @mixes i18n/Uppercase.Uppercase
 	 * @mixes moonstone/TooltipDecorator.TooltipDecorator
 	 * @mixes ui/Pressable.Pressable
 	 * @mixes spotlight/Spottable.Spottable
 	 * @ui
-	 * @public
+	 * @private
 	 */
 	return TooltipDecorator(
-				Pressable(
-					Spottable(
-						Skinnable(
-							Base
-						)
-					)
+		Pressable(
+			Spottable(
+				Skinnable(
+					Base
 				)
-			);
+			)
+		)
+	);
 });
 
 const ButtonBase = ButtonBaseFactory();
 const Button = ButtonFactory();
 
 export default Button;
-export {Button, ButtonBase, ButtonBaseFactory, ButtonFactory, NoMarqueeButtonFactory};
+export {Button, ButtonBase, ButtonBaseFactory, ButtonFactory, NoTextButtonFactory};
