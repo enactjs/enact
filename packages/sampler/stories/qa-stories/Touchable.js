@@ -4,7 +4,6 @@ import React from 'react';
 import {storiesOf, action} from '@kadira/storybook';
 import {boolean} from '@kadira/storybook-addon-knobs';
 
-const TouchableButton = Touchable(Button);
 const LongPressButton = Touchable({
 	events: [
 		{name: 'hold', time: 1000},
@@ -17,13 +16,13 @@ storiesOf('Touchable')
 	.addWithInfo(
 		'with default hold events',
 		() => (
-			<TouchableButton
+			<Button
 				onHold={action('onHold')}
 				onHoldPulse={action('onHoldPulse')}
 				disabled={boolean('disabled')}
 			>
 				Touchable
-			</TouchableButton>
+			</Button>
 		)
 	)
 	.addWithInfo(
@@ -41,21 +40,21 @@ storiesOf('Touchable')
 	.addWithInfo(
 		'that cancels the hold when moving beyond tolerance (16px)',
 		() => (
-			<TouchableButton
-				cancelTouchOnLeave={boolean('cancelTouchOnLeave', true)}
+			<Button
+				cancelHoldOnMove={boolean('cancelHoldOnMove', true)}
 				noResumeTouch={boolean('noResumeTouch', false)}
 				onHold={action('onHold')}
 				onHoldPulse={action('onHoldPulse')}
 				disabled={boolean('disabled')}
 			>
 				Resumable
-			</TouchableButton>
+			</Button>
 		)
 	)
 	.addWithInfo(
 		'that does not resume when re-entering component',
 		() => (
-			<TouchableButton
+			<Button
 				cancelTouchOnLeave={boolean('cancelTouchOnLeave', false)}
 				noResumeTouch={boolean('noResumeTouch', true)}
 				onHold={action('onHold')}
@@ -63,7 +62,7 @@ storiesOf('Touchable')
 				disabled={boolean('disabled')}
 			>
 				Resumable
-			</TouchableButton>
+			</Button>
 		)
 	);
 

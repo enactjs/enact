@@ -49,6 +49,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		static displayName = 'Touchable'
 
 		static propTypes = {
+			cancelHoldOnMove: PropTypes.bool,
 			cancelTouchOnLeave: PropTypes.bool,
 			disabled: PropTypes.bool,
 			noResumeTouch: PropTypes.bool,
@@ -60,6 +61,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		static defaultProps = {
+			cancelHoldOnMove: false,
 			cancelTouchOnLeave: false,
 			disabled: false,
 			noResumeTouch: false
@@ -147,11 +149,11 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			return true;
 		}
 
-		startHold = (ev, {cancelTouchOnLeave, noResumeTouch, onHold, onHoldPulse}) => {
+		startHold = (ev, {cancelHoldOnMove, noResumeTouch, onHold, onHoldPulse}) => {
 			if (onHold || onHoldPulse) {
 				this.hold.begin({
 					...getEventCoordinates(ev),
-					cancelOnLeave: cancelTouchOnLeave,
+					cancelOnMove: cancelHoldOnMove,
 					events,
 					frequency,
 					moveTolerance,
@@ -216,14 +218,15 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			this.enterHold
 		)
 
+		// if resume, pause
+		// 
 		handleLeave = this.handle(
 			forProp('disabled', false),
-			forProp('cancelTouchOnLeave', true),
+			this.leaveHold,
 			oneOf(
 				[forProp('noResumeTouch', false), this.pause],
-				[returnsTrue, this.deactivate]
-			),
-			this.leaveHold
+				[forProp('cancelTouchOnLeave', true), this.deactivate]
+			)
 		)
 
 		handleMouseDown = this.handle(
@@ -244,25 +247,22 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleTouchStart = this.handle(
 			forward('onTouchStart'),
+			// block the next mousedown to prevent duplicate onDown events
 			block,
 			this.handleDown
-		)
-
-		handleTouchEnter = this.handle(
-			forProp('disabled', false),
-			forProp('noResumeTouch', false),
-			this.activate,
-			this.enterHold
 		)
 
 		handleTouchMove = this.handle(
 			forward('onTouchMove'),
 			this.isTracking,
-			this.moveHold,
+			// we don't receive enter/leave events during a touch so we have to simulate them by
+			// detecting when the touch leaves the boundary. oneOf returns the value of whichever
+			// branch it follows so we append moveHold to either to handle moves that aren't
+			// entering or leaving
 			oneOf(
 				[this.hasTouchLeftTarget, this.handleLeave],
-				[forProp('cancelTouchOnLeave', true), this.handleEnter]
-			)
+				[returnsTrue, this.handleEnter]
+			).finally(this.moveHold)
 		)
 
 		handleTouchEnd = this.handle(

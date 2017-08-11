@@ -29,9 +29,9 @@ class Hold {
 	move = (x, y) => {
 		if (!this.isHolding()) return;
 
-		const {cancelOnLeave, moveTolerance, resume, x: startX, y: startY} = this.holdConfig;
+		const {cancelOnMove, moveTolerance, resume, x: startX, y: startY} = this.holdConfig;
 
-		if (!cancelOnLeave) {
+		if (cancelOnMove) {
 			const dx = startX - x;
 			const dy = startY - y;
 			const shouldEnd = Math.sqrt(dx * dx + dy * dy) >= moveTolerance;
@@ -59,9 +59,9 @@ class Hold {
 	enter = () => {
 		if (!this.isHolding()) return;
 
-		const {cancelOnLeave, resume} = this.holdConfig;
+		const {resume} = this.holdConfig;
 
-		if (cancelOnLeave && resume) {
+		if (resume) {
 			this.resume();
 		}
 	}
@@ -69,14 +69,12 @@ class Hold {
 	leave = () => {
 		if (!this.isHolding()) return;
 
-		const {cancelOnLeave, resume} = this.holdConfig;
+		const {resume} = this.holdConfig;
 
-		if (cancelOnLeave) {
-			if (resume) {
-				this.suspend();
-			} else {
-				this.end();
-			}
+		if (resume) {
+			this.suspend();
+		} else {
+			this.end();
 		}
 	}
 
