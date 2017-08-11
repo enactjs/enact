@@ -32,6 +32,7 @@ let ItemMarqueeDecorator;
  * @ui
  * @public
  */
+// DEV-NOTE: The commented lines below represent the implementation of the branch `feature/component-factory`, currently in review.
 // const ItemBaseFactory = factory({css: componentCss, components: {MarqueeDecorator}}, ({css, components}) => {
 const ItemBaseFactory = factory({css: componentCss}, ({css}) => {
 	// diffClasses('UI Item', componentCss, css);
@@ -152,19 +153,8 @@ const ItemFactory = (props) => Spottable(
 );
 
 /**
- * {@link ui/Item.ItemOverlay} is a focusable ui-styled control that can display
+ * {@link ui/Item.ItemOverlay} is a focusable unstyled control that can display
  * simple text or a set of controls along with overlays before and/or after the contents.
- *
- * ```
- *	<ItemOverlay autoHide="both">
- *		<overlayBefore>
- *			<Icon>flag</Icon>
- *			<Icon>star</Icon>
- *		</overlayBefore>
- *		An Item that will show some icons before and after this text when spotted
- *		<Icon slot="overlayAfter">trash</Icon>
- *	</ItemOverlay>
- * ```
  *
  * @class ItemOverlay
  * @memberof ui/Item

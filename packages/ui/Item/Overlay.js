@@ -7,12 +7,12 @@ import PropTypes from 'prop-types';
 import componentCss from './Overlay.less';
 
 /**
- * {@link ui/Overlay.OverlayBaseFactory} is Factory wrapper around {@link ui/Overlay.OverlayBase}
+ * {@link ui/Item.OverlayBaseFactory} is Factory wrapper around {@link ui/Overlay.OverlayBase}
  * that allows overriding certain classes at design time. The following are properties of the `css`
  * member of the argument to the factory.
  *
  * @class OverlayBaseFactory
- * @memberof ui/Overlay
+ * @memberof ui/Item
  * @factory
  * @ui
  * @public
