@@ -1,9 +1,16 @@
 /**
-* Exports the {@link moonstone/IconButton.IconButton} and {@link moonstone/IconButton.IconButtonBase}
-* components.  The default export is {@link moonstone/IconButton.IconButtonBase}.
-*
-* @module moonstone/IconButton
-*/
+ * Provides a special kind of {@link moonstone/IconButton} which accepts the same formats from
+ * {@link moonstone/Icon} but renders the Icon in a pressable {@link moonstone/IconButton}.
+ *
+ * @example
+ * <Button>gear</IconButton>
+ *
+ * @module moonstone/IconButton
+ * @exports IconButton
+ * @exports IconButtonBase
+ * @exports IconButtonBaseFactory
+ * @exports IconButtonFactory
+ */
 
 import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
@@ -18,15 +25,13 @@ import Skinnable from '../Skinnable';
 import componentCss from './IconButton.less';
 
 /**
-* {@link moonstone/IconButton.IconButtonFactory} is Factory wrapper around
-* {@link moonstone/IconButton.IconButton} that allows overriding certain classes of the base
-* `Button` component at design time. See {@link moonstone/Button.ButtonBaseFactory}.
-*
-* @class IconButtonFactory
-* @memberof moonstone/IconButton
-* @factory
-* @public
-*/
+ * A factory for customizing the visual style of [IconButtonBase]{@link moonstone/IconButton.IconButtonBase}.
+ *
+ * @class IconButtonBaseFactory
+ * @memberof moonstone/IconButton
+ * @factory
+ * @public
+ */
 const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 	// diffClasses('Moon IconButton', componentCss, css);
 
@@ -41,7 +46,7 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 	const Button = ButtonFactory({css});
 	const Icon = IconFactory({css});
 	/**
-	 * {@link moonstone/IconButton.IconButton} is a {@link moonstone/Icon.Icon} that acts like a button.
+	 * {@link moonstone/IconButton.IconButton} is a {@link moonstone/Icon.Icon} that acts like a Iconbutton.
 	 * You may specify an image or a font-based icon by setting the children to either the path to the
 	 * image or a string from the [IconList]{@link moonstone/Icon.IconList}.
 	 *
@@ -68,16 +73,45 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 	});
 });
 
+/**
+ * A stateless [IconButton]{@link moonstone/IconButton.IconButton}, with no HOCs applied.
+ *
+ * @class IconButtonBase
+ * @extends ui/IconButton.IconButtonBase
+ * @memberof moonstone/IconButton
+ * @ui
+ * @public
+ */
 const IconButtonBase = IconButtonBaseFactory();
 
-const IconButton = Skinnable(
-	IconButtonBase
-);
-
+/**
+ * A factory for customizing the visual style of [IconButton]{@link moonstone/IconButton.IconButton}.
+ * @see {@link moonstone/IconButton.IconButtonBaseFactory}.
+ *
+ * @class IconButtonFactory
+ * @memberof moonstone/IconButton
+ * @factory
+ * @public
+ */
 const IconButtonFactory = (props) => Skinnable(
 	IconButtonBaseFactory(props)
 );
 
+/**
+ * A ready-to-use {@link ui/IconButton}, with HOCs applied.
+ *
+ * @class IconButton
+ * @memberof moonstone/IconButton
+ * @extends moonstone/IconButton.IconButtonBase
+ * @mixes i18n/Uppercase
+ * @mixes moonstone/TooltipDecorator
+ * @mixes ui/Pressable
+ * @mixes spotlight/Spottable
+ * @mixes moonstone/Skinnable
+ * @ui
+ * @public
+ */
+const IconButton = IconButtonFactory();
 
 export default IconButton;
 export {

@@ -1,8 +1,16 @@
 /**
- * Exports the {@link moonstone/Icon.Icon} component and the list of icon constants as
- * [iconList]{@link moonstone/Icon.iconList}.
+ * A versatile way to draw an icon. This accepts strings to refer to preset icons, specific
+ * codepoints in a dingbat font, entity references in several formats, and URLs for a graphic file.
+ *
+ * @example
+ * <Icon>flag</Icon>
  *
  * @module moonstone/Icon
+ * @exports Icon
+ * @exports IconBase
+ * @exports IconBaseFactory
+ * @exports IconFactory
+ * @exports iconList
  */
 
 import factory from '@enact/core/factory';
@@ -18,10 +26,9 @@ import iconList from './IconList.js';
 import componentCss from './Icon.less';
 
 /**
- * {@link moonstone/Icon.IconFactory} is Factory wrapper around {@link moonstone/Icon.Icon}
- * that allows overriding certain classes at design time. See {@link moonstone/Icon.IconBaseFactory}.
+ * A factory for customizing the visual style of [IconBase]{@link moonstone/Icon.IconBase}.
  *
- * @class IconFactory
+ * @class IconBaseFactory
  * @memberof moonstone/Icon
  * @factory
  * @public
@@ -138,16 +145,41 @@ const IconBaseFactory = factory({css: componentCss}, ({css}) => {
  * @public
  */
 
+/**
+  * A stateless [Icon]{@link moonstone/Icon.Icon}, with no HOCs applied.
+  *
+  * @class IconBase
+  * @extends ui/Icon.IconBase
+  * @memberof moonstone/Icon
+  * @ui
+  * @public
+  */
 const IconBase = IconBaseFactory();
 
-const Icon = Skinnable(
-	IconBase
-);
-
+/**
+ * A factory for customizing the visual style of [Icon]{@link moonstone/Icon.Icon}.
+ * @see {@link moonstone/Icon.IconBaseFactory}.
+ *
+ * @class IconFactory
+ * @memberof moonstone/Icon
+ * @factory
+ * @public
+ */
 const IconFactory = (props) => Skinnable(
 	IconBaseFactory(props)
 );
 
+/**
+ * A ready-to-use {@link ui/Icon}, with HOCs applied.
+ *
+ * @class Icon
+ * @memberof moonstone/Icon
+ * @extends moonstone/Icon.IconBase
+ * @mixes moonstone/Skinnable
+ * @ui
+ * @public
+ */
+const Icon = IconFactory();
 
 export default Icon;
 export {
