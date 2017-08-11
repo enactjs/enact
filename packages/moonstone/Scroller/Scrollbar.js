@@ -294,7 +294,7 @@ class ScrollbarBase extends PureComponent {
 
 		onPrevScroll({...ev, isPreviousScrollButton: true, isVerticalScrollBar: vertical});
 		if (this.announceRef) {
-			this.announceRef.announce($L(vertical ? 'UP' : 'LEFT'));
+			this.announceRef.announce(vertical ? $L('UP') : $L('LEFT'));
 		}
 	}
 
@@ -303,7 +303,7 @@ class ScrollbarBase extends PureComponent {
 
 		onNextScroll({...ev, isPreviousScrollButton: false, isVerticalScrollBar: vertical});
 		if (this.announceRef) {
-			this.announceRef.announce($L(vertical ? 'DOWN' : 'RIGHT'));
+			this.announceRef.announce(vertical ? $L('DOWN') : $L('RIGHT'));
 		}
 	}
 

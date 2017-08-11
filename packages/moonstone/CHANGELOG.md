@@ -2,16 +2,38 @@
 
 The following is a curated list of changes in the Enact moonstone module, newest changes on the top.
 
-## [unreleased]
+## [Unreleased]
 
 ### Deprecated
 
 ### Added
 
+### Changed
+
+- `moonstone/VirtualGridList` to scroll by item via 5 way key
+
+### Fixed
+
+- `moonstone/VirtualList` not to lose focus when moving out from the first item via 5way when it has disabled items
+
+## [1.6.1] - 2017-08-07
+
+### Changed
+
+- `moonstone/Icon` and `moonstone/IconButton` to no longer fit image source to the icon's boundary
+
+## [1.6.0] - 2017-08-04
+
+### Added
+
+- `moonstone/VideoPlayer` ability to seek when holding down the right and left keys. Sensitivity can be adjusted using throttling options `jumpDelay` and `initialJumpDelay`.
+- `moonstone/VideoPlayer` property `no5WayJump` to disable jumping done by 5-way
 - `moonstone/VideoPlayer` support for the "More" button to use tooltips
 - `moonstone/VideoPlayer` properties `moreButtonLabel` and `moreButtonCloseLabel` to allow customization of the "More" button's tooltip and Aria labels
 - `moonstone/VideoPlayer` property `moreButtonDisabled` to disable the "More" button
 - `moonstone/Picker` and `moonstone/RangePicker` prop `aria-valuetext` to support reading custom text instead of value
+- `moonstone/VideoPlayer` methods `showControls` and `hideControls` to allow external interaction with the player
+- `moonstone/Scroller` support for Page Up/Page Down keys in pointer mode when no item has focus
 
 ### Changed
 
