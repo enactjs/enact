@@ -29,7 +29,7 @@ const SliderTooltipBase = kind({
 		 * @default 'rising'
 		 * @private
 		 */
-		climax: PropTypes.string,
+		climax: PropTypes.oneOf(['rising', 'falling']),
 
 		/**
 		 * Setting to `true` overrides the natural LTR->RTL tooltip side-flipping for locale changes

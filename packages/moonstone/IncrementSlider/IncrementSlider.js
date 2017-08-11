@@ -105,7 +105,7 @@ const IncrementSliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * @default 'rising'
 			 * @private
 			 */
-			climax: PropTypes.string,
+			climax: PropTypes.oneOf(['rising', 'falling']),
 
 			/**
 			 * Assign a custom icon for the decrementer. All strings supported by [Icon]{Icon} are
