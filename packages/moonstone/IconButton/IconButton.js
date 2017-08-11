@@ -10,7 +10,7 @@ import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {ButtonFactory} from '../Button';
+import {NoMarqueeButtonFactory} from '../Button';
 import Icon from '../Icon';
 
 import componentCss from './IconButton.less';
@@ -28,7 +28,7 @@ const OptimizedIcon = onlyUpdateForKeys(['small', 'children'])(Icon);
  * @public
  */
 const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
-	const Button = ButtonFactory({css}, true);
+	const Button = NoMarqueeButtonFactory({css}, true);
 	/**
 	 * {@link moonstone/IconButton.IconButton} is a {@link moonstone/Icon.Icon} that acts like a button.
 	 * You may specify an image or a font-based icon by setting the children to either the path to the
