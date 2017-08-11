@@ -8,7 +8,7 @@ import React from 'react';
 
 import {activate, deactivate, pause, States} from './state';
 import {block, unblock, isNotBlocked} from './block';
-import Hold from './Hold';
+import {Hold, holdConfigPropType} from './Hold';
 
 const getEventCoordinates = (ev) => {
 	let {clientX: x, clientY: y, type} = ev;
@@ -35,24 +35,29 @@ const forwardTap = makeTouchableEvent('tap', forward('onTap'));
 
 const defaultConfig = {
 	activeProp: null,
-	events: [
-		{name: 'hold', time: 200}
-	],
-	frequency: 200,
-	moveTolerance: 16
+	holdConfig: {
+		cancelOnMove: false,
+		moveTolerance: 16,
+		frequency: 200,
+		events: [
+			{name: 'hold', time: 200}
+		]
+	}
 };
 
 const Touchable = hoc(defaultConfig, (config, Wrapped) => {
-	const {activeProp, events, frequency, moveTolerance} = config;
+	const {
+		activeProp,
+		holdConfig: defaultHoldConfig
+	} = config;
 
 	return class extends React.Component {
 		static displayName = 'Touchable'
 
 		static propTypes = {
-			cancelHoldOnMove: PropTypes.bool,
-			cancelTouchOnLeave: PropTypes.bool,
 			disabled: PropTypes.bool,
-			noResumeTouch: PropTypes.bool,
+			holdConfig: holdConfigPropType,
+			noResume: PropTypes.bool,
 			onDown: PropTypes.func,
 			onHold: PropTypes.func,
 			onHoldPulse: PropTypes.func,
@@ -61,10 +66,8 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		static defaultProps = {
-			cancelHoldOnMove: false,
-			cancelTouchOnLeave: false,
 			disabled: false,
-			noResumeTouch: false
+			noResume: false
 		}
 
 		target = null
@@ -78,7 +81,6 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 				active: States.Inactive
 			};
 		}
-
 
 		componentDidMount () {
 			// ensure we clean up our internal state
@@ -97,7 +99,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentWillUnmount () {
 			this.clearTarget();
-			this.hold.suspend();
+			this.hold.end();
 
 			if (platform.touch) {
 				off('touchend', this.handleGlobalUp, document);
@@ -149,18 +151,15 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			return true;
 		}
 
-		startHold = (ev, {cancelHoldOnMove, noResumeTouch, onHold, onHoldPulse}) => {
+		startHold = (ev, {holdConfig, noResume, onHold, onHoldPulse}) => {
 			if (onHold || onHoldPulse) {
 				this.hold.begin({
-					...getEventCoordinates(ev),
-					cancelOnMove: cancelHoldOnMove,
-					events,
-					frequency,
-					moveTolerance,
+					...defaultHoldConfig,
+					...holdConfig,
 					onHold,
 					onHoldPulse,
-					resume: !noResumeTouch
-				});
+					resume: !noResume
+				}, getEventCoordinates(ev));
 			}
 
 			return true;
@@ -212,7 +211,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 		handleEnter = this.handle(
 			forProp('disabled', false),
-			forProp('noResumeTouch', false),
+			forProp('noResume', false),
 			this.isPaused,
 			this.activate,
 			this.enterHold
@@ -222,8 +221,8 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			forProp('disabled', false),
 			this.leaveHold,
 			oneOf(
-				[forProp('noResumeTouch', false), this.pause],
-				[forProp('cancelTouchOnLeave', true), this.deactivate]
+				[forProp('noResume', false), this.pause],
+				[returnsTrue, this.deactivate]
 			)
 		)
 
@@ -301,9 +300,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 
 			this.addHandlers(props);
 
-			delete props.cancelHoldOnMove;
-			delete props.cancelTouchOnLeave;
-			delete props.noResumeTouch;
+			delete props.noResume;
 			delete props.onDown;
 			delete props.onHold;
 			delete props.onHoldPulse;
@@ -311,7 +308,7 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			delete props.onUp;
 
 			if (activeProp) {
-				props[activeProp] = this.state.active === States.Active;
+				props[activeProp] = this.state.active !== States.Inactive;
 			}
 
 			return (

@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 class Hold {
 	constructor () {
 		this.holdJob = null;
@@ -8,7 +10,10 @@ class Hold {
 
 	isHolding = () => this.holdConfig != null
 
-	begin = (holdConfig) => {
+	begin = (holdConfig, {x, y}) => {
+		this.startX = x;
+		this.startY = y;
+
 		this.holdConfig = Object.assign({}, holdConfig);
 
 		this.holdConfig.events = this.holdConfig.events.slice();
@@ -29,11 +34,11 @@ class Hold {
 	move = (x, y) => {
 		if (!this.isHolding()) return;
 
-		const {cancelOnMove, moveTolerance, resume, x: startX, y: startY} = this.holdConfig;
+		const {cancelOnMove, moveTolerance, resume} = this.holdConfig;
 
 		if (cancelOnMove) {
-			const dx = startX - x;
-			const dy = startY - y;
+			const dx = this.startX - x;
+			const dy = this.startY - y;
 			const shouldEnd = Math.sqrt(dx * dx + dy * dy) >= moveTolerance;
 
 			if (shouldEnd) {
@@ -120,7 +125,20 @@ class Hold {
 	}
 }
 
+const holdConfigPropType = PropTypes.shape({
+	cancelOnMove: PropTypes.bool,
+	events: PropTypes.arrayOf(
+		PropTypes.shape({
+			name: PropTypes.string,
+			time: PropTypes.number
+		})
+	),
+	frequency: PropTypes.number,
+	moveTolerance: PropTypes.number
+});
+
 export default Hold;
 export {
-	Hold
+	Hold,
+	holdConfigPropType
 };
