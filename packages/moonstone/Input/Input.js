@@ -1,5 +1,8 @@
 /**
- * Exports the {@link moonstone/Input.Input} and {@link moonstone/Input.InputBase} components.
+ * An input component.
+ *
+ * @example
+ * <Input iconBefore="star" placholder="Enter something" />
  *
  * @module moonstone/Input
  */
@@ -33,8 +36,7 @@ const calcAriaLabel = function (title, type, value = '') {
 };
 
 /**
- * {@link moonstone/Input.InputBaseFactory} is a factory for customizing the Moonstone InputBase
- * component.
+ * A factory for customizing the visual style of [InputBase]{@link moonstone/Input.InputBase}.
  *
  * @class InputBaseFactory
  * @memberof moonstone/Input
@@ -54,16 +56,6 @@ const InputBaseFactory = factory({css: componentCss}, ({css}) => {
 	});
 	const InputDecoratorIcon = InputDecoratorIconFactory({css});
 
-	/**
-	 * {@link moonstone/Input.InputBase} is a Moonstone styled input component. It supports start and end
-	 * icons. Note that this base component is not stateless as many other base components are. However,
-	 * it does not support Spotlight. Apps will want to use {@link moonstone/Input.Input}.
-	 *
-	 * @class InputBase
-	 * @memberof moonstone/Input
-	 * @ui
-	 * @public
-	 */
 	return kind({
 		name: 'MoonstoneInput',
 
@@ -129,30 +121,22 @@ const InputBaseFactory = factory({css: componentCss}, ({css}) => {
 	});
 });
 
-const InputBase = InputBaseFactory();
-
 /**
- * {@link moonstone/Input.Input} is a Spottable, Moonstone styled input component. It supports pre
- * and post icons.
+ * An input component. It supports start and end icons. Note that this base component is not
+ * stateless as many other base components are. However, it does not support Spotlight. Apps will
+ * want to use {@link moonstone/Input.Input}.
  *
- * By default, `Input` maintains the state of its `value` property. Supply the
- * `defaultValue` property to control its initial value. If you wish to directly control updates
- * to the component, supply a value to `value` at creation time and update it in response to
- * `onChange` events.
- *
- * @class Input
+ * @class InputBase
  * @memberof moonstone/Input
- * @mixes ui/Changeable.Changeable
- * @mixes moonstone/Input/InputSpotlightDecorator
+ * @extends ui/Input.Input
  * @ui
  * @public
  */
-const Input = Skinnable(
-	InputBase
-);
+const InputBase = InputBaseFactory();
 
 /**
- * {@link moonstone/Input.InputFactory} is a factory for customizing the Moonstone Input component.
+ * A factory for customizing the visual style of [Input]{@link moonstone/Input.Input}.
+ * @see {@link moonstone/Input.InputBaseFactory}.
  *
  * @class InputFactory
  * @memberof moonstone/Input
@@ -162,6 +146,24 @@ const Input = Skinnable(
 const InputFactory = (props) => Skinnable(
 	InputBaseFactory(props)
 );
+
+/**
+ * A Spottable input component. It supports pre and post icons.
+ *
+ * By default, `Input` maintains the state of its `value` property. Supply the `defaultValue`
+ * property to control its initial value. If you wish to directly control updates to the component,
+ * supply a value to `value` at creation time and update it in response to `onChange` events.
+ *
+ * @class Input
+ * @memberof moonstone/Input
+ * @extends moonstone/Input.InputBase
+ * @mixes ui/Changeable.Changeable
+ * @mixes moonstone/Input/InputSpotlightDecorator
+ * @mixes moonstone/Skinnable.Skinnable
+ * @ui
+ * @public
+ */
+const Input = InputFactory();
 
 export default Input;
 export {

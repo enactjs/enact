@@ -37,7 +37,7 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 
 	const UiIconButton = UiIconButtonFactory({
 		/* Replace classes in this step */
-		css: /** @lends moonstone/IconButton.IconButtonFactory.prototype */ {
+		css: /** @lends moonstone/IconButton.IconButtonBaseFactory.prototype */ {
 			...componentCss,
 			// Include the component class name so it too may be overridden.
 			iconButton: css.iconButton
@@ -98,7 +98,7 @@ const IconButtonFactory = (props) => Skinnable(
 );
 
 /**
- * A ready-to-use {@link ui/IconButton}, with HOCs applied.
+ * A ready-to-use IconButton, with HOCs applied.
  *
  * @class IconButton
  * @memberof moonstone/IconButton

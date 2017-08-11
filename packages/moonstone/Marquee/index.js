@@ -1,13 +1,19 @@
 /**
- * Exports the {@link moonstone/Marquee.Marquee},
- * {@link moonstone/Marquee.MarqueeBase},
- * {@link moonstone/Marquee.MarqueeController},
- * {@link moonstone/Marquee.MarqueeDecorator}, and
- * {@link moonstone/Marquee.MarqueeText} components.
+ * Components for creating regions of text that allow content that is wider than its container to
+ * be revealed through a 'marquee' (horizontal scrolling) effect.
  *
- * The default export is {@link moonstone/Marquee.Marquee}.
+ * @example
+ * <div style={{width: '300px'}}>
+ *   <MarqueeText marqueeOn="render">
+ *     The quick brown fox jumped over the lazy dog.
+ *   </MarqueeText>
+ * </div>
  *
  * @module moonstone/Marquee
+ * @exports Marquee
+ * @exports ui/Marquee.MarqueeController
+ * @exports ui/Marquee.MarqueeDecorator
+ * @exports MarqueeText
  */
 
 import {MarqueeController, MarqueeDecorator, MarqueeText, controlContextTypes} from '@enact/ui/Marquee';

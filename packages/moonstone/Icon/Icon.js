@@ -38,7 +38,7 @@ const IconBaseFactory = factory({css: componentCss}, ({css}) => {
 
 	const MoonstoneIcon = UiIconFactory({
 		/* Replace classes in this step */
-		css: /** @lends moonstone/Icon.IconFactory.prototype */ {
+		css: /** @lends moonstone/Icon.IconBaseFactory.prototype */ {
 			...componentCss,
 			// Include the component class name so it too may be overridden.
 			Icon: css.Icon
@@ -52,7 +52,6 @@ const IconBaseFactory = factory({css: componentCss}, ({css}) => {
 		)
 	});
 });
-
 
 // Let's find a way to import this list directly, and bonus feature, render our icons in the docs next to their names.
 /**
@@ -170,7 +169,7 @@ const IconFactory = (props) => Skinnable(
 );
 
 /**
- * A ready-to-use {@link ui/Icon}, with HOCs applied.
+ * A ready-to-use Icon, with HOCs applied.
  *
  * @class Icon
  * @memberof moonstone/Icon

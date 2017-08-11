@@ -1,6 +1,5 @@
 /*
- * Exports the {@link moonstone/Marquee.Marquee} and {@link moonstone/Marquee.MarqueeBase}
- * components. The default export is {@link moonstone/Marquee.Marquee}.
+ * Exports the Marquee and MarqueeBase components. The default export is Marquee.
  *
  * note: not jsdoc on purpose, exports in index.js
  */
@@ -15,9 +14,9 @@ import componentCss from './Marquee.less';
  * {@link moonstone/Marquee.Marquee} is a stateless text container element which
  * implements a text cut-off followed by an ellipsis character.
  *
- * @class Marquee
+ * @class MarqueeFactory
  * @memberof moonstone/Marquee
- * @ui
+ * @factory
  * @public
  */
 const MarqueeBaseFactory = factory({css: componentCss}, ({css}) => {
@@ -33,6 +32,15 @@ const MarqueeBaseFactory = factory({css: componentCss}, ({css}) => {
 	});
 });
 
+/**
+ * A stateless text container element which implements a text cut-off followed by an ellipsis
+ * character.
+ *
+ * @class Marquee
+ * @memberof moonstone/Marquee
+ * @ui
+ * @public
+ */
 const MarqueeBase = MarqueeBaseFactory();
 
 export default MarqueeBase;

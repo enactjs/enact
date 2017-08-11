@@ -66,22 +66,6 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 
 	return kind({
 		name: 'MoonstoneButton',
-		propTypes: /** @lends moonstone/Button.ButtonBase.prototype */ {
-			/**
-			 * Transformation to apply to the text of the Button. By default, text is transformed
-			 * to uppercase.
-			 *
-			 * @see i18n/Uppercase#casing
-			 * @type {String}
-			 * @default 'upper'
-			 * @public
-			 */
-			casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence'])
-		},
-
-		defaultProps: {
-			casing: 'upper'
-		},
 
 		render: (props) => (
 			<MoonstoneButtonBase {...props} Icon={Icon} />
@@ -139,6 +123,23 @@ const ButtonFactory = (props) => Uppercase(
  * @public
  */
 const Button = ButtonFactory();
+
+Button.propTypes = /** @lends moonstone/Button.Button.prototype */ {
+	/**
+	 * Transformation to apply to the text of the Button. By default, text is transformed
+	 * to uppercase.
+	 *
+	 * @see i18n/Uppercase#casing
+	 * @type {String}
+	 * @default 'upper'
+	 * @public
+	 */
+	casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence'])
+};
+
+Button.defaultProps = {
+	casing: 'upper'
+};
 
 export default Button;
 export {
