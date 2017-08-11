@@ -1,7 +1,8 @@
 import React from 'react';
 import {mount, shallow} from 'enzyme';
 import {BodyTextBase as BodyText} from '../BodyText';
-import css from '../BodyText.less';
+// import css from '../BodyText.less';
+import uiCss from '@enact/ui/BodyText/BodyText.less';
 
 describe('BodyText Specs', () => {
 
@@ -37,7 +38,7 @@ describe('BodyText Specs', () => {
 		);
 
 		const expected = false;
-		const actual = subject.hasClass(css.centered);
+		const actual = subject.hasClass(uiCss.centered);
 		expect(actual).to.equal(expected);
 	});
 
@@ -47,7 +48,7 @@ describe('BodyText Specs', () => {
 		);
 
 		const expected = true;
-		const actual = subject.hasClass(css.centered);
+		const actual = subject.hasClass(uiCss.centered);
 		expect(actual).to.equal(expected);
 	});
 });

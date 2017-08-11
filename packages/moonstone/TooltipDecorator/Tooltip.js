@@ -33,7 +33,7 @@ const TooltipBaseFactory = factory({css: componentCss}, ({css}) => {
 	const TooltipLabel = TooltipLabelFactory({css});
 
 	return kind({
-		name: 'Tooltip',
+		name: 'MoonstoneTooltip',
 
 		styles: {
 			css: componentCss,

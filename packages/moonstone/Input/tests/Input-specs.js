@@ -181,7 +181,10 @@ describe('Input Specs', () => {
 			<Input invalid invalidMessage="invalid message" />
 		);
 
-		expect(subject.find('Tooltip').prop('children')).to.equal('INVALID MESSAGE');
+		const expected = 'INVALID MESSAGE';
+		const actual = subject.find('Tooltip').prop('children');
+
+		expect(actual).to.equal(expected);
 	});
 
 	it('should not display invalid message if it is valid', () => {
@@ -189,6 +192,9 @@ describe('Input Specs', () => {
 			<Input invalidMessage="invalid message" />
 		);
 
-		expect(subject.find('Tooltip')).to.have.length(0);
+		const expected = 0;
+		const actual = subject.find('Tooltip');
+
+		expect(actual).to.have.length(expected);
 	});
 });
