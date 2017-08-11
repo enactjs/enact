@@ -13,7 +13,7 @@ import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
 import React from 'react';
 // import {diffClasses} from '@enact/ui/MigrationAid';
-import {ToggleItemFactory as UiToggleItemFactory} from '@enact/moonstone/ToggleItem';
+import {ToggleItemFactory as UiToggleItemFactory} from '@enact/ui/ToggleItem';
 
 import {ItemOverlayFactory} from '../Item';
 
@@ -44,7 +44,7 @@ const ToggleItemBaseFactory = factory({css: componentCss}, ({css}) => {
 	const ItemOverlay = ItemOverlayFactory({css});
 
 	return kind({
-		name: 'uiToggleItem',
+		name: 'MoonstoneToggleItem',
 
 		render: (props) => {
 			return (

@@ -224,7 +224,6 @@ const ToggleItemBaseFactory = factory({css: componentCss}, ({css}) => {
  */
 const ToggleItemBase = ToggleItemBaseFactory();
 
-
 /**
  * A factory for customizing the visual style of [ToggleItem]{@link ui/ToggleItem.ToggleItem}.
  * @see {@link ui/ToggleItem.ToggleItemBaseFactory}.
@@ -250,7 +249,6 @@ const ToggleItemFactory = (props) => Toggleable(
  * @public
  */
 const ToggleItem = ToggleItemFactory();
-
 
 export default ToggleItem;
 export {
