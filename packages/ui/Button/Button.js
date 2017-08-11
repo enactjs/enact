@@ -232,8 +232,8 @@ const ButtonFactory = factory(props => {
 	 * @class Button
 	 * @memberof ui/Button
 	 * @mixes i18n/Uppercase.Uppercase
-	 * @mixes moonstone/TooltipDecorator.TooltipDecorator
-	 * @mixes moonstone/Marquee.MarqueeDecorator
+	 * @mixes ui/TooltipDecorator.TooltipDecorator
+	 * @mixes ui/Marquee.MarqueeDecorator
 	 * @mixes ui/Pressable.Pressable
 	 * @mixes spotlight/Spottable.Spottable
 	 * @ui

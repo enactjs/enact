@@ -21,7 +21,7 @@ const InputDecoratorIconBaseFactory = factory({css: componentCss}, ({css}) => {
 	return kind({
 		name: 'InputDecoratorIcon',
 
-		propTypes: /** @lends moonstone/Input.InputDecoratorIconBase.prototype */ {
+		propTypes: /** @lends ui/Input.InputDecoratorIconBase.prototype */ {
 			/**
 			 * The position of the icon. Either `before` or `after`.
 			 *
@@ -32,7 +32,7 @@ const InputDecoratorIconBaseFactory = factory({css: componentCss}, ({css}) => {
 			/**
 			 * The icon to be displayed.
 			 *
-			 * @see {@link moonstone/Icon.Icon#children}
+			 * @see {@link ui/Icon.Icon#children}
 			 * @type {String|Object}
 			 */
 			children: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
@@ -73,10 +73,10 @@ const InputDecoratorIconBaseFactory = factory({css: componentCss}, ({css}) => {
 });
 
 /**
- * The stateless functional base component for {@link moonstone/Input.InputDecoratorIcon}.
+ * The stateless functional base component for {@link ui/Input.InputDecoratorIcon}.
  *
  * @class InputDecoratorIconBase
- * @memberof moonstone/Input
+ * @memberof ui/Input
  * @ui
  * @private
  */
@@ -95,10 +95,10 @@ const InputDecoratorIconBase = InputDecoratorIconBaseFactory();
 const InputDecoratorIconFactory = (props) => onlyUpdateForKeys(['children'])(InputDecoratorIconBaseFactory(props));
 
 /**
- * An icon displayed either before or after the input field of an {@link moonstone/Input.Input}.
+ * An icon displayed either before or after the input field of an {@link ui/Input.Input}.
  *
  * @class InputDecoratorIcon
- * @memberof moonstone/Input
+ * @memberof ui/Input
  * @ui
  * @private
  */
