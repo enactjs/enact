@@ -1,7 +1,12 @@
 /**
- * Exports the {@link ui/Input.Input} and {@link ui/Input.InputBase} components.
+ * Components for creating and decorating inputs.
  *
  * @module ui/Input
+ * @exports Input
+ * @exports InputBase
+ * @exports InputBaseFactory
+ * @exports InputDecoratorIconFactory
+ * @exports InputFactory
  */
 
 import factory from '@enact/core/factory';
@@ -20,27 +25,15 @@ import InputSpotlightDecorator from './InputSpotlightDecorator';
 import componentCss from './Input.less';
 
 /**
- * {@link ui/Input.InputBaseFactory} is Factory wrapper around {@link ui/Input.InputBase}
- * that allows overriding certain classes at design time. The following are properties of the `css`
- * member of the argument to the factory.
+ * A Factory wrapper around {@link ui/Input.InputBase} that allows overriding certain classes at
+ * design time. The following are properties of the `css` member of the argument to the factory:
  *
  * @class InputBaseFactory
  * @memberof ui/Input
  * @factory
- * @ui
  * @public
  */
 const InputBaseFactory = factory({css: componentCss}, ({css}) => {
-	/**
-	 * {@link ui/Input.InputBase} is a ui styled input component. It supports start and end
-	 * icons. Note that this base component is not stateless as many other base components are.
-	 * However, it does not support Spotlight. Apps will want to use {@link ui/Input.Input}.
-	 *
-	 * @class InputBase
-	 * @memberof ui/Input
-	 * @ui
-	 * @public
-	 */
 	return kind({
 		name: 'Input',
 
@@ -279,11 +272,35 @@ const InputBaseFactory = factory({css: componentCss}, ({css}) => {
 	});
 });
 
+/**
+ * An input component. It supports start and end icons. Note that this base component is not
+ * stateless as many other base components are.  However, it does not support Spotlight. Apps
+ * will want to use {@link ui/Input.Input}.
+ *
+ * @class InputBase
+ * @memberof ui/Input
+ * @ui
+ * @public
+ */
 const InputBase = InputBaseFactory();
 
 /**
- * {@link ui/Input.Input} is a Spottable, ui styled input component. It supports pre
- * and post icons.
+ * A Factory wrapper around {@link ui/Input.InputBase} that allows overriding certain classes at
+ * design time.
+ *
+ * @class InputBaseFactory
+ * @memberof ui/Input
+ * @factory
+ * @public
+ */
+const InputFactory = (props) => Changeable(
+	InputSpotlightDecorator(
+		InputBaseFactory(props)
+	)
+);
+
+/**
+ * A Spottable, unstyled input component. It supports pre and post icons.
  *
  * By default, `Input` maintains the state of its `value` property. Supply the
  * `defaultValue` property to control its initial value. If you wish to directly control updates
@@ -292,22 +309,12 @@ const InputBase = InputBaseFactory();
  *
  * @class Input
  * @memberof ui/Input
+ * @extends ui/InputBase
  * @mixes ui/Changeable.Changeable
- * @mixes ui/Input/InputSpotlightDecorator
  * @ui
  * @public
  */
-const Input = Changeable(
-	InputSpotlightDecorator(
-		InputBase
-	)
-);
-
-const InputFactory = (props) => Changeable(
-	InputSpotlightDecorator(
-		InputBaseFactory(props)
-	)
-);
+const Input = InputFactory();
 
 export default Input;
 export {

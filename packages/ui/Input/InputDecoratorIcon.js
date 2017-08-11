@@ -8,27 +8,16 @@ import UiIcon from '../Icon';
 
 import componentCss from './Input.less';
 
-
 /**
- * {@link ui/InputDecoratorIcon.InputDecoratorIconBaseFactory} is Factory wrapper around
- * {@link ui/InputDecoratorIcon.InputDecoratorIconBase} that allows overriding certain classes at
- * design time. The following are properties of the `css` member of the argument to the factory.
+ * A Factory wrapper for creating Icons for use with `InputDecorator` that allows overriding certain
+ * classes at design time.
  *
  * @class InputDecoratorIconBaseFactory
- * @memberof ui/InputDecoratorIcon
+ * @memberof ui/Input
  * @factory
- * @ui
- * @public
+ * @private
  */
 const InputDecoratorIconBaseFactory = factory({css: componentCss}, ({css}) => {
-	/**
-	 * The stateless functional base component for {@link moonstone/Input.InputDecoratorIcon}.
-	 *
-	 * @class InputDecoratorIconBase
-	 * @memberof moonstone/Input
-	 * @ui
-	 * @private
-	 */
 	return kind({
 		name: 'InputDecoratorIcon',
 
@@ -83,8 +72,27 @@ const InputDecoratorIconBaseFactory = factory({css: componentCss}, ({css}) => {
 	});
 });
 
-
+/**
+ * The stateless functional base component for {@link moonstone/Input.InputDecoratorIcon}.
+ *
+ * @class InputDecoratorIconBase
+ * @memberof moonstone/Input
+ * @ui
+ * @private
+ */
 const InputDecoratorIconBase = InputDecoratorIconBaseFactory();
+
+/**
+ * A Factory wrapper for creating Icons for use with `InputDecorator` that allows overriding certain
+ * classes at design time.
+ *
+ * @class InputDecoratorIconBaseFactory
+ * @memberof ui/Input
+ * @factory
+ * @public
+ */
+
+const InputDecoratorIconFactory = (props) => onlyUpdateForKeys(['children'])(InputDecoratorIconBaseFactory(props));
 
 /**
  * An icon displayed either before or after the input field of an {@link moonstone/Input.Input}.
@@ -94,9 +102,7 @@ const InputDecoratorIconBase = InputDecoratorIconBaseFactory();
  * @ui
  * @private
  */
-const InputDecoratorIcon = onlyUpdateForKeys(['children'])(InputDecoratorIconBase);
-
-const InputDecoratorIconFactory = (props) => onlyUpdateForKeys(['children'])(InputDecoratorIconBaseFactory(props));
+const InputDecoratorIcon = InputDecoratorIconFactory();
 
 export default InputDecoratorIconBase;
 export {
