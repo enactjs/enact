@@ -335,7 +335,7 @@ const getDeepSpottableDescendants = (containerId, excludedContainers) => {
  */
 const isContainer5WayHoldable = (containerId) => {
 	const containerNode = getContainerNode(containerId);
-	if (containerNode && containerNode.getAttribute('data-container-preserve5WayHold') === 'true') {
+	if (containerNode && containerNode.getAttribute('data-container-continue5WayHold') === 'true') {
 		return true;
 	}
 	return false;

@@ -62,7 +62,7 @@ const defaultConfig = {
 	 * @memberof spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator.defaultConfig
 	 * @public
 	 */
-	preserve5WayHold: false,
+	continue5WayHold: false,
 
 	/**
 	 * Whether the container will preserve the id when it unmounts.
@@ -113,7 +113,7 @@ const defaultConfig = {
 const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const forwardMouseEnter = forward(enterEvent);
 	const forwardMouseLeave = forward(leaveEvent);
-	const {navigableFilter, preserve5WayHold, preserveId, ...containerConfig} = config;
+	const {navigableFilter, continue5WayHold, preserveId, ...containerConfig} = config;
 
 	return class extends React.Component {
 		static displayName = 'SpotlightContainerDecorator';
@@ -266,8 +266,8 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				rest['data-container-muted'] = spotlightMuted;
 			}
 
-			if (preserve5WayHold) {
-				rest['data-container-preserve5WayHold'] = preserve5WayHold;
+			if (continue5WayHold) {
+				rest['data-container-continue5WayHold'] = continue5WayHold;
 			}
 
 			return <Wrapped {...rest} ref={spotlightContainerRef} />;
