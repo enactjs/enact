@@ -55,7 +55,6 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/VideoPlayer` long title overlap issues
 - `moonstone/Header` to apply `marqueeOn` prop to `subTitleBelow` and `titleBelow`
 - `moonstone/Picker` wheeling in `moonstone/Scroller`
-- `moonstone/Slider` to align tooltip with detached knob
 - `moonstone/IncrementSlider` and `moonstone/Picker` to read value changes when selecting buttons
 
 ## [1.5.0] - 2017-07-19
