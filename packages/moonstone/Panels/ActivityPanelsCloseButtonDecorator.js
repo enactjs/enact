@@ -51,6 +51,7 @@ const ActivityPanelsCloseButtonDecorator = hoc((config, Wrapped) => {
 		}
 
 		componentWillUnmount () {
+			this.closeButton.className = this.closeButton.className.replace(css.activityPanelsCloseButton, '');
 			this.closeButton = null;
 		}
 

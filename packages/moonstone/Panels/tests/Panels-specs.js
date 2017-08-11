@@ -54,9 +54,12 @@ describe('Panels Specs', () => {
 					noCloseButton: true,
 					id
 				};
+				const context = {
+					hasCloseButton: false
+				};
 
 				const expected = childProps;
-				const actual = PanelsBase.computed.childProps(props);
+				const actual = PanelsBase.computed.childProps(props, context);
 
 				expect(actual).to.equal(expected);
 			});
@@ -67,9 +70,12 @@ describe('Panels Specs', () => {
 					childProps,
 					noCloseButton: false
 				};
+				const context = {
+					hasCloseButton: false
+				};
 
 				const expected = childProps;
-				const actual = PanelsBase.computed.childProps(props);
+				const actual = PanelsBase.computed.childProps(props, context);
 
 				expect(actual).to.equal(expected);
 			});
@@ -82,9 +88,12 @@ describe('Panels Specs', () => {
 					noCloseButton: false,
 					id
 				};
+				const context = {
+					hasCloseButton: false
+				};
 
 				const expected = `${id}_close`;
-				const actual = PanelsBase.computed.childProps(props)['aria-owns'];
+				const actual = PanelsBase.computed.childProps(props, context)['aria-owns'];
 
 				expect(actual).to.equal(expected);
 			});
@@ -100,9 +109,12 @@ describe('Panels Specs', () => {
 					noCloseButton: false,
 					id
 				};
+				const context = {
+					hasCloseButton: false
+				};
 
 				const expected = `${ariaOwns} ${id}_close`;
-				const actual = PanelsBase.computed.childProps(props)['aria-owns'];
+				const actual = PanelsBase.computed.childProps(props, context)['aria-owns'];
 
 				expect(actual).to.equal(expected);
 			});
