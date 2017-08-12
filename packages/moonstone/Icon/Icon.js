@@ -41,7 +41,7 @@ const IconBaseFactory = factory({css: componentCss}, ({css}) => {
 		css: /** @lends moonstone/Icon.IconBaseFactory.prototype */ {
 			...componentCss,
 			// Include the component class name so it too may be overridden.
-			Icon: css.Icon
+			icon: css.icon
 		}
 	});
 

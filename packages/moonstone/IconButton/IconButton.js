@@ -63,7 +63,7 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 	 * @public
 	 */
 	return kind({
-		name: 'IconButton',
+		name: 'MoonstoneIconButton',
 
 		render: (props) => {
 			return (
