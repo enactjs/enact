@@ -1,7 +1,4 @@
 class Flick {
-	minFlick = 0.1
-	maxMoves = 5
-
 	constructor () {
 		this.tracking = false;
 		this.moves = [];
@@ -11,15 +8,18 @@ class Flick {
 		return this.tracking;
 	}
 
-	begin = (x, y, onFlick) => {
+	begin = (config, {onFlick}, coords) => {
+		this.minVelocity = config.minVelocity;
+		this.maxMoves = config.maxMoves;
+
 		this.tracking = true;
 		this.moves.length = 0;
 		this.onFlick = onFlick;
 
-		this.move(x, y);
+		this.move(coords);
 	}
 
-	move = (x, y) => {
+	move = ({x, y}) => {
 		if (!this.tracking) return;
 
 		this.moves.push({
@@ -64,7 +64,7 @@ class Flick {
 			}
 
 			const v = Math.sqrt(x * x + y * y);
-			if (v > this.minFlick) {
+			if (v > this.minVelocity) {
 				// generate the flick using the start event so it has those coordinates
 				// this.sendFlick(ti.startEvent, x, y, v);
 				this.onFlick({
