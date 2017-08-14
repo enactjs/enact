@@ -18,7 +18,6 @@ describe('Touchable', () => {
 			</div>
 		);
 	};
-	const fn = () => true;
 	const preventDefault = (ev) => ev.preventDefault();
 
 	describe('config', () => {
@@ -37,45 +36,6 @@ describe('Touchable', () => {
 	});
 
 	describe('#onDown', () => {
-		it('should pass onMouseDown prop when onDown prop is provided', function () {
-			const Component = Touchable(DivComponent);
-			const subject = shallow(
-				<Component onDown={fn} />
-			);
-			const wrapped = subject.find(DivComponent);
-
-			const expected = true;
-			const actual = 'onMouseDown' in wrapped.props();
-
-			expect(actual).to.equal(expected);
-		});
-
-		it('should pass onMouseDown prop when activeProp is configured', function () {
-			const Component = Touchable({activeProp: 'active'}, DivComponent);
-			const subject = shallow(
-				<Component />
-			);
-			const wrapped = subject.find(DivComponent);
-
-			const expected = true;
-			const actual = 'onMouseDown' in wrapped.props();
-
-			expect(actual).to.equal(expected);
-		});
-
-		it('should not pass onMouseDown prop when neither activeProp is configured nor onDown prop is provided', function () {
-			const Component = Touchable(DivComponent);
-			const subject = shallow(
-				<Component />
-			);
-			const wrapped = subject.find(DivComponent);
-
-			const expected = false;
-			const actual = 'onMouseDown' in wrapped.props();
-
-			expect(actual).to.equal(expected);
-		});
-
 		it('should invoke onDown handle on mouse down', function () {
 			const Component = Touchable(DivComponent);
 			const handler = sinon.spy();
@@ -93,45 +53,6 @@ describe('Touchable', () => {
 	});
 
 	describe('#onUp', () => {
-		it('should pass onMouseUp prop when onUp prop is provided', function () {
-			const Component = Touchable(DivComponent);
-			const subject = shallow(
-				<Component onUp={fn} />
-			);
-			const wrapped = subject.find(DivComponent);
-
-			const expected = true;
-			const actual = 'onMouseUp' in wrapped.props();
-
-			expect(actual).to.equal(expected);
-		});
-
-		it('should pass onMouseUp prop when activeProp is configured', function () {
-			const Component = Touchable({activeProp: 'active'}, DivComponent);
-			const subject = shallow(
-				<Component />
-			);
-			const wrapped = subject.find(DivComponent);
-
-			const expected = true;
-			const actual = 'onMouseUp' in wrapped.props();
-
-			expect(actual).to.equal(expected);
-		});
-
-		it('should not pass onMouseUp prop when neither activeProp is configured nor onUp prop is provided', function () {
-			const Component = Touchable(DivComponent);
-			const subject = shallow(
-				<Component />
-			);
-			const wrapped = subject.find(DivComponent);
-
-			const expected = false;
-			const actual = 'onMouseUp' in wrapped.props();
-
-			expect(actual).to.equal(expected);
-		});
-
 		it('should invoke onUp handle on mouse up', function () {
 			const Component = Touchable({activeProp: 'pressed'}, DivComponent);
 			const handler = sinon.spy();
@@ -297,46 +218,6 @@ describe('Touchable', () => {
 				const afterUp = subject.state('active');
 
 				const expected = false;
-				const actual = beforeUp === afterUp;
-
-				expect(actual).to.equal(expected);
-			});
-
-			it('should update active state on mouse leave when cancelOnLeave is set and activeProp is configured', function () {
-				const Component = Touchable({activeProp: 'active'}, DivComponent);
-				const handler = sinon.spy();
-				const subject = mount(
-					<Component onDown={handler} cancelOnLeave />
-				);
-
-				const ev = {};
-				subject.simulate('mousedown', ev);
-
-				const beforeUp = subject.state('active');
-				subject.simulate('mouseleave', ev);
-				const afterUp = subject.state('active');
-
-				const expected = false;
-				const actual = beforeUp === afterUp;
-
-				expect(actual).to.equal(expected);
-			});
-
-			it('should not update active state on mouse leave when cancelOnLeave is not set and activeProp is configured', function () {
-				const Component = Touchable({activeProp: 'active'}, DivComponent);
-				const handler = sinon.spy();
-				const subject = mount(
-					<Component onDown={handler} />
-				);
-
-				const ev = {};
-				subject.simulate('mousedown', ev);
-
-				const beforeUp = subject.state('active');
-				subject.simulate('mouseleave', ev);
-				const afterUp = subject.state('active');
-
-				const expected = true;
 				const actual = beforeUp === afterUp;
 
 				expect(actual).to.equal(expected);
