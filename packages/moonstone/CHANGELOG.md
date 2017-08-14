@@ -21,9 +21,9 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
-- `moonstone/Button` added `NoTextButtonFactory` that is like button without `MarqueeDecorator` and `Uppercase`
-
 ### Changed
+
+- `moonstone/IconButton` to not use `MarqueeDecorator` and `Uppercase`.
 
 ### Fixed
 

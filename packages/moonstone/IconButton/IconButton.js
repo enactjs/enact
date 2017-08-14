@@ -24,12 +24,12 @@ const OptimizedIcon = onlyUpdateForKeys(['small', 'children'])(Icon);
 const IconButtonFactory = factory((css)  => {
 	const Base = ButtonBaseFactory(css);
 	/**
-	 * {@link moonstone/Button.NoTextButton} is a Button with Moonstone
+	 * {@link moonstone/IconButton.IconButton} is a Button with Moonstone
 	 * styling, Spottable and Pressable applied. This Button does not have
 	 * Marquee or Uppercase like Button, because it should not contain text.
 	 *
-	 * @class Button
-	 * @memberof moonstone/Button
+	 * @class IconButton
+	 * @memberof moonstone/IconButton
 	 * @mixes moonstone/TooltipDecorator.TooltipDecorator
 	 * @mixes ui/Pressable.Pressable
 	 * @mixes spotlight/Spottable.Spottable
