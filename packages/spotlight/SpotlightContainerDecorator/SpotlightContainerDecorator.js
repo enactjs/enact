@@ -113,7 +113,7 @@ const defaultConfig = {
 const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 	const forwardMouseEnter = forward(enterEvent);
 	const forwardMouseLeave = forward(leaveEvent);
-	const {navigableFilter, continue5WayHold, preserveId, ...containerConfig} = config;
+	const {navigableFilter, preserveId, ...containerConfig} = config;
 
 	return class extends React.Component {
 		static displayName = 'SpotlightContainerDecorator';
@@ -264,10 +264,6 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			if (spotlightMuted) {
 				rest['data-container-muted'] = spotlightMuted;
-			}
-
-			if (continue5WayHold) {
-				rest['data-container-continue5WayHold'] = continue5WayHold;
 			}
 
 			return <Wrapped {...rest} ref={spotlightContainerRef} />;
