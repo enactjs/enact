@@ -8,7 +8,7 @@ The following is a curated list of changes in the Enact spotlight module, newest
 
 ### Added
 
-- `spotlight/Spottable` ability to restore focus when an initially disabled control becomes enabled
+- `spotlight/Spottable` ability to restore focus when an initially disabled component becomes enabled
 
 ### Changed
 
