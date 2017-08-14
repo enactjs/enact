@@ -270,34 +270,8 @@ const ButtonFactory = factory((css)  => {
 	);
 });
 
-const NoTextButtonFactory = factory((css)  => {
-	const Base = ButtonBaseFactory(css);
-	/**
-	 * {@link moonstone/Button.NoTextButton} is a Button with Moonstone
-	 * styling, Spottable and Pressable applied. This Button does not have
-	 * Marquee or Uppercase like Button, because it should not contain text.
-	 *
-	 * @class Button
-	 * @memberof moonstone/Button
-	 * @mixes moonstone/TooltipDecorator.TooltipDecorator
-	 * @mixes ui/Pressable.Pressable
-	 * @mixes spotlight/Spottable.Spottable
-	 * @ui
-	 * @public
-	 */
-	return TooltipDecorator(
-		Pressable(
-			Spottable(
-				Skinnable(
-					Base
-				)
-			)
-		)
-	);
-});
-
 const ButtonBase = ButtonBaseFactory();
 const Button = ButtonFactory();
 
 export default Button;
-export {Button, ButtonBase, ButtonBaseFactory, ButtonFactory, NoTextButtonFactory};
+export {Button, ButtonBase, ButtonBaseFactory, ButtonFactory};

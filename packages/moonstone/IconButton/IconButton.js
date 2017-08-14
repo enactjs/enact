@@ -6,16 +6,46 @@
 
 import factory from '@enact/core/factory';
 import kind from '@enact/core/kind';
+import Spottable from '@enact/spotlight/Spottable';
+import Pressable from '@enact/ui/Pressable';
 import onlyUpdateForKeys from 'recompose/onlyUpdateForKeys';
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {NoTextButtonFactory} from '../Button';
+import {ButtonBaseFactory} from '../Button';
 import Icon from '../Icon';
+import {TooltipDecorator} from '../TooltipDecorator';
+import Skinnable from '../Skinnable';
 
 import componentCss from './IconButton.less';
 
 const OptimizedIcon = onlyUpdateForKeys(['small', 'children'])(Icon);
+
+const IconButtonFactory = factory((css)  => {
+	const Base = ButtonBaseFactory(css);
+	/**
+	 * {@link moonstone/Button.NoTextButton} is a Button with Moonstone
+	 * styling, Spottable and Pressable applied. This Button does not have
+	 * Marquee or Uppercase like Button, because it should not contain text.
+	 *
+	 * @class Button
+	 * @memberof moonstone/Button
+	 * @mixes moonstone/TooltipDecorator.TooltipDecorator
+	 * @mixes ui/Pressable.Pressable
+	 * @mixes spotlight/Spottable.Spottable
+	 * @ui
+	 * @public
+	 */
+	return TooltipDecorator(
+		Pressable(
+			Spottable(
+				Skinnable(
+					Base
+				)
+			)
+		)
+	);
+});
 
 /**
  * {@link moonstone/IconButton.IconButtonFactory} is Factory wrapper around
@@ -28,7 +58,7 @@ const OptimizedIcon = onlyUpdateForKeys(['small', 'children'])(Icon);
  * @public
  */
 const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
-	const Button = NoTextButtonFactory({css}, true);
+	const Button = IconButtonFactory({css});
 	/**
 	 * {@link moonstone/IconButton.IconButton} is a {@link moonstone/Icon.Icon} that acts like a button.
 	 * You may specify an image or a font-based icon by setting the children to either the path to the
