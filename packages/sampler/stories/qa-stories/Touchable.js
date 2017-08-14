@@ -64,6 +64,17 @@ storiesOf('Touchable')
 				Resumable
 			</Button>
 		)
+	)
+	.addWithInfo(
+		'with onFlick handler',
+		() => (
+			<Button
+				onFlick={action('onFlick')}
+				disabled={boolean('disabled')}
+			>
+				Flickable
+			</Button>
+		)
 	);
 
 
