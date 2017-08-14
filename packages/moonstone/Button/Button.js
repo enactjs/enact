@@ -232,7 +232,7 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
  * @factory
  * @public
  */
-const ButtonFactory = factory((css)  => {
+const ButtonFactory = factory(css => {
 	const Base = ButtonBaseFactory(css);
 	/**
 	 * {@link moonstone/Button.Button} is a Button with Moonstone styling, Spottable and
