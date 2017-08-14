@@ -12,9 +12,19 @@ The following is a curated list of changes in the Enact core module, newest chan
 
 ### Fixed
 
-## [1.5.0] - 2017-07-19
+## [1.6.1] - 2017-08-07
 
 No significant changes.
+
+## [1.6.0] - 2017-08-04
+
+No significant changes.
+
+## [1.5.0] - 2017-07-19
+
+### Changed
+
+- `@core/handle.preventDefault` (and, subsequently, `forwardWithPrevent`) to also call `preventDefault()` on the originating event
 
 ## [1.4.1] - 2017-07-05
 

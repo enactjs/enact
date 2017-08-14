@@ -62,6 +62,16 @@ const RangePickerBase = kind({
 		value: PropTypes.number.isRequired,
 
 		/**
+		 * Overrides the `aria-valuetext` for the picker. By default, `aria-valuetext` is set
+		 * to the current selected child value.
+		 *
+		 * @type {String}
+		 * @memberof moonstone/RangePicker.RangePickerBase.prototype
+		 * @public
+		 */
+		'aria-valuetext': PropTypes.string,
+
+		/**
 		 * Children from which to pick
 		 *
 		 * @type {Node}

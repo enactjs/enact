@@ -187,8 +187,8 @@ class VirtualListCoreNative extends Component {
 		super(props);
 
 		this.state = {firstIndex: 0, numOfItems: 0};
+		this.initContentRef = this.initRef('contentRef');
 		this.initContainerRef = this.initRef('containerRef');
-		this.initWrapperRef = this.initRef('wrapperRef');
 	}
 
 	componentWillMount () {
@@ -205,6 +205,7 @@ class VirtualListCoreNative extends Component {
 			this.calculateMetrics(this.props);
 			this.updateStatesAndBounds(this.props);
 		}
+		this.setContainerSize();
 	}
 
 	// Call updateStatesAndBounds here when dataSize has been changed to update nomOfItems state.
@@ -223,13 +224,16 @@ class VirtualListCoreNative extends Component {
 		if (hasMetricsChanged) {
 			this.calculateMetrics(nextProps);
 			this.updateStatesAndBounds(nextProps);
+			this.setContainerSize();
 		} else if (hasDataChanged) {
 			this.updateStatesAndBounds(nextProps);
+			this.setContainerSize();
 		}
 	}
 
 	shouldComponentUpdate (nextProps, nextState) {
-		if ((this.props.dataSize !== nextProps.dataSize) &&
+		if (!this.restoreLastFocused &&
+			(this.props.dataSize > 0 && this.props.dataSize !== nextProps.dataSize) &&
 			(nextState.firstIndex + nextState.numOfItems) < nextProps.dataSize) {
 			return false;
 		}
@@ -269,12 +273,14 @@ class VirtualListCoreNative extends Component {
 	scrollPosition = 0
 	isScrolledBy5way = false
 
-	wrapperClass = null
+	containerClass = null
+	contentRef = null
 	containerRef = null
-	wrapperRef = null
 
 	// spotlight
 	lastFocusedIndex = null
+	preservedIndex = null
+	nodeIndexToBeFocused = null
 
 	isVertical = () => this.isPrimaryDirectionVertical
 
@@ -282,7 +288,7 @@ class VirtualListCoreNative extends Component {
 
 	isPlaceholderFocused () {
 		const current = Spotlight.getCurrent();
-		if (current && current.dataset.vlPlaceholder && this.containerRef.contains(current)) {
+		if (current && current.dataset.vlPlaceholder && this.contentRef.contains(current)) {
 			return true;
 		}
 
@@ -296,22 +302,8 @@ class VirtualListCoreNative extends Component {
 			const index = placeholder.dataset.index;
 
 			if (index) {
-				this.lastFocusedIndex = parseInt(index);
+				this.preservedIndex = parseInt(index);
 				this.restoreLastFocused = true;
-
-				// adjust the firstIndex to include the last focused index, if necessary
-				this.setState(nextState => {
-					let {firstIndex, numOfItems} = nextState;
-					const lastIndex = firstIndex + numOfItems;
-
-					if (this.lastFocusedIndex < firstIndex || this.lastFocusedIndex >= lastIndex) {
-						firstIndex = this.lastFocusedIndex;
-					}
-
-					return {
-						firstIndex
-					};
-				});
 			}
 		}
 	}
@@ -321,8 +313,8 @@ class VirtualListCoreNative extends Component {
 		if (
 			this.restoreLastFocused &&
 			!this.isPlaceholderFocused() &&
-			firstVisibleIndex <= this.lastFocusedIndex &&
-			lastVisibleIndex >= this.lastFocusedIndex
+			firstVisibleIndex <= this.preservedIndex &&
+			lastVisibleIndex >= this.preservedIndex
 		) {
 			// if we're supposed to restore focus and virtual list has positioned a set of items
 			// that includes lastFocusedIndex, clear the indicator
@@ -331,12 +323,13 @@ class VirtualListCoreNative extends Component {
 
 			// try to focus the last focused item
 			const foundLastFocused = Spotlight.focus(
-				`[data-container-id="${containerId}"] [data-index="${this.lastFocusedIndex}"]`
+				`[data-container-id="${containerId}"] [data-index="${this.preservedIndex}"]`
 			);
 
 			// but if that fails (because it isn't found or is disabled), focus the container so
 			// spotlight isn't lost
 			if (!foundLastFocused) {
+				this.restoreLastFocused = true;
 				Spotlight.focus(containerId);
 			}
 		}
@@ -370,8 +363,6 @@ class VirtualListCoreNative extends Component {
 	gridPositionToItemPosition = ({primaryPosition, secondaryPosition}) =>
 		(this.isPrimaryDirectionVertical ? {left: secondaryPosition, top: primaryPosition} : {left: primaryPosition, top: secondaryPosition})
 
-	getContainerNode = () => (this.wrapperRef)
-
 	getClientSize = (node) => {
 		return {
 			clientWidth: node.clientWidth,
@@ -382,7 +373,7 @@ class VirtualListCoreNative extends Component {
 	calculateMetrics (props) {
 		const
 			{clientSize, direction, itemSize, spacing} = props,
-			node = this.getContainerNode();
+			node = this.containerRef;
 
 		if (!clientSize && !node) {
 			return;
@@ -451,6 +442,7 @@ class VirtualListCoreNative extends Component {
 			{dimensionToExtent, primary, moreInfo, scrollPosition} = this,
 			numOfItems = Math.min(dataSize, dimensionToExtent * (Math.ceil(primary.clientSize / primary.gridSize) + overhang)),
 			wasFirstIndexMax = ((this.maxFirstIndex < moreInfo.firstVisibleIndex - dimensionToExtent) && (firstIndex === this.maxFirstIndex));
+		let newFirstIndex = firstIndex;
 
 		this.maxFirstIndex = dataSize - numOfItems;
 		this.curDataSize = dataSize;
@@ -458,15 +450,28 @@ class VirtualListCoreNative extends Component {
 		// reset children
 		this.cc = [];
 
-		this.setState({firstIndex: wasFirstIndexMax ? this.maxFirstIndex : Math.min(firstIndex, this.maxFirstIndex), numOfItems});
+		// Adjust first index
+		if (this.restoreLastFocused &&
+			numOfItems > 0 &&
+			(this.preservedIndex < moreInfo.firstVisibleIndex || this.preservedIndex > moreInfo.lastVisibleIndex)) {
+			// If we need to restore last focus and the index is beyond the screen,
+			// we call `scrollTo` to create DOM for it.
+			this.props.cbScrollTo({index: this.preservedIndex, animate: false});
+		} else if (wasFirstIndexMax) {
+			newFirstIndex = this.maxFirstIndex;
+		} else {
+			newFirstIndex = Math.min(firstIndex, this.maxFirstIndex);
+		}
+
+		this.setState({firstIndex: newFirstIndex, numOfItems});
 		this.calculateScrollBounds(props);
-		this.updateMoreInfo(scrollPosition);
+		this.updateMoreInfo(dataSize, scrollPosition);
 	}
 
 	calculateScrollBounds (props) {
 		const
 			{clientSize} = props,
-			node = this.getContainerNode();
+			node = this.containerRef;
 
 		if (!clientSize && !node) {
 			return;
@@ -493,10 +498,14 @@ class VirtualListCoreNative extends Component {
 			this.props.cbScrollTo({position: (isPrimaryDirectionVertical) ? {y: maxPos} : {x: maxPos}});
 		}
 
-		this.wrapperClass = (isPrimaryDirectionVertical) ? css.vertical : css.horizontal;
+		this.containerClass = (isPrimaryDirectionVertical) ? css.vertical : css.horizontal;
+	}
 
-		this.containerRef.style.width = scrollBounds.scrollWidth + 'px';
-		this.containerRef.style.height = scrollBounds.scrollHeight + 'px';
+	setContainerSize = () => {
+		if (this.contentRef) {
+			this.contentRef.style.width = this.scrollBounds.scrollWidth + 'px';
+			this.contentRef.style.height = this.scrollBounds.scrollHeight + 'px';
+		}
 	}
 
 	syncThreshold (maxPos) {
@@ -515,6 +524,7 @@ class VirtualListCoreNative extends Component {
 
 	didScroll (x, y, dirX, dirY) {
 		const
+			{dataSize} = this.props,
 			{firstIndex} = this.state,
 			{isPrimaryDirectionVertical, threshold, dimensionToExtent, maxFirstIndex, scrollBounds} = this,
 			{gridSize} = this.primary,
@@ -548,7 +558,7 @@ class VirtualListCoreNative extends Component {
 
 		this.syncThreshold(maxPos);
 		this.scrollPosition = pos;
-		this.updateMoreInfo(pos);
+		this.updateMoreInfo(dataSize, pos);
 
 		if (firstIndex !== newFirstIndex) {
 			this.setState({firstIndex: newFirstIndex});
@@ -575,6 +585,10 @@ class VirtualListCoreNative extends Component {
 			['data-preventscrollonfocus']: true, // Added this attribute to prevent scroll on focus by browser
 			style: {...itemElement.props.style, ...style}
 		});
+
+		if (index === this.nodeIndexToBeFocused) {
+			this.focusByIndex(index);
+		}
 	}
 
 	positionItems () {
@@ -614,7 +628,7 @@ class VirtualListCoreNative extends Component {
 	}
 
 	scrollToPosition (x, y) {
-		const node = this.wrapperRef;
+		const node = this.containerRef;
 		node.scrollTo((this.context.rtl && !this.isPrimaryDirectionVertical) ? this.scrollBounds.maxLeft - x : x, y);
 	}
 
@@ -634,9 +648,8 @@ class VirtualListCoreNative extends Component {
 		return (this.isPrimaryDirectionVertical ? {x: secondaryPosition, y: primaryPosition} : {x: primaryPosition, y: secondaryPosition});
 	}
 
-	updateMoreInfo (primaryPosition) {
+	updateMoreInfo (dataSize, primaryPosition) {
 		const
-			{dataSize} = this.props,
 			{dimensionToExtent, moreInfo} = this,
 			{itemSize, gridSize, clientSize} = this.primary;
 
@@ -664,12 +677,13 @@ class VirtualListCoreNative extends Component {
 	focusByIndex = (index) => {
 		// We have to focus node async for now since list items are not yet ready when it reaches componentDid* lifecycle methods
 		setTimeout(() => {
-			const item = this.containerRef.querySelector(`[data-index='${index}'].spottable`);
+			const item = this.contentRef.querySelector(`[data-index='${index}'].spottable`);
 
 			if (Spotlight.isPaused()) {
 				Spotlight.resume();
 			}
 			this.focusOnNode(item);
+			this.nodeIndexToBeFocused = null;
 		}, 0);
 	}
 
@@ -683,14 +697,14 @@ class VirtualListCoreNative extends Component {
 		this.lastFocusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
 	}
 
-	calculatePositionOnFocus = (item, scrollPosition = this.scrollPosition) => {
+	calculatePositionOnFocus = ({item, scrollPosition = this.scrollPosition}) => {
 		const
 			{pageScroll} = this.props,
 			{primary} = this,
 			offsetToClientEnd = primary.clientSize - primary.itemSize,
 			focusedIndex = Number.parseInt(item.getAttribute(dataIndexAttribute));
 
-		if (!isNaN(focusedIndex) && focusedIndex !== this.lastFocusedIndex) {
+		if (!isNaN(focusedIndex) && (focusedIndex !== this.lastFocusedIndex || this.restoreLastFocused)) {
 			let gridPosition = this.getGridPosition(focusedIndex);
 
 			this.lastFocusedIndex = focusedIndex;
@@ -710,6 +724,30 @@ class VirtualListCoreNative extends Component {
 			gridPosition.secondaryPosition = 0;
 			return this.gridPositionToItemPosition(gridPosition);
 		}
+	}
+
+	setRestrict = (bool) => {
+		Spotlight.set(this.props['data-container-id'], {restrict: (bool) ? 'self-only' : 'self-first'});
+	}
+
+	setSpotlightContainerRestrict = (keyCode, target) => {
+		const
+			{dataSize} = this.props,
+			{isPrimaryDirectionVertical, dimensionToExtent} = this,
+			index = Number.parseInt(target.getAttribute(dataIndexAttribute)),
+			canMoveBackward = index >= dimensionToExtent,
+			canMoveForward = index < (dataSize - (((dataSize - 1) % dimensionToExtent) + 1));
+		let isSelfOnly = false;
+
+		if (isPrimaryDirectionVertical) {
+			if (isUp(keyCode) && canMoveBackward || isDown(keyCode) && canMoveForward) {
+				isSelfOnly = true;
+			}
+		} else if (isLeft(keyCode) && canMoveBackward || isRight(keyCode) && canMoveForward) {
+			isSelfOnly = true;
+		}
+
+		this.setRestrict(isSelfOnly);
 	}
 
 	getIndicesForPageScroll = (direction, currentIndex) => {
@@ -810,13 +848,14 @@ class VirtualListCoreNative extends Component {
 				target.blur();
 			}, 50);
 
+			this.nodeIndexToBeFocused = this.lastFocusedIndex = nextIndex;
+
 			if (!Spotlight.isPaused()) {
 				Spotlight.pause();
 			}
 
 			cbScrollTo({
 				index: nextIndex,
-				focus: true,
 				stickTo: isForward ? 'end' : 'start'
 			});
 			return true;
@@ -831,13 +870,14 @@ class VirtualListCoreNative extends Component {
 		this.isScrolledBy5way = false;
 		if (getDirection(keyCode)) {
 			e.preventDefault();
+			this.setSpotlightContainerRestrict(keyCode, target);
 			this.isScrolledBy5way = this.jumpToSpottableItem(keyCode, target);
 		}
 		forwardKeyDown(e, this.props);
 	}
 
 	setContainerDisabled = (bool) => {
-		const containerNode = this.getContainerNode();
+		const containerNode = this.containerRef;
 
 		if (containerNode) {
 			containerNode.setAttribute(dataContainerMutedAttribute, bool);
@@ -847,7 +887,7 @@ class VirtualListCoreNative extends Component {
 	syncClientSize = () => {
 		const
 			{props} = this,
-			node = this.getContainerNode();
+			node = this.containerRef;
 
 		if (!props.clientSize && !node) {
 			return;
@@ -860,6 +900,7 @@ class VirtualListCoreNative extends Component {
 		if (clientWidth !== scrollBounds.clientWidth || clientHeight !== scrollBounds.clientHeight) {
 			this.calculateMetrics(props);
 			this.updateStatesAndBounds(props);
+			this.setContainerSize();
 		}
 	}
 
@@ -893,17 +934,18 @@ class VirtualListCoreNative extends Component {
 
 		const
 			{className, style, ...rest} = props,
-			mergedClasses = classNames(css.list, this.wrapperClass, className);
+			mergedClasses = classNames(css.list, this.containerClass, className);
 
 		return (
-			<div ref={this.initWrapperRef} className={mergedClasses} style={style}>
-				<div {...rest} onKeyDown={this.onKeyDown} ref={this.initContainerRef}>
+			<div className={mergedClasses} ref={this.initContainerRef} style={style}>
+				<div {...rest} onKeyDown={this.onKeyDown} ref={this.initContentRef}>
 					{cc.length ? cc : null}
 					{primary ? null : (
 						<SpotlightPlaceholder
 							data-index={0}
 							data-vl-placeholder
 							onFocus={this.handlePlaceholderFocus}
+							role="region"
 						/>
 					)}
 				</div>

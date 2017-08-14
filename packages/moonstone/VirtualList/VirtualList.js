@@ -388,7 +388,7 @@ const VirtualGridList = kind({
 		 */
 	},
 
-	render: (props) => <VirtualListBase {...props} pageScroll />
+	render: (props) => <VirtualListBase {...props} />
 });
 
 export default VirtualList;
