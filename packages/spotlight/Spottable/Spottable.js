@@ -201,8 +201,10 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 			// if the component became enabled, notify spotlight to enable restoring "lost" focus
 			if (
-				(prevProps.disabled && !this.props.disabled) ||
-				(prevProps.spotlightDisabled && !this.props.spotlightDisabled)
+				(!this.props.disabled && !this.props.spotlightDisabled) && (
+					(prevProps.disabled && !this.props.disabled) ||
+					(prevProps.spotlightDisabled && !this.props.spotlightDisabled)
+				)
 			) {
 				if (!Spotlight.getCurrent() && !Spotlight.getPointerMode() && !Spotlight.isPaused()) {
 					const containers = getContainersForNode(this.node);
