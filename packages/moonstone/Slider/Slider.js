@@ -100,17 +100,6 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			children: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
 
 			/**
-			 * When not `vertical`, determines which side of the knob the tooltip appears on.
-			 * When `'rising'`, the tooltip will be on the left side, when `'falling'`, the tooltip will
-			 * be on the right.
-			 *
-			 * @type {String}
-			 * @default 'rising'
-			 * @private
-			 */
-			climax: PropTypes.oneOf(['rising', 'falling']),
-
-			/**
 			 * The slider can change its behavior to have the knob follow the cursor as it moves
 			 * across the slider, without applying the position. A click or drag behaves the same.
 			 * This is primarily used by media playback. Setting this to `true` enables this behavior.
@@ -142,6 +131,16 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * @private
 			 */
 			inputRef: PropTypes.func,
+
+			/**
+			* When not `vertical`, determines which side of the knob the tooltip appears on.
+			* When `false`, the tooltip will be on the left side, when `true`, the tooltip will
+			* be on the right.
+			*
+			* @type {String}
+			* @private
+			*/
+			knobAfterMidpoint: PropTypes.bool,
 
 			/**
 			 * The maximum value of the slider.
@@ -334,7 +333,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 		defaultProps: {
 			active: false,
 			backgroundProgress: 0,
-			climax: 'rising',
+			knobAfterMidpoint: false,
 			detachedKnob: false,
 			focused: false,
 			max: 100,
@@ -399,7 +398,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			proportionProgress: computeProportionProgress
 		},
 
-		render: ({backgroundProgress, children, climax, disabled, focused, inputRef, max, min, onBlur, onChange, onKeyDown, onMouseMove, onMouseUp, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, tooltip, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => {
+		render: ({backgroundProgress, children, disabled, focused, inputRef, knobAfterMidpoint, max, min, onBlur, onChange, onKeyDown, onMouseMove, onMouseUp, proportionProgress, scrubbing, sliderBarRef, sliderRef, step, tooltip, tooltipForceSide, tooltipSide, value, vertical, ...rest}) => {
 			delete rest.active;
 			delete rest.detachedKnob;
 			delete rest.noFill;
@@ -418,7 +417,7 @@ const SliderBaseFactory = factory({css: componentCss}, ({css}) => {
 			} else if (focused) {
 				// only display tooltip when `focused`
 				tooltipComponent = <SliderTooltip
-					climax={climax}
+					knobAfterMidpoint={knobAfterMidpoint}
 					forceSide={tooltipForceSide}
 					proportion={proportionProgress}
 					side={tooltipSide}

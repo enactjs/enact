@@ -21,17 +21,6 @@ const SliderTooltipBase = kind({
 
 	propTypes: /** @lends moonstone/Slider.SliderTooltip.prototype */{
 		/**
-		 * When not `vertical`, determines which side of the knob the tooltip appears on.
-		 * When `'rising'`, the tooltip will be on the left side, when `'falling'`, the tooltip will
-		 * be on the right.
-		 *
-		 * @type {String}
-		 * @default 'rising'
-		 * @private
-		 */
-		climax: PropTypes.oneOf(['rising', 'falling']),
-
-		/**
 		 * Setting to `true` overrides the natural LTR->RTL tooltip side-flipping for locale changes
 		 * for `vertical` sliders. This may be useful if you have a static layout that does not
 		 * automatically reverse when in an RTL language.
@@ -40,6 +29,17 @@ const SliderTooltipBase = kind({
 		 * @public
 		 */
 		forceSide: PropTypes.bool,
+
+		/**
+		* When not `vertical`, determines which side of the knob the tooltip appears on.
+		* When `false`, the tooltip will be on the left side, when `true`, the tooltip will
+		* be on the right.
+		*
+		* @type {String}
+		* @default 'rising'
+		* @private
+		*/
+		knobAfterMidpoint: PropTypes.bool,
 
 		/**
 		 * The proportion of progress across the bar. Should be a number between 0 and 1.
@@ -74,7 +74,7 @@ const SliderTooltipBase = kind({
 	},
 
 	defaultProps: {
-		climax: 'rising',
+		knobAfterMidpoint: false,
 		forceSide: false,
 		proportion: 0,
 		side: 'before',
@@ -90,9 +90,9 @@ const SliderTooltipBase = kind({
 
 	computed: {
 		className: ({forceSide, side, vertical, styler}) => styler.append({ignoreLocale: forceSide, vertical, horizontal: !vertical}, side),
-		arrowAnchor: ({climax, vertical}) => {
+		arrowAnchor: ({knobAfterMidpoint, vertical}) => {
 			if (vertical) return 'middle';
-			return (climax === 'rising') ? 'right' : 'left';
+			return knobAfterMidpoint ? 'left' : 'right';
 		},
 		direction: ({forceSide, side, vertical}, context) => {
 			let dir = 'right';
@@ -117,7 +117,7 @@ const SliderTooltipBase = kind({
 	},
 
 	render: ({children, ...rest}) => {
-		delete rest.climax;
+		delete rest.knobAfterMidpoint;
 		delete rest.forceSide;
 		delete rest.proportion;
 		delete rest.side;

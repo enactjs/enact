@@ -211,7 +211,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			this.state = {
 				active: false,
-				climax: 'rising',
+				knobAfterMidpoint: false,
 				focused: false,
 				value: value,
 				valueText: valueText
@@ -301,7 +301,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const {value} = this.state;
 			const proportionProgress = computeProportionProgress({value, max: this.normalizedMax, min: this.normalizedMin});
 			const knobProgress = this.knobPosition != null ? this.knobPosition : proportionProgress;
-			const currentClimax = knobProgress > 0.5 ? 'falling' : 'rising';
+			const currentKnobAfterMidpoint = knobProgress > 0.5;
 
 			loaderNode.style.transform = computeBarTransform(backgroundProgress, vertical);
 			barNode.style.transform = computeBarTransform(proportionProgress, vertical);
@@ -311,11 +311,11 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			// const knobTransform = computeKnobTransform(knobProgress, vertical, node);
 			// knobNode.style.setProperty('transform', knobTransform);
 			knobNode.style.setProperty('--knob-progress', knobProgress);
-			knobNode.dataset.climax = knobProgress > 0.5 ? 'falling' : 'rising';
+			knobNode.dataset.knobAfterMidpoint = currentKnobAfterMidpoint ? 'true' : 'false';
 
-			if (currentClimax !== this.state.climax && this.props.tooltip) {
+			if (currentKnobAfterMidpoint !== this.state.knobAfterMidpoint && this.props.tooltip) {
 				// This dictates tooltip's correct left/right positioning
-				this.setState({climax: currentClimax});
+				this.setState({knobAfterMidpoint: currentKnobAfterMidpoint});
 			}
 
 			this.notifyKnobMove(knobProgress, knobProgress !== proportionProgress);
@@ -472,7 +472,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					active={this.state.active}
 					aria-disabled={this.props.disabled}
 					aria-valuetext={this.state.valueText}
-					climax={this.state.climax}
+					knobAfterMidpoint={this.state.knobAfterMidpoint}
 					focused={this.state.focused}
 					inputRef={this.getInputNode}
 					onActivate={this.handleActivate}
