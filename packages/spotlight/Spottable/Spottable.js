@@ -178,7 +178,10 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 
 		componentDidUpdate (prevProps) {
 			// if the component is spotted and became disabled,
-			if (this.state.spotted && !prevProps.disabled && this.props.disabled) {
+			if (this.state.spotted && (
+				(!prevProps.disabled && this.props.disabled) ||
+				(!prevProps.spotlightDisabled && this.props.spotlightDisabled)
+			)) {
 				forward('onSpotlightDisappear', null, this.props);
 				if (lastSelectTarget === this) {
 					selectCancelled = true;
@@ -197,7 +200,10 @@ const Spottable = hoc(defaultConfig, (config, Wrapped) => {
 			}
 
 			// if the component became enabled, notify spotlight to enable restoring "lost" focus
-			if (prevProps.disabled && !this.props.disabled) {
+			if (
+				(prevProps.disabled && !this.props.disabled) ||
+				(prevProps.spotlightDisabled && !this.props.spotlightDisabled)
+			) {
 				if (!Spotlight.getCurrent() && !Spotlight.getPointerMode() && !Spotlight.isPaused()) {
 					const containers = getContainersForNode(this.node);
 					const containerId = Spotlight.getActiveContainer();
