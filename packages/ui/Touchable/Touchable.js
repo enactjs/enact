@@ -111,14 +111,14 @@ const Touchable = hoc(defaultConfig, (config, Wrapped) => {
 			this.target = target;
 
 			if (platform.touch) {
-				on('contextmenu', preventDefault, this.target);
+				on('contextmenu', preventDefault);
 				this.targetBounds = this.target.getBoundingClientRect();
 			}
 		}
 
 		clearTarget = () => {
 			if (platform.touch) {
-				off('contextmenu', preventDefault, this.target);
+				off('contextmenu', preventDefault);
 				this.targetBounds = null;
 			}
 
