@@ -1,36 +1,13 @@
 /*
- * This module loads Moonstone-specific fonts. It exports a primary function,
- * [fontGenerator]{@link moonstone/MoonstoneDecorator.fontGenerator}, utility functions
- * to help with font loading scenarios of components:
- * [onFontsLoaded]{@link moonstone/MoonstoneDecorator.fontGenerator.onFontsLoaded}.
- * The default export, `fontGenerator`, is not intended to be used directly by external developers.
+ * This module loads Moonstone specific fonts. It only includes one function,
+ * {@link moonstone/MoonstoneDecorator.fontGenerator} and is not intended to be directly
+ * included by external developers.
  */
 
 import ilib from '@enact/i18n';
 import Locale from '@enact/i18n/ilib/lib/Locale';
 
-const debugFonts = false;
-const pendingFontsLoadedCallbacks = [];
-
-let previousLocale = null,
-	fontsLoaded = false;
-
-/**
- * The supplied callback will fire after the loading process for all generated fonts is complete.
- * This does not guarantee that each font has successfully loaded; some fonts may have failed to
- * load.  If the callback is requested after the fonts have already been loaded, this will fire
- * immediately, so do not count on this to fire asynchronously.
- *
- * @param  {Function} fn Callback function to run when fonts have loaded
- * @private
- */
-const onFontsLoaded = (fn) => {
-	if (fontsLoaded) {
-		fn();
-	} else {
-		pendingFontsLoadedCallbacks.push(fn);
-	}
-};
+let previousLocale = null;
 
 /**
  * `fontGenerator` is the locale-specific font generator, allowing any locale to have its own custom
@@ -80,15 +57,12 @@ function fontGenerator (locale = ilib.getLocale()) {
 	// If the locale is the same as the last time this ran, bail out and don't bother to recompile this again.
 	if (locale === previousLocale) return;
 
-	// eslint-disable-next-line no-console
-	const dev = console;
-
 	previousLocale = locale;
 	const
 		loc = new Locale(locale),
 		language = loc.getLanguage(),
 		region = loc.getRegion(),
-		debugStyle = ' background-color: #444; padding: 0.25ex 0.5ex;',
+		styleId = 'enact-localization-font-override',
 		// Locale Configuration Block
 		fonts = {
 			'NonLatin': {
@@ -136,8 +110,8 @@ function fontGenerator (locale = ilib.getLocale()) {
 					'U+FB50-FDFF'
 			},
 			'zh-HK': {
-				regular: 'LG Display GP4_HK',
-				bold:    'LG Display GP4_HK',
+				regular: 'LG Display GP4_HK-Light',
+				bold:    'LG Display GP4_HK-Regular',
 				unicodeRange:
 					'U+0-FF,' +
 					'U+2E80-2EFF,' +
@@ -150,124 +124,90 @@ function fontGenerator (locale = ilib.getLocale()) {
 			}
 		};
 
-	const fontDefinitions = [];
-	const compiledLocalFontsList = [];
+	let styleElem = document.getElementById(styleId),
+		fontDefinitionCss = '';
 
 	// Duplications and alternate locale names
 	fonts['zh-TW'] = fonts['zh-HK'];
 
 	// Generate a single font-face rule
-	const buildFont = function ({localName, name, ...rest}) {
-		if (!name) {
-			return;
+	const buildFont = function (inOptions) {
+		if (!inOptions && !inOptions.name) {
+			return '';
 		}
-		const fontFace = new window.FontFace(name, 'local("' + localName + '")');
-		compiledLocalFontsList.push(localName);
-		if (debugFonts) dev.log('%cnew FontFace:', 'color:cyan;' + debugStyle, name, rest.weight, '"' + localName + '"');
-		for (let prop in rest) {
-			if (rest[prop] != null) fontFace[prop] = rest[prop];
+		let strOut = '@font-face { \n' +
+			'  font-family: "' + inOptions.name + '";\n' +
+			'  font-weight: ' + ( inOptions.weight || 'normal' ) + ';\n';
+
+		if (inOptions.localName) {
+			strOut += '  src: local("' + inOptions.localName + '");\n';
 		}
-		return fontFace.load();
+		if (inOptions.unicodeRange) {
+			strOut += '  unicode-range: ' + inOptions.unicodeRange + ';\n';
+		}
+		strOut += '} \n';
+		return strOut;
 	};
 
 	// Generate a collection of font-face rules, in multiple font-variants
 	const buildFontSet = function (strLang, bitDefault) {
-		const fontSet = [],
+		let strOut = '',
 			name = (bitDefault) ? '' : ' ' + strLang;
 
 		if (fonts[strLang].regular) {
 			// Build Regular
-			fontSet.push(buildFont({
+			strOut += buildFont({
 				name: 'Moonstone LG Display' + name,
 				localName: fonts[strLang].regular,
-				weight: 400,
+				weight: 500,
 				unicodeRange: fonts[strLang].unicodeRange
-			}));
+			});
 
 			// Build Bold
-			fontSet.push(buildFont({
+			strOut += buildFont({
 				name: 'Moonstone LG Display' + name,
-				localName: (fonts[strLang].bold || fonts[strLang].regular), // fallback to regular
+				localName: fonts[strLang].bold || fonts[strLang].regular,
 				weight: 700,
 				unicodeRange: fonts[strLang].unicodeRange
-			}));
+			});
 
 			// Build Light
-			fontSet.push(buildFont({
+			strOut += buildFont({
 				name: 'Moonstone LG Display' + name,
-				localName: (fonts[strLang].light || fonts[strLang].regular), // fallback to regular
+				localName: fonts[strLang].light || fonts[strLang].regular,
 				weight: 300,
 				unicodeRange: fonts[strLang].unicodeRange
-			}));
+			});
 		}
-		return fontSet;
+		return strOut;
 	};
+
+	if (!styleElem) {
+		styleElem = document.createElement('style');
+		styleElem.setAttribute('id', styleId);
+		document.head.appendChild(styleElem);
+	}
 
 	// Build all the fonts so they could be explicitly called
 	for (let lang in fonts) {
-		const fs = buildFontSet(lang);
-		fontDefinitions.push( ...fs );
-
-		// Set up the override so "Moonstone LG Display" becomes the local-specific font.
-		const [lo, re] = lang.split('-');
-		if (lo === language) {
-			if (!re || (re && re === region)) {
-				if (debugFonts) dev.log('%cOverriding Font:', 'color:yellowgreen;' + debugStyle, lang);
-				fontDefinitions.push( ...buildFontSet(lang, true) );
-			}
-		}
+		fontDefinitionCss += buildFontSet(lang);
 	}
 
-	if (debugFonts) dev.log('%cLets make some fonts:', 'color:limegreen;' + debugStyle, fontDefinitions);
-	const loadingErrors = [];
-	Promise
-		.all(fontDefinitions.map(p => p.catch(e => e)))
-		.then(results => {
-			results.forEach((loadedFontFace, i) => {
-				if (loadedFontFace.message) {
-					loadingErrors.push(i);
-				} else {
-					document.fonts.add(loadedFontFace);
-				}
-			});
-			if (debugFonts) {
-				document.fonts.forEach( function (font) {
-					dev.log('%cFont Ready:', 'color:goldenrod;' + debugStyle, font.family, font.weight);
-				});
-			}
-			fontsLoaded = true;
-			if (loadingErrors.length) {
-				dev.groupCollapsed(loadingErrors.length + ' Font(s) Failed to Load. (Not installed locally)');
-				loadingErrors.forEach(fontIndex =>
-					dev.warn('Font Failed: "' + compiledLocalFontsList[fontIndex] + '"')
-				);
-				dev.groupEnd();
-			}
-			pendingFontsLoadedCallbacks.forEach(cb => cb());
-		})
-		.catch(function (err) {
-			dev.error('%cFont Loading Error:', err);
-		});
-}
-
-/**
- * Check to see if the supplied node is assigned to use a font which has been fully loaded by the
- * browser.
- *
- * NOTE: This feature is under review as a work in progress. Use with caution as the API (inputs
- * outputs) may change in the future, as well as its capabilities.
- *
- * @param  {Node}  node The element to check
- *
- * @return {Boolean}      `true` for loaded, `false` for not loaded
- * @private
- */
-function isFontReady (node) {
-	if (node) {
-		return document.fonts.check( window.getComputedStyle(node).getPropertyValue('font') );
+	// Set up the override so "Moonstone LG Display" becomes the local-specific font.
+	if (language === 'ja') {
+		fontDefinitionCss += buildFontSet('ja', true);
+	}	else if (language === 'en' && region === 'JP') {
+		fontDefinitionCss += buildFontSet('en-JP', true);
+	}	else if (language === 'ur') {
+		fontDefinitionCss += buildFontSet('ur', true);
+	}	else if (language === 'zh' && region === 'HK') {
+		fontDefinitionCss += buildFontSet('zh-HK', true);
+	}	else if (language === 'zh' && region === 'TW') {
+		fontDefinitionCss += buildFontSet('zh-TW', true);
 	}
-	return false;
+
+	styleElem.innerHTML = fontDefinitionCss;
 }
 
 export default fontGenerator;
-export {fontGenerator, isFontReady, onFontsLoaded};
+export {fontGenerator};
