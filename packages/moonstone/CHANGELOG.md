@@ -11,21 +11,12 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonstone/VirtualGridList` to scroll by item via 5 way key
+- `moonstone/IconButton` to not use `MarqueeDecorator` and `Uppercase`.
 
 ### Fixed
 
 - `moonstone/VirtualList` not to lose focus when moving out from the first item via 5way when it has disabled items
 - `moonstone/Header` to not have its contents extend beyond its bounds
-
-## Unreleased
-
-### Added
-
-### Changed
-
-- `moonstone/IconButton` to not use `MarqueeDecorator` and `Uppercase`.
-
-### Fixed
 
 ## [1.6.1] - 2017-08-07
 
