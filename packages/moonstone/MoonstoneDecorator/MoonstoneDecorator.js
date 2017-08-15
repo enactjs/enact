@@ -12,6 +12,7 @@ import {ResolutionDecorator} from '@enact/ui/resolution';
 import {FloatingLayerDecorator} from '@enact/ui/FloatingLayer';
 import SpotlightRootDecorator from '@enact/spotlight/SpotlightRootDecorator';
 
+import ApplicationCloseDecorator from '../ApplicationCloseDecorator';
 import Skinnable from '../Skinnable';
 
 import I18nFontDecorator from './I18nFontDecorator';
@@ -26,6 +27,7 @@ import css from './MoonstoneDecorator.less';
  * @hocconfig
  */
 const defaultConfig = {
+	closeButton: false,
 	i18n: true,
 	float: true,
 	noAutoFocus: false,
@@ -41,6 +43,7 @@ const defaultConfig = {
 /**
  * {@link moonstone/MoonstoneDecorator.MoonstoneDecorator} is a Higher-order Component that applies
  * Moonstone theming to an application. It also applies
+ * [application close button]{@link moonstone/ApplicationCloseDecorator.ApplicationCloseDecorator},
  * [floating layer]{@link ui/FloatingLayer.FloatingLayerDecorator},
  * [resolution independence]{@link ui/resolution.ResolutionDecorator},
  * [custom text sizing]{@link moonstone/MoonstoneDecorator.TextSizeDecorator},
@@ -52,18 +55,28 @@ const defaultConfig = {
  * supported skins for Moonstone are "moonstone" (the default, dark skin) and "moonstone-light".
  * Use the `skin` property to assign a skin. Ex: `<DecoratedApp skin="light" />`
  *
+ * Note: [Application close button]{@link moonstone/ApplicationCloseDecorator.ApplicationCloseDecorator}
+ * by default is not applied. This will change in 2.0. Refer to following example for how to apply.
+ * ```
+ * const App = () => (<Panels />);
+ * const DecoratedApp = MoonstoneDecorator({closeButton: true}, App);
+ *
+ * <DecoratedApp onApplicationClose={handleClose} />
+ * ````
+ *
  * @class MoonstoneDecorator
  * @memberof moonstone/MoonstoneDecorator
  * @hoc
  * @public
  */
 const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {ri, i18n, spotlight, float, noAutoFocus, overlay, textSize, skin} = config;
+	const {closeButton, ri, i18n, spotlight, float, noAutoFocus, overlay, textSize, skin} = config;
 
 	// Apply classes depending on screen type (overlay / fullscreen)
 	const bgClassName = 'enact-fit' + (overlay ? '' : ` ${css.bg}`);
 
 	let App = Wrapped;
+	if (closeButton) App = ApplicationCloseDecorator(App);
 	if (float) App = FloatingLayerDecorator({wrappedClassName: bgClassName}, App);
 	if (ri) App = ResolutionDecorator(ri, App);
 	if (i18n) {

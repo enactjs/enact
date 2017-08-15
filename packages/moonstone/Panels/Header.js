@@ -5,6 +5,7 @@ import Uppercase from '@enact/i18n/Uppercase';
 import {isRtlText} from '@enact/i18n/util';
 import Slottable from '@enact/ui/Slottable';
 
+import {contextTypes} from '../ApplicationCloseDecorator';
 import {MarqueeDecorator, MarqueeText} from '../Marquee';
 import Skinnable from '../Skinnable';
 
@@ -118,6 +119,8 @@ const HeaderBase = kind({
 		type: PropTypes.oneOf(['compact', 'standard'])
 	},
 
+	contextTypes,
+
 	defaultProps: {
 		casing: 'upper',
 		fullBleed: false,
@@ -133,7 +136,7 @@ const HeaderBase = kind({
 	},
 
 	computed: {
-		className: ({fullBleed, type, styler}) => styler.append({fullBleed}, type),
+		className: ({fullBleed, type, styler}, {hasCloseButton}) => styler.append({fullBleed}, type, {hasCloseButton}),
 		direction: ({title, titleBelow}) => isRtlText(title) || isRtlText(titleBelow) ? 'rtl' : 'ltr',
 		titleBelowComponent: ({marqueeOn, titleBelow, type}) => {
 			switch (type) {
