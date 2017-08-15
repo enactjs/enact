@@ -1,3 +1,4 @@
+/* global global */
 /*
  * This module loads Moonstone specific fonts. It only includes one function,
  * {@link moonstone/MoonstoneDecorator.fontGenerator} and is not intended to be directly
@@ -51,9 +52,6 @@ let previousLocale = null;
  * @private
  */
 function fontGenerator (locale = ilib.getLocale()) {
-	// If document object is unavailable, bail out.
-	if (typeof document === 'undefined') return;
-
 	// If the locale is the same as the last time this ran, bail out and don't bother to recompile this again.
 	if (locale === previousLocale) return;
 
@@ -110,8 +108,8 @@ function fontGenerator (locale = ilib.getLocale()) {
 					'U+FB50-FDFF'
 			},
 			'zh-HK': {
-				regular: 'LG Display GP4_HK-Light',
-				bold:    'LG Display GP4_HK-Regular',
+				regular: 'LG Display GP4_HK',
+				bold:    'LG Display GP4_HK',
 				unicodeRange:
 					'U+0-FF,' +
 					'U+2E80-2EFF,' +
@@ -124,8 +122,7 @@ function fontGenerator (locale = ilib.getLocale()) {
 			}
 		};
 
-	let styleElem = document.getElementById(styleId),
-		fontDefinitionCss = '';
+	let fontDefinitionCss = '';
 
 	// Duplications and alternate locale names
 	fonts['zh-TW'] = fonts['zh-HK'];
@@ -182,12 +179,6 @@ function fontGenerator (locale = ilib.getLocale()) {
 		return strOut;
 	};
 
-	if (!styleElem) {
-		styleElem = document.createElement('style');
-		styleElem.setAttribute('id', styleId);
-		document.head.appendChild(styleElem);
-	}
-
 	// Build all the fonts so they could be explicitly called
 	for (let lang in fonts) {
 		fontDefinitionCss += buildFontSet(lang);
@@ -206,7 +197,21 @@ function fontGenerator (locale = ilib.getLocale()) {
 		fontDefinitionCss += buildFontSet('zh-TW', true);
 	}
 
-	styleElem.innerHTML = fontDefinitionCss;
+	if (typeof document === 'undefined') {
+		// Normal execution in a browser window
+		let styleElem = document.getElementById(styleId);
+
+		if (!styleElem) {
+			styleElem = document.createElement('style');
+			styleElem.setAttribute('id', styleId);
+			document.head.appendChild(styleElem);
+		}
+
+		styleElem.innerHTML = fontDefinitionCss;
+	} else if (global && global.hooks && global.hooks.prerender) {
+		// We're rendering without the DOM
+		global.hooks.prerender(`<style id="${styleId}>${fontDefinitionCss}</style>`);
+	}
 }
 
 export default fontGenerator;
