@@ -1469,7 +1469,7 @@ const VideoPlayerBase = class extends React.Component {
 
 				this.announce(`${$L('jump to')} ${knobTime}`);
 
-				if (this.sliderScrubbing & !this.state.sliderScrubbing) {
+				if (!this.state.sliderScrubbing) {
 					this.setState({sliderScrubbing: this.sliderScrubbing});
 					this.autoStopScrubbingJob.startAfter(1000);
 				}
