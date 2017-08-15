@@ -200,13 +200,14 @@ function fontGenerator (locale = ilib.getLocale()) {
 		if (!styleElem) {
 			styleElem = document.createElement('style');
 			styleElem.setAttribute('id', styleId);
+			styleElem.setAttribute('type', 'text/css');
 			document.head.appendChild(styleElem);
 		}
 
 		styleElem.innerHTML = fontDefinitionCss;
 	} else if (global && global.enactHooks && global.enactHooks.prerender) {
 		// We're rendering without the DOM
-		global.enactHooks.prerender({appendToHead: `<style id="${styleId}>${fontDefinitionCss}</style>`});
+		global.enactHooks.prerender({appendToHead: `<style type="text/css" id="${styleId}>${fontDefinitionCss}</style>`});
 	}
 }
 
