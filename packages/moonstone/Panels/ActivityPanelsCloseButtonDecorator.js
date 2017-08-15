@@ -51,7 +51,7 @@ const ActivityPanelsCloseButtonDecorator = hoc((config, Wrapped) => {
 		}
 
 		componentWillUnmount () {
-			this.closeButton.className = this.closeButton.className.replace(css.activityPanelsCloseButton, '');
+			this.closeButton.classList.remove(css.activityPanelsCloseButton);
 			this.closeButton = null;
 		}
 
@@ -59,10 +59,10 @@ const ActivityPanelsCloseButtonDecorator = hoc((config, Wrapped) => {
 			if (this.closeButton) {
 				if (index > 0) {
 					if (this.closeButton.className.indexOf(css.activityPanelsCloseButton) < 0) {
-						this.closeButton.className = this.closeButton.className.concat(' ' + css.activityPanelsCloseButton);
+						this.closeButton.classList.add(css.activityPanelsCloseButton);
 					}
 				} else {
-					this.closeButton.className = this.closeButton.className.replace(css.activityPanelsCloseButton, '');
+					this.closeButton.classList.remove(css.activityPanelsCloseButton);
 				}
 			}
 		}
