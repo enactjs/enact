@@ -207,7 +207,7 @@ function fontGenerator (locale = ilib.getLocale()) {
 		styleElem.innerHTML = fontDefinitionCss;
 	} else if (global && global.enactHooks && global.enactHooks.prerender) {
 		// We're rendering without the DOM
-		global.enactHooks.prerender({appendToHead: `<style type="text/css" id="${styleId}>${fontDefinitionCss}</style>`});
+		global.enactHooks.prerender({appendToHead: `<style type="text/css" id="${styleId}">${fontDefinitionCss}</style>`});
 	}
 }
 
