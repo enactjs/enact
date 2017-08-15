@@ -104,7 +104,15 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 			 * @default false
 			 * @public
 			 */
-			small: PropTypes.bool
+			small: PropTypes.bool,
+
+			/**
+			 * An optional node to receive the tooltip from `TooltipDecorator`.
+			 *
+			 * @type {Node}
+			 * @private
+			 */
+			tooltipNode: PropTypes.node
 		},
 
 		defaultProps: {
@@ -120,10 +128,11 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 			className: ({color, small, styler}) => styler.append({small}, color)
 		},
 
-		render: ({children, small, ...rest}) => {
+		render: ({children, small, tooltipNode, ...rest}) => {
 			return (
 				<Button {...rest} small={small} minWidth={false}>
 					<OptimizedIcon small={small} className={css.icon}>{children}</OptimizedIcon>
+					{tooltipNode}
 				</Button>
 			);
 		}
@@ -138,6 +147,7 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
  *
  * @class IconButtonBase
  * @memberof moonstone/IconButton
+ * @extends moonstone/Button.ButtonBase
  * @ui
  * @public
  */
@@ -152,14 +162,12 @@ const IconButtonBase = IconButtonBaseFactory();
  * @factory
  * @public
  */
-const IconButtonFactory = factory((css)  => {
-	const Base = IconButtonBaseFactory(css);
-
-	return TooltipDecorator(
+const IconButtonFactory = factory(({css}) => {
+	return TooltipDecorator({tooltipDestinationProp: 'tooltipNode'},
 		Pressable(
 			Spottable(
 				Skinnable(
-					Base
+					IconButtonBaseFactory({css})
 				)
 			)
 		)
@@ -182,9 +190,9 @@ const IconButtonFactory = factory((css)  => {
  * @class IconButton
  * @memberof moonstone/IconButton
  * @extends moonstone/IconButton.IconButtonBase
- * @mixes moonstone/tooltipdecorator.tooltipdecorator
- * @mixes ui/pressable.pressable
- * @mixes spotlight/spottable.spottable
+ * @mixes moonstone/TooltipDecorator.TooltipDecorator
+ * @mixes ui/Pressable.Pressable
+ * @mixes spotlight/Spottable.Spottable
  * @ui
  * @public
  */

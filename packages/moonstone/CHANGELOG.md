@@ -8,10 +8,12 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/TooltipDecorator` config property to direct tooltip into a property instead of adding to `children`
+
 ### Changed
 
 - `moonstone/VirtualGridList` to scroll by item via 5 way key
-- `moonstone/IconButton` to not use `MarqueeDecorator` and `Uppercase`.
+- `moonstone/IconButton` to not use `MarqueeDecorator` and `Uppercase`
 
 ### Fixed
 
