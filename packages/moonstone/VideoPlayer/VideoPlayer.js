@@ -526,6 +526,16 @@ const VideoPlayerBase = class extends React.Component {
 		source: PropTypes.node,
 
 		/**
+		* The amount of time in milliseconds that should pass before the tooltip thumbnail fades from
+		* translucent to opaque.
+		*
+		* @type {Number}
+		* @default 1000
+		* @public
+		*/
+		thumbnailFadeDelay: PropTypes.number,
+
+		/**
 		 * Set a thumbnail image source to show on VideoPlayer's Slider knob. This is a standard
 		 * {@link moonstone/Image} component so it supports all of the same options for the `src`
 		 * property. If no `thumbnailSrc` is set, no tooltip will display.
@@ -590,6 +600,7 @@ const VideoPlayerBase = class extends React.Component {
 			slowRewind: ['-1/2', '-1']
 		},
 		playIcon: 'play',
+		thumbnailFadeDelay: 1000,
 		titleHideDelay: 5000,
 		tooltipHideDelay: 3000
 	}
@@ -1471,7 +1482,7 @@ const VideoPlayerBase = class extends React.Component {
 
 				if (!this.state.sliderScrubbing) {
 					this.setState({sliderScrubbing: this.sliderScrubbing});
-					this.autoStopScrubbingJob.startAfter(1000);
+					this.autoStopScrubbingJob.startAfter(this.props.thumbnailFadeDelay);
 				}
 			}
 		}
