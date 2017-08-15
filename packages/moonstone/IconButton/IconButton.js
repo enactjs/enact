@@ -1,7 +1,11 @@
 /**
- * Exports the {@link moonstone/IconButton.IconButton} component.
+ * An {@link moonstone/Icon.Icon} that acts like a button.
  *
  * @module moonstone/IconButton
+ * @exports IconButton
+ * @exports IconButtonBase
+ * @exports IconButtonBaseFactory
+ * @exports IconButtonFactory
  */
 
 import factory from '@enact/core/factory';
@@ -21,36 +25,9 @@ import componentCss from './IconButton.less';
 
 const OptimizedIcon = onlyUpdateForKeys(['small', 'children'])(Icon);
 
-const IconButtonFactory = factory((css)  => {
-	const Base = ButtonBaseFactory(css);
-	/**
-	 * {@link moonstone/IconButton.IconButton} is a Button with Moonstone
-	 * styling, Spottable and Pressable applied. This Button does not have
-	 * Marquee or Uppercase like Button, because it should not contain text.
-	 *
-	 * @class IconButton
-	 * @memberof moonstone/IconButton
-	 * @mixes moonstone/TooltipDecorator.TooltipDecorator
-	 * @mixes ui/Pressable.Pressable
-	 * @mixes spotlight/Spottable.Spottable
-	 * @ui
-	 * @public
-	 */
-	return TooltipDecorator(
-		Pressable(
-			Spottable(
-				Skinnable(
-					Base
-				)
-			)
-		)
-	);
-});
-
 /**
- * {@link moonstone/IconButton.IconButtonFactory} is Factory wrapper around
- * {@link moonstone/IconButton.IconButton} that allows overriding certain classes of the base
- * `Button` component at design time. See {@link moonstone/Button.ButtonBaseFactory}.
+ * A Factory wrapper around {@link moonstone/IconButton.IconButtonBase} that allows overriding
+ * certain classes of the base `IconButton` component at design time.
  *
  * @class IconButtonFactory
  * @memberof moonstone/IconButton
@@ -58,28 +35,11 @@ const IconButtonFactory = factory((css)  => {
  * @public
  */
 const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
-	const Button = IconButtonFactory({css});
-	/**
-	 * {@link moonstone/IconButton.IconButton} is a {@link moonstone/Icon.Icon} that acts like a button.
-	 * You may specify an image or a font-based icon by setting the children to either the path to the
-	 * image or a string from the [IconList]{@link moonstone/Icon.IconList}.
-	 *
-	 * Usage:
-	 * ```
-	 * <IconButton onClick={handleClick} small>
-	 *     plus
-	 * </IconButton>
-	 * ```
-	 *
-	 * @class IconButton
-	 * @memberof moonstone/IconButton
-	 * @ui
-	 * @public
-	 */
+	const Button = ButtonBaseFactory({css});
 	return kind({
 		name: 'IconButton',
 
-		propTypes: /** @lends moonstone/IconButton.IconButton.prototype */ {
+		propTypes: /** @lends moonstone/IconButton.IconButtonBase.prototype */ {
 			/**
 			 * The background-color opacity of this icon button; valid values are `'opaque'`,
 			 * `'translucent'`, and `'transparent'`.
@@ -170,12 +130,70 @@ const IconButtonBaseFactory = factory({css: componentCss}, ({css}) => {
 	});
 });
 
+/**
+ * An {@link moonstone/Icon.Icon} that acts like a button.  You may specify an image or a font-based
+ * icon by setting the children to either the path to the image or a string from the
+ * [IconList]{@link moonstone/Icon.IconList}. Note: Unlike many `Base` versions, `IconButtonBase`
+ * includes a Higher-order Component to optimize icon rendering.
+ *
+ * @class IconButtonBase
+ * @memberof moonstone/IconButton
+ * @ui
+ * @public
+ */
 const IconButtonBase = IconButtonBaseFactory();
+
+/**
+ * A Factory wrapper around {@link moonstone/IconButton.IconButton} that allows overriding certain
+ * classes of the `IconButton` component at design time.
+ *
+ * @class IconButtonFactory
+ * @memberof moonstone/IconButton
+ * @factory
+ * @public
+ */
+const IconButtonFactory = factory((css)  => {
+	const Base = IconButtonBaseFactory(css);
+
+	return TooltipDecorator(
+		Pressable(
+			Spottable(
+				Skinnable(
+					Base
+				)
+			)
+		)
+	);
+});
+
+/**
+ * An {@link moonstone/Icon.Icon} that acts like a button.  You may specify an image or a font-based
+ * icon by setting the children to either the path to the image or a string from the
+ * [IconList]{@link moonstone/Icon.IconList}. `IconButton` does not have `Marquee` or `Uppercase`
+ * like `Button` has, as it should not contain text.
+ *
+ * Usage:
+ * ```
+ * <IconButton onClick={handleClick} small>
+ *     plus
+ * </IconButton>
+ * ```
+ *
+ * @class IconButton
+ * @memberof moonstone/IconButton
+ * @extends moonstone/IconButton.IconButtonBase
+ * @mixes moonstone/tooltipdecorator.tooltipdecorator
+ * @mixes ui/pressable.pressable
+ * @mixes spotlight/spottable.spottable
+ * @ui
+ * @public
+ */
+const IconButton = IconButtonBaseFactory();
 
 export default IconButtonBase;
 export {
-	IconButtonBase as IconButton,
+	IconButton,
 	IconButtonBase,
-	IconButtonBaseFactory as IconButtonFactory,
+	IconButtonFactory,
 	IconButtonBaseFactory
 };
