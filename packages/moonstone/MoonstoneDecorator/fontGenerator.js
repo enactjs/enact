@@ -133,14 +133,14 @@ function fontGenerator (locale = ilib.getLocale()) {
 			return '';
 		}
 		let strOut = '@font-face { \n' +
-			'  font-family: "' + inOptions.name + '";\n' +
-			'  font-weight: ' + ( inOptions.weight || 'normal' ) + ';\n';
+			`  font-family: "${inOptions.name}";\n` +
+			`  font-weight: ${inOptions.weight || 'normal'};\n`;
 
 		if (inOptions.localName) {
-			strOut += '  src: local("' + inOptions.localName + '");\n';
+			strOut += `  src: local("${inOptions.localName}");\n`;
 		}
 		if (inOptions.unicodeRange) {
-			strOut += '  unicode-range: ' + inOptions.unicodeRange + ';\n';
+			strOut += `  unicode-range: ${inOptions.unicodeRange};\n`;
 		}
 		strOut += '} \n';
 		return strOut;
@@ -156,14 +156,14 @@ function fontGenerator (locale = ilib.getLocale()) {
 			strOut += buildFont({
 				name: 'Moonstone LG Display' + name,
 				localName: fonts[strLang].regular,
-				weight: 500,
+				weight: 400,
 				unicodeRange: fonts[strLang].unicodeRange
 			});
 
 			// Build Bold
 			strOut += buildFont({
 				name: 'Moonstone LG Display' + name,
-				localName: fonts[strLang].bold || fonts[strLang].regular,
+				localName: (fonts[strLang].bold || fonts[strLang].regular), // fallback to regular
 				weight: 700,
 				unicodeRange: fonts[strLang].unicodeRange
 			});
@@ -171,7 +171,7 @@ function fontGenerator (locale = ilib.getLocale()) {
 			// Build Light
 			strOut += buildFont({
 				name: 'Moonstone LG Display' + name,
-				localName: fonts[strLang].light || fonts[strLang].regular,
+				localName: (fonts[strLang].light || fonts[strLang].regular), // fallback to regular
 				weight: 300,
 				unicodeRange: fonts[strLang].unicodeRange
 			});
@@ -182,22 +182,18 @@ function fontGenerator (locale = ilib.getLocale()) {
 	// Build all the fonts so they could be explicitly called
 	for (let lang in fonts) {
 		fontDefinitionCss += buildFontSet(lang);
+
+		// Set up the override so "Moonstone LG Display" becomes the local-specific font.
+		// la = language, re = region; `la-RE`
+		const [la, re] = lang.split('-');
+		if (la === language) {
+			if (!re || (re && re === region)) {
+				fontDefinitionCss += buildFontSet(lang, true);
+			}
+		}
 	}
 
-	// Set up the override so "Moonstone LG Display" becomes the local-specific font.
-	if (language === 'ja') {
-		fontDefinitionCss += buildFontSet('ja', true);
-	}	else if (language === 'en' && region === 'JP') {
-		fontDefinitionCss += buildFontSet('en-JP', true);
-	}	else if (language === 'ur') {
-		fontDefinitionCss += buildFontSet('ur', true);
-	}	else if (language === 'zh' && region === 'HK') {
-		fontDefinitionCss += buildFontSet('zh-HK', true);
-	}	else if (language === 'zh' && region === 'TW') {
-		fontDefinitionCss += buildFontSet('zh-TW', true);
-	}
-
-	if (typeof document === 'undefined') {
+	if (typeof document !== 'undefined') {
 		// Normal execution in a browser window
 		let styleElem = document.getElementById(styleId);
 
@@ -208,9 +204,9 @@ function fontGenerator (locale = ilib.getLocale()) {
 		}
 
 		styleElem.innerHTML = fontDefinitionCss;
-	} else if (global && global.hooks && global.hooks.prerender) {
+	} else if (global && global.enactHooks && global.enactHooks.prerender) {
 		// We're rendering without the DOM
-		global.hooks.prerender(`<style id="${styleId}>${fontDefinitionCss}</style>`);
+		global.enactHooks.prerender({appendToHead: `<style id="${styleId}>${fontDefinitionCss}</style>`});
 	}
 }
 
