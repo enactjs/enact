@@ -225,6 +225,10 @@ function getTargetInContainerByDirectionFromElement (direction, containerId, ele
 		return previous;
 	}
 
+	if (element.dataset.spotlightOverflow === 'ignore') {
+		boundingRect = getOverflowContainerRect(containerId) || boundingRect;
+	}
+
 	let elementRects = filterRects(getRects(elements), boundingRect);
 
 	let next = null;
