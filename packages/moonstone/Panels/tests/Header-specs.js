@@ -2,6 +2,7 @@ import React from 'react';
 import {mount} from 'enzyme';
 import Header from '../Header';
 import css from '../Header.less';
+import ApplicationCloseDecorator from '../../ApplicationCloseDecorator';
 
 describe('Header Specs', () => {
 
@@ -31,4 +32,22 @@ describe('Header Specs', () => {
 		expect(actual).to.equal(expected);
 	});
 
+	describe('when wrapped in ApplicationCloseDecorator', () => {
+		const Wrapper = ApplicationCloseDecorator('div');
+
+		it('should have hasCloseButton class applied', function () {
+			const header = mount(
+				<Wrapper>
+					<Header>
+						<title>Header</title>
+					</Header>
+				</Wrapper>
+			);
+
+			const expected = true;
+			const actual = header.find('header').hasClass(css.hasCloseButton);
+
+			expect(actual).to.equal(expected);
+		});
+	});
 });

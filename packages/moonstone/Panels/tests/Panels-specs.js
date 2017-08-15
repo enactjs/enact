@@ -44,6 +44,7 @@ describe('Panels Specs', () => {
 		expect(expected).to.equal(actual);
 	});
 
+	// TODO: remove following tests in 2.0.0
 	describe('computed', () => {
 		describe('childProps', () => {
 			it('should not add aria-owns when noCloseButton is true', () => {
@@ -115,6 +116,44 @@ describe('Panels Specs', () => {
 
 				const expected = `${ariaOwns} ${id}_close`;
 				const actual = PanelsBase.computed.childProps(props, context)['aria-owns'];
+
+				expect(actual).to.equal(expected);
+			});
+		});
+
+		describe('when hasCloseButton is true', () => {
+			it('should not add aria-owns', () => {
+				const id = 'id';
+				const childProps = {};
+				const props = {
+					childProps,
+					noCloseButton: false,
+					id
+				};
+				const context = {
+					hasCloseButton: true
+				};
+
+				const expected = void 0;
+				const actual = PanelsBase.computed.childProps(props, context)['aria-owns'];
+
+				expect(actual).to.equal(expected);
+			});
+
+			it('should not render applicationCloseButton', () => {
+				const id = 'id';
+				const childProps = {};
+				const props = {
+					childProps,
+					noCloseButton: false,
+					id
+				};
+				const context = {
+					hasCloseButton: true
+				};
+
+				const expected = void 0;
+				const actual = PanelsBase.computed.childProps(props, context).applicationCloseButton;
 
 				expect(actual).to.equal(expected);
 			});
