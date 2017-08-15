@@ -1087,6 +1087,7 @@ const ScrollableHoC = hoc({configureSpotlight: false}, (config, Wrapped) => {
 
 			delete props.cbScrollTo;
 			delete props.className;
+			delete props['data-container-id'];
 			delete props.focusableScrollbar;
 			delete props.horizontalScrollbar;
 			delete props.onScroll;
@@ -1094,7 +1095,6 @@ const ScrollableHoC = hoc({configureSpotlight: false}, (config, Wrapped) => {
 			delete props.onScrollStop;
 			delete props.style;
 			delete props.verticalScrollbar;
-			delete props['data-container-id'];
 
 			if (configureSpotlight) {
 				props.containerId = containerId;
@@ -1124,7 +1124,10 @@ const ScrollableHoC = hoc({configureSpotlight: false}, (config, Wrapped) => {
 	}
 
 	return SpotlightContainerDecorator(
-		{overflow: true},
+		{
+			overflow: true,
+			restrict: 'self-first'
+		},
 		Scrollable
 	);
 });

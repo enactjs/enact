@@ -50,8 +50,7 @@ const configureSpotlight = (containerId, instance) => {
 			return all.reduce((focused, node) => {
 				return focused || node.dataset.index === key && node;
 			}, null);
-		},
-		restrict: 'self-first'
+		}
 	});
 };
 
@@ -377,7 +376,7 @@ class VirtualListCore extends Component {
 			// that includes lastFocusedIndex, clear the indicator
 			this.restoreLastFocused = false;
 
-			const containerId = this.containerRef.closest('[data-container-id]').dataset.containerId;
+			const {containerId} = this.props;
 
 			// try to focus the last focused item
 			const foundLastFocused = Spotlight.focus(
