@@ -204,6 +204,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			this.current5WayValue = null;
 			this.knobPosition = null;
 			this.normalizeBounds(props);
+			this.detachedKnobPosition = 0;
 
 			const
 				value = this.clamp(props.value),
@@ -297,7 +298,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		updateUI = () => {
 			// intentionally breaking encapsulation to avoid having to specify multiple refs
 			const {barNode, knobNode, loaderNode, node} = this.sliderBarNode;
-			const {backgroundProgress, vertical} = this.props;
+			const {backgroundProgress, detachedKnob, vertical} = this.props;
 			const {value} = this.state;
 			const proportionProgress = computeProportionProgress({value, max: this.normalizedMax, min: this.normalizedMin});
 			const knobProgress = this.knobPosition != null ? this.knobPosition : proportionProgress;
@@ -318,7 +319,10 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.setState({knobAfterMidpoint: currentKnobAfterMidpoint});
 			}
 
-			this.notifyKnobMove(knobProgress, knobProgress !== proportionProgress);
+			if (detachedKnob && knobProgress !== this.detachedKnobPosition) {
+				this.notifyKnobMove(knobProgress, knobProgress !== proportionProgress);
+				this.detachedKnobPosition = knobProgress;
+			}
 		}
 
 		getInputNode = (node) => {

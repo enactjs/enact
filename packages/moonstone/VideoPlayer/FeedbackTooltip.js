@@ -57,6 +57,14 @@ const FeedbackTooltipBase = kind({
 		playbackState: PropTypes.oneOf(Object.keys(states)),
 
 		/**
+		 * `true` if Slider knob is scrubbing.
+		 *
+		 * @type {Boolean}
+		 * @public
+		 */
+		scrubbing: PropTypes.bool,
+
+		/**
 		 * Set a thumbnail image source to show on VideoPlayer's Slider knob. This is a standard
 		 * {@link moonstone/Image} component so it supports all of the same options for the `src`
 		 * property. If no `thumbnailSrc` is set, no tooltip will display.
@@ -81,6 +89,7 @@ const FeedbackTooltipBase = kind({
 
 	defaultProps: {
 		noFeedback: false,
+		scrubbing: false,
 		visible: true
 	},
 
@@ -90,13 +99,15 @@ const FeedbackTooltipBase = kind({
 	},
 
 	computed: {
-		className: ({playbackState: s, styler, visible}) => styler.append({
-			hidden: !visible && states[s] && states[s].allowHide
+		className: ({playbackState: s, scrubbing, styler, visible}) => styler.append({
+			hidden: !visible && states[s] && states[s].allowHide,
+			scrubbing
 		})
 	},
 
 	render: ({children, noFeedback, playbackState, playbackRate, thumbnailSrc, ...rest}) => {
 		delete rest.visible;
+		delete rest.scrubbing;
 		return (
 			<div {...rest}>
 				{thumbnailSrc ? <div className={css.thumbnail} style={!noFeedback ? {display: 'none'} : null}>
@@ -117,7 +128,7 @@ const FeedbackTooltipBase = kind({
 });
 
 const FeedbackTooltip = onlyUpdateForKeys(
-	['children', 'noFeedback', 'playbackState', 'playbackRate', 'thumbnailSrc', 'visible']
+	['children', 'noFeedback', 'playbackState', 'playbackRate', 'scrubbing', 'thumbnailSrc', 'visible']
 )(
 	Skinnable(
 		FeedbackTooltipBase

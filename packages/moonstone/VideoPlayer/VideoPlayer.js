@@ -1444,6 +1444,14 @@ const VideoPlayerBase = class extends React.Component {
 
 	sliderTooltipTimeJob = new Job((time) => this.setState({sliderTooltipTime: time}), 20)
 
+	stopScrubbing = () => {
+		if (this.state.sliderScrubbing) {
+			this.setState({sliderScrubbing: false});
+		}
+	}
+
+	autoStopScrubbingJob = new Job(this.stopScrubbing)
+
 	handleKnobMove = (ev) => {
 		this.sliderScrubbing = ev.detached;
 
@@ -1460,6 +1468,11 @@ const VideoPlayerBase = class extends React.Component {
 				forward('onScrub', {...ev, seconds}, this.props);
 
 				this.announce(`${$L('jump to')} ${knobTime}`);
+
+				if (this.sliderScrubbing & !this.state.sliderScrubbing) {
+					this.setState({sliderScrubbing: this.sliderScrubbing});
+					this.autoStopScrubbingJob.startAfter(1000);
+				}
 			}
 		}
 	}
@@ -1674,6 +1687,7 @@ const VideoPlayerBase = class extends React.Component {
 									noFeedback={this.state.mouseOver}
 									playbackState={this.prevCommand}
 									playbackRate={this.selectPlaybackRate(this.speedIndex)}
+									scrubbing={this.state.sliderScrubbing}
 									thumbnailSrc={thumbnailSrc}
 									visible={this.state.feedbackVisible}
 								>

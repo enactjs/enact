@@ -8,6 +8,8 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/VideoPlayer` tooltip-thumbnail that becomes semi-transparent when scrubbing slider
+
 ### Changed
 
 - `moonstone/VirtualGridList` to scroll by item via 5 way key

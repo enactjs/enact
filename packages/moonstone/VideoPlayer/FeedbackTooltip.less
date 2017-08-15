@@ -23,9 +23,16 @@
 		border-style: solid;
 		border-radius: @moon-video-slider-tooltip-thumbnail-border-radius;
 		overflow: hidden;
+		transition: opacity 250ms;
 
 		.image {
 			margin: 0;
+		}
+	}
+
+	&.scrubbing {
+		.thumbnail {
+			opacity: .5;
 		}
 	}
 
