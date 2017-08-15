@@ -391,10 +391,10 @@ const TooltipDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			let internalTooltip;
 
-			if (tooltipDestinationProp !== 'children') {
-				rest[tooltipDestinationProp] = renderedTooltip;
-			} else {
+			if (tooltipDestinationProp === 'children') {
 				internalTooltip = [children, renderedTooltip];
+			} else {
+				rest[tooltipDestinationProp] = renderedTooltip;
 			}
 
 			return (

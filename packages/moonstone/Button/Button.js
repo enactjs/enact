@@ -258,7 +258,7 @@ const ButtonFactory = factory(css => {
 		)
 	);
 
-	MoonstoneButton.propTypes = {
+	MoonstoneButton.propTypes = /** @lends moonstone/Button.Button.prototype */ {
 		/**
 		 * Transformation to apply to the text of the Button. By default, text is transformed
 		 * to uppercase.
