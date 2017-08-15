@@ -75,17 +75,6 @@ const ButtonBaseFactory = factory({css: componentCss}, ({css}) =>
 			backgroundOpacity: PropTypes.oneOf(['opaque', 'translucent', 'transparent']),
 
 			/**
-			 * Transformation to apply to the text of the Button. By default, text is transformed
-			 * to uppercase.
-			 *
-			 * @see i18n/Uppercase#casing
-			 * @type {String}
-			 * @default 'upper'
-			 * @public
-			 */
-			casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence']),
-
-			/**
 			 * This property accepts one of the following color names, which correspond with the
 			 * colored buttons on a standard remote control: `'red'`, `'green'`, `'yellow'`, `'blue'`
 			 *
@@ -254,7 +243,7 @@ const ButtonFactory = factory(css => {
 	 * @ui
 	 * @public
 	 */
-	return Uppercase(
+	const MoonstoneButton = Uppercase(
 		TooltipDecorator(
 			MarqueeDecorator(
 				{className: componentCss.marquee},
@@ -268,6 +257,25 @@ const ButtonFactory = factory(css => {
 			)
 		)
 	);
+
+	MoonstoneButton.propTypes = {
+		/**
+		 * Transformation to apply to the text of the Button. By default, text is transformed
+		 * to uppercase.
+		 *
+		 * @see i18n/Uppercase#casing
+		 * @type {String}
+		 * @default 'upper'
+		 * @public
+		 */
+		casing: PropTypes.oneOf(['upper', 'preserve', 'word', 'sentence'])
+	};
+
+	MoonstoneButton.defaultProps = {
+		casing: 'upper'
+	};
+
+	return MoonstoneButton;
 });
 
 const ButtonBase = ButtonBaseFactory();

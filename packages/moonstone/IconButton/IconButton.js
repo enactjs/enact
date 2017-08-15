@@ -188,9 +188,9 @@ const IconButtonFactory = factory((css)  => {
  * @ui
  * @public
  */
-const IconButton = IconButtonBaseFactory();
+const IconButton = IconButtonFactory();
 
-export default IconButtonBase;
+export default IconButton;
 export {
 	IconButton,
 	IconButtonBase,
