@@ -1698,7 +1698,7 @@ const VideoPlayerBase = class extends React.Component {
 									noFeedback={this.state.mouseOver}
 									playbackState={this.prevCommand}
 									playbackRate={this.selectPlaybackRate(this.speedIndex)}
-									scrubbing={this.state.thumbnailDeactivated}
+									thumbnailDeactivated={this.state.thumbnailDeactivated}
 									thumbnailSrc={thumbnailSrc}
 									visible={this.state.feedbackVisible}
 								>
