@@ -365,10 +365,9 @@ class VirtualListCore extends Component {
 
 	getItemPosition = (index, stickTo = 'start') => {
 		const
-			{itemSize} = this.props,
 			{primary} = this,
 			position = this.getGridPosition(index),
-			offset = ((itemSize instanceof Object) || stickTo === 'start') ? 0 : primary.clientSize - primary.itemSize;
+			offset = (stickTo === 'start') ? 0 : primary.clientSize - primary.itemSize;
 
 		position.primaryPosition -= offset;
 
@@ -779,37 +778,25 @@ class VirtualListCore extends Component {
 	getIndicesForPageScroll = (direction, currentIndex) => {
 		const
 			{context, dimensionToExtent, isPrimaryDirectionVertical, primary} = this,
-			{dataSize} = this.props,
-			indices = {};
+			{dataSize, spacing} = this.props;
 
-		let	offsetIndex = Math.floor(primary.clientSize / primary.gridSize) * dimensionToExtent;
+		let	offsetIndex = Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent;
 		offsetIndex *= !isPrimaryDirectionVertical && context.rtl ? -1 : 1;
+		offsetIndex *= (direction === 'down' || direction === 'right') ? 1 : -1;
 
-		if (direction === 'down' || direction === 'right') {
-			indices.indexToFocus = clamp(0, dataSize - 1, currentIndex + offsetIndex);
-			indices.indexToScroll = currentIndex + dimensionToExtent;
-			if (context.rtl && !isPrimaryDirectionVertical) {
-				indices.indexToScroll = indices.indexToFocus;
-			}
-		} else {
-			indices.indexToFocus = clamp(0, dataSize - 1, currentIndex - offsetIndex);
-			indices.indexToScroll = indices.indexToFocus;
-			if (context.rtl && !isPrimaryDirectionVertical) {
-				indices.indexToScroll = currentIndex + dimensionToExtent;
-			}
-		}
-
-		return indices;
+		return clamp(0, dataSize - 1, currentIndex + offsetIndex);
 	}
 
 	scrollToNextPage = ({direction, focusedItem}) => {
 		const
+			isRtl = this.context.rtl,
+			isForward = (direction === 'down' || isRtl && direction === 'left' || !isRtl && direction === 'right'),
 			focusedIndex = Number.parseInt(focusedItem.getAttribute(dataIndexAttribute)),
-			{indexToFocus, indexToScroll} = this.getIndicesForPageScroll(direction, focusedIndex);
+			indexToFocus = this.getIndicesForPageScroll(direction, focusedIndex);
 
 		if (focusedIndex !== indexToFocus) {
 			focusedItem.blur();
-			this.props.cbScrollTo({index: indexToScroll, animate: false});
+			this.props.cbScrollTo({index: indexToFocus, stickTo: isForward ? 'end' : 'start', animate: false});
 			this.focusByIndex(indexToFocus);
 		}
 
