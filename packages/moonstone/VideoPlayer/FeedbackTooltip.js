@@ -62,7 +62,7 @@ const FeedbackTooltipBase = kind({
 		 * @type {Boolean}
 		 * @public
 		 */
-		scrubbing: PropTypes.bool,
+		thumbnailDeactivated: PropTypes.bool,
 
 		/**
 		 * Set a thumbnail image source to show on VideoPlayer's Slider knob. This is a standard
@@ -89,7 +89,7 @@ const FeedbackTooltipBase = kind({
 
 	defaultProps: {
 		noFeedback: false,
-		scrubbing: false,
+		thumbnailDeactivated: false,
 		visible: true
 	},
 
@@ -99,15 +99,15 @@ const FeedbackTooltipBase = kind({
 	},
 
 	computed: {
-		className: ({playbackState: s, scrubbing, styler, visible}) => styler.append({
+		className: ({playbackState: s, thumbnailDeactivated, styler, visible}) => styler.append({
 			hidden: !visible && states[s] && states[s].allowHide,
-			scrubbing
+			thumbnailDeactivated
 		})
 	},
 
 	render: ({children, noFeedback, playbackState, playbackRate, thumbnailSrc, ...rest}) => {
 		delete rest.visible;
-		delete rest.scrubbing;
+		delete rest.thumbnailDeactivated;
 		return (
 			<div {...rest}>
 				{thumbnailSrc ? <div className={css.thumbnail} style={!noFeedback ? {display: 'none'} : null}>
@@ -128,7 +128,7 @@ const FeedbackTooltipBase = kind({
 });
 
 const FeedbackTooltip = onlyUpdateForKeys(
-	['children', 'noFeedback', 'playbackState', 'playbackRate', 'scrubbing', 'thumbnailSrc', 'visible']
+	['children', 'noFeedback', 'playbackState', 'playbackRate', 'thumbnailDeactivated', 'thumbnailSrc', 'visible']
 )(
 	Skinnable(
 		FeedbackTooltipBase

@@ -656,7 +656,7 @@ const VideoPlayerBase = class extends React.Component {
 			more: false,
 			proportionLoaded: 0,
 			proportionPlayed: 0,
-			sliderScrubbing: false,
+			thumbnailDeactivated: false,
 			sliderKnobProportion: 0,
 			titleVisible: true
 		};
@@ -1456,8 +1456,8 @@ const VideoPlayerBase = class extends React.Component {
 	sliderTooltipTimeJob = new Job((time) => this.setState({sliderTooltipTime: time}), 20)
 
 	stopScrubbing = () => {
-		if (this.state.sliderScrubbing) {
-			this.setState({sliderScrubbing: false});
+		if (this.state.thumbnailDeactivated) {
+			this.setState({thumbnailDeactivated: false});
 		}
 	}
 
@@ -1480,8 +1480,8 @@ const VideoPlayerBase = class extends React.Component {
 
 				this.announce(`${$L('jump to')} ${knobTime}`);
 
-				if (!this.state.sliderScrubbing) {
-					this.setState({sliderScrubbing: this.sliderScrubbing});
+				if (!this.state.thumbnailDeactivated) {
+					this.setState({thumbnailDeactivated: this.sliderScrubbing});
 					this.autoStopScrubbingJob.startAfter(this.props.thumbnailTransitionDelay);
 				}
 			}
@@ -1698,7 +1698,7 @@ const VideoPlayerBase = class extends React.Component {
 									noFeedback={this.state.mouseOver}
 									playbackState={this.prevCommand}
 									playbackRate={this.selectPlaybackRate(this.speedIndex)}
-									scrubbing={this.state.sliderScrubbing}
+									scrubbing={this.state.thumbnailDeactivated}
 									thumbnailSrc={thumbnailSrc}
 									visible={this.state.feedbackVisible}
 								>
