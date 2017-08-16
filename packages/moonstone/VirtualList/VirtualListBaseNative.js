@@ -962,6 +962,7 @@ class VirtualListCoreNative extends Component {
 		delete props.cbScrollTo;
 		delete props.clientSize;
 		delete props.component;
+		delete props.containerId;
 		delete props.data;
 		delete props.dataSize;
 		delete props.direction;

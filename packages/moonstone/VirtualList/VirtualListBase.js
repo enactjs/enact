@@ -993,6 +993,7 @@ class VirtualListCore extends Component {
 		delete props.cbScrollTo;
 		delete props.clientSize;
 		delete props.component;
+		delete props.containerId;
 		delete props.data;
 		delete props.dataSize;
 		delete props.direction;
@@ -1000,7 +1001,6 @@ class VirtualListCore extends Component {
 		delete props.overhang;
 		delete props.pageScroll;
 		delete props.spacing;
-		delete props.containerId;
 
 		if (primary) {
 			this.renderCalculate();
