@@ -32,6 +32,17 @@ const leaveEvent = 'onMouseLeave';
  */
 const defaultConfig = {
 	/**
+	 * When `true`, allows focus to move outside the container to the next spottable element when
+	 * holding 5 way keys.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @memberof spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator.defaultConfig
+	 * @public
+	 */
+	continue5WayHold: false,
+
+	/**
 	 * The selector for the default spottable element within the container.
 	 *
 	 * @type {String}
@@ -53,16 +64,6 @@ const defaultConfig = {
 	 * @public
 	 */
 	enterTo: null,
-
-	/**
-	 * When `true`, it allows moving focus to the next spottable element when holding 5 way keys.
-	 *
-	 * @type {Boolean}
-	 * @default false
-	 * @memberof spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator.defaultConfig
-	 * @public
-	 */
-	continue5WayHold: false,
 
 	/**
 	 * Whether the container will preserve the id when it unmounts.
@@ -131,7 +132,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * Function to capture a reference to the spotlight container node.
 			 *
 			 * @type {Function}
-			 * @public
+			 * @private
 			 */
 			spotlightContainerRef: PropTypes.func,
 
