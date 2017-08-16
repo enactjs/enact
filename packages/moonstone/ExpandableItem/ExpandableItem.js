@@ -14,6 +14,7 @@ import kind from '@enact/core/kind';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Spotlight from '@enact/spotlight';
+import SpotlightContainerDecorator from '@enact/spotlight/SpotlightContainerDecorator';
 
 import LabeledItem from '../LabeledItem';
 
@@ -22,6 +23,8 @@ import ExpandableTransitionContainer from './ExpandableTransitionContainer';
 
 const isUp = is('up');
 const isDown = is('down');
+
+const ContainerDiv = SpotlightContainerDecorator({continue5WayHold: true}, 'div');
 
 /**
  * {@link moonstone/ExpandableItem.ExpandableItemBase} is a stateless component that
@@ -320,7 +323,7 @@ const ExpandableItemBase = kind({
 		const ariaProps = extractAriaProps(rest);
 
 		return (
-			<div
+			<ContainerDiv
 				{...rest}
 				aria-disabled={disabled}
 				disabled={disabled}
@@ -353,7 +356,7 @@ const ExpandableItemBase = kind({
 				>
 					{children}
 				</ExpandableTransitionContainer>
-			</div>
+			</ContainerDiv>
 		);
 	}
 });
