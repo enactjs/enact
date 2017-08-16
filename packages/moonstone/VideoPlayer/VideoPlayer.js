@@ -1482,17 +1482,6 @@ const VideoPlayerBase = class extends React.Component {
 		});
 	}
 
-	handleMouseOver = () => {
-		this.setState({
-			feedbackIconVisible: false,
-			feedbackVisible: true
-		});
-		this.stopDelayedFeedbackHide();
-	}
-	handleMouseOut = () => {
-		this.setState({feedbackIconVisible: true});
-		this.startDelayedFeedbackHide();
-	}
 	onJumpBackward = this.handle(
 		(ev, props) => forwardJumpBackwardButtonClick(this.addStateToEvent(ev), props),
 		() => this.jump(-1 * this.props.jumpBy)
@@ -1689,8 +1678,6 @@ const VideoPlayerBase = class extends React.Component {
 								onChange={this.onSliderChange}
 								onFocus={this.handleSliderFocus}
 								onKnobMove={this.handleKnobMove}
-								onMouseOver={this.handleMouseOver}
-								onMouseOut={this.handleMouseOut}
 								onSpotlightUp={this.handleSpotlightUpFromSlider}
 								onSpotlightDown={this.handleSpotlightDownFromSlider}
 							>
