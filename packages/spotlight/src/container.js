@@ -52,8 +52,8 @@ let GlobalConfig = {
 			key: container ? node : all.indexOf(node)
 		};
 	},
-	lastFocusedRestore: ({key}, all) => {
-		return all[key];
+	lastFocusedRestore: ({container, key}, all) => {
+		return container ? key : all[key];
 	},
 	leaveFor: null,         // {left: <extSelector>, right: <extSelector>, up: <extSelector>, down: <extSelector>}
 	navigableFilter: null,
