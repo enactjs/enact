@@ -1,8 +1,8 @@
 import hoc from '@enact/core/hoc';
 import Spotlight from '@enact/spotlight';
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-
 
 /**
  * Default config for {@link mooonstone/ExpandableItem.ExpandableSpotlightDecorator}
@@ -107,7 +107,7 @@ const ExpandableSpotlightDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		setContainerNode = (node) => {
-			this.containerNode = node;
+			this.containerNode = ReactDOM.findDOMNode(node);	// eslint-disable-line react/no-find-dom-node
 		}
 
 		render () {
