@@ -752,6 +752,7 @@ const VideoPlayerBase = class extends React.Component {
 		this.refocusMoreButton.stop();
 		this.stopListeningForPulses();
 		this.sliderTooltipTimeJob.stop();
+		this.autoStopScrubbingJob.stop();
 	}
 
 	//

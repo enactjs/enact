@@ -319,7 +319,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				this.setState({knobAfterMidpoint: currentKnobAfterMidpoint});
 			}
 
-			if (detachedKnob && knobProgress !== this.detachedKnobPosition) {
+			if (knobProgress !== this.detachedKnobPosition) {
 				this.notifyKnobMove(knobProgress, knobProgress !== proportionProgress);
 				this.detachedKnobPosition = knobProgress;
 			}
