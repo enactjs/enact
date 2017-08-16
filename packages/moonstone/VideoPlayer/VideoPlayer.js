@@ -1482,9 +1482,7 @@ const VideoPlayerBase = class extends React.Component {
 
 				if (!this.state.thumbnailDeactivated) {
 					this.setState({
-						thumbnailDeactivated: this.sliderScrubbing,
-						feedbackVisible: true,
-						mouseOver: true
+						thumbnailDeactivated: this.sliderScrubbing
 					});
 					this.autoStopScrubbingJob.startAfter(this.props.thumbnailTransitionDelay);
 				}
@@ -1501,13 +1499,6 @@ const VideoPlayerBase = class extends React.Component {
 	handleMouseOut = () => {
 		this.setState({mouseOver: false});
 		this.startDelayedFeedbackHide();
-	}
-	handleBlur = () => {
-		this.setState({
-			thumbnailDeactivated: false,
-			feedbackVisible: false,
-			mouseOver: false
-		});
 	}
 	onJumpBackward = this.handle(
 		(ev, props) => forwardJumpBackwardButtonClick(this.addStateToEvent(ev), props),
@@ -1641,6 +1632,7 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.pauseAtEnd;
 		delete rest.playbackRateHash;
 		delete rest.setApiProvider;
+		delete rest.thumbnailTransitionDelay;
 		delete rest.titleHideDelay;
 		delete rest.tooltipHideDelay;
 
@@ -1698,7 +1690,6 @@ const VideoPlayerBase = class extends React.Component {
 							{noSlider ? null : <MediaSlider
 								backgroundProgress={this.state.proportionLoaded}
 								value={this.state.proportionPlayed}
-								onBlur={this.handleBlur}
 								onChange={this.onSliderChange}
 								onKnobMove={this.handleKnobMove}
 								onMouseOver={this.handleMouseOver}
