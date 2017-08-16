@@ -94,7 +94,9 @@ const handledCustomMediaEventsMap = {
 
 // provide forwarding of events on media controls
 const forwardControlsAvailable = forward('onControlsAvailable');
+const forwardBackward = forward('onBackward');
 const forwardBackwardButtonClick = forward('onBackwardButtonClick');
+const forwardForward = forward('onForward');
 const forwardForwardButtonClick = forward('onForwardButtonClick');
 const forwardJumpBackwardButtonClick = forwardWithPrevent('onJumpBackwardButtonClick');
 const forwardJumpForwardButtonClick = forwardWithPrevent('onJumpForwardButtonClick');
@@ -376,6 +378,13 @@ const VideoPlayerBase = class extends React.Component {
 		noSlider: PropTypes.bool,
 
 		/**
+		 * Function executed when media rewinds. The playback rate is sent as the first argument
+		 * in an object with a key `playbackRate` in Number.
+		 * @type {Function}
+		 */
+		onBackward: PropTypes.func,
+
+		/**
 		 * Function executed when the user clicks the Backward button. Is passed
 		 * a {@link moonstone/VideoPlayer.videoStatus} as the first argument.
 		 *
@@ -393,6 +402,13 @@ const VideoPlayerBase = class extends React.Component {
 		 * @public
 		 */
 		onControlsAvailable: PropTypes.func,
+
+		/**
+		 * Function executed when media fast forwards. The playback rate is sent as the first argument
+		 * in an object with a key `playbackRate` in Number.
+		 * @type {Function}
+		 */
+		onForward: PropTypes.func,
 
 		/**
 		 * Function executed when the user clicks the Forward button. Is passed
@@ -1214,6 +1230,8 @@ const VideoPlayerBase = class extends React.Component {
 		this.stopDelayedFeedbackHide();
 
 		this.showFeedback();
+
+		forwardForward({playbackRate: this.video.playbackRate}, this.props);
 	}
 
 	/**
@@ -1263,6 +1281,8 @@ const VideoPlayerBase = class extends React.Component {
 		this.stopDelayedFeedbackHide();
 
 		this.showFeedback();
+
+		forwardBackward({playbackRate: this.video.playbackRate}, this.props);
 	}
 
 	/**
@@ -1597,7 +1617,9 @@ const VideoPlayerBase = class extends React.Component {
 		delete rest.jumpDelay;
 		delete rest.no5WayJump;
 		delete rest.onControlsAvailable;
+		delete rest.onBackward;
 		delete rest.onBackwardButtonClick;
+		delete rest.onForward;
 		delete rest.onForwardButtonClick;
 		delete rest.onJumpBackwardButtonClick;
 		delete rest.onJumpForwardButtonClick;

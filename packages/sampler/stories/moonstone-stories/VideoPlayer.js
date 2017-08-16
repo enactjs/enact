@@ -39,6 +39,7 @@ const prop = {
 	],
 	events: [
 		'onAbort',
+		'onBackward',
 		'onBackwardButtonClick',
 		'onCanPlay',
 		'onCanPlayThrough',
@@ -48,6 +49,7 @@ const prop = {
 		'onEncrypted',
 		'onEnded',
 		'onError',
+		'onForward',
 		'onForwardButtonClick',
 		'onJumpBackwardButtonClick',
 		'onJumpForwardButtonClick',
