@@ -32,6 +32,7 @@ import {
 	getLastContainer,
 	getSpottableDescendants,
 	isContainer,
+	isContainer5WayHoldable,
 	isNavigable,
 	unmountContainer,
 	removeAllContainers,
@@ -236,7 +237,7 @@ const Spotlight = (function () {
 
 			// prevent focus if 5-way is being held and the next element isn't wrapped by
 			// the current element's immediate container
-			if (_5WayKeyHold && nextContainerIds.indexOf(currentContainerId) < 0) {
+			if (_5WayKeyHold && nextContainerIds.indexOf(currentContainerId) < 0 && !isContainer5WayHoldable(currentContainerId)) {
 				return false;
 			}
 
