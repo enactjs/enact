@@ -664,6 +664,15 @@ function getContainerNavigableElements (containerId) {
  * @public
  */
 function getContainerFocusTarget (containerId) {
+	const containerIds = getContainersForNode(getContainerNode(containerId));
+	for (let i = containerIds.length - 2; i > -1; i--) {
+		restoreLastFocusedElement(containerIds[i]);
+	}
+
+	return getNextContainerFocusTarget(containerId);
+}
+
+function getNextContainerFocusTarget (containerId) {
 	// deferring restoration until it's requested to allow containers to prepare first
 	restoreLastFocusedElement(containerId);
 
@@ -676,7 +685,7 @@ function getContainerFocusTarget (containerId) {
 			return result;
 		} else if (isContainer(element)) {
 			const nextId = isContainerNode(element) ? getContainerId(element) : element;
-			return getContainerFocusTarget(nextId);
+			return getNextContainerFocusTarget(nextId);
 		}
 
 		return element;
