@@ -129,14 +129,6 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			containerId: PropTypes.string,
 
 			/**
-			 * Function to capture a reference to the spotlight container node.
-			 *
-			 * @type {Function}
-			 * @private
-			 */
-			spotlightContainerRef: PropTypes.func,
-
-			/**
 			 * When `true`, controls in the container cannot be navigated.
 			 *
 			 * @type {Boolean}
@@ -251,7 +243,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		}
 
 		render () {
-			const {spotlightContainerRef, spotlightDisabled, spotlightMuted, ...rest} = this.props;
+			const {spotlightDisabled, spotlightMuted, ...rest} = this.props;
 			delete rest.containerId;
 			delete rest.spotlightRestrict;
 
@@ -267,7 +259,7 @@ const SpotlightContainerDecorator = hoc(defaultConfig, (config, Wrapped) => {
 				rest['data-container-muted'] = spotlightMuted;
 			}
 
-			return <Wrapped {...rest} ref={spotlightContainerRef} />;
+			return <Wrapped {...rest} />;
 		}
 	};
 });
