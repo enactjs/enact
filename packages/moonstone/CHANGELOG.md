@@ -13,6 +13,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 ### Changed
 
 - `moonstone/VirtualGridList` to scroll by item via 5 way key
+- `moonstone/VideoPlayer` to read target time when jump by left/right key
 - `moonstone/IconButton` to not use `MarqueeDecorator` and `Uppercase`
 
 ### Fixed
