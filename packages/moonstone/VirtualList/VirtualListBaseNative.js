@@ -769,7 +769,7 @@ class VirtualListCoreNative extends Component {
 	}
 
 	setRestrict = (bool) => {
-		Spotlight.set(this.props['data-container-id'], {restrict: (bool) ? 'self-only' : 'self-first'});
+		Spotlight.set(this.props.containerId, {restrict: (bool) ? 'self-only' : 'self-first'});
 	}
 
 	setSpotlightContainerRestrict = (keyCode, target) => {
