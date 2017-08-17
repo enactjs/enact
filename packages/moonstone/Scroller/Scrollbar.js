@@ -390,7 +390,7 @@ class ScrollbarBase extends PureComponent {
 }
 
 const Scrollbar = ApiDecorator(
-	{api: ['hideThumb', 'showThumb', 'startHidingThumb', 'update']},
+	{api: ['containerRef', 'hideThumb', 'showThumb', 'startHidingThumb', 'update']},
 	DisappearSpotlightDecorator(
 		{events: {
 			onNextSpotlightDisappear: '[data-scroll-button="previous"]',
