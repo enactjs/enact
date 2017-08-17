@@ -378,8 +378,9 @@ const VideoPlayerBase = class extends React.Component {
 		noSlider: PropTypes.bool,
 
 		/**
-		 * Function executed when media rewinds. The playback rate is sent as the first argument
-		 * in an object with a key `playbackRate` in Number.
+		 * Function executed when media playback rate changes in the backwards directioni (e.g.:
+		 * clicking rewind button on remote). The playback rate is sent in the `playbackRate` member
+		 * of the first argument.
 		 * @type {Function}
 		 */
 		onBackward: PropTypes.func,
@@ -404,8 +405,9 @@ const VideoPlayerBase = class extends React.Component {
 		onControlsAvailable: PropTypes.func,
 
 		/**
-		 * Function executed when media fast forwards. The playback rate is sent as the first argument
-		 * in an object with a key `playbackRate` in Number.
+		 * Function executed when media playback rate changes in the forwards directioni (e.g.:
+		 * clicking fast forward button on remote). The playback rate is sent in the `playbackRate`
+		 * member of the first argument.
 		 * @type {Function}
 		 */
 		onForward: PropTypes.func,
