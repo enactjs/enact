@@ -62,7 +62,7 @@ const defaultConfig = {
 	 * @memberof spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator.defaultConfig
 	 * @public
 	 */
-	preserveId: true
+	preserveId: false
 };
 
 /**

@@ -104,6 +104,15 @@ const ScrollableHoC = hoc({configureSpotlight: false}, (config, Wrapped) => {
 
 		static propTypes = /** @lends moonstone/Scroller.Scrollable.prototype */ {
 			/**
+			 * When `configureSpotlight` is true, this is passed onto the wrapped component to allow
+			 * it to customize the spotlight container for its use case.
+			 *
+			 * @type {String}
+			 * @private
+			 */
+			'data-container-id': PropTypes.string,
+
+			/**
 			 * The callback function which is called for linking scrollTo function.
 			 * You should specify a callback function as the value of this prop
 			 * to use scrollTo feature.
@@ -1126,6 +1135,7 @@ const ScrollableHoC = hoc({configureSpotlight: false}, (config, Wrapped) => {
 	return SpotlightContainerDecorator(
 		{
 			overflow: true,
+			preserveId: true,
 			restrict: 'self-first'
 		},
 		Scrollable
