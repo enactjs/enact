@@ -113,14 +113,14 @@ const TimePicker = DateTimeDecorator({
 	defaultOrder: ['h', 'm', 'a'],
 	handlers: {
 		onChangeHour: function (ev, value) {
-			const currentTime = DateFactory(value).getTimeExtended();
+			const currentTime = new DateFactory(value).getTimeExtended();
 			const currentHour = value.hour;
 
 			value.hour = ev.value;
 
 			// In the case of navigating onto the skipped hour of DST, ilib will return the same
 			// value so we skip that hour and update the value again.
-			const newTime = DateFactory(value).getTimeExtended();
+			const newTime = new DateFactory(value).getTimeExtended();
 			if (newTime === currentTime) {
 				value.hour = ev.value * 2 - currentHour;
 			}

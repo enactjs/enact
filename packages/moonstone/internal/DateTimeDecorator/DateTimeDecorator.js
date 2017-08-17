@@ -121,7 +121,7 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 		 */
 		toIDate (time) {
 			if (time && this.locale) {
-				return DateFactory({
+				return new DateFactory({
 					unixtime: time,
 					timezone: 'local'
 				});
@@ -151,7 +151,7 @@ const DateTimeDecorator = hoc((config, Wrapped) => {
 			const maxDays = value.cal.getMonLength(month, year);
 			value.day = (day <= maxDays) ? day : maxDays;
 
-			const date = DateFactory(value);
+			const date = new DateFactory(value);
 			const newValue = date.getTimeExtended();
 			const changed =	this.props.value == null || this.props.value !== newValue;
 
