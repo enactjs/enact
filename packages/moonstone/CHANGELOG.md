@@ -21,6 +21,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 - `moonstone/Header` to not have its contents extend beyond its bounds
 - `moonstone/Slider` to align tooltip with detached knob
 - `moonstone/FormCheckbox` to display correct colors in light skin
+- `moonstone/ExpandableList` to display correct font weight and size for list items
 
 ## [1.6.1] - 2017-08-07
 
