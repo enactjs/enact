@@ -32,6 +32,17 @@ const leaveEvent = 'onMouseLeave';
  */
 const defaultConfig = {
 	/**
+	 * When `true`, allows focus to move outside the container to the next spottable element when
+	 * holding 5 way keys.
+	 *
+	 * @type {Boolean}
+	 * @default false
+	 * @memberof spotlight/SpotlightContainerDecorator.SpotlightContainerDecorator.defaultConfig
+	 * @public
+	 */
+	continue5WayHold: false,
+
+	/**
 	 * The selector for the default spottable element within the container.
 	 *
 	 * @type {String}

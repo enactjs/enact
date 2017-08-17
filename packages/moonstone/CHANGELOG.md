@@ -8,14 +8,23 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Added
 
+- `moonstone/TooltipDecorator` config property to direct tooltip into a property instead of adding to `children`
+
 ### Changed
 
 - `moonstone/VirtualGridList` to scroll by item via 5 way key
+- `moonstone/VideoPlayer` to read target time when jump by left/right key
+- `moonstone/IconButton` to not use `MarqueeDecorator` and `Uppercase`
 
 ### Fixed
 
 - `moonstone/VirtualList` not to lose focus when moving out from the first item via 5way when it has disabled items
 - `moonstone/Header` to not have its contents extend beyond its bounds
+- `moonstone/Slider` to align tooltip with detached knob
+- `moonstone/FormCheckbox` to display correct colors in light skin
+- `moonstone/Picker` and `moonstone/RangePicker` to forward `onKeyDown` events when not `joined`
+- `moonstone/SelectableItem` to display correct icon width and alignment
+- `moonstone/Scroller` to properly 5-way navigate from scroll buttons
 - `moonstone/Scroller` and `moonstone/VirtualList` navigation via 5-way from paging controls
 
 ## [1.6.1] - 2017-08-07

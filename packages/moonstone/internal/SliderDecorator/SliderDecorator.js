@@ -90,7 +90,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * This is primarily used by media playback. Setting this to `true` enables this behavior.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @private
 			 */
 			detachedKnob: PropTypes.bool,
@@ -99,7 +98,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * When `true`, the component is shown as disabled and does not generate events
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			disabled: PropTypes.bool,
@@ -167,6 +165,14 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			step: PropTypes.number,
 
 			/**
+			 * Enables the built-in tooltip.
+			 *
+			 * @type {Boolean}
+			 * @public
+			 */
+			tooltip: PropTypes.bool,
+
+			/**
 			 * The value of the slider.
 			 *
 			 * @type {Number}
@@ -179,7 +185,6 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			 * If `true` the slider will be oriented vertically.
 			 *
 			 * @type {Boolean}
-			 * @default false
 			 * @public
 			 */
 			vertical: PropTypes.bool
@@ -206,6 +211,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 
 			this.state = {
 				active: false,
+				knobAfterMidpoint: false,
 				focused: false,
 				value: value,
 				valueText: valueText
@@ -295,6 +301,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			const {value} = this.state;
 			const proportionProgress = computeProportionProgress({value, max: this.normalizedMax, min: this.normalizedMin});
 			const knobProgress = this.knobPosition != null ? this.knobPosition : proportionProgress;
+			const currentKnobAfterMidpoint = knobProgress > 0.5;
 
 			loaderNode.style.transform = computeBarTransform(backgroundProgress, vertical);
 			barNode.style.transform = computeBarTransform(proportionProgress, vertical);
@@ -304,7 +311,13 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 			// const knobTransform = computeKnobTransform(knobProgress, vertical, node);
 			// knobNode.style.setProperty('transform', knobTransform);
 			knobNode.style.setProperty('--knob-progress', knobProgress);
-			knobNode.dataset.climax = knobProgress > 0.5 ? 'falling' : 'rising';
+			knobNode.dataset.knobAfterMidpoint = currentKnobAfterMidpoint ? 'true' : 'false';
+
+			if (currentKnobAfterMidpoint !== this.state.knobAfterMidpoint && this.props.tooltip) {
+				// This dictates tooltip's correct left/right positioning
+				this.setState({knobAfterMidpoint: currentKnobAfterMidpoint});
+			}
+
 			this.notifyKnobMove(knobProgress, knobProgress !== proportionProgress);
 		}
 
@@ -459,6 +472,7 @@ const SliderDecorator = hoc(defaultConfig, (config, Wrapped) => {
 					active={this.state.active}
 					aria-disabled={this.props.disabled}
 					aria-valuetext={this.state.valueText}
+					knobAfterMidpoint={this.state.knobAfterMidpoint}
 					focused={this.state.focused}
 					inputRef={this.getInputNode}
 					onActivate={this.handleActivate}

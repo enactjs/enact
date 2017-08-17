@@ -32,6 +32,7 @@ import {
 	getLastContainer,
 	getSpottableDescendants,
 	isContainer,
+	isContainer5WayHoldable,
 	isNavigable,
 	unmountContainer,
 	removeAllContainers,
@@ -236,7 +237,7 @@ const Spotlight = (function () {
 
 			// prevent focus if 5-way is being held and the next element isn't wrapped by
 			// the current element's immediate container
-			if (_5WayKeyHold && nextContainerIds.indexOf(currentContainerId) < 0) {
+			if (_5WayKeyHold && nextContainerIds.indexOf(currentContainerId) < 0 && !isContainer5WayHoldable(currentContainerId)) {
 				return false;
 			}
 
@@ -562,12 +563,14 @@ const Spotlight = (function () {
 		 */
 		focus: function (elem) {
 			let target = elem;
+			let wasContainerId = false;
 
 			if (!elem) {
 				target = getTargetByContainer();
 			} else if (typeof elem === 'string') {
 				if (getContainerConfig(elem)) {
 					target = getTargetByContainer(elem);
+					wasContainerId = true;
 				} else {
 					target = getTargetBySelector(elem);
 				}
@@ -577,6 +580,10 @@ const Spotlight = (function () {
 			const nextContainerId = last(nextContainerIds);
 			if (isNavigable(target, nextContainerId)) {
 				return focusElement(target, nextContainerIds);
+			} else if (wasContainerId) {
+				// if we failed to find a spottable target within the provided container, we'll set
+				// it as the active container to allow it to focus itself if its contents change
+				this.setActiveContainer(elem);
 			}
 
 			return false;

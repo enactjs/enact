@@ -424,22 +424,12 @@ const ScrollableHoC = hoc({configureSpotlight: false}, (config, Wrapped) => {
 			}
 		}
 
-		wheel (e, canScrollHorizontally, canScrollVertically) {
+		calculateDistanceByWheel (e, maxPixel) {
 			const
-				bounds = this.getScrollBounds(),
 				deltaMode = e.deltaMode,
 				wheelDeltaY = -e.wheelDeltaY;
 			let
-				delta = (wheelDeltaY || e.deltaY),
-				maxPixel;
-
-			if (canScrollVertically) {
-				maxPixel = bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel;
-			} else if (canScrollHorizontally) {
-				maxPixel = bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel;
-			} else {
-				return 0;
-			}
+				delta = (wheelDeltaY || e.deltaY);
 
 			if (deltaMode === 0) {
 				delta = clamp(-maxPixel, maxPixel, ri.scale(delta * scrollWheelMultiplierForDeltaPixel));
@@ -510,6 +500,42 @@ const ScrollableHoC = hoc({configureSpotlight: false}, (config, Wrapped) => {
 		onMouseLeave = (e) => {
 			this.onMouseMove(e);
 			this.onMouseUp();
+		}
+
+		onWheel = (e) => {
+			e.preventDefault();
+			if (!this.isDragging) {
+				const
+					bounds = this.getScrollBounds(),
+					canScrollHorizontally = this.canScrollHorizontally(bounds),
+					canScrollVertically = this.canScrollVertically(bounds),
+					focusedItem = Spotlight.getCurrent();
+				let
+					delta = 0, direction;
+
+				if (canScrollVertically) {
+					delta = this.calculateDistanceByWheel(e, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
+				} else if (canScrollHorizontally) {
+					delta = this.calculateDistanceByWheel(e, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
+				}
+				direction = Math.sign(delta);
+
+				Spotlight.setPointerMode(false);
+				if (focusedItem) {
+					focusedItem.blur();
+				}
+
+				this.childRef.setContainerDisabled(true);
+
+				if (direction !== this.wheelDirection) {
+					this.isScrollAnimationTargetAccumulated = false;
+					this.wheelDirection = direction;
+				}
+
+				if (delta !== 0) {
+					this.scrollToAccumulatedTarget(delta, canScrollVertically);
+				}
+			}
 		}
 
 		startScrollOnFocus = (pos, item) => {
@@ -644,32 +670,6 @@ const ScrollableHoC = hoc({configureSpotlight: false}, (config, Wrapped) => {
 			this.animateOnFocus = true;
 			if ((isPageUp(e.keyCode) || isPageDown(e.keyCode)) && this.hasFocus()) {
 				this.scrollByPage(e.keyCode);
-			}
-		}
-
-		onWheel = (e) => {
-			e.preventDefault();
-			if (!this.isDragging) {
-				const
-					bounds = this.getScrollBounds(),
-					canScrollHorizontally = this.canScrollHorizontally(bounds),
-					canScrollVertically = this.canScrollVertically(bounds),
-					delta = this.wheel(e, canScrollHorizontally, canScrollVertically),
-					direction = Math.sign(delta),
-					focusedItem = Spotlight.getCurrent();
-
-				Spotlight.setPointerMode(false);
-				if (focusedItem) {
-					focusedItem.blur();
-				}
-
-				this.childRef.setContainerDisabled(true);
-
-				if (direction !== this.wheelDirection) {
-					this.isScrollAnimationTargetAccumulated = false;
-					this.wheelDirection = direction;
-				}
-				this.scrollToAccumulatedTarget(delta, canScrollVertically);
 			}
 		}
 
