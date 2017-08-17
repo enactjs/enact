@@ -942,7 +942,8 @@ class VirtualListCore extends Component {
 	}
 
 	setContainerDisabled = (bool) => {
-		const containerNode = this.containerRef;
+		const {containerId} = this.props;
+		const containerNode = document.querySelector(`[data-container-id="${containerId}"]`);
 
 		if (containerNode) {
 			containerNode.setAttribute(dataContainerMutedAttribute, bool);
