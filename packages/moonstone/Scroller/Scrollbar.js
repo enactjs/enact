@@ -216,7 +216,7 @@ class ScrollbarBase extends PureComponent {
 			currentPos = vertical ? bounds.scrollTop : bounds.scrollLeft,
 			maxPos = vertical ? bounds.maxTop : bounds.maxLeft,
 			shouldDisablePrevButton = currentPos <= 0,
-			shouldDisableNextButton = currentPos >= maxPos,
+			shouldDisableNextButton = currentPos >= maxPos - 1,
 			spotItem = window.document.activeElement;
 
 		this.setState((prevState) => {
