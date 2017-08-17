@@ -350,13 +350,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 		scrolling = false
 		resetPosition = null // prevent auto-scroll on focus by Spotlight
 
-		calculateDistanceByWheel (e, maxPixel) {
-			const
-				deltaMode = e.deltaMode,
-				wheelDeltaY = -e.wheelDeltaY;
-			let
-				delta = (wheelDeltaY || e.deltaY);
-
+		calculateDistanceByWheel (deltaMode, delta, maxPixel) {
 			if (deltaMode === 0) {
 				delta = clamp(-maxPixel, maxPixel, ri.scale(delta * scrollWheelMultiplierForDeltaPixel));
 			} else if (deltaMode === 1) { // line; firefox
@@ -399,10 +393,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			const
 				bounds = this.getScrollBounds(),
 				canScrollHorizontally = this.canScrollHorizontally(bounds),
-				canScrollVertically = this.canScrollVertically(bounds);
+				canScrollVertically = this.canScrollVertically(bounds),
+				eventDeltaMode = e.deltaMode,
+				eventDelta = (-e.wheelDeltaY || e.deltaY);
 			let delta = 0;
 
-			this.childRef.setContainerDisabled(true);
 			this.lastFocusedItem = null;
 			if (typeof window !== 'undefined') {
 				window.document.activeElement.blur();
@@ -411,14 +406,22 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			// FIXME This routine is a temporary support for horizontal wheel scroll.
 			// FIXME If web engine supports horizontal wheel, this routine should be refined or removed.
 			if (canScrollVertically) { // This routine handles wheel events on scrollbars for vertical scroll.
-				const {horizontalScrollbarRef, verticalScrollbarRef} = this;
-				// Not to check if e.target is a descendant of a wrapped component which may have a lot of nodes in it.
-				if ((horizontalScrollbarRef && horizontalScrollbarRef.containerRef.contains(e.target)) ||
-					(verticalScrollbarRef && verticalScrollbarRef.containerRef.contains(e.target))) {
-					delta = this.calculateDistanceByWheel(e, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
+				if (eventDelta < 0 && this.scrollTop > 0 || eventDelta > 0 && this.scrollTop < bounds.maxTop) {
+					const {horizontalScrollbarRef, verticalScrollbarRef} = this;
+
+					this.childRef.setContainerDisabled(true);
+
+					// Not to check if e.target is a descendant of a wrapped component which may have a lot of nodes in it.
+					if ((horizontalScrollbarRef && horizontalScrollbarRef.containerRef.contains(e.target)) ||
+						(verticalScrollbarRef && verticalScrollbarRef.containerRef.contains(e.target))) {
+						delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
+					}
 				}
 			} else if (canScrollHorizontally) { // this routine handles wheel events on any children for horizontal scroll.
-				delta = this.calculateDistanceByWheel(e, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
+				if (eventDelta < 0 && this.scrollLeft > 0 || eventDelta > 0 && this.scrollLeft < bounds.maxLeft) {
+					this.childRef.setContainerDisabled(true);
+					delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
+				}
 			}
 
 			if (delta !== 0) {
