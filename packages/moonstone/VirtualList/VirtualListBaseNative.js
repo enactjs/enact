@@ -753,8 +753,8 @@ class VirtualListCoreNative extends Component {
 		const
 			{context, dimensionToExtent, isPrimaryDirectionVertical, primary} = this,
 			{dataSize, spacing} = this.props;
+		let offsetIndex = Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent;
 
-		let	offsetIndex = Math.floor((primary.clientSize + spacing) / primary.gridSize) * dimensionToExtent;
 		offsetIndex *= !isPrimaryDirectionVertical && context.rtl ? -1 : 1;
 		offsetIndex *= (direction === 'down' || direction === 'right') ? 1 : -1;
 
