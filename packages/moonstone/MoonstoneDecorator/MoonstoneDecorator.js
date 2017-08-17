@@ -15,6 +15,7 @@ import SpotlightRootDecorator from '@enact/spotlight/SpotlightRootDecorator';
 import Skinnable from '../Skinnable';
 
 import I18nFontDecorator from './I18nFontDecorator';
+import AccessibilityDecorator from './AccessibilityDecorator';
 import TextSizeDecorator from './TextSizeDecorator';
 import screenTypes from './screenTypes.json';
 import css from './MoonstoneDecorator.less';
@@ -58,7 +59,7 @@ const defaultConfig = {
  * @public
  */
 const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
-	const {ri, i18n, spotlight, float, noAutoFocus, overlay, textSize, skin} = config;
+	const {ri, i18n, spotlight, float, noAutoFocus, overlay, textSize, skin, highContrast} = config;
 
 	// Apply classes depending on screen type (overlay / fullscreen)
 	const bgClassName = 'enact-fit' + (overlay ? '' : ` ${css.bg}`);
@@ -76,7 +77,7 @@ const MoonstoneDecorator = hoc(defaultConfig, (config, Wrapped) => {
 		);
 	}
 	if (spotlight) App = SpotlightRootDecorator({noAutoFocus}, App);
-	if (textSize) App = TextSizeDecorator(App);
+	if (textSize || highContrast) App = AccessibilityDecorator({highContrast, textSize}, App);
 	if (skin) App = Skinnable({defaultSkin: 'dark'}, App);
 
 	// add webOS-specific key maps
