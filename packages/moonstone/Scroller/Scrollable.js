@@ -414,13 +414,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			}
 		}
 
-		calculateDistanceByWheel (e, maxPixel) {
-			const
-				deltaMode = e.deltaMode,
-				wheelDeltaY = -e.wheelDeltaY;
-			let
-				delta = (wheelDeltaY || e.deltaY);
-
+		calculateDistanceByWheel (deltaMode, delta, maxPixel) {
 			if (deltaMode === 0) {
 				delta = clamp(-maxPixel, maxPixel, ri.scale(delta * scrollWheelMultiplierForDeltaPixel));
 			} else if (deltaMode === 1) { // line; firefox
@@ -499,14 +493,17 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					bounds = this.getScrollBounds(),
 					canScrollHorizontally = this.canScrollHorizontally(bounds),
 					canScrollVertically = this.canScrollVertically(bounds),
-					focusedItem = Spotlight.getCurrent();
+					focusedItem = Spotlight.getCurrent(),
+					eventDeltaMode = e.deltaMode,
+					eventDelta = (-e.wheelDeltaY || e.deltaY);
 				let
-					delta = 0, direction;
+					delta = 0,
+					direction;
 
 				if (canScrollVertically) {
-					delta = this.calculateDistanceByWheel(e, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
+					delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientHeight * scrollWheelPageMultiplierForMaxPixel);
 				} else if (canScrollHorizontally) {
-					delta = this.calculateDistanceByWheel(e, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
+					delta = this.calculateDistanceByWheel(eventDeltaMode, eventDelta, bounds.clientWidth * scrollWheelPageMultiplierForMaxPixel);
 				}
 				direction = Math.sign(delta);
 
