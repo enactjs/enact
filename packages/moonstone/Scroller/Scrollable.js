@@ -93,7 +93,7 @@ const ScrollableSpotlightContainer = SpotlightContainerDecorator(
  * that applies a Scrollable behavior to its wrapped component.
  *
  * Scrollable catches `onFocus` event from its wrapped component for spotlight features,
- * and also catches `onMouseDown`, `onMouseLeave`, `onMouseMove`, `onMouseUp`, `onWheel` and `onKeyUp` events
+ * and also catches `onMouseDown`, `onMouseLeave`, `onMouseMove`, `onMouseUp`, `onWheel` and `onKeyDown` events
  * from its wrapped component for scrolling behaviors.
  *
  * Scrollable calls `onScrollStart`, `onScroll`, and `onScrollStop` callback functions during scroll.
@@ -260,7 +260,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.updateEventListeners();
 			this.updateScrollbars();
 
-			on('keyup', this.onKeyUp);
+			on('keydown', this.onKeyDown);
 		}
 
 		componentWillUpdate () {
@@ -306,7 +306,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				// FIXME `onFocus` doesn't work on the v8 snapshot.
 				childContainerRef.removeEventListener('focus', this.onFocus, true);
 			}
-			off('keyup', this.onKeyUp);
+			off('keydown', this.onKeyDown);
 		}
 
 		// status
@@ -656,9 +656,9 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			return current && this.containerRef.contains(current);
 		}
 
-		onKeyUp = (e) => {
+		onKeyDown = (e) => {
 			this.animateOnFocus = true;
-			if ((isPageUp(e.keyCode) || isPageDown(e.keyCode)) && this.hasFocus()) {
+			if ((isPageUp(e.keyCode) || isPageDown(e.keyCode)) && !e.repeat && this.hasFocus()) {
 				this.scrollByPage(e.keyCode);
 			}
 		}
