@@ -12,6 +12,7 @@ The following is a curated list of changes in the Enact moonstone module, newest
 
 ### Changed
 
+- `moonstone/Scrollbar` to disable paging control down button properly at the bottom when a scroller size is a non-integer value
 - `moonstone/VirtualList`, `moonstone/VirtualGridList`, and `moonstone/Scroller` to scroll on `keydown` event instead of `keyup` event of page up and page down keys
 - `moonstone/VirtualGridList` to scroll by item via 5 way key
 - `moonstone/VideoPlayer` to read target time when jump by left/right key
