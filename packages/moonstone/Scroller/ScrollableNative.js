@@ -89,7 +89,7 @@ const ScrollableSpotlightContainer = SpotlightContainerDecorator(
  * that applies a Scrollable behavior to its wrapped component.
  *
  * Scrollable catches `onFocus` event from its wrapped component for spotlight features,
- * and also catches `onWheel`, `onScroll` and `onKeyUp` events from its wrapped component for scrolling behaviors.
+ * and also catches `onWheel`, `onScroll` and `onKeyDown` events from its wrapped component for scrolling behaviors.
  *
  * Scrollable calls `onScrollStart`, `onScroll`, and `onScrollStop` callback functions during scroll.
  *
@@ -255,7 +255,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			this.updateEventListeners();
 			this.updateScrollbars();
 
-			on('keyup', this.onKeyUp);
+			on('keydown', this.onKeyDown);
 		}
 
 		componentWillUpdate () {
@@ -308,7 +308,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				childContainerRef.removeEventListener('mousemove', this.onMouseMove, {capture: true});
 			}
 
-			off('keyup', this.onKeyUp);
+			off('keydown', this.onKeyDown);
 		}
 
 		// status
@@ -473,7 +473,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				this.childRef.shouldPreventScrollByFocus() :
 				false;
 
-			if (!(shouldPreventScrollByFocus || Spotlight.getPointerMode() || this.isDragging)) {
+			if (!(shouldPreventScrollByFocus || Spotlight.getPointerMode())) {
 				const
 					item = e.target,
 					positionFn = this.childRef.calculatePositionOnFocus,
@@ -533,7 +533,6 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 				{getEndPoint, scrollToAccumulatedTarget} = this,
 				bounds = this.getScrollBounds(),
 				isVertical = this.canScrollVertically(bounds),
-				isHorizontal = this.canScrollHorizontally(bounds),
 				pageDistance = isPageUp(keyCode) ? (this.pageDistance * -1) : this.pageDistance,
 				spotItem = Spotlight.getCurrent();
 
@@ -548,7 +547,7 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 					next = getTargetByDirectionFromPosition(rDirection, endPoint, containerId);
 
 				if (!next) {
-					scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
+					scrollToAccumulatedTarget(pageDistance, isVertical);
 				} else if (next !== spotItem) {
 					this.animateOnFocus = false;
 					Spotlight.focus(next);
@@ -559,11 +558,11 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 						this.animateOnFocus = false;
 						Spotlight.focus(nextPage);
 					} else if (!nextPage) {
-						scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
+						scrollToAccumulatedTarget(pageDistance, isVertical);
 					}
 				}
 			} else {
-				scrollToAccumulatedTarget(pageDistance, isHorizontal, isVertical);
+				scrollToAccumulatedTarget(pageDistance, isVertical);
 			}
 		}
 
@@ -578,10 +577,13 @@ const ScrollableHoC = hoc((config, Wrapped) => {
 			return current && this.containerRef.contains(current);
 		}
 
-		onKeyUp = (e) => {
+		onKeyDown = (e) => {
 			this.animateOnFocus = true;
-			if ((isPageUp(e.keyCode) || isPageDown(e.keyCode)) && this.hasFocus()) {
-				this.scrollByPage(e.keyCode);
+			if (isPageUp(e.keyCode) || isPageDown(e.keyCode)) {
+				e.preventDefault();
+				if (!e.repeat && this.hasFocus()) {
+					this.scrollByPage(e.keyCode);
+				}
 			}
 		}
 
